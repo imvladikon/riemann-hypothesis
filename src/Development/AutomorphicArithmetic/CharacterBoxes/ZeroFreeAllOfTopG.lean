@@ -1340,15 +1340,20 @@ theorem eFamC_of_cls (ψ : PChar) (la : ℝ) {eps : ℝ} (Fm : FamP eps) (h : (G
   rw [Fm.L_x x i (by linarith), Fm.L_eps x i] at h1
   exact h1
 
-theorem zeroFreeAll_of_topG {la : ℝ} (hla : 1 < la) (h : TopG) (hS : ∀ ψ : PChar, HostExW la (GChi ψ).req) : ZeroFreeAll := by
-  have key : ZeroFreeOn fun _ => True :=
-    zeroFreeOn_of_tiedWin_cyc (Fam := FamP) (core := fun Fm => Fm.toFamCore) (Tied := fun Fm => ChainTied Fm) hla
-      (fun ψ _ => UpperTheory.Comparison₂.level_gm_le_on_family_scales _) (fun ψ _ => UpperTheory.Comparison₂.formB _) fun ψ _ => by
-        obtain ⟨eD, eL, ε₁, h1, h2⟩ := h la (GChi ψ) hla (hS ψ) (hypV_of_cls ψ la)
-        refine ⟨eD, eL, ε₁, h1, fun eps a b => ?_⟩
-        obtain ⟨Fm, c, d⟩ := h2 eps a b
-        exact ⟨Fm, eFamC_of_cls ψ la Fm c, c.1, d⟩
-  exact key
+theorem zeroFreeAbove_of_topG {la : ℝ} (hla : 1 < la) (h : TopG) (ψ : PChar)
+    (hS : HostExW la (GChi ψ).req) : ψ.ZeroFreeAbove (1 / 2) := by
+  refine (zeroFreeOn_of_tiedWin_cyc (Q := fun ξ => ξ = ψ) (Fam := FamP) (core := fun Fm => Fm.toFamCore)
+    (Tied := fun Fm => ChainTied Fm) hla (fun ξ _ => UpperTheory.Comparison₂.level_gm_le_on_family_scales _)
+    (fun ξ _ => UpperTheory.Comparison₂.formB _) ?_) ψ rfl
+  intro ξ hξ
+  subst ξ
+  obtain ⟨eD, eL, ε₁, h1, h2⟩ := h la (GChi ψ) hla hS (hypV_of_cls ψ la)
+  refine ⟨eD, eL, ε₁, h1, fun eps a b => ?_⟩
+  obtain ⟨Fm, c, d⟩ := h2 eps a b
+  exact ⟨Fm, eFamC_of_cls ψ la Fm c, c.1, d⟩
+
+theorem zeroFreeAll_of_topG {la : ℝ} (hla : 1 < la) (h : TopG) (hS : ∀ ψ : PChar, HostExW la (GChi ψ).req) : ZeroFreeAll :=
+  fun ψ _ => zeroFreeAbove_of_topG hla h ψ (hS ψ)
 
 end UpperTheory.Top
 

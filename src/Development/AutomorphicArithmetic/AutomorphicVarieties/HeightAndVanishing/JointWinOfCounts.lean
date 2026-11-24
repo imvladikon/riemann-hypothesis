@@ -653,14 +653,18 @@ theorem VVminusLe.mono {E : Type} [Field E] [NumberField E] [IsCMField E] {t : �
   obtain ⟨h1, h2⟩ := h Ω ld
   exact ⟨h1, fun S hS => (h2 S hS).trans hB⟩
 
-theorem vwinAt_of_joint {Ct w : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct w) (hc : ThmBc Ct) (ψ : PChar) : VWinAt ψ Ct w := by
-  intro eps h0 h1 A e he
+theorem vwinAt_of_joint {K : BConst} {Ct w : ℝ} (hC : 1 ≤ Ct) (hJoint : JointWin K Ct w)
+    (hc : ThmBc Ct) (ψ : PChar) : VWinAt ψ Ct w (fun eps => Jchi K Ct w eps ψ) := by
+  intro eps h0 h1
+  obtain ⟨hJ, hmain⟩ := hJoint ψ eps h0 h1
+  refine ⟨hJ, fun A e he => ?_⟩
+  let J := Jchi K Ct w eps ψ
   let t (x : ℝ) : ℕ := ⌊x ^ Ct⌋₊
   have hadm : admitted A Ct e t := by
     intro x hx
     have htx : x ≤ x ^ Ct := Real.self_le_rpow_of_one_le (by linarith) hC
     exact ⟨(he x hx).1, (he x hx).2, Nat.le_floor (by push_cast; linarith), Nat.floor_le (by linarith)⟩
-  obtain ⟨J, C, P, XJ, hJ, hmain⟩ := hJ ψ eps A h0 h1 e t hadm
+  obtain ⟨C, P, XJ, hmain⟩ := hmain A e t hadm
   obtain ⟨Cb, hCb⟩ := hc
   obtain ⟨K, hK0, hK⟩ := minusBound_le_exp_of_log_le Cb (AbF.ofChar ψ).deg
   obtain ⟨xT, hxT⟩ := error_terms_le_sqrt_exp_rpow eps K C h0
@@ -673,7 +677,7 @@ theorem vwinAt_of_joint {Ct w : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct w) (hc : 
     ⟨max (max xT xN) (max Y0 2), le_max_of_le_left (le_max_left _ _), le_max_of_le_left (le_max_right _ _),
       le_max_of_le_right (le_max_left _ _), le_max_of_le_right (le_max_right _ _)⟩
   have hL0 : (0 : ℝ) ≤ L := by linarith
-  refine ⟨J, hJ, max (max XJ XB) (L ^ J), ?_⟩
+  refine ⟨max (max XJ XB) (L ^ J), ?_⟩
   intro X hX q d hw
   have hXJ : XJ ≤ X := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hX
   have hXB' : XB ≤ X := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hX
@@ -1934,7 +1938,7 @@ theorem thmHV_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : Lo
 
 theorem jointWin_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK)
     {CK : ℝ} (hK : LemmaK CK) {K : BConst} (hK1 : 1 ≤ K.CK) {Ct w : ℝ} (hC : 1 ≤ Ct) (hw : 1 ≤ w)
-    (hB : ThmBab K Ct w) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) : JointWin Ct w :=
+    (hB : ThmBab K Ct w) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) : JointWin K Ct w :=
   jointWin_of hK1 hC hw hB
     (thmHV_of_counts hP hF hT hK h1 h2 h3 h5 hZ K (zero_lt_one.trans_le hC) (zero_lt_one.trans_le hw))
 
@@ -1942,7 +1946,8 @@ theorem vwin_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : Loc
     (hK : LemmaK CK) {K : BConst} (hK1 : 1 ≤ K.CK)
     (hB : ∀ (Ct w : ℝ), 1 ≤ Ct → 1 ≤ w → ThmBab K Ct w) (hc : ThmBcFree)
     (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) : VWin := by
-  intro ψ Ct w hCt hw
+  refine ⟨K.CK, hK1, fun ψ => ⟨Rchi K ψ, ?_⟩⟩
+  intro Ct w hCt hw
   have hJ := jointWin_of_counts hP hF hT hK hK1 hCt hw
     (hB Ct w hCt hw) h1 h2 h3 h5 hZ
   exact vwinAt_of_joint hCt hJ ((thmBc_iff hCt).2 hc) ψ

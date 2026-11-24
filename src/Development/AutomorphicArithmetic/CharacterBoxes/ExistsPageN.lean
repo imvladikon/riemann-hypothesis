@@ -84,13 +84,31 @@ def PageN (eps x : ℝ) (e : ℕ) : Prop := x ^ (2 + 8 * eps) ≤ (2 : ℝ) ^ e 
 def VAt (ψ : PChar) (eps Ct : ℝ) (q d e : ℕ) (x : ℝ) : Prop :=
   ∀ (E : Type) [Field E] [NumberField E], IsChiField ψ e q d E → VVle E ⌊x ^ Ct⌋₊ (Real.sqrt (Real.exp (x ^ eps)))
 
-def VWinAt (ψ : PChar) (Ct w : ℝ) : Prop :=
-  ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∀ (A : ℝ) (e : ℝ → ℕ),
-    (∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ A) →
-    ∃ J : ℝ, 1 ≤ J ∧ ∃ X0 : ℝ, ∀ X ≥ X0, ∀ q d : ℕ, WinPair eps (X ^ (1 / J)) q d →
-      ∃ Y : ℝ, X ^ (1 / J) ≤ Y ∧ Y ^ w ≤ X ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w → VAt ψ eps Ct q d (e x) x
+def windowIndex (w B : ℝ) (R : ℕ) : ℝ := w * (w * B) ^ R
 
-def VWin : Prop := ∀ (ψ : PChar) (Ct w : ℝ), 1 ≤ Ct → 1 ≤ w → VWinAt ψ Ct w
+def windowWidth (R : ℕ) : ℝ := (3 / 2 : ℝ) ^ (1 / ((R : ℝ) + 1))
+
+theorem one_lt_windowWidth (R : ℕ) : 1 < windowWidth R :=
+  Real.one_lt_rpow (by norm_num) (one_div_pos.mpr (by positivity))
+
+theorem windowIndex_windowWidth (R : ℕ) (B : ℝ) :
+    windowIndex (windowWidth R) B R = (3 / 2) * B ^ R := by
+  have hR : (R : ℝ) + 1 ≠ 0 := by positivity
+  have hpow : windowWidth R ^ (R + 1) = (3 / 2 : ℝ) := by
+    rw [← Real.rpow_natCast, windowWidth, ← Real.rpow_mul (by norm_num)]
+    rw [Nat.cast_add, Nat.cast_one, one_div_mul_cancel hR, Real.rpow_one]
+  unfold windowIndex
+  rw [mul_pow, ← mul_assoc, mul_comm (windowWidth R), ← pow_succ, hpow]
+
+def VWinAt (ψ : PChar) (Ct w : ℝ) (J : ℝ → ℝ) : Prop :=
+  ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → 1 ≤ J eps ∧ ∀ (A : ℝ) (e : ℝ → ℕ),
+    (∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ A) →
+    ∃ X0 : ℝ, ∀ X ≥ X0, ∀ q d : ℕ, WinPair eps (X ^ (1 / J eps)) q d →
+      ∃ Y : ℝ, X ^ (1 / J eps) ≤ Y ∧ Y ^ w ≤ X ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w → VAt ψ eps Ct q d (e x) x
+
+def VWin : Prop :=
+  ∃ CK : ℝ, 1 ≤ CK ∧ ∀ ψ : PChar, ∃ R : ℕ, ∀ (Ct w : ℝ), 1 ≤ Ct → 1 ≤ w →
+    VWinAt ψ Ct w (fun eps => windowIndex w (2 * CK * Ct / eps) R)
 
 theorem VVle.mono {E : Type} [Field E] [NumberField E] {t t' : ℕ} {B B' : ℝ} (h : VVle E t B) (ht : t' ≤ t) (hB : B ≤ B') :
     VVle E t' B' := by

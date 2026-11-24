@@ -902,15 +902,17 @@ section -- clump:auto
 
 open Formalism.HC UpperTheory.Top
 
-theorem UpperTheory.Top.winPairs :
-    ∀ (ψ : PChar) (eps c w : ℝ), 0 < eps → eps < 1 / 52 → 1 ≤ c → VWinAt ψ 400 w → PairEx →
-      ∃ J : ℝ, 1 ≤ J ∧ ∀ y : ℝ, ∃ Z : ℝ, y ≤ Z ∧ ∀ x : ℝ, Z ≤ x → x ≤ Z ^ w →
-        ∃ (Y : ℝ) (q d e : ℕ), WinDatum ψ eps J c x Y q d e := by
+theorem UpperTheory.Top.winPairs {index : ℝ → ℝ} :
+    ∀ (ψ : PChar) (eps c w : ℝ), 0 < eps → eps < 1 / 52 → 1 ≤ c → VWinAt ψ 400 w index → PairEx →
+      1 ≤ index eps ∧ ∀ y : ℝ, ∃ Z : ℝ, y ≤ Z ∧ ∀ x : ℝ, Z ≤ x → x ≤ Z ^ w →
+        ∃ (Y : ℝ) (q d e : ℕ), WinDatum ψ eps (index eps) c x Y q d e := by
   intro ψ eps c w heps heps52 hc hV hP
   obtain ⟨e, he, hpage⟩ := exists_scaled_pageN heps heps52 hc
-  obtain ⟨J, hJ, X0, hX0⟩ := hV eps heps heps52 4 e he
+  let J := index eps
+  obtain ⟨hJ, hV⟩ := hV eps heps heps52
+  obtain ⟨X0, hX0⟩ := hV 4 e he
   obtain ⟨Y1, hY1⟩ := hP ψ.N (Nat.pos_of_ne_zero (NeZero.ne _)) eps J heps heps52 hJ
-  refine ⟨J, hJ, fun y => ?_⟩
+  refine ⟨hJ, fun y => ?_⟩
   have hJ0 : 0 < J := by linarith
   have hJi : 0 ≤ 1 / J := one_div_nonneg.2 hJ0.le
   let M := max y (max Y1 (4 * c))
@@ -944,13 +946,13 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.HC GlobalTheory.EX UpperTheory.Top HostParam.Seam
 
-theorem UpperTheory.T3.supplyOfAdmOf {w : ℝ} :
+theorem UpperTheory.T3.supplyOfAdmOf {w : ℝ} {index : ℝ → ℝ} :
     (∀ eps C0 : ℝ, 0 < eps → eps < 1 / 52 → 1 ≤ C0 → ∃ CT2 C8 c6 Cb x0 : ℝ, C0 ≤ C8 ∧ 0 < c6 ∧ 0 < Cb ∧
       ∀ (s : Scale) (R : Ranks) (H0 : HostAx R.toFrame) (M : ℕ) (Y : ℝ), s.eps = eps → x0 ≤ s.x → RankVal s R →
         s.J ≤ C0 → (R.o : ℝ) ≤ C0 → (H0.QS : ℝ) ≤ C0 * R.n → 0 < M → (M : ℝ) ≤ C0 → H0.QS ∣ Nat.lcm (2 ^ (R.e + 2)) M →
         PairWin s Y → PairGood M eps Y s.x H0.q H0.d → FieldRows H0.toHostRaw ⌊Y ^ (eps / 5)⌋₊ → admitted R H0 →
         ∃ (H : Host R) (q0 : ℕ), H.toHostAx = H0 ∧ H.CT2 = CT2 ∧ HostGood s C8 4 c6 Cb H q0 ∧
-          R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps))) → ∀ ψ : PChar, VWinAt ψ 400 w →
+          R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps))) → ∀ ψ : PChar, VWinAt ψ 400 w index →
       (∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ (s : Scale) (φ : Frame) (H0 : HostAx φ), s.eps = eps → x0 ≤ s.x →
         s.x ^ (2 + 8 * eps) ≤ (φ.ord : ℝ) → (φ.ord : ℝ) ≤ 2 * s.x ^ (2 + 8 * eps) → φ.o = (Level.cyc ψ).o → KerChi ψ H0.toHostRaw →
         ∃ (R : Ranks) (h : R.toFrame = φ), RankVal s R ∧ admitted R (h ▸ H0)) →
@@ -960,7 +962,8 @@ theorem UpperTheory.T3.supplyOfAdmOf {w : ℝ} :
   have hN0 : 0 < ψ.N := Nat.pos_of_ne_zero (NeZero.ne _)
   have heps0 : eps ≠ 0 := heps.ne'
   obtain ⟨c, e0, hc, hF⟩ := UpperTheory.Top.fieldChi ψ
-  obtain ⟨J, hJ, hwin⟩ := UpperTheory.Top.winPairs ψ eps (c : ℝ) w heps heps' (by exact_mod_cast hc) hV QH.pairEx
+  let J := index eps
+  obtain ⟨hJ, hwin⟩ := UpperTheory.Top.winPairs ψ eps (c : ℝ) w heps heps' (by exact_mod_cast hc) hV QH.pairEx
   obtain ⟨C0, hC1, hCJ, hCo, hCN⟩ : ∃ C0 : ℝ, 1 ≤ C0 ∧ J ≤ C0 ∧ ((Level.cyc ψ).o : ℝ) ≤ C0 ∧
       8 * (ψ.N : ℝ) ≤ C0 :=
     by
@@ -1087,8 +1090,8 @@ theorem UpperTheory.Top.hostOfField :
         R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps)) :=
   UpperTheory.T3.hostOfFieldOf UpperTheory.T3.shortNorm UpperTheory.T3.smallOne
 
-theorem UpperTheory.Top.supplyOfAdm {w : ℝ} :
-    ∀ ψ : PChar, VWinAt ψ 400 w →
+theorem UpperTheory.Top.supplyOfAdm {w : ℝ} {index : ℝ → ℝ} :
+    ∀ ψ : PChar, VWinAt ψ 400 w index →
     (∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ (s : Scale) (φ : Frame) (H0 : HostAx φ), s.eps = eps → x0 ≤ s.x →
       s.x ^ (2 + 8 * eps) ≤ (φ.ord : ℝ) → (φ.ord : ℝ) ≤ 2 * s.x ^ (2 + 8 * eps) → φ.o = (Level.cyc ψ).o → KerChi ψ H0.toHostRaw →
       ∃ (R : Ranks) (h : R.toFrame = φ), RankVal s R ∧ admitted R (h ▸ H0)) →
@@ -1226,14 +1229,14 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CoprimeRanks.AdmChi =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi", "h": "module\n\npublic import Development.AutomorphicArithmetic.CharacterBoxes.Supply\npublic import Development.AutomorphicArithmetic.CharacterBoxes.HostOfField\npublic import Development.AutomorphicArithmetic.CoprimeRanks.AdmChi\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi", "h": "module\n\npublic import Development.AutomorphicArithmetic.CharacterBoxes.ZeroFreeAllOfTopG\npublic import Development.AutomorphicArithmetic.CharacterBoxes.Supply\npublic import Development.AutomorphicArithmetic.CharacterBoxes.HostOfField\npublic import Development.AutomorphicArithmetic.CoprimeRanks.AdmChi\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.HC GlobalTheory.EX UpperTheory.Top
 
-theorem UpperTheory.Top.supplyChi {w : ℝ} :
-    ∀ ψ : PChar, VWinAt ψ 400 w → HostExW w (GChi ψ).req := by
+theorem UpperTheory.Top.supplyChi {w : ℝ} {index : ℝ → ℝ} :
+    ∀ ψ : PChar, VWinAt ψ 400 w index → HostExW w (GChi ψ).req := by
   intro ψ hψ
   refine supplyOfAdm ψ hψ ?_
   intro eps he0 he1
@@ -1241,6 +1244,15 @@ theorem UpperTheory.Top.supplyChi {w : ℝ} :
   refine ⟨x0, fun s φ H0 hs hx hlo hhi _ _ => ?_⟩
   subst hs
   exact hx0 s φ H0 rfl hx hlo hhi
+
+theorem UpperTheory.Top.zeroFreeAll_of_topG_of_vwin (hT : TopG) (hV : VWin) : ZeroFreeAll := by
+  obtain ⟨CK, _, h⟩ := hV
+  intro ψ _
+  obtain ⟨R, h⟩ := h ψ
+  have hw := one_lt_windowWidth R
+  have hwin : VWinAt ψ 400 (windowWidth R) (fun eps => (3 / 2) * (2 * CK * 400 / eps) ^ R) := by
+    simpa only [windowIndex_windowWidth] using h 400 (windowWidth R) (by norm_num) hw.le
+  exact zeroFreeAbove_of_topG hw hT ψ (supplyChi ψ hwin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CharacterBoxes.SupplyChi =====
@@ -1280,8 +1292,9 @@ section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.Fc
 theorem UpperTheory.Top.zero_free_all_of_green_v_win (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
     (h : Nonempty (_root_.GlobalTheory.Fc.HypsAlt (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) _root_.GlobalTheory.Fc.DefiniteSideCondition)) : Formalism.HC.ZeroFreeAll :=
-  h.elim fun h => UpperTheory.Top.zeroFreeAll_of_topG (la := 3 / 2) (by norm_num)
-    (_root_.GlobalTheory.Fc.forall_goal_of_shape_of_hyps _ _ _ _ (_root_.UpperTheory.Top.shape_closed_link_n_of_green hG) trivial trivial h) fun ψ => UpperTheory.Top.supplyChi ψ (hV ψ 400 (3 / 2) (by norm_num) (by norm_num))
+  h.elim fun h => UpperTheory.Top.zeroFreeAll_of_topG_of_vwin
+    (_root_.GlobalTheory.Fc.forall_goal_of_shape_of_hyps _ _ _ _
+      (_root_.UpperTheory.Top.shape_closed_link_n_of_green hG) trivial trivial h) hV
 theorem UpperTheory.Top.every_character_of_green_v_win (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
     (h : Nonempty (_root_.GlobalTheory.Fc.HypsAlt (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) _root_.GlobalTheory.Fc.DefiniteSideCondition)) : UpperTheory.EveryCharacter :=
   UpperTheory.Top.imprimitive (_root_.UpperTheory.Top.zero_free_all_of_green_v_win hG hV h)
