@@ -840,7 +840,7 @@ theorem ch_top {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {U0 : Typ
     rw [← Finset.sum_sub_distrib]
   obtain ⟨s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11⟩ := h2
   have hle := each_unit_bound_statement Dd C Xpp s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 u
-  have herr := errX5at_le Dd C Xpp eK K h3 h5 u
+  have herr := errX5_le Dd C Xpp eK K h3 h5
   have hnT : Dd.nT = (TT.card : ℝ) := by
     unfold Data.nT
     have := Fintype.card_congr eT
@@ -1281,14 +1281,16 @@ open UpperTheory.Comparison₂ Deduction.CH Formalism Formalism.HC Formalism.D5 
 theorem UpperTheory.Comparison₂.core_gm :
     ∀ (Λ : Level) (eD eL K cHH eK C eps : ℝ), 0 < eps → ∃ x1 : ℝ, ∀ x ≥ x1, ∀ (φ : Frame) (H : HostAx φ) (TT : Finset φ.A),
       EAtH Λ H.toHostRaw TT x eps C → CoreAtH H.toHostRaw TT eD eL K cHH eK eps x →
-        Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + (eD + eL + 7) * eps) := by
+        Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + (max 1 (max eD eL) + 5) * eps) := by
   intro Λ eD eL K cHH eK C eps heps
   have ho : (0 : ℝ) ≤ Λ.o := Nat.cast_nonneg _
   have hc : |(3 * (Λ.o : ℝ) + 1)⁻¹| ≤ 1 := by
     rw [abs_of_nonneg (by positivity)]
     exact inv_le_one_of_one_le₀ (by linarith)
-  obtain ⟨x₁, hx₁⟩ := Deduction.ch_core (max (eD + eL) 0 + 3) eps C (koOf Λ) (3 * (Λ.o : ℝ) + 1)⁻¹ (4 * (Λ.o : ℝ))
-    (by positivity) heps hc
+  let E := max (1 : ℝ) (max eD eL)
+  have hEone : 1 ≤ E := le_max_left _ _
+  obtain ⟨x₁, hx₁⟩ := Deduction.ch_core (E + 1) eps C (koOf Λ) (3 * (Λ.o : ℝ) + 1)⁻¹ (4 * (Λ.o : ℝ))
+    (by linarith) heps hc
   obtain ⟨x₂, hx₂⟩ := large_x_eventually eps K cHH eK heps
   obtain ⟨x₃, hx₃⟩ := Filter.eventually_atTop.1
     ((tendsto_rpow_atTop heps).eventually_ge_atTop (1 + 4 * (Λ.o : ℝ)))
@@ -1301,8 +1303,8 @@ theorem UpperTheory.Comparison₂.core_gm :
   subst hxx hε
   have hLX := hx₂ _ g2
   have hWin' := hWin
-  obtain ⟨⟨w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16, w17, w18, w19, w20, w21, w22,
-    w23, w24, w25, w26, w27, wC⟩, wEta⟩ := hWin'
+  obtain ⟨⟨w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w13, w14, w15, w16, w17, w18, w19, w20, w21, w22,
+    w23, w25, w26, w27, wC⟩, wEta⟩ := hWin'
   obtain ⟨c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17⟩ := wC
   have hLX' : LargeX Dd.x Dd.ε K Cc.cHH eK := by
     refine ⟨hLX.1, le_trans ?_ hLX.2⟩
@@ -1312,15 +1314,13 @@ theorem UpperTheory.Comparison₂.core_gm :
   have hx0 : 0 < Dd.x := by linarith
   have hk : 0 < Dd.k := by linarith
   have ha : 0 ≤ Dd.a := le_trans (by positivity) w5
-  have hE0 : 0 ≤ eD + eL := by linarith
-  rw [max_eq_left hE0] at hx₁
   have hBr : 0 ≤ errorBracketSizeWindows Dd.x Dd.ε (Fintype.card φ.A) TT.card T2.card m Dd.b Dd.k Dd.a := by
     unfold errorBracketSizeWindows
     positivity
-  have hExp : Dd.x ^ (CErr Cc * Dd.ε) ≤ Dd.x ^ ((eD + eL + 3) * Dd.ε) := by
+  have hExp : Dd.x ^ (CErr Cc * Dd.ε) ≤ Dd.x ^ ((E + 1) * Dd.ε) := by
     refine Real.rpow_le_rpow_of_exponent_le w1 (mul_le_mul_of_nonneg_right ?_ w2.le)
     unfold CErr
-    linarith
+    exact add_le_add (max_le_max (le_refl (1 : ℝ)) (max_le_max heD heL)) le_rfl
   have hmain := hx₁ _ g1 φ.A m (arith H.toHostRaw) _ ell N TT T2 a w Dd.b Dd.b' Dd.k Dd.a η X' θ φ.A0
     (keptA Λ H.toHostRaw) (hostFactsS φ H) hb ha hk w7 w8 hSz hThin hCost hRest hT2
     (charsA Λ φ H TT _ _ C ell hx0 hE hell) (fun u hu => by
@@ -1329,16 +1329,17 @@ theorem UpperTheory.Comparison₂.core_gm :
         (mul_le_mul_of_nonneg_right hExp hBr))
   rw [gmA_eq Λ φ H TT _ _ C ell hE hell] at hmain
   have hs := sigA_le Λ φ H TT _ _ C ell hx0 hE hell
-  have h1 : Dd.x ^ ((1 : ℝ) / 2 + Dd.ε) ≤ Dd.x ^ ((1 : ℝ) / 2 + (eD + eL + 3 + 3) * Dd.ε) :=
+  have h1 : Dd.x ^ ((1 : ℝ) / 2 + Dd.ε) ≤ Dd.x ^ ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε) :=
     Real.rpow_le_rpow_of_exponent_le w1 (by nlinarith)
-  have h2 : Dd.x ^ ((1 : ℝ) / 2 + (eD + eL + 7) * Dd.ε)
-      = Dd.x ^ Dd.ε * Dd.x ^ ((1 : ℝ) / 2 + (eD + eL + 3 + 3) * Dd.ε) := by
+  have h2 : Dd.x ^ ((1 : ℝ) / 2 + (E + 5) * Dd.ε)
+      = Dd.x ^ Dd.ε * Dd.x ^ ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε) := by
     rw [← Real.rpow_add hx0]
     congr 1
     ring
   have h3 := mul_le_mul_of_nonneg_right (hx₃ _ g3)
-    (Real.rpow_nonneg hx0.le ((1 : ℝ) / 2 + (eD + eL + 3 + 3) * Dd.ε))
+    (Real.rpow_nonneg hx0.le ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε))
   have h4 := mul_le_mul_of_nonneg_left h1 (show 0 ≤ 4 * (Λ.o : ℝ) by positivity)
+  change Λ.Gm Dd.x ≤ Dd.x ^ ((1 : ℝ) / 2 + (E + 5) * Dd.ε)
   rw [h2]
   linarith
 end -- clump:auto

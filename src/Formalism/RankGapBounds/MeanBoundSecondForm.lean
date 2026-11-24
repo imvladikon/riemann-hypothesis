@@ -169,8 +169,7 @@ def Slopes : Prop :=
 def SlopeIneq : Prop :=
   ∀ u0, 0 ≤ D.del u0 → D.del u0 < 1 → 0 ≤ D.η u0 → 0 ≤ D.e u0 → D.e u0 ≤ 1 / 4 →
     D.s u0 - D.muMinCC u0 ≤ D.HH u0 → 0 < D.HH u0 →
-    D.s u0 - Real.log (Fintype.card (W u0) : ℝ)
-      - (1 - D.del u0)⁻¹ * (4 * D.uF u0 * Real.log (1 + D.HH u0 / D.uF u0)
+    D.s u0 - (1 - D.del u0)⁻¹ * (4 * (D.uF u0 * D.HH u0 / (D.uF u0 + D.HH u0))
           + (D.η u0 + 4 * Real.sqrt (D.e u0)) * D.HH u0) ≤ D.muCC u0
 
 def HHBound : Prop :=

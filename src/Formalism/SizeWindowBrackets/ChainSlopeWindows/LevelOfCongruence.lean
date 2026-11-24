@@ -101,44 +101,6 @@ lemma sub_wmean_le [Nonempty ι] {d X Y : ι → ℝ} (hd : ∀ i, 0 < d i) (c :
 
 end Means
 
-lemma phi_bound {u H X b U : ℝ} (hu : 0 ≤ u) (hH : 0 < H) (hHX : H ≤ X * b) (hb : 0 < b)
-    (hX : 0 < X) (huU : u ≤ U) :
-    u * Real.log (1 + H / u) ≤ Real.log (1 + X) * (U + b) := by
-  have hL : 0 < Real.log (1 + X) := Real.log_pos (by linarith)
-  have hX1 : 0 < 1 + X := by linarith
-  rcases hu.eq_or_lt with h0 | hpos
-  · rw [← h0, zero_mul]
-    exact mul_nonneg hL.le (by linarith)
-  · have hw0 : 0 ≤ (1 + X)⁻¹ := inv_nonneg.mpr hX1.le
-    have hw1 : (1 + X) * (1 + X)⁻¹ = 1 := mul_inv_cancel₀ hX1.ne'
-    have hb0 : 1 - (1 + X)⁻¹ ≤ Real.log (1 + X) := by
-      have := Real.log_le_sub_one_of_pos (inv_pos.mpr hX1)
-      rw [Real.log_inv] at this
-      linarith
-    have h1 : 0 < 1 + H / u := by
-      have := div_nonneg hH.le hpos.le
-      linarith
-    have ha : Real.log (1 + H / u) ≤ Real.log (1 + X) + ((1 + H / u) * (1 + X)⁻¹ - 1) := by
-      have := Real.log_le_sub_one_of_pos (mul_pos h1 (inv_pos.mpr hX1))
-      rw [Real.log_mul h1.ne' (inv_pos.mpr hX1).ne', Real.log_inv] at this
-      linarith
-    have hyu : u * (H / u) = H := by
-      rw [mul_comm, div_mul_eq_mul_div, mul_div_assoc, div_self hpos.ne', mul_one]
-    have i1 := mul_le_mul_of_nonneg_left ha hu
-    have e1 : u * (Real.log (1 + X) + ((1 + H / u) * (1 + X)⁻¹ - 1))
-        = u * Real.log (1 + X) + u * (1 + X)⁻¹ + H * (1 + X)⁻¹ - u := by
-      linear_combination (1 + X)⁻¹ * hyu
-    have i2 := mul_le_mul_of_nonneg_right huU hL.le
-    have hXw : X * (1 + X)⁻¹ = 1 - (1 + X)⁻¹ := by linear_combination hw1
-    have hwle : (1 + X)⁻¹ ≤ 1 := by linarith [mul_nonneg hX.le hw0]
-    have i3 : 0 ≤ u * (1 - (1 + X)⁻¹) := mul_nonneg hu (by linarith)
-    have i4 : H * (1 + X)⁻¹ ≤ b * (1 - (1 + X)⁻¹) := by
-      rw [← hXw]
-      have := mul_le_mul_of_nonneg_right hHX hw0
-      linarith
-    have i5 := mul_le_mul_of_nonneg_left hb0 hb.le
-    linarith
-
 namespace Data
 
 variable {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0)]
@@ -343,24 +305,23 @@ lemma key_identity5 (hv : 0 < D.v) (hf : 0 < f) (u0 : U0) (hw : ∀ j ρ, 0 < D.
 lemma Ga_bound5 (hS : D.HidaSetting C) (hDIV : D.DIV C) (hE : EComp5 D C)
     (hH : D.HComp C) (hCount : Count5 D C) (hSl : D.Slopes C) (hSN : QuotientSlopeBoundsWith D C Xpp)
     (hSI : D.SlopeIneq) (hHH : D.HHBound C) (hFP : D.FParams) (u0 : U0) :
-    D.Ga u0 ≤ D.Main u0 + Real.log (Fintype.card (W u0) : ℝ) + K0v5 D C
-      + wmean (D.d u0) (Lo5 D C Xpp u0)
-      + (1 - D.delBar)⁻¹ * (4 * Real.log (1 + D.x ^ C.cHH)
-          * (D.K3 C + wmean (D.d u0) (Lo5 D C Xpp u0) + D.b)
+    D.Ga u0 ≤ D.Main u0 + K0v5 D C + wmean (D.d u0) (Lo5 D C Xpp u0)
+      + (1 - D.delBar)⁻¹ * (4 * (D.K3 C + wmean (D.d u0) (Lo5 D C Xpp u0))
         + (D.etaBar + 4 * Real.sqrt D.eBar) * (D.x ^ C.cHH * D.b)) := by
   have hsl := s_lower5 D C Xpp hS hDIV hE hCount hSl hSN u0
   have huF0 := D.uF_nonneg C hS u0
   have huF := u_function_le_mean D C Xpp hS hE hH hCount hSl hSN u0
-  obtain ⟨hx, hb, -, -, -, hv, hf, -, hw, -, -, -, -, hdelBar, hetaBar, heBar0, heBar⟩ := hS
+  obtain ⟨-, -, -, -, -, hv, hf, -, hw, -, -, -, -, hdelBar, hetaBar, heBar0, heBar⟩ := hS
   have hid := key_identity5 D C hv hf u0 (hw u0)
   obtain ⟨hdel0, hdelle, heta0, hetale, he0, hele⟩ := hFP u0
   obtain ⟨hHH1, hHH2, hHH3⟩ := hHH u0
   have hSI' := hSI u0 hdel0 (by linarith) heta0 he0 (by linarith) hHH1 hHH2
-  have hX : 0 < D.x ^ C.cHH := Real.rpow_pos_of_pos hx _
-  have hphi := phi_bound huF0 hHH2 hHH3 hb hX huF
-  have hA0 : 0 ≤ 4 * D.uF u0 * Real.log (1 + D.HH u0 / D.uF u0) :=
-    mul_nonneg (by linarith)
-      (Real.log_nonneg (by have := div_nonneg hHH2.le huF0; linarith))
+  have hclip : D.uF u0 * D.HH u0 / (D.uF u0 + D.HH u0) ≤ D.uF u0 :=
+    (div_le_iff₀ (add_pos_of_nonneg_of_pos huF0 hHH2)).2
+      (mul_le_mul_of_nonneg_left (le_add_of_nonneg_left huF0) huF0)
+  have hspread := hclip.trans huF
+  have hA0 : 0 ≤ 4 * (D.uF u0 * D.HH u0 / (D.uF u0 + D.HH u0)) :=
+    mul_nonneg (by norm_num) (div_nonneg (mul_nonneg huF0 hHH2.le) (add_nonneg huF0 hHH2.le))
   have hsq : Real.sqrt (D.e u0) ≤ Real.sqrt D.eBar := Real.sqrt_le_sqrt hele
   have hc0 : 0 ≤ D.η u0 + 4 * Real.sqrt (D.e u0) :=
     add_nonneg heta0 (mul_nonneg (by norm_num) (Real.sqrt_nonneg _))
@@ -376,12 +337,11 @@ lemma Ga_bound5 (hS : D.HidaSetting C) (hDIV : D.DIV C) (hE : EComp5 D C)
   have hB0 : 0 ≤ (D.η u0 + 4 * Real.sqrt (D.e u0)) * D.HH u0 := mul_nonneg hc0 hHH2.le
   have hinv : (1 - D.del u0)⁻¹ ≤ (1 - D.delBar)⁻¹ := inv_anti₀ (by linarith) (by linarith)
   have hinv0 : 0 ≤ (1 - D.delBar)⁻¹ := inv_nonneg.mpr (by linarith)
-  have hPhi : (1 - D.del u0)⁻¹ * (4 * D.uF u0 * Real.log (1 + D.HH u0 / D.uF u0)
+  have hPhi : (1 - D.del u0)⁻¹ * (4 * (D.uF u0 * D.HH u0 / (D.uF u0 + D.HH u0))
         + (D.η u0 + 4 * Real.sqrt (D.e u0)) * D.HH u0)
-      ≤ (1 - D.delBar)⁻¹ * (4 * Real.log (1 + D.x ^ C.cHH)
-          * (D.K3 C + wmean (D.d u0) (Lo5 D C Xpp u0) + D.b)
+      ≤ (1 - D.delBar)⁻¹ * (4 * (D.K3 C + wmean (D.d u0) (Lo5 D C Xpp u0))
         + (D.etaBar + 4 * Real.sqrt D.eBar) * (D.x ^ C.cHH * D.b)) :=
-    calc _ ≤ (1 - D.delBar)⁻¹ * (4 * D.uF u0 * Real.log (1 + D.HH u0 / D.uF u0)
+    calc _ ≤ (1 - D.delBar)⁻¹ * (4 * (D.uF u0 * D.HH u0 / (D.uF u0 + D.HH u0))
           + (D.η u0 + 4 * Real.sqrt (D.e u0)) * D.HH u0) :=
           mul_le_mul_of_nonneg_right hinv (by linarith)
       _ ≤ _ := mul_le_mul_of_nonneg_left (by linarith) hinv0
@@ -406,14 +366,10 @@ theorem each_unit_bound_statement {U0 : Type} [Fintype U0] {W : U0 → Type}
     [∀ u0, Fintype (W u0)] [∀ u0, Nonempty (W u0)] {Top : Type} [Fintype Top] {m f : ℕ}
     (D : Data U0 W Top m f) (C : Consts) (Xpp : ℝ) : PointwiseBoundVariant D C Xpp := by
   intro hS hDIV hE hH hCount hSl hSN hLoss hSI hHH hFP u0
-  have hx : 0 < D.x := hS.1
   have hdelBar : D.delBar < 1 := hS.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hcSl1 : 0 ≤ C.cSl1 := hS.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hinv0 : 0 ≤ (1 - D.delBar)⁻¹ := inv_nonneg.mpr (by linarith)
-  have hX : 0 < D.x ^ C.cHH := Real.rpow_pos_of_pos hx _
-  have hLX : 0 ≤ Real.log (1 + D.x ^ C.cHH) := Real.log_nonneg (by linarith)
-  have hc4 : 0 ≤ (1 - D.delBar)⁻¹ * (4 * Real.log (1 + D.x ^ C.cHH)) :=
-    mul_nonneg hinv0 (mul_nonneg (by norm_num) hLX)
+  have hc4 : 0 ≤ (1 - D.delBar)⁻¹ * 4 := mul_nonneg hinv0 (by norm_num)
   have h1 := Ga_bound5 D C Xpp hS hDIV hE hH hCount hSl hSN hSI hHH hFP u0
   have h2 := weighted_mean_lower_bound_le D C Xpp hS hCount u0
   have hIO := mul_le_mul_of_nonneg_left (hLoss u0).2 hcSl1
@@ -423,7 +379,7 @@ theorem each_unit_bound_statement {U0 : Type} [Fintype U0] {W : U0 → Type}
   have h4 := (hLoss u0).1
   unfold Data.K3 at h1
   unfold K0v5 Data.EDiv at h1
-  unfold ErrX5at UBar5
+  unfold ErrX5 UBar5
   linarith
 
 def C1 : Consts := ⟨1, 1, 1, 1, 1, 1, 1, 1, 1, 1⟩

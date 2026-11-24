@@ -62,7 +62,7 @@ variable {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0)]
 def ErrText (D : Data U0 W Top m f) : ℝ :=
   D.nT * D.a * (1 + (m : ℝ) ^ 2 / D.k) + (m : ℝ) * (D.B0 + D.Nc)
 
-def CErr (C : Consts) : ℝ := C.eDiv + C.eLoss + 3
+def CErr (C : Consts) : ℝ := max 1 (max C.eDiv C.eLoss) + 1
 
 def KBig (K cHH eK : ℝ) : ℝ := 200 * (1 + K) ^ 2 * (1 + cHH) * (1 + eK)
 
@@ -76,13 +76,12 @@ def ErrWindows0 (D : Data U0 W Top m f) (C : Consts) (Xpp eK K : ℝ) : Prop :=
   1 ≤ D.b ∧ D.x * D.b ≤ D.a ∧
   1 ≤ D.nT ∧
   (m : ℝ) ≤ D.x ^ ((1 : ℝ) / 2 + D.ε / 2) ∧ D.x * m ≤ D.k ∧
-  0 ≤ eK ∧ 1 ≤ D.k ∧ D.k ≤ D.x ^ eK ∧ D.k ≤ D.a ∧
+  0 ≤ eK ∧ 1 ≤ D.k ∧ D.k ≤ D.x ^ eK ∧
   0 ≤ D.L ∧ D.L ≤ 2 * D.x ^ D.ε ∧ 0 ≤ D.La ∧ D.La ≤ 2 * D.x ^ D.ε ∧
   0 ≤ D.b' ∧ D.k * D.b' ≤ D.a ∧
   0 ≤ Xpp ∧ Xpp ≤ D.a ∧
   (∀ t, 0 ≤ D.aT t ∧ D.aT t ≤ 2 * D.a) ∧
   0 ≤ D.B0 ∧ 0 ≤ D.Nc ∧
-  (∀ u0, Real.log (Fintype.card (W u0) : ℝ) ≤ (D.k - 3) * Real.log 2) ∧
   D.delBar ≤ 1 / 2 ∧ 0 ≤ D.etaBar ∧ 0 ≤ D.eBar ∧
   ConstsBound C K
 

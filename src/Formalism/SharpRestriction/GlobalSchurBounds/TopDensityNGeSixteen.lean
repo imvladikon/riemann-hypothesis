@@ -627,7 +627,7 @@ theorem frame_at_of {D : D7} (L : SizeData₂ D) (C0 CH sg de eB : ℝ) (hsgx : 
       unfold uFrame
       show (D.div.Nu u).muMax - D.div.h u ≤ _
       linarith
-  exact joint_a_ramified_holds D.what₂.LL (Module.Dual D.what₂.LL D.div.RR.V) D.div.RR.ι κ₁ D.what₂.Word
+  exact joint_a_ramified_clipped_holds D.what₂.LL (Module.Dual D.what₂.LL D.div.RR.V) D.div.RR.ι κ₁ D.what₂.Word
     (fun u => (D.div.Nu u).V) (fun u => (D.div.Nu u).ι) D.div.RR.dualB D.div.RR.dualX D.div.RR.dualL
     (fun u => (D.div.Nu u).b) (fun u => (D.div.Nu u).X) (fun u => (D.div.Nu u).L) D.div.Bk D.div.h v Y Y' Ball γ ιf Bf Vr
     _ _ HH D.what₂.delp D.what₂.Dstar sg η0 η1 e0 de hG hNum hγ hBV hV hD0 hsg0 hsg20 hRs h0 h0' h1 he0 hse hde0 hde4

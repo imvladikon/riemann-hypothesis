@@ -248,7 +248,9 @@ def RamLin : Prop :=
     FrameTraceRatioLinear (fun i => Bf i * Vr i) ga (5 * sg + 3 * Real.sqrt de) ∧
     FrameDeviationLinear (fun i => Bf i * Vr i) ga (2 * e0) ∧ 2 * e0 ≤ 1 / 4 ∧ 0 < ∑ i, Fintype.card (ι i)
 
-def TheoremFLat : Prop :=
+/-- Frame transfer stated with the lattice hypotheses grouped as geometry and slope bounds. -/
+def FlatFrameTransfer (sourceLoss : ℝ → ℝ → ℝ)
+    (conclusion : ℕ → ℝ → ℝ → ℝ → Prop) : Prop :=
   ∀ (K W κ κ₁ I : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K]
     [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     [Fintype κ] [DecidableEq κ] [Fintype κ₁] [DecidableEq κ₁] [Fintype I] [Nonempty I]
@@ -261,10 +263,16 @@ def TheoremFLat : Prop :=
     (Ball : ∀ i, Matrix (κ ⊕ κ₁) (ι i) ℂ) (γ : I → ℝ) (s u HH e η δ : ℝ),
     LatGeom b' X' cc b X N B h v Y Y' Ball δ → LatNum b' X' cc b X N h s u HH →
     (∀ i, 0 < γ i) → FrameDeviationLinear Ball γ e → 0 ≤ e → e ≤ 1 / 4 → FrameTraceRatioLinear Ball γ η → 0 ≤ η →
-    s - Real.log (Fintype.card I : ℝ) -
-        (1 - δ)⁻¹ * (4 * u * Real.log (1 + HH / u) + (η + 4 * Real.sqrt e) * HH) ≤ muDef b' X' cc
+    conclusion (Fintype.card I) s ((1 - δ)⁻¹ * (sourceLoss u HH + (η + 4 * Real.sqrt e) * HH))
+      (muDef b' X' cc)
 
-def JointARam : Prop :=
+def TheoremFLat : Prop :=
+  FlatFrameTransfer (fun u HH => 4 * u * Real.log (1 + HH / u))
+    fun n s loss target => s - Real.log (n : ℝ) - loss ≤ target
+
+/-- The ramified frame estimate, with the source loss and the final weakening specified separately. -/
+def RamifiedFrameTransfer (sourceLoss : ℝ → ℝ → ℝ)
+    (conclusion : ℕ → ℝ → ℝ → ℝ → Prop) : Prop :=
   ∀ (K W κ κ₁ I : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K]
     [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     [Fintype κ] [DecidableEq κ] [Fintype κ₁] [DecidableEq κ₁] [Fintype I] [Nonempty I]
@@ -285,10 +293,13 @@ def JointARam : Prop :=
     0 ≤ de → de ≤ 1 / 4 →
     ∑ i, ((Fintype.card (ιf i) : ℝ) - (Fintype.card (ι i) : ℝ)) ≤ de * RsG ιf →
     InputSG Bf γ Dstar η0 η1 e0 →
-    s - Real.log (Fintype.card I : ℝ) -
-        (1 - δ)⁻¹ * (4 * u * Real.log (1 + HH / u)
-          + ((5 * sg + 3 * Real.sqrt de) + 4 * Real.sqrt (2 * e0)) * HH)
-      ≤ muDef b' X' cc
+    conclusion (Fintype.card I) s
+      ((1 - δ)⁻¹ * (sourceLoss u HH + ((5 * sg + 3 * Real.sqrt de) + 4 * Real.sqrt (2 * e0)) * HH))
+      (muDef b' X' cc)
+
+def JointARam : Prop :=
+  RamifiedFrameTransfer (fun u HH => 4 * u * Real.log (1 + HH / u))
+    fun n s loss target => s - Real.log (n : ℝ) - loss ≤ target
 
 def WordsR : Prop :=
   ∀ (I : Type) [Fintype I] (ιf : I → Type) [∀ i, Fintype (ιf i)] (Dstar sg C0 Gam : ℝ),

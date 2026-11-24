@@ -230,8 +230,8 @@ def Lat_at (D : D7) : Prop :=
 def Frame_at (D : D7) (etaB eB : ℝ) : Prop :=
   ∃ η e : ℝ, 0 ≤ η ∧ η ≤ etaB ∧ 0 ≤ e ∧ e ≤ eB ∧
     ∀ HH : ℝ, sFrame D.div.Nu D.div.h - D.div.RR.muMinDual ≤ HH → 0 < HH →
-      sFrame D.div.Nu D.div.h - Real.log (Fintype.card D.what₂.Word : ℝ) -
-        (1 - D.what₂.delp)⁻¹ * (4 * uFrame D.div.Nu D.div.h * Real.log (1 + HH / uFrame D.div.Nu D.div.h) +
+      sFrame D.div.Nu D.div.h -
+        (1 - D.what₂.delp)⁻¹ * (4 * (uFrame D.div.Nu D.div.h * HH / (uFrame D.div.Nu D.div.h + HH)) +
           (η + 4 * Real.sqrt e) * HH) ≤ D.div.RR.muDual
 
 structure Reads (e : Formalism.HC.Frame) (m : ℕ) (TT : Finset e.A) (a : e.A → ℝ) (w : Fin m → E0 × e.A → ℝ) : Prop where
@@ -723,10 +723,10 @@ theorem data_SlopeIneq
     (h : ∀ u0 : M.e.A, ∀ HH : ℝ,
       sFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h - (Fm.D x (M.pt u0)).div.RR.muMinDual ≤ HH → 0 < HH →
       sFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h -
-          Real.log (Fintype.card (Fm.D x (M.pt u0)).what₂.Word : ℝ) -
-        (1 - (Fm.D x (M.pt u0)).what₂.delp)⁻¹ * (4 * uFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h *
-            Real.log (1 + HH / uFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h) +
-          (ηv u0 + 4 * Real.sqrt (ev u0)) * HH) ≤ (Fm.D x (M.pt u0)).div.RR.muDual) :
+        (1 - (Fm.D x (M.pt u0)).what₂.delp)⁻¹ *
+          (4 * (uFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h * HH /
+              (uFrame (Fm.D x (M.pt u0)).div.Nu (Fm.D x (M.pt u0)).div.h + HH)) +
+            (ηv u0 + 4 * Real.sqrt (ev u0)) * HH) ≤ (Fm.D x (M.pt u0)).div.RR.muDual) :
     (M.data N CH etaB eB ηv ev).SlopeIneq := by
   intro u0 _ _ _ _ _ h6 h7
   rw [M.s_eq u0 N CH etaB eB ηv ev] at h6 ⊢
