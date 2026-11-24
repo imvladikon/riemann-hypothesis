@@ -130,6 +130,26 @@ def logOm : ℝ := D.gam + Real.log (π / D.v) - D.LpL
 
 def Ee (u0 : U0) (u : W u0) : ℝ := ∑ j, D.EeJ u0 u j
 
+/-- Maximum error difference between words over the same base point. -/
+def EeRange : ℝ :=
+  (Finset.univ : Finset (Option (Σ u0, W u0 × W u0))).sup' Finset.univ_nonempty
+    (fun p => p.elim 0 (fun t => |D.Ee t.1 t.2.1 - D.Ee t.1 t.2.2|))
+
+omit [Nonempty U0] [∀ u0, Nonempty (W u0)] [Fintype Top] in
+theorem abs_Ee_sub_le_range (u0 : U0) (u v : W u0) :
+    |D.Ee u0 u - D.Ee u0 v| ≤ D.EeRange := by
+  exact Finset.le_sup' (fun p : Option (Σ q, W q × W q) =>
+    p.elim 0 (fun t => |D.Ee t.1 t.2.1 - D.Ee t.1 t.2.2|))
+    (Finset.mem_univ (some ⟨u0, u, v⟩))
+
+omit [Nonempty U0] [∀ u0, Nonempty (W u0)] [Fintype Top] in
+theorem EeRange_le {b : ℝ} (hb : 0 ≤ b) (h : ∀ u0 (u v : W u0), |D.Ee u0 u - D.Ee u0 v| ≤ b) :
+    D.EeRange ≤ b := by
+  apply Finset.sup'_le
+  rintro (_ | ⟨u0, u, v⟩) _
+  · exact hb
+  · exact h u0 u v
+
 def s (u0 : U0) : ℝ := wmean (D.d u0) (fun u => D.muN u0 u - D.h u0 u)
 
 def uF (u0 : U0) : ℝ :=
@@ -180,7 +200,7 @@ def FParams : Prop :=
     0 ≤ D.e u0 ∧ D.e u0 ≤ D.eBar
 
 def Vvar : ℝ :=
-  2 * (m : ℝ) * C.cE * D.B0 + C.cH * (D.nT * D.a * D.La + (m : ℝ) * D.B0)
+  min D.EeRange (2 * (m : ℝ) * C.cE * D.B0) + C.cH * (D.nT * D.a * D.La + (m : ℝ) * D.B0)
     + D.sumA * (C.cCount * Real.log D.k)
 
 end Data

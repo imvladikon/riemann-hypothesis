@@ -263,12 +263,14 @@ lemma Vvar_bound5 (hS : D.HidaSetting C) (hE : EComp5 D C) (hH : D.HComp C) (hCo
   have hA := D.sumA_nonneg C hS
   have h1 := exponent_le_upper D C hE u0 u'
   have h2 := exponent_ge_lower D C hE u0 u
+  have hEe : D.Ee u0 u' - D.Ee u0 u ≤ min D.EeRange (2 * (m : ℝ) * C.cE * D.B0) :=
+    le_min ((le_abs_self _).trans (D.abs_Ee_sub_le_range u0 u' u)) (by linarith only [h1, h2])
   have h3 := (abs_le.mp (hH u0 u' u)).2
   rw [Data.sum_aT_mul, Data.sum_aT_mul] at h3
   have h4 := (abs_le.mp ((hCount u0 u).2.2 u')).2
   have h5 := mul_le_mul_of_nonneg_left h4 hA
   unfold Data.Vvar
-  linarith
+  linarith only [hEe, h3, h5]
 
 lemma u_function_le_mean (hS : D.HidaSetting C) (hE : EComp5 D C) (hH : D.HComp C) (hCount : Count5 D C)
     (hSl : D.Slopes C) (hSN : QuotientSlopeBoundsWith D C Xpp) (u0 : U0) :

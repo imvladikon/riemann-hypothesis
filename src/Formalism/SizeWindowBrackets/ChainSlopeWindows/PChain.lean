@@ -137,7 +137,9 @@ lemma errX5_le {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0
     hlk0 hlk hdI0 hdI het c1 c1' c2 c2' c3 c3' c4 c4' c5 c5' c6 c6' c7 c7'
     hg
   unfold ErrX5 UBar5 MLo5 Data.Vvar Data.LoP ErrText errCoefficient
-  exact this
+  refine le_trans ?_ this
+  gcongr
+  exact min_le_right _ _
 
 namespace ModelEv
 
