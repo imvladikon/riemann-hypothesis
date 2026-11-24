@@ -228,12 +228,11 @@ theorem GlobalTheory.Top.closed_family_admissible_twist_link_alt : ∀ (𝒜 : F
       Formalism.L2.G.Adm2InU.UsedTuplesBoundByConstant (Fm.D x i) (Fm.L x i) (Fm.ex x hx i).errX C1) ∧ Formalism.MainNotions.WeightDegreeSizes.familySizeBoundAtTypePrime Fm C1)
     (hServ : _root_.Formalism.L2.G.ServT.SelectionServed (D3 3 𝒜) fun Fm hc => sel Fm (d3_a hc)), Closed (D3 3 𝒜) fun Fm _ => ∃ x0 : ℝ, ∀ x, x0 ≤ x → Fm.x1 < x → ∀ i : Fm.Ix x, Formalism.MainNotions.LocalQuadraticParts.adm2 (Fm.D x i) (Fm.L x i) := by
   intro 𝒜 sel aPt0 aPtTw aPer0 aPerTw aP10 aAtG hServ
-  have hDG : Closed (D3 3 𝒜) fun Fm _ => DGamSize Fm := Closed.of_class fun _ _ hc => hc.2.2.2
   have hA2 : Formalism.L2.G.Adm2InU.Adm2InU (D3 3 𝒜) :=
     { pt0 := aPt0, ptTw := aPtTw, per0 := aPer0, perTw := aPerTw,
-      serv := _root_.Formalism.L2.G.ServT.closed_servF_of_servT_of_dGamSize (fun Fm hc => sel Fm (d3_a hc)) hDG hServ,
+      serv := _root_.Formalism.L2.G.ServT.closed_servF_of_servT (fun Fm hc => sel Fm (d3_a hc)) hServ,
       p10 := aP10, dgt := Formalism.MainNotions.closed_eventually_levelPrimeCoprimeStabiliser (WithChN 𝒜) 3, atG := aAtG }
-  exact (Formalism.L2.G.Adm2InU.admissible_family_of_inclusion hA2).imp fun _ _ _ a => a.1
+  exact Formalism.L2.G.Adm2InU.admissible_family_of_inclusion hA2
 end
 end
 end -- clump:auto

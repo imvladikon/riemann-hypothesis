@@ -174,11 +174,6 @@ def Conclusion1 (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K :
     D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) →
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x, InNP X Y K c u w x → ColGe T u μ w x (totS X K Xe ce sp u w)
 
-def ZeroGainValuation (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
-    D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) → GainZero D L (D.what₂.places.resChar w) →
-    ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w, ColGe T u μ w x (lowS L Xe K ce sp u w)
-
 def ColumnValuationAwayFromTypePrimes (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (sp : ℝ) : Prop :=
   L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
     D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) →
@@ -230,20 +225,6 @@ def unitBoundAtTwistedPlaces (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : La
     (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)), D.what₂.places.resChar w ∉ Dx.Qp μ →
     UAt X (W.Yt μ) K (lowS L Xe K ce sp u w) u w hg
 
-def SysAt (D : D7) (Y' : LatInst D) (u : D.what₂.Word) (w : D.what₂.places.Pl)
-    (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)) [Fact (D.what₂.places.resChar w).Prime]
-    (Xs : Formalism.MainNotions.FormalGroupSystem.Sys (D.what₂.places.resChar w)) : Prop :=
-  ∃ std vp unif eO eO_spec dG dG_spec om,
-    Xs = Formalism.MainNotions.FormalGroupSystem.Sys.mk (D.gat u w hg) (Y'.Fl u w hg) (Y'.Lv u w hg) (Y'.Ch u w hg) std vp unif eO eO_spec dG
-      dG_spec om
-
-def SmallInertPrimeSmallOrderLengthBound (D : D7) {Y : LatInst D} (W : TwLoc D Y) : Prop :=
-  ∀ (μ : D.what₂.Tup), DV.Used D μ → ∀ (u : D.what₂.Word) (w : D.what₂.places.Pl)
-    (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)),
-    haveI : Fact (D.what₂.places.resChar w).Prime := ⟨D.what₂.places.resChar_prime w⟩
-    ∀ (Xs : Formalism.MainNotions.FormalGroupSystem.Sys (D.what₂.places.resChar w)) (Ys : Formalism.MainNotions.FormalGroupSystem.Pend Xs), SysAt D (W.Yt μ) u w hg Xs →
-      Formalism.MainNotions.FormalGroupSystem.admitted D Xs Ys → Formalism.MainNotions.FormalGroupSystem.LowTermBound D Xs Ys
-
 def IsotypicPartsInternalDirectSum (D : D7) (Dx : DivX D) (T : TwForms D) (sp : ℝ) : Prop := IntegralKernelValuation D Dx T sp
 
 def OrbitsWithoutOperator (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC)
@@ -267,45 +248,15 @@ def LossAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
       ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w)
 
-def TypePrimeSizeConds (D : D7) (L : SizeData₂ D) (K : Consts) (ce : ErrC) (C : ℝ) : Prop :=
-  (∀ j ∈ SizeData₂.lifts D, ∀ u : D.what₂.Word, ∑ t : HH D, ctD D u j t ≤
-    2 * (D.host.TT.card : ℝ) * L.sc.b + 2 * (D.R.f : ℝ) * D.R.k * L.sc.b') ∧
-  FactDGam D C ∧
-  (∀ j ∈ SizeData₂.lifts D, ∀ S : Finset ℕ,
-    (∀ p ∈ S, p.Prime ∧ (IsResidueClassZero D p ∨ IsSg D p) ∧ ¬ (IsResidueClassZero D p ∧ hP D p = 0) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n) →
-    ∑ p ∈ S, Real.log p * (EatI L K ce j p - max 0 (FkindA D j p)) ≤
-      C * (D.R.f : ℝ) * L.sc.b * Real.log (L.sc.X'' D.R.n))
-
-def admitted (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (Dx : DivX D) (T : TwForms D)
-    (W : TwLoc D Y) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (sp : ℝ) : Prop :=
-  unitBoundAtTwistedPlaces D L X Y K Dx W lev Xe ce sp ∧ SmallInertPrimeSmallOrderLengthBound D W ∧ IsotypicPartsInternalDirectSum D Dx T sp ∧ OrbitsWithoutOperator D L X K Dx T lev Xe ce sp ∧
-    MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp ∧ LossAtDiscriminant D L K Dx T lev Xe ce sp
-
-def Conclusion₂ (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (c : LatCmp D) (Dx : DivX D)
-    (T : TwForms D) (W : TwLoc D Y) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (sp : ℝ) : Prop :=
-  Conclusion1 D L X Y K c Dx T lev Xe ce sp ∧ ZeroGainValuation D L K Dx T lev Xe ce sp ∧ ColumnValuationAwayFromTypePrimes D L K Dx T lev Xe ce sp ∧
-    TupleLatticeValuation D L X Y K Dx W lev Xe ce sp
-
-def Stmt (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (c : LatCmp D) (Dx : DivX D) : Prop :=
-  ∀ (T : TwForms D) (W : TwLoc D Y) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC), CmpV c Dx T W → ∀ sp ∈ ({0, 1} : Set ℝ),
-    admitted D L X Y K Dx T W lev Xe ce sp → Conclusion₂ D L X Y K c Dx T W lev Xe ce sp
-
-def Serv (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (c : LatCmp D) (Dx : DivX D)
-    (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (C : ℝ) : Prop :=
-  TypePrimeSizeConds D L K ce C ∧ Conclusion1 D L X Y K c Dx T lev Xe ce 1 ∧ ColumnValuationAwayFromTypePrimes D L K Dx T lev Xe ce 1
-
 def ServF {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) : Prop :=
-  ∃ C : ℝ, 0 ≤ C ∧ ∃ x0 : ℝ, ∀ x ≥ x0, ∀ (hx : Fm.x1 < x) (i : Fm.Ix x),
-    Serv (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (Fm.Gy x i) Fm.GK (Fm.ex x hx i).cmp (Fm.X x i) (Fm.ex x hx i).tw
-      (Fm.ex x hx i).lev (Fm.ex x hx i).errX Fm.cX.err C
+  ∃ x0 : ℝ, ∀ x ≥ x0, ∀ (hx : Fm.x1 < x) (i : Fm.Ix x),
+    Conclusion1 (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (Fm.Gy x i) Fm.GK (Fm.ex x hx i).cmp (Fm.X x i) (Fm.ex x hx i).tw
+      (Fm.ex x hx i).lev (Fm.ex x hx i).errX Fm.cX.err 1
 
 section Relations
 
 variable {X : Inst D L} {Y : LatInst D} {K : Consts} {c : LatCmp D} {Dx : DivX D} {T : TwForms D}
   {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
-
-theorem zero_gain_of_no_served_orbit (h : ColumnValuationAwayFromTypePrimes D L K Dx T lev Xe ce sp) : ZeroGainValuation D L K Dx T lev Xe ce sp := by
-  exact fun hF hE u w h1 h2 _ μ hμ hq x hx => h hF hE u w h1 h2 μ hμ hq x hx
 
 theorem lowS_eq_lowFE (hE : L.EDef Xe K ce) (u : D.what₂.Word) (w : D.what₂.places.Pl) :
     lowS L Xe K ce sp u w = lowFE L u w + sp * vDG D u w := by
@@ -376,16 +327,6 @@ theorem kernel_valuation_served (W : TwLoc D Y) (hV : CmpV c Dx T W) (hG : Tuple
       · exact le_rfl
       · exact gainP_nonneg' _ _ _ _ _ _
   linarith
-
-theorem local_theorem_of_statement (W : TwLoc D Y) (h : Formalism.MainNotions.FormalGroupSystem.ErrorExponentStatement D) : SmallInertPrimeSmallOrderLengthBound D W := by
-  intro μ _ u w hg Xs Ys hXs hA
-  obtain ⟨std, vp, unif, eO, eO_spec, dG, dG_spec, om, rfl⟩ := hXs
-  exact (@h u w ⟨D.what₂.places.resChar_prime w⟩ hg _ Ys rfl hA).2.2.2.2.2.2.2.2.2.2
-
-theorem serv_of {C : ℝ} (hS : Stmt D L X Y K c Dx) (W : TwLoc D Y) (hV : CmpV c Dx T W)
-    (hA : admitted D L X Y K Dx T W lev Xe ce 1) (hZ : TypePrimeSizeConds D L K ce C) : Serv D L X Y K c Dx T lev Xe ce C := by
-  have h1 := hS T W lev Xe ce hV 1 (by simp) hA
-  exact ⟨hZ, h1.1, h1.2.2.1⟩
 
 end Relations
 

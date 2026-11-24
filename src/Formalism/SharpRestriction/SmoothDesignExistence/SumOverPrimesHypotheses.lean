@@ -1,16 +1,11 @@
 module
 
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Development
-public import Formalism.PeriodIntegrals.SzCt
-public import Formalism.PeriodIntegrals.SzEatI
-public import Development.AutomorphicArithmetic.OrbitLabellings.SzEatIFree
 public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Formalism.SharpRestriction.GrowthBounds.WeilJacquetShalikaLaw
 public import Formalism.LocalRingCardinality.HostCls
 public import Formalism.SharpRestriction.GrowthBounds.LatticeSystems
 public import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
-public import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound
 public import Formalism.SharpRestriction.GrowthBounds.Joints
 public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NdBNonneg
@@ -23,13 +18,13 @@ public import Formalism.SharpRestriction.Divisibility.ChainOperators.GenericFram
 public import Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds
 public import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.LocalBoundElevenComparison
 public import Formalism.SharpRestriction.Divisibility.LocalNonemptiness.OrbitAdmissibleOfSplitBound
+public import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PrvAndKernelCommutationUpToUnitsOfRests
 public import Formalism.SharpRestriction.GrowthBounds.PlaneCountTheoremWithConstants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -48,8 +43,6 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -63,464 +56,16 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Mathlib.Tactic.Basify
-import Std.Tactic.BVDecide.Normalize.Prop
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.ENatToNat
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeAbsorption.SizeDel
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Formalism.SharpRestriction.CuspSpanNormBounds.SBridge
+import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ReduceModChar
+import Std.Tactic.BVDecide.Normalize.Prop
 import Aesop.Frontend.Tactic
+import Mathlib.Tactic.Linter.Style
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.FirstCoordinateLeThreeScale, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Places, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SizeFacts, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SzCtOf, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzConstantTerm, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzEatI, Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab, Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers, Formalism.SharpRestriction.GrowthBounds.JointsTw, Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx, Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.FirstCoordinateLeThreeScale =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.FirstCoordinateLeThreeScale", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Development\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open Formalism.BasicNotions Formalism.MainNotions.G
-open scoped BigOperators
-
-namespace PI.SzCt.UnitaryGroupMassFormula
-
-theorem five_le_k (D : D7) : 5 ≤ D.R.k := by
-  have h1 := D.R.m_add_three_le_k
-  have h2 := D.R.two_le_m
-  omega
-
-theorem cloudU_le (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) (τ : D.what₂.Tau) (i : ℕ) (h : i < D.R.k)
-    (h1 : 1 ≤ i) : (((D.hcW u τ).u ⟨i, h⟩ : ℚ) : ℝ) ≤ L.Sc := by
-  by_cases hi : i + 1 < D.R.k
-  · exact (L.cloud_u u τ ⟨i, h⟩ h1 hi).2
-  · have hk := five_le_k D
-    have hik : i = D.R.k - 1 := by omega
-    have hgt := (D.hc τ).v_gt_u ⟨D.R.k - 2, by omega⟩
-    have hv := (L.cloud_v τ ⟨D.R.k - 2, by omega⟩).2
-    have hlast := D.hcW_last u τ (by omega)
-    have e1 : (⟨i, h⟩ : Fin D.R.k) = ⟨D.R.k - 1, by omega⟩ := Fin.ext hik
-    have hgt' : (D.hc τ).u ⟨D.R.k - 1, by omega⟩ < (D.hc τ).v ⟨D.R.k - 2, by omega⟩ := by
-      have e2 : (⟨D.R.k - 1, by omega⟩ : Fin D.R.k) = ⟨D.R.k - 2 + 1, by omega⟩ :=
-        Fin.ext (show D.R.k - 1 = D.R.k - 2 + 1 by omega)
-      rw [e2]
-      exact hgt
-    have hgtR : (((D.hc τ).u ⟨D.R.k - 1, by omega⟩ : ℚ) : ℝ) <
-        (((D.hc τ).v ⟨D.R.k - 2, by omega⟩ : ℚ) : ℝ) := by exact_mod_cast hgt'
-    rw [e1, hlast]
-    linarith
-
-private lemma wSz_eq_wj' (D : D7) (j : ℕ) (τ : D.what₂.Tau) (hj1 : 1 ≤ j) (hj2 : j ≤ D.R.m) :
-    DV.wSz D j τ = wj D j τ := by
-  unfold DV.wSz wj
-  rw [dite_eq_left ⟨hj1, hj2⟩, dite_eq_left (by omega : j - 1 < D.R.m)]
-
-private lemma exists_wj_mem_Icc_add_etaSz (D : D7) (L : SizeData₂ D) (τ : D.what₂.Tau) :
-    ∃ lo : ℝ, ∀ j, 1 ≤ j → j ≤ D.R.m → lo ≤ wj D j τ ∧ wj D j τ ≤ lo + L.etaSz + 1 := by
-  have hPsi : (D.eTau τ : D.R.GG) ∈ D.R.Psi := (D.eTau τ).2
-  by_cases htop : (D.eTau τ : D.R.GG) ∈ D.host.topPlaces
-  · unfold Formalism.BasicNotions.Host.topPlaces at htop
-    rw [Finset.mem_image] at htop
-    obtain ⟨t, ht, hteq⟩ := htop
-    refine ⟨(L.bT ⟨t, ht⟩ : ℝ) + L.sc.b' / L.sc.x, fun j hj1 hj2 => ?_⟩
-    have hw := L.win_top j hj1 hj2 τ ⟨t, ht⟩ hteq.symm
-    constructor <;> linarith [hw.1, hw.2]
-  · by_cases hthick : (D.eTau τ : D.R.GG) ∈ D.host.thickPlaces
-    · refine ⟨L.sc.b, fun j hj1 hj2 => ?_⟩
-      have hw := L.win_thick j hj1 hj2 τ hthick
-      constructor <;> linarith [hw.1, hw.2]
-    · have hthin : D.host.IsThin (D.eTau τ : D.R.GG) := ⟨hPsi, htop, hthick⟩
-      refine ⟨L.sc.w'' D.R.n, fun j hj1 hj2 => ?_⟩
-      have hw := L.win_thin j hj1 hj2 τ hthin
-      constructor <;> linarith [hw.1, hw.2]
-
-private lemma hcW_e_cast_eq_wj_succ (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) (q : ℕ) (hq : q < D.R.m) :
-    (((D.hcW u τ).e ⟨q, hq⟩ : ℚ) : ℝ) = wj D (q + 1) τ := by
-  unfold wj
-  rw [dite_eq_left (by omega : q + 1 - 1 < D.R.m), D.hcW_e u τ]
-  have e : (⟨q + 1 - 1, by omega⟩ : Fin D.R.m) = ⟨q, hq⟩ := Fin.ext (show q + 1 - 1 = q by omega)
-  rw [e]
-
-theorem blocks_le (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) (j : ℕ) (τ : D.what₂.Tau)
-    (hj : 1 ≤ j) (hm : j ≤ D.R.m) :
-    ∑ i ∈ Finset.Ico D.R.k (D.R.N (j - 1)), DV.nuRow D u j τ i ≤
-      2 * (D.R.m : ℝ) * ((D.R.t : ℝ) + 1) * L.etaSz := by
-  obtain ⟨lo, hlo⟩ := exists_wj_mem_Icc_add_etaSz D L τ
-  have hη : 0 ≤ L.etaSz := L.etaSz_pos.le
-  have ht0 : (0 : ℝ) ≤ (D.R.t : ℝ) := Nat.cast_nonneg _
-  have hN1 : D.R.N (j - 1) = D.R.k + (j - 1) * (D.R.t + 1) := rfl
-  have hterm : ∀ i ∈ Finset.Ico D.R.k (D.R.N (j - 1)), DV.nuRow D u j τ i ≤ L.etaSz := by
-    intro i hi
-    rw [Finset.mem_Ico] at hi
-    obtain ⟨hi1, hi2⟩ := hi
-    have ht1 : 0 < D.R.t + 1 := Nat.succ_pos _
-    have hlt : i - D.R.k < (j - 1) * (D.R.t + 1) := by rw [hN1] at hi2; omega
-    have hq_lt : (i - D.R.k) / (D.R.t + 1) < j - 1 := (Nat.div_lt_iff_lt_mul ht1).2 hlt
-    have hqm : (i - D.R.k) / (D.R.t + 1) < D.R.m := lt_of_lt_of_le hq_lt (by omega)
-    have hdm := Nat.div_add_mod (i - D.R.k) (D.R.t + 1)
-    have hnk : ¬ i < D.R.k := by omega
-    have he := hcW_e_cast_eq_wj_succ D u τ _ hqm
-    have hnat : ∀ q : ℕ, q < j - 1 → q + 1 ≤ D.R.m ∧ q + 2 ≤ j := fun q h1 => by omega
-    obtain ⟨hq1, hq2⟩ := hnat _ hq_lt
-    obtain ⟨hlo0, -⟩ := hlo ((i - D.R.k) / (D.R.t + 1) + 1) (Nat.succ_pos _) hq1
-    obtain ⟨-, hhi⟩ := hlo j hj hm
-    have hw := wSz_eq_wj' D j τ hj hm
-    have hiR : (i : ℝ) = (D.R.k : ℝ) + ((D.R.t : ℝ) + 1) * (((i - D.R.k) / (D.R.t + 1) : ℕ) : ℝ) +
-        (((i - D.R.k) % (D.R.t + 1) : ℕ) : ℝ) := by
-      have hsplit : ∀ A : ℕ, A = i - D.R.k → i = D.R.k + A := fun A hA => by omega
-      have h' := hsplit _ hdm
-      conv_lhs => rw [h']
-      push_cast
-      ring
-    have hN1R : (D.R.N (j - 1) : ℝ) = (D.R.k : ℝ) + ((j : ℝ) - 1) * ((D.R.t : ℝ) + 1) := by
-      rw [hN1]
-      push_cast [Nat.cast_sub hj]
-      ring
-    have hN2R : (D.R.N j : ℝ) = (D.R.k : ℝ) + (j : ℝ) * ((D.R.t : ℝ) + 1) := by
-      show ((D.R.k + j * (D.R.t + 1) : ℕ) : ℝ) = _
-      push_cast
-      ring
-    have hqj : ((((i - D.R.k) / (D.R.t + 1) : ℕ) : ℝ)) + 2 ≤ (j : ℝ) := by
-      exact_mod_cast hq2
-    have hprod : 0 ≤ ((D.R.t : ℝ) + 1) * ((j : ℝ) - (((i - D.R.k) / (D.R.t + 1) : ℕ) : ℝ) - 2) :=
-      mul_nonneg (by linarith) (by linarith)
-    unfold DV.nuRow DV.srcPar
-    rw [dite_eq_right hnk, dite_eq_left hqm, hw, hN1R, hN2R, hiR]
-    push_cast
-    nlinarith
-  calc ∑ i ∈ Finset.Ico D.R.k (D.R.N (j - 1)), DV.nuRow D u j τ i
-      ≤ ∑ _i ∈ Finset.Ico D.R.k (D.R.N (j - 1)), L.etaSz := Finset.sum_le_sum hterm
-    _ = ((D.R.N (j - 1) - D.R.k : ℕ) : ℝ) * L.etaSz := by
-        rw [Finset.sum_const, Nat.card_Ico, nsmul_eq_mul]
-    _ ≤ 2 * (D.R.m : ℝ) * ((D.R.t : ℝ) + 1) * L.etaSz := by
-        have hN : D.R.N (j - 1) - D.R.k = (j - 1) * (D.R.t + 1) := by
-          rw [hN1]
-          exact Nat.add_sub_cancel_left _ _
-        rw [hN, Nat.cast_mul, Nat.cast_sub hj]
-        push_cast
-        have hjm : (j : ℝ) ≤ (D.R.m : ℝ) := by exact_mod_cast hm
-        have hj1 : (1 : ℝ) ≤ (j : ℝ) := by exact_mod_cast hj
-        have hp : 0 ≤ (2 * (D.R.m : ℝ) - ((j : ℝ) - 1)) * ((D.R.t : ℝ) + 1) * L.etaSz :=
-          mul_nonneg (mul_nonneg (by linarith) (by linarith)) hη
-        nlinarith
-
-theorem nuAbs_split (D : D7) (u : D.what₂.Word) (j : ℕ) (τ : D.what₂.Tau) :
-    nuAbs D u j τ = (∑ i ∈ Finset.range (D.R.k - 1), DV.nuRow D u j τ (i + 1)) + DV.nuRow D u j τ 0 +
-      ∑ i ∈ Finset.Ico D.R.k (D.R.N (j - 1)), DV.nuRow D u j τ i := by
-  have hk := five_le_k D
-  have hN : D.R.k ≤ D.R.N (j - 1) := by
-    unfold Formalism.BasicNotions.Ranks.N
-    exact Nat.le_add_right _ _
-  have hr : ∑ i ∈ Finset.range D.R.k, DV.nuRow D u j τ i =
-      (∑ i ∈ Finset.range (D.R.k - 1), DV.nuRow D u j τ (i + 1)) + DV.nuRow D u j τ 0 := by
-    have h := Finset.sum_range_succ' (fun i => DV.nuRow D u j τ i) (D.R.k - 1)
-    rw [Nat.sub_add_cancel (by omega : 1 ≤ D.R.k)] at h
-    exact h
-  unfold nuAbs
-  rw [← Finset.sum_range_add_sum_Ico _ hN, hr]
-
-private lemma nuRow_le_Sc_add_wSz (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) (j : ℕ) (τ : D.what₂.Tau) (i : ℕ)
-    (h1 : 1 ≤ i) (hi : i < D.R.k) : DV.nuRow D u j τ i ≤ L.Sc + DV.wSz D j τ := by
-  have hu := cloudU_le D L u τ i hi h1
-  have hN1 : (D.R.k : ℝ) ≤ (D.R.N (j - 1) : ℝ) := by
-    unfold Formalism.BasicNotions.Ranks.N
-    exact_mod_cast Nat.le_add_right _ _
-  have hN2 : (D.R.k : ℝ) ≤ (D.R.N j : ℝ) := by
-    unfold Formalism.BasicNotions.Ranks.N
-    exact_mod_cast Nat.le_add_right _ _
-  have hik : (i : ℝ) + 1 ≤ (D.R.k : ℝ) := by exact_mod_cast hi
-  unfold DV.nuRow DV.srcPar
-  rw [dite_eq_left hi]
-  linarith
-
-theorem cloudRows_le (D : D7) (L : SizeData₂ D) (u : D.what₂.Word) (j : ℕ) (τ : D.what₂.Tau) :
-    ∑ i ∈ Finset.range (D.R.k - 1), DV.nuRow D u j τ (i + 1) ≤
-      ((D.R.k : ℝ) - 1) * (L.Sc + DV.wSz D j τ) := by
-  have hk := five_le_k D
-  calc ∑ i ∈ Finset.range (D.R.k - 1), DV.nuRow D u j τ (i + 1)
-      ≤ ∑ _i ∈ Finset.range (D.R.k - 1), (L.Sc + DV.wSz D j τ) := by
-        apply Finset.sum_le_sum
-        intro i hi
-        rw [Finset.mem_range] at hi
-        exact nuRow_le_Sc_add_wSz D L u j τ (i + 1) (by omega) (by omega)
-    _ = ((D.R.k : ℝ) - 1) * (L.Sc + DV.wSz D j τ) := by
-        rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul, Nat.cast_sub (by omega : 1 ≤ D.R.k)]
-        push_cast
-        ring
-
-theorem rowA : RowA := by
-  intro D L j hj u τ
-  simp only [SizeData₂.lifts, Finset.mem_Icc] at hj
-  obtain ⟨hj1, hj2⟩ := hj
-  have hw := wSz_eq_wj' D j τ hj1 hj2
-  have hsplit := nuAbs_split D u j τ
-  have hcl := cloudRows_le D L u j τ
-  have hbl := blocks_le D L u j τ hj1 hj2
-  rw [hw] at hcl
-  rw [hsplit]
-  linarith
-
-theorem first_coordinate_le_three_scale (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (u : D.what₂.Word) (τ : D.what₂.Tau)
-    (hτ : (D.eTau τ : D.R.GG) ∉ D.host.topPlaces) :
-    (((D.hcW u τ).u ⟨0, by have := five_le_k D; omega⟩ : ℚ) : ℝ) ≤ 3 * L.Sc := by
-  have hk := five_le_k D
-  have hfirst := D.hcW_first u τ (by omega)
-  have h2 := P.cloud_place_bound τ (by omega) hτ
-  have hv := (L.cloud_v τ ⟨0, by omega⟩).2
-  rw [hfirst]
-  push_cast at h2
-  linarith
-
-theorem rowC : RowC := by
-  intro D L P j hj u τ hτ
-  simp only [SizeData₂.lifts, Finset.mem_Icc] at hj
-  obtain ⟨hj1, hj2⟩ := hj
-  have hk := five_le_k D
-  have hu := first_coordinate_le_three_scale D L P u τ hτ
-  have hw := wSz_eq_wj' D j τ hj1 hj2
-  have hN1 : (D.R.k : ℝ) ≤ (D.R.N (j - 1) : ℝ) := by
-    unfold Formalism.BasicNotions.Ranks.N
-    exact_mod_cast Nat.le_add_right _ _
-  have hN2 : (D.R.k : ℝ) ≤ (D.R.N j : ℝ) := by
-    unfold Formalism.BasicNotions.Ranks.N
-    exact_mod_cast Nat.le_add_right _ _
-  have hk5 : (5 : ℝ) ≤ (D.R.k : ℝ) := by exact_mod_cast hk
-  unfold DV.nuRow DV.srcPar
-  rw [dite_eq_left (by omega : 0 < D.R.k), hw]
-  push_cast
-  linarith
-
-end PI.SzCt.UnitaryGroupMassFormula
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.FirstCoordinateLeThreeScale =====
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Places =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Places", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Development\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-namespace PI.SzCt.UnitaryGroupMassFormula
-
-open Formalism.BasicNotions Formalism.MainNotions.G
-
-theorem eTau_tauPl (D : D7) (z : Bool × HH D) :
-    (D.eTau (tauPl D z) : D.R.GG) = plGG D z := by
-  simp [Formalism.BasicNotions.tauPl]
-
-theorem ramifiedTau1_ne_ramifiedTau2 (φ : Formalism.HC.Frame) (a b : φ.A) : φ.tau1 a ≠ φ.tau2 b := by
-  intro h
-  have h1 := congrArg (fun x => x.1.1) h
-  simp only [Formalism.HC.Frame.tau1, Formalism.HC.Frame.tau2] at h1
-  revert h1
-  decide
-
-theorem tau1_injective_alt (φ : Formalism.HC.Frame) {a b : φ.A} (h : φ.tau1 a = φ.tau1 b) : a = b := by
-  simpa [Formalism.HC.Frame.tau1, Formalism.HC.Frame.iota] using h
-
-theorem placeFacts : PlaceFacts := by
-  intro D
-  have h1 : ∀ t : HH D, (D.eTau (tauPl D (false, t)) : D.R.GG) = D.R.tau1 t := by
-    intro t; rw [eTau_tauPl]; simp [plGG]
-  have h2 : ∀ t : HH D, (D.eTau (tauPl D (true, t)) : D.R.GG) = D.R.tau2 t := by
-    intro t; rw [eTau_tauPl]; simp [plGG]
-  have hPsi : ∀ z : Bool × HH D, (D.eTau (tauPl D z) : D.R.GG) ∈ D.R.Psi :=
-    fun z => (D.eTau (tauPl D z)).2
-  have hnt : ∀ t : HH D, (D.eTau (tauPl D (true, t)) : D.R.GG) ∉ D.host.topPlaces := by
-    intro t h
-    rw [h2] at h
-    unfold Host.topPlaces at h
-    obtain ⟨a, -, ha⟩ := Finset.mem_image.1 h
-    exact ramifiedTau1_ne_ramifiedTau2 _ _ _ ha
-  refine ⟨h1, ?_, hnt, ?_⟩
-  · intro t ht
-    refine ⟨hPsi _, ?_, ?_⟩
-    · intro h
-      rw [h1] at h
-      unfold Host.topPlaces at h
-      obtain ⟨a, ha, hat⟩ := Finset.mem_image.1 h
-      exact ht (tau1_injective_alt _ hat ▸ ha)
-    · intro h
-      rw [h1] at h
-      unfold Host.thickPlaces at h
-      obtain ⟨a, -, ha⟩ := Finset.mem_image.1 h
-      exact ramifiedTau1_ne_ramifiedTau2 _ _ _ ha.symm
-  · intro t
-    by_cases h : (D.eTau (tauPl D (true, t)) : D.R.GG) ∈ D.host.thickPlaces
-    · exact Or.inl h
-    · exact Or.inr ⟨hPsi _, hnt t, h⟩
-
-end PI.SzCt.UnitaryGroupMassFormula
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Places =====
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SizeFacts =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SizeFacts", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Development\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-namespace PI.SzCt.UnitaryGroupMassFormula
-
-open Formalism.BasicNotions Formalism.MainNotions.G
-
-theorem sizeFacts : SizeFacts := by
-  intro D L hSz hx
-  obtain ⟨-, -, -, -, -, -, -, -, hLa, hRho, hBot, -, -, hEta, -, -, hDel, -⟩ := hSz
-  have hx0 : (0 : ℝ) < L.sc.x := by linarith
-  have hx1 : (1 : ℝ) ≤ L.sc.x := by linarith
-  have hb1 : 1 ≤ L.sc.b := by
-    unfold Scale.b
-    exact Real.one_le_exp (Real.rpow_nonneg hx0.le _)
-  have hb'0 : 0 ≤ L.sc.b' := by
-    unfold Scale.b' Scale.a
-    exact div_nonneg (mul_nonneg hx0.le (by linarith)) (Real.exp_pos _).le
-  have hn1 : (1 : ℝ) ≤ D.R.n := by
-    unfold Formalism.BasicNotions.Ranks.n; exact_mod_cast D.R.ord_pos
-  have ht1 : (1 : ℝ) ≤ D.R.t := by exact_mod_cast D.R.t_odd.pos
-  have hη := L.etaSz_pos
-  refine ⟨?_, ?_, hDel.2.2.2.1, ?_, hEta.2.2.2.2.1, hb1, hb'0⟩
-  · intro t
-    have hLa0 : 0 ≤ L.LaG := le_trans (Real.rpow_nonneg hx0.le _) hLa.1
-    have hk0 : (0 : ℝ) ≤ D.R.k := Nat.cast_nonneg _
-    set Q := Formalism.MainNotions.szNst L * L.sc.x ^ L.sc.eps * L.LaG / D.R.k with hQ
-    have h2 : 0 ≤ L.sc.x ^ Formalism.MainNotions.szTh L * Real.log L.sc.x * L.LaG / D.R.k :=
-      div_nonneg (mul_nonneg (mul_nonneg (Real.rpow_nonneg hx0.le _) (Real.log_nonneg hx1)) hLa0) hk0
-    have h3 : L.sc.x ^ (-2 : ℝ) ≤ 1 := Real.rpow_le_one_of_one_le_of_nonpos hx1 (by norm_num)
-    have h4 : 4 * Q ≤ 1 := by
-      have : 4 * Formalism.MainNotions.szNst L * L.sc.x ^ L.sc.eps * L.LaG / D.R.k = 4 * Q := by rw [hQ]; ring
-      unfold Formalism.MainNotions.SizeRho at hRho
-      linarith
-    have h5 := hBot t
-    have h6 : Formalism.MainNotions.szNst L * L.sc.x ^ L.sc.eps * L.LaG * L.sc.b' / D.R.k = Q * L.sc.b' := by
-      rw [hQ]; ring
-    rw [h6] at h5
-    nlinarith
-  · have h := hEta.2.2.2.1
-    calc L.etaSz ≤ (D.R.t : ℝ) * L.etaSz := le_mul_of_one_le_left hη.le ht1
-      _ ≤ _ := h
-  · unfold Scale.w''
-    exact div_le_div_of_nonneg_left hb'0 hx0 (le_mul_of_one_le_right hx0.le hn1)
-
-end PI.SzCt.UnitaryGroupMassFormula
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SizeFacts =====
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SzCtOf =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SzCtOf", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Development\npublic import Formalism.PeriodIntegrals.SzCt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-namespace PI.SzCt.UnitaryGroupMassFormula
-
-open Formalism.BasicNotions Formalism.MainNotions.G
-
-theorem ct_le (hA : RowA) (hC : RowC) (hS : SizeFacts) (hP : PlaceFacts)
-    (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (hx : 3 ≤ L.sc.x) (hSz : Formalism.MainNotions.SizesAt L)
-    (j : ℕ) (hj : j ∈ SizeData₂.lifts D) (u : D.what₂.Word) (t : HH D) :
-    ctD D u j t ≤ (if t ∈ D.host.TT then 2 * L.sc.b else 0) + 4 * (D.R.k : ℝ) * L.sc.b' := by
-  obtain ⟨hbT, hη, hkSc, hw'', hmη, hb1, hb'0⟩ := hS D L hSz hx
-  obtain ⟨hP1, hP2, hP3, hP4⟩ := hP D
-  obtain ⟨hj1, hj2⟩ := Finset.mem_Icc.1 hj
-  have hk5 : (5 : ℝ) ≤ (D.R.k : ℝ) := by exact_mod_cast five_le_k D
-  have hk1 : (0 : ℝ) ≤ (D.R.k : ℝ) - 1 := by linarith
-  have hSc := L.Sc_pos.le
-  have hbx : L.sc.b' / L.sc.x ≤ L.sc.b' / 3 :=
-    div_le_div_of_nonneg_left hb'0 (by norm_num) hx
-  have hw := hw''.trans hbx
-  have hw0 : 0 ≤ L.sc.w'' D.R.n := (mul_nonneg (Nat.cast_nonneg _) hSc).trans hkSc
-  have hη' := hη.trans ((div_le_self hw0 (by linarith)).trans hw)
-  have h3Sc := (mul_le_mul_of_nonneg_right (by linarith : (3 : ℝ) ≤ D.R.k) hSc).trans (hkSc.trans hw)
-  have hkb' := mul_le_mul_of_nonneg_right hk5 hb'0
-  have htail := hA D L j hj u (tauPl D (false, t))
-  by_cases ht : t ∈ D.host.TT
-  · simp only [ctD, ite_eq_left ht]
-    have hfirst := (min_le_right (DV.nuRow D u j (tauPl D (false, t)) 0) _).trans
-      (hC D L P j hj u (tauPl D (true, t)) (hP3 t))
-    have hwF : wj D j (tauPl D (false, t)) ≤ 2 * L.sc.b' := by
-      have htop := (L.win_top j hj1 hj2 _ ⟨t, ht⟩ (hP1 t)).2
-      linarith [hbT ⟨t, ht⟩]
-    have hwT : wj D j (tauPl D (true, t)) ≤ 2 * L.sc.b + L.sc.b' := by
-      rcases hP4 t with h | h
-      · linarith [(L.win_thick j hj1 hj2 _ h).2]
-      · linarith [(L.win_thin j hj1 hj2 _ h).2]
-    have hprod := mul_le_mul_of_nonneg_left hwF hk1
-    linarith
-  · simp only [ctD, ite_eq_right ht]
-    have hthin := hP2 t ht
-    have hfirst := (min_le_left _ (DV.nuRow D u j (tauPl D (true, t)) 0)).trans
-      (hC D L P j hj u (tauPl D (false, t)) hthin.2.1)
-    have hwF : wj D j (tauPl D (false, t)) ≤ 2 * (L.sc.b' / 3) := by
-      linarith [(L.win_thin j hj1 hj2 _ hthin).2]
-    have hprod := mul_le_mul_of_nonneg_left hwF hk1
-    linarith
-
-theorem szCt_of (hA : RowA) (hC : RowC) (hS : SizeFacts) (hP : PlaceFacts) :
-    PI.SzCt.SzCt := by
-  unfold PI.SzCt.SzCt
-  intro eps Ct CGam Cc CT2 PK
-  refine ⟨3, ?_⟩
-  intro D L P _ hx hSz j hj u
-  have hsum : ∑ t : HH D, ctD D u j t ≤
-      ∑ t : HH D, ((if t ∈ D.host.TT then 2 * L.sc.b else 0) + 4 * (D.R.k : ℝ) * L.sc.b') :=
-    Finset.sum_le_sum (fun t _ => ct_le hA hC hS hP D L P hx hSz j hj u t)
-  refine le_trans hsum ?_
-  obtain ⟨-, -, -, -, -, -, hb'0⟩ := hS D L hSz hx
-  have hcard : Fintype.card (HH D) = D.R.n := by
-    rw [Fintype.card_eq_nat_card]
-    show Nat.card (Fin D.R.ord) = D.R.n
-    simp [Nat.card_eq_fintype_card, Formalism.BasicNotions.Ranks.n]
-  rw [Finset.sum_add_distrib, Finset.sum_ite_mem, Finset.univ_inter, Finset.sum_const,
-    Finset.sum_const, nsmul_eq_mul, nsmul_eq_mul, Finset.card_univ, hcard]
-  have hf : (D.R.f : ℝ) = 2 * (D.R.n : ℝ) := by
-    unfold Formalism.BasicNotions.Ranks.f
-    push_cast
-    ring
-  rw [hf]
-  have e : (D.R.n : ℝ) * (4 * (D.R.k : ℝ) * L.sc.b') = 2 * (2 * (D.R.n : ℝ)) * (D.R.k : ℝ) * L.sc.b' := by
-    ring
-  have e2 : (D.host.TT.card : ℝ) * (2 * L.sc.b) = 2 * (D.host.TT.card : ℝ) * L.sc.b := by ring
-  linarith
-
-end PI.SzCt.UnitaryGroupMassFormula
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SzCtOf =====
-
--- ===== clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzConstantTerm =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzConstantTerm", "h": "module\n\npublic import Formalism.PeriodIntegrals.SzCt\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.FirstCoordinateLeThreeScale\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.Places\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SizeFacts\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeCount.SzCtOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-theorem sz_constant_term : PI.SzCt.SzCt :=
-  PI.SzCt.UnitaryGroupMassFormula.szCt_of PI.SzCt.UnitaryGroupMassFormula.rowA PI.SzCt.UnitaryGroupMassFormula.rowC
-    PI.SzCt.UnitaryGroupMassFormula.sizeFacts PI.SzCt.UnitaryGroupMassFormula.placeFacts
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzConstantTerm =====
-
--- ===== clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzEatI =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzEatI", "h": "module\n\npublic import Formalism.PeriodIntegrals.SzEatI\npublic import Development.AutomorphicArithmetic.OrbitLabellings.SzEatIFree\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SizeAbsorption.SizeDel\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-theorem sz_eat_identity : PI.SzEatI.SzEatI := UpperTheory.G2.szEatI_of_stepA PI.SzEatI.W.stepA
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzEatI =====
+-- Members: Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab, Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted, Formalism.SharpRestriction.GrowthBounds.JointsTw, Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx, Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses
 
 -- ===== clump member: Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab =====
 -- clump-header: {"m": "Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab", "h": "module\n\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
@@ -768,21 +313,6 @@ theorem baseChange_preserves_unitary_of (W : TwLoc D Y) (hV : CmpV c Dx T W) (hG
           rw [gainS, if_pos h1, g0S, gainP, if_neg h2, hVV, Finset.sum_empty, zero_add, Finset.sdiff_empty]
       rw [e]; exact h
 
-theorem statements_of_remaining_bound (W : TwLoc D Y) (hV : CmpV c Dx T W) (hA : admitted D L X Y K Dx T W lev Xe ce sp)
-    (hR : DGamDef D → RestElse D Dx T sp) : Conclusion₂ D L X Y K c Dx T W lev Xe ce sp := by
-  obtain ⟨hU, _, _, hNo, hC, hD⟩ := hA
-  have hc := first_clause_cases hNo hC hD hR
-  have hGt := first_in_local_models W hU
-  exact ⟨baseChange_preserves_unitary_of W hV hGt hNo hc, zero_gain_of_no_served_orbit hc, hc, hGt⟩
-
-def RestComp : Prop :=
-  ∀ (D : D7) (Dx : DivX D) (T : TwForms D) (sp : ℝ), IsotypicPartsInternalDirectSum D Dx T sp → DGamDef D → RestElse D Dx T sp
-
-theorem stmt_of_rest (hR : RestComp) (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (c : LatCmp D)
-    (Dx : DivX D) : Stmt D L X Y K c Dx := by
-  intro T W lev Xe ce hV sp _ hA
-  exact statements_of_remaining_bound W hV hA (fun hG => hR D Dx T sp hA.2.2.1 hG)
-
 end Formalism.MainNotions.WeilJacquetShalikaLaw.Proof
 
 end
@@ -995,29 +525,6 @@ end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted =====
-
--- ===== clump member: Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open Formalism.BasicNotions Formalism.BasicNotions.DV Formalism.MainNotions.G Formalism.MainNotions Formalism.MainNotions.WeilJacquetShalikaLaw
-
-namespace Formalism.MainNotions.WeilJacquetShalikaLaw.Proof
-
-theorem restComp_proved : RestComp := fun _ _ _ _ hI hD => remaining_primes_of_admitted hI hD
-
-theorem stmt_proved (D : D7) (L : SizeData₂ D) (X : Inst D L) (Y : LatInst D) (K : Consts) (c : LatCmp D) (Dx : DivX D) :
-    Stmt D L X Y K c Dx := stmt_of_rest restComp_proved D L X Y K c Dx
-
-end Formalism.MainNotions.WeilJacquetShalikaLaw.Proof
-
-end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.JointsTw =====
 -- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.JointsTw", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.WeilJacquetShalikaLaw\npublic import Formalism.SharpRestriction.GrowthBounds.Joints\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
@@ -1303,7 +810,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx =====
 
 -- ===== clump member: Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses =====
--- clump-header: {"m": "Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses", "h": "module\n\npublic import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.SharpRestriction.ParamsHeightRankConstant\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzConstantTerm\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SzEatI\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.GenericFramesLetters\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds\npublic import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.LocalBoundElevenComparison\npublic import Formalism.SharpRestriction.Divisibility.LocalNonemptiness.OrbitAdmissibleOfSplitBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers\npublic import Formalism.SharpRestriction.GrowthBounds.JointsTw\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PrvAndKernelCommutationUpToUnitsOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx\npublic import Formalism.SharpRestriction.GrowthBounds.PlaneCountTheoremWithConstants\nimport Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses", "h": "module\n\npublic import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.SharpRestriction.ParamsHeightRankConstant\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.GenericFramesLetters\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds\npublic import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.LocalBoundElevenComparison\npublic import Formalism.SharpRestriction.Divisibility.LocalNonemptiness.OrbitAdmissibleOfSplitBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound\npublic import Formalism.SharpRestriction.GrowthBounds.JointsTw\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PrvAndKernelCommutationUpToUnitsOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx\npublic import Formalism.SharpRestriction.GrowthBounds.PlaneCountTheoremWithConstants\nimport Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1312,60 +819,6 @@ noncomputable section
 namespace Formalism.MainNotions.Pk
 
 open Formalism.BasicNotions
-
-section Sz
-
-open Formalism.MainNotions.G
-
-theorem szCt_fam {eps : ℝ} (Fm : FamP eps) : ∃ x0 : ℝ, ∀ x ≥ x0, ∀ (hx : Fm.x1 < x) (i : Fm.Ix x),
-    ∀ j ∈ SizeData₂.lifts (Fm.D x i), ∀ u : (Fm.D x i).what₂.Word, ∑ t : HH (Fm.D x i), ctD (Fm.D x i) u j t ≤
-      2 * ((Fm.D x i).host.TT.card : ℝ) * (Fm.L x i).sc.b + 2 * ((Fm.D x i).R.f : ℝ) * (Fm.D x i).R.k * (Fm.L x i).sc.b' := by
-  obtain ⟨x0, hx0⟩ := sz_constant_term eps Fm.Ct Fm.CGam Fm.Cc Fm.CT2 Fm.PK
-  refine ⟨x0, fun x hx hx1 i => hx0 (Fm.D x i) (Fm.L x i) (Fm.params x hx1 i)
-    ⟨Fm.L_eps x i, Fm.Ct_eq x i, Fm.CGam_eq x i, Fm.Cc_eq x i, Fm.secondConstant_eq x i, Fm.params_K x hx1 i⟩
-    (by rw [Fm.L_x x i hx1]; exact hx) (Fm.sizes x hx1 i)⟩
-
-theorem szEatI_fam {eps : ℝ} (Fm : FamP eps) : ∃ C : ℝ, 0 ≤ C ∧ ∃ x0 : ℝ, ∀ x ≥ x0,
-    ∀ (hx : Fm.x1 < x) (i : Fm.Ix x), ∀ j ∈ SizeData₂.lifts (Fm.D x i), ∀ S : Finset ℕ,
-      (∀ p ∈ S, p.Prime ∧ (IsResidueClassZero (Fm.D x i) p ∨ IsSg (Fm.D x i) p) ∧ ¬ (IsResidueClassZero (Fm.D x i) p ∧ hP (Fm.D x i) p = 0) ∧
-        (p : ℝ) ≤ (Fm.L x i).sc.X'' (Fm.D x i).R.n) →
-      ∑ p ∈ S, Real.log p * (EatI (Fm.L x i) Fm.GK Fm.cX.err j p - max 0 (WeilJacquetShalikaLaw.FkindA (Fm.D x i) j p)) ≤
-        C * ((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n) := by
-  obtain ⟨C, hC, x0, hx0⟩ := sz_eat_identity Fm.GK Fm.cX.err eps Fm.Ct Fm.CGam Fm.Cc Fm.CT2 Fm.PK
-  refine ⟨C, hC, x0, fun x hx hx1 i => hx0 (Fm.D x i) (Fm.L x i) (Fm.params x hx1 i)
-    ⟨Fm.L_eps x i, Fm.Ct_eq x i, Fm.CGam_eq x i, Fm.Cc_eq x i, Fm.secondConstant_eq x i, Fm.params_K x hx1 i⟩
-    (by rw [Fm.L_x x i hx1]; exact hx) (Fm.sizes x hx1 i)⟩
-
-theorem one_le_Xpp {D : D7} (L : SizeData₂ D) (h : SizesAt L) (hm : 1 ≤ D.R.m) : 1 ≤ L.sc.X'' D.R.n := by
-  obtain ⟨τ⟩ := S.Inh.tau_index_set_nonempty D
-  have hw : L.sc.w'' D.R.n ≤ wj D 1 τ := S.wj_ge L τ 1 le_rfl hm
-  have hr := h.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1 1 τ 1 τ le_rfl hm le_rfl hm
-  nlinarith [S.w''_pos L, hw, hr]
-
-theorem admissible_size_family {eps : ℝ} (Fm : FamP eps) (hD : DGamSize Fm) : ∃ C : ℝ, 0 ≤ C ∧ ∃ x0 : ℝ, ∀ x ≥ x0,
-    ∀ (_ : Fm.x1 < x) (i : Fm.Ix x), WeilJacquetShalikaLaw.TypePrimeSizeConds (Fm.D x i) (Fm.L x i) Fm.GK Fm.cX.err C := by
-  obtain ⟨xz, hz⟩ := szCt_fam Fm
-  obtain ⟨Ce, hCe, xe, he⟩ := szEatI_fam Fm
-  obtain ⟨Cd, xd, hd⟩ := hD
-  refine ⟨max Ce (max Cd 0), le_trans (le_max_right _ _) (le_max_right _ _), max xz (max xe xd), fun x hx h1 i => ?_⟩
-  simp only [max_le_iff] at hx
-  obtain ⟨ez, ee, ed⟩ := hx
-  refine ⟨hz x ez h1 i, J.factDGam_mono (hd x ed i) (le_trans (le_max_left _ _) (le_max_right _ _)), fun j hj S hS => ?_⟩
-  have hm : 1 ≤ (Fm.D x i).R.m := by
-    simp only [SizeData₂.lifts, Finset.mem_Icc] at hj
-    omega
-  have hlog : 0 ≤ Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n) := Real.log_nonneg (one_le_Xpp (Fm.L x i) (Fm.sizes x h1 i) hm)
-  have hb : 0 < (Fm.L x i).sc.b := by unfold Scale.b; positivity
-  have hnn : 0 ≤ ((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n) :=
-    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hb.le) hlog
-  refine (he x ee h1 i j hj S hS).trans ?_
-  calc Ce * ((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n)
-      = Ce * (((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n)) := by ring
-    _ ≤ max Ce (max Cd 0) * (((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n)) :=
-        mul_le_mul_of_nonneg_right (le_max_left _ _) hnn
-    _ = max Ce (max Cd 0) * ((Fm.D x i).R.f : ℝ) * (Fm.L x i).sc.b * Real.log ((Fm.L x i).sc.X'' (Fm.D x i).R.n) := by ring
-
-end Sz
 
 section Re
 
@@ -1382,16 +835,14 @@ def reY {D : D7} (Y : LatInst D)
 
 def reW {D : D7} (Y : LatInst D) (LC : _) : WeilJacquetShalikaLaw.TwLoc D (reY Y LC) := ⟨LC, fun _ _ _ => rfl⟩
 
-theorem serv_re {D : D7} {L : SizeData₂ D} {X : Inst D L} {Y : LatInst D} {K : Consts} {c : LatCmp D} {Dx : DivX D}
-    {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {C : ℝ} (LC : _)
-    (h : WeilJacquetShalikaLaw.Serv D L X (reY Y LC) K c Dx T lev Xe ce C) : WeilJacquetShalikaLaw.Serv D L X Y K c Dx T lev Xe ce C := by
-  unfold WeilJacquetShalikaLaw.Serv at h ⊢
-  refine ⟨h.1, ?_, h.2.2⟩
-  have h2 := h.2.1
-  unfold WeilJacquetShalikaLaw.Conclusion1 at h2 ⊢
+theorem conclusion1_re {D : D7} {L : SizeData₂ D} {X : Inst D L} {Y : LatInst D}
+    {K : Consts} {c : LatCmp D} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC}
+    (LC : _) (h : WeilJacquetShalikaLaw.Conclusion1 D L X (reY Y LC) K c Dx T lev Xe ce 1) :
+    WeilJacquetShalikaLaw.Conclusion1 D L X Y K c Dx T lev Xe ce 1 := by
+  unfold WeilJacquetShalikaLaw.Conclusion1 at h ⊢
   intro hT
   have hT' : WeilJacquetShalikaLaw.Ties9 D L X (reY Y LC) c := { hT with }
-  exact h2 hT'
+  exact h hT'
 
 theorem num_re {D : D7} {L : SizeData₂ D} {X : Inst D L} {Y : LatInst D} {K : Consts} (LC : _)
     (h : FormalGroupSystem.SmallResidueCharComparison D L X Y K) : FormalGroupSystem.SmallResidueCharComparison D L X (reY Y LC) K := h
@@ -1440,26 +891,6 @@ theorem typeG_ne_d {D : D7} {L : SizeData₂ D} (P : ParameterChoice' D L) (k : 
   simp only [Host.cls, primeClass] at hs
   split_ifs at hs
 
-theorem closed_large_pos {𝒞 : FamClass} {P Q : ∀ {eps : ℝ}, FamP eps → ℝ → Prop} (K0 : TransportedAlt) (hP : Closed 𝒞 P)
-    (h : ∀ {eps : ℝ} (Fm : FamP eps) (CH : ℝ), 0 < eps → Fm.Large K0 CH → P Fm CH → Q Fm CH) : Closed 𝒞 Q := by
-  unfold Closed at hP ⊢
-  obtain ⟨ε1, hε1, hP⟩ := hP
-  refine ⟨ε1, hε1, fun eps he he1 => ?_⟩
-  obtain ⟨K, hK⟩ := hP eps he he1
-  refine ⟨⟨max K.pre K0.pre, fun l => max (K.t l) (K0.t l), fun l => max (K.mid l) (K0.mid l),
-    fun l => max (K.last l) (K0.last l)⟩, fun Fm CH hC hL => ?_⟩
-  unfold Formalism.MainNotions.FamP.Large at hL
-  obtain ⟨h1, -, h3, h4⟩ := hL
-  have hLK : Fm.Large K CH := by
-    unfold Formalism.MainNotions.FamP.Large
-    exact ⟨fun c hc => (le_max_left _ _).trans (h1 c hc), trivial,
-      fun c hc => (le_max_left _ _).trans (h3 c hc), fun c hc => (le_max_left _ _).trans (h4 c hc)⟩
-  have hLK0 : Fm.Large K0 CH := by
-    unfold Formalism.MainNotions.FamP.Large
-    exact ⟨fun c hc => (le_max_right _ _).trans (h1 c hc), trivial,
-      fun c hc => (le_max_right _ _).trans (h3 c hc), fun c hc => (le_max_right _ _).trans (h4 c hc)⟩
-  exact h Fm CH he hLK0 (hK Fm CH hC hLK)
-
 theorem three_le_split {eps : ℝ} (Fm : FamP eps) (h0 : 0 < eps) {x : ℝ} (hx : (3 : ℝ) ^ (5 / Fm.ez) ≤ x) (h1 : Fm.x1 < x)
     (i : Fm.Ix x) : 3 ≤ (Fm.D x i).host.splitBound := by
   have hez : 0 < Fm.ez := by rw [← Fm.L_ez x i]; exact (Fm.L x i).sc.ez_pos
@@ -1471,20 +902,18 @@ theorem three_le_split {eps : ℝ} (Fm : FamP eps) (h0 : 0 < eps) {x : ℝ} (hx 
         rw [← Real.rpow_mul (by norm_num), he, Real.rpow_one]; norm_num
     _ ≤ x ^ (Fm.ez / 5) := Real.rpow_le_rpow (by positivity) hx (by positivity)
 
-theorem sum_over_primes_service (𝒞 : FamClass) (hD : Closed 𝒞 fun Fm _ => DGamSize Fm) (h : SumOverPrimesHypotheses 𝒞) :
+open WeilJacquetShalikaLaw.Proof in
+theorem sum_over_primes_service (𝒞 : FamClass) (h : SumOverPrimesHypotheses 𝒞) :
     Closed 𝒞 fun Fm _ => WeilJacquetShalikaLaw.ServF Fm := by
-  have hpdv := h.pdv
   have h01 : OrbitPlaces.OrbitLetterBoundsAll 11 1 := DIV.Bridge.DworkPowerSeriesWeights.split_bound_eleven_one
-  refine closed_large_pos ⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩
-    (hD.and (h.twU.and (hpdv.and (G.num_closed 𝒞 FormalGroupSystem.Pf.stmtNumE))))
-    fun {eps} Fm CH hpos hL ⟨hDg, ⟨xb, hb⟩, ⟨xc, hc⟩, ⟨xn, hnum⟩⟩ => ?_
+  refine (h.twU.and (h.pdv.and (G.num_closed 𝒞 FormalGroupSystem.Pf.stmtNumE))).imp
+    fun Fm _ hpos ⟨⟨xb, hb⟩, ⟨xc, hc⟩, ⟨xn, hnum⟩⟩ => ?_
   have hpr1 : 1 ≤ Fm.GK.Pr1 := le_of_eq Fm.fixed.1.symm
   have hCL : OrbitPlaces.CLarge 11 1 Fm.GK Fm.cX.err :=
     OrbitPlaces.cLarge_of_fixed Fm.fixed.2.2.2.2.1 Fm.fixed.2.2.2.2.2.1 Fm.fixed.2.1 (by rw [Fm.fixed.2.2.1]; norm_num)
-  obtain ⟨Cs, hCs, xa, ha⟩ := admissible_size_family Fm hDg
-  refine ⟨Cs, hCs, max (max xa xb) (max (max xc ((3 : ℝ) ^ (5 / Fm.ez))) xn), fun x hx h1 i => ?_⟩
+  refine ⟨max (max xb xc) (max ((3 : ℝ) ^ (5 / Fm.ez)) xn), fun x hx h1 i => ?_⟩
   simp only [max_le_iff] at hx
-  obtain ⟨⟨ea, eb⟩, ⟨ec, ef⟩, en⟩ := hx
+  obtain ⟨⟨eb, ec⟩, ef, en⟩ := hx
   obtain ⟨LC, hV, hSys⟩ := hb x eb h1 i
   have hU := G.Joints.unit_bound_of_sum_over_primes _ _ _ _ _ _ (reW (Fm.Gy x i) LC) _ _ _ 1 (FormalGroupSystem.Pf.stmt_proved _) hSys
     (num_re LC (hnum x en i))
@@ -1501,11 +930,9 @@ theorem sum_over_primes_service (𝒞 : FamClass) (hD : Closed 𝒞 fun Fm _ => 
     ⟨hK, o, gd, b0, b0c, h01, a', ei, sd, sh, hCL⟩
   obtain ⟨n, c, d, it⟩ := J.four_orbit_conditions_of_proof (lev := (Fm.ex x h1 i).lev) (Xe := (Fm.ex x h1 i).errX)
     (OrbitPlaces.lift_bounds_of_essential hA (DIV.Lemmas.OrbitEntryBounds.orbit_entry_bounds_hold _ _ _ _ _ _ _ 11 1 h01 sd sh hCL))
-  have hAdm : WeilJacquetShalikaLaw.admitted (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (reY (Fm.Gy x i) LC) Fm.GK (Fm.X x i) (Fm.ex x h1 i).tw
-      (reW (Fm.Gy x i) LC) (Fm.ex x h1 i).lev (Fm.ex x h1 i).errX Fm.cX.err 1 :=
-    ⟨hU, WeilJacquetShalikaLaw.local_theorem_of_statement _ (FormalGroupSystem.Pf.stmtAt_proved _), it, n, c, d⟩
-  exact serv_re LC (WeilJacquetShalikaLaw.serv_of (WeilJacquetShalikaLaw.Proof.stmt_proved _ _ _ _ _ _ _) (reW (Fm.Gy x i) LC) hV hAdm
-    (ha x ea h1 i))
+  have hCol := first_clause_cases n c d (remaining_primes_of_admitted it)
+  have hTuple := first_in_local_models (reW (Fm.Gy x i) LC) hU
+  exact conclusion1_re LC (baseChange_preserves_unitary_of (reW (Fm.Gy x i) LC) hV hTuple n hCol)
 
 end Formalism.MainNotions.Pk
 

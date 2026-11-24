@@ -36,7 +36,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-import Formalism.SharpRestriction.SmoothDesignExistence.DGamSmooth
 
 @[expose] public section
 
@@ -67,9 +66,10 @@ theorem sumOverPrimesService_of_servT {𝒞 : FamClass} (sel : _root_.Formalism.
   refine ⟨(sel Fm hc).1, ?_⟩
   intro x hx0 hx i
   exact ⟨((sel Fm hc).2 x hx hx0 i).T.ker.ent, hp hc x hx hx0 i⟩
-theorem closed_servF_of_servT_of_dGamSize {𝒞 : FamClass} (sel : _root_.Formalism.L2.TwistSelection 𝒞) (hD : Closed 𝒞 fun Fm _ => DGamSize Fm) (h : _root_.Formalism.L2.G.ServT.SelectionServed 𝒞 sel) :
+theorem closed_servF_of_servT {𝒞 : FamClass} (sel : _root_.Formalism.L2.TwistSelection 𝒞)
+    (h : _root_.Formalism.L2.G.ServT.SelectionServed 𝒞 sel) :
     Closed 𝒞 fun Fm _ => WeilJacquetShalikaLaw.ServF Fm :=
-  sum_over_primes_service 𝒞 hD (_root_.Formalism.L2.G.ServT.sumOverPrimesService_of_servT sel h)
+  sum_over_primes_service 𝒞 (_root_.Formalism.L2.G.ServT.sumOverPrimesService_of_servT sel h)
 end Formalism.L2.G.ServT
 end
 end
