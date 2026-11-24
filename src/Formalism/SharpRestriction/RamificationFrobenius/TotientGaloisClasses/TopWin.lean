@@ -57,9 +57,11 @@ variable {Fam : ℝ → Type 1} (core : ∀ {eps : ℝ}, Fam eps → FamCore eps
 def ChebyshevInequalityOnFamilyWindows {eps : ℝ} (Fm : Fam eps) (eD eL : ℝ) : Prop :=
   ∃ K cHH eK CL x0 : ℝ, ∀ x ≥ x0, x ∈ (core Fm).Win → Tied Fm eD eL K cHH eK CL x
 
+/-- The exponent loss is uniform in `eps`. The multiplier may depend on the chosen family. -/
 def ChebyshevInequalityOnWindows (Λ : Level) : Prop :=
-  ∀ (eD eL eps : ℝ), 0 < eps → ∀ Fm : Fam eps, EFamC Λ (core Fm) → ChebyshevInequalityOnFamilyWindows @core @Tied Fm eD eL →
-    ∃ x1 : ℝ, ∀ x ≥ x1, x ∈ (core Fm).Win → Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + (max 1 (max eD eL) + 5) * eps)
+  ∀ eD eL : ℝ, ∃ C : ℝ, ∀ eps : ℝ, 0 < eps →
+    ∀ Fm : Fam eps, EFamC Λ (core Fm) → ChebyshevInequalityOnFamilyWindows @core @Tied Fm eD eL →
+      ∃ A x1 : ℝ, 0 ≤ A ∧ ∀ x ≥ x1, x ∈ (core Fm).Win → Λ.Gm x ≤ A * x ^ ((1 : ℝ) / 2 + C * eps)
 
 def ChebyshevInequalityAtWindowScale (la : ℝ) (Λ : Level) : Prop :=
   ∃ eD eL ε₁ : ℝ, 0 < ε₁ ∧ ∀ eps : ℝ, 0 < eps → eps < ε₁ → ∃ Fm : Fam eps, EFamC Λ (core Fm) ∧
@@ -81,17 +83,18 @@ theorem exists_small_eps (C : ℝ) {δ ε₁ : ℝ} (hδ : 0 < δ) (h1 : 0 < ε�
 theorem level_of_tiedWin {Λ : Level} {la : ℝ} (h112 : ChebyshevInequalityOnWindows @core @Tied Λ) (hB : Λ.FormBAt la)
     (h : ChebyshevInequalityAtWindowScale @core @Tied la Λ) : Λ.ZeroFreeLevel := by
   obtain ⟨eD, eL, ε₁, h1, h⟩ := h
+  obtain ⟨C, hC⟩ := h112 eD eL
   intro ψ hψ s hs
   have hm1 : min (s.re - 1 / 2) (1 / 2) ≤ s.re - 1 / 2 := min_le_left _ _
   have hm2 : min (s.re - 1 / 2) (1 / 2) ≤ 1 / 2 := min_le_right _ _
   have hm0 : 0 < min (s.re - 1 / 2) (1 / 2) := lt_min (by linarith) (by norm_num)
-  obtain ⟨ε, hε0, hεlt, hCe⟩ := exists_small_eps (max 1 (max eD eL) + 5) (half_pos hm0) h1
+  obtain ⟨ε, hε0, hεlt, hCe⟩ := exists_small_eps C (half_pos hm0) h1
   obtain ⟨Fm, hE, hW, hT⟩ := h ε hε0 hεlt
-  obtain ⟨x1, hx⟩ := h112 eD eL ε hε0 Fm hE hT
-  refine hB (1 / 2 + min (s.re - 1 / 2) (1 / 2) / 2) (by linarith) (by linarith)
+  obtain ⟨A, x1, hA, hx⟩ := hC ε hε0 Fm hE hT
+  refine hB (1 / 2 + min (s.re - 1 / 2) (1 / 2) / 2) A (by linarith) (by linarith)
     (((windows_iff _ la).1 hW).mono (x0 := max x1 1) fun y hy hw => ?_) ψ hψ s (by linarith)
   exact (hx y (le_of_max_le_left hy) hw).trans
-    (Real.rpow_le_rpow_of_exponent_le (le_of_max_le_right hy) (by linarith))
+    (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le (le_of_max_le_right hy) (by linarith)) hA)
 
 theorem zeroFreeOn_of_tiedWin {Q : PChar → Prop}
     (h : ∀ ψ, Q ψ → ∃ (Λ : Level) (la : ℝ), ψ ∈ Λ.KEPT ∧ 1 < la ∧ ChebyshevInequalityOnWindows @core @Tied Λ ∧ Λ.FormB ∧

@@ -145,20 +145,19 @@ def GrowthInequalityForm : Prop :=
 
 end
 
-def SizeWindows (C ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err : ℝ) : Prop :=
-  3 ≤ x ∧ 0 < ε ∧ 0 ≤ C ∧ 0 < n ∧ 0 < b ∧ 0 ≤ aE ∧ aE ≤ 2 * x * b ∧
+def SizeWindows (P ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err : ℝ) : Prop :=
+  3 ≤ x ∧ 0 < ε ∧ 1 ≤ P ∧ 0 < n ∧ 0 < b ∧ 0 ≤ aE ∧ aE ≤ 2 * x * b ∧
   x ^ (-(ε / 8)) * n / 2 ≤ nT ∧
   x ^ (-ε) ≤ (nT2 : ℝ) / n ∧ nT2 ≤ n ∧
   x ^ ((1 : ℝ) / 2 - ε) ≤ m ∧ (m : ℝ) ≤ x ^ ((1 : ℝ) / 2 + ε / 2) ∧
   x * m ≤ k ∧ k ≤ (n : ℝ) ^ 2 * x ^ ((1 : ℝ) / 2 - ε) ∧
-  Err ≤ x ^ (C * ε) * ((nT : ℝ) * aE * (1 + (m : ℝ) ^ 2 / k)
-    + m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))))) ∧
-  26 ≤ x ^ (3 * ε / 8)
+  Err ≤ P * ((nT : ℝ) * aE * (1 + (m : ℝ) ^ 2 / k)
+    + m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε)))))
 
 def GrowthSizeBound : Prop :=
-  ∀ (C ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err Gx : ℝ), SizeWindows C ε x n nT nT2 m b k aE Err →
-    (nT : ℝ) * m * b * (((nT2 : ℝ) / n) / 2) * (Gx - 4 * x ^ ((1 : ℝ) / 2 + ε)) ≤ Err + 2 * (nT : ℝ) * m * b / x →
-    Gx ≤ x ^ ((1 : ℝ) / 2 + (C + 3) * ε)
+  ∀ (P ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err Gx : ℝ), SizeWindows P ε x n nT nT2 m b k aE Err →
+    (nT : ℝ) * m * b * (((nT2 : ℝ) / n) / 2) * Gx ≤ Err + 2 * (nT : ℝ) * m * b / x →
+    Gx ≤ 22 * P * x ^ ((1 : ℝ) / 2 + 21 * ε / 8)
 
 section
 variable {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H]

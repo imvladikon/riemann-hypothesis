@@ -71,7 +71,7 @@ theorem core_ineq {nT a b b' k L La B0 Nc M sA lk dI et Xpp y yD yL K g
     (c1 : 0 ≤ cDiv) (c1' : cDiv ≤ K) (c2 : 0 ≤ cE) (c2' : cE ≤ K) (c3 : 0 ≤ cH) (c3' : cH ≤ K)
     (c4 : 0 ≤ cCount) (c4' : cCount ≤ K) (c5 : 0 ≤ cSlope) (c5' : cSlope ≤ K)
     (c6 : 0 ≤ cSl1) (c6' : cSl1 ≤ K) (c7 : 0 ≤ cLoss) (c7' : cLoss ≤ K)
-    (hg : 1 ≤ g) (hbig : 200 * (1 + K) ^ 2 * g ≤ y) :
+    (hg : 1 ≤ g) :
     sA * (cCount * (La + M ^ 2 * La / k))
       + (cDiv * nT * a * La + cDiv * M * (B0 + Nc) * yD)
       + M * cE * B0
@@ -84,7 +84,7 @@ theorem core_ineq {nT a b b' k L La B0 Nc M sA lk dI et Xpp y yD yL K g
             + cSl1 * M * B0
             + (cSl1 * (cLoss * nT * M * b * yL) + cSl1 * nT * M * (a / k + b') * (cCount * M * L)
                 + cSl1 * Xpp + 1)) + et)
-      ≤ max y (max yD yL) * y * (nT * a * (1 + M ^ 2 / k) + M * (B0 + Nc)) := by
+      ≤ (200 * (1 + K) ^ 2 * g * max y (max yD yL)) * (nT * a * (1 + M ^ 2 / k) + M * (B0 + Nc)) := by
   have hK : 0 ≤ K := c1.trans c1'
   have hy0 : 0 ≤ y := by linarith
   have hg0 : 0 ≤ g := by linarith
@@ -216,22 +216,14 @@ theorem core_ineq {nT a b b' k L La B0 Nc M sA lk dI et Xpp y yD yL K g
       nlinarith only [hK, sq_nonneg K]
     have hscaled := mul_le_mul_of_nonneg_right hlarge hg0
     nlinarith only [hbase, hscaled]
-  have hfin := mul_le_mul_of_nonneg_right (hbound.trans hbig) hP0
-  have hR : max y (max yD yL) * y * (nT * a * (1 + M ^ 2 / k) + M * (B0 + Nc)) =
-      y * P := by
+  have hfin := mul_le_mul_of_nonneg_right hbound hP0
+  have hR : (200 * (1 + K) ^ 2 * g * max y (max yD yL)) * (nT * a * (1 + M ^ 2 / k) + M * (B0 + Nc)) =
+      200 * (1 + K) ^ 2 * g * P := by
     rw [hP, hE, hA1, hA3, hA4, hr]
-    change Y * y * _ = _
+    change (200 * (1 + K) ^ 2 * g * Y) * _ = _
     ring
   rw [hR]
   linarith only [T1, T2a, T2b, T3, T4, T6, T7, T8, hfin]
-
-lemma log_le_of_le_rpow {x k e y : ℝ} (hx : 1 ≤ x) (he : 0 ≤ e) (hk : 0 < k) (hkx : k ≤ x ^ e)
-    (hlog : Real.log x ≤ y) (hy : 1 ≤ y) : Real.log k ≤ (1 + e) * y := by
-  have hx0 : 0 < x := by linarith
-  calc Real.log k ≤ Real.log (x ^ e) := Real.log_le_log hk hkx
-    _ = e * Real.log x := Real.log_rpow hx0 _
-    _ ≤ e * y := by gcongr
-    _ ≤ (1 + e) * y := by linarith
 
 lemma inv_one_sub_le_two {d : ℝ} (hd : d ≤ 1 / 2) : 0 ≤ (1 - d)⁻¹ ∧ (1 - d)⁻¹ ≤ 2 := by
   have hd12 : (1 : ℝ) / 2 ≤ 1 - d := by linarith
@@ -239,18 +231,6 @@ lemma inv_one_sub_le_two {d : ℝ} (hd : d ≤ 1 / 2) : 0 ≤ (1 - d)⁻¹ ∧ (
   have := inv_anti₀ (by norm_num : (0 : ℝ) < 1 / 2) hd12
   simpa using this
 
-
-theorem large_x_eventually : LargeXEv := by
-  intro ε K cHH eK hε
-  have h1 : ∀ᶠ x : ℝ in Filter.atTop, Real.log x ≤ x ^ ε := by
-    have hb := (isLittleO_log_rpow_atTop hε).bound (c := 1) one_pos
-    filter_upwards [hb, Filter.eventually_ge_atTop (1 : ℝ)] with x hx hx1
-    rw [one_mul, Real.norm_of_nonneg (Real.rpow_nonneg (by linarith) _)] at hx
-    exact (le_abs_self _).trans hx
-  have h2 : ∀ᶠ x : ℝ in Filter.atTop, KBig K cHH eK ≤ x ^ ε :=
-    (tendsto_rpow_atTop hε).eventually_ge_atTop _
-  obtain ⟨x0, hx0⟩ := Filter.eventually_atTop.1 (h1.and h2)
-  exact ⟨x0, fun x hx => hx0 x hx⟩
 
 section
 open Formalism Formalism.D5 Formalism.LFunctionChainParameters.characterSumData Formalism.LFunctionChainParameters.ThickSetMeanBounds

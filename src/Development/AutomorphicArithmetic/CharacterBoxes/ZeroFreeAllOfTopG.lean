@@ -1254,7 +1254,7 @@ open UpperTheory.Comparison₂ Deduction.CH Formalism Formalism.HC Formalism.D5 
 
 theorem UpperTheory.Comparison₂.formB :
     ∀ Λ : Level, Λ.FormB := by
-  intro Λ la hla θ hθ0 hθ1 hW
+  intro Λ la hla θ A hθ0 hθ1 hW
   classical
   let weight (ψ : PChar) : ℝ := if ψ = PChar.one then 1 else Λ.wt ψ
   have weight_pos (ψ : PChar) : 0 < weight ψ := by
@@ -1304,12 +1304,12 @@ theorem UpperTheory.Comparison₂.formB :
     intro ψ hψ s hs
     exact h ⟨ψ, hψ⟩ s hs
   apply hZ
-  refine Deduction.zeroFree_of_rpow_window F (δ := la - 1) (C := 1) hθ0 hθ1 (by linarith) fun Y₀ => ?_
+  refine Deduction.zeroFree_of_rpow_window F (δ := la - 1) (C := A) hθ0 hθ1 (by linarith) fun Y₀ => ?_
   obtain ⟨Y, hY, hx⟩ := hW Y₀
   refine ⟨Y, hY, fun y hy => ?_⟩
   have h1 : (1 : ℝ) + (la - 1) = la := by ring
   rw [h1] at hy
-  rw [hG, one_mul]
+  rw [hG]
   exact hx y hy.1 hy.2
 end -- clump:auto
 end -- clump:auto

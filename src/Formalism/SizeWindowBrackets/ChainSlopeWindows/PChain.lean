@@ -52,7 +52,7 @@ namespace Formalism.LFunctionChainParameters.LChain
 open Formalism Formalism.D5 Formalism.RankGapBounds.WeightedMeanData Formalism.LFunctionChainParameters.WeightedSlopeBounds Formalism.LFunctionChainParameters.characterSumData Formalism.LFunctionChainParameters.ThickSetMeanBounds Formalism.LFunctionChainParameters.LErr
 
 theorem size_windows_split : SizeWindowsSplit := by
-  intro C ε x n nT nT2 m b k aE Err
+  intro P ε x n nT nT2 m b k aE Err
   unfold SizeWindows RestSize errorBracketSizeWindows
   tauto
 
@@ -82,13 +82,11 @@ open Formalism Formalism.D5 Formalism.RankGapBounds.WeightedMeanData Formalism.L
 
 lemma errX5_le {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0)] [∀ u0, Nonempty (W u0)]
     {Top : Type} [Fintype Top] {m f : ℕ} (D : Data U0 W Top m f) (C : Consts) (Xpp eK K : ℝ)
-    (hW : ErrWindows D C Xpp eK K) (hX : LargeX D.x D.ε K C.cHH eK) :
-    ErrX5 D C Xpp ≤ D.x ^ (CErr C * D.ε) * ErrText D := by
+    (hW : ErrWindows D C Xpp eK K) :
+    ErrX5 D C Xpp ≤ (errCoefficient K eK D.ε * D.x ^ (CErr C * D.ε)) * ErrText D := by
   obtain ⟨⟨hx, hε, hε1, hb, hxb, hnT, hm, hxm, heK, hk1, hkx, hL0, hL, hLa0, hLa, hb', hkb', hX0,
     hXa, haT, hB0, hNc, hdel, -, -, hC⟩, het⟩ := hW
-  obtain ⟨c1, c1', c2, c2', c3, c3', c4, c4', c5, c5', c6, c6', c7, c7', hD, hLs, hHH⟩ := hC
-  obtain ⟨hlog, hbig⟩ := hX
-  have hx0 : 0 < D.x := by linarith only [hx]
+  obtain ⟨c1, c1', c2, c2', c3, c3', c4, c4', c5, c5', c6, c6', c7, c7', hD, hLs, -⟩ := hC
   have hy : 1 ≤ D.x ^ D.ε := Real.one_le_rpow hx hε.le
   have hyD : 1 ≤ D.x ^ (C.eDiv * D.ε) := Real.one_le_rpow hx (mul_nonneg hD hε.le)
   have hyL : 1 ≤ D.x ^ (C.eLoss * D.ε) := Real.one_le_rpow hx (mul_nonneg hLs hε.le)
@@ -112,35 +110,33 @@ lemma errX5_le {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0
       _ = 2 * ((Fintype.card Top : ℝ) * D.a) := by
         rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]; ring
   have hlk0 : 0 ≤ Real.log D.k := Real.log_nonneg hk1
-  have hlk : Real.log D.k ≤ (1 + eK) * D.x ^ D.ε := log_le_of_le_rpow hx heK hk hkx hlog hy
+  have hx0 : 0 < D.x := by linarith only [hx]
+  have hg : 1 ≤ 1 + eK / D.ε := le_add_of_nonneg_right (div_nonneg heK hε.le)
+  have hlk : Real.log D.k ≤ (1 + eK / D.ε) * D.x ^ D.ε := by
+    calc Real.log D.k ≤ Real.log (D.x ^ eK) := Real.log_le_log hk hkx
+      _ = eK * Real.log D.x := Real.log_rpow hx0 _
+      _ ≤ eK * (D.x ^ D.ε / D.ε) := mul_le_mul_of_nonneg_left (Real.log_le_rpow_div hx0.le hε) heK
+      _ = (eK / D.ε) * D.x ^ D.ε := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (by positivity)
   obtain ⟨hdI0, hdI⟩ := inv_one_sub_le_two hdel
   have hpow : D.x ^ (CErr C * D.ε) =
-      max (D.x ^ D.ε) (max (D.x ^ (C.eDiv * D.ε)) (D.x ^ (C.eLoss * D.ε))) * D.x ^ D.ε := by
-    unfold CErr
-    rw [add_mul, Real.rpow_add hx0, one_mul]
-    congr 1
+      max (D.x ^ D.ε) (max (D.x ^ (C.eDiv * D.ε)) (D.x ^ (C.eLoss * D.ε))) := by
     have hmono : Monotone (fun e : ℝ => D.x ^ (e * D.ε)) :=
       fun _ _ h => Real.rpow_le_rpow_of_exponent_le hx (mul_le_mul_of_nonneg_right h hε.le)
-    simpa only [one_mul] using
+    simpa only [CErr, one_mul] using
       (hmono.map_max (a := 1) (b := max C.eDiv C.eLoss)).trans
         (congrArg (max (D.x ^ ((1 : ℝ) * D.ε))) (hmono.map_max (a := C.eDiv) (b := C.eLoss)))
   rw [hpow]
-  have hthreshold : 200 * (1 + K) ^ 2 * (1 + eK) ≤ D.x ^ D.ε := by
-    refine le_trans ?_ hbig
-    unfold KBig
-    have hc : 1 ≤ 1 + C.cHH := by linarith
-    calc _ = 200 * (1 + K) ^ 2 * 1 * (1 + eK) := by ring
-      _ ≤ _ := by gcongr
   have := core_ineq (nT := D.nT) (a := D.a) (b := D.b) (b' := D.b') (k := D.k) (L := D.L) (La := D.La)
     (B0 := D.B0) (Nc := D.Nc) (M := (m : ℝ)) (sA := D.sumA)
     (lk := Real.log D.k) (dI := (1 - D.delBar)⁻¹)
     (et := (D.etaBar + 4 * Real.sqrt D.eBar) * (D.x ^ C.cHH * D.b)) (Xpp := Xpp)
     (y := D.x ^ D.ε) (yD := D.x ^ (C.eDiv * D.ε)) (yL := D.x ^ (C.eLoss * D.ε)) (K := K)
-    (g := 1 + eK)
+    (g := 1 + eK / D.ε)
     hy hyD hyL hnT ha1 hb0 hM hk hMk hMb hL0 hL hLa0 hLa hb' hkb' hX0 hXa hsA0 hsA hB0 hNc
     hlk0 hlk hdI0 hdI het c1 c1' c2 c2' c3 c3' c4 c4' c5 c5' c6 c6' c7 c7'
-    (by linarith only [heK]) hthreshold
-  unfold ErrX5 UBar5 MLo5 Data.Vvar Data.LoP ErrText
+    hg
+  unfold ErrX5 UBar5 MLo5 Data.Vvar Data.LoP ErrText errCoefficient
   exact this
 
 namespace ModelEv

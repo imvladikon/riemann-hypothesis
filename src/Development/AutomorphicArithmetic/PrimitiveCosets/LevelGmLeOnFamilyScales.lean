@@ -683,32 +683,29 @@ lemma core (A0 : AddSubgroup H) (D : ArithData H) (S : Finset ℕ) (hD : HostFac
 end CharacterBalanceMoves
 
 
-theorem ch_core (C ε CE Ko c M : ℝ) (hC : 0 ≤ C) (hε : 0 < ε) (hc : |c| ≤ 1) : ∃ x1 : ℝ, ∀ x ≥ x1,
+theorem ch_core (ε CE Ko c M : ℝ) (hε : 0 < ε) :
+    ∃ B : ℝ, 0 ≤ B ∧ ∀ x ≥ (3 : ℝ), ∀ P ≥ (1 : ℝ),
     ∀ (H : Type) [AddCommGroup H] [Fintype H] [DecidableEq H] (m : ℕ) (D : ArithData H) (S : Finset ℕ)
       (ell : AddChar (E0 × H) ℂ → ℂ) (N : ℕ) (TT T2 : Finset H) (a : H → ℝ) (w : H → Fin m → E0 × H → ℝ)
       (b b' k aE η X' θ : ℝ) (A0 : AddSubgroup H) (Kp : Finset (AddChar (E0 × H) ℂ)),
       HostFactsS D S → 0 < b → 0 ≤ aE → 0 < k → (m : ℝ) ≤ x ^ ((1 : ℝ) / 2 + ε / 2) → x * m ≤ k →
       SizesA A0 TT T2 a w N x b b' η X' θ → ThinScales D ell X' θ → CostWindows x (fPl H) b η θ →
       RestSize ε x (Fintype.card H) TT.card T2.card m b k aE → (∀ s ∈ T2, s ∈ A0) → CharsA ell A0 Kp TT c M Ko CE ε x →
-      (∀ u ∈ A0, gapA D N ell TT a w u ≤ x ^ (C * ε) * errorBracketSizeWindows x ε (Fintype.card H) TT.card T2.card m b k aE) →
-      GmA D ell Kp c x ≤ x ^ ((1 : ℝ) / 2 + (C + 3) * ε) + SigA D ell A0 Kp x := by
+      (∀ u ∈ A0, gapA D N ell TT a w u ≤ P * errorBracketSizeWindows x ε (Fintype.card H) TT.card T2.card m b k aE) →
+      GmA D ell Kp c x ≤ 22 * P * x ^ ((1 : ℝ) / 2 + 21 * ε / 8)
+        + B * x ^ ((1 : ℝ) / 2 + ε) + SigA D ell A0 Kp x := by
   obtain ⟨Cd, hCd, hDer⟩ := derivative_integral_all
-  obtain ⟨x₁, hx₁⟩ := Filter.eventually_atTop.1
-    ((tendsto_rpow_atTop (show 0 < 3 * ε / 8 by positivity)).eventually_ge_atTop 26)
   set A1 : ℝ := 5 + Cd + |Ko| + |M| * (4 + Cd + |Ko|) + 4 * |CE| with hA1
-  obtain ⟨x₂, hx₂⟩ := Filter.eventually_atTop.1
-    ((tendsto_rpow_atTop (show (0 : ℝ) < 1 / 4 by norm_num)).eventually_ge_atTop (|M| * A1))
-  refine ⟨max 3 (max x₁ x₂), fun x hx => ?_⟩
+  let B := |M| * A1
+  have hB : 0 ≤ B := by dsimp [B]; positivity
+  refine ⟨B, hB, fun x hx3 P hP => ?_⟩
   intro H _ _ _ m D S ell N TT T2 a w b b' k aE η X' θ A0 Kp hHost hb ha hk hm hxm hS hThin hCost hSize hT2 hCh hTop
   obtain ⟨h0K, hKp, hM, hE2, hKo, hE3⟩ := hCh
-  have hx3 : 3 ≤ x := le_of_max_le_left hx
-  have h26 := hx₁ x (le_of_max_le_left (le_of_max_le_right hx))
-  have hbig := hx₂ x (le_of_max_le_right (le_of_max_le_right hx))
   have hx0 : 0 < x := by linarith
   have w1 : 1 ≤ x := by linarith
-  have hW : SizeWindows C ε x (Fintype.card H) TT.card T2.card m b k aE
-      (x ^ (C * ε) * errorBracketSizeWindows x ε (Fintype.card H) TT.card T2.card m b k aE) :=
-    (size_windows_split _ _ _ _ _ _ _ _ _ _ _).2 ⟨hSize, le_refl _, ⟨hx3, h26⟩, hε, hC,
+  have hW : SizeWindows P ε x (Fintype.card H) TT.card T2.card m b k aE
+      (P * errorBracketSizeWindows x ε (Fintype.card H) TT.card T2.card m b k aE) :=
+    (size_windows_split _ _ _ _ _ _ _ _ _ _ _).2 ⟨hSize, le_refl _, hx3, hε, hP,
       Fintype.card_pos, hb, ha, Finset.card_le_univ T2, hm, hxm⟩
   set s : ℝ := x ^ ((1 : ℝ) / 4) with hs
   set e : ℝ := x ^ ε with he
@@ -760,7 +757,7 @@ theorem ch_core (C ε CE Ko c M : ℝ) (hC : 0 ≤ C) (hε : 0 < ε) (hc : |c| �
     (fun ψ h h1 => (hE3 ψ h h1).trans (mul_le_mul_of_nonneg_right (le_abs_self CE) hl0))
     r1 r2 r3
   set G : ℝ := GmA D ell Kp c x - SigA D ell A0 Kp x with hG
-  have hY : (TT.card : ℝ) * (G - 4 * x ^ ((1 : ℝ) / 2 + ε)) ≤
+  have hY : (TT.card : ℝ) * (G - B * x ^ ((1 : ℝ) / 2 + ε)) ≤
       ∑ t ∈ TT, (∑ ψ ∈ PsiA A0, ψ (CharacterBalanceMoves.e1 t) * GPsi D ell ψ (a t / b)).re := by
     simp_rw [Complex.re_sum]
     rw [Finset.sum_comm]
@@ -769,11 +766,13 @@ theorem ch_core (C ε CE Ko c M : ℝ) (hC : 0 ≤ C) (hε : 0 < ε) (hc : |c| �
       nsmul_eq_mul, hX]
     refine mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg _)
     have k1 := mul_le_mul_of_nonneg_right (hM.trans (le_abs_self M)) (show 0 ≤ A1 * (s * e) by positivity)
-    have k2 := mul_le_mul_of_nonneg_right hbig (show 0 ≤ s * e by positivity)
-    have k3 : 0 ≤ s * (s * e) := by positivity
-    linarith
+    have hsX : s * e ≤ s * (s * e) := le_mul_of_one_le_left (by positivity) hs1
+    have k2 : |M| * (A1 * (s * e)) ≤ B * (s * (s * e)) := by
+      calc _ = B * (s * e) := by dsimp [B]; ring
+        _ ≤ _ := mul_le_mul_of_nonneg_left hsX hB
+    linarith only [k1, k2]
   have hc' := CharacterBalanceMoves.core A0 D S hHost ell N TT T2 a w hx3 hb hS hThin hCost hT2 hTop hY
-  have hz := proposition_size_bound _ _ _ _ _ _ _ _ _ _ _ G hW hc'
+  have hz := proposition_size_bound _ _ _ _ _ _ _ _ _ _ _ _ hW hc'
   linarith
 
 end Deduction
@@ -827,9 +826,9 @@ theorem ch_top {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {U0 : Typ
     (D : ArithData H) (ell : AddChar (E0 × H) ℂ → ℂ) (N : ℕ) (TT T2 : Finset H) (a : H → ℝ)
     (w : H → Fin m → E0 × H → ℝ) (eT : Top ≃ TT) (eP : Fin f ≃ PhiSet (H := H))
     (h1 : IdentU Dd tr D N ell TT a w eT eP) (h2 : SizeData₂ Dd C Xpp) (h3 : ErrWindows Dd C Xpp eK K) (h4 : BNBoundsU Dd T2)
-    (h5 : LargeX Dd.x Dd.ε K C.cHH eK) (u : U0) :
+    (u : U0) :
     gapA D N ell TT a w (tr u) ≤
-      Dd.x ^ (CErr C * Dd.ε) * errorBracketSizeWindows Dd.x Dd.ε (Fintype.card H) TT.card T2.card m Dd.b Dd.k Dd.a := by
+      (errCoefficient K eK Dd.ε * Dd.x ^ (CErr C * Dd.ε)) * errorBracketSizeWindows Dd.x Dd.ε (Fintype.card H) TT.card T2.card m Dd.b Dd.k Dd.a := by
   have hmain := ch_top_main_eq Dd tr D N ell TT a w eT eP h1 u
   have hask := h1.2.2.2.2 u
   have hgap : gapA D N ell TT a w (tr u) = Dd.ASK u - Dd.Main u := by
@@ -840,7 +839,7 @@ theorem ch_top {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {U0 : Typ
     rw [← Finset.sum_sub_distrib]
   obtain ⟨s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11⟩ := h2
   have hle := each_unit_bound_statement Dd C Xpp s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 u
-  have herr := errX5_le Dd C Xpp eK K h3 h5
+  have herr := errX5_le Dd C Xpp eK K h3
   have hnT : Dd.nT = (TT.card : ℝ) := by
     unfold Data.nT
     have := Fintype.card_congr eT
@@ -853,7 +852,8 @@ theorem ch_top {H : Type} [AddCommGroup H] [Fintype H] [DecidableEq H] {U0 : Typ
     gcongr
     · exact h4.1
     · exact h4.2
-  have hpow : 0 ≤ Dd.x ^ (CErr C * Dd.ε) := Real.rpow_nonneg s1.1.le _
+  have hpow : 0 ≤ errCoefficient K eK Dd.ε * Dd.x ^ (CErr C * Dd.ε) :=
+    mul_nonneg (zero_le_one.trans h3.one_le_coefficient) (Real.rpow_nonneg s1.1.le _)
   rw [hgap]
   calc Dd.ASK u - Dd.Main u ≤ _ := by linarith
     _ ≤ _ := herr
@@ -1279,69 +1279,62 @@ open UpperTheory.Comparison₂ Deduction.CH Formalism Formalism.HC Formalism.D5 
   Formalism.LFunctionChainParameters.LChain Formalism.LFunctionChainParameters.LHost
 
 theorem UpperTheory.Comparison₂.core_gm :
-    ∀ (Λ : Level) (eD eL K cHH eK C eps : ℝ), 0 < eps → ∃ x1 : ℝ, ∀ x ≥ x1, ∀ (φ : Frame) (H : HostAx φ) (TT : Finset φ.A),
-      EAtH Λ H.toHostRaw TT x eps C → CoreAtH H.toHostRaw TT eD eL K cHH eK eps x →
-        Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + (max 1 (max eD eL) + 5) * eps) := by
-  intro Λ eD eL K cHH eK C eps heps
-  have ho : (0 : ℝ) ≤ Λ.o := Nat.cast_nonneg _
-  have hc : |(3 * (Λ.o : ℝ) + 1)⁻¹| ≤ 1 := by
-    rw [abs_of_nonneg (by positivity)]
-    exact inv_le_one_of_one_le₀ (by linarith)
+    ∀ (Λ : Level) (eD eL K cHH eK CE eps : ℝ), 0 < eps → ∃ B : ℝ, 0 ≤ B ∧
+      ∀ x ≥ (3 : ℝ), ∀ (φ : Frame) (H : HostAx φ) (TT : Finset φ.A),
+        EAtH Λ H.toHostRaw TT x eps CE → CoreAtH H.toHostRaw TT eD eL K cHH eK eps x →
+          Λ.Gm x ≤ B * x ^ ((1 : ℝ) / 2 + (max 1 (max eD eL) + 21 / 8) * eps) := by
+  intro Λ eD eL K cHH eK CE eps heps
   let E := max (1 : ℝ) (max eD eL)
-  have hEone : 1 ≤ E := le_max_left _ _
-  obtain ⟨x₁, hx₁⟩ := Deduction.ch_core (E + 1) eps C (koOf Λ) (3 * (Λ.o : ℝ) + 1)⁻¹ (4 * (Λ.o : ℝ))
-    (by linarith) heps hc
-  obtain ⟨x₂, hx₂⟩ := large_x_eventually eps K cHH eK heps
-  obtain ⟨x₃, hx₃⟩ := Filter.eventually_atTop.1
-    ((tendsto_rpow_atTop heps).eventually_ge_atTop (1 + 4 * (Λ.o : ℝ)))
-  refine ⟨max x₁ (max x₂ x₃), fun x hx φ H TT hE hCore => ?_⟩
-  have g1 : x₁ ≤ x := le_trans (le_max_left _ _) hx
-  have g2 : x₂ ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx
-  have g3 : x₃ ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx
+  let A := errCoefficient K eK eps
+  obtain ⟨T, hT, hcore⟩ := Deduction.ch_core eps CE (koOf Λ) (3 * (Λ.o : ℝ) + 1)⁻¹ (4 * (Λ.o : ℝ)) heps
+  refine ⟨max 0 (22 * A + T + 4 * (Λ.o : ℝ)), le_max_left _ _, fun x hx3 φ H TT hE hCore => ?_⟩
   obtain ⟨U0, i0, tr, W, i4, i5, Top, i6, m, f, Dd, Cc, Xpp, ell, N, T2, a, w, eT, eP, η, X', θ,
-    hell, hxx, hε, heD, heL, hcHH, hcov, hId, hLed, hWin, hBN, hSz, hThin, hCost, hRest, hT2⟩ := hCore
+    hell, hxx, hε, heD, heL, -, hcov, hId, hLed, hWin, hBN, hSz, hThin, hCost, hRest, hT2⟩ := hCore
   subst hxx hε
-  have hLX := hx₂ _ g2
-  have hWin' := hWin
-  obtain ⟨⟨w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w13, w14, w15, w16, w17, w18, w19, w20, w21, w22,
-    w23, w25, w26, w27, wC⟩, wEta⟩ := hWin'
-  obtain ⟨c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17⟩ := wC
-  have hLX' : LargeX Dd.x Dd.ε K Cc.cHH eK := by
-    refine ⟨hLX.1, le_trans ?_ hLX.2⟩
-    unfold KBig
-    exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (by linarith) (by positivity)) (by linarith)
-  have hb : 0 < Dd.b := by linarith
-  have hx0 : 0 < Dd.x := by linarith
-  have hk : 0 < Dd.k := by linarith
-  have ha : 0 ≤ Dd.a := le_trans (by positivity) w5
+  obtain ⟨hx1, hε, -, hb1, hab, -, hm, hxm, -, hk1, -⟩ := hWin.1
+  have hb : 0 < Dd.b := lt_of_lt_of_le zero_lt_one hb1
+  have hx0 : 0 < Dd.x := lt_of_lt_of_le zero_lt_one hx1
+  have hk : 0 < Dd.k := lt_of_lt_of_le zero_lt_one hk1
+  have ha : 0 ≤ Dd.a := le_trans (by positivity) hab
+  have hA : 1 ≤ A := hWin.one_le_coefficient
+  let P := A * Dd.x ^ (E * Dd.ε)
+  have hEone : 1 ≤ E := le_max_left _ _
+  have hP : 1 ≤ P := one_le_mul_of_one_le_of_one_le hA (Real.one_le_rpow hx1 (by positivity))
   have hBr : 0 ≤ errorBracketSizeWindows Dd.x Dd.ε (Fintype.card φ.A) TT.card T2.card m Dd.b Dd.k Dd.a := by
     unfold errorBracketSizeWindows
     positivity
-  have hExp : Dd.x ^ (CErr Cc * Dd.ε) ≤ Dd.x ^ ((E + 1) * Dd.ε) := by
-    refine Real.rpow_le_rpow_of_exponent_le w1 (mul_le_mul_of_nonneg_right ?_ w2.le)
-    unfold CErr
-    exact add_le_add (max_le_max (le_refl (1 : ℝ)) (max_le_max heD heL)) le_rfl
-  have hmain := hx₁ _ g1 φ.A m (arith H.toHostRaw) _ ell N TT T2 a w Dd.b Dd.b' Dd.k Dd.a η X' θ φ.A0
-    (keptA Λ H.toHostRaw) (hostFactsS φ H) hb ha hk w7 w8 hSz hThin hCost hRest hT2
-    (charsA Λ φ H TT _ _ C ell hx0 hE hell) (fun u hu => by
+  have hExp : Dd.x ^ (CErr Cc * Dd.ε) ≤ Dd.x ^ (E * Dd.ε) :=
+    Real.rpow_le_rpow_of_exponent_le hx1
+      (mul_le_mul_of_nonneg_right (max_le_max (le_refl (1 : ℝ)) (max_le_max heD heL)) hε.le)
+  have hmain := hcore _ hx3 P hP φ.A m (arith H.toHostRaw) _ ell N TT T2 a w Dd.b Dd.b' Dd.k Dd.a η X' θ φ.A0
+    (keptA Λ H.toHostRaw) (hostFactsS φ H) hb ha hk hm hxm hSz hThin hCost hRest hT2
+    (charsA Λ φ H TT _ _ CE ell hx0 hE hell) (fun u hu => by
       obtain ⟨v, rfl⟩ := hcov u hu
-      exact le_trans (Deduction.ch_top Dd tr Cc Xpp eK K _ ell N TT T2 a w eT eP hId hLed hWin hBN hLX' v)
-        (mul_le_mul_of_nonneg_right hExp hBr))
-  rw [gmA_eq Λ φ H TT _ _ C ell hE hell] at hmain
-  have hs := sigA_le Λ φ H TT _ _ C ell hx0 hE hell
-  have h1 : Dd.x ^ ((1 : ℝ) / 2 + Dd.ε) ≤ Dd.x ^ ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε) :=
-    Real.rpow_le_rpow_of_exponent_le w1 (by nlinarith)
-  have h2 : Dd.x ^ ((1 : ℝ) / 2 + (E + 5) * Dd.ε)
-      = Dd.x ^ Dd.ε * Dd.x ^ ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε) := by
+      exact le_trans (Deduction.ch_top Dd tr Cc Xpp eK K _ ell N TT T2 a w eT eP hId hLed hWin hBN v)
+        (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hExp (zero_le_one.trans hA)) hBr))
+  rw [gmA_eq Λ φ H TT _ _ CE ell hE hell] at hmain
+  have hs := sigA_le Λ φ H TT _ _ CE ell hx0 hE hell
+  let Z := Dd.x ^ ((1 : ℝ) / 2 + (E + 21 / 8) * Dd.ε)
+  have hZ0 : 0 ≤ Z := Real.rpow_nonneg hx0.le _
+  have hZ : Dd.x ^ ((1 : ℝ) / 2 + Dd.ε) ≤ Z :=
+    Real.rpow_le_rpow_of_exponent_le hx1 (by
+      have h := mul_nonneg (by linarith only [hEone] : 0 ≤ E + 21 / 8 - 1) hε.le
+      nlinarith only [h])
+  have hpow : Dd.x ^ (E * Dd.ε) * Dd.x ^ ((1 : ℝ) / 2 + 21 * Dd.ε / 8) = Z := by
+    dsimp [Z]
     rw [← Real.rpow_add hx0]
     congr 1
     ring
-  have h3 := mul_le_mul_of_nonneg_right (hx₃ _ g3)
-    (Real.rpow_nonneg hx0.le ((1 : ℝ) / 2 + (E + 1 + 3) * Dd.ε))
-  have h4 := mul_le_mul_of_nonneg_left h1 (show 0 ≤ 4 * (Λ.o : ℝ) by positivity)
-  change Λ.Gm Dd.x ≤ Dd.x ^ ((1 : ℝ) / 2 + (E + 5) * Dd.ε)
-  rw [h2]
-  linarith
+  have hnormal : 22 * P * Dd.x ^ ((1 : ℝ) / 2 + 21 * Dd.ε / 8) = (22 * A) * Z := by
+    calc _ = (22 * A) * (Dd.x ^ (E * Dd.ε) * Dd.x ^ ((1 : ℝ) / 2 + 21 * Dd.ε / 8)) := by
+          dsimp [P]; ring
+      _ = _ := by rw [hpow]
+  rw [hnormal] at hmain
+  have hmove := mul_le_mul_of_nonneg_left hZ hT
+  have hsig := mul_le_mul_of_nonneg_left hZ (show 0 ≤ 4 * (Λ.o : ℝ) by positivity)
+  change Λ.Gm Dd.x ≤ max 0 (22 * A + T + 4 * (Λ.o : ℝ)) * Z
+  calc Λ.Gm Dd.x ≤ (22 * A + T + 4 * (Λ.o : ℝ)) * Z := by linarith only [hmain, hs, hmove, hsig]
+    _ ≤ _ := mul_le_mul_of_nonneg_right (le_max_right _ _) hZ0
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.PrimitiveCosets.CoreGm =====
@@ -1366,9 +1359,11 @@ variable {Fam : ℝ → Type 1} {core : ∀ {eps : ℝ}, Fam eps → FamCore eps
 theorem windowInequality_of_artinInputs
     (h : ∀ {eps : ℝ} (Fm : Fam eps) (eD eL K cHH eK CL x : ℝ), Tied Fm eD eL K cHH eK CL x → FamCoreConstantBounds (core Fm) eD eL K cHH eK x)
     (Λ : Level) : ChebyshevInequalityOnWindows @core @Tied Λ := by
-  rintro eD eL eps he Fm ⟨C, xE, hE⟩ ⟨K, cHH, eK, CL, x0, hT⟩
-  obtain ⟨x1, hx1⟩ := core_gm Λ eD eL K cHH eK C eps he
-  refine ⟨max x1 (max x0 xE), fun x hx hw => ?_⟩
+  intro eD eL
+  refine ⟨max 1 (max eD eL) + 21 / 8, ?_⟩
+  rintro eps he Fm ⟨C, xE, hE⟩ ⟨K, cHH, eK, CL, x0, hT⟩
+  obtain ⟨B, hB, hx1⟩ := core_gm Λ eD eL K cHH eK C eps he
+  refine ⟨B, max 3 (max x0 xE), hB, fun x hx hw => ?_⟩
   have b := le_of_max_le_right hx
   obtain ⟨i, hi⟩ := h Fm _ _ _ _ _ _ _ (hT x (le_of_max_le_left b) hw)
   exact hx1 x (le_of_max_le_left hx) _ ((core Fm).D x i).host.toHostAx _ (hE x (le_of_max_le_right b) i) hi

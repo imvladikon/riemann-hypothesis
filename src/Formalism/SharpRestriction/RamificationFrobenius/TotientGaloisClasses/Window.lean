@@ -60,7 +60,7 @@ namespace Level
 variable (Λ : Level)
 
 def FormBAt (la : ℝ) : Prop :=
-  ∀ θ : ℝ, 0 < θ → θ < 1 → HasWindows {x | Λ.Gm x ≤ x ^ θ} la → Λ.ZeroFreeAbove θ
+  ∀ θ A : ℝ, 0 < θ → θ < 1 → HasWindows {x | Λ.Gm x ≤ A * x ^ θ} la → Λ.ZeroFreeAbove θ
 
 def FormB : Prop := ∀ la : ℝ, 1 < la → Λ.FormBAt la
 

@@ -62,9 +62,17 @@ variable {U0 : Type} [Fintype U0] {W : U0 → Type} [∀ u0, Fintype (W u0)]
 def ErrText (D : Data U0 W Top m f) : ℝ :=
   D.nT * D.a * (1 + (m : ℝ) ^ 2 / D.k) + (m : ℝ) * (D.B0 + D.Nc)
 
-def CErr (C : Consts) : ℝ := max 1 (max C.eDiv C.eLoss) + 1
+def CErr (C : Consts) : ℝ := max 1 (max C.eDiv C.eLoss)
 
-def KBig (K cHH eK : ℝ) : ℝ := 200 * (1 + K) ^ 2 * (1 + cHH) * (1 + eK)
+def errCoefficient (K eK ε : ℝ) : ℝ := 200 * (1 + K) ^ 2 * (1 + eK / ε)
+
+lemma one_le_errCoefficient {K eK ε : ℝ} (hK : 0 ≤ K) (heK : 0 ≤ eK) (hε : 0 ≤ ε) :
+    1 ≤ errCoefficient K eK ε := by
+  unfold errCoefficient
+  have hK' : 1 ≤ (1 + K) ^ 2 := by nlinarith [sq_nonneg K]
+  have heK' : 1 ≤ 1 + eK / ε := le_add_of_nonneg_right (div_nonneg heK hε)
+  calc (1 : ℝ) ≤ 200 * 1 * 1 := by norm_num
+    _ ≤ _ := by gcongr
 
 def ConstsBound (C : Consts) (K : ℝ) : Prop :=
   0 ≤ C.cDiv ∧ C.cDiv ≤ K ∧ 0 ≤ C.cE ∧ C.cE ≤ K ∧ 0 ≤ C.cH ∧ C.cH ≤ K ∧
@@ -89,12 +97,12 @@ def ErrWindows (D : Data U0 W Top m f) (C : Consts) (Xpp eK K : ℝ) : Prop :=
   ErrWindows0 D C Xpp eK K ∧
   (D.etaBar + 4 * Real.sqrt D.eBar) * (D.x ^ C.cHH * D.b) ≤ K * D.x ^ D.ε * (D.nT * D.a)
 
+lemma ErrWindows.one_le_coefficient {D : Data U0 W Top m f} {C : Consts} {Xpp eK K : ℝ}
+    (h : ErrWindows D C Xpp eK K) : 1 ≤ errCoefficient K eK D.ε := by
+  obtain ⟨-, hε, -, -, -, -, -, -, heK, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hC⟩ := h.1
+  exact one_le_errCoefficient (hC.1.trans hC.2.1) heK hε.le
+
 end
-
-def LargeX (x ε K cHH eK : ℝ) : Prop := Real.log x ≤ x ^ ε ∧ KBig K cHH eK ≤ x ^ ε
-
-def LargeXEv : Prop :=
-  ∀ ε K cHH eK : ℝ, 0 < ε → ∃ x₀ : ℝ, ∀ x : ℝ, x₀ ≤ x → LargeX x ε K cHH eK
 
 def bTx (x ε : ℝ) : ℝ := Real.exp (x ^ ε)
 

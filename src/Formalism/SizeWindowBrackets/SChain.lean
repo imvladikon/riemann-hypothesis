@@ -98,14 +98,10 @@ def RestSize (ε x : ℝ) (n nT nT2 m : ℕ) (b k aE : ℝ) : Prop :=
   x ^ ((1 : ℝ) / 2 - ε) ≤ m ∧
   k ≤ (n : ℝ) ^ 2 * x ^ ((1 : ℝ) / 2 - ε)
 
-def XLarge (K cHH eK Cd CL ε x : ℝ) : Prop :=
-  3 ≤ x ∧ 26 ≤ x ^ (3 * ε / 8) ∧ LargeX x ε K cHH eK ∧ moveCost x Cd CL ≤ x ^ ((1 : ℝ) / 2 + ε)
-
 def SizeWindowsSplit : Prop :=
-  ∀ (C ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err : ℝ),
-    SizeWindows C ε x n nT nT2 m b k aE Err ↔
-      (RestSize ε x n nT nT2 m b k aE ∧ Err ≤ x ^ (C * ε) * errorBracketSizeWindows x ε n nT nT2 m b k aE ∧
-        (3 ≤ x ∧ 26 ≤ x ^ (3 * ε / 8)) ∧
-        (0 < ε ∧ 0 ≤ C ∧ 0 < n ∧ 0 < b ∧ 0 ≤ aE ∧ nT2 ≤ n ∧ (m : ℝ) ≤ x ^ ((1 : ℝ) / 2 + ε / 2) ∧ x * m ≤ k))
+  ∀ (P ε x : ℝ) (n nT nT2 m : ℕ) (b k aE Err : ℝ),
+    SizeWindows P ε x n nT nT2 m b k aE Err ↔
+      (RestSize ε x n nT nT2 m b k aE ∧ Err ≤ P * errorBracketSizeWindows x ε n nT nT2 m b k aE ∧
+        3 ≤ x ∧ 0 < ε ∧ 1 ≤ P ∧ 0 < n ∧ 0 < b ∧ 0 ≤ aE ∧ nT2 ≤ n ∧ (m : ℝ) ≤ x ^ ((1 : ℝ) / 2 + ε / 2) ∧ x * m ≤ k)
 
 end Formalism.LFunctionChainParameters.LChain
