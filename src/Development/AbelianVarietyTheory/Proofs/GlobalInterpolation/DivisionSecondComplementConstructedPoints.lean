@@ -1071,16 +1071,15 @@ theorem FRamD_bounds (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc
   rw [f_eq]
   exact ⟨by linarith, mul_nonpos_of_nonpos_of_nonneg (by linarith) h0⟩
 
-theorem abs_EatD_le (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x)
+theorem EatD_bounds (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x)
     (u : D.what₂.Word) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) :
-    |EatD D u j| ≤ (D.host.TT.card : ℝ) * L.sc.b + (D.R.f : ℝ) * D.R.k * L.sc.b' := by
-  obtain ⟨a1, a2⟩ := FRamD_bounds h P hx j hj
-  have a3 := sum_ctD_le h P hx j hj u
-  have a4 : 0 ≤ ∑ t : HH D, ctD D u j t := Finset.sum_nonneg fun t _ => ctD_nonneg u j hj t
-  have a5 : 0 ≤ (D.host.TT.card : ℝ) * L.sc.b := mul_nonneg (Nat.cast_nonneg _) (by linarith [one_le_b L])
+    -((D.R.f : ℝ) * D.R.k * L.sc.b') ≤ EatD D u j ∧
+      EatD D u j ≤ (D.host.TT.card : ℝ) * L.sc.b + (D.R.f : ℝ) * D.R.k * L.sc.b' := by
+  obtain ⟨hF₀, hF₁⟩ := FRamD_bounds h P hx j hj
+  have hJet := sum_ctD_le h P hx j hj u
+  have hJet₀ : 0 ≤ ∑ t : HH D, ctD D u j t := Finset.sum_nonneg fun t _ => ctD_nonneg u j hj t
   unfold EatD
-  rw [abs_le]
-  constructor <;> linarith
+  exact ⟨by linarith, by linarith⟩
 
 end GlobalTheory.RamifiedLoss
 
@@ -1104,43 +1103,46 @@ open Formalism.MainNotions.G GlobalTheory.HCEntries GlobalTheory.FockDegreeGap G
 
 variable {D : D7} {L : SizeData₂ D}
 
-theorem offDiagonalRamified_bound_const_four (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) : Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound D L 4 := by
+theorem offDiagonalRamified_bounds (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) :
+    Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound D L 1 (3 / 2) := by
   intro u j hj
-  have hp : D.host.d.Prime := D.host.hyp.2.1
-  have hb := one_le_b L
-  have hL := one_le_scL L
-  have hn := one_le_n D
-  have hf : (1 : ℝ) ≤ D.R.f := by linarith [f_eq D, one_le_n D]
-  have hm : (1 : ℝ) ≤ D.R.m := by exact_mod_cast (by have := D.R.two_le_m; omega : 1 ≤ D.R.m)
-  have hE := abs_EatD_le h P hx u j hj
+  have hb := (one_le_b L).trans' zero_le_one
+  have hm : (2 : ℝ) ≤ D.R.m := by exact_mod_cast D.R.two_le_m
   have hlog : Real.log D.host.d ≤ L.sc.L := by
     obtain ⟨-, -, -, -, -, -, hQ, -⟩ := h
     refine hQ.2.2.2.2.1.trans (Real.rpow_le_rpow_of_exponent_le L.sc.one_lt_alt.le ?_)
     unfold szTh
     linarith [L.sc.eps_pos]
-  have hlog0 : 0 ≤ Real.log (D.host.d : ℝ) := Real.log_natCast_nonneg _
-  have hE2 : |EatD D u j| ≤ 2 * ((D.R.f : ℝ) * L.sc.b) := by
-    obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hS, -⟩ := h
-    have a1 : (D.host.TT.card : ℝ) ≤ D.R.n := by
-      rw [← card_HH]
-      exact_mod_cast Finset.card_le_univ _
-    have a2 : (D.host.TT.card : ℝ) * L.sc.b ≤ D.R.f * L.sc.b :=
-      mul_le_mul_of_nonneg_right (by linarith [f_eq D]) (by linarith)
-    have a3 : (D.R.f : ℝ) * (D.R.k * L.sc.b') ≤ D.R.f * L.sc.b :=
-      mul_le_mul_of_nonneg_left (k_b'_le hS) (by linarith)
+  have hlog0 := Real.log_natCast_nonneg D.host.d
+  obtain ⟨hLower, hUpper⟩ := EatD_bounds h P hx u j hj
+  obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hSizes, -⟩ := h
+  have hTT : (D.host.TT.card : ℝ) ≤ (D.R.f : ℝ) / 2 := by
+    rw [f_eq, ← card_HH]
+    have ht : (D.host.TT.card : ℝ) ≤ (Fintype.card (HH D) : ℝ) :=
+      by exact_mod_cast Finset.card_le_univ _
     linarith
-  have hB : L.B0 = D.R.f * D.R.m * L.sc.b * L.sc.L := rfl
-  have hB1 : D.R.f * L.sc.b * L.sc.L ≤ L.B0 := by
-    rw [hB, show (D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L = D.R.m * (D.R.f * L.sc.b * L.sc.L) by ring]
-    exact le_mul_of_one_le_left (by positivity) hm
-  have h1 : Real.log (D.host.d : ℝ) * |EatD D u j| ≤ L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) :=
-    mul_le_mul hlog hE2 (abs_nonneg _) (by linarith)
-  nlinarith
-
-theorem offDiagonalRamified_bound_along_family : ∀ {eps : ℝ} (Fm : FamP eps), 0 < eps → eps < 1 / 52 → ∃ C x0 : ℝ, 0 ≤ C ∧ ∀ x, x0 ≤ x → ∀ hx : Fm.x1 < x, ∀ i : Fm.Ix x, Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound (Fm.D x i) (Fm.L x i) C := by
-  intro eps Fm _ _
-  refine ⟨4, 2, by norm_num, fun x hx0 hx i => ?_⟩
-  exact offDiagonalRamified_bound_const_four (Fm.sizes x hx i) (Fm.params x hx i) (by rw [Fm.L_x x i hx]; exact hx0)
+  have hTTb := mul_le_mul_of_nonneg_right hTT hb
+  have hSmall := mul_le_mul_of_nonneg_left (k_b'_le hSizes) (Nat.cast_nonneg (α := ℝ) D.R.f)
+  have hlo : -((D.R.f : ℝ) * L.sc.b) ≤ EatD D u j := by linarith
+  have hup : EatD D u j ≤ 3 / 2 * ((D.R.f : ℝ) * L.sc.b) := by linarith
+  have hScale : 2 * Real.log (D.host.d : ℝ) * ((D.R.f : ℝ) * L.sc.b) ≤ L.B0 := by
+    calc
+      _ ≤ L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) := by
+        rw [show (2 : ℝ) * Real.log (D.host.d : ℝ) * ((D.R.f : ℝ) * L.sc.b) =
+          Real.log (D.host.d : ℝ) * (2 * ((D.R.f : ℝ) * L.sc.b)) by ring]
+        exact mul_le_mul_of_nonneg_right hlog (by positivity)
+      _ ≤ L.B0 := by
+        change L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) ≤ (D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L
+        have hL : 0 ≤ L.sc.L := zero_le_one.trans (one_le_scL L)
+        have hh := mul_le_mul_of_nonneg_right hm
+          (mul_nonneg (mul_nonneg (Nat.cast_nonneg (α := ℝ) D.R.f) hb) hL)
+        linarith only [hh]
+  have hc := mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hlog0
+  constructor
+  · have hs := mul_le_mul_of_nonneg_left hlo hc
+    linarith only [hs, hScale]
+  · have hs := mul_le_mul_of_nonneg_left hup hc
+    linarith only [hs, hScale]
 
 end GlobalTheory.RamifiedOffD
 
@@ -1348,18 +1350,22 @@ theorem familySecondComplementInputs_of_tuSize_of_dGamSize : ∀ {eps : ℝ} (Fm
     Formalism.MainNotions.WeightDegreeSizes.FamilySecondComplementInputs Fm := by
   intro eps Fm h0 h1 hT hG
   obtain ⟨Cdeg, xd, -, hdeg⟩ := _root_.GlobalTheory.AdmissibleDegree.admissibleDegreeCount_along_family Fm h0 h1
-  obtain ⟨Cg, xg, hCg, hsz⟩ := _root_.GlobalTheory.TypeSize.typePrimeSizeBound_of_eps_lt_one_div_fiftyTwo Fm h0 h1 hG Cdeg
+  obtain ⟨Cg, xg, -, hsz⟩ := _root_.GlobalTheory.TypeSize.typePrimeSizeBound_of_eps_lt_one_div_fiftyTwo Fm h0 h1 hG Cdeg
   obtain ⟨CT, xT, -, hoT⟩ := _root_.GlobalTheory.LevelBudget.admissible_off_type_level_budget Fm h0 h1 hT
-  obtain ⟨CG, xG, -, hoG⟩ := _root_.GlobalTheory.exists_nonneg_const_discriminant_term_le_budget_family Fm h0 h1 hT hG
-  obtain ⟨Cd, xD, -, hoD⟩ := _root_.GlobalTheory.RamifiedOffD.offDiagonalRamified_bound_along_family Fm h0 h1
+  obtain ⟨CG, xG, hCG, hoG⟩ := _root_.GlobalTheory.exists_nonneg_const_discriminant_term_le_budget_family Fm h0 h1 hT hG
   obtain ⟨CI, xI, -, hoI⟩ := _root_.GlobalTheory.InertLossAdm.inertPrimes_loss_log_sum_admissible Fm h0 h1
-  refine ⟨Cdeg, Cg, CT, CG + Cd, CI, max xd (max xg (max xT (max xG (max xD xI)))), hCg, ?_⟩
+  refine ⟨Cdeg, Cg, CT, CG + 3 / 2, CI, max xd (max xg (max xT (max xG (max 2 xI)))), ?_⟩
   intro x hx0 hx i
   simp only [max_le_iff] at hx0
   obtain ⟨a1, a2, a3, a4, a5, a6⟩ := hx0
+  have hD := _root_.GlobalTheory.RamifiedOffD.offDiagonalRamified_bounds
+    (Fm.sizes x hx i) (Fm.params x hx i) (by rw [Fm.L_x x i hx]; exact a5)
+  have hGD := Formalism.MainNotions.WeightDegreeSizes.stabiliserDiscriminantBound_of_separate
+    (by norm_num) (by norm_num) (hoG x a4 hx i) hD
+  rw [max_eq_left (by linarith : (1 : ℝ) ≤ CG + 3 / 2)] at hGD
   exact ⟨fun u j h => (Fm.D x i).T_ne_g u j h.symm, _root_.GlobalTheory.TypeValNN.typePrime_valuationSum_eq_logGap_family Fm x hx i,
     hdeg x a1 hx i, hsz x a2 hx i, hoT x a3 hx i,
-    Formalism.MainNotions.WeightDegreeSizes.stabiliserDiscriminantBound_of_separate (hoG x a4 hx i) (hoD x a5 hx i), hoI x a6 hx i⟩
+    hGD, hoI x a6 hx i⟩
 
 end GlobalTheory
 end -- clump:auto

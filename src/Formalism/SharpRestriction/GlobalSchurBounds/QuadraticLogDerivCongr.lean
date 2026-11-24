@@ -614,36 +614,6 @@ theorem data_DIV (C : Consts)
   exact h1
 
 include hx in
-theorem data_EComp5 (C : Consts)
-    (h : ∀ u0 : M.e.A, ∀ u, ∀ j ∈ SizeData₂.lifts (Fm.D x (M.pt u0)),
-      |(∑ w ∈ (Fm.L x (M.pt u0)).supp, SizeData₂.sz w ((Fm.L x (M.pt u0)).E u j w)) -
-        (∑ t : (Fm.D x (M.pt u0)).host.TT, ((Fm.L x (M.pt u0)).aT t : ℝ)) * lgG (Fm.D x (M.pt u0))| ≤
-        C.cE * (Fm.L x (M.pt u0)).B0) :
-    EComp5 (M.data N CH etaB eB ηv ev) C := by
-  intro u0 u
-  have h1 : ∀ j : Fin M.m, |(M.data N CH etaB eB ηv ev).EeJ u0 u j -
-      (M.data N CH etaB eB ηv ev).sumA * (M.data N CH etaB eB ηv ev).lg| ≤
-      C.cE * (M.data N CH etaB eB ηv ev).B0 := by
-    intro j
-    have h2 := h u0 u (j.val + 1) (M.mem_lifts u0 j)
-    rw [M.sumA_eq u0 N CH etaB eB ηv ev, M.s_lg u0, M.point_base_constants_eq hx u0] at h2
-    exact h2
-  have h3 : (M.data N CH etaB eB ηv ev).Ee u0 u - (M.m : ℝ) * (M.data N CH etaB eB ηv ev).sumA *
-      (M.data N CH etaB eB ηv ev).lg = ∑ j : Fin M.m, ((M.data N CH etaB eB ηv ev).EeJ u0 u j -
-      (M.data N CH etaB eB ηv ev).sumA * (M.data N CH etaB eB ηv ev).lg) := by
-    unfold Data.Ee
-    rw [Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-    ring
-  rw [h3]
-  calc |∑ j : Fin M.m, ((M.data N CH etaB eB ηv ev).EeJ u0 u j -
-      (M.data N CH etaB eB ηv ev).sumA * (M.data N CH etaB eB ηv ev).lg)|
-      ≤ ∑ j : Fin M.m, |(M.data N CH etaB eB ηv ev).EeJ u0 u j -
-      (M.data N CH etaB eB ηv ev).sumA * (M.data N CH etaB eB ηv ev).lg| := Finset.abs_sum_le_sum_abs _ _
-    _ ≤ ∑ _j : Fin M.m, C.cE * (M.data N CH etaB eB ηv ev).B0 := Finset.sum_le_sum (fun j _ => h1 j)
-    _ = C.cE * (M.m : ℝ) * (M.data N CH etaB eB ηv ev).B0 := by
-      rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
-
-include hx in
 theorem data_HComp (C : Consts)
     (h : ∀ u0 : M.e.A, ∀ u u',
       |((Fm.D x (M.pt u0)).div.h u + (∑ t : (Fm.D x (M.pt u0)).host.TT, ((Fm.L x (M.pt u0)).aT t : ℝ)) *
@@ -696,6 +666,18 @@ theorem Ee_eq (u : (Fm.D x (M.pt u0)).what₂.Word) :
   unfold SizeData₂.Ee Data.Ee
   exact sum_lifts (Fm.D x (M.pt u0)) M.m (M.hm u0)
     (fun j => ∑ w ∈ (Fm.L x (M.pt u0)).supp, SizeData₂.sz w ((Fm.L x (M.pt u0)).E u j w))
+
+include hx in
+theorem data_EComp5 (C : Consts)
+    (h : ∀ u0 : M.e.A, ∀ u, |(Fm.L x (M.pt u0)).Ee u - ((Fm.D x (M.pt u0)).R.m : ℝ) *
+      (∑ t : (Fm.D x (M.pt u0)).host.TT, ((Fm.L x (M.pt u0)).aT t : ℝ)) * lgG (Fm.D x (M.pt u0))| ≤
+        C.cE * ((Fm.D x (M.pt u0)).R.m : ℝ) * (Fm.L x (M.pt u0)).B0) :
+    EComp5 (M.data N CH etaB eB ηv ev) C := by
+  intro u0 u
+  have hE := h u0 u
+  rw [M.Ee_eq u0 N CH etaB eB ηv ev u, M.s_m u0, M.sumA_eq u0 N CH etaB eB ηv ev,
+    M.s_lg u0, M.point_base_constants_eq hx u0] at hE
+  exact hE
 
 include hx in
 theorem model_slopes_five (C : Consts) (h : ∀ u0 : M.e.A, SlopesN_at (Fm.L x (M.pt u0)) C.cSl1) :

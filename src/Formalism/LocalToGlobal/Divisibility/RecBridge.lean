@@ -686,7 +686,7 @@ def Compl3 (L : SizeData₂ D) (Z : DivX D) (Csz C : ℝ) : Prop :=
 
 /-- Assembles the per-scale divisibility link `LinkDIV_at L C Cabs CH` from the per-word bounds
 `WordFacts`, the frame-number bound `FrameNumberBound`, the `g`-place and off-`g` energy bounds
-`adm11` (rewriting `∏ g ∈ L.gTypes, g = g 0 * g 1` via `prod_gTypes`), the complement count bound
+`adm11` for the whole column, the complement count bound
 `adm13`, rationality of `Bu`, fullness of the common lattice `RR`, and `ZeroAbove`. -/
 theorem linkDIV_at_words (L : SizeData₂ D) (Z : DivX D) (Csz C Cabs CH : ℝ)
     (hh : ∀ u, D.div.h u = hExpl6 D L Z Csz u) (hW : ∀ u, WordFacts L C Cabs u) (h5 : Compl3 L Z Csz C)
@@ -695,8 +695,8 @@ theorem linkDIV_at_words (L : SizeData₂ D) (Z : DivX D) (Csz C Cabs CH : ℝ)
   have hfun : D.div.h = hExpl6 D L Z Csz := funext hh
   refine ⟨fun u => (hW u).1, ?_, hZ, ⟨hBR, h13⟩, hRR, fun u hu => (hW u).2.1 hu, fun u => (hW u).2.2, ?_, ?_⟩
   · rw [hfun]; exact hH
-  · intro u j hj
-    have h := (h11 u j hj).1
+  · intro u
+    have h := h11 u
     rwa [Formalism.MainNotions.DIV.prod_gTypes] at h
   · intro u u'
     rw [hh u, hh u']
@@ -864,9 +864,9 @@ theorem Compl3.mono {D : D7} {L : SizeData₂ D} {Z : DivX D} {Csz C C' : ℝ} (
   positivity
 
 theorem degree_weight_bound_mono {D : D7} {L : SizeData₂ D} {C C' : ℝ} (h : Formalism.MainNotions.LocalQuadraticParts.adm11 D L C) (hC : C ≤ C') :
-    Formalism.MainNotions.LocalQuadraticParts.adm11 D L C' := fun u j hj =>
-  ⟨(h u j hj).1.trans (mul_le_mul_of_nonneg_right hC (Formalism.MainNotions.loss_bound_nonneg L)),
-    (h u j hj).2.trans (mul_le_mul_of_nonneg_right hC (Formalism.MainNotions.loss_bound_nonneg L))⟩
+    Formalism.MainNotions.LocalQuadraticParts.adm11 D L C' := fun u =>
+  (h u).trans (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC (Nat.cast_nonneg D.R.m))
+    (Formalism.MainNotions.loss_bound_nonneg L))
 
 end PartD
 

@@ -106,8 +106,8 @@ def LinkDIV_at {D : D7} (L : SizeData₂ D) (C Cabs CH : ℝ) : Prop :=
   (∀ u, D.div.RR.muDual + D.div.h u - L.Fo ≤ L.MAIN u +
     C * (D.host.TT.card : ℝ) * L.sc.a * L.La +
     C * (D.R.m : ℝ) * (L.B0 + L.Nc) * L.sc.x ^ (Cabs * L.sc.eps)) ∧
-  (∀ u, ∀ j ∈ SizeData₂.lifts D, |(∑ w ∈ L.supp, SizeData₂.sz w (L.E u j w)) -
-    (∑ t : D.host.TT, (L.aT t : ℝ)) * Real.log ((D.host.g 0 : ℝ) * (D.host.g 1 : ℝ))| ≤ C * L.B0) ∧
+  (∀ u, |L.Ee u - (D.R.m : ℝ) * (∑ t : D.host.TT, (L.aT t : ℝ)) *
+    Real.log ((D.host.g 0 : ℝ) * (D.host.g 1 : ℝ))| ≤ C * (D.R.m : ℝ) * L.B0) ∧
   (∀ u u', |(D.div.h u + (∑ t : D.host.TT, (L.aT t : ℝ)) * Real.log ((D.mem u).A.T : ℝ)) -
     (D.div.h u' + (∑ t : D.host.TT, (L.aT t : ℝ)) * Real.log ((D.mem u').A.T : ℝ))| ≤
     C * ((D.host.TT.card : ℝ) * L.sc.a * L.La + (D.R.m : ℝ) * L.B0))

@@ -105,11 +105,8 @@ def ArchimedeanSignatureMatching (D : D7) (L : SizeData₂ D) (X : Loc D) (C Cab
 
 
 def adm11 (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop :=
-  ∀ u, ∀ j ∈ SizeData₂.lifts D,
-    |(∑ w ∈ L.supp, SizeData₂.sz w (L.E u j w)) -
-        (∑ t : D.host.TT, (L.aT t : ℝ)) * Real.log (∏ g ∈ L.gTypes, (g : ℝ))| ≤ C * L.B0 ∧
-    ∑ w ∈ L.supp.filter (fun w => D.what₂.places.resChar w ∉ L.gTypes), |SizeData₂.sz w (L.E u j w)| ≤
-      C * L.B0
+  ∀ u, |L.Ee u - (D.R.m : ℝ) * (∑ t : D.host.TT, (L.aT t : ℝ)) *
+    Real.log (∏ g ∈ L.gTypes, (g : ℝ))| ≤ C * (D.R.m : ℝ) * L.B0
 
 def adm12 (D : D7) (L : SizeData₂ D) : Prop :=
   ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →

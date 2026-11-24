@@ -78,17 +78,9 @@ theorem negEe_le (C : ℝ) (h2 : Formalism.MainNotions.LocalQuadraticParts.adm11
       rcases Nat.eq_zero_or_pos (∏ g ∈ L.gTypes, g) with h | h
       · rw [h]; simp
       · exact Real.log_nonneg (Nat.one_le_cast.mpr h)
-  have hj : ∀ j ∈ SizeData₂.lifts D, -(C * L.B0) ≤ ∑ w ∈ L.supp, SizeData₂.sz w (L.E u j w) := by
-    intro j hj
-    have h3 := (abs_le.mp (h2 u j hj).1).1
-    linarith
-  have hsum := Finset.sum_le_sum hj
-  have hE : L.Ee u = ∑ j ∈ SizeData₂.lifts D, ∑ w ∈ L.supp, SizeData₂.sz w (L.E u j w) := rfl
-  rw [hE]
-  rw [Finset.sum_const, SizeData₂.lifts, Nat.card_Icc, nsmul_eq_mul] at hsum
-  rw [SizeData₂.lifts]
-  have hm : ((D.R.m + 1 - 1 : ℕ) : ℝ) = D.R.m := by simp
-  rw [hm] at hsum
+  have hCenter := mul_nonneg (Nat.cast_nonneg (α := ℝ) D.R.m) hP
+  have hLower := (abs_le.mp (h2 u)).1
+  rw [← mul_assoc] at hCenter
   linarith
 
 def EcHH (l : List ℝ) : ℝ := 9 * (max (l.headD 0) 5 + 3) + 2

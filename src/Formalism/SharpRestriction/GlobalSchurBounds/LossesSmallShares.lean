@@ -213,8 +213,9 @@ theorem linkCore (Fm : FamP eps) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (
     linarith
   have L3 : EComp5 (M.data ⌈2 * (Fm.L x i0).sc.a⌉₊ CH etaB eB ηv ev) (mkC (max Cd 0) Cabs Cc Cs C1 Cl eL CH) := by
     apply M.data_EComp5 hx1
-    intro u0 u j hj
-    exact le_trans ((hDu u0).2.2.2.2.2.2.2.1 u j hj) (up hCdle (loss_bound_nonneg _))
+    intro u0 u
+    exact ((hDu u0).2.2.2.2.2.2.2.1 u).trans
+      (up (up hCdle (Nat.cast_nonneg _)) (loss_bound_nonneg _))
   have L4 : (M.data ⌈2 * (Fm.L x i0).sc.a⌉₊ CH etaB eB ηv ev).HComp (mkC (max Cd 0) Cabs Cc Cs C1 Cl eL CH) := by
     apply M.data_HComp hx1
     intro u0 u u'
