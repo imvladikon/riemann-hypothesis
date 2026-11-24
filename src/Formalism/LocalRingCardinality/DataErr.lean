@@ -143,14 +143,15 @@ def EatT (D : D7) (u : D.what₂.Word) (w : D.what₂.places.Pl) : ℝ :=
   else 0
 
 
-open Classical in
+/-- The first-row contraction cutoff at a discriminant place. -/
 def ctD (D : D7) (u : D.what₂.Word) (j : ℕ) (t : HH D) : ℝ :=
-  nuAbs D u j (tauPl D (false, t)) -
-    (if t ∈ D.host.TT then DV.nuRow D u j (tauPl D (false, t)) 0 - DV.nuRow D u j (tauPl D (false, t)) 1 else 0) +
-    (if t ∈ D.host.TT then DV.nuRow D u j (tauPl D (true, t)) 0 else 0)
+  let τ := tauPl D (false, t)
+  let a := DV.nuRow D u j τ 0
+  let b := DV.nuRow D u j (tauPl D (true, t)) 0
+  nuAbs D u j τ - a + min a b
 
-def EatD (D : D7) (j : ℕ) : ℝ :=
-  FRamD D j + (Finset.univ.sup' ⟨D.u₀, Finset.mem_univ _⟩ fun u : D.what₂.Word => ∑ t : HH D, ctD D u j t) / 2
+def EatD (D : D7) (u : D.what₂.Word) (j : ℕ) : ℝ :=
+  FRamD D j + (∑ t : HH D, ctD D u j t) / 2
 
 def exch (D : D7) : ℝ := (D.R.f : ℝ) * D.R.k * Nm D
 
@@ -199,7 +200,7 @@ def Eval {D : D7} (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (u : 
   (padicValNat p (D.mem u).C.DGam : ℝ) +
     (if p = D.host.g 0 then EatG L X c 0 u j w
      else if p = D.host.g 1 then EatG L X c 1 u j w
-     else if D.host.cls p = PrimeClass.ramD then EatD D j
+     else if D.host.cls p = PrimeClass.ramD then EatD D u j
      else if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then
        (if IsResidueClassZero D p ∧ hP D p = 0 then EatC L c j p else EatI L K c j p)
      else 0)

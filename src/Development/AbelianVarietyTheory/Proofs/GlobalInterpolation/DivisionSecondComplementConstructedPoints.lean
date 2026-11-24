@@ -988,13 +988,10 @@ theorem ctD_nonneg (u : D.what₂.Word) (j : ℕ) (hj : j ∈ SizeData₂.lifts 
   have hp : ∀ τ, ∀ r ∈ Finset.range (D.R.N (i + 1 - 1)), 0 ≤ nuRow D u (i + 1) τ r :=
     fun τ r hr => (RowWeightLemmas.nuRow_pos D u i j2 τ r (Finset.mem_range.1 hr)).le
   have m0 : 0 ∈ Finset.range (D.R.N (i + 1 - 1)) := Finset.mem_range.2 (by unfold Ranks.N; omega)
-  have m1 : 1 ∈ Finset.range (D.R.N (i + 1 - 1)) := Finset.mem_range.2 (by unfold Ranks.N; omega)
   have a1 := Finset.single_le_sum (hp (tauPl D (false, t))) m0
-  have a2 := hp (tauPl D (false, t)) 0 m0
-  have a3 := hp (tauPl D (false, t)) 1 m1
-  have a4 := hp (tauPl D (true, t)) 0 m0
-  unfold ctD nuAbs
-  split_ifs <;> linarith
+  have hmin := le_min (hp (tauPl D (false, t)) 0 m0) (hp (tauPl D (true, t)) 0 m0)
+  dsimp only [ctD, nuAbs]
+  linarith
 
 theorem ctD_le (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) (u : D.what₂.Word) (j : ℕ)
     (hj : j ∈ SizeData₂.lifts D) (t : HH D) :
@@ -1019,21 +1016,22 @@ theorem ctD_le (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) (u
     mul_le_mul_of_nonneg_left w1 (by linarith)
   have w4 : 5 * L.sc.b' ≤ D.R.k * L.sc.b' := mul_le_mul_of_nonneg_right hk' hb'.le
   have a := (abs_le.1 (nuAbs_place P u i j2 _ w0)).2
-  unfold ctD
   by_cases ht : t ∈ D.host.TT
-  · simp only [if_pos ht]
+  · simp only [ctD, ite_eq_left ht]
+    have hmin := min_le_right (nuRow D u (i + 1) (tauPl D (false, t)) 0)
+      (nuRow D u (i + 1) (tauPl D (true, t)) 0)
     rw [topWt_top L (t := ⟨t, ht⟩) (eTau_false D t)] at a
     have b1 := (head_row u i j2 (tauPl D (false, t)) 0 (by omega)).2
     rw [D.hcW_first u _ (by omega), (L.top_u _ ⟨t, ht⟩ (by omega) (eTau_false D t)).1] at b1
-    have b2 := (head_row u i j2 (tauPl D (false, t)) 1 (by omega)).1
-    have b3 := (L.cloud_u u (tauPl D (false, t)) ⟨1, by omega⟩ le_rfl (by show 1 + 1 < D.R.k; omega)).2
     have b4 := (head_row u i j2 (tauPl D (true, t)) 0 (by omega)).1
     rw [D.hcW_first u _ (by omega)] at b4
     have b5 := P.cloud_place_bound (tauPl D (true, t)) (by omega) (true_not_top D t)
     have b6 := (L.cloud_v (tauPl D (true, t)) ⟨0, by omega⟩).2
     push_cast at b5
     linarith
-  · simp only [if_neg ht]
+  · simp only [ctD, ite_eq_right ht]
+    have hmin := min_le_left (nuRow D u (i + 1) (tauPl D (false, t)) 0)
+      (nuRow D u (i + 1) (tauPl D (true, t)) 0)
     rw [topWt_off L (false_not_top ht)] at a
     linarith
 
@@ -1073,13 +1071,12 @@ theorem FRamD_bounds (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc
   rw [f_eq]
   exact ⟨by linarith, mul_nonpos_of_nonpos_of_nonneg (by linarith) h0⟩
 
-theorem abs_EatD_le (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) :
-    |EatD D j| ≤ (D.host.TT.card : ℝ) * L.sc.b + (D.R.f : ℝ) * D.R.k * L.sc.b' := by
+theorem abs_EatD_le (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x)
+    (u : D.what₂.Word) (j : ℕ) (hj : j ∈ SizeData₂.lifts D) :
+    |EatD D u j| ≤ (D.host.TT.card : ℝ) * L.sc.b + (D.R.f : ℝ) * D.R.k * L.sc.b' := by
   obtain ⟨a1, a2⟩ := FRamD_bounds h P hx j hj
-  have a3 := Finset.sup'_le (⟨D.u₀, Finset.mem_univ _⟩ : (Finset.univ : Finset D.what₂.Word).Nonempty)
-    (fun u : D.what₂.Word => ∑ t : HH D, ctD D u j t) fun u _ => sum_ctD_le h P hx j hj u
-  have a4 := (Finset.sum_nonneg fun t _ => ctD_nonneg D.u₀ j hj t).trans
-    (Finset.le_sup' (fun u : D.what₂.Word => ∑ t : HH D, ctD D u j t) (Finset.mem_univ D.u₀))
+  have a3 := sum_ctD_le h P hx j hj u
+  have a4 : 0 ≤ ∑ t : HH D, ctD D u j t := Finset.sum_nonneg fun t _ => ctD_nonneg u j hj t
   have a5 : 0 ≤ (D.host.TT.card : ℝ) * L.sc.b := mul_nonneg (Nat.cast_nonneg _) (by linarith [one_le_b L])
   unfold EatD
   rw [abs_le]
@@ -1108,21 +1105,21 @@ open Formalism.MainNotions.G GlobalTheory.HCEntries GlobalTheory.FockDegreeGap G
 variable {D : D7} {L : SizeData₂ D}
 
 theorem offDiagonalRamified_bound_const_four (h : SizesAt L) (P : ParameterChoice' D L) (hx : 2 ≤ L.sc.x) : Formalism.MainNotions.WeightDegreeSizes.DiscriminantOffsetBound D L 4 := by
-  intro j hj
+  intro u j hj
   have hp : D.host.d.Prime := D.host.hyp.2.1
   have hb := one_le_b L
   have hL := one_le_scL L
   have hn := one_le_n D
   have hf : (1 : ℝ) ≤ D.R.f := by linarith [f_eq D, one_le_n D]
   have hm : (1 : ℝ) ≤ D.R.m := by exact_mod_cast (by have := D.R.two_le_m; omega : 1 ≤ D.R.m)
-  have hE := abs_EatD_le h P hx j hj
+  have hE := abs_EatD_le h P hx u j hj
   have hlog : Real.log D.host.d ≤ L.sc.L := by
     obtain ⟨-, -, -, -, -, -, hQ, -⟩ := h
     refine hQ.2.2.2.2.1.trans (Real.rpow_le_rpow_of_exponent_le L.sc.one_lt_alt.le ?_)
     unfold szTh
     linarith [L.sc.eps_pos]
   have hlog0 : 0 ≤ Real.log (D.host.d : ℝ) := Real.log_natCast_nonneg _
-  have hE2 : |EatD D j| ≤ 2 * ((D.R.f : ℝ) * L.sc.b) := by
+  have hE2 : |EatD D u j| ≤ 2 * ((D.R.f : ℝ) * L.sc.b) := by
     obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hS, -⟩ := h
     have a1 : (D.host.TT.card : ℝ) ≤ D.R.n := by
       rw [← card_HH]
@@ -1136,7 +1133,7 @@ theorem offDiagonalRamified_bound_const_four (h : SizesAt L) (P : ParameterChoic
   have hB1 : D.R.f * L.sc.b * L.sc.L ≤ L.B0 := by
     rw [hB, show (D.R.f : ℝ) * D.R.m * L.sc.b * L.sc.L = D.R.m * (D.R.f * L.sc.b * L.sc.L) by ring]
     exact le_mul_of_one_le_left (by positivity) hm
-  have h1 : Real.log (D.host.d : ℝ) * |EatD D j| ≤ L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) :=
+  have h1 : Real.log (D.host.d : ℝ) * |EatD D u j| ≤ L.sc.L * (2 * ((D.R.f : ℝ) * L.sc.b)) :=
     mul_le_mul hlog hE2 (abs_nonneg _) (by linarith)
   nlinarith
 

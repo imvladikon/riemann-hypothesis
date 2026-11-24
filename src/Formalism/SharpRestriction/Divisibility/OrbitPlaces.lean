@@ -435,7 +435,7 @@ def OneLiftAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D
   L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
     D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ i < D.R.m,
-      KGe T u μ w i ((L.F (i + 1) w - EatD D (i + 1) - vDG D u w) + (if i = 0 then sp else 0) * vDG D u w)
+      KGe T u μ w i ((L.F (i + 1) w - EatD D u (i + 1) - vDG D u w) + (if i = 0 then sp else 0) * vDG D u w)
 
 def NoOperatorOrbitBound (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D)
     (ce : ErrC) (sp : ℝ) : Prop :=
@@ -458,7 +458,7 @@ def ValuationAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX
   L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
     D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D j - vDG D u w)) + sp * vDG D u w)
+      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w)
 
 def LiftIntegrality (D : D7) (Dx : DivX D) (T : TwForms D) (sp : ℝ) : Prop :=
   DGamDef D → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ D.host.d →
@@ -917,9 +917,6 @@ theorem liftD_of {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Ent D} {lev : L
     rw [hF (i + 1) (succ_mem_lifts hi) w]
     unfold Fval FvalP SizeData₂.gTypes
     rw [if_neg hg, if_pos hd]
-  have hsup : ∑ t : HH D, ctD D u (i + 1) t ≤
-      Finset.univ.sup' ⟨D.u₀, Finset.mem_univ _⟩ fun u : D.what₂.Word => ∑ t : HH D, ctD D u (i + 1) t :=
-    Finset.le_sup' (fun u : D.what₂.Word => ∑ t : HH D, ctD D u (i + 1) t) (Finset.mem_univ u)
   rw [eF]
   unfold EatD
   by_cases h0 : i = 0
@@ -945,7 +942,7 @@ theorem c_of {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe 
 theorem atD_of {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
     (hc : ValuationComposition D T) (hl : OneLiftAtDiscriminant D L K Dx T lev Xe ce sp) : ValuationAtDiscriminant D L K Dx T lev Xe ce sp := by
   intro hF hE u w hT hd μ hUs hQ x hx
-  have h := hc u μ w (fun j => (L.F j w - EatD D j - vDG D u w) +
+  have h := hc u μ w (fun j => (L.F j w - EatD D u j - vDG D u w) +
         (if j = 1 then sp * vDG D u w else 0)) (fun i hi => by
           have := hl hF hE u w hT hd μ hUs hQ i hi
           by_cases h0 : i = 0

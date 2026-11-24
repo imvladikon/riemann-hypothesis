@@ -329,7 +329,7 @@ def LevelPrimeBudget (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop := ∀ u, For
 def StabiliserLogBound (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop := ∀ u, 2 * Real.log ((D.mem u).C.DGam : ℝ) ≤ C * L.B0
 
 def DiscriminantOffsetBound (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop :=
-  ∀ j ∈ SizeData₂.lifts D, 2 * Real.log (D.host.d : ℝ) * |EatD D j| ≤ C * L.B0
+  ∀ u, ∀ j ∈ SizeData₂.lifts D, 2 * Real.log (D.host.d : ℝ) * |EatD D u j| ≤ C * L.B0
 
 def InertPrimeLossBound (D : D7) (L : SizeData₂ D) (K : Consts) (c : ErrC) (C : ℝ) : Prop :=
   ∀ j ∈ SizeData₂.lifts D, ∀ P : Finset ℕ,
@@ -339,13 +339,13 @@ def InertPrimeLossBound (D : D7) (L : SizeData₂ D) (K : Consts) (c : ErrC) (C 
 
 open Classical in
 def hOff (L : SizeData₂ D) (K : Consts) (c : ErrC) (u : D.what₂.Word) (j p : ℕ) : ℝ :=
-  (padicValNat p (D.mem u).C.DGam : ℝ) + (if D.host.cls p = PrimeClass.ramD then |EatD D j| else 0) +
+  (padicValNat p (D.mem u).C.DGam : ℝ) + (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) +
     (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0)
 
 theorem hOff_nonneg (L : SizeData₂ D) (K : Consts) (c : ErrC) (u : D.what₂.Word) (j p : ℕ) : 0 ≤ hOff L K c u j p := by
   unfold hOff
   have h1 : (0 : ℝ) ≤ (padicValNat p (D.mem u).C.DGam : ℝ) := Nat.cast_nonneg _
-  have h2 : 0 ≤ (if D.host.cls p = PrimeClass.ramD then |EatD D j| else 0) := by split_ifs <;> simp
+  have h2 : 0 ≤ (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) := by split_ifs <;> simp
   have h3 : 0 ≤ (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0) := by
     split_ifs <;> simp
   linarith
@@ -428,10 +428,10 @@ theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CG
     nlinarith
   have q1 : ∑ p ∈ P, Real.log (p : ℝ) * (padicValNat p (D.mem u).C.DGam : ℝ) ≤ Real.log ((D.mem u).C.DGam : ℝ) :=
     sum_val_log_le _ (D.mem u).C.DGam_pos P hPp
-  have q2 : ∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D j| else 0) ≤
-      Real.log (D.host.d : ℝ) * |EatD D j| := by
-    have : ∀ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D j| else 0) =
-        if D.host.cls p = PrimeClass.ramD then Real.log (p : ℝ) * |EatD D j| else 0 := by
+  have q2 : ∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) ≤
+      Real.log (D.host.d : ℝ) * |EatD D u j| := by
+    have : ∀ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) =
+        if D.host.cls p = PrimeClass.ramD then Real.log (p : ℝ) * |EatD D u j| else 0 := by
       intro p _; split_ifs <;> simp
     rw [Finset.sum_congr rfl this, ← Finset.sum_filter]
     refine (Finset.sum_le_sum_of_subset_of_nonneg (t := {D.host.d})
@@ -448,7 +448,7 @@ theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CG
     exact hI j hj _ fun p hp => ⟨hPp p (Finset.mem_filter.1 hp).1, (Finset.mem_filter.1 hp).2⟩
   have q4 : ∑ p ∈ P, Real.log (p : ℝ) * hOff L K c u j p =
       (∑ p ∈ P, Real.log (p : ℝ) * (padicValNat p (D.mem u).C.DGam : ℝ)) +
-      (∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D j| else 0)) +
+      (∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0)) +
       ∑ p ∈ P, Real.log (p : ℝ) *
         (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0) := by
     rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
@@ -456,7 +456,7 @@ theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CG
     unfold hOff; ring
   rw [← Finset.mul_sum] at q3
   have g1 := hG u
-  have g2 := hD j hj
+  have g2 := hD u j hj
   rw [q4] at p2
   nlinarith
 
