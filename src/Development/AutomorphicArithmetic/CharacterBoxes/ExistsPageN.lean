@@ -84,12 +84,13 @@ def PageN (eps x : ℝ) (e : ℕ) : Prop := x ^ (2 + 8 * eps) ≤ (2 : ℝ) ^ e 
 def VAt (ψ : PChar) (eps Ct : ℝ) (q d e : ℕ) (x : ℝ) : Prop :=
   ∀ (E : Type) [Field E] [NumberField E], IsChiField ψ e q d E → VVle E ⌊x ^ Ct⌋₊ (Real.sqrt (Real.exp (x ^ eps)))
 
-def VWinAt (ψ : PChar) (Ct : ℝ) : Prop :=
-  ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∀ e : ℝ → ℕ, (∀ x ≥ (1 : ℝ), PageN eps x (e x)) →
+def VWinAt (ψ : PChar) (Ct w : ℝ) : Prop :=
+  ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∀ (A : ℝ) (e : ℝ → ℕ),
+    (∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ A) →
     ∃ J : ℝ, 1 ≤ J ∧ ∃ X0 : ℝ, ∀ X ≥ X0, ∀ q d : ℕ, WinPair eps (X ^ (1 / J)) q d →
-      ∃ Y : ℝ, X ^ (1 / J) ≤ Y ∧ Y ^ (2 : ℝ) ≤ X ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) → VAt ψ eps Ct q d (e x) x
+      ∃ Y : ℝ, X ^ (1 / J) ≤ Y ∧ Y ^ w ≤ X ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w → VAt ψ eps Ct q d (e x) x
 
-def VWin : Prop := ∀ ψ : PChar, VWinAt ψ 401
+def VWin : Prop := ∀ (ψ : PChar) (Ct w : ℝ), 1 ≤ Ct → 1 ≤ w → VWinAt ψ Ct w
 
 theorem VVle.mono {E : Type} [Field E] [NumberField E] {t t' : ℕ} {B B' : ℝ} (h : VVle E t B) (ht : t' ≤ t) (hB : B ≤ B') :
     VVle E t' B' := by
@@ -118,6 +119,43 @@ theorem exists_pageN (eps : ℝ) (he : 0 < eps) : ∃ e : ℝ → ℕ, ∀ x ≥
     · exact ⟨0, fun h => absurd h hx⟩
   choose e he using this
   exact ⟨e, he⟩
+
+/-- Choose the dyadic conductor factor at the original scale, with a polynomial upper bound. -/
+theorem exists_scaled_pageN {eps c : ℝ} (heps : 0 < eps) (heps' : eps < 1 / 52) (hc : 1 ≤ c) :
+    ∃ e : ℝ → ℕ, (∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ (4 : ℝ)) ∧
+      ∀ x ≥ 4 * c, x ^ (2 + 8 * eps) ≤ c * 2 ^ e x ∧ c * 2 ^ e x ≤ 2 * x ^ (2 + 8 * eps) := by
+  let z (x : ℝ) := max 4 (x ^ (2 + 8 * eps) / c)
+  have hpoint (x : ℝ) : ∃ n : ℕ, z x ≤ (2 : ℝ) ^ n ∧ (2 : ℝ) ^ n ≤ 2 * z x := by
+    obtain ⟨n, hlo, hhi⟩ := exists_nat_pow_near (le_trans (by norm_num : (1 : ℝ) ≤ 4) (le_max_left _ _ : 4 ≤ z x))
+      (by norm_num : (1 : ℝ) < 2)
+    exact ⟨n + 1, hhi.le, by rw [pow_succ, mul_comm]; gcongr⟩
+  choose e hlo hhi using hpoint
+  refine ⟨e, fun x hx => ?_, fun x hx => ?_⟩
+  · have hx1 : 1 ≤ x := by linarith
+    have hfour : (4 : ℝ) ≤ x ^ (2 + 8 * eps) := by
+      calc (4 : ℝ) = (2 : ℝ) ^ (2 : ℝ) := by norm_num [Real.rpow_two]
+        _ ≤ x ^ (2 : ℝ) := Real.rpow_le_rpow (by norm_num) hx (by norm_num)
+        _ ≤ x ^ (2 + 8 * eps) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
+    have hz : z x ≤ x ^ (2 + 8 * eps) := max_le hfour (div_le_self (by positivity) hc)
+    have he : (2 : ℝ) ^ (2 : ℕ) ≤ (2 : ℝ) ^ e x := by
+      exact (show (2 : ℝ) ^ (2 : ℕ) ≤ 4 by norm_num).trans ((le_max_left _ _ : 4 ≤ z x).trans (hlo x))
+    refine ⟨(pow_le_pow_iff_right₀ (by norm_num)).1 he, ?_⟩
+    calc (2 : ℝ) ^ e x ≤ 2 * x ^ (2 + 8 * eps) := (hhi x).trans (mul_le_mul_of_nonneg_left hz (by norm_num))
+      _ ≤ x * x ^ (2 + 8 * eps) := mul_le_mul_of_nonneg_right hx (by positivity)
+      _ = x ^ (1 + (2 + 8 * eps)) := by rw [Real.rpow_add (by linarith) 1 (2 + 8 * eps), Real.rpow_one]
+      _ ≤ x ^ (4 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
+  · have hc0 : 0 < c := by linarith
+    have hx1 : 1 ≤ x := by linarith
+    have hz : z x = x ^ (2 + 8 * eps) / c :=
+      max_eq_right ((le_div_iff₀ hc0).2 (hx.trans (Real.self_le_rpow_of_one_le hx1 (by linarith))))
+    have hl := hlo x
+    have hu := hhi x
+    rw [hz] at hl hu
+    refine ⟨?_, ?_⟩
+    · rw [mul_comm c]
+      exact (div_le_iff₀ hc0).1 hl
+    · calc c * (2 : ℝ) ^ e x ≤ c * (2 * (x ^ (2 + 8 * eps) / c)) := mul_le_mul_of_nonneg_left hu hc0.le
+        _ = 2 * x ^ (2 + 8 * eps) := by field_simp
 
 end UpperTheory.Top
 

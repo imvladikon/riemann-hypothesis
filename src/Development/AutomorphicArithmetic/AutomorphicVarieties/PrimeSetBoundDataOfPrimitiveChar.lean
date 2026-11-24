@@ -60,8 +60,8 @@ structure BConst where
 
 def BConst.R (K : BConst) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : ℕ := K.R0 M + ∑ l ∈ B', K.Rl l (L l)
 
-def BConst.J (K : BConst) (Ct eps : ℝ) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : ℝ :=
-  2 * (2 * (2 * K.CK * Ct / eps)) ^ K.R M B' L
+def BConst.J (K : BConst) (Ct w eps : ℝ) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : ℝ :=
+  w * (w * (2 * K.CK * Ct / eps)) ^ K.R M B' L
 
 def admitted (A1 Ct : ℝ) (e t : ℝ → ℕ) : Prop :=
   ∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ A1 ∧ 2 ≤ t x ∧ (t x : ℝ) ≤ x ^ Ct
@@ -70,7 +70,7 @@ def PrimePair (m q d : ℕ) : Prop := q.Prime ∧ q % 8 = 3 ∧ d.Prime ∧ d % 
 
 def OddPrimesWithRootsOfUnity (B' : Finset ℕ) (L : ℕ → AbF) : Prop := ∀ l ∈ B', l.Prime ∧ l ≠ 2 ∧ (L l).HasMu l
 
-def InRange (J X Y : ℝ) : Prop := X ^ (1 / J) ≤ Y ∧ Y ^ (2 : ℝ) ≤ X
+def InRange (w J X Y : ℝ) : Prop := X ^ (1 / J) ≤ Y ∧ Y ^ w ≤ X
 
 def BaAt (M : AbF) (eps : ℝ) (e t : ℝ → ℕ) (q d : ℕ) (x : ℝ) : Prop :=
   ∀ (E : Type) [Field E] [NumberField E], IsCompField M (e x) q d E → BoundedHeightTwoPlaceCondition E (t x) (Real.exp (x ^ (4 * eps / 5)))
@@ -80,16 +80,16 @@ def BbAt (K : BConst) (B' : Finset ℕ) (L : ℕ → AbF) (eps : ℝ) (t : ℝ �
     ∀ (L₁ : Type) [Field L₁] [NumberField L₁] [Algebra L₀ L₁], IsLayer l (Nat.log l (K.Rl l (L l)) + 3) L₀ L₁ →
       VVat l L₁ (t x) (Real.exp (x ^ (4 * eps / 5)))
 
-def IsBWindow (K : BConst) (Ct eps : ℝ) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) (e t : ℝ → ℕ) (q d : ℕ) (X Y : ℝ) : Prop :=
-  InRange (K.J Ct eps M B' L) X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) → BaAt M eps e t q d x ∧ BbAt K B' L eps t x
+def IsBWindow (K : BConst) (Ct w eps : ℝ) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) (e t : ℝ → ℕ) (q d : ℕ) (X Y : ℝ) : Prop :=
+  InRange w (K.J Ct w eps M B' L) X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w → BaAt M eps e t q d x ∧ BbAt K B' L eps t x
 
-def BShape (K : BConst) (Ct : ℝ)
+def BShape (K : BConst) (Ct w : ℝ)
     (P : ℝ → AbF → Finset ℕ → (ℕ → AbF) → (ℝ → ℕ) → (ℝ → ℕ) → ℕ → ℕ → ℝ → ℝ → Prop) : Prop :=
   ∀ (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF), OddPrimesWithRootsOfUnity B' L → ∀ eps A1 : ℝ, 0 < eps → eps < 1 / 52 →
     ∃ X0 : ℝ, ∀ e t : ℝ → ℕ, admitted A1 Ct e t → ∀ X ≥ X0, ∀ q d : ℕ, PrimePair M.m q d →
-      Real.log ((q : ℝ) * d) ≤ X ^ (eps / (4 * K.J Ct eps M B' L)) → ∃ Y : ℝ, P eps M B' L e t q d X Y
+      Real.log ((q : ℝ) * d) ≤ X ^ (eps / (4 * K.J Ct w eps M B' L)) → ∃ Y : ℝ, P eps M B' L e t q d X Y
 
-def ThmBab (K : BConst) (Ct : ℝ) : Prop := BShape K Ct (IsBWindow K Ct)
+def ThmBab (K : BConst) (Ct w : ℝ) : Prop := BShape K Ct w (IsBWindow K Ct w)
 
 def ThmBc (Ct : ℝ) : Prop :=
   ∃ C : ℝ, ∀ (M : AbF) (A1 : ℝ) (e t : ℝ → ℕ), admitted A1 Ct e t → ∀ x ≥ (2 : ℝ), ∀ q d : ℕ, PrimePair M.m q d →
@@ -103,27 +103,27 @@ def ThmBcFree : Prop :=
 
 def Lchi (ψ : PChar) (l : ℕ) : AbF := AbF.cyc (l * ψ.N)
 
-def Jchi (K : BConst) (Ct eps : ℝ) (ψ : PChar) : ℝ := K.J Ct eps (AbF.ofChar ψ) (Bchi ψ) (Lchi ψ)
+def Jchi (K : BConst) (Ct w eps : ℝ) (ψ : PChar) : ℝ := K.J Ct w eps (AbF.ofChar ψ) (Bchi ψ) (Lchi ψ)
 
 def HVAt (ψ : PChar) (C eps : ℝ) (e t : ℝ → ℕ) (q d : ℕ) (x : ℝ) : Prop :=
   ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], IsChiField ψ (e x) q d E →
     VVplusLe E (t x) (((condF E : ℝ) * t x) ^ C + C * Real.exp (x ^ (4 * eps / 5)))
 
-def ThmHV (K : BConst) (Ct : ℝ) : Prop :=
+def ThmHV (K : BConst) (Ct w : ℝ) : Prop :=
   ∀ ψ : PChar, ∃ (C : ℝ) (r₁ r₂ : ℕ), r₁.Prime ∧ r₂.Prime ∧ ∀ eps A1 : ℝ, 0 < eps → eps < 1 / 52 →
     ∃ X0 : ℝ, ∀ e t : ℝ → ℕ, admitted A1 Ct e t → ∀ X ≥ X0, ∀ q d : ℕ, PrimePair ψ.N q d →
       2 * X ^ Ct + 1 < (q : ℝ) → 2 * X ^ Ct + 1 < (d : ℝ) →
       (∀ y ∈ [ψ.N, ordC ψ, pK ψ, hStar ψ, pOne ψ, r₁, r₂], y < q ∧ y < d) →
-      Real.log ((q : ℝ) * d) ≤ X ^ (eps / (4 * Jchi K Ct eps ψ)) →
-      ∀ Y : ℝ, IsBWindow K Ct eps (AbF.ofChar ψ) (Bchi ψ) (Lchi ψ) e t q d X Y →
-        ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) → HVAt ψ C eps e t q d x
+      Real.log ((q : ℝ) * d) ≤ X ^ (eps / (4 * Jchi K Ct w eps ψ)) →
+      ∀ Y : ℝ, IsBWindow K Ct w eps (AbF.ofChar ψ) (Bchi ψ) (Lchi ψ) e t q d X Y →
+        ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w → HVAt ψ C eps e t q d x
 
-def JointWin (Ct : ℝ) : Prop :=
+def JointWin (Ct w : ℝ) : Prop :=
   ∀ (ψ : PChar) (eps A1 : ℝ), 0 < eps → eps < 1 / 52 → ∀ e t : ℝ → ℕ, admitted A1 Ct e t →
-    ∃ (J C P X0 : ℝ), 0 < J ∧ ∀ X ≥ X0, ∀ q d : ℕ, PrimePair ψ.N q d →
+    ∃ (J C P X0 : ℝ), 1 ≤ J ∧ ∀ X ≥ X0, ∀ q d : ℕ, PrimePair ψ.N q d →
       2 * X ^ Ct + 1 < (q : ℝ) → 2 * X ^ Ct + 1 < (d : ℝ) → P < (q : ℝ) → P < (d : ℝ) →
       Real.log ((q : ℝ) * d) ≤ X ^ (eps / (4 * J)) →
-      ∃ Y : ℝ, InRange J X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) →
+      ∃ Y : ℝ, InRange w J X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ w →
         BaAt (AbF.ofChar ψ) eps e t q d x ∧ HVAt ψ C eps e t q d x
 
 theorem thmBc_iff {Ct : ℝ} (hC : 1 ≤ Ct) : ThmBc Ct ↔ ThmBcFree := by
@@ -153,19 +153,28 @@ theorem thmBc_iff {Ct : ℝ} (hC : 1 ≤ Ct) : ThmBc Ct ↔ ThmBcFree := by
 theorem primeSetBoundData_of_primitiveChar (ψ : PChar) : OddPrimesWithRootsOfUnity (Bchi ψ) (Lchi ψ) := fun _ hl =>
   ⟨(prime_of_mem_Bchi hl).1, (prime_of_mem_Bchi hl).2, AbF.hasMu_cyc (prime_of_mem_Bchi hl).1.pos (NeZero.pos _)⟩
 
-theorem BConst.J_pos (K : BConst) {Ct eps : ℝ} (hC : 0 < Ct) (he : 0 < eps) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) :
-    0 < K.J Ct eps M B' L := by
+theorem BConst.J_pos (K : BConst) {Ct w eps : ℝ} (hC : 0 < Ct) (hw : 0 < w) (he : 0 < eps)
+    (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : 0 < K.J Ct w eps M B' L := by
   have := K.CK_pos
   unfold BConst.J
   positivity
 
-theorem jointWin_of {K : BConst} {Ct : ℝ} (hC : 0 < Ct) (hB : ThmBab K Ct) (hV : ThmHV K Ct) : JointWin Ct := by
+theorem BConst.one_le_J (K : BConst) (hK : 1 ≤ K.CK) {Ct w eps : ℝ}
+    (hC : 1 ≤ Ct) (hw : 1 ≤ w) (he : 0 < eps) (he' : eps ≤ 1)
+    (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : 1 ≤ K.J Ct w eps M B' L := by
+  have hB : 1 ≤ 2 * K.CK * Ct / eps := by
+    apply (one_le_div he).2
+    nlinarith only [he', one_le_mul_of_one_le_of_one_le hK hC]
+  exact one_le_mul_of_one_le_of_one_le hw (one_le_pow₀ (one_le_mul_of_one_le_of_one_le hw hB))
+
+theorem jointWin_of {K : BConst} {Ct w : ℝ} (hK : 1 ≤ K.CK) (hC : 1 ≤ Ct) (hw : 1 ≤ w)
+    (hB : ThmBab K Ct w) (hV : ThmHV K Ct w) : JointWin Ct w := by
   intro ψ eps A1 h0 h1 e t ha
   obtain ⟨X0, H⟩ := hB (AbF.ofChar ψ) (Bchi ψ) (Lchi ψ) (primeSetBoundData_of_primitiveChar ψ) eps A1 h0 h1
   obtain ⟨C, r₁, r₂, -, -, H'⟩ := hV ψ
   obtain ⟨X1, H'⟩ := H' eps A1 h0 h1
-  refine ⟨Jchi K Ct eps ψ, C, (([ψ.N, ordC ψ, pK ψ, hStar ψ, pOne ψ, r₁, r₂].sum : ℕ) : ℝ), max X0 X1,
-    K.J_pos hC h0 _ _ _, fun X hX q d hp a b c c' hl => ?_⟩
+  refine ⟨Jchi K Ct w eps ψ, C, (([ψ.N, ordC ψ, pK ψ, hStar ψ, pOne ψ, r₁, r₂].sum : ℕ) : ℝ), max X0 X1,
+    K.one_le_J hK hC hw h0 (by linarith) _ _ _, fun X hX q d hp a b c c' hl => ?_⟩
   obtain ⟨Y, hY⟩ := H e t ha X ((le_max_left _ _).trans hX) q d hp hl
   refine ⟨Y, hY.1, fun x u v => ⟨(hY.2 x u v).1,
     H' e t ha X ((le_max_right _ _).trans hX) q d hp a b (fun y hy => ?_) hl Y hY x u v⟩⟩

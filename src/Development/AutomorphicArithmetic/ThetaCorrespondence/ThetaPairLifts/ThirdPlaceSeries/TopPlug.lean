@@ -903,82 +903,36 @@ section -- clump:auto
 open Formalism.HC UpperTheory.Top
 
 theorem UpperTheory.Top.winPairs :
-    ∀ (ψ : PChar) (eps c : ℝ), 0 < eps → eps < 1 / 52 → 1 ≤ c → VWinAt ψ 401 → PairEx →
-      ∃ J : ℝ, 1 ≤ J ∧ ∀ y : ℝ, ∃ Z : ℝ, y ≤ Z ∧ ∀ x : ℝ, Z ≤ x → x ≤ Z ^ ((3 : ℝ) / 2) →
+    ∀ (ψ : PChar) (eps c w : ℝ), 0 < eps → eps < 1 / 52 → 1 ≤ c → VWinAt ψ 400 w → PairEx →
+      ∃ J : ℝ, 1 ≤ J ∧ ∀ y : ℝ, ∃ Z : ℝ, y ≤ Z ∧ ∀ x : ℝ, Z ≤ x → x ≤ Z ^ w →
         ∃ (Y : ℝ) (q d e : ℕ), WinDatum ψ eps J c x Y q d e := by
-  intro ψ eps c heps heps52 hc hV hP
-  obtain ⟨e, he⟩ := exists_pageN eps heps
-  obtain ⟨J, hJ, X0, hX0⟩ := hV eps heps heps52 e he
-  have hN : 0 < ψ.N := Nat.pos_of_ne_zero (NeZero.ne _)
-  obtain ⟨Y1, hY1⟩ := hP ψ.N hN eps J heps heps52 hJ
-  have ha : 0 < 2 + 8 * eps := by linarith
-  have hc0 : 0 ≤ c := by linarith
-  obtain ⟨k, hk1, hka⟩ : ∃ k : ℝ, 1 ≤ k ∧ k ^ (2 + 8 * eps) = c := by
-    refine ⟨c ^ (1 / (2 + 8 * eps)), Real.one_le_rpow hc (one_div_nonneg.2 ha.le), ?_⟩
-    rw [one_div, Real.rpow_inv_rpow hc0 ha.ne']
-  have hk0 : 0 ≤ k := by linarith
+  intro ψ eps c w heps heps52 hc hV hP
+  obtain ⟨e, he, hpage⟩ := exists_scaled_pageN heps heps52 hc
+  obtain ⟨J, hJ, X0, hX0⟩ := hV eps heps heps52 4 e he
+  obtain ⟨Y1, hY1⟩ := hP ψ.N (Nat.pos_of_ne_zero (NeZero.ne _)) eps J heps heps52 hJ
   refine ⟨J, hJ, fun y => ?_⟩
-  have hJ0 : J ≠ 0 := ne_of_gt (by linarith)
-  have hJi : 0 ≤ 1 / J := one_div_nonneg.2 (by linarith)
-  obtain ⟨M, hM1, hMy, hMY1, hMk3, hMk400⟩ : ∃ M : ℝ, 1 ≤ M ∧ y ≤ M ∧ Y1 ≤ M ∧
-      k ^ (3 : ℝ) ≤ M ∧ k ^ (400 : ℝ) ≤ M :=
-    ⟨max 1 (max y (max Y1 (max (k ^ (3 : ℝ)) (k ^ (400 : ℝ))))), by simp, by simp, by simp, by simp, by simp⟩
-  obtain ⟨X, hXX0, hXM⟩ : ∃ X : ℝ, X0 ≤ X ∧ M ^ J ≤ X := ⟨max X0 (M ^ J), le_max_left _ _, le_max_right _ _⟩
+  have hJ0 : 0 < J := by linarith
+  have hJi : 0 ≤ 1 / J := one_div_nonneg.2 hJ0.le
+  let M := max y (max Y1 (4 * c))
+  have hMy : y ≤ M := le_max_left _ _
+  have hMY1 : Y1 ≤ M := (le_max_left _ _).trans (le_max_right _ _)
+  have hM4c : 4 * c ≤ M := (le_max_right _ _).trans (le_max_right _ _)
   have hM0 : 0 ≤ M := by linarith
-  have hX1 : 1 ≤ X := (Real.one_le_rpow hM1 (by linarith)).trans hXM
-  have hX0' : 0 ≤ X := by linarith
+  let X := max X0 (M ^ J)
+  have hX0' : 0 ≤ X := (Real.rpow_nonneg hM0 _).trans (le_max_right _ _)
   have hY0M : M ≤ X ^ (1 / J) := by
-    calc M = (M ^ J) ^ (1 / J) := by rw [one_div, Real.rpow_rpow_inv hM0 hJ0]
-      _ ≤ X ^ (1 / J) := Real.rpow_le_rpow (Real.rpow_nonneg hM0 _) hXM hJi
-  have hXJ : (X ^ (1 / J)) ^ J = X := by rw [one_div, Real.rpow_inv_rpow hX0' hJ0]
+    calc M = (M ^ J) ^ (1 / J) := by rw [one_div, Real.rpow_rpow_inv hM0 hJ0.ne']
+      _ ≤ X ^ (1 / J) := Real.rpow_le_rpow (Real.rpow_nonneg hM0 _) (le_max_right _ _) hJi
+  have hXJ : (X ^ (1 / J)) ^ J = X := by rw [one_div, Real.rpow_inv_rpow hX0' hJ0.ne']
   obtain ⟨q, d, hpg⟩ := hY1 (X ^ (1 / J)) (hMY1.trans hY0M)
-  obtain ⟨W, hW0, hW2, hWV⟩ := hX0 X hXX0 q d hpg.pair
+  obtain ⟨W, hW0, hWw, hWV⟩ := hX0 X (le_max_left _ _) q d hpg.pair
   have hWM : M ≤ W := hY0M.trans hW0
-  have hW1 : 1 ≤ W := hM1.trans hWM
-  have hWnn : 0 ≤ W := by linarith
-  have hk3 : k ^ (3 : ℝ) ≤ W := hMk3.trans hWM
-  have hlem : (k * W) ^ ((3 : ℝ) / 2) ≤ W ^ (2 : ℝ) := by
-    have h1 : (k * W) ^ ((3 : ℝ) / 2) = ((k * W) ^ (3 : ℝ)) ^ ((1 : ℝ) / 2) := by
-      rw [← Real.rpow_mul (mul_nonneg hk0 hWnn)]
-      norm_num
-    have h2 : W ^ (2 : ℝ) = (W ^ (4 : ℝ)) ^ ((1 : ℝ) / 2) := by
-      rw [← Real.rpow_mul hWnn]
-      norm_num
-    rw [h1, h2]
-    apply Real.rpow_le_rpow (Real.rpow_nonneg (mul_nonneg hk0 hWnn) _) _ (by norm_num)
-    rw [Real.mul_rpow hk0 hWnn, show (4 : ℝ) = 1 + 3 by norm_num, Real.rpow_add (by linarith : 0 < W),
-      Real.rpow_one]
-    exact mul_le_mul_of_nonneg_right hk3 (Real.rpow_nonneg hWnn _)
-  refine ⟨k * W, hMy.trans (hWM.trans (le_mul_of_one_le_left hWnn hk1)), fun x hZx hxZ => ?_⟩
-  have hkpos : 0 < k := by linarith
-  have hxW2 : x ≤ W ^ (2 : ℝ) := hxZ.trans hlem
-  have hxX : x ≤ X := hxW2.trans hW2
-  have hx1 : W ≤ x := (le_mul_of_one_le_left hWnn hk1).trans hZx
-  have hx0 : 0 ≤ x := by linarith
-  obtain ⟨x', rfl⟩ : ∃ x', x = k * x' := ⟨x / k, by field_simp⟩
-  have hWx' : W ≤ x' := le_of_mul_le_mul_left hZx hkpos
-  have hx'0 : 0 ≤ x' := hWnn.trans hWx'
-  have hx'1 : 1 ≤ x' := hW1.trans hWx'
-  have hx'x : x' ≤ k * x' := le_mul_of_one_le_left hx'0 hk1
-  have hpage : x' ^ (2 + 8 * eps) ≤ 2 ^ (e x') ∧ 2 ^ (e x') ≤ 2 * x' ^ (2 + 8 * eps) := he x' hx'1
-  have hpow : (k * x') ^ (2 + 8 * eps) = c * x' ^ (2 + 8 * eps) := by rw [Real.mul_rpow hk0 hx'0, hka]
-  refine ⟨X ^ (1 / J), q, d, e x', ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact Real.rpow_le_rpow hx0 hxX hJi
-  · exact hW0.trans hx1
-  · exact hpg.mono (by rw [hXJ]; exact hxX)
-  · rw [hpow]
-    exact mul_le_mul_of_nonneg_left hpage.1 hc0
-  · rw [hpow]
-    calc c * 2 ^ (e x') ≤ c * (2 * x' ^ (2 + 8 * eps)) := mul_le_mul_of_nonneg_left hpage.2 hc0
-      _ = 2 * (c * x' ^ (2 + 8 * eps)) := by ring
-  · intro E _ _ hE
-    have hv := hWV x' hWx' (hx'x.trans hxW2) E hE
-    refine hv.mono ?_ ?_
-    · apply Nat.floor_mono
-      rw [Real.mul_rpow hk0 hx'0, show (401 : ℝ) = 1 + 400 by norm_num, Real.rpow_add (by linarith : 0 < x'),
-        Real.rpow_one]
-      exact mul_le_mul_of_nonneg_right (hMk400.trans (hWM.trans hWx')) (Real.rpow_nonneg hx'0 _)
-    · exact Real.sqrt_le_sqrt (Real.exp_le_exp.2 (Real.rpow_le_rpow hx'0 hx'x heps.le))
+  refine ⟨W, hMy.trans hWM, fun x hxW hxw => ?_⟩
+  have hx0 : 0 ≤ x := hM0.trans (hWM.trans hxW)
+  have hxX : x ≤ X := hxw.trans hWw
+  obtain ⟨hlo, hup⟩ := hpage x (hM4c.trans (hWM.trans hxW))
+  exact ⟨X ^ (1 / J), q, d, e x, Real.rpow_le_rpow hx0 hxX hJi, hW0.trans hxW,
+    hpg.mono (by rwa [hXJ]), hlo, hup, hWV x hxW hxw⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CharacterBoxes.WinPairs =====
@@ -990,23 +944,23 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.HC GlobalTheory.EX UpperTheory.Top HostParam.Seam
 
-theorem UpperTheory.T3.supplyOfAdmOf :
+theorem UpperTheory.T3.supplyOfAdmOf {w : ℝ} :
     (∀ eps C0 : ℝ, 0 < eps → eps < 1 / 52 → 1 ≤ C0 → ∃ CT2 C8 c6 Cb x0 : ℝ, C0 ≤ C8 ∧ 0 < c6 ∧ 0 < Cb ∧
       ∀ (s : Scale) (R : Ranks) (H0 : HostAx R.toFrame) (M : ℕ) (Y : ℝ), s.eps = eps → x0 ≤ s.x → RankVal s R →
         s.J ≤ C0 → (R.o : ℝ) ≤ C0 → (H0.QS : ℝ) ≤ C0 * R.n → 0 < M → (M : ℝ) ≤ C0 → H0.QS ∣ Nat.lcm (2 ^ (R.e + 2)) M →
         PairWin s Y → PairGood M eps Y s.x H0.q H0.d → FieldRows H0.toHostRaw ⌊Y ^ (eps / 5)⌋₊ → admitted R H0 →
         ∃ (H : Host R) (q0 : ℕ), H.toHostAx = H0 ∧ H.CT2 = CT2 ∧ HostGood s C8 4 c6 Cb H q0 ∧
-          R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps))) → ∀ ψ : PChar, VWinAt ψ 401 →
+          R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps))) → ∀ ψ : PChar, VWinAt ψ 400 w →
       (∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ (s : Scale) (φ : Frame) (H0 : HostAx φ), s.eps = eps → x0 ≤ s.x →
         s.x ^ (2 + 8 * eps) ≤ (φ.ord : ℝ) → (φ.ord : ℝ) ≤ 2 * s.x ^ (2 + 8 * eps) → φ.o = (Level.cyc ψ).o → KerChi ψ H0.toHostRaw →
         ∃ (R : Ranks) (h : R.toFrame = φ), RankVal s R ∧ admitted R (h ▸ H0)) →
-      HostExW (3 / 2) (fun _ s R H _ => EAtH (Level.cyc ψ) H.toHostRaw H.TT s.x s.eps 4 ∧ VVle H.E R.t (Real.sqrt s.b)) := by
+      HostExW w (fun _ s R H _ => EAtH (Level.cyc ψ) H.toHostRaw H.TT s.x s.eps 4 ∧ VVle H.E R.t (Real.sqrt s.b)) := by
   intro hSup ψ hV hAdm eps heps heps'
   haveI := ψ.ne
   have hN0 : 0 < ψ.N := Nat.pos_of_ne_zero (NeZero.ne _)
   have heps0 : eps ≠ 0 := heps.ne'
   obtain ⟨c, e0, hc, hF⟩ := UpperTheory.Top.fieldChi ψ
-  obtain ⟨J, hJ, hwin⟩ := UpperTheory.Top.winPairs ψ eps (c : ℝ) heps heps' (by exact_mod_cast hc) hV QH.pairEx
+  obtain ⟨J, hJ, hwin⟩ := UpperTheory.Top.winPairs ψ eps (c : ℝ) w heps heps' (by exact_mod_cast hc) hV QH.pairEx
   obtain ⟨C0, hC1, hCJ, hCo, hCN⟩ : ∃ C0 : ℝ, 1 ≤ C0 ∧ J ≤ C0 ∧ ((Level.cyc ψ).o : ℝ) ≤ C0 ∧
       8 * (ψ.N : ℝ) ≤ C0 :=
     by
@@ -1133,12 +1087,12 @@ theorem UpperTheory.Top.hostOfField :
         R.toFrame.Shares H.TT (s.x ^ (-1 + s.eps)) :=
   UpperTheory.T3.hostOfFieldOf UpperTheory.T3.shortNorm UpperTheory.T3.smallOne
 
-theorem UpperTheory.Top.supplyOfAdm :
-    ∀ ψ : PChar, VWinAt ψ 401 →
+theorem UpperTheory.Top.supplyOfAdm {w : ℝ} :
+    ∀ ψ : PChar, VWinAt ψ 400 w →
     (∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ (s : Scale) (φ : Frame) (H0 : HostAx φ), s.eps = eps → x0 ≤ s.x →
       s.x ^ (2 + 8 * eps) ≤ (φ.ord : ℝ) → (φ.ord : ℝ) ≤ 2 * s.x ^ (2 + 8 * eps) → φ.o = (Level.cyc ψ).o → KerChi ψ H0.toHostRaw →
       ∃ (R : Ranks) (h : R.toFrame = φ), RankVal s R ∧ admitted R (h ▸ H0)) →
-    HostExW (3 / 2) (fun _ s R H _ => EAtH (Level.cyc ψ) H.toHostRaw H.TT s.x s.eps 4 ∧ VVle H.E R.t (Real.sqrt s.b)) :=
+    HostExW w (fun _ s R H _ => EAtH (Level.cyc ψ) H.toHostRaw H.TT s.x s.eps 4 ∧ VVle H.E R.t (Real.sqrt s.b)) :=
   UpperTheory.T3.supplyOfAdmOf UpperTheory.Top.hostOfField
 end -- clump:auto
 end -- clump:auto
@@ -1278,8 +1232,8 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.HC GlobalTheory.EX UpperTheory.Top
 
-theorem UpperTheory.Top.supplyChi :
-    ∀ ψ : PChar, VWinAt ψ 401 → HostExW (3 / 2) (GChi ψ).req := by
+theorem UpperTheory.Top.supplyChi {w : ℝ} :
+    ∀ ψ : PChar, VWinAt ψ 400 w → HostExW w (GChi ψ).req := by
   intro ψ hψ
   refine supplyOfAdm ψ hψ ?_
   intro eps he0 he1
@@ -1327,7 +1281,7 @@ open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.Fc
 theorem UpperTheory.Top.zero_free_all_of_green_v_win (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
     (h : Nonempty (_root_.GlobalTheory.Fc.HypsAlt (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) _root_.GlobalTheory.Fc.DefiniteSideCondition)) : Formalism.HC.ZeroFreeAll :=
   h.elim fun h => UpperTheory.Top.zeroFreeAll_of_topG (la := 3 / 2) (by norm_num)
-    (_root_.GlobalTheory.Fc.forall_goal_of_shape_of_hyps _ _ _ _ (_root_.UpperTheory.Top.shape_closed_link_n_of_green hG) trivial trivial h) fun ψ => UpperTheory.Top.supplyChi ψ (hV ψ)
+    (_root_.GlobalTheory.Fc.forall_goal_of_shape_of_hyps _ _ _ _ (_root_.UpperTheory.Top.shape_closed_link_n_of_green hG) trivial trivial h) fun ψ => UpperTheory.Top.supplyChi ψ (hV ψ 400 (3 / 2) (by norm_num) (by norm_num))
 theorem UpperTheory.Top.every_character_of_green_v_win (hG : GlobalTheory.GLq.Green) (hV : UpperTheory.Top.VWin)
     (h : Nonempty (_root_.GlobalTheory.Fc.HypsAlt (fun 𝒞 => Closed 𝒞 fun Fm _ => LinkN Fm) _root_.GlobalTheory.Fc.DefiniteSideCondition)) : UpperTheory.EveryCharacter :=
   UpperTheory.Top.imprimitive (_root_.UpperTheory.Top.zero_free_all_of_green_v_win hG hV h)

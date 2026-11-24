@@ -383,14 +383,14 @@ section -- clump:auto
 
 open NumberField Formalism.HC UpperTheory.Top UpperTheory.V
 
-theorem UpperTheory.V.log_conductor_mul_height_le_of_pageN :
-    ∀ (eps Ct : ℝ) (m : ℕ), 0 < eps → eps < 1 / 52 → ∃ x0 : ℝ, ∀ x ≥ x0, ∀ N t e q d : ℕ, 1 ≤ N → N ≤ 2 ^ (e + 2) * m * q * d →
-      PageN eps x e → 1 ≤ t → (t : ℝ) ≤ x ^ Ct → Real.log ((q : ℝ) * d) ≤ x ^ (eps / 4) → Real.log ((N : ℝ) * t) ≤ 2 * x ^ (eps / 4) := by
-  intro eps Ct m heps heps1
+theorem UpperTheory.V.log_conductor_mul_height_le :
+    ∀ (eps Ct A : ℝ) (m : ℕ), 0 < eps → ∃ x0 : ℝ, ∀ x ≥ x0, ∀ N t e q d : ℕ, 1 ≤ N → N ≤ 2 ^ (e + 2) * m * q * d →
+      (2 : ℝ) ^ e ≤ x ^ A → 1 ≤ t → (t : ℝ) ≤ x ^ Ct → Real.log ((q : ℝ) * d) ≤ x ^ (eps / 4) → Real.log ((N : ℝ) * t) ≤ 2 * x ^ (eps / 4) := by
+  intro eps Ct A m heps
   have hr : 0 < eps / 4 := by positivity
-  have hK0 : 0 < 3 + |Ct| := by positivity
-  have h1 := (isLittleO_log_rpow_atTop hr).bound (by positivity : (0:ℝ) < 1 / (2 * (3 + |Ct|)))
-  have h2 := (tendsto_rpow_atTop hr).eventually_ge_atTop (2 * (3 * Real.log 2 + Real.log m))
+  have hK0 : 0 < 1 + |A| + |Ct| := by positivity
+  have h1 := (isLittleO_log_rpow_atTop hr).bound (by positivity : (0:ℝ) < 1 / (2 * (1 + |A| + |Ct|)))
+  have h2 := (tendsto_rpow_atTop hr).eventually_ge_atTop (2 * (2 * Real.log 2 + Real.log m))
   obtain ⟨x0, hx0⟩ := Filter.eventually_atTop.1 ((h1.and h2).and (Filter.eventually_ge_atTop 1))
   refine ⟨x0, fun x hx N t e q d hN hNle hP ht htx hqd => ?_⟩
   obtain ⟨⟨hl, hg⟩, hx1⟩ := hx0 x hx
@@ -398,8 +398,8 @@ theorem UpperTheory.V.log_conductor_mul_height_le_of_pageN :
   have hlogx : 0 ≤ Real.log x := Real.log_nonneg hx1
   have hX : 0 < x ^ (eps / 4) := Real.rpow_pos_of_pos hxpos _
   rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hlogx, abs_of_pos hX] at hl
-  have hKl : (3 + |Ct|) * Real.log x ≤ x ^ (eps / 4) / 2 := by
-    calc (3 + |Ct|) * Real.log x ≤ (3 + |Ct|) * (1 / (2 * (3 + |Ct|)) * x ^ (eps / 4)) :=
+  have hKl : (1 + |A| + |Ct|) * Real.log x ≤ x ^ (eps / 4) / 2 := by
+    calc (1 + |A| + |Ct|) * Real.log x ≤ (1 + |A| + |Ct|) * (1 / (2 * (1 + |A| + |Ct|)) * x ^ (eps / 4)) :=
           mul_le_mul_of_nonneg_left hl hK0.le
       _ = x ^ (eps / 4) / 2 := by
           field_simp
@@ -427,13 +427,11 @@ theorem UpperTheory.V.log_conductor_mul_height_le_of_pageN :
   have hlogt : Real.log t ≤ Ct * Real.log x := by
     calc Real.log t ≤ Real.log (x ^ Ct) := Real.log_le_log (by linarith) htx
       _ = Ct * Real.log x := Real.log_rpow hxpos _
-  have hE : (e:ℝ) * Real.log 2 ≤ Real.log 2 + (2 + 8 * eps) * Real.log x := by
-    have h := Real.log_le_log (by positivity) hP.2
-    rw [Real.log_pow, Real.log_mul (by norm_num) (Real.rpow_pos_of_pos hxpos _).ne',
-      Real.log_rpow hxpos] at h
-    exact h
-  have hC : Ct * Real.log x ≤ |Ct| * Real.log x := mul_le_mul_of_nonneg_right (le_abs_self Ct) hlogx
-  nlinarith [mul_nonneg hlogx (by linarith : (0:ℝ) ≤ 1 - 8 * eps)]
+  have hE : (e:ℝ) * Real.log 2 ≤ A * Real.log x := by
+    have h := Real.log_le_log (by positivity) hP
+    rwa [Real.log_pow, Real.log_rpow hxpos] at h
+  nlinarith [mul_le_mul_of_nonneg_right (le_abs_self A) hlogx,
+    mul_le_mul_of_nonneg_right (le_abs_self Ct) hlogx, mul_nonneg hlogx (show 0 ≤ (1 : ℝ) by norm_num)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CMFieldExponentialBounds.LogConductorMulHeightLeOfPageN =====
@@ -655,65 +653,42 @@ theorem VVminusLe.mono {E : Type} [Field E] [NumberField E] [IsCMField E] {t : �
   obtain ⟨h1, h2⟩ := h Ω ld
   exact ⟨h1, fun S hS => (h2 S hS).trans hB⟩
 
-theorem admissible_of_pageN {eps Ct : ℝ} (h0 : 0 < eps) (h1 : eps < 1 / 52) (hC : 1 ≤ Ct) {e : ℝ → ℕ}
-    (he : ∀ x ≥ (1 : ℝ), PageN eps x (e x)) : admitted 4 Ct e fun x => ⌊x ^ Ct⌋₊ := by
-  intro x hx
-  have hx1 : (1 : ℝ) ≤ x := by linarith
-  obtain ⟨a, b⟩ := he x hx1
-  have h2 : x ^ (2 : ℝ) ≤ x ^ (2 + 8 * eps) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
-  have h3 : x ^ (2 + 8 * eps) ≤ x ^ (3 : ℝ) := Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
-  have h4 : x ^ (4 : ℝ) = x * x ^ (3 : ℝ) := by
-    rw [show (4 : ℝ) = 1 + 3 by norm_num, Real.rpow_add (by linarith), Real.rpow_one]
-  have h5 : (0 : ℝ) ≤ x ^ (3 : ℝ) := by positivity
-  have h6 : x ≤ x ^ Ct := Real.self_le_rpow_of_one_le hx1 hC
-  have h8 : 2 * x ^ (3 : ℝ) ≤ x * x ^ (3 : ℝ) := mul_le_mul_of_nonneg_right hx h5
-  refine ⟨?_, b.trans ((mul_le_mul_of_nonneg_left h3 zero_le_two).trans (h8.trans h4.ge)), Nat.le_floor (by push_cast; linarith), Nat.floor_le (by linarith)⟩
-  rw [Real.rpow_two] at h2
-  have h7 : (2 : ℝ) ^ 2 ≤ 2 ^ e x := by nlinarith
-  exact (pow_le_pow_iff_right₀ (by norm_num)).1 h7
-
-theorem vwinAt_of_joint {Ct : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct) (hc : ThmBc Ct) (ψ : PChar) : VWinAt ψ Ct := by
-  intro eps h0 h1 e he
-  set t : ℝ → ℕ := fun x => ⌊x ^ Ct⌋₊ with ht
-  have hadm : admitted 4 Ct e t := admissible_of_pageN h0 h1 hC he
-  obtain ⟨J, C, P, XJ, hJ0, hmain⟩ := hJ ψ eps 4 h0 h1 e t hadm
+theorem vwinAt_of_joint {Ct w : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct w) (hc : ThmBc Ct) (ψ : PChar) : VWinAt ψ Ct w := by
+  intro eps h0 h1 A e he
+  let t (x : ℝ) : ℕ := ⌊x ^ Ct⌋₊
+  have hadm : admitted A Ct e t := by
+    intro x hx
+    have htx : x ≤ x ^ Ct := Real.self_le_rpow_of_one_le (by linarith) hC
+    exact ⟨(he x hx).1, (he x hx).2, Nat.le_floor (by push_cast; linarith), Nat.floor_le (by linarith)⟩
+  obtain ⟨J, C, P, XJ, hJ, hmain⟩ := hJ ψ eps A h0 h1 e t hadm
   obtain ⟨Cb, hCb⟩ := hc
   obtain ⟨K, hK0, hK⟩ := minusBound_le_exp_of_log_le Cb (AbF.ofChar ψ).deg
   obtain ⟨xT, hxT⟩ := error_terms_le_sqrt_exp_rpow eps K C h0
-  obtain ⟨xN, hxN⟩ := log_conductor_mul_height_le_of_pageN eps Ct ψ.N h0 h1
+  obtain ⟨xN, hxN⟩ := log_conductor_mul_height_le eps Ct A ψ.N h0
   obtain ⟨Y0, hY0⟩ := log_mul_le_rpow_of_winPair eps h0
-  obtain ⟨J', hJ'1, hJJ'⟩ : ∃ J' : ℝ, 1 ≤ J' ∧ J ≤ J' := ⟨max J 1, le_max_right _ _, le_max_left _ _⟩
-  have hJ'0 : 0 < J' := by linarith
+  have hJ0 : 0 < J := zero_lt_one.trans_le hJ
   obtain ⟨P', hPP', hNP'⟩ : ∃ P' : ℝ, P ≤ P' ∧ (ψ.N : ℝ) ≤ P' := ⟨max P (ψ.N : ℝ), le_max_left _ _, le_max_right _ _⟩
-  obtain ⟨XB, hXB⟩ := eventually_winPair_gt_power eps J' Ct P' h0 hJ'0
+  obtain ⟨XB, hXB⟩ := eventually_winPair_gt_power eps J Ct P' h0 hJ0
   obtain ⟨L, hxTL, hxNL, hY0L, h2L⟩ : ∃ L : ℝ, xT ≤ L ∧ xN ≤ L ∧ Y0 ≤ L ∧ 2 ≤ L :=
     ⟨max (max xT xN) (max Y0 2), le_max_of_le_left (le_max_left _ _), le_max_of_le_left (le_max_right _ _),
       le_max_of_le_right (le_max_left _ _), le_max_of_le_right (le_max_right _ _)⟩
-  have hL1 : (1 : ℝ) ≤ L := by linarith
   have hL0 : (0 : ℝ) ≤ L := by linarith
-  refine ⟨J', hJ'1, max (max XJ XB) (L ^ J'), ?_⟩
+  refine ⟨J, hJ, max (max XJ XB) (L ^ J), ?_⟩
   intro X hX q d hw
   have hXJ : XJ ≤ X := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hX
   have hXB' : XB ≤ X := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hX
-  have hXL : L ^ J' ≤ X := le_trans (le_max_right _ _) hX
-  have hLX : L ≤ X ^ (1 / J') := by
-    have := Real.rpow_le_rpow (Real.rpow_nonneg hL0 _) hXL (le_of_lt (one_div_pos.mpr hJ'0))
-    rwa [← Real.rpow_mul hL0, mul_one_div_cancel hJ'0.ne', Real.rpow_one] at this
-  have hX1 : 1 ≤ X := by
-    have : 1 ≤ L ^ J' := Real.one_le_rpow hL1 hJ'0.le
-    linarith
-  have hX0 : (0 : ℝ) ≤ X := by linarith
+  have hXL : L ^ J ≤ X := le_trans (le_max_right _ _) hX
+  have hLX : L ≤ X ^ (1 / J) := by
+    have := Real.rpow_le_rpow (Real.rpow_nonneg hL0 _) hXL (le_of_lt (one_div_pos.mpr hJ0))
+    rwa [← Real.rpow_mul hL0, mul_one_div_cancel hJ0.ne', Real.rpow_one] at this
+  have hX0 : (0 : ℝ) ≤ X := (Real.rpow_nonneg hL0 _).trans hXL
   obtain ⟨hq3, hd3, hPq, hPd⟩ := hXB X hXB' q d hw
   have hlog := hY0 _ (hY0L.trans hLX) q d hw
-  have hpow : (X ^ (1 / J')) ^ (eps / 4) = X ^ (eps / (4 * J')) := by
+  have hpow : (X ^ (1 / J)) ^ (eps / 4) = X ^ (eps / (4 * J)) := by
     rw [← Real.rpow_mul hX0]
     congr 1
     field_simp
-  have hmono : X ^ (eps / (4 * J')) ≤ X ^ (eps / (4 * J)) :=
-    Real.rpow_le_rpow_of_exponent_le hX1 (div_le_div_of_nonneg_left h0.le (by positivity) (by linarith))
-  have hlogJ : Real.log (↑q * ↑d) ≤ X ^ (eps / (4 * J)) := by
-    rw [hpow] at hlog
-    exact hlog.trans hmono
+  have hlogJ : Real.log (↑q * ↑d) ≤ X ^ (eps / (4 * J)) := hpow ▸ hlog
   have hN0 : 0 < ψ.N := (AbF.ofChar ψ).pos
   have hcop : ∀ r : ℕ, Nat.Prime r → (ψ.N : ℝ) < r → Nat.Coprime r ψ.N := by
     intro r hr hlt
@@ -724,15 +699,12 @@ theorem vwinAt_of_joint {Ct : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct) (hc : ThmB
       Nat.Coprime.mul_left (hcop q hw.q_prime (lt_of_le_of_lt hNP' hPq)) (hcop d hw.d_prime (lt_of_le_of_lt hNP' hPd))⟩
   obtain ⟨Y, ⟨hYlo, hYhi⟩, hY⟩ :=
     hmain X hXJ q d hpp hq3 hd3 (lt_of_le_of_lt hPP' hPq) (lt_of_le_of_lt hPP' hPd) hlogJ
-  have hWY : X ^ (1 / J') ≤ Y :=
-    le_trans (Real.rpow_le_rpow_of_exponent_le hX1 (one_div_le_one_div_of_le (by linarith) hJJ')) hYlo
-  refine ⟨Y, hWY, hYhi, ?_⟩
-  intro x hxY hxY2
-  have hWx : X ^ (1 / J') ≤ x := hWY.trans hxY
+  refine ⟨Y, hYlo, hYhi, ?_⟩
+  intro x hxY hxYw
+  have hWx : X ^ (1 / J) ≤ x := hYlo.trans hxY
   have hLx : L ≤ x := hLX.trans hWx
   have hx2 : 2 ≤ x := h2L.trans hLx
-  have hx1 : 1 ≤ x := by linarith
-  obtain ⟨hBa, hHV⟩ := hY x hxY hxY2
+  obtain ⟨hBa, hHV⟩ := hY x hxY hxYw
   intro E _ _ hE
   have hq0 : 0 < q := hw.q_prime.pos
   have hd0 : 0 < d := hw.d_prime.pos
@@ -743,15 +715,14 @@ theorem vwinAt_of_joint {Ct : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct) (hc : ThmB
   have hE' : IsCompField (AbF.ofChar ψ) (e x) q d E := (isCompField_ofChar ψ (e x) q d E).2 hE
   have h2 := hBa E hE'
   have hp := hHV E hE
-  have hm := hCb (AbF.ofChar ψ) 4 e t hadm x hx2 q d hpp E hE'
+  have hm := hCb (AbF.ofChar ψ) A e t hadm x hx2 q d hpp E hE'
   obtain ⟨hc1, hc2, hc3⟩ := conductor_bounds_of_isChiField ψ (e x) q d hq0 hd0 E hE
   obtain ⟨-, -, ht2, htle⟩ := hadm x hx2
   have ht1 : 1 ≤ t x := by omega
-  have hWpos : (0 : ℝ) ≤ X ^ (1 / J') := Real.rpow_nonneg hX0 _
-  have hqd : Real.log (↑q * ↑d) ≤ x ^ (eps / 4) := by
-    have hlog0 := hY0 _ (hY0L.trans hLX) q d hw
-    exact hlog0.trans (Real.rpow_le_rpow hWpos hWx (by linarith))
-  have hNt := hxN x (hxNL.trans hLx) (condF E) (t x) (e x) q d hc1 hc2 (he x hx1) ht1 htle hqd
+  have hWpos : (0 : ℝ) ≤ X ^ (1 / J) := Real.rpow_nonneg hX0 _
+  have hqd : Real.log (↑q * ↑d) ≤ x ^ (eps / 4) :=
+    hlog.trans (Real.rpow_le_rpow hWpos hWx (by linarith))
+  have hNt := hxN x (hxNL.trans hLx) (condF E) (t x) (e x) q d hc1 hc2 (he x hx2).2 ht1 htle hqd
   have hmb := hK (Module.finrank ℚ E) (condF E) (t x) (x ^ (eps / 4)) hc1 ht1 hc3 hNt
   have hm' := VVminusLe.mono hm hmb
   have hv := vvle_of_parts h2 hm' hp
@@ -761,10 +732,6 @@ theorem vwinAt_of_joint {Ct : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct) (hc : ThmB
     nlinarith
   have htot := hxT x (hxTL.trans hLx) _ hu1 hNt
   exact VVle.mono hv le_rfl htot
-
-theorem vwin_of_joint (hJ : JointWin 401) (hc : ThmBc 401) : VWin := by
-  intro ψ
-  exact vwinAt_of_joint (by norm_num) hJ hc ψ
 
 end UpperTheory.V
 
@@ -1909,17 +1876,17 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC ReciprocityTheory.Gal Formalism.GaloisCohomology UpperTheory.V UpperTheory.V.Base UpperTheory.Top UpperTheory.V.HV
 
 theorem UpperTheory.V.HV.thmHV :
-    PointHV → ∀ (K : BConst) (Ct : ℝ), 0 < Ct → ThmHV K Ct := by
-  intro hP K Ct hCt ψ
+    PointHV → ∀ (K : BConst) (Ct w : ℝ), 0 < Ct → 0 < w → ThmHV K Ct w := by
+  intro hP K Ct w hCt hw ψ
   obtain ⟨C, r₁, r₂, hr₁, hr₂, hmain⟩ := hP ψ (fun l => Nat.log l (K.Rl l (Lchi ψ l)) + 3)
   refine ⟨(C : ℝ), r₁, r₂, hr₁, hr₂, ?_⟩
   intro eps A1 heps _
-  have hJ : 0 < Jchi K Ct eps ψ := BConst.J_pos K hCt heps _ _ _
-  refine ⟨(2 : ℝ) ^ Jchi K Ct eps ψ, ?_⟩
+  have hJ : 0 < Jchi K Ct w eps ψ := BConst.J_pos K hCt hw heps _ _ _
+  refine ⟨(2 : ℝ) ^ Jchi K Ct w eps ψ, ?_⟩
   intro e t hadm X hX q d hpair hq hd hlist _ Y hwin x hYx hxY
   obtain ⟨⟨hXY, hYX⟩, hwin'⟩ := hwin
-  have hXY' : X ^ (1 / Jchi K Ct eps ψ) ≤ Y := hXY
-  have h1 : ((2 : ℝ) ^ Jchi K Ct eps ψ) ^ (1 / Jchi K Ct eps ψ) ≤ X ^ (1 / Jchi K Ct eps ψ) :=
+  have hXY' : X ^ (1 / Jchi K Ct w eps ψ) ≤ Y := hXY
+  have h1 : ((2 : ℝ) ^ Jchi K Ct w eps ψ) ^ (1 / Jchi K Ct w eps ψ) ≤ X ^ (1 / Jchi K Ct w eps ψ) :=
     Real.rpow_le_rpow (by positivity) hX (by positivity)
   rw [one_div, Real.rpow_rpow_inv (by norm_num) hJ.ne'] at h1
   rw [one_div] at hXY'
@@ -1961,19 +1928,24 @@ theorem pointHV_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : 
   point (sumIn h2 h5 (countVs hP hF hT CK hK) countIV) (sumOut h1 hZ h2 h3)
 
 theorem thmHV_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK) {CK : ℝ}
-    (hK : LemmaK CK) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) (K : BConst) {Ct : ℝ}
-    (hC : 0 < Ct) : ThmHV K Ct :=
-  thmHV (pointHV_of_counts hP hF hT hK h1 h2 h3 h5 hZ) K Ct hC
+    (hK : LemmaK CK) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) (K : BConst) {Ct w : ℝ}
+    (hC : 0 < Ct) (hw : 0 < w) : ThmHV K Ct w :=
+  thmHV (pointHV_of_counts hP hF hT hK h1 h2 h3 h5 hZ) K Ct w hC hw
 
-theorem jointWin_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK) {CK : ℝ}
-    (hK : LemmaK CK) {K : BConst} (hB : ThmBab K 401) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV)
-    (hZ : CountZ) : JointWin 401 :=
-  jointWin_of (by norm_num) hB (thmHV_of_counts hP hF hT hK h1 h2 h3 h5 hZ K (by norm_num))
+theorem jointWin_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK)
+    {CK : ℝ} (hK : LemmaK CK) {K : BConst} (hK1 : 1 ≤ K.CK) {Ct w : ℝ} (hC : 1 ≤ Ct) (hw : 1 ≤ w)
+    (hB : ThmBab K Ct w) (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) : JointWin Ct w :=
+  jointWin_of hK1 hC hw hB
+    (thmHV_of_counts hP hF hT hK h1 h2 h3 h5 hZ K (zero_lt_one.trans_le hC) (zero_lt_one.trans_le hw))
 
 theorem vwin_of_counts (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK) {CK : ℝ}
-    (hK : LemmaK CK) {K : BConst} (hB : ThmBab K 401) (hc : ThmBcFree) (h1 : CountI) (h2 : CountII) (h3 : CountIII)
-    (h5 : CountV) (hZ : CountZ) : VWin :=
-  vwin_of_joint (jointWin_of_counts hP hF hT hK hB h1 h2 h3 h5 hZ) ((thmBc_iff (by norm_num)).2 hc)
+    (hK : LemmaK CK) {K : BConst} (hK1 : 1 ≤ K.CK)
+    (hB : ∀ (Ct w : ℝ), 1 ≤ Ct → 1 ≤ w → ThmBab K Ct w) (hc : ThmBcFree)
+    (h1 : CountI) (h2 : CountII) (h3 : CountIII) (h5 : CountV) (hZ : CountZ) : VWin := by
+  intro ψ Ct w hCt hw
+  have hJ := jointWin_of_counts hP hF hT hK hK1 hCt hw
+    (hB Ct w hCt hw) h1 h2 h3 h5 hZ
+  exact vwinAt_of_joint hCt hJ ((thmBc_iff hCt).2 hc) ψ
 
 end UpperTheory.V.HV
 end -- clump:auto
