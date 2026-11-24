@@ -6,6 +6,7 @@ public import Formalism.SharpRestriction.Divisibility.LocalQuadraticParts
 public import Formalism.SharpRestriction.GrowthBounds.WeilJacquetShalikaLaw
 public import Formalism.SharpRestriction.GlobalSchurBounds.ProductFirstZerothParts
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
+import Formalism.LocalRingCardinality.HostCls
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -320,6 +321,38 @@ theorem sum_val_log_le (n : ℕ) (hn : 0 < n) (P : Finset ℕ) (hP : ∀ p ∈ P
     _ ≤ Real.log (n : ℝ) := Real.log_le_log h3 (by exact_mod_cast h2)
 
 
+def stabiliserDiscriminantCost (n d : ℕ) (b : ℝ) : ℝ :=
+  Real.log (n : ℝ) + Real.log (d : ℝ) * (|(padicValNat d n : ℝ) + b| - (padicValNat d n : ℝ))
+
+theorem sum_val_log_with_offset_le {n d : ℕ} (hn : 0 < n) (hd : d.Prime)
+    (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime) (b : ℝ) :
+    (∑ p ∈ P, Real.log (p : ℝ) * |(padicValNat p n : ℝ) + (if p = d then b else 0)|) ≤
+      stabiliserDiscriminantCost n d b := by
+  let Q := P.erase d
+  have hdQ : d ∉ Q := Finset.notMem_erase d P
+  have hSubset : P ⊆ insert d Q := by
+    intro p hp
+    by_cases h : p = d
+    · exact Finset.mem_insert.2 (Or.inl h)
+    · exact Finset.mem_insert_of_mem (Finset.mem_erase.2 ⟨h, hp⟩)
+  have hVal := sum_val_log_le n hn (insert d Q) (fun p hp =>
+    (Finset.mem_insert.1 hp).elim (· ▸ hd) (fun h => hP p (Finset.mem_erase.1 h).2))
+  rw [Finset.sum_insert hdQ] at hVal
+  calc
+    _ ≤ ∑ p ∈ insert d Q, Real.log (p : ℝ) * |(padicValNat p n : ℝ) + (if p = d then b else 0)| :=
+      Finset.sum_le_sum_of_subset_of_nonneg hSubset fun p _ _ =>
+        mul_nonneg (Real.log_natCast_nonneg p) (abs_nonneg _)
+    _ = Real.log (d : ℝ) * |(padicValNat d n : ℝ) + b| +
+        ∑ p ∈ Q, Real.log (p : ℝ) * (padicValNat p n : ℝ) := by
+      rw [Finset.sum_insert hdQ, ite_eq_left rfl]
+      congr 1
+      exact Finset.sum_congr rfl fun p hp => by
+        rw [ite_eq_right (Finset.mem_erase.1 hp).1, add_zero, abs_of_nonneg (Nat.cast_nonneg _)]
+    _ ≤ _ := by
+      unfold stabiliserDiscriminantCost
+      linarith only [hVal]
+
+
 open Classical in
 def EatCI (L : SizeData₂ D) (K : Consts) (c : ErrC) (j p : ℕ) : ℝ :=
   if IsResidueClassZero D p ∧ hP D p = 0 then EatC L c j p else EatI L K c j p
@@ -331,6 +364,26 @@ def StabiliserLogBound (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop := ∀ u, 2
 def DiscriminantOffsetBound (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop :=
   ∀ u, ∀ j ∈ SizeData₂.lifts D, 2 * Real.log (D.host.d : ℝ) * |EatD D u j| ≤ C * L.B0
 
+
+def StabiliserDiscriminantBound (D : D7) (L : SizeData₂ D) (C : ℝ) : Prop :=
+  ∀ u, ∀ j ∈ SizeData₂.lifts D,
+    2 * stabiliserDiscriminantCost (D.mem u).C.DGam D.host.d (EatD D u j) ≤ C * L.B0
+
+theorem stabiliserDiscriminantBound_of_separate {L : SizeData₂ D} {CG Cd : ℝ}
+    (hG : StabiliserLogBound D L CG) (hD : DiscriminantOffsetBound D L Cd) :
+    StabiliserDiscriminantBound D L (CG + Cd) := by
+  intro u j hj
+  unfold stabiliserDiscriminantCost
+  have hv : 0 ≤ (padicValNat D.host.d (D.mem u).C.DGam : ℝ) := Nat.cast_nonneg _
+  have h := abs_add_le (padicValNat D.host.d (D.mem u).C.DGam : ℝ) (EatD D u j)
+  rw [abs_of_nonneg hv] at h
+  have hOff : |(padicValNat D.host.d (D.mem u).C.DGam : ℝ) + EatD D u j| -
+      (padicValNat D.host.d (D.mem u).C.DGam : ℝ) ≤ |EatD D u j| :=
+    sub_le_iff_le_add.2 (by simpa only [add_comm] using h)
+  have hlog := mul_le_mul_of_nonneg_left hOff
+    (Real.log_natCast_nonneg D.host.d)
+  nlinarith only [hlog, hG u, hD u j hj]
+
 def InertPrimeLossBound (D : D7) (L : SizeData₂ D) (K : Consts) (c : ErrC) (C : ℝ) : Prop :=
   ∀ j ∈ SizeData₂.lifts D, ∀ P : Finset ℕ,
     (∀ p ∈ P, p.Prime ∧ (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n) →
@@ -339,40 +392,31 @@ def InertPrimeLossBound (D : D7) (L : SizeData₂ D) (K : Consts) (c : ErrC) (C 
 
 open Classical in
 def hOff (L : SizeData₂ D) (K : Consts) (c : ErrC) (u : D.what₂.Word) (j p : ℕ) : ℝ :=
-  (padicValNat p (D.mem u).C.DGam : ℝ) + (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) +
+  |(padicValNat p (D.mem u).C.DGam : ℝ) + (if p = D.host.d then EatD D u j else 0)| +
     (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0)
 
 theorem hOff_nonneg (L : SizeData₂ D) (K : Consts) (c : ErrC) (u : D.what₂.Word) (j p : ℕ) : 0 ≤ hOff L K c u j p := by
   unfold hOff
-  have h1 : (0 : ℝ) ≤ (padicValNat p (D.mem u).C.DGam : ℝ) := Nat.cast_nonneg _
-  have h2 : 0 ≤ (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) := by split_ifs <;> simp
-  have h3 : 0 ≤ (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0) := by
-    split_ifs <;> simp
-  linarith
+  refine add_nonneg (abs_nonneg _) ?_
+  split_ifs <;> positivity
 
 theorem Eval_off (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (u : D.what₂.Word) (j : ℕ) (w : D.what₂.places.Pl)
     (hT : D.what₂.places.resChar w ≠ (D.mem u).A.T) (hg : D.what₂.places.resChar w ∉ L.gTypes) :
     |Eval L X K c u j w| ≤ hOff L K c u j (D.what₂.places.resChar w) := by
   have h0 : D.what₂.places.resChar w ≠ D.host.g 0 := fun h => hg (by simp [SizeData₂.gTypes, h])
   have h1 : D.what₂.places.resChar w ≠ D.host.g 1 := fun h => hg (by simp [SizeData₂.gTypes, h])
-  have hv : (0 : ℝ) ≤ (padicValNat (D.what₂.places.resChar w) (D.mem u).C.DGam : ℝ) := Nat.cast_nonneg _
-  unfold Eval hOff EatCI
-  simp only [if_neg h0, if_neg h1, if_neg hT]
-  refine (abs_add_le _ _).trans ?_
-  rw [abs_of_nonneg hv]
-  by_cases hr : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD
-  · simp only [if_pos hr]
-    have : 0 ≤ (if (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧
-        (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n then
-        |if IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) = 0 then
-          EatC L c j (D.what₂.places.resChar w) else EatI L K c j (D.what₂.places.resChar w)| else 0) := by
-      split_ifs <;> simp
-    linarith
-  · simp only [if_neg hr]
+  have hram : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD ↔ D.what₂.places.resChar w = D.host.d :=
+    primeClass_eq_ramD_iff D.host.toHostRaw
+  simp only [Eval, hOff, EatCI, ite_eq_right hT, ite_eq_right h0, ite_eq_right h1, hram]
+  by_cases hd : D.what₂.places.resChar w = D.host.d
+  · simp only [ite_eq_left hd]
+    exact le_add_of_nonneg_right (by split_ifs <;> positivity)
+  · simp only [ite_eq_right hd, add_zero]
     by_cases hi : (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧
         (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n
-    · simp only [if_pos hi]; linarith
-    · simp only [if_neg hi]; simp
+    · simp only [ite_eq_left hi]
+      exact abs_add_le _ _
+    · simp only [ite_eq_right hi, add_zero, le_refl]
 
 theorem EatT_nonneg (u : D.what₂.Word) (w : D.what₂.places.Pl) : 0 ≤ EatT D u w := by
   unfold EatT
@@ -388,9 +432,9 @@ theorem abs_sz (w : D.what₂.places.Pl) (y : ℝ) :
     abs_of_nonneg (Nat.cast_nonneg _ : (0 : ℝ) ≤ (D.what₂.places.ramIdx w : ℝ))]
   ring
 
-theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CG Cd CI : ℝ)
-    (hE : L.EDef X K c) (hT : LevelPrimeBudget D L CT) (hG : StabiliserLogBound D L CG) (hD : DiscriminantOffsetBound D L Cd)
-    (hI : InertPrimeLossBound D L K c CI) : C2off D L (CT + CG + Cd + CI) := by
+theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CGD CI : ℝ)
+    (hE : L.EDef X K c) (hT : LevelPrimeBudget D L CT) (hGD : StabiliserDiscriminantBound D L CGD)
+    (hI : InertPrimeLossBound D L K c CI) : C2off D L (CT + CGD + CI) := by
   classical
   intro u j hj
   set S := L.supp.filter (fun w => D.what₂.places.resChar w ∉ L.gTypes) with hS
@@ -426,60 +470,35 @@ theorem C2off_of (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (CT CG
     have := Eval_off L X K c u j w hw2.2 hw1.2
     have h5 : 0 ≤ SizeData₂.lwP w * (D.what₂.places.ramIdx w : ℝ) := mul_nonneg (logWeight_nonneg w) (Nat.cast_nonneg _)
     nlinarith
-  have q1 : ∑ p ∈ P, Real.log (p : ℝ) * (padicValNat p (D.mem u).C.DGam : ℝ) ≤ Real.log ((D.mem u).C.DGam : ℝ) :=
-    sum_val_log_le _ (D.mem u).C.DGam_pos P hPp
-  have q2 : ∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) ≤
-      Real.log (D.host.d : ℝ) * |EatD D u j| := by
-    have : ∀ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0) =
-        if D.host.cls p = PrimeClass.ramD then Real.log (p : ℝ) * |EatD D u j| else 0 := by
-      intro p _; split_ifs <;> simp
-    rw [Finset.sum_congr rfl this, ← Finset.sum_filter]
-    refine (Finset.sum_le_sum_of_subset_of_nonneg (t := {D.host.d})
-      (fun p hp => Finset.mem_singleton.2 (cls_ramD (Finset.mem_filter.1 hp).2))
-      fun p _ _ => mul_nonneg (Real.log_natCast_nonneg _) (abs_nonneg _)).trans ?_
-    simp
-  have q3 : ∑ p ∈ P, 2 * (Real.log (p : ℝ) *
+  have hVal := sum_val_log_with_offset_le (D.mem u).C.DGam_pos D.host.hyp.2.1 P hPp (EatD D u j)
+  have hOffset := (mul_le_mul_of_nonneg_left hVal (by norm_num : (0 : ℝ) ≤ 2)).trans (hGD u j hj)
+  have hInert : 2 * (∑ p ∈ P, Real.log (p : ℝ) *
       (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0)) ≤ CI * L.B0 := by
-    have : ∀ p ∈ P, 2 * (Real.log (p : ℝ) *
-        (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0)) =
-        if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then 2 * Real.log (p : ℝ) * |EatCI L K c j p| else 0 := by
-      intro p _; split_ifs <;> ring
-    rw [Finset.sum_congr rfl this, ← Finset.sum_filter]
+    simp only [Finset.mul_sum, mul_ite, mul_zero, ← Finset.sum_filter, ← mul_assoc]
     exact hI j hj _ fun p hp => ⟨hPp p (Finset.mem_filter.1 hp).1, (Finset.mem_filter.1 hp).2⟩
-  have q4 : ∑ p ∈ P, Real.log (p : ℝ) * hOff L K c u j p =
-      (∑ p ∈ P, Real.log (p : ℝ) * (padicValNat p (D.mem u).C.DGam : ℝ)) +
-      (∑ p ∈ P, Real.log (p : ℝ) * (if D.host.cls p = PrimeClass.ramD then |EatD D u j| else 0)) +
-      ∑ p ∈ P, Real.log (p : ℝ) *
-        (if (IsResidueClassZero D p ∨ IsSg D p) ∧ (p : ℝ) ≤ L.sc.X'' D.R.n then |EatCI L K c j p| else 0) := by
-    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
-    refine Finset.sum_congr rfl fun p _ => ?_
-    unfold hOff; ring
-  rw [← Finset.mul_sum] at q3
-  have g1 := hG u
-  have g2 := hD u j hj
-  rw [q4] at p2
-  nlinarith
+  simp only [hOff, mul_add, Finset.sum_add_distrib] at p2
+  nlinarith only [p1, p2, hOffset, hInert]
 
-def SecondComplementInputs (D : D7) (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (Cdeg Cg CT CG Cd CI : ℝ) : Prop :=
-  LevelPrimeNotTypePrime D ∧ NormDecompositionCond D X ∧ DegreeCountBound D L Cdeg ∧ TypePrimeSizeBound D L c Cdeg Cg ∧ LevelPrimeBudget D L CT ∧ StabiliserLogBound D L CG ∧
-    DiscriminantOffsetBound D L Cd ∧ InertPrimeLossBound D L K c CI
+def SecondComplementInputs (D : D7) (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (Cdeg Cg CT CGD CI : ℝ) : Prop :=
+  LevelPrimeNotTypePrime D ∧ NormDecompositionCond D X ∧ DegreeCountBound D L Cdeg ∧ TypePrimeSizeBound D L c Cdeg Cg ∧
+    LevelPrimeBudget D L CT ∧ StabiliserDiscriminantBound D L CGD ∧ InertPrimeLossBound D L K c CI
 
-theorem secondComplement_of_inputs (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (Cdeg Cg CT CG Cd CI : ℝ) (hc : c.Large) (hCg : 0 ≤ Cg)
-    (hE : L.EDef X K c) (h : SecondComplementInputs D L X K c Cdeg Cg CT CG Cd CI) :
-    IsotypicRank D L (2 * Cg + (CT + CG + Cd + CI)) := by
-  obtain ⟨a1, a2, a3, a4, a5, a6, a7, a8⟩ := h
-  exact secondComplement_of_split L Cg _ hCg (C2atG_of L X K c Cdeg Cg hc hE a1 a2 a3 a4) (C2off_of L X K c CT CG Cd CI hE a5 a6 a7 a8)
+theorem secondComplement_of_inputs (L : SizeData₂ D) (X : ErrX D) (K : Consts) (c : ErrC) (Cdeg Cg CT CGD CI : ℝ) (hc : c.Large) (hCg : 0 ≤ Cg)
+    (hE : L.EDef X K c) (h : SecondComplementInputs D L X K c Cdeg Cg CT CGD CI) :
+    IsotypicRank D L (2 * Cg + (CT + CGD + CI)) := by
+  obtain ⟨a1, a2, a3, a4, a5, a6, a7⟩ := h
+  exact secondComplement_of_split L Cg _ hCg (C2atG_of L X K c Cdeg Cg hc hE a1 a2 a3 a4) (C2off_of L X K c CT CGD CI hE a5 a6 a7)
 
 def FamilySecondComplementInputs {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) : Prop :=
-  ∃ Cdeg Cg CT CG Cd CI x0 : ℝ, 0 ≤ Cg ∧ ∀ x, x0 ≤ x → ∀ hx : Fm.x1 < x, ∀ i : Fm.Ix x,
-    SecondComplementInputs (Fm.D x i) (Fm.L x i) (Fm.ex x hx i).errX Fm.GK Fm.cX.err Cdeg Cg CT CG Cd CI
+  ∃ Cdeg Cg CT CGD CI x0 : ℝ, 0 ≤ Cg ∧ ∀ x, x0 ≤ x → ∀ hx : Fm.x1 < x, ∀ i : Fm.Ix x,
+    SecondComplementInputs (Fm.D x i) (Fm.L x i) (Fm.ex x hx i).errX Fm.GK Fm.cX.err Cdeg Cg CT CGD CI
 
 def familySecondComplement {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) : Prop :=
   ∃ C x0 : ℝ, ∀ x, x0 ≤ x → Fm.x1 < x → ∀ i : Fm.Ix x, IsotypicRank (Fm.D x i) (Fm.L x i) C
 
 theorem secondComplement_family_of_inputs {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) (h : FamilySecondComplementInputs Fm) : familySecondComplement Fm := by
-  obtain ⟨Cdeg, Cg, CT, CG, Cd, CI, x0, h0, h⟩ := h
-  exact ⟨_, x0, fun x hx0 hx i => secondComplement_of_inputs (Fm.L x i) (Fm.ex x hx i).errX Fm.GK Fm.cX.err Cdeg Cg CT CG Cd CI
+  obtain ⟨Cdeg, Cg, CT, CGD, CI, x0, h0, h⟩ := h
+  exact ⟨_, x0, fun x hx0 hx i => secondComplement_of_inputs (Fm.L x i) (Fm.ex x hx i).errX Fm.GK Fm.cX.err Cdeg Cg CT CGD CI
     (Fm.ex x hx i).err.large h0 (Fm.ex x hx i).err.edef (h x hx0 hx i)⟩
 
 end PartA

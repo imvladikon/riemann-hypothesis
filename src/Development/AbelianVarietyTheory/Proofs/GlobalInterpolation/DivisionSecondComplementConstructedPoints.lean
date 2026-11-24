@@ -1353,20 +1353,13 @@ theorem familySecondComplementInputs_of_tuSize_of_dGamSize : ∀ {eps : ℝ} (Fm
   obtain ⟨CG, xG, -, hoG⟩ := _root_.GlobalTheory.exists_nonneg_const_discriminant_term_le_budget_family Fm h0 h1 hT hG
   obtain ⟨Cd, xD, -, hoD⟩ := _root_.GlobalTheory.RamifiedOffD.offDiagonalRamified_bound_along_family Fm h0 h1
   obtain ⟨CI, xI, -, hoI⟩ := _root_.GlobalTheory.InertLossAdm.inertPrimes_loss_log_sum_admissible Fm h0 h1
-  refine ⟨Cdeg, Cg, CT, CG, Cd, CI, max xd (max xg (max xT (max xG (max xD xI)))), hCg, ?_⟩
+  refine ⟨Cdeg, Cg, CT, CG + Cd, CI, max xd (max xg (max xT (max xG (max xD xI)))), hCg, ?_⟩
   intro x hx0 hx i
-  have a1 : xd ≤ x := (le_max_left _ _).trans hx0
-  have r1 := (le_max_right _ _).trans hx0
-  have a2 : xg ≤ x := (le_max_left _ _).trans r1
-  have r2 := (le_max_right _ _).trans r1
-  have a3 : xT ≤ x := (le_max_left _ _).trans r2
-  have r3 := (le_max_right _ _).trans r2
-  have a4 : xG ≤ x := (le_max_left _ _).trans r3
-  have r4 := (le_max_right _ _).trans r3
-  have a5 : xD ≤ x := (le_max_left _ _).trans r4
-  have a6 : xI ≤ x := (le_max_right _ _).trans r4
-  exact ⟨fun u j h => (Fm.D x i).T_ne_g u j h.symm, _root_.GlobalTheory.TypeValNN.typePrime_valuationSum_eq_logGap_family Fm x hx i, hdeg x a1 hx i, hsz x a2 hx i,
-    hoT x a3 hx i, hoG x a4 hx i, hoD x a5 hx i, hoI x a6 hx i⟩
+  simp only [max_le_iff] at hx0
+  obtain ⟨a1, a2, a3, a4, a5, a6⟩ := hx0
+  exact ⟨fun u j h => (Fm.D x i).T_ne_g u j h.symm, _root_.GlobalTheory.TypeValNN.typePrime_valuationSum_eq_logGap_family Fm x hx i,
+    hdeg x a1 hx i, hsz x a2 hx i, hoT x a3 hx i,
+    Formalism.MainNotions.WeightDegreeSizes.stabiliserDiscriminantBound_of_separate (hoG x a4 hx i) (hoD x a5 hx i), hoI x a6 hx i⟩
 
 end GlobalTheory
 end -- clump:auto
