@@ -1301,11 +1301,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.grothendieckMessing_lift_of_noetherian_case : AbelianDeRham → (∀ (R : Type) [CommRing R] [IsNoetherianRing R] (I : Ideal R) (hI : I ^ 2 = 0) (R₀ : Type) [CommRing R₀] (π : R →+* R₀),
-    Function.Surjective π → RingHom.ker π = I → LiftObj (divided₂ hI) π ∧ LiftHom (divided₂ hI) π) →
-  ∀ (R : Type) [CommRing R] (I : Ideal R) (h : I ^ 2 = 0) (R₀ : Type) [CommRing R₀] (π : R →+* R₀),
-    Function.Surjective π → RingHom.ker π = I → LiftObj (divided₂ h) π := by
-  first | exact @GlobalTheory.NoethLiftObj.liftObj_of_noetherian
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrothendieckMessingLiftOfNoetherianCaseStatement =====
@@ -1379,7 +1374,7 @@ theorem exists_baseChange_subring : ∀ (R : Type) [CommRing R] (S S' : Subring 
     (hφ.congr e rfl)
   have hs : SmoothOfRelativeDimension g ((Over.pullback (spMap (Subring.inclusion h))).obj AS).hom := by
     exact (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback (IsPullback.of_hasPullback _ _) hsm
-  exact ⟨_, inferInstance, _, pullback.fst _ _, isAbelianScheme_overPullback _ AS hab, hs, hf,
+  exact ⟨_, inferInstance, _, pullback.fst _ _, _root_.GlobalTheory.isAbelianScheme_pullback_obj _ AS hab, hs, hf,
     isGrpPullback_pullback _ _, pullback.lift_fst _ _ _⟩
 
 theorem exists_finset_le_of_finiteType : ∀ (R : Type) [CommRing R] (S : Subring R), Algebra.FiniteType ℤ S → ∃ F : Finset R, ∀ T : Subring R, (F : Set R) ⊆ T → S ≤ T := by
@@ -1841,7 +1836,7 @@ namespace GlobalTheory.SqLift
 theorem sqLifting_of_noetherian : AbelianDeRham → (∀ (R : Type) [CommRing R] [IsNoetherianRing R] (I : Ideal R) (hI : I ^ 2 = 0) (R₀ : Type) [CommRing R₀] (π : R →+* R₀),
     Function.Surjective π → RingHom.ker π = I → LiftObj (divided₂ hI) π ∧ LiftHom (divided₂ hI) π) → SqLifting := by
   intro P H R _ I h R₀ _ π hπ hI
-  refine ⟨GlobalTheory.T.grothendieckMessing_lift_of_noetherian_case P H R I h R₀ π hπ hI, ?_⟩
+  refine ⟨_root_.GlobalTheory.NoethLiftObj.liftObj_of_noetherian P H R I h R₀ π hπ hI, ?_⟩
   intro g A₀ _ A _ i hA hAa hg g' B₀ _ B _ j hB hBa hg' f₀ _ hf
   obtain ⟨φ, hφ⟩ := GlobalTheory.T.liftHom_exists_of_noetherian_alt P H R I h R₀ π hπ hI g A₀ A i hA hAa hg g' B₀ B j hB hBa hg' f₀ hf
   exact GlobalTheory.T.existsUnique_isMonHom_lift_of_grpPullback_abelian R R₀ π hπ ⟨2, by rw [hI]; exact h⟩ A₀ B₀ A B i j hA hB hAa hBa f₀ φ hφ

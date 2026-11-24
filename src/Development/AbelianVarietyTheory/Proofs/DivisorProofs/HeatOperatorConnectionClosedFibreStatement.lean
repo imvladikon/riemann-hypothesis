@@ -1228,15 +1228,6 @@ open GlobalTheory.KS.DlogPol (gs_pbT gs_sub)
 
 namespace GlobalTheory.HeatConn.Comm
 
-theorem gs_stalkMap' {X X' Z : Scheme.{0}} (r : Z ⟶ X') (β : X' ⟶ X) (z : Z) (U : X.Opens) (h : β (r z) ∈ U)
-    (a : Γ(X, U)) : (r.stalkMap z).hom (gs β (r z) U a) = gs (r ≫ β) z U a := by
-  rw [← gs_pull r β z U h, gs_eq β _ U h, gs_eq r z _ h]
-  exact Scheme.Hom.germ_stalkMap_apply r (β ⁻¹ᵁ U) z h _
-
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [spMap, spMap, spMap, ← Spec.map_comp]; rfl
-
 theorem cst_spMap {V V' : Type} [CommRing V] [CommRing V'] {Z : Scheme.{0}} (q : Z ⟶ Sp V) (ψ : V' →+* V) (z : Z)
     (a : V') : cst (q ≫ spMap ψ) z a = cst q z (ψ a) := by
   rw [cst, cst, ← gs_pull _ (spMap ψ) z ⊤ trivial]
@@ -1249,7 +1240,7 @@ theorem stalkMap_eq_zero {k : Type} [Field k] {A₀ B' : Scheme.{0}} (q : B' ⟶
     (fun c hc => by
       have h1 : c.fst = 0 := by simpa using congrArg TrivSqZeroExt.snd hc
       exact ⟨TrivSqZeroExt.inl c.snd, by ext <;> simp [h1]⟩) ht
-  rw [map_mul, cst, gs_stalkMap' sc q y ⊤ trivial, ← cst, hsc, cst_spMap]
+  rw [map_mul, cst, _root_.GlobalTheory.Unif.PolyStep.gs_stalkMap sc q y ⊤ trivial, ← cst, hsc, cst_spMap]
   have e0 : (TrivSqZeroExt.fstHom k k k).toRingHom DualNumber.eps = 0 := by simp
   rw [e0, cst, map_zero, gs_eq _ y ⊤ trivial, map_zero, map_zero, zero_mul]
 
@@ -1259,7 +1250,7 @@ namespace GlobalTheory.HeatConn.Comm
 
 theorem spMap_fst_alg (k : Type) [Field k] :
     spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap (algebraMap k (DualNumber k)) = 𝟙 _ := by
-  rw [← spMap_comp]
+  rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   have : (TrivSqZeroExt.fstHom k k k).toRingHom.comp (algebraMap k (DualNumber k)) = RingHom.id k := by
     ext; simp
   rw [this, spMap]
@@ -1353,7 +1344,7 @@ theorem commutes : ∀ {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) {k : 
   have hfB : Flat B'.hom := MorphismProperty.of_isPullback h₁.1 hfA
   obtain ⟨φ', hφ'0, hφ'1, hφ'2⟩ := exists_lift Q ρ B' π₁ π₂ c' h₁ h₂ hc α j
   have e2 : spMap (constHom ρ) = spMap (algebraMap k (DualNumber k)) ≫
-      spMap ((TrivSqZeroExt.fstHom k k k).toRingHom.comp ρ) := spMap_comp _ _
+      spMap ((TrivSqZeroExt.fstHom k k k).toRingHom.comp ρ) := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ _
   obtain ⟨sc, hspr, hs₂, hsq, hpts⟩ := exists_sec Q.P.A.hom _ A₀.hom B'.hom m₀ π₁ π₂ pr hA₀.1
     (e2 ▸ h₂.1) h₃ hpr₁ hpr₂
   have hpre : ∀ U : Q.P.A.left.Opens, π₂ ⁻¹ᵁ U ≤ π₁ ⁻¹ᵁ U := fun U x hx => by
@@ -1408,7 +1399,7 @@ theorem commutes : ∀ {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) {k : 
       change m₀ ((pr ≫ T) (sc y)) ∈ W
       simp only [Scheme.Hom.comp_apply]
       rw [hy0]; simpa using hy
-    rw [map_sub, gs_stalkMap' sc pr y _ ma, gs_stalkMap' sc (pr ≫ T) y _ mb, hspr, reassoc_of% hspr] at h0
+    rw [map_sub, _root_.GlobalTheory.Unif.PolyStep.gs_stalkMap sc pr y _ ma, _root_.GlobalTheory.Unif.PolyStep.gs_stalkMap sc (pr ≫ T) y _ mb, hspr, reassoc_of% hspr] at h0
     exact sub_eq_zero.1 h0
   have hyz : (T ≫ m₀) (b z) ∈ W := by simpa using hz
   have mz1 : b z ∈ m₀ ⁻¹ᵁ (φ ⁻¹ᵁ W) := by
@@ -1419,7 +1410,7 @@ theorem commutes : ∀ {R : Type} [CommRing R] [IsDomain R] (Q : DegPre R) {k : 
   have mz2 : T (b z) ∈ m₀ ⁻¹ᵁ W := by
     change m₀ (T (b z)) ∈ W
     simpa using hyz
-  rw [gs_stalkMap b z _ mz1, key (b z) hyz, gs_stalkMap' b T z _ mz2]
+  rw [gs_stalkMap b z _ mz1, key (b z) hyz, _root_.GlobalTheory.Unif.PolyStep.gs_stalkMap b T z _ mz2]
 
 end GlobalTheory.HeatConn.Comm
 end -- clump:auto
@@ -1537,8 +1528,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.heatOperator_connection_closedFibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k : Type) [Field k] [CharZero k] (m d : ℕ) (t : SAB H (Sp (ChartRing k m d))) (P : PELUnif (maximalIdeal (ChartRing k m d)) t) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre (bdParam k m d) gam → LinearIndependent ℤ gam → (∀ p : Sp (ChartRing k m d), p ∈ abLocus t.G ↔ ∏ i, bdParam k m d i ∉ p.asIdeal) → letI := H.starRing; ∀ (Y : Ray P.oD) (n' : ℕ) (v' : Module.Basis (Fin n') (ChartRing k m d) (TanM (𝟙 (Sp (ChartRing k m d))) Y.H)) (dd : Fin n' → Fld Y.H.left), (∀ a, IsInv Y.H (v' a) (dd a)) → ∀ (D : Derivation ℤ (ChartRing k m d) (ChartRing k m d)) (q : Fin m → ChartRing k m d), (∀ i, D (bdParam k m d i) = q i * bdParam k m d i) → ∀ h : Heat Y.H Y.q.left P.D.toPre.P.L dd ⇑D, IsBasic Y h → HasDefect Y h (fun _ _ _ => 0) → (∀ a b, h.Θ a b ∈ maximalIdeal (ChartRing k m d)) → ∀ ρ : ChartRing k m d →+* DualNumber k, (∀ r, ρ r = TrivSqZeroExt.inl (MvPowerSeries.constantCoeff r) + TrivSqZeroExt.inr (MvPowerSeries.constantCoeff (D r))) → ∀ (e : ℕ), 1 ≤ e → ∀ (A₀ : Over (Sp k)) [GrpObj A₀] (m₀ : A₀.left ⟶ P.D.toPre.P.A.left), IsGrpPullback A₀ P.D.toPre.P.A (spMap ((TrivSqZeroExt.fstHom k k k).toRingHom.comp ρ)) m₀ → ∃ (V : h.J → P.D.toPre.P.A.left.Opens) (ed : ∀ W : P.D.toPre.P.A.left.Opens, Γ(P.D.toPre.P.A.left, W) → Γ(A₀.left, m₀ ⁻¹ᵁ W)) (pb : ∀ i, Γ(A₀.left, m₀ ⁻¹ᵁ V i)), GlobalTheory.HeatConn.IsConnK P.D.toPre.P.A P.D.toPre.P.L A₀ m₀ (fun r => (ρ r).snd) V h.j ed pb ∧ (∀ i, h.W i = Y.q.left ⁻¹ᵁ V i) ∧ ∀ (B' : Over (Sp (DualNumber k))) [GrpObj B'] (π₁ π₂ : B'.left ⟶ P.D.toPre.P.A.left) (c' : P.D.toPre.X → (Sp (DualNumber k) ⟶ B'.left)), IsGrpPullback B' P.D.toPre.P.A (spMap ρ) π₁ → IsGrpPullback B' P.D.toPre.P.A (spMap (constHom ρ)) π₂ → (∀ (Z : Scheme.{0}) (x : Z ⟶ B'.left) (y : Z ⟶ Sp k), x ≫ B'.hom = y ≫ spMap (TrivSqZeroExt.fstHom k k k).toRingHom → x ≫ π₁ = x ≫ π₂) → (∀ y, c' y ≫ B'.hom = 𝟙 _ ∧ c' y ≫ π₁ = spMap ρ ≫ (P.D.toPre.c y).left ∧ c' y ≫ π₂ = spMap (constHom ρ) ≫ (P.D.toPre.c y).left) → ∀ pr : B'.left ⟶ A₀.left, pr ≫ m₀ = π₂ → pr ≫ A₀.hom = B'.hom ≫ spMap (algebraMap k (DualNumber k)) → (∀ (W : P.D.toPre.P.A.left.Opens) (f : Γ(P.D.toPre.P.A.left, W)), pbT π₁ f (π₂ ⁻¹ᵁ W) = pbT π₂ f (π₂ ⁻¹ᵁ W) + constFn B'.hom (π₂ ⁻¹ᵁ W) DualNumber.eps * pbT pr (ed W f) (π₂ ⁻¹ᵁ W)) → ∃ c : P.D.toPre.X →+ k, ∀ (α : P.D.toPre.X) (σ σ' : P.D.toPre.SecB e α), TActs Y h e α σ σ' → ∀ (i : Fin 4 → h.J) (T : Fin 4 → (A₀.left ⟶ A₀.left)), (∀ j, T j ≫ m₀ = m₀ ≫ P.D.toPre.famφB α j) → (∀ j, T j ≫ A₀.hom = A₀.hom) → ∀ O : A₀.left.Opens, O ≤ m₀ ⁻¹ᵁ LB.wchart P.D.toPre.P.L (P.D.toPre.famφB α) (fun j => h.j (i j)) → (∀ j, O ≤ T j ⁻¹ᵁ (m₀ ⁻¹ᵁ V (i j))) → pbT m₀ (σ'.f (fun j => h.j (i j))) O = 2 * (e : Γ(A₀.left, O)) * (rsT (ed _ (σ.f (fun j => h.j (i j)))) O + pbT m₀ (σ.f (fun j => h.j (i j))) O * (∑ j, ((DegPre.famε e j : ℤ) : Γ(A₀.left, O)) * pbT (T j) (pb (i j)) O + constFn A₀.hom O (c α))) := by
-  first | exact @GlobalTheory.HeatConn.heat_connection
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorConnectionClosedFibreStatement =====

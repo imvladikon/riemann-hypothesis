@@ -77,9 +77,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.centralizer_separable_commutative : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] [DecidableEq ι] (γ g h : GL ι K),
-  (γ : Matrix ι ι K).charpoly.Separable → g * γ = γ * g → h * γ = γ * h → g * h = h * g := by
-  first | (exact @GlobalTheory.CentSep.centraliser_comm_of_separable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerSeparableCommutative =====
@@ -357,11 +354,7 @@ theorem volRat_of_le (U : Subgroup H) {W S : Subgroup H} (hWS : W ≤ S) (h : W.
     field_simp
     linear_combination (S.relIndex U : ℝ) * e3'
 
-theorem mem_locPart {T L : Subgroup H} {x g : H} :
-    g ∈ GlobalTheory.LKLoc.locPart T L x ↔ g ∈ T ∧ x⁻¹ * g * x ∈ L := by
-  first
-  | exact _root_.GlobalTheory.ConjugateIntersectionMembership.mem_inter_conj_iff
-  | (intros; exact _root_.GlobalTheory.ConjugateIntersectionMembership.mem_inter_conj_iff ..)
+alias mem_locPart := _root_.GlobalTheory.ConjugateIntersectionMembership.mem_inter_conj_iff
 
 theorem exists_mul_of_mem_sup {L N : Subgroup H} (hLN : ∀ l ∈ L, ∀ n ∈ N, l * n * l⁻¹ ∈ N) {k : H}
     (hk : k ∈ L ⊔ N) : ∃ n ∈ N, ∃ l ∈ L, k = n * l := by
@@ -525,13 +518,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.dsum_eq_zero_of_fibre_sums' : ∀ (H : Type) [Group H] (T P N L U : Subgroup H) (Ψ : H → ℂ), T ≤ P → N ≤ P → L ≤ P →
-  (∀ p ∈ P, ∀ n ∈ N, p * n * p⁻¹ ∈ N) → (∀ s ∈ T, ∀ t ∈ T, s * t = t * s) →
-  (∀ t ∈ T, ∀ x, Ψ (t * x) = Ψ x) → (∀ l ∈ L, ∀ x, Ψ (x * l) = Ψ x) → (∀ x, x ∉ P → Ψ x = 0) →
-  (∀ x ∈ P, (T ⊓ L.map (MulAut.conj x).toMonoidHom).relIndex (T ⊓ (L ⊔ N).map (MulAut.conj x).toMonoidHom) ≠ 0) →
-  (∀ m ∈ P, ∑ᶠ q : H ⧸ (N ⊓ L), (if Quotient.out q ∈ N then Ψ (m * Quotient.out q) else 0) = 0) →
-  GlobalTheory.OrbDesc.dsum T L U Ψ = 0 := by
-  first | (exact @GlobalTheory.OrbDesc.dsum_eq_zero_of_fibre_sums)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DsumEqZeroOfFibreSumsStatement =====
@@ -717,11 +703,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_conj_centralizer_le_blockDiagonalLevi : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] [DecidableEq ι] [Nonempty ι] (γ : GL ι K),
-  (γ : Matrix ι ι K).charpoly.Separable → ¬ Irreducible (γ : Matrix ι ι K).charpoly →
-  ∃ (a b : ℕ) (e : ι ≃ Fin a ⊕ Fin b), 0 < a ∧ 0 < b ∧ ∃ c : GL ι K,
-    GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) (c⁻¹ * γ * c) ≤ GlobalTheory.OrbDesc.blockLevi e := by
-  first | (exact @GlobalTheory.OrbDesc.exists_conj_cent_le_blockLevi)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjCentralizerLeBlockDiagonalLeviStatement =====
@@ -1053,17 +1034,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.finsum_unipotentConj_eq_zero_of_constantTerm_zero : ∀ (K : Type) [Field K] [TopologicalSpace K] [IsTopologicalRing K] [LocallyCompactSpace K] [MeasurableSpace K] [BorelSpace K]
-  (ι : Type) [Fintype ι] [DecidableEq ι] (a b : ℕ) (e : ι ≃ Fin a ⊕ Fin b) (f : GL ι K → ℂ),
-  IsLocallyConstant f → HasCompactSupport f →
-  (∀ (μ : Measure (Fin a → Fin b → K)), μ.IsAddHaarMeasure →
-    ∀ g h : GL ι K, ∫ X, f (g * (h⁻¹ * GlobalTheory.OrbDesc.uGL e X * h)) ∂μ = 0) →
-  ∀ K' : Subgroup (GL ι K), IsOpen (K' : Set (GL ι K)) → IsCompact (K' : Set (GL ι K)) →
-  (∀ k ∈ K', ∀ k' ∈ K', ∀ g, f (k * g * k') = f g) →
-  ∀ γ ∈ GlobalTheory.OrbDesc.blockPar e, (γ : Matrix ι ι K).charpoly.Separable →
-  ∑ᶠ q : GL ι K ⧸ (GlobalTheory.OrbDesc.blockUni e ⊓ (GlobalTheory.OrbDesc.blockPar e ⊓ K')),
-    (if Quotient.out q ∈ GlobalTheory.OrbDesc.blockUni e then f ((Quotient.out q)⁻¹ * γ * Quotient.out q) else 0) = 0 := by
-  first | (exact @GlobalTheory.OrbDesc.NSum.finsum_conj_eq_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumUnipotentConjEqZeroOfConstantTermZeroStatement =====
@@ -1198,11 +1168,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.orbit_sum_vanishes_of_parabolic_sums : ∀ (H : Type) [Group H] (T P L U : Subgroup H) (Ψ : H → ℂ), T ≤ P →
-  (∀ s ∈ T, ∀ t ∈ T, s * t = t * s) → (∀ t ∈ T, ∀ x, Ψ (t * x) = Ψ x) → (∀ l ∈ L, ∀ x, Ψ (x * l) = Ψ x) →
-  (∀ y : H, GlobalTheory.OrbDesc.dsum T (P ⊓ L.map (MulAut.conj y).toMonoidHom) U (fun x => if x ∈ P then Ψ (x * y) else 0) = 0) →
-  GlobalTheory.OrbDesc.dsum T L U Ψ = 0 := by
-  first | (exact @GlobalTheory.OrbDesc.dsum_eq_zero_of_par)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitSumVanishesOfParabolicSums =====
@@ -1449,15 +1414,6 @@ section -- clump:auto
 open MeasureTheory Matrix
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.relIndex_ne_zero_centralizer_parabolicCosetStabilizer : ∀ (K : Type) [Field K] [TopologicalSpace K] [IsTopologicalRing K] [LocallyCompactSpace K]
-  (ι : Type) [Fintype ι] [DecidableEq ι] (a b : ℕ) (e : ι ≃ Fin a ⊕ Fin b) (γ : GL ι K),
-  GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ ≤ GlobalTheory.OrbDesc.blockLevi e →
-  ∀ K' : Subgroup (GL ι K), IsOpen (K' : Set (GL ι K)) → IsCompact (K' : Set (GL ι K)) →
-  ∀ x ∈ GlobalTheory.OrbDesc.blockPar e,
-    (GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ ⊓ (GlobalTheory.OrbDesc.blockPar e ⊓ K').map (MulAut.conj x).toMonoidHom).relIndex
-      (GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ ⊓
-        ((GlobalTheory.OrbDesc.blockPar e ⊓ K') ⊔ GlobalTheory.OrbDesc.blockUni e).map (MulAut.conj x).toMonoidHom) ≠ 0 := by
-  first | (exact @GlobalTheory.OrbDesc.StabIndex.relIndex_twCent_inf_ne_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroCentralizerParabolicCosetStabilizeStatement =====
@@ -1582,11 +1538,11 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     (∀ k ∈ K0, ∀ k' ∈ K0, ∀ g, f (k * g * k') = f g) →
     GlobalTheory.LKLoc.twOrbU (MonoidHom.id (GL ι K)) K0 γ (GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ ⊓ K1) f = 0 := by
   intro K _ _ _ _ _ _ ι _ _ _ f hlc hcs hyp γ hsep hirr K0 K1 hK0o hK0c hK1o hK1c hbi
-  obtain ⟨a, b, e, ha, hb, c, hT⟩ := GlobalTheory.T.exists_conj_centralizer_le_blockDiagonalLevi K ι γ hsep hirr
+  obtain ⟨a, b, e, ha, hb, c, hT⟩ := _root_.GlobalTheory.OrbDesc.exists_conj_cent_le_blockLevi K ι γ hsep hirr
   set T := GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ with hTdef
   set γ' := c⁻¹ * γ * c with hγ'
   have hsep' : (γ' : Matrix ι ι K).charpoly.Separable := charpoly_conj_sep γ c hsep
-  have hcomm : ∀ s ∈ T, ∀ t ∈ T, s * t = t * s := fun s hs t ht => GlobalTheory.T.centralizer_separable_commutative K ι γ s t hsep hs ht
+  have hcomm : ∀ s ∈ T, ∀ t ∈ T, s * t = t * s := fun s hs t ht => _root_.GlobalTheory.CentSep.centraliser_comm_of_separable K ι γ s t hsep hs ht
   have hleft : ∀ t ∈ T, ∀ x, (fun x => f (x⁻¹ * γ * x)) (t * x) = (fun x => f (x⁻¹ * γ * x)) x := by
     intro t ht x
     have ht' : t * γ = γ * t := ht
@@ -1607,7 +1563,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     intro x; simp only [hΨdef, hγ']; congr 1; group
   set P := blockPar (K := K) e
   have hTP : T' ≤ P := hT.trans inf_le_left
-  have hcomm' : ∀ s ∈ T', ∀ t ∈ T', s * t = t * s := fun s hs t ht => GlobalTheory.T.centralizer_separable_commutative K ι γ' s t hsep' hs ht
+  have hcomm' : ∀ s ∈ T', ∀ t ∈ T', s * t = t * s := fun s hs t ht => _root_.GlobalTheory.CentSep.centraliser_comm_of_separable K ι γ' s t hsep' hs ht
   have hleft' : ∀ t ∈ T', ∀ x, Ψ (t * x) = Ψ x := by
     intro t ht x
     have ht' : t * γ' = γ' * t := ht
@@ -1621,7 +1577,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     simp only [MulEquiv.coe_toMonoidHom, MulAut.conj_apply, hΨdef]
     rw [← hbi k⁻¹ (K0.inv_mem hk) k hk ((c⁻¹⁻¹ * x * c⁻¹)⁻¹ * γ * (c⁻¹⁻¹ * x * c⁻¹))]
     congr 1; group
-  apply GlobalTheory.T.orbit_sum_vanishes_of_parabolic_sums _ T' P K0' _ Ψ hTP hcomm' hleft' hright'
+  apply _root_.GlobalTheory.OrbDesc.dsum_eq_zero_of_par _ T' P K0' _ Ψ hTP hcomm' hleft' hright'
   intro y
   set N := blockUni (K := K) e
   have hNP : N ≤ P := blockUni_le_blockPar e
@@ -1629,7 +1585,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
       IsCompact ((K0'.map (MulAut.conj y).toMonoidHom : Subgroup (GL ι K)) : Set (GL ι K)) := by
     have h1 := conj_open_compact K0 c⁻¹ hK0o hK0c
     exact conj_open_compact K0' y h1.1 h1.2
-  apply GlobalTheory.T.dsum_eq_zero_of_fibre_sums' _ T' P N (P ⊓ K0'.map (MulAut.conj y).toMonoidHom) _ _ hTP hNP inf_le_left
+  apply _root_.GlobalTheory.OrbDesc.dsum_eq_zero_of_fibre_sums _ T' P N (P ⊓ K0'.map (MulAut.conj y).toMonoidHom) _ _ hTP hNP inf_le_left
     (_root_.GlobalTheory.OrbDesc.blockUni_conj_mem K ι a b e) hcomm'
   · intro t ht x
     have : t * x ∈ P ↔ x ∈ P := ⟨fun h => by simpa using P.mul_mem (P.inv_mem (hTP ht)) h,
@@ -1647,7 +1603,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     · rfl
   · intro x hx
     simp only [if_neg hx]
-  · exact GlobalTheory.T.relIndex_ne_zero_centralizer_parabolicCosetStabilizer K ι a b e γ' hT _ hK'.1 hK'.2
+  · exact _root_.GlobalTheory.OrbDesc.StabIndex.relIndex_twCent_inf_ne_zero K ι a b e γ' hT _ hK'.1 hK'.2
   · intro m hm
     set d := c * y⁻¹
     obtain ⟨hlc', hcs', hyp'⟩ := conj_props f d hlc hcs hyp
@@ -1661,7 +1617,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
       group
     have hγ'T : γ' ∈ T' := (rfl : γ' * γ' = γ' * γ')
     have hγ''P : m⁻¹ * γ' * m ∈ P := P.mul_mem (P.mul_mem (P.inv_mem hm) (hTP hγ'T)) hm
-    have hC2 := GlobalTheory.T.finsum_unipotentConj_eq_zero_of_constantTerm_zero K ι a b e _ hlc' hcs' (hyp' a b e ha hb) _ hK'.1 hK'.2 hbi' _ hγ''P
+    have hC2 := _root_.GlobalTheory.OrbDesc.NSum.finsum_conj_eq_zero K ι a b e _ hlc' hcs' (hyp' a b e ha hb) _ hK'.1 hK'.2 hbi' _ hγ''P
       (charpoly_conj_sep γ' m hsep')
     refine Eq.trans (finsum_congr fun q => ?_) hC2
     by_cases h1 : Quotient.out q ∈ N

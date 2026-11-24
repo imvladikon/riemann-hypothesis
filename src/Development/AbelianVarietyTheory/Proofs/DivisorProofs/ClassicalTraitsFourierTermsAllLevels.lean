@@ -225,8 +225,6 @@ open Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Poinc.FibLat GlobalTheory.Poinc.Eq8
 
-theorem _root_.GlobalTheory.T.labelCongruence_endo_all_algClosed_fields : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (eA : u.A.A ⟶ u.A.A) (s : u.D.toPre.X →+ u.D.toPre.X), (∀ (m : ℕ) (pk pk' : QkPt u.D.toPre (PadicAlgCl p) m) (x x' : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), 1 ≤ m → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk x → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk' x' → x'.left = x.left ≫ eA.left → CongMod m pk'.y (s pk.y)) → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing u.V) F] (k : ℕ), 1 ≤ k → IsUnit (k : u.V) → ∀ (q q' : QkPt u.D.toPre F k) (a a' : TFK (R := u.V) F ⟶ u.A.A), QkToAkU u.U.toUnifPre F k q a → QkToAkU u.U.toUnifPre F k q' a' → a.left = a'.left ≫ eA.left → CongMod k q.y (s q'.y) := by
-  first | exact @GlobalTheory.LabelTransfer.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelCongruenceEndoAllAlgClosedFieldsStatement =====
@@ -267,7 +265,7 @@ theorem main : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : The
     obtain ⟨w, hw⟩ := hlab k pk pk' x x' hk hx hx' (by rw [hxx, Category.assoc, heA])
     refine ⟨j.symm w, j.injective ?_⟩
     rw [map_add (f := _), map_nsmul, AddEquiv.apply_symm_apply, hs, hw, hEm]
-  have hT := GlobalTheory.T.labelCongruence_endo_all_algClosed_fields o Ω S ρ p y₀ u eA s hlab'
+  have hT := _root_.GlobalTheory.LabelTransfer.main o Ω S ρ p y₀ u eA s hlab'
   haveI : Mono (jK u.V) := GlobalTheory.PolDeg.Wit.mono_jK
   haveI : Mono (genMap u.U) := by unfold genMap; infer_instance
   have hTor := GlobalTheory.Poinc.TorEnd.torMatch_of_endChar u.V hBase u.G u.semi u.D u.A u.U F hF m hm
@@ -330,8 +328,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Poinc.FibLat GlobalTheory.Poinc.Eq8
 
 
-theorem _root_.GlobalTheory.T.endomorphism_matrix_torsion_adjoint_on_characters : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (W : Matrix (Fin 8) (Fin 8) ℤ), PosW W → ∀ (X₀ : Type) [AddCommGroup X₀] (β : LinearMap.BilinForm ℤ X₀), (∀ a b, β a b = β b a) → (∀ a, a ≠ 0 → 0 < β a a) → ∀ sc : ℝ, 0 < sc → ∀ j : u.D.toPre.X ≃+ (Fin 8 → X₀), (∀ χ, l.q χ = sc * (qW W β (j χ) : ℤ)) → ∀ (e : ρ.P.A ⟶ ρ.P.A) (E E' : Matrix (Fin 8) (Fin 8) ℤ), (W + W.transpose) * E' = E.transpose * (W + W.transpose) → (∀ (m : ℕ) (pk pk' : QkPt u.D.toPre (PadicAlgCl p) m) (x x' : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), 1 ≤ m → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk x → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk' x' → x'.left ≫ u.φ = x.left ≫ u.φ ≫ e.left → CongMod m (j pk'.y) (fun a => ∑ b, E a b • j pk.y b)) → ∀ (F : u.G ⟶ u.G) (eA : u.A.A ⟶ u.A.A), IsMonHom F → eA.left ≫ u.φ = u.φ ≫ e.left → eA.left ≫ genMap u.U = genMap u.U ≫ F.left → ∀ m : u.D.toPre.X →+ u.D.toPre.X, EndChar u.U F m → ∀ χ, j (m χ) = fun a => ∑ b, E' a b • j χ b := by
-  first | exact @GlobalTheory.Poinc.FibMatrix.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndomorphismMatrixTorsionAdjointOnCharactersStatement =====
@@ -573,8 +569,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Poinc.FibLat GlobalTheory.Poinc.Eq8
 
 
-theorem _root_.GlobalTheory.T.lattice_of_uniformisation_eq_model_lattice : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (G : Over M.Z) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (I T : Type) (f : I → (G ⟶ G)) (gγ : T → (Over.mk M.pt ⟶ G)) (ζ : oˣ) (L : ℕ), 0 < L → ζ ^ L = 1 → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (Gu : Over (Sp V)) [GrpObj Gu] [IsCommMonObj Gu], IsSemiAbelian Gu → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A Gu) (F : I → (Gu ⟶ Gu)) (m : I → D.toPre.X →+ D.toPre.X), (∀ e, EndChar U (F e) (m e)) → ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsLocalRing V'] (fV : V →+* V'), IsLocalHom fV → ∀ (ξ : Sp V' ⟶ M.Z) (a : o →+* V'), ξ ≫ M.s = spMap a → ∀ (G' : Over (Sp V')) [GrpObj G'] (β : G'.left ⟶ Gu.left) (β' : G'.left ⟶ G.left), IsGrpPullback G' Gu (spMap fV) β → IsGrpPullback G' G ξ β' → (∀ e, ∃ F' : G' ⟶ G', F'.left ≫ β = β ≫ (F e).left ∧ F'.left ≫ β' = β' ≫ (f e).left) → ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing V) K] (iK : V' →+* K), Function.Injective iK → iK.comp fV = (algebraMap (FractionRing V) K).comp (algebraMap V (FractionRing V)) → ∀ c : T → D.toPre.X →+ ZMod L, (∀ t, ExtNear (gγ t) (ξ (closedPoint V')) ∧ ∃ (q : QkPt D.toPre K L) (τ : Multiplicative D.toPre.X →* Kˣ) (x : TFK (R := V) K ⟶ A.A) (x' : Sp K ⟶ G'.left), q.y = 0 ∧ GlobalTheory.UT.IsTor τ q.g ∧ QkToAkU U.toUnifPre K L q x ∧ (∀ χ, (τ (Multiplicative.ofAdd χ) : K) = iK (a ((ζ : o) ^ (c t χ).val))) ∧ x' ≫ G'.hom = spMap iK ∧ x' ≫ β = x.left ≫ genMap U ∧ ValAt (gγ t) (spMap iK ≫ ξ) (x' ≫ β')) → LatAt f gγ ζ L m c (ξ (closedPoint V')) := by
-  first | exact @GlobalTheory.Poinc.FibLat.latAt_of_unif
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeOfUniformisationEqModelLatticeStatement =====
@@ -675,7 +669,7 @@ theorem latAt_of_uTest {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [hA 
   have tor := PerpCharacter.exists_torus_point_eStd ⟨h1, h2, h3, h4, h5⟩ uTors_closed o Ω S ρ p y₀ u l
     (fun b => xx (Multiplicative.ofAdd b)) hx (fun b b' => by rw [ofAdd_add, map_mul])
     (fun z hz => (hsurj' z hz).imp fun _ h => h.symm)
-  refine GlobalTheory.T.lattice_of_uniformisation_eq_model_lattice o Ω Y G hG I _ f _ ζ _ hL hζ1 u.V hB u.G u.semi u.D u.A u.U F m hm V' fV hfV ξ a ha G' β β' hβ hβ'
+  refine _root_.GlobalTheory.Poinc.FibLat.latAt_of_unif o Ω Y G hG I _ f _ ζ _ hL hζ1 u.V hB u.G u.semi u.D u.A u.U F m hm V' fV hfV ξ a ha G' β β' hβ hβ'
     (fun i => ?_) (PadicAlgCl p) (κ'.comp jV) (κ'.injective.comp (IsFractionRing.injective V' _))
     (by rw [← hκ]; ext x; simp [jV, hfK]) c fun t => ⟨hext t.1 t.2, ?_⟩
   · obtain ⟨eK, -, heK⟩ := exists_endo_left hα (eA i) (heA i)
@@ -781,7 +775,7 @@ theorem latAt_of_isLab (X₁ : Setup F W i) (ε₁ : Matrix (Fin 8) (Fin 8) ℤ 
   refine ⟨fun t => (c₁ t).comp j.symm.toAddMonoidHom, fun t b mu h => hc₁ t b _ ((key b mu).1 h),
     hlat.equiv j (fun E' χ => ?_) fun t χ => by simp⟩
   obtain ⟨F', eA, h1, h2, h3, h4⟩ := hm E'
-  exact GlobalTheory.T.endomorphism_matrix_torsion_adjoint_on_characters _ _ _ ρ' p y₀ u l W X₁.posW _ c.T.β c.T.symm (Trait.beta_pos _ _ _ _ F c.T) c.sc c.scale_pos j hjq
+  exact _root_.GlobalTheory.Poinc.FibMatrix.main _ _ _ ρ' p y₀ u l W X₁.posW _ c.T.β c.T.symm (Trait.beta_pos _ _ _ _ F c.T) c.sc c.scale_pos j hjq
     (ε' (adj E')) (adj E') E' (hadj E') (fun m pk pk' x x' => hmat m pk pk' x x' _) F' eA h1 h2 h3 _ h4 χ
 
 theorem exists_adj (hW : IsE8 W) (E : Matrix (Fin 8) (Fin 8) ℤ) :
@@ -887,8 +881,6 @@ open GlobalTheory.Poinc
 open Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_labelled_lattice_equiv_of_common_fibre : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i), 1 ≤ g → 3 ≤ n → Odd n → IsOpenImmersion i → IsE8 W → ThetaInt F W i → IsProjOver X₁.M.s → ∀ (ε₁ : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), IsDiagEnd F W X₁.ρ.P X₁.u ε₁ → ∀ (Y : RatModel X₁.o₁ X₁.Ω₁) (U₀ : Y.Z.Opens) (EE : Y.Lat X₁.S.J) (_ : ZHOut X₁.ρ Y U₀ EE) (q : Y.Z ⟶ X₁.M.Z), X₁.S.Over₀ Y U₀ → X₁.S.IsEE Y U₀ EE → IsProper q → Y.pt ≫ q = X₁.M.pt → ∀ (p : ℕ) [Fact p.Prime] (z₁ : X₁.M.Z), _root_.IsPreconnected (q.base ⁻¹' {z₁}) → ∀ (c c' : CTrait X₁ p z₁) (y y' : Sp (OO p) ⟶ Y.Z), y ≫ q = c.y → y' ≫ q = c'.y → ∀ (yy : X₁.S.Gam →+ ModN (X₁.S.r * X₁.S.N) (Fin 8 → c.T.D.toPre.X)) (yy' : X₁.S.Gam →+ ModN (X₁.S.r * X₁.S.N) (Fin 8 → c'.T.D.toPre.X)), IsLab X₁ ε₁ c yy → IsLab X₁ ε₁ c' yy' → ∃ θ : (Fin 8 → c.T.D.toPre.X) ≃+ (Fin 8 → c'.T.D.toPre.X), (∀ a μ, yy a = QuotientAddGroup.mk μ → yy' a = QuotientAddGroup.mk (θ μ)) ∧ ∀ (E : Matrix (Fin 8) (Fin 8) ℤ) (v : Fin 8 → c.T.D.toPre.X), θ (fun a => ∑ b, E a b • v b) = fun a => ∑ b, E a b • θ v b := by
-  first | exact @GlobalTheory.Poinc.FibLat.exists_equiv_of_fibre
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelledLatticeEquivOfCommonFibreStatement =====
@@ -1017,7 +1009,7 @@ theorem GlobalTheory.Poinc.lattice_equiv_of_same_centre : ∀ (g n : ℕ) (F : S
   obtain ⟨Y, U₀, EE, FinalForm, q, hov, hee, hq, hpt, hcon, hlift⟩ := GlobalTheory.T.exists_semiabelianModel_proper_over_thetaSetup g n F W Z i X₁ hg hn ho hi he ht hp
   obtain ⟨y, hy⟩ := hlift p z₁ c
   obtain ⟨y', hy'⟩ := hlift p z₁ c'
-  obtain ⟨θ, hl, hE⟩ := GlobalTheory.T.exists_labelled_lattice_equiv_of_common_fibre g n F W Z i X₁ hg hn ho hi he ht hp ε₁ hε Y U₀ EE FinalForm q hov hee hq hpt p z₁ (hcon z₁) c c' y y' hy hy' yy yy' h h'
+  obtain ⟨θ, hl, hE⟩ := _root_.GlobalTheory.Poinc.FibLat.exists_equiv_of_fibre g n F W Z i X₁ hg hn ho hi he ht hp ε₁ hε Y U₀ EE FinalForm q hov hee hq hpt p z₁ (hcon z₁) c c' y y' hy hy' yy yy' h h'
   obtain ⟨κ, hκ⟩ := GlobalTheory.Poinc.LatCmp.exists_diag θ hE
   refine ⟨κ, fun a μ hμ => ?_⟩
   rw [hl a μ hμ, hκ]
@@ -1173,10 +1165,6 @@ theorem lbIso_pull_comp' {X Y Z : Scheme.{0}} {L : LB X} {M : LB Y} {a : Y ⟶ X
   LBIso.chartPull (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull M j j rfl)
     (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullSame L _ (fun _ => a) _ j fun _ => e) h
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) :=
-  (Spec.map_comp (CommRingCat.ofHom f) (CommRingCat.ofHom g)).symm
-
 theorem exists_deep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z)
     (X₁ : Setup F W i), 1 ≤ g → 3 ≤ n → Odd n → IsOpenImmersion i → IsE8 W → ThetaInt F W i → IsProjOver X₁.M.s →
     ∀ (ε₁ : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), IsDiagEnd F W X₁.ρ.P X₁.u ε₁ →
@@ -1206,7 +1194,7 @@ theorem exists_deep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
   set h' : X₁.S.R →+* S₂.R := (Subalgebra.inclusion hR).toRingHom.comp h with hh'
   have hval : ∀ a, ((h' a : S₂.R) : Ω₂) = algebraMap X₁.Ω₁ Ω₂ a := fun a => hh a
   have hpb' : IsGrpPullback ρ₂.P.A X₁.ρ.P.A (spMap h') (φ ≫ ψ) := by
-    rw [hh', ← spMap_comp']
+    rw [hh', ← _root_.GlobalTheory.spMap_comp_ring]
     exact hpb₂.comp hpb
   have hlb' : LBIso ρ₂.P.L (X₁.ρ.P.L.pull (φ ≫ ψ)) :=
     LBIso.trans ρ₂.P.isLB (pull_isLB P.isLB _) (pull_isLB X₁.ρ.P.isLB _) hlb₂ (lbIso_pull_comp' hlb φ rfl)
@@ -1215,7 +1203,7 @@ theorem exists_deep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
     obtain ⟨c, hc₁, pr, hpr, hun, hLc, -⟩ := hε₂
     exact ⟨c, hc₁, pr, hpr, hun, hLc⟩
   have key : spMap S₂.R.val.toRingHom ≫ spMap h' = spMap (algebraMap X₁.Ω₁ Ω₂) ≫ spMap X₁.S.R.val.toRingHom := by
-    rw [spMap_comp', spMap_comp']
+    rw [_root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring]
     congr 1
     ext a
     exact hval a
@@ -1231,7 +1219,7 @@ theorem exists_deep : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
       key, Category.assoc]
   have hbase : spMap S₂.R.val.toRingHom ≫ (spMap h' ≫ X₁.u) ≫ F.s =
       spMap ((algebraMap o₂ Ω₂).comp (κ.comp X₁.κ)) := by
-    rw [← Category.assoc, ← Category.assoc, key, Category.assoc, Category.assoc, X₁.base, spMap_comp', ← RingHom.comp_assoc, ← hc]
+    rw [← Category.assoc, ← Category.assoc, key, Category.assoc, Category.assoc, X₁.base, _root_.GlobalTheory.spMap_comp_ring, ← RingHom.comp_assoc, ← hc]
   have hbig : S₂.Big := big j le_rfl o₂ Ω₂ S₂ (hg₂.trans hPg) hN₂ hr₂
   let X₂ : Setup F W i := Setup.mk o₂ Ω₂ S₂ ρ₂ hbig (spMap h' ≫ X₁.u) hsharp hgen M₂ hMn (q ≫ X₁.π) inferInstance hcomp
     X₁.one_le X₁.three_le X₁.odd X₁.z X₁.proj X₁.normalZ X₁.imm X₁.thetaSetup_structureMap_comp X₁.dense X₁.e8 X₁.thetaInt (κ.comp X₁.κ) hbase
@@ -1275,16 +1263,6 @@ def IsSum {K X : Type} [NormedAddCommGroup K] [AddCommGroup X] (m : ℕ) (t : (F
   ∀ δ : ℝ, 0 < δ → ∃ S₀ : Finset (Fin 8 → X), ∀ S : Finset (Fin 8 → X), (∀ μ ∈ S, ∀ u, CongMod m (μ u) (ν u)) →
     (∀ μ ∈ S₀, (∀ u, CongMod m (μ u) (ν u)) → μ ∈ S) → ‖v - ∑ μ ∈ S, t μ‖ ≤ δ
 
-theorem cong_symm {X : Type} [AddCommGroup X] {m : ℕ} {x y : X} (h : CongMod m x y) : CongMod m y x := by
-  obtain ⟨w, rfl⟩ := h
-  exact ⟨-w, by simp⟩
-
-theorem cong_trans {X : Type} [AddCommGroup X] {m : ℕ} {x y z : X} (h : CongMod m x y) (h' : CongMod m y z) :
-    CongMod m x z := by
-  obtain ⟨w, rfl⟩ := h
-  obtain ⟨w', rfl⟩ := h'
-  exact ⟨w' + w, by rw [smul_add, add_assoc]⟩
-
 theorem cong_map {X Y : Type} [AddCommGroup X] [AddCommGroup Y] {m : ℕ} (e : X →+ Y) {x y : X} (h : CongMod m x y) :
     CongMod m (e x) (e y) := by
   obtain ⟨w, rfl⟩ := h
@@ -1299,8 +1277,8 @@ theorem IsSum.unique {K X : Type} [NormedAddCommGroup K] [AddCommGroup X] {m : �
   let S := (S₀ ∪ S₀').filter fun μ => ∀ u, CongMod m (μ u) (ν u)
   have h1 := hS S (fun μ hμ => (Finset.mem_filter.1 hμ).2)
     (fun μ hμ hh => Finset.mem_filter.2 ⟨Finset.mem_union_left _ hμ, hh⟩)
-  have h2 := hS' S (fun μ hμ u => cong_trans ((Finset.mem_filter.1 hμ).2 u) (hc u))
-    (fun μ hμ hh => Finset.mem_filter.2 ⟨Finset.mem_union_right _ hμ, fun u => cong_trans (hh u) (cong_symm (hc u))⟩)
+  have h2 := hS' S (fun μ hμ u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans ((Finset.mem_filter.1 hμ).2 u) (hc u))
+    (fun μ hμ hh => Finset.mem_filter.2 ⟨Finset.mem_union_right _ hμ, fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (hh u) (_root_.GlobalTheory.Poinc.GalTrans.cm_symm (hc u))⟩)
   have h3 : v - v' = (v - ∑ μ ∈ S, t μ) - (v' - ∑ μ ∈ S, t μ) := by abel
   rw [h3]
   linarith [norm_sub_le (v - ∑ μ ∈ S, t μ) (v' - ∑ μ ∈ S, t μ)]
@@ -1362,13 +1340,6 @@ theorem normal_pred {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) 
     (X : Setup F W i) : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X.M.Z := by
   first
   | exact (GlobalTheory.isNormalScheme_iff_pred _).1 X.normal
-
-theorem three_le_level (X₁ : Setup F W i) : 3 ≤ X₁.S.r * X₁.S.N := by
-  have h1 := X₁.S.r_pos
-  have h2 : 2 ≤ X₁.ρ.n ^ X₁.ρ.k :=
-    X₁.ρ.n_prime.two_le.trans (Nat.le_self_pow (by have := X₁.ρ.two_le; omega) _)
-  have h3 := X₁.ρ.N_eq
-  nlinarith
 
 theorem exists_iso (D : Deep X₁ ε₁) {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (c c' : CTrait X₁ p z₁)
     {y y' : Sp (OO p) ⟶ D.X.M.Z} (h : y ≫ D.q = c.y) (h' : y' ≫ D.q = c'.y) (hc : y' (cPt p) = y (cPt p))
@@ -1555,13 +1526,13 @@ theorem classSums_integralClosure : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) 
   let γ : Φ.X y₀ ≃ₗ[ℤ] Φ.X y₀ := (e y₀).trans (κσ.trans (e y₀).symm)
   have hγ : ∀ x, CongMod (X₁.S.r * X₁.S.N) (γ x) x := by
     intro x
-    have hL := three_le_level X₁
+    have hL := _root_.GlobalTheory.Poinc.GalLab.three_le_level X₁
     have hdvd : X₁.S.r * X₁.S.N ∣ D.X.S.r * D.X.S.N := by
       rw [D.sq]
       exact (D.dvd.trans (dvd_pow_self _ two_ne_zero)).mul_left _
     have hM := (Nat.div_mul_cancel hdvd).symm
     have hd : D.X.S.r * D.X.S.N / (X₁.S.r * X₁.S.N) ≠ 0 := fun h0 => by
-      have := three_le_level D.X
+      have := _root_.GlobalTheory.Poinc.GalLab.three_le_level D.X
       rw [h0] at hM
       omega
     obtain ⟨a₁, ha₁⟩ := D.lab_range (lb fun _ => e y₀ x)
@@ -1574,7 +1545,7 @@ theorem classSums_integralClosure : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) 
       have h5 : (e y₀).symm x = 0 := (smul_eq_zero.1 h4).resolve_left (by exact_mod_cast hd)
       simpa using congrArg (e y₀) h5) hd hM h2 0
     simpa [γ] using cong_map (e y₀).symm.toLinearMap.toAddMonoidHom h3
-  refine ⟨γ.toLinearMap, by rw [det_eq_one γ (three_le_level X₁) hγ]; simp, hγ, fun ν κ => Subtype.ext ?_⟩
+  refine ⟨γ.toLinearMap, by rw [det_eq_one γ (_root_.GlobalTheory.Poinc.GalLab.three_le_level X₁) hγ]; simp, hγ, fun ν κ => Subtype.ext ?_⟩
   rw [← hτ]
   refine (hτf _ κ).trans (hwd _ _ _ _ κ ((h₆ _).symm.trans (hκσ _ _ (hlb _))) (hlb _) fun u => ⟨0, by simp [γ]⟩)
 

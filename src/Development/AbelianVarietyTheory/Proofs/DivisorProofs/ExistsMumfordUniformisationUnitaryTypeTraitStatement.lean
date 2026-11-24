@@ -191,8 +191,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.exists_pullDeg_arcData_at_uniformiser : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (T : Formalism.L2.Pj.CDVR) (b : O →+* T.V) (D : DegData T.V (maximalIdeal T.V)) [Module (𝓞 E) D.toPre.X] (oD : letI := H.starRing; D.toPre.OAct (𝓞 E)) (ϖ : T.V) (hϖ : Irreducible ϖ) (hX : Nontrivial D.toPre.X) (hw : letI := H.starRing; TraceFormTwistIso D.toPre oD H.w0) (hdiv : ∀ a a', (2 * l.M' : ℤ) ∣ GlobalTheory.TraitArc.beF D hϖ a a') (pA : Dm.La → QkPt D.toPre (FractionRing T.V) l.A) (pM : Dm.La → QkPt D.toPre (FractionRing T.V) l.M) (hLie : GlobalTheory.TraitArc.LieCl D oD Dm β b) (hTate : GlobalTheory.TraitArc.TateCl D oD hϖ Dm β b hdiv pA pM) (Xo : Moduli Dm l) (Y : Model Xo c β) (y : Sp T.V ⟶ Y.X), Y.HasArcData (GlobalTheory.TraitArc.arc D oD hϖ β b hX hw hdiv pA pM hLie hTate) (maximalIdeal T.V) (RingHom.id T.V) ϖ y → ∃ (t : SAB H (Sp T.V)) (_ : SABMap t Y.t y) (P : PELUnif (maximalIdeal T.V) t), Nonempty (IsPullDeg (RingHom.id T.V) D.toPre P.D.toPre) := by
-  first | exact @GlobalTheory.TraitArcMatch.exists_isPullDeg_arc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullDegArcDataAtUniformiserStatement =====
@@ -254,8 +252,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.exists_compatible_primitiveRoots_through : ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (A : ℕ) (ω : K), 0 < A → IsPrimitiveRoot ω A → ∃ ζ : ℕ → Kˣ, (∀ n, 0 < n → IsPrimitiveRoot (ζ n) n) ∧ (∀ n m, 0 < n → 0 < m → ζ (n * m) ^ m = ζ n) ∧ (ζ A : K) = ω := by
-  first | exact @GlobalTheory.RootSystem.exists_compatible_roots_through
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatiblePrimitiveRootsThroughStatement =====
@@ -302,11 +298,11 @@ theorem exists_tate : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
         IsPrimitiveRoot.of_map_of_injective (f := c.F.val.toRingHom) h₀ Subtype.val_injective
       have h₂ : IsPrimitiveRoot z l.A := IsPrimitiveRoot.of_map_of_injective (f := β) h₁ hβ
       have h₃ : IsPrimitiveRoot (g z) l.A := h₂.map_of_injective hginj
-      obtain ⟨ζ, e₁, e₂, e₃⟩ := GlobalTheory.T.exists_compatible_primitiveRoots_through (AlgebraicClosure (FractionRing T.V)) l.A (g z) l.A_pos h₃
+      obtain ⟨ζ, e₁, e₂, e₃⟩ := _root_.GlobalTheory.RootSystem.exists_compatible_roots_through (AlgebraicClosure (FractionRing T.V)) l.A (g z) l.A_pos h₃
       refine ⟨ζ, e₁, e₂, fun z' hz' => ?_⟩
       have : z' = z := hβ (Subtype.val_injective (hz'.trans hz.symm))
       rw [this]; exact e₃
-    · obtain ⟨ζ, e₁, e₂, -⟩ := GlobalTheory.T.exists_compatible_primitiveRoots_through (AlgebraicClosure (FractionRing T.V)) 1 1 one_pos IsPrimitiveRoot.one
+    · obtain ⟨ζ, e₁, e₂, -⟩ := _root_.GlobalTheory.RootSystem.exists_compatible_roots_through (AlgebraicClosure (FractionRing T.V)) 1 1 one_pos IsPrimitiveRoot.one
       exact ⟨ζ, e₁, e₂, fun z hz' => (hz ⟨z, hz'⟩).elim⟩
 
   obtain ⟨-, -, -, hF⟩ := hP
@@ -364,8 +360,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.exists_rational_tate_pairs_unitaryType : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F), Function.Injective β → ∀ (T : Formalism.L2.Pj.CDVR) (b : O →+* T.V), Function.Injective b → ∀ (D : DegData T.V (maximalIdeal T.V)) [Module (𝓞 E) D.toPre.X] (o : letI := H.starRing; D.toPre.OAct (𝓞 E)), PelOK Dm D.toPre o → (∀ k : ℕ, k ∣ l.M' → ∀ q : QkPt D.toPre (AlgebraicClosure (FractionRing T.V)) k, ∃ p : QkPt D.toPre (FractionRing T.V) k, QkExt (algebraMap (FractionRing T.V) (AlgebraicClosure (FractionRing T.V))) p q) → ∃ (pA : Dm.La → QkPt D.toPre (FractionRing T.V) l.A) (pM : Dm.La → QkPt D.toPre (FractionRing T.V) l.M), ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing T.V) F] (z : O), ((β z : c.F) : ℂ) = zeta l.A → ∃ I : (letI := H.starRing; TateIsoQ Dm D.toPre o F), (I.ζ l.A : F) = algebraMap (FractionRing T.V) F (algebraMap T.V _ (b z)) ∧ (∀ a q, QkExt (algebraMap _ F) (pA a) q → QkPt.Equiv D.toPre F q (I.ev l.A a)) ∧ ∀ a q, QkExt (algebraMap _ F) (pM a) q → QkPt.Equiv D.toPre F q (I.ev l.M a) := by
-  first | exact @GlobalTheory.TraitTate.exists_tate
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalTatePairsUnitaryTypeStatement =====
@@ -523,7 +517,7 @@ theorem GlobalTheory.TraitArc.exists_input_recovering : ∀ (R : Type) [CommRing
   have hdiv : ∀ a a', (2 * l.M' : ℤ) ∣ beF D' hϖ a a' := fun a a' => by
     have := hdvd _ (isQ_qv D' hϖ) a a'
     exact_mod_cast this
-  obtain ⟨pA, pM, hT⟩ := GlobalTheory.T.exists_rational_tate_pairs_unitaryType E H Dm l c O β hβ T b hb D' o' hP' (fun k hk => hrat k (hk.mul_left 2))
+  obtain ⟨pA, pM, hT⟩ := _root_.GlobalTheory.TraitTate.exists_tate E H Dm l c O β hβ T b hb D' o' hP' (fun k hk => hrat k (hk.mul_left 2))
   have hLie : LieCl D' o' Dm β b := by
     intro F _ _ _ r _ τ
     obtain ⟨n, h₁, h₂⟩ := (hP'.2.2.2 F).1 τ
@@ -535,7 +529,7 @@ theorem GlobalTheory.TraitArc.exists_input_recovering : ∀ (R : Type) [CommRing
   refine ⟨T.V, T.cr, T.dom, inferInstance, ρ, b, ϖ, arc D' o' hϖ β b hX' hP'.2.2.1 hdiv pA pM hLie hTate,
     ⟨T.dvr, T.cpl, T.ch0⟩, hρ, hρf, hϖ, ?_⟩
   intro Xo Y y hy
-  obtain ⟨t, m, P, ⟨hD₂⟩⟩ := GlobalTheory.T.exists_pullDeg_arcData_at_uniformiser E H Dm l c O β T b D' o' ϖ hϖ hX' hP'.2.2.1 hdiv pA pM hLie hTate Xo Y y hy
+  obtain ⟨t, m, P, ⟨hD₂⟩⟩ := _root_.GlobalTheory.TraitArcMatch.exists_isPullDeg_arc E H Dm l c O β T b D' o' ϖ hϖ hX' hP'.2.2.1 hdiv pA pM hLie hTate Xo Y y hy
   refine ⟨t, m, P, ?_⟩
   have := GlobalTheory.Mum.nonempty_isPullDeg_comp_of_injective R T.V T.V ρ (RingHom.id T.V) D.toPre D'.toPre P.D.toPre
     Function.injective_id ⟨hD⟩ ⟨hD₂⟩
@@ -555,8 +549,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_arcDatum_recovering_unitaryData_completeDVR : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (D : DegData R (maximalIdeal R)) [Module (𝓞 E) D.toPre.X] (o : letI := H.starRing; D.toPre.OAct (𝓞 E)), Nontrivial D.toPre.X → PelOK Dm D.toPre o → ∀ (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F), Function.Injective β → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁] (ρ₁ : R →+* V₁) (b₁ : O →+* V₁), GlobalTheory.LN.CDvr V₁ → Function.Injective ρ₁ → ρ₁.Finite → IsLocalHom ρ₁ → Function.Injective b₁ → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsLocalRing V) (ρ : R →+* V) (b : O →+* V) (ϖ : V) (a : ArcIn Dm l β V b), GlobalTheory.LN.CDvr V ∧ Function.Injective ρ ∧ ρ.Finite ∧ Irreducible ϖ ∧ ∀ (Xo : Moduli Dm l) (Y : Model Xo c β) (y : Sp V ⟶ Y.X), Y.HasArcData a (maximalIdeal V) (RingHom.id V) ϖ y → ∃ (t : SAB H (Sp V)) (_ : SABMap t Y.t y) (P : PELUnif (maximalIdeal V) t), Nonempty (IsPullDeg ρ D.toPre P.D.toPre) := by
-  first | exact @GlobalTheory.TraitArc.exists_input_recovering
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArcDatumRecoveringUnitaryDataCompleteDVRStatement =====
@@ -671,12 +663,6 @@ theorem exists_place (F : IntermediateField ℚ ℂ) [FiniteDimensional ℚ F] (
     · exact h0 (by simpa using h2)
     · exact h2 (by simpa using hx)
 
-theorem exists_finite_ext (F K : Type) [Field F] [CharZero F] [FiniteDimensional ℚ F] [Field K] [CharZero K] :
-    ∃ (L : Type) (_ : Field L) (_ : Algebra K L), FiniteDimensional K L ∧ Nonempty (F →+* L) := by
-  first
-  | (apply _root_.GlobalTheory.FiniteExtensionEmbedding.exists_finite_extension_embedding <;> assumption)
-  | (intros; exact _root_.GlobalTheory.FiniteExtensionEmbedding.exists_finite_extension_embedding ..)
-
 theorem exists_place_finite_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E), ∃ (p : ℕ) (hp : p.Prime) (W₀ : ValuationSubring ℂ) (hW : (p : ℂ) ∈ W₀.nonunits) (i : Idx H p) (V₁ : Type) (_ : CommRing V₁) (_ : IsDomain V₁) (_ : IsLocalRing V₁) (ρ₁ : R →+* V₁) (b₁ : ↥(i.c.V W₀) →+* V₁), GlobalTheory.LN.CDvr V₁ ∧ Function.Injective ρ₁ ∧ ρ₁.Finite ∧ IsLocalHom ρ₁ ∧ Function.Injective b₁ := by
   intro R _ _ _ hR E _ _ _ H
   obtain ⟨h1, h2, h3⟩ := hR
@@ -688,7 +674,7 @@ theorem exists_place_finite_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLo
   haveI := c.fin
   haveI : CharZero (FractionRing R) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
-  obtain ⟨L, _, _, hL, ⟨jF⟩⟩ := exists_finite_ext c.F (FractionRing R)
+  obtain ⟨L, _, _, hL, ⟨jF⟩⟩ := _root_.GlobalTheory.FiniteExtensionEmbedding.exists_finite_extension_embedding c.F (FractionRing R)
   obtain ⟨V, _, _, hV, hVc, _, _, _, -, hfin, hinj, hloc, -⟩ :=
     GlobalTheory.SS.exists_complete_dvr_finite_extension R (FractionRing R) L
   have hVL := IsFractionRing.injective V L
@@ -836,8 +822,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.lineBundleSymmetryHypothesis_generic_unitary_uniformised : ∀ (V : Type) [CommRing V] [IsDomain V] (I : Ideal V) (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (t : SAB H (Sp V)) (P : PELUnif I t), (letI := P.A.isAb.comm; GlobalTheory.ZH.HypS P.A.A P.A.L) := by
-  first | exact @GlobalTheory.UTraitHyp.hypS_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleSymmetryHypothesisGenericUnitaryUniforStatement =====
@@ -860,12 +844,12 @@ theorem GlobalTheory.MumTrait.exists_unif_of_pelOK : ∀ (R : Type) [CommRing R]
   let Xo : ∀ l : Level H, Moduli Dm l := fun l => (GlobalTheory.Moduli.moduli_scheme_exists E H Dm l hpq).some
   obtain ⟨Y, hY, -⟩ := (GlobalTheory.partI_of_semistableReduction GlobalTheory.SS.semistableReductionSt).2 E H Dm hpq Xo
   have hFour := ((hY p W₀ hp hW).2 i).2.2
-  obtain ⟨V, _, _, _, ρ, b, ϖ, a, hV, hρi, hρf, hϖ, hmatch⟩ := GlobalTheory.T.exists_arcDatum_recovering_unitaryData_completeDVR R hR E H Dm D o hX hP i.l i.c _ (i.c.V W₀).subtype
+  obtain ⟨V, _, _, _, ρ, b, ϖ, a, hV, hρi, hρf, hϖ, hmatch⟩ := _root_.GlobalTheory.TraitArc.exists_input_recovering R hR E H Dm D o hX hP i.l i.c _ (i.c.V W₀).subtype
     Subtype.val_injective V₁ ρ₁ b₁ hV₁ hρ₁ hf₁ hl₁ hb₁
   obtain ⟨y, hy⟩ := GlobalTheory.T.exists_point_arcData_at_uniformiser_completeDVR E H Dm i.l (Xo i.l) i.c _ _ (Y p W₀ hp hW i) hFour V hV b ϖ a hϖ
   obtain ⟨t, -, P, hpull⟩ := hmatch (Xo i.l) (Y p W₀ hp hW i) y hy
   exact ⟨V, _, _, _, ρ, P.D, t.G, inferInstance, inferInstance, P.A, hV, hρi, hρf, hpull, t.semi, ⟨P.U⟩,
-    GlobalTheory.T.lineBundleSymmetryHypothesis_generic_unitary_uniformised V (maximalIdeal V) E H t P⟩
+    _root_.GlobalTheory.UTraitHyp.hypS_generic V (maximalIdeal V) E H t P⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordUniformisationUnitaryTypeTrait =====
@@ -881,8 +865,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_mumfordUniformisation_unitaryTypeTrait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.LN.CDvr R → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dm : Datum H) (D : DegData R (maximalIdeal R)) [Module (𝓞 E) D.toPre.X] (o : letI := H.starRing; D.toPre.OAct (𝓞 E)), Nontrivial D.toPre.X → PelOK Dm D.toPre o → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : IsDomain R₁) (_ : IsLocalRing R₁) (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (G : Over (Sp R₁)) (_ : GrpObj G) (_ : IsCommMonObj G) (A : PolAV (Sp (FractionRing R₁))), GlobalTheory.LN.CDvr R₁ ∧ Function.Injective ρ ∧ ρ.Finite ∧ Nonempty (IsPullDeg ρ D.toPre D₁.toPre) ∧ IsSemiAbelian G ∧ Nonempty (Unif (maximalIdeal R₁) D₁ A G) ∧ (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) := by
-  first | exact @GlobalTheory.MumTrait.exists_unif_of_pelOK
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordUniformisationUnitaryTypeTraitStatement =====

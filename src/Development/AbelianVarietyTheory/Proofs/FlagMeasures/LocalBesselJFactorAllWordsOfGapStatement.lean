@@ -747,8 +747,6 @@ open scoped Classical ENNReal
 open Matrix MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.L2.SG.LocWSOf
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.amplitudeConstant_eq_prod_covolumes : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y) (θ : ℝ) (C : Choice X θ) (hB : WuBessel C) (u u' : D.what₂.Word), 0 < θ → Formalism.L2.SG.ConcreteSettingExists.GapHyp D → ∏ τ, Complex.normSq ((((cOf hB u τ : ℝ) : ℂ))⁻¹ * sclOf hB u u' τ) = (Formalism.L2.SG.TermOp.scl (Y.FN u) (Y.FN u') (X := X) (u := u) (u' := u') * X.volK2) ^ 2 * ((Measure.pi (fun _ : D.what₂.Tau => muNB D θ) ((fun (x : X.B.I.Ginf) (τ : D.what₂.Tau) => (Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) (x (vOf X τ))) : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)) '' Y.FN u)).toReal * (Measure.pi (fun _ : D.what₂.Tau => muNB D θ) ((fun (x : X.B.I.Ginf) (τ : D.what₂.Tau) => (Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) (x (vOf X τ))) : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)) '' Y.FN u')).toReal) := by
-  exact GlobalTheory.AmplitudeConst.prod_normSq_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeConstantEqProdCovolumesStatement =====
@@ -921,9 +919,6 @@ theorem psi_cell {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : i
   rw [e, conj z hz n hn _ h2, psi_exact hz hz' c hg hp ⟨nm _ (nm _ hn' _ hρ.1) _ (ni _ hn'), h2⟩,
     conj z' hz' n' hn' _ hρ.1]
 
-theorem cont_lmul (a : Mat k r) : Continuous (lmulM a : Mt k r → Mt k r) :=
-  continuous_const.matrix_mul (continuous_id (X := Mat k r))
-
 theorem cont_conj (a : Mat k r) : Continuous (conjM a : Mt k r → Mt k r) :=
   (continuous_const.matrix_mul (continuous_id (X := Mat k r))).matrix_mul continuous_const
 
@@ -932,14 +927,14 @@ noncomputable def lmulE {a : Mat k r} (ha : IsUnit a.det) : Mt k r ≃ᵐ Mt k r
   invFun := lmulM a⁻¹
   left_inv x := Matrix.nonsing_inv_mul_cancel_left a (Matrix.of x) ha
   right_inv x := Matrix.mul_nonsing_inv_cancel_left a (Matrix.of x) ha
-  measurable_toFun := (cont_lmul a).measurable
-  measurable_invFun := (cont_lmul a⁻¹).measurable
+  measurable_toFun := (_root_.GlobalTheory.UnipUnimod.cont_lmul a).measurable
+  measurable_invFun := (_root_.GlobalTheory.UnipUnimod.cont_lmul a⁻¹).measurable
 
 theorem quot_translate {μG μR ν : Measure (Mt k r)} {a : Mat k r} (ha : IsUnit a.det)
     (hG : μG.map (lmulM a) = μG) (h : IsQuotMeas μG μR ν) :
     IsQuotMeas μG (μR.map (conjM a)) (ν.map (lmulM a)) := by
   intro f hf
-  have mL := (cont_lmul a).measurable
+  have mL := (_root_.GlobalTheory.UnipUnimod.cont_lmul a).measurable
   have mC := (cont_conj a).measurable
   have e1 : ∫⁻ x, f x ∂μG = ∫⁻ x, f (lmulM a x) ∂μG := by
     conv_lhs => rw [← hG]
@@ -1233,16 +1228,11 @@ noncomputable section
 
 namespace GlobalTheory.QuotTransport
 
-lemma jm_mul_self {n : ℕ} (ε : Fin n → Bool) : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := by
-  unfold Formalism.REAL.Jm
-  rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-  congr 1; funext a; split_ifs <;> norm_num
-
 lemma exists_unit {n m : ℕ} (ε : Fin n → Bool) (H : Matrix (Fin m) (Fin m) ℂ) (Q : Matrix (Fin n) (Fin m) ℂ)
     (Qi : Matrix (Fin m) (Fin n) ℂ) (h1 : Qi * Q = 1) (h2 : Q * Qi = 1) (h3 : Qᴴ * Formalism.REAL.Jm ε * Q = H)
     (y : Matrix (Fin m) (Fin m) ℂ) (hy : yᴴ * H * y = H) :
     ∃ g : Formalism.REAL.UJ ε, ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ) = Q * y⁻¹ * Qi := by
-  have hJ : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := jm_mul_self ε
+  have hJ : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := _root_.Formalism.REAL.Jm_mul_self ε
   have hHi : (Qi * Formalism.REAL.Jm ε * Qiᴴ) * H = 1 := by
     have : H * (Qi * Formalism.REAL.Jm ε * Qiᴴ) = 1 := by
       rw [← h3]
@@ -1445,8 +1435,6 @@ open scoped Classical ENNReal
 open Matrix MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.L2.SG.TermTieOf Formalism.L2.SG.LocWSOf Formalism.L2.SG.LoopTerm
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.localAmplitude_wittLift_eq_quotientIntegral : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y) (hI : SIso D.s (sOf hF)) (C : Choice X 1) (hB : WuBessel C) (u u' : D.what₂.Word) (t : D.s.Term u u') (s : TT Y u u'), s.toTerm = tc hI t → D.s.Gterm t ≠ 0 → D.s.relevant t → Formalism.L2.SG.ConcreteSettingExists.GapHyp D → ∀ (τ : D.what₂.Tau) (μ ν : Measure (Formalism.REAL.UJ (X.B.I.ε (vOf X τ)))), SFinite μ → Formalism.L2.SG.RealObj.IsQuotLoc μ ν → (∃ p, IsRootMeasR D (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u' τ) p (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) (s.pt.1 (vOf X τ))) (μ.map (fun y => Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) ((s.pt.1 (vOf X τ))⁻¹ * y * (s.pt.1 (vOf X τ))))))) → hsNormSq ((locS hB u u' τ).J (nu1 hI C t τ) (gamR hI C t τ)) = Complex.normSq ((((cOf hB u τ : ℝ) : ℂ))⁻¹ * sclOf hB u u' τ) * hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u (vOf X τ)); Formalism.L2.SG.RealObj.Jv ν (X.Wloc u (vOf X τ)) (X.Wloc u' (vOf X τ)) (s.pt.1 (vOf X τ))) := by
-  first | exact @GlobalTheory.AmpLoc.hsNormSq_amp_loc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalAmplitudeWittLiftEqQuotientIntegralStatement =====
@@ -1479,8 +1467,6 @@ open scoped Classical ENNReal
 open Matrix MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.L2.SG.TermTieOf Formalism.L2.SG.LocWSOf Formalism.L2.SG.LoopTerm
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.relevantLift_normalisedData_exist : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), PinAll (Y := Y) u u' := by
-  first | exact @GlobalTheory.pinAll_all
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelevantLiftNormalisedDataExistStatement =====
@@ -1520,22 +1506,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.RelPtLift
 
-section Uni
-
-variable {R : Type*} [CommRing R] {n : ℕ}
-
-theorem loUni_mul {l l' : Matrix (Fin n) (Fin n) R} (h : IsLoUni l) (h' : IsLoUni l') : IsLoUni (l * l') := by
-  first
-  | (apply _root_.GlobalTheory.LowerUnipotentMul.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.LowerUnipotentMul.main ..)
-
-theorem upUni_mul {l l' : Matrix (Fin n) (Fin n) R} (h : IsUpUni l) (h' : IsUpUni l') : IsUpUni (l * l') := by
-  first
-  | (apply _root_.GlobalTheory.UpperUnipotentProductFlagMeasures.upUni_mul <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UpperUnipotentProductFlagMeasures.upUni_mul ..)
-
-end Uni
-
 variable {k r : ℕ}
 
 def sgn (r : ℕ) : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ := Matrix.diagonal fun b => (-1 : ℂ) ^ (r - b.val)
@@ -1572,10 +1542,6 @@ theorem loUni_conjT {U : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (hU0 : ∀ c b,
 theorem det_Hpk : IsUnit (Formalism.QuantumDeterminants.Hpk k r).det :=
   Matrix.isUnit_det_of_right_inverse (Formalism.QuantumDeterminants.hpkFacts k r).2.1
 
-theorem mem_UH_of_Sset {z : Fin (2 * r + k + 1) → ℂ} {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
-    (ha : a ∈ Formalism.QuantumDeterminants.Sset k r z) : a ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) :=
-  Formalism.QuantumDeterminants.Sset_UH ha
-
 theorem zhat_dcoset {z z' : Fin (2 * r + k + 1) → ℂ} (hz : Formalism.QuantumDeterminants.inWb k r z) (hz' : Formalism.QuantumDeterminants.inWb k r z')
     {a a' : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ Formalism.QuantumDeterminants.Sset k r z)
     (ha' : a' ∈ Formalism.QuantumDeterminants.Sset k r z') (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
@@ -1586,7 +1552,7 @@ theorem zhat_dcoset {z z' : Fin (2 * r + k + 1) → ℂ} (hz : Formalism.Quantum
   obtain ⟨-, -, hinv'⟩ := Formalism.QuantumDeterminants.sGroup k r z' hz'
   obtain ⟨U, hU0, hU1, hF⟩ := Formalism.QuantumDeterminants.S_F hz (hinv a ha)
   obtain ⟨U', hU0', hU1', hF'⟩ := Formalism.QuantumDeterminants.S_F hz' (hinv' a' ha')
-  have hdet : IsUnit a.det := ((Formalism.QuantumDeterminants.uHGroup _ _ det_Hpk).2.2 a (mem_UH_of_Sset ha)).1
+  have hdet : IsUnit a.det := ((Formalism.QuantumDeterminants.uHGroup _ _ det_Hpk).2.2 a (_root_.Formalism.L2.SG.Pf.WFL.Sset_sub_UH ha)).1
   have hai : (a⁻¹)ᴴ * Formalism.QuantumDeterminants.Hpk k r * a⁻¹ = Formalism.QuantumDeterminants.Hpk k r := Formalism.QuantumDeterminants.Sset_UH (hinv a ha)
   have hHa : Formalism.QuantumDeterminants.Hpk k r * a = (a⁻¹)ᴴ * Formalism.QuantumDeterminants.Hpk k r := by
     calc Formalism.QuantumDeterminants.Hpk k r * a = (a⁻¹)ᴴ * Formalism.QuantumDeterminants.Hpk k r * a⁻¹ * a := by rw [hai]
@@ -1611,12 +1577,12 @@ theorem relPt_dcoset (D : D7) {z z' : Fin (2 * D.R.rS + D.R.k + 1) → ℂ} (hz 
   obtain ⟨hUH, ⟨L, V, hL, hV, hZ⟩, hGf⟩ := h
   obtain ⟨-, -, hinv'⟩ := Formalism.QuantumDeterminants.sGroup _ _ z' hz'
   have hG := Formalism.QuantumDeterminants.uHGroup _ _ (det_Hpk (k := D.R.k) (r := D.R.rS))
-  refine ⟨hG.2.1 _ (hG.2.1 _ (mem_UH_of_Sset ha) _ hUH) _ (mem_UH_of_Sset (hinv' a' ha')), ?_, ?_⟩
+  refine ⟨hG.2.1 _ (hG.2.1 _ (_root_.Formalism.L2.SG.Pf.WFL.Sset_sub_UH ha) _ hUH) _ (_root_.Formalism.L2.SG.Pf.WFL.Sset_sub_UH (hinv' a' ha')), ?_, ?_⟩
   · obtain ⟨U, U', hU0, hU1, hU0', hU1', he⟩ := zhat_dcoset hz hz' ha ha' γ
     have hZ' : Formalism.QuantumDeterminants.Zhat D.R.k D.R.rS z z' γ = L * ptMat p * V * sgn D.R.rS := by
       rw [← hZ, zhatO_eq, Matrix.mul_assoc, sgn_sq, Matrix.mul_one]
-    refine ⟨Uᴴ * L, V * (sgn D.R.rS * U' * sgn D.R.rS), loUni_mul (loUni_conjT hU0 hU1) hL,
-      upUni_mul hV (upUni_sgn_conj hU0' hU1'), ?_⟩
+    refine ⟨Uᴴ * L, V * (sgn D.R.rS * U' * sgn D.R.rS), _root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul (loUni_conjT hU0 hU1) hL,
+      _root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul hV (upUni_sgn_conj hU0' hU1'), ?_⟩
     rw [zhatO_eq, he, hZ']
     simp only [Matrix.mul_assoc]
   · rw [Formalism.QuantumDeterminants.gInv _ _ z z' hz hz' a ha a'⁻¹ (hinv' a' ha') γ]
@@ -1746,8 +1712,6 @@ theorem wloc_n {D : D7} (X : HidaSetting D) (u : D.what₂.Word) (v : InfinitePl
   simp only [mul_one, one_mul, uMat_one', psiV_one, one_smul] at hB
   rw [hA, ← hB]
 
-theorem uMat_mul_loc {n : ℕ} {ε : Fin n → Bool} (a b : Formalism.REAL.UJ ε) : uMat (a * b) = uMat a * uMat b := rfl
-
 theorem stab_inv : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ) (hB : WuBessel C) (u u' : D.what₂.Word) (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) (p : Point ℂ (D.R.rS + 1)), Formalism.L2.SG.ConcreteSettingExists.GapHyp D → RelPt D (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u' τ) (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) γ) p → ∀ s ∈ Formalism.L2.SG.RealObj.StSet (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε (vOf X τ)) (fun a => rv X.B.I (vOf X τ) (X.eR a)) (rv X.B.I (vOf X τ) (X.zR u))) (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε (vOf X τ)) (fun a => rv X.B.I (vOf X τ) (X.eR a)) (rv X.B.I (vOf X τ) (X.zR u'))) γ, ∀ x, Formalism.L2.SG.TermOp.rk1 (X.Wloc u (vOf X τ) (s * x)) (X.Wloc u' (vOf X τ) (γ⁻¹ * (s * x))) = Formalism.L2.SG.TermOp.rk1 (X.Wloc u (vOf X τ) x) (X.Wloc u' (vOf X τ) (γ⁻¹ * x)) := by
   intro D X θ C _ u u' τ γ p _ hrel s hs x
   obtain ⟨hQiQ, hQQi, hgram, hcol⟩ := C.isT τ
@@ -1782,7 +1746,7 @@ theorem stab_inv : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ)
           simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hQQi, Matrix.mul_one, uMat_inv_mul, Matrix.mul_one, hQiQ]
   have hconj : C.Qi τ * uMat (γ⁻¹ * s * γ) * C.Q τ = g⁻¹ * (C.Qi τ * uMat s * C.Q τ) * g := by
-    rw [hginv, hg, Formalism.L2.SG.RealObj.trG, uMat_mul_loc, uMat_mul_loc]
+    rw [hginv, hg, Formalism.L2.SG.RealObj.trG, _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_mul, _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_mul]
     calc C.Qi τ * (uMat γ⁻¹ * uMat s * uMat γ) * C.Q τ
         = C.Qi τ * (uMat γ⁻¹ * 1 * uMat s * 1 * uMat γ) * C.Q τ := by
           rw [Matrix.mul_one, Matrix.mul_one]
@@ -1842,7 +1806,7 @@ theorem jFactN_all : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y)
     apply hG
     apply (algebraMap D.host.F D.host.E).injective
     rw [gterm_val hI t, h0, map_zero]
-  have hP : HasPin hex.choose := GlobalTheory.T.relevantLift_normalisedData_exist D X Y u u' hex.choose hrel hsG
+  have hP : HasPin hex.choose := _root_.GlobalTheory.pinAll_all D X Y u u' hex.choose hrel hsG
   have hx := hP.choose_spec
   have hJ : JtOf hI t = Formalism.L2.SG.TermOp.ampN (Y.cs u) (Y.cs u') (Y.FN u) (Y.FN u') hex.choose := by
     unfold JtOf; rw [dite_eq_left hex]
@@ -1855,15 +1819,15 @@ theorem jFactN_all : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (hF : FinX Y)
     obtain ⟨τ, rfl⟩ : ∃ τ, vOf X τ = v := X.pl.symm.surjective v
     obtain ⟨p, hp⟩ := GlobalTheory.T.relevant_term_has_real_relative_point D X Y hF hI 1 C u u' t hex.choose hs hG hr τ
     exact GlobalTheory.StabInv.stab_inv D X 1 C hB u u' τ (hex.choose.pt.1 (vOf X τ)) p hGap hp
-  obtain ⟨μl, νl, hH, hQ, hR, hA⟩ := GlobalTheory.T.normalisedLift_amplitude_eq_covolume_mul_local D X Y 1 C u u' hex.choose hP.choose hrel hsG hx.1 hx.2.1 hx.2.2 hinv
+  obtain ⟨μl, νl, hH, hQ, hR, hA⟩ := _root_.GlobalTheory.AmpLift.amp_lift D X Y 1 C u u' hex.choose hP.choose hrel hsG hx.1 hx.2.1 hx.2.2 hinv
   have hloc : ∀ τ, j1 hI C hB t τ = Complex.normSq ((((cOf hB u τ : ℝ) : ℂ))⁻¹ * sclOf hB u u' τ) *
       hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u (vOf X τ));
         Formalism.L2.SG.RealObj.Jv (νl (vOf X τ)) (X.Wloc u (vOf X τ)) (X.Wloc u' (vOf X τ)) (hex.choose.pt.1 (vOf X τ))) := by
     intro τ
     have : SigmaFinite (μl (vOf X τ)) := (hH (vOf X τ)).1
-    exact GlobalTheory.T.localAmplitude_wittLift_eq_quotientIntegral D X Y hF hI C hB u u' t hex.choose hs hG hr hGap τ (μl (vOf X τ)) (νl (vOf X τ)) inferInstance
+    exact _root_.GlobalTheory.AmpLoc.hsNormSq_amp_loc D X Y hF hI C hB u u' t hex.choose hs hG hr hGap τ (μl (vOf X τ)) (νl (vOf X τ)) inferInstance
       (hQ (vOf X τ)) (hR τ)
-  have hK := GlobalTheory.T.amplitudeConstant_eq_prod_covolumes D X Y hF 1 C hB u u' one_pos hGap
+  have hK := _root_.GlobalTheory.AmplitudeConst.prod_normSq_eq D X Y hF 1 C hB u u' one_pos hGap
   have hre : (∏ τ, hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u (vOf X τ));
         Formalism.L2.SG.RealObj.Jv (νl (vOf X τ)) (X.Wloc u (vOf X τ)) (X.Wloc u' (vOf X τ)) (hex.choose.pt.1 (vOf X τ)))) =
       ∏ v, hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u v);

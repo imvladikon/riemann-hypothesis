@@ -133,6 +133,7 @@ import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsCompatibleAlongMap
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MemIdealOfOfDense
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.CentralCharts.TopLeIffCentre, Development.WeilBound.CoreStatements.CentralCharts.FlagImmersion, Development.WeilBound.CoreStatements.CentralCharts.GapPolynomialPositive, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GlobalReferenceGapPositive, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsEffectiveWeightSection, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericCharZero, Development.AutomorphicSpectrum.Proofs.GeometryProofs.EmbedsGenericOfCharZero, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsReferenceGeometrySameGeneric, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointsFiniteNonempty, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointsFiniteNonemptyStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRight, Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFinite, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGoodRootTower
@@ -587,22 +588,6 @@ section Chart
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {K : Type} [Fintype K]
   {J : K → Type} {y : (Σ k, J k) → Ω}
 
-theorem ne_of_chart {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀ k, J k => ∏ k, y ⟨k, c' k⟩) c p) (k : K) :
-    y ⟨k, c k⟩ ≠ 0 :=
-  (Finset.prod_ne_zero_iff.1 h.1) k (Finset.mem_univ k)
-
-theorem ratio_mem {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀ k, J k => ∏ k, y ⟨k, c' k⟩) c p)
-    (k : K) (i : J k) : y ⟨k, i⟩ / y ⟨k, c k⟩ ∈ regAt ξ p := by
-  classical
-  have h1 := h.2 (Function.update c k i)
-  have h2 : (∏ l, y ⟨l, Function.update c k i l⟩) / ∏ l, y ⟨l, c l⟩ = y ⟨k, i⟩ / y ⟨k, c k⟩ := by
-    rw [← Finset.prod_div_distrib, Finset.prod_eq_single k]
-    · simp
-    · intro l _ hl
-      rw [Function.update_of_ne hl, div_self (ne_of_chart h l)]
-    · simp
-  rwa [h2] at h1
-
 theorem chart_update {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀ k, J k => ∏ k, y ⟨k, c' k⟩) c p)
     [DecidableEq K] (k₀ : K) (i : J k₀) (hi : InChart ξ (fun i' : J k₀ => y ⟨k₀, i'⟩) i p) :
     InChart ξ (fun c' : ∀ k, J k => ∏ k, y ⟨k, c' k⟩) (Function.update c k₀ i) p := by
@@ -612,7 +597,7 @@ theorem chart_update {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀
     · subst hk
       simpa using hi.1
     · rw [Function.update_of_ne hk]
-      exact ne_of_chart h k
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_coord_ne_zero h k
   refine ⟨Finset.prod_ne_zero_iff.2 fun k _ => hne k, fun c' => ?_⟩
   show (∏ k, y ⟨k, c' k⟩) / ∏ k, y ⟨k, Function.update c k₀ i k⟩ ∈ regAt ξ p
   rw [← Finset.prod_div_distrib]
@@ -621,7 +606,7 @@ theorem chart_update {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀
   · subst hk
     simpa using hi.2 (c' k)
   · rw [Function.update_of_ne hk]
-    exact ratio_mem h k (c' k)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_ratio_mem h k (c' k)
 
 theorem chartRing_mem {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : ∀ k, J k => ∏ k, y ⟨k, c' k⟩) c p)
     {a : Ω} (ha : a ∈ chartRingZ y c) : a ∈ regAt ξ p := by
@@ -629,7 +614,7 @@ theorem chartRing_mem {p : Cpt ξ} {c : ∀ k, J k} (h : InChart ξ (fun c' : �
   induction ha using Algebra.adjoin_induction with
   | mem x hx =>
     obtain ⟨q, rfl⟩ := hx
-    exact ratio_mem h q.1 q.2
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_ratio_mem h q.1 q.2
   | algebraMap r => simpa using intCast_mem (regAt ξ p) r
   | add x y _ _ hx hy => exact add_mem hx hy
   | mul x y _ _ hx hy => exact mul_mem hx hy
@@ -669,7 +654,7 @@ theorem isEff_of_data (G : RefGeo Y) (n : RootIx D → ℤ) (e : G.Ω) (b : G.Ω
   have hc := chart_update hc0 G.k₀ i hi
   set cc := Function.update c0 G.k₀ i with hcc
   have hcck : cc G.k₀ = i := by simp [hcc]
-  have hne := ne_of_chart hc
+  have hne := _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_coord_ne_zero hc
   have hgen := hDeg.2 p (Set.mem_univ _) cc hc
   set a : G.K → ℤ := ∑ r, (-n r) • G.xdeg r with ha
   set E₀ : G.Ω := ∏ r, G.e r ^ (-n r) with hE₀
@@ -695,7 +680,7 @@ theorem isEff_of_data (G : RefGeo Y) (n : RootIx D → ℤ) (e : G.Ω) (b : G.Ω
   have hEc0 : Ec ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => hne k
   have hMc : M / Ec ∈ regAt G.𝔐.ξ p := by
     rw [hM, hEc, ← Finset.prod_div_distrib]
-    exact Subring.prod_mem _ fun k _ => ratio_mem hc k (i₀ k)
+    exact Subring.prod_mem _ fun k _ => _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_ratio_mem hc k (i₀ k)
   have hP : Q1 * Q2 * Pa = G.y ⟨G.k₀, i⟩ * Ec := by
     have h1 : G.y ⟨G.k₀, i⟩ * Ec = ∏ k, G.y ⟨k, cc k⟩ := by
       rw [hEc, ← Finset.mul_prod_erase Finset.univ (fun k => G.y ⟨k, cc k⟩) (Finset.mem_univ G.k₀), hcck]
@@ -767,7 +752,7 @@ theorem exists_eff : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨k, hk, e, he, he0⟩ := h2 (_root_.GlobalTheory.CompanionTheory.Relay.global_reference_gap_positive hG E H D Xo l c Y hgl hp hq G A ν hν) β dβ hβ hβP
   have hne0 : ∀ κ, ∃ i, G.y ⟨κ, i⟩ ≠ 0 := by
     obtain ⟨c0, hc0⟩ := G.𝔐.tie.cover ⟨genPt G.𝔐.ξ, specializes_rfl⟩
-    exact fun κ => ⟨c0 κ, ne_of_chart hc0 κ⟩
+    exact fun κ => ⟨c0 κ, _root_.GlobalTheory.CompanionTheory.Ar.Lat.block_coord_ne_zero hc0 κ⟩
   choose i₀ hi₀ using hne0
   set n : RootIx D → ℤ := fun r => ((k * 1 : ℕ) : ℤ) * ν r with hn'
   have hdeg : ∀ κ, (∑ r, (-n r) • G.xdeg r) κ = (k : ℤ) * (PB.combLine A.Re.ref (gapN ν)).a κ := by
@@ -1006,38 +991,6 @@ theorem segDeg {F : Type} [AddCommGroup F] [Module Ω F] {L : Lat ξ F} {a : K �
 
 end Segre
 
-section Ideal
-
-variable {K K' : Type} [Fintype K] [Fintype K'] {J : K → Type} {J' : K' → Type} [∀ k, Fintype (J k)]
-  [∀ k, Fintype (J' k)]
-
-theorem mem_mcPts_map (v : (Σ k, J k) → Σ k, J' k) (bd : Ideal (MRing J)) (w : (Σ k, J' k) → ℂ)
-    (hw : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0) (hw' : ∀ k, ∃ i, w (v ⟨k, i⟩) ≠ 0) :
-    w ∈ mcPts (bd.map (MvPolynomial.rename v)) ↔ (fun p => w (v p)) ∈ mcPts bd := by
-  have e : ∀ f : MRing J, MvPolynomial.eval w (MvPolynomial.map (Int.castRingHom ℂ)
-      (MvPolynomial.rename v f)) =
-      MvPolynomial.eval (fun p => w (v p)) (MvPolynomial.map (Int.castRingHom ℂ) f) := by
-    intro f
-    rw [MvPolynomial.map_rename, MvPolynomial.eval_rename]
-    rfl
-  constructor
-  · intro h
-    exact ⟨hw', fun f hf => by
-      rw [← e]
-      exact h.2 _ (Ideal.mem_map_of_mem _ hf)⟩
-  · intro h
-    refine ⟨hw, fun f hf => ?_⟩
-    let φ : MRing J' →+* ℂ := (MvPolynomial.eval w).comp (MvPolynomial.map (Int.castRingHom ℂ))
-    have hle : bd.map (MvPolynomial.rename v) ≤ RingHom.ker φ :=
-      Ideal.map_le_iff_le_comap.2 fun g hg => by
-        show φ (MvPolynomial.rename v g) = 0
-        show MvPolynomial.eval w (MvPolynomial.map (Int.castRingHom ℂ) (MvPolynomial.rename v g)) = 0
-        rw [e]
-        exact h.2 g hg
-    exact hle hf
-
-end Ideal
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Tor.Level H}
   {Xo : Moduli D l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F}
 
@@ -1115,7 +1068,7 @@ theorem exists_refGeo : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatem
       hall 𝔐.all 𝔐.tie.gen hξ hy₂ hreg hw
     have hne : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0 := fun k => (hw.1 k).imp fun _ h => h.ne_zero
     have hne' : ∀ k, ∃ i, w (v ⟨k, i⟩) ≠ 0 := fun k => (hw₁.1 k).imp fun _ h => h.ne_zero
-    rw [mem_mcPts_map v bd w hne hne']
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.EigBase.mem_mcPts_rename v bd w hne hne']
     refine (show (fun p => w (v p)) ∈ mcPts bd ↔ _ from hbd (z ≫ g) _ hw₁).trans ?_
     have hab := abLocus_pullback abLocusOne Y.t.semi 𝔐.m.cart.1 (centre z)
     have hc : f (centre (z ≫ g)) = 𝔐.f (centre z) := by
@@ -1379,7 +1332,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRight =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFinite =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFinite", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericIsGenericPoint\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAfterFiniteExtension\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteExtensionPrimes\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpen\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonLeft\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonMiddle\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRight\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptLabelBases\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptProjectiveModel\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsCompatibleAlongMap\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFinite", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericIsGenericPoint\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAfterFiniteExtension\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteExtensionPrimes\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpen\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonLeft\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonMiddle\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRight\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptLabelBases\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptProjectiveModel\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsCompatibleAlongMap\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.MemIdealOfOfDense\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1398,11 +1351,6 @@ theorem spMap_comp' {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (a : R
     spMap (a.comp b) = spMap a ≫ spMap b := by
   show Spec.map (CommRingCat.ofHom (a.comp b)) = Spec.map (CommRingCat.ofHom a) ≫ Spec.map (CommRingCat.ofHom b)
   rw [CommRingCat.ofHom_comp, Spec.map_comp]
-
-theorem spMap_inj {R S : Type} [CommRing R] [CommRing S] {a b : R →+* S} (h : spMap a = spMap b) : a = b := by
-  have h' : Spec.map (CommRingCat.ofHom a) = Spec.map (CommRingCat.ofHom b) := h
-  have := Spec.map_injective h'
-  exact CommRingCat.hom_ext_iff.1 this |> fun e => by simpa using e
 
 theorem spMap_dualMap_id (Ω : Type) [Field Ω] : spMap (dualMap (RingHom.id Ω)) = 𝟙 _ := by
   have : dualMap (RingHom.id Ω) = RingHom.id _ := by
@@ -1456,7 +1404,7 @@ theorem exists_cover : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → Out.
       simp
     have := c.fin
     have : NumberField c.F := {}
-    exact cst_ext (spMap_inj h4)
+    exact cst_ext (_root_.GlobalTheory.ZM.DenseFib.spMap_inj h4)
   obtain ⟨jA, hext, hpt, hact, hlat⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.CoverLie.main E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 B i (g ≫ h₁) hdomB hfB
   obtain ⟨Li₀, _, _, M₀, j, V₀, hspan, hj, hV, hflag⟩ :=
@@ -1558,7 +1506,7 @@ theorem level_data (hG : Top.Given) (hW : Out.WeilSt)
       (∀ p ∈ S, o'.𝔐.R p = 4) ∧ o'.Re.J = ⊤ ∧ ∃ _ : Algebra ℚ RM.Ω, SmoothGenericFibreM RM.y := by
   obtain ⟨Ω, _, _, K, _, J, _, y, bk, bx, i, 𝔐, h, Fl, xdeg, e, hbk, hy, hd, hf, hcst, hfl, hfin, hlines,
     hom, hsm, hR⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChangeGeo.exists_cover hG hW E H D l Xo c Y Sys Fx R o S hS hdisc hdeg
-  obtain ⟨RM, o', h1, h2, h3, h4⟩ := GlobalTheory.T.root_origin_coords_over_field hG E H D l Xo c Y Sys Fx R o S Ω K J y bk bx i 𝔐 h Fl
+  obtain ⟨RM, o', h1, h2, h3, h4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.root_model_on_cover hG E H D l Xo c Y Sys Fx R o S Ω K J y bk bx i 𝔐 h Fl
     xdeg e hdeg hemb hbij hbk hy hd hf hcst hfl hfin hlines hom hsm
   refine ⟨RM, o', h1, fun p hp => ?_, h3, h4⟩
   rw [h2]

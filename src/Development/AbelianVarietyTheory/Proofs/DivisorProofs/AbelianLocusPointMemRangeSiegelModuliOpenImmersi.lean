@@ -128,6 +128,7 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfC
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOfIsMumfordOf
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelExtensionOverDvr
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SABBaseChangeSt
@@ -784,7 +785,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleOfGenericFibreNormalLocalDomainStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalSiegelObjectExtensionAbelianLocus =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalSiegelObjectExtensionAbelianLocus", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral\npublic import Mathlib.AlgebraicGeometry.Geometrically.Integral\nimport Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp\npublic import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsRigidifiedExtensionOfGenericFibre\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EndoLbIsoSymmetryHypothesisExtendNormalModel\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleIsoExtendOfNormalBase\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmEndomorphismPlaceIntegral\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutatorPairingDeterminedAtGenericPointStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarisedExtensionFinite\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionTranslatesCoverSemiAbelian\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelExtends\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelBasisEveryGeometricPointLocalRingStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NondegeneratePairingOfGenericFibreStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleOfGenericFibreNormalLocalDomainStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDescendsFromGenericFibre\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRegularLocalRingOfFlatOfMapEqMaximalIdeal\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionAbelianVariety\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverOfIsIso\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOfIsMumfordOf\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalSiegelObjectExtensionAbelianLocus", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral\npublic import Mathlib.AlgebraicGeometry.Geometrically.Integral\nimport Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp\npublic import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsRigidifiedExtensionOfGenericFibre\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EndoLbIsoSymmetryHypothesisExtendNormalModel\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleIsoExtendOfNormalBase\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmEndomorphismPlaceIntegral\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutatorPairingDeterminedAtGenericPointStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarisedExtensionFinite\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionTranslatesCoverSemiAbelian\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelExtends\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelBasisEveryGeometricPointLocalRingStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NondegeneratePairingOfGenericFibreStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleOfGenericFibreNormalLocalDomainStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDescendsFromGenericFibre\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRegularLocalRingOfFlatOfMapEqMaximalIdeal\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionAbelianVariety\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverOfIsIso\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUnifOfIsMumfordOf\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelExtensionOverDvr\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -807,15 +808,6 @@ section Bundle
 variable {O K : Type} [CommRing O] [IsDomain O] [Field K] [Algebra O K] [IsFractionRing O K]
 
 
-omit [IsDomain O] [Field K] [Algebra O K] [IsFractionRing O K] in
-theorem pic_local [IsLocalRing O] (c : Pic (Sp O)) : c = 0 := by
-  obtain ⟨D, hD, rfl⟩ := cls_surj c
-  obtain ⟨i, hi⟩ := exists_chart hD (IsLocalRing.closedPoint O)
-  have hV : D.U i = ⊤ := (IsLocalRing.closedPoint_mem_iff _).1 hi
-  have := (cls_eq_zero_iff (pull_isLB hD (𝟙 _))).2 (IsoExtend.exists_gen_of_chart hD (𝟙 _) i fun y => by
-    rw [hV]; trivial)
-  rwa [cls_pull hD, pull_id] at this
-
 theorem generic_props : IsPreimmersion (spMap (algebraMap O K)) ∧ Flat (spMap (algebraMap O K)) ∧
     IsDominant (spMap (algebraMap O K)) := by
   refine ⟨IsPreimmersion.of_isLocalization (nonZeroDivisors O), ?_, ⟨?_⟩⟩
@@ -830,7 +822,7 @@ theorem pic_generic [IsLocalRing O] [IsNoetherianRing O] [IsIntegrallyClosed O] 
     (hab : CechPic.pull ψ a = CechPic.pull ψ b) : a = b := by
   obtain ⟨_, _, _⟩ := generic_props (O := O) (K := K)
   refine ZH.EndoExtend.pic_ext (spMap (algebraMap O K)) (ZJ.isNormalScheme_sp O) X e.left (Over.w e)
-    ((pic_local _).trans (pic_local _).symm) ?_
+    ((_root_.GlobalTheory.ThetaExtend.pic_local _).trans (_root_.GlobalTheory.ThetaExtend.pic_local _).symm) ?_
   rw [← h.isoPullback_inv_fst, pull_comp, pull_comp, hab]
 
 theorem exists_extension [IsRegularRing O] (X : Over (Sp O)) [Smooth X.hom] [IsProper X.hom]
@@ -905,10 +897,6 @@ end Bundle
 section Level
 
 variable {O K : Type} [CommRing O] [IsDomain O] [Field K] [Algebra O K] [IsFractionRing O K]
-
-omit [IsDomain O] [IsFractionRing O K] in
-theorem spMap_inj {R R' : Type} [CommRing R] [CommRing R'] {f f' : R →+* R'} (e : spMap f = spMap f') : f = f' :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective e)
 
 variable {A : Over (Sp O)} [GrpObj A] {A' : Over (Sp K)} [GrpObj A'] {ψ : A'.left ⟶ A.left}
 
@@ -1022,7 +1010,7 @@ theorem extend (O K : Type) [CommRing O] [IsRegularLocalRing O] [Field K] [Algeb
   obtain ⟨ρ, rfl⟩ := Models.RankZero.exists_spMap x
   obtain ⟨c1, c2⟩ := TT k (spMap ρ)
   refine ⟨c1, c2, fun a b => ?_⟩
-  have hβ : ρ.comp σ = β := spMap_inj ((Models.RankZero.spMap_comp σ ρ).symm.trans hx)
+  have hβ : ρ.comp σ = β := _root_.GlobalTheory.ZM.DenseFib.spMap_inj ((Models.RankZero.spMap_comp σ ρ).symm.trans hx)
   have hzz : Units.map ρ.toMonoidHom ζO = z := Units.ext (by rw [hz, ← hβ]; rfl)
   have := GlobalTheory.T.commutatorPairing_determined_at_genericPoint O A hA P hP r₁ r₂ amp n (Nat.pos_of_ne_zero hn) hnO (lev a) (lev b) (tors a) (tors b)
     (ζO ^ (2 * omegaStd a b)) k₀ j hjinj (w0 a b) k ρ
@@ -1075,7 +1063,7 @@ theorem exists_principal_extension : ∀ (g n : ℕ) (F : SFam g n (zetaAway n))
   have : IsRegularLocalRing O := isRegularRing_iff.mp (isRegularRing_of_isRegularLocalRing R) p.asIdeal
   obtain ⟨κ₀, rfl⟩ := Models.RankZero.exists_spMap κ
   have hκ₀ : κ₀.comp (algebraMap R O) = algebraMap R (FractionRing R) :=
-    spMap_inj ((Models.RankZero.spMap_comp _ _).symm.trans hκ)
+    _root_.GlobalTheory.ZM.DenseFib.spMap_inj ((Models.RankZero.spMap_comp _ _).symm.trans hκ)
   letI : Algebra O (FractionRing R) := κ₀.toAlgebra
   haveI : IsScalarTower R O (FractionRing R) :=
     IsScalarTower.of_algebraMap_eq fun r => (RingHom.congr_fun hκ₀ r).symm

@@ -135,7 +135,7 @@ theorem sigD_genSub (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) 
       rw [sigD_E hσ hD hk a b x, actM]
       simp only [LinearMap.sum_apply, LinearMap.smul_apply]
       exact Submodule.sum_mem _ fun c _ => Submodule.sum_mem _ fun d _ =>
-        Submodule.smul_mem _ _ (generatedSub_stable E V c d hx)
+        Submodule.smul_mem _ _ (_root_.ReciprocityTheory.ChartRestriction.DS.Lap.LemK.vc_genSub_stable E V c d hx)
   exact hT hv
 
 theorem wK_tensFock_genSub (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn ε σ D E) {V : Submodule ℂ D}
@@ -288,7 +288,7 @@ theorem YY_le_genSub (J : ℕ) : YY ε E V J ≤ tensFock (n := n) (genSub E V) 
   refine sup_le (layer_le_generated_tensorFock J) ?_
   rintro _ ⟨y, hy, rfl⟩
   have hy' := layer_le_generated_tensorFock J hy
-  exact ⟨dD_tensFock (fun a b v hv => generatedSub_stable E V a b hv) hy'.1, dD_physSub E hy'.2⟩
+  exact ⟨dD_tensFock (fun a b v hv => _root_.ReciprocityTheory.ChartRestriction.DS.Lap.LemK.vc_genSub_stable E V a b hv) hy'.1, dD_physSub E hy'.2⟩
 
 theorem diracSquare_mem_layer (hE : IsGlRep E) (hVk : IsKStableSub ε E V) {c : ℂ} (hc : ∀ v ∈ genSub E V, casimir E v = c • v)
     (J : ℕ) {y : TensorProduct ℂ N (Fock n)} (hy : y ∈ Y0 ε E V J) :

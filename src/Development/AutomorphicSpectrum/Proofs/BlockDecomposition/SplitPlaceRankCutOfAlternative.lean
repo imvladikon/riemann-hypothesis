@@ -650,8 +650,6 @@ open PositivityTheory.Rg.Rsw PositivityTheory.Rg.Rsw.L
 open GlobalTheory.CompanionTheory.Jp
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.local_image_of_unipotent_element : ∀ (D : D7) (n : ℕ) (nb : hermA D n → G D n), IsNMap nb → ∀ (v : Pl D) (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v) (x : hermA D n), thU D n v τ (proj D.sp.cm.sig (Jst D n) v (nb x)) = nU (tauC τ x.1) := by
-  first | exact @GlobalTheory.CompanionTheory.Jp.thU_proj_nMap
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalImageOfUnipotentElementStatement =====
@@ -778,8 +776,6 @@ open PositivityTheory.Rg.Rsw PositivityTheory.Rg.Rsw.L
 open GlobalTheory.CompanionTheory.Jp
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.modulus_upper_parabolic_local : ∀ (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v) (y : GLoc D.sp.cm.sig (Jst D n) v) (a d : GL (Fin n) (Fv D.host.F v)) (b : Matrix (Fin n) (Fin n) (Fv D.host.F v)), thU D n v τ y = pM a d b → ∃ hy : y ∈ GlobalTheory.LocIntw.upperParabolic (Fv D.host.F v) D.sp.cm.sig (Jst D n), absEv D.host.F D.host.E v (GlobalTheory.LocIntw.aUp (Fv D.host.F v) D.sp.cm.sig (Jst D n) ⟨y, hy⟩) = nvL D v (Matrix.GeneralLinearGroup.det a) / nvL D v (Matrix.GeneralLinearGroup.det d) := by
-  first | exact @GlobalTheory.CompanionTheory.Jp.UpTri.upperParabolic_height
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusUpperParabolicLocalStatement =====
@@ -1089,7 +1085,7 @@ theorem exists_rho (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F]
       (inL (O := Ov D v) (L := Lv D v) (n := n)).range := by
     intro k
     have hk : (k : G D n) ∈ GlobalTheory.LocIntw.KUpAd D.sp.cm.sig (Jst D n) := (Subgroup.mem_inf.1 k.2).1
-    exact (GlobalTheory.T.mem_maximal_compact_iff_integral_image D n v τ _).1 ((GlobalTheory.LocIntw.mem_KUpAd.1 hk).1 v)
+    exact (_root_.GlobalTheory.CompanionTheory.Jp.SplitK.mem_KUpFin_iff D n v τ _).1 ((GlobalTheory.LocIntw.mem_KUpAd.1 hk).1 v)
   obtain ⟨ρ, hρ⟩ := exists_lift _ _ hinj hmem
   have hρ' : ∀ k : KAt D n v, thU D n v τ (proj D.sp.cm.sig (Jst D n) v k) = inL (L := Lv D v) (ρ k) := hρ
   refine ⟨ρ, hρ', ?_, ?_⟩
@@ -1154,8 +1150,6 @@ open PositivityTheory.Rg.Rsw PositivityTheory.Rg.Rsw.L
 open GlobalTheory.CompanionTheory.Jp
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.surjective_reduction_maximal_compact : ∀ (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v), ∃ ρ : KAt D n v →* GL (Ix n) (Ov D v), (∀ k : KAt D n v, thU D n v τ (proj D.sp.cm.sig (Jst D n) v k) = inL (L := Lv D v) (ρ k)) ∧ Function.Surjective ρ ∧ ∀ ϖ : Ov D v, Irreducible ϖ → MeasurableSet (ρ ⁻¹' (Gam2 (n := n) ϖ : Set (GL (Ix n) (Ov D v)))) := by
-  first | exact @GlobalTheory.CompanionTheory.Jp.RhoSplit.exists_rho
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SurjectiveReductionMaximalCompactStatement =====
@@ -1192,7 +1186,7 @@ theorem hU_isHgt (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F] F
   obtain ⟨y, hy⟩ := (GlobalTheory.T.bijective_local_unitary_to_GL D n v τ).2 (pM a d b)
   obtain ⟨k, hk⟩ := (GlobalTheory.T.bijective_local_unitary_to_GL D n v τ).2 (inL κ)
   have hkK : k ∈ GlobalTheory.LocIntw.KUpFin D.sp.cm.sig (Jst D n) v := (GlobalTheory.T.mem_maximal_compact_iff_integral_image D n v τ k).2 ⟨κ, hk.symm⟩
-  obtain ⟨hyP, hab⟩ := GlobalTheory.T.modulus_upper_parabolic_local D n v τ y a d b hy
+  obtain ⟨hyP, hab⟩ := _root_.GlobalTheory.CompanionTheory.Jp.UpTri.upperParabolic_height D n v τ y a d b hy
   rw [← hy, ← hk, ← map_mul, hU_thU]
   exact (GlobalTheory.LocIntw.hgtUp_mul (GlobalTheory.LocIntw.isIwasawaUp_fin D n v) ⟨y, hyP⟩ hkK).trans hab
 
@@ -1234,7 +1228,7 @@ theorem split_place_rank_cut_of_local_computation : JpCondition → SplitPlaceRa
   have hok := GlobalTheory.T.normalized_valuation_uniformizer D v ϖ hϖ w hw
   choose ℓ hℓ using fun a : kv D v => IsLocalRing.residue_surjective (R := Ov D v) a
   have hβ : (Matrix.diagonal fun i : Fin n => if i.1 < r then (1 : kv D v) else 0).rank = r := rank_beta0 hrt
-  obtain ⟨ρ, hρ, hρs, hρm⟩ := GlobalTheory.T.surjective_reduction_maximal_compact D n v τ
+  obtain ⟨ρ, hρ, hρs, hρm⟩ := _root_.GlobalTheory.CompanionTheory.Jp.RhoSplit.exists_rho D n v τ
   obtain ⟨c, hcd, hct, hcint⟩ := hA (Ov D v) (Lv D v) n r t hrt hr ψ₀ hψ₀ _ hβ
   choose f hinf hoff hfX _ using fun Y : Matrix (Fin n) (Fin n) (kv D v) =>
     GlobalTheory.T.exists_global_hermitian_local_approximation D n v τ (((w⁻¹ : (Lv D v)ˣ) : Lv D v) • liftM (L := Lv D v) ℓ Y)
@@ -1304,7 +1298,7 @@ theorem split_place_rank_cut_of_local_computation : JpCondition → SplitPlaceRa
     funext k
     rw [Finset.sum_image (fun Y _ Y' _ h => hfinj h)]
     refine Finset.sum_congr rfl fun Y _ => ?_
-    rw [Function.leftInverse_invFun hfinj Y, e1, map_mul, map_mul, hρ k, GlobalTheory.T.local_image_of_unipotent_element D n nb hnb v τ (f Y), hfX Y]
+    rw [Function.leftInverse_invFun hfinj Y, e1, map_mul, map_mul, hρ k, _root_.GlobalTheory.CompanionTheory.Jp.thU_proj_nMap D n nb hnb v τ (f Y), hfX Y]
     rfl
 
 end GlobalTheory.CompanionTheory.Jp

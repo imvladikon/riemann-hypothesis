@@ -370,8 +370,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dLin transF IsInvPair dAct)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChartCmp
 
-theorem _root_.GlobalTheory.T.jetEq_bilinearSeries_of_biadditive : ∀ (k : Type) [CommRing k] [Algebra ℚ k] (d m : ℕ) (g : PS k 2 d), JEq m (ev (n := 3) ![pt k (n := 3) d 0 + pt k (n := 3) d 1, pt k (n := 3) d 2] g) (ev (n := 3) ![pt k (n := 3) d 0, pt k (n := 3) d 2] g + ev (n := 3) ![pt k (n := 3) d 1, pt k (n := 3) d 2] g) → JEq m (ev (n := 3) ![pt k (n := 3) d 0, pt k (n := 3) d 1 + pt k (n := 3) d 2] g) (ev (n := 3) ![pt k (n := 3) d 0, pt k (n := 3) d 1] g + ev (n := 3) ![pt k (n := 3) d 0, pt k (n := 3) d 2] g) → JEq m g (bilSer (fun i j => MvPowerSeries.coeff (Finsupp.single ((0 : Fin 2), i) 1 + Finsupp.single ((1 : Fin 2), j) 1) g) (pt k (n := 2) d 0) (pt k (n := 2) d 1)) := by
-  first | exact @GlobalTheory.ChartCmp.BilAdd.jeq_bilSer_of_biadditive
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.JetEqBilinearSeriesOfBiadditiveStatement =====
@@ -611,7 +609,7 @@ theorem exists_biadd_jEq : ∀ (R : Type) [CommRing R] (d : ℕ) (O : Type) [Com
     rfl
   have hb3 := nc3 (nc_comp1 he (hp (n := 3) 0)) (nc_comp1 he (hp (n := 3) 1)) (nc_comp1 he (hp (n := 3) 2))
   obtain ⟨β, hβ⟩ : ∃ β : Matrix (Fin d) (Fin d) k, JEq m g₀ (bilSer β (pt k (n := 2) d 0) (pt k d 1)) := by
-    refine ⟨_, GlobalTheory.T.jetEq_bilinearSeries_of_biadditive k d m g₀ ?_ ?_⟩
+    refine ⟨_, _root_.GlobalTheory.ChartCmp.BilAdd.jeq_bilSer_of_biadditive k d m g₀ ?_ ?_⟩
     · have h1 := jEq_ev hb3 hg.add1
       rw [ev_add' hb3, germEv_germEv_two_points hb3 (nc_addOf hF (hp 0) (hp 1)) (hp 2), germEv_germEv_two_points hb3 (hp 0) (hp 2),
         germEv_germEv_two_points hb3 (hp 1) (hp 2), evalPoints_formalGroupAdd hb3 _ (hp 0) (hp 1), evalPoints_coordinatePoint hb3, evalPoints_coordinatePoint hb3, evalPoints_coordinatePoint hb3] at h1

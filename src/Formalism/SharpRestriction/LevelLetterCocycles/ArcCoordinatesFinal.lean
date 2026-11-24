@@ -254,7 +254,7 @@ theorem secOfP_int (hinj : Function.Injective (algebraMap O LL))
   rw [one_smul] at hyx
   obtain ⟨β₀, hβ₀, hyβ⟩ := Formalism.MainNotions.UnusedSlot80.ArcF.Pp_repr W T c' e b hb.1 yP hyP
   have hbl : ∀ m, (letE c' : LetA O n) • b m = b m := fun m =>
-    Formalism.MainNotions.UnusedSlot80.ArcF.letter_of_Nl W T c' (hb.1.1 m).2
+    _root_.Formalism.MainNotions.LiftingTheory.frame_letE_fix W T c' (hb.1.1 m).2
   have hφl : ∀ m, (letE (c' + (e : ZMod n)) : LetA O n) • ((W.φD T) ^ e) (b m) = ((W.φD T) ^ e) (b m) :=
     fun m => φD_pow_letter W T c' (b m) (hbl m) e
   set Λ : LetA O n := abelian₂ W A (c' + (e : ZMod n)) e with hΛdef
@@ -700,7 +700,7 @@ theorem frame_const (hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP W) {T�
     intro j
     refine Formalism.MainNotions.N.Pv.LocalLengthBound.frobenius_uniformizer_pow_dvd (c := c') hR (W.AΔ.sub_mem (hm j).1
       (W.AΔ.mul_mem (Formalism.MainNotions.UnusedSlot80.SatPW.letE_mem_AΔ W c') (W.AΔ.algebraMap_mem _))) ?_ ?_
-    · rw [mul_sub, (hm j).2, ← mul_assoc, Formalism.MainNotions.N.Pv.LocalLengthBound.letE_sq]
+    · rw [mul_sub, (hm j).2, ← mul_assoc, _root_.Formalism.MainNotions.LiftingTheory.letter_idempotent_sq]
     · have := Formalism.MainNotions.UnusedSlot80.ArcF.ev_apply c' (m j - letE c' * algebraMap O (LetA O n) (o j))
       rw [← this, map_sub, map_mul, Formalism.MainNotions.UnusedSlot80.ArcF.ev_letE, Formalism.MainNotions.UnusedSlot80.ArcF.ev_alg, one_mul,
         Formalism.MainNotions.UnusedSlot80.ArcF.ev_apply, sub_self]
@@ -1194,7 +1194,7 @@ theorem splitPolar_of [FiniteDimensional Qp LL] (C : LevC.Ctx W) (hArc : ArcCore
   have hxe : x = p - W.map ι w := by rw [hpx]; abel
   have hxN : InFNc W Y c 1 x := by
     refine ⟨x, ⟨Formalism.MainNotions.UnusedSlot80.Split2.N_of_Nl W hx, fun δ hδ => ?_⟩,
-      Formalism.MainNotions.UnusedSlot80.ArcF.letter_of_Nl W Y c hx, (one_smul _ _).symm⟩
+      _root_.Formalism.MainNotions.LiftingTheory.frame_letE_fix W Y c hx, (one_smul _ _).symm⟩
     rw [hxe, map_sub, Formalism.MainNotions.UnusedSlot80.Relay2.Pp_Δ W Y _ _ p hp δ hδ, ← W.map_γ, hI.2.1 δ hδ]
   exact polar_core W C h9 A hA _ hc' (A.len c) c hac T₂ Y ι π hT₂ hWY hses b sol hb bY solY hbY hind2 hspan2
     hindY hspanY hNY w p x hP hp hxN hpx
@@ -1234,7 +1234,7 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 theorem splitShapeL_rec (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F)
     (hArc : AdmArcA D HW F Cm) (h1 : LevelZeroModPLocal D HW) (h2 : LevelZeroModPRefinedLocal D HW) (h23 : Formalism.MainNotions.LiftingTheory.adm23 D HW F)
     (h9 : Formalism.MainNotions.TruncatedSeriesCountingBounds.adm9 D) : Split.SplitShapeL D HW :=
-  Split.splitShapeL_of_pieces D HW (splitPolarL_of D HW F Cm hArc (arc_coordinates_of_levels D HW F Cm h1 h2) h23 h9)
+  Split.splitShapeL_of_pieces D HW (splitPolarL_of D HW F Cm hArc (_root_.Formalism.MainNotions.UnusedSlot80.arc_coordinates_of_level_zero_parts D HW F Cm h1 h2) h23 h9)
     (Split.polarToPoleL_of D HW F Cm hArc)
 
 end Formalism.MainNotions.UnusedSlot80
@@ -1286,7 +1286,7 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 theorem arc_coordinates_of_frobenius (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F) (h4 : Formalism.MainNotions.DeltaInvariantLattices.P4 D HW F Cm) (h9 : Formalism.MainNotions.DeltaInvariantLattices.P9 D HW F)
     (h2 : LevelZeroModPRefinedLocal D HW) : ArcCoordinatesTheorem D HW F Cm := fun hA =>
-  arc_coordinates_of_levels D HW F Cm (lev0MpL_of D HW F Cm hA h4 h9) h2 hA
+  _root_.Formalism.MainNotions.UnusedSlot80.arc_coordinates_of_level_zero_parts D HW F Cm (lev0MpL_of D HW F Cm hA h4 h9) h2 hA
 
 theorem arc_coordinates_of_frobenius_levels (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F) (hA : AdmArcA D HW F Cm) (h4 : Formalism.MainNotions.DeltaInvariantLattices.P4 D HW F Cm)

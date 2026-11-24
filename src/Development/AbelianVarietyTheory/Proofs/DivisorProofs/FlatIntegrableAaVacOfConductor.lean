@@ -466,8 +466,6 @@ section -- clump:auto
 open MeasureTheory ValuativeRel Matrix
 open GlobalTheory.OriginBox GlobalTheory.FunObj GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.RootEx
 
-theorem _root_.GlobalTheory.T.unfoldingCharacterPhase_origin_valuation_le_box : ∀ {k : Type} [Field k] [ValuativeRel k] (G : Grid k) (ϖ : kˣ) (a a' : ℤ) (e : Vars G), e ∈ box G ϖ a a' → valuation k (phase (0 : ColArgs G) e) ≤ valuation k ((ϖ ^ (a + a') : kˣ) : k) := by
-  first | exact @GlobalTheory.OriginBox.phase_origin_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingCharacterPhaseOriginValuationLeBoxStatement =====
@@ -509,7 +507,7 @@ theorem flatTensor_moved_box (G : Grid k) (hs : 1 ≤ G.s) (ψ : AddChar k Circl
     funext e
     rw [flatIntegrand, moved_false, _root_.GlobalTheory.OriginBox.indicator_moveArgs_origin G hs ϖ a a' g hg e]
     by_cases he : e ∈ box G ϖ a a'
-    · have h1 := GlobalTheory.T.unfoldingCharacterPhase_origin_valuation_le_box G ϖ a a' e he
+    · have h1 := _root_.GlobalTheory.OriginBox.phase_origin_le G ϖ a a' e he
       rw [Set.indicator_of_mem he, Set.indicator_of_mem he, hψ _ (by rwa [Valuation.map_neg])]
       simp only [Pi.one_apply, mul_one, Circle.coe_one, P]
     · rw [Set.indicator_of_notMem he, Set.indicator_of_notMem he]

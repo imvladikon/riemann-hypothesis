@@ -297,8 +297,6 @@ section -- clump:auto
 open MeasureTheory Function
 open scoped Pointwise
 
-theorem _root_.GlobalTheory.T.haar_map_conj_normalizing_lattice_eq_self : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [SecondCountableTopology H] [T2Space H] [MeasurableSpace H] [BorelSpace H], ∀ (Γ N : Subgroup H), Countable Γ → IsClosed (N : Set H) → ∀ (hN : ∀ γ ∈ Γ, ∀ n ∈ N, γ * n * γ⁻¹ ∈ N) (κ : Measure N) (𝓝 : Set N), κ.IsHaarMeasure → IsFundamentalDomain (Γ.subgroupOf N) 𝓝 κ → κ 𝓝 ≠ ⊤ → (∀ (γ : H) (hγ : γ ∈ Γ), κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ) := by
-  first | exact @GlobalTheory.UnfoldNormal.map_conj_eq_self
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HaarMapConjNormalizingLatticeEqSelfStatement =====
@@ -409,7 +407,7 @@ theorem unfold_zero_mean : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopo
     haveI : κ.IsMulRightInvariant := ⟨hR⟩
     exact (GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant κ).inv_eq_self
   have hC : ∀ γ (hγ : γ ∈ Γ), κ.map (fun n : N => (⟨γ * n * γ⁻¹, hN γ hγ n n.2⟩ : N)) = κ :=
-    GlobalTheory.T.haar_map_conj_normalizing_lattice_eq_self H Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 h𝓝t
+    _root_.GlobalTheory.UnfoldNormal.map_conj_eq_self H Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 h𝓝t
   have hemb : MeasurableEmbedding (shear N) := measurableEmbedding_shear hNc
   set G := pairGroup Γ N hN with hG
   set μ := (κ.prod ν).map (shear N) with hμ

@@ -94,6 +94,7 @@ import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Data.Finsupp.Pointwise
 import Formalism.SharpRestriction.GrowthBounds.AevalValuation.RestSpec
+import Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.TensZeroRight
 import Formalism.LocalToGlobal.GroupLattices.FockModels.ElementaryDivisorBasis
 import Formalism.LocalToGlobal.GroupLattices.FockModels.MulMemRiemannRochSpaceAdd
 import Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds
@@ -1074,7 +1075,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.AevalValuation.MemSupportedOf =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.MonomialSupport.PhMonomialMul =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.MonomialSupport.PhMonomialMul", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.AevalValuation.PlDefs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.Finsupp.Pointwise\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.AevalValuation.RestSpec\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.MonomialSupport.PhMonomialMul", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.AevalValuation.PlDefs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.Finsupp.Pointwise\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.AevalValuation.RestSpec\nimport Formalism.SharpRestriction.GrowthBounds.PlaneCoefficients.TensZeroRight\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1179,16 +1180,6 @@ private theorem coeff_compD {Kf : Type} [Field Kf] {ι : Type} {s : ℕ} (d : ι
   · by_cases h0 : AddMonoidAlgebra.coeff H m = 0 <;> simp [h, h0]
   · simp [h]
 
-private theorem compD_monomial' {Kf : Type} [Field Kf] {ι : Type} {s : ℕ} (d : ι → ℕ)
-    (m : ι × Fin s →₀ ℕ) (b : Kf) :
-    compD d (monomial m b) = if (∀ x, multideg m x = d x) then monomial m b else 0 := by
-  ext n
-  rw [coeff_compD, coeff_monomial]
-  by_cases h : m = n
-  · subst h
-    by_cases h' : ∀ x, multideg m x = d x <;> simp [h']
-  · by_cases h' : ∀ x, multideg m x = d x <;> simp [h, h']
-
 theorem compD_sum {Kf : Type} [Field Kf] {ι : Type} {s : ℕ} (d : ι → ℕ) {κ : Type*} (S : Finset κ)
     (f : κ → MvPolynomial (ι × Fin s) Kf) : compD d (∑ k ∈ S, f k) = ∑ k ∈ S, compD d (f k) := by
   ext m
@@ -1206,7 +1197,7 @@ theorem compPh : CompPh := by
 
   rw [map_sum, Finset.mul_sum, compD_sum, map_sum, Finset.mul_sum, Finset.sum_filter]
   refine Finset.sum_congr rfl (fun mo _ => ?_)
-  rw [ph_monomial_mul, compD_monomial']
+  rw [ph_monomial_mul, _root_.Formalism.MainNotions.PairMembershipBlocks.T5.compD_monomial]
   simp only [key]
   split_ifs <;> rfl
 
@@ -1224,24 +1215,13 @@ private theorem fdig_eq_sum_C_coeff_mul_prod_of_support_subset {p : ℕ} {O : Ty
     exact h2 (Finset.mem_filter.2 ⟨mem_support_iff.2 h, (Finset.mem_filter.1 h1).2⟩)
   simp [h0]
 
-private theorem signedChainData_fdig_add {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] {r J : ℕ}
-    (Dt : SignedChainData p O r J) (rho : (ZMod J × Fin r) × Fin r → ℕ)
-    (F G : MvPolynomial (TL J Dt.nL r × Fin r) (KK O)) :
-    Dt.Fdig rho (F + G) = Dt.Fdig rho F + Dt.Fdig rho G := by
-  rw [fdig_eq_sum_C_coeff_mul_prod_of_support_subset Dt rho (F + G) (F.support ∪ G.support) support_add,
-    fdig_eq_sum_C_coeff_mul_prod_of_support_subset Dt rho F (F.support ∪ G.support) Finset.subset_union_left,
-    fdig_eq_sum_C_coeff_mul_prod_of_support_subset Dt rho G (F.support ∪ G.support) Finset.subset_union_right,
-    ← Finset.sum_add_distrib]
-  refine Finset.sum_congr rfl (fun mo _ => ?_)
-  rw [MvPolynomial.coeff_add, map_add (f := _), add_mul]
-
 theorem fdigSum : FdigSum := by
   intro p O _ _ _ r J Dt rho α s f
   classical
   refine Finset.induction_on s ?_ ?_
   · simp [SignedChainData.Fdig]
   · intro a s ha ih
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, signedChainData_fdig_add, ih]
+    rw [Finset.sum_insert ha, Finset.sum_insert ha, _root_.Formalism.MainNotions.TestSideWords.Fdig_add, ih]
 
 section Dig
 
@@ -1271,10 +1251,6 @@ theorem liftMon_notin (mo : TL J Dt.nL r × Fin r →₀ ℕ) (w : ML J Dt.nL r 
     (hw : w ∉ Set.range Dt.liftVar) : liftMon Dt mo w = 0 :=
   Finsupp.mapDomain_notin_range _ _ hw
 
-private theorem liftVar_injective' {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
-    {r J : ℕ} (Dt : SignedChainData p O r J) : Function.Injective Dt.liftVar := by
-  rintro ⟨⟨j, l | m⟩, a⟩ ⟨⟨j', l' | m'⟩, a'⟩ h <;> simp only [SignedChainData.liftVar] at h <;> cases h <;> rfl
-
 private theorem liftE_apply_eq_liftExp {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {r J : ℕ} (Dt : SignedChainData p O r J) (γ : TL J Dt.nL r × Fin r →₀ ℕ) (v : TL J Dt.nL r × Fin r) :
     liftE Dt γ v = Dt.liftExp γ v := by
@@ -1286,7 +1262,7 @@ theorem liftMon_phExp (hP : ∀ j m, 0 < Dt.P j m) (β : TL J Dt.nL r × Fin r �
   ext w
   by_cases hw : w ∈ Set.range Dt.liftVar
   · obtain ⟨x, rfl⟩ := hw
-    simp only [liftMon, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective (liftVar_injective' Dt)]
+    simp only [liftMon, Finsupp.add_apply, Finsupp.mapDomain_apply_of_injective (_root_.Formalism.MainNotions.PairMembershipBlocks.liftVar_inj Dt)]
     rcases x with ⟨⟨j, l | m⟩, a⟩
     · simp [liftE, Pof, phExp_inl, SignedChainData.liftVar]
     · simp only [liftE, Finsupp.onFinset_apply, Pof, Finsupp.add_apply, phExp_inr, h1, zero_add,
@@ -1304,27 +1280,6 @@ theorem liftMon_phExp (hP : ∀ j m, 0 < Dt.P j m) (β : TL J Dt.nL r × Fin r �
 
 end Dig
 
-private theorem fdig_monomial {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
-    {r J : ℕ} (Dt : SignedChainData p O r J) (rho : (ZMod J × Fin r) × Fin r → ℕ)
-    (γ : TL J Dt.nL r × Fin r →₀ ℕ) (b : KK O) :
-    Dt.Fdig rho (monomial γ b) = if Dt.digOK rho γ then monomial (liftMon Dt γ) b else 0 := by
-  by_cases hb : b = 0
-  · simp [hb, SignedChainData.Fdig]
-  unfold SignedChainData.Fdig
-  rw [support_monomial, if_neg hb]
-  by_cases hd : Dt.digOK rho γ
-  · simp only [Finset.filter_singleton, hd, if_true, Finset.sum_singleton, coeff_monomial]
-    rw [liftMon, ← rename_monomial, monomial_eq, map_mul, rename_C, Finsupp.prod, map_prod]
-    congr 1
-    simp only [map_pow, rename_X, liftE_apply_eq_liftExp]
-    refine (Finset.prod_subset Finsupp.support_onFinset_subset fun v _ hv => ?_).symm
-    have h0 : Dt.liftExp γ v = 0 := by
-      rw [← liftE_apply_eq_liftExp]
-      by_contra h
-      exact hv (Finsupp.mem_support_iff.2 h)
-    rw [h0, pow_zero]
-  · simp [Finset.filter_singleton, hd]
-
 theorem fdigPh : FdigPh := by
   intro p O _ _ _ r J _ Dt hP rho β c F hF
   have hsupp : ∀ mo ∈ F.support, ∀ v ∈ mo.support, IsLW v.1 := by
@@ -1335,7 +1290,7 @@ theorem fdigPh : FdigPh := by
   conv_lhs => rw [F.as_sum]
 
   rw [map_sum, Finset.mul_sum, hs]
-  simp only [ph_monomial_mul, fdig_monomial]
+  simp only [ph_monomial_mul, _root_.Formalism.MainNotions.PairMembershipBlocks.Fdig_mono]
   by_cases hd : Dt.digOK rho β
   · rw [if_pos hd]
     conv_rhs => rw [F.as_sum, Finset.mul_sum]

@@ -186,19 +186,16 @@ theorem exists_kernel_ne_zero {V W : HSp D} {χ χ' : (AE D)ˣ →* Circle} {om 
     symplOH_zero_left, AddChar.map_zero_eq_one, one_mul]
   exact hw
 
-theorem hecke_mul {χ χ' : (AE D)ˣ →* Circle} (h : IsHeckeChar D χ) (h' : IsHeckeChar D χ') : IsHeckeChar D (χ * χ') :=
-  ⟨h.1.mul h'.1, fun x => by rw [MonoidHom.mul_apply, h.2, h'.2, mul_one]⟩
-
 theorem continuous_biAct : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (χA χS χS' χA' : (AE D)ˣ →* Circle) (oma : Om A S) (omb : Om S A'), IsWeilDatumO ψ A S χA χS oma → IsWeilDatumO ψ S A' χS' χA' omb → ∀ C, IsBiTheta ψ A S A' C → Continuous fun x : (GA D A × GA D S) × (GA D S × GA D A') × WO A S × WO S A' => omb x.2.1 (fun v => oma x.1 (fun u => C u v) x.2.2.1) x.2.2.2 := by
   intro D ψ A S A' χA χS χS' χA' oma omb ha hb C hC
   have hψ := ha.std
   have ex := GlobalTheory.T.exists_weilDatum_hermitianPair D
   obtain ⟨X, ⟨d⟩⟩ : ∃ X, Nonempty (OrthDec X S A) := ⟨_, ⟨GlobalTheory.BiTransfer.sumDec S A⟩⟩
   obtain ⟨Y, ⟨e⟩⟩ : ∃ Y, Nonempty (OrthDec Y S A') := ⟨_, ⟨GlobalTheory.BiTransfer.sumDec S A'⟩⟩
-  have hY := hecke_mul ha.hecT hb.hecT
+  have hY := _root_.GlobalTheory.WeilChange.hecke_mul ha.hecT hb.hecT
   have rY : ResEta D (χS * χA') Y.rank := e.rank_add ▸ resEta_mul ha.resT hb.resT
   have rX : ResEta D (χS' * χA) X.rank := d.rank_add ▸ resEta_mul hb.resS ha.resS
-  obtain ⟨Ω, hΩ⟩ := ex X Y ψ _ _ hψ (hecke_mul hb.hecS ha.hecS) hY rX rY
+  obtain ⟨Ω, hΩ⟩ := ex X Y ψ _ _ hψ (_root_.GlobalTheory.WeilChange.hecke_mul hb.hecS ha.hecS) hY rX rY
   obtain ⟨ΩS, hS⟩ := ex S Y ψ _ _ hψ hb.hecS hY hb.resS rY
   obtain ⟨ΩA, hA⟩ := ex A Y ψ _ _ hψ ha.hecS hY ha.resS rY
   obtain ⟨ω₁, hω₁⟩ := ex A A' ψ _ _ hψ ha.hecS hb.hecT ha.resS hb.resT
@@ -264,7 +261,7 @@ namespace GlobalTheory.BiTransfer
 theorem isBiTheta_act_left : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (χA χS : (AE D)ˣ →* Circle) (oma : Om A S), IsWeilDatumO ψ A S χA χS oma → ∀ C, IsBiTheta ψ A S A' C → ∀ p, IsBiTheta ψ A S A' fun u v => oma p (fun u' => C u' v) u := by
   intro D ψ A S A' χA χS oma H C hC p
   let d := sumDec A (GlobalTheory.ChiGrid.negSp A')
-  have h := (GlobalTheory.T.weil_operator_commutes_superposition_slices_source D ψ _ A _ S d χA χS oma H _ (isThetaFunO_join d hC) Unit 0 (fun _ => 0) (fun _ => 0)
+  have h := (_root_.GlobalTheory.WeilSuperpos.weil_comm_superpos D ψ _ A _ S d χA χS oma H _ (isThetaFunO_join d hC) Unit 0 (fun _ => 0) (fun _ => 0)
     measurable_const (integrable_zero _ _ _) p).1
   simp only [join_symm] at h
   exact isBiTheta_of_join d h
@@ -319,7 +316,7 @@ theorem isBiTheta_left {A S A' : HSp D} {χA χS : (AE D)ˣ →* Circle} {oma : 
     IsBiTheta ψ A S A' fun u v => oma p (fun u' => C u' v) u := by
   let d := GlobalTheory.BiTransfer.sumDec A (GlobalTheory.ChiGrid.negSp A')
   have hF := GlobalTheory.BiTransfer.isThetaFunO_join d hC
-  have h := (GlobalTheory.T.weil_operator_commutes_superposition_slices_source D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ hF Unit (0 : Measure Unit)
+  have h := (_root_.GlobalTheory.WeilSuperpos.weil_comm_superpos D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ hF Unit (0 : Measure Unit)
     (fun _ => 0) (fun _ => 0) measurable_const (integrable_zero _ _ _) p).1
   simp only [GlobalTheory.BiTransfer.join_symm] at h
   exact GlobalTheory.BiTransfer.isBiTheta_of_join (C := fun u v => oma p (fun u' => C u' v) u) d h
@@ -388,9 +385,9 @@ theorem comm : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (�
 
     have e2 : ∫ w in 𝓕, oma p (fun u' => omb q (C u') w) u * star (f w) ∂μ =
         ∫ w in 𝓕, oma p (fun u' => C u' w) u * star (g w) ∂μ := by
-      have c2 := (GlobalTheory.T.weil_operator_commutes_superposition_slices_source D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ (GlobalTheory.BiTransfer.isThetaFunO_join d hC2)
+      have c2 := (_root_.GlobalTheory.WeilSuperpos.weil_comm_superpos D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ (GlobalTheory.BiTransfer.isThetaFunO_join d hC2)
         (WO S A') (μ.restrict 𝓕) (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.dagger S A') (fun w => star (f w)) hk (hintS f hf) p).2 u
-      have c1 := (GlobalTheory.T.weil_operator_commutes_superposition_slices_source D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ (GlobalTheory.BiTransfer.isThetaFunO_join d hC)
+      have c1 := (_root_.GlobalTheory.WeilSuperpos.weil_comm_superpos D ψ _ A (GlobalTheory.ChiGrid.negSp A') S d χA χS oma hA _ (GlobalTheory.BiTransfer.isThetaFunO_join d hC)
         (WO S A') (μ.restrict 𝓕) (GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.dagger S A') (fun w => star (g w)) hk (hintS g hgt) p).2 u
       simp only [GlobalTheory.BiTransfer.join_symm, GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.dagger_dagger] at c1 c2
       have inner : (fun u' => ∫ w, star (f w) * omb q (C u') w ∂(μ.restrict 𝓕)) =

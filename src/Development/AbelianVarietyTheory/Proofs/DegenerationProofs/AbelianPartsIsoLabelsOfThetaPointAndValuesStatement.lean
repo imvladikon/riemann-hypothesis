@@ -616,8 +616,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.Ex
 open GlobalTheory.Ex.AbPartIso
 
-theorem _root_.GlobalTheory.T.exists_product_iso_of_fibre_iso_field : ∀ (R : Type) [CommRing R] [IsDomain R] (D D' : DegPre R) (F : Type) [Field F] [Algebra (FractionRing R) F] (Q Q' : PolAV (Sp F)) (Φ : Q.A.left ⟶ D.P.A.left) (Φ' : Q'.A.left ⟶ D'.P.A.left), IsFib D F Q Φ → IsFib D' F Q' Φ' → ∀ σ : Q.A ≅ Q'.A, IsPolIso Q Q' σ → ∃ (φ : TF (R := R) F ⊗ D.P.A ≅ TF (R := R) F ⊗ D'.P.A) (w : BunIso φ), HomF φ ∧ w.IsGen ∧ ∀ (a : TF (R := R) F ⟶ D.P.A) (a' : TF (R := R) F ⟶ D'.P.A), (∀ x : baseOver (Sp F) ⟶ Q.A, a.left = x.left ≫ Φ → a'.left = (x ≫ σ.hom).left ≫ Φ') → lift (𝟙 _) a ≫ φ.hom = lift (𝟙 _) a' := by
-  first | exact @GlobalTheory.Ex.AbPartIso.exists_iso_of_isFib
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProductIsoOfFibreIsoFieldStatement =====
@@ -864,7 +862,7 @@ theorem main : Laws → ThetaPtDeterminesSt → BrUthSt → UrCSt := by
   have key : ∀ j, j₀ ≤ j → ∃ I : NumB.Iso N.toNumB N'.toNumB, GeoIso ν ν' I ∧
       ∀ b, b ^ (n ^ j) ^ 2 = 1 → I.φ b = ρ j b := fun j hj => by
     obtain ⟨σ, hσ, hs⟩ := H j hj _ _ mt.c₀_ne (hρ j)
-    obtain ⟨φ, w, hφ, hw, hp⟩ := GlobalTheory.T.exists_product_iso_of_fibre_iso_field R D D' C Q Q' Φ Φ' hΦ hΦ' σ hσ
+    obtain ⟨φ, w, hφ, hw, hp⟩ := _root_.GlobalTheory.Ex.AbPartIso.exists_iso_of_isFib R D D' C Q Q' Φ Φ' hΦ hΦ' σ hσ
     obtain ⟨t, -, ht⟩ := hT'.good 1
     obtain ⟨I, hI, hc⟩ := exists_iso ν ν' hL.globalFns w hφ hw ⟨_, fun h => by
       rw [h, norm_zero] at ht; exact zero_ne_one ht⟩

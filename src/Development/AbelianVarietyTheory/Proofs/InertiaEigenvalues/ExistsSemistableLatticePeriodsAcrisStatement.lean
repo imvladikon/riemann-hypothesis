@@ -296,8 +296,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.exists_log_uniformizerTilt_bdRPlus_cocycle : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (C : Core l), Fits T C → ∀ (b : P.R.B) (c : ↥(GK K) → ℤ_[l]), ((∀ g : ↥(GK K), actSt P (g : GQ l) (Polynomial.X + Polynomial.C b) = Polynomial.X + Polynomial.C b + Polynomial.C ((c g : ℚ_[l]) • P.tB)) ∧ phiSt P (Polynomial.X + Polynomial.C b) = (l : Bst P) * (Polynomial.X + Polynomial.C b)) → (∀ g, bk.FixFlat g → c g = 0) → (∀ m : ℕ, ∃ (k : ℕ) (s : bk.S), bk.E ∣ s ∧ ∀ g : ↥(GK K), aDp l (Per.σA (g : GQ l) (bk.ev s) - bk.ev s) - (l : Per.BdRp l) ^ k * (aDp l (Per.zA l (c g)) * C.j C.t) ∈ Per.FilP l m) → ∃ lam : Per.BdRp l, (∀ g : ↥(GK K), Per.σDp (g : GQ l) lam = lam + aDp l (Per.zA l (c g)) * C.j C.t) ∧ (∀ m : ℕ, ∃ (k : ℕ) (s : bk.S), bk.E ∣ s ∧ aDp l (bk.ev s) - (l : Per.BdRp l) ^ k * lam ∈ Per.FilP l m) := by
-  first | (exact @GlobalTheory.LogFlatLam.exists_lam)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLogUniformizerTiltBdRPlusCocycleStatement =====
@@ -386,7 +384,7 @@ theorem exists_twisted_modification : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
     rw [hQ₀]; exact hinv g
   have hρ : ∀ g : ↥(GK K), ((ρ g).map (zOm l)).map ((algebraMap (Per.BdRp l) (Per.BdR l)).comp C.o) =
       (ρ g).map (Per.zD l) := by
-    intro g; ext i j; simp [zOm, GlobalTheory.RingIface.zD_alg, C.o_sec.z, aDp]
+    intro g; ext i j; simp [zOm, _root_.GlobalTheory.RingIface.zD_eq_alg, C.o_sec.z, aDp]
   have hinvQ : ∀ g : ↥(GK K), (ρ g).map (Per.zD l) * H.Q.map (Per.σD (g : GQ l)) = H.Q := fun g => by
     rw [← hρ g]; exact H.inv g g.2
 
@@ -555,7 +553,7 @@ theorem exists_twisted_modification : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
         (fun _ _ => (N : ℤ)) hU hDm (fun _ _ _ => by push_cast; omega) r t
     exact GlobalTheory.BKModif.mulFil hmul hanti _ _ (fun _ _ => (N : ℤ)) (fun _ _ => 0) (fun _ _ => (N : ℤ)) h1
       (fun _ _ => hφ0 _) (fun _ _ _ => by simp) r j
-  · have hl0 := GlobalTheory.BKModif.l_ne_zero bk
+  · have hl0 := _root_.GlobalTheory.BSP.LocalizedLatticeBasis.l_ne_zero bk
     have hΛ'Λ : Λ' * Λ = ((l : bk.S) ^ (2 * k)) • (1 : Matrix (Fin d) (Fin d) bk.S) :=
       GlobalTheory.BKModif.mul_comm_of_scalar Λ Λ' _ (pow_ne_zero _ hl0) hΛΛ
     have hA'A : Λ'.map ((aDp l).comp bk.ev) * Λ.map ((aDp l).comp bk.ev) =
@@ -866,8 +864,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.semistable_exp_cocycle_coboundary_mod_fil : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (C : Core l), Fits T C → ∀ (d k k₀ : ℕ) (Mn : Matrix (Fin d) (Fin d) (Wq l bk.a)) (c : ↥(GK K) → ℤ_[l]), (∀ i < d, ‖GlobalTheory.SstPer.ecoefQ l k₀ k i‖ ≤ 1) → Mn ^ d = 0 → (∀ m : ℕ, ∃ (k : ℕ) (s : bk.S), bk.E ∣ s ∧ ∀ g : ↥(GK K), aDp l (Per.σA (g : GQ l) (bk.ev s) - bk.ev s) - (l : Per.BdRp l) ^ k * (aDp l (Per.zA l (c g)) * C.j C.t) ∈ Per.FilP l m) → ∀ m : ℕ, ∃ (kk : ℕ) (Λ : Matrix (Fin d) (Fin d) (bk.S)), (∀ i j, bk.E ∣ (Λ - (l : bk.S) ^ kk • (1 : Matrix (Fin d) (Fin d) (bk.S))) i j) ∧ ∀ (g : ↥(GK K)) i j, C.j ((GlobalTheory.SstPer.kap C bk k₀ k Mn (c g) * (Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)).map (sigA (g : GQ l)) - (l : Per.Acris l) ^ k₀ • Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l m := by
-  first | (exact @GlobalTheory.SstPer.Cob.cocycle_cob)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableExpCocycleCoboundaryModFilStatement =====
@@ -1091,8 +1087,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.semistable_invariant_bdRPlus_basis_approx : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (C : Core l), Fits T C → ∀ (d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) ℤ_[l]) (U : Matrix (Fin d) (Fin d) (Per.Bcris l)) (k : ℕ) (Mn : Matrix (Fin d) (Fin d) (Wq l bk.a)) (c : ↥(GK K) → ℤ_[l]), Mn ^ d = 0 → (∀ g : ↥(GK K), (ρ g).map (Per.zB l) * U.map (Per.σB (g : GQ l)) = U * ∑ i ∈ Finset.range d, (C.qB (((i.factorial : ℚ_[l]) * (l : ℚ_[l]) ^ (k * i))⁻¹) * (Per.zB l (c g) * C.tB) ^ i) • (Mn.map ((Per.aB l).comp (wA l bk.a).toRingHom)) ^ i) → ∀ lam : Per.BdRp l, (∀ g : ↥(GK K), Per.σDp (g : GQ l) lam = lam + aDp l (Per.zA l (c g)) * C.j C.t) → (∀ m : ℕ, ∃ (k : ℕ) (s : bk.S), bk.E ∣ s ∧ aDp l (bk.ev s) - (l : Per.BdRp l) ^ k * lam ∈ Per.FilP l m) → ∃ Λ₀ : Matrix (Fin d) (Fin d) (Per.BdRp l), (∀ g : ↥(GK K), (ρ g).map (Per.zD l) * (U.map C.ι * Λ₀.map (algebraMap (Per.BdRp l) (Per.BdR l))).map (Per.σD (g : GQ l)) = U.map C.ι * Λ₀.map (algebraMap (Per.BdRp l) (Per.BdR l))) ∧ ∀ m : ℕ, ∃ (k : ℕ) (Λ Λ' : Matrix (Fin d) (Fin d) (bk.S)), Λ * Λ' = (l : bk.S) ^ (2 * k) • (1 : Matrix (Fin d) (Fin d) (bk.S)) ∧ ∀ i j, (Λ.map ((aDp l).comp bk.ev) - (l : Per.BdRp l) ^ k • Λ₀) i j ∈ Per.FilP l m := by
-  first | (exact @GlobalTheory.SstPer.SFil.invariant_basis_approx)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableInvariantBdRPlusBasisApproxStatement =====
@@ -1547,27 +1541,13 @@ namespace GlobalTheory.CrisPeriods
 
 variable {l : ℕ} [Fact l.Prime]
 
-private theorem padicInt_hom_ext {R : Type} [CommRing R] [IsHausdorff (Ideal.span {(l : R)}) R]
-    (f g : ℤ_[l] →+* R) (z : ℤ_[l]) : f z = g z := by
-  rw [← sub_eq_zero]
-  refine IsHausdorff.haus (I := Ideal.span {(l : R)}) inferInstance _ fun n => ?_
-  obtain ⟨y, hy⟩ := Ideal.mem_span_singleton.1 (PadicInt.appr_spec n z)
-  have hz : z = (z.appr n : ℤ_[l]) + (l : ℤ_[l]) ^ n * y := by rw [← hy]; ring
-  rw [SModEq.zero, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-  refine ⟨f y - g y, ?_⟩
-  have hf := congrArg f hz
-  have hg := congrArg g hz
-  rw [map_add (f := _), map_mul, map_pow, map_natCast, map_natCast] at hf hg
-  rw [hf, hg]
-  ring
-
 private theorem zA_eq_alg (z : ℤ_[l]) : Per.zA l z = algebraMap ℤ_[l] (Ainf l) z :=
   haveI : IsHausdorff (Ideal.span {(l : Ainf l)}) (Ainf l) :=
     (WittVector.isAdicCompleteIdealSpanP (p := l) (k := Per.Fl l)).toIsHausdorff
-  padicInt_hom_ext (R := Ainf l) (Per.zA l) (algebraMap ℤ_[l] (Ainf l)) z
+  _root_.GlobalTheory.MemLoc.SecUniq.padicInt_hom_ext_pt (R := Ainf l) (Per.zA l) (algebraMap ℤ_[l] (Ainf l)) z
 
 private theorem j_alg (C : Core l) (a : Ainf l) : C.j (algebraMap (Ainf l) (Per.Acris l) a) = aDp l a := by
-  rw [GlobalTheory.MemLoc.ULaws.alg_acris, C.j_cris.on0]
+  rw [_root_.GlobalTheory.MemLoc.algebraMap_ainf_acris_eq, C.j_cris.on0]
   rfl
 
 private theorem alg_alg_eq_aB (C : Core l) (a : Ainf l) :
@@ -1725,8 +1705,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.semistable_periods_over_Acris : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (C : Core l), Fits T C → ∀ (d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) ℤ_[l]) (U U' : Matrix (Fin d) (Fin d) (Per.Bcris l)), U * U' = 1 → ∀ (c₁ : ℕ) (F : Matrix (Fin d) (Fin d) (Wq l bk.a)), (l : Per.Bcris l) ^ c₁ • U.map (Per.φB l) = U * F.map ((Per.aB l).comp (wA l bk.a).toRingHom) → ∀ (k k₀ : ℕ) (Mn : Matrix (Fin d) (Fin d) (Wq l bk.a)) (c : ↥(GK K) → ℤ_[l]), (∀ i < d, ‖GlobalTheory.SstPer.ecoefQ l k₀ k i‖ ≤ 1) → (∀ g : ↥(GK K), (ρ g).map (Per.zB l) * U.map (Per.σB (g : GQ l)) = U * ∑ i ∈ Finset.range d, (C.qB (((i.factorial : ℚ_[l]) * (l : ℚ_[l]) ^ (k * i))⁻¹) * (Per.zB l (c g) * C.tB) ^ i) • (Mn.map ((Per.aB l).comp (wA l bk.a).toRingHom)) ^ i) → ∃ N₀ : ℕ, ∀ N : ℕ, N₀ ≤ N → ∀ (X X' : Matrix (Fin d) (Fin d) (bk.S)), (∀ i j, (U.map C.ι * X.map ((algebraMap (Per.BdRp l) (Per.BdR l)).comp ((aDp l).comp bk.ev))) i j ∈ Per.FilD l N) → (∀ i j, (X'.map ((algebraMap (Per.BdRp l) (Per.BdR l)).comp ((aDp l).comp bk.ev)) * U'.map C.ι) i j ∈ Per.FilD l N) → ∃ Z Z' : Matrix (Fin d) (Fin d) (Per.Acris l), Z * Z' = C.t ^ (2 * N) • (1 : Matrix (Fin d) (Fin d) (Per.Acris l)) ∧ (C.t ^ N * (l : Per.Acris l) ^ c₁) • Z.map (phiA l) = phiA l C.t ^ N • (Z * F.map (((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev).comp PowerSeries.C)) ∧ (∀ g : ↥(GK K), (C.t ^ N * (l : Per.Acris l) ^ k₀) • ((ρ g).map ((algebraMap (Ainf l) (Per.Acris l)).comp (algebraMap ℤ_[l] (Ainf l))) * Z.map (sigA (g : GQ l))) = sigA (g : GQ l) C.t ^ N • (Z * GlobalTheory.SstPer.kap C bk k₀ k Mn (c g))) ∧ (∀ i j, C.j ((Z * X.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l (2 * N)) ∧ (∀ i j, C.j ((X'.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev) * Z') i j) ∈ Per.FilP l (2 * N)) := by
-  first | (exact @GlobalTheory.CrisPeriods.periods_over_Acris_sst)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistablePeriodsOverAcrisStatement =====
@@ -1746,20 +1724,20 @@ namespace GlobalTheory.SstPer
 theorem sst_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (C : Core l), Fits T C → ∀ (d : ℕ) (ρ : ↥(GK K) →* GL (Fin d) ℤ_[l]), IsSst P (qRep ρ) → ∃ (N c₁ c₂ c₃ k₀ : ℕ) (F F' : Matrix (Fin d) (Fin d) (Wq l bk.a)) (X X' : Matrix (Fin d) (Fin d) (bk.S)) (Z Z' : Matrix (Fin d) (Fin d) (Per.Acris l)) (κ : ↥(GK K) → Matrix (Fin d) (Fin d) (Per.Acris l)), F * F' = (l : Wq l bk.a) ^ c₃ • (1 : Matrix (Fin d) (Fin d) (Wq l bk.a)) ∧ X * X' = ((l : bk.S) ^ c₂ * bk.E ^ (2 * N)) • (1 : Matrix (Fin d) (Fin d) (bk.S)) ∧ Z * Z' = C.t ^ (2 * N) • (1 : Matrix (Fin d) (Fin d) (Per.Acris l)) ∧ (C.t ^ N * (l : Per.Acris l) ^ c₁) • Z.map (phiA l) = phiA l C.t ^ N • (Z * F.map (((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev).comp PowerSeries.C)) ∧ (∀ g : ↥(GK K), (C.t ^ N * (l : Per.Acris l) ^ k₀) • ((ρ g).val.map ((algebraMap (Ainf l) (Per.Acris l)).comp (algebraMap ℤ_[l] (Ainf l))) * Z.map (sigA (g : GQ l))) = sigA (g : GQ l) C.t ^ N • (Z * κ g)) ∧ (∀ g : ↥(GK K), bk.FixFlat g → κ g = (l : Per.Acris l) ^ k₀ • (1 : Matrix (Fin d) (Fin d) (Per.Acris l))) ∧ (∀ i j, C.j ((Z * X.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l (2 * N)) ∧ (∀ i j, C.j ((X'.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev) * Z') i j) ∈ Per.FilP l (2 * N)) ∧ ∀ m : ℕ, ∃ (k : ℕ) (Λ : Matrix (Fin d) (Fin d) (bk.S)), (∀ i j, bk.E ∣ (Λ - (l : bk.S) ^ k • (1 : Matrix (Fin d) (Fin d) (bk.S))) i j) ∧ ∀ (g : ↥(GK K)) i j, C.j ((κ g * (Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)).map (sigA (g : GQ l)) - (l : Per.Acris l) ^ k₀ • Λ.map ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev)) i j) ∈ Per.FilP l m := by
   intro l _ K bk P AI T C hC d ρ hsst
   have hdr := GlobalTheory.sst_isDR l P AI T K _ (qRep ρ) hsst
-  obtain ⟨H, -⟩ := GlobalTheory.T.exists_hodge_basis_deRham_lattice l K P AI T C hC (bk.ev bk.E) bk.span_ev d ρ hdr
+  obtain ⟨H, -⟩ := _root_.GlobalTheory.HodgeEx.exists_hodge l K P AI T C hC (bk.ev bk.E) bk.span_ev d ρ hdr
   obtain ⟨b, c, hb, hfix, hlog⟩ := GlobalTheory.T.exists_log_teichmuller_pow_semistablePeriods l K bk P AI T C hC trivial
   obtain ⟨U, U', c₁, c₃, k, F, F', Mn, hUU', hFF', hφ, hMn, hgal⟩ := _root_.GlobalTheory.StU.period_matrix_at_zero l K bk P AI T C hC d ρ b c hb hsst
   obtain ⟨-, hInvdR⟩ := GlobalTheory.MemLoc.fits_inv l P AI T C hC
-  obtain ⟨lam, hlamg, hlamA⟩ := GlobalTheory.T.exists_log_uniformizerTilt_bdRPlus_cocycle l K bk P AI T C hC b c hb hfix hlog
-  obtain ⟨Λ₀, hΛ₀g, hΛ₀A⟩ := GlobalTheory.T.semistable_invariant_bdRPlus_basis_approx l K bk P AI T C hC d (fun g => (ρ g).val) U k Mn c hMn hgal lam hlamg hlamA
+  obtain ⟨lam, hlamg, hlamA⟩ := _root_.GlobalTheory.LogFlatLam.exists_lam l K bk P AI T C hC b c hb hfix hlog
+  obtain ⟨Λ₀, hΛ₀g, hΛ₀A⟩ := _root_.GlobalTheory.SstPer.SFil.invariant_basis_approx l K bk P AI T C hC d (fun g => (ρ g).val) U k Mn c hMn hgal lam hlamg hlamA
   obtain ⟨e, m, hm, hdf⟩ := Nat.exists_eq_pow_mul_and_not_dvd (Nat.factorial_ne_zero d) l (Fact.out : l.Prime).ne_one
   have hk₀ : ∀ i < d, ‖GlobalTheory.SstPer.ecoefQ l (e + k * d) k i‖ ≤ 1 := fun i hi => GlobalTheory.SstPer.ecoefQ_norm_le k hm hdf hi
-  obtain ⟨N₀, hZ⟩ := GlobalTheory.T.semistable_periods_over_Acris l K bk P AI T C hC d (fun g => (ρ g).val) U U' hUU' c₁ F hφ k (e + k * d) Mn c hk₀ hgal
+  obtain ⟨N₀, hZ⟩ := _root_.GlobalTheory.CrisPeriods.periods_over_Acris_sst l K bk P AI T C hC d (fun g => (ρ g).val) U U' hUU' c₁ F hφ k (e + k * d) Mn c hk₀ hgal
   have hUUι : U.map C.ι * U'.map C.ι = 1 := by
     rw [← Matrix.map_mul, hUU', Matrix.map_one _ (map_zero _) (map_one _)]
   obtain ⟨N, c₂, X, X', hN, hXX', hX, hX'⟩ := _root_.GlobalTheory.BKTwist.exists_twisted_modification l K bk C hInvdR d (fun g => (ρ g).val) H (U.map C.ι) (U'.map C.ι) Λ₀ hUUι hΛ₀g hΛ₀A N₀
   obtain ⟨Z, Z', hZZ', hZφ, hZg, hZX, hZX'⟩ := hZ N hN X X' hX hX'
-  refine ⟨N, c₁, c₂, c₃, e + k * d, F, F', X, X', Z, Z', fun g => GlobalTheory.SstPer.kap C bk (e + k * d) k Mn (c g), hFF', hXX', hZZ', hZφ, hZg, ?_, hZX, hZX', GlobalTheory.T.semistable_exp_cocycle_coboundary_mod_fil l K bk P AI T C hC d k (e + k * d) Mn c hk₀ hMn hlog⟩
+  refine ⟨N, c₁, c₂, c₃, e + k * d, F, F', X, X', Z, Z', fun g => GlobalTheory.SstPer.kap C bk (e + k * d) k Mn (c g), hFF', hXX', hZZ', hZφ, hZg, ?_, hZX, hZX', _root_.GlobalTheory.SstPer.Cob.cocycle_cob l K bk P AI T C hC d k (e + k * d) Mn c hk₀ hMn hlog⟩
   intro g hg
   simp only
   rw [hfix g hg]

@@ -231,8 +231,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.lastDoubleThetaLift_integrable_linear : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c), c.Is → t.Is → WeilOK (t := t) v → ∀ j (h : j + 2 * 0 + 2 = D.R.m) (Y : WO (c.V (j + 1)) c.T → ℂ), IsThetaFunO c.ψ _ _ Y → ∀ φ, IsContAut (c.X j) φ → (∀ X : WO (c.V j) (c.V (j + 1)) → ℂ, IsThetaFunO c.ψ _ _ X → ∀ f, IsContAut c.T f → IntegrableOn (fun h' => f h' * c.bl j (t.kom j) (t.kom (j + 1)) φ (c.lst j h (v.τ j h) (t.sBF j 0 h) X Y) ((c.oT (j + 1 + 1) h).emb (h', 1))) c.volT.𝓕 c.volT.μ) ∧ ∀ (G : Type) (s : Finset G) (a : G → ℂ) (X : G → WO (c.V j) (c.V (j + 1)) → ℂ), (∀ g, IsThetaFunO c.ψ _ _ (X g)) → ∑ g ∈ s, a g • c.bl j (t.kom j) (t.kom (j + 1)) φ (c.lst j h (v.τ j h) (t.sBF j 0 h) (X g) Y) = c.bl j (t.kom j) (t.kom (j + 1)) φ (c.lst j h (v.τ j h) (t.sBF j 0 h) (∑ g ∈ s, a g • X g) Y) := by
-  first | exact @GlobalTheory.LastDbl.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastDoubleThetaLiftIntegrableLinearStatement =====
@@ -894,23 +892,15 @@ theorem comb_single_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
   have hh : hO S T w 0 = 0 := by simp [hO]
   simp [heisO, symplOH, symplO, hh]
 
-theorem aconv_cons {G : Type} [AddMonoid G] (e : G →₀ ℂ) (l : List (G →₀ ℂ)) :
-    AddMonoidAlgebra.ofCoeff (aconv (e :: l)) = AddMonoidAlgebra.ofCoeff e * AddMonoidAlgebra.ofCoeff (aconv l) := by
-  rw [AddMonoidAlgebra.mul_def]
-  change AddMonoidAlgebra.ofCoeff (e.sum fun g a => (aconv l).sum fun h b => Finsupp.single (g + h) (a * b)) = _
-  simp only [AddMonoidAlgebra.ofCoeff_finsuppSum, AddMonoidAlgebra.ofCoeff_single]
-
-theorem aconv_nil {G : Type} [AddMonoid G] : AddMonoidAlgebra.ofCoeff (aconv ([] : List (G →₀ ℂ))) = 1 := rfl
-
 theorem conv_alg : (∀ (G : Type) [AddCommMonoid G] (c d : G →₀ ℂ) (l : List (G →₀ ℂ)), aconv (aconv [c, d] :: l) = aconv (c :: d :: l)) ∧ (∀ (G : Type) [AddMonoid G] (c : G →₀ ℂ), aconv [c] = c) ∧ (∀ (G : Type) [AddMonoid G] (l : List (G →₀ ℂ)), aconv (Finsupp.single 0 1 :: l) = aconv l) ∧ (∀ (G : Type) [AddMonoid G] (l : List (G →₀ ℂ)) (H : AddSubmonoid G), (∀ x ∈ l, ∀ g ∈ x.support, g ∈ H) → ∀ g ∈ (aconv l).support, g ∈ H) ∧ (∀ (G : Type) [Monoid G] (l : List (G →₀ ℂ)) (H : Submonoid G), (∀ x ∈ l, ∀ g ∈ x.support, g ∈ H) → ∀ g ∈ (conv l).support, g ∈ H) := by
   classical
   refine ⟨fun G _ c d l => ?_, fun G _ c => ?_, fun G _ l => ?_, fun G _ l H hl => ?_, fun G _ l H hl => ?_⟩
   · apply AddMonoidAlgebra.ofCoeff_injective
-    rw [aconv_cons, aconv_cons, aconv_cons, aconv_cons, aconv_cons, aconv_nil, mul_one, mul_assoc]
+    rw [_root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_nil, mul_one, mul_assoc]
   · apply AddMonoidAlgebra.ofCoeff_injective
-    rw [aconv_cons, aconv_nil, mul_one]
+    rw [_root_.GlobalTheory.QValOuter.aconv_cons, _root_.GlobalTheory.QValOuter.aconv_nil, mul_one]
   · apply AddMonoidAlgebra.ofCoeff_injective
-    rw [aconv_cons]
+    rw [_root_.GlobalTheory.QValOuter.aconv_cons]
     exact one_mul _
   · induction l with
     | nil =>
@@ -1087,25 +1077,6 @@ theorem εL_grp (α : Q.Ch j) : ∀ g ∈ (Q.εL j α).support, ∀ P : GlobalTh
 
 end Facts
 
-theorem gen_mem_idAt' {D : D7} (P : GlobalTheory.FinPl.Pl D → Prop) (α : Af D.host.F) (hα : ∀ w, ¬ P w → evalV D.host.F w α = 0)
-    (x : D.host.E) : (pairA D.host.F 0 α) ⊗ₜ[D.host.F] x ∈ GlobalTheory.FinPl.idAt D P := by
-  refine Ideal.mem_inf.2 ⟨?_, Ideal.mem_iInf.2 fun w => ?_⟩
-  · change (0 : Ainf D.host.F) ⊗ₜ[D.host.F] x = 0
-    exact TensorProduct.zero_tmul _ _
-  · change (evalV D.host.F w.1 α) ⊗ₜ[D.host.F] x = 0
-    rw [hα _ w.2, TensorProduct.zero_tmul]
-
-theorem latO_mx {D : D7} {S T : HSp D} {LS : Set (Fin S.rank → D.host.E)} {LT : Set (Fin T.rank → D.host.E)}
-    {P : GlobalTheory.FinPl.Pl D → Prop} {u : WO S T} (hu : u ∈ latO S T LS LT P) : GlobalTheory.FinPl.MxAt P u := by
-  induction hu using AddSubgroup.closure_induction with
-  | mem w hw =>
-    obtain ⟨α, -, hα, a, -, s, -, t, -, rfl⟩ := hw
-    intro i j
-    exact gen_mem_idAt' P α hα _
-  | zero => exact fun _ _ => zero_mem _
-  | add x y _ _ hx hy => exact fun i j => add_mem (hx i j) (hy i j)
-  | neg x _ hx => exact fun i j => neg_mem (hx i j)
-
 theorem latO_mono {D : D7} {S T : HSp D} {LS : Set (Fin S.rank → D.host.E)} {LT : Set (Fin T.rank → D.host.E)}
     {P P' : GlobalTheory.FinPl.Pl D → Prop} (h : ∀ x, P' x → P x) : latO S T LS LT P' ≤ latO S T LS LT P :=
   AddSubgroup.closure_mono fun _ ⟨α, hαi, hα, rest⟩ => ⟨α, hαi, fun v hv => hα v (fun h' => hv (h v h')), rest⟩
@@ -1133,9 +1104,9 @@ theorem comb_vac_at : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D
   refine ⟨(GlobalTheory.HeisComb.main D ψ S T).2.2.1 e f hf.1 (fun u hu => mx_inf (he u hu)) hstd, ?_, ?_⟩
   · intro u hu
     have h2u : 2 • u ∈ latO S T (LS : Set _) (LT : Set _) (· = p) := nsmul_mem hu 2
-    rw [hcomm _ (latO_mx h2u), hf.2.1 _ (hmono hu)]
+    rw [hcomm _ (_root_.GlobalTheory.FinPl.LatMem.latO_mxAt h2u), hf.2.1 _ (hmono hu)]
   · intro e' he' u hu hhalf
-    rw [hcomm _ (latO_mx hu), hf.2.2 e' he' u (hmono hu) hhalf]
+    rw [hcomm _ (_root_.GlobalTheory.FinPl.LatMem.latO_mxAt hu), hf.2.2 e' he' u (hmono hu) hhalf]
 
 theorem sum_om_vac_at : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ (LS : GlobalTheory.FinPl.Lat S) (LT : GlobalTheory.FinPl.Lat T) (p : GlobalTheory.FinPl.Pl D) (b : GA D S →₀ ℂ) (f : WO S T → ℂ), (∀ g ∈ b.support, g ∈ GlobalTheory.FinPl.grpAt S (· ≠ p)) → GlobalTheory.FinPl.Vac ψ S T LS LT (· = p) f → GlobalTheory.FinPl.Vac ψ S T LS LT (· = p) (∑ g ∈ b.support, b g • om (g, 1) f) := by
   intro D ψ S T χS χT om hw LS LT p b f hb hf
@@ -1149,9 +1120,9 @@ theorem sum_om_vac_at : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp
   refine ⟨GlobalTheory.Core.Rk.Collect.theta_sum b.support (fun g => b g) (fun g => om (g, 1) f) (fun g => hw.om_pres _ f hf.1), ?_, ?_⟩
   · intro u hu
     have h2u : 2 • u ∈ latO S T _ _ (· = p) := nsmul_mem hu 2
-    rw [hcomm _ (latO_mx h2u), hf.2.1 _ hu]
+    rw [hcomm _ (_root_.GlobalTheory.FinPl.LatMem.latO_mxAt h2u), hf.2.1 _ hu]
   · intro e' he' u hu hhalf
-    rw [hcomm _ (latO_mx hu), hf.2.2 e' he' u hu hhalf]
+    rw [hcomm _ (_root_.GlobalTheory.FinPl.LatMem.latO_mxAt hu), hf.2.2 e' he' u hu hhalf]
 
 theorem biComb_one {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (C : WO A S → WO S A' → ℂ) :
     biComb ψ A S A' (Finsupp.single 0 1) (Finsupp.single 0 1) C = C := by
@@ -1303,8 +1274,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSaw_last_two_steps_all_twist_places : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → t.Is → v.Is → WeilOK (t := t) v → F.Pins w → ∀ j (h : j + 2 * 0 + 2 = D.R.m) Ψ₁ Ψ₂, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ₁ → GlobalTheory.FinPl.Vac c.ψ _ _ (v.N (j + 1)) v.NT (· ∈ w.Q) Ψ₂ → ∀ φ, IsContAut (c.X j) φ → ∀ α β, (∏ i, ((F.Q i).idx (j + 1) : ℂ)) • c.bl j (t.kom j) (t.kom (j + 1)) φ (c.lst j h (v.τ j h) (t.sBF j 0 h) (∑ g ∈ (conv (List.ofFn fun i => (F.Q i).εL j (F.eqv j α i))).support, conv (List.ofFn fun i => (F.Q i).εL j (F.eqv j α i)) g • t.om j (g, 1) (comb c.ψ _ _ (w.eQ j) Ψ₁)) (comb c.ψ _ _ (w.eQT j h) Ψ₂)) = ∑ γ, (∏ i, (F.Q i).wt (j + 1) (F.eqv (j + 1) γ i)) • c.bl j (t.kom j) (t.kom (j + 1)) φ (biComb c.ψ _ _ _ (aconv (List.ofFn fun i => (F.Q i).dL j (F.eqv j α i) (F.eqv (j + 1) γ i))) (aconv (List.ofFn fun i => (F.Q i).dL (j + 1) (F.eqv (j + 1) γ i) (F.eqv (j + 1 + 1) β i))) (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂)) := by
-  first | exact @GlobalTheory.QLastCore.core
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLastTwoStepsAllTwistPlacesStatement =====
@@ -1397,30 +1366,16 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.QLastPf
 
-theorem heisO_smul' {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (u : WO S T) (a : ℂ) (f : WO S T → ℂ) :
-    heisO ψ S T u (a • f) = a • heisO ψ S T u f := by
-  funext x
-  simp only [heisO, Pi.smul_apply, smul_eq_mul]
-  ring
-
-theorem comb_smul_left {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : ℂ) (e : WO S T →₀ ℂ) (f : WO S T → ℂ) :
-    comb ψ S T (a • e) f = a • comb ψ S T e f := by
-  by_cases ha : a = 0
-  · simp [comb, ha]
-  · rw [comb, comb, Finsupp.support_smul_eq ha, Finset.smul_sum]
-    refine Finset.sum_congr rfl fun u _ => ?_
-    rw [Finsupp.smul_apply, smul_smul, smul_eq_mul]
-
 theorem comb_smul_right {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : ℂ) (e : WO S T →₀ ℂ) (f : WO S T → ℂ) :
     comb ψ S T e (a • f) = a • comb ψ S T e f := by
   rw [comb, comb, Finset.smul_sum]
   refine Finset.sum_congr rfl fun u _ => ?_
-  rw [heisO_smul', smul_comm]
+  rw [_root_.GlobalTheory.SplitScalar.heisO_smul, smul_comm]
 
 theorem biComb_smul {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (a b : ℂ) (e : WO A S →₀ ℂ) (e' : WO S A' →₀ ℂ)
     (C : WO A S → WO S A' → ℂ) : biComb ψ A S A' (a • e) (b • e') C = (a * b) • biComb ψ A S A' e e' C := by
   funext u v
-  simp only [biComb, comb_smul_left]
+  simp only [biComb, _root_.GlobalTheory.LocComb.comb_smul]
   have e1 : (fun u' => (b • comb ψ S A' e' (C u')) v) = b • fun u' => comb ψ S A' e' (C u') v := by
     funext u'; simp
   rw [e1, comb_smul_right]
@@ -1452,8 +1407,8 @@ theorem alg_of_core : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VT
     intro g
     rw [← (ht.sBF j 0 h).1]
     exact (t.sBF j 0 h).weil.om_pres _ _ hX
-  have lin := fun (s : Finset (GA D (c.V j))) (a : GA D (c.V j) → ℂ) => (GlobalTheory.T.lastDoubleThetaLift_integrable_linear D c v t hc ht hW j h _ hY φ hφ).2 _ s a _ hom
-  have hcore := GlobalTheory.T.seeSaw_last_two_steps_all_twist_places D c v t w F hc ht hv hW hF j h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ α β
+  have lin := fun (s : Finset (GA D (c.V j))) (a : GA D (c.V j) → ℂ) => (_root_.GlobalTheory.LastDbl.main D c v t hc ht hW j h _ hY φ hφ).2 _ s a _ hom
+  have hcore := _root_.GlobalTheory.QLastCore.core D c v t w F hc ht hv hW hF j h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ α β
   have hs : ∀ i, (F.Q i).s = j := fun i => by have := (F.Q i).hs; omega
   have hidx : ∀ i, ((F.Q i).idx (j + 1) : ℂ) ≠ 0 ∧ ((F.Q i).idx (j + 1 + 1) : ℂ) ≠ 0 := by
     intro i
@@ -1515,7 +1470,7 @@ theorem qLast_of_pin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : V
     intro g
     rw [← (ht.sBF j 0 h).1]
     exact (t.sBF j 0 h).weil.om_pres _ _ hX
-  have han := fun α => GlobalTheory.T.lastDoubleThetaLift_integrable_linear D c v t hc ht hW j h _ hY (φ α) (hφ α).1
+  have han := fun α => _root_.GlobalTheory.LastDbl.main D c v t hc ht hW j h _ hY (φ α) (hφ α).1
   set Y := comb c.ψ _ _ (w.eQT j h) Ψ₂ with hYd
   set X := comb c.ψ _ _ (w.eQ j) Ψ₁ with hXd
   set E := (c.oT (j + 1 + 1) h).emb with hE
@@ -1591,8 +1546,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSawIteratedIntegralLawLastSteps_of_localFactorisation : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → t.Is → v.Is → WeilOK (t := t) v → QPin v w → QLast v w := by
-  first | exact @GlobalTheory.QLastPf.qLast_of_pin
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawIteratedIntegralLawLastStepsOfLocalFactoriStatement =====

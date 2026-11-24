@@ -202,7 +202,7 @@ theorem bessel_dsig (hK : PI.KFinSmooth) {k r : ℕ} {ε : Fin (2 * r + k + 1) �
     (hl : IsBes R z π l) {X : Mx k r} (hX : Formalism.FourierDecayAlt.P.QrD.InLieW k r z X) (hX' : PI.UpqRep.InLieHpk k r X)
     {v : R.H} (hv : v ∈ R.sm) :
     l (PI.UpqRep.dsig (k := k) (r := r) R.σ X v) = Formalism.FourierDecayAlt.Q.dRep π X (l v) := by
-  have hd := (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp l hl.1 hl.2.1 hl.2.2.2 v hv).2 X hX'
+  have hd := (_root_.Gp91.GlobalTheory.cwCont_continuousOn_hasDerivAt hK k r ε mu R hR Wp l hl.1 hl.2.1 hl.2.2.2 v hv).2 X hX'
   have h1 : (1 : Mx k r) ∈ Formalism.QuantumDeterminants.Nset k r := by
     refine ⟨?_, ?_, ?_⟩
     · simp [Formalism.QuantumDeterminants.UH]
@@ -841,16 +841,6 @@ theorem pointwise_le {V ι : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [F
         simp only [Finset.mul_sum]
         exact Finset.sum_congr rfl fun s _ => by ring
 
-theorem lOneNorm_sub_single_one_le {n : ℕ} (ν : Fin n → ℤ) (s : Fin n) : n1 (ν - Pi.single s 1) ≤ n1 ν + 1 := by
-  have h1 : ∑ i, ((Pi.single s 1 : Fin n → ℤ) i).natAbs = 1 := by
-    rw [Finset.sum_eq_single s]
-    · simp
-    · intro b _ hb; simp [hb]
-    · simp
-  unfold n1
-  rw [← h1, ← Finset.sum_add_distrib]
-  exact Finset.sum_le_sum fun i _ => Int.natAbs_sub_le _ _
-
 theorem param_sub_single {n : ℕ} (lam : Fin n → ℝ) (ν : Fin n → ℤ) (s : Fin n) :
     (fun a => lam a + (((ν - Pi.single s 1) : Fin n → ℤ) a : ℝ)) =
       (fun a => lam a + (ν a : ℝ)) - Pi.single s 1 := by
@@ -866,7 +856,7 @@ theorem moment_step : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup 
   have hK : PI.KFinSmooth := hH.1.2.2.1
   obtain ⟨hNum, hFam, hG, hSide⟩ := id hS
   have hν0 : n1 ν ≤ q0 := by omega
-  have hνs : ∀ s, n1 (ν - Pi.single s 1) ≤ q0 := fun s => (lOneNorm_sub_single_one_le ν s).trans hν
+  have hνs : ∀ s, n1 (ν - Pi.single s 1) ≤ q0 := fun s => (_root_.Gp91.GlobalTheory.DualStepBound.lOneNorm_sub_single_one_le ν s).trans hν
   have hDS := hFam ν hν0
   have hDSs := fun s => hFam _ (hνs s)
   obtain ⟨hBe, hdg, -⟩ := hSide ν hν0
@@ -982,19 +972,6 @@ open scoped InnerProductSpace ENNReal
 
 namespace GlobalTheory.Moment
 
-theorem n1_sub_single_one_le_add_one {n : ℕ} (ν : Fin n → ℤ) (s : Fin n) :
-    n1 (ν - Pi.single s 1) ≤ n1 ν + 1 := by
-  have h1 : (∑ i, ((Pi.single s (1 : ℤ) : Fin n → ℤ) i).natAbs) = 1 := by
-    rw [Finset.sum_eq_single s]
-    · simp
-    · intro b _ hb
-      simp [Pi.single_eq_of_ne hb]
-    · simp
-  unfold n1
-  rw [← h1, ← Finset.sum_add_distrib]
-  refine Finset.sum_le_sum fun i _ => ?_
-  exact Int.natAbs_sub_le _ _
-
 theorem moment_first_length : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [CompleteSpace Wp] [FiniteDimensional ℂ Wp] (lam : Fin (2 * r + k + 1) → ℝ) (u : ℕ → ℝ) (b bv ga h : ℝ) (q0 : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (π : Mx k r → (Wp →L[ℂ] Wp)) (μW μN μG νq : Measure (Formalism.QuantumDeterminants.Mt k r)) (R : (Fin (2 * r + k + 1) → ℤ) → Rep k r) (l : ∀ ν, (R ν).H → Wp) (dg : (Fin (2 * r + k + 1) → ℤ) → ℝ) (Q : Mx k r) (E : ∀ ν, Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → Module.End ℂ (R ν).smSub), SetupG lam u b bv ga h q0 z π μW μN μG νq R l dg → PI.UpqRep.IsCayleyU k r (PI.BesselPeriodGGP.eps48 k r) Q → (∀ ν, n1 ν ≤ q0 → (R ν).IsE Q (E ν) ∧ Formalism.REAL.GlRel (E ν)) → ∀ (q : ℕ) ν, n1 ν + q ≤ q0 → ∀ j : ℕ, j + 2 * q ≤ 4 * (2 * r + k + 1) ^ 2 → ∀ w : (R ν).smSub, Lev (PI.BesselPeriodGGP.eps48 k r) (E ν) (fun a => lam a + ((ν : Fin (2 * r + k + 1) → ℤ) a : ℝ)) j w → ∫⁻ x, ENNReal.ofReal (lenA k r z (Matrix.of x) 0 ^ (2 * q) * (dg ν * ‖l ν ((R ν).σ (Matrix.of x) w)‖ ^ 2)) ∂νq ≤ ENNReal.ofReal ((((2 * r + k + 1) : ℝ) ^ 2 * (Formalism.QuantumDeterminants.Tz k r z * b ^ 4) * (6 * bv) ^ (2 * (2 * r + 2))) ^ q * ‖w‖ ^ 2) := by
   intro H k r Wp _ _ _ _ lam u b bv ga h q0 z π μW μN μG νq R l dg Q E hS hQ hE q
   have hT : 0 < Formalism.QuantumDeterminants.Tz k r z := hS.2.2.1.2.1
@@ -1010,7 +987,7 @@ theorem moment_first_length : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCo
     intro ν hν j hj w hw
     have := _root_.Gp91.GlobalTheory.MomentStep.moment_step H k r Wp lam u b bv ga h q0 z π μW μN μG νq R l dg Q E hS hQ hE ν (by omega) j q _
       (by omega) (pow_nonneg hC q)
-      (fun s y hy => ih (ν - Pi.single s 1) (by have := n1_sub_single_one_le_add_one ν s; omega) (j + 2) (by omega) y hy) w hw
+      (fun s y hy => ih (ν - Pi.single s 1) (by have := _root_.Gp91.GlobalTheory.DualStepBound.lOneNorm_sub_single_one_le ν s; omega) (j + 2) (by omega) y hy) w hw
     rw [pow_succ' _ q]
     exact this
 

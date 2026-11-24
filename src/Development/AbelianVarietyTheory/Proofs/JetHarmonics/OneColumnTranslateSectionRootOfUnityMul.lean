@@ -71,8 +71,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.PowGerm GlobalTheory.PtTie
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 
-theorem _root_.GlobalTheory.T.exists_mulEquiv_uniformisedPoints_universal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : letI := io.toAlgebra; FrPt Xo c T.Fr) (I : IntData Xo c T io y) (P : PELUnif (maximalIdeal T.V) I.G) (F : Type) [Field F] [Algebra T.Fr F] (xF : Sp F ⟶ Xo.X), xF = spMap (algebraMap T.Fr F) ≫ (letI := io.toAlgebra; y.x) → ∃ e : (TFK (R := T.V) F ⟶ P.A.A) ≃* (ptO Xo xF ⟶ Xo.univ.t.G), (∀ x b, PtTieF I P F xF x b ↔ b = e x) ∧ ∀ (a : 𝓞 E) x, e (x ≫ P.oA.act a) = e x ≫ Xo.univ.t.act.act a := by
-  first | exact @GlobalTheory.PtTie.exists_mulEquiv_ptTieF
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsMulEquivUniformisedPointsUniversalStatement =====
@@ -90,8 +88,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.PowGerm GlobalTheory.PtTie
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 
-theorem _root_.GlobalTheory.T.exists_translated_normalisedPullback_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (F : Type) [Field F] [IsAlgClosed F] (xF : Sp F ⟶ Xo.X) (α : 𝓞 E) (N : ℕ), Odd N → α * star α = (N : 𝓞 E) → ∀ (s : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L 1 (ptO Xo xF))) (b : ptO Xo xF ⟶ Xo.univ.t.G), b ^ N = 1 → ∃ hh, IsTransPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act α) N s b hh := by
-  first | exact @GlobalTheory.exists_isTransPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsTranslatedNormalisedPullbackSectionStatement =====
@@ -140,21 +136,21 @@ theorem oneColumn_translate : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     exact h1
   have hbij := GlobalTheory.expandsG_bijective_of_dvr hL hLL.2.1 hLL.2.2.2.1
     GlobalTheory.twistBaseChange_and_valuation_statements.1 T.V P.D P.A I.G.G P.U F
-  have hsec := GlobalTheory.T.powPullbackSec_modelUniversal_bijective E H Dw l Xo c T io y I P F yF.x hx
+  have hsec := _root_.GlobalTheory.SecTie.secTie_bijective E H Dw l Xo c T io y I P F yF.x hx
   obtain ⟨σs, hσs, -⟩ := (hsec 1).2.1 yF.s
   obtain ⟨θ₁, hθ₁, -⟩ := (hbij 1 le_rfl).1 σs
   obtain ⟨π, -, hπ⟩ := GlobalTheory.PullLin.exists_pull_linearMap hL T.V P.D F (𝓞 E) P.oD H.w0 P.w0 α N 1 hN1 le_rfl hα
   have hpull : PullAl P.D F P.oD α 1 N θ₁ (π θ₁) := (hπ _ _).2 rfl
-  refine ⟨θ₁, π θ₁, GlobalTheory.T.thetaFrame_expansion_framedPoint_generator E H Dw l Xo c T io y I P ϖ hϖ F φ hφ yF hyF σs θ₁ hσs hθ₁, hpull, ?_⟩
+  refine ⟨θ₁, π θ₁, _root_.GlobalTheory.GeneratorFrame.main E H Dw l Xo c T io y I P ϖ hϖ F φ hφ yF hyF σs θ₁ hσs hθ₁, hpull, ?_⟩
   intro p w ζ x r₀ r σ hw hfin hto hxk hphi hsm hσ
-  obtain ⟨e, he, hea⟩ := GlobalTheory.T.exists_mulEquiv_uniformisedPoints_universal E H Dw l Xo c T io y I P F yF.x hx
+  obtain ⟨e, he, hea⟩ := _root_.GlobalTheory.PtTie.exists_mulEquiv_ptTieF E H Dw l Xo c T io y I P F yF.x hx
   have hb : e x ≫ Xo.univ.t.act.act (star α) = 1 := by rw [← hea, hxk, map_one]
   have hbN : e x ^ N = 1 := pow_eq_one_of_act _ _ α (star α) N hα hb
-  obtain ⟨hh, hhh⟩ := GlobalTheory.T.exists_translated_normalisedPullback_section E H Dw l Xo c F yF.x α N hN hα yF.s (e x) hbN
+  obtain ⟨hh, hhh⟩ := _root_.GlobalTheory.exists_isTransPull E H Dw l Xo c F yF.x α N hN hα yF.s (e x) hbN
   obtain ⟨h₁, hnp, hsym⟩ := id hhh
   obtain ⟨σ₁, hσ₁, -⟩ := (hsec N).2.1 h₁
   obtain ⟨σ₀, hσ₀, -⟩ := (hsec N).2.1 hh
-  have hex₁ := GlobalTheory.T.normalisedPullback_section_expands_family E H Dw l Xo c T io y I P F yF.x hx α N 1 N (_root_.one_mul N) hα hN1 (Or.inl rfl)
+  have hex₁ := _root_.GlobalTheory.NormPullExp.main E H Dw l Xo c T io y I P F yF.x hx α N 1 N (_root_.one_mul N) hα hN1 (Or.inl rfl)
     σs yF.s θ₁ σ₁ h₁ (π θ₁) hσs hθ₁ hnp hσ₁ hpull
   have key : ∀ (q : ℕ) (eq : q = N) (θ : Fam P.D.toPre F q) (p : QkPt P.D.toPre F q)
       (w : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F p.g.b) (DegPre.lineε q)))
@@ -168,7 +164,7 @@ theorem oneColumn_translate : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     intro q eq
     obtain rfl : N = q := eq.symm
     intro θ p w r₀ r hθ hw hfin hto hphi hsm
-    exact GlobalTheory.T.symmetric_lift_acts_root_of_unity_on_expansions E H Dw l Xo c T io y I P F yF.x hx N hN1 σ₁ σ₀ h₁ hh θ r₀ r x (e x) p w ζ hσ₁ hσ₀ hθ hsym
+    exact _root_.GlobalTheory.SymActExpansion.exists_expandsG_of_isSymAct E H Dw l Xo c T io y I P F yF.x hx N hN1 σ₁ σ₀ h₁ hh θ r₀ r x (e x) p w ζ hσ₁ hσ₀ hθ hsym
       ((he _ _).2 rfl) hto hw hfin hphi hsm
   obtain ⟨u, t', ⟨m, hm, hum⟩, hut, hex₀⟩ := key (1 * N) (one_mul N) (π θ₁) p w r₀ r hex₁ hw hfin hto hphi hsm
   have hu : u ≠ 0 := by

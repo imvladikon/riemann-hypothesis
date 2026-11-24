@@ -218,8 +218,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.L2.PjFree GlobalTheory.EtaForm GlobalTheory.EtaAn GlobalTheory.ArcQ
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.norm_etaProductForm_le_at_unit_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r), GoodEmb c σ → IsUnf U → AllTest Xo c → ∀ (R i N : ℕ), Odd R → 1 < R → Nat.card (LevGrp Dw (R ^ 4)) = 2 * R ^ 4 * i → 1 ≤ N → ∀ (J : Type) [Fintype J] (cf : J → ℤ) (xs : J → Fin r → LatMod Dw (R ^ 4)) (f : Rul Xo c), Fintype.card J ≤ R ^ (2 * I2.PT.f E * r ^ 2) → (∀ j, |cf j| ≤ N) → Spans xs → IsEtaRule Xo c R cf xs f → ∀ (DF q m : ℕ) (R0 : ℝ), RunOK E r DF q R0 m → (Dw.p ≤ m ∨ Dw.q ≤ m) → ∀ (k : U.Comp) (x : (U.X k).dom), (∀ τ i, ‖dmin (U.X k).Gm x.1 τ i‖ = 1) → ‖rdU U f k x.1‖ ≤ Real.exp (-(i : ℝ) * (I2.phiFD (U.X k) (I2.th (E := E) q R0) x.1 - p16 E r q m R N)) := by
-  first | exact @GlobalTheory.EtaAn.norm_productForm_le_at_unit_frame
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusSplitting.NormEtaProductFormLeAtUnitFrameStatement =====
@@ -246,7 +244,7 @@ theorem etaRule_isSec_pnorm_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   refine ⟨hS, fun k x hx => ?_⟩
   obtain ⟨b, -, hb, hun, -, hphi, hp⟩ := GlobalTheory.T.exists_borel_orthonormal_flag_frame E r (U.X k) x hx
   rw [hp _ _ (hS k), ← hphi]
-  exact GlobalTheory.T.norm_etaProductForm_le_at_unit_frame E H Dw l Xo c σ r U hσ hU hT R i N hR hR1 hG hN J cf xs f hJ hcf hsp hf DF q m R0 hrun hm k
+  exact _root_.GlobalTheory.EtaAn.norm_productForm_le_at_unit_frame E H Dw l Xo c σ r U hσ hU hT R i N hR hR1 hG hN J cf xs f hJ hcf hsp hf DF q m R0 hrun hm k
     ⟨_, hb⟩ hun
 
 end GlobalTheory.EtaAn
@@ -263,8 +261,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.L2.PjFree GlobalTheory.EtaForm GlobalTheory.EtaAn GlobalTheory.ArcQ
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.productForm_isSection_pointwiseNorm_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r), GoodEmb c σ → IsUnf U → AllTest Xo c → ∀ (R i N : ℕ), Odd R → 1 < R → Nat.card (LevGrp Dw (R ^ 4)) = 2 * R ^ 4 * i → 1 ≤ N → ∀ (J : Type) [Fintype J] (cf : J → ℤ) (xs : J → Fin r → LatMod Dw (R ^ 4)) (f : Rul Xo c), Fintype.card J ≤ R ^ (2 * I2.PT.f E * r ^ 2) → (∀ j, |cf j| ≤ N) → Spans xs → IsEtaRule Xo c R cf xs f → ∀ (DF q m : ℕ) (R0 : ℝ), RunOK E r DF q R0 m → (Dw.p ≤ m ∨ Dw.q ≤ m) → (∀ k, (U.X k).IsSec (laU U 0 (r * (2 * R ^ 4 * i)) k) (rdU U f k)) ∧ ∀ (k : U.Comp), ∀ x ∈ (U.X k).dom, (U.X k).pnorm (laU U 0 (r * (2 * R ^ 4 * i)) k) (rdU U f k) x ≤ Real.exp (-(i : ℝ) * (I2.phiFD (U.X k) (I2.th (E := E) q R0) x - p16 E r q m R N)) := by
-  first | exact @GlobalTheory.EtaAn.etaRule_isSec_pnorm_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusSplitting.ProductFormIsSectionPointwiseNormLeStatement =====
@@ -309,7 +305,7 @@ theorem exists_etaRule_cusp_ne_zero_bounds : ∀ (E : Type) [Field E] [NumberFie
           p16 E r q m R (max 1 (Fintype.card (U σ₀).Comp) * R ^ (8 * I2.PT.f E * r ^ 2)))) := by
     intro σ hσ
     rw [← hn]
-    exact (GlobalTheory.T.productForm_isSection_pointwiseNorm_le E H Dw l Xo c σ r (U σ) hσ (hU σ hσ) hT R i _ hR hR1 hG hN _ cf _ f hJ hcf hsp hf
+    exact (_root_.GlobalTheory.EtaAn.etaRule_isSec_pnorm_le E H Dw l Xo c σ r (U σ) hσ (hU σ hσ) hT R i _ hR hR1 hG hN _ cf _ f hJ hcf hsp hf
       DF q m R0 hrun hm).2
   have hcusp := GlobalTheory.cusp_and_supC_le_of_bounded E H Dw l Xo c r U (2 * R ^ 4 * r * i) f
     (Real.exp (i * p16 E r q m R (max 1 (Fintype.card (U σ₀).Comp) * R ^ (8 * I2.PT.f E * r ^ 2)))) h2 hev hU hsec

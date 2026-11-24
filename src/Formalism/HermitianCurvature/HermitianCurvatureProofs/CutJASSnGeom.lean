@@ -69,10 +69,13 @@ import Mathlib.Tactic.TypeStar
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermXGen
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.XiHermitianCofactorDet
 import Mathlib.Tactic.Basify
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactlySupportedBanachModel
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialProperness.ZhatNormLinearBound
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Tactic.ENatToNat
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LinearChangeOfVariablesBis
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomAssemble, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomInvSqrt, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBLTools, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBL, Formalism.HermitianCurvature.HermitianCurvatureProofs.EmbeddingMulVecFactorization, Formalism.HermitianCurvature.HermitianCurvatureProofs.GeometryEquivarianceEmbedding, Formalism.HermitianCurvature.HermitianCurvatureProofs.GeometryEquivarianceFirstVector, Formalism.HermitianCurvature.HermitianCurvatureProofs.SmoothHermitianRankTwo, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeom
@@ -417,7 +420,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBLTools =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBL =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBL", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomCut\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.LocBCore\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomInvSqrt\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBLTools\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatPolyOK\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.HomogeneityNaturalDegree\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.TwoByOneBlock\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.AdjugateLastEntrySum\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermBvecEI\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermXGen\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HmSelfRe\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.XiHermitianCofactorDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBL", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomCut\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.LocBCore\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomInvSqrt\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomUBLTools\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatPolyOK\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.HomogeneityNaturalDegree\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.TwoByOneBlock\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.AdjugateLastEntrySum\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermBvecEI\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermXGen\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HmSelfRe\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.XiHermitianCofactorDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactlySupportedBanachModel\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialProperness.ZhatNormLinearBound\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -568,7 +571,7 @@ theorem prW_sq {z ξ : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hX : �
   have e2 : herm (Hpk k r) ξ z = herm (Hpk k r) w z := by
     conv_lhs => rw [hξ]
     rw [PI.UnitaryGroupMassFormula.GsFr.hm_add_l, PI.UnitaryGroupMassFormula.GsFr.herm_X_gen hx (PI.UnitaryGroupMassFormula.GsFr.wb_hi hz.1), add_zero]
-  have hzw : herm (Hpk k r) z w = star (herm (Hpk k r) w z) := PI.UnitaryGroupMassFormula.GsFr.hm_symm _ PI.UnitaryGroupMassFormula.GsFr.hH_ct w z
+  have hzw : herm (Hpk k r) z w = star (herm (Hpk k r) w z) := PI.UnitaryGroupMassFormula.GsFr.hm_symm _ _root_.Formalism.FourierDecayAlt.P.Ux1.hpk_herm w z
   have hpr : PI.UnitaryGroupMassFormula.GsFr.prW k r z ξ = w + (herm (Hpk k r) w z / (Tz k r z : ℂ)) • z := by
     rw [hwdef]; rfl
   have hzz : herm (Hpk k r) z z = -((Tz k r z : ℝ) : ℂ) := Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z
@@ -645,12 +648,6 @@ theorem ubl_nuG (h6 : UBLInvSqrt) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.
   have hG : ε ≤ Gf k r z z' g := hg.2
   gcongr
 
-private theorem inv_eq_Hpk_mul_conjTranspose_mul_Hpk_of_mem_GV {g : Mat k r} (hg : g ∈ GV k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  have hH : Hpk k r * Hpk k r = 1 := (Formalism.QuantumDeterminants.hermitian_pos_facts_hold k r).2.1
-  have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
-  apply Matrix.inv_eq_left_inv
-  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ (Hpk k r) g, hg', hH]
-
 theorem ubl_nuG' (h6 : UBLInvSqrt) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2.StdZ k r z')
     {ε : ℝ} (hε : 0 < ε) (n : ℕ) : UBL (nuG' z z') (geG k r z z' ε) n (r + 1) (2 * (r + 1)) := by
   have hT : 0 < Tz k r z' := hz'.2
@@ -666,7 +663,7 @@ theorem ubl_nuG' (h6 : UBLInvSqrt) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2
   congr 1
   show PI.UnitaryGroupMassFormula.GsFr.prW k r z' (g⁻¹ *ᵥ PI.UnitaryGroupMassFormula.GsFr.xcofL k r z z' g) =
     PI.UnitaryGroupMassFormula.GsFr.prW k r z' ((Hpk k r * gᴴ * Hpk k r) *ᵥ PI.UnitaryGroupMassFormula.GsFr.xcofL k r z z' g)
-  rw [inv_eq_Hpk_mul_conjTranspose_mul_Hpk_of_mem_GV hg]
+  rw [_root_.PI.PolynomialProperness.GN.inv_eq hg]
 
 theorem ubl_entry {S : Set (Mat k r)} (hSG : S ⊆ GV k r) {v : Mat k r → Fin (2 * r + k + 1) → ℂ} {n e γ : ℕ}
     (h : UBL v S n e γ) (i : Fin (2 * r + k + 1)) : UBL (fun g => v g i) S n e γ := by
@@ -1017,7 +1014,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.EmbeddingMulVecFactorization =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.GeometryEquivarianceEmbedding =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.GeometryEquivarianceEmbedding", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomCut\nimport Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.TwoByOneBlock\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.AdjugateLastEntrySum\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.FixOfPos\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.GsFramesOfIso\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermBvecEI\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HmSelfRe\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.WbPartOfInWb\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.XiHermitianCofactorDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.GeometryEquivarianceEmbedding", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJASSnGeomCut\nimport Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.TwoByOneBlock\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.AdjugateLastEntrySum\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.FixOfPos\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.GsFramesOfIso\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HermBvecEI\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.HmSelfRe\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.WbPartOfInWb\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GramSchmidtFrames.XiHermitianCofactorDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.LinearChangeOfVariablesBis\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1124,11 +1121,6 @@ lemma N_wb_X {n : B.Mat k r} (hn : n ∈ Nset k r) {v : Fin (2 * r + k + 1) → 
       · simp [h, Ne.symm h]
   rw [Finset.sum_congr rfl (fun j _ => key j)]
   simp
-
-lemma sset_N {z : Fin (2 * r + k + 1) → ℂ} {n : B.Mat k r} (hn : n ∈ Nset k r) : n ∈ Sset k r z := by
-  refine ⟨1, ?_, n, hn, (one_mul n).symm⟩
-  unfold UWset
-  simp [UH]
 
 lemma N_Fsp {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {n : B.Mat k r} (hn : n ∈ Nset k r)
     {x : Fin (2 * r + k + 1) → ℂ} (hx : x ∈ Fsp k r z) : n *ᵥ x ∈ Fsp k r z := by
@@ -1250,33 +1242,17 @@ lemma unitH_UH {h : B.Mat k r} (hh : h ∈ UH (Hpk k r)) (v : Fin (2 * r + k + 1
     h *ᵥ ((((Real.sqrt (Formalism.QuantumDeterminants.herm (Formalism.QuantumDeterminants.Hpk k r) v v).re)⁻¹ : ℝ) : ℂ) • v)
   rw [herm_hpk_mulVec_of_mem_uh hh, Matrix.mulVec_smul]
 
-private theorem rk_mulVec_eq_herm_smul (p q v : Fin (2 * r + k + 1) → ℂ) :
-    Rk k r p q *ᵥ v = Formalism.QuantumDeterminants.herm (Formalism.QuantumDeterminants.Hpk k r) v q • p := by
-  have e1 : Formalism.QuantumDeterminants.herm (Formalism.QuantumDeterminants.Hpk k r) v q = (star q ᵥ* Formalism.QuantumDeterminants.Hpk k r) ⬝ᵥ v := by
-    show star q ⬝ᵥ (Formalism.QuantumDeterminants.Hpk k r *ᵥ v) = _
-    exact Matrix.dotProduct_mulVec _ _ _
-  rw [e1]
-  ext i
-  simp only [Rk, Matrix.mulVec, Matrix.vecMulVec_apply, dotProduct, Pi.smul_apply, smul_eq_mul]
-  rw [Finset.sum_mul]
-  exact Finset.sum_congr rfl fun j _ => by ring
-
-private theorem dw_mulVec_eq_wbPart (v : Fin (2 * r + k + 1) → ℂ) : Dw k r *ᵥ v = PI.UnitaryGroupMassFormula.GsFr.wbPart k r v := by
-  ext i
-  simp only [Dw, Matrix.mulVec_diagonal, PI.UnitaryGroupMassFormula.GsFr.wbPart]
-  split_ifs <;> simp
-
 lemma PpG_mulVec (z z' : Fin (2 * r + k + 1) → ℂ) (g : B.Mat k r) (v : Fin (2 * r + k + 1) → ℂ) :
     PpG z z' g *ᵥ v = PI.UnitaryGroupMassFormula.GsFr.prW k r z' v -
       herm (Hpk k r) (PI.UnitaryGroupMassFormula.GsFr.prW k r z' v) (nuG' z z' g) • nuG' z z' g := by
   show (Pm k r z' - Rk k r (nuG' z z' g) (nuG' z z' g) * Pm k r z') *ᵥ v = _
   have hPm : Pm k r z' *ᵥ v = PI.UnitaryGroupMassFormula.GsFr.prW k r z' v := by
     show (Dw k r + ((Tz k r z' : ℂ))⁻¹ • (Rk k r z' z' * Dw k r)) *ᵥ v = _
-    rw [Matrix.add_mulVec, Matrix.smul_mulVec, ← Matrix.mulVec_mulVec, rk_mulVec_eq_herm_smul, dw_mulVec_eq_wbPart]
+    rw [Matrix.add_mulVec, Matrix.smul_mulVec, ← Matrix.mulVec_mulVec, _root_.PI.UnitaryGroupMassFormula.GsFr.Rk_mulVec, _root_.PI.UnitaryGroupMassFormula.GsFr.Dw_mulVec]
     show _ = PI.UnitaryGroupMassFormula.GsFr.wbPart k r v +
       (Formalism.QuantumDeterminants.herm (Formalism.QuantumDeterminants.Hpk k r) (PI.UnitaryGroupMassFormula.GsFr.wbPart k r v) z' / (Tz k r z' : ℂ)) • z'
     rw [smul_smul, div_eq_inv_mul]
-  rw [Matrix.sub_mulVec, ← Matrix.mulVec_mulVec, rk_mulVec_eq_herm_smul, hPm]
+  rw [Matrix.sub_mulVec, ← Matrix.mulVec_mulVec, _root_.PI.UnitaryGroupMassFormula.GsFr.Rk_mulVec, hPm]
 
 lemma ioG_mulVec (z z' : Fin (2 * r + k + 1) → ℂ) (g : B.Mat k r) (v : Fin (2 * r + k + 1) → ℂ) :
     ioG z z' g *ᵥ v = Phi k r z z' g *ᵥ (PpG z z' g *ᵥ v) := by
@@ -1321,7 +1297,7 @@ lemma det_tilde {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' :
   have hF' := Formalism.FourierDecayAlt.P.unipotent_map_frame k r z' hz'
   rw [zhat_UW (Wz.inv_mem h hh) hh', zhat_N hz hz' (Nc.inv_mem n hn) hn' g,
     Matrix.nonsing_inv_nonsing_inv n (Nc.unit n hn), Matrix.det_mul, Matrix.det_mul, Matrix.det_conjTranspose,
-    unitri_det (hF.1 n (sset_N hn)).2.1, unitri_det (hF'.1 n' (sset_N hn')).2.1]
+    unitri_det (hF.1 n (_root_.Formalism.FourierDecayAlt.P.C2x7.N_sub_S hn)).2.1, unitri_det (hF'.1 n' (_root_.Formalism.FourierDecayAlt.P.C2x7.N_sub_S hn')).2.1]
   simpa using hd
 
 end S3

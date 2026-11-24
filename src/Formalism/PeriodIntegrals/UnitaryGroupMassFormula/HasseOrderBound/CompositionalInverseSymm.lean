@@ -249,7 +249,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem coeffInversePowerFacts.{u, v} : PI.TayInvPow.{u, v} := PI.UnitaryGroupMassFormula.TayInvPow.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TayInvPow =====
@@ -316,7 +315,7 @@ end
 theorem compositionalInverseSymm : S1 := by
   classical
   intro D B P j X la N wL w T β
-  have hT := _root_.coeffInversePowerFacts (Idx D j N) (Lc X la w) (tayLc X la w) (s0 X la w) (wi X la w)
+  have hT := _root_.PI.UnitaryGroupMassFormula.TayInvPow.main (Idx D j N) (Lc X la w) (tayLc X la w) (s0 X la w) (wi X la w)
     (Finsupp.equivFunOnFinite.symm (cS X la w)) (section_mul_inverse X la w) (taySec X la w) T β
   rw [← hasse_apply] at hT
   have hprod : (β.prod fun p b => (Finsupp.equivFunOnFinite.symm (cS X la w)) p ^ b) =

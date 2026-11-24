@@ -138,6 +138,7 @@ import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Tactic.Linter.HaveILetI
 import ReciprocityTheory.Automorphisms.PlaceA
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsTransport
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Data.Nat.Choose.Multinomial
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
@@ -399,7 +400,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ChiIneMain =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MBlockParamH =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MBlockParamH", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharPolLpCharOfUnr\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Laws\npublic import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BlockSplitAll\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedNeBotOfMemSupport\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.FixedNeBotOfEquiv\npublic import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.GoodLem\nimport Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MBlockParamH", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CharPolLpCharOfUnr\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Laws\npublic import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BlockSplitAll\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedNeBotOfMemSupport\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.FixedNeBotOfEquiv\npublic import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.GoodLem\nimport Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsTransport\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -462,7 +463,7 @@ end Local
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 theorem split_param_of_typeBlock : ∀ (R : Ranks) (H : Host R) (what₂ : Rows.Data R) (N : NData R H what₂) (A : NAut N) (T : WDTie N A) (S : Reading T) (i : N.Loc) (w : PlE H) (hw : IsSplitPl H w), BlockSplitAll H.E → _root_.GlobalTheory.SplitRead.LawsAlt S → SuppLaws S → TypeBlock S i w hw → (∀ σ ∈ Ine (F := H.E) (N.plOm.1 w), A.inePol (A.locG (A.muC i) w) σ = X - C (iotaO N A i (chi1 N i σ))) → ∀ P : A.AV i, (A.inePol (A.locV i P w) (N.gam0 i w)).rootMultiplicity (iotaO N A i (chi1 N i (N.gam0 i w))) ≤ R.t → ∃ a b : A.LP w, A.locV i P w = A.lpSum a b ∧ A.lpDim a = R.r ∧ A.lpDim b = R.t ∧ A.mono0 b ∧ ∀ σ ∈ Ine (F := H.E) (N.plOm.1 w), A.inePol b σ = (X - C (iotaO N A i (chi1 N i σ))) ^ R.t := by
   intro R H what₂ N A T S i w hw hB hL hS hT hchi P hm
-  haveI : CharZero (w.adicCompletion H.E) := charZero_compl w
+  haveI : CharZero (w.adicCompletion H.E) := _root_.GlobalTheory.LocLanglands.FieldCompat.charZero_compl w
   obtain ⟨v, hv, hvb⟩ := hT.2 P
   have hμ := (S i w hw).mu_ok.1
   rw [T.inePol w _ _ (N.locNd_chebotarevPlace_mem i w), (S i w hw).locV, WD.inePol_of_mem_Ine _ (N.locNd_chebotarevPlace_mem i w)] at hm
@@ -1117,7 +1118,7 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.NRows.ThetaLocalI
     intro i w hw hSQ
     have ht := _root_.GlobalTheory.MuTameQS.main_alt_alt hL D P S hTrue i w hw hSQ
     by_cases hg : ∃ k, w ∈ placesOver D.host.E (D.host.g k)
-    · exact _root_.GlobalTheory.T.type_block_of_tame_at_split_place hL D P S hTrue i w hw hg ht.1
+    · exact _root_.GlobalTheory.TypeBlockPf.main_alt_alt hL D P S hTrue i w hw hg ht.1
     · have hng : ∀ k, w ∉ placesOver D.host.E (D.host.g k) := fun k hk => hg ⟨k, hk⟩
       have hT : TypeTame S i w hw := hTT i w hw (by
         rcases hSQ with hS | hQ
@@ -1128,13 +1129,6 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.NRows.ThetaLocalI
       exact ⟨v, hv0, fun h hK h1 _ u hu => hv h hK h1 u hu⟩
   exact _root_.GlobalTheory.InertialTypes.main_alt_alt D P.T S hTS hBS hLaws hSupp hchi hTT hTB
 end GlobalTheory.TypesAtPin
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.archimedeanSignatureMatching_of_modules : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), (∀ i : D.nd.Loc, Nonempty (RowMod D P.rep (D.nd.j i))) → _root_.GlobalTheory.NRows.RowsAAlt D → Formalism.MainNotions.SumRepresentations.ArchimedeanSignatureMatching D := by
-  first | exact @_root_.GlobalTheory.TypesAtPin.locComp_of_isRc_classMapD_cenLoc
 end
 end
 end -- clump:auto
@@ -1407,16 +1401,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.pairRead_of_join_isTrue_unit :
-    GlobalTheory.Published.BernsteinZelevinskyFiniteness →
-      ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : CharacterChoiceData hL D),
-        CharacterChoiceJoin P → ∀ S : Reading P.T, IsFaithfulReading P S → RowUnit S → PairRead S :=
-  GlobalTheory.NPin.pairRead_of_join_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PairReadOfJoinStatement =====
@@ -1658,19 +1642,19 @@ theorem latticesB_closing_alt : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt �
     GlobalTheory.NRows.RowsB D ∧ ∀ i, PairLift D.nd D.naut i ∧ SplitBC D.nd D.naut i ∧ RepOfLoc D.nd D.naut i := by
   intro hPr hL D P J hA h1 hpos
   have hRM : ∀ i : D.nd.Loc, Nonempty (RowMod D P.rep (D.nd.j i)) := fun i => ⟨J.rowM i⟩
-  obtain ⟨S, hT, hLaws, -⟩ := _root_.GlobalTheory.T.exists_true_reading_with_laws_suppLaws hPr.fin hL D P hRM
+  obtain ⟨S, hT, hLaws, -⟩ := _root_.GlobalTheory.TrueReading.exists_true_reading_alt hPr.fin hL D P hRM
   have hU : RowUnit S := _root_.GlobalTheory.RowUnitProof.rowUnit_of_isTrue_alt hL D P hRM S hT
-  have hPR : PairRead S := _root_.GlobalTheory.T.pairRead_of_join_isTrue_unit hPr.bz hL D P J S hT hU
+  have hPR : PairRead S := _root_.GlobalTheory.NPin.pairRead_of_join_alt hPr.bz hL D P J S hT hU
   have hpair : ∀ i, PairLift D.nd D.naut i :=
     _root_.UpperTheory.One.M.pairLift_of_howeDuality_bernstein_alt hPr.bz hPr.bern _ _ _ D.nd D.naut P.T S hLaws hU hPR (_root_.UpperTheory.One.M.repGood_of_isTrue' P hT)
   have hIf := _root_.GlobalTheory.AdmIface.main_alt_alt D
   have hcheb : ChebSplit D.nd := (hIf.2.1 hA.a5).1
   have hsplit : ∀ i, SplitBC D.nd D.naut i := fun i =>
     _root_.UpperTheory.GalS.splitBC_of_galIso _ _ _ D.nd D.naut i (_root_.UpperTheory.GalS.galIsoN_of_tie0_adm2_adm7 D hA.tie0 hA.a2 hA.temp i) hcheb hA.an2
-  have hrep : ∀ i, RepOfLoc D.nd D.naut i := _root_.GlobalTheory.T.repOfLoc_of_isTrue_laws hL D P S hT hLaws
+  have hrep : ∀ i, RepOfLoc D.nd D.naut i := _root_.UpperTheory.One.M.repOfLocal_h_alt hL D P S hT hLaws
   have hbc : ∀ i, BCEx D.nd D.naut i := hIf.1 h1
-  have horth : ∀ i, GlobalTheory.ThetaExh.TypeOrth D.nd D.naut i := fun i => _root_.GlobalTheory.T.type_orthogonality_of_form' hL D P i (J.form i)
-  refine ⟨⟨?_, GlobalTheory.RowTie.split_theta_correspondence_of_local_pairings D hpair, _root_.GlobalTheory.T.archimedeanSignatureMatching_of_modules hPr hL D P hRM hA,
+  have horth : ∀ i, GlobalTheory.ThetaExh.TypeOrth D.nd D.naut i := fun i => _root_.GlobalTheory.ThetaExh.typeOrth_of_pin_alt hL D P i (J.form i)
+  refine ⟨⟨?_, GlobalTheory.RowTie.split_theta_correspondence_of_local_pairings D hpair, _root_.GlobalTheory.TypesAtPin.locComp_of_isRc_classMapD_cenLoc hPr hL D P hRM hA,
     GlobalTheory.Proof.ThetaOneGenusOne.thetaOne_of_ties D hpos hpair horth hbc hsplit hrep⟩, fun i => ⟨hpair i, hsplit i, hrep i⟩⟩
   exact GlobalTheory.RowSizeClosing.rowSize_of_unitarySphericalComponent D
     (_root_.GlobalTheory.SplitRead.unitarySphericalComponent_of_reading_alt hPr.bz _ _ _ D.nd D.naut P.T S hLaws hU)
@@ -1688,16 +1672,16 @@ theorem exists_paired_point_of_thetaT_ne_zero (hP : _root_.GlobalTheory.NRows.Th
       ∀ (i : D.nd.Loc) σ, (∃ f ∈ D.what₂.isot (D.nd.j i) σ, D.what₂.thetaT (D.nd.mu i) (D.nd.j i) f ≠ 0) →
         ∃ (i' : D.nd.Loc) (P' : D.naut.AV i') (x' : D.nd.X i'), D.nd.j i' = D.nd.j i ∧ D.nd.w i' = D.nd.w i ∧
           GlobalTheory.ThetaExh.Pairs D.nd D.naut i' σ P' ∧ D.naut.ptV i' P' = some x' := by
-  obtain ⟨J⟩ := _root_.GlobalTheory.T.nonempty_join_of_agree hH hD hL D X.P X.X X.agree
+  obtain ⟨J⟩ := _root_.GlobalTheory.JoinExists.main_alt_alt hH hD hL D X.P X.X X.agree
   have hRM : ∀ i : D.nd.Loc, Nonempty (GlobalTheory.NPin.RowMod D X.P.rep (D.nd.j i)) := fun i => ⟨J.rowM i⟩
-  obtain ⟨S, hT, hLaws, -⟩ := _root_.GlobalTheory.T.exists_true_reading_with_laws_suppLaws hP.fin hL D X.P hRM
+  obtain ⟨S, hT, hLaws, -⟩ := _root_.GlobalTheory.TrueReading.exists_true_reading_alt hP.fin hL D X.P hRM
   have hU := _root_.GlobalTheory.RowUnitProof.rowUnit_of_isTrue_alt hL D X.P hRM S hT
-  have hPR := _root_.GlobalTheory.T.pairRead_of_join_isTrue_unit hP.bz hL D X.P J S hT hU
+  have hPR := _root_.GlobalTheory.NPin.pairRead_of_join_alt hP.bz hL D X.P J S hT hU
   exact ⟨GlobalTheory.RowLaws.paramLaws_of_tie X.P.T,
     _root_.GlobalTheory.ResLoc.xi_over_o_of_adm2 D X.P.cf X.P.C X.P.tp X.P.chr X.P.val (_root_.GlobalTheory.AutomorphismSplitting.tieAut_and_split_alt hP.fin hL D X.P).1
       (_root_.UpperTheory.GalS.galClose_alt hP hL D X.P) (GlobalTheory.ChebSplitDense.chebSplit hP.cheb D.nd),
     _root_.UpperTheory.One.M.pairLift_of_howeDuality_bernstein_alt hP.bz hP.bern _ _ _ D.nd D.naut X.P.T S hLaws hU hPR (_root_.UpperTheory.One.M.repGood_of_isTrue' X.P hT),
-    exists_pair_point D X.P.M X.P.H.hecke X.P.H.av X.P.H.cover (_root_.GlobalTheory.T.heckeStdTw_cover' hL D X.P)⟩
+    exists_pair_point D X.P.M X.P.H.hecke X.P.H.av X.P.H.cover (_root_.GlobalTheory.NPin.heckeStdTw_cover_alt hL D X.P)⟩
 end GlobalTheory.ResLoc
 end
 end

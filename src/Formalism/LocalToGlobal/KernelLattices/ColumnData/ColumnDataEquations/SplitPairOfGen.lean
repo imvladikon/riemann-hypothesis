@@ -108,7 +108,7 @@ theorem tripleData_of {B : Cd.Base D cc δ} (hL : B.LatAll) {N N' : ℕ}
     (a1 : TaylorLogMetric.admitted D N N' L₁ L₁') (a2 : TaylorLogMetric.admitted D N N' L₂ L₂') (a3 : TaylorLogMetric.admitted D N N' L₃ L₃') :
     TripleData (Ker.formV (TaylorLogMetric.area (TaylorLogMetric.lamOf D cc δ)) D.what₂.Tau N N') (TaylorLogMetric.al D B.tor)
       (TaylorLogMetric.La D B.tor L₁ L₁') (TaylorLogMetric.La D B.tor L₂ L₂') (TaylorLogMetric.La D B.tor L₃ L₃') :=
-  { herm := formV_herm' _ _ _ _
+  { herm := _root_.Formalism.L2.Ker.Cd.formV_herm _ _ _ _
     sd₁ := (hL.1 N N' _ _ a1).1
     sd₂ := (hL.1 N N' _ _ a2).1
     sd₃ := (hL.1 N N' _ _ a3).1
@@ -764,16 +764,11 @@ theorem mul_smul_mem {N : ℕ} {L₁ : Submodule (𝓞 D.host.E) (Fin N → D.ho
   rw [e]
   exact L₁.smul_mem m h
 
-theorem exists_smul_mem {N : ℕ} {L₁ : Submodule (𝓞 D.host.E) (Fin N → D.host.E)}
-    (hsp : Submodule.span D.host.E (L₁ : Set (Fin N → D.host.E)) = ⊤) (x : Fin N → D.host.E) :
-    ∃ n : 𝓞 D.host.E, n ≠ 0 ∧ (n : D.host.E) • x ∈ L₁ := by
-  first | (apply UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem <;> assumption) | exact @UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem D N L₁ hsp x | exact @UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem D N L₁ hsp | exact @UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem D N L₁ | exact @UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem D N | exact @UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem D
-
 theorem exists_n_one {N : ℕ} {L L₁ : Submodule (𝓞 D.host.E) (Fin N → D.host.E)} (hL : L.FG)
     (hsp : Submodule.span D.host.E (L₁ : Set (Fin N → D.host.E)) = ⊤) :
     ∃ n : 𝓞 D.host.E, n ≠ 0 ∧ ∀ u ∈ L, (n : D.host.E) • u ∈ L₁ := by
   obtain ⟨s, hs⟩ := hL
-  choose f hf0 hf using exists_smul_mem hsp
+  choose f hf0 hf using _root_.UpperTheory.Reformulated.B.WeightThresholdDefs.exists_smul_mem hsp
   refine ⟨∏ g ∈ s, f g, Finset.prod_ne_zero_iff.2 fun g _ => hf0 g, ?_⟩
   intro u hu
   rw [← hs] at hu

@@ -138,9 +138,6 @@ open scoped TensorProduct ENNReal NNReal Matrix
 
 namespace GlobalTheory.CompanionTheory.SW.AlgDiag
 
-theorem diag_hermitian : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (T : Matrix (Fin n) (Fin n) E), IsHermND σ T → ∃ (g : GL (Fin n) E) (D : Fin n → Fˣ), cT (σ : E →+* E) (g : Matrix (Fin n) (Fin n) E) * T * g = Matrix.diagonal fun i => algebraMap F E (D i : F) :=
-  _root_.UpperTheory.Reformulated.B.Gka4.diag_hermitian
-
 end GlobalTheory.CompanionTheory.SW.AlgDiag
 end -- clump:auto
 end -- clump:auto
@@ -206,7 +203,7 @@ theorem trans_uc : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     apply τ.injective
     rw [hCM.2.2.2 τ, hCM.2.2.2 τ, star_star]
   have hT : IsHermND σ (gramE σ J X) := ⟨gramE_herm σ hσ J hJ.1 X, hdet⟩
-  obtain ⟨g, D, hg⟩ := GlobalTheory.CompanionTheory.SW.AlgDiag.diag_hermitian F E σ hCM n _ hT
+  obtain ⟨g, D, hg⟩ := _root_.UpperTheory.Reformulated.B.Gka4.diag_hermitian F E σ hCM n _ hT
   set G : Matrix (Fin n) (Fin n) (R ⊗[F] E) := (g : Matrix (Fin n) (Fin n) E).map (inclR R) with hG
   set G' : Matrix (Fin n) (Fin n) (R ⊗[F] E) :=
     ((g⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E).map (inclR R) with hG'

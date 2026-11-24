@@ -1063,13 +1063,6 @@ open scoped Matrix
 
 namespace GlobalTheory.Ord2.GwCount
 
-theorem exists_bound_of_mem_span {K E ι : Type} [NormedField K] [AddCommGroup E] [Module K E] (φ : ι → E →ₗ[K] K)
-    (f : E →ₗ[K] K) (hf : f ∈ Submodule.span K (Set.range φ)) :
-    ∃ C : ℝ, 0 ≤ C ∧ ∀ (p : E) (r : ℝ), 0 ≤ r → (∀ j, ‖φ j p‖ ≤ r) → ‖f p‖ ≤ C * r := by
-  first
-  | (apply _root_.GlobalTheory.NormBoundOfSpan.norm_le_of_mem_span <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NormBoundOfSpan.norm_le_of_mem_span ..)
-
 theorem exists_bound_multiplier {K Γ : Type} [NormedField K] (M : Γ → Matrix (Fin 2) (Fin 2) K) (Y : Γ → Fin 2 → K)
     (hY : ¬ ∃ x : Fin 2 → K, ∀ s, Y s = M s *ᵥ x - x) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (a : K) (x : Fin 2 → K) (r : ℝ), 0 ≤ r →
@@ -1093,7 +1086,7 @@ theorem exists_bound_multiplier {K Γ : Type} [NormedField K] (M : Γ → Matrix
       rw [hφ] at this
       exact sub_eq_zero.1 this
     rw [Matrix.mulVec_smul, ← smul_sub, ← h1, smul_smul, inv_mul_cancel₀ ha, one_smul]
-  obtain ⟨C, hC, h⟩ := exists_bound_of_mem_span φ _ (FiniteDimensional.mem_span_of_iInf_ker_le_ker hker)
+  obtain ⟨C, hC, h⟩ := _root_.GlobalTheory.NormBoundOfSpan.norm_le_of_mem_span φ _ (FiniteDimensional.mem_span_of_iInf_ker_le_ker hker)
   exact ⟨C, hC, fun a x r hr hb => h (a, x) r hr fun j => by rw [show j = (j.1, j.2) from rfl, hφ]; exact hb _ _⟩
 
 theorem closed_multiplier : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (W : R2 Ω l) (c : Coef l) (Y : G ℚ Ω → Fin 2 → Qbar l), (∀ s i j, mat W s i j ∈ c.O) → Y ∈ Z1 (Loc.colRep W) → (∀ s i, Y s i ∈ c.O) → Y ∉ ReciprocityTheory.Gal.B1 (Loc.colRep W) → ∃ k0 : ℕ, ∀ (n : ℕ) (a : Qbar l), a ∈ c.O → Cob1 c n W ⊤ (fun s => a • Y s) → Cg n (a * ((l : ℕ) : Qbar l) ^ k0) 0 := by
@@ -1629,18 +1622,8 @@ section Basic
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem norm_le_one_of_mem (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 :=
-  _root_.UpperTheory.Reformulated.B.Rb6.norm_le_one_of_mem c hx
-
-theorem place_eq {p : ℕ} (hp : p.Prime) {v v' : HeightOneSpectrum (𝓞 ℚ)} (hv : ((p : ℕ) : 𝓞 ℚ) ∈ v.asIdeal)
-    (hv' : ((p : ℕ) : 𝓞 ℚ) ∈ v'.asIdeal) : v = v' :=
-  _root_.GlobalTheory.IdealComapPreimage.main hp hv hv'
-
-theorem cg_self (n : ℕ) (a : Qbar l) : Cg n a a := by
-  unfold Cg; rw [sub_self, norm_zero]; exact norm_nonneg _
-
 theorem cv_of_eq (n : ℕ) {a b : Fin 2 → Qbar l} (h : a = b) : Cv n a b := by
-  subst h; intro i; exact cg_self n _
+  subst h; intro i; exact _root_.GlobalTheory.Ord2.TwistTriv.cg_refl n _
 
 theorem norm_l_lt_one : ‖((l : ℕ) : Qbar l)‖ < 1 := by
   rw [← map_natCast (algebraMap ℚ_[l] (PadicAlgCl l)), norm_algebraMap']
@@ -1804,7 +1787,7 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
     intro n v _
     by_cases hlv : ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal
     · obtain ⟨v0, hAv0, hlv0⟩ := hN.atL
-      have hv : v = v0 := place_eq (Fact.out : l.Prime) hlv hlv0
+      have hv : v = v0 := _root_.GlobalTheory.PlaceConjQ.eq_of_prime_mem (Fact.out : l.Prime) hlv hlv0
       subst hv
       refine ⟨A, hAv0, ?_⟩
       exact _root_.GlobalTheory.Ord2.CupCob.cup_cob l Ω c2 n W (Dec (F := ℚ) A) y' z' hN.cont hWc2 hN.det2
@@ -1846,7 +1829,7 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
   set de : Qbar l := (mat W φ - 1).det with hdedef
   set de' : Qbar l := om (y' h) (z' g) - om (y' g) (z' h) with hde'def
   have hde' : de' ≠ 0 := sub_ne_zero.mpr hne
-  have hdeO : ‖de‖ ≤ 1 := norm_le_one_of_mem c2 (det_mem c2 (sub_one_mem c2 (hWc2 φ)))
+  have hdeO : ‖de‖ ≤ 1 := _root_.GlobalTheory.BoundedScalarNorm.norm_le_one c2 (det_mem c2 (sub_one_mem c2 (hWc2 φ)))
 
   have key : ∀ n : ℕ, 1 ≤ n → ‖de ^ 2 * de'‖ ≤ ‖((l : ℕ) : Qbar l) ^ n‖ := by
     intro n hn

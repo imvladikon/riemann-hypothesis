@@ -517,11 +517,6 @@ namespace GlobalTheory.HeightDefinite.Generic
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l}
 
-theorem frMap_comp {S T U : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T] [CommRing U]
-    [Algebra c.F U] (φ : S →ₐ[c.F] T) (ψ : T →ₐ[c.F] U) {y : FrPt Xo c S} {z : FrPt Xo c T} {w : FrPt Xo c U}
-    (h₁ : FrMap φ y z) (h₂ : FrMap ψ z w) : FrMap (ψ.comp φ) y w :=
-  Formalism.L2.Pj.frMap_trans S T U φ ψ y z w h₁ h₂
-
 theorem frBor_of_frMap {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T]
     (φ : S →ₐ[c.F] T) {t : Ix Dw → Sˣ} {y y' : FrPt Xo c S} {z z' : FrPt Xo c T} (h : FrBor t y y')
     (hz : FrMap φ y z) (hz' : FrMap φ y' z') : FrBor (fun i => Units.map (φ : S →* T) (t i)) z z' := by
@@ -535,7 +530,7 @@ theorem evR_of_frMap (hL : EvLaws Xo c) {a : (E →+* ℂ) × ℕ → ℕ} {n : 
     {y : FrPt Xo c S} {z : FrPt Xo c T} (hyz : FrMap φ y z) : evR Xo c g z = φ (evR Xo c g y) := by
   obtain ⟨q, χ, y₀, hy₀⟩ := hL.test S y
   rw [evR_eq_map_of_test_point hL hg q χ y₀ y hy₀,
-    evR_eq_map_of_test_point hL hg q (φ.comp χ) y₀ z (frMap_comp χ φ hy₀ hyz)]
+    evR_eq_map_of_test_point hL hg q (φ.comp χ) y₀ z (_root_.GlobalTheory.FramedBaseChange.trans χ φ hy₀ hyz)]
   rfl
 
 theorem isFractionRing_chart {h : GenFrEx Xo c} (C : FChart h) : IsFractionRing C.R (Om C.Z) := by
@@ -624,7 +619,7 @@ theorem pn_generic (hd : Dom a n) (hg : g ∈ sec Xo c a n) {h : GenFrEx Xo c}
   obtain rfl : sgOf P = σ := hP
   have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
   obtain ⟨w, hw⟩ := hL.bc _ _ (PAlg P) C.yg
-  have h1 := frMap_comp _ _ C.gen hw
+  have h1 := _root_.GlobalTheory.FramedBaseChange.trans _ _ C.gen hw
   obtain rfl : x = (PAlg P).comp C.R.val := AlgHom.ext hxP
   obtain rfl : z = w := (GlobalTheory.Frames.frMap_unique_refl_iff E H Dw l Xo c _ _ _ C.y).1 _ _ hz h1
   rw [(_root_.GlobalTheory.FrameNorm.fnConj_valAtCx_nrmC_eq_ptNorm E H Dw l Xo c r U hU xR fn hx hfn h yP hyP).2.2 C.Z P a n g hg]

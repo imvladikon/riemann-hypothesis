@@ -256,7 +256,7 @@ noncomputable section
 
 namespace GlobalTheory.KZ.H3.UnRoot
 
-lemma isOpen_Hs : IsOpen Hs := isOpen_lt continuous_const Complex.continuous_im
+alias isOpen_Hs := _root_.GlobalTheory.KZ.H3.isOpen_Hs_place
 
 lemma isPreconnected_Hs : IsPreconnected Hs :=
   (convex_halfSpace_gt Complex.imLm.isLinear (0:ℝ)).isPreconnected
@@ -848,16 +848,7 @@ noncomputable section
 
 namespace GlobalTheory.KZ.H3.KumFam
 
-theorem gamma_dvd {M N : ℕ} (h : M ∣ N) {δ : SL(2, ℤ)} (hδ : δ ∈ CongruenceSubgroup.Gamma N) :
-    δ ∈ CongruenceSubgroup.Gamma M := by
-  rw [CongruenceSubgroup.Gamma_mem] at hδ ⊢
-  obtain ⟨h1, h2, h3, h4⟩ := hδ
-  have e : ∀ x : ℤ, ZMod.castHom h (ZMod M) (x : ZMod N) = (x : ZMod M) := fun x => map_intCast _ x
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · rw [← e, h1, map_one]
-  · rw [← e, h2, map_zero]
-  · rw [← e, h3, map_zero]
-  · rw [← e, h4, map_one]
+alias gamma_dvd := _root_.GlobalTheory.KZ.H3.KumAdd.gamma_of_dvd
 
 theorem common_level {k : ℕ} (Q : Fin k → ℕ → Prop) (hmono : ∀ i M M', M ∣ M' → Q i M → Q i M')
     (h : ∀ i, ∃ M, 0 < M ∧ Q i M) : ∃ M, 0 < M ∧ ∀ i, Q i M := by

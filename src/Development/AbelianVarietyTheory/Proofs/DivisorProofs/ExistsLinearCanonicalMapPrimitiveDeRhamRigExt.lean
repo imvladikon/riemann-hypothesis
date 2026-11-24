@@ -209,11 +209,6 @@ open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB RigLB Cubical
 open GlobalTheory GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.PDiv GlobalTheory.PtExt
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.canonicalRigidifiedExtensionOfDeRhamClass_unique
-    (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (p : ℕ) (G : PDivGroup p R)
-    (t : G.TorsionTower A) (c : primDR A) (hA : IsAbelianScheme A) (x x' : G.RigExt)
-    (hx : IsCan t c x) (hx' : IsCan t c x') : x = x' :=
-  GlobalTheory.PtExt.isCan_unique R A p G t c hA x x' hx hx'
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalRigidifiedExtensionOfDeRhamClassUniqueStatement =====
@@ -260,7 +255,7 @@ theorem exists_sub_tower {B : ℕ → Type} [∀ n, AddCommGroup (B n)] (r : ∀
 theorem nonempty_dat (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (p : ℕ) (G : PDivGroup p R)
     (t : G.TorsionTower A) (c : primDR A) : Nonempty (Dat t c) := by
   obtain ⟨f, hf⟩ := CatCoh.H1.mk_surjective _ c.1
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_additiveStructure_of_primitiveDeRhamClass R A f (by rw [hf]; exact c.2)
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.PtExt.exists_isAdd_of_mem_primDR R A f (by rw [hf]; exact c.2)
   obtain ⟨h, hh⟩ := exists_sub_tower (B := fun n ↦ G.A n) (fun n ↦ G.res n) (fun n ↦ G.res_surjective n)
     (fun n ↦ fv f (G.A (n + 1)) (G.A n) (G.res n : G.A (n + 1) →ₐ[R] G.A n) (t.y (n + 1)))
   exact ⟨⟨f, hf, g, hg, h, hh⟩⟩
@@ -344,7 +339,7 @@ theorem canFun_isCan (t : G.TorsionTower A) (hA : IsAbelianScheme A) (c : primDR
 
 theorem isCan_iff (t : G.TorsionTower A) (hA : IsAbelianScheme A) (c : primDR A) (x : G.RigExt) :
     IsCan t c x ↔ canFun t hA c = x :=
-  ⟨fun h ↦ GlobalTheory.T.canonicalRigidifiedExtensionOfDeRhamClass_unique R A p G t c hA _ _ (canFun_isCan t hA c) h, fun h ↦ h ▸ canFun_isCan t hA c⟩
+  ⟨fun h ↦ _root_.GlobalTheory.PtExt.isCan_unique R A p G t c hA _ _ (canFun_isCan t hA c) h, fun h ↦ h ▸ canFun_isCan t hA c⟩
 
 def canMap (t : G.TorsionTower A) (hA : IsAbelianScheme A) : primDR A →ₗ[R] G.RigExt where
   toFun := canFun t hA

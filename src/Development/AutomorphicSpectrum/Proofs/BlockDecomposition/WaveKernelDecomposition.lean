@@ -419,9 +419,7 @@ theorem one_dim (Φ A B : ℝ → ℝ → ℂ)
 
 variable {n : ℕ}
 
-theorem val_mem_GLs (y : G n) : y.val ∈ GLs n := by
-  have h : IsUnit (y.val.det) := (Matrix.isUnit_iff_isUnit_det _).mp y.isUnit
-  exact h.ne_zero
+alias val_mem_GLs := _root_.GlobalTheory.CompanionTheory.WaveMult.Ibp.val_mem
 
 theorem continuous_val : Continuous (fun y : G n => y.val) := Units.continuous_val
 
@@ -630,22 +628,12 @@ section Gel
 
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
 
-theorem Rd_zero (X : Mat n) : Rd X (0 : Mat n → V) = 0 := by
-  funext g
-  have : fderiv ℝ (0 : Mat n → V) g = 0 := by
-    change fderiv ℝ (fun _ : Mat n => (0 : V)) g = 0
-    simp
-  simp [Rd, this]
-
-theorem Eu_zero (s : Bool) (a b : Fin n) : Eu s a b (0 : Mat n → V) = 0 := by
-  simp [Eu, Rd_zero]
-
 theorem Epow_one (s : Bool) (c b : Fin n) (f : Mat n → V) : Epow s 1 c b f = Eu s c b f := by
   simp only [Epow]
   rw [Finset.sum_eq_single b]
   · simp
   · intro d _ hd
-    simp [hd, Eu_zero]
+    simp [hd, _root_.GlobalTheory.CompanionTheory.WaveMult.Ibp.Eu_zero]
   · simp
 
 theorem EpowT_one (s : Bool) (c b : Fin n) (f : Mat n → V) : EpowT s 1 c b f = Eu s b c f := by
@@ -653,7 +641,7 @@ theorem EpowT_one (s : Bool) (c b : Fin n) (f : Mat n → V) : EpowT s 1 c b f =
   rw [Finset.sum_eq_single b]
   · simp
   · intro d _ hd
-    simp [hd, Eu_zero]
+    simp [hd, _root_.GlobalTheory.CompanionTheory.WaveMult.Ibp.Eu_zero]
   · simp
 
 theorem gel_two (s : Bool) (f : Mat n → V) : gel s 2 f = ∑ a, ∑ c, Eu s a c (Eu s c a f) := by
@@ -1069,7 +1057,7 @@ theorem kernel_adjoint : LgFacts → Unimod → RCalc → WaveSpeed → WaveEx �
   choose K hK using fun i => hO n μ E (w₁ i) g T hb
   refine ⟨N, c, w₁, K, hK, ?_, hval⟩
   have hw := hop hL hR μ E.V
-  obtain ⟨regp, eqvp⟩ := GlobalTheory.T.kernel_adjoint_regular hL n E k ⟨hk.1.continuousOn, hk.2.1⟩ hk.2.2.1
+  obtain ⟨regp, eqvp⟩ := _root_.GlobalTheory.CompanionTheory.WaveMult.adjoint_kernel_reg hL n E k ⟨hk.1.continuousOn, hk.2.1⟩ hk.2.2.1
   have regK : ∀ i, KReg (K i) := fun i => ⟨(hK i).1.continuousOn, (hK i).2.1⟩
   have rp : ∀ y ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ,
       ContinuousLinearMap.adjoint (k (y * k₂.1)⁻¹) = ContinuousLinearMap.adjoint (k y⁻¹) * E.ρ k₂ := by

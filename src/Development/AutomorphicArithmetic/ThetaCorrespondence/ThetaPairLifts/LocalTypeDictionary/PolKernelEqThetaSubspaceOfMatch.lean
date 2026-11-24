@@ -448,7 +448,7 @@ theorem polynomialKernel_constTerm_lieDeriv : _root_.GlobalTheory.FunPr.ThetaLoc
     (∀ x, HasDerivAt (fun t : ℝ => om (1, γ (Multiplicative.ofAdd t)) Φ x) (Φ₁ x) 0) → GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ₁) := by
   intro hP F E _ _ _ _ _ σ Bs a a' G Xc om om' R Rf hM γ hγ Φ Φ₁ hΦ hd
   obtain ⟨T, hT, m, f, φ, hf, rfl, hz⟩ := hΦ
-  have act := _root_.GlobalTheory.T.dualPair_preserves_polarization hP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V hM.triple)
+  have act := _root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V hM.triple)
   obtain ⟨D, hDm, hDi⟩ := act.2.2.1 γ hγ
   have hstd : ∀ i, ∀ᶠ v in Filter.cofinite,
       φ i v = Set.indicator {x | ∀ j, x j ∈ v.adicCompletionIntegers F} 1 := by
@@ -493,17 +493,6 @@ end GlobalTheory.PolKerLie
 end
 end
 
-section
-open NumberField IsDedekindDomain
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.lieAlgebra_preserves_polynomialKernel : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')
-    (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Lines σ G.W, ∀ Φ Φ₁, GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ) →
-    (∀ x, HasDerivAt (fun t : ℝ => om (1, γ (Multiplicative.ofAdd t)) Φ x) (Φ₁ x) 0) → GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ₁) := by
-  first | exact @_root_.GlobalTheory.PolKerLie.polynomialKernel_constTerm_lieDeriv
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LieAlgebraPreservesPolynomialKernel =====
@@ -563,7 +552,7 @@ theorem polynomialKernel_constTerm_lieDeriv_dualSpace : _root_.GlobalTheory.FunP
       funext x
       simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
   obtain ⟨T, m, f, φ, hfφ, rfl⟩ := exists_decomp G.M Bs.ψ Bs.emb hΦ
-  obtain ⟨D, hDmem, hD⟩ := (_root_.GlobalTheory.T.dualPair_preserves_polarization hP F E σ Bs _ _ G.V G.W G.M _ _ om _ _ _ _
+  obtain ⟨D, hDmem, hD⟩ := (_root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hP F E σ Bs _ _ G.V G.W G.M _ _ om _ _ _ _
     (GlobalTheory.ThK.RealUniq.isPair_V hM.triple)).1 γ hγ
   have hstd := hM.triple.geo.hM.std
   have hacts : ∀ i, ActsD (evI F) (fun t => ⇑(om (γ (Multiplicative.ofAdd t), 1))) ⇑(f i) ⇑(D (f i)) :=
@@ -598,17 +587,6 @@ theorem polynomialKernel_constTerm_lieDeriv_dualSpace : _root_.GlobalTheory.FunP
 end GlobalTheory.PolKerLieV
 end
 
-section
-open NumberField IsDedekindDomain
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.lieAlgebra_preserves_polynomialKernel_dualSpace : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')
-    (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Lines σ G.V, ∀ Φ ∈ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb, ∀ Φ₁,
-    (∀ x, HasDerivAt (fun t : ℝ => om (γ (Multiplicative.ofAdd t), 1) Φ x) (Φ₁ x) 0) → GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ₁) := by
-  first | exact @_root_.GlobalTheory.PolKerLieV.polynomialKernel_constTerm_lieDeriv_dualSpace
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LieAlgebraPreservesPolynomialKernelDualSpace =====
@@ -655,7 +633,7 @@ theorem maximalCompact_fixed_rel_polynomialKernel_constTerm : _root_.GlobalTheor
     (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')
     (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf σ G.V Bs.emb, ∀ Φ ∈ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb, GlobalTheory.PolKer.PolZero Bs G Xc R Rf (om (k, 1) Φ - Φ) := by
   intro hP F E _ _ _ _ _ σ Bs a a' G Xc om om' R Rf hM k hk Φ hΦ
-  obtain ⟨D, hDP, hD⟩ := (_root_.GlobalTheory.T.dualPair_preserves_polarization hP F E σ Bs a (a + a') G.V G.W G.M Xc.β (Xc.β / Xc.α) om _ _ _ _
+  obtain ⟨D, hDP, hD⟩ := (_root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hP F E σ Bs a (a + a') G.V G.W G.M Xc.β (Xc.β / Xc.α) om _ _ _ _
     (GlobalTheory.ThK.RealUniq.isPair_V hM.triple)).2.1 k hk
   obtain ⟨n, c, g, rfl⟩ := (Submodule.mem_span_set').1 hΦ
   choose f φ hf hSB hcof hg using fun i => (g i).2
@@ -684,16 +662,6 @@ end GlobalTheory.PolKerCpt
 end
 end
 
-section
-open NumberField IsDedekindDomain
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.maximalCompact_invariants_polynomialKernel : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')
-    (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf σ G.V Bs.emb, ∀ Φ ∈ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb, GlobalTheory.PolKer.PolZero Bs G Xc R Rf (om (k, 1) Φ - Φ) := by
-  first | exact @_root_.GlobalTheory.PolKerCpt.maximalCompact_fixed_rel_polynomialKernel_constTerm
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MaximalCompactFixedRelPolynomialKernelConstTerm =====
@@ -753,7 +721,7 @@ theorem polarization_zero_of_compact : _root_.GlobalTheory.FunPr.ThetaLocalInput
     ⟨hTr.base, hTr.geo.hV, hTr.geo.hW, hTr.geo.hM, hTr.chars.heckeβ,
       hecke_character_div hTr.chars.heckeβ hTr.chars.heckeα, hTr.chars.resβ,
       restriction_eta_pow_div hTr.chars.resβ hTr.chars.resα rfl, hTr.weil⟩
-  have actV := _root_.GlobalTheory.T.dualPair_preserves_polarization hP F E σ Bs a (a + a') G.V G.W G.M _ _ om _ _ _ _ hPV
+  have actV := _root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hP F E σ Bs a (a + a') G.V G.W G.M _ _ om _ _ _ _ hPV
   obtain ⟨D, hDm, hDi⟩ := actV.2.2.2 k hk
   have hA : ∀ g ∈ G.M.Pol Bs.ψ Bs.emb, Acts (evI F) (⇑(om (1, k))) (⇑g) (⇑(D g)) := fun g hg =>
     (hDi g hg (D g)).2 rfl
@@ -790,16 +758,6 @@ end GlobalTheory.PolKerCpt
 end
 end
 
-section
-open NumberField IsDedekindDomain
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.polarization_kernel_compact_vanishing : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W) (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a')
-    (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf → ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf σ G.W Bs.emb, ∀ Φ, GlobalTheory.PolKer.PolZero Bs G Xc R Rf (Φ) → GlobalTheory.PolKer.PolZero Bs G Xc R Rf (om (1, k) Φ) := by
-  first | exact @_root_.GlobalTheory.PolKerCpt.polarization_zero_of_compact
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.PolarizationKernelCompactVanishing =====
@@ -838,15 +796,15 @@ theorem GlobalTheory.PolKer.polKernel_eq_thetaSubspace_of_match : _root_.GlobalT
   · intro v h hh Φ hΦ
     exact (memK _).2 (_root_.GlobalTheory.PolKerFin.polZero_om_fin F E σ Bs a a' G Xc om om' R Rf hM v h hh Φ ((memK Φ).1 hΦ))
   · intro k hk Φ hΦ
-    exact (memK _).2 (_root_.GlobalTheory.T.polarization_kernel_compact_vanishing hP F E σ Bs a a' G Xc om om' R Rf hM k hk Φ ((memK Φ).1 hΦ))
+    exact (memK _).2 (_root_.GlobalTheory.PolKerCpt.polarization_zero_of_compact hP F E σ Bs a a' G Xc om om' R Rf hM k hk Φ ((memK Φ).1 hΦ))
   · intro γ hγ Φ hΦ Φ₁ _ hd
-    exact (memK _).2 (_root_.GlobalTheory.T.lieAlgebra_preserves_polynomialKernel hP F E σ Bs a a' G Xc om om' R Rf hM γ hγ Φ Φ₁ ((memK Φ).1 hΦ) hd)
+    exact (memK _).2 (_root_.GlobalTheory.PolKerLie.polynomialKernel_constTerm_lieDeriv hP F E σ Bs a a' G Xc om om' R Rf hM γ hγ Φ Φ₁ ((memK Φ).1 hΦ) hd)
   · intro v g hg Φ hΦ
     exact (memK _).2 (_root_.GlobalTheory.PolKer.polZero_relV F E σ Bs a a' G Xc om om' R Rf hM v g hg Φ hΦ)
   · intro k hk Φ hΦ
-    exact (memK _).2 (_root_.GlobalTheory.T.maximalCompact_invariants_polynomialKernel hP F E σ Bs a a' G Xc om om' R Rf hM k hk Φ hΦ)
+    exact (memK _).2 (_root_.GlobalTheory.PolKerCpt.maximalCompact_fixed_rel_polynomialKernel_constTerm hP F E σ Bs a a' G Xc om om' R Rf hM k hk Φ hΦ)
   · intro γ hγ Φ hΦ Φ₁ _ hd
-    exact (memK _).2 (_root_.GlobalTheory.T.lieAlgebra_preserves_polynomialKernel_dualSpace hP F E σ Bs a a' G Xc om om' R Rf hM γ hγ Φ hΦ Φ₁ hd)
+    exact (memK _).2 (_root_.GlobalTheory.PolKerLieV.polynomialKernel_constTerm_lieDeriv_dualSpace hP F E σ Bs a a' G Xc om om' R Rf hM γ hγ Φ hΦ Φ₁ hd)
   · intro hK
     obtain ⟨Φ, hΦ, hn⟩ := _root_.GlobalTheory.PolKer.exists_not_polZero F E σ Bs a a' G Xc om om' R Rf hM
     rw [← hK] at hΦ
@@ -855,19 +813,6 @@ theorem GlobalTheory.PolKer.polKernel_eq_thetaSubspace_of_match : _root_.GlobalT
     exact ⟨fun h => h.2, fun h => ⟨hΦD, h⟩⟩
 end
 
-section
-open NumberField IsDedekindDomain
-
-theorem _root_.GlobalTheory.T.thetaSubspace_contains_polKernel : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs G Xc om om' →
-    ∀ (R : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.RealMaps F a a') (Rf : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.FinMaps F a a'),
-    GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsMatched Bs G Xc om om' R Rf →
-    ∃ K, GlobalTheory.CoinvKer.IsThetaSub om Bs.emb (GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb) K ∧
-      K ≠ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb ∧
-      ∀ ΦD ∈ GlobalTheory.SquareAgree.algD G.M Bs.ψ Bs.emb, (ΦD ∈ K ↔ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.PolMatch Bs G Xc R Rf ΦD 0) := by
-  first | exact @_root_.GlobalTheory.PolKer.polKernel_eq_thetaSubspace_of_match
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.PolKernelEqThetaSubspaceOfMatch =====

@@ -76,8 +76,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.Poinc
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_levelPoint_rescale_same_torsionPoint : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (k k' d : ℕ) (pk : QkPt u.D.toPre (PadicAlgCl p) k) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), 1 ≤ k → 1 ≤ d → k' = d * k → QkToAkU u.U.toUnifPre (PadicAlgCl p) k pk x → ∃ pk' : QkPt u.D.toPre (PadicAlgCl p) k', pk'.y = d • pk.y ∧ QkToAkU u.U.toUnifPre (PadicAlgCl p) k' pk' x := by
-  first | exact @GlobalTheory.QLevelRescale.exists_qkPt_rescale
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelPointRescaleSameTorsionPointStatement =====
@@ -94,8 +92,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.Poinc
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_thetaTorsion_preimage_uniformised_model : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (a : S.Gam), ∃ (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x ∧ x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left := by
-  first | exact @GlobalTheory.Poinc.exists_qkPt_of_utest
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaTorsionPreimageUniformisedModelStatement =====
@@ -194,10 +190,6 @@ noncomputable section
 
 namespace GlobalTheory.Poinc.Special
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [← Spec.map_comp]; rfl
-
 section Model
 
 variable {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [CommRing o'] [Field Ω'] [Algebra o' Ω']
@@ -234,7 +226,7 @@ theorem pt_iff_eq {R : Type} [CommRing R] {G : Over (Sp R)} {h : R →+* K} {a :
     (c : IsPullback a A.hom G.hom (spMap h)) (j : K →+* C) {s : Sp R ⟶ G.left} {w : Sp K ⟶ A.left}
     (hw : w ≫ A.hom = 𝟙 _) (hs : w ≫ a = spMap h ≫ s) (x : Sp C ⟶ A.left) (hx : x ≫ A.hom = spMap j) :
     x ≫ a = spMap (j.comp h) ≫ s ↔ x = spMap j ≫ w := by
-  rw [spMap_comp', Category.assoc, ← hs]
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc, ← hs]
   constructor
   · intro e
     exact c.hom_ext (by rw [e, Category.assoc]) (by rw [hx, Category.assoc, hw, Category.comp_id])
@@ -259,8 +251,8 @@ end GlobalTheory.Poinc.Special
 theorem GlobalTheory.Poinc.Special.specialise_sameAt : ∀ (R₁ R₂ B K M Γ : Type) [CommRing R₁] [CommRing R₂] [CommRing B] [CommRing K] (P₁ : PolAV (Sp R₁)) (P₂ : PolAV (Sp R₂)) (f₁ : R₁ →+* B) (f₂ : R₂ →+* B) (e₁ : M → (P₁.A ⟶ P₁.A)) (e₂ : M → (P₂.A ⟶ P₂.A)) (t₁ : Γ → (baseOver (Sp R₁) ⟶ P₁.A)) (t₂ : Γ → (baseOver (Sp R₂) ⟶ P₂.A)), SameAt P₁ P₂ f₁ f₂ e₁ e₂ t₁ t₂ → (∀ τ : B →+* B, τ.comp f₂ = f₂ → τ = RingHom.id B) → ∀ (v : B →+* K) (A₁ : PolAV (Sp K)) (a₁ : A₁.A.left ⟶ P₁.A.left), IsGrpPullback A₁.A P₁.A (spMap (v.comp f₁)) a₁ → LBIso A₁.L (P₁.L.pull a₁) → ∃ φ₂ : A₁.A.left ⟶ P₂.A.left, IsGrpPullback A₁.A P₂.A (spMap (v.comp f₂)) φ₂ ∧ LBIso A₁.L (P₂.L.pull φ₂) ∧ (∀ E, ∃ e : A₁.A.left ⟶ A₁.A.left, e ≫ A₁.A.hom = A₁.A.hom ∧ e ≫ a₁ = a₁ ≫ (e₁ E).left ∧ e ≫ φ₂ = φ₂ ≫ (e₂ E).left) ∧ ∀ x, ∃ w : Sp K ⟶ A₁.A.left, w ≫ A₁.A.hom = 𝟙 _ ∧ w ≫ a₁ = spMap (v.comp f₁) ≫ (t₁ x).left ∧ w ≫ φ₂ = spMap (v.comp f₂) ≫ (t₂ x).left := by
   intro R₁ R₂ B K M Γ _ _ _ _ P₁ P₂ f₁ f₂ e₁ e₂ t₁ t₂ hS hrig v A₁ a₁ ha₁ hL₁
   obtain ⟨P, b₁, b₂, hb₁, hb₂, hLb₁, hLb₂, hε, ht⟩ := hS
-  have hv₁ : spMap (v.comp f₁) = spMap v ≫ spMap f₁ := GlobalTheory.Poinc.Special.spMap_comp' f₁ v
-  have hv₂ : spMap (v.comp f₂) = spMap v ≫ spMap f₂ := GlobalTheory.Poinc.Special.spMap_comp' f₂ v
+  have hv₁ : spMap (v.comp f₁) = spMap v ≫ spMap f₁ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp f₁ v
+  have hv₂ : spMap (v.comp f₂) = spMap v ≫ spMap f₂ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp f₂ v
   have sq : a₁ ≫ P₁.A.hom = (A₁.A.hom ≫ spMap v) ≫ spMap f₁ := by
     rw [ha₁.1.w, hv₁, Category.assoc]
   let b : A₁.A.left ⟶ P.A.left := hb₁.1.lift a₁ (A₁.A.hom ≫ spMap v) sq
@@ -291,7 +283,7 @@ theorem GlobalTheory.Poinc.Special.specialise_sameAt : ∀ (R₁ R₂ B K M Γ :
       exact Category.comp_id _
     have hτ : (Spec.preimage (w ≫ P.A.hom)).hom.comp f₂ = f₂ := by
       have h1 : spMap ((Spec.preimage (w ≫ P.A.hom)).hom.comp f₂) = spMap f₂ := by
-        rw [GlobalTheory.Poinc.Special.spMap_comp', hσ, hσ₂]
+        rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hσ, hσ₂]
       exact congrArg CommRingCat.Hom.hom (Spec.map_inj.1 h1)
     have hwP : w ≫ P.A.hom = 𝟙 _ := by
       rw [← hσ, hrig _ hτ]
@@ -582,7 +574,7 @@ theorem labels_lift : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
     rw [hq₁y, hq₁y'] at this
     exact this
   · intro a μ hμ
-    obtain ⟨pk, x, hx, hxa⟩ := GlobalTheory.T.exists_thetaTorsion_preimage_uniformised_model _ _ _ ρ' p y₀ u a
+    obtain ⟨pk, x, hx, hxa⟩ := _root_.GlobalTheory.Poinc.exists_qkPt_of_utest _ _ _ ρ' p y₀ u a
     have h1 := l.yy_eq a pk x hx hxa
     have h2 := hyy a pk.y h1
     have hL₁pos : 1 ≤ L₁ := by
@@ -602,7 +594,7 @@ theorem labels_lift : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (F
     have hdpos : 1 ≤ L₂ / L₁ := by
       rw [Nat.one_le_div_iff (by omega)]
       exact Nat.le_of_dvd (by omega) hdvd
-    obtain ⟨pk', hpk'y, hpk'⟩ := GlobalTheory.T.exists_levelPoint_rescale_same_torsionPoint _ _ _ ρ' p y₀ u L₁ L₂ (L₂ / L₁) pk x hL₁pos hdpos
+    obtain ⟨pk', hpk'y, hpk'⟩ := _root_.GlobalTheory.QLevelRescale.exists_qkPt_rescale _ _ _ ρ' p y₀ u L₁ L₂ (L₂ / L₁) pk x hL₁pos hdpos
       (Nat.div_mul_cancel hdvd).symm hx
     obtain ⟨pk₂, hpk₂y, hpk₂⟩ := hbw L₂ pk' x hL₂pos hpk'
     have h3 := (htor (T.symm x) a).2 (by simpa using hxa)

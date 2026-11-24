@@ -92,14 +92,10 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.LocMod.SuppFirst
 
-theorem e_mul_ι {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) (x : k) : p.e * p.ι x = p.ι x := by
-  rw [← p.ι_π, p.π_ι]
-
 theorem ι_mul' {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (p : Place D k) (x y : k) : p.ι (x * y) = p.ι x * p.ι y := by
   have h := p.ι_π (p.ι x * p.ι y)
-  rw [map_mul, p.π_ι, p.π_ι, ← mul_assoc, e_mul_ι] at h
+  rw [map_mul, p.π_ι, p.π_ι, ← mul_assoc, _root_.GlobalTheory.LocMod.Witness.e_ι] at h
   exact h
 
 theorem ι_one' {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -112,9 +108,9 @@ theorem shift_mul {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     (p.ι x + (1 - p.e)) * (p.ι y + (1 - p.e)) = p.ι (x * y) + (1 - p.e) := by
   have he : p.e * p.e = p.e := p.split.1
   have h1 : p.ι x * (1 - p.e) = 0 := by
-    rw [mul_sub, mul_one, mul_comm, e_mul_ι, sub_self]
+    rw [mul_sub, mul_one, mul_comm, _root_.GlobalTheory.LocMod.Witness.e_ι, sub_self]
   have h2 : (1 - p.e) * p.ι y = 0 := by
-    rw [sub_mul, one_mul, e_mul_ι, sub_self]
+    rw [sub_mul, one_mul, _root_.GlobalTheory.LocMod.Witness.e_ι, sub_self]
   have h3 : (1 - p.e) * (1 - p.e) = 1 - p.e := by
     rw [sub_mul, one_mul, mul_sub, mul_one, he, sub_self, sub_zero]
   rw [ι_mul', add_mul, mul_add, mul_add, h1, h2, h3, add_zero, zero_add]
@@ -126,12 +122,6 @@ def shiftU {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [
       rw [shift_mul, Units.inv_mul, ι_one']; ring⟩
   map_one' := by ext; simp [ι_one']
   map_mul' x y := by ext; simp [shift_mul]
-
-theorem exists_comp {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) (χ : (AE D)ˣ →* Circle) : ∃ μ : kˣ →* ℂˣ, p.IsComp χ μ := by
-  refine ⟨Circle.toUnits.comp (χ.comp (shiftU p)), fun x a ha => ?_⟩
-  have : shiftU p x = a := Units.ext ha.symm
-  simp [this]
 
 theorem card_frame {k : Type} [Field k] {N : ℕ} {Y : Type} [Fintype Y] [DecidableEq Y] (Fr : Frame k N Y) :
     Fintype.card Y = N := by
@@ -214,7 +204,7 @@ theorem gsupp1 : ∀ (D : D7), OmLoc D → FlatBF D → GlobalTheory.LocFlat.Sym
   obtain ⟨hk, hhk⟩ := (hloc J.W _ F.G₁).2.1 h hh
   have hc : c = 2 * σ := by have := F.bes.1; omega
 
-  obtain ⟨μT, hT⟩ := exists_comp p s₁.χW
+  obtain ⟨μT, hT⟩ := _root_.GlobalTheory.LocMod.Witness.exists_isComp p s₁.χW
   have hS : p.IsComp s₁.χV (S.μ (j + 1))⁻¹ := by
     intro x a ha
     have := hμ x a ha
@@ -534,9 +524,6 @@ theorem mem_grpAt (q : SplitPt D k) {V : HSp D} {g : GA D V} (hg : SuppAt q.e V 
   rw [← Matrix.map_one (Ideal.Quotient.mk (idAt D P)) (map_zero _) (map_one _), Matrix.map_apply, Ideal.Quotient.eq]
   exact idAt_le (fun v (e : v = q.v) => e ▸ hP) (mem_idAt q (hg i j))
 
-theorem mt_mul' (V : HSp D) (g h : GA D V) : mt V (g * h) = mt V g * mt V h := by
-  simp [Formalism.L2.Theta.mt]
-
 theorem sub_mul_sub (q : SplitPt D k) (q' : SplitPt D k') (hv : q'.v ≠ q.v) {V : HSp D} {g h : GA D V}
     (hg : SuppAt q.e V g) (hh : SuppAt q'.e V h) :
     (mt V g - 1) * (mt V h - 1) = 0 ∧ (mt V h - 1) * (mt V g - 1) = 0 := by
@@ -554,7 +541,7 @@ theorem commute_of_suppAt (q : SplitPt D k) (q' : SplitPt D k') (hv : q'.v ≠ q
     (hg : SuppAt q.e V g) (hh : SuppAt q'.e V h) : Commute g h := by
   obtain ⟨h1, h2⟩ := sub_mul_sub q q' hv hg hh
   have : mt V (g * h) = mt V (h * g) := by
-    rw [mt_mul', mt_mul', ← sub_eq_zero]
+    rw [_root_.GlobalTheory.BesselCompare.mt_mul, _root_.GlobalTheory.BesselCompare.mt_mul, ← sub_eq_zero]
     have e : mt V g * mt V h - mt V h * mt V g = (mt V g - 1) * (mt V h - 1) - (mt V h - 1) * (mt V g - 1) := by
       noncomm_ring
     rw [e, h1, h2, sub_zero]
@@ -1074,8 +1061,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSaw_unfoldedValue_commonConstants_fixedLevel : ∀ (D : D7) (c : Comm D) (v : VCom c) (n : ℕ) (G : Fin n → GLoc v), c.Is → v.Is → GPin G → ∃ a : ℕ → ℂ, (∀ j, a j ≠ 0) ∧ ∀ t : Tup c, t.Is → WeilOK (t := t) v → GValue (t := t) (v.withCG a) := by
-  first | exact @GlobalTheory.SeeSaw.GValAll.gValue_common
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedValueCommonConstantsFixedLevelStatement =====
@@ -1112,7 +1097,7 @@ theorem gsupp1_all (D : D7) : GlobalTheory.LocMod.GSupp1 D :=
 
 theorem gLaws : ∀ (D : D7) (c : Comm D) (v : VCom c) (n : ℕ) (G : Fin n → GLoc v), c.Is → v.Is → GPin G → ∃ a : ℕ → ℂ, (∀ j, a j ≠ 0) ∧ ∀ t : Tup c, t.Is → WeilOK (t := t) v → (∀ i, (G i).Chars t) → GSupp (t := t) (v.withCG a) ∧ GValue (t := t) (v.withCG a) := by
   intro D c v n G hc hv hG
-  obtain ⟨a, ha, hval⟩ := GlobalTheory.T.seeSaw_unfoldedValue_commonConstants_fixedLevel D c v n G hc hv hG
+  obtain ⟨a, ha, hval⟩ := _root_.GlobalTheory.SeeSaw.GValAll.gValue_common D c v n G hc hv hG
   refine ⟨a, ha, fun t ht hW hch => ⟨?_, hval t ht hW⟩⟩
   have hs : GSupp (t := t) v :=
     GlobalTheory.T.seeSaw_unfoldedSupport_fixedLevelPlaces D c v n G hc hv hG (gsupp1_all D) (gsupp2_all D) (GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D) t ht hch

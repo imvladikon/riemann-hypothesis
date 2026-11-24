@@ -868,7 +868,7 @@ end Formalism.GM.FockB
 
 namespace Formalism.GM
 
-theorem fock_block_decomposition : M.FockBlocks := FockB.fock_blocks_of_weights
+alias fock_block_decomposition := _root_.Formalism.GM.FockB.fock_blocks_of_weights
 
 end Formalism.GM
 end -- clump:auto

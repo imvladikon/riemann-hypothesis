@@ -1390,7 +1390,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.trKer_holds :
   have hinv : ∀ y, L.actG h⁻¹ (L.actG h y) = y := by
     intro y
     rw [← Module.End.mul_apply, ← map_mul, _root_.inv_mul_cancel, map_one, Module.End.one_apply]
-  obtain ⟨x, w, hw, hvx⟩ := GlobalTheory.T.latticeCompletion_eq_latticeVector_add_nsmul p D (n * κ) (Nat.mul_pos hn0 hκ0) hnκc v hv
+  obtain ⟨x, w, hw, hvx⟩ := _root_.GlobalTheory.LKGeo.exists_inAf_add_nsmul_of_mem_laHat p D (n * κ) (Nat.mul_pos hn0 hκ0) hnκc v hv
   obtain ⟨w', hw', hfx⟩ := hf x
   obtain ⟨w'', hw'', hw''e⟩ := hsurj w hw
   have e2 : κ • L.actG h⁻¹ w = w'' := by rw [← map_nsmul, ← hw''e, hinv]
@@ -1654,7 +1654,7 @@ theorem coreA_of (hP : TrPull) (hS : TrSame) (hL : LevTr) (hR : LevRe) (hC : Cls
   intro q _ D R R' _ _ _ b gb β hm N κ c 𝔟₁ 𝔟₂ E₁ E₂ hno hN hNq hκ hck hle hq f u hs ρ hρ X s M₁ M₂ c₁ c₂ a₁ a₂ e₁ e₂ h₁ h₂ hg o₁ o₂ ψ
     hA hlv C₁ C₂
   have hc : c.Coprime q := Nat.Coprime.coprime_dvd_left hck (hκ.pow_left 2)
-  obtain ⟨u', ψ₁, hT⟩ := GlobalTheory.T.exists_hecke_translate_locallyNoetherian_base q D R b f u c κ N hN hNq hc hκ hck hs.1 hs.2.1 hs.2.2.1 hs.2.2.2 E₁.X E₁.s E₁.univ
+  obtain ⟨u', ψ₁, hT⟩ := _root_.GlobalTheory.UPel.HT.HeckeAd.exists_isTranslA q D R b f u c κ N hN hNq hc hκ hck hs.1 hs.2.1 hs.2.2.1 hs.2.2.2 E₁.X E₁.s E₁.univ
   have hl := hR q D R b N 𝔟₁ 𝔟₂ ρ hle hρ _ _ u' _ (hL q D R b _ c κ N 𝔟₁ hκ hq _ _ E₁.univ u' ψ₁ E₁.lv hT E₁.isLev)
   obtain ⟨t, ⟨ht, m, hmlv⟩, -⟩ := E₂.rep E₁.X E₁.s u' _ hl
   let m₁ : ObjMap (ob hm o₁ (N * κ) c₁ e₁ h₁) E₁.univ C₁.j :=

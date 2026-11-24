@@ -238,12 +238,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.seesaw_places_statement : _root_.GlobalTheory.BigOn.Exp.TupLe.PlacesCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TupLe.placesSt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PlacesStStatement =====

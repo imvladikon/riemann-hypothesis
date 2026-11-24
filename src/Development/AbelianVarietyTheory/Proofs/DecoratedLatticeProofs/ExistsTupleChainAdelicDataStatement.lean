@@ -93,8 +93,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.KJInf Formalism.L2.Ker
 open GlobalTheory.SeeSaw GlobalTheory.Unf
 
-theorem _root_.GlobalTheory.T.exists_stepPoint_of_chartBasePoint : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (u : B.Word) (a : I.ι) (i : ℕ), i ≤ B.R.m → ∀ {C : Type} (chOf : (I.stp u a i).Cl → C) (Lb : C → Submodule (𝓞 B.host.E) (Fin (B.R.N i) → B.host.E)) (U : C → Subgroup (TC.GA B (B.R.N i))) (chi : ∀ β, U β →* ℂˣ) (y : (I.stp u a i).Cl → TC.GA B (B.R.N i)) (st : ∀ c, (I.stp u a i).Stab c → GL (Fin (B.R.N i)) B.host.E) (k : C → TC.GA B (B.R.N i)), I.Reads u a i chOf Lb U chi y st k → ∀ β, (∃ q : Formalism.L2.Col.ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u i, TC.PtOf (k β) q) → (∀ P ∈ I.SQ, P ∉ I.Q a → (k β).1.map (adAt B.host.F P) = 1) → ∃ (b0 : Idx I.sel (I.tup a) (I.idx a) i) (p0 : PtAt B.R I.sel (I.tup a) (I.cst a) u i), TC.PtOf (k β) (extTo I.SQ p0.1.1) ∧ p0.1.1.deco.1.N = Formalism.L2.Col.stdLat B.fields.E (B.R.N i) ∧ ∀ c, chOf c = β → c.1 = b0 ∧ cosetIn ((I.stp u a i).rep c) = cosetIn p0 := by
-  first | exact @GlobalTheory.KxPoint.pointOf_base
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsStepPointOfChartBasePointStatement =====
@@ -171,8 +169,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.KJInf Formalism.L2.Ker
 open GlobalTheory.SeeSaw GlobalTheory.Unf
 
-theorem _root_.GlobalTheory.T.lastStepChartBasePoint_carries_stdPoint : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) {C : Type} (chOf : (I.stp u a B.R.m).Cl → C) (Lb : C → Submodule (𝓞 B.host.E) (Fin (B.R.N B.R.m) → B.host.E)) (U : C → Subgroup (TC.GA B (B.R.N B.R.m))) (chi : ∀ β, U β →* ℂˣ) (y : (I.stp u a B.R.m).Cl → TC.GA B (B.R.N B.R.m)) (st : ∀ c, (I.stp u a B.R.m).Stab c → GL (Fin (B.R.N B.R.m)) B.host.E) (k : C → TC.GA B (B.R.N B.R.m)), I.Reads u a B.R.m chOf Lb U chi y st k → (∀ β, I.TopPt l Z u a (k β)) → ∀ β, (∃ q : Formalism.L2.Col.ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u B.R.m, TC.PtOf (k β) q) ∧ ∀ P ∈ I.SQ, P ∉ I.Q a → (k β).1.map (adAt B.host.F P) = 1 := by
-  first | exact @GlobalTheory.Mem.Col2.TopBase.topBase_ok
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastStepChartBasePointCarriesStdPointStatement =====
@@ -374,7 +370,7 @@ theorem topBaseOk {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : T
     (U : C → Subgroup (TC.GA B (B.R.N B.R.m))) (chi : ∀ β, U β →* ℂˣ) (y : (I.stp u a B.R.m).Cl → TC.GA B (B.R.N B.R.m))
     (st : ∀ c, (I.stp u a B.R.m).Stab c → GL (Fin (B.R.N B.R.m)) B.host.E) (k : C → TC.GA B (B.R.N B.R.m))
     (hR : I.Reads u a B.R.m chOf Lb U chi y st k) (htop : ∀ β, I.TopPt l Z u a (k β)) (β : C) : BaseOk I u a B.R.m (k β) := by
-  exact GlobalTheory.T.lastStepChartBasePoint_carries_stdPoint I hI hP l Z u a chOf Lb U chi y st k hR htop β
+  exact _root_.GlobalTheory.Mem.Col2.TopBase.topBase_ok I hI hP l Z u a chOf Lb U chi y st k hR htop β
 
 section SMid
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
@@ -462,7 +458,7 @@ theorem pointOf {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.
     ∃ (b0 : Idx I.sel (I.tup a) (I.idx a) i) (p0 : PtAt B.R I.sel (I.tup a) (I.cst a) u i),
       TC.PtOf (k β) (extTo I.SQ p0.1.1) ∧ p0.1.1.deco.1.N = Formalism.L2.Col.stdLat B.fields.E (B.R.N i) ∧
       ∀ c, chOf c = β → c.1 = b0 ∧ cosetIn ((I.stp u a i).rep c) = cosetIn p0 :=
-  GlobalTheory.T.exists_stepPoint_of_chartBasePoint I hI hP u a i hi chOf Lb U chi y st k hR β hb.1 hb.2
+  _root_.GlobalTheory.KxPoint.pointOf_base I hI hP u a i hi chOf Lb U chi y st k hR β hb.1 hb.2
 
 
 
@@ -481,10 +477,10 @@ theorem comp {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC.Pin
       (∀ β g, g ∈ U β ↔ g ∈ GfC _ ∧ ∃ κ : (K β).lev.U, κ.1.1 = finM _ (rankN (I.rec7 l Z) i hi) g) ∧
       (∀ β (g : U β) (κ : (K β).lev.U), κ.1.1 = finM _ (rankN (I.rec7 l Z) i hi) g.1 → chi β g = (K β).lev.chi κ) ∧
       (∀ β c, h β c ∈ GfC _ ∧ finM _ (rankN (I.rec7 l Z) i hi) (h β c) = ((K β).y c).1.1) := by
-  choose kA hkA using fun β => liftKA I hI hP l Z i hi (k β) (hR.k_std β)
+  choose kA hkA using fun β => _root_.GlobalTheory.BasePointLift.exists_lift_of_ptOf I hI hP l Z i hi (k β) (hR.k_std β)
   choose xr hxr using fun β => GlobalTheory.RecDict.exists_isDetRoot (I.rec7 l Z) _ (kA β)
   choose b0 p0 hp1 hp2 hp3 using fun β => pointOf I hI hP l u a i hi chOf _ _ _ _ _ k hR β (hb β)
-  choose U chi h hU hchi hh using fun β => levData I l Z i hi (K β)
+  choose U chi h hU hchi hh using fun β => _root_.GlobalTheory.ChartLevRead.levData I l Z i hi (K β)
   exact ⟨kA, xr, b0, p0, U, chi, h, fun β => ⟨(hkA β).1, (hkA β).2, hxr β⟩, fun β => ⟨hp1 β, hp2 β⟩,
     fun c => hp3 (chOf c) c rfl, hU, hchi, hh⟩
 

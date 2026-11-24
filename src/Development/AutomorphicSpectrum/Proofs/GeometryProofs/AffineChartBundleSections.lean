@@ -926,16 +926,6 @@ end Chart
 theorem punct_mono {n a : ℕ} {ρ ρ' : ℝ} (h : ρ ≤ ρ') : punct n a ρ ⊆ punct n a ρ' :=
   fun _ hz => ⟨Metric.ball_subset_ball h hz.1, hz.2⟩
 
-theorem isOpen_punct_set (n a : ℕ) (ρ : ℝ) : IsOpen (punct n a ρ) := by
-  have e : punct n a ρ = Metric.ball 0 ρ ∩ ⋂ i : Fin n, {z : Fin n → ℂ | i.val < a → z i ≠ 0} := by
-    ext z
-    simp [punct]
-  rw [e]
-  refine Metric.isOpen_ball.inter (isOpen_iInter_of_finite fun i => ?_)
-  by_cases h : i.val < a
-  · simpa [h] using isOpen_ne_fun (continuous_apply i) continuous_const
-  · simp [h]
-
 section Hol
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
@@ -973,7 +963,7 @@ theorem differentiableAt_of_chart {τ : E →+* ℂ} {σ : c.F →+* ℂ} {Φ : 
   haveI := C.j_open
   obtain ⟨r, hr, i, hi⟩ := C.exists_away hz₀
   set B : Set (Fin n → ℂ) := punct n a 1 ∩ (Metric.ball 0 1 ∩ (fun b => C.ψ b r) ⁻¹' {0}ᶜ) with hB
-  have hBo : IsOpen B := (isOpen_punct_set n a 1).inter
+  have hBo : IsOpen B := (_root_.GlobalTheory.CompanionTheory.Ar.Flat.isOpen_punct n a 1).inter
     ((C.hol.2 r).continuousOn.isOpen_inter_preimage Metric.isOpen_ball isOpen_compl_singleton)
   have hb₀ : z₀ ∈ B := ⟨hz₀, hz₀.1, hr⟩
   have hsub : B ⊆ Metric.ball 0 1 := fun b hb => hb.1.1
@@ -1197,9 +1187,7 @@ theorem exists_tied_chart {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
   {Xo : Moduli D l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F}
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f :=
-  Spec.map_comp (CommRingCat.ofHom f) (CommRingCat.ofHom g)
+alias spMap_comp' := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem exists_lift_of_centre_mem {X : Scheme.{0}} (W : X.Opens) (w : Sp ℂ ⟶ X) (h : centre w ∈ W) :
     ∃ w' : Sp ℂ ⟶ W.toScheme, w' ≫ W.ι = w := by

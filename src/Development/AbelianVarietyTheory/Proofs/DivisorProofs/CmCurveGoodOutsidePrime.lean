@@ -612,7 +612,7 @@ theorem natCast_notMem_pow_three_of_quadratic (p : ℕ) (K : Type) [Field K] [Nu
   intro hw
   have := isTotallyComplex_of_sq_eq_neg hp.pos hx
   obtain ⟨⟨⟨hfin, -, hun⟩, -⟩, -⟩ :=
-    GlobalTheory.Laid.hcfj_holds K h2 L₀ ((isIntegersLattice_iff hp.pos h2 hx L₀).mp hL)
+    _root_.GlobalTheory.CompanionTheory.Hypotheses₂.hilbertClassFieldJ K h2 L₀ ((isIntegersLattice_iff hp.pos h2 hx L₀).mp hL)
   have : NumberField K⟮(latticeCurve L₀).j⟯ := NumberField.of_module_finite K _
   have hle : ℚ⟮(latticeCurve L₀).j⟯ ≤
       (K⟮(latticeCurve L₀).j⟯.toSubfield.toIntermediateField fun q =>
@@ -1141,9 +1141,7 @@ theorem modelAt_of_val {V : ValuationSubring ℂ} {F : IntermediateField ℚ ℂ
   obtain ⟨C, h1, h2, h3, h4, h5, h6⟩ := h
   exact ⟨C, h1, h2, h3, h4, h5, h6.trans hv⟩
 
-theorem mem_of_isIntegral (V : ValuationSubring ℂ) {y : ℂ} (hy : IsIntegral ℤ y) : y ∈ V := by
-  obtain ⟨z, hz⟩ := IsIntegrallyClosed.algebraMap_eq_of_integral (R := V) (K := ℂ) (hy.tower_top (A := V))
-  exact hz ▸ z.2
+alias mem_of_isIntegral := _root_.GlobalTheory.CMModel.TorsMemVal.mem_of_isIntegral
 
 theorem short_Δ (d a b : ℂ) : (⟨0, 0, 0, d ^ 2 * a, d ^ 3 * b⟩ : WeierstrassCurve ℂ).Δ =
     d ^ 6 * (⟨0, 0, 0, a, b⟩ : WeierstrassCurve ℂ).Δ := by

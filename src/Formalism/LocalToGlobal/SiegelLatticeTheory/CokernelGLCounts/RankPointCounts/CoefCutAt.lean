@@ -138,7 +138,7 @@ theorem local_phase_orbit_eq (M : Loc.Model F E) (hOK : M.OK) {m : ℕ} (a : Loc
   rw [Matrix.nonsing_inv_mul _ hLd, sLow_one] at hLi
   have hUi := (sa (rI a (Loc.uUp a xy.2) * rI a ρ) (rI a (Loc.uUp a xy.2) * rI a ρ)⁻¹).2
     hUp (Formalism.DoubleCosetMeasures.isUpUni_inv E hUp)
-  rw [Matrix.mul_nonsing_inv _ hUd, sUp_one] at hUi
+  rw [Matrix.mul_nonsing_inv _ hUd, _root_.Formalism.MainNotions.LocalOrbitGerms.Dec.sUp_one] at hUi
   rw [(sa _ _).1 (lowUni_rI a (lowUni_of M hl)) (lowUni_rI a (uLow_lowUni xy.1))] at hLi
   rw [(sa _ _).2 (upUni_rI a (uUp_upUni a xy.2)) (upUni_rI a (upUni_of M hρ))] at hUi
   have hph : Formalism.DoubleCosetMeasures.sLow (rI a (Loc.uLow xy'.1)) + Formalism.DoubleCosetMeasures.sUp (rI a (Loc.uUp a xy'.2)) =
@@ -634,7 +634,7 @@ theorem thRestricted_of (hA : ∀ p, Agree δ M p) (hrows : IsRowReps D F0 what�
     have hn : nrep γ = some hex.choose := dif_pos hex
     obtain ⟨hRep, -, hL, hU, e⟩ := hex.choose_spec
     obtain ⟨F₁, hR₁, -, hc₁⟩ := hat
-    have hw : w = hex.choose.1 := pt_eq_of_cells cell_point_uniqueness (Formalism.L2.SG.Closed.TermFun_holds D u u') hrows γ
+    have hw : w = hex.choose.1 := pt_eq_of_cells cell_point_uniqueness (_root_.term_function_const D u u') hrows γ
       hR₁ hRep hc₁ ⟨_, _, hL, hU, e⟩
     unfold ptT
     rw [hn]
@@ -654,7 +654,7 @@ theorem thRestricted_of (hA : ∀ p, Agree δ M p) (hrows : IsRowReps D F0 what�
   rw [hpt]
   have hmem : CntLocal.ZZP (M := M) δ u u' p (zT γ) * LsDatumB.sgnP p ∈ x0L M δ (D.mem u).A.T (D.mem u').A.T p w := by
     rw [← htup]
-    exact ⟨1, 1, one_intLow p, one_intUp p, by rw [Matrix.one_mul, Matrix.mul_one]⟩
+    exact ⟨1, 1, _root_.Formalism.L2.SG.Pf.PCount.intLow_one p, _root_.Formalism.L2.SG.Pf.PCount.intUp_one p, by rw [Matrix.one_mul, Matrix.mul_one]⟩
   obtain ⟨l, ρ, hl, hρ, he⟩ := hmem
   have hZZ : CntLocal.ZZP (M := M) δ u u' p (zT γ) =
       l * modMat δ (D.mem u).A.T (D.mem u').A.T p w * ρ * LsDatumB.sgnP p := by
@@ -1419,19 +1419,6 @@ end Formalism.L2.SG.Pf.ThSomePf
 
 namespace Formalism.L2.SG.Pf
 
-open NumberField Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.TermDef Formalism.L2.SG.DataCut Formalism.L2.SG.LsDatumB
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem thSome_holds_of {D : Formalism.BasicNotions.D7} {δ : ∀ p : PlF D, (D.s.atP p).Fp}
-    {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} (hA : ∀ p, Agree δ M p) {u u' : D.what₂.Word}
-    {F0 : FlagG (VS D) D.R.rS (Formalism.L2.SG.CntLocal.Tn u)} {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
-    (hNR : NormRepElig u u' F0 what₂)
-    (hInt : ∀ (γ : TermDef.Term D u u' F0 what₂) (w : Point D.host.E (D.R.rS + 1)), EligAt γ w →
-      ∀ p a b, Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p (zT γ) a b ∈ (M p).R) :
-    ThSome M δ u u' F0 what₂ :=
-  ThSomePf.thSome_of hA hNR hInt
-
 end Formalism.L2.SG.Pf
 end -- clump:auto
 end -- clump:auto
@@ -1457,7 +1444,7 @@ theorem thSome_holds {D : Formalism.BasicNotions.D7} {δ : ∀ p : PlF D, (D.s.a
     {F0 : FlagG (VS D) D.R.rS (Formalism.L2.SG.CntLocal.Tn u)} {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
     (hrows : IsRowReps D F0 what₂) (hNR : NormRepElig u u' F0 what₂) :
     ThSome M δ u u' F0 what₂ := by
-  refine thSome_holds_of hA hNR fun γ w hγ p a b => ?_
+  refine _root_.Formalism.L2.SG.Pf.ThSomePf.thSome_of hA hNR fun γ w hγ p a b => ?_
   obtain ⟨Λ, hΛ, F', hF'⟩ := dnInDens_of hNR hrows γ w hγ
   exact PI.CntNotIntW.integral_on_pairs_holds D δ M hA u u' hT F0 what₂ hrows Λ hΛ (zT γ) F' hF' p a b
 
@@ -1510,7 +1497,7 @@ theorem cutAt_of_leaves {D : Formalism.BasicNotions.D7} {M : ∀ p : PlF D, Loc.
     (hFS : FCount.FibSum M δ u u' F0 what₂) (hDT : FCount.DensTh M δ L u u') :
     CutAt M δ L u u' F0 what₂ := by
   have hNR := normRepElig_of hN
-  have hU := Formalism.L2.SG.Pf.locUnram_holds hA u u'
+  have hU := _root_.Formalism.L2.SG.Pf.LocUnramB.locUnram_triv hA u u'
   have hR := Formalism.L2.SG.Pf.thRestricted_holds_of hA hrows hN PCount.eligRel_holds
   have hTS := Formalism.L2.SG.Pf.thSome_holds hA hc hrows hNR
   refine ⟨LocOrbSumPf.localOrbitSum_holds M δ u u' hA, Formalism.L2.SG.Pf.scalKind_of hrows,

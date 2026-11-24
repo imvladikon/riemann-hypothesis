@@ -941,24 +941,24 @@ section -- clump:auto
 namespace Formalism.FourierDecayAlt.P
 
 theorem orbit_tail_estimate : Formalism.FourierDecayAlt.G.TailStep :=
-  tail_estimate_of_bound tailBound_statement matrix_cutoff_spec cutoff_phase_bound
+  _root_.Formalism.FourierDecayAlt.P.OrbitTailEstimates.tailStepOfBound _root_.Formalism.FourierDecayAlt.P.OrbitTailEstimates.tailBound matrix_cutoff_spec cutoff_phase_bound
 
 theorem change_of_variables_xy : Formalism.FourierDecayAlt.G.InnerXY :=
-  inner_xy_of_reduced orbital_integral_reduced reduced_integrand_integrable split_xy_coordinates amplitude_eq
+  _root_.Formalism.FourierDecayAlt.P.CuspidalIrreducibleSubrep.innerXYOfReduced _root_.Formalism.FourierDecayAlt.P.G7.omReduced _root_.Formalism.FourierDecayAlt.P.CuspidalIrreducibleSubrep.redIntegrable split_xy_coordinates amplitude_eq
 
 theorem nonstationary_estimate : Formalism.FourierDecayAlt.G.NonStatStep :=
-  nonstationary_estimate_of_parts nonstationary_phase gradient_lower_bound phase_function_deriv phase_relative_deriv
-    critical_cutoff_spec amplitude_bound_far orbital_integral_converges_abs cutoff_phase_bound change_of_variables_xy
+  nonstationary_estimate_of_parts _root_.Formalism.FourierDecayAlt.P.WirtingerIntegrationByParts.nonStatPhase gradient_lower_bound phase_function_deriv phase_relative_deriv
+    critical_cutoff_spec amplitude_bound_far _root_.Formalism.FourierDecayAlt.P.G7.omConverges cutoff_phase_bound change_of_variables_xy
 
 theorem stationary_estimate : Formalism.FourierDecayAlt.G.StatStep :=
   stationary_estimate_of_parts stationary_phase_holomorphic phase_function_deriv phase_function_critical_points hessian_at_critical hessian_determinant
-    phase_near_critical critical_cutoff_spec amplitude_bound_critical amplitude_continuous_at_critical majorant_y
-    orbital_integral_converges_abs cutoff_phase_bound change_of_variables_xy
+    phase_near_critical critical_cutoff_spec _root_.Formalism.FourierDecayAlt.P.EtaleIntegralityFacts.Crit.main amplitude_continuous_at_critical majorant_y
+    _root_.Formalism.FourierDecayAlt.P.G7.omConverges cutoff_phase_bound change_of_variables_xy
 
 theorem germ_rate : Formalism.FourierDecayAlt.G.GermRate :=
-  germ_rate_of_estimates orbital_integral_converges_abs cutoff_phase_bound critical_cutoff_spec exists_small_delta
-    root_set_characterization orbit_tail_estimate change_of_variables_xy nonstationary_estimate stationary_estimate amplitude_limit
-    limit_integral stationary_leading_constant germ_large_parameter
+  germ_rate_of_estimates _root_.Formalism.FourierDecayAlt.P.G7.omConverges cutoff_phase_bound critical_cutoff_spec exists_small_delta
+    root_set_characterization orbit_tail_estimate change_of_variables_xy nonstationary_estimate stationary_estimate _root_.Formalism.FourierDecayAlt.P.EtaleIntegralityFacts.Lim.ampLimit
+    limit_integral stationary_leading_constant _root_.Formalism.FourierDecayAlt.P.OrbitTailEstimates.germLargeT
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -1370,30 +1370,30 @@ section -- clump:auto
 namespace Formalism.FourierDecayAlt.P
 
 theorem coordinate_sizes_in_norm : Formalism.FourierDecayAlt.U.SliceCoordinateSizes :=
-  coordinate_sizes_of_parts slice_membership block3_apply_embedding aux_statement_17 hat_z_on_slice level_determinant_z
+  _root_.Formalism.FourierDecayAlt.P.Ux6.coordinate_sizes_of_parts_holds _root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem block3_apply_embedding aux_statement_17 _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice level_determinant_z
 
 theorem norm_decay_in_coordinates : Formalism.FourierDecayAlt.U.CoordinateDecay :=
-  norm_decay_of_coordinate_sizes coordinate_sizes_in_norm
+  _root_.Formalism.FourierDecayAlt.P.Ux6.norm_decay_of_coordinate_sizes_holds coordinate_sizes_in_norm
 
 theorem phi_pointwise_bound : Formalism.FourierDecayAlt.U.PointwiseIntegralBound :=
-  phi_bound_of_parts slice_membership derivative_cost_bound norm_decay_in_coordinates weight_integrability
+  phi_bound_of_parts _root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem derivative_cost_bound norm_decay_in_coordinates _root_.Formalism.FourierDecayAlt.P.Ux6.weight_integrability_holds
 
 theorem theorem_u : Formalism.FourierDecayAlt.U.TheoremU :=
   theorem_u_of_parts phi_pointwise_bound phi_support_determinant weak_to_strong_smoothness
 
 theorem phi_support_level_function : Formalism.FourierDecayAlt.U.PhiSuppG :=
-  phi_support_level_of_parts level_function_slice level_determinant_z hat_z_on_slice
+  _root_.Formalism.FourierDecayAlt.P.Ux8.phiSuppGOfParts _root_.Formalism.FourierDecayAlt.P.Ux3.gfSlice level_determinant_z _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice
 
 theorem corollary_u2_germ_hypothesis : Formalism.FourierDecayAlt.U.GermExpansionHypothesis :=
-  corollary_u2_of_parts theorem_u corollary_u1_truncated_alt star_projection budget_second_corollary
-    thresholds_second_corollary phi_support_level_function
+  _root_.Formalism.FourierDecayAlt.P.Ux8.corollary_u2_of_parts_holds theorem_u corollary_u1_truncated_alt _root_.Formalism.FourierDecayAlt.P.Ux8.starPi _root_.Formalism.FourierDecayAlt.P.Ux7.budget_second_corollary_holds
+    _root_.Formalism.FourierDecayAlt.P.Ux7.thresholds_second_corollary_holds phi_support_level_function
 
 theorem germ_expansion_applies : Formalism.FourierDecayAlt.U.UseGerm :=
-  germ_expansion_of_parts germ_rate det_weyl_matrix corollary_u2_germ_hypothesis derivative_bound_of_decay
-    power_matching scale_matching
+  _root_.Formalism.FourierDecayAlt.P.Ux8.useGermOfParts germ_rate det_weyl_matrix corollary_u2_germ_hypothesis _root_.Formalism.FourierDecayAlt.P.Ux7.derivBoundOfDecay
+    _root_.Formalism.FourierDecayAlt.P.Ux7.powerMatch scale_matching
 
 theorem germ_expansion_top_level : Formalism.FourierDecayAlt.U.UseGermTop :=
-  germ_top_level_of_parts germ_rate det_weyl_matrix top_cells derivative_bound_of_decay
+  _root_.Formalism.FourierDecayAlt.P.Ux8.useGermTopOfParts germ_rate det_weyl_matrix top_cells _root_.Formalism.FourierDecayAlt.P.Ux7.derivBoundOfDecay
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

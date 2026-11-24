@@ -127,15 +127,7 @@ lemma form_even_iff (a b c m n : ℤ) (ha : Odd a) (hb : Odd b) (hc : Even c) :
     | simp only [cmForm, Int.even_add, Int.even_mul, Int.even_pow' two_ne_zero]
   tauto
 
-lemma exp_pi_int (n : ℤ) :
-    Complex.exp ((Real.pi : ℂ) * Complex.I * (((n : ℤ) : ℝ) : ℂ)) = if Even n then 1 else -1 := by
-  have e : (Real.pi : ℂ) * Complex.I * (((n : ℤ) : ℝ) : ℂ) = (n : ℂ) * ((Real.pi : ℂ) * Complex.I) := by
-    push_cast
-    ring
-  rw [e, Complex.exp_int_mul, Complex.exp_pi_mul_I]
-  split_ifs with h
-  · exact h.neg_one_zpow
-  · exact (Int.not_even_iff_odd.mp h).neg_one_zpow
+alias exp_pi_int := _root_.Formalism.L2.Th1.F.PeriodAreaSignLemmas.exp_pi_int
 
 end Cm2
 
@@ -198,9 +190,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace Formalism.L2.Th1.F
-
-theorem quasiPeriodConstIsogeny : QuasiPeriodConstIsogeny := quasiPeriodConstIsogeny_thm
-theorem cmTheta0 : CmTheta0 := cm_even_theta
 
 end Formalism.L2.Th1.F
 end -- clump:auto

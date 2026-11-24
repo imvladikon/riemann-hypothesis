@@ -430,7 +430,7 @@ end PositivityTheory.Rg.Sw.LC.Mom1
 
 namespace PositivityTheory.Rg.Sw.LC
 
-theorem oneMom : OneMom := Mom1.oneMom
+alias oneMom := _root_.PositivityTheory.Rg.Sw.LC.Mom1.oneMom
 
 end PositivityTheory.Rg.Sw.LC
 end -- clump:auto
@@ -1065,7 +1065,7 @@ end PositivityTheory.Rg.Sw.LC.Basic
 
 namespace PositivityTheory.Rg.Sw.LC
 
-theorem fockBasic : FockBasic := Basic.fockBasic
+alias fockBasic := _root_.PositivityTheory.Rg.Sw.LC.Basic.fockBasic
 
 end PositivityTheory.Rg.Sw.LC
 end -- clump:auto
@@ -1557,8 +1557,6 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.Sw.LC
 
-theorem nullStable : NullStable := NullS.nullStable
-
 end PositivityTheory.Rg.Sw.LC
 end -- clump:auto
 end -- clump:auto
@@ -1751,7 +1749,7 @@ private theorem nullSec_fock_apply_of_mem_kAlg {m n : ℕ} {ε : Fin m → Bool}
     ∀ p : PX m n, NullSec ε c (fock c p) → NullSec ε c (fock c (w p)) := by
   have hlin := (fockBasic m n c hc).1
   obtain ⟨a₁, a₂, a₃, a₄, a₅, hk⟩ := fockK_of fockBasic m n ε c hc
-  have hN := nullStable m n ε c hc
+  have hN := _root_.PositivityTheory.Rg.Sw.LC.NullS.nullStable m n ε c hc
   have hw' : w ∈ Algebra.adjoin ℂ (Set.range fun ij : Fin n × Fin n => KopL ε ij.1 ij.2) := hw
   clear hw
   induction hw' using Algebra.adjoin_induction with

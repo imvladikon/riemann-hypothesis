@@ -209,8 +209,6 @@ open GlobalTheory.FlagTan (dimFlag)
 open GlobalTheory.HSApp
 open GlobalTheory.Vanishing.H0
 
-theorem _root_.GlobalTheory.T.hilbertSamuel_map_birational_of_cuspForms_generate : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y) (Z : Comp Xo c) {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (P : WtPar Dw) (R : Choice X Z U P) (ω : CanId R.toModif) (x : ℝ) {D : D7} (V : (c.F →+* ℂ) → TH.HSp D) (dict : ∀ σ, Formalism.L2.Theta.GA D (V σ) → Σ k, FD.Frame ((U σ).X k).Ψ r) (h : Ready R ω x V dict) (f₁ : CuspFrame Z U x V dict P.u₁) (f₂ : CuspFrame Z U x V dict P.u₂) (th : R.L.Sec) (k : Consts), RatGen X Z U P.u₁ → (h.geo f₁ f₂ th k).Birational := by
-  first | exact @GlobalTheory.HSApp.birational_of_ratGen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelMapBirationalOfCuspFormsGenerateStatement =====
@@ -242,17 +240,17 @@ theorem nef_share_lower_bound (hP : _root_.GlobalTheory.CovTop.PublishedHodgeBun
     (Y : Deep T.toCore j) {e : ℕ} {o : ℝ} (hY : Y.Good e o) (P : WtPar (T.Q.Dw j)) (hB : WtBig P)
     (Z : Comp Y.d.Xo₂ Y.d.c₂) (hbir : BirOn Y.U Z (wtOf _ P.u₁ 0)) :
     (((P.T - 1).choose (CompHt.dimFlag (T.Q.Dw j)) : ℕ) : ℝ) * Y.dg P.u₁ Z ≤ Y.rkC (P.wt P.T) Z := by
-  have hP1 := _root_.GlobalTheory.T.covering_topology_refinement hP
+  have hP1 := _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems hP
   obtain ⟨g1, g2, g3⟩ := gapGe_of_wtBig hB
   have good : ∀ la, GapGe 1 la → _ := fun la h =>
-    _root_.GlobalTheory.T.covering_domain_lattice_regularity hP D T hT j hp hq hf hj Y e o hY la (antitone_of_gapGe hp hq h).1 (antitone_of_gapGe hp hq h).2
-  obtain ⟨TF, R, ω, h⟩ := _root_.GlobalTheory.T.exists_weight_hodge_bundle_generated hP1 hG hQ hP.q15 hP.q16 hSI hKS.toroidalChartsForFan hSL D T.toCore j Y e o hY hf Z P hB fun i _ => (good _ (g3 i)).1
+    _root_.GlobalTheory.CovTop.GoodDom.covering_regular_at_domain hP D T hT j hp hq hf hj Y e o hY la (antitone_of_gapGe hp hq h).1 (antitone_of_gapGe hp hq h).2
+  obtain ⟨TF, R, ω, h⟩ := _root_.GlobalTheory.HSApp.exists_weight_sections_nonvanishing hP1 hG hQ hP.q15 hP.q16 hSI hKS.toroidalChartsForFan hSL D T.toCore j Y e o hY hf Z P hB fun i _ => (good _ (g3 i)).1
   obtain ⟨f₁⟩ := nonempty_cuspFrame ((good _ g1).2 Z)
   obtain ⟨f₂⟩ := nonempty_cuspFrame ((good _ g2).2 Z)
   let k : CompHS.Consts := ⟨1, 1, 1, 1, 1, le_rfl, le_rfl, le_rfl⟩
   let th : R.L.Sec := GlobalTheory.CompHS.toSec (R.Δ₁.lift 0)
-  have hA := _root_.GlobalTheory.T.hodge_bundle_isNef_isBig_of_weight hP1 hQ.nef hSI hKS.toroidalChartsForFan hSL _ _ _ _ _ _ TF Z _ Y.U P R ω _ D _ _ h f₁ f₂ th k hY.geo hB
-  have a3 := GlobalTheory.T.hilbertSamuel_map_birational_of_cuspForms_generate TF.X Z Y.U P R ω _ _ _ h f₁ f₂ th k (GlobalTheory.T.cuspForm_ratios_generate_at_flagSpace_genericPoint TF.X Z Y.U P.u₁ ⟨R.toModif⟩ hbir)
+  have hA := _root_.GlobalTheory.HSApp.hodge_bundle_nef_and_big hP1 hQ.nef hSI hKS.toroidalChartsForFan hSL _ _ _ _ _ _ TF Z _ Y.U P R ω _ D _ _ h f₁ f₂ th k hY.geo hB
+  have a3 := _root_.GlobalTheory.HSApp.birational_of_ratGen TF.X Z Y.U P R ω _ _ _ h f₁ f₂ th k (_root_.GlobalTheory.HSApp.ratGen_of_birOn TF.X Z Y.U P.u₁ ⟨R.toModif⟩ hbir)
   obtain ⟨a1, a2⟩ := hA
   have key := _root_.GlobalTheory.HSCore.CompShare.choose_mul_compDeg_le hQ _ _ _ _ _ _ _ _ Z _ Y.U P R ω _ D _ _ h f₁ f₂ th k a1 a2 a3
   have hr : rankOn Y.U Z (wtOf _ (P.wt P.T) 0) = Module.finrank Y.d.c₂.F (cuspOn Y.U Z (wtOf _ (P.wt P.T) 0)) := by
@@ -371,9 +369,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelA
 open GlobalTheory.BadCount
 open scoped TensorProduct
 namespace GlobalTheory.CovTop.ShareRowsNef
-section Weights
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
-end Weights
 theorem share_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS →
     GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SemiAbelianLieSeminegative →
     _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree → _root_.GlobalTheory.CovTop.ShareCondition := by
@@ -381,15 +376,15 @@ theorem share_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.
   have h1 := hS
   have h2 := hF
   have h3 := hD
-  have h4 := _root_.GlobalTheory.T.size_bounds_for_family_alt hS
-  have h5 := _root_.GlobalTheory.T.valuation_multiplicity_run_estimate_alt hP hG hQ hSI hKS hSL hDG hS hF
-  have h6 := _root_.GlobalTheory.T.birOn_weightPair_both_components_alt hX hG hQ hSI hP hS
+  have h4 := _root_.GlobalTheory.CovTop.CovSz.size_rows_alt hS
+  have h5 := _root_.GlobalTheory.ValMultRun.valuation_multiplicity_of_consecutive_run_alt hP hG hQ hSI hKS hSL hDG hS hF
+  have h6 := _root_.GlobalTheory.HSApp.birOn_u₁_u₂_alt_alt hX hG hQ hSI hP hS
   unfold _root_.GlobalTheory.CovTop.SizeCondition at h1
   unfold _root_.GlobalTheory.CovTop.FlatDegreeCondition _root_.GlobalTheory.CovTop.CoversCondition at h2
   unfold _root_.GlobalTheory.CovTop.CoverDegree _root_.GlobalTheory.CovTop.CoversCondition at h3
   unfold _root_.GlobalTheory.CovTop.CoversCondition at h4 h5 h6
   have all := _root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt h1 h2) (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt h3 _root_.GlobalTheory.HSApp.wtBig_run_alt))
-    (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt (_root_.GlobalTheory.T.weight_parameter_strict_antitone_alt hS) h4)) (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt h5 h6)
+    (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt (_root_.GlobalTheory.QuoWt.weights_at_point_alt hS) h4)) (_root_.GlobalTheory.CovTop.ShareRowsNef.lifts_and_alt h5 h6)
   clear h1 h2 h3 h4 h5 h6
   refine Closed.imp all fun Fm _ _ ⟨C, hC, x0, h⟩ => ⟨C, hC, x0, fun x hx hle ι p hp i hi Y hY u1 hu Z => ?_⟩
   obtain ⟨⟨_, ⟨_, ⟨_, ⟨_, hs⟩, _, hfl⟩, _, ⟨_, hdg⟩, _, hB⟩, _, ⟨_, hq⟩, _, hz⟩, _, ⟨_, hv⟩, _, hbi⟩ := h x hx hle ι p hp i
@@ -398,7 +393,7 @@ theorem share_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.
   obtain ⟨-, h0, -, hz1⟩ := (hs.2.2.2.2.2.2 hi).2 u1 hu
   obtain ⟨δ, hδ, hδ2⟩ := hdg hi Y hY u1 hu
   obtain rfl := hqu u1 hu
-  have htw := (_root_.GlobalTheory.T.twisted_flat_bundle_ranks hP _ p.T hT _ hp1 hq1 hf hj Y _ _ hY.1 _ (hfl hi Y hY)).1
+  have htw := (_root_.GlobalTheory.TwistRank.flat_twist_rank_eq hP _ p.T hT _ hp1 hq1 hf hj Y _ _ hY.1 _ (hfl hi Y hY)).1
   refine ⟨?_, ?_⟩
   · rw [hw, htw]
     exact _root_.GlobalTheory.CovTop.ShareRowsNef.nef_share_lower_bound hP hSI hKS hG hQ hSL hT hp1 hq1 hf hj Y hY.1 _ (hB hi) Z (hbi hi Y hY Z).1
@@ -413,20 +408,6 @@ theorem share_alt_alt : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.
     · simpa using (hdom 0 (by norm_num) τ).2
 end GlobalTheory.CovTop.ShareRowsNef
 end
-end
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.share_of_deep_good_size_flat_deg_cover_degree : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree → _root_.GlobalTheory.CovTop.ShareCondition := by
-  first | exact @_root_.GlobalTheory.CovTop.ShareRowsNef.share_alt_alt
 end
 end
 end -- clump:auto

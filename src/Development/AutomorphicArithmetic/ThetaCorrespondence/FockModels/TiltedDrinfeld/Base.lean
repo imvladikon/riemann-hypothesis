@@ -215,10 +215,6 @@ theorem kummer_rel {a b : ℤ_[l]} (ha : epsPow untilt_epsilon a = epsT AI) (hb 
     ← epsPow_add, ← epsPow_add] at h1
   exact h1
 
-theorem fontaineT_congr' {x y : 𝒪♭} (h : x = y) (hx : PreTilt.untilt x = 1) (hy : PreTilt.untilt y = 1) :
-    fontaineT x hx = fontaineT y hy := by
-  subst h; rfl
-
 theorem exists_rel (T : Formalism.BasicNotions.LocTied6 l P AI) : ∃ a b : ℤ_[l],
     T.eD (P.ιB P.tB) = algebraMap (Formalism.Per6.BdRp l) (Formalism.Per6.BdR l)
       (algebraMap ℚ_[l] (Formalism.Per6.BdRp l) (a : ℚ_[l]) * fontaineT (epsilon l) untilt_epsilon) ∧
@@ -229,7 +225,7 @@ theorem exists_rel (T : Formalism.BasicNotions.LocTied6 l P AI) : ∃ a b : ℤ_
   obtain ⟨b, hb⟩ := exists_lFlat_eq (l := l)
   refine ⟨a, b, ?_, kummer_rel AI ha hb⟩
   rw [PositivityTheory.LocInh.tie_t T, ← fontaineT_epsPow,
-    fontaineT_congr' ((tiltMap_eps AI).trans ha.symm) _ (untilt_epsPow _ a)]
+    _root_.GroundTheory.PAdicHodge.fontaineT_congr ((tiltMap_eps AI).trans ha.symm) _ (untilt_epsPow _ a)]
 
 end UpperTheory.Lit.Drps.Kum
 end -- clump:auto
@@ -393,8 +389,6 @@ noncomputable section
 namespace period_ring_base
 
 open GroundTheory.PAdicHodge DeRhamPotentiallySemistable.DRPst Matrix
-
-theorem base_κ_cont (l : ℕ) [Fact l.Prime] : Continuous (κ : GQ l → ℚ_[l]) := continuous_κ l
 
 theorem base_no_kummer (l : ℕ) [Fact l.Prime] : ∀ L : Fld l, FiniteDimensional ℚ_[l] L → ∀ x : B l,
     ¬ ∀ σ ∈ L.fixingSubgroup, σB σ x - x = qB l (κ σ) * t l := by
@@ -708,7 +702,7 @@ theorem σD_alg (g : GQ l) (b : BdRp l) :
     σD g (algebraMap (BdRp l) (BdR l) b) = algebraMap (BdRp l) (BdR l) (toBot g • b) :=
   galBdRField_algebraMap _ _
 
-theorem tQ_alg : tQ l = algebraMap (BdRp l) (BdR l) (tBdR l) := DeRhamTwist.Twist.tQ_eq
+alias tQ_alg := _root_.DeRhamTwist.Twist.tQ_eq
 
 theorem orbit_alg (y : PadicAlgCl l) : Continuous fun g : GQ l => g y := by
   refine continuous_iff_continuousAt.2 fun g₀ => tendsto_nhds_of_eventually_eq ?_
@@ -1046,7 +1040,7 @@ theorem base : PeriodRingBase := fun l _ =>
     galois_t_transform := galois_period_cyclotomic l
     σ_u := base_σ_u l
     κ_mul := base_κ_mul l
-    κ_cont := base_κ_cont l
+    κ_cont := _root_.period_ring_base.continuous_κ l
     χ_cont := base_χ_cont l
     ι_Bst := base_ι_Bst l
     u_Bst := base_u_Bst l

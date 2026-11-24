@@ -187,17 +187,6 @@ theorem evalAt_res' {C : Type} [CommRing C] (x : Sp C ⟶ X) {V U : X.Opens} (hV
   congr 1
   rw [← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
 
-theorem evalAt_spMap' {C C' : Type} [CommRing C] [CommRing C'] (φ : C →+* C') (x : Sp C ⟶ X)
-    (x' : Sp C' ⟶ X) (e : spMap φ ≫ x = x') {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (h' : ⊤ ≤ x' ⁻¹ᵁ U)
-    (f : Γ(X, U)) : φ (evalAt x U h f) = evalAt x' U h' f := by
-  subst e
-  have e : (spMap φ ≫ x).appLE U ⊤ h' ≫ (Scheme.ΓSpecIso (CommRingCat.of C')).hom =
-      x.appLE U ⊤ h ≫ (Scheme.ΓSpecIso (CommRingCat.of C)).hom ≫ CommRingCat.ofHom φ := by
-    rw [← Scheme.ΓSpecIso_naturality, ← Category.assoc,
-      ← Scheme.Hom.appLE_comp_appLE (spMap φ) x U ⊤ ⊤ h le_rfl]
-    congr 2
-  exact (congrArg (fun t ↦ t.hom f) e).symm
-
 abbrev gv (L : LB X) {C : Type} [CommRing C] (x : Sp C ⟶ X) (a b : L.ι) : C :=
   evU x (L.U a ⊓ L.U b) (L.g a b).val
 
@@ -238,7 +227,7 @@ theorem dl_gv {R : Type} [CommRing R] {D D' : Type} [CommRing D] [CommRing D'] [
   rw [dl_mul _ _ (isUnit_fst (isUnit_gv L _ hb' kb)) (isUnit_fst (isUnit_gv L _ kb ka))] at e2
   have e3 : gv L y' b a = epsHom φ (gv L y b a) := by
     rw [gv_eq L y' (le_inf kb ka), gv_eq L y (le_inf hb ha)]
-    exact (evalAt_spMap' (epsHom φ : DualNumber D →+* DualNumber D') y y' e _ _ _).symm
+    exact (_root_.GlobalTheory.Cris.ChernExists.evalAt_spMap (epsHom φ : DualNumber D →+* DualNumber D') y y' e _ _ _).symm
   rw [e3, dl_epsHom φ _ (isUnit_fst (isUnit_gv L _ hb ha))] at e2
   linear_combination e1 - e2
 
@@ -773,9 +762,6 @@ namespace GlobalTheory.PtExt.CupA
 
 variable {R : Type} [CommRing R] {A B : Over (Sp R)} [GrpObj A] [GrpObj B]
 
-theorem spOver_left {D D' : Type} [CommRing D] [Algebra R D] [CommRing D'] [Algebra R D'] (φ : D →ₐ[R] D') :
-    (spOver (R := R) φ).left = spMap (φ : D →+* D') := rfl
-
 theorem pointWithZeroSecondCoord_left_comp_fst {D : Type} [CommRing D] [Algebra R D] (x : Pt A D) :
     (pt0 B x).left ≫ (fst A B).left = x.left := by
   rw [← Over.comp_left]; unfold pt0; rw [lift_fst]
@@ -793,7 +779,7 @@ theorem pointWithZeroSecondCoord_left_comp_snd (v : epsR R ⟶ B) (hv : IsTangen
       spMap (TrivSqZeroExt.fstHom R D D : DualNumber D →+* D) ≫ spMap (EpsWeil.epsMap R D : DualNumber R →+* DualNumber D) ≫ v.left := by
   have h := congrArg (fun p : Pt (A ⊗ B) D ↦ (p ≫ snd A B).left)
     (ContrMor.spOver_fst_ptV v hv x).symm
-  simpa only [Over.comp_left, spOver_left, Category.assoc, ptV_snd] using h
+  simpa only [Over.comp_left, _root_.GlobalTheory.PDiv.spOver_left, Category.assoc, ptV_snd] using h
 
 theorem epsMap_fst {D : Type} [CommRing D] [Algebra R D] (c : DualNumber R) :
     (EpsWeil.epsMap R D c).fst = algebraMap R D c.fst := by

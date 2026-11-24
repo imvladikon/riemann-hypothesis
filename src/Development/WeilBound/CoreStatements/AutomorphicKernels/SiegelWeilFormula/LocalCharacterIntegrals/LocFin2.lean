@@ -308,7 +308,7 @@ theorem convP : ConvP := by
   intro F E _ _ _ _ _ σ M J n ψ v μv νv lam L₁ L₂ Φv g T h
   haveI : lam.IsAddHaarMeasure := h.haar
   haveI : νv.IsAddHaarMeasure := h.sdH.1
-  obtain ⟨ϖ, hϖ0, hϖ1⟩ := exists_norm_lt_one (F := F) v
+  obtain ⟨ϖ, hϖ0, hϖ1⟩ := _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.exists_norm_lt_one' (F := F) v
   have hϖne : ϖ ≠ 0 := norm_pos_iff.1 hϖ0
   obtain ⟨R₀, hR₀, hKL⟩ := exists_lattice_norm_ge_pow hϖ0 hϖ1 lam h.co₁ h.co₂
   obtain ⟨k, hk⟩ := exists_scale σ n νv hϖne
@@ -861,12 +861,12 @@ theorem isOpen_ballH (σ : E →ₐ[F] E) (n : ℕ) (R : ℝ) (hR : 0 < R) :
 theorem perp_bound (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) (n : ℕ) :
     ∃ C₀ : ℝ, 0 ≤ C₀ ∧ ∀ R : ℝ, 0 < R → ∀ D : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E), D ∈ HermR (Fv F v) σ n →
       (∀ b : HermR (Fv F v) σ n, nM v b.1 ≤ R → psiV F ψ v (trPair (Fv F v) b.1 D) = 1) → nM v D ≤ C₀ / R := by
-  obtain ⟨y0, hy0⟩ := exists_psiV_ne_one (v := v) hcm hψ
+  obtain ⟨y0, hy0⟩ := _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.exists_psiV_ne_one' (v := v) hcm hψ
   obtain ⟨c, hc, htr⟩ := exists_trace_ge (E := E) v
   obtain ⟨Cσ, hCσ0, hCσ⟩ := exists_nA_sig v σ
   have hσ : ∀ x, σ (σ x) = x := sigma_invol' σ hcm.2.2.2
   have hy0n : 0 < ‖y0‖ := by
-    rw [norm_pos_iff]; rintro rfl; exact hy0 (psiV_zero ψ)
+    rw [norm_pos_iff]; rintro rfl; exact hy0 (_root_.PositivityTheory.SiegelWeilFormula.SwLocFin.psiV_zero' ψ)
   set C1 : ℝ := max 1 Cσ with hC1
   have hC1pos : 0 < C1 := lt_of_lt_of_le one_pos (le_max_left _ _)
   refine ⟨‖y0‖ * C1 / c, by positivity, ?_⟩
@@ -1028,12 +1028,12 @@ theorem uu_eq (T b : HermR (Fv F v) σ n) :
   unfold uu jtR
   rw [← integral_mul_const]
   congr 1; funext Y
-  rw [mul_assoc, ← psiV_add, trPair_sub_right, trPair_comm (Fv F v) T.1 b.1, sub_eq_add_neg]
+  rw [mul_assoc, ← _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.psiV_add', trPair_sub_right, trPair_comm (Fv F v) T.1 b.1, sub_eq_add_neg]
 
 theorem psiV_trPair_add_left (ψ : AddChar (AF F) ℂ) (S : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))
     (b b' : HermR (Fv F v) σ n) :
     psiV F ψ v (trPair (Fv F v) (b + b').1 S) = psiV F ψ v (trPair (Fv F v) b.1 S) * psiV F ψ v (trPair (Fv F v) b'.1 S) := by
-  rw [← psiV_add, ← trPair_add_left]; rfl
+  rw [← _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.psiV_add', ← trPair_add_left]; rfl
 
 variable {lam : Measure (Fin n → Fv F v ⊗[F] E)} {L₁ L₂ : AddSubgroup (Fin n → Fv F v ⊗[F] E)}
   {g : HermR (Fv F v) σ n → ℂ} {T : HermR (Fv F v) σ n}
@@ -1047,7 +1047,7 @@ theorem isClosed_setP (hψ : IsCharAF F ψ) (Λ : Set (HermR (Fv F v) σ n)) (T 
   have : setP σ J ψ v Λ T = ⋂ b ∈ Λ, {Y | psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1)) = 1} := by
     ext Y; simp [setP]
   rw [this]
-  exact isClosed_biInter fun b _ => isClosed_eq ((continuous_psiV hψ).comp
+  exact isClosed_biInter fun b _ => isClosed_eq ((_root_.PositivityTheory.SiegelWeilFormula.SwLocFin.continuous_psiV' hψ).comp
     (continuous_trPair continuous_const ((continuous_gramR' σ J).sub continuous_const))) continuous_const
 
 theorem setIntegral_uu (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (R : ℝ) (hR : 0 < R) :
@@ -1065,14 +1065,14 @@ theorem setIntegral_uu (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (R 
     fun b Y => Φv Y * psiV F ψ v (trPair (Fv F v) b.1 (gramR (Fv F v) σ J Y - T.1))
   have hΦc : Continuous Φv := h.sb.1.continuous
   have hΦi : Integrable Φv μv := hΦc.integrable_of_hasCompactSupport h.sb.2
-  have hψc := continuous_psiV (v := v) h.chr
+  have hψc := _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.continuous_psiV' (v := v) h.chr
   have hfc : Continuous (Function.uncurry f) :=
     (hΦc.comp continuous_snd).mul (hψc.comp (continuous_trPair (continuous_subtype_val.comp continuous_fst)
       (((continuous_gramR' σ J).comp continuous_snd).sub continuous_const)))
   have hint : Integrable (Function.uncurry f) ((νv.restrict (Λ : Set (HermR (Fv F v) σ n))).prod μv) := by
     refine Integrable.mono' ((integrable_const (1 : ℂ)).mul_prod hΦi).norm hfc.aestronglyMeasurable ?_
     filter_upwards with p
-    simp [f, Function.uncurry, norm_psiV h.chr]
+    simp [f, Function.uncurry, _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.norm_psiV' h.chr]
   have hPm : MeasurableSet (setP σ J ψ v (Λ : Set (HermR (Fv F v) σ n)) T) :=
     (isClosed_setP h.chr _ T).measurableSet
   calc ∫ b in (Λ : Set (HermR (Fv F v) σ n)), uu σ J ψ v μv Φv T b ∂νv
@@ -1105,7 +1105,7 @@ theorem isClosed_perpH (hψ : IsCharAF F ψ) (Λ : Set (HermR (Fv F v) σ n)) : 
   have : perpH σ ψ v Λ = ⋂ b ∈ Λ, {D : HermR (Fv F v) σ n | psiV F ψ v (trPair (Fv F v) b.1 D.1) = 1} := by
     ext D; simp [perpH]
   rw [this]
-  exact isClosed_biInter fun b _ => isClosed_eq ((continuous_psiV hψ).comp
+  exact isClosed_biInter fun b _ => isClosed_eq ((_root_.PositivityTheory.SiegelWeilFormula.SwLocFin.continuous_psiV' hψ).comp
     (continuous_trPair continuous_const continuous_subtype_val)) continuous_const
 
 theorem perpH_subset {C₀ : ℝ} (hC₀ : 0 ≤ C₀)
@@ -1166,7 +1166,7 @@ theorem vol_mul_vol_perp (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (
   have h0 : ∀ y : HermR (Fv F v) σ n, psiV F ψ v (pairHerm (Fv F v) σ n y 0) = 1 := by
     intro y
     show psiV F ψ v (trPair (Fv F v) y.1 (0 : HermR (Fv F v) σ n).1) = 1
-    rw [AddSubgroup.coe_zero, trPair_zero_right, psiV_zero]
+    rw [AddSubgroup.coe_zero, trPair_zero_right, _root_.PositivityTheory.SiegelWeilFormula.SwLocFin.psiV_zero']
   simp only [h0, mul_one, neg_zero] at key
   have hΦ00 : Φ0 0 = 1 := by
     simp only [Φ0]

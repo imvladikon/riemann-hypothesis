@@ -464,10 +464,6 @@ noncomputable section
 
 namespace GlobalTheory.NefBound
 
-theorem le_natCast_of_lt_succ {a : WithBot ℕ∞} {d : ℕ} (h : a < ((d + 1 : ℕ) : WithBot ℕ∞)) :
-    a ≤ (d : WithBot ℕ∞) :=
-  _root_.UpperTheory.Reformulated.B.Yhb2.main h
-
 end GlobalTheory.NefBound
 
 
@@ -484,7 +480,7 @@ theorem GlobalTheory.NefBound.hdim_twist_le_of_isIntegral : ∀ (k : Type) [Fiel
   | zero =>
     intro G _ h i hi
     have hs : suppDim G ≤ (d : WithBot ℕ∞) :=
-      GlobalTheory.NefBound.le_natCast_of_lt_succ (suppDim_lt_of_genRank_eq_zero hd h)
+      _root_.UpperTheory.Reformulated.B.Yhb2.main (suppDim_lt_of_genRank_eq_zero hd h)
     obtain ⟨C, hC⟩ := hE G hs i hi
     refine ⟨C, fun m => (hC m).trans (Nat.mul_le_mul_left _ ?_)⟩
     exact Nat.mul_le_mul (Nat.le_succ d) (Nat.pow_le_pow_right (Nat.succ_pos m) (Nat.sub_le d 1))

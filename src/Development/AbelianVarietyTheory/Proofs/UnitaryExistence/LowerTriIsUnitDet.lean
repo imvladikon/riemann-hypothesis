@@ -56,11 +56,7 @@ section Tri
 
 variable {S : Type} [CommRing S] {n : ℕ}
 
-theorem lowerTri_mul (A B : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j → A i j = 0)
-    (hB : ∀ i j, i < j → B i j = 0) : ∀ i j, i < j → (A * B) i j = 0 := by
-  first
-  | (apply _root_.GlobalTheory.LowerTriangularMul.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.LowerTriangularMul.main ..)
+alias lowerTri_mul := _root_.GlobalTheory.LowerTriangularMul.lowerTriangular_mul
 
 theorem lowerTri_mul_diag (A B : Matrix (Fin n) (Fin n) S) (hA : ∀ i j, i < j → A i j = 0)
     (hB : ∀ i j, i < j → B i j = 0) (i : Fin n) : (A * B) i i = A i i * B i i := by

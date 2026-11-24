@@ -728,8 +728,6 @@ open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc GlobalTheory.CompanionTheo
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 noncomputable section
 
-theorem _root_.GlobalTheory.T.mollification_right_translate : ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [CompleteSpace V], Unimod → ∀ (φ : Mat n → ℝ) (h : G n) (x : Lp V 2 μ) (z : Mat n), Mol μ φ (⇑(rR μ V h x)) z = Mol μ φ (⇑x) (z * h.val) := by
-  first | exact @GlobalTheory.CompanionTheory.PresSobA.Mol_rR_eq
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1093,7 +1091,7 @@ theorem mol_family (hU : Unimod) (x : List (Bool × Fin n × Fin n) → Lp V 2 �
     have h3 : (fun t : ℝ => Lz (rR μ V (expC (bs p) t) (x w))) =
         fun t : ℝ => Mol μ φ (⇑(x w)) (z * (expC (bs p) t).val) := by
       funext t
-      rw [hL, GlobalTheory.T.mollification_right_translate n μ V hU]
+      rw [hL, _root_.GlobalTheory.CompanionTheory.PresSobA.Mol_rR_eq n μ V hU]
     rw [h3] at h1
     rw [← hL]
     exact h2.unique h1

@@ -177,8 +177,7 @@ theorem exists_common_eigenvector {k ι V : Type} [Field k] [IsAlgClosed k] [Add
     obtain ⟨x, hx, hx0, hxe⟩ := ih _ hdlt W' rfl hW'ne hinv'
     exact ⟨x, hx.1, hx0, hxe⟩
 
-theorem target : ∀ {k ι V : Type} [inst : Field k] [IsAlgClosed k] [inst_2 : AddCommGroup V] [inst_3 : Module k V] [FiniteDimensional k V] (f : ι → Module.End k V), (∀ (i j : ι), f i * f j = f j * f i) → ∀ (d : ℕ) (W : Submodule k V), Module.finrank k ↥W = d → W ≠ ⊥ → (∀ (i : ι), ∀ w ∈ W, (f i : V → V) w ∈ W) → ∃ x ∈ W, x ≠ (0 : V) ∧ ∀ (i : ι), ∃ (c : k), (f i : V → V) x = c • x :=
-  fun f hc => exists_common_eigenvector f hc
+alias target := _root_.GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues.exists_common_eigenvector
 
 end GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues
 end -- clump:auto
@@ -194,14 +193,6 @@ open scoped BigOperators
 
 namespace GlobalTheory.CommTriang
 
-theorem exists_common_eigenvector_commuting {k ι V : Type} [Field k] [IsAlgClosed k] [AddCommGroup V] [Module k V]
-    [FiniteDimensional k V] (f : ι → Module.End k V) (hc : ∀ i j, f i * f j = f j * f i) :
-    ∀ (d : ℕ) (W : Submodule k V), Module.finrank k W = d → W ≠ ⊥ → (∀ i, ∀ w ∈ W, f i w ∈ W) →
-      ∃ x ∈ W, x ≠ 0 ∧ ∀ i, ∃ c : k, f i x = c • x := by
-  first
-  | (apply _root_.GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues.target ..)
-
 theorem exists_common_eigenvector : ∀ (k ι : Type) [Field k] [IsAlgClosed k] (n : ℕ)
     (T : ι → Matrix (Fin (n+1)) (Fin (n+1)) k), (∀ i j, T i * T j = T j * T i) →
     ∃ v : Fin (n+1) → k, v ≠ 0 ∧ ∃ χ : ι → k, ∀ i, (T i).mulVec v = χ i • v := by
@@ -209,7 +200,7 @@ theorem exists_common_eigenvector : ∀ (k ι : Type) [Field k] [IsAlgClosed k] 
   have hc : ∀ i j, Matrix.toLin' (T i) * Matrix.toLin' (T j) = Matrix.toLin' (T j) * Matrix.toLin' (T i) := by
     intro i j
     rw [Module.End.mul_eq_comp, Module.End.mul_eq_comp, ← Matrix.toLin'_mul, ← Matrix.toLin'_mul, hT]
-  obtain ⟨x, -, hx0, hx⟩ := exists_common_eigenvector_commuting (fun i => Matrix.toLin' (T i)) hc _ ⊤ rfl
+  obtain ⟨x, -, hx0, hx⟩ := _root_.GlobalTheory.CommonEigenvectorExistenceInertiaEigenvalues.exists_common_eigenvector (fun i => Matrix.toLin' (T i)) hc _ ⊤ rfl
     (by simp) (fun _ _ _ => Submodule.mem_top)
   choose χ hχ using hx
   exact ⟨x, hx0, χ, fun i => by simpa using hχ i⟩
@@ -217,12 +208,6 @@ theorem exists_common_eigenvector : ∀ (k ι : Type) [Field k] [IsAlgClosed k] 
 end GlobalTheory.CommTriang
 
 namespace GlobalTheory.CommTriang
-
-theorem exists_unit_col_zero : ∀ (k : Type) [Field k] (n : ℕ) (v : Fin (n+1) → k), v ≠ 0 →
-    ∃ P : Matrix (Fin (n+1)) (Fin (n+1)) k, IsUnit P ∧ ∀ a, P a 0 = v a := by
-  first
-  | exact @_root_.GlobalTheory.IntegralCriterion.main
-  | (intros; exact _root_.GlobalTheory.IntegralCriterion.main ..)
 
 end GlobalTheory.CommTriang
 
@@ -320,7 +305,7 @@ theorem exists_triangular (k ι : Type) [Field k] [IsAlgClosed k] : ∀ (n : ℕ
   | succ n ih =>
     intro T hT
     obtain ⟨v, hv0, χ, hv⟩ := exists_common_eigenvector k ι n T hT
-    obtain ⟨P₀, hP₀, hP₀v⟩ := exists_unit_col_zero k n v hv0
+    obtain ⟨P₀, hP₀, hP₀v⟩ := _root_.GlobalTheory.IntegralCriterion.main k n v hv0
     have hP₀d : IsUnit P₀.det := (Matrix.isUnit_iff_isUnit_det P₀).mp hP₀
     have hl : P₀⁻¹ * P₀ = 1 := Matrix.nonsing_inv_mul _ hP₀d
     have hr : P₀ * P₀⁻¹ = 1 := Matrix.mul_nonsing_inv _ hP₀d
@@ -415,8 +400,6 @@ theorem exists_triangular (k ι : Type) [Field k] [IsAlgClosed k] : ∀ (n : ℕ
 end GlobalTheory.CommTriang
 
 namespace GlobalTheory.CommTriang
-open Matrix
-
 end GlobalTheory.CommTriang
 end -- clump:auto
 end -- clump:auto

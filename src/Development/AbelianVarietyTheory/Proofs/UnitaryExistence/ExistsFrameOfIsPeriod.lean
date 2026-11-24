@@ -575,13 +575,7 @@ section Field
 
 variable {E : Type} [Field E] [NumberField E]
 
-theorem exists_row {Λ : Type} [AddCommGroup Λ] [Module (𝓞 E) Λ] {r : ℕ} (φ : Λ →ₗ[𝓞 E] (Fin r → E))
-    (hinj : Function.Injective φ) (hsp : Submodule.span E (Set.range φ) = ⊤) (σ : E →+* ℂ) (f : Λ →+ ℂ)
-    (hf : ∀ (a : 𝓞 E) x, f (a • x) = σ (a : E) * f x) :
-    ∃ c : Fin r → ℂ, ∀ v, f v = ∑ j, c j * σ (φ v j) := by
-  first
-  | (apply _root_.GlobalTheory.ExistsSmulMemRange.exists_coeffs <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ExistsSmulMemRange.exists_coeffs ..)
+alias exists_row := _root_.GlobalTheory.ExistsSmulMemRange.exists_coeffs
 
 theorem trace_eq_sum_re (Ψ : Finset (E →+* ℂ))
     (hΨ : ∀ τ : E →+* ℂ, τ ∈ Ψ ↔ ComplexEmbedding.conjugate τ ∉ Ψ) (z : E) :
@@ -616,11 +610,7 @@ theorem trace_eq_sum_re (Ψ : Finset (E →+* ℂ))
 
 variable [IsCMField E]
 
-theorem cmType_host (H : Host E) (Ψ : Finset (E →+* ℂ)) (hΨ : ∀ τ, τ ∈ Ψ ↔ τ (H.rt : E) = H.rt0)
-    (τ : E →+* ℂ) : τ ∈ Ψ ↔ ComplexEmbedding.conjugate τ ∉ Ψ := by
-  first
-  | (apply _root_.GlobalTheory.ConjugateMembership.mem_iff_conjugate_notMem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ConjugateMembership.mem_iff_conjugate_notMem ..)
+alias cmType_host := _root_.GlobalTheory.ConjugateMembership.mem_iff_conjugate_notMem
 
 theorem hermC_eq {r : ℕ} (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u v : Fin r → ℂ) :
     FD.hermC τ G u v = u ⬝ᵥ G.map τ *ᵥ star v := by

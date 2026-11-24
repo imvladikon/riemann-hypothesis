@@ -60,6 +60,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.PartialCoboundaryLinear
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Lemma
@@ -77,7 +78,7 @@ import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLoga
 -- Members: Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.CoboundaryCommutesHomomorphism, Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.FrobeniusOnRingA, Formalism.ThetaLogCoordinates.UniformThetaSubstitution.KernelFromKOneK, Formalism.ThetaLogCoordinates.UniformThetaSubstitution.EdgeNoTrunc, Formalism.ThetaLogCoordinates.UniformThetaSubstitution.ThetaLogIsSubst, Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ThetaIntegerIsSSubstitution, Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel
 
 -- ===== clump member: Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.CoboundaryCommutesHomomorphism =====
--- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.CoboundaryCommutesHomomorphism", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementC\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionHypothesesOfLevelOne\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.BiextensionHypothesesOfConditions\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NormLeInvOfLtOne\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstFirstCoboundaryThree\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstZeroOfConstantCoeff\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.TilInvariantLOf\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.TheoremSFromKOneOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.CoboundaryCommutesHomomorphism", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementC\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionHypothesesOfLevelOne\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.BiextensionHypothesesOfConditions\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NormLeInvOfLtOne\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstFirstCoboundaryThree\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstZeroOfConstantCoeff\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.TilInvariantLOf\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.TheoremSFromKOneOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.PartialCoboundaryLinear\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -117,34 +118,11 @@ private theorem mvSubst_sub_of_hasSubst {ι κ : Type} {φ : ι → MvPowerSerie
   | exact MvPowerSeries.subst_sub hφ f g
   | (rw [← coe_substAlgHom hφ]; exact map_sub _ f g)
 
-private theorem mvSubst_zero_of_hasSubst {ι κ : Type} {φ : ι → MvPowerSeries κ K} (hφ : HasSubst φ) :
-    subst φ (0 : MvPowerSeries ι K) = 0 := by
-  first
-  | exact MvPowerSeries.subst_zero hφ
-  | (rw [← coe_substAlgHom hφ]; exact map_zero _)
-
 private theorem powerSeries_subst_add_of_constantCoeff_eq_zero {τ : Type} {a : MvPowerSeries τ K} (ha : constantCoeff a = 0)
     (f g : PowerSeries K) :
     PowerSeries.subst a (f + g) = PowerSeries.subst a f + PowerSeries.subst a g := by
   show subst (fun _ : Unit => a) (f + g) = subst (fun _ : Unit => a) f + subst (fun _ : Unit => a) g
   exact mvSubst_add_of_hasSubst (hasSubst_finite_of_constantCoeff_eq_zero fun _ => ha) f g
-
-private theorem mvSubst_at1_eq_powerSeries_subst {ι κ : Type} {b : ι → MvPowerSeries κ K} (hb : HasSubst b) (x : ι)
-    (f : PowerSeries K) : subst b (at1 x f) = PowerSeries.subst (b x) f := by
-  unfold at1
-  have hx : HasSubst (fun _ : Unit => (X x : MvPowerSeries ι K)) := hasSubst_finite_of_constantCoeff_eq_zero fun _ => by simp
-  show subst b (subst (fun _ : Unit => (X x : MvPowerSeries ι K)) f) = subst (fun _ : Unit => b x) f
-  rw [subst_comp_subst_apply hx hb]
-  simp only [subst_X hb]
-
-private theorem powerSeries_subst_subst_eq_subst_comp {τ : Type} {a : MvPowerSeries τ K} (ha : constantCoeff a = 0)
-    {e : PowerSeries K} (he : PowerSeries.constantCoeff e = 0) (f : PowerSeries K) :
-    PowerSeries.subst (PowerSeries.subst a e) f = PowerSeries.subst a (PowerSeries.subst e f) := by
-  have h1 : HasSubst (fun _ : Unit => a) := hasSubst_finite_of_constantCoeff_eq_zero fun _ => ha
-  have h2 : HasSubst (fun _ : Unit => e) := hasSubst_finite_of_constantCoeff_eq_zero fun _ => he
-  show subst (fun _ : Unit => subst (fun _ : Unit => a) e) f =
-    subst (fun _ : Unit => a) (subst (fun _ : Unit => e) f)
-  rw [subst_comp_subst_apply h2 h1]
 
 private theorem mvSubst_powerSeries_subst_of_constantCoeff_eq_zero {ι κ : Type} {b : ι → MvPowerSeries κ K} (hb : HasSubst b)
     {a : MvPowerSeries ι K} (ha : constantCoeff a = 0) (f : PowerSeries K) :
@@ -152,15 +130,6 @@ private theorem mvSubst_powerSeries_subst_of_constantCoeff_eq_zero {ι κ : Type
   have h1 : HasSubst (fun _ : Unit => a) := hasSubst_finite_of_constantCoeff_eq_zero fun _ => ha
   show subst b (subst (fun _ : Unit => a) f) = subst (fun _ : Unit => subst b a) f
   rw [subst_comp_subst_apply h1 hb]
-
-private theorem mvSubst_subst_vec_pair_eq_subst_vec_pair {ι κ : Type} {φ : ι → MvPowerSeries κ K} (hφ : HasSubst φ)
-    {a b : MvPowerSeries ι K} (ha : constantCoeff a = 0) (hb : constantCoeff b = 0)
-    (f : MvPowerSeries (Fin 2) K) :
-    subst φ (subst ![a, b] f) = subst ![subst φ a, subst φ b] f := by
-  rw [subst_comp_subst_apply (hasSubst_vec_pair_of_constantCoeff_eq_zero ha hb) hφ]
-  congr 1
-  funext i
-  fin_cases i <;> rfl
 
 theorem constantCoeff_first_two_of_three {F : MvPowerSeries (Fin 2) K} (hF0 : constantCoeff F = 0) :
     constantCoeff (in3 F) = 0 := by
@@ -190,7 +159,7 @@ theorem diffOne_add {F : MvPowerSeries (Fin 2) K} (hF0 : constantCoeff F = 0)
 theorem swap_variables_add (H H' : MvPowerSeries (Fin 2) K) : swap2 (H + H') = swap2 H + swap2 H' := by
   have hX : ∀ i : Fin 2, constantCoeff (X i : MvPowerSeries (Fin 2) K) = 0 := fun i => by simp
   unfold swap2
-  exact mvSubst_add_of_hasSubst (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX 1) (hX 0)) H H'
+  exact mvSubst_add_of_hasSubst (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX 1) (hX 0)) H H'
 
 theorem cc_ps_gen {τ : Type} {a : MvPowerSeries τ K} (ha : constantCoeff a = 0)
     (f : PowerSeries K) : constantCoeff (PowerSeries.subst a f) = PowerSeries.constantCoeff f := by
@@ -210,13 +179,13 @@ theorem cob_hom {F FE : MvPowerSeries (Fin 2) K} {θ : PowerSeries K}
   have hX : ∀ i : Fin 2, constantCoeff (X i : MvPowerSeries (Fin 2) K) = 0 := fun i => by simp
   have hat : ∀ i : Fin 2, constantCoeff (at1 i θ) = 0 := fun i => by
     unfold at1; exact PowerSeries.constantCoeff_subst_eq_zero (hX i) θ hθ
-  have hφ : HasSubst ![at1 (0 : Fin 2) θ, at1 (1 : Fin 2) θ] := hasSubst_vec_pair_of_constantCoeff_eq_zero (hat 0) (hat 1)
+  have hφ : HasSubst ![at1 (0 : Fin 2) θ, at1 (1 : Fin 2) θ] := _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hat 0) (hat 1)
   have e0 : ∀ i : Fin 2, PowerSeries.subst (![at1 (0 : Fin 2) θ, at1 (1 : Fin 2) θ] i) phE =
       at1 i (PowerSeries.subst θ phE) := by
-    intro i; fin_cases i <;> (unfold at1; exact powerSeries_subst_subst_eq_subst_comp (hX _) hθ phE)
+    intro i; fin_cases i <;> (unfold at1; exact _root_.Formalism.L2.Th1.D.Pair.ps_comp (hX _) hθ phE)
   unfold cob
-  rw [mvSubst_sub_of_hasSubst hφ, mvSubst_sub_of_hasSubst hφ, mvSubst_powerSeries_subst_of_constantCoeff_eq_zero hφ hFE0, ← h.2, mvSubst_at1_eq_powerSeries_subst hφ, mvSubst_at1_eq_powerSeries_subst hφ,
-    powerSeries_subst_subst_eq_subst_comp hF0 hθ, e0 0, e0 1]
+  rw [mvSubst_sub_of_hasSubst hφ, mvSubst_sub_of_hasSubst hφ, mvSubst_powerSeries_subst_of_constantCoeff_eq_zero hφ hFE0, ← h.2, _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var hφ, _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var hφ,
+    _root_.Formalism.L2.Th1.D.Pair.ps_comp hF0 hθ, e0 0, e0 1]
 
 theorem coboundary_commutes_homomorphism {F FE : MvPowerSeries (Fin 2) K} {θ : PowerSeries K}
     (hF0 : constantCoeff F = 0) (hFE0 : constantCoeff FE = 0) (h : IsHom F FE θ)
@@ -237,23 +206,23 @@ theorem coboundary_commutes_homomorphism {F FE : MvPowerSeries (Fin 2) K} {θ : 
     · exact hat3 0
     · exact hat3 1
     · exact hat3 2
-  have h01 : HasSubst ![(X 0 : MvPowerSeries (Fin 3) K), X 1] := hasSubst_vec_pair_of_constantCoeff_eq_zero (hX3 0) (hX3 1)
+  have h01 : HasSubst ![(X 0 : MvPowerSeries (Fin 3) K), X 1] := _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX3 0) (hX3 1)
   have key : PowerSeries.subst (in3 F) θ =
       subst ![at1 (0 : Fin 3) θ, at1 (1 : Fin 3) θ, at1 (2 : Fin 3) θ] (in3 FE) := by
     unfold in3
-    rw [← mvSubst_powerSeries_subst_of_constantCoeff_eq_zero h01 hF0, h.2, mvSubst_subst_vec_pair_eq_subst_vec_pair h01 (hat2 0) (hat2 1), mvSubst_at1_eq_powerSeries_subst h01, mvSubst_at1_eq_powerSeries_subst h01,
-      mvSubst_subst_vec_pair_eq_subst_vec_pair hφ3 (hX3 0) (hX3 1), subst_X hφ3, subst_X hφ3]
+    rw [← mvSubst_powerSeries_subst_of_constantCoeff_eq_zero h01 hF0, h.2, _root_.Formalism.L2.Th1.D.Pair.subst2_comp h01 (hat2 0) (hat2 1), _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var h01, _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var h01,
+      _root_.Formalism.L2.Th1.D.Pair.subst2_comp hφ3 (hX3 0) (hX3 1), subst_X hφ3, subst_X hφ3]
     rfl
   have key' : PowerSeries.subst ((![in3 F, X 2] : Fin 2 → MvPowerSeries (Fin 3) K) 0) θ =
       subst ![at1 (0 : Fin 3) θ, at1 (1 : Fin 3) θ, at1 (2 : Fin 3) θ] (in3 FE) := key
   unfold d1
   rw [mvSubst_sub_of_hasSubst hφ3, mvSubst_sub_of_hasSubst hφ3,
-    mvSubst_subst_vec_pair_eq_subst_vec_pair (hasSubst_vec_pair_of_constantCoeff_eq_zero (constantCoeff_first_two_of_three hF0) (hX3 2)) (hat2 0) (hat2 1),
-    mvSubst_subst_vec_pair_eq_subst_vec_pair (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX3 0) (hX3 2)) (hat2 0) (hat2 1),
-    mvSubst_subst_vec_pair_eq_subst_vec_pair (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX3 1) (hX3 2)) (hat2 0) (hat2 1),
-    mvSubst_subst_vec_pair_eq_subst_vec_pair hφ3 (constantCoeff_first_two_of_three hFE0) (hX3 2), mvSubst_subst_vec_pair_eq_subst_vec_pair hφ3 (hX3 0) (hX3 2), mvSubst_subst_vec_pair_eq_subst_vec_pair hφ3 (hX3 1) (hX3 2)]
-  simp only [mvSubst_at1_eq_powerSeries_subst (hasSubst_vec_pair_of_constantCoeff_eq_zero (constantCoeff_first_two_of_three hF0) (hX3 2)), mvSubst_at1_eq_powerSeries_subst (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX3 0) (hX3 2)),
-    mvSubst_at1_eq_powerSeries_subst (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX3 1) (hX3 2)), subst_X hφ3]
+    _root_.Formalism.L2.Th1.D.Pair.subst2_comp (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (_root_.Formalism.InvariantFactorPaths.G7.GramFrameCompositionLinFacts.constantCoeff_law_first_two_of_three hF0) (hX3 2)) (hat2 0) (hat2 1),
+    _root_.Formalism.L2.Th1.D.Pair.subst2_comp (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX3 0) (hX3 2)) (hat2 0) (hat2 1),
+    _root_.Formalism.L2.Th1.D.Pair.subst2_comp (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX3 1) (hX3 2)) (hat2 0) (hat2 1),
+    _root_.Formalism.L2.Th1.D.Pair.subst2_comp hφ3 (_root_.Formalism.InvariantFactorPaths.G7.GramFrameCompositionLinFacts.constantCoeff_law_first_two_of_three hFE0) (hX3 2), _root_.Formalism.L2.Th1.D.Pair.subst2_comp hφ3 (hX3 0) (hX3 2), _root_.Formalism.L2.Th1.D.Pair.subst2_comp hφ3 (hX3 1) (hX3 2)]
+  simp only [_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (_root_.Formalism.InvariantFactorPaths.G7.GramFrameCompositionLinFacts.constantCoeff_law_first_two_of_three hF0) (hX3 2)), _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX3 0) (hX3 2)),
+    _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX3 1) (hX3 2)), subst_X hφ3]
   first
   | (rw [key']; rfl)
 
@@ -265,9 +234,9 @@ theorem swap_commutes_subst_log {θ : PowerSeries K} (hθ : PowerSeries.constant
   have hat : ∀ i : Fin 2, constantCoeff (at1 i θ) = 0 := fun i => by
     unfold at1; exact PowerSeries.constantCoeff_subst_eq_zero (hX i) θ hθ
   unfold swap2
-  rw [mvSubst_subst_vec_pair_eq_subst_vec_pair (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX 1) (hX 0)) (hat 0) (hat 1), mvSubst_subst_vec_pair_eq_subst_vec_pair (hasSubst_vec_pair_of_constantCoeff_eq_zero (hat 0) (hat 1)) (hX 1) (hX 0),
-    mvSubst_at1_eq_powerSeries_subst (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX 1) (hX 0)), mvSubst_at1_eq_powerSeries_subst (hasSubst_vec_pair_of_constantCoeff_eq_zero (hX 1) (hX 0))]
-  simp only [subst_X (hasSubst_vec_pair_of_constantCoeff_eq_zero (hat 0) (hat 1))]
+  rw [_root_.Formalism.L2.Th1.D.Pair.subst2_comp (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX 1) (hX 0)) (hat 0) (hat 1), _root_.Formalism.L2.Th1.D.Pair.subst2_comp (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hat 0) (hat 1)) (hX 1) (hX 0),
+    _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX 1) (hX 0)), _root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.subst_single_var (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hX 1) (hX 0))]
+  simp only [subst_X (_root_.Formalism.InvariantFactorPaths.G7.FrobeniusSubstitution.hasSubst_pair (hat 0) (hat 1))]
   rfl
 
 theorem law_right_zero {l : ℕ} (hl : 2 ≤ l) {F : MvPowerSeries (Fin 2) K}
@@ -362,7 +331,7 @@ theorem sim_subst0 {ι τ : Type} [Finite ι] {f : MvPowerSeries ι K} {φ : ι 
     Simeq (subst φ f) 0 := by
   have hS : Formalism.InvariantFactorPaths.G7.SimeqRules := Formalism.InvariantFactorPaths.G7.equivalence_rules
   have h1 := (hS K ι).2.2.2.2 τ f 0 φ h0 hi h
-  rwa [mvSubst_zero_of_hasSubst (hasSubst_finite_of_constantCoeff_eq_zero h0)] at h1
+  rwa [_root_.Formalism.L2.Th1.D.Pair.subst_zero' (hasSubst_finite_of_constantCoeff_eq_zero h0)] at h1
 
 theorem sim_ps {τ : Type} {g : MvPowerSeries τ K} (hg0 : constantCoeff g = 0) (hg : Integral g)
     {lam : PowerSeries K} (h : Simeq (lam : MvPowerSeries Unit K) 0) :
@@ -403,7 +372,7 @@ theorem simeq_coboundary_of_simeq_zero {F : MvPowerSeries (Fin 2) K} (hF0 : cons
     {μ : MvPowerSeries (Fin 2) K} (h : Simeq μ 0) : Simeq (d1 F μ) 0 := by
   have hX : ∀ i : Fin 3, constantCoeff (X i : MvPowerSeries (Fin 3) K) = 0 := fun i => by simp
   unfold d1
-  exact simeq_sub_zero_of_simeq_zero (simeq_sub_zero_of_simeq_zero (sim_pair (constantCoeff_first_two_of_three hF0) (hX 2) (integral_law_first_two_of_three hF) (integral_X_kummer_theta_logarithms _) h)
+  exact simeq_sub_zero_of_simeq_zero (simeq_sub_zero_of_simeq_zero (sim_pair (_root_.Formalism.InvariantFactorPaths.G7.GramFrameCompositionLinFacts.constantCoeff_law_first_two_of_three hF0) (hX 2) (integral_law_first_two_of_three hF) (integral_X_kummer_theta_logarithms _) h)
     (sim_pair (hX 0) (hX 2) (integral_X_kummer_theta_logarithms _) (integral_X_kummer_theta_logarithms _) h))
     (sim_pair (hX 1) (hX 2) (integral_X_kummer_theta_logarithms _) (integral_X_kummer_theta_logarithms _) h)
 
@@ -697,10 +666,6 @@ section -- clump:auto
 
 namespace Formalism.InvariantFactorPaths.G7.Top
 
-open Formalism.InvariantFactorPaths.G7
-
-theorem kernel_from_k_one_k : KernelBoundsGeneric := kernel_bounds_generic
-
 end Formalism.InvariantFactorPaths.G7.Top
 end -- clump:auto
 end -- clump:auto
@@ -955,9 +920,9 @@ theorem kernel_of_f : KernelOfF := by
     rw [← hϖ, zero_pow]
     have : 2 ^ 2 ≤ p ^ 2 := Nat.pow_le_pow_left hU.2.1.le 2
     omega
-  obtain ⟨-, -, μ, hμ0, -, hμ, -, -⟩ := Formalism.InvariantFactorPaths.G7.Top.logRescale K p ϖ hU.1 hnp hϖ
+  obtain ⟨-, -, μ, hμ0, -, hμ, -, -⟩ := _root_.Formalism.InvariantFactorPaths.G7.LogarithmEquivalence.logRescale K p ϖ hU.1 hnp hϖ
   rw [theta_integer_is_theta_log K0 K p ν r0 r1 σ j om oms ϖ μ hU.1.two_le hϖ0 hμ0 hμ]
-  exact Formalism.InvariantFactorPaths.G7.Top.kernel_from_k_one_k p K0 σ hU hζ F hF be (betaHypOfF K0 p σ hU F be hF1 hF2) K j
+  exact _root_.Formalism.InvariantFactorPaths.G7.kernel_bounds_generic p K0 σ hU hζ F hF be (betaHypOfF K0 p σ hU F be hF1 hF2) K j
     ν r0 r1 hj _ _ ϖ μ U0 Φ hϖ (omega_integral_criterion K0 K p ν σ j hU hj om oms hO hT) hμ0 hμ hU0 hΦ0 hΦ
     TT colN hts hp I n
 
@@ -973,14 +938,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace Formalism.L2.Th1.D
-
-theorem kernelOfF : KernelOfF := kernel_of_f
-theorem sigmaIsom : SigmaIsom := sigma_isometry
-theorem fixedIsLimit : FixedIsLimit := fixed_is_limit
-theorem transport_first_level : CoboundaryCocycleTransportAlongHom := transport_first_level_holds
-theorem transportNorm : TransportNorm := transport_norm_relation
-theorem trDualExists : TrDualExists := trace_dual_exists
-theorem frobA : FrobA := frobenius_on_ring_a
 
 end Formalism.L2.Th1.D
 end -- clump:auto

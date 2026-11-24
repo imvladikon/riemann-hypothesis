@@ -76,6 +76,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersecti
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective
 import Mathlib.Tactic.Basify
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MemIdealOfOfDense
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFiniteExtensionStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptCompare, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.FlagDataMatchUnderTwist, Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptFlag, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LGenflagFld, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LGenflag, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TIdeal, Development.WeilBound.CoreStatements.HomogeneousNonvanishing.PairIso, Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeTieCompare
@@ -1035,7 +1036,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TIdeal =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.HomogeneousNonvanishing.PairIso =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.HomogeneousNonvanishing.PairIso", "h": "module\n\npublic import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.RootOnFund\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeHostAutPermutation\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFiniteExtensionStatement\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptIsoCompare\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptMultihomogForm\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TwTan\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptCompare\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptFlag\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCompactificationInteriorPoint\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.HodgeCompactPullback\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.JNormal\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LGenflag\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TIdeal\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.HomogeneousNonvanishing.PairIso", "h": "module\n\npublic import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.RootOnFund\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeHostAutPermutation\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFiniteExtensionStatement\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptIsoCompare\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptMultihomogForm\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TwTan\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptCompare\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeCptFlag\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCompactificationInteriorPoint\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.HodgeCompactPullback\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.JNormal\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LGenflag\npublic import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TIdeal\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.MemIdealOfOfDense\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1218,7 +1219,7 @@ theorem pull_both {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
       ∀ r (e₀ : Ω) (L : HermLine J) (L' : HermLine J'), Fl.IsHodgeLine r e₀ L → IsPullHerm κ v L L' →
         Fl'.IsHodgeLine r (i e₀) L' := by
   obtain ⟨A', e, j, m, h1, h2, h3, h4, h5, h6, h7, -, h9⟩ :=
-    PositivityTheory.UnitarySelfGeneration.hodge_compact_pullback E H D l Xo c O β Y S Ω Ω' i K K' J J' y y' A x Z ξ' h hx hdisc hvb hall htie hnorm hd
+    _root_.GlobalTheory.CompanionTheory.Ar.HcptPullK.hodgeCpt_pull E H D l Xo c O β Y S Ω Ω' i K K' J J' y y' A x Z ξ' h hx hdisc hvb hall htie hnorm hd
   have hdom : GlobalTheory.CompanionTheory.Ar.Dominates A'.ξ A.ξ (e.hom ≫ h) i := by
     show A'.ξ ≫ e.hom ≫ h = _
     rw [← Category.assoc, h1]
@@ -1230,14 +1231,6 @@ theorem pull_both {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
   refine ⟨A', e, Fl', ψ', θ', j, h1, h2, h4, h5, h6, hb', q1, q3, q4, q5, fun r e₀ L L' hL hP => ?_⟩
   exact GlobalTheory.T.hodge_cpt_finite_extension E H D l Xo c O β Y S Ω Ω' i K K' J J' y y' A A' (e.hom ≫ h) j m κ v Fl hb hy hdom hf h3 h4 h6 h7 h9
     Fl' hb' r e₀ L L' hL hP
-
-theorem spMap_spMap {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
-theorem spMap_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) : f = g := by
-  have := Spec.map_injective h
-  exact congrArg CommRingCat.Hom.hom this
 
 theorem twTan_pre {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
     {Xo : Moduli D l} {c : Coeff l} {O O' : Type} [CommRing O] [CommRing O'] {β : O →+* c.F} {β' : O' →+* c.F}
@@ -1301,7 +1294,7 @@ theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Typ
     have := congrArg (fun f => f (ψ a)) hi
     simpa [a₁, a₂, RingHom.algebraMap_toAlgebra] using this
   have hkey : spMap i₁ ≫ spMap T.A.fn ≫ spMap ψ.toRingHom = spMap i₂ ≫ spMap T'.A.fn := by
-    rw [spMap_spMap, spMap_spMap, spMap_spMap, hi']
+    rw [_root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring, hi']
   have hk3 : ∀ {W : Scheme.{0}} (t : Sp T'.A.Ω₀ ⟶ W), spMap i₂ ≫ spMap T'.A.fn ≫ t =
       spMap i₁ ≫ spMap T.A.fn ≫ spMap ψ.toRingHom ≫ t := by
     intro W t
@@ -1328,12 +1321,12 @@ theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Typ
     simp only [Category.assoc]
     rw [hk3, hsnd]
   have hc₁ : (spMap i₁ ≫ spMap T.A.fn ≫ x₀) ≫ Limits.pullback.snd _ _ = spMap A₁.cst := by
-    rw [p3, ← spMap_spMap, ← hcst]
+    rw [p3, ← _root_.GlobalTheory.spMap_comp_ring, ← hcst]
     simp only [Category.assoc]
   have hc₂ : (spMap i₂ ≫ spMap T'.A.fn ≫ x₀') ≫ Limits.pullback.snd _ _ = spMap A₂.cst := by
-    rw [q3, ← spMap_spMap, ← hcst']
+    rw [q3, ← _root_.GlobalTheory.spMap_comp_ring, ← hcst']
     simp only [Category.assoc]
-  have hAc : A₁.cst = A₂.cst := spMap_inj (by rw [← hc₁, ← hc₂, hsnd₃])
+  have hAc : A₁.cst = A₂.cst := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hc₁, ← hc₂, hsnd₃])
   have hξe : A₂.ξ ≫ (e₂ ≪≫ e₁.symm).hom = A₁.ξ := by
     simp only [Iso.trans_hom, Iso.symm_hom]
     rw [← Category.assoc, q1, ← p1, Category.assoc, Iso.hom_inv_id, Category.comp_id]
@@ -1359,7 +1352,7 @@ theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Typ
   have htw : ∀ e, TwTan n Y Y (Fl₁.M₀.pt e).left (spMap (dualMap ψ₃.toRingHom) ≫ (Fl₂.M₀.pt (θ₃ e)).left) := by
     intro e
     obtain ⟨e₀, rfl⟩ := θ₁.surjective e
-    rw [hθ₃, q8, p8, ← Category.assoc, spMap_spMap, hψc, ← spMap_spMap, Category.assoc]
+    rw [hθ₃, q8, p8, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, hψc, ← _root_.GlobalTheory.spMap_comp_ring, Category.assoc]
     exact twTan_pre _ (hθt e₀)
   obtain ⟨-, hsteps⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagMatch.matched_generic_flags_carried E H D l Xo c O O β β Y Y g Φ n S Ω₃ K ι y A₁ A₂ Fl₁ Fl₂ ψ₃ θ₃ φ hβ hβ hfn hφt htw
   have hst : ∀ s k, (flagStep Ω₃ (Fl₁.b s) k).map (φ : A₁.Li →ₗ[Ω₃] A₂.Li) =
@@ -1432,8 +1425,7 @@ open ReciprocityTheory.ChartRestriction.G.AI.I1 (IsBlockMap pullDeg)
 open ReciprocityTheory.ChartRestriction.G.AI.I4 (IsPullHerm imageZ blockFnField)
 open scoped ComplexOrder
 
-theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (g : HostAut H) (Φ : Xo.X ≅ Xo.X) (_ : SABMap (twistSAB Xo.univ.t g) Xo.univ.t Φ.hom) (π : CMType H ≃ CMType H) (S : Finset ℕ) (n : ℕ) (M M' : Top.RootModel (CMType H) (D.p + D.q)) (T : HodgeTie Y S n M) (T' : HodgeTie Y S n M'), Mono (spMap β) → Φ.hom ≫ Xo.s = Xo.s → (∀ τ, (π τ).1 = τ.1.comp g.σ.toRingHom) → IsImageCpt Φ T.A T'.A → (∀ p ∈ S, T'.A.R p = T.A.R p) → ∃ (K : Type) (_ : Fintype K) (ι : K → Type) (_ : ∀ k, Fintype (ι k)) (κ : M.K → K) (v : (Σ k, M.ι k) → Σ k, ι k) (κ' : M'.K → K) (v' : (Σ k, M'.ι k) → Σ k, ι k) (Ω : Type) (_ : Field Ω) (_ : CharZero Ω) (y : (Σ k, ι k) → Ω) (b : MRing ι) (d : K → ℕ), IsBlockMap κ v ∧ IsBlockMap κ' v' ∧ mCoordIdeal (y ∘ v) = M.P ∧ mCoordIdeal (y ∘ v') = M'.P ∧ IsArithVar (mCoordIdeal y) (Top.dimFl (CMType H) (D.p + D.q) + 1) ∧ IsMultiHomog b d ∧ b ∉ mCoordIdeal y ∧ IntermediateField.relfinrank (blockFnField (y ∘ v)) (blockFnField y) ≠ 0 ∧ IntermediateField.relfinrank (blockFnField (y ∘ v)) (blockFnField y) * T.Fl.deg = IntermediateField.relfinrank (blockFnField (y ∘ v')) (blockFnField y) * T'.Fl.deg ∧ ∀ (r : CMType H × Fin (D.p + D.q)) (L L' : HermLine ι), IsPullHerm κ v (T.sing r) L → IsPullHerm κ' v' (T'.sing (π r.1, r.2)) L' → IsoLineOn (mCoordIdeal y) {z | z ∈ mcPts (mCoordIdeal y) ∧ evC z b ≠ 0} L L' :=
-  @GlobalTheory.CompanionTheory.Ar.PairIsoK.pair_iso
+alias pair_iso := _root_.GlobalTheory.CompanionTheory.Ar.PairIsoK.pair_iso
 
 end PositivityTheory.UnitarySelfGeneration
 end -- clump:auto

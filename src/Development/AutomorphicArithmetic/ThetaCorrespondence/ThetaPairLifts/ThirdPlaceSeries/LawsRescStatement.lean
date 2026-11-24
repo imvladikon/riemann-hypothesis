@@ -400,7 +400,7 @@ namespace GlobalTheory.LocMod.Exist
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : Place D k)
 
-theorem e_mul_ι (x : k) : p.e * p.ι x = p.ι x := by rw [← p.ι_π, p.π_ι]
+alias e_mul_ι := _root_.GlobalTheory.LocMod.Witness.e_ι
 
 variable {Y Y' : Type} [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y'] {S T : HSp D}
   (FS : GlobalTheory.LocMod.Frame k S.rank Y') (FT : GlobalTheory.LocMod.Frame k T.rank Y)
@@ -423,9 +423,7 @@ theorem dual_mem (b : Matrix Y Y' k) : dual p FS FT b ∈ half S T (cA D p.e) :=
     simp only [dual, Matrix.map_apply]
     rw [← map_mul, e_mul_ι]
 
-theorem up_add (x y : Matrix Y Y' k) : p.up FS FT (x + y) = p.up FS FT x + p.up FS FT y := by
-  ext i j
-  simp only [Place.up, Matrix.mul_add, Matrix.add_mul, Matrix.map_apply, Matrix.add_apply, map_add (f := _)]
+alias up_add := _root_.GlobalTheory.LocMod.Witness.up_add
 
 theorem dual_add (x y : Matrix Y Y' k) : dual p FS FT (x + y) = dual p FS FT x + dual p FS FT y := by
   ext i j
@@ -435,8 +433,7 @@ theorem up_zero : p.up FS FT 0 = 0 := by simpa using up_add p FS FT 0 0
 
 theorem dual_zero : dual p FS FT 0 = 0 := by simpa using dual_add p FS FT 0 0
 
-theorem continuous_up : Continuous (p.up FS FT) :=
-  ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).matrix_map p.cont_ι
+alias continuous_up := _root_.GlobalTheory.LocMod.Witness.up_cont
 
 theorem continuous_dual : Continuous (dual p FS FT) :=
   ((((continuous_const.matrix_mul continuous_id.matrix_transpose).matrix_mul continuous_const).matrix_mul
@@ -945,15 +942,6 @@ theorem support_prod_mem {G ι : Type} [AddCommMonoid G] (M : AddSubmonoid G) (s
     exact M.add_mem (h a (Finset.mem_insert_self a s) x hx)
       (ih (fun i hi => h i (Finset.mem_insert_of_mem hi)) z hz)
 
-theorem symplO_add_right (S T : HSp D) (x y y' : WO S T) :
-    symplO S T x (y + y') = symplO S T x y + symplO S T x y' := by
-  unfold symplO hO
-  simp only [Matrix.add_apply, map_add (f := _), mul_add, add_mul, Finset.sum_add_distrib]
-
-theorem symplO_zero_right (S T : HSp D) (x : WO S T) : symplO S T x 0 = 0 := by
-  unfold symplO hO
-  simp
-
 theorem comb_mul (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a b : AddMonoidAlgebra ℂ (WO S T))
     (h : ∀ x ∈ a.coeff.support, ∀ y ∈ b.coeff.support, symplO S T x y = 0) (f : WO S T → ℂ) :
     comb ψ S T (a * b).coeff f = comb ψ S T a.coeff (comb ψ S T b.coeff f) := by
@@ -1001,9 +989,9 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (
 
   let M : AddSubmonoid (WO (c.V j) (c.V (j + 1))) :=
     { carrier := {y | (∀ x, GlobalTheory.FinPl.MxAt (· = v₀) x → symplO _ _ x y = 0) ∧ y.map (infPart D) = 0}
-      add_mem' := fun {y y'} hy hy' => ⟨fun x hx => by rw [symplO_add_right, hy.1 x hx, hy'.1 x hx, add_zero], by
+      add_mem' := fun {y y'} hy hy' => ⟨fun x hx => by rw [_root_.GlobalTheory.LatVac.symplO_add_right, hy.1 x hx, hy'.1 x hx, add_zero], by
         rw [Matrix.map_add _ (map_add (infPart D)), hy.2, hy'.2, add_zero]⟩
-      zero_mem' := ⟨fun x _ => symplO_zero_right _ _ x, by
+      zero_mem' := ⟨fun x _ => _root_.GlobalTheory.PlaceModel.symplO_zero_right _ _ x, by
         funext a b
         simp⟩ }
   have hM : ∀ i' ∈ Finset.univ.erase i, ∀ y ∈ ((F.Q i').eL j).support, y ∈ M := by
@@ -1287,8 +1275,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.twistChainLevelProduct_inverse_scalar_laws : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (F : QFam v t), c.Is → t.Is → v.Is → WeilOK (t := t) v → F.Pins w → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), ∀ k ∈ GlobalTheory.QuotientFiniteLevel.qK F j σ h, ∃ a : ℂ, a ≠ 0 ∧ ∀ Ψ₁ Ψ₂, GlobalTheory.FinPl.Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ w.Q) Ψ₁ → GlobalTheory.FinPl.Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (· ∈ w.Q) Ψ₂ → t.om j (1, k) (comb c.ψ _ _ (w.eQ j) Ψ₁) = a⁻¹ • comb c.ψ _ _ (w.eQ j) Ψ₁ ∧ t.om (j + 1) (k, 1) (comb c.ψ _ _ (w.eQ (j + 1)) Ψ₂) = a • comb c.ψ _ _ (w.eQ (j + 1)) Ψ₂ := by
-  first | exact @GlobalTheory.QFinLaw.inverse_laws
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistChainLevelProductInverseScalarLawsStatement =====
@@ -1498,7 +1484,7 @@ theorem qFin_of_pin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VT
   obtain ⟨F, hF⟩ := hP
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.twistChainLevelProductOverPlaces_compact_open D c v t w F hF j σ h
   obtain ⟨T₁, hT, hS⟩ := GlobalTheory.T.firstVariable_support_finite_cells_at_twist_places D c v t w F hc ht hv hW hF j σ h
-  exact ⟨GlobalTheory.QuotientFiniteLevel.qK F j σ h, T₁, h1, h2, h3, hT, GlobalTheory.T.twistChainLevelProduct_inverse_scalar_laws D c v t w F hc ht hv hW hF j σ h, hS⟩
+  exact ⟨GlobalTheory.QuotientFiniteLevel.qK F j σ h, T₁, h1, h2, h3, hT, _root_.GlobalTheory.QFinLaw.inverse_laws D c v t w F hc ht hv hW hF j σ h, hS⟩
 
 end GlobalTheory.QFinMain
 end -- clump:auto
@@ -1518,8 +1504,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSawFiniteCells_at_twistPlaces_of_localFactorisation : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → t.Is → v.Is → WeilOK (t := t) v → QPin v w → QFin v w := by
-  first | exact @GlobalTheory.QFinMain.qFin_of_pin
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawFiniteCellsAtTwistPlacesOfLocalFactorisatiStatement =====
@@ -1539,7 +1523,7 @@ namespace GlobalTheory.QTw
 theorem laws_of_pin_resc : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → t.Is → v.Is → WeilOK (t := t) v → QPinU v w → QLaw v w ∧ QLast v w ∧ QFin v w :=
   fun D c v t w hc ht hv hW h =>
     GlobalTheory.QTw.RescTest.laws_of_qpinU v (fun w₀ h₀ =>
-      ⟨GlobalTheory.T.seeSawIteratedIntegralLaw_at_twist_of_factorisation D c v t w₀ hc ht hv hW h₀, GlobalTheory.T.seeSawIteratedIntegralLawLastSteps_of_localFactorisation D c v t w₀ hc ht hv hW h₀, GlobalTheory.T.seeSawFiniteCells_at_twistPlaces_of_localFactorisation D c v t w₀ hc ht hv hW h₀⟩) w h
+      ⟨_root_.GlobalTheory.QLawPf.qLaw_of_pin D c v t w₀ hc ht hv hW h₀, _root_.GlobalTheory.QLastPf.qLast_of_pin D c v t w₀ hc ht hv hW h₀, _root_.GlobalTheory.QFinMain.qFin_of_pin D c v t w₀ hc ht hv hW h₀⟩) w h
 
 end GlobalTheory.QTw
 end -- clump:auto
@@ -1556,8 +1540,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSawTwistPlaceLaws_of_rootOfUnityRescaling : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → t.Is → v.Is → WeilOK (t := t) v → QPinU v w → QLaw v w ∧ QLast v w ∧ QFin v w := by
-  first | exact @GlobalTheory.QTw.laws_of_pin_resc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawTwistPlaceLawsOfRootOfUnityRescalingStatement =====
@@ -1584,10 +1566,10 @@ theorem GlobalTheory.QColLaws.laws_resc_alt : GlobalTheory.Published.DiscreteSer
   intro hDS hHC B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha _haT row col hr hc t F w₀ s hs hPin hQ
   letI := a.fld; letI := a.val; letI := a.top; haveI := a.loc
   have hsh := ha.shape
-  have hIs := _root_.GlobalTheory.T.famCh_is_and_tuples_is_of_colOK hDS hHC W u hW.pk (a.fam row col) hr
-  have hweil := _root_.GlobalTheory.T.weilOK_of_rank_one_gram' W u hW.pk (a.fam row col) a.v hr hc (ha.tie row col).1
+  have hIs := _root_.GlobalTheory.Fam.IsFam.main_alt_alt hDS hHC W u hW.pk (a.fam row col) hr
+  have hweil := _root_.GlobalTheory.FamChars.weilOK_of_rank_one_gram W u hW.pk (a.fam row col) a.v hr hc (ha.tie row col).1
     (fun j h => ⟨hsh.pre.line.1, hsh.pre.tau j h⟩) t w₀ hQ
-  exact GlobalTheory.T.seeSawTwistPlaceLaws_of_rootOfUnityRescaling _ (a.fam row col).c a.v ((a.fam row col).t t) (GlobalTheory.QTw.resc w₀ s) hIs.1 (hIs.2 hc t) ha.vis hweil.1
+  exact _root_.GlobalTheory.QTw.laws_of_pin_resc _ (a.fam row col).c a.v ((a.fam row col).t t) (GlobalTheory.QTw.resc w₀ s) hIs.1 (hIs.2 hc t) ha.vis hweil.1
     ⟨w₀, s, hs, ⟨F, hPin⟩, rfl⟩
 end
 end -- clump:auto
@@ -1601,21 +1583,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
-open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.AdForm GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Fam GlobalTheory.SeeSaw GlobalTheory.StepData GlobalTheory.SplitWeil
-open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-attribute [local instance] _root_.GlobalTheory.Fam.GeometricFamily.fld _root_.GlobalTheory.Fam.GeometricFamily.val _root_.GlobalTheory.Fam.GeometricFamily.top _root_.GlobalTheory.Fam.GeometricFamily.loc
-
-theorem _root_.GlobalTheory.T.true_geometry_family_final_alt : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ (row : ∀ t, RowCh (_root_.GlobalTheory.Fam.pk_z W) (_root_.GlobalTheory.Fam.complexLevelStructure W) u a.g t)
-    (col : ∀ t : W.P.T, ColCh (D := I.rec7 l Z) u ((I.rec7 l Z).chTw u (W.P.I.tup t))), (a.fam row col).RowOK → (a.fam row col).ColOK →
-    ∀ t (F : GlobalTheory.QPl.QFam a.v ((a.fam row col).t t)) (w₀ : VTup ((a.fam row col).t t)) (s : ∀ j, (col t).Ch j → ℂ),
-    (∀ j α, ∃ n : ℕ, 0 < n ∧ s j α ^ n = 1) → F.Pins w₀ →
-    (∀ p, p ∈ w₀.Q ↔ ∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Q t, p = PP.under (𝓞 (I.rec7 l Z).host.F)) →
-    QLaw a.v (GlobalTheory.QTw.resc w₀ s) ∧ QLast a.v (GlobalTheory.QTw.resc w₀ s) ∧ QFin a.v (GlobalTheory.QTw.resc w₀ s) := by
-  first | exact @_root_.GlobalTheory.QColLaws.laws_resc_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LawsRescStatement =====

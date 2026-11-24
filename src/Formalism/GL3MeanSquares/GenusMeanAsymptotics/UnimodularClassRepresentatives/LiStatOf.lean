@@ -579,11 +579,11 @@ theorem locF_span_consBasis (S : VecSplit h h') {κ : Type} (b' : Basis κ K V')
       locF 𝔭 A = locF 𝔭 B := by
     intro A B hAB hBA
     apply le_antisymm
-    · exact (Formalism.HermitianLatticesTheory.genusCovol_locS_mono _ hAB).trans (Formalism.HermitianLatticesTheory.genusCovol_locS_idem _ _)
-    · exact (Formalism.HermitianLatticesTheory.genusCovol_locS_mono _ hBA).trans (Formalism.HermitianLatticesTheory.genusCovol_locS_idem _ _)
+    · exact (_root_.Formalism.HermitianLatticesTheory.locBasic_locS_mono _ hAB).trans (Formalism.HermitianLatticesTheory.genusCovol_locS_idem _ _)
+    · exact (_root_.Formalism.HermitianLatticesTheory.locBasic_locS_mono _ hBA).trans (Formalism.HermitianLatticesTheory.genusCovol_locS_idem _ _)
   unfold VecSplit.adjoin
   apply key
-  · refine le_trans ?_ (Formalism.HermitianLatticesTheory.genusCovol_le_locS _ _)
+  · refine le_trans ?_ (_root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ _)
     rw [Submodule.span_le]
     rintro _ ⟨j, rfl⟩
     rcases j with u | i
@@ -593,13 +593,13 @@ theorem locF_span_consBasis (S : VecSplit h h') {κ : Type} (b' : Basis κ K V')
       exact Submodule.mem_sup_right ⟨b' i, hbT i, rfl⟩
   · apply sup_le
     · rw [Submodule.span_le, Set.singleton_subset_iff]
-      apply Formalism.HermitianLatticesTheory.genusCovol_le_locS
+      apply _root_.Formalism.HermitianLatticesTheory.locBasic_le_locS
       rw [← consBasis_inl S b' ()]
       exact Submodule.subset_span ⟨Sum.inl (), rfl⟩
     · rintro _ ⟨t, ht, rfl⟩
       have ht' : t ∈ locF 𝔭 (spanO b') := by
         rw [hb']
-        exact Formalism.HermitianLatticesTheory.genusCovol_le_locS _ _ ht
+        exact _root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ _ ht
       obtain ⟨s, hs, hst⟩ := (Formalism.HermitianLatticesTheory.genusCovol_mem_locS _ _ _).1 ht'
       have hmap : ∀ y ∈ spanO b', S.ι y ∈ spanO (consBasis S b') := by
         intro y hy
@@ -1268,7 +1268,7 @@ theorem repRatio_eq_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (h
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} (hn : n ≠ 0) (hx : h S.x₀ S.x₀ = algebraMap F K (n : F))
     (hE : ¬ ∃ M₂ : Submodule (𝓞 K) V, Submodule.IsFullLattice K M₂ ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h M₂ ∧
       S.x₀ ∈ locF 𝔭 M₂) : repRatio h L 𝔭 n = 0 := by
-  obtain ⟨s, hsr⟩ := exists_locReps hK hF hs hd S hL hLi h𝔭
+  obtain ⟨s, hsr⟩ := _root_.Formalism.HermitianLattices.Ext.L3.BrB.exists_locReps' hK hF hs hd S hL hLi h𝔭
   obtain ⟨R, hR⟩ := exists_mReps hK hF hs hd S hL hLi h𝔭 hn hx hsr
   have hR0 : R = ∅ := by
     rw [Finset.eq_empty_iff_forall_notMem]
@@ -1295,8 +1295,8 @@ theorem liRatio : LIRatio := by
   by_cases hE : ∃ M₂ : Submodule (𝓞 K) V, Submodule.IsFullLattice K M₂ ∧
       Formalism.HermitianLatticesTheory.IsIntegralLat h M₂ ∧ S.x₀ ∈ locF 𝔭 M₂
   · obtain ⟨M₂, hM₂, hM₂i, hx₂⟩ := hE
-    obtain ⟨s, hsr⟩ := exists_locReps hK hF hs hd S hL hLi h𝔭
-    obtain ⟨s₀, hsr₀⟩ := exists_locReps hK hF hs hd S hL₀ hL₀i h𝔭
+    obtain ⟨s, hsr⟩ := _root_.Formalism.HermitianLattices.Ext.L3.BrB.exists_locReps' hK hF hs hd S hL hLi h𝔭
+    obtain ⟨s₀, hsr₀⟩ := _root_.Formalism.HermitianLattices.Ext.L3.BrB.exists_locReps' hK hF hs hd S hL₀ hL₀i h𝔭
     obtain ⟨J, hJ, hJ₀⟩ := ((main_term hK hF hs hd S hL hLi hM₂ hM₂i h𝔭 hn hx hx₂ hsr).and
       (main_term hK hF hs hd S hL₀ hL₀i hM₂ hM₂i h𝔭 hn hx hx₂ hsr₀)).exists
     obtain ⟨k, ⟨hk, hk₀⟩, hk1, hk2⟩ := ((hJ.and hJ₀).and

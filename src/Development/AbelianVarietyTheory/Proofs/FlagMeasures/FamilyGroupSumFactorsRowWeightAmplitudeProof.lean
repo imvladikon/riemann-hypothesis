@@ -719,13 +719,6 @@ theorem amp_eq_finsum (d : G.Dat) (hT : {o : Quot G.LRel | G.IsTerm d o.out}.Fin
     have : ¬ G.IsTerm d o.out := fun h => ho (hT.mem_toFinset.2 h)
     simp only [this, false_and, if_false]
 
-theorem finprod_split' {ι : Type} (S1 : Finset ι) (f g : ι → ℂ) (hf : (Function.mulSupport f).Finite)
-    (hfg : ∀ p ∉ S1, f p = g p) :
-    ∏ᶠ p, f p = (∏ p ∈ S1, f p) * ∏ᶠ p, (if p ∈ S1 then 1 else g p) := by
-  first
-  | (apply _root_.GlobalTheory.FinprodProdMulIte.finprod_eq_prod_mul_finprod_ite <;> assumption)
-  | (intros; exact _root_.GlobalTheory.FinprodProdMulIte.finprod_eq_prod_mul_finprod_ite ..)
-
 theorem norm_finprod_eq_one {ι : Type} (g : ι → ℂ) (hg : (Function.mulSupport g).Finite)
     (h1 : ∀ p, ‖g p‖ = 1) : ‖∏ᶠ p, g p‖ = 1 := by
   rw [finprod_eq_prod_of_mulSupport_subset (s := hg.toFinset) g (fun p hp => hg.mem_toFinset.2 hp), norm_prod]
@@ -799,7 +792,7 @@ theorem amp_sum_defect_sets : ∀ {F E : Type} [Field F] [NumberField F] [Field 
         c * ∏ p ∈ S1, (if p ∈ B then (G.S p).amp (d p) (fun Λ => ¬ (G.S p).BBzero (d p) Λ)
           else (G.S p).amp (d p) ((G.S p).BBzero (d p))) := by
     intro B hB
-    rw [(hprod B hB).1, finprod_split' S1 _ g (hsupp B hB), mul_comm]
+    rw [(hprod B hB).1, _root_.GlobalTheory.FinprodProdMulIte.finprod_eq_prod_mul_finprod_ite S1 _ g (hsupp B hB), mul_comm]
     · rw [Finset.prod_congr rfl fun p _ => amp_cond G d B p]
     · intro p hp
       have hpB : p ∉ B := fun h => hp (hB h)
@@ -1259,7 +1252,7 @@ theorem datum_in_orbit : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D
     have s4 := ut_moves _ _ ρ U' hMv.2.2.1 hMv.2.2.2.2
     exact UT.comp ρ (UT.trans_id (UT.comp n⁻¹ s1 s2) s3) s4
   have hγ : ρ * n⁻¹ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := Subgroup.mul_mem _ hMv.1 (nlamPf_inv hn).1.1
-  obtain ⟨ρp, hρe, hρu, -, -, -⟩ := GlobalTheory.T.rational_isometry_extends_local_isometry D ⟨Y.δ, Y.M, Y.agree⟩ p (ρ * n⁻¹) hγ
+  obtain ⟨ρp, hρe, hρu, -, -, -⟩ := _root_.GlobalTheory.LocExt.ext_isometry D ⟨Y.δ, Y.M, Y.agree⟩ p (ρ * n⁻¹) hγ
 
   have UA : UT (D.s.atP p).Ep ρp
       (locU ⟨Y.δ, Y.M, Y.agree⟩ p t₀.toTerm.lam (lf D (X.Fu u)) (Quot.out t₀.toTerm.cls).1 (Tu D u) (Tu D u')).f
@@ -1477,8 +1470,8 @@ theorem term_moves_to_base : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   intro D X Y u u' _hS w F00 F'0 FP hZ _hG _hB t₀ ht
   obtain ⟨F', ⟨hP, hmk⟩, hGv, hCell⟩ := ht
   have hrow : IsRowLat D (X.Fu u) t₀.lam := (Y.rowsOK u).1 _ t₀.mem
-  obtain ⟨hGF, hCF, -⟩ := Formalism.L2.SG.Closed.TermFun_holds D u u' (X.Fu u) t₀.lam hrow
-  have hrel := (Formalism.L2.SG.Closed.TermEqIff_holds D u u' (X.Fu u) t₀.lam hrow _ _).1 hmk
+  obtain ⟨hGF, hCF, -⟩ := _root_.term_function_const D u u' (X.Fu u) t₀.lam hrow
+  have hrel := (_root_.term_eq_iff_relation D u u' (X.Fu u) t₀.lam hrow _ _).1 hmk
   have hGt : Gval (lf D (X.Fu u)) t₀.frame ≠ 0 := by
     intro h
     apply hGv
@@ -1548,9 +1541,6 @@ theorem toPts_inj' {K : Type} [Zero K] {i : ℕ} (p q : Point K (i + 1)) (h : to
   simp only [List.getElem?_map, List.getElem?_eq_getElem hk, List.getElem?_eq_getElem hk', Option.map_some,
     Option.some.injEq] at hs
   exact Prod.ext (hv k hk hk') hs
-
-theorem one_mem_nRat {D : D7} {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) : (1 : (VS D).V ≃ₗ[D.host.E] (VS D).V) ∈ NRat F :=
-  ⟨one_mem _, fun j x _ => by simp, fun x _ => by simp⟩
 
 theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), Formalism.MainNotions.S.Cnt.Stand D u u' → 4 * D.R.rS + 7 ≤ D.R.k →
     ConcTie X Y → ∀ ν, Formalism.L2.SG.RealObj.NuQPin X u u' ν → ∀ s : X.B.I.Ginf → NNReal, (∀ γ, 0 < s γ) →
@@ -1647,7 +1637,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
         rw [hpteq]
         exact hp0
     have hrep : ∃ g, Formalism.L2.SG.RealObj.IsPtRep X u u' w1 g :=
-      (GlobalTheory.T.orbital_integrals_terms_one_doubleCoset D X Y u u' hSt ν hνP t0 hrel0 hG0 w1 hpt0.symm).1
+      (_root_.GlobalTheory.CosetOrbital.coset_orbital_form D X Y u u' hSt ν hνP t0 hrel0 hG0 w1 hpt0.symm).1
     have hJ : J2of Y u u' (sc s ν) γ = (s (Formalism.L2.SG.RealObj.gamW X u u' w1) : ℝ) ^ 2 *
         ‖Formalism.L2.SG.PackageTie.hsEmb (Jw Y u u' ν w1)‖ ^ 2 := by
       unfold J2of
@@ -1661,7 +1651,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
       obtain ⟨ρ1, U1, U1', hmv1⟩ := GlobalTheory.T.term_moves_to_baseFrames_up_to_unitriangular D X Y u u' hSt w1 F00 F'0 Fm.FP hZ hGv hBase t1 hat1'
       obtain ⟨T, hT, hamp1⟩ := GlobalTheory.T.rowTerm_amplitude_eq_mass_mul_phase D X Y u u' hSt hk w1 F00 F'0 Fm.FP hZ hGv hBase G cc ν hνP t1 ρ1 U1 U1'
         hmv1 hrel1 hpt1
-      have he := hamp1 t1 1 1 rfl ⟨one_mem_nRat _, one_mem_nRat _, by simp⟩
+      have he := hamp1 t1 1 1 rfl ⟨_root_.GlobalTheory.HL.NmlCoset.one_mem _, _root_.GlobalTheory.HL.NmlCoset.one_mem _, by simp⟩
       have hT0 : Formalism.L2.SG.PackageTie.hsEmb T = 0 := norm_eq_zero.1 (hT.trans h0)
       apply hv1
       show Formalism.L2.SG.TermOp.vec (Y.cs u) (Y.cs u') (Y.FN u) (Y.FN u') t1 = 0

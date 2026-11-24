@@ -198,7 +198,7 @@ theorem exists_mv {I : TC B X} (hI : I.Ok) (hP : TC.Pins B X) {l : I.Laws} {Z : 
       rfl
     rw [e]
     exact R.k_T β P r j hr
-  obtain ⟨hkU, hkV, -, -⟩ := GlobalTheory.T.admissibleBasePoint_unitary_normalisesLevel B.sp.cm (B.R.N i) hB (A.kb i β) (diaT (Pr := B.primes X) u) (R.k_std β) k3
+  obtain ⟨hkU, hkV, -, -⟩ := _root_.GlobalTheory.Mem.Col2.ChEx.basePt_facts B.sp.cm (B.R.N i) hB (A.kb i β) (diaT (Pr := B.primes X) u) (R.k_std β) k3
   refine exists_basePt_on (A.K i hi β).lev (A.kb i β) ?_ (fun v => ?_) S hSf hST
   · rw [hgr]
     exact hkU
@@ -785,8 +785,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.KJInf Formalism.L2.Ker
 open GlobalTheory.SeeSaw GlobalTheory.Unf
 
-theorem _root_.GlobalTheory.T.exists_tupleAdelicData_standardBasePoints : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι), ∃ (Ch : ℕ → Type) (_ : ∀ i, Fintype (Ch i)) (A : TwDat I l Z u a Ch), A.Is ∧ Nonempty (Unique (Ch B.R.m)) ∧ (∀ i, Nonempty (Idx I.sel (I.tup a) (I.idx a) i) → Nonempty (Ch i)) ∧ GlobalTheory.QTw.BaseCommon A ∧ (∀ i, i < B.R.m → ∀ β, A.kb i β = TC.kStd X u (B.R.N i)) ∧ ∀ i, i ≤ B.R.m → ∀ β (v : HeightOneSpectrum (𝓞 B.host.F)), ((B.T u : ℕ) : 𝓞 B.host.F) ∉ v.asIdeal → (i < B.R.m ∨ ¬ I.UnderQ a v) → Formalism.UG.bc (Formalism.UG.prV (E := B.host.E) v) (A.kb i β) = 1 ∧ ∀ i, i < B.R.m → ∀ β, A.kb i β = TC.kStd X u (B.R.N i) := by
-  first | exact @GlobalTheory.AdForm.exists_twDat_baseStd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsTupleAdelicDataStandardBasePointsStatement =====
@@ -857,7 +855,7 @@ theorem exists_quadratic_extension_readsLow : ∀ {B : GlobalTheory.Mem.Base} {X
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a _ ha hc t
   have hI := hW.tr.ok
   have hm := B.R.two_le_m
-  obtain ⟨Ch₀, -, A, hA, hlast, hne, -, hstd, -⟩ := GlobalTheory.T.exists_tupleAdelicData_standardBasePoints I hI hW.tr.pins.some l Z u (W.P.I.tup t)
+  obtain ⟨Ch₀, -, A, hA, hlast, hne, -, hstd, -⟩ := _root_.GlobalTheory.AdForm.exists_twDat_baseStd I hI hW.tr.pins.some l Z u (W.P.I.tup t)
   have hχ : ∀ j (hj : j < B.R.m), ChrEq (D := I.rec7 l Z) (_root_.GlobalTheory.Fam.chrK_alt W t j) (I.C.mu0 ⟨j, hj⟩ * I.xi (W.P.I.tup t)) := fun j hj =>
     GlobalTheory.Mem.TupChar.chrEq_mul (hW.tr.chr ⟨j, hj⟩) (hW.tq.xi t)
   let e := ((_root_.GlobalTheory.Fam.pk_z W).Q t).equivFin
@@ -955,15 +953,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Datum Formalism.L2.Forms MeasureTheory IsDedekindDomain NumberField Matrix
-open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.QPl GlobalTheory.QTw GlobalTheory.AdForm GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Fam
-open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.exists_quadratic_extension_reads_low_of_true : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → (commOf (_root_.GlobalTheory.Fam.pk_z W) u a.g).Is → ∀ t, ∃ J : _root_.GlobalTheory.Fam.QuadraticExtensionData a t, J.ReadsLow := by
-  first | exact @_root_.GlobalTheory.LowJoin.exists_quadratic_extension_readsLow
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsReadsLowStatement =====

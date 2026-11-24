@@ -527,11 +527,6 @@ theorem exists_dominant_lift {X X' : Scheme.{0}} (π : X' ⟶ X) {U W : X.Opens}
     exact IsDominant.of_comp_of_isOpenImmersion _ (π ⁻¹ᵁ W).ι
   · rw [← cancel_mono W.ι, Category.assoc, morphismRestrict_ι, reassoc_of% e, ht, X.homOfLE_ι]
 
-theorem exists_isProjOver_isIso_morphismRestrict : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (X : Scheme.{0}) [IsIntegral X] (f : X ⟶ Sp R) [IsProper f], ∃ (X' : Scheme.{0}) (π : X' ⟶ X) (U : X.Opens), IsProjOver (π ≫ f) ∧ (U : Set X).Nonempty ∧ IsIso (π ∣_ U) := by
-  first
-  | exact @_root_.GlobalTheory.BasicOpenLocalExtension.chow_integral
-  | (intros; exact _root_.GlobalTheory.BasicOpenLocalExtension.chow_integral ..)
-
 end GlobalTheory.ChowLemma
 end -- clump:auto
 end -- clump:auto
@@ -553,7 +548,7 @@ namespace GlobalTheory.ProperFinite
 theorem finite_coh_of_isProper {R : Type} [CommRing R] [IsNoetherianRing R] {X : Scheme.{0}} (f : X ⟶ Sp R)
     [IsProper f] (F : X.Modules) [QCoh.IsFiniteQC F] (p : ℕ) :
     letI := algebraΓOfHom f; Module.Finite R (coh F p) :=
-  finite_coh_of_forall_modification f (fun Z _ ι _ => GlobalTheory.ChowLemma.exists_isProjOver_isIso_morphismRestrict R Z (ι ≫ f)) F p
+  finite_coh_of_forall_modification f (fun Z _ ι _ => _root_.GlobalTheory.BasicOpenLocalExtension.chow_integral R Z (ι ≫ f)) F p
 
 theorem nonempty_perf_of_isProper {R : Type} [CommRing R] [IsNoetherianRing R] {Y : Scheme.{0}} (f : Y ⟶ Sp R)
     [IsProper f] [Flat f] {M : LB Y} (hM : M.IsLB) : Nonempty (Perf f M) := by

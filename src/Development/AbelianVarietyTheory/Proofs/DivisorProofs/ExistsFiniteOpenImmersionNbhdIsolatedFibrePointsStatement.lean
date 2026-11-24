@@ -1075,10 +1075,10 @@ theorem exists_finite_openImmersion : ∀ (U X : Scheme.{0}) (f : U ⟶ X), IsNo
     have hC : ∀ x, x ∈ C ↔ ∃ y, (ι.app (Opposite.op (V k))).hom y = x := fun x ↦ Iff.rfl
     have hB := hsC k C hsub b.1 b.2
     have hφ : Function.Injective (ι.app (Opposite.op (V k))).hom := hιinj _
-    exact bijective_awayMap_of_range Γ(X, (V k).1) (F'.obj (Opposite.op (V k)))
+    exact _root_.GlobalTheory.awayMap_bijective_of_range_eq_subalgebra Γ(X, (V k).1) (F'.obj (Opposite.op (V k)))
       (f.normalizationDiagram.obj (Opposite.op (V k).1)) C (ι.app _).hom hφ hC (b' k b) b.1
       (hb' k b) hB
-  have hiso := fun p : Σ k, G k ↦ isIso_restrict_basicOpen X _ F' _ α'
+  have hiso := fun p : Σ k, G k ↦ _root_.GlobalTheory.relSpec_map_isIso_over_basicOpen X _ F' _ α'
     f.coequifibered_normalizationDiagramMap hα' ι hι g hg₁ hg₂ (V p.1) (b' p.1 p.2) (hbij p)
     (Wp p) rfl
   refine isOpenImmersion_comp_of_isIso_restrict f.toNormalization g (⨆ p, Wp p)

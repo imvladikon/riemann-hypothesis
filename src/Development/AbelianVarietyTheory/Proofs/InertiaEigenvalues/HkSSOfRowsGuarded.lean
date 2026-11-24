@@ -430,14 +430,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Integral
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_conjugate_splitPlace_off_stableSet : ∀ (D : D7) (S0 : Finset (PlE D.host)) (Sb : Finset (Formalism.L2.DIV.Pl D.host.E)) (P : PlE D.host),
-    (∀ P1 P2, P1 ∈ S0 → IsConjPl D.host P1 P2 → P2 ∈ S0) → placesOver D.host.E 2 ⊆ (S0 : Set (PlE D.host)) →
-    (∀ Q ∈ Sb, Q ∈ S0) → IsSplitPl D.host P → P ∉ S0 →
-    ∃ P' : PlE D.host, IsConjPl D.host P P' ∧ IsSplitPl D.host P' ∧ P' ∉ S0 ∧
-      Formalism.IndefR.Bridge.SplitOff P (Sb : Set (Formalism.L2.DIV.Pl D.host.E)) ∧
-      Formalism.IndefR.Bridge.SplitOff P' (Sb : Set (Formalism.L2.DIV.Pl D.host.E)) ∧
-      ((2 : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal ∧ ((2 : ℕ) : 𝓞 D.host.E) ∉ P'.asIdeal := by
-  first | exact @GlobalTheory.ConjPlaceOff.exists_conj_off
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateSplitPlaceOffStableSetStatement =====
@@ -880,13 +872,6 @@ noncomputable section
 
 namespace GlobalTheory.GoodSS.Heart
 
-theorem aeval_map_of_comm {K M N : Type} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
-    (f : M →ₗ[K] N) (A : Module.End K M) (B : Module.End K N) (h : ∀ x, f (A x) = B (f x)) (p : K[X]) (x : M) :
-    f (Polynomial.aeval A p x) = Polynomial.aeval B p (f x) := by
-  first
-  | (apply _root_.GlobalTheory.AevalIntertwine.aeval_intertwine <;> assumption)
-  | (intros; exact _root_.GlobalTheory.AevalIntertwine.aeval_intertwine ..)
-
 theorem exists_lift_end {H X : Type} [AddCommGroup H] [Module ℂ H] [AddCommGroup X] [Module ℂ X]
     (e : H →ₗ[ℂ] X) (he : Function.Injective e) (A : X →ₗ[ℂ] X) (h : ∀ x, ∃ x', e x' = A (e x)) :
     ∃ S : Module.End ℂ H, ∀ x, e (S x) = A (e x) := by
@@ -991,7 +976,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
   obtain ⟨i0, rfl⟩ : ∃ i0 : Fin D.R.m, j = (i0 : ℕ) + 1 := ⟨⟨j - 1, by omega⟩, by simp only; omega⟩
   obtain ⟨hk1, hk2, hPs, hP0⟩ := hk
   obtain ⟨P', hPP', hP's, hP'0, hoffP, hoffP', h2P, h2P'⟩ :=
-    GlobalTheory.T.exists_conjugate_splitPlace_off_stableSet D (D.ntw.S0 i) Rl.Sb P (fun P1 P2 h h' => hS0c i P1 P2 h h') (hS02 i) (hS0b i) hPs hP0
+    _root_.GlobalTheory.ConjPlaceOff.exists_conj_off D (D.ntw.S0 i) Rl.Sb P (fun P1 P2 h h' => hS0c i P1 P2 h h') (hS02 i) (hS0b i) hPs hP0
   obtain ⟨α, α', R, R', hα, hRd, hα', hRd', hxR, hyR, hadj⟩ :=
     GlobalTheory.T.complexHecke_conjugatePlace_petersson_adjoint Rl F hR i0 k P P' hPs hPP' hoffP hoffP' h2P h2P' hk1 hk2
   have hkP : HkIdx i k P := ⟨hk1, hk2, hPs, hP0⟩
@@ -1137,7 +1122,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
       hadj u v (S0 u) (S1 v) (hS0 u) (hS1 v)]
   have hsep := _root_.GlobalTheory.NormalSeparable.minpoly_separable_of_normal ↥D.LL0 ↥V (Rl.HW i0 σ0).H φ jm T SS SS' hind (fun z => (hSj z).symm) hkeep hadj' hcomm
   refine ⟨minpoly ↥D.LL0 T, hsep, fun z hz => ?_⟩
-  have h := aeval_map_of_comm V.subtype T T0 (fun _ => rfl) (minpoly ↥D.LL0 T) ⟨z, hz⟩
+  have h := _root_.GlobalTheory.AevalIntertwine.aeval_intertwine V.subtype T T0 (fun _ => rfl) (minpoly ↥D.LL0 T) ⟨z, hz⟩
   rw [minpoly.aeval, LinearMap.zero_apply, map_zero] at h
   exact h.symm
 

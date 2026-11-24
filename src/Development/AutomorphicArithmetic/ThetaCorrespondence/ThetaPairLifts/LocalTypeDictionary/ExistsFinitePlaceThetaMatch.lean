@@ -130,6 +130,7 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantFi
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentity
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistCharacterOfArtin
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeCharUnramifiedAbovePlaceOfTrivialUnits
@@ -771,7 +772,7 @@ private theorem herm_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
   refine ⟨_, bas, ⟨fun a b => ?_, fun w => ?_, hfull, fun y => GlobalTheory.TripleSpace.mem_starLat_iff_form S hsd y, fun w => ?_, hbas⟩,
     fun y => Iff.rfl⟩
   · show star (((-1 : D.host.E) • S.gram) b a) = ((-1 : D.host.E) • S.gram) a b
-    simp only [Matrix.smul_apply, smul_eq_mul, star_mul', star_neg, star_one, GlobalTheory.TripleSpace.star_gram]
+    simp only [Matrix.smul_apply, smul_eq_mul, star_mul', star_neg, star_one, _root_.GlobalTheory.DualPairCheck.gram_star]
   · show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.HasSig (((-1 : D.host.E) • S.gram).map (B.emb w).1) _ _
     rw [eJ]
     exact GlobalTheory.TripleSpace.hasSig_neg_of_hasSignature (hasSignature_map_conj (hsig _))
@@ -793,7 +794,7 @@ private theorem skew_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
   have hJ : D.host.xi0 • (X.gramᵀ).submatrix e e = GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.skewGram X (zeroSp D) e' :=
     congrArg (D.host.xi0 • ·) (blk_empty e _ _).symm
   have hZ := GlobalTheory.LineSelfDual.isSelfDualC_selfDualLatticeCoordsInFrame D (zeroSp D)
-  have hlat := GlobalTheory.SkewLat.isLattice_pairLat GlobalTheory.SkewLat.DualPair.AA_ne hA.1 hZ.1 e'
+  have hlat := _root_.GlobalTheory.SkewLat.pairLat_scLat_isLattice GlobalTheory.SkewLat.DualPair.AA_ne hA.1 hZ.1 e'
   have hfull := GlobalTheory.SkewLat.pairLat_isFull
     (GlobalTheory.SkewLat.scLat_isFull GlobalTheory.SkewLat.DualPair.AA_ne
       (GlobalTheory.ProjXCols.selfDual_isFullLattice X Λ₀ hA))
@@ -806,23 +807,23 @@ private theorem skew_of_lat {D : D7} (B : Base D.host.F D.host.E) (τf : Infinit
     inferInstanceAs (Subsingleton (Fin 0 → D.host.E))
   refine ⟨_, bas, ⟨fun a b => ?_, fun w => ?_, hfull, fun y => ?_, fun w => ?_, hbas⟩, fun y => ?_⟩
   · show star (D.host.xi0 * X.gram (e a) (e b)) = -(D.host.xi0 * X.gram (e b) (e a))
-    rw [star_mul', GlobalTheory.DualPairCheck.star_purely_imaginary_eq_neg D, GlobalTheory.TripleSpace.star_gram, neg_mul]
+    rw [star_mul', GlobalTheory.DualPairCheck.star_purely_imaginary_eq_neg D, _root_.GlobalTheory.DualPairCheck.gram_star, neg_mul]
   · show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.HasSig (Complex.I • (D.host.xi0 • (X.gramᵀ).submatrix e e).map (B.emb w).1) _ _
     rw [hJ, GlobalTheory.SkewLat.I_smul_skewGram_map _ _ e' (τf w) (B.emb w).1 (hB w)]
     have h0 : Formalism.UG.HasSignature (gramAt D (zeroSp D) (τf w)) 0 0 :=
       ⟨(Equiv.sumEmpty (Fin 0) (Fin 0)).symm, 1, by ext (a | a) <;> exact a.elim0⟩
-    exact GlobalTheory.SkewLat.hasSig_blk e' _ _ (Formalism.L2.Theta.xi_zero_im_pos D (τf w)) (hsig _) h0
+    exact _root_.GlobalTheory.SigBlockSum.hasSig_smul_blk e' _ _ (Formalism.L2.Theta.xi_zero_im_pos D (τf w)) (hsig _) h0
   · show y ∈ _ ↔ ∀ x ∈ _, ∀ o : 𝓞 D.host.E, IsIntegral ℤ (Algebra.trace ℚ D.host.E
       (o * GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form D.sp.cm.sig (D.host.xi0 • (X.gramᵀ).submatrix e e) y x))
     rw [hJ]
-    exact GlobalTheory.SkewLat.dual_pairLat (fun c hc => GlobalTheory.SkewLat.star_mem_AA hc) _ _ hA hZ e' y
+    exact _root_.GlobalTheory.SkewLat.pairLat_trace_selfDual (fun c hc => _root_.GlobalTheory.star_mem_AA_of_mem_AAbar hc) _ _ hA hZ e' y
   · show GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsCartan (Complex.I • (D.host.xi0 • (X.gramᵀ).submatrix e e).map (B.emb w).1)
       (((s (τf w)).submatrix e e).map conj)
     rw [hJ, GlobalTheory.SkewLat.I_smul_skewGram_map _ _ e' (τf w) (B.emb w).1 (hB w), ← blk_empty e (s (τf w)) 1]
     have h0 : IsCartanInv (gramAt D (zeroSp D) (τf w)) 1 :=
       ⟨Subsingleton.elim _ _, Subsingleton.elim _ _, by
         rw [Subsingleton.elim (gramAt D (zeroSp D) (τf w) * 1) 1]; exact Matrix.PosDef.one⟩
-    exact GlobalTheory.SkewLat.isCartan_blk e' _ _ _ _ (Formalism.L2.Theta.xi_zero_im_pos D (τf w)) (hs _) h0
+    exact _root_.GlobalTheory.CartanBlocks.isCartan_blk e' _ _ _ _ (Formalism.L2.Theta.xi_zero_im_pos D (τf w)) (hs _) h0
   · refine GlobalTheory.SkewLat.mem_pairLat.trans ⟨fun h => h.1, fun h => ⟨h, ?_⟩⟩
     rw [Subsingleton.elim (fun k => y (e' (.inr k))) 0]
     exact zero_mem _
@@ -1092,7 +1093,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.DivisorFrames.ExistsPolynomialOfIsFinFThetaLiftPureTensor =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.DivisorFrames.IsSBHalfThetaFunOfHalfIdempotentPlaces =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.DivisorFrames.IsSBHalfThetaFunOfHalfIdempotentPlaces", "h": "module\n\npublic import Development.AutomorphicArithmetic.LocalEmbeddings.FinMatchDefs\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsReading\nimport Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual\npublic import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxGraphGraphHeis\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorLatticePointOfIntegralSplitPlaceCoor\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergStableRelationOfVacuaStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeAtFinitePlaceEqSumSplitPlaceParts\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticSelfZeroSplitSupported\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SeesawWeilZetaGlobal\npublic import Development.AutomorphicArithmetic.DivisorFrames.ExistsNeZeroLinearModelVacuumEqSmul\npublic import Development.AutomorphicArithmetic.DivisorFrames.PtOSgnMemLatAtVIffMemLatO\npublic import Development.AutomorphicArithmetic.DivisorFrames.ThetaOperatorIntertwinesHeisenberg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.DivisorFrames.IsSBHalfThetaFunOfHalfIdempotentPlaces", "h": "module\n\npublic import Development.AutomorphicArithmetic.LocalEmbeddings.FinMatchDefs\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsReading\nimport Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual\npublic import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ThetaAtEqSumHeisOfFourierSum\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxGraphGraphHeis\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorLatticePointOfIntegralSplitPlaceCoor\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergStableRelationOfVacuaStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddCharStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeAtFinitePlaceEqSumSplitPlaceParts\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticSelfZeroSplitSupported\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNsmulIntMemLatO\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SeesawWeilZetaGlobal\npublic import Development.AutomorphicArithmetic.DivisorFrames.ExistsNeZeroLinearModelVacuumEqSmul\npublic import Development.AutomorphicArithmetic.DivisorFrames.PtOSgnMemLatAtVIffMemLatO\npublic import Development.AutomorphicArithmetic.DivisorFrames.ThetaOperatorIntertwinesHeisenberg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentBaseFunctionIdentity\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1229,8 +1230,7 @@ private theorem isHalf_iff_ptO {m k d : ℕ} (G : Matrix (Fin m) (Fin m) D.host.
     ⟨fun h => Matrix.ext h, fun h i j => congrFun (congrFun h i) j⟩
   rw [h, h, ← ptO_smul, (ptO_bij G hG e).1.eq_iff]
 
-private theorem sb_zero {m n : ℕ} (a : AE D) (Λ : AddSubgroup (Mx D m n)) : IsSBHalf a Λ 0 :=
-  ⟨fun _ h => absurd rfl h, 1, one_pos, fun _ _ _ _ => rfl, fun _ h => absurd rfl h⟩
+private alias sb_zero := _root_.GlobalTheory.SymmetricBilinearHalf.sb_zero
 
 private theorem sb_smul {m n : ℕ} {a : AE D} {Λ : AddSubgroup (Mx D m n)} {φ : Mx D m n → ℂ} (h : IsSBHalf a Λ φ) (c : ℂ) :
     IsSBHalf a Λ (c • φ) := by
@@ -1238,19 +1238,7 @@ private theorem sb_smul {m n : ℕ} {a : AE D} {Λ : AddSubgroup (Mx D m n)} {φ
   exact ⟨fun t ht => h1 t (right_ne_zero_of_mul ht), k, hk, fun u hu hu' t => congrArg (c * ·) (h2 u hu hu' t),
     fun t ht => h3 t (right_ne_zero_of_mul ht)⟩
 
-private theorem sb_add {m n : ℕ} {a : AE D} {Λ : AddSubgroup (Mx D m n)} {φ φ' : Mx D m n → ℂ} (h : IsSBHalf a Λ φ)
-    (h' : IsSBHalf a Λ φ') : IsSBHalf a Λ (φ + φ') := by
-  obtain ⟨h1, k, hk, h2, h3⟩ := h
-  obtain ⟨h1', k', hk', h2', h3'⟩ := h'
-  have hor : ∀ t, (φ + φ') t ≠ 0 → φ t ≠ 0 ∨ φ' t ≠ 0 := fun t ht => by
-    by_contra! hc
-    exact ht (by rw [Pi.add_apply, hc.1, hc.2, add_zero])
-  refine ⟨fun t ht => (hor t ht).elim (h1 t) (h1' t), k * k', Nat.mul_pos hk hk', fun u hu hu' t => ?_, fun t ht => ?_⟩
-  · rw [Pi.add_apply, Pi.add_apply, mul_smul, h2 _ (nsmul_mem hu k') (GlobalTheory.BigDat.GraphHeis.isHalf_nsmul' hu' k'),
-      smul_comm k k' u, h2' _ (nsmul_mem hu k) (GlobalTheory.BigDat.GraphHeis.isHalf_nsmul' hu' k)]
-  · rcases hor t ht with h | h
-    · rw [mul_comm, mul_smul]; exact nsmul_mem (h3 t h) k'
-    · rw [mul_smul]; exact nsmul_mem (h3' t h) k
+private alias sb_add := _root_.GlobalTheory.SymmetricBilinearHalf.sb_add
 
 end Host
 
@@ -1349,7 +1337,7 @@ theorem UpperTheory.isSBHalf_thetaFun_of_halfIdempotent_places :
     · rw [if_neg hx, if_neg fun h => hx h.2, mul_zero]
   have hmm : ∀ (v : P) (t : D.host.E →ₐ[D.host.F] Fv D.host.F v) (w : AE D) (u : Matrix (Fin S.rank) (Fin d) (AE D)),
       (w • u).map (piW t) = piW t w • u.map (piW t) := fun v t w u => Matrix.ext fun i j => map_mul (piW t) w (u i j)
-  have hR := GlobalTheory.T.heisenbergStableRelation_of_vacua M Bs.ψ hstd hM (Finset.univ : Finset P) Subtype.val Subtype.val_injective.injOn
+  have hR := _root_.GlobalTheory.InductLagr.rel_of_vac M Bs.ψ hstd hM (Finset.univ : Finset P) Subtype.val Subtype.val_injective.injOn
     (fun v => Matrix (Fin S.rank) (Fin d) (Fv D.host.F v))
     (fun v => {u | At (evFin D.host.F v.1) u ∧ u.map (piW (t₀ v)) = 0})
     (fun v => {u | At (evFin D.host.F v.1) u ∧ u.map (piW (t₁ v)) = 0})
@@ -1675,7 +1663,7 @@ theorem exists_finite_place_theta_match (hP : _root_.GlobalTheory.FunPr.ThetaLoc
   have mA := _root_.GlobalTheory.TripleAssembly.PureImage.firstFactorMap_thetaSum_pure_tensor hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h
     hTA hTB R Rf hM 1 (fun _ => f) (fun _ => φ) (fun _ => ⟨sb, cof⟩)
     (by rw [Fin.sum_univ_one]; exact Submodule.subset_span ⟨f, φ, hfP, sb, cof, rfl⟩)
-  have mB := _root_.GlobalTheory.T.tripleProduct_secondMap_theta_pure hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h
+  have mB := _root_.GlobalTheory.TripleAssembly.secondFactorMap_theta_pure_tensor hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h
     hTA hTB R Rf hM 1 (fun _ => f') (fun _ => φ') (fun _ => ⟨sb', cof'⟩)
     (by rw [Fin.sum_univ_one]; exact Submodule.subset_span ⟨f', φ', hfP', sb', cof', rfl⟩)
   rw [Fin.sum_univ_one, Fin.sum_univ_one, ← hQ, hfy] at mA
@@ -1683,11 +1671,11 @@ theorem exists_finite_place_theta_match (hP : _root_.GlobalTheory.FunPr.ThetaLoc
   have sA := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D ψ θ hψ hθ true A WW FA FW _ _ _ hA
   have sB := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D ψ θ hψ hθ false A' WW FA' FW _ _ _ hB
   obtain ⟨oA, oB⟩ := _root_.GlobalTheory.T.triple_algebra_map_surjective hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
-  obtain ⟨iA, iB⟩ := _root_.GlobalTheory.T.triple_assembly_inverse_finite hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
-  obtain ⟨lA, lB⟩ := _root_.GlobalTheory.T.theta_triple_lift_lie_invariant hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
-  obtain ⟨fA, fB⟩ := _root_.GlobalTheory.T.theta_triple_maps_equivariant hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
-  obtain ⟨dA, dB⟩ := _root_.GlobalTheory.T.theta_triple_lift_lie_equivariant hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
-  have ir := _root_.GlobalTheory.T.theta_triple_lift_irreducible hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  obtain ⟨iA, iB⟩ := _root_.GlobalTheory.TripleAssembly.triple_map_comp_inverse_finite hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  obtain ⟨lA, lB⟩ := _root_.GlobalTheory.TripleAssembly.LieInv.theta_triple_maps_lie_action_eq_zero hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  obtain ⟨fA, fB⟩ := _root_.GlobalTheory.TripleAssembly.EqFin.theta_triple_maps_equivariant_on_finite_vectors hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  obtain ⟨dA, dB⟩ := _root_.GlobalTheory.TripleAssembly.theta_triple_maps_lie_equivariant hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
+  have ir := _root_.GlobalTheory.TripleAssembly.Irred.theta_triple_piT_irreducible hH hP D ψ θ hψ hθ A A' WW FA FA' FW _ _ hT _ _ hA hB _ Bs Γ Xc om om' h hTA hTB R Rf hM
   refine ⟨ModuleCat.of ℂ (GlobalTheory.TripleAssembly.PiT R Γ Rf), _, _, _, _,
     ⟨hA, hB, ir, ⟨sA.1, sA.2, oA, iA, lA, fA, dA⟩, ⟨sB.1, sB.2, oB, iB, lB, fB, dB⟩⟩, Q, Q', 1, ?_, ?_⟩
   · refine ne_of_eq_of_ne mA fun h0 => ?_

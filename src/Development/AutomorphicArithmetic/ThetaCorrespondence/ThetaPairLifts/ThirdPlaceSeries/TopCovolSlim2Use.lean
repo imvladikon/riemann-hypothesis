@@ -642,13 +642,6 @@ theorem ratPrimeDense : GroundTheory.Heights₂.Heights.HilbertSamuel.RatPrimeDe
     GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.proof
     GroundTheory.Heights₂.Heights.HilbertSamuel.PolyNonvanishDense.proof
 
-theorem continuous_aeval {n : ℕ} (f : MvPolynomial (Fin n) ℚ) : Continuous fun z : Fin n → ℂ => aeval z f := by
-  have : (fun z : Fin n → ℂ => aeval z f) = fun z => eval z (map (algebraMap ℚ ℂ) f) := by
-    funext z
-    rw [eval_map, aeval_def]
-  rw [this]
-  exact MvPolynomial.continuous_eval _
-
 theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.IsPrime) {z₀ : Fin n → ℂ}
     (hz₀ : ∀ g ∈ P, aeval z₀ g = 0) :
     ∃ z : ℕ → Fin n → ℂ, (∀ m g, aeval (z m) g = 0 ↔ g ∈ P) ∧ Tendsto z atTop (𝓝 z₀) := by
@@ -656,12 +649,12 @@ theorem generic_dense {n : ℕ} (P : Ideal (MvPolynomial (Fin n) ℚ)) (hP : P.I
   have hV : IsClosed V := by
     have : V = ⋂ g ∈ P, {z | aeval z g = 0} := by ext z; simp [V]
     rw [this]
-    exact isClosed_biInter fun g _ => isClosed_eq (continuous_aeval g) continuous_const
+    exact isClosed_biInter fun g _ => isClosed_eq (_root_.GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.continuous_aeval g) continuous_const
   haveI : CompleteSpace V := hV.completeSpace_coe
   haveI : Countable (MvPolynomial (Fin n) ℚ) := (basisMonomials (Fin n) ℚ).repr.injective.countable
   let O : {f : MvPolynomial (Fin n) ℚ // f ∉ P} → Set V := fun f => {z | aeval z.1 f.1 ≠ 0}
   have hO : ∀ f, IsOpen (O f) := fun f =>
-    isOpen_ne_fun ((continuous_aeval f.1).comp continuous_subtype_val) continuous_const
+    isOpen_ne_fun ((_root_.GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.continuous_aeval f.1).comp continuous_subtype_val) continuous_const
   have hD : ∀ f, Dense (O f) := fun f => by
     rw [Subtype.dense_iff]
     refine (ratPrimeDense (Fin n) P f.1 hP f.2).trans (closure_mono ?_)
@@ -745,7 +738,7 @@ theorem exists_seq_emb {B Ω : Type} [CommRing B] [IsDomain B] [Algebra.FiniteTy
     exact (hker m g).1 ((hr m g).symm.trans hb)
   refine ⟨fun m => IsFractionRing.lift (hinj m), fun b => ?_⟩
   obtain ⟨g, rfl⟩ := hπ b
-  have h1 := ((continuous_aeval (map (Int.castRingHom ℚ) g)).tendsto _).comp hl
+  have h1 := ((_root_.GroundTheory.Heights₂.Heights.HilbertSamuel.RootsBounded.continuous_aeval (map (Int.castRingHom ℚ) g)).tendsto _).comp hl
   simp only [IsFractionRing.lift_algebraMap, hr]
   rw [hπa, hom_aeval x a g, ← aeval_map_int]
   refine h1.congr fun m => ?_
@@ -1306,7 +1299,7 @@ namespace SelfIntersectionVolumeEstimates
 theorem topCovolSlim2_use_alt_alt : GlobalTheory.CompanionTheory.Hypotheses₂.ResolutionCharZero → GlobalTheory.CompanionTheory.Hypotheses₂.PrincipalisationCharZero → GlobalTheory.CompanionTheory.Hypotheses₂.PoincareLelongInv → PositivityTheory.MbHsUse.HSUse → ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.MoriwakiBigStatement → HT.FarguesExact → GR.ZarhinStatement → Pub.NefRR → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.SemiAbelianLieSeminegative → GlobalTheory.Published.PointSeparationPair → GlobalTheory.Published.ArDegree → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.GrothendieckDeformation → _root_.GlobalTheory.CovTop.CovolumeBoundOfX :=
   fun h₁ h₂ hPL hU hBig hFar hZar hRR hS hK hN hSep hDeg hP hGD =>
     have hX : GlobalTheory.CovTop.HypothesesX := ⟨hK, hN, GlobalTheory.GreenBridge.green_of_regular GlobalTheory.greenRegularCharacters_holds, hSep, _root_.FubiniStudyChowHeightFormula₂.fubiniStudy_chowHeight_formula hP⟩
-    have hF := PositivityTheory.Prw.toroidalChartsForFan_of hK
+    have hF := _root_.GlobalTheory.Published.ToroidalForFanKS.toroidalChartsForFan hK
     have hH : GlobalTheory.CovHt.HypothesesH := ⟨hS, hF, GlobalTheory.Published.toroidalCharts_of_siegel_of_forFan hS hF, hDeg⟩
     _root_.SelfIntersectionVolumeEstimates.topCovolG_alt_alt ⟨_root_.ChowFormHeightComparison₂.chow_form_height_comparison, _root_.PositivityTheory.Xj7N.small_sections_injective (GlobalTheory.CompanionTheory.Ar.Rec.exists_nonvanishing_of_toroidal hH.sieg hX.ks)⟩ hX hP hH hGD ⟨hP.q6, hP.q13, hP.q7, hP.q10, GlobalTheory.Published.chowFormIntExists_holds, ChowFormCompatibility.chow_form_hyperplane_section, hP.q12⟩
       (PositivityTheory.HtPt.Ah.deep_slim_use h₁ h₂ hPL hU hBig hFar hZar hRR)

@@ -180,8 +180,7 @@ def fr : F →+ A F := (algebraMap F (A F)).toAddMonoidHom
 
 variable {F}
 
-theorem oh_mul {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x * y ∈ Oh F :=
-  fun v => mul_mem (hx v) (hy v)
+alias oh_mul := _root_.GlobalTheory.CompanionTheory.SW.Core.Scale.mul_mem_Oh
 
 def perpG (ψ : AddChar (A F) ℂ) (L : AddSubgroup (A F)) : AddSubgroup (A F) where
   carrier := perp (fun x y => ψ (x * y)) L

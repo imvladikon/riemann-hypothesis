@@ -102,6 +102,7 @@ import Formalism.LocalToGlobal.GlobalTheory.GL3.Statement
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.IsTorsionPointStandardCM
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK
+import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OneLetterGaussTranslateOfCmCase
 import Mathlib.Tactic.Linter.HaveILetI
 import Formalism.LocalToGlobal.GlobalTheory.GL3.IntegralityIffAwayAtD
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.FlowTwoTorsionWp
@@ -133,33 +134,11 @@ namespace FrRat
 
 variable (D : D7)
 
-theorem lamOf_mem (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) :
-    ∀ w ∈ TaylorLogMetric.lamOf D cc δ, ∃ c ∈ cc, w = δ * D.host.φ₀ (((c : 𝓞 D.host.K) : D.host.K) : D.host.E) := by
-  intro w hw
-  let S : AddSubgroup ℂ :=
-    { carrier := {w | ∃ c ∈ cc, w = δ * D.host.φ₀ (((c : 𝓞 D.host.K) : D.host.K) : D.host.E)}
-      add_mem' := fun {a b} ha hb => by
-        obtain ⟨c, hc, rfl⟩ := ha
-        obtain ⟨c', hc', rfl⟩ := hb
-        exact ⟨c + c', cc.add_mem hc hc', by push_cast; rw [map_add (f := _)]; ring⟩
-      zero_mem' := ⟨0, cc.zero_mem, by simp⟩
-      neg_mem' := fun {a} ha => by
-        obtain ⟨c, hc, rfl⟩ := ha
-        exact ⟨-c, cc.neg_mem hc, by push_cast; rw [map_neg]; ring⟩ }
-  have hle : TaylorLogMetric.lamOf D cc δ ≤ S := by
-    unfold TaylorLogMetric.lamOf
-    rw [AddSubgroup.closure_le]
-    rintro _ ⟨c, hc, rfl⟩
-    exact ⟨c, hc, rfl⟩
-  exact hle hw
-
-theorem okE (c : 𝓞 D.host.K) : IsIntegral ℤ (((c : D.host.K) : D.host.E)) := by
-  have h := (RingOfIntegers.isIntegral_coe c).map (IsScalarTower.toAlgHom ℤ D.host.K D.host.E)
-  simpa using h
+alias lamOf_mem := _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.lam_mem
 
 theorem order_ideal_smul_mem (c : 𝓞 D.host.K) {a : D.host.E} (ha : a ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E)) :
     ((c : D.host.K) : D.host.E) * a ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) := by
-  have h := Submodule.smul_mem _ (⟨((c : D.host.K) : D.host.E), okE D c⟩ : 𝓞 D.host.E) ha
+  have h := Submodule.smul_mem _ (⟨((c : D.host.K) : D.host.E), _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.intK D c⟩ : 𝓞 D.host.E) ha
   exact h
 
 theorem lamMM_mem (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) :
@@ -185,7 +164,7 @@ theorem lamMM_mem (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) :
     obtain ⟨c, -, rfl⟩ := lamOf_mem D cc δ w hw
     refine ⟨((c : D.host.K) : D.host.E) * a, order_ideal_smul_mem D c ha, ?_⟩
     funext τ
-    rw [map_mul, IntegralOrthonormalChange.embT_K D τ _ (SetLike.coe_mem _)]
+    rw [map_mul, _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.embT_K D τ _ (SetLike.coe_mem _)]
     ring
   exact hle hz
 
@@ -196,12 +175,6 @@ theorem order_ideal_mem_one_by_one {a : D.host.E} (ha : a ∈ (D.host.AA0 : Subm
   ext i j
   fin_cases i; fin_cases j
   simp
-
-theorem blockFourfold_hOne_eq_hOne (L : PeriodPair) (n : Type) [Fintype n] [DecidableEq n] :
-    blk4 (hOne L n) = hOne L (Fin 4 × n) := by
-  ext ⟨a, i⟩ ⟨c, j⟩
-  simp only [blk4, hOne, Matrix.smul_apply, Matrix.one_apply, Prod.mk.injEq, smul_eq_mul]
-  by_cases hac : a = c <;> by_cases hij : i = j <;> simp [hac, hij]
 
 theorem matH_hOne (L : PeriodPair) (n : Type) [Fintype n] [DecidableEq n] :
     matH (hOne L n) = Formalism.L2.Th1.H.stdH L n := rfl
@@ -301,7 +274,7 @@ theorem rational_coordinates : RatCoord := by
 
     rw [hau w i' τ, ← hX w i', map_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
-    rw [map_mul, IntegralOrthonormalChange.embT_K D τ _ (SetLike.coe_mem _)]
+    rw [map_mul, _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.embT_K D τ _ (SetLike.coe_mem _)]
   refine ⟨c, hc1, ?_, ?_⟩
   · intro w i' m
     refine ⟨s w i' * N * A, hS w i', ?_⟩
@@ -313,7 +286,7 @@ theorem rational_coordinates : RatCoord := by
     have hH : ∑ x, g₁.symm (Pi.single w 1) x * conj (g₁.symm (Pi.single w' 1) x) = if w = w' then 1 else 0 := by
       have h := hI (g₁.symm (Pi.single w 1)) (g₁.symm (Pi.single w' 1))
       simp only [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] at h
-      rw [FrRat.blockFourfold_hOne_eq_hOne, FrRat.matH_hOne] at h
+      rw [_root_.Formalism.L2.Ker.blockFourfold_hOne_eq_hOne, FrRat.matH_hOne] at h
       rw [FrRat.stdH_apply', FrRat.stdH_apply'] at h
       have ha : ((Formalism.L2.Th1.F.area B.L : ℝ) : ℂ) ≠ 0 := by
         exact_mod_cast (Formalism.L2.Th1.F.PeriodAreaSignLemmas.area_pos B.L).ne'
@@ -331,7 +304,7 @@ theorem rational_coordinates : RatCoord := by
 
       rw [hc1, map_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
-      rw [map_mul, IntegralOrthonormalChange.embT_K D τ _ (SetLike.coe_mem _)]
+      rw [map_mul, _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.embT_K D τ _ (SetLike.coe_mem _)]
     have hG : ∀ i', D.host.φ₀ (∑ m, ∑ n, ((c w i' m : D.host.K) : D.host.E) *
         ((TaylorLogMetric.hYY D (b m) (b n) : D.host.K) : D.host.E) * D.host.conj ((c w' i' n : D.host.K) : D.host.E)) =
         ∑ τ, g₁.symm (Pi.single w 1) (i', τ) * conj (g₁.symm (Pi.single w' 1) (i', τ)) := by
@@ -407,7 +380,7 @@ theorem fixed_mem_closure (σ : MaximalUnramifiedExtension p →+* MaximalUnrami
   intro ε hε
   have hε' : 0 < ε * ((p : ℝ) ^ k)⁻¹ := by positivity
   obtain ⟨j, hj⟩ := exists_pow_lt_of_lt_one hε' (inv_lt_one_of_one_lt₀ hp1)
-  obtain ⟨n, hn⟩ := Formalism.L2.Th1.D.fixedIsLimit (MaximalUnramifiedExtension p) p σ hσ w hw1 hσw j
+  obtain ⟨n, hn⟩ := _root_.Formalism.L2.Th1.D.fixed_is_limit (MaximalUnramifiedExtension p) p σ hσ w hw1 hσw j
   refine ⟨((n : ℚ) / (p : ℚ) ^ k : ℚ), ⟨_, rfl⟩, ?_⟩
   have hpk0 : ((p : MaximalUnramifiedExtension p) ^ k) ≠ 0 := pow_ne_zero _ (by exact_mod_cast hp.ne_zero)
   have hq : ((((n : ℚ) / (p : ℚ) ^ k : ℚ)) : ℂ_[p]) = ((((n : ℚ) / (p : ℚ) ^ k : ℚ) : MaximalUnramifiedExtension p) : ℂ_[p]) :=
@@ -431,7 +404,7 @@ theorem conjugation_fixed_closure : FixConj := by
   obtain ⟨hwm, hws⟩ := Formalism.L2.Th1.D.sqrt_in_unramified_completion D.host.d hsq h4 p h5 (FrFix.not_sq D.host.d hj) ι
   obtain ⟨w, hw⟩ : ∃ w : MaximalUnramifiedExtension p, (w : ℂ_[p]) = ι (omegaK D.host.d) := ⟨⟨_, hwm⟩, rfl⟩
   have hσw : σ w = 1 - w := hws σ hσ w hw
-  have hLI := Formalism.L2.KerInert.lamCIota p lam ι hι
+  have hLI := _root_.Formalism.L2.KerInert.lattice_embedding p lam ι hι
   have hlc : ∀ z : D.host.E, lamC lam (D.host.φ₀ z) = ι (D.host.φ₀ z) :=
     fun z => hLI.1 _ (Formalism.MainNotions.Ext.test_vector_mem_schwartz_bruhat D z)
   have hsK : D.host.sqrtMinusD ∈ D.host.K := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.B5.br_sqrt_mem D
@@ -744,7 +717,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.TestVectorMemSchwartzBruhat =====
 
 -- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.MMIsom =====
--- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.MMIsom", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsMMIsom\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsFrONB\npublic import Formalism.LocalToGlobal.InertKernelTheory.OneCopyTh1S\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgTrans\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.ReBase\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.TestVectorMemSchwartzBruhat\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.UnitSubstOfLoc\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.IsTorsionPointStandardCM\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK\npublic import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.FinalFree\nimport Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.FamilyLogGammaSmallHolds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.MMIsom", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsMMIsom\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsFrONB\npublic import Formalism.LocalToGlobal.InertKernelTheory.OneCopyTh1S\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgTrans\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.ReBase\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.TestVectorMemSchwartzBruhat\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.UnitSubstOfLoc\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.IsTorsionPointStandardCM\nimport Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK\npublic import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.FinalFree\nimport Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.FamilyLogGammaSmallHolds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OneLetterGaussTranslateOfCmCase\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -807,7 +780,7 @@ theorem isomStd_frames (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Bas
     have i1 := hS0.idx₁
     have i2 := hS0.idx₂
     have hsd := Kap.kap_selfDual_lamM Bc hcc hδ
-    have hst := Kap.kap_stable_lamM Bc b₀ (Kap.kap_odd hcm)
+    have hst := Kap.kap_stable_lamM Bc b₀ (_root_.Formalism.L2.Th1.Top.HAux.odd_b hcm)
     have hiso := hS.isom
     have hidx' := hidx
     rw [hL] at iso i1 i2 hsd hiso hidx'
@@ -955,7 +928,7 @@ theorem frameONB_of (hLB : LocBasisMM) (hRC : RatCoord) (hFC : FixConj) : FrameO
     rw [hF.2 i' τ w, hc w i' τ, map_sum]
     refine Finset.sum_congr rfl fun m _ => ?_
     rw [map_mul, iota_lamC lam ι hι (JetIntegrality.test_vector_mem_schwartz_bruhat (D := D) _),
-      iota_lamC lam ι hι (AlgP.embT_mem_Qbar (D := D) τ _), ← htE', mul_comm]
+      iota_lamC lam ι hι (_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.RestC.emb_mem (D := D) τ _), ← htE', mul_comm]
 
   have hcross : ∀ (x : Fin 4 × D.what₂.Tau) (i' : Fin 4) (τ : D.what₂.Tau),
       ∑ m, Bb τ m * (Cm * scᵀ) (i', m) x = if i' = x.1 then B' τ x.2 else 0 := by
@@ -1403,7 +1376,7 @@ theorem fourProd_main : FourProd := by
       U D B.tor (prjB (eOne 2) (eOne 2) I J s) (B.thZero 1 1) (blkPt D (eOne 2) (eOne 2) I J z) :=
     funext (U_tensPow (eOne 2) (eOne 2) B.tor B.thMM s)
   have hH := fun I J => H _ (torsB (eOne 2) (eOne 2) B.tor p I J s hs)
-  rw [hfun, pSer_blk (eOne 2) (eOne 2) lam taylor_product_over_blocks _ (fun I J => (hH I J).1), atLogV_prod]
+  rw [hfun, pSer_blk (eOne 2) (eOne 2) lam _root_.Formalism.L2.KerInert.IntTens.taylor_product_blocks_factorization _ (fun I J => (hH I J).1), atLogV_prod]
   simp_rw [atLogV_rename (eOne 2) (eOne 2) lam _ C wq v _ (four_block_vector_entry (eOne 2) (eOne 2) lam A b v hvb)]
   rw [ePh_blk lam _ C wq hp2 r]
   rw [← Finset.prod_mul_distrib]
@@ -1414,8 +1387,6 @@ theorem fourProd_main : FourProd := by
 end Formalism.L2.KerInert.MMFour
 
 namespace Formalism.L2.KerInert
-
-theorem four_products_from_one : FourProd := MMFour.fourProd_main
 
 end Formalism.L2.KerInert
 end -- clump:auto
@@ -1511,14 +1482,9 @@ theorem subst_expMv {σ τ : Type} {b : σ → MvPowerSeries τ ℂ_[p]} (hb : M
 section G
 variable (g : G1 p)
 
-theorem cc_l : PowerSeries.constantCoeff g.l = 0 := by
-  unfold G1.l flog
-  rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_mk]
-  simp
-
 theorem cc_lg {σ : Type} {a : MvPowerSeries σ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0) :
     MvPowerSeries.constantCoeff (g.lg a) = 0 :=
-  PowerSeries.constantCoeff_subst_eq_zero ha _ (cc_l g)
+  PowerSeries.constantCoeff_subst_eq_zero ha _ (_root_.Formalism.MainNotions.Ext.CutA.l0 g)
 
 theorem cc_pt (hOk : g.Ok) {σ : Type} {y : MvPowerSeries σ ℂ_[p]} (hy : MvPowerSeries.constantCoeff y = 0) :
     MvPowerSeries.constantCoeff (g.pt y) = 0 :=
@@ -1757,9 +1723,7 @@ end Formalism.L2.KerInert.IntegralUnitSubstitution
 
 namespace Formalism.L2.KerInert
 
-theorem unitSubstLoc_of (hC : CcPrime) (hE : EndIntInertAll) (hN : PhNormOKInertAll) (hB : BiaddInertAll) :
-    UnitSubstLoc :=
-  IntegralUnitSubstitution.unitSubstLoc_of hC hE hN hB
+alias unitSubstLoc_of := _root_.Formalism.L2.KerInert.IntegralUnitSubstitution.unitSubstLoc_of
 
 theorem unitSubstLoc_of_model (hE : EndIntInertAll) (hN : PhNormOKInertAll) (hB : BiaddInertAll) : UnitSubstLoc :=
   unitSubstLoc_of curve_ideal_prime hE hN hB
@@ -1778,13 +1742,13 @@ section -- clump:auto
 namespace Formalism.L2.KerInert
 
 variable [Fact _root_.Formalism.L2.Th1.CM.CM2] in
-theorem genus_one_witt_exists : GenusOneWittExists := ModelP.genus_one_witt_exists_of (GenusOneDatumExistence.genus_one_datum_exists Sigma.invAlg')
+theorem genus_one_witt_exists : GenusOneWittExists := ModelP.genus_one_witt_exists_of (GenusOneDatumExistence.genus_one_datum_exists _root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic)
 
 variable [Fact _root_.Formalism.L2.Th1.CM.CM2] in
 theorem unit_substitution_local : UnitSubstLoc :=
   unitSubstLoc_of_model (ModelP.endIntInertAll_of endomorphisms_integral_inert genus_one_witt_exists)
-    (ModelP.phNormOKInertAll_of phi_norm_inert_prime endomorphisms_integral_inert genus_one_witt_exists)
-    (ModelP.biaddInertAll_of (Dict.biaddInert_of (Sigma.sigmaCurveInert_of Sigma.invAlg' Sigma.secondEisensteinAlgebraic))
+    (ModelP.phNormOKInertAll_of _root_.Formalism.L2.KerInert.PN.phNormOKInert_of endomorphisms_integral_inert genus_one_witt_exists)
+    (ModelP.biaddInertAll_of (Dict.biaddInert_of (Sigma.sigmaCurveInert_of _root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic Sigma.secondEisensteinAlgebraic))
       genus_one_witt_exists)
 
 
@@ -1808,7 +1772,7 @@ variable [Fact _root_.Formalism.L2.Th1.CM.CM2] in
 theorem integral_inert_of_weakApprox (h : WeakApproxAndOrthonormalBases) : IntInert :=
   intInert_of combination_fact pairing_fact (weakApprox_of h.1) pullback_torsion pullback_fact AlgP.algebraic_fact_kernels
     power_series_linearity pairs_standard_at_p (basisInv_of_loc unit_substitution_local) tensor_matrix_units_fact
-    (thFourInt_of (oneCopyLoc_of_isom h.2.2 AlgP.zero_value_algebraic) (locInv_of unit_substitution_local) four_products_from_one
+    (thFourInt_of (oneCopyLoc_of_isom h.2.2 AlgP.zero_value_algebraic) (locInv_of unit_substitution_local) _root_.Formalism.L2.KerInert.MMFour.fourProd_main
       (MMOnb.globONB_of h.2.1) AlgP.zero_value_algebraic)
 
 

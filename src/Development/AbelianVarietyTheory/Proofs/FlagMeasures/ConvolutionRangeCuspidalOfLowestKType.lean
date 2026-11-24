@@ -75,19 +75,13 @@ open scoped InnerProductSpace ComplexOrder ContDiff
 
 namespace GlobalTheory.Reproducing
 
-theorem two_mul_rank_le {n : ℕ} (ε : Fin n → Bool) : 2 * rkR ε ≤ n := by
-  have h := Finset.card_filter_add_card_filter_not (s := (univ : Finset (Fin n))) (fun a => ε a = true)
-  simp only [Bool.not_eq_true, Finset.card_univ, Fintype.card_fin] at h
-  unfold rkR
-  omega
-
 theorem weight_condition (B : RowsAut) (h s : ℝ) (hn : 1 ≤ B.I.n) (hb : HBig B 40 h)
     (hs : s ≤ 2 * (B.I.n : ℝ) ^ 2) (v : InfinitePlace B.I.F) :
     rkR (B.I.ε v) = 0 ∨ 8 * Real.sqrt (rkR (B.I.ε v)) * (s + 4 * B.I.n * rkR (B.I.ε v)) < h := by
   rcases Nat.eq_zero_or_pos (rkR (B.I.ε v)) with h0 | h0
   · exact Or.inl h0
   right
-  have h1 : (2 : ℝ) * rkR (B.I.ε v) ≤ B.I.n := by exact_mod_cast two_mul_rank_le _
+  have h1 : (2 : ℝ) * rkR (B.I.ε v) ≤ B.I.n := by exact_mod_cast _root_.GlobalTheory.KernelExpansion.two_mul_rank_le _
   have h2 : 0 < Real.sqrt (rkR (B.I.ε v)) := Real.sqrt_pos.2 (by exact_mod_cast h0)
   have h3 : (1 : ℝ) ≤ B.I.n := by exact_mod_cast hn
   have h4 := hb v
@@ -429,7 +423,7 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
     exact h0
   refine ⟨part1, ?_⟩
   intro W hW ν hν
-  have hn : 1 ≤ B.I.n := one_le_of_isIsot B.I W hW
+  have hn : 1 ≤ B.I.n := _root_.GlobalTheory.Dec.one_le_rank_of_isIsot B.I W hW
   have hbig32 : HBig B 32 h := by
     intro v
     have h1 : (0:ℝ) ≤ (B.I.n : ℝ) ^ 2 * Real.sqrt (rkR (B.I.ε v)) := by positivity

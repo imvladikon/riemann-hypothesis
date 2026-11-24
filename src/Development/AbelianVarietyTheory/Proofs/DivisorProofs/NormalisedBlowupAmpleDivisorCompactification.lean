@@ -322,23 +322,7 @@ theorem beta_pos (T : Trait F) (x : T.D.toPre.X) (hx : x ≠ 0) : 0 < T.β x x :
   fin_cases j
   simpa using hj
 
-theorem sc_pos {X₁ : Setup F W i} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (c : CTrait X₁ p z₁) : 0 < c.sc := by
-  have hϖ0 : algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 c.T.irr.ne_zero
-  have h0 : c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)‖ < 1 := by
-    by_contra hge
-    push_neg at hge
-    have hinv : ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ hge
-    obtain ⟨w, hw⟩ := (c.int _).1 hinv
-    apply c.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective c.T.V (FractionRing c.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold CTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
+alias sc_pos := _root_.GlobalTheory.Poinc.CTrait.scale_pos
 
 theorem exists_shortest {X : Type} [AddCommGroup X] (q : QuadraticMap ℤ X ℝ)
     (hq : Filter.Tendsto q Filter.cofinite Filter.atTop) (N : ℕ) (a : X) :
@@ -467,23 +451,7 @@ theorem norm_evC_lt (c : CTrait X₁ p z₁) (a : X₁.M.Z.presheaf.stalk z₁) 
   have h1 : ¬ IsUnit (X₁.M.stalkEquiv z₁ a) := fun hu => ha ((isUnit_map_iff (X₁.M.stalkEquiv z₁) a).1 hu)
   exact (RatModel.norm_val_lt_one_iff c.cen (X₁.M.stalkEquiv z₁ a).2).2 h1
 
-theorem sc_pos (c : CTrait X₁ p z₁) : 0 < c.sc := by
-  have hϖ0 : algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 c.T.irr.ne_zero
-  have h0 : c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)‖ < 1 := by
-    by_contra hge
-    push_neg at hge
-    have hinv : ‖c.ι (algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ hge
-    obtain ⟨w, hw⟩ := (c.int _).1 hinv
-    apply c.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective c.T.V (FractionRing c.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold CTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
+alias sc_pos := _root_.GlobalTheory.Poinc.CTrait.scale_pos
 
 theorem beta_pos (c : CTrait X₁ p z₁) (x : c.T.D.toPre.X) (hx : x ≠ 0) : 0 < c.T.β x x := by
   obtain ⟨j, hj⟩ := IsMonomial.exists_pos (IsLocalRing.maximalIdeal.isMaximal c.T.V).ne_top c.T.mono hx
@@ -593,26 +561,6 @@ namespace GlobalTheory.Poinc.GApprox
 
 variable {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) (Fin 8) ℤ} {Z : Scheme.{0}} {i : F.X ⟶ Z}
 
-theorem sc_pos {X₁ : Setup F W i} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (c : CTrait X₁ p z₁) : 0 < c.sc := by
-  set u := algebraMap c.T.V (FractionRing c.T.V) c.T.ϖ with hu
-  have h0 : c.T.ϖ ≠ 0 := c.T.irr.ne_zero
-  have hu0 : u ≠ 0 := by
-    rw [hu]; exact (IsFractionRing.injective c.T.V (FractionRing c.T.V)).ne_iff' (map_zero _) |>.2 h0
-  have hι0 : c.ι u ≠ 0 := (map_ne_zero c.ι).2 hu0
-  have hle : ‖c.ι u‖ ≤ 1 := (c.int u).2 ⟨_, rfl⟩
-  have hlt : ‖c.ι u‖ < 1 := by
-    refine lt_of_le_of_ne hle fun h1 => ?_
-    have : ‖c.ι u⁻¹‖ ≤ 1 := by rw [map_inv₀, norm_inv, h1, inv_one]
-    obtain ⟨v, hv⟩ := (c.int _).1 this
-    apply c.T.irr.not_isUnit
-    refine IsUnit.of_mul_eq_one v ?_
-    apply IsFractionRing.injective c.T.V (FractionRing c.T.V)
-    rw [map_mul, hv, ← hu, mul_inv_cancel₀ hu0, map_one]
-  have hpos : 0 < ‖c.ι u‖ := norm_pos_iff.2 hι0
-  unfold CTrait.sc
-  rw [← hu]
-  linarith [Real.log_neg hpos hlt]
-
 theorem sc_evalZ_eq_of_equiv {φ : InvFun ℤ} {X Y : Type} [AddCommGroup X] [AddCommGroup Y] [Module.Finite ℤ X]
     [Module.Finite ℤ Y] (hP : IsPolFanOn id φ X) {β : LinearMap.BilinForm ℤ X} (hs : ∀ a b, β a b = β b a)
     (hp : ∀ x, 0 ≤ β x x) {β' : LinearMap.BilinForm ℤ Y} {s s' : ℝ} (hs0 : 0 ≤ s) (hs' : 0 < s') (e : X ≃ₗ[ℤ] Y)
@@ -640,7 +588,7 @@ theorem sc_evalZ_eq {X₁ : Setup F W i} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M
   convert sc_evalZ_eq_of_equiv hP (Φ.bal y).1 (fun x => by
       by_cases hx : x = 0
       · simp [hx]
-      · exact (Φ.pos y x hx).le) (Φ.sc_pos y).le (sc_pos c) e he
+      · exact (Φ.pos y x hx).le) (Φ.sc_pos y).le (_root_.GlobalTheory.Poinc.CTrait.scale_pos c) e he
 
 end GlobalTheory.Poinc.GApprox
 

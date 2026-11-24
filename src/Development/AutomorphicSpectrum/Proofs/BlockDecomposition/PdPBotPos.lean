@@ -646,9 +646,9 @@ theorem bc_single : KH.LocBc → KH.PolyTf → BcOn True := by
   swap
   · exact absurd trivial hF
   obtain ⟨c, hc, rfl⟩ : ∃ c : ℤ, 0 ≤ c ∧ r = r' - c := ⟨r' - r, by omega, by ring⟩
-  obtain ⟨cO, eO, tfO, hiO, htO, hevO⟩ := GlobalTheory.T.exists_chart_from_coordinates (O := O) (R := O) (dividedPowersBot O) l s hO q
+  obtain ⟨cO, eO, tfO, hiO, htO, hevO⟩ := _root_.GlobalTheory.CompanionTheory.ChartAlg.chart_exists (O := O) (R := O) (dividedPowersBot O) l s hO q
     (Ideal.Quotient.mk ⊥) (fun _ => rfl) cV
-  obtain ⟨cA, eA, tfA, hiA, htA, hevA⟩ := GlobalTheory.T.exists_chart_from_coordinates (O := O) (R := A) γ l s hA q (κA O I) (fun _ => rfl) cV
+  obtain ⟨cA, eA, tfA, hiA, htA, hevA⟩ := _root_.GlobalTheory.CompanionTheory.ChartAlg.chart_exists (O := O) (R := A) γ l s hA q (κA O I) (fun _ => rfl) cV
   obtain ⟨e₀, he₀⟩ := _root_.GlobalTheory.CompanionTheory.BcMor.chart_mor γ q cV cO cA eO eA hiO hiA hevO hevA
   have hQ : ∀ T, TO q l s {V} T → InU V T := by
     rintro T ⟨-, V', rfl, h⟩
@@ -658,8 +658,8 @@ theorem bc_single : KH.LocBc → KH.PolyTf → BcOn True := by
     exact h
   have hD : TO q l s {V} cO.D := ⟨tfO, V, rfl, cO.inV⟩
   have hD' : TS γ q l s {V} cA.D := ⟨tfA, V, rfl, cA.inV⟩
-  have gO := GlobalTheory.T.chart_is_good cO
-  have gA := GlobalTheory.T.chart_is_good cA
+  have gO := _root_.GlobalTheory.CompanionTheory.ChartMaps.good cO
+  have gA := _root_.GlobalTheory.CompanionTheory.ChartMaps.good cA
   let E := cO.frame gO (TO q l s {V}) hQ hD
   let E' := cA.frame gA (TS γ q l s {V}) hQ' hD'
   let e : E.D ⟶ (smO γ q l s {V}).G.obj E'.D := ObjectProperty.homMk e₀

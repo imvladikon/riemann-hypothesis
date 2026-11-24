@@ -224,12 +224,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal NumberField IsDedekindDomain Polynomial
-
-theorem _root_.GlobalTheory.T.twisted_mu_piece_mem_base_change : ∀ D : D7, SumRepresentations.tie0 D → SumRepresentations.adm3 D → SumRepresentations.adm5 D → _root_.Formalism.MainNotions.SumRepresentations.adm7_alt D → GlobalTheory.RowCopy.RowSize D → GlobalTheory.RowCopy.HeckeSplitOne D → ∀ (i : D.nd.Loc) (σ : D.what₂.FT) (P : D.naut.AV i) (Pa : List (Part D.naut.CG)), D.what₂.isot (D.nd.j i) σ ≠ ⊥ → thetaOf D.nd D.naut i σ P → IsBCV D.nd D.naut i P Pa → (⟨1, D.naut.tw (D.naut.muC i) D.naut.etaTinv, D.R.t⟩ : Part D.naut.CG) ∈ Pa := by
-  first | exact @_root_.GlobalTheory.MuBlock.mu_block_mem_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MuBlockMemStatement =====
@@ -250,7 +244,7 @@ theorem conclusion42_of_parts (D : D7) (a : _root_.Formalism.MainNotions.SumRepr
   intro i σ hσ
   obtain ⟨P, hP⟩ := th i σ hσ
   obtain ⟨Pa, hPa⟩ := a1 i P
-  obtain ⟨Sig, h1, h2⟩ := _root_.GlobalTheory.RowThetaParam.param_of_theta D t0 a3 a4 a5 i σ P Pa hP hPa (_root_.GlobalTheory.T.twisted_mu_piece_mem_base_change D t0 a3 a5 a7 s hk i σ P Pa hσ hP hPa)
+  obtain ⟨Sig, h1, h2⟩ := _root_.GlobalTheory.RowThetaParam.param_of_theta D t0 a3 a4 a5 i σ P Pa hP hPa (_root_.GlobalTheory.MuBlock.mu_block_mem_alt D t0 a3 a5 a7 s hk i σ P Pa hσ hP hPa)
   refine ⟨⟨⟨_, (l i σ).2 hσ, (l i σ).1⟩, P, hP⟩, Sig, h1, fun P' hP' => ?_⟩
   obtain rfl : P = P' := by
     by_contra hne

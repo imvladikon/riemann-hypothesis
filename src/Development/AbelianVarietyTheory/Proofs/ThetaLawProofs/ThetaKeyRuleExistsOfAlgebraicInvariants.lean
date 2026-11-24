@@ -98,8 +98,6 @@ open GlobalTheory.AbLaw
 open GlobalTheory.KeyPow GlobalTheory.KeyKa
 
 
-theorem _root_.GlobalTheory.T.exists_ellipticKeyData_value_eq_discriminant : ThetaUnifAV → ∀ (R : Type) [CommRing R] (W : WeierstrassCurve R) [W.IsElliptic], ∃ x : KeyIn R, x.P.g = 1 ∧ ∀ (s : R →+* ℂ) (x' : KeyIn ℂ) (τ M : Matrix (Fin x'.P.g) (Fin x'.P.g) ℂ) (a b : Fin x'.P.g → ℂ) (c : ℂ), KeyPB x' x s → charHalf x'.P.g a b → c ≠ 0 → NormalAt x' τ M a b c → M.det ^ 4 / c ^ 8 = s W.Δ := by
-  first | exact @GlobalTheory.EllipticKey.exists_keyIn_value_eq_discriminant
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsEllipticKeyDataValueEqDiscriminantStatement =====
@@ -488,11 +486,6 @@ def HasValue (g n : ℕ) (ka : KeyIn ℂ → ℂˣ) (a₀ : ℂ) : Prop :=
     charHalf x.P.g a b → c₀ ≠ 0 → Mx.det ≠ 0 → NormalAt x τ Mx a b c₀ →
     (ka x : ℂ) = a₀ * (Mx.det ^ 4 / c₀ ^ 8) ^ n
 
-theorem dim_of_keyPB {R R' : Type} [CommRing R] [CommRing R'] {x' : KeyIn R'} {x : KeyIn R} {f : R →+* R'}
-    (h : KeyPB x' x f) : x'.P.g = x.P.g := by
-  obtain ⟨_, _, _, hg, -⟩ := h
-  exact hg
-
 theorem HasValue.holo {g n : ℕ} {ka : KeyIn ℂ → ℂˣ} {a₀ : ℂ} (h : HasValue g n ka a₀) (a b : Fin g → ℂ)
     (hab : charHalf g a b) : ∃ U : Matrix (Fin g) (Fin g) ℂ → ℂ, Key.IsHoloSiegel g U ∧
       ∀ (x : KeyIn ℂ) (h : x.P.g = g) (τ : Matrix (Fin x.P.g) (Fin x.P.g) ℂ),
@@ -557,7 +550,7 @@ theorem exists_rule_sq (hinv : Key.Chi.InversionStatement) {g c M : ℕ}
 theorem exists_test (hT : ThetaUnifAV) {g n : ℕ} (hg : 1 ≤ g) {ka : KeyIn ℂ → ℂˣ} {a₀ : ℂ} (h : HasValue g n ka a₀)
     {S : Type} [CommRing S] (W : WeierstrassCurve S) [W.IsElliptic] (s : S →+* ℂ) :
     ∃ (y : KeyIn S) (z : KeyIn ℂ), y.P.g = g ∧ KeyPB z y s ∧ (ka z : ℂ) = a₀ * s W.Δ ^ (g * n) := by
-  obtain ⟨x, hx, hxv⟩ := GlobalTheory.T.exists_ellipticKeyData_value_eq_discriminant hT S W
+  obtain ⟨x, hx, hxv⟩ := _root_.GlobalTheory.EllipticKey.exists_keyIn_value_eq_discriminant hT S W
   obtain ⟨y, hy⟩ := exists_isKeyPow S x g hg
   obtain ⟨x', hx'⟩ := exists_keyPB_ring x s
   obtain ⟨z, hz⟩ := exists_isKeyPow ℂ x' g hg
@@ -568,7 +561,7 @@ theorem exists_test (hT : ThetaUnifAV) {g n : ℕ} (hg : 1 ≤ g) {ka : KeyIn �
   obtain ⟨e, τ', M', hd, hn⟩ :=
     normalAt_pow x' z g τ Mx (fun i => (m i : ℝ) / 2) (fun i => (m' i : ℝ) / 2) c hz hn₀
   refine ⟨y, z, by rw [hy.dim_eq, hx, Nat.mul_one], keyPB_of_isKeyPow S ℂ s x y x' z g hx' hy hz, ?_⟩
-  rw [h z τ' M' _ _ _ (by rw [hz.dim_eq, dim_of_keyPB hx', hx, Nat.mul_one]) ⟨fun i => hab.1 _, fun i => hab.2 _⟩
+  rw [h z τ' M' _ _ _ (by rw [hz.dim_eq, _root_.GlobalTheory.KeyGalDesc.g_eq hx', hx, Nat.mul_one]) ⟨fun i => hab.1 _, fun i => hab.2 _⟩
     (pow_ne_zero _ hc) (by rw [hd]; exact pow_ne_zero _ hM) hn, ← hΔ, hd, pow_mul]
   congr 2
   ring
@@ -591,7 +584,7 @@ theorem const_rat_unit (hT : ThetaUnifAV) {g n M : ℕ} (hg : 1 ≤ g)
   obtain ⟨i⟩ := hlift (T := ℚ) hQ.isUnit
   obtain ⟨y, z, hy, hz, hv⟩ := exists_test hT hg h (W.map (algebraMap ℤ S)) ((Rat.castHom ℂ).comp i)
   obtain ⟨yQ, hyQ⟩ := exists_keyPB_ring y i
-  have hyQg : yQ.P.g = g := (dim_of_keyPB hyQ).trans hy
+  have hyQg : yQ.P.g = g := (_root_.GlobalTheory.KeyGalDesc.g_eq hyQ).trans hy
   rw [hF ℚ ℂ (Rat.castHom ℂ) yQ z hyQg (GlobalTheory.KeyCancel.keyPB_cancel _ _ _ y yQ z _ _ hyQ hz),
     WeierstrassCurve.map_Δ, eq_intCast (algebraMap ℤ S), map_intCast, eq_ratCast] at hv
   have hC : (W.Δ : ℂ) ≠ 0 := Int.cast_ne_zero.2 hW
@@ -604,7 +597,7 @@ theorem const_rat_unit (hT : ThetaUnifAV) {g n M : ℕ} (hg : 1 ≤ g)
     obtain ⟨yK, hyK⟩ := exists_keyPB_ring yQ (Rat.castHom K)
     have hyK' := GlobalTheory.keyPB_trans _ _ _ y yQ yK _ _ hyQ hyK
     rw [hext ((Rat.castHom K).comp i) ((algebraMap R K).comp j)] at hyK'
-    obtain ⟨u, hu, -⟩ := hU R K yR yK ((dim_of_keyPB hyR).trans hy) hM
+    obtain ⟨u, hu, -⟩ := hU R K yR yK ((_root_.GlobalTheory.KeyGalDesc.g_eq hyR).trans hy) hM
       (GlobalTheory.KeyCancel.keyPB_cancel _ _ _ y yR yK _ _ hyR hyK')
     rw [hF ℚ K _ yQ yK hyQg hyK, eq_ratCast] at hu
     have hK : (W.Δ : K) ≠ 0 := Int.cast_ne_zero.2 hW
@@ -731,11 +724,6 @@ theorem nonempty_ringHom_complex (K : Type) [Field K] [CharZero K] [Countable K]
     (hL ▸ Cardinal.aleph0_lt_continuum) (Cardinal.eq.1 (hL.trans Cardinal.mk_complex.symm))
   exact ⟨e.toRingHom.comp j⟩
 
-theorem g_eq_of_keyPB {R R' : Type} [CommRing R] [CommRing R'] {x' : KeyIn R'} {x : KeyIn R} {f : R →+* R'}
-    (h : KeyPB x' x f) : x'.P.g = x.P.g := by
-  obtain ⟨_, _, _, hg, _⟩ := h
-  exact hg
-
 def NormalValue (g n : ℕ) (κ : ∀ (K : Type) [Field K] [CharZero K], KeyIn K → Kˣ) : Prop :=
   ∀ (x : KeyIn ℂ) (τ Mx : Matrix (Fin x.P.g) (Fin x.P.g) ℂ) (a b : Fin x.P.g → ℂ) (c₀ : ℂ), x.P.g = g →
     charHalf x.P.g a b → c₀ ≠ 0 → Mx.det ≠ 0 → NormalAt x τ Mx a b c₀ → (κ ℂ x : ℂ) = (Mx.det ^ 4 / c₀ ^ 8) ^ n
@@ -745,10 +733,10 @@ theorem pow_eq_pow (hU : ThetaUnifAV) (hD : KeyDesc) {g n n' M M' : ℕ}
     (hn : NormalValue g n κ) (hn' : NormalValue g n' κ') (K : Type) [Field K] [CharZero K] (x : KeyIn K)
     (hx : x.P.g = g) : (κ K x : K) ^ n' = (κ' K x : K) ^ n := by
   obtain ⟨K₀, x₀, hK₀, hx₀⟩ := hD K x
-  have hg₀ : x₀.P.g = g := (g_eq_of_keyPB hx₀).symm.trans hx
+  have hg₀ : x₀.P.g = g := (_root_.GlobalTheory.KeyGalDesc.g_eq hx₀).symm.trans hx
   obtain ⟨σ⟩ := nonempty_ringHom_complex K₀
   obtain ⟨y, hy⟩ := exists_keyPB_ring x₀ σ
-  have hgy : y.P.g = g := (g_eq_of_keyPB hy).trans hg₀
+  have hgy : y.P.g = g := (_root_.GlobalTheory.KeyGalDesc.g_eq hy).trans hg₀
   obtain ⟨⟨τ, Mx, a, b, c, hab, hc, hM, hN⟩, -⟩ := KeyNormalExists.exists_normalAt hU y
   have e : (κ ℂ y : ℂ) ^ n' = (κ' ℂ y : ℂ) ^ n := by
     rw [hn y τ Mx a b c hgy hab hc hM hN, hn' y τ Mx a b c hgy hab hc hM hN, ← pow_mul, ← pow_mul, Nat.mul_comm]
@@ -796,22 +784,22 @@ theorem keyRule_of_kaSt : Out.Laws → ThetaUnifAV → Key.Chi.InversionStatemen
     exact (hκ P.g h₁).2.1.1 K P hg rig hr th hth v hv th' hth' v' hv' a Mx rfl
   · intro K K' _ _ _ _ f x x' hg h
     dsimp only
-    rw [show κ x'.P.g K' x' = κ x.P.g K' x' by rw [g_eq_of_keyPB h]]
+    rw [show κ x'.P.g K' x' = κ x.P.g K' x' by rw [_root_.GlobalTheory.KeyGalDesc.g_eq h]]
     exact (hκ _ hg).2.1.2.1 K K' f x x' rfl h
   · intro R K _ _ _ _ _ _ _ x xK hg h
     dsimp only
-    rw [show κ xK.P.g K xK = κ x.P.g K xK by rw [g_eq_of_keyPB h]]
+    rw [show κ xK.P.g K xK = κ x.P.g K xK by rw [_root_.GlobalTheory.KeyGalDesc.g_eq h]]
     obtain ⟨-, h₁, h₂⟩ := hκ _ hg
     by_cases hu : IsUnit (M x.P.g : R)
     · obtain ⟨u, hu₁, hu₂⟩ := h₁.2.2.1 R K x xK rfl hu h
       refine ⟨u, hu₁, fun k _ _ r xk hr hk => ?_⟩
-      rw [show κ xk.P.g k xk = κ x.P.g k xk by rw [g_eq_of_keyPB hk]]
+      rw [show κ xk.P.g k xk = κ x.P.g k xk by rw [_root_.GlobalTheory.KeyGalDesc.g_eq hk]]
       exact hu₂ k r xk hr hk
     · obtain ⟨p, hp, hpu⟩ := exists_prime_of_not_isUnit (hM _) hu
       obtain ⟨n', M', κ', hn', -, h'⟩ := hall x.P.g p hp
       obtain ⟨hpM, h₁', h₂'⟩ := h' hg
       obtain ⟨u, hu₁, -⟩ := h₁'.2.2.1 R K x xK rfl (hpu _ hpM) h
-      have e := pow_eq_pow hU hD h₁ h₁' h₂ h₂' K xK (g_eq_of_keyPB h)
+      have e := pow_eq_pow hU hD h₁ h₁' h₂ h₂' K xK (_root_.GlobalTheory.KeyGalDesc.g_eq h)
       rw [hu₁, ← map_pow, ← Units.val_pow_eq_pow_val u] at e
       obtain ⟨w, hw⟩ := exists_unit_of_pow hn' e
       exact ⟨w, hw, fun k _ _ r xk hr _ => absurd (isUnit_of_surjective hr (hM _)) hu⟩

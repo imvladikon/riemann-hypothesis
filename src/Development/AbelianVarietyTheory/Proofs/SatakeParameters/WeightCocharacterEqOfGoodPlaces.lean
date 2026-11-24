@@ -99,12 +99,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Hk3.LabDet
 
-theorem adjoin_common {M : Type} [AddCommGroup M] [Module ℂ M] (s : Set (Module.End ℂ M)) (u u' : M)
-    (h : ∀ x ∈ s, ∃ l : ℂ, x u = l • u ∧ x u' = l • u') :
-    ∀ a ∈ Algebra.adjoin ℂ s, ∃ l : ℂ, a u = l • u ∧ a u' = l • u' := by
-  first
-  | (apply _root_.GlobalTheory.CommonEigenvalueAdjoin.exists_common_eigenvalue_of_mem_adjoin <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CommonEigenvalueAdjoin.exists_common_eigenvalue_of_mem_adjoin ..)
+alias adjoin_common := _root_.GlobalTheory.CommonEigenvalueAdjoin.exists_common_eigenvalue_of_mem_adjoin
 
 variable {D : D7}
 

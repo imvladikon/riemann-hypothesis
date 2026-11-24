@@ -259,8 +259,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.diamondOperators_on_charts : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (i : ℕ) (hi : i ≤ B.R.m) (bad : Set (HeightOneSpectrum (𝓞 B.host.F))) (Ch : Type) (chOf : (I.stp u a i).Cl → Ch) (K : ∀ β : Ch, LevelChart (I.rec7 l Z) (B.T u) bad i hi (fun c : {c // chOf c = β} => (I.chain l u a).stab i c.1) (fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c.1))) (eY : (I.chain l u a).Y i ≃ Formalism.L2.Forms.Fr (I.rec7 l Z) i hi) (eV : (I.atT l u a).vT ≃ {v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F) // (B.T u : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal}), I.ReadsK l Z u a i hi chOf K → (∀ β, FunKilled (K β).lev (X.piT u)) → I.IdY l Z u a i hi eY → I.IdV l u a eV → DilationCompatibleChart (D := (I.rec7 l Z)) (I.fm l u a) eY eV chOf (lat := fun c => latCrd (I.rec7 l Z) i hi (I.latAt u a i c)) K := by
-  first | exact @GlobalTheory.Mem.Col2.DiaChart.dilTied
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DiamondOperatorsOnChartsStatement =====
@@ -555,8 +553,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Col Formalism.L2.DIV Formalism.L2.Ker Formalism.UG Formalism.L2.Forms GlobalTheory.Mem GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2 GlobalTheory.Mem.Col2.TC Matrix
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_levelJ_character_eq_member_off_places : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (Ch0 : B.Word → ℕ → Type) (chOf0 : ∀ u i, ((I.rec7 l Z).mem u).C.cls i → Ch0 u i) (F : ∀ u, FormsTiedSym (I.rec7 l Z) u (Ch0 u) (chOf0 u)) (u : B.Word) (a : I.ι) (Q : Finset (HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F))) (h1 : 1 ≤ B.R.m - 1) (Ch : Type) (_ : Finite Ch) (chOf : (I.stp u a (B.R.m - 1)).Cl → Ch) (K : ∀ β : Ch, LevelChart (I.rec7 l Z) (B.T u) (badQ (I.rec7 l Z) Q) (B.R.m - 1) (Nat.sub_le _ _) (fun c : {c // chOf c = β} => (I.chain l u a).stab (B.R.m - 1) c.1) (fun c => latCrd (I.rec7 l Z) (B.R.m - 1) (Nat.sub_le _ _) (I.latAt u a (B.R.m - 1) c.1))) (g : Ch → Ch0 u (B.R.m - 1)), (∀ v, v ∈ Q ↔ I.UnderQ a v) → (∀ u, I.StdF l Z u (F u)) → (∀ u j v h, (F u).glevJ.fr j v h = 1) → I.ReadsK l Z u a (B.R.m - 1) (Nat.sub_le _ _) chOf K → (∀ β, ∀ v, v ∉ Q → (K β).lev.Uloc v = ((F u).ch (B.R.m - 1) h1 (succ_pred_m B.R) (g β)).lev.Uloc v) → (∀ β (κ : (K β).lev.U) (κ' : ((F u).ch (B.R.m - 1) h1 (succ_pred_m B.R) (g β)).lev.U), κ.1 = κ'.1 → (∀ v ∈ Q, bc (prV (E := (I.rec7 l Z).host.E) v) κ.1 = 1) → (K β).lev.chi κ = ((F u).ch (B.R.m - 1) h1 (succ_pred_m B.R) (g β)).lev.chi κ') → ∀ J : TwLevJ I l Z F Q u a chOf K, ∃ χ : J.levJ.U →* ℂˣ, (∀ β (κ : J.levJ.U) (κ' : (K β).lev.U), κ'.1 = reGL (rankN (I.rec7 l Z) (B.R.m - 1) (Nat.sub_le _ _)) _ κ.1 → (K β).lev.chi κ' = χ κ) ∧ ∀ (κ : J.levJ.U) (κ' : (F u).levJ.U), κ'.1 = reGL (rankN (I.rec7 l Z) (B.R.m - 1) (Nat.sub_le _ _)) _ κ.1 → (∀ v ∈ Q, bc (prV (E := (I.rec7 l Z).host.E) v) κ.1 = 1) → χ κ = (F u).levJ.chi κ' := by
-  first | exact @GlobalTheory.Mem.Col2.TC.twLevJ_exists_chi_off
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelJCharacterEqMemberOffPlacesStatement =====
@@ -744,12 +740,6 @@ theorem den_nat {κ : Type} [Fintype κ] (f : κ → E) :
     rw [e, Int.cast_neg, Int.cast_natCast, neg_mul, neg_neg] at this
     exact this
 
-theorem exists_smul_mem {n : ℕ} (Λ : Submodule (𝓞 E) (Fin n → E)) (hs : Submodule.span E (Λ : Set (Fin n → E)) = ⊤)
-    (y : Fin n → E) : ∃ m : ℕ, m ≠ 0 ∧ (m : E) • y ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.NatSmulMemIntegral.exists_nat_smul_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NatSmulMemIntegral.exists_nat_smul_mem ..)
-
 theorem exists_den {n : ℕ} (Λ : Submodule (𝓞 E) (Fin n → E)) (hf : Module.Finite (𝓞 E) Λ) :
     ∃ m : ℕ, m ≠ 0 ∧ ∀ y ∈ Λ, ∀ i, IsIntegral ℤ ((m : E) * y i) := by
   obtain ⟨s, hs⟩ : Λ.FG := Module.Finite.iff_fg.1 hf
@@ -796,7 +786,7 @@ theorem loc_lower {n : ℕ} (v : HeightOneSpectrum (𝓞 F)) (Λ : Submodule (�
     (hs : Submodule.span E (Λ : Set (Fin n → E)) = ⊤) :
     ∃ m : ℕ, m ≠ 0 ∧ ∀ j, (Pi.single j (m : E ⊗[F] v.adicCompletion F) : Fin n → E ⊗[F] v.adicCompletion F)
       ∈ Formalism.L2.Herm.locL v Λ := by
-  choose a ha h using fun j : Fin n => exists_smul_mem Λ hs (Pi.single j 1)
+  choose a ha h using fun j : Fin n => _root_.GlobalTheory.NatSmulMemIntegral.exists_nat_smul_mem Λ hs (Pi.single j 1)
   refine ⟨∏ j, a j, Finset.prod_ne_zero_iff.2 fun j _ => ha j, fun j => ?_⟩
   obtain ⟨c, hc⟩ : a j ∣ ∏ j, a j := Finset.dvd_prod_of_mem _ (Finset.mem_univ j)
   have h1 : (fun i => inclE (v.adicCompletion F) (((a j : E) • (Pi.single j 1 : Fin n → E)) i))
@@ -1198,7 +1188,7 @@ theorem twStep_top (hok : I.Ok) (pins : TC.Pins B X) {H : Formalism.L2.Herm.Herm
     have hχ (κ κ' : ((F u).cls B.R.m le_rfl (Or.inr rfl)).lev.U)
         (e : κ.1 = κ'.1) : χ κ = χ κ' := congrArg χ (Subtype.ext e)
     exact ⟨S, ⟨fun _ _ κ κ' e _ => hχ κ κ' e, fun h => (h rfl).elim, fun h => (h rfl).elim⟩⟩
-  · obtain ⟨K1, hk, htop, hoU, hfin, hchi⟩ := GlobalTheory.T.chart_lastStep_twistBasePoint I hok pins l Z u a Q ((F u).cls B.R.m le_rfl (Or.inr rfl)) hQ hr0
+  · obtain ⟨K1, hk, htop, hoU, hfin, hchi⟩ := _root_.GlobalTheory.Mem.Col2.TC.chart_twm I hok pins l Z u a Q ((F u).cls B.R.m le_rfl (Or.inr rfl)) hQ hr0
     have hr : I.ReadsK l Z u a B.R.m le_rfl (fun _ => ()) K1 :=
       hk.elim fun k h => ⟨k, h.1⟩
     have hLb (β : Unit) : (K1 β).lev.Lb = ((F u).cls B.R.m le_rfl (Or.inr rfl)).lev.Lb := by
@@ -1269,10 +1259,10 @@ theorem twPack_ex (hok : I.Ok) (pins : TC.Pins B X) {H : Formalism.L2.Herm.HermC
       · exact absurd (ha ▸ (hQ v).1 hv) (GlobalTheory.T.not_twistPlace_referenceTuple I hok v)
     · obtain ⟨n, hn, h⟩ := (St (B.R.m - 1)).chiFin ha h1 (Nat.sub_le _ _) β
       exact ⟨n, hn, fun κ _ => h κ⟩
-  obtain ⟨J⟩ := GlobalTheory.T.exists_penultimateLevel_couplingCosets I hok pins l Z H.Ch H.chOf F u a Q h1 (St (B.R.m - 1)).Ch (St (B.R.m - 1)).fin (St (B.R.m - 1)).chOf
+  obtain ⟨J⟩ := _root_.GlobalTheory.Mem.Col2.TwistLevel.exists_levJ_cosets I hok pins l Z H.Ch H.chOf F u a Q h1 (St (B.R.m - 1)).Ch (St (B.R.m - 1)).fin (St (B.R.m - 1)).chOf
     (fun β => (St (B.R.m - 1)).K h1 (Nat.sub_le _ _) β) (St (B.R.m - 1)).gOf hQ hF hJ ((St (B.R.m - 1)).readsQ h1 (Nat.sub_le _ _) h2) hfin
     (fun β v hv => (St (B.R.m - 1)).offK h1 h2 β v hv) (fun β κ κ' e hv => (St (B.R.m - 1)).chiC h1 h2 β κ κ' e hv)
-  obtain ⟨χ, hχ, hχ'⟩ := GlobalTheory.T.exists_levelJ_character_eq_member_off_places I hok pins l Z H.Ch H.chOf F u a Q h1 (St (B.R.m - 1)).Ch (St (B.R.m - 1)).fin (St (B.R.m - 1)).chOf
+  obtain ⟨χ, hχ, hχ'⟩ := _root_.GlobalTheory.Mem.Col2.TC.twLevJ_exists_chi_off I hok pins l Z H.Ch H.chOf F u a Q h1 (St (B.R.m - 1)).Ch (St (B.R.m - 1)).fin (St (B.R.m - 1)).chOf
     (fun β => (St (B.R.m - 1)).K h1 (Nat.sub_le _ _) β) (St (B.R.m - 1)).gOf hQ hF hJ ((St (B.R.m - 1)).reads h1 (Nat.sub_le _ _))
     (fun β v hv => (St (B.R.m - 1)).offK h1 h2 β v hv) (fun β κ κ' e hv => (St (B.R.m - 1)).chiC h1 h2 β κ κ' e hv) J
   exact ⟨⟨St, hSt ▸ hSm, { J with chiJ := χ, chiJ_eq := hχ }, hχ'⟩⟩
@@ -1387,10 +1377,10 @@ def twW (hok : I.Ok) (pins : TC.Pins B X) (l0 : I.Law0 l) {H : Formalism.L2.Herm
       chiJ u μ _ := (p u μ).J.chiJ
       chiJ_eq u μ _ _ β κ κ' e := (p u μ).J.chiJ_eq β κ κ' e
       val u μ _ i h1 hm := by
-        have hv := GlobalTheory.T.hermitianChart_complex_rational_integral_forms I hok pins l Z u μ i hm _ _ _ (fun β => ((p u μ).St i).K h1 hm β) (twYS (twT Q hQ p) F u μ i hm)
+        have hv := _root_.GlobalTheory.Mem.Col2.TC.val_tied I hok pins l Z u μ i hm _ _ _ (fun β => ((p u μ).St i).K h1 hm β) (twYS (twT Q hQ p) F u μ i hm)
           (((p u μ).St i).reads h1 hm) (idY_twYS hF Q hQ p u μ i hm)
         exact ⟨hv.Fi, hv.rat, fun w _ => hv.lat w trivial⟩
-      dil u μ _ i h1 hm := GlobalTheory.T.diamondOperators_on_charts I hok pins l Z u μ i hm _ _ _ (fun β => ((p u μ).St i).K h1 hm β) (twYS (twT Q hQ p) F u μ i hm)
+      dil u μ _ i h1 hm := _root_.GlobalTheory.Mem.Col2.DiaChart.dilTied I hok pins l Z u μ i hm _ _ _ (fun β => ((p u μ).St i).K h1 hm β) (twYS (twT Q hQ p) F u μ i hm)
         ((A u μ).eV (F u).atT) (((p u μ).St i).reads h1 hm) (((p u μ).St i).fk h1 hm) (idY_twYS hF Q hQ p u μ i hm) (by
           intro v
           show ((F u).atT.eV ((A u μ).eVT v)).1 = _

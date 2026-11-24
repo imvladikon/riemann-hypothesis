@@ -307,10 +307,6 @@ def jetVec {A K : Type} [CommRing A] [Field K] {D : ℕ} (φ : A →+* K) (d : F
     rw [Pi.add_apply, Pi.smul_apply, Pi.smul_apply, smul_eq_mul, MulOpposite.smul_eq_mul_unop,
       MulOpposite.unop_op, hd c, map_add, map_mul, map_mul, mul_comm (φ (d c s))]
 
-theorem evalPt_congr {R : Type} [CommRing R] {X : Scheme.{0}} {x y : Sp R ⟶ X} (e : x = y) (U : X.Opens)
-    (hx : ⊤ ≤ x ⁻¹ᵁ U) (hy : ⊤ ≤ y ⁻¹ᵁ U) (f : Γ(X, U)) : evalPt x U hx f = evalPt y U hy f := by
-  subst e; rfl
-
 end GlobalTheory.TanPt
 
 namespace GlobalTheory.TanPt
@@ -348,7 +344,7 @@ theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s :
     rw [← evalPt_constFn p w _ hw a, he]
     have hza : evalPt z _ hzO (constFn p (Y.basicOpen (t : Γ(Y, V))) a) = β a := by
       rw [evalPt_constFn]
-      exact (evalPt_congr hz (⊤ : (Sp o).Opens) _ le_rfl _).trans (evalPt_spMap β a)
+      exact (_root_.GlobalTheory.ArtinKernel.evalPt_congr hz (⊤ : (Sp o).Opens) _ le_rfl _).trans (evalPt_spMap β a)
     refine TrivSqZeroExt.ext ?_ ?_
     · exact hza
     · funext c
@@ -361,9 +357,9 @@ theorem exists_tangent_point : ∀ {o : Type} [CommRing o] (X : Scheme.{0}) (s :
       fun q _ => hw (Set.mem_univ _)
     have h3 : ⊤ ≤ (spMap (TrivSqZeroExt.fstHom K K K).toRingHom ≫ spMap (dirMap mu) ≫ w) ⁻¹ᵁ
         Y.basicOpen (t : Γ(Y, V)) := fun q _ => hw (Set.mem_univ _)
-    have e := congrArg TrivSqZeroExt.snd (evalPt_congr hmu _ h1 h2 (x a))
+    have e := congrArg TrivSqZeroExt.snd (_root_.GlobalTheory.ArtinKernel.evalPt_congr hmu _ h1 h2 (x a))
     have e2 : (evalPt (constPt (spMap (dirMap mu) ≫ w)) _ h2 (x a)).snd = 0 := by
-      rw [evalPt_congr (show constPt (spMap (dirMap mu) ≫ w) = spMap (algebraMap K (DualNumber K)) ≫
+      rw [_root_.GlobalTheory.ArtinKernel.evalPt_congr (show constPt (spMap (dirMap mu) ≫ w) = spMap (algebraMap K (DualNumber K)) ≫
         (spMap (TrivSqZeroExt.fstHom K K K).toRingHom ≫ spMap (dirMap mu) ≫ w) from rfl) _ h2 h2,
         evalPt_spMap_comp _ _ _ h3 h2]
       rfl
@@ -420,7 +416,7 @@ theorem main : ∀ (h n : ℕ), 1 ≤ h → 3 ≤ n → Odd n → ∀ (K : Type)
   have he : ∀ u v : Fin 8, ∃ j, acts W j = Matrix.single u v 1 := fun u v => ⟨.inl (u, v), rfl⟩
   obtain ⟨t, ht⟩ := GlobalTheory.SiegelPower.exists_tObj_isSharp L1 L2 h (8 * h) W _ (acts W) bas hW hbas n (cycAway n)
     (cycBase hn) _ _ c hodd h3 hζ hc
-  refine GlobalTheory.PowerTangent.main L1 L2 GlobalTheory.Moduli.cube_of_isLB h (8 * h) W _ (acts W) bas hW hbas (.inr true) (.inr false)
+  refine GlobalTheory.PowerTangent.main L1 L2 _root_.GlobalTheory.AbLaw.CubeAssembly.cube_gen h (8 * h) W _ (acts W) bas hW hbas (.inr true) (.inr false)
     hw hw' n (cycAway n) (cycBase hn) K r β t c hc ht ?_
   intro lam t' m₁ m₂
   have hf : spMap (dirMap lam) ≫ spMap ((algebraMap K (TrivSqZeroExt K (Fin r → K))).comp β) =
@@ -468,7 +464,7 @@ theorem spMap_comp_spMap' {A A' B : Type} [CommRing A] [CommRing A'] [CommRing B
   simp only [spMap, ← Spec.map_comp]
   rfl
 
-theorem spMap_id' (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 (Sp A) := Spec.map_id _
+alias spMap_id' := _root_.GlobalTheory.LevelFibre.spMap_id'
 
 theorem isLocalRing_sq (K : Type) [Field K] : IsLocalRing (TrivSqZeroExt K (K × K)) :=
   haveI : Nontrivial (TrivSqZeroExt K (K × K)) := TrivSqZeroExt.inl_injective.nontrivial
@@ -1200,7 +1196,7 @@ theorem pull_ex {g n : ℕ} {B : Type} [CommRing B] {ζ : B} {S S' : Scheme.{0}}
 theorem classified_of_small : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g n (zetaAway n), ∀ (C : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] (e : C), e ∈ IsLocalRing.maximalIdeal C → (∀ a ∈ IsLocalRing.maximalIdeal C, a * e = 0) → ∀ (β : cycAway n →+* C) (c : SiegPre g n (zetaAway n) (spMap β)), c.Principal → (∀ c₀ : SiegPre g n (zetaAway n) (spMap ((Ideal.Quotient.mk (Ideal.span {e})).comp β)), SiegPB c₀ c (spMap (Ideal.Quotient.mk (Ideal.span {e}))) → ∃ f : Sp (C ⧸ Ideal.span {e}) ⟶ F.X, f ≫ F.s = spMap ((Ideal.Quotient.mk (Ideal.span {e})).comp β) ∧ SiegPB c₀ F.univ f) → ∃ f : Sp C ⟶ F.X, f ≫ F.s = spMap β ∧ SiegPB c F.univ f := by
   intro g n hg hn hodd F C _ _ _ e he hme β c hc hcl
   set π := Ideal.Quotient.mk (Ideal.span {e}) with hπ
-  obtain ⟨c₀, hc₀, -⟩ := pull_ex (s := spMap β) (s' := spMap (π.comp β)) (spMap π) (spMap_comp' β π).symm c
+  obtain ⟨c₀, hc₀, -⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s := spMap β) (s' := spMap (π.comp β)) (spMap π) (spMap_comp' β π).symm c
   obtain ⟨x₀, hx₀s, hx₀⟩ := hcl c₀ hc₀
   by_cases he0 : e = 0
   · have hker : ∀ a ∈ Ideal.span {e}, (RingHom.id C) a = 0 := by
@@ -1228,9 +1224,9 @@ theorem classified_of_small : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
   have hqβ : Spec.map q ≫ Spec.map βP = spMap β' := by
     rw [← Spec.map_comp]; rfl
   let πC : CommRingCat.of C ⟶ CommRingCat.of (C ⧸ Ideal.span {e}) := CommRingCat.ofHom π
-  obtain ⟨c₁, hc₁, hc₁p⟩ := pull_ex (s' := Spec.map p ≫ Spec.map βP) x₁ (by rw [hx₁s, hpβ]) F.univ
-  obtain ⟨c₂, hc₂, hc₂p⟩ := pull_ex (s' := Spec.map σ ≫ Spec.map βP) (𝟙 _) (by rw [Category.id_comp, hσβ]) c
-  obtain ⟨c₀', hc₀', -⟩ := pull_ex (s' := Spec.map πC ≫ Spec.map p ≫ Spec.map βP) x₀
+  obtain ⟨c₁, hc₁, hc₁p⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map p ≫ Spec.map βP) x₁ (by rw [hx₁s, hpβ]) F.univ
+  obtain ⟨c₂, hc₂, hc₂p⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map σ ≫ Spec.map βP) (𝟙 _) (by rw [Category.id_comp, hσβ]) c
+  obtain ⟨c₀', hc₀', -⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map πC ≫ Spec.map p ≫ Spec.map βP) x₀
     (by rw [hx₀s, hpβ, spMap_comp']) F.univ
   have h01 : SiegPB c₀' c₁ (spMap π) := pb_cancel hc₁ (by rw [hx₁]; exact hc₀')
   have h0c : SiegPB c₀' c₀ (𝟙 _) := pb_cancel hx₀ (by rw [Category.id_comp]; exact hc₀')
@@ -1239,7 +1235,7 @@ theorem classified_of_small : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
   obtain ⟨e', he'p, he'1, he'2⟩ := _root_.GlobalTheory.ArtinGlue.exists_principal_glue g n hn hodd P (CommRingCat.of C) (CommRingCat.of C)
     (CommRingCat.of (C ⧸ Ideal.span {e})) p σ πC πC sq1 hPl hPa Ideal.Quotient.mk_surjective
     Ideal.Quotient.mk_surjective βP c₁ c₂ (hc₁p F.princ) (hc₂p hc) ⟨c₀', h01, h02⟩
-  obtain ⟨eε, heε, heεp⟩ := pull_ex (s' := Spec.map q ≫ Spec.map βP) (Spec.map q) rfl e'
+  obtain ⟨eε, heε, heεp⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map q ≫ Spec.map βP) (Spec.map q) rfl e'
   obtain ⟨eε', heε', heε'p⟩ := pull_ex (s' := spMap β') (𝟙 _) (by rw [Category.id_comp, hqβ]) eε
   obtain ⟨v, hvs, hv₀⟩ := _root_.GlobalTheory.SiegelTangent.classified_dualNumber g n hg hn hodd F k β' eε' (heε'p (heεp he'p))
   have hεε : SiegPB eε eε' (𝟙 _) := pb_cancel heε' (by rw [Category.id_comp]; exact pb_id eε)
@@ -1248,7 +1244,7 @@ theorem classified_of_small : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
   let ε₀ : CommRingCat.of (DualNumber k) ⟶ CommRingCat.of k := CommRingCat.ofHom (TrivSqZeroExt.fstHom k k k).toRingHom
   have hw : Spec.map ρ ≫ Spec.map p = Spec.map ε₀ ≫ Spec.map q := by
     rw [← Spec.map_comp, ← Spec.map_comp, sq2.w]
-  obtain ⟨ck, hck, -⟩ := pull_ex (s' := Spec.map ρ ≫ Spec.map p ≫ Spec.map βP) (Spec.map ρ) rfl c₁
+  obtain ⟨ck, hck, -⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map ρ ≫ Spec.map p ≫ Spec.map βP) (Spec.map ρ) rfl c₁
   have hk1 : SiegPB ck F.univ (Spec.map ρ ≫ x₁) := pb_comp hc₁ hck
   have hk2 : SiegPB ck eε (Spec.map ε₀) := pb_cancel heε (by rw [← hw]; exact pb_comp he'1 hck)
   have hk3 : SiegPB ck F.univ (Spec.map ε₀ ≫ v) := pb_comp hv hk2
@@ -1264,7 +1260,7 @@ theorem classified_of_small : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
     have a1 := hu (w ≫ F.s) ⟨by rw [← Category.assoc, hw1], by rw [← Category.assoc, hw2]⟩
     have a2 := hu (Spec.map βP) ⟨by rw [hpβ, hx₁s], by rw [hqβ, hvs]⟩
     rw [a1, a2]
-  obtain ⟨e'', he'', he''p⟩ := pull_ex (s' := Spec.map βP) w hws F.univ
+  obtain ⟨e'', he'', he''p⟩ := _root_.GlobalTheory.FirstOrderSiegel.pull_exists (s' := Spec.map βP) w hws F.univ
   have hq1 : SiegPB c₁ e'' (Spec.map p) := pb_cancel he'' (by rw [hw1]; exact hc₁)
   have hq2 : SiegPB eε e'' (Spec.map q) := pb_cancel he'' (by rw [hw2]; exact hv)
   have hiso : SiegPB e' e'' (𝟙 _) := _root_.GlobalTheory.SiegPinch.siegPB_of_pinch g n hn hodd P (CommRingCat.of C) (CommRingCat.of (DualNumber k))
@@ -1442,24 +1438,6 @@ theorem ext_affine : ∀ (R : Type) [CommRing R] (I : Ideal R), IsHausdorff I R 
     rw [SModEq, Submodule.Quotient.eq, smul_eq_mul, Ideal.mul_top]
     exact Ideal.Quotient.eq.1 he'
 
-theorem srel_comp {h k : ℕ} {B B' B'' : Type} [CommRing B] [CommRing B'] [CommRing B''] {ζ : B} {ζ' : B'} {ζ'' : B''}
-    {S S' S'' : Scheme.{0}} {s : S ⟶ Sp B} {s' : S' ⟶ Sp B'} {s'' : S'' ⟶ Sp B''}
-    {c : SiegPre h k ζ s} {c' : SiegPre h k ζ' s'} {c'' : SiegPre h k ζ'' s''} {f : S' ⟶ S}
-    {f' : S'' ⟶ S'} {φ : c'.A.left ⟶ c.A.left} {ψ : c''.A.left ⟶ c'.A.left}
-    (m : SRelBy c' c 1 1 f φ) (m' : SRelBy c'' c' 1 1 f' ψ) : SRelBy c'' c 1 1 (f' ≫ f) (ψ ≫ φ) := by
-  obtain ⟨hφ, ⟨φ₂, hs, hw⟩, hl⟩ := m
-  obtain ⟨hψ, ⟨ψ₂, hs', hw'⟩, hl'⟩ := m'
-  simp only [pow_one] at hl hl' ⊢
-  refine ⟨hψ.comp hφ, ⟨ψ₂ ≫ φ₂, ⟨?_, ?_⟩, ?_⟩, fun a => ?_⟩
-  · rw [Category.assoc, hs.1, ← Category.assoc, hs'.1, Category.assoc]
-  · rw [Category.assoc, hs.2, ← Category.assoc, hs'.2, Category.assoc]
-  · exact (hw'.trans c''.isLB (pull_isLB c'.isLB _) (pull_isLB (pull_isLB c.isLB _) _)
-      (GlobalTheory.SiegelPullComp.iso_pull ψ₂ hw)).trans c''.isLB (pull_isLB (pull_isLB c.isLB _) _) (pull_isLB c.isLB _)
-      (GlobalTheory.SiegelPullComp.iso_pull_pull c.isLB φ₂ ψ₂)
-  · rw [pow_one, pow_one]
-    exact (Category.assoc _ _ _).symm.trans ((congrArg (· ≫ φ) (hl' a)).trans ((Category.assoc _ _ _).trans
-      ((congrArg (f' ≫ ·) (hl a)).trans (Category.assoc _ _ _).symm)))
-
 theorem tower : ∀ (g n : ℕ) (B : Type) [CommRing B] (b : TBase B n) (R : Type) [CommRing R] (I : Ideal R) (s s' : Sp R ⟶ Sp B) (c : SiegPre g n (b.ζ : B) s) (c' : SiegPre g n (b.ζ : B) s') (t : ∀ e : ℕ, Sp (R ⧸ I ^ (e + 1)) ⟶ Sp B) (ce : ∀ e, SiegPre g n (b.ζ : B) (t e)) (φ : ∀ e, (ce e).A.left ⟶ c.A.left) (ψ : ∀ e, (ce e).A.left ⟶ c'.A.left), 3 ≤ n → Odd n → c.Principal → c'.Principal → (∀ e, SRelBy (ce e) c 1 1 (Out.thick R I e) (φ e)) → (∀ e, SRelBy (ce e) c' 1 1 (Out.thick R I e) (ψ e)) → ∃ β : ∀ e, (ce e).A.left ⟶ (ce (e + 1)).A.left, ∀ e, β e ≫ φ (e + 1) = φ e ∧ β e ≫ ψ (e + 1) = ψ e := by
   intro g n B _ b R _ I s s' c c' t ce φ ψ hn hodd hc hc' hφ hψ
   have key : ∀ e, ∃ β : (ce e).A.left ⟶ (ce (e + 1)).A.left, β ≫ φ (e + 1) = φ e ∧ β ≫ ψ (e + 1) = ψ e := by
@@ -1469,10 +1447,10 @@ theorem tower : ∀ (g n : ℕ) (B : Type) [CommRing B] (b : TBase B n) (R : Typ
         (by rw [Out.thickTrans_comp]; exact (sRel_one_one_iff _ _ _).1 ⟨_, hφ e⟩)
     obtain ⟨β, hβ⟩ := (sRel_one_one_iff _ _ _).2 h1
     refine ⟨β, ?_, ?_⟩
-    · have := srel_comp (hφ (e + 1)) hβ
+    · have := _root_.GlobalTheory.SiegPBDescent.comp_by (hφ (e + 1)) hβ
       rw [Out.thickTrans_comp] at this
       exact GlobalTheory.SiegRigid.eq_of_sRelBy g n n 1 B B b (b.ζ : B) _ _ s (t e) c (ce e) _ _ _ hn hodd hc this (hφ e)
-    · have := srel_comp (hψ (e + 1)) hβ
+    · have := _root_.GlobalTheory.SiegPBDescent.comp_by (hψ (e + 1)) hβ
       rw [Out.thickTrans_comp] at this
       exact GlobalTheory.SiegRigid.eq_of_sRelBy g n n 1 B B b (b.ζ : B) _ _ s' (t e) c' (ce e) _ _ _ hn hodd hc' this (hψ e)
   choose β hβ using key
@@ -1491,13 +1469,7 @@ theorem alg : ∀ (g n : ℕ) (B : Type) [CommRing B] (b : TBase B n) (R : Type)
   choose φ hφ using fun e => (sRel_one_one_iff (ce e) c _).2 (hce e)
   choose ψ hψ using fun e => (sRel_one_one_iff (ce e) c' _).2 (hce' e)
   obtain ⟨β, hβ⟩ := tower g n B b R I s s' c c' t ce φ ψ hn hodd hc hc' hφ hψ
-  exact assemble g n B (b.ζ : B) R I hI s s' c c' t ce φ ψ β hc hφ hψ (fun e => (hβ e).1) (fun e => (hβ e).2)
-
-theorem quot_local (R : Type) [CommRing R] [IsLocalRing R] (e : ℕ) :
-    IsLocalRing (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) :=
-  have : Nontrivial (R ⧸ IsLocalRing.maximalIdeal R ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2
-    (ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal R).ne_top (Ideal.pow_le_self (Nat.succ_ne_zero e)))
-  IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
+  exact _root_.GlobalTheory.SiegFormalAssemble.siegPB_id_of_tower g n B (b.ζ : B) R I hI s s' c c' t ce φ ψ β hc hφ hψ (fun e => (hβ e).1) (fun e => (hβ e).2)
 
 theorem quot_artin {R : Type} [CommRing R] [IsNoetherianRing R] (m : Ideal R) (hm : m.IsMaximal)
     (N : ℕ) : IsArtinianRing (R ⧸ m ^ (N + 1)) := by
@@ -1517,13 +1489,6 @@ theorem quot_artin {R : Type} [CommRing R] [IsNoetherianRing R] (m : Ideal R) (h
     exact h5.resolve_left hP.ne_top
   exact IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
 
-theorem spMap_comp_ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
-theorem spMap_id_ {A : Type} [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  simp [spMap]
-
 end GlobalTheory.SFamCompl
 
 namespace GlobalTheory.SFamCompl
@@ -1532,13 +1497,13 @@ theorem classified_of_complete : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n 
   intro g n hg hn hodd F R _ _ _ hR β c hc
   have hn0 : n ≠ 0 := by omega
   set m := IsLocalRing.maximalIdeal R with hm
-  haveI : ∀ e : ℕ, IsLocalRing (R ⧸ m ^ (e + 1)) := fun e => quot_local R e
+  haveI : ∀ e : ℕ, IsLocalRing (R ⧸ m ^ (e + 1)) := fun e => _root_.GlobalTheory.WtTower.isLocalRing_quotient_pow R e
   haveI : ∀ e : ℕ, IsArtinianRing (R ⧸ m ^ (e + 1)) := fun e => quot_artin m (IsLocalRing.maximalIdeal.isMaximal R) e
   let βe : ∀ e : ℕ, cycAway n →+* (R ⧸ m ^ (e + 1)) := fun e => (Ideal.Quotient.mk _).comp β
   have hthick : ∀ e, Out.thick R m e ≫ spMap β = spMap (βe e) ≫ spMap (RingHom.id (cycAway n)) := by
     intro e
-    rw [spMap_id_, Category.comp_id]
-    exact (spMap_comp_ β (Ideal.Quotient.mk (m ^ (e + 1)))).symm
+    rw [_root_.GlobalTheory.LN.Cmp.spMap_ringHom_id, Category.comp_id]
+    exact (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp β (Ideal.Quotient.mk (m ^ (e + 1)))).symm
   have hpull := fun e => GlobalTheory.SiegelRingChange.siegPre_pull_ringChange g n (cycAway n) (cycAway n) (zetaAway n)
     (zetaAway n) (RingHom.id _) (Sp R) (Sp (R ⧸ m ^ (e + 1))) (spMap β) (spMap (βe e)) (Out.thick R m e) rfl (hthick e)
   choose ce hce using fun e => (hpull e).1 c
@@ -1551,13 +1516,13 @@ theorem classified_of_complete : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n 
     refine _root_.GlobalTheory.SiegUniq.eq_of_siegPB g n hg hn hodd F _ (spMap (βe e)) (ce e) _ _ ?_ (hxs e)
       (GlobalTheory.SiegelPullComp.pb_comp (hxpb (e + 1)) h1) (hxpb e)
     rw [Category.assoc, hxs (e + 1)]
-    exact (spMap_comp_ _ _).symm.trans (congrArg spMap (by ext a; rfl))
-  obtain ⟨f, hf⟩ := glue R hR F.X x hcomp
+    exact (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ _).symm.trans (congrArg spMap (by ext a; rfl))
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.LocalThickGlue.exists_glue R hR F.X x hcomp
   have hfs : f ≫ F.s = spMap β := by
     refine ext_affine R m hR.toIsHausdorff (cycAway n) _ _ fun e => ?_
-    rw [← Category.assoc, hf e, hxs e, hthick e, spMap_id_, Category.comp_id]
+    rw [← Category.assoc, hf e, hxs e, hthick e, _root_.GlobalTheory.LN.Cmp.spMap_ringHom_id, Category.comp_id]
   have hpf := GlobalTheory.SiegelRingChange.siegPre_pull_ringChange g n (cycAway n) (cycAway n) (zetaAway n)
-    (zetaAway n) (RingHom.id _) F.X (Sp R) F.s (spMap β) f rfl (by rw [hfs, spMap_id_, Category.comp_id])
+    (zetaAway n) (RingHom.id _) F.X (Sp R) F.s (spMap β) f rfl (by rw [hfs, _root_.GlobalTheory.LN.Cmp.spMap_ringHom_id, Category.comp_id])
   obtain ⟨c', hc'⟩ := hpf.1 F.univ
   have hc'p : c'.Principal := hpf.2.1 F.univ c' hc' F.princ
   have key : SiegPB c c' (𝟙 _) := by

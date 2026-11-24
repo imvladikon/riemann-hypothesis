@@ -654,7 +654,7 @@ theorem Wtop_smul (pr : P →* Q) {n : ℕ} (r : ℝ) (b : (Fin n → Q) → ℝ
 theorem QC.smul {n : ℕ} {b : (Fin (n + 1) → Q) → ℝ} (hb : QC b) (r : ℝ) : QC (r • b) := by
   refine ⟨fun g x => ?_, ?_⟩
   · simp only [Pi.smul_apply, smul_eq_mul, hb.1 g x]
-  · rw [dc_smul, hb.2, smul_zero]
+  · rw [_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_smul, hb.2, smul_zero]
 
 def GoodS (pr : P →* Q) {p q : ℕ} (x : Bi P Q (p + 2) (q + 2)) : Prop :=
   ∃ n : ℕ, n = p + q + 2 ∧ ∃ b : (Fin (n + 1) → Q) → ℝ, QC b ∧
@@ -711,19 +711,19 @@ theorem dh_add {a b : ℕ} (F G : Bi P Q (a + 1) b) : dh (F + G) = dh F + dh G :
 
 theorem dh_sub {a b : ℕ} (F G : Bi P Q (a + 1) b) : dh (F - G) = dh F - dh G := by
   funext x y
-  exact congrFun (dc_sub (fun x' => F x' y) (fun x' => G x' y)) x
+  exact congrFun (_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_sub (fun x' => F x' y) (fun x' => G x' y)) x
 
 theorem dh_smul {a b : ℕ} (r : ℝ) (F : Bi P Q (a + 1) b) : dh (r • F) = r • dh F := by
   funext x y
-  exact congrFun (dc_smul r (fun x' => F x' y)) x
+  exact congrFun (_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_smul r (fun x' => F x' y)) x
 
 theorem dv_sub {a b : ℕ} (F G : Bi P Q a (b + 1)) : dv (F - G) = dv F - dv G := by
   funext x y
-  exact congrFun (dc_sub (F x) (G x)) y
+  exact congrFun (_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_sub (F x) (G x)) y
 
 theorem dv_smul {a b : ℕ} (r : ℝ) (F : Bi P Q a (b + 1)) : dv (r • F) = r • dv F := by
   funext x y
-  exact congrFun (dc_smul r (F x)) y
+  exact congrFun (_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_smul r (F x)) y
 
 section Inv
 
@@ -979,7 +979,7 @@ theorem core_of (hA : SplitA) (hS : SplitS) (hB : SplitB) (hZ : ZInv) (hEz : E2V
     congr 1
     exact hinv (s (pr g)) (fun i => s (pr (y i)))
   · funext y
-    rw [dc_sub, Pi.sub_apply, hpt y, hbv (fun i => pr (y i))]
+    rw [_root_.PositivityTheory.KB.SplitAffineSpectral.PrismSpan.dc_sub, Pi.sub_apply, hpt y, hbv (fun i => pr (y i))]
     have h3 : dc (fun z => e' (fun i => s (z i))) (fun i => pr (y i))
         = dc (fun z => e' (fun i => s (pr (z i)))) y := rfl
     linarith
@@ -1023,15 +1023,6 @@ theorem cat_fc_hi {Q : Type} [Group Q] {a c m : ℕ} (h : a + c = m) (x : Fin (a
     | (congr 1; ext; simp only [fc_val]; split_ifs <;> omega)
     | (exfalso; split_ifs at hv <;> omega)
 
-private theorem fin_succAbove_eq_fc {n : ℕ} (i : Fin (n + 1)) (l : Fin n) : i.succAbove l = fc (i : ℕ) l := by
-  ext
-  rw [fc_val]
-  split_ifs with hl
-  · rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def]; simpa using hl)]
-    rfl
-  · rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def]; simp; omega)]
-    rfl
-
 theorem dc_cat {Q : Type} [Group Q] {a c m : ℕ} (h : a + c = m) (F : (Fin (m + 1) → Q) → ℝ)
     (x : Fin (a + 1) → Q) (z : Fin (c + 1) → Q) :
     dc F (cat x z (m + 2)) =
@@ -1039,7 +1030,7 @@ theorem dc_cat {Q : Type} [Group Q] {a c m : ℕ} (h : a + c = m) (F : (Fin (m +
         (-1 : ℝ) ^ (a + 1) *
           ∑ j : Fin (c + 1), (-1 : ℝ) ^ (j : ℕ) * F (cat x (fun l => z (j.succAbove l)) (m + 1)) := by
   simp only [dc]
-  simp_rw [fin_succAbove_eq_fc]
+  simp_rw [_root_.PositivityTheory.KB.SplitAffineSpectral.NormTraceLemmas.succAbove_eq_fc]
   rw [Fin.sum_univ_eq_sum_range (fun k => (-1 : ℝ) ^ k * F (fun l => cat x z (m + 2) (fc k l))) (m + 2),
     Fin.sum_univ_eq_sum_range (fun k => (-1 : ℝ) ^ k * F (cat (fun l => x (fc k l)) z (m + 1))) (a + 1),
     Fin.sum_univ_eq_sum_range (fun k => (-1 : ℝ) ^ k * F (cat x (fun l => z (fc k l)) (m + 1))) (c + 1),

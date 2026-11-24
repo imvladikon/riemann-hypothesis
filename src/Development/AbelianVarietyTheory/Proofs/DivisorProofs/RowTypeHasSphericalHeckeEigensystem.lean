@@ -71,8 +71,6 @@ open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab 
 open GlobalTheory.StdFrame (StdPsi)
 attribute [local instance] Formalism.IndefR.principalLevelFrame.instCMHostI
 
-theorem _root_.GlobalTheory.T.exists_baseLevel_vector_of_principalLevel_fixed : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) {s : ℕ}, A.fam.Ok s → Core R F → (∀ χ ∈ A.X, chiIdem χ * lvlIdem F.P0 F.ψ0 ≠ 0) → ∀ {n : ℕ} (PY : principalLevelFrame.RowPsi (Yc D 0) n) (π : Formalism.L2.NG.FinTyp D.host.E n) (v : Formalism.AUTREP.GAf D.host.E n → ℂ), v ∈ π.S → v ≠ 0 → principalLevelFrame.IsTypeVec (PY.ψ ⁻¹' levS _ (R.βY 0) (R.dat0 R.triv)) (fun _ => 1) v → (∀ κ : G → Formalism.AUTREP.GAf D.host.E n, (∀ g, IsLevelLift (Yc D 0) (R.βY 0) (R.dat0 R.triv) (R.eG g) (PY.ψ (κ g))) → ∑ g, RealDat.eC (A := A) D.what₂.embLL g • Formalism.L2.NG.rt D.host.E n (κ g) v = v) → ∃ x ∈ π.S, x ≠ 0 ∧ principalLevelFrame.IsTypeVec (PY.ψ ⁻¹' levS _ (R.βY 0) (R.dat0 (R.levR F false))) (fun κ => levChi _ (R.βY 0) (R.dat0 (R.levR F false)) (PY.ψ κ)) x := by
-  first | exact @GlobalTheory.BaseVec.exists_base_vec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBaseLevelVectorOfPrincipalLevelFixedStatement =====
@@ -91,8 +89,6 @@ open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab 
 open GlobalTheory.StdFrame (StdPsi)
 attribute [local instance] Formalism.IndefR.principalLevelFrame.instCMHostI
 
-theorem _root_.GlobalTheory.T.exists_good_fixed_vector_of_type_occurring_in_rows : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) {s : ℕ}, A.fam.Ok s → Core R F → ∀ {n : ℕ} (PY : principalLevelFrame.RowPsi (Yc D 0) n) π, π ∈ principalLevelFrame.OccRows R.θ PY (R.MY 0) (fun b => (levS _ (R.βY 0) (R.dat0 (R.levR F b)))) (fun b => (levChi _ (R.βY 0) (R.dat0 (R.levR F b)))) (fun _ => R.e0) → ∃ v ∈ (principalLevelFrame.FinTyp.conjT π).S, v ≠ 0 ∧ principalLevelFrame.IsTypeVec (PY.ψ ⁻¹' levS _ (R.βY 0) (R.dat0 R.triv)) (fun _ => 1) v ∧ ∀ κ : G → Formalism.AUTREP.GAf D.host.E n, (∀ g, IsLevelLift (Yc D 0) (R.βY 0) (R.dat0 R.triv) (R.eG g) (PY.ψ (κ g))) → ∑ g, RealDat.eC (A := A) D.what₂.embLL g • Formalism.L2.NG.rt D.host.E n (κ g) v = v := by
-  first | exact @GlobalTheory.OccRowVec.exists_vec_of_occRows
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodFixedVectorOfTypeOccurringInRowsStatement =====
@@ -230,8 +226,8 @@ namespace GlobalTheory.RowTypeVec
 
 theorem vec_of_rows : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) {s : ℕ}, A.fam.Ok s → Core R F → (∀ χ ∈ A.X, chiIdem χ * lvlIdem F.P0 F.ψ0 ≠ 0) → ∀ {n : ℕ} (hF : D.host.F = maximalRealSubfield D.host.E) (PY : principalLevelFrame.RowPsi (Yc D 0) n) (PW : ∀ i, principalLevelFrame.RowPsi (Wc D i) n), StdPsi hF PY → (∀ i, StdPsi hF (PW i)) → ∀ π, π ∈ principalLevelFrame.OccRows R.θ PY (R.MY 0) (fun b => (levS _ (R.βY 0) (R.dat0 (R.levR F b)))) (fun b => (levChi _ (R.βY 0) (R.dat0 (R.levR F b)))) (fun _ => R.e0) → ∀ i, ∃ x ∈ π.S, x ≠ 0 ∧ principalLevelFrame.IsTypeVec ((PW i).ψ ⁻¹' (levS _ (R.βW i) (R.datWp i (R.levL F false (sg0 D A))))) (fun κ => (levChi _ (R.βW i) (R.datWp i (R.levL F false (sg0 D A)))) ((PW i).ψ κ)) x := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F s hOk hC hgen n hF PY PW hPY hPW π hπ i
-  obtain ⟨v, hvS, hv0, hvT, hvG⟩ := GlobalTheory.T.exists_good_fixed_vector_of_type_occurring_in_rows R F hOk hC PY π hπ
-  obtain ⟨x, hxS, hx0, hxT⟩ := GlobalTheory.T.exists_baseLevel_vector_of_principalLevel_fixed R F hOk hC hgen PY (principalLevelFrame.FinTyp.conjT π) v hvS hv0 hvT hvG
+  obtain ⟨v, hvS, hv0, hvT, hvG⟩ := _root_.GlobalTheory.OccRowVec.exists_vec_of_occRows R F hOk hC PY π hπ
+  obtain ⟨x, hxS, hx0, hxT⟩ := _root_.GlobalTheory.BaseVec.exists_base_vec R F hOk hC hgen PY (principalLevelFrame.FinTyp.conjT π) v hvS hv0 hvT hvG
   set y : Formalism.AUTREP.GAf D.host.E n → ℂ := fun g => star (x g) with hy
   have hyS : y ∈ π.S := hxS
   have hy0 : y ≠ 0 := by
@@ -319,20 +315,6 @@ theorem rtV_apply (V : HSp D) (g : GA D V) (f : GA D V → ℂ) (h : GA D V) : r
 
 variable {V : HSp D} {n : ℕ}
 
-theorem pre_psi (Q : RowPsi V n) (z : Formalism.AUTREP.GAf D.host.E n) : pre Q (Q.ψ z) = z := by
-  have h : ∃ x, Q.ψ x = Q.ψ z := ⟨z, rfl⟩
-  unfold pre
-  rw [dite_eq_left h]
-  exact Q.inj h.choose_spec
-
-theorem psi_pre (Q : RowPsi V n) {γ : GA D V} (hγ : γ ∈ GfC V) : Q.ψ (pre Q γ) = γ := by
-  obtain ⟨h, hh⟩ := Q.onto γ hγ
-  have h' : ∃ x, Q.ψ x = γ := ⟨h, hh⟩
-  unfold pre
-  rw [dite_eq_left h']
-  exact h'.choose_spec
-
-
 open Classical in
 def lift (Q : RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) : GA D V → ℂ :=
   fun g => if g ∈ GfC V then x (pre Q g) else 0
@@ -341,9 +323,9 @@ theorem rtV_lift_psi (Q : RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → �
     (y : Formalism.AUTREP.GAf D.host.E n) : rtV V γ (lift Q x) (Q.ψ y) = x (y * pre Q γ) := by
   rw [rtV_apply]
   have hmem : Q.ψ y * γ ∈ GfC V := (GfC V).mul_mem (Q.into y) hγ
-  have heq : Q.ψ y * γ = Q.ψ (y * pre Q γ) := by rw [map_mul, psi_pre Q hγ]
+  have heq : Q.ψ y * γ = Q.ψ (y * pre Q γ) := by rw [map_mul, _root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hγ]
   unfold lift
-  rw [if_pos hmem, heq, pre_psi]
+  rw [if_pos hmem, heq, _root_.GlobalTheory.SphScalar.pre_psi]
 
 theorem lift_fixed (Q : RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ) (K : Set (GA D V)) (hK : K ⊆ GfC V)
     (hx : ∀ κ, Q.ψ κ ∈ K → Formalism.L2.NG.rt D.host.E n κ x = x) : ∀ k ∈ K, rtV V k (lift Q x) = lift Q x := by
@@ -353,10 +335,10 @@ theorem lift_fixed (Q : RowPsi V n) (x : Formalism.AUTREP.GAf D.host.E n → ℂ
   rw [rtV_apply]
   by_cases hg : g ∈ GfC V
   · have hgk : g * k ∈ GfC V := (GfC V).mul_mem hg hkG
-    have heq : g * k = Q.ψ (pre Q g * pre Q k) := by rw [map_mul, psi_pre Q hg, psi_pre Q hkG]
-    have hfix := congrFun (hx (pre Q k) (by rw [psi_pre Q hkG]; exact hk)) (pre Q g)
+    have heq : g * k = Q.ψ (pre Q g * pre Q k) := by rw [map_mul, _root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hg, _root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hkG]
+    have hfix := congrFun (hx (pre Q k) (by rw [_root_.Formalism.IndefR.principalLevelFrame.pre_spec Q hkG]; exact hk)) (pre Q g)
     unfold lift
-    rw [if_pos hgk, if_pos hg, heq, pre_psi]
+    rw [if_pos hgk, if_pos hg, heq, _root_.GlobalTheory.SphScalar.pre_psi]
     exact hfix
   · have hgk : g * k ∉ GfC V := fun h => hg (by simpa using (GfC V).mul_mem h ((GfC V).inv_mem hkG))
     unfold lift

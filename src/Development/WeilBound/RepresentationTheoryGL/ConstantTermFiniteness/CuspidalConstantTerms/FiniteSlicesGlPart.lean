@@ -255,12 +255,6 @@ open scoped TensorProduct DirectSum Classical
 
 namespace GlobalTheory.SepTypes
 
-theorem coeffSpan_finiteDimensional {G W : Type} [Group G] [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
-    (ρ : Representation ℂ G W) : FiniteDimensional ℂ (coeffSpan ρ) := by
-  first
-  | (apply _root_.GlobalTheory.CoefficientSpanFinite.finiteDimensional_span_coefficients <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CoefficientSpanFinite.finiteDimensional_span_coefficients ..)
-
 theorem coeffSpan_rtrans {G W : Type} [Group G] [AddCommGroup W] [Module ℂ W]
     (ρ : Representation ℂ G W) (c : G) {h : G → ℂ} (hh : h ∈ coeffSpan ρ) :
     (fun k => h (k * c)) ∈ coeffSpan ρ := by
@@ -285,7 +279,7 @@ theorem exists_space {ι : Type} [Fintype ι] [DecidableEq ι] {G : Type} [Group
       add_mem' := fun {a b} ha hb => ⟨ha.1.add hb.1, fun τ k₀ => Submodule.add_mem _ (ha.2 τ k₀) (hb.2 τ k₀)⟩
       zero_mem' := ⟨continuous_const, fun τ k₀ => Submodule.zero_mem _⟩
       smul_mem' := fun c {a} ha => ⟨ha.1.const_smul c, fun τ k₀ => Submodule.smul_mem _ c (ha.2 τ k₀)⟩ }
-  have hfd : ∀ τ, FiniteDimensional ℂ (coeffSpan (ρ τ)) := fun τ => coeffSpan_finiteDimensional (ρ τ)
+  have hfd : ∀ τ, FiniteDimensional ℂ (coeffSpan (ρ τ)) := fun τ => _root_.GlobalTheory.CoefficientSpanFinite.finiteDimensional_span_coefficients (ρ τ)
   have hfin := GlobalTheory.finiteDimensional_span_separately ι Γ (fun τ => coeffSpan (ρ τ)) hfd
   have hupd : ∀ (x : ∀ τ, Γ τ) τ y,
       Function.update x τ y = Function.update x τ 1 * Pi.mulSingle τ y := by
@@ -993,8 +987,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta GlobalTheory.Mem.Th GlobalTheory.UAut
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.unitary_lie_one_parameter_isRealOneParamSubgroupAdelic : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp D) (τ : D.what₂.Tau) (X : Matrix (Fin V.rank) (Fin V.rank) ℂ), X ∈ lieAt V τ → GlobalTheory.SiegelSet.IsRealLine D.sp.cm.sig V.gram (oneP θ V τ X) := by
-  first | exact @GlobalTheory.UAut.isRealLine_oneP
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieOneParameterIsRealOneParamSubgroupAdelStatement =====
@@ -1017,12 +1009,6 @@ theorem continuous_infGL [_root_.NumberField.IsTotallyComplex E] : Continuous (i
   have hs : Continuous (sInf E) := ((continuous_infEq E).prodMk continuous_const :
     Continuous fun x : Cinf E => ((infEq E x, 0) : InfiniteAdeleRing E × Af E))
   exact Continuous.units_map (corner (matN a (sInf E))) (continuous_const.add (continuous_id.matrix_map hs))
-
-theorem continuous_finGL : Continuous (finGL E a) := by
-  have hs : Continuous (sFin E) := (continuous_const.prodMk continuous_id :
-    Continuous fun x : Af E => ((0, x) : InfiniteAdeleRing E × Af E))
-  exact Continuous.units_map (corner (matN a (sFin E))) (continuous_const.add (continuous_id.matrix_map hs))
-
 
 omit [NumberField E] in
 theorem continuous_toUnits_Kinf : Continuous fun k : Kinf E a => (Unitary.toUnits k : GL (Fin a) (Cinf E)) :=
@@ -1052,14 +1038,6 @@ namespace GlobalTheory.CentralOps.Rg
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 attribute [local instance 100] LieRing.ofAssociativeRing
-
-theorem polyFun_mem (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D)
-    (R : RealPoints θ V) (P : PolyE V) : polyFun θ V P ∈ SmF θ V := GlobalTheory.CentralOps.polyFun_mem_smF D θ V R P
-
-theorem lieDer_polyFun (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)) (V : HSp D)
-    (R : RealPoints θ V) (τ : D.what₂.Tau) (X : LieAt V τ) (P : PolyE V) :
-    lieDer V (expInf θ V) (atPlace V τ X) (polyFun θ V P) = polyFun θ V (matDer τ X.1 P) := GlobalTheory.T.rightLieDerivative_realEntryPolynomialFunction D θ V R τ X P
-
 
 open Classical in
 theorem aeval_matDer_single {T : Type} {n : ℕ} (τ τ' : T) (a b c d : Fin n) :
@@ -1091,10 +1069,10 @@ theorem envRepAll_ι_of (R : RealPoints θ V) (τ : D.what₂.Tau) (y : ℂ ⊗[
   rw [← envIncl_ι, envRepAll_envIncl]
 
 theorem envRepAll_polyFun (R : RealPoints θ V) (u : GlobalTheory.AutFinLit.Env V) (P : PolyE V) :
-    (envRepAll R u ⟨polyFun θ V P, polyFun_mem D θ V R P⟩).1 = polyFun θ V (polyRep V u P) := by
+    (envRepAll R u ⟨polyFun θ V P, _root_.GlobalTheory.CentralOps.polyFun_mem_smF D θ V R P⟩).1 = polyFun θ V (polyRep V u P) := by
   classical
   let S : Subalgebra ℂ (GlobalTheory.AutFinLit.Env V) :=
-    { carrier := {u | ∀ P, (envRepAll R u ⟨polyFun θ V P, polyFun_mem D θ V R P⟩).1 = polyFun θ V (polyRep V u P)}
+    { carrier := {u | ∀ P, (envRepAll R u ⟨polyFun θ V P, _root_.GlobalTheory.CentralOps.polyFun_mem_smF D θ V R P⟩).1 = polyFun θ V (polyRep V u P)}
       mul_mem' := fun {u v} hu hv P => by
         rw [map_mul, map_mul, mul_apply_eq_comp, mul_apply_eq_comp, ← hu]
         congr 2
@@ -1117,7 +1095,7 @@ theorem envRepAll_polyFun (R : RealPoints θ V) (u : GlobalTheory.AutFinLit.Env 
         rw [envRepAll_ι_of, polyRep_ι_of, placeRep_tmul,
           show c ⊗ₜ[ℝ] X = c • ((1 : ℂ) ⊗ₜ[ℝ] X) by rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one], map_smul,
           map_smul, envRep_ι, LinearMap.smul_apply, LinearMap.smul_apply, Submodule.coe_smul, opInf_coe,
-          polyFun_smul, lieDer_polyFun D θ V R]
+          polyFun_smul, _root_.GlobalTheory.PolyRightDeriv.lieDer_polyFun D θ V R]
         rfl
   exact GlobalTheory.EnvCentre.mem_of_ι_mem (AlgHom.id ℂ _) S hι u P
 
@@ -1462,7 +1440,7 @@ theorem isCuspidal_comp_blockEmb : ∀ (F E : Type) [Field F] [NumberField F] [F
     have eS := GlobalTheory.ConstTrans.unip_eq_unipFlag F E σ hσ n J hJ r X Y hW S mS hmS hmS'
     have hCS : IsIsoCols σ J (GlobalTheory.StdPar.initCols X mS) := isIsoCols_of_isWittFrame hW hσσ hJ mS.2
     rw [hU₀, eS] at hu ⊢
-    exact conj_mem_unipFlag hJ hσσ hCS _ (GlobalTheory.ConstTrans.unip_le_parFlag F E σ hσ n J hJ r X Y hW (insert k S) S mS
+    exact conj_mem_unipFlag hJ hσσ hCS _ (_root_.GlobalTheory.StdParFlag.unip_le_parFlag F E σ hσ n J hJ r X Y hW (insert k S) S mS
       (Finset.subset_insert _ _) hmS hmS' hp) hu
   obtain ⟨π, hπc, hπm, hπs, hπk, hπr⟩ := GlobalTheory.T.exists_blockProjection_flagUnipotentRadical F E σ hσ n J hJ r X Y hW S l d h ι hι hS hk hl r' hr0 hr1 k hkv
   have hrat := GlobalTheory.T.blockEmbedding_rationalGL_mem_rationalPoints F E σ hσ n J hJ r X Y hW l d h ι hι
@@ -1613,32 +1591,6 @@ theorem kfin_of_space {S : Submodule ℂ (K → ℂ)} [FiniteDimensional ℂ S] 
 
 end Rep
 
-section Centre
-
-open PositivityTheory.Affgl GlobalTheory.CuspRep
-
-theorem zfin_of_cofin {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} {J : Set (Module.End ℂ (Sm E a))}
-    (hJ : Cofin J) {f : Sm E a} (hf : ∀ z ∈ J, z f = 0) :
-    FiniteDimensional ℂ (Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z f) '' Zalg E a)) := by
-  obtain ⟨-, V, hV, h⟩ := hJ
-  let ev : Module.End ℂ (Sm E a) →ₗ[ℂ] Sm E a := LinearMap.applyₗ f
-  have key : ∀ w ∈ Submodule.span ℂ {y | ∃ x ∈ Zalg E a, ∃ j ∈ J, y = x * j}, w f = 0 := fun w hw => by
-    induction hw using Submodule.span_induction with
-    | mem x hx =>
-      obtain ⟨x, -, j, hj, rfl⟩ := hx
-      rw [Module.End.mul_apply, hf j hj, map_zero]
-    | zero => rfl
-    | add x y _ _ hx hy => rw [LinearMap.add_apply, hx, hy, add_zero]
-    | smul a x _ hx => rw [LinearMap.smul_apply, hx, smul_zero]
-  refine Submodule.finiteDimensional_of_le (S₂ := V.map ev) (Submodule.span_le.2 ?_)
-  rintro _ ⟨z, hz, rfl⟩
-  obtain ⟨v, hv, w, hw, e⟩ := Submodule.mem_sup.1 (h z hz)
-  refine ⟨v, hv, ?_⟩
-  change v f = z f
-  rw [← e, LinearMap.add_apply, key w hw, add_zero]
-
-end Centre
-
 section Gelf
 
 variable {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)} {V : HSp D}
@@ -1656,7 +1608,7 @@ theorem zfin_of_gelf (hθ : IsInfFam θ) {φ : GA D V → ℂ} (hs : IsSm D.sp.c
   rintro _ ⟨z, hz, rfl⟩
   obtain ⟨u, hu, e⟩ := GlobalTheory.CentralOps.Rg.exists_center hθ R hz
   let ψ : GlobalTheory.SmoothForms.SmF θ V := ⟨φ, (GlobalTheory.SmoothForms.smooth_iff R φ).1 fun k τs Xs hX g =>
-    hs k (fun i => oneP θ V (τs i) (Xs i)) (fun i => GlobalTheory.T.unitary_lie_one_parameter_isRealOneParamSubgroupAdelic D θ hθ V _ _ (hX i)) g⟩
+    hs k (fun i => oneP θ V (τs i) (Xs i)) (fun i => _root_.GlobalTheory.UAut.isRealLine_oneP D θ hθ V _ _ (hX i)) g⟩
   exact (e ψ).symm ▸ GlobalTheory.CentralOps.mem_of_mem_center R hW hu ψ (Submodule.mem_span_singleton_self φ)
 
 end Gelf
@@ -1697,7 +1649,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
   have hL : IsOpen (L : Set (GL (Fin d) (GlobalTheory.CuspRep.Af D.host.E))) := by
     refine hU.preimage ?_
     have : Continuous fun k : GL (Fin d) (GlobalTheory.CuspRep.Af D.host.E) => g₀⁻¹ * ι (finGL D.host.E d k) * g₀⁻¹⁻¹ :=
-      (continuous_const.mul (hιc.comp CompanionTheory.D.gk.Br.LIC.continuous_finGL)).mul continuous_const
+      (continuous_const.mul (hιc.comp _root_.GlobalTheory.CompanionTheory.DenseKFin.continuous_finGL)).mul continuous_const
     exact this
   choose q hq hq0 using GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.MonicBlock.monic_block D θ hθ V c m X Y hW T l d hl ι hι hd hblk hend hprev
   let Js : Set (Module.End ℂ (Sm D.host.E d)) :=
@@ -1754,7 +1706,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
       rw [e]
       exact coeff_repOf S hSt α (hSφ φ h1.cont h3 _)
     have haut : IsAutForm F := by
-      refine ⟨GlobalTheory.CuspBlockLeft.cuspForm_blockEmb_left_invariant _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev φ hc _ hg₁, ?_, ?_, zfin_of_cofin hCof hkill, GlobalTheory.BlockForms.growth_comp_blockEmb _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev φ hc _ hg₁⟩
+      refine ⟨GlobalTheory.CuspBlockLeft.cuspForm_blockEmb_left_invariant _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev φ hc _ hg₁, ?_, ?_, _root_.GlobalTheory.CompanionTheory.CTFin.Slice1.zfin_of_cofin hCof hkill, GlobalTheory.BlockForms.growth_comp_blockEmb _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev φ hc _ hg₁⟩
       · have e : {a | finRep D.host.E d a F = F} = {a : GL (Fin d) (GlobalTheory.CuspRep.Af D.host.E) | ∀ g, φ (ι (g * finGL D.host.E d a) * (y * g₀)) = φ (ι g * (y * g₀))} :=
           Set.ext fun a => ⟨fun e g => congrFun (congrArg Subtype.val e) g, fun e => Subtype.ext (funext e)⟩
         rw [e]

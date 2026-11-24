@@ -1265,12 +1265,6 @@ open UpperTheory.ConvolutionTheory UpperTheory.ConvolutionTheory.C UpperTheory.C
 open UpperTheory.Gal.LocD UpperTheory.Gal.InertialTypesAlt.G UpperTheory.Gal.Join
 open scoped Classical
 
-private lemma exists_common_eigenvector {ι M : Type} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
-    (f : ι → Module.End ℂ M) (hc : ∀ i j, f i * f j = f j * f i) (W : Submodule ℂ M) (hW : W ≠ ⊥)
-    (hst : ∀ i, ∀ y ∈ W, f i y ∈ W) :
-    ∃ y ∈ W, y ≠ 0 ∧ ∀ i, ∃ c : ℂ, f i y = c • y :=
-  _root_.UpperTheory.Reformulated.B.CommonEigenvectorInInvariantComplexSubspace.exists_common_eigenvector f hc W hW hst
-
 theorem UpperTheory.Gal.Join.twExp :
     UpperTheory.Gal.Join.TwExp := by
   intro T X _ _ _ ρ P _ s A hρ hA hAρ t₁ htr
@@ -1357,7 +1351,7 @@ theorem UpperTheory.Gal.Join.twExp :
   have hNst : ∀ t, ∀ y ∈ N χ, r t y ∈ N χ := by
     intro t y hy
     exact (Submodule.mem_iInf _).mpr fun t' => hmaps t t' _ ((Submodule.mem_iInf _).mp hy t')
-  obtain ⟨y, hyN, hy0, hy⟩ := exists_common_eigenvector r hcomm (N χ) hN hNst
+  obtain ⟨y, hyN, hy0, hy⟩ := _root_.UpperTheory.Reformulated.B.CommonEigenvectorInInvariantComplexSubspace.exists_common_eigenvector r hcomm (N χ) hN hNst
   choose c hc using hy
   have hcχ : ∀ t, c t = χ t := by
     intro t
@@ -1604,13 +1598,6 @@ open UpperTheory.ConvolutionTheory UpperTheory.ConvolutionTheory.C UpperTheory.C
 open UpperTheory.Gal.LocD UpperTheory.Gal.InertialTypesAlt.G UpperTheory.Gal.Join
 open scoped Classical
 
-private theorem lift_eigen {T V : Type} [CommGroup T] [AddCommGroup V] [Module ℂ V]
-    (ρ : Representation ℂ T V) {ψ μ : T →* ℂˣ} {v y : V} (hψ : ∀ t, ρ t v = (ψ t : ℂ) • v)
-    (hne : μ ≠ ψ) (hy : y ∉ Submodule.span ℂ {v})
-    (hq : ∀ t, ρ t y - (μ t : ℂ) • y ∈ Submodule.span ℂ {v}) (hv : v ≠ 0) :
-    ∃ z, z ≠ 0 ∧ ∀ t, ρ t z = (μ t : ℂ) • z :=
-  _root_.UpperTheory.Reformulated.B.R4.lift_eigen ρ hψ hne hy hq hv
-
 private theorem exists_eigenchars {T : Type} [CommGroup T] (d : ℕ) : ∀ (V : Type) [AddCommGroup V] [Module ℂ V]
     [FiniteDimensional ℂ V] (ρ : Representation ℂ T V), Module.finrank ℂ V = d →
     ∃ E : Multiset (T →* ℂˣ), (∀ t, LinearMap.trace ℂ V (ρ t) = (E.map fun χ => (χ t : ℂ)).sum) ∧
@@ -1642,7 +1629,7 @@ private theorem exists_eigenchars {T : Type} [CommGroup T] (d : ℕ) : ∀ (V : 
       · exact ⟨v, hv, hne ▸ hψ⟩
       obtain ⟨q, hq0, hq⟩ := (h2 μ).1 ((Multiset.mem_cons.1 hμ).resolve_left hne)
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
-      refine lift_eigen ρ hψ hne (fun hy => hq0 ((Submodule.Quotient.mk_eq_zero _).2 hy)) (fun t => ?_) hv
+      refine _root_.UpperTheory.Reformulated.B.R4.lift_eigen ρ hψ hne (fun hy => hq0 ((Submodule.Quotient.mk_eq_zero _).2 hy)) (fun t => ?_) hv
       refine (Submodule.Quotient.eq _).1 ?_
       exact hq t
     · rintro ⟨y, hy, hμ⟩

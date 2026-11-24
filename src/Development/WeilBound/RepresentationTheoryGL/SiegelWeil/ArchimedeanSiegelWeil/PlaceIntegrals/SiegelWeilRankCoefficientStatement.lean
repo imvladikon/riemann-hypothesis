@@ -418,7 +418,7 @@ theorem mem_intH_iff (σ : E →ₐ[F] E) {d n : ℕ} (b : Module.Basis (Fin d) 
 theorem measurableSet_intH (σ : E →ₐ[F] E) {d n : ℕ} (b : Module.Basis (Fin d) F E)
     (S : Finset (HeightOneSpectrum (𝓞 F))) : MeasurableSet (intH (n := n) σ b S) := by
   haveI : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR (HeckeCharacterZeroLocus.SiegelWeilU.AF F) σ n) := ⟨rfl⟩
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  haveI := _root_.GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have hset : intH (n := n) σ b S = ⋂ v : HeightOneSpectrum (𝓞 F), ⋂ _ : v ∉ S, ⋂ a : Fin n, ⋂ i : Fin n,
       ⋂ k : Fin d, {B : HeckeCharacterZeroLocus.SiegelWeilU.HermR (HeckeCharacterZeroLocus.SiegelWeilU.AF F) σ n | (HeckeCharacterZeroLocus.SiegelWeilU.sndA F ((Algebra.TensorProduct.basis (HeckeCharacterZeroLocus.SiegelWeilU.AF F) b).repr
         ((B : Matrix (Fin n) (Fin n) (HeckeCharacterZeroLocus.SiegelWeilU.AF F ⊗[F] E)) a i) k)) v ∈ v.adicCompletionIntegers F} := by
@@ -460,7 +460,7 @@ end Adelic
 theorem coefS_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ n : ℕ, 0 < n → 2 * n < M → ∀ (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (dx : Measure (Fin n → Fin M → AF F ⊗[F] E)) (db : Measure (HermR (AF F) σ n)) (d : ℕ) (b : Module.Basis (Fin d) F E) (Φ : (Fin n → Fin M → AF F ⊗[F] E) → ℂ), Integrable (starN σ J ψ dx Φ) db → ∀ T : Matrix (Fin n) (Fin n) E, Filter.Tendsto (fun S => coefS σ J ψ dx db Φ T b S) Filter.atTop (nhds (coefN σ J ψ dx db Φ T)) := by
   intro F E _ _ _ _ _ σ _ M J _ n _ _ ψ hψ dx db d b Φ hI T
   haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  haveI := _root_.GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   obtain ⟨hψc, hψn, -, -⟩ := hψ
   have hchar : Continuous fun B : HermR (AF F) σ n =>
       ψ (-(algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E)
@@ -961,33 +961,15 @@ namespace GlobalTheory.CMTrace
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem sig_sig {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) : σ (σ x) = x := by
-  obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-  apply τ.injective
-  rw [h.2.2.2, h.2.2.2, star_star]
-
-theorem sig_ne_id {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  by_contra hc
-  push_neg at hc
-  obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
-  have hr : w.IsReal := by
-    rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
-    ext x
-    simp only [ComplexEmbedding.conjugate_coe_eq]
-    have := h.2.2.2 w.embedding x
-    rw [hc x] at this
-    exact this.symm
-  exact (InfinitePlace.not_isReal_iff_isComplex.mpr (h.2.1.isComplex w)) hr
-
 def sigE {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : Gal(E/F) :=
-  AlgEquiv.ofAlgHom σ σ (AlgHom.ext fun x => sig_sig h x) (AlgHom.ext fun x => sig_sig h x)
+  AlgEquiv.ofAlgHom σ σ (AlgHom.ext fun x => _root_.GlobalTheory.AdelicU.cm_conj_conj h x) (AlgHom.ext fun x => _root_.GlobalTheory.AdelicU.cm_conj_conj h x)
 
 theorem trace_eq {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (e : E) :
     algebraMap F E (Algebra.trace F E e) = e + σ e := by
   haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h.2.2.1
   have hne : (1 : Gal(E/F)) ≠ sigE h := by
     intro h1
-    obtain ⟨x, hx⟩ := sig_ne_id h
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.AdelicU.exists_cm_conj_ne h
     exact hx (congrArg (fun g : Gal(E/F) => g x) h1).symm
   have hle : Nat.card Gal(E/F) ≤ 2 := by
     calc Nat.card Gal(E/F) ≤ Nat.card (E →ₐ[F] E) :=
@@ -1663,13 +1645,13 @@ namespace GlobalTheory.CompanionTheory.WhitFree
 theorem whit_eq_integral : ∀ (D : D7) (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (μ : Measure (Mx D V.rank r)) (lam : Measure (hermA D r)) (ν : Measure (GA D V)) (φ : Mx D V.rank r → ℂ), Hyp D r V ψ θ μ lam ν φ → ∀ (t : ℕ) (β : HermE D r), GlobalTheory.CompanionTheory.WeilSiegel.Deg.IsBlockNF t β → ∀ (d : ℕ) (b : Module.Basis (Fin d) D.host.F D.host.E) (laminf : Measure (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F)) (lamv : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers D.host.F), Measure (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v)) (minf : HeckeCharacterZeroLocus.SiegelWeilU.HermR (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F) D.sp.cm.sig r → Measure (Fin r → Fin V.rank → HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F ⊗[D.host.F] D.host.E)) (m : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers D.host.F), HeckeCharacterZeroLocus.SiegelWeilU.HermR (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v) D.sp.cm.sig r → Measure (Fin r → Fin V.rank → HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v ⊗[D.host.F] D.host.E)), GlobalTheory.CompanionTheory.SW.IsStdInf laminf → (∀ v, GlobalTheory.CompanionTheory.SW.IsStdV v (lamv v)) → IsGramFibFree (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F) D.sp.cm.sig V.gram r (GlobalTheory.CompanionTheory.SW.coordW (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F) b laminf r V.rank) (GlobalTheory.CompanionTheory.SW.coordHerm (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F) D.sp.cm.sig b laminf r) minf → (∀ v, IsGramFibFree (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v) D.sp.cm.sig V.gram r (GlobalTheory.CompanionTheory.SW.coordW (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v) b (lamv v) r V.rank) (GlobalTheory.CompanionTheory.SW.coordHerm (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v) D.sp.cm.sig b (lamv v) r) (m v)) → ∀ I : Measure (Fin r → Fin V.rank → AE D), GlobalTheory.CompanionTheory.SW.IsEulerProd b I 1 (minf (HeckeCharacterZeroLocus.SiegelWeilU.hermOf (HeckeCharacterZeroLocus.SiegelWeilU.Ainf D.host.F) D.sp.cm.sig β.1 (hermE_symm β))) (fun v => m v (HeckeCharacterZeroLocus.SiegelWeilU.hermOf (HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v) D.sp.cm.sig β.1 (hermE_symm β))) → Integrable (fun X => φ (trM X)) I → W ψ V μ lam φ β = ∫ X, φ (trM X) ∂I := by
   intro D r V ψ θ μ lam ν φ hyp t β hβ d b laminf lamv minf m hinf hlamv hminf hm I hI _
   obtain ⟨hr, hψ, hθ, hμ, hlam, -, hφ, -⟩ := hyp
-  have hCM := GlobalTheory.DefiniteQuotient.cmExt D
+  have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
   obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
   obtain ⟨ht, -⟩ := hβ
   rw [hW φ β]
   exact coefN_eq_integral D.sp.cm.sig hCM V.gram hJ (by omega) hr ψ hψ dx hdx db hdb d b laminf lamv hinf hlamv minf hminf
-    m hm β.1 (hermE_symm β) I hI _ (GlobalTheory.T.schwartz_function_schwartz_bruhat D θ hθ V.rank r φ hφ)
+    m hm β.1 (hermE_symm β) I hI _ (_root_.GlobalTheory.CompanionTheory.SiegelND.isSchwartzBruhat_tupOf_of_mem_schwartzA D θ hθ V.rank r φ hφ)
 
 end GlobalTheory.CompanionTheory.WhitFree
 end -- clump:auto

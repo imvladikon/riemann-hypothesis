@@ -96,8 +96,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.dlog_basis_and_vanishing_above_dimension : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → (∃ b : Module.Basis (Fin d) K Ω[K⁄k], ∀ j, b j = (algebraMap F K (x j.succ / x 0))⁻¹ • D k K (algebraMap F K (x j.succ / x 0))) ∧ ∀ q, d < q → ∀ y ∈ ⋀[K]^q Ω[K⁄k], y = 0 := by
-  first | (exact @GlobalTheory.PD.IsFinCover.dlog_basis_and_vanish)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DlogBasisAndVanishingAboveDimensionStatement =====
@@ -188,7 +186,7 @@ theorem UpperTheory.Gal.productCup_of_system.field0_of :
         det := hdet }
     exact hLe F K K' d xu j2 Fx A hY a had u hu
   · push_neg at had
-    have hv := (GlobalTheory.T.dlog_basis_and_vanishing_above_dimension ℂ F K d x hK).2 a had
+    have hv := (_root_.GlobalTheory.PD.IsFinCover.dlog_basis_and_vanish ℂ F K d x hK).2 a had
     refine (Finset.sum_eq_zero fun p _ => ?_).trans (Finset.sum_eq_zero fun e _ => ?_).symm
     · rw [trace_eq_zero_of_bot _ (fun I => omB_eq_bot _ a hv) _ (u p), mul_zero]
     · rw [coeff_det_eq_zero had, zero_div]

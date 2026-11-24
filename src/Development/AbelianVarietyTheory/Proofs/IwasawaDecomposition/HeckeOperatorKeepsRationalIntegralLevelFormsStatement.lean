@@ -193,14 +193,6 @@ section Local
 
 variable {F : Type} [Field F] [NumberField F] {v : HeightOneSpectrum (𝓞 F)} {n : ℕ}
 
-theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
-  by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
-  · rw [← WithZero.exp_log h0] at hx ⊢
-    rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
-    rw [WithZero.exp_le_exp]
-    omega
-
 theorem int_of_double_coset (ϖ : v.adicCompletion F) (k : ℕ) (hϖ : Valued.v ϖ ≤ 1)
     (a b g : GL (Fin n) (v.adicCompletion F))
     (ha : a ∈ Formalism.UG.GLint (Fin n) (v.adicCompletionIntegers F).toSubring)
@@ -329,7 +321,7 @@ theorem tSet_denom (s : SplitPlace L) (ϖ : s.v.adicCompletion L⁺) (k : ℕ) (
     intro h; rw [h, Valuation.map_zero] at hunif; exact WithZero.coe_ne_zero hunif.symm
   obtain ⟨h1, h2⟩ := int_of_double_coset ϖ k hϖ1 a b _ ha hb hg
   have hpv : Valued.v (p : s.v.adicCompletion L⁺) ≤ WithZero.exp (-1) := by
-    refine le_exp_neg_one_of_lt_one ?_
+    refine _root_.GlobalTheory.HeckeLocInt.le_exp_neg_one_of_lt ?_
     have e : (p : s.v.adicCompletion L⁺) = algebraMap L⁺ (s.v.adicCompletion L⁺) (((p : ℕ) : 𝓞 L⁺) : L⁺) := by simp
     rw [e, adic_valued_algebraMap]
     exact (s.v.valuation_lt_one_iff_mem (K := L⁺) _).2 hp
@@ -702,7 +694,7 @@ theorem tN_lvlForm : ∀ (D : D7) (V : HSp D) (hr : D.R.r ≤ V.rank) (Pg Q : Fi
   intro D V hr Pg Q chi xi c P e hg hV hU hR halg hirr G₀ _ _ S act pres tie eG P₀ ψ₀ hred lam c0 pair del hmap hcoef hint
     B hB s ϖ k hs hϖ hk1 hk2 x
   exact tN_core P hg hV hU S act pres tie P₀ ψ₀⁻¹ lam c0 pair del hmap hcoef (hLat_lev V hV _) hint _ _
-    (GlobalTheory.T.definiteLevelForms_iff_stdGroupTypeSpace D V hr Pg Q chi xi c P e hg hU hR G₀ tie.red eG P₀ ψ₀ hred) s ϖ k hϖ
+    (_root_.GlobalTheory.MtInType.cutSp_iff_typeSp D V hr Pg Q chi xi c P e hg hU hR G₀ tie.red eG P₀ ψ₀ hred) s ϖ k hϖ
     (GlobalTheory.HeckeStdFacts.heckeStdPlain D.host.E V.rank (NG.AlgWt.mk c.W (wtRep c e) halg hirr) _ _ B
       (GlobalTheory.T.stdFrameLevelSubgroup_bounded_open_hyperspecial D V.rank _).2.1 hB s ϖ k hs hϖ hk1 hk2).1 x
 

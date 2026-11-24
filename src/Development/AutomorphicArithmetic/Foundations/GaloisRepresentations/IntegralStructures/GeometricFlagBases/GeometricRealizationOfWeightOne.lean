@@ -124,8 +124,6 @@ section -- clump:auto
 
 namespace CrystallineSemistableComparison.Close
 
-theorem cstSmooth_of_side (h : CrystallineSemistableComparison.Out.EtSideS) : CrystallineSemistableComparison.Out.CstSmooth := CrystallineSemistableComparison.Out.cstSmooth_of_side h
-
 end CrystallineSemistableComparison.Close
 end -- clump:auto
 end -- clump:auto
@@ -138,7 +136,7 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.Seam
 
-theorem cstSmooth : CrystallineSemistableComparison.CstSmooth := CrystallineSemistableComparison.Close.cstSmooth_of_side HT.etSideS
+theorem cstSmooth : CrystallineSemistableComparison.CstSmooth := _root_.CrystallineSemistableComparison.Out.cstSmooth_of_side HT.etSideS
 
 theorem crysStep_holds : UpperTheory.Gal.Int.Geo.CrysStep := crysStep_of cstSmooth.1
 
@@ -548,20 +546,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.bi_invariant_test_function_sum : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 → ∀ (wt : Polynomial G.F → ℂ)
-    (L : G.Level) (f : G.GAf → ℂ), IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f →
-      (∀ k ∈ L.K.toSubgroup, ∀ k' ∈ L.K.toSubgroup, ∀ g, f (k * g * k') = f g) →
-    ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), IsTest (sigG G 1) (KHT p G.m G.n 1 G.Fw) K' f' →
-      (∀ k ∈ K', ∀ k' ∈ K', ∀ g, f' (k * g * k') = f' g) →
-      GlobalTheory.LKDef.dSumIrr G wt L.K.toSubgroup f 1 K' f' =
-        ∑ᶠ q : GlobalTheory.LKDef.DFCls G, ∑ᶠ c : ConjClasses (GlobalTheory.LKCx.grp G (Quot.out q).β),
-          if GlobalTheory.LKDef.RegIrr G (((Quotient.out c : GlobalTheory.LKCx.grp G (Quot.out q).β).1.1 : G.Cˣ) : G.C) then
-            wt (minpoly G.F (((Quotient.out c : GlobalTheory.LKCx.grp G (Quot.out q).β).1.1 : G.Cˣ) : G.C)) *
-              centSum (GlobalTheory.LKCx.toAfF G (Quot.out q).β (Quot.out q).trivAf.choose (Quot.out q).trivAf.choose_spec.choose
-                  (Quot.out q).trivAf.choose_spec.choose_spec)
-                (GlobalTheory.LKCx.toP1 G (Quot.out q).β) (MonoidHom.id (Gr G 1)) L.K.toSubgroup K' 1 f f' (Quotient.out c)
-          else 0 := by
-  first | (exact @GlobalTheory.LKDef.Regroup.regroup)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BiInvariantTestFunctionSum =====
@@ -737,9 +721,9 @@ theorem GlobalTheory.LKDef.DForm.centSum_eq_zero_of_orbK : ∀ (p : ℕ) [Fact p
         ((KHT p G.m G.n 1 G.Fw).map (MulAut.conj g).toMonoidHom) := by
       rw [← conjAct_smul_eq_map', ← conjAct_smul_eq_map']
       exact hf'.1.smul (ConjAct.toConjAct g)
-    exact (h1.trans ((GlobalTheory.T.unitarySimilitudeIntegralSubgroup_commensurated_frobenius p G 1 one_pos).1 g)).trans hf'.1.symm
+    exact (h1.trans ((_root_.GlobalTheory.heckeOperator_integral p G 1 one_pos).1 g)).trans hf'.1.symm
   have hK : ∀ x : G.GAf × Gr G 1, (K.map (MulAut.conj x).toMonoidHom).Commensurable K :=
-    GlobalTheory.LKCountComm.commensurable_prod _ _ (GlobalTheory.T.compactOpenLevel_conj_commensurable p G L) hK'c
+    GlobalTheory.LKCountComm.commensurable_prod _ _ (_root_.GlobalTheory.LKMid.level_conj_commensurable p G L) hK'c
   have hbi : ∀ k ∈ K, ∀ k' ∈ K, ∀ g, F₀ (k * g * k') = F₀ g := by
     intro k hk k' hk' g
     obtain ⟨hk1, hk2⟩ := Subgroup.mem_prod.1 hk
@@ -760,7 +744,7 @@ theorem GlobalTheory.LKDef.DForm.centSum_eq_zero_of_orbK : ∀ (p : ℕ) [Fact p
       calc (t * x * k)⁻¹ * B.emb y * (t * x * k) = k⁻¹ * (x⁻¹ * (t⁻¹ * B.emb y * t) * x) * k := by group
         _ = _ := by rw [e0]
     rw [e, hbi _ (K.inv_mem hk) _ hk]
-  have hstab := GlobalTheory.T.definiteForm_stabilizer_finite_away_from_p p G ha L K' hf'.1 B
+  have hstab := _root_.GlobalTheory.DefStab.finite_locPart p G ha L K' hf'.1 B
   have hfin : ∀ x : G.GAf × Gr G 1, ((Γ' ⊓ K.map (MulAut.conj x).toMonoidHom : Subgroup (G.GAf × Gr G 1)) : Set (G.GAf × Gr G 1)).Finite := by
     intro x
     haveI := hstab x
@@ -808,16 +792,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.centSum_eq_zero_of_orbitalIntegral_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 →
-    ∀ (L : G.Level) (f : G.GAf → ℂ), IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f →
-      (∀ k ∈ L.K.toSubgroup, ∀ k' ∈ L.K.toSubgroup, ∀ g, f (k * g * k') = f g) →
-    ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), IsTest (sigG G 1) (KHT p G.m G.n 1 G.Fw) K' f' →
-      (∀ k ∈ K', ∀ k' ∈ K', ∀ g, f' (k * g * k') = f' g) →
-    ∀ (B : GlobalTheory.LKDef.DForm G) (y : GlobalTheory.LKCx.grp G B.β),
-      orbK (MonoidHom.id _) (L.K.toSubgroup.prod K') (B.emb y) (fun h => f h.1 * f' h.2) = 0 →
-      centSum (GlobalTheory.LKCx.toAfF G B.β B.trivAf.choose B.trivAf.choose_spec.choose B.trivAf.choose_spec.choose_spec)
-        (GlobalTheory.LKCx.toP1 G B.β) (MonoidHom.id (Gr G 1)) L.K.toSubgroup K' 1 f f' y = 0 := by
-  first | (exact @GlobalTheory.LKDef.DForm.centSum_eq_zero_of_orbK)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentSumEqZeroOfOrbitalIntegralEqZeroStatement =====
@@ -836,14 +810,14 @@ namespace GlobalTheory.LKDef
 
 theorem trace_definite_forms_identity : TraceDefinitePairsEqAutomorphicTrace := by
   intro p _ G ha V _ _ _ ξ wt hξ L f hf hfb K' f' hf' hf'b hvan
-  rw [GlobalTheory.T.bi_invariant_test_function_sum p G ha wt L f hf hfb K' f' hf' hf'b]
+  rw [_root_.GlobalTheory.LKDef.Regroup.regroup p G ha wt L f hf hfb K' f' hf' hf'b]
   unfold dTrace
   refine finsum_congr (fun q => ?_)
-  rw [GlobalTheory.T.heckeTrace_definiteForm_eq_sum_conjClasses p G ha V ξ L f hf hfb K' f' hf' hf'b (Quot.out q)]
+  rw [_root_.GlobalTheory.HeckeTrace.dform_trace_eq p G ha V ξ L f hf hfb K' f' hf' hf'b (Quot.out q)]
   refine finsum_congr (fun c => ?_)
   split_ifs with h
   · rw [hξ (Quot.out q) (Quotient.out c) h.1 h.2.1]
-  · rw [GlobalTheory.T.centSum_eq_zero_of_orbitalIntegral_eq_zero p G ha L f hf hfb K' f' hf' hf'b (Quot.out q) (Quotient.out c)
+  · rw [_root_.GlobalTheory.LKDef.DForm.centSum_eq_zero_of_orbK p G ha L f hf hfb K' f' hf' hf'b (Quot.out q) (Quotient.out c)
       (hvan (Quot.out q) _ _ _ (Quotient.out c) h), mul_zero]
 
 end GlobalTheory.LKDef
@@ -896,7 +870,7 @@ theorem Pair.mark_norm_sq : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pa
     ‖μ‖ ^ 2 = ((P.c : ℚ) : ℝ) := by
   intro p _ G P μ hμ
   obtain ⟨v, _, x, hx, hpos⟩ := hμ
-  obtain ⟨_, _, hlaw⟩ := GlobalTheory.T.similitudePair_hermitianForm_invertible_similitude p G P v
+  obtain ⟨_, _, hlaw⟩ := _root_.GlobalTheory.LKMid.pair_form_laws p G P v
   set H := G.gram v * G.psi v ((P.β⁻¹ : G.Cˣ) : G.C) with hH
   set A := G.psi v (P.γ : G.C) with hA
   set q : ℂ := star x ⬝ᵥ (H *ᵥ x) with hq
@@ -929,8 +903,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.mark_norm_sq_eq_similitudeFactor : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (μ : ℂ), P.Mark μ → ‖μ‖ ^ 2 = ((P.c : ℚ) : ℝ) := by
-  first | (exact @GlobalTheory.LKMid.Pair.mark_norm_sq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkNormSqEqSimilitudeFactorStatement =====
@@ -961,8 +933,8 @@ theorem mark_unique : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) 
     exact congrArg Subtype.val ((hw ⟨v, hv⟩).trans (hw ⟨v', hv'⟩).symm)
   subst hvv
   by_contra hne
-  have hn := GlobalTheory.T.mark_norm_sq_eq_similitudeFactor p G P μ ⟨v, hv, x, hx, hxp⟩
-  obtain ⟨-, -, hlaw⟩ := GlobalTheory.T.similitudePair_hermitianForm_invertible_similitude p G P v
+  have hn := _root_.GlobalTheory.LKMid.Pair.mark_norm_sq p G P μ ⟨v, hv, x, hx, hxp⟩
+  obtain ⟨-, -, hlaw⟩ := _root_.GlobalTheory.LKMid.pair_form_laws p G P v
 
   have e := dot_conjTranspose_mul_mul (G.psi v P.γ) (G.gram v * G.psi v ((P.β⁻¹ : G.Cˣ) : G.C)) x x'
   rw [hlaw, hx, hx', Matrix.mulVec_smul, Matrix.smul_mulVec, star_smul, smul_dotProduct,
@@ -1199,8 +1171,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKDef GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.markedFieldPairs_equiv_definiteFieldPairs_odd : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 → Odd G.n → ∀ (sel : Polynomial G.F → ℂ), IsSel G sel → ∃ e : {q : Cls G // Irreducible (Quot.out q).pol ∧ (Quot.out q).Mark (sel (Quot.out q).pol)} ≃ {q : DCls G // Irreducible (Quot.out q).pol}, ∀ q, (Quot.out (e q).1).pol = (Quot.out q.1).pol ∧ ∀ (Kf : Subgroup G.GAf) (f : G.GAf → ℂ) (r : ℕ) (K : Subgroup (Gr G r)) (φ : Gr G r → ℂ), 0 < r → (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → (∀ k ∈ K, ∀ g, φ (k⁻¹ * g * sigG G r k) = φ g) → (Quot.out (e q).1).term Kf f r K φ = (Quot.out q.1).term Kf f r K φ := by
-  first | (exact @GlobalTheory.LKDef.cls_equiv_dcls_irr)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkedFieldPairsEquivDefiniteFieldPairsOddStatement =====
@@ -1217,7 +1187,7 @@ namespace GlobalTheory.LKDef
 
 theorem marked_field_pairs_sum_eq_definite_pairs_sum : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 → Odd G.n → ∀ (wt sel : Polynomial G.F → ℂ), IsSel G sel → ∀ (Kf : Subgroup G.GAf) (f : G.GAf → ℂ) (r : ℕ) (K : Subgroup (Gr G r)) (φ : Gr G r → ℂ), 0 < r → (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → (∀ k ∈ K, ∀ g, φ (k⁻¹ * g * sigG G r k) = φ g) → markedSumIrr G wt sel Kf f r K φ = dSumIrr G wt Kf f r K φ := by
   intro p _ G ha hn wt sel hsel Kf f r K φ hr hf hφ
-  obtain ⟨e, he⟩ := GlobalTheory.T.markedFieldPairs_equiv_definiteFieldPairs_odd p G ha hn sel hsel
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.LKDef.cls_equiv_dcls_irr p G ha hn sel hsel
   unfold markedSumIrr dSumIrr
   convert GlobalTheory.finsum_ite_eq_of_equiv _ _ e (fun a : Cls G => wt (Quot.out a).pol * (Quot.out a).term Kf f r K φ)
     (fun b : DCls G => wt (Quot.out b).pol * (Quot.out b).term Kf f r K φ) fun q => by
@@ -1240,8 +1210,6 @@ namespace UpperTheory.Gal.Cnt
 theorem weighted_count_definite_unitary : GlobalTheory.RootSumWeights.MarkWeightedFixedPointEqDefinitePairOdd :=
   GlobalTheory.RootSumWeights.markWeightedFixedPoint_definitePair_odd_of_counts GlobalTheory.LKDef.marked_field_pairs_sum_eq_definite_pairs_sum UpperTheory.Cb.complex_count_regular_marked_points GlobalTheory.RootSumWeights.finitely_many_marked_classes_term_degree_one
 
-theorem trace_definite_forms_identity : GlobalTheory.LKDef.TraceDefinitePairsEqAutomorphicTrace := GlobalTheory.LKDef.trace_definite_forms_identity
-
 end UpperTheory.Gal.Cnt
 end -- clump:auto
 end -- clump:auto
@@ -1255,7 +1223,7 @@ section -- clump:auto
 namespace UpperTheory.Gal.LocalSmoothExtension
 
 theorem ksHodge_of_geo (hW : HolomorphicLefschetzFormula) (hF : FixK) : UpperTheory.Gal.Int.Geo.KSHodge :=
-  ksHodge_of_inputs hW hF UpperTheory.Gal.Cnt.weighted_count_definite_unitary UpperTheory.Gal.Cnt.trace_definite_forms_identity
+  ksHodge_of_inputs hW hF UpperTheory.Gal.Cnt.weighted_count_definite_unitary _root_.GlobalTheory.LKDef.trace_definite_forms_identity
 
 end UpperTheory.Gal.LocalSmoothExtension
 end -- clump:auto
@@ -1274,7 +1242,7 @@ theorem jumpStep_holds : JumpStep := G3.jumpStep_of Seam.HT.htSpecGood Seam.crys
 theorem steps_holds : Steps := steps_of Seam.crysStep_holds jumpStep_holds UpperTheory.Ru.crystallineComparison.phiStep
 
 theorem kodaira_spencer_of_weight_one (hW : LocalSmoothExtension.HolomorphicLefschetzFormula) : KSAll :=
-  ⟨CovMain.stdEx_holds, G3.kSEx_holds, G3.kSNice_holds, FiniteEtaleModels.ksGood_holds, CovMain.ksCong_holds, LocalSmoothExtension.ksHodge_of_geo hW FixZ.FixK_holds⟩
+  ⟨_root_.UpperTheory.standard_datum_exists, G3.kSEx_holds, G3.kSNice_holds, FiniteEtaleModels.ksGood_holds, CovMain.ksCong_holds, LocalSmoothExtension.ksHodge_of_geo hW FixZ.FixK_holds⟩
 
 theorem geometric_realization_of_weight_one (hW : LocalSmoothExtension.HolomorphicLefschetzFormula) : GeoOne := geoOne_of_parts steps_holds (kodaira_spencer_of_weight_one hW) Pl.planEx_holds
 

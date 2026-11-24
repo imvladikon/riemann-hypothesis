@@ -72,6 +72,7 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.InvariantFunctionsDescend
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.ConstPullback
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
@@ -241,14 +242,12 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.conj_dual_parts_killed_of_perfect_pairing : ∀ (O : Type) [CommRing O] (bar : O →+* O) (U : Type) [CommRing U] [IsDomain U] (M M' : Type) [CommGroup M] [CommGroup M'] (α : O → M →* M) (α' : O → M' →* M'), (∀ y, α 1 y = y) → (∀ a b y, α (a * b) y = α a (α b y)) → (∀ a b y, α (a + b) y = α a y * α b y) → (∀ x, α' 1 x = x) → (∀ a b x, α' (a * b) x = α' a (α' b x)) → (∀ a b x, α' (a + b) x = α' a x * α' b x) → (∀ a, bar (bar a) = a) → ∀ (e : M' →* M →* Uˣ) (e' : M →* M' →* Uˣ), Function.Injective e → Function.Injective e' → (∀ a x y, e (α' a x) y = e x (α (bar a) y)) → (∀ a y x, e' (α a y) x = e' y (α' (bar a) x)) → ∀ (u w : Ideal O) (n : ℕ), u ≤ w → u ⊔ u.map bar = ⊤ → (∀ a ∈ (u * u.map bar) ^ n, (∀ y, α a y = 1) ∧ ∀ x, α' a x = 1) → (∀ y, (∃ m : ℕ, ∀ a ∈ u ^ m, α a y = 1) → ∀ a ∈ w, α a y = 1) → Finite {y : M // ∀ a ∈ w, α a y = 1} → (∀ x, (∃ m : ℕ, ∀ a ∈ (u.map bar) ^ m, α' a x = 1) → ∀ a ∈ w.map bar, α' a x = 1) ∧ Nat.card {x : M' // ∀ a ∈ w.map bar, α' a x = 1} = Nat.card {y : M // ∀ a ∈ w, α a y = 1} := by
-  first | (exact @GlobalTheory.DualParts.conj_dual_parts)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjDualPartsKilledOfPerfectPairingStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopIsoInvRestrictAppTop =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopIsoInvRestrictAppTop", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEigen\npublic import Mathlib.AlgebraicGeometry.Morphisms.Flat\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.DescGen\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.FnOfComp\nimport Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle\nimport Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection\nimport Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopIsoInvRestrictAppTop", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEigen\npublic import Mathlib.AlgebraicGeometry.Morphisms.Flat\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.DescGen\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.FnOfComp\nimport Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle\nimport Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection\nimport Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal\nimport Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.InvariantFunctionsDescend\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -289,14 +288,6 @@ theorem evU_val_restrict {X Z : Scheme.{0}} (W : X.Opens) (y : Z ⟶ W.toScheme)
   have e := congrArg (fun φ => φ.hom r.val) (topIso_inv_appTop W y (fun z _ => h z))
   exact e.symm
 
-theorem appTop_injective_of_epi {X Y : Scheme.{0}} (Q : X ⟶ Y) [Epi Q] :
-    Function.Injective Q.appTop.hom := by
-  intro a b hab
-  have e : Q ≫ Out.TLinPf.mOf a = Q ≫ Out.TLinPf.mOf b := by
-    rw [Out.TLinPf.comp_mOf, Out.TLinPf.comp_mOf, hab]
-  rw [cancel_epi] at e
-  rw [← Out.TLinPf.fnOf_mOf a, e, Out.TLinPf.fnOf_mOf]
-
 theorem unit_descends : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) [Flat π] [Surjective π] [IsAffineHom π] (U : Y.Opens) (r : Γ(X, π ⁻¹ᵁ U)ˣ),
     (∀ (Z : Scheme.{0}) (g₁ g₂ : Z ⟶ X) (h₁ : ∀ z, g₁ z ∈ π ⁻¹ᵁ U) (h₂ : ∀ z, g₂ z ∈ π ⁻¹ᵁ U),
       g₁ ≫ π = g₂ ≫ π → evU g₁ h₁ r = evU g₂ h₂ r) →
@@ -323,7 +314,7 @@ theorem unit_descends : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) [Flat π] [Surject
     simp only [evU, map_inv] at k ⊢
     rw [k])
   have hvv : v * v' = 1 := by
-    apply appTop_injective_of_epi (π ∣_ U)
+    apply _root_.GlobalTheory.FunDescent.appTop_injective (π ∣_ U)
     rw [map_mul, hv, hv', ← map_mul, Units.mul_inv, map_one, map_one]
   have h1 : U.topIso.hom.hom v * U.topIso.hom.hom v' = 1 := by
     rw [← map_mul, hvv, map_one]
@@ -726,7 +717,7 @@ theorem exists_pairing {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A �
             exact this
           have hz : ((G₁ ≫ fst o'.A T)⁻¹ * (G₂ ≫ fst o'.A T)) ^ c = 1 := by
             rw [mul_pow, inv_pow, hb, inv_mul_cancel]
-          obtain ⟨V, i, y, w', hi, rfl, hy, hiz⟩ := GlobalTheory.T.abelianScheme_torsionPoint_locally_constant_geomPoint S o'.A o'.ab k x c (Nat.cast_ne_zero.2 hc.ne') FinalForm
+          obtain ⟨V, i, y, w', hi, rfl, hy, hiz⟩ := _root_.GlobalTheory.TorsLocConst.locally_const_torsion S o'.A o'.ab k x c (Nat.cast_ne_zero.2 hc.ne') FinalForm
             (G₁ ≫ snd o'.A T) _ hz w
           have hV : i ≫ G₂ = (i ≫ G₁) ≫ tr y := by
             apply CartesianMonoidalCategory.hom_ext
@@ -923,7 +914,7 @@ theorem isTj_dual {r : ℤ} {w : Ideal (𝓞 D.F)} (hw : w.IsMaximal) (hu : uIde
       Ideal.span {((p ^ e : ℕ) : 𝓞 D.F)} := by
     rw [Nat.cast_pow, ← Ideal.span_singleton_pow]
     exact Ideal.pow_right_mono (uIdeal_mul_map_le D hw.ne_top hu) e
-  obtain ⟨H₁, H₂⟩ := GlobalTheory.T.conj_dual_parts_killed_of_perfect_pairing (𝓞 D.F) (D.bar : 𝓞 D.F →+* 𝓞 D.F) Γ((Over.mk x).left, ⊤)
+  obtain ⟨H₁, H₂⟩ := _root_.GlobalTheory.DualParts.conj_dual_parts (𝓞 D.F) (D.bar : 𝓞 D.F →+* 𝓞 D.F) Γ((Over.mk x).left, ⊤)
     (kerPts ψ (Over.mk x)) (kerPts ψ' (Over.mk x))
     (fun a => kerAct ψ hl _ (algebraMap (𝓞 D.F) D.O a)) (fun a => kerAct ψ' hl' _ (algebraMap (𝓞 D.F) D.O a))
     (kerAct_one ψ hl _) (kerAct_mul ψ hl _) (kerAct_add ψ hl _)
@@ -995,7 +986,7 @@ theorem finite_etale_target : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   haveI := M.smooth
   haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
   haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
-  obtain ⟨Y', o₀, m₀, o₂, χ, hfin, het, hχ, hχT, univ'⟩ := GlobalTheory.T.harrisTaylor_typeTj_isogenies_representable p D R b N hN hNp hp (D.tr - r) _ j (p ^ e)
+  obtain ⟨Y', o₀, m₀, o₂, χ, hfin, het, hχ, hχT, univ'⟩ := _root_.GlobalTheory.UPel.HT.ES.IsogRep.exists_rep p D R b N hN hNp hp (D.tr - r) _ j (p ^ e)
     hw' hu' hj ⟨e, rfl, he⟩ hm M.X M.s M.univ
   obtain ⟨ψ', hψ', a₁, a₂⟩ := hψ.2.2.2.2.2
   obtain ⟨χ', hχ', b₁, b₂⟩ := hχ.2.2.2.2.2
@@ -1074,7 +1065,7 @@ theorem exists_tjCorr_finiteEtale : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
     infer_instance
   haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨Y, o₀, m₀, o', ψ, hfin, het, hisog, htj, huniv⟩ :=
-    GlobalTheory.T.harrisTaylor_typeTj_isogenies_representable p D R b N hN hNp hp r w j c hw hu hj hc hm M.X M.s M.univ
+    _root_.GlobalTheory.UPel.HT.ES.IsogRep.exists_rep p D R b N hN hNp hp r w j c hw hu hj hc hm M.X M.s M.univ
   obtain ⟨t, ⟨ht, ⟨mt⟩⟩, -⟩ := M.rep Y.left (Y.hom ≫ M.s) o'
   obtain ⟨h3, h4⟩ := _root_.GlobalTheory.UPel.HT.ESDual.finite_etale_target p D R b N hN hNp hp r w j c hw hu hj hc hm M Y.left Y.hom t ht.symm o₀ o' m₀ mt ψ
     hisog htj hfin het huniv
@@ -1112,17 +1103,6 @@ noncomputable section
 namespace UpperTheory.Cb.isogenyLiftUniqueness
 
 variable {p : ℕ} [Fact p.Prime] {D : Datum p} {R R' : Type} [CommRing R] [CommRing R'] {N : ℕ} {S : Scheme.{0}}
-
-private theorem sp_surj {A B : Type} [CommRing A] [CommRing B] (u : Sp B ⟶ Sp A) :
-    ∃ β : A →+* B, u = spMap β :=
-  ⟨(Spec.preimage u).hom, by simp [spMap]⟩
-
-private theorem sp_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
-private theorem sp_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) : f = g :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
 
 private def baseMap (b : Base D R) (φ : R →+* R') (hp : IsUnit ((p : ℕ) : R')) : Base D R' where
   unit k hk := by
@@ -1163,20 +1143,20 @@ private def toR {t : S ⟶ Sp R'} {s : S ⟶ Sp R} (h : t ≫ spMap φ = s) (o :
   kerP := o.kerP
   rosati := o.rosati
   lie R₁ _ β x hx v hv := by
-    obtain ⟨β', hβ'⟩ := sp_surj (x ≫ t)
-    obtain rfl : β = β'.comp φ := sp_inj (by rw [← hx, ← h, ← Category.assoc, hβ', sp_comp])
+    obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (x ≫ t)
+    obtain rfl : β = β'.comp φ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← h, ← Category.assoc, hβ', _root_.GlobalTheory.spMap_comp_ring])
     exact o.lie R₁ β' x hβ' v hv
   lieRank k _ _ x β hx i := by
-    obtain ⟨β', hβ'⟩ := sp_surj (x ≫ t)
-    obtain rfl : β = β'.comp φ := sp_inj (by rw [← hx, ← h, ← Category.assoc, hβ', sp_comp])
+    obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (x ≫ t)
+    obtain rfl : β = β'.comp φ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← h, ← Category.assoc, hβ', _root_.GlobalTheory.spMap_comp_ring])
     exact o.lieRank k x β' hβ' i
   eta := o.eta
   eta_add := o.eta_add
   eta_lin := o.eta_lin
   eta_ker := o.eta_ker
   geom k _ _ x β hx := by
-    obtain ⟨β', hβ'⟩ := sp_surj (x ≫ t)
-    obtain rfl : β = β'.comp φ := sp_inj (by rw [← hx, ← h, ← Category.assoc, hβ', sp_comp])
+    obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (x ≫ t)
+    obtain rfl : β = β'.comp φ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← h, ← Category.assoc, hβ', _root_.GlobalTheory.spMap_comp_ring])
     exact o.geom k x β' hβ'
 
 private def ofR {t : S ⟶ Sp R'} {s : S ⟶ Sp R} (h : t ≫ spMap φ = s) (o : Obj b N s) :
@@ -1192,13 +1172,13 @@ private def ofR {t : S ⟶ Sp R'} {s : S ⟶ Sp R} (h : t ≫ spMap φ = s) (o :
   ample := o.ample
   kerP := o.kerP
   rosati := o.rosati
-  lie R₁ _ β x hx v hv := o.lie R₁ (β.comp φ) x (by rw [← h, ← Category.assoc, hx, sp_comp]) v hv
-  lieRank k _ _ x β hx i := o.lieRank k x (β.comp φ) (by rw [← h, ← Category.assoc, hx, sp_comp]) i
+  lie R₁ _ β x hx v hv := o.lie R₁ (β.comp φ) x (by rw [← h, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring]) v hv
+  lieRank k _ _ x β hx i := o.lieRank k x (β.comp φ) (by rw [← h, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring]) i
   eta := o.eta
   eta_add := o.eta_add
   eta_lin := o.eta_lin
   eta_ker := o.eta_ker
-  geom k _ _ x β hx := o.geom k x (β.comp φ) (by rw [← h, ← Category.assoc, hx, sp_comp])
+  geom k _ _ x β hx := o.geom k x (β.comp φ) (by rw [← h, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring])
 
 local macro "cp " m:term:max : term =>
   `(⟨($m).φ, ($m).φ₂, ($m).cart, ($m).sq, ($m).act, ($m).pol, ($m).eta⟩)

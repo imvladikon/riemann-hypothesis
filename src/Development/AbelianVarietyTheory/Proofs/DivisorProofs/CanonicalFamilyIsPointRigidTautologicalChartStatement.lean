@@ -285,8 +285,6 @@ open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.UC
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.eq_of_mumfordBundle_torsion_presentations : ∀ (V : Type) [CommRing V] [IsDomain V] [CharZero V] (D : DegPre V) {S : Scheme.{0}} (B : Over S) [GrpObj B] [IsCommMonObj B] (P : LB (G2 B).left), P.IsLB → ∀ (t : Sp V ⟶ S) (a₁ a₂ : D.P.A.left ⟶ B.left) (aa₁ aa₂ : (G2 D.P.A).left ⟶ (G2 B).left), IsGrpPullback D.P.A B t a₁ → IsGrpPullback D.P.A B t a₂ → IsSquare a₁ aa₁ → IsSquare a₂ aa₂ → LBIso (abelian₂ D.P.A D.P.L) (P.pull aa₁) → LBIso (abelian₂ D.P.A D.P.L) (P.pull aa₂) → ∀ n : ℕ, 3 ≤ n → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F], (∀ x : TF (R := V) F ⟶ D.P.A, x ^ n = 1 → x.left ≫ a₁ = x.left ≫ a₂) → a₁ = a₂ := by
-  first | exact @GlobalTheory.PresRigid.eq_of_lam_of_torsion
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfMumfordBundleTorsionPresentationsStatement =====
@@ -466,26 +464,6 @@ theorem tors_sec {D' : Datum H} {l : Geo.Tor.Level H} {B : Type} [CommRing B] {b
   rw [this]
   rfl
 
-theorem second_diff {X Y K I : Type} [AddCommGroup X] [Module (𝓞 E) X] [AddCommGroup Y] [Module (𝓞 E) Y] [Field K]
-    [Fintype I] (e : X ≃ₗ[𝓞 E] Y) (s : I → K) (hs : ∀ k, s k ≠ 0) (ε : I → LinearMap.BilinForm ℤ Y)
-    (hε : ∀ k, ε k ∈ balForms H.bar Y) (n : ℤ) (g : X → Kˣ)
-    (hg : ∀ y, (((g y)⁻¹ : Kˣ) : K) = ∏ k, s k ^ (n * ε k (e y) (H.w0 • e y))) (a a' : X) :
-    (((g (a + a'))⁻¹ * g a * g a' : Kˣ) : K) = ∏ k, s k ^ (n * ε k (e a) (e a')) := by
-  have hw : H.w0 + H.bar H.w0 = 1 := GlobalTheory.PelPrim.cmHostUnit_add_conj_eq_one H
-  have hg' : ∀ y, (g y : K) = (∏ k, s k ^ (n * ε k (e y) (H.w0 • e y)))⁻¹ := fun y => by
-    rw [← hg, Units.val_inv_eq_inv_val, inv_inv]
-  rw [Units.val_mul, Units.val_mul, hg, hg', hg', ← Finset.prod_inv_distrib, ← Finset.prod_inv_distrib,
-    ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
-  refine Finset.prod_congr rfl fun k _ => ?_
-  rw [← zpow_neg, ← zpow_neg, ← zpow_add₀ (hs k), ← zpow_add₀ (hs k)]
-  congr 1
-  have h1 : ε k (e a') (H.w0 • e a) = ε k (e a) (H.bar H.w0 • e a') := by rw [(hε k).1, (hε k).2]
-  have h2 : ε k (e a) (H.w0 • e a') + ε k (e a) (H.bar H.w0 • e a') = ε k (e a) (e a') := by
-    rw [← map_add (f := _), ← add_smul, hw, one_smul]
-  simp only [map_add (f := _), smul_add, LinearMap.add_apply, h1]
-  rw [← h2]
-  ring
-
 theorem monomials_eq {o W : Type} [CommRing o] [CommRing W] [IsLocalRing W] (T : TautBase o W) {I : Type} [Fintype I] (ε : I → LinearMap.BilinForm ℤ (Fin T.r → ℤ)) (n : ℕ) (V : Type) [CommRing V] [IsDomain V] (ω : W →+* V) (D₁ D₂ : DegPre V) (s₁ : I → V) (e₁ : D₁.X ≃+ (Fin T.r → ℤ)) (β₁ : D₁.P.A.left ⟶ T.B.left) (ββ₁ : (G2 D₁.P.A).left ⟶ (G2 T.B).left) (w₁ : LB.Iso (abelian₂ D₁.P.A D₁.P.L) ((abelian₂ T.B T.M.L).pull ββ₁)) (s₂ : I → V) (e₂ : D₂.X ≃+ (Fin T.r → ℤ)) (β₂ : D₂.P.A.left ⟶ T.B.left) (ββ₂ : (G2 D₂.P.A).left ⟶ (G2 T.B).left) (w₂ : LB.Iso (abelian₂ D₂.P.A D₂.P.L) ((abelian₂ T.B T.M.L).pull ββ₂)) (b : D₁.P.A ⟶ D₂.P.A) (φ : D₁.X ≃+ D₂.X) (F : Type) [Field F] [Algebra (FractionRing V) F] : 1 ≤ n → D₁.TauBimult → D₂.TauBimult → From T ω s₁ ε n D₁ e₁ β₁ ββ₁ w₁ → From T ω s₂ ε n D₂ e₂ β₂ ββ₂ w₂ → Match D₁ D₂ b φ F → (∀ y, e₂ (φ y) = e₁ y) → b.left ≫ β₂ = β₁ → (∀ a : Fin T.r → ℤ, ∃ (p₁ : QkPt D₁ F n) (p₂ : QkPt D₂ F n), p₁.y = e₁.symm a ∧ TautPt T ω s₁ ε n D₁ e₁ β₁ ββ₁ w₁ F a p₁.g ∧ p₂.y = e₂.symm a ∧ TautPt T ω s₂ ε n D₂ e₂ β₂ ββ₂ w₂ F a p₂.g ∧ QImg b φ p₁ p₂) → ∀ c a : Fin T.r → ℤ, ∏ i, algebraMap (FractionRing V) F (algebraMap V (FractionRing V) (s₁ i)) ^ ε i c a = ∏ i, algebraMap (FractionRing V) F (algebraMap V (FractionRing V) (s₂ i)) ^ ε i c a := by
   intro hn hD₁ hD₂ hF₁ hF₂ hM he hb H c a
   obtain ⟨hbm, -, -, hu, -⟩ := hM
@@ -590,7 +568,7 @@ theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
   obtain ⟨β, ββ, w, hF⟩ := GlobalTheory.T.comesFromTautBase_of_rescaled_pullback_monomial T l.M' (mulDeg Cn.L.D l.M') hev hbi hgen ib β₀ ββ₀ w₀ hF₀ R iw hiw C.P.D.toPre g hD
     s ε e (fun y => congrArg ib (hxe y).symm) (fun a a' => by
       simp only [he, hε]
-      exact second_diff Cn.e _ (fun k => (map_ne_zero_iff _ (IsFractionRing.injective R _)).2 (hs0 k)) _
+      exact _root_.GlobalTheory.UCanon.LatId.second_diff_bal Cn.e _ (fun k => (map_ne_zero_iff _ (IsFractionRing.injective R _)).2 (hs0 k)) _
         (fun k => (Cn.ε k).2) _ g hg a a')
   have hT : IsGrpPullback Cn.L.o.t.G T.B (𝟙 _) (Cn.L.φB ≫ β₀) :=
     (Cn.L.ab.1.comp hF₀.1).congr ((Category.id_comp _).trans (Spec.map_id _)) rfl
@@ -663,7 +641,7 @@ theorem coords_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
     ⟨by rw [← Over.comp_left, lift_fst, Over.comp_left], by rw [← Over.comp_left, lift_snd, Over.comp_left]⟩
   have hLam : ∀ D : DegPre V, (abelian₂ D.P.A D.P.L).IsLB := fun D => LB.isLB_linComb D.P.isLB _ _
   have hLamT : (abelian₂ T.B T.M.L).IsLB := LB.isLB_linComb T.M.isLB _ _
-  have hb := GlobalTheory.T.eq_of_mumfordBundle_torsion_presentations V D₁.toPre T.B _ hLamT _ _ _ _ _ hF₁.1
+  have hb := _root_.GlobalTheory.PresRigid.eq_of_lam_of_torsion V D₁.toPre T.B _ hLamT _ _ _ _ _ hF₁.1
     (((isGrpPullback_of_iso (asIso b)).comp hF₂.1).congr (Category.id_comp _) rfl) hF₁.2.1 (isSquare_comp hbsq hF₂.2.1)
     ⟨w₁, hF₁.2.2.1⟩ (LBIso.trans (hLam _) (pull_isLB (hLam _) _) (pull_isLB hLamT _) hM.2.2.1
       (lbIso_pull_comp ⟨w₂, hF₂.2.2.1⟩ _ rfl)) l.M' hn (AlgebraicClosure (FractionRing V))
@@ -760,10 +738,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.UCanon.ScaleTorus
 
-theorem unitOn_mul' {R : Type} [CommRing R] (x y : Rˣ) : unitOn (x * y) = unitOn x * unitOn y := by
-  apply Units.ext
-  exact map_mul (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (x : R) (y : R)
-
 theorem isUnitTau_scaleGen : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H}
     (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     (C : MonoFam Xo c φ R) (N : ℕ) (s : Fin C.m ⊕ Fin N → R)
@@ -800,7 +774,7 @@ theorem isUnitTau_scaleGen : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
     have e₃ : gm (𝟙 (TK R).left) zz ⊤ (unitOn k) =
         gm (𝟙 (TK R).left) zz ⊤ (unitOn (k * w'⁻¹)) * gm (𝟙 (TK R).left) zz ⊤ (unitOn w') := by
       refine Eq.trans ?_ (map_mul _ _ _)
-      refine congrArg _ (Eq.trans ?_ (unitOn_mul' _ _))
+      refine congrArg _ (Eq.trans ?_ (_root_.GlobalTheory.ToricData.unitOn_mul _ _))
       rw [inv_mul_cancel_right]
     refine (hval zz J hJ).trans (Eq.trans ?_ (congrArg _ e₁.symm))
     rw [e₂, ← _root_.mul_assoc, ← e₃]
@@ -1037,8 +1011,7 @@ theorem exists_descent {K : Type} [Field K] (k₀ : Subfield K) [IsAlgClosed k�
   rw [← cancel_epi e₁.hom.left, ← he₂, ← Category.assoc, he₁, ← Category.assoc, ← h2]
   simp only [Over.comp_left, Category.assoc]
 
-theorem lbIso_pull {X Y : Scheme.{0}} {P Q : LB X} (h : LBIso P Q) (f : Y ⟶ X) : LBIso (P.pull f) (Q.pull f) :=
-  h.chartPull (Geo.Tor.chartPullPull P f f rfl) (Geo.Tor.chartPullPull Q f f rfl)
+alias lbIso_pull := _root_.GlobalTheory.RigidBundleGlue.LBIso.pull
 
 theorem exists_lbIso {K : Type} [Field K] (k₀ : Subfield K) (B₀ : Over (Sp k₀)) [GrpObj B₀] (B' : Over (Sp K)) [GrpObj B']
     (h₀ : IsAbelianScheme B₀) {A B₁ : Scheme.{0}} {π₀ : B'.left ⟶ B₀.left} {π₁ : B'.left ⟶ A} {β : A ⟶ B₁}
@@ -1266,20 +1239,6 @@ open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.UC
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.periodGenerators_agree_over_algClosedSubfield : ∀ (R : Type) [CommRing R] [IsDomain R]
-    (Q : DegPre R) (τ₀ : Gens Q) (K : Type) [Field K] [IsAlgClosed K] (ev : R →+* K) (k₀ : Subfield K), IsAlgClosed k₀ →
-    ∀ (W₀ : Type) [CommRing W₀] (ιb : W₀ →+* R), FromBase Q τ₀ ιb → (∀ a, ev (ιb a) ∈ k₀) →
-    ∀ (B₀ : Over (Sp k₀)) [GrpObj B₀] [IsCommMonObj B₀] (M₀ : LB B₀.left) (c₀ : Q.X → (Sp k₀ ⟶ B₀.left))
-      (B' : Over (Sp K)) [GrpObj B'] (π₁ : B'.left ⟶ Q.P.A.left) (π₀ : B'.left ⟶ B₀.left)
-      (w : LB.Iso (Q.P.L.pull π₁) (M₀.pull π₀)) (c' : Q.X → (Sp K ⟶ B'.left)),
-      IsAbelianScheme B₀ → M₀.IsLB → IsGrpPullback B' Q.P.A (spMap ev) π₁ → IsGrpPullback B' B₀ (spMap k₀.subtype) π₀ →
-      w.IsGen →
-      (∀ a, c' a ≫ B'.hom = 𝟙 _ ∧ c' a ≫ π₁ = spMap ev ≫ (Q.c a).left ∧ c' a ≫ π₀ = spMap k₀.subtype ≫ c₀ a) →
-      ∀ (a b : Q.X) (τ₁ : LB.Gen (LB.LinComb M₀ (K := Fin 4) ![c₀ (a + b), c₀ a, c₀ b, c₀ 0] ![-1, 1, 1, -1])),
-        τ₁.IsGen → ∃ x : k₀ˣ, ∀ z J J₀, Good Q.P.L z J → Good M₀ z J₀ →
-          val (τ₀ a b) (spMap ev) z J = lamUnit w c' a b z J J₀ *
-            gm (𝟙 (Sp K)) z ⊤ (unitOn (Units.map k₀.subtype.toMonoidHom x)) * val τ₁ (spMap k₀.subtype) z J₀ := by
-  first | exact @GlobalTheory.UCanon.BaseDescent.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodGeneratorsAgreeOverAlgClosedSubfieldStatement =====
@@ -1313,7 +1272,7 @@ theorem pointRigid_of_hasRigidCoords : ∀ {E : Type} [Field E] [NumberField E] 
     intro a b
     have hτ' := GlobalTheory.T.isUnitTau_scaledGenerator_torusMonomial Xo c φ R C N s ε τ₀ hs hε hτ u hu' a b
     obtain ⟨τ₁, hτ₁, hv⟩ := hrel a b _ hτ'
-    obtain ⟨x, hx⟩ := GlobalTheory.T.periodGenerators_agree_over_algClosedSubfield R C.P.D.toPre τ₀ K ev k₀ hk W₀ ιb hFB hιb B₀ M₀ c₀ B' π₁ π₀ w c' hB hM hp₁ hp₀ hw hc
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.UCanon.BaseDescent.main R C.P.D.toPre τ₀ K ev k₀ hk W₀ ιb hFB hιb B₀ M₀ c₀ B' π₁ π₀ w c' hB hM hp₁ hp₀ hw hc
       a b τ₁ hτ₁
     let z : Sp K := IsLocalRing.closedPoint K
     choose J hJ using fun χ : Sp K ⟶ C.P.D.toPre.P.A.left => exists_chart C.P.D.toPre.P.isLB (χ z)

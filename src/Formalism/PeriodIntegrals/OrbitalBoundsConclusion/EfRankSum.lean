@@ -174,7 +174,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem ramificationDegreeSum : PI.EfRankSum := PI.UnitaryGroupMassFormula.EfRankSum.efRankSum_main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.EfRankSum =====

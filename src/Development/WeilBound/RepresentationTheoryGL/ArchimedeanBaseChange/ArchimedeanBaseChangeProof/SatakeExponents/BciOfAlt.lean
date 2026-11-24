@@ -114,6 +114,7 @@ import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.Tactic.Linter.Style
 import Mathlib.RingTheory.PicardGroup
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermFiniteOfSmaller
 import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PIndMapB
 import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PIndMapD
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommuteRtOfMemZalg
@@ -896,7 +897,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.IsometrySymmetry.IsoVSymm =====
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.FiniteDimensionalTypeSpaceOfDisc =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.FiniteDimensionalTypeSpaceOfDisc", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypesK\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypesW\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.TensorSpanEqPairSpace\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypes\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.TypeBOfMemTypSp\nimport Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PProjA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Mathlib.RingTheory.PicardGroup\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.FiniteDimensionalTypeSpaceOfDisc", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypesK\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypesW\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.TensorSpanEqPairSpace\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LieSumDecompositions.PTypes\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.LimitPairSpaces.TypeBOfMemTypSp\nimport Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PProjA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Mathlib.RingTheory.PicardGroup\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermFiniteOfSmaller\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -910,33 +911,6 @@ namespace PositivityTheory.Rg.BcB.SpectralAccumulation.LV
 open PositivityTheory.Rg.BcB.SpectralAccumulation PositivityTheory.Rg.BcB.E PositivityTheory.Rg.BcB.SpectralAccumulation.Cz.KTypeSlices
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-
-theorem exists_sep {α : Type} (X : Submodule ℂ (α → ℂ)) [FiniteDimensional ℂ X] :
-    ∃ S : Finset α, ∀ w ∈ X, (∀ a ∈ S, w a = 0) → w = 0 := by
-  classical
-  let Ker : Finset α → Submodule ℂ (α → ℂ) := fun S =>
-    X ⊓ ⨅ a ∈ S, LinearMap.ker (LinearMap.proj a : (α → ℂ) →ₗ[ℂ] ℂ)
-  have hmem : ∀ S w, w ∈ Ker S ↔ w ∈ X ∧ ∀ a ∈ S, w a = 0 := by
-    intro S w
-    simp only [Ker, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.proj_apply]
-  have hfd : ∀ S, FiniteDimensional ℂ (Ker S) := fun S => Submodule.finiteDimensional_of_le inf_le_left
-  have hex : ∃ d, ∃ S, Module.finrank ℂ (Ker S) = d := ⟨_, ∅, rfl⟩
-  obtain ⟨S, hS0⟩ := Nat.find_spec hex
-  have hS : ∀ S', Module.finrank ℂ (Ker S) ≤ Module.finrank ℂ (Ker S') := fun S' => by
-    rw [hS0]
-    exact Nat.find_min' hex ⟨S', rfl⟩
-  refine ⟨S, fun w hw h0 => ?_⟩
-  by_contra hne
-  obtain ⟨a, ha⟩ := Function.ne_iff.1 hne
-  have hlt : Ker (insert a S) < Ker S := by
-    refine lt_of_le_of_ne (fun v hv => ?_) (fun he => ?_)
-    · rw [hmem] at hv ⊢
-      exact ⟨hv.1, fun b hb => hv.2 b (Finset.mem_insert_of_mem hb)⟩
-    · have hwS : w ∈ Ker S := (hmem S w).2 ⟨hw, h0⟩
-      rw [← he, hmem] at hwS
-      exact ha (hwS.2 a (Finset.mem_insert_self a S))
-  have := hfd S
-  exact absurd (hS (insert a S)) (not_le.2 (Submodule.finrank_lt_finrank_of_lt hlt))
 
 theorem typSp_tw_le {n : ℕ} {K' : Subgroup (GL (Fin n) (Af E))} (hK : K' ≤ detKer n)
     (W' : Submodule ℂ (Kinf E n → ℂ)) (U : Submodule ℂ (Sm E n)) (z : ℂ) :
@@ -978,7 +952,7 @@ theorem finiteDimensional_type_space_of_disc (hA : AdmDisc) {N : ℕ} (K : Subgr
     have : FiniteDimensional ℂ Y := fd_tens2 _ _
     set X := TypSp (Kf N K (r + s)) (Wf N W (r + s)) (Tr.node t₁ t₂).space with hX
     have : FiniteDimensional ℂ (Wf N W (r + s)) := fd_Wf hW _
-    obtain ⟨S, hS⟩ := exists_sep (Wf N W (r + s))
+    obtain ⟨S, hS⟩ := _root_.UpperTheory.Reformulated.B.Qp2.exists_finset_separating (Wf N W (r + s))
     set T := Tset r s (Kf N K (r + s)) with hTdef
     have hI : ∀ φ ∈ X, MemInd2 (tw t₁.space ((s : ℂ) / 2)) (tw t₂.space (-(r : ℂ) / 2)) φ := by
       intro φ hφ
@@ -1231,11 +1205,11 @@ theorem mult_flat {N : ℕ} (b : Tr E N) (γ : ℕ → ℂ) : GlobalTheory.Compa
   | node t₁ t₂ ih₁ ih₂ => exact _root_.GlobalTheory.CompanionTheory.LimV.NodeFlat.flatFn_nodeFn _ _ (ih₁ _) (ih₂ _)
 
 theorem mult_rinv {N : ℕ} (b : Tr E N) (γ : ℕ → ℂ) (x : GA E N) (k : Kinf E N) {c : GL (Fin N) (Af E)}
-    (hc : c ∈ Cint E N) : mult b γ (x * InducedTensorMap.cf N k c) = mult b γ x :=
+    (hc : c ∈ _root_.GlobalTheory.CompanionTheory.LimV.KO E N) : mult b γ (x * InducedTensorMap.cf N k c) = mult b γ x :=
   (mult_flat b γ).rinv x k c hc
 
 theorem mult_node {r s : ℕ} (t₁ : Tr E r) (t₂ : Tr E s) (γ : ℕ → ℂ) (u : BlockIx (r + s) r → Ad E)
-    (m : GA E r × GA E s) (k : Kinf E (r + s)) {c : GL (Fin (r + s)) (Af E)} (hc : c ∈ Cint E (r + s)) :
+    (m : GA E r × GA E s) (k : Kinf E (r + s)) {c : GL (Fin (r + s)) (Af E)} (hc : c ∈ _root_.GlobalTheory.CompanionTheory.LimV.KO E (r + s)) :
     mult (Tr.node t₁ t₂) γ (unip u * lev (Ad E) r s m * InducedTensorMap.cf (r + s) k c) =
       mult t₁ γ m.1 * mult t₂ (fun i => γ (i + t₁.twists.length)) m.2 :=
   _root_.GlobalTheory.CompanionTheory.LimV.NodeApply.nodeFn_apply _ _ (mult_flat _ _) (mult_flat _ _) u m k c hc
@@ -1381,7 +1355,7 @@ theorem finGL_unip' {r s : ℕ} (x : BlockIx (r + s) r → Af E) :
     rfl
 
 theorem lev_mul_cf_int {r s : ℕ} (k : Kinf E (r + s)) (g : GL (Fin (r + s)) (Af E)) :
-    ∃ (mf : GL (Fin r) (Af E) × GL (Fin s) (Af E)) (c : GL (Fin (r + s)) (Af E)), c ∈ Cint E (r + s) ∧
+    ∃ (mf : GL (Fin r) (Af E) × GL (Fin s) (Af E)) (c : GL (Fin (r + s)) (Af E)), c ∈ _root_.GlobalTheory.CompanionTheory.LimV.KO E (r + s) ∧
       ∀ m : GA E r × GA E s, ∃ v : BlockIx (r + s) r → Ad E,
         lev (Ad E) r s m * (infGL E (r + s) (Unitary.toUnits k) * finGL E (r + s) g) =
           unip v * lev (Ad E) r s (m.1 * finGL E r mf.1, m.2 * finGL E s mf.2) * InducedTensorMap.cf (r + s) k c := by
@@ -1628,8 +1602,8 @@ theorem limVec : LimVec := by
     have := (mult_tendsto s₁.strip γ₁ hγ₁ x.1).mul (mult_tendsto s₂.strip γ₂ hγ₂ x.2)
     rwa [one_mul] at this
 
-  let K₁' : Subgroup (GL (Fin a) (Af E)) := K₁ ⊓ Cint E a
-  let K₂' : Subgroup (GL (Fin b) (Af E)) := K₂ ⊓ Cint E b
+  let K₁' : Subgroup (GL (Fin a) (Af E)) := K₁ ⊓ _root_.GlobalTheory.CompanionTheory.LimV.KO E a
+  let K₂' : Subgroup (GL (Fin b) (Af E)) := K₂ ⊓ _root_.GlobalTheory.CompanionTheory.LimV.KO E b
   have hK₁' : IsOpen (K₁' : Set (GL (Fin a) (Af E))) :=
     hK₁.inter (GroundTheory.Automorphic.AdelicGLn.isOpen_integralFiniteGL E a)
   have hK₂' : IsOpen (K₂' : Set (GL (Fin b) (Af E))) :=

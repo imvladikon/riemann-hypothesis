@@ -233,9 +233,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.BigCorner
-theorem etale_big_corner_statement_holds_assembled : LateralTheory.DivDb.BigCorner := by
-  apply LateralTheory.DivDb.BigCorner₂.BigCorner_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.BigCorner := etale_big_corner_statement_holds_assembled
 end LateralTheory.Fin.BigCorner
 end -- clump:auto
 end -- clump:auto
@@ -287,11 +284,8 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.DegAll
-theorem etale_degree_polynomial_bound : LateralTheory.DivDb.DegPoly := by
-  apply LateralTheory.DivDb.DegPoly₂.DegPoly_of
 theorem etale_rep_image_degree_bound_all_holds_assembled : LateralTheory.DivDb.DegAll := by
-  apply LateralTheory.DivDb.DegAll_of <;> first | exact etale_degree_polynomial_bound
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.DegAll := etale_rep_image_degree_bound_all_holds_assembled
+  apply LateralTheory.DivDb.DegAll_of <;> first | exact _root_.LateralTheory.DivDb.DegPoly₂.DegPoly_of
 end LateralTheory.Fin.DegAll
 end -- clump:auto
 end -- clump:auto
@@ -420,13 +414,8 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.DenseAlg
-theorem etale_divisibility_chain_of_key : LateralTheory.DivDb.Chain := by
-  apply LateralTheory.DivDb.Chain_of
-theorem etale_frobenius_charpoly_separable : LateralTheory.DivDb.SepPoly := by
-  apply LateralTheory.DivDb.SepPoly_of
 theorem etale_rep_dense_algebraic_hull_holds_assembled : LateralTheory.DivDb.DenseAlg := by
-  apply LateralTheory.DivDb.DenseAlg₂.DenseAlg_of <;> first | exact etale_divisibility_chain_of_key | exact etale_frobenius_charpoly_separable
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.DenseAlg := etale_rep_dense_algebraic_hull_holds_assembled
+  apply LateralTheory.DivDb.DenseAlg₂.DenseAlg_of <;> first | exact _root_.LateralTheory.DivDb.ChainPf.chain_of | exact _root_.LateralTheory.DivDb.SepPoly_of
 end LateralTheory.Fin.DenseAlg
 end -- clump:auto
 end -- clump:auto
@@ -628,7 +617,6 @@ theorem main (hChain : Chain) : OpenCoset :=
 end LateralTheory.DivDb.OpenCosetPf
 
 namespace LateralTheory.DivDb
-theorem OpenCoset_of (hChain : Chain) : OpenCoset := OpenCosetPf.main hChain
 end LateralTheory.DivDb
 end -- clump:auto
 end -- clump:auto
@@ -640,15 +628,10 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.FinDense
-theorem etale_frobenius_charpoly_separable : LateralTheory.DivDb.SepPoly := by
-  apply LateralTheory.DivDb.SepPoly_of
-theorem etale_divisibility_chain_of_key : LateralTheory.DivDb.Chain := by
-  apply LateralTheory.DivDb.Chain_of
 theorem etale_open_coset_condition_holds_assembled : LateralTheory.DivDb.OpenCoset := by
-  apply LateralTheory.DivDb.OpenCoset_of <;> first | exact etale_divisibility_chain_of_key
+  apply _root_.LateralTheory.DivDb.OpenCosetPf.main <;> first | exact _root_.LateralTheory.DivDb.ChainPf.chain_of
 theorem etale_finite_image_dense_holds_assembled : LateralTheory.DivDb.FinDense := by
-  apply LateralTheory.DivDb.FinDense_of <;> first | exact etale_frobenius_charpoly_separable | exact etale_open_coset_condition_holds_assembled
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.FinDense := etale_finite_image_dense_holds_assembled
+  apply LateralTheory.DivDb.FinDense_of <;> first | exact _root_.LateralTheory.DivDb.SepPoly_of | exact etale_open_coset_condition_holds_assembled
 end LateralTheory.Fin.FinDense
 end -- clump:auto
 end -- clump:auto
@@ -864,9 +847,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.FinEmbed
-theorem etale_semisimple_finite_embedding_holds_assembled : LateralTheory.DivDb.FinEmbed := by
-  apply LateralTheory.DivDb.FinEmbedPf.FinEmbed_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.FinEmbed := etale_semisimple_finite_embedding_holds_assembled
 end LateralTheory.Fin.FinEmbed
 end -- clump:auto
 end -- clump:auto
@@ -934,9 +914,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.FinPoly
-theorem charpoly_eq_of_annihilating_poly_etale_instance : LateralTheory.DivDb.FinPoly := by
-  apply LateralTheory.DivDb.FinPolyPf.FinPoly_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.FinPoly := charpoly_eq_of_annihilating_poly_etale_instance
 end LateralTheory.Fin.FinPoly
 end -- clump:auto
 end -- clump:auto
@@ -1031,9 +1008,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.FinSub
-theorem finite_subrepresentation_etale_charpoly_instance : LateralTheory.DivDb.FinSub := by
-  apply LateralTheory.DivDb.FiniteSubrepresentation.FinSub_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.FinSub := finite_subrepresentation_etale_charpoly_instance
 end LateralTheory.Fin.FinSub
 end -- clump:auto
 end -- clump:auto
@@ -1045,9 +1019,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.MatrixUnits₂
-theorem etale_matrix_units_system_of_key : LateralTheory.DivDb.MatrixUnits₂ := by
-  apply LateralTheory.DivDb.MatrixUnitConstruction.MatUnits_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.MatrixUnits₂ := etale_matrix_units_system_of_key
 end LateralTheory.Fin.MatrixUnits₂
 end -- clump:auto
 end -- clump:auto
@@ -1326,9 +1297,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.Rep
-theorem etale_representation_realization_instance : LateralTheory.DivDb.Rep := by
-  apply LateralTheory.DivDb.RepPf.Rep_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.Rep := etale_representation_realization_instance
 end LateralTheory.Fin.Rep
 end -- clump:auto
 end -- clump:auto
@@ -1340,9 +1308,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.Semis
-theorem etale_semisimplicity_instance : LateralTheory.DivDb.Semis := by
-  apply LateralTheory.DivDb.SemisPf.Semis_of
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.Semis := etale_semisimplicity_instance
 end LateralTheory.Fin.Semis
 end -- clump:auto
 end -- clump:auto
@@ -1431,11 +1396,8 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.SpecLie
-theorem etale_special_point_exists_of_key : LateralTheory.DivDb.SpecPt := by
-  apply LateralTheory.DivDb.SpecPtPf.SpecPt_of
 theorem etale_spectrum_lie_algebra_instance : LateralTheory.DivDb.SpecLie := by
-  apply LateralTheory.DivDb.SpecLiePf.SpecLie_of <;> first | exact etale_special_point_exists_of_key
-theorem intersectionNumber_baseChange : LateralTheory.DivDb.SpecLie := etale_spectrum_lie_algebra_instance
+  apply LateralTheory.DivDb.SpecLiePf.SpecLie_of <;> first | exact _root_.LateralTheory.DivDb.SpecPtPf.SpecPt_of
 end LateralTheory.Fin.SpecLie
 end -- clump:auto
 end -- clump:auto
@@ -1563,7 +1525,7 @@ open Matrix PositivityTheory.AutomorphicGaloisHodgeTate.Div
 namespace LateralTheory.DivDb
 
 theorem goal_holds : DivWCoreLac :=
-  goal_of LateralTheory.Fin.SpecLie.intersectionNumber_baseChange LateralTheory.Fin.DegAll.intersectionNumber_baseChange LateralTheory.Fin.Struct.intersectionNumber_baseChange LateralTheory.Fin.Key.intersectionNumber_baseChange LateralTheory.Fin.BigCorner.intersectionNumber_baseChange LateralTheory.Fin.Semis.intersectionNumber_baseChange LateralTheory.Fin.MatrixUnits₂.intersectionNumber_baseChange LateralTheory.Fin.Rep.intersectionNumber_baseChange LateralTheory.Fin.DenseAlg.intersectionNumber_baseChange LateralTheory.Fin.FinSub.intersectionNumber_baseChange LateralTheory.Fin.FinDense.intersectionNumber_baseChange LateralTheory.Fin.FinPoly.intersectionNumber_baseChange LateralTheory.Fin.FinEmbed.intersectionNumber_baseChange
+  goal_of _root_.LateralTheory.Fin.SpecLie.etale_spectrum_lie_algebra_instance _root_.LateralTheory.Fin.DegAll.etale_rep_image_degree_bound_all_holds_assembled _root_.LateralTheory.Fin.Struct.etale_algebra_structure_theorem_of_components _root_.LateralTheory.Fin.Key.etale_divisibility_key_criterion_of_components _root_.LateralTheory.DivDb.BigCorner₂.BigCorner_of _root_.LateralTheory.DivDb.SemisPf.Semis_of _root_.LateralTheory.DivDb.MatrixUnitConstruction.MatUnits_of _root_.LateralTheory.DivDb.RepPf.Rep_of _root_.LateralTheory.Fin.DenseAlg.etale_rep_dense_algebraic_hull_holds_assembled _root_.LateralTheory.DivDb.FiniteSubrepresentation.FinSub_of _root_.LateralTheory.Fin.FinDense.etale_finite_image_dense_holds_assembled _root_.LateralTheory.DivDb.FinPolyPf.FinPoly_of _root_.LateralTheory.DivDb.FinEmbedPf.FinEmbed_of
 
 end LateralTheory.DivDb
 end -- clump:auto

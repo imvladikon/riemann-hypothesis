@@ -171,12 +171,6 @@ attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL Formalism.DoubleC
 open GlobalTheory.IndefiniteRowSideFullHecke.ScaledIntegerPeriodic
 
 
-theorem _root_.GlobalTheory.T.cartanDoubleCoset_finite_disjoint_leftCosets : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (ϖ : kˣ) (a : ℕ) (n : Fin a → ℤ), ∃ t : Finset (GL (Fin a) k), (∀ x ∈ t, x ∈ KO k (Fin a)) ∧
-      shellSet ϖ n = ⋃ x ∈ t, {g : GL (Fin a) k | (x * diagGL (fun i => ϖ ^ n i))⁻¹ * g ∈ KO k (Fin a)} ∧
-      (t : Set (GL (Fin a) k)).PairwiseDisjoint
-        (fun x => {g : GL (Fin a) k | (x * diagGL (fun i => ϖ ^ n i))⁻¹ * g ∈ KO k (Fin a)}) := by
-  first | exact @GlobalTheory.ShellCosets.shell_cosets
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartanDoubleCosetFiniteDisjointLeftCosetsStatement =====
@@ -237,12 +231,6 @@ attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL Formalism.DoubleC
 open GlobalTheory.IndefiniteRowSideFullHecke.ScaledIntegerPeriodic
 
 
-theorem _root_.GlobalTheory.T.integrableOn_cartanDoubleCoset_shellIntegrand : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    [MeasurableSpace k] [BorelSpace k] (ϖ : kˣ) (ν : kˣ →* ℂˣ) (e : ℕ), CondLE ϖ e ν →
-    ∀ (a : ℕ) (μ : Measure (GL (Fin a) k)) [μ.IsHaarMeasure] (φ : Matrix (Fin a) (Fin a) k → ℂ),
-      φ ∈ SB (Matrix (Fin a) (Fin a) k) → ∀ (n : Fin a → ℤ) (z : ℂ),
-        IntegrableOn (fun g : GL (Fin a) k => φ g.val * (ν (gdet g) : ℂ) * apow (gdet g) z) (shellSet ϖ n) μ := by
-  first | exact @GlobalTheory.ShellInt.integrableOn_shell
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnCartanDoubleCosetShellIntegrandStatement =====
@@ -383,14 +371,6 @@ attribute [-instance] Formalism.DoubleCosetMeasures.instMeasGL Formalism.DoubleC
 open GlobalTheory.IndefiniteRowSideFullHecke.ScaledIntegerPeriodic
 
 
-theorem _root_.GlobalTheory.T.setIntegral_leftCoset_shellIntegrand_eq_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    [MeasurableSpace k] [BorelSpace k] (ϖ : kˣ), IsUnif ϖ → ∀ (ν : kˣ →* ℂˣ) (a : ℕ) (μ : Measure (GL (Fin a) k))
-    [μ.IsHaarMeasure] (φ : Matrix (Fin a) (Fin a) k → ℂ) (M : ℤ), IsPeriodic ϖ M φ →
-    ∀ (n : Fin a → ℤ) (i : Fin a), M ≤ n i → ∀ u : kˣ, valuation k (u : k) = 1 → ν u ≠ 1 →
-    ∀ x ∈ KO k (Fin a), ∀ z : ℂ,
-      ∫ g in {g : GL (Fin a) k | (x * diagGL (fun i => ϖ ^ n i))⁻¹ * g ∈ KO k (Fin a)},
-        φ g.val * (ν (gdet g) : ℂ) * apow (gdet g) z ∂μ = 0 := by
-  first | exact @GlobalTheory.ShellPiece.setIntegral_coset_eq_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SetIntegralLeftCosetShellIntegrandEqZeroStatement =====
@@ -453,17 +433,17 @@ theorem shell_eq_zero_of_support : ∀ (k : Type) [Field k] [ValuativeRel k] [To
 theorem shell_lemma : ShellLemma := by
   intro k _ _ _ _ _ _ ϖ hϖ ν e hram hcond a μ hμ φ hφ
   have : μ.IsHaarMeasure := hμ
-  have hint := GlobalTheory.T.integrableOn_cartanDoubleCoset_shellIntegrand k ϖ ν e hcond a μ φ hφ
+  have hint := _root_.GlobalTheory.ShellInt.integrableOn_shell k ϖ ν e hcond a μ φ hφ
   have h2 : ∀ M : ℤ, IsPeriodic ϖ M φ → ∀ n : Fin a → ℤ, (∃ i, M ≤ n i) → ∀ z : ℂ, shell μ ϖ ν z φ n = 0 := by
     rintro M hM n ⟨i, hi⟩ z
     obtain ⟨u, hu1, hu2⟩ : ∃ u : kˣ, valuation k (u : k) = 1 ∧ ν u ≠ 1 := by
       by_contra h
       push_neg at h
       exact hram h
-    obtain ⟨t, htK, heq, hdisj⟩ := GlobalTheory.T.cartanDoubleCoset_finite_disjoint_leftCosets k ϖ a n
+    obtain ⟨t, htK, heq, hdisj⟩ := _root_.GlobalTheory.ShellCosets.shell_cosets k ϖ a n
     rw [shell, heq, integral_biUnion_finset t]
     · exact Finset.sum_eq_zero fun x hx =>
-        GlobalTheory.T.setIntegral_leftCoset_shellIntegrand_eq_zero k ϖ hϖ ν a μ φ M hM n i hi u hu1 hu2 x (htK x hx) z
+        _root_.GlobalTheory.ShellPiece.setIntegral_coset_eq_zero k ϖ hϖ ν a μ φ M hM n i hi u hu1 hu2 x (htK x hx) z
     · intro x _
       exact (isOpen_KO.preimage (continuous_const.mul continuous_id)).measurableSet
     · exact hdisj

@@ -74,10 +74,6 @@ open Formalism.BasicNotions NumberField
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E}
 
-theorem exists_smul_mem (Λ : Submodule (𝓞 E) S.V) (hΛ : Submodule.span E (Λ : Set S.V) = ⊤) (v : S.V) :
-    ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ := by
-  first | (apply Bl.general_b_fact_third_extra.goal1 <;> assumption)
-
 theorem finite_of_integral_bound (t : E) (ht : t ≠ 0) (C : ℝ) :
     {a : E | IsIntegral ℤ (t * a) ∧ ∀ τ : E →+* ℂ, ‖τ a‖ ≤ C}.Finite := by
   set K : ℝ := ∑ τ : E →+* ℂ, ‖τ t‖
@@ -288,7 +284,7 @@ theorem indSet_finite (hstar : ∀ (τ : E →+* ℂ) (a : E), τ (star a) = sta
     intro h; have := hzz τ; rw [h, map_zero] at this; simp at this
 
   set bB := Module.finBasis E P
-  have hd : ∀ i, ∃ d : 𝓞 E, d ≠ 0 ∧ d • (bB i : S.V) ∈ Λ := fun i => exists_smul_mem Λ hΛ _
+  have hd : ∀ i, ∃ d : 𝓞 E, d ≠ 0 ∧ d • (bB i : S.V) ∈ Λ := fun i => _root_.Bl.general_b_fact_third_extra.goal1 Λ hΛ _
   choose d hd0 hdΛ using hd
   have hd0' : ∀ i, algebraMap (𝓞 E) E (d i) ≠ 0 := fun i => by
     rw [ne_eq, ← map_zero (algebraMap (𝓞 E) E), (IsFractionRing.injective (𝓞 E) E).eq_iff]
@@ -508,8 +504,6 @@ section -- clump:auto
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem automorphism_lattice_finite (D : Formalism.BasicNotions.D7) : PI.AutLzFinite.AutLzFin D :=
-  PI.AutLzFinite.SlopeTestRemainingChoices.autLzFin_main D
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AutLzFinite =====

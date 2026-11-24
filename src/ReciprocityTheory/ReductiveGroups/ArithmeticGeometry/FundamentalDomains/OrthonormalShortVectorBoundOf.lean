@@ -1,6 +1,7 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowMatMulVec
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsIntegralCc
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LminorSubmatrixCastSucc
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpLatticeTransfer
@@ -15,7 +16,6 @@ public import ReciprocityTheory.SemistableReduction.LatAll
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PositiveSpanMatrices
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.UnitaryComplementMoveOfIsotropic
 public import Mathlib.Analysis.Real.Pi.Bounds
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowMatMulVec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,26 +81,11 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.O
 -- Members: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpComponentCombination, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.GramMatrixExistence, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ExistsPerpHermitianReduction, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MmatUnitary, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.GramSchmidtEigenframe, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ReducedLatticeShortBound, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.BlockIdentityExpansion, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LowerBlockMatrices, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.UnitaryFixingIsotropicPlane, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthonormalShortVectorBoundOf
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.TraceFormIndependence\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.TraceFormIndependence\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowMatMulVec\n\n"}
 section -- clump:auto
 @[expose] public section
 
 namespace ReciprocityTheory.ChartRestriction.G.FD.OrthogonalComplementLines
-
-open NumberField Complex ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.FD.TraceFormIndependence
-open scoped ComplexConjugate
-
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
-
-private lemma hermC_sub_left_of_ringHom (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u u' v : Fin r → ℂ) :
-    hermC τ G (u - u') v = hermC τ G u v - hermC τ G u' v := by
-  simp only [hermC, Pi.sub_apply, sub_mul, Finset.sum_sub_distrib]
-
-lemma ppos_sub (X : Data E r) (x : Frame X.Ψ r) (τ : X.Ψ) (u v : Fin r → ℂ) :
-    X.ppos x τ (u - v) = X.ppos x τ u - X.ppos x τ v := by
-  simp only [Data.ppos, hermC_sub_left_of_ringHom, sub_mul, Finset.sum_sub_distrib, sub_smul]
-
-variable {X : Data E r}
 
 end ReciprocityTheory.ChartRestriction.G.FD.OrthogonalComplementLines
 end -- clump:auto
@@ -198,7 +183,7 @@ end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpComponentCombination =====
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.GramMatrixExistence =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.GramMatrixExistence", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ExistsUnitaryBasisSameFlag\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpLatticeTransfer\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LminorSubmatrixCastSucc\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpComponentCombination\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.GramMatrixExistence", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ExistsUnitaryBasisSameFlag\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpLatticeTransfer\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LminorSubmatrixCastSucc\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalComplementLines\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PerpComponentCombination\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowMatMulVec\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -255,11 +240,6 @@ private lemma hermC_sum_smul_right (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r
   refine Finset.sum_congr rfl fun l _ => ?_
   ring
 
-private lemma herm_eq_hermC_emb_emb (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (x y : Fin r → E) :
-    τ (herm G x y) = hermC τ G (Data.emb τ x) (Data.emb τ y) := by
-
-  simp only [herm, hermC, map_sum, map_mul, Data.emb, cc, IsCMField.complexEmbedding_complexConj]
-
 private lemma emb_sum_smul' (τ : E →+* ℂ) {n : ℕ} (c : Fin n → E) (β : Fin n → Fin r → E) :
     Data.emb τ (∑ k, c k • β k) = ∑ k, τ (c k) • Data.emb τ (β k) := by
   funext a
@@ -295,7 +275,7 @@ theorem Q_exists (X : DataX E r) (ξ : Fin r → E) (z0 : Frame X.Ψ r)
   have hperp : ∀ (τ : X.Ψ) (y : Fin r → E), herm X.Gm y ξ = 0 →
       hermC τ.1 X.Gm (Data.emb τ.1 y) (Data.emb τ.1 ξ) = 0 := by
     intro τ y hy
-    rw [← herm_eq_hermC_emb_emb, hy, map_zero]
+    rw [← _root_.ReciprocityTheory.ChartRestriction.G.FD.emb_herm, hy, map_zero]
   have hee : ∀ τ : X.Ψ, hermC τ.1 X.Gm (Data.emb τ.1 ξ) (Data.emb τ.1 ξ) = 0 :=
     fun τ => hperp τ ξ hξξ
   have huc : ∀ (τ : X.Ψ) (v : Fin r → E),
@@ -312,7 +292,7 @@ theorem Q_exists (X : DataX E r) (ξ : Fin r → E) (z0 : Frame X.Ψ r)
     have h2 : X.Hf z0 τ (uc X.toData z0 ξ τ v) e = 0 := by
       have hl : (2 : ℂ) • X.ppos z0 τ (v - t • e) - (v - t • e) =
           ((2 : ℂ) • X.ppos z0 τ v - v) - t • ((2 : ℂ) • X.ppos z0 τ e - e) := by
-        rw [ReciprocityTheory.ChartRestriction.G.FD.OrthogonalComplementLines.ppos_sub X.toData, Data.ppos_smul_eq]
+        rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.ppos_sub X.toData, Data.ppos_smul_eq]
         module
       have hd : X.Hf z0 τ (uc X.toData z0 ξ τ v) e =
           X.Hf z0 τ v e - t * X.Hf z0 τ e e := by
@@ -364,7 +344,7 @@ theorem Q_exists (X : DataX E r) (ξ : Fin r → E) (z0 : Frame X.Ψ r)
       ReciprocityTheory.MultiplicativeHeights.jForm (X.p0 - 1) (Q τ *ᵥ ReciprocityTheory.MultiplicativeHeights.embVec τ.1 c)
         (Q τ *ᵥ ReciprocityTheory.MultiplicativeHeights.embVec τ.1 c') := by
     intro τ c c'
-    rw [Sform_h, herm_eq_hermC_emb_emb, ← uc_perp (X := X.toData) (z0 := z0) (ξ := ξ) (τ := τ) (hee τ)
+    rw [Sform_h, _root_.ReciprocityTheory.ChartRestriction.G.FD.emb_herm, ← uc_perp (X := X.toData) (z0 := z0) (ξ := ξ) (τ := τ) (hee τ)
       (Data.emb τ.1 (∑ k, c k • β k)) (Data.emb τ.1 (∑ k, c' k • β k)) (hp τ c) (hp τ c'),
       ← huc, ← huc, hQf, hQf, hermC_sum_smul_left]
     simp_rw [hermC_sum_smul_right, (hf τ).2.2.1]
@@ -482,16 +462,6 @@ theorem Mmat_mulVec (v : Fin r → ℂ) :
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun m _ => ?_
   ring
 
-private lemma hermC_add_left' (u u' v : Fin r → ℂ) :
-    hermC τ G (u + u') v = hermC τ G u v + hermC τ G u' v := by
-  unfold hermC
-  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-
-private lemma hermC_add_right_fundamental_domains' (u v v' : Fin r → ℂ) :
-    hermC τ G u (v + v') = hermC τ G u v + hermC τ G u v' := by
-  unfold hermC
-  simp only [Pi.add_apply, map_add (f := _), mul_add, Finset.sum_add_distrib]
-
 private lemma hermC_sum_smul_left {m : ℕ} (c : Fin m → ℂ) (q : Fin m → Fin r → ℂ) (v : Fin r → ℂ) :
     hermC τ G (∑ k, c k • q k) v = ∑ k, c k * hermC τ G (q k) v := by
   unfold hermC
@@ -521,7 +491,7 @@ theorem expand (q : Fin n → Fin r → ℂ) (x y : Fin r → ℂ) (c d : Fin n 
     (hx : ∀ l, hermC τ G x (q l) = 0) (hy : ∀ k, hermC τ G (q k) y = 0) :
     hermC τ G (x + ∑ k, c k • q k) (y + ∑ l, d l • q l) =
       hermC τ G x y + ∑ k, ∑ l, c k * conj (d l) * hermC τ G (q k) (q l) := by
-  rw [hermC_add_left', hermC_add_right_fundamental_domains', hermC_add_right_fundamental_domains']
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_right, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_right]
   simp only [hermC_sum_smul_right, hermC_sum_smul_left, hx, hy, mul_zero, Finset.sum_const_zero, add_zero,
     Finset.mul_sum]
   rw [zero_add, Finset.sum_comm]
@@ -574,7 +544,7 @@ theorem Mmat_unitary (hgf : ∀ k, g k ∈ Submodule.span ℂ (Set.range f))
       fun l => ?_⟩
     · simp only [neg_smul, Finset.sum_neg_distrib]
       abel
-    · rw [hermC_add_left', hermC_sum_smul_left]
+    · rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_left, hermC_sum_smul_left]
       simp only [hf_eps τ G p f hG hf, mul_ite, mul_zero, Finset.sum_ite_eq',
         Finset.mem_univ, if_true]
       linear_combination (-hermC τ G u (f l)) * eps_sq p l
@@ -622,10 +592,6 @@ noncomputable section
 
 variable {E : Type} [Field E] [NumberField E] [NumberField.IsCMField E]
 
-private theorem hermC_sub_left_eq_sub {r : ℕ} (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E)
-    (u u' v : Fin r → ℂ) : hermC τ G (u - u') v = hermC τ G u v - hermC τ G u' v :=
-  map_sub (AddMonoidHom.mk' (fun x => hermC τ G x v) (fun a b => hermC_add_left τ G a b v)) u u'
-
 private theorem hermC_finset_sum_left' {r : ℕ} (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E)
     {ι : Type} (s : Finset ι) (u : ι → Fin r → ℂ) (v : Fin r → ℂ) :
     hermC τ G (∑ i ∈ s, u i) v = ∑ i ∈ s, hermC τ G (u i) v :=
@@ -641,7 +607,7 @@ private theorem hermC_finset_sum_right_of_conj_symm {r : ℕ} (τ : E →+* ℂ)
 private theorem hermC_sub_right_of_conj_symm {r : ℕ} (τ : E →+* ℂ) {G : Matrix (Fin r) (Fin r) E}
     (hG : ∀ a b, cc (G a b) = G b a) (u v v' : Fin r → ℂ) :
     hermC τ G u (v - v') = hermC τ G u v - hermC τ G u v' := by
-  rw [← hermC_conj τ hG _ u, hermC_sub_left_eq_sub, map_sub, hermC_conj τ hG, hermC_conj τ hG]
+  rw [← hermC_conj τ hG _ u, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, map_sub, hermC_conj τ hG, hermC_conj τ hG]
 
 private theorem ppos_self_adjoint_hermC {r : ℕ} (X : Data E r) (x : Frame X.Ψ r) (τ : X.Ψ)
     (w v : Fin r → ℂ) :
@@ -714,7 +680,7 @@ theorem gramSchmidt_eigenframe (r : ℕ) (X : DataX E r) (ξ : Fin r → E) (z0 
   have hJspan : ∀ τ : X.Ψ, ∀ y ∈ Submodule.span ℂ (Set.range (f τ)),
       hermC τ.1 X.Gm (I • ((2 : ℂ) • X.ppos z0 τ y - y)) (Data.emb τ.1 ξ) = 0 := by
     intro τ y hy
-    rw [hermC_smul_left, hermC_sub_left_eq_sub, hermC_smul_left, ppos_self_adjoint_hermC, (hspan τ y hy).1,
+    rw [hermC_smul_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, hermC_smul_left, ppos_self_adjoint_hermC, (hspan τ y hy).1,
       (hspan τ y hy).2]
     simp
   refine ⟨fun τ => EigenframeMatrices.Mmat (τ := τ.1) (G := X.Gm) (p := X.p0 - 1) (f := f τ) (g := g τ),
@@ -730,7 +696,7 @@ theorem gramSchmidt_eigenframe (r : ℕ) (X : DataX E r) (ξ : Fin r → E) (z0 
       (hf := (hf τ).2.2.1) _
       (fun k => ?_)
     simp only [Pi.add_apply, Data.lineV, Data.Jz]
-    simp only [hermC_add_left, hermC_smul_left, hermC_sub_left_eq_sub, ppos_self_adjoint_hermC, e0, eP,
+    simp only [hermC_add_left, hermC_smul_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, ppos_self_adjoint_hermC, e0, eP,
       mul_zero, sub_zero, add_zero]
   · intro u hu
     obtain ⟨hu1, hu2⟩ := hu
@@ -1114,66 +1080,6 @@ lemma f_gram_re (X : Data E r) (ξ : Fin r → E) (z0 : Frame X.Ψ r) (f : X.Ψ 
   split_ifs <;> simp [Complex.mul_conj, Complex.normSq_eq_norm_sq] <;>
     rw [← Complex.ofReal_pow, Complex.ofReal_re]
 
-private lemma hermC_add_left_fundamental_domains (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u u' v : Fin r → ℂ) :
-    hermC τ G (u + u') v = hermC τ G u v + hermC τ G u' v := by
-  unfold hermC
-  simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-
-private lemma hermC_sub_left' (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u u' v : Fin r → ℂ) :
-    hermC τ G (u - u') v = hermC τ G u v - hermC τ G u' v := by
-  unfold hermC
-  simp only [Pi.sub_apply, sub_mul, Finset.sum_sub_distrib]
-
-private lemma hermC_sub_right' (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u v v' : Fin r → ℂ) :
-    hermC τ G u (v - v') = hermC τ G u v - hermC τ G u v' := by
-  unfold hermC
-  simp only [Pi.sub_apply, map_sub, mul_sub, Finset.sum_sub_distrib]
-
-private lemma hermC_smul_left_fundamental_domains (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (c : ℂ) (u v : Fin r → ℂ) :
-    hermC τ G (c • u) v = c * hermC τ G u v := by
-  unfold hermC
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun b _ => ?_
-  simp only [Pi.smul_apply, smul_eq_mul]
-  ring
-
-private lemma hermC_smul_right_fundamental_domains (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (c : ℂ) (u v : Fin r → ℂ) :
-    hermC τ G u (c • v) = conj c * hermC τ G u v := by
-  unfold hermC
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl fun b _ => ?_
-  simp only [Pi.smul_apply, smul_eq_mul, map_mul]
-  ring
-
-private lemma hermC_zero_left' (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (v : Fin r → ℂ) :
-    hermC τ G 0 v = 0 := by
-  unfold hermC
-  simp
-
-private lemma hermC_zero_right' (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u : Fin r → ℂ) :
-    hermC τ G u 0 = 0 := by
-  unfold hermC
-  simp
-
-private lemma ppos_smul_fundamental_domains (X : Data E r) (x : Frame X.Ψ r) (τ : X.Ψ) (c : ℂ) (u : Fin r → ℂ) :
-    X.ppos x τ (c • u) = c • X.ppos x τ u := by
-  rw [Data.ppos_eq, Data.ppos_eq, Finset.smul_sum]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [smul_smul, Finset.mul_sum]
-  congr 1
-  refine Finset.sum_congr rfl fun b _ => ?_
-  rw [hermC_smul_left_fundamental_domains]
-  ring
-
-private lemma hermC_add_right_fundamental_domains (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (u v v' : Fin r → ℂ) :
-    hermC τ G u (v + v') = hermC τ G u v + hermC τ G u v' := by
-  unfold hermC
-  simp only [Pi.add_apply, map_add (f := _), mul_add, Finset.sum_add_distrib]
-
 theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     (f : X.Ψ → Fin (r - 2) → Fin r → ℂ) (h1 : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (δ : ℝ)
     (hz : z0 ∈ X.dom) (hx0 : x0 ∈ X.dom) (hortho : X.IsOrtho x0)
@@ -1217,7 +1123,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
   have hvP : X.ppos z0 τ v = v := ppos_of_mem (X := X.toData) hz τ v hv
   have hvneg : ∀ k : Fin (r - 2), ¬ (k : ℕ) < X.p0 - 1 → hermC τ.1 X.Gm v (f τ k) = 0 := by
     intro k hk
-    rw [← hvP, Data.ppos_selfadj (X := X.toData) hz τ v (f τ k), hPneg k hk, hermC_zero_right']
+    rw [← hvP, Data.ppos_selfadj (X := X.toData) hz τ v (f τ k), hPneg k hk, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_right]
 
   obtain ⟨a, ha⟩ : ∃ a : Fin (r - 2) → ℂ,
       a = fun k : Fin (r - 2) => if (k : ℕ) < X.p0 - 1 then hermC τ.1 X.Gm v (f τ k) else 0 := ⟨_, rfl⟩
@@ -1241,7 +1147,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     simp only [hgr, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
   have hfp : ∀ k, hermC τ.1 X.Gm (f τ k) (v - w) = 0 := by
     intro k
-    rw [hermC_sub_right', hfw]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_right, hfw]
     by_cases hk : (k : ℕ) < X.p0 - 1
     · rw [if_pos hk, mul_one, ha]
       simp only [if_pos hk]
@@ -1251,15 +1157,15 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
       rw [← hermC_conj τ.1 X.Gm_herm, hvneg k hk, map_zero]
   have hskew : ∀ u q, hermC τ.1 X.Gm (X.Jt z0 τ u) q = -hermC τ.1 X.Gm u (X.Jt z0 τ q) := by
     intro u q
-    rw [hJt, hJt, hermC_smul_left_fundamental_domains, hermC_smul_right_fundamental_domains, hermC_sub_left', hermC_sub_right',
-      hermC_smul_left_fundamental_domains, hermC_smul_right_fundamental_domains, Data.ppos_selfadj (X := X.toData) hz τ u q, Complex.conj_I]
+    rw [hJt, hJt, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_right, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_right,
+      _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_right, Data.ppos_selfadj (X := X.toData) hz τ u q, Complex.conj_I]
     first
       | (simp only [map_ofNat]; ring)
 
   let Lq : (Fin r → ℂ) → (Fin r → ℂ) →ₗ[ℂ] ℂ := fun q =>
     { toFun := fun u => hermC τ.1 X.Gm u q
-      map_add' := fun u u' => hermC_add_left_fundamental_domains _ _ u u' q
-      map_smul' := fun c u => hermC_smul_left_fundamental_domains _ _ c u q }
+      map_add' := fun u u' => _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_left _ _ u u' q
+      map_smul' := fun c u => _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_left _ _ c u q }
   have hK : ⨅ i, LinearMap.ker (![Lq (Data.emb τ.1 ξ), Lq (X.Jt z0 τ (Data.emb τ.1 ξ))] i) ≤
       LinearMap.ker (Lq (v - w)) := by
     intro u hu
@@ -1278,7 +1184,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     have h := LinearMap.congr_fun hc u
     simp only [Fin.sum_univ_two, LinearMap.add_apply, LinearMap.smul_apply, Matrix.cons_val_zero,
       Matrix.cons_val_one, smul_eq_mul] at h
-    rw [hermC_add_right_fundamental_domains, hermC_smul_right_fundamental_domains, hermC_smul_right_fundamental_domains, Complex.conj_conj,
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_right, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_right, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_right, Complex.conj_conj,
       Complex.conj_conj]
     exact h.symm
   have hnd : ∀ z : Fin r → ℂ, (∀ u, hermC τ.1 X.Gm u z = 0) → z = 0 := by
@@ -1288,14 +1194,14 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     rw [← hermC_conj τ.1 X.Gm_herm, hz', map_zero, mul_zero, zero_smul]
   have hpq : v - w = conj (c 0) • Data.emb τ.1 ξ + conj (c 1) • X.Jt z0 τ (Data.emb τ.1 ξ) := by
     refine sub_eq_zero.mp (hnd _ fun u => ?_)
-    rw [hermC_sub_right', hc' u, sub_self]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_right, hc' u, sub_self]
   have hfix : h1 τ *ᵥ (v - w) = v - w := by
     have h := congrFun (hI (fun _ => conj (c 0)) (fun _ => conj (c 1))) τ
     simp only [Data.applyV, Data.lineV, Data.Jz, Pi.add_apply] at h
     have he : conj (c 0) • Data.emb τ.1 ξ + conj (c 1) • X.Jt z0 τ (Data.emb τ.1 ξ) =
         conj (c 0) • Data.emb τ.1 ξ + I • ((2 : ℂ) • X.ppos z0 τ (conj (c 1) • Data.emb τ.1 ξ) -
           conj (c 1) • Data.emb τ.1 ξ) := by
-      rw [hJt, ppos_smul_fundamental_domains]
+      rw [hJt, _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.ppos_smul_eq]
       first
         | module
     rw [hpq, he]
@@ -1307,7 +1213,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
     exact Finset.sum_eq_zero fun k _ => by rw [(hperp k).1, mul_zero]
   have hwP : X.ppos z0 τ w = w := ppos_of_mem (X := X.toData) hz τ w hwS
   have hp0 : ∀ τ' : X.Ψ, X.ppos z0 τ' 0 = 0 := fun τ' => by
-    simpa using ppos_smul_fundamental_domains X.toData z0 τ' 0 0
+    simpa using _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.ppos_smul_eq X.toData z0 τ' 0 0
   have hU : (fun τ' => if τ' = τ then w else 0) ∈ X.Uz z0 ξ := by
     refine ⟨fun τ' => ?_, fun τ' => ?_⟩
     · by_cases h : τ' = τ
@@ -1315,13 +1221,13 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
         rw [h]
         exact hwe
       · simp only [if_neg h]
-        exact hermC_zero_left' _ _ _
+        exact _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left _ _ _
     · by_cases h : τ' = τ
       · simp only [Data.Jz, if_pos h]
-        rw [h, hwP, hermC_smul_left_fundamental_domains, hermC_sub_left', hermC_smul_left_fundamental_domains, hwe]
+        rw [h, hwP, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_sub_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_smul_left, hwe]
         ring
       · simp only [Data.Jz, if_neg h, hp0, smul_zero, sub_zero]
-        exact hermC_zero_left' _ _ _
+        exact _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_zero_left _ _ _
   have hA := hUz _ hU
   have hA1 : hermC τ.1 X.Gm (h1 τ *ᵥ w) (Data.emb τ.1 ξ) = 0 := by
     have h := hA.1 τ
@@ -1344,7 +1250,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
       PositiveSpanMatrices.Neg X.toData x0 τ (∑ k, b k • f τ k) := by
     unfold PositiveSpanMatrices.Neg
     refine Finset.sum_congr rfl fun a' _ => ?_
-    rw [hermC_add_left_fundamental_domains, perp_kap (X := X.toData) hortho τ _ hpS0 a', zero_add,
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_left, perp_kap (X := X.toData) hortho τ _ hpS0 a', zero_add,
       hermC_sum_left_lemma, hermC_sum_left_lemma]
     congr 2
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -1384,7 +1290,7 @@ theorem key (X : DataX E r) (ξ : Fin r → E) (z0 x0 : Frame X.Ψ r)
   have hexp : (hermC τ.1 X.Gm ((v - w) + ∑ k, cc k • f τ k) ((v - w) + ∑ k, cc k • f τ k)).re =
       (hermC τ.1 X.Gm (v - w) (v - w)).re +
         (hermC τ.1 X.Gm (∑ k, cc k • f τ k) (∑ k, cc k • f τ k)).re := by
-    rw [hermC_add_left_fundamental_domains, hermC_add_right_fundamental_domains, hermC_add_right_fundamental_domains,
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_left, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_right, _root_.ReciprocityTheory.ChartRestriction.G.FD.hermC_add_right,
       hermC_sum_right_lemma_2 τ.1 X.Gm (v - w), hermC_sum_left_lemma τ.1 X.Gm cc (f τ) (v - w)]
     simp only [hpf, hfp, mul_zero, Finset.sum_const_zero, add_zero, zero_add, Complex.add_re]
   have hSS := f_gram_re X.toData ξ z0 f hf τ cc
@@ -1410,7 +1316,7 @@ end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.BlockIdentityExpansion =====
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LowerBlockMatrices =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LowerBlockMatrices", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PositiveSpanMatrices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LowerBlockMatrices", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.PositiveSpanMatrices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowMatMulVec\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1433,19 +1339,12 @@ def Bmat (h1 : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (z0 x0 : Frame X.Ψ r) (τ :
   Matrix.of fun a b => -hermC τ.1 X.Gm (col (h1 τ * mat z0 τ) (Fin.castLE X.p0_le b))
     (col (mat x0 τ) (kap X.p0_le a))
 
-lemma col_mul' (A B : Matrix (Fin r) (Fin r) ℂ) (a : Fin r) : col (A * B) a = A *ᵥ col B a := by
-  funext k
-  simp [col, Matrix.mul_apply, Matrix.mulVec, dotProduct]
-
-lemma mulVec_eq_sum_col (M : Matrix (Fin r) (Fin r) ℂ) (w : Fin r → ℂ) : M *ᵥ w = ∑ c, w c • col M c := by
-  funext k
-  simp only [Matrix.mulVec, dotProduct, col, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-  exact Finset.sum_congr rfl fun c _ ↦ mul_comm _ _
+alias mulVec_eq_sum_col := _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.mulVec_eq_sum_col
 
 lemma yvec_eq (h1 : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (z0 : Frame X.Ψ r) (τ : X.Ψ) (u : Fin X.p0 → ℂ) :
     ∑ b, u b • col (h1 τ * mat z0 τ) (Fin.castLE X.p0_le b) =
       h1 τ *ᵥ ∑ b, u b • col (mat z0 τ) (Fin.castLE X.p0_le b) := by
-  simp only [col_mul', Matrix.mulVec_sum, Matrix.mulVec_smul]
+  simp only [_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.col_mul, Matrix.mulVec_sum, Matrix.mulVec_smul]
 
 private lemma hermC_sum_smul_left' (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) {m : ℕ}
     (c : Fin m → ℂ) (y : Fin m → Fin r → ℂ) (v : Fin r → ℂ) :
@@ -1534,7 +1433,7 @@ lemma colZ (x0 : Frame X.Ψ r) (Z : X.Coord) (τ : X.Ψ) (b : Fin X.p0) :
   classical
   have hm : mat (X.xZ x0 Z) τ = mat x0 τ * X.lowBlock Z τ := rfl
   have hc : ∀ c k, col (X.lowBlock Z τ) c k = X.lowBlock Z τ k c := fun _ _ ↦ rfl
-  rw [hm, col_mul', mulVec_eq_sum_col, sum_split X.p0_le]
+  rw [hm, _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.col_mul, mulVec_eq_sum_col, sum_split X.p0_le]
   simp only [hc, lowBlock_castLE, lowBlock_kap, ite_smul, one_smul, zero_smul,
     Finset.sum_ite_eq', Finset.mem_univ, if_true]
 
@@ -1810,7 +1709,7 @@ theorem orthonormalShortVectorBound_of (hD4 : ShortVectorBound (E := E)) (hD5 : 
     hYind hYU hYorth hYpos hYneg
   obtain ⟨Z1, hfl, hZ⟩ := unitary_fixing_isotropic_plane r X ξ z0 x0 f h1 (d6rh c1 w / 120) hξ hz hx0 hortho hflag hf (by positivity) hU hI
     hUz (fun τ v hv c hc => hYgraph τ c (hc ▸ hmap τ v hv))
-  obtain ⟨hdom1, haproj, -, hJ⟩ := unitaryComplementMove r X.toData ξ hξ z0 hz h1 hU hI hUz
+  obtain ⟨hdom1, haproj, -, hJ⟩ := _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.unitaryComplementMove_of_isotropic r X.toData ξ hξ z0 hz h1 hU hI hUz
 
   have hJsplit : ∀ j : Fin (r - 2),
       X.Jz (X.lmulC h1 z0) (X.ucomp (X.lmulC h1 z0) ξ (X.embV (lam j))) =

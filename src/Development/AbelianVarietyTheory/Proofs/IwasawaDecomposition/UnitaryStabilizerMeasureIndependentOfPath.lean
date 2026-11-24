@@ -970,19 +970,6 @@ theorem twoStep_isProd_of_isStdX (F E : Type) [Field F] [NumberField F] [Field E
     _root_.GlobalTheory.GaugeEx.TsProd.twoStep_isProd F E σ hCM d b M J x a B J' ν mi mv ν' mi' mv' N Ni Nv hS hP hP' oi.2.1
       (fun v => (ov v).2.1) oi'.1 (fun v => (ov' v).1) hTi hTv hN⟩
 
-private theorem prInf_inclR_eq {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
-    (e : E) : prInf (inclR (AF F) e) = inclR (Ainf F) e := by
-  show (Algebra.TensorProduct.map (fstA F) (AlgHom.id F E)) (1 ⊗ₜ[F] e) = 1 ⊗ₜ[F] e
-  first
-  | rfl
-
-private theorem prV_inclR_eq {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
-    (v : HeightOneSpectrum (𝓞 F)) (e : E) : prV v (inclR (AF F) e) = inclR (Fv F v) e := by
-  show (Algebra.TensorProduct.map (evalV F v) (AlgHom.id F E))
-      ((Algebra.TensorProduct.map (sndA F) (AlgHom.id F E)) (1 ⊗ₜ[F] e)) = 1 ⊗ₜ[F] e
-  first
-  | rfl
-
 theorem twoStep_adelic_swap : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b), ∀ (M : ℕ) (J : Matrix (Fin (M + 1)) (Fin (M + 1)) E) (x₁ : Fin 1 → Fin (M + 1) → E) (a₁ : F) (B₁ : Matrix (Fin (M + 1)) (Fin M) E) (J₁' : Matrix (Fin M) (Fin M) E) (x₂ : Fin 1 → Fin (M + 1) → E) (a₂ : F) (B₂ : Matrix (Fin (M + 1)) (Fin M) E) (J₂' : Matrix (Fin M) (Fin M) E) (y₁ y₂ : Fin 1 → Fin M → E) (b₁ b₂ : F) (γ : GL (Fin 2) E), StepData σ J x₁ a₁ B₁ J₁' → StepData σ J x₂ a₂ B₂ J₂' → b₁ ≠ 0 → b₂ ≠ 0 → hE σ J₁' (y₁ 0) (y₁ 0) = algebraMap F E b₁ → hE σ J₂' (y₂ 0) (y₂ 0) = algebraMap F E b₂ → ![x₂ 0, B₂.mulVec (y₂ 0)] = lrAct 1 (γ : Matrix (Fin 2) (Fin 2) E) ![x₁ 0, B₁.mulVec (y₁ 0)] → ∀ (ν₁ ν₂ : Measure (Fin 1 → Fin (M + 1) → AF F ⊗[F] E)) (ν₁' ν₂' : Measure (Fin 1 → Fin M → AF F ⊗[F] E)) (N₁ N₂ : Measure (Fin 2 → Fin (M + 1) → AF F ⊗[F] E)), IsStdX s σ J a₁ ν₁ → IsStdX s σ J₁' b₁ ν₁' → IsStdX s σ J a₂ ν₂ → IsStdX s σ J₂' b₂ ν₂' → TwoStep (AF F) σ J x₁ B₁ ν₁ ν₁' N₁ → TwoStep (AF F) σ J x₂ B₂ ν₂ ν₂' N₂ → N₂ = N₁.map (lrAct 1 ((γ : Matrix (Fin 2) (Fin 2) E).map (inclR (AF F)))) := by
   intro F E _ _ _ _ _ σ hCM d b s M J x₁ a₁ B₁ J₁' x₂ a₂ B₂ J₂' y₁ y₂ b₁ b₂ γ hS₁ hS₂ hb₁ hb₂ hy₁
     hy₂ hγ ν₁ ν₂ ν₁' ν₂' N₁ N₂ hν₁ hν₁' hν₂ hν₂' hN₁ hN₂
@@ -1009,10 +996,10 @@ theorem twoStep_adelic_swap : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rfl
   have hγi : ((γ : Matrix (Fin 2) (Fin 2) E).map (inclR (AF F))).map prInf =
       (γ : Matrix (Fin 2) (Fin 2) E).map (inclR (Ainf F)) := by
-    ext i j; exact prInf_inclR_eq _
+    ext i j; exact _root_.GlobalTheory.AdelicWitt.prInf_inclR _
   have hγv : ∀ v, ((γ : Matrix (Fin 2) (Fin 2) E).map (inclR (AF F))).map (prV v) =
       (γ : Matrix (Fin 2) (Fin 2) E).map (inclR (Fv F v)) := by
-    intro v; ext i j; exact prV_inclR_eq v _
+    intro v; ext i j; exact _root_.GlobalTheory.AdelicWitt.prV_inclR v _
   have h1i : (1 : Matrix (Fin (M + 1)) (Fin (M + 1)) (AF F ⊗[F] E)).map prInf = 1 :=
     Matrix.map_one _ (map_zero _) (map_one _)
   have h1v : ∀ v, (1 : Matrix (Fin (M + 1)) (Fin (M + 1)) (AF F ⊗[F] E)).map (prV v) = 1 :=
@@ -1159,16 +1146,6 @@ theorem indep_two (h' : StepData σ J₁ y b C J₀) (hd : (consCol x B).det ≠
     exact h'.2.1 ((map_eq_zero _).1 h4.symm)
 
 end Two
-
-theorem lrAct_lrAct {S : Type} [CommRing S] {n M : ℕ} (γ γ' : Matrix (Fin n) (Fin n) S)
-    (X : Fin n → Fin M → S) : lrAct 1 γ' (lrAct 1 γ X) = lrAct 1 (γ * γ') X := by
-  funext a i
-  simp only [lrAct, Matrix.one_mulVec, Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul, mul_assoc]
-  exact Finset.sum_comm
-
-theorem lrAct_one {S : Type} [CommRing S] {n M : ℕ} (X : Fin n → Fin M → S) : lrAct 1 1 X = X := by
-  funext a i
-  simp [lrAct, Matrix.one_apply]
 
 theorem lrAct_two {M : ℕ} (γ : Matrix (Fin 2) (Fin 2) E) (u v : Fin M → E) (a : Fin 2) :
     lrAct 1 γ ![u, v] a = γ 0 a • u + γ 1 a • v := by
@@ -1474,7 +1451,7 @@ theorem square : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     have k1 := emb_fix (e' := e₂') he₂ h
     rw [hX, smul_lrAct] at k1
     have k2 := congrArg (lrAct 1 G') k1
-    rw [lrAct_lrAct, lrAct_lrAct, g1, lrAct_one, lrAct_one] at k2
+    rw [_root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_mul, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_mul, g1, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_one, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_one] at k2
     obtain ⟨h', hh'⟩ := emb_surj (e' := e₁') hL he₁ _ k2
     have k3 := emb_rel he₁ he₁' h'
     have k4 := emb_rel he₂ he₂' h
@@ -1488,14 +1465,14 @@ theorem square : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   have ht₂ : ∀ Y, (∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) ![x₂ 0, B₂ *ᵥ y₂ 0] = Y) →
       t (lrAct 1 G' Y) • ratTup (F := F) (AF F) ![x₂ 0, B₂ *ᵥ y₂ 0] = Y := by
     rintro Y ⟨g, rfl⟩
-    rw [hX, smul_lrAct, smul_lrAct, lrAct_lrAct, g1, lrAct_one, ht _ ⟨g, rfl⟩]
+    rw [hX, smul_lrAct, smul_lrAct, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_mul, g1, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_one, ht _ ⟨g, rfl⟩]
   have cι : Continuous (emb (AF F) e₂ e₂') :=
     (continuous_subtype_val.comp (c₂ e₂ he₂).2).comp (continuous_subtype_val.comp (c₂' e₂' he₂').2)
   refine Measure.ext_of_lintegral _ fun f hf => ?_
   rw [unfold_two h₁ he₁ he₁' (c₁ e₁ he₁).2 (c₁' e₁' he₁').2 r₁' r₁ n₁ n₁' o₁ o₁' t₁ hf mt₁ ht,
     unfold_two h₂ he₂ he₂' (c₂ e₂ he₂).2 (c₂' e₂' he₂').2 r₂' r₂ n₂ n₂' o₂ o₂' t₂ hf mt₂ ht₂,
     hN, lintegral_map (meas_avg μ₀ cι hf mt₂) (cG G)]
-  simp only [lrAct_lrAct, g1, lrAct_one, hι]
+  simp only [_root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_mul, g1, _root_.GlobalTheory.GaugeEx.SwapLoc.lrAct_one_one, hι]
 
 end Main
 

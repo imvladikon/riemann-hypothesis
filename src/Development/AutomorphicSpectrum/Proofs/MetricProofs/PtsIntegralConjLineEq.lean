@@ -388,9 +388,6 @@ open ReciprocityTheory.ChartRestriction.G.AI.I1 (IsBlockMap pullDeg)
 
 namespace GlobalTheory.CompanionTheory.Ar.Cmp
 
-theorem arInt_conj : SheetIndepStatement → PtsIndepStatement → GoodProjExistsStatement → ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) (e : ℕ) (L : Fin e → HermLine ι) (A : HermLine ι) (s : MRing ι), IsArithVar P (e + 1) → (∀ j, IsSmoothHerm (L j)) → IsSmoothHerm A → IsSectionOn P A s → arInt P s (conjLine A) (fun j => conjLine (L j)) = arInt P s A L :=
-  PositivityTheory.UnitarySelfGeneration.c_arint
-
 end GlobalTheory.CompanionTheory.Ar.Cmp
 end -- clump:auto
 end -- clump:auto
@@ -407,7 +404,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Tw
 
 theorem ptsIntegral_conjLine : PtsIndepStatement → ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Q : Ideal (MRing ι)) (e : ℕ) (L : Fin e → HermLine ι) (A : HermLine ι) (s : MRing ι), IsArithVar Q (e + 1) → (∀ j, IsSmoothHerm (L j)) → IsSmoothHerm A → IsSectionOn Q A s → ptsIntegral Q (pot fun j => conjLine (L j)) (logNorm (conjLine A) s) = ptsIntegral Q (pot L) (logNorm A s) := by
   intro hI K _ ι _ Q e L A s hQ hL hA hs
-  exact GlobalTheory.CompanionTheory.Ar.Cmp.arInt_conj
+  exact _root_.PositivityTheory.UnitarySelfGeneration.c_arint
     (fun K _ ι _ P e Ψ L A s hP hΨ hL hA hs => sheetIndep K ι P e Ψ L A s hP hΨ hL hA hs) hI
     (fun K _ ι _ P e hP => goodProjExists K ι P e hP) K ι Q e L A s hQ hL hA hs
 

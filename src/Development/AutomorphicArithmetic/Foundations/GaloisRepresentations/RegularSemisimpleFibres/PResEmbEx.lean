@@ -140,10 +140,6 @@ section Compl
 
 variable {L : Type} [Field L] [NumberField L] (v : HeightOneSpectrum (𝓞 L))
 
-theorem kappa_val_le_iff (y : v.adicCompletion L) :
-    valuation (v.adicCompletion L) y ≤ 1 ↔ Valued.v y ≤ 1 :=
-  (DiscreteGroups.sglob.DzIso.val_le_iff y).trans Valued.toNormedField.norm_le_one_iff
-
 theorem kappa_val_lt_iff (y : v.adicCompletion L) :
     valuation (v.adicCompletion L) y < 1 ↔ Valued.v y < 1 :=
   (DiscreteGroups.sglob.DzIso.val_lt_iff y).trans Valued.toNormedField.norm_lt_one_iff
@@ -154,7 +150,7 @@ theorem kappa_v_int (y : 𝓞 L) :
 
 def kappaToO : 𝓞 L →+* 𝒪[v.adicCompletion L] :=
   ((algebraMap L (v.adicCompletion L)).comp (algebraMap (𝓞 L) L)).codRestrict 𝒪[v.adicCompletion L] fun y =>
-    (Valuation.mem_integer_iff _ _).2 ((kappa_val_le_iff v _).2
+    (Valuation.mem_integer_iff _ _).2 ((_root_.GlobalTheory.CuspRep.ParLaws.valuation_le_one_iff v _).2
       ((kappa_v_int v y).trans_le (v.valuation_le_one y)))
 
 def kappaP : 𝓞 L →+* 𝓀[v.adicCompletion L] := (IsLocalRing.residue 𝒪[v.adicCompletion L]).comp (kappaToO v)
@@ -174,7 +170,7 @@ theorem kappa_surj_O : Function.Surjective (kappaP v) := by
   intro z
   obtain ⟨u, rfl⟩ := IsLocalRing.residue_surjective z
   have hu : Valued.v (u : v.adicCompletion L) ≤ 1 :=
-    (kappa_val_le_iff v _).1 ((Valuation.mem_integer_iff _ _).1 u.2)
+    (_root_.GlobalTheory.CuspRep.ParLaws.valuation_le_one_iff v _).1 ((Valuation.mem_integer_iff _ _).1 u.2)
   obtain ⟨x, hx⟩ := exists_int_approx_compl v (u : v.adicCompletion L) hu
   refine ⟨x, ?_⟩
   rw [kappaP, RingHom.comp_apply, residue_eq_iff_valuation_lt, Valuation.map_sub_swap]
@@ -198,10 +194,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 open GroundTheory.Global GroundTheory.Global.SemiLocal UpperTheory.V.Published UpperTheory.CBC UpperTheory.Gal.InertialTypesAlt
 open scoped Classical
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-private theorem res_algClosed {Ω : Type} [Field Ω] [IsAlgClosed Ω] (A : ValuationSubring Ω) :
-    IsAlgClosed (IsLocalRing.ResidueField A) :=
-  _root_.UpperTheory.Reformulated.B.Qk69.res_algClosed A
 
 private theorem res_surj {Ω : Type} [Field Ω] [CharZero Ω] (hΩ : ∀ x : Ω, IsAlgebraic ℤ x) (A : ValuationSubring Ω) {κ : Type} [Field κ]
     [IsAlgClosed κ] (p : ℕ) [Fact p.Prime] [CharP (IsLocalRing.ResidueField A) p]
@@ -244,7 +236,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.resEmbEx :
     ResEmbEx := by
   intro E Ω _ _ _ _ _ A v hv
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI := res_algClosed A
+  haveI := _root_.UpperTheory.Reformulated.B.Qk69.res_algClosed A
   obtain ⟨e₀, he₀⟩ : ∃ e₀ : 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A,
       ∀ x, e₀ (DiscreteGroups.sglob.DzType.kappaP v x) = DiscreteGroups.sglob.DzType.kappaQ A x := by
     refine ⟨RingHom.liftOfSurjective _ (DiscreteGroups.sglob.DzType.kappa_surj_O v) ⟨DiscreteGroups.sglob.DzType.kappaQ A, fun x hx => ?_⟩,

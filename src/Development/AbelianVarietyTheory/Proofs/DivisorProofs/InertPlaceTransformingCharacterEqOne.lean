@@ -9,11 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianAda
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFieldCompletionTensorOfIsInertAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerIrreducibleFinitePlaceCompletion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerMemSchwartzBruhatFinitePlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqZeroOfKillsProductSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
@@ -407,7 +407,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilOperatorDiagonalIntegralHeisenbergPoiStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryScalarInertPlaceInvertibleShifts =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryScalarInertPlaceInvertibleShifts", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFieldCompletionTensorOfIsInertAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagWZero\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrAt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryScalarInertPlaceInvertibleShifts", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFieldCompletionTensorOfIsInertAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagWZero\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrAt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -438,36 +438,10 @@ theorem exists_ne_of_cm {F E : Type} [Field F] [NumberField F] [Field E] [Number
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem idem_smul_of_at {M : Type} [AddCommGroup M] [Module (AF F) M] (v : Pl (F := F)) (u : M)
-    (hu : At (evFin F v) u) : GlobalTheory.LatVac.liftV v (1 : Fv F v) • u = u := by
-  have h := hu (1 - GlobalTheory.LatVac.liftV v 1) (by rw [map_sub, map_one, evFin_liftV, sub_self])
-  rw [sub_smul, one_smul] at h
-  exact (sub_eq_zero.1 h).symm
-
-theorem idem_mul (v : Pl (F := F)) (x : AF F) :
-    GlobalTheory.LatVac.liftV v (1 : Fv F v) * x = GlobalTheory.LatVac.liftV v (evFin F v x) := by
-  have h := at_liftV v (1 : Fv F v) (x - GlobalTheory.LatVac.liftV v (evFin F v x)) (by rw [map_sub, evFin_liftV, sub_self])
-  have h2 := idem_smul_of_at v _ (at_liftV v (evFin F v x))
-  rw [smul_eq_mul] at h h2
-  linear_combination h + h2
-
 theorem at_idem_smul {M : Type} [AddCommGroup M] [Module (AF F) M] (v : Pl (F := F)) (z : M) :
     At (evFin F v) (GlobalTheory.LatVac.liftV v (1 : Fv F v) • z) := by
   intro u hu
   rw [smul_smul, ← smul_eq_mul, at_liftV v 1 u hu, zero_smul]
-
-theorem idem_smul_eq_zero (v : Pl (F := F)) (a : AE F E) (ha : compFin F E v a = 0) :
-    GlobalTheory.LatVac.liftV v (1 : Fv F v) • a = 0 := by
-  have key : ∀ a : AE F E, GlobalTheory.LatVac.liftV v (1 : Fv F v) • a =
-      (GlobalTheory.LatVac.liftV v).rTensor E (compFin F E v a) := by
-    intro a
-    induction a using TensorProduct.induction_on with
-    | zero => simp
-    | tmul x e =>
-      rw [TensorProduct.smul_tmul', smul_eq_mul, idem_mul]
-      simp [compFin]
-    | add x y hx hy => rw [smul_add, hx, hy, map_add (f := _), map_add (f := _)]
-  rw [key, ha, map_zero]
 
 theorem compFin_lift (v : Pl (F := F)) (q : Fv F v ⊗[F] E) :
     compFin F E v ((GlobalTheory.LatVac.liftV v).rTensor E q) = q := by
@@ -492,7 +466,7 @@ theorem exists_inv_at (v : Pl (F := F)) {n : ℕ} (M : Matrix (Fin n) (Fin n) (A
     have h0 : GlobalTheory.LatVac.liftV v (1 : Fv F v) • (N - 1) = 0 := by
       ext i j
       rw [Matrix.smul_apply, Matrix.zero_apply]
-      apply idem_smul_eq_zero
+      apply _root_.GlobalTheory.InertLagUniq.liftV_one_smul_eq_zero
       have := congrFun (congrFun hN i) j
       rw [Matrix.map_apply] at this
       rw [Matrix.sub_apply, map_sub, this]
@@ -576,7 +550,7 @@ theorem exists_scalar_inv_at : ∀ (F E : Type) [Field F] [NumberField F] [Field
     simp only [lam]
     rw [div_mul_div_comm, mul_comm ((m : E) - ξ), div_self (mul_ne_zero (hnum m) (hden m))]
   set e : AF F := GlobalTheory.LatVac.liftV v (1 : Fv F v) with he
-  have hee : e * e = e := by rw [he, idem_mul, evFin_liftV]
+  have hee : e * e = e := by rw [he, _root_.GlobalTheory.InertLagUniq.liftV_one_mul, evFin_liftV]
   have hev : evFin F v e = 1 := evFin_liftV v 1
   set c : AE F E := (1 - e) ⊗ₜ[F] (1 : E) + e ⊗ₜ[F] l with hc
   set c' : AE F E := (1 - e) ⊗ₜ[F] (1 : E) + e ⊗ₜ[F] σ l with hc'
@@ -1800,7 +1774,7 @@ theorem scales_of_box {κ : Type} [Fintype κ] {v : Pl (F := F)} (ψ : AddChar (
   have key := GlobalTheory.T.linearForm_eq_zero_of_kills_productSchwartzBruhat F v κ κ ψ hψ hψ1 (Λ ∘ₗ S - a • Λ) (fun φ₁ h₁ φ₂ h₂ => by
     obtain ⟨Φ₁, -, hA⟩ := hex _ (box_mem_SB h₁ h₂)
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, smul_eq_mul, LinearMap.comp_apply]
-    rw [← hS _ (box_mem_SB h₁ h₂) Φ₁ hA, hbox φ₁ h₁ φ₂ h₂ Φ₁ hA, sub_self])
+    rw [← hS _ (_root_.GlobalTheory.BoxSpan.boxFun_mem_SB' h₁ h₂) Φ₁ hA, hbox φ₁ h₁ φ₂ h₂ Φ₁ hA, sub_self])
   intro Φ hΦ
   obtain ⟨Φ₁, hΦ₁, hA⟩ := hex Φ hΦ
   refine ⟨Φ₁, hΦ₁, hA, ?_⟩
@@ -1837,7 +1811,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hSB := GlobalTheory.T.heisenbergDiagonalIntegral_mem_schwartzBruhat F v _ _ hψc hψ1 μ hμ _ (box_mem_SB hφ₀ hφ₀) c₁ hc₁ U hUo hUc hU0 hU
   obtain ⟨Λ, hΛ⟩ := GlobalTheory.T.lagrangian_diagonal_integral_extends_linearForm F v _ _ hψc μ hμ N ν hν j hj hSB
   have hΛ0 : Λ (boxFun φ₀ φ₀) ≠ 0 := by
-    rw [hΛ _ (box_mem_SB hφ₀ hφ₀), lagInt]
+    rw [hΛ _ (_root_.GlobalTheory.BoxSpan.boxFun_mem_SB' hφ₀ hφ₀), lagInt]
     simp only [hU]
     exact GlobalTheory.T.integral_injectiveSubspace_compactOpen_const_ne_zero F v _ N ν hν j hj c₁ hc₁ U hUo hUc hU0
   have hlag : ∀ y, ζ y * Cᵀ ∈ lagAt v C := fun y =>
@@ -1955,7 +1929,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have s2 := hdiag k⁻¹ hki kd⁻¹ hkdi
   have q1 := hpar p₁ t₁ (at_of_one_sub_smul hp₁) ht₁
   have q2 := hpar p₂ t₂ (at_of_one_sub_smul hp₂) ht₂
-  have hb := box_mem_SB hφ₀ hφ₀
+  have hb := _root_.GlobalTheory.BoxSpan.boxFun_mem_SB' hφ₀ hφ₀
   have f1 : c k * c k⁻¹ = 1 := by
     have h := s1.mul s2 (hspl.pres _)
     rw [← map_mul, mul_inv_cancel, map_one] at h

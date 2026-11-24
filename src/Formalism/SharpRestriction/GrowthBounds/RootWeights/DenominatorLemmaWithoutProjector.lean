@@ -2,6 +2,7 @@ module
 
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.DegreeZeroWeightsBounded
 public import Formalism.SharpRestriction.GrowthBounds.CovariantDegrees
+public import Formalism.SharpRestriction.GrowthBounds.RootWeights.DvrFractionFieldCharZeroPrime
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.NontrivialIsotypicWeightZeroKilled
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.MemWeightSpaceIffDiagonalEigen
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.BinomialPreservesDiagonalStable
@@ -12,7 +13,6 @@ public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
 public import Formalism.SharpRestriction.GrowthBounds.RootWeights.InvariantDenominatorLinftyBound
-public import Formalism.SharpRestriction.GrowthBounds.RootWeights.DvrFractionFieldCharZeroPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +70,7 @@ import Mathlib.Topology.Sheaves.Presheaf
 -- Members: Formalism.SharpRestriction.GrowthBounds.RootWeights.CasimirPowerScaledInsertDividedPower, Formalism.SharpRestriction.GrowthBounds.RootWeights.CommutatorTripleProductLeibniz, Formalism.SharpRestriction.GrowthBounds.RootWeights.InvariantProjectionKillsNonzeroWeight, Formalism.SharpRestriction.GrowthBounds.RootWeights.InvariantProjectionDenominatorBound, Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightDifferenceLeEllOfRep, Formalism.SharpRestriction.GrowthBounds.RootWeights.DenominatorLemmaWithoutProjector
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.RootWeights.CasimirPowerScaledInsertDividedPower =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.RootWeights.CasimirPowerScaledInsertDividedPower", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.RootWeights.DegreeZeroWeightsBounded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.CovariantDegrees\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.RootWeights.CasimirPowerScaledInsertDividedPower", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.RootWeights.DegreeZeroWeightsBounded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.CovariantDegrees\nimport Formalism.SharpRestriction.GrowthBounds.RootWeights.DvrFractionFieldCharZeroPrime\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -192,23 +192,6 @@ private theorem isUnit_natCast_of_not_dvd_root_weights (S : UniformizedDVR p O) 
     exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ hum) (Ideal.mul_mem_left _ _ S.p_mem)
   exact (IsLocalRing.maximalIdeal.isMaximal O).ne_top ((Ideal.eq_top_iff_one _).mpr h2)
 
-private theorem charZero_KK_of_uniformizedDVR (S : UniformizedDVR p O) (hp : p.Prime) : CharZero (KK O) := by
-  refine charZero_of_inj_zero fun N hN => ?_
-  by_contra hN0
-  have hN' : (N : O) = 0 := by
-    apply IsFractionRing.injective O (KK O)
-    rw [map_natCast, map_zero, hN]
-  have hCu : p ^ N.factorization p * (N / p ^ N.factorization p) = N := by
-    first
-      | exact Nat.ordProj_mul_ordCompl_eq_self N p
-  have hu : ¬ p ∣ (N / p ^ N.factorization p) := by
-    first
-      | exact Nat.not_dvd_ordCompl hp hN0
-  rw [← hCu, Nat.cast_mul, Nat.cast_pow] at hN'
-  rcases mul_eq_zero.mp hN' with h | h
-  · exact S.p_ne (pow_eq_zero_iff'.mp h).1
-  · exact (isUnit_natCast_of_not_dvd_root_weights S hp _ hu).ne_zero h
-
 private theorem exists_integral_p_pow_div_choose_of_log_le (S : UniformizedDVR p O) (hp : p.Prime) (N k d : ℕ)
     (hN : Nat.log p N ≤ d) (hk : k ≤ N) :
     ∃ o : O, algebraMap O (KK O) o = ((p : KK O) ^ d) * (1 / ((N.choose k : ℕ) : KK O)) := by
@@ -243,7 +226,7 @@ theorem scaled_casimirPower_integral_bound (S : UniformizedDVR p O) (hp : p.Prim
     {M : Submodule O V} (hM : UZStable (O := O) E M) (c : Fin n) (L : ℕ) (s : Finset (Fin n)) :
     (∀ j ∈ s, j ≠ c) → ∀ q b : ℕ, q + b ≤ L + n - 1 → ∀ y ∈ M,
       ((p : O) ^ (s.card * deF p n L)) • casimirPowerScaled E c s b q y ∈ M := by
-  haveI := charZero_KK_of_uniformizedDVR S hp
+  haveI := _root_.Formalism.MainNotions.G.GLWeightTheory.dvr_fraction_field_charZero_prime S hp
   induction s using Finset.induction_on with
   | empty =>
     intro _ q b _ y hy
@@ -803,7 +786,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.RootWeights.InvariantProjectionDenominatorBound =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightDifferenceLeEllOfRep =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightDifferenceLeEllOfRep", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.ObjPol\npublic import Mathlib.Algebra.Lie.OfAssociative\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\npublic import Mathlib.LinearAlgebra.Eigenspace.Minpoly\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.Interval.Finset.Box\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Presheaf\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.CovariantDegrees\npublic import Mathlib.LinearAlgebra.Eigenspace.Basic\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.RootWeights.WeightDifferenceLeEllOfRep", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.ObjPol\npublic import Mathlib.Algebra.Lie.OfAssociative\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\npublic import Mathlib.LinearAlgebra.Eigenspace.Minpoly\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.Interval.Finset.Box\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Presheaf\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.CovariantDegrees\npublic import Mathlib.LinearAlgebra.Eigenspace.Basic\nimport Formalism.SharpRestriction.GrowthBounds.RootWeights.MemWeightSpaceIffDiagonalEigen\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -819,14 +802,9 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {n : ℕ} {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 
-private theorem mem_weightSp_iff (E : GLOps n K V) (μ : Fin n → ℤ) (x : V) :
-    x ∈ weightSp E μ ↔ ∀ c, E c c x = (μ c : K) • x := by
-  simp only [weightSp, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply,
-    LinearMap.smul_apply, Module.End.one_apply, sub_eq_zero]
-
 private theorem E_apply_mem_weightSp_add_rootW_of_ne {E : GLOps n K V} (hE : IsGLRep E) {a b : Fin n} (hab : a ≠ b)
     {μ : Fin n → ℤ} {x : V} (hx : x ∈ weightSp E μ) : E a b x ∈ weightSp E (μ + rootW a b) := by
-  rw [mem_weightSp_iff] at hx ⊢
+  rw [_root_.Formalism.MainNotions.G.GLWeightTheory.mem_weightSpace_iff_diagonal_eigen] at hx ⊢
   intro c
   have hc := LinearMap.congr_fun (hE.1 c c a b) x
   simp only [LinearMap.sub_apply, Module.End.mul_apply, hx c, map_smul] at hc
@@ -880,7 +858,7 @@ private theorem E_pow_apply_mem_weightSp_ne_zero_of_highest [CharZero K] {E : GL
   have hdiag : ∀ k : ℕ, E a a ((E b a ^ k) v) - E b b ((E b a ^ k) v) =
       ((N : K) - 2 * k) • (E b a ^ k) v := by
     intro k
-    have h := (mem_weightSp_iff E _ _).1 (hlow k)
+    have h := (_root_.Formalism.MainNotions.G.GLWeightTheory.mem_weightSpace_iff_diagonal_eigen E _ _).1 (hlow k)
     rw [h a, h b, ← sub_smul]
     congr 1
     simp only [rootW, Pi.add_apply, Pi.smul_apply, Pi.sub_apply, Pi.single_eq_same, Pi.single_apply,
@@ -927,7 +905,7 @@ private theorem finite_set_of_nonzero_weightSp [CharZero K] [FiniteDimensional K
   refine (Set.Finite.pi (t := fun c => {z : ℤ | (E c c).HasEigenvalue (z : K)}) hfin).subset ?_
   intro μ hμ
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hμ
-  rw [mem_weightSp_iff] at hx
+  rw [_root_.Formalism.MainNotions.G.GLWeightTheory.mem_weightSpace_iff_diagonal_eigen] at hx
   simp only [Set.mem_pi, Set.mem_univ, Set.mem_ofPred_eq, true_implies]
   intro c
   exact Module.End.hasEigenvalue_of_hasEigenvector

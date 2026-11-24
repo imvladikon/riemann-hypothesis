@@ -74,8 +74,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.exists_level_structure_on_torsion : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (ℓ : ℕ), ℓ.Prime → ℓ ≠ p → ∀ j : ℕ, ∃ f : (Fin (D.m * D.n) → 𝓞 D.F ⧸ Ideal.span {((ℓ ^ j : ℕ) : 𝓞 D.F)}) → (Over.mk x ⟶ o.A), (∀ a a', f (a + a') = f a * f a') ∧ (∀ (c : 𝓞 D.F) a, f (Ideal.Quotient.mk (Ideal.span {((ℓ ^ j : ℕ) : 𝓞 D.F)}) c • a) = f a ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) ∧ Function.Injective f ∧ ∀ g : Over.mk x ⟶ o.A, g ^ (ℓ ^ j) = 1 → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.QuotientCardinalityFinrank.torsion_points_free)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelStructureOnTorsion =====
@@ -291,8 +289,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.harrisTaylor_tangent_injective_away_from_etalePlace : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)), IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (c : 𝓞 D.F), c ≠ 0 → (∀ w : Ideal (𝓞 D.F), w.IsMaximal → ((p : ℕ) : 𝓞 D.F) ∈ w → w ≠ w0 → c ∉ w) → ∀ v : epsPtR x ⟶ o.A, spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ v.left = (1 : Over.mk x ⟶ o.A).left → v ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1 → v = 1 := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorTangentInjectiveAwayFromEtalePlaceStatement =====
@@ -322,8 +318,8 @@ theorem card_ker_elt {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing
     rcases (Nat.dvd_prime hℓ).1 hd with h1 | h1
     · exact CharP.ringChar_ne_one (R := k) h1
     · omega
-  exact GlobalTheory.T.abelianScheme_card_kernel_eq_norm_pow S o.A o.ab D.F (o.act.toF D) k x (D.m * D.n) ℓ hℓ hℓk (GlobalTheory.T.exists_level_structure_on_torsion p D R b N S s o k x ℓ hℓ hℓp) c hc
-    (GlobalTheory.T.harrisTaylor_tangent_injective_away_from_etalePlace p D R b N w0 hw S s o k x c hc hcw)
+  exact _root_.GlobalTheory.AVCount.card_ker_eq_norm_pow S o.A o.ab D.F (o.act.toF D) k x (D.m * D.n) ℓ hℓ hℓk (_root_.GlobalTheory.QuotientCardinalityFinrank.torsion_points_free p D R b N S s o k x ℓ hℓ hℓp) c hc
+    (_root_.GlobalTheory.UPel.HT.EtLev.TanInj.tan_eq_one_of_notMem p D R b N w0 hw S s o k x c hc hcw)
 
 theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ)
     (w0 : Ideal (𝓞 D.F)), IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k]
@@ -379,7 +375,7 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
       exact hc
     have hmem : ((n : ℕ) : 𝓞 D.F) ∈ Ideal.span {c} := Ideal.absNorm_mem _
     obtain ⟨c', hc'⟩ := Ideal.mem_span_singleton'.mp hmem
-    obtain ⟨g', hg'⟩ := GlobalTheory.T.exists_pow_eq_point_of_isAbelianScheme S o.A o.ab k x n hn0 g.toMul
+    obtain ⟨g', hg'⟩ := _root_.GlobalTheory.AbDivPt.exists_pow_eq_of_isAlgClosed S o.A o.ab k x n hn0 g.toMul
     refine ⟨c' • Additive.ofMul g', ?_⟩
     show c • c' • Additive.ofMul g' = g
     rw [smul_smul, mul_comm, hc', Nat.cast_smul_eq_nsmul, ← ofMul_pow, hg']
@@ -456,7 +452,7 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
       (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) (w0 : Set (𝓞 D.F))) with hh'
   have hT1 : Nat.card (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) (w0 : Set (𝓞 D.F))) =
       Nat.card (𝓞 D.F ⧸ w0) ^ h' := Module.natCard_eq_pow_finrank
-  have hall := GlobalTheory.T.card_torsionBySet_pow_of_divisible_numberField D.F _ w0 h' hmax hne hdiv hT1 H
+  have hall := _root_.GlobalTheory.torsion_pow_card D.F _ w0 h' hmax hne hdiv hT1 H
   rw [hTH] at hall
   have he : H * (D.m * D.n) = H * h' := Nat.pow_right_injective hq hall
   have he' : h' = D.m * D.n := (Nat.eq_of_mul_eq_mul_left hH0 he).symm
@@ -477,8 +473,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.EtLev
 
 
-theorem _root_.GlobalTheory.T.card_torsion_killed_by_prime_at_etale_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)), IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S), Nat.card {g : Over.mk x ⟶ o.A // ∀ c ∈ w0, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1} = Nat.card (𝓞 D.F ⧸ w0) ^ (D.m * D.n) := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardTorsionKilledByPrimeAtEtalePlaceStatement =====
@@ -490,8 +484,6 @@ section -- clump:auto
 
 open NumberField
 
-theorem _root_.GlobalTheory.T.torsionBySet_pow_free_of_card_pow_numberField : ∀ (F : Type) [Field F] [NumberField F] (M : Type) [AddCommGroup M] [Module (𝓞 F) M] (w0 : Ideal (𝓞 F)) (h r : ℕ), w0.IsMaximal → w0 ≠ ⊥ → (∀ j : ℕ, Nat.card (Submodule.torsionBySet (𝓞 F) M ((w0 ^ j : Ideal (𝓞 F)) : Set (𝓞 F))) = Nat.card (𝓞 F ⧸ w0) ^ (j * h)) → ∃ f : (Fin h → 𝓞 F ⧸ w0 ^ r) →+ M, (∀ (c : 𝓞 F) (a : Fin h → 𝓞 F ⧸ w0 ^ r), f (Ideal.Quotient.mk (w0 ^ r) c • a) = c • f a) ∧ Function.Injective f ∧ ∀ g : M, (∀ c ∈ w0 ^ r, c • g = 0) → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.torsionBySet_pow_free_of_natCard)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionBySetPowFreeOfCardPowNumberFieldStatement =====
@@ -573,14 +565,14 @@ theorem free_torsion_geomPt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
       exact hc
     have hmem : ((n : ℕ) : 𝓞 D.F) ∈ Ideal.span {c} := Ideal.absNorm_mem _
     obtain ⟨c', hc'⟩ := Ideal.mem_span_singleton'.mp hmem
-    obtain ⟨g', hg'⟩ := GlobalTheory.T.exists_pow_eq_point_of_isAbelianScheme S o.A o.ab k x n hn0 g.toMul
+    obtain ⟨g', hg'⟩ := _root_.GlobalTheory.AbDivPt.exists_pow_eq_of_isAlgClosed S o.A o.ab k x n hn0 g.toMul
     refine ⟨c' • Additive.ofMul g', ?_⟩
     show c • c' • Additive.ofMul g' = g
     rw [smul_smul, mul_comm, hc', Nat.cast_smul_eq_nsmul, ← ofMul_pow, hg']
     rfl
   have hcard1 : Nat.card (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) (w0 : Set (𝓞 D.F))) =
       Nat.card (𝓞 D.F ⧸ w0) ^ (D.m * D.n) := by
-    rw [← GlobalTheory.T.card_torsion_killed_by_prime_at_etale_place p D R b N w0 hw S s o k x]
+    rw [← _root_.GlobalTheory.UPel.HT.EtLev.GeoCard.card_ker_place p D R b N w0 hw S s o k x]
     refine Nat.card_congr (Equiv.subtypeEquiv Additive.toMul (fun g => ?_))
     rw [Submodule.mem_torsionBySet_iff]
     constructor
@@ -591,8 +583,8 @@ theorem free_torsion_geomPt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     · intro h c
       rw [hsm]
       exact congrArg Additive.ofMul (h c.1 c.2)
-  have hall := GlobalTheory.T.card_torsionBySet_pow_of_divisible_numberField D.F _ w0 (D.m * D.n) hmax hne hdiv hcard1
-  obtain ⟨f, hf1, hf2, hf3⟩ := GlobalTheory.T.torsionBySet_pow_free_of_card_pow_numberField D.F _ w0 (D.m * D.n) r hmax hne hall
+  have hall := _root_.GlobalTheory.torsion_pow_card D.F _ w0 (D.m * D.n) hmax hne hdiv hcard1
+  obtain ⟨f, hf1, hf2, hf3⟩ := _root_.GlobalTheory.torsionBySet_pow_free_of_natCard D.F _ w0 (D.m * D.n) r hmax hne hall
   refine ⟨fun a => (f a).toMul, ?_, ?_, ?_, ?_⟩
   · intro a a'
     show Additive.toMul (f (a + a')) = Additive.toMul (f a) * Additive.toMul (f a')
@@ -621,13 +613,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.EtLev
 
-theorem _root_.GlobalTheory.T.torsion_points_additive_parametrization : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (w0 : Ideal (𝓞 D.F)) (r : ℕ),
-  IsEtPlace b w0 → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S),
-  ∃ f : (Fin (D.m * D.n) → 𝓞 D.F ⧸ w0 ^ r) → (Over.mk x ⟶ o.A), (∀ a a', f (a + a') = f a * f a') ∧
-    (∀ (c : 𝓞 D.F) a, f (Ideal.Quotient.mk (w0 ^ r) c • a) = f a ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) ∧
-    Function.Injective f ∧
-    ∀ g : Over.mk x ⟶ o.A, (∀ c ∈ w0 ^ r, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃ a, f a = g := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointsAdditiveParametrizationStatement =====

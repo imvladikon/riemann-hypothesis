@@ -599,12 +599,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 namespace GlobalTheory.IsobaricOfPublished
 
-theorem multiset_eq_of_prod_map_add {m m' : Multiset ℂ}
-    (h : ∀ u : ℂ, (m.map (u + ·)).prod = (m'.map (u + ·)).prod) : m = m' := by
-  first
-  | (apply _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq <;> assumption)
-  | (intros; exact _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq ..)
-
 end GlobalTheory.IsobaricOfPublished
 
 namespace GlobalTheory.IsobaricOfPublished
@@ -626,7 +620,7 @@ namespace GlobalTheory.CompanionTheory.EGlue
 theorem infOfEq_holds : InfOfEq := by
   intro E _ _ _ N t ψ m τ m' hT hI hψ h0 hC
   have hS := hT E N t τ m' hI
-  refine GlobalTheory.IsobaricOfPublished.multiset_eq_of_prod_map_add fun u => ?_
+  refine _root_.GlobalTheory.MultisetOfProduct.multiset_eq_of_prod_add_eq fun u => ?_
   exact smul_left_injective ℂ h0 ((hS.2 u ψ hψ).symm.trans (hC τ u))
 
 end GlobalTheory.CompanionTheory.EGlue

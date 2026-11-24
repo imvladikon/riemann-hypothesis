@@ -776,7 +776,7 @@ theorem member_arch_eq (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {a b : ℕ} (
   haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) (AE F E)
   let π := prU (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JB)) (eInf F) eInf_mul
-  have hc1 := GlobalTheory.T.doubledUnitary_character_trivial_of_siegel F E σ hσ b JB ε hJ hdet (c.comp π) (hcont.comp (continuous_prU _ _ _ _)) (fun p t hpt => by
+  have hc1 := _root_.GlobalTheory.SiegelChar.eq_one_of_siegel F E σ hσ b JB ε hJ hdet (c.comp π) (hcont.comp (continuous_prU _ _ _ _)) (fun p t hpt => by
     refine hP (π p) (Units.map (prM (eInf F) eInf_mul (Fin b)) t) ?_ (hχ _ fun u hu => ?_)
     · exact prM_mul (eInf F) eInf_mul hpt
     · exact smul_det_prM (eInf F) eInf_mul t.1 (mul_eInf hu))
@@ -943,7 +943,7 @@ theorem conjugation_acts_on_derivation : _root_.GlobalTheory.FunPr.ThetaLocalInp
     hb.std fr hAθ hCθ hΦ
   have hsp : IsUSplitting (adeleClass F) B.ψ M.co (actAB (cA σ)) om := IsUWeilPair.isUSplitting hw
   have hsp2 := GlobalTheory.WeilSchrodinger.isUSplitting_inr hsp
-  obtain ⟨c, hc⟩ := _root_.GlobalTheory.RealLift.Main.i_liescalar_alt hK hder hvl F E σ _ _ _ _ _ _ _ B.ψ B.emb _ _ M.co 1 Complex.I A C Φ _
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LieScal.lie_algebra_acts_by_scalar hK hder hvl F E σ _ _ _ _ _ _ _ B.ψ B.emb _ _ M.co 1 Complex.I A C Φ _
     hb.cm hb.std fr hΦ hsp2
   obtain ⟨Yg, -, hY⟩ := GlobalTheory.RealLift.Main.i_genex F E σ (Fin d) _ _ B.emb (incM F W.J) Complex.I C hb.cm hC1 γ hγ
   obtain ⟨T0, rfl⟩ := GlobalTheory.RealLift.Main.pol_eq B M Φ hr hf
@@ -1281,8 +1281,8 @@ theorem real_maps_unique : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F
   have hR := hM.real
   have hPV := isPair_V hM.triple
   have hPV' := isPair_V' hM.triple
-  have actV := _root_.GlobalTheory.T.dualPair_preserves_polarization hKP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPV
-  have actV' := _root_.GlobalTheory.T.dualPair_preserves_polarization hKP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPV'
+  have actV := _root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hKP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPV
+  have actV' := _root_.GlobalTheory.PolActsPf.polarization_acts_of_isDualPair hKP _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPV'
   have ks_p : ∀ R' : RealMaps F a a', IsRealMaps B G om om' R' → KerStab B G.M om R'.p := fun R' h =>
     ⟨fun γ hγ f hf f₁ h1 h0 => by
       have := h.lie γ hγ f hf 0 (zero_mem _) f₁ 0 h1 (actsD_zero _) (by rw [h0, map_zero])
@@ -1688,7 +1688,7 @@ theorem thetaIntegral_rightTranslate_eq : _root_.GlobalTheory.FunPr.ThetaLocalIn
     IsPair B M χX χW om r s r' s' → ∀ g ∈ UAt σ X (evI F), ∀ (h : UA σ W.J) (Φ : (Fin n × Fin d → AF F) → ℂ),
       Φ ∈ schA F (Fin n × Fin d) → ∀ y, M.I om (om (g, h) Φ) y = M.I om Φ (y * h) := by
   intro hP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hp g _ h Φ hΦ y
-  have hTB := _root_.GlobalTheory.T.theta_kernel_fundamental_properties hP F E σ B n d X W M χX χW om r s r' s' hp
+  have hTB := _root_.GlobalTheory.ThKBasic.theta_kernel_basic_properties hP F E σ B n d X W M χX χW om r s r' s' hp
   have hinv : ∀ γ ∈ ratU σ X.J, ∀ x, theta om Φ (γ * x) (y * h) = theta om Φ x (y * h) := by
     intro γ hγ x
     have := (hTB.1 Φ hΦ).2.1 γ hγ 1 (one_mem _) x (y * h)
@@ -1726,16 +1726,6 @@ end GlobalTheory.ThetaRightTranslate
 end
 end
 
-section
-open scoped TensorProduct
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK
-
-theorem _root_.GlobalTheory.T.thetaIntegral_comp_rightTranslate : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (B : Base F E) (n d : ℕ) (X : Spc F E n) (W : Spc F E d) (M : Model σ X W) (χX χW : Chr F E) (om : Rep σ X W) (r s r' s' : ℕ),
-    IsPair B M χX χW om r s r' s' → ∀ g ∈ UAt σ X (evI F), ∀ (h : UA σ W.J) (Φ : (Fin n × Fin d → AF F) → ℂ),
-      Φ ∈ schA F (Fin n × Fin d) → ∀ y, M.I om (om (g, h) Φ) y = M.I om Φ (y * h) := by
-  first | exact @_root_.GlobalTheory.ThetaRightTranslate.thetaIntegral_rightTranslate_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralCompRightTranslate =====
@@ -1844,9 +1834,9 @@ theorem rebase_constants_agree (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs)
       rw [hΦ']
       exact Submodule.sum_mem _ fun i _ => Submodule.subset_span ⟨f' i, r' i, (hr' i).1, rfl⟩
     have key := hd _ _ hm (y * h⁻¹)
-    have i1 := _root_.GlobalTheory.T.thetaIntegral_comp_rightTranslate hP F E σ B a (a + a') G.V G.W G.M _ _ om _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V hT) g hg h _ sΦ
+    have i1 := _root_.GlobalTheory.ThetaRightTranslate.thetaIntegral_rightTranslate_eq hP F E σ B a (a + a') G.V G.W G.M _ _ om _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V hT) g hg h _ sΦ
       (y * h⁻¹)
-    have i2 := _root_.GlobalTheory.T.thetaIntegral_comp_rightTranslate hP F E σ B a' (a + a') G.V' G.W G.M' _ _ om' _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V' hT) g' hg' h _
+    have i2 := _root_.GlobalTheory.ThetaRightTranslate.thetaIntegral_rightTranslate_eq hP F E σ B a' (a + a') G.V' G.W G.M' _ _ om' _ _ _ _ (GlobalTheory.ThK.RealUniq.isPair_V' hT) g' hg' h _
       sΦ' (y * h⁻¹)
     rw [inv_mul_cancel_right] at i1 i2
     change G.M.I om (om (g, h) (Λ • Φ)) (y * h⁻¹) = d * G.M'.I om' (om' (g', h) Φ') (y * h⁻¹) at key

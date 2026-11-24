@@ -163,15 +163,6 @@ open GlobalTheory GlobalTheory.USep
 open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.UT GlobalTheory.FieldBaseChange
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
-theorem _root_.GlobalTheory.T.cubicalProduct_identity_of_genericPoint : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (N : ℕ) (b cχ : 𝟙_ (Over (Sp V)) ⟶ D.P.A),
-    b ^ N = 1 → ∀ (χt : LB.Gen (LB.LinComb D.P.L ![(cχ * b).left, cχ.left, b.left, (η[D.P.A]).left] DegPre.gtε)),
-    χt.IsGen →
-    (∀ z J, Good D.P.L z J → ∏ i ∈ Finset.range N, cubV D.cub z J (toUnit (TF (R := V) (FractionRing V)) ≫ cχ)
-        (toUnit (TF (R := V) (FractionRing V)) ≫ b ^ i) (toUnit (TF (R := V) (FractionRing V)) ≫ b) =
-      val χt (toUnit (TF (R := V) (FractionRing V))).left z J ^ N) →
-    ∀ (T : Over (Sp V)) (z : T.left) J, Good D.P.L z J →
-      ∏ i ∈ Finset.range N, cubV D.cub z J (toUnit T ≫ cχ) (toUnit T ≫ b ^ i) (toUnit T ≫ b) = val χt T.hom z J ^ N := by
-  first | exact @GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubicalProductIdentityOfGenericPointStatement =====
@@ -248,8 +239,6 @@ open GlobalTheory GlobalTheory.USep
 open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.FieldBaseChange GlobalTheory.UT
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
-theorem _root_.GlobalTheory.T.integralFrame_identity_of_genericPoint : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (N : ℕ) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A), b ^ N = 1 → ∀ (t : LB.Gen (LB.LinComb D.P.L ![(η[D.P.A]).left, b.left] (DegPre.lineε 1))), t.IsGen → ∀ (κ : LB.Gen (kapLB D (𝟙 D.P.A ^ N) (N ^ 2) 1)), Normd κ → (∀ z J, Good D.P.L z J → val t (toUnit (TF (R := V) (FractionRing V))).left z J ^ (N ^ 2) * val κ ((toUnit (TF (R := V) (FractionRing V))).left ≫ b.left) z J = 1) → ∀ (Z : Scheme.{0}) (r : Z ⟶ Sp V) (z : Z) J, Good D.P.L z J → val t r z J ^ (N ^ 2) * val κ (r ≫ b.left) z J = 1 := by
-  first | exact @GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFrameIdentityOfGenericPointStatement =====
@@ -313,7 +302,7 @@ theorem GlobalTheory.Poinc.Sep.CoefInt.isUnit_of_theta_sq : ∀ (N₁ : ℕ), 2 
   have hpl : p.left = spMap ev ≫ (b c₁).left := by rw [hc]; rfl
   have h1 := hne z J hgood
   rw [hpl] at h1
-  obtain ⟨y, hy⟩ := GlobalTheory.Poinc.Sep.Coef.toStk_surj z (sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (spMap ev ≫ (b c₁).left) z J)
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.Ex.GtValues.toStk_surj z (sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (spMap ev ≫ (b c₁).left) z J)
   rw [e2, hG0, map_zero, ← hy, ← map_pow] at e
   have h3 : toStk z (y ^ 2) = 0 := (Units.mul_left_eq_zero _).1 e.symm
   have h4 : y ^ 2 = 0 := (toStk z).injective (h3.trans (map_zero _).symm)
@@ -373,11 +362,6 @@ noncomputable section
 
 namespace GlobalTheory.PsiSqGeneric
 
-theorem jFK_self (V : Type) [CommRing V] [IsDomain V] :
-    jFK (R := V) (FractionRing V) = 𝟙 (Spec (CommRingCat.of (FractionRing V))) := by
-  show Spec.map (CommRingCat.ofHom (algebraMap (FractionRing V) (FractionRing V))) = 𝟙 _
-  rw [Algebra.algebraMap_self, CommRingCat.ofHom_id, Spec.map_id]
-
 theorem cst_eq_gm {V : Type} [CommRing V] [IsDomain V] (z : Spec (CommRingCat.of (FractionRing V)))
     (k : (FractionRing V)ˣ) :
     cst (R := V) (FractionRing V) z (k : FractionRing V) =
@@ -420,7 +404,7 @@ theorem core (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (hE : D.PsiEven
       congrArg (fun w => val (D.psi w) (𝟙 (Spec (CommRingCat.of (FractionRing V)))) z J) (add_neg_cancel mu)] at hv'
     rw [hx] at ev
     rw [hrig] at p0 hv'
-    rw [jFK_self, GlobalTheory.Poinc.Sep.Frames.toUnit_left_eq, cst_eq_gm]
+    rw [_root_.GlobalTheory.UU.ExpFrac.jFK_self, GlobalTheory.Poinc.Sep.Frames.toUnit_left_eq, cst_eq_gm]
     have hg : gm (𝟙 (Spec (CommRingCat.of (FractionRing V)))) z ⊤ (unitOn k'⁻¹) =
         (gm (𝟙 (Spec (CommRingCat.of (FractionRing V)))) z ⊤ (unitOn k'))⁻¹ := by
       rw [← map_inv]; rfl
@@ -469,19 +453,6 @@ open GlobalTheory GlobalTheory.USep
 open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.UT GlobalTheory.FieldBaseChange
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
-theorem _root_.GlobalTheory.T.psi_sq_genericPoint_eq_monomial_mul_symmetric : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V), D.PsiEven →
-    (∀ (Z : Scheme.{0}) (r : Z ⟶ (TK V).left) (z : Z) J, Good D.P.L z J →
-      val (D.psi 0) r z J * val D.rigK r z J = 1) →
-    ∀ (τ₀ : GlobalTheory.UChart.Gens D) (N : ℕ) (s : Fin N → V) (ε : Fin N → LinearMap.BilinForm ℤ D.X),
-    GlobalTheory.UChart.TauIn D τ₀ s ε → ∀ mu : D.X, ∃ k : (FractionRing V)ˣ,
-      (k : FractionRing V) = ∏ i, algebraMap V (FractionRing V) (s i) ^ ε i mu mu ∧
-      ∀ z J, Good D.P.L z J →
-        (@id ((TF (R := V) (FractionRing V)).left.presheaf.stalk z)ˣ (val (D.psi mu) (jFK (R := V) (FractionRing V)) z J)).val ^ 2 =
-          cst (FractionRing V) z (k : FractionRing V) *
-            (val D.sym ((toUnit (TF (R := V) (FractionRing V))).left ≫ (D.c mu).left) z J *
-              (val (τ₀ mu (-mu)) (toUnit (TF (R := V) (FractionRing V))).left z J)⁻¹ *
-              (rigV D (toUnit (TF (R := V) (FractionRing V))).left z J ^ 2)⁻¹).val := by
-  first | exact @GlobalTheory.PsiSqGeneric.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiSqGenericPointEqMonomialMulSymmetricStatement =====
@@ -512,7 +483,7 @@ theorem psi_zero_mul_rigK : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre
   have hcub : val (LB.pullGen D.P.L (thφ D.P.A (x3 D.P.A)) thε D.cub.t (D.pt3 0 0 0)) r z J = 1 := by
     have e := val_cub D.cub ρ hJ (toUnit (TK V) ≫ D.c 0) (toUnit (TK V) ≫ D.c 0) (toUnit (TK V) ≫ D.c 0)
     refine e.trans ?_
-    rw [GlobalTheory.Poinc.ThetaOne.c_zero, MonObj.comp_one, MonObj.comp_one]
+    rw [_root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, MonObj.comp_one, MonObj.comp_one]
     exact (isCub_cubV D.cub hJ).face 1 1
   have hc := (val_mul hJ _ _ r).symm.trans ((val_corr hJ (hB 0 0 0) r).trans (val_mul hJ _ _ r))
   rw [hcub, _root_.mul_one,
@@ -658,21 +629,6 @@ open GlobalTheory GlobalTheory.USep
 open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.UT GlobalTheory.FieldBaseChange
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
-theorem _root_.GlobalTheory.T.thetaFamily_coefficient_integral_torusPoint : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V)
-    (θ : SecOver D.P.A.hom (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1)))
-    (lam : FractionRing V) (th : Fam D (FractionRing V) 1),
-    famProj D (FractionRing V) 1 0 th = lam • termF D (FractionRing V) 1 0 θ →
-    (∀ (Z : Scheme.{0}) (r : Z ⟶ (TK V).left) (z : Z) J, Good D.P.L z J →
-      val (D.psi 0) r z J * val D.rigK r z J = 1) →
-    ∀ (χ : D.X) (g : GtPtF D (FractionRing V)) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A), g.b = toUnit _ ≫ b →
-    ∀ (w : Frm D (FractionRing V) 1 g.b) (x : FractionRing V), IsCoef 1 g w χ (th.s χ) x →
-    ∀ z J, Good D.P.L z J →
-      cst (FractionRing V) z x = cst (FractionRing V) z lam *
-        (@id ((TF (R := V) (FractionRing V)).left.presheaf.stalk z)ˣ (val (D.psi χ) (jFK (R := V) (FractionRing V)) z J)).val *
-        sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1)))
-          ((toUnit (TF (R := V) (FractionRing V))).left ≫ (b * D.c χ).left) z J *
-        (val (g.s χ) (𝟙 _) z J).val * (val w (𝟙 _) z J).val := by
-  first | exact @GlobalTheory.UT.CoefInt.coef_int
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFamilyCoefficientIntegralTorusPointStatement =====
@@ -695,14 +651,14 @@ namespace GlobalTheory.IntPointFn
 
 theorem comp_padd_c_zero (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A) :
     b.left ≫ (padd D.P.A (𝟙 D.P.A) (toUnit D.P.A ≫ D.c 0)).left = b.left := by
-  rw [← Over.comp_left, GlobalTheory.Poinc.ThetaOne.c_zero]
+  rw [← Over.comp_left, _root_.GlobalTheory.IndivisibleSection.c_zero_eq_one]
   simp only [padd, comp_one]
   show (b ≫ (𝟙 D.P.A * 1)).left = b.left
   rw [_root_.mul_one, Category.comp_id]
 
 theorem comp_toUnit_c_zero (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A) :
     b.left ≫ (toUnit D.P.A ≫ D.c 0).left = (η[D.P.A]).left := by
-  rw [← Over.comp_left, GlobalTheory.Poinc.ThetaOne.c_zero, ← SymFrame.eta_eq, ← Category.assoc,
+  rw [← Over.comp_left, _root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, ← SymFrame.eta_eq, ← Category.assoc,
     toUnit_unique (b ≫ toUnit D.P.A) (𝟙 _), Category.id_comp]
 
 theorem comp_toUnit_eta (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A) :
@@ -774,12 +730,12 @@ theorem c_comp_inv (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (χ : D.X
   rw [← Over.comp_left]
   congr 1
   have h : D.c χ * D.c (-χ) = 1 := by
-    rw [← GlobalTheory.Poinc.ThetaOne.c_zero D, ← add_neg_cancel χ, D.c_add]; rfl
+    rw [← _root_.GlobalTheory.IndivisibleSection.c_zero_eq_one D, ← add_neg_cancel χ, D.c_add]; rfl
   exact (eq_inv_of_mul_eq_one_right h).symm
 
 theorem c_eq_eta (V : Type) [CommRing V] [IsDomain V] (D : DegPre V) (χ : D.X) :
     (D.c (χ + -χ)).left = (η[D.P.A]).left := by
-  rw [add_neg_cancel, GlobalTheory.Poinc.ThetaOne.c_zero, ← SymFrame.eta_eq]
+  rw [add_neg_cancel, _root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, ← SymFrame.eta_eq]
 
 
 open GlobalTheory.IntPointFn in
@@ -798,7 +754,7 @@ theorem fn_of_theta_sq : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V)
             (val τ r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := by
   intro V _ _ D θ b χ t ht χt hχt τ hτ
   have hL := D.P.isLB
-  have e0 : (D.c 0).left = (η[D.P.A]).left := by rw [GlobalTheory.Poinc.ThetaOne.c_zero, ← SymFrame.eta_eq]
+  have e0 : (D.c 0).left = (η[D.P.A]).left := by rw [_root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, ← SymFrame.eta_eq]
   have e1 := c_comp_inv V D χ
   have e2 := c_eq_eta V D χ
   have e4 : (b * D.c χ).left = (D.c χ * b).left := by rw [_root_.mul_comm]
@@ -849,20 +805,6 @@ open GlobalTheory GlobalTheory.USep
 open GlobalTheory.Poinc.ThetaOne GlobalTheory.Poinc.Sep GlobalTheory.UT GlobalTheory.FieldBaseChange
 open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.Poinc.Sep.Frames GlobalTheory.UT.CoefBasic
 
-theorem _root_.GlobalTheory.T.thetaSquare_product_isFunction_on_spec : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V)
-    (θ : SecOver D.P.A.hom (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1)))
-    (b : 𝟙_ (Over (Sp V)) ⟶ D.P.A) (χ : D.X)
-    (t : LB.Gen (LB.LinComb D.P.L ![(η[D.P.A]).left, b.left] (DegPre.lineε 1))), t.IsGen →
-    ∀ (χt : LB.Gen (LB.LinComb D.P.L ![(D.c χ * b).left, (D.c χ).left, b.left, (η[D.P.A]).left] DegPre.gtε)),
-    χt.IsGen →
-    ∀ (τ : LB.Gen (LB.LinComb D.P.L (K := Fin 4) ![(D.c (χ + -χ)).left, (D.c χ).left, (D.c (-χ)).left, (D.c 0).left]
-      ![-1, 1, 1, -1])), τ.IsGen →
-    ∃ G : V, ∀ (Z : Scheme.{0}) (r : Z ⟶ Sp V) (z : Z) J, Good D.P.L z J →
-      gs r z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom G) =
-        sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (r ≫ (b * D.c χ).left) z J ^ 2 *
-          (val t r z J ^ 2 * val χt r z J ^ 2 * val D.sym (r ≫ (D.c χ).left) z J *
-            (val τ r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := by
-  first | exact @GlobalTheory.IntPointFnSq.fn_of_theta_sq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSquareProductIsFunctionOnSpecStatement =====
@@ -989,16 +931,16 @@ theorem integral_sq_terms : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [
         sval (θ : LB.Sec (LB.LinComb D.P.L (D.famφB 0) (DegPre.famε 1))) (r ≫ (b c * D.c (e mu)).left) z J ^ 2 *
           (val (t c) r z J ^ 2 * val (χt mu c) r z J ^ 2 * val D.sym (r ≫ (D.c (e mu)).left) z J *
             (val (τ₀ (e mu) (-e mu)) r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := fun mu c =>
-    GlobalTheory.T.thetaSquare_product_isFunction_on_spec V₁ D θ (b c) (e mu) (t c) (htg c) (χt mu c) (hχg mu c) (τ₀ (e mu) (-e mu)) (hτ _ _).1
+    _root_.GlobalTheory.IntPointFnSq.fn_of_theta_sq V₁ D θ (b c) (e mu) (t c) (htg c) (χt mu c) (hχg mu c) (τ₀ (e mu) (-e mu)) (hτ _ _).1
   choose G hGv using hG
-  have hk := fun mu => GlobalTheory.T.psi_sq_genericPoint_eq_monomial_mul_symmetric V₁ D hPE hψ0 τ₀ _ _ _ hτ (e mu)
+  have hk := fun mu => _root_.GlobalTheory.PsiSqGeneric.main V₁ D hPE hψ0 τ₀ _ _ _ hτ (e mu)
   choose k hkv hkψ using hk
   obtain ⟨z⟩ := exists_pt (R := V₁) (F := FractionRing V₁)
   obtain ⟨J, hJ⟩ := exists_good' D.P.isLB z
   have key : ∀ mu c, algebraMap V₁ (FractionRing V₁) (u mu c * mo mu) ^ 2 =
       lam ^ 2 * (k mu : FractionRing V₁) * algebraMap V₁ (FractionRing V₁) (G mu c) := by
     intro mu c
-    have E1 := GlobalTheory.T.thetaFamily_coefficient_integral_torusPoint V₁ D θ lam th hlam hψ0 (e mu) (g c) (b c) (hgb c) (w c) _ (hcoef mu c) z J hJ
+    have E1 := _root_.GlobalTheory.UT.CoefInt.coef_int V₁ D θ lam th hlam hψ0 (e mu) (g c) (b c) (hgb c) (w c) _ (hcoef mu c) z J hJ
     have E2 := hkψ mu z J hJ
     have E3 := hGv mu c _ (toUnit (TF (R := V₁) (FractionRing V₁))).left z J hJ
     rw [gs_top, htv c z J hJ, hχv mu c z J hJ] at E3
@@ -1047,9 +989,9 @@ theorem integral_sq_terms : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [
     rfl
   refine ⟨θ, b, t, χt, G 0 c₀, G, hθ, hbN, fun c => ⟨htg c, fun κ hκ Z r z' J' hJ' => ?_⟩,
     fun mu c => ⟨hχg mu c, fun T z' J' hJ' =>
-      GlobalTheory.T.cubicalProduct_identity_of_genericPoint V₁ D N₁ (b c) (D.c (e mu)) (hbN c) (χt mu c) (hχg mu c) (hχc mu c) T z' J' hJ'⟩,
+      _root_.GlobalTheory.Poinc.Sep.CubInt.cubProd_of_generic V₁ D N₁ (b c) (D.c (e mu)) (hbN c) (χt mu c) (hχg mu c) (hχc mu c) T z' J' hJ'⟩,
     hs₀u, fun mu c => ?_, hGv⟩
-  · refine GlobalTheory.T.integralFrame_identity_of_genericPoint V₁ D N₁ (b c) (hbN c) (t c) (htg c) κ hκ (fun y I hI => ?_) Z r z' J' hJ'
+  · refine _root_.GlobalTheory.Poinc.Sep.FrameInt.kap_of_generic V₁ D N₁ (b c) (hbN c) (t c) (htg c) κ hκ (fun y I hI => ?_) Z r z' J' hJ'
     rw [htv c y I hI]
     have := (hw c).2 κ hκ y I hI
     rwa [show (g c).b.left = (toUnit (TF (R := V₁) (FractionRing V₁))).left ≫ (b c).left from

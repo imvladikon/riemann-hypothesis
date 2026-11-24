@@ -463,7 +463,7 @@ theorem wd_prod₂_of_interleave_fin (hA : GlobalTheory.Published.IrreducibleAdm
   classical
   obtain ⟨hdu, hju⟩ := hxu
   obtain ⟨hdv, hjv⟩ := hyv
-  have hE := interleave_embed (T := IrrGL (k := k)) hw
+  have hE := _root_.GlobalTheory.CompanionTheory.WordProd.Intl.interleave_embeddings (T := IrrGL (k := k)) hw
   obtain ⟨r, σ₀, σ₁, hE⟩ := hE
   obtain ⟨hr0, hr1, hw0, hw1⟩ := hE
   let n := w.length
@@ -499,12 +499,12 @@ theorem wd_prod₂_of_interleave_fin (hA : GlobalTheory.Published.IrreducibleAdm
       jhMult (piTensor fun j => (s₀ i j).rep.ρ) (jac (f i) (ρ i)) ≠ 0 := by
     intro f
     refine Fin.forall_fin_two.2 ⟨?_, ?_⟩
-    · refine row_ne_zero (X 0).rep (hs 0) w.get σ₀ (fun j => b₀.1 0 j) (fun a => ?_) (fun j hj => ?_) hdeg0
+    · refine _root_.GlobalTheory.CompanionTheory.WordProd.RowCell.jhMult_row (X 0).rep (hs 0) w.get σ₀ (fun j => b₀.1 0 j) (fun a => ?_) (fun j hj => ?_) hdeg0
         (f 0) ?_
       · simp [b₀, (hr0 (σ₀ a)).2 ⟨a, rfl⟩]
       · simp [b₀, mt (hr0 j).1 hj]
       · rw [jm_congr' (funext hw0) hdeg0 hdu]; exact hju
-    · refine row_ne_zero (X 1).rep (hs 1) w.get σ₁ (fun j => b₀.1 1 j) (fun a => ?_) (fun j hj => ?_) hdeg1
+    · refine _root_.GlobalTheory.CompanionTheory.WordProd.RowCell.jhMult_row (X 1).rep (hs 1) w.get σ₁ (fun j => b₀.1 1 j) (fun a => ?_) (fun j hj => ?_) hdeg1
         (f 1) ?_
       · simp [b₀, (hr1 (σ₁ a)).2 ⟨a, rfl⟩]
       · simp [b₀, mt (hr1 j).1 hj]
@@ -639,7 +639,7 @@ theorem langlandsMultisegments_of_clauses (hA : GlobalTheory.Published.Irreducib
     (hFree : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], LOrderFree k)
     (hE : GlobalTheory.Published.LanglandsExhaustionGL) : GlobalTheory.Published.LanglandsMultisegments := by
   intro k _ _ _ _ _
-  exact ⟨GlobalTheory.T.langlands_injective_of_socle hA (hSoc k) (hSeg k),
+  exact ⟨_root_.GlobalTheory.CompanionTheory.Multisegment.lInjective hA (hSoc k) (hSeg k),
     fun 𝔪 𝔫 x y hd h₀ h₁ hy =>
       _root_.GlobalTheory.CompanionTheory.LangSumSub.main hA (hSoc k) (hSeg k)
         (hFree k) (hE k) 𝔪 𝔫 x y hd h₀ h₁ hy⟩

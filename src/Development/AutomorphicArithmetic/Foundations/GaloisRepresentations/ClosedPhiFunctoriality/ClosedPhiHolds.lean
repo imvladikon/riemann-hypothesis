@@ -652,10 +652,10 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.frEx_holds :
     (_root_.GlobalTheory.LayerSst.main l K L₀ P AI T a Cl _ (Cv.tw.ρ' m) (Cv.lay m)).1 hsstCl
   have hfr : ∀ m, ∃ F : Frame bk N (Cv.tw.d' m) (fun g => (Cv.tw.ρ' m g).val),
       F.IsDR ∧ (IsCrys (P.PD K) (qRep (Cv.tw.ρ' m)) → F.IsCr) := fun m =>
-    GlobalTheory.T.exists_breuilKisinFrame_semistable_boundedJumps l K bk τp hτp P AI T N _ (Cv.tw.ρ' m) (Cv.cont' m) (hsst m)
+    _root_.GlobalTheory.BKLim.exists_frame_sst l K bk τp hτp P AI T N _ (Cv.tw.ρ' m) (Cv.cont' m) (hsst m)
       (_root_.GlobalTheory.LayerJumps.layer_DdR_bounds l K L₀ P AI T a Cl J N hL₀ hN _ (Cv.tw.ρ' m) (Cv.lay m) hCl)
   choose F hFdr hFcr using hfr
-  obtain ⟨F₀, -, hF₀cr, rr, hlink⟩ := GlobalTheory.T.exists_deRhamFrame_limitLattice_breuilKisinTower l K bk τp hτp Cv.d N Cv.ρ Cv.tw F hFdr
+  obtain ⟨F₀, -, hF₀cr, rr, hlink⟩ := _root_.GlobalTheory.BKLim.limit_frame_exists l K bk τp hτp Cv.d N Cv.ρ Cv.tw F hFdr
   have hFc : ∀ m, (F m).IsCr := fun m =>
     hFcr m ((_root_.GlobalTheory.LayerSst.main l K L₀ P AI T a Cl _ (Cv.tw.ρ' m) (Cv.lay m)).2 hcr)
   exact ⟨N, F, F₀, rr, hFc, hF₀cr hFc, hlink⟩
@@ -775,7 +775,7 @@ theorem invU_holds : InvU := by
   intro N k d ρ F Y Y' Q Q' hY hYY hQQ hε
   have hgal : ∀ g : ↥(GK K), τ ^ N • ((ρ g).val.map (Per.zA l) * Y.map (Per.σA (g : GQ l))) =
       Per.σA (g : GQ l) τ ^ N • (Y * F.ε g) :=
-    (GlobalTheory.T.frame_ainf_matrix_frobenius_galois_eqs l K bk τ hτ N d _ F Y Y' hY hYY).2.1
+    (_root_.GlobalTheory.FrameEq.frame_Y_eqs l K bk τ hτ N d _ F Y Y' hY hYY).2.1
   have e2 : (⇑alg ∘ ⇑(fI l)) = ⇑f := funext hif
   obtain ⟨W, hW⟩ := hw.pow N
   set A := Y.map f with hA
@@ -1157,7 +1157,7 @@ private theorem opOne_pow (l : ℕ) [Fact l.Prime] (n : ℕ) (y : Per.Acris l) :
   | zero => simp
   | succ n ih =>
     rw [pow_succ, pow_succ, RingHom.mul_def, RingHom.mul_def, RingHom.comp_apply, RingHom.comp_apply]
-    rw [show Per.φB l (iB l y) = iB l (phiA l y) from GlobalTheory.MemLoc.PhiInj.φB_alg l y, ih]
+    rw [show Per.φB l (iB l y) = iB l (phiA l y) from _root_.GlobalTheory.CrisMaps.φB_phiA l y, ih]
 
 theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.opOne_holds :
     OpOne2 := by

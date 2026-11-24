@@ -188,13 +188,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.algHom_quotient_span_pow_eq_of_etaleLow : ∀ (A R C : Type) [CommRing A] [IsDomain A] [CommRing R] [Algebra A R]
-    [CommRing C] [Algebra R C] (ρ : R →+* A), ρ.comp (algebraMap A R) = RingHom.id A →
-    ∀ t : R, RingHom.ker ρ = Ideal.span {t} → t ∈ nonZeroDivisors R →
-    GlobalTheory.GoodEtale.EtaleLow A R C →
-    ∀ (n : ℕ) (f f' : C →ₐ[R] R ⧸ Ideal.span {t} ^ n),
-      (∀ c : C, f c - f' c ∈ Ideal.span {Ideal.Quotient.mk (Ideal.span {t} ^ n) t}) → f = f' := by
-  first | (exact @GlobalTheory.GoodEtaleSection.algHom_quot_eq_of_etaleLow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgHomQuotientSpanPowEqOfEtaleLowStatement =====
@@ -298,11 +291,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.hasHartogsProperty_quotient_span_pow_retraction : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-    [CommRing R] [Algebra A R] (ρ : R →+* A), ρ.comp (algebraMap A R) = RingHom.id A →
-    ∀ t : R, RingHom.ker ρ = Ideal.span {t} → t ∈ nonZeroDivisors R →
-    ∀ n : ℕ, GlobalTheory.GoodEtale.Hart A R (R ⧸ Ideal.span {t} ^ n) := by
-  first | (exact @GlobalTheory.GoodEtaleSection.hart_quot)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHartogsPropertyQuotientSpanPowRetractionStatement =====
@@ -498,7 +486,7 @@ theorem exists_algHom_quot_pow : ∀ (A R C : Type) [CommRing A] [IsDomain A] [I
   have hι : ∀ b, ι b = algebraMap B L0 b := fun b => rfl
   have hRL : ∀ r : R, algebraMap R L0 r = algebraMap B L0 (Ideal.Quotient.mk _ r) := fun r =>
     IsScalarTower.algebraMap_apply R B L0 r
-  have hHart := GlobalTheory.T.hasHartogsProperty_quotient_span_pow_retraction A R ρ hρ t hker ht n
+  have hHart := _root_.GlobalTheory.GoodEtaleSection.hart_quot A R ρ hρ t hker ht n
   have hmem : ∀ c, φ₀ c ∈ ι.range := by
     intro c
     obtain ⟨⟨x, m⟩, hxm⟩ := IsLocalization.mk'_surjective M0 (φ₀ c)
@@ -578,16 +566,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_algHom_quotient_pow_lifting_point : ∀ (A R C : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A]
-    [IsIntegrallyClosed A] [CommRing R] [IsNoetherianRing R] [IsLocalRing R] [Algebra A R]
-    [CommRing C] [Algebra R C] (ρ : R →+* A), ρ.comp (algebraMap A R) = RingHom.id A →
-    ∀ t : R, RingHom.ker ρ = Ideal.span {t} → t ∈ nonZeroDivisors R →
-    GlobalTheory.GoodEtale.EtaleLow A R C →
-    ∀ g : C →+* A, g.comp (algebraMap R C) = ρ →
-    ∀ n : ℕ, ∃ f : C →ₐ[R] R ⧸ Ideal.span {t} ^ n, ∀ c : C,
-      f c - Ideal.Quotient.mk (Ideal.span {t} ^ n) (algebraMap A R (g c)) ∈
-        Ideal.span {Ideal.Quotient.mk (Ideal.span {t} ^ n) t} := by
-  first | (exact @GlobalTheory.GoodEtaleSection.exists_algHom_quot_pow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgHomQuotientPowLiftingPointStatement =====
@@ -618,11 +596,11 @@ theorem exists_faithfullyFlat_algHom : ∀ (A R C : Type) [CommRing A] [IsDomain
     rw [ht0] at hu
     exact not_isUnit_zero hu
   obtain ⟨g, -, hg⟩ := exists_integral_point A R C ρ hint s hs
-  choose f hf using GlobalTheory.T.exists_algHom_quotient_pow_lifting_point A R C ρ hρ t hker ht hEt g hg
+  choose f hf using _root_.GlobalTheory.GoodEtaleSection.exists_algHom_quot_pow A R C ρ hρ t hker ht hEt g hg
   have compat : ∀ {m n : ℕ} (hle : m ≤ n),
       (Ideal.Quotient.factorₐ R (Ideal.pow_le_pow_right (I := Ideal.span {t}) hle)).comp (f n) = f m := by
     intro m n hle
-    refine GlobalTheory.T.algHom_quotient_span_pow_eq_of_etaleLow A R C ρ hρ t hker ht hEt m _ _ fun c => ?_
+    refine _root_.GlobalTheory.GoodEtaleSection.algHom_quot_eq_of_etaleLow A R C ρ hρ t hker ht hEt m _ _ fun c => ?_
     set φ := Ideal.Quotient.factorₐ R (Ideal.pow_le_pow_right (I := Ideal.span {t}) hle)
     have h1 := hf n c
     have h2 := hf m c
@@ -650,14 +628,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_faithfullyFlat_algHom_etale_height_one : ∀ (A R C : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-    [CommRing R] [IsNoetherianRing R] [IsLocalRing R] [Algebra A R] [CommRing C] [Algebra R C]
-    (ρ : R →+* A), ρ.comp (algebraMap A R) = RingHom.id A →
-    ∀ t : R, RingHom.ker ρ = Ideal.span {t} → t ∈ nonZeroDivisors R →
-    Algebra.IsIntegral R C → GlobalTheory.GoodEtale.EtaleLow A R C →
-    (∃ s : C →+* FractionRing A, s.comp (algebraMap R C) = (algebraMap A (FractionRing A)).comp ρ) →
-    ∃ (O : Type) (_ : CommRing O) (_ : Algebra R O), Module.FaithfullyFlat R O ∧ Nonempty (C →ₐ[R] O) := by
-  first | (exact @GlobalTheory.GoodEtaleSection.exists_faithfullyFlat_algHom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFaithfullyFlatAlgHomEtaleHeightOneStatement =====
@@ -700,11 +670,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etale_localizationAtPrime_tensor_of_low_height : ∀ (A R C O : Type) [CommRing A] [CommRing R] [Algebra A R] [CommRing C] [Algebra R C]
-    [CommRing O] [Algebra R O] (Q : Ideal O) [Q.IsPrime],
-    GlobalTheory.GoodEtale.EtaleLow A R C → ((Q.comap (algebraMap R O)).comap (algebraMap A R)).height ≤ 1 →
-    Algebra.Etale (Localization.AtPrime Q) (Localization.AtPrime Q ⊗[R] C) := by
-  first | (exact @GlobalTheory.GoodEtale.etale_localization_of_etaleLow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalizationAtPrimeTensorOfLowHeightStatement =====
@@ -757,12 +722,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_smul_dvd_of_localization_atPrime_tensor' : ∀ (R C O : Type) [CommRing R] [CommRing C] [Algebra R C] [CommRing O] [Algebra R O]
-    (Q : Ideal O) [Q.IsPrime] (b : R) (m : O ⊗[R] C),
-    (∃ m' : Localization.AtPrime Q ⊗[R] C,
-      (IsScalarTower.toAlgHom R O (Localization.AtPrime Q)).toLinearMap.rTensor C m = algebraMap R (Localization.AtPrime Q) b • m') →
-    ∃ s ∉ Q, ∃ m' : O ⊗[R] C, s • m = algebraMap R O b • m' := by
-  first | (exact @GlobalTheory.exists_smul_dvd_of_localization_atPrime_tensor)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmulDvdOfLocalizationAtPrimeTensorStatement =====
@@ -823,13 +782,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.finite_of_galois_trace_relation : ∀ (A R C : Type) [CommRing A] [CommRing R] [Algebra A R] [IsNoetherianRing R] [CommRing C] [Algebra R C]
-    (G : Type) [Group G] [Fintype G] [DecidableEq G] (act : G →* (C ≃ₐ[R] C)) (T : C →ₗ[R] R),
-    (∀ c, algebraMap R C (T c) = ∑ g, act g c) →
-    ∀ (a : A), a ≠ 0 → ∀ (n : ℕ) (x y : Fin n → C),
-      (∀ g, ∑ i, x i * act g (y i) = if g = 1 then algebraMap R C (algebraMap A R a) else 0) →
-    GlobalTheory.GoodEtale.TorsionFreeOver A R C → Module.Finite R C := by
-  first | (exact @GlobalTheory.GoodEtaleFinite.finite_of_trace_relation)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfGaloisTraceRelationStatement =====
@@ -899,14 +851,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.galoisComparisonMap_injective_of_flat : ∀ (A R C O : Type) [CommRing A] [CommRing R] [Algebra A R] [CommRing C] [Algebra R C]
-    [CommRing O] [Algebra R O] [Module.Flat R O]
-    (G : Type) [Group G] [Fintype G] [DecidableEq G] (act : G →* (C ≃ₐ[R] C)) (T : C →ₗ[R] R),
-    (∀ c, algebraMap R C (T c) = ∑ g, act g c) →
-    ∀ (a : A), a ≠ 0 → ∀ (n : ℕ) (x y : Fin n → C),
-      (∀ g, ∑ i, x i * act g (y i) = if g = 1 then algebraMap R C (algebraMap A R a) else 0) →
-    GlobalTheory.GoodEtale.TorsionFreeOver A R C → ∀ σ : C →ₐ[R] O, Function.Injective (GlobalTheory.GoodEtale.galMap act σ) := by
-  first | (exact @GlobalTheory.GoodEtale.galMap_injective_of_flat)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisComparisonMapInjectiveOfFlatStatement =====
@@ -995,13 +939,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.galoisElement_dvd_of_formallyUnramified : ∀ (R C O : Type) [CommRing R] [CommRing C] [Algebra R C] [CommRing O] [Algebra R O]
-    [Algebra.FormallyUnramified O (O ⊗[R] C)] [Algebra.EssFiniteType O (O ⊗[R] C)]
-    (G : Type) [Group G] [DecidableEq G] (act : G →* (C ≃ₐ[R] C)) (b : R) (n : ℕ) (x y : Fin n → C),
-      (∀ g, ∑ i, x i * act g (y i) = if g = 1 then algebraMap R C b else 0) →
-    ∀ σ : C →ₐ[R] O, Function.Injective (GlobalTheory.GoodEtale.galMap act σ) →
-    ∀ h : G, ∃ m' : O ⊗[R] C, GlobalTheory.GoodEtale.galElt act σ x y h = algebraMap R O b • m' := by
-  first | (exact @GlobalTheory.GoodEtale.galElt_dvd_of_unramified)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisElementDvdOfFormallyUnramifiedStatement =====
@@ -1101,10 +1038,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.hart_baseChange_of_flat : ∀ (A R M O : Type) [CommRing A] [IsNoetherianRing A] [CommRing R] [Algebra A R]
-    [AddCommGroup M] [Module R M] [CommRing O] [Algebra R O] [Algebra A O] [IsScalarTower A R O]
-    [Module.Flat R O], GlobalTheory.GoodEtale.Hart A R M → GlobalTheory.GoodEtale.Hart A O (O ⊗[R] M) := by
-  first | (exact @GlobalTheory.GoodEtale.hart_tensor_of_flat)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HartTensorOfFlatStatement =====
@@ -1188,10 +1121,10 @@ theorem descent_finiteEtale : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [Is
     Module.Finite R C ∧ Algebra.Etale R C := by
   intro A R C O _ _ _ _ _ _ _ _ _ _ _ G _ _ _ act T hT a ha n x y hxy hTF hH hE hσ
   obtain ⟨σ⟩ := hσ
-  refine ⟨GlobalTheory.T.finite_of_galois_trace_relation A R C G act T hT a ha n x y hxy hTF, ?_⟩
+  refine ⟨_root_.GlobalTheory.GoodEtaleFinite.finite_of_trace_relation A R C G act T hT a ha n x y hxy hTF, ?_⟩
   letI : Algebra A O := ((algebraMap R O).comp (algebraMap A R)).toAlgebra
   haveI : IsScalarTower A R O := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  have hHO : Hart A O (O ⊗[R] C) := GlobalTheory.T.hart_baseChange_of_flat A R C O hH
+  have hHO : Hart A O (O ⊗[R] C) := _root_.GlobalTheory.GoodEtale.hart_tensor_of_flat A R C O hH
   set b := algebraMap A R a with hb
   have hdiv : ∀ h : G, ∃ m' : O ⊗[R] C, galElt act σ x y h = algebraMap R O b • m' := by
     intro h
@@ -1199,15 +1132,15 @@ theorem descent_finiteEtale : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [Is
     intro Q hQ hht
     haveI := hQ
     haveI : Algebra.Etale (Localization.AtPrime Q) (Localization.AtPrime Q ⊗[R] C) :=
-      GlobalTheory.T.etale_localizationAtPrime_tensor_of_low_height A R C O Q hE (by first | exact hht)
+      _root_.GlobalTheory.GoodEtale.etale_localization_of_etaleLow A R C O Q hE (by first | exact hht)
     let σQ : C →ₐ[R] Localization.AtPrime Q := (IsScalarTower.toAlgHom R O _).comp σ
-    have hinj := GlobalTheory.T.galoisComparisonMap_injective_of_flat A R C (Localization.AtPrime Q) G act T hT a ha n x y hxy hTF σQ
-    obtain ⟨m'', hm''⟩ := GlobalTheory.T.galoisElement_dvd_of_formallyUnramified R C (Localization.AtPrime Q) G act b n x y hxy σQ hinj h
+    have hinj := _root_.GlobalTheory.GoodEtale.galMap_injective_of_flat A R C (Localization.AtPrime Q) G act T hT a ha n x y hxy hTF σQ
+    obtain ⟨m'', hm''⟩ := _root_.GlobalTheory.GoodEtale.galElt_dvd_of_unramified R C (Localization.AtPrime Q) G act b n x y hxy σQ hinj h
     have hcomp : (IsScalarTower.toAlgHom R O (Localization.AtPrime Q)).toLinearMap.rTensor C
         (galElt act σ x y h) = galElt act σQ x y h := by
 
       simp [galElt, map_sum, σQ]
-    obtain ⟨s, hs, m', hm'⟩ := GlobalTheory.T.exists_smul_dvd_of_localization_atPrime_tensor' R C O Q b _ ⟨m'', hcomp.trans hm''⟩
+    obtain ⟨s, hs, m', hm'⟩ := _root_.GlobalTheory.exists_smul_dvd_of_localization_atPrime_tensor R C O Q b _ ⟨m'', hcomp.trans hm''⟩
     exact ⟨s, hs, m', hm'⟩
   have key : ∀ h, ∃ m, galMap act σ m = Pi.single h 1 := by
     intro h
@@ -1232,7 +1165,7 @@ theorem descent_finiteEtale : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [Is
     funext g
     simp [Finset.sum_apply, Pi.single_apply]
   let e := AlgEquiv.ofBijective (galMap act σ)
-    ⟨GlobalTheory.T.galoisComparisonMap_injective_of_flat A R C O G act T hT a ha n x y hxy hTF σ, hsurj⟩
+    ⟨_root_.GlobalTheory.GoodEtale.galMap_injective_of_flat A R C O G act T hT a ha n x y hxy hTF σ, hsurj⟩
   haveI : Algebra.Etale O (O ⊗[R] C) := Algebra.Etale.of_equiv e.symm
   exact Algebra.Etale.of_etale_tensorProduct_of_faithfullyFlat O
 
@@ -1250,16 +1183,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.finiteEtale_of_galois_descent_hartogs : ∀ (A R C O : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [CommRing R] [Algebra A R]
-    [IsNoetherianRing R] [CommRing C] [Algebra R C] [CommRing O] [Algebra R O] [Module.FaithfullyFlat R O]
-    (G : Type) [Group G] [Fintype G] [DecidableEq G] (act : G →* (C ≃ₐ[R] C)) (T : C →ₗ[R] R),
-    (∀ c, algebraMap R C (T c) = ∑ g, act g c) →
-    ∀ (a : A), a ≠ 0 → ∀ (n : ℕ) (x y : Fin n → C),
-      (∀ g, ∑ i, x i * act g (y i) = if g = 1 then algebraMap R C (algebraMap A R a) else 0) →
-    GlobalTheory.GoodEtale.TorsionFreeOver A R C → GlobalTheory.GoodEtale.Hart A R C → GlobalTheory.GoodEtale.EtaleLow A R C →
-    Nonempty (C →ₐ[R] O) →
-    Module.Finite R C ∧ Algebra.Etale R C := by
-  first | (exact @GlobalTheory.GoodEtale.descent_finiteEtale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEtaleOfGaloisDescentHartogsStatement =====
@@ -1356,19 +1279,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.genericFibreBase_flat_noetherian_intClosed : ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A]
-    (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (ρ : Localization.AtPrime QA →+* A), ρ.comp (algebraMap A (Localization.AtPrime QA)) = RingHom.id A →
-      RingHom.ker ρ = Ideal.span {algebraMap (Polynomial A) (Localization.AtPrime QA) Polynomial.X} →
-    Module.Flat A (Localization.AtPrime QA) ∧ IsNoetherianRing (Localization.AtPrime QA) ∧
-      algebraMap (Polynomial A) (Localization.AtPrime QA) Polynomial.X ∈ nonZeroDivisors (Localization.AtPrime QA) ∧
-      ∀ f : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA), IsIntegral (Localization.AtPrime QA) f →
-        ∃ r : Localization.AtPrime QA, algebraMap _ (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) r = f := by
-  first | (exact @GlobalTheory.GoodEtaleBase.flat_noetherian_nzd_intClosed)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFibreBaseFlatNoetherianIntClosedStatement =====
@@ -1460,9 +1370,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.hasHartogsPropertyHeightOnePrimes_of_flat : ∀ (A : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-    (B : Type) [CommRing B] [Algebra A B] [Module.Flat A B], GlobalTheory.GoodEtale.Hart A B B := by
-  first | (exact @GlobalTheory.GoodEtale.hart_of_flat)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHartogsPropertyHeightOnePrimesOfFlatStatement =====
@@ -1475,12 +1382,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_mul_mem_integralClosureOverGenericFibre : ∀ (A R : Type) [CommRing A] [IsDomain A] [CommRing R] [Algebra A R]
-    (D : Type) [CommRing D] [Algebra (GlobalTheory.LocAcyc.GenFib A R) D]
-    [Module.Finite (GlobalTheory.LocAcyc.GenFib A R) D] (s : Finset D),
-    ∃ a : A, a ≠ 0 ∧ ∀ d ∈ s,
-      GlobalTheory.KeyOriginNoeth.baseHom A R D (algebraMap A R a) * d ∈ GlobalTheory.KeyOriginNoeth.closure A R D := by
-  first | (exact @GlobalTheory.KeyOriginNoeth.exists_common_multiple_mem_closure)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulMemIntegralClosureOverGenericFibreStatement =====
@@ -1660,7 +1561,7 @@ theorem closureData : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRi
   have htr : ∀ c ∈ closure A R D, ∃ r : R, algebraMap R (GenFib A R) r = τ c :=
     fun c hc => trace_mem hIC hinj τ q act hτ hc
   haveI : Module.Finite (GenFib A R) D := hT.1
-  obtain ⟨a, ha, hmem⟩ := GlobalTheory.T.exists_mul_mem_integralClosureOverGenericFibre A R D (Finset.univ.image x ∪ Finset.univ.image y)
+  obtain ⟨a, ha, hmem⟩ := _root_.GlobalTheory.KeyOriginNoeth.exists_common_multiple_mem_closure A R D (Finset.univ.image x ∪ Finset.univ.image y)
   set b := baseHom A R D (algebraMap A R a) with hbdef
   have hb : ∀ g, act g b = b := fun g => (act g).commutes _
   let x' : Fin n → closure A R D := fun i => ⟨b * x i, hmem _ (by simp)⟩
@@ -1835,24 +1736,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.integralClosure_zmodTorsor_genericFibre_data : ∀ (A R : Type) [CommRing A] [IsDomain A] [IsNoetherianRing A] [CommRing R] [Algebra A R]
-    [Nontrivial R] [Module.Flat A R] [IsNoetherianRing R],
-    GlobalTheory.GoodEtale.Hart A R R →
-    (∀ f : GlobalTheory.LocAcyc.GenFib A R, IsIntegral R f → ∃ r : R, algebraMap R (GlobalTheory.LocAcyc.GenFib A R) r = f) →
-    ∀ (q : ℕ) [NeZero q] (D : Type) [CommRing D] [Algebra (GlobalTheory.LocAcyc.GenFib A R) D]
-      (act : Multiplicative (ZMod q) →* (D ≃ₐ[GlobalTheory.LocAcyc.GenFib A R] D)),
-      GlobalTheory.KeyOriginCut.IsZTorsor (GlobalTheory.LocAcyc.GenFib A R) D q act →
-    letI := GlobalTheory.KeyOriginNoeth.closureAlg A R D
-    ∃ (act' : Multiplicative (ZMod q) →* (GlobalTheory.KeyOriginNoeth.closure A R D ≃ₐ[R] GlobalTheory.KeyOriginNoeth.closure A R D))
-      (T : GlobalTheory.KeyOriginNoeth.closure A R D →ₗ[R] R),
-      (∀ c, algebraMap R _ (T c) = ∑ g, act' g c) ∧
-      (∃ a : A, a ≠ 0 ∧ ∃ (n : ℕ) (x y : Fin n → GlobalTheory.KeyOriginNoeth.closure A R D),
-        ∀ g, ∑ i, x i * act' g (y i) = if g = 1 then algebraMap R _ (algebraMap A R a) else 0) ∧
-      GlobalTheory.GoodEtale.TorsionFreeOver A R (GlobalTheory.KeyOriginNoeth.closure A R D) ∧
-      GlobalTheory.GoodEtale.Hart A R (GlobalTheory.KeyOriginNoeth.closure A R D) ∧
-      Algebra.IsIntegral R (GlobalTheory.KeyOriginNoeth.closure A R D) ∧
-      Nontrivial (GlobalTheory.KeyOriginNoeth.closure A R D) := by
-  first | (exact @GlobalTheory.ClosureData.closureData)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralClosureZmodTorsorGenericFibreDataStatement =====
@@ -1881,17 +1764,17 @@ theorem GlobalTheory.GoodEtale.closure_finiteEtale : ∀ (A : Type) [CommRing A]
       GlobalTheory.KeyOriginNoeth.ClosureFiniteEtale A (Localization.AtPrime QA) DA := by
   intro A _ _ _ _ _ _ EA _ _ _ _ _ QA _ hQA ρ hρ hker q hq hqu DA _ _ actA htor hgood
   haveI : NeZero q := ⟨hq.ne'⟩
-  obtain ⟨hflat, hnoeth, ht, hic⟩ := GlobalTheory.T.genericFibreBase_flat_noetherian_intClosed A EA QA hQA ρ hρ hker
+  obtain ⟨hflat, hnoeth, ht, hic⟩ := _root_.GlobalTheory.GoodEtaleBase.flat_noetherian_nzd_intClosed A EA QA hQA ρ hρ hker
   haveI := hflat
   haveI := hnoeth
-  have hHR := GlobalTheory.T.hasHartogsPropertyHeightOnePrimes_of_flat A (Localization.AtPrime QA)
+  have hHR := _root_.GlobalTheory.GoodEtale.hart_of_flat A (Localization.AtPrime QA)
   obtain ⟨act', T, hT, ⟨a, ha, n, x, y, hxy⟩, htf, hHC, hint, hnt⟩ :=
-    GlobalTheory.T.integralClosure_zmodTorsor_genericFibre_data A (Localization.AtPrime QA) hHR hic q DA actA htor
+    _root_.GlobalTheory.ClosureData.closureData A (Localization.AtPrime QA) hHR hic q DA actA htor
   letI := GlobalTheory.KeyOriginNoeth.closureAlg A (Localization.AtPrime QA) DA
   obtain ⟨hEt, s, hs⟩ := hgood
-  obtain ⟨O, _, _, hO, hσ⟩ := GlobalTheory.T.exists_faithfullyFlat_algHom_etale_height_one A (Localization.AtPrime QA) (GlobalTheory.KeyOriginNoeth.closure A _ DA)
+  obtain ⟨O, _, _, hO, hσ⟩ := _root_.GlobalTheory.GoodEtaleSection.exists_faithfullyFlat_algHom A (Localization.AtPrime QA) (GlobalTheory.KeyOriginNoeth.closure A _ DA)
     ρ hρ _ hker ht hint (fun P _ h => hEt P h) ⟨s, hs⟩
-  obtain ⟨hfin, het⟩ := GlobalTheory.T.finiteEtale_of_galois_descent_hartogs A (Localization.AtPrime QA) (GlobalTheory.KeyOriginNoeth.closure A _ DA) O
+  obtain ⟨hfin, het⟩ := _root_.GlobalTheory.GoodEtale.descent_finiteEtale A (Localization.AtPrime QA) (GlobalTheory.KeyOriginNoeth.closure A _ DA) O
     (Multiplicative (ZMod q)) act' T hT a ha n x y hxy htf hHC (fun P _ h => hEt P h) hσ
   exact ⟨hfin, het, hnt⟩
 end -- clump:auto
@@ -1905,21 +1788,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.integralClosure_finiteEtale_originKeyLemma_essFiniteType : ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A]
-    (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (ρ : Localization.AtPrime QA →+* A), ρ.comp (algebraMap A (Localization.AtPrime QA)) = RingHom.id A →
-      RingHom.ker ρ = Ideal.span {algebraMap (Polynomial A) (Localization.AtPrime QA) Polynomial.X} →
-    ∀ (q : ℕ), 0 < q → IsUnit (q : A) →
-    ∀ (DA : Type) [CommRing DA] [Algebra (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA]
-      (actA : Multiplicative (ZMod q) →* (DA ≃ₐ[GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)] DA)),
-      GlobalTheory.KeyOriginCut.IsZTorsor (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA q actA →
-      GlobalTheory.KeyOriginNoeth.Good A (Localization.AtPrime QA) DA ρ →
-      GlobalTheory.KeyOriginNoeth.ClosureFiniteEtale A (Localization.AtPrime QA) DA := by
-  first | (exact @GlobalTheory.GoodEtale.closure_finiteEtale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralClosureFiniteEtaleOriginKeyLemmaEssFinitStatement =====

@@ -260,9 +260,6 @@ namespace GlobalTheory.CompanionTheory.HCSide.CentreNone
 
 variable {n a : ℕ} {ε : Fin n → Bool}
 
-theorem Jm_herm (ε : Fin n → Bool) : (Jm ε)ᴴ = Jm ε := by
-  simp only [Jm, diagonal_conjTranspose]; congr 1; funext i; by_cases h : ε i <;> simp [h]
-
 theorem half_props {C J : Matrix (Fin n) (Fin n) ℂ} (hh : Cᴴ = C) (hi : C * C = C) (hJ : J * C = C * J)
     (hJJ : J * J = 1) (hJh : Jᴴ = J) {t : ℂ} (ht : t * t = 1) (hs : star t = t) :
     ((1 / 2 : ℂ) • (C * (1 + t • J)))ᴴ = (1 / 2 : ℂ) • (C * (1 + t • J)) ∧
@@ -292,7 +289,7 @@ theorem exists_frame_J {C : Matrix (Fin n) (Fin n) ℂ} (hh : Cᴴ = C) (hi : C 
     ∃ (m : ℕ) (ε' : Fin m → Bool) (B : Matrix (Fin n) (Fin m) ℂ),
       Bᴴ * B = 1 ∧ B * Bᴴ = C ∧ Jm ε * B = B * Jm ε' := by
   have hJJ : Jm ε * Jm ε = 1 := Jm_mul_self ε
-  have hJh := Jm_herm ε
+  have hJh := _root_.Formalism.REAL.Jm_conjTranspose ε
   obtain ⟨p1, p2, p3⟩ := half_props hh hi hJ hJJ hJh (t := 1) (by norm_num) (by simp)
   obtain ⟨m1, m2, m3⟩ := half_props hh hi hJ hJJ hJh (t := -1) (by norm_num) (by simp)
   have hsum : (1 / 2 : ℂ) • (C * (1 + (1 : ℂ) • Jm ε)) + (1 / 2 : ℂ) • (C * (1 + (-1 : ℂ) • Jm ε)) = C := by
@@ -366,7 +363,7 @@ theorem exists_comp_frame : ∀ {n D : ℕ} (ε : Fin n → Bool) (C : Matrix (F
       C * Cᴴ + Formalism.REAL.Jm ε * C * Cᴴ * Formalism.REAL.Jm ε + R * Rᴴ = 1 := by
   intro n D ε C h1 h2
   have hJJ : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 := Formalism.REAL.Jm_mul_self ε
-  have hJh : (Formalism.REAL.Jm ε)ᴴ = Formalism.REAL.Jm ε := GlobalTheory.CompanionTheory.HCSide.CentreNone.Jm_herm ε
+  have hJh : (Formalism.REAL.Jm ε)ᴴ = Formalism.REAL.Jm ε := _root_.Formalism.REAL.Jm_conjTranspose ε
   generalize hJ : Formalism.REAL.Jm ε = J at *
   have hAA : C * Cᴴ * (C * Cᴴ) = C * Cᴴ := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc Cᴴ, h1, Matrix.one_mul]
@@ -757,7 +754,7 @@ theorem detOn_unitary {n : ℕ} {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Mat
     GlobalTheory.FlagMeas.detOn k V = 1 := by
   have e := GlobalTheory.RealInd.detOn_mul h' h
   rw [Matrix.mem_unitaryGroup_iff'.1 hk |> fun x => (show kᴴ * k = 1 from x), GlobalTheory.RealInd.detOn_one,
-    GlobalTheory.LeviPolar.detOn_conjTranspose n k V h h'] at e
+    _root_.GlobalTheory.FlagMeas.DetAdj.detOn_conjTranspose n k V h h'] at e
   have h0 := GlobalTheory.LeviPolar.detOn_nonneg k V
   nlinarith
 

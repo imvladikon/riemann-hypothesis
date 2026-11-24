@@ -179,8 +179,8 @@ theorem awThen_homotopic : ∀ G : ∀ a b n : ℕ, bo a b ⟶ bo n n, G 0 0 0 =
       ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, awO n x.1 x.2 ≫ G x.1 x.2 n =
         𝟙 (bo n n) + H n (n + 1) ≫ dD (n + 1) n + dD n (n - 1) ≫ H (n - 1) n := by
   intro G hG0 hG
-  obtain ⟨cone, ε, -, -, hcone⟩ := GlobalTheory.T.cone_contracting_homotopy
-  have haw := GlobalTheory.T.dD_comp_awO_eq_sum_awO_comp_dT
+  obtain ⟨cone, ε, -, -, hcone⟩ := _root_.GlobalTheory.EZ.Cone.coneContraction
+  have haw := _root_.GlobalTheory.EZ.awO_comm_d
   refine ⟨fun n m => if h : m = n + 1 then awHtpy G cone n ≫ eqToHom (by rw [h]) else 0, fun n => ?_⟩
   cases n with
   | zero =>
@@ -208,8 +208,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.alexanderWhitney_comp_shuffle_homotopic_id : ∀ G : ∀ a b n : ℕ, bo a b ⟶ bo n n, G 0 0 0 = 𝟙 (bo 0 0) → (∀ a b n : ℕ, a + b = n + 1 → G a b (n + 1) ≫ dD (n + 1) n = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n) → ∃ H : ∀ n m : ℕ, bo n n ⟶ bo m m, ∀ n : ℕ, ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, awO n x.1 x.2 ≫ G x.1 x.2 n = 𝟙 (bo n n) + H n (n + 1) ≫ dD (n + 1) n + dD n (n - 1) ≫ H (n - 1) n := by
-  first | (exact @GlobalTheory.EZ.awThen_homotopic)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlexanderWhitneyCompShuffleHomotopicIdStatement =====
@@ -458,8 +456,6 @@ section -- clump:auto
 
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 
-theorem _root_.GlobalTheory.T.bisimplicialOperatorChains_acyclic_positiveDegree : ∀ a b k : ℕ, 1 ≤ k → ∀ z : ∀ a' b' : ℕ, bo a b ⟶ bo a' b', (∀ c d : ℕ, c + d + 1 = k → ∑ x ∈ Finset.HasAntidiagonal.antidiagonal k, z x.1 x.2 ≫ dT x.1 x.2 c d = 0) → ∃ w : ∀ a' b' : ℕ, bo a b ⟶ bo a' b', ∀ c d : ℕ, c + d = k → ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (k + 1), w x.1 x.2 ≫ dT x.1 x.2 c d = z c d := by
-  first | (exact @GlobalTheory.EZ.totChains_acyclic)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BisimplicialOperatorChainsAcyclicPositiveDegreeStatement =====
@@ -471,8 +467,6 @@ section -- clump:auto
 
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 
-theorem _root_.GlobalTheory.T.sum_antidiagonal_dT_comp_dT_eq_zero : ∀ a b c d : ℕ, c + d + 2 = a + b → ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (c + d + 1), dT a b x.1 x.2 ≫ dT x.1 x.2 c d = 0 := by
-  first | (exact @GlobalTheory.EZ.TotSq.dT_sq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DTCompDTStatement =====
@@ -488,13 +482,6 @@ noncomputable section
 
 namespace GlobalTheory.EZ.HTot
 
-theorem idc_self (n : ℕ) : idc n n = 𝟙 _ := by
-  ext j
-  simp only [idc, clampHom, SimplexCategory.mkHom, SimplexCategory.Hom.toOrderHom_mk]
-  change min n (j : ℕ) = (j : ℕ)
-  have : (j : ℕ) < n + 1 := j.isLt
-  omega
-
 theorem backc_zero : backc 0 0 0 = 𝟙 _ := by
   ext j
   simp only [backc, clampHom, SimplexCategory.mkHom, SimplexCategory.Hom.toOrderHom_mk]
@@ -505,13 +492,13 @@ theorem backc_zero : backc 0 0 0 = 𝟙 _ := by
 theorem bop_id (a b : ℕ) : bop (𝟙 (SimplexCategory.mk a)) (𝟙 (SimplexCategory.mk b)) = 𝟙 (bo a b) := rfl
 
 theorem idO_self (a b : ℕ) : idO a b a b = 𝟙 (bo a b) := by
-  rw [idO, if_pos ⟨rfl, rfl⟩, idc_self, idc_self, bop_id]
+  rw [idO, if_pos ⟨rfl, rfl⟩, _root_.GlobalTheory.EZ.Acyc.idc_self', _root_.GlobalTheory.EZ.Acyc.idc_self', bop_id]
 
 theorem idO_ne {a b c d : ℕ} (h : ¬ (a = c ∧ b = d)) : idO a b c d = 0 := by
   rw [idO, if_neg h]
 
 theorem awO_zero : awO 0 0 0 = 𝟙 (bo 0 0) := by
-  rw [awO, if_pos rfl, idc_self, backc_zero, bop_id]
+  rw [awO, if_pos rfl, _root_.GlobalTheory.EZ.Acyc.idc_self', backc_zero, bop_id]
 
 theorem sum_idO_comp {T : BOp} (k a b : ℕ) (h : a + b = k) (g : ∀ p q : ℕ, bo p q ⟶ T) :
     ∑ y ∈ antidiagonal k, idO a b y.1 y.2 ≫ g y.1 y.2 = g a b := by
@@ -535,16 +522,6 @@ theorem sum_comp_idO {S : BOp} (k c d : ℕ) (h : c + d = k) (f : ∀ p q : ℕ,
   · intro hn
     exact absurd (mem_antidiagonal.2 h) hn
 
-theorem dT_comp_dT (a b c d : ℕ) (h : c + d + 2 = a + b) :
-    ∑ x ∈ antidiagonal (c + d + 1), dT a b x.1 x.2 ≫ dT x.1 x.2 c d = 0 :=
-  GlobalTheory.T.sum_antidiagonal_dT_comp_dT_eq_zero a b c d h
-
-theorem acyclic (a b k : ℕ) (hk : 1 ≤ k) (z : ∀ a' b' : ℕ, bo a b ⟶ bo a' b')
-    (hz : ∀ c d : ℕ, c + d + 1 = k → ∑ x ∈ antidiagonal k, z x.1 x.2 ≫ dT x.1 x.2 c d = 0) :
-    ∃ w : ∀ a' b' : ℕ, bo a b ⟶ bo a' b',
-      ∀ c d : ℕ, c + d = k → ∑ x ∈ antidiagonal (k + 1), w x.1 x.2 ≫ dT x.1 x.2 c d = z c d :=
-  GlobalTheory.T.bisimplicialOperatorChains_acyclic_positiveDegree a b k hk z hz
-
 theorem exists_fill : ∃ H : ∀ a b k : ℕ, (∀ a' b' : ℕ, bo a b ⟶ bo a' b') → (∀ a' b' : ℕ, bo a b ⟶ bo a' b'),
     ∀ a b k (z : ∀ a' b' : ℕ, bo a b ⟶ bo a' b'), 1 ≤ k →
       (∀ c d : ℕ, c + d + 1 = k → ∑ x ∈ antidiagonal k, z x.1 x.2 ≫ dT x.1 x.2 c d = 0) →
@@ -555,7 +532,7 @@ theorem exists_fill : ∃ H : ∀ a b k : ℕ, (∀ a' b' : ℕ, bo a b ⟶ bo a
     intro a b k z
     by_cases hk : 1 ≤ k
     · by_cases hz : ∀ c d : ℕ, c + d + 1 = k → ∑ x ∈ antidiagonal k, z x.1 x.2 ≫ dT x.1 x.2 c d = 0
-      · obtain ⟨w, hw⟩ := acyclic a b k hk z hz
+      · obtain ⟨w, hw⟩ := _root_.GlobalTheory.EZ.totChains_acyclic a b k hk z hz
         exact ⟨w, fun _ _ => hw⟩
       · exact ⟨0, fun _ h => absurd h hz⟩
     · exact ⟨0, fun h => absurd h hk⟩
@@ -604,7 +581,7 @@ theorem kRec_spec (G : ∀ a b n : ℕ, bo a b ⟶ bo n n) (hG0 : G 0 0 0 = 𝟙
       have h1 : ∑ y ∈ antidiagonal (n + 1), (G a b (n + 1) ≫ awO (n + 1) y.1 y.2) ≫ dT y.1 y.2 c d =
           ∑ x ∈ antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n ≫ awO n c d := by
         simp only [Category.assoc, ← Preadditive.comp_sum]
-        rw [← GlobalTheory.T.dD_comp_awO_eq_sum_awO_comp_dT n c d (by omega), ← Category.assoc, hGd a b n hab, Preadditive.sum_comp]
+        rw [← _root_.GlobalTheory.EZ.awO_comm_d n c d (by omega), ← Category.assoc, hGd a b n hab, Preadditive.sum_comp]
         simp only [Category.assoc]
       have h2 : ∑ y ∈ antidiagonal (n + 1), idO a b y.1 y.2 ≫ dT y.1 y.2 c d = dT a b c d :=
         sum_idO_comp (n + 1) a b hab (fun p q => dT p q c d)
@@ -625,7 +602,7 @@ theorem kRec_spec (G : ∀ a b n : ℕ, bo a b ⟶ bo n n) (hG0 : G 0 0 0 = 𝟙
           have hz' := mem_antidiagonal.1 hz
           simp only [← Category.assoc]
           rw [← Preadditive.sum_comp]
-          have h0 := dT_comp_dT a b z.1 z.2 (by omega)
+          have h0 := _root_.GlobalTheory.EZ.TotSq.dT_sq a b z.1 z.2 (by omega)
           rw [show z.1 + z.2 + 1 = m + 1 by omega] at h0
           rw [h0, Limits.zero_comp]
       have h3 : ∑ y ∈ antidiagonal (n + 1),
@@ -683,8 +660,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.alexander_whitney_homotopy_formula : ∀ G : ∀ a b n : ℕ, bo a b ⟶ bo n n, G 0 0 0 = 𝟙 (bo 0 0) → (∀ a b n : ℕ, a + b = n + 1 → G a b (n + 1) ≫ dD (n + 1) n = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n) → ∃ K : ∀ a b a' b' : ℕ, bo a b ⟶ bo a' b', ∀ a b a' b' : ℕ, a' + b' = a + b → G a b (a + b) ≫ awO (a + b) a' b' = idO a b a' b' + ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (a + b + 1), K a b x.1 x.2 ≫ dT x.1 x.2 a' b' + ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (a + b - 1), dT a b x.1 x.2 ≫ K x.1 x.2 a' b' := by
-  first | (exact @GlobalTheory.EZ.HTot.htot)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlexanderWhitneyHomotopyFormula =====
@@ -697,8 +672,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.diagonal_differential_eval : ∀ {C : Type u} [Category.{v} C] [Preadditive C] (Y : SimplicialObject (SimplicialObject C)) (n : ℕ), (ev Y).map (dD (n + 1) n) = (diagCx Y).d (n + 1) n := by
-  first | (exact @GlobalTheory.EZ.ev_map_dD_eq_diagCx_d)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalDifferentialEval =====
@@ -878,8 +851,6 @@ set_option backward.isDefEq.respectTransparency false
 variable {C : Type u} [Category.{v} C] [Preadditive C] [HasFiniteCoproducts C]
   (Y : SimplicialObject (SimplicialObject C))
 
-theorem awop' : ∀ (n a b : ℕ), a + b = n → dD (n + 1) n ≫ awO n a b = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (n + 1), awO (n + 1) x.1 x.2 ≫ dT x.1 x.2 a b := GlobalTheory.T.dD_comp_awO_eq_sum_awO_comp_dT
-theorem evd' : ∀ {C : Type u} [Category.{v} C] [Preadditive C] (Y : SimplicialObject (SimplicialObject C)) (n : ℕ), (ev Y).map (dD (n + 1) n) = (diagCx Y).d (n + 1) n := @GlobalTheory.T.diagonal_differential_eval
 theorem totd' : ∀ {C : Type u} [Category.{v} C] [Preadditive C] [HasFiniteCoproducts C] (Y : SimplicialObject (SimplicialObject C)) (a b k : ℕ) (h : a + b = k + 1), (dbl Y).ιTotal (ComplexShape.down ℕ) a b (k + 1) (by simpa only [ComplexShape.π_def] using h) ≫ (tot Y).d (k + 1) k = ∑ x ∈ (Finset.HasAntidiagonal.antidiagonal k).attach, (ev Y).map (dT a b x.1.1 x.1.2) ≫ (dbl Y).ιTotal (ComplexShape.down ℕ) x.1.1 x.1.2 k (by simpa only [ComplexShape.π_def] using Finset.HasAntidiagonal.mem_antidiagonal.1 x.2) := @GlobalTheory.T.total_differential_eval
 
 abbrev ιz (a b n : ℕ) : ((dbl Y).X a).X b ⟶ (tot Y).X n := (dbl Y).ιTotalOrZero (ComplexShape.down ℕ) a b n
@@ -929,7 +900,7 @@ theorem shufF_comm (G : ∀ a b n : ℕ, bo a b ⟶ bo n n)
   simp only [ComplexShape.π_def] at h
 
   rw [← ιz_eq Y _ _ _ h, ← Category.assoc, ιz_d, Preadditive.sum_comp, ← Category.assoc, ιz_shufF Y G _ _ _ h,
-  ← evd', ← Functor.map_comp, hG a b n h, Functor.map_sum]
+  ← _root_.GlobalTheory.EZ.ev_map_dD_eq_diagCx_d, ← Functor.map_comp, hG a b n h, Functor.map_sum]
   refine Finset.sum_congr rfl fun x hx => ?_
   rw [Category.assoc, ιz_shufF Y G _ _ _ (Finset.HasAntidiagonal.mem_antidiagonal.1 hx), Functor.map_comp]
 
@@ -946,13 +917,13 @@ variable {C : Type u} [Category.{v} C] [Preadditive C] [HasFiniteCoproducts C]
   (Y : SimplicialObject (SimplicialObject C))
 
 theorem awF_comm (n : ℕ) : awF Y (n + 1) ≫ (tot Y).d (n + 1) n = (diagCx Y).d (n + 1) n ≫ awF Y n := by
-  rw [awF_eq, awF_eq, Preadditive.sum_comp, Preadditive.comp_sum, ← evd']
+  rw [awF_eq, awF_eq, Preadditive.sum_comp, Preadditive.comp_sum, ← _root_.GlobalTheory.EZ.ev_map_dD_eq_diagCx_d]
   simp_rw [Category.assoc, ιz_d, Preadditive.comp_sum]
   simp_rw [← Category.assoc, ← Functor.map_comp]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun y hy => ?_
 
-  rw [awop' n y.1 y.2 (Finset.HasAntidiagonal.mem_antidiagonal.1 hy), Functor.map_sum, Preadditive.sum_comp]
+  rw [_root_.GlobalTheory.EZ.awO_comm_d n y.1 y.2 (Finset.HasAntidiagonal.mem_antidiagonal.1 hy), Functor.map_sum, Preadditive.sum_comp]
 
 theorem awF_shufF (G : ∀ a b n : ℕ, bo a b ⟶ bo n n) (n : ℕ) :
     awF Y n ≫ shufF Y G n = (ev Y).map (∑ x ∈ antidiagonal n, awO n x.1 x.2 ≫ G x.1 x.2 n) := by
@@ -968,7 +939,7 @@ theorem idc_self (n : ℕ) : idc n n = 𝟙 _ := by
 
 theorem ev_idO_self (a b : ℕ) : (ev Y).map (idO a b a b) = 𝟙 _ := by
   unfold idO
-  rw [if_pos ⟨rfl, rfl⟩, ev_map_bop, idc_self, idc_self]
+  rw [if_pos ⟨rfl, rfl⟩, ev_map_bop, idc_self, _root_.GlobalTheory.EZ.idc_self]
   simp
   rfl
 
@@ -1054,7 +1025,7 @@ def htpyD (G : ∀ a b n : ℕ, bo a b ⟶ bo n n)
     change awF Y n ≫ shufF Y G n = _
     rw [awF_shufF, hH n]
     simp only [Functor.map_add (ev Y), Functor.map_comp]
-    rw [evd', homD, if_pos rfl, show (ev Y).map (𝟙 (bo n n)) = 𝟙 ((diagCx Y).X n) from (ev Y).map_id _]
+    rw [_root_.GlobalTheory.EZ.ev_map_dD_eq_diagCx_d, homD, if_pos rfl, show (ev Y).map (𝟙 (bo n n)) = 𝟙 ((diagCx Y).X n) from (ev Y).map_id _]
     cases n with
     | zero =>
       rw [Homotopy.dNext_zero_chainComplex]
@@ -1062,7 +1033,7 @@ def htpyD (G : ∀ a b n : ℕ, bo a b ⟶ bo n n)
       rw [this, Functor.map_zero, zero_comp, add_zero]
       abel
     | succ m =>
-      rw [Homotopy.dNext_succ_chainComplex, Nat.add_sub_cancel, evd', homD, if_pos rfl]
+      rw [Homotopy.dNext_succ_chainComplex, Nat.add_sub_cancel, _root_.GlobalTheory.EZ.ev_map_dD_eq_diagCx_d, homD, if_pos rfl]
       abel
 
 def htpyT (G : ∀ a b n : ℕ, bo a b ⟶ bo n n)
@@ -1124,8 +1095,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.bisimplicialAlexanderWhitney_homotopyEquiv : ∀ {C : Type u} [Category.{v} C] [Preadditive C] [HasFiniteCoproducts C] (Y : SimplicialObject (SimplicialObject C)) (G : ∀ a b n : ℕ, bo a b ⟶ bo n n) (H : ∀ n m : ℕ, bo n n ⟶ bo m m) (K : ∀ a b a' b' : ℕ, bo a b ⟶ bo a' b'), G 0 0 0 = 𝟙 (bo 0 0) → (∀ a b n : ℕ, a + b = n + 1 → G a b (n + 1) ≫ dD (n + 1) n = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n) → (∀ n : ℕ, ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, awO n x.1 x.2 ≫ G x.1 x.2 n = 𝟙 (bo n n) + H n (n + 1) ≫ dD (n + 1) n + dD n (n - 1) ≫ H (n - 1) n) → (∀ a b a' b' : ℕ, a' + b' = a + b → G a b (a + b) ≫ awO (a + b) a' b' = idO a b a' b' + ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (a + b + 1), K a b x.1 x.2 ≫ dT x.1 x.2 a' b' + ∑ x ∈ Finset.HasAntidiagonal.antidiagonal (a + b - 1), dT a b x.1 x.2 ≫ K x.1 x.2 a' b') → ∃ e : HomotopyEquiv (diagCx Y) (tot Y), ∀ n : ℕ, e.hom.f n = awF Y n := by
-  first | (exact @GlobalTheory.EZ.awHomotopyEquiv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BisimplicialAlexanderWhitneyHomotopyEquivStatement =====
@@ -1453,8 +1422,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.eilenberg_zilber_homotopy_equivalence : ∀ (R : Type) [CommRing R] (X : SimplicialObject GlobalTheory.EtC.Spc), (∃ e : HomotopyEquiv (diagCx ((freeBi R).obj X)) (tot ((freeBi R).obj X)), ∀ n : ℕ, e.hom.f n = awF _ n) → ∃ e : HomotopyEquiv ((GlobalTheory.EtC.chains R).obj (GlobalTheory.EtC.bidiag.obj X)) (totChains R X), ∀ n : ℕ, e.hom.f (-(n : ℤ)) = awZ R X n := by
-  first | (exact @GlobalTheory.EZ.Ext.homotopyEquiv_chains_totChains)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EilenbergZilberHomotopyEquivalence =====
@@ -1470,18 +1437,6 @@ universe u v
 noncomputable section
 
 namespace GlobalTheory.EZ.Shuf
-
-theorem bop_comp {n m p q r s : ℕ} (α : SimplexCategory.mk p ⟶ SimplexCategory.mk n)
-    (β : SimplexCategory.mk q ⟶ SimplexCategory.mk m) (α' : SimplexCategory.mk r ⟶ SimplexCategory.mk p)
-    (β' : SimplexCategory.mk s ⟶ SimplexCategory.mk q) :
-    bop α β ≫ bop α' β' = bop (α' ≫ α) (β' ≫ β) := by
-  have := Free.single_comp_single (R := ℤ) (C := SimplexCategoryᵒᵖ × SimplexCategoryᵒᵖ)
-    (show (op (SimplexCategory.mk n), op (SimplexCategory.mk m)) ⟶
-      (op (SimplexCategory.mk p), op (SimplexCategory.mk q)) from (α.op, β.op))
-    (show (op (SimplexCategory.mk p), op (SimplexCategory.mk q)) ⟶
-      (op (SimplexCategory.mk r), op (SimplexCategory.mk s)) from (α'.op, β'.op)) 1 1
-  simp only [mul_one] at this
-  exact this
 
 theorem bop_id (n m : ℕ) : bop (𝟙 (SimplexCategory.mk n)) (𝟙 (SimplexCategory.mk m)) = 𝟙 (bo n m) := rfl
 
@@ -1513,7 +1468,7 @@ theorem dH_comp_dH (a b x y c d : ℕ) : dH a b x y ≫ dH x y c d = 0 := by
     · obtain ⟨rfl, rfl⟩ := h1
       obtain ⟨rfl, rfl⟩ := h2
       rw [if_pos ⟨rfl, rfl⟩, if_pos ⟨rfl, rfl⟩, Preadditive.sum_comp]
-      simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, bop_comp, smul_smul]
+      simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, _root_.GlobalTheory.EZ.Cone.bop_comp, smul_smul]
       have := alt_double_sum c (fun α => bop α (idc b b ≫ idc b b))
       simpa only [mul_comm] using this
     · rw [if_neg h2, comp_zero]
@@ -1526,7 +1481,7 @@ theorem dV_comp_dV (a b x y c d : ℕ) : dV a b x y ≫ dV x y c d = 0 := by
     · obtain ⟨rfl, rfl⟩ := h1
       obtain ⟨rfl, rfl⟩ := h2
       rw [if_pos ⟨rfl, rfl⟩, if_pos ⟨rfl, rfl⟩, Preadditive.sum_comp]
-      simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, bop_comp, smul_smul]
+      simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, _root_.GlobalTheory.EZ.Cone.bop_comp, smul_smul]
       have := alt_double_sum d (fun β => bop (idc a a ≫ idc a a) β)
       simpa only [mul_comm] using this
     · rw [if_neg h2, comp_zero]
@@ -1537,7 +1492,7 @@ theorem dH_comp_dV (c d : ℕ) :
   unfold dH dV
   rw [if_pos ⟨rfl, rfl⟩, if_pos ⟨rfl, rfl⟩, if_pos ⟨rfl, rfl⟩, if_pos ⟨rfl, rfl⟩,
     Preadditive.sum_comp, Preadditive.sum_comp]
-  simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, bop_comp, smul_smul,
+  simp only [Preadditive.comp_sum, Preadditive.zsmul_comp, Preadditive.comp_zsmul, _root_.GlobalTheory.EZ.Cone.bop_comp, smul_smul,
     idc_self, Category.id_comp, Category.comp_id]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by rw [mul_comm]
@@ -1562,7 +1517,7 @@ theorem shufRec_succ (cone : ∀ a b n : ℕ, (bo a b ⟶ bo n n) →+ (bo a b �
 theorem exists_shuffle : ∃ G : ∀ a b n : ℕ, bo a b ⟶ bo n n, G 0 0 0 = 𝟙 (bo 0 0) ∧
     ∀ a b n : ℕ, a + b = n + 1 → G a b (n + 1) ≫ dD (n + 1) n =
       ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n := by
-  obtain ⟨cone, ε, hε, h0, hs⟩ := GlobalTheory.T.cone_contracting_homotopy
+  obtain ⟨cone, ε, hε, h0, hs⟩ := _root_.GlobalTheory.EZ.Cone.coneContraction
   have hid : shufRec cone 0 0 0 = 𝟙 (bo 0 0) := by
     rw [shufRec_zero]
     rw [idO, if_pos ⟨rfl, rfl⟩, idc_self]
@@ -1614,8 +1569,6 @@ section -- clump:auto
 open CategoryTheory Limits Opposite AlgebraicTopology GlobalTheory.EZ
 universe u v
 
-theorem _root_.GlobalTheory.T.exists_bisimplicial_shuffle_operators : ∃ G : ∀ a b n : ℕ, bo a b ⟶ bo n n, G 0 0 0 = 𝟙 (bo 0 0) ∧ ∀ a b n : ℕ, a + b = n + 1 → G a b (n + 1) ≫ dD (n + 1) n = ∑ x ∈ Finset.HasAntidiagonal.antidiagonal n, dT a b x.1 x.2 ≫ G x.1 x.2 n := by
-  first | (exact @GlobalTheory.EZ.Shuf.exists_shuffle)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBisimplicialShuffleOperatorsStatement =====
@@ -1634,17 +1587,17 @@ universe u v
 theorem ez_nat {C : Type u} [Category.{v} C] [Preadditive C] [HasFiniteCoproducts C]
     (Y : SimplicialObject (SimplicialObject C)) :
     ∃ e : HomotopyEquiv (diagCx Y) (tot Y), ∀ n : ℕ, e.hom.f n = awF Y n := by
-  obtain ⟨G, h0, hG⟩ := GlobalTheory.T.exists_bisimplicial_shuffle_operators
-  obtain ⟨H, hH⟩ := GlobalTheory.T.alexanderWhitney_comp_shuffle_homotopic_id G h0 hG
-  obtain ⟨K, hK⟩ := GlobalTheory.T.alexander_whitney_homotopy_formula G h0 hG
-  exact GlobalTheory.T.bisimplicialAlexanderWhitney_homotopyEquiv Y G H K h0 hG hH hK
+  obtain ⟨G, h0, hG⟩ := _root_.GlobalTheory.EZ.Shuf.exists_shuffle
+  obtain ⟨H, hH⟩ := _root_.GlobalTheory.EZ.awThen_homotopic G h0 hG
+  obtain ⟨K, hK⟩ := _root_.GlobalTheory.EZ.HTot.htot G h0 hG
+  exact _root_.GlobalTheory.EZ.awHomotopyEquiv Y G H K h0 hG hH hK
 
 variable (R : Type) [CommRing R]
 
 theorem ez (X : SimplicialObject GlobalTheory.EtC.Spc) :
     ∃ e : HomotopyEquiv ((GlobalTheory.EtC.chains R).obj (GlobalTheory.EtC.bidiag.obj X)) (totChains R X),
       ∀ n : ℕ, e.hom.f (-(n : ℤ)) = awZ R X n :=
-  GlobalTheory.T.eilenberg_zilber_homotopy_equivalence R X (ez_nat _)
+  _root_.GlobalTheory.EZ.Ext.homotopyEquiv_chains_totChains R X (ez_nat _)
 
 def ezEquiv (X : SimplicialObject GlobalTheory.EtC.Spc) :
     HomotopyEquiv ((GlobalTheory.EtC.chains R).obj (GlobalTheory.EtC.bidiag.obj X)) (totChains R X) := (ez R X).choose

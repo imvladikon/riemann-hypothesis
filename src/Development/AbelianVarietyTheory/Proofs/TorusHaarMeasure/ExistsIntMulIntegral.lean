@@ -65,12 +65,7 @@ theorem exists_int_smul_mem {E : Type} [Field E] [NumberField E] {r : ℕ}
     ∃ k : ℤ, k ≠ 0 ∧ k • v ∈ Λ := by
   apply Formalism.L2.SG.Pf.NcVal.OmVSt.OmX.exists_int_smul_mem <;> assumption
 
-theorem main : ∀ {E : Type} [inst : Field E] [NumberField E] {r : ℕ}
-    (Λ : Submodule (NumberField.RingOfIntegers E) (Fin r → E)),
-    Submodule.span E (↑Λ : Set (Fin r → E)) = ⊤ →
-      ∀ (v : Fin r → E), ∃ (k : ℤ), k ≠ (0 : ℤ) ∧ k • v ∈ Λ := by
-  intro E _ _ r Λ hΛ v
-  exact exists_int_smul_mem Λ hΛ v
+alias main := _root_.GlobalTheory.IntegralMultiples.exists_int_smul_mem
 
 end GlobalTheory.IntegralMultiples
 end -- clump:auto
@@ -127,12 +122,7 @@ theorem exists_common_den {r : ℕ} (Λ : Submodule (𝓞 E) (Fin r → E)) (hΛ
 
 
 omit [IsCMField E] in
-theorem exists_int_smul_mem {r : ℕ} (Λ : Submodule (𝓞 E) (Fin r → E))
-    (hΛ : Submodule.span E (Λ : Set (Fin r → E)) = ⊤) (v : Fin r → E) :
-    ∃ k : ℤ, k ≠ 0 ∧ k • v ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.IntegralMultiples.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegralMultiples.main ..)
+alias exists_int_smul_mem := _root_.GlobalTheory.IntegralMultiples.exists_int_smul_mem
 
 theorem finite_vectors (r : ℕ) (X : Data E r) (R : ℝ) :
     {v : Fin r → E | v ∈ X.Λ ∧ ∀ (τ : X.Ψ) (a : Fin r), ‖τ.1 (v a)‖ ≤ R}.Finite := by

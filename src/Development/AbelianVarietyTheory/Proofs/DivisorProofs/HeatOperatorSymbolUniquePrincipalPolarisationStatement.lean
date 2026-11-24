@@ -423,14 +423,6 @@ noncomputable section
 
 namespace GlobalTheory.GenFields
 
-theorem sp_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
-theorem dualMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    (dualMap g).comp (dualMap f) = dualMap (g.comp f) :=
-  RingHom.ext fun z => by ext <;> simp [dualMap]
-
 theorem dualMapR_eq {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) : Chart.dualMapR f = dualMap f :=
   RingHom.ext fun z => by ext <;> simp [dualMap, Chart.dualMapR]
 
@@ -443,7 +435,7 @@ theorem red_of_isTr {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsComm
     spMap (TrivSqZeroExt.fstHom S S S).toRingHom ≫ w = g := by
   obtain ⟨g', v', h₁, h₂, rfl⟩ := h
   have e0 : spMap (TrivSqZeroExt.fstHom S S S).toRingHom ≫ spMap (algebraMap S (DualNumber S)) = 𝟙 _ := by
-    rw [sp_comp]
+    rw [_root_.GlobalTheory.spMap_comp_ring]
     have : (TrivSqZeroExt.fstHom S S S).toRingHom.comp (algebraMap S (DualNumber S)) = RingHom.id S := by
       ext r; simp
     rw [this]; exact Spec.map_id _
@@ -459,7 +451,7 @@ theorem red_of_isTr {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsComm
     simp only [Over.comp_left] at hr
     rw [Over.comp_left, one_left, h₂, ← Category.assoc]
     change (spMap (TrivSqZeroExt.fstHom S S S).toRingHom ≫ spMap (dualMap φ)) ≫ _ = _
-    rw [sp_comp, ef, ← sp_comp, Category.assoc]
+    rw [_root_.GlobalTheory.spMap_comp_ring, ef, ← _root_.GlobalTheory.spMap_comp_ring, Category.assoc]
     change spMap φ ≫ ((GlobalTheory.InvFieldBase.redPt R).left ≫ (tv v).left) = _
     rw [hr, one_left]
     change spMap φ ≫ 𝟙 _ ≫ _ = (g ≫ G.hom) ≫ _
@@ -485,7 +477,7 @@ theorem isTr_push {R K : Type} [CommRing R] [CommRing K] (x₀ : R →+* K) {G :
       simp only [Category.assoc])
   refine ⟨p, q, ?_, ?_, hpq⟩
   · simp only [hp, h₁, Category.assoc]
-  · rw [hq, h₂, Category.assoc (spMap (dualMap φ)), hv, ← Category.assoc, sp_comp, dualMap_comp]
+  · rw [hq, h₂, Category.assoc (spMap (dualMap φ)), hv, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.Frames.Glue.dual_comp]
 
 def epsOf {L : Type} [CommRing L] (D : L → L) (h1 : D 1 = 0) (ha : ∀ x y, D (x + y) = D x + D y)
     (hm : ∀ x y, D (x * y) = x * D y + y * D x) : L →+* DualNumber L where
@@ -505,7 +497,7 @@ theorem eq_of_isTr {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCommM
     (hw : IsTr G φ y v w) : w = spMap (epsOf D h1 ha hm) ≫ y := by
   have r1 := red_of_isTr hy hw
   have e1 : spMap (TrivSqZeroExt.fstHom L L L).toRingHom ≫ spMap (epsOf D h1 ha hm) = 𝟙 _ := by
-    rw [sp_comp]
+    rw [_root_.GlobalTheory.spMap_comp_ring]
     have : (TrivSqZeroExt.fstHom L L L).toRingHom.comp (epsOf D h1 ha hm) = RingHom.id L := by
       ext r; simp [epsOf]
     rw [this]; exact Spec.map_id _
@@ -535,7 +527,7 @@ theorem exists_basis_bc {R K : Type} [CommRing R] [CommRing K] (x₀ : R →+* K
       ∀ a, (tv (v a)).left ≫ m = spMap (dualMap x₀) ≫ (tv (v' a)).left := by
   obtain ⟨u', hu', hu'l⟩ := GlobalTheory.Heat.CoeffWt.exists_isLieBasis v'
   obtain ⟨u, hu, hul⟩ := GlobalTheory.exists_isLieBasis_baseChange R K x₀ G A m hm hs n u' hu'
-  have h := GlobalTheory.Heat.CoeffWt.isGrpPullback_self A
+  have h := _root_.GlobalTheory.ObjComp.isGrpPullback_id A
   let b : Fin n → TanM (𝟙 (Sp K)) A := fun j =>
     PullbackSections.mkT (pushHom h (epsR K) (u j)) ((PullbackSections.isTangent_iff h _).1 (hu.1 j))
   have ts : ∀ f : Fin n → TanM (𝟙 (Sp K)) A, tv (∑ i, f i) = ∏ i, tv (f i) := fun f => by
@@ -586,7 +578,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     exact fun p _ => hxU (Set.mem_univ ((spMap (algebraMap Ω (FractionRing Ω))).base p))
   have hyG : (ξ ≫ P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R)) ≫ t.G.hom =
       spMap (ψ.comp (algebraMap R (FractionRing R))) := by
-    rw [Category.assoc, hm.1.w, ← Category.assoc, hξA, sp_comp]
+    rw [Category.assoc, hm.1.w, ← Category.assoc, hξA, _root_.GlobalTheory.spMap_comp_ring]
   have hl : ∀ x y, δL a (x * y) = x * δL a y + y * δL a x := fun x y => by
     rw [(δL a).leibniz, smul_eq_mul, smul_eq_mul]
   have hDy : ∀ f, valR (ξ ≫ P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R)) U (dd' a U f) =
@@ -603,7 +595,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     Over.homMk (spMap (dualMap ψ) ≫ (tv (v a)).left) (by
       rw [Category.assoc, Over.w (tv (v a)), hξA]
       change spMap (dualMap ψ) ≫ spMap (algebraMap _ _) ≫ 𝟙 _ = spMap _ ≫ spMap ψ
-      rw [Category.comp_id, sp_comp, sp_comp, hdual])
+      rw [Category.comp_id, _root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring, hdual])
   have htr : IsTr P.A.A ψ ξ (v a) (g' * w').left := ⟨g', w', rfl, rfl, rfl⟩
   have key : (g' * w').left = spMap (epsOf (δL a) (δL a).map_one_eq_zero (map_add _) hl) ≫ ξ := by
     refine hm.1.hom_ext ?_ ?_
@@ -612,7 +604,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     · rw [Over.w (g' * w')]
       change spMap (algebraMap (FractionRing Ω) (DualNumber (FractionRing Ω))) ≫ ξ ≫ P.A.A.hom =
         (spMap _ ≫ ξ) ≫ P.A.A.hom
-      rw [Category.assoc, hξA, sp_comp, sp_comp]
+      rw [Category.assoc, hξA, _root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring]
       congr 1
       ext k
       · simp [epsOf, TrivSqZeroExt.algebraMap_eq_inl]
@@ -669,17 +661,11 @@ noncomputable section
 
 namespace GlobalTheory.SecSmul
 
-theorem map_resTop {X : Scheme.{0}} {U V : X.Opens} (h : V ≤ U) (c : Γ(X, ⊤)) :
-    (X.presheaf.map (homOfLE h).op).hom (resTop U c) = resTop V c := by
-  simp only [resTop]
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem exists_smul : ∀ (X : Scheme.{0}) (L : LB X) (k : ℕ) (σ : SecM (𝟙 X) L k) (c : Γ(X, ⊤)),
     ∃ σ'' : SecM (𝟙 X) L k, ∀ j, σ''.f j = resTop _ c * σ.f j := by
   intro X L k σ c
   refine ⟨⟨fun j => resTop _ c * σ.f j, fun i j => ?_⟩, fun j => rfl⟩
-  rw [map_mul, map_mul, σ.compat i j, map_resTop, map_resTop]
+  rw [map_mul, map_mul, σ.compat i j, _root_.ReciprocityTheory.ChartRestriction.G.DVR.SecOps.resTop_res, _root_.ReciprocityTheory.ChartRestriction.G.DVR.SecOps.resTop_res]
   ring
 
 end GlobalTheory.SecSmul
@@ -802,8 +788,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_section_power_through_genIso_and_schemeIso : ∀ (Y X₁ X₂ : Scheme.{0}) (L₁ : LB X₁) (L₂ : LB X₂) (f₁ : Y ⟶ X₁) (f₂ : Y ⟶ X₂) (w : LB.Iso (L₁.pull f₁) (L₂.pull f₂)), w.IsGen → L₁.IsLB → L₂.IsLB → ∀ (π : X₁ ⟶ Y), π ≫ f₁ = 𝟙 X₁ → f₁ ≫ π = 𝟙 Y → ∀ (k : ℕ) (s : LB.Sec (LB.LinComb L₂ (K := Fin 1) (fun _ => f₂) (fun _ => (k : ℤ)))), ∃ σ' : SecM (𝟙 X₁) L₁ k, (∀ (y : Y) (i : L₂.ι) (j : L₁.ι), f₂ y ∈ L₂.U i → f₁ y ∈ L₁.U j → gs (𝟙 Y) y _ (s.f fun _ => i) = (gs (𝟙 Y) y _ (w.s (fun _ => i, fun _ => j)).val) ^ k * gs f₁ y _ (σ'.f fun _ => j)) := by
-  first | exact @GlobalTheory.SecThroughIso.exists_sec_of_genIso
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionPowerThroughGenIsoAndSchemeIsoStatement =====
@@ -890,8 +874,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_section_power_through_generating_lineBundleIso : ∀ (Y X₁ X₂ : Scheme.{0}) (L₁ : LB X₁) (L₂ : LB X₂) (f₁ : Y ⟶ X₁) (f₂ : Y ⟶ X₂) (w : LB.Iso (L₁.pull f₁) (L₂.pull f₂)), w.IsGen → L₁.IsLB → L₂.IsLB → ∀ (k : ℕ) (σ' : SecM (𝟙 X₁) L₁ k), ∃ s : LB.Sec (LB.LinComb L₂ (K := Fin 1) (fun _ => f₂) (fun _ => (k : ℤ))), (∀ (y : Y) (i : L₂.ι) (j : L₁.ι), f₂ y ∈ L₂.U i → f₁ y ∈ L₁.U j → gs (𝟙 Y) y _ (s.f fun _ => i) = (gs (𝟙 Y) y _ (w.s (fun _ => i, fun _ => j)).val) ^ k * gs f₁ y _ (σ'.f fun _ => j)) := by
-  first | exact @GlobalTheory.SecThroughIso.exists_sec_of_iso
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionPowerThroughGeneratingLineBundleIsoStatement =====
@@ -953,8 +935,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_section_pullback_power_bundle_scalar_one : ∀ (X₂ Y : Scheme.{0}) (L₂ : LB X₂) (f₂ : Y ⟶ X₂) (k : ℕ) (σ : SecM (𝟙 X₂) L₂ k), ∃ s : LB.Sec (LB.LinComb L₂ (K := Fin 1) (fun _ => f₂) (fun _ => (k : ℤ))), GeneratorPullback.SecScal L₂ (fun _ : Fin 1 => f₂) (fun _ => (k : ℤ)) s (fun _ : Fin 1 => 𝟙 X₂) (fun _ => (k : ℤ)) σ f₂ 1 := by
-  first | exact @GlobalTheory.SecRestr.exists_restr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionPullbackPowerBundleScalarOneStatement =====
@@ -1023,8 +1003,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.pointValue_of_section_pullback_scalar_multiple : ∀ (X₂ Y : Scheme.{0}) (L₂ : LB X₂) (f₂ : Y ⟶ X₂) (k : ℕ) (σ : SecM (𝟙 X₂) L₂ k) (s : LB.Sec (LB.LinComb L₂ (K := Fin 1) (fun _ => f₂) (fun _ => (k : ℤ)))) (c : Γ(Y, ⊤)), GeneratorPullback.SecScal L₂ (fun _ : Fin 1 => f₂) (fun _ => (k : ℤ)) s (fun _ : Fin 1 => 𝟙 X₂) (fun _ => (k : ℤ)) σ f₂ c → ∀ (F : Type) [CommRing F] (ξ : Sp F ⟶ Y) (i : L₂.ι), ⊤ ≤ (ξ ≫ f₂) ⁻¹ᵁ L₂.U i → valR (ξ ≫ f₂) _ (σ.f fun _ => i) = valR ξ ⊤ c * valR ξ _ (s.f fun _ => i) := by
-  first | exact @GlobalTheory.SecScalVal.val_of_secScal
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointValueOfSectionPullbackScalarMultipleStatement =====
@@ -1086,8 +1064,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.pointValue_relation_sections_through_generating_iso : ∀ (Y X₁ X₂ : Scheme.{0}) (L₁ : LB X₁) (L₂ : LB X₂) (f₁ : Y ⟶ X₁) (f₂ : Y ⟶ X₂) (w : LB.Iso (L₁.pull f₁) (L₂.pull f₂)) (k : ℕ) (σ' : SecM (𝟙 X₁) L₁ k) (s : LB.Sec (LB.LinComb L₂ (K := Fin 1) (fun _ => f₂) (fun _ => (k : ℤ)))), (∀ (y : Y) (i : L₂.ι) (j : L₁.ι), f₂ y ∈ L₂.U i → f₁ y ∈ L₁.U j → gs (𝟙 Y) y _ (s.f fun _ => i) = (gs (𝟙 Y) y _ (w.s (fun _ => i, fun _ => j)).val) ^ k * gs f₁ y _ (σ'.f fun _ => j)) → ∀ (F : Type) [CommRing F] [IsLocalRing F] (ξ : Sp F ⟶ Y) (i : L₂.ι) (j : L₁.ι), ⊤ ≤ (ξ ≫ f₂) ⁻¹ᵁ L₂.U i → ⊤ ≤ (ξ ≫ f₁) ⁻¹ᵁ L₁.U j → valR ξ _ (s.f fun _ => i) = (valR ξ _ (w.s (fun _ => i, fun _ => j)).val) ^ k * valR (ξ ≫ f₁) _ (σ'.f fun _ => j) := by
-  first | exact @GlobalTheory.GermVal.valR_linComb_germ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointValueRelationSectionsThroughGeneratingIsoStatement =====
@@ -1255,14 +1231,14 @@ theorem vs_iff_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     fun p hp => Set.mem_iInter.2 fun _ => hj₀ hp
   constructor
   · rintro ⟨r, σ, ω, hr, hv, hs⟩
-    obtain ⟨s₁, hs₁⟩ := GlobalTheory.T.exists_section_pullback_power_bundle_scalar_one _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ
-    obtain ⟨σ₀, hσ₀⟩ := GlobalTheory.T.exists_section_power_through_genIso_and_schemeIso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w hw P.A.isLB
+    obtain ⟨s₁, hs₁⟩ := _root_.GlobalTheory.SecRestr.exists_restr _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ
+    obtain ⟨σ₀, hσ₀⟩ := _root_.GlobalTheory.SecThroughIso.exists_sec_of_genIso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w hw P.A.isLB
       P.U.LG.isLB P.U.gen.inv.left hgi hig k s₁
     obtain ⟨σ', hσ'⟩ := GlobalTheory.T.exists_section_power_mul_global_function _ P.A.L k σ₀ (scal P.A.A.hom (algebraMap R (FractionRing R) r)⁻¹)
     refine ⟨σ', ?_⟩
     have e1 := v1 σ ω hv
-    have e2 := GlobalTheory.T.pointValue_of_section_pullback_scalar_multiple _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ s₁ 1 hs₁ (FractionRing Ω) _ i hiK
-    have e3 := GlobalTheory.T.pointValue_relation_sections_through_generating_iso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w k σ₀ s₁ hσ₀
+    have e2 := _root_.GlobalTheory.SecScalVal.val_of_secScal _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ s₁ 1 hs₁ (FractionRing Ω) _ i hiK
+    have e3 := _root_.GlobalTheory.GermVal.valR_linComb_germ _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w k σ₀ s₁ hσ₀
       (FractionRing Ω) (ξ ≫ P.U.gen.inv.left) i j₀ hiK hjK
     rw [hξ1] at e3
     have e4 : valR ξ _ (σ'.f fun _ => j₀) = (algebraMap Ω (FractionRing Ω) (φ r))⁻¹ * valR ξ _ (σ₀.f fun _ => j₀) := by
@@ -1279,15 +1255,15 @@ theorem vs_iff_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     field_simp
     linear_combination (-(algebraMap Ω (FractionRing Ω) e₀ ^ k)) * hs + e2
   · rintro ⟨σ', rfl⟩
-    obtain ⟨s₁, hs₁⟩ := GlobalTheory.T.exists_section_power_through_generating_lineBundleIso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w hw P.A.isLB
+    obtain ⟨s₁, hs₁⟩ := _root_.GlobalTheory.SecThroughIso.exists_sec_of_iso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w hw P.A.isLB
       P.U.LG.isLB k σ'
     obtain ⟨F, hF, -⟩ := (P.U.expand k hk).1 s₁
     obtain ⟨r, hr, σ, f, hsc, -⟩ := hF
     obtain ⟨ω, hv⟩ := GlobalTheory.HeatV.exists_isValue t.G.left P.U.LG.L P.U.LG.isLB Ω x' g hg k σ
     refine ⟨r, σ, ω, hr, hv, ?_⟩
     have e1 := v1 σ ω hv
-    have e2 := GlobalTheory.T.pointValue_of_section_pullback_scalar_multiple _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ s₁ _ hsc (FractionRing Ω) _ i hiK
-    have e3 := GlobalTheory.T.pointValue_relation_sections_through_generating_iso _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w k σ' s₁ hs₁
+    have e2 := _root_.GlobalTheory.SecScalVal.val_of_secScal _ _ P.U.LG.L (pullback.fst t.G.hom (jK R)) k σ s₁ _ hsc (FractionRing Ω) _ i hiK
+    have e3 := _root_.GlobalTheory.GermVal.valR_linComb_germ _ _ _ P.A.L P.U.LG.L P.U.gen.hom.left (pullback.fst t.G.hom (jK R)) w k σ' s₁ hs₁
       (FractionRing Ω) (ξ ≫ P.U.gen.inv.left) i j₀ hiK hjK
     rw [hξ1] at e3
     have hq : (ξ ≫ P.U.gen.inv.left) ≫ pullback.snd t.G.hom (jK R) ≫ jK R =

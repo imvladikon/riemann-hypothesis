@@ -1055,12 +1055,7 @@ theorem exists_section {S S' : Scheme.{0}} {f : S' ⟶ S} {t : SAB H S} {t' : SA
   ⟨Over.homMk (m.cart.1.lift x (𝟙 S') (hx.trans (Category.id_comp f).symm)) (m.cart.1.lift_snd _ _ _),
     m.cart.1.lift_fst _ _ _⟩
 
-theorem exists_cancel {S S' S'' : Scheme.{0}} {t : SAB H S} {t' : SAB H S'} {t'' : SAB H S''} {f : S' ⟶ S}
-    {h : S'' ⟶ S} (m : SABMap t' t f) (n : SABMap t'' t h) (g : S'' ⟶ S') (e : g ≫ f = h) :
-    ∃ m' : SABMap t'' t' g, m'.φ ≫ m.φ = n.φ := by
-  subst e
-  obtain ⟨m', hm⟩ := sabCancel pullCubCancel E H _ _ _ t t' t'' f g m n
-  exact ⟨m', hm.symm⟩
+alias exists_cancel := _root_.GlobalTheory.LevelCover.sab_cancel
 
 theorem isAbelianScheme_of_proper {S : Scheme.{0}} (t : SAB H S) (h : IsProper t.G.hom) : IsAbelianScheme t.G :=
   ⟨t.comm, t.semi.smooth, h, t.semi.geomConnected⟩
@@ -1387,7 +1382,7 @@ end Incl
 
 theorem system_clauses : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Field K] [Algebra T K] [IsFractionRing T K] (G G' : Over (Sp T)) [GrpObj G] [GrpObj G'], IsSemiAbelian G → IsSemiAbelian G' → ∀ f : (Over.pullback (spMap (algebraMap T K))).obj G ⟶ (Over.pullback (spMap (algebraMap T K))).obj G', IsMonHom f → ∃! F : G ⟶ G', IsMonHom F ∧ (Over.pullback (spMap (algebraMap T K))).map F = f) → Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l), 1 ≤ D.p + D.q → ToroidalLevelCompatibility (H := H) (D := D) → ∀ (S : System Xo) p W hp hW, N2 (S.Y p W hp hW) := by
   intro hext L1 L2 L3 E _ _ _ H D Xo hD hN S p W hp hW
-  refine ⟨fun i => (GlobalTheory.T.localModel_oneModel_and_splitFibres hext L1 L2 L3 E H D Xo hD hN S p W hp hW i).1, ?_⟩
+  refine ⟨fun i => (_root_.GlobalTheory.Models.System.levelStructureConditions_and_splitFibres hext L1 L2 L3 E H D Xo hD hN S p W hp hW i).1, ?_⟩
   obtain ⟨hnp, hodd, h3, h4⟩ := S.aux (S.ch p)
   have hcop := (_root_.GlobalTheory.Models.exists_two_auxiliary_inert_odd_primes_coprime_level E H).2 _ (S.aux (S.ch p))
   obtain ⟨-, hl2, hl3⟩ := _root_.GlobalTheory.Models.primeToPart_spec E H p hp
@@ -1435,8 +1430,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj TensorProduct Pointwise
 open GlobalTheory.Models
 
-theorem _root_.GlobalTheory.T.localModelSystem_transition_siegel_clauses : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Field K] [Algebra T K] [IsFractionRing T K] (G G' : Over (Sp T)) [GrpObj G] [GrpObj G'], IsSemiAbelian G → IsSemiAbelian G' → ∀ f : (Over.pullback (spMap (algebraMap T K))).obj G ⟶ (Over.pullback (spMap (algebraMap T K))).obj G', IsMonHom f → ∃! F : G ⟶ G', IsMonHom F ∧ (Over.pullback (spMap (algebraMap T K))).map F = f) → Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l), 1 ≤ D.p + D.q → ToroidalLevelCompatibility (H := H) (D := D) → ∀ (S : System Xo) p W hp hW, N2 (S.Y p W hp hW) := by
-  first | exact @GlobalTheory.Models.system_clauses
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ModuliProofs.LocalModelSystemTransitionSiegelClausesStatement =====

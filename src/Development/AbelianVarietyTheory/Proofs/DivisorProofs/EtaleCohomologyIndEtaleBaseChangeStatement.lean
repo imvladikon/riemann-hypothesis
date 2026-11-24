@@ -155,14 +155,14 @@ theorem eqv_local : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T
     have hζ : Polynomial.aeval (algebraMap T O z) (Polynomial.cyclotomic q ℤ) = 0 := by
       rw [Polynomial.aeval_algebraMap_apply, Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map,
         Polynomial.map_cyclotomic, hz, map_zero]
-    exact GlobalTheory.T.h_zero_pullback_twist_bijective q O (TensorProduct T (FractionRing T) O)
+    exact _root_.GlobalTheory.EtC.h_zero_pull_bijective q O (TensorProduct T (FractionRing T) O)
       (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := O)).toRingHom hqO
       ⟨_, hζ⟩ inferInstance (idem_of_domain) (idem_of_domain) i
-  · haveI : Subsingleton (H (ZMod q) (sp O) (tw q i) n) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) O hSH (tw q i) n hn
+  · haveI : Subsingleton (H (ZMod q) (sp O) (tw q i) n) := _root_.GlobalTheory.EtC.b2 (ZMod q) O hSH (tw q i) n hn
     haveI : Subsingleton (H (ZMod q) (sp (TensorProduct T (FractionRing T) O)) (tw q i) n) := by
       rcases (show n = 1 ∨ 2 ≤ n by omega) with rfl | h2
-      · exact GlobalTheory.T.subsingleton_ht_one_genericFibre_of_sh_etale_cover q T hT hq O hSH hfac i
-      · exact GlobalTheory.T.subsingleton_etaleCohomology_genericFibre_henselianLine q T hT hq O hSH hInd n i h2
+      · exact _root_.GlobalTheory.LocAcycDegOne.tateTwistCohomology_genericFibre_henselLine_subsingleton q T hT hq O hSH hfac i
+      · exact _root_.GlobalTheory.EtC.GenFibreLine.genericFibre_subsingleton q T hT hq O hSH hInd n i h2
     exact bijective_of_subsingleton _ 0
 
 end GlobalTheory.EtC.LineLocal
@@ -177,8 +177,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC TensorProduct
 
-theorem _root_.GlobalTheory.T.etaleCohomology_equiv_strictHenselian_line_point : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → IsUnit (q : T) → ∀ (O : Type) [CommRing O] [Algebra (Polynomial T) O] [Algebra T O] [IsScalarTower T (Polynomial T) O], SH O → IndEt (Polynomial T) O → ∀ i : ℤ, Eqv _ (spMap (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := O)).toRingHom) (tw q i) := by
-  first | (exact @GlobalTheory.EtC.LineLocal.eqv_local)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivStrictHenselianLinePointStatement =====
@@ -194,27 +192,17 @@ noncomputable section
 
 namespace GlobalTheory.EtC.LineAcyc
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  dsimp only [spMap]
-  rw [CommRingCat.ofHom_comp, Spec.map_comp, Functor.map_comp]
-
-theorem spMap_id' (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 (sp A) := by
-  dsimp only [spMap]
-  rw [CommRingCat.ofHom_id, Spec.map_id]
-  exact sch.map_id _
-
 theorem pull_bijective_of_ringEquiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B)
     (R : Type) [CommRing R] (F : Shv R) (n : ℤ) :
     Function.Bijective (pull R (spMap (e : A →+* B)) F n) := by
   have h1 : ∀ x, pull R (spMap (e.symm : B →+* A)) F n (pull R (spMap (e : A →+* B)) F n x) = x := by
     intro x
-    rw [← pull_comp, ← spMap_comp', show ((e.symm : B →+* A).comp (e : A →+* B)) = RingHom.id A by
-      ext; simp, spMap_id', pull_id]
+    rw [← pull_comp, ← _root_.GlobalTheory.EtC.ProdStep.spMap_comp, show ((e.symm : B →+* A).comp (e : A →+* B)) = RingHom.id A by
+      ext; simp, _root_.GlobalTheory.EtAlgCD.spMap_id, pull_id]
   have h2 : ∀ x, pull R (spMap (e : A →+* B)) F n (pull R (spMap (e.symm : B →+* A)) F n x) = x := by
     intro x
-    rw [← pull_comp, ← spMap_comp', show ((e : A →+* B).comp (e.symm : B →+* A)) = RingHom.id B by
-      ext; simp, spMap_id', pull_id]
+    rw [← pull_comp, ← _root_.GlobalTheory.EtC.ProdStep.spMap_comp, show ((e : A →+* B).comp (e.symm : B →+* A)) = RingHom.id B by
+      ext; simp, _root_.GlobalTheory.EtAlgCD.spMap_id, pull_id]
   exact ⟨Function.LeftInverse.injective h1, Function.RightInverse.surjective h2⟩
 
 theorem eqv_of_square {X Y X' Y' : Type} [CommRing X] [CommRing Y] [CommRing X'] [CommRing Y']
@@ -223,7 +211,7 @@ theorem eqv_of_square {X Y X' Y' : Type} [CommRing X] [CommRing Y] [CommRing X']
     Eqv R (spMap g') F → Eqv R (spMap g) F := by
   intro hg' n
   have hc : spMap (eY : Y →+* Y') ≫ spMap g = spMap g' ≫ spMap (eX : X →+* X') := by
-    rw [← spMap_comp', ← spMap_comp', h]
+    rw [← _root_.GlobalTheory.EtC.ProdStep.spMap_comp, ← _root_.GlobalTheory.EtC.ProdStep.spMap_comp, h]
   have key : (pull R (spMap (eY : Y →+* Y')) F n) ∘ (pull R (spMap g) F n) =
       (pull R (spMap g') F n) ∘ (pull R (spMap (eX : X →+* X')) F n) := by
     funext x
@@ -245,7 +233,7 @@ theorem affineLine_localAcyclicity_of_strictHenselian_points (core : ∀ (q : �
     Eqv _ (spMap (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := O)).toRingHom) (tw q i)) : C3 := by
   intro q _ T _ _ _ hT hq B _ _ _ _ _ i
 
-  have hB := GlobalTheory.T.etaleCohomology_local_to_global_ringMap_indEtale (ZMod q) (tw q i) (GlobalTheory.T.tateTwist_finitary q i) B B (B ⊗[T] FractionRing T)
+  have hB := _root_.GlobalTheory.LocGlobRing.main (ZMod q) (tw q i) (_root_.GlobalTheory.EtC.tw_finitary q i) B B (B ⊗[T] FractionRing T)
     (Algebra.ofId B (B ⊗[T] FractionRing T))
 
   refine eqv_of_square _ (Algebra.ofId B (B ⊗[T] FractionRing T)).toRingHom (RingEquiv.refl B)
@@ -276,7 +264,7 @@ end GlobalTheory.EtC.LineAcyc
 
 namespace GlobalTheory.EtC.LineAcyc
 
-theorem c3 : C3 := affineLine_localAcyclicity_of_strictHenselian_points GlobalTheory.T.etaleCohomology_equiv_strictHenselian_line_point
+theorem c3 : C3 := affineLine_localAcyclicity_of_strictHenselian_points _root_.GlobalTheory.EtC.LineLocal.eqv_local
 
 end GlobalTheory.EtC.LineAcyc
 end -- clump:auto
@@ -291,8 +279,7 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etale_cohomology_ind_etale_base_change : GlobalTheory.EtC.C3 := by
-  first | (exact @GlobalTheory.EtC.LineAcyc.c3)
+alias _root_.GlobalTheory.T.etale_cohomology_ind_etale_base_change := _root_.GlobalTheory.EtC.LineAcyc.c3
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyIndEtaleBaseChangeStatement =====

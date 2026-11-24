@@ -253,7 +253,7 @@ section -- clump:auto
 
 namespace PositivityTheory.RgBcC
 
-theorem fr0Laws : MatrixFrechetDerivativeAtZeroLaws := fr0Laws_of rmLaws gamMul mtLaws gamDer
+theorem fr0Laws : MatrixFrechetDerivativeAtZeroLaws := _root_.PositivityTheory.RgBcC.Cxe.fr0Laws_of _root_.PositivityTheory.RgBcC.Cxc.rmLaws' gamMul mtLaws gamDer
 
 theorem avg : Avg := avg_of fr0Laws
 

@@ -300,12 +300,6 @@ theorem iteratedFDeriv_symm {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V
         exact map_zero _
       simp [this]
 
-theorem exists_perm_of_ofFn_perm {α : Type} {n : ℕ} (v w : Fin n → α)
-    (h : (List.ofFn v).Perm (List.ofFn w)) : ∃ σ : Equiv.Perm (Fin n), v = w ∘ σ := by
-  first
-  | (apply _root_.GlobalTheory.FiberCardPermutation.exists_perm_of_ofFn_perm <;> assumption)
-  | (intros; exact _root_.GlobalTheory.FiberCardPermutation.exists_perm_of_ofFn_perm ..)
-
 theorem term_eq {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {F : V → ℂ} {x : V}
     (hs : ∀ (n : ℕ) (v : Fin n → V) (σ : Equiv.Perm (Fin n)),
       iteratedFDeriv ℂ n F x (v ∘ σ) = iteratedFDeriv ℂ n F x v)
@@ -313,7 +307,7 @@ theorem term_eq {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {F : V →
     iteratedFDeriv ℂ n F x v = iteratedFDeriv ℂ m F x w := by
   have hnm : n = m := by simpa using h.length_eq
   subst hnm
-  obtain ⟨σ, rfl⟩ := exists_perm_of_ofFn_perm v w h
+  obtain ⟨σ, rfl⟩ := _root_.GlobalTheory.FiberCardPermutation.exists_perm_of_ofFn_perm v w h
   exact hs n w σ
 
 theorem ofFn_get_cast {α β : Type} (l : List α) {n : ℕ} (u : α → β) (h : n = l.length) :

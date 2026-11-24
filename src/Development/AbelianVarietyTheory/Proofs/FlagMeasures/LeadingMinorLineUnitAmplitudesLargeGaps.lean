@@ -407,8 +407,6 @@ section -- clump:auto
 open BranchingSupport GlobalTheory.CellAmp GlobalTheory.Amp Formalism.BasicNotions Formalism.MainNotions.S Formalism.QuantumDeterminants Matrix MeasureTheory Finset
 open scoped InnerProductSpace ENNReal
 
-theorem _root_.GlobalTheory.T.exists_goodLocalDatum_of_nonzero_periods_gap : GlobalTheory.GapIn.Hyp → ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (lam : Fin (2 * D.R.rS + D.R.k + 1) → ℝ) (R : Rep D.R.k D.R.rS) (h : ℝ) (l : R.H → W.Wp) (l' : R.H → W.Wq) (dd : ℝ), cdScaleTie D → GoodW D τ w w' θ W → R.IsDG (epsSH D.R) lam → PI.BesselMapUniq.IsBesselMapSm (k := D.R.k) (r := D.R.rS) W.z (psiS D W.z) R.σ W.π l → PI.BesselMapUniq.IsBesselMapSm (k := D.R.k) (r := D.R.rS) W.z' (psiS D W.z') R.σ W.π' l' → 0 < dd → (∀ v ∈ R.sm, l2SG W.νS (fun g => l (R.σ g v)) = ENNReal.ofReal (‖v‖ ^ 2 / dd)) → (∀ v ∈ R.sm, l2SG W.νS' (fun g => l' (R.σ g v)) = ENNReal.ofReal (‖v‖ ^ 2 / dd)) → ∃ A : LocS W, GoodS D lam A := by
-  first | exact @GlobalTheory.DatumOfPeriodsGap.exists_goodS
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGoodLocalDatumOfNonzeroPeriodsGapStatement =====
@@ -570,14 +568,14 @@ theorem exists_equiv (hH : HypsG) {ε : Fin (2 * r + k + 1) → Bool} {κ ι : T
   have hTs : ∀ s, SmMap (RI1 a) (RI2 s) (fun y => ∑ c, pr2 s c (io1 a c y)) := by
     intro s
     have hc : ∀ c, SmMap (RI1 a) (RI2 s) (fun y => pr2 s c (io1 a c y)) := fun c =>
-      (Gp91.GlobalTheory.T.smooth_maps_closure hK k r ε (m1 a) mS (m2 s) (RI1 a) S (RI2 s) (hd1 a) hS (hd2 s)).2.1 _ _
+      (_root_.Gp91.GlobalTheory.SmMapAct.smMap_act hK k r ε (m1 a) mS (m2 s) (RI1 a) S (RI2 s) (hd1 a) hS (hd2 s)).2.1 _ _
         (h1.io_sm a c) (h2.pr_sm s c)
     have key : ∀ t : Finset ι, SmMap (RI1 a) (RI2 s) (fun y => ∑ c ∈ t, pr2 s c (io1 a c y)) := by
       intro t
       induction t using Finset.induction_on with
       | empty => simpa using smMap_zero (RI1 a) (RI2 s)
       | insert c t hc' ih =>
-        have := (Gp91.GlobalTheory.T.smooth_maps_closure hK k r ε (m1 a) (m2 s) (m2 s) (RI1 a) (RI2 s) (RI2 s) (hd1 a) (hd2 s)
+        have := (_root_.Gp91.GlobalTheory.SmMapAct.smMap_act hK k r ε (m1 a) (m2 s) (m2 s) (RI1 a) (RI2 s) (RI2 s) (hd1 a) (hd2 s)
           (hd2 s)).2.2.1 _ _ 1 (hc c) ih
         simpa [Finset.sum_insert hc'] using this
     exact key univ
@@ -777,7 +775,7 @@ theorem amp_eq (hH : GlobalTheory.GapIn.Hyp) (D : D7) {τ w w' θ} {W : LocW D.R
       ∀ (ν : Measure (Mt D.R.k D.R.rS)) (γ : MatKR D.R.k D.R.rS), γ ∈ UH (Hpk D.R.k D.R.rS) →
         ν {x | Matrix.of x ∉ UH (Hpk D.R.k D.R.rS)} = 0 → A.J ν γ = η • amp R l l' w0 ν γ := by
   subst hR
-  exact GlobalTheory.T.amplitude_eq_smul_normalisedAmplitude_largeGap hH D τ w w' θ W lam A h l l' hθ hka hT hT' hW hA hg hok b1 b2 e1 e2
+  exact _root_.GlobalTheory.AmpNormalGap.amp_eq_smul_normalised_gap hH D τ w w' θ W lam A h l l' hθ hka hT hT' hW hA hg hok b1 b2 e1 e2
 
 
 
@@ -1135,7 +1133,7 @@ theorem minor_line : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → Ce
     exact (mul_pos two_pos hka0).ne'
   obtain ⟨t, ht, hNt, hz, hs⟩ := GlobalTheory.TorusScale.exists_torus_scale D.R.k D.R.rS _ hc0
   choose s hs0 hs1 hs2 hs3 using hs
-  have hmod := GlobalTheory.T.amplitudeLocalData_momentPieriHypotheses hH D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w w' θ W hTT hθ hW t ht hNt
+  have hmod := _root_.GlobalTheory.Amp.LocalSetupGap.exists_setup_both hH D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w w' θ W hTT hθ hW t ht hNt
     (fun z h => (hz z h).2)
   obtain ⟨U, U', l₁, l₂, dg, S1, S2⟩ := hmod F hF
   obtain ⟨V, V', m₁, m₂, dg', T1, T2, hE⟩ : ∃ V V' m₁ m₂ dg',
@@ -1167,7 +1165,7 @@ theorem minor_line : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → Ce
       (fun I : Sub _ l => F' (ν + eZ I.1)) io pr ep := by
     rcases hFF with h0 | h1
     · subst h0
-      exact tens_zero hH.1 _ _ _ _ _ _ _ _ _ F F' ν hNum hFG hFG' (by nlinarith)
+      exact _root_.GlobalTheory.TrivWedge.tensH_trivial hH.1 _ _ _ _ _ _ _ _ _ F F' ν hNum hFG hFG' (by nlinarith)
     · rw [h1]
       exact (_root_.Gp91.GlobalTheory.TensExists.tens_exists hH.1 _ _ _ _ _ _ _ _ _ F hNum hFG ν).1 l hνl
   obtain ⟨b1, e1⟩ := moved hH ht hNt (hz _ z1).2.1 (hz _ z1).2.2 G1 hDS (S1.2.2.2 ν hν0).1
@@ -1191,7 +1189,7 @@ theorem minor_line : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → Ce
     (fun I hI => by
       by_contra hn
       push Not at hn
-      exact hI (GlobalTheory.T.exists_goodLocalDatum_of_nonzero_periods_gap hH D τ w w' θ W _ _ 0 _ _ _ hcd hW (hDIG I) (bI1 I).1 (bI2 I).1 (hdI I).1
+      exact hI (_root_.GlobalTheory.DatumOfPeriodsGap.exists_goodS hH D τ w w' θ W _ _ 0 _ _ _ hcd hW (hDIG I) (bI1 I).1 (bI2 I).1 (hdI I).1
         (hm₀ I hn.1) (hm₁ I hn.2)))
     hd0.1 (fun I => (hdI I).1) hd0.2 (fun I => (hdI I).2)
   have hsum : ∀ {E : Type} [AddCommMonoid E] (f : Finset (Fin (2 * D.R.rS + D.R.k + 1)) → E),

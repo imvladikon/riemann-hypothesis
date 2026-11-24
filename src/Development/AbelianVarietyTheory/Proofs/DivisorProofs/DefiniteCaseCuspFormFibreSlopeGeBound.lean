@@ -138,6 +138,7 @@ import Formalism.LocalToGlobal.ProjectiveLattices.FrameProofs
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.RingTheory.PiTensorProduct
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HDiscAA
+import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LogSupSumLeOfNonvanishingDetLimit
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylOrthonormalBasisValuesAtUnitarySumSqLeOn, Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulNormDualWeylTensorEvaluationLeFibreNorm, Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCoordinatesFormsAndFibreNormBound, Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryMinorLeOneAndHadamardColumns, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylGramDeterminantLeDimPowDim, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalBasisLatticeOfInverseAdelicMatrixFami, Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDeterminantSmulStandardBasisInverseFrames, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeSlopeSqLocalMatricesEqDeterminants, Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatCharPowEqDetPow, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeDualWeylFibreLatticeGe, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLineDegreeGeHalfDetLieDefinitePoint, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCaseCuspFormFibreSlopeGeBound
@@ -345,7 +346,7 @@ theorem mem_range_of_le_one {w : HeightOneSpectrum (𝓞 c.F)} {T : CDVR} {io : 
     (ho : OverLa w T.V io e) {b : c.F} (hb : w.valuation c.F b ≤ 1) : io b ∈ Set.range (algebraMap T.V T.Fr) := by
   by_cases h0 : b = 0
   · exact ⟨0, by simp [h0]⟩
-  refine GlobalTheory.ArcQ.RecFr.mem_of_vV_nonneg ?_
+  refine _root_.Formalism.L2.PjFree.mem_range_of_vV_nonneg ?_
   rw [ho.2]
   refine mul_nonneg (Nat.cast_nonneg _) ?_
   have := (WithZero.log_le_log ((Valuation.ne_zero_iff _).2 h0) one_ne_zero).2 hb
@@ -1056,7 +1057,7 @@ theorem GlobalTheory.LocMatSlope.slope_sq_locLat : ∀ (K : Type) [Field K] [Num
   unfold lineDeg at hnum
   have hsplit : ∀ w, (vAdd w ((d : K) ^ n * (A w).det) : ℝ) = n * (vAdd w (d : K) : ℝ) + (vAdd w (A w).det : ℝ) :=
     fun w => by
-      rw [GlobalTheory.LatDetDeg.vAdd_mul' w (pow_ne_zero _ hdK) (hA.1 w), GlobalTheory.LatDetDeg.vAdd_pow' w hdK]
+      rw [_root_.Formalism.BasicNotions.Examples₂.PlacesToy.vAdd_mul w (pow_ne_zero _ hdK) (hA.1 w), GlobalTheory.LatDetDeg.vAdd_pow' w hdK]
       push_cast; ring
   have hfd := finite_vAdd (K := K) hdK
   have hfdet : (Function.support fun w => (vAdd w (A w).det : ℝ)).Finite := by
@@ -1829,7 +1830,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLineDegreeGeHalfDetLieDefinitePoint =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCaseCuspFormFibreSlopeGeBound =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCaseCuspFormFibreSlopeGeBound", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDualDetLieEqNegFlatSectionDegree\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectiveDualWeylTensorCuspFormsRationalPo\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreActionPreservesAdelicMatrices\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCoordinatesFormsAndFibreNormBound\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeOfLocalMatrixFamily\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyDefiniteRationalPointDataComponent\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeDualWeylFibreLatticeGe\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLineDegreeGeHalfDetLieDefinitePoint\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCaseCuspFormFibreSlopeGeBound", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDualDetLieEqNegFlatSectionDegree\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectiveDualWeylTensorCuspFormsRationalPo\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreActionPreservesAdelicMatrices\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCoordinatesFormsAndFibreNormBound\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeOfLocalMatrixFamily\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyDefiniteRationalPointDataComponent\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeDualWeylFibreLatticeGe\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLineDegreeGeHalfDetLieDefinitePoint\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LogSupSumLeOfNonvanishingDetLimit\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1840,13 +1841,6 @@ open CategoryTheory NumberField IsDedekindDomain Module Formalism.BasicNotions F
 open scoped Matrix Classical
 
 namespace GlobalTheory.DefFibre
-
-theorem vAdd_pow' {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) (x : K) (n : ℕ) :
-    vAdd w (x ^ n) = n * vAdd w x := by
-  simp [vAdd, map_pow, WithZero.log_pow]
-
-theorem vAdd_one' {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) : vAdd w (1 : K) = 0 := by
-  simp [vAdd]
 
 theorem subsingleton_idx : ∀ (N : ℕ) (la : Fin N → ℕ), N = 0 → Subsingleton (Idx la) := by
   rintro N la rfl
@@ -1886,9 +1880,9 @@ theorem fibreAt_defCase : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     exact ⟨hIntOne w _, hIntOne w _⟩
   have ha0 : ∀ w, P.a w ^ n ≠ 0 := fun w => pow_ne_zero _ (P.loc w).1
   have hsupp1 : (Function.support fun w => vAdd w (P.a w)).Finite :=
-    P.fin.subset fun w hw h => hw (by simp only; rw [h.1, vAdd_one'])
+    P.fin.subset fun w hw h => hw (by simp only; rw [h.1, _root_.Formalism.BasicNotions.Examples₂.PlacesToy.vAdd_one])
   have hsupp : (Function.support fun w => vAdd w (P.a w ^ n)).Finite :=
-    hsupp1.subset fun w hw h => hw (by simp only at h ⊢; rw [vAdd_pow', h, mul_zero])
+    hsupp1.subset fun w hw h => hw (by simp only at h ⊢; rw [_root_.Formalism.MainNotions.Gaps.SizeBoundsAlt.vAdd_pow', h, mul_zero])
   have hspos : ∀ σ, 0 < (Real.sqrt (P.N σ))⁻¹ ^ n := fun σ =>
     pow_pos (inv_pos.2 (Real.sqrt_pos.2 (P.arch σ).1)) n
   have hsconj : ∀ σ, (Real.sqrt (P.N ((starRingEnd ℂ).comp σ)))⁻¹ ^ n = (Real.sqrt (P.N σ))⁻¹ ^ n := fun σ => by
@@ -1907,7 +1901,7 @@ theorem fibreAt_defCase : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     Fintype.card_pos_iff.1 ((dim_eq_card _) ▸ dim_pos (hanti τ))
 
   have hline : lineDeg (fun σ => (Real.sqrt (P.N σ))⁻¹ ^ n) (fun w => (vAdd w (P.a w ^ n) : ℝ)) = n * P.degTh := by
-    simp only [PtData.degTh, lineDeg, vAdd_pow', Int.cast_mul, Int.cast_natCast, Real.log_pow]
+    simp only [PtData.degTh, lineDeg, _root_.Formalism.MainNotions.Gaps.SizeBoundsAlt.vAdd_pow', Int.cast_mul, Int.cast_natCast, Real.log_pow]
     have hf := fin_mul (ρ := fun w => (vAdd w (P.a w) : ℝ)) (hsupp1.subset fun w hw => by simpa [Function.mem_support] using hw) (lw c.F)
     simp only [mul_assoc]
     rw [← mul_finsum, ← Finset.mul_sum]

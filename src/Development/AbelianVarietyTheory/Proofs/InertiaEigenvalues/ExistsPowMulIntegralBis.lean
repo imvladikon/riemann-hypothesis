@@ -135,14 +135,6 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     {PD : PeriodData G Qp K₀ K B BdR} {LL O : Type} [Field LL] [Algebra Qp LL]
     [CommRing O] [Algebra O LL] [TopologicalSpace LL] {v : AddValuation LL (WithTop ℚ)} {n : ℕ}
 
-theorem exists_pow_smul_le {V : Type} [AddCommGroup V] [Module LL V] [Module O V] [IsScalarTower O LL V]
-    (c : O) (hc : ∀ a : LL, ∃ (k : ℕ) (b : O), algebraMap O LL b = algebraMap O LL c ^ k * a)
-    (L S : Submodule O V) (hL : Submodule.span LL (L : Set V) = ⊤) (hS : S.FG) :
-    ∃ m : ℕ, ∀ x ∈ S, c ^ m • x ∈ L := by
-  first
-  | (rename_i h_2 h_3 h_4 h_5 h_7 h_8 h_9 h_10; revert LL O h_2 h_3 h_4 h_5 V h_7 h_8 h_9 h_10 c hc L S hL hS; exact @_root_.GlobalTheory.PowerScalarMembership.main)
-  | (intros; exact _root_.GlobalTheory.PowerScalarMembership.main ..)
-
 variable (W : LocWach PD LL O v n)
 
 theorem ee_torsionFree (hp : ∀ a : O, (PD.p : O) * a = 0 → a = 0) (x : W.EE)
@@ -257,7 +249,7 @@ theorem exists_quasi_inverse (c : O)
     have := f.equiv g (e.symm y)
     change e _ = T.ρ g (e _) at this
     rw [this, e.apply_symm_apply]
-  obtain ⟨m, hm⟩ := GlobalTheory.WachSat.exists_pow_smul_le (LL := LL) c hc T'.L.T
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.PowerScalarMembership.main (LL := LL) c hc T'.L.T
     (T.L.T.map (e.symm.toLinearMap.restrictScalars O)) T'.L.span (T.L.fg.map _)
   haveI : ContinuousSMul LL T'.V := IsModuleTopology.toContinuousSMul LL T'.V
   let g : LatHom T.L T'.L :=

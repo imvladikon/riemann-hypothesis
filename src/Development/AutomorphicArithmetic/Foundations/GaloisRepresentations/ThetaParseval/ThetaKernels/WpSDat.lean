@@ -632,18 +632,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.eta_character_archimedean_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ η : (AF F)ˣ →* Circle, IsEtaF E η → ∀ a : (AF F)ˣ, At (evI F) ((a : AF F) - 1) →
-      (η a : ℂ) = ∏ w, piInf (B.emb w) ((idFF F E a : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) /
-        ((‖piInf (B.emb w) ((idFF F E a : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E)‖ : ℝ) : ℂ) := by
-  first | exact @_root_.GlobalTheory.EtaSignReal.eta_eq_prod_sign_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EtaCharacterArchimedeanFormula =====
@@ -707,16 +695,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.exists_hecke_character_trivial_exponent : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∃ ξ : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF ξ ∧ HasExp B.emb ξ (fun _ => 1) := by
-  first | exact @_root_.GlobalTheory.WeilTypeChar.exists_weil_char_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ExistsHeckeCharacterTrivialExponent =====
@@ -747,7 +725,7 @@ theorem exists_extend_hecke_k : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         ∀ a, lam' (idFF F E a) = lam a := by
   intro F E _ _ _ _ _ σ B hB lam hc h1 hinf
   haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  obtain ⟨M, hM, hMk⟩ := GlobalTheory.T.exists_congruence_kernel_ideleCharacter_trivialAtInfinity F lam hc hinf
+  obtain ⟨M, hM, hMk⟩ := _root_.GlobalTheory.HeckeExtend.exists_cong_ker F lam hc hinf
   let V : Subgroup (AF F ⊗[F] E)ˣ := (Units.map (incAF F E).toMonoidHom).range ⊔ WE F E (8 * M)
   have hkey : ∀ a : (AF F)ˣ, idFF F E a ∈ V → lam a = 1 := key σ hB.cm M hM lam h1 hMk
   have hN : 0 < 8 * M := by positivity
@@ -804,21 +782,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.extend_character_to_norm_group : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ lam : (AF F)ˣ →* Circle, Continuous lam →
-      (∀ a : Fˣ, lam (Units.map (algebraMap F (AF F)).toMonoidHom a) = 1) →
-      (∀ a : (AF F)ˣ, At (evI F) ((a : AF F) - 1) → lam a = 1) →
-      ∃ lam' : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF lam' ∧
-        (∀ z : (AF F ⊗[F] E)ˣ, At (evI F) ((z : AF F ⊗[F] E) - 1) → lam' z = 1) ∧
-        ∀ a, lam' (idFF F E a) = lam a := by
-  first | exact @_root_.GlobalTheory.HeckeExtend.exists_extend_hecke_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ExtendCharacterToNormGroup =====
@@ -840,7 +803,7 @@ namespace GlobalTheory.EtaCMType
 theorem exists_eta_cmType_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
     _root_.UpperTheory.TP.W.GoodK σ B → ∃ η : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF η ∧ ResEtaF η 1 ∧ HasExp B.emb η (fun _ => 1) := by
   intro F E _ _ _ _ _ σ B hB
-  obtain ⟨ξ, hξ, hξe⟩ := _root_.GlobalTheory.T.exists_hecke_character_trivial_exponent F E σ B hB
+  obtain ⟨ξ, hξ, hξe⟩ := _root_.GlobalTheory.WeilTypeChar.exists_weil_char_k F E σ B hB
   obtain ⟨η₀, hη₀, huniq⟩ := GlobalTheory.IdeleNormChar.globalNormIndexTwo F E hB.cm.2.2.1
   have hη₀' : IsEtaF E η₀ := hη₀
   let lam : (AF F)ˣ →* Circle := ξ.comp (idFF F E) * η₀⁻¹
@@ -855,14 +818,14 @@ theorem exists_eta_cmType_k : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have hlinf : ∀ a : (AF F)ˣ, At (evI F) ((a : AF F) - 1) → lam a = 1 := by
     intro a ha
     have e1 := hξe _ (at_idFF a ha)
-    have e2 := _root_.GlobalTheory.T.eta_character_archimedean_formula F E σ B hB η₀ hη₀' a ha
+    have e2 := _root_.GlobalTheory.EtaSignReal.eta_eq_prod_sign_k F E σ B hB η₀ hη₀' a ha
     have e3 : ξ (idFF F E a) = η₀ a := by
       apply Circle.ext
       rw [e1, e2]
       refine Finset.prod_congr rfl fun w _ => ?_
       rw [zpow_one]
     rw [hlam, e3, mul_inv_cancel]
-  obtain ⟨lam', hl'H, hl'inf, hl'res⟩ := _root_.GlobalTheory.T.extend_character_to_norm_group F E σ B hB lam hlc hlF hlinf
+  obtain ⟨lam', hl'H, hl'inf, hl'res⟩ := _root_.GlobalTheory.HeckeExtend.exists_extend_hecke_k F E σ B hB lam hlc hlF hlinf
   refine ⟨ξ * lam'⁻¹, ⟨hξ.1.mul hl'H.1.inv, fun x => ?_⟩, ⟨⟨η₀, hη₀'⟩, fun η hη a => ?_⟩, fun z hz => ?_⟩
   · change ξ _ * (lam' _)⁻¹ = 1
     rw [hξ.2, hl'H.2, inv_one, one_mul]
@@ -909,14 +872,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open scoped TensorProduct Matrix
-
-theorem _root_.GlobalTheory.T.inert_completion_isField : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (v : Pl F) (w : HeightOneSpectrum (𝓞 E)), Formalism.UG.IsInertAt F E v w → IsField (Fv F v ⊗[F] E) := by
-  first | exact @_root_.GlobalTheory.InertTensorField.isField_tensor_of_isInertAt_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.InertCompletionIsField =====
@@ -928,12 +883,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-theorem _root_.GlobalTheory.T.nonempty_algHom_or_exists_inert_of_goodK : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ v : Pl F, Nonempty (E →ₐ[F] Fv F v) ∨ ∃ w : HeightOneSpectrum (𝓞 E), Formalism.UG.IsInertAt F E v w := by
-  first | exact @_root_.GlobalTheory.KFinLoc.split_or_inert_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SplitOrInertKStatement =====
@@ -1028,7 +977,7 @@ theorem local_norm_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheor
     GlobalTheory.QuadNormBase.exists_basis F E σ hB.cm.2.2.1 (sig_invol hB.cm) (sig_ne hB.cm)
   have hbb' : b 1 * b 1 = algebraMap F E δ := hbb
   refine (GlobalTheory.QuadSymbol.mem_normGroup_iff_form b hb0 hbb').2 ?_
-  rcases _root_.GlobalTheory.T.nonempty_algHom_or_exists_inert_of_goodK F E σ B hB v with ⟨τ⟩ | ⟨w, hw⟩
+  rcases _root_.GlobalTheory.KFinLoc.split_or_inert_k F E σ B hB v with ⟨τ⟩ | ⟨w, hw⟩
   · obtain ⟨τ⟩ := τ
     have hs : τ (b 1) * τ (b 1) = algebraMap F (Fv F v) δ := by rw [← map_mul, hbb', AlgHom.commutes]
     have hs0 : τ (b 1) ≠ 0 := (map_ne_zero τ).2 (b.ne_zero 1)
@@ -1054,7 +1003,7 @@ theorem local_norm_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheor
       rw [map_mul, map_one] at hm
       rw [← hm]
       exact mul_le_of_le_one_right' a2
-    obtain ⟨z, hz⟩ := _root_.GlobalTheory.InertUnitNorm.unit_eq_mul_conj_k F E σ B hB v w hw (_root_.GlobalTheory.T.inert_completion_isField F E σ B hB v w hw) u hu
+    obtain ⟨z, hz⟩ := _root_.GlobalTheory.InertUnitNorm.unit_eq_mul_conj_k F E σ B hB v w hw (_root_.GlobalTheory.InertTensorField.isField_tensor_of_isInertAt_k F E σ B hB v w hw) u hu
     obtain ⟨x, y, rfl⟩ := tensor_decomp (A := Fv F v) (b 1) (fun x => ⟨b.repr x 0, b.repr x 1, by
       have hx := b.sum_repr x
       rw [Fin.sum_univ_two, hb0] at hx
@@ -1317,21 +1266,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.weil_datum_splitting_characters : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (χS χT νS νT : (AF F ⊗[F] E)ˣ →* Circle) ω,
-        IsWeilDatumOF σ JS JT (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ χS χT ω →
-        IsHeckeCharF νS → IsHeckeCharF νT → ResEtaF νS 0 → ResEtaF νT 0 →
-        ∃ ω', IsWeilDatumOF σ JS JT (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ (χS * νS) (χT * νT) ω' := by
-  first | exact @_root_.GlobalTheory.WeilTwistF.exists_weilDatumOF_twist_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.WeilDatumSplittingCharacters =====
@@ -1359,10 +1293,10 @@ theorem exists_isWeilDatumOF_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ hLat χS χT hcS hcT rS rT
   obtain ⟨η, hη1, hη2, hη3, hη4⟩ := _root_.PositivityTheory.ThKW.exists_eta_k F E σ B hB
   obtain ⟨Λ, hΛ1, hΛ2⟩ := hLat
-  have hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ := _root_.GlobalTheory.T.theta_function_heisenberg_translate F E σ B hB nS nT JS JT ξ₀
+  have hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ := _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF_k F E σ B hB nS nT JS JT ξ₀
   obtain ⟨w, lam, Om, hO⟩ := _root_.UpperTheory.TP.W.latK F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ Λ hΛ1 hΛ2 hc
   obtain ⟨om, hom⟩ := _root_.UpperTheory.TP.W.datumK_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ Λ hΛ1 hΛ2 hc w lam Om hO η hη1 hη2 hη3 hη4
-  obtain ⟨om', hom'⟩ := _root_.GlobalTheory.T.weil_datum_splitting_characters F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ _ _ ((η ^ nS)⁻¹ * χS) ((η ^ nT)⁻¹ * χT) om hom
+  obtain ⟨om', hom'⟩ := _root_.GlobalTheory.WeilTwistF.exists_weilDatumOF_twist_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ _ _ ((η ^ nS)⁻¹ * χS) ((η ^ nT)⁻¹ * χT) om hom
     (isHeckeCharF_div_pow hcS hη1 _) (isHeckeCharF_div_pow hcT hη1 _)
     (resEtaF_div_pow rS hη2) (resEtaF_div_pow rT hη2)
   rw [mul_inv_cancel_left, mul_inv_cancel_left] at hom'

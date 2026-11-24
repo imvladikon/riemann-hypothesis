@@ -315,8 +315,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.JSW Filter Topology Formalism.UG GlobalTheory.RSNonvan
 
-theorem _root_.GlobalTheory.T.exists_goodRankinSelbergPlaceSet_superset_totallyComplex : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (T : Finset (HeightOneSpectrum (𝓞 E))), ∃ T' : Finset (HeightOneSpectrum (𝓞 E)), T ⊆ T' ∧ IsGood T' := by
-  first | (exact @GlobalTheory.RSNonvan.exists_isGood_superset_all)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodRankinSelbergPlaceSetSupersetTotallyCoStatement =====
@@ -581,8 +579,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.JSW Filter Topology Formalism.UG GlobalTheory.RSNonvan
 
-theorem _root_.GlobalTheory.T.localRankinSelbergFactor_conj_tendsto_one_ne_zero : ∀ (q : ℕ) (A B : Multiset ℂˣ), 1 < q → (∀ α ∈ A, ‖(α : ℂ)‖ ^ 2 < (q : ℝ)) → (∀ β ∈ B, ‖(β : ℂ)‖ ^ 2 < (q : ℝ)) → Tendsto (fun x : ℝ => locL q A (B.map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ)) (𝓝[>] 1) (𝓝 (locL q A (B.map (Units.map (starRingEnd ℂ).toMonoidHom)) 1)) ∧ locL q A (B.map (Units.map (starRingEnd ℂ).toMonoidHom)) 1 ≠ 0 := by
-  first | (exact @GlobalTheory.JSW.locL_conj_tendsto_one_and_ne_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalRankinSelbergFactorConjTendstoOneNeZeroStatement =====
@@ -664,8 +660,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.JSW Filter Topology Formalism.UG GlobalTheory.RSNonvan
 
-theorem _root_.GlobalTheory.T.norm_prod_satakeParameters_unitary_eq_one : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (σ : CG E a) (w : HeightOneSpectrum (𝓞 E)) (B : Multiset ℂˣ), σ.IsUnitary → σ.HasSat w B → ‖((B.prod : ℂˣ) : ℂ)‖ = 1 := by
-  first | (exact @GlobalTheory.RSNonvan.norm_prod_sat_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormProdSatakeParametersUnitaryEqOneStatement =====
@@ -807,9 +801,9 @@ theorem norm_sq_lt_absNorm : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
       ‖(α : ℂ)‖ ^ 2 < (Ideal.absNorm w.asIdeal : ℝ) := by
   intro E _ _ _ a σ ha hσ T hT w hw α hα
   classical
-  obtain ⟨L1, hL1, -, c1, hc1, hlim1⟩ := GlobalTheory.T.rankinSelberg_partialL_pole_at_one_conj E a σ ha hσ T hT
+  obtain ⟨L1, hL1, -, c1, hc1, hlim1⟩ := _root_.GlobalTheory.RSPole.rs_pole_conj E a σ ha hσ T hT
   have hT' : UnrOutside (insert w T) σ := fun v hv => hT v (fun h => hv (Finset.mem_insert_of_mem h))
-  obtain ⟨L2, hL2, -, c2, hc2, hlim2⟩ := GlobalTheory.T.rankinSelberg_partialL_pole_at_one_conj E a σ ha hσ (insert w T) hT'
+  obtain ⟨L2, hL2, -, c2, hc2, hlim2⟩ := _root_.GlobalTheory.RSPole.rs_pole_conj E a σ ha hσ (insert w T) hT'
   have hsplit : ∀ x : ℝ, 1 < x → (L1 x : ℂ) = ((sat σ w ×ˢ (sat σ w).map (Units.map (starRingEnd ℂ).toMonoidHom)).map
       (gfac (Ideal.absNorm w.asIdeal) x)).prod * (L2 x : ℂ) := by
     intro x hx
@@ -987,7 +981,7 @@ theorem prod_map_val (B : Multiset ℂˣ) : (B.map (fun α : ℂˣ => (α : ℂ)
 theorem offDiag : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b), 1 ≤ a → 1 ≤ b → σ.IsUnitary → σ'.IsUnitary → (⟨a, σ⟩ : Σ a, CG E a) ≠ ⟨b, σ'⟩ → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), IsGood T → UnrOutside T σ → UnrOutside T σ' → ∃ G : ℂ → ℂ, (∀ x : ℝ, 0 < x → AnalyticAt ℂ G (x : ℂ)) ∧ ∀ x : ℝ, 1 < x → HasProd (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => lfac σ σ' (x : ℂ) w.1) (G x) := by
   intro E _ _ _ a b σ σ' ha hb hσ hσ' hne T hgood hU hU'
   rcases lt_trichotomy a b with hab | rfl | hab
-  · obtain ⟨F, H, hF, hH, hHpos, hFH⟩ := GlobalTheory.T.rankinSelberg_GLn_GLm_partialL_eq_div_entire E b a σ' σ ha hab hσ' hσ T hgood.2 hU' hU
+  · obtain ⟨F, H, hF, hH, hHpos, hFH⟩ := _root_.GlobalTheory.RSnmUnf.rs_nm_partialL_eq_div E b a σ' σ ha hab hσ' hσ T hgood.2 hU' hU
     refine ⟨fun z => starRingEnd ℂ (F (starRingEnd ℂ z) / H (starRingEnd ℂ z)), ?_, ?_⟩
     · intro x hx
       have hopen : IsOpen {z : ℂ | H (starRingEnd ℂ z) ≠ 0} :=
@@ -1021,7 +1015,7 @@ theorem offDiag : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
       rw [dslope_of_ne _ hx1, slope_def_module, hF1 hne', sub_zero, smul_eq_mul, inv_mul_eq_div]
     rw [e]
     exact hF x hx
-  · obtain ⟨F, H, hF, hH, hHpos, hFH⟩ := GlobalTheory.T.rankinSelberg_GLn_GLm_partialL_eq_div_entire E a b σ σ' hb hab hσ hσ' T hgood.2 hU hU'
+  · obtain ⟨F, H, hF, hH, hHpos, hFH⟩ := _root_.GlobalTheory.RSnmUnf.rs_nm_partialL_eq_div E a b σ σ' hb hab hσ hσ' T hgood.2 hU hU'
     refine ⟨fun z => F z / H z, fun x hx => (hF.analyticAt _).div (hH.analyticAt _) ?_, fun x hx => hFH x hx⟩
     intro h0
     have := (hHpos x).1
@@ -1038,7 +1032,7 @@ theorem tendsto_of_analyticAt {G : ℂ → ℂ} (hG : AnalyticAt ℂ G 1) :
 theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b), 1 ≤ a → 1 ≤ b → σ.IsUnitary → σ'.IsUnitary → (⟨a, σ⟩ : Σ a, CG E a) ≠ ⟨b, σ'⟩ → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T σ → UnrOutside T σ' → ∃ z : ℂ, z ≠ 0 ∧ Tendsto (fun x : ℝ => ∏' w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, locL (Ideal.absNorm w.1.asIdeal) (sat σ w.1) ((sat σ' w.1).map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ)) (𝓝[>] 1) (𝓝 z) := by
   intro E _ _ _ a b σ σ' ha hb hσ hσ' hne T hT hT'
   classical
-  obtain ⟨T', hTT', hgood⟩ := GlobalTheory.T.exists_goodRankinSelbergPlaceSet_superset_totallyComplex E T
+  obtain ⟨T', hTT', hgood⟩ := _root_.GlobalTheory.RSNonvan.exists_isGood_superset_all E T
   have hU : UnrOutside T' σ := fun w hw => hT w fun h => hw (hTT' h)
   have hU' : UnrOutside T' σ' := fun w hw => hT' w fun h => hw (hTT' h)
   obtain ⟨G, hGa, hG⟩ := offDiag E a b σ σ' ha hb hσ hσ' hne T' hgood hU hU'
@@ -1095,8 +1089,8 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
     · intro w hw
       rw [Multiset.card_add, Multiset.card_map, Multiset.card_map, (sat_spec (hU w hw)).card, (sat_spec (hU' w hw)).card]
     · intro w hw
-      rw [Multiset.prod_add, norm_mul, prod_map_val, prod_map_val, GlobalTheory.T.norm_prod_satakeParameters_unitary_eq_one E a σ w _ hσ (sat_spec (hU w hw)),
-        GlobalTheory.T.norm_prod_satakeParameters_unitary_eq_one E b σ' w _ hσ' (sat_spec (hU' w hw)), one_mul]
+      rw [Multiset.prod_add, norm_mul, prod_map_val, prod_map_val, _root_.GlobalTheory.RSNonvan.norm_prod_sat_eq_one E a σ w _ hσ (sat_spec (hU w hw)),
+        _root_.GlobalTheory.RSNonvan.norm_prod_sat_eq_one E b σ' w _ hσ' (sat_spec (hU' w hw)), one_mul]
     · refine hs.congr fun p => ?_
       have hq : (0 : ℝ) < (Ideal.absNorm p.1.1.asIdeal : ℝ) := by
         have := NumberField.HeightOneSpectrum.one_lt_absNorm p.1.1
@@ -1112,7 +1106,7 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
       lfac σ σ' 1 w ≠ 0 := by
     intro w hw
     have hw2 := (Finset.mem_sdiff.1 hw).2
-    exact GlobalTheory.T.localRankinSelbergFactor_conj_tendsto_one_ne_zero (Ideal.absNorm w.asIdeal) (sat σ w) (sat σ' w) (NumberField.HeightOneSpectrum.one_lt_absNorm w)
+    exact _root_.GlobalTheory.JSW.locL_conj_tendsto_one_and_ne_zero (Ideal.absNorm w.asIdeal) (sat σ w) (sat σ' w) (NumberField.HeightOneSpectrum.one_lt_absNorm w)
       (_root_.GlobalTheory.RSStrict.norm_sq_lt_absNorm E a σ ha hσ T hT w hw2) (_root_.GlobalTheory.RSStrict.norm_sq_lt_absNorm E b σ' hb hσ' T hT' w hw2)
   refine ⟨(∏ w ∈ T' \ T, lfac σ σ' 1 w) * G 1,
     mul_ne_zero (Finset.prod_ne_zero_iff.2 fun w hw => (hfac w hw).2) hG1, ?_⟩
@@ -1136,8 +1130,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.JSW Filter Topology
 
-theorem _root_.GlobalTheory.T.rankinSelberg_partialL_tendsto_ne_zero_at_one : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b), 1 ≤ a → 1 ≤ b → σ.IsUnitary → σ'.IsUnitary → (⟨a, σ⟩ : Σ a, CG E a) ≠ ⟨b, σ'⟩ → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T σ → UnrOutside T σ' → ∃ z : ℂ, z ≠ 0 ∧ Tendsto (fun x : ℝ => ∏' w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, locL (Ideal.absNorm w.1.asIdeal) (sat σ w.1) ((sat σ' w.1).map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ)) (𝓝[>] 1) (𝓝 z) := by
-  first | (exact @GlobalTheory.RSNonvan.tendsto_partialL_ne_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergPartialLTendstoNeZeroAtOneStatement =====
@@ -1202,7 +1194,7 @@ theorem norm_logRS_add_le : ∀ (E : Type) [Field E] [NumberField E] [_root_.Num
 
 theorem abs_re_logRS_bdd : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b), 1 ≤ a → 1 ≤ b → σ.IsUnitary → σ'.IsUnitary → (⟨a, σ⟩ : Σ a, CG E a) ≠ ⟨b, σ'⟩ → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T σ → UnrOutside T σ' → ∃ C : ℝ, ∀ᶠ x in 𝓝[>] (1 : ℝ), |(logRS T σ σ' x).re| ≤ C := by
   intro E _ _ _ a b σ σ' ha hb hσ hσ' hne T hT hT'
-  obtain ⟨z, hz, hlim⟩ := GlobalTheory.T.rankinSelberg_partialL_tendsto_ne_zero_at_one E a b σ σ' ha hb hσ hσ' hne T hT hT'
+  obtain ⟨z, hz, hlim⟩ := _root_.GlobalTheory.RSNonvan.tendsto_partialL_ne_zero E a b σ σ' ha hb hσ hσ' hne T hT hT'
   have hx1 : ∀ᶠ x in 𝓝[>] (1 : ℝ), 1 < x := self_mem_nhdsWithin
   have h1 : Tendsto (fun x : ℝ => Complex.exp (logRS T σ σ' x)) (𝓝[>] 1) (𝓝 z) :=
     hlim.congr' (hx1.mono fun x hx => (hasProd_exp_logRS hσ hσ' hT hT' hx).tprod_eq)
@@ -1218,7 +1210,7 @@ theorem abs_re_logRS_bdd : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
 
 theorem tendsto_re_logRS_self : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CG E a), 1 ≤ a → π.IsUnitary → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T π → Tendsto (fun x : ℝ => (logRS T π π x).re) (𝓝[>] 1) atTop := by
   intro E _ _ _ a π ha hπ T hT
-  obtain ⟨L, hL, -, c, hc, hlim⟩ := GlobalTheory.T.rankinSelberg_partialL_pole_at_one_conj E a π ha hπ T hT
+  obtain ⟨L, hL, -, c, hc, hlim⟩ := _root_.GlobalTheory.RSPole.rs_pole_conj E a π ha hπ T hT
   have hx1 : ∀ᶠ x in 𝓝[>] (1 : ℝ), 1 < x := self_mem_nhdsWithin
   have he : ∀ x : ℝ, 1 < x → (logRS T π π x).re = Real.log (L x) := fun x hx => by
     have e := (hL x hx).1.unique (hasProd_exp_logRS hπ hπ hT hT hx)
@@ -1608,12 +1600,12 @@ theorem UpperTheory.V.Z.Int.slopeAllOf :
     · exact_mod_cast add_left_cancel e
     · obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 hz
       exact ⟨m i, add_comm _ _⟩
-  obtain ⟨Q, hQ1, hQ2, hQ3, hQ4⟩ := (GlobalTheory.T.infinite_quadraticCM_goodBaseChange_split hAF E (AlgebraicClosure E) 2 n π w).nonempty
+  obtain ⟨Q, hQ1, hQ2, hQ3, hQ4⟩ := (_root_.GlobalTheory.GalCut.infinite_qcm_split_good hAF E (AlgebraicClosure E) 2 n π w).nonempty
   obtain ⟨P, hP⟩ := hQL E Q.K Q.two n hn π hQ3
   obtain ⟨⟨χ', hχ'⟩, -⟩ := GlobalTheory.T.polarizedPair_baseChange_polarized_same_weight hAF hJS hGK E Q.K 2 n hn π χ P hP ⟨hreg, hpol, trivial⟩
   have hin : GlobalTheory.GalCut.InScope .good 2 P χ' := ⟨hχ'.1, hχ'.2.1, hQ4 P hP⟩
   have hA := ReciprocityTheory.Gal.isPlaceOver_placeOf (AlgebraicClosure E) w
-  obtain ⟨w', h', i, hi⟩ := GlobalTheory.T.exists_place_completion_iso E (AlgebraicClosure E) Q.K w _ hA (hQ1 _ hA)
+  obtain ⟨w', h', i, hi⟩ := _root_.GlobalTheory.PlaceIsoDec.exists_placeIso_of_dec_le_range E (AlgebraicClosure E) Q.K w _ hA (hQ1 _ hA)
   have hund : w'.under (𝓞 E) = w := by
     have := GlobalTheory.PlaceIsoDec.liesOver_of_isPlaceOver hA h'
     ext1

@@ -125,27 +125,6 @@ theorem ut_of_mem {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : G.u
     rw [if_pos rfl, dite_eq_right (lt_irrefl _), add_zero, hA.2 i]
   · rw [if_neg (ne_of_gt h), dite_eq_right (not_lt.2 h.le), add_zero, hA.1 i j h]
 
-theorem ut_inv_mem {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : A⁻¹ ∈ C2.UTset r := by
-  have hT : Matrix.BlockTriangular A id := fun i j hij => hA.1 i j hij
-  have hu : IsUnit A.det := by
-    rw [Matrix.det_of_upperTriangular hT]
-    simp [hA.2]
-  haveI := Matrix.invertibleOfIsUnitDet A hu
-  have hTi : Matrix.BlockTriangular A⁻¹ id := Matrix.blockTriangular_inv_of_blockTriangular hT
-  refine ⟨fun i j hij => hTi hij, fun i => ?_⟩
-  have h1 : (A * A⁻¹) i i = 1 := by rw [Matrix.mul_nonsing_inv _ hu, Matrix.one_apply_eq]
-  rw [Matrix.mul_apply, Finset.sum_eq_single i] at h1
-  · rwa [hA.2, one_mul] at h1
-  · intro k _ hk
-    rcases lt_or_gt_of_ne hk with h | h
-    · rw [hA.1 i k h, zero_mul]
-    · rw [hTi h, mul_zero]
-  · simp
-
-theorem ut_det {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : IsUnit A.det := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => hA.1 i j hij)]
-  simp [hA.2]
-
 def uTransE (A : X → Matrix (Fin r) (Fin r) ℂ) (hA : ∀ x, A x ∈ C2.UTset r) (hAc : ∀ i j, Measurable fun x => A x i j)
     (hAi : ∀ i j, Measurable fun x => (A x)⁻¹ i j) :
     (X × (G.UT r → ℂ)) ≃ᵐ (X × (G.UT r → ℂ)) where
@@ -155,14 +134,14 @@ def uTransE (A : X → Matrix (Fin r) (Fin r) ℂ) (hA : ∀ x, A x ∈ C2.UTset
     ext
     · rfl
     · simp only
-      rw [ut_of_mem (C2x2.ut_mul (ut_inv_mem (hA p.1)) (StabilizerDisintegration.UC.upper_mem _)), ← Matrix.mul_assoc,
-        Matrix.mul_nonsing_inv _ (ut_det (hA p.1)), Matrix.one_mul, StabilizerDisintegration.UC.utc_upper]
+      rw [ut_of_mem (C2x2.ut_mul (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_inv (hA p.1)) (StabilizerDisintegration.UC.upper_mem _)), ← Matrix.mul_assoc,
+        Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_unit (hA p.1)), Matrix.one_mul, StabilizerDisintegration.UC.utc_upper]
   right_inv p := by
     ext
     · rfl
     · simp only
       rw [ut_of_mem (C2x2.ut_mul (hA p.1) (StabilizerDisintegration.UC.upper_mem _)), ← Matrix.mul_assoc,
-        Matrix.nonsing_inv_mul _ (ut_det (hA p.1)), Matrix.one_mul, StabilizerDisintegration.UC.utc_upper]
+        Matrix.nonsing_inv_mul _ (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_unit (hA p.1)), Matrix.one_mul, StabilizerDisintegration.UC.utc_upper]
   measurable_toFun := by
     refine measurable_fst.prodMk ?_
     refine Measurable.of_eval fun q => ?_
@@ -184,7 +163,7 @@ theorem uTransE_mp (A : X → Matrix (Fin r) (Fin r) ℂ) (hA : ∀ x, A x ∈ C
     MeasurePreserving (uTransE A hA hAc hAi) (μ.prod volume) (μ.prod volume) := by
   have h := MeasurePreserving.skew_product (f := id) (g := fun x u => StabilizerDisintegration.utc ((A x)⁻¹ * G.upper u))
     (MeasurePreserving.id μ) (measurable_snd.comp (uTransE A hA hAc hAi).measurable)
-    (Filter.Eventually.of_forall fun x => (StabilizerDisintegration.utLeft r _ (ut_inv_mem (hA x))).map_eq)
+    (Filter.Eventually.of_forall fun x => (StabilizerDisintegration.utLeft r _ (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_inv (hA x))).map_eq)
   exact h
 
 end utrans
@@ -338,11 +317,11 @@ theorem psiC_phiC (hy1 : IsUnit y1.det) (hy1' : IsUnit y1'.det) :
   intro p
   obtain ⟨x0, ⟨⟨a, b⟩, ⟨e, ⟨v, u⟩⟩⟩⟩ := p
   have hM : (A x0)⁻¹ * G.upper u ∈ C2.UTset r :=
-    StabilizerDisintegration.HC.UT_mul (ut_inv_mem (hA x0)) (StabilizerDisintegration.HC.upper_mem u)
+    _root_.Formalism.FourierDecayAlt.P.C2x2.ut_mul (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_inv (hA x0)) (StabilizerDisintegration.HC.upper_mem u)
   have hE : (StabilizerDisintegration.UC.eSp σ.symm).symm (StabilizerDisintegration.UC.fSp σ.symm (x0, fun q => v (StabilizerDisintegration.UC.iota σ q))) =
       (x0, fun q => v (StabilizerDisintegration.UC.iota σ q)) := (StabilizerDisintegration.UC.eSp σ.symm).symm_apply_apply _
   have hU : A x0 * G.upper (StabilizerDisintegration.utc ((A x0)⁻¹ * G.upper u)) = G.upper u := by
-    rw [ut_of_mem hM, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (ut_det (hA x0)), Matrix.one_mul]
+    rw [_root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_utc hM, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_unit (hA x0)), Matrix.one_mul]
   simp only [psiC, phiC, hE, rnAct_inv_rnAct hy1, rnAct_inv_rnAct hy1', Equiv.apply_symm_apply, hU,
     StabilizerDisintegration.HC.utc_upper, Prod.mk.injEq, and_true, true_and]
   exact Subsingleton.elim _ _
@@ -354,10 +333,10 @@ theorem phiC_psiC (hy1 : IsUnit y1.det) (hy1' : IsUnit y1'.det) :
   obtain ⟨⟨x1, w1⟩, ⟨x2, w2⟩⟩ := q
   have hE : StabilizerDisintegration.UC.fSp σ.symm ((StabilizerDisintegration.UC.eSp σ.symm).symm w1) = w1 := (StabilizerDisintegration.UC.eSp σ.symm).apply_symm_apply w1
   have hM : A ((StabilizerDisintegration.UC.eSp σ.symm).symm w1).1 * G.upper w2 ∈ C2.UTset r :=
-    StabilizerDisintegration.HC.UT_mul (hA _) (StabilizerDisintegration.HC.upper_mem w2)
+    _root_.Formalism.FourierDecayAlt.P.C2x2.ut_mul (hA _) (StabilizerDisintegration.HC.upper_mem w2)
   have hU : (A ((StabilizerDisintegration.UC.eSp σ.symm).symm w1).1)⁻¹ *
       G.upper (StabilizerDisintegration.utc (A ((StabilizerDisintegration.UC.eSp σ.symm).symm w1).1 * G.upper w2)) = G.upper w2 := by
-    rw [ut_of_mem hM, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (ut_det (hA _)), Matrix.one_mul]
+    rw [_root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_utc hM, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_unit (hA _)), Matrix.one_mul]
   simp only [psiC, phiC, rnAct_rnAct_inv hy1, rnAct_rnAct_inv hy1', Equiv.symm_apply_apply, Prod.mk.eta, hE, hU,
     StabilizerDisintegration.HC.utc_upper]
 
@@ -479,24 +458,6 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 def Amat (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) (x0 : C2.Lstidx σ.symm → ℂ) : Matrix (Fin r) (Fin r) ℂ :=
   (C2.monoP σ.symm d)⁻¹ * StabilizerDisintegration.lowS σ.symm x0 * C2.monoP σ.symm d
 
-private theorem mul_mem_utset_of_mem {m : ℕ} {A B : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.UTset m)
-    (hB : B ∈ C2.UTset m) : A * B ∈ C2.UTset m := by
-  refine ⟨fun i j hji => ?_, fun i => ?_⟩
-  · rw [Matrix.mul_apply]
-    apply Finset.sum_eq_zero
-    intro l _
-    rcases lt_or_ge l i with hl | hl
-    · rw [hA.1 i l hl, zero_mul]
-    · rw [hB.1 l j (lt_of_lt_of_le hji hl), mul_zero]
-  · rw [Matrix.mul_apply, Finset.sum_eq_single i]
-    · rw [hA.2 i, hB.2 i, mul_one]
-    · intro l _ hl
-      rcases lt_or_gt_of_ne hl with hl' | hl'
-      · rw [hA.1 i l hl', zero_mul]
-      · rw [hB.1 l i hl', mul_zero]
-    · intro hi
-      exact absurd (Finset.mem_univ i) hi
-
 theorem integrand_pw (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 1) → ℂ)
     (hz : S.z = liftVec k r 0 z0) (hz' : S.z' = liftVec k r 0 z0')
     (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) (hd : ∀ a, d a ≠ 0) (γ0 : B.Mat k 0) (hγ0 : γ0 ∈ B.GV k 0)
@@ -519,16 +480,16 @@ theorem integrand_pw (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 
   have hYu : IsUnit (midB r 0 (Matrix.of h)).det := Formalism.FourierDecayAlt.P.PBG.isUnit_det_of_UH hY.1
   have hY'u : IsUnit (midB r 0 (Matrix.of h')).det := Formalism.FourierDecayAlt.P.PBG.isUnit_det_of_UH hY'.1
   have hAm : Amat σ d x0 ∈ C2.UTset r := conjS_UT hd x0
-  have hAmi : (Amat σ d x0)⁻¹ ∈ C2.UTset r := ut_inv_mem hAm
+  have hAmi : (Amat σ d x0)⁻¹ ∈ C2.UTset r := _root_.Formalism.FourierDecayAlt.P.C2x2.ut_inv hAm
   have hup : G.upper u ∈ C2.UTset r := StabilizerDisintegration.UC.upper_mem u
-  have hprod : (Amat σ d x0)⁻¹ * G.upper u ∈ C2.UTset r := mul_mem_utset_of_mem hAmi hup
-  have hV' : G.upper (StabilizerDisintegration.utc ((Amat σ d x0)⁻¹ * G.upper u)) = (Amat σ d x0)⁻¹ * G.upper u := ut_of_mem hprod
-  have hAmu : IsUnit (Amat σ d x0).det := ut_det hAm
+  have hprod : (Amat σ d x0)⁻¹ * G.upper u ∈ C2.UTset r := _root_.Formalism.FourierDecayAlt.P.C2x2.ut_mul hAmi hup
+  have hV' : G.upper (StabilizerDisintegration.utc ((Amat σ d x0)⁻¹ * G.upper u)) = (Amat σ d x0)⁻¹ * G.upper u := _root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_utc hprod
+  have hAmu : IsUnit (Amat σ d x0).det := _root_.Formalism.FourierDecayAlt.P.C2x2.ut_unit hAm
   have hZu : IsUnit (U.hMat σ d).det := by
     rw [U.hMat, Matrix.det_mul, Matrix.det_diagonal]
     exact (Formalism.FourierDecayAlt.P.Dx2.SL.isUnit_wP σ).mul
       (isUnit_iff_ne_zero.mpr (Finset.prod_ne_zero_iff.mpr fun a _ => hd a))
-  have hγ0u : IsUnit γ0.det := gv_unit hγ0
+  have hγ0u : IsUnit γ0.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ0
   have hmat : (G.upper (StabilizerDisintegration.UC.fSp σ.symm (x0, (fun q => v (StabilizerDisintegration.UC.iota σ q)))))ᴴ * U.hMat σ d * G.upper (StabilizerDisintegration.utc ((Amat σ d x0)⁻¹ * G.upper u)) = U.headH σ d v u := by
     rw [hMat_monoP, orbit_split hd, headH_eq, hV']
     show _ * _ * G.upper (StabilizerDisintegration.utc (Amat σ d x0 * ((Amat σ d x0)⁻¹ * G.upper u))) = _
@@ -555,8 +516,8 @@ theorem integrand_pw (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 
   have hs1 : C2.simpleUp (G.upper (StabilizerDisintegration.UC.fSp σ.symm (x0, (fun q => v (StabilizerDisintegration.UC.iota σ q))))) = C2.simpleUp (StabilizerDisintegration.lowS σ.symm x0)ᴴ +
       C2.simpleUp (StabilizerDisintegration.lowP σ.symm (fun q => v (StabilizerDisintegration.UC.iota σ q)))ᴴ := by
     rw [StabilizerDisintegration.UC.upper_fSp]
-    exact simpleUp_mul (StabilizerDisintegration.UC.LT_ct (StabilizerDisintegration.UC.lowS_mem σ.symm x0).1)
-      (StabilizerDisintegration.UC.LT_ct (StabilizerDisintegration.UC.lowerUnipotent_mem σ.symm _).1)
+    exact simpleUp_mul (_root_.Formalism.FourierDecayAlt.P.C2x2.lt_conjT (StabilizerDisintegration.UC.lowS_mem σ.symm x0).1)
+      (_root_.Formalism.FourierDecayAlt.P.C2x2.lt_conjT (StabilizerDisintegration.UC.lowerUnipotent_mem σ.symm _).1)
   have hs2 : C2.simpleUp (G.upper (StabilizerDisintegration.utc ((Amat σ d x0)⁻¹ * G.upper u))) = C2.simpleUp (Amat σ d x0)⁻¹ + C2.simpleUp (G.upper u) := by
     rw [hV']
     exact simpleUp_mul hAmi hup
@@ -568,7 +529,7 @@ theorem integrand_pw (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 
     simp only [Matrix.mul_assoc]
   have hrelU : C2.psiC cStd (C2.simpleUp (StabilizerDisintegration.lowS σ.symm x0)ᴴ) =
       C2.psiC cStd (C2.simpleUp (Amat σ d x0)⁻¹) := by
-    have hQ : (StabilizerDisintegration.lowS σ.symm x0)ᴴ ∈ C2.UTset r := StabilizerDisintegration.UC.LT_ct (StabilizerDisintegration.UC.lowS_mem σ.symm x0).1
+    have hQ : (StabilizerDisintegration.lowS σ.symm x0)ᴴ ∈ C2.UTset r := _root_.Formalism.FourierDecayAlt.P.C2x2.lt_conjT (StabilizerDisintegration.UC.lowS_mem σ.symm x0).1
     have hQ' : (U.hMat σ d)⁻¹ * ((StabilizerDisintegration.lowS σ.symm x0)ᴴᴴ)⁻¹ * U.hMat σ d ∈ C2.UTset r := by
       rw [hinv]
       exact hAmi
@@ -662,12 +623,9 @@ theorem Amat_inv_cont (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) (hd : ∀ a,
 theorem norm_psi (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (g : B.Mat k r) : ‖psi k r z c g‖ = 1 := by
   unfold psi; rw [Complex.norm_exp]; simp
 
-theorem norm_Gpsi (β x : ℂ) : ‖G.psi β x‖ = 1 := by
-  unfold G.psi; rw [Complex.norm_exp]; simp
-
 theorem norm_psiStar (σ : Equiv.Perm (Fin r)) (z z' : Fin (2 * (r + 0 + 0) + k + 1) → ℂ) (ξ : U.Xi k r 0 0 σ) :
     ‖U.psiStar k 0 σ z z' ξ‖ = 1 := by
-  rw [psiStar_zero, norm_mul, norm_mul, norm_psi, norm_star, norm_psi, norm_Gpsi]; norm_num
+  rw [psiStar_zero, norm_mul, norm_mul, norm_psi, norm_star, norm_psi, _root_.Formalism.FourierDecayAlt.P.StationaryPhaseModel.F_norm_psi]; norm_num
 
 theorem psi_cont (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) : Continuous fun g : B.Mat k r => psi k r z c g := by
   unfold psi ell
@@ -786,8 +744,8 @@ theorem inner_int (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 1) 
   have hhL' : Matrix.of h' ∈ UWset k (r + 0) (liftVec k r 0 z0') := by rw [← hz']; exact hh'
   have hy1W : y1 ∈ UWset k 0 z0 := uw_mid r 0 z0 _ hhL
   have hy1W' : y1' ∈ UWset k 0 z0' := uw_mid r 0 z0' _ hhL'
-  have uy1 : IsUnit y1.det := gv_unit hy1W.1
-  have uy1' : IsUnit y1'.det := gv_unit hy1W'.1
+  have uy1 : IsUnit y1.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hy1W.1
+  have uy1' : IsUnit y1'.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hy1W'.1
   have hγ' : y1⁻¹ * γ0 * y1' ∈ B.GV k 0 := by
     have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k 0
     exact hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hy1W.1) _ hγ0) _ hy1W'.1

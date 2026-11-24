@@ -345,11 +345,6 @@ theorem an_wVec {M : FlagModel y Ψ N j} {n : ℕ} (BM : BaseMetric M n) (l : Fi
     exact an_sum fun I _ => (va.2 _ (reg_u BM l _ _)).mul
       (an_minorIJ (an_mul_transvection (hh τ) ca cb ht) _ _)
 
-theorem base_orbit {σ : Type} (blk : σ → Option K) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
-    SameOrbit (basePart blk z) (basePart blk z') := by
-  obtain ⟨c, hc, rfl⟩ := h
-  exact ⟨fun k => c k.1, fun k => hc k.1, rfl⟩
-
 theorem fst_orbit (k₀ : K) {z z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ} (h : SameOrbit z z') :
     SameOrbit (fstPt k₀ z) (fstPt k₀ z') := by
   obtain ⟨c, hc, rfl⟩ := h
@@ -432,7 +427,7 @@ theorem charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (�
     an_chart_comp FA.Re.R.A FA.S.A FA.Re.holo hV1 hgc hga, hWc, hWa, fun z hz => ⟨?_, fun x₀ hx₀ => ?_⟩,
     fun z hz => ⟨hW z hz, ?_, ?_⟩⟩
   · have h1 := FA.pr_eq (g z)
-    have h2 := base_orbit M.blk (hg z hz)
+    have h2 := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.ImgBase.sameOrbit_basePart M.blk (hg z hz)
     rw [FC.basePart_flagPt] at h2
     have h3 := (FC.bvec_good K ι Φ y Ψ N j M n BM l _ (hO _ hz)).2.2.2
     exact BM.Rb.inj _ _ (Proj.not_mem_mcPts_top _) (orbit_trans (orbit_symm h1) (orbit_trans h2 h3))
@@ -574,11 +569,6 @@ section Orbits
 
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
-theorem orbit_basePart {σ : Type} (blk : σ → Option K) {z z' : (Σ k, ι k) → ℂ} (h : SameOrbit z z') :
-    SameOrbit (basePart blk z) (basePart blk z') := by
-  obtain ⟨c, hc, rfl⟩ := h
-  exact ⟨fun k => c k.1, fun k => hc k.1, rfl⟩
-
 theorem orbit_fstPt {k₀ : K} {z z' : (Σ o : Option K, ι (o.getD k₀)) → ℂ} (h : SameOrbit z z') :
     SameOrbit (fstPt k₀ z) (fstPt k₀ z') := by
   obtain ⟨c, hc, rfl⟩ := h
@@ -655,7 +645,7 @@ theorem vector_of_chart : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
   have hz := RW.mem x x (RW.mem_U x)
   have hbase : SameOrbit (basePart M.blk (fstPt k₀ (RW.lift x x)))
       (BM.Rb.lift (FA.pr (q 0 x)) (FA.pr (q 0 x))) := by
-    have e1 := orbit_basePart M.blk (h0 x x₀ hx₀)
+    have e1 := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.ImgBase.sameOrbit_basePart M.blk (h0 x x₀ hx₀)
     have e2 := FA.pr_eq x₀
     rw [hx₀] at e2
     exact orbit_trans (orbit_symm e1) e2
@@ -820,10 +810,6 @@ theorem plk_ne_zero (M : FlagModel y Ψ N j) {n : ℕ} (BM : BaseMetric M n) (l 
     rw [(M.blk_none p).2 hn] at hp
     cases hp
 
-theorem not_mem_top (z : (Σ k, ι k) → ℂ) : z ∉ mcPts (⊤ : Ideal (MRing ι)) := fun h => by
-  have := h.2 1 trivial
-  simp at this
-
 end GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.DensW
 
 
@@ -892,7 +878,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.dens_w : ∀ (K : Type) [Finty
   rw [hw.1] at o₀
   rw [hw.2] at o₁
   have hpr : FA.pr (q 0 x') = b' := by
-    refine BM.Rb.inj _ _ (GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.DensW.not_mem_top _) (orbit_trans (orbit_symm (hbase x')) ?_)
+    refine BM.Rb.inj _ _ (_root_.GlobalTheory.CompanionTheory.Ar.PB.Proj.not_mem_mcPts_top _) (orbit_trans (orbit_symm (hbase x')) ?_)
     have o₂ := FibreCount.basePart_orbit M.blk o₀
     rw [FC.basePart_flagPt] at o₂
     exact orbit_trans o₂ hg.2.2.2

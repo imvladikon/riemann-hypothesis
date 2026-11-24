@@ -60,13 +60,7 @@ open scoped Classical
 
 local instance factT (D : D7) (k : Fin 2) : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
 
-theorem trace_alg {G : Type} [Group G] [Fintype G] (τ : FDRep ℂ G) (a : MonoidAlgebra ℂ G) :
-    LinearMap.trace ℂ τ (Representation.asAlgebraHom τ.ρ a) = tr a τ.character := by
-  have e : Representation.asAlgebraHom τ.ρ a = ∑ x, a.coeff x • τ.ρ x :=
-    LinearMap.ext fun w => by rw [alg_apply, LinearMap.sum_apply]; rfl
-
-  rw [e, map_sum, tr]
-  exact Finset.sum_congr rfl fun x _ => map_smul _ _ _
+alias trace_alg := _root_.GlobalTheory.GLq.TrIdem.trace_asAlgebraHom
 
 section Finite
 

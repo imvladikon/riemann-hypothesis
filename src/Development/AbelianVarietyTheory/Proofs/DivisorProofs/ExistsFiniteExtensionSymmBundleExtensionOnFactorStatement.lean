@@ -409,22 +409,13 @@ open Classical in
 def cl (s : L.Sec) (r : Z ⟶ X) (z : Z) : Associates (Z.presheaf.stalk z) :=
   if h : ∃ a, r z ∈ L.U a then Associates.mk (gs r z (L.U h.choose) (s.f h.choose)) else 0
 
-theorem gs_trans (s : L.Sec) (r : Z ⟶ X) (z : Z) {a b : L.ι} (ha : r z ∈ L.U a) (hb : r z ∈ L.U b) :
-    gs r z (L.U a) (s.f a) = (gm r z _ (L.g a b)).val * gs r z (L.U b) (s.f b) := by
-  have hm : r z ∈ L.U a ⊓ L.U b := ⟨ha, hb⟩
-  exact (gs_res r z _ hm _).symm.trans ((congrArg (gs r z _) (s.compat a b)).trans ((gs_mul r z _ hm _ _).trans
-    (congrArg₂ (· * ·) (gs_unit r z _ hm _) (gs_res r z _ hm _))))
-
 theorem mk_unit_mul {A : Type} [CommRing A] (u : Aˣ) (a : A) : Associates.mk (u.val * a) = Associates.mk a :=
   Associates.mk_eq_mk_iff_associated.2 (associated_unit_mul_left a u u.isUnit)
 
 theorem cl_eq (s : L.Sec) (r : Z ⟶ X) (z : Z) {a : L.ι} (ha : r z ∈ L.U a) :
     cl s r z = Associates.mk (gs r z (L.U a) (s.f a)) := by
   have h : ∃ a, r z ∈ L.U a := ⟨a, ha⟩
-  rw [cl, dite_eq_left h, gs_trans s r z h.choose_spec ha, mk_unit_mul]
-
-theorem gs_pow (r : Z ⟶ X) (z : Z) (U : X.Opens) (h : r z ∈ U) (a : Γ(X, U)) (n : ℕ) :
-    gs r z U (a ^ n) = gs r z U a ^ n := by simp only [gs_eq r z U h, map_pow]
+  rw [cl, dite_eq_left h, _root_.GlobalTheory.SecPullIso.gs_sec_trans s r z h.choose_spec ha, mk_unit_mul]
 
 theorem exists_move (hL : L.IsLB) (hM : M.IsLB) (e : cls L hL = cls M hM) (s : L.Sec) :
     ∃ t : M.Sec, ∀ (Z : Scheme.{0}) (r : Z ⟶ X) (z : Z), cl t r z = cl s r z := by
@@ -448,7 +439,7 @@ theorem exists_pp (hL : L.IsLB) (φ : Y ⟶ X) (n : ℕ) (s : L.Sec) :
         ((φ.app (L.U (j PUnit.unit))).hom (s.f (j PUnit.unit) ^ n))) =
         gs (r ≫ φ) z (L.U (j PUnit.unit)) (s.f (j PUnit.unit)) ^ n := fun Z r z j hj =>
     (gs_res r z _ hj _).trans ((gs_pull r φ z _ (Set.mem_iInter.1 hj PUnit.unit) _).trans
-      (gs_pow _ z _ (Set.mem_iInter.1 hj PUnit.unit) _ n))
+      (_root_.GlobalTheory.LBGerm.gs_pow _ z _ (Set.mem_iInter.1 hj PUnit.unit) _ n))
   refine ⟨⟨fun j => (Y.presheaf.map (homOfLE (LB.wchart_le L (fun _ : PUnit => φ) j PUnit.unit)).op).hom
         ((φ.app (L.U (j PUnit.unit))).hom (s.f (j PUnit.unit) ^ n)), fun j j' => fn_ext fun y hy => ?_⟩,
     fun Z r z => ?_⟩
@@ -456,7 +447,7 @@ theorem exists_pp (hL : L.IsLB) (φ : Y ⟶ X) (n : ℕ) (s : L.Sec) :
       ((gs_unit (𝟙 Y) y _ hy _).trans (congrArg Units.val (gm_linComb L _ _ (𝟙 Y) y j j' hy.1 hy.2)))
       (gs_res (𝟙 Y) y _ hy _))).symm)
     refine (val _ (𝟙 Y) y j hy.1).trans (Eq.trans ?_ (congrArg _ (val _ (𝟙 Y) y j' hy.2)).symm)
-    rw [gs_trans s (𝟙 Y ≫ φ) y (Set.mem_iInter.1 hy.1 PUnit.unit) (Set.mem_iInter.1 hy.2 PUnit.unit), mul_pow]
+    rw [_root_.GlobalTheory.SecPullIso.gs_sec_trans s (𝟙 Y ≫ φ) y (Set.mem_iInter.1 hy.1 PUnit.unit) (Set.mem_iInter.1 hy.2 PUnit.unit), mul_pow]
     simp
   · obtain ⟨a, ha⟩ := exists_chart hL (φ (r z))
     have hj : r z ∈ (pp L φ n).U (fun _ => a) := Set.mem_iInter.2 fun _ => ha
@@ -472,7 +463,7 @@ theorem exists_scale (hL : L.IsLB) (c : Γ(X, ⊤)) (s : L.Sec) :
   refine ⟨⟨fun a => (X.presheaf.map (homOfLE (le_top : L.U a ≤ ⊤)).op).hom c * s.f a,
     fun a b => fn_ext fun y hy => ?_⟩, fun Z r z => ?_⟩
   · rw [gs_res (𝟙 X) y _ hy, gs_mul (𝟙 X) y _ hy, gs_res (𝟙 X) y _ hy, gs_unit (𝟙 X) y _ hy, val _ _ _ a hy.1,
-      val _ _ _ b hy.2, gs_trans s (𝟙 X) y hy.1 hy.2, mul_left_comm]
+      val _ _ _ b hy.2, _root_.GlobalTheory.SecPullIso.gs_sec_trans s (𝟙 X) y hy.1 hy.2, mul_left_comm]
   · obtain ⟨a, ha⟩ := exists_chart hL (r z)
     rw [cl_eq _ r z ha, cl_eq _ r z ha, Associates.mk_mul_mk]
     exact congrArg Associates.mk (val Z r z a ha)
@@ -492,7 +483,7 @@ theorem cl_ne_zero [IsIntegral X] (hL : L.IsLB) (s : L.Sec) (hs : ∃ i, s.f i �
   obtain ⟨y, hy⟩ := nonempty_preirreducible_inter (L.U i).isOpen (L.U a).isOpen hne ⟨x, ha⟩
   rw [cl_eq s (𝟙 X) x ha, Ne, Associates.mk_eq_zero]
   refine gs_ne_zero (fun e => gs_ne_zero hi y hy.1 ?_) x ha
-  rw [gs_trans s (𝟙 X) y hy.1 hy.2, e, gs_eq (𝟙 X) y _ hy.2, map_zero, map_zero, MulZeroClass.mul_zero]
+  rw [_root_.GlobalTheory.SecPullIso.gs_sec_trans s (𝟙 X) y hy.1 hy.2, e, gs_eq (𝟙 X) y _ hy.2, map_zero, map_zero, MulZeroClass.mul_zero]
 
 theorem exists_ne_zero_of_cl (hL : L.IsLB) (s : L.Sec) (r : Z ⟶ X) (z : Z) (h : cl s r z ≠ 0) : ∃ i, s.f i ≠ 0 := by
   obtain ⟨a, ha⟩ := exists_chart hL (r z)
@@ -615,7 +606,7 @@ theorem exists_scalars [Flat G.hom] [IsIntegral (pullback G.hom (jK R))]
     (fun a b => fn_ext (V := j ⁻¹ᵁ N.U a ⊓ j ⁻¹ᵁ N.U b) fun y hy => by
       refine (gs_res (𝟙 Y) y inf_le_left hy _).trans (Eq.trans ?_ (gs_res (𝟙 Y) y inf_le_right hy _).symm)
       refine mul_right_cancel₀ (ht' a y hy.1) ((hw a y hy.1).symm.trans ?_)
-      rw [gs_trans s j y hy.1 hy.2, gs_trans t j y hy.1 hy.2, hw b y hy.2, mul_left_comm])
+      rw [_root_.GlobalTheory.SecPullIso.gs_sec_trans s j y hy.1 hy.2, _root_.GlobalTheory.SecPullIso.gs_sec_trans t j y hy.1 hy.2, hw b y hy.2, mul_left_comm])
   have hu' : ∀ a y, j y ∈ N.U a → gs j y (N.U a) (s.f a) = gs (𝟙 Y) y ⊤ u * gs j y (N.U a) (t.f a) :=
     fun a y hy => (hw a y hy).trans (congrArg (· * _) ((congrArg (gs (𝟙 Y) y _) (hu a)).symm.trans
       (gs_res (𝟙 Y) y (le_top : j ⁻¹ᵁ N.U a ≤ ⊤) hy u)))
@@ -719,7 +710,7 @@ theorem exists_sec_sq_of_double : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLo
       exact (cl_eq h (𝟙 _ ≫ pullback.fst G.hom (jK R)) y hy.1).symm
     refine exists_unit_of_associated _ _ _ (fun y hy e => pow_ne_zero 2 (hθ0 y) ?_) (fun y hy => ?_)
     · rw [← hb y hy, e]; rfl
-    · rw [← Associates.mk_eq_mk_iff_associated, hb y hy, gs_pow _ y _ hy, gs_res _ y _ hy, cl_eq θ _ y hy.2,
+    · rw [← Associates.mk_eq_mk_iff_associated, hb y hy, _root_.GlobalTheory.LBGerm.gs_pow _ y _ hy, gs_res _ y _ hy, cl_eq θ _ y hy.2,
         Associates.mk_pow]
   · have e : cl h f.left x = (Associates.mk (GlobalTheory.TwistLoc.gc G.hom x r) * cl σ (𝟙 _) x) ^ 2 := by
       have e₁ := hrr x
@@ -762,13 +753,6 @@ open TopologicalSpace Opposite
 
 variable {X Y Z : Scheme.{0}}
 
-theorem resU_resU {U V W : X.Opens} (h : V ≤ U) (k : W ≤ V) (x : Γ(X, U)ˣ) :
-    res k (res h x) = res (k.trans h) x := by
-  ext
-  change (X.presheaf.map (homOfLE h).op ≫ X.presheaf.map (homOfLE k).op).hom x.val = _
-  rw [← X.presheaf.map_comp]
-  rfl
-
 theorem resU_pullU_resU (f : Y ⟶ X) {U V : X.Opens} (k : V ≤ U) {W : Y.Opens}
     (h : W ≤ f ⁻¹ᵁ V) (x : Γ(X, U)ˣ) :
     res h (pullU f V (res k x)) = res (h.trans (f.preimage_mono k)) (pullU f U x) := by
@@ -787,13 +771,6 @@ theorem resU_pullU_square {P : Scheme.{0}} {g : Z ⟶ Y} {f : Y ⟶ X} {g' : Z �
     (h' : W ≤ g' ⁻¹ᵁ f' ⁻¹ᵁ U) (x : Γ(X, U)ˣ) :
     res h (pullU g _ (pullU f U x)) = res h' (pullU g' _ (pullU f' U x)) := by
   exact resU_pullU_congr e U h h' x
-
-theorem rs_rs {U V W : X.Opens} (h : V ≤ U) (k : W ≤ V) (x : Γ(X, U)) :
-    (X.presheaf.map (homOfLE k).op).hom ((X.presheaf.map (homOfLE h).op).hom x) =
-      (X.presheaf.map (homOfLE (k.trans h)).op).hom x := by
-  change (X.presheaf.map (homOfLE h).op ≫ X.presheaf.map (homOfLE k).op).hom x = _
-  rw [← X.presheaf.map_comp]
-  rfl
 
 theorem rs_app (f : Y ⟶ X) (U : X.Opens) {W : Y.Opens} (h : W ≤ f ⁻¹ᵁ U) (x : Γ(X, U)) :
     (Y.presheaf.map (homOfLE h).op).hom ((f.app U).hom x) = (f.appLE U W h).hom x := rfl
@@ -817,9 +794,6 @@ theorem inf_inf_le_inf_left (A B C D : X.Opens) : (A ⊓ B) ⊓ (C ⊓ D) ≤ A 
 
 theorem inf_inf_le_inf_right (A B C D : X.Opens) : (A ⊓ B) ⊓ (C ⊓ D) ≤ B ⊓ D :=
   fun _ hx => ⟨hx.1.2, hx.2.2⟩
-
-theorem inf_preimage_le (f : Y ⟶ X) (A B : X.Opens) : f ⁻¹ᵁ A ⊓ f ⁻¹ᵁ B ≤ f ⁻¹ᵁ (A ⊓ B) :=
-  fun _ hx => hx
 
 theorem pull_g_eq (L : LB X) (f : Y ⟶ X) (i i' : (L.pull f).ι) :
     (L.pull f).g i i' = res (le_inf ((inf_le_left.trans (LB.wchart_le L (fun _ => f) i PUnit.unit)))
@@ -857,7 +831,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
           V k ⊓ V l ⊓ V m ≤ V l ⊓ V m)).op).hom (hc l m)
     have e3 := congrArg (X.presheaf.map (homOfLE (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
           V k ⊓ V l ⊓ V m ≤ V k ⊓ V m)).op).hom (hc k m)
-    simp only [map_mul, rs_rs] at e1 e2 e3
+    simp only [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at e1 e2 e3
     apply cancel_nzd (ha m (V k ⊓ V l ⊓ V m) inf_le_right)
     simp only [res, Units.coe_map, MonoidHom.coe_coe, Units.val_mul]
     rw [_root_.mul_assoc, ← e2, ← e1, e3]
@@ -866,7 +840,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
         res (inf_le_right : (j ⁻¹ᵁ V k ⊓ j ⁻¹ᵁ V l) ⊓ (L.U i ⊓ L.U i') ≤ L.U i ⊓ L.U i')
           (L.g i i') *
         (res ((inf_le_left : (j ⁻¹ᵁ V k ⊓ j ⁻¹ᵁ V l) ⊓ (L.U i ⊓ L.U i') ≤ _).trans
-          (inf_preimage_le j (V k) (V l))) (pullU j _ (c k l)))⁻¹ *
+          (_root_.GlobalTheory.AbLaw.PowVanish.pre_inf j (V k) (V l))) (pullU j _ (c k l)))⁻¹ *
         res (inf_inf_le_inf_right (j ⁻¹ᵁ V k) (j ⁻¹ᵁ V l) (L.U i) (L.U i')) (w l i') := by
     intro k l i i'
     have hWl : (j ⁻¹ᵁ V k ⊓ j ⁻¹ᵁ V l) ⊓ (L.U i ⊓ L.U i') ≤ j ⁻¹ᵁ V l := fun _ hx => hx.1.2
@@ -880,7 +854,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
     have f2 := congrArg (Y.presheaf.map (homOfLE hW2).op).hom (hw l i')
     have f3 := congrArg (Y.presheaf.map (homOfLE hW3).op).hom (θ.compat i i')
     have f4 := congrArg (j.appLE (V k ⊓ V l) _ hWkl).hom (hc k l)
-    simp only [map_mul, rs_rs, rs_app, appLE_rs, rs_appLE] at f1 f2 f3 f4
+    simp only [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, rs_app, appLE_rs, rs_appLE] at f1 f2 f3 f4
     have Y1e : (Y.presheaf.map (homOfLE hW1).op).hom (w k i : Γ(Y, j ⁻¹ᵁ V k ⊓ L.U i)) *
         (j.appLE (V k ⊓ V l) _ hWkl).hom (c k l : Γ(X, V k ⊓ V l)) =
         (Y.presheaf.map (homOfLE hW3).op).hom (L.g i i' : Γ(Y, L.U i ⊓ L.U i')) *
@@ -895,7 +869,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
   have hinf3 : ∀ A B C : X.Opens,
       O.ι ⁻¹ᵁ A ⊓ O.ι ⁻¹ᵁ B ⊓ O.ι ⁻¹ᵁ C ≤ O.ι ⁻¹ᵁ (A ⊓ B ⊓ C) := fun _ _ _ _ hx => hx
   let N : LB O.toScheme := LB.mk Ix (fun k => O.ι ⁻¹ᵁ V k)
-    (fun k l => res (inf_preimage_le O.ι (V k) (V l))
+    (fun k l => res (_root_.GlobalTheory.AbLaw.PowVanish.pre_inf O.ι (V k) (V l))
       (pullU O.ι _ (c k l)))
   have hN : N.IsLB := by
     refine ⟨?_, ?_, ?_⟩
@@ -914,7 +888,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
       have := congrArg (fun u => res (hinf3 (V k) (V l) (V m)) (pullU O.ι _ u))
         (c_cocycle k l m)
       simp only [map_mul, resU_pullU_resU] at this
-      simp only [resU_resU]
+      simp only [_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
       exact this
   refine ⟨O, N, hVO, hN, ?_⟩
   have hsq : pullback.fst O.ι j ≫ O.ι = pullback.snd O.ι j ≫ j := pullback.condition
@@ -970,7 +944,7 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
         res (hQ.trans ((pullback.snd O.ι j).preimage_mono inf_le_right))
           (pullU (pullback.snd O.ι j) _ (L.g (p.1 PUnit.unit) (q.1 PUnit.unit))) := by
       rw [pull_g_eq]
-      exact resU_resU _ _ _
+      exact _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res' _ _ _
     have eN : res (le_inf (inf_le_left.trans inf_le_right) (inf_le_right.trans inf_le_right) :
           ((L.pull (pullback.snd O.ι j)).U p.1 ⊓ (N.pull (pullback.fst O.ι j)).U p.2) ⊓
           ((L.pull (pullback.snd O.ι j)).U q.1 ⊓ (N.pull (pullback.fst O.ι j)).U q.2) ≤ _)
@@ -978,11 +952,11 @@ theorem exists_lb_of_localEq : ∀ (X Y : Scheme.{0}) (j : Y ⟶ X) (L : LB Y) (
         res hQc (pullU (pullback.fst O.ι j) _
           (pullU O.ι _ (c (p.2 PUnit.unit) (q.2 PUnit.unit)))) := by
       rw [pull_g_eq, show N.g (p.2 PUnit.unit) (q.2 PUnit.unit) =
-        res (inf_preimage_le O.ι (V (p.2 PUnit.unit)) (V (q.2 PUnit.unit)))
+        res (_root_.GlobalTheory.AbLaw.PowVanish.pre_inf O.ι (V (p.2 PUnit.unit)) (V (q.2 PUnit.unit)))
           (pullU O.ι _ (c (p.2 PUnit.unit) (q.2 PUnit.unit))) from rfl]
-      refine (resU_resU _ _ _).trans ?_
-      exact resU_pullU_resU (pullback.fst O.ι j) (inf_preimage_le O.ι _ _) _ _
-    rw [eL, eN, resU_resU, resU_resU]
+      refine (_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res' _ _ _).trans ?_
+      exact resU_pullU_resU (pullback.fst O.ι j) (_root_.GlobalTheory.AbLaw.PowVanish.pre_inf O.ι _ _) _ _
+    rw [eL, eN, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
     exact key
   exact goal'
 
@@ -1236,12 +1210,6 @@ noncomputable section
 
 namespace GlobalTheory.SqGlue
 
-theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) (h₂ : W ≤ V) (s : Γ(X, U)) :
-    (X.presheaf.map (homOfLE h₂).op).hom ((X.presheaf.map (homOfLE h₁).op).hom s) =
-      (X.presheaf.map (homOfLE (h₂.trans h₁)).op).hom s := by
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem subsingleton_of_not_nonempty {X : Scheme.{0}} {W : X.Opens} (h : ¬ Nonempty W) : Subsingleton Γ(X, W) := by
   have e : W = ⊥ := by
     ext x
@@ -1271,7 +1239,7 @@ theorem exists_unit_of_locally {X : Scheme.{0}} [IsIntegral X] {V W : X.Opens} (
     refine res_cancel (W := O x ⊓ O y) (inf_le_left.trans ((hO x).trans hW)) ht ?_
     have e₁ := congrArg (X.presheaf.map (homOfLE (inf_le_left : O x ⊓ O y ≤ O x)).op).hom (hu x)
     have e₂ := congrArg (X.presheaf.map (homOfLE (inf_le_right : O x ⊓ O y ≤ O y)).op).hom (hu y)
-    rw [map_mul, res_res, res_res] at e₁ e₂
+    rw [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at e₁ e₂
     exact e₁.symm.trans e₂
   obtain ⟨c, hc, -⟩ := X.sheaf.existsUnique_gluing' O W (fun x => homOfLE (hO x)) hcov
     (fun x => (u x : Γ(X, O x))) hcomp
@@ -1285,13 +1253,13 @@ theorem exists_unit_of_locally {X : Scheme.{0}} [IsIntegral X] {V W : X.Opens} (
   refine ⟨hunit.unit, ?_⟩
   refine X.sheaf.eq_of_locally_eq' O W (fun x => homOfLE (hO x)) hcov _ _ fun x => ?_
   change (X.presheaf.map (homOfLE (hO x)).op).hom s = (X.presheaf.map (homOfLE (hO x)).op).hom _
-  rw [map_mul, res_res, IsUnit.unit_spec, hc', hu x]
+  rw [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, IsUnit.unit_spec, hc', hu x]
 
 theorem app_res {X Y : Scheme.{0}} (f : X ⟶ Y) {U U' : Y.Opens} {O : X.Opens} (hU : U' ≤ U) (hO : O ≤ f ⁻¹ᵁ U')
     (s : Γ(Y, U)) :
     (X.presheaf.map (homOfLE (hO.trans (f.preimage_mono hU))).op).hom ((f.app U).hom s) =
       (X.presheaf.map (homOfLE hO).op).hom ((f.app U').hom ((Y.presheaf.map (homOfLE hU).op).hom s)) := by
-  rw [← res_res (f.preimage_mono hU) hO]
+  rw [← _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres (f.preimage_mono hU) hO]
   congr 1
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, Scheme.Hom.naturality]
   rfl
@@ -1333,14 +1301,14 @@ theorem GlobalTheory.SqGlue.main : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [
     have hl : V k ⊓ V l ⊓ L2.U j ≤ V l ⊓ L2.U j := inf_le_inf_right _ inf_le_right
     have e1 := congrArg (G₁.left.presheaf.map (homOfLE hk).op).hom huk
     have e2 := congrArg (G₁.left.presheaf.map (homOfLE hl).op).hom hul
-    rw [map_mul, map_pow, res_res, res_res] at e1 e2
+    rw [map_mul, map_pow, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at e1 e2
     have e : (resU hk uk : Γ(G₁.left, V k ⊓ V l ⊓ L2.U j)) *
         (G₁.left.presheaf.map (homOfLE (hk.trans inf_le_left)).op).hom (a k) ^ 2 =
         (resU hl ul : Γ(G₁.left, V k ⊓ V l ⊓ L2.U j)) *
         (G₁.left.presheaf.map (homOfLE (hl.trans inf_le_left)).op).hom (a l) ^ 2 := by
       rw [coe_resU, coe_resU, ← e1, ← e2]
     refine ⟨V k ⊓ V l ⊓ L2.U j, inf_le_left, ⟨hx, hj⟩, (resU hk uk)⁻¹ * resU hl ul, ?_⟩
-    rw [map_pow, res_res, map_pow, Units.val_mul, _root_.mul_assoc, ← e, ← _root_.mul_assoc, Units.inv_mul, _root_.one_mul]
+    rw [map_pow, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, map_pow, Units.val_mul, _root_.mul_assoc, ← e, ← _root_.mul_assoc, Units.inv_mul, _root_.one_mul]
   · have ht : (f.app (V k)).hom (a k) ≠ 0 := fun h0 =>
       hne k (GlobalTheory.ExpInt.generic_app_injective G₁ (V k) (h0.trans (map_zero _).symm))
     refine (exists_unit_of_locally inf_le_left
@@ -1355,11 +1323,11 @@ theorem GlobalTheory.SqGlue.main : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [
     have hO₃ : f ⁻¹ᵁ (V k ⊓ L2.U j) ⊓ Lθ.U i ≤ f ⁻¹ᵁ V k ⊓ Lθ.U i :=
       inf_le_inf_right _ (f.preimage_mono inf_le_left)
     have e1 := congrArg ((pullback G₁.hom (jK R')).presheaf.map (homOfLE hO₁).op).hom hw
-    rw [map_mul, map_pow, res_res, res_res] at e1
+    rw [map_mul, map_pow, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at e1
     rw [app_res f (inf_le_right : V k ⊓ L2.U j ≤ L2.U j) hO₂, huk, map_mul, map_mul, map_pow, map_pow,
       ← app_res f (inf_le_left : V k ⊓ L2.U j ≤ V k) hO₂] at e1
     refine ⟨_, hO₃, ⟨⟨hy.1, hj⟩, hy.2⟩, resU hO₁ w * resU hO₂ (Units.map (f.app (V k ⊓ L2.U j)).hom.toMonoidHom uk), ?_⟩
-    rw [map_pow, res_res, map_pow, e1, Units.val_mul, coe_resU, coe_resU, Units.coe_map, _root_.mul_assoc]
+    rw [map_pow, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, map_pow, e1, Units.val_mul, coe_resU, coe_resU, Units.coe_map, _root_.mul_assoc]
     rfl
 end -- clump:auto
 end -- clump:auto
@@ -1499,23 +1467,6 @@ namespace GlobalTheory.Mum.DiagPic
 
 open GlobalTheory.CechPic
 
-theorem pull_inv {K : Type} [Field K] (A : PolAV (Sp K)) :
-    pull (GrpObj.inv : A.A ⟶ A.A).left (cls A.L A.isLB) = cls A.L A.isLB := by
-  obtain ⟨U, hU, ht⟩ := A.sym (default : PrimeSpectrum K)
-  have h := (cls_eq_zero_iff (LB.isLB_linComb A.isLB _ _)).2 ht
-  rw [cls_linComb A.isLB, Fin.sum_univ_two] at h
-  simp only [Matrix.cons_val_zero, Matrix.cons_val_one, one_smul, neg_smul, add_neg_eq_zero] at h
-  have hr : Set.range (𝟙 A.A.left : A.A.left ⟶ A.A.left) ⊆ Set.range (A.A.hom ⁻¹ᵁ U).ι := by
-    rw [Scheme.Opens.range_ι]
-    intro x _
-    have e : A.A.hom x = (default : PrimeSpectrum K) := Subsingleton.elim (α := PrimeSpectrum K) _ _
-    show A.A.hom x ∈ U
-    rw [e]
-    exact hU
-  have h' := congrArg (pull (IsOpenImmersion.lift (A.A.hom ⁻¹ᵁ U).ι (𝟙 _) hr)) h
-  rwa [← pull_comp, ← pull_comp, IsOpenImmersion.lift_fac_assoc, IsOpenImmersion.lift_fac, Category.id_comp,
-    pull_id] at h'
-
 theorem pull_one {S : Scheme.{0}} (A : PolAV S) {T : Over S} :
     pull (1 : T ⟶ A.A).left (cls A.L A.isLB) = 0 := by
   have h := (cls_eq_zero_iff (pull_isLB A.isLB _)).2 A.rigid
@@ -1525,10 +1476,10 @@ theorem pull_one {S : Scheme.{0}} (A : PolAV S) {T : Over S} :
 
 theorem lam_self {K : Type} [Field K] (A : PolAV (Sp K)) :
     lam (cls A.L A.isLB) (𝟙 A.A) (𝟙 A.A) = 2 • cls A.L A.isLB := by
-  have h := lam_mul_left A.isLB (GlobalTheory.Moduli.cube_of_isLB _ A A.L A.isLB) (𝟙 A.A) (𝟙 A.A)⁻¹ (𝟙 A.A)
+  have h := lam_mul_left A.isLB (_root_.GlobalTheory.AbLaw.CubeAssembly.cube_gen _ A A.L A.isLB) (𝟙 A.A) (𝟙 A.A)⁻¹ (𝟙 A.A)
   rw [mul_inv_cancel, lam_one_left] at h
   have e : lam (cls A.L A.isLB) (𝟙 A.A)⁻¹ (𝟙 A.A) = -(2 • cls A.L A.isLB) := by
-    rw [lam, inv_mul_cancel, pull_one, Hom.inv_def, Category.id_comp, pull_inv, Over.id_left, pull_id]
+    rw [lam, inv_mul_cancel, pull_one, Hom.inv_def, Category.id_comp, _root_.GlobalTheory.PolSpread.cls_inv, Over.id_left, pull_id]
     abel
   rw [e] at h
   exact (add_neg_eq_zero.1 h.symm)

@@ -93,6 +93,7 @@ import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AtPlaceIffEqAtTau
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPlaceModelPlaceMap
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
@@ -625,7 +626,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeLiftReps =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermFormEqOfImSpan =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermFormEqOfImSpan", "h": "module\n\npublic import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints\npublic import Formalism.LocalToGlobal.IndefiniteReal.FWExist\npublic import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd\npublic import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces\nimport Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LatticeSpanMembership\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermFormEqOfImSpan", "h": "module\n\npublic import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints\npublic import Formalism.LocalToGlobal.IndefiniteReal.FWExist\npublic import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd\npublic import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces\nimport Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LatticeSpanMembership\nimport Development.AbelianVarietyTheory.Proofs.HeightProofs.AtPlaceIffEqAtTau\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -719,10 +720,6 @@ theorem archM_rat {V : HSp D} {δ : GA D V} {M : Matrix (Fin V.rank) (Fin V.rank
   rw [show (matHom V δ).1 i j = (1 : AF D.host.F) ⊗ₜ[D.host.F] M i j from congrFun (congrFun hM i) j,
     Algebra.TensorProduct.map_tmul, map_one]
   exact ht.1 _
-
-theorem archM_mul (V : HSp D) (t : Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ) (a b : GA D V) :
-    archM V t (a * b) = archM V t a * archM V t b := by
-  simp only [archM, map_mul, Units.val_mul, Matrix.map_mul]
 
 theorem archM_fin (V : HSp D) (t : Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ) {a : GA D V} (ha : a ∈ GfC V) :
     archM V t a = 1 := by
@@ -824,7 +821,7 @@ theorem shift_core (hMod : R.IsModels) (hTie : TieIn T R κ v₀) (i : Fin D.R.m
     obtain ⟨ρ, hρ⟩ := hB _ t ht
     rw [hfr ρ ⟨t, ht⟩ hρ, hfr' ρ _ hρ, hρ]
     have e1 : γ * h = (γ * γ'⁻¹) * (γ' * (h * a)) * a⁻¹ := by group
-    rw [e1, archM_mul, archM_mul, archM_fin _ _ (inv_mem hin), Matrix.mul_one,
+    rw [e1, _root_.GlobalTheory.PointAtPlace.archM_mul, _root_.GlobalTheory.PointAtPlace.archM_mul, archM_fin _ _ (inv_mem hin), Matrix.mul_one,
       archM_rat hM (hMod.inf ρ), Matrix.mul_assoc]
     simp only [hN, Matrix.reindex_apply]
     rw [← Matrix.submatrix_mul_equiv _ _ _ (finCongr hr0).symm _]
@@ -1861,20 +1858,6 @@ theorem exists_map_const {V : HSp D} {b : Matrix (Fin V.rank) (Fin V.rank) D.hos
     (v : Fin m → D.host.E) : ∃ X : Matrix (Fin m) (Fin V.rank) D.host.E, ∀ j a, ∑ n, X j n * b n a = v j :=
   exists_const_of_orth (b' := fun i a => star (b i a)) (g := V.gram) hb.1 v
 
-theorem exists_frAt {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m}
-    {T : CoreJ D} [Algebra T.Q.c.F D.what₂.LL] {R : RealDat D A T.Q.c.F}
-    {κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)} {v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.MW i σ).Vec}
-    (hM : R.IsModels) (ht : TieIn T R κ v₀) (i : Fin D.R.m) (σ : T.Q.c.F →+* ℂ) (hσ : σ = T.σ₀)
-    (hV : T.V ((i : ℕ) + 1) σ = Wc D i) (h : GA D (Wc D i)) :
-    ∃ γ ∈ GQ (Wc D i), FrAt (R.MW i (sg0 D A)) R.θ (rank_Wc i) (dictW T i σ hV) γ h := by
-  have e : res T (sg0 D A) = T.σ₀ := by
-    rw [show sg0 D A = D.what₂.embLL from sgAt_mk _ R.hv0]
-    exact res_embLL T ht.alg ht.laws.pins.2.2.1
-  have hg : GoodEmb T.Q.c (res T (sg0 D A)) := e ▸ T.toCore.good_σ₀
-  obtain rfl : σ = res T (sg0 D A) := hσ.trans e.symm
-  obtain ⟨γ, h1, h2, -⟩ := (GlobalTheory.HolDict.BaseFrame.baseFrT_of_tieIn D G Pl0 T0 A T R κ v₀ hM ht i _ hg hV).2.2 h
-  exact ⟨γ, h1, h2⟩
-
 theorem cancel {ι : Type} [Fintype ι] {u ph K K' μ q w : ℂ} {e θ : ι → ℂ} (hph : ph ≠ 0) (hμ : μ ≠ 0) (hθ : ∀ a, θ a ≠ 0)
     (h1 : Complex.exp (Real.pi / 2 * ∑ a, e a) * (μ * q * w) = ph * K' * ∏ a, θ a)
     (h2 : u * (ph * K) * ∏ a, (Complex.exp (-(Real.pi / 2 * e a)) * θ a) = w) : u * (K * q) = μ⁻¹ * K' := by
@@ -1914,7 +1897,7 @@ theorem GlobalTheory.HeckeGenConst.generator_constant : ∀ (D : D7), GlobalTheo
   intro D hHk hSL hVF G _ _ Pl0 T0 A T _ R F κ v₀ hLev hGrp hFam hMod hThP hTie i σ hσ hV hpin P p k α Rc hS h hx
     a ha C z hz hx' t ht hb
   obtain ⟨ph, b, hph, hbON, hpin⟩ := hpin
-  obtain ⟨γ', hγ', hfr'⟩ := exists_frAt hMod hTie i σ hσ hV (h * a)
+  obtain ⟨γ', hγ', hfr'⟩ := _root_.GlobalTheory.FrameChangeRead.exists_frAt hMod hTie i σ hσ hV (h * a)
   obtain ⟨_, Wt', ⟨Y'⟩⟩ := exists_witness T i σ hV hTie.laws.toLawsM (hσ ▸ T.toCore.good_σ₀) (h * a)
   obtain ⟨rV, e, he, ⟨Δ, hΔ⟩, hall⟩ :=
     GlobalTheory.HeckeVacuum.omega_vacuum_hecke D G Pl0 T0 A T R hLev hFam hThP i P p k α Rc hS a ha

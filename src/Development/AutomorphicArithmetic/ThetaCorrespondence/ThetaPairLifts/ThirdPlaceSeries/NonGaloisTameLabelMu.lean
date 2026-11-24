@@ -185,18 +185,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin GlobalTheory.PendOf
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.split_weil_mu_tame_of_is_true
-    (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7)
-    (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D) (S : GlobalTheory.SplitRead.Reading P.T) :
-    _root_.GlobalTheory.NPin.IsFaithfulReading P S →
-      ∀ (i : D.nd.Loc) (k : Fin 2) (v : D.nd.PlG k) (hw : IsSplitPl D.host (D.naut.plGw k v)),
-        GlobalTheory.SplitWeil.IsTame (S i (D.naut.plGw k v) hw).mu :=
-  _root_.GlobalTheory.PendOf.isTame_reading_mu_at_split_plGw hL D P S
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IsTameMuPlGwStatement =====
@@ -294,13 +282,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin GlobalTheory.PendOf
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.split_mu_unit_eq_mu0_loc_k : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D) (S : Reading P.T), _root_.GlobalTheory.NPin.IsFaithfulReading P S → ∀ (i : D.nd.Loc) (k : Fin 2) (v : D.nd.PlG k) (hw : IsSplitPl D.host (D.naut.plGw k v)) (j : Fin D.R.m), j.1 + 1 = D.nd.j i → ∀ (u : 𝓞 D.host.E) (hu : (u : D.host.E) ≠ 0), u ∉ (D.naut.plGw k v).asIdeal → (((S i _ hw).mu (Units.map (algebraMap D.host.E ((D.naut.plGw k v).adicCompletion D.host.E)).toMonoidHom (Units.mk0 (u : D.host.E) hu)) : ℂˣ) : ℂ) = (((P.cf.mu0 j).locK (D.naut.plGw k v) (Units.mk0 (u : D.host.E) hu) : ℂˣ) : ℂ) := by
-  exact _root_.GlobalTheory.TupleCharAtType.mu_unit_value_eq_loc_k_mu0
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.XiUnrAtStatement =====
@@ -326,9 +307,9 @@ theorem GlobalTheory.PendOf.tame_label_mu_alt : _root_.GlobalTheory.NRows.ThetaL
   have hj := D.nd.j_range i
   let j : Fin D.R.m := ⟨D.nd.j i - 1, by omega⟩
   obtain ⟨c, hc, hcv⟩ := hchi k v j u hu0 hrep'
-  have htame := _root_.GlobalTheory.T.split_weil_mu_tame_of_is_true hL D P S hS i k v hw
+  have htame := _root_.GlobalTheory.PendOf.isTame_reading_mu_at_split_plGw hL D P S hS i k v hw
   refine ⟨htame, (S i _ hw).mu_ok.1, c, hc, _root_.UpperTheory.Lit.Dz.dz_swap_compatible_alt hL D P.ty.grp k v _ _ htame u hu0 hrep c ?_⟩
-  rw [_root_.GlobalTheory.T.split_mu_unit_eq_mu0_loc_k hL D P S hS i k v hw j (by simp only [j]; omega) u hu0 hunit]
+  rw [_root_.GlobalTheory.TupleCharAtType.mu_unit_value_eq_loc_k_mu0 hL D P S hS i k v hw j (by simp only [j]; omega) u hu0 hunit]
   exact hcv.symm
 end
 section

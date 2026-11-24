@@ -94,17 +94,9 @@ theorem hf_neg_right {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (a y : Fin n → 
     hf L Hm a (-y) = - hf L Hm a y := by
   simp [hf, Finset.sum_neg_distrib]
 
-theorem hf_swap {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm) (v w : Fin n → E) :
-    hf L Hm w v = L.cj (hf L Hm v w) := by
-  have h' : ∀ i j, L.cj (Hm j i) = Hm i j := fun i j => congrFun (congrFun h i) j
-
-  simp only [hf, map_sum, map_mul, L.cj_cj, h']
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
-
 theorem hf_swap_zero {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm) {v w : Fin n → E}
     (h0 : hf L Hm v w = 0) : hf L Hm w v = 0 := by
-  rw [hf_swap h, h0, map_zero]
+  rw [_root_.GlobalTheory.HL.MoveFacts.conj_form h, h0, map_zero]
 
 variable {r k : ℕ} (S : Frames L r k)
 
@@ -125,8 +117,7 @@ theorem frame_perp (g : Fin (r + 1) → S.V) (T : E)
   | add a c _ _ ha hc => rw [hf_add, ha, hc, add_zero]
   | smul c a _ ha => rw [hf_smul, ha, mul_zero]
 
-theorem spanTo_mono (g : Fin (r + 1) → S.V) {i j : ℕ} (h : i ≤ j) : S.spanTo g i ≤ S.spanTo g j :=
-  Submodule.span_mono (Set.image_mono fun _ ha => lt_of_lt_of_le ha h)
+alias spanTo_mono := _root_.GlobalTheory.HL.FrameOnto.spanTo_mono
 
 theorem mof_transport (Λ : Submodule L.O S.V) (Y : Submodule E S.V) (g g' g₁ g₁' : Fin (r + 1) → S.V)
     (x x' u : S.V) (h1 : ∀ b, g₁ b = g b - S.h (g b) u • x) (h1' : ∀ b, g₁' b = g' b + S.h (g' b) u • x')
@@ -170,13 +161,6 @@ theorem mof_transport (Λ : Submodule L.O S.V) (Y : Submodule E S.V) (g g' g₁ 
       module
     rw [this]
     exact Submodule.smul_mem _ c ha
-
-theorem th_ne : S.th ≠ 0 := by
-  unfold Frames.th
-  split_ifs
-  · intro h
-    exact S.ϖ_irr.ne_zero (Subtype.ext h)
-  · exact one_ne_zero
 
 end GlobalTheory.HL.TraceRep
 
@@ -228,7 +212,7 @@ theorem GlobalTheory.HL.TraceRep.class_from_trace : ∀ {F : Type} [Field F] [Va
   have hfrΛ : ∀ b, S.fr' d Λ b ∈ Λ := fun b =>
     (hf' (r + 1) le_rfl _).2 (Submodule.subset_span ⟨b, b.2, rfl⟩) |>.1
   have hth : algebraMap F E S.th⁻¹ • (x + x') ∈ Λ := by
-    rw [hte, smul_smul, ← map_mul, inv_mul_cancel₀ (th_ne S), map_one, one_smul]
+    rw [hte, smul_smul, ← map_mul, inv_mul_cancel₀ (_root_.GlobalTheory.FrameLevel.th_ne_zero S), map_one, one_smul]
     exact ht
   obtain ⟨y₁, hy₁Λ, hy₁Y, hm₁⟩ := mof_transport S Λ (S.spanTo S.f (j + 1) ⊔ S.spanTo S.f' (j + 1))
     (S.fr d Λ) (S.fr' d Λ) (fun b => (n₀⁻¹ * (S.wit d Λ).1) (S.f b))
@@ -323,22 +307,6 @@ theorem relIndex_eq_of_reps {R V : Type*} [Ring R] [AddCommGroup V] [Module R V]
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
-theorem spanTo_mono {L : LocE F E} {r k : ℕ} (S : Frames L r k) (g : Fin (r + 1) → S.V) {a b : ℕ}
-    (h : a ≤ b) : S.spanTo g a ≤ S.spanTo g b := by
-  unfold Frames.spanTo
-  apply Submodule.span_mono
-  rintro _ ⟨i, hi, rfl⟩
-  exact ⟨i, lt_of_lt_of_le hi h, rfl⟩
-
-theorem th_ne_zero {L : LocE F E} {r k : ℕ} (S : Frames L r k) : S.th ≠ 0 := by
-  unfold Frames.th
-  split_ifs
-  · intro h0
-    apply S.ϖ_irr.ne_zero
-    exact Subtype.ext h0
-  · exact one_ne_zero
-
-
 theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (j : Fin r) (β βJ : ℕ) (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → S.InFF β (j + 1) βJ d Λ → ∀ x x' u s, S.IsMove (j + 1) d Λ x x' u s → (∃ y ∈ Λ, y ∈ S.W0 ∧ S.h u y = 1) → ∀ Λ₁ : Submodule L.O S.V, (Λ₁ : Set S.V) = S.moved Λ x u s → S.InFF β (j + 1) βJ d Λ₁ := by
   intro F _ _ _ _ _ E _ _ _ L r k S j β βJ d Λ hT hF x x' u s hMv hleak Λ₁ hΛ₁
   obtain ⟨hT₁, hY⟩ := _root_.GlobalTheory.HL.MoveSame.move_same L r k S j β βJ d Λ hT hF x x' u s hMv Λ₁ hΛ₁
@@ -359,10 +327,10 @@ theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
   have hjr' : (j : ℕ) + 1 ≤ r + 1 := by omega
   have hYME : Y ≤ S.ME := by
     rw [hYdef]
-    exact sup_le_sup (spanTo_mono S S.f hjr') (spanTo_mono S S.f' hjr')
+    exact sup_le_sup (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S S.f hjr') (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S S.f' hjr')
   have hYX : Y ≤ S.X ⊔ S.X' := by
     rw [hYdef]
-    exact sup_le_sup (spanTo_mono S S.f hjr) (spanTo_mono S S.f' hjr)
+    exact sup_le_sup (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S S.f hjr) (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S S.f' hjr)
   have hYY : ∀ y ∈ Y, (y ∈ Λ → y ∈ Λ₁) ∧ (y ∈ S.M d Λ₁ ↔ y ∈ S.M d Λ) ∧
       S.lev (S.fr d Λ₁) (S.fr' d Λ₁) y = S.lev (S.fr d Λ) (S.fr' d Λ) y :=
     fun y hy => hY y ((hYmem y).1 hy)
@@ -417,7 +385,7 @@ theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
     simp only [AddSubgroup.mem_inf, Submodule.mem_toAddSubgroup]
     exact ⟨fun h => ⟨(hMiff y h.2).1 h.1, h.2⟩, fun h => ⟨(hMiff y h.2).2 h.1, h.2⟩⟩
 
-  have hth : S.th ≠ 0 := th_ne_zero S
+  have hth : S.th ≠ 0 := _root_.GlobalTheory.FrameLevel.th_ne_zero S
   have hInTh : ∀ w : S.V, algebraMap F E S.th⁻¹ • w ∈ (B₀ : Set S.V) → S.InTh Λ w := by
     intro w hw
     refine ⟨_, ((hB₀ _).1 hw).1, ?_⟩

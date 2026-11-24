@@ -69,6 +69,7 @@ import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagLeviMax
 import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.HaveILetI
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.EigenvalueGapExists, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsGradedMatrixEigenBound, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FiniteNetOfGradedProjections, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HilbertSchmidtProjectionBound, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InverseGramEigenvaluesSumHsStatement, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.IwasawaParabolicCompactFactorization, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.UnitaryMaximalCompactIsCompactStatement, CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatement
@@ -786,7 +787,7 @@ end -- clump:auto
 -- ===== end clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.UnitaryMaximalCompactIsCompactStatement =====
 
 -- ===== clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatement =====
--- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatement", "h": "module\n\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.AbsoluteL2Bound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HsConjTranspose\npublic import Mathlib.Basic.Real.Basic\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.EigenvalueGapExists\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsGradedMatrixEigenBound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ParabolicSubgroupEquality\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FiniteNetOfGradedProjections\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HaarExistence\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HilbertSchmidtProjectionBound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InverseGramEigenvaluesSumHsStatement\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.KeepsMul\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.IwasawaParabolicCompactFactorization\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.UnitaryMaximalCompactIsCompactStatement\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagLeviMaxCompactClosedSubgroups\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaDecompositionUnitaryIsotropicFlag\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatement", "h": "module\n\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.AbsoluteL2Bound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HsConjTranspose\npublic import Mathlib.Basic.Real.Basic\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.EigenvalueGapExists\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsGradedMatrixEigenBound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ParabolicSubgroupEquality\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FiniteNetOfGradedProjections\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HaarExistence\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HilbertSchmidtProjectionBound\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InverseGramEigenvaluesSumHsStatement\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.KeepsMul\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.IwasawaParabolicCompactFactorization\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.UnitaryMaximalCompactIsCompactStatement\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagLeviMaxCompactClosedSubgroups\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaDecompositionUnitaryIsotropicFlag\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -812,7 +813,7 @@ theorem hs_Pm_pos (hA : IsGrad ε A) (x : S7.UJ ε) : 0 < hs (S7.toM x * Pm A) :
 
 theorem prod_pos (hA : IsGrad ε A) (x : S7.UJ ε) :
     0 < hs (S7.toM x * Pm A) * (1 + hs (S7.toM x * Pz A)) :=
-  mul_pos (hs_Pm_pos hA x) (by linarith [hs_nonneg (S7.toM x * Pz A)])
+  mul_pos (hs_Pm_pos hA x) (by linarith [_root_.Formalism.REAL.frobenius_nonneg_matrix (S7.toM x * Pz A)])
 
 theorem tau_continuous (hA : IsGrad ε A) : Continuous fun x : S7.UJ ε => tauG A (S7.toM x) := by
   unfold tauG
@@ -929,7 +930,7 @@ theorem hs_lines (hA : IsGrad ε A) (x : S7.UJ ε) (t : ℝ) (h0 : 0 ≤ tauG A 
     exact Real.exp_le_one_iff.2 (by linarith)
   have hac : 1 ≤ hs (S7.toM x * Pm A) * hs (S7.toM x * Pp A) := by
     have h1 := one_le_hs (Pp_idem hA) (Pp_ne_zero hA)
-    have h2 := hs_mul_le (Pp A * S7.toM x⁻¹) (S7.toM x * Pp A)
+    have h2 := _root_.Formalism.REAL.frobenius_mul_le (Pp A * S7.toM x⁻¹) (S7.toM x * Pp A)
     have h3 : S7.toM x⁻¹ * S7.toM x = 1 := by
       show ((x⁻¹ : S7.UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ).val * ((x : (Matrix (Fin n) (Fin n) ℂ)ˣ)).val = 1
       simp
@@ -940,9 +941,9 @@ theorem hs_lines (hA : IsGrad ε A) (x : S7.UJ ε) (t : ℝ) (h0 : 0 ≤ tauG A 
   set a := hs (S7.toM x * Pm A)
   set b := hs (S7.toM x * Pz A)
   set c := hs (S7.toM x * Pp A)
-  have ha : 0 ≤ a := hs_nonneg _
-  have hb : 0 ≤ b := hs_nonneg _
-  have hc : 0 ≤ c := hs_nonneg _
+  have ha : 0 ≤ a := _root_.Formalism.REAL.frobenius_nonneg_matrix _
+  have hb : 0 ≤ b := _root_.Formalism.REAL.frobenius_nonneg_matrix _
+  have hc : 0 ≤ c := _root_.Formalism.REAL.frobenius_nonneg_matrix _
   have ha1 : a ≤ 1 := by nlinarith
   have hab : a * b ≤ 1 := by linarith
   have hc1 : 1 ≤ c := by nlinarith
@@ -1018,7 +1019,7 @@ theorem nilp_decomp (hA : IsGrad ε A) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : Y 
       abel
 
 theorem hilbert_schmidt_triple_mul_le (U V W : Matrix (Fin n) (Fin n) ℂ) : hs (U * V * W) ≤ hs U * hs V * hs W :=
-  (hs_mul_le _ _).trans (mul_le_mul_of_nonneg_right (hs_mul_le _ _) (hs_nonneg _))
+  (_root_.Formalism.REAL.frobenius_mul_le _ _).trans (mul_le_mul_of_nonneg_right (_root_.Formalism.REAL.frobenius_mul_le _ _) (_root_.Formalism.REAL.frobenius_nonneg_matrix _))
 
 theorem contraction (hA : IsGrad ε A) (x : S7.UJ ε) {Y : Matrix (Fin n) (Fin n) ℂ} (hY : Y ∈ nilpC A)
     (h0 : 0 ≤ tauG A (S7.toM x)) :
@@ -1042,9 +1043,9 @@ theorem contraction (hA : IsGrad ε A) (x : S7.UJ ε) {Y : Matrix (Fin n) (Fin n
   rw [e]
   set a := hs (S7.toM x * Pm A)
   set b := hs (S7.toM x * Pz A)
-  have ha : 0 ≤ a := hs_nonneg _
-  have hb : 0 ≤ b := hs_nonneg _
-  have hy : 0 ≤ hs Y := hs_nonneg _
+  have ha : 0 ≤ a := _root_.Formalism.REAL.frobenius_nonneg_matrix _
+  have hb : 0 ≤ b := _root_.Formalism.REAL.frobenius_nonneg_matrix _
+  have hy : 0 ≤ hs Y := _root_.Formalism.REAL.frobenius_nonneg_matrix _
   have ha1 : a ≤ 1 := by nlinarith
   have k1 : a * a ≤ a * (1 + b) := by nlinarith
   have k2 : 4 * (a * a) + 6 * (a * b) ≤ 6 * (a * (1 + b)) := by nlinarith
@@ -1198,7 +1199,7 @@ theorem cover (n : ℕ) (ε : Fin n → Bool) :
   have hα0 : 0 < α := by linarith
   have hβ0 : 0 < β := by linarith
   have hapos : 0 < a := hs_Pm_pos (hA j) _
-  have hb0 : 0 ≤ b := hs_nonneg _
+  have hb0 : 0 ≤ b := _root_.Formalism.REAL.frobenius_nonneg_matrix _
   have hP : a * (1 + b) ≤ 20 * (n : ℝ) ^ 2 * (β / α) := by
     have t1 : 1 + b ≤ 5 * n * β := by linarith [mul_le_mul hnR hβ1 zero_le_one (by linarith : (0 : ℝ) ≤ n)]
     calc a * (1 + b) ≤ (4 * n / α) * (5 * n * β) :=
@@ -1262,7 +1263,7 @@ theorem geo : Geo := by
       exact hx'
   · intro j x t h0 ht
     obtain ⟨u1, u2⟩ := hs_lines (hA j) (x : S7.UJ ε) t h0 ht
-    have hx0 := hs_nonneg (S7.toM (x : S7.UJ ε))
+    have hx0 := _root_.Formalism.REAL.frobenius_nonneg_matrix (S7.toM (x : S7.UJ ε))
     have hexp := (Real.exp_pos (2 * t)).le
     constructor
     · refine le_trans ?_ u1

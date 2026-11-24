@@ -316,15 +316,6 @@ open scoped nonZeroDivisors
 open GlobalTheory.CosetOrth
 
 
-theorem _root_.GlobalTheory.T.addChar_trace_unitBlock_trivial_of_moves : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (r : D.host.E) (I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)
-  (o : ℕ) (g : GA D S), S.gram = 1 → T.gram = 1 → o + S.rank ≤ T.rank →
-  (∀ u : WO S T, HatPt r I u → HatPt r I (actO S T g 1 u) →
-    ψ (symplO S T (2 • u) (finPt (S := S) (T := T) rfl rfl r (unitBlock D o S.rank T.rank))) =
-      ψ (symplO S T (actO S T g 1 (2 • u)) (finPt (S := S) (T := T) rfl rfl r (unitBlock D o S.rank T.rank)))) →
-  ∀ (σ : AE D) (i j : Fin S.rank), infPart D σ = 0 → InHat I (algebraMap D.host.E (FA D) r * fe D σ) →
-  (∀ k, InHat I (algebraMap D.host.E (FA D) r * fe D σ * fe D (mt S g⁻¹ i k))) →
-  ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * (incA D (star r⁻¹) * (2 * σ * (1 - mt S g⁻¹) i j)))) = 1 := by
-  first | exact @GlobalTheory.CosetOrth.Pairing.char_trace_eq_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddCharTraceUnitBlockTrivialOfMovesStatement =====
@@ -642,10 +633,6 @@ open scoped nonZeroDivisors
 open GlobalTheory.CosetOrth
 
 
-theorem _root_.GlobalTheory.T.dense_rationalHomPoints_idealCompletion : ∀ {D : D7} (S T : HSp D) (r : D.host.E) (I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E), r ≠ 0 → I ≠ 0 →
-  ∀ U : AddSubgroup (WO S T), IsOpen (U : Set (WO S T)) → ∀ u : WO S T, HatPt r I u →
-  ∃ z : Matrix (Fin T.rank) (Fin S.rank) D.host.E, (∀ i j, z i j ∈ I) ∧ u - finPt (S := S) (T := T) rfl rfl r z ∈ U := by
-  first | exact @GlobalTheory.CosetOrthDens.exists_finPt_sub_mem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseRationalHomPointsIdealCompletionStatement =====
@@ -679,7 +666,7 @@ open scoped TensorProduct
 namespace GlobalTheory.CosetOrth.LatInt
 
 theorem exists_pow_mem (D : D7) : ∃ k : ℕ, (((D.host.QS * D.host.q) ^ k : ℕ) : 𝓞 D.host.E) ∈ D.host.𝔟 := by
-  have hb := ReciprocityTheory.ChartRestriction.G.PullbackSections.MLI.bb_ne_bot D
+  have hb := _root_.Formalism.L2.Pj.b_ne_bot D
   have h : ((D.host.QS * D.host.q : ℕ) : 𝓞 D.host.E) ∈ D.host.𝔟.radical := by
     rw [Ideal.radical_eq_sInf, Submodule.mem_sInf]
     rintro J ⟨hJ, hp⟩
@@ -726,7 +713,7 @@ theorem YYl_entry {D : D7} {N N' : ℕ} {B : Matrix (Fin N') (Fin N) D.host.E}
 theorem mul_int {D : D7} {n : 𝓞 D.host.E} (hn : n ∈ D.host.𝔟) {x : D.host.E}
     (hx : x ∈ (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E)) :
     ∃ b : 𝓞 D.host.E, algebraMap (𝓞 D.host.E) D.host.E b = algebraMap (𝓞 D.host.E) D.host.E n * x := by
-  have hb := ReciprocityTheory.ChartRestriction.G.PullbackSections.MLI.bb_ne_bot D
+  have hb := _root_.Formalism.L2.Pj.b_ne_bot D
   have h1 : algebraMap (𝓞 D.host.E) D.host.E n * x ∈
       (D.host.𝔟 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) * D.host.AA0 :=
     FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeIdeal_of_mem _ hn) hx
@@ -805,11 +792,6 @@ open scoped nonZeroDivisors
 open GlobalTheory.CosetOrth
 
 
-theorem _root_.GlobalTheory.T.exists_pow_integral_completedHomLattice : ∀ {D : D7} (S T : HSp D) (r : D.host.E) (LB : Lat T), r ≠ 0 →
-  (∀ z : Matrix (Fin T.rank) (Fin S.rank) D.host.E, finPt (S := S) (T := T) rfl rfl r z ∈ (latO S T (stdLat S) LB fun _ => True) →
-    z ∈ Formalism.MainNotions.TaylorLogMetric.YYl D (Formalism.MainNotions.StandardLatticesGL3.stdL D S.rank) (Formalism.MainNotions.StandardLatticesGL3.stdL D T.rank)) →
-  ∃ k : ℕ, ∀ u ∈ (latO S T (stdLat S) LB fun _ => True), HatPt ((((D.host.QS * D.host.q) ^ k : ℕ) : D.host.E) * r) 1 u := by
-  first | exact @GlobalTheory.CosetOrth.LatInt.exists_hatPt_of_mem_latO
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowIntegralCompletedHomLatticeStatement =====
@@ -1552,12 +1534,6 @@ section Read
 variable {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {a d : ℕ} {hS : S.rank = a} {hT : T.rank = d}
   {δ : ℂ} {r : D.host.E}
 
-theorem symplOH_self (x : WO S T) : symplOH S T x x = 0 := by
-  have h := symplOH_add_self S T x x
-  have h2 := symplOH_skew S T x x
-  have h3 : symplO S T x x = 0 := by rw [← h]; nth_rewrite 1 [h2]; exact neg_add_cancel _
-  rw [symplOH, h3, mul_zero]
-
 theorem finPt_neg (z : Matrix (Fin d) (Fin a) D.host.E) : finPt hS hT r (-z) = -finPt hS hT r z := by
   unfold finPt
   rw [← map_neg]
@@ -1602,7 +1578,7 @@ theorem exists_read_of_wd (h : Setup ψ θ S T ⊤ δ r) {G : VC D a d → ℂ} 
   rw [heisO_heisO, finPt_neg, add_neg_cancel, heisO_zero, ← neg_neg (symplOH _ _ _ _), ← symplOH_skew]
   have : symplOH S T (-finPt hS hT r z) (finPt hS hT r z) = 0 := by
     have h3 := symplOH_add_left S T (-finPt hS hT r z) (finPt hS hT r z) (finPt hS hT r z)
-    rw [neg_add_cancel, symplOH_self, add_zero, symplOH, symplO_zero_left, mul_zero] at h3
+    rw [neg_add_cancel, _root_.GlobalTheory.OrientedHeis.symplOH_self, add_zero, symplOH, symplO_zero_left, mul_zero] at h3
     exact h3.symm
   rw [this, neg_zero, AddChar.map_zero_eq_one, one_smul, smul_smul, mul_inv_cancel₀ hc', one_smul]
 
@@ -1622,7 +1598,7 @@ theorem heis_two_finPt (h : Setup ψ θ S T ⊤ δ r) {L L'} {G : VC D a d → �
     conv_rhs => rw [← h2]
     rw [smul_smul, hal, one_smul]
   have h4 := heisO_heisO ψ S T (finPt hS hT r z) (finPt hS hT r z) f
-  rw [symplOH_self, AddChar.map_zero_eq_one, one_smul, ← two_nsmul, h3, heisO_smul, h3, smul_smul, hal, one_smul] at h4
+  rw [_root_.GlobalTheory.OrientedHeis.symplOH_self, AddChar.map_zero_eq_one, one_smul, ← two_nsmul, h3, heisO_smul, h3, smul_smul, hal, one_smul] at h4
   exact h4.symm
 
 end Read
@@ -1633,7 +1609,7 @@ theorem heis_two_hatPt {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
       heisO ψ S T (2 • finPt (S := S) (T := T) rfl rfl r z) f = f) {u : WO S T} (hu : HatPt r I u) :
     heisO ψ S T (2 • u) f = f := by
   obtain ⟨U, hU, hUf⟩ := hf.level
-  obtain ⟨z, hz, hk⟩ := GlobalTheory.T.dense_rationalHomPoints_idealCompletion S T r I hr hI U hU u hu
+  obtain ⟨z, hz, hk⟩ := _root_.GlobalTheory.CosetOrthDens.exists_finPt_sub_mem S T r I hr hI U hU u hu
   set x := finPt (S := S) (T := T) rfl rfl r z with hx
   have hxi : x.map (infPart D) = 0 := GlobalTheory.VacUnique.finRat_inf S T _
   have hki : (u - x).map (infPart D) = 0 := by
@@ -1649,7 +1625,7 @@ theorem heis_two_hatPt {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
   have h3 := heisO_comm ψ S T (2 • x) k f
   rw [h1, h2, h1] at h3
   have h4 := heisO_heisO ψ S T k k f
-  rw [h1, h1, symplOH_self, AddChar.map_zero_eq_one, one_smul] at h4
+  rw [h1, h1, _root_.GlobalTheory.OrientedHeis.symplOH_self, AddChar.map_zero_eq_one, one_smul] at h4
   have h5 := heisO_heisO ψ S T (2 • x) (k + k) f
   rw [← h4, h2, symplOH_add_right, symplOH_add_self, ← two_nsmul k, ← nsmul_add] at h5
   have h0 : ψ (symplO S T (2 • x) k) ≠ 0 := left_ne_zero_of_mul_eq_one (b := ψ (-symplO S T (2 • x) k))
@@ -1728,7 +1704,7 @@ theorem mem_of_char_eq {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
       ψ (symplO S T (2 • u) (finPt (S := S) (T := T) rfl rfl r (unitBlock D o S.rank T.rank))) =
         ψ (symplO S T (actO S T g 1 (2 • u)) (finPt (S := S) (T := T) rfl rfl r (unitBlock D o S.rank T.rank)))) :
     y ∈ intG D S.rank ∧ CongOne D 𝔪 y := by
-  obtain ⟨k, hk⟩ := GlobalTheory.T.exists_pow_integral_completedHomLattice S T r LB hr hY
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.CosetOrth.LatInt.exists_hatPt_of_mem_latO S T r LB hr hY
   have hH : ∀ i j, fe D (mt S g⁻¹ i j) = finMat y⁻¹ i j := fun i j => by
     obtain ⟨e, he⟩ := hg'.2
     exact he i j
@@ -1748,7 +1724,7 @@ theorem mem_of_char_eq {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
       (2 * σ * (1 - mt S g⁻¹) i j) (by rw [RingHom.map_mul, RingHom.map_mul, hσ, mul_zero, zero_mul]) fun t ht ht' => by
         have e2 : algebraMap D.host.E (FA D) r * fe D (t * σ) = fe D t * s := by
           rw [RingHom.map_mul, mul_left_comm, e1]
-        have h2 := GlobalTheory.T.addChar_trace_unitBlock_trivial_of_moves ψ S T r (skewId D 𝔪) o g gS gT ho h (t * σ) i j
+        have h2 := _root_.GlobalTheory.CosetOrth.Pairing.char_trace_eq_one ψ S T r (skewId D 𝔪) o g gS gT ho h (t * σ) i j
           (by rw [RingHom.map_mul, ht, zero_mul]) (by rw [e2]; exact ht'.mul_left hs)
           fun l => by rw [e2, hH, mul_assoc]; exact ht'.mul_left (hs' l)
         rw [← h2]
@@ -1772,9 +1748,6 @@ theorem mem_of_char_eq {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {r : D.hos
     split_ifs
     · rw [map_one]; rfl
     · rw [map_zero]; rfl
-
-theorem actO_two {S T : HSp D} (g : GA D S) (h : GA D T) (u : WO S T) : actO S T g h (2 • u) = 2 • actO S T g h u := by
-  simp only [actO, two_nsmul, Matrix.mul_add, Matrix.add_mul]
 
 theorem ip_eq_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {a d : ℕ} (hS : S.rank = a) (hT : T.rank = d)
     {δ : ℂ} {r : D.host.E} (h : Setup ψ θ S T ⊤ δ r) {χS χT : (AE D)ˣ →* Circle} {om : GlobalTheory.Core.Rk.IP.WRep S T}
@@ -1804,7 +1777,7 @@ theorem ip_eq_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D
   by_contra hd
   refine hne (ip_eq_zero_of_heis_eigen h.std hν (hω.om_pres _ _ hφ.1) hφ.1 (actO S T g 1 (2 • u)) ?_ ?_ (h.std.1.2.1 _) hd)
   · rw [← hω.om_heis _ _ _ _ hφ.1, eig u hu, map_smul]
-  · rw [actO_two]; exact eig _ hu'
+  · rw [_root_.GlobalTheory.WeilVacMove.actO_two_nsmul]; exact eig _ hu'
 
 end GlobalTheory.CosetOrth
 

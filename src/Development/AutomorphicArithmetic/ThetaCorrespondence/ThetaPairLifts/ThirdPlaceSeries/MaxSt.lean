@@ -145,7 +145,7 @@ theorem om_ioP_of_datum : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 
   have hBS : ∀ τ, (R.BV i τ)ᴴ * gramAt D (Vc D i) τ * R.BV i τ = 1 := fun τ =>
     GlobalTheory.JointHarm.onb_eq_one (hR.models.BV i τ)
   have hBu : ∀ τ, IsUnit (R.BV i τ) := fun τ => IsUnit.of_mul_eq_one_right _ (hBS τ)
-  obtain ⟨x₁, x₂, x₃, hx⟩ := GlobalTheory.T.lowestKType_coefficientWeight_eq_minorWeights D i (sg0 D A) (sgAt_mk _ R.hv0) (R.MW i (sg0 D A)) (hR.models.order i)
+  obtain ⟨x₁, x₂, x₃, hx⟩ := _root_.GlobalTheory.JointHarm.weights_of_minors D i (sg0 D A) (sgAt_mk _ R.hv0) (R.MW i (sg0 D A)) (hR.models.order i)
   have hrk : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hpq : ∀ τ, ((Wc D i).sig (tauE D τ)).1 + ((Wc D i).sig (tauE D τ)).2 = (Wc D i).rank := fun τ =>
     (GlobalTheory.T.thetaWeightArithmeticAtPlace_proof D i τ).rank.1.trans hrk.symm
@@ -228,17 +228,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.DetCharArch
 
-theorem map_conj {F E R R' : Type} [Field F] [Field E] [Algebra F E] [CommRing R] [Algebra F R] [CommRing R']
-    [Algebra F R'] (f : R →ₐ[F] R') (σ : E →ₐ[F] E) (x : R ⊗[F] E) :
-    (Algebra.TensorProduct.map f (AlgHom.id F E)).toRingHom (sigR R σ x) =
-      sigR R' σ ((Algebra.TensorProduct.map f (AlgHom.id F E)).toRingHom x) := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a x => simp [sigR]
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
-
-variable {D : D7} {θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)}
-
 end GlobalTheory.DetCharArch
 end -- clump:auto
 end -- clump:auto
@@ -319,9 +308,9 @@ theorem exists_isDetRoot_pow {D : D7} (V : HSp D) {u : GA D V} (hu : u ∈ GinfC
   obtain ⟨x0, hx0⟩ := (GlobalTheory.Member.isDetRoot_laws D V).1 u
   have hcm := GlobalTheory.Mem.VolExists.isCMExt D.sp.cm
   have einf : ∀ w : AE D, infPart D (sigR (AF D.host.F) D.sp.cm.sig w) = sigR (Ainf D.host.F) D.sp.cm.sig (infPart D w) :=
-    fun w => GlobalTheory.DetCharArch.map_conj _ _ _
+    fun w => _root_.GlobalTheory.UnitarySplit.map_sig _ _ _
   have efin : ∀ w : AE D, finPart D (sigR (AF D.host.F) D.sp.cm.sig w) = sigR (Af D.host.F) D.sp.cm.sig (finPart D w) :=
-    fun w => GlobalTheory.DetCharArch.map_conj _ _ _
+    fun w => _root_.GlobalTheory.UnitarySplit.map_sig _ _ _
   set dt : AE D := (matHom V u).1.det with hdt
   have hfd : finPart D dt = 1 := by
     have h1 : (finHom V u).1.det = finPart D dt := ((finPart D).map_det _).symm
@@ -579,7 +568,7 @@ namespace GlobalTheory.BigOn
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem maxSt_alt : _root_.GlobalTheory.BigOn.MaximalityStatement := by
   refine Formalism.MainNotions.Closed.of_all fun Fm _ => ⟨0, fun x hx _ i p hR hM v hv j => ?_⟩
-  have hL := _root_.GlobalTheory.T.links2_of_single_index_twisted _ _ _ _ _ _ _ _ _ _ p hR hM.1
+  have hL := _root_.GlobalTheory.BigOn.links2_of_rows_alt _ _ _ _ _ _ _ _ _ _ p hR hM.1
   have hC := hL.1
   have hv' : v ∈ (R2 p).twPl := hv
   have hdel : ∀ y, ((((R2 p).C.delAt (Formalism.EigenvalueLevelCeiling.plc v)).1 y : ℂˣ) : ℂ) ∈ (Fm.D x i).what₂.embLL.range := fun y => by

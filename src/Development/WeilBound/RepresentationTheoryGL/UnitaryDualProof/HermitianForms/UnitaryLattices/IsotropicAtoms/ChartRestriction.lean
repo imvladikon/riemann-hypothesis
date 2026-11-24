@@ -317,10 +317,7 @@ theorem finite_transversal {X : Type} [TopologicalSpace X] [AddCommGroup X]
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.mp ht
     rw [(key q).mp hat]
 
-theorem main : ∀ {X : Type} [TopologicalSpace X] [AddCommGroup X] [IsTopologicalAddGroup X]
-    (A H : AddSubgroup X), IsCompact (A : Set X) → IsOpen (H : Set X) → H ≤ A →
-    ∃ T : Finset X, (∀ t ∈ T, t ∈ A) ∧ ∀ a ∈ A, ∃! t, t ∈ T ∧ a - t ∈ H :=
-  fun A H hA hH hHA => GlobalTheory.CompanionTheory.OpenSubgroupTransversal.finite_transversal A H hA hH hHA
+alias main := _root_.GlobalTheory.CompanionTheory.OpenSubgroupTransversal.finite_transversal
 
 end GlobalTheory.CompanionTheory.OpenSubgroupTransversal
 end -- clump:auto
@@ -571,9 +568,9 @@ theorem card_smul_sum_eq {M : Type} [AddCommGroup M] [Module ℂ M] {A H H' : Ad
     (hF : ∀ a, ∀ h ∈ H, F (a + h) = F a) (hF' : ∀ a, ∀ h ∈ H', F (a + h) = F a) :
     (T'.card : ℂ) • ∑ t ∈ T, F t = (T.card : ℂ) • ∑ t ∈ T', F t := by
   have h1 : ∀ s ∈ T', ∑ t ∈ T, F (t + s) = ∑ t ∈ T, F t := fun s hs =>
-    sum_transversal_add hH hT hTr F hF (hT' s hs)
+    _root_.GlobalTheory.CompanionTheory.Transversal.sum_add_eq_sum_of_transversal hH hT hTr F hF (hT' s hs)
   have h2 : ∀ t ∈ T, ∑ s ∈ T', F (s + t) = ∑ s ∈ T', F s := fun t ht =>
-    sum_transversal_add hH' hT' hTr' F hF' (hT t ht)
+    _root_.GlobalTheory.CompanionTheory.Transversal.sum_add_eq_sum_of_transversal hH' hT' hTr' F hF' (hT t ht)
   have e1 : ∑ s ∈ T', ∑ t ∈ T, F (t + s) = T'.card • ∑ t ∈ T, F t := by
     rw [Finset.sum_congr rfl h1, Finset.sum_const]
   have e2 : ∑ t ∈ T, ∑ s ∈ T', F (s + t) = T.card • ∑ s ∈ T', F s := by
@@ -587,7 +584,7 @@ theorem sum_transversal_char {A H : AddSubgroup X} (hHA : H ≤ A) {T : Finset X
     (hT : ∀ t ∈ T, t ∈ A) (hTr : ∀ a ∈ A, ∃! t, t ∈ T ∧ a - t ∈ H) (χ : X → ℂ)
     (hχ : ∀ a b, χ (a + b) = χ a * χ b) (hH : ∀ h ∈ H, χ h = 1) {a : X} (ha : a ∈ A) (hne : χ a ≠ 1) :
     ∑ t ∈ T, χ t = 0 := by
-  have key := sum_transversal_add hHA hT hTr χ (fun b h hh => by rw [hχ, hH h hh, mul_one]) ha
+  have key := _root_.GlobalTheory.CompanionTheory.Transversal.sum_add_eq_sum_of_transversal hHA hT hTr χ (fun b h hh => by rw [hχ, hH h hh, mul_one]) ha
   simp only [hχ] at key
   rw [← Finset.sum_mul] at key
   have h0 : (∑ t ∈ T, χ t) * (χ a - 1) = 0 := by rw [mul_sub, mul_one, key, sub_self]
@@ -616,19 +613,6 @@ theorem relIndex_ne_zero' (A H : AddSubgroup X) (hA : IsCompact (A : Set X)) (hH
 
 end Transversal
 
-section Forms
-
-variable {V : Type} [AddCommGroup V] [Module ℂ V]
-
-theorem apply_eq_zero_of_isotropic (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ) (hB : ∀ v w, B w v = starRingEnd ℂ (B v w))
-    (hB' : ∀ v, 0 ≤ (B v v).re) (x : V) (hx : (B x x).re = 0) (w : V) : B x w = 0 :=
-  _root_.GlobalTheory.CompanionTheory.Herm.apply_eq_zero_of_isotropic B hB hB' x hx w
-
-theorem eq_zero_of_diag (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ) (hB : ∀ v, B v v = 0) : B = 0 :=
-  _root_.GlobalTheory.CompanionTheory.Sesquilinear.eq_zero_of_diag_eq_zero B hB
-
-end Forms
-
 section Local
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -656,10 +640,6 @@ theorem comap_lat (n : ℕ) (g : Matrix (Fin n) (Fin n) k) (hg : IsUnit g) (A : 
   _root_.GlobalTheory.CompanionTheory.Dblock.ComapLat.comap_mulVec_compact_open n g hg A hA hA'
 
 end Local
-
-theorem exists_GL_vecMul {k : Type} [Field k] (n : ℕ) (ξ : Fin (n + 1) → k) (hξ : ξ ≠ 0) :
-    ∃ g : GL (Fin (n + 1)) k, Matrix.vecMul ξ (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k) = Pi.single (Fin.last n) 1 :=
-  _root_.GlobalTheory.CompanionTheory.Matrixlemmas.exists_GL_vecMul_eq_single_last n ξ hξ
 
 end PositivityTheory.RgUd.Form.U.Atom
 end -- clump:auto

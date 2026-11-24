@@ -121,21 +121,9 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UU
 open GlobalTheory.LN
 
-noncomputable section
 namespace GlobalTheory.LN.SelfCmp
 
-theorem isGrpPullback_of_eq_id {S : Scheme.{0}} (G : Over S) [GrpObj G] {f : S ⟶ S} (hf : f = 𝟙 S) :
-    IsGrpPullback G G f (𝟙 G.left) := by
-  subst hf
-  refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
-  let ρ : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
-  have ex : x₀ = ρ ≫ x := Over.OverMorphism.ext (hx.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  have ey : y₀ = ρ ≫ y := Over.OverMorphism.ext (hy.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  rw [ex, ey, ← MonObj.comp_mul]
-  exact (Category.id_comp _).trans (Category.comp_id _).symm
-
 end GlobalTheory.LN.SelfCmp
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsGrpPullbackOfEqId =====
@@ -242,7 +230,7 @@ theorem exists_trait_lattice_equiv : ∀ (E : Type) [Field E] [NumberField E] [I
   obtain ⟨hL₁, hC₁, hE₁⟩ := PullUnif.main R hR G hG D A U T.V hTV tW.G tW.semi D₂ A₂ U₂ ψ β hψ bc hbc hbcβ hD hU
 
   have hid' : IsGrpPullback tW.G tW.G (spMap (RingHom.id T.V)) (𝟙 tW.G.left) :=
-    GlobalTheory.LN.SelfCmp.isGrpPullback_of_eq_id tW.G hid
+    _root_.GlobalTheory.LN.Cmp.grpPullback_id tW.G hid
   obtain ⟨ρ, hρ⟩ := GlobalTheory.SpreadTrait.exists_spread T.V hTV tW.G tW.semi D₂ A₂ U₂ T.V hTV tW.G tW.semi PW.D PW.A PW.U
     (RingHom.id T.V) (𝟙 _) hid'
   have hρs := GlobalTheory.TorusOntoSpread.restrict_surjective T.V hTV tW.G tW.semi D₂ A₂ U₂ T.V hTV tW.G tW.semi PW.D PW.A
@@ -1138,7 +1126,7 @@ theorem GlobalTheory.UPoinc.AllTraits.orders_all : ∀ (E : Type) [Field E] [Num
   haveI : IsLocallyNoetherian Y.Z := LocallyOfFiniteType.isLocallyNoetherian Y.s
   have hWc : IsAdicComplete (maximalIdeal W) W := hW.2.1
   obtain ⟨R, _, _, _, j, Λ, _, _, p, c₀, hRn, hRc, hj, hc, hper⟩ :=
-    localPeriods E H Dw hpq l Xo c C X₁ Y U₀ EE out πY hAdm hEE hHom (χ (closedPoint W))
+    _root_.GlobalTheory.UPoinc.UPeriods.main E H Dw hpq l Xo c C X₁ Y U₀ EE out πY hAdm hEE hHom (χ (closedPoint W))
   obtain ⟨jinj, jloc, jext⟩ := isCpl_props hj
   obtain ⟨ψ, ψloc, hψ⟩ := jext W hWc (Scheme.stalkClosedPointTo χ).hom inferInstance
   have hξ : spMap (ψ.comp j) ≫ Y.Z.fromSpecStalk (χ (closedPoint W)) = χ := by
@@ -1170,7 +1158,7 @@ theorem GlobalTheory.UPoinc.AllTraits.orders_all : ∀ (E : Type) [Field E] [Num
   haveI : CharZero A := (RingHom.charZero_iff ψ'inj).1 hRc
   haveI := jloc
   haveI := ψ'loc
-  obtain ⟨T', f, finj, floc, hthru, hyC⟩ := traitThroughOpen E H Dw hpq l Xo c C X₁ Y U₀ EE out πY hAdm hEE hHom
+  obtain ⟨T', f, finj, floc, hthru, hyC⟩ := _root_.GlobalTheory.UPoinc.exists_uTrait_through_open_of_stalk_dvr E H Dw hpq l Xo c C X₁ Y U₀ EE out πY hAdm hEE hHom
     (χ (closedPoint W)) A hA (ψ'.comp j) (ψ'inj.comp jinj) inferInstance
   haveI := floc
   haveI : IsDiscreteValuationRing T'.V := T'.cdvr.1

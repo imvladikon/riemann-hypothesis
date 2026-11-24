@@ -359,7 +359,7 @@ namespace GlobalTheory.GoodCoeff
 
 theorem exists_trace_form_integral_iff : ∀ (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∃ lam : LL →ₗ[ℚ_[l]] ℚ_[l], ∀ a : LL, (∀ b : O, ∃ u : ℤ_[l], lam (a * algebraMap O LL b) = (u : ℚ_[l])) ↔ ∃ b : O, algebraMap O LL b = a := by
   intro l _ LL _ _ _ O _ _ hG
-  have hint := (good_coeff_integers l LL O hG).1
+  have hint := (_root_.GlobalTheory.PowerImageOpen.main l LL O hG).1
   obtain ⟨⟨hD, hDVR, hFr⟩, hfin, hmod, htop, hopen⟩ := hG
   haveI := hD
   haveI := hDVR
@@ -866,7 +866,7 @@ theorem core_pos (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Forma
     Nat.card (QuotientCohomology LA _ hI) = Nat.card {x : (↥LA.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA.T)) // ∀ g, actQ LA _ hI g x = x} * Nat.card {x : (↥LA'.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA'.T)) // ∀ g, actQ LA' _ hI' g x = x} * Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * (finrank ℚ_[l] ↥K.1 * finrank LL A.V)) := by
   have hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hp : l.Prime := Fact.out
-  obtain ⟨-, -, hfinO, -⟩ := GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG
+  obtain ⟨-, -, hfinO, -⟩ := _root_.GlobalTheory.PowerImageOpen.main l LL O hG
   have hcO : Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ≠ 0 := by
     have := hfinO 1
     rw [pow_one] at this
@@ -965,7 +965,7 @@ theorem card_H1Q_eq : Formalism.GaloisCohomology.LocalTateDualityK → Formalism
   intro hT hE l _ P K LL _ _ _ O _ _ hG A A' LA LA' m hm r hI hI'
   have hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hp : l.Prime := Fact.out
-  obtain ⟨-, -, hfinO, -⟩ := GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG
+  obtain ⟨-, -, hfinO, -⟩ := _root_.GlobalTheory.PowerImageOpen.main l LL O hG
   have hcO : Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ≠ 0 := by
     have := hfinO 1
     rw [pow_one] at this
@@ -1094,7 +1094,7 @@ namespace GlobalTheory.H1Rank
 theorem not_isUnit_l : ∀ (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ¬ IsUnit ((l : ℕ) : O) := by
   intro l _ LL _ _ _ O _ _ hG hu
   obtain ⟨u, hu⟩ := hu
-  have hint := ((GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG).1 (algebraMap O LL (↑u⁻¹ : O))).1 ⟨_, rfl⟩
+  have hint := ((_root_.GlobalTheory.PowerImageOpen.main l LL O hG).1 (algebraMap O LL (↑u⁻¹ : O))).1 ⟨_, rfl⟩
   have hl0 : (l : ℚ_[l]) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   have hx : algebraMap O LL (↑u⁻¹ : O) = algebraMap ℚ_[l] LL ((l : ℚ_[l])⁻¹) := by
     have h1 : algebraMap O LL (↑u⁻¹ : O) * algebraMap O LL (u : O) = 1 := by
@@ -1240,7 +1240,7 @@ theorem growth_H1T_dim_H1V : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : T
     rw [h2] at h1
     exact (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero) ((map_eq_zero_iff _ (algebraMap ℚ_[l] LL).injective).1 h1)
   have hfq : ∀ r : ℕ, Finite (O ⧸ Ideal.span {((l : ℕ) : O) ^ r}) :=
-    (GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG).2.2.1
+    (_root_.GlobalTheory.PowerImageOpen.main l LL O hG).2.2.1
   have hfq1 : Finite (O ⧸ Ideal.span {((l : ℕ) : O)}) := by simpa using hfq 1
   have hsurj : ∀ y : H1V A.ρ, ∃ n : ℕ, ∃ x : LatticeCohomology LA, toH1V LA x = ((l : ℕ) : O) ^ n • y := by
     intro y

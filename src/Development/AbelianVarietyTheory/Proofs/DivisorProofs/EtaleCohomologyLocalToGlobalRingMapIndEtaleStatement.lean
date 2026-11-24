@@ -53,8 +53,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isIndEtaleAlgebra_of_strictlyHenselianEtaleStalk_affine : ∀ (A : Type) [CommRing A] (O : Type) [CommRing O] (s : Spec (CommRingCat.of O) ⟶ Spec (CommRingCat.of A)), IsStalk O s → ∃ _ : Algebra A O, SH O ∧ IndEt A O ∧ s = Spec.map (CommRingCat.ofHom (algebraMap A O)) := by
-  first | (exact @GlobalTheory.EtC.isStalk_affine)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIndEtaleAlgebraOfStrictlyHenselianEtaleStalkAfStatement =====
@@ -120,9 +118,9 @@ theorem GlobalTheory.LocGlobRing.main : ∀ (R : Type) [CommRing R] (F : Shv R),
   refine _root_.GlobalTheory.EtC.eqv_sch_of_stalks R F hF (Spec (CommRingCat.of C)) (Spec (CommRingCat.of B)) (Spec (CommRingCat.of A))
     (Spec.map (CommRingCat.ofHom φ.toRingHom)) (Spec.map (CommRingCat.ofHom (algebraMap A B))) ?_
   intro O _ s hs
-  obtain ⟨inst, hSH, hInd, rfl⟩ := GlobalTheory.T.isIndEtaleAlgebra_of_strictlyHenselianEtaleStalk_affine A O s hs
+  obtain ⟨inst, hSH, hInd, rfl⟩ := _root_.GlobalTheory.EtC.isStalk_affine A O s hs
   have h := @hyp O _ inst hSH hInd
-  have eb := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
+  have eb := _root_.GlobalTheory.EtC.eqv_basic R F
   rw [← Iso.hom_inv_id_assoc (GlobalTheory.LocGlobRing.pbIso A C O _ hC) (pullback.map _ _ _ _ _ _ _ _ _),
     GlobalTheory.LocGlobRing.square A B C O φ hC, Functor.map_comp, Functor.map_comp]
   exact (eb.2.1 _ _ _ _ _).1 (eb.1 _ _ _ inferInstance) ((eb.2.1 _ _ _ _ _).1 h (eb.1 _ _ _ inferInstance))
@@ -137,8 +135,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleCohomology_local_to_global_ringMap_indEtale : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (A B C : Type) [CommRing A] [CommRing B] [CommRing C] [Algebra A B] [Algebra A C] (φ : B →ₐ[A] C), (∀ (O : Type) [CommRing O] [Algebra A O], SH O → IndEt A O → Eqv R (spMap (Algebra.TensorProduct.map (AlgHom.id A O) φ).toRingHom) F) → Eqv R (spMap φ.toRingHom) F := by
-  first | (exact @GlobalTheory.LocGlobRing.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyLocalToGlobalRingMapIndEtaleStatement =====

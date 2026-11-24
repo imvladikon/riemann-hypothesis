@@ -1870,8 +1870,6 @@ theorem clozelConjC : Published.ClozelConjC :=
     (embed_of partH relFacts partA relOnto harmSub harmNe harmInj irrCo graph Lit.Bor.frameEx Lit.Bor.oneReal Lit.Geo.cuspRapid)
     noEis
 
-theorem borelInjC : Published.BorelInjC := Lit.Geo.borelInjC
-
 end UpperTheory.V.Z.Coh
 end -- clump:auto
 end -- clump:auto

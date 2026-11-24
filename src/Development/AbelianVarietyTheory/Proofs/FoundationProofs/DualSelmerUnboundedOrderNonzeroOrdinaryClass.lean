@@ -485,11 +485,6 @@ namespace GlobalTheory.Ord2.Unbounded
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem norm_le_one_of_mem (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 := by
-  first
-  | (apply _root_.GlobalTheory.IntegralElementNorm.norm_le_one_of_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegralElementNorm.norm_le_one_of_mem ..)
-
 theorem mulVec_mem (c : Coef l) {M : Matrix (Fin 2) (Fin 2) (Qbar l)} {x : Fin 2 → Qbar l}
     (hM : ∀ i j, M i j ∈ c.O) (hx : ∀ j, x j ∈ c.O) (i : Fin 2) : (M *ᵥ x) i ∈ c.O := by
   simp only [Matrix.mulVec, dotProduct, Fin.sum_univ_two]
@@ -588,7 +583,7 @@ theorem divSel_unbounded : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [
         rw [mul_sub L, mul_sub L, mul_left_comm L, mul_inv_cancel_left₀ hL0]
       unfold Cg
       rw [e, norm_mul]
-      exact mul_le_of_le_one_right (norm_nonneg _) (norm_le_one_of_mem c (hy' s i)))
+      exact mul_le_of_le_one_right (norm_nonneg _) (_root_.GlobalTheory.IntegralElementNorm.norm_le_one_of_mem c (hy' s i)))
   have hf : (fun s => ((l : ℕ) : Qbar l) ^ r • (fun s => ((l : ℕ) : Qbar l) ^ m • z s) s) =
       fun s => ((l : ℕ) : Qbar l) ^ (m + r) • z s := by
     funext s; rw [smul_smul, ← pow_add, add_comm]
@@ -1123,9 +1118,9 @@ theorem qbarLVectorCongruent_integralMatrix_mulVec {l : ℕ} [Fact l.Prime] (c :
   rw [e]
   refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ ?_)
   · rw [norm_mul]
-    exact (mul_le_of_le_one_left (norm_nonneg _) (norm_le_one_of_mem_coef c (hM i 0))).trans (h 0)
+    exact (mul_le_of_le_one_left (norm_nonneg _) (_root_.UpperTheory.Reformulated.B.Rf3.norm_le_one_of_mem_coef c (hM i 0))).trans (h 0)
   · rw [norm_mul]
-    exact (mul_le_of_le_one_left (norm_nonneg _) (norm_le_one_of_mem_coef c (hM i 1))).trans (h 1)
+    exact (mul_le_of_le_one_left (norm_nonneg _) (_root_.UpperTheory.Reformulated.B.Rf3.norm_le_one_of_mem_coef c (hM i 1))).trans (h 1)
 
 theorem limit_cocycle_mem_cocycles : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : R2 Ω l) (c : Coef l), (∀ s i j, mat W s i j ∈ c.O) → ∀ (a : ℕ → G ℚ Ω → Fin 2 → Qbar l) (z : G ℚ Ω → Fin 2 → Qbar l), (∀ n s t, Cv n (a n (s * t)) (a n s + mat W s *ᵥ a n t)) → (∀ n s, ∀ᶠ t in nhds s, Cv n (a n t) (a n s)) → (∀ n s, Cv n (z s) (a n s)) → z ∈ Z1 (Loc.colRep W) := by
   intro l _ Ω _ _ W c hW a z hco hloc hz
@@ -1197,7 +1192,7 @@ theorem memE_inv_of_mem : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (d : Qbar l)
     rintro ⟨u, hu⟩
     have h1 : ((u : c.O) : Qbar l) * ((u⁻¹ : c.Oˣ) : c.O) = 1 := by
       rw [← Subalgebra.coe_mul, Units.mul_inv]; rfl
-    have hn2 : ‖(((u⁻¹ : c.Oˣ) : c.O) : Qbar l)‖ ≤ 1 := norm_le_one_of_mem_coef c (SetLike.coe_mem _)
+    have hn2 : ‖(((u⁻¹ : c.Oˣ) : c.O) : Qbar l)‖ ≤ 1 := _root_.UpperTheory.Reformulated.B.Rf3.norm_le_one_of_mem_coef c (SetLike.coe_mem _)
     have hu' : ((u : c.O) : Qbar l) = ((l : ℕ) : Qbar l) := by rw [hu, hLval]
     rw [hu'] at h1
     have h2 := congrArg norm h1

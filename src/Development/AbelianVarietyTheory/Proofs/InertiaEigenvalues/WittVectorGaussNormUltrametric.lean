@@ -129,11 +129,7 @@ variable {R : Type} [CommRing R] (a : R → ℝ) (hb : ∀ x, 0 ≤ a x ∧ a x 
   (h1 : a 1 = 1) (hm : ∀ x y, a (x * y) = a x * a y) (ha : ∀ x y, a (x + y) ≤ max (a x) (a y))
 
 include h0 ha in
-theorem sum_le {ι : Type} (s : Finset ι) (f : ι → R) (c : ℝ) (hc : 0 ≤ c)
-    (h : ∀ i ∈ s, a (f i) ≤ c) : a (∑ i ∈ s, f i) ≤ c := by
-  first
-  | (apply _root_.GlobalTheory.UltrametricSum.ultra_sum_le <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UltrametricSum.ultra_sum_le ..)
+alias sum_le := _root_.GlobalTheory.UltrametricSum.ultra_sum_le
 
 include hb h1 hm in
 theorem neg_eq (x : R) : a (-x) = a x := by

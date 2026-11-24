@@ -231,11 +231,6 @@ lemma vV_nonneg_of_mem (b : V) : 0 ≤ vV V (algebraMap V K b) := by
 
 lemma vV_one : vV V (1 : K) = 0 := by simp [vV]
 
-lemma vV_inv {x : K} (hx : x ≠ 0) : vV V x⁻¹ = - vV V x := by
-  have := vV_mul (V := V) hx (inv_ne_zero hx)
-  rw [mul_inv_cancel₀ hx, vV_one] at this
-  omega
-
 lemma vV_eq_zero_of_mul {x y : K} (hx : x ∈ Set.range (algebraMap V K)) (hy : y ∈ Set.range (algebraMap V K))
     (h : x * y = 1) : vV V x = 0 := by
   obtain ⟨a, rfl⟩ := hx
@@ -300,7 +295,7 @@ lemma exists_vV_map (ψ : K →+* K') (hψ : ∀ a : V, ψ (algebraMap V K a) �
   have haK : algebraMap V K a ≠ 0 := by simpa using ha'
   have hbK : algebraMap V K b ≠ 0 := by simpa using hb'
   rw [div_eq_mul_inv, map_mul, map_inv₀, vV_mul ((map_ne_zero ψ).2 haK) (inv_ne_zero ((map_ne_zero ψ).2 hbK)),
-    vV_inv ((map_ne_zero ψ).2 hbK), vV_mul haK (inv_ne_zero hbK), vV_inv hbK, hint a ha', hint b hb']
+    _root_.GlobalTheory.GeoTie.ReadExist.vV_inv ((map_ne_zero ψ).2 hbK), vV_mul haK (inv_ne_zero hbK), _root_.GlobalTheory.GeoTie.ReadExist.vV_inv hbK, hint a ha', hint b hb']
   ring
 
 end Cmp
@@ -1276,13 +1271,6 @@ theorem isLieImg_comb {Ω : Type} [Field Ω] {x x' : Sp Ω ⟶ Xo.X} {ψ : Gx x 
     rw [tanMap_scale, ← hAB, ← Category.assoc, ← Category.assoc, scaleAt_comm]
   exact ⟨htw, htw', W, rfl, congrArg (·.left) key⟩
 
-theorem scal_mul'' {S : Type} [CommRing S] (x : Sp S ⟶ Xo.X) (a b : S) (i : (PPx x).ι) :
-    scal x (a * b) i = scal x a i * scal x b i := by
-  simp only [scal, ReciprocityTheory.ChartRestriction.G.Out.liftFun, map_mul]
-
-theorem scal_one'' {S : Type} [CommRing S] (x : Sp S ⟶ Xo.X) (i : (PPx x).ι) : scal x (1 : S) i = 1 := by
-  simp only [scal, ReciprocityTheory.ChartRestriction.G.Out.liftFun, map_one]
-
 theorem secBC_self {Ω : Type} [CommRing Ω] {x : Sp Ω ⟶ Xo.X} {a : Ω} {s s' : LB.Sec (PPx x)}
     (h : GlobalTheory.Frames.SecBC (RingHom.id Ω) a x x s s') : ∀ i, s'.f i = scal x a i * s.f i := by
   obtain ⟨pm, h₁, h₂, h₃⟩ := h
@@ -1353,7 +1341,7 @@ theorem hkRelFr_frBor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     have hs₂ := secBC_self hs'
     refine GlobalTheory.ThetaTrace.IsThetaTrace.smul hth' (toΓ Ω (((t none)⁻¹ : Ωˣ) : Ω)) (fun k => ?_) (fun k => hs₂ k)
     show w.s.f k = scal w.x (((t none)⁻¹ : Ωˣ) : Ω) k * zs.f k
-    rw [hs₁ k, ← _root_.mul_assoc, ← scal_mul'', Units.inv_mul, scal_one'', _root_.one_mul]
+    rw [hs₁ k, ← _root_.mul_assoc, ← _root_.GlobalTheory.Frames.SecCalc.scal_mul', Units.inv_mul, _root_.GlobalTheory.Frames.SecCalc.scal_one', _root_.one_mul]
 
 end GlobalTheory.HeckeBorelChange
 end -- clump:auto
@@ -1827,13 +1815,6 @@ theorem hecke_geometric_of_multiplicity_lower_bound_alt : _root_.GlobalTheory.He
     (fun Q hQ => delAt_mem w x.o.Z x.m.z i Q hQ)
 end GlobalTheory.HeightCounting.HeckeLaw
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.heckeGeo_at_levelB1_states : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, AllSt fun _ _ _ _ _ P x => ∀ (l : _root_.GlobalTheory.HeightCounting.Up.SecondIntermediateLevel hL x) (i : (Dof x).ntw.Tw) (b : Bool) (j : Fin (Dof x).R.m), GlobalTheory.GeoTie.HeckeGeo l.b.YS x.m.z.geo.fw ((Dof x).nth.iC i) b j := by
-  first | exact @_root_.GlobalTheory.HeightCounting.HeckeLaw.hecke_geometric_of_multiplicity_lower_bound_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1854,7 +1835,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.HeightCounting.Up.geoLaws_at_levelB1_states : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, AllSt fun _ _ _ _ _ P x => ∀ (l : _root_.GlobalTheory.HeightCounting.Up.SecondIntermediateLevel hL x) (i : (Dof x).ntw.Tw), GlobalTheory.GeoTie.GeoLaws l.b.YS x.m.z.geo.fw ((Dof x).nth.iC i) := by
   intro hP hS hL
-  have hH := _root_.GlobalTheory.T.heckeGeo_at_levelB1_states hP hS hL
+  have hH := _root_.GlobalTheory.HeightCounting.HeckeLaw.hecke_geometric_of_multiplicity_lower_bound_alt hP hS hL
   refine hH.trans (StepW.of_all fun K B f T w _ _ hw P x l i => ?_)
   have hint := (Dof x).nth.iC_int i
   refine ⟨?_, ?_, ?_, hw P x l i, ?_, ?_, ?_⟩
@@ -1873,13 +1854,6 @@ theorem GlobalTheory.HeightCounting.Up.geoLaws_at_levelB1_states : _root_.Global
     exact ⟨n, fun b z => hn _ z.1⟩
   · intro j hj b
     exact l.b.ser.off i j b (fun h => hj (Finset.mem_Icc.2 h))
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.geoLaws_iC_at_levelB1_of_serN : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, AllSt fun _ _ _ _ _ P x => ∀ (l : _root_.GlobalTheory.HeightCounting.Up.SecondIntermediateLevel hL x) (i : (Dof x).ntw.Tw), GlobalTheory.GeoTie.GeoLaws l.b.YS x.m.z.geo.fw ((Dof x).nth.iC i) := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.geoLaws_at_levelB1_states
 end
 end
 end -- clump:auto

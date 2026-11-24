@@ -203,7 +203,7 @@ theorem cov {K : Set (Fin (m + 1) → k)} (hK : IsCompact K) (h0 : (0 : Fin (m +
     exact ENNReal.ofReal_le_ofReal hb
   have hnn : ∀ η ∈ S, 0 ≤ (B (av ψ col η M v) v).re := fun η hη =>
     le_trans (mul_nonneg (Df_re_nonneg hCp η v) ENNReal.toReal_nonneg) (hbd η hη).1
-  have hbes := av_bessel ψ hψ col hS.col_zero hS.col_add hS.smooth_col B hBp hBc M hML S hSd v
+  have hbes := _root_.PositivityTheory.RgUd.Form.U.Lift2.AvA.av_bessel' ψ hψ col hS.col_zero hS.col_add hS.smooth_col B hBp hBc M hML S hSd v
   calc ∫⁻ ξ in K, ENNReal.ofReal (Df gl s C ξ v v).re ∂ν
       ≤ ∫⁻ ξ in ⋃ η ∈ S, (fun ξ => ξ - η) ⁻¹' (perp ψ M : Set (Fin (m + 1) → k)),
           ENNReal.ofReal (Df gl s C ξ v v).re ∂ν := lintegral_mono_set hKS
@@ -351,7 +351,7 @@ private theorem addHaar_singleton_zero_eq_zero {m : ℕ} {ψ : AddChar k Circle}
     have h0 : ({0} : Set (Fin (m + 1) → k)) ⊆ (perp ψ (gmap (g ^ j) A) : Set _) := by
       simp [(perp ψ (gmap (g ^ j) A)).zero_mem]
     calc (ν {0}).toReal ≤ (ν (perp ψ (gmap (g ^ j) A))).toReal :=
-          ENNReal.toReal_mono (meas_perp_lt_top ψ ν hψ hψ1 (lat_gmap _ _ hA)).ne (measure_mono h0)
+          ENNReal.toReal_mono (meas_perp_lt_top ψ ν hψ hψ1 (_root_.PositivityTheory.RgUd.Form.U.Lift2.AvA.lat_gmap' _ _ hA)).ne (measure_mono h0)
       _ = _ := by rw [meas_perp_gmap ψ ν hψ hψ1 _ hA, hpow, inv_pow]
   have hlim : Tendsto (fun j : ℕ => ((md g)⁻¹) ^ j * (ν (perp ψ A)).toReal) atTop (𝓝 0) := by
     have := tendsto_pow_atTop_nhds_zero_of_lt_one (inv_nonneg.2 (md_pos g).le) (inv_lt_one_of_one_lt₀ hg1)

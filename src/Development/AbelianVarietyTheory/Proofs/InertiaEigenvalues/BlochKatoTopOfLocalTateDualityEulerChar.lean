@@ -719,18 +719,6 @@ theorem filV_anti {a b : ℤ} (h : a ≤ b) :
     simp
   | add y z hy hz => rw [map_add (f := _)]; exact Submodule.add_mem _ hy hz
 
-theorem exists_mem_filV (x : V ⊗[Qp] BdR) : ∃ a, x ∈ FilV PD (LL := LL) (V := V) a := by
-  induction x using TensorProduct.induction_on with
-  | zero => exact ⟨0, Submodule.zero_mem _⟩
-  | tmul v c =>
-    obtain ⟨a, ha⟩ := PD.Fil_exh c
-    exact ⟨a, v ⊗ₜ ⟨c, ha⟩, by simp⟩
-  | add y z hy hz =>
-    obtain ⟨a, ha⟩ := hy
-    obtain ⟨b, hb⟩ := hz
-    exact ⟨min a b, Submodule.add_mem _ (filV_anti PD (min_le_left a b) ha)
-      (filV_anti PD (min_le_right a b) hb)⟩
-
 theorem exists_DdRE_le_filV (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
     [FiniteDimensional LL ↥(DdRE PD ρ τ)] :
     ∃ a, DdRE PD ρ τ ≤ FilV PD (LL := LL) (V := V) a := by
@@ -741,7 +729,7 @@ theorem exists_DdRE_le_filV (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
     | empty => exact ⟨0, by simp⟩
     | insert y s _ ih =>
       obtain ⟨a, ha⟩ := ih
-      obtain ⟨b, hb⟩ := exists_mem_filV PD (LL := LL) y
+      obtain ⟨b, hb⟩ := _root_.GlobalTheory.DRFil.exists_mem_FilV PD (LL := LL) y
       refine ⟨min a b, fun x hx => ?_⟩
       rcases Finset.mem_insert.mp hx with rfl | hx
       · exact filV_anti PD (min_le_right a b) hb

@@ -153,8 +153,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.isInCharacterIsotypicPart_twistedInduction : ∀ (G : Type) [Group G] [Finite G] (H : Subgroup G) (τ : G → G) (φ Y : H → ℂ), Kills φ Y → Kills (fun x => (Nat.card H : ℂ)⁻¹ * ∑ᶠ y : G, ext0 H φ (y⁻¹ * x * τ y)) (ind H Y) := by
-  first | (exact @GlobalTheory.Shin.IndIso.kills_ind)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInCharacterIsotypicPartTwistedInductionStatement =====
@@ -274,7 +272,7 @@ theorem kills_iff_conv : ∀ (G : Type) [Group G] [Finite G] (φ Y : G → ℂ),
     simp only [star_sum, star_mul', star_star] at h2
     rw [← h2]
   · rintro ⟨h, hφ⟩ V _ _ _ ρ hV
-    have hY0 := GlobalTheory.T.isInCharacterIsotypicPart_self G Y hY V ρ hV
+    have hY0 := _root_.GlobalTheory.Shin.kills_self G Y hY V ρ hV
     rw [finsum_eq_sum_of_fintype] at hY0 ⊢
     simp_rw [hφ, finsum_eq_sum_of_fintype]
     rw [conv_op_eq, hY0, zero_mul]
@@ -293,8 +291,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.isInCharacterIsotypicPart_iff_convolution : ∀ (G : Type) [Group G] [Finite G] (φ Y : G → ℂ), IsChar ℂ ℂ Y → (Kills φ Y ↔ ∃ h : G → ℂ, ∀ x, φ x = ∑ᶠ y, Y y * h (y⁻¹ * x)) := by
-  first | (exact @GlobalTheory.Shin.kills_iff_conv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInCharacterIsotypicPartIffConvolutionStatement =====
@@ -324,9 +320,9 @@ theorem kills_prod_comp_surj : ∀ (P G₁ G₂ : Type) [Group P] [Finite P] [Gr
     exact isChar_mul_complex (a := fun p => Y₁ (π p).1) (b := fun p => Y₂ (π p).2)
       ⟨n, ρ.comp ((MonoidHom.fst G₁ G₂).comp π), fun p => hρ _⟩
       ⟨m, σ.comp ((MonoidHom.snd G₁ G₂).comp π), fun p => hσ _⟩
-  obtain ⟨k₁, hk₁⟩ := (GlobalTheory.T.isInCharacterIsotypicPart_iff_convolution G₁ φ₁ Y₁ hY₁).1 h₁
-  obtain ⟨k₂, hk₂⟩ := (GlobalTheory.T.isInCharacterIsotypicPart_iff_convolution G₂ φ₂ Y₂ hY₂).1 h₂
-  apply (GlobalTheory.T.isInCharacterIsotypicPart_iff_convolution P _ _ hY).2
+  obtain ⟨k₁, hk₁⟩ := (_root_.GlobalTheory.Shin.kills_iff_conv G₁ φ₁ Y₁ hY₁).1 h₁
+  obtain ⟨k₂, hk₂⟩ := (_root_.GlobalTheory.Shin.kills_iff_conv G₂ φ₂ Y₂ hY₂).1 h₂
+  apply (_root_.GlobalTheory.Shin.kills_iff_conv P _ _ hY).2
   set c : ℕ := (Finset.univ.filter fun q : P => π q = 1).card with hcdef
   have hc : (c : ℂ) ≠ 0 := by
     rw [Nat.cast_ne_zero]
@@ -367,8 +363,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.isotypicPart_exteriorProduct_inflated_surjection : ∀ (P G₁ G₂ : Type) [Group P] [Finite P] [Group G₁] [Group G₂] (π : P →* G₁ × G₂), Function.Surjective π → ∀ (φ₁ Y₁ : G₁ → ℂ) (φ₂ Y₂ : G₂ → ℂ), IsChar ℂ ℂ Y₁ → IsChar ℂ ℂ Y₂ → Kills φ₁ Y₁ → Kills φ₂ Y₂ → Kills (fun p => φ₁ (π p).1 * φ₂ (π p).2) (fun p => Y₁ (π p).1 * Y₂ (π p).2) := by
-  first | (exact @GlobalTheory.Shin.kills_prod_comp_surj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotypicPartExteriorProductInflatedSurjectionStatement =====
@@ -389,7 +383,7 @@ theorem kills_hcTw : ∀ (F : Type) [Field F] [Finite F], ∀ (t : F →+* F) (a
     ∀ (α A : GL (Fin a) F → ℂ) (β B : GL (Fin b) F → ℂ), IsChar ℂ ℂ A → IsChar ℂ ℂ B → Kills α A →
       Kills β B → Kills (hcTw t a b α β n) (hc a b A B n) := by
   intro F _ _ t a b n hn α A β B hA hB hαA hβB
-  obtain ⟨H, π, hmem, hsurj, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
+  obtain ⟨H, π, hmem, hsurj, hπ, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
   have hcard : (Nat.card {p : GL (Fin n) F // InPar a p} : ℂ) = (Nat.card H : ℂ) := by
     congr 1
     exact Nat.card_congr (Equiv.subtypeEquivRight fun x => (hmem x).symm)
@@ -426,9 +420,9 @@ theorem kills_hcTw : ∀ (F : Type) [Field F] [Finite F], ∀ (t : F →+* F) (a
     congr 1
     funext y
     rw [hid, hE]
-  have hk := GlobalTheory.T.isotypicPart_exteriorProduct_inflated_surjection H (GL (Fin a) F) (GL (Fin b) F) π hsurj α A β B hA hB hαA hβB
+  have hk := _root_.GlobalTheory.Shin.kills_prod_comp_surj H (GL (Fin a) F) (GL (Fin b) F) π hsurj α A β B hA hB hαA hβB
   rw [h1, h2]
-  exact GlobalTheory.T.isInCharacterIsotypicPart_twistedInduction (GL (Fin n) F) H (fun y => gal t n y) _ _ hk
+  exact _root_.GlobalTheory.Shin.IndIso.kills_ind (GL (Fin n) F) H (fun y => gal t n y) _ _ hk
 
 end GlobalTheory.Shin.HcIso
 end -- clump:auto
@@ -444,8 +438,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.twistedHarishChandra_isotypic_part : ∀ (F : Type) [Field F] [Finite F], ∀ (t : F →+* F) (a b n : ℕ), n = a + b → ∀ (α A : GL (Fin a) F → ℂ) (β B : GL (Fin b) F → ℂ), IsChar ℂ ℂ A → IsChar ℂ ℂ B → Kills α A → Kills β B → Kills (hcTw t a b α β n) (hc a b A B n) := by
-  first | (exact @GlobalTheory.Shin.HcIso.kills_hcTw)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedHarishChandraIsotypicPartStatement =====

@@ -461,9 +461,6 @@ theorem meas_ind_gen {α : Type*} [MeasurableSpace α] (c : Fin r → ℂ) (s : 
   unfold ind
   exact Measurable.ite (measurableSet_lt hQ measurable_const) measurable_const measurable_const
 
-theorem enn_sq' {E : Type*} [NormedAddCommGroup E] (y : E) : ((‖y‖₊ : ℝ≥0∞)) ^ 2 = ENNReal.ofReal (‖y‖ ^ 2) :=
-  Formalism.L2.SG.Pf.BH.Model.enn_sq y
-
 theorem inner_eq (μb : Measure (Mt k r)) [SFinite μb] (c : Fin r → ℂ) {s : ℝ} (hs : 0 < s) :
     ∫⁻ n, ∫⁻ m, ∫⁻ n', ind c s n m n' ∂(Formalism.MainNotions.S.haarLie (Nset k r) 1) ∂μb ∂(Formalism.MainNotions.S.haarLie (Nset k r) 1) =
       ∫⁻ Y : Formalism.MainNotions.S.lieE (Nset k r), ∫⁻ Y' : Formalism.MainNotions.S.lieE (Nset k r),
@@ -498,7 +495,7 @@ theorem inner_eq (μb : Measure (Mt k r)) [SFinite μb] (c : Fin r → ℂ) {s :
         ENNReal.ofReal (‖Y'‖ ^ 2) < ENNReal.ofReal (s ^ 2) then 1 else 0 := by
     intro m
     unfold ind Qf
-    rw [rhoN k r Y, rhoN k r Y', enn_sq', enn_sq', ← ENNReal.ofReal_add (by positivity) hB]
+    rw [rhoN k r Y, rhoN k r Y', _root_.Formalism.L2.SG.Pf.BH.Model.enn_sq, _root_.Formalism.L2.SG.Pf.BH.Model.enn_sq, ← ENNReal.ofReal_add (by positivity) hB]
   simp_rw [e]
   exact m_int μb hs (by positivity) (by positivity)
 
@@ -530,7 +527,7 @@ theorem model_inner (E1 E2 : Type) [NormedAddCommGroup E1] [InnerProductSpace �
       (if ENNReal.ofReal (‖y1‖ ^ 2 + B) + (‖y2‖₊ : ℝ≥0∞) ^ 2 + ENNReal.ofReal (‖y3‖ ^ 2) <
       ENNReal.ofReal (s ^ 2) then (1 : ℝ≥0∞) else 0) := by
     intro y2
-    rw [enn_sq' y1, enn_sq' y3, ← ENNReal.ofReal_add (by positivity) hB]
+    rw [_root_.Formalism.L2.SG.Pf.BH.Model.enn_sq y1, _root_.Formalism.L2.SG.Pf.BH.Model.enn_sq y3, ← ENNReal.ofReal_add (by positivity) hB]
   simp_rw [e]
   exact z_int volume hs (by positivity) (by positivity)
 
@@ -1716,15 +1713,12 @@ section -- clump:auto
 namespace Formalism.L2.SG.Closed
 
 theorem AprimeInf_holds [hG : Fact PI.AprimeInfW.GaugeVolUD] : Formalism.L2.SG.Pf.NcReal.AprimeInf :=
-  PI.AprimeInfAsm.aprime_infinite_real Formalism.L2.SG.Pf.MassDataX.hinfCompact_holds hG.out
-
-variable [Fact Formalism.L2.SG.Pf.WB.RhsWLim] in
-theorem JacGauge_holds : Formalism.L2.SG.Pf.JacGauge := Formalism.L2.SG.Pf.jacGauge
+  _root_.PI.AprimeInfAsm.aprimeInf_of_hinfCompact Formalism.L2.SG.Pf.MassDataX.hinfCompact_holds hG.out
 
 open Formalism.L2.SG.Pf Formalism.L2.SG.Pf.NcReal in
 variable [Fact PI.AprimeInfW.GaugeVolUD] [Fact Formalism.L2.SG.Pf.WB.RhsWLim] in
 theorem RealBracket_holds (hC : Formalism.L2.SG.Pf.NcReal.JX.CovolRef) : Formalism.L2.SG.Pf.NcReal.RealBracket :=
-  Formalism.L2.SG.Pf.NcReal.JX.realBracket_of_jac JacGauge_holds hC AprimeInf_holds
+  Formalism.L2.SG.Pf.NcReal.JX.realBracket_of_jac _root_.Formalism.L2.SG.Pf.jacGauge hC AprimeInf_holds
     (fun n ε => Formalism.MainNotions.S.Gauge.gauge_density_exists n ε)
 
 end Formalism.L2.SG.Closed

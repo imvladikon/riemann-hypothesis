@@ -132,8 +132,6 @@ open GlobalTheory.TrMult
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Chamber GlobalTheory.TruncKer GlobalTheory.Cusp
 
-theorem _root_.GlobalTheory.T.typeHypothesis_forms_agree : ∀ (D : D7) (V : HSp D) (T : TypeDataG V), NoFixed T → GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.HypH (k := fun v : T.S => ResF v.1) T.τ ∧ GlobalTheory.IndefiniteRowSideFullHecke.CuspidalNoRadicalFixed.NoRadicalFixed T := by
-  first | exact @GlobalTheory.TypeHypForms.hypH_and_noRadicalFixed
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypeHypothesisFormsAgreeStatement =====

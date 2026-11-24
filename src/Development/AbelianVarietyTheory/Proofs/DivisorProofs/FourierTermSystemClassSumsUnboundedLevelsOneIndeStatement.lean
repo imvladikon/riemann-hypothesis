@@ -373,7 +373,7 @@ theorem yy_zero_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ 
     ⟨0, gb, 0, (GlobalTheory.TorusExt.isNsmul_iff_eq _ _ _).2 hkgb.symm, hi⟩
   let xb : TFK (R := V) (AlgebraicClosure (FractionRing V)) ⟶ 𝔪.A.A :=
     GlobalTheory.TorsionExt.fieldMap (FractionRing V) (AlgebraicClosure (FractionRing V)) ≫ x (lab c)
-  obtain ⟨wb, frb, hwb, hfrb, hlb⟩ := GlobalTheory.T.torusExtension_point_liesOver_after_field_extension V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀
+  obtain ⟨wb, frb, hwb, hfrb, hlb⟩ := _root_.GlobalTheory.Poinc.Tors.LiesOverExt.liesOver_ext V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀
     hw₀ (g' c) (w c) (x (lab c)) (fr (lab c)) hwc (hfr _).1 hov xb rfl
 
   obtain ⟨f', f₁, -⟩ := GlobalTheory.TorsionIso.torsion_eq hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U
@@ -495,23 +495,6 @@ theorem sumI_zero : SumI I (fun _ : Ix => (0 : E)) 0 :=
   ⟨⊥, Submodule.fg_bot, Submodule.zero_mem _, fun _ => Submodule.zero_mem _,
     fun _ => ⟨∅, fun T _ => by simp⟩⟩
 
-theorem sumI_add {x y : Ix → E} {s t : E} (hx : SumI I x s) (hy : SumI I y t) :
-    SumI I (fun i => x i + y i) (s + t) := by
-  obtain ⟨N₁, f₁, hs₁, hx₁, h₁⟩ := hx
-  obtain ⟨N₂, f₂, hs₂, hx₂, h₂⟩ := hy
-  refine ⟨N₁ ⊔ N₂, f₁.sup f₂, Submodule.add_mem_sup hs₁ hs₂, fun i => Submodule.add_mem_sup (hx₁ i) (hx₂ i),
-    fun n => ?_⟩
-  obtain ⟨S₁, hS₁⟩ := h₁ n
-  obtain ⟨S₂, hS₂⟩ := h₂ n
-  classical
-  refine ⟨S₁ ∪ S₂, fun T hT => ?_⟩
-  have e : s + t - ∑ i ∈ T, (x i + y i) = (s - ∑ i ∈ T, x i) + (t - ∑ i ∈ T, y i) := by
-    rw [Finset.sum_add_distrib]; abel
-  rw [e]
-  exact Submodule.add_mem _
-    (Submodule.smul_mono le_rfl le_sup_left (hS₁ T (Finset.union_subset_left hT)))
-    (Submodule.smul_mono le_rfl le_sup_right (hS₂ T (Finset.union_subset_right hT)))
-
 theorem sumI_smul (c : R) {x : Ix → E} {s : E} (hx : SumI I x s) : SumI I (fun i => c • x i) (c • s) := by
   obtain ⟨N, f, hs, hxN, h⟩ := hx
   refine ⟨N, f, N.smul_mem c hs, fun i => N.smul_mem c (hxN i), fun n => ?_⟩
@@ -527,7 +510,7 @@ theorem sumI_sum {κ : Type} (F : Finset κ) (x : κ → Ix → E) (s : κ → E
   | empty => simpa using (sumI_zero (I := I) (E := E) (Ix := Ix))
   | insert a F ha ih =>
     simp only [Finset.sum_insert ha]
-    exact sumI_add (h a (Finset.mem_insert_self a F)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
+    exact _root_.GlobalTheory.AdicSum.sumI_add (h a (Finset.mem_insert_self a F)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
 
 theorem sumI_comp {Ix' : Type} {e : Ix' → Ix} (he : Function.Injective e) {x : Ix → E} {s : E}
     (h0 : ∀ i, i ∉ Set.range e → x i = 0) (hx : SumI I x s) : SumI I (fun j => x (e j)) s := by
@@ -588,11 +571,6 @@ theorem eStd_sub_right (g m : ℕ) (x a b : Fin g ⊕ Fin g → ZMod m) :
   simp only [eStd, Pi.sub_apply, ← Finset.sum_sub_distrib]
   exact Finset.sum_congr rfl fun _ _ => by ring
 
-theorem eStd_add_left (g m : ℕ) (x y a : Fin g ⊕ Fin g → ZMod m) :
-    eStd g m (x + y) a = eStd g m x a + eStd g m y a := by
-  simp only [eStd, Pi.add_apply, ← Finset.sum_add_distrib]
-  exact Finset.sum_congr rfl fun _ _ => by ring
-
 end GlobalTheory.GSep.ClassSumFun
 
 namespace GlobalTheory.GSep.ClassSumFun
@@ -600,7 +578,7 @@ open Classical
 
 theorem exists_classSum_fun : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∃ f : X₁.S.Gam → X₁.S.Gam → X₁.Ω₁, (∀ a b, ∀ w : X₁.M.Z, X₁.M.Div X₁.S.th x₀ w → f a b ∈ X₁.M.O w) ∧ (∀ a a' b, a - a' ∈ X₁.S.HH X₁.M z₁ → f a b = f a' b) ∧ ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (t : X → V) (δ : I → X → X) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (C : Type) (lab : C → X₁.S.Gam), (∀ c, lab c ∈ X₁.S.HH X₁.M z₁) → ∀ T : X → C → V, 𝔪.Terms x₀ lab T → ∀ (c : C) (a : X₁.S.Gam) (κ : X), 𝔪.YY a κ → ∀ h : X₁.M.Z.presheaf.stalk z₁, X₁.M.stalkHom z₁ h = f a (lab c) → SumI (maximalIdeal V) (fun nu : X => T (κ + (X₁.S.r * X₁.S.N) • nu) c) (ev h) := by
   intro I X₁ z₁ act x₀ hdiv
-  obtain ⟨sg, eps, hlink⟩ := GlobalTheory.T.thetaConstants_translate_eq_twisted_sums I X₁ z₁ act x₀ hdiv
+  obtain ⟨sg, eps, hlink⟩ := _root_.GlobalTheory.GSep.twistSum_translate I X₁ z₁ act x₀ hdiv
   have hm0 : 0 < X₁.S.r * X₁.S.N :=
     Nat.mul_pos (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)
   haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨hm0.ne'⟩
@@ -728,7 +706,7 @@ theorem exists_classSum_fun : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z�
         have h₀' : eStd X₁.S.g _ τ₀ d ≠ 0 := by
           rw [Weights.eStd_swap]; exact neg_ne_zero.2 h₀
         refine sum_pow_val_eq_zero hq (fun τ : X₁.S.TT X₁.M z₁ => (sg : ℤ) • eStd X₁.S.g _ (τ : X₁.S.Gam) d)
-          (fun x y => by simp only [AddSubgroup.coe_add, eStd_add_left, smul_add]) ⟨τ₀, hτ₀⟩ ?_
+          (fun x y => by simp only [AddSubgroup.coe_add, _root_.GlobalTheory.ZH.TorusPerp.eStd_add_left, smul_add]) ⟨τ₀, hτ₀⟩ ?_
         rcases Int.units_eq_one_or sg with hs | hs <;> simpa [hs] using h₀'
     have hucard : ev (ι₀ u) * (Nat.card (X₁.S.TT X₁.M z₁) : V) = 1 := by
       rw [← map_natCast ev (Nat.card _), ← map_mul, ← map_natCast ι₀ (Nat.card _), ← map_mul, hu1, map_one, map_one]
@@ -843,8 +821,6 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_deeperPoint_integralClosure_stalk : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (𝔗 : GlobalTheory.GSep.Tower X₁ act) (z₁ : X₁.M.Z), letI : Algebra (X₁.M.Z.presheaf.stalk z₁) 𝔗.X₂.Ω₁ := ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp (X₁.M.stalkHom z₁)).toAlgebra; ∃ (z₂ : 𝔗.X₂.M.Z) (j₂ : integralClosure (X₁.M.Z.presheaf.stalk z₁) 𝔗.X₂.Ω₁ →+* 𝔗.X₂.M.Z.presheaf.stalk z₂), 𝔗.p z₂ = z₁ ∧ (∀ b, 𝔗.X₂.M.stalkHom z₂ (j₂ b) = b) ∧ ((maximalIdeal (𝔗.X₂.M.Z.presheaf.stalk z₂)).comap j₂).IsMaximal ∧ (∀ x : 𝔗.X₂.Ω₁, (∀ w, 𝔗.p w = z₁ → x ∈ 𝔗.X₂.M.O w) → x ∈ integralClosure (X₁.M.Z.presheaf.stalk z₁) 𝔗.X₂.Ω₁) ∧ (∀ σ : 𝔗.X₂.Ω₁ ≃ₐ[X₁.Ω₁] 𝔗.X₂.Ω₁, (∀ b b' : integralClosure (X₁.M.Z.presheaf.stalk z₁) 𝔗.X₂.Ω₁, (b' : 𝔗.X₂.Ω₁) = σ b → (j₂ b ∈ maximalIdeal (𝔗.X₂.M.Z.presheaf.stalk z₂) ↔ j₂ b' ∈ maximalIdeal (𝔗.X₂.M.Z.presheaf.stalk z₂))) → ∃ σ₂ : 𝔗.X₂.M.Z.presheaf.stalk z₂ ≃+* 𝔗.X₂.M.Z.presheaf.stalk z₂, ∀ x, 𝔗.X₂.M.stalkHom z₂ (σ₂ x) = σ (𝔗.X₂.M.stalkHom z₂ x)) ∧ ∀ (V : Type) [CommRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (V' : Type) [CommRing V'] (io : V →+* V') (ev₂ : 𝔗.X₂.M.Z.presheaf.stalk z₂ →+* V'), Function.Injective ev → Function.Injective io → 𝔗.Ext ev io ev₂ → Function.Injective ev₂ := by
-  first | exact @GlobalTheory.GSep.Tower.exists_point_integralClosure_stalk
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDeeperPointIntegralClosureStalkStatement =====
@@ -1185,7 +1161,7 @@ theorem GlobalTheory.GSep.Spz.latTo_of_specializes : ∀ (I : Type) (X₁ : Glob
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ
   have eqv := spread₂_endU_comm Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ
-  have tor := GlobalTheory.T.toricTorsionSection_of_spread_through_latticeMap Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
+  have tor := _root_.GlobalTheory.Poinc.Sep.Spz.torAt_of_spread₂ Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ X₁.o₁ Y.s o₁ o₂ ho₁ ho₂
   obtain ⟨tot₁, sur₁, cong₁, -⟩ := GlobalTheory.T.thetaLabels_surjective_hom_lattice_mod_level I X₁ z₁ act V₁ ev₁ X₀ t₁ δ₁ 𝔫₁
   obtain ⟨tot₂, sur₂, cong₂, -⟩ := GlobalTheory.T.thetaLabels_surjective_hom_lattice_mod_level I X₁ z₁ act V₂ ev₂ X t₂ δ₂ 𝔫₂
@@ -1214,7 +1190,7 @@ theorem GlobalTheory.GSep.Spz.latTo_of_specializes : ∀ (I : Type) (X₁ : Glob
       (X₁.S.r * X₁.S.N) (algebraMap (FractionRing V₁) _ (algebraMap V₁ _ (o₁ (X₁.S.ζ ^ (X₁.S.r * X₁.S.N))))) (by omega)
       (by rw [← map_pow, ← map_pow, ← map_pow, hζ, map_one, map_one, map_one]) c
     obtain ⟨τ', q, hτ', hq, hq', hQ⟩ := id hx₁
-    obtain ⟨τ, hτ⟩ := GlobalTheory.T.geometricTorsionPoint_member_has_label I X₁ z₁ act V₁ ev₁ X₀ t₁ δ₁ 𝔫₁ x₁ (GlobalTheory.GSep.Spz.pow_eq_one_of_qkToAkU 𝔫₁ hQ)
+    obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.GSep.IntTerm.torsion_has_label I X₁ z₁ act V₁ ev₁ X₀ t₁ δ₁ 𝔫₁ x₁ (GlobalTheory.GSep.Spz.pow_eq_one_of_qkToAkU 𝔫₁ hQ)
     have hH : τ ∈ X₁.S.HH X₁.M z₁ := (int₁ τ).2 ⟨q, x₁, hq.trans (map_zero _).symm, hQ, hτ⟩
     obtain ⟨Wo, h, hW, hs⟩ := FinalForm.sec _ τ (hHH hH)
     have lift : ∀ {V : Type} [CommRing V] [IsLocalRing V] (ξ : Sp V ⟶ Y.Z), ξ (closedPoint V) ∈ Wo →
@@ -1625,7 +1601,7 @@ theorem classSums_deeper : ∀ (O : Type) [CommRing O] (bar : O → O) (q : ℕ)
   intro y₀ N₀
   obtain ⟨𝔗, hN₀⟩ := hdeep N₀
   letI : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra
-  obtain ⟨-, hfr, -, -⟩ := GlobalTheory.T.modelStalk_normal_noetherian_fractionRing X₁ z₁
+  obtain ⟨-, hfr, -, -⟩ := _root_.GlobalTheory.GSep.stalk_isNoetherian_normal_fractionRing X₁ z₁
   haveI := hfr
   letI algAL : Algebra (X₁.M.Z.presheaf.stalk z₁) 𝔗.X₂.Ω₁ :=
     ((algebraMap X₁.Ω₁ 𝔗.X₂.Ω₁).comp (X₁.M.stalkHom z₁)).toAlgebra
@@ -1633,7 +1609,7 @@ theorem classSums_deeper : ∀ (O : Type) [CommRing O] (bar : O → O) (q : ℕ)
   haveI := 𝔗.gal
   obtain ⟨algFL, tower, hfd, hgal, hfix⟩ :=
     GlobalTheory.finiteGalois_fractionRing_of_isFractionRing (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ 𝔗.X₂.Ω₁ (fun _ => rfl)
-  obtain ⟨z₂, j₂, hz₂, hj₂, hmax, hint, hσ₂, hinj⟩ := GlobalTheory.T.exists_deeperPoint_integralClosure_stalk O X₁ act 𝔗 z₁
+  obtain ⟨z₂, j₂, hz₂, hj₂, hmax, hint, hσ₂, hinj⟩ := _root_.GlobalTheory.GSep.Tower.exists_point_integralClosure_stalk O X₁ act 𝔗 z₁
   have hdiv₂ : ∀ w, 𝔗.p w = z₁ → 𝔗.X₂.M.Div 𝔗.X₂.S.th (𝔗.lam x₀) w := fun w hw =>
     (GlobalTheory.T.deeperModel_dividing_label_and_shifts_preserved O X₁ z₁ act hact hunit 𝔗 w hw x₀ hdiv (Φ.V y₀) (Φ.ev y₀) _ _ _ (𝔪 y₀)).1
   have hlab : ∀ c, 𝔗.lam (lab c) ∈ 𝔗.X₂.S.HH 𝔗.X₂.M z₂ := fun c =>

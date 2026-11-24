@@ -516,9 +516,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace PositivityTheory.PfSWUS.KFinMatch
 
-theorem adj_one_k {D : D7} {n : ℕ} : adj (1 : Mx D n n) = 1 := by
-  show ((1 : Matrix (Fin n) (Fin n) (AE D)).map (cA D))ᵀ = 1
-  rw [Matrix.map_one (cA D) (map_zero (cA D)) (map_one (cA D)), Matrix.transpose_one]
+alias adj_one_k := _root_.GlobalTheory.MixModel.adj_one
 
 
 
@@ -609,8 +607,6 @@ open GlobalTheory.AutomorphicL2Unitary GlobalTheory.AdelicU GlobalTheory.Doublin
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC
 
-theorem _root_.GlobalTheory.T.hermitian_measure_conjugation : ∀ (D : D7) (n : ℕ) (lam : Measure (hermA D n)), lam.IsAddHaarMeasure → ∀ (a : GL (Fin n) (AE D)) (f : hermA D n → ℂ), ∫ c, f (GlobalTheory.CompanionTheory.IwaAd.cg a c) ∂lam = npow (absA D (Matrix.GeneralLinearGroup.det a)) (-(n : ℂ)) * ∫ c, f c ∂lam := by
-  first | exact @GlobalTheory.CompanionTheory.CgMod.integral_cg
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -633,7 +629,7 @@ open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory
 
 theorem mod_of_cg : ∀ (D : D7) (n : ℕ) (lam : Measure (PositivityTheory.GramSchwartzFunctions.BC.hermA D n)), lam.IsAddHaarMeasure → ∀ (a : GL (Fin n) (AE D)) (f : Mx D n n → ℂ), ∫ b, f b.1 ∂lam = ((GlobalTheory.Doubling.absA D (Matrix.GeneralLinearGroup.det a) : ℝ) : ℂ) ^ n * ∫ c, f (a.1 * c.1 * GlobalTheory.MixModel.adj a.1) ∂lam := by
   intro D n lam hlam a f
-  have h := GlobalTheory.T.hermitian_measure_conjugation D n lam hlam a (fun c => f c.1)
+  have h := _root_.GlobalTheory.CompanionTheory.CgMod.integral_cg D n lam hlam a (fun c => f c.1)
   have hr0 : 0 < absA D (Matrix.GeneralLinearGroup.det a) :=
     pos_iff_ne_zero.2 (GlobalTheory.ResAniso.ResProp.absAU_ne_zero _)
   have e : ∫ c, f (a.1 * c.1 * adj a.1) ∂lam =
@@ -773,7 +769,7 @@ theorem realMatch : RealMatch := by
       exact Units.mul_inv (frG τ)
     have hY : ∀ τ, PositivityTheory.SiegelWeilFormula.Gen.crd (θ τ) (frG τ) (aTau θ a τ) (HeckeCharacterZeroLocus.SiegelWeilU.projInf (tupInv x)) =
         ((frG τ)⁻¹).1 * compAt θ τ (HMul.hMul x a.1 : Mx D V.rank n) := fun τ => by
-      rw [GlobalTheory.VacKInf.LeviFix.compAt_mul', ← Matrix.mul_assoc]
+      rw [_root_.GlobalTheory.WeilVacMove.compAt_mul, ← Matrix.mul_assoc]
       rfl
     have hZ : ∀ τ, frM τ * (((frG τ)⁻¹).1 * compAt θ τ (HMul.hMul x a.1 : Mx D V.rank n)) =
         compAt θ τ (HMul.hMul x a.1 : Mx D V.rank n) := fun τ => by
@@ -1376,7 +1372,7 @@ theorem matchMono_of' (hψ : PsiPlaces) (hR : RealMatch) (hRc : RealConj) (hH : 
   refine ⟨d, bs, θ, l, εG, frG, aTau θ a, PG, lamS, L₁, L₂, fun X => φ (HMul.hMul (tupOf X) a.1), Φf, Φv,
     μ.map tupInv, lam.map hermTo, ψ, ?_, npow (absA D (Matrix.GeneralLinearGroup.det a)) ((V.rank : ℂ) - n), ?_, ?_⟩
   · constructor
-    · exact GlobalTheory.DefiniteQuotient.cmExt D
+    · exact _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
     · exact GlobalTheory.DefiniteQuotient.gram_hermND V
     · exact hrange.1
     · intro i j

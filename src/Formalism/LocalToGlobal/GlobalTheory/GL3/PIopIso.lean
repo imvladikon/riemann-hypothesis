@@ -117,16 +117,9 @@ theorem t_heis : HeisenbergCocycle := by
   rw [hc]
   ring
 
-section
-variable {V : Type} [AddCommGroup V] {H : V → V → ℂ}
-
-end
-
 end Formalism.HermitianLattices.WeilRepresentation.CocycleEighthPower
 
 namespace Formalism.HermitianLattices.WeilRepresentation
-
-theorem heisenberg_cocycle : HeisenbergCocycle := CocycleEighthPower.t_heis
 
 end Formalism.HermitianLattices.WeilRepresentation
 end -- clump:auto
@@ -164,7 +157,7 @@ def cf (T : Tor D) (x y : VC D N N') : ℂ :=
 
 theorem U_U (T : Tor D) (x y : VC D N N') (G : VC D N N' → ℂ) (z : VC D N N') :
     U D T x (U D T y G) z = cf T x y * U D T (x + y) G z :=
-  Formalism.HermitianLattices.WeilRepresentation.heisenberg_cocycle _ (Hf D T) (Hf_add_left T) (Hf_herm T) G x y z
+  _root_.Formalism.HermitianLattices.WeilRepresentation.CocycleEighthPower.t_heis _ (Hf D T) (Hf_add_left T) (Hf_herm T) G x y z
 
 theorem U_smul (T : Tor D) (x : VC D N N') (c : ℂ) (G : VC D N N' → ℂ) (z : VC D N N') :
     U D T x (fun w => c * G w) z = c * U D T x G z := by

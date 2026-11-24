@@ -475,15 +475,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open MeasureTheory
 
 
-theorem _root_.GlobalTheory.T.integral_diagonalTheta_secondVariable_diagonal : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (κ : Type) [Fintype κ],
-    letI : MeasurableSpace (κ → AF F) := borel _
-    ∀ (μ : MeasureTheory.Measure (κ → AF F)), μ.IsAddHaarMeasure →
-    ∀ 𝓕₁ : Set (κ → AF F), MeasureTheory.IsAddFundamentalDomain (GlobalTheory.ThetaParseval.ratVec F κ) 𝓕₁ μ → μ 𝓕₁ ≠ ⊤ →
-    ∀ Φ ∈ GlobalTheory.WeilM.schA F (κ ⊕ κ), ∀ x : κ → AF F,
-      ∫ y in 𝓕₁, GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr ψ (Sum.elim x x, Sum.elim y (-y)) Φ) ∂μ =
-        (μ.real 𝓕₁ : ℂ) * ∑' η : κ → F, Φ (Sum.elim ((fun i => algebraMap F (AF F) (η i)) + x)
-          ((fun i => algebraMap F (AF F) (η i)) + x)) := by
-  first | exact @GlobalTheory.ThetaDiagUnfold.integral_thetaSum_schr_diag
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDiagonalThetaSecondVariableDiagonalStatement =====
@@ -576,15 +567,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open MeasureTheory
 
 
-theorem _root_.GlobalTheory.T.integral_fundamentalDomain_tsum_rationalTranslates : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ],
-    letI : MeasurableSpace (κ → AF F) := borel _
-    ∀ (μ : MeasureTheory.Measure (κ → AF F)), μ.IsAddHaarMeasure →
-    ∀ 𝓕₁ : Set (κ → AF F), MeasureTheory.IsAddFundamentalDomain (GlobalTheory.ThetaParseval.ratVec F κ) 𝓕₁ μ → μ 𝓕₁ ≠ ⊤ →
-    ∀ h : (κ → AF F) → ℂ, Continuous h →
-      (∃ B : ℝ, ∀ x : κ → AF F, Summable (fun η : κ → F => ‖h ((fun i => algebraMap F (AF F) (η i)) + x)‖) ∧
-        ∑' η : κ → F, ‖h ((fun i => algebraMap F (AF F) (η i)) + x)‖ ≤ B) →
-      ∫ x in 𝓕₁, ∑' η : κ → F, h ((fun i => algebraMap F (AF F) (η i)) + x) ∂μ = ∫ u, h u ∂μ := by
-  first | exact @GlobalTheory.ThetaUnfoldInt.integral_fundamentalDomain_tsum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFundamentalDomainTsumRationalTranslatesStatement =====
@@ -727,18 +709,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open MeasureTheory
 
 
-theorem _root_.GlobalTheory.T.integral_ratPairFundamentalDomain_adelic_iterated : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ],
-    letI : MeasurableSpace (κ → AF F) := borel _
-    letI : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
-    ∀ (μ : MeasureTheory.Measure (κ → AF F)), μ.IsAddHaarMeasure →
-    ∀ (lam : MeasureTheory.Measure ((κ → AF F) × (κ → AF F))), lam.IsAddHaarMeasure →
-    ∀ 𝓖 : Set ((κ → AF F) × (κ → AF F)),
-      MeasureTheory.IsAddFundamentalDomain (GlobalTheory.WeilUnitaryTransport.ratPair F κ) 𝓖 lam →
-    ∀ 𝓕₁ : Set (κ → AF F), MeasureTheory.IsAddFundamentalDomain (GlobalTheory.ThetaParseval.ratVec F κ) 𝓕₁ μ → μ 𝓕₁ ≠ ⊤ →
-    ∃ c₁ : ℝ, 0 < c₁ ∧ ∀ G : (κ → AF F) × (κ → AF F) → ℂ, Measurable G →
-      (∀ γ ∈ GlobalTheory.WeilUnitaryTransport.ratPair F κ, ∀ w, G (γ + w) = G w) → (∃ B : ℝ, ∀ w, ‖G w‖ ≤ B) →
-      ∫ w in 𝓖, G w ∂lam = c₁ * ∫ x in 𝓕₁, ∫ y in 𝓕₁, G (x, y) ∂μ ∂μ := by
-  first | exact @GlobalTheory.PeriodicIteratedIntegral.integral_ratPair_fundamentalDomain_eq_iterated
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralRatPairFundamentalDomainAdelicIteratedStatement =====
@@ -1110,7 +1080,7 @@ theorem diag_theta_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
   have hψc : IsCharAF D.host.F ψ := hψ.1
   obtain ⟨lam, 𝓖, hlam, h𝓖, -, htr⟩ := GlobalTheory.T.darbouxCoords_transport_covolumeOne_haar D S T κ co.e (GlobalTheory.T.ratDarbouxCoords_rationalMatrix_iff_ratPair D S T κ co.e hrat) ν 𝓕 hν
   obtain ⟨𝓕₁, h𝓕₁, h0, htop⟩ := GlobalTheory.RatVecDomain.exists_fundamentalDomain D.host.F κ μ hμ
-  obtain ⟨c₁, hc₁, hiter⟩ := GlobalTheory.T.integral_ratPairFundamentalDomain_adelic_iterated D.host.F κ μ hμ lam hlam 𝓖 h𝓖 𝓕₁ h𝓕₁ htop
+  obtain ⟨c₁, hc₁, hiter⟩ := _root_.GlobalTheory.PeriodicIteratedIntegral.integral_ratPair_fundamentalDomain_eq_iterated D.host.F κ μ hμ lam hlam 𝓖 h𝓖 𝓕₁ h𝓕₁ htop
   have hpos : 0 < μ.real 𝓕₁ := ENNReal.toReal_pos h0 htop
   refine ⟨((c₁ * μ.real 𝓕₁ : ℝ) : ℂ), Complex.ofReal_ne_zero.mpr (mul_pos hc₁ hpos).ne', fun Φ hΦ => ?_⟩
 
@@ -1191,7 +1161,7 @@ theorem diag_theta_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
   have hinner : ∀ x, ∫ y in 𝓕₁, G (x, y) ∂μ = (μ.real 𝓕₁ : ℂ) *
       ∑' η : κ → D.host.F, h ((fun i => algebraMap D.host.F (AF D.host.F) (η i)) + x) := by
     intro x
-    exact GlobalTheory.T.integral_diagonalTheta_secondVariable_diagonal D.host.F ψ hψc κ μ hμ 𝓕₁ h𝓕₁ htop Φ hΦ x
+    exact _root_.GlobalTheory.ThetaDiagUnfold.integral_thetaSum_schr_diag D.host.F ψ hψc κ μ hμ 𝓕₁ h𝓕₁ htop Φ hΦ x
   calc GlobalTheory.DiagSiegel.thetaDiagInt ν 𝓕 (GlobalTheory.WeilSchrodinger.thetaTr D.host.F (GlobalTheory.DblSchr.ddr co) ψ Φ)
       = ∫ w in 𝓕, G (co.e w) ∂ν := by
         unfold GlobalTheory.DiagSiegel.thetaDiagInt
@@ -1200,7 +1170,7 @@ theorem diag_theta_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
     _ = c₁ * ∫ x in 𝓕₁, ∫ y in 𝓕₁, G (x, y) ∂μ ∂μ := hiter G hGm hGper hGbd
     _ = c₁ * ((μ.real 𝓕₁ : ℂ) * ∫ u, h u ∂μ) := by
         simp_rw [hinner]
-        rw [integral_const_mul, GlobalTheory.T.integral_fundamentalDomain_tsum_rationalTranslates D.host.F κ μ hμ 𝓕₁ h𝓕₁ htop h hcont hhbd]
+        rw [integral_const_mul, _root_.GlobalTheory.ThetaUnfoldInt.integral_fundamentalDomain_tsum D.host.F κ μ hμ 𝓕₁ h𝓕₁ htop h hcont hhbd]
     _ = ((c₁ * μ.real 𝓕₁ : ℝ) : ℂ) * GlobalTheory.DiagSiegel.diagInt μ Φ := by
         push_cast
         rw [mul_assoc]

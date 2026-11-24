@@ -311,28 +311,9 @@ namespace GlobalTheory.BalRankSym
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
-theorem host_bar_bar (H : Host E) (a : 𝓞 E) : H.bar (H.bar a) = a := by
-  apply RingOfIntegers.ext
-  rw [H.bar_eq, H.bar_eq]
-  exact IsCMField.complexConj_apply_apply E _
+alias host_bar_bar := _root_.GlobalTheory.HostModel.bar_bar
 
-theorem host_bar_rt (H : Host E) : H.bar H.rt = -H.rt := by
-  have h1 : (H.bar H.rt) ^ 2 = H.rt ^ 2 := by rw [← map_pow, H.rt_sq]; simp
-  rcases sq_eq_sq_iff_eq_or_eq_neg.1 h1 with h | h
-  · exfalso
-    obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance
-    have h2 : IsCMField.complexConj E (H.rt : E) = (H.rt : E) := by rw [← H.bar_eq, h]
-    have h3 := IsCMField.complexEmbedding_complexConj E φ (H.rt : E)
-    rw [h2] at h3
-    have h4 : (φ (H.rt : E)) ^ 2 = -(H.d : ℂ) := by
-      have := congrArg (fun x : 𝓞 E => φ (x : E)) H.rt_sq
-      simpa using this
-    have h5 : (φ (H.rt : E)).im = 0 := Complex.conj_eq_iff_im.1 h3.symm
-    have h6 := congrArg Complex.re h4
-    simp [sq, h5] at h6
-    have h7 : (0 : ℝ) < H.d := by exact_mod_cast H.d_prime.pos
-    nlinarith [mul_self_nonneg (φ (H.rt : E)).re]
-  · exact h
+alias host_bar_rt := _root_.GlobalTheory.HostModel.bar_rt
 
 variable (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X]
 
@@ -730,8 +711,6 @@ open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.UC
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.ringKrullDim_add_trdeg_completion_polynomial : ∀ (F W R : Type) [Field F] [CommRing W] [IsDomain W] [IsLocalRing W] [CommRing R] [IsLocalRing R] (b : F →+* W), b.EssFiniteType → ∀ (I : Type) [Fintype I] (ψ : MvPolynomial I W →+* R), GlobalTheory.TChart.IsComplAt ψ → IsLocalHom (ψ.comp MvPolynomial.C) → ∀ bR : F →+* R, (ψ.comp MvPolynomial.C).comp b = bR → ((residue R).comp bR).EssFiniteType ∧ ∀ a t : ℕ, ringKrullDim W = a → (letI := ((residue W).comp b).toAlgebra; Algebra.trdeg F (ResidueField W) = t) → ∃ a' t' : ℕ, ringKrullDim R = a' ∧ (letI := ((residue R).comp bR).toAlgebra; Algebra.trdeg F (ResidueField R) = t') ∧ a' + t' = a + t + Fintype.card I := by
-  first | exact @GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingKrullDimAddTrdegCompletionPolynomialStatement =====
@@ -751,7 +730,7 @@ namespace GlobalTheory.UCanon
 
 theorem canon_residue_dim : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ {k : Type} [Field k] {m e : ℕ} (C : MonoFam Xo c φ (ChartRing k m e)), Canon C → ((residue (ChartRing k m e)).comp C.b).EssFiniteType ∧ (letI := ((residue (ChartRing k m e)).comp C.b).toAlgebra; ((m + e : ℕ) : Cardinal) + Algebra.trdeg c.F (ResidueField (ChartRing k m e)) = Dw.dim) := by
   intro E _ _ _ H Dw l Xo c φ k _ m e C hC
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.ringKrullDim_add_trdeg_completion_polynomial c.F hC.L.W (ChartRing k m e) hC.L.b hC.L.ft (Fin C.m ⊕ Fin hC.N) hC.ψ hC.compl hC.ψ_loc
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CDimAlg.ringKrullDim_add_trdeg_of_isComplAt c.F hC.L.W (ChartRing k m e) hC.L.b hC.L.ft (Fin C.m ⊕ Fin hC.N) hC.ψ hC.compl hC.ψ_loc
     C.b hC.base
   refine ⟨h1, ?_⟩
   obtain ⟨a, t, ha, ht, hat⟩ := hC.L.dim

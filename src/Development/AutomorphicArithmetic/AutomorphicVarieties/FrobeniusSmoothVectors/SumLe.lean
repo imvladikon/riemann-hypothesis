@@ -1102,11 +1102,6 @@ section -- clump:auto
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
-private theorem ep_odd_span_X {O σ ι : Type} [CommRing O] (e : ι → σ) (s : Finset ι) :
-    ∀ f : MvPowerSeries σ O, (∀ n : σ →₀ ℕ, (∀ i ∈ s, n (e i) = 0) → MvPowerSeries.coeff n f = 0) →
-      f ∈ Ideal.span (Set.range fun i => (MvPowerSeries.X (e i) : MvPowerSeries σ O)) :=
-  _root_.UpperTheory.Reformulated.B.PowerSeriesMemSpanIndexedVariables.ep_odd_span_X e s
-
 theorem UpperTheory.V.Fr.ep_odd :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (σ : R →ₐ[O] R) (P : GPres O σ), Ideal.span (evp σ 1 : Set R) = Ideal.span (Set.range fun i => P.p (MvPowerSeries.X (.inr i))) := by
   intro O _ _ R _ _ _ σ P
@@ -1117,7 +1112,7 @@ theorem UpperTheory.V.Fr.ep_odd :
     rintro _ ⟨f, hf, rfl⟩
     have h1 : f ∈ Ideal.span (Set.range fun i : Fin P.g =>
         (MvPowerSeries.X (Sum.inr i) : MvPowerSeries (Fin P.a ⊕ Fin P.g) O)) := by
-      refine ep_odd_span_X Sum.inr Finset.univ f fun n hn => hf n ?_
+      refine _root_.UpperTheory.Reformulated.B.PowerSeriesMemSpanIndexedVariables.ep_odd_span_X Sum.inr Finset.univ f fun n hn => hf n ?_
       have : Finsupp.weight (Space.Loc.par P.a P.g) n = 0 := by
         rw [Finsupp.weight_apply, Finsupp.sum]
         refine Finset.sum_eq_zero fun s _ => ?_
@@ -1266,12 +1261,6 @@ section -- clump:auto
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
-open MvPowerSeries in
-private theorem ev_decomp {O σ : Type} [CommRing O] [Fintype σ] (f : MvPowerSeries σ O) :
-    ∃ h : σ → MvPowerSeries σ O, f = C (constantCoeff f) + ∑ i, MvPowerSeries.X i * h i ∧
-      ∀ i, constantCoeff (h i) = coeff (Finsupp.single i 1) f :=
-  _root_.UpperTheory.Reformulated.B.Qf39.ev_decomp f
-
 private theorem ev_max {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebra O R]
     [IsCO O R] {R' : Type} [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R') {x : R} :
     f x ∈ maximalIdeal R' ↔ x ∈ maximalIdeal R := by
@@ -1357,7 +1346,7 @@ theorem UpperTheory.V.Fr.ep_vars :
     refine h2R.mul_left_cancel ?_
     rw [hw, h1]
     simp
-  · obtain ⟨u, hu, hu0⟩ := ev_decomp h
+  · obtain ⟨u, hu, hu0⟩ := _root_.UpperTheory.Reformulated.B.Qf39.ev_decomp h
     have h0 : p h = 0 := hh
     have h1 : algebraMap O R (MvPowerSeries.constantCoeff h) + ∑ i, z i * p (u i) = 0 := by
 
@@ -1465,13 +1454,6 @@ section -- clump:auto
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
-section
-open MvPowerSeries
-private theorem mem_span_X {O σ : Type} [CommRing O] [Fintype σ] (f : MvPowerSeries σ O)
-    (hf : constantCoeff f = 0) : f ∈ Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ O)) :=
-  _root_.UpperTheory.Reformulated.B.MemSpanVariable.mem_span_X f hf
-end
-
 private theorem der_zero {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [CommRing R] [Algebra O R] [IsCO O R]
     {σ : R →ₐ[O] R} (P : GPres O σ) (D : R →ₗ[O] ResidueField O) (hD : D ∈ PtDer (res O R) (ResidueField O))
     (h : ∀ s, D (P.p (MvPowerSeries.X s)) = 0) : D = 0 := by
@@ -1494,7 +1476,7 @@ private theorem der_zero {O : Type} [CommRing O] [IsLocalRing O] {R : Type} [Com
   obtain ⟨f, rfl⟩ := P.surj x
   have e : f = (f - algebraMap O _ (MvPowerSeries.constantCoeff f)) + (MvPowerSeries.constantCoeff f) • 1 := by
     rw [Algebra.algebraMap_eq_smul_one, sub_add_cancel]
-  have h2 := (hs _ (mem_span_X (f - algebraMap O _ (MvPowerSeries.constantCoeff f))
+  have h2 := (hs _ (_root_.UpperTheory.Reformulated.B.MemSpanVariable.mem_span_X (f - algebraMap O _ (MvPowerSeries.constantCoeff f))
     (by simp [MvPowerSeries.algebraMap_apply]))).2
   rw [e, map_add (f := _), map_add (f := _), h2, map_smul, map_smul, map_one, h1]
   simp

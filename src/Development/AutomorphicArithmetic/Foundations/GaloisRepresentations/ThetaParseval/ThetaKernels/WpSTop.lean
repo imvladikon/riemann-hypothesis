@@ -167,16 +167,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-
-theorem _root_.GlobalTheory.T.restricted_eta_power_character : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (χ : (AF F ⊗[F] E)ˣ →* Circle) (n : ℕ),
-      ResEtaPow (Units.map (algebraMap F (AF F)).toMonoidHom).range χ n → Formalism.IndefR.DatumF.ResEtaF χ n := by
-  first | exact @_root_.GlobalTheory.ResEtaFOfPow.resEtaF_of_resEtaPow_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.RestrictedEtaPowerCharacter =====
@@ -506,28 +496,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.lagrangian_darboux_schrodinger_action : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (JB : Matrix (Fin nS) (Fin nS) E) (ξ : AF F ⊗[F] E), ξ • incM F JB = incM F (ξ₀ • JS⁻¹) →
-      ∀ (κ : Type) [Fintype κ]
-        (co : Darboux (symp (cA σ) ξ (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) (incM F JB)) κ),
-        (∀ x : Matrix (Fin (nT + nT)) (Fin nS) E, ∃ y z : κ → F,
-          co.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) →
-      ∀ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν →
-      ∀ l ∈ (adeleClass F).adm κ,
-        (∀ z : Matrix (Fin nS) (Fin nT) (AF F ⊗[F] E), ∀ φ ∈ schA F κ,
-          l ((GlobalTheory.WeilSchrodinger.transD (cA σ) co).rho B.ψ (z * ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id)ᵀ) φ) = l φ) →
-        ∃ c : ℂ, ∀ Φ ∈ schA F κ, l Φ = c * GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) := by
-  first | exact @_root_.GlobalTheory.LagrUniq.lagr_invariant_unique_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.LagrangianDarbouxSchrodingerAction =====
@@ -939,31 +907,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-theorem _root_.GlobalTheory.T.fundamental_domain_haar_parseval : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν →
-      ∀ (χS : (AF F ⊗[F] E)ˣ →* Circle) (ωd : GAF σ JS × GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →*
-            Module.End ℂ (WOF F E nS (nT + nT) → ℂ)),
-        IsWeilDatumOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)
-            (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ χS 1 ωd →
-      ∀ α : GL (Fin nT) (AF F ⊗[F] E) →* Circle,
-        (∀ (h : GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)) (t : GL (Fin nT) (AF F ⊗[F] E)),
-          mtF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) h * ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) = ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) * t.1 →
-          ∀ f, IsThetaFunOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ f →
-            GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (ωd (1, h) f) = (α t : ℂ) * ((((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AF F ⊗[F] E →* AF F) (Matrix.GeneralLinearGroup.det t)) : ℝ) ^ ((Fintype.card (Fin nS) : ℝ) / 2) : ℝ) : ℂ) * GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) f) →
-      ∀ f₀, IsThetaFunOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ f₀ →
-        GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) f₀ ≠ 0 →
-      ∀ e, IsSplitIdemF σ e → ∀ t : GL (Fin nT) (AF F ⊗[F] E),
-        (∀ i j, (e + cAF σ e) * (t.1 - 1) i j = (t.1 - 1) i j) → α t = χS (Matrix.GeneralLinearGroup.det t) := by
-  first | exact @_root_.PositivityTheory.ThKW.fundamental_domain_parseval_global
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.FundamentalDomainHaarParseval =====
@@ -987,7 +930,7 @@ theorem heckeChar_eq_one_of_split_k : ∀ (F E : Type) [Field F] [NumberField F]
       (∀ e, IsSplitIdemF σ e → ∀ x : (AF F ⊗[F] E)ˣ, (e + cAF σ e) * ((x : AF F ⊗[F] E) - 1) = (x : AF F ⊗[F] E) - 1 →
         ν x = 1) → ∀ x, ν x = 1 := by
   intro F E _ _ _ _ _ σ B hB ν hν hs
-  exact GlobalTheory.T.heckeChar_eq_one_of_trivial_splitPlaces_CM F E σ hB.cm ν hν hs
+  exact _root_.GlobalTheory.HeckeSplitGen.heckeChar_eq_one_of_split F E σ hB.cm ν hν hs
 end GlobalTheory.HeckeSplitBase
 end
 end
@@ -1002,17 +945,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-theorem _root_.GlobalTheory.T.hecke_character_trivial_of_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ ν : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF ν →
-      (∀ e, IsSplitIdemF σ e → ∀ x : (AF F ⊗[F] E)ˣ, (e + cAF σ e) * ((x : AF F ⊗[F] E) - 1) = (x : AF F ⊗[F] E) - 1 →
-        ν x = 1) → ∀ x, ν x = 1 := by
-  first | exact @_root_.GlobalTheory.HeckeSplitBase.heckeChar_eq_one_of_split_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.HeckeCharacterTrivialOfSplit =====
@@ -1045,14 +977,14 @@ theorem lagr_law_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
           ∀ f, IsThetaFunOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ f →
             GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (ωd (1, h) f) = (χS (Matrix.GeneralLinearGroup.det t) : ℂ) * ((((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AF F ⊗[F] E →* AF F) (Matrix.GeneralLinearGroup.det t)) : ℝ) ^ ((Fintype.card (Fin nS) : ℝ) / 2) : ℝ) : ℂ) * GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) f := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ ν 𝓕 hν h𝓕 χS ωd hωd
-  obtain ⟨α, hαc, hαr, hlaw⟩ := _root_.GlobalTheory.T.fundamental_domain_haar_plancherel F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ ν 𝓕 hν h𝓕 χS ωd hωd
+  obtain ⟨α, hαc, hαr, hlaw⟩ := _root_.PositivityTheory.ThKW.fundamental_domain_plancherel_global F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ ν 𝓕 hν h𝓕 χS ωd hωd
   intro h t hht f hf
   by_cases h0 : ∀ g, IsThetaFunOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ g →
       GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) g = 0
   · rw [h0 _ (hωd.om_pres _ f hf), h0 f hf, mul_zero]
   push_neg at h0
   obtain ⟨f₀, hf₀, hne⟩ := h0
-  have hsp := _root_.GlobalTheory.T.fundamental_domain_haar_parseval F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ ν 𝓕 hν h𝓕 χS ωd hωd α hlaw f₀ hf₀ hne
+  have hsp := _root_.PositivityTheory.ThKW.fundamental_domain_parseval_global F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ ν 𝓕 hν h𝓕 χS ωd hωd α hlaw f₀ hf₀ hne
   have hα : ∀ a : GL (Fin nT) (AF F ⊗[F] E), α a = χS (Matrix.GeneralLinearGroup.det a) := by
     rcases Nat.eq_zero_or_pos nT with hn0 | hpos
     · intro a
@@ -1067,7 +999,7 @@ theorem lagr_law_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
         rw [MonoidHom.mul_apply, MonoidHom.comp_apply, MonoidHom.inv_apply, hωd.hecS.2 x, inv_one, mul_one,
           GlobalTheory.LeviOrigin.dgU_map (incAF F E) nT i0 x]
         exact hαr _
-    have hν1 := _root_.GlobalTheory.T.hecke_character_trivial_of_split F E σ B hB _ hhec (by
+    have hν1 := _root_.GlobalTheory.HeckeSplitBase.heckeChar_eq_one_of_split_k F E σ B hB _ hhec (by
       intro e he x hx
       have h2 := hsp e he (GlobalTheory.LeviOrigin.dgU nT i0 x) (by
         intro k l
@@ -1143,39 +1075,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-theorem _root_.GlobalTheory.T.lagrangian_darboux_schrodinger_unitary : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (JB : Matrix (Fin nS) (Fin nS) E) (ξ : AF F ⊗[F] E), ξ • incM F JB = incM F (ξ₀ • JS⁻¹) →
-      ∀ (κ : Type) [Fintype κ]
-        (co : Darboux (symp (cA σ) ξ (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) (incM F JB)) κ),
-        (∀ x : Matrix (Fin (nT + nT)) (Fin nS) E, ∃ y z : κ → F,
-          co.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) →
-      ∀ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν →
-      ∀ (χS : (AF F ⊗[F] E)ˣ →* Circle), Formalism.IndefR.DatumF.IsHeckeCharF χS → Formalism.IndefR.DatumF.ResEtaF χS nS →
-      ∀ ωd : Formalism.IndefR.DatumF.GAF σ JS × Formalism.IndefR.DatumF.GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →*
-            Module.End ℂ (Formalism.IndefR.DatumF.WOF F E nS (nT + nT) → ℂ),
-          Formalism.IndefR.DatumF.IsWeilDatumOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)
-            (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ χS 1 ωd →
-      ∀ omp : UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) × UG (cA σ) (incM F JB) →*
-            Module.End ℂ ((κ → AF F) → ℂ),
-          GlobalTheory.WeilSchrodinger.IsTransportF σ B.ψ co ωd omp →
-      ∀ (p : UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ)) (t : GL (Fin nT) (AF F ⊗[F] E)),
-        p.1.1 * ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) = ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) * t.1 →
-      ∀ Φ ∈ schA F κ, omp (p, 1) Φ ∈ schA F κ ∧
-        GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ (omp (p, 1) Φ)) =
-          (χS (Matrix.GeneralLinearGroup.det t) : ℂ) *
-            ((((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AF F ⊗[F] E →* AF F)
-              (Matrix.GeneralLinearGroup.det t)) : ℝ) ^ ((Fintype.card (Fin nS) : ℝ) / 2) : ℝ) : ℂ) *
-            GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) := by
-  first | exact @_root_.GlobalTheory.SiegelLawDblTargetF.main_law_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.LagrangianDarbouxSchrodingerUnitary =====
@@ -1216,8 +1115,8 @@ theorem GlobalTheory.WeilSchrodinger.DblTargetF.siegelRule_dblTarget_k : ∀ (F 
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS hχS rχS JB ξ hξ κ _ co hco ωd hωd omp htr
   intro l hl hinv p t hpt φ hφ
   obtain ⟨ν, 𝓕, hν, h𝓕⟩ := GlobalTheory.TowerFD.exists_fd_any F E nS nT
-  obtain ⟨c, hc⟩ := _root_.GlobalTheory.T.lagrangian_darboux_schrodinger_action F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ JB ξ hξ κ co hco ν 𝓕 hν h𝓕 l hl hinv
-  obtain ⟨hmem, hrule⟩ := _root_.GlobalTheory.T.lagrangian_darboux_schrodinger_unitary F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ JB ξ hξ κ co hco ν 𝓕 hν h𝓕 χS hχS rχS
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LagrUniq.lagr_invariant_unique_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ JB ξ hξ κ co hco ν 𝓕 hν h𝓕 l hl hinv
+  obtain ⟨hmem, hrule⟩ := _root_.GlobalTheory.SiegelLawDblTargetF.main_law_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ JB ξ hξ κ co hco ν 𝓕 hν h𝓕 χS hχS rχS
     ωd hωd omp htr p t hpt φ hφ
   show l (omp (p, 1) φ) = _
   rw [hc _ hmem, hrule, hc _ hφ]
@@ -1235,32 +1134,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-theorem _root_.GlobalTheory.T.splitting_character_restricted_eta : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (χS : (AF F ⊗[F] E)ˣ →* Circle), Formalism.IndefR.DatumF.IsHeckeCharF χS → Formalism.IndefR.DatumF.ResEtaF χS nS →
-      ∀ (JB : Matrix (Fin nS) (Fin nS) E) (ξ : AF F ⊗[F] E), ξ • incM F JB = incM F (ξ₀ • JS⁻¹) →
-      ∀ (κ : Type) [Fintype κ]
-        (co : Darboux (symp (cA σ) ξ (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) (incM F JB)) κ),
-        (∀ x : Matrix (Fin (nT + nT)) (Fin nS) E, ∃ y z : κ → F,
-          co.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) →
-        ∀ ωd : Formalism.IndefR.DatumF.GAF σ JS × Formalism.IndefR.DatumF.GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →*
-            Module.End ℂ (Formalism.IndefR.DatumF.WOF F E nS (nT + nT) → ℂ),
-          Formalism.IndefR.DatumF.IsWeilDatumOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)
-            (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ χS 1 ωd →
-        ∀ omp : UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) × UG (cA σ) (incM F JB) →*
-            Module.End ℂ ((κ → AF F) → ℂ),
-          GlobalTheory.WeilSchrodinger.IsTransportF σ B.ψ co ωd omp →
-          SiegelRule (cA σ) (adeleClass F) B.ψ ξ (incM F JB) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ)
-            (GlobalTheory.WeilSchrodinger.transD (cA σ) co) χS
-            ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id)
-            (omp.comp (MonoidHom.inl _ _)) := by
-  first | exact @_root_.GlobalTheory.WeilSchrodinger.DblTargetF.siegelRule_dblTarget_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SplittingCharacterRestrictedEta =====
@@ -1306,19 +1179,19 @@ theorem exists_dbl_target_k : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have r1 := GlobalTheory.WeilSchrodinger.DblTargetF.resEtaF_one_dbl h2 rT
   obtain ⟨ωd, hωd⟩ := _root_.PositivityTheory.ThKW.S.exists_isWeilDatumOF_k F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ (PositivityTheory.ThKW.LatH.dblT hLat) χS 1 hS h1 rS r1
   have hrat' := GlobalTheory.WeilSchrodinger.DblTargetF.coDbl_rat hA co hrat
-  obtain ⟨omp, hmp⟩ := _root_.GlobalTheory.T.weil_representation_hermitian_pair F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
+  obtain ⟨omp, hmp⟩ := _root_.GlobalTheory.TransportF.exists_isTransportF_k F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
     hBm (κ ⊕ κ) (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat'
-  have k2 := _root_.GlobalTheory.T.weil_representation_pair_continuous F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
+  have k2 := _root_.GlobalTheory.TransportHeisF.pres_impl_k F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
     hBm (κ ⊕ κ) (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat' omp hmp
-  have k3 := _root_.GlobalTheory.T.weil_representation_pair_smooth F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
+  have k3 := _root_.GlobalTheory.WeilAdmCM.transport_admissible_weil_datum F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
     hBm (κ ⊕ κ) (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat' omp hmp
-  have k4 := _root_.GlobalTheory.T.weil_representation_pair_unitary F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
+  have k4 := _root_.GlobalTheory.WeilUnitaryTransportF.isUnitaryOn_transportF_k F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
     hBm (κ ⊕ κ) (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat' omp hmp
-  have k5 := _root_.GlobalTheory.T.weil_representation_pair_equivariant F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
+  have k5 := _root_.GlobalTheory.WeilContF.continuous_transportF_k F E σ B hB nS (nT + nT) JS _ hJS hJTd ξ₀ hξ0 hσξ χS 1 hS h1 rS r1 ωd hωd _ JB ξ rfl
     hBm (κ ⊕ κ) (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat' omp hmp
   have hsp : IsUSplitting (adeleClass F) B.ψ (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) (actAB (cA σ)) omp :=
     ⟨⟨k2.1, k2.2, k3⟩, k4, k5⟩
-  have hsg := _root_.GlobalTheory.T.splitting_character_restricted_eta F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS hS rS JB ξ hBm (κ ⊕ κ)
+  have hsg := _root_.GlobalTheory.WeilSchrodinger.DblTargetF.siegelRule_dblTarget_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS hS rS JB ξ hBm (κ ⊕ κ)
     (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) hrat' ωd hωd omp hmp
   have t1 := GlobalTheory.WeilSchrodinger.DblTarget.isDblCoord_transD co
   have t2 : IsLagr (cA σ) (dbl (incM F JA)) (diagCols (Fin nT)) := isLagr_diagCols _ _
@@ -1329,7 +1202,7 @@ theorem exists_dbl_target_k : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     (GlobalTheory.WeilSchrodinger.DblTarget.dblRows co) _ (GlobalTheory.WeilSchrodinger.DblTargetF.reindex_dbl_incM hA) χS _ hsg
   refine ⟨_, _, t1, ⟨t2, t4, t5⟩, ?_⟩
   intro g gd hgd φ₁ hφ₁ φ₂ hφ₂
-  have key := _root_.GlobalTheory.T.doubled_weil_apply_boxFun_eq_boxFun_left F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS χT hS hT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
+  have key := _root_.GlobalTheory.DblTargetRestrict.restrict_boxFun_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS χT hS hT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
     ωd hωd omp hmp g (GlobalTheory.WeilSchrodinger.DblTargetF.ugDbl hA gd)
     (by rw [GlobalTheory.WeilSchrodinger.DblTargetF.ugDbl_coe, hgd]) φ₁ hφ₁ φ₂ hφ₂
   rw [MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.inl_apply]
@@ -1365,11 +1238,11 @@ theorem PositivityTheory.ThKW.S.exists_isUWeilPair_cm_k : ∀ (F E : Type) [Fiel
               co.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) →
             ∃ om, IsUWeilPair (cA σ) (adeleClass F) B.ψ ξ (incM F JA) (incM F JB) co χT χS om := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ hLat χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ _ co hrat
-  obtain ⟨om, hom⟩ := _root_.GlobalTheory.T.weil_representation_hermitian_pair F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat
-  have h2 := _root_.GlobalTheory.T.weil_representation_pair_continuous F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
-  have h3 := _root_.GlobalTheory.T.weil_representation_pair_smooth F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
-  have h4 := _root_.GlobalTheory.T.weil_representation_pair_unitary F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
-  have h5 := _root_.GlobalTheory.T.weil_representation_pair_equivariant F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
+  obtain ⟨om, hom⟩ := _root_.GlobalTheory.TransportF.exists_isTransportF_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat
+  have h2 := _root_.GlobalTheory.TransportHeisF.pres_impl_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
+  have h3 := _root_.GlobalTheory.WeilAdmCM.transport_admissible_weil_datum F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
+  have h4 := _root_.GlobalTheory.WeilUnitaryTransportF.isUnitaryOn_transportF_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
+  have h5 := _root_.GlobalTheory.WeilContF.continuous_transportF_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
   have h6 := _root_.PositivityTheory.ThKW.dblS_of_dblT_k _root_.PositivityTheory.ThKW.S.exists_dbl_target_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ hLat χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
   have h7 := _root_.PositivityTheory.ThKW.S.exists_dbl_target_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ₀ hσ hLat χS χT cS cT rS rT ω hω JA JB ξ hA hBm κ co hrat om hom
   have hsp : IsUSplitting (adeleClass F) B.ψ co (actAB (cA σ)) om := ⟨⟨h2.1, h2.2, h3⟩, h4, h5⟩
@@ -1407,7 +1280,7 @@ theorem exists_isWeil_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hS : IsHermND σ (-ξ₀ • W.J⁻¹) := _root_.GlobalTheory.skew_dual_isHermND F E σ d W.J hW.skew hWu ξ₀ hξ hσξ
   have hLat : PositivityTheory.ThKW.LatH σ (-ξ₀ • W.J⁻¹) X.Jᵀ ξ₀ := PositivityTheory.ThKW.latH_of hB.cm hX hW hXu hWu hξ
   obtain ⟨ω, hω⟩ := _root_.PositivityTheory.ThKW.S.exists_isWeilDatumOF_k F E σ B hB d n (-ξ₀ • W.J⁻¹) X.Jᵀ hS hT ξ₀ hξ hσξ hLat χW χX hcW hcX
-    (_root_.GlobalTheory.T.restricted_eta_power_character F E σ B hB χW d rW) (_root_.GlobalTheory.T.restricted_eta_power_character F E σ B hB χX n rX)
+    (_root_.GlobalTheory.ResEtaFOfPow.resEtaF_of_resEtaPow_k F E σ B hB χW d rW) (_root_.GlobalTheory.ResEtaFOfPow.resEtaF_of_resEtaPow_k F E σ B hB χX n rX)
   have eB : (-1 : AF F ⊗[F] E) • incM F W.J = incM F (ξ₀ • (-ξ₀ • W.J⁻¹)⁻¹) := by
     have e1 : (-ξ₀ • W.J⁻¹)⁻¹ = (-ξ₀)⁻¹ • W.J := Matrix.inv_eq_left_inv (by
       rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.mul_nonsing_inv _ hWu,
@@ -1418,7 +1291,7 @@ theorem exists_isWeil_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     funext i j
     simp [incM]
   exact _root_.PositivityTheory.ThKW.S.exists_isUWeilPair_cm_k F E σ B hB d n (-ξ₀ • W.J⁻¹) X.Jᵀ hS hT ξ₀ hξ hσξ hLat χW χX hcW hcX
-    (_root_.GlobalTheory.T.restricted_eta_power_character F E σ B hB χW d rW) (_root_.GlobalTheory.T.restricted_eta_power_character F E σ B hB χX n rX) ω hω X.J W.J (-1) (by simp) eB
+    (_root_.GlobalTheory.ResEtaFOfPow.resEtaF_of_resEtaPow_k F E σ B hB χW d rW) (_root_.GlobalTheory.ResEtaFOfPow.resEtaF_of_resEtaPow_k F E σ B hB χX n rX) ω hω X.J W.J (-1) (by simp) eB
     (Fin n × Fin d) M.co hM.rat
 theorem weilEx_k : _root_.PositivityTheory.ThKG.Tow.WeilEx_k := _root_.PositivityTheory.ThKW.S.exists_isWeil_k
 end PositivityTheory.ThKW.S

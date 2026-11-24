@@ -589,23 +589,9 @@ private lemma inverse_block_pairing_eq (A B C D : Matrix ι ι ℚ) (a b a' b' :
 open Matrix Complex in
 open scoped ComplexConjugate Real in
 variable {κ ι : Type} [Fintype κ] [Fintype ι] [DecidableEq ι] in
-private lemma qm_add_siegel_theta_transformation {α β : Type} (M N : Matrix α β ℚ) :
-    _root_.GlobalTheory.SW.qm (M + N) = _root_.GlobalTheory.SW.qm M + _root_.GlobalTheory.SW.qm N := by
-  ext i j; simp [_root_.GlobalTheory.SW.qm]
-
-open Matrix Complex in
-open scoped ComplexConjugate Real in
-variable {κ ι : Type} [Fintype κ] [Fintype ι] [DecidableEq ι] in
 private lemma qm_neg_siegel_theta_transformation {α β : Type} (M : Matrix α β ℚ) :
     _root_.GlobalTheory.SW.qm (-M) = -_root_.GlobalTheory.SW.qm M := by
   ext i j; simp [_root_.GlobalTheory.SW.qm]
-
-open Matrix Complex in
-open scoped ComplexConjugate Real in
-variable {κ ι : Type} [Fintype κ] [Fintype ι] [DecidableEq ι] in
-private lemma qm_mul_siegel_theta_transformation' {α β γ : Type} [Fintype β] (M : Matrix α β ℚ) (N : Matrix β γ ℚ) :
-    _root_.GlobalTheory.SW.qm (M * N) = _root_.GlobalTheory.SW.qm M * _root_.GlobalTheory.SW.qm N := by
-  ext i j; simp [_root_.GlobalTheory.SW.qm, Matrix.mul_apply]
 
 open Matrix Complex in
 open scoped ComplexConjugate Real in
@@ -651,7 +637,7 @@ private lemma isUnit_det_spDen_of_mem_siegel {σ : Matrix (ι ⊕ ι) (ι ⊕ ι
   have d2 := congrArg _root_.GlobalTheory.SW.qm s2
   have d3 := congrArg _root_.GlobalTheory.SW.qm s3
   have d4 := congrArg _root_.GlobalTheory.SW.qm s4
-  simp only [qm_add_siegel_theta_transformation, qm_neg_siegel_theta_transformation, qm_mul_siegel_theta_transformation', qm_transpose_siegel_theta_transformation, qm_zero_siegel_theta_transformation,
+  simp only [_root_.GlobalTheory.SiegelAction.qm_add, qm_neg_siegel_theta_transformation, _root_.GlobalTheory.SiegelAction.qm_mul, qm_transpose_siegel_theta_transformation, qm_zero_siegel_theta_transformation,
     qm_one_siegel_theta_transformation] at d1 d2 d3 d4
   have hτs : τᵀ = τ := hτ.1
   have hY := hτ.2
@@ -827,7 +813,7 @@ private lemma transS_heisS_rowAct {σ : Matrix (ι ⊕ ι) (ι ⊕ ι) ℚ}
   have d2 := congrArg _root_.GlobalTheory.SW.qm s2
   have d3 := congrArg _root_.GlobalTheory.SW.qm s3
   have d4 := congrArg _root_.GlobalTheory.SW.qm s4
-  simp only [qm_add_siegel_theta_transformation, qm_neg_siegel_theta_transformation, qm_mul_siegel_theta_transformation', qm_transpose_siegel_theta_transformation, qm_zero_siegel_theta_transformation,
+  simp only [_root_.GlobalTheory.SiegelAction.qm_add, qm_neg_siegel_theta_transformation, _root_.GlobalTheory.SiegelAction.qm_mul, qm_transpose_siegel_theta_transformation, qm_zero_siegel_theta_transformation,
     qm_one_siegel_theta_transformation] at c2 c4 d1 d2 d3 d4
   obtain ⟨A, hA⟩ : ∃ A, A = _root_.GlobalTheory.SW.qm σ.toBlocks₁₁ := ⟨_, rfl⟩
   obtain ⟨B, hB⟩ : ∃ B, B = _root_.GlobalTheory.SW.qm σ.toBlocks₁₂ := ⟨_, rfl⟩
@@ -1005,19 +991,6 @@ namespace GlobalTheory.Phase.WeilPV
 
 variable {κ ι : Type} [Fintype κ] [Fintype ι] [DecidableEq ι]
 
-theorem trans_unique {σ : Matrix (ι ⊕ ι) (ι ⊕ ι) ℚ} (hσ : σ ∈ Matrix.symplecticGroup ι ℚ)
-    {φ ψ ψ' : Matrix κ ι ℚ → ℂ} (h1 : IsSB ψ) (h2 : IsSB ψ') (t1 : TransS σ φ ψ)
-    (t2 : TransS σ φ ψ') : ψ = ψ' := by
-  obtain ⟨hd, hs, -⟩ := GlobalTheory.SiegelAction.symplectic_action ι σ hσ _ (I_mem_siegel (ι := ι))
-  refine GlobalTheory.SW.eq_of_thS_eq κ ι ψ ψ' h1 h2 _ hs fun ζ => ?_
-  have e1 := t1 _ I_mem_siegel (fun k => ζ k ᵥ* spDen σ (I • 1))
-  have e2 := t2 _ I_mem_siegel (fun k => ζ k ᵥ* spDen σ (I • 1))
-  have e := e1.trans e2.symm
-  simp only [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 hd),
-    Matrix.vecMul_one] at e
-  exact e
-
-
 omit [DecidableEq ι] in
 theorem thS_smul (c : ℂ) (φ : Matrix κ ι ℚ → ℂ) (τ : Matrix ι ι ℂ) (ζ : κ → ι → ℂ) :
     thS (c • φ) τ ζ = c * thS φ τ ζ := by
@@ -1078,7 +1051,7 @@ theorem vac_trans {σ : Matrix (ι ⊕ ι) (ι ⊕ ι) ℚ} (hσ : σ ∈ Matrix
   · intro y hy
     have t1 := trans_smul (ε (T.symm y)) (hT φ ψ h.sb hψ t (T.symm y))
     rw [h.fix _ ((mem _).1 hy), T.apply_symm_apply] at t1
-    exact trans_unique hσ (sb_smul _ (GlobalTheory.SW.heisS_laws _ _ _ _ ψ hψ).1) hψ t1 t
+    exact _root_.GlobalTheory.Phase.transS_unique hσ (sb_smul _ (GlobalTheory.SW.heisS_laws _ _ _ _ ψ hψ).1) hψ t1 t
 
 
 omit [DecidableEq ι] in
@@ -1112,7 +1085,7 @@ theorem pv_mul (he : Even (Fintype.card κ)) {σ σ' : Matrix (ι ⊕ ι) (ι �
   obtain ⟨s1, t1, -⟩ := hw φ (pv_sb h)
   obtain ⟨s2, t2, -⟩ := hw' (w φ) s1
   have t3 := GlobalTheory.SW.transS_comp κ ι σ σ' hσ hσ' _ _ _ t1 t2
-  rw [trans_unique (mul_mem hσ' hσ) hψ s2 t t3]
+  rw [_root_.GlobalTheory.Phase.transS_unique (mul_mem hσ' hσ) hψ s2 t t3]
   exact H' _ _ s2 t2 (H _ _ s1 t1 h)
 
 theorem pv_of_transS : ∀ (κ ι : Type) [Fintype κ] [Fintype ι] [DecidableEq ι], Even (Fintype.card κ) → ∀ σ ∈ Matrix.symplecticGroup ι ℚ, ∀ φ ψ : Matrix κ ι ℚ → ℂ, IsSB ψ → TransS σ φ ψ → PV φ → PV ψ := by
@@ -1147,24 +1120,6 @@ open Matrix Complex GlobalTheory.SW GlobalTheory.Phase
 open scoped ComplexConjugate Real
 
 namespace GlobalTheory.Phase.Mult
-
-theorem thS_smul' {κ ι : Type} [Fintype κ] [Fintype ι] (c : ℂ) (φ : Matrix κ ι ℚ → ℂ) (τ : Matrix ι ι ℂ)
-    (ζ : κ → ι → ℂ) : thS (c • φ) τ ζ = c * thS φ τ ζ := by
-  unfold thS
-  rw [← tsum_mul_left]
-  congr 1
-  funext x
-  simp [Pi.smul_apply, smul_eq_mul, mul_assoc]
-
-theorem isSB_smul' {κ ι : Type} [Fintype κ] [Fintype ι] (c : ℂ) {φ : Matrix κ ι ℚ → ℂ} (h : IsSB φ) :
-    IsSB (c • φ) := by
-  obtain ⟨R, hR, h1, h2⟩ := h
-  refine ⟨R, hR, fun x hx => h1 x ?_, fun x y hy => ?_⟩
-  · intro h0
-    apply hx
-    simp [h0]
-  · simp only [Pi.smul_apply, smul_eq_mul]
-    rw [h2 x y hy]
 
 theorem quad_blk {n g : ℕ} (M : Matrix (Fin g) (Fin g) ℂ) (ζ : Fin n × Fin g → ℂ) :
     ζ ⬝ᵥ blk n M *ᵥ ζ = ∑ k, (fun i => ζ (k, i)) ⬝ᵥ M *ᵥ fun i => ζ (k, i) := by
@@ -1263,10 +1218,10 @@ theorem isMu_of_fixed {n g : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ} (hτ : τ �
     have hW : W = fun k => (W k ᵥ* D) ᵥ* D⁻¹ := by
       funext k
       rw [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv _ hDu, Matrix.vecMul_one]
-    rw [thS_smul', hW, hdup, mul_assoc, hT, ← hW]
+    rw [_root_.GlobalTheory.Phase.WeilPV.thS_smul, hW, hdup, mul_assoc, hT, ← hW]
     ring
   have heq := eq_of_thS_eq (Fin 2) (Fin n × Fin g) (dup φ') ((t ^ 2 * d) • ω (dup φ))
-    (hsbd' hsb') (isSB_smul' _ hsbω) B hBs hall
+    (hsbd' hsb') (_root_.GlobalTheory.Phase.WeilPV.sb_smul _ hsbω) B hBs hall
   have hpvω : PV (ω (dup φ)) :=
     _root_.GlobalTheory.Phase.WeilPV.pv_of_transS (Fin 2) (Fin n × Fin g) heven s hs (dup φ) (ω (dup φ)) hsbω hTω (hpvd hφ)
   obtain ⟨x, hx⟩ := Function.ne_iff.mp (hned' h0)
@@ -1377,7 +1332,7 @@ theorem isMu_multiplier_sq_mul_det : ∀ (E : Type) [Field E] [NumberField E] [I
     exact this.symm
   have H1 := H z
   simp only [GlobalTheory.SW.thA, hz, hz', imInv_eq] at H1
-  rw [thS_smul', thS_smul']
+  rw [_root_.GlobalTheory.Phase.WeilPV.thS_smul, _root_.GlobalTheory.Phase.WeilPV.thS_smul]
   have hne := pow_ne_zero (n / 2) hMu.ne_zero
   have H2 := mul_left_cancel₀ hne (by rw [← _root_.mul_assoc, H1]; ring :
     (hMat X bas idx x).det ^ (n / 2) *
@@ -1466,18 +1421,6 @@ theorem cmHost_idempotent_trace_eq_one (H : Host E) : (H.w0 : E) + cc (H.w0 : E)
   have : 2 * ((H.w0 : E) + cc (H.w0 : E)) = 2 * 1 := by linear_combination h2 + h3 + hc
   exact mul_left_cancel₀ two_ne_zero this
 
-theorem finite_levQ {H : Host E} (Dw : Datum H) (l : Geo.Tor.Level H) : Finite (LevQ Dw l) := by
-  have hM : l.Mb ≠ ⊥ := by
-    intro h
-    have h₁ := l.prod
-    rw [h, Ideal.bot_mul, eq_comm, Ideal.span_singleton_eq_bot] at h₁
-    have h₂ : l.M = 0 := by exact_mod_cast h₁
-    have := l.three_le
-    omega
-  have := l.Mb.finiteQuotientOfFreeOfNeBot hM
-  have := Dw.fin
-  exact Submodule.finite_quotient_smul l.Mb (N := (⊤ : Submodule (𝓞 E) Dw.La)) Module.Finite.fg_top
-
 theorem mem_vset (Λ : GenLat E n) {M : ℕ} (hM : 3 ≤ M) (hU : Λ.Unimod) (hT : Λ.TrivAt M) :
     Λ.La ∈ Vset E n M := by
   obtain ⟨k, hk, h1, h2⟩ := hT
@@ -1489,22 +1432,13 @@ theorem mem_vset (Λ : GenLat E n) {M : ℕ} (hM : 3 ≤ M) (hU : Λ.Unimod) (hT
     · exact hk0
   exact ⟨GenLatCmp.fg_of_smul_le hk0 h1, (GenLatCmp.unimod_iff Λ.La).1 hU, k, hk0, hk, h1, h2⟩
 
-theorem thA_sum (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) {x : Frame X.Ψ r}
-    (hx : x ∈ X.dom) {T : Type} (s : Finset T) (f : T → TF n g) (hf : ∀ i, IsSB (f i)) :
-    thA X bas idx (∑ i ∈ s, f i) x = ∑ i ∈ s, thA X bas idx (f i) x := by
-  induction s using Finset.induction_on with
-  | empty => simpa using UnAct.thA_smul (X := X) (bas := bas) idx x 0 (0 : TF n g)
-  | insert a s ha ih =>
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, ← ih]
-    exact UnAct.thA_add idx hs hx (hf a) (RecSum.isSB_sum s f hf)
-
 theorem theta_sum₂ (hr : X.p0 + q0 = r) (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) {x : Frame X.Ψ r}
     (hx : x ∈ X.dom) {T : Type} (s : Finset T) (W : T → ℂ) (f : T → TF n g) (hf : ∀ i, IsSB (f i))
     (P : Harm.Poly ℂ X.Ψ q0 X.p0 (Fin n)) :
     thP X hr bas idx (∑ i ∈ s, W i • f i) P x = ∑ i ∈ s, W i * thP X hr bas idx (f i) P x := by
   unfold thP
   rw [← Jet.polyDeriv_sum_fun P _ s W _ fun i _ => ThetaHol.differentiable_thA idx hs (hf i) hx,
-    thA_sum idx hs hx s _ fun i => TensVac.sb_smul _ (hf i)]
+    _root_.GlobalTheory.Dict.ShortVal.thA_sum idx hs hx s _ fun i => TensVac.sb_smul _ (hf i)]
   congr 1
   funext w
   simp only [UnAct.thA_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -1561,7 +1495,7 @@ theorem change_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
   intro hci E _ _ _ H Dw l Xo c _ r g X bas idx e q0 n hr eL hs hrr hn hdir hty _ nab hnab Λ h hU hh hT hT'
   have hw := cmHost_idempotent_trace_eq_one H
   have hwi : IsIntegral ℤ (H.w0 : E) := H.w0.isIntegral_coe
-  obtain ⟨hU', hmv, hu, -⟩ := (GlobalTheory.T.pushforward_preserves_harmonic_polynomials_and_lattices E H Dw l c n 0 h hh).2 Λ
+  obtain ⟨hU', hmv, hu, -⟩ := (_root_.GlobalTheory.PushKeeps.push_keeps E H Dw l c n 0 h hh).2 Λ
   have hΛ := mem_vset Λ l.three_le hU hT
   have hΛ' := mem_vset (actLat h Λ) l.three_le (hU' hU) hT'
   have hΛ1 : Λ.La ∈ Vset E n 1 := (GenLatCmp.genLat_vset E n _).2.2.1 1 _ (one_dvd _) hΛ
@@ -1602,7 +1536,7 @@ theorem change_at_point : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
     (hN.2.2.trans inf_le_left)
   obtain ⟨-, -, -, hz2, -⟩ := ZLat.exists_reps_sum E r X g bas idx n hs hn _ hwi hw L hL _ hΛ1' N' hN'.1
     (hN'.2.2.trans inf_le_left)
-  haveI := finite_levQ Dw l
+  haveI := _root_.GlobalTheory.finite_levQ Dw l
   haveI := Fintype.ofFinite (Fin n → LevQ Dw l)
   generalize unitv (projA X bas (H.w0 : E) (tens Λ.La L) v₀) = u at hcol hu1 hp1
   generalize unitv (projA X bas (H.w0 : E) (tens (actLat h Λ).La L) v₀) = u' at hcol hu2 hp2

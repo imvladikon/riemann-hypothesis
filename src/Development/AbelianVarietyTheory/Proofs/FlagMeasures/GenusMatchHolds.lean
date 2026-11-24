@@ -986,13 +986,6 @@ section Global
 
 variable {E : Type} [Field E] [NumberField E] {n : ℕ}
 
-theorem exists_zsmul_mem_of_span (M : Submodule (𝓞 E) (Fin n → E))
-    (hM : Submodule.span E (M : Set (Fin n → E)) = ⊤) (x : Fin n → E) :
-    ∃ c : ℤ, c ≠ 0 ∧ c • x ∈ M := by
-  first
-  | (apply _root_.GlobalTheory.IntSmulIsIntegral.exists_int_smul_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntSmulIsIntegral.exists_int_smul_mem ..)
-
 theorem exists_zsmul_le (L M : Submodule (𝓞 E) (Fin n → E)) (hL : Module.Finite (𝓞 E) L)
     (hM : Submodule.span E (M : Set (Fin n → E)) = ⊤) :
     ∃ c : ℤ, c ≠ 0 ∧ ∀ x ∈ L, c • x ∈ M := by
@@ -1004,7 +997,7 @@ theorem exists_zsmul_le (L M : Submodule (𝓞 E) (Fin n → E)) (hL : Module.Fi
     | empty => exact ⟨1, one_ne_zero, by simp⟩
     | insert a T _ ih =>
       obtain ⟨c, hc, hcT⟩ := ih
-      obtain ⟨d, hd, hda⟩ := exists_zsmul_mem_of_span M hM a
+      obtain ⟨d, hd, hda⟩ := _root_.GlobalTheory.IntSmulIsIntegral.exists_int_smul_mem M hM a
       refine ⟨d * c, mul_ne_zero hd hc, fun x hx => ?_⟩
       rcases Finset.mem_insert.mp hx with rfl | hx
       · rw [mul_comm, mul_smul]
@@ -1169,7 +1162,7 @@ namespace GlobalTheory.St.G
 theorem genusMatch_holds : ∀ (D : D7) (F : ∀ u, Formalism.L2.Forms.Forms0 D u), GenusMatch D F := by
   intro D F X u wt ιA hW hA
   obtain ⟨hT, -, -, hdeg, -, hH, hdet⟩ := record_facts D u
-  have hM := (GlobalTheory.T.transported_column_lattice_has_level_and_dual_generator D X u wt hW).1
+  have hM := (_root_.GlobalTheory.St.G.mlat_main D X u wt hW).1
   have hL := stepLevel_tLat (S := (F u).cls0.lev)
   have hE := (GlobalTheory.T.adelicColumnLattice_eq_spanPart_transportedFrame D X u wt ιA hW hA).1
   obtain ⟨h, hh⟩ := _root_.GlobalTheory.St.G.tlat_one_genus D.host.F D.host.E D.sp.cm (D.R.N 0) _ hH hdet (D.mem u).A.T D.R.f

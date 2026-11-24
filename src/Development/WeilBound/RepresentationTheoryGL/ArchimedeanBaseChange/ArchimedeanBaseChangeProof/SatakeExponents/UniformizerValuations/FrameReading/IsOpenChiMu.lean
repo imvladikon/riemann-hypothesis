@@ -72,6 +72,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.FieldNOf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfIsOpen
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientOfNonNilpotent, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientOfNonNilpotentVariant, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientOfNonNilpotentVariantStatement, Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LocFinal, Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScFin, Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScKey, Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScLin, Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.IsOpenChiMu
@@ -280,7 +281,7 @@ theorem hk_smul' (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι F)) 
 
 def hkEnd (ρ : Representation ℂ (GL ι F) V) (K : Subgroup (GL ι F)) (e : GL ι F → ℂ) (he : IsHk K e) :
     Module.End ℂ (fixed ρ K) where
-  toFun v := ⟨hk ρ K e v.1, ((PositivityTheory.Rg.BcN.F2.Final.hkAlg F ι) K e e he he).2.2 V ρ v.1 v.2 |>.1⟩
+  toFun v := ⟨hk ρ K e v.1, ((_root_.GlobalTheory.CompanionTheory.HeckeAlg.hk_alg F ι) K e e he he).2.2 V ρ v.1 v.2 |>.1⟩
   map_add' v w := Subtype.ext (hk_add' ρ K e he v.1 w.1)
   map_smul' c v := Subtype.ext (hk_smul' ρ K e c v.1)
 
@@ -358,7 +359,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScFin =====
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScKey =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScKey", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DgMatOne\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LeviOf\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsHalfBlockDetIntegralGLInvariant\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUpperTimesUnipotentMulBlockDiagonal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarIntegralNormalizedIntegralMatricesTwoSidedMu\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModulusHalfLeviAbsDet\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UNInjective\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermLocallyConstant\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermMultiplicative\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinsumOutOfLe\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HintConstMulSum\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelIndexEqCard\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmVecTranslate\nimport GroundTheory.LocalFields.PadicLogSeries\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.FieldNOf\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.FiniteDiscreteFamilies.PeakCone\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.PScKey", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DgMatOne\npublic import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LeviOf\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsHalfBlockDetIntegralGLInvariant\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUpperTimesUnipotentMulBlockDiagonal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarIntegralNormalizedIntegralMatricesTwoSidedMu\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModulusHalfLeviAbsDet\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UNInjective\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermLocallyConstant\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermMultiplicative\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinsumOutOfLe\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HintConstMulSum\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelIndexEqCard\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmVecTranslate\nimport GroundTheory.LocalFields.PadicLogSeries\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.FieldNOf\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.FiniteDiscreteFamilies.PeakCone\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfIsOpen\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -372,12 +373,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 namespace PositivityTheory.Rg.BcB.F.Tail.PSc
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-
-theorem relIndex_ne_zero_open {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {K U : Subgroup G}
-    (hK : IsCompact (K : Set G)) (hU : IsOpen (U : Set G)) : U.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI := Subgroup.quotient_finite_of_isOpen (U.subgroupOf K) (hU.preimage continuous_subtype_val)
-  exact Subgroup.index_ne_zero_of_finite
 
 section Key
 
@@ -543,7 +538,7 @@ theorem key_ind {n a b : ℕ} (h : a + b = n) (w : Pl E) (K' : Subgroup (GLw n w
   have hUo : IsOpen (U : Set (GLw a w × GLw b w)) := by
     rw [hUdef, Subgroup.coe_inf, Subgroup.coe_inf, Subgroup.coe_comap]
     exact (hU₀.inter hK2o).inter (hK'o.preimage (GlobalTheory.CompanionTheory.GL3BlockMatrixLocal.continuous_dgM h w))
-  have hne : U.relIndex K2' ≠ 0 := relIndex_ne_zero_open hK2c hUo
+  have hne : U.relIndex K2' ≠ 0 := _root_.GlobalTheory.TwTrLin.relIndex_ne_zero_of_isOpen hK2c hUo
   have hf := he.2.2.2
   have hinv : ∀ g, ∀ y ∈ X, ∀ k ∈ U, ∀ m, phi3 h w e g y (m * k) = phi3 h w e g y m := by
     intro g y hy k hk m
@@ -610,14 +605,7 @@ namespace PositivityTheory.Rg.BcB.F.Tail.PSc
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ}
 
-theorem mem_fixed_iff' {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] {ρ : Representation ℂ G V}
-    {U : Subgroup G} {v : V} : v ∈ fixed ρ U ↔ ∀ u ∈ U, ρ u v = v := by
-  constructor
-  · intro hv u hu
-    have := hv ⟨u, hu⟩
-    simpa using this
-  · intro hv u
-    simpa using hv u u.2
+alias mem_fixed_iff' := _root_.GlobalTheory.LGrp.mem_fixed
 
 theorem actP_eq_sum (w : Pl E) (U : Subgroup (GLw a w × GLw b w)) (hUo : IsOpen (U : Set (GLw a w × GLw b w)))
     (G : H E a b → ℂ) (hG : G ∈ fixed (pairRt a b w) U) (u : GLw a w × GLw b w → ℂ) (hu : HasCompactSupport u)

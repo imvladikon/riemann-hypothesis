@@ -170,8 +170,6 @@ open GlobalTheory GlobalTheory.ZM GlobalTheory.ZH GlobalTheory.UMin GlobalTheory
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.finite_integerRing_actions_principallyPolarised : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (P : PolAV (Sp K)), letI := H.starRing; Set.Finite {act : 𝓞 E → (P.A ⟶ P.A) | ∃ ρ : P.OAct (𝓞 E), ∀ a, ρ.act a = act a} := by
-  first | exact @GlobalTheory.UMin.FinAct.finite_oActs
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteIntegerRingActionsPrincipallyPolarisedStatement =====
@@ -264,10 +262,6 @@ def oActIso {O : Type} [CommRing O] {S : Scheme.{0}} {A B : Over S} [GrpObj A] [
   mul x y := by rw [a.mul]; simp
   add x y := by rw [a.add, MonObj.mul_comp, MonObj.comp_mul]
 
-theorem pbMap_fst {S S' : Scheme.{0}} (f : S' ⟶ S) {X Y : Over S} (a : X ⟶ Y) :
-    ((Over.pullback f).map a).left ≫ pullback.fst Y.hom f = pullback.fst X.hom f ≫ a.left :=
-  pullback.lift_fst _ _ _
-
 end GlobalTheory.PolPartPull
 
 namespace GlobalTheory.PolPartPull
@@ -345,7 +339,7 @@ theorem exists_oact (t : SAB H S) {K : Type} [Field K] (P : PolAV (Sp K)) (x : S
   let j' : OAct (𝓞 E) P.A := PolPartPull.oActIso β (OAct.pullback x t.G t.act)
   have hj : ∀ c, (j'.act c).left ≫ α = α ≫ (t.act.act c).left := fun c => by
     show (β.inv ≫ (Over.pullback x).map (t.act.act c) ≫ β.hom).left ≫ α = _
-    rw [Over.comp_left, Over.comp_left, Category.assoc, Category.assoc, hβ, PolPartPull.pbMap_fst, ← hβ,
+    rw [Over.comp_left, Over.comp_left, Category.assoc, Category.assoc, hβ, _root_.ReciprocityTheory.ChartRestriction.G.Pdiv.PullbackComparison.pullback_map_left_fst', ← hβ,
       ← Category.assoc, ← Category.assoc, ← Over.comp_left, Iso.inv_hom_id, Over.id_left, Category.id_comp]
   exact ⟨{ j'.toRingAct with rosati := fun c => rosati_fibre t P x hα hL c (hj c) (hj (star c)) }, hj⟩
 
@@ -414,10 +408,6 @@ end GlobalTheory.UMinQF
 noncomputable section
 namespace GlobalTheory.UMinQF
 
-theorem pow_of_add {La Q : Type} [AddCommGroup La] [Group Q] (f : La → Q) (hf : ∀ a b, f (a + b) = f a * f b)
-    (n : ℕ) (a : La) : f (n • a) = f a ^ n :=
-  (AddMonoidHom.mk' (fun a => Additive.ofMul (f a)) (fun a b => by rw [hf]; rfl)).map_nsmul n a
-
 theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Sp K)) (s₀ : Sp K ⟶ Sp (KA l)), Set.Finite {x : Sp K ⟶ Xo.X | x ≫ Xo.s = s₀ ∧ ∃ α : P.A.left ⟶ Xo.univ.t.G.left, IsGrpPullback P.A Xo.univ.t.G x α ∧ LBIso P.L (Xo.univ.t.PP.L.pull α)} := by
   intro E _ _ _ H Dw l Xo K _ _ P s₀
   haveI := P.isAb.comm
@@ -447,7 +437,7 @@ theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     exact Ideal.mul_le_left h
   let F := fun x : X0 => ((fun c => (ρ x).act c), (fun a => pt x (Xo.univ.eta a)), (fun a => pt x (Xo.univ.etaA a)))
   set As := {act : 𝓞 E → (P.A ⟶ P.A) | ∃ ρ : P.OAct (𝓞 E), ∀ a, ρ.act a = act a}
-  have hA : As.Finite := GlobalTheory.T.finite_integerRing_actions_principallyPolarised E H K P
+  have hA : As.Finite := _root_.GlobalTheory.UMin.FinAct.finite_oActs E H K P
   set FM := {f : Dw.La → (baseOver (Sp K) ⟶ P.A) | (∀ a b, f (a + b) = f a * f b) ∧
     ∀ a, f a ∈ {z : baseOver (Sp K) ⟶ P.A | z ^ l.M = 1}}
   set FA := {f : Dw.La → (baseOver (Sp K) ⟶ P.A) | (∀ a b, f (a + b) = f a * f b) ∧
@@ -459,13 +449,13 @@ theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     · show pt x _ = pt x _ * pt x _
       rw [Xo.univ.eta_add, map_mul]
     · show pt x _ ^ l.M = 1
-      rw [← map_pow, ← pow_of_add _ Xo.univ.eta_add, Xo.univ.eta_ker, map_one]
+      rw [← map_pow, ← _root_.GlobalTheory.SiegelComparison.map_nsmul_of_add _ Xo.univ.eta_add, Xo.univ.eta_ker, map_one]
       rw [← Nat.cast_smul_eq_nsmul (𝓞 E)]
       exact Submodule.smul_mem_smul hMb Submodule.mem_top
     · show pt x _ = pt x _ * pt x _
       rw [Xo.univ.etaA_add, map_mul]
     · show pt x _ ^ l.A = 1
-      rw [← map_pow, ← pow_of_add _ Xo.univ.etaA_add, Xo.univ.etaA_ker, map_one]
+      rw [← map_pow, ← _root_.GlobalTheory.SiegelComparison.map_nsmul_of_add _ Xo.univ.etaA_add, Xo.univ.etaA_ker, map_one]
   have inj : Function.Injective F := by
     intro x x' h
     simp only [F, Prod.mk.injEq] at h
@@ -535,10 +525,6 @@ theorem polFib_transport {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left
       (chartPullSame L (fun _ : PUnit => φ.hom.left ≫ α) (fun _ => α) (fun _ => 1) φ.hom.left
         (fun _ => rfl)) hLα
   exact LBIso.trans P'.isLB (pull_isLB P.isLB _) (pull_isLB hL _) h1 h2
-
-theorem charZero_of_pt {F K : Type} [Field F] [CharZero F] [Field K] (t : Sp K ⟶ Sp F) : CharZero K := by
-  have f := (Spec.preimage t).hom
-  exact (f.charZero_iff f.injective).1 inferInstance
 
 end GlobalTheory.UMin.QF
 
@@ -623,7 +609,7 @@ namespace GlobalTheory.UMin.QF
 
 theorem finite_fibre_thMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (o : Type) [CommRing o] (j n : ℕ) (f : Xo.XF c ⟶ PSpace o n), 81 ^ (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)).factorial < 3 ^ j * 81 → n + 1 = (3 ^ j * 81) ^ (4 * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q))) → ThMap Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.rig (3 ^ j * 81) (pullback.fst _ _ : Xo.XF c ⟶ Xo.X) f → ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ Xo.XF c), Set.Finite {y : Sp K ⟶ Xo.XF c | y ≫ pullback.snd _ _ = x ≫ pullback.snd _ _ ∧ y ≫ f = x ≫ f} := by
   intro E _ _ _ H Dw l Xo c o _ j n f hbig hn hth K _ _ x
-  haveI : CharZero K := charZero_of_pt (x ≫ pullback.snd _ _)
+  haveI : CharZero K := _root_.GlobalTheory.ZM.FullLevel.charZero_of_hom (x ≫ pullback.snd _ _)
   set g := Module.finrank ℚ E / 2 * (Dw.p + Dw.q) with hg
   have hm0 : ((3 ^ j * 81 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (by positivity)
   have h3 : ((3 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (by norm_num)

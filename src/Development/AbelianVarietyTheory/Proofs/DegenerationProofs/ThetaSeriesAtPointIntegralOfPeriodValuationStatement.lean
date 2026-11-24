@@ -341,8 +341,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 
-theorem _root_.GlobalTheory.T.fourierSeries_product_eq_product_series : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (k k' : ℕ) (g : GtPtF u.D.toPre (PadicAlgCl p)) (w : GlobalTheory.UT.Frm u.D.toPre (PadicAlgCl p) k g.b) (w' : GlobalTheory.UT.Frm u.D.toPre (PadicAlgCl p) k' g.b) (w'' : GlobalTheory.UT.Frm u.D.toPre (PadicAlgCl p) (k + k') g.b), 1 ≤ k → 1 ≤ k' → w.IsGen → w'.IsGen → w''.IsGen → ∃ κ : PadicAlgCl p, κ ≠ 0 ∧ ∀ (σ : u.U.toUnifPre.SecGF (PadicAlgCl p) k) (σ' : u.U.toUnifPre.SecGF (PadicAlgCl p) k') (σ'' : u.U.toUnifPre.SecGF (PadicAlgCl p) (k + k')) s s' s'', u.U.toUnifPre.ExpandsG (PadicAlgCl p) k σ s → u.U.toUnifPre.ExpandsG (PadicAlgCl p) k' σ' s' → u.U.toUnifPre.ExpandsG (PadicAlgCl p) (k + k') σ'' s'' → (∀ j, (show Γ((UnifPre.GF (G := u.G) (PadicAlgCl p)).left, (LB.LinComb u.U.LG.L (K := Fin 1) (fun _ => UnifPre.gFK (G := u.G) (PadicAlgCl p)) (fun _ => ((k : ℕ) : ℤ))).U j) from σ''.f j) = σ.f j * (show Γ((UnifPre.GF (G := u.G) (PadicAlgCl p)).left, (LB.LinComb u.U.LG.L (K := Fin 1) (fun _ => UnifPre.gFK (G := u.G) (PadicAlgCl p)) (fun _ => ((k : ℕ) : ℤ))).U j) from σ'.f j)) → ∀ x x', HasSum (fun χ => GlobalTheory.UT.coef s g w χ) x → HasSum (fun χ => GlobalTheory.UT.coef s' g w' χ) x' → HasSum (fun χ => GlobalTheory.UT.coef s'' g w'' χ) (κ * x * x') := by
-  first | exact @GlobalTheory.ZH.SeriesProd.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FourierSeriesProductEqProductSeriesStatement =====
@@ -980,7 +978,7 @@ theorem parAt_of_parAt_mul : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing 
       have h1 : 1 ≤ N * (m + 1) := Nat.mul_pos (by omega) (by omega)
       obtain ⟨w'', hw''⟩ : ∃ w : GlobalTheory.UT.Frm u.D.toPre (PadicAlgCl p) (N * (m + 1) + N) g.b, w.IsGen :=
         DVR.exists_gen_of_local (V := PadicAlgCl p) u.D.toPre.P.L u.D.toPre.P.isLB _ _
-      obtain ⟨c, hc, hp⟩ := GlobalTheory.T.fourierSeries_product_eq_product_series hL o Ω S ρ p y₀ u lab (N * (m + 1)) N g w' w w'' h1 (by omega) hw' hw hw''
+      obtain ⟨c, hc, hp⟩ := _root_.GlobalTheory.ZH.SeriesProd.main hL o Ω S ρ p y₀ u lab (N * (m + 1)) N g w' w w'' h1 (by omega) hw' hw hw''
       refine ⟨w'', hw'', c * κ, mul_ne_zero hc hκ, fun σ s hs => ?_⟩
       obtain ⟨τ, t, hτ, e, hsum⟩ := h σ s hs
       obtain ⟨t', ht'⟩ := expd (N * (m + 1) + N) (by omega) (mulPow τ σ₀)

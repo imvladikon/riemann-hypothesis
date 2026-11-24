@@ -69,8 +69,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.isIndEtale_over_etale_of_isIndEtale : ∀ (A W O : Type) [CommRing A] [CommRing W] [CommRing O] [Algebra A W] [Algebra A O] [Algebra W O] [IsScalarTower A W O] [Algebra.Etale A W], GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap A O) → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap W O) := by
-  first | (exact @GlobalTheory.IndEtaleCancel.isIndEtale_of_etale_of_isIndEtale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIndEtaleOverEtaleOfIsIndEtaleStatement =====
@@ -234,8 +232,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.isNoetherianRing_of_directed_pure_union' : ∀ (S : Type) [CommRing S] [IsLocalRing S] (ι : Type) [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] (R : ι → Subring S), Monotone R → (∀ x : S, ∃ i, x ∈ R i) → (∀ i, IsNoetherianRing (R i)) → (∀ i, ((maximalIdeal S).comap (R i).subtype).map (R i).subtype = maximalIdeal S) → (∀ i (J : Ideal (R i)), (J.map (R i).subtype).comap (R i).subtype = J) → IsNoetherianRing S := by
-  first | (exact @GlobalTheory.isNoetherianRing_of_directed_pure_union)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsNoetherianRingOfDirectedPureUnionStatement =====
@@ -248,12 +244,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC IsLocalRing
 
 namespace GlobalTheory.StalkNoeth
-
-theorem noeth_of_directed_subrings : ∀ (S : Type) [CommRing S] [IsLocalRing S] (ι : Type) [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] (R : ι → Subring S), Monotone R → (∀ x : S, ∃ i, x ∈ R i) → (∀ i, IsNoetherianRing (R i)) → (∀ i, ((maximalIdeal S).comap (R i).subtype).map (R i).subtype = maximalIdeal S) → (∀ i (J : Ideal (R i)), (J.map (R i).subtype).comap (R i).subtype = J) → IsNoetherianRing S :=
-  GlobalTheory.T.isNoetherianRing_of_directed_pure_union'
-
-theorem isIndEtale_of_etale_of_isIndEtale : ∀ (A W O : Type) [CommRing A] [CommRing W] [CommRing O] [Algebra A W] [Algebra A O] [Algebra W O] [IsScalarTower A W O] [Algebra.Etale A W], GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap A O) → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap W O) :=
-  GlobalTheory.T.isIndEtale_over_etale_of_isIndEtale
 
 noncomputable def stageHom {A W O : Type} [CommRing A] [CommRing W] [CommRing O] [IsLocalRing O] [Algebra A W] [Algebra A O]
     (v : W →ₐ[A] O) : Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O)) →+* O :=
@@ -271,7 +261,7 @@ theorem stage_props {A W O : Type} [CommRing A] [CommRing W] [CommRing O] [IsLoc
   set q := (maximalIdeal O).comap (v : W →+* O) with hq
   letI : Algebra W O := (v : W →+* O).toAlgebra
   haveI : IsScalarTower A W O := IsScalarTower.of_algebraMap_eq (fun a => (v.commutes a).symm)
-  have h1 : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap W O) := isIndEtale_of_etale_of_isIndEtale A W O hO
+  have h1 : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap W O) := _root_.GlobalTheory.IndEtaleCancel.isIndEtale_of_etale_of_isIndEtale A W O hO
   letI : Algebra (Localization.AtPrime q) O := (stageHom v).toAlgebra
   haveI : IsScalarTower W (Localization.AtPrime q) O :=
     IsScalarTower.of_algebraMap_eq (fun w => (stageHom_algebraMap v w).symm)
@@ -342,7 +332,7 @@ theorem isNoetherianRing_of_indEt : ∀ (A O : Type) [CommRing A] [IsNoetherianR
         rw [← AlgHom.comp_assoc, huv]; exact Algebra.TensorProduct.productMap_left v1 v2)
     · exact stage_le v2 v3 (u.comp Algebra.TensorProduct.includeRight) (by
         rw [← AlgHom.comp_assoc, huv]; exact Algebra.TensorProduct.productMap_right v1 v2)
-  refine noeth_of_directed_subrings O ι (fun T => T.1) (fun _ _ h => h) mem ?_ ?_ ?_
+  refine _root_.GlobalTheory.isNoetherianRing_of_directed_pure_union O ι (fun T => T.1) (fun _ _ h => h) mem ?_ ?_ ?_
   · rintro ⟨T, W, _, _, _, v, rfl⟩
     haveI : IsNoetherianRing W := Algebra.FiniteType.isNoetherianRing A W
     haveI : IsNoetherianRing (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))) :=

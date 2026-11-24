@@ -111,7 +111,7 @@ theorem cocEq : CocEq := by
     change -(i:ℤ) = q at hi
     omega
 
-theorem CocEq_of : CocEq := cocEq
+alias CocEq_of := _root_.LateralTheory.EtaleTrace.cocEq
 
 end LateralTheory.EtaleTrace
 end -- clump:auto

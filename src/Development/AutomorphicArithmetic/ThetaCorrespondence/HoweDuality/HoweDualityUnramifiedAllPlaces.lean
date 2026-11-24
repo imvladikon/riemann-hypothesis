@@ -24,10 +24,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelInfAlt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealLieOperatorThetaQuotientLine
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieDerivativePolynomialFockArchimedeanUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankPolynomialFockSchrodingerModelLeAleph0Statement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaSubGAlgDOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsFourierTransform
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.FactorApply
 public import Development.WeilBound.ThetaLifts.SphericalLattices.HoweInert
 public import Development.WeilBound.CoreStatements.CompactAveragingSplitting.EigenvectorLifting.InertDef
@@ -128,14 +128,6 @@ theorem at_mul_left {x : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteR
   intro a ha
   rw [← Matrix.mul_smul, hx a ha, Matrix.mul_zero]
 
-theorem continuous_mat_line_left (γ : Multiplicative ℝ →* UA σ X.J) (hγ : Continuous γ) :
-    Continuous fun t : ℝ => mat (γ (Multiplicative.ofAdd t)) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp (hγ.comp continuous_ofAdd))
-
-theorem mat_mul_left (g h : UA σ X.J) : mat (g * h) = mat g * mat h := rfl
-
-theorem mat_one_left : mat (1 : UA σ X.J) = 1 := rfl
-
 def opLl (M : Model σ X W) (g : Matrix (Fin n) (Fin n) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) : (Vs (Fin n × Fin d)) →ₗ[ℝ] Vs (Fin n × Fin d) where
   toFun w := GlobalTheory.HeisOrbit.archCo M.co (g * lift M.co w)
   map_add' w w' := by rw [lift_add, Matrix.mul_add, archCo_add]
@@ -157,7 +149,7 @@ theorem opRl_apply (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (
 
 theorem opRl_zero (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) : opRl M γ 0 = 1 := by
   refine ContinuousLinearMap.ext fun w => ?_
-  rw [opRl_apply, opLl_apply, ofAdd_zero, map_one, mat_one_left, Matrix.one_mul, archCo_lift]
+  rw [opRl_apply, opLl_apply, ofAdd_zero, map_one, _root_.GlobalTheory.HeisOrbitSmooth.mat_one, Matrix.one_mul, archCo_lift]
   rfl
 
 theorem opRl_add (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (s t : ℝ) :
@@ -166,14 +158,14 @@ theorem opRl_add (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (s 
   rw [ContinuousLinearMap.mul_apply, opRl_apply, opRl_apply, opRl_apply,
     opLl_apply M (mat (γ (Multiplicative.ofAdd t))) w,
     opLl_archCo M _ (at_mul_left (at_lift M.co w) _),
-    opLl_apply, ofAdd_add, map_mul, mat_mul_left, Matrix.mul_assoc]
+    opLl_apply, ofAdd_add, map_mul, _root_.GlobalTheory.HeisOrbitSmooth.mat_mul, Matrix.mul_assoc]
 
 theorem continuous_opRl (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (hγ : Continuous γ) :
     Continuous (opRl M γ) := by
   haveI : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))
   refine continuous_clm_apply.2 fun w => ?_
   simp only [opRl_apply, opLl_apply]
-  exact (continuous_archCo M).comp ((continuous_mat_line_left γ hγ).matrix_mul continuous_const)
+  exact (continuous_archCo M).comp ((_root_.GlobalTheory.HeisOrbitSmooth.continuous_mat_line γ hγ).matrix_mul continuous_const)
 
 theorem archCo_orbit_smooth_left : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
     {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Model σ X W), ∀ γ ∈ Lines σ X, ∀ u : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evI F) u →
@@ -1058,7 +1050,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HoweDualityRealPlacesPolynomialVectorsSmallPair =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsGaussianKernel =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsGaussianKernel", "h": "module\n\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsIntertwining\npublic import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsGaussianKernel", "h": "module\n\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsIntertwining\npublic import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1075,26 +1067,10 @@ theorem decomp {M₀ : Type} [AddCommGroup M₀] [Module ℂ M₀] {ι : Type} [
     ∃ (m : ℕ) (f : Fin m → M₀) (φ : Fin m → ∀ i, M i), t = ∑ j, f j ⊗ₜ[ℂ] PiTensorProduct.tprod ℂ (φ j) := by
   apply GlobalTheory.HoweGlobal.decomp <;> assumption
 
-theorem det_ne_hasSig {n r s : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : HasSig M r s) : M.det ≠ 0 := by
-  obtain ⟨hrs, A, hA⟩ := h
-
-  let e : Fin r ⊕ Fin s ≃ Fin n := finSumFinEquiv.trans (finCongr hrs)
-  let B : Matrix (Fin n) (Fin n) ℂ := A.submatrix id e.symm
-  have key : Bᵀ * M * B.map star =
-      (Matrix.fromBlocks 1 0 0 (-1) : Matrix (Fin r ⊕ Fin s) (Fin r ⊕ Fin s) ℂ).submatrix e.symm e.symm := by
-    rw [← hA]
-    ext i j
-    simp [B, Matrix.mul_apply]
-  have hdet := congrArg Matrix.det key
-  rw [Matrix.det_submatrix_equiv_self, Matrix.det_fromBlocks_zero₂₁, Matrix.det_mul, Matrix.det_mul] at hdet
-  intro h0
-  rw [h0, mul_zero, zero_mul, Matrix.det_one, one_mul, Matrix.det_neg, Matrix.det_one, mul_one] at hdet
-  exact pow_ne_zero _ (neg_ne_zero.mpr one_ne_zero) hdet.symm
-
 theorem det_ne_sig_map {E : Type} [Field E] {n r s : ℕ} {J : Matrix (Fin n) (Fin n) E} (τ : E →+* ℂ) (c : ℂ)
     (h : HasSig (c • J.map τ) r s) : J.det ≠ 0 := by
   intro h0
-  apply det_ne_hasSig h
+  apply _root_.GlobalTheory.ThK.RealUniq.det_ne_zero_of_sig h
   have hmap : (J.map τ).det = τ J.det := (RingHom.map_det τ J).symm
   rw [Matrix.det_smul, hmap, h0, map_zero, mul_zero]
 
@@ -1318,18 +1294,12 @@ open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels Formalism.MainNoti
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 
-theorem one_mem_UAt {n : ℕ} (X : Spc F E n) {R : Type} [Zero R] (ev : AF F → R) : (1 : UA σ X.J) ∈ UAt σ X ev := by
-  intro u _
-  have e : mat (1 : UA σ X.J) = 1 := rfl
-  show u • (mat (1 : UA σ X.J) - 1) = 0
-  rw [e, sub_self, smul_zero]
-
 variable {Bs : Base F E} {a a' : ℕ} {G : Geo σ a a'} {Xc : Chars F E} {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}
 
 theorem exists_image (hT : IsTriple Bs G Xc om om') (v : Pl (F := F)) {h : UA σ G.W.J} (hh : h ∈ UAt σ G.W (evFin F v))
     (φ : (Fin a' × Fin (a + a') → Fv F v) → ℂ) (hφ : φ ∈ SB (Fin a' × Fin (a + a') → Fv F v)) :
     ∃ φ₁ ∈ SB (Fin a' × Fin (a + a') → Fv F v), Acts (evFin F v) (om' (1, h)) φ φ₁ :=
-  GlobalTheory.ThK.LocalOps.acts_exists (GlobalTheory.ThK.RealUniq.isPair_V' hT) v (1, h) (one_mem_UAt _ _) hh φ hφ
+  GlobalTheory.ThK.LocalOps.acts_exists (GlobalTheory.ThK.RealUniq.isPair_V' hT) v (1, h) (_root_.GlobalTheory.SmoothAtPlace.one_mem_uAt _ _) hh φ hφ
 
 def locOp (hT : IsTriple Bs G Xc om om') (v : Pl (F := F)) {h : UA σ G.W.J} (hh : h ∈ UAt σ G.W (evFin F v)) :
     Module.End ℂ ↥(SB (Fin a' × Fin (a + a') → Fv F v)) where

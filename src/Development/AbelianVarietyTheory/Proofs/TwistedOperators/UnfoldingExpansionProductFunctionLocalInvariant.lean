@@ -222,7 +222,7 @@ theorem absFin_idemSum_eq_one {e : AE D} {P : Finset (Pl D.host.E)} (he : IsIdem
     change _ = ∏ PP ∈ P.attach, (fun PP => es PP * c + (1 - es PP)) PP.1
     rw [Finset.prod_attach P (fun PP => es PP * c + (1 - es PP)),
       GlobalTheory.SplitIdeleModulus.prod_idem hes _ P subset_rfl, hae]
-  let A : (AE D)ˣ →* ℝ := ⟨⟨GlobalTheory.IndefiniteRowSideFullHecke.SplitLinearModelNorm.absFin D, GlobalTheory.SplitIdeleModulus.absFin_one'⟩, GlobalTheory.SplitLinear.absFin_mul⟩
+  let A : (AE D)ˣ →* ℝ := ⟨⟨GlobalTheory.IndefiniteRowSideFullHecke.SplitLinearModelNorm.absFin D, _root_.GlobalTheory.SplitLinear.absFin_one⟩, GlobalTheory.SplitLinear.absFin_mul⟩
   have hA : GlobalTheory.IndefiniteRowSideFullHecke.SplitLinearModelNorm.absFin D x = A x := rfl
   rw [hA, hx', map_prod]
   exact Finset.prod_eq_one fun PP _ => absFin_single (hes PP.1 PP.2) (u PP) c rfl c' hcc (hc PP.1 PP.2)
@@ -453,8 +453,6 @@ open IsDedekindDomain NumberField MeasureTheory Matrix ValuativeRel GlobalTheory
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 open GlobalTheory.TopLevelInv
 
-theorem _root_.GlobalTheory.T.determinantIdeleAtIdempotent_idempotentPart_components : ∀ {D : D7} {P : Finset (Pl D.host.E)} {e : AE D} (he : IsIdemSum e P) (V : HSp D) (g : GA D V), infPart D (GlobalTheory.VecInv.detAt e (GlobalTheory.PlaceModelSum.isOrthSum_of_isIdemSum he).idem V (cutPart (e + cA D e) V g) : AE D) = 1 ∧ (∀ Q ∈ P, GlobalTheory.StdFrames.cpt Q (toEAf D (GlobalTheory.VecInv.detAt e (GlobalTheory.PlaceModelSum.isOrthSum_of_isIdemSum he).idem V (cutPart (e + cA D e) V g) : AE D)) = ((Formalism.L2.Theta.mt V g).map fun z => GlobalTheory.StdFrames.cpt Q (toEAf D z)).det) ∧ ∀ Q ∉ P, GlobalTheory.StdFrames.cpt Q (toEAf D (GlobalTheory.VecInv.detAt e (GlobalTheory.PlaceModelSum.isOrthSum_of_isIdemSum he).idem V (cutPart (e + cA D e) V g) : AE D)) = 1 := by
-  first | exact @GlobalTheory.TopLevelInv.detAt_cutPart_parts
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DeterminantIdeleAtIdempotentIdempotentPartComponStatement =====
@@ -622,7 +620,7 @@ theorem mu_detAt_eq_prod_loc : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Con
       ∏ w : locPl G t, (((locGrid G t w).mu (j + 1 + 1) (gdet (kapAt S t j hj k w)) : ℂˣ) : ℂ) := by
   intro D T L sc G W U S t μ₀ hL ht Φ β j hj k hk e he
   obtain ⟨hχ, htame⟩ := chrEq_mu_succ_succ hL t j hj
-  obtain ⟨hinf, hin, hout⟩ := GlobalTheory.T.determinantIdeleAtIdempotent_idempotentPart_components he (G.V (.top (j + 1)))
+  obtain ⟨hinf, hin, hout⟩ := _root_.GlobalTheory.TopLevelInv.detAt_cutPart_parts he (G.V (.top (j + 1)))
     ((((S.N.u (.top (j + 1)))⁻¹ * k * S.N.u (.top (j + 1)) : FinPt G (.top (j + 1))) : GA D (G.V (.top (j + 1)))))
   rw [GlobalTheory.T.unitaryIdeleChar_eq_prod_loc_of_tameAt hχ (locPl G t) (fun P _ => htame P) (fun P => gdet (kapAt S t j hj k P)) _ hinf
     (fun P hP => (hin P hP).trans (GlobalTheory.T.det_unitaryConj_atPlace_eq_det_latticeBasisComponent S t j hj k _ P)) hout]
@@ -1066,12 +1064,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 open GlobalTheory.TopLevelInv
 open Formalism.IndefR.Fin.LevelGroupLemmas (resG detAt)
 
-theorem _root_.GlobalTheory.T.detIdele_conjugatedTopPoint_eq_prod_local : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {U : Set T}
-    (S : GridChoice W U) {t : T}, t ∈ U → ∀ (j : ℕ) (hj : j + 1 < D.R.m) (k : FinPt G (.top (j + 1))) (e : AE D),
-    IsIdemSum e (locPl G t) →
-    detAt e (G.V (.top (j + 1))) (conjPt S j k) =
-      ∏ w : locPl G t, GlobalTheory.LFun.locIdele D.host.F w.1 (gdet (kapAt S t j hj k w)) := by
-  first | exact @GlobalTheory.TopLevelInv.detAt_conjPt_eq_prod
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdeleConjugatedTopPointEqProdLocalStatement =====
@@ -1529,9 +1521,9 @@ theorem omega_conj_vac_low: ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     have := hTm.vac; rwa [one_smul] at this
   rw [hsplit, map_mul, Module.End.mul_apply, GlobalTheory.T.truncatedConjugate_fixes_standardVacuum_topPair S hL ht j hj k hk e he ε hε halg]
   conv_lhs => rw [← hvac]
-  refine (hlaw (halfInd e (stdLatO S (.top t j))) (isSBHalf_halfInd e _)).trans ?_
+  refine (hlaw (halfInd e (stdLatO S (.top t j))) (_root_.GlobalTheory.isSBHalf_halfInd e _)).trans ?_
   congr 1
-  · rw [detAt_one' he2, detAt_resG_eq he2 hc hε halg, GlobalTheory.T.detIdele_conjugatedTopPoint_eq_prod_local S ht j hj k e he]
+  · rw [detAt_one' he2, detAt_resG_eq he2 hc hε halg, _root_.GlobalTheory.TopLevelInv.detAt_conjPt_eq_prod S ht j hj k e he]
     unfold GlobalTheory.SplitLinear.fac
     simp only [splitFacO, map_one, inv_one, one_mul]
     rw [GlobalTheory.T.topPairSourceChar_prod_localIdeles G hL j hj]
@@ -1546,7 +1538,7 @@ theorem omega_conj_vac_low: ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     apply halfInd_congr
     by_cases hx : IsHalf e x
     · have hinv : (conjPt S j k)⁻¹ = resG _ (1 - ε) (conjPt S j k)⁻¹ * (resG _ ε (conjPt S j k))⁻¹ := by
-        rw [← resG_inv_eq hε', ← _root_.mul_inv_rev, resG_compl _ hε]
+        rw [← _root_.Formalism.IndefR.Fin.LevelGroupLemmas.resG_inv hε', ← _root_.mul_inv_rev, resG_compl _ hε]
       have key : actO (G.pS (.top t j : Pair T)) (G.pT (.top t j : Pair T)) 1⁻¹ (conjPt S j k)⁻¹ x =
           actO (G.pS (.top t j : Pair T)) (G.pT (.top t j : Pair T)) 1⁻¹ (resG _ ε (conjPt S j k))⁻¹ x :=
         calc _ = actO (G.pS (.top t j : Pair T)) (G.pT (.top t j : Pair T)) (1 * 1⁻¹)

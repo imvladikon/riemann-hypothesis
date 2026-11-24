@@ -48,12 +48,13 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleChartGenericComparison
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlagpairOfFrames, Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparison
 
 -- ===== clump member: Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlagpairOfFrames =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlagpairOfFrames", "h": "module\n\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Cartier\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PGenericProjClosureDivisor\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlagpairOfFrames", "h": "module\n\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Cartier\npublic import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PGenericProjClosureDivisor\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor\nimport Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleChartGenericComparison\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -122,27 +123,6 @@ theorem pow_smul_mem {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationR
 
 end PositivityTheory.Xgn.A_flagpair_of_frames
 
-private theorem isMultiHomog_prod_X_pow' {O : Type} [CommRing O] {K : Type} [Fintype K] [DecidableEq K]
-    {ι : K → Type} (c : (k : K) → ι k) (e : K → ℕ) :
-    IsMultiHomog (∏ k, (X ⟨k, c k⟩ : MRing ι O) ^ e k) e := by
-  have hXpow : ∀ (q : (k : K) × ι k) (n : ℕ),
-      IsMultiHomog ((X q : MRing ι O) ^ n) (n • blockWeight ι q) := by
-    intro q n
-    induction n with
-    | zero =>
-      rw [pow_zero, zero_smul]
-      exact isWeightedHomogeneous_one O (blockWeight ι)
-    | succ n ih =>
-      rw [pow_succ, succ_nsmul]
-      exact IsWeightedHomogeneous.mul ih (isWeightedHomogeneous_X O (blockWeight ι) q)
-  have h := IsWeightedHomogeneous.prod Finset.univ (fun k => (X ⟨k, c k⟩ : MRing ι O) ^ e k)
-    (fun k => e k • blockWeight ι ⟨k, c k⟩) (fun k _ => hXpow _ _)
-  have hsum : (∑ k, e k • blockWeight ι ⟨k, c k⟩) = e := by
-    funext k'
-    simp [Finset.sum_apply, blockWeight, Pi.single_apply]
-  rw [hsum] at h
-  exact h
-
 private theorem exists_multiHomog_aeval_eq_mul_mseg_pow {O : Type} [CommRing O] {Ω : Type} [Field Ω] [Algebra O Ω]
     {K : Type} [Fintype K] [DecidableEq K] {ι : K → Type} (x : (k : K) × ι k → Ω)
     (c : (k : K) → ι k) (hc : mseg x c ≠ 0) (a : Ω) (ha : a ∈ chartRing O (mseg x) c) :
@@ -157,7 +137,7 @@ private theorem exists_multiHomog_aeval_eq_mul_mseg_pow {O : Type} [CommRing O] 
   induction ha using Algebra.adjoin_induction with
   | mem u hu =>
     obtain ⟨s, rfl⟩ := hu
-    refine ⟨1, ∏ k, (X ⟨k, s k⟩ : MRing ι O) ^ (fun _ : K => 1) k, isMultiHomog_prod_X_pow' (O := O) s _, ?_⟩
+    refine ⟨1, ∏ k, (X ⟨k, s k⟩ : MRing ι O) ^ (fun _ : K => 1) k, _root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) s _, ?_⟩
     rw [pow_one, div_mul_cancel₀ _ hc]
     simp [mseg, map_prod]
   | algebraMap r =>
@@ -169,8 +149,8 @@ private theorem exists_multiHomog_aeval_eq_mul_mseg_pow {O : Type} [CommRing O] 
     refine ⟨p1 + p2, h1 * (∏ k, (X ⟨k, c k⟩ : MRing ι O) ^ (fun _ : K => p2) k) +
       h2 * (∏ k, (X ⟨k, c k⟩ : MRing ι O) ^ (fun _ : K => p1) k), ?_, ?_⟩
     · refine IsWeightedHomogeneous.add
-        (hdeg (IsWeightedHomogeneous.mul hh1 (isMultiHomog_prod_X_pow' (O := O) c _)) ?_)
-        (hdeg (IsWeightedHomogeneous.mul hh2 (isMultiHomog_prod_X_pow' (O := O) c _)) ?_)
+        (hdeg (IsWeightedHomogeneous.mul hh1 (_root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) c _)) ?_)
+        (hdeg (IsWeightedHomogeneous.mul hh2 (_root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) c _)) ?_)
       · funext k
         simp
       · funext k
@@ -264,10 +244,10 @@ theorem PositivityTheory.Xgn.t_flagpair_of_frames : ∀ (O : Type) [CommRing O] 
     refine ⟨h * ∏ k, (X ⟨k, c k⟩ : MRing ι O) ^ (b i k - b' i k).toNat,
       C (ϖ ^ n) * ∏ k, (X ⟨k, c k⟩ : MRing ι O) ^ (p + (-(b i k - b' i k)).toNat),
       fun k => p + (b i k - b' i k).toNat, fun k => p + (-(b i k - b' i k)).toNat, ?_, ?_, ?_, ?_, ?_⟩
-    · exact hdeg (IsWeightedHomogeneous.mul hh (isMultiHomog_prod_X_pow' (O := O) c (fun k => (b i k - b' i k).toNat)))
+    · exact hdeg (IsWeightedHomogeneous.mul hh (_root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) c (fun k => (b i k - b' i k).toNat)))
         (by funext k; simp)
     · exact hdeg (IsWeightedHomogeneous.mul (isWeightedHomogeneous_C _ _)
-        (isMultiHomog_prod_X_pow' (O := O) c (fun k => p + (-(b i k - b' i k)).toNat))) (by funext k; simp)
+        (_root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) c (fun k => p + (-(b i k - b' i k)).toNat))) (by funext k; simp)
     · funext k
       simp only [Pi.sub_apply]
       push_cast
@@ -300,7 +280,7 @@ theorem PositivityTheory.Xgn.t_flagpair_of_frames : ∀ (O : Type) [CommRing O] 
           · refine IsWeightedHomogeneous.sub
               (hdeg (IsWeightedHomogeneous.mul hh hh') (by funext k; simp))
               (hdeg (IsWeightedHomogeneous.mul (isWeightedHomogeneous_C _ _)
-                (isMultiHomog_prod_X_pow' (O := O) c (fun _ : K => p + p'))) (by funext k; simp))
+                (_root_.PositivityTheory.Xgn.A_vertdiv_commensurable.mono_homog (O := O) c (fun _ : K => p + p'))) (by funext k; simp))
           · rw [map_sub, map_mul, map_mul, hhev, hh'ev, aeval_C, map_pow]
             simp only [map_prod, map_pow, aeval_X]
             rw [show (∏ k, x ⟨k, c k⟩ ^ (p + p')) = mseg x c ^ (p + p') by rw [Finset.prod_pow]; rfl]
@@ -365,8 +345,7 @@ open GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.NumbersDVR.Bundl
 
 namespace GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames
 
-theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (Ω : Type) [Field Ω] [Algebra O Ω] (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (x : (Σ k, ι k) → Ω) (ϖ : O), Irreducible ϖ → ∀ d : ℕ, IsModelOver (pointIdeal O x) d → ∀ (N : ℕ) (V : Type) [AddCommGroup V] [Module Ω V] (E E' : ChartBundle O (mseg x) N V), SameGeneric O x E E' → ∀ (w w' : Module.Basis (Fin N) Ω V) (b b' : Fin N → K → ℤ), IsFlagFrame x E w b → IsFlagFrame x E' w' b' → (∀ i j : Fin N, i < j → w.repr (w' i) j = 0) → SameGenericFibre ϖ E E' ∧ ∃ f g : Fin N → MRing ι O, IsFlagPair ϖ x E E' w w' b b' f g :=
-  @PositivityTheory.Xgn.t_flagpair_of_frames
+alias main := _root_.PositivityTheory.Xgn.t_flagpair_of_frames
 
 end GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames
 end -- clump:auto

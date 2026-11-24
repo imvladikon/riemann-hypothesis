@@ -150,8 +150,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.exists_freeSch_hom_glue_of_etale_covering : ∀ (R : Type) [CommRing R] {S : Scheme.{0}} (F : GlobalTheory.EtC.Shv R) (T : Sieve S), T ∈ Scheme.etaleTopology S → ∀ (σ : ∀ ⦃V : Scheme.{0}⦄ (v : V ⟶ S), T v → (GlobalTheory.EtC.Tr.freeSch R V ⟶ F)), (∀ ⦃V W : Scheme.{0}⦄ (v : V ⟶ S) (hv : T v) (g : W ⟶ V), (GlobalTheory.EtC.free R).map (yoneda.map g) ≫ σ v hv = σ (g ≫ v) (T.downward_closed hv g)) → ∃ t : GlobalTheory.EtC.Tr.freeSch R S ⟶ F, ∀ ⦃V : Scheme.{0}⦄ (v : V ⟶ S) (hv : T v), (GlobalTheory.EtC.free R).map (yoneda.map v) ≫ t = σ v hv := by
-  first | (exact @GlobalTheory.EtC.Tr.free_hom_glue_of_covering)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FreeHomGlueOfCoveringStatement =====
@@ -321,8 +319,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.freeSheaf_sum_sections_eq_of_two_splittings : ∀ (R : Type) [CommRing R] {Z X V : Scheme.{0}} {f : Z ⟶ X} {y : V ⟶ X} {m m' : ℕ} {s : Fin m → (V ⟶ Z)} {s' : Fin m' → (V ⟶ Z)}, GlobalTheory.EtC.Tr.SplitBy f y s → GlobalTheory.EtC.Tr.SplitBy f y s' → ∑ j, (GlobalTheory.EtC.free R).map (yoneda.map (s j)) = ∑ j, (GlobalTheory.EtC.free R).map (yoneda.map (s' j)) := by
-  first | (exact @GlobalTheory.EtC.Tr.sum_sections_eq_of_two_splittings)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FreeSheafSumSectionsEqOfTwoSplittingsStatement =====
@@ -334,8 +330,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.splitBy_baseChange' : ∀ {Z X V T : Scheme.{0}} {f : Z ⟶ X} {y : V ⟶ X} {m : ℕ} {s : Fin m → (V ⟶ Z)}, GlobalTheory.EtC.Tr.SplitBy f y s → ∀ (w : T ⟶ V), GlobalTheory.EtC.Tr.SplitBy f (w ≫ y) (fun j => w ≫ s j) := by
-  first | (exact @GlobalTheory.EtC.Tr.splitBy_baseChange)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitByBaseChangeStatement =====
@@ -373,8 +367,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.diagonalComplementSecondProjection_isFinite_etale : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f], IsFinite (GlobalTheory.EtC.Tr.diagComplHom f) ∧ Etale (GlobalTheory.EtC.Tr.diagComplHom f) := by
-  first | (exact @GlobalTheory.EtC.Tr.diagComplHom_isFinite_etale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.DiagonalComplementSecondProjectionIsFiniteEtaleStatement =====
@@ -455,8 +447,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.exists_fibreFieldPointsCardLE_of_isFinite_isAffine : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [IsAffine X], ∃ n, GlobalTheory.EtC.Tr.FibrePointsLE f n := by
-  first | (exact @GlobalTheory.EtC.Tr.finite_fibrePointsLE_of_isAffine)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFibreFieldPointsCardLEOfIsFiniteIsAffineStatement =====
@@ -524,8 +514,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.fibreFieldPointsCardLE_diagonalComplementSecondProjection : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f] (n : ℕ), GlobalTheory.EtC.Tr.FibrePointsLE f (n + 1) → GlobalTheory.EtC.Tr.FibrePointsLE (GlobalTheory.EtC.Tr.diagComplHom f) n := by
-  first | (exact @GlobalTheory.EtC.Tr.fibrePointsLE_diagComplHom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FibreFieldPointsCardLEDiagonalComplementSecondPrStatement =====
@@ -557,8 +545,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.isEmpty_of_fibreFieldPointsCardLE_zero : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X), GlobalTheory.EtC.Tr.FibrePointsLE f 0 → IsEmpty Z := by
-  first | (exact @GlobalTheory.EtC.Tr.isEmpty_of_fibrePointsLE_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsEmptyOfFibreFieldPointsCardLEZeroStatement =====
@@ -623,8 +609,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.mem_etaleTopology_of_pullback_finite_etale : ∀ {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f] (T : Sieve X), T.pullback f ∈ Scheme.etaleTopology Z → (∀ {V : Scheme.{0}} (v : V ⟶ X), IsEmpty (pullback f v : Scheme.{0}) → T v) → T ∈ Scheme.etaleTopology X := by
-  first | (exact @GlobalTheory.EtC.Tr.mem_etaleTopology_of_pullback_finite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemEtaleTopologyOfPullbackFiniteEtaleStatement =====
@@ -660,8 +644,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.splitsFinitelyOverScheme_of_isEmpty_pullback : ∀ {Z X V : Scheme.{0}} (f : Z ⟶ X) (y : V ⟶ X), IsEmpty (pullback f y : Scheme.{0}) → GlobalTheory.EtC.Tr.Splits f y := by
-  first | (exact @GlobalTheory.EtC.Tr.splits_of_isEmpty_pullback)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitsFinitelyOverSchemeOfIsEmptyPullbackStatement =====
@@ -707,8 +689,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry
 
-theorem _root_.GlobalTheory.T.splitsFinitelyOverScheme_of_pullback_snd : ∀ {Z X S V : Scheme.{0}} (f : Z ⟶ X) (x : S ⟶ X) (v : V ⟶ S), GlobalTheory.EtC.Tr.Splits (pullback.snd f x) v → GlobalTheory.EtC.Tr.Splits f (v ≫ x) := by
-  first | (exact @GlobalTheory.EtC.Tr.splits_of_splits_pullback_snd)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitsFinitelyOverSchemeOfPullbackSndStatement =====
@@ -880,22 +860,22 @@ theorem splitSieve_mem_of_fibrePointsLE : ∀ (n : ℕ) {Z X : Scheme.{0}} (f : 
   induction n with
   | zero =>
     intro Z X f _ _ h
-    have : IsEmpty Z := GlobalTheory.T.isEmpty_of_fibreFieldPointsCardLE_zero f h
-    have hs : Splits f (𝟙 X ≫ 𝟙 X) := GlobalTheory.T.splitsFinitelyOverScheme_of_isEmpty_pullback f _ (Function.isEmpty (pullback.fst f (𝟙 X ≫ 𝟙 X)))
+    have : IsEmpty Z := _root_.GlobalTheory.EtC.Tr.isEmpty_of_fibrePointsLE_zero f h
+    have hs : Splits f (𝟙 X ≫ 𝟙 X) := _root_.GlobalTheory.EtC.Tr.splits_of_isEmpty_pullback f _ (Function.isEmpty (pullback.fst f (𝟙 X ≫ 𝟙 X)))
     have hmem : splitSieve f (𝟙 X) (𝟙 X) := ⟨X, 𝟙 X, 𝟙 X, hs, Category.id_comp _⟩
     rw [Sieve.id_mem_iff_eq_top] at hmem
     rw [hmem]; exact (Scheme.etaleTopology).top_mem X
   | succ n ih =>
     intro Z X f _ _ h
-    obtain ⟨hfin, het⟩ := GlobalTheory.T.diagonalComplementSecondProjection_isFinite_etale f
-    have hg := ih (diagComplHom f) (GlobalTheory.T.fibreFieldPointsCardLE_diagonalComplementSecondProjection f n h)
-    refine GlobalTheory.T.mem_etaleTopology_of_pullback_finite_etale f _ ?_ (fun {V} v hv => ?_)
+    obtain ⟨hfin, het⟩ := _root_.GlobalTheory.EtC.Tr.diagComplHom_isFinite_etale f
+    have hg := ih (diagComplHom f) (_root_.GlobalTheory.EtC.Tr.fibrePointsLE_diagComplHom f n h)
+    refine _root_.GlobalTheory.EtC.Tr.mem_etaleTopology_of_pullback_finite f _ ?_ (fun {V} v hv => ?_)
     · refine (Scheme.etaleTopology).superset_covering ?_ hg
       rintro V u ⟨W, w, v, hv, rfl⟩
       have h1 : Splits (pullback.snd f f) (v ≫ 𝟙 Z) := _root_.GlobalTheory.EtC.Tr.splits_pullbackSnd_of_splits_diagComplHom f _ hv
-      have h2 : Splits f ((v ≫ 𝟙 Z) ≫ f) := GlobalTheory.T.splitsFinitelyOverScheme_of_pullback_snd f f _ h1
+      have h2 : Splits f ((v ≫ 𝟙 Z) ≫ f) := _root_.GlobalTheory.EtC.Tr.splits_of_splits_pullback_snd f f _ h1
       exact ⟨W, w, v ≫ f, by simpa using h2, by simp⟩
-    · exact ⟨V, 𝟙 V, v, by simpa using GlobalTheory.T.splitsFinitelyOverScheme_of_isEmpty_pullback f v hv, Category.id_comp _⟩
+    · exact ⟨V, 𝟙 V, v, by simpa using _root_.GlobalTheory.EtC.Tr.splits_of_isEmpty_pullback f v hv, Category.id_comp _⟩
 
 theorem splitSieve_mem : ∀ {Z X S : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f] (x : S ⟶ X),
     splitSieve f x ∈ Scheme.etaleTopology S := by
@@ -907,11 +887,11 @@ theorem splitSieve_mem : ∀ {Z X S : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Et
   rintro Y u ⟨W, w, _, ⟨i⟩, rfl⟩
   rw [Sieve.pullback_comp]
   refine (Scheme.etaleTopology).pullback_stable w ?_
-  obtain ⟨n, hn⟩ := GlobalTheory.T.exists_fibreFieldPointsCardLE_of_isFinite_isAffine (pullback.snd f (𝒰.f i ≫ x))
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.EtC.Tr.finite_fibrePointsLE_of_isAffine (pullback.snd f (𝒰.f i ≫ x))
   have hi := splitSieve_mem_of_fibrePointsLE n (pullback.snd f (𝒰.f i ≫ x)) hn
   refine (Scheme.etaleTopology).superset_covering ?_ hi
   rintro V u ⟨W', w', v, hv, rfl⟩
-  have h1 := GlobalTheory.T.splitsFinitelyOverScheme_of_pullback_snd f (𝒰.f i ≫ x) (v ≫ 𝟙 _) hv
+  have h1 := _root_.GlobalTheory.EtC.Tr.splits_of_splits_pullback_snd f (𝒰.f i ≫ x) (v ≫ 𝟙 _) hv
   exact ⟨W', w', v ≫ 𝒰.f i, by simpa using h1, by simp⟩
 
 end GlobalTheory.EtC.Tr
@@ -937,7 +917,7 @@ theorem splits_of_splitSieve {Z X S V : Scheme.{0}} {f : Z ⟶ X} {x : S ⟶ X} 
     Splits f (v ≫ x) := by
   obtain ⟨W, w, u, ⟨m, s, hs⟩, rfl⟩ := hv
   refine ⟨m, fun j => w ≫ s j, ?_⟩
-  have := GlobalTheory.T.splitBy_baseChange' hs w
+  have := _root_.GlobalTheory.EtC.Tr.splitBy_baseChange hs w
   rwa [Category.assoc]
 
 def splitSum {Z X V : Scheme.{0}} (f : Z ⟶ X) (y : V ⟶ X) (h : Splits f y) : freeSch R V ⟶ freeSch R Z :=
@@ -945,7 +925,7 @@ def splitSum {Z X V : Scheme.{0}} (f : Z ⟶ X) (y : V ⟶ X) (h : Splits f y) :
 
 theorem splitSum_eq {Z X V : Scheme.{0}} {f : Z ⟶ X} {y : V ⟶ X} (h : Splits f y) {m : ℕ} {s : Fin m → (V ⟶ Z)}
     (hs : SplitBy f y s) : splitSum R f y h = ∑ j, (free R).map (yoneda.map (s j)) :=
-  GlobalTheory.T.freeSheaf_sum_sections_eq_of_two_splittings R h.choose_spec.choose_spec hs
+  _root_.GlobalTheory.EtC.Tr.sum_sections_eq_of_two_splittings R h.choose_spec.choose_spec hs
 
 theorem existsUnique_isTransfer {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f] :
     ∃! t, IsTransfer R f t := by
@@ -957,10 +937,10 @@ theorem existsUnique_isTransfer {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [E
       (free R).map (yoneda.map g) ≫ σ v hv = σ (g ≫ v) ((splitSieve f (𝟙 X)).downward_closed hv g) := by
     intro V W v hv g
     obtain ⟨m, s, hs⟩ := splits_of_splitSieve hv
-    have hg := GlobalTheory.T.splitBy_baseChange' hs g
+    have hg := _root_.GlobalTheory.EtC.Tr.splitBy_baseChange hs g
     rw [← Category.assoc] at hg
     simp only [σ, splitSum_eq R _ hs, splitSum_eq R _ hg, Preadditive.comp_sum, ← Functor.map_comp]
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_freeSch_hom_glue_of_etale_covering R (freeSch R Z) _ hT σ hσ
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.EtC.Tr.free_hom_glue_of_covering R (freeSch R Z) _ hT σ hσ
   have key : ∀ t', IsTransfer R f t' → ∀ ⦃V : Scheme.{0}⦄ (v : V ⟶ X) (hv : splitSieve f (𝟙 X) v),
       (free R).map (yoneda.map v) ≫ t' = σ v hv := by
     intro t' ht' V v hv
@@ -973,11 +953,11 @@ theorem existsUnique_isTransfer {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [E
     refine GlobalTheory.T.freeSch_hom_ext_of_etale_covering R (freeSch R Z) _ _ _ (_root_.GlobalTheory.EtC.Tr.splitSieve_mem f x) (fun V v hv => ?_)
     obtain ⟨m', s', hs'⟩ := splits_of_splitSieve hv
     have hvx : splitSieve f (𝟙 X) (v ≫ x) := ⟨V, 𝟙 V, v ≫ x, (show Splits f ((v ≫ x) ≫ 𝟙 X) by rw [Category.comp_id]; exact ⟨m', s', hs'⟩), Category.id_comp _⟩
-    have h1 := GlobalTheory.T.splitBy_baseChange' ⟨hs, hiso⟩ v
+    have h1 := _root_.GlobalTheory.EtC.Tr.splitBy_baseChange ⟨hs, hiso⟩ v
     rw [← Category.assoc, ← Functor.map_comp, ← Functor.map_comp, ht _ hvx, Preadditive.comp_sum]
     simp only [σ, ← Functor.map_comp]
     rw [splitSum_eq R _ (show SplitBy f ((v ≫ x) ≫ 𝟙 X) (fun j => v ≫ s j) by rw [Category.comp_id]; exact h1)]
-  · exact GlobalTheory.T.freeSch_hom_ext_of_etale_covering R (freeSch R Z) _ _ _ hT fun V v hv => by rw [key t' ht' v hv, ht v hv]
+  · exact _root_.GlobalTheory.EtC.Tr.free_hom_ext_of_covering R (freeSch R Z) _ _ _ hT fun V v hv => by rw [key t' ht' v hv, ht v hv]
 
 end GlobalTheory.EtC.Tr
 

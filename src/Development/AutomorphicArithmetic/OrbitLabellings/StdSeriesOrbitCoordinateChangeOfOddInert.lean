@@ -80,50 +80,6 @@ namespace UpperTheory.LocalBasisConjugationRank
 open GlobalTheory.InertCompare (rhoH rhoH_apply coe_rhoH embT_mem)
 open GlobalTheory.PadicPlaceBound (norm_int_le_one)
 
-section Trace
-
-open Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL (algKC embA embT_inj emb_cases bE_mem embT_K)
-
-private theorem embA_bij' (D : D7) : letI := algKC D; Function.Bijective (embA D) := by
-  letI := algKC D
-  constructor
-  · intro τ τ' h
-    apply embT_inj D
-    ext x
-    exact congrArg (fun f : D.host.E →ₐ[D.host.K] ℂ => f x) h
-  · intro σ
-    obtain ⟨τ, hτ | hτ⟩ := emb_cases D (σ : D.host.E →+* ℂ)
-    · refine ⟨τ, AlgHom.ext fun x => ?_⟩
-      have := congrArg (fun f : D.host.E →+* ℂ => f x) hτ
-      exact this.symm
-    · exfalso
-      have hb := bE_mem D
-      have h1 : σ (D.host.sqd) = D.host.φ₀ (D.host.sqd) :=
-        σ.commutes ⟨_, hb⟩
-      have h2 := congrArg (fun f : D.host.E →+* ℂ => f (D.host.sqd)) hτ
-      simp only [AlgHom.coe_toRingHom, RingHom.comp_apply] at h2
-      rw [embT_K D τ _ hb, h1] at h2
-      have h0 : D.host.φ₀ (D.host.sqd) = Complex.I * (Real.sqrt D.host.d : ℂ) :=
-        D.host.φ₀_mem
-      rw [h0, map_mul, Complex.conj_I, Complex.conj_ofReal] at h2
-      have hs := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.IO.sqrt_d_pos D
-      have : (Real.sqrt D.host.d : ℂ) = 0 := by
-        have h3 : 2 * Complex.I * (Real.sqrt D.host.d : ℂ) = 0 := by linear_combination h2
-        simpa [Complex.I_ne_zero] using h3
-      exact hs.ne' (by exact_mod_cast this)
-
-private theorem sum_tau_trace' (D : D7) (z : D.host.E) :
-    ∑ τ : D.what₂.Tau, embT D τ z =
-      D.host.φ₀ ((Algebra.trace D.host.K D.host.E z : D.host.K) : D.host.E) := by
-  letI := algKC D
-  have h := _root_.trace_eq_sum_embeddings (K := D.host.K) (L := D.host.E) ℂ (x := z)
-  rw [RingHom.algebraMap_toAlgebra, RingHom.comp_apply] at h
-  change _ = D.host.φ₀ (algebraMap D.host.K D.host.E _)
-  rw [h, ← (Equiv.ofBijective _ (embA_bij' D)).sum_comp]
-  rfl
-
-end Trace
-
 private def toKur (p : ℕ) [Fact p.Prime] (x : ℂ_[p]) : MaximalUnramifiedExtension p := if h : x ∈ MaximalUnramifiedExtension p then ⟨x, h⟩ else 0
 
 private theorem coe_toKur {p : ℕ} [Fact p.Prime] {x : ℂ_[p]} (h : x ∈ MaximalUnramifiedExtension p) : ((toKur p x : MaximalUnramifiedExtension p) : ℂ_[p]) = x := by
@@ -174,7 +130,7 @@ private theorem sigma_rhoK (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* �
 
 private theorem norm_sigma_eq (p : ℕ) [Fact p.Prime] (σ : MaximalUnramifiedExtension p →+* MaximalUnramifiedExtension p) (hσ : UnrOK (MaximalUnramifiedExtension p) p σ) (x : MaximalUnramifiedExtension p) :
     ‖σ x‖ = ‖x‖ :=
-  Formalism.L2.Th1.D.sigmaIsom (MaximalUnramifiedExtension p) p σ hσ x
+  _root_.Formalism.L2.Th1.D.sigma_isometry (MaximalUnramifiedExtension p) p σ hσ x
 
 private def lamB (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) {N N' r : ℕ}
     (b : Fin r → Matrix (Fin N') (Fin N) D.host.E) (k : D.what₂.Tau × Fin N' × Fin N) (i : Fin r) : ℂ_[p] :=
@@ -223,7 +179,7 @@ private theorem cols_of_trace (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+
     apply Subtype.ext
     rw [AddSubmonoidClass.coe_finsetSum]
     simp only [embQ, RingHom.codRestrict_apply]
-    rw [sum_tau_trace' D Y, htr]
+    rw [_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.sum_tau_trace D Y, htr]
     by_cases h : i = i'
     · rw [if_pos h.symm, if_pos h]
       simp
@@ -245,7 +201,7 @@ private theorem cols_of_trace (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+
 
 private theorem cardTau (D : D7) : Fintype.card D.what₂.Tau = Module.finrank D.host.K D.host.E := by
   letI := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.algKC D
-  rw [Fintype.card_congr (Equiv.ofBijective _ (embA_bij' D)), AlgHom.card]
+  rw [Fintype.card_congr (Equiv.ofBijective _ (_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.FL.embA_bij D)), AlgHom.card]
 
 private theorem nat_mult (D : D7) (z : D.host.E) : ∃ k : ℕ, 0 < k ∧ IsIntegral ℤ ((k : D.host.E) * z) := by
   have hz : IsAlgebraic ℤ z := (IsFractionRing.isAlgebraic_iff ℤ ℚ D.host.E).2 (Algebra.IsAlgebraic.isAlgebraic z)
@@ -341,10 +297,6 @@ private theorem inv_map_field {E K : Type*} [Field E] [Field K] (f : E →+* K) 
   ext i j
   simp [Ring.inverse_eq_inv', map_inv₀]
 
-private theorem conj_conj (D : D7) (x : D.host.E) : D.host.conj (D.host.conj x) = x :=
-  D.host.φ₀.injective (by
-    rw [Formalism.HC.HostAx.conjE_apply, Formalism.HC.HostAx.conjE_apply, Complex.conj_conj])
-
 private theorem frob_moves_coords : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (σ : MaximalUnramifiedExtension p →+* MaximalUnramifiedExtension p), UnrOK (MaximalUnramifiedExtension p) p σ → (IsResidueClassZero D p ∨ IsSg D p) → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (P : D.what₂.Tau → Matrix (Fin N) (Fin N) D.host.E) (P' : D.what₂.Tau → Matrix (Fin N') (Fin N') D.host.E), StdBases D lam L P → StdBases D lam L' P' → ∀ (r : ℕ) (b : Fin r → Matrix (Fin N') (Fin N) D.host.E), (∀ z a b₀ i, σ (gK D lam P P' b z a b₀ i) = hK D lam P P' b (posPl D p z 1) a b₀ i) ∧ (∀ w a b₀ i, σ (hK D lam P P' b w a b₀ i) = gK D lam P P' b (posPl D p w 1) a b₀ i) := by
   intro D p _ lam σ hσ hcl N N' L L' P P' hP hP' r b
   choose ρ hρ using exists_ringHom_rhoK D lam σ hσ hcl
@@ -369,7 +321,7 @@ private theorem frob_moves_coords : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam :
       rw [Matrix.map_mul, Matrix.map_mul]
       congr 1
       ext i j
-      simp [conj_conj]
+      simp [_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.conj_conj]
     rw [e, hQ z]
     simp
   have K1 : ∀ {n : ℕ} (Q : D.what₂.Tau → Matrix (Fin n) (Fin n) D.host.E),
@@ -388,7 +340,7 @@ private theorem frob_moves_coords : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam :
 
   · simp only [gK, hK, hfun, map_sum, map_mul]
     refine Finset.sum_congr rfl fun b₁ _ => Finset.sum_congr rfl fun a₁ _ => ?_
-    rw [hs, hs, conj_conj, hinv, K1 P hPc z]
+    rw [hs, hs, _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.conj_conj, hinv, K1 P hPc z]
     have e2 := congrFun (congrFun (K2 P' hP'c z) b₁) b₀
     simp only [Matrix.map_apply, Matrix.transpose_apply] at e2 ⊢
     rw [e2]; ring
@@ -919,7 +871,7 @@ theorem UpperTheory.stdSeries_orbit_coordinate_change_of_odd_inert :
   have hiso : ∀ (n : ℕ) (x : MaximalUnramifiedExtension p), ‖(σ ^ n) x‖ = ‖x‖ := fun n x => by
     induction n with
     | zero => rfl
-    | succ n ih => rw [pow_succ', RingHom.coe_mul, Function.comp_apply, Formalism.L2.Th1.D.sigmaIsom (MaximalUnramifiedExtension p) p σ hσ, ih]
+    | succ n ih => rw [pow_succ', RingHom.coe_mul, Function.comp_apply, _root_.Formalism.L2.Th1.D.sigma_isometry (MaximalUnramifiedExtension p) p σ hσ, ih]
   refine ⟨fun k e => gam σ (nP D p) (posPl D p) (om e.1.2) (fun z => g z e.2.1 e.2.2 k) e.1.1.1,
     fun k e => ⟨?_, gam_fix hp (fun z => hg2 z _ _ _) (hfix _) _⟩, ?_, fun c G => ?_⟩
   · refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg zero_le_one fun m _ => ?_

@@ -373,8 +373,6 @@ end Formalism.GM.M.PhiIntegrality
 
 namespace Formalism.GM
 
-theorem projectorIntegral : M.PhiInt := M.PhiIntegrality.phi_integrality
-
 end Formalism.GM
 end -- clump:auto
 end -- clump:auto

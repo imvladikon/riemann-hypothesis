@@ -193,14 +193,7 @@ namespace GlobalTheory
 
 namespace JetGenerators
 
-theorem exists_tangent {k A : Type} [Field k] [CommRing A] [Algebra k A] (aug : A →ₐ[k] k)
-    {I : Ideal A} {n : ℕ} (hJ : (RingHom.ker aug) ^ (n + 1) = ⊥) (hI : I ≤ RingHom.ker aug)
-    (hne : ¬ RingHom.ker aug ≤ I) :
-    ∃ φ : A →ₐ[k] DualNumber k, (TrivSqZeroExt.fstHom k k k).comp φ = aug ∧ (∀ a ∈ I, φ a = 0) ∧
-      ∃ a ∈ RingHom.ker aug, φ a ≠ 0 := by
-  first
-  | (apply _root_.GlobalTheory.NotLeSqSup.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NotLeSqSup.main ..)
+alias exists_tangent := _root_.GlobalTheory.NotLeSqSup.main
 
 theorem spMap_jetAug {k : Type} [CommRing k] {G : Over (Spec (CommRingCat.of k))} [GrpObj G] {d : ℕ}
     {x : ∀ m : ℕ, Chart.sp (R₀ := k) (Chart.JetR k (Fin d) m) ⟶ G} (hx : Chart.IsUnivChart G d x)

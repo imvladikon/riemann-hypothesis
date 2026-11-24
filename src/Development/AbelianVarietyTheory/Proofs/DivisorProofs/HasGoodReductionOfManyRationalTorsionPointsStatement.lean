@@ -232,8 +232,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.HTLat GlobalTheory.Published GlobalTheory.Published.AbVarRed IsLocalRing
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.curve_baseChange_two_distinct_points_of_field : ∀ (R F : Type) [CommRing R] [Field F] (ψ : R →+* F) (X : Over (Sp R)) (P₁ : Polynomial R) (u₁ : Sp (Localization.Away P₁) ⟶ X.left) (α β : R) (hα : IsUnit (Polynomial.evalRingHom α P₁)) (hβ : IsUnit (Polynomial.evalRingHom β P₁)), u₁ ≫ X.hom = spMap (algebraMap R (Localization.Away P₁)) → IsUnit (ψ P₁.leadingCoeff) → spMap ψ ≫ spMap (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hα) ≫ u₁ ≠ spMap ψ ≫ spMap (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hβ) ≫ u₁ → ∃ (P' : Polynomial F) (_ : P' ≠ 0) (u' : Sp (Localization.Away P') ⟶ ((Over.pullback (spMap ψ)).obj X).left) (a' b' : Localization.Away P' →ₐ[F] F), u' ≫ ((Over.pullback (spMap ψ)).obj X).hom = spMap (algebraMap F (Localization.Away P')) ∧ spMap a'.toRingHom ≫ u' ≠ spMap b'.toRingHom ≫ u' := by
-  first | exact @GlobalTheory.curve_baseChange_two_points
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CurveBaseChangeTwoDistinctPointsOfFieldStatement =====
@@ -660,8 +658,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.HTLat GlobalTheory.Published GlobalTheory.Published.AbVarRed IsLocalRing
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_finset_away_lift_descent : ∀ (k : Type) [Field k] (P : Polynomial k) (T : Finset (Localization.Away P)), ∃ F : Finset k, ∀ (R : Subring k), (F : Set k) ⊆ R → ∀ (P₁ : Polynomial R) (h : IsUnit (((algebraMap (Polynomial k) (Localization.Away P)).comp (Polynomial.mapRingHom R.subtype)) P₁)), P₁.map R.subtype = P → ∀ t ∈ T, t ∈ (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ h).range := by
-  first | exact @GlobalTheory.localization_away_descent_range
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationAwayDescentRangeStatement =====
@@ -711,8 +707,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.HTLat GlobalTheory.Published GlobalTheory.Published.AbVarRed IsLocalRing
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.localizationAway_polynomial_subring_lift_injective : ∀ (k : Type) [Field k] (P : Polynomial k), P ≠ 0 → ∀ (R : Subring k) (P₁ : Polynomial R) (h : IsUnit (((algebraMap (Polynomial k) (Localization.Away P)).comp (Polynomial.mapRingHom R.subtype)) P₁)), P₁.map R.subtype = P → Function.Injective (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ h) := by
-  first | exact @GlobalTheory.descentLocInj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationAwayPolynomialSubringLiftInjectiveStatement =====
@@ -750,7 +744,7 @@ theorem group_sections_curve_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)
   obtain ⟨S, yS, hSfg, -, hyS⟩ := Spread.exists_fg_points G₀.hom (fun _ : Unit => u ≫ φ) (fun _ => hu₀) ⊥
     Subalgebra.fg_bot
   obtain ⟨T, hT⟩ := hSfg
-  obtain ⟨Fc, hFc⟩ := GlobalTheory.T.exists_finset_away_lift_descent k P T
+  obtain ⟨Fc, hFc⟩ := _root_.GlobalTheory.localization_away_descent_range k P T
 
   set X' : L := algebraMap (Polynomial k) L X with hX'
   have haev : ∀ (c : L →ₐ[k] k) (q : Polynomial k), c (algebraMap (Polynomial k) L q) = q.eval (c X') := by
@@ -845,7 +839,7 @@ theorem group_sections_curve_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)
     rw [RingHom.comp_apply, Polynomial.coe_mapRingHom, hP₁]
     exact IsLocalization.Away.algebraMap_isUnit P
   set Lm := IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hPu with hLm
-  have hinj : Function.Injective Lm := GlobalTheory.T.localizationAway_polynomial_subring_lift_injective k P hP R' P₁ hPu hP₁
+  have hinj : Function.Injective Lm := _root_.GlobalTheory.descentLocInj k P hP R' P₁ hPu hP₁
   have hrange : ∀ t ∈ T, t ∈ Lm.range := hFc R' (fun x hx => hFR (by simp [F, hx])) P₁ hPu hP₁
   have hLmC : ∀ r : R', Lm (algebraMap R' (Localization.Away P₁) r) = algebraMap k L r := by
     intro r
@@ -955,8 +949,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.HTLat GlobalTheory.Published GlobalTheory.Published.AbVarRed IsLocalRing
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_fg_subring_descent_group_sections_curve : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G], GlobalTheory.SS.SmConn G → ∀ g : ℕ, SmoothOfRelativeDimension g G.hom → ∀ m : ℕ, 1 ≤ m → (m : k) ≠ 0 → ∀ s : Finset (𝟙_ (Over (Sp k)) ⟶ G), (∀ x ∈ s, x ^ m = 1) → ∀ (P : Polynomial k), P ≠ 0 → ∀ (u : Sp (Localization.Away P) ⟶ G.left) (a b : Localization.Away P →ₐ[k] k), u ≫ G.hom = spMap (algebraMap k (Localization.Away P)) → spMap a.toRingHom ≫ u ≠ spMap b.toRingHom ≫ u → ∃ (R : Subring k) (G₁ : Over (Sp R)) (_ : GrpObj G₁), Algebra.FiniteType ℤ R ∧ IsUnit (m : R) ∧ IsCommMonObj G₁ ∧ Smooth G₁.hom ∧ IsSeparated G₁.hom ∧ QuasiCompact G₁.hom ∧ GeometricallyConnected (pullback.snd G₁.hom (spMap R.subtype)) ∧ SmoothOfRelativeDimension g (pullback.snd G₁.hom (spMap R.subtype)) ∧ (∃ s₁ : Finset (𝟙_ (Over (Sp R)) ⟶ G₁), s₁.card = s.card ∧ (∀ x ∈ s₁, x ^ m = 1) ∧ ∀ x ∈ s₁, ∀ y ∈ s₁, x ≠ y → spMap R.subtype ≫ x.left ≠ spMap R.subtype ≫ y.left) ∧ ∃ (P₁ : Polynomial R) (_ : P₁ ≠ 0) (u₁ : Sp (Localization.Away P₁) ⟶ G₁.left) (α β : R) (hα : IsUnit (Polynomial.evalRingHom α P₁)) (hβ : IsUnit (Polynomial.evalRingHom β P₁)), u₁ ≫ G₁.hom = spMap (algebraMap R (Localization.Away P₁)) ∧ spMap R.subtype ≫ spMap (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hα) ≫ u₁ ≠ spMap R.subtype ≫ spMap (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hβ) ≫ u₁ := by
-  first | exact @GlobalTheory.SpreadCurve.group_sections_curve_descend
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFgSubringDescentGroupSectionsCurveStatement =====
@@ -1039,16 +1031,12 @@ noncomputable section
 
 namespace GlobalTheory.CharPSpec
 
-theorem spMap_comp_eq' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] {f : A →+* B} {g : B →+* C}
-    {h : A →+* C} (e : g.comp f = h) : spMap g ≫ spMap f = spMap h := by
-  rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, e]
-
 theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (G : Over (Sp k)) [GrpObj G], GlobalTheory.SS.SmConn G → ∀ g : ℕ, SmoothOfRelativeDimension g G.hom → ∀ m : ℕ, 1 ≤ m → ∀ s : Finset (𝟙_ (Over (Sp k)) ⟶ G), (∀ x ∈ s, x ^ m = 1) → ∀ (P : Polynomial k), P ≠ 0 → ∀ (u : Sp (Localization.Away P) ⟶ G.left) (a b : Localization.Away P →ₐ[k] k), u ≫ G.hom = spMap (algebraMap k (Localization.Away P)) → spMap a.toRingHom ≫ u ≠ spMap b.toRingHom ≫ u → ∃ (k' : Type) (_ : Field k') (_ : IsAlgClosed k') (p : ℕ) (_ : Fact p.Prime) (_ : CharP k' p) (G' : Over (Sp k')) (_ : GrpObj G'), GlobalTheory.SS.SmConn G' ∧ SmoothOfRelativeDimension g G'.hom ∧ (m : k') ≠ 0 ∧ (∃ s' : Finset (𝟙_ (Over (Sp k')) ⟶ G'), (∀ x ∈ s', x ^ m = 1) ∧ s'.card = s.card) ∧ ∃ (P' : Polynomial k') (_ : P' ≠ 0) (u' : Sp (Localization.Away P') ⟶ G'.left) (a' b' : Localization.Away P' →ₐ[k'] k'), u' ≫ G'.hom = spMap (algebraMap k' (Localization.Away P')) ∧ spMap a'.toRingHom ≫ u' ≠ spMap b'.toRingHom ≫ u' := by
   intro k _ _ _ G _ hG g hg m hm s hs P hP u a b hu hab
   classical
   have hm0 : (m : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
   obtain ⟨R, G₁, _, hfg, hmR, hcomm, hsm, hsep, hqc, hgc, hrd, ⟨s₁, hcard, hs₁, hdist⟩, P₁, hP₁, u₁, α, β, hα, hβ,
-    hu₁, hαβ⟩ := GlobalTheory.T.exists_fg_subring_descent_group_sections_curve k G hG g hg m hm hm0 s hs P hP u a b hu hab
+    hu₁, hαβ⟩ := _root_.GlobalTheory.SpreadCurve.group_sections_curve_descend k G hG g hg m hm hm0 s hs P hP u a b hu hab
   haveI : Algebra.FiniteType ℤ R := hfg
   haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   have hinj : Function.Injective R.subtype := Subtype.val_injective
@@ -1067,7 +1055,7 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
   have hsec : ∀ (c₀ : R) (hc₀ : IsUnit (Polynomial.evalRingHom c₀ P₁)),
       spMap (IsLocalization.Away.lift (S := Localization.Away P₁) P₁ hc₀) ≫ u₁ ≫ G₁.hom = 𝟙 _ := by
     intro c₀ hc₀
-    rw [hu₁, spMap_comp_eq' (h := RingHom.id R)]
+    rw [hu₁, _root_.GlobalTheory.ModelDescent.spMap_comp_eq (h := RingHom.id R)]
     · show Spec.map (CommRingCat.ofHom (RingHom.id R)) = _
       rw [CommRingCat.ofHom_id, Spec.map_id]
     · ext r
@@ -1134,7 +1122,7 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
       simp only [GlobalTheory.IsogRed.sec_left] at e
       exact H₃ _ ψ u3 x.left (Finset.mem_image_of_mem _ hx) y.left (Finset.mem_image_of_mem _ hy)
         (fun h => hne (Over.OverMorphism.ext h)) e
-  · exact GlobalTheory.T.curve_baseChange_two_distinct_points_of_field R _ ψ G₁ P₁ u₁ α β hα hβ hu₁ u5
+  · exact _root_.GlobalTheory.curve_baseChange_two_points R _ ψ G₁ P₁ u₁ α β hα hβ hu₁ u5
       (H₄ _ ψ u4 _ (Finset.mem_insert_self _ _) _ (Finset.mem_insert_of_mem (Finset.mem_singleton_self _))
         (fun h => hαβ (by rw [h])))
 

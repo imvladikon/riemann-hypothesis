@@ -45,6 +45,7 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Algebra.Order.Star.Real
 import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.IdxRules
 import Mathlib.Tactic.TypeStar
+import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ImageLcv
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.MirabolicMackeyTheory.StatementLoc, Formalism.MirabolicMackeyTheory.LocalConditionsWeighted, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.GlobalBoundRefinements, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional
@@ -338,17 +339,17 @@ open Formalism.DivisionValues
 
 theorem enlarge_initial_lattice : EnlargeInitialLattice := by
   intro K _ _ _ Z _ _ _ _ _ w M Th1 Th hM h1 hT h1T hTM E r h W
-  have a := (idxCutLe K Z w ⊤ W M Th hM hT hTM le_top).1
-  have b := (idxCutLe K Z w ⊤ W Th Th1 hT h1 h1T le_top).1
-  have c := (idxCutLe K Z w ⊤ W Th1 Th1 h1 h1 le_rfl le_top).1
+  have a := (_root_.Formalism.EigenvalueLevelCeiling.index_truncation_le K Z w ⊤ W M Th hM hT hTM le_top).1
+  have b := (_root_.Formalism.EigenvalueLevelCeiling.index_truncation_le K Z w ⊤ W Th Th1 hT h1 h1T le_top).1
+  have c := (_root_.Formalism.EigenvalueLevelCeiling.index_truncation_le K Z w ⊤ W Th1 Th1 h1 h1 le_rfl le_top).1
   have d : cut W Th1 ≤ cut W Th := inf_le_inf_right _ h1T
-  have e := idxMono K Z w W (cut W M) (cut W Th1) (cut W Th) a c b d
+  have e := _root_.Formalism.EigenvalueLevelCeiling.index_monotone K Z w W (cut W M) (cut W Th1) (cut W Th) a c b d
   have e' : (lix w (cut W M) (cut W Th) : ℝ) ≤ (lix w (cut W M) (cut W Th1) : ℝ) := by exact_mod_cast e
   exact le_trans e' (h W)
 
 theorem twist_chain : TwChain := by
   intro K _ _ _ Z _ _ _ _ _ w W e A Th0 ThJ X₃ hA h0 hJ hle ε h
-  have a := idxMono K Z w W A _ _ hA h0 hJ (Submodule.map_mono hle)
+  have a := _root_.Formalism.EigenvalueLevelCeiling.index_monotone K Z w W A _ _ hA h0 hJ (Submodule.map_mono hle)
   have a' : (lix w A (ThJ.map (e.restrictScalars (𝓞 K))) : ℝ) ≤
       (lix w A (Th0.map (e.restrictScalars (𝓞 K))) : ℝ) := by exact_mod_cast a
   linarith
@@ -358,7 +359,7 @@ theorem local_conditions_family : OnLocalJ := by
     σ hσ hsc hdata a E r ha hE hT0 h0 hJ h0J h3 h4 h34 ε hTW d φ hinj hrng Mj Tj hMj hTj
   exact onLocal K Z w P ρ U ψ hMk V₀ e he hr M Th ThK Th0 X₃ X₄ hM hTh hThK hle hFG hEig hMs hTs σ hσ hsc hdata
     a E r ha hE hT0 h0 h3 h4 h34 ε
-    (twist_chain K Z w _ e _ Th0 ThJ X₃ (idxCutLe K Z w ⊤ _ M Th hM hTh hle le_top).1 h0 hJ h0J ε hTW)
+    (twist_chain K Z w _ e _ Th0 ThJ X₃ (_root_.Formalism.EigenvalueLevelCeiling.index_truncation_le K Z w ⊤ _ M Th hM hTh hle le_top).1 h0 hJ h0J ε hTW)
     d φ hinj hrng Mj Tj hMj hTj
 
 theorem theta_identity : ThetaIdentity := by
@@ -502,7 +503,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.GlobalBoundRefinements =====
 
 -- ===== clump member: Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional =====
--- clump-header: {"m": "Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional", "h": "module\n\npublic import Formalism.MirabolicMackeyTheory.StatementLoc\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.GlobalBoundRefinements\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.IdxRules\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional", "h": "module\n\npublic import Formalism.MirabolicMackeyTheory.StatementLoc\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.GlobalBoundRefinements\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.IdxRules\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ImageLcv\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -522,28 +523,24 @@ theorem locLen_congr {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W] (p
   unfold Formalism.HermitianLatticesTheory.locLen
   rw [hA, hC]
 
-private theorem mem_localization_iff_exists_smul_mem {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W] (p : Ideal R)
-    [p.IsPrime] (L : Submodule R W) (x : W) :
-    x ∈ Formalism.HermitianLatticesTheory.localization₂ p L ↔ ∃ s ∈ p.primeCompl, s • x ∈ L := Iff.rfl
-
 private theorem locP_locP' {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W] (p : Ideal R)
     [p.IsPrime] (A : Submodule R W) :
     Formalism.HermitianLatticesTheory.localization₂ p (Formalism.HermitianLatticesTheory.localization₂ p A) = Formalism.HermitianLatticesTheory.localization₂ p A := by
   ext x
-  rw [mem_localization_iff_exists_smul_mem, mem_localization_iff_exists_smul_mem]
+  rw [_root_.Formalism.DivisionValues.imageLcv_mem_locP, _root_.Formalism.DivisionValues.imageLcv_mem_locP]
   constructor
   · rintro ⟨s, hs, h⟩
-    rw [mem_localization_iff_exists_smul_mem] at h
+    rw [_root_.Formalism.DivisionValues.imageLcv_mem_locP] at h
     obtain ⟨t, ht, h⟩ := h
     exact ⟨t * s, p.primeCompl.mul_mem ht hs, by rw [mul_smul]; exact h⟩
   · intro hx
-    exact ⟨1, p.primeCompl.one_mem, by rw [one_smul, mem_localization_iff_exists_smul_mem]; exact hx⟩
+    exact ⟨1, p.primeCompl.one_mem, by rw [one_smul, _root_.Formalism.DivisionValues.imageLcv_mem_locP]; exact hx⟩
 
 private theorem locP_inf' {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W] (p : Ideal R)
     [p.IsPrime] (A B : Submodule R W) :
     Formalism.HermitianLatticesTheory.localization₂ p (A ⊓ B) = Formalism.HermitianLatticesTheory.localization₂ p A ⊓ Formalism.HermitianLatticesTheory.localization₂ p B := by
   ext x
-  rw [Submodule.mem_inf, mem_localization_iff_exists_smul_mem, mem_localization_iff_exists_smul_mem, mem_localization_iff_exists_smul_mem]
+  rw [Submodule.mem_inf, _root_.Formalism.DivisionValues.imageLcv_mem_locP, _root_.Formalism.DivisionValues.imageLcv_mem_locP, _root_.Formalism.DivisionValues.imageLcv_mem_locP]
   constructor
   · rintro ⟨s, hs, h⟩
     rw [Submodule.mem_inf] at h
@@ -589,12 +586,6 @@ theorem local_conditions_weighted_at_place : LocalConditionsWeightedAtPlace := b
     hM hTh1 hTh hThK h1le hle hFG hEig hMs hTs σ hσ hsc hdata a E r ha hE hT0 h0 hJ h0J
     (idxRules_inf_lat h3 h4) X θ' eX pr Mt hc hpr h4 inf_le_right ε
     (by rw [locP w _ _ _ h34]; exact hTW) d φ hinj hrng Mj Tj hMj hTj
-
-section Instance
-
-variable (K : Type) [Field K] [NumberField K] [StarRing K]
-
-end Instance
 
 end Formalism.EigenvalueLevelCeiling
 end -- clump:auto

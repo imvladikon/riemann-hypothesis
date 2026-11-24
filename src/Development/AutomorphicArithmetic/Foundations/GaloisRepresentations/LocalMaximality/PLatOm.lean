@@ -163,8 +163,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.finite_projective_span_of_integralClosure' : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (A : Subalgebra k F) (B : Subalgebra k K), (∀ y : K, y ∈ B ↔ y ∈ integralClosure A K) → Module.Finite A (integralClosure A K) → Module.Projective A (integralClosure A K) → ∀ (W : Type) [AddCommGroup W] [Module K W] [Module F W] [IsScalarTower F K W] (S : Set W), (∀ c ∈ B, ∀ w ∈ S, (c : K) • w ∈ S) → Module.Finite B (Submodule.span B S) → Module.Projective B (Submodule.span B S) → Module.Finite A (Submodule.span A S) ∧ Module.Projective A (Submodule.span A S) := by
-  first | (exact @GlobalTheory.finite_projective_span_of_integralClosure)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteProjectiveSpanOfIntegralClosureStatement =====
@@ -276,8 +274,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.kahlerFormsOverSubalgebra_comap_span_eq_top : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (B : Subalgebra k K) [IsFractionRing B K] (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module k W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K), Function.Injective e → LinearMap.range e = ⋀[K]^p Ω[K⁄k] → Submodule.span K ((omB k K B p).comap (e.restrictScalars k) : Set W) = ⊤ := by
-  first | (exact @GlobalTheory.PD.omB_comap_span_eq_top)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KahlerFormsOverSubalgebraComapSpanEqTopStatement =====
@@ -293,7 +289,7 @@ namespace GlobalTheory.PD
 
 theorem omB_comap_loc : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module F W] [Module k W] [IsScalarTower F K W] [IsScalarTower k F W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K) (I : Finset (Fin (d + 1))) (i : Fin (d + 1)), i ∈ I → (omB k K (rB k K x I) p).comap (e.restrictScalars k) = (Submodule.span (rA k x I) ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W)).restrictScalars k := by
   intro k _ _ F K _ _ _ _ _ _ d x hx p W _ _ _ _ _ _ _ e I i hi
-  have hloc := GlobalTheory.T.kahlerFormsOverSubalgebra_standardOpen_iff_pow_smul k F K d x hx I i hi p
+  have hloc := _root_.GlobalTheory.omB_iff_pow_smul k F K d x hx I i hi p
   ext w
   rw [Submodule.restrictScalars_mem, Submodule.mem_comap, LinearMap.restrictScalars_apply]
   constructor
@@ -325,7 +321,7 @@ theorem omB_comap_loc : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Fiel
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact Submodule.add_mem _ ha hb
     | smul r a _ ha =>
       rw [Subalgebra.smul_def, ← algebraMap_smul K, map_smul]
-      refine ((GlobalTheory.T.kahlerFormsOverSubalgebra_closure_properties k K (rB k K x I) p p).2.1 _ ha).2.2.2 _ ?_
+      refine ((_root_.GlobalTheory.PD.omB_alg k K (rB k K x I) p p).2.1 _ ha).2.2.2 _ ?_
       exact (integralClosure (rA k x I) K).algebraMap_mem r
 
 end GlobalTheory.PD
@@ -340,8 +336,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.pulledBackForms_intersection_eq_chart_localization : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module F W] [Module k W] [IsScalarTower F K W] [IsScalarTower k F W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K) (I : Finset (Fin (d + 1))) (i : Fin (d + 1)), i ∈ I → (omB k K (rB k K x I) p).comap (e.restrictScalars k) = (Submodule.span (rA k x I) ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W)).restrictScalars k := by
-  first | (exact @GlobalTheory.PD.omB_comap_loc)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PulledBackFormsIntersectionEqChartLocalizationStatement =====
@@ -405,8 +399,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.span_eq_top_of_stable_of_isFractionRing' : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k K] [Algebra F K] [FiniteDimensional F K] (B : Subalgebra k K) [IsFractionRing B K] (W : Type) [AddCommGroup W] [Module K W] [Module F W] [IsScalarTower F K W] (S : Set W), (∀ c ∈ B, ∀ w ∈ S, (c : K) • w ∈ S) → Submodule.span K S = ⊤ → Submodule.span F S = ⊤ := by
-  first | (exact @GlobalTheory.span_eq_top_of_stable_of_isFractionRing)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanEqTopOfStableOfIsFractionRingStatement =====
@@ -418,8 +410,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.kahlerFormsOverSubalgebra_eq_range_exteriorPower : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (B : Subalgebra k K) [IsFractionRing B K] [Algebra.Smooth k B] (q : ℕ), ∃ e : (⋀[B]^q Ω[B⁄k]) →ₗ[B] DR k K, Function.Injective e ∧ (∀ y, y ∈ omB k K B q ↔ ∃ z, e z = y) ∧ ∀ v : Fin q → B, e (exteriorPower.ιMulti B q fun j => D k B (v j)) = ExteriorAlgebra.ιMulti K q fun j => D k K (v j : K) := by
-  first | (exact @GlobalTheory.PD.omB_eq_range_exteriorPower)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KahlerFormsOverSubalgebraEqRangeExteriorPowerStatement =====
@@ -443,8 +433,8 @@ theorem projective_exteriorPower_of_projective (R V : Type) [CommRing R] [AddCom
 
 theorem span_omB_comap_finite_projective : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (B : Subalgebra k K) [IsFractionRing B K] [Algebra.Smooth k B] (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module k W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K), Function.Injective e → LinearMap.range e = ⋀[K]^p Ω[K⁄k] → Module.Finite B (Submodule.span B ((omB k K B p).comap (e.restrictScalars k) : Set W)) ∧ Module.Projective B (Submodule.span B ((omB k K B p).comap (e.restrictScalars k) : Set W)) := by
   intro k K _ _ _ B _ _ p W _ _ _ _ e he hr
-  obtain ⟨e', he', hre', -⟩ := GlobalTheory.T.kahlerFormsOverSubalgebra_eq_range_exteriorPower k K B p
-  have hom := fun a ha => ((GlobalTheory.T.kahlerFormsOverSubalgebra_closure_properties k K B p p).2.1 a ha)
+  obtain ⟨e', he', hre', -⟩ := _root_.GlobalTheory.PD.omB_eq_range_exteriorPower k K B p
+  have hom := fun a ha => ((_root_.GlobalTheory.PD.omB_alg k K B p p).2.1 a ha)
   let S : Submodule k W := (omB k K B p).comap (e.restrictScalars k)
   let T : Submodule B W :=
     { carrier := (S : Set W)
@@ -495,8 +485,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.span_regularForms_finite_projective_smooth : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (B : Subalgebra k K) [IsFractionRing B K] [Algebra.Smooth k B] (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module k W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K), Function.Injective e → LinearMap.range e = ⋀[K]^p Ω[K⁄k] → Module.Finite B (Submodule.span B ((omB k K B p).comap (e.restrictScalars k) : Set W)) ∧ Module.Projective B (Submodule.span B ((omB k K B p).comap (e.restrictScalars k) : Set W)) := by
-  first | (exact @GlobalTheory.PD.span_omB_comap_finite_projective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanRegularFormsFiniteProjectiveSmoothStatement =====
@@ -521,21 +509,21 @@ theorem omB_isBundle : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field
     intro I c hc w hw
     simp only [SetLike.mem_coe, Submodule.mem_comap, LinearMap.restrictScalars_apply] at hw ⊢
     rw [map_smul]
-    exact ((GlobalTheory.T.kahlerFormsOverSubalgebra_closure_properties k K _ p p).2.1 _ hw).2.2.2 c hc
+    exact ((_root_.GlobalTheory.PD.omB_alg k K _ p p).2.1 _ hw).2.2.2 c hc
   have key : ∀ i, Module.Finite (rA k x {i}) (Submodule.span (rA k x {i})
         ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W)) ∧
       Module.Projective (rA k x {i}) (Submodule.span (rA k x {i})
         ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W)) := by
     intro i
-    obtain ⟨hf1, hf2, hf3⟩ := GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hx {i} (Finset.singleton_nonempty i)
+    obtain ⟨hf1, hf2, hf3⟩ := _root_.GlobalTheory.PD.rB_finite_frac_smooth k F K d x hx {i} (Finset.singleton_nonempty i)
     haveI := hf2
     haveI := hf3
-    obtain ⟨hB1, hB2⟩ := GlobalTheory.T.span_regularForms_finite_projective_smooth k K (rB k K x {i}) p W e he hr
-    exact GlobalTheory.T.finite_projective_span_of_integralClosure' k F K (rA k x {i}) (rB k K x {i}) (fun y => Iff.rfl) hf1 (GlobalTheory.T.integralClosure_projective_over_standardOpenRing k F K d x hx i) W _
+    obtain ⟨hB1, hB2⟩ := _root_.GlobalTheory.PD.span_omB_comap_finite_projective k K (rB k K x {i}) p W e he hr
+    exact _root_.GlobalTheory.finite_projective_span_of_integralClosure k F K (rA k x {i}) (rB k K x {i}) (fun y => Iff.rfl) hf1 (_root_.GlobalTheory.integralClosure_projective_rA k F K d x hx i) W _
       (hstab {i}) hB1 hB2
-  refine ⟨fun i => ?_, fun i => (key i).2, fun I i hi => GlobalTheory.T.pulledBackForms_intersection_eq_chart_localization k F K d x hx p W e I i hi⟩
+  refine ⟨fun i => ?_, fun i => (key i).2, fun I i hi => _root_.GlobalTheory.PD.omB_comap_loc k F K d x hx p W e I i hi⟩
   obtain ⟨hfin, -⟩ := key i
-  obtain ⟨-, hf2, -⟩ := GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hx {i} (Finset.singleton_nonempty i)
+  obtain ⟨-, hf2, -⟩ := _root_.GlobalTheory.PD.rB_finite_frac_smooth k F K d x hx {i} (Finset.singleton_nonempty i)
   haveI := hf2
   haveI : FiniteDimensional F K := hx.fin
   set S : Set W := ((omB k K (rB k K x {i}) p).comap (e.restrictScalars k) : Set W) with hSdef
@@ -557,8 +545,8 @@ theorem omB_isBundle : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field
       | smul a z _ hz => exact hA a z hz
     · exact fun y hy => Submodule.subset_span hy
   refine ⟨s, by rw [hs, hspan], ?_⟩
-  have hK := GlobalTheory.T.kahlerFormsOverSubalgebra_comap_span_eq_top k K (rB k K x {i}) p W e he hr
-  have hF := GlobalTheory.T.span_eq_top_of_stable_of_isFractionRing' k F K (rB k K x {i}) W S (hstab {i}) hK
+  have hK := _root_.GlobalTheory.PD.omB_comap_span_eq_top k K (rB k K x {i}) p W e he hr
+  have hF := _root_.GlobalTheory.span_eq_top_of_stable_of_isFractionRing k F K (rB k K x {i}) W S (hstab {i}) hK
   rw [eq_top_iff, ← hF, Submodule.span_le]
   intro w hw
   have : w ∈ Submodule.span (rA k x {i}) (s : Set W) := by rw [hs]; exact Submodule.subset_span hw
@@ -577,8 +565,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.regularForms_isBundle_projectiveCover : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (p : ℕ) (W : Type) [AddCommGroup W] [Module K W] [Module F W] [Module k W] [IsScalarTower F K W] [IsScalarTower k F W] [IsScalarTower k K W] (e : W →ₗ[K] DR k K), Function.Injective e → LinearMap.range e = ⋀[K]^p Ω[K⁄k] → IsBundle k x fun I => (omB k K (rB k K x I) p).comap (e.restrictScalars k) := by
-  first | (exact @GlobalTheory.PD.omB_isBundle)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularFormsIsBundleProjectiveCoverStatement =====
@@ -671,7 +657,7 @@ private theorem lat_of_isBundle {F : Type} [Field F] [Algebra ℂ F] {d : ℕ} {
     (hM : ∀ m ∈ M, ∃ w, e w = m) (hML : ∀ w, w ∈ L I ↔ e w ∈ M) :
     Lat (rA ℂ x I) M ∧ ∀ w, e w ∈ Submodule.span F (M : Set V) := by
   classical
-  haveI : IsFractionRing (rA ℂ x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing ℂ F d x hx {i} (Finset.singleton_nonempty i)).1
+  haveI : IsFractionRing (rA ℂ x {i}) F := (_root_.GlobalTheory.PD.rA_isFractionRing_isNoetherianRing ℂ F d x hx {i} (Finset.singleton_nonempty i)).1
   obtain ⟨s, hs, hsF⟩ := hL.fg i
   let P : Submodule (rA ℂ x {i}) W := Submodule.span (rA ℂ x {i}) (L {i} : Set W)
   have hPs : P = Submodule.span (rA ℂ x {i}) (s : Set W) := by
@@ -744,7 +730,7 @@ theorem UpperTheory.Gal.productCup_of_system.latOm_of :
     LatOm := by
   intro F K _ _ _ _ _ _ d x hc a I hI
   obtain ⟨i, hi⟩ := hI
-  have hB := GlobalTheory.T.regularForms_isBundle_projectiveCover ℂ F K d (xv x) hc a (⋀[K]^a Ω[K⁄ℂ]) (⋀[K]^a Ω[K⁄ℂ]).subtype
+  have hB := _root_.GlobalTheory.PD.omB_isBundle ℂ F K d (xv x) hc a (⋀[K]^a Ω[K⁄ℂ]) (⋀[K]^a Ω[K⁄ℂ]).subtype
     Subtype.val_injective (Submodule.range_subtype _)
   have hle : omB ℂ K (rB ℂ K (xv x) I) a ≤ (⋀[K]^a Ω[K⁄ℂ]).restrictScalars ℂ := by
     refine Submodule.span_le.2 ?_

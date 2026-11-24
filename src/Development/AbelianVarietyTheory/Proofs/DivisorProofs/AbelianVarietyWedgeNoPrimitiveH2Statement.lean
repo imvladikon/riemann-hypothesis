@@ -235,8 +235,6 @@ open scoped TensorProduct CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.AbLaw GlobalTheory.CatCoh GlobalTheory.CechDR GlobalTheory.AbCoh
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exteriorSquare_of_symmetric_tensor_relations : ∀ (K : Type) [Field K] (V W : Type) [AddCommGroup V] [Module K V] [AddCommGroup W] [Module K W] [Module.Finite K V] [Module.Finite K W] (β : V →ₗ[K] V →ₗ[K] W), Module.finrank K W ≤ (Module.finrank K V).choose 2 → (∀ t : V ⊗[K] V, TensorProduct.lift β t = 0 → TensorProduct.comm K V V t = t) → (∃ e : ⋀[K]^2 V ≃ₗ[K] W, ∀ a b, e (exteriorPower.ιMulti K 2 ![a, b]) = β a b) ∧ Function.Surjective (TensorProduct.lift β) ∧ ∀ t : V ⊗[K] V, TensorProduct.comm K V V t = t → TensorProduct.lift β t = 0 := by
-  first | exact @GlobalTheory.exteriorSq_of_symm_relations
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExteriorSquareOfSymmetricTensorRelationsStatement =====
@@ -828,7 +826,7 @@ theorem GlobalTheory.AbCoh.wedgeO_noPrimO2 : ∀ (K : Type) [Field K] [IsAlgClos
     rw [e2.finrank_eq, e1.finrank_eq, h1]; exact h2
   have hrel : ∀ t : HO1 A.hom ⊗[K] HO1 A.hom, TensorProduct.lift (cup (OAff A.hom)) t = 0 →
       TensorProduct.comm K _ _ t = t := fun t ht ↦ symm_of_prim A hprim t (by simp [ht])
-  obtain ⟨hw, hsurj, hsym⟩ := GlobalTheory.T.exteriorSquare_of_symmetric_tensor_relations K (HO1 A.hom) (HO2 A.hom) (cup (OAff A.hom)) hdim hrel
+  obtain ⟨hw, hsurj, hsym⟩ := _root_.GlobalTheory.exteriorSq_of_symm_relations K (HO1 A.hom) (HO2 A.hom) (cup (OAff A.hom)) hdim hrel
   refine ⟨hw, fun z hz ↦ ?_⟩
   obtain ⟨t, rfl⟩ := hsurj z
   exact hsym t (symm_of_prim A hprim t hz)

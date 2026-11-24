@@ -222,8 +222,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStep_integrand_leftInvariant_bessel_second : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ r ∈ besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o, ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f q₁ (r * q₂) = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepCell.LeftSecond.integ_left_second
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandLeftInvariantBesselSecondStatement =====
@@ -284,8 +282,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStep_integrand_leftInvariant_fourierJacobi_first : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ r ∈ jacGrp (c.jac j (σ + 1) h).d, ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f (r * q₁) q₂ = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepCell.LeftOne.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandLeftInvariantFourierJacobiFirStatement =====
@@ -359,8 +355,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStepIntegrand_rightInvariant_first_fixedLevel : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ k ∈ v.JG (j + 1), ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f (q₁ * k) q₂ = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepLev.integ_lev
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandRightInvariantFirstFixedLevelStatement =====
@@ -430,8 +424,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStepIntegrand_rightInvariant_first_offLevel : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ κ, InK (c.V (j + 1)) (v.N (j + 1)) (offP v w) κ → ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f (q₁ * κ) q₂ = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepOff.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandRightInvariantFirstOffLevelStatement =====
@@ -448,13 +440,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
 namespace GlobalTheory.DStepLev
-
-theorem comm_inf_fin {D : D7} (V : HSp D) {a b : GA D V} (ha : a ∈ GinfC V) (hb : b ∈ GfC V) : a * b = b * a := by
-  have ha' : finHom V a = 1 := ha
-  have hb' : infHom V b = 1 := hb
-  have h := GlobalTheory.LevelCut.eq_one_of_parts V (a * b * (b * a)⁻¹)
-    (show infHom V _ = 1 by simp [hb']) (show finHom V _ = 1 by simp [ha'])
-  exact mul_inv_eq_one.mp h
 
 theorem per_hand_mul {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {σ : ℕ} {B : BesLev D (σ + 1)} {J : JacLev D (σ + 1)}
     {B' : BesLev D σ} (s₁ : StepBF ψ B J) (s₂ : StepFB ψ J B') (l : Link B B'.L B'.ζ) (vL : VolM D B'.L.rank J.W₀.rank)
@@ -498,7 +483,7 @@ theorem integ_mul_level : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w 
     (fun p hp => Finset.disjoint_left.1 hF.disjG hp) _ (hF.atQ (j + 1)).1 Ψ₂ hΨ₂)
   have hkf : k ∈ GfC _ := GlobalTheory.LevelCut.mem_GfC_of_grpAt _ _ k ((hv.JG _ hlt).1 hk)
   have hr : rTrans (q₂ * k) f = s • rTrans q₂ f := by
-    rw [hf]; exact rTrans_eigen a _ k q₂ _ s (comm_inf_fin _ ha hkf) (h3 G x)
+    rw [hf]; exact rTrans_eigen a _ k q₂ _ s (_root_.GlobalTheory.PointAtPlaceHom.comm_of_mem _ ha hkf) (h3 G x)
   rw [← (ht.sFB j σ h).1] at hom
   unfold integ
   refine Finset.sum_congr rfl fun α _ => Finset.sum_congr rfl fun g _ => ?_
@@ -521,8 +506,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStepIntegrand_rightInvariant_second_fixedLevel : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ k ∈ v.JG (j + 1 + 1), ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f q₁ (q₂ * k) = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepLev.integ_mul_level
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandRightInvariantSecondFixedLeveStatement =====
@@ -602,8 +585,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.doubleStepIntegrand_rightInvariant_second_offLevel : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ κ, InK (c.V (j + 1 + 1)) (v.N (j + 1 + 1)) (offP v w) κ → ∀ q₁ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f q₁ (q₂ * κ) = integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ := by
-  first | exact @GlobalTheory.DStepOffSnd.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandRightInvariantSecondOffLevelStatement =====
@@ -652,8 +633,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.seeSaw_doubleStep_integrand_vanishes_off_bessel : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ q₁ ∈ grpAt (c.V (j + 1)) (· ∈ w.Q), ∀ q₂ ∈ GfC (c.V (j + 1 + 1)), integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ ≠ 0 → ∃ r ∈ besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o, r ∈ GfC (c.V (j + 1 + 1)) ∧ ∃ y ∈ grpAt (c.V (j + 1 + 1)) (· ∈ w.Q), ∃ κ, InK (c.V (j + 1 + 1)) (v.N (j + 1 + 1)) (offP v w) κ ∧ ∃ k ∈ v.JG (j + 1 + 1), q₂ = r * y * (κ * k) := by
-  first | exact @GlobalTheory.DStepSuppSecond.integ_support
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepIntegrandVanishesOffBesselStatement =====
@@ -702,12 +681,9 @@ theorem at_eq (V : HSp D) (P : Pl D → Prop) : grpAt V P = GfC V ⊓ grpOff V (
   rw [(GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D V ∅).2.2.2.2.2.2.2.1]
   simp only [not_not]
 
-theorem at_le_fin (V : HSp D) (P : Pl D → Prop) : grpAt V P ≤ GfC V := by
-  rw [at_eq]; exact inf_le_left
-
 theorem at_mono (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → P' p) : grpAt V P ≤ grpAt V P' := by
   rw [at_eq V P']
-  exact le_inf (at_le_fin V P) (at_le_off V fun p hp hn => hn (h p hp))
+  exact le_inf (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC V P) (at_le_off V fun p hp hn => hn (h p hp))
 
 theorem split_two (V : HSp D) (A B : Finset (Pl D)) {x : GA D V} (hx : x ∈ GfC V)
     (ho : x ∈ grpOff V (fun p => p ∉ A ∧ p ∉ B)) :
@@ -720,7 +696,7 @@ theorem split_two (V : HSp D) (A B : Finset (Pl D)) {x : GA D V} (hx : x ∈ GfC
     exact this
   refine ⟨a.1, a.2, b.1, ?_, b.2, h1⟩
   rw [at_eq]
-  refine ⟨at_le_fin V _ b.2, ?_⟩
+  refine ⟨_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC V _ b.2, ?_⟩
   have hb1 : b.1 ∈ grpOff V (fun p => p ∉ A ∧ p ∉ B) := by
     have : b.1 = a.1⁻¹ * x := by rw [h1]; group
     rw [this]
@@ -791,7 +767,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), 
   have hzf : z ∈ GfC (c.V (j + 1)) := by
     have : z = r⁻¹ * q₁ * κ⁻¹ := by rw [hdec]; group
     rw [this]
-    exact mul_mem (mul_mem (inv_mem (at_le_fin _ _ hrP)) hq₁) (inv_mem (at_le_fin _ _ hκ.1))
+    exact mul_mem (mul_mem (inv_mem (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hrP)) hq₁) (inv_mem (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hκ.1))
   obtain ⟨s, hs, y, hy, hy', hzs⟩ := split_two (c.V (j + 1)) v.gP w.Q hzf hz
 
   have e₁ := ((hoff j σ h _ _ k₁ (k₂ _)).1 κ hκ).1
@@ -817,7 +793,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), 
     rw [e₃]
     exact this
   obtain ⟨r', hr', hr'P, k, hk, hsk⟩ := (hG j σ h _ _ (vac_om hW vG hgo hyo) (k₂ _)).1 s hs hfl
-  refine ⟨r * r', mul_mem hr hr', mul_mem (at_le_fin _ _ hrP) (at_le_fin _ _ hr'P), y, hy, κ, hκ, k, hk, ?_⟩
+  refine ⟨r * r', mul_mem hr hr', mul_mem (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hrP) (_root_.GlobalTheory.FinPl.SetCut.grpAt_le_GfC _ _ hr'P), y, hy, κ, hκ, k, hk, ?_⟩
   have hkP : k ∈ grpAt (c.V (j + 1)) (· ∈ v.gP) := (hv.JG (j + 1) (by omega)).1 hk
   have hcm := (GlobalTheory.T.unitaryFiniteAdelicGroup_split_finitePlaceSet D (c.V (j + 1)) v.gP).2.2.2.2.1 k hkP (y * κ)
     (mul_mem hy' (at_mono _ (fun p hp => hp.1) hκ.1))
@@ -841,8 +817,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DStepCell
 
-theorem _root_.GlobalTheory.T.seeSaw_doubleStep_integrand_vanishes_off_fourierJacobi : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ q₁ ∈ GfC (c.V (j + 1)), ∀ q₂, integ v w j σ h Ψ₁ Ψ₂ φ f q₁ q₂ ≠ 0 → ∃ r ∈ jacGrp (c.jac j (σ + 1) h).d, r ∈ GfC (c.V (j + 1)) ∧ ∃ y ∈ grpAt (c.V (j + 1)) (· ∈ w.Q), ∃ κ, InK (c.V (j + 1)) (v.N (j + 1)) (offP v w) κ ∧ ∃ k ∈ v.JG (j + 1), q₁ = r * y * (κ * k) := by
-  first | exact @GlobalTheory.DStepSupp.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepIntegrandVanishesOffFourierJacobStatement =====
@@ -870,14 +844,14 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
   change Iter2 ρ₁ μ₁ ρ₂ μ₂ (fun q₁ q₂ => integ v w j σ h Ψ₁ Ψ₂ φ f q₁.1 q₂.1) z at hz
   change Iter2 (c.ρJ j (σ + 1) h) (c.μf (j + 1)) (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1))
     (fun q₁ q₂ => integ v w j σ h Ψ₁ Ψ₂ φ f q₁.1 q₂.1) (v.kap j σ h * z)
-  have hA1 := GlobalTheory.T.doubleStep_integrand_leftInvariant_fourierJacobi_first D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hA2 := GlobalTheory.T.doubleStepIntegrand_rightInvariant_first_offLevel D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hA3 := GlobalTheory.T.doubleStepIntegrand_rightInvariant_first_fixedLevel D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hB := GlobalTheory.T.seeSaw_doubleStep_integrand_vanishes_off_fourierJacobi D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hC1 := GlobalTheory.T.doubleStep_integrand_leftInvariant_bessel_second D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hC2 := GlobalTheory.T.doubleStepIntegrand_rightInvariant_second_offLevel D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hC3 := GlobalTheory.T.doubleStepIntegrand_rightInvariant_second_fixedLevel D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
-  have hC4 := GlobalTheory.T.seeSaw_doubleStep_integrand_vanishes_off_bessel D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hA1 := _root_.GlobalTheory.DStepCell.LeftOne.main D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hA2 := _root_.GlobalTheory.DStepOff.main D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hA3 := _root_.GlobalTheory.DStepLev.integ_lev D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hB := _root_.GlobalTheory.DStepSupp.main D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hC1 := _root_.GlobalTheory.DStepCell.LeftSecond.integ_left_second D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hC2 := _root_.GlobalTheory.DStepOffSnd.main D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hC3 := _root_.GlobalTheory.DStepLev.integ_mul_level D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
+  have hC4 := _root_.GlobalTheory.DStepSuppSecond.integ_support D c v t w hc hv ht hVF hWe hOff hGS hQF hCL hFL j σ h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ G x a ha f hf
   set F := integ v w j σ h Ψ₁ Ψ₂ φ f with hFdef
   obtain ⟨f₁', hf₁', hinn⟩ := hz
 
@@ -1045,8 +1019,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSawDoubleStep_finiteIntegral_collapse_twistPlaces : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → WeilOK (t := t) v → OffLaw v w → GSupp (t := t) v → QFin v w → ContrLaw D → FlatLaw D → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m) ρ₁ μ₁ ρ₂ μ₂, IsNormAt (c.V (j + 1)) (jacGrp (c.jac j (σ + 1) h).d) (v.N (j + 1)) (· ∈ w.Q) ρ₁ μ₁ → IsNormAt (c.V (j + 1 + 1)) (besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o) (v.N (j + 1 + 1)) (· ∈ w.Q) ρ₂ μ₂ → ∀ Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ (G : t.CC (j + 1 + 1)) x, ∀ a ∈ GinfC _, ∀ f, f = rTrans (a * v.b (j + 1 + 1)) (G.1 x) → ∀ z, Iter2 ρ₁ μ₁ ρ₂ μ₂ (fun q₁ q₂ : _ => ∑ α, ∑ g ∈ (w.ε j α).support, w.ε j α g * (c.B (j + 1 + 1) σ (idx_step h)).per c.ψ (Chain.hand (t.sBF j (σ + 1) h) (t.sFB j σ h) (c.lnk j σ h) (c.vL j σ h) (comb c.ψ _ _ (v.eG j) (comb c.ψ _ _ (w.eQ j) Ψ₁)) (comb c.ψ _ _ (v.eG (j + 1)) (comb c.ψ _ _ (w.eQ (j + 1)) Ψ₂)) (φ α) g q₁.1 q₂.1) (rTrans q₂.1 f)) z → Iter2 (c.ρJ j (σ + 1) h) (c.μf (j + 1)) (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1)) (fun q₁ q₂ : _ => ∑ α, ∑ g ∈ (w.ε j α).support, w.ε j α g * (c.B (j + 1 + 1) σ (idx_step h)).per c.ψ (Chain.hand (t.sBF j (σ + 1) h) (t.sFB j σ h) (c.lnk j σ h) (c.vL j σ h) (comb c.ψ _ _ (v.eG j) (comb c.ψ _ _ (w.eQ j) Ψ₁)) (comb c.ψ _ _ (v.eG (j + 1)) (comb c.ψ _ _ (w.eQ (j + 1)) Ψ₂)) (φ α) g q₁.1 q₂.1) (rTrans q₂.1 f)) (v.kap j σ h * z) := by
-  first | exact @GlobalTheory.DStepCell.cell_collapse
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepFiniteIntegralCollapseTwistPlaceBis =====
@@ -1166,8 +1138,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSaw_unfoldedData_eq_kernelData_at_level : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → v.Is → t.Is → VForm v w → GValue (t := t) v → TLaw v w → FlatLaw D → BiAct D → ∀ j σ h Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (fun _ => True) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (fun _ => True) Ψ₂ → ∀ φ : t.Ch j → GA D (c.X j) → ℂ, (∀ α, φ α ∈ v.RamAd j) → ∀ β, (∑ α, ∑ γ, c.bl j (t.kom j) (t.kom (j + 1)) (φ α) (biComb c.ψ _ _ _ (w.dQ j α γ) (w.dQ (j + 1) γ β) (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) (comb c.ψ _ _ (v.eG j) Ψ₁) (comb c.ψ _ _ (v.eG (j + 1)) Ψ₂)))) = (v.cG j * w.cT j) • t.two j (fun α => v.Sad j (φ α)) ((v.op j).app c.ψ (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) Ψ₁ Ψ₂)) β := by
-  first | exact @GlobalTheory.SeeSawRhs.unfolded_eq_kernel_data
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedDataEqKernelDataAtLevelStatement =====
@@ -1204,17 +1174,13 @@ namespace GlobalTheory.ValFin
 
 variable {D : D7}
 
-theorem isThetaFunO_zero (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) : IsThetaFunO ψ S T 0 :=
-  ⟨fun _ _ => by simp, ⟨⊤, isOpen_univ, fun _ _ _ => by funext w; simp [heisO]⟩, continuous_const,
-    fun _ _ _ _ _ => by simp only [Pi.zero_apply]; exact contDiff_const⟩
-
 theorem isLatVac_zero (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (Λ : AddSubgroup (WO S T)) :
     IsLatVac (heisO ψ S T) Λ 0 :=
   ⟨fun _ _ => by funext w; simp [heisO], fun _ _ _ _ _ => by funext w; simp [heisO]⟩
 
 theorem isReal_zero (c : Comm D) (j : ℕ) : c.IsReal j 0 := by
-  refine ⟨⟨continuous_const, fun v => ⟨isThetaFunO_zero _ _ _, isLatVac_zero _ _ _ _⟩,
-    fun u => ⟨isThetaFunO_zero _ _ _, isLatVac_zero _ _ _ _⟩⟩, ?_⟩
+  refine ⟨⟨continuous_const, fun v => ⟨_root_.Formalism.IndefR.Fock.CCR.theta_zero _ _ _, isLatVac_zero _ _ _ _⟩,
+    fun u => ⟨_root_.Formalism.IndefR.Fock.CCR.theta_zero _ _ _, isLatVac_zero _ _ _ _⟩⟩, ?_⟩
   intro n L L' _ _ _ _ u v
   simp only [Pi.zero_apply]
   exact contDiff_const
@@ -1283,7 +1249,7 @@ theorem valX : ∀ (D : D7) (c : Comm D) (v : VCom c) (𝒯 : Type) (t : 𝒯 �
   · exact ⟨0, isReal_zero c j, fun s => (hT ⟨s⟩).elim⟩
   obtain ⟨s₀⟩ := hT
   refine ⟨(v.op j).app c.ψ (c.ctr j σ h ((t s₀).sBF j (σ + 1) h) ((t s₀).sFB j σ h) (v.Ψ j P₁ 1 a) (v.Ψ (j + 1) P₂ a a')),
-    ((GlobalTheory.T.seeSaw_commonRealDatum_biTheta_vacuum_contraction D c v (t s₀) (w s₀) hc hv (ht s₀) (hL s₀).vac (hL s₀).tl hFlat).1 j σ h _ _ hV₁ hV₂).2, ?_⟩
+    ((_root_.GlobalTheory.VReal.v_real D c v (t s₀) (w s₀) hc hv (ht s₀) (hL s₀).vac (hL s₀).tl hFlat).1 j σ h _ _ hV₁ hV₂).2, ?_⟩
   intro s ψ hψ y G x
   have hLs := hL s
   have hF := hLs.form
@@ -1316,12 +1282,12 @@ theorem valX : ∀ (D : D7) (c : Comm D) (v : VCom c) (𝒯 : Type) (t : 𝒯 �
   have hc₁ := K₁.1 (v.eG j) ((w s).eQ j) (hv.atG j).1 (hF.atQ j).1 (v.Ψ j P₁ 1 a)
   have hc₂ := K₂.1 (v.eG (j + 1)) ((w s).eQ (j + 1)) (hv.atG (j + 1)).1 (hF.atQ (j + 1)).1 (v.Ψ (j + 1) P₂ a a')
   rw [← hc₁, ← hc₂] at hQ
-  have hcell := GlobalTheory.T.seeSawDoubleStep_finiteIntegral_collapse_twistPlaces D c v (t s) (w s) hc hv (ht s) hF hLs.weil hLs.off hLs.gs hLs.qfin hContr hFlat j σ h
+  have hcell := _root_.GlobalTheory.DStepCell.cell_collapse D c v (t s) (w s) hc hv (ht s) hF hLs.weil hLs.off hLs.gs hLs.qfin hContr hFlat j σ h
     ρ₁ μ₁ ρ₂ μ₂ hn₁ hn₂ _ _ hV₁ hV₂ (fun α => (t s).rd j α ψ y) hφR G x a' ha' _ rfl _ hQ
   have hmove := GlobalTheory.T.seeSaw_iteratedIntegrand_vacuumForm_base_points D c v (t s) (w s) hc hv (ht s) hF j σ h P₁ P₂ a ha a' ha' (fun α => (t s).rd j α ψ y)
     (G.1 x) _ _ _ _ rfl rfl rfl hcell
   convert hmove using 1
-  have hrhs := GlobalTheory.T.seeSaw_unfoldedData_eq_kernelData_at_level D c v (t s) (w s) hc hv (ht s) hF hLs.gv hLs.tl hFlat hBi j σ h _ _ hV₁ hV₂
+  have hrhs := _root_.GlobalTheory.SeeSawRhs.unfolded_eq_kernel_data D c v (t s) (w s) hc hv (ht s) hF hLs.gv hLs.tl hFlat hBi j σ h _ _ hV₁ hV₂
     (fun α => (t s).rd j α ψ y) hφR
   have hct := ctr_indep c j σ h ((t s).sBF j (σ + 1) h) ((t s₀).sBF j (σ + 1) h) ((t s).sFB j σ h) ((t s₀).sFB j σ h)
     _ _ hV₁.1 hV₂.1

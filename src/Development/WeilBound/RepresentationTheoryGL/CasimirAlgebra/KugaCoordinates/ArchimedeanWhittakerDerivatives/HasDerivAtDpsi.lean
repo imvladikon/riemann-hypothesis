@@ -396,13 +396,6 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.Cz
 
-open Matrix
-
-theorem exists_upper_unitary {ι : Type} {n : ℕ} (y : GL (Fin n) (ι → ℂ)) :
-    ∃ (b : GL (Fin n) (ι → ℂ)) (k : Matrix.unitaryGroup (Fin n) (ι → ℂ)),
-      (∀ i j : Fin n, j < i → b.val i j = 0) ∧ y = b * Unitary.toUnits k := by
-  exact GlobalTheory.CompanionTheory.Iwasawa.exists_upper_mul_unitary y
-
 end PositivityTheory.Rg.Cz
 end -- clump:auto
 end -- clump:auto
@@ -497,20 +490,6 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.Cz
 
-open GlobalTheory.CuspGeneric MeasureTheory
-
-variable {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [LocallyCompactSpace G]
-  [SecondCountableTopology G] [T2Space G]
-
-theorem avg_sub (Γ : AddSubgroup G) (hΓ : IsCoLat Γ) (Φ Φ' : G → ℂ) (h : Per Γ Φ) (h' : Per Γ Φ') :
-    avg Γ (fun x => Φ x - Φ' x) = avg Γ Φ - avg Γ Φ' :=
-  GlobalTheory.CompanionTheory.CuspGeneric.avg_sub_of_per Γ hΓ Φ Φ' h h'
-
-theorem avg_integral_swap (Γ : AddSubgroup G) (hΓ : IsCoLat Γ) (F : G × ℝ → ℂ) (hF : Continuous F)
-    (hp : ∀ γ ∈ Γ, ∀ x s, F (γ + x, s) = F (x, s)) (t : ℝ) :
-    avg Γ (fun x => ∫ s in (0 : ℝ)..t, F (x, s)) = ∫ s in (0 : ℝ)..t, avg Γ (fun x => F (x, s)) :=
-  GlobalTheory.CompanionTheory.AvgSwap.avg_intervalIntegral_swap Γ hΓ F hF hp t
-
 end PositivityTheory.Rg.Cz
 end -- clump:auto
 end -- clump:auto
@@ -566,7 +545,7 @@ theorem intRel_colT {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (M : Matrix (Fin
   have e0 : colT ψ (m + 1) f (g * infGL E a (cu M hM t)) - colT ψ (m + 1) f g =
       avg (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (fun x => ψ (-dot ξ x) * f (blkU x * (g * infGL E a (cu M hM t))) -
         ψ (-dot ξ x) * f (blkU x * g)) :=
-    (avg_sub _ hΓ _ _ (per_coef hψ ξ hf.cont hl _) (per_coef hψ ξ hf.cont hl _)).symm
+    (_root_.GlobalTheory.CompanionTheory.CuspGeneric.avg_sub_of_per _ hΓ _ _ (per_coef hψ ξ hf.cont hl _) (per_coef hψ ξ hf.cont hl _)).symm
   have e1 : (fun x : UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E => ψ (-dot ξ x) * f (blkU x * (g * infGL E a (cu M hM t))) -
         ψ (-dot ξ x) * f (blkU x * g)) =
       fun x => ∫ s in (0 : ℝ)..t, ψ (-dot ξ x) * f' (blkU x * (g * infGL E a (cu M hM s))) := by
@@ -589,7 +568,7 @@ theorem intRel_colT {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (M : Matrix (Fin
         (x, s) :=
     fun γ hγ x s => (per_coef hψ ξ hf'.cont hl' (g * infGL E a (cu M hM s))).2 γ hγ x
   rw [e0, e1]
-  exact avg_integral_swap _ hΓ _ hF hp t
+  exact _root_.GlobalTheory.CompanionTheory.AvgSwap.avg_intervalIntegral_swap _ hΓ _ hF hp t
 
 theorem intRel_whit {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (M : Matrix (Fin a) (Fin a) (Cinf E)) (hM : M * M = 0)
     (m : ℕ) : (m < a ∨ m = 0) → ∀ {f f' : GA E a → ℂ}, Good ψ m f → Good ψ m f' → IntRel M hM f f' →
@@ -769,15 +748,6 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.Cz
 
-theorem hasDerivAt_of_mulHom (χ : ℝ → ℂ) (hc : Continuous χ) (h0 : χ 0 = 1) (hm : ∀ s t, χ (s + t) = χ s * χ t) :
-    ∃ c : ℂ, ∀ t, HasDerivAt χ (c * χ t) t :=
-  GlobalTheory.CompanionTheory.CharDeriv.hasDerivAt_of_continuous_hom χ hc h0 hm
-
-theorem wirtinger_ne_zero (χ : ℂ → ℂ) (hc : Continuous χ) (hm : ∀ z w, χ (z + w) = χ z * χ w) (hn : ∀ z, ‖χ z‖ = 1)
-    (ht : ∃ z, χ z ≠ 1) (D : ℂ → ℂ) (hD : ∀ z, HasDerivAt (fun t : ℝ => χ (t * z)) (D z) 0) (β : ℂ) (hβ : β ≠ 0) :
-    D β - Complex.I * D (β * Complex.I) ≠ 0 :=
-  GlobalTheory.CompanionTheory.Unitary.wirtinger_combination_ne_zero χ hc hm hn ht D hD β hβ
-
 end PositivityTheory.Rg.Cz
 end -- clump:auto
 end -- clump:auto
@@ -800,7 +770,7 @@ def dpsi (ψ : AddChar (Ad E) ℂ) (Z : Cinf E) : ℂ := deriv (fun t : ℝ => �
 
 theorem hasDerivAt_dpsi {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (Z : Cinf E) :
     HasDerivAt (fun t : ℝ => ψ (sInf E (t • Z))) (dpsi ψ Z) 0 := by
-  obtain ⟨c, hc⟩ := hasDerivAt_of_mulHom (fun t : ℝ => ψ (sInf E (t • Z)))
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CompanionTheory.CharDeriv.hasDerivAt_of_continuous_hom (fun t : ℝ => ψ (sInf E (t • Z)))
     (hψ.cont.comp (continuous_sInf'.comp (continuous_id.smul continuous_const)))
     (by simp only [zero_smul, map_zero, AddChar.map_zero_eq_one])
     (fun s t => by simp only [add_smul, map_add (f := _), AddChar.map_add_eq_mul])
@@ -839,7 +809,7 @@ theorem whitLie_holds : WhitLie := by
   have hw0 : whit ψ (a - 1) φ₀.1.1 ≠ 0 :=
     (whit_good hψ (a - 1) h0 (hg φ₀)).2 fun h => hφ₀ (Subtype.ext (Subtype.ext h))
   obtain ⟨g₀, hg₀⟩ := Function.ne_iff.1 hw0
-  obtain ⟨b, k, hb, hyk⟩ := exists_upper_unitary (GeneralLinearGroup.map (pInf E) g₀)
+  obtain ⟨b, k, hb, hyk⟩ := _root_.GlobalTheory.CompanionTheory.Iwasawa.exists_upper_mul_unitary (GeneralLinearGroup.map (pInf E) g₀)
   let ℓ : π.V →ₗ[ℂ] ℂ :=
     { toFun := fun φ => whit ψ (a - 1) φ.1.1 (infGL E a b)
       map_add' := fun φ φ' => congrFun (whit_add hψ (a - 1) h0 (hg φ) (hg φ')) _
@@ -865,7 +835,7 @@ theorem whitLie_holds : WhitLie := by
       have hu : IsUnit (b.val p p * (b⁻¹).val q q) :=
         (IsUnit.of_mul_eq_one _ (diag_inv b hb p)).mul (IsUnit.of_mul_eq_one_right _ (diag_inv b hb q))
       have hβ0 : β p q ≠ 0 := (hu.map (coord τ)).ne_zero
-      exact wirtinger_ne_zero (fun z => ψ (sInf E (atEmb τ z)))
+      exact _root_.GlobalTheory.CompanionTheory.Unitary.wirtinger_combination_ne_zero (fun z => ψ (sInf E (atEmb τ z)))
         (hψ.cont.comp (continuous_sInf'.comp (continuous_atEmb τ)))
         (fun z w => by simp only [atEmb_add, map_add (f := _), AddChar.map_add_eq_mul]) (fun z => hψ.norm _)
         (psi_nontriv hψ τ) (fun z => dpsi ψ (atEmb τ z))

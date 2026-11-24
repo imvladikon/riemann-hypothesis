@@ -442,10 +442,6 @@ open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory
 noncomputable section
 namespace GlobalTheory.Mem.R3.LiftBrg.ActQ
 
-theorem castGL_self {R : Type} [CommRing R] {m : ℕ} (x : GL (Fin m) R) : LiftBrg.castGL (rfl : m = m) x = x := by
-  ext i j
-  simp [LiftBrg.castGL]
-
 theorem coarse_eq_blkOf' {a r t m : ℕ} (hn : a = r + m * t) (i : Fin a) :
     Formalism.L2.Col.coarse r (List.replicate m t) i.val = Formalism.L2.DIV.blkOf r t i := by
   unfold Formalism.L2.DIV.blkOf
@@ -461,21 +457,11 @@ theorem coarse_eq_blkOf' {a r t m : ℕ} (hn : a = r + m * t) (i : Fin a) :
       · exact h0
     rw [Formalism.L2.Col.blkIdx_replicate ht m _ (by omega)]
 
-theorem coarseBlockIndex_single_eq_twoBlock {a r b : ℕ} (hn : a = r + b) (i : Fin a) :
-    Formalism.L2.Col.coarse r [b] i.val = Formalism.L2.DIV.blk2 r i := by
-  unfold Formalism.L2.DIV.blk2
-  split_ifs with hi
-  · exact Formalism.L2.Col.coarse_of_lt hi
-  · rw [Formalism.L2.Col.coarse_of_le (Nat.not_lt.mp hi)]
-    have hi2 := i.2
-    have : i.val - r < b := by omega
-    simp [Formalism.L2.Col.blkIdx, this]
-
 theorem castGL_inv_mul_diag_mem_HKV {κ : Type} [CommRing κ] {a n r t : ℕ} (h : a = n) (hn : n = r + t) (hra : r ≤ a)
     (hrn : r ≤ n) (y : GL (Fin a) κ) (hy : y ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blkOf r t)) :
     (LiftBrg.castGL h y)⁻¹ * Formalism.L2.Col.diagEmb κ hrn (Formalism.L2.DIV.upperLeftBlock hra y) ∈ Formalism.L2.Col.HKV κ n r t := by
   subst h
-  rw [castGL_self]
+  rw [_root_.GlobalTheory.Mem.R3.LiftBrg.ActQ.castGL_rfl_apply']
   have hn' : a = r + 1 * t := by rw [hn, one_mul]
   have hy' : y ∈ Formalism.L2.Col.blockUT _ κ r (List.replicate 1 t) := by
     intro i j hij
@@ -512,12 +498,12 @@ theorem castGL_inv_mem_HQ {κ : Type} [CommRing κ] {a n r b : ℕ} (h : a = n) 
     (hy : y ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 r)) :
     (LiftBrg.castGL h y)⁻¹ * 1 ∈ Formalism.L2.Col.HQ κ n r b := by
   subst h
-  rw [castGL_self, mul_one]
+  rw [_root_.GlobalTheory.Mem.R3.LiftBrg.ActQ.castGL_rfl_apply', mul_one]
   refine Subgroup.inv_mem _ ?_
   intro i j hij
   apply hy
   have hij' : Formalism.L2.Col.coarse r [b] j.val < Formalism.L2.Col.coarse r [b] i.val := hij
-  rw [coarseBlockIndex_single_eq_twoBlock hn, coarseBlockIndex_single_eq_twoBlock hn] at hij'
+  rw [_root_.GlobalTheory.Mem.R3.LiftBrg.LamQInv.coarseBlockIndex_single_eq_twoBlock hn, _root_.GlobalTheory.Mem.R3.LiftBrg.LamQInv.coarseBlockIndex_single_eq_twoBlock hn] at hij'
   exact hij'
 
 theorem lev_lam_congr' {κ K : Type} [CommRing κ] [Field K] {n : ℕ} {l l' : Formalism.L2.Col.Lev κ K n} (e : l = l')
@@ -706,14 +692,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.flagLift_translation_mem_typeLevel_character : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → ∀ (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (LiftBrg.EA X)), LiftBrg.FrameOK X I U i t A k →
-    ∀ κ : (levEnv (Vc X.toD7 i) (L.βV i) (L.datVt i t)).Q,
-      ∃ hh : (LiftBrg.ActQ.redZ X I U L i t A k κ)⁻¹ *
-          Formalism.L2.Col.unipotentGroupBlockEmbedding (X.B.primes px) I.sel t.1 (Formalism.L2.Col.r_le_nV X.B.R) (LiftBrg.ActQ.redQ X I U L eG i t κ) ∈
-          (Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv.grp,
-        X.toD7.what₂.embLL (((Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv.chr ⟨_, hh⟩ : X.B.fields.Kˣ) : X.B.fields.K) =
-          (((levEnv (Vc X.toD7 i) (L.βV i) (L.datVt i t)).ch κ : ℂˣ) : ℂ) := by
-  first | exact @GlobalTheory.Mem.R3.LiftBrg.ActQ.inv_redZ_mul_g0Hat_type
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagLiftTranslationMemTypeLevelCharacterStatement =====
@@ -759,8 +737,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.levelGroup_reduction_onto_finite_group_surjective : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → ∀ (i : Fin X.toD7.R.m) (t : TupU I U), Function.Surjective (LiftBrg.ActQ.redQ X I U L eG i t) := by
-  first | exact @GlobalTheory.Mem.R3.LiftBrg.ActQ.redQ_surjective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelGroupReductionOntoFiniteGroupSurjectiveStatement =====
@@ -969,7 +945,7 @@ theorem lemT : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U
           X.toD7.what₂.embLL (((Formalism.L2.Col.mtTyKK I.Ch I.sel t.1 ((i : ℕ) + 1)).inv.chr ⟨h, hh⟩ : X.B.fields.Kˣ) : X.B.fields.K) =
             (((levEnv (Vc X.toD7 i) (L.βV i) (L.datVt i t)).ch κ : ℂˣ) : ℂ) := by
   intro X px I U L eG hI hV hL hG i t A k hA κ
-  obtain ⟨hh, hc⟩ := GlobalTheory.T.flagLift_translation_mem_typeLevel_character X px I U L eG hI hV hL hG i t A k hA κ
+  obtain ⟨hh, hc⟩ := _root_.GlobalTheory.Mem.R3.LiftBrg.ActQ.inv_redZ_mul_g0Hat_type X px I U L eG hI hV hL hG i t A k hA κ
   refine ⟨_, hh, fun x => ?_, hc⟩
   rw [GlobalTheory.T.stdDecoratedLattice_rightTranslate_levelQ X px I U L hI hV hL i t A k hA κ x, mul_inv_cancel_right]
 
@@ -1003,7 +979,7 @@ theorem exists_actTie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X
         eG (a.red q) = rTup (L.βV i) (L.datVt i t) (Formalism.UG.bc (swapAE X.toD7) ((q : Bridge.Gf (Vc X.toD7 i)) : GL _ _)) := by
   intro X px I hX U Xg tr L eG hI hV hL hG cV i t A k hA P hP
   refine ⟨{ red := redQ X I U L eG i t
-            red_surj := GlobalTheory.T.levelGroup_reduction_onto_finite_group_surjective X px I U L eG hI hV hL hG i t
+            red_surj := _root_.GlobalTheory.Mem.R3.LiftBrg.ActQ.redQ_surjective X px I U L eG hI hV hL hG i t
             red_ker := fun q => redQ_eq_one_iff X I U L eG i t q
             act_eq := lemAct X px I hX U Xg tr L eG hI hV hL hG cV i t A k hA P hP }, fun q => ?_⟩
   exact eG_redQ X I U L eG i t q
@@ -1024,12 +1000,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.exists_finiteGroupAction_liftForms_rightTranslation : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → ∀ (cV : ∀ i, CoefA (Vc X.toD7 i)) (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (LiftBrg.EA X)), LiftBrg.FrameOK X I U i t A k → ∀ P : LiftBrg.PresL X I hX U Xg tr L cV i t, LiftBrg.ReadsStd X I hX U Xg tr L cV i t A k P →
-    ∃ a : Bridge.ActTie (Bridge.ratF (Vc X.toD7 i)) P (LiftBrg.envL X I hX U Xg tr L cV i t).lev.Q
-        (LiftBrg.envL X I hX U Xg tr L cV i t).lev.ch ((famR X I hX U Xg tr).A.leftGroupActionLift i t),
-      ∀ q : (levEnv (Vc X.toD7 i) (L.βV i) (L.datVt i t)).Q,
-        eG (a.red q) = rTup (L.βV i) (L.datVt i t) (Formalism.UG.bc (swapAE X.toD7) ((q : Bridge.Gf (Vc X.toD7 i)) : GL _ _)) := by
-  first | exact @GlobalTheory.Mem.R3.LiftBrg.ActQ.exists_actTie
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteGroupActionLiftFormsRightTranslationStatement =====

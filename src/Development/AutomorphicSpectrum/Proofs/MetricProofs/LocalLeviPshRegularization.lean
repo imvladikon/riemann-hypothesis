@@ -79,13 +79,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 
 noncomputable section
 
-lemma mollifier_bdd {D : ℕ} (ρ : ReciprocityTheory.AnForm.A.Mollifier D) : ∃ b : ℝ, ∀ w, ρ.toFun w ≤ b := by
-  have hcs : HasCompactSupport ρ.toFun := by
-    refine HasCompactSupport.of_support_subset_isCompact (isCompact_closedBall (0 : Fin D → ℂ) 1) ?_
-    exact ρ.support_subset.trans ball_subset_closedBall
-  obtain ⟨b, hb⟩ := ρ.contDiff.continuous.bounded_above_of_compact_support hcs
-  exact ⟨b, fun w => (le_abs_self _).trans (hb w)⟩
-
 lemma polyMax_le_pmoff_same {D : ℕ} {S : Finset (Fin D)} {u w : (Fin D → ℂ) → ℝ} {R B κ : ℝ}
     (hub : ∀ x ∈ ball (0 : Fin D → ℂ) R \ ReciprocityTheory.AnForm.A.coordDiv S, u x ≤ B)
     (hW1 : ReciprocityTheory.AnForm.A.IsPsh (ball 0 R) w)
@@ -122,7 +115,7 @@ theorem molli_trunc_near_polyMax :
     fun x hx => (hb x hx).2
   obtain ⟨C₀, ℓ₀, hC₀, hosc⟩ := RegularChartScaling.oscGen m (R := 3 / 2) (by norm_num) (by norm_num)
     hc hp hb (C₁ := 2) (by norm_num)
-  obtain ⟨b, hbρ⟩ := mollifier_bdd ρ
+  obtain ⟨b, hbρ⟩ := _root_.GroundTheory.Heights₂.Heights.Regular.mollifier_exists_bound ρ
   have hb0 : 0 ≤ b := (ρ.nonneg 0).trans (hbρ 0)
   set K : ℝ := Real.pi ^ D * (3 / 2 : ℝ) ^ (2 * D) * b with hK
   have hK0 : 0 ≤ K := by positivity
@@ -405,7 +398,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 theorem mollify_converges_C2_rate :
     ∀ (D : ℕ) (ρ : ReciprocityTheory.AnForm.A.Mollifier D) (V K : Set (Fin D → ℂ)) (u : (Fin D → ℂ) → ℝ) (w : ℝ → (Fin D → ℂ) → ℝ), IsOpen V → IsCompact K → K ⊆ V → ContDiffOn ℝ ∞ u V → (∀ᶠ t in 𝓝[>] (0 : ℝ), Set.EqOn (w t) u V) → TendstoUniformlyOn (fun t => ReciprocityTheory.AnForm.A.molli ρ t (w t)) (u) (𝓝[>] 0) K ∧ TendstoUniformlyOn (fun t => fderiv ℝ (ReciprocityTheory.AnForm.A.molli ρ t (w t))) (fderiv ℝ (u)) (𝓝[>] 0) K ∧ TendstoUniformlyOn (fun t => fderiv ℝ (fderiv ℝ (ReciprocityTheory.AnForm.A.molli ρ t (w t)))) (fderiv ℝ (fderiv ℝ (u))) (𝓝[>] 0) K ∧ ∃ M : ℝ, ∀ᶠ t in 𝓝[>] (0 : ℝ), ∀ z ∈ K, ‖fderiv ℝ (ReciprocityTheory.AnForm.A.molli ρ t (w t)) z - fderiv ℝ (u) z‖ ≤ M * t := by
   intro D ρ V K u w hV hK hKV hu hw
-  obtain ⟨C, ε₀, hε₀, hC⟩ := ReciprocityTheory.AnForm.A.mollification_second_order D ρ V K u hV
+  obtain ⟨C, ε₀, hε₀, hC⟩ := _root_.ReciprocityTheory.AnForm.A.mollificationSecondOrder_holds D ρ V K u hV
     (by exact_mod_cast contDiffOn_infty.1 hu 3) hK hKV
   have hsmallt : ∀ᶠ t in 𝓝[>] (0 : ℝ), t < ε₀ / 2 :=
     nhdsWithin_le_nhds (Iio_mem_nhds (by positivity))
@@ -472,12 +465,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 section OneChart
 
 variable {D : ℕ}
-
-lemma oc_isClosed_coordDiv (S : Finset (Fin D)) : IsClosed (ReciprocityTheory.AnForm.A.coordDiv S) := by
-  have : ReciprocityTheory.AnForm.A.coordDiv S = ⋃ i ∈ S, {z : Fin D → ℂ | z i = 0} := by
-    ext z; simp [ReciprocityTheory.AnForm.A.coordDiv]
-  rw [this]
-  exact isClosed_biUnion_finset fun i _ => isClosed_eq (continuous_apply i) continuous_const
 
 lemma oc_q_bounds {q : (Fin D → ℂ) → ℝ} (hq : ContDiffOn ℝ ∞ q (ball (0 : Fin D → ℂ) 2)) :
     ∃ Q : ℝ, 0 ≤ Q ∧ ∀ z ∈ ball (0 : Fin D → ℂ) (3 / 2), |q z| ≤ Q ∧ ‖fderiv ℝ q z‖ ≤ Q := by
@@ -588,7 +575,7 @@ end OneChart
 theorem regularise_one_chart :
     ∀ (D : ℕ) (S : Finset (Fin D)) (m : Fin D → ℕ) (q ph : (Fin D → ℂ) → ℝ) (C₅ K : ℝ), (∀ i ∈ S, 1 ≤ m i) → ContDiffOn ℝ ∞ q (ball (0 : Fin D → ℂ) (2)) → ContDiffOn ℝ ∞ ph (ball (0 : Fin D → ℂ) (2) \ ReciprocityTheory.AnForm.A.coordDiv S) → ReciprocityTheory.AnForm.A.IsLeviPsh (ball (0 : Fin D → ℂ) (2) \ ReciprocityTheory.AnForm.A.coordDiv S) (fun z => q z + ph z) → (∀ z ∈ ball (0 : Fin D → ℂ) (2) \ ReciprocityTheory.AnForm.A.coordDiv S, -C₅ * Real.log (rLoc S m z) ≤ ph z ∧ ph z ≤ C₅) → (∀ z ∈ ball (0 : Fin D → ℂ) (3 / 2) \ ReciprocityTheory.AnForm.A.coordDiv S, ‖fderiv ℝ ph z‖ ≤ C₅ * rLoc S m z ^ C₅ * Real.exp (rLoc S m z / 2)) → ∃ (C t₀ : ℝ) (phT : ℝ → (Fin D → ℂ) → ℝ), 1 ≤ C ∧ 0 < t₀ ∧ t₀ ≤ Real.exp (-Real.exp 1) ∧ (∀ t, 0 < t → t ≤ t₀ → ContDiffOn ℝ ∞ (phT t) (ball (0 : Fin D → ℂ) (5 / 4)) ∧ ReciprocityTheory.AnForm.A.IsLeviPsh (ball (0 : Fin D → ℂ) (5 / 4)) (fun z => q z + phT t z) ∧ (∀ z ∈ ball (0 : Fin D → ℂ) (5 / 4), phT t z ≤ C ∧ -C * Real.log (Real.log (1 / t)) ≤ phT t z) ∧ (∀ z ∈ ball (0 : Fin D → ℂ) (5 / 4) \ ReciprocityTheory.AnForm.A.coordDiv S, ph z ≤ phT t z ∧ (rLoc S m z ≤ Real.log (1 / t) + K → phT t z ≤ ph z + t ^ ((1 : ℝ) / 3))) ∧ (∀ z ∈ ball (0 : Fin D → ℂ) (5 / 4), polyMaxOff S (fun x => q x + ph x) z t - epsT C t ≤ q z + phT t z ∧ q z + phT t z ≤ polyMaxOff S (fun x => q x + ph x) z t) ∧ ∀ t', t ≤ t' → t' ≤ t₀ → ∀ z ∈ ball (0 : Fin D → ℂ) (5 / 4), phT t z ≤ phT t' z + epsT C t') ∧ ∀ K' ⊆ ball (0 : Fin D → ℂ) (5 / 4) \ ReciprocityTheory.AnForm.A.coordDiv S, IsCompact K' → TendstoUniformlyOn (fun t => phT t) (ph) (𝓝[>] 0) K' ∧ TendstoUniformlyOn (fun t => fderiv ℝ (phT t)) (fderiv ℝ (ph)) (𝓝[>] 0) K' ∧ TendstoUniformlyOn (fun t => fderiv ℝ (fderiv ℝ (phT t))) (fderiv ℝ (fderiv ℝ (ph))) (𝓝[>] 0) K' ∧ ∃ M : ℝ, ∀ᶠ t in 𝓝[>] (0 : ℝ), ∀ z ∈ K', ‖fderiv ℝ (phT t) z - fderiv ℝ (ph) z‖ ≤ M * t := by
   intro D S m q ph C₅ K hm hq hph hL hb hg
-  have hAc := oc_isClosed_coordDiv S
+  have hAc := _root_.ReciprocityTheory.AnForm.A.PlurisubharmonicExtension.coordDiv_closed S
   have hC₅ : 0 ≤ C₅ := RegularChartScaling.fifth_volume_constant_nonneg m le_rfl (by norm_num) hb
   obtain ⟨Q, hQ0, hQ⟩ := oc_q_bounds hq
   have hsub : ball (0 : Fin D → ℂ) (3 / 2) \ ReciprocityTheory.AnForm.A.coordDiv S ⊆

@@ -1318,7 +1318,7 @@ theorem GlobalTheory.UPoinc.exists_uLocTuples_theta : ∀ (E : Type) [Field E] [
       rw [hunitK, mul_comm (m₁ : ℤ) (v cl), zpow_mul, zpow_natCast, zpow_natCast, ← mul_pow, ← hvw cl]
       rw [show (((m₂ : ℤ) * b' (μ cl) (μ cl)).toNat) = (((m₂ : ℤ) * T.be (π (μ cl)) (π (μ cl))).toNat) from rfl]
       rw [hw', map_mul, map_pow, zpow_natCast]
-    have := GlobalTheory.T.uniformiser_zpow_mul_unit_exponent_unique T.irr _ _ _ _ h2
+    have := _root_.GlobalTheory.exponent_uniformiser_unique T.irr _ _ _ _ h2
     rw [this, Int.toNat_of_nonneg hq0]
   let Ev : ((Fin n → ZMod X₁.S.N) → ℤ) → ℤ := fun ν => ∑ cl, v cl * ((m₁ : ℤ) * ν cl)
   have hE : ∀ ν, (Ev ν : ℝ) = (m₂ : ℝ) * ∑ cl, (ν cl : ℝ) * (b' (μ cl) (μ cl) : ℝ) := by
@@ -1482,7 +1482,7 @@ theorem lift_i_of_closedPoint (C : UCompact Xo c) (V : Type) [CommRing V] [IsLoc
     (fun a => hunit a (nonZeroDivisors.ne_zero a.2))
   have hψ : ψ.comp C.b = φ := RingHom.ext fun a => IsLocalization.lift_eq (M := nonZeroDivisors C.o) (S := c.F) _ a
   have hsq : g ≫ C.z = spMap ψ ≫ spMap C.b := by
-    rw [← hφ, ← hψ]; exact GlobalTheory.UTraitPt.spMap_comp_eq _ _
+    rw [← hφ, ← hψ]; exact _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ _
   let g₁ : Sp V ⟶ pullback C.z (spMap C.b) := pullback.lift g (spMap ψ) hsq
   have e1 : g₁ ≫ pullback.fst C.z (spMap C.b) = g := pullback.lift_fst _ _ _
   have hx₁ : g₁ (closedPoint V) = C.iF x := hinj ((Scheme.Hom.comp_apply g₁ (pullback.fst C.z (spMap C.b)) _).symm.trans

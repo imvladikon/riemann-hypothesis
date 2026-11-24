@@ -136,14 +136,6 @@ theorem constDeformation_act_eq : _root_.GlobalTheory.CovTop.Hypotheses'' → Gl
 end GlobalTheory.ConstDeform
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj MonoidalCategory
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.const_deformation_action_trivial : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (q : A'.left ⟶ A.left), IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i → IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → i ≫ q = 𝟙 _ → IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q → ∀ (o : Obj Dw l (baseKA l) (x' ≫ Xo.s)) (m : ObjMap o Xo.univ x') (g : o.t.G.left ⟶ A'.left), g ≫ π' = m.cm.F → g ≫ A'.hom = o.t.G.hom → ∀ hF : IsGrpPullback o.t.G Xo.univ.t.G (constPt x') (g ≫ q ≫ π), ∀ a, (o.t.act.act a).left ≫ (g ≫ q ≫ π) = (g ≫ q ≫ π) ≫ (Xo.univ.t.act.act a).left := by
-  first | exact @_root_.GlobalTheory.ConstDeform.constDeformation_act_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ConstDeformationActionTrivial =====
@@ -178,14 +170,6 @@ theorem cubical_structure_pullback_const_point : _root_.GlobalTheory.CovTop.Hypo
 end GlobalTheory.ConstDefCub
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj MonoidalCategory
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.cubical_structure_const_section_pullback : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (q : A'.left ⟶ A.left), IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i → IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → i ≫ q = 𝟙 _ → IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q → ∀ (o : Obj Dw l (baseKA l) (x' ≫ Xo.s)) (m : ObjMap o Xo.univ x') (g : o.t.G.left ⟶ A'.left), g ≫ π' = m.cm.F → g ≫ A'.hom = o.t.G.hom → ∀ hF : IsGrpPullback o.t.G Xo.univ.t.G (constPt x') (g ≫ q ≫ π), (cubeMapOf hF).IsPullCubical o.t.cub Xo.univ.t.cub := by
-  first | exact @_root_.GlobalTheory.ConstDefCub.cubical_structure_pullback_const_point
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CubicalStructureConstSectionPullback =====
@@ -263,8 +247,8 @@ theorem constDeformation_objMap_eq : _root_.GlobalTheory.CovTop.Hypotheses'' →
     cm := cubeMapOf hF
     cart := hF
     base := rfl
-    act := _root_.GlobalTheory.T.const_deformation_action_trivial hP hGD E H Dw l Xo c K y x' hpq hT A A' π π' i q hi hπ hπ' hiπ hiq hq o m g hg hgw hF
-    lin := _root_.GlobalTheory.T.cubical_structure_const_section_pullback hP hGD E H Dw l Xo c K y x' hpq hT A A' π π' i q hi hπ hπ' hiπ hiq hq o m g hg hgw hF
+    act := _root_.GlobalTheory.ConstDeform.constDeformation_act_eq hP hGD E H Dw l Xo c K y x' hpq hT A A' π π' i q hi hπ hπ' hiπ hiq hq o m g hg hgw hF
+    lin := _root_.GlobalTheory.ConstDefCub.cubical_structure_pullback_const_point hP hGD E H Dw l Xo c K y x' hpq hT A A' π π' i q hi hπ hπ' hiπ hiq hq o m g hg hgw hF
     eta := fun a => key (o.eta a) (Xo.univ.eta a) l.M (by have := l.three_le; omega)
       (by rw [← hpow _ o.eta_add]; exact o.eta_ker _ (by
         rw [← Nat.cast_smul_eq_nsmul (𝓞 E)]; exact Submodule.smul_mem_smul hM Submodule.mem_top))
@@ -274,14 +258,6 @@ theorem constDeformation_objMap_eq : _root_.GlobalTheory.CovTop.Hypotheses'' →
 end GlobalTheory.ConstDeform
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.const_deformation_obj_eq : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (q : A'.left ⟶ A.left), IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i → IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → i ≫ q = 𝟙 _ → IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q → ∀ o : Obj Dw l (baseKA l) (x' ≫ Xo.s), Nonempty (ObjMap o Xo.univ x') → Nonempty (ObjMap o Xo.univ (constPt x')) := by
-  first | exact @_root_.GlobalTheory.ConstDeform.constDeformation_objMap_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ConstDeformationObjMapEq =====
@@ -298,17 +274,10 @@ open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRes
 open AlgebraicGeometry CategoryTheory MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.DeRham
-open GlobalTheory.Cris GlobalTheory.Published GlobalTheory.Published.AbelianDeRham TensorProduct
-variable {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A]
 end GlobalTheory.DeRham
 namespace GlobalTheory.DeRham
-open GlobalTheory.Cris GlobalTheory.Published GlobalTheory.Published.AbelianDeRham TensorProduct
-variable {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A]
-variable {C : Over (Sp (DualNumber R))} [GrpObj C] {φ : C.left ⟶ A.left} {j : A.left ⟶ C.left}
 end GlobalTheory.DeRham
 namespace GlobalTheory.DeRham
-open GlobalTheory.Cris GlobalTheory.Published GlobalTheory.Published.AbelianDeRham TensorProduct
-variable {R : Type} [CommRing R] {A : Over (Sp R)} [GrpObj A]
 end GlobalTheory.DeRham
 namespace GlobalTheory.FlagTan
 theorem exists_retraction_of_kodaira_spencer_zero : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation →
@@ -330,14 +299,6 @@ end GlobalTheory.FlagTan
 end
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.deformation_retracts_of_kodaira_spencer_zero : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (h : IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i), IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → (∀ f ∈ GlobalTheory.DeRham.Fil A, GlobalTheory.DeRham.IsKSValue h f 1) → ∃ q : A'.left ⟶ A.left, i ≫ q = 𝟙 _ ∧ IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q := by
-  first | exact @_root_.GlobalTheory.FlagTan.exists_retraction_of_kodaira_spencer_zero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.DeformationRetractsOfKodairaSpencerZero =====
@@ -354,9 +315,6 @@ open CategoryTheory AlgebraicGeometry DividedPowers TensorProduct TrivSqZeroExt
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.CrysConn
 attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.KSSym
-variable {R : Type} [CommRing R] {X : Scheme.{0}}
-variable {s : X ⟶ Sp R} {s' : X ⟶ Sp (DualNumber R)}
-open GlobalTheory.Published
 end GlobalTheory.KSSym
 namespace GlobalTheory.KSSym
 open NumberField Formalism.L2.Pj MonObj
@@ -380,14 +338,6 @@ end GlobalTheory.KSSym
 end
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.kodairaSpencer_pairing_symmetric : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (K : Type) [Field K] (x : Sp K ⟶ Xo.X) (x' : Sp (DualNumber K) ⟶ Xo.X) (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (h : IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i) (ψ : LinearMap.BilinForm K (GlobalTheory.DeRham.HdR A)), IsGrpPullback A Xo.univ.t.G x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → GlobalTheory.DeRham.IsPolForm (GlobalTheory.Cris.dp0 K) (𝟙 _) A (Xo.univ.t.PP.L.pull π) ψ → ∀ f g k k' : GlobalTheory.DeRham.HdR A, GlobalTheory.DeRham.IsFilLift h f k → GlobalTheory.DeRham.IsFilLift h g k' → ψ f k' + ψ k g = 0 := by
-  first | exact @_root_.GlobalTheory.KSSym.kodairaSpencer_map_symm
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerPairingSymmetric =====
@@ -419,8 +369,8 @@ theorem kodaira_spencer_full : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (
   have hA' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hU hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
   haveI : IsCommMonObj A := hA.comm
-  obtain ⟨a', ha'⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ'
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ
+  obtain ⟨a', ha'⟩ := _root_.GlobalTheory.OActPull.exists_oAct_of_isGrpPullback Xo.univ.t.act hπ'
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.OActPull.exists_oAct_of_isGrpPullback Xo.univ.t.act hπ
   have hc : ∀ z, (a.act z).left ≫ i = i ≫ (a'.act z).left := fun z => by
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, ha' z, ← Category.assoc i π', e, ha z]
@@ -429,7 +379,7 @@ theorem kodaira_spencer_full : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (
   obtain rfl : ψ = ψ₀ := IsPolForm.unique P.1 hA gA (pull_isLB Xo.univ.t.PP.isLB π) hpol hpol₀
   have hadj := GlobalTheory.T.polarizationCrystalForm_adjoint_conj_action P Xo hπ a ha hpol
   have hK := GlobalTheory.DeRham.ksRegular_of_isAbelianScheme P h hA' gA'
-  obtain ⟨ub₀, hu₀, ht₀, he₀, hbasis₀⟩ := GlobalTheory.T.exists_frame_tangentVectors_of_isGrpPullback y hπ a ha
+  obtain ⟨ub₀, hu₀, ht₀, he₀, hbasis₀⟩ := _root_.GlobalTheory.KSExist.exists_frame_of_isGrpPullback y hπ a ha
   obtain rfl : ub = ub₀ := by
     funext σ k
     apply ReciprocityTheory.ChartRestriction.G.PullbackSections.push_inj hπ
@@ -445,7 +395,7 @@ theorem kodaira_spencer_full : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (
     have h1 := (hl' k).push (a.act z)
     rw [he₀] at h1
     exact h1.sub_mem ((hl' k).smul _)
-  have hsym := _root_.GlobalTheory.T.kodairaSpencer_pairing_symmetric PP E H Dw l Xo K y.x x' A A' π π' i h ψ hπ hπ' e hpol
+  have hsym := _root_.GlobalTheory.KSSym.kodairaSpencer_map_symm PP E H Dw l Xo K y.x x' A A' π π' i h ψ hπ hπ' e hpol
   refine isKSValue_one_of_rows h ψ hiso hlag hperf hpol.isAlt hsym ub hb hl' hspan
     (fun σ => σ ∈ GlobalTheory.FlagTan.psiSet H) conjEmb
     (fun σ hσ => ((GlobalTheory.FlagTan.isHalf_psiSet H) σ).1 hσ) ?_ ?_
@@ -475,14 +425,6 @@ end GlobalTheory.KSFull
 end
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory MonObj
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.kodaira_spencer_full_flag_tangent : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y x' 0 → ∃ (A : Over (Sp K)) (_ : GrpObj A) (A' : Over (Sp (DualNumber K))) (_ : GrpObj A') (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (h : IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i), IsGrpPullback A Xo.univ.t.G y.x π ∧ IsGrpPullback A' Xo.univ.t.G x' π' ∧ i ≫ π' = π ∧ ∀ f ∈ GlobalTheory.DeRham.Fil A, GlobalTheory.DeRham.IsKSValue h f 1 := by
-  first | exact @_root_.GlobalTheory.KSFull.kodaira_spencer_full
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerFullFlagTangent =====
@@ -504,14 +446,14 @@ theorem eq_const_of_kodaira_spencer_eq_zero : _root_.GlobalTheory.CovTop.Hypothe
       (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → IsTanX y x' → IsKS (psiSet H) y x' 0 →
         x' = spMap (algebraMap K (DualNumber K)) ≫ y.x := by
   intro P G E _ _ _ H Dw l Xo c K _ _ y x' hpq hx hks
-  obtain ⟨A, hA, A', hA', π, π', i, h, h1, h2, h3, h4⟩ := _root_.GlobalTheory.T.kodaira_spencer_full_flag_tangent P E H Dw l Xo c K y x' hpq hx hks
+  obtain ⟨A, hA, A', hA', π, π', i, h, h1, h2, h3, h4⟩ := _root_.GlobalTheory.KSFull.kodaira_spencer_full P E H Dw l Xo c K y x' hpq hx hks
   letI := hA
   letI := hA'
-  obtain ⟨q, hq1, hq2⟩ := _root_.GlobalTheory.T.deformation_retracts_of_kodaira_spencer_zero P G E H Dw l Xo c K y x' hpq hx A A' π π' i h h1 h2 h3 h4
+  obtain ⟨q, hq1, hq2⟩ := _root_.GlobalTheory.FlagTan.exists_retraction_of_kodaira_spencer_zero P G E H Dw l Xo c K y x' hpq hx A A' π π' i h h1 h2 h3 h4
   obtain ⟨o, m⟩ := GlobalTheory.obj_pull E H Dw l _ _ (baseKA l) (baseKA l) (RingHom.id _) _ _ Xo.s (x' ≫ Xo.s) x' rfl rfl
     (by rw [spMap, CommRingCat.ofHom_id, Spec.map_id, Category.comp_id]) Xo.univ
   have e := Xo.unram K x' o m
-    (_root_.GlobalTheory.T.const_deformation_obj_eq P G E H Dw l Xo c K y x' hpq hx A A' π π' i q h h1 h2 h3 hq1 hq2 o m)
+    (_root_.GlobalTheory.ConstDeform.constDeformation_objMap_eq P G E H Dw l Xo c K y x' hpq hx A A' π π' i q h h1 h2 h3 hq1 hq2 o m)
   rw [← hx.2]
   conv_lhs => rw [e]
   rfl
@@ -519,13 +461,6 @@ end GlobalTheory.FlagTan
 end
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory
-
-theorem _root_.GlobalTheory.T.flag_deformation_const_of_kodaira_spencer_zero : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y x' 0 → x' = spMap (algebraMap K (DualNumber K)) ≫ y.x := by
-  first | exact @_root_.GlobalTheory.FlagTan.eq_const_of_kodaira_spencer_eq_zero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.FlagDeformationConstOfKodairaSpencerZero =====
@@ -544,8 +479,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.DeRham
-open GlobalTheory.Cris GlobalTheory.CatCoh GlobalTheory.Published GlobalTheory.Published.AbelianDeRham DividedPowers
-variable {R : Type} [CommRing R]
 end GlobalTheory.DeRham
 namespace GlobalTheory.FlagTan
 open GlobalTheory.DeRham GlobalTheory.Cris GlobalTheory.Published ReciprocityTheory.ChartRestriction.G.PullbackSections
@@ -573,7 +506,7 @@ theorem kodaira_spencer_direct_sum : _root_.GlobalTheory.CovTop.Hypotheses'' →
     · rw [← Category.assoc, ← hXy]
       exact congrArg (· ≫ X) (e₀ M)
   obtain ⟨M₀, A, _, A', _, π, π', i, hi, ψ, ub, hb, hπ, hπ', hiπ, hpol, hu, hl, what₂⟩ :=
-    _root_.GlobalTheory.T.exists_kodaira_spencer_flag_tangent Pr E H Dw l Xo c K y _ hpq tan
+    _root_.GlobalTheory.KSExist.exists_kodaira_spencer_map Pr E H Dw l Xo c K y _ hpq tan
   obtain ⟨C, _, πC, hC⟩ := exists_isGrpPullback Xo.univ.t.G X
   have hU := ObjDim.isAbelianScheme Xo.univ
   have hg := ObjDim.smoothOfRelativeDimension Xo.univ
@@ -628,13 +561,6 @@ end GlobalTheory.FlagTan
 end
 end
 
-section
-open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open AlgebraicGeometry CategoryTheory
-
-theorem _root_.GlobalTheory.T.kodaira_spencer_of_direct_sum_deformation : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (ι : Type) [Fintype ι] [DecidableEq ι] (X : Sp (TrivSqZeroExt K (ι → K)) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → X ≫ Xo.s = sOf c _ → spMap (TrivSqZeroExt.fstHom c.F K (ι → K)).toRingHom ≫ X = y.x → ∀ N : ι → GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H) → K, (∀ k, GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y (spMap (GlobalTheory.FlagTan.dir c (Pi.single k (1 : K))).toRingHom ≫ X) (N k)) → ∀ M : ι → K, GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y (spMap (GlobalTheory.FlagTan.dir c M).toRingHom ≫ X) (∑ k, M k • N k) := by
-  first | exact @_root_.GlobalTheory.FlagTan.kodaira_spencer_direct_sum
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerOfDirectSumDeformation =====
@@ -655,32 +581,32 @@ theorem kodaira_spencer_universal : _root_.GlobalTheory.CovTop.Hypotheses'' → 
   obtain ⟨X₀, h1, h2, hinj⟩ :=
     _root_.GlobalTheory.TanBasis.exists_point_tanBasis E H Dw l Xo c K y (HIx Dw (psiSet H)) (card_HIx (isHalf_psiSet H))
   choose N hN using fun k : HIx Dw (psiSet H) =>
-    _root_.GlobalTheory.T.exists_kodaira_spencer_flag_tangent hP E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 (Pi.single k 1))
-  have hL := _root_.GlobalTheory.T.kodaira_spencer_of_direct_sum_deformation hP E H Dw l Xo c K y _ X₀ hpq h1 h2 N hN
+    _root_.GlobalTheory.KSExist.exists_kodaira_spencer_map hP E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 (Pi.single k 1))
+  have hL := _root_.GlobalTheory.FlagTan.kodaira_spencer_direct_sum hP E H Dw l Xo c K y _ X₀ hpq h1 h2 N hN
   let L : (HIx Dw (psiSet H) → K) →ₗ[K] (HIx Dw (psiSet H) → K) := Fintype.linearCombination K N
   have hLa : ∀ M, L M = ∑ k, M k • N k := fun M => Fintype.linearCombination_apply _ _ _
   have h0 : spMap (dir c (0 : HIx Dw (psiSet H) → K)).toRingHom ≫ X₀ =
       spMap (algebraMap K (DualNumber K)) ≫ y.x := by
-    rw [← h2, ← Category.assoc, spMap_comp_spMap']
+    rw [← h2, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     congr 2
     ext z <;> simp [TrivSqZeroExt.algebraMap_eq_inl]
   have Linj : Function.Injective L := (injective_iff_map_eq_zero L).2 fun M hM =>
-    hinj ((_root_.GlobalTheory.T.flag_deformation_const_of_kodaira_spencer_zero hP hG E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 M)
+    hinj ((_root_.GlobalTheory.FlagTan.eq_const_of_kodaira_spencer_eq_zero hP hG E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 M)
       (by rw [← hM, hLa]; exact hL M)).trans h0.symm)
   let e := LinearEquiv.ofInjectiveEndo L Linj
   let P := LinearMap.toMatrix' (e.symm : (HIx Dw (psiSet H) → K) →ₗ[K] (HIx Dw (psiSet H) → K))
   have hP' : ∀ M, P.mulVec M = e.symm M := fun M => LinearMap.toMatrix'_mulVec _ M
   refine ⟨spMap (reparam c.F P).toRingHom ≫ X₀, ?_, ?_, fun M => ?_⟩
-  · rw [Category.assoc, h1, sOf, spMap_comp_spMap']
+  · rw [Category.assoc, h1, sOf, _root_.GlobalTheory.spMap_comp_ring]
     congr 1
     rw [← RingHom.comp_assoc]
     congr 1
     exact (reparam c.F P).comp_algebraMap
-  · rw [← Category.assoc, spMap_comp_spMap', ← h2]
+  · rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, ← h2]
     congr 2
     ext z
     simp [reparam]
-  · rw [← Category.assoc, spMap_comp_spMap', dir_comp_reparam, hP']
+  · rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, dir_comp_reparam, hP']
     have := hL (e.symm M)
     rwa [← hLa, show L (e.symm M) = M from e.apply_symm_apply M] at this
 end GlobalTheory.FlagTan.KSUniv
@@ -690,8 +616,7 @@ section
 open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
 open AlgebraicGeometry CategoryTheory
 
-theorem _root_.GlobalTheory.T.kodaira_spencer_universal_family : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), 1 ≤ Dw.p + Dw.q → ∃ X : Sp (TrivSqZeroExt K (GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H) → K)) ⟶ Xo.X, X ≫ Xo.s = sOf c _ ∧ spMap (TrivSqZeroExt.fstHom c.F K (GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H) → K)).toRingHom ≫ X = y.x ∧ ∀ M : GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H) → K, GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y (spMap (GlobalTheory.FlagTan.dir c M).toRingHom ≫ X) M := by
-  first | exact @_root_.GlobalTheory.FlagTan.KSUniv.kodaira_spencer_universal
+alias _root_.GlobalTheory.T.kodaira_spencer_universal_family := _root_.GlobalTheory.FlagTan.KSUniv.kodaira_spencer_universal
 end
 end -- clump:auto
 end -- clump:auto

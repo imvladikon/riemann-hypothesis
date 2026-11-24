@@ -59,6 +59,7 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Tactic.Polynomial.Basic
+import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.CayleyChartDomainIsOpen
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Tactic.ENatToNat
@@ -200,7 +201,7 @@ end -- clump:auto
 -- ===== end clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.BaseFamilyAlt =====
 
 -- ===== clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FamilyInduction =====
--- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FamilyInduction", "h": "module\n\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.InfinitesimalCharacterPaths.TensDecomp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ChainRuleSmooth.Curves\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.Normed.Algebra.MatrixExponential\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\npublic import Mathlib.Algebra.Order.Chebyshev\n\n"}
+-- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FamilyInduction", "h": "module\n\npublic import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.InfinitesimalCharacterPaths.TensDecomp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ChainRuleSmooth.Curves\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.Normed.Algebra.MatrixExponential\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\npublic import Mathlib.Algebra.Order.Chebyshev\nimport ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.CayleyChartDomainIsOpen\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -214,14 +215,6 @@ namespace GlobalTheory.CompanionTheory.RgStepFam
 open CompanionTheory.RgExh CompanionTheory.RgExh.Dec CompanionTheory.RgExh.Dec.J ReciprocityTheory.ChartRestriction.DS
 
 variable {n : ℕ} {ε : Fin n → Bool}
-
-theorem mul_inUJ {a b : Matrix (Fin n) (Fin n) ℂ} (ha : Formalism.REAL.inUJ ε a) (hb : Formalism.REAL.inUJ ε b) :
-    Formalism.REAL.inUJ ε (a * b) := by
-  unfold Formalism.REAL.inUJ at *
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * Formalism.REAL.Jm ε * (a * b) = bᴴ * (aᴴ * Formalism.REAL.Jm ε * a) * b := by
-        simp only [Matrix.mul_assoc]
-    _ = Formalism.REAL.Jm ε := by rw [ha, hb]
 
 theorem inv_mul_of_inUJ {g : Matrix (Fin n) (Fin n) ℂ} (hg : Formalism.REAL.inUJ ε g) : g⁻¹ * g = 1 := by
   have h : (Formalism.REAL.Jm ε * gᴴ * Formalism.REAL.Jm ε) * g = 1 := by
@@ -397,7 +390,7 @@ theorem line_hasDeriv (hc : IsCoefFam ε X c) (i : ι) (u : X.V) {Y g : Matrix (
     HasDerivAt (fun t : ℝ => c i u (g * NormedSpace.exp ((t : ℂ) • Y)))
       (c i (actM X.E Y u) (g * NormedSpace.exp ((s : ℂ) • Y))) s := by
   have hgs : Formalism.REAL.inUJ ε (g * NormedSpace.exp ((s : ℂ) • Y)) :=
-    mul_inUJ hg (Formalism.REAL.exp_indefinite_unitary_holds n ε Y hY s)
+    _root_.ReciprocityTheory.ChartRestriction.DS.slm_inUJ_mul hg (Formalism.REAL.exp_indefinite_unitary_holds n ε Y hY s)
   have h0 := hc.1 i u Y hY _ hgs
   have h0' : HasDerivAt (fun t : ℝ => c i u (g * NormedSpace.exp ((s : ℂ) • Y) * NormedSpace.exp ((t : ℂ) • Y)))
       (c i (actM X.E Y u) (g * NormedSpace.exp ((s : ℂ) • Y))) (s - s) := by
@@ -695,10 +688,6 @@ theorem actL_single (E : Fin n → Fin n → Module.End ℂ M) (a b : Fin n) (x 
   · intro c _ hc
     exact Finset.sum_eq_zero fun d _ => by simp [hc.symm]
   · simp
-
-theorem act_single (E : Fin n → Fin n → Module.End ℂ M) (a b : Fin n) :
-    actM E (Matrix.single a b 1) = E a b := by
-  rw [← actL_apply, actL_single, one_smul]
 
 theorem actL_comm {E : Fin n → Fin n → Module.End ℂ M} (hE : GlRel E) (Y Z : Matrix (Fin n) (Fin n) ℂ) :
     actL E Y * actL E Z - actL E Z * actL E Y = actL E (Y * Z - Z * Y) := by
@@ -1261,7 +1250,7 @@ theorem degree : CompanionTheory.RgExh.Dec.J.Degree := by
   have hst : ∀ a b, ∀ φ ∈ Wm F c, contraE X a b φ ∈ Wm F c := by
     intro a b φ hφ
     have := Wm_stab F c (Matrix.single a b 1) φ hφ
-    rw [act_single] at this
+    rw [_root_.ReciprocityTheory.ChartRestriction.DS.SmDerA.actM_single] at this
     have e : contraE X a b φ = -(φ ∘ₗ X.E a b) := rfl
     rw [e]
     exact neg_mem this

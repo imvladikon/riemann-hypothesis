@@ -703,10 +703,6 @@ private theorem exists_conj (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosed Ω
     (ComplexEmbedding.conjugate j) (Subsingleton.elim _ _)
   exact ⟨j, σ.symm.toRingEquiv, fun x => DFunLike.congr_fun hσ x⟩
 
-private theorem conj_of_sq {w : ℂ} {q : ℕ} (hq : 0 < q) (h : w ^ 2 = (q : ℂ)) :
-    starRingEnd ℂ w = w :=
-  _root_.UpperTheory.Reformulated.B.Qh56.conj_of_sq hq h
-
 private theorem sq_fix {E Y Ω : Type} [Field E] [Field Y] [Field Ω] [Algebra E Y] [Algebra Y Ω]
     (δ : Y) (q : ℕ) (hq : δ ^ 2 = (q : Y))
     (hspan : ∀ y : Y, ∃ a b : E, y = algebraMap E Y a + algebraMap E Y b * δ)
@@ -736,7 +732,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.twoPrimes :
   have hcc : ∀ z, c (c z) = z := fun z => j0.injective (by rw [hc, hc, Complex.conj_conj])
   have hcδ : c (algebraMap Y Ω δ) = algebraMap Y Ω δ := j0.injective (by
     rw [hc]
-    exact conj_of_sq hq0 (by rw [← map_pow, hδ2, map_natCast]))
+    exact _root_.UpperTheory.Reformulated.B.Qh56.conj_of_sq hq0 (by rw [← map_pow, hδ2, map_natCast]))
   have hcroot : ∀ ξ : Ω, ξ ^ M = 1 → c ξ = ξ⁻¹ := fun ξ h => j0.injective (by
     have h1 : (j0 ξ) ^ M = 1 := by rw [← map_pow, h, map_one]
     rw [hc, map_inv₀, Complex.inv_eq_conj (Complex.norm_eq_one_of_pow_eq_one h1 hM.ne')])
@@ -814,8 +810,8 @@ theorem UpperTheory.Gal.Int.Core.exists_quadratic_CM_ext_split_at : UpperTheory.
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
   haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ Y Ω⟩
-  have hRfin := GlobalTheory.T.finite_places_inertia_not_le_openSubgroup Ω F (fixGrp F Ω Y) (isOpen_fixGrp F Ω Y)
-  have hQfin := GlobalTheory.T.finite_places_inertia_not_le_openSubgroup Ω ℚ (fixGrp ℚ Ω Y) (isOpen_fixGrp ℚ Ω Y)
+  have hRfin := _root_.GlobalTheory.DelGlob.finite_not_ine_le_of_isOpen Ω F (fixGrp F Ω Y) (isOpen_fixGrp F Ω Y)
+  have hQfin := _root_.GlobalTheory.DelGlob.finite_not_ine_le_of_isOpen Ω ℚ (fixGrp ℚ Ω Y) (isOpen_fixGrp ℚ Ω Y)
   set R := hRfin.toFinset with hRdef
   set R' := hQfin.toFinset with hR'def
   set TT := hT.toFinset with hTTdef

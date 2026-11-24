@@ -668,8 +668,6 @@ open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField PositivityTheory.BCUSide.HermitianLocalForms
 
-theorem _root_.GlobalTheory.T.hermitian_form_polynomial_in : ∀ (K : Type) [Field K] (σ : K →+* K) (n : ℕ) (A H₀ H : Matrix (Fin n) (Fin n) K), IsUnit A.det → A.charpoly.Separable → H₀.det ≠ 0 → cT σ A * H₀ * A = H₀ → cT σ A * H * A = H → ∃ m : K[X], H = H₀ * aeval A m := by
-  first | exact @GlobalTheory.CompanionTheory.FormRatio.exists_eq_mul_aeval
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianFormPolynomialInStatement =====
@@ -1206,7 +1204,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (hU : Unr 
       (x : v.adicCompletion (maximalRealSubfield E) ⊗[maximalRealSubfield E] plus Q)) ≠ 0 :=
     (_root_.map_ne_zero _).2 (Units.ne_zero (Units.map (Algebra.norm (v.adicCompletion (maximalRealSubfield E)) :
       (v.adicCompletion (maximalRealSubfield E)) ⊗[maximalRealSubfield E] plus Q →* (v.adicCompletion (maximalRealSubfield E))) x))
-  rw [det_gramOn_mul (cj w) _ (aeval A m) V hM, hdet, GlobalTheory.UnitaryClasses.BaseChangeSign.ordL_mul hg0 hn0,
+  rw [det_gramOn_mul (cj w) _ (aeval A m) V hM, hdet, _root_.Formalism.UG.P.fSatake_ord_mul hg0 hn0,
     zpow_add₀ (by norm_num : (-1 : ℂ) ≠ 0), mul_comm, ← hs]
   rfl
 
@@ -1967,7 +1965,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.SelfReciprocalLocalField Positivity
 
 namespace PositivityTheory.BCUSide.HermitianLocalForms.Lem
 
-theorem ratio_poly : ∀ (K : Type) [Field K] (σ : K →+* K) (n : ℕ) (A H₀ H : Matrix (Fin n) (Fin n) K), IsUnit A.det → A.charpoly.Separable → H₀.det ≠ 0 → cT σ A * H₀ * A = H₀ → cT σ A * H * A = H → ∃ m : K[X], H = H₀ * aeval A m := GlobalTheory.T.hermitian_form_polynomial_in
+alias ratio_poly := _root_.GlobalTheory.CompanionTheory.FormRatio.exists_eq_mul_aeval
 
 theorem sign_rel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))) (hv : w.under (𝓞 (maximalRealSubfield E)) = v), ∀ (n : ℕ) (γ₀ : GL (Fin n) E), γ₀.val.charpoly ∈ Ell E n → ∀ H₀ : Matrix (Fin n) (Fin n) E, IsHerm (IsCMField.complexConj E).toRingEquiv.toRingHom H₀ → H₀.det ≠ 0 → cT (IsCMField.complexConj E).toRingEquiv.toRingHom γ₀.val * H₀ * γ₀.val = H₀ → (∀ τ : E →+* ℂ, ∃ Q : Matrix (Fin n) (Fin n) ℂ, Q.det ≠ 0 ∧ H₀.map τ = cT (starRingEnd ℂ) Q * Q) → ∀ (m : (w.adicCompletion E)[X]) (r : ℕ) (Q : SelfRecip E r), Q.1 ∣ γ₀.val.charpoly → ∀ x : ((v.adicCompletion (maximalRealSubfield E)) ⊗[(maximalRealSubfield E)] plus Q)ˣ, inclPlus Q (v.adicCompletion (maximalRealSubfield E)) (x : (v.adicCompletion (maximalRealSubfield E)) ⊗[(maximalRealSubfield E)] plus Q) = locPhi hU w hw v hv Q m → sgnOn (cj w) ((H₀.map (algebraMap E (w.adicCompletion E))) * aeval (γ₀.val.map (algebraMap E (w.adicCompletion E))) m) (atPl w Q.1) (γ₀.val.map (algebraMap E (w.adicCompletion E))) = ((GlobalTheory.QuadSymbol.eta (maximalRealSubfield E) E (v.adicCompletion (maximalRealSubfield E)) (Units.map (Algebra.norm (v.adicCompletion (maximalRealSubfield E)) : (v.adicCompletion (maximalRealSubfield E)) ⊗[(maximalRealSubfield E)] plus Q →* (v.adicCompletion (maximalRealSubfield E))) x) : ℤ) : ℂ) * sgnOn (cj w) (H₀.map (algebraMap E (w.adicCompletion E))) (atPl w Q.1) (γ₀.val.map (algebraMap E (w.adicCompletion E))) := GlobalTheory.T.local_hermitian_class_first
 

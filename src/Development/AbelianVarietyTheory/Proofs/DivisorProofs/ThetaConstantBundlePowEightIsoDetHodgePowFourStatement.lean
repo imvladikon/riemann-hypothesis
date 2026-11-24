@@ -147,6 +147,7 @@ import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorusExt
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSysFFMemFinitePerpProj
 import Mathlib.Tactic.ReduceModChar
@@ -271,16 +272,14 @@ namespace GlobalTheory.KeyTheta
 
 variable {X Y : Scheme.{0}}
 
-abbrev L1 (L : LB X) : LB X := LB.LinComb L (K := Fin 1) (fun _ => 𝟙 X) (fun _ => 1)
-
-theorem lineBundle_chart_le_firstPower_chart (L : LB X) (i : L.ι) : L.U i ≤ (L1 L).U (fun _ => i) :=
+theorem lineBundle_chart_le_firstPower_chart (L : LB X) (i : L.ι) : L.U i ≤ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U (fun _ => i) :=
   fun _ hx => Set.mem_iInter.2 fun _ => hx
 
 def prodSec (π : X ⟶ Y) (L : LB X) (δ : LB Y) {W N : Y.Opens} (hNW : N ≤ W)
-    (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (L1 L).U j)) (t : δ.Sec) :
+    (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U j)) (t : δ.Sec) :
     ∀ p : (CechPic.tens L (δ.pull π)).ι, Γ(X, π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U p) :=
   fun p => resG X (le_inf (inf_le_left.trans (fun _ hx => hNW hx)) (inf_le_right.trans (inf_le_left.trans (lineBundle_chart_le_firstPower_chart L p.1))) :
-        π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U p ≤ π ⁻¹ᵁ W ⊓ (L1 L).U (fun _ => p.1)) (σ (fun _ => p.1)) *
+        π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U p ≤ π ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U (fun _ => p.1)) (σ (fun _ => p.1)) *
     resG X (inf_le_right.trans inf_le_right :
         π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U p ≤ LB.wchart δ (fun _ : PUnit => π) p.2)
       ((π.appLE (δ.U (p.2 PUnit.unit)) _ (LB.wchart_le δ (fun _ => π) p.2 PUnit.unit)).hom (t.f (p.2 PUnit.unit)))
@@ -294,7 +293,7 @@ def toPre (Zh : ZH.ZHOut ρ M U₀ EE) : ZH.ZHPre ρ M U₀ :=
 
 end GlobalTheory.KeyTheta
 
-theorem GlobalTheory.KeyTheta.prodSec_mem : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) (L : LB X) (δ : LB Y) {W N : Y.Opens} (hNW : N ≤ W) (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (GlobalTheory.KeyTheta.L1 L).U j)) (t : δ.Sec), σ ∈ secOn (GlobalTheory.KeyTheta.L1 L) (π ⁻¹ᵁ W) → GlobalTheory.KeyTheta.prodSec π L δ hNW σ t ∈ secOn (CechPic.tens L (δ.pull π)) (π ⁻¹ᵁ N) := by
+theorem GlobalTheory.KeyTheta.prodSec_mem : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) (L : LB X) (δ : LB Y) {W N : Y.Opens} (hNW : N ≤ W) (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U j)) (t : δ.Sec), σ ∈ secOn (_root_.GlobalTheory.ZH.TorsionNonzero.one L) (π ⁻¹ᵁ W) → GlobalTheory.KeyTheta.prodSec π L δ hNW σ t ∈ secOn (CechPic.tens L (δ.pull π)) (π ⁻¹ᵁ N) := by
   intro X Y π L δ W N hNW σ t hσ
   have rr : ∀ {A B C : X.Opens} (e : B ≤ A) (e' : C ≤ B) (s : Γ(X, A)),
       resG X e' (resG X e s) = resG X (e'.trans e) s := fun e e' s => by
@@ -343,11 +342,11 @@ theorem GlobalTheory.KeyTheta.prodSec_mem : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y
     congr 1
     exact ar _ _ _
   have hl : ∀ (h : π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U (i, j) ⊓ (CechPic.tens L (δ.pull π)).U (i', j') ≤
-      (L1 L).U (fun _ => i) ⊓ (L1 L).U (fun _ => i')),
-      resG X h ((L1 L).g (fun _ => i) (fun _ => i') : Γ(X, _)) =
+      (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U (fun _ => i) ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U (fun _ => i')),
+      resG X h ((_root_.GlobalTheory.ZH.TorsionNonzero.one L).g (fun _ => i) (fun _ => i') : Γ(X, _)) =
         resG X (fun x hx => ⟨hx.1.2.1, hx.2.1⟩ : π ⁻¹ᵁ N ⊓ (CechPic.tens L (δ.pull π)).U (i, j) ⊓ (CechPic.tens L (δ.pull π)).U (i', j') ≤ L.U i ⊓ L.U i') (L.g i i' : Γ(X, L.U i ⊓ L.U i')) := by
     intro h
-    simp only [L1, LB.LinComb, Fin.prod_univ_one, zpow_one]
+    simp only [_root_.GlobalTheory.ZH.TorsionNonzero.one, LB.LinComb, Fin.prod_univ_one, zpow_one]
     exact rr _ _ _
   rw [hl] at hs
   dsimp only [prodSec]
@@ -356,7 +355,7 @@ theorem GlobalTheory.KeyTheta.prodSec_mem : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y
   rw [hs, ht]
   ring
 
-theorem GlobalTheory.KeyTheta.prodSec_fib : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) (L : LB X) (δ : LB Y) {W : Y.Opens} (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (GlobalTheory.KeyTheta.L1 L).U j)) (t : δ.Sec), (∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ Y), Set.range x ⊆ W → ∃ (g : Sp K ⟶ X) (j : (GlobalTheory.KeyTheta.L1 L).ι), g ≫ π = x ∧ valF g _ (σ j) ≠ 0) → ∀ (k : δ.ι) (hk : Y.basicOpen (t.f k) ≤ W) (y : Y), y ∈ Y.basicOpen (t.f k) → ∃ (z : X) (p : (CechPic.tens L (δ.pull π)).ι), π z = y ∧ z ∈ X.basicOpen (GlobalTheory.KeyTheta.prodSec π L δ hk σ t p) := by
+theorem GlobalTheory.KeyTheta.prodSec_fib : ∀ {X Y : Scheme.{0}} (π : X ⟶ Y) (L : LB X) (δ : LB Y) {W : Y.Opens} (σ : ∀ j, Γ(X, π ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one L).U j)) (t : δ.Sec), (∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ Y), Set.range x ⊆ W → ∃ (g : Sp K ⟶ X) (j : (_root_.GlobalTheory.ZH.TorsionNonzero.one L).ι), g ≫ π = x ∧ valF g _ (σ j) ≠ 0) → ∀ (k : δ.ι) (hk : Y.basicOpen (t.f k) ≤ W) (y : Y), y ∈ Y.basicOpen (t.f k) → ∃ (z : X) (p : (CechPic.tens L (δ.pull π)).ι), π z = y ∧ z ∈ X.basicOpen (GlobalTheory.KeyTheta.prodSec π L δ hk σ t p) := by
   intro X Y π L δ W σ t hne k hk y hy
   obtain ⟨K, _, _, x, hx⟩ := GlobalTheory.TripleOut.exists_geomPoint y
   obtain ⟨g, j, hg, hv⟩ := hne K x (by rintro _ ⟨w, rfl⟩; rw [hx]; exact hk hy)
@@ -466,7 +465,7 @@ theorem GlobalTheory.KeyTheta.ratio_value : ∀ (o Ω : Type) [CommRing o] [Fiel
   rw [eq_div_iff ha]
   exact mul_right_cancel₀ hc (by rw [← h]; ring)
 
-theorem GlobalTheory.KeyTheta.theta_ratio : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ZH.ThetaSys o Ω) (ρ : S.Real) (M : ZH.RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZH.ZHOut ρ M U₀ EE), (U₀ : Set M.Z).Nonempty → ∀ (a b : S.Gam) (W W' M₀ : M.Z.Opens) (hW : M₀ ≤ W) (hW' : M₀ ≤ W') (σ : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j)) (σ' : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W' ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j)), ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th a)⁻¹) _ σ → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th b)⁻¹) _ σ' → (M₀ : Set M.Z).Nonempty → ∀ u : Γ(M.Z, M₀), S.th a ≠ 0 → S.th b ≠ 0 → valF M.pt M₀ u = S.th b / S.th a → ∀ (j : (GlobalTheory.KeyTheta.L1 Zh.L.L).ι) (V : Zh.G.left.Opens) (hV : V ≤ Zh.G.hom ⁻¹ᵁ M₀ ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j), resG Zh.G.left (fun x hx => ⟨hW (hV hx).1, (hV hx).2⟩ : V ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j) (σ j) = (Zh.G.hom.appLE M₀ V (hV.trans inf_le_left)).hom u * resG Zh.G.left (fun x hx => ⟨hW' (hV hx).1, (hV hx).2⟩ : V ≤ Zh.G.hom ⁻¹ᵁ W' ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j) (σ' j) := by
+theorem GlobalTheory.KeyTheta.theta_ratio : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ZH.ThetaSys o Ω) (ρ : S.Real) (M : ZH.RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZH.ZHOut ρ M U₀ EE), (U₀ : Set M.Z).Nonempty → ∀ (a b : S.Gam) (W W' M₀ : M.Z.Opens) (hW : M₀ ≤ W) (hW' : M₀ ≤ W') (σ : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j)) (σ' : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W' ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j)), ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th a)⁻¹) _ σ → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th b)⁻¹) _ σ' → (M₀ : Set M.Z).Nonempty → ∀ u : Γ(M.Z, M₀), S.th a ≠ 0 → S.th b ≠ 0 → valF M.pt M₀ u = S.th b / S.th a → ∀ (j : (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).ι) (V : Zh.G.left.Opens) (hV : V ≤ Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j), resG Zh.G.left (fun x hx => ⟨hW (hV hx).1, (hV hx).2⟩ : V ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j) (σ j) = (Zh.G.hom.appLE M₀ V (hV.trans inf_le_left)).hom u * resG Zh.G.left (fun x hx => ⟨hW' (hV hx).1, (hV hx).2⟩ : V ≤ Zh.G.hom ⁻¹ᵁ W' ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j) (σ' j) := by
   intro o Ω _ _ _ S ρ M U₀ EE Zh hU a b W W' M₀ hW hW' σ σ' hg hg' hne u ha hb hv j V hV
   have rr : ∀ {A B C : Zh.G.left.Opens} (e : B ≤ A) (e' : C ≤ B) (s : Γ(Zh.G.left, A)),
       resG Zh.G.left e' (resG Zh.G.left e s) = resG Zh.G.left (e'.trans e) s := fun e e' s => by
@@ -490,20 +489,20 @@ theorem GlobalTheory.KeyTheta.theta_ratio : ∀ (o Ω : Type) [CommRing o] [Fiel
   rw [hcoef] at g3
   have heq := congrFun (Q.eq_of_genVal hU 1 _ _ _ _ _ g1 g3) j
   have heq' : resG Zh.G.left (fun x hx => ⟨hW hx.1, hx.2⟩ :
-        Zh.G.hom ⁻¹ᵁ M₀ ⊓ (L1 Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (L1 Zh.L.L).U j) (σ j) =
-      resG Zh.G.left (inf_le_left : Zh.G.hom ⁻¹ᵁ M₀ ⊓ (L1 Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ M₀)
+        Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j) (σ j) =
+      resG Zh.G.left (inf_le_left : Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ M₀)
         ((Zh.G.hom.appLE M₀ (Zh.G.hom ⁻¹ᵁ M₀) le_rfl).hom u) *
       resG Zh.G.left (fun x hx => ⟨hW' hx.1, hx.2⟩ :
-        Zh.G.hom ⁻¹ᵁ M₀ ⊓ (L1 Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W' ⊓ (L1 Zh.L.L).U j) (σ' j) := by
+        Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W' ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j) (σ' j) := by
     have h := heq
     simp only [Finset.univ_unique, Finset.sum_singleton] at h
     exact h
   rw [← rr (fun x hx => ⟨hW hx.1, hx.2⟩ :
-    Zh.G.hom ⁻¹ᵁ M₀ ⊓ (L1 Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (L1 Zh.L.L).U j) hV, heq', map_mul, rr, ar]
+    Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j ≤ Zh.G.hom ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j) hV, heq', map_mul, rr, ar]
   congr 1
   exact rr _ _ _
 
-theorem GlobalTheory.KeyTheta.prodSec_agree : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ZH.ThetaSys o Ω) (ρ : S.Real) (M : ZH.RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZH.ZHOut ρ M U₀ EE), (U₀ : Set M.Z).Nonempty → ∀ (δ : LB M.Z) (t : S.Gam → δ.Sec), ZM.SecCoord δ t M.pt S.th → ∀ (a b : S.Gam) (W W' : M.Z.Opens) (σ : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j)) (σ' : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W' ⊓ (GlobalTheory.KeyTheta.L1 Zh.L.L).U j)), σ ∈ secOn (GlobalTheory.KeyTheta.L1 Zh.L.L) (Zh.G.hom ⁻¹ᵁ W) → σ' ∈ secOn (GlobalTheory.KeyTheta.L1 Zh.L.L) (Zh.G.hom ⁻¹ᵁ W') → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th a)⁻¹) _ σ → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th b)⁻¹) _ σ' → ∀ (k l : δ.ι) (hk : M.Z.basicOpen ((t a).f k) ≤ W) (hl : M.Z.basicOpen ((t b).f l) ≤ W') (p : (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).ι), resG Zh.G.left (inf_le_inf_right _ inf_le_left : (Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l)) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p ≤ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p) (GlobalTheory.KeyTheta.prodSec Zh.G.hom Zh.L.L δ hk σ (t a) p) = resG Zh.G.left (inf_le_inf_right _ inf_le_right : (Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l)) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p ≤ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p) (GlobalTheory.KeyTheta.prodSec Zh.G.hom Zh.L.L δ hl σ' (t b) p) := by
+theorem GlobalTheory.KeyTheta.prodSec_agree : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ZH.ThetaSys o Ω) (ρ : S.Real) (M : ZH.RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Zh : ZH.ZHOut ρ M U₀ EE), (U₀ : Set M.Z).Nonempty → ∀ (δ : LB M.Z) (t : S.Gam → δ.Sec), ZM.SecCoord δ t M.pt S.th → ∀ (a b : S.Gam) (W W' : M.Z.Opens) (σ : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j)) (σ' : ∀ j, Γ(Zh.G.left, Zh.G.hom ⁻¹ᵁ W' ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U j)), σ ∈ secOn (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L) (Zh.G.hom ⁻¹ᵁ W) → σ' ∈ secOn (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L) (Zh.G.hom ⁻¹ᵁ W') → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th a)⁻¹) _ σ → ZH.GenVal ρ M U₀ Zh.u₀ Zh.G Zh.φ Zh.L.L Zh.w 1 (fun _ : Unit => ρ.th₁) (fun _ => (S.th b)⁻¹) _ σ' → ∀ (k l : δ.ι) (hk : M.Z.basicOpen ((t a).f k) ≤ W) (hl : M.Z.basicOpen ((t b).f l) ≤ W') (p : (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).ι), resG Zh.G.left (inf_le_inf_right _ inf_le_left : (Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l)) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p ≤ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p) (GlobalTheory.KeyTheta.prodSec Zh.G.hom Zh.L.L δ hk σ (t a) p) = resG Zh.G.left (inf_le_inf_right _ inf_le_right : (Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l)) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p ≤ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l) ⊓ (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U p) (GlobalTheory.KeyTheta.prodSec Zh.G.hom Zh.L.L δ hl σ' (t b) p) := by
   intro o Ω _ _ _ S ρ M U₀ EE Zh hU δ t hsc a b W W' σ σ' hσ hσ' hg hg' k l hk hl p
   have rr : ∀ {A B C : Zh.G.left.Opens} (e : B ≤ A) (e' : C ≤ B) (s : Γ(Zh.G.left, A)),
       resG Zh.G.left e' (resG Zh.G.left e s) = resG Zh.G.left (e'.trans e) s := fun e e' s => by
@@ -526,7 +525,7 @@ theorem GlobalTheory.KeyTheta.prodSec_agree : ∀ (o Ω : Type) [CommRing o] [Fi
   obtain ⟨u, hu⟩ := GlobalTheory.KeyTheta.ratio_exists δ (t a) (t b) k M₀ inf_le_left
   obtain ⟨ha, hb, hv⟩ := GlobalTheory.KeyTheta.ratio_value o Ω M δ t S.th hsc a b k l M₀ hne inf_le_left inf_le_right u hu
   have hO : Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t a).f k) ⊓ Zh.G.hom ⁻¹ᵁ M.Z.basicOpen ((t b).f l) ⊓
-      (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U (i, jj) ≤ Zh.G.hom ⁻¹ᵁ M₀ ⊓ (L1 Zh.L.L).U (fun _ => i) :=
+      (CechPic.tens Zh.L.L (δ.pull Zh.G.hom)).U (i, jj) ≤ Zh.G.hom ⁻¹ᵁ M₀ ⊓ (_root_.GlobalTheory.ZH.TorsionNonzero.one Zh.L.L).U (fun _ => i) :=
     fun x hx => ⟨⟨hx.1.1, hx.1.2⟩, lineBundle_chart_le_firstPower_chart Zh.L.L i hx.2.1⟩
   have h1 := GlobalTheory.KeyTheta.theta_ratio o Ω S ρ M U₀ EE Zh hU a b W W' M₀ (inf_le_left.trans hk) (inf_le_right.trans hl) σ σ' hg hg' hne u ha hb hv
     (fun _ => i) _ hO
@@ -1104,15 +1103,6 @@ theorem norm_toF_unit {V : Type} [CommRing V] [IsDomain V] {I : Ideal V} {C : Ty
   have h4 : ‖toF V C u‖ * ‖toF V C ↑u⁻¹‖ = 1 := by rw [← norm_mul, h3, norm_one]
   nlinarith [norm_nonneg (toF V C u), norm_nonneg (toF V C ↑u⁻¹)]
 
-theorem c_ne_zero : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V],
-    IsAdicComplete (IsLocalRing.maximalIdeal V) V → ∀ (D : DegData V (IsLocalRing.maximalIdeal V))
-    (x : KeyIn (FractionRing V)) (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G →
-    ∀ (U : Unif (IsLocalRing.maximalIdeal V) D x.P G) (w₀ : GlobalTheory.UT.W0 U.toUnifPre), GlobalTheory.UT.NormW U.toUnifPre w₀ x.rig →
-    ∀ (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] [CompleteSpace C] [IsAlgClosed C] [CharZero C]
-      [Algebra (FractionRing V) C], CExt V (IsLocalRing.maximalIdeal V) C →
-    ∀ (N : NumD C) (ν : NumOf D.toPre C N) (th : GlobalTheory.UT.SecA x.P C 1) (ϑ : Fam D.toPre C 1) (c : C),
-      IsPolAVSectionInverseImage x.P (TFK (R := V) C) x.th th → U.ExpandsF C 1 w₀ th ϑ → ν.FamV ϑ (c • N.vth) → c ≠ 0 := GlobalTheory.T.genericThetaExpansion_scalar_ne_zero
-
 theorem level_labels : ∀ (K C : Type) [Field K] [Field C] [IsAlgClosed C] (f : K →+* C) (P : PolAV (Sp K))
     (P' : PolAV (Sp C)) (io : (Over.mk (spMap f) ⟶ P.A) ≃* (baseOver (Sp C) ⟶ P'.A)),
     (∀ (k : ℕ) a b (z : Γ(Sp C, ⊤)ˣ), WeilIs P'.A P'.L k (io a) (io b) z → WeilIs P.A P.L k a b z) →
@@ -1207,14 +1197,14 @@ theorem kapF_of_rule4 : ∀ κ : Rule, Rule4 κ → KapF κ := by
   have hκC : (κ C xC : C) = algebraMap (FractionRing V) C (κ (FractionRing V) x') := hFun _ _ _ x' xC hPB
   obtain ⟨ζ, ⟨lev⟩⟩ := GlobalTheory.T.exists_symplecticLevel_algClosed_charZero C xC.P (m ^ 2) (by omega)
   obtain ⟨hprim, hadd, hinj, hsurj, hweil⟩ :=
-    level_labels (FractionRing V) C (algebraMap (FractionRing V) C) x'.P xC.P io hW x.P.g (m ^ 2) hgC ζ lev hm2
+    _root_.GlobalTheory.levelPoint_baseChange_label (FractionRing V) C (algebraMap (FractionRing V) C) x'.P xC.P io hW x.P.g (m ^ 2) hgC ζ lev hm2
   set pt : (Fin (2 * x.P.g) → ZMod (m ^ 2)) → (TFK (R := V) C ⟶ x.P.A) := fun a => io.symm (levelPoint lev hgC a) with hpt
-  obtain ⟨p, Q, hQL, hpq⟩ := GlobalTheory.T.torsionSymplecticLabels_of_levelStructure V hcomp D x.P G hSA U C hCE N ν hInt x.P.g (m ^ 2) (by omega) ζ pt hprim
+  obtain ⟨p, Q, hQL, hpq⟩ := _root_.GlobalTheory.MBLow.qLevel_of_torsion_labels V hcomp D x.P G hSA U C hCE N ν hInt x.P.g (m ^ 2) (by omega) ζ pt hprim
     hadd hinj hsurj hweil
 
-  choose Θ tt ss ff hfam using fun a => GlobalTheory.T.symmetricThetaTranslates_expand_seriesFamilies V hcomp D x.P G hSA U C hCE N ν hInt w₀ x.rig hNW th ϑ c hExp hFV
+  choose Θ tt ss ff hfam using fun a => _root_.GlobalTheory.MBLow.symTranslate_expandsF V hcomp D x.P G hSA U C hCE N ν hInt w₀ x.rig hNW th ϑ c hExp hFV
     m hmOdd (p a) (Q a) (pt a) (hpq a).1 (hpq a).2
-  have hc : c ≠ 0 := c_ne_zero V hcomp D x G hSA U w₀ hNW C hCE N ν th ϑ c hOn hExp hFV
+  have hc : c ≠ 0 := _root_.GlobalTheory.KeyScalarNe.scalar_ne_zero V hcomp D x G hSA U w₀ hNW C hCE N ν th ϑ c hOn hExp hFV
   set s' : (Fin (2 * x.P.g) → ZMod (m ^ 2)) → Fam D.toPre C (m ^ 2) := fun a => c⁻¹ • ss a with hs'
   have hs'V : ∀ a, ν.FamV (s' a) (ff a) := fun a => by
     have := GlobalTheory.WeilValues.famV_smul ν (hfam a).2.2.2.2 c⁻¹
@@ -1228,7 +1218,7 @@ theorem kapF_of_rule4 : ∀ κ : Rule, Rule4 κ → KapF κ := by
     obtain rfl : z = (default : PrimeSpectrum C) := Subsingleton.elim _ _
     exact hi
   obtain ⟨i₀, hi₀⟩ := hch
-  choose cj hcj using fun j => GlobalTheory.T.tangentVector_section_value_eq_expansion_sum V hcomp D x.P G hSA U C hCE N ν hInt w₀ x.rig hNW (y' j) (gm₀ j) (gm j)
+  choose cj hcj using fun j => _root_.GlobalTheory.MBLow.TanExp.value_at_tangent V hcomp D x.P G hSA U C hCE N ν hInt w₀ x.rig hNW (y' j) (gm₀ j) (gm j)
     (yA j) (hy'.1 j) (hT j).1 (hT j).2.2 (hyA j) (m ^ 2) i₀ hi₀
   set j₁ : Fin x.P.g := ⟨0, x.g_pos⟩
   set Sf : (Fin (2 * x.P.g) → ZMod (m ^ 2)) → Fin x.P.g → C :=
@@ -1236,7 +1226,7 @@ theorem kapF_of_rule4 : ∀ κ : Rule, Rule4 κ → KapF κ := by
   set Ss : (Fin (2 * x.P.g) → ZMod (m ^ 2)) → Fin x.P.g → C :=
     fun a j => ∑' α, (jc ν (ss a) (gm j) α).snd / ν.rg ^ (m ^ 2) with hSs
   have hind : ∀ a j, Sf a j = Sf a j₁ := fun a j =>
-    fst_indep (FractionRing V) C x.P x.rig (m ^ 2) (tt a) i₀ hi₀ (v' j) (v' j₁) (hv'.1 j) (hv'.1 j₁) (yA j) (yA j₁)
+    _root_.GlobalTheory.TangentFirstOrder.fst_eq_of_tangent (FractionRing V) C x.P x.rig (m ^ 2) (tt a) i₀ hi₀ (v' j) (v' j₁) (hv'.1 j) (hv'.1 j₁) (yA j) (yA j₁)
       (hyA j).1 (hyAs j) (hyA j₁).1 (hyAs j₁) _ _ _ _ (hcj j (tt a) (ss a) (hfam a).2.2.1).2.2
       (hcj j₁ (tt a) (ss a) (hfam a).2.2.1).2.2
   have hTJ : ThJetT x'.P x'.rig m (spMap (algebraMap (FractionRing V) C)) th pt yA (fun a => Sf a j₁) Ss := by
@@ -1286,12 +1276,12 @@ theorem kapF_of_rule4 : ∀ κ : Rule, Rule4 κ → KapF κ := by
     rw [hSf, ← tsum_mul_left]
     apply tsum_congr
     intro α
-    simp [haa, hs', jc_smul, TrivSqZeroExt.fst_mul, mul_div_assoc]
+    simp [haa, hs', _root_.GlobalTheory.JcSmul.jc_smul, TrivSqZeroExt.fst_mul, mul_div_assoc]
   have hSb : ∀ a j, c⁻¹ * Ss a j = ∑' α, bb a j α := fun a j => by
     rw [hSs, ← tsum_mul_left]
     apply tsum_congr
     intro α
-    simp [hbb, hs', jc_smul, TrivSqZeroExt.snd_mul, mul_div_assoc]
+    simp [hbb, hs', _root_.GlobalTheory.JcSmul.jc_smul, TrivSqZeroExt.snd_mul, mul_div_assoc]
   have hJ3 : ThJet x'' hgC m (levelPoint lev hgC) (fun i => ∑' α, aa i α) (fun i j => ∑' α, bb i j α) := by
     have e1 : (fun i => ∑' α, aa i α) = fun i => c⁻¹ * Sf i j₁ := funext fun i => (hSa i).symm
     have e2 : (fun i j => ∑' α, bb i j α) = fun i j => c⁻¹ * Ss i j := funext fun i => funext fun j => (hSb i j).symm
@@ -1395,7 +1385,7 @@ theorem keyTrait_of_keyTraitU : ∀ κ : Rule, KeyTraitU κ → KeyTrait κ := b
   have hFd := dualMapR_eq_of_map _ F hF1 hF2
   haveI : IsMonHom θ.hom := hθm
   refine hU V hA hF D x G hSA U' w₀ ⟨hw₀, x.rig_gen, ?_⟩ y hLie (fun i => ?_) σ' ?_ ?_
-  · exact GlobalTheory.T.iso_preserves_rigidification_at_origin V G x.P.A θ.hom φ hθφ hφe x.P.L L.L U.LG.L x.P.isLB L.isLB U.LG.isLB x.rig L.rig U.LG.rig ψ e' w₀ hPW hRig heR
+  · exact _root_.GlobalTheory.normW_origin V G x.P.A θ.hom φ hθφ hφe x.P.L L.L U.LG.L x.P.isLB L.isLB U.LG.isLB x.rig L.rig U.LG.rig ψ e' w₀ hPW hRig heR
   · show (x.v i).left ≫ (U'.gen.inv.left ≫ pullback.fst G.hom (jK V)) = _
     rw [hinv, hv i, hFd]
   · intro s
@@ -1449,24 +1439,13 @@ theorem mk_le {A X : Type} [MetricSpace X] (f : A → X) (hf : DenseRange f) (hA
   rw [← Cardinal.power_def, Cardinal.mk_nat]
   exact (Cardinal.power_le_power_right hA).trans_eq Cardinal.continuum_power_aleph0
 
-theorem nonempty_iso (p : ℕ) [Fact p.Prime] : Nonempty (ℂ ≃+* ℂ_[p]) := by
-  have h1 : #ℚ_[p] ≤ 𝔠 := mk_le _ (Padic.denseRange_ratCast p)
-    (Cardinal.mk_le_aleph0.trans Cardinal.aleph0_le_continuum)
-  have h2 : #(PadicAlgCl p) ≤ 𝔠 :=
-    (Algebra.IsAlgebraic.cardinalMk_le_max ℚ_[p] (PadicAlgCl p)).trans (max_le h1 Cardinal.aleph0_le_continuum)
-  have h3 : #(ℂ_[p]) ≤ 𝔠 := mk_le (X := PadicComplex p) _
-    (UniformSpace.Completion.denseRange_coe (α := PadicAlgCl p)) h2
-  have h4 : 𝔠 ≤ #(ℂ_[p]) := continuum_le_cardinal_of_nontriviallyNormedField _
-  refine IsAlgClosed.ringEquiv_of_equiv_of_charZero (by rw [Cardinal.mk_complex]; exact Cardinal.aleph0_lt_continuum) ?_
-  exact Cardinal.eq.1 (by rw [Cardinal.mk_complex]; exact le_antisymm h4 h3)
-
 end GlobalTheory.MomOne.Inh
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormNatEqOne =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteAlgClosedFieldDvrEmbedding =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteAlgClosedFieldDvrEmbedding", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot\npublic import Mathlib.NumberTheory.Padics.Complex\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingPadicComplexInt\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormNatEqOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.UnifAlong\nimport Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteAlgClosedFieldDvrEmbedding", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot\npublic import Mathlib.NumberTheory.Padics.Complex\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingPadicComplexInt\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormNatEqOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.UnifAlong\nimport Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1512,7 +1491,7 @@ theorem exists_complete_closed_field :
   let T : Formalism.L2.Pj.CDVR := { V := V }
   obtain ⟨p, hp, k, kO, hk⟩ := GlobalTheory.CompleteDvrEmbedding.exists_embedding_padicComplexInt T hf
   letI : Algebra (FractionRing V) ℂ_[p] := k.toAlgebra
-  obtain ⟨eC⟩ := GlobalTheory.MomOne.Inh.nonempty_iso p
+  obtain ⟨eC⟩ := _root_.GlobalTheory.MomOne.Basic.nonempty_iso p
   refine ⟨ℂ_[p], inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, this, ⟨?_, ?_⟩, ⟨eC.symm⟩⟩
   · have hle : ∀ r : V, ‖k (algebraMap V (FractionRing V) r)‖ ≤ 1 := fun r => by
       rw [← hk r]

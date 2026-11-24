@@ -204,17 +204,9 @@ open ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction
 
 variable {R : Type} [CommRing R] [IsDomain R] (D : DegPre R)
 
-def rigV {T : Over (Spec (CommRingCat.of R))} (z : T.left) (J : (T.left ⟶ D.P.A.left) → D.P.L.ι) :
-    (T.left.presheaf.stalk z)ˣ :=
-  val (L := D.P.L) (φ := fun _ : PUnit => eSec D.P.A) (ε := fun _ => 1) D.rig T.hom z J
-
-theorem cPoint_zero' (T : Over (Spec (CommRingCat.of R))) : cP D T 0 = 1 := by
-  have := cPoint_nsmul D T 0 0
-  rwa [zero_nsmul, pow_zero] at this
-
 theorem cPoint_neg' (T : Over (Spec (CommRingCat.of R))) (y : D.X) : cP D T (-y) = (cP D T y)⁻¹ := by
   have := cPoint_add D T (-y) y
-  rw [neg_add_cancel, cPoint_zero'] at this
+  rw [neg_add_cancel, _root_.GlobalTheory.PsiZero.cPoint_zero'] at this
   exact eq_inv_of_mul_eq_one_left this.symm
 
 section Values
@@ -223,28 +215,17 @@ variable {D} {F : Type} [Field F] [Algebra (FractionRing R) F] {T : Over (Spec (
   (σ : T ⟶ TF (R := R) F) {z : T.left} {J : (T.left ⟶ D.P.A.left) → D.P.L.ι} (hJ : Good D.P.L z J)
 include hJ
 
-theorem val_rigK : val D.rigK (σ.left ≫ jFK (R := R) F) z J = rigV D z J :=
+theorem val_rigK : val D.rigK (σ.left ≫ jFK (R := R) F) z J = _root_.GlobalTheory.UU.rigV D z J :=
   (val_pull hJ _ _ _).trans (congrArg (fun q => val (L := D.P.L) (φ := fun _ : PUnit => eSec D.P.A) (ε := fun _ => 1)
     D.rig q z J) ((Category.assoc _ _ _).trans (Over.w σ)))
-
-theorem tau_nsmul (hB : D.TauBimult) (a mu b : D.X) (k : ℕ) :
-    val (D.tau (a + k • mu) b) (σ.left ≫ jFK (R := R) F) z J * cubN (th D z J) k (cP D T a) (cP D T mu) (cP D T b) =
-      val (D.tau a b) (σ.left ≫ jFK (R := R) F) z J * val (D.tau mu b) (σ.left ≫ jFK (R := R) F) z J ^ k := by
-  induction k with
-  | zero => rw [zero_nsmul, add_zero, pow_zero]; rfl
-  | succ k ih =>
-    have e := tau_mul σ hJ hB (a + k • mu) mu b
-    rw [cPoint_add, cPoint_nsmul] at e
-    rw [succ_nsmul, ← add_assoc, cubN, Finset.prod_range_succ, mul_comm (∏ _ ∈ _, _), ← _root_.mul_assoc, e, pow_succ,
-      ← _root_.mul_assoc, ← ih, cubN, mul_right_comm]
 
 theorem tau_zero (hB : D.TauBimult) (b : D.X) : val (D.tau 0 b) (σ.left ≫ jFK (R := R) F) z J = 1 := by
   have e := tau_mul σ hJ hB 0 0 b
   have C : IsCub (th D z J) := isCub_cubV D.cub hJ
-  rw [add_zero, cPoint_zero', C.face] at e
+  rw [add_zero, _root_.GlobalTheory.PsiZero.cPoint_zero', C.face] at e
   exact (mul_left_cancel e).symm
 
-theorem psi_zero (hB : D.TauBimult) : val (D.psi 0) (σ.left ≫ jFK (R := R) F) z J * rigV D z J = 1 := by
+theorem psi_zero (hB : D.TauBimult) : val (D.psi 0) (σ.left ≫ jFK (R := R) F) z J * _root_.GlobalTheory.UU.rigV D z J = 1 := by
   have e := tau_zero σ hJ hB 0
   rw [TauPull.val_tau _ hJ, add_zero, val_rigK σ hJ, mul_inv_cancel, _root_.one_mul, ← mul_inv] at e
   exact inv_eq_one.1 e
@@ -271,14 +252,14 @@ theorem exists_sq (hB : D.TauBimult) (hE : D.PsiEven) (F : Type) [Field F] [Alge
     ∃ s : LB.Gen (LB.LinComb D.P.L (K := Fin 2) ![(𝟙 D.P.A : D.P.A ⟶ D.P.A).left, (𝟙 D.P.A ^ n : D.P.A ⟶ D.P.A).left]
       ![((n ^ 2 : ℕ) : ℤ), -1]), s.IsGen ∧
       (∀ (T : Over (Spec (CommRingCat.of R))) (z : T.left) (J), Good D.P.L z J →
-        val s (1 : T ⟶ D.P.A).left z J * rigV D z J = rigV D z J ^ (n ^ 2)) ∧
+        val s (1 : T ⟶ D.P.A).left z J * _root_.GlobalTheory.UU.rigV D z J = _root_.GlobalTheory.UU.rigV D z J ^ (n ^ 2)) ∧
       ∀ (T : Over (Spec (CommRingCat.of R))) (σ : T ⟶ TF (R := R) F) (mu : D.X) (z : T.left) (J), Good D.P.L z J →
         val s (cP D T mu).left z J * val (D.psi mu) (σ.left ≫ jFK (R := R) F) z J ^ (n ^ 2) =
           val (D.psi (n • mu)) (σ.left ≫ jFK (R := R) F) z J := by
   let ρ := LB.pullGen D.P.L (fun _ : PUnit => eSec D.P.A) (fun _ => 1) D.rig D.P.A.hom
   have hρ : ρ.IsGen := pullGen_isGen _ _ _ _ D.rig_gen _
   have vρ : ∀ (T : Over (Spec (CommRingCat.of R))) (x : T ⟶ D.P.A) (z : T.left) (J), Good D.P.L z J →
-      val ρ x.left z J = rigV D z J := fun T x z J hJ => by
+      val ρ x.left z J = _root_.GlobalTheory.UU.rigV D z J := fun T x z J hJ => by
     rw [val_pull hJ, Over.w]; rfl
   have e1 : D.P.A.hom ≫ eSec D.P.A = (1 : D.P.A ⟶ D.P.A).left := rfl
   induction n with
@@ -311,7 +292,7 @@ theorem exists_sq (hB : D.TauBimult) (hE : D.PsiEven) (F : Type) [Field F] [Alge
         (powGen_isGen _ _ _ _ (invGen_isGen _ _ _ _ D.sym_gen) _) (powGen_isGen _ _ _ _ hρ _)))
     have ev : ∀ (T : Over (Spec (CommRingCat.of R))) (x : T ⟶ D.P.A) (z : T.left) (J), Good D.P.L z J →
         val s' x.left z J = val s x.left z J * cubN (th D z J) n x x x⁻¹ *
-          ((val D.sym x.left z J)⁻¹ ^ n * rigV D z J ^ (2 * n + 1)) := fun T x z J hJ => by
+          ((val D.sym x.left z J)⁻¹ ^ n * _root_.GlobalTheory.UU.rigV D z J ^ (2 * n + 1)) := fun T x z J hJ => by
       rw [vs' _ _ z J hJ, val_mul hJ, val_mul hJ, val_mul hJ, val_pow, val_pow, val_inv, vρ _ _ z J hJ, vt _ _ z J hJ,
         GrpObj.comp_inv, Category.comp_id]
     refine ⟨s', hs', fun T z J hJ => ?_, fun T σ mu z J hJ => ?_⟩
@@ -319,7 +300,7 @@ theorem exists_sq (hB : D.TauBimult) (hE : D.PsiEven) (F : Type) [Field F] [Alge
       rw [ev _ _ z J hJ, inv_one, C.N_one, sym_one hJ, inv_one, one_pow, _root_.mul_one, _root_.one_mul, mul_right_comm,
         s₁ T z J hJ, ← pow_add]
       congr 1; ring
-    · have f₁ := tau_nsmul σ hJ hB mu mu (-mu) n
+    · have f₁ := _root_.ReciprocityTheory.ChartRestriction.G.DVR.UUA.tau_nsmul σ hJ hB mu mu (-mu) n
       rw [TauPull.val_tau _ hJ, TauPull.val_tau _ hJ, cPoint_neg', add_neg_cancel, val_rigK σ hJ, add_comm mu,
         add_neg_cancel_right, ← succ_nsmul] at f₁
       have f₂ := congrArg (· ^ n) (psi_even σ hJ hE mu)
@@ -348,7 +329,7 @@ theorem prod_mulB {T : Over (Spec (CommRingCat.of R))} (x : T ⟶ D.P.A) (m : �
 theorem exists_mulGen (hB : D.TauBimult) (hE : D.PsiEven) (F : Type) [Field F] [Algebra (FractionRing R) F] (m : ℕ)
     (χ : D.X) : ∃ u : LB.Gen (LB.LinComb D.P.L (mulφB D m χ) (mulεB 1 (m ^ 2))), u.IsGen ∧
       (∀ (T : Over (Spec (CommRingCat.of R))) (z : T.left) (J), Good D.P.L z J →
-        val u (1 : T ⟶ D.P.A).left z J * rigV D z J = rigV D z J ^ (m ^ 2)) ∧
+        val u (1 : T ⟶ D.P.A).left z J * _root_.GlobalTheory.UU.rigV D z J = _root_.GlobalTheory.UU.rigV D z J ^ (m ^ 2)) ∧
       ∀ (T : Over (Spec (CommRingCat.of R))) (σ : T ⟶ TF (R := R) F) (mu : D.X) (z : T.left) (J), Good D.P.L z J →
         val u (cP D T mu).left z J * val (D.psi mu) (σ.left ≫ jFK (R := R) F) z J ^ (m ^ 2) *
             val (D.tau mu (m • χ)) (σ.left ≫ jFK (R := R) F) z J =
@@ -378,9 +359,9 @@ theorem exists_mulGen (hB : D.TauBimult) (hE : D.PsiEven) (F : Type) [Field F] [
   · have C : IsCub (th D z J) := isCub_cubV D.cub hJ
     have c : cubN (th D z J) m 1 1 (cP D T χ) = 1 := Finset.prod_eq_one fun _ _ => C.face₂ _ _
     rw [ev _ _ z J hJ, C.N_one, c, inv_one, _root_.mul_one, _root_.mul_one, s₁ T z J hJ]
-  · have f₁ := tau_nsmul σ hJ hB 0 χ mu m
-    have f₂ := tau_nsmul σ hJ hB 0 mu χ m
-    rw [zero_add, cPoint_zero', tau_zero σ hJ hB] at f₁ f₂
+  · have f₁ := _root_.ReciprocityTheory.ChartRestriction.G.DVR.UUA.tau_nsmul σ hJ hB 0 χ mu m
+    have f₂ := _root_.ReciprocityTheory.ChartRestriction.G.DVR.UUA.tau_nsmul σ hJ hB 0 mu χ m
+    rw [zero_add, _root_.GlobalTheory.PsiZero.cPoint_zero', tau_zero σ hJ hB] at f₁ f₂
     rw [tau_symm σ hJ, tau_symm σ hJ χ] at f₁
     have f₄ := s₂ T σ mu z J hJ
     rw [ev _ _ z J hJ]
@@ -414,7 +395,7 @@ theorem fe_compat (hG : GlobalFnsSt) {F : Type} [Field F] [Algebra (FractionRing
     (u₁ : LB.Gen (LB.LinComb D.P.L (mulφB D m (χ + 1 • m • mu)) (mulεB 1 (m ^ 2)))) (hu₁ : u₁.IsGen)
     (u₂ : LB.Gen (LB.LinComb D.P.L (mulφB D m χ) (mulεB 1 (m ^ 2)))) (hu₂ : u₂.IsGen)
     (v₁ : ∀ (T : Over (Spec (CommRingCat.of R))) (z : T.left) (J), Good D.P.L z J →
-        val u₁ (1 : T ⟶ D.P.A).left z J * rigV D z J = rigV D z J ^ (m ^ 2))
+        val u₁ (1 : T ⟶ D.P.A).left z J * _root_.GlobalTheory.UU.rigV D z J = _root_.GlobalTheory.UU.rigV D z J ^ (m ^ 2))
     (v₂ : ∀ (T : Over (Spec (CommRingCat.of R))) (σ : T ⟶ TF (R := R) F) (z : T.left) (J), Good D.P.L z J →
         val u₂ (cP D T mu).left z J * val (D.psi mu) (σ.left ≫ jFK (R := R) F) z J ^ (m ^ 2) *
             val (D.tau mu (m • χ)) (σ.left ≫ jFK (R := R) F) z J =
@@ -564,7 +545,7 @@ theorem exists_mulFam (hG : GlobalFnsSt) (hB : D.TauBimult) (hE : D.PsiEven) {I 
     have e₁ : (1 : 𝟙_ (Over (Spec (CommRingCat.of R))) ⟶ D.P.A).left = eSec D.P.A := Category.id_comp _
     have e₂ := u₁ χ (𝟙_ _) y J hJ
     obtain ⟨n, hn⟩ : ∃ n, m ^ 2 = n + 1 := Nat.exists_eq_succ_of_ne_zero (pow_ne_zero 2 hm)
-    have e₃ : rigV D (T := 𝟙_ _) y J ^ (m ^ 2) = rigV D (T := 𝟙_ _) y J ^ (m ^ 2 - 1) * rigV D (T := 𝟙_ _) y J := by
+    have e₃ : _root_.GlobalTheory.UU.rigV D (T := 𝟙_ _) y J ^ (m ^ 2) = _root_.GlobalTheory.UU.rigV D (T := 𝟙_ _) y J ^ (m ^ 2 - 1) * _root_.GlobalTheory.UU.rigV D (T := 𝟙_ _) y J := by
       rw [hn, pow_succ]; rfl
     rw [e₁, e₃] at e₂
     rw [val_pull hJ, Category.id_comp]
@@ -647,11 +628,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_section_pullback_commuting_endomorphism_generator : ∀ {X Y : Scheme.{0}} (L : LB X), L.IsLB → ∀ (β : Y ⟶ X) (g : Y ⟶ Y) (h : X ⟶ X), g ≫ β = β ≫ h →
-    ∀ (k k' : ℕ) (u : LB.Gen (LB.LinComb L (K := Fin 2) ![𝟙 X, h] ![(k' : ℤ), -(k : ℤ)])), u.IsGen → ∀ (σ : SecK L β k),
-    ∃ σ₂ : SecK L β k', ∀ (Z : Scheme.{0}) (r : Z ⟶ Y) (z : Z) (J : (Z ⟶ X) → L.ι), Good L z J →
-      sval σ₂ r z J = (val u (r ≫ β) z J).val * sval σ (r ≫ g) z J := by
-  first | exact @GlobalTheory.Mum.exists_secK_pullMul_gen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionPullbackCommutingEndomorphismGeneraStatement =====
@@ -875,8 +851,8 @@ theorem expand : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base 
   have hinj : Function.Injective E.h := fun a b h => hsm (by simpa only [hEh] using h)
   obtain ⟨β₀, hβ₀⟩ := ThetaSum.exists_gen_pow T.U.LG T.U.cubG T.U.symG T.U.symG_gen m E.aG hEG
   obtain ⟨β, hβ, hβ'⟩ := PullExp.exists_normalised T.U.LG.isLB E.aG _ _ β₀ hβ₀
-  obtain ⟨κ₀, hκ₀, hrel⟩ := GlobalTheory.T.descent_powerIso_endomorphism_abelianPart_uniformization hL W (maximalIdeal W) hI T.D' T.A T.G hG T.U E (m ^ 2) 1 β hβ hβ'
-  obtain ⟨σ₃, f₃, p₁, p₂, p₃, p₄⟩ := GlobalTheory.T.pullback_section_endomorphism_expansion W (maximalIdeal W) T.D' T.A T.G T.U.toUnifPre E hinj (m ^ 2) 1 β hβ κ₀
+  obtain ⟨κ₀, hκ₀, hrel⟩ := _root_.GlobalTheory.UT.PullDescent.main hL W (maximalIdeal W) hI T.D' T.A T.G hG T.U E (m ^ 2) 1 β hβ hβ'
+  obtain ⟨σ₃, f₃, p₁, p₂, p₃, p₄⟩ := _root_.GlobalTheory.PullInt.main W (maximalIdeal W) T.D' T.A T.G T.U.toUnifPre E hinj (m ^ 2) 1 β hβ κ₀
     hκ₀.1 hrel σ' f' hσ'
   have hf : f₃ = f'' := funext fun b => ReciprocityTheory.ChartRestriction.G.DVR.SecOps.sec_ext (sec_ext_val T.D'.toPre.P.isLB fun y J hJ => by
     by_cases hb : b ∈ Set.range E.h
@@ -929,18 +905,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.expansion_multiplicationPullback_trait_degreeOne : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R))
-    (C : LabCover D) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (m : ℕ), Odd m →
-    ∀ (F₁ : IntFam (maximalIdeal R) D.toPre 1) (G : IntFam (maximalIdeal R) D.toPre (m ^ 2)), MulFam m F₁ G →
-    ∀ (σ' : H0 T.U.LG.L 1) (f' : ∀ x, T.D'.toPre.SecB 1 x), (∀ x, PullB T.hD x (F₁.f (T.hD.xe x)) (f' x)) →
-    (∀ e, T.U.ExpandsAt e 1 σ' f') →
-    ∀ (f'' : ∀ x, T.D'.toPre.SecB (m ^ 2) x), (∀ x, PullB T.hD x (G.f (T.hD.xe x)) (f'' x)) →
-    ∃ (uG : LB.Gen (LB.LinComb T.U.LG.L (K := Fin 2) ![𝟙 T.G.left, (mulA T.G m).left] ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)]))
-      (σ'' : H0 T.U.LG.L (m ^ 2)), uG.IsGen ∧
-      (∀ (Z : Scheme.{0}) (r : Z ⟶ T.G.left) (z : Z) (J : (Z ⟶ T.G.left) → T.U.LG.L.ι), Good T.U.LG.L z J →
-        sval σ'' r z J = (val uG (r ≫ 𝟙 _) z J).val * sval σ' (r ≫ (mulA T.G m).left) z J) ∧
-      ∀ e, T.U.ExpandsAt e (m ^ 2) σ'' f'' := by
-  first | exact @GlobalTheory.Mum.MulExpand.expand
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExpansionMultiplicationPullbackTraitDegreeOneStatement =====
@@ -1003,20 +967,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.multiplicationPullback_trait_genericCondition : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : DegData R (maximalIdeal R))
-    (C : LabCover D) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (m : ℕ) (a : W)
-    (u : LB.Gen (LB.LinComb C.P.L.L (K := Fin 2) ![𝟙 C.G.left, (mulA C.G m).left] ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)]))
-    (θ₀ : SecK C.P.L.L C.α 1) (S : SecK C.P.L.L C.α (m ^ 2)),
-    (∀ (Z : Scheme.{0}) (p : Z ⟶ C.A.A.left) (z : Z) J, Good C.P.L.L z J →
-      sval S p z J = (val u (p ≫ C.α) z J).val * sval θ₀ (p ≫ (mulA C.A.A m).left) z J) →
-    ∀ (σ : SecK C.P.L.L T.β 1) (σ₂ : SecK C.P.L.L T.β (m ^ 2)),
-    (∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left), p ≫ T.β = p' ≫ C.α → ∀ z J, Good C.P.L.L z J →
-      sval σ p z J = gs p z ⊤ (scal T.G.hom a) * sval θ₀ p' z J) →
-    (∀ (Z : Scheme.{0}) (r : Z ⟶ T.G.left) (z : Z) (J : (Z ⟶ C.G.left) → C.P.L.L.ι), Good C.P.L.L z J →
-      sval σ₂ r z J = (val u (r ≫ T.β) z J).val * sval σ (r ≫ (mulA T.G m).left) z J) →
-    ∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left), p ≫ T.β = p' ≫ C.α → ∀ z J, Good C.P.L.L z J →
-      sval σ₂ p z J = gs p z ⊤ (scal T.G.hom a) * sval S p' z J := by
-  first | exact @GlobalTheory.Mum.pullMul_trait_generic
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicationPullbackTraitGenericConditionStatement =====
@@ -1120,19 +1070,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.multiplicationPullbacks_differ_by_unit : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R))
-    (C : LabCover D) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (m : ℕ)
-    (u : LB.Gen (LB.LinComb C.P.L.L (K := Fin 2) ![𝟙 C.G.left, (mulA C.G m).left] ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)])),
-    u.IsGen →
-    ∀ (uG : LB.Gen (LB.LinComb T.U.LG.L (K := Fin 2) ![𝟙 T.G.left, (mulA T.G m).left] ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)])),
-    uG.IsGen → ∀ (b : W) (σ' : H0 T.U.LG.L 1) (σ : SecK C.P.L.L T.β 1), T.Carries b σ' σ →
-    ∀ (σ₂ : SecK C.P.L.L T.β (m ^ 2)) (σ'' : H0 T.U.LG.L (m ^ 2)),
-    (∀ (Z : Scheme.{0}) (r : Z ⟶ T.G.left) (z : Z) (J : (Z ⟶ C.G.left) → C.P.L.L.ι), Good C.P.L.L z J →
-      sval σ₂ r z J = (val u (r ≫ T.β) z J).val * sval σ (r ≫ (mulA T.G m).left) z J) →
-    (∀ (Z : Scheme.{0}) (r : Z ⟶ T.G.left) (z : Z) (J : (Z ⟶ T.G.left) → T.U.LG.L.ι), Good T.U.LG.L z J →
-      sval σ'' r z J = (val uG (r ≫ 𝟙 _) z J).val * sval σ' (r ≫ (mulA T.G m).left) z J) →
-    ∃ v : Wˣ, T.Carries (b * v) σ'' σ₂ := by
-  first | exact @GlobalTheory.Mum.Trait.carries_mulPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicationPullbacksDifferByUnitStatement =====
@@ -1154,12 +1091,12 @@ theorem exp_mulPull_trait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
   intro R _ _ _ hR D C m hm F₁ G θ₀ S hMF hMS W _ _ _ T a b ha hE
   obtain ⟨σ, ⟨σ', f', hcar, hpull, hexp⟩, hgen⟩ := hE
   obtain ⟨u, hu, hS⟩ := hMS
-  obtain ⟨σ₂, hσ₂⟩ := GlobalTheory.T.exists_section_pullback_commuting_endomorphism_generator C.P.L.L C.P.L.isLB T.β (mulA T.G m).left (mulA C.G m).left
+  obtain ⟨σ₂, hσ₂⟩ := _root_.GlobalTheory.Mum.exists_secK_pullMul_gen C.P.L.L C.P.L.isLB T.β (mulA T.G m).left (mulA C.G m).left
     (GlobalTheory.ZH.TorsFrame.mulA_comm T.cart m) 1 (m ^ 2) u hu σ
-  have hgen₂ := GlobalTheory.T.multiplicationPullback_trait_genericCondition R D C W T m a u θ₀ S hS σ σ₂ hgen hσ₂
+  have hgen₂ := _root_.GlobalTheory.Mum.pullMul_trait_generic R D C W T m a u θ₀ S hS σ σ₂ hgen hσ₂
   obtain ⟨G', hG'⟩ := GlobalTheory.Mum.exists_intFam_pull R hR D W T.φ T.D' T.hD T.inj T.loc (m ^ 2) G
-  obtain ⟨uG, σ'', huG, hσ'', hexp''⟩ := GlobalTheory.T.expansion_multiplicationPullback_trait_degreeOne R hR D C W T m hm F₁ G hMF σ' f' hpull hexp G'.f hG'
-  obtain ⟨v, hv⟩ := GlobalTheory.T.multiplicationPullbacks_differ_by_unit R hR D C W T m u hu uG huG b σ' σ hcar σ₂ σ'' hσ₂ hσ''
+  obtain ⟨uG, σ'', huG, hσ'', hexp''⟩ := _root_.GlobalTheory.Mum.MulExpand.expand R hR D C W T m hm F₁ G hMF σ' f' hpull hexp G'.f hG'
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.Mum.Trait.carries_mulPull R hR D C W T m u hu uG huG b σ' σ hcar σ₂ σ'' hσ₂ hσ''
   exact ⟨v, σ₂, ⟨σ'', G'.f, hv, hG', hexp''⟩, hgen₂⟩
 
 end GlobalTheory.Mum

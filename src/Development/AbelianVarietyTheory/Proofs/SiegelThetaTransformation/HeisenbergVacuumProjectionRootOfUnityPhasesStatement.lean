@@ -228,7 +228,7 @@ theorem proj_phases : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
   have hproj : projA X bas w (tens Λ L) v = ip v vΛ • vΛ := H.2.2.1 v hv'.1 vΛ hvΛ
   have hnorm := H.2.2.2 L hL (stdL E n) hstd vΛ v hvΛ hv
   rw [(_root_.GlobalTheory.SW.TensLat.tens_selfDual_semichar_index E r X g bas idx n hs hn w hw hw1 L hL 1 Λ hΛ).2.2.2.2.2 (stdL E n) hstd,
-    ip_conj hv'.1 hvΛ'.1, Complex.norm_conj] at hnorm
+    _root_.GlobalTheory.SW.TensVac.ip_conj hv'.1 hvΛ'.1, Complex.norm_conj] at hnorm
   have hsq := congrArg Real.sqrt hnorm
   rw [Real.sqrt_mul (Nat.cast_nonneg _), Real.sqrt_sq (norm_nonneg _), Real.sqrt_one] at hsq
   have hc0 : ‖ip v vΛ‖ ≠ 0 := by

@@ -69,6 +69,7 @@ import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.Cryst
 import Mathlib.Tactic.Linter.Style
 import Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvEquiv
 import Mathlib.Tactic.Polynomial.Basic
+import Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.ThmEFinal
 import Mathlib.Data.Nat.Cast.SetInterval
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -582,7 +583,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLocReg =====
 
 -- ===== clump member: Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvDelta =====
--- clump-header: {"m": "Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvDelta", "h": "module\n\nimport Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvEquiv\npublic import Formalism.SharpRestriction.LevelLetterCocycles.MapEvalPsPi\nimport Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.Graded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvDelta", "h": "module\n\nimport Formalism.SharpRestriction.LevelLetterCocycles.LevelKernelDetection.PfLvEquiv\npublic import Formalism.SharpRestriction.LevelLetterCocycles.MapEvalPsPi\nimport Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.Graded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.ThmEFinal\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -626,14 +627,6 @@ theorem grdB_ringInverse (τ : Ks ≃ₐ[LL] Ks) (a : LLˣ) {X : HahnSeries ℤ 
       _ = (grdB τ a (↑u⁻¹ : HahnSeries ℤ Ks) * ↑u) * ↑u⁻¹ := by ring
       _ = ↑u⁻¹ := by rw [h1, one_mul]
   · rw [Ring.inverse_non_unit _ hu, grdB_zero']
-
-theorem ofPS_coeff_neg {R : Type} [CommRing R] (x : PowerSeries R) {i : ℤ} (hi : i < 0) :
-    (HahnSeries.ofPowerSeries ℤ R x).coeff i = 0 := by
-  rw [HahnSeries.ofPowerSeries_apply]
-  exact HahnSeries.embDomain_of_notMem_range (by
-    rintro ⟨m, hm⟩
-    simp at hm
-    omega)
 
 end Graded
 
@@ -682,7 +675,7 @@ theorem delta_holds (hR : Ring9 W) (uZ : ℤ_[PD.p]ˣ) (ιZ : ℤ_[PD.p] →+* O
   · show algebraMap LL (KsW W s) ((((levW W uZ ιZ s).a j) ^ i : LLˣ) : LL) *
         ((levW W uZ ιZ s).τ j) ((HahnSeries.ofPowerSeries ℤ (KsW W s) (rhoL hR c s a)).coeff i) =
       (HahnSeries.ofPowerSeries ℤ (KsW W s) (rhoL hR c s a)).coeff i
-    rw [ofPS_coeff_neg _ hi, map_zero, mul_zero]
+    rw [_root_.Formalism.ExponentWindows.G.BR.ofPS_coeff_neg _ hi, map_zero, mul_zero]
   · obtain ⟨k, rfl⟩ := Int.eq_ofNat_of_zero_le (not_lt.mp hi)
     show algebraMap LL (KsW W s) ((((levW W uZ ιZ s).a j) ^ (k : ℤ) : LLˣ) : LL) *
         ((levW W uZ ιZ s).τ j) ((HahnSeries.ofPowerSeries ℤ (KsW W s) (rhoL hR c s a)).coeff (k : ℤ)) =
@@ -1267,10 +1260,6 @@ section Cst
 variable {LL Ks D D₂ : Type} [Field LL] [CommRing Ks] [Algebra LL Ks] [AddCommGroup D] [Module LL D]
   [AddCommGroup D₂] [Module LL D₂]
 
-theorem mapLocL_cstD_add (d d' : D) :
-    cstD (LL := LL) Ks (d + d') = cstD Ks d + cstD Ks d' := by
-  simp [cstD, TensorProduct.tmul_add]
-
 theorem mapLocL_cstD_zero : cstD (LL := LL) (D := D) Ks 0 = 0 := by
   simp [cstD]
 
@@ -1279,7 +1268,7 @@ theorem mapLocL_cstD_sum {ι : Type} (s : Finset ι) (f : ι → D) :
   classical
   induction s using Finset.induction_on with
   | empty => simp [mapLocL_cstD_zero]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, mapLocL_cstD_add, ih]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, _root_.Formalism.ExponentWindows.G.SlopeTestRemainingChoices.cst_add, ih]
 
 theorem mapLocL_C_smul_cstD (x : LL) (d : D) :
     (HahnSeries.C (algebraMap LL Ks x) : HahnSeries ℤ Ks) • cstD (LL := LL) Ks d = cstD Ks (x • d) := by
@@ -1680,9 +1669,6 @@ theorem mapHyp_of (hR : Ring9 W) (uZ : ℤ_[PD.p]ˣ) (ιZ : ℤ_[PD.p] →+* O) 
 
 namespace Assemble
 
-theorem finrank_one (hKb : Function.Bijective (algebraMap K₀ K)) : Module.finrank K₀ K = 1 :=
-  (AlgEquiv.ofBijective (Algebra.ofId K₀ K) hKb).toLinearEquiv.finrank_eq.symm.trans (Module.finrank_self K₀)
-
 theorem pow_unif [IsDomain O] [IsDiscreteValuationRing O] {ϖ : O} (hϖ : Irreducible ϖ)
     (hℓm : ((PD.p : ℕ) : O) ∈ IsLocalRing.maximalIdeal O) :
     ∃ (N : ℕ) (u : O), ((PD.p : ℕ) : O) ^ N = ϖ * u := by
@@ -1727,7 +1713,7 @@ theorem lvHyp_holds' (Lb : LevB W) (hR : Ring9 W) (uZ : ℤ_[PD.p]ˣ) (ιZ : ℤ
     LvHyp Lb hR uZ ιZ C c ell Λ κ (lamOf C c ell e) :=
   lvHyp_holds Lb hR uZ ιZ C c ell Λ κ e lev_Γ levB_Γ levN_eq (W.gamK_eq_one hs1 (by omega)) hs1 hP5 hT hJl
     valRing (hv_holds W valRing.2.2)
-    (hω_holds (card_DelF hs1 (by omega) (Assemble.finrank_one hKb) h9) valRing.1 ιZ)
+    (hω_holds (card_DelF hs1 (by omega) (_root_.Formalism.MainNotions.UnusedSlot80.SatW.finrank_one_of_bij' hKb) h9) valRing.1 ιZ)
     (huZ_holds hutie valRing.2.2) m hm hκ
 
 theorem levSteps_of_jumps' [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O]
@@ -1776,7 +1762,7 @@ theorem levSteps_of_jumps' [IsDomain O] [IsDiscreteValuationRing O] [IsAdicCompl
     (hjumps : ∀ s < ell, Formalism.ExponentWindows.G.Jumps (kind s) G₀ Sz η (b s) (FilD W T c s)) :
     LevSteps Hy ϖ j M g G₀ Sz η kind b e := by
   have hℓ2 : PD.p ≠ 2 := by omega
-  have hK1 := Assemble.finrank_one hKb
+  have hK1 := _root_.Formalism.MainNotions.UnusedSlot80.SatW.finrank_one_of_bij' hKb
   have hmod : Formalism.MainNotions.DeltaInvariantLattices.wachModuleOverLetters W T W.π₀ := ((h9 hs1 hℓ2).2.2 hK1).2
   have R := ringSteps_of Hy ((baseIdOf hR).Bs.ff' ell j M g) kind b η ϖ hϖ hℓ2 hℓm n hn hroot (Assemble.firstGeometricCondition_of_properties hR) G2 hφ hρζ
     huZv hutie hom'

@@ -130,6 +130,7 @@ import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatum
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Mathlib.Algebra.Order.Star.Rat
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JumpSetDistinctOfRealPlaceFacts
 import Std.Tactic.BVDecide.Normalize.BitVec
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -613,7 +614,7 @@ theorem main : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (r : �
   intro D HW F r ρ large₂ ep h0 _h1 hW hTB hJump _hFon _hG2 _hSet hLit hPar i hQ π _hπ
   have hl : D.nd.l i = D.host.q ∨ D.nd.l i = D.host.d := hQ.1.1
   refine ⟨GlobalTheory.HubLoc.cBnum (D.nd.l i) ⌊2 * large₂.sc.b⌋₊ D.R.t (4 * D.R.n * D.R.nV), ?_, ?_⟩
-  · exact localTB D HW F i (r i) π _ _ _ hTB (fun w hw C h => hW i hQ w hw C h) (hLit i hQ).2.2.2.1
+  · exact _root_.GlobalTheory.TBLocalW.tb_of_localW D HW F i (r i) π _ _ _ hTB (fun w hw C h => hW i hQ w hw C h) (hLit i hQ).2.2.2.1
       (jointCond_at_qd D HW F r large₂ ep h0 hJump hPar i hQ π)
   · have ht1 : 1 ≤ D.R.t := D.R.t_odd.pos
     have hr1 : 1 ≤ D.R.r := by unfold Ranks.r; have := D.R.m_add_three_le_k; have := D.R.two_le_m; omega
@@ -1377,7 +1378,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedPlaceSelmerLengthBoundOfLocalDuality =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmJumpSetup =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmJumpSetup", "h": "module\n\npublic import Formalism.SharpRestriction.LevelLetterCocycles.AdmissibleParameterJ\npublic import Formalism.LocalRingCardinality.DataParams\npublic import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypeJumps\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLetterOfLocalEmbedding\nimport Formalism.LocalRingCardinality.RankBoundMonotoneInDimension\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmJumpSetup", "h": "module\n\npublic import Formalism.SharpRestriction.LevelLetterCocycles.AdmissibleParameterJ\npublic import Formalism.LocalRingCardinality.DataParams\npublic import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypeJumps\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLetterOfLocalEmbedding\nimport Formalism.LocalRingCardinality.RankBoundMonotoneInDimension\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily\nimport Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JumpSetDistinctOfRealPlaceFacts\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1391,14 +1392,12 @@ open Formalism.MainNotions.AdmissibleParameterJ
 
 variable {D : D7}
 
-theorem refl_refl (q : ℚ) : AdmissibleParameterJ.refl D (AdmissibleParameterJ.refl D q) = q := by unfold AdmissibleParameterJ.refl; ring
-
 theorem refl_injective : Function.Injective (AdmissibleParameterJ.refl D) := fun a b h => by
   have := congrArg (AdmissibleParameterJ.refl D) h
-  rwa [refl_refl, refl_refl] at this
+  rwa [_root_.GlobalTheory.JumpSets.jp_refl_refl, _root_.GlobalTheory.JumpSets.jp_refl_refl] at this
 
 theorem ncard_reflS (S : Set ℚ) : (reflS D S).ncard = S.ncard :=
-  Set.ncard_preimage_of_injective_subset_range refl_injective (fun q _ => ⟨AdmissibleParameterJ.refl D q, refl_refl q⟩)
+  Set.ncard_preimage_of_injective_subset_range refl_injective (fun q _ => ⟨AdmissibleParameterJ.refl D q, _root_.GlobalTheory.JumpSets.jp_refl_refl q⟩)
 
 theorem finite_reflS {S : Set ℚ} (h : S.Finite) : (reflS D S).Finite :=
   Set.Finite.preimage (refl_injective.injOn) h
@@ -1460,21 +1459,10 @@ theorem lowJ_int (j : ℕ) (ρ : D.what₂.Tau) : ∀ q ∈ lowJ D j ρ, ∃ z :
   obtain ⟨z3, h3⟩ := exists_int_eq_jumpBlockCentreOffset (D := D)
   exact ⟨z1 - z2 + z3, by rw [h1, h2, h3]; push_cast; ring⟩
 
-theorem mem_blockJ (a : ℤ) : (a : ℚ) ∈ blockJ D ↔ 0 ≤ a ∧ a < D.R.t := by
-  constructor
-  · rintro ⟨c, hc, h⟩
-    have e : a = (c : ℤ) := by exact_mod_cast h
-    subst e
-    exact ⟨by positivity, by exact_mod_cast hc⟩
-  · rintro ⟨h0, h1⟩
-    refine ⟨a.toNat, by omega, ?_⟩
-    have := Int.toNat_of_nonneg h0
-    exact_mod_cast this.symm
-
 theorem mem_reflS_blockJ (a : ℤ) : (a : ℚ) ∈ reflS D (blockJ D) ↔ 0 ≤ a ∧ a < D.R.t := by
   show AdmissibleParameterJ.refl D (a : ℚ) ∈ blockJ D ↔ _
   have e : AdmissibleParameterJ.refl D (a : ℚ) = (((D.R.t : ℤ) - 1 - a : ℤ) : ℚ) := by unfold AdmissibleParameterJ.refl; push_cast; ring
-  rw [e, mem_blockJ]
+  rw [e, _root_.GlobalTheory.JumpSets.block_mem_iff]
   omega
 
 theorem mem_JJ (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) (a : ℤ) : (a : ℚ) ∈ JJ D up j ρ ↔
@@ -1483,7 +1471,7 @@ theorem mem_JJ (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) (a : ℤ) : (a : ℚ) 
   · rw [← mem_reflS_blockJ]
     simp only [JJ, cloudT, lowT, Bool.false_eq_true, if_false, Jm, Jp, reflS, Set.mem_setOf_eq, Set.mem_union]
     tauto
-  · rw [← mem_blockJ]
+  · rw [← _root_.GlobalTheory.JumpSets.block_mem_iff]
     simp only [JJ, cloudT, lowT, if_true, Jp, Set.mem_union]
     tauto
 
@@ -1727,7 +1715,7 @@ variable {D : D7}
 open Classical in
 theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ ep, AdmissibleParameterJ.hodgeTateJumpsAtModulesForSign D ep → EmbeddingTypeJumps.HodgeJumpWindowsAtDistinguishedPrimes X.r ep L := by
   intro _ D L P nch HW F Cm X C₂ S ep hJa
-  obtain ⟨-, hJb, hJc, -⟩ := _root_.GlobalTheory.JumpStatement.holds_all_alt D L (S.facts.admJ L S.par)
+  obtain ⟨-, hJb, hJc, -⟩ := _root_.GlobalTheory.JumpSets.stmtJ_holds_alt D L (S.facts.admJ L S.par)
   intro i _ w hw C τ
   obtain ⟨g, ρ, hR, hjx, -⟩ := hJa i (X.r i) (S.canon.fam.good i) w hw C τ
   obtain ⟨hj1, hj2⟩ := D.nd.j_range i
@@ -1788,14 +1776,14 @@ theorem main_of_alt (hc : GlobalTheory.Published.GlobalArtinReciprocity → Glob
   refine ⟨2080, polyB, ?_⟩
   intro hP D L P nch HW F Cm X C₂ hS
   have hb : (0 : ℝ) ≤ L.sc.b := (Real.exp_pos _).le
-  have hX := _root_.GlobalTheory.T.split_bound_of_params_alt hP.font hP.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 hS.canon P
+  have hX := _root_.GlobalTheory.HubX.Assembly.main_alt_alt hP.font hP.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 hS.canon P
     (by have := hS.big; linarith) le_rfl (by simpa using hb) (hS.facts.admJ L hS.par) hS.par67 hS.facts.toCore.admA
     hS.facts.Conclusion1.1 hS.facts.Conclusion1.2.2 hS.facts.Conclusion2.1 hS.facts.Conclusion2.2.2 hS.facts.rhoBar hS.facts.large.2.1
     hS.facts.large.2.2 hS.facts.nct hS.facts.trip hS.facts.same hS.facts.block hS.facts.muUnr hS.facts.depthG
-  have hSet := _root_.GlobalTheory.T.set_pt_of_setup_not_twisted hP D L P nch HW F Cm X C₂ hS
+  have hSet := _root_.GlobalTheory.SetPtOff.main_alt_alt hP D L P nch HW F Cm X C₂ hS
   have hpt : ∀ i, EmbeddingTypeJumps.AtQD i → ∀ π ∈ D.nd.Zgood i, SetPt i (X.r i) (X.ρ i) π := fun i hi π hπ =>
     hSet i (GlobalTheory.AtQDTypes.l_not_mem_gset i hi.1.1) π hπ
-  obtain ⟨ep, hep⟩ := (_root_.GlobalTheory.JumpStatement.holds_all_alt D L (hS.facts.admJ L hS.par)).1
+  obtain ⟨ep, hep⟩ := (_root_.GlobalTheory.JumpSets.stmtJ_holds_alt D L (hS.facts.admJ L hS.par)).1
   have hJ := _root_.GlobalTheory.T.hodgeJumpParameters_of_setup hP D L P nch HW F Cm X C₂ hS ep hep
   have hSt := _root_.GlobalTheory.InertiaEigenvalues.LengthBoundClosing.stmt_closed hP.artin hP.bk hP.tate hP.euler D (GlobalTheory.DesignUnconditional.main D hS.facts.large.2.2)
   have hN5 : EmbeddingTypeJumps.GlobalIndexAwayFromTypes X.r X.ρ := fun i π dc lenRow e' cB hA =>

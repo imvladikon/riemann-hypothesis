@@ -510,7 +510,7 @@ theorem alHecke : ∀ (k N l : ℕ) (χ : DirichletCharacter ℂ N) (a a' : ℕ 
       ⟨by rw [alConjInv_det h hN hl0 δ hδ.2.1]; exact hδ.1, alConjInv_mem δ, fun hd => hδ.2.2 (by
         have := dvd_sub hd (alConjInv_00_l h δ); simpa using this)⟩
     exact slz_alQ_hsum k χ h hk hN hl0 (DU (N * l) l) l hl0 hcop (fun δ hδ => ⟨hδ.1, hδ.2.1⟩) hφU hψU
-      (repU l) ((zrepU (N * l) l hl).1 (dvd_mul_left l N)) (qs a) (qs a') hqs hinv
+      (repU l) ((_root_.GlobalTheory.EisM.lrep_repU (N * l) l hl).1 (dvd_mul_left l N)) (qs a) (qs a') hqs hinv
 
 end GlobalTheory.EisM.AtkinLehner
 end -- clump:auto
@@ -1393,7 +1393,7 @@ theorem chapterM_of_level (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ)
     mul_self_eq_one_iff.mp (by rw [← map_mul, neg_one_mul, neg_neg, map_one])
   have hsg : (-1 : ℂ) ^ e * ψ (-1) = 1 ∨ (-1 : ℂ) ^ e * ψ (-1) = -1 := by
     rcases neg_one_pow_eq_or ℂ e with h | h <;> rcases hψ with h' | h' <;> simp [h, h']
-  obtain ⟨θ, hθm1, hθχ, hθχ'⟩ := chapterM_theta N r χ _ hN hr hr7 hrN hsg
+  obtain ⟨θ, hθm1, hθχ, hθχ'⟩ := _root_.GlobalTheory.exists_char_parity_mul_ne_one_mul_inv_ne_one N r χ _ hN hr hr7 hrN hsg
 
   set u : (ZMod N)ˣ := ZMod.unitOfCoprime l hcop with hu
   have hul : ((u : ZMod N)) = (l : ZMod N) := ZMod.coe_unitOfCoprime l hcop
@@ -1420,7 +1420,7 @@ theorem chapterM_of_level (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ)
   have hv := key hprim hs hp hα0 hθm1 hθχ B c hEig hval B' c' hrel (fun a ha => hall.U a ha)
   have hmeas := _root_.GlobalTheory.EisM.measMu_of_eig l ι e N χ θ ψ (χ l * α) B' c' he hN hlN
     (by rw [map_mul, norm_mul, hnχ, hα, one_mul]) hall.kill hall.U hθm1 hχm1
-  obtain ⟨c₁, d₁, hc1, hd1, hc1c, hd1c, hc, hd⟩ := chapterM_smooth N l e (θ * χ) (θ * χ⁻¹) ψ hN hlp hlN he hθχ hθχ'
+  obtain ⟨c₁, d₁, hc1, hd1, hc1c, hd1c, hc, hd⟩ := _root_.GlobalTheory.smoothing_integers_two_characters N l e (θ * χ) (θ * χ⁻¹) ψ hN hlp hlN he hθχ hθχ'
   refine ⟨θ, χ l * α, _, B', c', c₁, d₁, ?_, ?_, ?_, ?_, hχm1, hθm1, hmeas, ?_, hc1, hd1, hc1c, hd1c, hc, hd⟩
   · have := Nat.le_of_dvd hN hrN; omega
   · rw [map_mul, norm_mul, hnχ, hα, one_mul]

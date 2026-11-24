@@ -394,8 +394,6 @@ open NumberField IsDedekindDomain GlobalTheory.CMVal GlobalTheory.LatVal GlobalT
 open GlobalTheory.ToricTransport (coordIn)
 open scoped nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.modF_finiteIdeleUpToExtension : ∀ {K E : Type} [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E] (t : (Af K)ˣ), modF (upIdele K E t) = modF t ^ Module.finrank K E := by
-  first | exact @GlobalTheory.UpIdeleMod.modF_upIdele
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModFFiniteIdeleUpToExtensionStatement =====
@@ -558,8 +556,6 @@ theorem nrm_eq_modF : ∀ {K : Type} [Field K] [NumberField K] (t : (Af K)ˣ) (�
 
 theorem modF_rat : ∀ {E : Type} [Field E] [NumberField E] (y : (Af E)ˣ), ∃ q : ℚ, modF y = q := _root_.GlobalTheory.CMVal.ModFRat.modF_rat
 
-theorem modF_upIdele : ∀ {K E : Type} [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E] (t : (Af K)ˣ), modF (upIdele K E t) = modF t ^ Module.finrank K E := GlobalTheory.T.modF_finiteIdeleUpToExtension
-
 theorem card_eq_finrank : ∀ {K E : Type} [Field K] [NumberField K] [Field E] [NumberField E] [IsCMField E] [Algebra K E] {I : Type} [Fintype I] (φ : I → E →+* ℂ) (hφ : IsCMType φ) (h2 : Module.finrank ℚ K = 2), Fintype.card I = Module.finrank K E := _root_.GlobalTheory.CMTypeCard.card_eq_finrank_of_isCMType
 
 theorem norm_conj_finPart : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {I : Type} [Fintype I] (φ : I → E →+* ℂ) (hφ : IsCMType φ) (s : ℕ) (κ : I → ℕ) (c : Ideal (OF E)) (hc : c ≠ ⊥) (χ : HChar E) (hχ : HasInf χ φ (fun i => (κ i : ℤ) + s)) (hu : ∀ u ∈ hatOUnits c, finPart χ u = 1) (σ : ℂ ≃+* ℂ) (y : (Af E)ˣ), ‖σ (finPart χ y : ℂ)‖ = 1 := _root_.GlobalTheory.CMVal.norm_conj_finPart
@@ -615,13 +611,13 @@ theorem norm_lamF_conj_up {K E : Type} [Field K] [NumberField K] [Field E] [Numb
     (σ : ℂ ≃+* ℂ) (hc : IsConjChar φ s κ' σ χ χ') (t : (Af K)ˣ) :
     ‖lamF s χ' (upIdele K E t)‖ = modF t ^ (s * Fintype.card I) := by
   have hu := GlobalTheory.CMVal.OrderUnits.finPart_eq_one E I φ hφ s κ 𝔣 Q χ hE h𝔣 hQ hχ
-  have h1 := norm_conj_finPart φ hφ s κ (condQ 𝔣 Q) (condQ_ne_bot h𝔣 Q) χ hχ.2.2.1 hu σ (upIdele K E t)
-  obtain ⟨q, hq⟩ := modF_rat (upIdele K E t)
+  have h1 := _root_.GlobalTheory.CMVal.norm_conj_finPart φ hφ s κ (condQ 𝔣 Q) (condQ_ne_bot h𝔣 Q) χ hχ.2.2.1 hu σ (upIdele K E t)
+  obtain ⟨q, hq⟩ := _root_.GlobalTheory.CMVal.ModFRat.modF_rat (upIdele K E t)
   have hpos := GlobalTheory.CMVal.IdeleModule.modF_pos (upIdele K E t)
   rw [hc.1, lamF, map_mul, norm_mul, h1, one_mul]
   have e : (((modF (upIdele K E t)) ^ s : ℝ) : ℂ) = ((q ^ s : ℚ) : ℂ) := by rw [hq]; push_cast; rfl
   rw [e, map_ratCast, ← e]
-  rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (pow_pos hpos _), modF_upIdele, ← card_eq_finrank φ hφ h2,
+  rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (pow_pos hpos _), _root_.GlobalTheory.UpIdeleMod.modF_upIdele, ← _root_.GlobalTheory.CMTypeCard.card_eq_finrank_of_isCMType φ hφ h2,
     ← pow_mul, mul_comm]
 
 theorem beta_eq_coordIn_pow (E : Type) [Field E] [NumberField E] {I : Type} [Fintype I] (d s : ℕ) (κ : I → ℕ)
@@ -645,13 +641,13 @@ theorem transportFor_of (hA : LatAlg) (hC : LatConj) {K : Type} [Field K] [Numbe
       σ (coordIn E d s κ Ω₀ T) = coordIn E d s κ (Ω σ) ((((nrm (𝔞 σ : FractionalIdeal (𝓞 K)⁰ K) : ℝ) : ℂ) ^
         (∑ i, κ i))⁻¹ * (lamF s χ' (upIdele K E (t σ)))⁻¹ * T') := by
     intro σ hσ κ' hκ' Q χ T χ' T' hV hV'
-    rw [nrm_eq_modF _ _ (hT σ hσ).2]
-    exact conj_coordIn_toric hC d δ φK h2 hd hδ σ (t σ) ΛK (Λ σ) Ω₀ (Ω σ) hΩ₀ (hT σ hσ).1 φ hE hφ hφK s hs
+    rw [_root_.GlobalTheory.LatVal.nrm_eq_modF_of_isInvIdealOf _ _ (hT σ hσ).2]
+    exact _root_.GlobalTheory.ConjCoordToric.conj_coordIn_toric hC d δ φK h2 hd hδ σ (t σ) ΛK (Λ σ) Ω₀ (Ω σ) hΩ₀ (hT σ hσ).1 φ hE hφ hφK s hs
       κ κ' hκ' 𝔣 h𝔣 Q χ χ' T T' hV hV'
   refine ⟨fun Q χ T hV => ⟨?_, fun σ hσ κ' hκ' χ' T' hV' => ?_⟩,
     fun Q₁ Q₂ χ₁ χ₂ T₁ T₂ hV₁ hV₂ hT₂ => ⟨?_, fun σ hσ κ' hκ' χ₁' χ₂' T₁' T₂' hV₁' hV₂' => ?_⟩⟩
   · rw [beta_eq_coordIn_pow E d s κ Ω₀ T ΛK hΩ₀]
-    exact (algebraic_coordIn_toric hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q χ T hV).pow 12
+    exact (_root_.GlobalTheory.ToricCoordAlg.isAlgebraic_coordIn hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q χ T hV).pow 12
   · have hD := (disc_j_of_torsTransport (hT σ hσ).1 hΩ₀).1
     set N := nrm (𝔞 σ : FractionalIdeal (𝓞 K)⁰ K) with hN
     have hN0 : N ≠ 0 := nrm_ne_zero _
@@ -661,7 +657,7 @@ theorem transportFor_of (hA : LatAlg) (hC : LatConj) {K : Type} [Field K] [Numbe
       rw [beta_eq_coordIn_pow E d s κ Ω₀ T ΛK hΩ₀, map_pow, conj σ hσ κ' hκ' Q χ T χ' T' hV hV',
         beta_eq_coordIn_pow E d s κ (Ω σ) _ (Λ σ) hD]
     have hl := norm_lamF_conj_up h2 φ hE hφ s κ κ' 𝔣 h𝔣 Q hV.1 χ χ' hV.2.1 σ hV'.1 (t σ)
-    rw [← nrm_eq_modF _ _ (hT σ hσ).2, ← hN] at hl
+    rw [← _root_.GlobalTheory.LatVal.nrm_eq_modF_of_isInvIdealOf _ _ (hT σ hσ).2, ← hN] at hl
     refine ⟨by rw [e, beta_eq]; ring, ?_⟩
     rw [e, beta_eq, norm_div, norm_pow, norm_mul, norm_mul, norm_mul, norm_inv, norm_inv, hl, norm_pow, norm_pow,
       Complex.norm_real, Complex.norm_real, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos hNpos,
@@ -670,8 +666,8 @@ theorem transportFor_of (hA : LatAlg) (hC : LatConj) {K : Type} [Field K] [Numbe
     field_simp
     ring
   · rw [← coordIn_div E hd hs κ hΩ₀0 T₁ T₂, div_eq_mul_inv]
-    exact (algebraic_coordIn_toric hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q₁ χ₁ T₁ hV₁).mul
-      (algebraic_coordIn_toric hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q₂ χ₂ T₂ hV₂).inv
+    exact (_root_.GlobalTheory.ToricCoordAlg.isAlgebraic_coordIn hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q₁ χ₁ T₁ hV₁).mul
+      (_root_.GlobalTheory.ToricCoordAlg.isAlgebraic_coordIn hA d δ φK h2 hd hδ ΛK Ω₀ hΛ hΩ₀ φ hE hφ hφK s hs κ 𝔣 h𝔣 Q₂ χ₂ T₂ hV₂).inv
   · have hΩσ : Ω σ ≠ 0 := (hT σ hσ).1.2.1
     set m : ℂ := (((nrm (𝔞 σ : FractionalIdeal (𝓞 K)⁰ K) : ℝ) : ℂ) ^ (∑ i, κ i)) with hm
     have hm0 : m ≠ 0 := pow_ne_zero _ (by exact_mod_cast nrm_ne_zero _)
@@ -691,7 +687,7 @@ theorem transportFor_of (hA : LatAlg) (hC : LatConj) {K : Type} [Field K] [Numbe
 theorem transport_of (hH : GlobalTheory.Published.HilbertClassFieldJ) (hA : LatAlg) (hC : LatConj) : Transport := by
   intro K _ _ d hd h2 hdisc φK ΛK hΛ
   have hTC : IsTotallyComplex K := isTotallyComplex_of_discr_neg h2 (by rw [hdisc]; omega)
-  obtain ⟨δ, hδ⟩ := exists_sq_eq_neg K d h2 hdisc
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.exists_sq_eq_neg_of_discr_eq_neg K d h2 hdisc
   obtain ⟨Ω₀, hΩ₀⟩ := IsAlgClosed.exists_pow_nat_eq (latDisc ΛK) (by norm_num : 0 < 12)
   have hΩ₀0 : Ω₀ ≠ 0 := by rintro rfl; exact latDisc_ne_zero ΛK (by rw [← hΩ₀]; norm_num)
   have key : ∀ σ : ℂ ≃+* ℂ, Fixes φK σ → ∃ (t : (Af K)ˣ) (𝔞 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (Λ : PeriodPair) (Ω : ℂ),
@@ -717,7 +713,7 @@ theorem transport_of (hH : GlobalTheory.Published.HilbertClassFieldJ) (hA : LatA
   haveI : Nonempty PeriodPair := ⟨ΛK⟩
   choose! t 𝔞 Λ Ω hT using key
   refine ⟨t, 𝔞, Λ, fun σ hσ => ⟨(hT σ hσ).2.1, (hT σ hσ).2.2, (disc_j_of_torsTransport (hT σ hσ).1 hΩ₀).2⟩,
-    equidistributed_of_j hH h2 φK ΛK hΛ 𝔞
+    _root_.GlobalTheory.EquidistJ.equidistributed_of_hilbertClassFieldJ hH h2 φK ΛK hΛ 𝔞
       (fun σ hσ => ⟨Λ σ, (hT σ hσ).2.2, (disc_j_of_torsTransport (hT σ hσ).1 hΩ₀).2⟩), ?_⟩
   intro E _ _ _ _ _ hE I _ φ hcard hφ hφK s κ 𝔣 hs hκ h𝔣
   exact transportFor_of hA hC d (by omega) δ hδ h2 φK ΛK hΛ Ω₀ hΩ₀ hΩ₀0 t 𝔞 Λ Ω
@@ -840,9 +836,6 @@ theorem locK_pow_eq_one {ξ : HChar E} {N : ℕ} (h : ξ.OrderDvd N) (w : Height
     ((ξ.locK w x : ℂˣ) : ℂ) ^ N = 1 :=
   pow_apply_eq_one h _
 
-theorem isUnitary_of_orderDvd {ξ : HChar E} {N : ℕ} (hN : 0 < N) (h : ξ.OrderDvd N) : IsUnitary ξ := fun x =>
-  Complex.norm_eq_one_of_pow_eq_one (pow_apply_eq_one h x) hN.ne'
-
 theorem expAt_unr_mul {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} {a : ℕ} (hχ : χ.UnrAt w) (hξ : ExpAt ξ w a) :
     ExpAt (χ * ξ) w a := by
   intro k
@@ -941,7 +934,7 @@ theorem exists_gaussSumAt_dvd {K : Type} [Field K] [NumberField K] (σ : K →+*
 
     rw [← hσg, map_sum, map_sum, map_sum]
     exact Finset.sum_congr rfl fun y _ => by rw [map_inv₀, Complex.inv_eq_conj (hnorm y)]
-  have hu : IsUnitary ξ := isUnitary_of_orderDvd hN hξN
+  have hu : IsUnitary ξ := _root_.Formalism.L2.Host.HChar.isUnitary_of_order hN hξN
   have hG := GlobalTheory.GaussMod.gaussSumAt_normSq ξ w 1 c one_ne_zero hξ hu (valuation_unif_pow w _)
   have hprod : (∑ y, X y) * (∑ y, (X y)⁻¹) = (q : K) := σ.injective (by
     rw [map_mul, hσg, hσg', Complex.mul_conj, Complex.normSq_eq_norm_sq, hG, hqw, map_natCast]
@@ -1535,19 +1528,11 @@ open Formalism.L2.Host (unif atFin)
 
 variable {E : Type} [Field E] [NumberField E]
 
-theorem locK_pow_eq_one {ξ : HChar E} {N : ℕ} (hf : ξ.OrderDvd N) (w : HeightOneSpectrum (𝓞 E)) (y : Eˣ) :
-    ((ξ.locK w y : ℂˣ) : ℂ) ^ N = 1 := by
-  have h : (ξ ^ N).locK w y = 1 := by rw [show ξ ^ N = 1 from hf]; rfl
-  have h2 : (ξ ^ N).locK w y = ξ.locK w y ^ N := by
-    show (ξ.1 ^ N) _ = _
-    rw [MonoidHom.pow_apply]; rfl
-  rw [← Units.val_pow_eq_pow_val, ← h2, h, Units.val_one]
-
 theorem isAwayUnit_of_locK {K : Type} [Field K] [NumberField K] [StarRing K] (σ : K →+* ℂ) {ξ : HChar E} {N : ℕ}
     (hN : 0 < N) (hf : ξ.OrderDvd N) (w : HeightOneSpectrum (𝓞 E)) (y : Eˣ) {g : K} (hg : σ g = ((ξ.locK w y : ℂˣ) : ℂ))
     {m : ℕ} (hm : 0 < m) : GlobalTheory.Square.IsAwayUnit m g := by
   refine (GlobalTheory.Square.isAwayUnit_closure K m hm).1 g N hN (σ.injective ?_)
-  rw [map_pow, hg, locK_pow_eq_one hf, map_one]
+  rw [map_pow, hg, _root_.GlobalTheory.TameTwistEps.locK_pow_eq_one hf, map_one]
 
 end GlobalTheory.ReflVal
 
@@ -1683,23 +1668,14 @@ namespace GlobalTheory.CMVal.TrivAbove
 
 variable {E : Type} [Field E] [NumberField E]
 
-theorem one_coord' (w : HeightOneSpectrum (𝓞 E)) : (1 : Af E) w = 1 := rfl
-
-theorem mul_coord' (x y : Af E) (w : HeightOneSpectrum (𝓞 E)) : (x * y) w = x w * y w := rfl
-
-theorem inv_coord' (z : (Af E)ˣ) (w : HeightOneSpectrum (𝓞 E)) : (↑z⁻¹ : Af E) w = ((z : Af E) w)⁻¹ := by
-  show (((coord w z)⁻¹ : (w.adicCompletion E)ˣ) : w.adicCompletion E) = _
-  rw [Units.val_inv_eq_inv_val, coe_coord]
-
-
 open Classical in
 theorem prod_single_coord (S : Finset (HeightOneSpectrum (𝓞 E)))
     (x : ∀ w : HeightOneSpectrum (𝓞 E), (w.adicCompletion E)ˣ) (w' : HeightOneSpectrum (𝓞 E)) :
     ((∏ w ∈ S, single w (x w) : (Af E)ˣ) : Af E) w' = if w' ∈ S then (x w' : w'.adicCompletion E) else 1 := by
   induction S using Finset.induction_on with
-  | empty => rw [Finset.prod_empty, Units.val_one, one_coord']; simp
+  | empty => rw [Finset.prod_empty, Units.val_one, _root_.GlobalTheory.CMVal.Euler.one_coord]; simp
   | insert a S ha ih =>
-    rw [Finset.prod_insert ha, Units.val_mul, mul_coord', ih]
+    rw [Finset.prod_insert ha, Units.val_mul, _root_.GlobalTheory.CMVal.Euler.mul_coord, ih]
     by_cases h : w' = a
     · subst h; simp [ha, single_self]
     · rw [suppAt_single a (x a) w' h]; simp [h]
@@ -1710,7 +1686,7 @@ theorem mem_hatOUnits [IsCMField E] {c : Ideal (OF E)} (hc : c ≠ ⊥) (z : (Af
     z ∈ hatOUnits c := by
   have key : ∀ z : Af E, (∀ w : HeightOneSpectrum (𝓞 E), Valued.v (z w - 1) ≤
       WithZero.exp (-(multiplicity w.asIdeal (Ideal.map (algebraMap (OF E) (𝓞 E)) c) : ℤ))) → z ∈ hatO c :=
-    fun z h => (_root_.GlobalTheory.CMVal.HatPlace.mem_hatO_iff E c hc z).2 ⟨1, one_mem _, fun w => by rw [one_coord', map_one], h⟩
+    fun z h => (_root_.GlobalTheory.CMVal.HatPlace.mem_hatO_iff E c hc z).2 ⟨1, one_mem _, fun w => by rw [_root_.GlobalTheory.CMVal.Euler.one_coord, map_one], h⟩
   refine ⟨key _ fun w => (hz w).le, key _ fun w => ?_⟩
   have h1 : Valued.v ((z : Af E) w - 1) < Valued.v (1 : w.adicCompletion E) := by
     rw [map_one]
@@ -1720,7 +1696,7 @@ theorem mem_hatOUnits [IsCMField E] {c : Ideal (OF E)} (hc : c ≠ ⊥) (z : (Af
     rwa [map_one] at this
   have hz0 : (z : Af E) w ≠ 0 := by rw [← coe_coord]; exact (coord w z).ne_zero
   show Valued.v ((↑z⁻¹ : Af E) w - 1) ≤ _
-  rw [inv_coord']
+  rw [_root_.GlobalTheory.CMVal.Euler.inv_coord]
   have he : ((z : Af E) w)⁻¹ - 1 = -(((z : Af E) w - 1) * ((z : Af E) w)⁻¹) := by
     field_simp; ring
   rw [he, Valuation.map_neg, map_mul, map_inv₀, hv, inv_one, mul_one]
@@ -1746,7 +1722,7 @@ theorem exists_rep_trivial_above : ∀ (E : Type) [Field E] [NumberField E] [IsC
     refine Subgroup.mem_sup_right (mem_hatOUnits hc u fun w => ?_)
     rw [hudef, prod_single_coord]
     split_ifs with hw
-    · rw [coe_coord, hy1, Units.val_mul, mul_coord']
+    · rw [coe_coord, hy1, Units.val_mul, _root_.GlobalTheory.CMVal.Euler.mul_coord]
       have hAw : (A : Af E) w = algebraMap E (w.adicCompletion E) (a : E) := rfl
       have := ha w hw
       rw [hAw]
@@ -1756,7 +1732,7 @@ theorem exists_rep_trivial_above : ∀ (E : Type) [Field E] [NumberField E] [IsC
   · rw [QuotientGroup.mk_mul, QuotientGroup.mk_inv, hy1, QuotientGroup.mk_mul,
       (QuotientGroup.eq_one_iff A).2 hA, (QuotientGroup.eq_one_iff u).2 hu, one_mul, inv_one, mul_one]
   · have hwT : w ∈ hfin.toFinset := hfin.mem_toFinset.2 hw
-    rw [Units.val_mul, mul_coord', inv_coord', hudef, prod_single_coord, if_pos hwT, coe_coord]
+    rw [Units.val_mul, _root_.GlobalTheory.CMVal.Euler.mul_coord, _root_.GlobalTheory.CMVal.Euler.inv_coord, hudef, prod_single_coord, if_pos hwT, coe_coord]
     exact mul_inv_cancel₀ (by rw [← coe_coord]; exact (coord w y1).ne_zero)
 
 end GlobalTheory.CMVal.TrivAbove

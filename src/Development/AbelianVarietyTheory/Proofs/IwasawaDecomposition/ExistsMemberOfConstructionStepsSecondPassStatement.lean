@@ -902,32 +902,6 @@ noncomputable section
 
 namespace GlobalTheory.Mem.Top.Bl.OnePrimeEach
 
-theorem exists_ratPrime_mem {L : Type} [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) :
-    ∃ p : ℕ, p.Prime ∧ (p : 𝓞 L) ∈ w.asIdeal := by
-  haveI := w.isMaximal
-  haveI : Finite (𝓞 L ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-  letI := Ideal.Quotient.field w.asIdeal
-  obtain ⟨p, hp⟩ := CharP.exists (𝓞 L ⧸ w.asIdeal)
-  refine ⟨p, CharP.char_is_prime (𝓞 L ⧸ w.asIdeal) p, ?_⟩
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact CharP.cast_eq_zero _ p
-
-theorem exists_mem_of_prime (L : Type) [Field L] [NumberField L] {p : ℕ} (hp : p.Prime) :
-    ∃ P : HeightOneSpectrum (𝓞 L), ((p : ℕ) : 𝓞 L) ∈ P.asIdeal := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
-  obtain ⟨Q, hQ, hQ'⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 L) (Ideal.span {(p : ℤ)})
-    (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 L)).injective_int]; exact bot_le)
-  have hmem : ((p : ℕ) : 𝓞 L) ∈ Q := by
-    have : (p : ℤ) ∈ Q.comap (algebraMap ℤ (𝓞 L)) := by
-      change (p : ℤ) ∈ Ideal.under ℤ Q
-      rw [hQ']
-      exact Ideal.mem_span_singleton_self _
-    simpa [Ideal.mem_comap] using this
-  refine ⟨⟨Q, hQ.isPrime, ?_⟩, hmem⟩
-  rintro rfl
-  exact (Nat.cast_ne_zero.2 hp.ne_zero) (Ideal.mem_bot.1 hmem)
-
 theorem ratPrime_unique {L : Type} [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) {p q : ℕ}
     (hp : p.Prime) (hq : q.Prime) (hpw : (p : 𝓞 L) ∈ w.asIdeal) (hqw : (q : 𝓞 L) ∈ w.asIdeal) : p = q := by
   by_contra hne
@@ -940,23 +914,23 @@ theorem ratPrime_unique {L : Type} [Field L] [NumberField L] (w : HeightOneSpect
 
 variable {R : Ranks} (H : Formalism.BasicNotions.Host R)
 
-def ratP (v : HeightOneSpectrum (𝓞 H.F)) : ℕ := (exists_ratPrime_mem v).choose
+def ratP (v : HeightOneSpectrum (𝓞 H.F)) : ℕ := (_root_.Formalism.BasicNotions.Examples₂.PlacesToy.exists_prime_mem v).choose
 
-theorem ratP_prime (v : HeightOneSpectrum (𝓞 H.F)) : (ratP H v).Prime := (exists_ratPrime_mem v).choose_spec.1
+theorem ratP_prime (v : HeightOneSpectrum (𝓞 H.F)) : (ratP H v).Prime := (_root_.Formalism.BasicNotions.Examples₂.PlacesToy.exists_prime_mem v).choose_spec.1
 
 theorem ratP_mem (v : HeightOneSpectrum (𝓞 H.F)) : ((ratP H v : ℕ) : 𝓞 H.F) ∈ v.asIdeal :=
-  (exists_ratPrime_mem v).choose_spec.2
+  (_root_.Formalism.BasicNotions.Examples₂.PlacesToy.exists_prime_mem v).choose_spec.2
 
 theorem ratP_eq (v : HeightOneSpectrum (𝓞 H.F)) {p : ℕ} (hp : p.Prime) (h : (p : 𝓞 H.F) ∈ v.asIdeal) :
     ratP H v = p := ratPrime_unique v (ratP_prime H v) hp (ratP_mem H v) h
 
 def primeK (p : ℕ) : HeightOneSpectrum (𝓞 H.K) :=
-  if hp : p.Prime then (exists_mem_of_prime H.K hp).choose else (exists_mem_of_prime H.K Nat.prime_two).choose
+  if hp : p.Prime then (_root_.GlobalTheory.CharVal.exists_over H.K hp).choose else (_root_.GlobalTheory.CharVal.exists_over H.K Nat.prime_two).choose
 
 theorem primeK_mem {p : ℕ} (hp : p.Prime) : ((p : ℕ) : 𝓞 H.K) ∈ (primeK H p).asIdeal := by
   unfold primeK
   rw [dite_eq_left hp]
-  exact (exists_mem_of_prime H.K hp).choose_spec
+  exact (_root_.GlobalTheory.CharVal.exists_over H.K hp).choose_spec
 
 def sel (v : HeightOneSpectrum (𝓞 H.F)) : HeightOneSpectrum (𝓞 H.E) :=
   (GlobalTheory.PlaceOverPair.exists_mem_pvSet H (ratP_prime H v) (primeK H (ratP H v)) (primeK_mem H (ratP_prime H v)) v
@@ -1009,8 +983,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_half_selection_split_places_base : ∀ B : Base, ∃ (Pv : HeightOneSpectrum (𝓞 B.host.F) → HeightOneSpectrum (𝓞 B.host.E)) (d : PlacesOverCommonPrime B.host), Formalism.L2.Col.IsSel B.fields Pv ∧ (∀ v, Pv v ∈ aboveF (L := B.host.E) B.host.F v) ∧ Half B Pv ∧ (∀ v hv, Pv v = d.P v hv) ∧ ∀ v hv, Pv v = d.P' v hv := by
-  first | exact @GlobalTheory.Mem.Top.Bl.exists_half_selection_split_places
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHalfSelectionSplitPlacesBaseStatement =====
@@ -1059,7 +1031,7 @@ theorem step_pinned (h2b : StandardLattice.SiegelMassRatioCM) :
   refine (h41.inter hv).imp fun B f T hO G hk _ _ => ?_
   obtain ⟨H, V, Lc⟩ := G
   obtain ⟨⟨δ, hδ⟩, hp⟩ := hk
-  obtain ⟨Pv, d, hsel, habove, hhalf, hd1, hd2⟩ := GlobalTheory.T.exists_half_selection_split_places_base B
+  obtain ⟨Pv, d, hsel, habove, hhalf, hd1, hd2⟩ := _root_.GlobalTheory.Mem.Top.Bl.exists_half_selection_split_places B
   obtain ⟨X, I, hok, hpins, htw, hjets, hsel', hC, hS, hxi, hval⟩ := H hp (hfr _ hO).1 Pv hsel
   obtain ⟨hv1, hv2⟩ := V X I hok hS hxi
   subst hsel'
@@ -1112,10 +1084,10 @@ theorem memberE_of_steps2 : GlobalTheory.NT.RayField → GlobalTheory.Published.
   have hB : BaseCond KPx := KPxCond.baseCond_KPx hR hP hC h2b
   have h1 : FirstG KPx (IsBuiltE 𝒮) :=
     step_hasCore (MemberEx2.step_start h2b)
-      (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1) h4 (GlobalTheory.T.exists_constructedCore_of_all_construction_stages h2b 𝒮 hA hD hT) h3)
+      (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1) h4 (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core h2b 𝒮 hA hD hT) h3)
   have hW : StepW (fun K B f T w => Start K B f T w ∧ Has3 𝒮' K B f T w)
       (HasC fun K B f T w Z c => GoodE 𝒮 K B f T w Z c ∧ DQ.TwAllAt (w.D Z) c.O.nch c.O.xd) :=
-    (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1.1) h4' (GlobalTheory.T.exists_constructedCore_of_all_construction_stages h2b 𝒮' hA' hD' hT')
+    (MemberEx2.stepW_builtE (fun _ _ _ _ _ h => h.1.1) h4' (_root_.GlobalTheory.Mem.Top.Bl.CoreAsm.stepW_core h2b 𝒮' hA' hD' hT')
       (StepW.of_all fun _ _ _ _ _ _ _ h => h.2)).trans
       (StepW.of_all fun _ _ _ _ _ _ _ H => let ⟨Z, c, hc⟩ := H; ⟨Z, c, hL _ _ _ _ _ _ _ hc⟩)
   have hS := step_hasCore (admitted := fun K B f T => ∃ w : ColW B f T, Start K B f T w ∧ Has3 𝒮' K B f T w)

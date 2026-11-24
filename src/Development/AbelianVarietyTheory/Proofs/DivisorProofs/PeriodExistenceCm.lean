@@ -464,8 +464,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain GlobalTheory.CMVal GlobalTheory.LatVal Neutral.B1
 open scoped nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.isUniformiserAt_iff_adicCompletion_isUnifAt : ∀ {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) (x : (v.adicCompletion K)ˣ), IsUniformiserAt K v (x : v.adicCompletion K) ↔ Formalism.L2.Host.IsUnifAt v x := by
-  first | exact @GlobalTheory.UnifVal.isUniformiserAt_iff_isUnifAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUniformiserAtIffAdicCompletionIsUnifAtStatement =====
@@ -526,17 +524,6 @@ namespace GlobalTheory.LatVal
 
 open Neutral.B1
 
-theorem exists_uniformisation_torsTransport {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K]
-    (h2 : Module.finrank ℚ K = 2) (ι : K →+* ℂ) (Λ₀ : PeriodPair) (Ω₀ : ℂ)
-    (hΛ : GlobalTheory.IndefiniteRowSideFullHecke.LatticeNormTransport.IsLatOf ι 1 Λ₀) (hΩ : Ω₀ ≠ 0) :
-    letI : Algebra K ℂ := ι.toAlgebra
-    ∃ (X : WeierstrassCurve ℂ) (_ : X.IsElliptic)
-      (ξ : (ℂ ⧸ GlobalTheory.EllipticCM.idealSub (1 : FractionalIdeal (𝓞 K)⁰ K)) ≃+ X.toAffine.Point),
-      GlobalTheory.EllipticCM.IsAnalyticIso ξ ∧ ∀ (σ : ℂ ≃ₐ[K] ℂ) (t : (Af K)ˣ),
-        GlobalTheory.EllipticCM.Transports σ t one_ne_zero ξ →
-        ∃ (Λ₁ : PeriodPair) (Ω₁ : ℂ), TorsTransport ι σ.toRingEquiv t Λ₀ Λ₁ Ω₀ Ω₁ :=
-  _root_.GlobalTheory.LatVal.CurveTransport.exists_curve_torsTransport h2 ι Λ₀ Ω₀ hΛ hΩ
-
 theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] {Ω : Type}
     [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] {art : Ideles K →* GlobalTheory.HeckeGal.Gab K Ω}
     (ha : GlobalTheory.HeckeGal.IsGlobalArtin art) (e : Ω ≃ₐ[K] AlgebraicClosure K) :
@@ -575,7 +562,7 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
     · intro hu Q hQ hQv
       rw [← hx] at hu
       obtain ⟨σ, hσ, hσe⟩ := (ha.frob v A hA (art (localIdele K v x))).1
-        ⟨x, (GlobalTheory.T.isUniformiserAt_iff_adicCompletion_isUnifAt v x).1 hu, rfl⟩
+        ⟨x, (_root_.GlobalTheory.UnifVal.isUniformiserAt_iff_isUnifAt v x).1 hu, rfl⟩
       rw [hArtσ _ σ (by rw [← hσe, map_inv, inv_inv]), abRestrict_mk]
       exact _root_.GlobalTheory.FrobRestrict.isFrobAt_restrict e L h v A hA σ hσ Q hQ hQv
     · intro hu
@@ -593,7 +580,7 @@ theorem periodEx_of_mainTheorem : GlobalTheory.Published.EllipticMainTheoremCM �
     change g (ι x) = ι x
     rw [← hj, RingHom.comp_apply, ← hσg, AlgEquiv.commutes]
   let gK : ℂ ≃ₐ[K] ℂ := AlgEquiv.ofRingEquiv (f := g) hg
-  obtain ⟨X, hX, ξ, hξ, hT⟩ := exists_uniformisation_torsTransport h2 ι Λ₀ Ω₀ hΛ hΩ
+  obtain ⟨X, hX, ξ, hξ, hT⟩ := _root_.GlobalTheory.LatVal.CurveTransport.exists_curve_torsTransport h2 ι Λ₀ Ω₀ hΛ hΩ
   let e := IsAlgClosure.equiv K Ω (AlgebraicClosure K)
   obtain ⟨Art, hArt, hArtσ⟩ := exists_globalArtinMap ha e
   have hjK : ∀ x : K, j (algebraMap K Ω x) = algebraMap K ℂ x := fun x => by

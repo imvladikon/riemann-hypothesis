@@ -306,15 +306,10 @@ namespace PeriodLatticeBasisLemmas
 private theorem mem_lattice_iff_exists_int_comb' (L : PeriodPair) {x : ℂ} :
     x ∈ L.lattice ↔ ∃ m n : ℤ, (m : ℂ) * L.ω₁ + (n : ℂ) * L.ω₂ = x := L.mem_lattice
 
-private theorem periodPair_basis_zero_eq_omega_one (L : PeriodPair) : L.basis 0 = L.ω₁ :=
-  L.basis_zero
-
-private theorem periodPair_basis_one_eq_omega_two (L : PeriodPair) : L.basis 1 = L.ω₂ := L.basis_one
-
 private theorem basis_equivFun_real_comb_periods (L : PeriodPair) (s t : ℝ) :
     L.basis.equivFun ((s : ℂ) * L.ω₁ + (t : ℂ) * L.ω₂) = ![s, t] := by
   have e : ((s : ℂ) * L.ω₁ + (t : ℂ) * L.ω₂) = L.basis.equivFun.symm ![s, t] := by
-    rw [Module.Basis.equivFun_symm_apply, Fin.sum_univ_two, periodPair_basis_zero_eq_omega_one, periodPair_basis_one_eq_omega_two]
+    rw [Module.Basis.equivFun_symm_apply, Fin.sum_univ_two, _root_.PeriodPair.basis_zero, _root_.PeriodPair.basis_one]
     simp [Complex.real_smul]
   rw [e, LinearEquiv.apply_symm_apply]
 
@@ -336,7 +331,7 @@ private theorem lattice_eq_iInter_preimage_int_coords (L : PeriodPair) :
     obtain ⟨n, hn⟩ := h 1
     refine (mem_lattice_iff_exists_int_comb' L).mpr ⟨m, n, ?_⟩
     have hs := L.basis.sum_equivFun x
-    rw [Fin.sum_univ_two, periodPair_basis_zero_eq_omega_one, periodPair_basis_one_eq_omega_two, ← hm, ← hn] at hs
+    rw [Fin.sum_univ_two, _root_.PeriodPair.basis_zero, _root_.PeriodPair.basis_one, ← hm, ← hn] at hs
     rw [← hs]
     simp [Complex.real_smul]
 
@@ -673,19 +668,14 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.F
 
-theorem zetaSummable : ZetaSummable := zeta_summable
-theorem zetaHasDeriv : ZetaHasDeriv := zeta_has_deriv
-theorem zetaOdd : ZetaOdd := zeta_odd
-theorem zetaQuasi : ZetaQuasi := zetaQuasi_of zetaHasDeriv zetaOdd
-theorem sigmaSummable : SigmaSummable := sigma_summable
-theorem sigmaProdLU : SigmaProdLU := sigma_product_locally_uniform
-theorem sigmaEntire : SigmaEntire := sigmaEntire_of sigmaProdLU
-theorem sigmaOdd : SigmaOdd := sigma_odd
-theorem sigmaZero : SigmaZero := sigmaZero_of sigmaSummable
-theorem sigmaLogDeriv : SigmaLogDeriv := sigmaLogDeriv_of sigmaProdLU sigmaSummable zetaSummable
-theorem sigmaQuasi : SigmaQuasi := sigmaQuasi_of zetaQuasi sigmaLogDeriv sigmaEntire sigmaOdd sigmaZero
-theorem sigmaSimple : SigmaSimple := sigmaSimple_of sigmaQuasi sigmaEntire (sigmaDerivZero_of sigmaProdLU)
-theorem etaEisenstein : EtaEisenstein := etaEisenstein_of zetaSummable zetaOdd
+alias zetaHasDeriv := _root_.Formalism.L2.Th1.F.zeta_has_deriv
+theorem zetaQuasi : ZetaQuasi := zetaQuasi_of zetaHasDeriv _root_.Formalism.L2.Th1.F.zeta_odd
+theorem sigmaEntire : SigmaEntire := sigmaEntire_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform
+theorem sigmaZero : SigmaZero := sigmaZero_of _root_.Formalism.L2.Th1.F.sigma_summable
+theorem sigmaLogDeriv : SigmaLogDeriv := sigmaLogDeriv_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform _root_.Formalism.L2.Th1.F.sigma_summable _root_.Formalism.L2.Th1.F.zeta_summable
+theorem sigmaQuasi : SigmaQuasi := sigmaQuasi_of zetaQuasi sigmaLogDeriv sigmaEntire _root_.Formalism.L2.Th1.F.sigma_odd sigmaZero
+theorem sigmaSimple : SigmaSimple := sigmaSimple_of sigmaQuasi sigmaEntire (sigmaDerivZero_of _root_.Formalism.L2.Th1.F.sigma_product_locally_uniform)
+theorem etaEisenstein : EtaEisenstein := etaEisenstein_of _root_.Formalism.L2.Th1.F.zeta_summable _root_.Formalism.L2.Th1.F.zeta_odd
 theorem legendre : Legendre := legendre_of etaEisenstein
 
 end Formalism.L2.Th1.F

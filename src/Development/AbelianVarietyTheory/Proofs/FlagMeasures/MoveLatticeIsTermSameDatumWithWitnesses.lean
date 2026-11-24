@@ -152,28 +152,6 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 variable (L : LocE F E) {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
 
-theorem hf_zero_l (y : Fin n → E) : hf L Hm 0 y = 0 := by simp [hf]
-
-theorem hf_zero_r (y : Fin n → E) : hf L Hm y 0 = 0 := by simp [hf]
-
-theorem hf_sum_l {ι : Type} (s : Finset ι) (a : ι → Fin n → E) (y : Fin n → E) :
-    hf L Hm (∑ i ∈ s, a i) y = ∑ i ∈ s, hf L Hm (a i) y := by
-  induction s using Finset.induction_on with
-  | empty => simp [hf_zero_l]
-  | insert i s hi ih => rw [Finset.sum_insert hi, Finset.sum_insert hi, hf_add_l, ih]
-
-theorem hf_sum_r {ι : Type} (s : Finset ι) (a : ι → Fin n → E) (y : Fin n → E) :
-    hf L Hm y (∑ i ∈ s, a i) = ∑ i ∈ s, hf L Hm y (a i) := by
-  induction s using Finset.induction_on with
-  | empty => simp [hf_zero_r]
-  | insert i s hi ih => rw [Finset.sum_insert hi, Finset.sum_insert hi, hf_add_r, ih]
-
-theorem exists_smul_mem [IsNonarchimedeanLocalField F] {Λ : Submodule L.O (Fin n → E)}
-    (hΛ : IsLat L Λ) (x : Fin n → E) : ∃ t : 𝒪[F], t ≠ 0 ∧ algebraMap F E t • x ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.CommonDenominator.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CommonDenominator.main ..)
-
 noncomputable def shear {m : ℕ} (b d : Fin m → Fin n → E) (hdb : ∀ i j, hf L Hm (d i) (b j) = 0) :
     (Fin n → E) ≃ₗ[E] (Fin n → E) where
   toFun v := v + ∑ j, hf L Hm v (b j) • d j
@@ -181,8 +159,8 @@ noncomputable def shear {m : ℕ} (b d : Fin m → Fin n → E) (hdb : ∀ i j, 
   map_smul' c v := by
     simp only [hf_smul_l, RingHom.id_apply, smul_add, Finset.smul_sum, mul_smul]
   invFun v := v - ∑ j, hf L Hm v (b j) • d j
-  left_inv v := by simp [hf_add_l, hf_sum_l, hf_smul_l, hdb]
-  right_inv v := by simp [hf_sub_l, hf_sum_l, hf_smul_l, hdb]
+  left_inv v := by simp [hf_add_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l, hdb]
+  right_inv v := by simp [hf_sub_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l, hdb]
 
 theorem shear_apply {m : ℕ} (b d : Fin m → Fin n → E) (hdb : ∀ i j, hf L Hm (d i) (b j) = 0)
     (v : Fin n → E) : shear L Hm b d hdb v = v + ∑ j, hf L Hm v (b j) • d j := rfl
@@ -202,7 +180,7 @@ theorem shear_mem_isomG {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm) {m : �
 
     rw [← hf_cj L h, hv, map_sum]
     simp only [map_mul, hf_cj L h]
-  simp only [shear_apply, hf_add_l, hf_add_r, hf_sum_l, hf_sum_r, hf_smul_l, hf_smul_r, hdd,
+  simp only [shear_apply, hf_add_l, hf_add_r, _root_.GlobalTheory.HL.DualInter.sum_l, _root_.GlobalTheory.HL.DualInter.sum_r, hf_smul_l, hf_smul_r, hdd,
     mul_zero, Finset.sum_const_zero, add_zero]
   simp only [hw]
   simp only [hv v, Finset.mul_sum]
@@ -228,7 +206,7 @@ theorem exists_isometry_of_same_trace : ∀ {F : Type} [Field F] [ValuativeRel F
     have h1 : ∀ i, e i ∈ perp L Hm X := by
       intro i y hy
       obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hy
-      simp [hf_sum_r, hf_smul_r, hee]
+      simp [_root_.GlobalTheory.HL.DualInter.sum_r, hf_smul_r, hee]
     exact Submodule.span_le.2 (Set.range_subset_iff.2 h1)
   have hbm : ∀ j, b j ∈ La ∧ b j ∈ X := fun j => by
     have : b j ∈ La ⊓ X.restrictScalars L.O := by
@@ -243,13 +221,13 @@ theorem exists_isometry_of_same_trace : ∀ {F : Type} [Field F] [ValuativeRel F
 
   have hperp : ∀ v, (∀ j, hf L Hm v (b j) = 0) → v ∈ perp L Hm X := by
     intro v hv x hx
-    obtain ⟨t, ht, htx⟩ := exists_smul_mem L hLa.1 x
+    obtain ⟨t, ht, htx⟩ := _root_.GlobalTheory.CommonDenominator.main L hLa.1 x
     have h1 : algebraMap F E t • x ∈ Submodule.span L.O (Set.range b) := by
       rw [← hb]; exact ⟨htx, X.smul_mem _ hx⟩
     obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun L.O).1 h1
     have h2 : hf L Hm v (algebraMap F E t • x) = 0 := by
       rw [← ha]
-      simp [hf_sum_r, Subring.smul_def, hf_smul_r, hv]
+      simp [_root_.GlobalTheory.HL.DualInter.sum_r, Subring.smul_def, hf_smul_r, hv]
     rw [hf_smul_r, AlgEquiv.commutes] at h2
     have ht' : (t : F) ≠ 0 := fun h => ht (Subtype.ext h)
     exact ((IsUnit.mk0 _ ht').map (algebraMap F E)).mul_right_eq_zero.1 h2
@@ -290,16 +268,16 @@ theorem exists_isometry_of_same_trace : ∀ {F : Type} [Field F] [ValuativeRel F
   have hdb : ∀ i j, hf L Hm (d i) (b j) = 0 := fun i j => hXp _ (hd i) _ (hbm j).2
   have hdd : ∀ i j, hf L Hm (d i) (d j) = 0 := fun i j => hXp _ (hd i) _ (hd j)
   have hv0 : ∀ v, v - ∑ j, hf L Hm v (b j) • c j ∈ perp L Hm X := fun v =>
-    hperp _ fun k => by simp [hf_sub_l, hf_sum_l, hf_smul_l, hcb]
+    hperp _ fun k => by simp [hf_sub_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l, hcb]
   have hv : ∀ v k, hf L Hm v (d k) = ∑ j, hf L Hm v (b j) * hf L Hm (c j) (d k) := fun v k => by
     have h1 := hv0 v _ (hd k)
-    simp only [hf_sub_l, hf_sum_l, hf_smul_l] at h1
+    simp only [hf_sub_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l] at h1
     exact sub_eq_zero.1 h1
   have hcd : ∀ j k, hf L Hm (c j) (d k) + hf L Hm (d j) (c k) = 0 := fun j k => by
     have h1 : hf L Hm (c j) (d k) = hf L Hm (c j) (d₀ k) - L.cj τ * H j k := by
-      simp [d, hf_sub_r, hf_sum_r, hf_smul_r, hcb, hHc]
+      simp [d, hf_sub_r, _root_.GlobalTheory.HL.DualInter.sum_r, hf_smul_r, hcb, hHc]
     have h2 : hf L Hm (d j) (c k) = hf L Hm (d₀ j) (c k) - τ * H j k := by
-      simp [d, hf_sub_l, hf_sum_l, hf_smul_l, hbc]
+      simp [d, hf_sub_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l, hbc]
     have h3 : H j k = hf L Hm (c j) (d₀ k) + hf L Hm (d₀ j) (c k) := rfl
     rw [h1, h2]
     linear_combination -h3 - H j k * hτ
@@ -323,7 +301,7 @@ theorem exists_isometry_of_same_trace : ∀ {F : Type} [Field F] [ValuativeRel F
           + ∑ j, hf L Hm w (b j) • c j := by
         simp only [shear_symm_apply, smul_add, Finset.sum_add_distrib]; abel
       have h2 : w - ∑ j, hf L Hm w (b j) • (c j + d j) ∈ perp L Hm X :=
-        hperp _ fun k => by simp [hf_sub_l, hf_sum_l, hf_smul_l, hf_add_l, hcb, hdb]
+        hperp _ fun k => by simp [hf_sub_l, _root_.GlobalTheory.HL.DualInter.sum_l, hf_smul_l, hf_add_l, hcb, hdb]
       show (shear L Hm b d hdb).symm w ∈ La
       rw [h1]
       refine La.add_mem ((hab _ h2).2 (Lb.sub_mem hw (Lb.sum_mem fun j _ =>
@@ -525,7 +503,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
   have hx'u := h_swap0 S hux'
   have hm : ∀ v, v ∈ n₀⁻¹ • Λ ↔ n₀ v ∈ Λ := fun v => by rw [mem_smul, inv_inv]
   have hm' : ∀ v, v ∈ Λ ↔ n₀⁻¹ v ∈ n₀⁻¹ • Λ := fun v => by rw [hm, app_inv]
-  have hSD₁ : IsSD L S.Hm (n₀⁻¹ • Λ) := isSD_smul S ((isomG L S.Hm).inv_mem hn₀.1.1) hSD
+  have hSD₁ : IsSD L S.Hm (n₀⁻¹ • Λ) := _root_.GlobalTheory.HL.TermBasic.isSD_smul S ((isomG L S.Hm).inv_mem hn₀.1.1) hSD
   have H : ∀ v ∈ Λ, v ∈ perp L S.Hm S.X' → S.InTh Λ (n₀ (n₀' v) - v) := fun v hv hp => by
     rw [e₀, e₀']
     exact cong S hSD hb hu hs1 hc hx'u hv (hp _ hx'X)
@@ -546,7 +524,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     rw [ei₀, ei₀']
     exact cong S hSD₁ hb₁ hu₁ hs₁ hc (by rw [h_neg_r, hx'u, neg_zero]) hv (hp _ hx'X)
   obtain ⟨g, hg, hfix, hgL⟩ := GlobalTheory.HL.SameTrace.exists_isometry_of_same_trace L S.Hm S.herm (n₀' • Λ) (n₀⁻¹ • Λ)
-    (isSD_smul S hn₀'.1.1 hSD) hSD₁ r (fun j : Fin r => S.f' j.castSucc) (f'_li S)
+    (_root_.GlobalTheory.HL.TermBasic.isSD_smul S hn₀'.1.1 hSD) hSD₁ r (fun j : Fin r => S.f' j.castSucc) (f'_li S)
     (fun i j => f'_perp S _ _ (by rw [← X'_eq]; exact Submodule.subset_span ⟨j, rfl⟩)) (by
       rw [X'_eq]
       intro v hv

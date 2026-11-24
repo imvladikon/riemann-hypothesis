@@ -754,12 +754,6 @@ namespace GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.UnitScale
 
 open GlobalTheory.CompanionTheory.SW.WBox (cK eW)
 
-theorem map_eq_of_conj {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
-    [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
-    (m s : G ≃ₜ+ G) (ν : Measure G) [ν.IsAddHaarMeasure] (c : ℝ≥0) (hs : ∀ x, s (s x) = x)
-    (h : ν.map (fun x => s (m (s (m x)))) = (c * c) • ν) : ν.map m = c • ν :=
-  _root_.UpperTheory.Reformulated.B.FactorConjugationCancel.map_eq_of_conj m s ν c hs h
-
 section Coord
 
 variable {F E : Type} [Field F] [Field E] [Algebra F E] {R : Type} [CommRing R] [Algebra F R] {d : ℕ}
@@ -889,7 +883,7 @@ theorem map_coordW_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       _ = _ := by
           rw [hT, Measure.map_smul, ← hνπ]
           exact (eW R hK 1 1).symm.measurable.aemeasurable
-  refine map_eq_of_conj (mulT y) (sigT (sigR R σ) hsc hinv) _ c (fun X => ?_) ?_
+  refine _root_.UpperTheory.Reformulated.B.FactorConjugationCancel.map_eq_of_conj (mulT y) (sigT (sigR R σ) hsc hinv) _ c (fun X => ?_) ?_
   · funext a i
     exact hinv _
   · have e : (fun X => sigT (sigR R σ) hsc hinv (mulT y (sigT (sigR R σ) hsc hinv (mulT y X)))) =
@@ -959,25 +953,10 @@ section Coord
 variable {F E : Type} [Field F] [Field E] [Algebra F E] {R : Type} [CommRing R] [Algebra F R] {d : ℕ}
   (b : Module.Basis (Fin d) F E)
 
-theorem cK_tmul_mul (r : R) (y : R ⊗[F] E) (k : Fin d) :
-    cK R b ((r ⊗ₜ[F] (1 : E)) * y) k = r * cK R b y k := by
-  have e : (r ⊗ₜ[F] (1 : E)) * y = r • y := by
-    rw [Algebra.smul_def]
-    rfl
-  simp [cK, e]
-
 theorem cK_incl (e : E) (k : Fin d) : cK R b (inclR R e) k = algebraMap F R (b.repr e k) := by
   simp [cK, inclR, Algebra.TensorProduct.basis_repr_tmul, Algebra.algebraMap_eq_smul_one]
 
 end Coord
-
-theorem map_sigR {F E : Type} [Field F] [Field E] [Algebra F E] {R R' : Type} [CommRing R] [Algebra F R] [CommRing R']
-    [Algebra F R'] (σ : E →ₐ[F] E) (f : R →ₐ[F] R') (x : R ⊗[F] E) :
-    Algebra.TensorProduct.map f (AlgHom.id F E) (sigR R σ x) =
-      sigR R' σ (Algebra.TensorProduct.map f (AlgHom.id F E) x) := by
-  induction x with
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
-  | tmul r e => simp [sigR]
 
 section Comp
 
@@ -999,12 +978,12 @@ theorem cV_incl (v : HeightOneSpectrum (𝓞 F)) (x : E) : cV v (inclR (AF F) x)
   simp [cV, inclR]
 
 theorem cI_sigR (σ : E →ₐ[F] E) (x : AF F ⊗[F] E) : cI (sigR (AF F) σ x) = sigR (Ainf F) σ (cI x) :=
-  map_sigR σ _ x
+  _root_.GlobalTheory.CompanionTheory.SW.EulerDens.map_sigR σ _ x
 
 theorem cV_sigR (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (x : AF F ⊗[F] E) :
     cV v (sigR (AF F) σ x) = sigR (Fv F v) σ (cV v x) := by
   simp only [cV, AlgHom.comp_apply]
-  rw [map_sigR, map_sigR]
+  rw [_root_.GlobalTheory.CompanionTheory.SW.EulerDens.map_sigR, _root_.GlobalTheory.CompanionTheory.SW.EulerDens.map_sigR]
 
 theorem cI_norm (σ : E →ₐ[F] E) (y : (AF F ⊗[F] E)ˣ) (n : (AF F)ˣ) (h : IsNm σ y n) :
     (n : AF F).1 ⊗ₜ[F] (1 : E) = sigR (Ainf F) σ (cI (y : AF F ⊗[F] E)) * cI (y : AF F ⊗[F] E) := by
@@ -1039,7 +1018,7 @@ theorem coordinate_equiv_rational_scalar {F E : Type} [Field F] [Field E] [Algeb
       fun a i => (c ⊗ₜ[F] (1 : E)) * ratTup R X a i := by
   rw [MeasurableEquiv.symm_apply_eq]
   funext p
-  rw [GlobalTheory.CompanionTheory.SW.WBox.eW_apply, cK_tmul_mul, ratTup, cK_incl]
+  rw [GlobalTheory.CompanionTheory.SW.WBox.eW_apply, _root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.UnitScale.cK_tmul_mul', ratTup, cK_incl]
 
 theorem place1 {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (hcm : IsCMExt F E σ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R]

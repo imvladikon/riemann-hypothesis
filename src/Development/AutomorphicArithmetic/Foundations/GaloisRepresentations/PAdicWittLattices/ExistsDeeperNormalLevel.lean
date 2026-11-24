@@ -354,8 +354,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.compatible_roots_evaluation_injective : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → (∃ (ζ : ℕ → kˣ) (ev : ℕ → D.La → (Over.mk x ⟶ o.A)), (∀ e, IsPrimitiveRoot (ζ e) (p ^ e)) ∧ (∀ e, ζ (e + 1) ^ p = ζ e) ∧ (∀ e y z, ev e (y + z) = ev e y * ev e z) ∧ (∀ e (c : D.O) y, ev e (c • y) = ev e y ≫ o.act.act c) ∧ (∀ e y, ev e y = 1 ↔ ∃ z, y = p ^ e • z) ∧ (∀ e (q : Over.mk x ⟶ o.A), q ^ (p ^ e) = 1 ↔ ∃ y, ev e y = q) ∧ (∀ e y, ev (e + 1) y ^ p = ev e y) ∧ (∀ e y z, Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) (p ^ e) (ev e y) (ev e z) (unitOn (ζ e ^ (2 * D.EF y z))))) → ∃ I : GTateIso D.toG k (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c) (fun n g g' z => Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)), ∀ y, toUnit _ ≫ o.eta y = I.ev N y := by
-  first | (exact @GlobalTheory.UPel.HT.GTateGlue.glue)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatibleRootsEvaluationInjective =====
@@ -610,7 +608,7 @@ theorem card_ker_eq_det {S : Scheme.{0}} (A : Over S) [GrpObj A] (hA : IsAbelian
     exact hφ (Int.natAbs_eq_zero.1 hdeg.symm)
   have hneg : ∀ (T : Over (Sp k)) (y : T ⟶ B.X), y ≫ Hom.hom (-f) = 1 ↔ y ≫ f.hom = 1 := fun T y => by
     rw [neg_hom, GrpObj.comp_inv, inv_eq_one]
-  have hk := GlobalTheory.AV.DegSep.deg_eq_card_ker_of_killed k B B (-f) n (Nat.cast_ne_zero.2 hn) hiso fun T y hy => by
+  have hk := _root_.GlobalTheory.AV.DegSep.deg_eq_card_ker k B B (-f) n (Nat.cast_ne_zero.2 hn) hiso fun T y hy => by
     apply (hbij T).1
     have h := hf T y
     rw [(hneg T y).1 hy, map_one] at h
@@ -835,8 +833,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.exists_level_evaluation_hom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → ∀ e : ℕ, ∃ ev : D.La → (Over.mk x ⟶ o.A), (∀ y z, ev (y + z) = ev y * ev z) ∧ (∀ (c : D.O) y, ev (c • y) = ev y ≫ o.act.act c) ∧ (∀ y, ev y = 1 ↔ ∃ z, y = p ^ e • z) ∧ (∀ (q : Over.mk x ⟶ o.A), q ^ (p ^ e) = 1 ↔ ∃ y, ev y = q) := by
-  first | (exact @GlobalTheory.UPel.HT.PTors.exists_ev_pow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelEvaluationHom =====
@@ -924,12 +920,12 @@ theorem exists_padic_similitude : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
         rwa [h b hb, uone] at this)
     have h2 := pow_gcd_eq_one.2 ⟨h1, ha⟩
     rwa [Nat.Coprime.gcd_eq_one (Nat.Coprime.pow_right r he), pow_one] at h2
-  obtain ⟨ζ, hζ, hζ'⟩ := GlobalTheory.T.exists_compatible_prime_power_roots p k
-  obtain ⟨ev, hev, hev'⟩ := GlobalTheory.T.exists_compatible_similitude_level_tower p D k Q act (fun r => W (p ^ r)) ζ amul hζ'
+  obtain ⟨ζ, hζ, hζ'⟩ := _root_.GlobalTheory.exists_compatible_primitive_prime_pow_roots p k
+  obtain ⟨ev, hev, hev'⟩ := _root_.GlobalTheory.TowerLev.exists_compatible p D k Q act (fun r => W (p ^ r)) ζ amul hζ'
     (fun r a b ha hb => lev (p ^ r) p (pow_pos hp.pos r) hp.pos a b ha hb) fun r => by
-      obtain ⟨f, hf⟩ := GlobalTheory.T.exists_level_evaluation_hom p D R b N hN3 hN S s o k x β hβ r
+      obtain ⟨f, hf⟩ := _root_.GlobalTheory.UPel.HT.PTors.exists_ev_pow p D R b N hN3 hN S s o k x β hβ r
       have hq : 0 < p ^ r := pow_pos hp.pos r
-      exact GlobalTheory.T.exists_level_pairing_eq_alt p D k Q act r (W (p ^ r)) (ζ r) (hζ r) (wmul _ hq) (wskew _ hq) (wadj _ hq) (wnd r) f hf
+      exact _root_.GlobalTheory.UPel.HT.FinLevSim.exists_level_pairing_eq p D k Q act r (W (p ^ r)) (ζ r) (hζ r) (wmul _ hq) (wskew _ hq) (wadj _ hq) (wnd r) f hf
   refine ⟨ζ, ev, hζ, hζ', fun r => (hev r).1.1, fun r => (hev r).1.2.1, fun r => (hev r).1.2.2.1,
     fun r => (hev r).1.2.2.2, hev', fun r y z => ?_⟩
   have hq : 0 < p ^ r := pow_pos hp.pos r
@@ -953,8 +949,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.exists_compatible_roots_and_evaluation : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → ∃ (ζ : ℕ → kˣ) (ev : ℕ → D.La → (Over.mk x ⟶ o.A)), (∀ e, IsPrimitiveRoot (ζ e) (p ^ e)) ∧ (∀ e, ζ (e + 1) ^ p = ζ e) ∧ (∀ e y z, ev e (y + z) = ev e y * ev e z) ∧ (∀ e (c : D.O) y, ev e (c • y) = ev e y ≫ o.act.act c) ∧ (∀ e y, ev e y = 1 ↔ ∃ z, y = p ^ e • z) ∧ (∀ e (q : Over.mk x ⟶ o.A), q ^ (p ^ e) = 1 ↔ ∃ y, ev e y = q) ∧ (∀ e y, ev (e + 1) y ^ p = ev e y) ∧ (∀ e y z, Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) (p ^ e) (ev e y) (ev e z) (unitOn (ζ e ^ (2 * D.EF y z)))) := by
-  first | (exact @GlobalTheory.UPel.HT.PadicTate.exists_padic_similitude)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatibleRootsAndEvaluation =====
@@ -971,7 +965,7 @@ namespace GlobalTheory
 
 theorem gen_level_extends_tate : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → ∃ I : GTateIso D.toG k (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c) (fun n g g' z => Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)), ∀ y, toUnit _ ≫ o.eta y = I.ev N y :=
   fun p _ D R _ b N hN hNp S s o k _ _ _ x β hx =>
-    GlobalTheory.T.compatible_roots_evaluation_injective p D R b N hN hNp S s o k x β hx (GlobalTheory.T.exists_compatible_roots_and_evaluation p D R b N hN hNp S s o k x β hx)
+    _root_.GlobalTheory.UPel.HT.GTateGlue.glue p D R b N hN hNp S s o k x β hx (_root_.GlobalTheory.UPel.HT.PadicTate.exists_padic_similitude p D R b N hN hNp S s o k x β hx)
 
 end GlobalTheory
 end -- clump:auto
@@ -986,8 +980,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.exists_tate_module_iso : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b N s) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (x : Sp k ⟶ S) (β : R →+* k), x ≫ s = spMap β → ∃ I : GTateIso D.toG k (Over.mk x ⟶ o.A) (fun c g => g ≫ o.act.act c) (fun n g g' z => Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)), ∀ y, toUnit _ ≫ o.eta y = I.ev N y := by
-  first | (exact @GlobalTheory.gen_level_extends_tate)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTateModuleIso =====
@@ -1006,9 +998,6 @@ namespace GlobalTheory.UPel.HT.GenKer
 
 variable {p : ℕ} [Fact p.Prime] {D : Datum p} {R' : Type} [CommRing R'] [Algebra ℚ R'] {S : Scheme.{0}}
 
-theorem exists_spMap {A B : Type} [CommRing A] [CommRing B] (u : Sp B ⟶ Sp A) : ∃ β : A →+* B, u = spMap β :=
-  ⟨(Spec.preimage u).hom, by simp [spMap]⟩
-
 theorem charZero_of_hom {k : Type} [Field k] (β : R' →+* k) : CharZero k :=
   charZero_of_injective_ringHom (β.comp (algebraMap ℚ R')).injective
 
@@ -1017,7 +1006,7 @@ theorem pow_eq_one_geom {gb : GBase D.toG R'} {N : ℕ} {t : S ⟶ Sp R'} (o : G
     (g : Over.mk x₀ ⟶ o.A) (M : ℕ) (hM : 0 < M) (hn : g ^ M = 1)
     (hg : ∃ u : (o.P.pull (lift (snd o.A (Over.mk x₀) ≫ g) (fst o.A (Over.mk x₀))).left).Gen, u.IsGen) :
     g ^ e = 1 := by
-  obtain ⟨β, hβ⟩ := exists_spMap (x₀ ≫ t)
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (x₀ ≫ t)
   haveI := charZero_of_hom β
   obtain ⟨I, -⟩ := o.geom k x₀ β hβ
   obtain ⟨y, hy⟩ : ∃ y : D.La, I.ev M y = g := (I.onto M hM g).1 hn
@@ -1066,7 +1055,7 @@ theorem exists_coprime_pow_eq_one (p : ℕ) [Fact p.Prime] (D : Datum p) (R' : T
   let a : Sp B ⟶ T.left := u.inv ≫ T.left.affineCover.f i
   let a' : Over.mk (a ≫ T.hom) ⟶ T := Over.homMk a rfl
   have hx' := KerBy.gen_comp S o.A o.P T _ a' x hx
-  obtain ⟨M, hM, hxM⟩ := GlobalTheory.T.isTorsion_of_birigidified_bundle_trivial_on_slice S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ o.symm o.ample B (a ≫ T.hom) _ hx'
+  obtain ⟨M, hM, hxM⟩ := _root_.GlobalTheory.KerTorsion.exists_pow_eq_one S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ o.symm o.ample B (a ≫ T.hom) _ hx'
   have hu : IsUnit ((M : ℕ) : Γ(S, ⊤)) := by
     have h0 : IsUnit ((M : ℕ) : R') := by
       simpa using (IsUnit.mk0 (M : ℚ) (Nat.cast_ne_zero.2 hM.ne')).map (algebraMap ℚ R')
@@ -1092,8 +1081,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.torsion_of_generating_section : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [Algebra ℚ R] (gb : GBase D.toG R) (N : ℕ), 3 ≤ N → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : GObj gb N s), ∃ e : ℕ, e.Coprime p ∧ ∀ (T : Over S) (x : T ⟶ o.A), (∃ t : (o.P.pull (lift (snd o.A T ≫ x) (fst o.A T)).left).Gen, t.IsGen) → x ^ e = 1 := by
-  first | (exact @GlobalTheory.UPel.HT.GenKer.exists_coprime_pow_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionOfGeneratingSection =====
@@ -1139,12 +1126,12 @@ theorem fullTate (gb : GBase D.toG R) {N : ℕ} (h3 : 3 ≤ N) (hN : N.Coprime p
   haveI : CharZero k := by
     letI : Algebra ℚ k := (β.comp (algebraMap ℚ R)).toAlgebra
     exact algebraRat.charZero k
-  exact GlobalTheory.T.exists_tate_module_iso p D R gb.toBaseAt N h3 hN S s o k x β h
+  exact _root_.GlobalTheory.gen_level_extends_tate p D R gb.toBaseAt N h3 hN S s o k x β h
 
 theorem kerPrimeTo {gb : GBase D.toG R} {N : ℕ} (h3 : 3 ≤ N) {s : S ⟶ Sp R} (o : GObj gb N s) :
     ∃ e : ℕ, e.Coprime p ∧ ∀ (T : Over S) (x : T ⟶ o.A),
       (∃ t : (o.P.pull (lift (snd o.A T ≫ x) (fst o.A T)).left).Gen, t.IsGen) → x ^ e = 1 :=
-  GlobalTheory.T.torsion_of_generating_section p D R gb N h3 S s o
+  _root_.GlobalTheory.UPel.HT.GenKer.exists_coprime_pow_eq_one p D R gb N h3 S s o
 
 def GTateIso.toPrimeTo {k : Type} [Field k] {Q : Type} [Group Q] {act : D.O → Q → Q}
     {e : ℕ → Q → Q → kˣ → Prop} (I : GTateIso D.toG k Q act e) : TateIsoO D k Q act e where
@@ -1216,7 +1203,7 @@ def GBase.genModelOf (gb : GBase D.toG R) {N : ℕ} (h3 : 3 ≤ N) (hN : N.Copri
 theorem genModel_nonempty (p : ℕ) [Fact p.Prime] (D : Datum p) (R' : Type) [CommRing R'] [Algebra ℚ R']
     [IsNoetherianRing R'] (gb : GBase D.toG R') (N : ℕ) (h3 : 3 ≤ N) (hN : N.Coprime p) :
     Nonempty (GenModel gb N) := by
-  obtain ⟨M⟩ := GlobalTheory.T.harrisTaylorIntegralModel_nonempty p D R' gb.toBaseAt N h3 hN
+  obtain ⟨M⟩ := _root_.GlobalTheory.UPel.HT.model_nonempty p D R' gb.toBaseAt N h3 hN
   exact ⟨gb.genModelOf h3 hN M⟩
 
 end GlobalTheory.UPel.HT.Gen
@@ -1233,8 +1220,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.unitaryCharZeroGenericModel_nonempty : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R' : Type) [CommRing R'] [Algebra ℚ R'] [IsNoetherianRing R'] (gb : GBase D.toG R') (N : ℕ), 3 ≤ N → N.Coprime p → Nonempty (GenModel gb N) := by
-  first | (exact @GlobalTheory.UPel.HT.Gen.genModel_nonempty)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCharZeroGenericModelNonemptyStatement =====
@@ -1342,7 +1327,7 @@ private theorem comp_univ_hom_eq_of_wit {p : ℕ} [Fact p.Prime] {D : Datum p} {
 theorem UpperTheory.Gal.G3.pKSEx :
     KNBasic → WitUniq → WitComp → WitCart → WitEx → WitOne → WitTrans → WitFree → KSEx := by
   intro hK hU hC hCart hEx hOne hTr hFree p _ D G L _ R _ _ gb k
-  have hM : ∀ N : Lv p, Nonempty (GenModel gb N.1) := fun N => GlobalTheory.T.unitaryCharZeroGenericModel_nonempty p D R gb N.1 N.2.1 N.2.2
+  have hM : ∀ N : Lv p, Nonempty (GenModel gb N.1) := fun N => _root_.GlobalTheory.UPel.HT.Gen.genModel_nonempty p D R gb N.1 N.2.1 N.2.2
   let M : (N : Lv p) → GenModel gb N.1 := fun N => (hM N).some
   have hint : ∀ {N : ℕ} {u : G.GAf}, u ∈ L.KN N → Integ L u := fun hu =>
     UpperTheory.Gal.Int.Geo.integ_of_mem (UpperTheory.Gal.Int.Geo.KN_anti (one_dvd _) hu)

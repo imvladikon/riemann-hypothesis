@@ -137,8 +137,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleCohomologyEquivalence_baseChange_cechAugmentation : ∀ (R : Type) [CommRing R] (F : Shv R) (S W V : Scheme.{0}) (r : W ⟶ S) (f : V ⟶ W), Etale f → Surjective f → ∀ U : Over S, Eqv R ((bcMap (cechAug f) (sch.map r)).app U) F := by
-  first | (exact @GlobalTheory.EtC.bc_cechAug_eqv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalenceBaseChangeCechAugmentaStatement =====
@@ -155,7 +153,7 @@ namespace GlobalTheory.EtC
 theorem contCone_of_etale_surjective : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G) (W V : Scheme.{0}) (r : W ⟶ S) (f : V ⟶ W), Etale f → Surjective f → ∀ (P : MorphismProperty Scheme.{0}) [P.IsStableUnderBaseChange] [P.IsMultiplicative], P f → (∀ (Z : Scheme.{0}) (π : Z ⟶ V), P π → ContCone R F ((bc (sch.map (π ≫ f ≫ r))).mapCone c)) → ContCone R F ((bc (sch.map r)).mapCone c) := by
   intro R _ F S I _ _ G c W V r f hE hS P _ _ hf hZ
   have hstep : ContCone R F ((bc (cechAug f ≫ sch.map r)).mapCone c) := by
-    refine GlobalTheory.T.cohomologyContinuous_base_change_of_levels R F S (cech f) (cechAug f ≫ sch.map r) I G c (fun k => ?_)
+    refine _root_.GlobalTheory.EtC.CcStep.cc_step R F S (cech f) (cechAug f ≫ sch.map r) I G c (fun k => ?_)
     obtain ⟨Z, π, e, hP, he⟩ := GlobalTheory.EtC.cech_level_representable P V W f hf k
     refine ⟨Z, π ≫ f ≫ r, e, ?_, hZ Z π hP⟩
     rw [NatTrans.comp_app, ← Category.assoc, he]
@@ -163,7 +161,7 @@ theorem contCone_of_etale_surjective : ∀ (R : Type) [CommRing R] (F : Shv R) (
     rw [← yoneda.map_comp, Category.assoc]
   refine (ContCone.iff_of_eqv R F I _ _ ((bc (cechAug f ≫ sch.map r)).mapCone c) ((bc (sch.map r)).mapCone c)
     (Functor.whiskerLeft G (bcMap (cechAug f) (sch.map r))) ((bcMap (cechAug f) (sch.map r)).app c.pt) (fun i => ?_)
-    (fun i => GlobalTheory.T.etaleCohomologyEquivalence_baseChange_cechAugmentation R F S W V r f hE hS (G.obj i)) (GlobalTheory.T.etaleCohomologyEquivalence_baseChange_cechAugmentation R F S W V r f hE hS c.pt)).mp hstep
+    (fun i => _root_.GlobalTheory.EtC.bc_cechAug_eqv R F S W V r f hE hS (G.obj i)) (_root_.GlobalTheory.EtC.bc_cechAug_eqv R F S W V r f hE hS c.pt)).mp hstep
   exact ((bcMap (cechAug f) (sch.map r)).naturality (c.π.app i))
 
 end GlobalTheory.EtC
@@ -178,8 +176,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.continuousCone_descends_etale_surjective : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G) (W V : Scheme.{0}) (r : W ⟶ S) (f : V ⟶ W), Etale f → Surjective f → ∀ (P : MorphismProperty Scheme.{0}) [P.IsStableUnderBaseChange] [P.IsMultiplicative], P f → (∀ (Z : Scheme.{0}) (π : Z ⟶ V), P π → ContCone R F ((bc (sch.map (π ≫ f ≫ r))).mapCone c)) → ContCone R F ((bc (sch.map r)).mapCone c) := by
-  first | (exact @GlobalTheory.EtC.contCone_of_etale_surjective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousConeDescendsEtaleSurjectiveStatement =====
@@ -223,7 +219,7 @@ theorem contCone_bc_of_compact_separated (R : Type) [CommRing R] (F : Shv R) (hF
   have hfa : IsAffineHom f := by
     have : IsAffineHom (f ≫ terminal.from W) := isAffineHom_of_isAffine _
     exact IsAffineHom.of_comp f (terminal.from W)
-  refine GlobalTheory.T.continuousCone_descends_etale_surjective R F S I G c W V r f hfe hfs @IsAffineHom hfa ?_
+  refine _root_.GlobalTheory.EtC.contCone_of_etale_surjective R F S I G c W V r f hfe hfs @IsAffineHom hfa ?_
   intro Z π hπ
   have : IsAffine Z := isAffine_of_isAffineHom π
   exact _root_.GlobalTheory.EtC.contCone_bc_affine R F hF S I G c hc hG Z (π ≫ f ≫ r) inferInstance
@@ -244,7 +240,7 @@ theorem contCone_bc_of_qcqs : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary 
         obtain ⟨hf1, hf2⟩ := hf
         obtain ⟨hg1, hg2⟩ := hg
         exact ⟨inferInstance, inferInstance⟩ }
-  refine GlobalTheory.T.continuousCone_descends_etale_surjective R F S I G c W V r f hfe hfs (@QuasiCompact ⊓ @IsSeparated) ⟨hqc, hsep⟩ ?_
+  refine _root_.GlobalTheory.EtC.contCone_of_etale_surjective R F S I G c W V r f hfe hfs (@QuasiCompact ⊓ @IsSeparated) ⟨hqc, hsep⟩ ?_
   intro Z π hπ
   obtain ⟨h1, h2⟩ := hπ
   have : CompactSpace Z := QuasiCompact.compactSpace_of_compactSpace π
@@ -295,8 +291,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.cohomologyContinuousOnCone_of_whisker : ∀ (R : Type) [CommRing R] (F : Shv R) (I : Type) [SmallCategory I] [IsCofiltered I] (I' : Type) [SmallCategory I'] [IsCofiltered I'] (L : I' ⥤ I) (G : I ⥤ Spc) (c : Cone G), (∀ i, ∃ i', Nonempty (L.obj i' ⟶ i)) → ContCone R F (c.whisker L) → ContCone R F c := by
-  first | (exact @GlobalTheory.EtC.contCone_of_whisker)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyContinuousOnConeOfWhiskerStatement =====
@@ -318,9 +312,9 @@ theorem contCone_of_qcqs_affine : ∀ (R : Type) [CommRing R] (F : Shv R), Finit
   haveI := hqs i₀
   have hcore := _root_.GlobalTheory.contCone_bc_of_qcqs R F hF (G.obj i₀) (Over i₀) (Over.post G) ((Over.conePost G i₀).obj c) hc'
     (fun j => haff _ _ j.hom) (G.obj i₀) (𝟙 _)
-  have hb := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
+  have hb := _root_.GlobalTheory.EtC.eqv_basic R F
   haveI : IsIso (sch.map (𝟙 (G.obj i₀))) := inferInstance
-  apply GlobalTheory.T.cohomologyContinuousOnCone_of_whisker R F I (Over i₀) (Over.forget i₀) (G ⋙ sch) (sch.mapCone c)
+  apply _root_.GlobalTheory.EtC.contCone_of_whisker R F I (Over i₀) (Over.forget i₀) (G ⋙ sch) (sch.mapCone c)
   · intro i
     exact ⟨Over.mk (IsCofiltered.minToRight i i₀), ⟨IsCofiltered.minToLeft i i₀⟩⟩
   · let α : Over.post G ⋙ bc (sch.map (𝟙 (G.obj i₀))) ⟶ Over.forget i₀ ⋙ G ⋙ sch :=
@@ -329,7 +323,7 @@ theorem contCone_of_qcqs_affine : ∀ (R : Type) [CommRing R] (F : Shv R), Finit
           simp only [Functor.comp_map, bc, pullback.map]
           erw [pullback.lift_snd]
           rfl }
-    refine (GlobalTheory.T.of_etaleCohomologyEquivalence_diagram R F (Over i₀) _ _ ((bc (sch.map (𝟙 (G.obj i₀)))).mapCone ((Over.conePost G i₀).obj c))
+    refine (_root_.GlobalTheory.EtC.ContCone.iff_of_eqv R F (Over i₀) _ _ ((bc (sch.map (𝟙 (G.obj i₀)))).mapCone ((Over.conePost G i₀).obj c))
       ((sch.mapCone c).whisker (Over.forget i₀)) α (pullback.snd _ _) ?_ ?_ ?_).1 hcore
     · intro j
       simp only [Functor.mapCone_π_app, Cone.whisker_π, bc, pullback.map]

@@ -515,7 +515,7 @@ theorem degLift_of_liftDeg (hXi : B.XiExists) (hL : LiftDegAll) : KB.DegLift := 
       rw [lst_succ, hcs u]
       simp only [smul_eq_mul]
   have hinj : ∀ a, Function.Injective (fun i => grid (Fin.rev a) i) := fun a => hgrid _
-  have hE := Formalism.FourierDecayAlt.P.extract_K_bound ℂ K (2 * (j - s) + s) (fun _ => (-1 : ℂ) ^ (s - 1) * (t⁻¹ - t'⁻¹)) W
+  have hE := _root_.Formalism.FourierDecayAlt.P.LagrangeExtraction.extractK ℂ K (2 * (j - s) + s) (fun _ => (-1 : ℂ) ^ (s - 1) * (t⁻¹ - t'⁻¹)) W
     (fun a => grid (Fin.rev a)) hPS hinj (fun _ => 0)
   rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at hE
   have hW0 : W 0 (fun _ => 0) = p.RR F j w (h ++ [(s, t)]) (h' ++ [(s, t')]) := by
@@ -1674,8 +1674,8 @@ theorem ptBound_of_xiExists (hXi : B.XiExists) (hA : P5.ThmPActualCpt) : ∃ C�
   have hVI := waveIsometry_of_radial hRad
   have hFP := GlobalTheory.WeightedFormPos.formPosCpt_of_xiExists hXi
   have hI4 := GlobalTheory.LiftBoundCpt.liftBound_of_xiExists hXi hA hSS hFP
-  obtain ⟨C₂, hC₂, hLS⟩ := Formalism.FourierDecayAlt.P.lemma_s_of_parts Formalism.FourierDecayAlt.P.lemma_s_induction_base
-    Formalism.FourierDecayAlt.P.lemma_s_induction_up
+  obtain ⟨C₂, hC₂, hLS⟩ := _root_.Formalism.FourierDecayAlt.P.TBBx1.lemmaSOfSteps _root_.Formalism.FourierDecayAlt.P.TBBx1.stepOne
+    _root_.Formalism.FourierDecayAlt.P.TBBx1.stepUp
   refine ⟨C₂, hC₂, ?_⟩
   intro Wp Wq _ _ _ _ _ _ P p F Λ κ₀ χ nn Y K N Cb hΛ hκ hK hKN hχ hnn hCb hF hWG hLG hI5 hTN hZN hE hB
   refine Formalism.FourierDecayAlt.P.point_bound_of_corollary_s Wp Wq P p nn χ F Y Λ K N C₂ κ₀ hC₂.le hκ hnn

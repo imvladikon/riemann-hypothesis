@@ -770,7 +770,7 @@ variable {q : ℕ} [NeZero q]
 
 theorem pull_cup {E E' : Spc} (f : E ⟶ E') {n m i j : ℤ} (a : Ht q E' n i) (b : Ht q E' m j) :
     pull _ f _ _ (cup q a b) = cup q (pull _ f _ _ a) (pull _ f _ _ b) :=
-  GlobalTheory.T.cup_hypercohomologyPullback _ (twPair q i j) f rfl a b
+  _root_.GlobalTheory.EtC.Pair.cup_pull _ (twPair q i j) f rfl a b
 
 theorem cast_smul {E : Spc} {n i n' i' : ℤ} (hn : n = n') (hi : i = i') (ε : ℤˣ) (x : Ht q E n i) :
     (ε • x).cast hn hi = ε • x.cast hn hi := by
@@ -1070,18 +1070,9 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 namespace UpperTheory.P2
 variable {q : ℕ} [NeZero q]
 
-private theorem inv_of_map {Y E : Spc} (f : Y ⟶ E) (hE : Inv q E) : Inv q Y :=
-  fun U ⟨y⟩ => hE U ⟨y.map f⟩
+private alias inv_of_map := _root_.UpperTheory.MayerVietorisKummerChernClass.inv_map
 
-private theorem eqv_iso {R : Type} [CommRing R] {A B : Spc} (f : A ⟶ B) [IsIso f] (F : Shv R) : Eqv R f F := by
-  intro n
-  constructor
-  · intro a b h
-    have := congrArg (pull R (inv f) F n) h
-    rwa [← pull_comp, ← pull_comp, IsIso.inv_hom_id, pull_id, pull_id] at this
-  · intro x
-    refine ⟨pull R (inv f) F n x, ?_⟩
-    rw [← pull_comp, IsIso.hom_inv_id, pull_id]
+private alias eqv_iso := _root_.GlobalTheory.EtC.eqv_of_isIso
 
 private theorem eqv_comp {R : Type} [CommRing R] {A B C : Spc} {f : A ⟶ B} {g : B ⟶ C} {F : Shv R} (hf : Eqv R f F) (hg : Eqv R g F) :
     Eqv R (f ≫ g) F := by

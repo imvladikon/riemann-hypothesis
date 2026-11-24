@@ -136,20 +136,16 @@ theorem symplOH_coord (h0 : d.j0 = 0) (w w' : WO S T) :
     sub_eq_add_neg]
   rfl
 
-theorem map_mul_zero {R : Type} [CommRing R] (q : AE D →+* R) {l m n : ℕ} {x : Mx D l m} (hx : x.map q = 0)
-    (y : Mx D m n) : (x ⬝ y : Mx D l n).map q = 0 := by
-  rw [Matrix.map_mul, hx, Matrix.zero_mul]
-
 theorem snd_bt {x : Mx D T.rank ρ} (hx : x.map (finPart D) = 0) (y : Mx D T.rank ρ) : (bt d T x y).2 = 0 := by
   have h := GlobalTheory.OrientedHeis.snd_symplO (S := S) (T := T) (x := d.extX T x) (y := d.extY T y)
-    (Or.inl (map_mul_zero _ hx _))
+    (Or.inl (_root_.GlobalTheory.MixModel.map_mul_eq_zero_left _ hx _))
   change _ * sndA D.host.F (symplO S T (d.extX T x) (d.extY T y)) = 0
   rw [h, mul_zero]
 
 theorem bt_eq_pair (x : Mx D T.rank ρ) {y : Mx D T.rank ρ} (hy : y.map (infPart D) = 0) :
     bt d T x y = pairA D.host.F 0 (bt d T x y).2 := by
   have h := GlobalTheory.OrientedHeis.fst_symplO (S := S) (T := T) (x := d.extX T x) (y := d.extY T y)
-    (Or.inr (map_mul_zero _ hy _))
+    (Or.inr (_root_.GlobalTheory.MixModel.map_mul_eq_zero_left _ hy _))
   refine Prod.ext ?_ rfl
   change _ * fstA D.host.F (symplO S T (d.extX T x) (d.extY T y)) = 0
   rw [h, mul_zero]
@@ -259,8 +255,8 @@ theorem level (hψ : IsCharAF D.host.F ψ) (h0 : d.j0 = 0) (hφ : GlobalTheory.I
   have cX : Continuous rX := continuous_id.matrix_mul continuous_const
   have cY : Continuous rY := continuous_id.matrix_mul continuous_const
   refine ⟨U.comap rX ⊓ V.comap rY, (hU.preimage cX).inter (hV.preimage cY), fun u hu hi => ?_⟩
-  have ha := hUφ (u ⬝ d.jX) hu.1 (map_mul_zero _ hi _)
-  have hb := hVψ (u ⬝ d.jY) hu.2 (map_mul_zero _ hi _)
+  have ha := hUφ (u ⬝ d.jX) hu.1 (_root_.GlobalTheory.MixModel.map_mul_eq_zero_left _ hi _)
+  have hb := hVψ (u ⬝ d.jY) hu.2 (_root_.GlobalTheory.MixModel.map_mul_eq_zero_left _ hi _)
   funext w
   rw [heisO, hf, hf, symplOH_coord d T h0, Matrix.add_mul, Matrix.add_mul]
   generalize (u ⬝ d.jX : Mx D T.rank ρ) = a at ha ⊢
@@ -810,7 +806,7 @@ theorem schw_onto : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
   let V : Set (WO (dblSp A) B → ℂ) := {g | ∃ φ', GlobalTheory.IndefiniteRowSideFullHecke.SchwartzBruhatMixedFamilies.IsSchwartzBruhat φ' ∧ g = ser D ψ A B φ'}
   have hVc : ∀ g ∈ V, Continuous g := by
     rintro g ⟨φ', hφ', rfl⟩
-    exact (GlobalTheory.T.thetaSeries_schwartzBruhat_continuous_schrodinger D ψ hψ A B ν 𝓨 hν φ' hφ' (ser D ψ A B φ') (fun _ => rfl)).1
+    exact (_root_.GlobalTheory.Core.Rk.ThetaOf.theta_series_sch D ψ hψ A B ν 𝓨 hν φ' hφ' (ser D ψ A B φ') (fun _ => rfl)).1
   have hVd : ∀ g ∈ V, ∀ M : ℝ →+ WO (dblSp A) B, Continuous M → (∀ t, (M t).map (finPart D) = 0) →
       ∃ g' ∈ V, ∀ w, HasDerivAt (fun t : ℝ => heisO ψ (dblSp A) B (M t) g w) (g' w) 0 := by
     rintro g ⟨φ', hφ', rfl⟩ M hM hMf

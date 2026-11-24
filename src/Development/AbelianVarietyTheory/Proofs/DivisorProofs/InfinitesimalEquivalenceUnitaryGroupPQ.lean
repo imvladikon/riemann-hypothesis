@@ -665,11 +665,6 @@ theorem vIso_le (Λ : Fin n → ℝ) : vIso ε ρ V Λ ≤ V := sSup_le fun _ hS
 theorem vIso_le_kIso (Λ : Fin n → ℝ) : vIso ε ρ V Λ ≤ GlobalTheory.KFinDual.kIso ε ρ Λ :=
   sSup_le_sSup fun _ hS => hS.2
 
-theorem isURepOn_Kset (hU : IsURepOn (UJset ε) ρ) : IsURepOn (Kset ε) ρ :=
-  ⟨⟨hU.1.1, fun a ha b hb => hU.1.2 a (mem_UJset_of_mem_Kset ha) b (mem_UJset_of_mem_Kset hb)⟩,
-    fun g hg => hU.2.1 g (mem_UJset_of_mem_Kset hg),
-    fun v => (hU.2.2 v).mono fun _ hk => mem_UJset_of_mem_Kset hk⟩
-
 theorem le_iSup_vIso (hU : IsURepOn (Kset ε) ρ)
     (hirr : ∀ S : Submodule ℂ H, FiniteDimensional ℂ S → S ≠ ⊥ → IsKStableOn ε ρ S →
       (∀ S' : Submodule ℂ H, S' ≤ S → IsKStableOn ε ρ S' → S' = ⊥ ∨ S' = S) → ∃ Λ, IsKTypeOf ε ρ Λ S)
@@ -736,7 +731,7 @@ theorem kType_exists [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) :
 theorem mem_of_mem_closure [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) (hV : IsGKSub ε ρ V)
     (hA : IsAdmissibleSub ε ρ V) {w : H} (hw : w ∈ V.topologicalClosure) (hk : IsKFin ε ρ w) : w ∈ V := by
   classical
-  have hUK := isURepOn_Kset hU
+  have hUK := _root_.GlobalTheory.Dec.FormF.URep_K hU
   have hty := kType_exists hU
   obtain ⟨s, hs⟩ := GlobalTheory.KFinDual.exists_finset (GlobalTheory.KFinDual.decomp n ε H ρ hUK hty) w hk
   set A : Submodule ℂ H := s.sup (vIso ε ρ V) with hAdef
@@ -930,7 +925,7 @@ theorem admissibleClosure_gKSubmodule : GlobalTheory.Published.AdmissibleClosure
   have hgen : ∀ v ∈ V, σ g v ∈ V.topologicalClosure := by
     intro v hv
     refine Submodule.iSup_induction (vIso ε σ V) (motive := fun v => σ g v ∈ V.topologicalClosure)
-      (le_iSup_vIso (isURepOn_Kset hU) (kType_exists hU) hV hv)
+      (le_iSup_vIso (_root_.GlobalTheory.Dec.FormF.URep_K hU) (kType_exists hU) hV hv)
       (fun Λ y hy => rep_mem_closure_of_vIso hU hV hA Λ hg hy) (by simp)
       (fun a b ha hb => by rw [map_add]; exact add_mem ha hb)
   have hw' : w ∈ closure (V : Set H) := by rwa [← Submodule.topologicalClosure_coe]
@@ -984,7 +979,7 @@ theorem exists_kIso_ne_bot [Nontrivial H₁] (hU : IsURepOn (UJset ε) σ₁) :
   by_contra hc
   push_neg at hc
   have hall : ∀ v : H₁, IsKFin ε σ₁ v → v = 0 := fun v hv => by
-    have h := GlobalTheory.KFinDual.decomp n ε H₁ σ₁ (isURepOn_Kset hU) (kType_exists hU) v hv
+    have h := GlobalTheory.KFinDual.decomp n ε H₁ σ₁ (_root_.GlobalTheory.Dec.FormF.URep_K hU) (kType_exists hU) v hv
     have h0 : (⨆ Λ : Fin n → ℝ, sSup {S : Submodule ℂ H₁ | IsKTypeOf ε σ₁ Λ S}) = ⊥ := iSup_eq_bot.2 hc
     rw [h0] at h
     exact (Submodule.mem_bot ℂ).1 h
@@ -1002,8 +997,8 @@ theorem form_prop [Nontrivial H₁] (hU₁ : IsURepOn (UJset ε) σ₁) (hI₁ :
     (hL : ∀ X ∈ lieSet ε, ∀ v, IsKFin ε σ₁ v → T (dRep σ₁ X v) = dRep σ₂ X (T v)) :
     ∃ c : ℝ, 0 < c ∧ ∀ v w, IsKFin ε σ₁ v → IsKFin ε σ₁ w → ⟪T v, T w⟫_ℂ = (c : ℂ) * ⟪v, w⟫_ℂ := by
   classical
-  have hUK₁ := isURepOn_Kset hU₁
-  have hUK₂ := isURepOn_Kset hU₂
+  have hUK₁ := _root_.GlobalTheory.Dec.FormF.URep_K hU₁
+  have hUK₂ := _root_.GlobalTheory.Dec.FormF.URep_K hU₂
   have hG₁ := isGKSub_kFinVec hU₁ hI₁
   have hG₂ := isGKSub_kFinVec hU₂ hI₂
   obtain ⟨Λ₀, hΛ₀⟩ := exists_kIso_ne_bot hU₁

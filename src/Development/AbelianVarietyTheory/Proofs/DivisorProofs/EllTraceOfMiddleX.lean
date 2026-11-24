@@ -561,16 +561,12 @@ lemma cd_aeval (P : ℂ[X]) : ∀ a b, ContDiff ℝ ∞ (fun Y : Mx n => (aeval 
     simp only [Polynomial.aeval_monomial]
     exact cd_mul (fun a b => contDiff_const) (cd_pow k)
 
-lemma conj_pow (g g' D : Matrix (Fin n) (Fin n) ℂ) (h1 : g' * g = 1) (h2 : g * g' = 1) (k : ℕ) :
-    (g' * D * g) ^ k = g' * D ^ k * g :=
-  _root_.UpperTheory.Reformulated.B.Yhd8.main g g' D h1 h2 k
-
 lemma aeval_conj (g g' D : Matrix (Fin n) (Fin n) ℂ) (h1 : g' * g = 1) (h2 : g * g' = 1) (P : ℂ[X]) :
     aeval (g' * D * g) P = g' * aeval D P * g := by
   induction P using Polynomial.induction_on' with
   | add p q hp hq => rw [map_add (f := _), map_add (f := _), hp, hq, mul_add, add_mul]
   | monomial k c =>
-    rw [Polynomial.aeval_monomial, Polynomial.aeval_monomial, conj_pow g g' D h1 h2,
+    rw [Polynomial.aeval_monomial, Polynomial.aeval_monomial, _root_.UpperTheory.Reformulated.B.Yhd8.main g g' D h1 h2,
       ← Algebra.smul_def, ← Algebra.smul_def, mul_smul_comm, smul_mul_assoc]
 
 lemma aeval_diag (l : Fin n → ℂ) (P : ℂ[X]) :
@@ -986,7 +982,7 @@ noncomputable section
 theorem MainStatements.WeightKernel.cuspAny : MainStatements.WeightKernel.CuspAny := by
   intro D V hodd T U hNoFixed μf hμf ff hff fa hA 𝔉 hP
   have := hμf
-  have hH := (GlobalTheory.T.typeHypothesis_forms_agree D V T hNoFixed).1
+  have hH := (_root_.GlobalTheory.TypeHypForms.hypH_and_noRadicalFixed D V T hNoFixed).1
   obtain ⟨a, ha0, ha2, hpar⟩ := parabolicAtSplitPlaces D V hodd T 𝔉 hP
   obtain ⟨v, hv⟩ := hH a ha0 (by omega)
   obtain ⟨h, hh, e⟩ := hff.2.1 v
@@ -1764,7 +1760,7 @@ theorem hyperX : CuspAny → ArchZero → GlobalTheory.IndefiniteRowSideFullHeck
   haveI : ∀ w, (μa w).IsHaarMeasure := hRP.haar_arch
   haveI : ∀ v, (μf v).IsHaarMeasure := hRP.haar_loc
   obtain ⟨w⟩ : Nonempty (InfinitePlace D.host.F) := inferInstance
-  have hnc := (GlobalTheory.T.centralizer_regular_levi_commutative_noncompact D V Φ P hpar γ0 hreg0 hmem).2.2 (Finset.nonempty_iff_ne_empty.1 hne) w
+  have hnc := (_root_.GlobalTheory.LeviCent.cent_levi D V Φ P hpar γ0 hreg0 hmem).2.2 (Finset.nonempty_iff_ne_empty.1 hne) w
   have hcm := isCMExt_host D
   have horb : ∀ (ds : Measure (cent (projArch D.sp.cm.sig V.gram w (rat V γ0)))) [ds.IsHaarMeasure]
       [ds.IsMulRightInvariant], HasOrbInt (μa w) (projArch D.sp.cm.sig V.gram w (rat V γ0)) ds (fa w) 0 := by
@@ -1824,7 +1820,7 @@ theorem ellTrace_of_middleX : MainStatements.RegularCuspidalTrace.RegClassInt �
   set f := tensor D.sp.cm.sig V.gram fa ff with hfdef
   have hcc : f ∈ CcGA V := tensor_mem_ccAd harch.mem hfin.isFinFamily
   have hcs := continuous_of_mem_ccAd hcc
-  obtain ⟨hH, -⟩ := GlobalTheory.T.typeHypothesis_forms_agree D V T hnf
+  obtain ⟨hH, -⟩ := _root_.GlobalTheory.TypeHypForms.hypH_and_noRadicalFixed D V T hnf
   haveI := hμa
   haveI := hμf
   have hconst := hPC.2 D V hodd S M T hH U μa μf f ⟨fa, ff, harch, hfin, rfl⟩

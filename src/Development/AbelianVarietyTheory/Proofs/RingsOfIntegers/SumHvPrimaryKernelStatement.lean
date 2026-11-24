@@ -307,8 +307,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dAct dLin)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
-theorem _root_.GlobalTheory.T.constantCoeff_invariant_operator_along_matrix : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (K : Type) [Field K] [Algebra ℚ K] [Algebra V K] (n : ℕ) (mu : Matrix (Fin n) (Fin n) O) (Ty : Type) [Fintype Ty] (r : Ty → ℕ) (σ : Ty → O →+* K) (u : (Σ τ : Ty, Fin (r τ)) → Fin d → K), (∀ ℓ a, (dAct K B a).mulVec (u ℓ) = σ ℓ.1 a • u ℓ) → ∀ (P : MvPolynomial (Letter Ty r n) K) (g : PS K n d), MvPowerSeries.constantCoeff (DpolyN (B.FK K) (fun ℓ : Letter Ty r n => ℓ.2.2) (fun ℓ => u ⟨ℓ.1, ℓ.2.1⟩) P (ev (n := n) (fun b i => FB.toK K (matV B mu (fun j => pt V (n := n) d j) b i)) g)) = MvPowerSeries.constantCoeff (DpolyN (B.FK K) (fun ℓ : Letter Ty r n => ℓ.2.2) (fun ℓ => u ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.aeval (fun ℓ : Letter Ty r n => ∑ b, MvPolynomial.C (σ ℓ.1 (mu b ℓ.2.2)) * MvPolynomial.X (⟨ℓ.1, ℓ.2.1, b⟩ : Letter Ty r n)) P) g) := by
-  first | exact @GlobalTheory.MatChain.constantCoeff_dpolyN_matV
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ConstantCoeffInvariantOperatorAlongMatrixStatement =====
@@ -403,7 +401,7 @@ theorem nabValN_kappa_mul_pullM : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDi
   intro V _ _ _ _ _ d O _ _ B K _ _ _ h w0 hh n mu N κ hκ Ty _ r σ u hu P g
   unfold nabValN
   rw [kappa_mul_pullM_mul_expS B K h w0 hh mu N κ hκ g]
-  exact GlobalTheory.T.constantCoeff_invariant_operator_along_matrix V d O B K n mu Ty r σ u hu P _
+  exact _root_.GlobalTheory.MatChain.constantCoeff_dpolyN_matV V d O B K n mu Ty r σ u hu P _
 
 end GlobalTheory.PlaceInt
 end -- clump:auto
@@ -1051,8 +1049,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dAct dLin)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
-theorem _root_.GlobalTheory.T.prod_symmetricTranslationUnits_eq_kappa_ratio : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [CharZero V] (d : ℕ) (O : Type) [CommRing O] [StarRing O] (B : FB V d O) (K : Type) [Field K] [Algebra ℚ K] [Algebra V K] [IsFractionRing V K] (h : PS K 2 d) (w0 : O), B.IsCanonGauge K h → ∀ (Θ : PS V 3 d) (jo : PS V 1 d), IsTheta B K h w0 Θ → IsIota B K h w0 jo → ∀ (n : ℕ) (mu : Matrix (Fin n) (Fin n) O) (N : ℕ), Odd N → (∀ j k, ∑ i, star (mu i j) * mu i k = if j = k then (N : O) else 0) → ∀ κ : PS V n d, IsKappa B K h w0 mu N κ → ∀ α ∈ kerM B mu, ∀ u : Fin n → PS V 1 d, (∀ b, TrUnit B Θ jo N (α b) (u b)) → (∏ b, evV (n := n) ![pt V d b] (u b)) * shift B.G.F α κ = κ := by
-  first | exact @GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ProdSymmetricTranslationUnitsEqKappaRatioStatement =====
@@ -1249,7 +1245,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   intro E _ _ _ H Dw l Xo c _ hstar T io y C hG nab hnab e ρ w n he hCh ℓ hℓ hℓu N k M p q hN hsim hNk hkℓ hrat J _ a ha
     hiff F G hF hmove hkill P s hP hFF
   let _ := io.toAlgebra
-  obtain ⟨B, hB, hBall⟩ := GlobalTheory.T.integralChart_formalBiextension_gauge_bound E H Dw l Xo c hstar T io y C
+  obtain ⟨B, hB, hBall⟩ := _root_.GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   obtain ⟨hcan, hg0, heig, hbd⟩ := hBall B hB
   obtain ⟨⟨Θ, hΘ⟩, jo, hjo⟩ := GlobalTheory.T.gauge_thirdDifference_symmetry_integral_exponentials T.V (chD C.ch) (𝓞 E) B T.Fr (gaugeOf C) H.w0 hcan
   have hNpos : N ^ 2 ≠ 0 := pow_ne_zero 2 (Odd.pos hN).ne'
@@ -1268,7 +1264,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     split_ifs <;> simp
   obtain ⟨hdet, hsM'⟩ := sim_two_sided sM (p * q) _ hN2 hsM
 
-  have h51 := fun (kk : ℕ) (Fk : SecN Xo (xOf y) kk) => GlobalTheory.T.regular_section_integral_germ_unique_scale E H Dw l Xo c hstar T io y C hG.1 kk Fk
+  have h51 := fun (kk : ℕ) (Fk : SecN Xo (xOf y) kk) => _root_.GlobalTheory.RegularGerm.regular_germ E H Dw l Xo c hstar T io y C hG.1 kk Fk
   choose f hf using fun b => (h51 (N ^ 2) (F b)).1 (hF b)
   have hkpq : ∀ i, Kills Xo (p * q) (a i) := fun i => ((hiff (a i)).mp ⟨i, rfl⟩).1
   choose α hα using fun i b => ((hiff (a i)).mp ⟨i, rfl⟩).2 b
@@ -1303,7 +1299,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   choose u hu hgerm using fun i b => h70 (a i b) (α i b) (hα i b) (htor i b)
   obtain ⟨κ, hκ, hκ1⟩ := GlobalTheory.T.exists_integral_exponential_similitude_gauge T.V (chD C.ch) (𝓞 E) B T.Fr (gaugeOf C) H.w0 hcan n (p * q) (N ^ 2) hsimS
   have hU : ∀ i, (∏ b, evV (n := n) ![pt T.V (chD C.ch) b] (u i b)) * shift B.G.F (α i) κ = κ := fun i =>
-    GlobalTheory.T.prod_symmetricTranslationUnits_eq_kappa_ratio T.V (chD C.ch) (𝓞 E) B T.Fr (gaugeOf C) H.w0 hcan Θ jo hΘ hjo n (p * q) (N ^ 2) hN.pow hsimS κ hκ
+    _root_.GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa T.V (chD C.ch) (𝓞 E) B T.Fr (gaugeOf C) H.w0 hcan Θ jo hΘ hjo n (p * q) (N ^ 2) hN.pow hsimS κ hκ
       (α i) (hker i) (u i) (fun b => hu i b)
   have hq : ∀ i, α i ∈ kerM B q → (∏ b, evV (n := n) ![pt T.V (chD C.ch) b] (u i b)) *
       shift B.G.F (α i) (∏ b, evV (n := n) ![pt T.V (chD C.ch) b] (f b)) =
@@ -1359,7 +1355,7 @@ theorem sum_hv_formal_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (fun ℓ : LtN Dw n => ℓ.2.2) (fun ℓ => C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.map io P) := by
     intro i
     rw [← box_shift B (hsm i) (u i) f]
-    exact GlobalTheory.T.harmonicValue_integralPoint_eq_value_on_biextensionCopies E H Dw l Xo c hstar T io y C nab hnab B hB (N ^ 2) n (G i) _
+    exact _root_.GlobalTheory.PlaceInt.hv_eq_nabValN E H Dw l Xo c hstar T io y C nab hnab B hB (N ^ 2) n (G i) _
       (fun b => hgerm i b (F b) (G i b) (f b) (hF b) (hf b) (hmove i b)) w P hP
   have hlin := isLinearMap_nabValN B T.Fr (gaugeOf C) H.w0 (N ^ 2) (fun ℓ : LtN Dw n => ℓ.2.2)
     (fun ℓ => C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.map io P)
@@ -1426,8 +1422,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dAct dLin)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
-theorem _root_.GlobalTheory.T.sum_harmonicValues_formalKernel_similitude : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (N k M : ℕ) (p q : Matrix (Fin n) (Fin n) (𝓞 E)), Odd N → IsSim H (p * q) (N ^ 2) → N ^ 2 = k * M → Nat.Coprime k ℓ → AllRat Xo (xOf y) M → ∀ (J : Type) [Fintype J] (a : J → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)), Function.Injective a → (∀ u : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G), (∃ i, a i = u) ↔ (Kills Xo (p * q) u ∧ ∀ b, ∃ α, FormPt C (u b) α)) → ∀ (F : Fin n → SecN Xo (xOf y) (N ^ 2)) (G : J → Fin n → SecN Xo (xOf y) (N ^ 2)), (∀ b, Regular C (N ^ 2) (F b)) → (∀ i b, Moves Xo (a i b) (F b) (G i b)) → (∀ i, Kills Xo q (a i) → ∃ r : Fin n → T.V, ∏ b, r b = 1 ∧ ∀ b j, (G i b).f j = liftFun Xo.univ.t.G _ (T := ptO Xo (xOf y)) (toΓ T.Fr (algebraMap T.V T.Fr (r b))) * (F b).f j) → ∀ (P : MvPolynomial (LtN Dw n) c.F) (s : c.F), P ∈ HH c w n → MvPolynomial.map io (MvPolynomial.C s * pushL c ((p * q).map (algebraMap (𝓞 E) E)) P) ∈ FFV (Dw := Dw) T w n → letI := io.toAlgebra; ∃ z : T.Fr, ((-ρ : ℝ) : EReal) ≤ nval T.V e z ∧ io s * ∑ i, hv Xo c nab y.1 (N ^ 2) (G i) P = (Nat.card {i : J // Kills Xo q (a i)} : T.Fr) * io (∏ τ : E →+* ℂ, embK c τ p.det ^ Dw.mult τ) * z := by
-  first | exact @GlobalTheory.PlaceInt.FormSum.sum_hv_formal_kernel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SumHarmonicValuesFormalKernelSimilitudeStatement =====
@@ -1706,7 +1700,7 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       choose G' hG'' using fun (α : W₁) b =>
         (existsUnique_moves E H Dw l Xo T.Fr (xOf y) (N ^ 2) hodd (α.1.1 b) (htor α b) (G (eq.symm x) b)).1.exists
       have hr : ∀ α : W₁, Rel (G (eq.symm (α * x))) (G' α) := fun α => key α x (hG' x) (hG'' α) (hG' _)
-      obtain ⟨z, hz, hz'⟩ := GlobalTheory.T.sum_harmonicValues_formalKernel_similitude E H Dw l Xo c hbar T io y C hC nab hnab e ρ w n he hB ℓ hℓ hℓu N k M p q hN
+      obtain ⟨z, hz, hz'⟩ := _root_.GlobalTheory.PlaceInt.FormSum.sum_hv_formal_kernel E H Dw l Xo c hbar T io y C hC nab hnab e ρ w n he hB ℓ hℓ hℓu N k M p q hN
         hsim hkM hk hM W₁ (fun α => α.1.1) (Subtype.val_injective.comp Subtype.val_injective)
         (fun u => ⟨by rintro ⟨α, rfl⟩; exact ⟨α.1.2.1, α.2⟩, fun ⟨h1, h2⟩ => by
           choose α hα using h2
@@ -1744,8 +1738,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dAct dLin)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.PlaceInt
 
-theorem _root_.GlobalTheory.T.sum_hv_primary_kernel_alt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (N k M k₁ : ℕ) (p q g : Matrix (Fin n) (Fin n) (𝓞 E)), Odd N → IsSim H (p * q) (N ^ 2) → N ^ 2 = k * M → Nat.Coprime k ℓ → AllRat Xo (xOf y) M → Nat.Coprime k₁ ℓ → g * q = ((k₁ * N : ℕ) : 𝓞 E) • (1 : Matrix (Fin n) (Fin n) (𝓞 E)) → ∀ (J : Type) [Fintype J] (a : J → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)), Function.Injective a → (∀ u : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G), (∃ i, a i = u) ↔ (Kills Xo (p * q) u ∧ ∀ b, (∃ j : ℕ, u b ^ (ℓ ^ j) = 1))) → (∀ i i' (ε : Fin n → Γ((ptO Xo (xOf y)).left, ⊤)ˣ), (∀ b, WeilIs Xo.univ.t.G Xo.univ.t.PP.L ((N ^ 2 : ℕ) : ℤ) (a i b) (a i' b) (ε b)) → ∏ b, ε b = 1) → ∀ (F : Fin n → SecN Xo (xOf y) (N ^ 2)) (G : J → Fin n → SecN Xo (xOf y) (N ^ 2)), (∀ b, Reach Xo (sOf1 y) (N ^ 2) (F b)) → (∀ b (u : (ptO Xo (xOf y) ⟶ Xo.univ.t.G)), (∃ j : ℕ, u ^ (ℓ ^ j) = 1) → u ^ N = 1 → Moves Xo u (F b) (F b)) → (∀ i b, Moves Xo (a i b) (F b) (G i b)) → ∀ (P : MvPolynomial (LtN Dw n) c.F) (s : c.F), P ∈ HH c w n → MvPolynomial.map io (MvPolynomial.C s * pushL c ((p * q).map (algebraMap (𝓞 E) E)) P) ∈ FFV (Dw := Dw) T w n → letI := io.toAlgebra; ∃ z : T.Fr, ((-ρ : ℝ) : EReal) ≤ nval T.V e z ∧ io s * ∑ i, hv Xo c nab y.1 (N ^ 2) (G i) P = (Nat.card {i : J // Kills Xo q (a i)} : T.Fr) * io (∏ τ : E →+* ℂ, embK c τ p.det ^ Dw.mult τ) * z := by
-  first | exact @GlobalTheory.sum_hv_primary_kernel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.SumHvPrimaryKernelStatement =====

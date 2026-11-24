@@ -62,6 +62,7 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.TypeStar
+import Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.Algebra.AffineMonoid.UniqueSums
@@ -480,7 +481,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.NMPseudoOf =====
 
 -- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowersEqInv =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowersEqInv", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowers\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresInt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowersEqInv", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountingFormula.DifferentIdealPowers\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresInt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianLattices.HermitianLatticesProofs.LocBasic\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -494,27 +495,13 @@ section Loc
 
 variable {R W : Type*} [CommRing R] [AddCommGroup W] [Module R W]
 
-theorem le_locS (S : Submonoid R) (L : Submodule R W) : L ≤ Formalism.HermitianLatticesTheory.locS S L := fun x hx => ⟨1, S.one_mem, by simpa using hx⟩
-
-theorem locS_mono (S : Submonoid R) {L M : Submodule R W} (h : L ≤ M) :
-    Formalism.HermitianLatticesTheory.locS S L ≤ Formalism.HermitianLatticesTheory.locS S M := fun x ⟨s, hs, hx⟩ => ⟨s, hs, h hx⟩
-
-theorem locS_idem (S : Submonoid R) (L : Submodule R W) :
-    Formalism.HermitianLatticesTheory.locS S (Formalism.HermitianLatticesTheory.locS S L) = Formalism.HermitianLatticesTheory.locS S L := by
-  apply le_antisymm
-  · rintro x ⟨s, hs, t, ht, hx⟩
-    refine ⟨t * s, S.mul_mem ht hs, ?_⟩
-    rw [mul_smul]
-    exact hx
-  · exact le_locS S _
-
 theorem locS_eq_of (S : Submonoid R) {L M : Submodule R W} (h1 : L ≤ Formalism.HermitianLatticesTheory.locS S M)
     (h2 : M ≤ Formalism.HermitianLatticesTheory.locS S L) : Formalism.HermitianLatticesTheory.locS S L = Formalism.HermitianLatticesTheory.locS S M := by
   apply le_antisymm
-  · calc Formalism.HermitianLatticesTheory.locS S L ≤ Formalism.HermitianLatticesTheory.locS S (Formalism.HermitianLatticesTheory.locS S M) := locS_mono S h1
-      _ = Formalism.HermitianLatticesTheory.locS S M := locS_idem S M
-  · calc Formalism.HermitianLatticesTheory.locS S M ≤ Formalism.HermitianLatticesTheory.locS S (Formalism.HermitianLatticesTheory.locS S L) := locS_mono S h2
-      _ = Formalism.HermitianLatticesTheory.locS S L := locS_idem S L
+  · calc Formalism.HermitianLatticesTheory.locS S L ≤ Formalism.HermitianLatticesTheory.locS S (Formalism.HermitianLatticesTheory.locS S M) := _root_.Formalism.HermitianLatticesTheory.locBasic_locS_mono S h1
+      _ = Formalism.HermitianLatticesTheory.locS S M := _root_.Formalism.HermitianLatticesTheory.locBasic_locS_idem S M
+  · calc Formalism.HermitianLatticesTheory.locS S M ≤ Formalism.HermitianLatticesTheory.locS S (Formalism.HermitianLatticesTheory.locS S L) := _root_.Formalism.HermitianLatticesTheory.locBasic_locS_mono S h2
+      _ = Formalism.HermitianLatticesTheory.locS S L := _root_.Formalism.HermitianLatticesTheory.locBasic_locS_idem S L
 
 theorem iInf_localization_eq [IsDedekindDomain R] (hR : ¬ IsField R) (L : Submodule R W) :
     (⨅ P : HeightOneSpectrum R, haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal L) = L := by
@@ -536,7 +523,7 @@ theorem iInf_localization_eq [IsDedekindDomain R] (hR : ¬ IsField R) (L : Submo
       exact Ring.isField_iff_maximal_bot.2 hM
     obtain ⟨s, hs, hsx⟩ := hx ⟨M, hM.isPrime, hM0⟩
     exact hs (hIM (by simpa [I] using hsx))
-  · exact le_iInf fun P => le_locS _ L
+  · exact le_iInf fun P => _root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ L
 
 end Loc
 
@@ -603,7 +590,7 @@ theorem loc_g (D : Formalism.BasicNotions.D7) {T T' : D.host.E} (F0 : FlagG (VS 
       Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (pbLat (flagDifferenceVectors D F0 F') (Sum.elim (differentIdealPowers D) (differentIdealPowers D))) := by
   haveI := P.isPrime
   apply locS_eq_of
-  · refine (Submodule.span_le.mpr ?_).trans (le_locS _ _)
+  · refine (Submodule.span_le.mpr ?_).trans (_root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ _)
     rintro v (⟨a, rfl⟩ | ⟨b, rfl⟩)
     · have := mem_pb F0 F' (Sum.inl a) _ (one_mem_aa D a 1)
       simpa [flagDifferenceVectors] using this
@@ -700,11 +687,11 @@ theorem loc_ng (D : Formalism.BasicNotions.D7) {T T' : D.host.E} (F0 : FlagG (VS
   haveI := P.isPrime
   have hg := gS_ne_zero' D
   apply locS_eq_of
-  · exact (UUS_le_pb D F0 F').trans (le_locS _ _)
+  · exact (UUS_le_pb D F0 F').trans (_root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ _)
   · refine Submodule.span_le.mpr ?_
     rintro v ⟨i, c, hc, rfl⟩
     rcases i with a | b
-    · exact le_locS _ _ (mem_UUS_fvec D F0 F' a c hc).1
+    · exact _root_.Formalism.HermitianLatticesTheory.locBasic_le_locS _ _ (mem_UUS_fvec D F0 F' a c hc).1
     · refine ⟨((gS D : ℕ) : 𝓞 D.host.E), hP, ?_⟩
       have e : ((gS D : ℕ) : 𝓞 D.host.E) • (c • flagDifferenceVectors D F0 F' (Sum.inr b)) = c • F'.fl.fvec b - c • F0.fvec b := by
         rw [smul_O_E]
@@ -999,12 +986,6 @@ theorem gZ_ne_zero (D : Formalism.BasicNotions.D7) (T T' : D.host.E) (Z : MatZ D
   rw [h0, map_zero, Complex.zero_re] at this
   exact lt_irrefl _ this
 
-theorem gS_ne_zero (D : Formalism.BasicNotions.D7) : ((gS D : D.host.E)) ≠ 0 := by
-  have h1 := (D.host.g_prime 0).pos
-  have h2 := (D.host.g_prime 1).pos
-  unfold gS
-  exact_mod_cast (Nat.mul_pos h1 h2).ne'
-
 theorem prod_tri {c : ℚ} (hc : c ≠ 0) :
     ∀ n : ℕ, (∏ a : Fin n, c ^ (-((n : ℤ) - (a : ℕ)))) ^ 2 = c ^ (-((n * (n + 1) : ℕ) : ℤ))
   | 0 => by simp
@@ -1050,7 +1031,7 @@ theorem normMM_of (hN : NMPseudo) (hM : MMPseudo) (hΔ : DetGa) : NormMM := by
   rw [hMM] at hint ⊢
   obtain ⟨hcm, hfix, -⟩ := field_dictionary_holds D
   have hG := gZ_ne_zero D _ _ Z hpos
-  have hg := gS_ne_zero D
+  have hg := _root_.PI.UnitaryGroupMassFormula.CntFormula.R6.gS_ne_zero' D
   have hdetGa := hΔ D (Tn u) (Tn u') (star_natCast _) (star_natCast _) Z
   have hdet := det_gram_flagDifference F0 F' Z hZ
   rw [hdetGa] at hdet

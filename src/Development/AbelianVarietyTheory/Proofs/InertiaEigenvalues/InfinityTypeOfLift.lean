@@ -93,16 +93,9 @@ omit [NumberField L] [IsCMField L] in
 theorem conj_conj (τ : L →+* ℂ) : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate τ) = τ := by
   ext x; simp
 
-theorem conj_ne (τ : L →+* ℂ) : ComplexEmbedding.conjugate τ ≠ τ := by
-  intro h
-  have h1 : ComplexEmbedding.IsReal τ := ComplexEmbedding.isReal_iff.2 h
-  have h2 := IsTotallyComplex.isComplex (InfinitePlace.mk τ)
-  rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_mk_iff] at h2
-  exact h2 h1
-
 theorem evPt_eq_tinv (τ : L →+* ℂ) (B : GL (Fin n) ℂ) :
     evPt τ B = evPt (ComplexEmbedding.conjugate τ) (tinv B) := by
-  have hne := conj_ne τ
+  have hne := _root_.GlobalTheory.AlgWtHW.conjugate_ne_self τ
   funext p
   rcases p with ⟨σ, i, j⟩
   by_cases h1 : σ = τ
@@ -223,8 +216,6 @@ theorem evLgG_of_forall {p : Ctx → ∀ B : Base, Fr B.toPre → TwDat B → Pr
 end GlobalTheory.LiftInfRef
 
 namespace GlobalTheory.LiftInfRef
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 end GlobalTheory.LiftInfRef
 

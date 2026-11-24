@@ -197,7 +197,7 @@ theorem inner_weil (w : D.what₂.Word) (z : X.B.I.Ginf) :
     refine lintegral_congr_ae ?_
     filter_upwards [hS] with s hs
     have hn : ‖X.Wu w (s * z')‖ₑ = ‖X.Wu w z'‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, norm_Wu_S X w s hs z']
+      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, _root_.Formalism.L2.SG.Pf.WuDec.norm_Wu_inv X w s hs z']
     rw [hmul, hGdef]
     simp only [hn]
     ring
@@ -278,7 +278,7 @@ theorem double_integral_finite_diagonal {D : D7} (X : Formalism.L2.SG.HidaSettin
   have hrep := (Formalism.L2.S.Pv.SchurTens.stepSchurG_holds D X).1
   rw [quad_eq_GG (μ := Formalism.L2.SG.ProjRows.muInf X.B.I) (μS := muS X u) (μS' := muS X u') hrep
     (X.B.tens X.B.w) (X.Wu_spec u).2.2.1 (X.Wu_spec u').2.2.1 (X.nuQ_weil u) (X.nuQ_weil u') hinv hinv' h0 h0'
-    hiS hiS' (norm_Wu_S X u) (norm_Wu_S X u') γ, lint_GG_prod]
+    hiS hiS' (_root_.Formalism.L2.SG.Pf.WuDec.norm_Wu_inv X u) (_root_.Formalism.L2.SG.Pf.WuDec.norm_Wu_inv X u') γ, lint_GG_prod]
   refine ENNReal.prod_lt_top fun v _ => ?_
   unfold phiV
   exact hL v (c v) (hc v) (γ v) (hγ v)

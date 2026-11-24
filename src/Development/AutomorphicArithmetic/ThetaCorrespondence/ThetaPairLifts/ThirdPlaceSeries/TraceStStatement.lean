@@ -200,12 +200,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.tupLe_traceSt : _root_.GlobalTheory.BigOn.Exp.TupLe.TraceCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TupLe.traceSt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TraceStStatement =====

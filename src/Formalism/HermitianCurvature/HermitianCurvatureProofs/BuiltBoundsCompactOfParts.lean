@@ -873,12 +873,12 @@ theorem locSup_step (S : C.HidaSetting E Wp Wq) (hpos : C.ThmPPos S) (hg : 0 < S
   set Bt := max (max Ba 0) (Bp + Bq) with hBt
   have hBt0 : 0 ≤ Bt := (le_max_right _ _).trans (le_max_left _ _)
 
-  obtain ⟨i1, i2, hcov, -⟩ := pbc_lstdFacts 1 1 one_pos
+  obtain ⟨i1, i2, hcov, -⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.Lat.lstdFacts 1 1 one_pos
   have := i1; have := i2
   have hgR : (0 : ℝ) < S.g := by exact_mod_cast hg
   obtain ⟨Lm, j1, j2, hLm⟩ := GlobalTheory.dual_smul_mem (Lstd 1 1) (S.g : ℝ) hgR.ne'
   have := j1; have := j2
-  obtain ⟨Cs, -, hCsum⟩ := pbc_lstdSum
+  obtain ⟨Cs, -, hCsum⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.Lat.lstdSum
   obtain ⟨hsm, -⟩ := hCsum 1 1 (S.g : ℝ) (fun _ => Λ b (n - 1) v) one_pos hgR (fun _ => hΛ0)
   let D : Fin 1 → C.LPt → C.LPt → ℂ → ℂ := fun _ p q c =>
     KB.gN S v ε (b + n - 1) (w.1 v) (p ++ [(n, c)]) (q ++ [(n, c)])
@@ -1342,7 +1342,7 @@ theorem gsup_succ (S : C.HidaSetting E Wp Wq) (hpos : C.ThmPPos S) (hI : KB.IntA
     (hRB : (∏ _v : Fin S.f, KB.dlB S b n) * (∏ v, Cs * (1 + (R * thr S b n v / S.g) ^ 2)) / R ^ (2 * S.f) ≤
       B ^ S.f * S.base.vol b n) :
     ∃ P, 0 ≤ P ∧ P ≤ B ^ S.f * S.base.vol b n * P' ∧ GSup S ε b n P := by
-  obtain ⟨i1, i2, hcov, -⟩ := pbc_lstdFacts S.f R hR
+  obtain ⟨i1, i2, hcov, -⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.Lat.lstdFacts S.f R hR
   have := i1; have := i2
   have hg' : (0 : ℝ) < S.g := by exact_mod_cast hg
   have hL0 : ∀ v, 0 ≤ Λ b (n - 1) v := fun v => (hΛt v).1
@@ -1537,8 +1537,8 @@ theorem sumFormConcrete_of (S : C.HidaSetting E Wp Wq) (hg1 : 0 < S.G.g1) (hg2 :
 end setting
 
 theorem sumFormOfLoc : KB.SumFormOfLoc := by
-  obtain ⟨Cs, hCs1, hCs⟩ := pbc_lstdSum
-  obtain ⟨B, hB1, hSzAll⟩ := pbc_sizesSup Cs hCs1
+  obtain ⟨Cs, hCs1, hCs⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.Lat.lstdSum
+  obtain ⟨B, hB1, hSzAll⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.Lat.sizesSup Cs hCs1
   obtain ⟨A, hA1, hBLall⟩ := pbc_blockLatV
   refine ⟨max A B, le_max_of_le_left hA1, ?_⟩
   intro E _ _ _ Wp Wq _ _ _ _ S X Λ hg1 hg2 hU hpos hG hI hW hXt hL hΛt hthr hGL
@@ -1552,8 +1552,6 @@ end
 end Formalism.FourierDecayAlt.P.PBC
 
 namespace Formalism.FourierDecayAlt.P
-
-theorem sum_form_of_local_statements : Formalism.FourierDecayAlt.KB.SumFormOfLoc := PBC.sumFormOfLoc
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -1810,7 +1808,7 @@ theorem core (hW : WaveLocB) (hL : LiftLocB) (hTL : PBL.TopLocB) (hDT : KB.DegTo
         (∃ Ll Ll', JC.LiftBelowTop S Ll ∧ JC.LiftTopDiag S Ll' ∧ JC.ThresholdsLift S Ll Ll') ∧
         JC.SumFormConcrete S C₄ := by
   obtain ⟨c1, h1⟩ := limit_of_module_forms Cb
-  obtain ⟨C₄, hC₄, hSF⟩ := sum_form_of_local_statements
+  obtain ⟨C₄, hC₄, hSF⟩ := _root_.Formalism.FourierDecayAlt.P.PBC.sumFormOfLoc
   obtain ⟨c2, h2⟩ := hW Cb
   obtain ⟨c3, h3⟩ := hL Cb
   obtain ⟨c4, h4⟩ := hG Cb

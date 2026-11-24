@@ -268,8 +268,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen GlobalTheory.UPel.HT.EtLev
 
-theorem _root_.GlobalTheory.T.exists_pPower_level_from_primes_above_p : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (Q : Type) [CommGroup Q] (act : D.O → Q → Q), (∀ c a b, act c (a * b) = act c a * act c b) → (∀ a, act 1 a = a) → (∀ b c a, act (b * c) a = act b (act c a)) → (∀ b c a, act (b + c) a = act b a * act c a) → (∀ (w : Ideal (𝓞 D.F)) (r : ℕ), w.IsMaximal → (p : 𝓞 D.F) ∈ w → ∃ l : D.La → Q, (∀ x y, l (x + y) = l x * l y) ∧ (∀ (c : D.O) x, l (c • x) = act c (l x)) ∧ (∀ x, l x = 1 ↔ x ∈ wSub D w r) ∧ ∀ g, (∀ c ∈ w ^ r, act (algebraMap (𝓞 D.F) D.O c) g = 1) → ∃ y, l y = g) → ∀ r : ℕ, ∃ f : D.La → Q, (∀ x y, f (x + y) = f x * f y) ∧ (∀ (c : D.O) x, f (c • x) = act c (f x)) ∧ (∀ x, f x = 1 ↔ ∃ y, x = (p ^ r) • y) ∧ (∀ g : Q, g ^ (p ^ r) = 1 ↔ ∃ x, f x = g) := by
-  first | (exact @GlobalTheory.UPel.HT.EtLev.LevCrt.exists_pLevel)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPPowerLevelFromPrimesAbovePStatement =====
@@ -552,8 +550,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen GlobalTheory.UPel.HT.EtLev
 
-theorem _root_.GlobalTheory.T.weil_pairing_cocycle_uniqueness : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (k : Type) [Field k] (Q : Type) [CommGroup Q] (act : D.O → Q → Q) (E : ℕ → Q → Q → kˣ → Prop), (∀ c a b, act c (a * b) = act c a * act c b) → (∀ n, 0 < n → ∀ a b : Q, a ^ n = 1 → b ^ n = 1 → ∃ c, E n a b c) → (∀ n, 0 < n → ∀ (a b : Q) (c c' : kˣ), E n a b c → E n a b c' → c = c') → (∀ n m, 0 < n → 0 < m → ∀ (a b : Q) (c : kˣ), a ^ (n * m) = 1 → b ^ (n * m) = 1 → E (n * m) a b c → E n (a ^ m) (b ^ m) (c ^ m)) → ∀ (I : TateIsoO D k Q act E) (ζ : ℕ → kˣ) (ev : ℕ → D.La → Q), (∀ r, IsPrimitiveRoot (ζ r) (p ^ r)) → (∀ r, ζ (r + 1) ^ p = ζ r) → (∀ r, (∀ x y, ev r (x + y) = ev r x * ev r y) ∧ (∀ (c : D.O) x, ev r (c • x) = act c (ev r x)) ∧ (∀ x, ev r x = 1 ↔ ∃ y, x = (p ^ r) • y) ∧ (∀ g : Q, g ^ (p ^ r) = 1 ↔ ∃ x, ev r x = g)) → (∀ r x, ev (r + 1) x ^ p = ev r x) → (∀ r x y, E (p ^ r) (ev r x) (ev r y) (ζ r ^ (2 * D.EF x y))) → ∃ J : GTateIso D.toG k Q act E, ∀ n, 0 < n → n.Coprime p → ∀ y : D.La, J.ev n y = I.ev n y := by
-  first | (exact @GlobalTheory.TateGlue.exists_gTateIso)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingCocycleUniqueness =====
@@ -573,15 +569,7 @@ namespace GlobalTheory.UPel.HT.GenCmp
 variable {p : ℕ} [Fact p.Prime] {D : Datum p} {R R' : Type} [CommRing R] [CommRing R'] [Algebra ℚ R']
   {S : Scheme.{0}}
 
-theorem exists_spMap {A B : Type} [CommRing A] [CommRing B] (u : Sp B ⟶ Sp A) : ∃ β : A →+* B, u = spMap β :=
-  ⟨(Spec.preimage u).hom, by simp [spMap]⟩
-
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (φ : A →+* B) (β : B →+* C) :
-    spMap β ≫ spMap φ = spMap (β.comp φ) := by
-  simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
-theorem spMap_inj {A B : Type} [CommRing A] [CommRing B] {β β' : A →+* B} (h : spMap β = spMap β') : β = β' :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
+alias exists_spMap := _root_.GlobalTheory.ZM.RepMap.exists_spMap
 
 def baseOf (gb : GBase D.toG R') : Base D R' where
   unit k hk := by
@@ -628,19 +616,19 @@ def rebase (hρ : gb.ρ = φ b.ρ) (ht : ∀ i, gb.t i = φ.comp (b.t i)) {t : S
   kerP := o.kerP
   rosati := o.rosati
   lie R₁ _ β x hx v hv := by
-    have h := o.lie R₁ (β.comp φ) x (by rw [hs, ← Category.assoc, hx, spMap_comp']) v
+    have h := o.lie R₁ (β.comp φ) x (by rw [hs, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring]) v
       (by simpa [baseOf, hρ] using hv)
     obtain ⟨w, hw, hvw⟩ := h
     exact ⟨w, fun i c => (congrArg (fun z => IsTanScal o.act x (algebraMap (𝓞 D.F) D.O c) (β z) (w i))
       (DFunLike.congr_fun (ht i) c)).mpr (hw i c), hvw⟩
   lieRank k _ _ x β hx i :=
     (congrArg (fun z => LieMult (o.act.toF D) x (β.comp z) D.m) (ht i)).mpr
-      (o.lieRank k x (β.comp φ) (by rw [hs, ← Category.assoc, hx, spMap_comp']) i)
+      (o.lieRank k x (β.comp φ) (by rw [hs, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring]) i)
   eta := o.eta
   eta_add := o.eta_add
   eta_lin := o.eta_lin
   eta_ker := o.eta_ker
-  geom k _ _ x β hx := o.geom k x (β.comp φ) (by rw [hs, ← Category.assoc, hx, spMap_comp'])
+  geom k _ _ x β hx := o.geom k x (β.comp φ) (by rw [hs, ← Category.assoc, hx, _root_.GlobalTheory.spMap_comp_ring])
 
 def toGObj {t : S ⟶ Sp R'} (o : Obj (baseOf gb) N t) (h : GeomFull o t) : GObj gb N t where
   A := o.A
@@ -689,13 +677,13 @@ def toObj (hρ : gb.ρ = φ b.ρ) (ht : ∀ i, gb.t i = φ.comp (b.t i)) {t : S 
   rosati := o.rosati
   lie R₁ _ β x hx v hv := by
     obtain ⟨β', hβ'⟩ := exists_spMap (x ≫ t)
-    obtain rfl : β = β'.comp φ := spMap_inj (by rw [← hx, ← Category.assoc, hβ', spMap_comp'])
+    obtain rfl : β = β'.comp φ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← Category.assoc, hβ', _root_.GlobalTheory.spMap_comp_ring])
     obtain ⟨w, hw, hvw⟩ := o.lie R₁ β' x hβ' v (by rw [hρ]; exact hv)
     exact ⟨w, fun i c => (congrArg (fun z => IsTanScal o.act x (algebraMap (𝓞 D.F) D.O c) (β' z) (w i))
       (DFunLike.congr_fun (ht i) c)).mp (hw i c), hvw⟩
   lieRank k _ _ x β hx i := by
     obtain ⟨β', hβ'⟩ := exists_spMap (x ≫ t)
-    obtain rfl : β = β'.comp φ := spMap_inj (by rw [← hx, ← Category.assoc, hβ', spMap_comp'])
+    obtain rfl : β = β'.comp φ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← Category.assoc, hβ', _root_.GlobalTheory.spMap_comp_ring])
     exact (congrArg (fun z => LieMult (actF o.act) x (β'.comp z) D.m) (ht i)).mp (o.lieRank k x β' hβ' i)
   eta := o.eta
   eta_add := o.eta_add
@@ -798,7 +786,7 @@ theorem genericObject_kernelCondition {gb : GBase D.toG R'} {N : ℕ} {t : S ⟶
   let a : Sp B ⟶ T.left := u.inv ≫ T.left.affineCover.f i
   let a' : Over.mk (a ≫ T.hom) ⟶ T := Over.homMk a rfl
   have hx' := KerBy.gen_comp S o.A o.P T _ a' x hx
-  obtain ⟨M, hM, hxM⟩ := GlobalTheory.T.isTorsion_of_birigidified_bundle_trivial_on_slice S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ o.symm o.ample B (a ≫ T.hom) _ hx'
+  obtain ⟨M, hM, hxM⟩ := _root_.GlobalTheory.KerTorsion.exists_pow_eq_one S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ o.symm o.ample B (a ≫ T.hom) _ hx'
   have hu : IsUnit ((M : ℕ) : Γ(S, ⊤)) := by
     have h0 : IsUnit ((M : ℕ) : R') := by
       simpa using (IsUnit.mk0 (M : ℚ) (Nat.cast_ne_zero.2 hM.ne')).map (algebraMap ℚ R')
@@ -873,13 +861,13 @@ theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} 
     rw [umul, ← h, uone, inv_mul_cancel]
   have wadj : ∀ n, 0 < n → ∀ (c : D.O) (a b : Q), a ^ n = 1 → b ^ n = 1 →
       W n (act c a) b = W n a (act (D.star c).unop b) := fun n hn c a b ha hb =>
-    ub.1 (GlobalTheory.T.commutatorPairing_adjoint_eq_of_pullback_iso S o.A o.P o.ab o.isLB _ _ (o.act.hom c) (o.act.hom _) (o.rosati c) n _ a b _ _
+    ub.1 (_root_.GlobalTheory.AdjPairing.weilIs_adj_eq S o.A o.P o.ab o.isLB _ _ (o.act.hom c) (o.act.hom _) (o.rosati c) n _ a b _ _
       (hW n _ b hn (apow c a n ha) hb) (hW n a _ hn ha (apow _ b n hb)))
   have wnd : ∀ r, ∀ a : Q, a ^ (p ^ r) = 1 → (∀ b : Q, b ^ (p ^ r) = 1 → W (p ^ r) a b = 1) → a = 1 := by
     intro r a ha h
     have hq : 0 < p ^ r := pow_pos hp.pos r
     obtain ⟨e, he, hk⟩ := o.kerP
-    have h1 := hk _ a (GlobalTheory.T.lineBundle_slice_trivial_of_weilPairing_one_torsion S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ k x (p ^ r) (Nat.cast_ne_zero.2 hq.ne') a ha
+    have h1 := hk _ a (_root_.GlobalTheory.WeilKernel.triv_slice_of_forall_weilIs_one S o.A o.P o.ab o.isLB o.rig₁ o.rig₂ k x (p ^ r) (Nat.cast_ne_zero.2 hq.ne') a ha
       fun b hb => by
         have := hW _ a b hq ha hb
         rwa [h b hb, uone] at this)
@@ -891,17 +879,17 @@ theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} 
   have amul' : ∀ b c a, act (b * c) a = act b (act c a) := fun b c a => by simp [act, o.act.mul]
   have aadd : ∀ b c a, act (b + c) a = act b a * act c a := fun b c a => by
     simp [act, o.act.add, MonObj.comp_mul]
-  have lin := GlobalTheory.T.exists_pPower_level_from_primes_above_p p D Q act amul aone amul' aadd fun w r hw hpw => by
-    obtain ⟨f, f₁, f₂, f₃, f₄⟩ := GlobalTheory.T.torsion_points_additive_parametrization p D R' b N w r (isEtPlace_of_isUnit b hpu w hw hpw) S t o k x
-    exact GlobalTheory.T.exists_morita_lattice_quotient_torsion p D w r hw hpw Q act amul aone amul' aadd f f₁ f₂ f₃ f₄
-  obtain ⟨ζ, hζ, hζ'⟩ := GlobalTheory.T.exists_compatible_prime_power_roots p k
-  obtain ⟨ev, hev, hev'⟩ := GlobalTheory.T.exists_compatible_similitude_level_tower p D k Q act (fun r => W (p ^ r)) ζ amul hζ'
+  have lin := _root_.GlobalTheory.UPel.HT.EtLev.LevCrt.exists_pLevel p D Q act amul aone amul' aadd fun w r hw hpw => by
+    obtain ⟨f, f₁, f₂, f₃, f₄⟩ := _root_.GlobalTheory.UPel.HT.EtLev.TorFree.free_torsion_geomPt p D R' b N w r (isEtPlace_of_isUnit b hpu w hw hpw) S t o k x
+    exact _root_.GlobalTheory.EtLevMorita.exists_lev p D w r hw hpw Q act amul aone amul' aadd f f₁ f₂ f₃ f₄
+  obtain ⟨ζ, hζ, hζ'⟩ := _root_.GlobalTheory.exists_compatible_primitive_prime_pow_roots p k
+  obtain ⟨ev, hev, hev'⟩ := _root_.GlobalTheory.TowerLev.exists_compatible p D k Q act (fun r => W (p ^ r)) ζ amul hζ'
     (fun r a b ha hb => lev (p ^ r) p (pow_pos hp.pos r) hp.pos a b ha hb) fun r => by
       obtain ⟨f, hf⟩ := lin r
       have hq : 0 < p ^ r := pow_pos hp.pos r
-      exact GlobalTheory.T.exists_level_pairing_eq_alt p D k Q act r (W (p ^ r)) (ζ r) (hζ r) (wmul _ hq) (wskew _ hq) (wadj _ hq) (wnd r) f hf
+      exact _root_.GlobalTheory.UPel.HT.FinLevSim.exists_level_pairing_eq p D k Q act r (W (p ^ r)) (ζ r) (hζ r) (wmul _ hq) (wskew _ hq) (wadj _ hq) (wnd r) f hf
   obtain ⟨I, hI⟩ := o.geom k x β hβ
-  obtain ⟨J, hJ⟩ := GlobalTheory.T.weil_pairing_cocycle_uniqueness p D k Q act E amul (fun n hn a b ha hb => ⟨_, hE n hn a b ha hb⟩) uqE
+  obtain ⟨J, hJ⟩ := _root_.GlobalTheory.TateGlue.exists_gTateIso p D k Q act E amul (fun n hn a b ha hb => ⟨_, hE n hn a b ha hb⟩) uqE
     (fun n m hn hm a b c ha hb h => by
       have e := uqE _ (Nat.mul_pos hn hm) a b _ _ h (hE _ (Nat.mul_pos hn hm) a b ha hb)
       have h' := hE n hn (a ^ m) (b ^ m) (by rw [← pow_mul, mul_comm, ha]) (by rw [← pow_mul, mul_comm, hb])

@@ -178,8 +178,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.height_eq_one_of_liesOver_height_one : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (A : Subalgebra k F) [IsFractionRing A F] (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → ∀ (p : Ideal A), p.IsPrime → p.height = 1 → ∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → Q.height = 1 := by
-  first | (exact @GlobalTheory.integralClosure_height_eq_one_of_liesOver)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralClosureHeightEqOneOfLiesOverStatement =====
@@ -292,8 +290,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.exists_uniformizer_ramification_of_height_one : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → ∀ (p : Ideal A), p.IsPrime → ∀ t : A, Irreducible t → p = Ideal.span {t} → ∀ Q : Ideal B, Q.IsPrime → Q.height = 1 → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → ∃ (s : B) (e : ℕ), 1 ≤ e ∧ s ∈ Q ∧ (∀ y ∈ Q, ∃ c r : B, r ∉ Q ∧ r * y = c * s) ∧ (∃ a r : B, a ∉ Q ∧ r ∉ Q ∧ (r : K) * algebraMap F K t = a * s ^ e) := by
-  first | (exact @GlobalTheory.integralClosure_height_one_uniformizer_ramification)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralClosureHeightOneUniformizerRamificationAStatement =====
@@ -345,8 +341,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.exists_D_eq_sum_smul_D_of_mem_adjoin : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (n : ℕ) (u : Fin n → F), ∀ v ∈ Algebra.adjoin k (Set.range u), ∃ c : Fin n → F, (∀ j, c j ∈ Algebra.adjoin k (Set.range u)) ∧ D k K (algebraMap F K v) = ∑ j, algebraMap F K (c j) • D k K (algebraMap F K (u j)) := by
-  first | (exact @GlobalTheory.dadj_combination)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DadjCombinationStatement =====
@@ -429,8 +423,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.differential_relation_local_ring_bound : ∀ (k K : Type) [Field k] [CharZero k] [Field K] [Algebra k K] (B : Subalgebra k K) (Q : Ideal B), Q.IsPrime → ∀ (s : B) (m : ℕ) (y : Fin m → K) (T : K) (e : ℕ), 1 ≤ e → s ∈ Q → (∀ v : B, ∃ r : B, r ∉ Q ∧ ∃ c : Fin (m + 1) → B, (r : K) • D k K (v : K) = ∑ l, (c l : K) • (Fin.cons (D k K (s : K)) (fun j => D k K (y j)) : Fin (m + 1) → Ω[K⁄k]) l) → (∃ a r : B, a ∉ Q ∧ r ∉ Q ∧ (r : K) * T = a * s ^ e) → ∃ N Dn : B, N ∉ Q ∧ Dn ∉ Q ∧ (Dn : K) • ExteriorAlgebra.ιMulti K (m + 1) (Fin.cons (D k K T) (fun j => D k K (y j)) : Fin (m + 1) → Ω[K⁄k]) = ((N : K) * (s : K) ^ (e - 1)) • ExteriorAlgebra.ιMulti K (m + 1) (Fin.cons (D k K (s : K)) (fun j => D k K (y j)) : Fin (m + 1) → Ω[K⁄k]) := by
-  first | (exact @GlobalTheory.wedge_D_eq_pow_mul_wedge_D_of_eq_unit_mul_pow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialRelationLocalRingBound =====
@@ -478,14 +470,6 @@ open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
 namespace GlobalTheory.WedgeDen
 
-theorem alternatingMap_sum_smul_eq_det_smul' {L M N : Type} [Field L] [AddCommGroup M] [Module L M]
-    [AddCommGroup N] [Module L N] {n : ℕ} (f : M [⋀^Fin n]→ₗ[L] N) (g : Fin n → M)
-    (a : Fin n → Fin n → L) :
-    f (fun i => ∑ l, a i l • g l) = (Matrix.of a).det • f g := by
-  first
-  | (apply _root_.GlobalTheory.AlternatingLinearCombination.alternating_map_linear_combination <;> assumption)
-  | (intros; exact _root_.GlobalTheory.AlternatingLinearCombination.alternating_map_linear_combination ..)
-
 theorem exists_smul_ιMulti_eq_smul_ιMulti : ∀ (R L M : Type) [CommRing R] [Field L] [Algebra R L] [AddCommGroup M] [Module L M] (S : Submonoid R) (n : ℕ) (g w : Fin n → M), (∀ i, ∃ r ∈ S, ∃ c : Fin n → R, algebraMap R L r • w i = ∑ l, algebraMap R L (c l) • g l) → ∃ r ∈ S, ∃ c : R, algebraMap R L r • ExteriorAlgebra.ιMulti L n w = algebraMap R L c • ExteriorAlgebra.ιMulti L n g := by
   intro R L M _ _ _ _ _ S n g w h
   classical
@@ -493,7 +477,7 @@ theorem exists_smul_ιMulti_eq_smul_ιMulti : ∀ (R L M : Type) [CommRing R] [F
   refine ⟨∏ i, r i, prod_mem fun i _ => hr i, (Matrix.of c).det, ?_⟩
   rw [map_prod, ← AlternatingMap.map_smul_univ]
   simp_rw [hc]
-  rw [alternatingMap_sum_smul_eq_det_smul', RingHom.map_det]
+  rw [_root_.GlobalTheory.AlternatingLinearCombination.alternating_map_linear_combination, RingHom.map_det]
   rfl
 
 end GlobalTheory.WedgeDen
@@ -508,8 +492,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.exterior_wedge_eq_of_localized_span : ∀ (R L M : Type) [CommRing R] [Field L] [Algebra R L] [AddCommGroup M] [Module L M] (S : Submonoid R) (n : ℕ) (g w : Fin n → M), (∀ i, ∃ r ∈ S, ∃ c : Fin n → R, algebraMap R L r • w i = ∑ l, algebraMap R L (c l) • g l) → ∃ r ∈ S, ∃ c : R, algebraMap R L r • ExteriorAlgebra.ιMulti L n w = algebraMap R L c • ExteriorAlgebra.ιMulti L n g := by
-  first | (exact @GlobalTheory.WedgeDen.exists_smul_ιMulti_eq_smul_ιMulti)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExteriorWedgeEqOfLocalizedSpanStatement =====
@@ -557,8 +539,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.integralClosure_finiteType_over_adjoin : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → Algebra.FiniteType k B := by
-  first | (exact @GlobalTheory.integralClosure_finiteType_of_charZero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralClosureFiniteTypeOfCharZeroStatement =====
@@ -655,8 +635,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.isTranscendenceBasis_quotient_integralClosure' : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (A : Subalgebra k F) (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → ∀ (Q : Ideal B), Q.IsPrime → ∀ (t : A), (∀ (a : A) (b : B), (b : K) = algebraMap F K a → (b ∈ Q ↔ t ∣ a)) → ∀ (m : ℕ) (y : Fin m → A), IsTranscendenceBasis k (fun j => Ideal.Quotient.mk (Ideal.span {t}) (y j)) → ∀ y' : Fin m → B, (∀ j, (y' j : K) = algebraMap F K (y j)) → IsTranscendenceBasis k (fun j => Ideal.Quotient.mk Q (y' j)) := by
-  first | (exact @GlobalTheory.isTranscendenceBasis_quotient_integralClosure)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTranscendenceBasisQuotientIntegralClosureStatement =====
@@ -742,8 +720,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.mem_heightOne_prime_integralClosure_iff_dvd_irreducible : ∀ (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → ∀ (Q : Ideal B), Q.IsPrime → Q.height = 1 → ∀ (t : A), Irreducible t → (∀ b : B, (b : K) = algebraMap F K t → b ∈ Q) → ∀ (a : A) (b : B), (b : K) = algebraMap F K a → (b ∈ Q ↔ t ∣ a) := by
-  first | (exact @GlobalTheory.JacVal.mem_iff_dvd_of_height_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHeightOnePrimeIntegralClosureIffDvdIrreduciblStatement =====
@@ -890,8 +866,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.polynomial_ring_irreducible_prime_reduction : ∀ (k F : Type) [Field k] [Field F] [Algebra k F] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F), A = Algebra.adjoin k (Set.range u) → ∀ t : A, Irreducible t → Prime t ∧ ∃ m : ℕ, d = m + 1 ∧ ∃ y : Fin m → A, IsTranscendenceBasis k (fun j => Ideal.Quotient.mk (Ideal.span {t}) (y j)) := by
-  first | (exact @GlobalTheory.TrBasisQuot.trBasis_mod_irreducible)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialRingIrreduciblePrimeReduction =====
@@ -1079,8 +1053,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.exists_not_mem_smul_D_eq_sum : ∀ (k K L : Type) [Field k] [CharZero k] [Field K] [Field L] [Algebra k K] [Algebra k L] [Algebra K L] [IsScalarTower k K L] (B : Subalgebra k K) [Algebra.FiniteType k B] (Q : Ideal B), Q.IsPrime → ∀ s : B, s ∈ Q → s ≠ 0 → (∀ y ∈ Q, ∃ c r : B, r ∉ Q ∧ r * y = c * s) → ∀ (m : ℕ) (y : Fin m → B), IsTranscendenceBasis k (fun j => Ideal.Quotient.mk Q (y j)) → ∀ v : B, ∃ r : B, r ∉ Q ∧ ∃ c : Fin (m + 1) → B, algebraMap K L (r : K) • D k L (algebraMap K L (v : K)) = ∑ l, algebraMap K L (c l : K) • (Fin.cons (D k L (algebraMap K L (s : K))) (fun j => D k L (algebraMap K L (y j : K))) : Fin (m + 1) → Ω[L⁄k]) l := by
-  first | (exact @GlobalTheory.span_D_lift_clear_denominators)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanDLiftClearDenominatorsStatement =====
@@ -1106,15 +1078,15 @@ theorem omB_top_coeff_iff_pole : ∀ (k F K : Type) [Field k] [CharZero k] [Fiel
     have h1 : r₀ * b = a₀ * s ^ e := Subtype.ext (by push_cast; rw [hb]; exact hrt)
     have h2 : r₀ * b ∈ Q := h1 ▸ Q.mul_mem_left _ (Q.pow_mem_of_mem hsQ e (by omega))
     exact (hQ.mem_or_mem h2).resolve_left hr₀
-  have hcomap := GlobalTheory.T.mem_heightOne_prime_integralClosure_iff_dvd_irreducible k F K d u hu A hA B hB Q hQ hQh t ht htQ
-  obtain ⟨htp, m, rfl, y, hy⟩ := GlobalTheory.T.polynomial_ring_irreducible_prime_reduction k F d u hu A hA t ht
+  have hcomap := _root_.GlobalTheory.JacVal.mem_iff_dvd_of_height_one k F K d u hu A hA B hB Q hQ hQh t ht htQ
+  obtain ⟨htp, m, rfl, y, hy⟩ := _root_.GlobalTheory.TrBasisQuot.trBasis_mod_irreducible k F d u hu A hA t ht
   have hAft : Algebra.FiniteType k A := by
     subst hA
     classical
     exact (Subalgebra.fg_iff_finiteType _).1 ⟨Finset.univ.image u, by simp⟩
   have ht0 : t ≠ 0 := ht.ne_zero
   have hP : (Ideal.span {t}).IsPrime := (Ideal.span_singleton_prime ht0).2 htp
-  have genA := GlobalTheory.T.exists_not_mem_smul_D_eq_sum k F K A (Ideal.span {t}) hP t (Ideal.mem_span_singleton_self t) ht0
+  have genA := _root_.GlobalTheory.span_D_lift_clear_denominators k F K A (Ideal.span {t}) hP t (Ideal.mem_span_singleton_self t) ht0
     (fun y hy => by
       obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.1 hy
       exact ⟨c, 1, (Ideal.ne_top_iff_one _).1 hP.ne_top, by ring⟩) m y hy
@@ -1127,13 +1099,13 @@ theorem omB_top_coeff_iff_pole : ∀ (k F K : Type) [Field k] [CharZero k] [Fiel
   set du : DR k K := ExteriorAlgebra.ιMulti K (m + 1) fun j => D k K (algebraMap F K (u j)) with hdu
   have hdu0 : du ≠ 0 := fun h => by rw [h, map_zero] at hτ; exact zero_ne_one hτ
   set gA : Fin (m + 1) → Ω[K⁄k] := Fin.cons (D k K (algebraMap F K (t : F))) (fun j => D k K (algebraMap F K (y j : F))) with hgA
-  obtain ⟨rA, hrA, aA, hA1⟩ := GlobalTheory.T.exterior_wedge_eq_of_localized_span A K Ω[K⁄k] (Ideal.span {t}).primeCompl (m + 1) gA (fun j => D k K (algebraMap F K (u j))) (fun i => by
+  obtain ⟨rA, hrA, aA, hA1⟩ := _root_.GlobalTheory.WedgeDen.exists_smul_ιMulti_eq_smul_ιMulti A K Ω[K⁄k] (Ideal.span {t}).primeCompl (m + 1) gA (fun j => D k K (algebraMap F K (u j))) (fun i => by
     obtain ⟨r, hr, c, hc⟩ := genA ⟨u i, hA ▸ Algebra.subset_adjoin (Set.mem_range_self i)⟩
     exact ⟨r, hr, c, hc⟩)
-  obtain ⟨r', hr', c', hA2⟩ := GlobalTheory.T.exterior_wedge_eq_of_localized_span A K Ω[K⁄k] (Ideal.span {t}).primeCompl (m + 1) (fun j => D k K (algebraMap F K (u j))) gA (fun i => by
+  obtain ⟨r', hr', c', hA2⟩ := _root_.GlobalTheory.WedgeDen.exists_smul_ιMulti_eq_smul_ιMulti A K Ω[K⁄k] (Ideal.span {t}).primeCompl (m + 1) (fun j => D k K (algebraMap F K (u j))) gA (fun i => by
     have key : ∀ v : A, ∃ c : Fin (m + 1) → A, D k K (algebraMap F K (v : F)) = ∑ l, algebraMap A K (c l) • D k K (algebraMap F K (u l)) := by
       intro v
-      obtain ⟨c, hc, hc'⟩ := GlobalTheory.T.exists_D_eq_sum_smul_D_of_mem_adjoin k F K (m + 1) u (v : F) (hA ▸ v.2)
+      obtain ⟨c, hc, hc'⟩ := _root_.GlobalTheory.dadj_combination k F K (m + 1) u (v : F) (hA ▸ v.2)
       exact ⟨fun j => ⟨c j, hA ▸ hc j⟩, hc'⟩
     refine Fin.cases ?_ (fun j => ?_) i
     · obtain ⟨c, hc⟩ := key t
@@ -1152,8 +1124,8 @@ theorem omB_top_coeff_iff_pole : ∀ (k F K : Type) [Field k] [CharZero k] [Fiel
     · exact hr' h4
 
   let y' : Fin m → B := fun j => ιB (y j)
-  have hy' := GlobalTheory.T.isTranscendenceBasis_quotient_integralClosure' k F K A B hB Q hQ t hcomap m y hy y' (fun j => rfl)
-  haveI := GlobalTheory.T.integralClosure_finiteType_over_adjoin k F K (m + 1) u hu A hA B hB
+  have hy' := _root_.GlobalTheory.isTranscendenceBasis_quotient_integralClosure k F K A B hB Q hQ t hcomap m y hy y' (fun j => rfl)
+  haveI := _root_.GlobalTheory.integralClosure_finiteType_of_charZero k F K (m + 1) u hu A hA B hB
   have hs0 : s ≠ 0 := by
     rintro rfl
     have h5 : (r₀ : K) * algebraMap F K t = 0 := by rw [hrt]; simp [zero_pow (by omega : e ≠ 0)]
@@ -1162,9 +1134,9 @@ theorem omB_top_coeff_iff_pole : ∀ (k F K : Type) [Field k] [CharZero k] [Fiel
     · exact ht0 (by
         have : (t : F) = 0 := (map_eq_zero_iff _ (algebraMap F K).injective).1 h6
         exact Subtype.ext this)
-  have genB := GlobalTheory.T.exists_not_mem_smul_D_eq_sum k K K B Q hQ s hsQ hs0 hQs m y' hy'
+  have genB := _root_.GlobalTheory.span_D_lift_clear_denominators k K K B Q hQ s hsQ hs0 hQs m y' hy'
   simp only [Algebra.algebraMap_self_apply] at genB
-  obtain ⟨N, Dn, hN, hDn, hND⟩ := GlobalTheory.T.differential_relation_local_ring_bound k K B Q hQ s m (fun j => (y' j : K)) (algebraMap F K t) e he hsQ genB ⟨a₀, r₀, ha₀, hr₀, hrt⟩
+  obtain ⟨N, Dn, hN, hDn, hND⟩ := _root_.GlobalTheory.wedge_D_eq_pow_mul_wedge_D_of_eq_unit_mul_pow k K B Q hQ s m (fun j => (y' j : K)) (algebraMap F K t) e he hsQ genB ⟨a₀, r₀, ha₀, hr₀, hrt⟩
   set ω : DR k K := ExteriorAlgebra.ιMulti K (m + 1) (Fin.cons (D k K (s : K)) (fun j => D k K (y' j : K)) : Fin (m + 1) → Ω[K⁄k]) with hω
   let Dt : B := Dn * ιB rA
   let Nt : B := N * ιB aA
@@ -1192,7 +1164,7 @@ theorem omB_top_coeff_iff_pole : ∀ (k F K : Type) [Field k] [CharZero k] [Fiel
       induction hyy using Submodule.span_induction with
       | mem x hx =>
         obtain ⟨b, hb, v, hv, rfl⟩ := hx
-        obtain ⟨ρ, hρ, β, hβ⟩ := GlobalTheory.T.exterior_wedge_eq_of_localized_span B K Ω[K⁄k] Q.primeCompl (m + 1) (Fin.cons (D k K (s : K)) (fun j => D k K (y' j : K))) (fun j => D k K (v j)) (fun i => genB ⟨v i, hv i⟩)
+        obtain ⟨ρ, hρ, β, hβ⟩ := _root_.GlobalTheory.WedgeDen.exists_smul_ιMulti_eq_smul_ιMulti B K Ω[K⁄k] Q.primeCompl (m + 1) (Fin.cons (D k K (s : K)) (fun j => D k K (y' j : K))) (fun j => D k K (v j)) (fun i => genB ⟨v i, hv i⟩)
         have hβ' : (ρ : K) • ExteriorAlgebra.ιMulti K (m + 1) (fun j => D k K (v j)) = (β : K) • ω := hβ
         have h8 := congrArg τ hβ'
         rw [map_smul, map_smul, smul_eq_mul, smul_eq_mul] at h8
@@ -1240,8 +1212,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.regular_topForm_pole_order_height_one_prime : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → Algebra.Smooth k B → ∀ τ : DR k K →ₗ[K] K, τ (ExteriorAlgebra.ιMulti K d fun j => D k K (algebraMap F K (u j))) = 1 → ∀ (Q : Ideal B), Q.IsPrime → Q.height = 1 → ∀ (t : A) (s : B) (e : ℕ), Irreducible t → 1 ≤ e → s ∈ Q → (∀ y ∈ Q, ∃ c r : B, r ∉ Q ∧ r * y = c * s) → (∃ a r : B, a ∉ Q ∧ r ∉ Q ∧ (r : K) * algebraMap F K t = a * s ^ e) → ∀ z : K, (∃ r : B, r ∉ Q ∧ ∃ y ∈ omB k K B d, τ y = r * z) ↔ ∃ c r : B, r ∉ Q ∧ (r : K) * s ^ (e - 1) * z = c := by
-  first | (exact @GlobalTheory.PD.omB_top_coeff_iff_pole)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularTopFormPoleOrderHeightOnePrimeStatement =====
@@ -1869,8 +1839,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.trace_mem_localization_iff_forall_prime_alt : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → ∀ (p : Ideal A), p.IsPrime → p.height = 1 → ∀ t : A, Irreducible t → p = Ideal.span {t} → (∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → Q.height = 1) → (∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → ∃ (s : B) (e : ℕ), 1 ≤ e ∧ s ∈ Q ∧ (∀ y ∈ Q, ∃ c r : B, r ∉ Q ∧ r * y = c * s) ∧ (∃ a r : B, a ∉ Q ∧ r ∉ Q ∧ (r : K) * algebraMap F K t = a * s ^ e)) → ∀ z : K, (∀ b : B, ∃ r c : A, r ∉ p ∧ (r : F) * Algebra.trace F K (z * b) = c) ↔ ∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → ∀ (s : B) (e : ℕ), 1 ≤ e → s ∈ Q → (∀ y ∈ Q, ∃ c r : B, r ∉ Q ∧ r * y = c * s) → (∃ a r : B, a ∉ Q ∧ r ∉ Q ∧ (r : K) * algebraMap F K t = a * s ^ e) → ∃ c r : B, r ∉ Q ∧ (r : K) * s ^ (e - 1) * z = c := by
-  first | (exact @GlobalTheory.CodimDual.trace_mem_localization_iff_forall_prime)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceMemLocalizationIffForallPrimeStatement =====
@@ -1902,16 +1870,16 @@ theorem mem_traceDual_localization_iff_forall_regularForm : ∀ (k F K : Type) [
   intro k F K _ _ _ _ _ _ _ _ _ d u hu A _ hA B hB hsm τ hτ p hp hh z
   obtain ⟨t, ht, hpt⟩ := heightOne_eq_span_irreducible k F d u hu A hA p hp hh
   have h2 : ∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → Q.height = 1 :=
-    fun Q hQ hov => GlobalTheory.T.height_eq_one_of_liesOver_height_one k F K A B hB p hp hh Q hQ hov
-  have h3 := fun Q hQ hov => GlobalTheory.T.exists_uniformizer_ramification_of_height_one k F K d u hu A hA B hB p hp t ht hpt Q hQ (h2 Q hQ hov) hov
-  rw [GlobalTheory.T.trace_mem_localization_iff_forall_prime_alt k F K d u hu A hA B hB p hp hh t ht hpt h2 h3 z]
+    fun Q hQ hov => _root_.GlobalTheory.integralClosure_height_eq_one_of_liesOver k F K A B hB p hp hh Q hQ hov
+  have h3 := fun Q hQ hov => _root_.GlobalTheory.integralClosure_height_one_uniformizer_ramification k F K d u hu A hA B hB p hp t ht hpt Q hQ (h2 Q hQ hov) hov
+  rw [_root_.GlobalTheory.CodimDual.trace_mem_localization_iff_forall_prime k F K d u hu A hA B hB p hp hh t ht hpt h2 h3 z]
   constructor
   · intro hl Q hQ hov
     obtain ⟨s, e, he, hs, hun, htd⟩ := h3 Q hQ hov
-    exact (GlobalTheory.T.regular_topForm_pole_order_height_one_prime k F K d u hu A hA B hB hsm τ hτ Q hQ (h2 Q hQ hov) t s e ht he hs hun htd z).mpr
+    exact (_root_.GlobalTheory.PD.omB_top_coeff_iff_pole k F K d u hu A hA B hB hsm τ hτ Q hQ (h2 Q hQ hov) t s e ht he hs hun htd z).mpr
       (hl Q hQ hov s e he hs hun htd)
   · intro hr Q hQ hov s e he hs hun htd
-    exact (GlobalTheory.T.regular_topForm_pole_order_height_one_prime k F K d u hu A hA B hB hsm τ hτ Q hQ (h2 Q hQ hov) t s e ht he hs hun htd z).mp (hr Q hQ hov)
+    exact (_root_.GlobalTheory.PD.omB_top_coeff_iff_pole k F K d u hu A hA B hB hsm τ hτ Q hQ (h2 Q hQ hov) t s e ht he hs hun htd z).mp (hr Q hQ hov)
 
 end GlobalTheory
 end -- clump:auto
@@ -1925,8 +1893,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.mem_traceDual_localization_iff_forall_regularForm_alt : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → Algebra.Smooth k B → ∀ τ : DR k K →ₗ[K] K, τ (ExteriorAlgebra.ιMulti K d fun j => D k K (algebraMap F K (u j))) = 1 → ∀ (p : Ideal A), p.IsPrime → p.height = 1 → ∀ z : K, (∀ b : B, ∃ r c : A, r ∉ p ∧ (r : F) * Algebra.trace F K (z * b) = c) ↔ ∀ Q : Ideal B, Q.IsPrime → (∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p)) → (∃ r : B, r ∉ Q ∧ ∃ y ∈ omB k K B d, τ y = r * z) := by
-  first | (exact @GlobalTheory.mem_traceDual_localization_iff_forall_regularForm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemTraceDualLocalizationIffForallRegularFormStatement =====

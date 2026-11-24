@@ -68,8 +68,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
-theorem _root_.GlobalTheory.T.psi_comp_endomorphism_eq_pow_of_pullback_iso : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∀ E E' : EndU U.toUnifPre, LBIso (cubeLB G ![fst G G ≫ E.aG, snd G G] U.LG.L) (cubeLB G ![fst G G, snd G G ≫ E'.aG] U.LG.L) → Function.Injective E.h → ∀ ν : ℕ, 1 ≤ ν → (∀ y, E.h (E'.h y) = ν • y) → (∃ β : LB.Gen (LB.LinComb U.LG.L (K := Fin 2) ![𝟙 _, E.aG.left] ![(ν : ℤ), -((1 : ℕ) : ℤ)]), β.IsGen) → ∀ κ : LB.Gen (kapLB D.toPre E.aB ν 1), Normd κ → ∀ y (z : (TK R).left) J, Good D.toPre.P.L z J → val (D.toPre.psi (E'.h y)) (𝟙 _) z J * rigV D.toPre (TK R).hom z J = val (D.toPre.psi y) (𝟙 _) z J ^ ν * val κ (D.toPre.xK y) z J * rigV D.toPre (TK R).hom z J ^ ν := by
-  first | exact @GlobalTheory.UT.PsiPull.psi_pull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.PsiCompEndomorphismEqPowOfPullbackIsoStatement =====
@@ -135,8 +133,8 @@ theorem exists_norm_form : LL → TwistBCSpanStatement → TWM.VRatioGtStatement
   rw [← eG] at hg
   haveI := E.homG
   obtain ⟨β, hβ, nβ⟩ := exists_norm_three U.LG E.aG N hg
-  obtain ⟨κ, hκ, -⟩ := GlobalTheory.T.descent_powerIso_endomorphism_abelianPart_uniformization hL R I hI D A G hG U E N 1 β hβ nβ
-  have key := GlobalTheory.T.psi_comp_endomorphism_eq_pow_of_pullback_iso hL h1 h2 h3 h4 R I hI D A G hG U (AlgebraicClosure (FractionRing R)) E E'
+  obtain ⟨κ, hκ, -⟩ := _root_.GlobalTheory.UT.PullDescent.main hL R I hI D A G hG U E N 1 β hβ nβ
+  have key := _root_.GlobalTheory.UT.PsiPull.psi_pull hL h1 h2 h3 h4 R I hI D A G hG U (AlgebraicClosure (FractionRing R)) E E'
     (by rw [eG, eG']; exact hadj a)
     (fun x y e => star_smul_injective a N hN hN1 (by rw [← eh, ← eh]; exact e)) N hN1
     (fun y => by rw [eh, eh', star_star, smul_smul, mul_comm, hN, Nat.cast_smul_eq_nsmul])

@@ -721,7 +721,7 @@ theorem weights {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (
     (nuLast W u i τ : ℤ) - (W.lamTrue u i τ).detShift = z - ((R.N (i + 1) / 2 : ℕ) : ℤ) ∧
       (W.lamTrue u (i + 1) τ).detShift = ((R.N i / 2 : ℕ) : ℤ) - z := by
   have half : ∀ k, (((R.N k / 2 : ℕ) : ℤ) : ℚ) = (R.N k : ℚ) / 2 := fun k => by
-    obtain ⟨c, hc⟩ := even_rank R k
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree.even_N R k
     have : R.N k / 2 = c := by omega
     rw [this, hc]
     push_cast
@@ -745,7 +745,7 @@ theorem ratStep : ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.ho
   obtain ⟨m0, eta, ht, hc⟩ := h.tied
   have hX := h.ok.fields
   have hPr := h.ok.primes
-  have ea := even_rank Z.R i
+  have ea := _root_.GlobalTheory.IndefiniteRowSideFullHecke.IndexExponentDegree.even_N Z.R i
   have eb := even_rank Z.R (i + 1)
   obtain ⟨hL, hsm⟩ := _root_.GlobalTheory.ThetaMove.LatticeFacts.laHyp_and_eSmooth H Z.X s cc δ B χ cD _ _ hX hs hcc hδ hv ea eb
   have bad := GlobalTheory.ThetaMove.BadPrimes.bad_primes Z.X Z.Pr sel S mu u hX hPr h.isSel h.T_mem h.g_mem

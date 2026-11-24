@@ -193,14 +193,6 @@ theorem quotMat_map {B : Type} [CommRing B] (f : A →+* B) (M : Matrix ι ι A)
 
 end Pure
 
-theorem ordL_eq_neg_log {K : Type} [Field K] [Valued K (WithZero (Multiplicative ℤ))] (x : K) :
-    ordL x = -WithZero.log (Valued.v x) := by
-  unfold ordL
-  split_ifs with h
-  · simp [h]
-  · conv_rhs => rw [← WithZero.coe_unzero h]
-    rfl
-
 theorem isHermND_dbl {F E : Type} [Field F] [Field E] [Algebra F E] (σ : E →ₐ[F] E) {n : ℕ}
     {J : Matrix (Fin n) (Fin n) E} (hJ : IsHermND σ J) : IsHermND σ (dblGram finSumFinEquiv J) := by
   refine ⟨fun i j => ?_, ?_⟩
@@ -263,7 +255,7 @@ theorem exists_dbl_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       rfl
     have h2 := congrArg (fun y => Valued.v (toCompl h' y)) (sigR_det_quot_mul_aH hQ hJ.2 p)
     simp only [map_mul, map_one, ← hcc, hcv] at h2
-    rw [h1, ordL_eq_neg_log, ordL_eq_neg_log, eq_inv_of_mul_eq_one_right h2, WithZero.log_inv]
+    rw [h1, _root_.GlobalTheory.LGrp.ordL_eq, _root_.GlobalTheory.LGrp.ordL_eq, eq_inv_of_mul_eq_one_right h2, WithZero.log_inv]
 
 end GlobalTheory.LFun.DblSplit
 end -- clump:auto
@@ -698,8 +690,6 @@ open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt)
 open GlobalTheory.LFun (locChar IsSplitChart IsInertChart KGL UnrAt)
 
 
-theorem _root_.GlobalTheory.T.sphericalSection_graph_splitPlace : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (χ : (AE D)ˣ →* Circle) (b : ℕ), ResEta D χ b → ∀ v : FinPl D, Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v → (∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = v → UnrAt χ w) → ∀ (s : ℂ) (φ : Gv (dblSp A) v → ℂ), IsSphSecAt A L v χ⁻¹ s φ → ∀ (w : HeightOneSpectrum (𝓞 D.host.E)) (h : w.under (𝓞 D.host.F) = v) (e : Gv A v ≃* GL (Fin A.rank) (w.adicCompletion D.host.E)), IsSplitChart D.sp.cm.sig A.gram L h e → ∀ ϖ, IsUnifV D.host.E w ϖ → ∀ (d : Fin A.rank → ℤ) (t : GL (Fin A.rank) (w.adicCompletion D.host.E)), t.1 = Matrix.diagonal (fun i => ϖ ^ d i) → ∀ k₁ ∈ KGL w (n := A.rank), ∀ k₂ ∈ KGL w (n := A.rank), φ (ioAt A v (e.symm (k₁ * t * k₂))) = (((GlobalTheory.LFun.val χ w)⁻¹ : ℂˣ) : ℂ) ^ (∑ i, d i) * (qV D.host.E w : ℂ) ^ (-((A.rank : ℂ) / 2 + s) * ((∑ i, |d i| : ℤ) : ℂ)) := by
-  first | exact @GlobalTheory.Core.Rk.KerSplit.sphSec_split
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SphericalSectionGraphSplitPlaceStatement =====
@@ -981,12 +971,12 @@ theorem localZetaOn_split : GlobalTheory.Published.UnramifiedDoublingGL →
     GlobalTheory.LGrp.mem_fixed.1 (hpar w h).mem_fixed
   have hz1 : ‖(((GlobalTheory.LFun.val χ w)⁻¹ : ℂˣ) : ℂ)‖ = 1 := by
     rw [Units.val_inv_eq_inv_val, norm_inv, GlobalTheory.LFun.norm_val, inv_one]
-  have hker := GlobalTheory.T.sphericalSection_graph_splitPlace D A L hL χ b hb v hv hU s φ hφ w h e he
+  have hker := _root_.GlobalTheory.Core.Rk.KerSplit.sphSec_split D A L hL χ b hb v hv hU s φ hφ w h e he
   have hbd : ℓ x ≠ 0 → ∀ β ∈ par w, ‖(β : ℂ)‖ ≤ (qV D.host.E w : ℝ) ^ ((A.rank : ℝ) / 2) ∧
       ‖((β⁻¹ : ℂˣ) : ℂ)‖ ≤ (qV D.host.E w : ℝ) ^ ((A.rank : ℝ) / 2) := by
     intro h0 β hβ
     have hc1 : c 1 ≠ 0 := by rw [hcx, map_one, Module.End.one_apply]; exact h0
-    have Hb := GlobalTheory.T.sphericalParameterBound_split_place D A L hL v hv par c hc' hc1
+    have Hb := _root_.GlobalTheory.Core.Rk.BdSplit.paramBound_split D A L hL v hv par c hc' hc1
     refine ⟨(Hb w h).2 β hβ, ?_⟩
     have H2 := (Hb w' h').2 β⁻¹ (hB' ▸ Multiset.mem_map_of_mem _ hβ)
     have e2 : ((Ideal.absNorm w'.asIdeal : ℕ) : ℝ) = (qV D.host.E w : ℝ) := by

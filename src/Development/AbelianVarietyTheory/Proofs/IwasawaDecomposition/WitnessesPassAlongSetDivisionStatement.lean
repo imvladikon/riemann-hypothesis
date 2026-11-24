@@ -418,14 +418,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.Db GlobalTheory.Mem.Top.Bl.WitTr NumberField IsDedekindDomain
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.kernelTaylorSeries_preserved_divisionLatticeChange :
-    ∀ {B : Base} {f : Fr B.toPre} {T : TwDat B}
-    (w : ColW B f T) (Z : w.Lt) (t : ColT w Z) (Y : DivX (w.D Z)) (Gy : G.LatInst (w.D Z))
-    (ker : KerFam (w.D Z) t.Gt t.cmp (w.tw Z) Gy) (k : KerT t Y Gy ker)
-    (N : ∀ u, Submodule (𝓞 B.LL) (Z.V.div.Nu u).V) (h : B.Word → ℝ),
-    EntC k → ∃ k' : KerT (DivTr.colTTr w Z N h t) (DivTr.divTrZ w Z N h Y)
-      (DivTr.latTrZ w Z N h Gy) (DivTr.kerTr w Z N h ker), EntC k' :=
-  @GlobalTheory.Mem.Top.Bl.WitTr.kerT_entC_setDiv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelTaylorSeriesPreservedDivisionLatticeChangeStatement =====
@@ -571,10 +563,10 @@ theorem witMv_of_positionMv : ∀ 𝒮 : Slots, PositionMv 𝒮 → WitMv 𝒮 :
   intro 𝒮 hS K B f T w Z O x N h hE
   have hR := GlobalTheory.T.concreteSplitPrimeAutomorphicData_divisionLatticeChange K.s (w.D Z) x.col.Gt x.col.cmp x.col.g.herm x.col.g.forms N h x.col.isRec
   let col := columnLocalDataTransportDivision w Z N h x.col hR
-  obtain ⟨k, hk⟩ := GlobalTheory.T.kernelTaylorSeries_preserved_divisionLatticeChange w Z x.col.toColT O.X O.Gy x.ker0 x.ker N h hE
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.Mem.Top.Bl.WitTr.kerT_entC_setDiv w Z x.col.toColT O.X O.Gy x.ker0 x.ker N h hE
   let n := nchTTr w Z N h x.n
-  obtain ⟨dv⟩ := GlobalTheory.T.divisionLocalData_preserved_divisionLatticeChange w Z x.n O.X N h x.div
-  obtain ⟨th⟩ := GlobalTheory.T.thetaAutomorphicWeilData_preserved_divisionLatticeChange w Z x.n O.th N h x.th
+  obtain ⟨dv⟩ := _root_.GlobalTheory.Mem.Top.Bl.WitTr.divT_setDiv w Z x.n O.X N h x.div
+  obtain ⟨th⟩ := _root_.GlobalTheory.Mem.Top.Bl.ThTTr.thT_setDiv w Z x.n O.th N h x.th
   obtain ⟨t, hobj, ⟨rx⟩, ⟨nx⟩, ⟨sx⟩, ⟨ox⟩⟩ := hS K B f T w Z O x N h (O.tr N h) rfl col n
   have hker : (⟨(O.tr N h).gatT, (O.tr N h).cmp, (O.tr N h).tw, (O.tr N h).ker⟩ : Σ (Gt : GatTies (w.D (setDivZ Z N h)))
       (cmp : LatCmp (w.D (setDivZ Z N h))) (tw : TwForms (w.D (setDivZ Z N h))), KerFam (w.D (setDivZ Z N h)) Gt cmp tw (O.tr N h).Gy) =

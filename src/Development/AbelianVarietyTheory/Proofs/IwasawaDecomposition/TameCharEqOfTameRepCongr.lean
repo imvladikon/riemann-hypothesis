@@ -310,7 +310,7 @@ theorem tame_quot_indep : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω]
     have e : σ ρ / ρ - 1 = (σ ρ - ρ) / ρ := by field_simp
     rw [e, map_div₀, hvρ, div_one]
     exact hσ.2 ρ hvρ.le
-  have hfix : σ ρ / ρ = 1 := root_eq_of_close A m hσρm (one_pow m) hmv hclose
+  have hfix : σ ρ / ρ = 1 := _root_.GlobalTheory.PowEqOneValuation.eq_of_pow_eq_one_of_valuation_sub_lt_one A m hσρm (one_pow m) hmv hclose
   have hfix' : σ ρ = ρ := (div_eq_one_iff_eq hρ0).1 hfix
   have eπ' : π' = ρ * π := by rw [hρ]; field_simp
   rw [eπ', map_mul, hfix', mul_div_mul_left _ _ hρ0]
@@ -424,7 +424,7 @@ theorem char_eq_of_tameRep_congr : ∀ {E Ω : Type} [Field E] [NumberField E] [
     have := (hlt (u - u')).2 huu
     simpa using this
   have heq : s π / π = s' π / π := by
-    refine root_eq_of_close A m (hroot s) (hroot s') hmv ?_
+    refine _root_.GlobalTheory.PowEqOneValuation.eq_of_pow_eq_one_of_valuation_sub_lt_one A m (hroot s) (hroot s') hmv ?_
     have e : s π / π - s' π / π = (s π / π - algebraMap E Ω (u : E))
         + (algebraMap E Ω (u : E) - algebraMap E Ω (u' : E)) - (s' π / π - algebraMap E Ω (u' : E)) := by ring
     rw [e]

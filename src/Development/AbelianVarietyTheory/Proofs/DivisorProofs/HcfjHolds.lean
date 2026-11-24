@@ -62,8 +62,6 @@ section -- clump:auto
 
 namespace GlobalTheory.Laid
 
-theorem hcfj_holds : GlobalTheory.Published.HilbertClassFieldJ := GlobalTheory.CompanionTheory.Hypotheses₂.hilbertClassFieldJ
-
 end GlobalTheory.Laid
 end -- clump:auto
 end -- clump:auto

@@ -1589,7 +1589,7 @@ namespace PositivityTheory.PfWsf.Hand.Merge
 theorem siegelND : PositivityTheory.GramSchwartzFunctions.BC.SiegelND := by
   intro D r V ψ θ μ lam ν φ hyp β hβ
   obtain ⟨hr, hψ, hθ, hμ, hlam, hν, hφ, habs⟩ := hyp
-  have hCM := GlobalTheory.DefiniteQuotient.cmExt D
+  have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
   obtain ⟨μH, 𝓕, hμH, h𝓕, -⟩ := GlobalTheory.Published.SiegelOneVector.exists_normalised D.sp.cm.sig V.gram hCM hJ
   obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
@@ -1614,13 +1614,10 @@ section -- clump:auto
 
 namespace PositivityTheory.PfWsf.Top
 
-theorem pull : PositivityTheory.GramSchwartzFunctions.PullSchLI := GlobalTheory.CompanionTheory.PullSch.pullSchLI
-theorem orb : PositivityTheory.GramSchwartzFunctions.ThetaOrbits := GlobalTheory.CompanionTheory.ThetaOrbit.thetaOrbits
-
 theorem head_of_two (hE : PositivityTheory.GramSchwartzFunctions.EisCells) (hB : PositivityTheory.GramSchwartzFunctions.BigCell) : GlobalTheory.Published.WeilSiegelFormula :=
   GlobalTheory.CompanionTheory.SiegelAssemblyLI.weilSiegelFormula_of_chapters_LI
     (GlobalTheory.CompanionTheory.WeilTheta.weilThetaConvergence_of_siegelSet GlobalTheory.CompanionTheory.SiegelRed.siegelSetUnitary)
-    GlobalTheory.WeilEisConv.weilEisensteinSiegelConvergence pull hE orb hB
+    GlobalTheory.WeilEisConv.weilEisensteinSiegelConvergence _root_.GlobalTheory.CompanionTheory.PullSch.pullSchLI hE _root_.GlobalTheory.CompanionTheory.ThetaOrbit.thetaOrbits hB
 
 theorem big_of_three (h1 : PositivityTheory.GramSchwartzFunctions.BC.PoissonHerm) (h2 : PositivityTheory.GramSchwartzFunctions.BC.SiegelND) (h3 : PositivityTheory.GramSchwartzFunctions.BC.SiegelDeg) :
     PositivityTheory.GramSchwartzFunctions.BigCell :=

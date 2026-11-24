@@ -156,8 +156,6 @@ open PositivityTheory.RgBcC GlobalTheory.CompanionTheory.WaveSpd
 open PositivityTheory.RgTw (Mat G)
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem _root_.GlobalTheory.T.continuous_one_param_differentiable : ∀ {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [CompleteSpace 𝔸] (Φ : ℝ → 𝔸), Continuous Φ → Φ 0 = 1 → (∀ s t, Φ (s + t) = Φ s * Φ t) → ∃ B, HasDerivAt Φ B 0 := by
-  first | exact @GlobalTheory.CompanionTheory.OneParam.hasDerivAt_zero_of_continuous_oneParam
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousOneParamDifferentiableStatement =====
@@ -263,7 +261,7 @@ theorem rd_skew_eq_const {n : ℕ} (E : KMod n) (Y : Mat n) (hY : Yᴴ = -Y) :
   have hΦ0 : Φ 0 = 1 := by simp only [Φ, neg_zero, c0, map_one]
   have hΦa : ∀ s t, Φ (s + t) = Φ s * Φ t := fun s t => by
     simp only [Φ, neg_add, cadd, map_mul]
-  obtain ⟨B, hB⟩ := GlobalTheory.T.continuous_one_param_differentiable Φ hΦc hΦ0 hΦa
+  obtain ⟨B, hB⟩ := _root_.GlobalTheory.CompanionTheory.OneParam.hasDerivAt_zero_of_continuous_oneParam Φ hΦc hΦ0 hΦa
   refine ⟨B, fun f hf g hg => ?_⟩
   have hk : ∀ t, f (g * (c t).1) = Φ t (f g) := fun t => by
     rw [hf.2 g hg (c t), hinv]

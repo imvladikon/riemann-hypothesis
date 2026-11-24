@@ -61,29 +61,6 @@ noncomputable section
 
 namespace GlobalTheory.ReducedFactor
 
-section General
-
-variable {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
-
-theorem nontrivial_of_irr {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) : Nontrivial V := by
-  have : IsSimpleOrder (Subrepresentation ρ) := h
-  by_contra hV
-  rw [not_nontrivial_iff_subsingleton] at hV
-  apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
-  apply Subrepresentation.toSubmodule_injective
-  ext x
-  rw [Subsingleton.elim x 0]
-  exact iff_of_true (zero_mem _) (zero_mem _)
-
-end General
-
-section Tensor
-
-variable {G H V V' U : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V']
-  [AddCommGroup U] [Module ℂ U]
-
-end Tensor
-
 end GlobalTheory.ReducedFactor
 
 namespace GlobalTheory.ReducedFactor
@@ -118,7 +95,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.unlFull :
       (fun a => (single_spec (hx a)).2.1)
   have h1 := GlobalTheory.LocGL.SupportPerm.isSubquotient_prodIrr_of_hasSupport
     UpperTheory.Zero.LLC.Pr.zel UpperTheory.Zero.LLC.Pr.bz k N s ⟨V, π, hs.isSmooth, hs.isIrreducible⟩ x hd hs
-  haveI := GlobalTheory.ReducedFactor.nontrivial_of_irr hs.isIrreducible
+  haveI := _root_.GlobalTheory.JacFactor.nontrivial_of_isIrreducible hs.isIrreducible
   have equiv_of_sub {G A B : Type} [Group G] [AddCommGroup A] [Module ℂ A]
       [AddCommGroup B] [Module ℂ B] {σ : Representation ℂ G B}
       {ρ : Representation ℂ G A} (h : IsSubquotient σ ρ) [Nontrivial B]

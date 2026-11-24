@@ -291,17 +291,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar
 
-variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj A] [IsCommMonObj B]
-
-variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
-
-theorem isFinite_mu_fibre (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) (g : ℕ)
-    (hgA : SmoothOfRelativeDimension g A.hom) (hgB : SmoothOfRelativeDimension g B.hom) (l : A ⟶ B) [IsMonHom l]
-    (mu : B ⟶ A) [IsMonHom mu] (m : ℕ) (hm : 1 ≤ m) (h₁ : l ≫ mu = 𝟙 A ^ m) (h₂ : mu ≫ l = 𝟙 B ^ m)
-    (s : Sp Ω ⟶ S) (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
-    (ha : Out.RelAmple ((Over.pullback s).obj A) L) : IsFinite ((Over.pullback s).map mu).left :=
-  Z2.isFinite_mu_fibre hA hB g hgA hgB l mu m hm h₁ h₂ s L hL ha
-
 end PositivityTheory.PrwZar
 end -- clump:auto
 end -- clump:auto
@@ -415,15 +404,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqT
 attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace PositivityTheory.PrwZar
-
-variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj A] [IsCommMonObj B]
-
-variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
-
-theorem relAmple_of_two_smul {G : Over (Sp Ω)} [GrpObj G] (hG : IsAbelianScheme G) {M N : LB G.left}
-    (hM : M.IsLB) (hN : N.IsLB) (d : ℕ) (hd : 1 ≤ d) (e : d • cls M hM = d • cls N hN) (h : Out.RelAmple G N) :
-    Out.RelAmple G M :=
-  Z2.relAmple_of_two_smul hG hM hN d hd e h
 
 end PositivityTheory.PrwZar
 end -- clump:auto
@@ -955,18 +935,6 @@ variable {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] [IsCommMonObj A] 
 
 variable {Ω : Type} [Field Ω] [IsAlgClosed Ω]
 
-theorem two_cls_eMap (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A ⊗ B).left} (hD : IsDual A B P)
-    (hD' : IsDual B A (swap P)) (l : A ⟶ B) [IsMonHom l] (mu : B ⟶ A) [IsMonHom mu] (α : Matrix (Fin 4) (Fin 4) ℤ)
-    (s : Sp Ω ⟶ S) (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
-    (e : LBIso ((ev P (fst A A) (snd A A ≫ l)).pull (sqToBase A s)) (abelian₂ ((Over.pullback s).obj A) L))
-    (m : ℕ) (hm : 1 ≤ m) (h₁ : l ≫ mu = 𝟙 A ^ m) (h₂ : mu ≫ l = 𝟙 B ^ m)
-    (hα : α.transpose * α = ((4 * m ^ 2 - 1 : ℕ) : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ))
-    (hα' : α * α.transpose = ((4 * m ^ 2 - 1 : ℕ) : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ))
-    (h₁' : ((zb mu α s P L).pull ((Over.pullback s).map (eMap mu α m)).left).IsLB)
-    (h₂' : (lPart mu s L).IsLB) :
-    2 • cls _ h₁' = 2 • cls _ h₂' :=
-  Z2.two_cls_eMap hA hB hD hD' l mu α s L hL e m hm h₁ h₂ hα hα' h₁' h₂'
-
 theorem two_cls_pow (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A ⊗ B).left} (hD : IsDual A B P)
     (hD' : IsDual B A (swap P)) (l : A ⟶ B) [IsMonHom l] (mu : B ⟶ A) [IsMonHom mu] (α : Matrix (Fin 4) (Fin 4) ℤ)
     (s : Sp Ω ⟶ S) (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
@@ -1037,8 +1005,8 @@ theorem relAmple_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
   have h4 : IsAbelianScheme (G4 (A ⊗ B)) :=
     AbelianSchemeGerms.isAbelianScheme_tensor _ _ hAB
       (AbelianSchemeGerms.isAbelianScheme_tensor _ _ hAB (AbelianSchemeGerms.isAbelianScheme_tensor _ _ hAB hAB))
-  have hG : IsAbelianScheme ((Over.pullback s).obj (G4 (A ⊗ B))) := Z2.isAbelianScheme_pb s _ h4
-  have hfin := isFinite_mu_fibre hA hB g hgA hgB l mu m hm h₁ h₂ s L hL ha
+  have hG : IsAbelianScheme ((Over.pullback s).obj (G4 (A ⊗ B))) := _root_.GlobalTheory.isAbelianScheme_pullback_obj s _ h4
+  have hfin := _root_.PositivityTheory.PrwZar.Z2.isFinite_mu_fibre hA hB g hgA hgB l mu m hm h₁ h₂ s L hL ha
   have hlp := relAmple_lPart hA hB mu s L hL ha hfin
   have hlpLB : (lPart mu s L).IsLB := LB.isLB_linComb hL _ _
   have hzb : (zb mu α s P L).IsLB := isLB_zb mu α s hP hL
@@ -1050,8 +1018,8 @@ theorem relAmple_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
     rw [← Functor.map_comp, eMap_comp_eMap'_eq_id_pow, Z2.pb_map_id_pow]
   have hE1 : ((zb mu α s P L).pull (Over.Hom.left ((Over.pullback s).map (eMap mu α m)))).IsLB :=
     LB.isLB_pull hzb _
-  have hE := two_cls_eMap hA hB hD hD' l mu α s L hL e m hm h₁ h₂ hα hα' hE1 hlpLB
-  have hEa := relAmple_of_two_smul hG hE1 hlpLB 2 (by norm_num) hE hlp
+  have hE := _root_.PositivityTheory.PrwZar.Z2.two_cls_eMap hA hB hD hD' l mu α s L hL e m hm h₁ h₂ hα hα' hE1 hlpLB
+  have hEa := _root_.PositivityTheory.PrwZar.Z2.relAmple_of_two_smul hG hE1 hlpLB 2 (by norm_num) hE hlp
   obtain ⟨hE'fin, -, -, -⟩ := Z2.fin_surj_core hG hG ((Over.pullback s).map (eMap' mu α m))
     ((Over.pullback s).map (eMap mu α m)) (2 * m) (by omega) c1 c2 hlpLB hlp
   haveI := hE'fin
@@ -1066,7 +1034,7 @@ theorem relAmple_zb (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A
   have hM : (lbPow (zb mu α s P L) ((2 * m) ^ 2)).IsLB := GlobalTheory.isLB_lbPow hzb _
   have key : 2 • cls _ hM = 2 • cls _ hNLB := by
     rw [hN, hpow, cls_lbPow hzb, smul_smul]
-  have h3 := relAmple_of_two_smul hG hM hNLB 2 (by norm_num) key h2
+  have h3 := _root_.PositivityTheory.PrwZar.Z2.relAmple_of_two_smul hG hM hNLB 2 (by norm_num) key h2
   exact relAmple_of_lbPow hG hzb ((2 * m) ^ 2) (Nat.one_le_pow _ _ (by omega)) h3
 
 end PositivityTheory.PrwZar
@@ -1265,13 +1233,6 @@ theorem zcPair_positionB (hD : IsDual A B P) (l : A ⟶ B) [IsMonHom l] (mu : B 
 end Slots
 
 
-omit [GrpObj A] [GrpObj B] in
-theorem zcPair_pull {P : LB (A ⊗ B).left} (hP : P.IsLB) (l : A ⟶ B) (mu : B ⟶ A) (α : Matrix (Fin 4) (Fin 4) ℤ)
-    {Y Y' : Over S} (h : Y' ⟶ Y) (u u' : Y ⟶ G4 (A ⊗ B)) :
-    pull h.left (zcPair hP l mu α u u') = zcPair hP l mu α (h ≫ u) (h ≫ u') := by
-  set_option synthInstance.maxHeartbeats 100000 in
-    simp only [zcPair, map_add (f := _), map_sum, map_zsmul, map_nsmul, pull_evc, Category.assoc]
-
 private theorem zpow_fin_sum_eq_prod_zpow {M : Type*} [CommGroup M] (a : M) (f : Fin 4 → ℤ) :
     a ^ (∑ k, f k) = ∏ k, a ^ f k := by
   simp [Fin.sum_univ_four, Fin.prod_univ_four, zpow_add]
@@ -1452,23 +1413,10 @@ theorem kToBase_liftPt (G : Over S) {Y : Over (Sp Ω)} (v : Over.mk (Y.hom ≫ s
     toBase G s (kLiftPt s G v) = v :=
   Over.OverMorphism.ext (pullback.lift_fst _ _ _)
 
-theorem kToBase_inj (G : Over S) {Y : Over (Sp Ω)} {a b : Y ⟶ (Over.pullback s).obj G}
-    (h : toBase G s a = toBase G s b) : a = b := by
-  ext1
-  apply pullback.hom_ext
-  · simpa [toBase] using congrArg Over.Hom.left h
-  · exact (Over.w a).trans (Over.w b).symm
-
 theorem kToBase_comp (G : Over S) {Y Y' : Over (Sp Ω)} (h : Y' ⟶ Y) (a : Y ⟶ (Over.pullback s).obj G) :
     toBase G s (h ≫ a) = (Over.homMk h.left (by simp only [Over.mk_hom]; rw [← Category.assoc, Over.w h]) :
       Over.mk (Y'.hom ≫ s) ⟶ Over.mk (Y.hom ≫ s)) ≫ toBase G s a :=
   Over.OverMorphism.ext (Category.assoc _ _ _)
-
-theorem kToBase_one (G : Over S) [GrpObj G] {Y : Over (Sp Ω)} :
-    toBase G s (1 : Y ⟶ (Over.pullback s).obj G) = 1 := by
-  apply Over.OverMorphism.ext
-  simp only [toBase, Hom.one_def]
-  simp
 
 theorem kLift_sqToBase (G : Over S) {Y : Over (Sp Ω)} (a u : Y ⟶ (Over.pullback s).obj G) :
     (lift a u).left ≫ sqToBase G s = (lift (toBase G s a) (toBase G s u)).left := by
@@ -1498,7 +1446,7 @@ theorem kLam_zb_pt (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A 
   rw [pull_lam, lift_fst, lift_snd] at k2
   rw [← k2, ← pull_comp, kLift_sqToBase]
   unfold zc
-  rw [zcPair_pull, lift_fst, lift_snd]
+  rw [_root_.PositivityTheory.PrwZar.pull_zcPair, lift_fst, lift_snd]
 
 theorem kEvc_sym (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : P.IsLB) (l : A ⟶ B) (s : Sp Ω ⟶ S)
     (L : LB ((Over.pullback s).obj A).left) (hL : L.IsLB)
@@ -1566,8 +1514,8 @@ theorem kTriv_zb' (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A �
     let Z : Over (Sp Ω) := Over.mk (V.ι ≫ t)
     let j : Z ⟶ Over.mk t := Over.homMk V.ι rfl
     have hxV : j ≫ x = 1 := by
-      apply kToBase_inj s
-      rw [kToBase_one]
+      apply _root_.PositivityTheory.PrwZar.toBase_injective s
+      rw [_root_.PositivityTheory.PrwZar.toBase_one]
       refine zcPair_eq_one hA hB hD hD' l mu α m hm h₁ h₂ hα hα' (toBase _ s (j ≫ x)) ?_ ?_
       · intro Y w a b
         let Z' : Over (Sp Ω) := Over.mk (w.left ≫ Z.hom)
@@ -1599,7 +1547,7 @@ theorem kTriv_zb' (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) {P : LB (A �
             = zcPair hD.isLB l mu α (ε.hom ≫ (ε.inv ≫ w ≫ toBase _ s (j ≫ x))) (ε.hom ≫ (ε.inv ≫ v)) := by
               simp
           _ = pull ε.hom.left (zcPair hD.isLB l mu α (ε.inv ≫ w ≫ toBase _ s (j ≫ x)) (ε.inv ≫ v)) :=
-              (zcPair_pull _ _ _ _ _ _ _).symm
+              (_root_.PositivityTheory.PrwZar.pull_zcPair _ _ _ _ _ _ _).symm
           _ = 0 := by
             rw [← Category.assoc, hk, ← kToBase_comp, ← kToBase_liftPt s _ (ε.inv ≫ v),
               ← kLam_zb_pt hA hB hD hD' l mu α s L hL e, ← Category.assoc,

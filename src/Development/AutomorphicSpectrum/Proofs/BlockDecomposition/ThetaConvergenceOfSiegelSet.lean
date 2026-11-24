@@ -453,11 +453,6 @@ theorem lin (h1 : Rx * X = 0) (h2 : Ry * Y = 0) (h3 : Rx * Y = 1) (h4 : Ry * X =
       hQQ]
     simp
 
-theorem mt_inv_mul {D : D7} (V : HSp D) (a : GA D V) : Formalism.L2.Theta.mt V a⁻¹ * Formalism.L2.Theta.mt V a = 1 := by
-  have h := congrArg Units.val (map_mul (Formalism.L2.Theta.matHom V) a⁻¹ a)
-  rw [inv_mul_cancel, map_one] at h
-  exact h.symm
-
 theorem map_mt_eq_archMat {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (ρ : D.what₂.Tau) (a : GA D V) :
     (Formalism.L2.Theta.mt V a).map (fun x => θ ρ (infPart D x)) =
       GlobalTheory.Orb.archMat D.sp.cm.sig V.gram (embOverOf D ρ) (projArch D.sp.cm.sig V.gram (placeOf D ρ) a) := by
@@ -482,7 +477,7 @@ theorem torus_coords : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HS
   · have hhτ : ∀ x, θ ρ (infPart D (incA D x)) = tauE D ρ x := fun x => (hθ ρ).1 x
     let φ : AE D →+* ℂ := (θ ρ).comp (infPart D)
     have hAB : (Formalism.L2.Theta.mt V a⁻¹).map φ * (Formalism.L2.Theta.mt V a).map φ = 1 := by
-      rw [← Matrix.map_mul, mt_inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
+      rw [← Matrix.map_mul, _root_.GlobalTheory.MixModel.mt_inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
     have hB : (Formalism.L2.Theta.mt V a).map φ = _ := map_mt_eq_archMat hθ V ρ a
     have hcomp : compAt θ ρ (invPt V a ξ) = (Formalism.L2.Theta.mt V a⁻¹).map φ * ξ.map (tauE D ρ) := by
       change (HMul.hMul (Formalism.L2.Theta.mt V a⁻¹) (ξ.map (incA D))).map φ = _
@@ -693,10 +688,6 @@ theorem one_dim (b : ℝ) (hb : 0 < b) :
       rw [two_mul, ← add_assoc, ENNReal.ofReal_add (by positivity) hb.le,
         ENNReal.ofReal_add (by norm_num) hb.le, ENNReal.ofReal_one]
 
-theorem multi_dim {P : Type} [Fintype P] (g : P → ℤ → ℝ≥0∞) :
-    ∑' x : P → ℤ, ∏ p, g p (x p) ≤ ∏ p, ∑' n, g p n :=
-  _root_.UpperTheory.Reformulated.B.MultiDimensional.multi_dim g
-
 theorem tsum_le_prod_of_injOn {S P : Type} [Fintype P] (m : S → P → ℤ) (b : P → ℝ)
     (hb : ∀ p, 0 < b p) (h : S → ℝ≥0∞) (hinj : Set.InjOn m {ξ | h ξ ≠ 0})
     (hh : ∀ ξ, h ξ ≤ ∏ p, ENNReal.ofReal (((1 + |(m ξ p : ℝ)| / b p) ^ 2)⁻¹)) :
@@ -712,7 +703,7 @@ theorem tsum_le_prod_of_injOn {S P : Type} [Fintype P] (m : S → P → ℤ) (b 
         ENNReal.tsum_le_tsum fun ξ => hh ξ
     _ ≤ ∑' x : P → ℤ, ∏ p, g p (x p) :=
         (by refine' _root_.le_trans _ (_root_.tsum_comp_le_tsum_of_injective hinj' _); exact _root_.le_rfl)
-    _ ≤ ∏ p, ∑' n, g p n := multi_dim g
+    _ ≤ ∏ p, ∑' n, g p n := _root_.UpperTheory.Reformulated.B.MultiDimensional.multi_dim g
     _ ≤ ∏ p, ENNReal.ofReal (1 + 2 * b p) :=
         Finset.prod_le_prod' fun p _ => one_dim (b p) (hb p)
 
@@ -1038,16 +1029,6 @@ theorem schwartz_col_bound {T : Type} [Fintype T] {M n : ℕ} (f : SchwartzMap (
 
 variable {D : D7}
 
-theorem mt_mul_inv (V : HSp D) (y : GA D V) :
-    (HMul.hMul (Formalism.L2.Theta.mt V y) (Formalism.L2.Theta.mt V y⁻¹) : Matrix (Fin V.rank) (Fin V.rank) (AE D)) = 1 := by
-  have h : (Formalism.L2.Theta.matHom V y) * (Formalism.L2.Theta.matHom V y⁻¹) = 1 := by
-    rw [← map_mul, mul_inv_cancel, map_one]
-  exact congrArg Units.val h
-
-theorem compAt_mul' (θ : InfFam D) (τ : D.what₂.Tau) {k m n : ℕ} (x : Mx D k m) (y : Mx D m n) :
-    compAt θ τ (HMul.hMul x y : Mx D k n) = HMul.hMul (compAt θ τ x) (compAt θ τ y) :=
-  Matrix.map_mul (f := (θ τ).comp (infPart D))
-
 theorem real_compare {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (n : ℕ) (C₁ : Set (GA D V)) (hC₁ : IsCompact C₁) :
     ∃ P : ℝ, 1 ≤ P ∧ ∀ y ∈ C₁, ∀ x : Mx D V.rank n,
       ‖(fun τ i j => compAt θ τ x i j : D.what₂.Tau → Fin V.rank → Fin n → ℂ)‖ ≤
@@ -1063,7 +1044,7 @@ theorem real_compare {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (n : ℕ) (
     fun τ i j => compAt θ τ (HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n) i j with hu
   have hx : ∀ τ, compAt θ τ x = HMul.hMul (compAt θ τ (Formalism.L2.Theta.mt V y))
       (compAt θ τ (HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n)) := fun τ => by
-    rw [← compAt_mul', ← Matrix.mul_assoc, mt_mul_inv, Matrix.one_mul]
+    rw [← _root_.GlobalTheory.WeilVacMove.compAt_mul, ← Matrix.mul_assoc, _root_.GlobalTheory.MixModel.mt_mul_inv, Matrix.one_mul]
   have hN : 0 ≤ (1 + V.rank * |R|) * ‖u‖ := by positivity
   refine (pi_norm_le_iff_of_nonneg hN).2 fun τ => (pi_norm_le_iff_of_nonneg hN).2 fun i =>
     (pi_norm_le_iff_of_nonneg hN).2 fun j => ?_
@@ -1114,7 +1095,7 @@ theorem finite_compare (V : HSp D) (n : ℕ)
         ⟨hy, subset_tsupport _ hne⟩, ?_⟩, rfl⟩⟩
   funext i j
   have e : (HMul.hMul (Formalism.L2.Theta.mt V y) (HMul.hMul (Formalism.L2.Theta.mt V y⁻¹) x : Mx D V.rank n) : Mx D V.rank n) = x := by
-    rw [← Matrix.mul_assoc, mt_mul_inv, Matrix.one_mul]
+    rw [← Matrix.mul_assoc, _root_.GlobalTheory.MixModel.mt_mul_inv, Matrix.one_mul]
   have e2 := congrFun (congrFun e i) j
   rw [Matrix.mul_apply] at e2
   show ∑ k, finPart D (Formalism.L2.Theta.mt V y i k) * finPart D _ = _
@@ -1365,8 +1346,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.SiegelFormula
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.theta_integral_le_fundamental_set : ∀ (D : D7) (V : HSp D) (ν : Measure (GA D V)), ν.IsHaarMeasure → ∀ {n : ℕ} (φ : Mx D V.rank n → ℂ), Continuous φ → ∀ S : Set (GA D V), MeasurableSet S → (∀ g, ∃ γ ∈ GQ V, γ * g ∈ S) → absThetaInt V ν φ ≤ ∫⁻ g in S, absTheta V φ g ∂ν := by
-  first | exact @GlobalTheory.CompanionTheory.WeilConv.absThetaInt_le_of_meets_orbits
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIntegralLeFundamentalSetStatement =====
@@ -1429,8 +1408,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.SiegelFormula
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.witt_frame_rank_le_witt_index : ∀ (D : D7) (V : HSp D) {r : ℕ} (Xf Yf : Matrix (Fin V.rank) (Fin r) D.host.E), GlobalTheory.SiegelSet.IsWittFrame D.sp.cm.sig V.gram Xf Yf → r ≤ Formalism.MainNotions.SchurIrreducible.wittIdx V := by
-  first | exact @GlobalTheory.CompanionTheory.WittFrame.length_le_wittIdx
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittFrameRankLeWittIndexStatement =====
@@ -1472,11 +1449,11 @@ theorem weilThetaConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSe
     rcases Nat.eq_zero_or_pos r with hr | hr
     · subst hr
       exact GlobalTheory.CompanionTheory.SiegelCone.cone_integral_zero_vars_lt_top D.host.F V.rank (2 * n) c
-    · have hw := GlobalTheory.T.witt_frame_rank_le_witt_index D V Xf Yf hW
+    · have hw := _root_.GlobalTheory.CompanionTheory.WittFrame.length_le_wittIdx D V Xf Yf hW
       have h2 : n + Formalism.MainNotions.SchurIrreducible.wittIdx V < V.rank := hV.resolve_left (by omega)
       exact _root_.GlobalTheory.SiegelSet.lintegral_cone_modulus_lt_top D.host.F V.rank r (2 * n) hc (by omega)
   calc absThetaInt V ν Φ.1 ≤ ∫⁻ g in S, absTheta V Φ.1 g ∂ν :=
-        GlobalTheory.T.theta_integral_le_fundamental_set D V ν hν Φ.1 hcontΦ S hSm hScov
+        _root_.GlobalTheory.CompanionTheory.WeilConv.absThetaInt_le_of_meets_orbits D V ν hν Φ.1 hcontΦ S hSm hScov
     _ ≤ C₁ * ∫⁻ t in GlobalTheory.SiegelSet.cone r c,
           ENNReal.ofReal (max C 0 * ∏ i, t i ^ (Module.finrank ℚ D.host.F * (2 * n))) *
             ENNReal.ofReal ((GlobalTheory.SiegelSet.modulus D.host.F V.rank t * ∏ i, t i)⁻¹) := by

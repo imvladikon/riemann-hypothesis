@@ -155,12 +155,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.adicIntegralTensorBasis_of_trace_mem_eventually : ∀ (L : Type) [Field L] [NumberField L] (κ : Type) (bL : Module.Basis κ ℚ L),
-    ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S, ∀ E : v.adicCompletion ℚ ⊗[ℚ] L,
-      (∀ i, Algebra.trace (v.adicCompletion ℚ) (v.adicCompletion ℚ ⊗[ℚ] L)
-          (E * ((1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] bL i)) ∈ v.adicCompletionIntegers ℚ) →
-        IsIntB v bL E := by
-  first | (exact @GlobalTheory.LocIntSpan.isIntB_of_trace_mem)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicIntegralTensorBasisOfTraceMemEventuallyStatement =====
@@ -177,11 +171,6 @@ noncomputable section
 
 namespace GlobalTheory.AdicSpan
 
-theorem isIntB_one_mul_cofinite : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C] (κ : Type) (b : Module.Basis κ ℚ C),
-    ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S,
-      IsIntB v b 1 ∧ ∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z) :=
-  isIntB_one_mul_eventually
-
 end GlobalTheory.AdicSpan
 end -- clump:auto
 end -- clump:auto
@@ -196,10 +185,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_finset_adicIntegralTensorBasis_one_mul : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C] (κ : Type) (b : Module.Basis κ ℚ C),
-    ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S,
-      IsIntB v b 1 ∧ ∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z) := by
-  first | (exact @GlobalTheory.AdicSpan.isIntB_one_mul_cofinite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetAdicIntegralTensorBasisOneMulStatement =====
@@ -266,10 +251,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.isIntegral_of_adicIntegralTensorBasis_ring : ∀ (v : HeightOneSpectrum ℤ) (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C] (κ : Type)
-    (b : Module.Basis κ ℚ C), IsIntB v b 1 → (∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z)) →
-      ∀ y, IsIntB v b y → IsIntegral (v.adicCompletionIntegers ℚ) y := by
-  first | (exact @GlobalTheory.AdicSpan.isIntegral_of_isIntB)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfAdicIntegralTensorBasisRingStatement =====
@@ -292,13 +273,13 @@ theorem isIntB_of_isIntB_conj : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteD
         IsIntB v b (↑X * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) ι E * ↑X⁻¹) →
         IsIntB v bL E := by
   intro C _ _ _ L _ _ ι hι κ b κ' bL
-  obtain ⟨S₁, h₁⟩ := GlobalTheory.T.exists_finset_adicIntegralTensorBasis_one_mul C κ b
-  obtain ⟨S₂, h₂⟩ := GlobalTheory.T.exists_finset_adicIntegralTensorBasis_one_mul L κ' bL
-  obtain ⟨S₃, h₃⟩ := GlobalTheory.T.adicIntegralTensorBasis_of_trace_mem_eventually L κ' bL
+  obtain ⟨S₁, h₁⟩ := _root_.GlobalTheory.AdicSpan.isIntB_one_mul_eventually C κ b
+  obtain ⟨S₂, h₂⟩ := _root_.GlobalTheory.AdicSpan.isIntB_one_mul_eventually L κ' bL
+  obtain ⟨S₃, h₃⟩ := _root_.GlobalTheory.LocIntSpan.isIntB_of_trace_mem L κ' bL
   refine ⟨S₁ ∪ S₂ ∪ S₃, fun v hv X E hE => ?_⟩
   simp only [Finset.mem_union, not_or] at hv
   obtain ⟨⟨hv1, hv2⟩, hv3⟩ := hv
-  have hint := GlobalTheory.T.isIntegral_of_adicIntegralTensorBasis_ring v C κ b (h₁ v hv1).1 (h₁ v hv1).2 _ hE
+  have hint := _root_.GlobalTheory.AdicSpan.isIntegral_of_isIntB v C κ b (h₁ v hv1).1 (h₁ v hv1).2 _ hE
   have hE' := isIntegral_of_isIntegral_conj X _ hint
   let F : v.adicCompletion ℚ ⊗[ℚ] L →ₐ[v.adicCompletion ℚ] v.adicCompletion ℚ ⊗[ℚ] C :=
     Algebra.TensorProduct.map (AlgHom.id (v.adicCompletion ℚ) (v.adicCompletion ℚ)) ι
@@ -310,7 +291,7 @@ theorem isIntB_of_isIntB_conj : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteD
     (isIntegral_algHom_iff (F.restrictScalars (v.adicCompletionIntegers ℚ)) hinj).1 (by simpa [hF] using hE')
   refine h₃ v hv3 E fun i => mem_of_isIntegral v ?_
   have hb : IsIntegral (v.adicCompletionIntegers ℚ) ((1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] bL i) :=
-    GlobalTheory.T.isIntegral_of_adicIntegralTensorBasis_ring v L κ' bL (h₂ v hv2).1 (h₂ v hv2).2 _ (isIntB_tmul_basis v bL i)
+    _root_.GlobalTheory.AdicSpan.isIntegral_of_isIntB v L κ' bL (h₂ v hv2).1 (h₂ v hv2).2 _ (isIntB_tmul_basis v bL i)
   exact GlobalTheory.DiscConductor.isIntegral_trace_of_isIntegral _ _ _ _ (hE''.mul hb)
 
 end GlobalTheory.LocIntSpan
@@ -327,13 +308,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.almost_all_places_twisted_unit_integral : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C] (L : Type) [Field L] [NumberField L]
-    (ι : L →ₐ[ℚ] C), Function.Injective ι → ∀ (κ : Type) (b : Module.Basis κ ℚ C) (κ' : Type)
-    (bL : Module.Basis κ' ℚ L), ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S,
-      ∀ (X : (v.adicCompletion ℚ ⊗[ℚ] C)ˣ) (E : v.adicCompletion ℚ ⊗[ℚ] L),
-        IsIntB v b (↑X * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) ι E * ↑X⁻¹) →
-        IsIntB v bL E := by
-  first | (exact @GlobalTheory.LocIntSpan.isIntB_of_isIntB_conj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlmostAllPlacesTwistedUnitIntegral =====
@@ -346,11 +320,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.eventually_adic_integral_span_closed_mul_star : ∀ (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ C] (σ : C →+* Cᵐᵒᵖ) (κ : Type)
-    (b : Module.Basis κ ℚ C), ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S,
-      (∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z)) ∧
-      (∀ y, IsIntB v b y → IsIntB v b (starT σ (v.adicCompletion ℚ) y).unop) := by
-  first | (exact @GlobalTheory.AdicSpan.isIntB_mul_star_eventually)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyAdicIntegralSpanClosedMulStarStatement =====
@@ -698,15 +667,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.adicIntegralTensorBasis_hensel_exists_unique_sqrt : ∀ (v : HeightOneSpectrum ℤ) (L : Type) [Field L] [NumberField L] (κ : Type) (bL : Module.Basis κ ℚ L),
-    Valued.v (2 : v.adicCompletion ℚ) = 1 → IsIntB v bL 1 →
-    (∀ x y, IsIntB v bL x → IsIntB v bL y → IsIntB v bL (x * y)) →
-    (∀ x y, IsIntB v bL x → IsSmallB v bL y → IsSmallB v bL (x * y)) →
-    ∀ u : v.adicCompletion ℚ ⊗[ℚ] L, IsIntB v bL u → IsSmallB v bL (u - 1) →
-    ∃ f : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ, IsIntB v bL ↑f ∧ IsIntB v bL ↑f⁻¹ ∧ (f : v.adicCompletion ℚ ⊗[ℚ] L) ^ 2 = u ∧
-      IsSmallB v bL (↑f - 1) ∧
-      ∀ g : v.adicCompletion ℚ ⊗[ℚ] L, IsIntB v bL g → g ^ 2 = u → IsSmallB v bL (g - 1) → g = ↑f := by
-  first | (exact @GlobalTheory.AdicSpan.HenselSqrt.exists_sqrt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicIntegralTensorBasisHenselExistsUniqueSqrtStatement =====
@@ -990,19 +950,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_twistedNorm_mod_maxIdeal_adicTensor : ∀ (v : HeightOneSpectrum ℤ) (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L), (∀ x, c (c x) = x) →
-    ∀ (κ : Type) (bL : Module.Basis κ ℚ L),
-    Valued.v (2 : v.adicCompletion ℚ) = 1 → IsIntB v bL 1 →
-    (∀ x y, IsIntB v bL x → IsIntB v bL y → IsIntB v bL (x * y)) →
-    (∀ x y, IsIntB v bL x → IsSmallB v bL y → IsSmallB v bL (x * y)) →
-    (∀ x, IsIntB v bL x → IsIntB v bL (Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c x)) →
-    ∀ θ : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ, IsIntB v bL ↑θ → IsIntB v bL ↑θ⁻¹ →
-    Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c ↑θ = -↑θ →
-    ∀ e : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ, Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c ↑e = ↑e →
-    IsIntB v bL ↑e → IsIntB v bL ↑e⁻¹ →
-    ∃ z : v.adicCompletion ℚ ⊗[ℚ] L, IsIntB v bL z ∧
-      IsSmallB v bL (z * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c z - ↑e) := by
-  first | (exact @GlobalTheory.ResidueNorm.exists_norm_mod_small)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistedNormModMaxIdealAdicTensorStatement =====
@@ -1125,7 +1072,7 @@ theorem unit_fixed_is_norm : ∀ (L : Type) [Field L] [NumberField L] (c : L →
       by rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, mul_inv_cancel₀ hθ, Algebra.TensorProduct.one_def],
       by rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, inv_mul_cancel₀ hθ, Algebra.TensorProduct.one_def]⟩
   have hσθ : σ ↑θu = -↑θu := by simp [θu, σ, hcθ, TensorProduct.tmul_neg]
-  obtain ⟨z, hzI, hzS⟩ := GlobalTheory.T.exists_twistedNorm_mod_maxIdeal_adicTensor v L c hc κ bL h2 h1 hmul hmulS hσI θu hθI hθI' hσθ e hee hei hei'
+  obtain ⟨z, hzI, hzS⟩ := _root_.GlobalTheory.ResidueNorm.exists_norm_mod_small v L c hc κ bL h2 h1 hmul hmulS hσI θu hθI hθI' hσθ e hee hei hei'
   set w := z * σ z with hwdef
   have hwσ : σ w = w := by simp only [w, map_mul, hσσ]; ring
   set u : v.adicCompletion ℚ ⊗[ℚ] L := ↑e⁻¹ * w with hudef
@@ -1133,7 +1080,7 @@ theorem unit_fixed_is_norm : ∀ (L : Type) [Field L] [NumberField L] (c : L →
   have huS : IsSmallB v bL (u - 1) := by
     have : u - 1 = ↑e⁻¹ * (w - ↑e) := by simp [u, mul_sub]
     rw [this]; exact hmulS _ _ hei' hzS
-  obtain ⟨f, hfI, hfI', hf2, hfS, huniq⟩ := GlobalTheory.T.adicIntegralTensorBasis_hensel_exists_unique_sqrt v L κ bL h2 h1 hmul hmulS u huI huS
+  obtain ⟨f, hfI, hfI', hf2, hfS, huniq⟩ := _root_.GlobalTheory.AdicSpan.HenselSqrt.exists_sqrt v L κ bL h2 h1 hmul hmulS u huI huS
   have hσu : σ u = u := by simp only [u, map_mul, hσinv e hee, hwσ]
   have hσf : σ ↑f = ↑f := by
     refine huniq _ (hσI _ hfI) (by rw [← map_pow, hf2, hσu]) ?_
@@ -1164,13 +1111,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount IsDedekindDomain GlobalTheory.AdicSpan
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.fixed_unit_eq_norm_almost_all_places : ∀ (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L), (∀ x, c (c x) = x) → (∃ x, c x ≠ x) →
-    ∀ (κ : Type) (bL : Module.Basis κ ℚ L), ∃ S : Finset (HeightOneSpectrum ℤ), ∀ v ∉ S,
-      ∀ e : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ,
-        Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c ↑e = ↑e → IsIntB v bL ↑e →
-        IsIntB v bL ↑e⁻¹ → ∃ y : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ,
-          (e : v.adicCompletion ℚ ⊗[ℚ] L) = ↑y * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c ↑y := by
-  first | (exact @GlobalTheory.LocNorm.unit_fixed_is_norm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FixedUnitEqNormAlmostAllPlacesStatement =====
@@ -1222,10 +1162,10 @@ theorem ratio_local_norm_dpair : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (�
   obtain ⟨S1, hS1⟩ := exists_finset_of_eventually (GlobalTheory.OrbFinAf.cptInt p G Ω hΩ)
   obtain ⟨S2, hS2⟩ := exists_finset_of_eventually
     (GlobalTheory.OrbFinAf.cptInt p G {P₁.toAf x₁ t₁ hx₁ P₁.self} isCompact_singleton)
-  obtain ⟨S3, hS3⟩ := GlobalTheory.T.eventually_adic_integral_span_closed_mul_star G.C G.star _ (Module.finBasis ℚ G.C)
-  obtain ⟨S4, hS4⟩ := GlobalTheory.T.eventually_integral_conjugators_differ_by_centralizer p G P₁.γ P₁.reg.1 P₁.reg.2 L ι hinj hcent _ (Module.finBasis ℚ G.C)
-  obtain ⟨S5, hS5⟩ := GlobalTheory.T.almost_all_places_twisted_unit_integral G.C L ι hinj _ (Module.finBasis ℚ G.C) _ (Module.finBasis ℚ L)
-  obtain ⟨S6, hS6⟩ := GlobalTheory.T.fixed_unit_eq_norm_almost_all_places L c hcc hcne _ (Module.finBasis ℚ L)
+  obtain ⟨S3, hS3⟩ := _root_.GlobalTheory.AdicSpan.isIntB_mul_star_eventually G.C G.star _ (Module.finBasis ℚ G.C)
+  obtain ⟨S4, hS4⟩ := _root_.GlobalTheory.LatStep.lattice_step p G P₁.γ P₁.reg.1 P₁.reg.2 L ι hinj hcent _ (Module.finBasis ℚ G.C)
+  obtain ⟨S5, hS5⟩ := _root_.GlobalTheory.LocIntSpan.isIntB_of_isIntB_conj G.C L ι hinj _ (Module.finBasis ℚ G.C) _ (Module.finBasis ℚ L)
+  obtain ⟨S6, hS6⟩ := _root_.GlobalTheory.LocNorm.unit_fixed_is_norm L c hcc hcne _ (Module.finBasis ℚ L)
   refine ⟨S1 ∪ S2 ∪ S3 ∪ S4 ∪ S5 ∪ S6 ∪ (finite_above p).toFinset, ?_⟩
   intro P hγ hcP hex a ha v hv
   obtain ⟨x, t, hx, hxΩ⟩ := hex
@@ -1388,17 +1328,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.definitePairs_ratio_locally_rational_times_norm : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (Ω : Set G.GAf), IsCompact Ω →
-    ∀ (P₁ : GlobalTheory.LKDef.DPair G) (L : Type) [Field L] [NumberField L] (ι : L →ₐ[ℚ] G.C) (c : L →ₐ[ℚ] L),
-    Function.Injective ι → (∀ z : G.C, z * P₁.γ = P₁.γ * z ↔ ∃ w, ι w = z) →
-    (∀ x, ι (c x) = P₁.β * sh G (ι x) * ((P₁.β⁻¹ : G.Cˣ) : G.C)) →
-    ∃ S : Finset (IsDedekindDomain.HeightOneSpectrum ℤ), ∀ (P : GlobalTheory.LKDef.DPair G), P.γ = P₁.γ → P.c = P₁.c →
-      (∃ (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t), P.toAf x t hx P.self ∈ Ω) →
-      ∀ a : L, ι a = ((P.β * P₁.β⁻¹ : G.Cˣ) : G.C) → ∀ v ∉ S,
-        ∃ (r : (v.adicCompletion ℚ)ˣ) (y : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ),
-          (1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] a = algebraMap (v.adicCompletion ℚ) (v.adicCompletion ℚ ⊗[ℚ] L) (r : v.adicCompletion ℚ) *
-            ((y : v.adicCompletion ℚ ⊗[ℚ] L) * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c y) := by
-  first | (exact @GlobalTheory.LocTriv.ratio_local_norm_dpair)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefinitePairsRatioLocallyRationalTimesNormStatement =====

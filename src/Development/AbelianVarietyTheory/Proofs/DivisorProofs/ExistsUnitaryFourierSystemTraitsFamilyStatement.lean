@@ -275,7 +275,7 @@ open Classical GlobalTheory.Poinc.Sep.ExactSums in
 theorem exact_of_isGeo : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (W : Matrix (Fin s) (Fin s) ℤ) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : O → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam) (Φ : VPre bar q W (X₁.M.Z.presheaf.stalk z₁)) (lab : Φ.Q → X₁.S.Gam), GlobalTheory.GSep.IsGeo X₁ z₁ act x₀ Φ lab → Φ.Exact (X₁.S.r * X₁.S.N) := by
   intro O _ bar q s W X₁ z₁ act x₀ Φ lab hG
   obtain ⟨hdiv, hlab, hmem⟩ := hG
-  obtain ⟨sg, eps, hlink⟩ := GlobalTheory.T.thetaConstants_translate_eq_twisted_sums O X₁ z₁ act x₀ hdiv
+  obtain ⟨sg, eps, hlink⟩ := _root_.GlobalTheory.GSep.twistSum_translate O X₁ z₁ act x₀ hdiv
   intro y κ c
   obtain ⟨𝔪, hT⟩ := hmem y
   haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)⟩
@@ -603,8 +603,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.USep
 
-theorem _root_.GlobalTheory.T.unitaryUniformisation_genericFibre_isPullback : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), ∀ (X₁ : GlobalTheory.GSep.GSet) (act : 𝓞 E → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (u : Sp (ratHull X₁.S.R) ⟶ Xo.XF c) (π : X₁.M.Z ⟶ C.Z), GlobalTheory.GSep.ULink C X₁ act u π → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], IsCN V → ∀ (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t) (yK : X₁.S.R →+* FractionRing V) (x' : Sp (FractionRing V) ⟶ Sp (ratHull X₁.S.R)), x' ≫ spMap (toRat X₁.S.R) = spMap yK → GenOf Xo c (x' ≫ u) t → ∃ φ : P.A.A.left ⟶ X₁.ρ.P.A.left, IsGrpPullback P.A.A X₁.ρ.P.A (spMap yK) φ ∧ LBIso P.A.L (X₁.ρ.P.L.pull φ) ∧ ∀ a, (letI := H.starRing; (P.oA.act (H.bar a)).left) ≫ φ = φ ≫ (act a).left := by
-  first | exact @GlobalTheory.USepGen.genfib_pull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryUniformisationGenericFibreIsPullbackStatement =====
@@ -628,7 +626,7 @@ theorem member_of_monomial_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   obtain ⟨t₁, P₁, p, hG₁, hlin, hpsi⟩ := GlobalTheory.T.exists_unitaryUniformisation_baseChange_injective E H Dw l Xo c V hV t y P hG V₁ ρ fK hV₁ hinj hloc hfK
   obtain ⟨yK, x', hyK, hx', hx'u⟩ := GlobalTheory.GSep.valPt_lies_over_unitary E H Dw hpq l Xo c C X₁ act u π hL z₁ V₁ ev (spMap fK ≫ y) hreg
     (hpt.trans (Category.assoc _ _ _).symm)
-  obtain ⟨φ, hcart, hwl, hact⟩ := GlobalTheory.T.unitaryUniformisation_genericFibre_isPullback E H Dw hpq l Xo c C X₁ act u π hL V₁ hV₁ t₁ P₁ yK x' hx'
+  obtain ⟨φ, hcart, hwl, hact⟩ := _root_.GlobalTheory.USepGen.genfib_pull E H Dw hpq l Xo c C X₁ act u π hL V₁ hV₁ t₁ P₁ yK x' hx'
     (by rw [hx'u]; exact hG₁)
   obtain ⟨wl, hwl⟩ := hwl
   let e₈ : (Fin 1 → P.D.toPre.X) ≃+ P₁.D.toPre.X := (AddEquiv.piUnique fun _ : Fin 1 => P.D.toPre.X).trans p.xe.symm
@@ -759,7 +757,7 @@ theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet
       (fun Z r z J J' hJ hJ' =>
         (Hr Z r z J J' hJ hJ').trans (congrArg (· * _) ((Fintype.prod_unique _).trans (zpow_one _))))
       (hx a) (X₁.ρ.fr_tors a) (hfr a).1 (fun z J J' hJ hJ' => ((hfr a).2 z J J' hJ hJ').symm)
-  obtain ⟨ρ', c, hc, hN, hmove⟩ := GlobalTheory.T.exists_renormalization_rigidification_multiple V _ 𝔪.D 𝔪.A 𝔪.G 𝔪.U.toUnifPre w₀ hw₀ ρ hρ
+  obtain ⟨ρ', c, hc, hN, hmove⟩ := _root_.GlobalTheory.Poinc.Renorm.exists_renorm V _ 𝔪.D 𝔪.A 𝔪.G 𝔪.U.toUnifPre w₀ hw₀ ρ hρ
   choose w' fr' hw' hfr' hov hco hval using fun a : C => liesOver_scale V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.U.toUnifPre (FractionRing V) w₀
     (g' a) (w a) (x (lab a)) (fr (lab a)) (hg a).2.1 (hfr _).1 (hg a).2.2 c hc
   have htors : ∀ a, (g' a).b ^ (X₁.S.r * X₁.S.N) = 1 := fun a => by
@@ -768,10 +766,10 @@ theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet
     have e := congrArg (GlobalTheory.TorusExt.gtProj 𝔪.D.toPre (FractionRing V)) ((GlobalTheory.TorusExt.isNsmul_iff_eq _ _ _).1 h₁)
     rw [map_nsmul] at e
     exact (congrArg Additive.toMul e).symm.trans ((isZero_iff o).1 h₂).1
-  choose b hb₁ hb₂ using fun a => GlobalTheory.T.torsionPoint_extends_over_normal_domain hL.1 V 𝔪.cn.1 𝔪.cn.2.1 𝔪.D.toPre.P _ hk (g' a).b (htors a)
+  choose b hb₁ hb₂ using fun a => _root_.GlobalTheory.Poinc.Tors.torsion_extend hL.1 V 𝔪.cn.1 𝔪.cn.2.1 𝔪.D.toPre.P _ hk (g' a).b (htors a)
   refine ⟨(c / 𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩) • s + 0, g', b, w', hb₂, fun a => (hg a).1, ?_, fun a => ⟨hw' a, ?_⟩,
     fun mu a => ?_⟩
-  · refine GlobalTheory.T.torsion_sections_exhaust_geometric_fibres hL.1 V 𝔪.cn.1 𝔪.D.toPre.P _ hk hu C b hb₁ fun p hp => ?_
+  · refine _root_.GlobalTheory.Poinc.Tors.torsion_exhaust_geometric hL.1 V 𝔪.cn.1 𝔪.D.toPre.P _ hk hu C b hb₁ fun p hp => ?_
     obtain ⟨a, ha⟩ := exhaust_of_labels hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U _ hk C g' (fun a => x (lab a)) (fun a => (hg a).1)
       (fun a a' e => by
         have h₁ := hg a
@@ -779,7 +777,7 @@ theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet
         generalize w a' = om at h₂
         generalize g' a' = ga at e om h₂
         subst e
-        exact GlobalTheory.T.eq_of_framedPoint_lies_over_torus_extension hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U _ w₀ hw₀ _ _ _ _ _ _ _ h₁.2.1 h₂.2.1 (hfr _).1 (hfr _).1
+        exact _root_.GlobalTheory.Poinc.Tors.OneOver.eq_of_liesOver hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U _ w₀ hw₀ _ _ _ _ _ _ _ h₁.2.1 h₂.2.1 (hfr _).1 (hfr _).1
           h₁.2.2 h₂.2.2)
       (fun q y hq hy => by
         have hyN : y ^ (X₁.S.r * X₁.S.N) = 1 := (hy w₀ hw₀).1
@@ -806,7 +804,7 @@ theorem isThetaTerms₀_of_terms : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet
     change spMap _ ≫ spMap _ ≫ jK V = spMap _ ≫ jK V
     rw [Algebra.algebraMap_self, show spMap (RingHom.id (FractionRing V)) = 𝟙 _ from Spec.map_id _, Category.id_comp]
   · obtain ⟨o, h₁, h₂⟩ := (hg a).1
-    exact GlobalTheory.T.torsion_frame_abelian_part_torsion_frame hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U _ w₀ ρ' hN _ hk _ o h₁ h₂ _ _ _ (hw' a) (hov a)
+    exact _root_.GlobalTheory.Poinc.Tors.FrameTors.frame_tors hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U _ w₀ ρ' hN _ hk _ o h₁ h₂ _ _ _ (hw' a) (hov a)
       (hmove _ _ _ _ _ (htf _) (hfr' a) (hval a))
   · have h₁ := ((CoefBasic.coef_basic V 𝔪.D.toPre (FractionRing V) 1 (g' a)).2.2 (w' a) (hw' a)).2.1
     have h₂ : coef (0 : Fam 𝔪.D.toPre (FractionRing V) 1) (g' a) (w' a) (𝔪.e₈ mu) = 0 := by
@@ -863,11 +861,6 @@ namespace GlobalTheory.GSep.UTower
 theorem spMap_comp_ring {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
     spMap g ≫ spMap f = spMap (g.comp f) :=
   (Spec.map_comp (CommRingCat.ofHom f) (CommRingCat.ofHom g)).symm
-
-theorem lbIso_pull_comp_of_eq {X Y Z : Scheme.{0}} {L : LB X} {M : LB Y} {a : Y ⟶ X} (h : LBIso M (L.pull a)) (j : Z ⟶ Y)
-    {a' : Z ⟶ X} (e : a' = j ≫ a) : LBIso (M.pull j) (L.pull a') :=
-  LBIso.chartPull (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull M j j rfl)
-    (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullSame L _ (fun _ => a) _ j fun _ => e) h
 
 theorem isMonHom_of_isGrpPullback {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [GrpObj G'] {f : S' ⟶ S}
     {φ : G'.left ⟶ G.left} (hφ : IsGrpPullback G' G f φ) (e : G ⟶ G) [IsMonHom e] (e' : G' ⟶ G')
@@ -941,10 +934,10 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   set om : X₁.S.R →+* S₂.R := (Subalgebra.inclusion hR).toRingHom.comp h with hom
   have hval : ∀ a, ((om a : S₂.R) : Ω₂) = algebraMap X₁.Ω₁ Ω₂ a := fun a => hh a
   have hcart : IsGrpPullback ρ₂.P.A X₁.ρ.P.A (spMap om) (φ₂ ≫ ψ) := by
-    rw [hom, ← spMap_comp_ring]
+    rw [hom, ← _root_.GlobalTheory.spMap_comp_ring]
     exact hpb₂.comp hpb
   have hlbc : LBIso ρ₂.P.L (X₁.ρ.P.L.pull (φ₂ ≫ ψ)) :=
-    LBIso.trans ρ₂.P.isLB (pull_isLB P.isLB _) (pull_isLB X₁.ρ.P.isLB _) hlb₂ (lbIso_pull_comp_of_eq hlb φ₂ rfl)
+    LBIso.trans ρ₂.P.isLB (pull_isLB P.isLB _) (pull_isLB X₁.ρ.P.isLB _) hlb₂ (_root_.GlobalTheory.Ex.GenericFibre.lbIso_pull hlb φ₂ rfl)
 
   have hφp := hcart.1
   have wε : ∀ a, ((φ₂ ≫ ψ) ≫ (act a).left) ≫ X₁.ρ.P.A.hom = ρ₂.P.A.hom ≫ spMap om := fun a => by
@@ -969,7 +962,7 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     X₁.M.qc X₁.M.sep _ hp hst
   have hs : M₂.s ≫ spMap κ = q ≫ X₁.M.s := by
     refine ext_of_isDominant M₂.pt ?_
-    rw [← Category.assoc, M₂.pt_s, spMap_comp_ring, ← Category.assoc, hqgen, hp]
+    rw [← Category.assoc, M₂.pt_s, _root_.GlobalTheory.spMap_comp_ring, ← Category.assoc, hqgen, hp]
   have hproj : IsProjOver M₂.s :=
     _root_.GlobalTheory.FiniteOverProj.isProjOver_of_isFinite_over X₁.o₁ o₂ κ M₂.Z X₁.M.Z X₁.M.s q M₂.s X₁.projM hq inferInstance hs
 
@@ -983,7 +976,7 @@ theorem deep_of_uLink : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     ((algebraMap X₁.Ω₁ Ω₂).comp (ratHull X₁.S.R).val.toRingHom).codRestrict (ratHull S₂.R) hrat
   have hrv : spMap (ratHull S₂.R).val.toRingHom ≫ spMap rh =
       spMap (algebraMap X₁.Ω₁ Ω₂) ≫ spMap (ratHull X₁.S.R).val.toRingHom := by
-    rw [spMap_comp_ring, spMap_comp_ring]
+    rw [_root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring]
     rfl
   have hUO₂ : UOver Xo c ρ₂.P (toRat S₂.R) (spMap rh ≫ u) := by
     refine (uOver_baseChange_iff hcart hlbc (toRat S₂.R)).2 ?_

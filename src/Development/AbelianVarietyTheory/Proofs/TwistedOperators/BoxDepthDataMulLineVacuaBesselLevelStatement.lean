@@ -403,7 +403,7 @@ theorem lineComp_mem_shift : OnStd fun {D} _ _ {sc} {G} W F => ∀ ρ (h : 2 * �
     GlobalTheory.T.depthLatticeGridRow_le_selfDualHomLatticeShift D hD T L μ0 hL sc G W Mv hM (2 * ρ + 1) (by omega) (by omega) hU1
   clear hU1 hu
   have hq : ∀ t ∈ G.Λ (.grid (2 * ρ + 1) 0), (F.dJ ρ h).q0 *ᵥ t ∈ G.Λ (.core (2 * ρ + 1)) :=
-    GlobalTheory.FinPl.CoreProj.wittCoreProjection_mem_lattice_of_splits (F.dJ ρ h) (GlobalTheory.FinPl.LocGlob.mem_of_mem_latV_all sdC) fun v => (hloc v).2
+    GlobalTheory.FinPl.CoreProj.wittCoreProjection_mem_lattice_of_splits (F.dJ ρ h) (_root_.GlobalTheory.FinPl.LocGlob.mem_of_local sdC) fun v => (hloc v).2
   have hu' : u = (F.dJ ρ h).p0 * ((F.dJ ρ h).j0 * u * (F.dB ρ h).p0) * (F.dB ρ h).j0 := by
     simp only [← Matrix.mul_assoc, HypDec.p0_j0, Matrix.one_mul]
     rw [Matrix.mul_assoc u, HypDec.p0_j0, Matrix.mul_one]
@@ -1233,11 +1233,6 @@ theorem half_adj {m n : ℕ} {e : AE D} {x : Mx D m n} (hx : IsHalf e x) : IsHal
   show cA D e * cA D (x j i) = cA D (x j i)
   rw [← map_mul, hx]
 
-theorem split_conj {e : AE D} (he : IsSplitIdem D e) : IsSplitIdem D (cA D e) := by
-  obtain ⟨h1, h2, v, ε, hv, h3⟩ := he
-  exact ⟨by rw [← map_mul, h1], by rw [GlobalTheory.DualPairCheck.cA_cA, mul_comm, h2], v, ε, hv,
-    by rw [GlobalTheory.DualPairCheck.cA_cA, add_comm, h3]⟩
-
 theorem kap_half {L : HSp D} {ζ ζ' : Fin L.rank → D.host.E} (h : IsLineVec L ζ') (l : Lnk L ζ L ζ') (S : HSp D)
     {e : AE D} {w : WO S L} (hh : IsHalf e (l.κ S w)) : IsHalf (cA D e) w := by
   obtain ⟨σ, hστ, _⟩ := GlobalTheory.Unf.LinkGram.exists_inv_of_rank_one h.1 h.1 l.τ (lnk_tau_ne h l)
@@ -1253,7 +1248,7 @@ theorem kappa_vac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), (∀ x, ‖ψ
   · have e2 : (2 • l.κ S w : WO L S) = l.κ S (2 • w) := by rw [two_nsmul, two_nsmul, kap_add h l]
     rw [e2]
     exact kap_heis ψ hψ h l S Ξ _ (hv.1 w hw)
-  · exact kap_heis ψ hψ h l S Ξ w (hv.2 (cA D e) (split_conj he) w hw (kap_half h l S hh))
+  · exact kap_heis ψ hψ h l S Ξ w (hv.2 (cA D e) (_root_.GlobalTheory.SplitScalar.isSplitIdem_conj he) w hw (kap_half h l S hh))
 
 end GlobalTheory.KapVac
 end -- clump:auto

@@ -1355,10 +1355,6 @@ theorem exists_finset_trSet (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteVa
 
 variable {D : D7}
 
-theorem suppAt_conj' {e : Formalism.L2.Theta.AE D} {V : HSp D} {g : GA D V} (hg : Formalism.L2.Theta.SuppAt e V g) :
-    Formalism.L2.Theta.SuppAt (cA D e) V g := fun i j => by
-  rw [GlobalTheory.DualPairCheck.cA_cA, add_comm]; exact hg i j
-
 theorem suppAt_one' (e : Formalism.L2.Theta.AE D) (V : HSp D) : Formalism.L2.Theta.SuppAt e V 1 := fun i j => by
   rw [GlobalTheory.AdelicLatMove.mt_one, sub_self, Matrix.zero_apply, mul_zero]
 
@@ -1371,7 +1367,7 @@ theorem exists_scalar (hW : IsWeilDatumO ψ S T χS χT om) {e : Formalism.L2.Th
     {h : GA D T} (hg : Formalism.L2.Theta.SuppAt e S g) (hh : Formalism.L2.Theta.SuppAt e T h) :
     ∃ s : ℂ, s ≠ 0 ∧ ∀ ℓ, InvForm ψ S T e ℓ → ∀ f, IsThetaFunO ψ S T f → ℓ (om (g, h) f) = s * ℓ f := by
   have he' := isSplitIdem_conj he
-  obtain ⟨r, hr, H⟩ := hW.om_split (cA D e) he' g h (suppAt_conj' hg) (suppAt_conj' hh) _ _
+  obtain ⟨r, hr, H⟩ := hW.om_split (cA D e) he' g h (_root_.GlobalTheory.SplitPlace.suppAt_conj hg) (_root_.GlobalTheory.SplitPlace.suppAt_conj hh) _ _
     (GlobalTheory.VecInv.isDetAt_detAt _ he'.1 S g) (GlobalTheory.VecInv.isDetAt_detAt _ he'.1 T h)
   refine ⟨_, mul_ne_zero (Complex.ofReal_ne_zero.2 hr.ne') (Circle.coe_ne_zero _), fun ℓ hℓ => H ℓ fun u hu => hℓ u ?_⟩
   rw [GlobalTheory.DualPairCheck.cA_cA] at hu
@@ -1701,7 +1697,7 @@ theorem piece (R : RealDat D A Ks) (hL : R.toLevCh.Is A.μ0) (hω : R.thP_ωP) (
     simp only [Matrix.smul_apply, smul_eq_mul] at this
     rw [Matrix.sub_apply]
     linear_combination -this
-  obtain ⟨s, hs0, hs⟩ := exists_scalar hW he.1 (suppAt_one' e (Vc D i)) hh'
+  obtain ⟨s, hs0, hs⟩ := exists_scalar hW he.1 (_root_.GlobalTheory.WeilUniq.suppAt_one e (Vc D i)) hh'
   set E : Matrix (Fin D.R.r ⊕ Fin D.R.t) (Fin D.R.r) (OI v) := Matrix.fromRows 1 0 with hE
   set x₀ := σ (E.map (algebraMap (OI v) (Fv D.host.F v))) with hx₀
   set A₁ := halfPow φ (Vc D i) (Wc D i) (frCo φ (R.βV i)) (frCo φ (R.βW i)) e ϖ 1 with hA₁

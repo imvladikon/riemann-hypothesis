@@ -104,15 +104,13 @@ section -- clump:auto
 
 namespace Formalism.SLP.GlobalBoundRefinements.Final
 
-theorem autCount : Formalism.SLP.GlobalBoundRefinements.AutCount := Formalism.SLP.GlobalBoundRefinements.P.card_linearEquiv_le
-
 end Formalism.SLP.GlobalBoundRefinements.Final
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HyperbolicPlaceProducts.ArithmeticCountRevised =====
 
 -- ===== clump member: Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.IdealsOfNormEqIndexSet =====
--- clump-header: {"m": "Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.IdealsOfNormEqIndexSet", "h": "module\n\npublic import Formalism.FlagUnipotentLattices.CardSubmodulesAndLinearEquivBounds\npublic import Formalism.HyperbolicPlaceProducts.SubgroupIndexCounts.CountO\npublic import Formalism.HyperbolicPlaceProducts.ArithmeticCountRevised\npublic import Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\npublic import Mathlib.Data.Nat.Choose.Dvd\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.IdealsOfNormEqIndexSet", "h": "module\n\npublic import Formalism.FlagUnipotentLattices.CardSubmodulesAndLinearEquivBounds\npublic import Formalism.HyperbolicPlaceProducts.SubgroupIndexCounts.CountO\npublic import Formalism.HyperbolicPlaceProducts.ArithmeticCountRevised\npublic import Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\npublic import Mathlib.Data.Nat.Choose.Dvd\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -121,14 +119,14 @@ open scoped BigOperators ComplexConjugate
 
 namespace Formalism.HermitianLatticeCounting.P
 
-theorem submodule_automorphism_count : CardSubmodulesAndLinearEquivBounds := ⟨Formalism.SLP.Final.submoduleCountDed, Formalism.SLP.GlobalBoundRefinements.Final.autCount⟩
+theorem submodule_automorphism_count : CardSubmodulesAndLinearEquivBounds := ⟨_root_.Formalism.SLP.P.card_submodules_le_of_dedekind, _root_.Formalism.SLP.GlobalBoundRefinements.P.card_linearEquiv_le⟩
 
 theorem ideal_count_statement : CardSubmodulesOfIndexLePow := by
   intro E _ _ M _ _ _ _ k j hj hk
-  obtain ⟨hfin, hcard⟩ := Formalism.SLP.Final.submoduleIndexCountO E M j hj
+  obtain ⟨hfin, hcard⟩ := _root_.Formalism.SLP.P.card_submodules_of_index_le E M j hj
   refine ⟨hfin, ?_⟩
   have hd : 1 ≤ finrank ℚ E := Module.finrank_pos
-  have hom := Formalism.SLP.Final.omegaPow (finrank ℚ E) j hd hj
+  have hom := _root_.Formalism.SLP.P.pow_primeFactors_length_le (finrank ℚ E) j hd hj
   have hj1 : (1 : ℝ) ≤ j := by exact_mod_cast hj
   calc ((({N : Submodule (NumberField.RingOfIntegers E) M | N.toAddSubgroup.index = j}.ncard : ℕ)) : ℝ)
       ≤ ((finrank ℚ E ^ (Nat.primeFactorsList j).length *
@@ -507,7 +505,7 @@ theorem ideal_norm_le_count : IdealNormLeCount := by
     rw [← Set.ncard_eq_toFinset_card _ (Ideal.finite_setOf_absNorm_eq _)]
     have e1 : (({I : Ideal (𝓞 K) | Ideal.absNorm I = n}.ncard : ℕ) : ℝ) ≤ (d : ℝ) ^ (Nat.primeFactorsList n).length := by
       exact_mod_cast normCount_lemma K n hn1
-    have e2 := Formalism.SLP.Final.omegaPow d n hd hn1
+    have e2 := _root_.Formalism.SLP.P.pow_primeFactors_length_le d n hd hn1
     have e3 : (n : ℝ) ^ Real.logb 2 d ≤ x ^ Real.logb 2 d :=
       Real.rpow_le_rpow (by positivity) ((Nat.cast_le.2 hn2).trans (Nat.floor_le hx0.le)) hL
     linarith

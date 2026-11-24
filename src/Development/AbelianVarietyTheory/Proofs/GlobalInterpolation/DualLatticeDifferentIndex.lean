@@ -111,11 +111,7 @@ namespace GlobalTheory.StdDual
 
 variable (F : Type) [Field F] [NumberField F]
 
-theorem traceInf_algebraMap (x : F) :
-    traceInf F (algebraMap F (Ainf F) x) = ((Algebra.trace ℚ F x : ℚ) : ℝ) := by
-  first
-  | (apply _root_.GlobalTheory.TraceSumRealEmbeddings.traceInf_algebraMap <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TraceSumRealEmbeddings.traceInf_algebraMap ..)
+alias traceInf_algebraMap := _root_.GlobalTheory.TraceSumRealEmbeddings.traceInf_algebraMap
 
 variable {F}
 

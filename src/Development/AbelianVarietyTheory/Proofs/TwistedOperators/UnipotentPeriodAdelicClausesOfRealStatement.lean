@@ -410,8 +410,6 @@ open GlobalTheory.ChainFr GlobalTheory.SepRows GlobalTheory.SepPer Matrix
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.mem_ideal_smul_adelicPointRationalLattice : ∀ (D : D7) (V : HSp D) (Λ : Lat V) (𝔪 : Ideal (𝓞 D.host.E)), IsSelfDualC V Λ → ∀ (x : GA D V) (y : Fin V.rank → D.host.E), (Lev.finE V x⁻¹).1 *ᵥ (fun i => y i ⊗ₜ[D.host.F] (1 : Formalism.L2.Herm.Af D.host.F)) ∈ Formalism.L2.Herm.hatL (F := D.host.F) (𝔪 • Λ) → y ∈ 𝔪 • latAt Λ x := by
-  first | exact @GlobalTheory.SepLatIdeal.mem_smul_latAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemIdealSmulAdelicPointRationalLatticeStatement =====
@@ -515,16 +513,6 @@ theorem unitaryEmbedding_fixes_vectors {Y V : HSp D} {c : ℕ} {ε : D.host.E} (
   rw [GlobalTheory.UnitaryEmbeddingProperties.unitaryEmbedding_matrix_formula]
   simp only [GlobalTheory.UnitaryEmbeddingProperties.ex, Matrix.add_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hQ, Matrix.mulVec_zero, add_zero]
 
-theorem summandEmbedding_mem_infiniteCompact {Y V : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogonalExtensionData Y V c ε) {a : GA D Y} (ha : a ∈ GinfC Y) :
-    stabilizerEmbedding d a ∈ GinfC V := by
-  show finHom V (stabilizerEmbedding d a) = 1
-  apply Units.ext
-  show ((matHom V (stabilizerEmbedding d a)).1).map (Algebra.TensorProduct.map (sndA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom = 1
-  rw [GlobalTheory.UnitaryEmbeddingProperties.unitaryEmbedding_matrix_formula, GlobalTheory.UnitaryEmbeddingProperties.ex_map]
-  have h1 : ((matHom Y a).1).map (Algebra.TensorProduct.map (sndA D.host.F) (AlgHom.id D.host.F D.host.E)).toRingHom = 1 :=
-    congrArg Units.val ha
-  rw [h1, GlobalTheory.UnitaryEmbeddingProperties.ex_one]
-
 theorem summandEmbedding_mem_finiteCompact {Y V : HSp D} {c : ℕ} {ε : D.host.E} (d : HermitianOrthogonalExtensionData Y V c ε) {b : GA D Y} (hb : b ∈ GfC Y) :
     stabilizerEmbedding d b ∈ GfC V := by
   show infHom V (stabilizerEmbedding d b) = 1
@@ -573,7 +561,7 @@ theorem coef_split (θ : InfFam D) {Y V : HSp D} (d : HermitianOrthogonalExtensi
     (K : Subgroup (GL (Fin V.rank) (Lev.EAf D))) (u : ∀ τ, M.H τ) (g : GA D V) (a : GinfC Y) (b : GfC Y) :
     coef θ M K u u (g * stabilizerEmbedding d ((a : GA D Y) * b)) =
       coefR θ M u u (g * stabilizerEmbedding d a) * (if Lev.finE V (g * stabilizerEmbedding d b) ∈ K then (1 : ℂ) else 0) := by
-  have ha := summandEmbedding_mem_infiniteCompact d a.2
+  have ha := _root_.GlobalTheory.RealType.Emb_mem_inf d a.2
   have hb := summandEmbedding_mem_finiteCompact d b.2
   have e1 : g * stabilizerEmbedding d ((a : GA D Y) * b) = g * stabilizerEmbedding d a * stabilizerEmbedding d b := by
     rw [GlobalTheory.UnitaryEmbeddingProperties.unitaryEmbedding_mul, mul_assoc]
@@ -649,7 +637,7 @@ theorem vanish {Y V : HSp D} (d : HermitianOrthogonalExtensionData Y V 1 1) (Λ 
     funext i
     simp only [Pi.sub_apply, TensorProduct.sub_tmul]
   rw [e, summandEmbedding_inv] at h4
-  exact GlobalTheory.T.mem_ideal_smul_adelicPointRationalLattice D V Λ 𝔪 hΛ (stabilizerEmbedding d x) (z - zv d) h4
+  exact _root_.GlobalTheory.SepLatIdeal.mem_smul_latAt D V Λ 𝔪 hΛ (stabilizerEmbedding d x) (z - zv d) h4
 
 end GlobalTheory.SepPer.AdelicFromReal
 

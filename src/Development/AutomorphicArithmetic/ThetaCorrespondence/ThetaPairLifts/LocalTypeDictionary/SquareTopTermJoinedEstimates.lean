@@ -268,22 +268,6 @@ namespace GlobalTheory.FunObj.StdDatum
 
 variable {D : D7}
 
-theorem om_sum {δ : ℂ} {a d : ℕ} {e0 : VC D a d → ℂ} (W : WeilO D ⊤ δ a d e0) (g : GA D a) (g' : GA D d) {ι : Type}
-    (s : Finset ι) (F : ι → VC D a d → ℂ) (hF : ∀ i ∈ s, F i ∈ TT D (tor0 D ⊤ δ) a d) :
-    W.Om g g' (∑ i ∈ s, F i) = ∑ i ∈ s, W.Om g g' (F i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-    simp only [Finset.sum_empty]
-    have h0 : (0 : VC D a d → ℂ) ∈ TT D (tor0 D ⊤ δ) a d := (GlobalTheory.FinWeil.TTs D (tor0 D ⊤ δ) a d).zero_mem
-    have := W.smul g g' 0 0 h0
-    simpa using this
-  | insert x s hx ih =>
-    rw [Finset.sum_insert hx, Finset.sum_insert hx,
-      W.add g g' _ (hF x (Finset.mem_insert_self _ _)) _
-        ((GlobalTheory.FinWeil.TTs D (tor0 D ⊤ δ) a d).sum_mem fun i hi => hF i (Finset.mem_insert_of_mem hi)),
-      ih fun i hi => hF i (Finset.mem_insert_of_mem hi)]
-
 theorem exists_bottom_big : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}, L.Is μ₀ → ∀ (G : GridData L sc), IsCoprime (condE G.pl) D.host.𝔟 → ∀ {δ t0 : ℂ}, Crv D ⊤ δ → GL3Theta.IsTwoTorsionPointUnkilled D (lamOf D ⊤ δ) t0 → ∀ (i j : Fin D.R.m) (χβ : HeckeU D (botBig D i j)), (∀ x, χβ.f x = (betaH G i j)⁻¹.1 (finIdl D x)) → ∀ (χν : HeckeU D (botBig D i j + botSmall D i j)), (∀ x, χν.f x = (nuH G μ₀ i j)⁻¹.1 (finIdl D x)) → (∀ τ, ((botBig D i j + botSmall D i j : ℕ) : ℤ) ≤ χν.n τ) → ∃ P : GlobalTheory.NormSum.Pair D ⊤ δ t0 (levQ G.pl), P.a = botBig D i j ∧ P.d = botBig D i j + botSmall D i j ∧ HasChars P (betaH G i j)⁻¹ (nuH G μ₀ i j)⁻¹ ∧ IsStdDatum P (condE G.pl) 0 ∧ IsBlockLevel P (condE G.pl) (botBig D i j) := by
   intro D T L sc μ₀ hL G hb δ t0 hc ht i j χβ hβ χν hν hn
   have hd : Even (botBig D i j + botSmall D i j) := by
@@ -307,7 +291,7 @@ theorem exists_bottom_big : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   have hfix : ∀ k ∈ intG D (botBig D i j), W.Om k 1 (stdSum W (condE G.pl) 0 R) = stdSum W (condE G.pl) 0 R := by
     intro k hk
     unfold stdSum
-    rw [om_sum W k 1 R _ fun r _ => W.maps _ _ _ hcv]
+    rw [_root_.GlobalTheory.FunObj.StdDatum.CapelliMinorMembership.om_finsum W k 1 R _ fun r _ => W.maps _ _ _ hcv]
     have e1 : ∀ r, W.Om k 1 (W.Om r 1 (cosetV D δ (condE G.pl) 0 _ _ e0)) = W.Om (k * r) 1 (cosetV D δ (condE G.pl) 0 _ _ e0) := by
       intro r
       have := W.mul k r 1 1 _ hcv
@@ -542,19 +526,7 @@ namespace GlobalTheory.FunObj.SqNum.MeanValLow
 
 variable {K : Type} [Field K] [NumberField K]
 
-theorem vw_eq_zero_of_notMem (w : Formalism.PairingDivisionLocalBalance.Pl K) {a : 𝓞 K} (ha : a ∉ w.asIdeal) : Formalism.DivisionValues.vw w (a : K) = 0 := by
-  classical
-  have ha0 : (Ideal.span {a} : Ideal (𝓞 K)) ≠ 0 := by
-    rw [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    rintro rfl
-    exact ha w.asIdeal.zero_mem
-  unfold Formalism.DivisionValues.vw
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ ha0]
-  by_contra h
-  have h' : (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {a})).factors ≠ 0 := by
-    intro h0
-    exact h (by rw [h0]; rfl)
-  exact ha (Ideal.dvd_span_singleton.1 ((Associates.count_ne_zero_iff_dvd ha0 w.irreducible).1 h'))
+alias vw_eq_zero_of_notMem := _root_.GlobalTheory.Square.vw_eq_zero_of_notMem
 
 theorem vw_int_nonneg (w : Formalism.PairingDivisionLocalBalance.Pl K) (a : 𝓞 K) : 0 ≤ Formalism.DivisionValues.vw w (a : K) := by
   unfold Formalism.DivisionValues.vw
@@ -686,8 +658,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain
 open Classical
 
-theorem _root_.GlobalTheory.T.square_nu_twisted_tuple_isCMValueHeckeCharacter : ∀ {D : Formalism.BasicNotions.D7} {T : Type} {L : Formalism.IndefR.Links.LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} (G : GlobalTheory.ChiGrid.GridData L sc) {μ₀ : T}, L.Is μ₀ → ∀ (t : T) (i j : Fin D.R.m) {s : ℕ}, s ≤ GlobalTheory.FunObj.SqNum.halfRank D i j → GlobalTheory.CMVal.IsValChar (GlobalTheory.FunObj.SqNum.cmPhi D) s (GlobalTheory.FunObj.SqNum.kap D sc.cGap i j s) (GlobalTheory.FunObj.SqNum.condF G.pl) ((GlobalTheory.SqTop.twPl G t).image fun P => P.under (𝓞 D.host.F)) (GlobalTheory.FunObj.SqNum.nuH G t i j) := by
-  first | exact @GlobalTheory.SqTop.TwVal.isValChar_nu_twist
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareNuTwistedTupleIsCMValueHeckeCharacterStatement =====
@@ -760,13 +730,6 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc)
 
 
 open Classical in
-theorem twist_val {μ₀ : T} (hL : L.Is μ₀) (t : T) (i j : Fin D.R.m) {s : ℕ} (hs : s ≤ halfRank D i j) :
-    IsValChar (cmPhi D) s (kap D sc.cGap i j s) (condF G.pl)
-      ((GlobalTheory.SqTop.twPl G t).image fun P => P.under (𝓞 D.host.F)) (nuH G t i j) :=
-  GlobalTheory.T.square_nu_twisted_tuple_isCMValueHeckeCharacter G hL t i j hs
-
-
-open Classical in
 theorem squareTopTwistPlaces_coprime_splitPlaces {μ₀ : T} (hL : L.Is μ₀) (t : T) :
     IsFinSetSplitPlacesCoprimeConductor (condF G.pl) ((GlobalTheory.SqTop.twPl G t).image fun P => P.under (𝓞 D.host.F)) :=
   _root_.GlobalTheory.KummerTwistLemmas.twist_places_under_split_coprime_conductor G hL t
@@ -788,10 +751,6 @@ theorem vw_pow {K : Type} [Field K] [NumberField K] (w : Formalism.PairingDivisi
     vw w (z ^ n) = n * vw w z := by
   unfold vw
   rw [← FractionalIdeal.spanSingleton_pow, FractionalIdeal.count_pow]
-
-theorem over_under {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (𝓞 E)) :
-    Over P (P.under (OF E)) := rfl
-
 
 open Classical in
 theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.ToricDenominator) {D : D7} {T : Type} {Lc : LevCh D T} {sc : Consts} {μ₀ : T}
@@ -819,10 +778,10 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
 
   obtain ⟨Q, hQdef⟩ : ∃ Q : Finset (HeightOneSpectrum (OF D.host.E)),
       Q = (GlobalTheory.SqTop.twPl G t).image fun P => P.under (𝓞 D.host.F) := ⟨_, rfl⟩
-  have hQval := twist_val G hL t i j hs2
-  have hQaux := squareTopTwistPlaces_coprime_splitPlaces G hL t
-  have hQram := twist_ram G hL t i j
-  have hQpr := twist_prime G t hl hlw hQw
+  have hQval := _root_.GlobalTheory.SqTop.TwVal.isValChar_nu_twist G hL t i j hs2
+  have hQaux := _root_.GlobalTheory.KummerTwistLemmas.twist_places_under_split_coprime_conductor G hL t
+  have hQram := _root_.GlobalTheory.SqTop.nuH_not_unrAt_twPl G hL t i j
+  have hQpr := _root_.GlobalTheory.twPl_under_not_mem_prime G t hl hlw hQw
   rw [← hQdef] at hQval hQaux hQpr
   have hex : ∀ q ∈ Q, ∃ P ∈ GlobalTheory.SqTop.twPl G t, P.under (𝓞 D.host.F) = q := fun q hq => by
     rw [hQdef] at hq
@@ -834,7 +793,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     simp only [Pq, dif_pos h]
     exact h.choose_spec
   have hov : ∀ q ∈ Q, Over (Pq q) q := fun q hq =>
-    (over_under (Pq q)).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
+    (_root_.GlobalTheory.CMVal.Euler.over_under (Pq q)).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
   have htor := GlobalTheory.ToricSumValue.toricSum_eq GlobalTheory.Published.HeckeEntire_holds D.host.E D.what₂.Tau (cmPhi D) hφ s
     (kap D sc.cGap i j s) (condF G.pl) Q (nuH G t i j) Pq Λ hU hs1 hbc hQaux hQval
     hov hΛ
@@ -860,7 +819,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
   have hV := ((H (kap D sc.cGap i j s) (condF G.pl) Λl (nuH G μ₀ i j) hbc hΛl hx.1) l hl Q hQaux hQpr).2
     (Lc.xiH t) (Λ s) hpic (hnu ▸ htor)
   obtain ⟨zc', hzc', hn⟩ := hden
-  obtain rfl : zc = zc' := classZetaVals_unique (by omega) hzc hzc'
+  obtain rfl : zc = zc' := _root_.GlobalTheory.ZetaValUnique.classZetaVals_unique (by omega) hzc hzc'
   set B := GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.betaBound_vp D.host.d s (kap D sc.cGap i j s) (condF G.pl) zc l with hB
   set N := ⌈B / 12⌉₊ with hN
   have hnl : n l = N := by rw [hn l hl]
@@ -876,7 +835,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
       exact hP.1.resolve_left hP.2
     exact G.pl.levelPlace_ne_basePlace t P hP' e
   have hram0 : ¬ (nuH G t i j).UnrAt (G.pl.w G.pl.v0) := by
-    have h1 := (hQval.2.2.2 G.pl.v0 (G.pl.w G.pl.v0) ((over_under _).trans (congrArg HeightOneSpectrum.asIdeal (G.pl.w_over _ (Finset.mem_insert_self _ _))))).2 hv0
+    have h1 := (hQval.2.2.2 G.pl.v0 (G.pl.w G.pl.v0) ((_root_.GlobalTheory.CMVal.Euler.over_under _).trans (congrArg HeightOneSpectrum.asIdeal (G.pl.w_over _ (Finset.mem_insert_self _ _))))).2 hv0
     rw [GlobalTheory.FunObj.SqNum.Model.expIn_condF, if_pos (G.pl.mem_S0_of_sum_eq.2 (Or.inl rfl)), condExp, if_pos rfl] at h1
     exact h1.not_unrAt one_ne_zero
   have hΛs : Λ s ≠ 0 := GlobalTheory.HeckePartial.IsHeckeL.ne_zero_of_one_le hQval.1
@@ -894,7 +853,7 @@ theorem core (hTD : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBo
     refine div_ne_zero (pow_ne_zero _ (mul_ne_zero ?_ hx0)) (pow_ne_zero _ (latDisc_ne_zero Λl))
     exact_mod_cast (cmValueConst_pos D.host.E (hfd.1.pos) (by omega) _).ne'
   rw [hbeta, pow_one, zpow_natCast] at hInt
-  have key := meanVal_lower D.what₂.embLL hp hβ0 (pow_ne_zero 12 hz0) hl hlw hInt
+  have key := _root_.GlobalTheory.FunObj.SqNum.meanVal_vw_ge_of_intAt D.what₂.embLL hp hβ0 (pow_ne_zero 12 hz0) hl hlw hInt
   rw [vw_pow w hz0] at key
   have h2 : ((-(N * vw w (l : D.what₂.LL)) : ℤ) : ℝ) ≤ (vw w z : ℝ) + meanVal_vw w p / 12 := by
     push_cast at key ⊢
@@ -1502,10 +1461,10 @@ namespace GlobalTheory.SqTop.BotNeFormula
 theorem bottomTheta_ne_zero_of_innerProduct_formula : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
     (∀ D, GlobalTheory.NormSum.Inp D) → LNe → BotSmall → NormBig → TriEx → BotNe := by
   intro hPr hK hM hI hL hB hN hT
-  have hLarge := _root_.GlobalTheory.T.theta_bottom_formula_large hPr hK hM hI hB
-  have hSmall := _root_.GlobalTheory.T.theta_bottom_formula_small hPr hK hM hI hB
-  have hMatch := _root_.GlobalTheory.T.rallis_bottom_minor_matching hPr hK hM hI hB
-  have hBasis := _root_.GlobalTheory.T.exists_bottom_basis_change hPr
+  have hLarge := _root_.GlobalTheory.BotFormula.rallis_bottom_formula_large_rank hPr hK hM hI hB
+  have hSmall := _root_.GlobalTheory.BotFormula.rallis_bottom_formula_small_rank hPr hK hM hI hB
+  have hMatch := _root_.GlobalTheory.BotMatch.theta_bottom_minor_match hPr hK hM hI hB
+  have hBasis := _root_.GlobalTheory.BottomRebase.bottom_basis_change hPr
   unfold LNe at hL
   unfold BotSmall at hB
   unfold NormBig at hN
@@ -1577,15 +1536,6 @@ theorem bottomTheta_ne_zero_of_innerProduct_formula : _root_.GlobalTheory.FunPr.
 end GlobalTheory.SqTop.BotNeFormula
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.bottomTheta_nonvanishing : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → (∀ D, GlobalTheory.NormSum.Inp D) → LNe → BotSmall → NormBig → TriEx → BotNe := by
-  exact _root_.GlobalTheory.SqTop.BotNeFormula.bottomTheta_ne_zero_of_innerProduct_formula
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BottomThetaNeZeroOfInnerProductFormula =====
@@ -1601,10 +1551,6 @@ open GlobalTheory.NormSum (Pair)
 open GlobalTheory.CMVal (IsHeckeL)
 
 namespace GlobalTheory.NormBigProof
-
-theorem squareBottomHalfRankSum_le_halfRank (D : Formalism.BasicNotions.D7) (i j : ℕ) : h0 D i j ≤ halfRank D i j := by
-  unfold h0 halfRank botBig botSmall
-  exact Nat.div_le_div_right (Nat.add_le_add (Nat.sub_le _ _) (Nat.sub_le _ _))
 
 end GlobalTheory.NormBigProof
 end -- clump:auto
@@ -1782,14 +1728,6 @@ end GlobalTheory.NormBigNe
 end
 end
 
-section
-open GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.big_theta_lift_ne_zero_of_petersson_norm : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → GlobalTheory.SqTop.LNe → GlobalTheory.SqTop.GBig fun {D} _ _ _ G _ _ _ _ =>
-  ∀ (δ t0 : ℂ) (i j : Fin D.R.m) t (Q : ℕ) (P P' : GlobalTheory.NormSum.Pair D ⊤ δ t0 Q),
-    GlobalTheory.FunObj.SqNum.IsBottom G t i j (GlobalTheory.SqTop.modT G t) P P' → P.norm ≠ 0 := by
-  first | exact @_root_.GlobalTheory.NormBigNe.big_theta_petersson_norm_ne_zero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BigThetaLiftNeZeroOfPeterssonNorm =====
@@ -1808,8 +1746,8 @@ namespace GlobalTheory.NormBigProof
 theorem normBig_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → LNe → NormBig := by
   intro hP hI hL
   obtain ⟨a1, k1⟩ := hL
-  obtain ⟨a2, k2⟩ := _root_.GlobalTheory.T.theta_lift_petersson_norm_ratio_formula hP hI ⟨a1, k1⟩
-  obtain ⟨a3, k3⟩ := _root_.GlobalTheory.T.big_theta_lift_ne_zero_of_petersson_norm hP hI ⟨a1, k1⟩
+  obtain ⟨a2, k2⟩ := _root_.GlobalTheory.NormRatio.big_theta_petersson_norm_ratio_eq hP hI ⟨a1, k1⟩
+  obtain ⟨a3, k3⟩ := _root_.GlobalTheory.NormBigNe.big_theta_petersson_norm_ne_zero hP hI ⟨a1, k1⟩
   refine ⟨max a1 (max a2 a3), fun ε CF hCF => ?_⟩
   obtain ⟨c1, x1, l1⟩ := k1 ε CF (le_trans (le_max_left _ _) hCF)
   obtain ⟨c2, x2, l2⟩ := k2 ε CF (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hCF)
@@ -1826,7 +1764,7 @@ theorem normBig_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, Glo
     obtain ⟨Λ₀, hΛ₀, hne⟩ := (hl i j).1 t₀
     have hprod : ∏ s ∈ Icc (1 - (e0 D i j : ℤ)) (h0 D i j : ℤ), Λ₀ s ≠ 0 :=
       prod_ne_zero_iff.2 fun s hs => hne s (mem_Icc.1 hs).1
-        (le_trans (mem_Icc.1 hs).2 (by exact_mod_cast squareBottomHalfRankSum_le_halfRank D i j))
+        (le_trans (mem_Icc.1 hs).2 (by exact_mod_cast _root_.GlobalTheory.SqTop.squareBottomHalfRankSum_le_halfRank D i j))
     have hn₀ : (P₀.norm : ℂ) ≠ 0 := by exact_mod_cast hz δ t0 i j t₀ Q₀ P₀ P₀' hb₀
     refine ⟨(P₀.norm : ℂ) / ∏ s ∈ Icc (1 - (e0 D i j : ℤ)) (h0 D i j : ℤ), Λ₀ s, div_ne_zero hn₀ hprod,
       fun t Q P P' Λ hb hΛ => ?_⟩
@@ -1866,23 +1804,19 @@ theorem square_top_term_joined_estimates : GlobalTheory.Published.HoweDualityRea
   have hDS : DenSum := GlobalTheory.DenSumPf.denSum hZD hF
   have hThb : ThbSt := _root_.GlobalTheory.SqTop.thbSt_of_inputs hTD hF hTor hDE hDS hBA
   have hBS : BotSmall := GlobalTheory.SqTop.BotSmallProof.botSmall_holds
-  have hBC : BotConst := _root_.GlobalTheory.T.botConst_of_theta_matching hPr hTI hLM hInp hBS hL
+  have hBC : BotConst := _root_.GlobalTheory.SqTop.botConst_of_inputs_alt hPr hTI hLM hInp hBS hL
   have hBE : BotEx := _root_.GlobalTheory.SqTop.botEx_holds hInp
   have hBET : BotExT := _root_.GlobalTheory.SqTop.botExT_holds hInp
   have hNB : NormBig := _root_.GlobalTheory.T.normBig_of_lNe hPr hInp hL
   have hRL : RhoLow := _root_.GlobalTheory.RhoLowProof.rhoLow_holds hTD hF hTor
   have hTri : TriEx := _root_.GlobalTheory.T.triEx_of_howe_duality_real hHD hPr hTI hLM hL
-  have hBN : BotNe := _root_.GlobalTheory.T.bottomTheta_nonvanishing hPr hTI hLM hInp hL hBS hNB hTri
-  have hTw : Tower := _root_.GlobalTheory.T.tower_of_theta_matching_lNe hPr hTI hLM hL
-  have hOne : OneSqSt := GlobalTheory.T.square_ratio_valuation_without_norm_formula hInp hL hTor hBS hBET hNB hBN hTri hTw hBC hRefl hRL
+  have hBN : BotNe := _root_.GlobalTheory.SqTop.BotNeFormula.bottomTheta_ne_zero_of_innerProduct_formula hPr hTI hLM hInp hL hBS hNB hTri
+  have hTw : Tower := _root_.GlobalTheory.SqTower.tower_alt_bis hPr hTI hLM hL
+  have hOne : OneSqSt := _root_.GlobalTheory.SqTop.OneSqNoSmall.oneSqSt_of_claims' hInp hL hTor hBS hBET hNB hBN hTri hTw hBC hRefl hRL
   exact ⟨hDS, hThb, hOne, hBS, hBN, hF, hTor, hDE, hBE, hL, hTri, hTw⟩
 end GlobalTheory.SqTop
 end
 
-section
-theorem _root_.GlobalTheory.T.square_leading_term_bound : GlobalTheory.Published.HoweDualityReal → _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.Published.HeckeFunctionalEquationAbs → GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.ToricDenominator → GlobalTheory.IndefiniteRowSideFullHecke.LatticeNormTransport.Transport → GlobalTheory.IndefiniteRowSideFullHecke.ZetaValueIdeals.ZetaDenominators → GlobalTheory.SqTop.Refl → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.SqTop.DenSum ∧ GlobalTheory.SqTop.ThbSt ∧ GlobalTheory.SqTop.OneSqSt ∧ GlobalTheory.SqTop.BotSmall ∧ GlobalTheory.SqTop.BotNe ∧ GlobalTheory.SqTop.FieldDat ∧ GlobalTheory.SqTop.TorEx ∧ GlobalTheory.SqTop.DenEx ∧ GlobalTheory.SqTop.BotEx ∧ GlobalTheory.SqTop.LNe ∧ GlobalTheory.SqTop.TriEx ∧ GlobalTheory.SqTop.Tower := by
-  first | exact @_root_.GlobalTheory.SqTop.square_top_term_joined_estimates
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SquareTopTermJoinedEstimates =====

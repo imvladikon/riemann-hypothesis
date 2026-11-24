@@ -157,7 +157,7 @@ theorem norm_evR_le (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
     simp only [Function.comp, FD.sgn]
     split_ifs <;> simp
   obtain ⟨W, Dc, A, θ, v, κ, he, hg, hw, hL, hmk, hA, hrd, hth, hmean, hvac, hprod⟩ :=
-    GlobalTheory.T.exists_analyticData_unitFrame_framedPoint E H Dw l Xo c σ r U hσ hU hr1 a n hDom k x huf
+    _root_.GlobalTheory.Dict.VSetup.exists_setup E H Dw l Xo c σ r U hσ hU hr1 a n hDom k x huf
   obtain ⟨-, -, hlen, -, -⟩ := hx_ortho E r (U.X k) W.g Dc.bas Dc.idx Dc.sympl x.1 x.2 hxo
   have hv0 := thLaValAt_evR nab hnab hΛu hΛt hΛl hP w hf hraw ℂ (unC U k x)
   have hM : 0 < l.M := by have := l.three_le; omega
@@ -507,7 +507,7 @@ theorem homN_raw_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : �
       Real.exp (-(((Formalism.L2.Pj.DF (T.Q.Dw j) a : ℕ) : ℝ) / 2) * Real.log (Real.pi * (2 * xiR D))) := by
     rw [AllWt.lieFacZ_wtZ, lieFac, show 2 * Real.pi * xiR D = Real.pi * (2 * xiR D) by ring]
     simp [Formalism.L2.Pj.DF]
-  have hsupp := card_support_le ((GlobalTheory.T.exists_integralHarmonic_ne_zero_and_isHomogeneous _ _ (T.Q.Dw j) Y.d.l₂ Y.d.c₂ a n).2 P hP.1)
+  have hsupp := card_support_le ((_root_.GlobalTheory.exists_harmA_ne_zero_and_isHomogeneous _ _ (T.Q.Dw j) Y.d.l₂ Y.d.c₂ a n).2 P hP.1)
   rw [card_letters, hcard, ← hpq] at hsupp
   rw [hlie, ← hpq]
   exact numbers D.R.f D.R.r n _ _ Lb _ _ _ _ _ ρ _ _ hL hf1 hr1 hrn hdκ hnκ hsz hfr hrd1 hrdL (by linarith)

@@ -147,16 +147,13 @@ theorem mem_of_val {v : HeightOneSpectrum (𝓞 F)} {a : v.adicCompletion F}
     (ha : Valued.v a ≤ 1) : a ∈ v.adicCompletionIntegers F :=
   (HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F v).2 ha
 
-theorem val_natCast_le (v : HeightOneSpectrum (𝓞 F)) (k : ℕ) : Valued.v (k : v.adicCompletion F) ≤ 1 :=
-  val_le_one (natCast_mem (HeightOneSpectrum.adicCompletionIntegers F v) k)
-
 theorem val_unit_of_rel (v : HeightOneSpectrum (𝓞 F)) (k : ℕ) {t q r : v.adicCompletion F}
     (hm : Valued.v (((2 * k + 1 : ℕ) : v.adicCompletion F)) < 1)
     (ht : Valued.v t ≤ 1) (hq : Valued.v q ≤ 1) (hr : Valued.v r ≤ 1)
     (h4 : (4 : v.adicCompletion F) = t * q + ((2 * k + 1 : ℕ) : v.adicCompletion F) * r) :
     Valued.v (-(k : v.adicCompletion F) * t) = 1 := by
   set M : v.adicCompletion F := ((2 * k + 1 : ℕ) : v.adicCompletion F) with hM
-  have hk : Valued.v (k : v.adicCompletion F) ≤ 1 := val_natCast_le v k
+  have hk : Valued.v (k : v.adicCompletion F) ≤ 1 := _root_.GlobalTheory.AdLat.valued_natCast_le_one v k
   have h2k : Valued.v (2 * (k : v.adicCompletion F)) = 1 := by
     have e : 2 * (k : v.adicCompletion F) = -1 + M := by rw [hM]; push_cast; ring
     rw [e, Valuation.map_add_eq_of_lt_left Valued.v (by rw [Valuation.map_neg, map_one]; exact hm),
@@ -249,7 +246,7 @@ theorem exists_adele_unit_congr_one : ∀ (D : D7) (m : ℕ), Odd m → ∀ (z y
     simp only [map_add (f := _), map_mul, map_natCast, map_ofNat] at this
     exact this
   have hMone : ∀ v, ¬ P v → Valued.v ((M : v.adicCompletion D.host.F)) = 1 := fun v hv =>
-    le_antisymm (val_natCast_le v M) (not_lt.1 hv)
+    le_antisymm (_root_.GlobalTheory.AdLat.valued_natCast_le_one v M) (not_lt.1 hv)
   have hMne : ∀ v, ¬ P v → (M : v.adicCompletion D.host.F) ≠ 0 := fun v hv h => by
     have := hMone v hv; rw [h, map_zero] at this; exact zero_ne_one this
   let eg : ∀ v : HeightOneSpectrum (𝓞 D.host.F), v.adicCompletion D.host.F := fun v => if P v then 1 else 0
@@ -541,9 +538,6 @@ theorem finPart_jF (b : Af D.host.F ⊗[D.host.F] D.host.E) : finPart D (jF D b)
   | tmul p q => rfl
   | add p q hp hq => rw [LinearMap.map_add (f := _), RingHom.map_add (f := _), hp, hq]
 
-theorem ext_parts {a b : AE D} (h1 : infPart D a = infPart D b) (h2 : finPart D a = finPart D b) : a = b := by
-  rw [← recon a, ← recon b, h1, h2]
-
 theorem exists_unit_parts (a : (Ainf D.host.F ⊗[D.host.F] D.host.E)ˣ) (b : (Af D.host.F ⊗[D.host.F] D.host.E)ˣ) :
     ∃ Y : (AE D)ˣ, infPart D (Y : AE D) = a ∧ finPart D (Y : AE D) = b := by
   have hI : ∀ a' b', infPart D (jI D a' + jF D b') = a' := fun a' b' => by
@@ -552,7 +546,7 @@ theorem exists_unit_parts (a : (Ainf D.host.F ⊗[D.host.F] D.host.E)ˣ) (b : (A
     rw [RingHom.map_add (f := _), finPart_jI, finPart_jF, zero_add]
   have h1 : (jI D (a : _) + jF D (b : _)) * (jI D ((a⁻¹ : (Ainf D.host.F ⊗[D.host.F] D.host.E)ˣ) : _) +
       jF D ((b⁻¹ : (Af D.host.F ⊗[D.host.F] D.host.E)ˣ) : _)) = 1 := by
-    apply ext_parts
+    apply _root_.GlobalTheory.SplitScalar.adele_ext
     · rw [RingHom.map_mul, hI, hI, Units.mul_inv, RingHom.map_one]
     · rw [RingHom.map_mul, hF, hF, Units.mul_inv, RingHom.map_one]
   exact ⟨⟨_, _, h1, by rw [mul_comm]; exact h1⟩, hI _ _, hF _ _⟩
@@ -645,7 +639,7 @@ theorem exists_root_one {D : D7} {V : HSp D} {M pd : ℕ} {k : Type} [Field k] {
   refine ⟨Yf * Yi, ?_, ?_⟩
   · unfold IsDetRoot
     generalize ((Yf * Yi : (AE D)ˣ) : AE D) = Y at hYI hYF ⊢
-    apply ext_parts
+    apply _root_.GlobalTheory.SplitScalar.adele_ext
     · calc infPart D Y = infPart D (y₀ : AE D) := hYI
         _ = infPart D ((matHom V u).1.det * sigR (AF D.host.F) D.sp.cm.sig (y₀ : AE D)) := congrArg (infPart D) hy₀
         _ = infPart D (matHom V u).1.det * infPart D (sigR (AF D.host.F) D.sp.cm.sig (y₀ : AE D)) := (infPart D).map_mul _ _
@@ -901,7 +895,7 @@ theorem mem_of_infPart {k : Type} [Field k] (σ : k →+* ℂ) (δ : Formalism.L
     exact hP ((Set.Finite.mem_toFinset _).2 h)
   let zz : (FiniteAdeleRing (𝓞 D.host.E) D.host.E)ˣ := Units.map ((ι : _ →+* _).comp (finPart D)).toMonoidHom x
   have hz0 : ∀ P, (zz : FiniteAdeleRing (𝓞 D.host.E) D.host.E) P ≠ 0 := (FiniteAdeleRing.isUnit_iff.1 zz.isUnit).1
-  obtain ⟨k, hk⟩ := exists_global_approx D.host.E Rm (fun P => (zz : FiniteAdeleRing (𝓞 D.host.E) D.host.E) P)
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.WeakApprox.exists_units_approx D.host.E Rm (fun P => (zz : FiniteAdeleRing (𝓞 D.host.E) D.host.E) P)
     (fun P _ => hz0 P)
   let K : (AE D)ˣ := Units.map (incA D).toMonoidHom k
   obtain ⟨-, a, b, -, -, hab, ha, hb⟩ := GlobalTheory.IdeleParts.congr_open_and_parts D
@@ -1086,16 +1080,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.TwistRat
 
-theorem curveOver_of_rayIn : GlobalTheory.Published.RayClassFieldSt → ∀ (D : D7) (Q : Par D), Q.PinHost → ∀ (N : ℕ), 3 ≤ N → ∀ (Fc : IntermediateField ℚ ℂ) (σ : Fc →+* ℂ), RayIn D N σ.fieldRange → GlobalTheory.CompRat.CurveOver Q.H Fc N := GlobalTheory.TwistRat.Field.curveOver_of_rayIn
-
-theorem twist_mem_fieldRange : ∀ (D : D7) (V : HSp D) (pd : ℕ) (k : Type) [Field k] (σ : k →+* ℂ) (δ : Formalism.L2.Host.HChar D.host.E) (δc : (AE D)ˣ →* Circle), IsTwist pd σ δ δc → ∀ dd : GA D V → ℂ, (MuVal V δc dd ∨ MuVal V δc⁻¹ dd) → ∀ g, dd g ∈ σ.fieldRange := GlobalTheory.TwistValues.mem_fieldRange
-
-theorem twist_eq_of_finHom : ∀ (D : D7) (V : HSp D) (pd : ℕ) (k : Type) [Field k] (σ : k →+* ℂ) (δ : Formalism.L2.Host.HChar D.host.E) (δc : (AE D)ˣ →* Circle), IsTwist pd σ δ δc → ∀ dd : GA D V → ℂ, (MuVal V δc dd ∨ MuVal V δc⁻¹ dd) → ∀ h h' : GA D V, finHom V h = finHom V h' → dd h = dd h' := GlobalTheory.TwistFinPart.twist_eq_of_finHom
-
-theorem twist_mul_left : ∀ (D : D7) (V : HSp D) (pd : ℕ) (k : Type) [Field k] (σ : k →+* ℂ) (δ : Formalism.L2.Host.HChar D.host.E) (δc : (AE D)ˣ →* Circle), IsTwist pd σ δ δc → ∀ dd : GA D V → ℂ, (MuVal V δc dd ∨ MuVal V δc⁻¹ dd) → ∀ γ ∈ GQ V, ∀ h : GA D V, dd (γ * h) = dd h := GlobalTheory.TwistLeft.twist_left
-
-theorem twist_mul_right : ∀ (D : D7) (V : HSp D) (M pd : ℕ) (k : Type) [Field k] (σ : k →+* ℂ) (δ : Formalism.L2.Host.HChar D.host.E) (δc : (AE D)ˣ →* Circle), IsAuxiliarySplitSquarefreeLevel D M pd → IsTwist pd σ δ δc → ∀ dd : GA D V → ℂ, (MuVal V δc dd ∨ MuVal V δc⁻¹ dd) → ∀ u : GA D V, Formalism.L2.Pj.gLat V u = ↑(Formalism.L2.Pj.latHat V) → GlobalTheory.Member.FinCong V (M * pd) u → ∀ h : GA D V, dd (h * u) = dd h := GlobalTheory.TwistRat.Right.dd_mul_right
-
 theorem muVal_cast {D : D7} {V W : HSp D} (h : V = W) (χ : (AE D)ˣ →* Circle) (dd : GA D W → ℂ) (hd : MuVal W χ dd) :
     MuVal V χ (castDict h.symm dd) := by
   subst h; exact hd
@@ -1123,18 +1107,18 @@ theorem isRat_twist : GlobalTheory.Published.RayClassFieldSt → ∀ (D : D7) (G
   have hpd : 0 < C.d.pd := hAux.1.pos
   have hN3 : 3 ≤ T.Q.l.M * C.d.pd := le_trans T.Q.l.three_le (Nat.le_mul_of_pos_right _ hpd)
   have hcurve : GlobalTheory.CompRat.CurveOver T.Q.H C.d.c₂.F (T.Q.l.M * C.d.pd) :=
-    curveOver_of_rayIn hRF D T.Q hL.pins.1 _ hN3 C.d.c₂.F C.σ₂ hRay
+    _root_.GlobalTheory.TwistRat.Field.curveOver_of_rayIn hRF D T.Q hL.pins.1 _ hN3 C.d.c₂.F C.σ₂ hRay
   set dd' : GA D (T.V ((i : ℕ) + 1) T.σ₀) → ℂ := castDict hV.symm dd with hdd'
   have hdd2 : MuVal _ δc dd' ∨ MuVal _ δc⁻¹ dd' :=
     hdd.imp (muVal_cast hV δc dd) (muVal_cast hV δc⁻¹ dd)
-  have hval := twist_mem_fieldRange D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2
+  have hval := _root_.GlobalTheory.TwistValues.mem_fieldRange D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2
   choose w hw using fun g => RingHom.mem_fieldRange.1 (hval g)
   have hinj : ∀ g g', dd' g = dd' g' → w g = w g' := fun g g' h => C.σ₂.injective (by rw [hw, hw, h])
   have key := (GlobalTheory.CoverComp.forms_mul_comp D T hL ((i : ℕ) + 1) ⟨Nat.succ_pos _, i.2⟩ T.σ₀ rfl C hU
     (T.Q.l.M * C.d.pd) (Nat.mul_pos (by have := T.Q.l.three_le; omega) hpd) (by rw [hlev]) (Or.inr hcurve) w
-    (fun h h' hh => hinj _ _ (twist_eq_of_finHom D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2 h h' hh))
-    (fun γ hγ h => hinj _ _ (twist_mul_left D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2 γ hγ h))
-    (fun u hu1 hu2 h => hinj _ _ (twist_mul_right D _ T.Q.l.M C.d.pd _ C.σ₂ δ δc hAux hTw dd' hdd2 u hu1 (hlev ▸ hu2) h))
+    (fun h h' hh => hinj _ _ (_root_.GlobalTheory.TwistFinPart.twist_eq_of_finHom D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2 h h' hh))
+    (fun γ hγ h => hinj _ _ (_root_.GlobalTheory.TwistLeft.twist_left D _ C.d.pd _ C.σ₂ δ δc hTw dd' hdd2 γ hγ h))
+    (fun u hu1 hu2 h => hinj _ _ (_root_.GlobalTheory.TwistRat.Right.dd_mul_right D _ T.Q.l.M C.d.pd _ C.σ₂ δ δc hAux hTw dd' hdd2 u hu1 (hlev ▸ hu2) h))
     (wtA (κ i)) (κ i).n).1 φ' hφ'
   refine ⟨_, key, ?_⟩
   simp only [hw]

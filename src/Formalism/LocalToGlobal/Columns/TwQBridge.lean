@@ -179,7 +179,7 @@ theorem qsp_dense (D : 𝓞 F) (hD : D ≠ 0) (hDv : D ∈ v.asIdeal) (k : GL (F
 
   let kO : Matrix (Fin n) (Fin n) O := fun i j => ⟨_, hk i j⟩
   let kiO : Matrix (Fin n) (Fin n) O := fun i j => ⟨_, hk' i j⟩
-  let RO : Matrix (Fin n) (Fin n) O := fun i j => ⟨_, glo_algMap_int v (r i j)⟩
+  let RO : Matrix (Fin n) (Fin n) O := fun i j => ⟨_, _root_.Formalism.UG.P.levelaf_int_mem_v v (r i j)⟩
   have hkk : kO * kiO = 1 := by
     have h1 : (O.subtype).mapMatrix (kO * kiO) = (O.subtype).mapMatrix 1 := by
       rw [map_mul, map_one]
@@ -345,7 +345,7 @@ theorem qbU_dense (P : Q) (k : GL (Fin n) ((qv F P.1).adicCompletion F))
     (hk' : qbInt ((k⁻¹ : GL (Fin n) ((qv F P.1).adicCompletion F)) : Matrix (Fin n) (Fin n) ((qv F P.1).adicCompletion F))) :
     ∃ g : ↥(GLint E n P.1), (qbIota P.1 (qbF hc hQ P) g)⁻¹ * k ∈
       qbU P.1 (qbF hc hQ P) (qbF_int hc hQ P) (qbF_P hc hQ P) (Θ P) (qbF hc hQ P (qbD hc Θ hQ hΘ P)) := by
-  obtain ⟨b, hb⟩ := qsp_norm_mem hc (qbPi hc hQ P)
+  obtain ⟨b, hb⟩ := _root_.Formalism.L2.Col.rll_norm_mem hc (qbPi hc hQ P)
   have hbP : b ∈ (underPl F P.1).asIdeal := by
     show algebraMap (𝓞 F) (𝓞 E) b ∈ P.1.asIdeal
     rw [hb]; exact Ideal.mul_mem_right _ _ (qbPi_spec hc hQ P).1

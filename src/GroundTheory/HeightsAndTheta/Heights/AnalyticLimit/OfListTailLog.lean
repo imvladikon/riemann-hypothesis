@@ -90,6 +90,7 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Std.Tactic.BVDecide.Normalize.Prop
+import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftB
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.ConvergenceRate, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassError, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassReplaceLevi, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassReplaceKappa, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassReplace, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepA, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepB, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStep, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PListTailLog, GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.OfListTailLog
@@ -1422,7 +1423,7 @@ end -- clump:auto
 -- ===== end clump member: GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepA =====
 
 -- ===== clump member: GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepB =====
--- clump-header: {"m": "GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepB", "h": "module\n\npublic import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.UIObjects\npublic import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.EnergyStep\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA\n\n"}
+-- clump-header: {"m": "GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassStepB", "h": "module\n\npublic import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.UIObjects\npublic import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.EnergyStep\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftB\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1438,8 +1439,6 @@ open GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Regular (ell)
 
 noncomputable section
 
-theorem two_le_top_gms : (2 : WithTop ℕ∞) ≤ ∞ := WithTop.coe_le_coe.mpr le_top
-
 variable {e : ℕ} {W : Type} [TopologicalSpace W] {A : FinHolAtlas e W}
 
 def formDiff (Om th : LocPot W) : LocPot W := Om + th.rsmul (-1)
@@ -1452,9 +1451,9 @@ theorem isPsh_formDiff {Om th : LocPot W} (hO : IsPotential A Om) (hth : IsPoten
     (hle : LeviLe A Set.univ 1 th 1 Om) : IsPsh A (formDiff Om th) := by
   intro x j y hy w
   have h1 := (ReciprocityTheory.AnForm.M.contDiffAt_of_isPotential A Om hO x j
-    ⟨hy.1, hy.2.1⟩).of_le two_le_top_gms
+    ⟨hy.1, hy.2.1⟩).of_le _root_.ReciprocityTheory.AnForm.M.two_le_infty
   have h2 := (ReciprocityTheory.AnForm.M.contDiffAt_of_isPotential A th hth x j
-    ⟨hy.1, hy.2.2⟩).of_le two_le_top_gms
+    ⟨hy.1, hy.2.2⟩).of_le _root_.ReciprocityTheory.AnForm.M.two_le_infty
   have hl := levi_add_smul (-1) h1 h2 w
   have hle' := hle x j y ⟨hy.1, ⟨Set.mem_univ _, hy.2.2⟩, hy.2.1⟩ w
   have heq : (formDiff Om th).φ x ∘ (A.chart j).symm =
@@ -1474,7 +1473,7 @@ theorem isPsh_of_formNonneg_dense {P : LocPot W} {Yo : Set W} (hP : IsPotential 
   obtain ⟨F, hF⟩ : ∃ F, F = P.φ x ∘ (A.chart j).symm := ⟨_, rfl⟩
   have hFs : ContDiffOn ℝ 2 F ((A.chart j).target ∩ (A.chart j).symm ⁻¹' P.U x) := by
     rw [hF]
-    exact (hP.1 x j).of_le two_le_top_gms
+    exact (hP.1 x j).of_le _root_.ReciprocityTheory.AnForm.M.two_le_infty
   rw [← hF]
   have hpair : ContinuousAt (fun p : (Fin e → ℂ) × (Fin e → ℂ) => levi F p.1 p.2) (y, w) :=
     (continuousOn_levi hOo hFs).continuousAt (prod_mem_nhds (hOo.mem_nhds hy) Filter.univ_mem)
@@ -1755,18 +1754,16 @@ set_option maxSynthPendingDepth 1
 
 namespace GroundTheory.Heights₂.Heights.AnalyticLimit
 
-theorem GreenMassStep.full : GreenMassStep.Statement := GreenMassStep.proof
+alias GreenMassStep.full := _root_.GroundTheory.Heights₂.Heights.AnalyticLimit.GreenMassStep.proof
 
-theorem GreenMassReplace.full : GreenMassReplace.Statement := GreenMassReplace.proof
+alias GreenMassReplace.full := _root_.GroundTheory.Heights₂.Heights.AnalyticLimit.GreenMassReplace.proof
 
-theorem GreenMassError.full : GreenMassError.Statement := GreenMassError.proof
+alias GreenMassError.full := _root_.GroundTheory.Heights₂.Heights.AnalyticLimit.GreenMassError.proof
 
 theorem UniformIntegrability.full : UniformIntegrability.Statement :=
   UniformIntegrability.of_greenMass GreenMassStep.full GreenMassReplace.full GreenMassError.full
 
-theorem ListTailLog.of_lemmaE (hE : LemmaETailLog.Statement) (hM : ListMono.Statement)
-    (hC : RegSection.Statement) (hS : TailShift.Statement) : ListTailLog.Statement :=
-  ListTailLog.proof hE hM hC hS
+alias ListTailLog.of_lemmaE := _root_.GroundTheory.Heights₂.Heights.AnalyticLimit.ListTailLog.proof
 
 end GroundTheory.Heights₂.Heights.AnalyticLimit
 end -- clump:auto

@@ -743,13 +743,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy GlobalTheory.FieldPair
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.formallyEtale_polynomialPlace_to_place : ∀ {K L : Type} [Field K] [Field L] (cK : ℂ →+* K) (cL : ℂ →+* L) (r : ℕ) (R : Subring K)
-    (T : Subring L) (ι : R →+* T) (ψ : T →+* R) (τ : Fin r → T) (P : Place cL) (P0 : Place cK)
-    (j : K →+* L), IsEtTower cK R cL T ι ψ τ → P.IsPrimeOf T → P0.IsPrimeOf R →
-    (∀ g : R, j (g : K) = (ι g : L)) → ∀ (hA : ∀ f ∈ P0.ring, j f ∈ P.ring)
-    (hτ : ∀ i, (τ i : L) ∈ P.ring),
-    (MvPolynomial.eval₂Hom (j.restrict P0.ring P.ring hA) (fun i => (⟨τ i, hτ i⟩ : P.ring))).FormallyEtale := by
-  first | exact @GlobalTheory.FieldPair.formallyEtale_polyPlace
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtalePolynomialPlaceToPlaceStatement =====
@@ -868,7 +861,7 @@ theorem formOrd_append_of_ord_eq : ∀ {K L : Type} [Field K] [Field L] (cK : �
     have := hj ⟨cK a, hE.base.const_mem a⟩
     rw [hE.const a] at this
     exact this
-  have hFE := GlobalTheory.T.formallyEtale_polynomialPlace_to_place cK cL r R T ι ψ τ P P0 j hE hP hP0 hj hA hτ
+  have hFE := _root_.GlobalTheory.FieldPair.formallyEtale_polyPlace cK cL r R T ι ψ τ P P0 j hE hP hP0 hj hA hτ
 
   letI := P0.const.toAlgebra
   letI := cK.toAlgebra

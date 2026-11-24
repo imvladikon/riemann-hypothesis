@@ -191,8 +191,6 @@ open Formalism.BasicNotions.Loc GlobalTheory.Pst GlobalTheory.WeilDeligne
 open scoped TensorProduct
 open GlobalTheory.Pst.TwistLetters
 
-theorem _root_.GlobalTheory.T.exists_balancedBilinear_tensorProduct_map : ∀ {LL U D₁ D₂ D₃ : Type} [Field LL] [Field U] [AddCommGroup D₁] [Module LL D₁] [AddCommGroup D₂] [Module LL D₂] [AddCommGroup D₃] [Module LL D₃] (m₁ : U →+* Module.End LL D₁) (m₂ : U →+* Module.End LL D₂) (m₃ : U →+* Module.End LL D₃) (F : Type) [Field F] [Algebra LL F] (τ : U →+* F) (β : D₁ →ₗ[LL] D₂ →ₗ[LL] D₃), (∀ c x y, β (m₁ c x) y = m₃ c (β x y)) → (∀ c x y, β x (m₂ c y) = m₃ c (β x y)) → ∃ Φ : GlobalTheory.Pst.Letter m₁ F τ ⊗[F] GlobalTheory.Pst.Letter m₂ F τ →ₗ[F] GlobalTheory.Pst.Letter m₃ F τ, ∀ x y, Φ (GlobalTheory.Pst.letterMk m₁ F τ x ⊗ₜ GlobalTheory.Pst.letterMk m₂ F τ y) = GlobalTheory.Pst.letterMk m₃ F τ (β x y) := by
-  first | exact @GlobalTheory.LetterDescent.exists_letter_tensor_map
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsBalancedBilinearTensorProductMapStatement =====
@@ -328,7 +326,7 @@ theorem wdSpace_twist_equiv : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI 
   clear_value χ
   have hl := dmul_mulD_left P (Bw.repE L s) (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) (Bw.repE L m) χ hχm hχt
   have hr := dmul_mulD_right P (Bw.repE L s) (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) (Bw.repE L m) χ hχm hχt
-  have hL1 := @GlobalTheory.T.exists_balancedBilinear_tensorProduct_map _ _ _ _ _ _ _ _ _ _ _ _ _ (mulD P (Bw.repE L s)) (mulD P (Bw.repE L m)) (mulD P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m)))) ℂ _ (algC ι L) (urC ι) _ hl hr
+  have hL1 := @_root_.GlobalTheory.LetterDescent.exists_letter_tensor_map _ _ _ _ _ _ _ _ _ _ _ _ _ (mulD P (Bw.repE L s)) (mulD P (Bw.repE L m)) (mulD P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m)))) ℂ _ (algC ι L) (urC ι) _ hl hr
   obtain ⟨Φ, hΦ'⟩ : ∃ Φ : WDSpace P ι (Bw.repE L s) ⊗[ℂ] WDSpace P ι (Bw.repE L m) →ₗ[ℂ] WDSpace P ι (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))), ∀ x y, Φ (wdMk P ι (Bw.repE L s) x ⊗ₜ wdMk P ι (Bw.repE L m) y) = wdMk P ι (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) ((dmul P (Bw.repE L s) (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) (Bw.repE L m) χ hχm hχt) x y) := hL1
   have hsurj : Function.Surjective Φ := by
     have h2b := GlobalTheory.T.exists_invertible_dPst_potSemistableCharacter P AI hT (Bw.repE L m) χ hχm hm
@@ -395,8 +393,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open Formalism.BasicNotions.Loc GlobalTheory.Pst GlobalTheory.WeilDeligne
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.dpstLetter_twist_tensor_equiv : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), Nonempty (LocTied l P AI) → ∀ (ι : Om l ≃+* ℂ) {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (h : IsPlaceOver A w) (hj : Induces Bw) {L : FinExt l} {a : ℕ} (s : ↥(Dec (F := E) A) →* GL (Fin a) ↥L.1) (m : ↥(Dec (F := E) A) →* GL (Fin 1) ↥L.1) [FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P (Bw.repE L s))] [FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P (Bw.repE L m))] [FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))))], IsPst P (Bw.repE L s) → IsPst P (Bw.repE L m) → IsPst P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) → ∃ e : WDSpace P ι (Bw.repE L s) ⊗[ℂ] WDSpace P ι (Bw.repE L m) ≃ₗ[ℂ] WDSpace P ι (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))), (∀ (σ : ↥(Weil h)) x, e (TensorProduct.map (wdRho P ι Bw h hj (Bw.repE L s) σ) (wdRho P ι Bw h hj (Bw.repE L m) σ) x) = wdRho P ι Bw h hj (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) σ (e x)) ∧ ∀ x, e (((wdN P ι (Bw.repE L s)).rTensor (WDSpace P ι (Bw.repE L m)) + (wdN P ι (Bw.repE L m)).lTensor (WDSpace P ι (Bw.repE L s)) : Module.End ℂ (WDSpace P ι (Bw.repE L s) ⊗[ℂ] WDSpace P ι (Bw.repE L m))) x) = wdN P ι (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m))) (e x) := by
-  first | exact @GlobalTheory.Pst.TwistLetters.wdSpace_twist_equiv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.DpstLetterTwistTensorEquivStatement =====
@@ -491,7 +487,7 @@ theorem wdPst_twist_one_field : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (A
   haveI := hs.finite
   haveI := hm.finite
   haveI := ht.finite
-  obtain ⟨e, he1, he2⟩ := GlobalTheory.T.dpstLetter_twist_tensor_equiv P AI hT ι Bw h hj s m hs hm ht
+  obtain ⟨e, he1, he2⟩ := _root_.GlobalTheory.Pst.TwistLetters.wdSpace_twist_equiv P AI hT ι Bw h hj s m hs hm ht
   have f1 := isFrobSS_wdRep P ι Bw h hj (Bw.repE L s)
   have f2 := isFrobSS_wdRep P ι Bw h hj (Bw.repE L m)
   have f3 := isFrobSS_wdRep P ι Bw h hj (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.twGL s (Matrix.GeneralLinearGroup.det.comp m)))
@@ -512,7 +508,7 @@ theorem wdAt_twist : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf
   have hu := IsModel.unique Bw (r := Formalism.MainNotions.SumRepresentations.At.twGL r (Matrix.GeneralLinearGroup.det.comp c)) (hm₃.enlarge l₃) hmt
   have q₃ := GlobalTheory.PstExt.isPst_enlarge P Bw l₃ t₃ hp₃
   rw [hu] at q₃
-  rw [e₁, e₂, e₃, ← GlobalTheory.T.potSemistableParameter_coefficientField_enlarge P ι Bw h hj l₃ t₃ hp₃, hu, ← GlobalTheory.T.potSemistableParameter_coefficientField_enlarge P ι Bw h hj l₁ r₁ hp₁, ← GlobalTheory.T.potSemistableParameter_coefficientField_enlarge P ι Bw h hj l₂ c₂ hp₂]
+  rw [e₁, e₂, e₃, ← _root_.GlobalTheory.Pst.EnlargeParam.wdPst_enlarge P ι Bw h hj l₃ t₃ hp₃, hu, ← _root_.GlobalTheory.Pst.EnlargeParam.wdPst_enlarge P ι Bw h hj l₁ r₁ hp₁, ← _root_.GlobalTheory.Pst.EnlargeParam.wdPst_enlarge P ι Bw h hj l₂ c₂ hp₂]
   exact wdPst_twist_one_field P AI hT ι Bw h hj _ _ (GlobalTheory.PstExt.isPst_enlarge P Bw l₁ r₁ hp₁)
     (GlobalTheory.PstExt.isPst_enlarge P Bw l₂ c₂ hp₂) q₃
 

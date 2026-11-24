@@ -466,8 +466,6 @@ theorem GlobalTheory.HilbertThetaSeries.wC_near_one : ∀ (F : Type) [Field F] [
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.weil_index_constant_congruent_one_mod_prime : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ), p ≠ 2 → ∀ δ c : F, IsDel p δ → PUnit p (c / δ) → ∀ t N : ℕ, N.Coprime p → (-1) ^ ((p - 1) / 2) * (t : ℤ) ≡ 1 [ZMOD p] → ‖ι.symm (wC (p - 1) t (N : F) c) - 1‖ ≤ (p : ℝ)⁻¹ := by
-  first | exact @GlobalTheory.HilbertThetaSeries.wC_near_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.WeilIndexConstantCongruentOneModPrime =====
@@ -559,23 +557,14 @@ section Lat
 
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] [DecidableEq κ]
 
-theorem smul_mem_LL {a : F} (ha : IsIntegral ℤ a) {x : κ → F} (hx : x ∈ LL F κ) : a • x ∈ LL F κ :=
-  fun i hi => ha.mul (hx i hi)
-
-theorem BF_smul_right (G : Matrix κ κ ℤ) (a : F) (x y : κ → F) : BF G x (a • y) = a * BF G x y := by
-  simp only [BF, Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul]
-
-theorem BF_add_right (G : Matrix κ κ ℤ) (x y z : κ → F) : BF G x (y + z) = BF G x y + BF G x z := by
-  simp only [BF, Matrix.mulVec_add, dotProduct_add]
-
 theorem isSB_wT {p : ℕ} (hp : p.Prime) {δ : F} (hδ : IsDel p δ) {G S : Matrix κ κ ℤ} {t : ℕ} (hL : LatD p G S t)
     (Φ : (κ → F) → ℂ) {N : ℕ} {T : Finset (κ → F)} {c : F} (hN : 0 < N) (hNp : N.Coprime p)
     (hT : ∀ x ∈ T, x ∈ aL κ (N : F)⁻¹) (hc : PUnit p (c / δ)) (k : ℕ) :
     ∃ M : ℕ, 0 < M ∧ M.Coprime p ∧ IsSB M (wT G k t (N : F) c T Φ) := by
-  obtain ⟨hδ0, hint, htr, d, -, hd, -, -, hdu⟩ := GlobalTheory.T.isDel_ne_zero_coprime_denominators_different_generator F p hp δ hδ
-  obtain ⟨-, hsm, hadd, hI, -, haL, het, -⟩ := GlobalTheory.T.evenPos_gramForm_integral_lattice_properties F κ G hL.pos
-  obtain ⟨hlev, -⟩ := GlobalTheory.T.dualLattice_index_eq_discr_pow_mul_det_pow F κ G hL.pos
-  obtain ⟨-, -, -, ht⟩ := GlobalTheory.T.intMatrix_isometry_prime_order_lattice_stability F p hp κ G S t hL
+  obtain ⟨hδ0, hint, htr, d, -, hd, -, -, hdu⟩ := _root_.GlobalTheory.HilbertThetaSeries.denominators_prime_to F p hp δ hδ
+  obtain ⟨-, hsm, hadd, hI, -, haL, het, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hL.pos
+  obtain ⟨hlev, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.DualLevel.dual_level_index F κ G hL.pos
+  obtain ⟨-, -, -, ht⟩ := _root_.GlobalTheory.HilbertThetaSeries.IsoP.isometry_order_p F p hp κ G S t hL
   have htp : t.Coprime p := ((Nat.Prime.coprime_iff_not_dvd hp).2 (by exact_mod_cast ht)).symm
   obtain ⟨w₀, hw₀⟩ := exists_place F p hp
   have hc0 : c ≠ 0 := by
@@ -607,7 +596,7 @@ theorem isSB_wT {p : ℕ} (hp : p.Prime) {δ : F} (hδ : IsDel p δ) {G S : Matr
   · have hyd : ((N : F) / c) • y ∈ dualL F G := by
       by_contra h
       exact hy (by simp [wT, h])
-    have h3 := smul_mem_LL ((hnat (N₂ * N)).mul h1i) (hlev _ hyd d hd)
+    have h3 := _root_.GlobalTheory.HilbertThetaSeries.DualLevel.smul_mem_LL ((hnat (N₂ * N)).mul h1i) (hlev _ hyd d hd)
     refine (haL _ _).2 ⟨_, h3, ?_⟩
     rw [smul_smul, smul_smul, smul_smul, hL.det]
     have e : ((N₁ * N₂ * N : ℕ) : F)⁻¹ * (((N₂ * N : ℕ) : F) * (N₁ * (c / ((t : F) ^ 2 * d * N)))) *
@@ -636,7 +625,7 @@ theorem isSB_wT {p : ℕ} (hp : p.Prime) {δ : F} (hδ : IsDel p δ) {G S : Matr
       rw [hadd, add_div, (het _ _).1, ((het (BF _ (_ • l₀) _ / c) 0).2.2.1).2, mul_one]
       obtain ⟨n, hn⟩ := h2i _ ((hnat N₁).mul ((hI l₀ hl₀).2 x₀ hx₀))
       refine ⟨n, ?_⟩
-      rw [← hn, (hsm _ _ _).1, BF_smul_right]
+      rw [← hn, (hsm _ _ _).1, _root_.GlobalTheory.HilbertThetaSeries.FormLat.bf_smul_right]
       congr 1
       push_cast
       field_simp
@@ -649,9 +638,9 @@ theorem good_wT : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Pri
   classical
   have hp : p.Prime := hpf.out
   obtain ⟨-, hinv, hint, hzero⟩ := hΦ
-  obtain ⟨-, hsm, -, -, -, haL, het, -⟩ := GlobalTheory.T.evenPos_gramForm_integral_lattice_properties F κ G hL.pos
-  obtain ⟨hiso, hS, hfree, -⟩ := GlobalTheory.T.intMatrix_isometry_prime_order_lattice_stability F p hp κ G S t hL
-  have hC := GlobalTheory.T.weil_index_constant_congruent_one_mod_prime F p ι hp2 δ c hδ hc t N hNp hL.cong
+  obtain ⟨-, hsm, -, -, -, haL, het, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hL.pos
+  obtain ⟨hiso, hS, hfree, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.IsoP.isometry_order_p F p hp κ G S t hL
+  have hC := _root_.GlobalTheory.HilbertThetaSeries.wC_near_one F p ι hp2 δ c hδ hc t N hNp hL.cong
   have hp1 : (p : ℝ)⁻¹ ≤ 1 := inv_le_one_of_one_le₀ (by exact_mod_cast hp.one_le)
   have hC1 : ‖ι.symm (wC (p - 1) t (N : F) c)‖ ≤ 1 := by
     have := IsUltrametricDist.norm_add_le_max (ι.symm (wC (p - 1) t (N : F) c) - 1) 1
@@ -676,10 +665,10 @@ theorem good_wT : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Pri
       refine Finset.sum_nbij σ (fun x hx => (hσ x hx).1) hbij.injOn hbij.surjOn fun x hx => ?_
       obtain ⟨l, hl, e⟩ := (haL _ _).1 (hσ x hx).2
       have e' : S.map (Int.cast : ℤ → F) *ᵥ x = σ x + (N : F) • l := by rw [← e, hs, add_sub_cancel]
-      rw [hΦσ x hx, ← (hiso y x).1, e', BF_add_right, add_div, (het _ _).1, ((het (BF _ _ (_ • l) / c) 0).2.2.1).2, mul_one]
+      rw [hΦσ x hx, ← (hiso y x).1, e', _root_.GlobalTheory.HilbertThetaSeries.FormLat.bf_add_right, add_div, (het _ _).1, ((het (BF _ _ (_ • l) / c) 0).2.2.1).2, mul_one]
       obtain ⟨n, hn⟩ := hiff.2 h l hl
       refine ⟨n, ?_⟩
-      rw [← hn, (hsm _ _ _).1, BF_smul_right]
+      rw [← hn, (hsm _ _ _).1, _root_.GlobalTheory.HilbertThetaSeries.FormLat.bf_smul_right]
       congr 1
       ring
     · rfl
@@ -699,7 +688,7 @@ theorem good_wT : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Pri
       refine Finset.sum_congr rfl fun x _ => ?_
       simp [BF, et]
     have hσ0 : σ 0 = 0 := (huniq _ h0 _ (hσ 0 h0).1 (by simpa using (hσ 0 h0).2)).symm
-    have horb := GlobalTheory.T.norm_sum_free_orbits_le_inv_prime p ι _ σ (T.erase 0) Φ
+    have horb := _root_.GlobalTheory.HilbertThetaSeries.norm_sum_free_orbits_le p ι _ σ (T.erase 0) Φ
       (fun x hx => by
         obtain ⟨hx0, hx⟩ := Finset.mem_erase.1 hx
         exact Finset.mem_erase.2 ⟨fun h => hx0 (hbij.injOn hx h0 (h.trans hσ0.symm)), (hσ x hx).1⟩)
@@ -728,8 +717,6 @@ end GlobalTheory.HilbertThetaSeries.GoodInv
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.integral_test_function_finite_fourier_transform_of_odd_prime : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ), p ≠ 2 → ∀ δ : F, IsDel p δ → ∀ (κ : Type) [Fintype κ] [DecidableEq κ] (G S : Matrix κ κ ℤ) (t : ℕ), LatD p G S t → ∀ (Φ : (κ → F) → ℂ) (N : ℕ) (T : Finset (κ → F)) (c : F), Good ι S Φ → 0 < N → N.Coprime p → IsSB N Φ → IsReps (aL κ (N : F)) (aL κ (N : F)⁻¹) T → 0 ∈ T → PUnit p (c / δ) → Good ι S (wT G (p - 1) t (N : F) c T Φ) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.GoodInv.good_wT
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.IntegralTestFunctionFiniteFourierTransformOfOddP =====
@@ -835,8 +822,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.integral_test_function_mul_trace_character_quad_form_of_delta_integral : ∀ (F : Type) [Field F] [NumberField F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ) (δ : F), IsDel p δ → ∀ (κ : Type) [Fintype κ] [DecidableEq κ] (G S : Matrix κ κ ℤ) (t : ℕ), LatD p G S t → ∀ Φ : (κ → F) → ℂ, Good ι S Φ → ∀ b : F, PInt p (δ * b) → Good ι S fun x => Φ x * et (b * QF G x) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.good_mul_et_QF
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.IntegralTestFunctionMulTraceCharacterQuadFormOfD =====
@@ -931,8 +916,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.lattice_periodic_function_range_finite : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [DecidableEq κ] (N : ℕ) (Φ : (κ → F) → ℂ), 0 < N → IsSB N Φ → (Set.range Φ).Finite := by
-  first | exact @GlobalTheory.HilbertThetaSeries.isSB_range_finite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.LatticePeriodicFunctionRangeFinite =====
@@ -951,13 +934,13 @@ theorem th_congr_one : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F
   intro F _ _ _ p _ ι κ _ _ G S t hL Φ hΦ
   obtain ⟨⟨N, hN, hNp, hSB⟩, hinv, hbd, h0⟩ := hΦ
   have hp : p.Prime := Fact.out
-  obtain ⟨hQ, hact, -, -⟩ := _root_.GlobalTheory.T.intMatrix_isometry_prime_order_lattice_stability F p hp κ G S t hL
-  obtain ⟨hTP, -, hfin⟩ := _root_.GlobalTheory.T.evenPosGram_quadForm_totallyPositive_properness F κ G hL.pos
-  obtain ⟨B, hB⟩ := ((_root_.GlobalTheory.T.lattice_periodic_function_range_finite F κ N Φ hN hSB).image (fun w => ‖w‖)).bddAbove
+  obtain ⟨hQ, hact, -, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.IsoP.isometry_order_p F p hp κ G S t hL
+  obtain ⟨hTP, -, hfin⟩ := _root_.GlobalTheory.HilbertThetaSeries.qf_totPos_proper F κ G hL.pos
+  obtain ⟨B, hB⟩ := ((_root_.GlobalTheory.HilbertThetaSeries.isSB_range_finite F κ N Φ hN hSB).image (fun w => ‖w‖)).bddAbove
   have hB' : ∀ x, ‖Φ x‖ ≤ B := fun x => hB ⟨Φ x, ⟨x, rfl⟩, rfl⟩
-  obtain ⟨-, -, -, hq⟩ := _root_.GlobalTheory.T.thetaSeries_holomorphic_qExpansion_of_bounded_coeff F κ G hL.pos ((N:F)⁻¹) Φ B hSB.1 hB'
-  have hc := (_root_.GlobalTheory.T.qExpansion_linear_combination F _ _ _ _ (1:ℂ) hq hq).2.2.2
-  have hq1 := (_root_.GlobalTheory.T.qExpansion_linear_combination F _ _ _ _ (1:ℂ) hq hc).2.2.1
+  obtain ⟨-, -, -, hq⟩ := _root_.GlobalTheory.HilbertThetaSeries.th_expansion F κ G hL.pos ((N:F)⁻¹) Φ B hSB.1 hB'
+  have hc := (_root_.GlobalTheory.HilbertThetaSeries.hasQ_lin F _ _ _ _ (1:ℂ) hq hq).2.2.2
+  have hq1 := (_root_.GlobalTheory.HilbertThetaSeries.hasQ_lin F _ _ _ _ (1:ℂ) hq hc).2.2.1
   refine ⟨_, hq1, fun ξ => ?_⟩
   simp only [Pi.sub_apply]
   have hfs := hfin ((N:F)⁻¹) ξ
@@ -980,7 +963,7 @@ theorem th_congr_one : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F
     rw [hz, Finset.sum_singleton, if_pos rfl, map_sub, map_one]
     exact h0
   · rw [if_neg hξ, sub_zero]
-    apply _root_.GlobalTheory.T.norm_sum_free_orbits_le_inv_prime p ι (κ → F) (fun x => S.map Int.cast *ᵥ x) hfs.toFinset Φ
+    apply _root_.GlobalTheory.HilbertThetaSeries.norm_sum_free_orbits_le p ι (κ → F) (fun x => S.map Int.cast *ᵥ x) hfs.toFinset Φ
     · intro x hx
       simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hx ⊢
       exact ⟨((hact x).2.2.2 _).2 hx.1, ((hQ x x).2).trans hx.2⟩
@@ -1001,8 +984,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.thetaSeries_congr_one_mod_p_of_isometry : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ) (κ : Type) [Fintype κ] [DecidableEq κ] (G S : Matrix κ κ ℤ) (t : ℕ), LatD p G S t → ∀ Φ : (κ → F) → ℂ, Good ι S Φ → Small ι (p : ℝ)⁻¹ (th G Φ - 1) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.th_congr_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ThetaSeriesCongrOneModPOfIsometry =====
@@ -1066,12 +1047,12 @@ theorem theta_translates_integral_one : ∀ (F : Type) [Field F] [NumberField F]
       rw [div_inv_eq_mul, ← Nat.cast_mul]
       simpa using isIntegral_algebraMap (R := ℤ) (A := F) (x := ((N * N : ℕ) : ℤ))
     obtain ⟨T, hT, h0T, hle, -⟩ := GlobalTheory.HilbertThetaSeries.exists_isReps_aL F κ (N : F) (N : F)⁻¹ hNF (inv_ne_zero hNF) hint
-    refine ⟨_, GlobalTheory.T.integral_test_function_finite_fourier_transform_of_odd_prime F p ι hp2 δ hδ κ G S t hL Φ N T c hΦ hN hNp hSB hT h0T hc, ?_⟩
-    exact GlobalTheory.T.hilbertThetaSeries_periodic_inversion_formula F κ G hL.pos t hL.det (p - 1) hL.card (N : F) (N : F)⁻¹ c T Φ hNF (inv_ne_zero hNF) hle hT hSB.1 hSB.2
+    refine ⟨_, _root_.GlobalTheory.HilbertThetaSeries.GoodInv.good_wT F p ι hp2 δ hδ κ G S t hL Φ N T c hΦ hN hNp hSB hT h0T hc, ?_⟩
+    exact _root_.GlobalTheory.HilbertThetaSeries.thetaSeries_periodic_slash_frickeMatrix F κ G hL.pos t hL.det (p - 1) hL.card (N : F) (N : F)⁻¹ c T Φ hNF (inv_ne_zero hNF) hle hT hSB.1 hSB.2
 
   have hA : ∀ (b : F) (Φ : (κ → F) → ℂ), Good ι S Φ → PInt p (δ * b) →
       ∃ Ψ, Good ι S Ψ ∧ sl0 (p - 1) (toInf (aff 1 b)) (th G Φ) = th G Ψ := fun b Φ hΦ hb =>
-    ⟨_, GlobalTheory.T.integral_test_function_mul_trace_character_quad_form_of_delta_integral F p ι δ hδ κ G S t hL Φ hΦ b hb, GlobalTheory.HilbertThetaSeries.th_translate F κ G (p - 1) b Φ⟩
+    ⟨_, _root_.GlobalTheory.HilbertThetaSeries.good_mul_et_QF F p ι δ hδ κ G S t hL Φ hΦ b hb, GlobalTheory.HilbertThetaSeries.th_translate F κ G (p - 1) b Φ⟩
 
   let P : GL (Fin 2) F → Prop := fun g => Pos (toInf g) ∧
     ∃ Ψ, Good ι S Ψ ∧ sl0 (p - 1) (toInf g) (th G oneL) = th G Ψ
@@ -1102,8 +1083,8 @@ theorem theta_translates_integral_one : ∀ (F : Type) [Field F] [NumberField F]
     funext z
     simp [sl0, hden]
   rw [← hsub]
-  obtain ⟨a, hQ, hbd⟩ := GlobalTheory.T.thetaSeries_congr_one_mod_p_of_isometry F p ι κ G S t hL Ψ hΨ
-  refine ⟨_, GlobalTheory.T.hasQExpansion_affineTranslate_coeff F (p - 1) (th G Ψ - 1) a ε 0 hε hQ, fun ξ => ?_⟩
+  obtain ⟨a, hQ, hbd⟩ := _root_.GlobalTheory.HilbertThetaSeries.th_congr_one F p ι κ G S t hL Ψ hΨ
+  refine ⟨_, _root_.GlobalTheory.HilbertThetaSeries.QAff.hasQ_aff F (p - 1) (th G Ψ - 1) a ε 0 hε hQ, fun ξ => ?_⟩
   simpa [et] using hbd (ξ / ε)
 
 end GlobalTheory.HilbertThetaSeries
@@ -1111,8 +1092,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.theta_translate_integral_congruent_one_mod_prime : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ), p ≠ 2 → ∀ δ : F, IsDel p δ → ∀ (κ : Type) [Fintype κ] [DecidableEq κ] (G S : Matrix κ κ ℤ) (t : ℕ), LatD p G S t → ∀ γ : GL (Fin 2) F, InG p δ γ → Small ι (p : ℝ)⁻¹ (sl0 (p - 1) (toInf γ) (th G oneL) - 1) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.theta_translates_integral_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ThetaTranslateIntegralCongruentOneModPrime =====

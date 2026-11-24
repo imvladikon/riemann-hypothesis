@@ -77,6 +77,7 @@ import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgeb
 import Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.IsOrthCo
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.DescentCore
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThIndep
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.AlternatingFormStandardHermitian
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.SelfDualComap
@@ -144,7 +145,7 @@ theorem isSplit_conj (D : D7) {P Q : HeightOneSpectrum (𝓞 D.host.E)} (hP : GL
   obtain ⟨a, b, hab, ha, hb⟩ := hP
   have hb' : b = Formalism.L2.PairingIndexBounds.Rec.cO D a := Subtype.ext (hab.trans rfl)
   refine ⟨b, a, ?_, ?_, ?_⟩
-  · rw [hab]; exact (Formalism.L2.PairingIndexBounds.Rec.conj_conj' D (a : D.host.E)).symm
+  · rw [hab]; exact (_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.conj_conj D (a : D.host.E)).symm
   · rw [hQ, hb', Formalism.L2.PairingIndexBounds.Rec.cO_cO]; exact ha
   · rw [hQ, ← hb']; exact hb
 
@@ -177,7 +178,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqOffSplitOfEqOffSplitPrime =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCommonScaleLatticePairsSplitPrime =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCommonScaleLatticePairsSplitPrime", "h": "module\n\npublic import Formalism.LocalToGlobal.Columns.DecoFin\npublic import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NatCastMemOfPlace\nimport Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap\nimport Formalism.LocalToGlobal.InertKernelTheory.DefsRepComb\nimport Formalism.LocalToGlobal.KernelLattices.XiIndCClass\nimport Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.IsOrthCo\nimport Formalism.SharpRestriction.GrowthBounds.MultisetValuation.DescentCore\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCommonScaleLatticePairsSplitPrime", "h": "module\n\npublic import Formalism.LocalToGlobal.Columns.DecoFin\npublic import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NatCastMemOfPlace\nimport Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap\nimport Formalism.LocalToGlobal.InertKernelTheory.DefsRepComb\nimport Formalism.LocalToGlobal.KernelLattices.XiIndCClass\nimport Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.IsOrthCo\nimport Formalism.SharpRestriction.GrowthBounds.MultisetValuation.DescentCore\nimport Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThIndep\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -187,12 +188,6 @@ open Formalism.L2.Th1.H Formalism.L2.KerInert.RepComb
 noncomputable section
 
 namespace GlobalTheory.CommonScale
-
-theorem conj_star (D : D7) (x : D.host.E) : (letI := D.host.cmStar; star x) = D.host.conj x := by
-  apply D.host.φ₀.injective
-  have := D.host.isCMField_hostE
-  exact (IsCMField.complexEmbedding_complexConj _ D.host.φ₀ x).trans
-    (D.host.conjE_apply D.host.φ₀ x).symm
 
 theorem coprime_of_ne {R : Type} [CommRing R] {P Q : Ideal R} (hP : P.IsMaximal) (hQ : Q.IsMaximal)
     (h : P ≠ Q) : IsCoprime P Q := by
@@ -244,7 +239,7 @@ theorem scale : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (P : HeightOne
   have hxQ : ∀ Q : HeightOneSpectrum (𝓞 D.host.E), j ∈ Q.asIdeal → x ∉ Q.asIdeal := fun Q hj' hx' =>
     Q.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 (by rw [← hxj]; exact Q.asIdeal.add_mem hx' hj'))
   have hy : ((Formalism.L2.Col.cO D.host.E x : 𝓞 D.host.E) : D.host.E) = D.host.conj (x : D.host.E) :=
-    conj_star D (x : D.host.E)
+    _root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.star_conj D (x : D.host.E)
   refine ⟨x * Formalism.L2.Col.cO D.host.E x, ?_, ?_, ?_⟩
   · obtain ⟨t, ht⟩ := Ideal.mem_span_singleton.1 hjcl
     have hx1 : x = 1 - (cl : 𝓞 D.host.E) * t := by rw [← ht, ← hxj]; ring
@@ -621,31 +616,13 @@ theorem resV_linSub_zero {σ κ R : Type} [Fintype σ] [Field R] (f : κ → σ)
 
 variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
-theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
-
-theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
-    TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
-  rw [lamC_of_mem lam hx, lamC_of_mem lam hy, lamC_of_mem lam (mul_mem hx hy), ← map_mul]; rfl
-
-theorem lamC_sum {κ : Type} (T : Finset κ) (f : κ → ℂ) (h : ∀ i ∈ T, f i ∈ TaylorLogMetric.Qbar) :
-    TaylorLogMetric.lamC lam (∑ i ∈ T, f i) = ∑ i ∈ T, TaylorLogMetric.lamC lam (f i) := by
-  classical
-  induction T using Finset.induction_on with
-  | empty => rw [Finset.sum_empty, Finset.sum_empty, lamC_of_mem lam (zero_mem _)]; exact map_zero lam
-  | insert i T hi ih =>
-    have hT : ∀ k ∈ T, f k ∈ TaylorLogMetric.Qbar := fun k hk => h k (Finset.mem_insert_of_mem hk)
-    have hfi : f i ∈ TaylorLogMetric.Qbar := h i (Finset.mem_insert_self i T)
-    rw [Finset.sum_insert hi, Finset.sum_insert hi, ← ih hT, lamC_of_mem lam hfi, lamC_of_mem lam (sum_mem hT),
-      lamC_of_mem lam (add_mem hfi (sum_mem hT)), ← map_add]
-    rfl
-
 theorem ratCast_mem (q : ℚ) : (q : ℂ) ∈ TaylorLogMetric.Qbar := by
   have : ((q : TaylorLogMetric.Qbar) : ℂ) = (q : ℂ) := by simp
   rw [← this]; exact Subtype.mem _
 
 theorem lamC_ratCast_mul (q : ℚ) {x : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam ((q : ℂ) * x) = (q : ℂ_[p]) * TaylorLogMetric.lamC lam x := by
-  rw [lamC_mul lam (ratCast_mem q) hx, lamC_of_mem lam (ratCast_mem q)]
+  rw [_root_.Formalism.L2.Ker.lamC_mul lam (ratCast_mem q) hx, _root_.Formalism.L2.Ker.lamC_of_mem lam (ratCast_mem q)]
   congr 1
   have : (⟨(q : ℂ), ratCast_mem q⟩ : TaylorLogMetric.Qbar) = (q : TaylorLogMetric.Qbar) := Subtype.ext (by simp)
   rw [this, map_ratCast]
@@ -845,8 +822,8 @@ theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (
         have hT := hcoef i α
         have hchi : (Base.chiFac χ _ _ (fd.kerN j i.1.1) (fd.kerN (j + 1) i.1.2))⁻¹ ∈ TaylorLogMetric.Qbar := inv_mem hch
         rw [MvPowerSeries.coeff_smul, MvPowerSeries.coeff_smul, hcs, GlobalTheory.ThetaConj.taylor_mul D _ (hdiff i) α,
-          lamC_mul lam (mul_mem hs0 hchi) hT, lamC_mul lam hs0 hchi,
-          lamC_ratCast_mul lam _ (mul_mem hchi hT), lamC_mul lam hchi hT, hkkE i]
+          _root_.Formalism.L2.Ker.lamC_mul lam (mul_mem hs0 hchi) hT, _root_.Formalism.L2.Ker.lamC_mul lam hs0 hchi,
+          lamC_ratCast_mul lam _ (mul_mem hchi hT), _root_.Formalism.L2.Ker.lamC_mul lam hchi hT, hkkE i]
         rw [show pPow X j i.1.1 i.1.2 * (TaylorLogMetric.lamC lam (scal0 X fd χ muT j i.1.1 i.1.2) *
             TaylorLogMetric.lamC lam (Base.chiFac χ _ _ (fd.kerN j i.1.1) (fd.kerN (j + 1) i.1.2))⁻¹ *
             TaylorLogMetric.lamC lam (TaylorLogMetric.taylor D (kerTh B χ SS cl (fd.kerN j i.1.1) (fd.kerN (j + 1) i.1.2) (xiM X fd Ξ₀ j La₀ La₀')) α)) =
@@ -865,8 +842,8 @@ theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (
         have h4 := zpow_ne_zero (hh * volE X v j La₀.2 La₀'.2) hp0C
         field_simp [hw i]
       rw [Finset.sum_congr rfl e1, ← Finset.mul_sum]
-      have hl0 : TaylorLogMetric.lamC lam 0 = 0 := by rw [lamC_of_mem lam (zero_mem _)]; exact map_zero lam
-      rw [← lamC_sum lam s _ (fun i _ => mul_mem (ratCast_mem _) (mul_mem (inv_mem (hOKi i).2.2.2.2.2.1) (hcoef i α))),
+      have hl0 : TaylorLogMetric.lamC lam 0 = 0 := by rw [_root_.Formalism.L2.Ker.lamC_of_mem lam (zero_mem _)]; exact map_zero lam
+      rw [← _root_.Formalism.L2.Ker.lamC_sum lam s _ (fun i _ => mul_mem (ratCast_mem _) (mul_mem (inv_mem (hOKi i).2.2.2.2.2.1) (hcoef i α))),
         hysum α, hl0, mul_zero]
     calc ∑ i ∈ s, cq i • (fun i : I a => (kk i.1.1 i.1.2)⁻¹ • K j i.1.1 i.1.2) i
         = ∑ i ∈ s, ((cq i : ℂ_[p]) * (E.iK (kk i.1.1 i.1.2))⁻¹) •

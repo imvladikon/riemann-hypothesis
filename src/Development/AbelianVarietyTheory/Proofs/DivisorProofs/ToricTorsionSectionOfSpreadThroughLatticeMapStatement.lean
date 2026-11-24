@@ -186,8 +186,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.Poinc.Eq8 GlobalTheory.Poinc.Sep.Spz Classical
 
-theorem _root_.GlobalTheory.T.toricTorsionPoint_of_torusPoint_at_closedPointField : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (ξ : Sp V ⟶ B) (β : G.left ⟶ H.left), IsGrpPullback G H ξ β → ∀ (σ : Sp V ⟶ H.left), σ ≫ H.hom = ξ → ∀ (k : ℕ) (w : V), 1 ≤ k → IsUnit (k : V) → w ^ k = 1 → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (c : D.toPre.X →+ ℤ) (x : TFK (R := V) F ⟶ A.A), x ^ k = 1 → x.left ≫ genMap U ≫ β = spMap (algebraMap (FractionRing V) F) ≫ jK V ≫ σ → ∀ (κ : Type) [Field κ] (b : V →+* κ) (hb : ∀ y ∈ maximalIdeal V ^ (0 + 1), b y = 0) (Gκ : Over (Sp κ)) [GrpObj Gκ] (m : Gκ.left ⟶ G.left) (hm : IsGrpPullback Gκ G (spMap b) m) (τ : Multiplicative D.toPre.X →* κˣ), (∀ χ, (τ (Multiplicative.ofAdd χ) : κ) = b w ^ c χ) → ∀ (z : Over.mk (spMap (RingHom.id κ)) ⟶ splitTorus (Sp κ) D.toPre.X), (∀ χ, GlobalTheory.UU.chV z χ = unitOn (τ (Multiplicative.ofAdd χ))) → spMap b ≫ σ = (z ≫ GlobalTheory.TorusPart.gtTorus (U.gt 0) hb hm).left ≫ m ≫ β → TorAt U F k (algebraMap (FractionRing V) F (algebraMap V (FractionRing V) w)) c x := by
-  first | exact @GlobalTheory.Poinc.Sep.Spz.torAt_of_closedPoint
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricTorsionPointOfTorusPointAtClosedPointFieldStatement =====
@@ -293,8 +291,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.Poinc.Eq8 GlobalTheory.Poinc.Sep.Spz Classical
 
-theorem _root_.GlobalTheory.T.toricTorsionSection_eq_torusPoint_at_closedPointField : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (ξ : Sp V ⟶ B) (β : G.left ⟶ H.left), IsGrpPullback G H ξ β → ∀ (σ : Sp V ⟶ H.left), σ ≫ H.hom = ξ → ∀ (k : ℕ) (w : V), 1 ≤ k → w ^ k = 1 → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (c : D.toPre.X →+ ℤ) (x : TFK (R := V) F ⟶ A.A), TorAt U F k (algebraMap (FractionRing V) F (algebraMap V (FractionRing V) w)) c x → x.left ≫ genMap U ≫ β = spMap (algebraMap (FractionRing V) F) ≫ jK V ≫ σ → ∀ (κ : Type) [Field κ] (b : V →+* κ) (hb : ∀ y ∈ maximalIdeal V ^ (0 + 1), b y = 0) (Gκ : Over (Sp κ)) [GrpObj Gκ] (m : Gκ.left ⟶ G.left) (hm : IsGrpPullback Gκ G (spMap b) m) (τ : Multiplicative D.toPre.X →* κˣ), (∀ χ, (τ (Multiplicative.ofAdd χ) : κ) = b w ^ c χ) → ∀ (z : Over.mk (spMap (RingHom.id κ)) ⟶ splitTorus (Sp κ) D.toPre.X), (∀ χ, GlobalTheory.UU.chV z χ = unitOn (τ (Multiplicative.ofAdd χ))) → spMap b ≫ σ = (z ≫ GlobalTheory.TorusPart.gtTorus (U.gt 0) hb hm).left ≫ m ≫ β := by
-  first | exact @GlobalTheory.ToricTorsionClosedPt.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricTorsionSectionEqTorusPointAtClosedPointFielStatement =====
@@ -317,18 +313,7 @@ noncomputable section
 
 namespace GlobalTheory.SpreadTorSection
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [spMap, spMap, spMap, ← Spec.map_comp]; rfl
-
-theorem spMap_id' (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  show Spec.map (𝟙 _) = _
-  exact Spec.map_id _
-
-theorem spMap_injective' {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) :
-    f = g := by
-  have := congrArg (fun u => (Spec.preimage u).hom) h
-  simpa [spMap, Spec.preimage_map] using this
+alias spMap_comp' := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem range_sub {W κ : Type} [CommRing W] [IsLocalRing W] [Field κ] {B : Scheme.{0}} (ψ : Sp W ⟶ B)
     (Wo : B.Opens) (c : W →+* κ) [IsLocalHom c] (y : Sp κ ⟶ Wo.toScheme) (e : spMap c ≫ ψ = y ≫ Wo.ι) :
@@ -378,7 +363,7 @@ theorem bc_point {W L X : Type} [CommRing W] [CommRing L] [AddCommGroup X] (f : 
     refine GlobalTheory.UU.splitTorus_left_hom_ext _ _ ?_ fun χ => ?_
     · rw [Category.assoc, GlobalTheory.SplitTorus.bcMap_hom, ← Category.assoc, Over.w zL, Category.assoc, Over.w zW]
       change spMap (RingHom.id L) ≫ spMap f = spMap f ≫ spMap (RingHom.id W)
-      rw [spMap_id', spMap_id', Category.id_comp, Category.comp_id]
+      rw [_root_.GlobalTheory.LevelFibre.spMap_id', _root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp, Category.comp_id]
     · rw [Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.comp_apply, GlobalTheory.UU.bcMap_charUnit,
         Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.comp_apply]
       have e1 := (GlobalTheory.UU.chV_val zL χ).symm.trans (congrArg Units.val (hzL χ))
@@ -407,9 +392,9 @@ theorem trait_section : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonO
   have hoW : spMap oW = ψ ≫ s := by
     show Spec.map (CommRingCat.ofHom (Spec.preimage (ψ ≫ s)).hom) = _
     rw [CommRingCat.ofHom_hom, Spec.map_preimage]
-  have ho₁ : α.comp oW = b₁.comp o₁ := spMap_injective' (by
+  have ho₁ : α.comp oW = b₁.comp o₁ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by
     rw [spMap_comp', spMap_comp', hoW, ← Category.assoc, hαψ, Category.assoc, hs₁])
-  have ho₂ : c'.comp oW = b₂.comp o₂ := spMap_injective' (by
+  have ho₂ : c'.comp oW = b₂.comp o₂ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by
     rw [spMap_comp', spMap_comp', hoW, ← Category.assoc, hc'ψ, Category.assoc, hs₂])
 
   have hζu : IsUnit ζ := IsUnit.of_pow_eq_one hζ (by omega)
@@ -432,7 +417,7 @@ theorem trait_section : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonO
     · simp only [Category.assoc]
       rw [hh, hψ', hψ.1.w, ← Category.assoc, Over.w (zW ≫ j)]
       change ψ = spMap (RingHom.id W) ≫ ψ
-      rw [spMap_id', Category.id_comp]
+      rw [_root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp]
     · rw [← Category.assoc, e₁, Category.assoc, hyp₁, ← hjn, ← hnφ, ← Category.assoc (spMap α), hbcΩ,
         Category.assoc]
 
@@ -496,11 +481,11 @@ theorem GlobalTheory.Poinc.Sep.Spz.torAt_of_spread₂ : ∀ (B : Scheme.{0}) (H 
   intro B H _ _ hH V₁ _ _ _ hV₁ G₁ _ _ hG₁ D₁ A₁ U₁ ξ₁ β₁ hβ₁ V₂ _ _ _ hV₂ G₂ _ _ hG₂ D₂ A₂ U₂ ξ₂ β₂ hβ₂ ρ hS o _ s o₁ o₂ hs₁ hs₂ k ζ hk hku hζ Wo h ξ₁' ξ₂' hh h₁ h₂ F₁ _ _ _ F₂ _ _ _ c x₁ x₂ hx₁ hx₁g hx₂ hx₂g
   have hw₁ : o₁ ζ ^ k = 1 := by rw [← map_pow, hζ, map_one]
   have hw₂ : o₂ ζ ^ k = 1 := by rw [← map_pow, hζ, map_one]
-  have hA := GlobalTheory.T.toricTorsionSection_eq_torusPoint_at_closedPointField B H V₁ hV₁ G₁ hG₁ D₁ A₁ U₁ ξ₁ β₁ hβ₁ (ξ₁' ≫ h) (by rw [Category.assoc, hh, h₁]) k (o₁ ζ) hk hw₁
+  have hA := _root_.GlobalTheory.ToricTorsionClosedPt.main B H V₁ hV₁ G₁ hG₁ D₁ A₁ U₁ ξ₁ β₁ hβ₁ (ξ₁' ≫ h) (by rw [Category.assoc, hh, h₁]) k (o₁ ζ) hk hw₁
     F₁ c x₁ hx₁ hx₁g
   obtain ⟨κ, _, b, hb, Gκ, _, m, hm, τ, z, hτ, hz, he⟩ := GlobalTheory.T.torusPointSection_along_spreadingTrait B H hH V₁ G₁ D₁ A₁ U₁ ξ₁ β₁ V₂ G₂ D₂ A₂ U₂ ξ₂ β₂ ρ
     hS o s o₁ o₂ hs₁ hs₂ k ζ hk hζ Wo h ξ₁' ξ₂' hh h₁ h₂ c hA
-  exact GlobalTheory.T.toricTorsionPoint_of_torusPoint_at_closedPointField B H V₂ hV₂ G₂ hG₂ D₂ A₂ U₂ ξ₂ β₂ hβ₂ (ξ₂' ≫ h) (by rw [Category.assoc, hh, h₂]) k (o₂ ζ) hk
+  exact _root_.GlobalTheory.Poinc.Sep.Spz.torAt_of_closedPoint B H V₂ hV₂ G₂ hG₂ D₂ A₂ U₂ ξ₂ β₂ hβ₂ (ξ₂' ≫ h) (by rw [Category.assoc, hh, h₂]) k (o₂ ζ) hk
     (by simpa using hku.map o₂) hw₂ F₂ (c.comp ρ) x₂ hx₂ hx₂g κ b hb Gκ m hm τ hτ z hz he
 end -- clump:auto
 end -- clump:auto
@@ -520,8 +505,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.Poinc.Eq8 GlobalTheory.Poinc.Sep.Spz Classical
 
-theorem _root_.GlobalTheory.T.toricTorsionSection_of_spread_through_latticeMap : ∀ (B : Scheme.{0}) (H : Over B) [GrpObj H] [IsCommMonObj H], IsSemiAbelian H → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], GlobalTheory.Mum.Base V₁ → ∀ (G₁ : Over (Sp V₁)) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (D₁ : DegData V₁ (maximalIdeal V₁)) (A₁ : PolAV (Sp (FractionRing V₁))) (U₁ : Unif (maximalIdeal V₁) D₁ A₁ G₁) (ξ₁ : Sp V₁ ⟶ B) (β₁ : G₁.left ⟶ H.left), IsGrpPullback G₁ H ξ₁ β₁ → ∀ (V₂ : Type) [CommRing V₂] [IsDomain V₂] [IsLocalRing V₂], GlobalTheory.Mum.Base V₂ → ∀ (G₂ : Over (Sp V₂)) [GrpObj G₂] [IsCommMonObj G₂], IsSemiAbelian G₂ → ∀ (D₂ : DegData V₂ (maximalIdeal V₂)) (A₂ : PolAV (Sp (FractionRing V₂))) (U₂ : Unif (maximalIdeal V₂) D₂ A₂ G₂) (ξ₂ : Sp V₂ ⟶ B) (β₂ : G₂.left ⟶ H.left), IsGrpPullback G₂ H ξ₂ β₂ → ∀ ρ : D₂.toPre.X →+ D₁.toPre.X, Spread₂ H U₁ ξ₁ β₁ U₂ ξ₂ β₂ ρ → ∀ (o : Type) [CommRing o] (s : B ⟶ Sp o) (o₁ : o →+* V₁) (o₂ : o →+* V₂), ξ₁ ≫ s = spMap o₁ → ξ₂ ≫ s = spMap o₂ → ∀ (k : ℕ) (ζ : o), 1 ≤ k → IsUnit (k : o) → ζ ^ k = 1 → ∀ (Wo : B.Opens) (h : Wo.toScheme ⟶ H.left) (ξ₁' : Sp V₁ ⟶ Wo.toScheme) (ξ₂' : Sp V₂ ⟶ Wo.toScheme), h ≫ H.hom = Wo.ι → ξ₁' ≫ Wo.ι = ξ₁ → ξ₂' ≫ Wo.ι = ξ₂ → ∀ (F₁ : Type) [Field F₁] [IsAlgClosed F₁] [Algebra (FractionRing V₁) F₁] (F₂ : Type) [Field F₂] [IsAlgClosed F₂] [Algebra (FractionRing V₂) F₂] (c : D₁.toPre.X →+ ℤ) (x₁ : TFK (R := V₁) F₁ ⟶ A₁.A) (x₂ : TFK (R := V₂) F₂ ⟶ A₂.A), TorAt U₁ F₁ k (algebraMap (FractionRing V₁) F₁ (algebraMap V₁ (FractionRing V₁) (o₁ ζ))) c x₁ → x₁.left ≫ genMap U₁ ≫ β₁ = spMap (algebraMap (FractionRing V₁) F₁) ≫ jK V₁ ≫ ξ₁' ≫ h → x₂ ^ k = 1 → x₂.left ≫ genMap U₂ ≫ β₂ = spMap (algebraMap (FractionRing V₂) F₂) ≫ jK V₂ ≫ ξ₂' ≫ h → TorAt U₂ F₂ k (algebraMap (FractionRing V₂) F₂ (algebraMap V₂ (FractionRing V₂) (o₂ ζ))) (c.comp ρ) x₂ := by
-  first | exact @GlobalTheory.Poinc.Sep.Spz.torAt_of_spread₂
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricTorsionSectionOfSpreadThroughLatticeMapStatement =====

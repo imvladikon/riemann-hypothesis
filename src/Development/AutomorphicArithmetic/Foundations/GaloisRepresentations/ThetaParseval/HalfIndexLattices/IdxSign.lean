@@ -13,8 +13,8 @@ public import Mathlib.LinearAlgebra.Determinant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryIdeleCharTrivialCongruentOneModulo
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutDef
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBI
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaC
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBS
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SpanInfRatF
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
@@ -160,11 +160,6 @@ variable {E V : Type} [Field E] [NumberField E] {P : HeightOneSpectrum (𝓞 E)}
   [Module (P.adicCompletion E) V] [Module (P.adicCompletionIntegers E) V]
   [IsScalarTower (P.adicCompletionIntegers E) (P.adicCompletion E) V]
 
-private theorem one_lt_norm (P : HeightOneSpectrum (𝓞 E)) : 1 < Ideal.absNorm P.asIdeal := by
-  have h0 : Ideal.absNorm P.asIdeal ≠ 0 := fun h => P.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
-  have h1 : Ideal.absNorm P.asIdeal ≠ 1 := fun h => P.isPrime.ne_top (Ideal.absNorm_eq_one_iff.mp h)
-  omega
-
 private theorem norm_eq_zpow {x : P.adicCompletion E} (hx : x ≠ 0) :
     ‖x‖ = (Ideal.absNorm P.asIdeal : ℝ) ^ (Valued.v x).log := by
   rw [← GroundTheory.Global.normalizedAbv_apply]
@@ -220,7 +215,7 @@ private theorem relIndex_eq_inv_norm_det_basis_change {m : ℕ} (a c : Module.Ba
 
 private theorem exists_nat_pow_eq_of_real_eq_zpow_absNorm (r : ℕ) (k : ℤ) (h : (r : ℝ) = (Ideal.absNorm P.asIdeal : ℝ) ^ k) :
     ∃ n : ℕ, r = Ideal.absNorm P.asIdeal ^ n := by
-  have hN : (1 : ℝ) < Ideal.absNorm P.asIdeal := by exact_mod_cast one_lt_norm P
+  have hN : (1 : ℝ) < Ideal.absNorm P.asIdeal := by exact_mod_cast _root_.GlobalTheory.LFun.one_lt_absNorm P
   have hpos : (0 : ℝ) < (Ideal.absNorm P.asIdeal : ℝ) ^ k := zpow_pos (by linarith) k
   have hr : 1 ≤ r := by
     rcases Nat.eq_zero_or_pos r with h0 | h0
@@ -352,7 +347,7 @@ private theorem main (L : Submodule (P.adicCompletionIntegers E) V)
     exact (LinearEquiv.isUnit_det' Te).ne_zero
   have hd2 : LinearMap.det ((t.equiv c (Equiv.refl _)).toLinearMap) ≠ 0 :=
     (LinearEquiv.isUnit_det' _).ne_zero
-  have hN : (1 : ℝ) < Ideal.absNorm P.asIdeal := by exact_mod_cast one_lt_norm P
+  have hN : (1 : ℝ) < Ideal.absNorm P.asIdeal := by exact_mod_cast _root_.GlobalTheory.LFun.one_lt_absNorm P
   have hnorm : ‖LinearMap.det T‖ = (Ideal.absNorm P.asIdeal : ℝ) ^ ((i : ℤ) - j) := by
     have n1 : ‖LinearMap.det ((a.equiv c (Equiv.refl _)).toLinearMap)‖ =
         ‖LinearMap.det ((t.equiv c (Equiv.refl _)).toLinearMap)‖ * ‖LinearMap.det T‖ := by
@@ -428,7 +423,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IdeleLatticeFacts.ExistsLinearMapDetMulMulEqPow =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.IdeleLatticeFacts.ExistsLocalLatticeOfGlobalLattice =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.IdeleLatticeFacts.ExistsLocalLatticeOfGlobalLattice", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaB\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.GoodLat\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryIdeleCharTrivialCongruentOneModulo\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutDef\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBI\nimport Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab\nimport Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaA\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.IdeleLatticeFacts.ExistsLocalLatticeOfGlobalLattice", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaB\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.GoodLat\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryIdeleCharTrivialCongruentOneModulo\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutDef\npublic import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepBI\nimport Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab\nimport Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaA\nimport Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEtaC\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -443,14 +438,8 @@ section SlopeTestRemainingChoices
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-private theorem ev_pair (P : HeightOneSpectrum (𝓞 E)) (α : Af F) :
-    ev F E P (algebraMap (AF F) (AEF F E) (pairA F 0 α)) =
-      GlobalTheory.LFun.complMap rfl (evalV F (P.under (𝓞 F)) α) := by
-  rw [ev_alg]
-  rfl
-
 private theorem ev_finIdem (P : HeightOneSpectrum (𝓞 E)) : ev F E P (finIdem F E) = 1 := by
-  rw [finIdem, ev_pair, map_one, map_one]
+  rw [finIdem, _root_.PositivityTheory.ThKW.AutEtaA.ev_fin, map_one, map_one]
 
 private theorem finPart_lift (y : Af F ⊗[F] E) : finPartF F E (PositivityTheory.ThKW.LatB.liftF F E y) = y := by
   induction y using TensorProduct.induction_on with
@@ -541,7 +530,7 @@ private theorem ev_mem_span (P : HeightOneSpectrum (𝓞 E)) (Λ : Submodule (�
   induction hz using AddSubgroup.closure_induction with
   | mem z hz =>
     obtain ⟨α, hα, γ, hγ, rfl⟩ := hz
-    rw [ev_map_smul, ev_pair, ev_ratWF]
+    rw [ev_map_smul, _root_.PositivityTheory.ThKW.AutEtaA.ev_fin, ev_ratWF]
     have hc : GlobalTheory.LFun.complMap rfl (evalV F (P.under (𝓞 F)) α) ∈ P.adicCompletionIntegers E :=
       GlobalTheory.LFun.complMap_mem rfl (hα _)
     exact Submodule.smul_mem _ (⟨_, hc⟩ : P.adicCompletionIntegers E) (Submodule.subset_span ⟨γ, hγ, rfl⟩)

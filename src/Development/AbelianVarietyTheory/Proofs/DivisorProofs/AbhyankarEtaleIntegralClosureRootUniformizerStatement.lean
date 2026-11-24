@@ -922,16 +922,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.abhyankar_ramificationIdx_eq_one_alt : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D],
-    Nonempty (D ≃ₐ[S] AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) → Irreducible π → IsUnit (e : S) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → P.ramificationIdx S ∣ e) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → ∀ [P.LiesOver (maximalIdeal S)],
-      Algebra.IsSeparable (S ⧸ maximalIdeal S) (integralClosure S L ⧸ P)) →
-    ∀ [IsDomain D] [IsDiscreteValuationRing D] (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
-    Q.ramificationIdx D = 1 := by
-  first | (exact @GlobalTheory.abhyankar_ramificationIdx_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarRamificationIdxEqOneStatement =====
@@ -1044,8 +1034,6 @@ open IsLocalRing
 
 
 
-theorem _root_.GlobalTheory.T.isDVR_adjoinRoot_X_pow_sub_C_of_irreducible : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (π : R) (e : ℕ), Irreducible π → 0 < e → ∀ [IsDomain (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π : Polynomial R))], IsDiscreteValuationRing (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π : Polynomial R)) := by
-  first | (exact @GlobalTheory.adjoinRoot_uniformiser_isDVR)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootUniformiserIsDVRStatement =====
@@ -1103,8 +1091,6 @@ open IsLocalRing
 
 
 
-theorem _root_.GlobalTheory.T.adjoinRoot_X_pow_sub_uniformizer_isDomain : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (π : R) (e : ℕ), Irreducible π → 0 < e → IsDomain (AdjoinRoot (Polynomial.X ^ e - Polynomial.C π : Polynomial R)) := by
-  first | (exact @GlobalTheory.adjoinRoot_X_pow_sub_C_uniformizer_isDomain)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootXPowSubUniformizerIsDomainStatement =====
@@ -1152,8 +1138,8 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
     rcases Nat.eq_zero_or_pos e with h | h
     · subst h; simp at he
     · exact h
-  haveI hAd := GlobalTheory.T.adjoinRoot_X_pow_sub_uniformizer_isDomain S π e hπ he0
-  haveI hAv := GlobalTheory.T.isDVR_adjoinRoot_X_pow_sub_C_of_irreducible S π e hπ he0
+  haveI hAd := _root_.GlobalTheory.adjoinRoot_X_pow_sub_C_uniformizer_isDomain S π e hπ he0
+  haveI hAv := _root_.GlobalTheory.adjoinRoot_uniformiser_isDVR S π e hπ he0
   haveI : IsDomain D := φ.toMulEquiv.isDomain
   haveI : IsPrincipalIdealRing D :=
     IsPrincipalIdealRing.of_surjective φ.symm.toRingHom φ.symm.surjective
@@ -1216,7 +1202,7 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
           (algebraMap_isIntegral_iff.mpr inferInstance) Q)
     haveI : Q.LiesOver (maximalIdeal D) := ⟨hQu.symm⟩
     exact isUnramifiedAt_of_ramificationIdx_eq_one_of_isSeparable (maximalIdeal D) Q
-      (GlobalTheory.T.abhyankar_ramificationIdx_eq_one_alt S K L π e D ⟨φ⟩ hπ he hram hsep Q) (GlobalTheory.T.abhyankar_residueField_isSeparable_alt S K L π e D ⟨φ⟩ hπ he hram hsep Q)
+      (_root_.GlobalTheory.abhyankar_ramificationIdx_eq_one S K L π e D ⟨φ⟩ hπ he hram hsep Q) (_root_.GlobalTheory.abhyankar_residueField_isSeparable S K L π e D ⟨φ⟩ hπ he hram hsep Q)
   haveI : Algebra.FormallyUnramified D (integralClosure D (TensorProduct S D L)) := by
     rw [Algebra.formallyUnramified_iff_forall]
     intro q
@@ -1241,15 +1227,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.abhyankar_dvr_of_isSeparable_alt : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D],
-    Nonempty (D ≃ₐ[S] AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) → Irreducible π → IsUnit (e : S) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → P.ramificationIdx S ∣ e) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → ∀ [P.LiesOver (maximalIdeal S)],
-      Algebra.IsSeparable (S ⧸ maximalIdeal S) (integralClosure S L ⧸ P)) →
-    Algebra.Etale D (integralClosure D (TensorProduct S D L)) := by
-  first | (exact @GlobalTheory.abhyankar_dvr_of_isSeparable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarDvrOfIsSeparableStatement =====
@@ -1326,11 +1303,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etale_integralClosure_tensor : ∀ (S₁ K₁ T : Type) [CommRing S₁] [IsDomain S₁] [IsIntegrallyClosed S₁] [Field K₁]
-    [Algebra S₁ K₁] [IsFractionRing S₁ K₁] [CommRing T] [Algebra S₁ T],
-    Algebra.Etale S₁ T → Algebra.IsIntegral S₁ T →
-    Algebra.Etale S₁ (integralClosure S₁ (K₁ ⊗[S₁] T)) := by
-  first | (exact @GlobalTheory.etale_integralClosure_tensor_of_etale_of_isIntegral)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIntegralClosureTensorOfEtaleOfIsIntegralStatement =====
@@ -1451,7 +1423,7 @@ theorem GlobalTheory.AbhyankarBC.etale_integralClosure_of_root_uniformizer : ∀
   let f : S[X] := X ^ q - C π
   let D := AdjoinRoot f
   have hD : Algebra.Etale D (integralClosure D (D ⊗[S] L)) :=
-    GlobalTheory.T.abhyankar_dvr_of_isSeparable_alt S K L π q D ⟨AlgEquiv.refl⟩ hπ hqu hram hsep
+    _root_.GlobalTheory.abhyankar_dvr_of_isSeparable S K L π q D ⟨AlgEquiv.refl⟩ hπ hqu hram hsep
   let φ : D →ₐ[S] S₁ := AdjoinRoot.liftAlgHom f (Algebra.ofId S S₁) y (by simp [f, hy])
   letI : Algebra D S₁ := φ.toRingHom.toAlgebra
   letI : Algebra D K₁ := ((algebraMap S₁ K₁).comp φ.toRingHom).toAlgebra
@@ -1463,7 +1435,7 @@ theorem GlobalTheory.AbhyankarBC.etale_integralClosure_of_root_uniformizer : ∀
   let T := S₁ ⊗[D] N
   haveI : Algebra.Etale S₁ T := Algebra.Etale.baseChange D N S₁
   haveI : Algebra.IsIntegral S₁ T := Algebra.IsIntegral.tensorProduct D S₁ N
-  haveI hT := GlobalTheory.T.etale_integralClosure_tensor S₁ K₁ T inferInstance inferInstance
+  haveI hT := _root_.GlobalTheory.etale_integralClosure_tensor_of_etale_of_isIntegral S₁ K₁ T inferInstance inferInstance
   have hunit : ∀ m ∈ Algebra.algebraMapSubmonoid D (nonZeroDivisors S), IsUnit (algebraMap D K₁ m) := by
     rintro _ ⟨s, hs, rfl⟩
     rw [← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply S S₁ K₁]
@@ -1489,18 +1461,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.abhyankar_etale_integralClosure_root_uniformizer : ∀ (S S₁ K K₁ L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S] [CommRing S₁]
-    [IsDomain S₁] [IsDiscreteValuationRing S₁] [Field K] [Algebra S K] [IsFractionRing S K] [Field K₁]
-    [Algebra S₁ K₁] [IsFractionRing S₁ K₁] [Algebra S S₁] [Algebra K K₁] [Algebra S K₁]
-    [IsScalarTower S K K₁] [IsScalarTower S S₁ K₁] [Field L] [Algebra K L] [Algebra S L]
-    [IsScalarTower S K L] [FiniteDimensional K L] [Algebra.IsSeparable K L],
-    Function.Injective (algebraMap S S₁) → ∀ (q : ℕ), 0 < q → IsUnit (q : S) →
-    ∀ π : S, Irreducible π → ∀ y : S₁, y ^ q = algebraMap S S₁ π →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → P.ramificationIdx S ∣ q) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → ∀ [P.LiesOver (maximalIdeal S)],
-      Algebra.IsSeparable (S ⧸ maximalIdeal S) (integralClosure S L ⧸ P)) →
-    Algebra.Etale S₁ (integralClosure S₁ (K₁ ⊗[K] L)) := by
-  first | (exact @GlobalTheory.AbhyankarBC.etale_integralClosure_of_root_uniformizer)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarEtaleIntegralClosureRootUniformizerStatement =====

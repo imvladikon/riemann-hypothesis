@@ -249,9 +249,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleTateTwistSheafFlat
-theorem etale_roots_of_unity_twist_flat_of_local_free : LateralTheory.EtaleFoundations.EtaleTateTwistSheafFlat := by
-  apply LateralTheory.EtaleFoundations.etale_tate_twist_sections_flat_of_quotient_iso
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.EtaleTateTwistSheafFlat := etale_roots_of_unity_twist_flat_of_local_free
+alias intersectionNumber_baseChange := _root_.LateralTheory.EtaleFoundations.etale_tate_twist_sections_flat_of_quotient_iso
 end LateralTheory.Fin.EtaleTateTwistSheafFlat
 end -- clump:auto
 end -- clump:auto

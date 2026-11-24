@@ -874,12 +874,6 @@ theorem theta_integral_functional_equation (w : InfinitePlace k) {F : (ι → �
   rw [step1, step2, hDinv.setIntegral_eq hD hinvar]
   rfl
 
-theorem thetaCInt_inv : ∀ {k : Type} [Field k] [NumberField k], ∀ {ι : Type} [Fintype ι]
-    [DecidableEq ι], ∀ (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
-    (ω : HeckeCharacter k) (t : {r : ℝ // 0 < r}), thetaCInt w F ω t⁻¹ =
-      ((t : ℝ) : ℂ) ^ Fintype.card ι * thetaCInt w (adelicFourierPi k F) ω⁻¹ t :=
-  fun w _ hF ω t ↦ theta_integral_functional_equation w hF ω t
-
 end GlobalTheory.CompanionTheory.AdelicThetaSeries.Hd
 end -- clump:auto
 end -- clump:auto
@@ -1037,7 +1031,7 @@ theorem thetaCFun_one_div (w : InfinitePlace k) {F : (ι → 𝔸[k]) → ℂ}
     thetaCFun w F ω (1 / x) =
       ((1 : ℂ) * ((x ^ (Fintype.card ι : ℝ) : ℝ) : ℂ)) • thetaCFun w (adelicFourierPi k F) ω x := by
   have hx0 : (0 : ℝ) < x := hx
-  have h := GlobalTheory.CompanionTheory.AdelicThetaSeries.Hd.thetaCInt_inv w hF ω ⟨x, hx0⟩
+  have h := _root_.GlobalTheory.CompanionTheory.AdelicThetaSeries.Hd.theta_integral_functional_equation w hF ω ⟨x, hx0⟩
   rw [← eq_inv_of_mul_eq_one_left hω] at h
   rw [thetaCFun_of_pos w _ ω (one_div_pos.2 hx0), thetaCFun_of_pos w _ ω hx0, Real.rpow_natCast]
   have e : (⟨1 / x, one_div_pos.2 hx0⟩ : {r : ℝ // 0 < r}) = (⟨x, hx0⟩ : {r : ℝ // 0 < r})⁻¹ := by

@@ -88,12 +88,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.eigenvalue_normSq_of_similitude_hermitian_signature : ∀ (n : ℕ) (h Q Γ : Matrix (Fin n) (Fin n) ℂ) (hh : h.IsHermitian) (Z : GL (Fin n) ℂ) (c : ℝ),
-    sigPosH hh ≤ 1 → sigPosH hh + sigNegH hh = n → Q = (Z : Matrix (Fin n) (Fin n) ℂ)ᴴ * h * Z → c ≠ 0 →
-    Γᴴ * Q * Γ = (c : ℂ) • Q →
-    (sigPosH hh = 0 ∨ ∃ (μ : ℂ) (x₀ : Fin n → ℂ), Γ *ᵥ x₀ = μ • x₀ ∧ 0 < (star x₀ ⬝ᵥ (Q *ᵥ x₀)).re) →
-    ∀ (w : ℂ) (x : Fin n → ℂ), x ≠ 0 → Γ *ᵥ x = w • x → ‖w‖ ^ 2 = c := by
-  first | (exact @GlobalTheory.eig_norm_sq_of_similitude)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenvalueNormSqOfSimilitudeHermitianSignatureStatement =====
@@ -196,9 +190,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_eigenvector_of_minpoly_root_hermitianPsi : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v : InfinitePlace G.F) (w : ℂ),
-    P.pol.eval₂ v.embedding w = 0 → ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v P.γ *ᵥ x = w • x := by
-  first | (exact @GlobalTheory.LKMid.roots_eig)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEigenvectorOfMinpolyRootHermitianPsiStatement =====
@@ -301,15 +292,15 @@ theorem local_pair_scalar_norm : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L
   intro p _ G L f hf _ P₁
   have hdeg := P₁.reg.1
   have hsep := P₁.reg.2
-  obtain ⟨Ω, hΩc, hΩ⟩ := GlobalTheory.T.exists_compact_support_twistedHeckeTestFunction p G L f hf
+  obtain ⟨Ω, hΩc, hΩ⟩ := _root_.GlobalTheory.FinClsLoc.support_subset_compact p G L f hf
   have hev := eventually_compL_mem_intPts p G Ω hΩc
-  have hlat := GlobalTheory.T.eventually_kottwitz_lattice_separable_minpoly p G P₁.γ hsep hdeg
-  have hnorm := GlobalTheory.T.eventually_tauFixed_unit_centralizer_is_norm p G P₁.β P₁.sym P₁.γ (P₁.c : ℚ) P₁.sim hsep hdeg
+  have hlat := _root_.GlobalTheory.FinClsLoc.SepLat.kottwitz_lattice_sep p G P₁.γ hsep hdeg
+  have hnorm := _root_.GlobalTheory.LocNormTau.exists_norm_of_tau_fixed_sep p G P₁.β P₁.sym P₁.γ (P₁.c : ℚ) P₁.sim hsep hdeg
   have hstab := GlobalTheory.FinClsLoc.intC_stab p G P₁.β
   obtain ⟨S, hS⟩ := GlobalTheory.FinClsLoc.exists_finset_forall_prime_awayP_padic p _ (hev.and (hlat.and (hnorm.and hstab)))
   refine ⟨S, fun P hγ hc x t hx g hfy ℓ _ hℓ => ?_⟩
   obtain ⟨w, ⟨hev', hlat', hnorm', hmul, hstar, hβi, hβi'⟩, ⟨e⟩⟩ := hS ℓ hℓ
-  apply GlobalTheory.T.localTwistedNormConclusion_transfer_ringEquiv p G (w.1.adicCompletion ℚ) ℚ_[ℓ] e
+  apply _root_.GlobalTheory.FinClsLoc.localTransfer p G (w.1.adicCompletion ℚ) ℚ_[ℓ] e
   have hint := hev' _ (hΩ _ hfy)
   obtain ⟨k, lam, hk1, hk2, hk3⟩ := GlobalTheory.CxRegPair.glue_pair G P x t hx g w
   rw [hγ] at hk1 hk2
@@ -385,8 +376,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.kottwitzPair_form_ratio_local_scalar_norm : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (f : G.GAf → ℂ), IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f → (∀ g, f g ≠ 0 → RegAf G g) → ∀ P₁ : Pair G, ∃ S : Finset ℕ, ∀ (P : Pair G), P.γ = P₁.γ → P.c = P₁.c → ∀ (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t) (g : G.GAf), f (g⁻¹ * P.toAf x t hx P.self * g) ≠ 0 → ∀ (ℓ : ℕ) [Fact ℓ.Prime], ℓ ∉ S → ∃ (u : ℚ_[ℓ]ˣ) (z : (ℚ_[ℓ] ⊗[ℚ] G.C)ˣ), Commute (z : ℚ_[ℓ] ⊗[ℚ] G.C) (inC G ℚ_[ℓ] (P₁.γ : G.C)) ∧ inC G ℚ_[ℓ] ((P.β : G.C) * ((P₁.β⁻¹ : G.Cˣ) : G.C)) = algebraMap ℚ_[ℓ] (ℚ_[ℓ] ⊗[ℚ] G.C) (u : ℚ_[ℓ]) * ((z : ℚ_[ℓ] ⊗[ℚ] G.C) * inC G ℚ_[ℓ] (P₁.β : G.C) * (starT G.star ℚ_[ℓ] (z : ℚ_[ℓ] ⊗[ℚ] G.C)).unop * inC G ℚ_[ℓ] ((P₁.β⁻¹ : G.Cˣ) : G.C)) := by
-  first | (exact @GlobalTheory.CxRegPair.local_pair_scalar_norm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzPairFormRatioLocalScalarNormStatement =====
@@ -444,14 +433,6 @@ namespace GlobalTheory.LKCx.PeriodicClassFixedPoints
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem sh_mul' (G : HTGroup p) (a b : G.C) : sh G (a * b) = sh G b * sh G a := by
-  simp only [sh, map_mul, MulOpposite.unop_mul]
-
-theorem sh_one' (G : HTGroup p) : sh G 1 = 1 := by simp [sh]
-
-theorem sh_mul_inv' (G : HTGroup p) (e : G.Cˣ) : sh G (e : G.C) * sh G ((e⁻¹ : G.Cˣ) : G.C) = 1 := by
-  rw [← sh_mul', Units.inv_mul, sh_one']
-
 theorem commute_ratio (G : HTGroup p) (β β₁ γ : G.Cˣ) (c : ℚ) (hc : c ≠ 0)
     (h : (γ : G.C) * β * sh G γ = algebraMap ℚ G.C c * β)
     (h₁ : (γ : G.C) * β₁ * sh G γ = algebraMap ℚ G.C c * β₁) :
@@ -474,8 +455,8 @@ theorem tau_ratio (G : HTGroup p) (β β₁ : G.Cˣ) (h : sh G β = β) (h₁ : 
       (β : G.C) * ((β₁⁻¹ : G.Cˣ) : G.C) := by
   have e : (β₁ : G.C) * sh G ((β₁⁻¹ : G.Cˣ) : G.C) = 1 := by
     conv_lhs => rw [← h₁]
-    exact sh_mul_inv' G β₁
-  rw [sh_mul', h, ← mul_assoc, e, one_mul]
+    exact _root_.GlobalTheory.CxRegPair.sh_mul_sh_inv G β₁
+  rw [_root_.GlobalTheory.LKMid.PairConj.sh_mul, h, ← mul_assoc, e, one_mul]
 
 theorem rel_of_same (G : HTGroup p) (β₁ γ₀ : G.Cˣ) (a₀ : G.C) (P Q : Pair G) (hP : P.γ = γ₀) (hQ : Q.γ = γ₀)
     (r r' : ℚˣ) (e e' : G.Cˣ) (he : Commute (e : G.C) γ₀) (he' : Commute (e' : G.C) γ₀)
@@ -492,10 +473,10 @@ theorem rel_of_same (G : HTGroup p) (β₁ γ₀ : G.Cˣ) (a₀ : G.C) (P Q : Pa
     have hrr : (r' : ℚ) / r * r = r' := by field_simp
     rw [hrr]
     congr 1
-    rw [Units.val_mul, sh_mul']
+    rw [Units.val_mul, _root_.GlobalTheory.LKMid.PairConj.sh_mul]
     calc (e' : G.C) * a₀ * β₁ * sh G (e' : G.C)
         = (e' : G.C) * (((e⁻¹ : G.Cˣ) : G.C) * e) * a₀ * β₁ * (sh G (e : G.C) * sh G ((e⁻¹ : G.Cˣ) : G.C)) * sh G (e' : G.C) := by
-          rw [Units.inv_mul, sh_mul_inv', mul_one, mul_one]
+          rw [Units.inv_mul, _root_.GlobalTheory.CxRegPair.sh_mul_sh_inv, mul_one, mul_one]
       _ = _ := by simp only [mul_assoc]
   · have hc : Commute ((e' * e⁻¹ : G.Cˣ) : G.C) (γ₀ : G.C) := by
       rw [Units.val_mul]; exact he'.mul_left he.units_inv_left
@@ -526,8 +507,8 @@ theorem finite_fixed (G : HTGroup p) (L : G.Level) (f : G.GAf → ℂ)
     rintro q ⟨P, -, hγ, hc, -⟩
     exact hne ⟨P, hγ, hc⟩
   obtain ⟨P₁, rfl, rfl⟩ := hne
-  obtain ⟨S, hS⟩ := GlobalTheory.T.kottwitzPair_form_ratio_local_scalar_norm p G L f hf hreg P₁
-  obtain ⟨A, hA⟩ := GlobalTheory.T.finite_fixed_unit_classes_centralizer_regular p G P₁.β P₁.sym P₁.γ P₁.c P₁.sim P₁.reg.2 P₁.reg.1 S
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.CxRegPair.local_pair_scalar_norm p G L f hf hreg P₁
+  obtain ⟨A, hA⟩ := _root_.GlobalTheory.LKCx.ClsReg.finite_fixed_classes_regular p G P₁.β P₁.sym P₁.γ P₁.c P₁.sim P₁.reg.2 P₁.reg.1 S
   let D : G.C × Bool → Pair G → Prop := fun ab P => P.γ = P₁.γ ∧ ∃ (r : ℚˣ) (e : G.Cˣ),
     Commute (e : G.C) P₁.γ ∧ decide (0 < (r : ℚ)) = ab.2 ∧
     (P.β : G.C) = algebraMap ℚ G.C r * ((e : G.C) * ab.1 * P₁.β * sh G (e : G.C))
@@ -591,8 +572,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.finite_kottwitz_classes_per_minpoly_a_eq_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 → ∀ (L : G.Level) (f : G.GAf → ℂ), IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f → (∀ g, f g ≠ 0 → RegAf G g) → ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), IsTest (sigG G 1) (KHT p G.m G.n 1 G.Fw) K' f' → ∀ P0 : Polynomial G.F, {q : Cls G | (Quot.out q).pol = P0 ∧ (∃ μ, (Quot.out q).Mark μ) ∧ (Quot.out q).term L.K.toSubgroup f 1 K' f' ≠ 0}.Finite := by
-  first | (exact @GlobalTheory.LKCx.PeriodicClassFixedPoints.finite_classes_of_pol_a_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteKottwitzClassesPerMinpolyAEqOneStatement =====
@@ -713,9 +692,9 @@ theorem root_norm_le' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β y : G.C
 theorem integral_of_term_ne_zero' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (f : G.GAf → ℂ) (r : ℕ) (K : Subgroup (Gr G r)) (φ : Gr G r → ℂ), 0 < r → IsTest (MonoidHom.id _) L.K.toSubgroup L.K.toSubgroup f → IsTest (sigG G r) (KHT p G.m G.n r G.Fw) K φ → ∃ N : ℕ, 0 < N ∧ ∀ P : Pair G, (∃ μ, P.Mark μ) → P.term L.K.toSubgroup f r K φ ≠ 0 → IsIntegral ℤ ((N : ℤ) • (P.γ : G.C)) ∧ IsIntegral ℤ ((N : ℤ) • ((P.γ⁻¹ : G.Cˣ) : G.C)) := open scoped Pointwise in by
   classical
   intro p _ G L f r K φ hr hf hφ
-  obtain ⟨Ω, hΩc, hΩ⟩ := GlobalTheory.T.twistedHeckeTestFunction_support_compact p G L f hf
-  obtain ⟨D, hD, hDp⟩ := GlobalTheory.T.compact_conj_charpoly_bounded_denominators_awayP p G (Ω ∪ (fun g => g⁻¹) '' Ω) (hΩc.union (hΩc.image continuous_inv))
-  obtain ⟨k, hk⟩ := GlobalTheory.T.twisted_orbit_norm_bounds p G r K φ hr hφ
+  obtain ⟨Ω, hΩc, hΩ⟩ := _root_.GlobalTheory.isTest_support_compact p G L f hf
+  obtain ⟨D, hD, hDp⟩ := _root_.GlobalTheory.AwayPDen.charpoly_den_bounded p G (Ω ∪ (fun g => g⁻¹) '' Ω) (hΩc.union (hΩc.image continuous_inv))
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.AtPBd.main p G r K φ hr hφ
   have hp := (Fact.out : p.Prime)
   refine ⟨D * p ^ (2 * k * Module.finrank ℚ G.C), Nat.mul_pos hD (pow_pos hp.pos _), ?_⟩
   intro P _ hP
@@ -735,12 +714,12 @@ theorem integral_of_term_ne_zero' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p)
         ((LinearMap.mulLeft ℚ (y0 : G.C)).charpoly.map (algebraMap ℚ (PadicAlgCl p))).IsRoot μ →
         ‖μ‖ ≤ (p : ℝ) ^ (2 * k) := fun μ hμ => by
       rw [show 2 * k = k + k by ring, pow_add]; exact hroots μ hμ
-    have h6 := GlobalTheory.T.padic_coeff_denominator_bound_of_bounded_roots p _ (LinearMap.charpoly_monic _) (2 * k) hroots'
+    have h6 := _root_.GlobalTheory.padic_denom_coeff_of_roots_bounded p _ (LinearMap.charpoly_monic _) (2 * k) hroots'
     rw [LinearMap.charpoly_natDegree] at h6
-    apply GlobalTheory.T.isIntegral_natCast_smul_of_mul_charpoly_coeff_int G.C
+    apply _root_.GlobalTheory.isIntegral_smul_of_charpoly_coeff_mul_int G.C
     intro i
     obtain ⟨kk, hkk⟩ := hAf i
-    exact GlobalTheory.T.den_bound_combine_padic_primeToP p D (2 * k * Module.finrank ℚ G.C) kk hp _ (h6 i) hkk
+    exact _root_.GlobalTheory.den_comb p D (2 * k * Module.finrank ℚ G.C) kk hp _ (h6 i) hkk
 
   rw [Pair.term] at hP
   split_ifs at hP with h
@@ -797,7 +776,7 @@ theorem finite_pol_marked' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
     {P0 : Polynomial G.F | ∃ P : Pair G, (∃ μ, P.Mark μ) ∧ P.pol = P0 ∧
       IsIntegral ℤ ((N : ℤ) • (P.γ : G.C)) ∧ IsIntegral ℤ ((N : ℤ) • ((P.γ⁻¹ : G.Cˣ) : G.C))}.Finite := by
   intro p _ G hG N hN
-  refine (GlobalTheory.T.finite_monic_of_roots_bdd_of_mul_isIntegral G.F G.n N N hN).subset ?_
+  refine (_root_.GlobalTheory.finite_monic_roots_bdd_mul_isIntegral G.F G.n N N hN).subset ?_
   rintro _ ⟨P, ⟨μ, v₀, hv₀, x₀, hx₀, hpos⟩, rfl, hI1, hI2⟩
   have hc0 : ((P.c : ℚ) : ℝ) ≠ 0 := by exact_mod_cast P.c.ne_zero
   have hnorm : ∀ (v : InfinitePlace G.F) (w : ℂ) (x : Fin G.n → ℂ), x ≠ 0 → G.psi v P.γ *ᵥ x = w • x →
@@ -807,7 +786,7 @@ theorem finite_pol_marked' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
     obtain ⟨Z, hZ⟩ := _root_.GlobalTheory.LKMid.Pair.gram_psi_inv_congr p G P v
     have hsig := G.sig v
     have hn := G.n_pos
-    refine GlobalTheory.T.eigenvalue_normSq_of_similitude_hermitian_signature G.n (G.gram v) _ (G.psi v P.γ) (G.gram_herm v) Z ((P.c : ℚ) : ℝ) ?_ ?_ hZ hc0 ?_ ?_
+    refine _root_.GlobalTheory.eig_norm_sq_of_similitude G.n (G.gram v) _ (G.psi v P.γ) (G.gram_herm v) Z ((P.c : ℚ) : ℝ) ?_ ?_ hZ hc0 ?_ ?_
       w x hx hwx
     · rcases hsig with h | h <;> omega
     · rcases hsig with h | h <;> omega
@@ -848,7 +827,7 @@ theorem finite_pol_marked' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
   have hkey : ∀ (v : InfinitePlace G.F) (w : ℂ), P.pol.eval₂ v.embedding w = 0 →
       ‖w‖ ≤ N ∧ IsIntegral ℤ ((N : ℂ) * w) := by
     intro v w hw
-    obtain ⟨x, hx, hwx⟩ := GlobalTheory.T.exists_eigenvector_of_minpoly_root_hermitianPsi p G P v w hw
+    obtain ⟨x, hx, hwx⟩ := _root_.GlobalTheory.LKMid.roots_eig p G P v w hw
     obtain ⟨h2, h3⟩ := hint v w x hx hwx
     exact ⟨norm_le_of_isIntegral_inv w P.c N hN (hnorm v w x hx hwx) hc0 h3, h2⟩
   refine ⟨minpoly.monic (Algebra.IsIntegral.isIntegral _), P.reg.1, ?_⟩
@@ -872,7 +851,7 @@ theorem finite_cls_term_one_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p)
   intro p _ G ha L f hf hreg K' f' hf'
   obtain ⟨N, hN, hb⟩ := integral_of_term_ne_zero' p G L f 1 K' f' one_pos hf hf'
   have hS := finite_pol_marked' p G ha N hN
-  refine (hS.biUnion (fun P0 _ => GlobalTheory.T.finite_kottwitz_classes_per_minpoly_a_eq_one p G ha L f hf hreg K' f' hf' P0)).subset ?_
+  refine (hS.biUnion (fun P0 _ => _root_.GlobalTheory.LKCx.PeriodicClassFixedPoints.finite_classes_of_pol_a_one p G ha L f hf hreg K' f' hf' P0)).subset ?_
   rintro q ⟨hm, ht⟩
   obtain ⟨h1, h2⟩ := hb (Quot.out q) hm ht
   exact Set.mem_biUnion (x := (Quot.out q).pol) ⟨Quot.out q, hm, rfl, h1, h2⟩ ⟨rfl, hm, ht⟩

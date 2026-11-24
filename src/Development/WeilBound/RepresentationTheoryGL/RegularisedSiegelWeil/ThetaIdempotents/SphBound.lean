@@ -1264,20 +1264,9 @@ theorem chz_add (ψ : AddChar (AF D.host.F) ℂ) (b₀ : HermE D ρ) (a b : herm
   simp only [chz, AddSubgroup.coe_add]
   rw [Matrix.mul_add, Matrix.trace_add, GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', AddChar.map_add_eq_mul]
 
-theorem chz_norm {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) (a : hermA D ρ) :
-    ‖chz ψ b₀ a‖ = 1 := hψ.2.1 _
-
-theorem chz_cont {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) : Continuous (chz ψ b₀) :=
-  GlobalTheory.CompanionTheory.HermPoisson.continuous_chi hψ (b₀.1.map (incA D) : Mx D ρ ρ)
-
 theorem chz_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) (l : ratHerm D ρ) :
     chz ψ b₀ l.1 = 1 :=
   GlobalTheory.CompanionTheory.HermPoisson.chi_rat hψ (m := (b₀.1.map (incA D) : Mx D ρ ρ)) ⟨b₀.1, rfl⟩ l
-
-theorem continuous_jacobi_map_zero {hn : ρ + p = n} (M : Maps D hn) : Continuous fun z : hermA D ρ => M.nzx z 0 :=
-  M.nzx_cont.comp (continuous_id.prodMk continuous_const)
-
-
 
 theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
     {b₀ : HermE D ρ} (hb₀ : b₀.1.det ≠ 0) {χ : (AE D)ˣ →* Circle} (hχ : IsHeckeChar D χ) {s : ℂ} {f : G D n → ℂ}
@@ -1298,7 +1287,7 @@ theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddC
   haveI : Countable (Matrix (Fin ρ) (Fin p) D.host.E) := countable_mat ρ p
   obtain ⟨e, he, hfib, hτe, hterm⟩ := GlobalTheory.T.heisenberg_cosets_param_rational hn M
   obtain ⟨K0, hK0, hKc⟩ := hcolat.2
-  have hcn := continuous_jacobi_map_zero M
+  have hcn := _root_.GlobalTheory.CompanionTheory.PcB.continuous_nz M
   obtain ⟨Um, hUm, hub⟩ := hmaj ((fun d : hermA D ρ × G D n => M.nzx d.1 0 * d.2) '' (K0 ×ˢ C))
     ((hK0.prod hC).image ((hcn.comp continuous_fst).mul continuous_snd))
   refine ⟨Um, hUm, e, he, fun g hg => ?_⟩
@@ -1312,7 +1301,7 @@ theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddC
     simp only [F]
     rw [hadd, mul_assoc]
     exact term_mul_left hinv ⟨M.nzx l.1 0, (hrat l).1⟩ _ q
-  have hchc : Continuous ch := Complex.continuous_conj.comp (chz_cont hψ b₀)
+  have hchc : Continuous ch := Complex.continuous_conj.comp (_root_.GlobalTheory.CompanionTheory.PcB.continuous_chz hψ b₀)
   have hF : ∀ q, Continuous (F q) := fun q =>
     hf.comp (continuous_const.mul (hcn.mul continuous_const))
   have hF0 : ∀ (l : ratHerm D ρ) u b, F (e (l, u)) b = F0 u ((l : hermA D ρ) + b) := fun l u b => by
@@ -1328,7 +1317,7 @@ theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddC
   have key := GlobalTheory.T.fundamental_domain_unfolding_two_sums m.lz (ratHerm D ρ) m.𝓖 hFD hvol
     (fun q : Cosets (P D n) (GF D n) => zKer hn (ratOf q.out)) (⊥ : Submodule D.host.E (Fin ρ → D.host.E)) F F0 ch
     (fun q => (hF q).aestronglyMeasurable) hchc.aestronglyMeasurable
-    (fun b => by simp only [ch, RCLike.norm_conj]; exact chz_norm hψ b₀ b)
+    (fun b => by simp only [ch, RCLike.norm_conj]; exact _root_.GlobalTheory.CompanionTheory.PcB.chz_norm hψ b₀ b)
     (fun a b => by simp only [ch]; rw [chz_add, map_mul])
     (fun l => by simp only [ch]; rw [chz_rat hψ b₀ l, map_one])
     Um hUm τ hτ
@@ -1365,7 +1354,7 @@ theorem unfold_on {hn : ρ + p = n} (M : Maps D hn) (m : Meas D ρ p) {ψ : AddC
     refine le_trans ?_ hle
     refine (norm_integral_le_integral_norm _).trans (le_of_eq ?_)
     refine integral_congr_ae (ae_of_all _ fun z => ?_)
-    simp only [F0, norm_mul, RCLike.norm_conj, chz_norm hψ b₀, mul_one]
+    simp only [F0, norm_mul, RCLike.norm_conj, _root_.GlobalTheory.CompanionTheory.PcB.chz_norm hψ b₀, mul_one]
   · exact key.2
 
 theorem zUnfold : ZUnfold := by
@@ -1459,18 +1448,12 @@ theorem trace_swap_pr (b₀ : HermE D ρ) {b : Mx D p p} (hb : adj b = b) (u v :
     Matrix.trace (b ⬝ pr b₀ v u) = cA D (Matrix.trace (b ⬝ pr b₀ u v)) := by
   rw [← trace_adj, adj_mul, hb, adj_pr, Matrix.trace_mul_comm]
 
-theorem halfTr_add'' (a c : AE D) : halfTr (a + c) = halfTr a + halfTr c := by
-  simp only [halfTr, trA, map_add (f := _), mul_add]
-
-theorem halfTr_neg'' (a : AE D) : halfTr (-a) = -halfTr a := by
-  simp only [halfTr, trA, map_neg, mul_neg]
-
 theorem quad_shift_pr (b₀ : HermE D ρ) {b : Mx D p p} (hb : adj b = b) (u v : Mx D ρ p) :
     halfTr (Matrix.trace (b ⬝ pr b₀ (u + v) (u + v))) =
       halfTr (Matrix.trace (b ⬝ pr b₀ u u)) + trA (Matrix.trace (pr b₀ u (v ⬝ b))) +
         halfTr (Matrix.trace (pr b₀ v (v ⬝ b))) := by
   rw [pr_add_left, pr_add_right, pr_add_right, Matrix.mul_add, Matrix.mul_add, Matrix.mul_add, Matrix.trace_add,
-    Matrix.trace_add, Matrix.trace_add, halfTr_add'', halfTr_add'', halfTr_add'', trace_swap_pr b₀ hb u v,
+    Matrix.trace_add, Matrix.trace_add, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', trace_swap_pr b₀ hb u v,
     trace_mul_pr, trace_mul_pr, ← Unip.halfTr_add_cA (Matrix.trace (b ⬝ pr b₀ u v))]
   abel
 
@@ -1482,7 +1465,7 @@ theorem psi_halfTr_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F
 theorem chz_add (ψ : AddChar (AF D.host.F) ℂ) (b₀ : HermE D ρ) (z : hermA D ρ) (w : Mx D ρ ρ) (h : z.1 + w ∈ hermA D ρ) :
     chz ψ b₀ ⟨z.1 + w, h⟩ = chz ψ b₀ z * ψ (halfTr (Matrix.trace (b₀.1.map (incA D) ⬝ w))) := by
   simp only [chz]
-  rw [Matrix.mul_add, Matrix.trace_add, halfTr_add'', AddChar.map_add_eq_mul]
+  rw [Matrix.mul_add, Matrix.trace_add, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', AddChar.map_add_eq_mul]
 
 theorem trace_rat {k : ℕ} (N : Matrix (Fin k) (Fin k) D.host.E) :
     Matrix.trace (rat N : Mx D k k) = incA D (Matrix.trace N) := by
@@ -1527,7 +1510,7 @@ theorem th_unip {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) {b
       simpa [zU, sub_eq_add_neg] using this⟩ := Subtype.ext (sub_eq_add_neg _ _)
     have e2 : Matrix.trace (b₀.1.map (incA D) ⬝ (y ⬝ (rat b ⬝ adj y))) = Matrix.trace (pr b₀ y (y ⬝ rat b)) := by
       rw [pr_def, ← Matrix.mul_assoc y, ← Matrix.mul_assoc (b₀.1.map (incA D)) (y ⬝ rat b) (adj y), Matrix.trace_mul_comm]
-    rw [e, chz_add, Matrix.mul_neg, Matrix.trace_neg, halfTr_neg'', e2]
+    rw [e, chz_add, Matrix.mul_neg, Matrix.trace_neg, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_neg', e2]
   have ht : ∀ ξ : Matrix (Fin ρ) (Fin p) D.host.E,
       ψ (trA (Matrix.trace (pr b₀ (x - y ⬝ rat b) (ξ.map (incA D))))) * Ω (g * h) (ξ.map (incA D) + y) =
         ψ u * (ψ (trA (Matrix.trace (pr b₀ x (ξ.map (incA D))))) * Ω h (ξ.map (incA D) + y)) := by
@@ -1649,7 +1632,7 @@ theorem chz_zW (ψ : AddChar (AF D.host.F) ℂ) (b₀ : HermE D ρ) (z : hermA D
     rw [pr_def, ← Matrix.mul_assoc (b₀.1.map (incA D)) y (adj x), Matrix.trace_mul_comm]
   have e2 : Matrix.trace (b₀.1.map (incA D) ⬝ (x ⬝ adj y)) = cA D (Matrix.trace (pr b₀ x y)) := by
     rw [← trace_pr_swap, pr_def, ← Matrix.mul_assoc (b₀.1.map (incA D)) x (adj y), Matrix.trace_mul_comm]
-  rw [e, chz_add, Matrix.mul_neg, Matrix.mul_add, Matrix.trace_neg, Matrix.trace_add, e1, e2, halfTr_neg'', halfTr_add'',
+  rw [e, chz_add, Matrix.mul_neg, Matrix.mul_add, Matrix.trace_neg, Matrix.trace_add, e1, e2, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_neg', _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add',
     add_comm (halfTr (cA D _)), Unip.halfTr_add_cA]
   rfl
 

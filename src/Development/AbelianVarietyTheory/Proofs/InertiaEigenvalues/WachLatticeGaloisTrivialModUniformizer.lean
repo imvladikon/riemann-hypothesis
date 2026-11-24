@@ -73,15 +73,6 @@ theorem shift_mem {L M : Type} [Field L] [AddCommGroup M] [Module L M] {D : Subm
     · simp [h2 _ h3]
     · simp [h3]
 
-theorem conv_one {L M : Type} [Field L] [AddCommGroup M] [Module L M] (f : ℤ → M) :
-    conv (1 : PowerSeries L) f = f := by
-  funext k
-  unfold conv
-  rw [finsum_eq_single _ 0]
-  · simp
-  · intro j hj
-    simp [PowerSeries.coeff_one, hj]
-
 theorem exists_smul_of_dvd_repr {A M ι : Type} [CommRing A] [AddCommGroup M] [Module A M]
     [Fintype ι] (N : Submodule A M) (nb : Module.Basis ι A ↥N) (a : A) (z : ↥N)
     (hz : ∀ j, a ^ 1 ∣ nb.repr z j) : ∃ y ∈ N, (z : M) = a • y := by
@@ -136,7 +127,7 @@ theorem sub_mem_X_of_val : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   refine (hI.2.2 (g' - x') 1).1 ?_ j
   refine shift_mem hS (ex (Cm l) h T i ζ x') _ ?_
     (algebraMap ↥(OL LL) ↥LL.1 (W.χΓ g : ↥(OL LL))) fun k => ?_
-  · exact Submodule.subset_span ⟨1, x', (conv_one _).symm⟩
+  · exact Submodule.subset_span ⟨1, x', (_root_.GlobalTheory.NL.Model.conv_one _).symm⟩
   · rw [← ex_of_val (Cm l) h T hT i ζ (s - 1) hζ g hg x' k]
     unfold ex
     rw [map_sub]

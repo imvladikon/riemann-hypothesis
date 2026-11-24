@@ -314,20 +314,11 @@ namespace GlobalTheory.Mum.SecExp
 
 open ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem exists_restrict' {X Y Z : Scheme.{0}} (L : LB X) {K : Type} [Fintype K] (φ : K → (Y ⟶ X)) (ε : K → ℤ)
-    (h : Z ⟶ Y) (φ' : K → (Z ⟶ X)) (hφ : ∀ k, φ' k = h ≫ φ k) (s : LB.Sec (LB.LinComb L φ ε)) :
-    ∃ t : LB.Sec (LB.LinComb L φ' ε), GeneratorPullback.SecScal L φ' ε t φ ε s h 1 := by
-  obtain rfl : φ' = fun k => h ≫ φ k := funext hφ
-  refine ⟨ReciprocityTheory.ChartRestriction.G.DVR.pullSec L φ ε s h, fun j₁ j₂ hco => ?_⟩
-  obtain rfl : j₁ = j₂ := funext fun k => hco (Sum.inl k) (Sum.inr k) rfl
-  rw [resTop, map_one, _root_.one_mul]
-  exact (DVR.rs_rs _ _ _).symm
-
 theorem exists_intFam : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ U : Unif (maximalIdeal R) D A G, ∀ k : ℕ, 3 ≤ k → ∀ s : H0 U.LG.L k, ∃ f : IntFam (maximalIdeal R) D.toPre k, ∀ e : ℕ, U.ExpandsAt e k s f.f := by
   intro R _ _ _ hB D A G _ _ hG U k hk s
   have hR : AdmBase R (maximalIdeal R) := hB.1
   have : IsNoetherianRing R := hR.1
-  obtain ⟨sK, hsK⟩ := exists_restrict' U.LG.L (fun _ : Fin 1 => 𝟙 G.left) (fun _ => (k : ℤ))
+  obtain ⟨sK, hsK⟩ := _root_.GlobalTheory.UnifDescent.exists_restrict U.LG.L (fun _ : Fin 1 => 𝟙 G.left) (fun _ => (k : ℤ))
     (pullback.fst G.hom (jK R)) (fun _ => pullback.fst G.hom (jK R)) (fun _ => (Category.comp_id _).symm) s
   obtain ⟨E, hE, -⟩ := (U.expand k (by omega)).1 sK
   obtain ⟨g, hg, hext⟩ := GlobalTheory.IntegralExpansionLocal.main R (maximalIdeal R) le_rfl D A G U.toUnifPre k s sK hsK E hE
@@ -783,8 +774,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.exists_mumfordMultiplier_exponent_nonzero_section : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (a a' : D.toPre.P.A ⟶ D.toPre.P.A) (h h' : D.toPre.X →+ D.toPre.X), EndData D.toPre a a' h h' → ∃ N : ℕ, 1 ≤ N ∧ GlobalTheory.MumMult.PosN D a h h' N ∧ ∃ (σ₀ : LB.Sec (LB.LinComb D.toPre.P.L (K := Fin 2) ![𝟙 D.toPre.P.A.left, a.left] ![(N : ℤ), -1])) (x : D.toPre.P.A.left), D.toPre.P.A.hom x = (IsLocalRing.closedPoint R : PrimeSpectrum R) ∧ GlobalTheory.MumMult.NonzeroAt D a N σ₀ x := by
-  first | exact @GlobalTheory.MumMult.exists_N_sec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordMultiplierExponentNonzeroSectionStatement =====
@@ -806,7 +795,7 @@ namespace GlobalTheory.MumMult
 
 theorem chart_main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ U : Unif (maximalIdeal R) D A G, ∀ (a a' : D.toPre.P.A ⟶ D.toPre.P.A) (h h' : D.toPre.X →+ D.toPre.X), EndData D.toPre a a' h h' → ∀ b, FormalEnd U.toUnifPre a h' b → ∃ N : ℕ, 1 ≤ N ∧ ∃ m : ∀ (e : ℕ) (i i' : Fin 1 → U.LG.L.ι), Γ((thickObj R (maximalIdeal R) e G).left, (((b e).left ≫ (fstG (maximalIdeal R) e G).left) ⁻¹ᵁ secChart U.LG.L i ⊓ (fstG (maximalIdeal R) e G).left ⁻¹ᵁ secChart U.LG.L i')), (∀ k : ℕ, 3 ≤ k → ∀ s : H0 U.LG.L k, ∃ F : IntFam (maximalIdeal R) D.toPre (N * k), ∀ (e : ℕ) (i i' : Fin 1 → U.LG.L.ι), GlobalTheory.MumMult.ChartExpOn U.toUnifPre e (N * k) i' (((b e).left ≫ (fstG (maximalIdeal R) e G).left) ⁻¹ᵁ secChart U.LG.L i ⊓ (fstG (maximalIdeal R) e G).left ⁻¹ᵁ secChart U.LG.L i') (m e i i' ^ k * ((thickObj R (maximalIdeal R) e G).left.presheaf.map (homOfLE (inf_le_left : (((b e).left ≫ (fstG (maximalIdeal R) e G).left) ⁻¹ᵁ secChart U.LG.L i ⊓ (fstG (maximalIdeal R) e G).left ⁻¹ᵁ secChart U.LG.L i') ≤ ((b e).left ≫ (fstG (maximalIdeal R) e G).left) ⁻¹ᵁ secChart U.LG.L i)).op).hom ((((b e).left ≫ (fstG (maximalIdeal R) e G).left).app (secChart U.LG.L i)).hom (s.f i))) F.f) ∧ ∃ y : (thickObj R (maximalIdeal R) 0 G).left, (∃ i' : Fin 1 → U.LG.L.ι, y ∈ (fstG (maximalIdeal R) 0 G).left ⁻¹ᵁ secChart U.LG.L i') ∧ ∀ i i' : Fin 1 → U.LG.L.ι, y ∈ (((b 0).left ≫ (fstG (maximalIdeal R) 0 G).left) ⁻¹ᵁ secChart U.LG.L i ⊓ (fstG (maximalIdeal R) 0 G).left ⁻¹ᵁ secChart U.LG.L i') → y ∈ (thickObj R (maximalIdeal R) 0 G).left.basicOpen (m 0 i i') := by
   intro R _ _ _ hB D A G _ _ hG U a a' h h' hE b hb
-  obtain ⟨N, hN, hpos, σ₀, x, hx, hσ⟩ := GlobalTheory.T.exists_mumfordMultiplier_exponent_nonzero_section R hB D a a' h h' hE
+  obtain ⟨N, hN, hpos, σ₀, x, hx, hσ⟩ := _root_.GlobalTheory.MumMult.exists_N_sec R hB D a a' h h' hE
   obtain ⟨m, hAct, hLead⟩ := GlobalTheory.T.exists_mumfordMultiplier_of_section R hB D A G hG U a a' h h' hE b hb N hN hpos σ₀ x hx hσ
   refine ⟨N, hN, m, fun k hk s => ?_, GlobalTheory.T.exists_closedFibre_chart_point_mumfordMultiplier_nonzero R D A G U b m hLead⟩
   obtain ⟨f, hf⟩ := GlobalTheory.T.exists_integralThetaExpansion_of_section_power_ge_three R hB D A G hG U k hk s
@@ -1160,22 +1149,15 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.Mum
 
-theorem secRatio_app_restrict {Y Z : Scheme.{0}} (h : Z ⟶ Y) {U W : Y.Opens} (hle : W ≤ U)
-    (hle' : h ⁻¹ᵁ W ≤ h ⁻¹ᵁ U) (x : Γ(Y, U)) :
-    (Z.presheaf.map (homOfLE hle').op).hom ((h.app U).hom x) =
-      (h.app W).hom ((Y.presheaf.map (homOfLE hle).op).hom x) := by
-  have := congrArg (fun φ => φ.hom x) (h.naturality (homOfLE hle).op)
-  simpa using this.symm
-
 theorem secRatioEq_comp : ∀ {X Y Z : Scheme.{0}} (L : LB X) {k k' : ℕ} (u v : Y ⟶ X) (h : Z ⟶ Y) (s₁ s₂ : H0 L k) (t₁ t₂ : H0 L k'), SecRatioEq L u v s₁ s₂ t₁ t₂ → SecRatioEq L (h ≫ u) (h ≫ v) s₁ s₂ t₁ t₂ := by
   intro X Y Z L k k' u v h s₁ s₂ t₁ t₂ hR i i'
   have e := congrArg (h.app (u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i')).hom (hR i i')
   simp only [map_mul] at e
   simp only [Scheme.Hom.comp_app]
-  erw [secRatio_app_restrict h (inf_le_left : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ u ⁻¹ᵁ secChart L i),
-    secRatio_app_restrict h (inf_le_right : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ v ⁻¹ᵁ secChart L i'),
-    secRatio_app_restrict h (inf_le_left : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ u ⁻¹ᵁ secChart L i),
-    secRatio_app_restrict h (inf_le_right : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ v ⁻¹ᵁ secChart L i')]
+  erw [_root_.GlobalTheory.ConstThickening.res_app h (inf_le_left : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ u ⁻¹ᵁ secChart L i),
+    _root_.GlobalTheory.ConstThickening.res_app h (inf_le_right : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ v ⁻¹ᵁ secChart L i'),
+    _root_.GlobalTheory.ConstThickening.res_app h (inf_le_left : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ u ⁻¹ᵁ secChart L i),
+    _root_.GlobalTheory.ConstThickening.res_app h (inf_le_right : u ⁻¹ᵁ secChart L i ⊓ v ⁻¹ᵁ secChart L i' ≤ v ⁻¹ᵁ secChart L i')]
   exact e
 
 end GlobalTheory.Mum

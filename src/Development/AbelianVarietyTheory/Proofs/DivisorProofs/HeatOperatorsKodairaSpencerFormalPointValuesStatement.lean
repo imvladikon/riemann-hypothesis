@@ -66,6 +66,7 @@ import Mathlib.AlgebraicGeometry.QuasiAffine
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueSpecializes
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB
 import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
@@ -611,7 +612,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoverMemberContainingFractionFieldPointStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationFractionRingOfVectorField =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationFractionRingOfVectorField", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemRangeCompIffOfIsClosedImmersion\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDerivationExtendOfFormallySmooth\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationFractionRingOfVectorField", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemRangeCompIffOfIsClosedImmersion\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDerivationExtendOfFormallySmooth\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueSpecializes\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -641,11 +642,6 @@ theorem top_le_preimage_of_mem {A : Type} [CommRing A] [IsLocalRing A] {X : Sche
 theorem germ_resG {X : Scheme.{0}} {U V : X.Opens} (h : V ≤ U) (p : X) (hp : p ∈ V) (f : Γ(X, U)) :
     X.presheaf.germ V p hp (resG X h f) = X.presheaf.germ U p (h hp) f :=
   X.presheaf.germ_res_apply (homOfLE h) p hp f
-
-theorem resG_resG {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (f : Γ(X, U)) :
-    resG X h' (resG X h f) = resG X (h'.trans h) f := by
-  simp only [resG, ← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
 
 theorem eventually_zero {X : Scheme.{0}} {Ω : Type} [CommRing Ω] [IsDomain Ω] [IsLocalRing Ω] (x : Sp Ω ⟶ X)
     (hx : ∀ (O : X.Opens) (f : Γ(X, O)), ⊤ ≤ x ⁻¹ᵁ O → valR x O f = 0 → f = 0) (O : X.Opens) (f : Γ(X, O))
@@ -686,17 +682,17 @@ theorem eventually_zero {X : Scheme.{0}} {Ω : Type} [CommRing Ω] [IsDomain Ω]
   rw [valR_res ξ _ hξW₁, valR_res ξ _ hξW₁, valR_mul ξ _ (le_preimage_mono ξ (leOfHom iU) hξW₁),
     valR_res ξ _ (le_preimage_mono ξ (leOfHom iU) hξW₁), hf, zero_mul, hξ, valR_spMap_comp _ x U hxU] at hval
   have ha0 : a = 0 := hx U a hxU ((IsFractionRing.injective Ω (FractionRing Ω)) (by rw [← hval, map_zero]))
-  rw [ha0, map_zero, map_mul, resG_resG, resG_resG] at heq
+  rw [ha0, map_zero, map_mul, _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG] at heq
   set O₃ : X.Opens := W₁ ⊓ X.basicOpen (s : Γ(X, U)) with hO₃
   have h₃ : O₃ ≤ W₁ := inf_le_left
   have hunit : IsUnit (resG X (h₃.trans ((leOfHom iU).trans inf_le_right)) (s : Γ(X, U))) := by
     have h0 : IsUnit (resG X (X.basicOpen_le (s : Γ(X, U))) (s : Γ(X, U))) :=
       RingedSpace.isUnit_res_basicOpen X.toLocallyRingedSpace.toRingedSpace (s : Γ(X, U))
-    rw [← resG_resG (X.basicOpen_le (s : Γ(X, U))) (show O₃ ≤ X.basicOpen (s : Γ(X, U)) from inf_le_right)]
+    rw [← _root_.GlobalTheory.Cartier.resG_resG (X.basicOpen_le (s : Γ(X, U))) (show O₃ ≤ X.basicOpen (s : Γ(X, U)) from inf_le_right)]
     exact h0.map _
   refine ⟨O₃, h₃.trans ((leOfHom iU).trans inf_le_left), top_le_preimage_of_mem ξ O₃ (show p ∈ O₃ from ⟨hpW₁, hps⟩), ?_⟩
   have := congrArg (resG X h₃) heq
-  rw [map_mul, resG_resG, resG_resG, map_zero] at this
+  rw [map_mul, _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG, map_zero] at this
   exact (hunit.mul_left_eq_zero).mp this
 
 theorem valR_sub {C : Type} [CommRing C] {X : Scheme.{0}} (x : Sp C ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
@@ -750,10 +746,10 @@ theorem valR_der_eq (H : ∀ (O : X.Opens) (f : Γ(X, O)), ⊤ ≤ ξ ⁻¹ᵁ O
     (d : Fld X) (hd : IsField W d) {O O' : X.Opens} (f : Γ(X, O)) (f' : Γ(X, O')) (hOW : O ≤ W) (hO'W : O' ≤ W)
     (hO : ⊤ ≤ ξ ⁻¹ᵁ O) (hO' : ⊤ ≤ ξ ⁻¹ᵁ O') (e : valR ξ O f = valR ξ O' f') :
     valR ξ O (d O f) = valR ξ O' (d O' f') := by
-  have h2 := top_le_preimage_inf ξ hO hO'
+  have h2 := _root_.GlobalTheory.Specialise.le_preimage_inf ξ hO hO'
   obtain ⟨O₃, h₃, hO₃, hz⟩ := H (O ⊓ O') (resG X inf_le_left f - resG X inf_le_right f') h2
     (by rw [valR_sub ξ _ h2, valR_res ξ _ h2, valR_res ξ _ h2, e, sub_self])
-  rw [map_sub, resG_resG, resG_resG, sub_eq_zero] at hz
+  rw [map_sub, _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG, sub_eq_zero] at hz
   rw [← valR_res ξ (h₃.trans inf_le_left) hO₃, ← valR_res ξ (h₃.trans inf_le_right) hO₃,
     ← hd.2.2 O O₃ _ hOW f, ← hd.2.2 O' O₃ _ hO'W f', hz]
 
@@ -785,7 +781,7 @@ theorem valDer_add (H : ∀ (O : X.Opens) (f : Γ(X, O)), ⊤ ≤ ξ ⁻¹ᵁ O 
     valDer ξ W hW d (a + b) = valDer ξ W hW d a + valDer ξ W hW d b := by
   obtain ⟨O, f, hOW, hO, ea⟩ := (mem_valField_iff ξ W hW a).mp a.2
   obtain ⟨O', f', hO'W, hO', eb⟩ := (mem_valField_iff ξ W hW b).mp b.2
-  have h2 := top_le_preimage_inf ξ hO hO'
+  have h2 := _root_.GlobalTheory.Specialise.le_preimage_inf ξ hO hO'
   have h2W : O ⊓ O' ≤ W := inf_le_left.trans hOW
   rw [valDer_eq H hW d hd (a + b) (resG X inf_le_left f + resG X inf_le_right f') h2W h2
       (by rw [valR_add ξ _ h2, valR_res ξ _ h2, valR_res ξ _ h2, ea, eb]; rfl),
@@ -799,7 +795,7 @@ theorem valDer_mul (H : ∀ (O : X.Opens) (f : Γ(X, O)), ⊤ ≤ ξ ⁻¹ᵁ O 
     valDer ξ W hW d (a * b) = (a : K) * valDer ξ W hW d b + (b : K) * valDer ξ W hW d a := by
   obtain ⟨O, f, hOW, hO, ea⟩ := (mem_valField_iff ξ W hW a).mp a.2
   obtain ⟨O', f', hO'W, hO', eb⟩ := (mem_valField_iff ξ W hW b).mp b.2
-  have h2 := top_le_preimage_inf ξ hO hO'
+  have h2 := _root_.GlobalTheory.Specialise.le_preimage_inf ξ hO hO'
   have h2W : O ⊓ O' ≤ W := inf_le_left.trans hOW
   have ea' : valR ξ (O ⊓ O') (resG X inf_le_left f) = a := by rw [valR_res ξ _ h2, ea]
   have eb' : valR ξ (O ⊓ O') (resG X inf_le_right f') = b := by rw [valR_res ξ _ h2, eb]
@@ -1459,8 +1455,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.heatOperators_kodairaSpencer_formal_point_values : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (m : ℕ) (tt : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre tt gam → (∀ i, tt i ≠ 0) → (∀ p : Sp R, p ∈ abLocus t.G ↔ ∏ i, tt i ∉ p.asIdeal) → ∀ (n : ℕ) (v' : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) t.G)) (D : Derivation ℤ R R), ∀ (Ω : Type) [CommRing Ω] [IsDomain Ω] [IsLocalRing Ω] (φ : R →+* Ω) (x' : Sp Ω ⟶ t.G.left) (δ : Fin n → Derivation ℤ Ω Ω) (dd' : Fin n → Fld t.G.left), IsAdicComplete ((maximalIdeal R).map φ) Ω → x' ≫ t.G.hom = spMap φ → (∀ a, IsInv t.G (v' a) (dd' a)) → (∀ a r, δ a (φ r) = 0) → (∀ a O f, ⊤ ≤ x' ⁻¹ᵁ O → valR x' O (dd' a O f) = δ a (valR x' O f)) → (∀ O (f : Γ(t.G.left, O)), ⊤ ≤ x' ⁻¹ᵁ O → valR x' O f = 0 → f = 0) → ∀ (g : GlobalTheory.RayEv.Transport.Frame t.PP.L (x' ≫ 𝟙 t.G.left)), g.IsGen → ∀ (δL : Fin n → Derivation ℤ (FractionRing Ω) (FractionRing Ω)), (∀ a ω, δL a ((algebraMap Ω (FractionRing Ω)) ω) = (algebraMap Ω (FractionRing Ω)) (δ a ω)) → ∀ (Θ₁ : Matrix (Fin n) (Fin n) Γ(Sp R, ((Sp R).affineBasicOpen (U := (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens)) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))).1)) (DV : Derivation ℤ Γ(Sp R, ((Sp R).affineBasicOpen (U := (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens)) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))).1) Γ(Sp R, ((Sp R).affineBasicOpen (U := (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens)) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))).1)), (∀ r, DV (((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)) = ((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (D r))) → IsKS t ((Sp R).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))) ((Sp R).affineBasicOpen (U := (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens)) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))) (fun a => spMap (dualMap (((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)) ≫ (tv (v' a)).left) ⇑DV Θ₁ → ∃ (iota : Γ(Sp R, ((Sp R).affineBasicOpen (U := (⟨⊤, isAffineOpen_top _⟩ : (Sp R).affineOpens)) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i))).1) →+* (FractionRing Ω)) (dt : Derivation ℤ (FractionRing Ω) (FractionRing Ω)) (u' : Fin n → (FractionRing Ω)) (p p' : (FractionRing Ω)), (∀ r, iota (((Sp R).presheaf.map (homOfLE ((Sp R).basicOpen_le (U := ⊤) ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom (∏ i, tt i)))).op).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)) = (algebraMap Ω (FractionRing Ω)) (φ r)) ∧ (∀ r, dt ((algebraMap Ω (FractionRing Ω)) (φ r)) = (algebraMap Ω (FractionRing Ω)) (φ (D r))) ∧ ∀ (k : ℕ), 1 ≤ k → ∀ s : (FractionRing Ω), (∃ (r : R) (σ : SecM (𝟙 t.G.left) t.PP.L k) (ω : Ω), r ≠ 0 ∧ IsValue (𝟙 _) t.PP.L x' g k σ ω ∧ (algebraMap Ω (FractionRing Ω)) ω = (algebraMap Ω (FractionRing Ω)) (φ r) * (s)) → (∃ (r : R) (σ : SecM (𝟙 t.G.left) t.PP.L k) (ω : Ω), r ≠ 0 ∧ IsValue (𝟙 _) t.PP.L x' g k σ ω ∧ (algebraMap Ω (FractionRing Ω)) ω = (algebraMap Ω (FractionRing Ω)) (φ r) * (ringOp ⇑dt (fun a => ⇑(δL a)) (iota.mapMatrix Θ₁) u' p p' k s)) := by
-  first | exact @GlobalTheory.HeatV.heat_values_of_isKS
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorsKodairaSpencerFormalPointValuesStatement =====

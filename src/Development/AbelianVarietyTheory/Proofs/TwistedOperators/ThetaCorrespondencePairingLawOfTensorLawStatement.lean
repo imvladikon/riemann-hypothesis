@@ -256,19 +256,6 @@ open GlobalTheory.ArchRec
 
 namespace GlobalTheory.ArchRec.SpanMod
 
-variable {r s : ℕ}
-
-theorem exists_unitary_span (r s : ℕ) (W U I : Type) [AddCommGroup W] [Module ℂ W] [NormedAddCommGroup U]
-    [InnerProductSpace ℂ U] (a : Mat r s →ₗ[ℂ] Module.End ℂ W) (b : Mat r s → Module.End ℂ U)
-    (j : I → W →ₗ[ℂ] U) (ha : IsGK a) (hb : IsUAct b)
-    (hj : ∀ i, ∀ Z ∈ upq r s, ∀ P, j i (a Z P) = b Z (j i P)) :
-    ∃ (MM : UGKMod r s) (inc : MM.M.V →ₗ[ℂ] U), Function.Injective inc ∧
-      LinearMap.range inc = Submodule.span ℂ {y | ∃ i P, y = j i P} ∧
-      ∀ Z ∈ upq r s, ∀ y, inc (MM.M.act Z y) = b Z (inc y) := by
-  first
-  | (apply _root_.GlobalTheory.RealPartAdjointAction.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.RealPartAdjointAction.main ..)
-
 end GlobalTheory.ArchRec.SpanMod
 end -- clump:auto
 end -- clump:auto
@@ -292,8 +279,6 @@ open scoped TensorProduct InnerProductSpace ComplexConjugate
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.ArchRec
 
-theorem _root_.GlobalTheory.T.exists_unitary_module_onto_span_of_intertwining : ∀ (r s : ℕ) (W U I : Type) [AddCommGroup W] [Module ℂ W] [NormedAddCommGroup U] [InnerProductSpace ℂ U] (a : Mat r s →ₗ[ℂ] Module.End ℂ W) (b : Mat r s → Module.End ℂ U) (j : I → W →ₗ[ℂ] U), IsGK a → IsUAct b → (∀ i, ∀ Z ∈ upq r s, ∀ P, j i (a Z P) = b Z (j i P)) → ∃ (MM : UGKMod r s) (inc : MM.M.V →ₗ[ℂ] U), Function.Injective inc ∧ LinearMap.range inc = Submodule.span ℂ {y | ∃ i P, y = j i P} ∧ ∀ Z ∈ upq r s, ∀ y, inc (MM.M.act Z y) = b Z (inc y) := by
-  first | exact @GlobalTheory.ArchRec.SpanMod.exists_unitary_span
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitarySpanStatement =====
@@ -425,7 +410,7 @@ theorem exists_both (h₁ : IsGK a₁) (h₂ : IsGK a₂) (hA : AdmGK R.HK) {U :
       Function.Injective inc ∧ (∀ Z ∈ upq r s, ∀ y, inc (MM.M.act Z y) = b Z (inc y)) ∧
       TIntw a₁ a₂ R.HK MM.M f ∧ TIntw a₁ a₂ R.HK MM.M f' ∧
       (∀ P v, B P v = inc (ctr R _ v (f P))) ∧ ∀ P v, B' P v = inc (ctr R _ v (f' P)) := by
-  obtain ⟨MM, inc, hi, hr, he⟩ := GlobalTheory.T.exists_unitary_module_onto_span_of_intertwining r s (MvPolynomial σ ℂ) U (R.HK.V ⊕ R.HK.V) a₂ b
+  obtain ⟨MM, inc, hi, hr, he⟩ := _root_.GlobalTheory.RealPartAdjointAction.main r s (MvPolynomial σ ℂ) U (R.HK.V ⊕ R.HK.V) a₂ b
     (Sum.elim (fun v => B.flip v) (fun v => B'.flip v)) h₂ hb (by
       rintro (v | v) Z hZ P
       · exact hB.2 Z hZ P v

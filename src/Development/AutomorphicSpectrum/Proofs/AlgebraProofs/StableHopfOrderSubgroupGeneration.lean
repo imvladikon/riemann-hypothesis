@@ -928,7 +928,7 @@ theorem a_nonunit_of (hproj : type_of% @GlobalTheory.T.stable_hopf_order_fundame
     (hom : type_of% @_root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_product) : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable F AA.carrier → ∀ (K : Submodule F N) (t : N), t ∉ K → GenAF p AA.carrier K.toAddSubgroup → ∀ τ : MulChar F R, IsFund p τ → ∀ c' c : R, idealX AA.carrier K t τ = Ideal.span {c'} → idealX AA.carrier K t (τ ^ p) = Ideal.span {c} → v (algebraMap R C c') ^ p < v (algebraMap R C c) → c ∈ idealD p AA.carrier K t (τ ^ p) := by
   intro p hp C _ _ _ v R _ _ hv hp1 F _ _ _ _ f hF N _ _ _ _ AA hst K t ht hgen τ hτ c' c hc' hc hlt
   obtain ⟨⟨S, hS, hSst⟩, -⟩ := hstep p C v R hv hp1 F f hF N AA hst K t ht
-  have hprin := GlobalTheory.T.character_ideal_principal_eigen p C v R hv hp1 F f hF S hSst
+  have hprin := _root_.GlobalTheory.CompanionTheory.Ar.GR.eig_rank_one p C v R hv hp1 F f hF S hSst
   choose cc hcc0 hcc using fun χ => (hprin χ).1
   have hcm : c ∈ idealX AA.carrier K t (τ ^ p) := by rw [hc]; exact Ideal.mem_span_singleton_self c
   obtain ⟨g₀, hg₀, e₀⟩ := hcm
@@ -1057,8 +1057,7 @@ section -- clump:auto
 open ReciprocityTheory.PGsh.L2 ReciprocityTheory.PGsh.Up GlobalTheory.CompanionTheory.Ar.GR
 open scoped Matrix
 
-theorem _root_.GlobalTheory.CompanionTheory.Relay.stable_hopf_order_subgroup_quotient : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ), Fintype.card F = p ^ f → ∀ (N : Type) [AddCommGroup N] [Module F N] [Fintype N] [DecidableEq N] (AA : HopfOrder (C := C) R N), FStable F AA.carrier → ∀ (K : Submodule F N) (t : N), t ∉ K → GenAF p AA.carrier K.toAddSubgroup → ∀ τ : MulChar F R, IsFund p τ → ∀ c' c : R, idealX AA.carrier K t τ = Ideal.span {c'} → idealX AA.carrier K t (τ ^ p) = Ideal.span {c} → v (algebraMap R C c') ^ p < v (algebraMap R C c) → c ∈ idealD p AA.carrier K t (τ ^ p) := by
-  first | exact @PositivityTheory.HtPt.Rfin.a_nonunit
+alias _root_.GlobalTheory.CompanionTheory.Relay.stable_hopf_order_subgroup_quotient := _root_.PositivityTheory.HtPt.Rfin.a_nonunit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupQuotient =====

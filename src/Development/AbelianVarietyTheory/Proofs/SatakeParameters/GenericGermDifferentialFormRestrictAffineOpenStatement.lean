@@ -90,13 +90,7 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD GlobalTheory.CechDR GlobalTheory.HodgeCoh ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem _root_.GlobalTheory.T.genericGerm_differentialForm_restrict_affineOpen : ∀ (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ),
-    letI := algΓ p
-    ∀ [inst : Algebra ℂ Z.functionField] (hinst : inst = ffAlg p) (j : ℕ) (V V' : Z.Opens)
-      (hV : IsAffineOpen V) (hV' : IsAffineOpen V') (hη : genericPoint Z ∈ V) (hη' : genericPoint Z ∈ V')
-      (h : V' ≤ V) (y : sectionsOn (Omega p j) V),
-      formGermI p j hV' hη' hinst (sectionsOn.res ℂ (Omega p j) h y) = formGermI p j hV hη hinst y := by
-  first | (exact @GlobalTheory.HodgeCoh.formGermI_res)
+alias _root_.GlobalTheory.T.genericGerm_differentialForm_restrict_affineOpen := _root_.GlobalTheory.HodgeCoh.formGermI_res
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermDifferentialFormRestrictAffineOpenStatement =====

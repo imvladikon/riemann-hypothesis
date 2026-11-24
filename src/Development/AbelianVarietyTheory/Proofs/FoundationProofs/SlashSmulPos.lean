@@ -117,14 +117,6 @@ theorem toGL_mat (γ : SL(2, ℤ)) : toGL (mat γ) = Matrix.SpecialLinearGroup.m
   ext i j
   simp [mat, Matrix.SpecialLinearGroup.mapGL]
 
-theorem toGL_mul (A B : Matrix (Fin 2) (Fin 2) ℤ) (hA : A.det ≠ 0) (hB : B.det ≠ 0) :
-    toGL (A * B) = toGL A * toGL B := by
-  have hAB : (A * B).det ≠ 0 := by rw [Matrix.det_mul]; exact mul_ne_zero hA hB
-  unfold toGL
-  rw [dite_eq_right hA, dite_eq_right hB, dite_eq_right hAB]
-  ext i j
-  simp [Matrix.mul_apply]
-
 theorem det_toGL (A : Matrix (Fin 2) (Fin 2) ℤ) (hA : A.det ≠ 0) :
     ((toGL A).det : ℝ) = (A.det : ℝ) := by
   unfold toGL
@@ -217,10 +209,10 @@ theorem ul_slash_dg (N : ℕ) (k : ℤ) (l : ℕ) (hl : 0 < l) (f : CuspForm (Co
     have hS : (!![(l : ℤ), 0; 0, (l : ℤ)]).det ≠ 0 := by
       rw [Matrix.det_fin_two_of]; nlinarith
     have hT : (!![1, (j : ℤ); 0, 1]).det ≠ 0 := by rw [Matrix.det_fin_two_of]; norm_num
-    rw [← SlashAction.slash_mul, ← toGL_mul _ _ hD hU]
+    rw [← SlashAction.slash_mul, ← _root_.GlobalTheory.SlashUpperTriangularMatrices.toGL_mul _ _ hD hU]
     have e : dg (l : ℤ) 1 * ulFam l j = !![(l : ℤ), 0; 0, (l : ℤ)] * !![1, (j : ℤ); 0, 1] := by
       ext a b; fin_cases a <;> fin_cases b <;> simp [dg, ulFam, Matrix.mul_apply, Fin.sum_univ_two]
-    rw [e, toGL_mul _ _ hS hT, SlashAction.slash_mul, slash_scalar k l hl,
+    rw [e, _root_.GlobalTheory.SlashUpperTriangularMatrices.toGL_mul _ _ hS hT, SlashAction.slash_mul, slash_scalar k l hl,
       slash_smul_toGL k _ (by rw [Matrix.det_fin_two_of]; norm_num), slash_T_cusp]
   rw [Finset.sum_congr rfl (fun j _ => key j), Finset.sum_const, Finset.card_univ, Fintype.card_fin,
     ← Nat.cast_smul_eq_nsmul ℂ, smul_smul]
@@ -246,7 +238,7 @@ theorem tq_eq (N : ℕ) (k : ℤ) (l : ℕ) (hl : 0 < l) (s : SL(2, ℤ)) (χ : 
     have hs1 : s ∈ CongruenceSubgroup.Gamma0 N := by simpa using hs.1
     have hsd : (mat s).det ≠ 0 := by simp [mat]
     have hD : (dg (l : ℤ) 1).det ≠ 0 := by rw [det_dg]; omega
-    rw [e, toGL_mul _ _ hsd hD, SlashAction.slash_mul, toGL_mat]
+    rw [e, _root_.GlobalTheory.SlashUpperTriangularMatrices.toGL_mul _ _ hsd hD, SlashAction.slash_mul, toGL_mat]
     have h2 : f ∣[k] (Matrix.SpecialLinearGroup.mapGL ℝ s) = χ (l : ZMod N) • f := by
       have := hf s hs1
       rw [hs.2] at this
@@ -1147,20 +1139,12 @@ theorem toGL_det (g : Matrix (Fin 2) (Fin 2) ℤ) (hg : g.det ≠ 0) :
   simp only [Matrix.GeneralLinearGroup.mkOfDetNeZero, Matrix.det_fin_two]
   simp
 
-theorem slash_smul_pos (k : ℤ) (g : Matrix (Fin 2) (Fin 2) ℤ) (hg : 0 < g.det) (c : ℂ) (f : ℍ → ℂ) :
-    (c • f) ∣[k] toGL g = c • (f ∣[k] toGL g) := by
-  rw [ModularForm.smul_slash]
-  congr 1
-  simp only [UpperHalfPlane.σ]
-  rw [if_pos (by rw [Matrix.GeneralLinearGroup.val_det_apply, toGL_det g hg.ne']; exact_mod_cast hg)]
-  rfl
-
 def ulLin (k : ℤ) (l : ℕ) (hl : 0 < l) : Module.End ℂ (ℍ → ℂ) where
   toFun := UlF k l
   map_add' f g := by simp only [UlF, hkF, SlashAction.add_slash, Finset.sum_add_distrib]
   map_smul' c f := by
     simp only [UlF, hkF, RingHom.id_apply, Finset.smul_sum]
-    refine Finset.sum_congr rfl fun j _ => slash_smul_pos k _ ?_ c f
+    refine Finset.sum_congr rfl fun j _ => _root_.GlobalTheory.HeckeFamilyMatrices.smul_slash_toGL k _ ?_ c f
     simp [ulFam, Matrix.det_fin_two]
     exact_mod_cast hl
 
@@ -1185,7 +1169,7 @@ def oldSp (N l : ℕ) (k : ℤ) (χ : DirichletCharacter ℂ N) (hl : 0 < l) : S
     refine ⟨c • f₁, c • f₂, fun γ hγ => ?_, fun γ hγ => ?_, ?_⟩
     · rw [CuspForm.coe_smul, ModularForm.SL_smul_slash, h₁ γ hγ, smul_comm]
     · rw [CuspForm.coe_smul, ModularForm.SL_smul_slash, h₂ γ hγ, smul_comm]
-    · rw [CuspForm.coe_smul, CuspForm.coe_smul, slash_smul_pos k _ hd, smul_add]
+    · rw [CuspForm.coe_smul, CuspForm.coe_smul, _root_.GlobalTheory.HeckeFamilyMatrices.smul_slash_toGL k _ hd, smul_add]
 
 theorem aeval_mem {M : Type*} [AddCommGroup M] [Module ℂ M] (U : Module.End ℂ M) (O : Submodule ℂ M)
     (hU : ∀ x ∈ O, U x ∈ O) (p : ℂ[X]) (x : M) (hx : x ∈ O) : aeval U p x ∈ O := by

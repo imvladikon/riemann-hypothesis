@@ -1028,7 +1028,7 @@ theorem cHess_posSemidef_of_levi {n : ℕ} {f : ReciprocityTheory.L2DbarEstimate
 
 theorem re_sum_perm_det_nonneg {D : ℕ} (A : Fin D → Matrix (Fin D) (Fin D) ℂ) (hA : ∀ i, (A i).PosSemidef) :
     0 ≤ (∑ τ : Equiv.Perm (Fin D), (Matrix.of fun j l => A (τ l) j l).det).re := by
-  have h := (ReciprocityTheory.AnForm.A.mdisc_nonneg_of_posSemidef A hA).2
+  have h := (_root_.ReciprocityTheory.AnForm.A.mixedDiscriminant_nonneg_of_gram A hA).2
   have h0 : (D.factorial : ℂ) ≠ 0 := by exact_mod_cast D.factorial_ne_zero
   have e : (∑ τ : Equiv.Perm (Fin D), (Matrix.of fun j l => A (τ l) j l).det) =
       ((D.factorial : ℝ) : ℂ) * ReciprocityTheory.AnForm.mdisc A := by
@@ -1667,13 +1667,6 @@ set_option autoImplicit false
 
 namespace GlobalTheory.RecSec
 
-theorem compactSpace_of_projOver {R : Type} [CommRing R] {X : Scheme.{0}} {f : X ⟶ Sp R}
-    (h : IsProjOver f) : CompactSpace X := by
-  obtain ⟨m, i, hi, rfl⟩ := h
-  have := isProper_str R m
-  have : IsProper (i ≫ PSpace.str R m) := inferInstance
-  exact QuasiCompact.compactSpace_of_compactSpace (i ≫ PSpace.str R m)
-
 theorem finsum_update_tens (P : GlobalTheory.Published.Principalisation) {F : Type} [Field F] {X : Scheme.{0}} [IsIntegral X]
     [IsLocallyNoetherian X] {p : X ⟶ Sp F} {σ : F →+* ℂ} {e : ℕ} (hp : IsProjOver p)
     (hdim : topologicalKrullDim X = (e + 1 : ℕ)) (Δ : CartierDiv X) (B : MLine p σ) (b : B.B.Sec)
@@ -1681,7 +1674,7 @@ theorem finsum_update_tens (P : GlobalTheory.Published.Principalisation) {F : Ty
     ∑ᶠ z, (Δ.mult z : ℝ) * cycInt (Function.update L i (A.tens C)) (B.logSec b) z =
       ∑ᶠ z, (Δ.mult z : ℝ) * cycInt (Function.update L i A) (B.logSec b) z +
         ∑ᶠ z, (Δ.mult z : ℝ) * cycInt (Function.update L i C) (B.logSec b) z := by
-  have : CompactSpace X := compactSpace_of_projOver hp
+  have : CompactSpace X := _root_.GlobalTheory.MetricIndep.compactSpace_of_projOver hp
   have hfin := Δ.finite_support_mult
   have hsub (G : X → ℝ) : (Function.support fun z => (Δ.mult z : ℝ) * G z).Finite :=
     hfin.subset fun z hz => by

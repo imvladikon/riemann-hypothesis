@@ -272,14 +272,7 @@ theorem isLat_comap (f : W →ₗ[LaurentSeries k] V) (hf : Function.Injective f
 
 end
 
-theorem main : ∀ {k : Type} [inst : Field k] {V : Type} [inst_1 : AddCommGroup V]
-    [inst_2 : Module (LaurentSeries k) V] [inst_3 : Module (PowerSeries k) V]
-    [inst_4 : IsScalarTower (PowerSeries k) (LaurentSeries k) V] {W : Type} [inst_5 : AddCommGroup W]
-    [inst_6 : Module (LaurentSeries k) W] [inst_7 : Module (PowerSeries k) W]
-    [inst_8 : IsScalarTower (PowerSeries k) (LaurentSeries k) W] (f : LinearMap (RingHom.id (LaurentSeries k)) W V),
-    Function.Injective (DFunLike.coe f) → ∀ {N : Submodule (PowerSeries k) V}, GlobalTheory.PhiGam.IsLat N →
-      GlobalTheory.PhiGam.IsLat (Submodule.comap (LinearMap.restrictScalars (PowerSeries k) f) N) :=
-  fun f hf _ hN => isLat_comap f hf hN
+alias main := _root_.GlobalTheory.LatticeComap.isLat_comap
 
 end GlobalTheory.LatticeComap
 end -- clump:auto
@@ -341,8 +334,8 @@ theorem main : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k l] (R 
       CondAB D'.φ w w' (fun i => (N i).comap ((f i).restrictScalars k⟦X⟧)) ∧
       ∀ i, CondC (D'.γ i) ((N i).comap ((f i).restrictScalars k⟦X⟧)) := by
   intro k _ l _ _ R n _ V _ _ _ _ _ _ _ _ W _ _ _ _ _ _ _ _ D D' f hf hφ hγ w w' N hN hAB hC
-  refine ⟨fun i => isLat_comap _ (hf i) (hN i), fun i => ?_, fun i x hx => ?_⟩
-  · have h := comap_pull D D' i (f (i - 1)) (f i) (hf _) (hf _) (hφ i) (hN (i - 1)).1
+  refine ⟨fun i => _root_.GlobalTheory.LatticeComap.isLat_comap _ (hf i) (hN i), fun i => ?_, fun i x hx => ?_⟩
+  · have h := _root_.GlobalTheory.IndependentSpanDual.comap_pull D D' i (f (i - 1)) (f i) (hf _) (hf _) (hφ i) (hN (i - 1)).1
     rw [← h, ← comap_sh, ← comap_sh]
     exact ⟨Submodule.comap_mono (hAB i).1, Submodule.comap_mono (hAB i).2⟩
   · rw [← comap_sh]

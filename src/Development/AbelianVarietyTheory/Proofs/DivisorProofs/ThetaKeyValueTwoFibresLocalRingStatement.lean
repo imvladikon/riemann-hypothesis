@@ -893,15 +893,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UU
 
 
-theorem _root_.GlobalTheory.T.exists_smul_of_twistedPullbacks_sameBundle : ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (P : PolAV (Sp K)) (m : ℕ), 1 ≤ m →
-    ∀ (th : LB.Sec (LPow P.A P.L ((1 : ℕ) : ℤ) (baseOver (Sp K))))
-      (α α' : LB.Gen (LB.LinComb P.L (K := Fin 2) ![(snd (baseOver (Sp K)) P.A).left, (snd (baseOver (Sp K)) P.A ^ m).left]
-        ![((m ^ 2 : ℕ) : ℤ), -((1 : ℕ) : ℤ)]))
-      (s₁ s₁' : LB.Sec (LPow P.A P.L ((m ^ 2 : ℕ) : ℤ) (baseOver (Sp K)))), α.IsGen → α'.IsGen →
-    IsTwistPull P.A P.L (mulT P.A (baseOver (Sp K)) m) (snd (baseOver (Sp K)) P.A ^ m) (lift_snd _ _) ((m ^ 2 : ℕ) : ℤ) ((1 : ℕ) : ℤ) α th s₁ →
-    IsTwistPull P.A P.L (mulT P.A (baseOver (Sp K)) m) (snd (baseOver (Sp K)) P.A ^ m) (lift_snd _ _) ((m ^ 2 : ℕ) : ℤ) ((1 : ℕ) : ℤ) α' th s₁' →
-    ∃ c : K, (SecMod.mk (fst (baseOver (Sp K)) P.A).left s₁' : EA P (𝟙 (Sp K)) (m ^ 2)) = c • SecMod.mk (fst (baseOver (Sp K)) P.A).left s₁ := by
-  first | exact @GlobalTheory.TwistRatio.exists_smul_of_isTwistPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmulOfTwistedPullbacksSameBundleStatement =====
@@ -918,16 +909,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.TwistNZ
-
-theorem mem_nz_iff {Y : Scheme.{0}} {H : LB Y} (s : LB.Sec H) (k : H.ι)
-    {x : Y} (hk : x ∈ H.U k) : x ∈ nonzeroLocus s ↔ x ∈ Y.basicOpen (s.f k) := by
-  refine ⟨fun hx => ?_, fun hx => TopologicalSpace.Opens.mem_iSup.2 ⟨k, hx⟩⟩
-  obtain ⟨l, hl⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-  have e := congrArg Y.basicOpen (s.compat k l)
-  rw [Scheme.basicOpen_mul, Y.basicOpen_of_isUnit (H.g k l).isUnit] at e
-  erw [Scheme.basicOpen_res, Scheme.basicOpen_res] at e
-  have hx' : x ∈ H.U k ⊓ H.U l := ⟨hk, Y.basicOpen_le _ hl⟩
-  exact (e.ge ⟨hx', hx', hl⟩).2
 
 theorem twistPull_nonzero : ∀ {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left}, L.IsLB → ∀ {T : Over S} (ψ : T ⊗ A ⟶ T ⊗ A) (m : T ⊗ A ⟶ A) (hm : ψ ≫ snd T A = m) (a b : ℤ) (α : LB.Gen (LB.LinComb L (K := Fin 2) ![(snd T A).left, m.left] ![a, -b])) (s : LB.Sec (LPow A L b T)) (s' : LB.Sec (LPow A L a T)), IsTwistPull A L ψ m hm a b α s s' → ∀ p : (T ⊗ A).left, ψ.left.base p ∈ nonzeroLocus s → p ∈ nonzeroLocus s' := by
   intro S A _ L hL T ψ m hm a b α s s' H p hp
@@ -951,7 +932,7 @@ theorem twistPull_nonzero : ∀ {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB
     rw [Scheme.Hom.comp_base, TopCat.comp_app] at this
     rw [this]; exact h1
   have h2 : ψ.left.base p ∈ (T ⊗ A).left.basicOpen (s.f (fun _ => j 1)) :=
-    (mem_nz_iff s _ hψ).1 hp
+    (_root_.GlobalTheory.Cartier.mem_nonzeroLocus_iff s _ hψ).1 hp
   have h3 : p ∈ (T ⊗ A).left.basicOpen ((ψ.left.app _).hom (s.f (fun _ => j 1))) := by
     rw [← Scheme.preimage_basicOpen]; exact h2
   have e := congrArg (T ⊗ A).left.basicOpen (H j)
@@ -977,8 +958,6 @@ open GlobalTheory GlobalTheory.LieHt GlobalTheory.Cartier GlobalTheory.ThetaOnto
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.twistedPullback_nonvanishing_of_pulledSection : ∀ {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left}, L.IsLB → ∀ {T : Over S} (ψ : T ⊗ A ⟶ T ⊗ A) (m : T ⊗ A ⟶ A) (hm : ψ ≫ snd T A = m) (a b : ℤ) (α : LB.Gen (LB.LinComb L (K := Fin 2) ![(snd T A).left, m.left] ![a, -b])) (s : LB.Sec (LPow A L b T)) (s' : LB.Sec (LPow A L a T)), IsTwistPull A L ψ m hm a b α s s' → ∀ p : (T ⊗ A).left, ψ.left.base p ∈ nonzeroLocus s → p ∈ nonzeroLocus s' := by
-  first | exact @GlobalTheory.TwistNZ.twistPull_nonzero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedPullbackNonvanishingOfPulledSectionStatement =====
@@ -1035,7 +1014,7 @@ theorem mulT_surjective : ∀ {S : Scheme.{0}} [IsLocallyNoetherian S] (P : PolA
   have h3' : (λ_ P.A).hom.left ((λ_ P.A).inv.left b) = b := h3
   rw [h1, h3', hb, h2']
 
-theorem mem_nonzeroLocus_of_isTwistPull : ∀ {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left}, L.IsLB → ∀ {T : Over S} (ψ : T ⊗ A ⟶ T ⊗ A) (m : T ⊗ A ⟶ A) (hm : ψ ≫ snd T A = m) (a b : ℤ) (α : LB.Gen (LB.LinComb L (K := Fin 2) ![(snd T A).left, m.left] ![a, -b])) (s : LB.Sec (LPow A L b T)) (s' : LB.Sec (LPow A L a T)), IsTwistPull A L ψ m hm a b α s s' → ∀ p : (T ⊗ A).left, ψ.left.base p ∈ nonzeroLocus s → p ∈ nonzeroLocus s' := GlobalTheory.T.twistedPullback_nonvanishing_of_pulledSection
+alias mem_nonzeroLocus_of_isTwistPull := _root_.GlobalTheory.TwistNZ.twistPull_nonzero
 
 end GlobalTheory.MBLow.TranslateSection
 end -- clump:auto
@@ -1196,7 +1175,7 @@ theorem span_eq_top : ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (x :
     obtain ⟨θ₂, hp₂, hv₂⟩ := hmul θ (U i)
     obtain ⟨k, hk⟩ := hpt (θ.pt * pt i) (by rw [mul_pow, hθ, ← (hUt i).1.pt_eq, hker, _root_.mul_one])
     obtain ⟨-, α', s₁', hα', -, htw', ha'⟩ := hUt k
-    obtain ⟨c, hc⟩ := GlobalTheory.T.exists_smul_of_twistedPullbacks_sameBundle K x.P m (by omega) th α' α s₁' s₁ hα' hα htw' htw
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.TwistRatio.exists_smul_of_isTwistPull K x.P m (by omega) th α' α s₁' s₁ hα' hα htw' htw
     obtain ⟨d, hd⟩ := hrat (U k) θ₂ (by rw [hp₂, (hUt k).1.pt_eq, (hUt i).1.pt_eq, hk])
     have e : f θ (SecMod.mk _ (t i)) = f θ₂ (SecMod.mk _ s₁) := by
       rw [← hf _ _ _ ha]
@@ -1434,11 +1413,6 @@ namespace GlobalTheory.MBLow.JetBCGen
 
 open GlobalTheory.MBLow.JetBC GlobalTheory.ThetaPtMove GlobalTheory.ConstFam GlobalTheory.GlobalLift
 
-theorem one_left_eq {S : Scheme.{0}} (A : Over S) [GrpObj A] (T : Over S) : (1 : T ⟶ A).left = T.hom ≫ eSec A := by
-  show (toUnit T ≫ η[A]).left = _
-  rw [Over.comp_left]
-  rfl
-
 theorem tr_move_gen {S S' : Scheme.{0}} {P₀ : PolAV S} {P : PolAV S'} {f : S' ⟶ S} {φ : P.A.left ⟶ P₀.A.left}
     (hp : IsGrpPullback P.A P₀.A f φ) {T : Over S'} {T₀ : Over S} (τ : T.left ⟶ T₀.left)
     (hτ : τ ≫ T₀.hom = T.hom ≫ f) {w : LB.Iso P.L (P₀.L.pull φ)}
@@ -1463,7 +1437,7 @@ theorem tr_move_gen {S S' : Scheme.{0}} {P₀ : PolAV S} {P : PolAV S'} {f : S' 
   rw [val_pull hJ, val_rigT' _ _ _ _ _ _ _ _ hJ, Category.assoc _ τ T₀.hom, hτ, ← Category.assoc, q₁, q₂] at q
   rw [val_pull hJ', val_rigT' _ _ _ _ _ _ _ _ hJ']
   have e₁ : (𝟙 _ ≫ (ptSecT P.A (1 : T ⟶ P.A)).left) ≫ (snd T P.A).left = (𝟙 _ ≫ T.hom) ≫ eSec P.A := by
-    rw [Category.id_comp, ptSecT_snd, one_left_eq, Category.id_comp]
+    rw [Category.id_comp, ptSecT_snd, _root_.GlobalTheory.UU.one_left, Category.id_comp]
   have e₂ : (𝟙 _ ≫ (ptSecT P.A (1 : T ⟶ P.A)).left) ≫ (snd T P.A ^ m).left = (𝟙 _ ≫ T.hom) ≫ eSec P.A := by
     rw [Category.id_comp, ← Over.comp_left, MonObj.comp_pow, ← e₁, Category.id_comp, ← Over.comp_left,
       show ptSecT P.A (1 : T ⟶ P.A) ≫ snd T P.A = 1 from lift_snd _ _, one_pow]

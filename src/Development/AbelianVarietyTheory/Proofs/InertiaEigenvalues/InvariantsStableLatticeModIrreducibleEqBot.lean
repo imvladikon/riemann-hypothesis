@@ -109,12 +109,7 @@ namespace GlobalTheory.TopSteps.FinSummand
 open Module TensorProduct
 open GlobalTheory.AdmLoc Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N
 
-theorem exists_isCompl_of_saturated {O M : Type} [CommRing O] [IsDomain O] [IsPrincipalIdealRing O]
-    [AddCommGroup M] [Module O M] [Module.Finite O M] (N : Submodule O M)
-    (h : ∀ (a : O) (x : M), a ≠ 0 → a • x ∈ N → x ∈ N) : ∃ C : Submodule O M, IsCompl N C := by
-  first
-  | (apply _root_.GlobalTheory.SaturatedComplement.exists_isCompl_of_saturated <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SaturatedComplement.exists_isCompl_of_saturated ..)
+alias exists_isCompl_of_saturated := _root_.GlobalTheory.SaturatedComplement.exists_isCompl_of_saturated
 
 section General
 

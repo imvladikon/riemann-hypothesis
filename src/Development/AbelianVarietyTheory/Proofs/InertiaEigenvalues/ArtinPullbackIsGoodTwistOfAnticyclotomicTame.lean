@@ -187,8 +187,6 @@ open Formalism.IndefR.Links
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.heckeChar_unramified_outside_of_lPower_galois_char : ∀ (D : D7) (N : NData D.R D.host D.what₂) (art : Neutral.B1.Ideles D.host.E →* GlobalTheory.HeckeGal.Gab D.host.E N.Om), GlobalTheory.HeckeGal.IsGlobalArtin art → ∀ (r : G D.host.E N.Om →* ℂˣ) (l n : ℕ), l.Prime → (∀ σ, r σ ^ (l ^ n) = 1) → ∀ (c : (AE D)ˣ →* Circle) (χ : Formalism.L2.Host.HChar D.host.E), ChrEq c χ → GlobalTheory.ToricDistribution.Corr art r χ → ∀ Q : Finset (Pl D.host.E), SplitSet Q → (∀ P ∈ Q, ((l : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal) → (∀ v : Pl D.host.E, v ∉ Q → (∀ P ∈ Q, ¬ Formalism.BasicNotions.IsConjPl D.host P v) → ∀ B : ValuationSubring N.Om, IsPlaceOver B v → ∀ σ ∈ Ine (F := D.host.E) B, r σ = 1) → GlobalTheory.ExportSeries.UnramOutside c Q := by
-  first | exact @GlobalTheory.UnramPull.unramOutside_of_corr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharUnramifiedOutsideOfLPowerGaloisCharStatement =====
@@ -411,7 +409,7 @@ theorem good_pull : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D
     obtain ⟨c, χ, hc, hχ, hcr⟩ := exists_chrEq_pull ha o1 (pow_ne_zero n hl.ne_zero) o2
     rw [map_one]
     refine Units.ext ((hcr _).symm.trans ?_)
-    rw [GlobalTheory.T.heckeChar_unramified_outside_of_lPower_galois_char D N a.art ha.artin _ l n hl o2 c χ hc hχ Q hQ hQl (fun v hv hc' B hB σ hσ => by
+    rw [_root_.GlobalTheory.UnramPull.unramOutside_of_corr D N a.art ha.artin _ l n hl o2 c χ hc hχ Q hQ hQl (fun v hv hc' B hB σ hσ => by
       rw [MonoidHom.comp_apply, show φ.rangeRestrict σ = 1 from Subtype.ext (hunr v hv hc' B hB σ hσ), map_one]) x h1 h2 h3 h4]
     simp
   ·

@@ -69,6 +69,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverOfIsPullback
 import Mathlib.AlgebraicGeometry.QuasiAffine
 import Mathlib.Tactic.Linter.HaveILetI
@@ -615,7 +616,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasTransitionCompatibleFramesOfNoCompleteDVRPoin =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAmpleCechLineBundleDisjointUnionPushforward =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAmpleCechLineBundleDisjointUnionPushforward", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasFramesOfAmpFrames\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAmpleCechLineBundleDisjointUnionPushforward", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasFramesOfAmpFrames\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -629,14 +630,9 @@ namespace GlobalTheory.ModelSum.UnionAmple
 
 variable {Z Z' : Scheme.{0}}
 
-theorem gs_eq_stalkMap (r : Z' ⟶ Z) (z : Z') (U : Z.Opens) (h : r z ∈ U) (a : Γ(Z, U)) :
-    gs r z U a = (r.stalkMap z).hom (gs (𝟙 Z) (r z) U a) := by
-  rw [gs_eq r z U h, gs_eq (𝟙 Z) (r z) U h]
-  exact (Scheme.Hom.germ_stalkMap_apply r U z h a).symm
-
 theorem gs_id_of_gs (f : Z' ⟶ Z) [IsOpenImmersion f] (y : Z') {U : Z.Opens} (h : f y ∈ U) {a b : Γ(Z, U)}
     (e : gs f y U a = gs f y U b) : gs (𝟙 Z) (f y) U a = gs (𝟙 Z) (f y) U b := by
-  rw [gs_eq_stalkMap f y U h, gs_eq_stalkMap f y U h] at e
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap f y U h, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap f y U h] at e
   exact (ConcreteCategory.bijective_of_isIso (f.stalkMap y)).1 e
 
 theorem gm_id_of_gm (f : Z' ⟶ Z) [IsOpenImmersion f] (y : Z') {U : Z.Opens} (h : f y ∈ U) {a b : Γ(Z, U)ˣ}
@@ -771,7 +767,7 @@ theorem Part.exists_sec [IsOpenImmersion f] (h : Part f A C e) {d : ℕ} (s : H0
       exact mul_eq_zero_of_right _ ((gs_res _ x inf_le_right hx _).trans (h0 J' x hf))
   · have key : ∀ (J : Fin 1 → C.ι) (y : Z'), f y ∈ LB.wchart C (fun _ : Fin 1 => 𝟙 Z) J →
         (f y ∈ Z.basicOpen (t J) ↔ IsUnit (gs f y _ (t J))) := fun J y hy => by
-      rw [gs_eq_stalkMap f y _ hy, isUnit_map_iff, gs_eq (𝟙 Z) (f y) _ hy]
+      rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap f y _ hy, isUnit_map_iff, gs_eq (𝟙 Z) (f y) _ hy]
       exact Z.mem_basicOpen _ _ hy
     have key' : ∀ (j : Fin 1 → A.ι) (y : Z') (hy : y ∈ LB.wchart A (fun _ : Fin 1 => 𝟙 Z') j),
         (y ∈ Z'.basicOpen (s.f j) ↔ IsUnit (gs (𝟙 Z') y _ (s.f j))) := fun j y hy => by

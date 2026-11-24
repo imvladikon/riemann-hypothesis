@@ -107,7 +107,7 @@ theorem exists_up [GrpObj G] (hc : IsGaloisCover Ga ρ π) (H : IsPullback φ G.
   have hc' := isGaloisCover_act hc T
   obtain ⟨z, hz, -⟩ := (_root_.GlobalTheory.ZM.galoisCover_descent _ _ _ Ga _ hc').1 _ (w.left ≫ φ) fun a ↦ by
     rw [← Category.assoc, (mem_equivariant hc hν).mp hw a, Category.assoc, hφ]
-  refine ⟨Over.homMk z (cover_ext hc' ?_), QuotientDescent.hom_ext H ((up_left H _).trans hz)⟩
+  refine ⟨Over.homMk z (_root_.GlobalTheory.GaloisDescent.cover_ext hc' ?_), QuotientDescent.hom_ext H ((up_left H _).trans hz)⟩
   rw [reassoc_of% hz, H.w, pullback.condition]
   exact (Category.assoc _ _ _).symm.trans (congrArg (· ≫ π) (Over.w w))
 

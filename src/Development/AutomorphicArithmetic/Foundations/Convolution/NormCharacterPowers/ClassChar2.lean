@@ -120,12 +120,7 @@ theorem norm_le {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (�
   · rw [Polynomial.natDegree_X_pow_sub_X hq, Finset.card_univ]
     exact not_le.1 hlt
 
-theorem int_le {M Ω : Type} [Field M] [NumberField M] [Field Ω] [Algebra M Ω] (A : ValuationSubring Ω) (x : 𝓞 M) :
-    A.valuation (algebraMap M Ω x) ≤ 1 := by
-  have hi : IsIntegral ℤ (algebraMap M Ω x) := x.isIntegral_coe.algebraMap
-  obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (R := A) (K := Ω)).1 (hi.tower_top (A := A))
-  rw [A.valuation_le_one_iff, ← hy]
-  exact y.2
+alias int_le := _root_.CompanionTheory.FamInh.val_int_le_one
 
 theorem moved {K M : Type} [Field K] [Field M] [NumberField M] [Algebra K M] (τ : M ≃ₐ[K] M) (h : τ ≠ 1) :
     ∃ θ : 𝓞 M, τ θ ≠ θ := by

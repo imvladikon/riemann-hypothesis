@@ -186,11 +186,11 @@ theorem exists_op {w : HeightOneSpectrum (𝓞 E)} (hw : IsSplitAt w) (Kw : Subg
   classical
   obtain ⟨t, ht, hact⟩ := GlobalTheory.T.localOperator_acts_by_localComponentScalar E a w hw Kw hc ho f z act
   let e : Submodule ℂ (UA E a → ℂ) → ℂ := fun U =>
-    if h : IsAutRepU U then z (GlobalTheory.T.exists_unique_splitPlaceComponent_definiteUnitary E a U h w hw).1.choose else 0
+    if h : IsAutRepU U then z (_root_.GlobalTheory.SplitComp.exists_comp_and_unique E a U h w hw).1.choose else 0
   have he : ∀ U, IsAutRepU U → ∀ φ ∈ U, (∀ x ∈ locU a w, cLoc w x ∈ Kw → RU E a x φ = φ) →
       opOf (RU E a) t φ = e U • φ := fun U hU φ hφ hx => by
     simp only [e, dif_pos hU]
-    exact hact U hU _ (GlobalTheory.T.exists_unique_splitPlaceComponent_definiteUnitary E a U hU w hw).1.choose_spec φ hφ hx
+    exact hact U hU _ (_root_.GlobalTheory.SplitComp.exists_comp_and_unique E a U hU w hw).1.choose_spec φ hφ hx
   refine ⟨t, e, ht, he, ?_⟩
   rintro U hU ⟨φ, hφ, h0, hx⟩ σ hσ
   exact smul_left_injective ℂ h0 ((he U hU φ hφ hx).symm.trans (hact U hU σ hσ φ hφ hx))
@@ -212,7 +212,7 @@ theorem fixed_ne_bot {U : Submodule ℂ (UA E a → ℂ)} (hU : IsAutRepU U) {w 
 
 theorem exists_satU {U : Submodule ℂ (UA E a → ℂ)} (hU : IsAutRepU U) {w : HeightOneSpectrum (𝓞 E)} (hw : IsSplitAt w)
     (h : ∃ φ ∈ U, φ ≠ 0 ∧ ∀ x ∈ locU a w, cLoc w x ∈ GlobalTheory.LFun.KGL w (n := a) → RU E a x φ = φ) : ∃ B, SatU U w B := by
-  obtain ⟨σ, hσ⟩ := (GlobalTheory.T.exists_unique_splitPlaceComponent_definiteUnitary E a U hU w hw).1
+  obtain ⟨σ, hσ⟩ := (_root_.GlobalTheory.SplitComp.exists_comp_and_unique E a U hU w hw).1
   obtain ⟨B, hB⟩ := (UpperTheory.Cb.spherical_operators_exist E w a).1 σ (fixed_ne_bot hU hw h σ hσ)
   exact ⟨B, σ, hσ, hB⟩
 
@@ -461,8 +461,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.Published GlobalTheory.AboveL
 open GlobalTheory.Cong.AdaptLev
 
-theorem _root_.GlobalTheory.T.autForm_fixed_by_integralPoints_almostAllPlaces : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a : ℕ) (φ : UA E a → ℂ), IsAutFormU φ → ∀ᶠ w in Filter.cofinite, ∀ x ∈ GlobalTheory.Cong.AdaptLev.intU a w, RU E a x φ = φ := by
-  first | (exact @GlobalTheory.Cong.AutFormFix.fixed_intU_eventually)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AutFormFixedByIntegralPointsAlmostAllPlacesStatement =====
@@ -478,8 +476,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.Published GlobalTheory.AboveL
 open GlobalTheory.Cong.AdaptLev
 
-theorem _root_.GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a : ℕ) (w : HeightOneSpectrum (𝓞 E)), IsCompact (GlobalTheory.Cong.AdaptLev.intU a w : Set (UA E a)) ∧ IsOpen (((GlobalTheory.Cong.AdaptLev.intU a w).subgroupOf (locU a w)) : Set (locU a w)) := by
-  first | (exact @GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.DefiniteUnitaryIntegralBelowPlaceCompactOpenStatement =====
@@ -730,8 +726,6 @@ open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.Published GlobalTheory.AboveL
 
-theorem _root_.GlobalTheory.T.exists_vector_fixed_by_product_localLevels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a : ℕ) (U : Submodule ℂ (UA E a → ℂ)), IsAutRepU U → ∀ (w₀ : HeightOneSpectrum (𝓞 E)) (K : HeightOneSpectrum (𝓞 E) → Subgroup (UA E a)), (∀ w, K w ≤ locU a w) → (∀ w u, ¬ Apart w u → K w = K u) → (∀ w, IsCompact (K w : Set (UA E a))) → (∀ᶠ w in Filter.cofinite, ∀ x ∈ K w, cLoc w x ∈ GlobalTheory.LFun.KGL w (n := a)) → (∀ w, IsOpen ((K w).subgroupOf (locU a w) : Set (locU a w))) → (∀ w, Apart w w₀ → ∃ φ ∈ U, φ ≠ 0 ∧ ∀ x ∈ K w, RU E a x φ = φ) → ∃ φ ∈ U, φ ≠ 0 ∧ ∀ w, Apart w w₀ → ∀ x ∈ K w, RU E a x φ = φ := by
-  first | (exact @GlobalTheory.Cong.FixProd.fix_prod)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsVectorFixedByProductLocalLevelsStatement =====
@@ -903,8 +897,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.Published GlobalTheory.AboveL
 open GlobalTheory.Cong.AdaptLev
 
-theorem _root_.GlobalTheory.T.fixed_of_fixed_by_local_levels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a : ℕ) (w₀ : HeightOneSpectrum (𝓞 E)) (H : HeightOneSpectrum (𝓞 E) → Subgroup (UA E a)), (∀ w, H w ≤ locU a w) → (∀ w u, ¬ Apart w u → H w = H u) → (∀ w, IsCompact (H w : Set (UA E a))) → (∀ w, IsOpen (((H w).subgroupOf (locU a w)) : Set (locU a w))) → (∀ᶠ w in Filter.cofinite, H w = GlobalTheory.Cong.AdaptLev.intU a w) → ∀ φ : UA E a → ℂ, IsAutFormU φ → (∀ w, Apart w w₀ → ∀ x ∈ H w, RU E a x φ = φ) → ∀ x ∈ GlobalTheory.Cong.AdaptLev.levelOf a w₀ H, RU E a x φ = φ := by
-  first | (exact @GlobalTheory.Cong.AdaptLev.fixed_of_levelOf)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FixedOfFixedByLocalLevelsStatement =====
@@ -1107,8 +1099,6 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.Published GlobalTheory.AboveL
 open GlobalTheory.Cong.AdaptLev
 
-theorem _root_.GlobalTheory.T.isLevelAway_definiteUnitaryLevelFromLocalLevels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a : ℕ) (w₀ : HeightOneSpectrum (𝓞 E)) (H : HeightOneSpectrum (𝓞 E) → Subgroup (UA E a)), (∀ w, H w ≤ locU a w) → (∀ w u, ¬ Apart w u → H w = H u) → (∀ w, IsCompact (H w : Set (UA E a))) → (∀ w, IsOpen (((H w).subgroupOf (locU a w)) : Set (locU a w))) → (∀ᶠ w in Filter.cofinite, H w = GlobalTheory.Cong.AdaptLev.intU a w) → IsLevelAway w₀ (GlobalTheory.Cong.AdaptLev.levelOf a w₀ H) := by
-  first | (exact @GlobalTheory.Cong.LevAway.isLevelAway_levelOf)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsLevelAwayDefiniteUnitaryLevelFromLocalLevelsStatement =====
@@ -1158,20 +1148,20 @@ theorem exists_locLev {U : Submodule ℂ (UA E a → ℂ)} (hU : IsAutRepU U) (w
     exacts [le_rfl, inf_le_left]
   · simp only [H]
     split_ifs
-    · exact (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a r).2
+    · exact (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a r).2
     · have e : (((intU a r ⊓ stab).subgroupOf (locU a r)) : Set (locU a r)) =
           (((intU a r).subgroupOf (locU a r)) : Set (locU a r)) ∩
             (fun x : locU a r => (⟨x.1, ((GlobalTheory.Cong.LevelExt.mem_locU_iff x.1).1 x.2).1⟩ : finU (E := E) (n := a))) ⁻¹'
               {k : finU (E := E) (n := a) | RU E a k φ₀ = φ₀} := by
         ext x; exact Iff.rfl
       rw [e]
-      exact (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a r).2.inter (hφ₀aut.level.preimage (Continuous.subtype_mk continuous_subtype_val _))
+      exact (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a r).2.inter (hφ₀aut.level.preimage (Continuous.subtype_mk continuous_subtype_val _))
   · simp only [H, intU_congr h]
   · simp only [H]
     split_ifs with h1
     · exact h1
     · exact ⟨φ₀, hφ₀U, hφ₀0, fun x hx => (Subgroup.mem_inf.1 hx).2⟩
-  · filter_upwards [GlobalTheory.T.autForm_fixed_by_integralPoints_almostAllPlaces E a φ₀ hφ₀aut] with w hw
+  · filter_upwards [_root_.GlobalTheory.Cong.AutFormFix.fixed_intU_eventually E a φ₀ hφ₀aut] with w hw
     exact hint w ⟨φ₀, hφ₀U, hφ₀0, hw⟩
 
 theorem map_intU {w : HeightOneSpectrum (𝓞 E)} (hw : IsSplitAt w) : (intU a w).map (cLoc w) = GlobalTheory.LFun.KGL w (n := a) := by
@@ -1188,7 +1178,7 @@ theorem open_compact_map {w : HeightOneSpectrum (𝓞 E)} (hw : IsSplitAt w) {L 
   rw [map_eq_image hle e he]
   refine ⟨e.toHomeomorph.isOpenMap _ ho, IsCompact.image ?_ e.continuous⟩
   rw [Topology.IsInducing.subtypeVal.isCompact_iff]
-  convert isCompact_of_le hL ho (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a w).1 using 1
+  convert isCompact_of_le hL ho (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a w).1 using 1
   exact coe_subgroupOf_image hle
 
 theorem exists_level {T : Finset (HeightOneSpectrum (𝓞 E))} {U : Submodule ℂ (UA E a → ℂ)} (hU : AutOffT T U)
@@ -1204,10 +1194,10 @@ theorem exists_level {T : Finset (HeightOneSpectrum (𝓞 E))} {U : Submodule �
   classical
   obtain ⟨H, hleI, hopen, hfib, hfix, hint, hae⟩ := exists_locLev hU.1 w₀
   have hle : ∀ w, H w ≤ locU a w := fun w => (hleI w).trans (intU_le_locU w)
-  have hcpt : ∀ w, IsCompact (H w : Set (UA E a)) := fun w => isCompact_of_le (hleI w) (hopen w) (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a w).1
-  obtain ⟨φ, hφU, hφ0, hφH⟩ := GlobalTheory.T.exists_vector_fixed_by_product_localLevels E a U hU.1 w₀ H hle hfib hcpt
+  have hcpt : ∀ w, IsCompact (H w : Set (UA E a)) := fun w => isCompact_of_le (hleI w) (hopen w) (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a w).1
+  obtain ⟨φ, hφU, hφ0, hφH⟩ := _root_.GlobalTheory.Cong.FixProd.fix_prod E a U hU.1 w₀ H hle hfib hcpt
     (hae.mono fun w hw x hx => by rw [hw] at hx; exact (mem_intU.1 hx).2 w (not_apart_self w)) hopen (fun w _ => hfix w)
-  have hφ := GlobalTheory.T.fixed_of_fixed_by_local_levels E a w₀ H hle hfib hcpt hopen hae φ (hU.1.aut φ hφU) hφH
+  have hφ := _root_.GlobalTheory.Cong.AdaptLev.fixed_of_levelOf E a w₀ H hle hfib hcpt hopen hae φ (hU.1.aut φ hφU) hφH
   let H' : HeightOneSpectrum (𝓞 E) → Subgroup (UA E a) := fun w => if Apart w v' then H w else intU a w
   have h1 : ∀ w, Apart w v' → H' w = H w := fun w h => if_pos h
   have h2 : ∀ w, ¬ Apart w v' → H' w = intU a w := fun w h => if_neg h
@@ -1219,8 +1209,8 @@ theorem exists_level {T : Finset (HeightOneSpectrum (𝓞 E))} {U : Submodule �
   have hopen' : ∀ w, IsOpen (((H' w).subgroupOf (locU a w)) : Set (locU a w)) := fun w => by
     by_cases h : Apart w v'
     · rw [h1 w h]; exact hopen w
-    · rw [h2 w h]; exact (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a w).2
-  have hcpt' : ∀ w, IsCompact (H' w : Set (UA E a)) := fun w => isCompact_of_le (hleI' w) (hopen' w) (GlobalTheory.T.definiteUnitaryIntegralBelowPlace_compact_open E a w).1
+    · rw [h2 w h]; exact (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a w).2
+  have hcpt' : ∀ w, IsCompact (H' w : Set (UA E a)) := fun w => isCompact_of_le (hleI' w) (hopen' w) (_root_.GlobalTheory.Cong.AdaptLev.intU_isCompact_isOpen E a w).1
   have hfib' : ∀ w u, ¬ Apart w u → H' w = H' u := fun w u h => by
     by_cases hw : Apart w v'
     · have hu : Apart u v' := by
@@ -1233,7 +1223,7 @@ theorem exists_level {T : Finset (HeightOneSpectrum (𝓞 E))} {U : Submodule �
     · rw [h1 w hw, h]
     · exact h2 w hw
   refine ⟨levelOf a w₀ H', fun w => (H' w).map (cLoc w), (H v').map (cLoc v'),
-    GlobalTheory.T.isLevelAway_definiteUnitaryLevelFromLocalLevels E a w₀ H' hle' hfib' hcpt' hopen' (hae.mono hint'), (open_compact_map hv' (hleI v') (hopen v')).1,
+    _root_.GlobalTheory.Cong.LevAway.isLevelAway_levelOf E a w₀ H' hle' hfib' hcpt' hopen' (hae.mono hint'), (open_compact_map hv' (hleI v') (hopen v')).1,
     ⟨φ, hφU, hφ0, fun x hx => hφ x ?_⟩, ?_, fun w hw _ => open_compact_map hw (hleI' w) (hopen' w), ?_, ?_, ?_⟩
   · obtain ⟨hx1, y, hy, e⟩ := Subgroup.mem_inf.1 hx
     obtain ⟨g1, g2, g3⟩ := mem_levelOf.1 hx1
@@ -1395,7 +1385,7 @@ theorem stepSt_of_ex (hEll : EllSt) (H : WtLacEx) : StepSt := by
   rintro _ ⟨U₁, mu, g1, g2, g3, rfl⟩
   refine ⟨by simp, ?_⟩
   have hmu : (Wt.ofFam mu).at = mu := by
-    obtain ⟨W', -, hW', -⟩ := GlobalTheory.T.exists_algebraicForm_weight_level_smooth_at_place E a mu K U₁ hK.fin g3 w₀
+    obtain ⟨W', -, hW', -⟩ := _root_.GlobalTheory.Cong.exists_algForm_ofType E a mu K U₁ hK.fin g3 w₀
     obtain rfl : mu = W'.at := (funext hW').symm
     have : Wt.ofFam W'.at = W' := funext fun v => W'.at_embedding v
     rw [this]
@@ -1467,7 +1457,7 @@ theorem congUWG_of (H : StepSt) (hFin : FinU) (D : ∀ a : ℕ, MvPolynomial (Fi
   have hsys : ∀ U', IsAutRepU U' → (∃ φ ∈ U', φ ≠ 0 ∧ ∀ x ∈ K', RU E a x φ = φ) → IsSysU O U' fun j => ι.symm (ej j U') :=
     fun U' h1 h2 j σ hσ => congrArg ι.symm (hje j U' h1 (hloc U' h2 _ (O.split j) (hO₀ j) (hOv j)) σ hσ)
   have hθeq : θ = fun j => ι.symm (ej j U) := funext fun j => by
-    obtain ⟨σ, hσ⟩ := (GlobalTheory.T.exists_unique_splitPlaceComponent_definiteUnitary E a U hU.1 _ (O.split j)).1
+    obtain ⟨σ, hσ⟩ := (_root_.GlobalTheory.SplitComp.exists_comp_and_unique E a U hU.1 _ (O.split j)).1
     rw [hθ j σ hσ]
     exact (hsys U hU.1 hfix j σ hσ).symm
   have hactJ : ActsBy K' tj fun U' j => ej j U' := fun U' hU' φ hφ hx j =>
@@ -1507,7 +1497,7 @@ theorem congUWG_of (H : StepSt) (hFin : FinU) (D : ∀ a : ℕ, MvPolynomial (Fi
     · exact hcp p
     · exact hcz z
   have hlam' : (Wt.ofFam lam).at = lam := by
-    obtain ⟨W', -, hW', -⟩ := GlobalTheory.T.exists_algebraicForm_weight_level_smooth_at_place E a lam K' U hK'.fin hOf w₀
+    obtain ⟨W', -, hW', -⟩ := _root_.GlobalTheory.Cong.exists_algForm_ofType E a lam K' U hK'.fin hOf w₀
     obtain rfl : lam = W'.at := (funext hW').symm
     have : Wt.ofFam W'.at = W' := funext fun v => W'.at_embedding v
     rw [this]

@@ -393,7 +393,7 @@ theorem sobChart_holds : SobChart := by
 
 end Chart
 
-theorem sobChart_holds : SobChart := Chart.sobChart_holds
+alias sobChart_holds := _root_.Formalism.IndefR.Tow.SobPf.Chart.sobChart_holds
 
 end Formalism.IndefR.Tow.SobPf
 

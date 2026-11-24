@@ -273,9 +273,7 @@ namespace UpperTheory.V.Sd
 end UpperTheory.V.Sd
 
 open UpperTheory.V UpperTheory.V.Sd in
-theorem UpperTheory.V.Sd.holLin :
-    UpperTheory.V.Sd.HolLin :=
-  _root_.UpperTheory.Reformulated.B.Gr32.holLin
+alias UpperTheory.V.Sd.holLin := _root_.UpperTheory.Reformulated.B.Gr32.holLin
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.HolLin =====

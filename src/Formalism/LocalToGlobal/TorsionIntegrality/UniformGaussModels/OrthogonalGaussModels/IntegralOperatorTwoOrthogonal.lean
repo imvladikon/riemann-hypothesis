@@ -86,7 +86,7 @@ open Formalism.L2.Th1.F (MulStable IsKerReps taylor0 pSeries)
 
 theorem coeff_two_pSeries (L : PeriodPair) :
     PowerSeries.coeff 2 (pSeries L) = L.g₂ / 20 := by
-  rw [Formalism.L2.Th1.F.pSeriesCoeff L 2, if_neg (by norm_num)]
+  rw [_root_.Formalism.L2.Th1.F.weierstrass_p_series_coeff L 2, if_neg (by norm_num)]
   first
     | (simp only [PeriodPair.g₂]; push_cast; ring)
 
@@ -278,8 +278,8 @@ theorem not_in_kernel_of_multiplier_torsion (h1 : TwoTorsionKernelUnique) (h2 : 
   have hIM : Formalism.L2.Th1.A.IntModel W := ⟨a1, a2, a3, a4, a6⟩
   have hsub := Formalism.ELL.formal_group_points_subgroup.{0} ℂ_[2] W hM hΔ
   have htor := Formalism.ELL.formal_group_points_no_torsion.{0} ℂ_[2] W hM hΔ
-  have hadd := Formalism.L2.Th1.E.ptWAdd 2 L ι W hU
-  have hzero := Formalism.L2.Th1.E.ptWZero 2 L ι W hU
+  have hadd := _root_.Formalism.L2.Th1.E.analytic_point_map_add 2 L ι W hU
+  have hzero := _root_.Formalism.L2.Th1.E.analytic_point_eq_zero_iff 2 L ι W hU
   have hnsmul : ∀ (n : ℕ) (t : ℂ), π ((n : ℂ) * t) = n • π t := by
     intro n t
     induction n with
@@ -991,8 +991,6 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.B
 
-theorem th0TwoCM : ThetaZeroTwoCM := LCm.theta_zero_two_complex_mult
-
 end Formalism.L2.Th1.B
 end -- clump:auto
 end -- clump:auto
@@ -1050,7 +1048,7 @@ theorem IntOpTwoOrth_of (h : Formalism.L2.Th1.B.ThetaZeroTwoCM) : IntOpTwoOrth :
   rw [mul_assoc]
   exact Subring.mul_mem _ ((hmem _).2 (hP m)) ((hmem _).2 (hJI m))
 
-theorem integral_operator_two_orthogonal : IntOpTwoOrth := IntOpTwoOrth_of Formalism.L2.Th1.B.th0TwoCM
+theorem integral_operator_two_orthogonal : IntOpTwoOrth := IntOpTwoOrth_of _root_.Formalism.L2.Th1.B.LCm.theta_zero_two_complex_mult
 
 end Formalism.L2.Th1.Top
 end -- clump:auto

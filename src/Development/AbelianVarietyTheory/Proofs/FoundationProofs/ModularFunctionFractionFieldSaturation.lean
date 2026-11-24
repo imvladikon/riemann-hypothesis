@@ -404,7 +404,7 @@ theorem inR_of_integral : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ε : Ω �
   intro Ω _ _ ε M n h r hM hh hinv hr heq
   obtain ⟨N, w, hN, hMN, hlv⟩ := exists_common_lv M hM r hr
   have hinvN : ∀ γ ∈ CongruenceSubgroup.Gamma N, ∀ τ : ℍ, h (γ • τ) = h τ :=
-    fun γ hγ τ => hinv γ (gamma_le_of_dvd hMN hγ) τ
+    fun γ hγ τ => hinv γ (_root_.GlobalTheory.FN.gamma_le_of_dvd hMN hγ) τ
   refine ⟨N, w, hN, hinvN, fun γ => ?_⟩
   have hH : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (fun τ => DD τ ^ w * h (γ • τ)) :=
     (mdifferentiable_DD.pow w).mul (mdifferentiable_comp_smul hh γ)
@@ -460,19 +460,6 @@ theorem mdiff_comp_sl (f : ℍ → ℂ) (hf : MDifferentiable 𝓘(ℂ) 𝓘(ℂ
     MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (fun τ : ℍ => f (γ • τ)) := by
   have hg : 0 < ((γ : GL (Fin 2) ℝ)).det.val := by simp
   exact hf.comp (UpperHalfPlane.mdifferentiable_smul hg)
-
-theorem gamma_le {K L : ℕ} (hd : K ∣ L) : CongruenceSubgroup.Gamma L ≤ CongruenceSubgroup.Gamma K := by
-  intro γ hγ
-  have c : ∀ x y : ℤ, ((x : ZMod L) = y) → ((x : ZMod K) = y) := fun x y h => by
-    have := congrArg (ZMod.castHom hd (ZMod K)) h
-    simpa using this
-  rw [CongruenceSubgroup.Gamma_mem] at hγ ⊢
-  obtain ⟨h1, h2, h3, h4⟩ := hγ
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · simpa using c _ 1 (by simpa using h1)
-  · simpa using c _ 0 (by simpa using h2)
-  · simpa using c _ 0 (by simpa using h3)
-  · simpa using c _ 1 (by simpa using h4)
 
 theorem alg (m : ℕ) (P : ℕ → ℂ) (x y : ℂ)
     (h : ∑ i ∈ Finset.range (m + 1 + 1), P i * x ^ i * y ^ (m + 1 - i) = 0) :
@@ -538,8 +525,8 @@ theorem sat : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ε : Ω →+* ℂ) (M
   obtain ⟨N, w, hN, hLv, -⟩ := hp (m + 1)
   have hinv : ∀ γ ∈ CongruenceSubgroup.Gamma (M * N), ∀ τ : ℍ, h (γ • τ) = h τ := by
     intro γ hγ
-    have hγM := gamma_le (Dvd.intro N rfl) hγ
-    have hγN := gamma_le (Dvd.intro_left M rfl) hγ
+    have hγM := _root_.GlobalTheory.FN.gamma_le_of_dvd (Dvd.intro N rfl) hγ
+    have hγN := _root_.GlobalTheory.FN.gamma_le_of_dvd (Dvd.intro_left M rfl) hγ
     have hprod : ∀ τ, (fun τ => h (γ • τ) - h τ) τ * (fun τ => b τ * b (γ • τ)) τ = 0 := by
       intro τ
       have E1 := hPA (γ • τ)

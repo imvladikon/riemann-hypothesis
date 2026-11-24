@@ -1010,7 +1010,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.Di.rootNat_holds :
   intro q _ i V U g ζ
   have hroot := (GlobalTheory.T.tateTwistUnitClass_rootClass_spec q).2.2.2
   have hnat := (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) U).2.2.2.1 g (twGen i ζ)
-  have hres := (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 V U g ζ
+  have hres := (_root_.GlobalTheory.EtC.twist_sections q i).2.2.2.1 V U g ζ
   rw [hroot i U ζ, hroot i V (ζ.map g.appTop.hom), ← hres]
   exact hnat
 end -- clump:auto

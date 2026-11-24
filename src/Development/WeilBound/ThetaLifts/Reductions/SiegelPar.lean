@@ -49,12 +49,13 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
+import Formalism.LocalToGlobal.ProjectiveLattices.UnifDom
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.ThetaLifts.Reductions.SiegelParMod, Development.WeilBound.ThetaLifts.Reductions.SiegelPar
 
 -- ===== clump member: Development.WeilBound.ThetaLifts.Reductions.SiegelParMod =====
--- clump-header: {"m": "Development.WeilBound.ThetaLifts.Reductions.SiegelParMod", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelCore\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelMod\npublic import Development.WeilBound.ThetaLifts.FrameEstimates.SquareIntegrableWeilRange\nimport Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsProdMeasureFinAway\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AddHaarLeftRightMulAdelicMatricesModule\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup\npublic import Development.WeilBound.ThetaLifts.FrameEstimates.LeHeightOfIsTorusElt\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelAbs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\n\n"}
+-- clump-header: {"m": "Development.WeilBound.ThetaLifts.Reductions.SiegelParMod", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelCore\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelMod\npublic import Development.WeilBound.ThetaLifts.FrameEstimates.SquareIntegrableWeilRange\nimport Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsProdMeasureFinAway\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AddHaarLeftRightMulAdelicMatricesModule\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup\npublic import Development.WeilBound.ThetaLifts.FrameEstimates.LeHeightOfIsTorusElt\npublic import Development.WeilBound.ThetaLifts.Reductions.SiegelAbs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\nimport Formalism.LocalToGlobal.ProjectiveLattices.UnifDom\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -84,7 +85,7 @@ theorem ring_facts : IsTopologicalRing (AF F ⊗[F] E) ∧ T2Space (AF F ⊗[F] 
   exact ⟨GlobalTheory.Doubling.isTopologicalRing_tens, e.isEmbedding.t2Space, e.isClosedEmbedding.locallyCompactSpace,
     e.isEmbedding.secondCountableTopology⟩
 
-theorem tr_RE : IsTopologicalRing (AF F ⊗[F] E) := ring_facts.1
+alias tr_RE := _root_.Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
 theorem t2_space_adele_tensor : T2Space (AF F ⊗[F] E) := ring_facts.2.1
 theorem lc_RE : LocallyCompactSpace (AF F ⊗[F] E) := ring_facts.2.2.1
 theorem sc_RE : SecondCountableTopology (AF F ⊗[F] E) := ring_facts.2.2.2
@@ -198,15 +199,6 @@ theorem conjC_mul (b c : G) : conjC (b * c) = (conjC c).trans (conjC b) := by
 
 end Conj
 
-theorem sum_castLE {R : Type} [AddCommMonoid R] {k r : ℕ} (hk : k ≤ r) (g : Fin r → R)
-    (hg : ∀ l : Fin r, k ≤ l.val → g l = 0) : ∑ l, g l = ∑ l : Fin k, g (Fin.castLE hk l) := by
-  let e : Fin k ↪ Fin r := ⟨Fin.castLE hk, Fin.castLE_injective hk⟩
-  have h1 := Finset.sum_map Finset.univ e g
-  rw [show (∑ l : Fin k, g (Fin.castLE hk l)) = ∑ x ∈ Finset.univ.map e, g x from h1.symm]
-  refine (Finset.sum_subset (Finset.subset_univ _) fun l _ hl => hg l ?_).symm
-  by_contra h'
-  exact hl (Finset.mem_map.2 ⟨⟨l.val, by omega⟩, Finset.mem_univ _, Fin.ext rfl⟩)
-
 theorem gram_colL {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] (s : R →+* R) {m : ℕ} (A : Matrix (Fin n) (Fin r) R)
     (J' : Matrix (Fin n) (Fin n) R) (B : Matrix (Fin n) (Fin m) R) :
     cT s (colK hk A) * J' * B = (cT s A * J' * B).submatrix (Fin.castLE hk) id := by
@@ -224,7 +216,7 @@ theorem colK_of_minPar {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] {M : Mat
   rw [mul_colK, e]
   ext i j
   simp only [colK, Matrix.submatrix_apply, id, Matrix.mul_apply]
-  exact sum_castLE hk _ fun l hl => by
+  exact _root_.Formalism.L2.Pj.sum_castLE hk _ fun l hl => by
     have hz : B l (Fin.castLE hk j) = 0 := hB (by have := j.2; rw [Fin.lt_iff_val_lt_val]; simp; omega)
     rw [hz, mul_zero]
 
@@ -262,7 +254,7 @@ theorem minPar_of_eich {k : ℕ} (hk : k ≤ r) {R : Type} [CommRing R] (A : Mat
     congr 1
     ext i m
     simp only [Matrix.mul_apply, Matrix.of_apply, colK, Matrix.submatrix_apply, id]
-    rw [sum_castLE hk (fun l => A i l * if hl : l.val < k then C ⟨l.val, hl⟩ m else 0) fun l hl => by
+    rw [_root_.Formalism.L2.Pj.sum_castLE hk (fun l => A i l * if hl : l.val < k then C ⟨l.val, hl⟩ m else 0) fun l hl => by
       rw [dite_eq_right (by omega), mul_zero]]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [dite_eq_left (by simp)]
@@ -563,12 +555,9 @@ theorem exists_isTorus (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFra
   obtain ⟨a, h1, h2, h3, h4⟩ := exists_torus h hJ hW
   exact ⟨a, ⟨h1, h2, h3, fun t => (h4 t).1, fun t => (h4 t).2.1, fun t => (h4 t).2.2⟩⟩
 
-theorem mul_mem_minPar {p q : GAd σ J} (hp : p ∈ minPar σ J X) (hq : q ∈ minPar σ J X) : p * q ∈ minPar σ J X :=
-  mul_mem_minimal_parabolic hp hq
+alias mul_mem_minPar := _root_.PositivityTheory.ThKR.mul_mem_minimal_parabolic
 
-theorem inv_mem_minPar (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J X Y) {p : GAd σ J}
-    (hp : p ∈ minPar σ J X) : p⁻¹ ∈ minPar σ J X :=
-  inv_mem_minimal_parabolic h hJ hW hp
+alias inv_mem_minPar := _root_.PositivityTheory.ThKR.inv_mem_minimal_parabolic
 
 
 variable (X) in
@@ -578,9 +567,7 @@ def minParSub (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J X
   mul_mem' := mul_mem_minPar
   inv_mem' := inv_mem_minPar h hJ hW
 
-theorem isClosed_minPar (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J X Y) :
-    IsClosed (minPar σ J X) :=
-  isClosed_minimal_parabolic h hJ hW
+alias isClosed_minPar := _root_.PositivityTheory.ThKR.isClosed_minimal_parabolic
 
 theorem minParOne_subset : minParOne σ J X ⊆ minPar σ J X := fun _ ⟨B, hB, e, _⟩ => ⟨B, hB, e⟩
 

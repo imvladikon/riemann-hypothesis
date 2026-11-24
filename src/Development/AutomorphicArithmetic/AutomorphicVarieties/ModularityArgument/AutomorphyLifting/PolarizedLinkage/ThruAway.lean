@@ -139,7 +139,7 @@ theorem exists_char_of_ine [FiniteDimensional K L] [w.asIdeal.LiesOver v.asIdeal
     omega
   have hI : (g : G L Ω) ∈ Ine (F := L) A := deg_eq_zero_iff.1 hdeg
   have hg : ineIncl hL (⟨g, hI⟩ : Ine (F := L) A) = g := Subtype.ext rfl
-  have key := GlobalTheory.T.localArtin_comp_norm_compat K L Ω A v w hK hL aK aL haK haL
+  have key := _root_.GlobalTheory.ArtinNormU.localArtin_normU K L Ω A v w hK hL aK aL haK haL
     (ineIncl hK (ineRes (K := K) (⟨g, hI⟩ : Ine (F := L) A))) (ineIncl hL ⟨g, hI⟩) (fun _ => rfl)
   rw [← hg, ← hθ, hθχ, MonoidHom.comp_apply, key]
 
@@ -216,7 +216,7 @@ theorem _root_.UpperTheory.V.Z.Win.thruAway : ThruAway := by
   have hpolC : ∀ g : Weil hA, (rc (algNorm σ)).charPol g = ∏ j, (X - C ((ξ' j (a g) : ℂˣ) : ℂ)) := fun g =>
     charPol_of_chars hLaws _ ξ' hξ' hsup' g
   obtain ⟨hG, hZ⟩ := GlobalTheory.geometricLemma_and_zelevinskyPolynomialRing
-  have hse : s = GlobalTheory.RoadU.chars ξ hξ := GlobalTheory.LocGL.SupportUnique.hasSupport_unique hG GlobalTheory.Laid.bzfin_holds hZ _
+  have hse : s = GlobalTheory.RoadU.chars ξ hξ := GlobalTheory.LocGL.SupportUnique.hasSupport_unique hG _root_.GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness hZ _
     (IrrGL.of σ.ρ σ.smooth σ.irred) _ _ (hsup.of_equiv (IrrGL.equivOf σ.ρ σ.smooth σ.irred)) hsupx
   obtain ⟨j, -, hj⟩ := Multiset.mem_map.1 (hse ▸ hmem)
   have hζj : ξ j = ζ := IrrGL.ofChar_inj.1 hj

@@ -92,6 +92,7 @@ import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Sheaves.Presheaf
 import Std.Tactic.BVDecide.Normalize.BitVec
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAGACutGraded, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAGroupAdj, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAGroupAdjJComm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocAdd, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocPhi, Formalism.HermitianCurvature.HermitianCurvatureProofs.LocalSquareIntegrableTransfer, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocDone, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocToolsOp, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJALocOpAdjProof, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAAdjDone, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAQQ, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAAsm, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAQQOpen, Formalism.HermitianCurvature.HermitianCurvatureProofs.JAdjTrQQOfThree
@@ -865,7 +866,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAQQ =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAAsm =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAAsm", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAQQ\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutAsm\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCutTr\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDAsm\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Presheaf\nimport Std.Tactic.BVDecide.Normalize.BitVec\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAAsm", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJAQQ\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutAsm\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCutTr\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDAsm\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SeminormCompletion\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Presheaf\nimport Std.Tactic.BVDecide.Normalize.BitVec\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1015,11 +1016,6 @@ theorem ipA_smul_left (c : ℂ) (U V : M.Ty P → MA.SmQ P.r P.TT) : MA.ipA P (c
   rw [← integral_const_mul]
   congr 1; funext q; simp only [Pi.smul_apply, evQ_smul]; ring
 
-theorem ipA_zero_left (V : M.Ty P → MA.SmQ P.r P.TT) : MA.ipA P 0 V = 0 := by
-  simp only [ipA_eq]
-  refine Finset.sum_eq_zero fun π _ => ?_
-  simp [evQ_zero]
-
 theorem ipA_add_right {U V V' : M.Ty P → MA.SmQ P.r P.TT} (h : PI P U V) (h' : PI P U V') :
     MA.ipA P U (V + V') = MA.ipA P U V + MA.ipA P U V' := by
   simp only [ipA_eq, ← Finset.sum_add_distrib]
@@ -1034,17 +1030,12 @@ theorem ipA_smul_right (c : ℂ) (U V : M.Ty P → MA.SmQ P.r P.TT) :
   rw [← integral_const_mul]
   congr 1; funext q; simp only [Pi.smul_apply, evQ_smul, map_mul]; ring
 
-theorem ipA_zero_right (U : M.Ty P → MA.SmQ P.r P.TT) : MA.ipA P U 0 = 0 := by
-  simp only [ipA_eq]
-  refine Finset.sum_eq_zero fun π _ => ?_
-  simp [evQ_zero]
-
 theorem ipA_sum_left {ι : Type} (l : List ι) (c : ι → ℂ) (u : ι → M.Ty P → MA.SmQ P.r P.TT)
     (V : M.Ty P → MA.SmQ P.r P.TT) (h : ∀ i ∈ l, PI P (u i) V) :
     MA.ipA P ((l.map fun i => c i • u i).sum) V = (l.map fun i => c i * MA.ipA P (u i) V).sum ∧
       PI P ((l.map fun i => c i • u i).sum) V := by
   induction l with
-  | nil => exact ⟨by simpa using ipA_zero_left V, by simpa using PI_zero_left V⟩
+  | nil => exact ⟨by simpa using _root_.Formalism.FourierDecayAlt.P.MAx3.AD.ipA_zero_left V, by simpa using PI_zero_left V⟩
   | cons i l ih =>
     obtain ⟨h1, h2⟩ := ih fun j hj => h j (List.mem_cons_of_mem _ hj)
     have hi : PI P (c i • u i) V := PI_smul_left (c i) (h i (List.mem_cons_self ..))
@@ -1056,7 +1047,7 @@ theorem ipA_sum_right {ι : Type} (U : M.Ty P → MA.SmQ P.r P.TT) (l : List ι)
     MA.ipA P U ((l.map fun i => c i • u i).sum) = (l.map fun i => conj (c i) * MA.ipA P U (u i)).sum ∧
       PI P U ((l.map fun i => c i • u i).sum) := by
   induction l with
-  | nil => exact ⟨by simpa using ipA_zero_right U, by simpa using PI_zero_right U⟩
+  | nil => exact ⟨by simpa using _root_.Formalism.FourierDecayAlt.P.MAx3.Z.ipA_zero_right U, by simpa using PI_zero_right U⟩
   | cons i l ih =>
     obtain ⟨h1, h2⟩ := ih fun j hj => h j (List.mem_cons_of_mem _ hj)
     have hi : PI P U (c i • u i) := PI_smul_right (c i) (h i (List.mem_cons_self ..))
@@ -1245,7 +1236,7 @@ theorem trJ_van (e : M.Ty (D.parOf S v) → ℂ → (Wq (S.pl v) →L[ℂ] Wp (S
   unfold trJ MA.toSm MA.evQ
   split_ifs with hs
   · have h0 : B.hsVec (0 : Wq (S.pl v) →L[ℂ] Wp (S.pl v)) = 0 := by
-      have := hsVec_smul (0 : ℂ) (0 : Wq (S.pl v) →L[ℂ] Wp (S.pl v))
+      have := _root_.PI.UnitaryGroupMassFormula.UsCompose.hsVec_smul (0 : ℂ) (0 : Wq (S.pl v) →L[ℂ] Wp (S.pl v))
       simpa using this
     simp [hJ0, h0]
   · rfl
@@ -1293,7 +1284,7 @@ theorem Rz_one : Rz S T v e Bg Dh Oh 0 1 := by
     subst ht
     exact ⟨fun Θ h => absurd h (List.not_mem_nil), by simp [heavy]⟩
   · intro J _
-    simp [actA_one, applyL]
+    simp [_root_.Formalism.FourierDecayAlt.P.MAx2.R2.act_one, applyL]
 
 theorem Rz_mul (hFF : ∀ Θ : OpT S v, IsAAOp S T v Θ → ∀ J ∈ smoothFormsPositiveCone S T v, B.opApply Θ J ∈ smoothFormsPositiveCone S T v ∧ B.opAdj Θ J ∈ smoothFormsPositiveCone S T v)
     {k₁ k₂ : ℕ} {x y : MA.A (D.parOf S v) (MA.DQ (D.parOf S v))}
@@ -1647,7 +1638,7 @@ theorem builtOW_mono {E : Type} [Field E] [NumberField E] [IsCMField E] {Wp Wq :
     {ν' : Fin S.f → Fin (2 * S.G.r + S.G.k + 1) → ℂ} {m₀ : Fin S.f → B.Mat S.G.k S.G.r}
     {top : ∀ v : Fin S.f, (B.Mat S.G.k S.G.r → (Wq (S.pl v) →L[ℂ] Wp (S.pl v))) → List C.Letter → C.LPt → C.LPt → ℂ}
     {A₀ : ℝ} (hB : BuiltOW C₂ S T f χ ν' m₀ top A₀) : BuiltOW C₁ S T f χ ν' m₀ top A₀ :=
-  ⟨isBuiltPlace_mono h hB.1, hB.2⟩
+  ⟨_root_.Formalism.FourierDecayAlt.P.CutMP.isBuiltPlace_mono3 h hB.1, hB.2⟩
 
 theorem weight_budget_linear_inequality (A K x a b : ℝ) (hx : 0 ≤ x) (hab : a + b ≤ K) : A - K * x ≤ A - a * x - b * x := by nlinarith
 

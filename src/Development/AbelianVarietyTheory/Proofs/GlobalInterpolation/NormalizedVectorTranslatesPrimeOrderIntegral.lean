@@ -482,12 +482,10 @@ theorem disc_one (B : Base D cc δ) (hcc : TaylorLogMetric.IsCurveIdeal D cc) (h
 
 theorem d_sq (D : D7) : Squarefree D.host.d := (D.host.hyp.2.1 : D.host.d.Prime).squarefree
 
-theorem host_imagQuadratic_discriminant_mod_four (D : D7) : D.host.d % 4 = 3 := by have := D.host.hyp.2.2.2.1; omega
-
 theorem g₂_g₃_mem_Qbar (B : Base D cc δ) (hcc : TaylorLogMetric.IsCurveIdeal D cc) (hδ : TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ) :
     B.L.g₂ ∈ TaylorLogMetric.Qbar ∧ B.L.g₃ ∈ TaylorLogMetric.Qbar := by
   have hdisc := disc_one B hcc hδ
-  have hj : IsIntegral ℤ (Formalism.L2.Th1.CM.jInv B.L) := GlobalTheory.ThLoc.cm1 D.host.d B.L (d_sq D) (host_imagQuadratic_discriminant_mod_four D) (hasCMBy B)
+  have hj : IsIntegral ℤ (Formalism.L2.Th1.CM.jInv B.L) := GlobalTheory.ThLoc.cm1 D.host.d B.L (d_sq D) (_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.B5.discriminant_mod_four D) (hasCMBy B)
   have hjQ : Formalism.L2.Th1.CM.jInv B.L ∈ TaylorLogMetric.Qbar :=
     (qbar_iff _).2 (hj.tower_top (A := ℚ)).isAlgebraic
   have hg2c : B.L.g₂ ^ 3 = Formalism.L2.Th1.CM.jInv B.L / 1728 := by
@@ -682,8 +680,6 @@ theorem opU_hOne (L : PeriodPair) (x : Fin 1 → ℂ) (F : ℂ → ℂ) (z : Fin
   congr 3
   ring
 
-theorem area_pos (L : PeriodPair) : 0 < Formalism.L2.Th1.F.area L := Formalism.L2.Th1.F.areaPos_thm L
-
 theorem herm_conj (L : PeriodPair) (x y : ℂ) : herm L y x = conj (herm L x y) := by
   simp [herm, mul_comm]
 
@@ -738,7 +734,7 @@ theorem setupOne_ok (hp : d.Prime) (h16 : d % 16 = 7) : (setupOne d L).Ok := by
     show (hOne L (Fin 1)).PosDef
     rw [h, Matrix.posDef_diagonal_iff]
     intro _
-    have := area_pos L
+    have := _root_.Formalism.L2.Th1.F.PeriodAreaSignLemmas.area_pos L
     rw [← Complex.ofReal_inv]
     exact_mod_cast inv_pos.2 this
   · have hi : Function.Injective (fun x : (setupOne d L).La => (⟨x.1 0, x.2⟩ : L.lattice)) := by
@@ -1149,7 +1145,7 @@ theorem jets_root : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* ℂ_[q]) (n : T
         exact h
     have hrange : ∀ p : Fin 4 × κ, p ∈ Set.range (e a) ↔ p ∈ S a := by
       rintro ⟨b, i⟩; simp [Set.mem_range, he, S, eq_comm]
-    obtain ⟨h1, h2⟩ := mahler_embed (n → ℂ) κ (Fin 4 × κ) (e a) (fun i => c • v i) (fun p => sliceL a (U p)) G hG
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.MomEmbed.mahler_embed (n → ℂ) κ (Fin 4 × κ) (e a) (fun i => c • v i) (fun p => sliceL a (U p)) G hG
       (fun i => by simp [U, he, sliceL_apply, slice_fourBlockInclusionVector])
       (fun p hp => by
         have : p.1 ≠ a := fun h => hp ((hrange p).2 (by simp [S, h]))
@@ -1170,9 +1166,9 @@ theorem jets_root : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* ℂ_[q]) (n : T
   have d2 := dj {0, 1} 2 (by decide)
   have d3 := dj {0, 1, 2} 3 (by decide)
   rw [u1] at d1; rw [u2] at d2; rw [u3] at d3
-  obtain ⟨A1v, A1⟩ := mahler_mul_disj _ _ U _ _ (hGa 0) (hGa 1) (S 0) (S 1) d1 (hposition 0).1 (hposition 1).1
-  obtain ⟨A2v, A2⟩ := mahler_mul_disj _ _ U _ _ ((hGa 0).mul (hGa 1)) (hGa 2) (S 0 ∪ S 1) (S 2) d2 A1v (hposition 2).1
-  obtain ⟨-, A3⟩ := mahler_mul_disj _ _ U _ _ (((hGa 0).mul (hGa 1)).mul (hGa 2)) (hGa 3)
+  obtain ⟨A1v, A1⟩ := _root_.GlobalTheory.mahler_mul_of_disjoint_support _ _ U _ _ (hGa 0) (hGa 1) (S 0) (S 1) d1 (hposition 0).1 (hposition 1).1
+  obtain ⟨A2v, A2⟩ := _root_.GlobalTheory.mahler_mul_of_disjoint_support _ _ U _ _ ((hGa 0).mul (hGa 1)) (hGa 2) (S 0 ∪ S 1) (S 2) d2 A1v (hposition 2).1
+  obtain ⟨-, A3⟩ := _root_.GlobalTheory.mahler_mul_of_disjoint_support _ _ U _ _ (((hGa 0).mul (hGa 1)).mul (hGa 2)) (hGa 3)
     (S 0 ∪ S 1 ∪ S 2) (S 3) d3 A2v (hposition 3).1
   have key : mahler U (tens4 G) (fun p => m p.2) = (mahler (fun i => c • v i) G m) ^ 4 := by
     rw [ht, A3 _ ?_, A2 _ ?_, A1 _ ?_, (hposition 0).2 _ ?_, (hposition 1).2 _ ?_, (hposition 2).2 _ ?_, (hposition 3).2 _ ?_]

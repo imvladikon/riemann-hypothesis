@@ -470,9 +470,7 @@ private theorem UpperTheory.EvaluationPowerKernel.main :
 
 end SlopeTestRemainingChoices
 
-theorem UpperTheory.exists_iso_of_pIsogeny_kernel_eq :
-    ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → IsUnit ((p : ℕ) : R) → ∀ (c : ℕ) (T : Scheme.{0}) (s : T ⟶ Sp R) (o o₁ o₂ : Obj b N s) (ψ₁ : o.A ⟶ o₁.A) (ψ₂ : o.A ⟶ o₂.A), IsPIsog c o o₁ ψ₁ → IsPIsog c o o₂ ψ₂ → (∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ T) (g : Over.mk x ⟶ o.A), g ≫ ψ₁ = 1 ↔ g ≫ ψ₂ = 1) → ∃ m : ObjMap o₁ o₂ (𝟙 T), ψ₁.left ≫ m.φ = ψ₂.left :=
-  UpperTheory.EvaluationPowerKernel.main
+alias UpperTheory.exists_iso_of_pIsogeny_kernel_eq := _root_.UpperTheory.EvaluationPowerKernel.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsIsoOfPIsogenyKernelEq =====
@@ -497,7 +495,7 @@ theorem evc_zpow {A A' : AbVar K} {P : LB (A.X ⊗ A'.X).left} (hP : AbDual.IsDu
     AbDual.evc hP.isLB a (b ^ k) = k • AbDual.evc hP.isLB a b ∧ AbDual.evc hP.isLB a 1 = 0 := by
   let F : (Y ⟶ A'.X) →* Multiplicative (Pic Y.left) :=
     MonoidHom.mk' (fun b => Multiplicative.ofAdd (AbDual.evc hP.isLB a b)) (fun b b' => by
-      rw [GlobalTheory.T.poincareClass_additive_in_dual_variable K A A' P hP Y a b b']; rfl)
+      rw [_root_.GlobalTheory.AbDual.poincare_evc_mul_right K A A' P hP Y a b b']; rfl)
   refine ⟨?_, ?_⟩
   · have := map_zpow F b k
     exact this
@@ -546,8 +544,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianVarietyMumfordClass_symm_natural_additive : ∀ (K : Type) [Field K] (A B : AbVar K) (c c' : Pic A.X.left) (d : Pic B.X.left) (f : A ⟶ B) (Y Z : Over (Sp K)) (u : Z ⟶ Y) (x y : Y ⟶ A.X), AbVar.lam c x y = AbVar.lam c y x ∧ CechPic.pull u.left (AbVar.lam c x y) = AbVar.lam c (u ≫ x) (u ≫ y) ∧ AbVar.lam d (x ≫ f.hom) (y ≫ f.hom) = AbVar.lam (CechPic.pull f.hom.left d) x y ∧ AbVar.lam (c + c') x y = AbVar.lam c x y + AbVar.lam c' x y := by
-  first | (exact @GlobalTheory.AV.lam_symm_nat_add)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyMumfordClassSymmNaturalAdditiveStatement =====
@@ -575,8 +571,8 @@ theorem isAdj_pt {A B : AbVar K} {c : Pic A.X.left} {d : Pic B.X.left} {f : A �
     (H : IsAdj c d f n h) {Y : Over (Sp K)} (x : Y ⟶ A.X) (y : Y ⟶ B.X) :
     n • lam d (x ≫ f.hom) y = lam c x (y ≫ h.hom) := by
   have H' := congrArg (CechPic.pull (lift x y).left) H
-  rw [map_zsmul, (GlobalTheory.T.abelianVarietyMumfordClass_symm_natural_additive K A A c c c (𝟙 A) _ Y (lift x y) _ _).2.1,
-    (GlobalTheory.T.abelianVarietyMumfordClass_symm_natural_additive K B B d d d (𝟙 B) _ Y (lift x y) _ _).2.1] at H'
+  rw [map_zsmul, (_root_.GlobalTheory.AV.lam_symm_nat_add K A A c c c (𝟙 A) _ Y (lift x y) _ _).2.1,
+    (_root_.GlobalTheory.AV.lam_symm_nat_add K B B d d d (𝟙 B) _ Y (lift x y) _ _).2.1] at H'
   simpa only [lift_fst_assoc, lift_snd_assoc, lift_fst, lift_snd] using H'
 
 end GlobalTheory.AV.AbVar.AdjCalc
@@ -786,7 +782,7 @@ theorem exists_phi : ∀ (K : Type) [Field K] (A A' : AbVar K) (P : LB (A.X ⊗ 
     exact GlobalTheory.T.abelianVarietyMumfordClass_mul_left K A c Y a a' t
   have hnorm : CechPic.pull (lift (𝟙 A.X) (1 : A.X ⟶ A.X)).left β = 0 := by
     rw [hpull, AbVar.lam, _root_.mul_one, pull_one_eq_zero, sub_self, sub_zero]
-  obtain ⟨ψ, hψ, -⟩ := GlobalTheory.T.biadditiveClass_eq_poincarePullback_unique_hom K A A' A P hP β hadd hnorm
+  obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' A P hP β hadd hnorm
   refine ⟨ψ, hψ, fun hc => ?_⟩
   have hfin : IsFinite ψ.hom.left := by
     refine (GlobalTheory.T.isFinite_iff_finite_ker' K A A' ψ).2 ?_
@@ -860,13 +856,13 @@ theorem exists_isAdj : ∀ (K : Type) [Field K] (A B : AbVar K) (c : Pic A.X.lef
   have hzero : CechPic.pull (lift (𝟙 A.X) (1 : A.X ⟶ B.X)).left
       (AbVar.lam d (fst A.X B.X ≫ f.hom) (snd A.X B.X)) = 0 := by
     rw [lam_eq, CechPic.pull_lam, lift_snd, CechPic.lam_one_right]
-  obtain ⟨ψ, hψ, -⟩ := GlobalTheory.T.biadditiveClass_eq_poincarePullback_unique_hom K A A' B P hP _ hadd hzero
+  obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' B P hP _ hadd hzero
   have hpow : ∀ (Y : Over (Sp K)) (a : Y ⟶ A.X) (b : Y ⟶ A'.X) (m : ℕ),
       AbDual.evc hP.isLB a (b ^ m) = m • AbDual.evc hP.isLB a b := by
     intro Y a b m
     induction m with
     | zero => rw [pow_zero, zero_smul, AbDual.evc_one_right hP.isLB hP.zero a]
-    | succ m ih => rw [pow_succ, GlobalTheory.T.poincareClass_additive_in_dual_variable K A A' P hP Y a, ih, succ_nsmul]
+    | succ m ih => rw [pow_succ, _root_.GlobalTheory.AbDual.poincare_evc_mul_right K A A' P hP Y a, ih, succ_nsmul]
   refine ⟨n, ψ ≫ v, hn, ?_⟩
   have e1 := congrArg (CechPic.pull (lift (fst A.X B.X) (snd A.X B.X ≫ (ψ ≫ v).hom)).left) hφ
   rw [lam_eq, CechPic.pull_lam, AbDual.pull_evc, lift_fst, lift_snd_assoc, lift_snd, ← lam_eq] at e1
@@ -893,8 +889,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_adjoint_up_to_integer : ∀ (K : Type) [Field K] (A B : AbVar K) (c : Pic A.X.left) (d : Pic B.X.left), IsAmpleCls c → ∀ f : A ⟶ B, ∃ (n : ℕ) (h : B ⟶ A), 0 < n ∧ IsAdj c d f n h := by
-  first | (exact @GlobalTheory.AV.AbVar.exists_isAdj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdjointUpToIntegerStatement =====
@@ -917,8 +911,8 @@ private theorem hom_cancel :
     ∀ (Ω : Type) [Field Ω] (A B : Over (Sp Ω)) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B], IsAbelianScheme A → IsAbelianScheme B →
       ∀ (f g : A ⟶ B), IsMonHom f → IsMonHom g → ∀ (n : ℕ), 0 < n → f ^ n = g ^ n → f = g := by
   intro Ω _ A B _ _ _ _ hA hB f g hf hg n hn hfg
-  obtain ⟨dA, hsA⟩ := GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω A hA
-  obtain ⟨dB, hsB⟩ := GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω B hB
+  obtain ⟨dA, hsA⟩ := _root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω A hA
+  obtain ⟨dB, hsB⟩ := _root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω B hB
   let A' : GlobalTheory.AV.AbVar Ω := ⟨A, hA, dA, hsA⟩
   let B' : GlobalTheory.AV.AbVar Ω := ⟨B, hB, dB, hsB⟩
   let F : A' ⟶ B' := GlobalTheory.AV.AbVar.Hom.mk (A := A') (B := B') f
@@ -948,8 +942,8 @@ private theorem eq_zero_of_zsmul_eq_zero {K : Type} [Field K] (A B : AbVar K)
     (m : ℤ) (hm : m ≠ 0) (hmβ : m • β = 0) : β = 0 := by
   obtain ⟨A', P, hdual, -⟩ := GlobalTheory.T.abelianVariety_exists_dual_pair K A
   have hP := hdual.1
-  obtain ⟨ψ, hψ, -⟩ := GlobalTheory.T.biadditiveClass_eq_poincarePullback_unique_hom K A A' B P hP β hadd hnorm
-  obtain ⟨ψ0, -, huniq⟩ := GlobalTheory.T.biadditiveClass_eq_poincarePullback_unique_hom K A A' B P hP 0 (by intros; simp) (by simp)
+  obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' B P hP β hadd hnorm
+  obtain ⟨ψ0, -, huniq⟩ := _root_.GlobalTheory.AV.FamHom.main K A A' B P hP 0 (by intros; simp) (by simp)
   have e1 : (0 : GlobalTheory.CechPic.Pic (A.X ⊗ B.X).left) =
       GlobalTheory.AbDual.evc hP.isLB (fst A.X B.X) (snd A.X B.X ≫ GlobalTheory.AV.AbVar.Hom.hom (m • ψ)) := by
     rw [GlobalTheory.AV.AbVar.zsmul_hom, GlobalTheory.AV.AbVar.AdjCalc.comp_zpow', (GlobalTheory.AdjCancel.evc_zpow hP _ _ m).1,
@@ -967,8 +961,8 @@ end
 private theorem pic_eq_zero :
     ∀ (Ω : Type) [Field Ω] (A B : Over (Sp Ω)) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B], IsAbelianScheme A → IsAbelianScheme B → ∀ β : GlobalTheory.CechPic.Pic (A ⊗ B).left, (∀ (Y : Over (Sp Ω)) (a a' : Y ⟶ A) (t : Y ⟶ B), GlobalTheory.CechPic.pull (lift (a * a') t).left β = GlobalTheory.CechPic.pull (lift a t).left β + GlobalTheory.CechPic.pull (lift a' t).left β) → GlobalTheory.CechPic.pull (lift (𝟙 A) (1 : A ⟶ B)).left β = 0 → ∀ n : ℕ, 0 < n → n • β = 0 → β = 0 := by
   intro Ω _ A B _ _ _ _ hA hB β hadd hnorm n hn hnβ
-  obtain ⟨dA, hsA⟩ := GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω A hA
-  obtain ⟨dB, hsB⟩ := GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω B hB
+  obtain ⟨dA, hsA⟩ := _root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω A hA
+  obtain ⟨dB, hsB⟩ := _root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω B hB
   let A' : GlobalTheory.AV.AbVar Ω := ⟨A, hA, dA, hsA⟩
   let B' : GlobalTheory.AV.AbVar Ω := ⟨B, hB, dB, hsB⟩
   refine eq_zero_of_zsmul_eq_zero A' B' β hadd hnorm (n : ℤ) (by exact_mod_cast hn.ne') ?_
@@ -1100,7 +1094,7 @@ private theorem exists_adjoint :
   intro p _ D R _ b N Ω _ σ o₁ o₂ κ hκ
   have hp := (Fact.out : p.Prime)
   let fκ : av o₂ ⟶ av o₁ := @GlobalTheory.AV.AbVar.Hom.mk _ _ (av o₂) (av o₁) κ hκ
-  obtain ⟨n, h, hn, hadj⟩ := GlobalTheory.T.exists_adjoint_up_to_integer Ω (av o₂) (av o₁) (dg o₂) (dg o₁) (dg_ample o₂) fκ
+  obtain ⟨n, h, hn, hadj⟩ := _root_.GlobalTheory.AV.AbVar.exists_isAdj Ω (av o₂) (av o₁) (dg o₂) (dg o₁) (dg_ample o₂) fκ
   obtain ⟨ν₀, hν₀, hνdef⟩ : ∃ ν₀ : o₁.A ⟶ o₂.A, IsMonHom ν₀ ∧ ν₀ = GlobalTheory.AV.AbVar.Hom.hom h :=
     ⟨_, (Additive.toMul h).2, rfl⟩
   have H1 : ∀ (Y : Over (Sp Ω)) (y : Y ⟶ o₂.A) (x : Y ⟶ o₁.A),
@@ -1164,8 +1158,8 @@ private noncomputable def avOf {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type}
     {Ω : Type} [Field Ω] {σ : Sp Ω ⟶ Sp R} (o : Obj b N σ) : GlobalTheory.AV.AbVar Ω :=
   { X := o.A
     ab := o.ab
-    dim := (GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω o.A o.ab).choose
-    smooth := (GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists Ω o.A o.ab).choose_spec }
+    dim := (_root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω o.A o.ab).choose
+    smooth := (_root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme Ω o.A o.ab).choose_spec }
 
 private theorem idPow_comp {S : Scheme.{0}} {A B : Over S} [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B]
     (f : A ⟶ B) [IsMonHom f] (n : ℕ) : ((𝟙 A) ^ n) ≫ f = f ^ n := by
@@ -1372,15 +1366,6 @@ private def homSub (A B : Over (Sp Ω)) [GrpObj A] [IsCommMonObj A] [GrpObj B] [
     change IsMonHom (f⁻¹)
     infer_instance
 
-private theorem act_nat (o : Obj b N σ) (k : ℕ) : o.act.act (k : D.O) = 𝟙 o.A ^ k := by
-  have h0 : o.act.act 0 = 1 := by
-    have h := o.act.add 0 0
-    rw [add_zero] at h
-    exact mul_left_cancel (h.symm.trans (_root_.mul_one _).symm)
-  induction k with
-  | zero => simpa using h0
-  | succ n ih => rw [Nat.cast_succ, o.act.add, ih, o.act.one, pow_succ]
-
 private theorem half {E : ℕ} {r : ℤ} (o₁ o₂ o' : Obj b N σ) (ψ₁ : o₁.A ⟶ o'.A) (ψ₂ : o₂.A ⟶ o'.A)
     (φ₁ : o'.A ⟶ o₁.A) (φ₂ : o'.A ⟶ o₂.A) (h₁ : IsPIsog (p ^ E) o₁ o' ψ₁) (h₂ : IsPIsog (p ^ E) o₂ o' ψ₂)
     (hφ₁ : IsMonHom φ₁) (hφ₂ : IsMonHom φ₂)
@@ -1461,7 +1446,7 @@ private theorem half {E : ℕ} {r : ℤ} (o₁ o₂ o' : Obj b N σ) (ψ₁ : o�
   have ha : o₁.act.act (algebraMap (𝓞 D.F) D.O a) ≫ ψ₁ ≫ φ₂ =
       M * (o₁.act.act (algebraMap (𝓞 D.F) D.O t) ≫ ψ₁ ≫ φ₂) ^ (p ^ E) := by
     rw [ht, map_add (f := _), o₁.act.add, MonObj.mul_comp, map_mul, map_pow, map_natCast, ← Nat.cast_pow,
-      o₁.act.mul, act_nat, idPow_comp, MonObj.pow_comp, ← hbβ, ← hMdef]
+      o₁.act.mul, _root_.UpperTheory.KEq.act_natCast, idPow_comp, MonObj.pow_comp, ← hbβ, ← hMdef]
   refine ⟨ν ^ u' * M ^ w * (o₁.act.act (algebraMap (𝓞 D.F) D.O t) ≫ ψ₁ ≫ φ₂) * κ, ?_, ?_⟩
   · have hX : IsMonHom (o₁.act.act (algebraMap (𝓞 D.F) D.O t) ≫ ψ₁ ≫ φ₂) := inferInstance
     exact (homSub o₁.A o₂.A).mul_mem ((homSub o₁.A o₂.A).mul_mem
@@ -1519,7 +1504,7 @@ private theorem ker_le {k : Type} [Field k] [IsAlgClosed k] [CharZero k] {σ : S
   apply glue_ext
   intro w
   obtain ⟨V, i, y, w', hi, hiw, hyc, hix⟩ :=
-    GlobalTheory.T.abelianScheme_torsionPoint_locally_constant_geomPoint (Sp k) o.A o.ab k (𝟙 (Sp k)) c hc0 T (toUnit T) x hxc w
+    _root_.GlobalTheory.TorsLocConst.locally_const_torsion (Sp k) o.A o.ab k (𝟙 (Sp k)) c hc0 T (toUnit T) x hxc w
   refine ⟨V, i, w', hi, hiw, ?_⟩
   have hpt : i ≫ toUnit T = toUnit V := toUnit_unique _ _
   have hVy : toUnit V ≫ y = i ≫ x := by
@@ -1602,7 +1587,7 @@ private theorem factor {k : Type} [Field k] [IsAlgClosed k] [CharZero k] {σ : S
     have hxc : x ^ (p ^ e) = 1 := by
       have h0 := he _ (Ideal.pow_mem_pow (p_mem_uIdeal D r) e)
       change x ≫ o.act.act _ = 1 at h0
-      rw [map_pow, map_natCast, ← Nat.cast_pow, act_nat o (p ^ e), MonObj.comp_pow,
+      rw [map_pow, map_natCast, ← Nat.cast_pow, _root_.UpperTheory.KEq.act_natCast o (p ^ e), MonObj.comp_pow,
         Category.comp_id] at h0
       exact h0
     have hc : 0 < p ^ e := pow_pos (Fact.out : p.Prime).pos e
@@ -1764,13 +1749,13 @@ theorem UpperTheory.subData_points_correspond_repData :
   have hx2 : y₂ ≫ Rd.Y.hom = x := hy ▸ hx
   obtain ⟨ox, ⟨my₁⟩⟩ := IsogRep.exists_pull y₁ Rd.o₀ (s' := x ≫ s) (by rw [← hx, Category.assoc])
   obtain ⟨o₁, ⟨n₁⟩⟩ := IsogRep.exists_pull y₁ Rd.o' (s' := x ≫ s) (by rw [← hx, Category.assoc])
-  obtain ⟨ψ₁, hiso₁, hsq₁⟩ := GlobalTheory.T.isPIsogenyOfSimilitude_pullback_objects p D R b N c _ _ _ _ y₁ Rd.o₀ Rd.o' ox o₁ my₁ n₁ Rd.ψ Rd.isog
+  obtain ⟨ψ₁, hiso₁, hsq₁⟩ := _root_.GlobalTheory.UPel.HT.ESPull.isPIsog_pull p D R b N c _ _ _ _ y₁ Rd.o₀ Rd.o' ox o₁ my₁ n₁ Rd.ψ Rd.isog
   have htj₁ : IsTj r w j ox o₁ ψ₁ := isTj_of_pull my₁ n₁ hsq₁ Rd.tj
   obtain ⟨mc, hmc⟩ := IsogRep.exists_comp my₁ Rd.m₀
   obtain ⟨m, hmφ⟩ := exists_objMap_same_phi_of_eq hx mc
   obtain ⟨my₂, hmy₂⟩ := IsogRep.exists_factor hN hcop hx2 Rd.m₀ m
   obtain ⟨o₂, ⟨n'⟩⟩ := IsogRep.exists_pull y₂ Rd.o' (s' := x ≫ s) (by rw [← hx2, Category.assoc])
-  obtain ⟨ψ₂, hiso₂, hsq₂⟩ := GlobalTheory.T.isPIsogenyOfSimilitude_pullback_objects p D R b N c _ _ _ _ y₂ Rd.o₀ Rd.o' ox o₂ my₂ n' Rd.ψ Rd.isog
+  obtain ⟨ψ₂, hiso₂, hsq₂⟩ := _root_.GlobalTheory.UPel.HT.ESPull.isPIsog_pull p D R b N c _ _ _ _ y₂ Rd.o₀ Rd.o' ox o₂ my₂ n' Rd.ψ Rd.isog
   have hker : ∀ h : 𝟙_ (Over (Sp k)) ⟶ ox.A,
       (h ≫ ψ₁ = 1 ∧ ∃ e, KilledBy ox (uIdeal D r ^ e) h) ↔
         (h ≫ ψ₂ = 1 ∧ ∃ e, KilledBy ox (uIdeal D r ^ e) h) := by

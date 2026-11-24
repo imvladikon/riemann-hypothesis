@@ -131,6 +131,7 @@ import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.RingTheory.Henselian
 import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdAroots
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdArootsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfNormProdAevalEqStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsoIsogenyOmegaAndDualSurjective, Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelDegreeLeDieudonneColengthOfHeightOne, Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelDegreeLeDieudonneColengthOfHeightOneStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelDegreeLeDieudonneColength, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneColengthEqLogDegree, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsogenyKernelFiniteAlgebraFinrankEqDegreeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKernelPartOrderPrimeToPStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyInducesPDivisibleGroupIsogenyPPartDegree, Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyInducesPDivisibleGroupIsogenyPPartDegreeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelKilledOfDegNeZero, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyDieudonneIntegralityFactorisation, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyDieudonneIntegralityFactorisationStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraFiniteFinrankLe, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraFiniteFinrankLeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomTorsionFreeStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraInjectiveClearDenom, Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.LengthQuotRangeEqAddValDet, Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittVectorColengthRangeEqDetValuation, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompEqZeroOfNotIsIsogeny, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicIntCharpolyCommuteFrobeniusSemilinear, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionTowerAndHeightEqTwoDimStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDet, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyMapEq
@@ -145,34 +146,6 @@ open scoped CategoryTheory.Obj CategoryTheory.MonObj TensorProduct
 open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.deg_aeval_end_eq_prod_aroots : ∀ (K : Type) [Field K] (A : AbVar K) (f : End A) (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra ℚ Ω] (R : Polynomial ℤ), algebraMap ℚ Ω (deg (A := A) (B := A) (Polynomial.aeval f R).asHom : ℚ) = ((((charpoly f).map (Int.castRingHom ℚ)).aroots Ω).map (fun a => Polynomial.aeval a R)).prod := by
-  intro K _ A f Ω _ _ _ R
-  obtain ⟨⟨hm, hd, hev⟩, -⟩ := GlobalTheory.T.abelianVarietyEndCharpoly_spec K A f
-  refine GlobalTheory.T.multiplicative_polynomialFunction_eq_normForm Ω A.dim
-    (fun F => (deg (Polynomial.aeval f F).asHom : ℚ))
-    ((charpoly f).map (Int.castRingHom ℚ)) ?_ ?_ ?_ ?_ ?_ R
-  · intro F G
-    have h := (isIsogeny_comp_iff_and_deg_comp K A A A
-      (Polynomial.aeval f G).asHom (Polynomial.aeval f F).asHom rfl rfl).2
-    change (deg (Polynomial.aeval f (F * G)).asHom : ℚ) =
-      (deg (Polynomial.aeval f F).asHom : ℚ) * (deg (Polynomial.aeval f G).asHom : ℚ)
-    rw [map_mul, End.mul_asHom, h, Nat.cast_mul, mul_comm]
-  · intro n u
-    obtain ⟨Φ, hΦ, hΦev⟩ := GlobalTheory.T.homDegree_integerCombination_isHomogeneous K A A rfl n
-      (fun i => (Polynomial.aeval f (u i)).asHom)
-    refine ⟨Φ, hΦ, fun m => ?_⟩
-    rw [hΦev m]
-    change _ = (deg (End.addEquiv (Polynomial.aeval f (∑ i, m i • u i))) : ℚ)
-    simp only [map_sum, map_zsmul, End.addEquiv_apply]
-  · exact hm.map _
-  · rw [Polynomial.natDegree_map_eq_of_injective (RingHom.injective_int _)]
-    exact hd
-  · intro n
-    have e : Polynomial.aeval f (Polynomial.C n - Polynomial.X) = (n : End A) - f := by
-      rw [map_sub, Polynomial.aeval_X, Polynomial.aeval_C, eq_intCast]
-    change ((charpoly f).map (Int.castRingHom ℚ)).eval (n : ℚ) =
-      (deg (Polynomial.aeval f (Polynomial.C n - Polynomial.X)).asHom : ℚ)
-    rw [Polynomial.eval_intCast_map, Int.cast_id, hev n, e, map_natCast]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdArootsStatement =====
@@ -1059,8 +1032,6 @@ open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory GlobalTheory.PD
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor
 attribute [local instance] CategoryTheory.Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianVariety_dieudonne_integrality_factorisation : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type) [Field k] [CharP k p] [PerfectRing k p] (A B : AbVar k) (G H : PDivGroup p k) (t : G.TorsionTower A.X) (t' : H.TorsionTower B.X) (f : A ⟶ B), (∀ n : ℕ, (∀ m, ∃ m', T.map (t.map t' f.hom) m = p ^ n • m') → ∃ f' : A ⟶ B, f = p ^ n • f') ∧ (IsIsogeny f → IsIsog (t.map t' f.hom) ∧ Module.length (WittVector p k) (T.M G ⧸ LinearMap.range (T.map (t.map t' f.hom))) = padicValNat p (deg f)) ∧ ∀ (C : AbVar k) (K : PDivGroup p k) (t'' : K.TorsionTower C.X) (g : A ⟶ C) (e : ℕ), IsIsogeny f → deg f = p ^ e → LinearMap.range (T.map (t.map t'' g.hom)) ≤ LinearMap.range (T.map (t.map t' f.hom)) → ∃ u : B ⟶ C, f ≫ u = g := by
-  first | (exact @GlobalTheory.Dieu.AbVarDieu.abVar_dieudonne_integral_length_factor)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyDieudonneIntegralityFactorisationStatement =====
@@ -1081,7 +1052,7 @@ namespace GlobalTheory.AV.AbVar
 theorem end_isogeny_algebra_finrank_le : ∀ (K : Type) [Field K] (A : AbVar K),
     Module.Finite ℚ (End0 A) ∧ Module.finrank ℚ (End0 A) ≤ 4 * A.dim * A.dim := by
   intro K _ A
-  obtain ⟨hfin, hfree, hrk⟩ := GlobalTheory.T.hom_finite_free_finrank_le_four_mul_dim K A A
+  obtain ⟨hfin, hfree, hrk⟩ := _root_.GlobalTheory.AV.AbVar.hom_finite_free_rank_le K A A
   let e : End A ≃ₗ[ℤ] (A ⟶ A) := End.addEquiv.toIntLinearEquiv
   haveI : Module.Finite ℤ (A ⟶ A) := hfin
   haveI : Module.Free ℤ (A ⟶ A) := hfree
@@ -1108,8 +1079,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.end_isogeny_algebra_finite_finrank_le : ∀ (K : Type) [Field K] (A : AbVar K), Module.Finite ℚ (End0 A) ∧ Module.finrank ℚ (End0 A) ≤ 4 * A.dim * A.dim := by
-  first | (exact @GlobalTheory.AV.AbVar.end_isogeny_algebra_finrank_le)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraFiniteFinrankLeStatement =====
@@ -1308,7 +1277,7 @@ theorem norm_natCast_padicInt (p : ℕ) [Fact p.Prime] (n : ℕ) (hn : 0 < n) :
 
 theorem exists_comp_eq_zero_of_not_isIsogeny {k : Type} [Field k] (A : AbVar k) (f : End A)
     (hf : ¬ IsIsogeny f.asHom) : ∃ g : End A, g ≠ 0 ∧ f.asHom ≫ g.asHom = 0 := by
-  have hfin := (GlobalTheory.T.end_isogeny_algebra_finite_finrank_le k A).1
+  have hfin := (_root_.GlobalTheory.AV.AbVar.end_isogeny_algebra_finrank_le k A).1
   have hx : ¬ IsUnit (toEnd0 A f) := by
     rintro ⟨u, hu⟩
     obtain ⟨n, g, hn, hg⟩ := (toEnd0_injective_and_fraction k A).2 (↑u⁻¹ : End0 A)
@@ -1342,7 +1311,7 @@ theorem norm_det_eq_norm_deg : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : 
   intro p _ T k _ _ _ A G t _ _ ψ f d hd
   have hlen := _root_.GlobalTheory.Dieu.ColenDet.colength_det p k (T.M G) ψ (T.map (t.map t f.asHom.hom)) d hd
   by_cases hf : IsIsogeny f.asHom
-  · have hb := (GlobalTheory.T.abelianVariety_dieudonne_integrality_factorisation p T k A A G G t t f.asHom).2.1 hf
+  · have hb := (_root_.GlobalTheory.Dieu.AbVarDieu.abVar_dieudonne_integral_length_factor p T k A A G G t t f.asHom).2.1 hf
     have hpos := (isogeny_flat_finrank k A A f.asHom hf).2.2.1
     rw [hlen.1 _ hb.2, norm_natCast_padicInt p _ hpos]
   · have hdeg : deg f.asHom = 0 := by rw [deg, ite_eq_right hf]
@@ -1582,7 +1551,7 @@ theorem prod_aeval_aroots_padic_eq_det : ∀ (p : ℕ) [Fact p.Prime] (S : Type)
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hj : Function.Injective j := j.toRingHom.injective
   let uK : Module.End K (TensorProduct S K N) := u.baseChange K
-  have key := GlobalTheory.T.det_aeval_eq_prod_aroots_charpoly' K Ω (TensorProduct S K N) uK (R.map (Int.castRingHom K))
+  have key := _root_.GlobalTheory.det_aeval_eq_prod_aroots_charpoly K Ω (TensorProduct S K N) uK (R.map (Int.castRingHom K))
   have hF : ∀ {A : Type} [Ring A] [Algebra K A] (x : A), aeval x (R.map (Int.castRingHom K)) = aeval x R := by
     intro A _ _ x
     rw [← algebraMap_int_eq, aeval_map_algebraMap]
@@ -1623,7 +1592,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDet =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyMapEq =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyMapEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyEndCharpolySpecStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdArootsStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfNormProdAevalEqStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompEqZeroOfNotIsIsogeny\npublic import Mathlib.LinearAlgebra.Charpoly.Basic\npublic import Mathlib.NumberTheory.Padics.PadicIntegers\npublic import Mathlib.RingTheory.WittVector.Frobenius\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicIntCharpolyCommuteFrobeniusSemilinear\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionTowerAndHeightEqTwoDimStatement\npublic import Mathlib.NumberTheory.Padics.Complex\npublic import Mathlib.RingTheory.SimpleRing.Principal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyMapEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyEndCharpolySpecStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdArootsStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfNormProdAevalEqStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompEqZeroOfNotIsIsogeny\npublic import Mathlib.LinearAlgebra.Charpoly.Basic\npublic import Mathlib.NumberTheory.Padics.PadicIntegers\npublic import Mathlib.RingTheory.WittVector.Frobenius\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicIntCharpolyCommuteFrobeniusSemilinear\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionTowerAndHeightEqTwoDimStatement\npublic import Mathlib.NumberTheory.Padics.Complex\npublic import Mathlib.RingTheory.SimpleRing.Principal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDet\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdAroots\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1721,7 +1690,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
       have hQ : (charpoly f).map (Int.castRingHom ℚ_[p]) =
           ((charpoly f).map (Int.castRingHom ℚ)).map (algebraMap ℚ ℚ_[p]) := by
         rw [Polynomial.map_map]; congr 1
-      have h2 := GlobalTheory.T.deg_aeval_end_eq_prod_aroots k A f (PadicAlgCl p) R
+      have h2 := _root_.GlobalTheory.AV.AbVar.deg_aeval_eq_prod_aroots k A f (PadicAlgCl p) R
       rw [hQ, Polynomial.aroots_map]
       erw [← h2]
       rw [PadicAlgCl.norm_extends, map_natCast, ← map_natCast (algebraMap ℚ_[p] (PadicAlgCl p)), PadicAlgCl.norm_extends]

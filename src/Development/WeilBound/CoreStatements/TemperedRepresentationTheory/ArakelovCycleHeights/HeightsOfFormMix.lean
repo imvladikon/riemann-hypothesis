@@ -278,17 +278,6 @@ namespace GlobalTheory.Published.Amb
 
 variable {k : Type} [CommRing k] {X : Scheme.{0}}
 
-private theorem comb_isometric_of_isometric {p : X ⟶ Sp k} {ι : Type} [Fintype ι] {L L' : ι → HermLB p}
-    (hL : ∀ j, (L j).Isometric (L' j)) (n : ι → ℤ) : (comb L n).Isometric (comb L' n) := by
-  unfold comb
-  induction (Finset.univ : Finset ι).toList with
-  | nil => exact HermLB.Isometric.refl _
-  | cons i l ih =>
-    simp only [List.foldr_cons]
-    refine HermLB.Isometric.tens ?_ ih
-    unfold zp
-    exact HermLB.Isometric.tens (HermLB.Isometric.pow (hL i) _) (HermLB.Isometric.dual (HermLB.Isometric.pow (hL i) _))
-
 theorem mixOn_congr [IsIntegral X] [IsLocallyNoetherian X] {p : X ⟶ Sp k} {D : ℕ} (hX : IsArithVar p D) {ι : Type}
     [Fintype ι] {M M' : HermLB p} {L L' : ι → HermLB p} (hM : M.Isometric M') (hL : ∀ j, (L j).Isometric (L' j))
     (H : MixOn p D ι M L) : MixOn p D ι M' L' := by
@@ -299,8 +288,8 @@ theorem mixOn_congr [IsIntegral X] [IsLocallyNoetherian X] {p : X ⟶ Sp k} {D :
     | none => exact HermLB.Isometric.symm hM
     | some j => exact HermLB.Isometric.symm (hL j)
   have hΦ' : IsArFun (fun o : Option ι => o.elim M L) D Φ :=
-    ⟨fun n' => HermLB.Isometric.isSelfInter hX (comb_isometric_of_isometric hfam n') (hΦ.1 n'), hΦ.2⟩
-  have hcomb : (comb L' n).Isometric (comb L n) := comb_isometric_of_isometric (fun j => HermLB.Isometric.symm (hL j)) n
+    ⟨fun n' => HermLB.Isometric.isSelfInter hX (_root_.GlobalTheory.ArInt.isometric_comb_congr hfam n') (hΦ.1 n'), hΦ.2⟩
+  have hcomb : (comb L' n).Isometric (comb L n) := _root_.GlobalTheory.ArInt.isometric_comb_congr (fun j => HermLB.Isometric.symm (hL j)) n
   have hh' : (comb L n).IsArithHeight h := HermLB.Isometric.isArithHeight hX hcomb hh
   obtain ⟨r0, hr0, hdiv, hlog⟩ := HermLB.Isometric.exists_isRatSec (HermLB.Isometric.symm hM) hr
   obtain ⟨hint, heq⟩ := H Φ hΦ' n h hh' r0 hr0
@@ -1060,12 +1049,12 @@ theorem isArithVar_mpZ (m : ℕ) (n : Fin (m + 1) → ℕ) : IsArithVar (mpStr �
 theorem isArithVar_qp (n' m : ℕ) (n : Fin (m + 1) → ℕ) :
     IsArithVar (qpStr n' m n) (∑ a, (Fin.cons n' n : Fin (m + 2) → ℕ) a) := by
   have hA := isArithVar_mpZ m n
-  have h1 : ringKrullDim ℤ = 1 := GlobalTheory.Amb.ringKrullDim_eq_one (Module.Finite.self ℤ)
+  have h1 : ringKrullDim ℤ = 1 := _root_.GlobalTheory.Amb.ringKrullDim_eq_one' (Module.Finite.self ℤ)
   have hP := GlobalTheory.ProjModel.isArithVar_pspace ℤ h1 n'
   have hsum : ∑ a, (Fin.cons n' n : Fin (m + 2) → ℕ) a = n' + ∑ a, n a := Fin.sum_cons _ _
   rw [hsum]
   have hpc : GlobalTheory.Amb.PolyCovered (qpStr n' m n) (n' + ∑ a, n a) :=
-    GlobalTheory.Amb.polyCovered_pullback (PSpace.str ℤ n') (mpStr ℤ m n) _ _ (GlobalTheory.Amb.polyCovered_pSpace n')
+    GlobalTheory.Amb.polyCovered_pullback (PSpace.str ℤ n') (mpStr ℤ m n) _ _ (_root_.GlobalTheory.Amb.polyCovered_pSpace' n')
       (GlobalTheory.Amb.polyCovered_mp ℤ m n)
   have e : spMap (Int.castRingHom ℤ) = 𝟙 (Sp ℤ) := by simp
   have f1 : Flat (toSpecBase ℤ n') := by
@@ -1074,9 +1063,9 @@ theorem isArithVar_qp (n' m : ℕ) (n : Fin (m + 1) → ℕ) :
   have f2 : Flat (mpStr ℤ m n) := by
     have := hA.flat
     rwa [e, Category.comp_id] at this
-  refine ⟨inferInstance, inferInstance, GlobalTheory.Amb.isIntegral_of_polyCovered _ _ hpc,
+  refine ⟨inferInstance, inferInstance, _root_.GlobalTheory.Amb.isIntegral_of_polyCovered' _ _ hpc,
     GlobalTheory.ProjSpace.isProjOver_pullback hP.isProjOver hA.isProjOver, ?_,
-    GlobalTheory.Amb.topologicalKrullDim_of_polyCovered h1 _ _ hpc⟩
+    _root_.GlobalTheory.Amb.topologicalKrullDim_of_polyCovered' h1 _ _ hpc⟩
   rw [e, Category.comp_id]
   infer_instance
 

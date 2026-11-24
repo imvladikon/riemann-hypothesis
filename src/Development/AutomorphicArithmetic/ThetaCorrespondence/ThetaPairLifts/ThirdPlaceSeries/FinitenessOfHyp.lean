@@ -203,7 +203,7 @@ theorem exists_moved_transfer (s : SameGrp (B := B) (C := w.C) o.Z o'.Z) (m : Mo
     ∃ m' : Moved o', m'.z = Dat.transfer (B := B) (C := w.C) (a := o.Z) (b := o'.Z) s m.z ∧ m'.Coh := by
   obtain ⟨y', hy⟩ := @GlobalTheory.Mem.R3.Rw.hd_tr B w.C o.Z o'.Z _ _ _ _ _ _ _ _ m.z.alg _ m.z.R.toRealDat m.y
   obtain ⟨t, a1, a2, a3, a4, a5, a6, a7⟩ := Mv.pkT_tr (a := o.Z) o'.Z (iK := m.z.alg) m.z.F m.y y' hy m.t
-  have he := (@GlobalTheory.T.rowBasis_congruenceLengths_other_later_stages B w.C o.Z o'.Z _ _ _ _ _ _ _ _ _ m.z.alg _ m.z.R m.z.F).1
+  have he := (@_root_.GlobalTheory.Mem.R3.Rw.rr_eta_tr B w.C o.Z o'.Z _ _ _ _ _ _ _ _ _ m.z.alg _ m.z.R m.z.F).1
   have hW := Dat.nonzeroIndexPlaces_transferAlongSameFiniteGroup (B := B) (C := w.C) (a := o.Z) (b := o'.Z) s m.z
   letI : Algebra m.z.core.Q.c.F (Late.D o'.Z).what₂.LL := alg (a := o.Z) o'.Z m.z.alg
   have hA : ((by with_unfolding_all exact (t.tA :)) : type_of% m.t.tA) = m.t.tA := eq_of_heq ((by with_unfolding_all exact (a1 :)))
@@ -601,12 +601,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX GlobalTheory.HeightCounting NumberField IsDedekindDomain Polynomial
-
-theorem _root_.GlobalTheory.T.exists_twOpen_expRel_of_chebSplit : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D' : D7) (b : _root_.GlobalTheory.HeightCounting.NormChoiceConstructed hL D'), Elem b.D → GlobalTheory.RowTie.ChebSplit b.D.nd → ∃ Tw : TwOpen (withLoc b.L) (chL b.L b.C) (cfL b.L b.cf) (tpL b.L b.tp) (mtL b.L b.M) b.low, ExpRel b.L b.Bs.exp Tw.exp := by
-  first | exact @_root_.GlobalTheory.HeightCounting.FitTwExp.exists_twOpen_expRel_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsTwOpenExpRelStatement =====
@@ -933,7 +927,7 @@ theorem nAllC_withLoc_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists), _
   obtain ⟨TO⟩ := _root_.GlobalTheory.HeightCounting.typesOpen_withLoc_alt b.D b.cf b.jE b.A b.low b.Pq b.S b.hL b.eig b.θ b.Bs b.M b.C b.tp b.ch b.mt
     hE.star hE.int hE.split hCh b.big b.L b.Sp b.Au b.ss
   have rho : NR.NRhoTied (withLoc b.L) := _root_.GlobalTheory.HeightCounting.nRhoTied_withLoc_alt hL D' b hE.star hE.int hE.split hCh TO
-  obtain ⟨Tw, hX⟩ := _root_.GlobalTheory.T.exists_twOpen_expRel_of_chebSplit hL D' b hE hCh
+  obtain ⟨Tw, hX⟩ := _root_.GlobalTheory.HeightCounting.FitTwExp.exists_twOpen_expRel_alt hL D' b hE hCh
   have ty : NormalizedTypesCompatibility (withLoc b.L) b.jE :=
     { eM := TO.par.eM, eM_K := TO.par.eM_K, tA := TO.grp.tA, tκ := TO.grp.tκ, teichC_def := TO.grp.teichC_def,
       iota_loc := fun i => ⟨TO.plB _, TO.plκ _, TO.plB_loc i, TO.plB_iota i⟩,
@@ -986,7 +980,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T} {P : Pre2 K w}
   {x : St P} (l : _root_.GlobalTheory.HeightCounting.Up.StrictHenselianAcyclicLevel hL x)
 theorem builtEx_of_published_inputs' (hP : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt) : _root_.GlobalTheory.CoefDuty.AutomorphicSideExists l.a.A l.mt.M l.c.ch l.c.tp.tup := fun big =>
-  _root_.GlobalTheory.T.side_rational_hecke_data_alt hP.what₂.art (Dof x) (cfOf x) l.a.jE l.a.A (lowAll (Dof x)) l.Pq l.rat.S l.rat.In.hL l.rat.In.eig l.rat.In.θ l.b.Bs l.mt.M
+  _root_.GlobalTheory.HeightCounting.locAll_exists_alt hP.what₂.art (Dof x) (cfOf x) l.a.jE l.a.A (lowAll (Dof x)) l.Pq l.rat.S l.rat.In.hL l.rat.In.eig l.rat.In.θ l.b.Bs l.mt.M
     l.c.ch l.c.tp l.c.side (_root_.GlobalTheory.HeightCounting.Fin3.mtInput_of_levelC l) l.a.elem.star l.a.elem.int l.a.elem.split (GlobalTheory.ChebSplitDense.chebSplit_nd hP.what₂.cheb _)
     (fun v _ => by rw [l.c.psi_eq]; exact GlobalTheory.twDat_psi_valuesIn_LL B T P.coh v) l.a.omax
     (_root_.GlobalTheory.HeightCounting.blocksUnique_of_cgTrue_alt hL hP.what₂.fin hP.what₂.gal hP.what₂.art hP.what₂.js hP.what₂.cheb _ _ l.a.cg) big
@@ -1046,12 +1040,6 @@ theorem sFin_and_sFinl_of_theta_data_exists : GlobalTheory.Published.WeilReprese
       fun _ _ _ _ _ _ _ a b => ⟨(a, ⟨b cDep hp⟩)⟩
 end GlobalTheory.HeightCounting.Fin3
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-
-theorem _root_.GlobalTheory.T.sFin_and_sFinl_of_archCmp_sEta_thetaData : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.ArchimedeanComparison' hL → _root_.GlobalTheory.HeightCounting.Up.EtaStatement' hL → _root_.GlobalTheory.HeightCounting.Up.ThetaDataExists hL → _root_.GlobalTheory.HeightCounting.Up.FinitenessStatement hL ∧ ∀ cDep : ℝ, _root_.GlobalTheory.HeightCounting.Up.FinitenessListStatement hL cDep := by
-  exact _root_.GlobalTheory.HeightCounting.Fin3.sFin_and_sFinl_of_theta_data_exists
 end
 end
 end -- clump:auto

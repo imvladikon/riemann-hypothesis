@@ -312,7 +312,7 @@ theorem comm_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TBij_k) (g : UA �
     rw [one_mul]
     simpa only [mul_assoc] using e2.symm
   obtain ⟨ε, hε⟩ := _root_.PositivityTheory.SiegelWeilFormula.tweyl.signY_k d
-  have hc1 := GlobalTheory.T.doubledUnitary_character_trivial_of_siegel F E σ (_root_.PositivityTheory.SiegelWeilFormula.tweyl.cm_k d) d.n d.Y.J ε hε (_root_.PositivityTheory.SiegelWeilFormula.tweyl.detY_k d) c hcont hP
+  have hc1 := _root_.GlobalTheory.SiegelChar.eq_one_of_siegel F E σ (_root_.PositivityTheory.SiegelWeilFormula.tweyl.cm_k d) d.n d.Y.J ε hε (_root_.PositivityTheory.SiegelWeilFormula.tweyl.detY_k d) c hcont hP
   intro Φ hΦ x
   have e := hcf x _ ((_root_.PositivityTheory.SiegelWeilFormula.tweyl.hS_k d).pres g Φ hΦ)
   have hcf1 : cf x = 1 := by rw [← hcv, hc1]; rfl
@@ -1134,8 +1134,6 @@ theorem T_lin_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (Φ Φ' 
   show d.l (d.dd.rho d.B.ψ (X * (incM F d.b.1.toCols₂)ᵀ) (Φ + a • Φ')) =
     d.l (d.dd.rho d.B.ψ (X * (incM F d.b.1.toCols₂)ᵀ) Φ) + a • d.l (d.dd.rho d.B.ψ (X * (incM F d.b.1.toCols₂)ᵀ) Φ')
   rw [e, map_add (f := _), map_smul]
-theorem mu_right_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : d.μ.IsMulRightInvariant := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitA.mu_right_k d
 theorem thetaSum_S_rat_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : ∀ Φ ∈ d.sch, ∀ γ ∈ ratU σ d.A.J, thetaSum F (d.S γ Φ) = thetaSum F Φ := by
   intro Φ hΦ γ hγ
   obtain ⟨γ0, hγ0⟩ := hγ
@@ -1172,7 +1170,7 @@ theorem thetaSum_lin_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (
 theorem I_S_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : ∀ Φ ∈ d.sch, ∀ g x, d.I (d.S g Φ) x = d.I Φ x := by
   intro Φ hΦ g x
   have := d.ok.haar
-  have := _root_.PositivityTheory.SiegelWeilFormula.KSplit.mu_right_k d
+  have := _root_.PositivityTheory.SiegelWeilFormula.KSplitA.mu_right_k d
   have := PositivityTheory.ThKF.countable_ratU σ d.A.J
   have : BorelSpace (UA σ d.A.J) := ⟨rfl⟩
   have hinv : ∀ γ ∈ ratU σ d.A.J, ∀ h, thetaSum F (d.om x (d.S (γ * h) Φ)) = thetaSum F (d.om x (d.S h Φ)) := by
@@ -1196,15 +1194,10 @@ theorem I_lin_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (d : _ro
   simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.I, thetaMean, MeasureTheory.setAverage_eq, e]
   rw [MeasureTheory.integral_add (hi Φ hΦ) ((hi Φ' hΦ').const_mul a), MeasureTheory.integral_const_mul, smul_add,
     mul_smul_comm]
-theorem exists_embU_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (u : Matrix (Fin d.m) (Fin d.m) ℂ)
-    (hu : u ∈ Matrix.unitaryGroup (Fin d.m) ℂ) : ∃ g : UA σ d.A.J, ∀ X : Mx F E d.m d.n,
-      R.loc w (mat g⁻¹ * X) = (u * Matrix.of (R.loc w X) : Matrix (Fin d.m) (Fin d.n) ℂ) ∧ (∀ w', w' ≠ w → d.cw w' (mat g⁻¹ * X - X) = 0) ∧
-        finOne F • (mat g⁻¹ * X - X) = 0 := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitA.exists_embU_k d R w u hu
 theorem S_lift_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hF : _root_.PositivityTheory.SiegelWeilFormula.FockMem_k) (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (Ψ : Mx F E d.m d.n → ℂ)
     (hΨ : Ψ ∈ R.away w) (φ : PX d.m d.n →ₗ[ℂ] d.Fn) (hφ : R.IsLift w Ψ φ) (u : Matrix (Fin d.m) (Fin d.m) ℂ)
     (hu : u ∈ Matrix.unitaryGroup (Fin d.m) ℂ) : ∃ g : UA σ d.A.J, ∀ P, d.S g (φ P) = φ (actU u P) := by
-  obtain ⟨g, hg⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplit.exists_embU_k d R w u hu
+  obtain ⟨g, hg⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplitA.exists_embU_k d R w u hu
   refine ⟨g, fun P => ?_⟩
   have hP := hφ P
   have hQ := hφ (actU u P)
@@ -1219,7 +1212,7 @@ theorem S_lift_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hF : _
     have eX : mat g⁻¹ * X = X + (mat g⁻¹ * X - X) := by abel
     simp only [_root_.PositivityTheory.SiegelWeilFormula.RD_k.tens, smul_eq_mul, Pi.zero_apply]
     rw [h1, eX, hΨi X _ h2 h3, show fP P (u * Matrix.of (R.loc w X)) = fP (actU u P) (R.loc w X) from
-      fP_unitary u hu P _]
+      _root_.PositivityTheory.SiegelWeilFormula.KSplitA.fP_unitary u hu P _]
     ring
   have h0 := (hT.1 F E σ d).2.2 _ hsub hT0
   have : d.S g (φ P) = -((-1 : ℂ) • φ (actU u P)) := eq_neg_of_add_eq_zero_left h0
@@ -1268,53 +1261,35 @@ open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.IndefiniteRowSideFullH
 open GlobalTheory.Doubling (absE)
 namespace PositivityTheory.SiegelWeilFormula.KSplit
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-theorem commW_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (x : d.G) (hx : d.cw w (inFrame d.b x) = 1) (y : GR d.n) :
-    x * R.ι w y = R.ι w y * x := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitW.commW_k d R w x hx y
-theorem iota_mem_K_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (y : GR d.n) (hy : InK (mR y)) : R.ι w y ∈ d.K := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitW.iota_mem_K_k d R w y hy
-theorem kSplit_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (k : d.G) (hk : k ∈ d.K) :
-    ∃ y : GR d.n, (R.ι w y)⁻¹ * k ∈ d.K ∧ d.cw w (inFrame d.b ((R.ι w y)⁻¹ * k)) = 1 := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitW.kSplit_k d R w k hk
-theorem iota_isPar_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (q : GR d.n) (hq : (mR q).toBlocks₂₁ = 0) :
-    ∃ t, IsPar (R.ι w q) t ∧ (absE F E (Matrix.GeneralLinearGroup.det t) : ℝ) = ‖(mR q).toBlocks₁₁.det‖ ^ 2 := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitP.iota_isPar_k d R w q hq
-theorem siegel_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {p : d.G} {t : GL (Fin d.n) (AE F E)} (hp : IsPar p t) :
-    ∃ C : ℂ, ∀ Φ ∈ d.sch, d.l (d.om p Φ) = C * d.l Φ := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitP.siegel_k d hp
-theorem T_zero_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (Φ : d.Fn) : d.T Φ 0 = d.l Φ := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitP.T_zero_k d Φ
-theorem loc_zero_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) : R.loc w 0 = 0 := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KSplitP.loc_zero_k d R w
 theorem gSplit_of_k (hF : _root_.PositivityTheory.SiegelWeilFormula.FockMem_k) (hAw : _root_.PositivityTheory.SiegelWeilFormula.AwayAct_k) : _root_.PositivityTheory.SiegelWeilFormula.GSplit_k := by
   intro F E _ _ _ _ _ σ d R w L hL Ψ hΨ φ hφ g
   obtain ⟨p, t, hp, k, hk, rfl⟩ := d.ok.hgt.iwa g
-  obtain ⟨y, hk'K, hk'w⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplit.kSplit_k d R w k hk
+  obtain ⟨y, hk'K, hk'w⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplitW.kSplit_k d R w k hk
   set k' := (R.ι w y)⁻¹ * k with hk'
-  have hcomm := _root_.PositivityTheory.SiegelWeilFormula.KSplit.commW_k d R w k' hk'w
+  have hcomm := _root_.PositivityTheory.SiegelWeilFormula.KSplitW.commW_k d R w k' hk'w
   obtain ⟨A, hA⟩ := hAw F E σ d R w k' hk'w
   have hΨi : d.Indep w Ψ := ((hF F E σ d R).2.1 w Ψ hΨ).2
-  obtain ⟨C, hC⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplit.siegel_k d hp
-  refine ⟨p * k', y, C * A Ψ 0, (absE F E (Matrix.GeneralLinearGroup.det t) : ℝ), absE_pos _, ?_,
+  obtain ⟨C, hC⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplitP.siegel_k d hp
+  refine ⟨p * k', y, C * A Ψ 0, (absE F E (Matrix.GeneralLinearGroup.det t) : ℝ), _root_.PositivityTheory.SiegelWeilFormula.KSplitP.absE_pos _, ?_,
     fun y' => ⟨?_, fun P => ?_⟩⟩
   · rw [mul_assoc, hcomm y, hk', mul_inv_cancel_left]
   · obtain ⟨q, k₀, rfl, hq, hk₀, hloc⟩ := Glob.locIwasawa y'
-    obtain ⟨tq, hPq, habs⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplit.iota_isPar_k d R w q hq
+    obtain ⟨tq, hPq, habs⟩ := _root_.PositivityTheory.SiegelWeilFormula.KSplitP.iota_isPar_k d R w q hq
     have e : p * k' * R.ι w (q * k₀) = (p * R.ι w q) * (R.ι w k₀ * k') := by
       rw [map_mul, mul_assoc p, ← mul_assoc k', hcomm q, mul_assoc (R.ι w q), hcomm k₀]
       simp only [mul_assoc]
-    have hval := d.ok.hgt.val _ _ (isPar_mul hp hPq) _ ((d.K).mul_mem (_root_.PositivityTheory.SiegelWeilFormula.KSplit.iota_mem_K_k d R w k₀ hk₀) hk'K)
+    have hval := d.ok.hgt.val _ _ (_root_.PositivityTheory.SiegelWeilFormula.KSplitP.isPar_mul hp hPq) _ ((d.K).mul_mem (_root_.PositivityTheory.SiegelWeilFormula.KSplitW.iota_mem_K_k d R w k₀ hk₀) hk'K)
     have h0 : 0 ≤ d.a ((p * R.ι w q) * (R.ι w k₀ * k')) := by rw [hval]; exact NNReal.coe_nonneg _
     show ((d.a (p * k' * R.ι w (q * k₀))).toNNReal : ℝ) = _
     rw [e, Real.coe_toNNReal _ h0, hval, map_mul, map_mul, NNReal.coe_mul, habs, hloc]
-  · have hsw := fP_sw P
+  · have hsw := _root_.PositivityTheory.SiegelWeilFormula.KSplitP.fP_sw P
     have hΞ := (hL y' (fP P) hsw).2 Ψ hΨi (φ P) (hφ P).1 (hφ P).2
     have hΞs : d.om (R.ι w y') (φ P) ∈ d.sch := d.ok.dbl.weil.2.1.pres _ _ (hφ P).1
     have h2 := (hA Ψ hΨi).2 _ (hL y' (fP P) hsw).1 _ hΞs hΞ
     have hs2 : d.om k' (d.om (R.ι w y') (φ P)) ∈ d.sch := d.ok.dbl.weil.2.1.pres _ _ hΞs
     unfold _root_.PositivityTheory.SiegelWeilFormula.SD_k.sec0
-    rw [map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hC _ hs2, ← _root_.PositivityTheory.SiegelWeilFormula.KSplit.T_zero_k, h2]
-    simp only [_root_.PositivityTheory.SiegelWeilFormula.RD_k.tens, _root_.PositivityTheory.SiegelWeilFormula.KSplit.loc_zero_k]
+    rw [map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hC _ hs2, ← _root_.PositivityTheory.SiegelWeilFormula.KSplitP.T_zero_k, h2]
+    simp only [_root_.PositivityTheory.SiegelWeilFormula.RD_k.tens, _root_.PositivityTheory.SiegelWeilFormula.KSplitP.loc_zero_k]
     ring
 end PositivityTheory.SiegelWeilFormula.KSplit
 end
@@ -1425,7 +1400,7 @@ theorem unfoldCore_k (B : Base F E) (hB : _root_.UpperTheory.TP.W.GoodK σ B) (h
       have e : (w * nb ν'.1) = (γ : rat2 σ Y).1 * (w * nb ν.1) := (congrArg Subtype.val hγ).symm
       rw [e, mul_inv_cancel_right]
       exact Subgroup.mem_subgroupOf.1 γ.2
-    exact (Subtype.ext (big_inj hb hw hnb hP)).symm
+    exact (Subtype.ext (_root_.PositivityTheory.SiegelWeilFormula.kunf.big_inj' hb hw hnb hP)).symm
   have hAq₀ : ∀ β, A q₀ β = φ (w * nb β * x) := fun β => by
     rw [hAmk, mul_assoc]
   have hI := abs_integrable lam (nF σ Y b) 𝓖 h𝓖 act hact0 hact A hA hAact C hC hcov u hu hAu q₀ hinj
@@ -1442,7 +1417,7 @@ theorem unfoldCore_k (B : Base F E) (hB : _root_.UpperTheory.TP.W.GoodK σ B) (h
     simp only [χ₀, AddChar.map_neg_eq_inv, psi_rat hB.std T ν, inv_one]
   have hsmall : ∀ q, (∀ ν, act q₀ ν ≠ q) →
       ∃ β₀, χ₀ β₀ ≠ 1 ∧ ∀ ν β, A (act q ν) (β + β₀) = A (act q ν) β := fun q hq => by
-    rcases _root_.PositivityTheory.SiegelWeilFormula.kunf.cells_k B hB hb hw hnb T hT (q.out : rat2 σ Y).1 (q.out : rat2 σ Y).2 with
+    rcases _root_.PositivityTheory.SiegelWeilFormula.kunf.cells'_k B hB hb hw hnb T hT (q.out : rat2 σ Y).1 (q.out : rat2 σ Y).2 with
       ⟨p, hpP, hpΓ, ν, hνF, hγ⟩ | ⟨β₀, hψ, t, hpar, hdet⟩
     · exfalso
       refine hq ⟨ν, hνF⟩ ?_

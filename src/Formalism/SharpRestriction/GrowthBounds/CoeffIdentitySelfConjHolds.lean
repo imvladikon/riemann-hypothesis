@@ -608,7 +608,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.CharacterGerms.FrobPowSmul =====
 
 -- ===== clump member: Formalism.LocalToGlobal.CharacterGerms.MmMulSeries =====
--- clump-header: {"m": "Formalism.LocalToGlobal.CharacterGerms.MmMulSeries", "h": "module\n\npublic import Formalism.LocalToGlobal.CharacterGerms.IntSubst\npublic import Formalism.LocalToGlobal.CharacterGerms.Interface\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\npublic import Mathlib.Data.Nat.Choose.Dvd\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Presheaf\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.CharacterGerms.MmMulSeries", "h": "module\n\npublic import Formalism.LocalToGlobal.CharacterGerms.IntSubst\npublic import Formalism.LocalToGlobal.CharacterGerms.Interface\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\npublic import Mathlib.Data.Nat.Choose.Dvd\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Presheaf\nimport Formalism.LocalToGlobal.CharacterGerms.IndependenceBoundRaw\nimport Formalism.LocalToGlobal.CharacterGerms.RowTiePGerm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -623,18 +623,9 @@ namespace RootsP
 
 variable {C : Type} [Field C] {V : VF C}
 
-private lemma mm_zero_lemma : V.MM (0 : C) := by
-  simp only [VF.MM, AddValuation.map_zero]
-  first
-    | exact WithTop.coe_lt_top 0
-
 private lemma ge0_zero_lemma_2 : V.Ge 0 (0 : C) := by
   simp only [VF.Ge, AddValuation.map_zero]
   exact le_top
-
-private lemma mm_add_lemma_3 {x y : C} (hx : V.MM x) (hy : V.MM y) : V.MM (x + y) := by
-  simp only [VF.MM] at hx hy ⊢
-  exact lt_of_lt_of_le (lt_min hx hy) (V.v.map_add x y)
 
 private lemma ge0_add_lemma_4 {x y : C} (hx : V.Ge 0 x) (hy : V.Ge 0 y) : V.Ge 0 (x + y) := by
   simp only [VF.Ge] at hx hy ⊢
@@ -655,20 +646,6 @@ private lemma ge0_mul_lemma_6 {x y : C} (hx : V.Ge 0 x) (hy : V.Ge 0 y) : V.Ge 0
 private lemma ge0_one_lemma_7 : V.Ge 0 (1 : C) := by
   simp [VF.Ge]
 
-private lemma ints_mul_lemma_8 {σ : Type} {F G : MvPowerSeries σ C} (hF : IntS V F) (hG : IntS V G) :
-    IntS V (F * G) := by
-  intro μ
-  rw [MvPowerSeries.coeff_mul]
-  exact Finset.sum_induction _ (fun x => V.Ge 0 x) (fun a b ha hb => ge0_add_lemma_4 ha hb) ge0_zero_lemma_2
-    (fun p _ => ge0_mul_lemma_6 (hF p.1) (hG p.2))
-
-private lemma ints_one_lemma_9 {σ : Type} : IntS V (1 : MvPowerSeries σ C) := by
-  intro μ
-  rw [MvPowerSeries.coeff_one]
-  split_ifs
-  · exact ge0_one_lemma_7
-  · exact ge0_zero_lemma_2
-
 private lemma ge_zero_of_mm {x : C} (h : V.MM x) : V.Ge 0 x := by
   simp only [VF.MM] at h
   simp only [VF.Ge]
@@ -684,7 +661,7 @@ theorem mm_mul_series {σ : Type} {A B : MvPowerSeries σ C} (hA : ∀ μ, V.MM 
     (hB : ∀ μ, V.Ge 0 (MvPowerSeries.coeff μ B)) : ∀ μ, V.MM (MvPowerSeries.coeff μ (A * B)) := by
   intro μ
   rw [MvPowerSeries.coeff_mul]
-  exact Finset.sum_induction _ (fun x => V.MM x) (fun a b ha hb => mm_add_lemma_3 ha hb) mm_zero_lemma
+  exact Finset.sum_induction _ (fun x => V.MM x) (fun a b ha hb => _root_.Formalism.L2.FormalSeriesBounds.ValuationNonnegativity.mm_add ha hb) _root_.Formalism.L2.FormalSeriesBounds.ValuationNonnegativity.mm_zero
     (fun p _ => mm_mul_lemma_5 (hA p.1) (hB p.2))
 
 theorem root_one {ζ : C} (hζ : ζ ^ V.l = 1) : V.MM (ζ - 1) := by
@@ -786,10 +763,10 @@ theorem rootsProd : ∀ (C : Type) [Field C] (V : VF C) (ζ : C), ζ ^ V.l = 1 �
     induction n with
     | zero =>
       rw [pow_zero]
-      exact RootsP.ints_one_lemma_9
+      exact _root_.Formalism.L2.FormalSeriesBounds.PartialDerivEval.intS_one
     | succ n ih =>
       rw [pow_succ]
-      exact RootsP.ints_mul_lemma_8 ih hf
+      exact _root_.Formalism.L2.FormalSeriesBounds.PartialDerivEval.intS_mul ih hf
   have key : ∀ n : ℕ, ∀ μ, V.MM (MvPowerSeries.coeff μ
       (∏ k ∈ Finset.range n, MvPowerSeries.rescale (fun i => if i = j then ζ ^ k else 1) f - f ^ n)) := by
     intro n
@@ -797,7 +774,7 @@ theorem rootsProd : ∀ (C : Type) [Field C] (V : VF C) (ζ : C), ζ ^ V.l = 1 �
     | zero =>
       intro μ
       simp only [Finset.range_zero, Finset.prod_empty, pow_zero, sub_self, map_zero]
-      exact RootsP.mm_zero_lemma
+      exact _root_.Formalism.L2.FormalSeriesBounds.ValuationNonnegativity.mm_zero
     | succ n ih =>
       intro μ
       have hid : ∏ k ∈ Finset.range (n + 1), MvPowerSeries.rescale (fun i => if i = j then ζ ^ k else 1) f -
@@ -808,7 +785,7 @@ theorem rootsProd : ∀ (C : Type) [Field C] (V : VF C) (ζ : C), ζ ^ V.l = 1 �
         rw [Finset.prod_range_succ, pow_succ]
         ring
       rw [hid, map_add (f := _)]
-      refine RootsP.mm_add_lemma_3 (RootsP.mm_mul_series ih (hG n) μ) ?_
+      refine _root_.Formalism.L2.FormalSeriesBounds.ValuationNonnegativity.mm_add (RootsP.mm_mul_series ih (hG n) μ) ?_
       rw [mul_comm]
       exact RootsP.mm_mul_series (hE n) (hpow n) μ
   exact key V.l
@@ -1223,12 +1200,9 @@ theorem mmA_zero : V.MM (0 : C) := by
   unfold VF.MM
   simp
 
-theorem mmA_sum {ι : Type} (s : Finset ι) (f : ι → C) (h : ∀ i ∈ s, V.MM (f i)) : V.MM (∑ i ∈ s, f i) :=
-  Finset.sum_induction f (fun x => V.MM x) (fun _ _ => mmA_add) mmA_zero h
+alias mmA_sum := _root_.Formalism.L2.FormalSeriesBounds.mm_sum
 
-theorem mmA_mul_int {a b : C} (ha : V.MM a) (hb : V.Ge 0 b) : V.MM (a * b) := by
-  rw [mul_comm]
-  exact MaximalIdealCongruence.mm_mul_ge' hb ha
+alias mmA_mul_int := _root_.Formalism.L2.FormalSeriesBounds.mm_mul_ge
 
 end MM
 
@@ -1581,12 +1555,7 @@ theorem gen_low_inV {N : ℕ} (hN : 0 < N) {f : PowerSeries C} (hf0 : PowerSerie
   · exact gen_mm_pw hN hf0 hf1 _ hμ
   · exact gen_mm_zero
 
-theorem gen_intS_X {τ : Type} (x : τ) : IntS V (MvPowerSeries.X x : MvPowerSeries τ C) := by
-  intro μ
-  rw [MvPowerSeries.coeff_X]
-  split_ifs
-  · exact VF.Ge.one
-  · exact VF.Ge.zero 0
+alias gen_intS_X := _root_.Formalism.L2.FormalSeriesBounds.PartialDerivEval.intS_X
 
 theorem gen_intS_psubst {τ : Type} {a : MvPowerSeries τ C} (ha0 : MvPowerSeries.constantCoeff a = 0) (ha : IntS V a)
     {f : PowerSeries C} (hf : ∀ m, V.Ge 0 (PowerSeries.coeff m f)) : IntS V (PowerSeries.subst a f) :=

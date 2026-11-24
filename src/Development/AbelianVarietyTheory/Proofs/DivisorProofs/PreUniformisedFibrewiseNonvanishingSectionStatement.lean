@@ -332,8 +332,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_translatedThetaCoefficient_section : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : DegPre R) (th : GlobalTheory.UU.SecBT D (𝟙_ _) 1 0) (χ : D.X) (u : LB.Gen (LB.LinComb D.P.L (K := PUnit) (fun _ => (D.c χ).left) (fun _ => -1))), u.IsGen → ∀ b : R, ∃ g : GlobalTheory.UU.SecBT D (𝟙_ _) 1 χ, GlobalTheory.PsiRing.Coef D χ u th g b := by
-  first | exact @GlobalTheory.PsiCoefMk.exists_sec_coef
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslatedThetaCoefficientSectionStatement =====
@@ -416,8 +414,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.psiScalar_nsmul_eq_unit_mul_pow_sq : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : DegPre R) (ga : ∀ χ : D.X, LB.Gen (LB.LinComb D.P.L (K := PUnit) (fun _ => (D.c χ).left) (fun _ => -1))) (a : D.X → (FractionRing R)ˣ), GlobalTheory.UU.PsiScal D ga a → D.PsiEven → D.TauBimult → ∀ (χ : D.X) (n : ℕ), ∃ u : Rˣ, ((a (n • χ) : (FractionRing R)ˣ) : FractionRing R) = algebraMap R (FractionRing R) (u : R) * ((a χ : (FractionRing R)ˣ) : FractionRing R) ^ (n ^ 2) := by
-  first | exact @GlobalTheory.Mum.psiScal_nsmul_eq_unit_mul_pow
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiScalarNsmulEqUnitMulPowSqStatement =====
@@ -450,12 +446,6 @@ theorem eq_zero_of_dominant {X Y Y' : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K : 
   refine (e₁.trans e₂).trans ?_
   rw [gs_eq _ y _ hy, map_zero, map_zero]
 
-theorem sval_zero {X Y Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {ψ : K → (Y ⟶ X)}
-    {ε : K → ℤ} (s : LB.Sec (LB.LinComb L ψ ε)) (h0 : ∀ j, s.f j = 0) (r : Z ⟶ Y) (z : Z) {J} (hJ : Good L z J) :
-    sval s r z J = 0 := by
-  refine (congrArg (gs r z (LB.wchart L ψ (fun k => J (r ≫ ψ k)))) (h0 _)).trans ((gs_eq r z _ (hJ.mem ψ r) _).trans ?_)
-  exact (congrArg _ (map_zero _)).trans (map_zero _)
-
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (U : GlobalTheory.UU.PreU (maximalIdeal R) D A G) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (φ : R →+* V) (D' : DegPre V) (A' : PolAV (Sp (FractionRing V))) (G' : Over (Sp V)) [GrpObj G'] [IsCommMonObj G'] (U' : GlobalTheory.UU.PreU (maximalIdeal V) D' A' G') (F : G'.left ⟶ G.left) (C : GlobalTheory.LN.Cmp φ U U' F), GlobalTheory.LN.CDvr V → Function.Injective φ → ∀ (σ : U.SecGT (𝟙_ _) 1) (σ' : U'.SecGT (𝟙_ _) 1), (∀ (Z : Scheme.{0}) (r' : Z ⟶ (𝟙_ _ ⊗ G').left) (r : Z ⟶ (𝟙_ _ ⊗ G).left), r ≫ (snd _ G).left = r' ≫ (snd _ G').left ≫ F → ∀ z J J', Good U.P.L.L z J → Good U'.P.L.L z J' → sval σ r z J = (gw C.wL (r' ≫ (snd _ G').left) z (J (r ≫ (snd _ G).left)) (J' (r' ≫ (snd _ G').left))).val ^ 1 * sval σ' r' z J') → (∃ j, σ.f j ≠ 0) → ∃ j, σ'.f j ≠ 0 := by
   intro R _ _ _ _ D A G _ _ U V _ _ _ φ D' A' G' _ _ U' F C _ hφ σ σ' H ⟨j, hj⟩
   by_contra h0
@@ -476,7 +466,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R 
   choose J' hJ' using fun χ : G'.left ⟶ G'.left => exists_chart U'.P.L.isLB (χ y)
   have e₁ := H _ (λ_ G').inv.left (F ≫ (λ_ G).inv.left)
     (by rw [Category.assoc, e, ← Category.assoc, e, Category.id_comp, Category.comp_id]) y J J' hJ hJ'
-  rw [sval_zero σ' h0 _ y hJ', MulZeroClass.mul_zero] at e₁
+  rw [_root_.GlobalTheory.ThetaScalar.sval_eq_zero σ' h0 _ y hJ', MulZeroClass.mul_zero] at e₁
   exact e₁
 
 end GlobalTheory.PullNonzero
@@ -583,8 +573,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.secIsMul_of_translatedThetaCoefficient_proportional : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (χ : D.X) (u : LB.Gen (LB.LinComb D.P.L (K := PUnit) (fun _ => (D.c χ).left) (fun _ => -1))) (th : GlobalTheory.UU.SecBT D (𝟙_ _) 1 0) (g₁ g₂ : GlobalTheory.UU.SecBT D (𝟙_ _) 1 χ) (b₁ b₂ q : R), GlobalTheory.PsiRing.Coef D χ u th g₁ b₁ → GlobalTheory.PsiRing.Coef D χ u th g₂ b₂ → b₁ = q * b₂ → ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul (𝟙_ _ ⊗ D.P.A).hom q g₁ g₂ := by
-  first | exact @GlobalTheory.PsiRing.secIsMul_of_coef
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecIsMulOfTranslatedThetaCoefficientProportionalStatement =====
@@ -676,9 +664,9 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   obtain ⟨ga, a, hS⟩ := GlobalTheory.exists_psiScal R E
   obtain ⟨th, hth, hmul⟩ := GlobalTheory.T.exists_thetaSection_nonzeroFibres_localRing h₂.secTwist R D
   obtain ⟨q, hq⟩ := hmul (f 0)
-  choose b hb using fun χ : D.X => GlobalTheory.T.exists_twistedSection_thetaTranslate_coef R D th hmul χ (ga χ) (hS χ).1 (f χ)
+  choose b hb using fun χ : D.X => _root_.GlobalTheory.PsiCoef.exists_coef R D th hmul χ (ga χ) (hS χ).1 (f χ)
   have hab : ∀ χ, algebraMap R (FractionRing R) q * (a χ).val = algebraMap R (FractionRing R) (b χ) := fun χ =>
-    GlobalTheory.T.psiScalar_eq_expansionCoef_ratio R E ga a f th hS hrelE hth χ q (b χ) hq (hb χ)
+    _root_.GlobalTheory.psiScal_eq_ratio R E ga a f th hS hrelE hth χ q (b χ) hq (hb χ)
   have hq0 : q ≠ 0 := by
     rintro rfl
     obtain ⟨j, hj⟩ := hne 0
@@ -687,7 +675,7 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     simp [scal]
   have hint : ∀ χ, ∃ c : R, ((a χ : (FractionRing R)ˣ) : FractionRing R) = algebraMap R _ c := fun χ => by
     refine integral_of_sqPow_bdd R _ q hq0 fun n => ?_
-    obtain ⟨u, hu⟩ := GlobalTheory.T.psiScalar_nsmul_eq_unit_mul_pow_sq R E ga a hS hev hbi χ n
+    obtain ⟨u, hu⟩ := _root_.GlobalTheory.Mum.psiScal_nsmul_eq_unit_mul_pow R E ga a hS hev hbi χ n
     refine ⟨((u⁻¹ : Rˣ) : R) * b (n • χ), ?_⟩
     rw [map_mul, ← hab, hu]
     have hu1 : algebraMap R (FractionRing R) ((u⁻¹ : Rˣ) : R) * algebraMap R _ (u : R) = 1 := by
@@ -699,15 +687,15 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     exact (hab χ).symm.trans (by rw [map_mul, ← hc χ])
   have hcm : ∀ χ : D.X, χ ≠ 0 → c χ ∈ maximalIdeal R := fun χ hχ => by
     obtain ⟨x, rfl⟩ := C.xe.surjective χ
-    obtain ⟨m, hm₁, hm₂⟩ := GlobalTheory.T.psiScalar_mem_of_psi_mem_ideal R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi ga a hS x _
+    obtain ⟨m, hm₁, hm₂⟩ := _root_.GlobalTheory.PsiRing.scalar_mem_of_psiIn R V φ E D'.toPre C.β C.v C.xe C.pbB C.v_gen C.c_pr gam hgam hpsi ga a hS x _
       (D'.psi_pos x fun h0 => hχ (by rw [h0, map_zero])) _ q (hab _)
     have hm₃ : φ q * φ (c (C.xe x)) = φ q * m := by rw [← map_mul, ← hbc]; exact hm₂
     have hφq : φ q ≠ 0 := (map_ne_zero_iff _ hφ).2 hq0
     have e := mul_left_cancel₀ hφq hm₃
     have hmem : c (C.xe x) ∈ (maximalIdeal V).comap φ := Ideal.mem_comap.2 (by rw [e]; exact hm₁)
     exact (Set.ext_iff.1 (congrArg (fun J : Ideal R => (J : Set R)) hI) _).1 hmem
-  choose G₁ hG₁ using fun χ : D.X => GlobalTheory.T.exists_translatedThetaCoefficient_section R D th χ (ga χ) (hS χ).1 (c χ)
-  choose H₁ hH₁ using fun χ : D.X => GlobalTheory.T.exists_translatedThetaCoefficient_section R D th χ (ga χ) (hS χ).1 1
+  choose G₁ hG₁ using fun χ : D.X => _root_.GlobalTheory.PsiCoefMk.exists_sec_coef R D th χ (ga χ) (hS χ).1 (c χ)
+  choose H₁ hH₁ using fun χ : D.X => _root_.GlobalTheory.PsiCoefMk.exists_sec_coef R D th χ (ga χ) (hS χ).1 1
   classical
   let g : ∀ α, GlobalTheory.UU.SecBT D (𝟙_ _) 1 α := fun α => if h0 : α = 0 then h0 ▸ th else G₁ α
   refine ⟨σ, f, g, q, hq0, hf, fun α => ?_, ?_, fun α hα => ⟨c α, hcm α hα, H₁ α, ?_⟩⟩
@@ -716,11 +704,11 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
       simp only [g, dif_pos rfl]
       exact GlobalTheory.T.secIsMul_of_baseMultiple_thetaSection R D th (f 0) q hq
     · simp only [g, dif_neg h0]
-      exact GlobalTheory.T.secIsMul_of_translatedThetaCoefficient_proportional R D α (ga α) th (f α) (G₁ α) (b α) (c α) q (hb α) (hG₁ α) (hbc α)
+      exact _root_.GlobalTheory.PsiRing.secIsMul_of_coef R D α (ga α) th (f α) (G₁ α) (b α) (c α) q (hb α) (hG₁ α) (hbc α)
   · simp only [g, dif_pos rfl]
     exact hth
   · simp only [g, dif_neg hα]
-    exact GlobalTheory.T.secIsMul_of_translatedThetaCoefficient_proportional R D α (ga α) th (G₁ α) (H₁ α) (c α) 1 (c α) (hG₁ α) (hH₁ α) (_root_.mul_one _).symm
+    exact _root_.GlobalTheory.PsiRing.secIsMul_of_coef R D α (ga α) th (G₁ α) (H₁ α) (c α) 1 (c α) (hG₁ α) (hH₁ α) (_root_.mul_one _).symm
 
 end GlobalTheory.Mum
 end
@@ -1101,13 +1089,6 @@ theorem exists_lift {R : Type} [CommRing R] (J : Ideal R) {X Y P : Scheme.{0}} (
   refine ⟨hP.lift _ _ w, ?_⟩
   rw [← Category.assoc, hP.lift_fst, Category.assoc, hk, Category.comp_id]
 
-theorem cst_stalkMap' {V : Type} [CommRing V] {X Z : Scheme.{0}} (r : Z ⟶ X) (p : X ⟶ Sp V) (z : Z) (a : V) :
-    (r.stalkMap z).hom (cst p (r z) a) = cst (r ≫ p) z a := by
-  have e := gs_pull (𝟙 X) p (r z) ⊤ trivial ((Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom a)
-  rw [Category.id_comp] at e
-  exact (congrArg (r.stalkMap z).hom e.symm).trans ((gs_stalkMap r z (p ⁻¹ᵁ ⊤) trivial _).symm.trans
-    (gs_pull r p z ⊤ trivial _))
-
 theorem germ_dvd_of_expT_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (U : GlobalTheory.UU.PreU (maximalIdeal R) D A G) (σ : U.SecGT (𝟙_ _) 1) (f g : ∀ α, GlobalTheory.UU.SecBT D (𝟙_ _) 1 α) (q : R), U.ExpT (𝟙_ _) 1 σ f → (∀ α, ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul (𝟙_ _ ⊗ D.P.A).hom q (f α) (g α)) → ∀ (x : (𝟙_ (Over (Sp R)) ⊗ G).left), (𝟙_ (Over (Sp R)) ⊗ G).hom x = closedPoint R → ∀ (j : Fin 1 → U.P.L.L.ι), x ∈ LB.wchart U.P.L.L (fun _ : Fin 1 => (snd (𝟙_ (Over (Sp R))) G).left) j → ∃ t, gs (𝟙 _) x (LB.wchart U.P.L.L (fun _ : Fin 1 => (snd (𝟙_ (Over (Sp R))) G).left) j) (σ.f j) = cst (𝟙_ (Over (Sp R)) ⊗ G).hom x q * t := by
   intro R _ _ _ hR D A G _ _ U σ f g q hE hM x hx j hxj
   haveI : IsNoetherianRing R := hR.1.1
@@ -1216,7 +1197,7 @@ theorem germ_dvd_of_expT_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   refine Submodule.mem_sup.2 ⟨t * cst (𝟙_ (Over (Sp R)) ⊗ G).hom
     ((pullback.fst G.hom (thick R (maximalIdeal R) e) ≫ (λ_ G).inv.left) z) q,
     Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _), _, hker ?_, add_sub_cancel _ _⟩
-  rw [RingHom.mem_ker, map_sub, map_mul, cst_stalkMap', ht', sub_self]
+  rw [RingHom.mem_ker, map_sub, map_mul, _root_.ReciprocityTheory.ChartRestriction.G.H1.cst_stalkMap, ht', sub_self]
 
 end GlobalTheory.ClosedFibreDvd
 

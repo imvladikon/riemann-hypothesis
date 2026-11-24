@@ -718,7 +718,7 @@ theorem exists_unit_value : LL → TwistBCSpanStatement → TWM.VRatioGtStatemen
     by_contra h'
     exact h ⟨e, c, he, hc, h'⟩
   obtain ⟨e, c, he, hc, hc0⟩ := hex
-  obtain ⟨w₁, hw₁, hv₁, hsum⟩ := GlobalTheory.T.section_value_at_torsionPoint_eq_sum_terms hL hT hVR hTW hUU V hcpl ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN _ hj p _ hx e he
+  obtain ⟨w₁, hw₁, hv₁, hsum⟩ := _root_.GlobalTheory.UT.TorsionValue.value_at_torsion hL hT hVR hTW hUU V hcpl ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN _ hj p _ hx e he
   have hv₁ : GenV hϖ hv w₁ 0 := by
     have e0 : ((Q p.y : ℚ) / ((n ^ (i + m + 2) : ℕ) : ℚ) ^ 2) = 0 := by
       rw [show p.y = 0 from by simp only [p, qkMk], QForm.Q_zero hϖ D hQ]; simp
@@ -758,8 +758,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT GlobalTheory.LN GlobalTheory.Ex GlobalTheory.OneBasis
 
-theorem _root_.GlobalTheory.T.exists_torsionPoint_unit_value_primitive_integral_family : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → AllUV fun {V} _ _ _ {ϖ} hϖ {D} Q {F} _ _ {v} hv {A} {G} _ _ U => ∀ w₀ ρ, NormW U.toUnifPre w₀ ρ → ∀ k n : ℕ, 4 ≤ k → n.Prime → IsUnit (n : V) → ∀ (t : SecA A F k) (s : Fam D.toPre F k) (α : D.toPre.X), U.ExpandsF F k w₀ t s → IntGe D v s 0 → (∀ q : ℚ, 0 < q → ¬ VGe D F v k α (s.s α) q) → ∃ (j : ℕ) (x : TFK (R := V) F ⟶ A.A), 2 ≤ j ∧ FromGt U.toUnifPre (n ^ j) x ∧ ∀ e (c : F), IsTorsFrame A ρ (n ^ j) x e → ValAt t x e c → v c = 0 := by
-  first | exact @GlobalTheory.OneBasis.UnitValue.exists_unit_value
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorsionPointUnitValuePrimitiveIntegralFamiStatement =====
@@ -846,7 +844,7 @@ theorem integral_value_at_torsion : LL → TwistBCSpanStatement → TWM.VRatioGt
   intro hL hT hVR hTW hUU V _ _ _ _ hcpl ϖ hϖ D Q hQ F _ _ _ v hv A G _ _ hG U w₀ ρ hN n k hn hk x e t s c hp he hts hs hc
   obtain ⟨p, hy, hx⟩ := hp
   obtain ⟨w₁, hw₁, hv₁, hsum⟩ :=
-    GlobalTheory.T.section_value_at_torsionPoint_eq_sum_terms hL hT hVR hTW hUU V hcpl ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN n hn p x hx e he
+    _root_.GlobalTheory.UT.TorsionValue.value_at_torsion hL hT hVR hTW hUU V hcpl ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN n hn p x hx e he
   have hv₁ : GenV hϖ hv w₁ 0 := by
     have e0 : ((Q p.y : ℚ) / (n : ℚ) ^ 2) = 0 := by rw [hy, QForm.Q_zero hϖ D hQ]; simp
     rwa [e0] at hv₁
@@ -877,8 +875,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT GlobalTheory.LN GlobalTheory.Ex GlobalTheory.OneBasis
 
-theorem _root_.GlobalTheory.T.integral_family_values_torsion_torusExtension : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → AllUV fun {V} _ _ _ {ϖ} hϖ {D} Q {F} _ _ {v} hv {A} {G} _ _ U => ∀ w₀ ρ, NormW U.toUnifPre w₀ ρ → ∀ n k : ℕ, 1 ≤ n → 1 ≤ k → ∀ (x : TFK (R := V) F ⟶ A.A) e (t : SecA A F k) (s : Fam D.toPre F k) (c : F), FromGt U.toUnifPre n x → IsTorsFrame A ρ n x e → U.ExpandsF F k w₀ t s → IntGe D v s 0 → ValAt t x e c → 0 ≤ v c := by
-  first | exact @GlobalTheory.OneBasis.integral_value_at_torsion
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IntegralFamilyValuesTorsionTorusExtensionStatement =====
@@ -1070,8 +1066,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT GlobalTheory.LN GlobalTheory.Ex GlobalTheory.OneBasis
 
-theorem _root_.GlobalTheory.T.torusExtension_torsion_mem_unitThetaConstantGroup : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → AllUV fun {V} _ _ _ {ϖ} hϖ {D} Q {F} _ _ {v} hv {A} {G} _ _ U => ∀ w₀ ρ, NormW U.toUnifPre w₀ ρ → ∀ (th : SecA A F 1) (ϑ : Fam D.toPre F 1), U.ExpandsF F 1 w₀ th ϑ → Prim D Q v ϑ → ∀ n j : ℕ, n.Prime → Odd n → IsUnit (n : V) → 2 ≤ j → ∀ x : TFK (R := V) F ⟶ A.A, FromGt U.toUnifPre (n ^ j) x → x ∈ unitGrp v ρ th (n ^ j) := by
-  first | exact @GlobalTheory.OneBasis.UnitGen.fromGt_mem_unitGrp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionTorsionMemUnitThetaConstantGroupStatement =====
@@ -1266,11 +1260,11 @@ theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWState
         · simp [Pi.single_eq_of_ne h']
       rwa [Finset.sum_eq_single i (fun i' _ h' => by rw [Pi.single_eq_of_ne h', zero_smul]) (by simp),
         Pi.single_eq_same, one_smul] at this
-    exact (hO _).2 (GlobalTheory.T.integral_family_values_torsion_torusExtension hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN (n ^ j) (m ^ 2)
+    exact (hO _).2 (_root_.GlobalTheory.OneBasis.integral_value_at_torsion hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN (n ^ j) (m ^ 2)
       (pow_pos hn.pos j) hm1 h e (b i) (s i) _ hf he (hb i) hi (valAt_cmb (hB i) hl))
   · rintro a ha ⟨i, hi⟩
     obtain ⟨t, ht⟩ := exists_cmb b a
-    obtain ⟨j, x, hj, hx, hval⟩ := GlobalTheory.T.exists_torsionPoint_unit_value_primitive_integral_family hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN (m ^ 2) n
+    obtain ⟨j, x, hj, hx, hval⟩ := _root_.GlobalTheory.OneBasis.UnitValue.exists_unit_value hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN (m ^ 2) n
       (by nlinarith) hn hnu t _ (cls i) (hcb a t ht) (((hs.2 a 0).2.1).2 fun i' => (hO _).1 (ha i'))
       fun q hq hV => by
         have := (hs.2 a q).2.2 i hV
@@ -1278,7 +1272,7 @@ theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWState
         exact absurd this (not_le.2 hq)
     refine ⟨j, x, ?_, ?_⟩
     · rw [hHs]
-      exact GlobalTheory.T.torusExtension_torsion_mem_unitThetaConstantGroup hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP n j hn hno hnu hj x hx
+      exact _root_.GlobalTheory.OneBasis.UnitGen.fromGt_mem_unitGrp hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP n j hn hno hnu hj x hx
     · rintro l ⟨e, he, hl⟩
       rw [valuation_eq_one_iff hO, Matrix.dotProduct_mulVec]
       exact hval e _ he (valAt_cmb (cmb_comp hB ht) hl)
@@ -1288,7 +1282,7 @@ theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWState
       · exact ⟨1, one_ne_zero, by rw [← h]; simp⟩
       · exact exists_val_eq hv h
     choose π hπ0 hπ using hπ
-    have u01 := GlobalTheory.T.valuation_nonneg_iff_span_multiplicationTranslates hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP m hm hmu hm3
+    have u01 := _root_.GlobalTheory.UT.nuGe_zero_iff_span_translates hL h₁ h₂ h₃ h₄ V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ ρ hN th ϑ hE hP m hm hmu hm3
     have hnu : ∀ a : Fin r → F, (∀ i, a i / π i ∈ O) ↔ NuGe D Q F v (m ^ 2) (∑ i, a i • s i) 0 := fun a => by
       rw [(hs.2 a 0).1]
       exact forall_congr' fun i => by rw [hO, div_mem_iff v (hπ0 i) (hπ i), zero_add]

@@ -241,12 +241,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.TypeLeaf Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.MainNotions.ArithmeticCylinders Formalism.ConjugateSelfDual ReciprocityTheory.Gal Polynomial NumberField IsDedekindDomain
-
-theorem _root_.GlobalTheory.T.tame_fixed_of_l_ne_g : ∀ D : D7, WildOne D → _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → TameFixed D i [⟨D.R.r, π, 1⟩] ρ k := by
-  first | exact @_root_.GlobalTheory.TypeLeaf.tame_fixed_of_type_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TameFixedAway =====
@@ -704,7 +698,7 @@ theorem tame_any_at_of_is_conj_pl_tame_gen : ∀ D : D7, WildOne D → (∀ (i :
     congrArg Prod.snd hinv
   have hρM : redF D i ρ γ0 ^ M = 1 := congrArg Prod.fst hone
   have hχM : chiBar D i γ0 ^ M = 1 := congrArg Prod.snd hone
-  obtain ⟨v', j, ι, e₁, e₂, he₁, he₂, hι, hch, hχ0⟩ := _root_.GlobalTheory.T.tame_any_at_pl_gw D hG hF i π ρ hc ha hfull hρ k hl v
+  obtain ⟨v', j, ι, e₁, e₂, he₁, he₂, hι, hch, hχ0⟩ := _root_.GlobalTheory.TypeLeaf.tameAnyAt_fixed_alt_alt D hG hF i π ρ hc ha hfull hρ k hl v
   refine ⟨v', j, ι.comp θ, e₁, e₂, he₁, he₂, injPrimeTo_comp hι hθ hθo, ?_, ?_⟩
   · have h1 := charpoly_pow_of_prod _ _ _ hch (n * (M - 1))
     rw [← Units.val_pow_eq_pow_val, ← hρ1, map_mul, map_mul, map_inv _ g, Units.val_mul, Units.val_mul, Matrix.coe_units_inv,
@@ -733,12 +727,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.TypeLeaf Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.MainNotions.ArithmeticCylinders Formalism.ConjugateSelfDual ReciprocityTheory.Gal Polynomial NumberField IsDedekindDomain
-
-theorem _root_.GlobalTheory.T.tame_any_at_conj_of_frobenius_dense : ∀ D : D7, WildOne D → (∀ (i : D.nd.Loc) (k : Fin 2) (v : D.nd.PlG k), D.nd.l i ≠ D.host.g k → ∀ s ∈ wildSet D.nd (D.nd.plOm.1 (D.naut.plGw k v)), D.nd.chi i 1 s = 1) → _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → ∀ (v : D.nd.PlG k) (w : PlE D.host), IsConjPl D.host (D.naut.plGw k v) w → TameGen D.nd (D.nd.plOm.1 w) (D.nd.gam0 i w) → TameAnyAt D i [⟨D.R.r, π, 1⟩] ρ k w := by
-  first | exact @_root_.GlobalTheory.TypeLeaf.ConjPlace.tame_any_at_of_is_conj_pl_tame_gen
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TameOfFrobeniusDense =====
@@ -762,11 +750,11 @@ theorem tameSum_of_inputs_alt : ∀ D : D7, WildOne D →
   obtain ⟨x, hx⟩ := hx
   obtain ⟨π, rfl⟩ := hc
   obtain ⟨h1, h2⟩ := hP i x π hx
-  refine ⟨_root_.GlobalTheory.T.tame_fixed_of_l_ne_g D hW hG hF i π ρ h1 h2 hfull hρ k hk, fun w hw ht => ?_⟩
+  refine ⟨_root_.GlobalTheory.TypeLeaf.tame_fixed_of_type_alt D hW hG hF i π ρ h1 h2 hfull hρ k hk, fun w hw ht => ?_⟩
   obtain ⟨v, hv | hv⟩ := GlobalTheory.TypePlaceCover.place_cover D k w hw
   · subst hv
-    exact _root_.GlobalTheory.T.tame_any_at_pl_gw D hG hF i π ρ h1 h2 hfull hρ k hk v
-  · exact _root_.GlobalTheory.T.tame_any_at_conj_of_frobenius_dense D hW hχ hG hF i π ρ h1 h2 hfull hρ k hk v w hv ht
+    exact _root_.GlobalTheory.TypeLeaf.tameAnyAt_fixed_alt_alt D hG hF i π ρ h1 h2 hfull hρ k hk v
+  · exact _root_.GlobalTheory.TypeLeaf.ConjPlace.tame_any_at_of_is_conj_pl_tame_gen D hW hχ hG hF i π ρ h1 h2 hfull hρ k hk v w hv ht
 end GlobalTheory.TypeLeaf
 end
 end

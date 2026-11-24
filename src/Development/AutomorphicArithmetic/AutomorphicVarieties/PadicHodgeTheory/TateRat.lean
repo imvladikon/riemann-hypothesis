@@ -185,35 +185,6 @@ private theorem finite_padicInt_quot_span_of_ne_zero (l : ℕ) [Fact l.Prime] {q
   rw [card_quotient_eq_card_of_isReps]
   exact pow_ne_zero _ (Fact.out : l.Prime).ne_zero
 
-private theorem card_pi_padicInt_quot_lSub (l : ℕ) [Fact l.Prime] (n m : ℕ) :
-    Nat.card ((Fin n → ℤ_[l]) ⧸ lSub l (Fin n → ℤ_[l]) m) = l ^ (m * n) := by
-  let I : Ideal ℤ_[l] := Ideal.span {(l : ℤ_[l]) ^ m}
-  let φ : (Fin n → ℤ_[l]) →ₗ[ℤ_[l]] (Fin n → ℤ_[l] ⧸ I) :=
-    LinearMap.pi (fun i => (Submodule.mkQ I) ∘ₗ LinearMap.proj i)
-  have hsurj : Function.Surjective φ := by
-    intro g
-    choose y hy using fun i => Submodule.Quotient.mk_surjective I (g i)
-    exact ⟨y, funext fun i => hy i⟩
-  have hker : LinearMap.ker φ = lSub l (Fin n → ℤ_[l]) m := by
-    ext x
-    rw [LinearMap.mem_ker, mem_lSub]
-    constructor
-    · intro hx
-      have h2 : ∀ i, ∃ y, (l : ℤ_[l]) ^ m * y = x i := fun i => by
-        have h1 : (Submodule.Quotient.mk (x i) : ℤ_[l] ⧸ I) = 0 := congrFun hx i
-        rw [Submodule.Quotient.mk_eq_zero, Ideal.mem_span_singleton'] at h1
-        obtain ⟨a, ha⟩ := h1
-        exact ⟨a, by rw [mul_comm]; exact ha⟩
-      choose y hy using h2
-      exact ⟨y, funext fun i => by simp [hy]⟩
-    · rintro ⟨y, rfl⟩
-      funext i
-      show (Submodule.Quotient.mk _ : ℤ_[l] ⧸ I) = 0
-      rw [Submodule.Quotient.mk_eq_zero, Ideal.mem_span_singleton']
-      exact ⟨y i, by simp [mul_comm]⟩
-  rw [← hker, Nat.card_congr (φ.quotKerEquivOfSurjective hsurj).toEquiv, Nat.card_fun,
-    card_quotient_eq_card_of_isReps, Nat.card_eq_fintype_card, Fintype.card_fin, ← pow_mul]
-
 theorem UpperTheory.card_quotient_powSubmodule_grows_finrank :
     ∀ (l : ℕ) [Fact l.Prime] (N : Type) [AddCommGroup N] [Module ℤ_[l] N] [Module.Finite ℤ_[l] N], Grows l (fun m => Nat.card (N ⧸ lSub l N m)) (finrank ℤ_[l] N) := by
   intro l _ N _ _ _
@@ -257,7 +228,7 @@ theorem UpperTheory.card_quotient_powSubmodule_grows_finrank :
     refine ⟨g.symm (y1, y2), ?_⟩
     rw [← map_smul, Prod.smul_mk, hy1, hy2]
     simp [f1, f2]
-  have hF := card_pi_padicInt_quot_lSub l n m
+  have hF := _root_.UpperTheory.V.Loc.card_quot_lSub l n m
   haveI : Finite ((Fin n → ℤ_[l]) ⧸ lSub l (Fin n → ℤ_[l]) m) :=
     Nat.finite_of_card_ne_zero (by rw [hF]; exact pow_ne_zero _ (Fact.out : l.Prime).ne_zero)
   haveI : Finite (D ⧸ lSub l D m) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
@@ -843,10 +814,6 @@ section -- clump:auto
 
 open Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal TensorProduct Module UpperTheory.V.Loc Topology
 
-private theorem killed (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Module ℤ_[l] M] [Finite M] :
-    ∃ r : ℕ, 0 < r ∧ ∀ x : M, (l : ℤ_[l]) ^ r • x = 0 :=
-  _root_.UpperTheory.Reformulated.B.Qe12.killed l M
-
 private theorem H0dual_eq {G A V : Type} [Group G] [CommRing A] [AddCommGroup V] [Module A V] (χ : G →* Aˣ)
     (ρ : Representation A G V) : H0dual χ ρ = (coSub χ ρ).dualAnnihilator := by
   ext f
@@ -887,7 +854,7 @@ private def modRep (n : ℕ) {G Q V : Type} [Group G] [CommRing Q] [AddCommGroup
 theorem UpperTheory.finite_level_of_finite_level_mod :
     ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpace G] (χ : G →* ℤ_[l]ˣ) (d : ℕ), FinLevelMod l G χ d → FinLevel l G χ d := by
   intro l _ G _ _ χ d h M _ _ _ _ _ ρ hρ
-  obtain ⟨r, hr, hk⟩ := killed l M
+  obtain ⟨r, hr, hk⟩ := _root_.UpperTheory.Reformulated.B.Qe12.killed l M
   have hk' : ∀ x : M, (l ^ r) • x = 0 := fun x => by
     rw [← Nat.cast_smul_eq_nsmul ℤ_[l], Nat.cast_pow]; exact hk x
   haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩

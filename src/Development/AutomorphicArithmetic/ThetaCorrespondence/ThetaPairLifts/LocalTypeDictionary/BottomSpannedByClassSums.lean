@@ -149,27 +149,6 @@ end GlobalTheory.BottomDeg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.bottomClassSum_finite_support : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∃ K : Finset (FVar D WW.rank A.rank →₀ ℕ), ∀ t, ∀ h ∈ GfC WW, ∀ k ∉ K,
-      X.I W.ψ W.θ t (MvPolynomial.monomial k 1) h = 0 := by
-  first | exact @_root_.GlobalTheory.BottomDeg.bottomClassSum_eq_zero_off_finite
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BottomClassSumEqZeroOffFinite =====
@@ -1153,27 +1132,6 @@ end GlobalTheory.BottomLevel
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.bottomForm_rightTranslate_level : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∃ (J : Subgroup (GA D WW)) (M₂ : IntermediateField ℚ ℂ), IsOpen (J : Set (GA D WW)) ∧ FiniteDimensional ℚ M₂ ∧
-      ∀ t, ∀ κ ∈ J, κ ∈ GfC WW → ∃ ℓ ∈ M₂, ∀ P x, X.I W.ψ W.θ t P (x * κ) = ℓ * X.I W.ψ W.θ t P x := by
-  first | exact @_root_.GlobalTheory.BottomLevel.rightTranslate_preserves_level
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BottomFormRightTranslateLevel =====
@@ -1224,26 +1182,6 @@ end GlobalTheory.RowTest.BottomRat
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.bottomIntegral_leftInvariant_rationalPoints : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∀ t P, ∀ γ ∈ GQ WW, ∀ x, X.I W.ψ W.θ t P (γ * x) = X.I W.ψ W.θ t P x := by
-  first | exact @_root_.GlobalTheory.RowTest.BottomRat.bottomIntegral_rational_left
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BottomIntegralRationalLeft =====
@@ -1606,41 +1544,14 @@ open Formalism.IndefR.Datum GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTe
 open scoped ComplexOrder
 noncomputable section
 namespace GlobalTheory.RealRatAct
-variable {σ : Type}
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
-open Formalism.L2.Theta
-variable {D : D7}
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
-open Formalism.L2.Theta
-variable {D : D7}
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
-open Formalism.L2.Theta
-variable {D : D7}
-section Act
-variable {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
-  {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
-variable (hW : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (hgS : ∀ τ, gramAt D S τ = -1)
-  (hgT : ∀ τ, gramAt D T τ = 1) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
-  (hv : ∀ ρ, IsFockVacAt (heisO ψ S T) θ ρ (cplxO (-1) 1) f) {K : IntermediateField ℚ ℂ}
-  (hK : ∀ z ∈ K, starRingEnd ℂ z ∈ K)
-include hW hθ hgS hgT hf hv
-end Act
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
-open Formalism.L2.Theta
-variable {D : D7}
-section Act
-variable {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {χS χT : (AE D)ˣ →* Circle}
-  {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
-  (hW : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) (hgS : ∀ τ, gramAt D S τ = -1)
-  (hgT : ∀ τ, gramAt D T τ = 1) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
-  (hv : ∀ ρ, IsFockVacAt (heisO ψ S T) θ ρ (cplxO (-1) 1) f) {K : IntermediateField ℚ ℂ}
-  (hK : ∀ z ∈ K, starRingEnd ℂ z ∈ K)
-include hW hθ hgS hgT hf hv hK
-end Act
 end GlobalTheory.RealRatAct
 namespace GlobalTheory.RealRatAct
 open Formalism.L2.Theta
@@ -1722,28 +1633,6 @@ end GlobalTheory.RealRatAct
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.realTranslate_preserves_rationalAction : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∃ M₁ : IntermediateField ℚ ℂ, FiniteDimensional ℚ M₁ ∧ ∀ t, ∀ γ ∈ GQ WW, ∀ r ∈ GinfC WW, γ * r ∈ GfC WW → ∀ x k,
-      ∃ c : (FVar D WW.rank A.rank →₀ ℕ) →₀ ℂ, (∀ k', c k' ∈ M₁) ∧
-        X.I W.ψ W.θ t (MvPolynomial.monomial k 1) (x * r) = ∑ k' ∈ c.support, c k' * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) x := by
-  first | exact @_root_.GlobalTheory.RealRatAct.rationalAction_real_translate
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RealTranslatePreservesRationalAction =====
@@ -1777,10 +1666,10 @@ theorem classSums_span_bottom : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D 
           ∑ h' ∈ H, ∑ k' ∈ K, c h' k' * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) h' := by
   intro D T _ L μ₀ sc G W i j A A' WW X hP hI hL hX
   classical
-  obtain ⟨K, hK⟩ := _root_.GlobalTheory.T.bottomClassSum_finite_support (X := X) (W := W) (i := i) (j := j) hP hI hL hX
-  obtain ⟨M₁, hM₁, hr⟩ := _root_.GlobalTheory.T.realTranslate_preserves_rationalAction (X := X) (W := W) (i := i) (j := j) hP hI hL hX
-  obtain ⟨J, M₂, hJ, hM₂, hl⟩ := _root_.GlobalTheory.T.bottomForm_rightTranslate_level (X := X) (W := W) (i := i) (j := j) hP hI hL hX
-  obtain ⟨H, hH, hc⟩ := _root_.GlobalTheory.T.bottomClasses_finite (X := X) (W := W) (i := i) (j := j) hP hI hL hX J hJ
+  obtain ⟨K, hK⟩ := _root_.GlobalTheory.BottomDeg.bottomClassSum_eq_zero_off_finite (X := X) (W := W) (i := i) (j := j) hP hI hL hX
+  obtain ⟨M₁, hM₁, hr⟩ := _root_.GlobalTheory.RealRatAct.rationalAction_real_translate (X := X) (W := W) (i := i) (j := j) hP hI hL hX
+  obtain ⟨J, M₂, hJ, hM₂, hl⟩ := _root_.GlobalTheory.BottomLevel.rightTranslate_preserves_level (X := X) (W := W) (i := i) (j := j) hP hI hL hX
+  obtain ⟨H, hH, hc⟩ := _root_.GlobalTheory.BotClassFin.bottomClass_exists_finite_reps (X := X) (W := W) (i := i) (j := j) hP hI hL hX J hJ
   refine ⟨H, K, M₁ ⊔ M₂, IntermediateField.finiteDimensional_sup M₁ M₂, hH, ?_⟩
   intro t h hh k
   obtain ⟨γ, hγ, r, hrI, h₀, hh₀, κ, hκJ, hκf, rfl⟩ := hc h hh
@@ -1793,8 +1682,8 @@ theorem classSums_span_bottom : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D 
   have e1 : X.I W.ψ W.θ t (MvPolynomial.monomial k 1) (γ * r * h₀ * κ) =
       ∑ k' ∈ c.support, c k' * ℓ * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀ := by
     have e0 : γ * r * h₀ * κ = γ * ((h₀ * κ) * r) := by
-      rw [← GlobalTheory.AdelicSplit.commute_GinfC_GfC WW hrI hx]; simp only [mul_assoc]
-    rw [e0, _root_.GlobalTheory.T.bottomIntegral_leftInvariant_rationalPoints hP hI hL hX t _ γ hγ, hcE]
+      rw [← _root_.GlobalTheory.PointAtPlaceHom.comm_of_mem WW hrI hx]; simp only [mul_assoc]
+    rw [e0, _root_.GlobalTheory.RowTest.BottomRat.bottomIntegral_rational_left hP hI hL hX t _ γ hγ, hcE]
     refine Finset.sum_congr rfl fun k' _ => ?_
     rw [hℓ, mul_assoc]
   refine ⟨fun h' k' => if h' = h₀ then c k' * ℓ else 0, fun a b => ?_, ?_⟩
@@ -1815,23 +1704,6 @@ end GlobalTheory.BotSpan
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.bottom_spanned_by_classSums : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∃ (H : Finset (GA D WW)) (K : Finset (FVar D WW.rank A.rank →₀ ℕ)) (M₀ : IntermediateField ℚ ℂ), FiniteDimensional ℚ M₀ ∧
-      (∀ h ∈ H, h ∈ GfC WW) ∧ ∀ t, ∀ h ∈ GfC WW, ∀ k, ∃ c : GA D WW → (FVar D WW.rank A.rank →₀ ℕ) → ℂ, (∀ a b, c a b ∈ M₀) ∧
-        X.I W.ψ W.θ t (MvPolynomial.monomial k 1) h =
-          ∑ h' ∈ H, ∑ k' ∈ K, c h' k' * X.I W.ψ W.θ t (MvPolynomial.monomial k' 1) h' := by
-  first | exact @_root_.GlobalTheory.BotSpan.classSums_span_bottom
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BottomSpannedByClassSums =====

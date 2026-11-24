@@ -119,9 +119,6 @@ open Formalism.BasicNotions Formalism.FrobeniusOrbits Formalism.MainNotions
 
 variable (D : D7)
 
-theorem condE_pos : 0 < LevelStarExponents.condE D := by
-  exact AbsolutelyIrreducibleSpan.condE_pos (D := D)
-
 theorem leastSplitAuxiliaryPrimeThetaChain_spec : (AbsolutelyIrreducibleSpan.q0 D).Prime ∧ AbsolutelyIrreducibleSpan.q0 D % (AbsolutelyIrreducibleSpan.rPr D * LevelStarExponents.condE D) = 1 := by
   exact ⟨(AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).1, (AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).2.1⟩
 
@@ -190,7 +187,7 @@ theorem split_prime_mod_conductor_eq_one : AbsolutelyIrreducibleSpan.q0 D % D.ho
     unfold LevelStarExponents.condE
     exact dvd_mul_of_dvd_left (dvd_mul_left _ _) _
   exact q0_mod_eq_one_of_dvd_condE D dvd_rfl
-    (le_trans hh.1.two_le (Nat.le_of_dvd (condE_pos D) hdv))
+    (le_trans hh.1.two_le (Nat.le_of_dvd (_root_.Formalism.MainNotions.AbsolutelyIrreducibleSpan.condE_pos D) hdv))
 
 theorem split_prime_splits_completely : (placesOver D.host.E (AbsolutelyIrreducibleSpan.q0 D)).ncard = Module.finrank ℚ D.host.E := by
   haveI : Fact (AbsolutelyIrreducibleSpan.q0 D).Prime := ⟨(AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).1⟩

@@ -126,11 +126,6 @@ theorem cnt_sub [Countable Γ] [DiscreteTopology Γ] (S : Subgroup G) : Countabl
   have ji : Function.Injective j := fun a b h => Subtype.ext (Subtype.ext (congrArg Subtype.val h :))
   exact ⟨ji.countable, DiscreteTopology.of_continuous_injective ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) ji⟩
 
-theorem IsAv.conj_sub (hA : IsClosed (A : Set G)) (L : Lat (Γ.subgroupOf A)) {f c : G → ℂ} (h : IsAv (Γ.subgroupOf A) Subtype.val f c)
-    {γ : G} (hγ : γ ∈ Γ) (h1 : ∀ u ∈ A, γ⁻¹ * u * γ ∈ A) (h2 : ∀ u ∈ A, γ * u * γ⁻¹ ∈ A) (hf : ∀ x, f (γ * x) = f x) (x : G) :
-    c (γ * x) = c x :=
-  _root_.UpperTheory.Reformulated.B.ConjugateSubgroup.conj_sub hA L h hγ h1 h2 hf x
-
 variable [Group B] [TopologicalSpace B] [IsTopologicalGroup B] [MeasurableSpace B] [BorelSpace B]
   [LocallyCompactSpace B] [SecondCountableTopology B] [T2Space B] {ΓB : Subgroup B}
 
@@ -242,7 +237,7 @@ theorem mem_pair (hJ₁ : ∀ i j, σ (W₁.J j i) = -W₁.J i j) {u : UA σ W.J
       rw [this, Matrix.mulVec_smul, e1]
     · obtain ⟨a, b, hab⟩ := span_pair_iff.1 (k2 (H.ι *ᵥ z) fun v hv => by
         obtain ⟨a, b, rfl⟩ := Submodule.mem_span_pair.1 hv
-        refine inc_inj (F := F) ?_
+        refine _root_.PositivityTheory.ThKF.inclR_inj (F := F) ?_
         have z1 := congrArg (inclR (F := F) (AF F)) (hz _ (Submodule.mem_span_singleton_self _))
         rw [← fa_inc, map_zero] at z1
         have : ∀ w p q : Fin d → AE F E, fa σ W.J w (p + q) = fa σ W.J w p + fa σ W.J w q := fun w p q => by
@@ -397,7 +392,7 @@ theorem two_kill (hd : W.J.det ≠ 0) (hJ₁ : ∀ i j, σ (W₁.J j i) = -W₁.
     have n1 := emb2_norm h hJ hH hH₁ g
     have n2 := emb2_norm h hJ hH hH₁ g⁻¹
     rw [map_inv, map_inv] at n2
-    exact IsAv.conj_sub G2.closed (lat_of_good G2) hφ r (fun u => conj_unipU r n1 n2)
+    exact _root_.UpperTheory.Reformulated.B.ConjugateSubgroup.conj_sub G2.closed (lat_of_good G2) hφ r (fun u => conj_unipU r n1 n2)
       (fun u hu => by simpa using conj_unipU (inv_mem r) n2 (by simpa using n1) hu) (hf.2 _ r)
   have φu : ∀ γ ∈ ((inclR (F := F) (E := E) (AF F)).toAddMonoidHom.toMultiplicative).range, ∀ x, φ ((m.comp uni) γ * x) = φ x := by
     rintro _ ⟨ξ, rfl⟩

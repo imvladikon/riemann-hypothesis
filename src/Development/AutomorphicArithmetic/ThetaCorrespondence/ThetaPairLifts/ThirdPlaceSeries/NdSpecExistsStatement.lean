@@ -1448,7 +1448,7 @@ theorem rt_mem_all {a : NG.AlgWt L n} (h : GAf L n) {f : GAf L n → a.W} (hf : 
     NG.rt L n h f ∈ NG.AFall L n a.ρ := by
   obtain ⟨N, hN, h2⟩ := hf.2
   obtain ⟨⟨N', hN', hc⟩, -, -⟩ :=
-    GlobalTheory.CongIndex.finite_index_conj L n (Umax L n) GlobalTheory.ClassPet.umax_bounded h N hN
+    GlobalTheory.CongIndex.finite_index_conj L n (Umax L n) _root_.GlobalTheory.CoefDuty.Model.isBounded_umax h N hN
   exact (GlobalTheory.ClassPet.rt_mem a hf hN' h2 hc).1
 
 def sph (a : NG.AlgWt L n) (v : HeightOneSpectrum (𝓞 L⁺)) : Submodule ℂ (GAf L n → a.W) where
@@ -1605,14 +1605,6 @@ instance (M : Type) : TopologicalSpace (Disc M) := ⊥
 instance (M : Type) : DiscreteTopology (Disc M) := ⟨rfl⟩
 instance (M : Type) [CommGroup M] : IsTopologicalGroup (Disc M) := inferInstance
 
-theorem finite_placesOver (E : Type) [Field E] [NumberField E] (l : ℕ) (hl : l ≠ 0) :
-    (placesOver E l).Finite := by
-  have h0 : Ideal.span {((l : ℕ) : 𝓞 E)} ≠ 0 := by
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact_mod_cast hl
-  refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  exact Ideal.dvd_span_singleton.mpr hv
-
 end GlobalTheory.TwistRamLoc
 
 namespace GlobalTheory.TwistRamLoc
@@ -1663,7 +1655,7 @@ theorem twist_ram_and_trivial_at_l : ∀ (D : D7) (cf : CharFrame D) (C : NChoic
     · rw [Subgroup.coe_inf]
       exact hro.inter hΨo
   let S : Finset (HeightOneSpectrum (𝓞 D.host.E)) :=
-    C.Q w ∪ (finite_placesOver D.host.E (D.what₂.places.resChar w) (D.what₂.places.resChar_prime w).ne_zero).toFinset
+    C.Q w ∪ (_root_.Formalism.MainNotions.placesOver_finite_av D.host.E (D.what₂.places.resChar w) (D.what₂.places.resChar_prime w).ne_zero).toFinset
   have hΦ1 : Φ = 1 := by
     refine GlobalTheory.FrobDense.eq_one_of_frob D.host.E D.nd.Om art ha _ Φ hΦc S fun v hv A hA σ hσ => ?_
     have hvQ : v ∉ C.Q w := fun h => hv (Finset.mem_union_left _ h)
@@ -1988,12 +1980,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX GlobalTheory.HeightCounting NumberField IsDedekindDomain Polynomial
-
-theorem _root_.GlobalTheory.T.side_rational_eigen_data_alt : GlobalTheory.Published.GlobalArtinReciprocity → HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* Qb) (A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE) (low : Finset ℕ) (Pq : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E)) → PlE D.host) (S : RatDat D.ntw) (hL : ∀ j, ℕ → PlE D.host → Module.End D.what₂.LL (S.WL j)) (eig : ℕ → D.what₂.FT → ℕ → PlE D.host → ↥D.LL0) (θ : ∀ kk : Fin 2, Multiplicative (ZMod (D.host.g kk)) →* (↥D.LL0)ˣ) (Bs : SideB D cf A.row low Pq S hL eig θ) (M : MtFam D) (C : NChoice D) (tp : TupTied D cf C), ChoiceSide D cf M Bs.exp C tp → MtInput D M tp.tup C.Q → (∀ x : D.LL0, star (x : D.what₂.LL) ∈ D.LL0) → (∀ j g, ∃ z : ℤ, eExp D j g = z) → (∀ v, v ∈ placesOver D.host.E D.host.pde ∨ v ∈ placesOver D.host.E D.host.pde' → IsSplitPl D.host v) → GlobalTheory.RowTie.ChebSplit D.nd → (Function.Injective D.what₂.OtoLL ∧ ∃ F : Subfield D.what₂.LL, ∀ x, x ∈ D.what₂.OtoLL.range ↔ x ∈ F ∧ IsIntegral ℤ x) → (∀ w, D.what₂.muAt w ≠ D.what₂.mu0 → (tp.psi w).ValuesIn 0 D.what₂.embLL) → ∀ big : D.what₂.places.Pl → Finset ℂ, ∃ (X : LocNd (lay0 D)) (T : LocTw X), Nonempty (NdSpec A.pl M C big X T) := by
-  first | exact @_root_.GlobalTheory.HeckeLocN.ndSpec_exists_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NdSpecExistsStatement =====

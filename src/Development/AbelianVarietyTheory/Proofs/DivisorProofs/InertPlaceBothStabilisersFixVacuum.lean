@@ -255,20 +255,7 @@ noncomputable section
 
 namespace GlobalTheory.VDblEig
 
-theorem boxFun_mem_SB' {k : Type} [CommRing k] [TopologicalSpace k] [T2Space k] {κ κ' : Type}
-    {φ₁ : (κ → k) → ℂ} {φ₂ : (κ' → k) → ℂ} (h₁ : φ₁ ∈ SB (κ → k)) (h₂ : φ₂ ∈ SB (κ' → k)) :
-    boxFun φ₁ φ₂ ∈ SB (κ ⊕ κ' → k) := by
-  have cl : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inl := continuous_pi fun i => continuous_apply _
-  have cr : Continuous fun x : κ ⊕ κ' → k => x ∘ Sum.inr := continuous_pi fun i => continuous_apply _
-  refine ⟨(h₁.1.comp_continuous cl).mul (h₂.1.comp_continuous cr), ?_⟩
-  let e := (Homeomorph.sumArrowHomeomorphProdArrow (X := k) (ι := κ) (ι' := κ'))
-  refine HasCompactSupport.intro ((h₁.2.prod h₂.2).image e.symm.continuous) fun x hx => ?_
-  have hx' : e x ∉ tsupport φ₁ ×ˢ tsupport φ₂ := fun h => hx ⟨e x, h, e.symm_apply_apply x⟩
-  rw [Homeomorph.sumArrowHomeomorphProdArrow_apply, Set.mem_prod, not_and_or] at hx'
-  simp only [boxFun]
-  rcases hx' with h | h
-  · rw [image_eq_zero_of_notMem_tsupport h, zero_mul]
-  · rw [image_eq_zero_of_notMem_tsupport h, mul_zero]
+alias boxFun_mem_SB' := _root_.GlobalTheory.DblVacLine.box_mem_SB
 
 theorem star_mem_SB' {Y : Type} [TopologicalSpace Y] {φ : Y → ℂ} (h : φ ∈ SB Y) :
     (fun y => star (φ y)) ∈ SB Y :=
@@ -1753,28 +1740,9 @@ theorem matD_mul {σ : E →ₐ[F] E} {d : ℕ} {W : Spc F E d} (g h : UD σ W) 
 theorem matD_inv_mul {σ : E →ₐ[F] E} {d : ℕ} {W : Spc F E d} (g : UD σ W) : matD g⁻¹ * matD g = 1 := by
   rw [← matD_mul, inv_mul_cancel]; rfl
 
-theorem KD_mul {σ : E →ₐ[F] E} {d : ℕ} {W : Spc F E d} {v : Pl (F := F)} {g h : UD σ W} (hg : g ∈ KD σ W v)
-    (hh : h ∈ KD σ W v) : g * h ∈ KD σ W v := by
-  refine ⟨fun u hu => ?_, fun z hz => ?_⟩
-  · have e : matD (g * h) - 1 = matD g * (matD h - 1) + (matD g - 1) := by
-      rw [matD_mul, Matrix.mul_sub, Matrix.mul_one]; abel
-    show u • (matD (g * h) - 1) = 0
-    have h1 : u • (matD h - 1) = 0 := hh.1 u hu
-    have h2 : u • (matD g - 1) = 0 := hg.1 u hu
-    rw [e, smul_add, ← Matrix.mul_smul, h1, h2, Matrix.mul_zero, add_zero]
-  · refine ⟨?_, ?_⟩
-    · rw [matD_mul, ← Matrix.mulVec_mulVec]; exact (hg.2 _ (hh.2 z hz).1).1
-    · rw [_root_.mul_inv_rev, matD_mul, ← Matrix.mulVec_mulVec]; exact (hh.2 _ (hg.2 z hz).2).2
+alias KD_mul := _root_.GlobalTheory.DblVacFactor.KD_mul
 
-theorem KD_inv {σ : E →ₐ[F] E} {d : ℕ} {W : Spc F E d} {v : Pl (F := F)} {g : UD σ W} (hg : g ∈ KD σ W v) :
-    g⁻¹ ∈ KD σ W v := by
-  refine ⟨fun u hu => ?_, fun z hz => ?_⟩
-  · have e : matD g⁻¹ - 1 = -(matD g⁻¹ * (matD g - 1)) := by
-      rw [Matrix.mul_sub, matD_inv_mul, Matrix.mul_one]; abel
-    show u • (matD g⁻¹ - 1) = 0
-    have h2 : u • (matD g - 1) = 0 := hg.1 u hu
-    rw [e, smul_neg, ← Matrix.mul_smul, h2, Matrix.mul_zero, neg_zero]
-  · rw [inv_inv]; exact ⟨(hg.2 z hz).2, (hg.2 z hz).1⟩
+alias KD_inv := _root_.GlobalTheory.DblVacFactor.KD_inv
 
 theorem PDiag_inv {σ : E →ₐ[F] E} {d : ℕ} {W : Spc F E d} {p : UD σ W} (hp : p ∈ PDiag σ W) :
     p⁻¹ ∈ PDiag σ W := by

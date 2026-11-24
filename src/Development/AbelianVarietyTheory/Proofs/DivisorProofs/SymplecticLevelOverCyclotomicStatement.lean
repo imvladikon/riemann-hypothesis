@@ -117,13 +117,9 @@ noncomputable section
 
 namespace GlobalTheory.CycAwayCover
 
-theorem isUnit_natCast_cycAway {M : ℕ} (hM : M ≠ 0) : IsUnit (M : cycAway M) := by
-  refine isUnit_iff_exists_inv.2 ⟨⟨(M : ℂ)⁻¹, Subring.subset_closure (Or.inr rfl)⟩, ?_⟩
-  exact Subtype.ext (by simpa using mul_inv_cancel₀ (Nat.cast_ne_zero.2 hM : (M : ℂ) ≠ 0))
-
 def awayToCyc (M : ℕ) (hM : M ≠ 0) : Localization.Away (M : ℤ) →+* cycAway M :=
   IsLocalization.Away.lift (S := Localization.Away (M : ℤ)) (M : ℤ) (g := Int.castRingHom (cycAway M))
-    (by simpa using isUnit_natCast_cycAway hM)
+    (by simpa using _root_.GlobalTheory.SiegelTor.isUnit_natCast hM)
 
 theorem awayToCyc_injective {M : ℕ} (hM : M ≠ 0) : Function.Injective (awayToCyc M hM) := by
   have hle : Submonoid.powers (M : ℤ) ≤ nonZeroDivisors ℤ :=
@@ -145,7 +141,7 @@ theorem finite_awayToCyc {M : ℕ} (hM : M ≠ 0) : (awayToCyc M hM).Finite := b
       have := congrArg (algebraMap (Localization.Away (M : ℤ)) (cycAway M))
         (IsLocalization.Away.mul_invSelf (S := Localization.Away (M : ℤ)) (M : ℤ))
       simpa using this
-    exact (isUnit_natCast_cycAway hM).mul_left_cancel (h1.trans h2.symm)
+    exact (_root_.GlobalTheory.SiegelTor.isUnit_natCast hM).mul_left_cancel (h1.trans h2.symm)
   have hint : Algebra.IsIntegral (Localization.Away (M : ℤ)) (cycAway M) := by
     constructor
     rintro ⟨x, hx⟩
@@ -229,8 +225,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.exists_cyclotomicAway_finiteEtale_cover : ∀ (M : ℕ) (S : Scheme.{0}), 0 < M → IsUnit (M : Γ(S, ⊤)) → ∃ (S' : Over S) (t₀ : S'.left ⟶ Sp (cycAway M)), IsFinite S'.hom ∧ Etale S'.hom ∧ ∀ (T : Scheme.{0}) (f : T ⟶ S) (t₁ : T ⟶ Sp (cycAway M)), ∃! g : T ⟶ S'.left, g ≫ S'.hom = f ∧ g ≫ t₀ = t₁ := by
-  first | (exact @GlobalTheory.CycAwayCover.exists_cycAway_cover)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCyclotomicAwayFiniteEtaleCoverStatement =====
@@ -317,8 +311,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.torsionFamily_kernel_exact_isClopen_geometric : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G], IsAbelianScheme G → ∀ (M h : ℕ), 0 < M → IsUnit (M : Γ(S, ⊤)) → ∀ (Z : Over S) (e : (Fin h ⊕ Fin h → ℤ) → (Z ⟶ G)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → GlobalTheory.HkClopen.Loc (S := Z.left) (fun k _ _ x => ∀ a, (Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e a = 1 ↔ ∃ c, a = M • c) := by
-  first | (exact @GlobalTheory.kerClopen_geom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionFamilyKernelExactIsClopenGeometricStatement =====
@@ -460,8 +452,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.torsionFamily_surjective_iff_geometricPoint : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M → M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (k : Type) [Field k] [IsAlgClosed k] (y : Sp k ⟶ S) (e : (Fin h ⊕ Fin h → ℤ) → (Over.mk y ⟶ o.A)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → (∀ a, e a = 1 ↔ ∃ c, a = M • c) → ((∀ g : Over.mk y ⟶ o.A, g ^ M = 1 → ∃ a, e a = g) ↔ (M = 1 ∨ 2 * h = Module.finrank ℤ D.La)) := by
-  first | (exact @GlobalTheory.HTSympCover.onto_tors_iff)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionFamilySurjectiveIffGeometricPointStatement =====
@@ -565,9 +555,9 @@ theorem weil_locus_clopen : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
     refine (GlobalTheory.loc_units_eq Z.left M v (Units.map (fnOn t₁).toMonoidHom (ζu ^ (2 * omegaStd a c))) hMZ hv
       fun k _ _ g => ?_).congr fun k _ _ g => ?_
     · obtain ⟨β, hβ⟩ := exists_spMap (g ≫ t₁)
-      rw [map_fnOn _ g β hβ, ← GlobalTheory.SiegCover.unitOn_pow', map_zpow, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul,
+      rw [map_fnOn _ g β hβ, ← _root_.GlobalTheory.HeckePoint.unitOn_pow, map_zpow, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul,
         zpow_natCast, hζM, one_zpow]
-      exact GlobalTheory.SiegCover.unitOn_one'
+      exact _root_.GlobalTheory.HeckePoint.unitOn_one
     · have hW' := GlobalTheory.CommPairing.weilIs_pull hG o.ab hLB (Over.homMk g rfl : Over.mk (g ≫ Z.hom) ⟶ Z) hW
       obtain ⟨β, hβ⟩ := exists_spMap (g ≫ t₁)
       have hu := map_fnOn _ g β hβ (ζu ^ (2 * omegaStd a c))
@@ -625,8 +615,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.weilPairing_condition_locus_isClopen : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M → M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (Z : Over S) (t₁ : Z.left ⟶ Sp (cycAway M)) (e : (Fin h ⊕ Fin h → ℤ) → (Z ⟶ o.A)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → GlobalTheory.HkClopen.Loc (S := Z.left) (fun k _ _ x => ∀ (β : cycAway M →+* k) (z : kˣ), x ≫ t₁ = spMap β → (z : k) = β (zetaAway M) → ∀ a c, Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) M ((Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e a) ((Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e c) (unitOn (z ^ (2 * omegaStd a c)))) := by
-  first | (exact @GlobalTheory.HTWeilLocus.weil_locus_clopen)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingConditionLocusIsClopenStatement =====
@@ -658,14 +646,6 @@ theorem ptC_congr {b : Base D R} {N : ℕ} {S : Scheme.{0}} {t : S ⟶ Sp R} (o 
   obtain rfl : f = f' := funext fun a => Over.OverMorphism.ext (hf a)
   rfl
 
-theorem lemCyc : ∀ (M : ℕ) (S : Scheme.{0}), 0 < M → IsUnit (M : Γ(S, ⊤)) → ∃ (S' : Over S) (t₀ : S'.left ⟶ Sp (cycAway M)), IsFinite S'.hom ∧ Etale S'.hom ∧ ∀ (T : Scheme.{0}) (f : T ⟶ S) (t₁ : T ⟶ Sp (cycAway M)), ∃! g : T ⟶ S'.left, g ≫ S'.hom = f ∧ g ≫ t₀ = t₁ := GlobalTheory.T.exists_cyclotomicAway_finiteEtale_cover
-
-theorem lemKer : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G], IsAbelianScheme G → ∀ (M h : ℕ), 0 < M → IsUnit (M : Γ(S, ⊤)) → ∀ (Z : Over S) (e : (Fin h ⊕ Fin h → ℤ) → (Z ⟶ G)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → GlobalTheory.HkClopen.Loc (S := Z.left) (fun k _ _ x => ∀ a, (Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e a = 1 ↔ ∃ c, a = M • c) := GlobalTheory.T.torsionFamily_kernel_exact_isClopen_geometric
-
-theorem lemOnto : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M → M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (k : Type) [Field k] [IsAlgClosed k] (y : Sp k ⟶ S) (e : (Fin h ⊕ Fin h → ℤ) → (Over.mk y ⟶ o.A)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → (∀ a, e a = 1 ↔ ∃ c, a = M • c) → ((∀ g : Over.mk y ⟶ o.A, g ^ M = 1 → ∃ a, e a = g) ↔ (M = 1 ∨ 2 * h = Module.finrank ℤ D.La)) := GlobalTheory.T.torsionFamily_surjective_iff_geometricPoint
-
-theorem lemWeil : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M → M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (Z : Over S) (t₁ : Z.left ⟶ Sp (cycAway M)) (e : (Fin h ⊕ Fin h → ℤ) → (Z ⟶ o.A)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → GlobalTheory.HkClopen.Loc (S := Z.left) (fun k _ _ x => ∀ (β : cycAway M →+* k) (z : kˣ), x ≫ t₁ = spMap β → (z : k) = β (zetaAway M) → ∀ a c, Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) M ((Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e a) ((Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ e c) (unitOn (z ^ (2 * omegaStd a c)))) := GlobalTheory.T.weilPairing_condition_locus_isClopen
-
 theorem exists_sympLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M →
   M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t),
     ∃ (Y : Over S) (t₁ : Y.left ⟶ Sp (cycAway M)) (lu : (Fin h ⊕ Fin h → ℤ) → (Y ⟶ o.A)),
@@ -682,7 +662,7 @@ theorem exists_sympLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     GlobalTheory.exists_finiteEtale_latticeTorsionHom S o.A M (Fin h ⊕ Fin h → ℤ) o.ab hMS
   haveI := hfin
   haveI := het
-  obtain ⟨S', t₀, hS1, hS2, hSu⟩ := lemCyc M S hM hMS
+  obtain ⟨S', t₀, hS1, hS2, hSu⟩ := _root_.GlobalTheory.CycAwayCover.exists_cycAway_cover M S hM hMS
   haveI := hS1
   haveI := hS2
   obtain ⟨hW1, hW2⟩ := GlobalTheory.LevCover.finiteEtale_tensor Z S'
@@ -694,8 +674,8 @@ theorem exists_sympLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
   have eadd' : ∀ a c, e (a + c) = e a * e c := fun a c => by simp only [e, eadd, MonObj.comp_mul]
   have epow' : ∀ a, e a ^ M = 1 := fun a => by simp only [e]; rw [← MonObj.comp_pow, epow, MonObj.comp_one]
   let C : Prop := M = 1 ∨ 2 * h = Module.finrank ℤ D.La
-  obtain ⟨Vs, hVs, HV⟩ := (lemKer S o.A o.ab M h hM hMS W e eadd' epow').and
-    ((GlobalTheory.HkClopen.Loc.const (S := W.left) C).and (lemWeil p D R b N h M hM hcop S t o W τ e eadd' epow'))
+  obtain ⟨Vs, hVs, HV⟩ := (_root_.GlobalTheory.kerClopen_geom S o.A o.ab M h hM hMS W e eadd' epow').and
+    ((GlobalTheory.HkClopen.Loc.const (S := W.left) C).and (_root_.GlobalTheory.HTWeilLocus.weil_locus_clopen p D R b N h M hM hcop S t o W τ e eadd' epow'))
   let U : W.left.Opens := ⟨Vs, hVs.isOpen⟩
   obtain ⟨Y, i, hY1, hY2, hmono, Hi⟩ := GlobalTheory.LevCover.exists_sub U hVs.isClosed
   have memIff : ∀ (T : Over S) (w : T ⟶ W) (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ T.left)
@@ -714,9 +694,9 @@ theorem exists_sympLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
       fun a => by rw [← MonObj.comp_pow, epow', MonObj.comp_one]
     constructor
     · rintro ⟨hk, hC, hw⟩
-      exact ⟨hk, (lemOnto p D R b N h M hM hcop S t o k _ _ ha hp hk).2 hC, hw β z hβ hz⟩
+      exact ⟨hk, (_root_.GlobalTheory.HTSympCover.onto_tors_iff p D R b N h M hM hcop S t o k _ _ ha hp hk).2 hC, hw β z hβ hz⟩
     · rintro ⟨hk, ho, hw⟩
-      refine ⟨hk, (lemOnto p D R b N h M hM hcop S t o k _ _ ha hp hk).1 ho, fun β' z' hβ' hz' => ?_⟩
+      refine ⟨hk, (_root_.GlobalTheory.HTSympCover.onto_tors_iff p D R b N h M hM hcop S t o k _ _ ha hp hk).1 ho, fun β' z' hβ' hz' => ?_⟩
       obtain rfl : β' = β := GlobalTheory.LevCover.spMap_inj' (hβ'.symm.trans hβ)
       obtain rfl : z' = z := Units.ext (hz'.trans hz.symm)
       exact hw
@@ -789,14 +769,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.exists_finiteEtale_symplecticLevel_scheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M →
-  M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t),
-    ∃ (Y : Over S) (t₁ : Y.left ⟶ Sp (cycAway M)) (lu : (Fin h ⊕ Fin h → ℤ) → (Y ⟶ o.A)),
-      IsFinite Y.hom ∧ Etale Y.hom ∧
-      ∀ (T : Over S) (t₁' : T.left ⟶ Sp (cycAway M)) (lv : (Fin h ⊕ Fin h → ℤ) → (T ⟶ o.A)),
-        (SympCond o h M T t₁' lv → ∃! f : T ⟶ Y, f.left ≫ t₁ = t₁' ∧ ∀ a, f ≫ lu a = lv a) ∧
-        ((∃ f : T ⟶ Y, f.left ≫ t₁ = t₁' ∧ ∀ a, f ≫ lu a = lv a) → SympCond o h M T t₁' lv) := by
-  first | (exact @GlobalTheory.HTSympRep.exists_sympLevScheme)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleSymplecticLevelSchemeStatement =====
@@ -897,12 +869,6 @@ section -- clump:auto
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem _root_.GlobalTheory.T.exists_lattice_map_mod_of_perfect_alternating : ∀ (La : Type) [AddCommGroup La] [Module.Free ℤ La] [Module.Finite ℤ La] (EF : LinearMap.BilinForm ℤ La),
-  (∀ x, EF x x = 0) → Function.Injective EF → ∀ (e M : ℕ), (∀ f : La →ₗ[ℤ] ℤ, ∃ x, EF x = e • f) → M.Coprime e →
-  ∃ L : (Fin (Module.finrank ℤ La / 2) ⊕ Fin (Module.finrank ℤ La / 2) → ℤ) →+ La,
-    (∀ a, (∃ y, L a = M • y) ↔ ∃ c, a = M • c) ∧ (∀ x, ∃ a y, x = L a + M • y) ∧
-    ∀ a c, ∃ k : ℤ, EF (L a) (L c) = omegaStd a c + M * k := by
-  first | (exact @GlobalTheory.exists_lattice_map_mod_of_perfect)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeMapModOfPerfectAlternatingStatement =====
@@ -1035,9 +1001,6 @@ section -- clump:auto
 
 open GlobalTheory.SiegelTor
 
-theorem _root_.GlobalTheory.T.exists_ringHom_cyclotomicAway_to_field_primitiveRoot : ∀ (M : ℕ), M ≠ 0 → ∀ (K : Type) [Field K] (y : K), IsPrimitiveRoot y M → IsUnit (M : K) →
-  ∃ β : cycAway M →+* K, β (zetaAway M) = y := by
-  first | (exact @GlobalTheory.CycLift.exists_hom_to_field)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingHomCyclotomicAwayToFieldPrimitiveRootStatement =====
@@ -1067,11 +1030,11 @@ theorem exists_sympCond_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
   obtain ⟨I, -⟩ := o.geom K x β hβ
   haveI := D.freeLa
   haveI := D.finLa
-  obtain ⟨L, hLker, hLonto, hLω⟩ := GlobalTheory.T.exists_lattice_map_mod_of_perfect_alternating D.La D.EF D.alt D.nondeg e M hperf hMe
+  obtain ⟨L, hLker, hLonto, hLω⟩ := _root_.GlobalTheory.exists_lattice_map_mod_of_perfect D.La D.EF D.alt D.nondeg e M hperf hMe
   have hMK : IsUnit (M : K) := by simpa using (b.unit M hMp).map β
   have hprim : IsPrimitiveRoot ((I.ζ M : Kˣ) : K) M :=
     IsPrimitiveRoot.coe_units_iff.2 (I.ζ_prim M hM0 hMp)
-  obtain ⟨β₀, hβ₀⟩ := GlobalTheory.T.exists_ringHom_cyclotomicAway_to_field_primitiveRoot M (by omega) K _ hprim hMK
+  obtain ⟨β₀, hβ₀⟩ := _root_.GlobalTheory.CycLift.exists_hom_to_field M (by omega) K _ hprim hMK
   refine ⟨spMap β₀, fun a => I.ev M (L a), fun a c => by show I.ev M (L (a + c)) = I.ev M (L a) * I.ev M (L c); rw [map_add (f := _), I.add],
     fun a => (I.onto M hM0 hMp _).2 ⟨L a, rfl⟩, ?_⟩
   intro k _ _ x' β' z hx' hz
@@ -1087,7 +1050,7 @@ theorem exists_sympCond_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     ⟨(Spec.preimage ((spMap φ ≫ x) ≫ t)).hom, (Spec.map_preimage _).symm⟩
   obtain ⟨I', -⟩ := o.geom k (spMap φ ≫ x) β'' hβ''
   let h : Over.mk (spMap φ ≫ (Over.mk x).hom) ⟶ Over.mk x := Over.homMk (spMap φ) rfl
-  have : Epi h.left := GlobalTheory.UPel.GeometricLevelExistence.epi_spMap_field φ
+  have : Epi h.left := _root_.GlobalTheory.ArcExt.epi_spMap φ
   have : Epi h := Over.epi_of_epi_left h
   change (∀ a, h ≫ I.ev M (L a) = 1 ↔ _) ∧ (∀ g : Over.mk (spMap φ ≫ (Over.mk x).hom) ⟶ o.A, g ^ M = 1 →
       ∃ a, h ≫ I.ev M (L a) = g) ∧ ∀ a c, Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) M
@@ -1124,7 +1087,7 @@ theorem exists_sympCond_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
         rw [hk₀, show (2 : ℤ) * (omegaStd a c + M * k₀) = 2 * omegaStd a c + M * (2 * k₀) by ring, zpow_add,
           zpow_mul (I.ζ M) (M : ℤ), hζM, one_zpow, _root_.mul_one]
       rw [hK, ← map_zpow]
-      exact GlobalTheory.UPel.GeometricLevelExistence.unitOn_pull_spMap φ _
+      exact _root_.GlobalTheory.ZH.TorusPerp.map_unitOn φ _
     rw [e] at H
     exact H
 
@@ -1142,13 +1105,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor GlobalTheory.HTSympCover
 
-theorem _root_.GlobalTheory.T.exists_symplectic_level_geometric_point_harrisTaylor : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N M e : ℕ),
-  3 ≤ M → Odd M → M.Coprime p → M.Coprime e → (∀ f : D.La →ₗ[ℤ] ℤ, ∃ x, D.EF x = e • f) →
-  ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ S),
-    ∃ (t₁ : Sp K ⟶ Sp (cycAway M))
-      (lv : (Fin (Module.finrank ℤ D.La / 2) ⊕ Fin (Module.finrank ℤ D.La / 2) → ℤ) → (Over.mk x ⟶ o.A)),
-      SympCond o (Module.finrank ℤ D.La / 2) M (Over.mk x) t₁ lv := by
-  first | (exact @GlobalTheory.HTSympCover.exists_sympCond_geom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticLevelGeometricPointHarrisTaylorStatement =====
@@ -1294,9 +1250,6 @@ theorem omegaMod_reduceMod {h M : ℕ} (a c : Fin h ⊕ Fin h → ℤ) :
     omegaMod M (reduceMod M a) (reduceMod M c) = ((omegaStd a c : ℤ) : ZMod M) := by
   simp [omegaMod, omegaStd, reduceMod]
 
-theorem sp_exists_spMap {A B : Type} [CommRing A] [CommRing B] (g : Sp B ⟶ Sp A) : ∃ f : A →+* B, g = spMap f :=
-  ⟨(Spec.preimage g).hom, by simp [spMap]⟩
-
 theorem sympCond_fibre_existsUnique : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M →
   Odd M → 1 ≤ h → ∀ (σ : sympSimGrp h M → (cycAway M →+* cycAway M)),
   (∀ a, ∃ n : ℕ, IsMultOf a n ∧ σ a (zetaAway M) = zetaAway M ^ n) →
@@ -1308,8 +1261,8 @@ theorem sympCond_fibre_existsUnique : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p)
   haveI : NeZero M := ⟨hM.ne'⟩
   obtain ⟨hadd, -, hgeo⟩ := H
   obtain ⟨hadd', -, hgeo'⟩ := H'
-  obtain ⟨β, hβ⟩ := sp_exists_spMap t₁
-  obtain ⟨β', hβ'⟩ := sp_exists_spMap t₁'
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap t₁
+  obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap t₁'
   have hζ : ∀ g₀ : cycAway M →+* K, g₀ (zetaAway M) ^ M = 1 := fun g₀ => by
     rw [← map_pow, zetaAway_pow_self M hM.ne', map_one]
   let z : Kˣ := Units.ofPowEqOne _ M (hζ β) hM.ne'
@@ -1594,7 +1547,7 @@ theorem exists_galoisCover_of_geom {p : ℕ} [Fact p.Prime] {D : Datum p} {R : T
       GlobalTheory.ZM.IsGaloisCover (sympSimGrp h M) ρ₁ π₁ ∧ (∀ a, ρ₁ a ≫ y = y ≫ ρ a) ∧
       y ≫ s = π₁ ≫ t ∧ Nonempty (ObjMap o' o π₁) ∧ Nonempty (ObjMap o' u y) := by
   haveI : NeZero M := ⟨by omega⟩
-  obtain ⟨Y, t₁, lu, hYf, hYe, hY⟩ := GlobalTheory.T.exists_finiteEtale_symplecticLevel_scheme p D R b N h M hM0 hMp S t o
+  obtain ⟨Y, t₁, lu, hYf, hYe, hY⟩ := _root_.GlobalTheory.HTSympRep.exists_sympLevScheme p D R b N h M hM0 hMp S t o
   have hAu : SympCond o h M Y t₁ lu := (hY Y t₁ lu).2 ⟨𝟙 Y, by simp, fun a => Category.id_comp _⟩
   have uniqY : ∀ {T : Over S} (f g : T ⟶ Y), f.left ≫ t₁ = g.left ≫ t₁ → (∀ c, f ≫ lu c = g ≫ lu c) → f = g :=
     fun {T} f g e1 e2 => ((hY T (g.left ≫ t₁) (fun c => g ≫ lu c)).1 ((hY T _ _).2 ⟨g, rfl, fun _ => rfl⟩)).unique
@@ -1728,7 +1681,7 @@ theorem exists_galoisCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Typ
   intro p _ D R _ b N M e _ _ hM hodd hMp _ hMe hperf X s s₁ u lev _ huniv ρ hρ S t o
   have h1 : 1 ≤ Module.finrank ℤ D.La / 2 := by have := D.two_le_finrank_La; omega
   exact exists_galoisCover_of_geom b N _ M h1 (by omega) hodd hMp X s s₁ u lev huniv ρ hρ S t o
-    (fun K _ _ x => GlobalTheory.T.exists_symplectic_level_geometric_point_harrisTaylor p D R b N M e hM hodd hMp hMe hperf S t o K x)
+    (fun K _ _ x => _root_.GlobalTheory.HTSympCover.exists_sympCond_geom p D R b N M e hM hodd hMp hMe hperf S t o K x)
 
 end GlobalTheory.HTSympCover
 end -- clump:auto
@@ -1745,20 +1698,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor
 
 
-theorem _root_.GlobalTheory.T.symplectic_level_over_cyclotomic : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N M e : ℕ),
-  3 ≤ N → N.Coprime p → 3 ≤ M → Odd M → M.Coprime p → e.Coprime p → M.Coprime e →
-  (∀ f : D.La →ₗ[ℤ] ℤ, ∃ x, D.EF x = e • f) →
-  ∀ (X : Scheme.{0}) (s : X ⟶ Sp R) (s₁ : X ⟶ Sp (cycAway M)) (u : Obj b N s)
-    (lev : (Fin (Module.finrank ℤ D.La / 2) ⊕ Fin (Module.finrank ℤ D.La / 2) → ℤ) → (𝟙_ (Over X) ⟶ u.A)),
-    IsSympLev u.P (Module.finrank ℤ D.La / 2) M (zetaAway M) s₁ lev →
-    HarrisTaylorSymplecticLevelFamilyUniversalProperty b N (Module.finrank ℤ D.La / 2) M s s₁ u lev →
-    ∀ ρ : sympSimGrp (Module.finrank ℤ D.La / 2) M → (X ⟶ X), SympActs s s₁ u lev ρ →
-    ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t),
-      ∃ (S₁ : Scheme.{0}) (π₁ : S₁ ⟶ S) (ρ₁ : sympSimGrp (Module.finrank ℤ D.La / 2) M → (S₁ ⟶ S₁)) (y : S₁ ⟶ X)
-        (o' : Obj b N (π₁ ≫ t)),
-        GlobalTheory.ZM.IsGaloisCover (sympSimGrp (Module.finrank ℤ D.La / 2) M) ρ₁ π₁ ∧ (∀ a, ρ₁ a ≫ y = y ≫ ρ a) ∧
-        y ≫ s = π₁ ≫ t ∧ Nonempty (ObjMap o' o π₁) ∧ Nonempty (ObjMap o' u y) := by
-  first | (exact @GlobalTheory.HTSympCover.exists_galoisCover)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticLevelOverCyclotomicStatement =====

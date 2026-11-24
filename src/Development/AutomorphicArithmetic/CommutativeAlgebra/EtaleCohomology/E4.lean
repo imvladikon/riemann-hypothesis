@@ -162,6 +162,7 @@ import Aesop.Main
 import Mathlib.RingTheory.KrullDimension.Field
 import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 import Mathlib.AlgebraicGeometry.QuasiAffine
+import Development.EtaleCohomology.EtaleSheaves.PropertyDescent.BaseChange
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.DescentMapFactorsThroughStage, Development.EtaleCohomology.EtaleSheaves.LeafBdryPf, Development.EtaleCohomology.EtaleSheaves.LeafClosedPf, Development.EtaleCohomology.EtaleSheaves.LeafDimBoundPf, Development.EtaleCohomology.EtaleSheaves.LeafDimOpenPf, Development.EtaleCohomology.EtaleSheaves.LeafGlueDimPf, Development.EtaleCohomology.EtaleSheaves.LeafGlueExtendPf, Development.EtaleCohomology.EtaleSheaves.LeafGlueGenericPf, Development.EtaleCohomology.EtaleSheaves.LeafIrredPf, Development.EtaleCohomology.EtaleSheaves.LeafLimFPPf, Development.EtaleCohomology.EtaleSheaves.LeafLocalExtendPf, Development.EtaleCohomology.EtaleSheaves.LeafNSysGlueOf, Development.EtaleCohomology.EtaleSheaves.LeafObjAffPf, Development.EtaleCohomology.EtaleSheaves.LeafPtPf, Development.EtaleCohomology.EtaleSheaves.LeafSHPtOf, Development.EtaleCohomology.EtaleSheaves.LeafSHSievePf, Development.EtaleCohomology.EtaleSheaves.LeafSelPicPf, Development.EtaleCohomology.EtaleSheaves.LeafSpreadLQFGraphOf, Development.EtaleCohomology.EtaleSheaves.LeafSpreadLQFMapVtuPfG, Development.EtaleCohomology.EtaleSheaves.LeafStalkOfAlgOf, Development.EtaleCohomology.EtaleSheaves.LeafStalkSmoothClosedPf, Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineSpaceSmoothNormal, Development.EtaleCohomology.EtaleSheaves.LeafStalkValuationPf, Development.EtaleCohomology.EtaleSheaves.LeafTrdegDimPf, Development.EtaleCohomology.EtaleSheaves.OpenSpreadingOut, Development.EtaleCohomology.EtaleSheaves.QuasiFiniteAtOfIsOpenFiber, Development.EtaleCohomology.EtaleSheaves.RTEqZeroOfPtA, Development.EtaleCohomology.EtaleSheaves.ReducedOfSmooth, Development.EtaleCohomology.EtaleSheaves.SheafIsomorphism.LeafShIsoOf, Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFinitenessBaseChange, Development.EtaleCohomology.EtaleSheaves.StalkVanishing, Development.EtaleCohomology.EtaleSheaves.ZeroSheafMaps.LeafShMapZeroOf, Development.EtaleCohomology.KummerTheory.FinInjSlice, Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.EtaleTopology, Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.E4
@@ -1203,10 +1204,6 @@ theorem toR_sk {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] (R : Subalgebra
     toR R ≫ Spec.map (CommRingCat.ofHom (algebraMap k R)) = Spec.map (CommRingCat.ofHom (algebraMap k Ω)) := by
   rw [← Spec.map_comp]; rfl
 
-theorem incl_sk {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] {R R' : Subalgebra k Ω} (hR : R ≤ R') :
-    incl hR ≫ Spec.map (CommRingCat.ofHom (algebraMap k R)) = Spec.map (CommRingCat.ofHom (algebraMap k R')) := by
-  rw [← Spec.map_comp]; rfl
-
 abbrev cmp {A B K X : Scheme.{0}} (p : X ⟶ K) (a : A ⟶ B) (b : B ⟶ K) (c : A ⟶ K) (h : a ≫ b = c) :
     pullback c p ⟶ pullback b p :=
   pullback.lift (pullback.fst c p ≫ a) (pullback.snd _ _)
@@ -1235,7 +1232,7 @@ theorem LeafSpreadLQFGraph_of (hM : LateralTheory.E.SpreadingOutQuasiFiniteness.
       · simp only [Category.assoc, pullback.lift_snd]; exact hve.symm) hlqf
   refine ⟨S, hRS, hSfg, fun R' hSR' hR E0 q' r hr hf' => ?_⟩
   refine hS R' hSR' hR E0 _ (pullback.fst (Spec.map (CommRingCat.ofHom (algebraMap k R'))) p)
-    (pullback.lift q' (r ≫ f) hf'.symm) r (cmp p (incl hR) _ _ (incl_sk hR)) (paste p _ _ _ (incl_sk hR))
+    (pullback.lift q' (r ≫ f) hf'.symm) r (cmp p (incl hR) _ _ (_root_.LateralTheory.E.SpreadingOutQuasiFiniteness.incl_toK hR)) (paste p _ _ _ (_root_.LateralTheory.E.SpreadingOutQuasiFiniteness.incl_toK hR))
     (by rw [pullback.lift_fst, pullback.lift_fst]; exact hr) ?_
   apply pullback.hom_ext
   · simp only [Category.assoc, pullback.lift_fst, pullback.lift_fst_assoc]; exact hr.w.symm
@@ -1702,7 +1699,7 @@ end -- clump:auto
 -- ===== end clump member: Development.EtaleCohomology.EtaleSheaves.SheafIsomorphism.LeafShIsoOf =====
 
 -- ===== clump member: Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFinitenessBaseChange =====
--- clump-header: {"m": "Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFinitenessBaseChange", "h": "module\n\npublic import Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFinitenessBaseChange", "h": "module\n\npublic import Development.EtaleCohomology.EtaleSheaves.SpreadingOutQuasiFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.EtaleCohomology.EtaleSheaves.PropertyDescent.BaseChange\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1720,7 +1717,7 @@ theorem sq {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] {R R' : Subalgebra 
     IsPullback (pullback.lift v (c ≫ toR R') (by rw [Category.assoc, toR_incl]; exact hv.w)) c
       (pullback.snd q (incl hR)) (toR R') := by
   refine IsPullback.of_right ?_ (pullback.lift_snd _ _ _) (IsPullback.of_hasPullback q (incl hR))
-  rw [pullback.lift_fst, toR_incl]; exact hv
+  rw [pullback.lift_fst, _root_.LateralTheory.E.LeafPropsDescendPf.BaseChange.toR_incl]; exact hv
 
 theorem spread_chain_base_change_to_larger_subalgebra : LateralTheory.E.SpreadingOutQuasiFiniteness.LeafBaseChangePreR := by
   intro k _ Ω _ _ R R' hR C0 C1 C2 c0 γ1 γ2 D0 D1 D2 q d1 d2 v0 v1 v2 hpre
@@ -1735,7 +1732,7 @@ theorem spread_chain_base_change_to_larger_subalgebra : LateralTheory.E.Spreadin
   have P0 := sq hR p0
   have P1 := sq hR p1
   have P2 := sq hR p2
-  refine ⟨_, _, _, pullback.snd q (incl hR), e1, e2, _, pullback.lift v1 ((γ1 ≫ c0) ≫ toR R') (by rw [Category.assoc, toR_incl]; exact p1.w), pullback.lift v2 ((γ2 ≫ γ1 ≫ c0) ≫ toR R') (by rw [Category.assoc, toR_incl]; exact p2.w), pullback.fst _ _, pullback.fst _ _, pullback.fst _ _,
+  refine ⟨_, _, _, pullback.snd q (incl hR), e1, e2, _, pullback.lift v1 ((γ1 ≫ c0) ≫ toR R') (by rw [Category.assoc, _root_.LateralTheory.E.LeafPropsDescendPf.BaseChange.toR_incl]; exact p1.w), pullback.lift v2 ((γ2 ≫ γ1 ≫ c0) ≫ toR R') (by rw [Category.assoc, _root_.LateralTheory.E.LeafPropsDescendPf.BaseChange.toR_incl]; exact p2.w), pullback.fst _ _, pullback.fst _ _, pullback.fst _ _,
     ⟨P0, ?_, ?_, ?_, ?_⟩, IsPullback.of_hasPullback _ _, ?_, ?_, pullback.lift_fst _ _ _,
     pullback.lift_fst _ _ _, pullback.lift_fst _ _ _⟩
   · rw [t1]; exact P1
@@ -1807,11 +1804,9 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.InjSlice
-theorem etale_forget_preservesInjectiveObjects : LateralTheory.KummerTheory.ForgetInj := by
-  apply LateralTheory.KummerTheory.ForgetInj_of
 theorem etale_injective_sheaf_restricts_to_slice_injective_in_local_homotopy_a : LateralTheory.KummerTheory.InjSlice := by
-  apply LateralTheory.KummerTheory.InjSlice_of <;> first | exact etale_forget_preservesInjectiveObjects
-theorem intersectionNumber_baseChange : LateralTheory.KummerTheory.InjSlice := etale_injective_sheaf_restricts_to_slice_injective_in_local_homotopy_a
+  apply LateralTheory.KummerTheory.InjSlice_of <;> first | exact _root_.LateralTheory.KummerTheory.ForgetInj_of
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.InjSlice.etale_injective_sheaf_restricts_to_slice_injective_in_local_homotopy_a
 end LateralTheory.Fin.InjSlice
 end -- clump:auto
 end -- clump:auto
@@ -1910,9 +1905,9 @@ theorem top : LateralTheory.E.EtaleChapterEFour := by
   have a79 : LateralTheory.E.LeafGeoCut.LeafClosed := LateralTheory.E.LeafClosedPf.LeafClosed_of
   have a80 : LateralTheory.E.LeafGeoCut.LeafBdry := LateralTheory.E.LeafBdryPf.LeafBdry_of
   have a81 : LateralTheory.E.E4.LeafGeo := LateralTheory.E.LeafGeoCut.goal_of a78 a79 a80
-  have a82 : LateralTheory.E.E4.LeafSpec := UpperTheory.Cb.geometric_fibre_cohomology_constant
+  have a82 : LateralTheory.E.E4.LeafSpec := _root_.UpperTheory.Cb.BimoduleProjections.leaf
   have a83 : LateralTheory.E.LeafGhostCut.LeafRelExact := LateralTheory.E.LeafGhostCut.relExact
-  have a84 : LateralTheory.E.LeafGhostCut.LeafRelNat := LateralTheory.E.LeafInj0WPf.leafRelNat
+  have a84 : LateralTheory.E.LeafGhostCut.LeafRelNat := _root_.LateralTheory.E.LeafGhostCut.relNat
   have a85 : LateralTheory.E.LeafGhostRelCut.LeafTrunc := LateralTheory.E.LeafGhostRelCut.LeafTrunc_of
   have a86 : LateralTheory.KummerTheory.InjSlice := LateralTheory.Fin.InjSlice.intersectionNumber_baseChange
   have a87 : LateralTheory.EWeil.AcycPf.RestrInj := UpperTheory.Cb.restrInj
@@ -1938,7 +1933,7 @@ theorem top : LateralTheory.E.EtaleChapterEFour := by
   have a107 : LateralTheory.E.LeafSHSysPf.LeafRingSys := UpperTheory.Cb.sepClosed_point_filtered_etale_colimit
   have a108 : LateralTheory.E.LeafSHSysPf.LeafNSysGlue := LateralTheory.E.NeighbourhoodSystemGluing.LeafNSysGlue_of a107
   have a109 : LateralTheory.E.LeafVanBStalkPf.LeafSHSys := LateralTheory.E.LeafSHSysPf.LeafSHSys_of_glue a107 a108
-  have a110 : LateralTheory.E.LeafVanBStalkPf.LeafSHCont := UpperTheory.Cb.etale_stalk_cohomology_strictHenselian_continuity
+  have a110 : LateralTheory.E.LeafVanBStalkPf.LeafSHCont := _root_.UpperTheory.Cb.etale_stalk_cohomology_strictHenselian_continuity.SlopeTestRemainingChoices.main
   have a111 : LateralTheory.E.LeafVanBStalkPf.LeafStalkPt := LateralTheory.E.LeafVanBStalkPf.stalkPt_of a109 a110
   have a112 : LateralTheory.E.LeafVanBPf.LeafVanBStalk := LateralTheory.E.LeafVanBStalkPf.LeafVanBStalk_of_pt a111
   have a113 : LateralTheory.E.LeafVanBPf.LeafClosedSHPos := LateralTheory.E.LeafClosedSHPosPf.LeafClosedSHPos_of
@@ -1974,7 +1969,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem UpperTheory.Et.e4 : LateralTheory.E.EtaleChapterEFour := UpperTheory.Et.EtaleTopology.top GlobalTheory.T.etale_descent_picard_group
+theorem UpperTheory.Et.e4 : LateralTheory.E.EtaleChapterEFour := UpperTheory.Et.EtaleTopology.top _root_.GlobalTheory.EtC.b6pic_holds
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.E4 =====

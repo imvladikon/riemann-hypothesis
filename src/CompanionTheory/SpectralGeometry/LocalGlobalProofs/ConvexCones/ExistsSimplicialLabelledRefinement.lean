@@ -70,6 +70,7 @@ import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Star.Int
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFineInvariantFan
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierDimFanCellExists, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierLabelMarkedFaceBound, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.MarkingValueGaloisInvariant, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsMarkingCentreFunction, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.BarycentricStageExtension, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierDimensionLabelBounded, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierFunctionTwistedGalois, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellFaceOfFaceCut, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellOfQuotientCell, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellOfQuotientRadicalCone, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsCarrierDimensionLabel, CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsSimplicialLabelledRefinement
@@ -607,15 +608,6 @@ theorem finrank_int_eq_fraction_mul (O : Type) [CommRing O] [IsDomain O] [CharZe
     Module.finrank ℤ X = Module.finrank ℚ K * Module.finrank O X := by
   rw [finrank_int_eq_mul_finrank O X, IsFractionRing.finrank_eq ℤ ℚ O K]
 
-theorem finrank_int_eq_finrank_mul (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Module.Finite ℤ O]
-    (X : Type) [AddCommGroup X] [Module O X] :
-    Module.finrank ℤ X = Module.finrank ℤ O * Module.finrank O X := by
-  have : CharZero (FractionRing O) :=
-    charZero_of_injective_algebraMap (IsFractionRing.injective O (FractionRing O))
-  have h := finrank_int_eq_fraction_mul O (FractionRing O) O
-  rw [Module.finrank_self, mul_one] at h
-  rw [finrank_int_eq_fraction_mul O (FractionRing O) X, h]
-
 private theorem isTorsionFree_int_of_isTorsionFree (O : Type) [CommRing O] [IsDomain O] [CharZero O]
     (Y : Type) [AddCommGroup Y] [Module O Y] [Module.IsTorsionFree O Y] :
     Module.IsTorsionFree ℤ Y :=
@@ -646,7 +638,7 @@ theorem genRank_le_sq (O : Type) [CommRing O] [IsDomain O] [CharZero O] [Module.
   haveI : Module.Finite ℤ X := Module.Finite.trans O X
   haveI : Module.Free ℤ X := free_int_of_projective O
   have hX' : Module.finrank ℤ X ≤ q * Module.finrank ℤ O := by
-    rw [finrank_int_eq_finrank_mul O X, mul_comm]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Fan.IntegerFinrankMultiplicativity.finrank_int_eq_mul_finrank O X, mul_comm]
     exact Nat.mul_le_mul_right _ hX
   show Module.finrank ℤ (Submodule.span ℤ (Set.range γ)) ≤ _
   calc Module.finrank ℤ (Submodule.span ℤ (Set.range γ))
@@ -762,7 +754,7 @@ end -- clump:auto
 -- ===== end clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierFunctionTwistedGalois =====
 
 -- ===== clump member: CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellFaceOfFaceCut =====
--- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellFaceOfFaceCut", "h": "module\n\npublic import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt\n\n"}
+-- clump-header: {"m": "CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CellFaceOfFaceCut", "h": "module\n\npublic import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFineInvariantFan\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -777,55 +769,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Fan.CellFaces
 variable {O : Type} [CommRing O] {bar : O → O} {ψ : InvFun O}
   {X : Type} [AddCommGroup X] [Module O X] [Module.Finite O X]
 
-
-omit [Module O X] [Module.Finite O X] in
-theorem apply_eq_sum_of_toReal {m : ℕ} {β : LinearMap.BilinForm ℤ X} {u : Fin m → LinearMap.BilinForm ℤ X}
-    {c : Fin m → ℝ} (hβ : toReal β = ∑ i, c i • toReal (u i)) (F : LinearMap.BilinForm ℤ X →ₗ[ℤ] ℤ) :
-    (F β : ℝ) = ∑ i, c i * (F (u i) : ℝ) := by
-  have hpt : ∀ a b : X, ((β a b : ℤ) : ℝ) = ∑ i, c i * ((u i a b : ℤ) : ℝ) := by
-    intro a b
-    have := congrArg (fun B : X →ₗ[ℤ] X →ₗ[ℤ] ℝ => B a b) hβ
-    simpa [toReal_apply, LinearMap.sum_apply, LinearMap.smul_apply] using this
-  have hπ : ∀ (π : ℝ →ₗ[ℚ] ℚ) (x : ℝ) (n : ℤ), π (x * (n : ℝ)) = π x * (n : ℚ) := by
-    intro π x n
-    rw [mul_comm, ← zsmul_eq_mul, map_zsmul, zsmul_eq_mul, mul_comm]
-  have hrat : ∀ π : ℝ →ₗ[ℚ] ℚ, π 1 * (F β : ℚ) = ∑ i, π (c i) * (F (u i) : ℚ) := by
-    intro π
-    have hq : ∀ a b : X, π 1 * ((β a b : ℤ) : ℚ) = ∑ i, π (c i) * ((u i a b : ℤ) : ℚ) := by
-      intro a b
-      have h1 := congrArg π (hpt a b)
-
-      rw [← one_mul ((β a b : ℤ) : ℝ), hπ, map_sum] at h1
-      simpa only [hπ] using h1
-    obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors ℤ)
-      (Finset.univ : Finset (Option (Fin m))) (fun o : Option (Fin m) => o.elim (π 1) (fun i => π (c i)))
-    choose z hz using fun o => hb o (Finset.mem_univ o)
-    have hz' : ∀ o, ((z o : ℤ) : ℚ) = ((b : ℤ) : ℚ) * o.elim (π 1) (fun i => π (c i)) := by
-      intro o
-      simpa [zsmul_eq_mul] using hz o
-    have hint : z none • β = ∑ i, z (some i) • u i := by
-      ext x y
-      apply Int.cast_injective (α := ℚ)
-      simp only [LinearMap.smul_apply, LinearMap.sum_apply, smul_eq_mul, Int.cast_mul, Int.cast_sum, hz',
-        Option.elim_none, Option.elim_some]
-      rw [mul_assoc, hq x y, Finset.mul_sum]
-      exact Finset.sum_congr rfl fun i _ => by ring
-    have h2 := congrArg (fun β => ((F β : ℤ) : ℚ)) hint
-
-    simp only [map_zsmul, map_sum, smul_eq_mul, Int.cast_mul, Int.cast_sum, hz', Option.elim_none,
-    Option.elim_some] at h2
-    have hb0 : ((b : ℤ) : ℚ) ≠ 0 := by exact_mod_cast nonZeroDivisors.ne_zero b.2
-    apply mul_left_cancel₀ hb0
-    rw [Finset.mul_sum, ← mul_assoc, h2]
-    exact Finset.sum_congr rfl fun i _ => by ring
-  have hr : ∑ i, c i * (F (u i) : ℝ) - (F β : ℝ) = 0 := by
-    refine (Module.forall_dual_apply_eq_zero_iff ℚ _).mp fun π => ?_
-
-    rw [map_sub, map_sum, ← one_mul ((F β : ℤ) : ℝ), hπ]
-    simp only [hπ]
-    rw [← hrat π]
-    ring
-  linarith
 
 theorem est_at {m : ℕ} {γ : Fin m → LinearMap.BilinForm ℤ X} {N : ℕ} {ℓ h : LinearMap.BilinForm ℤ X →ₗ[ℤ] ℤ}
     (hstr : ∀ β ∈ balForms bar X, (∀ y, 0 ≤ β y y) → N * ψ.evalZ β = ℓ β →
@@ -931,8 +874,8 @@ theorem isCell_comp : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero
     have hrel : toReal β = ∑ i, c i • toReal (pull (e.symm : X →ₗ[O] X) (γ' i)) := by
       ext a b
       simpa [toReal_apply, LinearMap.sum_apply] using hpt a b
-    have hℓ := apply_eq_sum_of_toReal hrel ℓ
-    have hh := apply_eq_sum_of_toReal hrel h
+    have hℓ := _root_.GlobalTheory.PolFan.FaceCutCell.apply_eq_sum_of_toReal hrel ℓ
+    have hh := _root_.GlobalTheory.PolFan.FaceCutCell.apply_eq_sum_of_toReal hrel h
     have hφ : ψ.evalZ β = ∑ i, c i * ψ.evalZ (pull (e.symm : X →ₗ[O] X) (γ' i)) := by
       rw [← hcellu.linear c hc']
       show ψ.eval X (fun a b => ((β a b : ℤ) : ℝ)) = _
@@ -1480,7 +1423,7 @@ theorem exists_simpLab_refinement : ∀ (O : Type) [CommRing O] [IsDedekindDomai
         exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.BarycentricSubdivision.baryStep O bar w0 hb q ψ lab φ _ hD hψ hT hlT hlab hφT hφ
   obtain ⟨φ, hφT, hφ⟩ := key N
   rw [Nat.sub_self] at hφ
-  exact ⟨φ, lab, hφ.1, hφT, hlT, GlobalTheory.T.simplicialLabelling_of_barycentricStage_zero _ bar q ψ lab φ hlab hφ, hφ.2.1⟩
+  exact ⟨φ, lab, hφ.1, hφT, hlT, _root_.GlobalTheory.PolFan.BaryFin.simpLab_of_isBaryStage_zero _ bar q ψ lab φ hlab hφ, hφ.2.1⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fan.SimplicialLabelRefinement
 end -- clump:auto

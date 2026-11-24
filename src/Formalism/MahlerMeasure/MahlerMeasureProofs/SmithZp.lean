@@ -170,8 +170,6 @@ section -- clump:auto
 
 namespace Formalism.A
 
-theorem smithExists : SmithExists := smith_form_exists
-
 end Formalism.A
 end -- clump:auto
 end -- clump:auto
@@ -190,7 +188,7 @@ theorem smith_form_p_adic_integers : SmithZp := by
   intro p _ n M
   classical
   let y : (Fin n → ℤ_[p]) →ₗ[ℤ_[p]] (Fin n → ℤ_[p]) := Matrix.toLin' M
-  obtain ⟨S⟩ := Formalism.A.smithExists ℤ_[p] (Fin n → ℤ_[p]) y
+  obtain ⟨S⟩ := _root_.Formalism.A.smith_form_exists ℤ_[p] (Fin n → ℤ_[p]) y
   have hfr : Module.finrank ℤ_[p] (Fin n → ℤ_[p]) = n := Module.finrank_fin_fun ℤ_[p]
   let e : Fin (Module.finrank ℤ_[p] (Fin n → ℤ_[p])) ≃ Fin n := finCongr hfr
   let b := S.b.reindex e

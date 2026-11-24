@@ -402,7 +402,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
   have hcm : IsCMExt F E σ := hP.base.cm
   have hψ : IsStd B.ψ := hP.base.std
   have hf : ∑ i, ∑ k, incV F H.y i * incM F X.J i k * cA σ (incV F H.x k) = 1 := by
-    rw [form_inc, form_swap (invol hcm) hP.herm.herm, hH.xy, map_one, map_one]
+    rw [form_inc, form_swap (_root_.GlobalTheory.AdelicU.cm_conj_conj hcm) hP.herm.herm, hH.xy, map_one, map_one]
   have hdet : IsUnit (incM F W.J).det := by
     obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
     have h1 := GlobalTheory.ArchTraceNondeg.det_ne_zero_of_hasSig (hP.skew.sig w)
@@ -528,7 +528,7 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.finj : ∀ (F E : Type) [F
     intro z
     induction z using TensorProduct.induction_on with
     | zero => simp
-    | tmul a x => simp [cAF, sigR, GlobalTheory.DblSiegelChar.invol hB.cm]
+    | tmul a x => simp [cAF, sigR, _root_.GlobalTheory.AdelicU.cm_conj_conj hB.cm]
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
   have he : Continuous (vecE F E nS nT) := by
     show Continuous fun (w : WOF F E nS nT) (k : Fin (nT * nS)) => w (finProdFinEquiv.symm k).1 (finProdFinEquiv.symm k).2

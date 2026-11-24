@@ -839,12 +839,6 @@ namespace GlobalTheory.ExpImage.Sum
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P)
 
-theorem frob_π₁ : WittVector.frobenius AI.π₁ = AI.μ := by
-  rw [LocAinf.π₁, LocAinf.μ, map_sub, map_one, WittVector.frobenius_eq_map_frobenius,
-    WittVector.map_teichmuller]
-  congr 2
-  exact (frobeniusEquiv (OCb l) l).apply_symm_apply AI.ε
-
 theorem act_μ {K : FinExt l} {h : GQ l} (hh : h ∈ Hinf K) : AI.actW h AI.μ = AI.μ := by
   have h1 : P.χQ h = 1 :=
     ((GlobalTheory.Cyc.cyc_basic l P.χQ P.χQ_cyc).2.2 K h (Hinf_le_fix hh)).2.mp hh
@@ -951,7 +945,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
         (AI.π₁ * η k - ((l : ℕ) : Ainf l) ^ s * η (k + 1)) (by
         rw [hβ]
         convert hstep k using 1
-        rw [← hη k, ← hη (k + 1), map_sub, map_mul, map_mul, map_pow, map_natCast, frob_π₁, AI.μ_eq]
+        rw [← hη k, ← hη (k + 1), map_sub, map_mul, map_mul, map_pow, map_natCast, _root_.GlobalTheory.ExpStep.frob_π₁, AI.μ_eq]
         ring)
       refine ⟨z, ?_⟩
       rw [step_dR AI T hu hz]
@@ -1215,10 +1209,6 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l}
 
-theorem oB_mem_zero {AI : LocAinf l P} (T : LocTied l P AI) (x : Om l) : oB P x ∈ FilB P 0 := by
-  obtain ⟨y, h1, -⟩ := T.om x
-  exact (GlobalTheory.ThetaTie.fil_zero T _).2 ⟨y, h1.symm⟩
-
 theorem tD_pow_mem_zero (j : ℕ) : tD P ^ j ∈ FilB P 0 :=
   FilB_anti (by simp) (FilB_pow (tD_mem (P := P)) j)
 
@@ -1255,7 +1245,7 @@ theorem expStar_of_sum : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] (AI : Loc
     ∑ j ∈ Finset.range e, qB (LT l) (c j) * (oB (LT l) (w j) * tD (LT l) ^ j) with hS
   have hS0 : S ∈ FilB (LT l) 0 :=
     Submodule.sum_mem _ fun j _ =>
-      qB_mul_mem _ (FilB_zero_mul (oB_mem_zero T _) (tD_pow_mem_zero j))
+      qB_mul_mem _ (FilB_zero_mul (_root_.GlobalTheory.ExpImage.IntCoc.oB_mem T _) (tD_pow_mem_zero j))
   have hSH : ∀ h ∈ Hinf K, (LT l).actQdR h S = S := by
     intro h hh
     have h1 : (LT l).χQ h = 1 := (hker K h (Hinf_le_fix hh)).2.1 hh
@@ -1646,10 +1636,6 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.Basi
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l}
 
-theorem frob_teich (x : OCb l) :
-    WittVector.frobenius (WittVector.teichmuller l x) = WittVector.teichmuller l x ^ l := by
-  rw [WittVector.frobenius_eq_map_frobenius, WittVector.map_teichmuller, frobenius_def, map_pow]
-
 theorem root_pow (AI : LocAinf l P) (m : ℕ) : AI.εroot m ^ (l ^ m) = AI.ε := by
   induction m with
   | zero => simp [LocAinf.εroot]
@@ -1717,7 +1703,7 @@ theorem expand : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P
 
     rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [map_mul, map_pow, Function.iterate_succ_apply', epsT, frob_teich, ← pow_mul]
+    rw [map_mul, map_pow, Function.iterate_succ_apply', epsT, _root_.GlobalTheory.ExpImage.Tail.frob_teich, ← pow_mul]
     congr 2
     ring
   have hs : H s = ∑ i ∈ T, (WittVector.frobenius : Ainf l → Ainf l)^[s] (w i) *
@@ -1811,18 +1797,13 @@ theorem exists_inv_pow_one_add {l : ℕ} [Fact l.Prime] {s : ℕ} (hs : 1 ≤ s)
     rw [one_pow] at h2
     exact h1.trans h2
 
-theorem zetaQ_pow_level {l : ℕ} [Fact l.Prime] (P : LocPrime l) (s : ℕ) : P.ζQ s ^ (l ^ s) = 1 := by
-  induction s with
-  | zero => simpa using P.ζQ_zero
-  | succ s ih => rw [pow_succ', pow_mul, P.ζQ_succ, ih]
-
 theorem levSum_mem_Ks {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (s j : ℕ) {ι : Type}
     (T : Finset ι) (c : ι → ↥(K0 K)) (m : ι → ℕ) (d : ↥(K0 K)) :
     levSum P K s j T c m d ∈ Ks K s := by
   have h0 : ∀ x : ↥(K0 K), (x : Om l) ∈ Ks K s := fun x => (le_sup_left : K0 K ≤ Ks K s) x.2
   have hζ : P.ζQ s ∈ Ks K s := by
     refine (le_sup_right : _ ≤ Ks K s) (IntermediateField.subset_adjoin _ _ ?_)
-    exact zetaQ_pow_level P s
+    exact _root_.GlobalTheory.ExpImage.ζQ_pow P s
   unfold levSum
   refine add_mem (sum_mem fun i _ => mul_mem (pow_mem (natCast_mem _ _) _) (sum_mem fun a _ =>
     mul_mem (mul_mem (h0 _) (pow_mem (natCast_mem _ _) _)) (pow_mem hζ _)))

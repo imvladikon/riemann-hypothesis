@@ -115,9 +115,6 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     {LL O : Type} [Field LL] [Algebra Qp LL] [TopologicalSpace LL] [CommRing O] [Algebra O LL]
     {v : AddValuation LL (WithTop ℚ)} {n : ℕ} (W : LocWach PD LL O v n)
 
-theorem finrank_eq_one_of_bijective_bis (hb : Function.Bijective (algebraMap K₀ K)) : Module.finrank K₀ K = 1 :=
-  (LinearEquiv.ofBijective (Algebra.linearMap K₀ K) hb).finrank_eq.symm.trans (Module.finrank_self K₀)
-
 theorem exists_horizontal_solutions (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hA : Formalism.MainNotions.LiftingTheory.CaseA W) (T : LocLat G Qp LL O)
     (hT : IsCrys PD T.ρ) (i : ZMod n) {d : ℕ} (b : Fin d → W.DD T)
     (hb : Formalism.MainNotions.LiftingTheory.IsFrameΔ W T i b) : ∃ sol, IsHor W T i b sol := by
@@ -134,7 +131,7 @@ theorem exists_horizontal_solutions (hH : Formalism.MainNotions.LiftingTheory.co
 theorem horizontal_frame_structure (hH : Formalism.MainNotions.LiftingTheory.coreH W) (hP9 : Formalism.MainNotions.DeltaInvariantLattices.P9W W) :
     Formalism.MainNotions.N.FrobeniusPowerSeries.HorFrameCore W := by
   intro hCA _ A _ T hT c
-  have hmod := ((hP9 T hT.1 hCA.2.1 hCA.2.2).2.2 (finrank_eq_one_of_bijective_bis hCA.1)).2
+  have hmod := ((hP9 T hT.1 hCA.2.1 hCA.2.2).2.2 (_root_.Formalism.MainNotions.UnusedSlot80.SatW.finrank_one_of_bij' hCA.1)).2
   obtain ⟨d, b, hb⟩ := Formalism.MainNotions.UnusedSlot80.Relay2.frame_exists W T c hmod
   obtain ⟨sol, hsol⟩ := exists_horizontal_solutions W hH hCA T hT.1 c b hb
   exact ⟨d, b, sol, hsol⟩
@@ -173,7 +170,7 @@ theorem frobenius_vector_mem_dcris (T : LocLat G Qp LL O) (c' : ZMod n) {d : ℕ
   unfold dvO dv
   refine Submodule.sum_mem _ fun m _ => Submodule.smul_mem _ _ ?_
   have hbN : b m ∈ W.N T := (hb.1 m).1.1
-  have hbl : (letE c' : LetA O n) • b m = b m := Formalism.MainNotions.UnusedSlot80.ArcF.letter_of_Nl W T c' (hb.1 m).2
+  have hbl : (letE c' : LetA O n) • b m = b m := _root_.Formalism.MainNotions.LiftingTheory.frame_letE_fix W T c' (hb.1 m).2
   have hcl : cmpD W T (b m) ∈ DcrisL PD T.ρ (W.emb c') := by
     rw [Formalism.MainNotions.UnusedSlot80.ArcF.cmpD_of_mem W T hbN]; exact Formalism.MainNotions.UnusedSlot80.ArcF.cmp_mem_letter W T c' hbN hbl
   exact Formalism.MainNotions.UnusedSlot80.ArcF.φVB_pow_letter W T c' hcl e
@@ -314,7 +311,7 @@ theorem gamma_lift_along_arc [IsDomain O] (hinj : Function.Injective (algebraMap
     intro δ hδ
     refine lam_cancel W hR A a e T ?_
     have h1 : W.γD T δ (Λ • u) = Λ • W.γD T δ u := by
-      rw [Formalism.MainNotions.LiftingTheory.frame_γD_smul, hΛmem δ hδ]
+      rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, hΛmem δ hδ]
     rw [← h1, hup0, Relay2.Pp_Δ W T c' e p0 hp0 δ hδ]
   obtain ⟨w, hw, w', hw', hww, hγΛ⟩ := lam_γ W hS A a e
   obtain ⟨u0, hu0, hγπ⟩ := hP
@@ -341,7 +338,7 @@ theorem gamma_lift_along_arc [IsDomain O] (hinj : Function.Injective (algebraMap
   have hγΛu : InFP W T c' e 1 (Λ • W.γ T u) := by
     have h1 : Λ • W.γ T u = w' • W.γ T (Λ • u) := by
       show _ = w' • W.γD T W.gam (Λ • u)
-      rw [Formalism.MainNotions.LiftingTheory.frame_γD_smul, hγΛ, smul_smul, ← mul_assoc, hww, one_mul]
+      rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, hγΛ, smul_smul, ← mul_assoc, hww, one_mul]
       rfl
     refine ⟨w' • W.γ T p0, Relay2.Pp_smul W T c' _ hw' _ (Relay2.Pp_γ W T c' _ p0 hp0), ?_⟩
     rw [one_smul, h1, hup0]
@@ -434,15 +431,12 @@ theorem Coprime_prod (s : Finset ℕ) (x : ℕ → LetA O n) {z : LetA O n}
     exact Coprime_mul W (W.AΔ.prod_mem fun i _ => hx i) hz
       (ih fun i hi => h i (Finset.mem_insert_of_mem hi)) (h a (Finset.mem_insert_self a s))
 
-theorem level_mem_invariants (s : ℕ) : ps W s ∈ W.AΔ :=
-  Formalism.MainNotions.UnusedSlot80.UnivC.ps_mem W s
-
 theorem exists_partition_of_l_pow_levels (hC : Formalism.MainNotions.UnusedSlot80.KL.PsCoprime W)
     (N : ℕ) (S : Finset ℕ) (hS : S.Nonempty) :
     ∃ m : ℕ, ∃ ε : ℕ → LetA O n, (∀ s, ε s ∈ W.AΔ) ∧
       (∀ s ∈ S, ∃ r ∈ W.AΔ, ε s = (∏ t ∈ S.erase s, ps W t ^ N) * r) ∧
       ∑ s ∈ S, ε s = lA W ^ m := by
-  have hps := level_mem_invariants W
+  have hps := _root_.Formalism.MainNotions.UnusedSlot80.UnivC.ps_mem W
   induction S using Finset.induction_on with
   | empty => exact absurd hS Finset.not_nonempty_empty
   | insert a s ha ih =>

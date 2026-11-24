@@ -159,8 +159,7 @@ theorem main {K : Type} [Field K] [NumberField K] {Z : Type} [AddCommGroup Z] [M
 
 end GlobalTheory.TargetLemmaCollection
 
-theorem GlobalTheory.TargetLemmaCollection.target : ∀ {K : Type} [inst : Field K] [NumberField K] {Z : Type} [inst_2 : AddCommGroup Z] [inst_3 : Module K Z] [inst_4 : Module (NumberField.RingOfIntegers K) Z] [IsScalarTower (NumberField.RingOfIntegers K) K Z] {A : Submodule (NumberField.RingOfIntegers K) Z} {x : Z}, x ∈ Submodule.span K (↑A : Set Z) → ∃ (d : NumberField.RingOfIntegers K), d ≠ (0 : NumberField.RingOfIntegers K) ∧ d • x ∈ A :=
-  fun hx => GlobalTheory.TargetLemmaCollection.main hx
+alias GlobalTheory.TargetLemmaCollection.target := _root_.GlobalTheory.TargetLemmaCollection.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsExtraAlt =====
@@ -188,12 +187,6 @@ section Gen
 variable {K : Type} [Field K] [NumberField K]
 variable {Z : Type} [AddCommGroup Z] [Module K Z] [Module (𝓞 K) Z] [IsScalarTower (𝓞 K) K Z]
 
-theorem exists_smul_mem_of_mem_span {A : Submodule (𝓞 K) Z} {x : Z} (hx : x ∈ Submodule.span K (A : Set Z)) :
-    ∃ d : 𝓞 K, d ≠ 0 ∧ d • x ∈ A := by
-  first
-  | (apply _root_.GlobalTheory.TargetLemmaCollection.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TargetLemmaCollection.target ..)
-
 theorem span_cut {A : Submodule (𝓞 K) Z} (hA : Submodule.span K (A : Set Z) = ⊤) (W : Submodule K Z) :
     Submodule.span K (Formalism.EigenvalueLevelCeiling.cut W A : Set Z) = W := by
   apply le_antisymm
@@ -201,7 +194,7 @@ theorem span_cut {A : Submodule (𝓞 K) Z} (hA : Submodule.span K (A : Set Z) =
     intro x hx
     exact (Submodule.mem_inf.1 hx).2
   · intro w hw
-    obtain ⟨d, hd, hm⟩ := exists_smul_mem_of_mem_span (A := A) (x := w) (by rw [hA]; trivial)
+    obtain ⟨d, hd, hm⟩ := _root_.GlobalTheory.TargetLemmaCollection.main (A := A) (x := w) (by rw [hA]; trivial)
     have hd' : algebraMap (𝓞 K) K d ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 K) K)).2 hd
     have hmem : d • w ∈ Formalism.EigenvalueLevelCeiling.cut W A := by
       refine Submodule.mem_inf.2 ⟨hm, ?_⟩
@@ -363,7 +356,7 @@ theorem rank_at_twisted_places_of_rec_span (hR : p.PointConditions') (hm : More 
       GlobalTheory.TraceClassRank.CompareOffOwn (T := (r.used v).full) (R := R2 p) (hrec.1.ok.laws v).p (fw2 p) j (r.lev j)
         (F2 p).P0 (F2 p).ψ0⁻¹ 1 v (ownAt D v)) :
     GlobalTheory.TraceClassRank.RankAtPlaces O := by
-  obtain ⟨hC, hOk, hLU, -⟩ := _root_.GlobalTheory.T.links2_of_single_index_twisted _ _ _ _ _ _ _ _ _ _ p hR hm.1
+  obtain ⟨hC, hOk, hLU, -⟩ := _root_.GlobalTheory.BigOn.links2_of_rows_alt _ _ _ _ _ _ _ _ _ _ p hR hm.1
   obtain ⟨hc, hinj, z, act, y, ht⟩ := hrec.1.tied
   have hX := hOk.irr
   have h1 := hC.grp.levels

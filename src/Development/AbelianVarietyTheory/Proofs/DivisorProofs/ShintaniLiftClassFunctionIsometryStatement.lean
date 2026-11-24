@@ -76,11 +76,11 @@ theorem shLift_isometry : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] 
   haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
   letI : Fintype (GL (Fin n) F) := Fintype.ofFinite _
   letI : Fintype (GL (Fin n) F') := Fintype.ofFinite _
-  have hex := GlobalTheory.T.every_element_is_norm F F' s hs n
-  have hfib := GlobalTheory.T.card_isGaloisTwistedNormGL_mul_card_GL F F' s hs n
-  have hlf := (GlobalTheory.T.base_change_lift_class_function F F' s hs n f hf).1
-  have hlf' := (GlobalTheory.T.base_change_lift_class_function F F' s hs n f' hf').1
-  have hnd := GlobalTheory.T.isConj_of_isConj_glFieldExtensionInclusion F F' n
+  have hex := _root_.GlobalTheory.Shin.exists_isNorm F F' s hs n
+  have hfib := _root_.GlobalTheory.Shin.NormFibre.card_isNorm_mul_card F F' s hs n
+  have hlf := (_root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs n f hf).1
+  have hlf' := (_root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs n f' hf').1
+  have hnd := _root_.GlobalTheory.Shin.isConj_of_isConj_incl F F' n
   obtain ⟨c, hc⟩ : ∃ c : GL (Fin n) F → ℂ, ∀ γ, c γ = (Nat.card {γ' : GL (Fin n) F // IsConj γ γ'} : ℂ) :=
     ⟨_, fun _ => rfl⟩
   obtain ⟨v, hv⟩ : ∃ v : GL (Fin n) F → ℂ, ∀ γ, v γ = f γ * star (f' γ) := ⟨_, fun _ => rfl⟩
@@ -151,8 +151,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.shintaniLiftClassFunction_isometry : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (n : ℕ) (f f' : GL (Fin n) F → ℂ), IsCl f → IsCl f' → (Nat.card (GL (Fin n) F) : ℂ) * ∑ᶠ δ, shLift s f δ * star (shLift s f' δ) = (Nat.card (GL (Fin n) F') : ℂ) * ∑ᶠ γ, f γ * star (f' γ) := by
-  first | (exact @GlobalTheory.Shin.shLift_isometry)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShintaniLiftClassFunctionIsometryStatement =====

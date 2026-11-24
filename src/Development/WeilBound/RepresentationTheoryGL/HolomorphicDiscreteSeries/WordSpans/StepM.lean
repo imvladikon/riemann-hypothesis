@@ -50,6 +50,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective
 import Mathlib.Tactic.Linter.HaveILetI
 import Development.WeilBound.CoreStatements.BranchingTraces.BranchingComatrices.RootOfNe
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -60,7 +61,7 @@ import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeCSchur
 -- Members: Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.ContinuousUmInv, Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.EmbRow, Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.NonVanishing, Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.WordSpaces, Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.ModelWalkOfInputs, Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.StepM
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.ContinuousUmInv =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.ContinuousUmInv", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.WordSpan\npublic import Development.WeilBound.CoreStatements.BranchingTraces.ContinuousEmb\npublic import Development.WeilBound.CoreStatements.OrbitDecayEstimates.CurveDerivativeDecay.LipschitzEstimate\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.ContinuousUmInv", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WordSpans.WordSpan\npublic import Development.WeilBound.CoreStatements.BranchingTraces.ContinuousEmb\npublic import Development.WeilBound.CoreStatements.OrbitDecayEstimates.CurveDerivativeDecay.LipschitzEstimate\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -83,9 +84,6 @@ theorem norm_entry_le {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) (i j : Fin m) :
   exact (Finset.single_le_sum (f := fun j => ‖M i j‖ ^ 2) (fun _ _ => by positivity) (Finset.mem_univ j)).trans
     (Finset.single_le_sum (f := fun i => ∑ j, ‖M i j‖ ^ 2) (fun _ _ => Finset.sum_nonneg fun _ _ => by positivity)
       (Finset.mem_univ i))
-
-theorem hs_nonneg' {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ) : 0 ≤ hs M :=
-  Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => by positivity
 
 theorem um_inv_eq {m : ℕ} {ε : Fin m → Bool} (g : UJ ε) : um g⁻¹ = Jm ε * (um g)ᴴ * Jm ε := by
   have hg : (um g)ᴴ * Jm ε * um g = Jm ε := g.2
@@ -194,7 +192,7 @@ theorem word_growth (hS : IsSmMod ε σ S E) (hU : IsURepOn (UJset ε) σ) (w : 
       refine Continuous.smul ?_ (hc c d)
       exact ((continuous_um_inv.matrix_elem c p.1).mul (continuous_um.matrix_elem p.2 d))
     · rw [e1]
-      have hg1 : 0 ≤ hs (um g) := hs_nonneg' _
+      have hg1 : 0 ≤ hs (um g) := _root_.Formalism.REAL.frobenius_nonneg_matrix _
       have hco : ∀ c d, ‖um g⁻¹ c p.1 * um g p.2 d‖ ≤ hs (um g) := fun c d => by
         rw [norm_mul]
         have h1 := norm_entry_le (um g⁻¹) c p.1
@@ -334,7 +332,7 @@ theorem zero_proof : Zero := by
   set a : ℝ := (n : ℝ) ^ 2 + 1 with ha
   set C' : ℝ := max C 0 with hC'
   have hcb' : ∀ h, ‖c h‖ ≤ C' * hs (um h) ^ (-(a + L)) := fun h =>
-    (hcb h).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg (hs_nonneg' _) _))
+    (hcb h).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg (_root_.Formalism.REAL.frobenius_nonneg_matrix _) _))
   set K₀ : ℝ := C' * CT * 2 ^ L with hK₀
   have hC'0 : 0 ≤ C' := le_max_right _ _
   have hK₀0 : 0 ≤ K₀ := mul_nonneg (mul_nonneg hC'0 hCT0) (by positivity)
@@ -359,7 +357,7 @@ theorem zero_proof : Zero := by
     rw [norm_mul]
     calc _ ≤ (C' * hs (um h) ^ (-(a + L))) * (‖b‖ * (CT * 2 ^ L * hs (um h) ^ L)) :=
           mul_le_mul (hcb' h) ((norm_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_left (hX h) (norm_nonneg _)))
-            (norm_nonneg _) (mul_nonneg hC'0 (Real.rpow_nonneg (hs_nonneg' _) _))
+            (norm_nonneg _) (mul_nonneg hC'0 (Real.rpow_nonneg (_root_.Formalism.REAL.frobenius_nonneg_matrix _) _))
       _ = K₀ * ‖b‖ * (hs (um h) ^ (-(a + L)) * hs (um h) ^ L) := by rw [hK₀]; ring
       _ = _ := by rw [hrp]
   have integ : ∀ b : H, Integrable (fun h : UJ ε' => c h * ⟪b, ap T (π (emb e (um h)) η)⟫_ℂ) ν := fun b =>
@@ -370,7 +368,7 @@ theorem zero_proof : Zero := by
       Complex.continuous_ofReal.comp (continuous_hs_um.rpow_const fun h =>
         Or.inl (lt_of_lt_of_le one_pos (one_le_hs' hn h)).ne')
     have := (hIntR n ε' ν hν hn _ 1 a hcw le_rfl fun h => by
-      rw [Complex.norm_real, Real.norm_of_nonneg (Real.rpow_nonneg (hs_nonneg' _) _), one_mul]).1
+      rw [Complex.norm_real, Real.norm_of_nonneg (Real.rpow_nonneg (_root_.Formalism.REAL.frobenius_nonneg_matrix _) _), one_mul]).1
     simpa using this.re
   refine ⟨integ b, ?_⟩
 
@@ -400,7 +398,7 @@ theorem zero_proof : Zero := by
     refine LipschitzWith.continuous (K := Real.toNNReal (K₀ * ∫ h, hs (um h) ^ (-a) ∂ν))
       (LipschitzWith.of_dist_le_mul fun b b' => ?_)
     rw [dist_eq_norm, dist_eq_norm, Real.coe_toNNReal _ (mul_nonneg hK₀0 (integral_nonneg fun h =>
-      Real.rpow_nonneg (hs_nonneg' _) _))]
+      Real.rpow_nonneg (_root_.Formalism.REAL.frobenius_nonneg_matrix _) _))]
     exact hlip b b'
   have hcl : IsClosed {b : H | Λ b = 0} := isClosed_eq hcont continuous_const
   have hall : closure (S : Set H) ⊆ {b : H | Λ b = 0} := closure_minimal (fun b hb => hS0 b hb) hcl
@@ -951,12 +949,12 @@ theorem stepM_of (hKey : KeyId) (hZ : Zero) (hPhi : PhiEq) (hIrr : Irr) :
   have gH : Formalism.QuantumDeterminants.GapAtLeast ε' mu (200 * ((N + 1 : ℕ) : ℝ) ^ 3) :=
     gap_mono hG.gap' (by have : ((N + 1 : ℕ) : ℝ) ≤ ((N + 1 : ℕ) : ℝ) + 1 := by linarith
                          have := pow_le_pow_left₀ hc1 this 3; linarith)
-  obtain ⟨H, i1, i2, π, hπ⟩ := exists_ds ε lam (by omega) hG.hc gG
-  obtain ⟨H', i3, i4, σ, hσ⟩ := exists_ds ε' mu hN1 hG.hc' gH
+  obtain ⟨H, i1, i2, π, hπ⟩ := _root_.PositivityTheory.RgHe.SM.LowWeightDensity.exists_ds ε lam (by omega) hG.hc gG
+  obtain ⟨H', i3, i4, σ, hσ⟩ := _root_.PositivityTheory.RgHe.SM.LowWeightDensity.exists_ds ε' mu hN1 hG.hc' gH
   haveI : CompleteSpace H := hπ.1
   haveI : CompleteSpace H' := hσ.1
   obtain ⟨j0, hj0, hj0m⟩ := hOcc H H' π σ hπ hσ
-  obtain ⟨P, hP, hP0⟩ := exists_P hG.fits hπ hσ hj0 hj0m
+  obtain ⟨P, hP, hP0⟩ := _root_.PositivityTheory.RgHe.SM.LowWeightDensity.exists_P hG.fits hπ hσ hj0 hj0m
   obtain ⟨S, E, hS⟩ := hSmMod (N + 2) ε H π hπ.2.2.1
   obtain ⟨S', E', hS'⟩ := hSmMod (N + 1) ε' H' σ hσ.2.2.1
   obtain ⟨X, hXS, hXκ⟩ := hDec (N + 1) ε' mu H' σ (signs hG).1 (signs hG).2 hG.hc' hσ gH
@@ -987,7 +985,7 @@ theorem stepM_of (hKey : KeyId) (hZ : Zero) (hPhi : PhiEq) (hIrr : Irr) :
   have hpr2 := right_ne_zero_of_mul hprod
   have hpry : X.pr j (Pi.single l (X.p j (phi E e P η₀) l)) ≠ 0 := fun h0 => hpr2 (by rw [h0, inner_zero_left])
   have hprφ : X.pr j (phi E e P η₀) ≠ 0 := fun h0 => hpr2 (by rw [h0, inner_zero_right])
-  obtain ⟨w', hw', hw'1⟩ := exists_low hσ'
+  obtain ⟨w', hw', hw'1⟩ := _root_.PositivityTheory.RgHe.SM.LowWeightDensity.exists_low hσ'
   have hw'0 : w' ≠ 0 := fun h0 => by rw [h0, norm_zero] at hw'1; exact zero_ne_one hw'1
   obtain ⟨h₁, hh₁⟩ := hIrr (N + 1) ε' _ (X.πs j) hσ'.2.2.1 hσ'.2.2.2.1 _ w' hprφ hw'0
   obtain ⟨h₂, hh₂⟩ := hIrr (N + 1) ε' _ (X.πs j) hσ'.2.2.1 hσ'.2.2.2.1 _ w' hpry hw'0
@@ -1006,7 +1004,7 @@ theorem stepM_of (hKey : KeyId) (hZ : Zero) (hPhi : PhiEq) (hIrr : Irr) :
     rw [hpry₂, ← inner_conj_symm]; exact (map_ne_zero _).2 hh₂
   have hB : ⟪w', X.pr j (phi E e P η₁)⟫_ℂ ≠ 0 := by rw [hprφ₁]; exact hh₁
   obtain ⟨κ', hκ', hsch⟩ := schur_haar hσ' (muG ε')
-  obtain ⟨hcont, C, hCb⟩ := decay_low hN1 hG'.hc' hσ' hG'.gap' hw' hw'1
+  obtain ⟨hcont, C, hCb⟩ := _root_.PositivityTheory.RgHe.SM.LowWeightDensity.decay_low hN1 hG'.hc' hσ' hG'.gap' hw' hw'1
   by_contra hnot
   have hall : ∀ a b : H, ∫ h : UJ ε', conj ⟪w', X.πs j (um h) w'⟫_ℂ * ⟪b, π (emb e (um h)) a⟫_ℂ ∂(muG ε') = 0 := by
     intro a b
@@ -1056,8 +1054,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace PositivityTheory.RgHe.SM
-
-theorem stepM : PositivityTheory.RgHe.Models → PositivityTheory.RgHe.OfInt → PositivityTheory.RgHe.Seed → PositivityTheory.RgHe.DecEx2 → PositivityTheory.RgHe.StepM := model_walk_of_inputs
 
 end PositivityTheory.RgHe.SM
 end -- clump:auto

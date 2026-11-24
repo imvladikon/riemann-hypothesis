@@ -160,8 +160,6 @@ open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.UnitLemma GlobalTheory.InertUnitOrb
 
-theorem _root_.GlobalTheory.T.isCompact_closure_zpowers_iff_bounded_entries : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (w : Pl E) (n : ℕ) (H : Subgroup (GLw n w)), IsClosed (H : Set (GLw n w)) → ∀ s : H, IsCompact (closure (Subgroup.zpowers s : Set H)) ↔ ∃ m : ℤ, ∀ k : ℤ, ∀ i j, Valued.v ((((s ^ k : H) : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j) ≤ WithZero.exp m := by
-  first | exact @GlobalTheory.PowersCompact.isCompact_closure_zpowers_iff
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactClosureZpowersIffBoundedEntriesStatement =====

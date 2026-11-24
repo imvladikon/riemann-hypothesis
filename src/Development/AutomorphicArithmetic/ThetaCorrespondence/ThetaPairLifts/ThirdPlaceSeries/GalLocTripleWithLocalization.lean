@@ -109,6 +109,7 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Strict
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 import Mathlib.Algebra.AffineMonoid.Basic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GoodTupleConditionOfIdempotentZero
+import Formalism.SharpRestriction.GlobalSchurBounds.FrameCodeOfAdditive
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
 import Formalism.LocalToGlobal.IndefiniteReal.ExistsChosenExtremalVector
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StandardLatticesDiagonal
@@ -535,49 +536,6 @@ theorem vAdd_unit (D : D7) (w : D.what₂.places.Pl) (s : 𝓞 D.what₂.LL) (hs
   unfold vAdd
   rw [h1]; simp
 
-theorem exists_place (D : D7) (p : ℕ) (hp : p.Prime) : ∃ w : D.what₂.places.Pl, D.what₂.places.resChar w = p := by
-  have hnu : ¬ IsUnit ((p : ℕ) : 𝓞 D.what₂.LL) := by
-    intro h
-    have : IsUnit (algebraMap ℤ (𝓞 D.what₂.LL) (p : ℤ)) := by simpa using h
-    have h2 := Int.isUnit_iff.1 (isUnit_of_map_unit (algebraMap ℤ (𝓞 D.what₂.LL)) _ this)
-    have := hp.two_le
-    omega
-  obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal (Ideal.span {((p : ℕ) : 𝓞 D.what₂.LL)}) (by
-    rwa [Ne, Ideal.span_singleton_eq_top])
-  have hpM : ((p : ℕ) : 𝓞 D.what₂.LL) ∈ M := hle (Ideal.subset_span rfl)
-  have hne : M ≠ ⊥ := by
-    rintro rfl
-    have : ((p : ℕ) : 𝓞 D.what₂.LL) = 0 := hpM
-    exact hp.ne_zero (by exact_mod_cast this)
-  let v : HeightOneSpectrum (𝓞 D.what₂.LL) := ⟨M, hM.isPrime, hne⟩
-  refine ⟨D.plEq.symm v, ?_⟩
-  set w := D.plEq.symm v with hw
-  have hv : D.plEq w = v := by simp [hw]
-  by_contra hq
-  have hq' := D.what₂.places.resChar_prime w
-  have hnot : ((D.what₂.places.resChar w : ℕ) : 𝓞 D.what₂.LL) ∉ (D.plEq w).asIdeal := by
-    rw [hv]
-    intro hin
-    have hc : IsCoprime ((D.what₂.places.resChar w : ℕ) : ℤ) (p : ℤ) :=
-      Nat.isCoprime_iff_coprime.2 ((Nat.coprime_primes hq' hp).2 hq)
-    obtain ⟨a, b, hab⟩ := hc
-    apply hM.ne_top
-    rw [Ideal.eq_top_iff_one]
-    have : (1 : 𝓞 D.what₂.LL) = (a : 𝓞 D.what₂.LL) * (D.what₂.places.resChar w : ℕ) + (b : 𝓞 D.what₂.LL) * (p : ℕ) := by
-      exact_mod_cast congrArg (Int.cast : ℤ → 𝓞 D.what₂.LL) hab.symm
-    rw [this]
-    exact M.add_mem (M.mul_mem_left _ hin) (M.mul_mem_left _ hpM)
-  have h0 := vAdd_unit D w _ hnot
-  have h1 := D.what₂.places.val_resChar w
-  rw [D.val_eq w _ (Nat.cast_ne_zero.2 hq'.ne_zero)] at h1
-  have h2 : vAdd (D.plEq w) ((D.what₂.places.resChar w : ℕ) : D.what₂.LL) = (D.what₂.places.ramIdx w : ℕ) := by
-    exact_mod_cast h1
-  have h3 : (((D.what₂.places.resChar w : ℕ) : 𝓞 D.what₂.LL) : D.what₂.LL) = ((D.what₂.places.resChar w : ℕ) : D.what₂.LL) := by
-    simp
-  rw [h3, h2] at h0
-  have := D.what₂.places.ramIdx_pos w
-  omega
-
 end GlobalTheory.Survey.PeriodBoundOfPlaceBound
 
 end
@@ -659,7 +617,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemNonzeroPlacesOfResidueChar =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwistedAtAtMem =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwistedAtAtMem", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ThetaDataExists\npublic import Development.AbelianVarietyTheory.Counterexamples.HeckeCharacterExamples.PeriodBoundOfPlaceBound\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsStagesClauses\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemNonzeroPlacesOfResidueChar\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JumpsCardOfBuilt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwistedAtAtMem", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ThetaDataExists\npublic import Development.AbelianVarietyTheory.Counterexamples.HeckeCharacterExamples.PeriodBoundOfPlaceBound\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsStagesClauses\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemNonzeroPlacesOfResidueChar\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsComp\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JumpsCardOfBuilt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.SharpRestriction.GlobalSchurBounds.FrameCodeOfAdditive\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -672,7 +630,7 @@ namespace GlobalTheory.GalLoc
 theorem twistedAt_atMem_alt : ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ _ _ _ => ∃ v, TwistedAt (w.D Z) v := by
   intro hL
   refine GlobalTheory.HeightCounting.JumpsAt.evLgG_of_forall fun K B f T _ w Z Wt p0 t nch n xd c _ _ _ => ?_
-  obtain ⟨v, hv⟩ := GlobalTheory.Survey.PeriodBoundOfPlaceBound.exists_place (w.D Z) (B.host.g 0) (B.host.g_prime 0)
+  obtain ⟨v, hv⟩ := _root_.Formalism.MainNotions.Lnk.place_over (w.D Z) (B.host.g 0) (B.host.g_prime 0)
   have hW := GlobalTheory.Mem.Top.Bl.Model3.type_mem t v 0 hv
   exact ⟨v, (GlobalTheory.Mem.Top.V4.Model.mem_iff t.mu v).1 hW⟩
 end GlobalTheory.GalLoc
@@ -688,13 +646,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.exists_twisted_place_at_member : ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ _ _ _ => ∃ v, TwistedAt (w.D Z) v := by
-  first | exact @_root_.GlobalTheory.GalLoc.twistedAt_atMem_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwistedAtAtMemStatement =====
@@ -714,8 +665,8 @@ namespace GlobalTheory.GalLoc.RowParamAt
 theorem localGalois_parameter_mem_at_place_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c =>
     ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.RowParam (w.D Z) Rw := by
   intro hN _ hL
-  refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.T.good_cusp_param_at_member_of_heq_locR hN hL) (_root_.GlobalTheory.T.exists_loc_with_place_and_index_at_member hN hL))
-    (_root_.GlobalTheory.T.exists_twisted_place_at_member hL)) ?_
+  refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.HeightCounting.Up.cuspParameter_at_member_alt hN hL) (_root_.GlobalTheory.HeightCounting.Up.LocEx.exists_localization_at_member_alt hN hL))
+    (_root_.GlobalTheory.GalLoc.twistedAt_atMem_alt hL)) ?_
   intro K B f T w Z Wt p0 t nch n xd c _ H Rw hRw
   obtain ⟨⟨hp, hl⟩, v, hv⟩ := H
   have hW := _root_.GlobalTheory.GalLoc.RowParamAt.locW_of_nTrue_alt c.a.nt Rw hRw
@@ -824,10 +775,10 @@ theorem frobenius_eigenvalues_at_place_alt : _root_.GlobalTheory.HeightCounting.
   have h2 : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t _ _ c =>
     ∀ Sb : Finset (PlE (w.D Z).host), (∀ i, Sb ⊆ (w.D Z).ntw.S0 i) → ∃ Sb' : Finset (PlE (w.D Z).host), Sb ⊆ Sb' ∧
       (∀ i, Sb' ⊆ (w.D Z).ntw.S0 i) ∧ GlobalTheory.TwInputs.Eig.Low (w.D Z) Sb' ∧
-      GlobalTheory.HeightCounting.RatSide.HeckeRd t.r.z.R t.r.z.cG c.row.kKs c.row.hk Sb' c.row.hecke.hL := _root_.GlobalTheory.T.exists_superset_low_heckeRd_of_subset_S0
+      GlobalTheory.HeightCounting.RatSide.HeckeRd t.r.z.R t.r.z.cG c.row.kKs c.row.hk Sb' c.row.hecke.hL := _root_.GlobalTheory.HeckeSbLayer.exists_hecke_stable_sublayer_alt
   have h3 : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t _ _ c =>
     ∃ θ : ∀ kk : Fin 2, Multiplicative (ZMod ((w.D Z).host.g kk)) →* (↥(w.D Z).LL0)ˣ, HEq θ c.a.nt.θ ∧
-      GlobalTheory.HeightCounting.RatSide.LvlPsi t.r.z.R t.r.z.F t.r.z.cG θ := _root_.GlobalTheory.T.exists_theta_heq_lvlPsi_at_members
+      GlobalTheory.HeightCounting.RatSide.LvlPsi t.r.z.R t.r.z.F t.r.z.cG θ := _root_.GlobalTheory.GalLoc.PsiLvl.localGalois_psi_level_at_place_alt
   refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' (h2 hN hS hL) (h3 hN hS hL)) ?_
   intro K B f T w Z Wt p0 t nch n xd c hE H
   obtain ⟨H2, H3⟩ := H
@@ -1351,7 +1302,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeR
 
 theorem residual_ties_of_membership : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → _root_.GlobalTheory.EigTie.ResTiedAlt (w.D Z) Rw := by
   intro hP hL
-  refine EvG.imp (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.T.exists_linked_data_pinned_at_layer hP hL) (_root_.GlobalTheory.T.lamP_muTw_pos_at_members hP hL)) (_root_.GlobalTheory.T.exists_loc_with_place_and_index_at_member hP hL))
+  refine EvG.imp (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.isTied_of_layer_member_alt hP hL) (_root_.GlobalTheory.Mem.LamPosTw.lambda_pos_of_twisted_mu_alt hP hL)) (_root_.GlobalTheory.HeightCounting.Up.LocEx.exists_localization_at_member_alt hP hL))
     fun _ _ _ _ _ hK => large₂.imp hK fun B f T _ H kp w Z Wt p0 t nch n xd c hE hX hp Rw hRw => ?_
   obtain ⟨⟨⟨X, -⟩, hpos⟩, hloc⟩ := H kp w Z Wt p0 t nch n xd c hE hX hp
   obtain ⟨e⟩ := hE
@@ -1359,13 +1310,6 @@ theorem residual_ties_of_membership : _root_.GlobalTheory.HeightCounting.Up.Publ
     (e : _root_.GlobalTheory.HeightCounting.RealExpansionExtraData (D := (w.st Z).toD7) c.row t.r.z.geo xd).large.1 t.r.Y.lam hpos hloc Rw hRw
 end GlobalTheory.ResLoc
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.non_galois_residual_ties : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → _root_.GlobalTheory.EigTie.ResTiedAlt (w.D Z) Rw := by
-  first | exact @_root_.GlobalTheory.ResLoc.residual_ties_of_membership
 end
 end
 end -- clump:auto
@@ -1421,7 +1365,7 @@ theorem galLoc_triple_at_place_alt (hP : _root_.GlobalTheory.HeightCounting.Up.P
     (hR : _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.RowParam (w.D Z) Rw)
     (hC : _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GlobalTheory.TwInputs.CommAll (w.D Z) ∧ GlobalTheory.TwInputs.FullAll (w.D Z)) :
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => _root_.GlobalTheory.Triple.IsGaloisTriple (w.D Z) := by
-  have hT := _root_.GlobalTheory.T.non_galois_residual_ties hP hL
+  have hT := _root_.GlobalTheory.ResLoc.residual_ties_of_membership hP hL
   refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' hE (_root_.GlobalTheory.GalLoc.atMem_and' hF (_root_.GlobalTheory.GalLoc.atMem_and' hR (_root_.GlobalTheory.GalLoc.atMem_and' hC hT)))) ?_
   intro K B f T w Z Wt p0 t nch n xd c hN H
   obtain ⟨⟨Sb, hSb, eT, eO⟩, ⟨val, roots, hstar⟩, rp, ⟨cm, fa⟩, rt⟩ := H

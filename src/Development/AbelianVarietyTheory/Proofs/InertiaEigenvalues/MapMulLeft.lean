@@ -149,8 +149,6 @@ section -- clump:auto
 
 open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.BasicNotions.Loc TensorProduct GlobalTheory.NL
 
-theorem _root_.GlobalTheory.T.wachLevelExpansionLaws_of_rootsOfUnity : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; LevLaws W := by
-  first | exact @GlobalTheory.NL.Expansion.levLaws
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionLawsOfRootsOfUnityStatement =====
@@ -167,7 +165,7 @@ namespace GlobalTheory.NL.AllLaws
 theorem laws : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; let E := ((F l).E K s LL h).tie; Laws (HW l) (F l) h := by
   intro D HW F l _ K s LL h W E
   haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  exact ⟨GlobalTheory.T.wachLevelExpansionLaws_of_rootsOfUnity D HW l K s LL h, _root_.GlobalTheory.NL.ioLaws D HW F l K s LL h,
+  exact ⟨_root_.GlobalTheory.NL.Expansion.levLaws D HW l K s LL h, _root_.GlobalTheory.NL.ioLaws D HW F l K s LL h,
     GlobalTheory.TrivCrys.isCrys_lat_of_trivial W.one W.one_triv⟩
 
 end GlobalTheory.NL.AllLaws

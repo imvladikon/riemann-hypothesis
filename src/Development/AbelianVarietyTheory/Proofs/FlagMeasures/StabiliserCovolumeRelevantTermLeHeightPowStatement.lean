@@ -84,6 +84,7 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
 import Formalism.SharpRestriction.CuspSpanNormBounds.IsPrimitiveSub
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.HermitianCombinationZ
 import Mathlib.CategoryTheory.Countable
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.FormAll
 import Mathlib.Tactic.Linter.HaveILetI
@@ -1059,10 +1060,6 @@ theorem act_isLoUni_map {K : Type} [Field K] {N : ℕ} (ψ : K →+* ℂ) {M : M
     (h : IsLoUni M) : IsLoUni (M.map ψ) := fun i j =>
   ⟨fun hij => by simp [(h i j).1 hij], fun hij => by subst hij; simp [(h i i).2 rfl]⟩
 
-theorem act_isLoUni_conjTranspose {N : ℕ} {C : Matrix (Fin N) (Fin N) ℂ} (h : IsUpUni C) : IsLoUni Cᴴ :=
-  fun i j => ⟨fun hij => by simp [Matrix.conjTranspose_apply, (h j i).1 hij],
-    fun hij => by subst hij; simp [Matrix.conjTranspose_apply, (h i i).2 rfl]⟩
-
 theorem act_sgn_mem {r : ℕ} {Z P m : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (hZ : IsUnit Z.det)
     (hP : Z * actSgn r = P) (hm : m ∈ GlobalTheory.LoopV.stabU Z) : actSgn r * m * actSgn r ∈ GlobalTheory.LoopV.stabU P := by
   refine ⟨act_isUpUni_sgn hm.1, ?_⟩
@@ -1148,9 +1145,9 @@ theorem cover_action : ∀ Cg cb Cu cT CT C0 A : ℝ, ∀ (D : D7) (X : HidaSett
   refine ⟨T, ?_, ?_⟩
   · set a : D.what₂.Tau → Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) ℂ := fun τ => Uc τ * (sg * (B τ)⁻¹ * sg) with ha
     set b : D.what₂.Tau → Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) ℂ := fun τ => sg * B τ * sg * (Uc τ)⁻¹ with hb
-    have hau : ∀ τ, IsUpUni (a τ) := fun τ => Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_mul (hUcu τ)
+    have hau : ∀ τ, IsUpUni (a τ) := fun τ => _root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul (hUcu τ)
       (act_isUpUni_sgn (Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_inv (hBu τ)).1)
-    have hbu : ∀ τ, IsUpUni (b τ) := fun τ => Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_mul (act_isUpUni_sgn (hBu τ))
+    have hbu : ∀ τ, IsUpUni (b τ) := fun τ => _root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul (act_isUpUni_sgn (hBu τ))
       (Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_inv (hUcu τ)).1
     have hconj : ∀ τ (M : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) ℂ),
         Xm τ * M * (Xm τ)⁻¹ = a τ * (sg * M * sg) * b τ := fun τ M => by
@@ -1276,7 +1273,7 @@ theorem cover_action : ∀ Cg cb Cu cT CT C0 A : ℝ, ∀ (D : D7) (X : HidaSett
       rw [act_zhatOM_map, hzr, hdec, hzm, Matrix.map_mul, Matrix.map_mul, ← hZs] at h
       exact h
     set g0 := B τ * (sg * (Uc τ)⁻¹ * sg) with hg0
-    have hCl := act_isLoUni_conjTranspose (hCu τ)
+    have hCl := _root_.GlobalTheory.FrameStab.isLoUni_conjTranspose (hCu τ)
     have hCli := Formalism.L2.SG.Pf.ZsVolGrp.isLoUni_inv hCl
     have hZg : Zv * g0 * Zv⁻¹ = ((Cm τ)ᴴ)⁻¹ * L.map (embS D τ) := by
       have h1 : (Cm τ)ᴴ * (Zv * g0) = L.map (embS D τ) * Zv := by
@@ -1290,10 +1287,10 @@ theorem cover_action : ∀ Cg cb Cu cT CT C0 A : ℝ, ∀ (D : D7) (X : HidaSett
         rw [← h1, ← Matrix.mul_assoc ((Cm τ)ᴴ)⁻¹, hCli.2.1, Matrix.one_mul]
       rw [h2, Matrix.mul_assoc, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hZu, Matrix.mul_one]
     have hg0s : g0 ∈ GlobalTheory.LoopV.stabU Zv := by
-      refine ⟨Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_mul (hBu τ)
+      refine ⟨_root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul (hBu τ)
         (act_isUpUni_sgn (Formalism.L2.SG.Pf.ZsVolGrp.isUpUni_inv (hUcu τ)).1), ?_⟩
       rw [hZg]
-      exact Formalism.L2.SG.Pf.ZsVolGrp.isLoUni_mul hCli.1 (act_isLoUni_map _ hL)
+      exact _root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul hCli.1 (act_isLoUni_map _ hL)
     have hg0i : g0⁻¹ = sg * Uc τ * sg * (B τ)⁻¹ := by
       refine Matrix.inv_eq_right_inv ?_
       calc g0 * (sg * Uc τ * sg * (B τ)⁻¹) = B τ * (sg * ((Uc τ)⁻¹ * (sg * (sg * (Uc τ * (sg * (B τ)⁻¹)))))) := by
@@ -1587,7 +1584,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemRootsPointMatrixIffSameBlockStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatCoordConjEqStCoord =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatCoordConjEqStCoord", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatCoordCont\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LoopTieOf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ParametersTermRelations\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatCoordConjEqStCoord", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatCoordCont\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LoopTieOf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ParametersTermRelations\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.HermitianCombinationZ\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1595,11 +1592,6 @@ open Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.LoopVol
-
-private theorem hJ_smul_right_flag_measures {n : ℕ} (ε : Fin n → Bool) (c : ℂ) (x y : Fin n → ℂ) :
-    Formalism.L2.SG.HidaSetting.hJ ε x (c • y) = c * Formalism.L2.SG.HidaSetting.hJ ε x y := by
-  unfold Formalism.L2.SG.HidaSetting.hJ
-  rw [Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul]
 
 theorem ratCoord_conj_eq_stCoord : ∀ (D : D7) (X : HidaSetting D) (u' : D.what₂.Word) (w : Point D.host.E (D.R.rS + 1)) (γ s y : X.B.I.Ginf) (τ : D.what₂.Tau) (q : GlobalTheory.LoopV.roots (ptMat w)) (p : Formalism.L2.SG.RealObj.FreeE w), p.1 = q.1 → GlobalTheory.LoopVol.ratCoord X u' w γ s (s * y * s⁻¹) τ q = ((D.host.rdE : ℂ) ^ (q.1.2.1 - q.1.1.1))⁻¹ * Formalism.L2.SG.RealObj.stCoord X u' w γ y (X.pl.symm τ) p := by
   intro D X u' w γ s y τ q p hpq
@@ -1617,7 +1609,7 @@ theorem ratCoord_conj_eq_stCoord : ∀ (D : D7) (X : HidaSetting D) (u' : D.what
   unfold GlobalTheory.LoopVol.ratCoord Formalism.L2.SG.RealObj.stCoord
   rw [hconj]
   unfold Formalism.L2.SG.RealObj.frm Formalism.L2.SG.RealObj.famSc
-  simp only [Complex.ofReal_one, one_pow, inv_one, one_smul, Matrix.mulVec_smul, hJ_smul_right_flag_measures]
+  simp only [Complex.ofReal_one, one_pow, inv_one, one_smul, Matrix.mulVec_smul, _root_.PI.SchurPlaces.LeviLA.hJ_smul_right]
 
   have hsplit : D.R.rS - pq.1.val = (pq.2.val - pq.1.val) + (D.R.rS - pq.2.val) := by omega
   rw [hsplit, pow_add]

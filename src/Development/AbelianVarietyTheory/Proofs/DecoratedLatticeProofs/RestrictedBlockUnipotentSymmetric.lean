@@ -1643,9 +1643,9 @@ theorem GlobalTheory.FlagBasis.read_inst (D : D7) (e0 f0 : Fin D.R.rS → VA (in
         (congrArg _ e).trans (Formalism.L2.SG.Pf.unitaryCongruence.divN_gmul _ _ hg t)
       show star (psiEf (divN (instOf D) (D.host.g 0 * D.host.g 1) s.1)) = 1
       rw [this, hint t ht, star_one])
-    (GlobalTheory.T.exists_integralAdele_prescribed_residues_and_conj D Pg hnc)
+    (_root_.GlobalTheory.ConjResidueSurj.exists_res_and_conj D Pg hnc)
     (GlobalTheory.T.residueSupport_single_place_to_conjugatePair_position D Pg hPg.1 hnc (fun s => star (psiEf (divN (instOf D) (D.host.g 0 * D.host.g 1) s.1)) ≠ 1) fun Q hQ => by
-      obtain ⟨s, h1, h2⟩ := GlobalTheory.T.exists_finiteAdditiveChar_ne_one_at_each_prime D psiEf hadd hint hrat Q hQ
+      obtain ⟨s, h1, h2⟩ := _root_.GlobalTheory.FiniteCharNontrivial.exists_psi_ne_one D psiEf hadd hint hrat Q hQ
       exact ⟨s, h1, fun h => h2 (by simpa using congrArg star h)⟩)
   obtain ⟨a, ha1, hK⟩ := read_in_frame (instOf D) _ hg e0 f0 z0 bw bwd ew hF hn' β₀ hβ₀ Pg hPg.1 hN psiEf hadd hint ψ0 a₁ a₂ ha hχ
   have hL : (instOf D).L = Formalism.L2.Herm.crdLat (D.sp.Y 0) (D.sp.Y 0).L0 := Lv_eq_map D

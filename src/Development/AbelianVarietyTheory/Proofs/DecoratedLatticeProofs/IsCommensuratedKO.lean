@@ -513,17 +513,6 @@ theorem int_mul_of_mem_KO {g x : GL (Fin n) k} (hg : ∀ i j, g.1 i j ∈ 𝒪[k
   rw [Units.val_mul, Matrix.mul_apply]
   exact sum_mem fun l _ => mul_mem (hg i l) (((SplitFlip.mem_KO_iff x).1 hx).1 l j)
 
-theorem ord_det_of_mem_KO {x : GL (Fin n) k} (hx : x ∈ KO k (Fin n)) :
-    ord k (Matrix.GeneralLinearGroup.det x) = 0 := by
-  obtain ⟨g, rfl⟩ := hx
-  apply ord_eq_zero
-  have h1 : ((Matrix.GeneralLinearGroup.det (Matrix.GeneralLinearGroup.map (algebraMap 𝒪[k] k) g) : kˣ) : k) =
-      algebraMap 𝒪[k] k (Matrix.GeneralLinearGroup.det g : 𝒪[k]ˣ) :=
-    ((algebraMap 𝒪[k] k).map_det _).symm
-  rw [h1]
-  exact (Valuation.integer.integers (valuation k)).one_of_isUnit (Units.isUnit _)
-
-
 variable (k n) in
 def pairEquiv : ((GL (Fin n) k ⧸ KO k (Fin n)) × (GL (Fin n) k ⧸ KO k (Fin n))) ≃
     ((GL (Fin n) k ⧸ KO k (Fin n)) × (GL (Fin n) k ⧸ KO k (Fin n))) where
@@ -652,7 +641,7 @@ theorem pairTerm_pairEquiv {γ : Fin n → ℂ} {φ : GL (Fin n) k → ℂ} (hφ
       rwa [mul_inv_cancel_right] at this, fun H => int_mul_of_mem_KO H x.2⟩
   have hord : ord k (Matrix.GeneralLinearGroup.det (h.out⁻¹ * g.out * x : GL (Fin n) k)) =
       ord k (Matrix.GeneralLinearGroup.det (h.out⁻¹ * g.out)) := by
-    rw [map_mul, ord_mul, ord_det_of_mem_KO x.2, add_zero]
+    rw [map_mul, ord_mul, _root_.GlobalTheory.LatticePair.ord_det_of_mem_KO x.2, add_zero]
   have hval : φ (h.out * (h.out⁻¹ * g.out * x)) = φ g.out := by
     rw [mul_assoc, mul_inv_cancel_left, hφ.1 _ _ x.2]
   rw [pairEquiv_apply, pairTerm]

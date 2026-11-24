@@ -13,6 +13,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfHasR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenImmersionWhiskerLeftRangePreimageSnd
 public import Mathlib.AlgebraicGeometry.Pullbacks
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeAndRelDimOfOpenCover
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIntegralClosureOfEssFiniteTypeIntDomain
@@ -27,7 +28,6 @@ public import Mathlib.RingTheory.Noetherian.Nilpotent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescendsToFinitelyGeneratedSubring
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.DimSplitPf
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeAndRelDimOfOpenCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -273,8 +273,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.additiveLineBundleFamily_of_disjoint_open_pieces : ∀ {S : Scheme.{0}} (A : Over S) [GrpObj A] {κ : Type} [Finite κ] (Bt : Over S) (B : κ → Over S) (j : ∀ i, B i ⟶ Bt) [∀ i, IsOpenImmersion (j i).left], (⨆ i, (j i).left.opensRange = ⊤) → (Pairwise fun i i' => Disjoint (j i).left.opensRange (j i').left.opensRange) → ∀ (P : ∀ i, LB (A ⊗ B i).left) (Pt : LB (A ⊗ Bt).left), (∀ i, Fam A (P i)) → Pt.IsLB → (∀ i, LBIso (Pt.pull (A ◁ j i).left) (P i)) → Fam A Pt := by
-  first | exact @GlobalTheory.DualCon.ProdGlue.fam_of_pieces
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveLineBundleFamilyOfDisjointOpenPiecesStatement =====
@@ -290,8 +288,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_cechPicard_glue_finite_disjoint_cover : ∀ {Y : Scheme.{0}} {κ : Type} [Finite κ] {Z : κ → Scheme.{0}} (f : ∀ i, Z i ⟶ Y) [∀ i, IsOpenImmersion (f i)], (⨆ i, (f i).opensRange = ⊤) → (Pairwise fun i i' => Disjoint (f i).opensRange (f i').opensRange) → ∀ c : ∀ i, Pic (Z i), ∃ d : Pic Y, ∀ i, GlobalTheory.CechPic.pull (f i) d = c i := by
-  first | exact @GlobalTheory.CechPic.Glue.exists_pic_glue
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechPicardGlueFiniteDisjointCoverStatement =====
@@ -631,7 +627,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointDisjointUnionRepresentingFamilyUniqueStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperSmoothGeomConnectedSigmaDescDisjointCover =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperSmoothGeomConnectedSigmaDescDisjointCover", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperSmoothGeomConnectedSigmaDescDisjointCover", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeAndRelDimOfOpenCover\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -644,15 +640,6 @@ set_option autoImplicit false
 noncomputable section
 
 namespace GlobalTheory.DualCon
-
-theorem of_isPullback_opens_cover (Q : MorphismProperty Scheme.{0}) [IsZariskiLocalAtTarget Q]
-    {S X : Scheme.{0}} {I : Type} {U : I → S.Opens} (hU : iSup U = ⊤) {Z : I → Scheme.{0}} {p : X ⟶ S}
-    {q : ∀ i, Z i ⟶ (U i).toScheme} {ψ : ∀ i, Z i ⟶ X} (h : ∀ i, IsPullback (ψ i) (q i) p (U i).ι)
-    (hq : ∀ i, Q (q i)) : Q p := by
-  refine IsZariskiLocalAtTarget.of_iSup_eq_top U hU fun i => ?_
-  have e := (isPullback_morphismRestrict p (U i)).flip
-  rw [← IsPullback.isoIsPullback_hom_snd _ _ e (h i), MorphismProperty.cancel_left_of_respectsIso Q]
-  exact hq i
 
 theorem isPullback_sigmaι_desc {X : Scheme.{0}} {κ : Type} (V : κ → X.Opens)
     (hd : Pairwise fun i i' => Disjoint (V i) (V i')) {B : κ → Scheme.{0}} (f : ∀ i, B i ⟶ (V i).toScheme)
@@ -692,9 +679,9 @@ theorem good_sigmaDesc_of_disjoint_cover : ∀ {X : Scheme.{0}} {κ : Type} [Fin
   have hs : IsZariskiLocalAtTarget (@SmoothOfRelativeDimension.{0} g) :=
     HasRingHomProperty.instIsZariskiLocalAtTarget _
   exact
-    { proper := of_isPullback_opens_cover @IsProper hU sq fun i => (hf i).proper
-      smooth := of_isPullback_opens_cover (@SmoothOfRelativeDimension.{0} g) hU sq fun i => (hf i).smooth
-      conn := of_isPullback_opens_cover @GeometricallyConnected hU sq fun i => (hf i).conn }
+    { proper := _root_.GlobalTheory.CoverGlue.of_isPullback_cover @IsProper hU sq fun i => (hf i).proper
+      smooth := _root_.GlobalTheory.CoverGlue.of_isPullback_cover (@SmoothOfRelativeDimension.{0} g) hU sq fun i => (hf i).smooth
+      conn := _root_.GlobalTheory.CoverGlue.of_isPullback_cover @GeometricallyConnected hU sq fun i => (hf i).conn }
 
 end GlobalTheory.DualCon
 end -- clump:auto
@@ -844,11 +831,11 @@ theorem hasRepAF_of_disjoint_cover {S : Scheme.{0}} (A : Over S) [GrpObj A] (g :
     rw [(GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i)).2] at h1
     rw [(GlobalTheory.T.isOpenImmersion_whiskerLeft_range_preimage_snd A (j i')).2] at h2
     exact (disjoint_iff.1 (hjd hii')).le ⟨h1, h2⟩
-  obtain ⟨d, hd⟩ := GlobalTheory.T.exists_cechPicard_glue_finite_disjoint_cover (fun i => (A ◁ j i).left) hkc hkd (fun i => cls (P i) (hP i).1.fam.isLB)
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.CechPic.Glue.exists_pic_glue (fun i => (A ◁ j i).left) hkc hkd (fun i => cls (P i) (hP i).1.fam.isLB)
   obtain ⟨Pt, hPt, rfl⟩ := cls_surj d
   have hPi : ∀ i, LBIso (Pt.pull (A ◁ j i).left) (P i) := fun i =>
     (cls_eq_iff (pull_isLB hPt _) (hP i).1.fam.isLB).1 ((cls_pull hPt _ _).trans (hd i))
-  refine ⟨Bt, bt, Pt, ⟨GlobalTheory.T.additiveLineBundleFamily_of_disjoint_open_pieces A Bt B j hjc hjd P Pt (fun i => (hP i).1.fam) hPt hPi, fun T t N hN => ?_⟩, ?_, ?_⟩
+  refine ⟨Bt, bt, Pt, ⟨_root_.GlobalTheory.DualCon.ProdGlue.fam_of_pieces A Bt B j hjc hjd P Pt (fun i => (hP i).1.fam) hPt hPi, fun T t N hN => ?_⟩, ?_, ?_⟩
   · obtain ⟨x, hx, hxN⟩ := GlobalTheory.T.exists_point_disjointUnion_representingAdditiveFamily A X V hcov hdisj Bt B j hjc hjd b bt hb P Pt (fun i => (hP i).1) hPt hPi T t N hN
     refine ⟨x, ⟨hx, hxN⟩, fun y hy => ?_⟩
     refine GlobalTheory.T.point_disjointUnion_representingFamily_unique A X V hcov hdisj Bt B j hjc hjd b bt hb P Pt (fun i => (hP i).1) hPt hPi T y x (hy.1.trans hx.symm) ?_
@@ -1345,7 +1332,7 @@ theorem hasRep_opens {S X : Scheme.{0}} (i : X ⟶ S) [IsOpenImmersion i] (A : O
   have hr : Set.range V.ι ⊆ Set.range i := by
     rw [Scheme.Opens.range_ι]; exact hV
   let m : Over.mk V.ι ⟶ Over.mk i := Over.homMk (IsOpenImmersion.lift i V.ι hr) (IsOpenImmersion.lift_fac _ _ _)
-  exact GlobalTheory.T.baseChangeBis S A (Over.mk i) (Over.mk V.ι) g m h
+  exact _root_.GlobalTheory.DualCon.HasRep.baseChange S A (Over.mk i) (Over.mk V.ι) g m h
 
 theorem comap_ne_bot_away {R : Type} [CommRing R] (f : R) (J' : Ideal (Localization.Away f)) (h : J' ≠ ⊥) :
     J'.comap (algebraMap R (Localization.Away f)) ≠ ⊥ := by

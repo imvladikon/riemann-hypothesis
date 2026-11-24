@@ -1152,10 +1152,6 @@ theorem proper_pull {K W L : Type} [Field K] [CommRing W] [Field L] [Algebra K L
   have : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
   infer_instance
 
-theorem spMap_comp {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (f : R →+* S) (g : S →+* T) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
 theorem eq_one_of_lieMult_zero {S : Scheme.{0}} {O : Type} [CommRing O] {G : Over S} [GrpObj G] (a : OAct O G)
     {k : Type} [Field k] (t : Sp k ⟶ S) (τ : O →+* k) (h : LieMult a t τ 0) (w : epsPt t ⟶ G)
     (hw : IsLieEigen a t τ w) : w = 1 := by
@@ -1282,10 +1278,10 @@ theorem potGood_of_lieMult_zero : ∀ (V K : Type) [CommRing V] [IsDomain V] [Is
   let aG : OAct (𝓞 F) G := ⟨actG, g1, g2, g3, g4⟩
   obtain ⟨g', hg'⟩ := lift_ext V K W L Ω hc hfin g
   have e1 := GlobalTheory.LiePull.lieMult_pull (𝓞 F) _ _ A _ _ (pullback.fst _ _) act aL hAL hLc Ω (spMap g') σ 0
-  have hx : spMap g' ≫ spMap (algebraMap K L) = spMap g := by rw [← hg', spMap_comp]
+  have hx : spMap g' ≫ spMap (algebraMap K L) = spMap g := by rw [← hg', _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   have e2 := GlobalTheory.LiePull.lieMult_pull (𝓞 F) _ _ G _ _ φ aG aL hφ hGc Ω (spMap g') σ 0
   have hG0 : LieMult aG (spMap (g'.comp (algebraMap W L))) σ 0 := by
-    rw [spMap_comp]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
     exact e2.1 (e1.2 (hx ▸ hL))
   haveI : CharZero Ω := charZero_of_injective_ringHom g.injective
   have hinj : Function.Injective (g'.comp (algebraMap W L)) :=
@@ -1918,10 +1914,6 @@ open GlobalTheory.UPel.HT
 
 namespace GlobalTheory.UPel.HT
 
-lemma specMap_contravariant_comp_ringHom {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, ← Spec.map_comp]; rfl
-
 theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsDomain R]
     [CharZero R] [IsNoetherianRing R] (b : Base D R) (N : ℕ) (M : Model b N)
     (hc : 2 * D.a < Module.finrank ℚ D.F ∨ (D.IsDivision ∧ D.n < 2 * D.m)) : IsProper M.s := by
@@ -1941,7 +1933,7 @@ theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     (spMap (algebraMap K L)) oK
   have hLs : spMap (algebraMap K L) ≫ spMap ((algebraMap V K).comp β) =
       spMap ((algebraMap W L).comp ((algebraMap V W).comp β)) := by
-    rw [specMap_contravariant_comp_ringHom, ← RingHom.comp_assoc, ← RingHom.comp_assoc, hcomp]
+    rw [_root_.GlobalTheory.spMap_comp_ring, ← RingHom.comp_assoc, ← RingHom.comp_assoc, hcomp]
   generalize hs' : spMap (algebraMap K L) ≫ spMap ((algebraMap V K).comp β) = s₁ at oL hL
   obtain rfl : s₁ = spMap ((algebraMap W L).comp ((algebraMap V W).comp β)) := hs'.symm.trans hLs
   obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.SS.exists_isGrpPullback_of_isModel K W L oK.A G hmod oL.A hL.φ hL.cart
@@ -1950,7 +1942,7 @@ theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   obtain ⟨h₁⟩ := _root_.GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ oL oW M.univ _ _ hW hf
   obtain ⟨h₂⟩ := _root_.GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ oL oK M.univ _ _ hL hK
   obtain ⟨g, -, hg⟩ := M.rep (Sp L) _ oL
-  have e₁ : spMap (algebraMap W L) ≫ f = g := hg _ ⟨by rw [Category.assoc, hfs, specMap_contravariant_comp_ringHom], ⟨h₁⟩⟩
+  have e₁ : spMap (algebraMap W L) ≫ f = g := hg _ ⟨by rw [Category.assoc, hfs, _root_.GlobalTheory.spMap_comp_ring], ⟨h₁⟩⟩
   have e₂ : spMap (algebraMap K L) ≫ x = g := hg _ ⟨by rw [Category.assoc, hx, hLs], ⟨h₂⟩⟩
   exact ⟨W, L, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     inferInstance, inferInstance, hcomp, hloc, f, e₂.trans e₁.symm⟩

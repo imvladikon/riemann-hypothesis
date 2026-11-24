@@ -69,17 +69,6 @@ open NumberField IsDedekindDomain GlobalTheory.LatHecke Formalism.UG
 
 namespace GlobalTheory.ElemCartan
 
-section Dvr
-
-variable {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K]
-  [IsFractionRing O K] {r : ℕ}
-
-theorem coord_of_mem_std {x : Fin r → K} (hx : x ∈ (std O K r).1) (i : Fin r) :
-    ∃ a : O, algebraMap O K a = x i := by
-  apply _root_.GlobalTheory.LatHecke.coord_of_mem_std <;> assumption
-
-end Dvr
-
 section Adic
 
 variable {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
@@ -90,11 +79,6 @@ theorem zpow_mem_iff {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) (m : ℤ) 
     ← WithZero.coe_one, WithZero.coe_le_coe, ← ofAdd_zsmul, ← ofAdd_zero, Multiplicative.ofAdd_le,
     smul_eq_mul]
   omega
-
-theorem ne_zero_of_unif {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) : ϖ ≠ 0 := by
-  intro h
-  rw [IsUnifV, h, map_zero] at hϖ
-  exact WithZero.zero_ne_coe hϖ
 
 theorem antitone_zero_one {n j : ℕ} (a : Fin n → ℤ) (ha : Antitone a)
     (h01 : ∀ i, a i = 0 ∨ a i = 1)
@@ -112,7 +96,7 @@ theorem mem_doubleCoset_of_subElem :
     ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
       (n : ℕ) (ϖ : w.adicCompletion E), IsUnifV E w ϖ →
       ∀ (j : ℕ), j ≤ n → ∀ (g : GL (Fin n) (w.adicCompletion E)),
-        (haveI := GlobalTheory.RowSatakeBound.finite_residue w
+        (haveI := _root_.Formalism.UG.P.glint_finite_residueField w
          glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
            Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) →
          ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
@@ -120,11 +104,11 @@ theorem mem_doubleCoset_of_subElem :
              (a : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * diagJ n ϖ j *
                (b : Matrix (Fin n) (Fin n) (w.adicCompletion E))) := by
   intro E _ _ w n ϖ hϖ j _ g hg
-  have := GlobalTheory.RowSatakeBound.finite_residue w
+  have := _root_.Formalism.UG.P.glint_finite_residueField w
   obtain ⟨M₀, hM, hMg⟩ := hg
   set L := std (w.adicCompletionIntegers E) (w.adicCompletion E) n with hLdef
   set M : Lat (w.adicCompletionIntegers E) (w.adicCompletion E) n := M₀ with hMdef
-  have hϖ0 := ne_zero_of_unif w hϖ
+  have hϖ0 := _root_.Formalism.UG.P.satake_unif_ne_zero w hϖ
   have hϖO : ϖ ∈ Ov E w := by
     have := (zpow_mem_iff w hϖ 1).2 zero_le_one
     simpa using this
@@ -154,7 +138,7 @@ theorem mem_doubleCoset_of_subElem :
     intro i
     have hmem : Matrix.toLin' (D : Matrix (Fin n) (Fin n) (w.adicCompletion E)) (Pi.basisFun (w.adicCompletion E) (Fin n) i) ∈ glMap D L.1 :=
       ⟨_, Submodule.subset_span ⟨i, rfl⟩, rfl⟩
-    obtain ⟨c, hc⟩ := coord_of_mem_std (hle hmem) i
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.LatHecke.coord_of_mem_std (hle hmem) i
     rw [hDe] at hc
     simp only [Pi.basisFun_apply, Pi.single_eq_same, mul_one] at hc
     rw [← zpow_mem_iff w hϖ, ← hc]
@@ -170,7 +154,7 @@ theorem mem_doubleCoset_of_subElem :
     have hmem : (⟨ϖ, hϖO⟩ : w.adicCompletionIntegers E) • Pi.basisFun (w.adicCompletion E) (Fin n) i ∈ IsLocalRing.maximalIdeal (w.adicCompletionIntegers E) • L.1 :=
       Submodule.smul_mem_smul hϖm (Submodule.subset_span ⟨i, rfl⟩)
     obtain ⟨x, hx, hxe⟩ := hmax hmem
-    obtain ⟨c, hc⟩ := coord_of_mem_std hx i
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.LatHecke.coord_of_mem_std hx i
     have hxi := congrFun hxe i
     simp only [LinearMap.coe_restrictScalars] at hxi
     rw [hDe] at hxi
@@ -247,7 +231,7 @@ theorem stab_iff (n : ℕ) (g : GL (Fin n) (w.adicCompletion E)) :
 
 theorem coset_of_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (j : ℕ) (hj : j ≤ n)
     (g : GL (Fin n) (w.adicCompletion E)) :
-    haveI := GlobalTheory.RowSatakeBound.finite_residue w
+    haveI := _root_.Formalism.UG.P.glint_finite_residueField w
     glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
       Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) →
     ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
@@ -257,19 +241,19 @@ theorem coset_of_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ)
 theorem diag_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (S : Finset (Fin n))
     (d : GL (Fin n) (w.adicCompletion E))
     (hd : (d : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = Matrix.diagonal (fun i => if i ∈ S then ϖ else 1)) :
-    haveI := GlobalTheory.RowSatakeBound.finite_residue w
+    haveI := _root_.Formalism.UG.P.glint_finite_residueField w
     glMap d (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
       Subtype.val '' subElem S.card (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) :=
   _root_.GlobalTheory.DiagElem.glMap_diag_mem_subElem E w n ϖ hϖ S d hd
 
 theorem elem_of_coset (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (j : ℕ) (hj : j ≤ n)
     (g : GL (Fin n) (w.adicCompletion E)) :
-    haveI := GlobalTheory.RowSatakeBound.finite_residue w
+    haveI := _root_.Formalism.UG.P.glint_finite_residueField w
     (∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
       (g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = (a : Matrix (Fin n) (Fin n) _) * diagJ n ϖ j * (b : Matrix (Fin n) (Fin n) _)) →
     glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
       Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) := by
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  haveI := _root_.Formalism.UG.P.glint_finite_residueField w
   rintro ⟨a, ha, b, hb, e⟩
   set S : Finset (Fin n) := Finset.univ.filter fun i => (i : ℕ) < j
   have hS : S.card = j := by
@@ -308,11 +292,11 @@ theorem heckeVec_Tj_eq_sum {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ (GL (Fin n) (w.adicCompletion E)) V) {x : V} (hx : x ∈ fixed ρ (KGL w (n := n)))
     {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) {j : ℕ} (hj : j ≤ n)
     (s : Finset (GL (Fin n) (w.adicCompletion E)))
-    (hs : haveI := GlobalTheory.RowSatakeBound.finite_residue w
+    (hs : haveI := _root_.Formalism.UG.P.glint_finite_residueField w
       Set.BijOn (fun g => glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1) s
         (Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n))) :
     heckeVec ρ (KGL w (n := n)) (Tj ℂ n (Ov E w) ϖ j) x = ∑ g ∈ s, ρ g x := by
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  haveI := _root_.Formalism.UG.P.glint_finite_residueField w
   set D := Matrix.GeneralLinearGroup.mkOfDetNeZero (diagJ n ϖ j) (diagJ_det_ne hϖ j)
   have hD : ∀ g : GL (Fin n) (w.adicCompletion E), g ∈ DoubleCoset.doubleCoset D (KGL w (n := n) : Set _) (KGL w (n := n)) ↔
       ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
@@ -379,7 +363,7 @@ theorem isUnitarySatakeAt_of_hasSatake : ∀ (E : Type) [Field E] [NumberField E
   letI cd : InnerProductSpace.Core ℂ π.V := formCore B hB hpos
   letI : NormedAddCommGroup π.V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
   letI : InnerProductSpace ℂ π.V := InnerProductSpace.ofCore cd.toCore
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  haveI := _root_.Formalism.UG.P.glint_finite_residueField w
   have hn : ∀ y : π.V, ‖y‖ ^ 2 = (B y y).re := fun y => by
     rw [← @inner_self_eq_norm_sq ℂ]
     rfl

@@ -336,10 +336,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.CFin
 
-theorem exists_nat_mul_isIntegral {E : Type} [Field E] [NumberField E] (x : E) :
-    ∃ n : ℕ, 0 < n ∧ IsIntegral ℤ ((n : E) * x) :=
-  _root_.UpperTheory.Reformulated.B.DYha3.main x
-
 theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] {𝒦 : Set (Af F ⊗[F] E)} (h𝒦 : IsCompact 𝒦) :
     ∃ d : ℕ, 0 < d ∧ ∀ e : E, inclR (F := F) (Af F) e ∈ 𝒦 → IsIntegral ℤ ((d : E) * e) := by
@@ -356,7 +352,7 @@ theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberFie
     simp [Algebra.algebraMap_eq_smul_one]
   choose m hm hmi using fun i =>
     GroundTheory.Automorphic.CuspidalSpectrum.exists_natCast_mul_integral_of_isCompact F (h𝒦.image (hc i))
-  choose D hD hDi using fun i => exists_nat_mul_isIntegral (b i)
+  choose D hD hDi using fun i => _root_.UpperTheory.Reformulated.B.DYha3.main (b i)
   refine ⟨(∏ i, m i) * ∏ i, D i, Nat.mul_pos (Finset.prod_pos fun i _ => hm i)
     (Finset.prod_pos fun i _ => hD i), fun e he => ?_⟩
   have hsum : ((((∏ i, m i) * ∏ i, D i : ℕ)) : E) * e =
@@ -1453,13 +1449,6 @@ variable {σ : E →ₐ[F] E} {n r m : ℕ} {J : Matrix (Fin n) (Fin n) E} {X Y 
   {Z : Matrix (Fin n) (Fin m) E} {Qi : Matrix (Idx r m) (Fin n) E}
 
 
-omit [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] in
-theorem norm_matrix_triple_product_le {a b c d : Type} [Fintype b] [Fintype c] (A : Matrix a b ℂ) (M : Matrix b c ℂ)
-    (B : Matrix c d ℂ) {α μ β : ℝ} (hA : ∀ i j, ‖A i j‖ ≤ α) (hM : ∀ i j, ‖M i j‖ ≤ μ) (hB : ∀ i j, ‖B i j‖ ≤ β)
-    (i : a) (j : d) : ‖(A * M * B) i j‖ ≤ Fintype.card b * Fintype.card c * (α * μ * β) :=
-  _root_.UpperTheory.Reformulated.B.Yla6.main A M B hA hM hB i j
-
-
 omit [Field F] [NumberField F] [Algebra F E] in
 theorem entry_le_sum {a b : Type} [Fintype a] [Fintype b] (M : Matrix a b E) (φ : E →+* ℂ) (i : a) (j : b) :
     ‖φ (M i j)‖ ≤ ∑ ψ : E →+* ℂ, ∑ u, ∑ v, ‖ψ (M u v)‖ :=
@@ -1519,7 +1508,7 @@ theorem block_diagonal_bound_weighted : ∀ {ι : Type} [Fintype ι] [DecidableE
               (inv_nonneg.2 hwy.le)
         _ = B * R := by field_simp
     · simpa using mul_nonneg hB0 hR0
-  have := norm_matrix_triple_product_le (bd b P) (bd b T) (bd b P') hbP hbT hbP' u v
+  have := _root_.UpperTheory.Reformulated.B.Yla6.main (bd b P) (bd b T) (bd b P') hbP hbT hbP' u v
   refine this.trans (le_of_eq ?_)
   ring
 
@@ -1609,7 +1598,7 @@ theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame �
   rw [ca, cai] at hD
   have bM : ∀ (g : GAd σ J) (β : ℝ), (∀ i j, ‖am g i j‖ ≤ β) → β ≤ max Bp (max Bpi By) → ∀ i j, ‖cd (am g) i j‖ ≤ b0 :=
     fun g β hg hβ i j => by
-      have := norm_matrix_triple_product_le Qic (am g) Qc (fun i j => entry_le_sum Qi φ i j) hg (fun i j => entry_le_sum (frm X Z Y) φ i j) i j
+      have := _root_.UpperTheory.Reformulated.B.Yla6.main Qic (am g) Qc (fun i j => entry_le_sum Qi φ i j) hg (fun i j => entry_le_sum (frm X Z Y) φ i j) i j
       simp only [Fintype.card_fin] at this
       refine this.trans ?_
       rw [hb0]

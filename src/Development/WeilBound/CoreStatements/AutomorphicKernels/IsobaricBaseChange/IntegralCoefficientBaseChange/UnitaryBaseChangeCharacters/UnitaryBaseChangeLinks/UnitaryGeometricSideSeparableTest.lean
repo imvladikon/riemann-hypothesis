@@ -292,8 +292,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-theorem _root_.GlobalTheory.T.exists_commute_mul_cT_eq_of_integral_hermitian_polynomial : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] [CompleteSpace L] (σ : L →+* L) (ϖ : L) (q : ℕ), IsUnramInv ϖ σ q → ∀ (n : ℕ) (y : Matrix (Fin n) (Fin n) L) (Q₀ : (intL L)[X]), (∀ i j, y i j ∈ intL L) → cT σ y * y = 1 → y.charpoly = Q₀.map (intL L).subtype → Q₀.Separable → ∀ t : GL (Fin n) L, (∀ i j, t.val i j ∈ intL L) → (∀ i j, (t⁻¹ : GL (Fin n) L).val i j ∈ intL L) → cT σ t.val = t.val → (∃ p : (intL L)[X], t.val = aeval y (p.map (intL L).subtype)) → ∃ s : GL (Fin n) L, s.val * y = y * s.val ∧ s.val * cT σ s.val = t.val := by
-  first | exact @GlobalTheory.NormEq.hermUnit_eq_norm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.IntegralUnitaryConjugacyLatticeStatement =====
@@ -481,7 +479,7 @@ theorem locConj [CompleteSpace L] {σ : L →+* L} {ϖ : L} {q : ℕ} (hσ : IsU
     change T = _
     rw [← hT₀, hp, ← hYm, GlobalTheory.UTr.aeval_map_map]
   have hch : ym.charpoly = Y.val.charpoly.map φ := by rw [← hYm, Matrix.charpoly_map]
-  obtain ⟨s, hs1, hs2⟩ := GlobalTheory.T.exists_commute_mul_cT_eq_of_integral_hermitian_polynomial L σ ϖ q hσ n ym Y.val.charpoly hyI hyU hch hs tU hTI htiI hTfix ⟨p, hTp⟩
+  obtain ⟨s, hs1, hs2⟩ := _root_.GlobalTheory.NormEq.hermUnit_eq_norm L σ ϖ q hσ n ym Y.val.charpoly hyI hyU hch hs tU hTI htiI hTfix ⟨p, hTp⟩
   refine ⟨s⁻¹ * g, ?_, ?_⟩
   · set S := s.val
     set Si := (s⁻¹ : GL (Fin n) L).val
@@ -558,8 +556,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-theorem _root_.GlobalTheory.T.kappa_sign_multiplicative : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ, 1 ≤ n → ∀ (w : Pl E) (Q₁ Q₂ Q₃ : (w.adicCompletion E)[X]) (γ g : UL n w), γ.1.val.charpoly.Separable → Q₁ * Q₂ ∣ γ.1.val.charpoly → IsCoprime Q₁ Q₂ → IsCsr w Q₁ → IsCsr w Q₂ → kapSign n w (Q₁ * Q₂) γ.1 = kapSign n w Q₁ γ.1 * kapSign n w Q₂ γ.1 ∧ kapSign n w Q₃ (g⁻¹ * γ * g).1 = kapSign n w Q₃ γ.1 ∧ (kapSign n w Q₃ γ.1 = 1 ∨ kapSign n w Q₃ γ.1 = -1) := by
-  first | exact @GlobalTheory.KapSignMul.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.KappaSignMultiplicative =====
@@ -756,8 +752,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep GlobalTheory.PRep Formalism.UG Formalism.BasicNotions GlobalTheory.UnitaryBC Formalism.L2.Host GlobalTheory.BCT
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-theorem _root_.GlobalTheory.T.twisted_GL_mass_formula : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (δ : GL (Fin n) E), (δ * thE E n δ).val.charpoly ∈ Ell E n → mass (thF E n) (ratF E n).range (ratF E n δ) = kap (δ * thE E n δ).val.charpoly * 2 ^ nfac (δ * thE E n δ).val.charpoly := by
-  first | exact @GlobalTheory.BCT.mass_eq_kap
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.TwistedGLMassFormulaStatement =====
@@ -1009,7 +1003,7 @@ theorem exists_norm (γ : UE E n) : ∃ δ : GL (Fin n) E, δ * thE E n δ = γ.
   haveI : T2Space (Af E) := inferInstanceAs (T2Space (RestrictedProduct _ _ _))
   haveI : T2Space (GL (Fin n) (Af E)) := Units.isEmbedding_embedProduct.t2Space
   haveI : T2Space (finU (E := E) (n := n)) := T2Space.of_injective_continuous pU_injective continuous_pU
-  refine GlobalTheory.T.twistedCentralizerMass_eq_of_topEquiv _ _ _ _ _ _ _ _ (isClosed_twCent _ continuous_id _) (isClosed_twCent _ continuous_thF _)
+  refine _root_.GlobalTheory.MassTor.mass_eq_of_equiv _ _ _ _ _ _ _ _ (isClosed_twCent _ continuous_id _) (isClosed_twCent _ continuous_thF _)
     (centEquiv (finPt γ) (ratF E n (B * (PhiU n E)⁻¹)) fun g => ?_) fun t => mem_ratFinU t.1
   rw [map_mul, map_inv, hΦ, pU_finPt]
   refine (mem_twCent _ _ g).trans (grp_iff _ (tau_tau _ conjFin_conjFin) _ _ _ PhiU_sq_comm ?_ (fun g hg => ?_) g)
@@ -1031,7 +1025,7 @@ theorem mass_unitary : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], U
   intro E _ _ _ hE n _ γ hγ
   obtain ⟨δ, hδ, hm⟩ := exists_norm γ
   rw [hm, ← hδ]
-  exact GlobalTheory.T.twisted_GL_mass_formula E hE n δ (hδ ▸ hγ)
+  exact _root_.GlobalTheory.BCT.mass_eq_kap E hE n δ (hδ ▸ hγ)
 
 end GlobalTheory.BCT.MassU
 end -- clump:auto
@@ -1172,7 +1166,7 @@ theorem csr_one (w : Pl E) : IsCsr w (1 : (w.adicCompletion E)[X]) := by
 
 theorem kapSign_conj (hU : Unr E) (hn : 1 ≤ n) {w : Pl E} (Q : (w.adicCompletion E)[X]) (y g : UL n w)
     (hy : y.1.val.charpoly.Separable) : kapSign n w Q (g⁻¹ * y * g).1 = kapSign n w Q y.1 :=
-  (GlobalTheory.T.kappa_sign_multiplicative E hU n hn w 1 1 Q y g hy (by simp) isCoprime_one_left (csr_one w) (csr_one w)).2.1
+  (_root_.GlobalTheory.KapSignMul.main E hU n hn w 1 1 Q y g hy (by simp) isCoprime_one_left (csr_one w) (csr_one w)).2.1
 
 abbrev LocCl (n : ℕ) (P : E[X]) (w : Pl E) : Type :=
   {c : TwCl (MonoidHom.id (UL n w)) // c.rep.1.val.charpoly = atPl w P}
@@ -1292,7 +1286,7 @@ theorem sign_mul (hU : Unr E) (hn : 1 ≤ n) {P Q₁ Q₂ : E[X]} (hP : P ∈ El
   have hs : γ.1.val.charpoly.Separable := by
     rw [hγ]
     exact atPl_separable hP w
-  have key := (GlobalTheory.T.kappa_sign_multiplicative E hU n hn w (atPl w Q₁) (atPl w Q₂) 1 γ 1 hs hd hcw (csr_at hU hP h1 d1 w)
+  have key := (_root_.GlobalTheory.KapSignMul.main E hU n hn w (atPl w Q₁) (atPl w Q₂) 1 γ 1 hs hd hcw (csr_at hU hP h1 d1 w)
     (csr_at hU hP h2 d2 w)).1
   have e : atPl w (Q₁ * Q₂) = atPl w Q₁ * atPl w Q₂ := Polynomial.map_mul _
   rw [e]
@@ -1331,7 +1325,7 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
     refine finprod_mem_induction (fun z : ℂ => z = 1 ∨ z = -1) (Or.inl rfl) ?_ ?_
     · rintro a b (rfl | rfl) (rfl | rfl) <;> norm_num
     · intro w _
-      exact (GlobalTheory.T.kappa_sign_multiplicative E hU n hn w 1 1 (atPl w Q) (x w).1.rep 1 (hsepx w) (by simp) isCoprime_one_left
+      exact (_root_.GlobalTheory.KapSignMul.main E hU n hn w 1 1 (atPl w Q) (x w).1.rep 1 (hsepx w) (by simp) isCoprime_one_left
         (csr_one w) (csr_one w)).2.2
   have hdiv := (GlobalTheory.T.monic_divisor_sign_sum E P hP.1 hP.2.2.1 σ hmul hpm).2
   have hbij : Function.Bijective (fun d : Fac P => (⟨d.1.1, d.2.1, ⟨d.1.2, d.2.2.2.symm⟩⟩ :
@@ -1373,7 +1367,7 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
         obtain ⟨g, hg⟩ := hy1 w
         rw [hg]
         exact kapSign_conj hU hn _ _ _ (hsepx w)
-      obtain ⟨γ, hγP, hγ⟩ := (GlobalTheory.T.unitary_conjugacy_sign_product E hU n hn S hS P hP).2.2 y hyP hyK hyS
+      obtain ⟨γ, hγP, hγ⟩ := (_root_.GlobalTheory.UnitaryClasses.main E hU n hn S hS P hP).2.2 y hyP hyK hyS
       obtain ⟨h, hh⟩ := rep_cls γ
       refine ⟨⟨cls γ, by rw [hh, charpoly_conj', hγP]⟩, fun w hw => ?_⟩
       apply Subtype.ext
@@ -1382,7 +1376,7 @@ theorem signs (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {P
       obtain ⟨k, hk⟩ := hy1 w
       rw [hh, locPt_conj hU, cls_conj, hg, cls_conj, hk, cls_conj, cls_rep]
     · rintro ⟨r, hr⟩ Q hQ hQP
-      rw [← (GlobalTheory.T.unitary_conjugacy_sign_product E hU n hn S hS P hP).2.1 r.1.rep r.2 Q hQ hQP]
+      rw [← (_root_.GlobalTheory.UnitaryClasses.main E hU n hn S hS P hP).2.1 r.1.rep r.2 Q hQ hQP]
       refine finprod_mem_congr rfl fun w hw => ?_
       have e : (x w).1 = cls (locPt w r.1.rep) := (congrArg Subtype.val (hr w hw)).symm
       obtain ⟨g, hg⟩ := rep_cls (locPt w r.1.rep)
@@ -1443,7 +1437,7 @@ theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {
     simpa [mul_assoc] using hw
   case h4 =>
     intro r r' h
-    have := (GlobalTheory.T.unitary_conjugacy_sign_product E hU n hn S hS P hP).1 r.1.rep r'.1.rep r.2 r'.2 fun w hw => by
+    have := (_root_.GlobalTheory.UnitaryClasses.main E hU n hn S hS P hP).1 r.1.rep r'.1.rep r.2 r'.2 fun w hw => by
       have e := congrArg Subtype.val (h w hw)
       exact (cls_eq_iff _ _).1 e
     obtain ⟨g, hg⟩ := this
@@ -1499,7 +1493,7 @@ theorem geomURat_eq_geomU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     (∃ w ∈ S, ∀ y, f w y ≠ 0 → y.1.val.charpoly.Separable) →
     geomURat lam (fun γ => ∏ᶠ w ∈ S, twOrb (MonoidHom.id _) (KL n w) (locPt w γ) (f w)) = geomU S lam f := by
   intro E _ _ _ hU n hn S hS lam K' hK' f hf _
-  have hFin := GlobalTheory.T.finite_elliptic_charpolys_support E hU n S hS f (fun w => (hf.1 w).1) hf.2
+  have hFin := _root_.GlobalTheory.FinPolySupp.finpoly E hU n S hS f (fun w => (hf.1 w).1) hf.2
   let F := hFin.toFinset
   have hmemF : ∀ P, P ∈ F ↔ P ∈ Ell E n ∧ ∀ w ∈ S, ∃ y : UL n w, f w y ≠ 0 ∧ y.1.val.charpoly = atPl w P :=
     fun P => hFin.mem_toFinset

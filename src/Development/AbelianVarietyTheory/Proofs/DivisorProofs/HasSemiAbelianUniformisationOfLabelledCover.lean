@@ -338,8 +338,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.cubeSymm_compat_descends_from_pushed_points : ∀ {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [IsCommMonObj G] [GrpObj G'] [IsCommMonObj G'] {f : S' ⟶ S} {β : G'.left ⟶ G.left} (h : IsGrpPullback G' G f β), ∀ (L : RigLB G) (c : CubicalStr G L) (s : LB.Gen (LB.LinComb L.L (K := Fin 2) ![(ι[G]).left, 𝟙 G.left] ![1, -1])), s.IsGen → (∀ U, Function.Injective ((cubeMapOf h).F3.app U).hom) → (∀ {X : Scheme.{0}} (a b : (G3 G).left ⟶ X), (cubeMapOf h).F3 ≫ a = (cubeMapOf h).F3 ≫ b → a = b) → (∀ (T : Over S') (z : T.left) (I : (T.left ⟶ G.left) → L.L.ι), Good L.L z I → ∀ x y u : T ⟶ G', cubV c z I (pushHom h T x⁻¹) (pushHom h T y⁻¹) (pushHom h T u⁻¹) * val s (pushHom h T (x * y)).left z I * val s (pushHom h T (x * u)).left z I * val s (pushHom h T (y * u)).left z I = cubV c z I (pushHom h T x) (pushHom h T y) (pushHom h T u) * val s (pushHom h T (x * y * u)).left z I * val s (pushHom h T x).left z I * val s (pushHom h T y).left z I * val s (pushHom h T u).left z I) → ∀ (T : Over S) (x y u : T ⟶ G) (z : T.left) (J : (T.left ⟶ G.left) → L.L.ι), Good L.L z J → cubV c z J x⁻¹ y⁻¹ u⁻¹ * val s (x * y).left z J * val s (x * u).left z J * val s (y * u).left z J = cubV c z J x y u * val s (x * y * u).left z J * val s x.left z J * val s y.left z J * val s u.left z J := by
-  first | exact @GlobalTheory.CubeSymDescent.of_push
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubeSymmCompatDescendsFromPushedPointsStatement =====
@@ -576,8 +574,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_transported_generator_descend_bijective_app : ∀ {X X' Y Y' : Scheme.{0}} {K : Type} [Fintype K] {M : LB X} {L : LB X'} {F : X' ⟶ X} {w : LB.Iso L (M.pull F)}, PGen w → M.IsLB → L.IsLB → ∀ (π : Y' ⟶ Y), (∀ V : Y.Opens, Function.Bijective (π.app V).hom) → ∀ {φ' : K → (Y' ⟶ X')} {φ : K → (Y ⟶ X)}, (∀ k, φ' k ≫ F = π ≫ φ k) → ∀ {ε : K → ℤ} (a : LB.Gen (LB.LinComb L φ' ε)), a.IsGen → ∃ t : LB.Gen (LB.LinComb M φ ε), t.IsGen ∧ ∀ (Z : Scheme.{0}) (r : Z ⟶ Y') (z : Z) (I : (Z ⟶ X) → M.ι) (J : (Z ⟶ X') → L.ι), Good M z I → Good L z J → val t (r ≫ π) z I = (∏ k, gw w (r ≫ φ' k) z (I ((r ≫ φ' k) ≫ F)) (J (r ≫ φ' k)) ^ ε k) * val a r z J := by
-  first | exact @GlobalTheory.Mum.BijDescent.exists_descend_bij
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTransportedGeneratorDescendBijectiveAppStatement =====
@@ -660,7 +656,7 @@ theorem exists_cp_descent : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
   have k3 := key _ _ _ hf3 A3
   have k4 := key _ _ _ hf4 A4
 
-  obtain ⟨rig, hr, -⟩ := GlobalTheory.T.exists_transported_generator_descend_bijective_app hp hL P'.L.isLB M.π k0.1 (K := PUnit) (φ' := fun _ => eSec G')
+  obtain ⟨rig, hr, -⟩ := _root_.GlobalTheory.Mum.BijDescent.exists_descend_bij hp hL P'.L.isLB M.π k0.1 (K := PUnit) (φ' := fun _ => eSec G')
     (φ := fun _ => eSec G) (fun _ => (cubeMapOf h).e_comm) P'.L.rig P'.L.rigGen
 
   have hι : (ι[G']).left ≫ β = β ≫ (ι[G]).left := by
@@ -673,11 +669,11 @@ theorem exists_cp_descent : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
     fin_cases k
     · exact hι
     · exact (Category.id_comp _).trans (Category.comp_id _).symm
-  obtain ⟨s, hs, vs⟩ := GlobalTheory.T.exists_transported_generator_descend_bijective_app hp hL P'.L.isLB β k1.1 hc₂ P'.sym P'.sym_gen
+  obtain ⟨s, hs, vs⟩ := _root_.GlobalTheory.Mum.BijDescent.exists_descend_bij hp hL P'.L.isLB β k1.1 hc₂ P'.sym P'.sym_gen
 
   have hc : ∀ I : thK.{0}, thφ G' (x3 G') I ≫ β = (cubeMapOf h).F3 ≫ thφ G (x3 G) I :=
     fun I => (cubeMapOf h).psum_comm I.down
-  obtain ⟨t, ht, vt⟩ := GlobalTheory.T.exists_transported_generator_descend_bijective_app hp hL P'.L.isLB (cubeMapOf h).F3 k3.1 hc P'.c.t P'.c.isGen
+  obtain ⟨t, ht, vt⟩ := _root_.GlobalTheory.Mum.BijDescent.exists_descend_bij hp hL P'.L.isLB (cubeMapOf h).F3 k3.1 hc P'.c.t P'.c.isGen
   let L₁ : RigLB G := ⟨L, rig, hL, hr⟩
   let Wf : ∀ {T : Over M.S} (z : T.left), ((T.left ⟶ G.left) → L.ι) → ((T.left ⟶ G'.left) → P'.L.L.ι) →
       (T ⟶ G') → (T.left.presheaf.stalk z)ˣ := fun z I J x => gw w x.left z (I (x.left ≫ β)) (J x.left)
@@ -708,7 +704,7 @@ theorem exists_cp_descent : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
       simp only [ofMul_mul, ofMul_inv, inv_inv]
       abel
   subst hct
-  have symCub := GlobalTheory.T.cubeSymm_compat_descends_from_pushed_points h L₁ c s hs (fun U => (k3.1 U).1) k3.2 fun T z I hI x y u => by
+  have symCub := _root_.GlobalTheory.CubeSymDescent.of_push h L₁ c s hs (fun U => (k3.1 U).1) k3.2 fun T z I hI x y u => by
     obtain ⟨J, hJ⟩ := GlobalTheory.UU.exists_good_pt P'.L.isLB z
     refine GlobalTheory.UU.sym_cub_alg (MonoidHom.id _) (fun a => (Wf z I J a)⁻¹) (θ := cubV P'.c z J)
       (θ' := fun a b d => cubV c z I (pushHom h T a) (pushHom h T b) (pushHom h T d))
@@ -935,14 +931,6 @@ noncomputable section
 
 namespace GlobalTheory.Mum.ClosedFibreInj
 
-theorem spMap_epi {K L : Type} [Field K] [Field L] (f : K →+* L) : Epi (spMap f) := by
-  letI := f.toAlgebra
-  haveI : Flat (spMap f) := by
-    rw [spMap, HasRingHomProperty.Spec_iff (P := @Flat)]
-    exact (show Module.Flat K L from inferInstance)
-  haveI : Surjective (spMap f) := ⟨fun z => ⟨⟨⊥, Ideal.isPrime_bot⟩, Subsingleton.elim _ _⟩⟩
-  exact Flat.epi_of_flat_of_surjective _
-
 theorem point_lift (Ω : Type) [Field Ω] (X Y : Scheme.{0}) (g : Y ⟶ X) (hg : Surjective g) (x : Sp Ω ⟶ X) :
     ∃ (Ω' : Type) (_ : Field Ω') (io : Ω →+* Ω') (y : Sp Ω' ⟶ Y), y ≫ g = spMap io ≫ x := by
   haveI := hg
@@ -954,9 +942,7 @@ theorem point_lift (Ω : Type) [Field Ω] (X Y : Scheme.{0}) (g : Y ⟶ X) (hg :
   rw [Category.assoc, ← pullback.condition, ← Category.assoc]
   exact congrArg (· ≫ x) (Spec.map_preimage _).symm
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [← Spec.map_comp]; rfl
+alias spMap_comp := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem closedFibre_inj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (M : Modif R) (G' : Over M.S) [GrpObj G'] (E : Emb M.π G') (N : Near M.π G') (fU : N.U.left ⟶ PSpace R E.N) (l : pullback N.U.hom M.π ⟶ E.H.toScheme), l ≫ E.H.ι = N.u → l ≫ E.f = pullback.fst _ _ ≫ fU → Surjective M.π → ∀ (Ω : Type) [Field Ω] (κ : ResidueField R →+* Ω) (a a' : Sp Ω ⟶ N.U.left), a ≫ N.U.hom = spMap (κ.comp (residue R)) → a' ≫ N.U.hom = spMap (κ.comp (residue R)) → a ≫ fU = a' ≫ fU → a = a' := by
   intro R _ _ _ M G' _ E N fU l hl hlf hπ Ω _ κ a a' ha ha' hf
@@ -1004,8 +990,8 @@ theorem closedFibre_inj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
   simp only [← Category.assoc, cancel_mono] at hx1
   have h2 := congrArg (· ≫ pullback.fst N.U.hom M.π) hx1
   simp only [Category.assoc, pullback.lift_fst] at h2
-  haveI := spMap_epi io'
-  haveI := spMap_epi io
+  haveI := _root_.GlobalTheory.ThetaDescent.epi_spMap io'
+  haveI := _root_.GlobalTheory.ThetaDescent.epi_spMap io
   rw [cancel_epi, cancel_epi] at h2
   exact h2.symm
 
@@ -1060,8 +1046,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.spMap_field_ext_cancel : ∀ (Ω Ω' : Type) [Field Ω] [Field Ω'] (io : Ω →+* Ω') (X : Scheme.{0}) (a b : Sp Ω ⟶ X), spMap io ≫ a = spMap io ≫ b → a = b := by
-  first | exact @GlobalTheory.Mum.spMap_field_cancel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapFieldExtCancelStatement =====
@@ -1085,20 +1069,20 @@ theorem specMap_contravariant_comp_ringHom {A B C : Type} [CommRing A] [CommRing
 
 theorem Near.closed_product_unique : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (M : Modif R) (G' : Over M.S) [GrpObj G'] (E : Emb M.π G') (N : Near M.π G') (fU : N.U.left ⟶ PSpace R E.N) (l : pullback N.U.hom M.π ⟶ E.H.toScheme), l ≫ E.H.ι = N.u → l ≫ E.f = pullback.fst _ _ ≫ fU → Surjective M.π → ∀ (Ω : Type) [Field Ω] (κ : ResidueField R →+* Ω) (s s' : Sp Ω ⟶ M.S) (a b c c' : Sp Ω ⟶ N.U.left) (x y : Over.mk s ⟶ G') (x' y' : Over.mk s' ⟶ G'), s ≫ M.π = spMap (κ.comp (residue R)) → s' ≫ M.π = spMap (κ.comp (residue R)) → N.Pt s a x.left → N.Pt s b y.left → N.Pt s c (x * y).left → N.Pt s' a x'.left → N.Pt s' b y'.left → N.Pt s' c' (x' * y').left → c = c' := by
   intro R _ _ _ M G' _ E N fU l hl1 hl2 hsurj Ω _ κ s s' a b c c' x y x' y' hs hs' ha hb hc ha' hb' hc'
-  obtain ⟨Ω₁, _, io₁, ca, cb, hca, hcb, hcc⟩ := GlobalTheory.T.closedFibre_embedding_mul_image_eq_of_field_point R M G' E N fU l hl1 hl2 Ω κ s a b c x y hs ha hb hc
+  obtain ⟨Ω₁, _, io₁, ca, cb, hca, hcb, hcc⟩ := _root_.GlobalTheory.Mum.closed_product_image R M G' E N fU l hl1 hl2 Ω κ s a b c x y hs ha hb hc
   obtain ⟨Ω₂, _, io₂, ca', cb', hca', hcb', hcc'⟩ :=
     GlobalTheory.T.closedFibre_embedding_mul_image_eq_of_field_point R M G' E N fU l hl1 hl2 Ω κ s' a b c' x' y' hs' ha' hb' hc'
   obtain ⟨Ω₃, _, j₁, j₂, hj⟩ := GlobalTheory.T.exists_common_field_extension' Ω Ω₁ Ω₂ io₁ io₂
   have : Mono E.j := by haveI := E.imm; infer_instance
 
   let g₁ : Over.mk (spMap ((j₁.comp io₁).comp κ)) ⟶ Over.mk (spMap (io₁.comp κ)) :=
-    Over.homMk (spMap j₁) (by simp only [Over.mk_hom, specMap_contravariant_comp_ringHom])
+    Over.homMk (spMap j₁) (by simp only [Over.mk_hom, _root_.GlobalTheory.spMap_comp_ring])
   let g₂ : Over.mk (spMap ((j₁.comp io₁).comp κ)) ⟶ Over.mk (spMap (io₂.comp κ)) :=
-    Over.homMk (spMap j₂) (by simp only [Over.mk_hom, specMap_contravariant_comp_ringHom, hj])
+    Over.homMk (spMap j₂) (by simp only [Over.mk_hom, _root_.GlobalTheory.spMap_comp_ring, hj])
   have hg₁ : g₁.left = spMap j₁ := rfl
   have hg₂ : g₂.left = spMap j₂ := rfl
-  have e₁ : spMap j₁ ≫ spMap io₁ = spMap (j₁.comp io₁) := specMap_contravariant_comp_ringHom _ _
-  have e₂ : spMap j₂ ≫ spMap io₂ = spMap (j₁.comp io₁) := by rw [specMap_contravariant_comp_ringHom, hj]
+  have e₁ : spMap j₁ ≫ spMap io₁ = spMap (j₁.comp io₁) := _root_.GlobalTheory.spMap_comp_ring _ _
+  have e₂ : spMap j₂ ≫ spMap io₂ = spMap (j₁.comp io₁) := by rw [_root_.GlobalTheory.spMap_comp_ring, hj]
   have hA : g₁ ≫ ca = g₂ ≫ ca' := by
     ext1
     rw [← cancel_mono E.j]
@@ -1128,7 +1112,7 @@ theorem Near.closed_product_unique : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   have key := GlobalTheory.T.closedFibre_fieldPoints_injective_projective_map R M G' E N fU l hl1 hl2 hsurj Ω₃ ((j₁.comp io₁).comp κ) (spMap (j₁.comp io₁) ≫ c)
     (spMap (j₁.comp io₁) ≫ c') (hco c (hlies s c _ hs hc)) (hco c' (hlies s' c' _ hs' hc'))
     (by simpa only [Category.assoc] using hfU)
-  exact GlobalTheory.T.spMap_field_ext_cancel Ω Ω₃ (j₁.comp io₁) N.U.left c c' key
+  exact _root_.GlobalTheory.Mum.spMap_field_cancel Ω Ω₃ (j₁.comp io₁) N.U.left c c' key
 
 end GlobalTheory.Mum
 end -- clump:auto
@@ -1163,8 +1147,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_spMap_residueField_of_forall_eq_closedPoint : ∀ (R : Type) [CommRing R] [IsLocalRing R] (Ω : Type) [Field Ω] (g : Sp Ω ⟶ Sp R), (∀ w, g w = closedPoint R) → ∃ κ : ResidueField R →+* Ω, g = spMap (κ.comp (residue R)) := by
-  first | exact @GlobalTheory.Mum.spMap_factor_residueField_of_closedPoint
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapFactorResidueFieldOfClosedPointStatement =====
@@ -1200,7 +1182,7 @@ theorem Near.closed_fibre_constant : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     show (P.fromSpecResidueField w ≫ pullback.snd _ _) ≫ (O.ι ≫ pullback.fst (N.U ⊗ N.U).hom M.π) =
       (P.fromSpecResidueField w ≫ pullback.fst _ _) ≫ (O.ι ≫ pullback.fst (N.U ⊗ N.U).hom M.π)
     rw [Category.assoc, Category.assoc, pullback.condition]
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_spMap_residueField_of_forall_eq_closedPoint R (P.residueField w)
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.Mum.spMap_factor_residueField_of_closedPoint R (P.residueField w)
     ((t ≫ O.ι ≫ pullback.fst (N.U ⊗ N.U).hom M.π) ≫ (N.U ⊗ N.U).hom) (fun u => by
       rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, ht]; exact hcl)
   have key : ∀ (t₁ : Sp (P.residueField w) ⟶ O.toScheme),

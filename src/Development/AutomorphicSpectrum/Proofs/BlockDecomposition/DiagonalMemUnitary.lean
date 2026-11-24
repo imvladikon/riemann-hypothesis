@@ -302,16 +302,6 @@ theorem exists_multi {H V : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ 
 
     simp only [LinearMap.sum_apply, LinearMap.comp_apply, map_sum, hP1, hT2]
 
-theorem exp_mem_unitary (X : Matrix (Fin n) (Fin n) ℂ) (hX : Xᴴ = -X) (s : ℝ) :
-    NormedSpace.exp ((s : ℂ) • X) ∈ Matrix.unitaryGroup (Fin n) ℂ := by
-  rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, ← Matrix.exp_conjTranspose]
-  have h : ((s : ℂ) • X)ᴴ = -((s : ℂ) • X) := by
-    rw [conjTranspose_smul, hX]
-    simp
-  have hc : Commute ((s : ℂ) • X) (-((s : ℂ) • X)) := (Commute.refl _).neg_right
-  rw [h, ← Matrix.exp_add_of_commute _ _ hc]
-  simp
-
 theorem single_conjT (a b : Fin n) (c : ℂ) :
     (Matrix.single a b c : Matrix (Fin n) (Fin n) ℂ)ᴴ = Matrix.single b a (star c) := by
   ext i j
@@ -361,7 +351,7 @@ theorem dual_rel (E : KMod n) (G : Fin n → Fin n → Module.End ℂ (E.V →L[
         HasDerivAt (fun t : ℝ => ρ' (γ t) w) (∑ a, ∑ b, X a b • G' a b w) 0)
     (a b : Fin n) (ξ : E.V →L[ℂ] ℂ) : G' a b (e ξ) = e (G a b ξ) := by
   have key := coef_zero (fun i j => G' i j (e ξ) - e (G i j ξ)) (fun X hX => by
-    let γ : ℝ → Matrix.unitaryGroup (Fin n) ℂ := fun t => ⟨_, exp_mem_unitary X hX t⟩
+    let γ : ℝ → Matrix.unitaryGroup (Fin n) ℂ := fun t => ⟨_, _root_.GlobalTheory.CompanionTheory.RealCount.IntegrateK.exp_smul_mem_unitary X hX t⟩
     have h1 := hGd X γ hX (fun _ => rfl) (e ξ)
     have h2 := hG.2 X γ hX (fun _ => rfl) ξ
     have h3 : HasDerivAt (fun t : ℝ => e (ξ ∘L E.ρ (γ t)⁻¹)) (e (∑ a, ∑ b, X a b • G a b ξ)) 0 :=
@@ -1254,17 +1244,6 @@ open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.R
 namespace GlobalTheory.CompanionTheory.CoefId
 variable {n : ℕ}
 
-theorem coeff_eq {ι κ : Type} (I : Finset ι) (J : Finset κ) (f : ι → ℂ) (g : κ → ℂ) (e : ι → Fin n → ℤ)
-    (e' : κ → Fin n → ℤ)
-    (h : ∀ z : Fin n → ℂ, (∀ a, ‖z a‖ = 1) → Function.Injective (fun a => z a ^ 2) →
-      ∑ i ∈ I, f i * mon (e i) z = ∑ j ∈ J, g j * mon (e' j) z) (m : Fin n → ℤ) :
-    ∑ i ∈ I.filter (fun i => e i = m), f i = ∑ j ∈ J.filter (fun j => e' j = m), g j :=
-  _root_.GlobalTheory.CompanionTheory.CoefId.laurent_indep_torus I J f g e e' h m
-
-theorem flip_prod (z : Fin n → ℂ) (h0 : ∀ a, z a ≠ 0) :
-    (∏ a, ∏ b, (1 + z a / z b)) * (∏ a, z a) ^ (n - 1) = 2 ^ n * (∏ p ∈ prs n, (z p.1 + z p.2)) ^ 2 :=
-  _root_.GlobalTheory.CompanionTheory.CoefId.prod_one_add_div_mul_prod_pow z h0
-
 theorem den_sq (z : Fin n → ℂ) :
     (Matrix.of fun i j : Fin n => (z i ^ 2) ^ (n - 1 - (j : ℕ))).det =
       (Matrix.of fun i j : Fin n => z i ^ (n - 1 - (j : ℕ))).det * ∏ p ∈ prs n, (z p.1 + z p.2) :=
@@ -1362,7 +1341,7 @@ theorem torus_id (lam : Fin n → ℤ) (z : Fin n → ℂ) (h0 : ∀ a, z a ≠ 
         mon (fun a => 2 * (lam (σ a) + dl n (σ a)) + score T a - ((n : ℤ) - 1)) z := by
   have hD : (Matrix.of fun i j : Fin n => (z i ^ 2) ^ (n - 1 - (j : ℕ))).det ≠ 0 :=
     den_ne_zero (fun a => z a ^ 2) hinj
-  have hDe := den_sq z
+  have hDe := _root_.GlobalTheory.CompanionTheory.CoefId.det_vandermonde_sq z
   rw [hDe] at hD
   set A := (Matrix.of fun i j : Fin n => z i ^ (n - 1 - (j : ℕ))).det with hA
   set P := ∏ p ∈ prs n, (z p.1 + z p.2) with hP
@@ -1378,7 +1357,7 @@ theorem torus_id (lam : Fin n → ℤ) (z : Fin n → ℂ) (h0 : ∀ a, z a ≠ 
     simp only [Matrix.of_apply, dl]
     rw [← zpow_natCast, ← _root_.zpow_mul]
     norm_num
-  have hF := flip_prod z h0
+  have hF := _root_.GlobalTheory.CompanionTheory.CoefId.prod_one_add_div_mul_prod_pow z h0
   have hR : ∑ σ : Equiv.Perm (Fin n), ∑ T ∈ (prs n).powerset, ((Equiv.Perm.sign σ : ℤ) : ℂ) *
         mon (fun a => 2 * (lam (σ a) + dl n (σ a)) + score T a - ((n : ℤ) - 1)) z =
       (∑ σ : Equiv.Perm (Fin n), ((Equiv.Perm.sign σ : ℤ) : ℂ) *
@@ -1404,7 +1383,7 @@ theorem exp_tZero (lam : Fin n → ℤ) (lev : Fin n → ℕ) (hm : Monotone lev
     have := a.2
     simp only [dl]
     omega
-  rw [score_tZero lev hm, muZ, h1]
+  rw [_root_.GlobalTheory.CompanionTheory.CoefId.score_tZero_level lev hm, muZ, h1]
   ring
 
 theorem dl_strictAnti : StrictAnti (dl n) := by
@@ -1427,7 +1406,7 @@ theorem main_coef {n : ℕ} (lam : Fin n → ℤ) (hl : Antitone lam) (F : Finse
   have hm : Monotone lev := hlev.1
   set μ := muZ lam lev with hμdef
   have hμa : Antitone μ := harmZ_spec lam hl lev hlev
-  have key := coeff_eq (F ×ˢ (univ : Finset (Equiv.Perm (Fin n))))
+  have key := _root_.GlobalTheory.CompanionTheory.CoefId.laurent_indep_torus (F ×ˢ (univ : Finset (Equiv.Perm (Fin n))))
     ((univ : Finset (Equiv.Perm (Fin n))) ×ˢ (prs n).powerset)
     (fun x => c x.1 * ((Equiv.Perm.sign x.2 : ℤ) : ℂ)) (fun x => 2 ^ n * ((Equiv.Perm.sign x.1 : ℤ) : ℂ))
     (fun x a => x.1 (x.2 a) + dl n (x.2 a))
@@ -1730,8 +1709,6 @@ open Matrix Finset
 open scoped InnerProductSpace
 open PositivityTheory.RgBcC PositivityTheory.RgBcC.Real PositivityTheory.RgBcC.RealD GlobalTheory.CompanionTheory.RealCount GlobalTheory.CompanionTheory.RealCountG
 
-theorem _root_.GlobalTheory.T.twisted_trace_weyl_character : ∀ {n : ℕ} (lam : Fin n → ℤ) (E : KMod n) (T : E.V →L[ℂ] E.V), IsLefK lam E T → ∀ (k : Matrix.unitaryGroup (Fin n) ℂ) (z : Fin n → ℂ), k.1 = diagonal z → Function.Injective (fun a => z a ^ 2) → LinearMap.trace ℂ (E.V →L[ℂ] ℂ) (dualT E (E.ρ k⁻¹ * T) : (E.V →L[ℂ] ℂ) →ₗ[ℂ] (E.V →L[ℂ] ℂ)) = (∏ a, ∏ b, (1 + z a / z b)) * weylChar lam (fun a => z a ^ 2) := by
-  first | exact @GlobalTheory.CompanionTheory.RealCountG.LefDual.trace_dualT_inv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedTraceWeylCharacterStatement =====
@@ -1829,7 +1806,7 @@ theorem dualtr {n : ℕ} (lam : Fin n → ℤ) (hl : Antitone lam) (E : KMod n) 
     (fun z hz hinj => ?_) μ hμ).2
   have hzi : Function.Injective z := fun a b h => hinj (by simp only [h])
   have h1 := hch ⟨diagonal z, diagonal_mem_unitary z hz⟩ z rfl hzi
-  have h2 := GlobalTheory.T.twisted_trace_weyl_character lam E T hT ⟨diagonal z, diagonal_mem_unitary z hz⟩ z rfl hinj
+  have h2 := _root_.GlobalTheory.CompanionTheory.RealCountG.LefDual.trace_dualT_inv lam E T hT ⟨diagonal z, diagonal_mem_unitary z hz⟩ z rfl hinj
   rw [← h1, h2]
 
 theorem countG : CountG := by

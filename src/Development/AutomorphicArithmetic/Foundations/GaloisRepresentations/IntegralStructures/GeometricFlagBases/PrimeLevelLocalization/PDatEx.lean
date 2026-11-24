@@ -106,17 +106,13 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix GlobalTheory.UPel.HT GlobalTheory.LKTrip GlobalTheory.LKMid GlobalTheory.LKDef GlobalTheory.CuspRep GlobalTheory.UnitaryBC UpperTheory.Gal.W2.Seed UpperTheory.Gal.G1 UpperTheory.Gal.Int.Geo GlobalTheory.CongL
 open scoped TensorProduct
 
-private lemma conj_sqrt_neg {E : Type} [Field E] [NumberField E] [IsCMField E] (d : ℕ) (x : E)
-    (hd : 0 < d) (hx : x ^ 2 = -(d : E)) : IsCMField.complexConj E x = -x :=
-  _root_.UpperTheory.Reformulated.B.ConjugateSqrtNeg.conj_sqrt_neg d x hd hx
-
 private lemma omega_at {E : Type} [Field E] [NumberField E] [IsCMField E] (bar : 𝓞 E ≃+* 𝓞 E)
     (hbar : ∀ a : 𝓞 E, ((bar a : 𝓞 E) : E) = IsCMField.complexConj E (a : E)) (d : ℕ) (x : E)
     (hd : 0 < d) (hx : x ^ 2 = -(d : E)) (tr nm : ℤ) (f : ℚ)
     (hdisc : ((tr ^ 2 - 4 * nm : ℤ) : ℚ) = f ^ 2 * (-(d : ℚ))) :
     ∃ ω : 𝓞 E, ω + bar ω = (tr : 𝓞 E) ∧ ω * bar ω = (nm : 𝓞 E) ∧
       2 * (ω : E) - (tr : E) = (f : E) * x := by
-  have hcx := conj_sqrt_neg d x hd hx
+  have hcx := _root_.UpperTheory.Reformulated.B.ConjugateSqrtNeg.conj_sqrt_neg d x hd hx
   have hdiscE : ((tr : E) ^ 2 - 4 * (nm : E)) = (f : E) ^ 2 * (-(d : E)) := by
     have := congrArg (algebraMap ℚ E) hdisc
     simpa using this
@@ -345,7 +341,7 @@ open UpperTheory.Gal.W2.Seed
 
 namespace UpperTheory.Gal.G1
 
-theorem exists_auxiliary_prime : AuxiliaryInertOddPrime := exists_auxiliary_prime_cmDatum
+alias exists_auxiliary_prime := _root_.UpperTheory.Gal.G1.exists_auxiliary_prime_cmDatum
 theorem ArithK_holds : ArithK := pArithK BarEx_holds QuadEx_holds CEx_holds UnitMod_holds CodiffGen_holds CodiffUnit_holds IdemEx_holds RealGen_holds PosGen_holds DeltaEx_holds PerfOf_holds
 theorem ScOf_holds : ScOf := pScOf SetupBasic_holds
 theorem RootAt_holds : RootAt := pRootAt
@@ -546,8 +542,7 @@ namespace UpperTheory.Gal.G1
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
-theorem pDiscInt : DiscInt :=
-  _root_.UpperTheory.Reformulated.B.Qk39.pDiscInt
+alias pDiscInt := _root_.UpperTheory.Reformulated.B.Qk39.pDiscInt
 
 end UpperTheory.Gal.G1
 end -- clump:auto

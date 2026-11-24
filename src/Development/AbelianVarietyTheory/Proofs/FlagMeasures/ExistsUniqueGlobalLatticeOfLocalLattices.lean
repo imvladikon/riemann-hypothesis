@@ -382,12 +382,7 @@ theorem smul_mem_of_mem' (Λ : Submodule O (Fin n → R)) {c : R} (hc : c ∈ O)
   have := Λ.smul_mem (⟨c, hc⟩ : O) hx
   simpa [Subring.smul_def] using this
 
-theorem exists_nat_smul_mem (Λ : Submodule O (Fin n → R))
-    (hd : ∀ y : R, ∃ m : ℕ, m ≠ 0 ∧ (m : R) * y ∈ O) {x : Fin n → R}
-    (hx : x ∈ Submodule.span R (Λ : Set (Fin n → R))) : ∃ m : ℕ, m ≠ 0 ∧ (m : R) • x ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.NatSmulMem.exists_nat_smul_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NatSmulMem.exists_nat_smul_mem ..)
+alias exists_nat_smul_mem := _root_.GlobalTheory.NatSmulMem.exists_nat_smul_mem
 
 theorem exists_nat_between (Λ : Submodule O (Fin n → R)) (hfg : Λ.FG)
     (hsp : Submodule.span R (Λ : Set (Fin n → R)) = ⊤)
@@ -470,8 +465,6 @@ section -- clump:auto
 open ValuativeRel Formalism.MainNotions.S.Loc GlobalTheory.HL NumberField IsDedekindDomain
 open scoped Pointwise ENNReal Classical
 
-theorem _root_.GlobalTheory.T.local_lattice_between_scaled_standard_lattices : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (p : HeightOneSpectrum (𝓞 F)) (n : ℕ) (Λ : Submodule (A.L p).O (Fin n → (A.loc p).Ep)), IsLat (A.L p) Λ → (∀ y : (A.loc p).Ep, ∃ m : ℕ, m ≠ 0 ∧ (m : (A.loc p).Ep) * y ∈ (A.L p).O) → ∃ m : ℕ, m ≠ 0 ∧ (∀ v : Fin n → (A.loc p).Ep, (∀ i, v i ∈ (A.L p).O) → (m : (A.loc p).Ep) • v ∈ Λ) ∧ ∀ v ∈ Λ, ∀ i, (m : (A.loc p).Ep) * v i ∈ (A.L p).O := by
-  first | exact @GlobalTheory.HL.Glue.lat_between
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLatticeBetweenScaledStandardLatticesStatement =====
@@ -631,7 +624,7 @@ theorem glue : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
       _root_.GlobalTheory.HL.Glue.exists_nat_mul_mem A (fun y hy => by
         obtain ⟨x, hx⟩ := happ1 y hy
         exact ⟨x, fun p => by simpa using hx p⟩)
-    obtain ⟨N, hN, hb⟩ := _root_.GlobalTheory.HL.Glue.exists_uniform_bound A n Λ hfin fun p => GlobalTheory.T.local_lattice_between_scaled_standard_lattices A p n (Λ p) (hlat p) (h3 p)
+    obtain ⟨N, hN, hb⟩ := _root_.GlobalTheory.HL.Glue.exists_uniform_bound A n Λ hfin fun p => _root_.GlobalTheory.HL.Glue.lat_between A p n (Λ p) (hlat p) (h3 p)
     let Γ : Submodule (𝓞 E) (Fin n → E) :=
       { carrier := {x | ∀ p, A.bc p x ∈ Λ p}
         add_mem' := by

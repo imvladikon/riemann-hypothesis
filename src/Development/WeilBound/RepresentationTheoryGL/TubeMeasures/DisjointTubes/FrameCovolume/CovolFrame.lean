@@ -90,6 +90,7 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SmulMemOfIsInteg
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign
 import Formalism.LocalToGlobal.ProjectiveLattices.DatProofs
 import Mathlib.Tactic.Linter.Style
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Upqcpt
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsCompactDualHaar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OnbPerp
@@ -170,15 +171,8 @@ namespace GlobalTheory.CovTop.VolUp.Proj
 
 variable {p q r : ℕ}
 
-theorem Jpq_eq_diagonal (p q : ℕ) :
-    Formalism.UG.Jpq p q = Matrix.diagonal (Sum.elim (fun _ => (1 : ℂ)) (fun _ => -1)) := by
-  ext i j
-  rcases i with i | i <;> rcases j with j | j <;>
-    simp [Formalism.UG.Jpq, Matrix.diagonal_apply, Matrix.one_apply]
-  split_ifs <;> simp
-
 theorem det_Jpq_ne (p q : ℕ) : (Formalism.UG.Jpq p q).det ≠ 0 := by
-  rw [Jpq_eq_diagonal, Matrix.det_diagonal]
+  rw [_root_.Formalism.UG.P.Jpq_eq_diagonal, Matrix.det_diagonal]
   refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
   rcases i with i | i <;> simp
 
@@ -197,7 +191,7 @@ theorem det_mat_ne (u : UpqT p q) : (UpqT.mat u).det ≠ 0 := by
 
 theorem dg_unitary (a₀ : Fin p ⊕ Fin q) (z : ℂ) (hz : star z * z = 1) :
     (dg a₀ z)ᴴ * Formalism.UG.Jpq p q * dg a₀ z = Formalism.UG.Jpq p q := by
-  rw [Jpq_eq_diagonal, dg, Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal,
+  rw [_root_.Formalism.UG.P.Jpq_eq_diagonal, dg, Matrix.diagonal_conjTranspose, Matrix.diagonal_mul_diagonal,
     Matrix.diagonal_mul_diagonal]
   congr 1
   funext i
@@ -350,7 +344,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousEquivariantDetOneFactorProjectioStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainOrthonormalFrameIdentification =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainOrthonormalFrameIdentification", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose\npublic import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainDataPrincipalCongruenceLevel\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeNegTransposeGram\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DefClassDecompIff\nimport Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective\nimport Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsInvariantNatLengthLattice\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SmulMemOfIsIntegral\nimport Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign\nimport Formalism.LocalToGlobal.ProjectiveLattices.DatProofs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainOrthonormalFrameIdentification", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose\npublic import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainDataPrincipalCongruenceLevel\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeNegTransposeGram\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DefClassDecompIff\nimport Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective\nimport Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsInvariantNatLengthLattice\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SmulMemOfIsIntegral\nimport Formalism.LocalToGlobal.BesselHermitianTheta.LemmasSign\nimport Formalism.LocalToGlobal.ProjectiveLattices.DatProofs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Upqcpt\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -380,11 +374,6 @@ theorem permM_conj {ι : Type} [Fintype ι] [DecidableEq ι] {r : ℕ} (e : ι �
   simp [permM, Matrix.mul_apply, Matrix.conjTranspose_apply]
   rw [← e.symm.sum_comp]
   simp
-
-theorem jpq_eq_diagonal (p q : ℕ) :
-    Formalism.UG.Jpq p q = Matrix.diagonal (Sum.elim (fun _ : Fin p => (1 : ℂ)) (fun _ : Fin q => -1)) := by
-  rw [Formalism.UG.Jpq, ← Matrix.fromBlocks_diagonal, Matrix.diagonal_one, ← Matrix.diagonal_neg]
-  rfl
 
 theorem sumElim_sgn {p q r : ℕ} (hcard : r = q + p) (a : Fin r) :
     Sum.elim (fun _ : Fin p => (1 : ℂ)) (fun _ : Fin q => -1)
@@ -430,7 +419,7 @@ theorem exists_frame_of_sig {n p q : ℕ} {Gc : Matrix (Fin n) (Fin n) ℂ} (h :
   · have key : ∀ y : Matrix (Fin n) (Fin n) ℂ, yᴴ * Gc * y = (A * y)ᴴ * Formalism.UG.Jpq p q * (A * y) := fun y => by
       rw [← hA, Matrix.conjTranspose_mul]
       simp only [Matrix.mul_assoc]
-    rw [key, hAx, permM_conj, Equiv.symm_symm, jpq_eq_diagonal, Matrix.submatrix_diagonal_equiv,
+    rw [key, hAx, permM_conj, Equiv.symm_symm, _root_.Formalism.UG.P.Jpq_eq_diagonal, Matrix.submatrix_diagonal_equiv,
       Matrix.diagonal_neg, Matrix.diagonal_transpose]
     congr 1
     funext a
@@ -678,8 +667,7 @@ theorem two_le_r_and_fdeg (D : D7) : 2 ≤ D.R.r ∧ ReciprocityTheory.ChartRest
   rw [Formalism.L2.Pj.hostSize_finrank D]
   omega
 
-theorem main : ∀ D : D7, 2 ≤ D.R.r ∧ ReciprocityTheory.ChartRestriction.G.FD.fdeg D.host.E = D.R.f :=
-  two_le_r_and_fdeg
+alias main := _root_.GlobalTheory.RankHostFacts.two_le_r_and_fdeg
 
 end GlobalTheory.RankHostFacts
 end -- clump:auto

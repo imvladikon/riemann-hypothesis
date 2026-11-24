@@ -403,9 +403,6 @@ section -- clump:auto
 
 namespace PositivityTheory.jumpWindows
 
-theorem finite_part_of_meet : Meet → CuspidalIrreducibleSubrep :=
-  GlobalTheory.CompanionTheory.FinitePart.g14_of_meet
-
 end PositivityTheory.jumpWindows
 end -- clump:auto
 end -- clump:auto

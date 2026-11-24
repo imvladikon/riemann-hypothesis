@@ -393,14 +393,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped ContDiff
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem tay_coord {N : ℕ} (k : Fin N) : tay (fun v : Fin N → ℂ => v k) 0 = MvPowerSeries.X ((0 : Fin 1), k) := by
-  apply GlobalTheory.JetLinSub.tay_coord <;> assumption
-
-theorem jetOf_coord {N : ℕ} (m : ℕ) (k : Fin N) :
-    jetOf m (fun v : Fin N → ℂ => v k) = Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), k)) := by
-  simpa only [jetOf, tay_coord, psJet, FBIdJet.psTrunc_eq, MvPolynomial.coe_X] using
-    FBIdJet.mk_trunc_coe m (MvPolynomial.X ((0 : Fin 1), k) : MvPolynomial (Fin 1 × Fin N) ℂ)
-
 theorem jetOf_sum_coord {N : ℕ} (m : ℕ) {T : Type} (I : Finset T) (k : T → Fin N) :
     jetOf m (fun v : Fin N → ℂ => ∑ i ∈ I, v (k i)) =
       Ideal.Quotient.mk _ (∑ i ∈ I, MvPolynomial.X ((0 : Fin 1), k i)) := by
@@ -409,7 +401,7 @@ theorem jetOf_sum_coord {N : ℕ} (m : ℕ) {T : Type} (I : Finset T) (k : T →
   | empty => simpa using jetOf_const (g := N) m 0
   | insert a s ha ih =>
     simp only [Finset.sum_insert ha, map_add (f := _)]
-    rw [← ih, ← jetOf_coord, ← jetOf_add]
+    rw [← ih, ← _root_.GlobalTheory.JetLinSub.jetOf_coord, ← jetOf_add]
     · rfl
     · exact (contDiff_apply ℂ (fun _ => ℂ) _).contDiffAt
     · exact (ContDiff.sum fun i _ => contDiff_apply ℂ (fun _ => ℂ) _).contDiffAt
@@ -664,19 +656,11 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open scoped ContDiff
 
-theorem tay_coord {N : ℕ} (k : Fin N) :
-    tay (fun v : Fin N → ℂ => v k) 0 = MvPowerSeries.X ((0 : Fin 1), k) := by
-  apply GlobalTheory.JetLinSub.tay_coord <;> assumption
-
-theorem psJet_X' {κ : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (p : κ) :
-    psJet m (MvPowerSeries.X p : MvPowerSeries κ ℂ) = Ideal.Quotient.mk _ (MvPolynomial.X p) := by
-  rw [← MvPolynomial.coe_X, psJet, FBIdJet.psTrunc_eq, FBIdJet.mk_trunc_coe]
-
 theorem jetN_coord {n g : ℕ} (m : ℕ) (i : Fin n) (j : Fin g) :
     jetN m (fun w : Fin n → Fin g → ℂ => w i j) = Ideal.Quotient.mk _ (MvPolynomial.X (i, j)) := by
   have h : jetOf m (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j))) =
       Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j))) := by
-    rw [jetOf, tay_coord, psJet_X']
+    rw [jetOf, _root_.GlobalTheory.JetLinSub.tay_coord, _root_.GlobalTheory.JetLinSub.psJet_X]
   show renN n g m (jetOf m (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j)))) = _
   rw [h]
   show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
@@ -692,7 +676,7 @@ theorem jetN_coord_add {n g : ℕ} (m : ℕ) (i i' : Fin n) (j : Fin g) :
 theorem subst_X {κ κ' : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (sb : κ → MvPolynomial κ' ℂ) (p : κ) :
     (jetSubstP m sb : Jet ℂ κ m →ₐ[ℂ] Jet ℂ κ' m) (psJet m (MvPowerSeries.X p)) =
       Ideal.Quotient.mk _ (sb p - MvPolynomial.C (MvPolynomial.constantCoeff (sb p))) := by
-  rw [psJet_X']
+  rw [_root_.GlobalTheory.JetLinSub.psJet_X]
   show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
   simp
 
@@ -924,20 +908,11 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped ContDiff
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem tay_coord {g : ℕ} (k : Fin g) :
-    tay (fun v : Fin g → ℂ => v k) 0 = MvPowerSeries.X ((0 : Fin 1), k) := by
-  apply GlobalTheory.JetLinSub.tay_coord <;> assumption
-
-
-theorem psJet_X {κ : Type} [Fintype κ] [DecidableEq κ] (m : ℕ) (s : κ) :
-    psJet m (MvPowerSeries.X s : MvPowerSeries κ ℂ) = Ideal.Quotient.mk _ (MvPolynomial.X s) := by
-  rw [← MvPolynomial.coe_X, psJet, FBIdJet.psTrunc_eq, FBIdJet.mk_trunc_coe]
-
 theorem jetN_coord {n g : ℕ} (m : ℕ) (i : Fin n) (j : Fin g) :
     jetN m (fun w : Fin n → Fin g → ℂ => w i j) = Ideal.Quotient.mk _ (MvPolynomial.X (i, j)) := by
   unfold jetN jetOf
   show renN n g m (psJet m (tay (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j))) 0)) = _
-  rw [tay_coord, psJet_X]
+  rw [_root_.GlobalTheory.JetLinSub.tay_coord, _root_.GlobalTheory.JetLinSub.psJet_X]
   show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
   rw [MvPolynomial.aeval_X, Equiv.symm_apply_apply]
 
@@ -972,7 +947,7 @@ theorem sy_trivial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     (fun p : Fin 2 × Fin g => (![fun j => MvPolynomial.X ((1 : Fin 2), j), fun j => MvPolynomial.X ((0 : Fin 2), j)] :
       Fin 2 → Fin g → MvPolynomial (Fin 2 × Fin g) ℂ) p.1 p.2) (by
       rintro ⟨i, j⟩
-      rw [psJet_X]
+      rw [_root_.GlobalTheory.JetLinSub.psJet_X]
       refine Eq.trans ?_ (jetN_coord m (Equiv.swap (0 : Fin 2) 1 i) j).symm
       show Ideal.Quotient.mk _ (MvPolynomial.aeval _ _) = _
       fin_cases i <;> simp) _ _ _ _ _ hR
@@ -1031,17 +1006,12 @@ open scoped ContDiff
 
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem tay_coord {N : ℕ} (k : Fin N) :
-    tay (fun v : Fin N → ℂ => v k) 0 = MvPowerSeries.X ((0 : Fin 1), k) := by
-  apply GlobalTheory.JetLinSub.tay_coord <;> assumption
-
-
 theorem jetN_coord {n g : ℕ} (m : ℕ) (a : ℂ) (i : Fin n) (j : Fin g) :
     jetN m (fun w : Fin n → Fin g → ℂ => a * w i j) =
       Ideal.Quotient.mk _ (MvPolynomial.C a * MvPolynomial.X (i, j)) := by
   have h1 : jetOf m (fun v : Fin (n * g) → ℂ => v (finProdFinEquiv (i, j))) =
       Ideal.Quotient.mk _ (MvPolynomial.X ((0 : Fin 1), finProdFinEquiv (i, j))) := by
-    rw [jetOf, tay_coord, psJet, FBIdJet.psTrunc_eq, ← MvPolynomial.coe_X, FBIdJet.mk_trunc_coe]
+    rw [jetOf, _root_.GlobalTheory.JetLinSub.tay_coord, psJet, FBIdJet.psTrunc_eq, ← MvPolynomial.coe_X, FBIdJet.mk_trunc_coe]
   have h2 := jetOf_mul m (f := fun _ : Fin (n * g) → ℂ => a) (h := fun v => v (finProdFinEquiv (i, j)))
     contDiffAt_const (contDiff_apply ℂ (fun _ => ℂ) _).contDiffAt
   rw [jetOf_const, h1] at h2
@@ -1121,10 +1091,6 @@ theorem jetMap_uniq {n m : ℕ} {ψ ψ' : Sp (Jet ℂ (Fin n × Fin g) m) ⟶ A.
   obtain ⟨_, rfl⟩ := h'
   rfl
 
-theorem e_zero_left : (Φ.e 0).left = x0 ≫ eSec A := by
-  rw [(Φ.e_ker 0).2 Φ.lat.zero_mem, Hom.one_def, Over.comp_left, Over.toUnit_left]
-  rfl
-
 theorem jetMap_aug {n m : ℕ} {ψ : Sp (Jet ℂ (Fin n × Fin g) m) ⟶ A.left}
     {Λ : (Fin n → Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)} (h : Φ.JetMap m ψ Λ) :
     spMap ((jetAug : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] ℂ) : Jet ℂ (Fin n × Fin g) m →+* ℂ) ≫ ψ = (Φ.e 0).left := by
@@ -1147,7 +1113,7 @@ theorem corr_rig {n m : ℕ} {K : Type} [Fintype K] (φ : K → (Sp (Jet ℂ (Fi
     rw [hid, Category.id_comp]
   intro j j' _ _ hjj
   have hj : ∀ k, j k = j' 0 := fun k => hjj k 0 (by
-    rw [h0, ← e_zero_left Φ]; exact jetMap_aug Φ (h.1 k))
+    rw [h0, ← _root_.GlobalTheory.AnVal.AnFr.genMove_e_zero_left Φ]; exact jetMap_aug Φ (h.1 k))
   apply Units.ext
   set W := LB.wchart L.L (fun k => (homAt x0 (jetAug : Jet ℂ (Fin n × Fin g) m →ₐ[ℂ] ℂ)).left ≫ φ k) j ⊓
     LB.wchart L.L (fun _ : Fin 1 => (overAt x0 ℂ).hom ≫ eSec A) j' with hWdef
@@ -1166,7 +1132,7 @@ theorem corr_rig {n m : ℕ} {K : Type} [Fintype K] (φ : K → (Sp (Jet ℂ (Fi
           LB.wchart L.L φ j := Set.mem_iInter.2 fun k => Set.mem_iInter.1 hc.1 k
       rwa [hp] at this
     have hU : ⊤ ≤ (Φ.e 0).left ⁻¹ᵁ L.L.U (j' 0) := by
-      rw [e_zero_left Φ, ← h0]
+      rw [_root_.GlobalTheory.AnVal.AnFr.genMove_e_zero_left Φ, ← h0]
       exact hW2.trans (LB.wchart_le _ _ _ 0)
     refine valAt'_id_inj hW ?_
     refine (TB.ValAt.valAt'_res (𝟙 (Sp ℂ)) inf_le_left hW _).trans (Eq.trans ?_ (TB.ValAt.valAt'_res (𝟙 (Sp ℂ)) inf_le_right hW _).symm)
@@ -1299,7 +1265,7 @@ theorem jetMap_psum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     (Λ : Fin n → (Fin n → Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)) (hx : ∀ i, Φ.toAnFr.JetMap m (xs i).left (Λ i))
     (I : Finset (Fin n)) :
     Φ.toAnFr.JetMap m (psum Xo.univ.t.G xs I).left (∑ i ∈ I, Λ i) := by
-  obtain ⟨-, h1, hmul, -⟩ := GlobalTheory.T.cmFrame_jetPoints_are_exponential_jets E H Dw l Xo c y g ty el Φ n m
+  obtain ⟨-, h1, hmul, -⟩ := _root_.GlobalTheory.AnVal.jetPts_jetMap E H Dw l Xo c y g ty el Φ n m
   have key : ∀ L : List (Fin n), Φ.toAnFr.JetMap m
       (L.foldr (fun k acc => padd Xo.univ.t.G (xs k) acc) (pzero Xo.univ.t.G (jO y g m n))).left
       (L.map Λ).sum := by
@@ -1324,7 +1290,7 @@ theorem exists_isAnE : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       (cφ ![jpt y g Φ.jx m (0 : Fin 2), jpt y g Φ.jx m (1 : Fin 2)]) (cε 2) (psumL 2 g) ?_
     intro I
     refine jetMap_psum Φ 2 m _ (fun i => LinearMap.proj i) ?_ I.down
-    have h0 := (GlobalTheory.T.cmFrame_jetPoints_are_exponential_jets E H Dw l Xo c y g ty el Φ 2 m).1
+    have h0 := (_root_.GlobalTheory.AnVal.jetPts_jetMap E H Dw l Xo c y g ty el Φ 2 m).1
     intro i
     fin_cases i
     · exact h0 0
@@ -1458,8 +1424,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1 GlobalTheory.AnVal
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_analytic_biextension_chart_complex_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra c.F ℂ] [StarRing (𝓞 E)] (y : FrPt Xo c ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (el : Fin g ≃ Lt1 Dw) (Φ : AnPt y g ty el), (∀ a : 𝓞 E, star a = H.bar a) → ∃ (C : ChartAt Xo c y) (hd : C.d = g), C.h = 0 ∧ (∀ i, C.B.G.F i = (MvPowerSeries.X (R := ℂ) ((0 : Fin 2), i) + MvPowerSeries.X (R := ℂ) ((1 : Fin 2), i))) ∧ (∀ (ℓ : Lt1 Dw) (i' : Fin C.d), C.uvec ℓ i' = if Fin.cast hd i' = el.symm ℓ then 1 else 0) ∧ ∀ (k : ℕ) (F : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L k (ptO Xo y.x))) (θ : (Fin g → ℂ) → ℂ), Φ.toAnFr.Rd k F θ → IsGerm y C.d C.x C.B.A.act C.e C.wP k F (MvPowerSeries.rename (fun p : Fin 1 × Fin g => (p.1, Fin.cast hd.symm p.2)) (tay θ 0)) := by
-  first | exact @GlobalTheory.AnVal.exists_analytic_chart
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAnalyticBiextensionChartComplexPointStatement =====
@@ -1595,7 +1559,7 @@ theorem harm_nab_eq_polyDeriv : ChartIndepSt2 → ∀ (E : Type) [Field E] [Numb
   obtain ⟨N, hN, hNP, hs⟩ := GlobalTheory.exists_natCast_smul_mem_harmA E H Dw l c a n P hP
   obtain ⟨C₁, hex₁, hpin₁⟩ := hnab.2 ℂ y
   choose f₁ hf₁ using fun b => hex₁ k (F b)
-  obtain ⟨C, hd, hh, hF, hu, hgerm⟩ := GlobalTheory.T.exists_analytic_biextension_chart_complex_point E H Dw l Xo c y g ty el Φ hnab.1
+  obtain ⟨C, hd, hh, hF, hu, hgerm⟩ := _root_.GlobalTheory.AnVal.exists_analytic_chart E H Dw l Xo c y g ty el Φ hnab.1
   subst hd
   have hdiff : ∀ b, Differentiable ℂ (θ b) := fun b =>
     ((GlobalTheory.T.section_reading_existsUnique_isTheta _ _ _ _ _ Φ.toAnFr k (F b)).2.1 (θ b) (hθ b)).1

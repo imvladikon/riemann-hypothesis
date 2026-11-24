@@ -269,7 +269,7 @@ theorem pItY_of_one : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
   intro h1 h2 D G _ _ Pl0 T A Ks _ _ _ R hC hL hM hωY hωX hvY hvX k hk t₀ y hy
   have hk0 : k < D.R.m := by omega
   have hSt := GlobalTheory.Chain.StepVac.stepsOK D G Pl0 T A Ks R hL hM.inf hωY hωX hvY hvX
-  obtain ⟨y₀, hy₀⟩ := GlobalTheory.Chain.innerIntertwiners_of_pair D G Pl0 T A Ks R (GlobalTheory.T.exists_uniformRealThetaIntertwiner_chainStep h1 h2 D) hC hM.inf hSt k hk
+  obtain ⟨y₀, hy₀⟩ := GlobalTheory.Chain.innerIntertwiners_of_pair D G Pl0 T A Ks R (_root_.GlobalTheory.Chain.ItPairObj.itPair_holds h1 h2 D) hC hM.inf hSt k hk
   have hS := hSt.1 t₀ ⟨k, hk0⟩ hk
   have key : ∀ (V W : HSp D) (a b : ℕ) (_ : a = k) (_ : b = k + 1) (M : DSModel V (parB (Ptw D) a))
       (M' : DSModel W (parB (Ptw D) b)) ω f, GlobalTheory.Chain.IsStepWeil ⟨k, hk0⟩ R.ψ V W ω → GlobalTheory.Chain.IsVacVec R.ψ R.θ M M' f →
@@ -428,9 +428,9 @@ theorem exists_thP (h₃ : GlobalTheory.Published.CuspRapidDecay) (hL : R.toLevC
     (hv : R.thP_vP) (t₀ : T)
     (hI : ∀ i, IsIoW R.θ (R.MW i (sg0 D A)) (R.cV i) (R.ωP i t₀) (R.ptP i t₀) (RealDat.Delta i) (R.ioP i)) :
     ∃ thF thG, ({ R with thF := thF, thG := thG } : RealDat D A Ks).IsThP := by
-  have hp : R.thP_pt_theta := (GlobalTheory.T.exists_lowestKType_fockMap_thetaVectors D G Pl0 T A Ks R hL hF hM hω hv).1
+  have hp : R.thP_pt_theta := (_root_.GlobalTheory.JointHarm.exists_ioP D G Pl0 T A Ks R hL hF hM hω hv).1
   have hio : R.thP_ioP := fun i => GlobalTheory.IoAllTuples.ioP_of_isIoW_at D G Pl0 T A Ks R hL hF hM hω hv i t₀ _ (hI i)
-  obtain ⟨thF, h1, h2⟩ := GlobalTheory.T.exists_thetaLift_linearMap_cuspFormMultiplicity h₃ D G Pl0 T A Ks R hL hF hM hω hv hp hio
+  obtain ⟨thF, h1, h2⟩ := _root_.GlobalTheory.DefLift.ThetaMap.exists_thetaMap h₃ D G Pl0 T A Ks R hL hF hM hω hv hp hio
   obtain ⟨thG, h3⟩ := GlobalTheory.GoodProjLift.exists_thG D G Pl0 T A Ks { R with thF := thF } hL
     (fam_with hF R.ioY R.ioX R.Th thF R.thG) (models_with hM R.ioY R.ioX R.Th thF R.thG) h1
   exact ⟨thF, thG, hω, hv, hp, hio, h1, h2, h3⟩
@@ -724,13 +724,6 @@ theorem extL_is (hL : R.toLevCh.Is A.μ0) (hV : ∀ n, TwLev R (V.xiH n) (V.xi n
     βV := hL.βV
     βW := hL.βW }
 
-theorem Q_base (hL : R.toLevCh.Is A.μ0) : R.Q A.μ0 = ∅ :=
-  Finset.eq_empty_of_forall_notMem fun PP hP => (hL.Q_ram A.μ0 PP).2 (Or.inl hP) (by
-    show (R.xiH A.μ0).UnrAt PP
-    rw [hL.xi_base]
-    exact fun _ _ => rfl)
-
-
 open Formalism.L2.Host Formalism.L2.Col GlobalTheory.RationalValues in
 theorem xiR_mem (hL : R.toLevCh.Is A.μ0) (hF : R.IsFam) {χ xi Q xiR} (h : TwLev R χ xi Q xiR) :
     ∀ PP ∈ Q, ∀ x, ((xiR PP x : ℂˣ) : ℂ) ∈ D.what₂.embLL.fieldRange := by
@@ -788,7 +781,7 @@ theorem okOf_subset (hL : R.toLevCh.Is A.μ0) (hF : R.IsFam) (n : N) : okOf R V 
   obtain ⟨g, c, c', ht⟩ := hF.tie
   intro P hP
   refine (ht.ok A.μ0 P).2 ?_
-  rw [Q_base hL, Finset.coe_empty, Set.union_empty]
+  rw [_root_.GlobalTheory.LiftLower.Q_base hL, Finset.coe_empty, Set.union_empty]
   exact ⟨hP.1, fun h => hP.2.1 (Or.inl h), fun w hw => hP.2.2 w (Or.inl hw)⟩
 
 theorem sep_new (hL' : (extL R.toLevCh V).Is (.inl A.μ0)) (n : N) : ∀ PP ∈ R.Pg, ∀ PP' ∈ V.Q n,
@@ -814,7 +807,7 @@ theorem exists_sideX (hS : SideLev) {F : Face D A} (hC : GlobalTheory.Hk3.Core R
   obtain ⟨g, c, c', ht⟩ := hC.fam.tie
   have key := hS D G D.sp.X' R.βX R.ΛX hC.lev.βX (R.datXt A.μ0) (V.Q n) ((extL R.toLevCh V).datXt (.inr n)).xq Pl0 R.pl (A.ok A.μ0)
     (okOf R V n) ((R.Sb : Set (Pl D.host.E)) ∪ (V.Q n : Set (Pl D.host.E)))
-    (by show R.Q A.μ0 ⊆ _; rw [Q_base hC.lev]; exact Finset.empty_subset _) (okOf_subset hC.lev hC.fam n) (sep_new hL' n)
+    (by show R.Q A.μ0 ⊆ _; rw [_root_.GlobalTheory.LiftLower.Q_base hC.lev]; exact Finset.empty_subset _) (okOf_subset hC.lev hC.fam n) (sep_new hL' n)
     (fun P hP => hP) (fun PP h => h.elim (fun h => Or.inl (hC.fam.Sb h)) Or.inr)
     (fun j hj PP hP x => hχ ⟨j, hj⟩ PP hP x)
     (fun PP hP x => by
@@ -845,7 +838,7 @@ theorem exists_sideV (hS : SideLev) {F : Face D A} (hC : GlobalTheory.Hk3.Core R
   obtain ⟨g, c, c', ht⟩ := hC.fam.tie
   have key := hS D G (Vc D i) (R.βV i) (R.ΛV i) (hC.lev.βV i) (R.datVt i A.μ0) (V.Q n) ((extL R.toLevCh V).datVt i (.inr n)).xq Pl0 R.pl
     (A.ok A.μ0) (okOf R V n) ((R.Sb : Set (Pl D.host.E)) ∪ (V.Q n : Set (Pl D.host.E)))
-    (by show R.Q A.μ0 ⊆ _; rw [Q_base hC.lev]; exact Finset.empty_subset _) (okOf_subset hC.lev hC.fam n) (sep_new hL' n)
+    (by show R.Q A.μ0 ⊆ _; rw [_root_.GlobalTheory.LiftLower.Q_base hC.lev]; exact Finset.empty_subset _) (okOf_subset hC.lev hC.fam n) (sep_new hL' n)
     (fun P hP => hP) (fun PP h => h.elim (fun h => Or.inl (hC.fam.Sb h)) Or.inr)
     (fun j _ PP hP x => by
       have e : (R.datVt i A.μ0).cg (j + 1) PP x = (R.chi ((i : ℕ) + 1) PP x)⁻¹ := rfl
@@ -1219,8 +1212,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.classPres_of_finiteIndex_subLevel : ∀ {G Γ : Type} [Group G] [Group Γ] (ι : Γ →* G) {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W] {K : Type} [Field K] [NumberField K] [StarRing K] (σ : K →+* ℂ) (S : CSD K) (ρ : Γ →* Module.End ℂ W) (J : Subgroup G) (χ : J →* ℂˣ) (P : Bridge.ClassPres ι S σ ρ J χ) (J' : Subgroup G), J' ≤ J → (J'.subgroupOf J).FiniteIndex → ∀ χ' : J' →* ℂˣ, (∀ k, ∃ a : K, σ a = ((χ' k : ℂˣ) : ℂ)) → (∀ γ x, ∃ x', P.coef x' = ρ γ (P.coef x)) → ∃ (Cl : Type) (fC : Fintype Cl) (π : Cl → S.Cl) (k : Cl → J) (Gam : Cl → Type) (gG : ∀ c, Group (Gam c)) (fG : ∀ c, Fintype (Gam c)) (ρ' : ∀ c, Gam c →* Module.End K S.V) (P' : Bridge.ClassPres ι ({ S with Cl := Cl, finCl := fC, Gam := Gam, grpGam := gG, finGam := fG, ρ := ρ', Nab := fun c => S.Nab (π c), Del := fun c => S.Del (π c) } : CSD K) σ ρ J' χ'), (∀ c : Cl, P'.y c = P.y (π c) * (k c : G)) ∧ P'.coef = P.coef := by
-  first | exact @GlobalTheory.classPres_subLevel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassPresOfFiniteIndexSubLevelStatement =====
@@ -1329,8 +1320,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_mem_smaller_parahoricLevel_mod_firstBlocks : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)), IsSDFrame V β Λ 1 → ∀ (L : LevDat D.host.E ℂ V.rank) (Q' : Finset (Pl D.host.E)) (xq : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ), L.Q ⊆ Q' → (∀ PP ∈ L.Pg, ∀ PP' ∈ Q', PP ≠ PP' ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP PP' ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP' PP) → ∀ g ∈ (levEnv V β L).Q, ∃ g' ∈ (levEnv V β { L with Q := Q', xq := xq }).Q, g⁻¹ * g' ∈ (levEnv V β L).J := by
-  first | exact @GlobalTheory.SmallerParahoric.exists_mem_smaller
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMemSmallerParahoricLevelModFirstBlocksStatement =====
@@ -1414,8 +1403,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.isDoubleCoset_of_smaller_level_same_local : ∀ {G : Type} [Group G] (J J' Lc : Subgroup G) (x : G) (A : Finset G), J' ≤ J → J ⊓ Lc ≤ J' → (∀ k ∈ J, ∃ k₁ ∈ J, ∃ k₂ ∈ J, k₁ ∈ Lc ∧ k = k₁ * k₂ ∧ ∀ y ∈ Lc, Commute k₂ y) → x ∈ Lc → (∀ a ∈ A, a ∈ Lc) → Bridge.IsDC J x A → Bridge.IsDC J' x A := by
-  first | exact @GlobalTheory.isDC_of_smaller_level_same_local
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDoubleCosetOfSmallerLevelSameLocalStatement =====
@@ -1470,14 +1457,14 @@ theorem local_group_two {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D))
 
 theorem isDC_smaller_level : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)), IsSDFrame V β Λ 1 → ∀ (L : LevDat D.host.E ℂ V.rank) (Q' : Finset (Pl D.host.E)) (xq : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ), L.Q ⊆ Q' → ∀ (Pl0 : Type) (pl : Pl0 → Pl D.host.E) (ok : Set Pl0) (i : ok × ℕ), (∀ PP, PP ∈ L.Pg ∨ PP ∈ Q' → PP ≠ pl i.1 ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP (pl i.1)) → i.2 ≤ V.rank → ∀ (x : Bridge.Gf V) (A : Finset (Bridge.Gf V)), isTEnv V pl ok i x → (∀ a ∈ A, isLocEnv V pl ok i a) → Bridge.IsDC (levEnv V β L).J x A → Bridge.IsDC (levEnv V β { L with Q := Q', xq := xq }).J x A := by
   intro D V β Λ hSD L Q' xq hQ Pl0 pl ok i hoff hi x A hx hA hDC
-  have hle := (GlobalTheory.T.parahoricSublevel_finiteIndex_more_places D V β Λ hSD L Q' xq hQ).1
+  have hle := (_root_.GlobalTheory.sublevel_finiteIndex D V β Λ hSD L Q' xq hQ).1
   obtain ⟨cc, hβ⟩ := hSD
   rw [one_pow] at hβ
   obtain ⟨α, ⟨e, ϖ, he, -, -, hα⟩, hxα⟩ := hx hi
   obtain ⟨Lc, l1, l2, l3, l4⟩ := local_group_two V β Λ L { L with Q := Q', xq := xq } hβ (pl i.1) e he
     (fun PP h => hoff PP (h.imp_right fun h' => hQ h')) hoff
   have e1 : x = fin V α⁻¹ := Subtype.ext hxα
-  refine GlobalTheory.T.isDoubleCoset_of_smaller_level_same_local _ _ Lc x A hle l4 l3 ?_ (fun a ha => ?_) hDC
+  refine _root_.GlobalTheory.isDC_of_smaller_level_same_local _ _ Lc x A hle l4 l3 ?_ (fun a ha => ?_) hDC
   · rw [e1]
     exact l2 α hα.2.1
   · obtain ⟨g, hg, rfl⟩ := loc_supp V (hA a ha) he
@@ -1497,8 +1484,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Form
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.hecke_representatives_split_place_smaller_level : ∀ (D : D7) (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)), IsSDFrame V β Λ 1 → ∀ (L : LevDat D.host.E ℂ V.rank) (Q' : Finset (Pl D.host.E)) (xq : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ), L.Q ⊆ Q' → ∀ (Pl0 : Type) (pl : Pl0 → Pl D.host.E) (ok : Set Pl0) (i : ok × ℕ), (∀ PP, PP ∈ L.Pg ∨ PP ∈ Q' → PP ≠ pl i.1 ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP (pl i.1)) → i.2 ≤ V.rank → ∀ (x : Bridge.Gf V) (A : Finset (Bridge.Gf V)), isTEnv V pl ok i x → (∀ a ∈ A, isLocEnv V pl ok i a) → Bridge.IsDC (levEnv V β L).J x A → Bridge.IsDC (levEnv V β { L with Q := Q', xq := xq }).J x A := by
-  first | exact @GlobalTheory.SmallerLevelHecke.isDC_smaller_level
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeRepresentativesSplitPlaceSmallerLevelStatement =====
@@ -1610,7 +1595,7 @@ theorem surj_restrict {A G : Type} [Group A] [Group G] {J Q Q' : Subgroup A} (h 
 
 theorem sideReal_moreLevel : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)), IsSDFrame V β Λ 1 → ∀ (L : LevDat D.host.E ℂ V.rank) (Q' : Finset (Pl D.host.E)) (xq : ∀ PP : Pl D.host.E, (kP PP)ˣ →* ℂˣ) (Pl0 : Type) (pl : Pl0 → Pl D.host.E) (ok ok' : Set Pl0) (Sp : Set (Pl D.host.E)), L.Q ⊆ Q' → ok' ⊆ ok → (∀ PP ∈ L.Pg, ∀ PP' ∈ Q', PP ≠ PP' ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP PP' ∧ ¬ Formalism.IndefR.Lev.IsConjPl PP' PP) → (∀ P ∈ ok', Bridge.SplitOff (pl P) Sp) → (∀ PP, PP ∈ L.Pg ∨ PP ∈ Q' → PP ∈ Sp) → (∀ j, j < L.s → ∀ PP ∈ L.Pg, ∀ x, ∃ a, D.what₂.embLL a = ((L.cg (j + 1) PP x : ℂˣ) : ℂ)) → (∀ PP ∈ Q', ∀ x, ∃ a, D.what₂.embLL a = ((xq PP x : ℂˣ) : ℂ)) → ∀ (c : Bridge.CoefDat D V) (S : CSD D.what₂.LL) (act : Representation D.what₂.LL G S.Forms) (op : ok × ℕ → Module.End D.what₂.LL S.Forms) (B : Bridge.SideReal D V (Bridge.envOf c (levEnvOf V β L pl ok)) S act op (fun i => i.2)), (∃ (lam : D.what₂.Tau → DomWeight V.rank) (c0 : VV D.what₂.LL lam →ₛₗ[D.what₂.embLL] c.W) (rho : _) (pair : _) (nab del : _), Bridge.CoefMapTie V c c0 rho ∧ Bridge.CoefTie V c B.pres lam c0 pair nab del) → ∃ (S' : CSD D.what₂.LL) (act' : Representation D.what₂.LL G S'.Forms) (op' : ok' × ℕ → Module.End D.what₂.LL S'.Forms) (B' : Bridge.SideReal D V (Bridge.envOf c (levEnvOf V β { L with Q := Q', xq := xq } pl ok')) S' act' op' (fun i => i.2)), (∀ q : (levEnv V β { L with Q := Q', xq := xq }).Q, ∃ hq : (q : Bridge.Gf V) ∈ (levEnv V β L).Q, B'.act_tie.red q = B.act_tie.red ⟨q, hq⟩) ∧ (∀ (lam : D.what₂.Tau → DomWeight V.rank) (c0 : VV D.what₂.LL lam →ₛₗ[D.what₂.embLL] c.W) pair nab del, Bridge.CoefTie V c B.pres lam c0 pair nab del → Bridge.CoefTie V c B'.pres lam c0 pair nab del) ∧ ∀ P, op' (P, 0) = 1 ∧ ∀ k, V.rank < k → op' (P, k) = 0 := by
   intro D G _ _ V β Λ hSD L Q' xq Pl0 pl ok ok' Sp hQ hok hdisj hsplit hS hcg hxq c S act op B hct
-  have hfin := GlobalTheory.T.parahoricSublevel_finiteIndex_more_places D V β Λ hSD L Q' xq hQ
+  have hfin := _root_.GlobalTheory.sublevel_finiteIndex D V β Λ hSD L Q' xq hQ
   obtain ⟨hJle, hQle, hfi, hker⟩ := hfin
   obtain ⟨cc, hβ⟩ := hSD
   rw [one_pow] at hβ
@@ -1630,14 +1615,14 @@ theorem sideReal_moreLevel : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (V : 
     refine ((hco _).trans ?_).trans (congrArg (c.ρ γ) (hco x)).symm
     rw [LinearEquiv.apply_symm_apply]
     exact hmap.1 γ γE hγ (e x)
-  obtain ⟨Cl, fC, π, kc, Gam, gG, fG, ρ', P', hy, hcoef⟩ := GlobalTheory.T.classPres_of_finiteIndex_subLevel (Bridge.ratF V) D.what₂.embLL S c.ρ
+  obtain ⟨Cl, fC, π, kc, Gam, gG, fG, ρ', P', hy, hcoef⟩ := _root_.GlobalTheory.classPres_subLevel (Bridge.ratF V) D.what₂.embLL S c.ρ
     (levEnv V β L).J (levEnv V β L).χ B.pres (levEnv V β L').J hJle hfi (levEnv V β L').χ hvalJ hrat
   have hrat' : ∀ (γ : GQ V) x, ∃ x', P'.coef x' = c.ρ γ (P'.coef x) := by
     rw [hcoef]; exact hrat
 
   let red' : (levEnv V β L').Q →* G := B.act_tie.red.comp (Subgroup.inclusion hQle)
   have hred_surj : Function.Surjective red' :=
-    surj_restrict hQle B.act_tie.red B.act_tie.red_surj B.act_tie.red_ker (GlobalTheory.T.exists_mem_smaller_parahoricLevel_mod_firstBlocks D V β Λ hSD' L Q' xq hQ hdisj)
+    surj_restrict hQle B.act_tie.red B.act_tie.red_surj B.act_tie.red_ker (_root_.GlobalTheory.SmallerParahoric.exists_mem_smaller D V β Λ hSD' L Q' xq hQ hdisj)
   have hred_ker : ∀ q : (levEnv V β L').Q, red' q = 1 ↔ (q : Bridge.Gf V) ∈ (levEnv V β L').J := by
     intro q
     exact (B.act_tie.red_ker ⟨q, hQle q.2⟩).trans ⟨fun h => hker _ q.2 h, fun h => hJle h⟩
@@ -1651,7 +1636,7 @@ theorem sideReal_moreLevel : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (V : 
     have hT : isTEnv V pl ok (up i) (B.hecke.hx (up i)) := B.hecke.hx_ok (up i) hi
     have hA : ∀ a ∈ B.hecke.hA (up i), isLocEnv V pl ok (up i) a := B.hecke.hA_loc (up i) hi
     refine ⟨hT, hA, ?_⟩
-    exact GlobalTheory.T.hecke_representatives_split_place_smaller_level D V β Λ hSD' L Q' xq hQ Pl0 pl ok (up i) (hoffI i) hi.2 _ _ hT hA (B.hecke.hDC (up i) hi)
+    exact _root_.GlobalTheory.SmallerLevelHecke.isDC_smaller_level D V β Λ hSD' L Q' xq hQ Pl0 pl ok (up i) (hoffI i) hi.2 _ _ hT hA (B.hecke.hDC (up i) hi)
   have hloc : ∀ i : ok' × ℕ, (1 ≤ i.2 ∧ i.2 ≤ V.rank) → ∃ Lc : Subgroup (Bridge.Gf V),
       (∀ x, isLocEnv V pl ok' i x → x ∈ Lc) ∧
       (∀ k ∈ (levEnv V β L').J, ∃ k₁ ∈ (levEnv V β L').J, ∃ k₂ ∈ (levEnv V β L').J, k₁ ∈ Lc ∧ k = k₁ * k₂ ∧

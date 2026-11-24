@@ -139,7 +139,7 @@ theorem richAt_ch (c : Cfg) (l N R : ℕ) (hN : 3 ≤ N) (hlen : 6 * (N : ℝ) ^
   · refine ⟨fun _ => Formalism.SA.C.chebPt α (α + ℓ) 1 0, fun i j _ => Fin.ext (by have := i.2; have := j.2; omega), fun j => hmem 1 le_rfl
       (le_max_left _ _) 0, ?_⟩
     simp [Formalism.FourierDecayAlt.F7.lagCo]
-  · have hsharp := Formalism.FourierDecayAlt.P.chebyshev_bound_sharp α (α + ℓ) n (by linarith) hn0
+  · have hsharp := _root_.Formalism.FourierDecayAlt.P.ChebyshevExtremalPolynomials.sharp α (α + ℓ) n (by linarith) hn0
     refine ⟨Formalism.SA.C.chebPt α (α + ℓ) n, hsharp.1, fun j => hmem n hn0 (le_trans hn (le_max_right _ _)) j, ?_⟩
     rw [hsharp.2, show α + ℓ - α = ℓ by ring]
     have h4 : 4 / ℓ ≤ 28 * N / ((c.Del / 2 - c.v l) - (5 / 2 - c.v l)) := by
@@ -338,17 +338,6 @@ def gridT {D : D7} (e : InfinitePlace D.host.E ≃ D.what₂.Tau) (l : ℕ) (j :
 def grid1T {D : D7} (e : InfinitePlace D.host.E ≃ D.what₂.Tau) (l : ℕ) (j : Fin (nfE D)) : Finset ℝ :=
   Formalism.L2.SG.Pf.CarrierSz.grid1Of ((Formalism.L2.SG.SpectralTiesReal.gOf D e).place (plE D j)) l (4 * Formalism.FourierDecayAlt.C.Kst * (D.R.rS + 1))
 
-theorem b_ge_one (c : Formalism.FourierDecayAlt.Sz.Cfg) (h : c.Ok) : ∀ j, 1 ≤ j → j ≤ c.m → 1 ≤ c.b j := by
-  intro j hj1 hjm
-  induction j with
-  | zero => omega
-  | succ n ih =>
-    rcases Nat.eq_zero_or_pos n with hn | hn
-    · subst hn; exact h.hb1
-    · have h1 := ih hn (by omega)
-      have h2 := h.hgap n hn (by omega)
-      linarith
-
 variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) {θ : ℝ} (C : Choice X θ)
 
 theorem gridsRich_ITc (u u' : D.what₂.Word) (e : InfinitePlace D.host.E ≃ D.what₂.Tau) (he : PlaceTie X e)
@@ -378,7 +367,7 @@ theorem gridsOK_ITc (u u' : D.what₂.Word) (e : InfinitePlace D.host.E ≃ D.wh
   have hDel : (0 : ℝ) < (D.s.Del : ℝ) := by exact_mod_cast D.s.Del_pos
   refine Formalism.L2.SG.Pf.CarrierSz.gridsOK_ch _ hlen (fun v => by show gridT e l v = _; unfold gridT; rfl)
     (fun v => by show grid1T e l v = _; unfold grid1T; rfl)
-    (Formalism.L2.SG.Pf.CarrierSz.pNe_of _ hDel (fun x => (hOk x).hv0) (fun x j h1 h2 => b_ge_one _ (hOk x) j h1 h2) hl2)
+    (Formalism.L2.SG.Pf.CarrierSz.pNe_of _ hDel (fun x => (hOk x).hv0) (fun x j h1 h2 => _root_.Formalism.FourierDecayAlt.P.Sz5.b_ge_one _ (hOk x) j h1 h2) hl2)
 
 end Formalism.L2.SG.Pf.CarrierT
 end -- clump:auto

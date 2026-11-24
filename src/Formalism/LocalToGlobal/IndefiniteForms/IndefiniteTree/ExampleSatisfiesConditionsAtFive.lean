@@ -71,6 +71,7 @@ import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.LocalToGlobal.IndefiniteForms.IndefUse
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.MirabolicMackeyTheory.ErrSumGoodExact, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsComposeGeneral, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PrimeLogarithmTail.SumLogBlock, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PrimeLogarithmTail.SumLogDivSqLeDiv, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PrimeLogOverPSqTail, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.AbsorbLocalConditionsOfExact, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsGlobalForm, Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.UnipotentNumeric, Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSatisfiesConditionsAtFive
@@ -892,7 +893,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.UnipotentNumeric =====
 
 -- ===== clump member: Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSatisfiesConditionsAtFive =====
--- clump-header: {"m": "Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSatisfiesConditionsAtFive", "h": "module\n\npublic import Formalism.LocalToGlobal.IndefiniteForms.IndefSide\npublic import Formalism.MirabolicMackeyTheory.StatementL\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.AbsorbLocalConditionsOfExact\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsGlobalForm\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.UnipotentNumeric\npublic import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.BoundsChain\npublic import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondComplementParameterBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSatisfiesConditionsAtFive", "h": "module\n\npublic import Formalism.LocalToGlobal.IndefiniteForms.IndefSide\npublic import Formalism.MirabolicMackeyTheory.StatementL\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.AbsorbLocalConditionsOfExact\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsGlobalForm\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.LocalConditionsWeightedConditional\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic\npublic import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.UnipotentNumeric\npublic import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.BoundsChain\npublic import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondComplementParameterBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.IndefiniteForms.IndefUse\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1273,13 +1274,6 @@ theorem card_pos (U : Subgroup P) : (0 : ℝ) < (Nat.card U : ℝ) := by
   have h : 0 < Nat.card U := Nat.card_pos
   exact_mod_cast h
 
-theorem matLat_one' {d : ℕ} (L : Submodule (𝓞 K) (Fin d → K)) :
-    matLat (1 : Matrix (Fin d) (Fin d) K) L = L := by
-  unfold matLat
-  rw [Matrix.mulVecLin_one]
-  first
-  | exact Submodule.map_id L
-
 theorem local_bound (O : OnObj S P c) (v : HeightOneSpectrum (𝓞 K)) (j : Bs.J) (t : Bs.Tup)
     (hMk : LeafMackey O) (hSup : LeafSup O) (hProj : LeafProj O)
     (hC : Function.Injective (O.φ j) ∧ LinearMap.range (O.φ j) = O.Zg j ∧
@@ -1659,14 +1653,14 @@ theorem on_core (N : IndefNum Bs) (O : OnObj S P c) (CE : ℝ) (hRk : RankRows S
     O.e0 (fun v j => O.r v j / (ramw v : ℝ)) O.ε0 N.F0 O.errl (fun w j => (ramw w : ℝ) * N.J0 (S.μ w) w j)
     O.vU0 O.gq (fun j => (O.nZ j : ℝ)) EA O.Rb (fun _ => O.EJ) (O.U.index : ℝ)
     (∑ w ∈ S.Tw, lw w * ((ramw w : ℝ) * (2 / (plc w : ℝ) ^ 2))) hδ
-    (by intro w hw j; simp only [matLat_one']; exact hloc1 w hw j)
-    (by intro w hw j; simp only [matLat_one']; exact hloc2 w hw j)
+    (by intro w hw j; simp only [_root_.Formalism.L2.Indef.matLat_one]; exact hloc1 w hw j)
+    (by intro w hw j; simp only [_root_.Formalism.L2.Indef.matLat_one]; exact hloc2 w hw j)
     hsh hv hdep h1.2 hEA hRb hEJ le_rfl
   obtain ⟨c1, c2, -⟩ := X
   refine ⟨?_, ?_, ?_⟩
   · intro w hw
     have h := c1 w hw
-    simp only [matLat_one'] at h
+    simp only [_root_.Formalism.L2.Indef.matLat_one] at h
     rw [(ramified_basic_bound K w).2.2.2.2] at h
     simp only [IndefData.Iw]
     exact h
@@ -1915,13 +1909,6 @@ theorem lw_pos (w : HeightOneSpectrum (𝓞 K)) : 0 < lw w := by
   apply div_pos (Real.log_pos h2)
   have h4 : 0 < finrank ℚ K := Module.finrank_pos
   exact_mod_cast h4
-
-section Level
-
-variable (h5 : ∀ w ∈ Tw0, plc w = 5)
-include h5
-
-end Level
 
 end Examples₂
 

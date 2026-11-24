@@ -548,8 +548,6 @@ theorem main : LocUnrInert := by
 
 end GlobalTheory.ThK.Dbl.Inert
 
-theorem GlobalTheory.ThK.Dbl.locUnrInert : GlobalTheory.ThK.Dbl.LocUnrInert := GlobalTheory.ThK.Dbl.Inert.main
-
 end
 end -- clump:auto
 end -- clump:auto

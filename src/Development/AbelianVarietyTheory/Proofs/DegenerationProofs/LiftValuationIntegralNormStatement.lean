@@ -201,8 +201,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.Ex
 open GlobalTheory.ModelData
 
-theorem _root_.GlobalTheory.T.arcDatum_pullback_rescaled_matches : GlobalFnsSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (O' : Type) [CommRing O'] [IsDomain O'] (b : O →+* O') (a : ArcIn D l β O' b) (R : Type) [CommRing R] [IsDomain R] (f : O' →+* R) (D' : DegPre R) (hD : IsPullDeg f a.D₀ D') (u₀ : R) (uK : (FractionRing R)ˣ), (uK : FractionRing R) = algebraMap R _ u₀ → ∀ (q : D'.X → (FractionRing R)ˣ) (Φ : D'.P.A.left ⟶ a.D₀.P.A.left), Φ = PsiEvenPull.proj hD → (∀ y, q y = uK ^ (a.be (hD.xe y) (hD.xe y) / 2)) → ∃ (_ : Module (𝓞 E) (TauTwist.rescale D' q).X) (oW : letI := H.starRing; (TauTwist.rescale D' q).OAct (𝓞 E)) (he : _) (w : _) (e : _), GlobalTheory.LN.Match a f u₀ (TauTwist.rescale D' q) oW Φ he w e ∧ (∀ y, hD.xe (e y) = y) ∧ (TauTwist.rescale D' q).PsiEven ∧ (TauTwist.rescale D' q).TauBimult := by
-  first | exact @GlobalTheory.RescaleMatch.exists_match_rescale
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcDatumPullbackRescaledMatchesStatement =====
@@ -506,8 +504,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.Ex
 open GlobalTheory.ModelData
 
-theorem _root_.GlobalTheory.T.exists_torsion_isometry_uniformised_model : GlobalTheory.UT.LL → BrGtSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (C : Type) [NormedField C] (o : Full D C) (M : Mdl o) (N' : NumD C) (_ : NumOf M.P.D.toPre C N'), ∃ I : TateIsoQ D M.P.D.toPre M.P.oD C, I.ζ = o.I.ζ ∧ ∀ k, 0 < k → ∀ x p' (z : TFK (R := M.W) C ⟶ M.P.A.A), QkPt.Equiv _ C (I.ev k x) p' → z.left = (o.I.ev k x).left ≫ M.φ → M.P.ToA C k p' z := by
-  first | exact @GlobalTheory.ModelData.ModelTate.exists_tateIsoQ_of_model
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorsionIsometryUniformisedModelStatement =====
@@ -665,8 +661,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.Ex
 open GlobalTheory.ModelData
 
-theorem _root_.GlobalTheory.T.torsionIsometry_values_isTorsionLabelSystem : BrGtSt → BrWpSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (R : Type) [CommRing R] [IsDomain R] (D₀ : DegPre R) [Module (𝓞 E) D₀.X] (oa : letI := H.starRing; D₀.OAct (𝓞 E)), D₀.PsiEven → D₀.TauBimult → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (I : TateIsoQ D D₀ oa F) (N : NumD F) (ν : NumOf D₀ F N) (q : ∀ n : ℕ, D.La → N.QT n), (∀ n a, ν.QPt (I.ev n a) (q n a)) → Labels N D.EF I.ζ q ∧ ∀ k, 0 < k → ∀ (x : 𝓞 E) (a : D.La), ∃ z, ν.eX (q k (x • a)).1.1.toAdd = x • ν.eX (q k a).1.1.toAdd + k • z := by
-  first | exact @GlobalTheory.ModelData.labels_of_tateIsoQ
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionIsometryValuesIsTorsionLabelSystemStatement =====
@@ -1048,7 +1042,7 @@ theorem exists_twisted_pull (hL : Laws) [IsLocalRing O'] [IsNoetherianRing O'] (
   obtain ⟨ν', e₁, e₂⟩ := GlobalTheory.T.exists_degenerationValues_of_strict_pullback hL.globalFns O' R f a.D₀ D' hD hs C hf A.N A.ν th' h₁ h₂
   have h0 : algebraMap R (FractionRing R) u₀ ≠ 0 := fun h => u.ne_zero (by rw [hu, h, map_zero])
   let q : D'.X → (FractionRing R)ˣ := fun y => Units.mk0 _ h0 ^ (a.be (hD.xe y) (hD.xe y) / 2)
-  obtain ⟨m, oW, he, w, e, hM, hx, hE, hB⟩ := GlobalTheory.T.arcDatum_pullback_rescaled_matches hL.globalFns E H D l c O β O' b a R f D' hD u₀ (Units.mk0 _ h0) rfl q
+  obtain ⟨m, oW, he, w, e, hM, hx, hE, hB⟩ := _root_.GlobalTheory.RescaleMatch.exists_match_rescale hL.globalFns E H D l c O β O' b a R f D' hD u₀ (Units.mk0 _ h0) rfl q
     _ rfl fun _ => rfl
   obtain ⟨νW, e₃, e₄⟩ := GlobalTheory.T.exists_degenerationValues_of_rescaled_twisted R D' C A.N ν' _ A.be u q fun y => by
     simp only [q, e₁, A.be_eq, Units.val_zpow_eq_zpow_val, map_zpow₀, Units.val_mk0, hu]
@@ -1104,7 +1098,7 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   have tW : (A.N.twist A.be u).toNumB.Tors n DW.P.g := hg ▸ tN
   have tN' := GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 hUth M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C xW N' ν' hI'' n hn ho hn1
 
-  obtain ⟨lA, linA⟩ := GlobalTheory.T.torsionIsometry_values_isTorsionLabelSystem hGt hWp E H D O' a.D₀ a.oa a.even a.bimult C A.I A.N A.ν A.q A.hq
+  obtain ⟨lA, linA⟩ := _root_.GlobalTheory.ModelData.labels_of_tateIsoQ hGt hWp E H D O' a.D₀ a.oa a.even a.bimult C A.I A.N A.ν A.q A.hq
   have ex : ∀ (k : ℕ) (x : D.La), ∃ p : (A.N.twist A.be u).QT k, 0 < k → TwRel A.be u (r k) (A.q k x) p := fun k x => by
     rcases Nat.eq_zero_or_pos k with rfl | hk
     · exact ⟨1, fun h => absurd h (lt_irrefl 0)⟩
@@ -1113,10 +1107,10 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   choose lab hlab using ex
   have lT := GlobalTheory.T.torsionLabelSystem_twist_by_compatible_roots C A.N D.La D.EF A.I.ζ A.q _ A.be u r hr lA lab fun k hk x => hlab k x hk
 
-  obtain ⟨I', hζ, hTo⟩ := GlobalTheory.T.exists_torsion_isometry_uniformised_model hV.1 hGt E H D C o M N' ν'
+  obtain ⟨I', hζ, hTo⟩ := _root_.GlobalTheory.ModelData.ModelTate.exists_tateIsoQ_of_model hV.1 hGt E H D C o M N' ν'
   have G' := hGt M.W M.P.D.toPre M.P.D.psi_even M.P.D.tau_bimult C N' ν'
   choose lab' hlab' using fun (k : ℕ) (x : D.La) => ((G'.2.2.2.2 k).1 (I'.ev k x)).exists
-  obtain ⟨lM, linM⟩ := GlobalTheory.T.torsionIsometry_values_isTorsionLabelSystem hGt hWp E H D M.W M.P.D.toPre M.P.oD M.P.D.psi_even M.P.D.tau_bimult C I' N' ν' lab' hlab'
+  obtain ⟨lM, linM⟩ := _root_.GlobalTheory.ModelData.labels_of_tateIsoQ hGt hWp E H D M.W M.P.D.toPre M.P.oD M.P.D.psi_even M.P.D.tau_bimult C I' N' ν' lab' hlab'
   have qEqEquiv (k : ℕ) : Equivalence (N'.QEq (k := k)) := by
     refine ⟨?_, ?_, ?_⟩
     · intro p
@@ -1182,8 +1176,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.Ex
 
-theorem _root_.GlobalTheory.T.lift_valuation_integral_norm : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → AllA fun {E} _ _ _ {H} {D} {l} {Xo} {c} {W₀} Y {O'} _ _ {b} a => ∀ (C : Type) [NontriviallyNormedField C] [IsUltrametricDist C] [CompleteSpace C] [IsAlgClosed C] [CharZero C] [Algebra (FractionRing O') C] (A : Lift a C) (u : Cˣ) (r : ℕ → Cˣ) (o : Full D C) (M : Mdl o) (f : O' →+* M.W) (u₀ : M.W), A.ν.IntN → Roots u r → ‖(u : C)‖ < 1 → (u : C) = algebraMap (FractionRing M.W) C (algebraMap _ _ u₀) → (∀ x, algebraMap (FractionRing M.W) C (algebraMap _ _ (f x)) = algebraMap (FractionRing O') C (algebraMap _ _ x)) → ∀ n : ℕ, n.Prime → Odd n → ‖(n : C)‖ = 1 → (∀ j, o.I.ζ (n ^ j) = A.I.ζ (n ^ j) ∧ ∀ p : D.La → (A.N.twist A.be u).QT ((n ^ j) ^ 2), (∀ x, TwRel A.be u (r ((n ^ j) ^ 2)) (A.q _ x) (p x)) → o.Theta (n ^ j) fun x => (A.N.twist A.be u).tx (n ^ j) (p x)) → ∃ (N' : NumD C) (ν' : NumOf M.P.D.toPre C N') (J : NumD.Iso (A.N.twist A.be u) N'), (∀ (x : 𝓞 E) y, ν'.eX (J.e (A.arc.act x y)) = x • ν'.eX (J.e y)) ∧ (∀ j x (p : (A.N.twist A.be u).QT (n ^ j)) (q' : N'.QT (n ^ j)) p' z, TwRel A.be u (r (n ^ j)) (A.q _ x) p → q'.1.1.toAdd = J.e p.1.1.toAdd → J.Rel p.1.2 q'.1.2 → ν'.QPt p' q' → z.left = (o.I.ev (n ^ j) x).left ≫ M.φ → M.P.ToA C (n ^ j) p' z) ∧ ∃ (DW : DegPre M.W) (_ : Module (𝓞 E) DW.X) (oW : letI := H.starRing; DW.OAct (𝓞 E)) (φ : _) (he : _) (w : _) (e : _) (νW : NumOf DW C (A.N.twist A.be u)), GlobalTheory.LN.Match a f u₀ DW oW φ he w e ∧ (∀ y, νW.eX y = e (A.ν.eX y)) ∧ (∀ x, (νW.eA x).left ≫ φ = (A.ν.eA x).left) ∧ GeoIso νW ν' J.toIso := by
-  first | exact @GlobalTheory.ModelData.data_of_model
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LiftValuationIntegralNormStatement =====

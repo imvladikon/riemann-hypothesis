@@ -221,8 +221,6 @@ open Formalism.MainNotions.DIV.Cons (SCF intO)
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.integralThetaSection_exists_and_baseChange : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), (∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), letI := io.toAlgebra; ∃ G : SAB H (Sp T.V), Nonempty (IntSec Xo T.V y.1.x y.1.s G)) ∧ ∀ (V V' : Type) [CommRing V] [IsDomain V] [CommRing V'] [IsDomain V'] [Algebra c.F (FractionRing V)] [Algebra c.F (FractionRing V')] (φ : V →+* V') (ψ : FractionRing V →ₐ[c.F] FractionRing V') (y : FrPt Xo c (FractionRing V)) (y' : FrPt Xo c (FractionRing V')) (G : SAB H (Sp V)) (G' : SAB H (Sp V')) (_ : SABMap G' G (spMap φ)) (_ : IntSec Xo V y.x y.s G), (∀ a, ψ (algebraMap V _ a) = algebraMap V' _ (φ a)) → FrMap ψ y y' → Nonempty (IntSec Xo V' y'.x y'.s G') := by
-  first | exact @GlobalTheory.EtaVal.intSec_exists_and_baseChange
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusSplitting.IntegralThetaSectionExistsAndBaseChangeStatement =====
@@ -374,7 +372,7 @@ theorem phiC_le_normalized_valuation_local_model_base_change (E : Type) [Field E
         ((((Nat.card (LevGrp Dw (R ^ 4)) : ℝ) / (R : ℝ) ^ 4 *
           (Formalism.BasicNotions.eWL c.F la * Formalism.MainNotions.ModuliIntegralCharts.phiC cj bA) : ℝ)) : EReal) ≤ nval T.V e (evI y f) := by
   letI := io.toAlgebra
-  obtain ⟨G, ⟨I⟩⟩ := (GlobalTheory.T.integralThetaSection_exists_and_baseChange E H Dw l Xo c).1 T io y
+  obtain ⟨G, ⟨I⟩⟩ := (_root_.GlobalTheory.EtaVal.intSec_exists_and_baseChange E H Dw l Xo c).1 T io y
   obtain ⟨T', φ, G', m, hφi, hφf, -, -, U, hU, hUt⟩ :=
     GlobalTheory.UnifAfterExt.exists_finite_ext_uniformised E H Dw l Xo T G I.t' I.m2 y.1.x I.m1 hAlg
   obtain ⟨i, ρ, hρ, hi, hiv, hf⟩ := GlobalTheory.T.exists_injective_intO_embedding_of_norm_lt_one T T' φ hφi hφf
@@ -402,7 +400,7 @@ theorem phiC_le_normalized_valuation_local_model_base_change (E : Type) [Field E
   letI : Algebra c.F T'.Fr := (i.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
   obtain ⟨y', hy'⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.firstFiveLaws.1 E H Dw l Xo c T.Fr T'.Fr ψ y.1
-  obtain ⟨I'⟩ := (GlobalTheory.T.integralThetaSection_exists_and_baseChange E H Dw l Xo c).2 T.V T'.V φ ψ y.1 y' G G' m I hi hy'
+  obtain ⟨I'⟩ := (_root_.GlobalTheory.EtaVal.intSec_exists_and_baseChange E H Dw l Xo c).2 T.V T'.V φ ψ y.1 y' G G' m I hi hy'
   have hval := (GlobalTheory.EtaForm.etaValAt_evR_of_fromTest E H Dw l Xo c R hR J n cf xs g hg T.Fr y.1 y.2.1).2
     T'.Fr ψ y' hy'
   by_cases h0 : evI y g = 0
@@ -550,7 +548,7 @@ theorem exists_form_four_clauses (D : D7) (T : Top D) (h : LawsP T) (DF q : ℕ)
     have := D.R.m_add_three_le_k
     unfold Ranks.r; omega
   obtain ⟨i, J, fJ, cf, xs, f, hi, hcard, hsp, hrule, hcusp, hne, -, hnzd, harch, hsup⟩ :=
-    GlobalTheory.T.exists_product_cuspForm_ne_zero_arch_supNorm_bounds D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r
+    _root_.GlobalTheory.EtaAn.exists_etaRule_cusp_ne_zero_bounds D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r
       (fun σ => Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) T.σ₀ (fun σ hσ => h.unf j hj σ hσ) T.good_σ₀
       (h.allTest j hj) hr 5 (by decide) (by norm_num) DF q D.R.m R0 hrun (Or.inr hq)
   have hw := wtA_wEt_eq_zero D j i

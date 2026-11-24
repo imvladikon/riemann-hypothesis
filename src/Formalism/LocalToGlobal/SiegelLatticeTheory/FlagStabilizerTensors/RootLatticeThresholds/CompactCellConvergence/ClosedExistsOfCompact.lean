@@ -55,13 +55,14 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
 import Mathlib.Tactic.TypeStar
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.FlagStabClosed, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.ClosedExistsOfCompact
 
 -- ===== clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.FlagStabClosed =====
--- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.FlagStabClosed", "h": "module\n\npublic import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth\npublic import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.FlagSpanVanishing\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.ZhatSectionExists\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.FlagStabClosed", "h": "module\n\npublic import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth\npublic import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.FlagSpanVanishing\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.ZhatSectionExists\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -121,10 +122,6 @@ theorem sgS_closed (z z' : Fin (2 * r + k + 1) → ℂ) (hz : StdZ k r z)
     (γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) : IsClosed (SgS k r z z' γ) :=
   (sset_closed z hz).inter ((lpg_closed _).preimage ((uMap_cont z).matrix_conjTranspose))
 
-theorem n_in_sset (z : Fin (2 * r + k + 1) → ℂ) {n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
-    (hn : n ∈ Nset k r) : n ∈ Sset k r z :=
-  ⟨1, ⟨WeylGroupFacts.uh_one, fun a => by simp, by simp⟩, n, hn, by simp⟩
-
 theorem uw_in_sset (z : Fin (2 * r + k + 1) → ℂ) {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hh : h ∈ UWset k r z) : h ∈ Sset k r z :=
   ⟨h, hh, 1, WeylGroupFacts.mem_n_one, by simp⟩
@@ -138,8 +135,8 @@ theorem sg_eq (z z' : Fin (2 * r + k + 1) → ℂ) (hz : StdZ k r z)
   constructor
   · rintro ⟨n0, hn0, v, hv, hvL, h, hh, rfl⟩
     obtain ⟨hτN, -, hτu⟩ := hT v hv
-    have h1 : n0 ∈ Sset k r z := n_in_sset z hn0.1
-    have h2 : tauM k r z v ∈ Sset k r z := n_in_sset z hτN
+    have h1 : n0 ∈ Sset k r z := _root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hn0.1
+    have h2 : tauM k r z v ∈ Sset k r z := _root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hτN
     have h3 : h ∈ Sset k r z := uw_in_sset z hh
     refine ⟨hSG.2.1 _ (hSG.2.1 _ h1 _ h2) _ h3, ?_⟩
     rw [(hU.1 _ (hSG.2.1 _ h1 _ h2)).2.2 _ h3, (hU.1 _ h1).2.2 _ h2, hn0.2, hτu, hU.2 h hh]
@@ -160,13 +157,13 @@ theorem sg_eq (z z' : Fin (2 * r + k + 1) → ℂ) (hz : StdZ k r z)
     have hsplit : h * m = h * m * h⁻¹ * h := by
       rw [Matrix.mul_assoc (h * m), Matrix.nonsing_inv_mul _ hhU, Matrix.mul_one]
     have hun : uMap k r z (h * m * h⁻¹) = v := by
-      have := hmul _ (n_in_sset z hn) _ (uw_in_sset z hh)
+      have := hmul _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hn) _ (uw_in_sset z hh)
       rw [← hsplit, hU.2 h hh, Matrix.mul_one] at this
       exact this.symm
     have hone : uMap k r z 1 = 1 := hU.2 1 ⟨WeylGroupFacts.uh_one, fun a => by simp, by simp⟩
     have huinv : uMap k r z (h * m * h⁻¹ * (tauM k r z v)⁻¹) = 1 := by
-      have e1 := hmul _ (n_in_sset z hn) _ (n_in_sset z hτi)
-      have e2 := hmul _ (n_in_sset z hτN) _ (n_in_sset z hτi)
+      have e1 := hmul _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hn) _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hτi)
+      have e2 := hmul _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hτN) _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hτi)
       rw [Matrix.mul_nonsing_inv _ hτU, hone, hτu] at e2
       rw [e1, hun]; exact e2.symm
     refine ⟨_, ⟨hn0, huinv⟩, v, hv, by simpa using hsL, h, hh, ?_⟩

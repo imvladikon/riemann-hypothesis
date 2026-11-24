@@ -189,8 +189,6 @@ theorem classSec : LateralTheory.E.LocSecPfB.ClassSec := by
   exact ((LateralTheory.E.LeafLocPf.secCx F X).homologyIsoSc' (n - 1) n (n + 1) (by simp) (by simp) ≪≫
     (S X F n).moduleCatHomologyIso).toLinearEquiv.toAddEquiv.symm
 
-theorem ClassSec_of : LateralTheory.E.LocSecPfB.ClassSec := classSec
-
 end LateralTheory.E.ClassSecPf
 end -- clump:auto
 end -- clump:auto
@@ -583,7 +581,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 namespace LateralTheory.E.LeafTwistIsoPf
 
 theorem leafLoc : LateralTheory.E.LeafTwistPf.LeafLoc :=
-  LateralTheory.E.LeafLocPf.LeafLoc_of' (LateralTheory.E.LocSecPfC.LocSec_of LateralTheory.E.ClassSecPf.ClassSec_of)
+  LateralTheory.E.LeafLocPf.LeafLoc_of' (LateralTheory.E.LocSecPfC.LocSec_of _root_.LateralTheory.E.ClassSecPf.classSec)
     (LateralTheory.E.LocSlicePf.LocSlice_of' LateralTheory.E.PullMonoPf.PullMono_of)
 
 theorem leafTwSec : LateralTheory.E.LeafTwistPf.LeafTwSec :=

@@ -1033,14 +1033,6 @@ open GlobalTheory.FlagTan (dimFlag psiSet TIx HIx VIx IsTanFrame IsDef IsVert KS
 open GlobalTheory.AllWt (exOf)
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_ringMaps_lift_vertical_deformations_affine : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} {X : GlobalTheory.FlagMod.FlagCover Y} {Z : Comp Xo c} (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagTan.dimFlag Dw)) (k : X.F.J) (W : M.X.Opens) (hW : IsAffineOpen W)
-    (hle : W ≤ M.off ⊓ (toFlag M) ⁻¹ᵁ X.F.U k), ∃ e : VIx Dw → (Γ(M.X, W) →+* DualNumber Γ(M.X, W)), (∀ b s, (e b s).fst = s) ∧
-      ∀ (K : Type) [Field K] [Algebra c.F K] (ψ : Γ(M.X, W) →+* K)
-        (hk : ⊤ ≤ ((spMap ψ ≫ tau hW) ≫ toFlag M) ⁻¹ᵁ X.F.U k) (Q : FrPt Xo c K),
-        X.F.ChartFr k _ hk Q → ∀ b : VIx Dw, ∃ w : FrPt Xo c (DualNumber K),
-          IsVert Q (Pi.single b.toF (1 : K)) w ∧
-          spMap ((dualMap ψ).comp (e b)) ≫ tau hW ≫ toFlag M = X.ptY w := by
-  first | exact @GlobalTheory.CompHS.exists_vertLift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingMapsLiftVerticalDeformationsAffineStatement =====
@@ -1100,7 +1092,7 @@ theorem exists_local (hP : GlobalTheory.Published.AbelianDeRham)
   have hWV : W' ≤ W := hWW'.trans (hW₁V.trans inf_le_left)
   have hW'k : W' ≤ M.off ⊓ (toFlag M) ⁻¹ᵁ X.F.U k := hWV.trans (hW.trans hWk)
   have hW'i : W' ≤ M.K.bundle.U i := hWV.trans (hW.trans hWi)
-  obtain ⟨eV, eV1, eV2⟩ := GlobalTheory.T.exists_ringMaps_lift_vertical_deformations_affine M k W' hW' hW'k
+  obtain ⟨eV, eV1, eV2⟩ := _root_.GlobalTheory.CompHS.exists_vertLift M k W' hW' hW'k
   let e : TIx Dw (psiSet H) → (Γ(M.X, W') →+* DualNumber Γ(M.X, W')) := Sum.elim eH eV
   have e1 : ∀ b s, (e b s).fst = s := by
     rintro (b | b) s

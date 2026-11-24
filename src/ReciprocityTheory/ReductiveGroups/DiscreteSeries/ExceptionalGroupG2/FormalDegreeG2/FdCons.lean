@@ -283,7 +283,7 @@ theorem formal_degree_liminf_lower_bound {ε : Fin n → Bool} {lam : Fin n → 
     intro t
     refine ENNReal.measurable_ofReal.comp (Continuous.measurable ?_)
     exact ((continuous_norm.comp ((fdl_inner_continuous _ (T t) _ _).comp (continuous_const_smul _))).pow 2).mul
-      ((jac_continuous ε).comp (continuous_const_smul _))
+      ((_root_.ReciprocityTheory.ChartRestriction.DS.pb_jac_continuous ε).comp (continuous_const_smul _))
   refine le_trans ?_ (lintegral_liminf_le hmeas)
   rw [← fdl_gauss ε]
   refine lintegral_mono fun y => ?_
@@ -800,7 +800,7 @@ theorem formal_degree_limsup_upper_bound {ε : Fin n → Bool} {lam : Fin n → 
     have hc : Continuous (fun y : PCoord ε → ℂ => (((Real.sqrt ((t + T : ℕ) : ℝ))⁻¹ : ℝ) : ℂ) • y) :=
       continuous_const_smul _
     exact (Real.continuous_exp.comp (continuous_const.mul ((continuous_potential_pmat _).comp hc))).mul
-      ((jac_continuous ε).comp hc)
+      ((_root_.ReciprocityTheory.ChartRestriction.DS.pb_jac_continuous ε).comp hc)
   have hint := ((fdU_integrable_prod_exp (ε := ε)
     (c := (Real.sqrt ((16 * n * q0 ε + 1 : ℕ) : ℝ) / Real.sqrt (2 * (q0 ε : ℝ)) / 8 -
           |(n : ℝ) - 1| * Real.sqrt (2 * (q0 ε : ℝ)) / Real.sqrt ((16 * n * q0 ε + 1 : ℕ) : ℝ)) /
@@ -910,7 +910,7 @@ theorem thmFD (hB3 : Lap.Base.TangentPairingStatement) {ε : Fin n → Bool} {la
         ∫⁻ z : PCoord ε → ℂ, ENNReal.ofReal (‖⟪(T t).w, fF ε (lamT lam t) (T t) (pmat z) (T t).w⟫_ℂ‖ ^ 2 * Jac z)) ≤
         ENNReal.ofReal ((t : ℝ) ^ (pOf ε * qOf ε) * (Module.finrank ℂ (T t).V : ℝ) / dfun (lamT lam t)) := by
       filter_upwards [hF, hd] with t hFt hdt
-      have F3 := lintegral_fF_coeff_sq_le_finrank_div_fdeg hFt hdt
+      have F3 := _root_.ReciprocityTheory.ChartRestriction.DS.formal_degree_inequality hFt hdt
       calc _ = ENNReal.ofReal ((t : ℝ) ^ (pOf ε * qOf ε)) * (ENNReal.ofReal (cPQ ε) *
             ∫⁻ z : PCoord ε → ℂ, ENNReal.ofReal (‖⟪(T t).w, fF ε (lamT lam t) (T t) (pmat z) (T t).w⟫_ℂ‖ ^ 2 * Jac z)) := by
             ring

@@ -99,6 +99,7 @@ import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFr
 import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerIsoFlagTangentPsiSet
 import Formalism.LocalRingCardinality.HostCls
 import Mathlib.Algebra.Azumaya.Basic
+import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.GloballyGeneratedOnOpenOfWeightGapGe
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroForallComplexPointSeparate, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEqOfGenericUniqueComplexPoint, Development.AbelianVarietyTheory.Proofs.GenericRegularity.EqOfUnitriangularOfEqLowerMul, Development.AbelianVarietyTheory.Proofs.GenericRegularity.CompEmbEqOfFrBor, Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightPositivityPrincipalisationDeep, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspGermTransferOfBoundary, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspRatioFieldEqTopOfToroidalCompactification, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.WeightPrincipalisationBound
@@ -275,14 +276,6 @@ open AlgebraicGeometry CategoryTheory Limits NumberField Topology ReciprocityThe
 
 namespace GlobalTheory.Reg.GenericFlagInj
 
-theorem unitri_eq_of_lower {S : Type} [CommRing S] {n : ℕ} (A A' L : Matrix (Fin n) (Fin n) S)
-    (hA : ∀ i j, j < i → A i j = 0) (hAd : ∀ i, A i i = 1)
-    (hA' : ∀ i j, j < i → A' i j = 0) (hAd' : ∀ i, A' i i = 1)
-    (hL : ∀ i j, i < j → L i j = 0) (e : A' = L * A) : A' = A := by
-  first
-  | (apply _root_.GlobalTheory.UnitriangularLowerMulEq.eq_of_unitriangular_of_eq_lower_mul <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UnitriangularLowerMulEq.eq_of_unitriangular_of_eq_lower_mul ..)
-
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l}
 
@@ -360,7 +353,7 @@ theorem eq_of_frBor {T : Type} [CommRing T] [Nontrivial T] [Algebra c.F T] (h : 
     intro τ
     choose cf hd hz hcf using hb.2.1 τ
     have hyx : y.x = spMap (resKap φ).toRingHom ≫ y₀.x := by rw [hx, hy₀]
-    have key := unitri_eq_of_lower (Matrix.of fun i j => φ (genCoef Z τ i j))
+    have key := _root_.GlobalTheory.UnitriangularLowerMulEq.eq_of_unitriangular_of_eq_lower_mul (Matrix.of fun i j => φ (genCoef Z τ i j))
       (Matrix.of fun i j => φ' (genCoef Z τ i j)) (Matrix.of cf)
       (fun i j hij => by simp [genCoef, not_lt.2 hij.le, hij.ne'])
       (fun i => by simp [genCoef])
@@ -464,21 +457,6 @@ theorem val_eq_stalk {k K : Type} [CommRing k] [Field K] {Y : Scheme.{0}} {p : Y
   rw [H0.val_apply, H0.germ_apply]
   exact (stalkClosedPointTo_ger x _ _ _ (memInf hy hj)).symm
 
-theorem gapGe_std (Dw : Datum H) : GapGe 1 (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw) := by
-  intro τ k hk
-  simp only [gap, dif_pos hk, GlobalTheory.CompHt.stdWt]
-  push_cast
-  omega
-
-theorem gapGe_sub_std (m : ℕ) (b : AllWt.Weight Dw) (h : GapGe (m : ℤ) b) :
-    GapGe 0 (b - m • (GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q) : AllWt.Weight Dw)) := by
-  intro τ k hk
-  have h1 := h τ k hk
-  simp only [gap, dif_pos hk, Pi.sub_apply, Pi.smul_apply, GlobalTheory.CompHt.stdWt] at h1 ⊢
-  rw [nsmul_eq_mul, nsmul_eq_mul]
-  push_cast
-  linarith
-
 theorem cls_nsmul {Y : Scheme.{0}} {Λ : Type} [AddCommGroup Λ] {B : Λ → LB Y} (C : Common B) (n : ℕ) (a : Λ) :
     cls (B (n • a)) (C.isLB (n • a)) = n • cls (B a) (C.isLB a) :=
   map_nsmul (AddMonoidHom.mk' (fun a => cls (B a) (C.isLB a)) (cls_common_add C)) n a
@@ -554,7 +532,7 @@ theorem exists_cusp_germ_transfer : _root_.GlobalTheory.CovTop.Hypotheses'' → 
     obtain ⟨m, hm⟩ := (M.bijective_pullOff (isLB_L₀ TF.X Z s)).2 ((C.mulEquiv ω.unit).symm (H0.restr le_top g))
     have hm' : C.mul ω.ω (M.pullOff m) = H0.restr le_top g := by
       rw [hm, ← ProdChart.mulEquiv_apply C ω.unit, LinearEquiv.apply_symm_apply]
-    obtain ⟨g', hv, hr⟩ := (_root_.GlobalTheory.T.log_canonical_criterion_boundary hP hG E H Dw l Xo c TF Z hF M ω b s hs m).2 ⟨g, hm'.symm⟩
+    obtain ⟨g', hv, hr⟩ := (_root_.GlobalTheory.LogCanon.log_canonical_pair_iff hP hG E H Dw l Xo c TF Z hF M ω b s hs m).2 ⟨g, hm'.symm⟩
     refine ⟨ofSpace TF.X Z U s ⟨g', hvs hv⟩, ?_⟩
     rw [cuspSec_ofSpace]
     exact (congrArg (fun x => C.mul ω.ω (M.pullOff x)) hr).trans hm'
@@ -579,27 +557,12 @@ theorem exists_cusp_germ_transfer : _root_.GlobalTheory.CovTop.Hypotheses'' → 
 end GlobalTheory.CuspTransfer
 end
 
-section
-open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory Formalism.L2.Pj Formalism.BasicNotions
-open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
-open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermTools GlobalTheory.Adelic GlobalTheory.CompHS GlobalTheory.CovTop
-open GlobalTheory.AllWt (Psi wtOf cuspOn latOn normOn petOn GoodOn GoodW bergOn framesOn)
-open GlobalTheory.FlagMod (FlagCover)
-open GlobalTheory.FlagTan (dimFlag)
-open GlobalTheory.HSApp
-open GlobalTheory.Vanishing.H0
-open GlobalTheory.Vanishing.H0
-
-theorem _root_.GlobalTheory.T.cusp_germ_transfer_of_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r), FnAlgClosed (Xo := Xo) (c := c) → ∀ (M : Modif (str₀ TF.X Z) (U₀ TF.X Z) (dimFlag Dw)) (ω : CanId M) (b s : AllWt.Weight Dw), FlagTan.kap Dw + b = s → vanBd TF.X Z s ≤ space TF.X Z U s → ∃ F : H0 M.str (tens M.K.bundle ((L₀ TF.X Z b).pull M.σ)) ⊤ → Cusp Z U s, ∀ (z : M.X) (hz : z ∈ M.off) (j : (tens M.K.bundle ((L₀ TF.X Z b).pull M.σ)).ι) (hj : z ∈ (tens M.K.bundle ((L₀ TF.X Z b).pull M.σ)).U j) (i : (L₀ TF.X Z s).ι) (hi : M.σ z ∈ (L₀ TF.X Z s).U i), ∃ u : (M.X.presheaf.stalk z)ˣ, ∀ g : H0 M.str (tens M.K.bundle ((L₀ TF.X Z b).pull M.σ)) ⊤, germ j z (memTop z) hj g = u.val * (M.σ.stalkMap z).hom (germ i (M.σ z) (M.off_eq.le hz) hi (cuspSec TF.X Z U s (F g))) := by
-  first | exact @_root_.GlobalTheory.CuspTransfer.exists_cusp_germ_transfer
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspGermTransferOfBoundary =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspRatioFieldEqTopOfToroidalCompactification =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspRatioFieldEqTopOfToroidalCompactification", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.Hypotheses2\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HypothesesX\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame\nimport Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyIsLimitBaseChange\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleModuloEffectiveAwayFromPointPullAffine\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalPtMemMaximalIdeal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyKodairaSpencerIdentificationOffBoundary\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeparatesOnSmoothOfPair\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanBdLeSpace\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightPositivityPrincipalisationDeep\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.FnFGFnTrdeg\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.BaseWeightLineBundleIsNef\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspGermTransferOfBoundary\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.HodgeBundleAmpleOnRegularLocus\nimport Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerIsoFlagTangentPsiSet\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ToroidalFlagNonempty\npublic import Formalism.LocalRingCardinality.HeightBoundGeFourthPowerRank\nimport Formalism.LocalRingCardinality.HostCls\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.Multiplier\nimport Mathlib.Algebra.Azumaya.Basic\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspRatioFieldEqTopOfToroidalCompactification", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.Hypotheses2\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HypothesesX\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame\nimport Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyIsLimitBaseChange\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleModuloEffectiveAwayFromPointPullAffine\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalPtMemMaximalIdeal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyKodairaSpencerIdentificationOffBoundary\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeparatesOnSmoothOfPair\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanBdLeSpace\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightPositivityPrincipalisationDeep\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.FnFGFnTrdeg\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.BaseWeightLineBundleIsNef\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspGermTransferOfBoundary\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.HodgeBundleAmpleOnRegularLocus\nimport Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.KodairaSpencerIsoFlagTangentPsiSet\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ToroidalFlagNonempty\npublic import Formalism.LocalRingCardinality.HeightBoundGeFourthPowerRank\nimport Formalism.LocalRingCardinality.HostCls\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.Multiplier\nimport Mathlib.Algebra.Azumaya.Basic\nimport Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.GloballyGeneratedOnOpenOfWeightGapGe\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -645,7 +608,7 @@ theorem cuspRatioField_eq_top_of_toroidalCompactification (hP : _root_.GlobalThe
     exact hV.2.2
   obtain ⟨ω⟩ := GlobalTheory.CompHS.canId_nonempty hP.p5 E H Dw l Xo c TF.Y TF.X Z M
     (fun K _ _ y => _root_.GlobalTheory.FlagTan.kodaira_spencer_iso_flag_tangent_psi_set hP hG E H Dw l Xo c K y hpq)
-  obtain ⟨F, hFg⟩ := _root_.GlobalTheory.T.cusp_germ_transfer_of_boundary hP hG E H Dw l Xo c TF Z r U hF M ω (la - FlagTan.kap Dw) la (by abel) hv
+  obtain ⟨F, hFg⟩ := _root_.GlobalTheory.CuspTransfer.exists_cusp_germ_transfer hP hG E H Dw l Xo c TF Z r U hF M ω (la - FlagTan.kap Dw) la (by abel) hv
   have h : GenFrEx Xo c := (Reg.genFrEx_and_genFromTest E H Dw l Xo c).1
   obtain ⟨z, hz, hO⟩ := exists_lift_genFr M h
   have hzo : ptOf z ∈ M.off := (le_iff_ptOf_mem _ _).1 hO
@@ -679,7 +642,7 @@ theorem cuspRatioField_eq_top_of_toroidalCompactification (hP : _root_.GlobalThe
     exact hne (congrArg AlgHom.toRingHom this)
   set std : AllWt.Weight Dw := GlobalTheory.CompHt.stdWt (Psi H) (Dw.p + Dw.q)
   set m : ℕ := (dimFlag Dw + 2).choose 2
-  have hstd : GapGe 1 std := gapGe_std Dw
+  have hstd : GapGe 1 std := _root_.GlobalTheory.HSApp.gapGe_stdWt Dw
   have nef : ∀ w : AllWt.Weight Dw, GapGe 0 w → letI := algebraΓOfHom M.str; IsNef c.F ((L₀ TF.X Z w).pull M.σ) :=
     fun w hw => TwoPoint.nef_pull hN _ M.str M.σ hV.2.1 M.proj _ (_root_.GlobalTheory.NefWt.weight_line_bundle_isNef hP hN hLie E H Dw l Xo c TF Z hF w hw)
   obtain ⟨mu, hmu0, m', hm', hA⟩ := _root_.GlobalTheory.HSApp.hodge_bundle_ample_at_regular_point hP hN hSi hCh E H Dw l Xo c TF Z hF std hstd _ hη
@@ -694,7 +657,7 @@ theorem cuspRatioField_eq_top_of_toroidalCompactification (hP : _root_.GlobalThe
     fun n => (le_iff_ptOf_mem _ _).2 (by rw [ptOf_spMap_comp]; exact hj)
   have main := fun (a : Fin 2 → ℂ) (ha : ∀ n, a n ≠ 0) =>
     TwoPoint.separate_two (TwoPoint.separatesOnSmooth_of_pair hS) hN c.F σ M.X M.str (dimFlag Dw) M.proj hconn hD M.K
-      _ _ _ _ _ _ _ _ _ _ m' m (nef std (hstd.mono zero_le_one)) (nef _ (gapGe_sub_std m _ hg)) (nef mu hmu0) le_rfl hm'
+      _ _ _ _ _ _ _ _ _ _ m' m (nef std (hstd.mono zero_le_one)) (nef _ (_root_.GlobalTheory.HSApp.gapGe_sub_smul m _ hg)) (nef mu hmu0) le_rfl hm'
       e₁ e₂ (fun n => spMap (ι n) ≫ z) hzz
       (fun n => by rw [Category.assoc, hstr, spMap_comp_ring, hι])
       (fun n s => by
@@ -739,13 +702,6 @@ end GlobalTheory.SepCusp
 end
 end
 
-section
-open NumberField GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.DegCmp GlobalTheory.DegVal GlobalTheory.CovTop ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta
-open scoped ENNReal NNReal
-
-theorem _root_.GlobalTheory.T.cusp_values_separate_generic_points : GlobalTheory.CovTop.HypothesesX → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SiegelToroidalIntegral → _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.Principalisation → ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → ∀ (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)), (∀ τ (a b : Fin ((T.Q.Dw j).p + (T.Q.Dw j).q)), (b : ℕ) = a + 1 → (((dimFlag (T.Q.Dw j) + 3) ^ 2 + 2 * ((T.Q.Dw j).p + (T.Q.Dw j).q) : ℕ) : ℤ) ≤ u τ a - u τ b) → ∀ Z : Comp Y.d.Xo₂ Y.d.c₂, ∃ (σ : Y.d.c₂.F →+* ℂ) (A B : Subalgebra Y.d.c₂.F (Om Z)), A.FG ∧ B.FG ∧ B ≤ A ∧ (∀ b ∈ B, b ∈ ratioField (genPoint Z (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0)))) ∧ IntermediateField.adjoin Y.d.c₂.F (A : Set (Om Z)) = ⊤ ∧ (∀ b ∈ B, b ≠ 0 → ∃ x : A →+* ℂ, (∀ k : Y.d.c₂.F, x (@algebraMap Y.d.c₂.F A _ _ A.algebra k) = σ k) ∧ (∀ hb : b ∈ A, x ⟨b, hb⟩ ≠ 0) ∧ ∀ y : A →+* ℂ, (∀ k : Y.d.c₂.F, y (@algebraMap Y.d.c₂.F A _ _ A.algebra k) = σ k) → (∀ a : A, (a : Om Z) ∈ B → y a = x a) → y = x) := by
-  first | exact @_root_.GlobalTheory.SepCusp.cusp_values_separate_general_points
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.CuspRatioFieldEqTopOfToroidalCompactification =====
@@ -762,8 +718,8 @@ set_option autoImplicit false
 namespace GlobalTheory.DegVal
 theorem birOn_of_weight_gaps_large : GlobalTheory.CovTop.HypothesesX → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SiegelToroidalIntegral → _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.Principalisation → ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → ∀ (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)), (∀ τ (a b : Fin ((T.Q.Dw j).p + (T.Q.Dw j).q)), (b : ℕ) = a + 1 → (((dimFlag (T.Q.Dw j) + 3) ^ 2 + 2 * ((T.Q.Dw j).p + (T.Q.Dw j).q) : ℕ) : ℤ) ≤ u τ a - u τ b) → ∀ Z : Comp Y.d.Xo₂ Y.d.c₂, BirOn Y.U Z (wtOf (T.Q.Dw j) u 0) := by
   intro hX hG hQ hS hP hN hPr D T hT j hp hq Y e o hY u hu Z
-  obtain ⟨f₀, hf₀, hne⟩ := _root_.GlobalTheory.T.exists_centre_cusp_generic_value_ne_zero hX hG hQ hS hP hN hPr D T hT j hp hq Y e o hY u hu Z
-  obtain ⟨σ, A, B, hA, hB, hBA, hBr, hAtop, hsep⟩ := _root_.GlobalTheory.T.cusp_values_separate_generic_points hX hG hQ hS hP hN hPr D T hT j hp hq Y e o hY u hu Z
+  obtain ⟨f₀, hf₀, hne⟩ := _root_.GlobalTheory.CentreCusp.exists_cusp_with_generic_value_ne_zero hX hG hQ hS hP hN hPr D T hT j hp hq Y e o hY u hu Z
+  obtain ⟨σ, A, B, hA, hB, hBA, hBr, hAtop, hsep⟩ := _root_.GlobalTheory.SepCusp.cusp_values_separate_general_points hX hG hQ hS hP hN hPr D T hT j hp hq Y e o hY u hu Z
   have key := exists_mul_eq_of_generic_unique_complexPoint _ _ σ A B hA hB hBA hsep
   refine ⟨fun h => hne ?_, eq_top_iff.2 ?_⟩
   · have := LinearMap.congr_fun h ⟨f₀, hf₀⟩
@@ -776,13 +732,6 @@ theorem birOn_of_weight_gaps_large : GlobalTheory.CovTop.HypothesesX → GlobalT
 end GlobalTheory.DegVal
 end
 
-section
-open NumberField GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.DegCmp GlobalTheory.DegVal GlobalTheory.CovTop ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD Formalism.L2.Pj Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta
-open scoped ENNReal NNReal
-
-theorem _root_.GlobalTheory.T.birOn_wtOf_of_consecutive_gap_bound : GlobalTheory.CovTop.HypothesesX → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SiegelToroidalIntegral → _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.Principalisation → ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → ∀ (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)), (∀ τ (a b : Fin ((T.Q.Dw j).p + (T.Q.Dw j).q)), (b : ℕ) = a + 1 → (((dimFlag (T.Q.Dw j) + 3) ^ 2 + 2 * ((T.Q.Dw j).p + (T.Q.Dw j).q) : ℕ) : ℤ) ≤ u τ a - u τ b) → ∀ Z : Comp Y.d.Xo₂ Y.d.c₂, BirOn Y.U Z (wtOf (T.Q.Dw j) u 0) := by
-  first | exact @_root_.GlobalTheory.DegVal.birOn_of_weight_gaps_large
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.WeightPrincipalisationBound =====

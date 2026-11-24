@@ -475,8 +475,6 @@ open GlobalTheory.Core.Rk.IP
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Core.Rk.Exh GlobalTheory.RegSW
 
-theorem _root_.GlobalTheory.T.doublingMap_span_dense_heisenbergStable : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A W : HSp D), IsStdChar D ψ (-1) → let M : Submodule ℂ (WO (dblSp A) W → ℂ) := Submodule.span ℂ {φ | ∃ f₁ f₂, IsThetaFunO ψ A W f₁ ∧ IsThetaFunO ψ A W f₂ ∧ φ = delta A W f₁ f₂}; (∀ g ∈ M, IsThetaFunO ψ (dblSp A) W g) ∧ (∀ g ∈ M, ∀ w, heisO ψ (dblSp A) W w g ∈ M) ∧ ∀ f, IsThetaFunO ψ (dblSp A) W f → GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.UnifLimit M f := by
-  first | exact @GlobalTheory.Core.Rk.DoubleSpan.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoublingMapSpanDenseHeisenbergStableStatement =====
@@ -613,7 +611,7 @@ theorem kills_of_noLift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A W : H
   set M : Submodule ℂ (WO (dblSp A) W → ℂ) := Submodule.span ℂ
     {φ | ∃ f₁ f₂, IsThetaFunO ψ A W f₁ ∧ IsThetaFunO ψ A W f₂ ∧ φ = delta A W f₁ f₂} with hM
   have h83 : (∀ g ∈ M, IsThetaFunO ψ (dblSp A) W g) ∧ (∀ g ∈ M, ∀ w, heisO ψ (dblSp A) W w g ∈ M) ∧
-      ∀ f, IsThetaFunO ψ (dblSp A) W f → GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.UnifLimit M f := GlobalTheory.T.doublingMap_span_dense_heisenbergStable D ψ A W hom.std
+      ∀ f, IsThetaFunO ψ (dblSp A) W f → GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.UnifLimit M f := _root_.GlobalTheory.Core.Rk.DoubleSpan.main D ψ A W hom.std
   obtain ⟨hMθ, hMh, hMlim⟩ := h83
 
   have hintθ : ∀ g, IsThetaFunO ψ (dblSp A) W g → Integrable (fun x => c x * omh (p x) g 0) μ := fun g hg =>
@@ -1184,8 +1182,6 @@ open GlobalTheory.Core.Rk.IP
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Core.Rk.Exh GlobalTheory.RegSW
 
-theorem _root_.GlobalTheory.T.zeta_residue_ne_zero_of_simple_pole_lift_L_function : GlobalTheory.IndefiniteRowSideFullHecke.SimplePoleTwistedLift.SimplePole → ∀ (D : D7) (S : Finset (FinPl D)) (r t : ℕ) (c par : GlobalTheory.LFun.Fam D.host.E) (χ : (AE D)ˣ →* Circle), GlobalTheory.IndefiniteRowSideFullHecke.SimplePoleTwistedLift.Hyp (S : Set (FinPl D)) r t c par (GlobalTheory.LFun.val (F := D.host.F) χ) (GlobalTheory.LFun.val (F := D.host.F) χ) → ∀ (a b : ℕ) (Z : ℂ → ℂ) (C z : ℂ), C ≠ 0 → EqRight Z (fun s => GlobalTheory.LFun.LSD D S par χ (s + 1 / 2) / GlobalTheory.LFun.dSfun D.host.E (S : Set (FinPl D)) a b s * C) → CoeffAt Z ((t : ℂ) / 2) (-1) z → z ≠ 0 := by
-  first | exact @GlobalTheory.Core.Rk.Exh.residue_ne_zero_of_simplePole
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZetaResidueNeZeroOfSimplePoleLiftLFunctionStatement =====
@@ -1662,7 +1658,7 @@ theorem downNe_of_core : ResidueKilled.DM → PositivityTheory.Rg.Rsw.ResCore �
       (sZero A B)) (fun g => conj (u g)) (fun g => conj (u g))) ((t : ℂ) / 2) (-1) 0 := by
     rw [← hs0]
     exact hcoef
-  exact GlobalTheory.T.zeta_residue_ne_zero_of_simple_pole_lift_L_function hSP D (under Z) W.rank t c par χW hHyp A.rank B.rank _ C _ hC0 hEq hcoef' rfl
+  exact _root_.GlobalTheory.Core.Rk.Exh.residue_ne_zero_of_simplePole hSP D (under Z) W.rank t c par χW hHyp A.rank B.rank _ C _ hC0 hEq hcoef' rfl
 
 end GlobalTheory.Core.Rk.Exh.Top
 

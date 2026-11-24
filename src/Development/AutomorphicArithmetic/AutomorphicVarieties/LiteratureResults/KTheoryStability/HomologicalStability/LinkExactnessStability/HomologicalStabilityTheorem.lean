@@ -111,12 +111,6 @@ theorem main : ∀ (k G : Type) [CommRing k] [Group G] (C : ℕ → Rep k G) (d 
 
 end GlobalTheory.HomStab.TruncFirstCycles
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.exists_syzygy_factorization : ∀ (k G : Type) [CommRing k] [Group G] (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → Function.Exact (d 1).hom (d 0).hom → ∃ (Z : Rep k G) (ι : Z ⟶ C 1) (h : ι ≫ d 0 = 0) (b : C 2 ⟶ Z), (ShortComplex.mk ι (d 0) h).ShortExact ∧ b ≫ ι = d 1 ∧ Function.Surjective b.hom ∧ d 2 ≫ b = 0 ∧ (Function.Exact (d 2).hom (d 1).hom → Function.Exact (d 2).hom b.hom) := by
-  first
-  | exact @GlobalTheory.HomStab.TruncFirstCycles.main
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsSyzygyFactorization =====
@@ -143,10 +137,10 @@ def shD (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p) (Z : Rep k G) (b : 
 
 theorem main : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i + 1 → Function.Exact (d (p + 1)).hom (d p).hom) → (∀ p q, 2 ≤ p → p + q = i + 1 → Function.Exact (hMap (d (p + 1)) q).hom (hMap (d p) q).hom) → Function.Exact (hMap (d 1) i).hom (hMap (d 0) i).hom := by
   intro k G _ _ i C d hd hs hex hH
-  obtain ⟨Z, ι, hι, b, hse, hbι, hbs, hdb, hexb⟩ := GlobalTheory.T.exists_syzygy_factorization k G C d hd hs (hex 0 (by omega))
+  obtain ⟨Z, ι, hι, b, hse, hbι, hbs, hdb, hexb⟩ := _root_.GlobalTheory.HomStab.TruncFirstCycles.main k G C d hd hs (hex 0 (by omega))
   have hfun : ∀ {A B : Rep k G} (f : A ⟶ B), hMap f i = (groupHomology.functor k G i).map f := fun f => rfl
   have hsurj : Function.Surjective (hMap b i).hom := by
-    refine GlobalTheory.T.surjective_hMap_zero_of_staircase k G i (shC C Z) (shD C d Z b) ?_ hbs ?_ ?_
+    refine _root_.GlobalTheory.HomStab.Staircase.main k G i (shC C Z) (shD C d Z b) ?_ hbs ?_ ?_
     · intro p
       cases p with
       | zero => exact hdb
@@ -181,12 +175,6 @@ theorem main : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Re
 
 end GlobalTheory.HomStab.StairMid
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.exact_hMap_one_zero_of_staircase : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i + 1 → Function.Exact (d (p + 1)).hom (d p).hom) → (∀ p q, 2 ≤ p → p + q = i + 1 → Function.Exact (hMap (d (p + 1)) q).hom (hMap (d p) q).hom) → Function.Exact (hMap (d 1) i).hom (hMap (d 0) i).hom := by
-  first
-  | exact @GlobalTheory.HomStab.StairMid.main
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactHMapOneZeroOfStaircase =====
@@ -203,9 +191,9 @@ namespace GlobalTheory
 theorem injective_stabilisation_bottom_of_rows_exact : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i + 1 → Function.Exact (d (p + 1)).hom (d p).hom) → ∀ (M : ℕ → ℕ → ModuleCat.{0} k) (e : ∀ p q, M p q ⟶ groupHomology (C p) q) (s : ∀ p q, M (p + 1) q ⟶ M p q), (∀ p q, p ≤ i + 3 → IsIso (e p q)) → (∀ p q, p + 1 ≤ i + 3 → e (p + 1) q ≫ hMap (d p) q = if Even p then s p q ≫ e p q else 0) → (∀ p q, Even p → 2 ≤ p → p + q = i + 1 → Function.Injective (s p q).hom) → (∀ p q, Even p → 4 ≤ p → p + q = i + 2 → Function.Surjective (s p q).hom) → Function.Injective (s 0 i).hom := by
   intro k G _ _ i C d hdd hsurj hex M e s hiso hcomm hinj hsur
   have hE : Function.Exact (hMap (d 1) i).hom (hMap (d 0) i).hom := by
-    refine T.exact_hMap_one_zero_of_staircase k G i C d hdd hsurj hex ?_
+    refine _root_.GlobalTheory.HomStab.StairMid.main k G i C d hdd hsurj hex ?_
     intro p q hp hpq
-    refine T.homology_row_exact_of_stabilisation_pattern k G C d hdd M e s (i + 3) hiso hcomm p q (by omega) ?_ ?_
+    refine _root_.GlobalTheory.HomStab.Row.main k G C d hdd M e s (i + 3) hiso hcomm p q (by omega) ?_ ?_
     · intro hev
       exact hinj p q hev hp hpq
     · intro hodd
@@ -243,12 +231,6 @@ theorem injective_stabilisation_bottom_of_rows_exact : ∀ (k G : Type) [CommRin
 
 end GlobalTheory
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.quillen_stabilisation_injective_bottom : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i + 1 → Function.Exact (d (p + 1)).hom (d p).hom) → ∀ (M : ℕ → ℕ → ModuleCat.{0} k) (e : ∀ p q, M p q ⟶ groupHomology (C p) q) (s : ∀ p q, M (p + 1) q ⟶ M p q), (∀ p q, p ≤ i + 3 → IsIso (e p q)) → (∀ p q, p + 1 ≤ i + 3 → e (p + 1) q ≫ hMap (d p) q = if Even p then s p q ≫ e p q else 0) → (∀ p q, Even p → 2 ≤ p → p + q = i + 1 → Function.Injective (s p q).hom) → (∀ p q, Even p → 4 ≤ p → p + q = i + 2 → Function.Surjective (s p q).hom) → Function.Injective (s 0 i).hom := by
-  first
-  | exact @GlobalTheory.injective_stabilisation_bottom_of_rows_exact
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.QuillenStabilisationInjectiveBottom =====
@@ -265,11 +247,11 @@ namespace GlobalTheory
 theorem homStab_GL_inj_step : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ i : ℕ, (∀ q m m' (h : m ≤ m'), q < i → m' = m + 1 → (2 * q + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) q).hom) ∧ (2 * q + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) q).hom)) → ∀ m m' (h : m ≤ m'), m' = m + 1 → 2 * i + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) i).hom := by
   intro R _ s hs i ih m m' h hm hi
   subst hm
-  obtain ⟨e, he, hed⟩ := GlobalTheory.T.splitSeq_firstPage_iso_and_differential R s hs (m + 1)
-  obtain ⟨hdd, hsurj, hex⟩ := GlobalTheory.T.splitSequence_rep_complex_exact R (m + 1)
-  have key := GlobalTheory.T.quillen_stabilisation_injective_bottom ℤ (GL (Fin (m + 1)) R) i (splitRep R (m + 1)) (splitD R (m + 1)) hdd
-    (hsurj (GlobalTheory.T.splitSeq_exactAt_of_two_mul_add_stableRange_le R s hs (m + 1) 0 (by omega)))
-    (fun p hp => hex p (GlobalTheory.T.splitSeq_exactAt_of_two_mul_add_stableRange_le R s hs (m + 1) (p + 1) (by omega)))
+  obtain ⟨e, he, hed⟩ := _root_.GlobalTheory.HomStab.firstPage_split R s hs (m + 1)
+  obtain ⟨hdd, hsurj, hex⟩ := _root_.GlobalTheory.HomStab.SplitEx.main R (m + 1)
+  have key := _root_.GlobalTheory.injective_stabilisation_bottom_of_rows_exact ℤ (GL (Fin (m + 1)) R) i (splitRep R (m + 1)) (splitD R (m + 1)) hdd
+    (hsurj (_root_.GlobalTheory.SeqCx.exactAt_splitSeq_of_stableRange R s hs (m + 1) 0 (by omega)))
+    (fun p hp => hex p (_root_.GlobalTheory.SeqCx.exactAt_splitSeq_of_stableRange R s hs (m + 1) (p + 1) (by omega)))
     (fun p q => grpH (GL (Fin (m + 1 - p)) R) q) e
     (fun p q => grpHMap (stab R (m + 1 - (p + 1)) (m + 1 - p) (by omega)) q)
     (fun p q hp => he p q (by omega))
@@ -280,12 +262,6 @@ theorem homStab_GL_inj_step : ∀ (R : Type) [CommRing R] (s : ℕ), StableRange
 
 end GlobalTheory
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab GlobalTheory.SeqCx UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.groupHomology_GL_stab_injective_of_stableRange_induction : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ i : ℕ, (∀ q m m' (h : m ≤ m'), q < i → m' = m + 1 → (2 * q + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) q).hom) ∧ (2 * q + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) q).hom)) → ∀ m m' (h : m ≤ m'), m' = m + 1 → 2 * i + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) i).hom := by
-  first
-  | exact @GlobalTheory.homStab_GL_inj_step
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.GroupHomologyGLStabInjectiveOfStableRangeInducti =====
@@ -302,9 +278,9 @@ namespace GlobalTheory.HomStab
 theorem stab_surj_bottom : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i → Function.Exact (d (p + 1)).hom (d p).hom) → ∀ (M : ℕ → ℕ → ModuleCat.{0} k) (e : ∀ p q, M p q ⟶ groupHomology (C p) q) (s : ∀ p q, M (p + 1) q ⟶ M p q), (∀ p q, p ≤ i + 2 → IsIso (e p q)) → (∀ p q, p + 1 ≤ i + 2 → e (p + 1) q ≫ hMap (d p) q = if Even p then s p q ≫ e p q else 0) → (∀ p q, Even p → 2 ≤ p → p + q = i → Function.Injective (s p q).hom) → (∀ p q, Even p → 2 ≤ p → p + q = i + 1 → Function.Surjective (s p q).hom) → Function.Surjective (s 0 i).hom := by
   intro k G _ _ i C d hd hs hex M e s hiso hsq hinj hsur
   have hsurjH : Function.Surjective (hMap (d 0) i).hom := by
-    refine GlobalTheory.T.surjective_hMap_zero_of_staircase k G i C d hd hs hex ?_
+    refine _root_.GlobalTheory.HomStab.Staircase.main k G i C d hd hs hex ?_
     intro p q hp hpq
-    refine GlobalTheory.T.homology_row_exact_of_stabilisation_pattern k G C d hd M e s (i + 2) hiso hsq p q (by omega) ?_ ?_
+    refine _root_.GlobalTheory.HomStab.Row.main k G C d hd M e s (i + 2) hiso hsq p q (by omega) ?_ ?_
     · intro hev
       exact hinj p q hev (by obtain ⟨r, hr⟩ := hev; omega) hpq
     · intro hodd
@@ -327,12 +303,6 @@ theorem stab_surj_bottom : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C 
 
 end GlobalTheory.HomStab
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.quillen_stabilisation_surjective_bottom : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Rep k G) (d : ∀ p, C (p + 1) ⟶ C p), (∀ p, d (p + 1) ≫ d p = 0) → Function.Surjective (d 0).hom → (∀ p, p + 1 ≤ i → Function.Exact (d (p + 1)).hom (d p).hom) → ∀ (M : ℕ → ℕ → ModuleCat.{0} k) (e : ∀ p q, M p q ⟶ groupHomology (C p) q) (s : ∀ p q, M (p + 1) q ⟶ M p q), (∀ p q, p ≤ i + 2 → IsIso (e p q)) → (∀ p q, p + 1 ≤ i + 2 → e (p + 1) q ≫ hMap (d p) q = if Even p then s p q ≫ e p q else 0) → (∀ p q, Even p → 2 ≤ p → p + q = i → Function.Injective (s p q).hom) → (∀ p q, Even p → 2 ≤ p → p + q = i + 1 → Function.Surjective (s p q).hom) → Function.Surjective (s 0 i).hom := by
-  first
-  | exact @GlobalTheory.HomStab.stab_surj_bottom
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.QuillenStabilisationSurjectiveBottom =====
@@ -353,11 +323,11 @@ theorem grpHMap_stab_surjective_congr (R : Type) [CommRing R] (i a b a' b' : ℕ
 
 theorem grpHMap_stab_surjective_step : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ i : ℕ, (∀ q m m' (h : m ≤ m'), q < i → m' = m + 1 → (2 * q + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) q).hom) ∧ (2 * q + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) q).hom)) → ∀ m m' (h : m ≤ m'), m' = m + 1 → 2 * i + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) i).hom := by
   intro R _ s hsr i IH m m' h hm hi
-  obtain ⟨e, he, hc⟩ := GlobalTheory.T.splitSeq_firstPage_iso_and_differential R s hsr (m + 1)
-  obtain ⟨hdd, hd0, hex⟩ := GlobalTheory.T.splitSequence_rep_complex_exact R (m + 1)
-  have key := GlobalTheory.T.quillen_stabilisation_surjective_bottom ℤ (GL (Fin (m + 1)) R) i (splitRep R (m + 1)) (splitD R (m + 1)) hdd
-    (hd0 (GlobalTheory.T.splitSeq_exactAt_of_two_mul_add_stableRange_le R s hsr (m + 1) 0 (by omega)))
-    (fun p hp => hex p (GlobalTheory.T.splitSeq_exactAt_of_two_mul_add_stableRange_le R s hsr (m + 1) (p + 1) (by omega)))
+  obtain ⟨e, he, hc⟩ := _root_.GlobalTheory.HomStab.firstPage_split R s hsr (m + 1)
+  obtain ⟨hdd, hd0, hex⟩ := _root_.GlobalTheory.HomStab.SplitEx.main R (m + 1)
+  have key := _root_.GlobalTheory.HomStab.stab_surj_bottom ℤ (GL (Fin (m + 1)) R) i (splitRep R (m + 1)) (splitD R (m + 1)) hdd
+    (hd0 (_root_.GlobalTheory.SeqCx.exactAt_splitSeq_of_stableRange R s hsr (m + 1) 0 (by omega)))
+    (fun p hp => hex p (_root_.GlobalTheory.SeqCx.exactAt_splitSeq_of_stableRange R s hsr (m + 1) (p + 1) (by omega)))
     (fun p q => grpH (GL (Fin (m + 1 - p)) R) q) e
     (fun p q => grpHMap (stab R (m + 1 - (p + 1)) (m + 1 - p) (by omega)) q)
     (fun p q hp => he p q (by omega))
@@ -368,12 +338,6 @@ theorem grpHMap_stab_surjective_step : ∀ (R : Type) [CommRing R] (s : ℕ), St
 
 end GlobalTheory.HomStab
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab GlobalTheory.SeqCx UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.groupHomology_GL_stab_surjective_of_stableRange_induction : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ i : ℕ, (∀ q m m' (h : m ≤ m'), q < i → m' = m + 1 → (2 * q + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) q).hom) ∧ (2 * q + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) q).hom)) → ∀ m m' (h : m ≤ m'), m' = m + 1 → 2 * i + s + 1 ≤ m → Function.Surjective (grpHMap (stab R m m' h) i).hom := by
-  first
-  | exact @GlobalTheory.HomStab.grpHMap_stab_surjective_step
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.GroupHomologyGLStabSurjectiveOfStableRangeInduct =====
@@ -400,7 +364,7 @@ theorem kStability_main : UpperTheory.V.Published.KStability := by
           (2 * q + s + 2 ≤ m → Function.Injective (grpHMap (stab R m m' h) q).hom) :=
         fun q m m' h hq hm => ih q hq m m' h hm
       intro m m' h hm
-      exact ⟨GlobalTheory.T.groupHomology_GL_stab_surjective_of_stableRange_induction R s hs i hyp m m' h hm, GlobalTheory.T.groupHomology_GL_stab_injective_of_stableRange_induction R s hs i hyp m m' h hm⟩
+      exact ⟨_root_.GlobalTheory.HomStab.grpHMap_stab_surjective_step R s hs i hyp m m' h hm, _root_.GlobalTheory.homStab_GL_inj_step R s hs i hyp m m' h hm⟩
   intro i n hn
   have h1 := key i n (n + 1) (Nat.le_succ n) rfl
   rw [ConcreteCategory.isIso_iff_bijective]

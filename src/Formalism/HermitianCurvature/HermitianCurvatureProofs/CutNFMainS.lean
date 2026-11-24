@@ -317,18 +317,6 @@ theorem scalar_point_measurability_holds : ScalarMeas := fun k r TT => ⟨measur
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem entry_le_gN {k r : ℕ} (g : B.Mat k r) (i j : Fin (2 * r + k + 1)) : ‖g i j‖ ≤ B.gN g := by
-  unfold B.gN
-  rw [← Real.sqrt_sq (norm_nonneg (g i j)), Complex.sq_norm]
-  apply Real.sqrt_le_sqrt
-  have h1 : Complex.normSq (g i j) ≤ ∑ j', Complex.normSq (g i j') :=
-    Finset.single_le_sum (f := fun j' => Complex.normSq (g i j')) (fun j' _ => Complex.normSq_nonneg _)
-      (Finset.mem_univ j)
-  have h2 : ∑ j', Complex.normSq (g i j') ≤ ∑ i', ∑ j', Complex.normSq (g i' j') :=
-    Finset.single_le_sum (f := fun i' => ∑ j', Complex.normSq (g i' j'))
-      (fun i' _ => Finset.sum_nonneg fun j' _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
-  exact h1.trans h2
-
 theorem gN_ball_compact (k r : ℕ) (R : ℝ) : IsCompact {g : B.Mat k r | B.gN g ≤ R} := by
   have hc : Continuous (fun g : B.Mat k r => B.gN g) := by
     unfold B.gN
@@ -339,7 +327,7 @@ theorem gN_ball_compact (k r : ℕ) (R : ℝ) : IsCompact {g : B.Mat k r | B.gN 
   refine ⟨max R 0, fun g hg => ?_⟩
   rw [Matrix.norm_le_iff (le_max_right _ _)]
   intro i j
-  exact (entry_le_gN g i j).trans (le_trans hg (le_max_left _ _))
+  exact (_root_.Formalism.FourierDecayAlt.P.Ux5.entry_le_gN g i j).trans (le_trans hg (le_max_left _ _))
 
 theorem cptCoef_inCC {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (Bs : B.RealPlaceData k r Wp Wq) {X : B.Mat k r → (Wq →L[ℂ] Wp)}
@@ -449,10 +437,6 @@ section orb
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq]
 
-theorem vv_choose_congr {α : Sort*} {P Q : α → Prop} (e : P = Q) (hP : ∃ x, P x) (hQ : ∃ x, Q x) :
-    hP.choose = hQ.choose := by
-  subst e; rfl
-
 theorem orbJ_congr_gpos (Bs : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ ∈ B.GV k r)
     (hpos : 0 < Gf k r Bs.z Bs.z' γ) (μR : Measure (Mt k r)) (Y Y' : B.Mat k r → (Wq →L[ℂ] Wp))
     (hYY : ∀ g ∈ B.GV k r, 0 < Gf k r Bs.z Bs.z' g → Y g = Y' g) :
@@ -476,7 +460,7 @@ theorem orbJ_congr_gpos (Bs : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ :
   unfold D.orbJ
   by_cases h : ∃ θ, D.IsNormCut Bs γ μR θ ∧ Integrable (fun q => θ q • D.orbIntegrand Bs γ Y q) Bs.μSS
   · have h2 : ∃ θ, D.IsNormCut Bs γ μR θ ∧ Integrable (fun q => θ q • D.orbIntegrand Bs γ Y' q) Bs.μSS := hP ▸ h
-    rw [dite_eq_left h, dite_eq_left h2, vv_choose_congr hP h h2]
+    rw [dite_eq_left h, dite_eq_left h2, _root_.Formalism.FourierDecayAlt.P.JCx1.needs.choose_congr hP h h2]
     apply integral_congr_ae
     filter_upwards [hae] with q hq
     rw [hq]

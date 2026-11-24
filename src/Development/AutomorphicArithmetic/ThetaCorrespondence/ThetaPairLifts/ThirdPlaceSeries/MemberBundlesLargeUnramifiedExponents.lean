@@ -254,17 +254,11 @@ theorem compatibleSystem_hypotheses_of_localInputs : GlobalTheory.Published.Glob
     have u : GlobalTheory.Published.DiscreteSeriesUpqUnique := GlobalTheory.Published.discreteSeriesUpqUnique_of_classification cl
     have d := GlobalTheory.discreteSeries_three_of_hypotheses ce c.2.2.2.2 u
     ⟨ar.rayClassFieldSt, ar.principalIdealSt, cm, hm, cd, cw, GlobalTheory.weilRepresentationUnitaryPair, c.2.2.1, hf, c.2.1, u,
-      GlobalTheory.rowsFinDim_link, sw, c.2.2.2.2, fd, GlobalTheory.Mass.massRatio_all_unramified_cmFields,
+      _root_.CompanionTheory.D.gk.RF.automorphic_forms_finite_dimensional, sw, c.2.2.2.2, fd, GlobalTheory.Mass.massRatio_all_unramified_cmFields,
       d.1, d.2.1, d.2.2, ar, we⟩
 end GlobalTheory
 end
 
-section
-open GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.LiteralAutomorphy
-
-theorem _root_.GlobalTheory.T.compatibleSystem_member_hypotheses : GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.CMCurveGoodOutsidePrimeSt → GlobalTheory.Published.WeberRayFieldSt → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.DiscreteSeriesCoverExists → GlobalTheory.Published.FormalDegreeCompactDual → HeckeCharacterZeroLocus.SiegelWeilU.SiegelWeilUnitaryConvergent → _root_.GlobalTheory.Mem.Top.Bl.HypAAlt := by
-  first | exact @_root_.GlobalTheory.compatibleSystem_hypotheses_of_localInputs
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.CompatibleSystemHypothesesOfLocalInputs =====
@@ -301,15 +295,9 @@ noncomputable section
 
 namespace GlobalTheory.Mem.R3.Rw.Untw
 
-theorem exists_below_of_range (D D' : D7) (h : Set.range D.what₂.embLL ⊆ Set.range D'.what₂.embLL) (v' : D'.what₂.places.Pl) :
-    ∃ v : D.what₂.places.Pl, Below D D' v v' := by
-  first
-  | (apply _root_.GlobalTheory.PrimeBelow.exists_below <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PrimeBelow.exists_below ..)
-
 theorem resChar_of_below {D D' : D7} {v : D.what₂.places.Pl} {v' : D'.what₂.places.Pl} (hB : Below D D' v v') :
     D'.what₂.places.resChar v' = D.what₂.places.resChar v := by
-  refine GlobalTheory.LvT.Inh.resChar_eq_of_mem_plEq D' v' (D.what₂.places.resChar_prime v) ((hB _ _ ?_).1 (GlobalTheory.LvT.Inh.resChar_mem_plEq D v))
+  refine GlobalTheory.LvT.Inh.resChar_eq_of_mem_plEq D' v' (D.what₂.places.resChar_prime v) ((hB _ _ ?_).1 (_root_.Formalism.BasicNotions.resChar_mem D v))
   simp only [map_natCast]
 
 end GlobalTheory.Mem.R3.Rw.Untw
@@ -783,7 +771,7 @@ theorem dat_saturated_of_untw : GlobalTheory.Published.GreenCuspidal → DatExS 
   refine ⟨Z, pin.hX, z', hG2, hGT, hGA, hKap, hFine', ?_, ?_, ?_⟩
   · intro v' hv'
     rcases (Dat.mem_auxiliaryPlaces_iff_three_parts z' _ v').1 hv' with h | h
-    · obtain ⟨v, hB⟩ := Untw.exists_below_of_range (w₀.D Z₀) (w.D Z) hE.2.2.2 v'
+    · obtain ⟨v, hB⟩ := _root_.GlobalTheory.PrimeBelow.exists_below (w₀.D Z₀) (w.D Z) hE.2.2.2 v'
       have hv : v ∈ z₀.W1 (fun _ _ => 0) := (hExt.W1 v v' hB).2 ((Dat.mem_auxiliaryPlaces_iff_three_parts z' _ v').2 (Or.inl h))
       have hr : B.places.resChar v' = B₀.places.resChar v := Untw.resChar_of_below hB
       have hm : B₀.places.resChar v ∈ (T.pl : Set ℕ) := hW₀ v hv
@@ -795,7 +783,7 @@ theorem dat_saturated_of_untw : GlobalTheory.Published.GreenCuspidal → DatExS 
     exact e.trans rfl
   · intro v₁ v₂ hov hv₁
     rcases (Dat.mem_auxiliaryPlaces_iff_three_parts z' _ v₁).1 hv₁ with h | h
-    · obtain ⟨v, hB⟩ := Untw.exists_below_of_range (w₀.D Z₀) (w.D Z) hE.2.2.2 v₁
+    · obtain ⟨v, hB⟩ := _root_.GlobalTheory.PrimeBelow.exists_below (w₀.D Z₀) (w.D Z) hE.2.2.2 v₁
       have hv : v ∈ z₀.W1 (fun _ _ => 0) := (hExt.W1 v v₁ hB).2 ((Dat.mem_auxiliaryPlaces_iff_three_parts z' _ v₁).2 (Or.inl h))
       have hB₂ := GlobalTheory.T.placesOverFixedField_same_coefficient_place (w₀.D Z₀) (w.D Z) hsub v v₁ v₂ hov hB
       have hv₂ := (hExt.W1 v v₂ hB₂).1 hv
@@ -881,7 +869,7 @@ theorem ties_at (hG : GlobalTheory.Published.GreenCuspidal) {B : Base} {f : Fr B
   have hch := z.pins.char
   refine ⟨⟨ok, hch, hEx, host, par, B.ccK_top, z.pins.keep.guard,
     GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev ty, serClause_of_typesTrue hG _ ty,
-    GlobalTheory.Hk3.inertJunk_colIn3 _ _ _ hX _ _ _ _ _ _, z.pins.trSem, z.pins.keep.std, z.pins.phs, hn⟩,
+    _root_.GlobalTheory.Hk3.FamModel.inertJunk_col _ _ _ hX _ _ _ _ _ _, z.pins.trSem, z.pins.keep.std, z.pins.phs, hn⟩,
     TiesG.of_dat z hU hI (fun i => ?_) (CoverAt.coverField_of_weberLev hW w Z hX Wt z)⟩
   exact GlobalTheory.OneMapRow3.oneFormMapRow_threeLevel_of_characterisation _ _ _ _ _ _ z.core z.R z.F z.geo.κ z.geo.v₀ z.geo.O (fun _ => 1) hn hch hEx ⟨z.geo.fw⟩ hI i
     (z.geo.pins i) (z.geo.phase i hU)
@@ -1192,7 +1180,7 @@ theorem holdsL_of_ties_alt (P : _root_.GlobalTheory.PrimIn.PublishedThetaConditi
   obtain ⟨x₀, hx₀⟩ := GlobalTheory.LiftRows.goodForms_definite_exist (GlobalTheory.DefFree.goodVectorsDefinite P.q12) eps heps
   refine ⟨x₀, ?_⟩
   intro D G _ _ Pl0 I0 T0 A3 T _ R F κ v₀ O L hLe hLx hSz ⟨pV⟩ hT hG hM hInt
-  obtain ⟨hGiven, hGS, hCD, -, hTR, hUp, -⟩ := _root_.GlobalTheory.T.lift_data_of_multiplicity_one P R F hT hM
+  obtain ⟨hGiven, hGS, hCD, -, hTR, hUp, -⟩ := _root_.GlobalTheory.PrimBase.base_of_ties_alt P R F hT hM
   obtain ⟨hOk, hGU, hGE, hBlk, hA, hB⟩ := _root_.GlobalTheory.T.pgUnit_and_pgEquiv_of_multEq P R F hT hM
   obtain ⟨hLT, hLTB, hML⟩ := GlobalTheory.T.liftTests_modularLattice_of_coreCompatibility T R F κ v₀ O hT hG
   have hU : R.toRealDat.LUnif := hG.unif
@@ -1212,7 +1200,7 @@ theorem holdsL_of_ties_alt (P : _root_.GlobalTheory.PrimIn.PublishedThetaConditi
   have hW := partsW_of_carried P.q2 R F hT.ok hT.char hT.ex hGS hCD hM hOk.1 hCar hK hB hU
   obtain ⟨-, hH, hTS, -⟩ := GlobalTheory.Hk3.HeckeClose.heckeClose P.q1 P.q3 P.q2 R F 1 hT.ok hT.char hT.ex hT.junk hT.ser hT.trSem hU
     hGU hGE hLev hA hB hK hW
-  have hOnto := _root_.GlobalTheory.T.partial_L_function_of_hypotheses_alt P.q5 P.q4 P.q2 P.q1 P.q7 P.q9 P.q10 P.q11 hHL R F hT.ok hT.char hT.ex hT.host hT.params
+  have hOnto := _root_.GlobalTheory.LiftOntoOfPublished.ontoC_of_hypotheses_alt P.q5 P.q4 P.q2 P.q1 P.q7 P.q9 P.q10 P.q11 hHL R F hT.ok hT.char hT.ex hT.host hT.params
     hT.ccK hT.guard hT.types hOk.2 hGE hU
   obtain ⟨fw, hbar⟩ := hG.fw
   have hConj : R.toRealDat.PConj := GlobalTheory.ConjNorm.pConj T R.toRealDat F.lv2 κ v₀ hcore.1 hSch fw hbar hU
@@ -1313,7 +1301,7 @@ namespace GlobalTheory.Mem.R3.Rw.Bare
 
 theorem bare_form_saturated : _root_.GlobalTheory.Mem.Top.Bl.HypAAlt → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses → DatExt0 → StepW Start fun K B f T w => ∃ (P : Pre2 K w) (x : St P), (T = TwDat.untw B T.pl → ∀ v v', GlobalTheory.TwistChoice.OverOne (w.D P.Z₀) v v' → v ∈ P.Wt → v' ∈ P.Wt) ∧ IsEmpty x.o.N.nd.Loc ∧ ∀ j v, x.o.η j v = 0 := by
   intro hA hH hE
-  have holdsW : WeightCaseCondition := _root_.GlobalTheory.T.w_of_weight_residue_char hH.h1 hH.h3 hH.multW
+  have holdsW : WeightCaseCondition := _root_.GlobalTheory.Mem.R3.Rw.AtDatumEvaluation.w_of_multEq_and_test_at_weights hH.h1 hH.h3 hH.multW
   have holdsL : LowerUnitaryCaseCondition := _root_.GlobalTheory.T.lu_of_multiplicity_equal hH.h1 hH.h3 hH.multL
   have datS : DatExS := GlobalTheory.T.exists_fineAdelicDatum_of_hypotheses hH.cover hA.a5 hA.a6 hA.a7 hA.a8 hA.a9 hA.a10
   have hW := GlobalTheory.T.untwisted_adelic_data_saturated_over_fixed_field hH.h1.q12 datS holdsL hE
@@ -1383,14 +1371,6 @@ end GlobalTheory.HeightCounting.Up
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
-
-theorem _root_.GlobalTheory.T.compatibleSystem_weightOne_saturated : _root_.GlobalTheory.Mem.Top.Bl.HypAAlt → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses → ExistsUnlocalizedSaturatedState := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.weightOne_saturated_of_hypotheses
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.CompatibleSystemWeightOneSaturated =====
@@ -1429,7 +1409,7 @@ theorem twisted_local_multiplicity_eq : GlobalTheory.Published.HarishChandraAnal
     have hT : TypesTrue (w.st Z').toD7.ntypes y.R.C.P y.R.C.W := by
       rw [y.lev.C, w.C_eq]
       exact g1'
-    exact _root_.GlobalTheory.T.twisted_multiplicity_one h1 h2 h3 h4 h5 h6 h7 h12 h13 hG y.R y.F
+    exact _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq h1 h2 h3 h4 h5 h6 h7 h12 h13 hG y.R y.F
       ((hOk w.px w.I hX w.ok w.C_eq w.xi_range).2 _ y.Xg y.tr y.good.irr) hch hEx' hhost ⟨L, hpar⟩ B.ccK_top
       y.pins.keep.guard (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev hT)
   exact (GlobalTheory.T.equalMultiplicities_rowTest_of_sameGroupTransfer
@@ -1542,11 +1522,6 @@ theorem member_hodgeHyp_of_localInputs_rationalWeights : _root_.GlobalTheory.Mem
 end GlobalTheory.Mem
 end
 
-section
-open GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.LiteralAutomorphy
-theorem _root_.GlobalTheory.T.compatibleSystem_member_rationalWeights : _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilSiegelFormulaUnitary → GlobalTheory.Published.SiegelWeilUnitarySchrodinger → GlobalTheory.Published.SiegelEisensteinContinuation → _root_.GlobalTheory.Published.UnusedSlot72 → GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheory.Published.BernsteinZelevinskyFiniteness → GlobalTheory.Published.SchurOrthogonalitySquareIntegrable → RowRatW → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses :=
-  _root_.GlobalTheory.Mem.member_hodgeHyp_of_localInputs_rationalWeights
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MemberHodgeHypOfLocalInputsRationalWeights =====
@@ -1599,9 +1574,9 @@ theorem exists_weilBlock_ne_at_member_alt : _root_.GlobalTheory.Mem.Top.Bl.HypAA
     ExBL KPx (IsBuiltE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ).s) (IsGoodE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ).s)
       (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ)) := by
   intro ha hh pm hL N Γ A hb hs
-  exact _root_.GlobalTheory.T.geometric_parameter_uniform_alt pm.m14 hh.cover ha.a5 ha.a7 ha.a8 ha.a9 ha.a10 ha.a6 ha.a22 ha.a23 ha.a1 hL (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) Γ _ rfl
+  exact _root_.GlobalTheory.Mem.Top.Bl.exBL_isLinked_prmR_alt pm.m14 hh.cover ha.a5 ha.a7 ha.a8 ha.a9 ha.a10 ha.a6 ha.a22 ha.a23 ha.a1 hL (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) Γ _ rfl
     (fun K B f T w Z Wt p0 t nch n xd c e => hb K B f T w Z Wt p0 t nch n xd c e.1) (_root_.GlobalTheory.Mem.LiteralAutomorphy.slot_mv_extension_with_at_property A hs)
-    (_root_.GlobalTheory.T.member_multiplicatively_closed_alt pm.m1 pm.m2 pm.m3 pm.m4 pm.m5 pm.m6 pm.m7 pm.m12 pm.m13 pm.m14 hL _ _ _)
+    (_root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt pm.m1 pm.m2 pm.m3 pm.m4 pm.m5 pm.m6 pm.m7 pm.m12 pm.m13 pm.m14 hL _ _ _)
 end GlobalTheory.Mem.LiteralAutomorphy
 end
 end
@@ -1609,8 +1584,7 @@ section
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.compatibleSystem_weilBlock_ne_alt : _root_.GlobalTheory.Mem.Top.Bl.HypAAlt → _root_.GlobalTheory.Mem.Top.Bl.MultiplicityCoverHypotheses → _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (Γ : GeoP) (A : AtP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → PositionMv (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N SExt.none Γ).s → ExBL KPx (IsBuiltE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ).s) (IsGoodE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ).s) (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) SExt.none Γ)) := by
-  first | exact @_root_.GlobalTheory.Mem.LiteralAutomorphy.exists_weilBlock_ne_at_member_alt
+alias _root_.GlobalTheory.T.compatibleSystem_weilBlock_ne_alt := _root_.GlobalTheory.Mem.LiteralAutomorphy.exists_weilBlock_ne_at_member_alt
 end
 end
 end -- clump:auto
@@ -1682,8 +1656,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.RowEx GlobalTheory.Mem.LiteralAutomorphy
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.memberE_extensionWithAtProperty_of_evLgG : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP) (A : AtP), EvLgG A → MemberE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ).s → MemberE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL N A) S Γ).s :=
-  _root_.GlobalTheory.Mem.LiteralAutomorphy.memberE_extensionWithAtProperty_of_memberE
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IsBuiltEPrmAIffStatement =====
@@ -1709,29 +1681,29 @@ theorem member_bundles_large_unramified_exponents_alt : _root_.GlobalTheory.Fc.S
         (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.Mem.LiteralAutomorphy.extensionWithAtProperty hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithOrigin hL cDep) A) SExt.none (geoCl anyGeometry))) := by
   intro P hR hL cDep A hEv
   have sw := P.siegelWeilUnitaryConvergent2
-  have hA := _root_.GlobalTheory.T.compatibleSystem_member_hypotheses P.globalArtinReciprocity P.cMCurveGoodOutsidePrimeSt P.weberRayFieldSt
+  have hA := _root_.GlobalTheory.compatibleSystem_hypotheses_of_localInputs P.globalArtinReciprocity P.cMCurveGoodOutsidePrimeSt P.weberRayFieldSt
     P.harishChandraModules P.cuspRapidDecay P.casselmanWallach P.harishChandraFinite
     P.discreteSeriesClassification P.discreteSeriesCoverExists
     P.formalDegreeCompactDual sw
   have hPM : _root_.GlobalTheory.Mem.LiteralAutomorphy.MemberHypotheses := ⟨P.harishChandraAnalyticity, P.discreteSeriesClassification, P.cuspRapidDecay,
     P.harishChandraFinite, P.cuspTraceClass, P.dixmierMalliavinFactorisation, P.flathFactorisation,
     P.zelevinskyPolynomialRing, P.geometricLemma, P.greenCuspidal⟩
-  have hH := _root_.GlobalTheory.T.compatibleSystem_member_rationalWeights hPM P.harishChandraModules P.discreteSeriesCover P.casselmanWallach
+  have hH := _root_.GlobalTheory.Mem.member_hodgeHyp_of_localInputs_rationalWeights hPM P.harishChandraModules P.discreteSeriesCover P.casselmanWallach
     P.weilSiegelFormulaUnitary P.siegelWeilUnitarySchrodinger P.siegelEisensteinContinuation
     P.siegelEisensteinSimplePole P.unramifiedDoublingGL P.bernsteinZelevinskyFiniteness
     P.schurOrthogonalitySquareIntegrable hR
-  have hW := _root_.GlobalTheory.T.compatibleSystem_weightOne_saturated hA hH
-  have hM := _root_.GlobalTheory.T.member_multiplicatively_closed_alt P.harishChandraAnalyticity P.discreteSeriesClassification
+  have hW := _root_.GlobalTheory.HeightCounting.Up.weightOne_saturated_of_hypotheses hA hH
+  have hM := _root_.GlobalTheory.Mem.Top.Bl.MultQClose.multiplicative_closure_prime_mem_alt P.harishChandraAnalyticity P.discreteSeriesClassification
     P.cuspRapidDecay P.harishChandraFinite P.cuspTraceClass P.dixmierMalliavinFactorisation
     P.flathFactorisation P.zelevinskyPolynomialRing P.geometricLemma
     P.greenCuspidal hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithOrigin hL cDep) SExt.none (geoCl anyGeometry)
-  obtain ⟨hE, -, -, hL', hN⟩ := _root_.GlobalTheory.T.hyps_e_third_layer_ser_n_of_geometric_galois P.litN P.toHypothesesX
+  obtain ⟨hE, -, -, hL', hN⟩ := _root_.GlobalTheory.MemberClose.exists_hyp_n_of_geometric_galois_compat P.litN P.toHypothesesX
   have hMember :=
     (_root_.GlobalTheory.Mem.Top.Bl.exists_baseLattice_of_prime_alt hA hE hH hW hL hN cDep hM).1
   exact ⟨hA.a18,
-    _root_.GlobalTheory.T.memberE_extensionWithAtProperty_of_evLgG hL _ _ _ A hEv hMember,
+    _root_.GlobalTheory.Mem.LiteralAutomorphy.memberE_extensionWithAtProperty_of_memberE hL _ _ _ A hEv hMember,
     _root_.GlobalTheory.T.compatibleSystem_weilBlock_ne_alt hA hH hPM hL _ _ A (fun _ _ _ _ _ _ _ _ _ _ _ _ _ x => ⟨x.1.1⟩)
-      (_root_.GlobalTheory.T.slot_mv_extension_with_origin_geo_cl hL cDep anyGeometry)⟩
+      (_root_.GlobalTheory.HeightCounting.Up.movable_prmR_nel_alt hL cDep anyGeometry)⟩
 end GlobalTheory.Fc.StageOneU
 end
 

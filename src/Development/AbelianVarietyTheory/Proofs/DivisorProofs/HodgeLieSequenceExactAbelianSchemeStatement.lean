@@ -122,8 +122,6 @@ section -- clump:auto
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianScheme_hodgeFiltration_functional_extends : GlobalTheory.Published.CrystallineSmoothLift → GlobalTheory.Published.AbelianHodgeDeRham → ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ ψ : F1 (A.hom ≫ 𝟙 (Sp R)) →ₗ[R] R, ∃ H : FirstDeRham (A.hom ≫ 𝟙 (Sp R)) →ₗ[R] R, ∀ c : F1 (A.hom ≫ 𝟙 (Sp R)), H c = ψ c := by
-  first | exact @GlobalTheory.AbelianExtend.abelianScheme_hodgeFiltration_functional_extends'
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHodgeFiltrationFunctionalExtendsStatement =====
@@ -215,7 +213,7 @@ theorem lieExact_of_crystallineLift_hodgeDeRham : GlobalTheory.Published.Crystal
       have : e.symm (c1 f) = Submodule.Quotient.mk f := e.symm_apply_eq.2 rfl
       change (LinearMap.ker c1).liftQ (tanVal v) hker (e.symm (c1 f)) = _
       rw [this]; rfl
-    obtain ⟨H, hH'⟩ := GlobalTheory.T.abelianScheme_hodgeFiltration_functional_extends hC hH R A g hab hdim ψ
+    obtain ⟨H, hH'⟩ := _root_.GlobalTheory.AbelianExtend.abelianScheme_hodgeFiltration_functional_extends' hC hH R A g hab hdim ψ
     exact ⟨H ∘ₗ (primDR A).subtype, hv, fun f hf ↦ (hH' (c1 f)).trans (hψ f)⟩
 
 end GlobalTheory.LieHodge

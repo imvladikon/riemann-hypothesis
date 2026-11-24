@@ -110,7 +110,7 @@ theorem heisO_resS_symm_zero {V₀ A L : HSp D} (ψ : AddChar (AF D.host.F) ℂ)
   have h1 : (o.resS S).symm (u, x) + (o.resS S).symm (a, 0) = (o.resS S).symm (u + a, x) := by
     rw [← map_add (f := _)]; simp
   simp only [heisO]
-  rw [o.symplOH_resS, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, symplOH_zero_right, add_zero, h1]
+  rw [o.symplOH_resS, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, _root_.GlobalTheory.MixModel.symplOH_zero_right, add_zero, h1]
 
 theorem heisO_resT_symm_zero {T A L : HSp D} (ψ : AddChar (AF D.host.F) ℂ) (o : OrthDec T A L) (S : HSp D)
     (f : WO S T → ℂ) (b v : WO S A) (x : WO S L) :
@@ -119,7 +119,7 @@ theorem heisO_resT_symm_zero {T A L : HSp D} (ψ : AddChar (AF D.host.F) ℂ) (o
   have h1 : (o.resT S).symm (v, x) + (o.resT S).symm (b, 0) = (o.resT S).symm (v + b, x) := by
     rw [← map_add (f := _)]; simp
   simp only [heisO]
-  rw [o.symplOH_resT, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, symplOH_zero_right, add_zero, h1]
+  rw [o.symplOH_resT, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply, _root_.GlobalTheory.MixModel.symplOH_zero_right, add_zero, h1]
 
 theorem comb_extS {V₀ A L : HSp D} (ψ : AddChar (AF D.host.F) ℂ) (o : OrthDec V₀ A L) (S : HSp D)
     (c : WO A S →₀ ℂ) (f : WO V₀ S → ℂ) :
@@ -388,9 +388,9 @@ theorem integrand_periodic {ρ σ : ℕ} {B : BesLev D ρ} {B' : BesLev D σ} (l
   have e2 : ratW B'.V₀ S γ₂ = (B'.o.resT S).symm (0, γ) := hγ₂
   have e1 : ratW S B.V₀ γ₁ = (B.o.resS S).symm (0, l.κ S γ) := hγ₁
   rw [e2, ← map_add (f := _), Prod.mk_add_mk, zero_add, B'.o.symplOH_resT, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply,
-    ContrComb.symplOH_zero_left, zero_add] at q2
+    _root_.GlobalTheory.MixModel.symplOH_zero_left, zero_add] at q2
   rw [e1, ← map_add (f := _), Prod.mk_add_mk, zero_add, B.o.symplOH_resS, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply,
-    ContrComb.symplOH_zero_left, zero_add, hκ, neg_neg] at q1
+    _root_.GlobalTheory.MixModel.symplOH_zero_left, zero_add, hκ, neg_neg] at q1
   rw [hadd, q2, q1]
   have e : ψ (-symplOH S B'.L γ a) * ψ (symplOH S B'.L γ a) = 1 := by
     rw [← AddChar.map_add_eq_mul, neg_add_cancel, AddChar.map_zero_eq_one]
@@ -457,7 +457,7 @@ theorem contr_quasi : ∀ (D : D7) (ρ σ : ℕ) (B : BesLev D ρ) (B' : BesLev 
     funext w
     have e : ((ratW S B.A γ + u, l.κ S w) : WO B.A S × WO B.L S) = (ratW S B.A γ, (0 : WO B.L S)) + (u, l.κ S w) := by simp
     rw [e, map_add (f := _), e0, h₁.quasi, ← e0, B.o.symplOH_resS, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply,
-      symplOH_zero_left, add_zero]
+      _root_.GlobalTheory.MixModel.symplOH_zero_left, add_zero]
     ring
   · intro γ u v
     have e0 : (B'.o.resT S).symm (ratW B'.A S γ, 0) = ratW B'.V₀ S (B'.o.iA * γ) := by
@@ -468,7 +468,7 @@ theorem contr_quasi : ∀ (D : D7) (ρ σ : ℕ) (B : BesLev D ρ) (B' : BesLev 
     funext w
     have e : ((ratW B'.A S γ + v, w) : WO S B'.A × WO S B'.L) = (ratW B'.A S γ, (0 : WO S B'.L)) + (v, w) := by simp
     rw [e, map_add (f := _), e0, h₂.quasi, ← e0, B'.o.symplOH_resT, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply,
-      symplOH_zero_left, add_zero]
+      _root_.GlobalTheory.MixModel.symplOH_zero_left, add_zero]
     ring
 
 end GlobalTheory.ContrComb

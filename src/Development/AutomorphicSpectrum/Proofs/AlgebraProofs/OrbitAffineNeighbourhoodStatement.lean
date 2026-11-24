@@ -320,8 +320,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
 
-theorem _root_.GlobalTheory.T.finite_set_basic_open_affine : ∀ {X : Scheme.{0}} (U V₀ : X.Opens), IsAffineOpen U → V₀ ≤ U → ∀ K : Set X, K.Finite → K ⊆ V₀ → ∃ f : Γ(X, U), K ⊆ X.basicOpen f ∧ X.basicOpen f ≤ V₀ := by
-  first | exact @GlobalTheory.CompanionTheory.PrimeAvoid.exists_basicOpen_between
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FiniteSetBasicOpenAffineStatement =====
@@ -765,7 +763,7 @@ theorem exists_stable_affine_nbhd : ∀ {S : Scheme.{0}} (G X : Over S) [GrpObj 
   have hV₀O : V₀ ≤ O := fun y hy => hy (GlobalTheory.T.mem_orbit_self' G X y)
   have hV₀U : V₀ ≤ U := hV₀O.trans inf_le_left
   have hxV₀ : orbit G X x ⊆ V₀ := fun y hy w hw => hxO (htrans hy hw)
-  obtain ⟨f, hKf, hfV⟩ := GlobalTheory.T.finite_set_basic_open_affine U V₀ hU hV₀U _ (orbit_finite hG x) hxV₀
+  obtain ⟨f, hKf, hfV⟩ := _root_.GlobalTheory.CompanionTheory.PrimeAvoid.exists_basicOpen_between U V₀ hU hV₀U _ (orbit_finite hG x) hxV₀
   let D : X.left.Opens := X.left.basicOpen f
   have hD : IsAffineOpen D := hU.basicOpen f
   have hDW : D ≤ X.hom ⁻¹ᵁ W := (hfV.trans hV₀O).trans inf_le_right
@@ -828,8 +826,6 @@ open scoped CategoryTheory.MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.FreeQuotProof GlobalTheory.CompanionTheory.Hypotheses₂ GlobalTheory.CompanionTheory.Hypotheses₂.FreeQuot
 
-theorem _root_.GlobalTheory.T.orbit_affine_neighbourhood : ∀ {S : Scheme.{0}} (G X : Over S) [GrpObj G] [ModObj G X], IsFiniteLocallyFree G.hom → ∀ (x : X.left) (U : X.left.Opens), IsAffineOpen U → orbit G X x ⊆ U → ∃ (V : X.left.Opens) (W : S.Opens), x ∈ V ∧ IsAffineOpen V ∧ IsAffineOpen W ∧ V ≤ X.hom ⁻¹ᵁ W ∧ (γ[G, X] : G ⊗ X ⟶ X).left ⁻¹ᵁ V = (snd G X).left ⁻¹ᵁ V := by
-  first | exact @GlobalTheory.CompanionTheory.FreeQuotProof.Nbhd.exists_stable_affine_nbhd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.OrbitAffineNeighbourhoodStatement =====

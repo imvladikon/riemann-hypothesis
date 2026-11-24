@@ -642,8 +642,8 @@ theorem curve_lattice_self_dual : CurveSelfDualRec := by
     rw [e, hw1, hw2, map_add (f := _), map_mul, map_mul, map_intCast, map_intCast]
     ring
   have hD : (starRingEnd ℂ w1 * w2).im ≠ 0 := by
-    obtain ⟨p1, q1, e1⟩ := CS.K_repr D _ (c1 : D.host.K).2
-    obtain ⟨p2, q2, e2⟩ := CS.K_repr D _ (c2 : D.host.K).2
+    obtain ⟨p1, q1, e1⟩ := _root_.UpperTheory.Reformulated.B.ExportFamilies.K_repr D _ (c1 : D.host.K).2
+    obtain ⟨p2, q2, e2⟩ := _root_.UpperTheory.Reformulated.B.ExportFamilies.K_repr D _ (c2 : D.host.K).2
     have hφ1 : D.host.φ₀ ((c1 : D.host.K) : D.host.E) =
         (p1 : ℂ) + (q1 : ℂ) * (Complex.I * (Real.sqrt D.host.d : ℂ)) := by
       rw [e1, map_add (f := _), map_mul, map_ratCast, map_ratCast, CS.embedding_sqrt_neg_d]

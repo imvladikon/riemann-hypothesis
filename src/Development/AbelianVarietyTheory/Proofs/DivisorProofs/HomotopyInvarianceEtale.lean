@@ -125,7 +125,7 @@ theorem acyc_polynomial_of_isAlgClosed : ∀ (q : ℕ) [NeZero q] (K : Type) [Fi
   have hqA : IsUnit (q : Polynomial K) := by
     simpa using hq.map (Polynomial.C : K →+* Polynomial K)
   by_cases h2 : 2 ≤ n
-  · exact GlobalTheory.T.smooth_affine_curve_etale_cohomologicalDimension_le_one q K (Polynomial K) hq n i h2
+  · exact _root_.GlobalTheory.EtC.etC_c2 q K (Polynomial K) hq n i h2
   · have hn1 : n = 1 := by omega
     subst hn1
     have hζ : ∃ ζ : Polynomial K, Polynomial.aeval ζ (Polynomial.cyclotomic q ℤ) = 0 := by
@@ -140,9 +140,9 @@ theorem acyc_polynomial_of_isAlgClosed : ∀ (q : ℕ) [NeZero q] (K : Type) [Fi
         exact hz
       have hC : Polynomial.C z = algebraMap K (Polynomial K) z := rfl
       rw [hC, Polynomial.aeval_algebraMap_apply, hz', map_zero]
-    obtain ⟨e⟩ := GlobalTheory.T.tateTwistCohomology_spec_twist_independent q (Polynomial K) hqA hζ 1 i 1
+    obtain ⟨e⟩ := _root_.GlobalTheory.EtC.untwist q (Polynomial K) hqA hζ 1 i 1
     have hs : Subsingleton (Ht q (sp (Polynomial K)) 1 1) := by
-      refine GlobalTheory.T.kummer_etale_vanishing q (Polynomial K) hqA ?_ ?_
+      refine _root_.GlobalTheory.EtC.kummer_vanishing q (Polynomial K) hqA ?_ ?_
       · intro u
         obtain ⟨r, hr, hru⟩ := Polynomial.isUnit_iff.1 u.isUnit
         obtain ⟨v, hv⟩ := IsAlgClosed.exists_pow_nat_eq r (Nat.pos_of_ne_zero (NeZero.ne q))
@@ -169,8 +169,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistAcyclic_spectrum_polynomial_of_isAlgClosed : ∀ (q : ℕ) [NeZero q] (K : Type) [Field K] [IsAlgClosed K], IsUnit (q : K) → Acyc q (sp (Polynomial K)) := by
-  first | (exact @GlobalTheory.EtC.acyc_polynomial_of_isAlgClosed)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistAcyclicSpectrumPolynomialOfIsAlgClosedStatement =====
@@ -184,15 +182,9 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
 namespace GlobalTheory.EtC.HtpyLine
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp only [spMap]
-  rw [← Functor.map_comp, ← Spec.map_comp]
-  rfl
+alias spMap_comp := _root_.GlobalTheory.EtC.ProdStep.spMap_comp
 
-theorem spMap_id (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  simp only [spMap]
-  rw [show CommRingCat.ofHom (RingHom.id A) = 𝟙 (CommRingCat.of A) from rfl, Spec.map_id, CategoryTheory.Functor.map_id]
+alias spMap_id := _root_.GlobalTheory.EtAlgCD.spMap_id
 
 theorem pull_bijective_of_ringEquiv {R : Type} [CommRing R] {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B)
     (F : Shv R) (n : ℤ) : Function.Bijective (pull R (spMap (e : A →+* B)) F n) := by
@@ -249,12 +241,12 @@ theorem htpy_AIC : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T]
     haveI := hneg (sp T)
     haveI := hneg (sp (Polynomial T))
     exact bijective_of_subsingleton _
-  · exact GlobalTheory.T.h_zero_pullback_twist_bijective q T (Polynomial T) Polynomial.C hq (exists_cyclotomic_root_of_AIC q T hA) inferInstance
+  · exact _root_.GlobalTheory.EtC.h_zero_pull_bijective q T (Polynomial T) Polynomial.C hq (exists_cyclotomic_root_of_AIC q T hA) inferInstance
       (fun e he => IsIdempotentElem.iff_eq_zero_or_one.mp he) (fun e he => IsIdempotentElem.iff_eq_zero_or_one.mp he) i
-  · haveI hT : Subsingleton (Ht q (sp T) n i) := GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic q T hA hq n i hn
+  · haveI hT : Subsingleton (Ht q (sp T) n i) := _root_.GlobalTheory.EtC.b5 q T hA hq n i hn
     haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
     have hqK : IsUnit (q : FractionRing T) := by simpa using hq.map (algebraMap T (FractionRing T))
-    haveI hKt : Subsingleton (Ht q (sp (Polynomial (FractionRing T))) n i) := GlobalTheory.T.tateTwistAcyclic_spectrum_polynomial_of_isAlgClosed q (FractionRing T) hqK n i hn
+    haveI hKt : Subsingleton (Ht q (sp (Polynomial (FractionRing T))) n i) := _root_.GlobalTheory.EtC.acyc_polynomial_of_isAlgClosed q (FractionRing T) hqK n i hn
     let e : TensorProduct T (FractionRing T) (Polynomial T) ≃+* Polynomial (FractionRing T) :=
       (polyEquivTensor T (FractionRing T)).symm.toRingEquiv
     haveI hTens : Subsingleton (Ht q (sp (TensorProduct T (FractionRing T) (Polynomial T))) n i) :=
@@ -275,8 +267,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleHomotopyInvariance_absIntClosedLocalDomain : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → IsUnit (q : T) → ∀ i : ℤ, Eqv _ (spMap (Polynomial.C : T →+* Polynomial T)) (tw q i) := by
-  first | (exact @GlobalTheory.EtC.HtpyLine.htpy_AIC)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvarianceAbsIntClosedLocalDomainStatement =====
@@ -356,8 +346,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isAlgClosed_fractionRing_atPrime_of_etale' : ∀ (T E : Type) [CommRing T] [IsDomain T] [CommRing E] [Algebra T E] [Algebra.Etale T E] (P : Ideal E) [P.IsPrime] [IsDomain (Localization.AtPrime P)], IsAlgClosed (FractionRing T) → IsAlgClosed (FractionRing (Localization.AtPrime P)) := by
-  first | (exact @GlobalTheory.isAlgClosed_fractionRing_atPrime_of_etale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgClosedFractionRingAtPrimeOfEtaleStatement =====
@@ -472,8 +460,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isDomain_monicRoots_of_isIndEtale_local : ∀ (T O : Type) [CommRing T] [CommRing O] [IsLocalRing O] [Algebra T O], IndEt T O → (∀ (E : Type) [CommRing E] [Algebra T E] [Algebra.Etale T E] (P : Ideal E) [P.IsPrime], IsDomain (Localization.AtPrime P) ∧ AIC (Localization.AtPrime P)) → IsDomain O ∧ AIC O := by
-  first | (exact @GlobalTheory.LocalIndEtAIC.isDomain_aic_of_indEt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDomainMonicRootsOfIsIndEtaleLocalStatement =====
@@ -488,16 +474,6 @@ open scoped TensorProduct
 
 namespace GlobalTheory.HInvAic
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp only [spMap]
-  rw [← Functor.map_comp, ← Spec.map_comp]
-  rfl
-
-theorem spMap_id (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  simp only [spMap]
-  rw [show CommRingCat.ofHom (RingHom.id A) = 𝟙 (CommRingCat.of A) from rfl, Spec.map_id, CategoryTheory.Functor.map_id]
-
 theorem eqv_comp {R : Type} [CommRing R] {E E' E'' : Spc} (f : E ⟶ E') (g : E' ⟶ E'') (F : Shv R)
     (hf : Eqv R f F) (hg : Eqv R g F) : Eqv R (f ≫ g) F := by
   intro n
@@ -509,9 +485,9 @@ theorem eqv_spMap_equiv {R : Type} [CommRing R] {A B : Type} [CommRing A] [CommR
     Eqv R (spMap (e : A →+* B)) F := by
   intro n
   have h1 : spMap (e : A →+* B) ≫ spMap (e.symm : B →+* A) = 𝟙 _ := by
-    rw [← spMap_comp]; convert spMap_id B; ext x; simp
+    rw [← _root_.GlobalTheory.EtC.ProdStep.spMap_comp]; convert _root_.GlobalTheory.EtAlgCD.spMap_id B; ext x; simp
   have h2 : spMap (e.symm : B →+* A) ≫ spMap (e : A →+* B) = 𝟙 _ := by
-    rw [← spMap_comp]; convert spMap_id A; ext x; simp
+    rw [← _root_.GlobalTheory.EtC.ProdStep.spMap_comp]; convert _root_.GlobalTheory.EtAlgCD.spMap_id A; ext x; simp
   refine Function.bijective_iff_has_inverse.mpr ⟨pull R (spMap (e.symm : B →+* A)) F n, fun x => ?_, fun x => ?_⟩
   · rw [← pull_comp, h2, pull_id]
   · rw [← pull_comp, h1, pull_id]
@@ -524,12 +500,12 @@ theorem alg (T O : Type) [CommRing T] [IsDomain T] [CommRing O] [Algebra T O] :
     AIC T → SH O → IndEt T O → IsDomain O ∧ AIC O := by
   intro hT hSH hInd
   obtain ⟨hH, -⟩ := hSH
-  obtain ⟨-, hac⟩ := (GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed T).1 hT
-  haveI : IsIntegrallyClosed T := ((GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed T).1 hT).1
-  refine GlobalTheory.T.isDomain_monicRoots_of_isIndEtale_local T O hInd ?_
+  obtain ⟨-, hac⟩ := (_root_.GlobalTheory.AICIff.aic_iff T).1 hT
+  haveI : IsIntegrallyClosed T := ((_root_.GlobalTheory.AICIff.aic_iff T).1 hT).1
+  refine _root_.GlobalTheory.LocalIndEtAIC.isDomain_aic_of_indEt T O hInd ?_
   intro E _ _ _ P _
   obtain ⟨hd, hc⟩ := GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_etale T P (Localization.AtPrime P)
-  exact ⟨hd, (GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed _).2 ⟨hc, GlobalTheory.T.isAlgClosed_fractionRing_atPrime_of_etale' T E P hac⟩⟩
+  exact ⟨hd, (_root_.GlobalTheory.AICIff.aic_iff _).2 ⟨hc, _root_.GlobalTheory.isAlgClosed_fractionRing_atPrime_of_etale T E P hac⟩⟩
 end GlobalTheory.HInvAic
 
 namespace GlobalTheory.HInvAic
@@ -553,14 +529,14 @@ theorem main : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T], AI
   have hφ : ((Algebra.ofId T (Polynomial T)).toRingHom : T →+* Polynomial T) = Polynomial.C := by
     ext x <;> simp
   rw [← hφ]
-  apply GlobalTheory.T.etaleCohomology_local_to_global_ringMap_indEtale (ZMod q) (tw q i) (GlobalTheory.T.tateTwist_finitary q i) T T (Polynomial T) (Algebra.ofId T (Polynomial T))
+  apply _root_.GlobalTheory.LocGlobRing.main (ZMod q) (tw q i) (_root_.GlobalTheory.EtC.tw_finitary q i) T T (Polynomial T) (Algebra.ofId T (Polynomial T))
 
   intro O _ _ hSH hInd
   obtain ⟨hdom, haic⟩ := alg T O hT hSH hInd
   obtain ⟨hH, -⟩ := hSH
   have hqO : IsUnit (q : O) := by simpa using hq.map (algebraMap T O)
-  have hC := GlobalTheory.T.etaleHomotopyInvariance_absIntClosedLocalDomain q O haic hqO i
-  rw [tensor_map_eq, spMap_comp, spMap_comp]
+  have hC := _root_.GlobalTheory.EtC.HtpyLine.htpy_AIC q O haic hqO i
+  rw [tensor_map_eq, _root_.GlobalTheory.EtC.ProdStep.spMap_comp, _root_.GlobalTheory.EtC.ProdStep.spMap_comp]
   exact eqv_comp _ _ _ (eqv_comp _ _ _ (eqv_spMap_equiv _ _) hC) (eqv_spMap_equiv _ _)
 
 end GlobalTheory.HInvAic
@@ -576,8 +552,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etaleHomotopyInvariance_absolutelyIntegrallyClosed : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T], AIC T → IsUnit (q : T) → HInv q T := by
-  first | (exact @GlobalTheory.HInvAic.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvarianceAbsolutelyIntegrallyCloseStatement =====
@@ -631,7 +605,7 @@ theorem GlobalTheory.hInv_of_integral_killed_of_lower : ∀ (q : ℕ) [NeZero q]
       have h' : a + 1 ≤ (d : ℕ∞) := by exact_mod_cast h
       have ha : a ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top d) (le_trans le_self_add h')
       exact_mod_cast (ENat.add_one_le_iff ha).mp h'
-  exact GlobalTheory.T.hInv_of_directed_union_subalgebras q E (Finset E) (fun F => (Algebra.adjoin D (F : Set E)).restrictScalars ℤ)
+  exact _root_.GlobalTheory.EtC.hInv_of_directed_union q E (Finset E) (fun F => (Algebra.adjoin D (F : Set E)).restrictScalars ℤ)
     (fun F G h x hx => Algebra.adjoin_mono (Finset.coe_subset.mpr h) hx)
     (fun a => ⟨{a}, Algebra.subset_adjoin (by simp)⟩)
     (fun F => by
@@ -651,8 +625,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etaleHomotopyInvariant_integral_killed_of_lowerDim : ∀ (q : ℕ) [NeZero q] (d : ℕ), (∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R], IsUnit (q : R) → ringKrullDim R < d → HInv q R) → ∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.FiniteType ℤ D], IsUnit (q : D) → ringKrullDim D ≤ d → ∀ (E : Type) [CommRing E] [Algebra D E] [Algebra.IsIntegral D E] (s : D), s ≠ 0 → algebraMap D E s = 0 → HInv q E := by
-  first | (exact @GlobalTheory.hInv_of_integral_killed_of_lower)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvariantIntegralKilledOfLowerDimStatement =====
@@ -718,8 +690,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_finset_mem_tensorPowerFirstFactorAdjoinFinset : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R A] (k : ℕ) (x : PiTensorProduct R (fun _ : Fin (k + 1) => A)), ∃ F : Finset A, x ∈ firstAndFinite R A k F := by
-  first | (exact @GlobalTheory.EtC.exists_finset_mem_firstAndFinite) | (exact GlobalTheory.EtC.exists_finset_mem_firstAndFinite) | (intros; apply GlobalTheory.EtC.exists_finset_mem_firstAndFinite  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetMemTensorPowerFirstFactorAdjoinFinseStatement =====
@@ -834,8 +804,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_ne_zero_isNilpotent_mul_finite_inf_fg_ideals : ∀ (D E : Type) [CommRing D] [IsDomain D] [CommRing E] [Algebra D E] (ι : Type) (X : Finset ι) (P : ι → Ideal E), (∀ i ∈ X, (P i).FG) → (∀ Q : Ideal E, Q.IsPrime → Q.comap (algebraMap D E) = ⊥ → (⨅ i ∈ X, P i) ≤ Q) → ∃ s : D, s ≠ 0 ∧ ∀ y ∈ (⨅ i ∈ X, P i), IsNilpotent (algebraMap D E s * y) := by
-  first | (exact @GlobalTheory.FinInterNil.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroIsNilpotentMulFiniteInfFgIdealsStatement =====
@@ -946,8 +914,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_retraction_of_monicPolynomialsHaveRoots : ∀ (D T E : Type) [CommRing D] [IsDomain D] [CommRing T] [IsDomain T] [Algebra D T] [Algebra.IsIntegral D T] [CommRing E] [Algebra D E] [Algebra.IsIntegral D E], AIC T → ∀ (ι : T →ₐ[D] E) (Q : Ideal E), Q.IsPrime → Q.comap (algebraMap D E) = ⊥ → ∃ χ : E →ₐ[D] T, χ.comp ι = AlgHom.id D T ∧ RingHom.ker χ = Q := by
-  first | (exact @GlobalTheory.exists_retraction_of_AIC)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRetractionOfMonicPolynomialsHaveRootsStatement =====
@@ -989,13 +955,6 @@ theorem finite_retractions_of_adjoin_finset_integral
       rw [e₁, e₂]
     · exact congrFun he ⟨x, hx⟩
 
-theorem finite_retractions_of_adjoin_finset_integral' :
-    ∀ (D T E : Type) [CommRing D] [IsDomain D] [CommRing T] [IsDomain T] [Algebra D T]
-      [CommRing E] [Algebra D E] [Algebra.IsIntegral D E] (ι : T →ₐ[D] E) (F : Finset E),
-      Algebra.adjoin D (Set.range ι ∪ (F : Set E)) = ⊤ →
-        {χ : E →ₐ[D] T | χ.comp ι = AlgHom.id D T}.Finite :=
-  fun D T E _ _ _ _ _ _ _ _ ι F hF => finite_retractions_of_adjoin_finset_integral D T E ι F hF
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -1009,8 +968,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.finite_retractions_of_adjoin_finset_integral_domain : ∀ (D T E : Type) [CommRing D] [IsDomain D] [CommRing T] [IsDomain T] [Algebra D T] [CommRing E] [Algebra D E] [Algebra.IsIntegral D E] (ι : T →ₐ[D] E) (F : Finset E), Algebra.adjoin D (Set.range ι ∪ (F : Set E)) = ⊤ → {χ : E →ₐ[D] T | χ.comp ι = AlgHom.id D T}.Finite := by
-  first | (exact @GlobalTheory.finite_retractions_of_adjoin_finset_integral')
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRetractionsOfAdjoinFinsetIntegralDomainStatement =====
@@ -1064,7 +1021,7 @@ theorem homotopyInv_quot_iInf_ker_retractions : ∀ (q : ℕ) [NeZero q] (D T E 
       set J : Ideal E := P ⊓ I with hJ
       have hJP : J ≤ P := inf_le_left
       have hJI : J ≤ I := inf_le_right
-      apply GlobalTheory.T.etaleHomotopyInvariantTwists_of_closedCover q (E ⧸ J) (P.map (Ideal.Quotient.mk J)) (I.map (Ideal.Quotient.mk J))
+      apply _root_.GlobalTheory.EtC.ClosedCover.closedCover q (E ⧸ J) (P.map (Ideal.Quotient.mk J)) (I.map (Ideal.Quotient.mk J))
       · intro x hx
         obtain ⟨e, rfl⟩ := Ideal.Quotient.mk_surjective x
         have h1 := (Ideal.mem_quotient_iff_mem hJP).mp hx.1
@@ -1096,8 +1053,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.hInv_quot_iInf_ker_retractions : ∀ (q : ℕ) [NeZero q] (D T E : Type) [CommRing D] [IsDomain D] [CommRing T] [IsDomain T] [Algebra D T] [Algebra.IsIntegral D T] [CommRing E] [Algebra D E] [Algebra.IsIntegral D E], IsUnit (q : D) → HInv q T → (∀ (E' : Type) [CommRing E'] [Algebra D E'] [Algebra.IsIntegral D E'] (s : D), s ≠ 0 → algebraMap D E' s = 0 → HInv q E') → ∀ (ι : T →ₐ[D] E) (X : Finset (E →ₐ[D] T)), (∀ χ ∈ X, χ.comp ι = AlgHom.id D T) → HInv q (E ⧸ ⨅ χ ∈ X, RingHom.ker χ) := by
-  first | (exact @GlobalTheory.homotopyInv_quot_iInf_ker_retractions)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomotopyInvQuotIInfKerRetractionsStatement =====
@@ -1158,8 +1113,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.ker_retraction_fg_of_adjoin_finset : ∀ (D T E : Type) [CommRing D] [CommRing T] [Algebra D T] [CommRing E] [Algebra D E] (ι : T →ₐ[D] E) (F : Finset E), Algebra.adjoin D (Set.range ι ∪ (F : Set E)) = ⊤ → ∀ χ : E →ₐ[D] T, χ.comp ι = AlgHom.id D T → (RingHom.ker χ).FG := by
-  first | (exact @GlobalTheory.ker_retraction_fg)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerRetractionFgStatement =====
@@ -1271,8 +1224,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_isIntegral : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R A] [Algebra.IsIntegral R A] (k : ℕ) (F : Finset A), Algebra.IsIntegral R (firstAndFinite R A k F) := by
-  first | (exact @GlobalTheory.EtC.firstAndFinite_isIntegral) | (exact GlobalTheory.EtC.firstAndFinite_isIntegral) | (intros; apply GlobalTheory.EtC.firstAndFinite_isIntegral  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorPowerFirstFactorAdjoinFinsetIsIntegralStatement =====
@@ -1293,14 +1244,14 @@ theorem hInv_of_finite_over_aic (q : ℕ) [NeZero q] (d : ℕ) (hH : (∀ (R : T
     [Algebra.IsIntegral D T] (hT : AIC T) (hTq : HInv q T) (E : Type) [CommRing E] [Algebra D E]
     [Algebra.IsIntegral D E] (ι : T →ₐ[D] E) (F : Finset E)
     (hF : Algebra.adjoin D (Set.range ι ∪ (F : Set E)) = ⊤) : HInv q E := by
-  have hlow := GlobalTheory.T.etaleHomotopyInvariant_integral_killed_of_lowerDim q d hH D hq hd
+  have hlow := _root_.GlobalTheory.hInv_of_integral_killed_of_lower q d hH D hq hd
   have hqE : IsUnit (q : E) := by simpa using hq.map (algebraMap D E)
-  set X : Finset (E →ₐ[D] T) := (GlobalTheory.T.finite_retractions_of_adjoin_finset_integral_domain D T E ι F hF).toFinset with hX
+  set X : Finset (E →ₐ[D] T) := (_root_.GlobalTheory.finite_retractions_of_adjoin_finset_integral D T E ι F hF).toFinset with hX
   have hXid : ∀ χ ∈ X, χ.comp ι = AlgHom.id D T := fun χ hχ => by simpa [hX] using hχ
-  obtain ⟨s, hs0, hs⟩ := GlobalTheory.T.exists_ne_zero_isNilpotent_mul_finite_inf_fg_ideals D E (E →ₐ[D] T) X (fun χ => RingHom.ker χ)
-    (fun χ hχ => GlobalTheory.T.ker_retraction_fg_of_adjoin_finset D T E ι F hF χ (hXid χ hχ))
+  obtain ⟨s, hs0, hs⟩ := _root_.GlobalTheory.FinInterNil.main D E (E →ₐ[D] T) X (fun χ => RingHom.ker χ)
+    (fun χ hχ => _root_.GlobalTheory.ker_retraction_fg D T E ι F hF χ (hXid χ hχ))
     (fun Q hQ hQc => by
-      obtain ⟨χ, hχι, hχQ⟩ := GlobalTheory.T.exists_retraction_of_monicPolynomialsHaveRoots D T E hT ι Q hQ hQc
+      obtain ⟨χ, hχι, hχQ⟩ := _root_.GlobalTheory.exists_retraction_of_AIC D T E hT ι Q hQ hQc
       have hmem : χ ∈ X := by simpa [hX] using hχι
       rw [← hχQ]
       exact iInf₂_le χ hmem)
@@ -1319,7 +1270,7 @@ theorem hInv_of_finite_over_aic (q : ℕ) [NeZero q] (d : ℕ) (hH : (∀ (R : T
     intro K hK
     rw [IsScalarTower.algebraMap_apply D E (E ⧸ K), Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem]
     exact hK (Ideal.mem_span_singleton_self _)
-  exact GlobalTheory.T.etaleHomotopyInvariantTwists_of_closedCover q E I J hIJ hqE (GlobalTheory.T.hInv_quot_iInf_ker_retractions q D T E hq hTq hlow ι X hXid)
+  exact _root_.GlobalTheory.EtC.ClosedCover.closedCover q E I J hIJ hqE (_root_.GlobalTheory.homotopyInv_quot_iInf_ker_retractions q D T E hq hTq hlow ι X hXid)
     (hlow (E ⧸ J) s hs0 (hJs J le_rfl)) (hlow (E ⧸ (I ⊔ J)) s hs0 (hJs _ le_sup_right))
 
 def subalgebraOfSubringEquiv {R A : Type} [CommRing R] [CommRing A] [Algebra R A] (S : Subalgebra R A) :
@@ -1335,10 +1286,10 @@ theorem hInv_tensorPower_integralClosure : ∀ (q : ℕ) [NeZero q] (d : ℕ), (
   intro q _ d hH D _ _ _ hq hd k
   have hqDp : IsUnit (q : integralClosure D (AlgebraicClosure (FractionRing D))) := by
     simpa using hq.map (algebraMap D (integralClosure D (AlgebraicClosure (FractionRing D))))
-  have hTq := GlobalTheory.T.etaleHomotopyInvariance_absolutelyIntegrallyClosed q _ (GlobalTheory.T.monicPolynomialsHaveRoots_integralClosure_algClosure D) hqDp
+  have hTq := _root_.GlobalTheory.HInvAic.main q _ (_root_.GlobalTheory.aic_integralClosure_algebraicClosure D) hqDp
   have hqS : ∀ F, IsUnit (q : firstAndFinite D (integralClosure D (AlgebraicClosure (FractionRing D))) k F) :=
     fun F => by simpa using hq.map (algebraMap D (firstAndFinite D (integralClosure D (AlgebraicClosure (FractionRing D))) k F))
-  refine GlobalTheory.T.hInv_of_directed_union_subalgebras q _ (Finset (integralClosure D (AlgebraicClosure (FractionRing D))))
+  refine _root_.GlobalTheory.EtC.hInv_of_directed_union q _ (Finset (integralClosure D (AlgebraicClosure (FractionRing D))))
     (fun F => subalgebraOfSubring (firstAndFinite D (integralClosure D (AlgebraicClosure (FractionRing D))) k F).toSubring)
     ?_ ?_ ?_ ?_
   · intro F G hFG x hx
@@ -1346,12 +1297,12 @@ theorem hInv_tensorPower_integralClosure : ∀ (q : ℕ) [NeZero q] (d : ℕ), (
     exact Algebra.adjoin_mono (Set.union_subset_union_right _
       (Set.iUnion_mono fun i => Set.image_mono (Finset.coe_subset.mpr hFG))) hx
   · intro x
-    obtain ⟨F, hF⟩ := GlobalTheory.T.exists_finset_mem_tensorPowerFirstFactorAdjoinFinset D _ k x
+    obtain ⟨F, hF⟩ := _root_.GlobalTheory.EtC.exists_finset_mem_firstAndFinite D _ k x
     exact ⟨F, (mem_subalgebraOfSubring).mpr hF⟩
   · intro F
     simpa using (hqS F).map (subalgebraOfSubringEquiv (firstAndFinite D (integralClosure D (AlgebraicClosure (FractionRing D))) k F))
   · intro F
-    haveI := GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_isIntegral D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
+    haveI := _root_.GlobalTheory.EtC.firstAndFinite_isIntegral D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
     obtain ⟨F', hF'⟩ := GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_fg_over_first D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
     exact _root_.GlobalTheory.EtC.hInv_of_ringEquiv q _ _ (subalgebraOfSubringEquiv _)
       (hInv_of_finite_over_aic q d hH D hq hd _ (GlobalTheory.T.monicPolynomialsHaveRoots_integralClosure_algClosure D) hTq _ (firstIncl D _ k F) F' hF')
@@ -1369,8 +1320,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etale_homotopy_invariance_tensor_power_integral_closure : ∀ (q : ℕ) [NeZero q] (d : ℕ), (∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R], IsUnit (q : R) → ringKrullDim R < d → HInv q R) → ∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.FiniteType ℤ D], IsUnit (q : D) → ringKrullDim D ≤ d → ∀ k : ℕ, HInv q (PiTensorProduct D (fun _ : Fin (k + 1) => integralClosure D (AlgebraicClosure (FractionRing D)))) := by
-  first | (exact @GlobalTheory.EtC.hInv_tensorPower_integralClosure)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvarianceTensorPowerIntegralClosurStatement =====
@@ -1497,7 +1446,7 @@ theorem hInv_of_domains_of_dim_lt : ∀ (q : ℕ) [NeZero q] (d : ℕ),
     refine key _ (fun p hp => ?_)
     rw [Set.Finite.mem_toFinset] at hp
     exact hp.1.1
-  exact GlobalTheory.T.etaleHomotopyInvariantTwists_of_closedCover q R (nilradical R) (nilradical R) (by simp) hq hred hred (by rwa [sup_idem])
+  exact _root_.GlobalTheory.EtC.ClosedCover.closedCover q R (nilradical R) (nilradical R) (by simp) hq hred hred (by rwa [sup_idem])
 
 end GlobalTheory
 end -- clump:auto
@@ -1512,8 +1461,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etaleHomotopyInvariantTwists_of_domains_of_dim_lt : ∀ (q : ℕ) [NeZero q] (d : ℕ), (∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R], IsUnit (q : R) → ringKrullDim R < d → HInv q R) → (∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.FiniteType ℤ D], IsUnit (q : D) → ringKrullDim D ≤ d → HInv q D) → ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R], IsUnit (q : R) → ringKrullDim R ≤ d → HInv q R := by
-  first | (exact @GlobalTheory.hInv_of_domains_of_dim_lt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvariantTwistsOfDomainsOfDimLtStatement =====
@@ -1542,7 +1489,7 @@ theorem GlobalTheory.homotopyInvariance_strictlyHenselian : ∀ (q : ℕ) [NeZer
       intro R _ _ hR hd
       have hdom : ∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.FiniteType ℤ D], IsUnit (q : D) → ringKrullDim D ≤ d → HInv q D := by
         intro D _ _ _ hD hDd
-        refine GlobalTheory.T.etaleHomotopyInvariance_cechDescent_integral q D (integralClosure D (AlgebraicClosure (FractionRing D))) inferInstance ?_ hD (GlobalTheory.T.etale_homotopy_invariance_tensor_power_integral_closure q d ih D hD hDd)
+        refine _root_.GlobalTheory.EtC.CechDescHInv.hInv_of_integral q D (integralClosure D (AlgebraicClosure (FractionRing D))) inferInstance ?_ hD (_root_.GlobalTheory.EtC.hInv_tensorPower_integralClosure q d ih D hD hDd)
         intro x hx
         have hinj : Function.Injective (algebraMap D (AlgebraicClosure (FractionRing D))) := by
           rw [IsScalarTower.algebraMap_eq D (FractionRing D) (AlgebraicClosure (FractionRing D))]
@@ -1552,7 +1499,7 @@ theorem GlobalTheory.homotopyInvariance_strictlyHenselian : ∀ (q : ℕ) [NeZer
           have := congrArg Subtype.val (RingHom.mem_ker.mp hx)
           simpa using this
         rw [h0]; exact zero_mem _
-      refine GlobalTheory.T.etaleHomotopyInvariantTwists_of_domains_of_dim_lt q d ih hdom R hR ?_
+      refine _root_.GlobalTheory.hInv_of_domains_of_dim_lt q d ih hdom R hR ?_
       revert hd
       induction ringKrullDim R with
       | bot => intro _; exact bot_le
@@ -1589,7 +1536,7 @@ theorem GlobalTheory.homotopyInvariance_strictlyHenselian : ∀ (q : ℕ) [NeZer
         | coe m => exact ⟨m, le_rfl⟩
     exact hfg (d + 1) (S s) (hunit s) (lt_of_le_of_lt hd (by exact_mod_cast Nat.lt_succ_self d))
   intro i
-  exact GlobalTheory.T.hInv_of_directed_union_subalgebras q A (Finset A) S hmono hcov hunit hinv i
+  exact _root_.GlobalTheory.EtC.hInv_of_directed_union q A (Finset A) S hmono hcov hunit hinv i
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomotopyInvarianceTateTwistStrictlyHenselian =====
@@ -1601,8 +1548,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.homotopyInvariance_tateTwist_strictlyHenselian : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ i : ℤ, Eqv _ (spMap (Polynomial.C : A →+* Polynomial A)) (tw q i) := by
-  first | (exact @GlobalTheory.homotopyInvariance_strictlyHenselian)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomotopyInvarianceTateTwistStrictlyHenselianStatement =====
@@ -1703,12 +1648,12 @@ theorem homotopy_invariance_etale : GlobalTheory.EtC.C4 := by
   intro q _ A _ hq i
   have hqΓ : IsUnit ((q : ℕ) : Γ(Spec (CommRingCat.of A), ⊤)) := by
     simpa using hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  refine GlobalTheory.T.etC_b3 q (Spec.map (CommRingCat.ofHom (Polynomial.C : A →+* Polynomial A)))
+  refine _root_.GlobalTheory.EtC.tateTwist_local_to_global_strictlyHenselian q (Spec.map (CommRingCat.ofHom (Polynomial.C : A →+* Polynomial A)))
     (𝟙 (Spec (CommRingCat.of A))) hqΓ i ?_
   intro A' _ s hA'
   refine eqv_baseChange q A i A' s ?_
   have hq' : IsUnit (q : A') := by simpa using hq.map (Spec.preimage s).hom
-  exact GlobalTheory.T.homotopyInvariance_tateTwist_strictlyHenselian q A' hA' hq' i
+  exact _root_.GlobalTheory.homotopyInvariance_strictlyHenselian q A' hA' hq' i
 
 end GlobalTheory.EtC.HomotopyInv
 end -- clump:auto

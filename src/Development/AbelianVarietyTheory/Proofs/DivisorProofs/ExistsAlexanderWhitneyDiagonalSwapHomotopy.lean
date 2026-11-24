@@ -282,12 +282,6 @@ noncomputable section
 
 namespace GlobalTheory.EtC.PrCx
 
-open SimplexCategory
-
-theorem alt_sum_zero {A : Type*} [AddCommGroup A] {n : ℕ} (G : (SimplexCategory.mk n ⟶ SimplexCategory.mk (n + 2)) → A) :
-    ∑ i : Fin (n + 3), ∑ j : Fin (n + 2), ((-1 : ℤ) ^ (i : ℕ) * (-1) ^ (j : ℕ)) • G (δ j ≫ δ i) = 0 :=
-  _root_.UpperTheory.Reformulated.B.AlternatingSumZero.alt_sum_zero G
-
 end GlobalTheory.EtC.PrCx
 
 namespace GlobalTheory.EtC.PrCx
@@ -379,7 +373,7 @@ theorem D₁_D₁ (c : Pr N →₀ ℤ) : D₁ N (D₁ N c) = 0 := by
     rcases p with _ | p
 
     · simp [d₁_succ, D₁_single, d₁_zero]
-    have h := alt_sum_zero (n := p) (fun θ => single (⟨p, r, θ ≫ a, b⟩ : Pr N) (1 : ℤ))
+    have h := _root_.UpperTheory.Reformulated.B.AlternatingSumZero.alt_sum_zero (n := p) (fun θ => single (⟨p, r, θ ≫ a, b⟩ : Pr N) (1 : ℤ))
 
     rw [d₁_succ, map_sum]
     simp only [D₁_single, d₁_succ, Finset.smul_sum]
@@ -400,7 +394,7 @@ theorem D₂_D₂ (c : Pr N →₀ ℤ) : D₂ N (D₂ N c) = 0 := by
     rcases r with _ | r
 
     · simp [d₂_succ, D₂_single, d₂_zero]
-    have h := alt_sum_zero (n := r) (fun θ => single (⟨p, r, a, θ ≫ b⟩ : Pr N) (1 : ℤ))
+    have h := _root_.UpperTheory.Reformulated.B.AlternatingSumZero.alt_sum_zero (n := r) (fun θ => single (⟨p, r, a, θ ≫ b⟩ : Pr N) (1 : ℤ))
 
     rw [d₂_succ, map_sum]
     simp only [D₂_single, d₂_succ, Finset.smul_sum]
@@ -476,7 +470,7 @@ theorem push_push {N M K : ℕ} (θ : SimplexCategory.mk N ⟶ SimplexCategory.m
   | single z c => simp [push_single, Category.assoc]
 
 theorem bd_bd {N : ℕ} (c : Pr N →₀ ℤ) : Pr.bd (Pr.bd c) = 0 := by
-  have h := alt_sum_zero (n := N) (fun θ => Pr.push θ c)
+  have h := _root_.UpperTheory.Reformulated.B.AlternatingSumZero.alt_sum_zero (n := N) (fun θ => Pr.push θ c)
 
   simp only [Pr.bd, map_sum, map_zsmul, push_push, Finset.smul_sum, smul_smul]
   exact h
@@ -555,8 +549,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.prism_chain_complex_boundary_identities : (∀ N (c : Pr N →₀ ℤ), Pr.d N (Pr.d N c) = 0) ∧ (∀ {N M : ℕ} (θ : SimplexCategory.mk N ⟶ SimplexCategory.mk M) c, Pr.d M (Pr.push θ c) = Pr.push θ (Pr.d N c)) ∧ (∀ N k (c : Pr N →₀ ℤ), Pr.Deg (k + 1) c → Pr.Deg k (Pr.d N c)) ∧ (∀ N k (c : Pr N →₀ ℤ), Pr.Deg k c → Pr.Deg k (Pr.bd c)) ∧ (∀ N (c : Pr N →₀ ℤ), Pr.bd (Pr.bd c) = 0) ∧ (∀ N (c : Pr N →₀ ℤ), Pr.d (N + 1) (Pr.bd c) = Pr.bd (Pr.d N c)) ∧ ∀ N, Pr.Deg N (Pr.aw N) ∧ Pr.Deg N (Pr.wa N) := by
-  first | (exact @GlobalTheory.EtC.PrCx.pr_complex)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrismChainComplexBoundaryIdentitiesStatement =====
@@ -766,8 +758,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.standardSimplexFacePairs_acyclic_positive_degree : ∀ N k (c : Pr N →₀ ℤ), Pr.Deg (k + 1) c → Pr.d N c = 0 → ∃ e, Pr.Deg (k + 2) e ∧ Pr.d N e = c := by
-  first | (exact @GlobalTheory.PrAcyc.pr_acyclic)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardSimplexFacePairsAcyclicPositiveDegreeStatement =====
@@ -808,9 +798,9 @@ noncomputable def hom : ∀ N, Pr N →₀ ℤ
 lemma step_spec (N : ℕ) (c : Pr N →₀ ℤ) (hc : Pr.Deg (N + 1) c)
     (hd : Pr.bd (Pr.d N c) = Pr.bd (Pr.aw N - Pr.wa N)) :
     Pr.Deg (N + 2) (step N c) ∧ Pr.d (N + 1) (step N c) = Pr.aw (N + 1) - Pr.wa (N + 1) - Pr.bd c := by
-  obtain ⟨-, -, -, hbdeg, -, hdbd, haw⟩ := GlobalTheory.T.prism_chain_complex_boundary_identities
+  obtain ⟨-, -, -, hbdeg, -, hdbd, haw⟩ := _root_.GlobalTheory.EtC.PrCx.pr_complex
   have H : ∃ e, Pr.Deg (N + 2) e ∧ Pr.d (N + 1) e = Pr.aw (N + 1) - Pr.wa (N + 1) - Pr.bd c := by
-    apply GlobalTheory.T.standardSimplexFacePairs_acyclic_positive_degree (N + 1) N
+    apply _root_.GlobalTheory.PrAcyc.pr_acyclic (N + 1) N
     · exact deg_sub (deg_sub (haw (N + 1)).1 (haw (N + 1)).2) (hbdeg _ _ _ hc)
     · obtain ⟨h1, h2⟩ := _root_.GlobalTheory.EtC.AWChain.aw_wa_chain N
       rw [map_sub, map_sub, h1, h2, hdbd, hd, bd_sub, sub_self]
@@ -823,7 +813,7 @@ lemma hom_spec (N : ℕ) : Pr.Deg (N + 1) (hom N) ∧ Pr.bd (Pr.d N (hom N)) = P
   | zero => exact ⟨deg_zero, by simp [hom, aw_zero_eq_wa_zero]⟩
   | succ N ih =>
     obtain ⟨h1, h2⟩ := step_spec N (hom N) ih.1 ih.2
-    obtain ⟨-, -, -, -, hbb, -, -⟩ := GlobalTheory.T.prism_chain_complex_boundary_identities
+    obtain ⟨-, -, -, -, hbb, -, -⟩ := _root_.GlobalTheory.EtC.PrCx.pr_complex
     refine ⟨h1, ?_⟩
     show Pr.bd (Pr.d (N + 1) (step N (hom N))) = _
     rw [h2, bd_sub, hbb, sub_zero]

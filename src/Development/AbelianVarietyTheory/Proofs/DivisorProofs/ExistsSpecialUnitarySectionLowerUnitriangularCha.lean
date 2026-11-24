@@ -623,7 +623,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rfl
   · intro z
     have hdiag : ∀ τ a, dY X z τ a a = 0 := fun τ a => by
-      have h6 := congrArg Complex.re (GlobalTheory.T.unitaryChartSectionFrameEntriesFDeriv_skew X hx z τ a a)
+      have h6 := congrArg Complex.re (_root_.GlobalTheory.SUChartSection.dY_skew X hx z τ a a)
       have h7 := _root_.GlobalTheory.SUChartSection.diagreal X hx z τ a
       simp only [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.conj_re,
         Complex.conj_im, h7, Complex.zero_re, mul_zero, sub_zero, neg_zero] at h6

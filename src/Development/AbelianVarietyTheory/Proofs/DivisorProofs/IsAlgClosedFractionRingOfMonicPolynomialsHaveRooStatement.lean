@@ -45,5 +45,3 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isAlgClosed_fractionRing_of_monic_polynomials_have_roots : ∀ (A : Type) [CommRing A] [IsDomain A], AIC A → IsAlgClosed (FractionRing A) := by
-  first | (exact @_root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing) | (exact _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing) | (intros; apply _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing  <;> assumption)

@@ -393,7 +393,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
     constructor
     · rintro ⟨a, rfl⟩; exact ⟨a, rfl⟩
     · rintro ⟨a, rfl⟩; exact ⟨a, rfl⟩
-  obtain ⟨d, hd, hdet⟩ := GlobalTheory.KapSignMul.gram_change (K.c : K.E →+* K.E) W u v hu_li hu_span hv_li hv_span
+  obtain ⟨d, hd, hdet⟩ := _root_.GlobalTheory.gram_det_change_of_bases (K.c : K.E →+* K.E) W u v hu_li hu_span hv_li hv_span
   have hM : (Matrix.of fun i j => ∑ k, cj w ((b i : Fin n → w.adicCompletion E) k) * (b j : Fin n → w.adicCompletion E) k) =
       (Matrix.of fun i j => ∑ k, (K.c : K.E →+* K.E) (v i k) * v j k).map e := by
     ext i j
@@ -1603,16 +1603,6 @@ noncomputable section
 
 namespace GlobalTheory.InertTwUnit
 
-theorem cast_finsum_rat {ι : Type} (f : ι → ℚ) : ((∑ᶠ i, f i : ℚ) : ℂ) = ∑ᶠ i, (f i : ℂ) := by
-  by_cases h : (Function.support f).Finite
-  · exact map_finsum (Rat.castHom ℂ) h
-  · have h1 : (Function.support f).Infinite := h
-    have h2 : (Function.support fun i => (f i : ℂ)).Infinite := by
-      have e : (Function.support fun i => (f i : ℂ)) = Function.support f := by
-        ext i; simp
-      rw [e]; exact h1
-    rw [finsum_of_infinite_support h1, finsum_of_infinite_support h2, Rat.cast_zero]
-
 theorem twisted_unit_eq_stSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → qV E w = K.q ^ 2 → ∀ (a : ℕ) (Q : (w.adicCompletion E)[X]), Q.Monic → Q.natDegree = a → Q.Separable → IsCsr w Q → ∃ B : GlobalTheory.UnitLemma.InvAlg K, B.g * B.σ B.g = 1 ∧ B.P = Q.map e.symm.toRingHom ∧ stTw a w Q ((GlobalTheory.LFun.KGL w (n := a) : Set (GLw a w)).indicator 1) = (B.stSum : ℂ) := by
   intro E _ _ _ hU w hw K e hc hr hv hq a Q hm hd hs hQ
   unfold stTw IsCsr at *
@@ -1661,7 +1651,7 @@ theorem twisted_unit_eq_stSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   simp only [← finsum_eq_if]
   rw [← finsum_subtype_eq_finsum_cond, ← finsum_comp_equiv F]
   simp only [hterm]
-  exact (cast_finsum_rat _).symm
+  exact (_root_.GlobalTheory.TwOrbLat.cast_finsum _).symm
 
 end GlobalTheory.InertTwUnit
 end -- clump:auto
@@ -1731,10 +1721,6 @@ theorem rep_mk {G : Type} [Group G] (θ : G →* G) (x : G) :
   rw [Equivalence.eqvGen_iff (equivalence_twisted_conj θ)] at h
   exact (equivalence_twisted_conj θ).symm h
 
-theorem mk_rep {G : Type} [Group G] {θ : G →* G} (c : TwCl θ) : (Quot.mk _ c.rep : TwCl θ) = c := by
-  unfold TwCl.rep
-  exact Quot.out_eq c
-
 noncomputable def clsEquiv {G G' : Type} [Group G] [Group G'] (θ : G →* G) (θ' : G' →* G') :
     TwCl θ × TwCl θ' ≃ TwCl (θ.prodMap θ') where
   toFun p := Quot.mk _ (p.1.rep, p.2.rep)
@@ -1742,14 +1728,14 @@ noncomputable def clsEquiv {G G' : Type} [Group G] [Group G'] (θ : G →* G) (�
   left_inv p := by
     obtain ⟨g, hg⟩ := rep_mk (θ.prodMap θ') (p.1.rep, p.2.rep)
     refine Prod.ext ?_ ?_
-    · refine Eq.trans (Quot.sound ⟨g.1, ?_⟩).symm (mk_rep p.1)
+    · refine Eq.trans (Quot.sound ⟨g.1, ?_⟩).symm (_root_.GlobalTheory.BCT.ClsFin.mk_rep p.1)
       exact congrArg Prod.fst hg
-    · refine Eq.trans (Quot.sound ⟨g.2, ?_⟩).symm (mk_rep p.2)
+    · refine Eq.trans (Quot.sound ⟨g.2, ?_⟩).symm (_root_.GlobalTheory.BCT.ClsFin.mk_rep p.2)
       exact congrArg Prod.snd hg
   right_inv c := by
     obtain ⟨g, hg⟩ := rep_mk θ c.rep.1
     obtain ⟨g', hg'⟩ := rep_mk θ' c.rep.2
-    refine Eq.trans (Quot.sound ⟨(g, g'), ?_⟩).symm (mk_rep c)
+    refine Eq.trans (Quot.sound ⟨(g, g'), ?_⟩).symm (_root_.GlobalTheory.BCT.ClsFin.mk_rep c)
     refine Prod.ext ?_ ?_
     · simp [hg]
     · simp [hg']
@@ -1897,8 +1883,6 @@ open NumberField IsDedekindDomain Matrix Polynomial Filter GlobalTheory.CuspRep 
 open scoped Classical TensorProduct
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem PositivityTheory.BcbA.Ties.unit_product_indicator_twist : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (a b : ℕ) (w : Pl E), ¬ IsSplitAt w → ∀ Q₁ Q₂ : (w.adicCompletion E)[X], Q₁.Separable → Q₂.Separable → stTw2 a b w Q₁ Q₂ ((((GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b)) : Subgroup _) : Set _).indicator 1) = stTw a w Q₁ ((GlobalTheory.LFun.KGL w (n := a) : Set (GLw a w)).indicator 1) * stTw b w Q₂ ((GlobalTheory.LFun.KGL w (n := b) : Set (GLw b w)).indicator 1) :=
-  GlobalTheory.BCT.UnitProd.stTw2_unit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriTrivialCase.IwahoriTrivialLemmas.UnitProductIndicatorTwist =====
@@ -1932,7 +1916,7 @@ theorem PositivityTheory.Rg.Bc.ArchbcB.B.archimedean_base_change_first : Positiv
       Polynomial.natDegree_map_eq_of_injective e.symm.injective _
     rw [h1, h2, Polynomial.resultant_map_map]
     simp
-  rw [PositivityTheory.BcbA.Ties.unit_product_indicator_twist E hE a b w hw Q₁ Q₂ hs₁ hs₂, hst₁, hst₂, hk, ← Rat.cast_mul, ← hid, Rat.cast_mul]
+  rw [_root_.GlobalTheory.BCT.UnitProd.stTw2_unit E hE a b w hw Q₁ Q₂ hs₁ hs₂, hst₁, hst₂, hk, ← Rat.cast_mul, ← hid, Rat.cast_mul]
   congr 1
   rw [hv]
   unfold delta absHalf
@@ -1945,8 +1929,7 @@ theorem PositivityTheory.Rg.Bc.ArchbcB.B.archimedean_base_change_first : Positiv
   push_cast
   rw [neg_eq_neg_one_mul, mul_zpow, ← _root_.inv_zpow', inv_neg_one]
 
-theorem PositivityTheory.Rg.Bc.ArchbcB.B.m1 : PositivityTheory.Rg.Bc.ArchbcB.B.M1 :=
-  PositivityTheory.Rg.Bc.ArchbcB.B.archimedean_base_change_first
+alias PositivityTheory.Rg.Bc.ArchbcB.B.m1 := _root_.PositivityTheory.Rg.Bc.ArchbcB.B.archimedean_base_change_first
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.MultiplicityOneBase.ArchimedeanBaseChangeFirst =====

@@ -222,11 +222,7 @@ section Ext
 
 variable {E : Type} [Field E] [NumberField E] {n : ℕ}
 
-theorem exists_smul_mem (Λ : Submodule (𝓞 E) (Fin n → E)) (hΛ : Submodule.span E (Λ : Set (Fin n → E)) = ⊤)
-    (v : Fin n → E) : ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.SmulMemSpanTop.exists_smul_mem_of_span_eq_top <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SmulMemSpanTop.exists_smul_mem_of_span_eq_top ..)
+alias exists_smul_mem := _root_.GlobalTheory.SmulMemSpanTop.exists_smul_mem_of_span_eq_top
 
 theorem exists_matrix_of_lattice (Λ : Submodule (𝓞 E) (Fin n → E))
     (hΛ : Submodule.span E (Λ : Set (Fin n → E)) = ⊤) (ψ : Λ →ₗ[𝓞 E] (Fin n → E)) :

@@ -281,8 +281,6 @@ theorem gmSep : LateralTheory.E.H2CurveOrder.LeafKumMuInjPf.GmSep := by
   have h1 := congrArg (fun z : (Scheme.Γ ⋙ unitsF).obj (op W) => ((Additive.toMul z.down : (Γ(W, ⊤))ˣ) : Γ(W, ⊤))) hg
   exact h1
 
-theorem GmSep_of : LateralTheory.E.H2CurveOrder.LeafKumMuInjPf.GmSep := gmSep
-
 end LateralTheory.E.H2CurveOrder.GmSepPf
 end -- clump:auto
 end -- clump:auto
@@ -663,8 +661,6 @@ theorem pow_pf : LeafKumMuSurjPow := by
   apply key
   exact hunit
 
-theorem LeafKumMuSurjPow_of : LeafKumMuSurjPow := pow_pf
-
 end LateralTheory.E.H2CurveOrder.LeafKumMuSurjPowPf
 end -- clump:auto
 end -- clump:auto
@@ -782,8 +778,6 @@ theorem LeafKumMuSurjPrim_pf : LateralTheory.E.H2CurveOrder.LeafKumMuSurjPf.Leaf
   rintro V f ⟨W, g, _, ⟨⟩, rfl⟩
   exact prim_of_hom q B hq ((Scheme.Γ.map (g ≫ pullback.snd x (Spec.map φ)).op).hom.comp
     (Scheme.ΓSpecIso (CommRingCat.of (cycPair q B hq).Ring)).inv.hom)
-
-theorem LeafKumMuSurjPrim_of : LateralTheory.E.H2CurveOrder.LeafKumMuSurjPf.LeafKumMuSurjPrim := LeafKumMuSurjPrim_pf
 
 end LateralTheory.E.H2CurveOrder.LeafKumMuSurjPrimPf
 end -- clump:auto
@@ -988,10 +982,10 @@ namespace LateralTheory.E.H2CurveOrder
 open LateralTheory.E.E4 LeafKumSeqPf KummerH0Surjection
 
 theorem muUnits : LeafKumMuPf.LeafKumMuUnits := by
-  have hI := LeafKumMuInjPfGlue.LeafKumMuInj_of TwLocGenPf.TwLocGen_of GmSepPf.GmSep_of
+  have hI := LeafKumMuInjPfGlue.LeafKumMuInj_of TwLocGenPf.TwLocGen_of _root_.LateralTheory.E.H2CurveOrder.GmSepPf.gmSep
   exact LeafKumMuUnitsPf.LeafKumMuUnits_of LeafKumMuMapPf.LeafKumMuMap_of hI
-    (LeafKumMuSurjPf.etale_mu_twist_sections_surj_of_prim_root_pow_inj LeafKumMuSurjPrimPf.LeafKumMuSurjPrim_of
-      LeafKumMuSurjPowPf.LeafKumMuSurjPow_of hI)
+    (LeafKumMuSurjPf.etale_mu_twist_sections_surj_of_prim_root_pow_inj _root_.LateralTheory.E.H2CurveOrder.LeafKumMuSurjPrimPf.LeafKumMuSurjPrim_pf
+      _root_.LateralTheory.E.H2CurveOrder.LeafKumMuSurjPowPf.pow_pf hI)
 
 theorem kumSecSurj : LeafKumSecSurj := LeafKumSecSurjPf.LeafKumSecSurj_of LeafUnitRootPf.LeafUnitRoot_of
 

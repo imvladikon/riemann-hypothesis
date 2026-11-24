@@ -92,36 +92,17 @@ namespace GlobalTheory.SS.StrictGrp
 section Basic
 variable {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K] {A A' A'' : Over (Sp K)}
 
-theorem isPullback_j (M : Model R A) : IsPullback M.j A.hom M.Y.hom (spMap (algebraMap R K)) := by
-  have : IsIso M.e.inv.left := inferInstanceAs (IsIso ((Over.forget _).map M.e.inv))
-  have h : IsPullback M.e.inv.left A.hom (pullback.snd M.Y.hom (spMap (algebraMap R K))) (𝟙 _) :=
-    IsPullback.of_horiz_isIso ⟨(Over.w M.e.inv).trans (Category.comp_id _).symm⟩
-  simpa [Model.j] using h.paste_horiz (IsPullback.of_hasPullback M.Y.hom (spMap (algebraMap R K)))
+alias isPullback_j := _root_.GlobalTheory.SS.SectionTranslation.j_isPullback
 
-theorem j_comm (M : Model R A) (N : Model R A') (f : A ⟶ A') (g : M.Y ⟶ N.Y)
-    (h : M.e.inv ≫ (Over.pullback (spMap (algebraMap R K))).map g = f ≫ N.e.inv) : M.j ≫ g.left = f.left ≫ N.j := by
-  have h2 := congrArg (fun q => q.left ≫ pullback.fst N.Y.hom (spMap (algebraMap R K))) h
-  have h4 : ((Over.pullback (spMap (algebraMap R K))).map g).left ≫ pullback.fst N.Y.hom (spMap (algebraMap R K))
-      = pullback.fst M.Y.hom (spMap (algebraMap R K)) ≫ g.left := pullback.lift_fst _ _ _
-  simp only [Over.comp_left, Category.assoc] at h2
-  unfold Model.j
-  rw [Category.assoc]
-  exact (congrArg (fun q => M.e.inv.left ≫ q) h4).symm.trans h2
+alias j_comm := _root_.GlobalTheory.SS.LawDef.j_comm
 
-theorem prod_j_fst (M : Model R A) (N : Model R A') :
-    (M.prod N).j ≫ (fst M.Y N.Y).left = (fst A A').left ≫ M.j :=
-  j_comm (M.prod N) M (fst A A') (fst M.Y N.Y) (by simp [Model.prod])
+alias prod_j_fst := _root_.GlobalTheory.SS.GI.prod_j_fst
 
-theorem prod_j_snd (M : Model R A) (N : Model R A') :
-    (M.prod N).j ≫ (snd M.Y N.Y).left = (snd A A').left ≫ N.j :=
-  j_comm (M.prod N) N (snd A A') (snd M.Y N.Y) (by simp [Model.prod])
-
-theorem twist_j (M : Model R A) (f : A ≅ A') : (M.twist f).j = f.inv.left ≫ M.j := by
-  simp [Model.twist, Model.j]
+alias prod_j_snd := _root_.GlobalTheory.SS.GI.prod_j_snd
 
 theorem twist_comm {M : Model R A} {N : Model R A'} {f : A ≅ A'} {g : M.Y.left ⟶ N.Y.left}
     (h : (M.twist f).j ≫ g = N.j) : M.j ≫ g = f.hom.left ≫ N.j := by
-  rw [← h, twist_j, Category.assoc, ← Category.assoc f.hom.left, ← Over.comp_left, f.hom_inv_id, Over.id_left,
+  rw [← h, _root_.GlobalTheory.SS.Translates.twist_j, Category.assoc, ← Category.assoc f.hom.left, ← Over.comp_left, f.hom_inv_id, Over.id_left,
     Category.id_comp]
 
 theorem prod_comm {B B' : Over (Sp K)} {M : Model R A} {N : Model R A'} {P : Model R B} {Q : Model R B'}
@@ -201,17 +182,14 @@ end Basic
 section Transl
 variable {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] [IsCommMonObj A]
 
-theorem comp_transl {T : Over (Sp K)} (x : T ⟶ A) (a : 𝟙_ (Over (Sp K)) ⟶ A) :
-    x ≫ (transl a).hom = (toUnit T ≫ a) * x := by
-  simp [transl, MonObj.comp_mul, ← Category.assoc, toUnit_unique (x ≫ toUnit A) (toUnit T)]
+alias comp_transl := _root_.GlobalTheory.SS.Translates.comp_transl_hom
 
 theorem transl_hom (a : 𝟙_ (Over (Sp K)) ⟶ A) : (transl a).hom = (toUnit A ≫ a) * 𝟙 A := rfl
 
 theorem transl_mul (a b : 𝟙_ (Over (Sp K)) ⟶ A) : (transl a).hom ≫ (transl b).hom = (transl (a * b)).hom := by
   rw [comp_transl, transl_hom, transl_hom, MonObj.comp_mul, ← _root_.mul_assoc, _root_.mul_comm (toUnit A ≫ b)]
 
-theorem transl_one : (transl (1 : 𝟙_ (Over (Sp K)) ⟶ A)).hom = 𝟙 A := by
-  rw [transl_hom, MonObj.comp_one, _root_.one_mul]
+alias transl_one := _root_.GlobalTheory.SS.FinUnion.transl_one
 
 theorem transl_inv (a : 𝟙_ (Over (Sp K)) ⟶ A) : (transl a).inv = (transl a⁻¹).hom := by
   rw [transl_hom, GrpObj.comp_inv]; rfl
@@ -493,12 +471,6 @@ theorem fibre_preirr {P X Y S : Scheme.{0}} {p : P ⟶ X} {q : P ⟶ Y} {g : X �
   rw [← Scheme.Hom.range_fiberι, ← Set.image_univ]
   exact (PreirreducibleSpace.isPreirreducible_univ).image _ (p.fiberι x).continuous.continuousOn
 
-theorem apply_eq_of_dominant {W X Y Z : Scheme.{0}} {a b : X ⟶ Y} (s : Y ⟶ Z) [IsSeparated s]
-    (hs : a ≫ s = b ≫ s) (i : W ⟶ X) [IsDominant i] (hi : i ≫ a = i ≫ b) (x : X) : a x = b x := by
-  first
-  | (rename_i h_7 h_10; revert W X Y Z a b s h_7 hs i h_10 hi x; exact @_root_.GlobalTheory.EqualityOnPoints.eq_on_points)
-  | (intros; exact _root_.GlobalTheory.EqualityOnPoints.eq_on_points ..)
-
 variable {R : Type} [CommRing R] {K : Type} [Field K] [Algebra R K] {A A' : Over (Sp K)}
 
 theorem extends_comp {M : Model R A} {N : Model R A'} {f : A ⟶ A'} {U : M.Y.left.Opens}
@@ -532,15 +504,6 @@ theorem prod_j_snd (M : Model R A) (N : Model R A') :
   simp only [Over.comp_left, Category.assoc] at h
   exact (Category.assoc _ _ _).trans ((congrArg (_ ≫ ·) (pullback_map_fst _).symm).trans h)
 
-theorem isPullback_j (M : Model R A) :
-    IsPullback M.j A.hom M.Y.hom (spMap (algebraMap R K)) := by
-  refine (IsPullback.of_hasPullback M.Y.hom (spMap (algebraMap R K))).of_iso
-    ((Over.forget _).mapIso M.e) (Iso.refl _) (Iso.refl _) (Iso.refl _) ?_ ?_ (by simp) (by simp)
-  · have : M.e.hom.left ≫ M.e.inv.left = 𝟙 _ := by rw [← Over.comp_left]; simp
-    show _ ≫ 𝟙 _ = M.e.hom.left ≫ M.e.inv.left ≫ _
-    rw [← Category.assoc, this]; simp
-  · exact (Category.comp_id _).trans (Over.w M.e.hom).symm
-
 theorem isDominant_j [IsDomain R] [IsFractionRing R K] (M : Model R A) : IsDominant M.j := by
   have := M.smooth
   have hd : DenseRange (spMap (algebraMap R K)) := by
@@ -550,7 +513,7 @@ theorem isDominant_j [IsDomain R] [IsFractionRing R K] (M : Model R A) : IsDomin
     exact bot_le
   refine ⟨(hd.preimage M.Y.hom.isOpenMap).mono ?_⟩
   rintro y ⟨s, hs⟩
-  obtain ⟨a, ha, -⟩ := Scheme.exists_preimage_of_isPullback (isPullback_j M) y s hs.symm
+  obtain ⟨a, ha, -⟩ := Scheme.exists_preimage_of_isPullback (_root_.GlobalTheory.SS.GI.isPullback_j M) y s hs.symm
   exact ⟨a, ha⟩
 
 theorem j_notMem_sp [IsDomain R] [IsDiscreteValuationRing R] [IsFractionRing R K] (M : Model R A)
@@ -578,7 +541,7 @@ theorem exists_restrict [IsNoetherianRing R] (M : Model R A) (V : M.Y.left.Opens
   let j' : A.left ⟶ V.toScheme := IsOpenImmersion.lift V.ι M.j (by simpa using hV)
   have hj : j' ≫ V.ι = M.j := IsOpenImmersion.lift_fac _ _ _
   have h1 : IsPullback j' (𝟙 _) V.ι M.j := IsPullback.of_vert_isIso_mono ⟨by simp [hj]⟩
-  have h2 := (h1.flip.paste_horiz (isPullback_j M).flip).flip
+  have h2 := (h1.flip.paste_horiz (_root_.GlobalTheory.SS.GI.isPullback_j M).flip).flip
   rw [Category.id_comp] at h2
   refine ⟨⟨Over.mk (V.ι ≫ M.Y.hom), (Over.isoMk h2.isoPullback h2.isoPullback_hom_snd).symm,
     inferInstanceAs (Smooth (V.ι ≫ M.Y.hom)), inferInstanceAs (IsSeparated (V.ι ≫ M.Y.hom)),
@@ -664,7 +627,7 @@ theorem ext_pt [IsDomain R] [IsFractionRing R K] {B B' : Over (Sp K)} {M : Model
   have hd : IsDominant (M.j ∣_ W) := IsZariskiLocalAtTarget.restrict this W
   have hw : U.ι u ∈ W := ⟨u.2, hu ▸ u'.2⟩
   obtain ⟨w, hw⟩ : ∃ w : W.toScheme, W.ι w = U.ι u := ⟨⟨_, hw⟩, rfl⟩
-  have key := apply_eq_of_dominant (a := a ≫ g ≫ p.left) (b := a' ≫ g' ≫ p'.left) Q.Y.hom
+  have key := _root_.GlobalTheory.EqualityOnPoints.eq_on_points (a := a ≫ g ≫ p.left) (b := a' ≫ g' ≫ p'.left) Q.Y.hom
     (by simp only [Category.assoc, Over.w, h.1, h'.1, reassoc_of% ha, reassoc_of% ha'])
     (M.j ∣_ W) (by
       have e1 := extends_comp h (M.j ⁻¹ᵁ W).ι (M.j ∣_ W ≫ a)

@@ -1077,7 +1077,7 @@ theorem exists_iw (r s : ℕ) (x : GA E (r + s)) : ∃ (v : BlockIx (r + s) r �
     (k : Kinf E (r + s)) (g : GL (Fin (r + s)) (Af E)),
     x = unip v * lev (Ad E) r s p * (infGL E (r + s) (Unitary.toUnits k) * finGL E (r + s) g) := by
   have h : ∑ i, (![r, s] : Fin 2 → ℕ) i = r + s := CapFactor.two_sum _
-  obtain ⟨v, hv, m, k, g, rfl⟩ := GlobalTheory.SpehInfChar.exists_iwasawa E (![r, s]) h x
+  obtain ⟨v, hv, m, k, g, rfl⟩ := _root_.GlobalTheory.IwasawaAdelic.iwasawa E (![r, s]) h x
   obtain ⟨xv, rfl⟩ := CapFactor.exists_unip_of_mem ![r, s] h hv
   refine ⟨xv, (m 0, m 1), k, g, ?_⟩
   have e := CapFactor.lev_eq_leviEmb (![r, s]) h (m 0, m 1)

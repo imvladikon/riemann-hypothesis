@@ -94,15 +94,10 @@ namespace GlobalTheory.Ord2.XiCoc
 
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime]
 
-theorem norm_le_one_of_int (x : Qbar l) (hx : IsIntegral ℤ_[l] x) : ‖x‖ ≤ 1 := by
-  first
-  | (apply _root_.GlobalTheory.PadicIntegralNorm.norm_le_one_of_isIntegral_padicInt <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PadicIntegralNorm.norm_le_one_of_isIntegral_padicInt ..)
-
 theorem norm_le_one (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 := by
   haveI := c.fin
   have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite ℤ_[l] c.O
-  exact norm_le_one_of_int x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
+  exact _root_.GlobalTheory.PadicIntegralNorm.norm_le_one_of_isIntegral_padicInt x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
 
 theorem eps_mem (c : Coef l) (s : G ℚ Ω) : eps l s ∈ c.O := by
   have h : eps l s = algebraMap ℤ_[l] (Qbar l) ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) := by
@@ -858,13 +853,8 @@ theorem mul_mem_ballSub {r : ℝ} {hr : 0 ≤ r} {k x : PadicAlgCl l} (hk : ‖k
   rw [mem_ballSub, norm_mul]
   exact (mul_le_of_le_one_left (norm_nonneg _) hk).trans hx
 
-theorem norm_le_one_of_int (x : PadicAlgCl l) (hx : IsIntegral ℤ_[l] x) : ‖x‖ ≤ 1 := by
-  first
-  | (apply _root_.GlobalTheory.IntegralNormLeOne.norm_le_one_of_isIntegral <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegralNormLeOne.norm_le_one_of_isIntegral ..)
-
 theorem norm_le_one_of_mem (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 :=
-  norm_le_one_of_int x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
+  _root_.GlobalTheory.IntegralNormLeOne.norm_le_one_of_isIntegral x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
 
 end GlobalTheory.BrTame
 
@@ -1011,24 +1001,10 @@ theorem mem_iff (v : Pl) (n : ℕ) : (n : 𝓞 ℚ) ∈ v.asIdeal ↔ normV v �
   rw [Nat.cast_mul]
   exact Ideal.mul_mem_right _ _ (Ideal.absNorm_mem _)
 
-theorem normV_prime (v : Pl) : (normV v).Prime := by
-  have h1 : 1 < normV v := by
-    rw [normV_eq]
-    exact NumberField.HeightOneSpectrum.one_lt_absNorm v
-  refine Nat.prime_def.2 ⟨h1, fun m hm => ?_⟩
-  obtain ⟨c, hc⟩ := hm
-  have h2 := (mem_iff v _).2 dvd_rfl
-  rw [hc, Nat.cast_mul] at h2
-  rcases v.isPrime.mem_or_mem h2 with h | h
-  · exact Or.inr (Nat.dvd_antisymm ⟨c, hc⟩ ((mem_iff v _).1 h))
-  · have h3 := Nat.dvd_antisymm (Dvd.intro_left m hc.symm) ((mem_iff v _).1 h)
-    rw [h3] at hc
-    exact Or.inl (Nat.eq_of_mul_eq_mul_right (by omega) (hc.symm.trans (one_mul _).symm))
-
 theorem not_mem_l {w : Pl} {n : ℕ} (hn : 1 ≤ n) (hw : l ^ n ∣ normV w - 1) : ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal := by
   intro h
   have h1 := (mem_iff w l).1 h
-  have h2 : normV w = l := (Nat.prime_dvd_prime_iff_eq (normV_prime w) (Fact.out : l.Prime)).1 h1
+  have h2 : normV w = l := (Nat.prime_dvd_prime_iff_eq (_root_.GlobalTheory.Ord2.PrimeChar.normV_prime w) (Fact.out : l.Prime)).1 h1
   rw [h2] at hw
   have hl := (Fact.out : l.Prime).two_le
   have h3 : l ^ n ≤ l - 1 := Nat.le_of_dvd (by omega) hw
@@ -1049,7 +1025,7 @@ theorem eps_frob [IsAlgClosure ℚ Ω] {B : ValuationSubring Ω} {w : Pl} (hl : 
 
 theorem cg_norm {w : Pl} {n : ℕ} (hw : l ^ n ∣ normV w - 1) : Cg n ((normV w : ℕ) : Qbar l) 1 := by
   obtain ⟨k, hk⟩ := hw
-  have h0 : 1 ≤ normV w := (normV_prime w).one_lt.le
+  have h0 : 1 ≤ normV w := (_root_.GlobalTheory.Ord2.PrimeChar.normV_prime w).one_lt.le
   have e : ((normV w : ℕ) : Qbar l) - 1 = ((l : ℕ) : Qbar l) ^ n * (k : Qbar l) := by
     have : normV w = l ^ n * k + 1 := by omega
     rw [this]; push_cast; ring
@@ -1417,9 +1393,7 @@ theorem norm_le_one_of_isIntegral {l : ℕ} [Fact (Nat.Prime l)] (x : PadicAlgCl
     (hx : IsIntegral ℤ_[l] x) : ‖x‖ ≤ (1 : ℝ) := by
   apply GlobalTheory.PadicNormCastBounds.norm_le_one_of_isIntegral <;> assumption
 
-theorem main : ∀ {l : ℕ} [inst : Fact (Nat.Prime l)] (x : PadicAlgCl l),
-    IsIntegral ℤ_[l] x → ‖x‖ ≤ (1 : ℝ) :=
-  fun x hx => norm_le_one_of_isIntegral x hx
+alias main := _root_.GlobalTheory.IntegralAlgebraMapNormBound.norm_le_one_of_isIntegral
 
 end GlobalTheory.IntegralAlgebraMapNormBound
 end -- clump:auto
@@ -1570,12 +1544,8 @@ section HtComm
 
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime]
 
-private theorem htc_norm_le_one_of_isIntegral (x : PadicAlgCl l) (hx : IsIntegral ℤ_[l] x) :
-    ‖x‖ ≤ 1 :=
-  _root_.GlobalTheory.IntegralAlgebraMapNormBound.main x hx
-
 theorem htc_norm_le_one (c : Coef l) (x : Qbar l) (hx : x ∈ c.O) : ‖x‖ ≤ 1 :=
-  htc_norm_le_one_of_isIntegral x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
+  _root_.GlobalTheory.IntegralNormLeOne.norm_le_one_of_isIntegral x ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) (⟨x, hx⟩ : c.O)).map c.O.val)
 
 theorem htc_continuous_cycBar : Continuous (cycBar ℚ Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
@@ -1586,11 +1556,6 @@ theorem htc_dual1_eq_one {W : R2 Ω l} {s : G ℚ Ω} (hs : s ∈ N0g W) : dual1
   rw [MonoidHom.mem_ker] at hc hw
   have hd : dt W s = 1 := by simp [dt, hw]
   simp [dual1, tw, hw, hc, hd]
-
-theorem htc_cocycle {W : R2 Ω l} {x : G ℚ Ω → Fin 2 → Qbar l} (hx : x ∈ Z1 (Loc.colRep W)) (s t : G ℚ Ω) :
-    x (s * t) = x s + mat W s *ᵥ x t := by
-  have := hx.2 s t
-  simpa [Loc.colRep, Matrix.toLin'_apply] using this
 
 theorem htc_open_near (f : G ℚ Ω → Qbar l) (hf : Continuous f) (σ : G ℚ Ω) (r : ℝ) (hr : 0 < r) :
     ∃ U : Subgroup (G ℚ Ω), IsOpen (U : Set (G ℚ Ω)) ∧ ∀ a ∈ U, ‖f (σ * a) - f σ‖ < r := by
@@ -1630,28 +1595,15 @@ theorem htc_NS_le (S : Set Pl) (H : Subgroup (G ℚ Ω)) [H.Normal] (hc : IsClos
   obtain ⟨v, hv, B, hB, hs⟩ := hs
   exact h v hv B hB hs
 
-theorem htc_ht_mem (c : Coef l) (W : R2 Ω l) (y z : G ℚ Ω → Fin 2 → Qbar l) (u : G ℚ Ω → Qbar l)
-    (hO : ∀ s i j, mat W s i j ∈ c.O) (hyO : ∀ s i, y s i ∈ c.O) (hzO : ∀ s i, z s i ∈ c.O) (huO : ∀ s, u s ∈ c.O)
-    (s : G ℚ Ω) : ht W y z u s ∈ c.O :=
-  _root_.GlobalTheory.FinTwoMembership.ht_mem c W y z u hO hyO hzO huO s
-
 theorem congruence_mul_of_unit_factor {n : ℕ} {P h un D : Qbar l} (h1 : Cg n (P * h) 0) (h2 : Cg n P (un * D)) (hun : ‖un‖ = 1)
     (hh : ‖h‖ ≤ 1) : Cg n (D * h) 0 :=
   _root_.UpperTheory.Reformulated.B.Yza4.congruence_mul_of_unit_factor h1 h2 hun hh
 
-theorem htc_cocycle_NS (S : Set Pl) (V : R2 Ω l) (H : Subgroup (G ℚ Ω)) (x : G ℚ Ω → Fin 2 → Qbar l) (hN : H.Normal)
-    (hc : IsClosed (H : Set (G ℚ Ω))) (hV : ∀ a ∈ H, V a = 1) (hx : x ∈ Z1 (Loc.colRep V))
-    (h : ∀ v ∉ S, ∀ B : ValuationSubring Ω, IsPlaceOver B v → ∀ s ∈ Ine (F := ℚ) B, s ∈ H ∧ x s = 0) :
-    ∀ a ∈ NS (F := ℚ) Ω S, x a = 0 :=
-  _root_.GlobalTheory.ZeroSubmodule.main S V H x hN hc hV hx h
+alias htc_cocycle_NS := _root_.GlobalTheory.ZeroSubmodule.main
 
 theorem htc_killsMu_open [IsAlgClosure ℚ Ω] (C : Type) [Group C] (N : ℕ) (ψ : G ℚ Ω →* C) (hN : N ≠ 0)
     (h : KillsMu N ψ) : IsOpen (ψ.ker : Set (G ℚ Ω)) ∧ IsLocallyConstant ψ :=
   _root_.GlobalTheory.OpenKernelLocallyConstant.isOpen_ker_and_isLocallyConstant C N ψ hN h
-
-theorem htc_Ine_fix_mu (N : ℕ) (v : Pl) (B : ValuationSubring Ω) (hB : IsPlaceOver B v) (hN : ((N : ℕ) : 𝓞 ℚ) ∉ v.asIdeal) :
-    ∀ s ∈ Ine (F := ℚ) B, ∀ ζ : Ω, ζ ^ N = 1 → s ζ = ζ :=
-  _root_.GlobalTheory.InertiaRootOfUnity.inertia_fixes_root_of_unity N v B hB hN
 
 theorem htc_places (w : Pl) : normV w ≠ 0 ∧ (∀ v : Pl, v ≠ w → ((normV w : ℕ) : 𝓞 ℚ) ∉ v.asIdeal) ∧
     ∀ (p : ℕ), p.Prime → ∀ v v' : Pl, ((p : ℕ) : 𝓞 ℚ) ∈ v.asIdeal → ((p : ℕ) : 𝓞 ℚ) ∈ v'.asIdeal → v = v' :=
@@ -1714,7 +1666,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
   obtain ⟨hNw, hNwv, hpl⟩ := htc_places w
   obtain ⟨hψo, hψlc⟩ := htc_killsMu_open _ (normV w) ψ hNw hKill
   have hψIne : ∀ v, v ≠ w → ∀ B' : ValuationSubring Ω, IsPlaceOver B' v → Ine (F := ℚ) B' ≤ ψ.ker :=
-    fun v hv B' hB' s hs => hKill s (fun ζ hζ => htc_Ine_fix_mu (normV w) v B' hB' (hNwv v hv) s hs ζ hζ)
+    fun v hv B' hB' s hs => hKill s (fun ζ hζ => _root_.GlobalTheory.InertiaRootOfUnity.inertia_fixes_root_of_unity (normV w) v B' hB' (hNwv v hv) s hs ζ hζ)
 
   haveI hN0n : (N0g W).Normal := by unfold N0g; infer_instance
   have hN0c : IsClosed (N0g W : Set (G ℚ Ω)) := by
@@ -1773,7 +1725,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
       rw [hψ0 s (hDecψ v hv B' hB' s hs), zero_mul, zero_smul, add_zero] at this
       exact this⟩
   have hCocz : ∀ H : Subgroup (G ℚ Ω), Coc1 c n (dual1 W) H z :=
-    fun H => ⟨hzc.continuousOn, hzO, fun s _ t _ => by rw [htc_cocycle hz]; exact hCv _⟩
+    fun H => ⟨hzc.continuousOn, hzO, fun s _ t _ => by rw [_root_.GlobalTheory.Ord2.cocycle_mulVec hz]; exact hCv _⟩
   set ξ : G ℚ Ω → G ℚ Ω → Qbar l := fun s t => cup W d z s t - (((ψ s).toAdd.val : ℕ) : Qbar l) * P * eps l s * u t
     with hξ
   have hξDec : ∀ v ∈ S, ∀ B' : ValuationSubring Ω, IsPlaceOver B' v → Cob2 c n (Dec (F := ℚ) B') (cup W d z) →
@@ -1807,7 +1759,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
     hψlc (hIne1 B hB) hPO hy hz hyO hzO (fun a ha => ⟨hNSy a (hIneB ha), hNSz a (hIneB ha)⟩) huc huO
     (fun s a ha => huS s a (by rw [htc_ker_toGS]; exact hIneB ha)) hcup hdc hdO hdrel hCobw
   have hFτ : Cg n (F τ) 0 := congruence_mul_of_unit_factor hlocw (hPfrob B τ hB hFrob) hun
-    (htc_norm_le_one c _ (htc_ht_mem c W y z u hO hyO hzO huO τ))
+    (htc_norm_le_one c _ (_root_.GlobalTheory.FinTwoMembership.ht_mem c W y z u hO hyO hzO huO τ))
   have hFσ := hU₁ _ (Subgroup.mem_inf.1 hστ).1
   simp only [mul_inv_cancel_left] at hFσ
   show ‖F σ - 0‖ ≤ _

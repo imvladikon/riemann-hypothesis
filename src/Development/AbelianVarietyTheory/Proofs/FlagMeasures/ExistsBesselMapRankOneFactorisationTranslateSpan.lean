@@ -927,17 +927,9 @@ namespace GlobalTheory.SgInf.BesselExt
 
 variable {k r : ℕ}
 
-theorem one_memG : (1 : Mat k r) ∈ GG k r := by
-  show (1 : Mat k r)ᴴ * Hpk k r * 1 = Hpk k r
-  simp
+alias one_memG := _root_.GlobalTheory.SgInfDD.gg_one
 
-theorem mul_memG {x y : Mat k r} (hx : x ∈ GG k r) (hy : y ∈ GG k r) : x * y ∈ GG k r := by
-  show (x * y)ᴴ * Hpk k r * (x * y) = Hpk k r
-  have hx' : xᴴ * Hpk k r * x = Hpk k r := hx
-  have hy' : yᴴ * Hpk k r * y = Hpk k r := hy
-  calc (x * y)ᴴ * Hpk k r * (x * y) = yᴴ * (xᴴ * Hpk k r * x) * y := by
-        rw [Matrix.conjTranspose_mul]; simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [hx', hy']
+alias mul_memG := _root_.GlobalTheory.SgInfDD.gg_mul
 
 section Sm
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace

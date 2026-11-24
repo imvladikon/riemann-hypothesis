@@ -173,13 +173,6 @@ noncomputable section
 
 namespace UpperTheory.Lit.Bur.HWSpanType.Derived
 
-theorem contDiff_setIntegral_nat {X P E : Type} [TopologicalSpace X] [T2Space X] [MeasurableSpace X] [BorelSpace X]
-    [NormedAddCommGroup P] [NormedSpace ℝ P] [FiniteDimensional ℝ P] [NormedAddCommGroup E] [NormedSpace ℝ E]
-    (μ : Measure X) [IsFiniteMeasureOnCompacts μ] {K : Set X} (hK : IsCompact K) {a : X → E} (ha : Continuous a)
-    (m : ℕ) : ∀ {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] (Ψ : P × E → F),
-      ContDiff ℝ ∞ Ψ → ContDiff ℝ m fun p => ∫ x in K, Ψ (p, a x) ∂μ :=
-  _root_.UpperTheory.Reformulated.B.SetIntegralDifferentiability.contDiff_setIntegral_nat μ hK ha m
-
 open Formalism.REAL
 
 section
@@ -285,7 +278,7 @@ theorem smooth_of_continuous {n : ℕ} {ε : Fin n → Bool} {B : Type} [NormedR
   have hK := hemb.isCompact_preimage hC
   have hs : ContDiff ℝ ∞ fun x => ∫ g in (fun g : UJ ε => toM g) ⁻¹'
       (Set.image2 (· * ·) (Metric.closedBall x₀ 1) (tsupport φ)), φ (y x * toM g) • σ (toM g) ∂μ :=
-    contDiff_infty.2 fun m => contDiff_setIntegral_nat μ hK (hu.prodMk hb) m
+    contDiff_infty.2 fun m => _root_.UpperTheory.Reformulated.B.SetIntegralDifferentiability.contDiff_setIntegral_nat μ hK (hu.prodMk hb) m
       (fun z : Matrix (Fin n) (Fin n) ℂ × (Matrix (Fin n) (Fin n) ℂ × B) => φ (y z.1 * z.2.1) • z.2.2)
       ((hφ.comp (contDiff_matMul (hy.comp contDiff_fst) (contDiff_fst.comp contDiff_snd))).smul
         (contDiff_snd.comp contDiff_snd))
@@ -726,7 +719,7 @@ theorem exists_type_of_highest [FiniteDimensional ℂ W] (hπ : IsURepOn (UJset 
     IsHCTypeU k u (compress π (Formalism.REAL.kSpan (allPos k) E x)) := by
   set S := Formalism.REAL.kSpan (allPos k) E x with hSdef
   have hxm : x ∈ S := Formalism.REAL.mem_compactSpan x
-  have hst := stable_of_derived hπ E hE S (Formalism.REAL.isCompactInvariant_compactSpan x)
+  have hst := stable_of_derived hπ E hE S (_root_.Formalism.REAL.compact_span_stable x)
   have hc : ∀ g ∈ UJset (allPos k), ∀ v : S, (compress π S g v : W) = π g v :=
     fun g hg v => coe_compress (hst g hg v v.2)
   have hone : (1 : Matrix (Fin k) (Fin k) ℂ) ∈ UJset (allPos k) := by
@@ -770,11 +763,6 @@ theorem exists_type_of_highest [FiniteDimensional ℂ W] (hπ : IsURepOn (UJset 
   · intro μ v _ hv hw
     exact weight_cdom_of_mem_kSpan k W E _ μ x v hgl hun hΛ v.2 (fun h => hv (Subtype.ext h))
       (isWeight_of_isWtOn E hE μ v ((hwt _ _).1 hw))
-
-section
-attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra
-
-end
 
 end UpperTheory.Lit.Bur.HWSpanType
 end -- clump:auto
@@ -965,7 +953,7 @@ theorem exists_hcType_of_irred : ∀ {k : ℕ} {Wp : Type} [NormedAddCommGroup W
     rw [hlow]; exact hx
   have htype := exists_type_of_highest hρ E hgl hun hE _ x hx0 hΛ
   set S := Formalism.REAL.kSpan (PI.UpqRep.allPos k) E x with hS
-  have hst := Wt.stable_of_derived hρ E hE S (Formalism.REAL.isCompactInvariant_compactSpan x)
+  have hst := Wt.stable_of_derived hρ E hE S (_root_.Formalism.REAL.compact_span_stable x)
   have hxS : x ∈ S := Formalism.REAL.mem_compactSpan x
   have htop : S = ⊤ := (hirr S hst).resolve_left fun h => hx0 (by
     rw [h] at hxS; exact (Submodule.mem_bot ℂ).1 hxS)
@@ -979,8 +967,6 @@ end UpperTheory.Lit.Bur.HWSpanType
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.irreducible_unitary_rep_iso_harishChandraType : ∀ {k : ℕ} {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [Nontrivial Wp] {ρ : Matrix (Fin k) (Fin k) ℂ → (Wp →L[ℂ] Wp)} (hρ : PI.UpqRep.IsURepOn (PI.UpqRep.UJset (PI.UpqRep.allPos k)) ρ) (hirr : ∀ S : Submodule ℂ Wp, (∀ g ∈ PI.UpqRep.UJset (PI.UpqRep.allPos k), ∀ v ∈ S, ρ g v ∈ S) → S = ⊥ ∨ S = ⊤), ∃ (u : Fin k → ℝ) (Wq : Type) (_ : NormedAddCommGroup Wq) (_ : InnerProductSpace ℂ Wq) (ρ' : Matrix (Fin k) (Fin k) ℂ → (Wq →L[ℂ] Wq)) (T : Wp ≃ₗ[ℂ] Wq), PI.UpqRep.IsHCTypeU k u ρ' ∧ ∀ h ∈ PI.UpqRep.UJset (PI.UpqRep.allPos k), ∀ w, T (ρ h w) = ρ' h (T w) := by
-  first | exact @UpperTheory.Lit.Bur.HWSpanType.exists_hcType_of_irred
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

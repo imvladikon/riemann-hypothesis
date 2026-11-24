@@ -403,14 +403,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 attribute [local instance 10000] GlobalTheory.SplitWeil.matrixMeasurableSpace
 open GlobalTheory.TopLevelInv
 
-theorem _root_.GlobalTheory.T.inversePartialFourierSum_comp_fromBlocks : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    {A D₁ D₂ : Type} [Fintype A] [DecidableEq A] [Fintype D₁] [DecidableEq D₁] [Fintype D₂] [DecidableEq D₂]
-    (ψ : AddChar k Circle) (ϖ : kˣ) (e : ℕ), IsUnif ϖ → HasConductor ψ 1 →
-    ∀ Φ : Matrix A (D₁ ⊕ D₂) k → ℂ, HasDepth ϖ e (blockLat ϖ e (Assignment.one.block D₁ D₂)ᶜ) Φ →
-    ∀ M₁ ∈ KO k D₁, ∀ M₂ ∈ KO k D₂, ∀ X : Matrix A (D₁ ⊕ D₂) k,
-      invFourierSum ψ ϖ e (Assignment.one.block D₁ D₂)ᶜ (fun Z => Φ (Z * fromBlocks M₁.val 0 0 (invT M₂).val)) X =
-        invFourierSum ψ ϖ e (Assignment.one.block D₁ D₂)ᶜ Φ (X * fromBlocks M₁.val 0 0 M₂.val) := by
-  first | exact @GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.InversePartialFourierSumCompFromBlocksStatement =====
@@ -789,7 +781,7 @@ theorem squareFlip_blockDiag_cols : ∀ {k : Type} [Field k] [ValuativeRel k] [T
     rw [← latA_blockLat]; exact hd
   unfold squareFlip
   rw [h1, h2, map_smul, Pi.smul_apply, smul_eq_mul,
-    GlobalTheory.T.inversePartialFourierSum_comp_fromBlocks ψ⁻¹ ϖ e hϖ (hasConductor_inv hψ) _ h3 M₁ hM₁ M₂ hM₂ X]
+    _root_.GlobalTheory.BlockSubstFourier.invFourierSum_comp_fromBlocks ψ⁻¹ ϖ e hϖ (hasConductor_inv hψ) _ h3 M₁ hM₁ M₂ hM₂ X]
 
 end GlobalTheory.SquareFlipCols
 end -- clump:auto
@@ -1060,11 +1052,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 attribute [local instance 10000] GlobalTheory.SplitWeil.matrixMeasurableSpace
 open GlobalTheory.TopLevelInv
 
-theorem _root_.GlobalTheory.T.sum_quotientIntegerMatrices_invariant_integralGL_mul_left : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {A B : Type} [Fintype A] [DecidableEq A] [Fintype B] [DecidableEq B]
-    (ϖ : kˣ) (e : ℕ), IsUnif ϖ → ∀ f : Matrix A B k → ℂ, (∀ Z Z' : Matrix A B k, (∀ i j, Z' i j ∈ 𝒪[k]) → f (Z + Z') = f Z) →
-    ∀ M : GL A k, M ∈ KO k A →
-      ∑ S : A → B → Res k e, f (M.val * ((ϖ ^ e)⁻¹ • liftRes S)) = ∑ S : A → B → Res k e, f ((ϖ ^ e)⁻¹ • liftRes S) := by
-  first | exact @GlobalTheory.ResSumInv.sum_res_mul_left
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumQuotientIntegerMatricesInvariantIntegralGLMulStatement =====
@@ -1173,7 +1160,7 @@ theorem squareFlip_one_rows : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
         simpa [setCols, hj] using hZ' i ⟨j, hj⟩
       · intro i j hj
         simp [setCols, hj]
-    have key := GlobalTheory.T.sum_quotientIntegerMatrices_invariant_integralGL_mul_left ϖ e hϖ (fun Z => φ (setCols (Assignment.two.block D₁ D₂) X' Z) * (ψ (pairCols (Assignment.two.block D₁ D₂) X' Z) : ℂ)) hg (invT u⁻¹) hMK
+    have key := _root_.GlobalTheory.ResSumInv.sum_res_mul_left ϖ e hϖ (fun Z => φ (setCols (Assignment.two.block D₁ D₂) X' Z) * (ψ (pairCols (Assignment.two.block D₁ D₂) X' Z) : ℂ)) hg (invT u⁻¹) hMK
     beta_reduce at key
     rw [← key, Finset.mul_sum]
     refine Finset.sum_congr rfl fun S _ => ?_
@@ -1232,10 +1219,6 @@ theorem exists_split {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesT
 
 theorem not_touch {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
     ∀ b ∈ γ, b.src ≠ (i + 1, j + 1) ∧ b.tgt ≠ (i + 1, j + 1) := _root_.GlobalTheory.SplitFlip.pathAvoid hγ h
-
-theorem innerVertices_flipPath {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
-    ∀ X ∈ innerVertices (flipPath i j γ), X ≠ (i, j) ∧ (X ≠ (i + 1, j + 1) → X ∈ innerVertices γ) :=
-  _root_.GlobalTheory.SplitFlip.mem_innerVertices_flipPath hγ h
 
 end GlobalTheory.FlipAdm
 
@@ -1398,10 +1381,10 @@ theorem isAdmissible_flip : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologic
   obtain ⟨γ, J, T⟩ := St
   obtain ⟨hpath, -, htens, hinv⟩ := hadm
   simp only at hν hpt hlev hpath htens hinv
-  obtain ⟨l₁, l₂, hγ, hfl⟩ := exists_split hpath hpt
+  obtain ⟨l₁, l₂, hγ, hfl⟩ := _root_.GlobalTheory.SplitFlip.flipPath_split hpath hpt
   have h1 : Edge.theta i j ∈ γ := hpt.subset (by simp)
   have h2 : Edge.ex i j ∈ γ := hpt.subset (by simp)
-  refine ⟨isPath_flipPath hpath hpt, fun X _ => ?_, isTensor_flipTensor hϖ hψ he hν (hlev (i, j)).1 (hlev (i, j)).2 h1 h2 htens,
+  refine ⟨_root_.GlobalTheory.SplitFlip.isPath_flipPath hpath hpt, fun X _ => ?_, isTensor_flipTensor hϖ hψ he hν (hlev (i, j)).1 (hlev (i, j)).2 h1 h2 htens,
     fun X hX u hu => ?_⟩
   · by_cases hXW : X = (i + 1, j + 1)
     · subst hXW
@@ -1410,7 +1393,7 @@ theorem isAdmissible_flip : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologic
     · simp only [Grid.PiLocalization₂.flip, Grid.flipLevel, Function.update_of_ne hXW]
       exact hlev X
   · simp only [Grid.PiLocalization₂.flip] at hX hu ⊢
-    obtain ⟨hX1, hX2⟩ := innerVertices_flipPath hpath hpt X hX
+    obtain ⟨hX1, hX2⟩ := _root_.GlobalTheory.SplitFlip.mem_innerVertices_flipPath hpath hpt X hX
     have huK : u ∈ KO k _ := by
       by_cases hXW : X = (i + 1, j + 1)
       · subst hXW; simpa [Grid.flipLevel] using hu
@@ -1426,7 +1409,7 @@ theorem isAdmissible_flip : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologic
     congr 1
     by_cases hXW : X = (i + 1, j + 1)
     · subst hXW
-      exact pathAct_mulSingle_of_not_touch htens _ (not_touch hpath hpt) u
+      exact pathAct_mulSingle_of_not_touch htens _ (_root_.GlobalTheory.SplitFlip.pathAvoid hpath hpt) u
     · rw [Grid.flipLevel, Function.update_of_ne hXW] at hu
       exact hinv X (hX2 hXW) u hu
 

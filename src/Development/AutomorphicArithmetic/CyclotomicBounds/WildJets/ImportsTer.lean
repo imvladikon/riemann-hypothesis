@@ -71,11 +71,6 @@ open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 
 
-theorem _root_.GlobalTheory.T.exists_rational_split_stabilizer_decomposition : ∀ {D : D7} (V : HSp D) (B : GL (Fin V.rank) D.host.E) (N : ℕ), 0 < N → ∀ g : GfC V,
-    ∃ r s k : GfC V, GlobalTheory.MovedKappaEx.RatFin V r ∧ GlobalTheory.UnRep.SuppSplit (GlobalTheory.Member.cF D) N (finHom V s.1).1 ∧
-      (∀ v, v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (colLat B) ↔
-        Matrix.mulVec (Formalism.IndefR.Lev.finE V k.1).1 v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (colLat B)) ∧ g = r * s * k := by
-  first | exact @GlobalTheory.RatSplitLat.exists_rat_split_lat
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalSplitStabilizerDecompositionStatement =====
@@ -195,7 +190,7 @@ theorem UpperTheory.WildA.toStd :
       rwa [smul_smul, ← Nat.cast_mul] at this
     · have := h2 _ (h2' x hx)
       rwa [smul_smul, ← Nat.cast_mul, mul_comm] at this
-  obtain ⟨r, s, k, hr, hs, hk, e⟩ := GlobalTheory.T.exists_rational_split_stabilizer_decomposition (G.V X) (S.N.fr X) (∏ q ∈ ({l} : Finset ℕ), q)
+  obtain ⟨r, s, k, hr, hs, hk, e⟩ := _root_.GlobalTheory.RatSplitLat.exists_rat_split_lat (G.V X) (S.N.fr X) (∏ q ∈ ({l} : Finset ℕ), q)
     (by simpa using hl.pos) (x * S.N.u X)
   have hs' := GlobalTheory.T.mem_splitPlaceFinitePointsOffPrimes_of_supported _ {l} s hs
   have hB := GlobalTheory.T.latticeOf_stabiliser_mul_inv_eq_standardLattice S X hX k hk

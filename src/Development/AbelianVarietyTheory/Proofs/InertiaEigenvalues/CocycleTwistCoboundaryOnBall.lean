@@ -614,11 +614,6 @@ theorem eq_zero_of_small {r : ℕ} (X : AddSubgroup C) (hX1 : ∀ x ∈ X, ‖x�
     rw [e]; exact (h1 n z hz).2.1
   exact norm_le_zero_iff.1 (ge_of_tendsto' (tendsto_pow_atTop_nhds_zero_of_lt_one hc hc1) h3)
 
-theorem norm_zpow_sub_one_le (u : C) (hu : ‖u - 1‖ < 1) (i : ℤ) : ‖u ^ i - 1‖ ≤ ‖u - 1‖ := by
-  first
-  | (apply _root_.GlobalTheory.UnitNormPowerSubOne.norm_zpow_sub_one_le <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UnitNormPowerSubOne.norm_zpow_sub_one_le ..)
-
 end Abstract
 
 variable {l : ℕ} [hl : Fact l.Prime]
@@ -672,7 +667,7 @@ theorem chiC_mem_inC (χ : GQ l →* ℚ_[l]ˣ) (i : ℤ) (g : GQ l)
 theorem norm_chiC_sub_one {χ : GQ l →* ℚ_[l]ˣ} {K : FinExt l} {j : ℕ} (hj : Lev l j) {g : GQ l}
     (hg : IsGen χ K j g) (i : ℤ) : ‖chiC χ i g - 1‖ < rho1 l := by
   have h1 : ‖(χ g : ℚ_[l]) - 1‖ < rho1 l := hg.2 ▸ pow_lt_rho hj
-  have h2 := norm_zpow_sub_one_le _ (h1.trans rho_lt_one) i
+  have h2 := _root_.GlobalTheory.UnitNormPowerSubOne.norm_zpow_sub_one_le _ (h1.trans rho_lt_one) i
   have e : chiC χ i g - 1 = algebraMap ℚ_[l] (PadicComplex l) ((χ g : ℚ_[l]) ^ i - 1) := by
     simp [chiC]
   rw [e, norm_algebraMap']
@@ -780,18 +775,11 @@ theorem aeval_eq_zero_of_eigenbasis {C : Type} [Field C] {r : ℕ} (A : Matrix (
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem hinf_le_gj (K : FinExt l) (s : ℕ) : Hinf K ≤ Gj K s :=
-  IntermediateField.fixingSubgroup_antitone
-    (sup_le_sup_left (IntermediateField.adjoin.mono ℚ_[l] {x : Om l | x ^ (l ^ s) = 1}
-      {x : Om l | ∃ j : ℕ, x ^ (l ^ j) = 1} fun (x : Om l) (hx : x ^ (l ^ s) = 1) =>
-      (⟨s, hx⟩ : ∃ j : ℕ, x ^ (l ^ j) = 1)) _ : Ks K s ≤ Kinf K)
+alias hinf_le_gj := _root_.GlobalTheory.Cyc.AlmostTrace.Hinf_le_Gj
 
-theorem gj_le (K : FinExt l) (s : ℕ) : Gj K s ≤ (K0 K).fixingSubgroup :=
-  IntermediateField.fixingSubgroup_antitone (show K0 K ≤ Ks K s from le_sup_left)
+alias gj_le := _root_.GlobalTheory.Cyc.cyclotomicTowerLevelGaloisSubgroup_le_fixingSubgroup_base
 
-theorem norm_l_lt : ‖(l : PadicComplex l)‖ < 1 := by
-  rw [← map_natCast (algebraMap ℚ_[l] (PadicComplex l)), norm_algebraMap']
-  exact Padic.norm_p_lt_one
+alias norm_l_lt := _root_.GlobalTheory.TateDecomp.norm_l_lt
 
 theorem norm_chiC {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (j : ℤ) (g : GQ l) : ‖chiC χ j g‖ = 1 := by
   rw [chiC, norm_algebraMap', Units.val_zpow_eq_zpow_val, norm_zpow,
@@ -1014,11 +1002,6 @@ theorem surj_of_small [CompleteSpace C] {r : ℕ} (X : AddSubgroup C) (hX : IsCl
 
 variable [IsUltrametricDist C]
 
-theorem norm_zpow_sub_one_le (u : C) (hu : ‖u - 1‖ < 1) (i : ℤ) : ‖u ^ i - 1‖ ≤ ‖u - 1‖ := by
-  first
-  | (apply _root_.GlobalTheory.CloseToUnitNorm.norm_zpow_sub_one_le <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CloseToUnitNorm.norm_zpow_sub_one_le ..)
-
 end Abstract
 
 variable {l : ℕ} [hl : Fact l.Prime]
@@ -1051,7 +1034,7 @@ theorem chiC_mem_inC (χ : GQ l →* ℚ_[l]ˣ) (i : ℤ) (g : GQ l)
 theorem norm_chiC_sub_one {χ : GQ l →* ℚ_[l]ˣ} {K : FinExt l} {j : ℕ} (hj : Lev l j) {g : GQ l}
     (hg : IsGen χ K j g) (i : ℤ) : ‖chiC χ i g - 1‖ < rho1 l := by
   have h1 : ‖(χ g : ℚ_[l]) - 1‖ < rho1 l := hg.2 ▸ pow_lt_rho hj
-  have h2 := norm_zpow_sub_one_le _ (h1.trans rho_lt_one) i
+  have h2 := _root_.GlobalTheory.CloseToUnitNorm.norm_zpow_sub_one_le _ (h1.trans rho_lt_one) i
   have e : chiC χ i g - 1 = algebraMap ℚ_[l] (PadicComplex l) ((χ g : ℚ_[l]) ^ i - 1) := by
     simp [chiC]
   rw [e, norm_algebraMap']
@@ -1258,37 +1241,17 @@ noncomputable def intR (F : IntermediateField ℚ_[l] (Om l)) : Subring (PadicCo
   zero_mem' := ⟨(mem_fld F _).1 (zero_mem _), by simp⟩
   neg_mem' := fun {a} ha => ⟨(mem_fld F _).1 (neg_mem ((mem_fld F _).2 ha.1)), by simpa using ha.2⟩
 
-theorem Ks_le_Kinf (K : FinExt l) (j : ℕ) : Ks K j ≤ Kinf K :=
-  sup_le_sup_left (IntermediateField.adjoin.mono ℚ_[l] _ _ fun (x : Om l) hx =>
-    (show ∃ j : ℕ, x ^ (l ^ j) = 1 from ⟨j, hx⟩)) _
-
 theorem add_mem_Ohat (K : FinExt l) (j : ℕ) {y x : PadicComplex l} (hy : y ∈ intC (Ks K j))
     (hx : x ∈ Ohat K) : y + x ∈ Ohat K := by
   have hy' : y ∈ (intR (Kinf K)).topologicalClosure :=
     (intR (Kinf K)).le_topologicalClosure
-      (show y ∈ intC (Kinf K) from ⟨Set.image_mono (Ks_le_Kinf K j) hy.1, hy.2⟩)
+      (show y ∈ intC (Kinf K) from ⟨Set.image_mono (_root_.GlobalTheory.Cyc.AlmostTrace.Ks_le_Kinf K j) hy.1, hy.2⟩)
   have hx' : x ∈ (intR (Kinf K)).topologicalClosure := hx
   exact add_mem hy' hx'
-
-theorem root_mem_inC (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
-    (h : IsPrimitiveRoot ζ l) : ζ ∈ inC (Ks K j) := by
-  haveI : NeZero l := ⟨hl.1.ne_zero⟩
-  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
-  have hη' := hη.map_of_injective (algebraMap (Om l) (PadicComplex l)).injective
-  obtain ⟨k, -, hk⟩ := hη'.eq_pow_of_pow_eq_one h.pow_eq_one
-  refine ⟨η ^ k, ?_, ?_⟩
-  · refine pow_mem (?_ : η ∈ Ks K j) k
-    refine (le_sup_right : _ ≤ Ks K j) (IntermediateField.subset_adjoin _ _ ?_)
-    exact (hη.pow_eq_one_iff_dvd _).2 (dvd_pow_self l (by omega))
-  · simp only [PadicComplex.coe_eq, map_pow]
-    exact hk
 
 theorem algebraMap_mem (F : IntermediateField ℚ_[l] (Om l)) (t : ℚ_[l]) (ht : ‖t‖ ≤ 1) :
     algebraMap ℚ_[l] (PadicComplex l) t ∈ intR F :=
   ⟨⟨algebraMap ℚ_[l] (Om l) _, F.algebraMap_mem _, rfl⟩, by rwa [norm_algebraMap']⟩
-
-theorem norm_l : ‖(l : PadicComplex l)‖ = (l : ℝ)⁻¹ := by
-  rw [← map_natCast (algebraMap ℚ_[l] (PadicComplex l)), norm_algebraMap', Padic.norm_p]
 
 theorem quot_mem (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
     (h : IsPrimitiveRoot ζ l) {N : ℕ} (hN : 1 ≤ N) :
@@ -1298,8 +1261,8 @@ theorem quot_mem (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {ζ : PadicComplex l}
   have hz := GlobalTheory.Cyc.norm_primitiveRoot_sub_one l 1 le_rfl ζ (by rwa [pow_one])
   have hz0 : ζ - 1 ≠ 0 := sub_ne_zero.2 (h.ne_one hl.1.one_lt)
   refine ⟨(mem_fld _ _).1 (div_mem (pow_mem (natCast_mem _ _) _)
-    (sub_mem ((mem_fld _ _).2 (root_mem_inC K hj h)) (one_mem _))), ?_⟩
-  rw [norm_div, div_le_one (norm_pos_iff.2 hz0), norm_pow, norm_l, hz]
+    (sub_mem ((mem_fld _ _).2 (_root_.GlobalTheory.CycEigen.root_mem_inC K hj h)) (one_mem _))), ?_⟩
+  rw [norm_div, div_le_one (norm_pos_iff.2 hz0), norm_pow, _root_.GlobalTheory.Cyc.TateS.norm_l, hz]
   calc ((l : ℝ)⁻¹) ^ N ≤ ((l : ℝ)⁻¹) ^ 1 :=
         pow_le_pow_of_le_one (by positivity) (inv_le_one_of_one_le₀ h1.le) hN
     _ = (l : ℝ) ^ (-1 : ℝ) := by rw [pow_one, Real.rpow_neg_one]
@@ -1334,13 +1297,7 @@ theorem norm_prod_chi {χ : GQ l →* ℚ_[l]ˣ} {K : FinExt l} {j : ℕ} (hj : 
     GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l j hj _ hg.2 _ hne, inv_pow, ← zpow_natCast, ← zpow_neg]
   push_cast; rfl
 
-theorem act_fix {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (hact : IsActC act)
-    {F : IntermediateField ℚ_[l] (Om l)} {g : GQ l} (hg : g ∈ F.fixingSubgroup)
-    {y : PadicComplex l} (hy : y ∈ inC F) : act g y = y := by
-  obtain ⟨x, hx, rfl⟩ := hy
-  have := (IntermediateField.mem_fixingSubgroup_iff F g).1 hg x hx
-  simp only []
-  rw [hact.1, this]
+alias act_fix := _root_.GlobalTheory.CycEigen.act_inC
 
 theorem twAct_add (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (χ : GQ l →* ℚ_[l]ˣ) (i : ℤ)
     {r : ℕ} (U : GQ l → Matrix (Fin r) (Fin r) (PadicComplex l)) (g : GQ l)
@@ -1458,37 +1415,9 @@ section Basic
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem ks_le_kinf (K : FinExt l) (s : ℕ) : Ks K s ≤ Kinf K := by
-  unfold Ks Kinf
-  refine sup_le_sup_left ?_ _
-  exact IntermediateField.adjoin.mono _ _ _ (fun x hx => ⟨s, hx⟩)
+alias hinf_le_gj := _root_.GlobalTheory.Cyc.AlmostTrace.Hinf_le_Gj
 
-theorem hinf_le_gj (K : FinExt l) (s : ℕ) : Hinf K ≤ Gj K s := by
-  intro g hg
-  rw [Hinf, IntermediateField.mem_fixingSubgroup_iff] at hg
-  rw [Gj, IntermediateField.mem_fixingSubgroup_iff]
-  intro x hx
-  exact hg x (ks_le_kinf K s hx)
-
-theorem gj_le (K : FinExt l) (s : ℕ) : Gj K s ≤ (K0 K).fixingSubgroup := by
-  intro g hg
-  rw [Gj, IntermediateField.mem_fixingSubgroup_iff] at hg
-  rw [IntermediateField.mem_fixingSubgroup_iff]
-  intro x hx
-  apply hg x
-  unfold Ks
-  exact (le_sup_left : K0 K ≤ _) hx
-
-theorem act_inC {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsActC act)
-    {F : IntermediateField ℚ_[l] (Om l)} {g : GQ l} (hg : g ∈ F.fixingSubgroup)
-    {y : PadicComplex l} (hy : y ∈ inC F) : act g y = y := by
-  obtain ⟨x, hxF, rfl⟩ := hy
-  rw [ha.1 g x]
-  congr 1
-  exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg x hxF
-
-theorem algebraMap_eq (q : ℚ_[l]) :
-    algebraMap ℚ_[l] (PadicComplex l) q = ((algebraMap ℚ_[l] (Om l) q : Om l) : PadicComplex l) := IsScalarTower.algebraMap_apply ℚ_[l] (Om l) (PadicComplex l) q
+alias algebraMap_eq := _root_.GlobalTheory.Cyc.Procyclic.algebraMap_eq_coe
 
 theorem act_algebraMap {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsActC act)
     (g : GQ l) (q : ℚ_[l]) :
@@ -1507,40 +1436,17 @@ theorem chiC_mul (χ : GQ l →* ℚ_[l]ˣ) (j : ℤ) (g h : GQ l) :
     chiC χ j (g * h) = chiC χ j g * chiC χ j h := by
   simp only [chiC, map_mul, mul_zpow, Units.val_mul]
 
-theorem norm_l_lt : ‖(l : PadicComplex l)‖ < 1 := by
-  have h1 : (l : PadicComplex l) = algebraMap ℚ_[l] (PadicComplex l) (l : ℚ_[l]) := (map_natCast _ l).symm
-  rw [h1, norm_algebraMap]
-  exact Padic.norm_p_lt_one
-
-theorem ohat_norm (K : FinExt l) {y : PadicComplex l} (hy : y ∈ Ohat K) : ‖y‖ ≤ 1 := by
-  have hcl : IsClosed {y : PadicComplex l | ‖y‖ ≤ 1} := isClosed_le continuous_norm continuous_const
-  exact closure_minimal (by exact fun z hz => hz.2) hcl hy
-
-theorem norm_chiC {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (j : ℤ) (g : GQ l) : ‖chiC χ j g‖ = 1 := by
-  rw [chiC, norm_algebraMap, Units.val_zpow_eq_zpow_val, norm_zpow, IsCyc.norm_eq_one hχ g, one_zpow]
-
-theorem continuous_chiC {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (j : ℤ) : Continuous (chiC χ j) := by
-  have h0 : Continuous (fun g : GQ l => ((χ g : ℚ_[l])) ^ j) :=
-    (IsCyc.continuous hχ).zpow₀ j (fun g => Or.inl (χ g).ne_zero)
-  have h1 : chiC χ j = fun g => algebraMap ℚ_[l] (PadicComplex l) ((χ g : ℚ_[l]) ^ j) := by
-    funext g
-    rw [chiC, Units.val_zpow_eq_zpow_val]
-  rw [h1]
-  exact continuous_algMap.comp h0
+alias norm_l_lt := _root_.GlobalTheory.TateDecomp.norm_l_lt
 
 theorem chi_hinf {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (K : FinExt l) {h : GQ l} (hh : h ∈ Hinf K) :
     χ h = 1 := by
-  have hK0 : h ∈ (K0 K).fixingSubgroup := gj_le K 0 (hinf_le_gj K 0 hh)
+  have hK0 : h ∈ (K0 K).fixingSubgroup := _root_.GlobalTheory.Cyc.cyclotomicTowerLevelGaloisSubgroup_le_fixingSubgroup_base K 0 (hinf_le_gj K 0 hh)
   exact ((cyc_basic l χ hχ).2.2 K h hK0).2.1 hh
-
-theorem chiC_hinf {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (K : FinExt l) (j : ℤ) {h : GQ l}
-    (hh : h ∈ Hinf K) : chiC χ j h = 1 := by
-  rw [chiC, chi_hinf hχ K hh, one_zpow, Units.val_one, map_one]
 
 theorem conj_hinf {χ : GQ l →* ℚ_[l]ˣ} (hχ : IsCyc χ) (K : FinExt l) (s : ℕ) {g h : GQ l}
     (hg : g ∈ Gj K s) (hh : h ∈ Hinf K) : g⁻¹ * h * g ∈ Hinf K := by
-  have hg0 : g ∈ (K0 K).fixingSubgroup := gj_le K s hg
-  have hh0 : h ∈ (K0 K).fixingSubgroup := gj_le K 0 (hinf_le_gj K 0 hh)
+  have hg0 : g ∈ (K0 K).fixingSubgroup := _root_.GlobalTheory.Cyc.cyclotomicTowerLevelGaloisSubgroup_le_fixingSubgroup_base K s hg
+  have hh0 : h ∈ (K0 K).fixingSubgroup := _root_.GlobalTheory.Cyc.cyclotomicTowerLevelGaloisSubgroup_le_fixingSubgroup_base K 0 (hinf_le_gj K 0 hh)
   have hx0 : g⁻¹ * h * g ∈ (K0 K).fixingSubgroup :=
     Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ hg0) hh0) hg0
   rw [((cyc_basic l χ hχ).2.2 K _ hx0).2]
@@ -1624,19 +1530,19 @@ theorem tw_ball (ha : IsActC act) (hχ : IsCyc χ) (hU : Frame χ K m U g) {σ :
       exact mul_le_one₀ (hU1 b) (norm_nonneg _) (hx b)
   have e : twAct act χ i U σ x a = chiC χ i σ * ∑ b, U σ a b * act σ (x b) := by
     simp only [twAct, Pi.smul_apply, smul_eq_mul, Matrix.mulVec, dotProduct]
-  rw [e, norm_mul, norm_chiC hχ, one_mul]
+  rw [e, norm_mul, _root_.GlobalTheory.CycEigen.norm_chiC hχ, one_mul]
   exact hs
 
 theorem tw_hinf (hχ : IsCyc χ) (hU : Frame χ K m U g) {h : GQ l} (hh : h ∈ Hinf K)
     (x : Fin r → PadicComplex l) : twAct act χ i U h x = fun a => act h (x a) := by
   have hU1 : U h = 1 := hU.2.2.2.2.1 h hh
-  rw [twAct, hU1, Matrix.one_mulVec, chiC_hinf hχ K i hh, one_smul]
+  rw [twAct, hU1, Matrix.one_mulVec, _root_.GlobalTheory.CycEigen.chiC_hinf hχ K i hh, one_smul]
 
 theorem tw_mul (ha : IsActC act) (hU : Frame χ K m U g) {σ τ : GQ l} (hσ : σ ∈ Gj K m)
     (hτ : τ ∈ Gj K m) (x : Fin r → PadicComplex l) :
     twAct act χ i U (σ * τ) x = twAct act χ i U σ (twAct act χ i U τ x) := by
   have hσF : σ ∈ (Ks K m).fixingSubgroup := hσ
-  have hfix : ∀ a b, act σ (U τ a b) = U τ a b := fun a b => act_inC ha hσF (hU.2.2.1 τ hτ a b).1
+  have hfix : ∀ a b, act σ (U τ a b) = U τ a b := fun a b => _root_.GlobalTheory.CycEigen.act_inC ha hσF (hU.2.2.1 τ hτ a b).1
   have hc : act σ (chiC χ i τ) = chiC χ i τ := act_algebraMap ha σ _
   have hv : (fun a => act σ (twAct act χ i U τ x a))
       = chiC χ i τ • (U τ).mulVec (fun b => act σ (act τ (x b))) := by
@@ -1660,7 +1566,7 @@ theorem tw_cont (ha : IsActC act) (hχ : IsCyc χ) (hU : Frame χ K m U g)
   have h2 : ContinuousOn (fun σ => ∑ b, U σ a b * act σ (x b)) (Gj K m) :=
     continuousOn_finsetSum _ (fun b _ => h1 b)
   have h3 : ContinuousOn (fun σ => chiC χ i σ * ∑ b, U σ a b * act σ (x b)) (Gj K m) :=
-    (continuous_chiC hχ i).continuousOn.mul h2
+    (_root_.GlobalTheory.Cyc.Procyclic.continuous_chiC hχ i).continuousOn.mul h2
   refine h3.congr ?_
   intro σ _
   simp only [twAct, Pi.smul_apply, smul_eq_mul, Matrix.mulVec, dotProduct]
@@ -1748,7 +1654,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
   obtain ⟨y, hyO, hye⟩ := _root_.GlobalTheory.CycCoinv.torsion_coinvariants l act χ ha hχ K m r hm U g hU J hJ i (c1 g) x2 k hw hx2O
     (hcob1 g hgG).symm
   rw [← hN] at hye
-  have hyb : y ∈ ball l r := fun a => ohat_norm K (hyO a)
+  have hyb : y ∈ ball l r := fun a => _root_.GlobalTheory.CycEigen.ohat_norm K (hyO a)
   have hyfix : ∀ h ∈ Hinf K, twAct act χ i U h y = y := by
     intro h hh
     rw [tw_hinf hχ hU hh]

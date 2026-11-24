@@ -378,10 +378,6 @@ theorem appLE_top_top {X Y : Scheme.{0}} (f : X ⟶ Y) (e : (⊤ : X.Opens) ≤ 
   rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]
   rfl
 
-theorem appLE_congr {X Y : Scheme.{0}} {f g : X ⟶ Y} (hfg : f = g) (U : Y.Opens) (V : X.Opens)
-    (e₁ : V ≤ f ⁻¹ᵁ U) (e₂ : V ≤ g ⁻¹ᵁ U) : f.appLE U V e₁ = g.appLE U V e₂ := by
-  subst hfg; rfl
-
 end GlobalTheory.ConstDescent
 
 namespace GlobalTheory.ConstDescent
@@ -433,7 +429,7 @@ theorem mem_range_of_pullback_eq {K L : Type} [Field K] [Field L] (ψ : K →+* 
       e.appLE U ⊤ heU ≫ (Scheme.ΓSpecIso B).hom ≫
         CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom ≫ (Scheme.ΓSpecIso Z).inv := by
     refine (Scheme.Hom.comp_appLE k _ U ⊤ hk).symm.trans ?_
-    refine (appLE_congr hk1 U ⊤ _ heU').trans ?_
+    refine (_root_.GlobalTheory.SS.FrobField.appLE_congr_hom hk1 U ⊤ _ heU').trans ?_
     refine (Scheme.Hom.appLE_comp_appLE a e U ⊤ ⊤ heU (fun _ _ => trivial)).symm.trans ?_
     congr 1
     refine (appLE_top_top a _).trans ?_
@@ -484,8 +480,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.mem_range_of_base_change_ratio_sections : ∀ {K L : Type} [Field K] [Field L] (ψ : K →+* L) {X : Scheme.{0}} (h : X ⟶ Sp K) (U : X.Opens) (f₁ f₂ : Γ(X, U)) (l : L), f₂ ≠ 0 → ((pullback.fst h (spMap ψ)).app U).hom f₁ = ((pullback.fst h (spMap ψ)).app U).hom f₂ * resTop _ (scal (pullback.snd h (spMap ψ)) l) → l ∈ Set.range ψ := by
-  first | exact @GlobalTheory.ConstDescent.mem_range_of_pullback_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemRangeOfBaseChangeRatioSectionsStatement =====
@@ -543,8 +537,7 @@ theorem gs_top' (f : Z ⟶ Y) (z : Z) (a : Γ(Y, ⊤)) : gs f z ⊤ a = gs (𝟙
   rw [Category.id_comp] at this
   exact this.symm
 
-theorem gs_zero'' (f : Z ⟶ Y) (z : Z) (U : Y.Opens) : gs f z U 0 = 0 := by
-  unfold gs; split_ifs <;> simp
+alias gs_zero'' := _root_.GlobalTheory.UU.SchurComp.gs_zero
 
 abbrev sg (g : Z ⟶ Sp A) (z : Z) (a : A) : Z.presheaf.stalk z := gs (𝟙 Z) z ⊤ (scal g a)
 
@@ -622,7 +615,7 @@ theorem secK_ratio_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
         rw [G0 j₀ y hy]
         change _ = sg g y c' * (_ * sg g y (d' / c'))
         rw [mul_comm _ (sg g y (d' / c')), ← _root_.mul_assoc, ← sg_mul, hcd]
-      obtain ⟨m₀, hm₀⟩ := GlobalTheory.T.mem_range_of_base_change_ratio_sections ψ C.A.A.hom (Uc j₀) (s₁.f j₀) (s₂.f j₀) (d' / c') hj₀ e
+      obtain ⟨m₀, hm₀⟩ := _root_.GlobalTheory.ConstDescent.mem_range_of_pullback_eq ψ C.A.A.hom (Uc j₀) (s₁.f j₀) (s₂.f j₀) (d' / c') hj₀ e
       refine ⟨m₀, fun h => ?_, fun j y hy => ?_⟩
       · rw [h, map_zero] at hm₀
         exact div_ne_zero hd0 hc0 hm₀.symm
@@ -826,14 +819,6 @@ noncomputable section
 
 namespace GlobalTheory.Mum.ZeroFam
 
-theorem gs_zero' {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
-  unfold gs; split_ifs <;> simp
-
-theorem sval_eq_zero {X Y Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
-    (s : LB.Sec (LB.LinComb L φ ε)) (hs : ∀ j, s.f j = 0) (r : Z ⟶ Y) (z : Z) (J : (Z ⟶ X) → L.ι) :
-    sval s r z J = 0 := by
-  unfold sval; exact (congrArg (gs r z _) (hs _)).trans (gs_zero' _ _ _)
-
 theorem secB_zero_of_pullB {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] {φ : R →+* R'}
     {D : DegPre R} {D' : DegPre R'} (hD : IsPullDeg φ D D') {k : ℕ} (x : D'.X) (b : D.SecB k (hD.xe x))
     (b' : D'.SecB k x) (hb : ∀ j, b.f j = 0) (h : PullB hD x b b') : ∀ q, b'.f q = 0 := by
@@ -843,8 +828,8 @@ theorem secB_zero_of_pullB {R R' : Type} [CommRing R] [IsDomain R] [CommRing R']
     ((hD.e.hom.left ≫ pullback.fst D.P.A.hom (specOf φ)) ((D'.famφB x) κ y))
   have e := h _ (𝟙 _) y p q (fun κ => hp κ) (fun κ => Set.mem_iInter.1 hy κ)
   rw [show b.f p = 0 from hb _] at e
-  have e2 := e.symm.trans (gs_zero' _ _ _)
-  exact ((Units.mul_right_eq_zero _).1 e2).trans (gs_zero' _ _ _).symm
+  have e2 := e.symm.trans (_root_.GlobalTheory.UU.SchurComp.gs_zero _ _ _)
+  exact ((Units.mul_right_eq_zero _).1 e2).trans (_root_.GlobalTheory.UU.SchurComp.gs_zero _ _ _).symm
 
 end GlobalTheory.Mum.ZeroFam
 
@@ -872,7 +857,7 @@ theorem section_eq_zero_of_expansion_zero_family {W : Type} [CommRing W] [IsDoma
       (DegPre.prB D.toPre (FractionRing W)).left (scal (DegPre.BF D.toPre (FractionRing W)).hom 1) := fun α => by
     rw [h1']
     exact SectionScalarValuation.secScal_of_sval D.toPre.P.isLB fun y J _ =>
-      (sval_eq_zero _ (hf α) _ y J).trans (sval_eq_zero _ (fun _ => rfl) _ y J).symm
+      (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (hf α) _ y J).trans (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (fun _ => rfl) _ y J).symm
   have hE₀ : ∀ e, U.ExpandsAt e k (SecOps.secZero : H0 U.LG.L k) f := fun e => by
     refine ⟨∅, fun α _ j => by rw [show (f α).f j = 0 from hf α j, map_zero], fun p j₁ jf jt _ _ => ?_⟩
     simp only [Finset.attach_empty, Finset.sum_empty]
@@ -883,11 +868,11 @@ theorem section_eq_zero_of_expansion_zero_family {W : Type} [CommRing W] [IsDoma
   have hEz : U.Expands k SecOps.secZero 0 := ⟨1, one_ne_zero, SecOps.secZero, f, by
     rw [h1]
     exact SectionScalarValuation.secScal_of_sval U.LG.isLB fun y J _ =>
-      (sval_eq_zero _ (fun _ => rfl) _ y J).trans (sval_eq_zero _ (fun _ => rfl) _ y J).symm, hF, hE₀⟩
+      (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (fun _ => rfl) _ y J).trans (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (fun _ => rfl) _ y J).symm, hF, hE₀⟩
   have e₀ : s₀ = SecOps.secZero := ((U.expand k hk).2 0).unique hEs₀ hEz
   have hm := secIsMul_of_generic G U.LG.isLB k SecOps.secZero σ SecOps.secZero 1
     (SectionScalarValuation.secScal_of_sval U.LG.isLB fun y J _ =>
-      (sval_eq_zero _ (fun _ => rfl) _ y J).trans (sval_eq_zero _ (fun _ => rfl) _ y J).symm)
+      (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (fun _ => rfl) _ y J).trans (_root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ (fun _ => rfl) _ y J).symm)
     (by
       rw [h1]
       exact SectionScalarValuation.secScal_of_sval U.LG.isLB fun y J hJ => by rw [Category.id_comp, ← hs₀ y J hJ, e₀])
@@ -905,7 +890,7 @@ theorem exp_of_members_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   have hf' : ∀ x q, (f' x).f q = 0 := fun x => secB_zero_of_pullB T.hD x _ (f' x) (hF _) (hP x)
   have hσ' := section_eq_zero_of_expansion_zero_family T.U hk σ' f' hf' hE
   refine ⟨σ, ⟨σ', f', fun Z r z J J' hJ hJ' => ?_, hP, hE⟩, hs⟩
-  rw [hC Z r z J J' hJ hJ', sval_eq_zero _ hσ', mul_zero, mul_zero]
+  rw [hC Z r z J J' hJ hJ', _root_.GlobalTheory.ThetaIntegral.sval_eq_zero _ hσ', mul_zero, mul_zero]
 
 end GlobalTheory.Mum.ZeroFam
 end -- clump:auto
@@ -1233,14 +1218,6 @@ noncomputable section
 
 namespace GlobalTheory.Mum.Rescale
 
-theorem gs_comp_stalk {X Y Z : Scheme.{0}} (g : Z ⟶ Y) (f : Y ⟶ X) (z : Z) (U : X.Opens) (h : f (g z) ∈ U)
-    (a : Γ(X, U)) : gs (g ≫ f) z U a = (g.stalkMap z).hom (gs f (g z) U a) := by
-  rw [gs_stalkMap (g ≫ f) z U h, gs_stalkMap f (g z) U h, Scheme.Hom.stalkMap_comp]
-  rfl
-
-theorem cst_zero' {V : Type} [CommRing V] {Z : Scheme.{0}} (q : Z ⟶ Sp V) (z : Z) : cst q z 0 = 0 := by
-  simp only [cst, gs_eq q z ⊤ trivial, map_zero]
-
 theorem sval_secScale {X Y Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
     (c : Γ(Y, ⊤)) (s : LB.Sec (LB.LinComb L φ ε)) (r : Z ⟶ Y) (z : Z) {J : (Z ⟶ X) → L.ι} (hJ : Good L z J) :
     sval (ReciprocityTheory.ChartRestriction.G.DVR.SecOps.secScale c s) r z J = gs r z ⊤ c * sval s r z J :=
@@ -1271,13 +1248,13 @@ theorem cancel (C : LabCover D) {W : Type} [CommRing W] [IsDomain W] [IsLocalRin
   have A₁ : sval s₁ (g ≫ pullback.fst T.β C.α) z J = (g.stalkMap z).hom (sval s₁ (pullback.fst T.β C.α) (g z) J₀) := by
     rw [sval_of s₁ _ z J (fun _ => J₀ (pullback.fst T.β C.α ≫ T.β)) (fun _ => (e₀ ()).symm),
       sval_of s₁ _ (g z) J₀ (fun _ => J₀ (pullback.fst T.β C.α ≫ T.β)) (fun _ => rfl)]
-    exact gs_comp_stalk g _ z _ (hJ₀.mem _ _) _
+    exact _root_.GlobalTheory.OneBasis.ThMove.gs_comp g _ z _ (hJ₀.mem _ _) _
   have A₂ : sval s₂ (g ≫ pullback.snd T.β C.α) z J = (g.stalkMap z).hom (sval s₂ (pullback.snd T.β C.α) (g z) J₀) := by
     have e₁ : J ((g ≫ pullback.snd T.β C.α) ≫ C.α) = J₀ (pullback.fst T.β C.α ≫ T.β) := by
       rw [e₀ (), Category.assoc, Category.assoc, pullback.condition]
     rw [sval_of s₂ _ z J (fun _ => J₀ (pullback.fst T.β C.α ≫ T.β)) (fun _ => e₁),
       sval_of s₂ _ (g z) J₀ (fun _ => J₀ (pullback.fst T.β C.α ≫ T.β)) (fun _ => eJ)]
-    refine gs_comp_stalk g _ z _ ?_ _
+    refine _root_.GlobalTheory.OneBasis.ThMove.gs_comp g _ z _ ?_ _
     exact Set.mem_iInter.2 fun _ => by rw [← eJ]; exact hJ₀ (pullback.snd T.β C.α ≫ C.α)
   have hz : sval s₁ (pullback.fst T.β C.α) (g z) J₀ = sval s₂ (pullback.snd T.β C.α) (g z) J₀ := by
     have h0 : cst (pullback.fst T.β C.α ≫ T.G.hom) (g z) b *
@@ -1285,7 +1262,7 @@ theorem cancel (C : LabCover D) {W : Type} [CommRing W] [IsDomain W] [IsLocalRin
       rw [mul_sub, key, sub_self]
     have := GlobalTheory.cst_dvd_of_cst_mul_eq_zero (pullback.fst T.β C.α ≫ T.G.hom) (g z) (a := b) (b := 0)
       (fun c hc => zero_dvd_iff.2 ((mul_eq_zero.1 hc).resolve_left hb)) h0
-    rw [cst_zero', zero_dvd_iff, sub_eq_zero] at this
+    rw [_root_.GlobalTheory.GenSecField.cst_zero', zero_dvd_iff, sub_eq_zero] at this
     exact this
   rw [A₁, A₂, hz]
 
@@ -1330,7 +1307,7 @@ theorem rescale : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base
   have e1 := hC Z p z J I hJ hI'
   have e2 := hσ Z p p' hpp z J hJ
   rw [e1, gs_scal, gs_scal, pow_one] at e2
-  rw [sval_secScale _ _ _ _ hJ, sval_secScale _ _ _ _ hJ, hs₁ Z p z J I hJ hI', gs_scal, gs_scal]
+  rw [_root_.GlobalTheory.KunnethDomain.sval_scale _ _ _ _ hJ, _root_.GlobalTheory.KunnethDomain.sval_scale _ _ _ _ hJ, hs₁ Z p z J I hJ hI', gs_scal, gs_scal]
 
   have hρ : ∀ c : R, cst (p ≫ T.G.hom) z (T.φ c) = cst (p' ≫ C.A.A.hom) z (algebraMap R (FractionRing R) c) := by
     intro c

@@ -103,7 +103,7 @@ theorem GlobalTheory.ThetaOfSmF.theta_of_smF_k : ∀ (F E : Type) [Field F] [Num
         IsThetaFunOF σ JS JT ξ₀ B.ψ f.1 := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT _ _ ξ₀ _ _ θ hθ ι hι hψ f hF hl
   refine ⟨f.2, hl, f.1.continuous, fun k L hL hL0 w => ?_⟩
-  obtain ⟨lam, hlc, hlam⟩ := GlobalTheory.HeisLineDiffF.exists_log (_root_.GlobalTheory.T.standard_additive_character_sign F E σ B hB)
+  obtain ⟨lam, hlc, hlam⟩ := GlobalTheory.HeisLineDiffF.exists_log (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB)
   let P : (Fin k → ℝ) →+ (IxF F nS nT → ℂ) :=
     { toFun := fun t => piWF θ (L t)
       map_zero' := by
@@ -158,22 +158,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix BoundedContinuousFunction ContDiff
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.IndefR.DatumF MeasureTheory Matrix GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open GlobalTheory.RealWeil GlobalTheory.RealWeilF
-open Classical
-
-theorem _root_.GlobalTheory.T.archimedean_chart_gaussian_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (B : Base F E), _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ → ∀ θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ),
-      IsInfFamF (fun w : InfinitePlace F => (B.emb w).1) θ → ∀ ι : (InfinitePlace F → ℂ) →+ AEF F E, IsChartF θ ι →
-      ∀ (hψ : IsCharAF F B.ψ) (f : BBF σ JS JT ξ₀ B.ψ), Sm (rhoVF σ JS JT ξ₀ B.ψ hψ ι) f →
-        (∃ U : AddSubgroup (WOF F E nS nT), IsOpen (U : Set (WOF F E nS nT)) ∧
-          ∀ u ∈ U, u.map (infPartF F E) = 0 → heisOF σ JS JT ξ₀ B.ψ u f.1 = f.1) →
-        IsThetaFunOF σ JS JT ξ₀ B.ψ f.1 := by
-  first | exact @_root_.GlobalTheory.ThetaOfSmF.theta_of_smF_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ArchimedeanChartGaussianInvariant =====
@@ -198,7 +182,7 @@ theorem contDiff_heis_iota_k (σ : E →ₐ[F] E) (B : Base F E) (hB : _root_.Up
     {θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ)} {ι : (InfinitePlace F → ℂ) →+ AEF F E} (hι : IsChartF θ ι)
     {f : WOF F E nS nT → ℂ} (hf : IsThetaFunOF σ JS JT ξ₀ B.ψ f) (x : WOF F E nS nT) :
     ContDiff ℝ ∞ fun v : IxF F nS nT → ℂ => heisOF σ JS JT ξ₀ B.ψ (iotaVF ι v) f x := by
-  obtain ⟨lam, hl, hlam⟩ := GlobalTheory.HeisLineDiffF.exists_log (_root_.GlobalTheory.T.standard_additive_character_sign F E σ B hB)
+  obtain ⟨lam, hl, hlam⟩ := GlobalTheory.HeisLineDiffF.exists_log (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB)
   let φ : (IxF F nS nT → ℂ) →+ ℂ :=
     { toFun := fun v => lam (symplOHF σ JS JT ξ₀ x (iotaVF ι v))
       map_zero' := by rw [iotaVF_zero, GlobalTheory.HeisLineDiffF.symplOHF_zero_right, map_zero]
@@ -230,7 +214,7 @@ theorem GlobalTheory.ThetaSmoothF.sm_of_thetaF_k : ∀ (F E : Type) [Field F] [N
       ∀ (hψ : IsCharAF F B.ψ) (f : BBF σ JS JT ξ₀ B.ψ), IsThetaFunOF σ JS JT ξ₀ B.ψ f.1 →
         Sm (rhoVF σ JS JT ξ₀ B.ψ hψ ι) f := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' θ hθ ι hι hψ f hf
-  have hstd := _root_.GlobalTheory.T.standard_additive_character_sign F E σ B hB
+  have hstd := _root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB
   let H := HMF (nS := nS) (nT := nT) JS JT ξ₀ (fun w : InfinitePlace F => (B.emb w).1)
   let B₀ : (IxF F nS nT → ℂ) →ₗ[ℝ] (IxF F nS nT → ℂ) →ₗ[ℝ] ℝ :=
     LinearMap.mk₂ ℝ (fun x y => (star y ⬝ᵥ H *ᵥ x).im)
@@ -268,16 +252,16 @@ theorem GlobalTheory.ThetaSmoothF.sm_of_thetaF_k : ∀ (F E : Type) [Field F] [N
         ∀ u ∈ U, u.map (infPartF F E) = 0 → heisOF σ JS JT ξ₀ B.ψ u d = d := by
       obtain ⟨U, hU, hUf⟩ := hg.level
       exact ⟨U, hU, fun u hu hu0 =>
-        _root_.GlobalTheory.T.theta_function_rapid_decay F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 L hL hL0 u hu0 (hUf u hu hu0)⟩
+        _root_.GlobalTheory.HeisDerivCM.heisOF_deriv_fix_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 L hL hL0 u hu0 (hUf u hu hu0)⟩
     have hsm : ∀ (k : ℕ) (L' : (Fin k → ℝ) →+ WOF F E nS nT), Continuous L' →
         (∀ t, (L' t).map (finPartF F E) = 0) → ∀ w, ContDiff ℝ ∞ fun t => d (w + L' t) :=
-      fun k L' hL' hL'0 w => _root_.GlobalTheory.T.theta_function_integrable F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 k L' hL' hL'0 w
+      fun k L' hL' hL'0 w => _root_.GlobalTheory.ThetaLineSmoothF.contDiff_deriv_heisOF_line_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 k L' hL' hL'0 w
     have hd : IsThetaFunOF σ JS JT ξ₀ B.ψ d :=
-      ⟨fun γ w => _root_.GlobalTheory.T.theta_function_moderate_growth F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 γ w, hlev,
+      ⟨fun γ w => _root_.GlobalTheory.ThetaDerivQuasi.deriv_heis_quasi_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 γ w, hlev,
         _root_.GlobalTheory.T.theta_integral_unfolding F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd d hlev hsm, hsm⟩
     have hb := _root_.GlobalTheory.TowerFD.thetaFunOF_bounded F E σ nS nT JS JT ξ₀ B.ψ hψ d hd
     refine ⟨toBF d hd.cont hb hd.quasi, hd, fun x => ?_⟩
-    exact (_root_.GlobalTheory.T.theta_function_smooth_vectors F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 x).hasDerivAt
+    exact (_root_.GlobalTheory.HeisLineDiffF.differentiableAt_heisOF_line_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξ' hstd g.1 hg L hL hL0 x).hasDerivAt
 end
 end
 end -- clump:auto
@@ -356,18 +340,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix BoundedContinuousFunction ContDiff
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.IndefR.DatumF MeasureTheory Matrix GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open GlobalTheory.RealWeil GlobalTheory.RealWeilF
-open Classical
-
-theorem _root_.GlobalTheory.T.continuous_moment_map : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (B : Base F E), _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E)
-      (θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ)),
-      IsInfFamF (fun w : InfinitePlace F => (B.emb w).1) θ → Continuous (mMF σ JS JT θ) := by
-  first | exact @_root_.GlobalTheory.RealWeilF.MCont.continuous_mMF_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ContinuousMomentMap =====
@@ -395,14 +367,14 @@ theorem exists_inf_A_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ 
       s * mMF σ JS JT θ p = mMF σ JS JT θ p * s → ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → IsVacF σ JS JT ξ₀ B.ψ ι s f →
         oi p f = GlobalTheory.RealWeil.dP s (mMF σ JS JT θ p) • f := by
   have hB := C.good
-  have hc : IsCharAF F B.ψ := (_root_.GlobalTheory.T.standard_additive_character_sign F E σ B hB).1
+  have hc : IsCharAF F B.ψ := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB).1
   have hθ := C.inf
   have hι := C.chart
   have hS := C.hS
   have hT := C.hT
   have hξ := C.h0
   have hξσ := C.hξ
-  have hH := _root_.GlobalTheory.T.hermitian_form_matrix_selfadjoint F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ
+  have hH := _root_.GlobalTheory.RealWeilF.HMF_herm_det_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ
   have hHeis : IsHeis (fun x y => (star y ⬝ᵥ HMF JS JT ξ₀ (fun w : InfinitePlace F => (B.emb w).1) *ᵥ x).im)
       (rhoVF σ JS JT ξ₀ B.ψ hc ι) := by
     refine ⟨fun f => ?_, fun u v f => ?_, fun u f => norm_rhoBF hc _ f, fun f => ?_⟩
@@ -415,7 +387,7 @@ theorem exists_inf_A_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ 
   obtain ⟨Ω, ⟨hadd, hsmul, hsm, hone, hmul, hheis, hcomm, hunit⟩, htriv, hcont, hvac⟩ :=
     _root_.GlobalTheory.RealWeil.UnitaryOsc.exists_osc (IxF F nS nT) (HMF JS JT ξ₀ (fun w : InfinitePlace F => (B.emb w).1)) hH.1 hH.2
       (BBF σ JS JT ξ₀ B.ψ) (rhoVF σ JS JT ξ₀ B.ψ hc ι) hHeis (GAF σ JS × GAF σ JT) (mMF σ JS JT θ)
-      (_root_.GlobalTheory.T.archimedean_chart_gaussian_vector F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι)
+      (_root_.GlobalTheory.RealWeilF.mMF_unitary_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι)
   have sm := _root_.GlobalTheory.T.archimedean_chart_gaussian_norm F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι hc
   have hfr := _root_.GlobalTheory.WeilDatumF.symplOHF_fin_real_orth F E σ nS nT JS JT ξ₀
   have rcomm : ∀ {u : WOF F E nS nT}, u.map (infPartF F E) = 0 → ∀ (v : IxF F nS nT → ℂ) (f : BBF σ JS JT ξ₀ B.ψ),
@@ -435,7 +407,7 @@ theorem exists_inf_A_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ 
   have hth : ∀ p (f : BBF σ JS JT ξ₀ B.ψ), IsThetaFunOF σ JS JT ξ₀ B.ψ f.1 → IsThetaFunOF σ JS JT ξ₀ B.ψ (Ω p f).1 := by
     intro p f hf
     obtain ⟨U, hU, hl⟩ := hf.level
-    refine _root_.GlobalTheory.T.archimedean_chart_gaussian_invariant F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι hc _ (hsm p f (sm f hf)) ⟨U, hU, fun u hu h0 => ?_⟩
+    refine _root_.GlobalTheory.ThetaOfSmF.theta_of_smF_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι hc _ (hsm p f (sm f hf)) ⟨U, hU, fun u hu h0 => ?_⟩
     have e : rhoBF σ JS JT ξ₀ B.ψ hc u f = f := QB_ext fun x => congrFun ((coe_rhoBF hc u f).trans (hl u hu h0)) x
     rw [← coe_rhoBF hc, ← hfin p h0 f (sm f hf), e]
   have hbd := _root_.GlobalTheory.TowerFD.thetaFunOF_bounded F E σ nS nT JS JT ξ₀ B.ψ hc
@@ -449,16 +421,16 @@ theorem exists_inf_A_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ 
     exact hth p G hf
   · simp only [hom _ G hf]
     exact (ev _ _ w).continuous.comp
-      (hcont (_root_.GlobalTheory.T.continuous_moment_map F E σ B hB nS nT JS JT θ hθ) G (sm G hf))
+      (hcont (_root_.GlobalTheory.RealWeilF.MCont.continuous_mMF_k F E σ B hB nS nT JS JT θ hθ) G (sm G hf))
   · rw [hom p G hf]
     exact _root_.GlobalTheory.RealWeilF.lintegral_eq_of_normsF F E σ nS nT JS JT ξ₀ B.ψ hc μ 𝓕 hμ h𝓕 _ _
       fun H _ _ _ Φ hΦ => hunit H Φ (fun v g => hΦ _ g) p G (sm G hf)
   · rw [hom _ G hf, htriv _ (mMF_fin θ hg hk) G (sm G hf)]
   · obtain ⟨u, v, hu, rfl⟩ := _root_.GlobalTheory.RealWeilF.exists_realZero_add_iotaVF F E nS nT θ ι hι w
     have h1 : IsThetaFunOF σ JS JT ξ₀ B.ψ (rhoVF σ JS JT ξ₀ B.ψ hc ι v G).1 :=
-      _root_.GlobalTheory.T.theta_function_heisenberg_translate F E σ B hB nS nT JS JT ξ₀ _ _ hf
+      _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF_k F E σ B hB nS nT JS JT ξ₀ _ _ hf
     have h2 : IsThetaFunOF σ JS JT ξ₀ B.ψ (rhoBF σ JS JT ξ₀ B.ψ hc u (rhoVF σ JS JT ξ₀ B.ψ hc ι v G)).1 :=
-      _root_.GlobalTheory.T.theta_function_heisenberg_translate F E σ B hB nS nT JS JT ξ₀ _ _ h1
+      _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF_k F E σ B hB nS nT JS JT ξ₀ _ _ h1
     have e1 : actOF σ JS JT g k (u + iotaVF ι v) = u + iotaVF ι (mMF σ JS JT θ (g, k) *ᵥ v) := by
       rw [GlobalTheory.RealWeilF.actOF_add, _root_.GlobalTheory.RealWeilFinFix.actOF_fin F E σ nS nT JS JT g k hg hk u hu, _root_.GlobalTheory.T.actOF_iotaVF_eq_iotaVF_mulVec F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ θ hθ ι hι]
     rw [hom _ G hf, e1, ← coe_rhoBF hc _ G, ← coe_rhoBF hc _ (Ω (g, k) G), radd hu v G,
@@ -547,11 +519,6 @@ theorem exists_inf_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ
       s * mMF σ JS JT θ p = mMF σ JS JT θ p * s → ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → IsVacF σ JS JT ξ₀ B.ψ ι s f →
         oi p f = GlobalTheory.RealWeil.dP s (mMF σ JS JT θ p) • f :=
   _root_.PositivityTheory.ThKW.exists_inf_A_k C
-theorem det_mMF_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) {g : GAF σ JS} {h : GAF σ JT} {a b}
-    (ha : IsRatF σ JS g a) (hb : IsRatF σ JT h⁻¹ b) :
-    (mMF σ JS JT θ (g⁻¹, h⁻¹)).det = ∏ v, tauB B v (b ⊗ₖ aᵀ).det ∧
-      (mMF σ JS JT θ (g⁻¹, h⁻¹) - 1).det = ∏ v, tauB B v (b ⊗ₖ aᵀ - 1).det :=
-  _root_.PositivityTheory.ThKW.det_mMF_B_k C ha hb
 end PositivityTheory.ThKW
 end
 end

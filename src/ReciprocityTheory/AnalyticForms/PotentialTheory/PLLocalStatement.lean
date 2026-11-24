@@ -511,7 +511,7 @@ theorem lhs_sum (A : FinHolAtlas (e + 1) X) (L : LocPot X) (s : X → X → ℂ)
         intro H
         funext k
         refine Fin.cases ?_ (fun k => ?_) k <;> rfl
-      rw [e1, e1, e1, ReciprocityTheory.AnForm.A.hessC_add F G y hF hG]
+      rw [e1, e1, e1, _root_.ReciprocityTheory.AnForm.A.TraceConjugationCover.complexHessian_add_of_contDiffAt F G y hF hG]
       have h := ReciprocityTheory.AnForm.A.mdisc_cons_smul_add 1 1 (hessC F y) (hessC G y) (fun k => hessC (ψs k) y)
       simp only [one_smul, one_mul] at h
       rw [h, Complex.add_re]
@@ -774,7 +774,7 @@ open scoped ContDiff
 
 noncomputable section
 
-theorem poincareLelong : PoincareLelongStatement := PLAux.pl_global
+alias poincareLelong := _root_.ReciprocityTheory.AnForm.M.PLAux.pl_global
 
 end
 

@@ -169,7 +169,7 @@ theorem exists_compact_cover (E : Type) [Field E] [NumberField E] [IsCMField E] 
     ∃ C : Set (UA E n), IsCompact C ∧ ∀ g, ∃ γ ∈ ratU E n, ∃ c ∈ C, g = γ * c := by
   classical
   obtain ⟨K, hKo, hKc⟩ := exists_isOpen_isCompact_finU E n
-  obtain ⟨S, hS⟩ := GlobalTheory.T.definiteUnitary_classSet_finite E n K hKo
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.DefU.ClassFin.classSet_finite E n K hKo
   haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   haveI : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
     obtain ⟨e, -⟩ := _root_.GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup E n v.embedding

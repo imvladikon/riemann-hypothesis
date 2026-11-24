@@ -89,16 +89,6 @@ open Formalism.IndefR.Fin
 
 variable {D : D7}
 
-theorem symplO_zero_r (S T : HSp D) (x : WO S T) : symplO S T x 0 = 0 := by
-  have h := GlobalTheory.FinPl.ExtZeroLat.symplO_add_right S T x 0 0
-  simp only [add_zero] at h
-  exact left_eq_add.mp h
-
-theorem symplO_neg_r (S T : HSp D) (x y : WO S T) : symplO S T x (-y) = -symplO S T x y := by
-  have h := GlobalTheory.FinPl.ExtZeroLat.symplO_add_right S T x y (-y)
-  rw [add_neg_cancel, symplO_zero_r] at h
-  linear_combination -h
-
 theorem psi_ne_zero' (ψ : AddChar (AF D.host.F) ℂ) (a : AF D.host.F) : ψ a ≠ 0 := by
   intro h
   have := ψ.map_add_eq_mul a (-a)
@@ -127,9 +117,9 @@ def annHalf (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (e : AE D) (Λ : AddS
   add_mem' {a b} ha hb := ⟨(halfGrp S T (cA D e)).add_mem ha.1 hb.1, fun x hx hxe => by
     rw [GlobalTheory.FinPl.ExtZeroLat.symplO_add_right, AddChar.map_add_eq_mul, ha.2 x hx hxe, hb.2 x hx hxe, one_mul]⟩
   zero_mem' := ⟨(halfGrp S T (cA D e)).zero_mem, fun x _ _ => by
-    rw [symplO_zero_r, AddChar.map_zero_eq_one]⟩
+    rw [_root_.GlobalTheory.PlaceModel.symplO_zero_right, AddChar.map_zero_eq_one]⟩
   neg_mem' {a} ha := ⟨(halfGrp S T (cA D e)).neg_mem ha.1, fun x hx hxe => by
-    rw [symplO_neg_r, AddChar.map_neg_eq_inv, ha.2 x hx hxe, inv_one]⟩
+    rw [_root_.GlobalTheory.SplitSelfDual.symplO_neg_right, AddChar.map_neg_eq_inv, ha.2 x hx hxe, inv_one]⟩
 
 theorem half_inf_half {e : AE D} (he : e * cA D e = 0) (S T : HSp D) {u : WO S T}
     (h1 : IsHalf e u) (h2 : IsHalf (cA D e) u) : u = 0 := by
@@ -338,29 +328,6 @@ noncomputable section
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory Matrix ValuativeRel GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SplitWeil GlobalTheory.SeeSaw GlobalTheory.AdForm GlobalTheory.LocMod
 namespace GlobalTheory.LocMod
 
-theorem pi_e_self {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) : p.π p.e = 1 := by
-  have h := p.ι_π 1
-  rw [map_one, mul_one] at h
-  rw [← h, p.π_ι]
-
-theorem pi_eq_zero_of {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) {e : AE D} (h : e * p.e = 0) : p.π e = 0 := by
-  have := congrArg p.π h
-  rwa [map_mul, pi_e_self, mul_one, map_zero] at this
-
-theorem up_down_eq {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) {S T : HSp D} {Y Y' : Type} [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y']
-    (FS : Frame k S.rank Y') (FT : Frame k T.rank Y) (t : WO S T) :
-    p.up FS FT (p.down FS FT t) = t.map (fun x => p.e * x) := by
-  unfold Place.up Place.down
-  have hM : FT.β * (FT.γ * (t : Matrix (Fin T.rank) (Fin S.rank) (AE D)).map p.π * FS.β) * FS.γ =
-      (t : Matrix (Fin T.rank) (Fin S.rank) (AE D)).map p.π := by
-    rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, FT.βγ, Matrix.one_mul, Matrix.mul_assoc, FS.βγ, Matrix.mul_one]
-  rw [hM]
-  ext i j
-  simp only [Matrix.map_apply, p.ι_π]
-
 theorem ratDatum_factor : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : Place D k) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → DenseRange p.pr → ∀ (S T : HSp D) (Y Y' : Type) [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y'] (FS : Frame k S.rank Y') (FT : Frame k T.rank Y) (P : Finset (Formalism.L2.DIV.Pl D.host.E)) (PP : Formalism.L2.DIV.Pl D.host.E) (e : AE D), PP ∉ P → Formalism.L2.NTheta.IsIdemAt p.e PP → IsIdemSum e P → IsIdemSum (e + p.e) (@insert _ _ (@Finset.instInsert _ (Classical.decEq _)) PP P) → (∀ x : Matrix Y Y' k, (∀ r q, x r q ∈ 𝒪[k]) ↔ p.up FS FT x ∈ stdHom S T) → ∀ (Ξ Ξ' : Matrix (Fin T.rank) (Fin S.rank) D.host.E → ℂ) (Ξk : Matrix Y Y' k → ℂ), Ξk ∈ SB (Matrix Y Y' k) → (∀ γ, Ξ' γ = Ξ γ * Ξk (FT.γ * γ.map p.pr * FS.β)) → ∀ c, p.IsCombAt ψ FS FT c Ξk → ∀ f₀ f f', IsThetaFunO ψ S T f₀ → IsLatVac (heisO ψ S T) (stdHom S T) f₀ → IsRatDatum ψ S T e Ξ f₀ f → IsRatDatum ψ S T (e + p.e) Ξ' f₀ f' → f' = comb ψ S T c f := by
   intro D k _ _ _ _ p ψ hψ _hdense S T Y Y' _ _ _ _ FS FT P PP e hPP hIdemAt hE hE' hstd Ξ Ξ' Ξk hΞk hΞ' c hc f₀ f f' hf₀ hvac hf hf'
   obtain ⟨Φ, hΦSB, hΦrat, hθ⟩ := hf
@@ -375,7 +342,7 @@ theorem ratDatum_factor : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [To
   have hvacm := _root_.GlobalTheory.LocMod.TOneModel.isPlaceModel_tensorOne D k p ψ S T Y Y' FS FT e horth hstd hstabp f₀ T' hT'
     (fun Φ₁ h₁ => _root_.GlobalTheory.LocMod.Place.isSBHalf_tensorAt D k p S T Y Y' FS FT e horth hstd hstabp Φ₁ h₁ _ (_root_.GlobalTheory.LocMod.Place.intInd_mem_SB k Y Y'))
   have hfT : f = T' (p.tensorOne FS FT Φ) := hθ.2 _ hvacm
-  have hπe : p.π e = 0 := pi_eq_zero_of p horth
+  have hπe : p.π e = 0 := _root_.GlobalTheory.LocMod.TOneModel.pi_of_mul p horth
   have hpe2 : p.e * p.e = p.e := p.split.1
   have hid : Φ' = p.tensorAt FS FT Φ Ξk := by
     refine _root_.GlobalTheory.RatHalfDense.eq_of_rat D S T _ (e + p.e) hE' Φ' _ hΦ'SB (hsb Ξk hΞk) fun γ => ?_
@@ -384,10 +351,10 @@ theorem ratDatum_factor : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [To
       unfold Place.down
       congr 2
       ext i j
-      simp only [Matrix.map_apply, map_mul, map_add (f := _), hπe, pi_e_self, zero_add, one_mul, Place.pr]
+      simp only [Matrix.map_apply, map_mul, map_add (f := _), hπe, _root_.GlobalTheory.LocMod.Place.pi_idem, zero_add, one_mul, Place.pr]
     have hs : (γ.map fun a => (e + p.e) * incA D a) - p.up FS FT (p.down FS FT (γ.map fun a => (e + p.e) * incA D a)) =
         γ.map fun a => e * incA D a := by
-      rw [up_down_eq]
+      rw [_root_.GlobalTheory.LocMod.TOneModel.up_down_eq]
       ext i j
       simp only [Matrix.sub_apply, Matrix.map_apply]
       have h2 : p.e * e = 0 := by rw [mul_comm]; exact horth

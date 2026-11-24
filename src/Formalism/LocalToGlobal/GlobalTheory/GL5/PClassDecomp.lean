@@ -54,6 +54,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Upqcpt
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.Imports, Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp
@@ -130,7 +131,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.Imports =====
 
 -- ===== clump member: Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp =====
--- clump-header: {"m": "Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp", "h": "module\n\npublic import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.CompactFixesLattice\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.EmbeddingTypeJumps\npublic import Formalism.LocalRingCardinality.PosOfIsomEmb\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.ExistsDenOfIsCompact\nimport Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.ExistsDenOfIsCompactAdele\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.Imports\nimport Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.MemClosureOfMemSS\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.GlobalTheory.GL5.PClassDecomp", "h": "module\n\npublic import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.CompactFixesLattice\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.EmbeddingTypeJumps\npublic import Formalism.LocalRingCardinality.PosOfIsomEmb\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.ExistsDenOfIsCompact\nimport Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.ExistsDenOfIsCompactAdele\npublic import Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.Imports\nimport Formalism.LocalToGlobal.GlobalTheory.GL1.CompactFixesLattice.MemClosureOfMemSS\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Upqcpt\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -703,18 +704,10 @@ theorem infMat_unitary (σ : E →ₐ[F] E) (hσ : ∀ a, σ a = star a)
   rw [e1, e2] at h1
   rw [hX]; exact h1
 
-theorem Jpq_zero (P : ℕ) : Formalism.UG.Jpq P 0 = 1 := by
-  ext i j
-  rcases i with i | i
-  · rcases j with j | j
-    · simp [Formalism.UG.Jpq, Matrix.one_apply]
-    · exact j.elim0
-  · exact i.elim0
-
 theorem upq_of_unitary {P : ℕ} (A : Matrix (Fin P ⊕ Fin 0) (Fin P) ℂ) (Jt X : Matrix (Fin P) (Fin P) ℂ)
     (hJ : IsUnit Jt.det) (hA : A.conjTranspose * Formalism.UG.Jpq P 0 * A = Jt)
     (hX : X.conjTranspose * Jt * X = Jt) : ∃ b : Formalism.BasicNotions.UpqT P 0, Formalism.BasicNotions.UpqT.mat b * A = A * X := by
-  rw [Jpq_zero, Matrix.mul_one] at hA
+  rw [_root_.Formalism.UG.P.Jpq_zero, Matrix.mul_one] at hA
   let L : Matrix (Fin P) (Fin P ⊕ Fin 0) ℂ := Jt⁻¹ * A.conjTranspose
   have hLA : L * A = 1 := by
     simp only [L, Matrix.mul_assoc, hA]
@@ -734,7 +727,7 @@ theorem upq_of_unitary {P : ℕ} (A : Matrix (Fin P ⊕ Fin 0) (Fin P) ℂ) (Jt 
     show Formalism.UG.cT (starRingEnd ℂ) bm * Formalism.UG.Jpq P 0 * bm = Formalism.UG.Jpq P 0
     have e : Formalism.UG.cT (starRingEnd ℂ) bm = bm.conjTranspose := by
       ext i j; simp [Formalism.UG.cT, Matrix.conjTranspose_apply]
-    rw [e, Jpq_zero, Matrix.mul_one, hbb]
+    rw [e, _root_.Formalism.UG.P.Jpq_zero, Matrix.mul_one, hbb]
   refine ⟨(⟨g, hg⟩ : Formalism.UG.Upq P 0), ?_⟩
   show bm * A = A * X
   simp only [bm, Matrix.mul_assoc, hLA, Matrix.mul_one]
@@ -752,7 +745,7 @@ theorem inf_all (σ : E →ₐ[F] E) (hσ : ∀ a, σ a = star a)
     rw [hsig] at h0
     obtain ⟨e, P', hP⟩ := h0
     have hd := congrArg Matrix.det hP
-    rw [Jpq_zero, Matrix.det_one, Matrix.det_mul, Matrix.det_mul, Matrix.det_reindex_self] at hd
+    rw [_root_.Formalism.UG.P.Jpq_zero, Matrix.det_one, Matrix.det_mul, Matrix.det_mul, Matrix.det_reindex_self] at hd
     refine isUnit_iff_ne_zero.mpr fun h0 => ?_
     rw [h0, mul_zero, zero_mul] at hd
     exact zero_ne_one hd

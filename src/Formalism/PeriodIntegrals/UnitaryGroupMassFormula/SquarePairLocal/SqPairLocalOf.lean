@@ -473,7 +473,7 @@ end PI.SqPairLocal.Mdl
 
 namespace PI.SqPairLocal
 
-theorem modelEx_of (hF : FixedDVR) (hU : RealUnif) : ModelEx := Mdl.modelEx_of hF hU
+alias modelEx_of := _root_.PI.SqPairLocal.Mdl.modelEx_of
 
 end PI.SqPairLocal
 end -- clump:auto
@@ -1016,10 +1016,7 @@ section IntMulSec
 
 variable {E : Type} [Field E] [NumberField E] {N : ℕ}
 
-theorem exists_den (L'' : Submodule (𝓞 E) (Fin N → E))
-    (hsp : Submodule.span E (L'' : Set (Fin N → E)) = ⊤) (v : Fin N → E) :
-    ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ L'' := by
-  first | (apply Bl.general_b_fact_left_bis.goal1 <;> assumption)
+alias exists_den := _root_.Bl.general_b_fact_left_bis.goal1
 
 theorem exists_den_fg (L' L'' : Submodule (𝓞 E) (Fin N → E)) (hfg : L'.FG)
     (hsp : Submodule.span E (L'' : Set (Fin N → E)) = ⊤) :

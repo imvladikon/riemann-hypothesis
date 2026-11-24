@@ -118,17 +118,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry Limits TopologicalSpace Opposite GlobalTheory SheafPull
 
-theorem _root_.GlobalTheory.T.cechComparison_degreeZero_alternatingPullback : ∀ {T T' : TopCat.{0}} (f : T' ⟶ T) {ι κ : Type} [LinearOrder ι] [LinearOrder κ]
-    [Finite ι] [Finite κ] {V : Opens T} {U : ι → Opens T} {V' : Opens T'} {U' : κ → Opens T'}
-    (τ : κ → ι) (hτ : ∀ s : Finset κ, cechOpen V' U' s ≤ (Opens.map f).obj (cechOpen V U (s.image τ)))
-    (hc : V ≤ ⨆ i, U i) (hc' : V' ≤ ⨆ k, U' k) (hV : V' ≤ (Opens.map f).obj V)
-    {F : AbSheaf T} {G : AbSheaf T'} (φ : F ⟶ (push f).obj G) (hF : CechAcyclic V U F)
-    (hG : CechAcyclic V' U' G) (x : LinearMap.ker (Cube.d (cechAbCube F.obj V U) (0 + 1)))
-    (y : LinearMap.ker (Cube.d (cechAbCube G.obj V' U') (0 + 1))),
-    y.1 = (cechAbPull f τ hτ φ).term (0 + 1) x.1 →
-    cechAbHEquivH' hc' hG 0 (cechClass _ 0 y) =
-      SheafPull.pull f φ 0 (homOfLE hV) (cechAbHEquivH' hc hF 0 (cechClass _ 0 x)) := by
-  first | (exact @GlobalTheory.cechAbPull_degZero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.CechComparisonDegreeZeroAlternatingPullbackStatement =====
@@ -224,11 +213,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry Limits TopologicalSpace Opposite GlobalTheory SheafPull
 
-theorem _root_.GlobalTheory.T.moduleCubePullHom_term_comm_cechDifferential : ∀ {ι κ : Type} [LinearOrder ι] [LinearOrder κ] {R S : Type} [Ring R] [Ring S]
-    {σ : R →+* S} {τ : κ → ι} {A : Cube.{0} ι R} {B : Cube.{0} κ S}
-    (ψ : Cube.PullHom σ τ A B) (p : ℕ) (x : Cube.Term A p),
-    ψ.term (p + 1) (Cube.d A p x) = Cube.d B p (ψ.term p x) := by
-  first | (exact @GlobalTheory.Cube.PullHom.term_d)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ModuleCubePullHomTermCommCechDifferentialStatement =====
@@ -266,7 +250,7 @@ theorem termMap_term {A A' : Cube.{0} ι R} {B B' : Cube.{0} κ S} (ψ : Cube.Pu
 
 theorem term_mem_ker {A : Cube.{0} ι R} {B : Cube.{0} κ S} (ψ : Cube.PullHom σ τ A B) (p : ℕ)
     (x : LinearMap.ker (Cube.d A p)) : ψ.term p x.1 ∈ LinearMap.ker (Cube.d B p) := by
-  rw [LinearMap.mem_ker, ← GlobalTheory.T.moduleCubePullHom_term_comm_cechDifferential ψ p x.1, x.2, map_zero]
+  rw [LinearMap.mem_ker, ← _root_.GlobalTheory.Cube.PullHom.term_d ψ p x.1, x.2, map_zero]
 
 theorem cechClass_eq {A : Cube.{0} ι R} {B : Cube.{0} κ S} (ψ : Cube.PullHom σ τ A B) (p : ℕ)
     (x x₂ : LinearMap.ker (Cube.d A (p + 1))) (y y₂ : LinearMap.ker (Cube.d B (p + 1)))
@@ -282,7 +266,7 @@ theorem cechClass_eq {A : Cube.{0} ι R} {B : Cube.{0} κ S} (ψ : Cube.PullHom 
   | succ p =>
     obtain ⟨z, hz⟩ := (cechClass_succ_eq_zero_iff A p _).1 h
     refine (cechClass_succ_eq_zero_iff B p _).2 ⟨ψ.term (p + 1) z, ?_⟩
-    rw [← GlobalTheory.T.moduleCubePullHom_term_comm_cechDifferential ψ (p + 1) z, hz, Submodule.coe_sub, Submodule.coe_sub, hy, hy₂, map_sub]
+    rw [← _root_.GlobalTheory.Cube.PullHom.term_d ψ (p + 1) z, hz, Submodule.coe_sub, Submodule.coe_sub, hy, hy₂, map_sub]
 
 theorem cechClass_δ {S₀ : ShortComplex (Cube.{0} ι R)} {S₁ : ShortComplex (Cube.{0} κ S)}
     (hS₀ : (S₀.map (cechFunctor ι R)).ShortExact) (hS₁ : (S₁.map (cechFunctor κ S)).ShortExact)
@@ -302,7 +286,7 @@ theorem cechClass_δ {S₀ : ShortComplex (Cube.{0} ι R)} {S₁ : ShortComplex 
     δ_cechClass hS₁ p y₃ (ψ₂.term _ x₂) _ ?_ ?_⟩
   · rw [termMap_term ψ₂ ψ₃ S₀.g S₁.g hg, h₂, hy]
   · show Cube.termMap S₁.f _ (ψ₁.term _ x₁.1) = Cube.d S₁.X₂ (p + 1) (ψ₂.term (p + 1) x₂)
-    rw [termMap_term ψ₁ ψ₂ S₀.f S₁.f hf, h₁, GlobalTheory.T.moduleCubePullHom_term_comm_cechDifferential]
+    rw [termMap_term ψ₁ ψ₂ S₀.f S₁.f hf, h₁, _root_.GlobalTheory.Cube.PullHom.term_d]
 
 end Cube.PullHom
 
@@ -364,7 +348,7 @@ theorem cechAbHEquivH'_pull {T T' : TopCat.{0}} (f : T' ⟶ T) {ι κ : Type} [L
       cechAbHEquivH' hc' hG n (cechClass _ n y) =
         SheafPull.pull f φ n (homOfLE hV) (cechAbHEquivH' hc hF n (cechClass _ n x)) := by
   induction n with
-  | zero => exact fun φ hF hG x y h => GlobalTheory.T.cechComparison_degreeZero_alternatingPullback f τ hτ hc hc' hV φ hF hG x y h
+  | zero => exact fun φ hF hG x y h => _root_.GlobalTheory.cechAbPull_degZero f τ hτ hc hc' hV φ hF hG x y h
   | succ n ih =>
     intro F G φ hF hG x y hy
     have hSF := Flasque.injectiveShortComplex_shortExact F
@@ -381,7 +365,7 @@ theorem cechAbHEquivH'_pull {T T' : TopCat.{0}} (f : T' ⟶ T) {ι κ : Type} [L
     let y₃ : LinearMap.ker (Cube.d (cechAbCube (Flasque.injectiveShortComplex G).X₃.obj V' U')
         (n + 1)) :=
       ⟨(cechAbPull f τ hτ (G := (Flasque.injectiveShortComplex G).X₃) ψ.τ₃).term (n + 1) x₃.1, by
-        rw [LinearMap.mem_ker, ← GlobalTheory.T.moduleCubePullHom_term_comm_cechDifferential, x₃.2, map_zero]⟩
+        rw [LinearMap.mem_ker, ← _root_.GlobalTheory.Cube.PullHom.term_d, x₃.2, map_zero]⟩
     obtain ⟨x₁, y₁, hy₁, hx₁, hy₁'⟩ := cechAbPull_δ f τ hτ hSF hSG hF hG ψ n x₃ y₃ rfl
     have hxy : cechClass _ (n + 1) y = cechClass _ (n + 1) y₁ :=
       Cube.PullHom.cechClass_eq _ (n + 1) x x₁ y y₁ hy hy₁ (hc₃.symm.trans hx₁)
@@ -466,8 +450,7 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD GlobalTheory.CechDR GlobalTheory.HodgeCoh ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem _root_.GlobalTheory.T.scheme_cechComparison_natural_refinement : ∀ (X X' : Scheme.{0}) (R : Type) [CommRing R] [Algebra R Γ(X, ⊤)] [Algebra R Γ(X', ⊤)] (f : X' ⟶ X) (hσ : ∀ r, f.appTop (algebraMap R Γ(X, ⊤) r) = algebraMap R Γ(X', ⊤) ((RingHom.id R) r)) (F : X.Modules) (G : X'.Modules) [F.IsQuasicoherent] [G.IsQuasicoherent] (φ : F ⟶ (Scheme.Modules.pushforward f).obj G) (ι κ : Type) [LinearOrder ι] [Fintype ι] [LinearOrder κ] [Fintype κ] (U : ι → X.Opens) (U' : κ → X'.Opens) (hc : ⨆ i, U i = ⊤) (hU : ∀ s : Finset ι, s.Nonempty → IsAffineOpen (⨅ i ∈ s, U i)) (hc' : ⨆ i, U' i = ⊤) (hU' : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, U' i)) (τ : κ → ι), (∀ k, U' k ≤ f ⁻¹ᵁ U (τ k)) → ∀ (n : ℕ) (x : LinearMap.ker (Cube.d (cechCube R F ⊤ U) (n + 1))) (x' : LinearMap.ker (Cube.d (cechCube R G ⊤ U') (n + 1))), (∀ (t : {t : Finset κ // t.card = n + 1}) (s : {s : Finset ι // s.card = n + 1}) (h : cechOpen ⊤ U' t.1 ≤ f ⁻¹ᵁ cechOpen ⊤ U s.1), Set.InjOn τ (t.1 : Set κ) → s.1 = t.1.image τ → x'.1 t = sortSign τ t.1 • sectionsOn.res R G h (sectionsOn.map R φ (cechOpen ⊤ U s.1) (x.1 s))) → (∀ t : {t : Finset κ // t.card = n + 1}, ¬ Set.InjOn τ (t.1 : Set κ) → x'.1 t = 0) → cechHEquivCoh R hc' hU' G n (cechClass (cechCube R G ⊤ U') n x') = cohOn.pull hσ φ (le_top : (⊤ : X'.Opens) ≤ f ⁻¹ᵁ ⊤) n (cechHEquivCoh R hc hU F n (cechClass (cechCube R F ⊤ U) n x)) := by
-  first | (exact @GlobalTheory.cechHEquivCoh_pull)
+alias _root_.GlobalTheory.T.scheme_cechComparison_natural_refinement := _root_.GlobalTheory.cechHEquivCoh_pull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SchemeCechComparisonNaturalRefinementStatement =====

@@ -133,22 +133,8 @@ theorem coordRight_map {R : Type} [CommRing R] {M P N : Type}
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem padicInt_ringHom_ext_pt {R : Type} [CommRing R] [IsHausdorff (Ideal.span {(l : R)}) R]
-    (f g : ℤ_[l] →+* R) (a : ℤ_[l]) : f a = g a := by
-  rw [← sub_eq_zero]
-  refine IsHausdorff.haus' (I := Ideal.span {(l : R)}) _ fun n => ?_
-  rw [SModEq.zero, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-  obtain ⟨c, hc⟩ := Ideal.mem_span_singleton.1 (PadicInt.appr_spec n a)
-  have e : a = (a.appr n : ℤ_[l]) + (l : ℤ_[l]) ^ n * c := by rw [← hc]; ring
-  refine ⟨f c - g c, ?_⟩
-  have hf := congrArg f e
-  have hg := congrArg g e
-  rw [map_add (f := _), map_mul, map_pow, map_natCast, map_natCast] at hf hg
-  rw [hf, hg]
-  ring
-
 theorem zA_eq_algebraMap_pt (a : ℤ_[l]) : Per.zA l a = algebraMap ℤ_[l] (Ainf l) a :=
-  padicInt_ringHom_ext_pt (R := WittVector l (Per.Fl l)) (Per.zA l) _ a
+  _root_.GlobalTheory.MemLoc.SecUniq.padicInt_hom_ext_pt (R := WittVector l (Per.Fl l)) (Per.zA l) _ a
 
 theorem iota_algebraMap_pt (C : GlobalTheory.MemLoc.Core l) (a : ℤ_[l]) :
     C.ι (algebraMap ℤ_[l] (Per.Bcris l) a) =
@@ -443,14 +429,7 @@ namespace GlobalTheory.BKGal.HatVal
 variable {l : ℕ} [Fact l.Prime] {O K : Type} [CommRing O] [Algebra ℤ_[l] O]
   [NormedField K] [NormedAlgebra ℚ_[l] K] [Algebra O K] {G : Type} [Group G] [TopologicalSpace G]
 
-theorem TWincl_smul' {R R' : Type} [CommRing R] [CommRing R'] [Algebra O R] [Algebra O R'] (f : R →ₐ[O] R')
-    (T : LocLat G ℚ_[l] K O) (r : R) (z : TW R T) : TWincl f T (r • z) = f r • TWincl f T z := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp only [smul_zero, map_zero]
-  | tmul s x =>
-    simp only [TWincl, smul_tmul', TensorProduct.map_tmul, AlgHom.toLinearMap_apply, LinearMap.id_apply,
-      smul_eq_mul, map_mul]
-  | add x y hx hy => simp only [smul_add, map_add (f := _), hx, hy]
+alias TWincl_smul' := _root_.GlobalTheory.BKGal.HatVal.BasisCoord.tWincl_smul'
 
 theorem TWincl_TWincl {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] [Algebra O R] [Algebra O R']
     [Algebra O R''] (f : R →ₐ[O] R') (g : R' →ₐ[O] R'') (T : LocLat G ℚ_[l] K O) (z : TW R T) :
@@ -1175,9 +1154,7 @@ namespace GlobalTheory.BKGal.XiFil.ImageFil
 
 variable {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [Algebra ℤ_[l] O]
 
-theorem mul_mem_filO_zero (C : GlobalTheory.MemLoc.Core l) {x y : OB l O} (hx : x ∈ filO O C 0)
-    (hy : y ∈ filO O C 0) : x * y ∈ filO O C 0 := by
-  exact Bridge.mul_mem_filtration_zero C hx hy
+alias mul_mem_filO_zero := _root_.Bridge.mul_mem_filtration_zero
 
 theorem toOB_mem_filO (C : GlobalTheory.MemLoc.Core l) (x : OCr l O) : toOB l O x ∈ filO O C 0 := by
   induction x using TensorProduct.induction_on with
@@ -1272,13 +1249,9 @@ section Rings
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem ι_aB (C : GlobalTheory.MemLoc.Core l) (w : Per.Ainf l) :
-    C.ι (Per.aB l w) = algebraMap (Per.BdRp l) (Per.BdR l) (GlobalTheory.MemLoc.aDp l w) :=
-  GlobalTheory.MemLoc.ULaws.iota_aB C w
-
 private theorem aB_alg (C : GlobalTheory.MemLoc.Core l) (w : Per.Ainf l) :
     algebraMap (Per.Acris l) (Per.Bcris l) (algebraMap (Per.Ainf l) (Per.Acris l) w) = Per.aB l w :=
-  GlobalTheory.MemLoc.ULaws.iota_injective C (by rw [C.ι_j, GlobalTheory.MemLoc.TFil.j_alg C.j_cris, ι_aB])
+  GlobalTheory.MemLoc.ULaws.iota_injective C (by rw [C.ι_j, GlobalTheory.MemLoc.TFil.j_alg C.j_cris, _root_.GlobalTheory.MemLoc.ULaws.iota_aB])
 
 private theorem toB_tmul (C : GlobalTheory.MemLoc.Core l) {O : Type} [CommRing O] [Algebra ℤ_[l] O] (o : O)
     (w : Per.Ainf l) : toB l O (o ⊗ₜ[ℤ_[l]] w) = o ⊗ₜ[ℤ_[l]] Per.aB l w :=
@@ -1309,7 +1282,7 @@ theorem smul_TWincl_mem_filT (C : GlobalTheory.MemLoc.Core l) (T : LocLat G ℚ_
         rw [toB_tmul C o w, Algebra.TensorProduct.tmul_mul_tmul, one_mul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       rw [e, ← smul_tmul']
       refine Submodule.smul_mem _ o (Submodule.subset_span ⟨d * Per.aB l w, x, ?_, rfl⟩)
-      rw [map_mul, ι_aB, mul_comm, ← Algebra.smul_def]
+      rw [map_mul, _root_.GlobalTheory.MemLoc.ULaws.iota_aB, mul_comm, ← Algebra.smul_def]
       exact Submodule.smul_mem _ _ hd
     | add c c' hc hc' => rw [map_add (f := _), mul_add, add_tmul]; exact add_mem hc hc'
   | add z z' hz hz' => rw [map_add (f := _), smul_add]; exact add_mem hz hz'
@@ -1368,7 +1341,7 @@ theorem GlobalTheory.BKGal.XiPole.jB_single_mem_filT : ∀ (l : ℕ) [Fact l.Pri
     IsUnit.unit_spec _
   have hιμ : C.ι (Per.aB l (muOf ε)) = (U : Per.BdR l) *
       algebraMap (Per.BdRp l) (Per.BdR l) (GlobalTheory.MemLoc.aDp l (GlobalTheory.MemLoc.TiedUnif.piOne ε)) := by
-    rw [ι_aB, hUval, ← map_mul, ← map_mul]
+    rw [_root_.GlobalTheory.MemLoc.ULaws.iota_aB, hUval, ← map_mul, ← map_mul]
     exact congrArg _ (congrArg _ (GlobalTheory.MemLoc.TiedUnif.mu_eq ε))
   have h1 : C.ι d * (C.ι (Per.aB l (muOf ε))) ^ η = 1 := by
     rw [← map_pow, ← map_mul, ← map_pow, hdm, map_one]

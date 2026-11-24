@@ -482,11 +482,7 @@ open ReciprocityTheory.ChartRestriction.G.PullbackSections
 
 namespace ShortClause
 
-theorem val_mul {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) :
-    vLa la (a * b) = vLa la a + vLa la b := by
-  unfold vLa
-  rw [map_mul, WithZero.log_mul ((Valuation.ne_zero_iff _).2 ha) ((Valuation.ne_zero_iff _).2 hb)]
-  ring
+alias val_mul := _root_.Formalism.L2.Pj.Crude.crv_vLa_mul
 
 theorem val_pow {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) (a : K) (n : ℕ) :
     vLa la (a ^ n) = n * vLa la a := by

@@ -335,13 +335,6 @@ theorem map_le_maximalIdeal (R S : Type) [CommRing R] [IsLocalRing R] [CommRing 
     [Algebra R S] [Module.Finite R S] : (maximalIdeal R).map (algebraMap R S) ≤ maximalIdeal S :=
   Ideal.map_le_iff_le_comap.2 (eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := R) (maximalIdeal S))).ge
 
-theorem complete_of_finite (R S : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
-    [IsAdicComplete (maximalIdeal R) R] [CommRing S] [IsLocalRing S]
-    [Algebra R S] [Module.Finite R S] : IsAdicComplete (maximalIdeal S) S := by
-  first
-  | (rename_i h_2 h_3 h_4 h_5 h_6 h_7 h_8 h_9; revert R S h_2 h_3 h_4 h_5 h_6 h_7 h_8 h_9; exact @_root_.GlobalTheory.AdicCompleteFinite.isAdicComplete_of_finite)
-  | (intros; exact _root_.GlobalTheory.AdicCompleteFinite.isAdicComplete_of_finite ..)
-
 theorem tors_of_nsmul (l : ℕ) [Fact l.Prime] (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [Algebra ℤ_[l] Λ]
     [Module.Finite ℤ_[l] Λ] (B : Type) [AddCommGroup B] [Module Λ B] (hB : ∀ b : B, ∃ n : ℕ, (l ^ n) • b = 0) :
     Tors Λ B := by
@@ -588,7 +581,7 @@ theorem thmS_of_selmer_functor : KernelRep → ∀ (D : Formalism.BasicNotions.D
   have hS := setup_of_auxiliary_characters i bkP s hG P d Q hA hQ
   obtain ⟨hM, h1, h2, h3⟩ := h i s _ _ Q hS
   have := IsNoetherianRing.of_finite (X.O0 i) (abelian₂ X i M ι)
-  have := complete_of_finite ℤ_[X.l i] (abelian₂ X i M ι)
+  have := _root_.GlobalTheory.AdicCompleteFinite.isAdicComplete_of_finite ℤ_[X.l i] (abelian₂ X i M ι)
   have : Finite (IsLocalRing.ResidueField (abelian₂ X i M ι)) := by
     have := hS.2.1
     have := X.twistBaseCoefficientRing_residueField_finite i
@@ -1338,11 +1331,6 @@ theorem few_relations [IsNoetherianRing Λ] [Finite (ResidueField Λ)] (F : Modu
           rw [Nat.card_fun, Nat.card_eq_fintype_card (α := Fin a), Fintype.card_fin]
   exact _root_.GlobalTheory.exists_span_eq_top_of_card_hom_residueField_le Λ N a (hle1.trans (hcard.trans hle2))
 
-theorem residue_kill : ∀ r ∈ maximalIdeal Λ, ∀ y : ResidueField Λ, r • y = 0 := by
-  intro r hr y
-  rw [Algebra.smul_def, IsLocalRing.ResidueField.algebraMap_eq,
-    (IsLocalRing.residue_eq_zero_iff r).mpr hr, zero_mul]
-
 theorem residue_simple : IsSimpleModule Λ (ResidueField Λ) :=
   isSimpleModule_iff_isCoatom.mpr (IsLocalRing.maximalIdeal.isMaximal Λ).out
 
@@ -1350,7 +1338,7 @@ theorem kernelRep : KernelRep := by
   unfold KernelRep
   intro Λ _ _ _ _ _ F _ _ hlex hcol hobs
   classical
-  have hres := residue_kill (Λ := Λ)
+  have hres := _root_.GlobalTheory.SelFun.residue_smul_eq_zero (Λ := Λ)
   have hsimple := residue_simple (Λ := Λ)
   have htors : ∀ (B : ModuleCat.{0} Λ) (n : ℕ), (∀ x ∈ maximalIdeal Λ ^ n, ∀ y : B, x • y = 0) → Tors Λ B :=
     fun B n h y => ⟨n, fun x hx => h x hx y⟩

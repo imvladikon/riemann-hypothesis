@@ -153,10 +153,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianScheme_endomorphism_finite_of_geometric_fibres : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (φ : A ⟶ A),
-    (∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ S), IsFinite ((Over.pullback t).map φ).left) →
-    IsFinite φ.left := by
-  first | (exact @GlobalTheory.AbEnd.isFinite_of_isFinite_geomFibres)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeEndomorphismFiniteOfGeometricFibresStatement =====
@@ -251,10 +247,6 @@ section -- clump:auto
 
 open scoped NumberField
 
-theorem _root_.GlobalTheory.T.card_lTorsion_eq_pow_of_tateSimilitude : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (k : Type) [Field k] (Q : Type) [Group Q]
-    (act : D.O → Q → Q) (e : ℕ → Q → Q → kˣ → Prop) (I : GlobalTheory.UPel.HT.TateIsoO D k Q act e) (l : ℕ),
-    l.Prime → l ≠ p → Nat.card {q : Q // q ^ l = 1} = l ^ (D.m * D.n * Module.finrank ℚ D.F) := by
-  first | (exact @GlobalTheory.UPel.HT.TateIsoO.card_pow_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardLTorsionEqPowOfTateSimilitudeStatement =====
@@ -271,14 +263,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory
 
-theorem flat_of_isFinite_of_flat_geometric_fibres_over :
-    ∀ (S : Scheme.{0}) (X Y : Over S) (f : X ⟶ Y), Flat X.hom → LocallyOfFinitePresentation X.hom →
-    LocallyOfFinitePresentation Y.hom → IsFinite f.left →
-    (∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ S), Flat ((Over.pullback t).map f).left) →
-    Flat f.left :=
-  fun S X Y f h1 h0 h2 h3 H =>
-    flat_of_isFinite_of_finitePresentation_of_flat_geometric_fibres S X Y f h1 h0 h2 h3 H
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -294,11 +278,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.flat_of_finite_flat_geometric_fibres_over_base : ∀ (S : Scheme.{0}) (X Y : Over S) (f : X ⟶ Y), Flat X.hom → LocallyOfFinitePresentation X.hom →
-    LocallyOfFinitePresentation Y.hom → IsFinite f.left →
-    (∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ S), Flat ((Over.pullback t).map f).left) →
-    Flat f.left := by
-  first | (exact @GlobalTheory.flat_of_isFinite_of_flat_geometric_fibres_over)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOfFiniteFlatGeometricFibresOverBaseStatement =====
@@ -326,8 +305,8 @@ def toAbVar {k : Type} [Field k] (A : Over (Spec (CommRingCat.of k))) [GrpObj A]
     AbVar k where
   X := A
   ab := hA
-  dim := (GlobalTheory.T.abelianScheme_specField_smoothOfRelativeDimension k A hA).choose
-  smooth := (GlobalTheory.T.abelianScheme_specField_smoothOfRelativeDimension k A hA).choose_spec
+  dim := (_root_.GlobalTheory.AbFieldDim.exists_smoothOfRelativeDimension k A hA).choose
+  smooth := (_root_.GlobalTheory.AbFieldDim.exists_smoothOfRelativeDimension k A hA).choose_spec
 
 end GlobalTheory.TateHondaBridge
 
@@ -348,14 +327,6 @@ open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] CategoryTheory.Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.AV.AbVar
-
-theorem exists_prime_cast_ne_zero_of_field (k : Type) [Field k] : ∃ l : ℕ, l.Prime ∧ (l : k) ≠ 0 := by
-  obtain ⟨l, hl, hlp⟩ := Nat.exists_infinite_primes (ringChar k + 1)
-  refine ⟨l, hlp, fun h => ?_⟩
-  rw [CharP.cast_eq_zero_iff k (ringChar k)] at h
-  rcases hlp.eq_one_or_self_of_dvd _ h with h1 | h1
-  · exact CharP.ringChar_ne_one h1
-  · omega
 
 theorem minpoly_int_coeff_zero_ne_zero {F : Type} [Field F] [NumberField F] (x : 𝓞 F) (hx : x ≠ 0) :
     (minpoly ℤ x).coeff 0 ≠ 0 := by
@@ -391,7 +362,7 @@ namespace GlobalTheory.AV.AbVar
 theorem deg_eq_coeff_zero_pow_of_aeval {k : Type} [Field k] (A : AbVar k) (f : End A) (m : ℤ[X]) (hm : m.Monic)
     (hp : Prime m) (hf : aeval f m = 0) :
     ∃ e : ℕ, e * m.natDegree = 2 * A.dim ∧ (deg f.asHom : ℤ) = m.coeff 0 ^ e := by
-  obtain ⟨l, hl, hl0⟩ := exists_prime_cast_ne_zero_of_field k
+  obtain ⟨l, hl, hl0⟩ := _root_.GlobalTheory.AV.AbVar.exists_prime_natCast_ne_zero_of_field k
   have := Fact.mk hl
   obtain ⟨-, -, -, hfin, hrank⟩ := GlobalTheory.AV.AbVar.tl_free_finrank k l hl0 A
   have hchar (g : End A) :
@@ -627,13 +598,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.isFinite_and_finrank_act_eq_norm_pow : ∀ (k : Type) [Field k] [IsAlgClosed k] (A : Over (Sp k)) [GrpObj A], IsAbelianScheme A →
-    ∀ (F : Type) [Field F] [NumberField F] (ρ : OAct (𝓞 F) A) (l d : ℕ), l.Prime → (l : k) ≠ 0 →
-    Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ A // x ^ l = 1} = l ^ (d * Module.finrank ℚ F) →
-    ∀ c : 𝓞 F, c ≠ 0 → IsFinite (ρ.act c).left ∧
-      (ρ.act c).left.finrank ((1 : Over.mk (𝟙 (Sp k)) ⟶ A).left (IsLocalRing.closedPoint k)) =
-        (Algebra.norm ℤ c).natAbs ^ d := by
-  first | (exact @GlobalTheory.AV.OActDeg.isFinite_and_finrank_eq_norm_pow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteAndFinrankEqNormPowStatement =====
@@ -688,11 +652,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.isogeny_degree_of_fibre_rank : ∀ (k : Type) [Field k] [IsAlgClosed k] (A : Over (Sp k)) [GrpObj A], IsAbelianScheme A →
-    ∀ (φ : A ⟶ A), IsMonHom φ → IsFinite φ.left → ∀ d : ℕ,
-    φ.left.finrank ((1 : Over.mk (𝟙 (Sp k)) ⟶ A).left (IsLocalRing.closedPoint k)) = d →
-    GlobalTheory.IwLevel.IsIsogDeg φ d := by
-  first | (exact @GlobalTheory.IwLevel.isIsogDeg_of_isFinite_of_finrank_origin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyDegreeOfFibreRank =====
@@ -717,9 +676,9 @@ theorem isIsogDeg_of_geomFibres (S : Scheme.{0}) (A : Over S) [GrpObj A] (hA : I
     (d : ℕ) (h : ∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ S),
       GlobalTheory.IwLevel.IsIsogDeg ((Over.pullback t).map φ) d) : GlobalTheory.IwLevel.IsIsogDeg φ d := by
   have := hA.smooth
-  have hfin : IsFinite φ.left := GlobalTheory.T.abelianScheme_endomorphism_finite_of_geometric_fibres S A hA φ fun k _ _ t => (h k t).fin
+  have hfin : IsFinite φ.left := _root_.GlobalTheory.AbEnd.isFinite_of_isFinite_geomFibres S A hA φ fun k _ _ t => (h k t).fin
   have hflat : Flat φ.left :=
-    GlobalTheory.T.flat_of_finite_flat_geometric_fibres_over_base S A A φ inferInstance inferInstance inferInstance hfin fun k _ _ t => (h k t).flat
+    _root_.GlobalTheory.flat_of_isFinite_of_finitePresentation_of_flat_geometric_fibres S A A φ inferInstance inferInstance inferInstance hfin fun k _ _ t => (h k t).flat
   refine ⟨hfin, hflat, GlobalTheory.AbLaw.MulN.surjective_of_geomFibres φ fun k _ _ t => (h k t).surj, fun y => ?_⟩
   let K := AlgebraicClosure (A.left.residueField y)
   let u : Sp K ⟶ A.left := spMap (algebraMap (A.left.residueField y) K) ≫ A.left.fromSpecResidueField y
@@ -741,8 +700,8 @@ theorem isIsogDeg_fibre (k : Type) [Field k] [IsAlgClosed k] (A : Over (Sp k)) [
     (F : Type) [Field F] [NumberField F] (ρ : OAct (𝓞 F) A) (l d : ℕ) (hl : l.Prime) (hl0 : (l : k) ≠ 0)
     (hcard : Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ A // x ^ l = 1} = l ^ (d * Module.finrank ℚ F))
     (c : 𝓞 F) (hc : c ≠ 0) : GlobalTheory.IwLevel.IsIsogDeg (ρ.act c) ((Algebra.norm ℤ c).natAbs ^ d) := by
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.isFinite_and_finrank_act_eq_norm_pow k A hA F ρ l d hl hl0 hcard c hc
-  exact GlobalTheory.T.isogeny_degree_of_fibre_rank k A hA _ (ρ.hom c) h1 _ h2
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.AV.OActDeg.isFinite_and_finrank_eq_norm_pow k A hA F ρ l d hl hl0 hcard c hc
+  exact _root_.GlobalTheory.IwLevel.isIsogDeg_of_isFinite_of_finrank_origin k A hA _ (ρ.hom c) h1 _ h2
 
 def pullAct {p : ℕ} [Fact p.Prime] {D : GlobalTheory.UPel.HT.Datum p} {S : Scheme.{0}} {A : Over S} [GrpObj A]
     [IsCommMonObj A] (act : GlobalTheory.UPel.HT.OActN D.O A) {T : Scheme.{0}} (t : T ⟶ S) :
@@ -770,7 +729,7 @@ theorem isIsogDeg_intAct : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.H
     have := (b.unit l hcop).map φ.hom
     rw [map_natCast] at this
     exact this.ne_zero
-  have hcount := GlobalTheory.T.card_lTorsion_eq_pow_of_tateSimilitude p D k _ _ _ I l hl hlp'
+  have hcount := _root_.GlobalTheory.UPel.HT.TateIsoO.card_pow_eq_one p D k _ _ _ I l hl hlp'
   let e := GlobalTheory.TorsionLift.ptsEquiv t o.A (𝟙_ (Over (Sp k))) t (Category.id_comp t)
   have hc2 : Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ (Over.pullback t).obj o.A // x ^ l = 1} =
       l ^ ((D.m * D.n) * Module.finrank ℚ D.F) := by

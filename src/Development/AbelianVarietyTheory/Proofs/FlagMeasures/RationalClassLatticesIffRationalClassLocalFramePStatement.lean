@@ -92,13 +92,11 @@ theorem mem_localLattice_inf_of_mem_span : ∀ (D : D7) (Z : LocDat D) (p : PlF 
   have e := Formalism.L2.SG.Pf.locSatC_holds D Z p Λ U h.fg
   exact (Set.ext_iff.1 e y).2 ⟨hy, hs⟩
 
-theorem O_eq {D : D7} (Z : LocDat D) (p : PlF D) : (Z.M p).L.O = (D.s.atP p).O := (Z.agree p).2.2.2.1
-
 theorem gS_unit : ∀ (D : D7) (Z : LocDat D) (p : PlF D), (Z.M p).split = none →
     ∃ u ∈ (Z.M p).L.O, u * ((gS D : ℕ) : (D.s.atP p).Ep) = 1 := by
   intro D Z p hs
   refine ⟨(D.s.atP p).ιE (uP p : D.host.E), ?_, ?_⟩
-  · rw [O_eq Z p]; exact Formalism.L2.SG.Pf.LocFacts.unitPart_mem₂ p
+  · rw [_root_.Formalism.L2.SG.Pf.LocFacts.lf_hO Z p]; exact Formalism.L2.SG.Pf.LocFacts.unitPart_mem₂ p
   · rw [mul_comm, ← map_natCast (D.s.atP p).ιE]
     exact Formalism.L2.SG.Pf.StabIntSh.gS_mul_uP Z.δ Z.M Z.agree p hs
 
@@ -112,8 +110,8 @@ theorem gS_split : ∀ (D : D7) (Z : LocDat D) (p : PlF D) (g : Loc.SplitG (Z.M 
   rw [hs, hs'] at hagree
   have hq : g.q = sg.q := hagree.2
   refine ⟨(D.s.atP p).ιE ((Formalism.MainNotions.BridgeLemma.oth p : ℕ) : D.host.E), ?_, (D.s.atP p).ιE (uP p : D.host.E), ?_, ?_, ?_⟩
-  · rw [O_eq Z p, map_natCast]; exact natCast_mem _ _
-  · rw [O_eq Z p]; exact Formalism.L2.SG.Pf.LocFacts.unitPart_mem₂ p
+  · rw [_root_.Formalism.L2.SG.Pf.LocFacts.lf_hO Z p, map_natCast]; exact natCast_mem _ _
+  · rw [_root_.Formalism.L2.SG.Pf.LocFacts.lf_hO Z p]; exact Formalism.L2.SG.Pf.LocFacts.unitPart_mem₂ p
   · rw [hq, sg.q_eq, ← Formalism.MainNotions.BridgeLemma.gpart_mul_oth p, Formalism.MainNotions.BridgeLemma.gpart_some p sg hs']
     simp only [Nat.cast_mul, map_natCast]
     rw [← map_natCast (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep), mul_comm]
@@ -471,13 +469,6 @@ private lemma exists_integer_mul_eq_of_valuation_le (D : D7) (q : PlF D) (x y : 
     exact (div_le_one₀ hpos).2 hv
   · field_simp
 
-private lemma algebraMap_mem_O_of_mem_integer' (D : D7) (q : PlF D) (w : (D.s.atP q).Fp)
-    (hw : w ∈ Valuation.integer (ValuativeRel.valuation (D.s.atP q).Fp)) :
-    algebraMap (D.s.atP q).Fp (D.s.atP q).Ep w ∈ (D.s.atP q).O := by
-  rw [(D.s.atP q).O_def]
-  exact isIntegral_algebraMap (R := Valuation.integer (ValuativeRel.valuation (D.s.atP q).Fp))
-    (x := (⟨w, hw⟩ : Valuation.integer (ValuativeRel.valuation (D.s.atP q).Fp)))
-
 private lemma exists_smul_sub_eq_gS_mul_mem_O (D : D7) (p : PlF D) (f : (D.s.atP p).Fp) (e : D.host.E) :
     ∃ b : D.host.E, ∃ o ∈ (D.s.atP p).O,
       f • (D.s.atP p).ιE e - (D.s.atP p).ιE b = (D.s.atP p).ιE ((gS D : ℕ) : D.host.E) * o := by
@@ -509,7 +500,7 @@ private lemma exists_smul_sub_eq_gS_mul_mem_O (D : D7) (p : PlF D) (f : (D.s.atP
     exact (div_le_one₀ (zero_lt_iff.2 hvu)).2 ha.le
   refine ⟨algebraMap D.host.F D.host.E a * e,
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((f - (D.s.atP p).ιF a) / u) * (D.s.atP p).ιE ((d : ℤ) • e),
-    mul_mem (algebraMap_mem_O_of_mem_integer' D p _ ((Valuation.mem_integer_iff _ _).2 hβ))
+    mul_mem (_root_.PI.CntNotIntW.algMap_mem_O D p _ ((Valuation.mem_integer_iff _ _).2 hβ))
       (Formalism.L2.SG.Pf.StabIntSh.lg_iota_int p ⟨(d : ℤ) • e, hdint⟩), ?_⟩
   rw [map_mul, (D.s.atP p).compat, zsmul_eq_mul, map_mul, map_intCast, map_natCast, Algebra.smul_def]
   have hsplit : f = (f - (D.s.atP p).ιF a) / u * u + (D.s.atP p).ιF a := by
@@ -612,7 +603,7 @@ theorem exists_int_congr_gS : ∀ (D : D7) (p : PlF D) (c : (D.s.atP p).Ep), c �
       exact mul_le_of_le_one_right' (p.intValuation_le_one _)
     obtain ⟨β, hβ, hβe⟩ := exists_integer_mul_eq_of_valuation_le D p _ _ (by exact_mod_cast hgN) hle
     refine ⟨algebraMap (D.s.atP p).Fp (D.s.atP p).Ep β * (D.s.atP p).ιE b₀ - o₀,
-      sub_mem (mul_mem (algebraMap_mem_O_of_mem_integer' D p β hβ) hb₀) ho₀, ?_⟩
+      sub_mem (mul_mem (_root_.PI.CntNotIntW.algMap_mem_O D p β hβ) hb₀) ho₀, ?_⟩
     have ht : (D.s.atP p).ιF (t : D.host.F) = (D.s.atP p).ιF ((gS D : ℕ) : D.host.F) * β + 1 := by
       rw [← hβe, map_sub, map_one]; ring
     rw [hιa p, ht, map_add (f := _), map_mul, map_one, map_natCast, map_natCast, map_natCast]
@@ -635,7 +626,7 @@ theorem exists_int_congr_gS : ∀ (D : D7) (p : PlF D) (c : (D.s.atP p).Ep), c �
       mul_ne_zero (by exact_mod_cast hgN) (by exact_mod_cast hd0)
     obtain ⟨β, hβ, hβe⟩ := exists_integer_mul_eq_of_valuation_le D q _ _ hne hle
     refine ⟨algebraMap (D.s.atP q).Fp (D.s.atP q).Ep β * (D.s.atP q).ιE ((d : ℤ) • b₀),
-      mul_mem (algebraMap_mem_O_of_mem_integer' D q β hβ) (hdb q), ?_⟩
+      mul_mem (_root_.PI.CntNotIntW.algMap_mem_O D q β hβ) (hdb q), ?_⟩
     rw [hιa q, hβe, zsmul_eq_mul]
     simp only [map_mul, map_intCast, map_natCast]
     ring
@@ -767,7 +758,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : Formalism.BasicNotions.D7} (Zd : LocDat D) (p : PlF D)
 
-theorem hO : (Zd.M p).L.O = (D.s.atP p).O := (Zd.agree p).2.2.2.1
+alias hO := _root_.Formalism.L2.SG.Pf.LocFacts.lf_hO
 
 theorem smul_mem_localLattice {Λ : Submodule (𝓞 D.host.E) (VS D).V} {a : (D.s.atP p).Ep} (ha : a ∈ (D.s.atP p).O)
     {v : Vp D p} (hv : v ∈ lattice₂ D Zd.M p Λ) : a • v ∈ lattice₂ D Zd.M p Λ :=
@@ -798,9 +789,6 @@ theorem gS_typed (g : Loc.SplitG (Zd.M p).L) (hs : (Zd.M p).split = some g) :
       exact_mod_cast Formalism.MainNotions.BridgeLemma.oth_ne_zero p
     push_cast
     rw [mul_inv_cancel₀ h0, map_one]
-
-theorem localLattice_mono {A B : Submodule (𝓞 D.host.E) (VS D).V} (h : A ≤ B) : lattice₂ D Zd.M p A ≤ lattice₂ D Zd.M p B :=
-  Submodule.span_mono (Set.image_mono h)
 
 theorem smul_gS_mem {Λ : Submodule (𝓞 D.host.E) (VS D).V} {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T)
     (F' : LFlag (D.sp.Y 0) D.R.rS T') {v : Vp D p} (hv : v ∈ lattice₂ D Zd.M p Λ) :
@@ -963,7 +951,7 @@ theorem off_step {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (
     {v : Vp D p} (h : ∃ w ∈ lattice₂ D Zd.M p N, v = (D.s.atP p).ιE ((gS D : ℕ) : D.host.E) • w) :
     v ∈ lattice₂ D Zd.M p (NgX Λ₁ (gS D) F F') := by
   obtain ⟨u, hu, rfl⟩ := h
-  exact smul_gS_mem Zd p F F' (localLattice_mono Zd p hN hu)
+  exact smul_gS_mem Zd p F F' (_root_.Formalism.L2.SG.Pf.BBTie.latP_mono Zd p hN hu)
 
 theorem alg1 {R V : Type} [CommRing R] [AddCommGroup V] [Module R V] (c : R) (x a b s w v : V) (e : a - x = c • w) :
     x - (b - s - c • v) = (a - b + s) - c • (w - v) ∧ x - (b + s - c • v) = (a - b - s) - c • (w - v) := by
@@ -987,7 +975,7 @@ theorem place_A (g : Loc.SplitG (Zd.M p).L) (hs : (Zd.M p).split = some g) {T T'
   have le1 : Lrep Λ₁ F ≤ Λ₁ := inf_le_left
   have le2 : Lrep Λ₁ F' ≤ Λ₁ := inf_le_left
   have hN : l - l' ∈ NgX Λ₁ (gS D) F F' :=
-    ngx_step Zd p g hs F F' h₁ (localLattice_mono Zd p le1 hw) (localLattice_mono Zd p le2 hw') e e'
+    ngx_step Zd p g hs F F' h₁ (_root_.Formalism.L2.SG.Pf.BBTie.latP_mono Zd p le1 hw) (_root_.Formalism.L2.SG.Pf.BBTie.latP_mono Zd p le2 hw') e e'
       (fun q hq => off_step Zd q F F' le1 (ho q hq)) (fun q hq => off_step Zd q F F' le2 (ho' q hq))
       (q_le_NgX Zd p g hs F F' hd)
   obtain ⟨m', hm', m, hm, d', d, hN₂⟩ := hG l' hl' l hl hN
@@ -1374,7 +1362,7 @@ theorem gdat_eq_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
       ∀ g, (Z.M p).split = some g → (y p).io = (locH Z p).iotaGraph g ⟨lattice₂ D Z.M p Λ, (FP p).A.f, (FP p).B.f, (FP p).A.T, (FP p).B.T⟩ := by
     intro Λ y hy p
     obtain ⟨τ, hτ, hlam⟩ := hy.2 p
-    have h1 := inner_of_term (locH Z p) D.R.rS (FP p) (y p) τ hτ
+    have h1 := _root_.GlobalTheory.InnerRead.datum_eq_Lset (locH Z p) D.R.rS (FP p) (y p) τ hτ
     refine ⟨h1.1.trans (congrArg (fun L => (locH Z p).Lset L (FP p).A.f) hlam),
       h1.2.trans (congrArg (fun L => (locH Z p).Lset L (FP p).B.f) hlam), fun g hg => ?_⟩
     have h2 := (hτ.2.2.2.2 g hg).2
@@ -1391,13 +1379,13 @@ theorem gdat_eq_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
     funext p
     apply datum_ext
     · apply SetLike.coe_injective
-      exact (hL Λ₁ y₁ h₁ p).1.trans ((lset_eq_of_lsub_eq D Z p F (FP p).A (hB p).1 Λ₁ Λ₂ h₁.1 h₂.1 hF).trans (hL Λ₂ y₂ h₂ p).1.symm)
+      exact (hL Λ₁ y₁ h₁ p).1.trans ((_root_.GlobalTheory.Unfold.InnerLoc.lset_eq_of_lsub_eq D Z p F (FP p).A (hB p).1 Λ₁ Λ₂ h₁.1 h₂.1 hF).trans (hL Λ₂ y₂ h₂ p).1.symm)
     · apply SetLike.coe_injective
-      exact (hL Λ₁ y₁ h₁ p).2.1.trans ((lset_eq_of_lsub_eq D Z p F' (FP p).B (hB p).2.1 Λ₁ Λ₂ h₁.1 h₂.1 hF').trans (hL Λ₂ y₂ h₂ p).2.1.symm)
+      exact (hL Λ₁ y₁ h₁ p).2.1.trans ((_root_.GlobalTheory.Unfold.InnerLoc.lset_eq_of_lsub_eq D Z p F' (FP p).B (hB p).2.1 Λ₁ Λ₂ h₁.1 h₂.1 hF').trans (hL Λ₂ y₂ h₂ p).2.1.symm)
     · cases hs : (Z.M p).split with
       | none => exact ((y₁ p).io_L hs).trans ((y₂ p).io_L hs).symm
       | some g =>
-        exact ((hL Λ₁ y₁ h₁ p).2.2 g hs).trans ((iota_eq_of_graph_eq D Z FP _ _ F F' hB Λ₁ Λ₂ h₁.1 h₂.1 hF hF' hΓ p g hs).trans
+        exact ((hL Λ₁ y₁ h₁ p).2.2 g hs).trans ((_root_.GlobalTheory.IotaLocA.io_eq_of_graph D Z FP _ _ F F' hB Λ₁ Λ₂ h₁.1 h₂.1 hF hF' hΓ p g hs).trans
           ((hL Λ₂ y₂ h₂ p).2.2 g hs).symm)
   · intro hy
     subst hy
@@ -1407,7 +1395,7 @@ theorem gdat_eq_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wh
     have hF' : Lsub Λ₁ F' = Lsub Λ₂ F' :=
       lsub_eq_of_lset_eq D Z F' (fun p => (FP p).B) (fun p => (hB p).2.1) Λ₁ Λ₂ h₁.1 h₂.1
         (fun p => (hL Λ₁ y₁ h₁ p).2.1.symm.trans (hL Λ₂ y₁ h₂ p).2.1)
-    have hΓ := graph_eq_of_iota_eq D Z FP _ _ F F' hB Λ₁ Λ₂ h₁.1 h₂.1 hF hF'
+    have hΓ := _root_.GlobalTheory.Unfold.IotaGlob.graph_eq_of_local_iota D Z FP _ _ F F' hB Λ₁ Λ₂ h₁.1 h₂.1 hF hF'
       (fun p g hs => ((hL Λ₁ y₁ h₁ p).2.2 g hs).symm.trans ((hL Λ₂ y₁ h₂ p).2.2 g hs))
     exact Prod.ext hF (Prod.ext hF' hΓ)
 
@@ -1580,8 +1568,6 @@ open scoped Classical ENNReal
 open NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full Formalism.L2.SG.RowsConc Formalism.L2.SG.NGData Formalism.L2.SG.TermLoc GlobalTheory.Unfold
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.rationalClass_lattices_iff_rationalClass_localFramePairs : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → Equivalence (GRel (Z := Z) (FP := FP) F F') ∧ (∀ y y' : Dat Z FP, GRel F F' y y' → (stabY F F' y).encard = (stabY F F' y').encard) ∧ ∀ (Λ₁ Λ₂ : LV D) (y₁ y₂ : Dat Z FP), LocOver Λ₁ y₁ → LocOver Λ₂ y₂ → (LRel F F' Λ₁ Λ₂ ↔ GRel F F' y₁ y₂) ∧ stabL F F' Λ₁ = stabY F F' y₁ := by
-  first | exact @GlobalTheory.Unfold.ratCls_agree
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalClassLatticesIffRationalClassLocalFramePStatement =====

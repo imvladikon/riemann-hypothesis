@@ -275,8 +275,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.LocGL GlobalTheory.WeilDeligne GlobalTheory.LocLanglands GlobalTheory.Published
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem GlobalTheory.RecTTransport.good_of_repRel : ∀ (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] [CharZero k'] (i : k ≃+* k'), Continuous i → ∀ (x : IrrGL (k := k)) (x' : IrrGL (k := k')), RepRel i x x' → UpperTheory.Zero.LLC.Good x → UpperTheory.Zero.LLC.Good x' :=
-  GlobalTheory.GoodTransport.good_transport
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodIrrGLTransportAlongFieldIso =====
@@ -290,8 +288,6 @@ open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.Conju
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.good_irrGL_transport_along_fieldIso : ∀ (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] [CharZero k'] (i : k ≃+* k'), Continuous i → ∀ (x : IrrGL (k := k)) (x' : IrrGL (k := k')), RepRel i x x' → UpperTheory.Zero.LLC.Good x → UpperTheory.Zero.LLC.Good x' := by
-  first | (exact @GlobalTheory.RecTTransport.good_of_repRel)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodIrrGLTransportAlongFieldIsoStatement =====
@@ -460,8 +456,6 @@ open NumberField IsDedekindDomain ValuativeRel Matrix Polynomial Formalism.Conju
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.principalCongruence_fixedVectors_ne_bot_transport : ∀ (k k' : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k] [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k'] [CharZero k'] (i : k ≃+* k'), Continuous i → ∀ (x : IrrGL (k := k)) (x' : IrrGL (k := k')), RepRel i x x' → GlobalTheory.PRep.fixed x.rep (GlobalTheory.SplitWeil.KOne k (Fin x.1)) ≠ ⊥ → GlobalTheory.PRep.fixed x'.rep (GlobalTheory.SplitWeil.KOne k' (Fin x'.1)) ≠ ⊥ := by
-  first | (exact @GlobalTheory.KOneTransport.fixed_ne_bot_transport)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalCongruenceFixedVectorsNeBotTransportStatement =====
@@ -641,7 +635,7 @@ private theorem isRecT_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.a
   have hrel : ∀ x', RepRel i (T.symm x') x' := fun x' => (hT _ _).2 (T.apply_symm_apply x')
   have hcusp : ∀ x', (T.symm x').IsCusp ↔ x'.IsCusp := fun x' => (hcu _ _ (hrel x')).1
   have hG : ∀ x x', RepRel i x x' → (UpperTheory.Zero.LLC.Good x ↔ UpperTheory.Zero.LLC.Good x') := fun x x' hx =>
-    ⟨GlobalTheory.T.good_irrGL_transport_along_fieldIso _ _ i h3 x x' hx, GlobalTheory.T.good_irrGL_transport_along_fieldIso _ _ i.symm hs x' x (repRel_symm hx)⟩
+    ⟨_root_.GlobalTheory.GoodTransport.good_transport _ _ i h3 x x' hx, _root_.GlobalTheory.GoodTransport.good_transport _ _ i.symm hs x' x (repRel_symm hx)⟩
   have hwd : ∀ y, WDRel φ y (S y) := fun y => (hS _ _).2 rfl
   have hσ : ∀ σ', WeilRel φ (c.symm σ') σ' := fun σ' => (hc _ _).2 (c.apply_symm_apply σ')
   have hv : ∀ (ω : (w'.adicCompletion E')ˣ →* ℂˣ) (z : (w.adicCompletion E)ˣ),
@@ -698,8 +692,8 @@ private theorem isRecT_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.a
       rw [← hRS _ _ (hrel x'), ← hRS _ _ (hrel y'), e]
     exact T.symm.injective (L.inj _ _ ((hG _ _ (hrel y')).2 hg) e2)
   · have hx' := repRel_symm (hrel x')
-    exact tame_fwd P (hR _ _ (hrel x')) (L.depth _ (GlobalTheory.T.good_irrGL_transport_along_fieldIso _ _ i.symm hs _ _ hx' hg)
-      (GlobalTheory.T.principalCongruence_fixedVectors_ne_bot_transport _ _ i.symm hs _ _ hx' hf))
+    exact tame_fwd P (hR _ _ (hrel x')) (L.depth _ (_root_.GlobalTheory.GoodTransport.good_transport _ _ i.symm hs _ _ hx' hg)
+      (_root_.GlobalTheory.KOneTransport.fixed_ne_bot_transport _ _ i.symm hs _ _ hx' hf))
 
 end UpperTheory.One.M.FieldTr
 
@@ -713,7 +707,7 @@ theorem UpperTheory.One.M.fieldGT :
   obtain ⟨a', ha', -⟩ := id H'
   obtain ⟨rc'', hrec, hR⟩ := isRecT_fwd P rc H a' ha'
   have hr : RepRel i (cls π) (cls π') := ⟨n, π, π', e, rfl, rfl, he⟩
-  have hg' := GlobalTheory.T.good_irrGL_transport_along_fieldIso _ _ i h3 _ _ hr hg
+  have hg' := _root_.GlobalTheory.GoodTransport.good_transport _ _ i h3 _ _ hr hg
   have W := hR _ _ hr
   rw [UpperTheory.Zero.LLC.recTUnique E' Ω' A' w' h' rc'' rc' hrec H' _ hg'] at W
   obtain ⟨a, ha, L⟩ := H

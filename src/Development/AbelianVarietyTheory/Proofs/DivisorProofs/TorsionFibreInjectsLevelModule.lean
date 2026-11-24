@@ -839,11 +839,6 @@ open MonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.Semi
 
 
-theorem _root_.GlobalTheory.T.levelSection_injective_at_geometricPoint : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
-    {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} (TF : TorFlag Xo c) (Z : Comp Xo c) {X' : Scheme.{0}}
-    (φ : X' ⟶ X₀ TF.Y Z) (ℓ : V₀ TF.Y Z ⟶ X') (hℓ : ℓ ≫ φ = j₀ TF.Y Z) (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : Sp Ω ⟶ V₀ TF.Y Z) (c c' : LevelMod Dw l)
-    (h : x ≫ GlobalTheory.TorsSpec.etaSecL TF Z φ ℓ hℓ c = x ≫ GlobalTheory.TorsSpec.etaSecL TF Z φ ℓ hℓ c'), c = c' := by
-  first | exact @GlobalTheory.TorsSpec.etaSecL_injective_at
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelSectionInjectiveAtGeometricPointStatement =====
@@ -1537,7 +1532,7 @@ theorem torsLevel_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     fun P h => Classical.choose (Classical.choose_spec (hlift P h)).2
   have hcl : ∀ P h, ValAt (pullG TF Z φ) l.M ℓ (etaSecL TF Z φ ℓ hℓ) (PT P h (IsLocalRing.closedPoint K)) (cl P h) :=
     fun P h => Classical.choose_spec (Classical.choose_spec (hlift P h)).2
-  have hun := GlobalTheory.T.levelSection_injective_at_geometricPoint TF Z φ ℓ hℓ
+  have hun := _root_.GlobalTheory.TorsSpec.etaSecL_injective_at TF Z φ ℓ hℓ
   refine ⟨fun P => if h : IsTorsI I (pullAct TF Z φ) P then cl P h else 0, ?_, ?_, ?_, ?_⟩
   · intro P Q hP hQ
     have hPQ : IsTorsI I (pullAct TF Z φ) (P * Q) := fun a ha => by

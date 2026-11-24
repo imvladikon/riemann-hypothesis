@@ -64,8 +64,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 
 
-theorem _root_.GlobalTheory.T.perfect_pairing_torsion_module : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → (∃ e : ℕ, c = p ^ e) → ∀ (M : Type) [AddCommGroup M] [Module (𝓞 D.F) M] [Finite M], (∀ x : M, c • x = 0) → ∀ (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (e : M → M → kˣ), (∀ x x' y, e (x + x') y = e x y * e x' y) → (∀ x y y', e x (y + y') = e x y * e x y') → (∀ (a : 𝓞 D.F) x y, e (a • x) y = e x (D.bar a • y)) → (∀ x y, e x y * e y x = 1) → (∀ x, (∀ y, e x y = 1) → x = 0) → Ideal.absNorm w ^ j ≤ Nat.card {x : M // ∀ a ∈ w, a • x = 0} → ∃ H : Submodule (𝓞 D.F) M, (∀ x ∈ H, ∀ y ∈ H, e x y = 1) ∧ (∀ x, (∀ y ∈ H, e x y = 1) → x ∈ H) ∧ (∀ x ∈ H, (∃ i : ℕ, ∀ a ∈ uIdeal D r ^ i, a • x = 0) → ∀ a ∈ w, a • x = 0) ∧ Nat.card {x : M // x ∈ H ∧ ∀ a ∈ w, a • x = 0} = Ideal.absNorm w ^ j := by
-  first | (exact @GlobalTheory.UPel.HT.ES.exists_maximal_isotropic_of_type)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PerfectPairingTorsionModule =====
@@ -156,7 +154,7 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
     rw [he g g' hg hg']
     exact ⟨fun h => (hinj (hone.trans h)).symm, fun h => by rw [h]; exact hone.symm⟩
   let M := torsSub o (𝟙_ (Over (Sp k))) c
-  haveI : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+  haveI : Finite M := (_root_.GlobalTheory.AbTorsionGeomDescent.finite_torsion_and_descent k o.A o.ab c hck).1
   have hM0 : ∀ x : M, x = 0 ↔ x.1.toMul = 1 := fun x => ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
   have hkill : ∀ (v : Ideal (𝓞 D.F)) (x : M), (∀ a ∈ v, a • x = 0) ↔ KilledBy o v x.1.toMul :=
     fun v x => forall₂_congr fun a _ => hM0 (a • x)
@@ -181,7 +179,7 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
           right_inv := fun _ => rfl }
       rw [← Nat.card_congr φ, hrk, hm, Nat.one_mul]
       exact Nat.pow_le_pow_right hq hj
-  obtain ⟨K, Kiso, Kmax, Ku, Kcard⟩ := GlobalTheory.T.perfect_pairing_torsion_module p D r w j c hw hu ⟨ex, hce⟩ M
+  obtain ⟨K, Kiso, Kmax, Ku, Kcard⟩ := _root_.GlobalTheory.UPel.HT.ES.exists_maximal_isotropic_of_type p D r w j c hw hu ⟨ex, hce⟩ M
     (fun x => (hM0 _).2 x.2) k (fun x y => e x.1.toMul y.1.toMul)
     (fun x x' y => hl _ _ _ x.2 x'.2 y.2) (fun x y y' => hr _ _ _ x.2 y.2 y'.2)
     (fun a x y => by
@@ -201,7 +199,7 @@ theorem exists_sub (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ) (hw : w.IsMaxima
         exact ⟨-x, K.neg_mem hx, rfl⟩ }
   refine ⟨H, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · rintro c' _ ⟨x, hx, rfl⟩
-    obtain ⟨a, rfl⟩ := GlobalTheory.T.integers_surjective_of_rank_one p D hm c'
+    obtain ⟨a, rfl⟩ := _root_.GlobalTheory.UPel.HT.Datum.algebraMap_surjective_of_m_eq_one p D hm c'
     exact ⟨a • x, K.smul_mem a hx, rfl⟩
   · rintro _ ⟨x, -, rfl⟩
     exact x.2
@@ -228,7 +226,7 @@ theorem exists_isPIsog_isTj : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     rw [hce, Nat.cast_pow]
     exact pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hfin : Finite H := by
-    haveI := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+    haveI := (_root_.GlobalTheory.AbTorsionGeomDescent.finite_torsion_and_descent k o.A o.ab c hck).1
     exact Finite.of_injective (fun h : H => (⟨h.1, hpow h.1 h.2⟩ : {g : 𝟙_ (Over (Sp k)) ⟶ o.A // g ^ c = 1}))
       fun a a' h => Subtype.ext (Subtype.mk.inj h)
   have hinj : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h h' : 𝟙_ (Over (Sp k)) ⟶ o.A),

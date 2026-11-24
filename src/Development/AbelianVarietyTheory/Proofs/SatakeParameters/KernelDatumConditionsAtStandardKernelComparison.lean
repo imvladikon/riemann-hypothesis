@@ -131,6 +131,7 @@ import Mathlib.Tactic.TypeStar
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.HCFFromRecipA
 import Formalism.PeriodIntegrals.OrbJetBase
+import Formalism.LocalToGlobal.Columns.ChainTwOk
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.SatakeParameters.JacobiOfClass, Development.AbelianVarietyTheory.Proofs.SatakeParameters.GoodModelTwoScaleOne, Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLeOneOfDisc, Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralJetsNormalisedThetaTranslatesAwayDisc, Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralJetsNormalisedThetaCombinationsAwayD, Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatrixUnitIntegralCombEmbeddedHoms, Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralJetsRealPlaceLocalBases, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KvalGeZeroOfIntegralJets, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumEntriesIntegralAwayFromD, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumPeriodLatticeIdealFgOfHeckeCharacters, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntriesHypOfHeckeCharacterConditions, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntriesHypOfColumnSideProperties, Development.AbelianVarietyTheory.Proofs.SatakeParameters.PadicNormDetLatticeBasisEqDetIdealNorm, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelBasisDeterminantAbsAtPlace, Development.AbelianVarietyTheory.Proofs.SatakeParameters.NrmIdNonneg, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntryUnramifiedUnit, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelPairScalarsIsUnitTrueColumns, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelPairScalarsIsUnitTrueColumnsStatement, Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepZeroTrivialStabilisersTrueColumnsStatement, Development.AbelianVarietyTheory.Proofs.SatakeParameters.AtOfTrueColumns, Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepRepEqOneAtTypePrimes, Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumConditionsAtStandardKernelComparison
@@ -195,7 +196,7 @@ theorem hostAt_inert : Formalism.L2.KerInert.GenusOneModelExistsLattice → Form
   have hin := jacobi_of_class D p hcl
   obtain ⟨cc', δ', g, -, -, hL, hlam, hAt, hM, hLT⟩ := h1 D cc δ hc hδ p h5 hin lam
   obtain ⟨g2, g3, ε, s2, -, -, -, -, hn, ⟨a1, a2, a3, a4, a5, -, F, hF, -⟩, hD⟩ := h2 D cc' δ' p g hLT hAt h5 hin hM
-  obtain ⟨σ, hσ, -⟩ := Formalism.L2.Th1.D.fieldDataCM p h5
+  obtain ⟨σ, hσ, -⟩ := _root_.Formalism.L2.Th1.D.complex_multiplication_field_data p h5
   refine ⟨_, g2, g3, s2, ε, σ, F, hn, ⟨h5, a1, a2, a3, a4, hσ, hF, a5 σ hσ⟩, ?_⟩
   intro N N' L L' hA
   obtain ⟨r, b, hb, ho⟩ := Formalism.L2.KerInert.orthBasisExists_of Formalism.L2.KerInert.global_orthonormal_basis_four
@@ -484,7 +485,7 @@ theorem goodModelThree : GlobalTheory.ThLoc.Inputs → ∀ (D : D7) (cc : Ideal 
     rw [← e2, ← e3]
     exact h
   have hcm : Formalism.L2.Th1.CM.HasCMBy D.host.d L :=
-    Formalism.L2.Th1.F.hasCMByScale D.host.d _ lam hlam (Formalism.L2.Th1.F.cmPairHasCMBy a₀ b₀ c₀ D.host.d ha hd hok.1
+    Formalism.L2.Th1.F.hasCMByScale D.host.d _ lam hlam (_root_.Formalism.L2.Th1.F.cm_pair_has_cm a₀ b₀ c₀ D.host.d ha hd hok.1
       (Formalism.L2.Th1.H.CmData.odd_b a₀ b₀ c₀ D.host.d hok.1 hok.2.2.1))
   have hd8 := hok.2.2.1
   have hj : IsIntegral ℤ (Formalism.L2.Th1.CM.jInv L) :=
@@ -540,7 +541,7 @@ theorem GlobalTheory.ThLoc.jetsIntegral_three (hIn : GlobalTheory.ThLoc.Inputs) 
     simpa [Formalism.L2.Th1.CM.omegaK] using this
   have hω2 : conj (Formalism.L2.Th1.CM.omegaK dK) * (lam * (a₀ : ℂ) / 2) ∉ (cmL a₀ b₀ dK ha hd lam hlam).lattice := by
     have := GlobalTheory.ThLoc.LocJets.half_notMem ha hd lam hlam hcmok (-1) (Or.inr rfl)
-    rw [GlobalTheory.ThLoc.LocJets.conj_omegaK]
+    rw [_root_.Formalism.L2.Th1.B.LCm.conj_omegaK]
     simpa [sub_eq_add_neg] using this
   obtain ⟨g₁, ε, hiso, hidx, hidx', hε, hten⟩ := l5
   obtain ⟨Dm, q0, hD, hq0, hfac, hgram⟩ :=
@@ -600,23 +601,10 @@ noncomputable section
 
 namespace GlobalTheory.Proof.integralJets_normalisedThetaCombinations_away_d
 
-theorem jets_comb {K : Type} [NormedField K] [IsUltrametricDist K] {X κ : Type} [Fintype κ] (r : κ → K)
-    (sg : κ → MvPowerSeries X K) (hr : ∀ k, ‖r k‖ ≤ 1) (hsg : ∀ k, JetsIntegral (sg k)) :
-    JetsIntegral (∑ k, MvPowerSeries.C (r k) * sg k) := by
-  refine (Formalism.L2.Th1.G.jets_in_norm_holds K X _).2 ?_
-  refine Formalism.L2.Th1.G.jetsIn_sum _ _ fun k _ => ?_
-  exact Formalism.L2.Th1.G.jetsIn_mul (Formalism.L2.Th1.G.jetsIn_C (hr k))
-    ((Formalism.L2.Th1.G.jets_in_norm_holds K X _).1 (hsg k))
-
 theorem embT_mem (D : D7) (τ : D.what₂.Tau) (x : D.host.E) : TaylorLogMetric.embT D τ x ∈ TaylorLogMetric.Qbar := by
   have hx : IsAlgebraic ℚ x := Algebra.IsAlgebraic.isAlgebraic x
   have : IsAlgebraic ℚ ((TaylorLogMetric.embT D τ).toRatAlgHom x) := hx.algHom _
   exact (mem_algebraicClosure_iff).2 this
-
-theorem norm_natCast_coprime {p : ℕ} [Fact p.Prime] {n : ℕ} (h : Nat.Coprime n p) : ‖(n : ℂ_[p])‖ = 1 := by
-  have e : (n : ℂ_[p]) = algebraMap ℚ_[p] ℂ_[p] (n : ℚ_[p]) := (map_natCast _ n).symm
-  rw [e, norm_algebraMap', Padic.norm_natCast_eq_one_iff]
-  exact h.symm
 
 theorem atLin_X {σ κ : Type} [Fintype κ] {p : ℕ} [Fact p.Prime] (c : σ → κ → ℂ_[p]) (F : MvPowerSeries σ ℂ_[p]) :
     TaylorLogMetric.atLin c (fun j => MvPowerSeries.X j) F = Formalism.L2.Th1.G.linSub c F := rfl
@@ -708,7 +696,7 @@ theorem term_jets (hIn : GlobalTheory.ThLoc.Inputs) (hcc : TaylorLogMetric.IsCur
   let v : Fin n → DVar X.Tau N N' → ℂ := fun j =>
     (s.flatV N N').symm (TaylorLogMetric.embV D B.tor (((s₁ * s₂ : ℕ) : D.host.E) • y j))
   let A : Fin n → Fin n → ℂ_[p] := fun j x => if j = x then (((s₁ * s₂ : ℕ) : ℂ_[p]))⁻¹ else 0
-  have hn1 : ‖(((s₁ * s₂ : ℕ) : ℂ_[p]))‖ = 1 := norm_natCast_coprime hS
+  have hn1 : ‖(((s₁ * s₂ : ℕ) : ℂ_[p]))‖ = 1 := _root_.GlobalTheory.HeckeVal.norm_natCast_eq_one hS
   have hn0 : (((s₁ * s₂ : ℕ) : ℂ_[p])) ≠ 0 := fun h => by rw [h, norm_zero] at hn1; exact zero_ne_one hn1
   have hv : ∀ j, InMul (cmL a₀ b₀ D.host.d ha hd lam hlam) (s.laF B.tor L₁ L₁') (v j) := by
     intro j ω hω
@@ -775,7 +763,7 @@ theorem GlobalTheory.Proof.integralJets_normalisedThetaCombinations_away_d.jetsA
     rw [map_mul, AlgHom.commutes, Formalism.L2.Th1.G.linSubHom_apply]
     rfl
   rw [e]
-  exact GlobalTheory.Proof.integralJets_normalisedThetaCombinations_away_d.jets_comb r _ hr fun k =>
+  exact _root_.GlobalTheory.ThLoc.LocJets.jets_comb r _ hr fun k =>
     GlobalTheory.Proof.integralJets_normalisedThetaCombinations_away_d.term_jets hIn hcc hδ B χ hχ s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat (hL1 k).1 (hL1 k).2.1 (hL1 k).2.2 lm ι hι hpd h3
       (t k) (ht k) y hy
 end -- clump:auto
@@ -1694,7 +1682,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AtOfTrueColumns =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepRepEqOneAtTypePrimes =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepRepEqOneAtTypePrimes", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ColNorm\npublic import Formalism.LocalToGlobal.Columns.ChainTw\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepRepEqOneAtTypePrimes", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ColNorm\npublic import Formalism.LocalToGlobal.Columns.ChainTw\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.LocalToGlobal.Columns.ChainTwOk\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1704,29 +1692,6 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 namespace GlobalTheory.Pdv
 
 
-open Classical in
-theorem stepRep_eq_one_at_typePrimes {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
-    (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
-    (mu : Tup X.F X.E X.K S) (cst : LocCst X (rowSG Pr sel mu)) (m2 j : ℕ)
-    (b : (twSt Ch sel mu cst m2 j).β) (P : rowSG Pr sel mu) (hP : P.1 ∈ Pr.vGs) :
-    (twSt Ch sel mu cst m2 j).h b P = 1 := by
-  cases j with
-  | zero => rfl
-  | succ i =>
-    by_cases h1 : i + 1 ≤ m2
-    · revert b
-      rw [show twSt Ch sel mu cst m2 (i+1) = twNext Ch sel mu cst (twSt Ch sel mu cst m2 i) by simp [twSt, h1]]
-      intro b
-      have hq : P.1 ∉ twQOff (Pr := Pr) sel mu := fun hq => (Finset.mem_sdiff.1 hq).2 hP
-      simp only [twNext, hq, dif_neg, not_false_eq_true]
-    · by_cases h2 : i + 1 = m2 + 1
-      · revert b
-        rw [show twSt Ch sel mu cst m2 (i+1) = twUnitSt _ (i+1) by simp [twSt, h2]]
-        intro b; rfl
-      · revert b
-        rw [show twSt Ch sel mu cst m2 (i+1) = twEmptySt _ (i+1) by simp only [twSt, if_neg h1, if_neg h2]]
-        intro b; exact b.elim
-
 theorem colNorm_of_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), (∀ a, I.cst a = twCst I.Ch I.sel (I.tup a) I.glob ∧ I.idx a = twIdx I.Ch I.sel (I.tup a) (I.cst a) (B.R.m - 2)) → GlobalTheory.Pdv.ColNorm I := by
   intro B X I H a
   obtain ⟨hc, hi⟩ := H a
@@ -1735,7 +1700,7 @@ theorem colNorm_of_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), (∀ a, 
   · rw [hc]; show B.R.m ≤ B.R.m; exact le_rfl
   · rw [hi]
     intro j _ b P hP
-    exact stepRep_eq_one_at_typePrimes _ _ _ _ _ _ b P hP
+    exact _root_.Formalism.L2.Col.twSt_h_g _ _ _ _ _ _ b P hP
 
 end GlobalTheory.Pdv
 end -- clump:auto

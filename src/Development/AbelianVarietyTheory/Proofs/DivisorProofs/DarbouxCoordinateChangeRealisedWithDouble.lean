@@ -54,6 +54,7 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Tactic.Linter.HaveILetI
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticBlockGeneratorsLagrangianNormalF
 import Mathlib.RingTheory.TotallySplit
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -531,7 +532,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDarbouxOperatorsLeviAndDouble =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticMemClosureGenerators =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticMemClosureGenerators", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticMemClosureGenerators", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticBlockGeneratorsLagrangianNormalF\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -707,22 +708,6 @@ private theorem exists_symm_isUnit_det_sub_mul_of_finrank_ker (b : Matrix κ κ 
   rw [this]
   exact hu
 
-private theorem fromBlocks_one_symm_mem_closure_gens (T : Matrix κ κ F) (hT : Tᵀ = T) :
-    Matrix.fromBlocks 1 T 0 1 ∈ Submonoid.closure (GlobalTheory.AdelicSvN.gens F κ) := by
-  have hw : (Matrix.fromBlocks 0 1 (-1) 0 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) ∈
-      Submonoid.closure (GlobalTheory.AdelicSvN.gens F κ) :=
-    Submonoid.subset_closure (Or.inr rfl)
-  have hu : (Matrix.fromBlocks 1 0 (-T) 1 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) ∈
-      Submonoid.closure (GlobalTheory.AdelicSvN.gens F κ) :=
-    Submonoid.subset_closure (Or.inl (Or.inr ⟨T, hT, rfl⟩))
-  have e : (Matrix.fromBlocks 1 T 0 1 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) =
-      Matrix.fromBlocks 0 1 (-1) 0 * Matrix.fromBlocks 1 0 (-T) 1 *
-        (Matrix.fromBlocks 0 1 (-1) 0 * Matrix.fromBlocks 0 1 (-1) 0 * Matrix.fromBlocks 0 1 (-1) 0) := by
-    simp [Matrix.fromBlocks_multiply]
-  rw [e]
-  exact Submonoid.mul_mem _ (Submonoid.mul_mem _ hw hu)
-    (Submonoid.mul_mem _ (Submonoid.mul_mem _ hw hw) hw)
-
 theorem main (g : Matrix (κ ⊕ κ) (κ ⊕ κ) F) (hg : Sp g) : g ∈ Submonoid.closure (GlobalTheory.AdelicSvN.gens F κ) := by
   obtain ⟨a, b, c, d, rfl⟩ : ∃ a b c d, g = Matrix.fromBlocks a b c d :=
     ⟨_, _, _, _, (Matrix.fromBlocks_toBlocks g).symm⟩
@@ -762,7 +747,7 @@ theorem main (g : Matrix (κ ⊕ κ) (κ ⊕ κ) F) (hg : Sp g) : g ∈ Submonoi
   set k := Matrix.fromBlocks 1 (-S) 0 1 * Matrix.fromBlocks a b (c - C * a) d' with hk
   have hkSp : Sp k := by
     have hn : Sp (Matrix.fromBlocks 1 (-S) 0 1 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) :=
-      sp_of_mem_closure (fromBlocks_one_symm_mem_closure_gens (-S) (by rw [Matrix.transpose_neg, hS]))
+      sp_of_mem_closure (_root_.GlobalTheory.AdelicSvN.LagrangianNormalForm.upper_mem (-S) (by rw [Matrix.transpose_neg, hS]))
     exact hn.mul hg1
   have hk12 : k.toBlocks₁₂ = 0 := by
     simp [hk, Matrix.fromBlocks_multiply, hSd]
@@ -772,7 +757,7 @@ theorem main (g : Matrix (κ ⊕ κ) (κ ⊕ κ) F) (hg : Sp g) : g ∈ Submonoi
     rw [hk, ← Matrix.mul_assoc (Matrix.fromBlocks 1 S 0 1), ← e1]
     simp [Matrix.fromBlocks_multiply]
   rw [e2]
-  refine Submonoid.mul_mem _ (Submonoid.subset_closure ?_) (Submonoid.mul_mem _ (fromBlocks_one_symm_mem_closure_gens S hS) hkm)
+  refine Submonoid.mul_mem _ (Submonoid.subset_closure ?_) (Submonoid.mul_mem _ (_root_.GlobalTheory.AdelicSvN.LagrangianNormalForm.upper_mem S hS) hkm)
   exact Or.inl (Or.inr ⟨-C, by rw [Matrix.transpose_neg, hC], rfl⟩)
 
 end GlobalTheory.SympGen
@@ -800,9 +785,7 @@ namespace GlobalTheory.TowU.WeylModel
 
 variable {F : Type} [Field F] [NumberField F]
 
-theorem act_weyl {κ : Type} [Fintype κ] [DecidableEq κ] (w : (κ → AF F) × (κ → AF F)) :
-    AdelicSvN.act (Matrix.fromBlocks 0 1 (-1) 0 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) w = (w.2, -w.1) := by
-  simp [AdelicSvN.act, Matrix.fromBlocks_map, Matrix.fromBlocks_mulVec, Matrix.map_neg, Matrix.neg_mulVec]
+alias act_weyl := _root_.GlobalTheory.AdelicSvN.Weyl.act_weyl
 
 theorem conj_psi {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (t : AF F) : conj (ψ t) = ψ (-t) := by
   rw [AddChar.map_neg_eq_inv, Complex.inv_eq_conj (GlobalTheory.StdCharFromIsStd.norm_psi hψ t)]

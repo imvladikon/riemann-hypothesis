@@ -1500,18 +1500,6 @@ theorem position_zero {I : Ideal (MRing J) → (n : ℕ) → (Fin n → HermLine
     obtain ⟨u, v, huv, hu, -⟩ := OneModel.exists_pair_ne h2.1.2 hz
     rw [a1 _ hz u v huv hu, h2.2.1 _ hz u v huv hu]
 
-theorem comb_single {τ : Type} [Fintype τ] [DecidableEq τ] (l : τ → HermLine J) (a : τ) :
-    Top.combLine l (Pi.single a 1) = l a := by
-  refine OneSlot.hermLine_ext ?_ (funext fun z => ?_)
-  · show ∑ j, (Pi.single a 1 : τ → ℤ) j • (l j).a = _
-    simp [Pi.single_apply]
-  · show ∏ j, (l j).h z ^ (Pi.single a 1 : τ → ℤ) j = _
-    rw [Finset.prod_eq_single a]
-    · simp
-    · intro b _ hb
-      simp [hb]
-    · simp
-
 theorem ii_comb_snoc {II : IntersectionSystem} (hII : IsFullIntersectionSystem II) (hP : IsArithVar P (e + 1)) {τ : Type}
     [Fintype τ] [DecidableEq τ] (l : τ → HermLine J) (hl : ∀ a, IsSmoothHerm (l a)) (ν : Fin e → τ → ℤ) (a : τ) :
     II K J P (e + 1) (Fin.snoc (fun k => Top.combLine l (ν k)) (l a)) =
@@ -1521,7 +1509,7 @@ theorem ii_comb_snoc {II : IntersectionSystem} (hII : IsFullIntersectionSystem I
       Fin.snoc (α := fun _ => HermLine J) (fun k => Top.combLine l (ν k)) (l a) := by
     funext k
     refine Fin.lastCases ?_ (fun k => ?_) k
-    · simp [comb_single]
+    · simp [_root_.RootFieldNumerics.Ii.combLine_single]
     · simp
   rw [← h1, h, ← (Fin.snocEquiv fun _ => τ).sum_comp, Fintype.sum_prod_type, Finset.sum_eq_single a]
   · refine Finset.sum_congr rfl fun w _ => ?_
@@ -1594,7 +1582,7 @@ theorem replace_gen {II : IntersectionSystem} (hII : IsFullIntersectionSystem II
       · simp [h1, hν]
       · by_cases h2 : q (i.succAbove k)
         · simp only [h1, h2, not_false_eq_true, and_self, if_true, if_false]
-          exact comb_single _ _
+          exact _root_.RootFieldNumerics.Ii.combLine_single _ _
         · simp [h1, h2, hν]
     have hterm : ∀ u : Fin e → Option (Option σ), Tendsto (fun t => (∏ k, (μ k (u k) : ℝ)) *
         (II K J P (e + 1) (Fin.snoc (fun k => l t (u k)) (M t)) -
@@ -1687,8 +1675,7 @@ open GroundTheory.Heights₂.Heights.LowerBoundFree GlobalTheory.CompanionTheory
 open ReciprocityTheory.AnForm (levi)
 open ReciprocityTheory.ChartRestriction.G.AI.I1 ReciprocityTheory.ChartRestriction.G.AI.I4
 
-theorem _root_.GlobalTheory.CompanionTheory.Relay.good_origin_intersection_relay : PB.AgreementPos → PB.Proportional → Cmp.CmpSt → Top.Given → PtsIntegrableStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (D.p + D.q)) (o : Top.GoodOrigin Y T) (II : IntersectionSystem), Top.IsGlobal Xo l c Y → o.Extra → IsFullIntersectionSystem II → 1 ≤ D.p → 1 ≤ D.q → ∀ (B B₁ : ℕ) (a : T.Comp) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (O Lt : Type) [CommRing O] [AddCommGroup Lt] [Module O Lt] (X : ComponentSetting Dc O Lt) (Or : CptOrigin Y T.bad Dc X.H), 2 ≤ B → B ≤ B₁ → D.q ≤ D.p → Or.bg = Sum.inl → Or.sm = Sum.inr → Or.Good → genPt Or.𝔐.ξ₀ = genPt (o.Fx a).ξf → (∀ r : ℕ, r ∈ Dc.S ↔ r.Prime ∧ r ≤ B₁ ∧ r ∉ T.bad) → ∃ (K₃ : Type) (_ : Fintype K₃) (ι₃ : K₃ → Type) (_ : ∀ k, Fintype (ι₃ k)) (κ : K → K₃) (v : (Σ k, J k) → Σ k, ι₃ k) (P₃ : Ideal (MRing ι₃)) (e r : ℕ) (cf : Fin r → ℝ) (Mt : ℝ → HermLine ι₃) (Nt : ℝ → Fin r → Fin e → HermLine ι₃) (δ : ℝ), IsBlockMap κ v ∧ IsArithVar P₃ (Dc.n + 1 + e) ∧ imageZ v P₃ = mCoordIdeal Dc.y ∧ 0 < δ ∧ (∀ t m i, (Nt t m i).a = (Nt 1 m i).a) ∧ (∀ t m i, IsSmoothHerm (Nt t m i)) ∧ (∀ᶠ t in 𝓝[>] (0 : ℝ), IsPullHerm κ v (muReg X.H X.S B t) (Mt t)) ∧ Tendsto (fun t => ∑ m, cf m * II K₃ ι₃ P₃ (Dc.n + 1 + e) (Fin.append (fun _ : Fin (Dc.n + 1) => Mt t) (Nt t m))) (𝓝[>] 0) (𝓝 (δ * T.PPc II B a (Top.testPoly T.j))) ∧ ∀ᶠ t in 𝓝[>] (0 : ℝ), ∑ m, cf m * ptsIntegral (e := Dc.n + e) P₃ (fun i z => Real.log ((Fin.append (fun _ : Fin Dc.n => Mt t) (Nt 1 m) i).h z)) (fun _ => 1) = δ * (T.M B a).geoFun (Top.toA (Top.muSmall T.j ^ Top.dimX (CMType H) (D.p + D.q) T.j * Top.fibClass T.j : Top.RP (CMType H) (D.p + D.q))) := by
-  first | exact @LevelTowerAlt.good_origin_tower_height
+alias _root_.GlobalTheory.CompanionTheory.Relay.good_origin_intersection_relay := _root_.LevelTowerAlt.good_origin_tower_height
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginIntersectionRelay =====

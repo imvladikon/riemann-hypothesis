@@ -39,6 +39,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Polynomial.Basic
@@ -135,7 +136,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameAdaptedIsometryMapFlagSpacesStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerLatticeIdentificationCompatOfGraphEq =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerLatticeIdentificationCompatOfGraphEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerLatticeIdentificationCompatOfGraphEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -152,15 +153,6 @@ section Gen
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : Formalism.BasicNotions.HSpace E} {r : ℕ}
 
-theorem mem_gmap_iff (ψ : S.V ≃ₗ[E] S.V) (Λ : Submodule (𝓞 E) S.V) (x : S.V) :
-    x ∈ Formalism.HermitianLatticesTheory.gmap ψ Λ ↔ ψ.symm x ∈ Λ := by
-  unfold Formalism.HermitianLatticesTheory.gmap
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    simpa using hy
-  · intro h
-    exact ⟨ψ.symm x, h, by simp⟩
-
 theorem mem_map_iff (ψ : S.V ≃ₗ[E] S.V) (U : Submodule E S.V) (x : S.V) :
     x ∈ U.map (ψ : S.V →ₗ[E] S.V) ↔ ψ.symm x ∈ U := by
   constructor
@@ -169,15 +161,10 @@ theorem mem_map_iff (ψ : S.V ≃ₗ[E] S.V) (U : Submodule E S.V) (x : S.V) :
   · intro h
     exact ⟨ψ.symm x, h, by simp⟩
 
-theorem mem_orth_iff (U : Submodule E S.V) (x : S.V) :
-    x ∈ orth S U ↔ ∀ y ∈ U, S.hT y x = 0 := by
-  unfold orth
-  simp [Submodule.mem_iInf]
-
 theorem mem_orth_map (ψ : S.V ≃ₗ[E] S.V) (hψ : ψ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (U : Submodule E S.V)
     (x : S.V) : x ∈ orth S (U.map (ψ : S.V →ₗ[E] S.V)) ↔ ψ.symm x ∈ orth S U := by
   have hi : ∀ a b, S.hT (ψ a) (ψ b) = S.hT a b := hψ
-  rw [mem_orth_iff, mem_orth_iff]
+  rw [_root_.Formalism.MainNotions.LatticeGluingRadicals.a_mem_orth, _root_.Formalism.MainNotions.LatticeGluingRadicals.a_mem_orth]
   constructor
   · intro h y hy
     have := h (ψ y) ⟨y, hy, rfl⟩
@@ -194,13 +181,13 @@ theorem mem_Lrep_map (ψ : S.V ≃ₗ[E] S.V) (hψ : ψ ∈ Formalism.HermitianL
     (F G : LFlag S r T) (hF : (Xsp F).map (ψ : S.V →ₗ[E] S.V) = Xsp G) (x : S.V) :
     x ∈ Lrep (Formalism.HermitianLatticesTheory.gmap ψ Λ) G ↔ ψ.symm x ∈ Lrep Λ F := by
   unfold Lrep
-  rw [Submodule.mem_inf, Submodule.mem_inf, mem_gmap_iff, toO, toO, Submodule.restrictScalars_mem,
+  rw [Submodule.mem_inf, Submodule.mem_inf, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, toO, toO, Submodule.restrictScalars_mem,
     Submodule.restrictScalars_mem, ← hF, mem_orth_map ψ hψ]
 
 theorem gmap_eq (ψ : S.V ≃ₗ[E] S.V) (Λ : Submodule (𝓞 E) S.V) :
     Formalism.HermitianLatticesTheory.gmap ψ Λ = Λ.map (ψ.restrictScalars (𝓞 E) : S.V →ₗ[𝓞 E] S.V) := by
   ext x
-  rw [mem_gmap_iff, Submodule.mem_map_equiv]
+  rw [_root_.Formalism.L2.SG.Saturated.mem_gmap_iff, Submodule.mem_map_equiv]
   rfl
 
 theorem XLam_map (ψ : S.V ≃ₗ[E] S.V) (Λ : Submodule (𝓞 E) S.V)
@@ -209,7 +196,7 @@ theorem XLam_map (ψ : S.V ≃ₗ[E] S.V) (Λ : Submodule (𝓞 E) S.V)
   ext x
   rw [Submodule.mem_map_equiv]
   unfold XLam
-  rw [Submodule.mem_inf, Submodule.mem_inf, mem_gmap_iff, toO, toO, Submodule.restrictScalars_mem,
+  rw [Submodule.mem_inf, Submodule.mem_inf, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, toO, toO, Submodule.restrictScalars_mem,
     Submodule.restrictScalars_mem, ← hF, mem_map_iff]
   rfl
 
@@ -793,27 +780,10 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 variable {D : D7}
 
-theorem gmap_mul (a b : GV D) (M : LV D) :
-    Formalism.HermitianLatticesTheory.gmap (a * b) M = Formalism.HermitianLatticesTheory.gmap a (Formalism.HermitianLatticesTheory.gmap b M) := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨b y, ⟨y, hy, rfl⟩, rfl⟩
-  · rintro ⟨z, ⟨y, hy, rfl⟩, rfl⟩
-    exact ⟨y, hy, rfl⟩
-
-theorem gmap_one (M : LV D) : Formalism.HermitianLatticesTheory.gmap (1 : GV D) M = M := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact hy
-  · intro hx
-    exact ⟨x, hx, rfl⟩
+alias gmap_mul := _root_.GlobalTheory.Unfold.SideEq.gmap_mul
 
 theorem gmap_inv_of {a : GV D} {M N : LV D} (h : Formalism.HermitianLatticesTheory.gmap a M = N) : Formalism.HermitianLatticesTheory.gmap a⁻¹ N = M := by
-  rw [← h, ← gmap_mul, inv_mul_cancel, gmap_one]
+  rw [← h, ← gmap_mul, inv_mul_cancel, _root_.GlobalTheory.Unfold.SideEq.gmap_one]
 
 theorem adapt_mul {T : D.host.E} {F G H : LFlag (D.sp.Y 0) D.R.rS T} {g g' : GV D} (hg : Adapt g F G)
     (hg' : Adapt g' G H) : Adapt (g' * g) F H := by
@@ -874,8 +844,8 @@ theorem translates : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
   obtain ⟨h, ⟨hhi, hhF, hhF'⟩, hgd⟩ := hR
   rw [← gmap_mul] at hgd
   set ψ₀ := h * g₀ with hψ₀
-  have hψ₀a : Adapt ψ₀ (lf D (X.Fu u)) F := adapt_mul hg₀a (adapt_fix hhi hhF)
-  have hψ₀b : Adapt ψ₀ t₀.frame F' := adapt_mul hg₀b (adapt_fix hhi hhF')
+  have hψ₀a : Adapt ψ₀ (lf D (X.Fu u)) F := _root_.GlobalTheory.Unfold.SideEq.adapt_mul hg₀a (adapt_fix hhi hhF)
+  have hψ₀b : Adapt ψ₀ t₀.frame F' := _root_.GlobalTheory.Unfold.SideEq.adapt_mul hg₀b (adapt_fix hhi hhF')
   have li₀ : t₀.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t₀.rep.2.2.1
   have lg₀ : Formalism.HermitianLatticesTheory.gmap t₀.lin t₀.lam' = t₀.lam := t₀.rep.2.2.2.1
   have li : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
@@ -921,7 +891,7 @@ theorem translates : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
   have hΨ₀b : Adapt (ψ₁ * n⁻¹) (mapLF (n * t.lin * n'⁻¹) (lf D (X.Fu u'))) F' := by
     refine (adapt_mapLF (F := lf D (X.Fu u')) (G := F') (g := ψ₁ * n⁻¹) hγi).2 ?_
     have : ψ₁ * n⁻¹ * (n * t.lin * n'⁻¹) = ψ₁ * t.lin * n'⁻¹ := by group
-    have key := adapt_mul hn'iN.1 hψ₁b'
+    have key := _root_.GlobalTheory.Unfold.SideEq.adapt_mul hn'iN.1 hψ₁b'
     rw [← this] at key
     exact key
   have hg1 : Formalism.HermitianLatticesTheory.gmap (ψ₁ * n⁻¹) t₀.lam = Formalism.HermitianLatticesTheory.gmap ψ₀ t₀.lam := by
@@ -929,8 +899,8 @@ theorem translates : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.wha
     rw [this, gmap_mul, gmap_inv_of hA2]
   refine GlobalTheory.T.innerLatticeIdentification_compat_of_graph_eq D _ _ (lf D (X.Fu u)) F (mapLF (n * t.lin * n'⁻¹) (lf D (X.Fu u')))
     (mapLF t.lin (lf D (X.Fu u'))) F' t₀.lam (ψ₁ * n⁻¹) ψ₁ (t.lin * (n * t.lin * n'⁻¹)⁻¹)
-    (mul_mem hψ₁a.1 hni) hψ₁a.1 (GlobalTheory.T.frameAdaptedIsometry_map_flagSpaces D _ _ _ _ hΨ₀a).2 (GlobalTheory.T.frameAdaptedIsometry_map_flagSpaces D _ _ _ _ hψ₁a).2
-    (GlobalTheory.T.frameAdaptedIsometry_map_flagSpaces D _ _ _ _ hΨ₀b).2 (GlobalTheory.T.frameAdaptedIsometry_map_flagSpaces D _ (mapLF t.lin (lf D (X.Fu u'))) F' ψ₁ hψ₁b).2
+    (mul_mem hψ₁a.1 hni) hψ₁a.1 (_root_.GlobalTheory.adapt_map_flag D _ _ _ _ hΨ₀a).2 (_root_.GlobalTheory.adapt_map_flag D _ _ _ _ hψ₁a).2
+    (_root_.GlobalTheory.adapt_map_flag D _ _ _ _ hΨ₀b).2 (_root_.GlobalTheory.adapt_map_flag D _ (mapLF t.lin (lf D (X.Fu u'))) F' ψ₁ hψ₁b).2
     ?_ (mul_mem li (inv_mem hγi)) ?_ ?_ ?_ ?_
   · exact (congrArg (fun Λ => (gdat F F' Λ).2.2) hg1).trans
       (e3.trans (congrArg (fun Λ => (gdat F F' (Formalism.HermitianLatticesTheory.gmap ψ₁ Λ)).2.2) hlam))

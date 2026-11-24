@@ -138,8 +138,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.bilinForm_injective_exists_nsmul_mem_range : ∀ (La : Type) [AddCommGroup La] [Module.Free ℤ La] [Module.Finite ℤ La] (EF : LinearMap.BilinForm ℤ La), Function.Injective EF → ∃ e : ℕ, 0 < e ∧ ∀ f : La →ₗ[ℤ] ℤ, ∃ x, EF x = e • f := by
-  first | (exact @GlobalTheory.bilinForm_injective_exists_mul_mem_range)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.BilinFormInjectiveExistsNsmulMemRangeStatement =====
@@ -563,8 +561,6 @@ section -- clump:auto
 open NumberField GlobalTheory.LKInvGood
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_ringOfIntegersTensorPadic_equiv_adjoin : ∀ (F : Type) [Field F] [NumberField F] (ℓ : ℕ) [Fact ℓ.Prime], ∃ κ : 𝓞 F ⊗[ℤ] ℤ_[ℓ] ≃+* cenOrder ℓ F, ∀ c : 𝓞 F, (κ (c ⊗ₜ[ℤ] 1) : ℚ_[ℓ] ⊗[ℚ] F) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] (c : F) := by
-  first | (exact @GlobalTheory.CenOrderIso.cenOrder_equiv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingOfIntegersTensorPadicEquivAdjoinStatement =====
@@ -667,8 +663,6 @@ section -- clump:auto
 open NumberField GlobalTheory.LKInvGood
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_tensorPadicInt_equiv_adjoin_of_free_finite : ∀ (O : Type) [Ring O] [Module.Free ℤ O] [Module.Finite ℤ O] (ℓ : ℕ) [Fact ℓ.Prime], ∃ ι : O ⊗[ℤ] ℤ_[ℓ] ≃+* locOrder ℓ (Algebra.TensorProduct.includeRight (R := ℤ) (A := ℚ) (B := O)).toRingHom.range, ∀ o : O, (ι (o ⊗ₜ[ℤ] 1) : ℚ_[ℓ] ⊗[ℚ] (ℚ ⊗[ℤ] O)) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] ((1 : ℚ) ⊗ₜ[ℤ] o) := by
-  first | (exact @GlobalTheory.LocIso.tensor_padicInt_equiv_locOrder)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTensorPadicIntEquivAdjoinOfFreeFiniteStatement =====
@@ -739,13 +733,13 @@ theorem splitAE : ∀ (G : GDatum), ∃ M : ℕ, 0 < M ∧ ∀ (p : ℕ) [Fact p
   haveI := isCentral G
   haveI := GDatum.isSimpleRing G
   haveI : FiniteDimensional G.F (ℚ ⊗[ℤ] G.O) := Module.Finite.of_restrictScalars_finite ℚ G.F _
-  obtain ⟨N, hN, hloc⟩ := GlobalTheory.T.adjoinLocalOrderTensorPadic_matrix_almost_all G.F (ℚ ⊗[ℤ] G.O) G.m (finrank_eq G) (ordB G) (ordB_finite G) (ordB_denom G)
+  obtain ⟨N, hN, hloc⟩ := _root_.GlobalTheory.LocMatrix.locOrder_matrix G.F (ℚ ⊗[ℤ] G.O) G.m (finrank_eq G) (ordB G) (ordB_finite G) (ordB_denom G)
   refine ⟨N, hN, fun p _ hp => ?_⟩
   obtain ⟨ψ, hψ⟩ := hloc p hp
   obtain ⟨ι, hι⟩ : ∃ ι : G.O ⊗[ℤ] ℤ_[p] ≃+* locOrder p (ordB G),
       ∀ o : G.O, (ι (o ⊗ₜ[ℤ] 1) : ℚ_[p] ⊗[ℚ] (ℚ ⊗[ℤ] G.O)) = (1 : ℚ_[p]) ⊗ₜ[ℚ] ((1 : ℚ) ⊗ₜ[ℤ] o) :=
-    GlobalTheory.T.exists_tensorPadicInt_equiv_adjoin_of_free_finite G.O p
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_ringOfIntegersTensorPadic_equiv_adjoin G.F p
+    _root_.GlobalTheory.LocIso.tensor_padicInt_equiv_locOrder G.O p
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.CenOrderIso.cenOrder_equiv G.F p
   let Φ : G.O ⊗[ℤ] ℤ_[p] ≃+* Matrix (Fin G.m) (Fin G.m) (𝓞 G.F ⊗[ℤ] ℤ_[p]) :=
     ι.trans (ψ.toRingEquiv.trans κ.symm.mapMatrix)
   refine ⟨AlgEquiv.ofRingEquiv (f := Φ) fun c => ?_⟩
@@ -778,8 +772,6 @@ open NumberField
 open GlobalTheory.UPel.HT.Gen
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.harrisTaylorOrder_split_almost_all_primes : ∀ (G : GDatum), ∃ M : ℕ, 0 < M ∧ ∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ M → Nonempty ((G.O ⊗[ℤ] ℤ_[p]) ≃ₐ[𝓞 G.F] Matrix (Fin G.m) (Fin G.m) (𝓞 G.F ⊗[ℤ] ℤ_[p])) := by
-  first | (exact @GlobalTheory.UPel.HT.Gen.SplitAE.splitAE)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.HarrisTaylorOrderSplitAlmostAllPrimesStatement =====
@@ -842,8 +834,8 @@ theorem schur (tr nm : ℤ) (M : ℕ) (hM : 0 < M) :
 theorem exists_datum (G : GDatum) (N : ℕ) (hN : 0 < N) :
     ∃ (p : ℕ) (_ : Fact p.Prime) (D : Datum p), N.Coprime p ∧ D.toG = G := by
   haveI := G.freeLa; haveI := G.finLa
-  obtain ⟨e, he, hperf⟩ := GlobalTheory.T.bilinForm_injective_exists_nsmul_mem_range G.La G.EF G.nondeg
-  obtain ⟨M, hM, hsplit⟩ := GlobalTheory.T.harrisTaylorOrder_split_almost_all_primes G
+  obtain ⟨e, he, hperf⟩ := _root_.GlobalTheory.bilinForm_injective_exists_mul_mem_range G.La G.EF G.nondeg
+  obtain ⟨M, hM, hsplit⟩ := _root_.GlobalTheory.UPel.HT.Gen.SplitAE.splitAE G
   have hd : 0 < (G.tr ^ 2 - 4 * G.nm).natAbs := Int.natAbs_pos.2 (ne_of_lt G.disc_neg)
   obtain ⟨p, hp, hpM, r, hr⟩ := schur G.tr G.nm (N * e * M * (G.tr ^ 2 - 4 * G.nm).natAbs) (by positivity)
   haveI : Fact p.Prime := ⟨hp⟩
@@ -877,8 +869,6 @@ section -- clump:auto
 open NumberField
 open GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Gen
 
-theorem _root_.GlobalTheory.T.exists_harrisTaylorDatum_at_prime_coprime : ∀ (G : GDatum) (N : ℕ), 0 < N → ∃ (p : ℕ) (_ : Fact p.Prime) (D : Datum p), N.Coprime p ∧ D.toG = G := by
-  first | (exact @GlobalTheory.GoodPrime.exists_datum)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsHarrisTaylorDatumAtPrimeCoprimeStatement =====
@@ -942,8 +932,8 @@ def baseOfG {p : ℕ} [Fact p.Prime] {D : Datum p} (gb : GBase D.toG ℂ) : Base
 
 theorem genericModel_complex_smooth {p : ℕ} [Fact p.Prime] (D : Datum p) (gb : GBase D.toG ℂ) (N : ℕ) (hN : 3 ≤ N)
     (hNp : N.Coprime p) (X : GenModel gb N) : ∃ d, SmoothOfRelativeDimension d X.s := by
-  obtain ⟨M⟩ := GlobalTheory.T.harrisTaylorIntegralModel_nonempty p D ℂ (baseOfG gb) N hN hNp
-  obtain ⟨j, hj, -, hjs, -⟩ := GlobalTheory.T.exists_open_closed_immersion_genModel_to_fibre p D ℂ (baseOfG gb) ℂ (RingHom.id ℂ) gb rfl
+  obtain ⟨M⟩ := _root_.GlobalTheory.UPel.HT.model_nonempty p D ℂ (baseOfG gb) N hN hNp
+  obtain ⟨j, hj, -, hjs, -⟩ := _root_.GlobalTheory.UPel.HT.GenCmp.genModel_eq_genericFibre p D ℂ (baseOfG gb) ℂ (RingHom.id ℂ) gb rfl
     (fun i => (RingHom.id_comp _).symm) N hN hNp M X
   have h1 : SmoothOfRelativeDimension (D.a * (D.n - 1)) (pullback.snd M.s (spMap (RingHom.id ℂ))) :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback (IsPullback.of_hasPullback _ _) M.smooth
@@ -1043,7 +1033,7 @@ theorem genModel_smooth : ∀ (G : GDatum) (gb : GBase G ℂ) (N : ℕ), 3 ≤ N
       SmoothOfRelativeDimension (G.m * G.n * Module.finrank ℚ G.F / 2) X.univ.A.hom := by
   intro G gb N hN X
   refine ⟨?_, relDim_A gb N X⟩
-  obtain ⟨p, _, D, hNp, rfl⟩ := GlobalTheory.T.exists_harrisTaylorDatum_at_prime_coprime G N (by omega)
+  obtain ⟨p, _, D, hNp, rfl⟩ := _root_.GlobalTheory.GoodPrime.exists_datum G N (by omega)
   exact genericModel_complex_smooth D gb N hN hNp X
 
 end GlobalTheory.UPel.HT.Gen.CxSmooth

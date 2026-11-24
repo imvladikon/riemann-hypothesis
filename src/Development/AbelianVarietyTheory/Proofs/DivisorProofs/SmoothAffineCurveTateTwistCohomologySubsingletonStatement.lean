@@ -203,7 +203,7 @@ theorem GlobalTheory.EtC.classVanishesAwayNZD : ∀ (q : ℕ) (R : Type) [CommRi
     (z : Ht q (sp R) n i), pull _ (spMap (algebraMap R (FractionRing R))) _ _ z = 0 →
     ∃ g ∈ nonZeroDivisors R, pull _ (spMap (algebraMap R (Localization.Away g))) _ _ z = 0 := by
   intro q R _ hq n i x hx
-  have hB1 := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (diag R) (cocone R) (isColim R) n i).2
+  have hB1 := (_root_.GlobalTheory.EtC.pairingProperties q (diag R) (cocone R) (isColim R) n i).2
   have hq1 : IsUnit (q : Localization.Away (idx1 : Idx R).val) := by
     have := hq.map (algebraMap R (Localization.Away (idx1 : Idx R).val))
     rwa [map_natCast] at this
@@ -231,8 +231,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.class_vanishes_away_nonZeroDivisor : ∀ (q : ℕ) (R : Type) [CommRing R], IsUnit (q : R) → ∀ (n i : ℤ) (z : Ht q (sp R) n i), pull _ (spMap (algebraMap R (FractionRing R))) _ _ z = 0 → ∃ g ∈ nonZeroDivisors R, pull _ (spMap (algebraMap R (Localization.Away g))) _ _ z = 0 := by
-  first | (exact @GlobalTheory.EtC.classVanishesAwayNZD)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassVanishesAwayNonZeroDivisorStatement =====
@@ -315,8 +313,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.cohomology_vanishes_artinian : ∀ (q : ℕ) (K : Type) [CommRing K] [IsArtinianRing K] [IsReduced K] (n i : ℤ), (∀ M : MaximalSpectrum K, Subsingleton (Ht q (sp (K ⧸ M.asIdeal)) n i)) → Subsingleton (Ht q (sp K) n i) := by
-  first | (exact @GlobalTheory.EtC.ArtCoh.ht_subsingleton_artinian)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyVanishesArtinian =====
@@ -431,8 +427,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.etale_maximal_quotient_algebraic : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], ¬ IsField B → ∀ (f : B), f ≠ 0 → ∀ (A' : Type) [CommRing A'] [Algebra B A'] [Algebra.Etale B A'] (M : MaximalSpectrum (FractionRing (Localization.Away (algebraMap B A' f)))), ∃ _ : Algebra (RatFunc k) (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal), Algebra.IsAlgebraic (RatFunc k) (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal) := by
-  first | (exact @GlobalTheory.FracAlgEtale.exists_isAlgebraic_ratFunc_residue)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMaximalQuotientAlgebraicStatement =====
@@ -584,8 +578,6 @@ section -- clump:auto
 
 open GlobalTheory.AffineCurveNbhd
 
-theorem _root_.GlobalTheory.T.exists_dvd_mul_pow_etale_nbhd_zeroLocus : ∀ (B A' : Type) [CommRing B] [IsDedekindDomain B] [CommRing A'] [Algebra B A'] [Algebra.Etale B A'] (f : B), f ≠ 0 → IsNbhd B A' f → ∀ a ∈ nonZeroDivisors A', ∀ M : Ideal A', M.IsMaximal → algebraMap B A' f ∈ M → ∃ s ∉ M, ∃ N : ℕ, a ∣ s * algebraMap B A' f ^ N := by
-  first | (exact @GlobalTheory.LocDivEtale.exists_dvd_mul_pow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvdMulPowEtaleNbhdZeroLocusStatement =====
@@ -668,8 +660,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.fractionRing_away_etale_dedekind_artinian_reduced : ∀ (B : Type) [CommRing B] [IsDedekindDomain B] (f : B) (A' : Type) [CommRing A'] [Algebra B A'] [Algebra.Etale B A'], IsArtinianRing (FractionRing (Localization.Away (algebraMap B A' f))) ∧ IsReduced (FractionRing (Localization.Away (algebraMap B A' f))) := by
-  first | (exact @GlobalTheory.fractionRing_away_etale_isArtinian_isReduced)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FractionRingAwayEtaleDedekindArtinianReducedStatement =====
@@ -758,8 +748,6 @@ section -- clump:auto
 
 open GlobalTheory.AffineCurveNbhd
 
-theorem _root_.GlobalTheory.T.isNbhd_away_of_add_algebraMap_mul_eq_one : ∀ (B A' : Type) [CommRing B] [CommRing A'] [Algebra B A'] (f : B) (h c : A'), IsNbhd B A' f → h + algebraMap B A' f * c = 1 → IsNbhd B (Localization.Away h) f := by
-  first | (exact @GlobalTheory.AffineCurveNbhd.isNbhd_away_of_add_mul_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNbhdAwayOfAddMulEqOneStatement =====
@@ -794,17 +782,17 @@ theorem main : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [
     simpa only [map_natCast] using this
 
   have hFR : Subsingleton (Ht q (sp (FractionRing R)) m i) := by
-    obtain ⟨hArt, hRed⟩ := GlobalTheory.T.fractionRing_away_etale_dedekind_artinian_reduced B f A'
-    refine GlobalTheory.T.cohomology_vanishes_artinian q _ m i (fun M => ?_)
-    obtain ⟨alg, halg⟩ := GlobalTheory.T.etale_maximal_quotient_algebraic k B hBf f hf A' M
+    obtain ⟨hArt, hRed⟩ := _root_.GlobalTheory.fractionRing_away_etale_isArtinian_isReduced B f A'
+    refine _root_.GlobalTheory.EtC.ArtCoh.ht_subsingleton_artinian q _ m i (fun M => ?_)
+    obtain ⟨alg, halg⟩ := _root_.GlobalTheory.FracAlgEtale.exists_isAlgebraic_ratFunc_residue k B hBf f hf A' M
     have hqM : IsUnit (q : FractionRing R ⧸ M.asIdeal) := by
       have := (hqR.map (algebraMap R (FractionRing R))).map (Ideal.Quotient.mk M.asIdeal)
       rwa [map_natCast, map_natCast] at this
     haveI := M.isMaximal
     letI : Field (FractionRing R ⧸ M.asIdeal) := Ideal.Quotient.field _
-    exact GlobalTheory.T.etale_cohomology_vanishing_algebraic_over_ratFunc q k (FractionRing R ⧸ M.asIdeal) hqM m i hm
+    exact _root_.GlobalTheory.EtC.gaugeSplitting_holds q k (FractionRing R ⧸ M.asIdeal) hqM m i hm
 
-  obtain ⟨g, hg, hz⟩ := GlobalTheory.T.class_vanishes_away_nonZeroDivisor q R hqR m i z (Subsingleton.elim _ _)
+  obtain ⟨g, hg, hz⟩ := _root_.GlobalTheory.EtC.classVanishesAwayNZD q R hqR m i z (Subsingleton.elim _ _)
 
   have hf'reg : IsSMulRegular A' f' := by
     have h := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := A') (mem_nonZeroDivisors_of_ne_zero hf)
@@ -855,14 +843,14 @@ theorem main : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [
     by_contra hne
     obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
     have hfM : f' ∈ M := hle (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-    obtain ⟨t, htM, N, hN⟩ := GlobalTheory.T.exists_dvd_mul_pow_etale_nbhd_zeroLocus B A' f hf hN a ha M hM hfM
+    obtain ⟨t, htM, N, hN⟩ := _root_.GlobalTheory.LocDivEtale.exists_dvd_mul_pow B A' f hf hN a ha M hM hfM
     exact htM (hle (Ideal.mem_sup_left ⟨N, hN⟩))
   have h1 : (1 : A') ∈ J ⊔ Ideal.span {f'} := by rw [hJ]; trivial
   obtain ⟨h, ⟨N, hhN⟩, y, hy, hhy⟩ := Submodule.mem_sup.mp h1
   obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp hy
 
   refine ⟨Localization.Away h, inferInstance, inferInstance, inferInstance,
-    IsScalarTower.toAlgHom B A' (Localization.Away h), GlobalTheory.T.isNbhd_away_of_add_algebraMap_mul_eq_one B A' f h c hN (by rw [← hhy]; ring), ?_⟩
+    IsScalarTower.toAlgHom B A' (Localization.Away h), _root_.GlobalTheory.AffineCurveNbhd.isNbhd_away_of_add_mul_eq_one B A' f h c hN (by rw [← hhy]; ring), ?_⟩
   set φ := IsScalarTower.toAlgHom B A' (Localization.Away h)
   set S := Localization.Away (algebraMap B (Localization.Away h) f)
   have hcomp : ∀ x : A', awayHom φ f (algebraMap A' R x) = algebraMap _ S (φ x) := fun x =>
@@ -896,8 +884,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC GlobalTheory.AffineCurveNbhd
 
-theorem _root_.GlobalTheory.T.higherDegree_class_dies_on_finer_etaleNeighbourhood : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ¬ IsUnit f → ∀ (A' : Type) [CommRing A'] [Algebra B A'] [Algebra.Etale B A'], IsNbhd B A' f → ∀ (m i : ℤ), 2 ≤ m → ∀ z : Ht q (sp (Localization.Away (algebraMap B A' f))) m i, ∃ (A'' : Type) (_ : CommRing A'') (_ : Algebra B A'') (_ : Algebra.Etale B A'') (φ : A' →ₐ[B] A''), IsNbhd B A'' f ∧ pull _ (spMap (awayHom φ f)) _ _ z = 0 := by
-  first | (exact @GlobalTheory.KillFiner.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HigherDegreeClassDiesOnFinerEtaleNeighbourhoodStatement =====
@@ -971,8 +957,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.chain_complex_exact_square : ∀ (R : Type) [CommRing R] {X₁ X₂ X₃ X₄ : Scheme.{0}} (a : X₁ ⟶ X₂) (b : X₁ ⟶ X₃) (c : X₂ ⟶ X₄) (d : X₃ ⟶ X₄) (w₁ : biprod.lift ((free R).map (yoneda.map a)) (-(free R).map (yoneda.map b)) ≫ biprod.desc ((free R).map (yoneda.map c)) ((free R).map (yoneda.map d)) = 0) (w₂ : biprod.lift ((chains R).map (sch.map a)) (-(chains R).map (sch.map b)) ≫ biprod.desc ((chains R).map (sch.map c)) ((chains R).map (sch.map d)) = 0), (ShortComplex.mk _ _ w₁).ShortExact → (ShortComplex.mk _ _ w₂).ShortExact := by
-  first | (exact @GlobalTheory.EtC.chains_shortExact_of_free)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChainComplexExactSquare =====
@@ -1024,7 +1008,7 @@ def exSC (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algeb
 
 theorem exSC_shortExact (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A']
     [Algebra.Etale A A'] (f : A) (hN : IsNbhd A A' f) : (exSC R A A' f).ShortExact := by
-  refine GlobalTheory.T.chain_complex_exact_square R _ _ _ _ ?_ (exSC R A A' f).zero (GlobalTheory.T.freeEtaleSheaf_excision_shortExact R A A' f hN ?_)
+  refine _root_.GlobalTheory.EtC.chains_shortExact_of_free R _ _ _ _ ?_ (exSC R A A' f).zero (_root_.GlobalTheory.EtC.MVFree.shortExact R A A' f hN ?_)
   all_goals
     simp only [biprod.lift_desc, Preadditive.neg_comp, ← Functor.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       awayMap_comp_algebraMap, add_neg_cancel]
@@ -1107,8 +1091,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC GlobalTheory.AffineCurveNbhd
 
-theorem _root_.GlobalTheory.T.mayer_vietoris_exact_etale : ∀ (q : ℕ) (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] [Algebra.Etale A A'] (f : A), IsNbhd A A' f → ∀ n i : ℤ, ∃ δ : Ht q (sp (Localization.Away (algebraMap A A' f))) n i →+ Ht q (sp A) (n + 1) i, Function.Exact δ (fun x : Ht q (sp A) (n + 1) i => (pull _ (spMap (algebraMap A (Localization.Away f))) _ _ x, pull _ (spMap (algebraMap A A')) _ _ x)) ∧ ∀ (A'' : Type) [CommRing A''] [Algebra A A''] [Algebra.Etale A A''] (φ : A' →ₐ[A] A''), IsNbhd A A'' f → ∀ z, pull _ (spMap (awayHom φ f)) _ _ z = 0 → δ z = 0 := by
-  first | (exact @GlobalTheory.EtC.ExcisionNat.excision_natural)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MayerVietorisExactEtaleStatement =====
@@ -1128,19 +1110,19 @@ theorem subsingleton_of_three_le : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field 
   intro q _ k B _ _ _ _ _ _ hq n i hn
   have hqB : IsUnit (q : B) := by simpa using hq.map (algebraMap k B)
   by_cases hB : IsField B
-  · exact GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) B (GlobalTheory.T.sH_of_isField_finiteType_of_isAlgClosed k B hB) (tw q i) n (by omega)
+  · exact _root_.GlobalTheory.EtC.b2 (ZMod q) B (_root_.GlobalTheory.field_finiteType_algClosed_SH k B hB) (tw q i) n (by omega)
   · obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by ring⟩
     suffices h : ∀ x : Ht q (sp B) (m + 1) i, x = 0 from ⟨fun x y => by rw [h x, h y]⟩
     intro x
-    obtain ⟨_, _⟩ := GlobalTheory.T.exists_isAlgebraic_ratFunc_fractionRing_dedekind k B hB
+    obtain ⟨_, _⟩ := _root_.GlobalTheory.FracAlgDedekind.exists_isAlgebraic_ratFunc k B hB
     have hqK : IsUnit (q : FractionRing B) := by simpa using hqB.map (algebraMap B (FractionRing B))
     have h1 : pull _ (spMap (algebraMap B (FractionRing B))) _ _ x = 0 :=
-      (GlobalTheory.T.etale_cohomology_vanishing_algebraic_over_ratFunc q k (FractionRing B) hqK (m + 1) i (by omega)).elim _ _
-    obtain ⟨f, hf0, hfu, hxf⟩ := GlobalTheory.T.class_vanishes_away_nonzero_nonunit_domain q B hB hqB (m + 1) i x h1
-    obtain ⟨A', _, _, _, hA', hxA'⟩ := GlobalTheory.T.etale_local_vanishing_cohomology q k B hq f hf0 hfu (m + 1) i (by omega) x
-    obtain ⟨δ, hex, hkill⟩ := GlobalTheory.T.mayer_vietoris_exact_etale q B A' f hA' m i
+      (_root_.GlobalTheory.EtC.gaugeSplitting_holds q k (FractionRing B) hqK (m + 1) i (by omega)).elim _ _
+    obtain ⟨f, hf0, hfu, hxf⟩ := _root_.GlobalTheory.EtC.classVanishesAway q B hB hqB (m + 1) i x h1
+    obtain ⟨A', _, _, _, hA', hxA'⟩ := _root_.GlobalTheory.CurveNbhdKill.exists_nbhd_pull_eq_zero q k B hq f hf0 hfu (m + 1) i (by omega) x
+    obtain ⟨δ, hex, hkill⟩ := _root_.GlobalTheory.EtC.ExcisionNat.excision_natural q B A' f hA' m i
     obtain ⟨z, rfl⟩ := (hex x).mp (by simp [hxf, hxA'])
-    obtain ⟨A'', _, _, _, φ, hA'', hz⟩ := GlobalTheory.T.higherDegree_class_dies_on_finer_etaleNeighbourhood q k B hq f hf0 hfu A' hA' m i (by omega) z
+    obtain ⟨A'', _, _, _, φ, hA'', hz⟩ := _root_.GlobalTheory.KillFiner.main q k B hq f hf0 hfu A' hA' m i (by omega) z
     exact hkill A'' φ hA'' z hz
 
 end GlobalTheory.EtC.AffineCurve
@@ -1155,8 +1137,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.smoothAffineCurve_tateTwistCohomology_subsingleton_of_ge_three : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ n i : ℤ, 3 ≤ n → Subsingleton (Ht q (sp B) n i) := by
-  first | (exact @GlobalTheory.EtC.AffineCurve.subsingleton_of_three_le)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAffineCurveTateTwistCohomologySubsingletonStatement =====

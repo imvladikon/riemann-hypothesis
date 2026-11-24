@@ -378,8 +378,6 @@ open GlobalTheory GlobalTheory.LieHt GlobalTheory.Cartier GlobalTheory.ThetaOnto
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.lineBundleSymmetryHypothesis_baseChange : ∀ (K K' : Type) [Field K] [Field K'] (f : K →+* K') (P : PolAV (Sp K)) (P' : PolAV (Sp K')) (ψ : P'.A.left ⟶ P.A.left), IsPolFibre f P P' ψ → (letI := P.isAb.comm; GlobalTheory.ZH.HypS P.A P.L) → (letI := P'.isAb.comm; GlobalTheory.ZH.HypS P'.A P'.L) := by
-  first | exact @GlobalTheory.MBLow.hypS_of_isPolFibre
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleSymmetryHypothesisBaseChangeStatement =====
@@ -665,12 +663,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.Mum.FibLevel
 
-theorem comp_pow_pt {S : Scheme.{0}} {A T T' : Over S} [GrpObj A] (ρ : T' ⟶ T) (x : T ⟶ A) (n : ℕ) :
-    ρ ≫ x ^ n = (ρ ≫ x) ^ n := by
-  induction n with
-  | zero => rw [pow_zero, pow_zero, MonObj.comp_one]
-  | succ n ih => rw [pow_succ, pow_succ, MonObj.comp_mul, ih]
-
 theorem exists_level_of_pullback : ∀ (T K : Type) [CommRing T] [IsNoetherianRing T] [Field K] [IsAlgClosed K] (χ : T →+* K) (P : PolAV (Sp T)) (Q : PolAV (Sp K)) (ψ : Q.A.left ⟶ P.A.left), IsGrpPullback Q.A P.A (spMap χ) ψ → LBIso Q.L (P.L.pull ψ) → ∀ (g M : ℕ) (hg : Q.g = g) (c : Tˣ) (ζK : Kˣ), (M : K) ≠ 0 → Units.map χ.toMonoidHom c = ζK → IsPrimitiveRoot ζK M → ∀ (y : Fin (2 * g) → (baseOver (Sp T) ⟶ P.A)), (∀ i, y i ^ M = 1) → (∀ i j, WeilIs P.A P.L M (y i) (y j) (unitOn c ^ stdSymp g i j)) → ∃ lev : Level Q M (unitOn ζK), ∀ i, (GlobalTheory.levelBasis lev hg i).left ≫ ψ = spMap χ ≫ (y i).left := by
   intro T K _ _ _ _ χ P Q ψ hpb hLB g M hg c ζK hM hcζ hζ y hy hw
   have hL : Out.Laws := GlobalTheory.lawsAndExpansions.1.1
@@ -681,7 +673,7 @@ theorem exists_level_of_pullback : ∀ (T K : Type) [CommRing T] [IsNoetherianRi
   have hxl : ∀ i, (h0 ≫ y i).left = (x i).left ≫ ψ := fun i => by rw [← hex, he]
   have hxM : ∀ i, x i ^ M = 1 := fun i => by
     show e.symm (h0 ≫ y i) ^ M = 1
-    rw [← map_pow, ← comp_pow_pt, hy, MonObj.comp_one, map_one]
+    rw [← map_pow, ← _root_.GlobalTheory.SemiAbTorsion.comp_pow_points, hy, MonObj.comp_one, map_one]
   have hv : ∀ n : ℤ, Units.map h0.left.appTop.hom.toMonoidHom (unitOn c ^ n) = unitOn ζK ^ n := by
     intro n
     rw [map_zpow]
@@ -742,10 +734,6 @@ noncomputable section
 
 namespace GlobalTheory.Mum
 
-theorem spMap_comp_spMap {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (j : B →+* C) :
-    spMap j ≫ spMap f = spMap (j.comp f) := by
-  rw [← Spec.map_comp]; rfl
-
 theorem isThetaPt_fibre : ∀ (F Ω T : Type) [Field F] [IsAlgClosed F] [CharZero F] [Field Ω] [IsAlgClosed Ω] [CommRing T] [IsDomain T] [Algebra F T] (em : F →+* Ω) (jT : T →+* Ω) (t : T →ₐ[F] F), Algebra.FiniteType F T → Function.Injective jT → jT.comp (algebraMap F T) = em → ∀ (A : PolAV (Sp Ω)) (P : PolAV (Sp T)) (φ : A.A.left ⟶ P.A.left), IsGrpPullback A.A P.A (spMap jT) φ → LBIso A.L (P.L.pull φ) → ∀ (m : ℕ) (I : Type) (x : I → (baseOver (Sp Ω) ⟶ A.A)) (y : I → (baseOver (Sp T) ⟶ P.A)) (v : I → F), Odd m → 3 ≤ m → (∀ i, (x i).left ≫ φ = spMap jT ≫ (y i).left) → (∀ i, y i ^ (m ^ 2) = 1) → (∀ z : Over.mk (spMap t.toRingHom) ⟶ P.A, z ^ m = 1 → ∃ i, ((Over.homMk (spMap t.toRingHom) : Over.mk (spMap t.toRingHom) ⟶ baseOver (Sp T)) ≫ y i) ^ m = z) → IsThetaPt A m x (fun i => (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom (em (v i))) → IsThetaPt P m (fun i => (Over.homMk (spMap t.toRingHom) : Over.mk (spMap t.toRingHom) ⟶ baseOver (Sp T)) ≫ y i) (fun i => (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom (v i)) := by
   intro F Ω T _ _ _ _ _ _ _ _ em jT t hft hinj hcomp A P φ hp hw m I x y v hm hm3 hxy hy hcov hA
   obtain ⟨⟨hL, hL2, -⟩, -⟩ := GlobalTheory.lawsAndExpansions
@@ -791,8 +779,8 @@ theorem isThetaPt_fibre : ∀ (F Ω T : Type) [Field F] [IsAlgClosed F] [CharZer
   obtain ⟨w, hwR⟩ := GlobalTheory.Ex.Specialise.exists_isThetaPt_local hL hL2 P s hm hu _ hmo
 
   have e1 : spMap jR ≫ s = 𝟙 (Sp Ω) ≫ spMap jT := by
-    rw [Category.id_comp, spMap_comp_spMap, hjR]
-  have e2 : spMap r ≫ s = spMap tR := by rw [spMap_comp_spMap, hr]
+    rw [Category.id_comp, _root_.GlobalTheory.spMap_comp_ring, hjR]
+  have e2 : spMap r ≫ s = spMap tR := by rw [_root_.GlobalTheory.spMap_comp_ring, hr]
   have hΩ := GlobalTheory.Ex.Specialise.isThetaPt_map hL2 P jR e1 hwR
   have hF := GlobalTheory.Ex.Specialise.isThetaPt_map hL2 P r e2 hwR
 
@@ -948,17 +936,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.MumCore
 
-theorem linComb_hom {S S' : Scheme.{0}} {A T : Over S} {A' T' : Over S'} [GrpObj A] [GrpObj A']
-    (f : (T ⟶ A) →* (T' ⟶ A')) {r : ℕ} (y : Fin r → (T ⟶ A)) (a : Fin r → ℕ) :
-    f (linComb y a) = linComb (fun i => f (y i)) a := by
-  have h := map_list_prod f (List.ofFn fun i => y i ^ a i)
-  rw [List.map_ofFn] at h
-  exact h.trans (congrArg List.prod (congrArg List.ofFn (funext fun i => map_pow f (y i) (a i))))
-
-theorem comp_linComb' {S : Scheme.{0}} {A T T' : Over S} [GrpObj A] (U : T' ⟶ T) {r : ℕ} (y : Fin r → (T ⟶ A))
-    (a : Fin r → ℕ) : U ≫ linComb y a = linComb (fun i => U ≫ y i) a :=
-  linComb_hom (MonoidHom.mk' (U ≫ ·) fun x y => MonObj.comp_mul U x y) y a
-
 theorem linComb_pow_eq_one {S : Scheme.{0}} {A T : Over S} [GrpObj A] [IsCommMonObj A] {r : ℕ} (y : Fin r → (T ⟶ A))
     (a : Fin r → ℕ) (M : ℕ) (h : ∀ i, y i ^ M = 1) : linComb y a ^ M = 1 := by
   unfold linComb
@@ -972,11 +949,9 @@ theorem push_linComb {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] 
     (linComb x a).left ≫ φ = U ≫ (linComb y a).left := by
   let V : Over.mk (T.hom ≫ f) ⟶ T₀ := Over.homMk U hU
   have e : pushHom h T (linComb x a) = V ≫ linComb y a := by
-    rw [linComb_hom, comp_linComb']
+    rw [_root_.GlobalTheory.ThetaPtUp.map_linComb, _root_.GlobalTheory.DenseBasis.comp_linComb]
     exact congrArg (linComb · a) (funext fun i => Over.OverMorphism.ext (hxy i))
   exact congrArg (fun z => z.left) e
-
-theorem unitOn_zpow {R : Type} [CommRing R] (c : Rˣ) (e : ℤ) : unitOn (c ^ e) = unitOn c ^ e := map_zpow _ c e
 
 theorem final_pf : ∀ (F Ω : Type) [Field F] [Field Ω] (em : F →+* Ω) (A B : PolAV (Sp Ω)) (A₀ : PolAV (Sp F)) (σ : A.A ≅ B.A) (ψ : B.A.left ⟶ A₀.A.left), GlobalTheory.IsPolIso A B σ → IsGrpPullback B.A A₀.A (spMap em) ψ → LBIso B.L (A₀.L.pull ψ) → ∃ a : A.A.left ⟶ A₀.A.left, IsGrpPullback A.A A₀.A (spMap em) a ∧ LBIso A.L (A₀.L.pull a) := by
   intro F Ω _ _ em A B A₀ σ ψ hσ h hLB
@@ -1012,8 +987,8 @@ theorem fibre_descends : ∀ (F Ω T : Type) [Field F] [IsAlgClosed F] [CharZero
   have hpair : ∀ i j, WeilIs P.A P.L (((n ^ J) ^ 2 : ℕ) : ℤ) (y₀ i) (y₀ j) (unitOn ζT ^ stdSymp A.g i j) := fun i j => by
     have := GlobalTheory.T.commutatorPairing_spread_points_eq_spread_root Ω T jT hinj A P φ hP hL ((n ^ J) ^ 2) (lev.pt i) (lev.pt j) (y₀ i) (y₀ j) (ζT ^ stdSymp A.g i j)
       (Nat.one_le_iff_ne_zero.2 hM0) (hy i) (hy j) (hyt i) (hyt j)
-      (by rw [map_zpow, hjζ, unitOn_zpow]; exact lev.pairing i j)
-    rwa [unitOn_zpow] at this
+      (by rw [map_zpow, hjζ, _root_.GlobalTheory.obbuild_unitOn_zpow]; exact lev.pairing i j)
+    rwa [_root_.GlobalTheory.obbuild_unitOn_zpow] at this
   let tR : T →+* F := t.toRingHom
   have htζ : Units.map tR.toMonoidHom ζT = ζ := by ext; simp [ζT, tR]
   let polPull {S : Scheme.{0}} (Q : PolAV S) {R : Type} [CommRing R] (f : Sp R ⟶ S) : PolAV (Sp R) := by
@@ -1213,7 +1188,7 @@ theorem exists_geomIso_of_unif : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
       (fun i => e₀ (v i)) htor hC⟩
   obtain ⟨A₀, a, ha, hLa⟩ := GlobalTheory.T.polarisedAbelianVariety_descends_of_rational_thetaPoints (Kb R) (Kb W) e₀ B n hn ho hth
   refine ⟨A₀, e₀, he₀, ?_, B, a, b, ha, hLa, hB.2.1, hB.2.2.symm⟩
-  exact GlobalTheory.SymDescentAlgClosed.hypS_of_baseChange (Kb R) (Kb W) e₀ A₀ B a ha hLa (GlobalTheory.T.lineBundleSymmetryHypothesis_baseChange _ _ _ A' B b hB hS)
+  exact GlobalTheory.SymDescentAlgClosed.hypS_of_baseChange (Kb R) (Kb W) e₀ A₀ B a ha hLa (_root_.GlobalTheory.MBLow.hypS_of_isPolFibre _ _ _ A' B b hB hS)
 
 end GlobalTheory.Mum.GeoDesc
 end -- clump:auto
@@ -1232,8 +1207,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_geometricFibreIso_of_traitUniformisation : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W), Function.Injective φ → IsLocalHom φ → ∀ (D' : DegData W (maximalIdeal W)) (G' : Over (Sp W)) [GrpObj G'] [IsCommMonObj G'] (A' : PolAV (Sp (FractionRing W))), Nonempty (IsPullDeg φ D.toPre D'.toPre) → IsSemiAbelian G' → Nonempty (Unif (maximalIdeal W) D' A' G') → (letI := A'.isAb.comm; GlobalTheory.ZH.HypS A'.A A'.L) → ∃ (A₀ : PolAV (Sp (Kb R))) (e₀ : Kb R →+* Kb W), (∀ r, e₀ (algebraMap (FractionRing R) (Kb R) (algebraMap R _ r)) = algebraMap (FractionRing W) (Kb W) (algebraMap W _ (φ r))) ∧ (letI := A₀.isAb.comm; GlobalTheory.ZH.HypS A₀.A A₀.L) ∧ GeomIso A₀ A' e₀ (algebraMap (FractionRing W) (Kb W)) := by
-  first | exact @GlobalTheory.Mum.GeoDesc.exists_geomIso_of_unif
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGeometricFibreIsoOfTraitUniformisationStatement =====
@@ -1249,8 +1222,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_uniformisedTrait_descent_finite_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W), Function.Injective φ → IsLocalHom φ → ∀ (D' : DegData W (maximalIdeal W)) (G' : Over (Sp W)) [GrpObj G'] [IsCommMonObj G'] (A' : PolAV (Sp (FractionRing W))), Nonempty (IsPullDeg φ D.toPre D'.toPre) → IsSemiAbelian G' → Nonempty (Unif (maximalIdeal W) D' A' G') → (letI := A'.isAb.comm; GlobalTheory.ZH.HypS A'.A A'.L) → ∀ (A₀ : PolAV (Sp (Kb R))) (e₀ : Kb R →+* Kb W), (∀ r, e₀ (algebraMap (FractionRing R) (Kb R) (algebraMap R _ r)) = algebraMap (FractionRing W) (Kb W) (algebraMap W _ (φ r))) → (letI := A₀.isAb.comm; GlobalTheory.ZH.HypS A₀.A A₀.L) → GeomIso A₀ A' e₀ (algebraMap (FractionRing W) (Kb W)) → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : IsDomain R₁) (_ : IsLocalRing R₁) (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (A : PolAV (Sp (FractionRing R₁))), FinExt ρ ∧ Nonempty (IsPullDeg ρ D.toPre D₁.toPre) ∧ (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) ∧ UniTrait D₁.toPre A := by
-  first | exact @GlobalTheory.Mum.ClosureDescent.exists_uniTrait
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisedTraitDescentFiniteExtStatement =====
@@ -1273,9 +1244,9 @@ namespace GlobalTheory.Mum
 
 theorem exists_desc_labels : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W), Function.Injective φ → IsLocalHom φ → ∀ (D' : DegData W (maximalIdeal W)) (G' : Over (Sp W)) [GrpObj G'] [IsCommMonObj G'] (A' : PolAV (Sp (FractionRing W))), Nonempty (IsPullDeg φ D.toPre D'.toPre) → IsSemiAbelian G' → Nonempty (Unif (maximalIdeal W) D' A' G') → (letI := A'.isAb.comm; GlobalTheory.ZH.HypS A'.A A'.L) → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : IsDomain R₁) (_ : IsLocalRing R₁) (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (A : PolAV (Sp (FractionRing R₁))) (lab : Labels D₁.toPre A), FinExt ρ ∧ Nonempty (IsPullDeg ρ D.toPre D₁.toPre) ∧ (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) ∧ OneTrait D₁.toPre A lab ∧ GalEqN n lab := by
   intro R _ _ _ hR D n hn ho hu W _ _ _ hW φ hφ hl D' G' _ _ A' hP hG hU hS
-  obtain ⟨A₀, e₀, hc, hS₀, hI⟩ := GlobalTheory.T.exists_geometricFibreIso_of_traitUniformisation R hR D n hn ho hu W hW φ hφ hl D' G' A' hP hG hU hS
+  obtain ⟨A₀, e₀, hc, hS₀, hI⟩ := _root_.GlobalTheory.Mum.GeoDesc.exists_geomIso_of_unif R hR D n hn ho hu W hW φ hφ hl D' G' A' hP hG hU hS
   obtain ⟨R₁, _, _, _, ρ, D₁, A, hF, hP₁, hS₁, hT⟩ :=
-    GlobalTheory.T.exists_uniformisedTrait_descent_finite_ext R hR D n hn ho hu W hW φ hφ hl D' G' A' hP hG hU hS A₀ e₀ hc hS₀ hI
+    _root_.GlobalTheory.Mum.ClosureDescent.exists_uniTrait R hR D n hn ho hu W hW φ hφ hl D' G' A' hP hG hU hS A₀ e₀ hc hS₀ hI
   have hR₁ : Base R₁ := ⟨hF.1, by haveI := hR.2; exact charZero_of_injective_ringHom hF.2.1⟩
   obtain ⟨lab, hO⟩ := GlobalTheory.T.exists_torsionLabels_uniformisedDominatingTrait R₁ hR₁ D₁ A hT
   exact GlobalTheory.T.exists_finite_extension_galois_equivariant_labels R hR D n hn ho hu R₁ ρ D₁ A lab hF hP₁ hS₁ hO
@@ -1297,8 +1268,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_labelledSemiAbelianCover_finite_extension : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W), Function.Injective φ → IsLocalHom φ → ∀ (D' : DegData W (maximalIdeal W)) (G' : Over (Sp W)) [GrpObj G'] [IsCommMonObj G'] (A' : PolAV (Sp (FractionRing W))), Nonempty (IsPullDeg φ D.toPre D'.toPre) → IsSemiAbelian G' → Nonempty (Unif (maximalIdeal W) D' A' G') → (letI := A'.isAb.comm; GlobalTheory.ZH.HypS A'.A A'.L) → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : IsDomain R₁) (_ : IsLocalRing R₁) (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (A : PolAV (Sp (FractionRing R₁))) (lab : Labels D₁.toPre A), FinExt ρ ∧ Nonempty (IsPullDeg ρ D.toPre D₁.toPre) ∧ (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) ∧ OneTrait D₁.toPre A lab ∧ GalEqN n lab := by
-  first | exact @GlobalTheory.Mum.exists_desc_labels
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelledSemiAbelianCoverFiniteExtensionStatement =====

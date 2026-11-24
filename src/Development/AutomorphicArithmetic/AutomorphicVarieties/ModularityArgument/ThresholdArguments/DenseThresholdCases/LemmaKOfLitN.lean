@@ -1320,9 +1320,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.SDetect
-theorem detection_statement_holds : UpperTheory.V.ZK.SDetect := by
-  apply LateralTheory.Q.SDetectCut.goal
-theorem intersectionNumber_baseChange : UpperTheory.V.ZK.SDetect := detection_statement_holds
 end LateralTheory.Fin.SDetect
 end -- clump:auto
 end -- clump:auto
@@ -1557,9 +1554,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.SFewOf
-theorem few_of_statement_holds : UpperTheory.V.ZK.SFewOf := by
-  apply LateralTheory.Q.SFewOfCut.sFewOf
-theorem intersectionNumber_baseChange : UpperTheory.V.ZK.SFewOf := few_of_statement_holds
 end LateralTheory.Fin.SFewOf
 end -- clump:auto
 end -- clump:auto
@@ -1686,9 +1680,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.SLayer
-theorem layer_statement_holds : UpperTheory.V.ZK.SLayer := by
-  apply LateralTheory.Q.SLayerCut.goal_of
-theorem intersectionNumber_baseChange : UpperTheory.V.ZK.SLayer := layer_statement_holds
 end LateralTheory.Fin.SLayer
 end -- clump:auto
 end -- clump:auto
@@ -1938,9 +1929,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.SStein
-theorem stein_statement_holds : UpperTheory.V.ZK.SStein := by
-  apply LateralTheory.Q.SSteinT.SStein_of
-theorem intersectionNumber_baseChange : UpperTheory.V.ZK.SStein := stein_statement_holds
 end LateralTheory.Fin.SStein
 end -- clump:auto
 end -- clump:auto
@@ -1958,7 +1946,7 @@ namespace UpperTheory.V.ZK
 theorem lemmaK (hB : BOdd) (hP : GlobalTheory.Published.PoitouTateDuality) (hF : LocalFinitenessK) (hT : LocalTateDualityK) :
     ∃ CK, LemmaK CK :=
   lemmaK_of_steps hB hP hF hT
-    sChain sPrism sPrismMul sZc LateralTheory.Fin.SRel.intersectionNumber_baseChange sTrans sCoc sThetaOf sPhi sEta LateralTheory.Fin.SStein.intersectionNumber_baseChange sClassOf sUpperOf LateralTheory.Fin.SDetect.intersectionNumber_baseChange sCount LateralTheory.Fin.SFewOf.intersectionNumber_baseChange PositivityTheory.QuaternionShaBounds.sSha LateralTheory.Fin.SLayer.intersectionNumber_baseChange sTors sNum sFinal
+    sChain sPrism sPrismMul sZc _root_.LateralTheory.Q.SRelT.SRel_of sTrans sCoc sThetaOf sPhi sEta _root_.LateralTheory.Q.SSteinT.SStein_of sClassOf sUpperOf _root_.LateralTheory.Q.SDetectCut.goal sCount _root_.LateralTheory.Q.SFewOfCut.sFewOf PositivityTheory.QuaternionShaBounds.sSha _root_.LateralTheory.Q.SLayerCut.goal_of sTors sNum sFinal
 
 end UpperTheory.V.ZK
 end -- clump:auto

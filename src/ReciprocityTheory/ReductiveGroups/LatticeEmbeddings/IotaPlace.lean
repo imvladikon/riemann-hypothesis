@@ -133,14 +133,6 @@ theorem smallIdeal_isPrime (ι : K →+* ℂ_[p]) : (smallIdeal ι).IsPrime := b
     obtain ⟨ha, hb⟩ := hc
     nlinarith [norm_int_le ι a, norm_int_le ι b]
 
-theorem norm_p_lt_one : ‖(p : ℂ_[p])‖ < 1 := by
-  have e : (p : ℂ_[p]) = (((algebraMap ℚ_[p] (PadicAlgCl p)) (p : ℚ_[p]) : PadicAlgCl p) : ℂ_[p]) := by
-    first
-      | simp
-  rw [e, PadicComplex.norm_extends, PadicAlgCl.norm_extends]
-  first
-    | exact Padic.norm_p_lt_one
-
 end ReciprocityTheory.ChartRestriction.B3.IotaPl
 
 namespace ReciprocityTheory.ChartRestriction.B3

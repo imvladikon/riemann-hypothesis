@@ -146,11 +146,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.exists_mem_submonoid_dvd_mul_of_height_one : ∀ (B : Type) [CommRing B] [IsDomain B] [IsNoetherianRing B] [IsIntegrallyClosed B]
-    (S : Submonoid B), (0 : B) ∉ S → ∀ x y : B, y ≠ 0 →
-    (∀ Q : Ideal B, Q.IsPrime → Q.height = 1 → y ∈ Q → Disjoint (S : Set B) (Q : Set B) →
-      ∃ t ∉ Q, y ∣ t * x) → ∃ u ∈ S, y ∣ u * x := by
-  first | (exact @GlobalTheory.exists_mem_submonoid_dvd_mul_of_forall_height_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemSubmonoidDvdMulOfForallHeightEqOneStatement =====
@@ -252,12 +247,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.height_one_prime_associate : ∀ (A' B' : Type) [CommRing A'] [CommRing B'] [IsDomain B'] [IsNoetherianRing B']
-    [IsIntegrallyClosed B'] [Algebra A' B'] (𝔭 : Ideal A'), (𝔭.map (algebraMap A' B')).IsPrime →
-    (𝔭.map (algebraMap A' B')).height = 1 → ∀ c : B', c ≠ 0 →
-    ∃ j : A', (∃ t ∉ 𝔭.map (algebraMap A' B'), c ∣ t * algebraMap A' B' j) ∧
-      (∃ t ∉ 𝔭.map (algebraMap A' B'), algebraMap A' B' j ∣ t * c) := by
-  first | (exact @GlobalTheory.exists_locally_associated_algebraMap_of_height_eq_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightOnePrimeAssociate =====
@@ -356,7 +345,7 @@ theorem divisor_descent : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoet
     have hsQ : algebraMap A' B' s ∈ Q := by rw [← hbc]; exact Q.mul_mem_right c hbQ
     obtain ⟨h𝔭1, h𝔭Q⟩ := primeDescent A' B' s hs hpr Q hQ hQ1 hsQ
     obtain ⟨j₀, ⟨t₁, ht₁, hj₁⟩, ⟨t₂, ht₂, hj₂⟩⟩ :=
-      GlobalTheory.T.height_one_prime_associate A' B' (Q.comap (algebraMap A' B')) (by rw [h𝔭Q]; exact hQ) (by rw [h𝔭Q]; exact hQ1) c hc0
+      _root_.GlobalTheory.exists_locally_associated_algebraMap_of_height_eq_one A' B' (Q.comap (algebraMap A' B')) (by rw [h𝔭Q]; exact hQ) (by rw [h𝔭Q]; exact hQ1) c hc0
     rw [h𝔭Q] at ht₁ ht₂
     have hS0 : (0 : B') ∉ (Q.comap (algebraMap A' B')).primeCompl.map (algebraMap A' B') := by
       intro h0
@@ -364,7 +353,7 @@ theorem divisor_descent : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoet
       by_cases hu0 : u' = 0
       · exact hu' (hu0 ▸ (Q.comap (algebraMap A' B')).zero_mem)
       · exact hinj u' hu0 h
-    obtain ⟨u, huS, hu⟩ := GlobalTheory.T.exists_mem_submonoid_dvd_mul_of_height_one B' ((Q.comap (algebraMap A' B')).primeCompl.map (algebraMap A' B'))
+    obtain ⟨u, huS, hu⟩ := _root_.GlobalTheory.exists_mem_submonoid_dvd_mul_of_forall_height_eq_one B' ((Q.comap (algebraMap A' B')).primeCompl.map (algebraMap A' B'))
       hS0 (algebraMap A' B' j₀) c hc0 (by
         intro Q' hQ' hQ'1 hcQ' hdisj
         have hsQ' : algebraMap A' B' s ∈ Q' := by rw [← hbc]; exact Q'.mul_mem_left b hcQ'
@@ -390,7 +379,7 @@ theorem divisor_descent : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoet
     · rw [map_mul, mul_assoc]; exact mul_dvd_mul_left _ hj₂
   apply colonStep A' B' b c s hbc
   intro x hx
-  obtain ⟨u, hu, hdiv⟩ := GlobalTheory.T.exists_mem_submonoid_dvd_mul_of_height_one B' ⊥ (by simp) (algebraMap A' B' x) b hb0 (by
+  obtain ⟨u, hu, hdiv⟩ := _root_.GlobalTheory.exists_mem_submonoid_dvd_mul_of_forall_height_eq_one B' ⊥ (by simp) (algebraMap A' B' x) b hb0 (by
     intro Q hQ hQ1 hbQ _
     obtain ⟨j, hcj, t, htQ, z, hz⟩ := hloc Q hQ hQ1 hbQ
     obtain ⟨a, ha⟩ := hx j hcj
@@ -421,13 +410,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.divisor_descent_flat_normal_domains : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoetherianRing A'] [IsIntegrallyClosed A']
-    [CommRing B'] [IsDomain B'] [IsNoetherianRing B'] [IsIntegrallyClosed B'] [Algebra A' B']
-    [Module.Flat A' B'] (s : A'), s ≠ 0 →
-    (∀ 𝔭 : Ideal A', 𝔭.IsPrime → 𝔭.height = 1 → s ∈ 𝔭 → (𝔭.map (algebraMap A' B')).IsPrime) →
-    ∀ b c : B', b * c = algebraMap A' B' s →
-    b ∈ ((Ideal.span {b}).comap (algebraMap A' B')).map (algebraMap A' B') := by
-  first | (exact @GlobalTheory.DivDescent.divisor_descent)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisorDescentFlatNormalDomainsStatement =====
@@ -584,13 +566,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.exists_local_hom_to_strictly_henselian_normal : ∀ (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      (i : A →+* T), IsLocalHom i →
-    ∃ (A' : Type) (_ : CommRing A') (_ : IsDomain A') (_ : HenselianLocalRing A')
-      (_ : IsSepClosed (ResidueField A')) (_ : IsNoetherianRing A') (_ : IsIntegrallyClosed A')
-      (ι : A →+* A') (α : A' →+* T), α.comp ι = i ∧ IsLocalHom α := by
-  first | (exact @GlobalTheory.exists_strictlyHenselian_normal_between)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomToStrictlyHenselianNormalStatement =====
@@ -602,27 +577,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.exists_localStage_tensor_polynomial_origin : ∀ (T O : Type) [CommRing T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O],
-    (maximalIdeal O).comap (algebraMap (Polynomial T) O) = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (A : Type) [CommRing A] [IsLocalRing A] (i : A →+* T), IsLocalHom i →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (jA : Localization.AtPrime QA →+* O),
-      jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-        (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∀ (A' : Type) [CommRing A'] [IsLocalRing A'] (ι : A →+* A') (α : A' →+* T), α.comp ι = i → IsLocalHom α →
-    ∃ (E' : Type) (_ : CommRing E') (_ : Algebra (Polynomial A') E') (_ : Algebra.Etale (Polynomial A') E')
-      (Q' : Ideal E') (_ : Q'.IsPrime),
-      Q'.comap (algebraMap (Polynomial A') E') = GlobalTheory.KeyOriginCut.originIdeal A' ∧
-      ∃ (β : Localization.AtPrime QA →+* Localization.AtPrime Q') (γ : Localization.AtPrime Q' →+* O),
-        ((algebraMap (Polynomial A') (Localization.AtPrime Q')).comp Polynomial.C).comp ι =
-          β.comp ((algebraMap (Polynomial A) (Localization.AtPrime QA)).comp Polynomial.C) ∧
-        γ.comp β = jA ∧
-        γ.comp ((algebraMap (Polynomial A') (Localization.AtPrime Q')).comp Polynomial.C) =
-          (algebraMap T O).comp α := by
-  first | (exact @GlobalTheory.LocalStage.localStage)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalStageTensorPolynomialOriginStatement =====
@@ -674,9 +628,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_normal_local_domain_over_henselian_prime : ∀ (A : Type) [CommRing A] [HenselianLocalRing A] (𝔭 : Ideal A) [𝔭.IsPrime],
-    ∃ (S : Type) (_ : CommRing S) (_ : IsDomain S) (_ : IsIntegrallyClosed S) (_ : IsLocalRing S) (f : A →+* S), f.IsIntegral ∧ RingHom.ker f = 𝔭 := by
-  first | (exact @GlobalTheory.NormalLocal.exists_normal_local)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalLocalDomainOverHenselianPrimeStatement =====
@@ -776,10 +727,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_sub_mem_maximalIdeal_etale_over_origin : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsSepClosed (ResidueField A)] (E : Type) [CommRing E] [Algebra (Polynomial A) E] [Algebra.Etale (Polynomial A) E] (Q : Ideal E) [Q.IsPrime],
-    Q.comap (algebraMap (Polynomial A) E) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ y : Localization.AtPrime Q, ∃ a : Polynomial A, y - algebraMap (Polynomial A) (Localization.AtPrime Q) a ∈ maximalIdeal (Localization.AtPrime Q) := by
-  first | (exact @GlobalTheory.OriginResidue.residue_origin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSubMemMaximalIdealEtaleOverOriginStatement =====
@@ -829,9 +776,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.flat_tensor_kernel_mem_map_ideal : ∀ (P T L : Type) [CommRing P] [CommRing T] [CommRing L] [Algebra P T] [Algebra P L] [Module.Flat P L] (I : Ideal P),
-    RingHom.ker (algebraMap P T) = I → ∀ y : L, (1 : T) ⊗ₜ[P] y = 0 → y ∈ I.map (algebraMap P L) := by
-  first | (exact @GlobalTheory.flat_one_tmul_eq_zero_mem_map)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatTensorKernelMemMapIdeal =====
@@ -938,11 +882,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.origin_ideal_unique_prime_over : ∀ (A S : Type) [CommRing A] [IsLocalRing A] [CommRing S] [IsLocalRing S] (f : A →+* S), f.IsIntegral →
-    (Polynomial.mapRingHom f).IsIntegral ∧ (GlobalTheory.KeyOriginCut.originIdeal S).IsPrime ∧
-    (GlobalTheory.KeyOriginCut.originIdeal S).comap (Polynomial.mapRingHom f) = GlobalTheory.KeyOriginCut.originIdeal A ∧
-    ∀ 𝔔 : Ideal (Polynomial S), 𝔔.IsPrime → 𝔔.comap (Polynomial.mapRingHom f) = GlobalTheory.KeyOriginCut.originIdeal A → 𝔔 = GlobalTheory.KeyOriginCut.originIdeal S := by
-  first | (exact @GlobalTheory.PolyOrigin.polyOrigin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginIdealUniquePrimeOver =====
@@ -1076,12 +1015,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.isLocalRing_tensor_of_unique_prime_over : ∀ (P T L : Type) [CommRing P] [CommRing T] [CommRing L] [Algebra P T] [Algebra P L] [IsLocalRing L] [Algebra.IsIntegral P T] (𝔐 : Ideal T) [𝔐.IsPrime],
-    𝔐.comap (algebraMap P T) = (maximalIdeal L).comap (algebraMap P L) →
-    (∀ 𝔔 : Ideal T, 𝔔.IsPrime → 𝔔.comap (algebraMap P T) = (maximalIdeal L).comap (algebraMap P L) → 𝔔 = 𝔐) →
-    (∀ y : L, ∃ a : P, y - algebraMap P L a ∈ maximalIdeal L) →
-    IsLocalRing (TensorProduct P T L) := by
-  first | (exact @GlobalTheory.tensor_isLocalRing_of_unique_prime_over)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorIsLocalRingOfUniquePrimeOverStatement =====
@@ -1142,9 +1075,6 @@ section -- clump:auto
 open IsLocalRing Polynomial
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.isDomain_tensor_atPrime_of_isLocalRing_of_etale : ∀ (P R E : Type) [CommRing P] [CommRing R] [IsDomain R] [IsIntegrallyClosed R] [Algebra P R] [CommRing E] [Algebra P E] [Algebra.Etale P E] (Q : Ideal E) [Q.IsPrime],
-    IsLocalRing (TensorProduct P R (Localization.AtPrime Q)) → IsDomain (TensorProduct P R (Localization.AtPrime Q)) := by
-  first | (exact @GlobalTheory.tensor_localization_atPrime_isDomain_of_isLocalRing_etale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLocalizationAtPrimeIsDomainOfIsLocalRingEtStatement =====
@@ -1165,8 +1095,8 @@ theorem origin_primes : ∀ (A' : Type) [CommRing A'] [HenselianLocalRing A'] [I
     Q.comap (algebraMap (Polynomial A') E) = GlobalTheory.KeyOriginCut.originIdeal A' →
     (𝔭.map ((algebraMap (Polynomial A') (Localization.AtPrime Q)).comp Polynomial.C)).IsPrime := by
   intro A' _ _ _ 𝔭 _ E _ _ _ Q _ hQ
-  obtain ⟨S, _, _, _, _, f, hfi, hker⟩ := GlobalTheory.T.exists_normal_local_domain_over_henselian_prime A' 𝔭
-  obtain ⟨hXi, hOp, hOc, hOu⟩ := GlobalTheory.T.origin_ideal_unique_prime_over A' S f hfi
+  obtain ⟨S, _, _, _, _, f, hfi, hker⟩ := _root_.GlobalTheory.NormalLocal.exists_normal_local A' 𝔭
+  obtain ⟨hXi, hOp, hOc, hOu⟩ := _root_.GlobalTheory.PolyOrigin.polyOrigin A' S f hfi
   letI : Algebra (Polynomial A') (Polynomial S) := (Polynomial.mapRingHom f).toAlgebra
   haveI : Algebra.IsIntegral (Polynomial A') (Polynomial S) := ⟨hXi⟩
   have hmax : (maximalIdeal (Localization.AtPrime Q)).comap
@@ -1176,11 +1106,11 @@ theorem origin_primes : ∀ (A' : Type) [CommRing A'] [HenselianLocalRing A'] [I
     rw [IsScalarTower.algebraMap_eq (Polynomial A') E (Localization.AtPrime Q), ← Ideal.comap_comap,
       h0, hQ]
   haveI hloc : IsLocalRing (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
-    GlobalTheory.T.isLocalRing_tensor_of_unique_prime_over (Polynomial A') (Polynomial S) (Localization.AtPrime Q) (GlobalTheory.KeyOriginCut.originIdeal S)
+    _root_.GlobalTheory.tensor_isLocalRing_of_unique_prime_over (Polynomial A') (Polynomial S) (Localization.AtPrime Q) (GlobalTheory.KeyOriginCut.originIdeal S)
       (by rw [hmax]; exact hOc) (by intro 𝔔 h1 h2; rw [hmax] at h2; exact hOu 𝔔 h1 h2)
-      (GlobalTheory.T.exists_sub_mem_maximalIdeal_etale_over_origin A' E Q hQ)
+      (_root_.GlobalTheory.OriginResidue.residue_origin A' E Q hQ)
   haveI hdom : IsDomain (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
-    GlobalTheory.T.isDomain_tensor_atPrime_of_isLocalRing_of_etale (Polynomial A') (Polynomial S) E Q hloc
+    _root_.GlobalTheory.tensor_localization_atPrime_isDomain_of_isLocalRing_etale (Polynomial A') (Polynomial S) E Q hloc
   haveI : Module.Flat (Polynomial A') (Localization.AtPrime Q) :=
     Module.Flat.trans (Polynomial A') E (Localization.AtPrime Q)
   have hkerX : RingHom.ker (algebraMap (Polynomial A') (Polynomial S)) = 𝔭.map Polynomial.C := by
@@ -1207,7 +1137,7 @@ theorem origin_primes : ∀ (A' : Type) [CommRing A'] [HenselianLocalRing A'] [I
   have hg1 : ∀ y, g y = 0 → y ∈ 𝔭.map ((algebraMap (Polynomial A') (Localization.AtPrime Q)).comp Polynomial.C) := by
     intro y hy
     rw [hJ]
-    exact GlobalTheory.T.flat_tensor_kernel_mem_map_ideal (Polynomial A') (Polynomial S) (Localization.AtPrime Q) _ hkerX y hy
+    exact _root_.GlobalTheory.flat_one_tmul_eq_zero_mem_map (Polynomial A') (Polynomial S) (Localization.AtPrime Q) _ hkerX y hy
   refine ⟨?_, ?_⟩
   · intro htop
     have h1 := hg0 1 (by rw [htop]; exact Submodule.mem_top)
@@ -1232,12 +1162,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.origin_ideal_extension_prime : ∀ (A' : Type) [CommRing A'] [HenselianLocalRing A'] [IsSepClosed (ResidueField A')]
-    (𝔭 : Ideal A') [𝔭.IsPrime] (E : Type) [CommRing E] [Algebra (Polynomial A') E]
-    [Algebra.Etale (Polynomial A') E] (Q : Ideal E) [Q.IsPrime],
-    Q.comap (algebraMap (Polynomial A') E) = GlobalTheory.KeyOriginCut.originIdeal A' →
-    (𝔭.map ((algebraMap (Polynomial A') (Localization.AtPrime Q)).comp Polynomial.C)).IsPrime := by
-  first | (exact @GlobalTheory.OriginPrimes.origin_primes)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginIdealExtensionPrime =====
@@ -1305,9 +1229,9 @@ theorem good_stage : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] 
     rw [← hφ, ← Ideal.comap_comap, GlobalTheory.comap_maximalIdeal_of_localHom_strictHens φ, ← hP]
     first
       | exact Localization.AtPrime.under_maximalIdeal
-  obtain ⟨A', _, _, _, _, _, _, ι, α, hια, hα⟩ := GlobalTheory.T.exists_local_hom_to_strictly_henselian_normal T hT A i hil
+  obtain ⟨A', _, _, _, _, _, _, ι, α, hια, hα⟩ := _root_.GlobalTheory.exists_strictlyHenselian_normal_between T hT A i hil
   obtain ⟨E', _, _, _, Q', _, hQ', β, γ, h1, h2, h3⟩ :=
-    GlobalTheory.T.exists_localStage_tensor_polynomial_origin T O hO A i hil EA QA hQA jA hjA A' ι α hια hα
+    _root_.GlobalTheory.LocalStage.localStage T O hO A i hil EA QA hQA jA hjA A' ι α hια hα
   obtain ⟨hd, hn, hic, hfl⟩ := local_props A' E' Q'
   letI alg : Algebra A' (Localization.AtPrime Q') :=
     ((algebraMap (Polynomial A') (Localization.AtPrime Q')).comp Polynomial.C).toAlgebra
@@ -1326,7 +1250,7 @@ theorem good_stage : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] 
     apply hi
     rw [map_zero, ← hια, RingHom.comp_apply, h, map_zero]
   · intro 𝔭 _ _ _
-    exact GlobalTheory.T.origin_ideal_extension_prime A' 𝔭 E' Q' hQ'
+    exact _root_.GlobalTheory.OriginPrimes.origin_primes A' 𝔭 E' Q' hQ'
 
 end GlobalTheory.GoodStageOrigin
 end -- clump:auto
@@ -1341,30 +1265,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.divisorsOfConstants_flat_normal_stage_at_origin : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A] (i : A →+* T), Function.Injective i → IsLocalHom i →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (jA : Localization.AtPrime QA →+* O),
-      jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-        (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∀ (sA : A), sA ≠ 0 →
-    ∃ (A' : Type) (_ : CommRing A') (_ : IsDomain A') (_ : IsNoetherianRing A') (_ : IsIntegrallyClosed A')
-      (B' : Type) (_ : CommRing B') (_ : IsDomain B') (_ : IsLocalRing B') (_ : IsNoetherianRing B')
-      (_ : IsIntegrallyClosed B') (_ : Algebra A' B') (_ : Module.Flat A' B')
-      (ι : A →+* A') (α : A' →+* T) (β : Localization.AtPrime QA →+* B') (γ : B' →+* O),
-      (algebraMap A' B').comp ι = β.comp (algebraMap A (Localization.AtPrime QA)) ∧
-      γ.comp β = jA ∧ γ.comp (algebraMap A' B') = (algebraMap T O).comp α ∧ ι sA ≠ 0 ∧
-      ∀ 𝔭 : Ideal A', 𝔭.IsPrime → 𝔭.height = 1 → ι sA ∈ 𝔭 →
-        (𝔭.map (algebraMap A' B')).IsPrime := by
-  first | (exact @GlobalTheory.GoodStageOrigin.good_stage)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisorsOfConstantsFlatNormalStageAtOriginStatement =====
@@ -1422,12 +1322,12 @@ theorem divConst_origin_noeth : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLo
   intro T O _ _ _ _ _ _ _ _ hT P _ φ hφ hsh hP A _ _ _ _ _ _ i hi hil EA _ _ _ _ _ QA _ hQA jA hjA
     bA cA sA hs hbc
   obtain ⟨A', _, _, _, _, B', _, _, _, _, _, _, _, ι, α, β, γ, h1, h2, h3, h4, h5⟩ :=
-    GlobalTheory.T.divisorsOfConstants_flat_normal_stage_at_origin T O hT P φ hφ hsh hP A i hi hil EA QA hQA jA hjA sA hs
+    _root_.GlobalTheory.GoodStageOrigin.good_stage T O hT P φ hφ hsh hP A i hi hil EA QA hQA jA hjA sA hs
   have hbc' : β bA * β cA = algebraMap A' B' (ι sA) := by
     have e := congrArg (fun g => g sA) h1
     simp only [RingHom.comp_apply] at e
     rw [e, ← hbc, map_mul]
-  have hmem := GlobalTheory.T.divisor_descent_flat_normal_domains A' B' (ι sA) h4 h5 (β bA) (β cA) hbc'
+  have hmem := _root_.GlobalTheory.DivDescent.divisor_descent A' B' (ι sA) h4 h5 (β bA) (β cA) hbc'
   obtain ⟨d, w, hdw⟩ := exists_unit_of_mem_map_comap (algebraMap A' B') (β bA) hmem
   have e3 := congrArg (fun g => g d) h3
   simp only [RingHom.comp_apply] at e3
@@ -1447,24 +1347,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.divConst_origin_noeth_alt : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A] (i : A →+* T), Function.Injective i → IsLocalHom i →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (jA : Localization.AtPrime QA →+* O),
-      jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-        (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∀ (bA cA : Localization.AtPrime QA) (sA : A), sA ≠ 0 →
-      bA * cA = algebraMap A (Localization.AtPrime QA) sA →
-    ∃ (a : T) (w : Oˣ), jA bA = algebraMap T O a * (w : O) := by
-  first | (exact @GlobalTheory.VertUnitsNoeth.divConst_origin_noeth)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivConstOriginNoethStatement =====
@@ -1574,21 +1456,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.exists_etaleStage_divisor_strictHenselisation_origin : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (b c : O) (s : T), s ≠ 0 → b * c = algebraMap T O s →
-    ∃ (E : Type) (_ : CommRing E) (_ : Algebra (Polynomial T) E) (_ : Algebra T E)
-      (_ : IsScalarTower T (Polynomial T) E) (_ : Algebra.Etale (Polynomial T) E)
-      (Q : Ideal E) (_ : Q.IsPrime),
-      Q.comap (algebraMap (Polynomial T) E) = GlobalTheory.KeyOriginCut.originIdeal T ∧
-      ∃ (j : Localization.AtPrime Q →+* O),
-        j.comp (algebraMap (Polynomial T) (Localization.AtPrime Q)) = algebraMap (Polynomial T) O ∧
-      ∃ (b₁ c₁ : Localization.AtPrime Q),
-        b₁ * c₁ = algebraMap T (Localization.AtPrime Q) s ∧ j b₁ = b ∧ j c₁ = c := by
-  first | (exact @GlobalTheory.KeyOriginCut.exists_stage_divisor)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleStageDivisorStrictHenselisationOriginStatement =====
@@ -1600,29 +1467,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.exists_noetherian_model_of_divisor_of_constants : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (E : Type) [CommRing E] [Algebra (Polynomial T) E] [Algebra T E]
-      [IsScalarTower T (Polynomial T) E] [Algebra.Etale (Polynomial T) E]
-      (Q : Ideal E) [Q.IsPrime],
-      Q.comap (algebraMap (Polynomial T) E) = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (j : Localization.AtPrime Q →+* O),
-      j.comp (algebraMap (Polynomial T) (Localization.AtPrime Q)) = algebraMap (Polynomial T) O →
-    ∀ (b₁ c₁ : Localization.AtPrime Q) (s : T), s ≠ 0 →
-      b₁ * c₁ = algebraMap T (Localization.AtPrime Q) s →
-    ∃ (A : Type) (_ : CommRing A) (_ : IsDomain A) (_ : IsLocalRing A) (_ : IsNoetherianRing A)
-      (_ : IsIntegrallyClosed A) (_ : Algebra.EssFiniteType ℤ A) (i : A →+* T),
-      Function.Injective i ∧ IsLocalHom i ∧
-      ∃ (EA : Type) (_ : CommRing EA) (_ : Algebra (Polynomial A) EA) (_ : Algebra A EA)
-        (_ : IsScalarTower A (Polynomial A) EA) (_ : Algebra.Etale (Polynomial A) EA)
-        (QA : Ideal EA) (_ : QA.IsPrime),
-        QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A ∧
-      ∃ (jA : Localization.AtPrime QA →+* O),
-        jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-          (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) ∧
-      ∃ (bA cA : Localization.AtPrime QA) (sA : A), sA ≠ 0 ∧ i sA = s ∧
-        bA * cA = algebraMap A (Localization.AtPrime QA) sA ∧ jA bA = j b₁ := by
-  first | (exact @GlobalTheory.VertUnitsNoeth.exists_noetherian_model_of_mul_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNoetherianModelOfDivisorOfConstantsStatement =====
@@ -1637,9 +1481,9 @@ open IsLocalRing Polynomial
 namespace GlobalTheory.VertUnits
 
 theorem divConstOrigin : GlobalTheory.VertUnits.DivConstOrigin := by
-  have h₁ := GlobalTheory.T.exists_etaleStage_divisor_strictHenselisation_origin
-  have h₂ := GlobalTheory.T.exists_noetherian_model_of_divisor_of_constants
-  have h₃ := GlobalTheory.T.divConst_origin_noeth_alt
+  have h₁ := _root_.GlobalTheory.KeyOriginCut.exists_stage_divisor
+  have h₂ := _root_.GlobalTheory.VertUnitsNoeth.exists_noetherian_model_of_mul_eq
+  have h₃ := _root_.GlobalTheory.VertUnitsNoeth.divConst_origin_noeth
   unfold GlobalTheory.VertUnits.DivConstOrigin GlobalTheory.VertUnits.DivConstWith GlobalTheory.VertUnits.DivConst
   intro T O _ _ _ _ _ _ _ _ hT P _ φ hφ hsh _ hPo b c s hs hbc
   have hPo' : P = GlobalTheory.KeyOriginCut.originIdeal T := hPo

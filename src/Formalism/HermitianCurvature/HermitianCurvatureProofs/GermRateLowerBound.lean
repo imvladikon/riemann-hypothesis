@@ -393,9 +393,9 @@ theorem germPlace_of (hSI : SliceIntCut) (hYG : YGSlice) (hFM : FormModel) : Ger
     simp only
     congr 1
     funext e
-    have hg := Formalism.FourierDecayAlt.P.Ux10.gaXi_mem Formalism.FourierDecayAlt.P.slice_membership Formalism.FourierDecayAlt.P.radical_parametrisation σ d hd ξ Z hZ hγ
+    have hg := Formalism.FourierDecayAlt.P.Ux10.gaXi_mem _root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem _root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam σ d hd ξ Z hZ hγ
     have hDj : U.DjU P0.k (ph + (m + 1 + 1)) ρ (U.gaXi P0.k ρ σ d ξ Z γ) = dh * (wd * D0) := by
-      rw [Formalism.FourierDecayAlt.P.Ux10.DjU_gaXi Formalism.FourierDecayAlt.P.hat_z_on_slice, ← hZD]
+      rw [Formalism.FourierDecayAlt.P.Ux10.DjU_gaXi _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice, ← hZD]
     have hb := hKj D0 hD0
     rw [← hDj] at hb
     have hDj0 : U.DjU P0.k (ph + (m + 1 + 1)) ρ (U.gaXi P0.k ρ σ d ξ Z γ) ≠ 0 := by
@@ -453,7 +453,7 @@ theorem germPlace_of (hSI : SliceIntCut) (hYG : YGSlice) (hFM : FormModel) : Ger
     intro v e
     have h1 : B.CCle (UD.a C₂ A₀) UD.mmB (fun γ => MM.ev v γ e) ‖v‖ := ccle_comp (MM.mem v) e
     have h2 : B.CCle (P5.Auser P0 N + 1) UD.mmB (fun γ => MM.ev v γ e) ‖v‖ :=
-      Formalism.FourierDecayAlt.P.compactly_supported_monotone P0.k ρ _ (UD.a C₂ A₀) _ ‖v‖ UD.mmB _ hAa h1
+      _root_.Formalism.FourierDecayAlt.P.Ux8.ccMono P0.k ρ _ (UD.a C₂ A₀) _ ‖v‖ UD.mmB _ hAa h1
     have h3 : B.CCle (P5.Auser P0 N + 1) (P5.mmUser P0 N) (fun γ => MM.ev v γ e) ‖v‖ :=
       Formalism.FourierDecayAlt.P.BetaSesquilinearity.CCle_mono_m (by show P5.mmUser P0 N ≤ mmB; omega) h2
     refine ⟨h3.1, ⟨_, h3⟩, fun γ hγ hne => ?_⟩
@@ -761,8 +761,8 @@ theorem sliceOmBlock : SliceOmBlock := by
   subst hp
   have hP : D.ptSize (h ++ [(n + 1, t), (1, c)]) = D.ptSize h + (n + 1 + 1) := ptSize_two h n t c
   have hlocH : D.IsLocPt h (D.ptSize h) := ⟨fun b hb => hloc.1 b (List.mem_append_left _ hb), rfl⟩
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hlocH).1
+  have hspec := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hloc).1
+  have hspec' := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hlocH).1
   set ph := D.ptSize h with hph
   have hσ : ∀ a : Fin (D.ptSize (h ++ [(n + 1, t), (1, c)])),
       ((Fub.sigQ (D.ptPerm h) (Om.σB (n + 1))) (Fin.cast hP a)).val =
@@ -825,7 +825,6 @@ end final
 
 end Formalism.FourierDecayAlt.P.FormNormSumIdentities.GlobalTheory
 
-theorem Formalism.FourierDecayAlt.P.slice_orbital_block : Formalism.FourierDecayAlt.P.FormNormSumIdentities.SliceOmBlock := Formalism.FourierDecayAlt.P.FormNormSumIdentities.GlobalTheory.sliceOmBlock
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -901,7 +900,7 @@ theorem slice_germ_points : Formalism.FourierDecayAlt.P.FormNormSumIdentities.YG
       · subst hb; exact ⟨by omega, ht⟩
       · subst hb; exact ⟨le_rfl, hc0⟩
     have hle : D.ptSize (ptG h' m (Sum.inl (t, c))) ≤ r := by rw [ptSize_ptG]; omega
-    have hSB := Formalism.FourierDecayAlt.P.slice_orbital_block k r E z z' F h' (ptG h' m (Sum.inl (t, c))) m t c rfl hle
+    have hSB := _root_.Formalism.FourierDecayAlt.P.FormNormSumIdentities.GlobalTheory.sliceOmBlock k r E z z' F h' (ptG h' m (Sum.inl (t, c))) m t c rfl hle
       (D.castM (by rw [ptSize_ptG]; omega) γ) hloc hint
     rw [hSB]
     congr 1
@@ -942,7 +941,7 @@ theorem slice_germ_points : Formalism.FourierDecayAlt.P.FormNormSumIdentities.YG
       · exact hh'.1 b hb
       · subst hb; exact ⟨by omega, hz0⟩
     have hle : D.ptSize (ptG h' m (Sum.inr w0)) ≤ r := by rw [ptSize_ptG]; omega
-    have hSO := Formalism.FourierDecayAlt.P.slice_measure_identity k r E z z' F h' (ptG h' m (Sum.inr w0)) (m + 1) w0 rfl hle
+    have hSO := _root_.Formalism.FourierDecayAlt.P.Dx2.SL.sliceOm k r E z z' F h' (ptG h' m (Sum.inr w0)) (m + 1) w0 rfl hle
       (D.castM (by rw [ptSize_ptG]; omega) γ) hloc hint
     rw [hSO]
     congr 1
@@ -1152,7 +1151,7 @@ theorem germ_at_place : FormNormSumIdentities.GermPlace :=
   FormNormSumIdentities.germPlace_of slice_integral_cutoff slice_germ_points form_model
 
 theorem germ_rate_lower_bound : GermRateSplit.GermRateLowB :=
-  FormNormSumIdentities.germRateLowB_of germ_at_place germ_null_set_compact germ_constant
+  FormNormSumIdentities.germRateLowB_of germ_at_place _root_.Formalism.FourierDecayAlt.P.FormNormSumIdentities.gNSetC _root_.Formalism.FourierDecayAlt.P.FormNormSumIdentities.germConst
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

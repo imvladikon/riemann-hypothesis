@@ -87,6 +87,7 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Tactic.Lemma
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFibreSimplyTransitive
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
@@ -266,10 +267,6 @@ private theorem card_res :
   (card_quot_of _ (res_surj w) w.asIdeal (fun a => by
     rw [RingHom.comp_apply, IsLocalRing.residue_eq_zero_iff, iota_mem_max])).symm
 
-private theorem card_pow (q : ℕ) (hq : q.Prime) (h : (q : 𝓞 E) ∈ w.asIdeal) :
-    ∃ f : ℕ, Nat.card (𝓞 E ⧸ w.asIdeal) = q ^ f :=
-  by apply _root_.UpperTheory.Reformulated.B.Qi54.card_pow <;> assumption
-
 end Local
 
 theorem baseExtension_holds : Gal.Int.Geo.BaseEx := by
@@ -284,7 +281,7 @@ theorem baseExtension_holds : Gal.Int.Geo.BaseEx := by
   have hqm : (q : 𝓞 E) ∈ w.asIdeal := by
     have h := (hpl' (q : 𝓞 D.F)).1 (hu (ES.p_mem_uIdeal D r))
     rwa [map_natCast] at h
-  obtain ⟨f, hf⟩ := card_pow w q hq hqm
+  obtain ⟨f, hf⟩ := _root_.UpperTheory.Reformulated.B.Qi54.card_pow w q hq hqm
   have hnw : Ideal.absNorm w.asIdeal = q ^ f := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, hf]
   have hroot : D.ω ^ 2 - (D.tr : 𝓞 D.F) * D.ω + (D.nm : 𝓞 D.F) = 0 := by
@@ -581,7 +578,7 @@ private theorem gen_part (hLG : LatGen) (L : Link D G) (𝔞 : Ideal (𝓞 D.F))
     rw [← ew]; abel
   · intro h
     have step1 : ∀ v ∈ LaHat D, ∃ w ∈ LaHat D, mulF D a (L.actG g v - v) = N • w := fun v hv => by
-      obtain ⟨x, w', hw', rfl⟩ := GlobalTheory.T.latticeCompletion_eq_latticeVector_add_nsmul p D N hN hNp v hv
+      obtain ⟨x, w', hw', rfl⟩ := _root_.GlobalTheory.LKGeo.exists_inAf_add_nsmul_of_mem_laHat p D N hN hNp v hv
       obtain ⟨v₁, hv₁, e₁⟩ := h x
       refine ⟨v₁ + mulF D a (L.actG g w' - w'), add_mem hv₁ (mulF_mem a (sub_mem (hg _ hw') hw')), ?_⟩
       have e₂ : mulF D a (L.actG g (inAf D x) - inAf D x) = N • v₁ := by
@@ -593,9 +590,9 @@ private theorem gen_part (hLG : LatGen) (L : Link D G) (𝔞 : Ideal (𝓞 D.F))
     intro v hv
     have hu : L.actG g v - v ∈ LaHat D := sub_mem (hg v hv) hv
     obtain ⟨w₁, hw₁, e₁⟩ := step1 v hv
-    obtain ⟨y, w, hw, e₂⟩ := GlobalTheory.T.latticeCompletion_eq_latticeVector_add_nsmul p D N hN hNp _ hu
+    obtain ⟨y, w, hw, e₂⟩ := _root_.GlobalTheory.LKGeo.exists_inAf_add_nsmul_of_mem_laHat p D N hN hNp _ hu
     have hdvd : ∃ u : D.La, algebraMap (𝓞 D.F) D.O a • y = N • u := by
-      refine GlobalTheory.T.exists_latticeVector_eq_nsmul_of_adelic_nsmul p D N hN hNp (GlobalTheory.T.int_dvd_of_eq_nat_mul_integralAdeleAwayFromP p N hN hNp) _ ⟨w₁ - mulF D a w, sub_mem hw₁ (mulF_mem a hw), ?_⟩
+      refine _root_.GlobalTheory.LKGeo.LatDvd.exists_eq_nsmul_of_inAf p D N hN hNp (_root_.GlobalTheory.LKGeo.IntDvd.int_dvd_of_eq_mul_isIntAf p N hN hNp) _ ⟨w₁ - mulF D a w, sub_mem hw₁ (mulF_mem a hw), ?_⟩
       rw [e₂, map_add (f := _), mulF_inAf, map_nsmul] at e₁
       rw [smul_sub, ← e₁]; abel
     have hy : y ∈ wSub D 𝔞 1 := ((hLG p D a N 𝔞 hN hgen).1 y).1 hdvd
@@ -634,7 +631,7 @@ private theorem UpperTheory.grpLat_half {p : ℕ} [Fact p.Prime] {D : Datum p} {
     ∀ v ∈ LaHat D, L.actG (h₁ * h₂⁻¹) v ∈ LaHat D := by
   intro v hv
   obtain ⟨v', hv', e₁⟩ := s₂ v hv
-  obtain ⟨x, w, hw, e₂⟩ := GlobalTheory.T.latticeCompletion_eq_latticeVector_add_nsmul p D M hM hc v' hv'
+  obtain ⟨x, w, hw, e₂⟩ := _root_.GlobalTheory.LKGeo.exists_inAf_add_nsmul_of_mem_laHat p D M hM hc v' hv'
   obtain ⟨u, hu, e₃⟩ := e x ⟨v - L.actG h₂ w, sub_mem hv (i₂ w hw), by
     have h : L.actG h₂ v' = L.actG h₂ (inAf D x) + M • L.actG h₂ w := by
       rw [e₂, map_add (f := _), map_nsmul]
@@ -713,7 +710,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.GroupSchemePullbackExists =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.HeckeLiftExistsOfQuotientLevel =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.HeckeLiftExistsOfQuotientLevel", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FinModel\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.HeckeLiftExistsOfQuotientLevel", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FinModel\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFibreSimplyTransitive\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -742,12 +739,9 @@ private theorem qobj' (hObj : QObj) (β : R →+* R') (hm : Match b gb β) (hN :
   subst e
   exact hObj q D R R' b gb β hm N N₀ c hN h0 hc S' s' o
 
-private theorem sec_hom {X : Scheme.{0}} {A : Over X} (e : 𝟙_ (Over X) ⟶ A) : e.left ≫ A.hom = 𝟙 X := by
-  simpa using Over.w e
-
 private theorem sec_lift {X Y : Scheme.{0}} {A : Over X} {B : Over Y} {f : X ⟶ Y} {φ : A.left ⟶ B.left}
     (hc : IsPullback φ A.hom B.hom f) (e : 𝟙_ (Over Y) ⟶ B) : ∃ l : 𝟙_ (Over X) ⟶ A, l.left ≫ φ = f ≫ e.left := by
-  refine ⟨Over.homMk (hc.lift (f ≫ e.left) (𝟙 X) (by simp [sec_hom e])) (by simp), ?_⟩
+  refine ⟨Over.homMk (hc.lift (f ≫ e.left) (𝟙 X) (by simp [_root_.GlobalTheory.LevelFibre.sec_w e])) (by simp), ?_⟩
   simp
 
 end SlopeTestRemainingChoices
@@ -819,7 +813,7 @@ theorem UpperTheory.hecke_lift_exists_of_quotient_level :
     · simp only [Category.assoc]
       rw [← hmm, hn'c, hl', reassoc_of% hys, ← C'.lv, hsm]
     · simp only [Category.assoc]
-      rw [mm.cart.1.w, reassoc_of% (sec_hom _), sec_hom l']
+      rw [mm.cart.1.w, reassoc_of% (_root_.GlobalTheory.LevelFibre.sec_w _), _root_.GlobalTheory.LevelFibre.sec_w l']
       simp
   have I3 : ∀ y' : D.La, (W.o.eta ((algebraMap (𝓞 D.F) D.O) a • y')).left ≫ q3.φ =
       (y ≫ Lj.t) ≫ (S.Y.lv y').left := by
@@ -981,7 +975,7 @@ theorem UpperTheory.hecke_lift_separated_of_lattice_congruence :
       ∃ b : Over.mk ((z ≫ V.π) ≫ l.y) ⟶ Lj.o.A, b.left ≫ Lj.ms.φ = z ≫ ((T.M N').univ.eta x).left ≫ C'.m.φ ∧
         (b ≫ Lj.ψ = 1 ↔ ∃ v' ∈ LaHat D, L.actG (h * u * v) (inAf D x) = N'.1 • v') := by
     intro u v hu hv W V l x
-    obtain ⟨x', w', hw', e⟩ := GlobalTheory.T.latticeCompletion_eq_latticeVector_add_nsmul p D N'.1 hpos N'.2.2 (L.actG v (inAf D x))
+    obtain ⟨x', w', hw', e⟩ := _root_.GlobalTheory.LKGeo.exists_inAf_add_nsmul_of_mem_laHat p D N'.1 hpos N'.2.2 (L.actG v (inAf D x))
       (integ_of_mem (hKN hv) _ (AddSubgroup.subset_closure ⟨1, x, fun v => by simp, rfl⟩))
     have hinv := (hBI p D G L E gb w q r 𝔴 𝔫 S k T K₀ hLev N' N' 1 (c * t) (t * a) (by simp) hNum' C₂ C' v hv V).2
     rw [hC₂] at hinv
@@ -1367,7 +1361,7 @@ theorem UpperTheory.rational_splitting_exists :
       uniq := fun i => Fin.ext (by have := i.2; simp; omega) }
   let e0 : D.O ≃ₐ[NumberField.RingOfIntegers D.F] NumberField.RingOfIntegers D.F :=
     (AlgEquiv.ofBijective (Algebra.ofId _ _)
-      ⟨D.algebraMap_injective hm, GlobalTheory.T.integers_surjective_of_rank_one p D hm⟩).symm
+      ⟨D.algebraMap_injective hm, _root_.GlobalTheory.UPel.HT.Datum.algebraMap_surjective_of_m_eq_one p D hm⟩).symm
   exact ⟨(Algebra.TensorProduct.congr e0 AlgEquiv.refl).trans
     (matrix_unique_algEquiv _ _ _).some.symm⟩
 end -- clump:auto

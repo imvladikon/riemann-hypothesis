@@ -55,13 +55,15 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree
+import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.LevelSubgroupProperties
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.PairTiesPf, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FinXHolds, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FinXClosed
 
 -- ===== clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.PairTiesPf =====
--- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.PairTiesPf", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.XLeSpanEXLam\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.ConcreteLevelAdelicSubset\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.PairTiesPf", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.XLeSpanEXLam\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.ConcreteLevelAdelicSubset\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree\nimport Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -120,8 +122,8 @@ theorem scal_move_rev {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {G₁ G₂
     have := hy _ hw1
     rw [← Formalism.L2.SG.Saturated.isom_apply hn.1.1, n.apply_symm_apply] at this
     exact this
-  have hoX : orth S (Xplus F) ≤ orth S (Xsp F) := orth_anti le_sup_left
-  have hoX' : ∀ (G : LFlag S r T'), orth S (Xplus G) ≤ orth S (Xsp G) := fun G => orth_anti le_sup_left
+  have hoX : orth S (Xplus F) ≤ orth S (Xsp F) := _root_.Formalism.MainNotions.LatticeGluingRadicals.c_orth_anti le_sup_left
+  have hoX' : ∀ (G : LFlag S r T'), orth S (Xplus G) ≤ orth S (Xsp G) := fun G => _root_.Formalism.MainNotions.LatticeGluingRadicals.c_orth_anti le_sup_left
   intro y1 hy1 y2 hy2 y1' hy1' y2'' hy2'' h12 h2'' al al'
   have hY1 : n₁ y1 ∈ Ylift Λ F K₁ := ⟨hU₁ ▸ Submodule.mem_map_of_mem hy1.1, hpF hn₁ hy1.2⟩
   have hY2 : n₂ y2 ∈ Ylift Λ F K₂ := ⟨hU₂ ▸ Submodule.mem_map_of_mem hy2.1, hpF hn₂ hy2.2⟩
@@ -145,17 +147,6 @@ theorem scal_move_rev {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {G₁ G₂
   have s1 := sg_move hn₁ hX₁ (hzK hm₁ hL₁ hX₁ hz₁) hLF y1 y1' al al'
   have s2 := sg_move hn₂ hX₂ (hzK hm₂ hL₂ hX₂ hz₂) hLF y2 y2'' al al'
   exact s1.symm.trans (key.trans s2)
-
-theorem mem_gmap_iff' (δ : S.V ≃ₗ[E] S.V) (M : Submodule (𝓞 E) S.V) (x : S.V) :
-    x ∈ Formalism.HermitianLatticesTheory.gmap δ M ↔ δ.symm x ∈ M := by
-
-  unfold Formalism.HermitianLatticesTheory.gmap
-  rw [Submodule.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    simpa using hy
-  · intro h
-    exact ⟨δ.symm x, h, by simp⟩
 
 theorem Th_map {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag S r T'} (δ B : S.V ≃ₗ[E] S.V)
     (hδ : δ ∈ Formalism.HermitianLatticesTheory.isom S.hT) :
@@ -207,19 +198,6 @@ end MoveB
 section MoveC
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ} {T T' : E}
-
-theorem aut_mem {Λ : Submodule (𝓞 E) S.V} {φ : S.V ≃ₗ[E] S.V} (h : IsAutLam S Λ φ) {x : S.V} (hx : x ∈ Λ) : φ x ∈ Λ := by
-
-  have h2 : Formalism.HermitianLatticesTheory.gmap φ Λ = Λ := h.2
-  rw [← h2]
-  exact (mem_gmap_iff' φ Λ (φ x)).2 (by simpa using hx)
-
-theorem aut_symm_mem {Λ : Submodule (𝓞 E) S.V} {φ : S.V ≃ₗ[E] S.V} (h : IsAutLam S Λ φ) {x : S.V} (hx : x ∈ Λ) :
-    φ.symm x ∈ Λ := by
-
-  have h2 : Formalism.HermitianLatticesTheory.gmap φ Λ = Λ := h.2
-  have hx' : x ∈ Formalism.HermitianLatticesTheory.gmap φ Λ := by rw [h2]; exact hx
-  exact (mem_gmap_iff' φ Λ x).1 hx'
 
 theorem mapL_inv_mapL (δ : S.V ≃ₗ[E] S.V) (hδ : δ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (hδi : δ⁻¹ ∈ Formalism.HermitianLatticesTheory.isom S.hT)
     {T₀ : E} (F : LFlag S r T₀) :
@@ -290,7 +268,7 @@ theorem scal_map {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' : LFlag
     have h2 := scal_map_fwd δ⁻¹ (δ * B * δ⁻¹) hδi h
     have hg : Formalism.HermitianLatticesTheory.gmap δ⁻¹ (Formalism.HermitianLatticesTheory.gmap δ Λ) = Λ := by
       ext x
-      rw [mem_gmap_iff', mem_gmap_iff']
+      rw [_root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff]
       show δ.symm (δ x) ∈ Λ ↔ x ∈ Λ
       rw [LinearEquiv.symm_apply_apply]
     have hb : δ⁻¹ * (δ * B * δ⁻¹) * δ⁻¹⁻¹ = B := by group
@@ -308,17 +286,17 @@ theorem isPair_map_fwd {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' :
   refine ⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩
   · exact Subgroup.mul_mem _ (Subgroup.mul_mem _ hδ hA.1) (Subgroup.inv_mem _ hδ)
   · ext x
-    rw [mem_gmap_iff', mem_gmap_iff', mem_gmap_iff']
+    rw [_root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff]
     have e : δ.symm ((δ * B * δ⁻¹).symm x) = B.symm (δ.symm x) := by
       show δ.symm (δ (B.symm (δ.symm x))) = _
       exact δ.symm_apply_apply _
     rw [e]
     constructor
     · intro hy
-      have h3 := aut_mem hA hy
+      have h3 := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hA hy
       simpa using h3
     · intro hy
-      exact aut_symm_mem hA hy
+      exact _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_symm_mem hA hy
   · intro j
     rw [Formalism.L2.SG.Pf.Xflag_mapL, Formalism.L2.SG.Pf.Xflag_mapL, ← hX j, ← Submodule.map_comp, ← Submodule.map_comp]
     congr 1
@@ -328,8 +306,8 @@ theorem isPair_map_fwd {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {F' F'' :
   · change δ (B (δ⁻¹ (δ F'.fl.z))) = δ F''.fl.z
     rw [hinv, hz]
   · intro x' hx' l hl
-    rw [Formalism.L2.SG.Pf.Lrep_mapL, mem_gmap_iff'] at hx' hl
-    rw [Formalism.L2.SG.Pf.NgX_mapL, Formalism.L2.SG.Pf.NgX_mapL, mem_gmap_iff', mem_gmap_iff']
+    rw [Formalism.L2.SG.Pf.Lrep_mapL, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff] at hx' hl
+    rw [Formalism.L2.SG.Pf.NgX_mapL, Formalism.L2.SG.Pf.NgX_mapL, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff]
     have e2 : δ.symm (l - (δ * B * δ⁻¹) x') = δ.symm l - B (δ.symm x') := by
       have h4 : (δ * B * δ⁻¹) x' = δ (B (δ.symm x')) := rfl
       rw [map_sub, h4, LinearEquiv.symm_apply_apply]
@@ -363,18 +341,18 @@ theorem iota_move {Λ : Submodule (𝓞 E) S.V} {F : LFlag S r T} {G₁ G₂ K�
   have hshift : ∀ {n : S.V ≃ₗ[E] S.V}, n ∈ NLam Λ F → ∀ {l : S.V}, l ∈ Lrep Λ F → n.symm l - l ∈ XLam Λ F := by
     intro n hn l hl
     have hni := nlam_inv hn
-    exact ⟨Λ.sub_mem (aut_symm_mem hn.1 hl.1) hl.1, hni.2.2 l hl.2⟩
+    exact ⟨Λ.sub_mem (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_symm_mem hn.1 hl.1) hl.1, hni.2.2 l hl.2⟩
   intro x' hx' l hl
-  rw [hLrep hn₁ hX₁, mem_gmap_iff'] at hx'
+  rw [hLrep hn₁ hX₁, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff] at hx'
   have hy := h _ hx' l hl
-  rw [hN hn₁ hX₁, hN hn₂ hX₂, mem_gmap_iff', mem_gmap_iff', map_sub, map_sub]
+  rw [hN hn₁ hX₁, hN hn₂ hX₂, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, _root_.Formalism.L2.SG.Saturated.mem_gmap_iff, map_sub, map_sub]
   have e : n₂.symm ((n₂ * m₂ * β * m₁⁻¹ * n₁⁻¹) x') = m₂ (β (m₁.symm (n₁.symm x'))) := by
     show n₂.symm (n₂ (m₂ (β (m₁.symm (n₁.symm x'))))) = _; rw [n₂.symm_apply_apply]
   rw [e]
   have s1 := hshift hn₁ hl
   have s2 := hshift hn₂ hl
   have hk : m₂ (β (m₁.symm (n₁.symm x'))) - β (n₁.symm x') ∈ XLam Λ G₂ := by
-    refine ⟨Λ.sub_mem (aut_mem hm₂.1 (aut_mem hβ (aut_symm_mem hm₁.1 hx'.1))) (aut_mem hβ hx'.1), ?_⟩
+    refine ⟨Λ.sub_mem (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hm₂.1 (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hβ (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_symm_mem hm₁.1 hx'.1))) (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.aut_mem hβ hx'.1), ?_⟩
     have := key_mod hm₁ hm₂ hβ.1 hβX (τ := (1 : S.V ≃ₗ[E] S.V)) (fun x hx => hx) (fun x _ => by simp) hx'.2
     exact this
   constructor
@@ -412,7 +390,7 @@ theorem dc_rep {s : TT Y u u'} {t : RT Y u u'} (h : s.toTerm = t) :
   subst h
   refine ⟨rfl, ?_⟩
   have hrow : IsRowLat D (X.Fu u) s.lam := (Y.rowsOK u).1 s.lam s.mem
-  exact (Formalism.L2.SG.Closed.TermEqIff_holds D u u' (X.Fu u) s.lam hrow ⟨s.frame, s.rep.2.2.2.2⟩
+  exact (_root_.term_eq_iff_relation D u u' (X.Fu u) s.lam hrow ⟨s.frame, s.rep.2.2.2.2⟩
     (Quot.out s.toTerm.cls)).1 (Quot.out_eq _).symm
 
 open Formalism.L2.SG.TermTieOf in
@@ -646,7 +624,7 @@ theorem finX_holds (hWu : Formalism.L2.SG.Pf.WuDecayOfGap) (hRF : Formalism.L2.S
   have hfold : ∀ u, Formalism.L2.SG.WuDecay.FoldOK T.X u T.Y.hK := fun u =>
     Formalism.L2.SG.Closed.FoldOKC_holds hFL D T.X T.Y u hK2 hWD
   exact finX_of_neat T.Y (fun u => Formalism.L2.SG.Pf.neatKu_full D T.X T.Y u)
-    (fun u => Formalism.L2.SG.Closed.InHHC_holds D T.X T.Y u hph (hfold u))
+    (fun u => _root_.Formalism.L2.SG.Pf.inHHC_holds D T.X T.Y u hph (hfold u))
     (Formalism.L2.SG.Pf.RowDictPf.finiteDimensional_HHX_of_hypotheses T.X hRF Formalism.L2.SG.Pf.RowDictPf.schur_orthogonality_discrete_series
       (fun v => phLoc_int_of_gap T.X hg v _))
     (fun u u' t => fibFin_holds D T.X T.Y u u' t)

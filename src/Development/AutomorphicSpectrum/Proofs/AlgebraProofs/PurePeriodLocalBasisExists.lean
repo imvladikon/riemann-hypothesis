@@ -1482,15 +1482,8 @@ open scoped ComplexOrder
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 
-theorem norm_le_one_of_int {C : Type} [NormedField C] [IsUltrametricDist C] {x : C}
-    (hx : @IsIntegral ℤ C _ _ (Ring.toIntAlgebra C) x) : ‖x‖ ≤ 1 := by
-  have h : x ∈ (NormedField.valuation (K := C)).integer :=
-    (Valuation.integer.integers (NormedField.valuation (K := C))).mem_of_integral hx.tower_top
-  rw [Valuation.mem_integer_iff, NormedField.valuation_apply] at h
-  exact_mod_cast h
-
 theorem norm_int_le (ℓ : Nat.Primes) (j : E →+* ℂ_[ℓ]) (b : 𝓞 E) : ‖j (b : E)‖ ≤ 1 :=
-  norm_le_one_of_int (map_isIntegral_int j b.isIntegral_coe)
+  _root_.PositivityTheory.Xgf.NI.norm_le_one_of_isIntegral (map_isIntegral_int j b.isIntegral_coe)
 
 theorem norm_prime_lt (ℓ : Nat.Primes) : ‖(((ℓ : ℕ) : ℂ_[ℓ]))‖ < 1 := by
   have h : (((ℓ : ℕ) : ℂ_[ℓ])) = algebraMap ℚ_[ℓ] ℂ_[ℓ] ((ℓ : ℕ) : ℚ_[ℓ]) := by simp

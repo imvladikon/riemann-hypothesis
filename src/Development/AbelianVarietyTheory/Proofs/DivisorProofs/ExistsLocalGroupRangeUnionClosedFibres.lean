@@ -1184,16 +1184,6 @@ open GlobalTheory.Desc
 
 namespace GlobalTheory.Desc.Spread
 
-theorem isPullback_sq {S U Z X : Scheme.{0}} {s : Z ⟶ S} {j : U ⟶ S} {p : X ⟶ U} {φ : X ⟶ Z}
-    (h : IsPullback φ p s j) :
-    IsPullback (pullback.map p p s s φ φ j h.w.symm h.w.symm) (pullback.fst p p ≫ p) (pullback.fst s s ≫ s) j := by
-  have h₁ : IsPullback (pullback.map p p s s φ φ j h.w.symm h.w.symm) (pullback.fst p p) (pullback.fst s s) φ := by
-    refine IsPullback.of_right (h₁₂ := pullback.snd s s) (v₁₃ := s) (h₂₂ := s) ?_ (pullback.lift_fst _ _ _)
-      (IsPullback.of_hasPullback s s).flip
-    rw [pullback.lift_snd, h.w]
-    exact (IsPullback.of_hasPullback p p).flip.paste_horiz h
-  exact h₁.paste_vert h
-
 theorem lift_left_eq {S : Scheme.{0}} {T G : Over S} (a b : T ⟶ G) (t : T.left ⟶ pullback G.hom G.hom)
     (h₁ : t ≫ pullback.fst _ _ = a.left) (h₂ : t ≫ pullback.snd _ _ = b.left) : (lift a b).left = t := by
   apply pullback.hom_ext
@@ -1237,9 +1227,9 @@ theorem exists_grp_near : ∀ (R : Type) [CommRing R] [IsDomain R] (f : R), f �
   intro R _ _ f hf x S₁ X ξ' _ _ _ q _ _ _ A _ hc G _ i e hi he hm
   obtain ⟨hone, hinv⟩ := _root_.GlobalTheory.Desc.oneAgree_invAgree_of_mulAgree _ _ _ X q _ _ A G i e hi he.w hm
   obtain ⟨g₁, hg₁, H₁⟩ := exists_ext hf x ξ' (pullback.fst q q ≫ q) q ((μ[A]).left ≫ i) ((μ[G]).left ≫ e)
-    (isPullback_sq hi) (isPullback_sq he)
-    (by rw [(isPullback_sq hi).w, Category.assoc, hi.w, Over.w_assoc]; rfl)
-    (by rw [(isPullback_sq he).w, Category.assoc, he.w, Over.w_assoc]; rfl)
+    (_root_.GlobalTheory.SpreadAb.isPullback_square hi) (_root_.GlobalTheory.SpreadAb.isPullback_square he)
+    (by rw [(_root_.GlobalTheory.SpreadAb.isPullback_square hi).w, Category.assoc, hi.w, Over.w_assoc]; rfl)
+    (by rw [(_root_.GlobalTheory.SpreadAb.isPullback_square he).w, Category.assoc, he.w, Over.w_assoc]; rfl)
     (fun T t₀ t₁ h => by
       have k₁ := congrArg (· ≫ pullback.fst q q) h
       have k₂ := congrArg (· ≫ pullback.snd q q) h
@@ -1271,13 +1261,13 @@ theorem exists_grp_near : ∀ (R : Type) [CommRing R] [IsDomain R] (f : R), f �
   let H : Over (Sp (Localization.Away g)) := Over.mk (pullback.snd q (awayMap g))
   let h : H.left ⟶ X := pullback.fst q (awayMap g)
   have hH : IsPullback h H.hom q (awayMap g) := IsPullback.of_hasPullback _ _
-  obtain ⟨m, hm₁, hm₂⟩ := H₁ _ _ (not_mem_of_dvd ⟨g₂ * g₃, mul_assoc _ _ _⟩ (isPullback_sq hH).w)
+  obtain ⟨m, hm₁, hm₂⟩ := H₁ _ _ (not_mem_of_dvd ⟨g₂ * g₃, mul_assoc _ _ _⟩ (_root_.GlobalTheory.SpreadAb.isPullback_square hH).w)
   obtain ⟨n, hn₁, hn₂⟩ := H₂ _ _ (not_mem_of_dvd ⟨g₁ * g₃, by simp only [g]; ring⟩ hH.w)
   obtain ⟨o, ho₁, ho₂⟩ := H₃ _ (awayMap g) (not_mem_of_dvd (c := 𝟙 _) ⟨g₁ * g₂, mul_comm _ _⟩ (by simp))
   have L : ∀ (Y : Over (Sp (Localization.Away g))) (u : Y.left ⟶ X), u ≫ q = Y.hom ≫ awayMap g →
       ∃ v : Y ⟶ H, v.left ≫ h = u :=
     fun Y u w => ⟨Over.homMk (hH.lift u Y.hom w) (hH.lift_snd _ _ _), hH.lift_fst _ _ _⟩
-  obtain ⟨m', hm'⟩ := L (H ⊗ H) m (hm₁.trans (isPullback_sq hH).w)
+  obtain ⟨m', hm'⟩ := L (H ⊗ H) m (hm₁.trans (_root_.GlobalTheory.SpreadAb.isPullback_square hH).w)
   obtain ⟨n', hn'⟩ := L H n (hn₁.trans hH.w)
   obtain ⟨o', ho'⟩ := L (𝟙_ _) o (ho₁.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
   obtain ⟨_, hfin⟩ := _root_.GlobalTheory.Desc.SpreadGrp.grpObj_of_agree R f g hf X q inferInstance ‹_› A hc i hi H h hH m' n' o'
@@ -1575,10 +1565,6 @@ namespace GlobalTheory.OpenSubgrp
 
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem comp_inv' {S : Scheme.{0}} {G : Over S} [GrpObj G] {T T' : Over S} (ρ : T' ⟶ T) (x : T ⟶ G) :
-    ρ ≫ x⁻¹ = (ρ ≫ x)⁻¹ :=
-  (Category.assoc _ _ _).symm
-
 theorem range_subset : ∀ (S P : Scheme.{0}) (H₁ H₂ : Over S) [GrpObj H₁] [GrpObj H₂] (h₁ : H₁.left ⟶ P)
     (h₂ : H₂.left ⟶ P), ∀ pS : P ⟶ S, h₁ ≫ pS = H₁.hom → h₂ ≫ pS = H₂.hom → IsOpenImmersion h₁ →
     IsOpenImmersion h₂ → Smooth H₁.hom → GeometricallyConnected H₁.hom → MulAgree H₁ H₂ h₁ h₂ →
@@ -1601,7 +1587,7 @@ theorem range_subset : ∀ (S P : Scheme.{0}) (H₁ H₂ : Over S) [GrpObj H₁]
   let Y : Over S := Over.mk (O.ι ≫ (H₁ ⊗ H₁).hom)
   let j : Y ⟶ H₁ ⊗ H₁ := Over.homMk O.ι rfl
   have e1 : (j ≫ g) * (j ≫ a) = j ≫ f := by
-    rw [MonObj.comp_mul, comp_inv', mul_inv_cancel_left]
+    rw [MonObj.comp_mul, _root_.GlobalTheory.SymLiftOdd.comp_inv', mul_inv_cancel_left]
   have inW : ∀ y, h₁ ((j ≫ f).left y) ∈ Set.range h₂ := by
     rw [← e1]
     exact OpenSubgrp.mul_mem_range e₁ e₂ hm (j ≫ g) (j ≫ a) (fun y => y.2.2) (fun y => y.2.1)
@@ -1617,7 +1603,7 @@ theorem range_subset : ∀ (S P : Scheme.{0}) (H₁ H₂ : Over S) [GrpObj H₁]
     obtain ⟨w, hw1, hw2⟩ := m2 z
     let b : H₁ ⊗ H₁ ⟶ H₁ ⊗ H₁ := lift f (f * g⁻¹)
     have b1 : b ≫ a = g := by
-      rw [MonObj.comp_mul, comp_inv', lift_fst, lift_snd, mul_inv_rev, inv_inv, inv_mul_cancel_right]
+      rw [MonObj.comp_mul, _root_.GlobalTheory.SymLiftOdd.comp_inv', lift_fst, lift_snd, mul_inv_rev, inv_inv, inv_mul_cancel_right]
     have b2 : b ≫ f = f := lift_fst _ _
     refine ⟨b.left w, ?_, ?_⟩
     · rw [← Scheme.Hom.comp_apply, ← Over.comp_left, b1]; exact hw1
@@ -1651,23 +1637,7 @@ open GlobalTheory.Desc
 
 namespace GlobalTheory.Desc.UnionLocal
 
-theorem awayMap_notMem {R : Type} [CommRing R] (g : R) (w : Sp (Localization.Away g)) : g ∉ (awayMap g w).asIdeal := by
-  intro h
-  have : algebraMap R (Localization.Away g) g ∈ w.asIdeal := h
-  exact w.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _ this (IsLocalization.Away.algebraMap_isUnit g))
-
-theorem mul_left_comp {S T T' : Scheme.{0}} {H : Over S} [GrpObj H] {t : T ⟶ S} {t' : T' ⟶ S} (k : T' ⟶ T)
-    (a b : Over.mk t ⟶ H) (a₁ b₁ : Over.mk t' ⟶ H) (ha : a₁.left = k ≫ a.left) (hb : b₁.left = k ≫ b.left) :
-    (a₁ * b₁).left = k ≫ (a * b).left := by
-  have ht : k ≫ t = t' := by
-    have e1 : a.left ≫ H.hom = t := Over.w a
-    have e2 : a₁.left ≫ H.hom = t' := Over.w a₁
-    rw [← e1, ← e2, ha]; exact (Category.assoc _ _ _).symm
-  let κ : Over.mk t' ⟶ Over.mk t := Over.homMk k ht
-  have e1 : a₁ = κ ≫ a := Over.OverMorphism.ext ha
-  have e2 : b₁ = κ ≫ b := Over.OverMorphism.ext hb
-  rw [e1, e2, ← MonObj.comp_mul]
-  rfl
+alias mul_left_comp := _root_.GlobalTheory.Desc.ChartLaw.mul_left_comp
 
 theorem mulAgree_pullback {S S' S₂ P : Scheme.{0}} {H : Over S} [GrpObj H] {H' : Over S'} [GrpObj H'] {A : Over S₂} [GrpObj A]
     {t : S' ⟶ S} {π : H'.left ⟶ H.left} (hπ : IsGrpPullback H' H t π) {h : H.left ⟶ P} {i : A.left ⟶ P}
@@ -1757,119 +1727,6 @@ theorem exists_connected (σ : Setup) (E : Emb σ) (g : σ.R) (H' : Over (Sp (Lo
   rw [← hm T t₁ t₂ (a ≫ j) (b ≫ j) a' b' ((Category.assoc _ _ _).trans ha) ((Category.assoc _ _ _).trans hb),
     ← MonObj.mul_comp, Over.comp_left, Category.assoc]
 
-theorem lift_open (σ : Setup) (x : Sp σ.R) {T : Scheme.{0}} (c : T ⟶ (σ.C x).G.left) (d : T ⟶ Sp (Localization.Away σ.f))
-    (e : c ≫ (σ.C x).G.hom ≫ spMap (σ.ρ x) = d ≫ awayMap σ.f) : ∃ l : T ⟶ (σ.V x).toScheme, l ≫ (σ.V x).ι = c := by
-  refine ⟨IsOpenImmersion.lift (σ.V x).ι c ?_, IsOpenImmersion.lift_fac _ _ _⟩
-  rintro _ ⟨τ, rfl⟩
-  rw [Scheme.Opens.range_ι]
-  refine (σ.hV x _).2 ?_
-  have h1 := awayMap_notMem σ.f (d τ)
-  rw [← Scheme.Hom.comp_apply, ← e] at h1
-  exact h1
-
-theorem chart_mul_generic (σ : Setup) (E : Emb σ) (x : Sp σ.R) {T : Scheme.{0}} (s : T ⟶ Sp (FractionRing (σ.C x).R))
-    (t₂ : T ⟶ Sp (Localization.Away σ.f)) (a b : Over.mk (s ≫ jK (σ.C x).R) ⟶ (σ.C x).G) (a' b' : Over.mk t₂ ⟶ σ.A)
-    (ha : a.left ≫ E.emb x = a'.left ≫ E.ιA) (hb : b.left ≫ E.emb x = b'.left ≫ E.ιA) :
-    (a * b).left ≫ E.emb x = (a' * b').left ≫ E.ιA := by
-  have : IsOpenImmersion E.ιA := MorphismProperty.of_isPullback E.cartA.flip inferInstance
-  obtain ⟨l, hl⟩ := lift_open σ x (pullback.fst (σ.C x).G.hom (jK (σ.C x).R)) (pullback.snd _ _ ≫ (σ.C x).y) (by
-    rw [pullback.condition_assoc, Category.assoc, (σ.C x).hy, σ.hρ])
-  have hα : (σ.C x).α ≫ E.ιA = pullback.fst (σ.C x).G.hom (jK (σ.C x).R) ≫ E.emb x := by
-    have := σ.compat x _ (𝟙 _) l (by rw [Category.id_comp, hl])
-    rw [Category.id_comp] at this
-    rw [this, Category.assoc, E.onV, ← Category.assoc, hl]
-  let P : (Over.mk (s ≫ jK (σ.C x).R) ⟶ (σ.C x).G) → (Over.mk s ⟶ (Over.pullback (jK (σ.C x).R)).obj (σ.C x).G) :=
-    fun c => Over.homMk (pullback.lift c.left s (Over.w c)) (pullback.lift_snd _ _ _)
-  have hP : ∀ c, c.left = (P c).left ≫ pullback.fst (σ.C x).G.hom (jK (σ.C x).R) := fun c => (pullback.lift_fst _ _ _).symm
-  have hA : ∀ c (c' : Over.mk t₂ ⟶ σ.A), c.left ≫ E.emb x = c'.left ≫ E.ιA → c'.left = (P c).left ≫ (σ.C x).α := by
-    intro c c' h
-    rw [← cancel_mono E.ιA, ← h, hP c]
-    exact (Category.assoc _ _ _).trans ((congrArg ((P c).left ≫ ·) hα.symm).trans (Category.assoc _ _ _).symm)
-  have ht : t₂ = s ≫ (σ.C x).y := by
-    have e1 : a'.left ≫ σ.A.hom = t₂ := Over.w a'
-    have e2 : (P a).left ≫ ((Over.pullback (jK (σ.C x).R)).obj (σ.C x).G).hom = s := Over.w (P a)
-    have e3 := (σ.C x).gen.1.w
-    rw [← e1, hA a a' ha]
-    exact (Category.assoc _ _ _).trans ((congrArg ((P a).left ≫ ·) e3).trans
-      ((Category.assoc _ _ _).symm.trans (congrArg (· ≫ (σ.C x).y) e2)))
-  subst ht
-  have m1 := (σ.C x).gen.2 (Over.mk s) (P a) (P b) a' b' (hA a a' ha) (hA b b' hb)
-  have m2 := (isGrpPullback_pullback (σ.C x).G (jK (σ.C x).R)).2 (Over.mk s) (P a) (P b) a b (hP a) (hP b)
-  exact (congrArg (· ≫ E.emb x) m2).trans ((Category.assoc _ _ _).trans ((congrArg ((P a * P b).left ≫ ·) hα.symm).trans
-    ((Category.assoc _ _ _).symm.trans (congrArg (· ≫ E.ιA) m1.symm))))
-
-theorem chart_mul_flat (σ : Setup) (E : Emb σ) (x : Sp σ.R) {T : Scheme.{0}} (t₁ : T ⟶ Sp (σ.C x).R) [Flat t₁]
-    (t₂ : T ⟶ Sp (Localization.Away σ.f)) (a b : Over.mk t₁ ⟶ (σ.C x).G) (a' b' : Over.mk t₂ ⟶ σ.A)
-    (ha : a.left ≫ E.emb x = a'.left ≫ E.ιA) (hb : b.left ≫ E.emb x = b'.left ≫ E.ιA) :
-    (a * b).left ≫ E.emb x = (a' * b').left ≫ E.ιA := by
-  have := E.sep
-  obtain ⟨w, -⟩ := E.openIn x
-  have p1 : ∀ c : Over.mk t₁ ⟶ (σ.C x).G, (c.left ≫ E.emb x) ≫ E.p = t₁ ≫ spMap (σ.ρ x) := fun c => by
-    have e : c.left ≫ (σ.C x).G.hom = t₁ := Over.w c
-    rw [Category.assoc, w, ← Category.assoc, e]
-  have p2 : ∀ c : Over.mk t₂ ⟶ σ.A, (c.left ≫ E.ιA) ≫ E.p = t₂ ≫ awayMap σ.f := fun c => by
-    have e : c.left ≫ σ.A.hom = t₂ := Over.w c
-    rw [Category.assoc, E.cartA.w, ← Category.assoc, e]
-  have : IsSchemeTheoreticallyDominant (jK (σ.C x).R) :=
-    schDom_spec_map _ (IsFractionRing.injective (σ.C x).R (FractionRing (σ.C x).R))
-  have : IsSchemeTheoreticallyDominant (pullback.fst t₁ (jK (σ.C x).R)) :=
-    IsSchemeTheoreticallyDominant.of_isPullback (IsPullback.of_hasPullback t₁ (jK (σ.C x).R)).flip
-  refine ext_of_schDom E.p (by rw [p1, p2, ← p1 a, ← p2 a', ha]) (pullback.fst t₁ (jK (σ.C x).R)) ?_
-  let k := pullback.fst t₁ (jK (σ.C x).R)
-  let Q : (Over.mk t₁ ⟶ (σ.C x).G) → (Over.mk (pullback.snd t₁ (jK (σ.C x).R) ≫ jK (σ.C x).R) ⟶ (σ.C x).G) := fun c =>
-    Over.homMk (k ≫ c.left) ((Category.assoc _ _ _).trans ((congrArg (k ≫ ·) (Over.w c)).trans pullback.condition))
-  let Q' : (Over.mk t₂ ⟶ σ.A) → (Over.mk (k ≫ t₂) ⟶ σ.A) := fun c =>
-    Over.homMk (k ≫ c.left) ((Category.assoc _ _ _).trans (congrArg (k ≫ ·) (Over.w c)))
-  have h := chart_mul_generic σ E x _ _ (Q a) (Q b) (Q' a') (Q' b')
-    ((Category.assoc _ _ _).trans ((congrArg (k ≫ ·) ha).trans (Category.assoc _ _ _).symm))
-    ((Category.assoc _ _ _).trans ((congrArg (k ≫ ·) hb).trans (Category.assoc _ _ _).symm))
-  rw [mul_left_comp k a b (Q a) (Q b) rfl rfl, mul_left_comp k a' b' (Q' a') (Q' b') rfl rfl] at h
-  exact (Category.assoc _ _ _).symm.trans (h.trans (Category.assoc _ _ _))
-
-theorem chart_mulAgree (σ : Setup) (E : Emb σ) (x : Sp σ.R) : MulAgree (σ.C x).G σ.A (E.emb x) E.ιA := by
-  intro T t₁ t₂ a b a' b' ha hb
-  have : IsOpenImmersion E.ιA := MorphismProperty.of_isPullback E.cartA.flip inferInstance
-  have := (σ.C x).semi.smooth
-  obtain ⟨w, -⟩ := E.openIn x
-  have hl : ∀ (c : Over.mk t₁ ⟶ (σ.C x).G) (c' : Over.mk t₂ ⟶ σ.A), c.left ≫ E.emb x = c'.left ≫ E.ιA →
-      ∃ l : T ⟶ (σ.V x).toScheme, l ≫ (σ.V x).ι = c.left ∧ l ≫ σ.φ x = c'.left := by
-    intro c c' h
-    obtain ⟨l, hl⟩ := lift_open σ x c.left (c'.left ≫ σ.A.hom) (by
-      rw [← w, ← Category.assoc, h, Category.assoc, E.cartA.w, Category.assoc])
-    refine ⟨l, hl, ?_⟩
-    rw [← cancel_mono E.ιA, Category.assoc, E.onV, ← Category.assoc, hl]
-    exact h
-  obtain ⟨la, ha1, ha2⟩ := hl a a' ha
-  obtain ⟨lb, hb1, hb2⟩ := hl b b' hb
-  let q : (σ.V x).toScheme ⟶ Sp (σ.C x).R := (σ.V x).ι ≫ (σ.C x).G.hom
-  have hq : la ≫ q = lb ≫ q := by
-    have e1 : a.left ≫ (σ.C x).G.hom = t₁ := Over.w a
-    have e2 : b.left ≫ (σ.C x).G.hom = t₁ := Over.w b
-    simp only [q, ← Category.assoc, ha1, hb1]
-    exact e1.trans e2.symm
-  have hu : pullback.snd q q ≫ σ.φ x ≫ σ.A.hom = pullback.fst q q ≫ σ.φ x ≫ σ.A.hom := by
-    rw [← cancel_mono (awayMap σ.f)]
-    simp only [Category.assoc]
-    rw [(σ.cart x).w]
-    exact (pullback.condition_assoc (f := q) (g := q) _).symm
-  let a₀ : Over.mk (pullback.fst q q ≫ q) ⟶ (σ.C x).G := Over.homMk (pullback.fst q q ≫ (σ.V x).ι) (Category.assoc _ _ _)
-  let b₀ : Over.mk (pullback.fst q q ≫ q) ⟶ (σ.C x).G := Over.homMk (pullback.snd q q ≫ (σ.V x).ι)
-    ((Category.assoc _ _ _).trans pullback.condition.symm)
-  let a₁ : Over.mk (pullback.fst q q ≫ σ.φ x ≫ σ.A.hom) ⟶ σ.A := Over.homMk (pullback.fst q q ≫ σ.φ x) (Category.assoc _ _ _)
-  let b₁ : Over.mk (pullback.fst q q ≫ σ.φ x ≫ σ.A.hom) ⟶ σ.A := Over.homMk (pullback.snd q q ≫ σ.φ x)
-    ((Category.assoc _ _ _).trans hu)
-  have h := chart_mul_flat σ E x (pullback.fst q q ≫ q) _ a₀ b₀ a₁ b₁
-    ((Category.assoc _ _ _).trans ((congrArg (pullback.fst q q ≫ ·) (E.onV x).symm).trans (Category.assoc _ _ _).symm))
-    ((Category.assoc _ _ _).trans ((congrArg (pullback.snd q q ≫ ·) (E.onV x).symm).trans (Category.assoc _ _ _).symm))
-  let k := pullback.lift la lb hq
-  have k1 : k ≫ pullback.fst q q = la := pullback.lift_fst _ _ _
-  have k2 : k ≫ pullback.snd q q = lb := pullback.lift_snd _ _ _
-  rw [mul_left_comp k a₀ b₀ a b (ha1.symm.trans (by rw [← k1]; exact Category.assoc _ _ _))
-      (hb1.symm.trans (by rw [← k2]; exact Category.assoc _ _ _)),
-    mul_left_comp k a₁ b₁ a' b' (ha2.symm.trans (by rw [← k1]; exact Category.assoc _ _ _))
-      (hb2.symm.trans (by rw [← k2]; exact Category.assoc _ _ _))]
-  exact (Category.assoc _ _ _).trans ((congrArg (k ≫ ·) h).trans (Category.assoc _ _ _).symm)
-
 theorem mem_range_iff (σ : Setup) (E : Emb σ) (g : σ.R) (H : Over (Sp (Localization.Away g))) [GrpObj H] (h : H.left ⟶ E.P)
     (hl : E.LocGrp g H h) (hc : GeometricallyConnected H.hom) (x : Sp σ.R) (hx : g ∉ x.asIdeal) (z : E.P) (hz : E.p z = x) :
     z ∈ Set.range h ↔ ∃ y : (σ.C x).G.left, (σ.C x).G.hom y = closedPoint _ ∧ E.emb x y = z := by
@@ -1890,7 +1747,7 @@ theorem mem_range_iff (σ : Setup) (E : Emb σ) (g : σ.R) (H : Over (Sp (Locali
     inferInstanceAs (GeometricallyConnected (pullback.snd H.hom t))
   have s₁ := (σ.C x).semi.smooth
   have fl : Flat (spMap (σ.ρ x)) := Flat.SpecMap_iff.2 (σ.flat x)
-  have m₁ := chart_mulAgree σ E x
+  have m₁ := _root_.GlobalTheory.Desc.ChartLaw.chart_mulAgree σ E x
   have m₂ := mulAgree_pullback (isGrpPullback_pullback H t) hm
   constructor
   · rintro ⟨v, rfl⟩
@@ -1921,7 +1778,7 @@ theorem exists_locGrp_range_eq : ∀ (σ : Setup) (E : Emb σ), σ.Common → �
   · rintro ⟨v, rfl⟩
     have hpz : g ∉ (E.p (h v)).asIdeal := by
       rw [← Scheme.Hom.comp_apply, hl.2.2.2.1, Scheme.Hom.comp_apply]
-      exact awayMap_notMem g _
+      exact _root_.GlobalTheory.Desc.ChartLaw.awayMap_notMem g _
     obtain ⟨y, hy, hyz⟩ := (mem_range_iff σ E g H h hl hgc _ hpz _ rfl).1 ⟨v, rfl⟩
     exact ⟨⟨_, y, hy, hyz⟩, hpz⟩
   · rintro ⟨⟨x₀, y, hy, rfl⟩, hz⟩

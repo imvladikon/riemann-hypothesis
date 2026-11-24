@@ -252,15 +252,6 @@ open ValuativeRel
 open scoped GlobalTheory.VacAny
 open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 
-theorem _root_.GlobalTheory.T.exists_periodic_measurable_schwartz_bound : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)),
-    ∃ (r : (κ → AF F) → ℂ) (K : Set (κ → Fv F v)), @Measurable _ _ (borel _) _ r ∧
-      (∀ x z, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) z → r (x + z) = r x) ∧
-      (∀ φ ∈ GlobalTheory.WeilM.SB (κ → Fv F v), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens (evFin F v) φ r ∈ GlobalTheory.WeilM.schA F κ) ∧
-      IsCompact K ∧ (interior K).Nonempty ∧
-      ∀ μA : @MeasureTheory.Measure (κ → AF F) (borel _), @MeasureTheory.Measure.IsAddHaarMeasure _ _ _ (borel _) μA →
-        ∫⁻ x, K.indicator 1 (fun i => evFin F v (x i)) * ‖r x‖ₑ ^ 2 ∂μA ≠ 0 ∧
-        ∫⁻ x, K.indicator 1 (fun i => evFin F v (x i)) * ‖r x‖ₑ ^ 2 ∂μA ≠ ⊤ := by
-  first | exact @GlobalTheory.Cofactor.exists_cofactor
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPeriodicMeasurableSchwartzBoundStatement =====
@@ -431,7 +422,7 @@ theorem lintegral_sq_eq_of_acts : ∀ {F E : Type} [Field F] [NumberField F] [Fi
       ∀ μ : @Measure (Fin a' × Fin (a + a') → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
         ∫⁻ y, ‖φ₁ y‖ₑ ^ 2 ∂μ = ∫⁻ y, ‖φ y‖ₑ ^ 2 ∂μ := by
   intro F E _ _ _ _ _ σ a a' Bs Γ X om om' hTr v x _ φ φ₁ hφ hφ₁ hact μ hμ
-  obtain ⟨r, K, hrm, hinv, hsch, hK, hKi, hint⟩ := GlobalTheory.T.exists_periodic_measurable_schwartz_bound (κ := Fin a' × Fin (a + a')) v
+  obtain ⟨r, K, hrm, hinv, hsch, hK, hKi, hint⟩ := _root_.GlobalTheory.Cofactor.exists_cofactor (κ := Fin a' × Fin (a + a')) v
   letI mA : MeasurableSpace (Fin a' × Fin (a + a') → AF F) := borel _
   haveI : BorelSpace (Fin a' × Fin (a + a') → AF F) := ⟨rfl⟩
   have hμA : MeasureTheory.Measure.IsAddHaarMeasure

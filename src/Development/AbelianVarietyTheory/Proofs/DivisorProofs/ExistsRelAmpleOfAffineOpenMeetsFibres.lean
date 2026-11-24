@@ -483,8 +483,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.eq_of_isAffineOpen_of_ringKrullDim_le_one' : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] [X.IsSeparated], ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X → ∀ V V' : X.Opens, IsAffineOpen V → V ≤ V' → (∀ z ∈ V', ringKrullDim (X.presheaf.stalk z) ≤ 1 → z ∈ V) → V' = V := by
-  first | exact @GlobalTheory.eq_of_isAffineOpen_of_ringKrullDim_le_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfIsAffineOpenOfRingKrullDimLeOneStatement =====
@@ -513,7 +511,7 @@ theorem extend_isLocus_of_big_open : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X
     have := congrArg (fun U : W.toScheme.Opens => (⟨x, hx⟩ : W.toScheme) ∈ U) h1
     exact Iff.of_eq this
   refine ⟨L, hL, t, rfl, ?_⟩
-  exact GlobalTheory.T.eq_of_isAffineOpen_of_ringKrullDim_le_one' X hX V (ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus t) hV (fun x hx => (key x (hVW hx)).2 hx)
+  exact _root_.GlobalTheory.eq_of_isAffineOpen_of_ringKrullDim_le_one X hX V (ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus t) hV (fun x hx => (key x (hVW hx)).2 hx)
     (fun z hz hz1 => (key z (hW z hz1)).1 hz)
 
 end GlobalTheory
@@ -873,8 +871,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.isAffineOpen_preimage_add_inf_preimage_sub_grpScheme : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] [IsSeparated A.hom] (V : A.left.Opens), IsAffineOpen V → ∀ (T : Over (Sp R)) [IsAffine T.left] (a : T ⟶ A), IsAffineOpen ((fst A T * (snd A T ≫ a)).left ⁻¹ᵁ V ⊓ (fst A T * (snd A T ≫ a)⁻¹).left ⁻¹ᵁ V) := by
-  first | exact @GlobalTheory.SumAffine.isAffineOpen_preimage_add_inf_preimage_sub
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageAddInfPreimageSubGrpSchemeStatement =====
@@ -959,7 +955,7 @@ theorem isAmpleLB_pull_fst_of_translates : ∀ (R : Type) [CommRing R] [IsNoethe
     IsLocus.exists_sec h2 (hcls ▸ GlobalTheory.T.translate_mul_inv_isNonvanishingLocus_square (Sp R) A hA c V hloc T (a i) (hrel i))
   choose s hs using hsec
   exact isAmpleLB_of_cover hL' (by norm_num) s (by simp only [hs]; exact hcov)
-    fun i => (hs i).symm ▸ GlobalTheory.T.isAffineOpen_preimage_add_inf_preimage_sub_grpScheme R A V hV T (a i)
+    fun i => (hs i).symm ▸ _root_.GlobalTheory.SumAffine.isAffineOpen_preimage_add_inf_preimage_sub R A V hV T (a i)
 
 end GlobalTheory
 end -- clump:auto

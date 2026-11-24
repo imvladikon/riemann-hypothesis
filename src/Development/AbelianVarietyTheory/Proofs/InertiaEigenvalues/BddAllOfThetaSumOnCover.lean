@@ -980,7 +980,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem unif_of_splitModel {T : CDVR} {io : c.F →+* T.Fr} {y : IntFr Xo c T io} (I : IntData Xo c T io y.1)
     (hS : PullbackSections.SplitModel I) : ∃ P : PELUnif (IsLocalRing.maximalIdeal T.V) I.G, P.TorsionIso := by
   have hprop : IsProper I.t'.G.hom := MorphismProperty.of_isPullback (P := @IsProper) I.m1.cart.1 Xo.univ.proper
-  obtain ⟨j, -⟩ := GlobalTheory.semiAbelian_model_determined_by_generic_fibre E H T.V inferInstance I.G I.G I.t' hprop I.m2 I.m2
+  obtain ⟨j, -⟩ := _root_.GlobalTheory.ModelUniqueChecks.extV_holds E H T.V inferInstance I.G I.G I.t' hprop I.m2 I.m2
   have hp := GlobalTheory.UnifAfterExt.polAt_of_sabMap j I.m2 I.m1 Xo.univ.proper Xo.univ.ample Xo.univ.ktriv (jK T.V) (𝟙 _)
     ((Category.comp_id _).trans (Category.id_comp _).symm)
   obtain ⟨-, P, -, hP⟩ := GlobalTheory.UnifAfterExt.isOpen_and_uniformised T.V inferInstance I.G hp hS
@@ -1190,33 +1190,14 @@ open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestrictio
 
 namespace GlobalTheory.CoverBound
 
-theorem inV_iff (T : CDVR) (x : T.Fr) : InV T x ↔ 0 ≤ vV T.V x := by
-  by_cases h0 : x = 0
-  · subst h0
-    simp [InV, vV]
-  constructor
-  · rintro ⟨a, rfl⟩
-    have h1 : valV T.V (algebraMap T.V T.Fr a) ≤ 1 := HeightOneSpectrum.valuation_le_one _ a
-    have h2 := (WithZero.log_le_log (valV_ne_zero (V := T.V) h0) one_ne_zero).2 h1
-    rw [WithZero.log_one] at h2
-    unfold vV
-    omega
-  · intro h3
-    have h4 : valV T.V x ≤ 1 := by
-      refine (WithZero.log_le_log (valV_ne_zero h0) one_ne_zero).1 ?_
-      rw [WithZero.log_one]
-      unfold vV at h3
-      omega
-    exact IsDiscreteValuationRing.exists_lift_of_le_one (A := T.V) (K := T.Fr) h4
-
 theorem inV_map_iff {T T' : CDVR} (i : T.Fr →+* T'.Fr) {r : ℕ} (hr : 0 < r)
     (hi : ∀ a : T.Fr, vV T'.V (i a) = (r : ℤ) * vV T.V a) (x : T.Fr) : InV T' (i x) ↔ InV T x := by
-  rw [inV_iff, inV_iff, hi]
+  rw [_root_.GlobalTheory.GoodTransfer.inV_iff, _root_.GlobalTheory.GoodTransfer.inV_iff, hi]
   exact mul_nonneg_iff_of_pos_left (by exact_mod_cast hr)
 
 theorem inV_of_overLa {K : Type} [Field K] [NumberField K] {la : HeightOneSpectrum (𝓞 K)} {T : CDVR}
     {io : K →+* T.Fr} {e : ℕ} (ho : OverLa la T.V io e) {x : K} (hx : la.valuation K x ≤ 1) : InV T (io x) := by
-  rw [inV_iff, ho.2]
+  rw [_root_.GlobalTheory.GoodTransfer.inV_iff, ho.2]
   refine mul_nonneg (Nat.cast_nonneg e) ?_
   by_cases h0 : x = 0
   · simp [vLa, h0]
@@ -1231,7 +1212,7 @@ theorem inV_of_pow_eq (T : CDVR) {x : T.Fr} {e : ℕ} (he : 0 < e) (hx : x ^ (e 
     exact zero_mem (algebraMap T.V T.Fr).range
   have h := GlobalTheory.PlaceExtField.vV_pow (V := T.V) h0 (e + 1)
   rw [hx] at h
-  rw [inV_iff]
+  rw [_root_.GlobalTheory.GoodTransfer.inV_iff]
   have he' : (0 : ℤ) < e := by exact_mod_cast he
   push_cast at h
   have : (e : ℤ) * vV T.V x = 0 := by linarith

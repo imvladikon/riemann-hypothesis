@@ -89,12 +89,6 @@ theorem galAct_incl (n : ℕ) (t : F' ≃ₐ[F] F') (γ : GL (Fin n) F) :
   ext i j
   simp [galAct_apply, gal, incl]
 
-theorem galAct_coe (n : ℕ) (t : F' ≃ₐ[F] F') (x : GL (Fin n) F') :
-    ((galAct F F' n t x : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') =
-      (x : Matrix (Fin n) (Fin n) F').map t := by
-  ext i j
-  simp [galAct_apply, gal]
-
 end Fields
 
 section Count
@@ -104,7 +98,7 @@ variable {F F' : Type} [Field F] [Field F'] [Algebra F F'] [Finite F']
 def nrmFibreEquivOf (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) {n : ℕ}
     {c g' : GL (Fin n) F'} (y : GL (Fin n) F') (hy : y * c * y⁻¹ = g') :
     {δ : GL (Fin n) F' // nrm s δ = g'} ≃ {δ : GL (Fin n) F' // nrm s δ = c} :=
-  have htw := (GlobalTheory.T.galoisTwistedNormGL_basic_properties F F' s hs n).2.2.1
+  have htw := (_root_.GlobalTheory.Shin.NrmBasic.main F F' s hs n).2.2.1
   { toFun := fun δ => ⟨y⁻¹ * δ.1 * galAct F F' n s y, by
         rw [htw, δ.2, ← hy]; group⟩
     invFun := fun ε => ⟨y * ε.1 * galAct F F' n s y⁻¹, by
@@ -153,8 +147,8 @@ theorem card_nrm_eq_mul_card_commute (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃�
     (n : ℕ) (γ : GL (Fin n) F) :
     Nat.card {δ : GL (Fin n) F' // nrm s δ = incl F F' n γ} * Nat.card {x : GL (Fin n) F // Commute x γ} =
       Nat.card {x : GL (Fin n) F' // Commute x (incl F F' n γ)} := by
-  obtain ⟨-, hinj, -, hcomm, hmul⟩ := GlobalTheory.T.galoisTwistedNormGL_basic_properties F F' s hs n
-  obtain ⟨δ₀, hδ₀B, hδ₀⟩ := GlobalTheory.T.norm_map_surjective_finite_field F F' s hs n γ
+  obtain ⟨-, hinj, -, hcomm, hmul⟩ := _root_.GlobalTheory.Shin.NrmBasic.main F F' s hs n
+  obtain ⟨δ₀, hδ₀B, hδ₀⟩ := _root_.GlobalTheory.Shin.NormSurj.nrm_surj_adjoin F F' s hs n γ
   have hcfix : ∀ t : F' ≃ₐ[F] F', galAct F F' n t (incl F F' n γ) = incl F F' n γ := fun t => galAct_incl n t γ
   set c := incl F F' n γ with hc
   set B := Subalgebra.centralizer F' {(c : Matrix (Fin n) (Fin n) F')} with hB
@@ -164,7 +158,7 @@ theorem card_nrm_eq_mul_card_commute (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃�
     simp only [Set.mem_singleton_iff, forall_eq]
     rw [Commute, SemiconjBy, Units.ext_iff, Units.val_mul, Units.val_mul]
     exact eq_comm
-  have hcs : (c : Matrix (Fin n) (Fin n) F').map s = c := by rw [← galAct_coe, hcfix]
+  have hcs : (c : Matrix (Fin n) (Fin n) F').map s = c := by rw [← _root_.GlobalTheory.Shin.NormSurj.coe_galAct, hcfix]
   have hstab : ∀ x ∈ B, x.map s ∈ B := by
     intro x hx
     rw [hB, Subalgebra.mem_centralizer_iff] at hx ⊢
@@ -175,7 +169,7 @@ theorem card_nrm_eq_mul_card_commute (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃�
       Matrix.map_mul (f := (s : F' →+* F'))
     rw [hcs] at e1 e2
     rw [← e1, ← e2, hx]
-  have h90 := GlobalTheory.T.card_twistedNorm_one_mul_card_fixed_units F F' s hs n B hstab
+  have h90 := _root_.GlobalTheory.Shin.card_nrm_one_mul_card_fixed F F' s hs n B hstab
   have hδ₀comm : ∀ e : GL (Fin n) F', Commute e c → Commute δ₀ e := by
     intro e he
     have hle : Algebra.adjoin F' {(c : Matrix (Fin n) (Fin n) F')} ≤
@@ -259,8 +253,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.card_isGaloisTwistedNormGL_mul_card_GL : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (n : ℕ) (γ : GL (Fin n) F), Nat.card {δ : GL (Fin n) F' // IsNorm s δ γ} * Nat.card (GL (Fin n) F) = Nat.card {γ' : GL (Fin n) F // IsConj γ γ'} * Nat.card (GL (Fin n) F') := by
-  first | (exact @GlobalTheory.Shin.NormFibre.card_isNorm_mul_card)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardIsGaloisTwistedNormGLMulCardGLStatement =====

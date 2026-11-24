@@ -147,8 +147,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open scoped TensorProduct Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_integer_lift_mod_nat_integralAdeleTensor : ∀ (D : D7) (X : HidaSetting D) (s : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F), s ∈ Formalism.MainNotions.S.IntAf X.B.I.F X.B.I.E → ∃ α : 𝓞 D.host.E, ZMod' X.B.I X.B.g (s - Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F) (X.ιE.symm (α : D.host.E))) := by
-  first | exact @GlobalTheory.Mem.LiftModG.exists_lift_mod_g
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegerLiftModNatIntegralAdeleTensorStatement =====
@@ -213,8 +211,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open scoped TensorProduct Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exp_div_mul_eq_stdAddChar_mul_of_coprime : ∀ (p q : ℕ) [NeZero p] [NeZero q], Nat.Coprime p q → ∀ T : ℤ, Complex.exp (2 * Real.pi * Complex.I * (T : ℂ) / ((p * q : ℕ) : ℂ)) = ZMod.stdAddChar (((q : ZMod p))⁻¹ * (T : ZMod p)) * ZMod.stdAddChar (((p : ZMod q))⁻¹ * (T : ZMod q)) := by
-  first | exact @GlobalTheory.exp_two_pi_I_div_mul_eq_stdAddChar_mul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExpDivMulEqStdAddCharMulOfCoprimeStatement =====
@@ -435,8 +431,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open scoped TensorProduct Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.mem_prime_of_inclE_mem_placeIdealIntegralAdelicSpan : ∀ (D : D7) (X : HidaSetting D) (w : HeightOneSpectrum (𝓞 D.host.E)) (α : 𝓞 D.host.E), Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F) (X.ιE.symm (α : D.host.E)) ∈ GlobalTheory.Mem.SymChar.wInt X w → α ∈ w.asIdeal := by
-  first | exact @GlobalTheory.Mem.SymChar.mem_of_inclE_mem_wInt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemPrimeOfInclEMemPlaceIdealIntegralAdelicSpanStatement =====
@@ -512,8 +506,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open scoped TensorProduct Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.star_finiteAddChar_div_nat_eq_exp_trace : ∀ (D : D7) (X : HidaSetting D) (α : 𝓞 D.host.E), star (X.psiEf (divN X.B.I X.B.g (Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F) (X.ιE.symm (α : D.host.E))))) = Complex.exp (2 * Real.pi * Complex.I * ((Algebra.intTrace ℤ (𝓞 D.host.E) α : ℤ) : ℂ) / ((X.B.g : ℕ) : ℂ)) := by
-  first | exact @GlobalTheory.Mem.CharRat.star_psiEf_divN_inclE
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarFiniteAddCharDivNatEqExpTraceStatement =====
@@ -575,7 +567,7 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
   intro D X _h _hι hg
   refine ⟨fun kv => psiK D kv.1, fun kv => psiK_ne_one D kv.1, ?_⟩
   intro s t u ht hu
-  obtain ⟨_, _, hcard0⟩ := GlobalTheory.T.places_over_typePrime_chosen_and_conj D 0
+  obtain ⟨_, _, hcard0⟩ := _root_.GlobalTheory.PlacesOverG.places_over_g_k D 0
   obtain ⟨v0⟩ : Nonempty (D.nd.PlG 0) := by
     by_contra hc
     rw [not_nonempty_iff] at hc
@@ -586,7 +578,7 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
     have h2 : (((t ⟨0, v0⟩).val : ℕ) : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F) ∈ Formalism.MainNotions.S.IntAf X.B.I.F X.B.I.E :=
       natCast_mem _ _
     simpa using add_mem h1 h2
-  obtain ⟨α, hα⟩ := GlobalTheory.T.exists_integer_lift_mod_nat_integralAdeleTensor D X s hs
+  obtain ⟨α, hα⟩ := _root_.GlobalTheory.Mem.LiftModG.exists_lift_mod_g D X s hs
   set a := Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F) (X.ιE.symm (α : D.host.E)) with ha
   have hg0 : X.B.g ≠ 0 := by
     rw [X.g_eq]; exact mul_ne_zero (D.host.g_prime 0).ne_zero (D.host.g_prime 1).ne_zero
@@ -594,7 +586,7 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
     conv_lhs => rw [show s = a + (s - a) by ring]
     rw [Formalism.L2.SG.Pf.unitaryCongruence.divN_add, X.psiEf_add,
       Formalism.L2.SG.Pf.unitaryCongruence.psi_Z X.B.I X.B.g X.psiEf_add X.psiEf_int hg0 hα, mul_one]
-  rw [hstep, GlobalTheory.T.star_finiteAddChar_div_nat_eq_exp_trace D X α]
+  rw [hstep, _root_.GlobalTheory.Mem.CharRat.star_psiEf_divN_inclE D X α]
   have hres : ∀ kv : (Σ k : Fin 2, D.nd.PlG k),
       α - (((t kv).val : ℕ) : 𝓞 D.host.E) ∈ (D.naut.plGw kv.1 kv.2).asIdeal ∧
       α - (((u kv).val : ℕ) : 𝓞 D.host.E) ∈ (GlobalTheory.IdemSupport.cP (D := D) (D.naut.plGw kv.1 kv.2)).asIdeal := by
@@ -602,14 +594,14 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
     have hZ : s - a ∈ GlobalTheory.Mem.SymChar.wInt X (D.naut.plGw kv.1 kv.2) :=
       GlobalTheory.Mem.SymChar.wInt_of_zmod X kv.1 (hg kv) hα
     constructor
-    · apply GlobalTheory.T.mem_prime_of_inclE_mem_placeIdealIntegralAdelicSpan D X
+    · apply _root_.GlobalTheory.Mem.SymChar.mem_of_inclE_mem_wInt D X
       have e : Formalism.UG.inclE (F := X.B.I.F) (Formalism.MainNotions.S.Af X.B.I.F)
           (X.ιE.symm (((α - (((t kv).val : ℕ) : 𝓞 D.host.E) : 𝓞 D.host.E)) : D.host.E)) =
           (s - (((t kv).val : ℕ) : X.B.I.E ⊗[X.B.I.F] Formalism.MainNotions.S.Af X.B.I.F)) - (s - a) := by
         rw [ha]; push_cast; rw [map_sub, map_natCast, map_sub, map_natCast]; ring
       rw [e]; exact sub_mem (ht kv) hZ
     · rw [GlobalTheory.IdemSupport.mem_cP, map_sub, map_natCast]
-      apply GlobalTheory.T.mem_prime_of_inclE_mem_placeIdealIntegralAdelicSpan D X
+      apply _root_.GlobalTheory.Mem.SymChar.mem_of_inclE_mem_wInt D X
       have hZ' : sigA X.B.I s - sigA X.B.I a ∈ GlobalTheory.Mem.SymChar.wInt X (D.naut.plGw kv.1 kv.2) := by
         rw [← map_sub]
         exact GlobalTheory.Mem.SymChar.wInt_of_zmod X kv.1 (hg kv) (Formalism.L2.SG.Pf.unitaryCongruence.Z_sig X.B.I X.B.g hα)
@@ -645,7 +637,7 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
   have hcop : Nat.Coprime (D.host.g 0) (D.host.g 1) :=
     (Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne
   rw [X.g_eq]
-  exact GlobalTheory.T.exp_div_mul_eq_stdAddChar_mul_of_coprime (D.host.g 0) (D.host.g 1) hcop _
+  exact _root_.GlobalTheory.exp_two_pi_I_div_mul_eq_stdAddChar_mul (D.host.g 0) (D.host.g 1) hcop _
 
 end GlobalTheory.Mem.SymChar.CharProd
 end -- clump:auto
@@ -746,8 +738,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 open scoped TensorProduct Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.idempotent_mem_placeIdealSpan_of_ne_one : ∀ (D : D7) (X : HidaSetting D) (kv : Σ k : Fin 2, D.nd.PlG k), ¬ GlobalTheory.Mem.SymFrame.EwAt X (D.naut.plGw kv.1 kv.2) → X.ew ∈ GlobalTheory.Mem.SymChar.wInt X (D.naut.plGw kv.1 kv.2) := by
-  first | exact @GlobalTheory.Mem.SymChar.EwZero.ew_mem_wInt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMemPlaceIdealSpanOfNeOneStatement =====
@@ -966,7 +956,7 @@ theorem resid_at_w : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism.L2.
       · have hs : side X w = false := by simp [side, hw]
         rw [if_neg (by simp [hs])]
         rw [QuotientAddGroup.mk'_apply, QuotientAddGroup.eq_zero_iff]
-        have hew := GlobalTheory.T.idempotent_mem_placeIdealSpan_of_ne_one D X kv hw
+        have hew := _root_.GlobalTheory.Mem.SymChar.EwZero.ew_mem_wInt D X kv hw
         have hbw : X.B.I.fmat k *ᵥ X.bw ⟨i.1 + 1, hi⟩ ∈ X.B.I.Lf :=
           Formalism.L2.SG.Pf.unitaryCongruence.K_mv X.B.I hk (X.vectorsInLattice.2.2 _).1
         have hint := Formalism.L2.SG.Pf.unitaryCongruence.hA_int X.B.I (X.vectorsInLattice.2.2 i).2 hbw

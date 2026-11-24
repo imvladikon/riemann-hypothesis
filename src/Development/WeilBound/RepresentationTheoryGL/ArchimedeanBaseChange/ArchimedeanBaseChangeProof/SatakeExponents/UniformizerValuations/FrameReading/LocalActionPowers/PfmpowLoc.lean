@@ -158,7 +158,7 @@ theorem hinteq {H : Type} [Group H] (K S : Subgroup H) (u : H → ℂ) (hSK : S 
   have h2 : (rStab u ⊓ K).relIndex K ≠ 0 := by
     intro h; rw [h, mul_zero] at hmul; exact hrel hmul.symm
   have hu : ∀ x, ∀ t ∈ rStab u ⊓ K, u (x * t) = u x := fun x t ht => ht.1 x
-  rw [finsum_quot_le hS0 u hu h1 hfin, hint, ← hmul]
+  rw [_root_.UpperTheory.Reformulated.B.P6.r20a.PositivityTheory.Rg.BcN.F2.LocOpPf.finsum_quot_le hS0 u hu h1 hfin, hint, ← hmul]
   push_cast
   field_simp
 

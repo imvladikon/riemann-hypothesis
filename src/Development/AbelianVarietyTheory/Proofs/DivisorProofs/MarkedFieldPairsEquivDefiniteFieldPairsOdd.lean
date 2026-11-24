@@ -163,8 +163,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.cmField_conj_extends_of_adjoin_absSq : ∀ (F M : Type) [Field F] [NumberField F] [IsCMField F] [Field M] [NumberField M] [Algebra F M] (π : M) (c : ℚ), Algebra.adjoin F {π} = ⊤ → c ≠ 0 → (∀ φ : M →+* ℂ, ‖φ π‖ ^ 2 = (c : ℝ)) → ∃ σ : M →+* M, (∀ x : F, σ (algebraMap F M x) = algebraMap F M (IsCMField.complexConj F x)) ∧ σ π * π = (c : M) ∧ ∀ (φ : M →+* ℂ) (x : M), φ (σ x) = (starRingEnd ℂ) (φ x) := by
-  first | (exact @GlobalTheory.cm_conj_extends_of_adjoin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmFieldConjExtendsOfAdjoinAbsSqStatement =====
@@ -254,8 +252,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.diagonal_sign_of_positive_eigenvector_one_positive : ∀ {n : ℕ} (A h g : Matrix (Fin n) (Fin n) ℂ) (hA : A.IsHermitian) (W Z : GL (Fin n) ℂ) (lam : Fin n → ℂ) (d : Fin n → ℝ), A.det ≠ 0 → sigPosH hA = 1 → h = (W : Matrix (Fin n) (Fin n) ℂ)ᴴ * A * (W : Matrix (Fin n) (Fin n) ℂ) → (Z : Matrix (Fin n) (Fin n) ℂ)ᴴ * h * (Z : Matrix (Fin n) (Fin n) ℂ) = Matrix.diagonal (fun i => (d i : ℂ)) → Function.Injective lam → g * (Z : Matrix (Fin n) (Fin n) ℂ) = (Z : Matrix (Fin n) (Fin n) ℂ) * Matrix.diagonal lam → ∀ (i₀ : Fin n) (x : Fin n → ℂ), g *ᵥ x = lam i₀ • x → 0 < (star x ⬝ᵥ (h *ᵥ x)).re → 0 < d i₀ ∧ ∀ i, i ≠ i₀ → d i < 0 := by
-  first | (exact @GlobalTheory.diag_sign_of_pos_eigenvector)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalSignOfPositiveEigenvectorOnePositiveStatement =====
@@ -316,8 +312,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_adelicUnit_carrying_form_to_normMultiple : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β : G.C) (M : Type) [Field M] [NumberField M] (j : M →+* G.C) (σ : M →+* M), (∀ y : M, β * sh G (j y) = j (σ y) * β) → ∀ (a : M) (u : (AfP p ⊗[ℚ] M)ˣ), (u : AfP p ⊗[ℚ] M) * Algebra.TensorProduct.map (AlgHom.id ℚ (AfP p)) σ.toRatAlgHom u = 1 ⊗ₜ a → ∃ U : (AfP p ⊗[ℚ] G.C)ˣ, (U : AfP p ⊗[ℚ] G.C) * inC G (AfP p) β * (starT G.star (AfP p) U).unop = inC G (AfP p) (j a * β) ∧ ∀ y : G.C, (∀ m : M, y * j m = j m * y) → inC G (AfP p) y * U = U * inC G (AfP p) y := by
-  first | (exact @GlobalTheory.adelic_norm_move)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicUnitCarryingFormToNormMultipleStatement =====
@@ -330,8 +324,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.hermitianTriple_trivial_over_reals_of_gram_congruent : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β : G.Cˣ), (∀ v : InfinitePlace G.F, ∃ W : GL (Fin G.n) ℂ, G.gram v * G.psi v ((β⁻¹ : G.Cˣ) : G.C) = (W : Matrix (Fin G.n) (Fin G.n) ℂ)ᴴ * G.gram v * (W : Matrix (Fin G.n) (Fin G.n) ℂ)) → ∃ z : (ℝ ⊗[ℚ] G.C)ˣ, Triv G ℝ β z 1 := by
-  first | (exact @GlobalTheory.LKMid.trivR_of_gram_psi_inv_congr)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTripleTrivialOverRealsOfGramCongruentStatement =====
@@ -344,8 +336,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_eigenbasis_psi_infinitePlace_distinct_roots : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (v : InfinitePlace G.F), ∃ (Z : GL (Fin G.n) ℂ) (lam : Fin G.n → ℂ), Function.Injective lam ∧ (∀ z : ℂ, P.pol.eval₂ v.embedding z = 0 ↔ ∃ i, lam i = z) ∧ G.psi v (P.γ : G.C) * (Z : Matrix (Fin G.n) (Fin G.n) ℂ) = (Z : Matrix (Fin G.n) (Fin G.n) ℂ) * Matrix.diagonal lam := by
-  first | (exact @GlobalTheory.LKMid.psi_eigenbasis)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEigenbasisPsiInfinitePlaceDistinctRootsStatement =====
@@ -489,13 +479,13 @@ theorem exists_basis (ha : G.a = 1) (P : Pair G) (μ : ℂ) (hm : P.Mark μ) (pb
         (Z : Matrix (Fin G.n) (Fin G.n) ℂ) * Matrix.diagonal (fun i => e i y)) ∧ (∀ i, d i ≠ 0) ∧
       (Z : Matrix (Fin G.n) (Fin G.n) ℂ)ᴴ * (G.gram w * G.psi w ((P.β⁻¹ : G.Cˣ) : G.C)) *
         (Z : Matrix (Fin G.n) (Fin G.n) ℂ) = Matrix.diagonal (fun i => (d i : ℂ)) := by
-  obtain ⟨Z, lam, hinj, hroot, hZ⟩ := GlobalTheory.T.exists_eigenbasis_psi_infinitePlace_distinct_roots p G P w
+  obtain ⟨Z, lam, hinj, hroot, hZ⟩ := _root_.GlobalTheory.LKMid.psi_eigenbasis p G P w
   have hr : ∀ i, P.pol.eval₂ w.embedding (lam i) = 0 := fun i => (hroot _).2 ⟨i, rfl⟩
   choose e he he' using fun i => exists_emb pb w.embedding (lam i) (hpol ▸ hr i)
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.similitudePair_hermitianForm_invertible_similitude p G P w
-  obtain ⟨d, hd, hD⟩ := GlobalTheory.T.exists_diagonal_congr_of_similitude_distinct_eigenvalues _ (G.psi w P.γ) ((P.c : ℚ) : ℝ) Z lam h1 h2
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.LKMid.pair_form_laws p G P w
+  obtain ⟨d, hd, hD⟩ := _root_.GlobalTheory.similitude_eigvec_orthogonal _ (G.psi w P.γ) ((P.c : ℚ) : ℝ) Z lam h1 h2
     (by exact_mod_cast P.c.ne_zero) (by rw [h3]; simp) hinj
-    (fun i => GlobalTheory.T.marked_similitude_pair_minpoly_roots_normSq_eq p G P μ ha hm _ _ (hr i)) hZ
+    (fun i => _root_.GlobalTheory.LKMid.MarkEll.mark_ell p G P μ ha hm _ _ (hr i)) hZ
   have hl : (fun i => e i pb.gen) = lam := funext he'
   refine ⟨Z, d, e, he, hl ▸ hinj, fun z hz => ?_, fun y => ?_, hd, hD⟩
   · obtain ⟨i, hi⟩ := (hroot z).1 hz
@@ -536,8 +526,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.negDef_of_hermitianMatrixPositiveIndex_eq_zero : ∀ {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (hA : A.IsHermitian), A.det ≠ 0 → sigPosH hA = 0 → ∀ y : Fin n → ℂ, y ≠ 0 → (star y ⬝ᵥ A *ᵥ y).re < 0 := by
-  first | (exact @GlobalTheory.herm_negDef_of_sigPosH_eq_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegDefOfHermitianMatrixPositiveIndexEqZeroStatement =====
@@ -880,7 +868,7 @@ theorem dexists_basis (Q : DPair G) (pb : PowerBasis G.F M) (hpol : Q.pol = minp
   have hr : ∀ i, Q.pol.eval₂ w.embedding (lam i) = 0 := fun i => (hroot _).2 ⟨i, rfl⟩
   choose e he he' using fun i => exists_emb pb w.embedding (lam i) (hpol ▸ hr i)
   obtain ⟨h1, h2, h3⟩ := dform_laws Q w
-  obtain ⟨d, hd, hD⟩ := GlobalTheory.T.exists_diagonal_congr_of_similitude_distinct_eigenvalues _ (G.psi w Q.γ) ((Q.c : ℚ) : ℝ) Z lam h1 h2
+  obtain ⟨d, hd, hD⟩ := _root_.GlobalTheory.similitude_eigvec_orthogonal _ (G.psi w Q.γ) ((Q.c : ℚ) : ℝ) Z lam h1 h2
     (by exact_mod_cast Q.c.ne_zero) (by rw [h3]; simp) hinj
     (fun i => dell_at Q w _ (hr i)) hZ
   have hl : (fun i => e i pb.gen) = lam := funext he'
@@ -1063,7 +1051,7 @@ theorem real_back (ha : G.a = 1) (P : Pair G) (pb : PowerBasis G.F M) (hpol : P.
     have hg : G.psi v₀ P.γ * (Z : Matrix (Fin G.n) (Fin G.n) ℂ) =
         (Z : Matrix (Fin G.n) (Fin G.n) ℂ) * Matrix.diagonal (fun i => e i pb.gen) := by
       rw [← hj]; exact hZ pb.gen
-    obtain ⟨hd0, hdn⟩ := GlobalTheory.T.diagonal_sign_of_positive_eigenvector_one_positive _ _ (G.psi v₀ P.γ) (G.gram_herm v₀) W Z _ d (G.gram_det v₀) hv hW hD hinj hg
+    obtain ⟨hd0, hdn⟩ := _root_.GlobalTheory.diag_sign_of_pos_eigenvector _ _ (G.psi v₀ P.γ) (G.gram_herm v₀) W Z _ d (G.gram_det v₀) hv hW hD hinj hg
       i₀ y (by rw [hy, hi₀]) hpos
     by_cases hi : i = i₀
     · subst hi; exact mul_pos hd0 (hi₀ ▸ hb1)
@@ -1075,7 +1063,7 @@ theorem real_back (ha : G.a = 1) (P : Pair G) (pb : PowerBasis G.F M) (hpol : P.
       rw [quad_conj, hD, quad_single]
     have hneg : d i < 0 := by
       rw [hdi, hW, ← quad_conj]
-      exact GlobalTheory.T.negDef_of_hermitianMatrixPositiveIndex_eq_zero _ (G.gram_herm w) (G.gram_det w) hs _
+      exact _root_.GlobalTheory.herm_negDef_of_sigPosH_eq_zero _ (G.gram_herm w) (G.gram_det w) hs _
         (gl_mulVec_ne _ _ (gl_mulVec_ne _ _ (by simp)))
     exact mul_neg_of_neg_of_pos hneg (hb3 w hw _ (he i))
 
@@ -1155,7 +1143,7 @@ theorem core (ha : G.a = 1) (hn : Odd G.n) (pb : PowerBasis G.F M) (hdeg : (minp
       (∃ u : (AfP p ⊗[ℚ] G.C)ˣ, (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.γ : G.C) =
         inC G (AfP p) (Q.γ : G.C) * u ∧ (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.β : G.C) *
         (starT G.star (AfP p) u).unop = inC G (AfP p) (P.β : G.C))) := by
-  obtain ⟨σ, hσ, hπ, hφ⟩ := GlobalTheory.T.cmField_conj_extends_of_adjoin_absSq G.F M pb.gen (c0 : ℚ) pb.adjoin_gen_eq_top c0.ne_zero hc0
+  obtain ⟨σ, hσ, hπ, hφ⟩ := _root_.GlobalTheory.cm_conj_extends_of_adjoin G.F M pb.gen (c0 : ℚ) pb.adjoin_gen_eq_top c0.ne_zero hc0
   obtain ⟨ε, hε, rfl⟩ := exists_emb pb v.embedding μ hμ
   have hσ1 : σ ≠ RingHom.id M := by
     intro h
@@ -1214,7 +1202,7 @@ theorem core (ha : G.a = 1) (hn : Odd G.n) (pb : PowerBasis G.F M) (hdeg : (minp
     have hβi : ((β'⁻¹ : G.Cˣ) : G.C) = ((Q.β⁻¹ : G.Cˣ) : G.C) * j a⁻¹ := by
       apply Units.inv_eq_of_mul_eq_one_right
       rw [hβ', mul_assoc, ← mul_assoc (Q.β : G.C), Units.mul_inv, one_mul, ← map_mul, mul_inv_cancel₀ ha0, map_one]
-    obtain ⟨U, hU, hUc⟩ := GlobalTheory.T.exists_adelicUnit_carrying_form_to_normMultiple p G Q.β M (j : M →+* G.C) σ hlaw a u hu
+    obtain ⟨U, hU, hUc⟩ := _root_.GlobalTheory.adelic_norm_move p G Q.β M (j : M →+* G.C) σ hlaw a u hu
     obtain ⟨x, t, hx⟩ := Q.trivAf
     have hx' : Triv G (AfP p) β' (x * U⁻¹) t := triv_mul_inv (AfP p) _ _ x U t hU hx
     obtain ⟨hR, hM⟩ := dreal_move ha Q pb hQ j hj v hv ε hε a⁻¹ (fun φ => by rw [hinv', hinv])
@@ -1231,7 +1219,7 @@ theorem core (ha : G.a = 1) (hn : Odd G.n) (pb : PowerBasis G.F M) (hdeg : (minp
             ← mul_assoc, Algebra.commutes]
         reg := Q.reg
         trivAf := ⟨_, t, hx'⟩
-        trivR := GlobalTheory.T.hermitianTriple_trivial_over_reals_of_gram_congruent p G β' hR }
+        trivR := _root_.GlobalTheory.LKMid.trivR_of_gram_psi_inv_congr p G β' hR }
     exact ⟨P, rfl, rfl, by rw [← hja]; exact hβ', ⟨v, hv, hM⟩, U, (hUc _ fun m => hcomm _ rfl m).symm, hU⟩
   · have h0 : Polynomial.aeval (P.γ : G.C) (minpoly G.F pb.gen) = 0 := by
       rw [← hP]; exact minpoly.aeval _ _
@@ -1248,7 +1236,7 @@ theorem core (ha : G.a = 1) (hn : Odd G.n) (pb : PowerBasis G.F M) (hdeg : (minp
     have hlawQ : ∀ y : M, (β' : G.C) * sh G (j y) = j (σ y) * β' := by
       intro y
       rw [hβ', mul_assoc, hlawP y, ← mul_assoc, ← mul_assoc, ← map_mul, ← map_mul, mul_comm a⁻¹ (σ y)]
-    obtain ⟨U, hU, hUc⟩ := GlobalTheory.T.exists_adelicUnit_carrying_form_to_normMultiple p G (β' : G.C) M (j : M →+* G.C) σ hlawQ a u hu
+    obtain ⟨U, hU, hUc⟩ := _root_.GlobalTheory.adelic_norm_move p G (β' : G.C) M (j : M →+* G.C) σ hlawQ a u hu
     have hjβ : j a * (β' : G.C) = P.β := by
       rw [hβ', ← mul_assoc, ← map_mul, mul_inv_cancel₀ ha0, map_one, one_mul]
     have hjβ' : (j : M →+* G.C) a * (β' : G.C) = P.β := hjβ
@@ -1291,7 +1279,7 @@ theorem move_definite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
       ∀ (φ : G.F →+* ℂ) (z : ℂ), P0.eval₂ φ z = 0 → ‖z‖ ^ 2 = ((c0 : ℚ) : ℝ) := by
     rcases hex with ⟨Q, hQ⟩ | ⟨P, hP, hm⟩
     · exact ⟨Q.c, Q.γ, hQ, Q.reg, fun φ z hz => DMove.dell Q φ z (by rw [hQ]; exact hz)⟩
-    · exact ⟨P.c, P.γ, hP, P.reg, fun φ z hz => GlobalTheory.T.marked_similitude_pair_minpoly_roots_normSq_eq p G P μ ha hm φ z (by rw [hP]; exact hz)⟩
+    · exact ⟨P.c, P.γ, hP, P.reg, fun φ z hz => _root_.GlobalTheory.LKMid.MarkEll.mark_ell p G P μ ha hm φ z (by rw [hP]; exact hz)⟩
   have hmon : P0.Monic := hγ0 ▸ minpoly.monic (Algebra.IsIntegral.isIntegral _)
   haveI : Fact (Irreducible P0) := ⟨hirr⟩
   let pb := AdjoinRoot.powerBasis hmon.ne_zero
@@ -1306,7 +1294,7 @@ theorem move_definite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
   refine ⟨A, fun Q hQ => h1 Q hQ ?_, fun P hP hm => h2 P hP ?_ hm⟩
   · have e1 := DMove.dell Q v.embedding μ (by rw [hQ]; exact hμ)
     exact Units.ext (by exact_mod_cast e1.symm.trans e2)
-  · have e1 := GlobalTheory.T.marked_similitude_pair_minpoly_roots_normSq_eq p G P μ ha hm v.embedding μ (by rw [hP]; exact hμ)
+  · have e1 := _root_.GlobalTheory.LKMid.MarkEll.mark_ell p G P μ ha hm v.embedding μ (by rw [hP]; exact hμ)
     exact Units.ext (by exact_mod_cast e1.symm.trans e2)
 
 end GlobalTheory.LKDef
@@ -1323,8 +1311,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKDef GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_polynomial_move_definiteSimilitudePair_marked : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 → Odd G.n → ∀ (P0 : Polynomial G.F) (μ : ℂ) (v : InfinitePlace G.F), sigPosH (G.gram_herm v) = 1 → Irreducible P0 → P0.eval₂ v.embedding μ = 0 → ∃ A : Polynomial G.F, (∀ Q : DPair G, Q.pol = P0 → ∃ P : Pair G, P.γ = Q.γ ∧ P.c = Q.c ∧ (P.β : G.C) = Polynomial.aeval (Q.γ : G.C) A * Q.β ∧ P.Mark μ ∧ (∃ u : (AfP p ⊗[ℚ] G.C)ˣ, (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.γ : G.C) = inC G (AfP p) (Q.γ : G.C) * u ∧ (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.β : G.C) * (starT G.star (AfP p) u).unop = inC G (AfP p) (P.β : G.C))) ∧ (∀ P : Pair G, P.pol = P0 → P.Mark μ → ∃ Q : DPair G, Q.γ = P.γ ∧ Q.c = P.c ∧ (P.β : G.C) = Polynomial.aeval (P.γ : G.C) A * Q.β ∧ (∃ u : (AfP p ⊗[ℚ] G.C)ˣ, (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.γ : G.C) = inC G (AfP p) (Q.γ : G.C) * u ∧ (u : AfP p ⊗[ℚ] G.C) * inC G (AfP p) (Q.β : G.C) * (starT G.star (AfP p) u).unop = inC G (AfP p) (P.β : G.C))) := by
-  first | (exact @GlobalTheory.LKDef.move_definite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolynomialMoveDefiniteSimilitudePairMarkedStatement =====
@@ -1524,7 +1510,7 @@ theorem term_eq_of_local_isom : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P 
   split_ifs with h
   · have hQ := Q.trivAf.choose_spec.choose_spec
     have hx' := triv_mul_inv (P.β : G.C) (Q.β : G.C) _ u _ hQ huβ
-    rw [GlobalTheory.T.kottwitzPair_term_eq_pointSum_any_trivialisation p G P Kf f r K φ hr hf hφ _ _ hx' h.choose.1 h.choose.2 (by rw [hat]; exact h.choose_spec)]
+    rw [_root_.GlobalTheory.LKMid.Pair.term_eq_termAt p G P Kf f r K φ hr hf hφ _ _ hx' h.choose.1 h.choose.2 (by rw [hat]; exact h.choose_spec)]
     exact termAt_eq P Q hγ hc _ u _ hQ hx' huγ Kf f r K φ _ _
   · unfold Pair.term
     rw [dite_eq_right]
@@ -1617,7 +1603,7 @@ theorem cls_equiv_dcls_irr : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
     exact ⟨x.1, x.2⟩
   have key := fun (P0 : Polynomial G.F) (hi : Irreducible P0) (hm : P0.Monic)
       (hd : P0.natDegree = G.n) =>
-    GlobalTheory.T.exists_polynomial_move_definiteSimilitudePair_marked p G ha hn P0 (sel P0) v0 hv0 hi (hsel v0 hv0 P0 hm hd)
+    _root_.GlobalTheory.LKDef.move_definite p G ha hn P0 (sel P0) v0 hv0 hi (hsel v0 hv0 P0 hm hd)
   choose! A hA1 hA2 using key
   have hF := fun (P : Pair G) (hi : Irreducible P.pol) (hm : P.Mark (sel P.pol)) =>
     hA2 P.pol hi (minpoly_monic_of_irreducible (P.γ : G.C) hi) P.reg.1 P rfl hm

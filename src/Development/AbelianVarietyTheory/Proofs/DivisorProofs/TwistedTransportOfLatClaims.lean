@@ -336,8 +336,7 @@ end GlobalTheory.TwistedTransportProof
 
 
 open GlobalTheory.TwistedTransportProof in
-theorem GlobalTheory.TwistedTransportProof.main : PeriodEx → LatAlg → LatConj → GlobalTheory.ToricTransport.TwistedTransport :=
-  twistedTransport_of_latClaims
+alias GlobalTheory.TwistedTransportProof.main := _root_.GlobalTheory.TwistedTransportProof.twistedTransport_of_latClaims
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

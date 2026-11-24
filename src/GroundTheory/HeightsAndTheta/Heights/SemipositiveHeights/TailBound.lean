@@ -807,7 +807,7 @@ theorem ListMonoDens.proof : ListMonoDens.Statement := by
 
   have hsum : ∀ i, hessC (fun y' => o y' + v i y') y =
       hessC (fun y' => f i y' + v i y') y + hessC (fun y' => o y' + (-1) * f i y') y := fun i => by
-    rw [← ReciprocityTheory.AnForm.A.hessC_add _ _ y ((hfC i).add (hvC i))
+    rw [← _root_.ReciprocityTheory.AnForm.A.TraceConjugationCover.complexHessian_add_of_contDiffAt _ _ y ((hfC i).add (hvC i))
       (hgC i)]
     congr 1
     funext y'
@@ -1503,7 +1503,7 @@ theorem RegSection.full : RegSection.Statement :=
     (BdNormCont.proof ChartCont.proof BdEqHolo.proof)
     (BdComparison.proof ChartCont.proof BddOnInner.proof)
 
-theorem TailShift.full : TailShift.Statement := TailShift.proof
+alias TailShift.full := _root_.GroundTheory.Heights₂.Heights.AnalyticLimit.TailShift.proof
 
 theorem LemmaETailLog.of_lemmaETailMass (h : LemmaETailMass.Statement) : LemmaETailLog.Statement :=
   LemmaETailLog.proof h TailLogOfMass.proof

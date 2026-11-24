@@ -1482,9 +1482,7 @@ theorem kStable_of_units {N : Submodule ℂ V}
     (h : ∀ a b, sameBlock a b → ∀ x ∈ N, act (Eab a b) x ∈ N) : KStable act N :=
   fun _ hZ x hx => GlobalTheory.TensorHW.kc_ind act N x (fun a b hab => h a b hab x hx) hZ
 
-theorem equiv_sameBlock : Equivalence (sameBlock : Ix p q → Ix p q → Prop) :=
-  ⟨sameBlock_self, by rintro (a | a) (b | b) h <;> simp_all [sameBlock],
-    by rintro (a | a) (b | b) (c | c) h h' <;> simp_all [sameBlock]⟩
+alias equiv_sameBlock := _root_.GlobalTheory.LowestType.same_equiv
 
 end Gen
 

@@ -130,16 +130,6 @@ noncomputable section
 
 namespace Formalism.HermitianLatticesTheory
 
-section MajLatticeAux
-
-variable {K : Type*} [Field K] [NumberField K]
-
-theorem majLattice_common (t : Finset K) :
-    ∃ d : ℤ, d ≠ 0 ∧ ∀ a ∈ t, IsIntegral ℤ ((d : K) * a) := by
-  first | exact UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common .. | exact @UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common K ‹_› ‹_› t | exact @UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common K ‹_› ‹_› | exact @UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common K ‹_› | exact @UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common K
-
-end MajLatticeAux
-
 section MajLatticeMain
 
 variable {K V ι : Type*} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [StarRing K] [AddCommGroup V]
@@ -147,15 +137,11 @@ variable {K V ι : Type*} [Field K] [NumberField K] [_root_.NumberField.IsTotall
 
 variable [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
 
-theorem majLattice_exists_c (L : Submodule (𝓞 K) V)
-    (hL : Submodule.span K (L : Set V) = ⊤) (y : V) : ∃ c : ℤ, c ≠ 0 ∧ c • y ∈ L := by
-  first | (apply Bl.general_b_fact_second_rest.goal1 <;> assumption) | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› L hL y | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› L hL | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› L | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V ‹_› | exact @Bl.general_b_fact_second_rest.goal1 K V | exact @Bl.general_b_fact_second_rest.goal1 K
-
 theorem majLattice_exists_d (b : Basis ι K V) (L : Submodule (𝓞 K) V) (hfg : L.FG) :
     ∃ d : ℤ, d ≠ 0 ∧ ∀ x ∈ L, ∀ i, IsIntegral ℤ ((d : K) * b.repr x i) := by
   classical
   obtain ⟨s, hs⟩ := hfg
-  obtain ⟨d, hd, ht⟩ := majLattice_common (s.biUnion fun g => Finset.univ.image fun i => b.repr g i)
+  obtain ⟨d, hd, ht⟩ := _root_.UpperTheory.Reformulated.B.CommonMajorizingLattice.majLattice_common (s.biUnion fun g => Finset.univ.image fun i => b.repr g i)
   refine ⟨d, hd, fun x hx => ?_⟩
   rw [← hs] at hx
   induction hx using Submodule.span_induction with
@@ -220,7 +206,7 @@ theorem lat_pres (Λ : Submodule (𝓞 D.host.E) (VS D).V) (hΛ : Submodule.IsFu
       ∀ g : (VS D).V →ₗ[D.host.E] (VS D).V, (∀ y, X.crd (g y) = G *ᵥ X.crd y) → ∀ y ∈ Λ, g y ∈ Λ := by
   obtain ⟨d, hd0, hd⟩ := Formalism.HermitianLatticesTheory.majLattice_exists_d X.bas Λ hΛ.fg
   have hc : ∀ i, ∃ c : ℤ, c ≠ 0 ∧ c • X.bas i ∈ Λ := fun i =>
-    Formalism.HermitianLatticesTheory.majLattice_exists_c Λ hΛ.span_eq_top (X.bas i)
+    _root_.Bl.general_b_fact_second_rest.goal1 Λ hΛ.span_eq_top (X.bas i)
   choose c hc0 hcm using hc
   set C : ℤ := ∏ i, c i with hC
   have hCm : ∀ i, (C * C) • X.bas i ∈ Λ := by

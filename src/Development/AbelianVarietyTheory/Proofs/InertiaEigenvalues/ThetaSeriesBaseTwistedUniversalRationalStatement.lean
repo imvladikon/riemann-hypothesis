@@ -417,7 +417,7 @@ theorem tameAt_of_congr (H : Formalism.L2.Host.HChar E) (PP : HeightOneSpectrum 
     hT.inter ((GlobalTheory.ChainOnto.TameRes.isOpen_ltOne PP).preimage (continuous_sub_right 1))
   obtain ⟨k, hk⟩ := (HeightOneSpectrum.denseRange_algebraMap E PP).exists_mem_open hU ⟨_, hxT⟩
   have hk1 : PP.valuation E (k - 1) < 1 := by
-    rw [← GlobalTheory.ChainOnto.TameRes.val_alg, map_sub, map_one]; exact hk.2
+    rw [← _root_.Formalism.UG.P.levelaf_valued_algebraMap, map_sub, map_one]; exact hk.2
   have hk0 : k ≠ 0 := by
     rintro rfl
     simp at hk1
@@ -1014,11 +1014,6 @@ end Lemmas
 
 section Main
 
-theorem natM_mem_Mb (T : CoreJ D) : ((T.Q.l.M : ℕ) : 𝓞 D.host.E) ∈ T.Q.l.Mb := by
-  have hle : T.Q.l.Mb * T.Q.l.Mb.map (T.Q.H.bar : 𝓞 D.host.E →+* 𝓞 D.host.E) ≤ T.Q.l.Mb := Ideal.mul_le_left
-  rw [T.Q.l.prod] at hle
-  exact hle (Ideal.mem_span_singleton_self _)
-
 variable {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL]
 
 theorem harmVec_eq {Rl : RealDat3 D A3 Ks} {cG : G0 Rl.Pg D.R.r ≃* G0g D.nd} {ρ : Setup D.ntw} (hpin : RealPin Rl cG ρ)
@@ -1074,7 +1069,7 @@ theorem ratTwist_of_isRatScalar (hRF : GlobalTheory.NT.RayField) {T : CoreJ D} [
     have h2 : T.Q.l.Mb ≤ PP.asIdeal := by
       rw [hhalf.1]
       exact Ideal.prod_le_inf.trans (Finset.inf_le hPP)
-    exact h2 (natM_mem_Mb T)
+    exact h2 (_root_.GlobalTheory.RefDatumLev.natM_mem_Mb T)
   have hdat0 := isLevDatum_vecFlat (ρ.B i j b) (hρ.base i j b) (ρ.tw i b k Q ψ) ht hadm (T.Q.l.M * C.d.pd)
     C.σ₂.fieldRange (fun PP hPP => by
       rw [Nat.cast_mul]

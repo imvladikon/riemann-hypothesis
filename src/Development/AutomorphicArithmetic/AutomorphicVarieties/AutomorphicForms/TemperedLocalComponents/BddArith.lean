@@ -1907,9 +1907,7 @@ private theorem main : UpperTheory.V.Af.BA.ResOf := by
 
 end UpperTheory.V.Af.BA.ResolutionExactness
 
-theorem UpperTheory.repResolution_exists :
-    UpperTheory.V.Af.BA.ResOf :=
-  UpperTheory.V.Af.BA.ResolutionExactness.main
+alias UpperTheory.repResolution_exists := _root_.UpperTheory.V.Af.BA.ResolutionExactness.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.RepResolutionExists =====

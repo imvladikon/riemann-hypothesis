@@ -173,13 +173,6 @@ theorem fdc_hc_add {μ : Fin n → ℝ} {s : Fin n} (hμ : IsHCParam μ) (hs : S
     rw [Pi.add_apply, Pi.single_eq_of_ne has, add_zero]
     exact hm
 
-theorem fdc_w_ne {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) : T.w ≠ 0 := by
-  letI := T.instNACG
-  intro h
-  have h1 := T.w_norm
-  rw [h, norm_zero] at h1
-  exact zero_ne_one h1
-
 theorem fdc_model {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) {μ : Fin n → ℝ} {h : ℝ}
     (hμ : IsHCParam μ) (hg : GapAtLeast ε μ h) (hh : thrStar ε + 1 < h) (T : KType ε (lowK ε μ)) :
     ∃ m : Fin n → ℤ, IsMu μ m ∧ IsPsiFor ε μ T (PsiM T m) := by
@@ -235,7 +228,7 @@ theorem fdc_ds_exists {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf 
     (hμ : IsHCParam μ) (hg : GapAtLeast ε μ h) (hh : thrStar ε + 1 < h) : ∃ d, FdcGood ε μ d := by
   obtain ⟨T⟩ := HW.kType_exists ε μ hμ
   obtain ⟨m, -, hP⟩ := fdc_model hp hq hμ hg hh T
-  have hDS := isDS_sigLam (fdc_stdGap hμ hg hh) hP (fdc_w_ne T)
+  have hDS := isDS_sigLam (fdc_stdGap hμ hg hh) hP (_root_.ReciprocityTheory.ChartRestriction.DS.HW.KType.w_ne_zero T)
   obtain ⟨d, hd⟩ := fdcGood_of_isDS hDS
   exact ⟨d, _, inferInstance, inferInstance, _, hDS, hd⟩
 
@@ -666,7 +659,7 @@ theorem formal_degree_limsup_upper_bound {ε : Fin n → Bool} {lam : Fin n → 
     have hc : Continuous (fun y : PCoord ε → ℂ => (((Real.sqrt ((t + T : ℕ) : ℝ))⁻¹ : ℝ) : ℂ) • y) :=
       continuous_const_smul _
     exact (Real.continuous_exp.comp (continuous_const.mul ((continuous_potential_pmat _).comp hc))).mul
-      ((jac_continuous ε).comp hc)
+      ((_root_.ReciprocityTheory.ChartRestriction.DS.pb_jac_continuous ε).comp hc)
   have hint := ((fdU_integrable_prod_exp (ε := ε)
     (c := (Real.sqrt ((16 * n * q0 ε + 1 : ℕ) : ℝ) / Real.sqrt (2 * (q0 ε : ℝ)) / 8 -
           |(n : ℝ) - 1| * Real.sqrt (2 * (q0 ε : ℝ)) / Real.sqrt ((16 * n * q0 ε + 1 : ℕ) : ℝ)) /
@@ -776,7 +769,7 @@ theorem thmFD (hB3 : Lap.Base.TangentPairingStatement) {ε : Fin n → Bool} {la
         ∫⁻ z : PCoord ε → ℂ, ENNReal.ofReal (‖⟪(T t).w, fF ε (lamT lam t) (T t) (pmat z) (T t).w⟫_ℂ‖ ^ 2 * Jac z)) ≤
         ENNReal.ofReal ((t : ℝ) ^ (pOf ε * qOf ε) * (Module.finrank ℂ (T t).V : ℝ) / dfun (lamT lam t)) := by
       filter_upwards [hF, hd] with t hFt hdt
-      have F3 := lintegral_fF_coeff_sq_le_finrank_div_fdeg hFt hdt
+      have F3 := _root_.ReciprocityTheory.ChartRestriction.DS.formal_degree_inequality hFt hdt
       calc _ = ENNReal.ofReal ((t : ℝ) ^ (pOf ε * qOf ε)) * (ENNReal.ofReal (cPQ ε) *
             ∫⁻ z : PCoord ε → ℂ, ENNReal.ofReal (‖⟪(T t).w, fF ε (lamT lam t) (T t) (pmat z) (T t).w⟫_ℂ‖ ^ 2 * Jac z)) := by
             ring

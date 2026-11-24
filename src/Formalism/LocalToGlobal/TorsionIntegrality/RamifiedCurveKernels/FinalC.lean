@@ -200,7 +200,7 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.G
 
-theorem kernelTwo : KernelTwo := kernel_two_holds
+alias kernelTwo := _root_.Formalism.L2.Th1.G.kernel_two_holds
 
 end Formalism.L2.Th1.G
 end -- clump:auto

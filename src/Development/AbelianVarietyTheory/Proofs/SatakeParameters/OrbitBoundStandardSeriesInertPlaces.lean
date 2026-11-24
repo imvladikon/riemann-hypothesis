@@ -66,6 +66,7 @@ import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
+import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS
 import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionHypothesesOfLevelOne
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -167,7 +168,7 @@ theorem kernel_bound (l : ℕ) [Fact l.Prime] (ν m N0 N1 : ℕ) [NeZero ν] (hm
   have hb : MvPowerSeries.constantCoeff (MvPowerSeries.map (MaximalUnramifiedExtension l).subtype be0) = 0 := by
     have h0 : MvPowerSeries.constantCoeff be0 = 0 := h1.1 0 (Or.inl rfl)
     rw [MvPowerSeries.constantCoeff_map, h0, map_zero]
-  exact (Formalism.L2.Th1.D.kernelOfF l (MaximalUnramifiedExtension l) σ hσ (exists_root_sq l) F hF be0 h1 h2 ℂ_[l] (MaximalUnramifiedExtension l).subtype m N0 N1
+  exact (_root_.Formalism.L2.Th1.D.kernel_of_f l (MaximalUnramifiedExtension l) σ hσ (exists_root_sq l) F hF be0 h1 h2 ℂ_[l] (MaximalUnramifiedExtension l).subtype m N0 N1
     (fun _ => rfl) (exists_pi l) om oms hO hT U0 _ hU (constantCoeff_sumE _ hb)
     ((Formalism.InvariantFactorPaths.G7.equivalence_rules ℂ_[l] _).1 _) TT colN hts hp I n).1
 
@@ -234,7 +235,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.KvalGeOrbitGainWithoutOperator =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AddCoordExponentIntegralJetsUnramified =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.AddCoordExponentIntegralJetsUnramified", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries\npublic import Formalism.LocalToGlobal.TorsionIntegrality.CMGoodModels.Statement\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TrDual\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ExistsUnitFactorizationBounded\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ExponentialSpecification\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstFirstCoboundaryThree\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstZeroOfConstantCoeff\nimport Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CoeffPowEqZeroOfCc\nimport Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.DegreeLeOfMemAntidiagonal\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.CoeffSubstLgFOfDegreeOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementB\nimport Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.AddCoordExponentIntegralJetsUnramified", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HurwitzSubstituteTwoSeries\npublic import Formalism.LocalToGlobal.TorsionIntegrality.CMGoodModels.Statement\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TrDual\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ExistsUnitFactorizationBounded\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.ExponentialSpecification\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstFirstCoboundaryThree\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.SubstZeroOfConstantCoeff\nimport Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CoeffPowEqZeroOfCc\nimport Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.DegreeLeOfMemAntidiagonal\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.CoeffSubstLgFOfDegreeOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementB\nimport Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -498,11 +499,6 @@ section Main
 
 variable {K : Type} [NormedField K] [IsUltrametricDist K] [CharZero K]
 
-omit [CharZero K] in
-theorem norm_sub_le_max'' (x y : K) : ‖x - y‖ ≤ max ‖x‖ ‖y‖ := by
-  rw [sub_eq_add_neg]
-  exact (IsUltrametricDist.norm_add_le_max _ _).trans (by rw [norm_neg])
-
 theorem norm_root_sub_pow (l : ℕ) (hl : 2 ≤ l) (hlt1 : ‖(l : K)‖ < 1) {ζ : K}
     (hζ : IsPrimitiveRoot ζ (l ^ 2 - 1)) : ‖ζ - ζ ^ l‖ = 1 := by
   have hq0 : l * 2 ≤ l * l := Nat.mul_le_mul_left l hl
@@ -514,16 +510,16 @@ theorem norm_root_sub_pow (l : ℕ) (hl : 2 ≤ l) (hlt1 : ‖(l : K)‖ < 1) {�
     have hq : ‖(l : K) ^ 2‖ < 1 := by
       rw [norm_pow]; exact pow_lt_one₀ (norm_nonneg _) hlt1 (by norm_num)
     apply le_antisymm
-    · exact (norm_sub_le_max'' _ _).trans (max_le hq.le (by simp))
+    · exact (_root_.Formalism.InvariantFactorPaths.G7.LemOne.norm_sub_le_max _ _).trans (max_le hq.le (by simp))
     · by_contra hc
       push_neg at hc
       have h1 : ‖(1 : K)‖ ≤ max ‖(l : K) ^ 2‖ ‖(l : K) ^ 2 - 1‖ := by
-        have := norm_sub_le_max'' ((l : K) ^ 2) ((l : K) ^ 2 - 1)
+        have := _root_.Formalism.InvariantFactorPaths.G7.LemOne.norm_sub_le_max ((l : K) ^ 2) ((l : K) ^ 2 - 1)
         simpa using this
       rw [norm_one] at h1
       exact absurd h1 (not_le.2 (max_lt hq hc))
   have hle : ‖ζ - ζ ^ l‖ ≤ 1 :=
-    (norm_sub_le_max'' _ _).trans (max_le hnζ.le (by rw [norm_pow, hnζ, one_pow]))
+    (_root_.Formalism.InvariantFactorPaths.G7.LemOne.norm_sub_le_max _ _).trans (max_le hnζ.le (by rw [norm_pow, hnζ, one_pow]))
   refine le_antisymm hle (not_lt.1 fun hlt => ?_)
   have hζl : (ζ ^ l) ^ (l ^ 2 - 1) = 1 := by rw [← pow_mul, mul_comm, pow_mul, hζ1, one_pow]
   have heq := Formalism.L2.Th1.D.FormalExponential.root_eq_of_norm_lt hN hζ1 hζl hlt

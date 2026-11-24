@@ -60,6 +60,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.FinrankTensor
 import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CcDualWtAnti
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Formalism.GradedWeylDivisibility.FinalC
@@ -258,7 +259,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.HermitianTensor.BlockSubstitutionBlockEmb =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.HermitianTensor.ContractionOfPairingLemmas =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.HermitianTensor.ContractionOfPairingLemmas", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CoeffSumMonomialLinear\nimport Formalism.GradedWeylDivisibility.DualWeylDominanceOf\nimport Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.FinrankTensor\npublic import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.OneMemDualWeyl\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsIffIntegral\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsTwoWeightIff\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.NuOfLoZero\nimport Mathlib.Algebra.AffineMonoid.UniqueSums\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.HermitianTensor.ContractionOfPairingLemmas", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CoeffSumMonomialLinear\nimport Formalism.GradedWeylDivisibility.DualWeylDominanceOf\nimport Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.FinrankTensor\npublic import Formalism.SharpRestriction.GrowthBounds.ColumnSpanDensity.OneMemDualWeyl\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsIffIntegral\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.MemInvariantSectionsTwoWeightIff\npublic import Formalism.SharpRestriction.GrowthBounds.HermitianTensor.NuOfLoZero\nimport Mathlib.Algebra.AffineMonoid.UniqueSums\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.SharpRestriction.GrowthBounds.HermitianTensor.CcDualWtAnti\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -278,12 +279,12 @@ theorem contraction_of_pairing_lemmas (hPh : QPh) (hSC : SubCoeffP) (hSM : SubMa
   have := R.charZero
   have : Infinite R.Kf := inferInstance
   have hloA : Antitone (lam - wtPQ (mm + 1) P Q) := caLo_anti mm ccl P Q lam hlam h0 hl hmid
-  have hlo'A : Antitone (dualWt (lam - wtPQ (mm + 1) P Q)) := qsDualWt_anti _ hloA
+  have hlo'A : Antitone (dualWt (lam - wtPQ (mm + 1) P Q)) := _root_.Formalism.MainNotions.flipOneThree.Pf.cc_dualWt_anti _ hloA
   have hαZ := nuOf_lam_mid mm ccl Q lam hl hmid
   have hβZ := nuOf_lo_mid mm ccl P Q lam h0 hl hmid
   have hβ'Z := nuOf_lo'_mid mm ccl P Q lam h0 hl hmid
   have hbd := lam_mid_bd mm ccl lam hmid
-  have hαA : Antitone (fun j => nuOf lam (midI mm j)) := fun i j hij => nuOf_anti lam hlam (midI_mono mm hij)
+  have hαA : Antitone (fun j => nuOf lam (midI mm j)) := fun i j hij => _root_.Formalism.MainNotions.G.LatticeSystems.kp_nuOf_antitone lam hlam (midI_mono mm hij)
   have hαN : ∀ i, (fun j => nuOf lam (midI mm j)) i ≤ Q + 2 * ccl := by
     intro i
     show nuOf lam (midI mm i) ≤ Q + 2 * ccl
@@ -303,7 +304,7 @@ theorem contraction_of_pairing_lemmas (hPh : QPh) (hSC : SubCoeffP) (hSM : SubMa
   have hαβ : (fun j => nuOf lam (midI mm j)) = fun j => nuOf (lam - wtPQ (mm + 1) P Q) (midI mm j) + Q := by
     funext j
     have := hαZ j; have := hβZ j; omega
-  have hwA : ∀ a b, Antitone (nuOf (wtPQ (mm + 1) a b)) := fun a b => nuOf_anti _ (wtPQ_anti (mm + 1) a b (by omega))
+  have hwA : ∀ a b, Antitone (nuOf (wtPQ (mm + 1) a b)) := fun a b => _root_.Formalism.MainNotions.G.LatticeSystems.kp_nuOf_antitone _ (wtPQ_anti (mm + 1) a b (by omega))
   have hK : ∀ v ∈ dualWeyl R.Kf (mm + 1 + 1) (mm + 1 + 1) (nuOf lam),
       ∀ t ∈ dualWeyl R.Kf (mm + 1 + 1) (mm + 1 + 1) (nuOf (dualWt (lam - wtPQ (mm + 1) P Q))),
         lamOf R.Kf mm L (blockEmb R.Kf true v * blockEmb R.Kf false t) ∈
@@ -331,13 +332,13 @@ theorem contraction_of_pairing_lemmas (hPh : QPh) (hSC : SubCoeffP) (hSM : SubMa
         ⟨AddMonoidAlgebra.coeff (subY R.O mm t0) y.2, hSC R.O mm _ t0 ht0 _, rfl⟩
     exact this
   · have hβA : Antitone (fun j => nuOf (lam - wtPQ (mm + 1) P Q) (midI mm j)) :=
-      fun i j hij => nuOf_anti _ hloA (midI_mono mm hij)
+      fun i j hij => _root_.Formalism.MainNotions.G.LatticeSystems.kp_nuOf_antitone _ hloA (midI_mono mm hij)
     have hβc : ∀ j, (fun j => nuOf (lam - wtPQ (mm + 1) P Q) (midI mm j)) j ≤ 2 * ccl := by
       intro j
       show nuOf (lam - wtPQ (mm + 1) P Q) (midI mm j) ≤ 2 * ccl
       have := hβZ j; have := hbd j; omega
     have hβ'A : Antitone (fun j => nuOf (dualWt (lam - wtPQ (mm + 1) P Q)) (midI mm j)) :=
-      fun i j hij => nuOf_anti _ hlo'A (midI_mono mm hij)
+      fun i j hij => _root_.Formalism.MainNotions.G.LatticeSystems.kp_nuOf_antitone _ hlo'A (midI_mono mm hij)
     have hβ'c : ∀ j, (fun j => nuOf (dualWt (lam - wtPQ (mm + 1) P Q)) (midI mm j)) j ≤ 2 * ccl := by
       intro j
       show nuOf (dualWt (lam - wtPQ (mm + 1) P Q)) (midI mm j) ≤ 2 * ccl
@@ -1198,7 +1199,7 @@ theorem topCore (h2 : ExplicitMapOntoTwoLetters) (h5 : TwoLetterLatticeGaussInve
 
 theorem topLineP_of (h2 : ExplicitMapOntoTwoLetters) (h5 : TwoLetterLatticeGaussInverse) (hCO : CartanOnto) : TopLineP := by
   intro p n' R r hr a b Ψ hΨ h0 hl
-  have hA : Antitone (nuOf (wtPQ (r + 1) a b)) := nuOf_anti _ (wtPQ_anti (r + 1) a b (by omega))
+  have hA : Antitone (nuOf (wtPQ (r + 1) a b)) := _root_.Formalism.MainNotions.G.LatticeSystems.kp_nuOf_antitone _ (wtPQ_anti (r + 1) a b (by omega))
   obtain ⟨c, hc⟩ := topCore h2 h5 hCO R (r + 1) (by omega) a b Ψ hΨ h0 hl
   obtain ⟨c', hc'⟩ := topCore h2 h5 hCO R (r + 1) (by omega) a b (hw R.Kf (le_refl (r + 1 + 1)) (nuOf (wtPQ (r + 1) a b)))
     (hwMem R.Kf _ _ le_rfl _ hA)

@@ -57,6 +57,7 @@ import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Polynomial.Basic
+import GroundTheory.AutomorphicForms.CuspidalAdmissible
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.DiscreteGroups.GlobalIrreducibility.LConvUnifA, Development.DiscreteGroups.GlobalIrreducibility.LConvUnifB, Development.DiscreteGroups.GlobalIrreducibility.LConvUnif
@@ -257,7 +258,7 @@ end -- clump:auto
 -- ===== end clump member: Development.DiscreteGroups.GlobalIrreducibility.LConvUnifA =====
 
 -- ===== clump member: Development.DiscreteGroups.GlobalIrreducibility.LConvUnifB =====
--- clump-header: {"m": "Development.DiscreteGroups.GlobalIrreducibility.LConvUnifB", "h": "module\n\npublic import GroundTheory.AutomorphicForms.Cartan\npublic import GroundTheory.AutomorphicForms.InductionParabolicGroups\npublic import GroundTheory.AutomorphicForms.IwahoriFactorization\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.DiscreteGroups.GlobalIrreducibility.LConvUnifB", "h": "module\n\npublic import GroundTheory.AutomorphicForms.Cartan\npublic import GroundTheory.AutomorphicForms.InductionParabolicGroups\npublic import GroundTheory.AutomorphicForms.IwahoriFactorization\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.AutomorphicForms.CuspidalAdmissible\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -272,21 +273,6 @@ section Local
 
 variable {F : Type*} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
   {n : ℕ}
-
-theorem diagPow_add (μ ν : Fin n → ℤ) : diagPow F n (μ + ν) = diagPow F n μ * diagPow F n ν := by
-  refine Units.ext ?_
-  rw [Units.val_mul, coe_diagPow, coe_diagPow, coe_diagPow, diagonal_mul_diagonal]
-  congr 1
-  funext i
-  rw [Pi.add_apply, zpow_add₀ (GroundTheory.Automorphic.Cartan.uniformizer_ne_zero F)]
-
-theorem diagPow_zero : diagPow F n 0 = 1 := by
-  refine Units.ext ?_
-  rw [coe_diagPow, Units.val_one]
-  simp
-
-theorem diagPow_neg (μ : Fin n → ℤ) : diagPow F n (-μ) = (diagPow F n μ)⁻¹ := by
-  rw [eq_inv_iff_mul_eq_one, ← diagPow_add, neg_add_cancel, diagPow_zero]
 
 theorem diagPow_conj_apply (c : Fin n → ℤ) (x : GL (Fin n) F) (i j : Fin n) :
     ((diagPow F n c * x * (diagPow F n c)⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) i j =
@@ -401,7 +387,7 @@ theorem dominant_conj {r : ℕ} (hr : 1 ≤ r) {μ ν : Fin n → ℤ} (hμ : Is
       diagPow_comm_of_mem_levi ν (inv_mem hy.2)
     have hb : y⁻¹ = diagPow F n ν * y⁻¹ * (diagPow F n ν)⁻¹ := by
       rw [hc, mul_inv_cancel_right]
-    rw [diagPow_neg, hκ']
+    rw [_root_.GroundTheory.Automorphic.Parabolic.diagPow_neg, hκ']
     conv_lhs => rw [hb]
     group
 
@@ -551,7 +537,7 @@ include hρ hKc hKo
 theorem hop_diagPow_mul (hr : 1 ≤ r) {μ ν : Fin n → ℤ} (hμ : IsDominant μ) (hν : IsDominant ν) :
     hop ρ hρ hKc hKo (diagPow F n μ) * hop ρ hρ hKc hKo (diagPow F n ν) =
       hop ρ hρ hKc hKo (diagPow F n (μ + ν)) := by
-  rw [diagPow_add]
+  rw [_root_.GroundTheory.Automorphic.Parabolic.diagPow_add]
   refine hop_mul hρ hKc hKo fun w hw κ hκ => ?_
   obtain ⟨a, ha, b, hb, c, hc, h⟩ := dominant_conj hr hμ hν hκ
   have hbc : ρ (b * c) w = w := hw _ (mul_mem hb hc)
@@ -601,7 +587,7 @@ theorem finrank_le_of_commBound (hr : 1 ≤ r) [ρ.IsIrreducible] [FiniteDimensi
   have hTC : ∀ μ, IsDominant μ → T (diagPow F n μ) ∈ C := by
     refine dom_induct (fun μ => T (diagPow F n μ) ∈ C) ?_ ?_ ?_
     · show T (diagPow F n 0) ∈ C
-      rw [diagPow_zero, hop_one]
+      rw [_root_.GroundTheory.Automorphic.Parabolic.diagPow_zero, hop_one]
       exact C.one_mem
     · intro i
       exact Algebra.subset_adjoin ⟨i, rfl⟩

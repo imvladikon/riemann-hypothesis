@@ -526,13 +526,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.class_sum_divisibility_of_extensionWithLaw : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → ∀ (K : Ctx) (q : WPt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ).s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c) (_ : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness (p := _root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) q b) (t : b.Comparison₂), _root_.GlobalTheory.Fc.Ind.IotaPointSummands _ _ c (b.part t) ∧ (_root_.GlobalTheory.Fc.Ind.DivisorPointSummands _ _ c (b.part t) → GlobalTheory.ExportPin.ClassSumPin (b.part t).pt) := by
-  first | exact @_root_.GlobalTheory.ClassSumPinLink.pIota_classSumPin_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ClassSumPinOfReadAtStatement =====
@@ -764,22 +757,10 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links GlobalTheory.FinalJoin2 GlobalTheory.AtMember GlobalTheory.EX
-  GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.Plug GlobalTheory.PlugPt
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace GlobalTheory.Plug.RaysW
-
-theorem nonempty_heightOneSpectrum (L : Type) [Field L] [NumberField L] : Nonempty (HeightOneSpectrum (𝓞 L)) := by
-  obtain ⟨P, hne, hP⟩ := (Ring.not_isField_iff_exists_prime (R := 𝓞 L)).1 (NumberField.RingOfIntegers.not_isField L)
-  exact ⟨⟨P, hP, hne⟩⟩
 
 end GlobalTheory.Plug.RaysW
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.SideWeightRaysOfRayRec =====
@@ -807,7 +788,7 @@ theorem rays_of_rayRec_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (
   show GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField _ (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.tupLevel p.x.what₂.r.z.R.toRealDat t)
   rcases (R3.mem_range_ixOf p.w.I).1 ⟨t, rfl⟩ with h0 | ⟨w, hw, hxi⟩
   ·
-    obtain ⟨v⟩ := nonempty_heightOneSpectrum (p.w.D p.Z).what₂.LL
+    obtain ⟨v⟩ := _root_.Formalism.MainNotions.Gaps.EtaleWeightGaps.exists_prime (p.w.D p.Z).what₂.LL
     refine hR ((p.w.D p.Z).plEq.symm v) _ fun P hP ↦ ?_
     have hram : ¬ (p.x.what₂.r.z.R.xiH t).UnrAt P := (hlev.is.Q_ram t P).2 (Or.inl hP)
     rw [hlev.xiH t, h0, p.w.ok.trueColumnChoices_heckeChar_reference_eq_one] at hram
@@ -855,13 +836,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links GlobalTheory.FinalJoin2 GlobalTheory.AtMember GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.Plug GlobalTheory.PlugPt
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.side_weight_rays_of_ray_rec' : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (𝒮 : Slots) (ν : _root_.GlobalTheory.PlugPt.ExtensionReading hL 𝒮) (K : Ctx) (p : WPt 𝒮 K), RayRec (p.w.D p.Z) p.O.ex.nch → (_root_.GlobalTheory.PlugPt.sideOfWeightedPoint ν p).Rays := by
-  first | exact @_root_.GlobalTheory.Plug.RaysW.rays_of_rayRec_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RaysOfRayRecStatement =====
@@ -890,7 +864,7 @@ theorem rowE_tiesB_alt : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheo
     have hu := GlobalTheory.T.seriesUpdate_preserves_parameterFreeConditions_rayFields _ _ (_root_.GlobalTheory.PlugPt.sideOfWeightedPoint ν p) p.O.ex.errX p.O.ex.xd kap lam err
     show (sidePt b').Ties p.O.ex.errX p.O.ex.xd ∧ (sidePt b').Rays
     rw [hs]
-    exact ⟨hu.1 (_root_.GlobalTheory.T.side_weight_ties_err_of_ray_field_core_slot hR hL 𝒮 ν hC K p), hu.2 (_root_.GlobalTheory.T.side_weight_rays_of_ray_rec' hL 𝒮 ν K p hr)⟩
+    exact ⟨hu.1 (_root_.GlobalTheory.PlugPt.side_weight_ties_of_ray_field hR hL 𝒮 ν hC K p), hu.2 (_root_.GlobalTheory.Plug.RaysW.rays_of_rayRec_alt hL 𝒮 ν K p hr)⟩
   have hb : F ⟨β.D, β.O, b⟩ := (congrArg F heq).mpr hp
   exact hb hray
 end GlobalTheory.PlugPt
@@ -1046,13 +1020,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.exponent_reading_of_hasExp_bundle : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP) (hE : _root_.GlobalTheory.PlugPt.HasExponent' N) (K : Ctx) (q : WPt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ).s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c) (_ : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness (p := _root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) q b) (t : b.Comparison₂), _root_.GlobalTheory.PlugPt.pinnedPointOfReading (_root_.GlobalTheory.PlugPt.ExtensionReading.of RX hE (SXE S) (OX Γ)) K q c (b.part t).pt :=
-  _root_.GlobalTheory.PlugPt.pin_pt_of_bundle_witness
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SidePtPartOfPackStatement =====
@@ -1109,7 +1076,7 @@ theorem linked_ties_alt : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperThe
       rintro x _ rfl t
       exact ⟨t, rfl⟩
     obtain ⟨t', e'⟩ := key ⟨β.D, β.O, b⟩ _ e t
-    exact ⟨q, b'.part t', _root_.GlobalTheory.T.exponent_reading_of_hasExp_bundle hL N S Γ hE K q c b' w t', e'⟩
+    exact ⟨q, b'.part t', _root_.GlobalTheory.PlugPt.pin_pt_of_bundle_witness hL N S Γ hE K q c b' w t', e'⟩
   have hB : RowE (sAnd (IsGoodE (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ).s) GlobalTheory.PlugPt.RayPosition) (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ))
       (fun _ D O c (b : _root_.GlobalTheory.Fc.BundleCondition D O c) => ∀ t : b.Comparison₂, GlobalTheory.PlugPt.TiesB D O c (b.part t).pt ∧ GlobalTheory.CovTop.RecTied D O.L ∧
         GlobalTheory.BigOn.More (b.part t).pt) :=
@@ -1136,7 +1103,7 @@ theorem linked_ties_alt : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperThe
         (y.2.2.part t).pt.CompatibilityConditions ∧ GlobalTheory.CovTop.RecTied y.1 y.2.1.L ∧ GlobalTheory.BigOn.More (y.2.2.part t).pt := by
     rintro _ rfl htw hdv hT t
     obtain ⟨hTB, hRec, hMore⟩ := hT t
-    have hcs := _root_.GlobalTheory.T.class_sum_divisibility_of_extensionWithLaw hL N S Γ hN K q c b' w t
+    have hcs := _root_.GlobalTheory.ClassSumPinLink.pIota_classSumPin_alt hL N S Γ hN K q c b' w t
     refine ⟨hcs.1, hcs.2 (_root_.GlobalTheory.Fc.FourBoundsAtBundles.p_div_of_div3g _ hdv), ?_, hRec, hMore⟩
     exact _root_.GlobalTheory.PlugPt.ties_of_tiesB_alt _ _ c _ hTB hRec.1 (_root_.GlobalTheory.Fc.Ind.pt_realised_and_pb_eq _ _ c _).1 htw
   exact key ⟨β.D, β.O, b⟩ e htw hdv hT
@@ -1153,13 +1120,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.class_sum_divisor_all_alt : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDivisorCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) fun Q L => Row Q L (AtAll fun D O c (b : _root_.GlobalTheory.Fc.BundleCondition D O c) => ∀ t : b.Comparison₂, _root_.GlobalTheory.Fc.Ind.IotaPointSummands D O c (b.part t) ∧ GlobalTheory.ExportPin.ClassSumPin (b.part t).pt ∧ (b.part t).pt.CompatibilityConditions ∧ GlobalTheory.CovTop.RecTied D O.L ∧ GlobalTheory.BigOn.More (b.part t).pt) := by
-  first | exact @_root_.GlobalTheory.GeoTies.linked_ties_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkedTiesStatement =====

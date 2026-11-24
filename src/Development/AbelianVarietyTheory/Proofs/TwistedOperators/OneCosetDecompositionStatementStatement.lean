@@ -406,20 +406,11 @@ open ValuativeRel
 
 namespace GlobalTheory.StairFrameFJ
 
-private theorem isIntegral_sqrtMinusD' (D : D7) : IsIntegral ℤ D.host.sqrtMinusD := by
-  refine IsIntegral.of_pow (n := 2) two_pos ?_
-  have hsq : D.host.sqrtMinusD ^ 2 = -(D.host.d : D.host.E) := by
-    unfold Host.sqrtMinusD
-    exact D.host.sqd_sq
-  rw [hsq]
-  refine IsIntegral.neg ?_
-  simpa using (isIntegral_algebraMap (R := ℤ) (A := D.host.E) (x := (D.host.d : ℤ)))
-
 theorem isIntegral_inv_neg_xi0 (D : D7) : IsIntegral ℤ (-D.host.xi0)⁻¹ := by
 
   unfold Host.xi0
   rw [neg_div, neg_neg, one_div, inv_inv]
-  refine IsIntegral.mul ?_ (isIntegral_sqrtMinusD' D)
+  refine IsIntegral.mul ?_ (_root_.Formalism.L2.Pj.sqrtMinusD_isIntegral D)
   simpa using (isIntegral_algebraMap (R := ℤ) (A := D.host.E) (x := ((Ideal.absNorm D.host.ccK : ℕ) : ℤ)))
 
 private theorem mem_integer_of_isIntegral_int {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
@@ -495,14 +486,6 @@ namespace GlobalTheory.DepthColumn
 
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-theorem sec_mul_right (p : GlobalTheory.FinPl.SplitPt D k) (x : k) (b : AE D) : p.sec x * b = p.sec (x * p.pr b) := by
-  have h1 : p.sec x = p.e * p.sec x := by
-    have := p.sec_pr (p.sec x)
-    rwa [p.pr_sec] at this
-  have h2 := p.sec_pr (p.sec x * b)
-  rw [map_mul, p.pr_sec, ← mul_assoc, ← h1] at h2
-  exact h2.symm
-
 theorem sec_mem_idV (p : GlobalTheory.FinPl.SplitPt D k) {I : GlobalTheory.SeeSaw.FI D} {a : D.host.E} (ha : a ∈ I) (ha0 : a ≠ 0) {c : k}
     (hc : valuation k c ≤ valuation k (p.pr (incA D a))) : p.sec c ∈ GlobalTheory.SeeSaw.idV I p.v := by
   have h0 : p.pr (incA D a) ≠ 0 := (map_ne_zero_iff (p.pr.comp (incA D)) (p.pr.comp (incA D)).injective).2 ha0
@@ -522,7 +505,7 @@ theorem sec_mem_idV (p : GlobalTheory.FinPl.SplitPt D k) {I : GlobalTheory.SeeSa
     rw [Valuation.mem_integer_iff, map_div₀]
     exact div_le_one_of_le₀ hc zero_le'
   have h1 := key _ ((GlobalTheory.SeeSaw.idV_one_eq_intAt D p.v _).2 ⟨p.sec_mem_idAt _, (p.int_iff _).1 hint⟩)
-  rwa [mul_comm, sec_mul_right, div_mul_cancel₀ _ h0] at h1
+  rwa [mul_comm, _root_.GlobalTheory.FinPl.FrameLat.sec_mul_right, div_mul_cancel₀ _ h0] at h1
 
 def prInt (p : GlobalTheory.FinPl.SplitPt D k) {PP : HeightOneSpectrum (𝓞 D.host.E)} (he : Formalism.L2.NTheta.IsIdemAt p.e PP) :
     𝓞 D.host.E →+* 𝒪[k] :=
@@ -724,7 +707,7 @@ theorem col_mem_depth : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (h : 2 * (σ + 
         incA D ((G.colDec (2 * (σ + 1) + 1) (by omega) (by omega)).a j ⟨q.1, by omega⟩) := by
     funext j
     have e1 : p.sec s * incA D ((-D.host.xi0) ^ (q.1 + 1)) = p.sec ((ϖ : k) ^ (G.pl.depth sc v * (q.1 + 1))) := by
-      rw [sec_mul_right, map_pow, map_pow, hs, mul_assoc, ← mul_pow, inv_mul_cancel₀ hξ, one_pow, mul_one]
+      rw [_root_.GlobalTheory.FinPl.FrameLat.sec_mul_right, map_pow, map_pow, hs, mul_assoc, ← mul_pow, inv_mul_cancel₀ hξ, one_pow, mul_one]
     simp only [Pi.smul_apply, smul_eq_mul, HypDec.jX, GlobalTheory.MixModel.rat, hJ, colsOf, Matrix.map_apply, map_mul]
     rw [← mul_assoc, e1]
     rfl

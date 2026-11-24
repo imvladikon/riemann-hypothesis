@@ -218,11 +218,6 @@ theorem face_zero {E : Spc} {U : Scheme.{0}} (x : Sx E 2 U) : x.face 0 = x.sub 1
   unfold Sx.face Sx.sub SimplicialObject.δ
   rw [delta_zero_eq]
 
-theorem sub_res {E : Spc} {N : ℕ} {V U : Scheme.{0}} (g : V ⟶ U) (x : Sx E N U) (j l : ℕ) (h : j + l ≤ N) :
-    (x.res g).sub j l h = (x.sub j l h).res g := by
-  unfold Sx.sub Sx.res
-  exact NatTrans.naturality_apply (E.map (SimplexCategory.subinterval j l h).op) g.op x
-
 open GlobalTheory.EtC.PicSpec
 
 theorem corrFam_nat (Q q : ℕ) [NeZero Q] (hqQ : q ∣ Q) {E : Spc} (hE : Inv Q E) (L : E ⟶ ofCat (glCat 1)) (p : ℕ) (s : ℤ)
@@ -254,10 +249,10 @@ theorem coefficientReduction_firstChernClass_tateTwist : ∀ (Q q : ℕ) [NeZero
     exact isUnit_of_mul_isUnit_left this
   obtain ⟨γ, hγ, hγ0, hγ1, hγ2⟩ := (GlobalTheory.T.firstChernClassTateTwist_cocycle_unique_natural_additive Q).1 L hE
   obtain ⟨γ', hγ', hγ0', hγ1', hγ2'⟩ := (GlobalTheory.T.firstChernClassTateTwist_cocycle_unique_natural_additive q).1 L hUnit
-  obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap _ _ (redMap Q q 1)).1 E 2 γ
+  obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec _ _ (redMap Q q 1)).1 E 2 γ
   have hred : red Q q E 2 1 (c1 Q L) = CohomologyClass.mk β := by
     rw [← hγ]
-    exact (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap _ _ (redMap Q q 1)).2 E 2 γ β hβ
+    exact (_root_.GlobalTheory.EtC.SemiMap.op_image_spec _ _ (redMap Q q 1)).2 E 2 γ β hβ
   rw [hred, ← hγ']
   obtain ⟨α, hα⟩ := GlobalTheory.T.exists_cochain_ev_eq_of_natural' (ZMod q) (corrFam Q q L) (corrFam_nat Q q hqQ hE L)
   rw [← sub_eq_zero, ← CohomologyClass.mk_sub, CohomologyClass.mk_eq_zero_iff, mem_coboundaries_iff _ 1 (by norm_num)]
@@ -291,9 +286,9 @@ theorem coefficientReduction_firstChernClass_tateTwist : ∀ (Q q : ℕ) [NeZero
     norm_num
     refine (_root_.GlobalTheory.RedChern.redMap_cocycle_sub_eq_defects Q q hqQ U _ _ (hE U ⟨(x.face 0).face 0⟩) _ _ (fun V g v w hv hw => ?_) (fun V g v w hv hw => ?_)).symm
     · rw [(GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod Q)).2.1 γ.1 2 0 _ V U g x]
-      exact hγ2 V (x.res g) v w (by rw [sub_res, lineUnit_res]; exact hv) (by rw [sub_res, lineUnit_res]; exact hw)
+      exact hγ2 V (x.res g) v w (by rw [_root_.GlobalTheory.EtC.CupSpec.sub_res, lineUnit_res]; exact hv) (by rw [_root_.GlobalTheory.EtC.CupSpec.sub_res, lineUnit_res]; exact hw)
     · rw [(GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod q)).2.1 γ'.1 2 0 _ V U g x]
-      exact hγ2' V (x.res g) v w (by rw [sub_res, lineUnit_res]; exact hv) (by rw [sub_res, lineUnit_res]; exact hw)
+      exact hγ2' V (x.res g) v w (by rw [_root_.GlobalTheory.EtC.CupSpec.sub_res, lineUnit_res]; exact hv) (by rw [_root_.GlobalTheory.EtC.CupSpec.sub_res, lineUnit_res]; exact hw)
   | p + 3 =>
     have hZ := res_isZero (tw q 1) t (by omega)
     exact (sec_eq_zero hZ _).trans (sec_eq_zero hZ _).symm
@@ -437,8 +432,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_semiMap_of_tensorPairing : ∀ (Q : ℕ) (R : Type) [CommRing R] {I J T : Cx (ZMod Q)} {I' J' K' : Cx R} (τ : Pair I J T), τ.IsTensor → ∀ (ν : Pair I' J' K') (ρ₁ : SemiMap I I') (ρ₂ : SemiMap J J'), ∃ σ : SemiMap T K', ∀ (U : Scheme.{0}) (s t w : ℤ) (h : s + t = w) (a : Sec (I.X s) U) (b : Sec (J.X t) U), σ.app U w (τ.mul U s t w h a b) = ν.mul U s t w h (ρ₁.app U s a) (ρ₂.app U t b) := by
-  first | (exact @GlobalTheory.EtC.semiMap_of_tensorPair)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSemiMapOfTensorPairingStatement =====
@@ -853,8 +846,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.flat_tensor_of_flat_complexes : ∀ (R : Type) [CommRing R] {I J T : Cx R} (τ : Pair I J T), τ.IsTensor → (∀ t, FlatS (I.X t)) → (∀ t, FlatS (J.X t)) → ∀ w, FlatS (T.X w) := by
-  first | (exact @GlobalTheory.EtC.FlatTens.flatS_tens)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatTensorOfFlatComplexesStatement =====
@@ -883,7 +874,7 @@ theorem flatS_cone {R : Type} [CommRing R] (F : Shv R) (hF : FlatS F) (T : Cx R)
     (ε : sgl F ⟶ T) (n : ℤ) : FlatS ((mappingCone ε).X n) := by
   obtain ⟨hiso, hzero⟩ := _root_.GlobalTheory.EtC.flatS_iso_and_zero R
   refine hiso (HomologicalComplex.homotopyCofiber.XIsoBiprod ε n (n + 1) rfl).symm
-    (GlobalTheory.T.isLocallyFlatEtaleSheaf_biprod _ _ _ ?_ (hT n))
+    (_root_.GlobalTheory.EtC.flatS_biprod _ _ _ ?_ (hT n))
   by_cases h : n + 1 = 0
   · exact hiso (HomologicalComplex.singleObjXIsoOfEq (ComplexShape.up ℤ) 0 F (n + 1) h).symm hF
   · exact hzero _ (HomologicalComplex.isZero_single_obj_X _ _ _ _ h)
@@ -919,9 +910,7 @@ noncomputable section
 
 namespace GlobalTheory.EtC.ScalarExt
 
-theorem sec_map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.res g (Sec.map φ x) = Sec.map φ (Sec.res g x) :=
-  (congrArg (fun f => ModuleCat.Hom.hom f x) (φ.hom.naturality g.op)).symm
+alias sec_map_res := _root_.GlobalTheory.EtC.CupSpec.map_res
 
 theorem loc_mono {U : Scheme.{0}} {P P' : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P)
     (hP : ∀ V g, P V g → P' V g) : Loc U P' := by
@@ -989,10 +978,10 @@ theorem semiMap_op_eq_of_flat_res : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ 
       erw [HomologicalComplex.comp_f, Category.assoc, Category.assoc]
       exact congrArg (_ ≫ ·) key
     · exact (HomologicalComplex.isZero_single_obj_X _ _ _ _ hi).eq_of_src _ _
-  obtain ⟨H⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective (ZMod q) _ _ _ εb).2 _ _ hcomp
-  have h1 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective (ZMod Q) (ZMod q) (unitSemi T) σ (semiBar σ hl) (semi_factor σ hl)).1 E n x
-  have h2 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective (ZMod Q) (ZMod q) (unitSemi T) σ' (semiBar σ' hl') (semi_factor σ' hl')).1 E n x
-  rw [h1, h2, ((GlobalTheory.T.hypercohomologyPullbackPushforward_functorial (ZMod q)).2.2.2.2 _ _ ⟨H⟩ _ n).2]
+  obtain ⟨H⟩ := (_root_.GlobalTheory.EtC.extHom_of_quasiIso (ZMod q) _ _ _ εb).2 _ _ hcomp
+  have h1 := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij (ZMod Q) (ZMod q) (unitSemi T) σ (semiBar σ hl) (semi_factor σ hl)).1 E n x
+  have h2 := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij (ZMod Q) (ZMod q) (unitSemi T) σ' (semiBar σ' hl') (semi_factor σ' hl')).1 E n x
+  rw [h1, h2, ((_root_.GlobalTheory.EtC.ZcFun.main (ZMod q)).2.2.2.2 _ _ ⟨H⟩ _ n).2]
 
 end GlobalTheory.EtC.ScalarExt
 
@@ -1008,8 +997,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.semiMap_eq_of_flat_tateTwist_resolution : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (k : ℤ) {T : Cx (ZMod Q)} (e : ∀ U : Scheme.{0}, Prim Q Γ(U, ⊤) → Sec (T.X 0) U), IsTwRes Q k T e → (∀ t, FlatS (T.X t)) → ∀ σ σ' : SemiMap T (res _ (tw q k)), (∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)), σ.app U 0 (e U ζ) = σ'.app U 0 (e U ζ)) → ∀ (E : Spc) (n : ℤ) (x : CohomologyClass ((chains (ZMod Q)).obj E) T n), σ.op.app E n x = σ'.op.app E n x := by
-  first | (exact @GlobalTheory.EtC.ScalarExt.semiMap_op_eq_of_flat_res)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiMapEqOfFlatTateTwistResolutionStatement =====
@@ -1024,60 +1011,40 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 namespace GlobalTheory.EtC.RedCup
 
-theorem sec_map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.res g (Sec.map φ x) = Sec.map φ (Sec.res g x) := by
-  simp only [Sec.res, Sec.map]
-  rw [← ModuleCat.comp_apply, ← ModuleCat.comp_apply, φ.hom.naturality]
-
-theorem sec_map_comp {R : Type} [CommRing R] {F G H : Shv R} (φ : F ⟶ G) (ψ : G ⟶ H) {U : Scheme.{0}} (x : Sec F U) :
-    Sec.map (φ ≫ ψ) x = Sec.map ψ (Sec.map φ x) := rfl
-
-theorem cpush_id {R : Type} [CommRing R] (K I : Cx R) (n : ℤ) (a : CohomologyClass K I n) : cpush K (𝟙 I) n a = a := by
-  obtain ⟨a, rfl⟩ := a.mk_surjective
-  refine congrArg CohomologyClass.mk (Cocycle.ext ?_)
-  simp [zcomp]
-
 def semiPre {S R : Type} [CommRing S] [CommRing R] {T K : Cx S} {K' : Cx R} (u : T ⟶ K) (ρ : SemiMap K K') :
     SemiMap T K' where
   app U s := (ρ.app U s).comp ((u.f s).hom.app (op U)).hom.toAddMonoidHom
   nat g s a := by
     change Sec.res g (ρ.app _ s (Sec.map (u.f s) a)) = ρ.app _ s (Sec.map (u.f s) (Sec.res g a))
-    rw [ρ.nat, sec_map_res]
+    rw [ρ.nat, _root_.GlobalTheory.EtC.CupSpec.map_res]
   comm U s t a := by
     change Sec.map (_ : _ ⟶ _) (ρ.app U s (Sec.map (u.f s) a)) = ρ.app U t (Sec.map (u.f t) (Sec.map (T.d s t) a))
-    rw [ρ.comm, ← sec_map_comp, ← sec_map_comp, u.comm]
-
-theorem ev_comp_ofHom {R : Type} [CommRing R] {E : Spc} {I K : Cx R} {n : ℤ} (α : Cochain ((chains R).obj E) I n) (u : I ⟶ K)
-    (p : ℕ) (s : ℤ) (h : -(p : ℤ) + n = s) (U : Scheme.{0}) (x : Sx E p U) :
-    ev (R := R) (α.comp (Cochain.ofHom u) (add_zero n)) p s h U x =
-      Sec.map (u.f s) (ev (R := R) α p s h U x) := by
-  simp only [ev, Cochain.comp_zero_cochain_v, Cochain.ofHom_v]
-  rfl
+    rw [ρ.comm, ← _root_.GlobalTheory.EtC.exactIff_map_comp, ← _root_.GlobalTheory.EtC.exactIff_map_comp, u.comm]
 
 theorem semiPre_op {S R : Type} [CommRing S] [CommRing R] {T K : Cx S} {K' : Cx R} (u : T ⟶ K) (ρ : SemiMap K K')
     (E : Spc) (n : ℤ) (x : CohomologyClass ((chains S).obj E) T n) :
     (semiPre u ρ).op.app E n x = ρ.op.app E n (cpush _ u n x) := by
   obtain ⟨α, rfl⟩ := x.mk_surjective
-  obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).1 E n (zcomp α (Cocycle.ofHom u) (add_zero n))
+  obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).1 E n (zcomp α (Cocycle.ofHom u) (add_zero n))
   change _ = ρ.op.app E n (CohomologyClass.mk (zcomp α (Cocycle.ofHom u) (add_zero n)))
-  rw [(GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).2 E n _ β hβ]
-  refine (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R (semiPre u ρ)).2 E n α β (fun p s h U y => ?_)
+  rw [(_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).2 E n _ β hβ]
+  refine (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R (semiPre u ρ)).2 E n α β (fun p s h U y => ?_)
   rw [hβ p s h U y]
   change ρ.app U s (ev (R := S) (α.1.comp (Cochain.ofHom u) (add_zero n)) p s h U y) = _
-  rw [ev_comp_ofHom]
+  rw [_root_.GlobalTheory.EtC.OpComp.ev_comp_ofHom']
   rfl
 
 theorem semiMap_cup : ∀ (S R : Type) [CommRing S] [CommRing R] {I J T : Cx S} {I' J' K' : Cx R} (τ : Pair I J T) (ν : Pair I' J' K') (ρ₁ : SemiMap I I') (ρ₂ : SemiMap J J') (σ : SemiMap T K'), (∀ (U : Scheme.{0}) (s t w : ℤ) (h : s + t = w) (a : Sec (I.X s) U) (b : Sec (J.X t) U), σ.app U w (τ.mul U s t w h a b) = ν.mul U s t w h (ρ₁.app U s a) (ρ₂.app U t b)) → ∀ (E : Spc) {n m k : ℤ} (hk : n + m = k) (a : CohomologyClass ((chains S).obj E) I n) (b : CohomologyClass ((chains S).obj E) J m), σ.op.app E k (τ.cup E hk a b) = ν.cup E hk (ρ₁.op.app E n a) (ρ₂.op.app E m b) := by
   intro S R _ _ I J T I' J' K' τ ν ρ₁ ρ₂ σ hσ E n m k hk a b
   obtain ⟨α, rfl⟩ := a.mk_surjective
   obtain ⟨β, rfl⟩ := b.mk_surjective
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW S τ hk).1 α β
-  obtain ⟨α', hα'⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ₁).1 E n α
-  obtain ⟨β', hβ'⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ₂).1 E m β
-  obtain ⟨γ', hγ'⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R σ).1 E k γ
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW S τ hk).2 α β γ hγ, (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R σ).2 E k γ γ' hγ',
-    (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ₁).2 E n α α' hα', (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ₂).2 E m β β' hβ']
-  refine ((GlobalTheory.T.cup_eq_class_of_isAW R ν hk).2 α' β' γ' ?_).symm
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full S τ hk).1 α β
+  obtain ⟨α', hα'⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ₁).1 E n α
+  obtain ⟨β', hβ'⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ₂).1 E m β
+  obtain ⟨γ', hγ'⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R σ).1 E k γ
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full S τ hk).2 α β γ hγ, (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R σ).2 E k γ γ' hγ',
+    (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ₁).2 E n α α' hα', (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ₂).2 E m β β' hβ']
+  refine ((_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν hk).2 α' β' γ' ?_).symm
   intro N w h U x
 
   rw [hγ' N w h U x, hγ N w h U x, map_sum]
@@ -1088,30 +1055,30 @@ theorem reduction_cup : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (E : Spc) {n
     red Q q E _ _ (cup Q a b) = cup q (red Q q E _ _ a) (red Q q E _ _ b) := by
   intro Q q _ hqQ E n m i j a b
   haveI : NeZero q := ⟨by rintro rfl; exact NeZero.ne Q (zero_dvd_iff.mp hqQ)⟩
-  obtain ⟨T, τ, hτ⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod Q) (res _ (tw Q i)) (res _ (tw Q j))
-  obtain ⟨u, hu, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod Q) τ hτ).1 (twPair Q i j) (𝟙 _) (𝟙 _)
+  obtain ⟨T, τ, hτ⟩ := _root_.GlobalTheory.EtC.tensor_exists (ZMod Q) (res _ (tw Q i)) (res _ (tw Q j))
+  obtain ⟨u, hu, -⟩ := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod Q) τ hτ).1 (twPair Q i j) (𝟙 _) (𝟙 _)
   have hcup : cup Q a b = cpush _ u _ (τ.cup E rfl a b) := by
-    rw [GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing (ZMod Q) τ (twPair Q i j) (𝟙 _) (𝟙 _) u hu E rfl a b, cpush_id, cpush_id]
+    rw [_root_.GlobalTheory.cup_natural_in_pairing (ZMod Q) τ (twPair Q i j) (𝟙 _) (𝟙 _) u hu E rfl a b, _root_.GlobalTheory.EtC.InjResCmp.cpush_id, _root_.GlobalTheory.EtC.InjResCmp.cpush_id]
     rfl
-  obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_semiMap_of_tensorPairing Q (ZMod q) τ hτ (twPair q i j) (redMap Q q i) (redMap Q q j)
+  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.EtC.semiMap_of_tensorPair Q (ZMod q) τ hτ (twPair q i j) (redMap Q q i) (redMap Q q j)
   have h1 := semiMap_cup (ZMod Q) (ZMod q) τ (twPair q i j) (redMap Q q i) (redMap Q q j) σ hσ E rfl a b
   rw [hcup]
   change (redMap Q q (i + j)).op.app E (n + m) (cpush _ u _ _) = (twPair q i j).cup E rfl _ _
   rw [← semiPre_op]
   change _ = (twPair q i j).cup E rfl ((redMap Q q i).op.app E n a) ((redMap Q q j).op.app E m b)
   rw [← h1]
-  have hres := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy Q i
-  have hresj := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy Q j
+  have hres := _root_.GlobalTheory.EtC.TwResExt.twRes_ext Q i
+  have hresj := _root_.GlobalTheory.EtC.TwResExt.twRes_ext Q j
   have htw := _root_.GlobalTheory.EtC.isTwRes_tensor Q i j (i + j) rfl (fun _ ζ => resGen i ζ) (fun _ ζ => resGen j ζ) hres.1 hresj.1 hresj.2.1 τ hτ
-  have hflat := GlobalTheory.T.flat_tensor_of_flat_complexes (ZMod Q) τ hτ hres.2.1 hresj.2.1
-  refine GlobalTheory.T.semiMap_eq_of_flat_tateTwist_resolution Q q hqQ (i + j) _ htw hflat _ _ ?_ E (n + m) _
+  have hflat := _root_.GlobalTheory.EtC.FlatTens.flatS_tens (ZMod Q) τ hτ hres.2.1 hresj.2.1
+  refine _root_.GlobalTheory.EtC.ScalarExt.semiMap_op_eq_of_flat_res Q q hqQ (i + j) _ htw hflat _ _ ?_ E (n + m) _
   intro U ζ
-  obtain ⟨ξ, hξ⟩ := (GlobalTheory.T.primitiveRoot_pow_unit_sub_prod_properties Q Γ(U, ⊤)).2.2.2.2.2 q hqQ ζ
-  rw [hσ, GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ i U ζ ξ hξ, GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ j U ζ ξ hξ, (_root_.GlobalTheory.EtC.TwPairUniq.main q i j).1 U ξ]
+  obtain ⟨ξ, hξ⟩ := (_root_.GlobalTheory.EtC.PrimBasic.prim_basic Q Γ(U, ⊤)).2.2.2.2.2 q hqQ ζ
+  rw [hσ, _root_.GlobalTheory.EtC.RedExists.red_exists Q q hqQ i U ζ ξ hξ, _root_.GlobalTheory.EtC.RedExists.red_exists Q q hqQ j U ζ ξ hξ, (_root_.GlobalTheory.EtC.TwPairUniq.main q i j).1 U ξ]
   change (redMap Q q (i + j)).app U 0 (Sec.map (u.f 0) _) = _
   rw [hu]
   change (redMap Q q (i + j)).app U 0 ((twPair Q i j).mul U 0 0 0 _ (resGen i ζ) (resGen j ζ)) = _
-  rw [(_root_.GlobalTheory.EtC.TwPairUniq.main Q i j).1 U ζ, GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ (i + j) U ζ ξ hξ]
+  rw [(_root_.GlobalTheory.EtC.TwPairUniq.main Q i j).1 U ζ, _root_.GlobalTheory.EtC.RedExists.red_exists Q q hqQ (i + j) U ζ ξ hξ]
 
 end GlobalTheory.EtC.RedCup
 
@@ -1129,15 +1096,10 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 namespace GlobalTheory.EtC.RedUnit
 
-theorem res_map {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (y : Sec F U) :
-    Sec.res g (Sec.map φ y) = Sec.map φ (Sec.res g y) := by
-  have := congrArg (fun f => f.hom y) (φ.hom.naturality g.op)
-  exact this.symm
-
 theorem res_resGen {q : ℕ} [NeZero q] (i : ℤ) {V U : Scheme.{0}} (g : V ⟶ U) (ζ : Prim q Γ(U, ⊤)) :
     Sec.res g (resGen i ζ) = resGen i (ζ.map g.appTop.hom) := by
   unfold resGen
-  rw [res_map, (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 V U g ζ]
+  rw [_root_.GlobalTheory.EtC.CupSpec.map_res, (_root_.GlobalTheory.EtC.twist_sections q i).2.2.2.1 V U g ζ]
 
 theorem val_one_smul {q : ℕ} [NeZero q] {M : Type*} [AddCommGroup M] [Module (ULift.{1} (ZMod q)) M] (y : M) :
     (1 : ZMod q).val • y = y := by
@@ -1154,7 +1116,7 @@ theorem resGen_zero_eq {q : ℕ} [NeZero q] {U : Scheme.{0}} (ζ ξ : Prim q Γ(
   refine ⟨S, hS, fun W h hh => ?_⟩
   obtain ⟨a, ha⟩ := hP W h hh
   rw [res_resGen, res_resGen]
-  have := (GlobalTheory.T.tateTwist_sections_locally_generated q 0).2.2.2.2.1 W (ζ.map h.appTop.hom) (ξ.map h.appTop.hom) a ha
+  have := (_root_.GlobalTheory.EtC.twist_sections q 0).2.2.2.2.1 W (ζ.map h.appTop.hom) (ξ.map h.appTop.hom) a ha
   unfold resGen
   rw [this, zpow_zero, Units.val_one, val_one_smul]
 
@@ -1169,18 +1131,18 @@ theorem GlobalTheory.EtC.red_one : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ E
     rw [hk, Nat.cast_mul] at this
     exact isUnit_of_mul_isUnit_left this
   obtain ⟨α, hα1, hα2⟩ := (GlobalTheory.T.tateTwistUnitClass_rootClass_spec Q).1 E hE
-  obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap _ _ (redMap Q q 0)).1 E 0 α
+  obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec _ _ (redMap Q q 0)).1 E 0 α
   have hred : red Q q E 0 0 (one Q E) = CohomologyClass.mk β := by
-    rw [← hα1]; exact (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap _ _ (redMap Q q 0)).2 E 0 α β hβ
+    rw [← hα1]; exact (_root_.GlobalTheory.EtC.SemiMap.op_image_spec _ _ (redMap Q q 0)).2 E 0 α β hβ
   rw [hred]
   refine (GlobalTheory.T.tateTwistUnitClass_rootClass_spec q).2.1 E hEq β fun U x ξ => ?_
   apply (_root_.GlobalTheory.EtC.sec_ext_glue _ _ U).1
   obtain ⟨S, hS, hP⟩ := (GlobalTheory.T.etaleLocal_primitiveRoot_and_roots_of_unity Q U).1 (hE U ⟨x⟩)
   refine ⟨S, hS, fun V g hg => ?_⟩
   obtain ⟨ζ⟩ := hP V g hg
-  obtain ⟨ξ', hξ'⟩ := (GlobalTheory.T.primitiveRoot_pow_unit_sub_prod_properties Q Γ(V, ⊤)).2.2.2.2.2 q hqQ ζ
+  obtain ⟨ξ', hξ'⟩ := (_root_.GlobalTheory.EtC.PrimBasic.prim_basic Q Γ(V, ⊤)).2.2.2.2.2 q hqQ ζ
   rw [(GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod q)).2.1 β.1 0 0 _ V U g x, hβ 0 0 _ V (x.res g), hα2 V (x.res g) ζ,
-    GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ 0 V ζ ξ' hξ', RedUnit.res_resGen]
+    _root_.GlobalTheory.EtC.RedExists.red_exists Q q hqQ 0 V ζ ξ' hξ', RedUnit.res_resGen]
   exact RedUnit.resGen_zero_eq _ _
 end -- clump:auto
 end -- clump:auto
@@ -1193,9 +1155,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistCoefficientReduction_unitClass : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ E : Spc, Inv Q E → red Q q E 0 0 (one Q E) = one q E := by
-  first
-  | exact @GlobalTheory.EtC.red_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCoefficientReductionUnitClassStatement =====
@@ -1321,15 +1280,15 @@ theorem op_eq : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (i : ℤ) (ρ ρ' : 
   obtain ⟨u, hu⟩ := _root_.GlobalTheory.EtC.SemiMap.factor_extCx Q q hq _ _ ρ
   obtain ⟨u', hu'⟩ := _root_.GlobalTheory.EtC.SemiMap.factor_extCx Q q hq _ _ ρ'
   have e1 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective _ _ (extπ (ZMod.castHom hq (ZMod q)) (res _ (tw Q i))) ρ u hu).1 E n x
-  have e2 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective _ _ (extπ (ZMod.castHom hq (ZMod q)) (res _ (tw Q i))) ρ' u' hu').1 E n x
+  have e2 := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij _ _ (extπ (ZMod.castHom hq (ZMod q)) (res _ (tw Q i))) ρ' u' hu').1 E n x
   have hε := GlobalTheory.T.extendScalars_tateTwistResolution_hom_ext_augmentation Q q hq i _ u u' (fun U ζ => by rw [← hu, ← hu', h])
   haveI := _root_.GlobalTheory.EtC.ExtQis.quasiIso_extAug Q q hq i
   haveI : (res (ZMod q) (tw q i)).IsKInjective :=
     inferInstanceAs ((injectiveResolution (tw q i)).cochainComplex.IsKInjective)
   haveI : (res (ZMod q) (tw q i)).IsStrictlyGE 0 :=
     inferInstanceAs ((injectiveResolution (tw q i)).cochainComplex.IsStrictlyGE 0)
-  obtain ⟨H⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective (ZMod q) _ _ (res _ (tw q i)) (extAug (ZMod.castHom hq (ZMod q)) (tw Q i))).2 u u' hε
-  have e3 := ((GlobalTheory.T.hypercohomologyPullbackPushforward_functorial (ZMod q)).2.2.2.2 u u' ⟨H⟩ ((chains (ZMod q)).obj E) n).2
+  obtain ⟨H⟩ := (_root_.GlobalTheory.EtC.extHom_of_quasiIso (ZMod q) _ _ (res _ (tw q i)) (extAug (ZMod.castHom hq (ZMod q)) (tw Q i))).2 u u' hε
+  have e3 := ((_root_.GlobalTheory.EtC.ZcFun.main (ZMod q)).2.2.2.2 u u' ⟨H⟩ ((chains (ZMod q)).obj E) n).2
   rw [e1, e2, e3]
 
 end GlobalTheory.EtC.RedUniq
@@ -1369,15 +1328,15 @@ def semiComp {I : Cx S} {J : Cx R} {K : Cx T} (ρ : SemiMap I J) (σ : SemiMap J
 theorem semiId_op (I : Cx S) (E : Spc) (n : ℤ) (x : CohomologyClass ((chains S).obj E) I n) :
     (semiId I).op.app E n x = x := by
   obtain ⟨α, rfl⟩ := x.mk_surjective
-  exact (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S S (semiId I)).2 E n α α (fun _ _ _ _ _ => rfl)
+  exact (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S S (semiId I)).2 E n α α (fun _ _ _ _ _ => rfl)
 
 theorem semiComp_op {I : Cx S} {J : Cx R} {K : Cx T} (ρ : SemiMap I J) (σ : SemiMap J K) (E : Spc) (n : ℤ)
     (x : CohomologyClass ((chains S).obj E) I n) : (semiComp ρ σ).op.app E n x = σ.op.app E n (ρ.op.app E n x) := by
   obtain ⟨α, rfl⟩ := x.mk_surjective
-  obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).1 E n α
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R T σ).1 E n β
-  rw [(GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).2 E n α β hβ, (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R T σ).2 E n β γ hγ]
-  exact (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S T (semiComp ρ σ)).2 E n α γ (fun p s h U y => by
+  obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).1 E n α
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R T σ).1 E n β
+  rw [(_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).2 E n α β hβ, (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R T σ).2 E n β γ hγ]
+  exact (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S T (semiComp ρ σ)).2 E n α γ (fun p s h U y => by
     rw [hγ p s h U y, hβ p s h U y]; rfl)
 
 theorem neZero_of_dvd {q Q : ℕ} [NeZero Q] (h : q ∣ Q) : NeZero q :=
@@ -1400,12 +1359,12 @@ namespace GlobalTheory.EtC.RedCoef
 theorem a11 : GlobalTheory.EtC.A11 := by
   intro Q q _ hqQ E
   haveI : NeZero q := neZero_of_dvd hqQ
-  refine ⟨fun a b => _root_.GlobalTheory.EtC.RedCup.reduction_cup Q q hqQ E a b, fun hE => ⟨GlobalTheory.T.tateTwistCoefficientReduction_unitClass Q q hqQ E hE, fun L => _root_.GlobalTheory.EtC.RedChern.coefficientReduction_firstChernClass_tateTwist Q q hqQ E hE L⟩,
+  refine ⟨fun a b => _root_.GlobalTheory.EtC.RedCup.reduction_cup Q q hqQ E a b, fun hE => ⟨_root_.GlobalTheory.EtC.red_one Q q hqQ E hE, fun L => _root_.GlobalTheory.EtC.RedChern.coefficientReduction_firstChernClass_tateTwist Q q hqQ E hE L⟩,
     fun n i a => ?_, fun r hr n i a => ?_⟩
   · have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
         (redMap Q Q i).app U 0 (resGen i ζ) = (semiId (res _ (tw Q i))).app U 0 (resGen i ζ) := by
       intro U ζ
-      refine GlobalTheory.T.tateTwistReductionResolutionMap_generator Q Q dvd_rfl i U ζ ζ ?_
+      refine _root_.GlobalTheory.EtC.RedExists.red_exists Q Q dvd_rfl i U ζ ζ ?_
       rw [Nat.div_self (Nat.pos_of_ne_zero (NeZero.ne Q)), pow_one]
     exact (_root_.GlobalTheory.EtC.RedUniq.op_eq Q Q dvd_rfl i _ _ hgen E n a).trans (semiId_op _ E n a)
   · haveI : NeZero r := neZero_of_dvd hr
@@ -1413,11 +1372,11 @@ theorem a11 : GlobalTheory.EtC.A11 := by
     have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
         (semiComp (redMap Q q i) (redMap q r i)).app U 0 (resGen i ζ) = (redMap Q r i).app U 0 (resGen i ζ) := by
       intro U ζ
-      obtain ⟨η, hη⟩ := (GlobalTheory.T.primitiveRoot_pow_unit_sub_prod_properties Q Γ(U, ⊤)).2.2.2.2.2 q hqQ ζ
-      obtain ⟨ξ, hξ⟩ := (GlobalTheory.T.primitiveRoot_pow_unit_sub_prod_properties q Γ(U, ⊤)).2.2.2.2.2 r hr η
+      obtain ⟨η, hη⟩ := (_root_.GlobalTheory.EtC.PrimBasic.prim_basic Q Γ(U, ⊤)).2.2.2.2.2 q hqQ ζ
+      obtain ⟨ξ, hξ⟩ := (_root_.GlobalTheory.EtC.PrimBasic.prim_basic q Γ(U, ⊤)).2.2.2.2.2 r hr η
       change (redMap q r i).app U 0 ((redMap Q q i).app U 0 (resGen i ζ)) = _
-      rw [GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ i U ζ η hη, GlobalTheory.T.tateTwistReductionResolutionMap_generator q r hr i U η ξ hξ,
-        GlobalTheory.T.tateTwistReductionResolutionMap_generator Q r hrQ i U ζ ξ (by rw [hξ, hη, ← pow_mul, div_mul_div hqQ hr])]
+      rw [_root_.GlobalTheory.EtC.RedExists.red_exists Q q hqQ i U ζ η hη, _root_.GlobalTheory.EtC.RedExists.red_exists q r hr i U η ξ hξ,
+        _root_.GlobalTheory.EtC.RedExists.red_exists Q r hrQ i U ζ ξ (by rw [hξ, hη, ← pow_mul, div_mul_div hqQ hr])]
     exact (semiComp_op _ _ E n a).symm.trans (_root_.GlobalTheory.EtC.RedUniq.op_eq Q r hrQ i _ _ hgen E n a)
 
 end GlobalTheory.EtC.RedCoef

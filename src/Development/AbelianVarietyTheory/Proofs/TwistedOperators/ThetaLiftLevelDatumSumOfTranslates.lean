@@ -604,10 +604,6 @@ namespace GlobalTheory.ConjCompl
 def clos (D : D7) (I : Ideal (𝓞 D.host.E)) : AddSubgroup (Af D.host.F ⊗[D.host.F] D.host.E) :=
   AddSubgroup.closure {y | ∃ a ∈ intAf D.host.F, ∃ x : 𝓞 D.host.E, x ∈ I ∧ y = a ⊗ₜ[D.host.F] (x : D.host.E)}
 
-theorem intAf_mul' {F : Type} [Field F] [NumberField F] {a b : Af F} (ha : a ∈ intAf F) (hb : b ∈ intAf F) :
-    a * b ∈ intAf F := fun v => by
-  rw [map_mul]; exact mul_mem (ha v) (hb v)
-
 theorem one_mem_intAf' {F : Type} [Field F] [NumberField F] : (1 : Af F) ∈ intAf F := fun v => by
   rw [map_one]; exact one_mem _
 
@@ -628,7 +624,7 @@ theorem mul_mem_clos {I J : Ideal (𝓞 D.host.E)} {y z : Af D.host.F ⊗[D.host
       rw [Algebra.TensorProduct.tmul_mul_tmul]
       have e : (x : D.host.E) * (x' : D.host.E) = ((x * x' : 𝓞 D.host.E) : D.host.E) := rfl
       rw [e]
-      exact tmul_mem_clos (intAf_mul' ha hb) (Ideal.mul_mem_mul hx hx')
+      exact tmul_mem_clos (_root_.GlobalTheory.LatVac.mul_mem_intAf ha hb) (Ideal.mul_mem_mul hx hx')
     | zero => rw [zero_mul]; exact zero_mem _
     | add _ _ _ _ h1 h2 => rw [add_mul]; exact add_mem h1 h2
     | neg _ _ h => rw [neg_mul]; exact neg_mem h
@@ -994,30 +990,6 @@ theorem fullSmul {r : ℕ} {𝔞 : Ideal (𝓞 D.host.E)} (h : 𝔞 ≠ ⊥) {N 
   exact fun v hv => (Submodule.smul_mem_iff _ h0).1
     (Submodule.subset_span (Submodule.smul_mem_smul ha hv))
 
-theorem omegaK_congr {a b : ℕ} (Pg : Finset (Formalism.L2.DIV.Pl D.host.E))
-    {y y' : ∀ PP : Formalism.L2.DIV.Pl D.host.E, Matrix (Fin b) (Fin a) (Formalism.L2.DIV.kP PP)}
-    (h : ∀ PP ∈ Pg, y PP = y' PP) : omegaK Pg y = omegaK Pg y' := by
-  unfold omegaK
-  have hc : (∀ PP ∈ Pg, LowZero a (y PP) ∧ topL a (y PP) = 1) ↔
-      (∀ PP ∈ Pg, LowZero a (y' PP) ∧ topL a (y' PP) = 1) := forall₂_congr fun PP hP => by rw [h PP hP]
-  by_cases h1 : ∀ PP ∈ Pg, LowZero a (y PP) ∧ topL a (y PP) = 1
-  · rw [if_pos h1, if_pos (hc.1 h1)]
-  · rw [if_neg h1, if_neg (fun h2 => h1 (hc.2 h2))]
-
-theorem omegaQ_congr {a b : ℕ} (Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (r : ℕ)
-    (ξ : ∀ PP : Formalism.L2.DIV.Pl D.host.E, (Formalism.L2.DIV.kP PP)ˣ →* ℂˣ) (k : ℤ)
-    {y y' : ∀ PP : Formalism.L2.DIV.Pl D.host.E, Matrix (Fin b) (Fin a) (Formalism.L2.DIV.kP PP)}
-    (h : ∀ PP ∈ Q, y PP = y' PP) : omegaQ Q r ξ k y = omegaQ Q r ξ k y' := by
-  unfold omegaQ
-  have hc : (∀ PP ∈ Q, LowZero r (y PP) ∧ IsUnit (topL r (y PP)).det) ↔
-      (∀ PP ∈ Q, LowZero r (y' PP) ∧ IsUnit (topL r (y' PP)).det) := forall₂_congr fun PP hP => by rw [h PP hP]
-  by_cases h1 : ∀ PP ∈ Q, LowZero r (y PP) ∧ IsUnit (topL r (y PP)).det
-  · rw [dite_eq_left h1, dite_eq_left (hc.1 h1)]
-    refine Finset.prod_congr rfl fun PP _ => ?_
-    rw [show (h1 PP.1 PP.2).2.unit = (hc.1 h1 PP.1 PP.2).2.unit from
-      Units.ext (by simp only [IsUnit.unit_spec, h PP.1 PP.2])]
-  · rw [dite_eq_right h1, dite_eq_right (fun h2 => h1 (hc.2 h2))]
-
 end GlobalTheory.LiftLevel.DatSum
 
 noncomputable section
@@ -1178,8 +1150,8 @@ theorem thPDatum_eq_levelSum : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.
       have h3 := (GlobalTheory.FrameAdjAdd.frMapAdj_add_isIntM_redM S T βS βT _ _ hwI hnI).2 PP
       rw [add_neg_cancel, redM_frMapAdj_zero] at h3
       rw [tr_neg, eq_neg_of_add_eq_zero_right h3.symm, eq_neg_of_add_eq_zero_left h1.symm]
-    refine congrArg₂ (· * ·) (omegaK_congr Pg (fun PP hPP => (hred PP (Finset.mem_union_left _ hPP)).symm))
-      (omegaQ_congr Q T.rank ξ (-1) (fun PP hPP => (hred PP (Finset.mem_union_right _ hPP)).symm))
+    refine congrArg₂ (· * ·) (_root_.GlobalTheory.PlaceVec.omegaK_congr Pg (fun PP hPP => (hred PP (Finset.mem_union_left _ hPP)).symm))
+      (_root_.GlobalTheory.PlaceVec.omegaQ_congr Q T.rank ξ (-1) (fun PP hPP => (hred PP (Finset.mem_union_right _ hPP)).symm))
   · rw [thPDatum, if_neg hx]
     refine (finsum_eq_zero_of_forall_eq_zero fun c => ?_).symm
     rw [indL, if_neg, mul_zero]
@@ -1544,9 +1516,6 @@ open GlobalTheory.LiftLevel
 
 variable {D : D7}
 
-theorem partAt_eq_smul {S T : HSp D} (c : AE D) (w : WO S T) : partAt c w = c • w := by
-  ext i j; rfl
-
 theorem actO_smul' (S T : HSp D) (g : GA D S) (h : GA D T) (c : AE D) (x : WO S T) :
     actO S T g h (c • x) = c • actO S T g h x := by
   simp only [actO, Matrix.mul_smul, Matrix.smul_mul]
@@ -1604,7 +1573,7 @@ theorem moved_class : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank ≤ 
     rw [this]; exact mem_sh C Lv
   have hB : (1 - cA D e) • x ∈ hatA S T (tens std (Lv.sh C.X.Λ)) := by
     have : (1 - cA D e) • x = partAt e x + partAt (1 - e - cA D e) x := by
-      rw [partAt_eq_smul, partAt_eq_smul, ← add_smul]; congr 1; ring
+      rw [_root_.GlobalTheory.LiftLevel.partAt_eq_smul, _root_.GlobalTheory.LiftLevel.partAt_eq_smul, ← add_smul]; congr 1; ring
     rw [this]; exact add_mem hE hF
   have hmov1 : IsMov (fmt T 1) (Lv.sh C.X.Λ) (Lv.sh C.X.Λ) := by
     have hmt1 : Formalism.L2.Theta.mt T 1 = 1 := by simp [Formalism.L2.Theta.mt]
@@ -1615,9 +1584,9 @@ theorem moved_class : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank ≤ 
   obtain ⟨u₀, hu₀, hu₀e⟩ := (GlobalTheory.TensLatMove.mem_hatA_iff S T hS k₀⁻¹ 1 Λ' std (Lv.sh C.X.Λ) (Lv.sh C.X.Λ)
     hΛ' hmov1 _).1 hB
   have hv : partAt (1 - cA D e) X = u₀ := by
-    rw [partAt_eq_smul, hX, ← actO_smul', hu₀e, actO_actO_inv]
+    rw [_root_.GlobalTheory.LiftLevel.partAt_eq_smul, hX, ← actO_smul', hu₀e, actO_actO_inv]
   refine ⟨partAt (1 - cA D e) X, hv ▸ hu₀, ?_, ?_⟩
-  · rw [partAt_eq_smul, partAt_eq_smul, smul_comm (cA D e) (2 : ℕ) X, ← smul_add, ← add_smul]
+  · rw [_root_.GlobalTheory.LiftLevel.partAt_eq_smul, _root_.GlobalTheory.LiftLevel.partAt_eq_smul, smul_comm (cA D e) (2 : ℕ) X, ← smul_add, ← add_smul]
     congr 1
     rw [add_sub_cancel, one_smul]
   · have hce : cA D e * cA D e = cA D e := by rw [← map_mul, GlobalTheory.PlaceVec.idemSum_mul_self he]
@@ -1640,7 +1609,7 @@ theorem moved_class : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.rank ≤ 
     have hpair := GlobalTheory.LatVac.char_sympl_eq_one C.std (GlobalTheory.Ker.Base.selfDualC_stdL hS) hT hP hR
     have hpair' : C.ψ (symplO S T (cA D e • X) ((1 - cA D e) • X)) = 1 := by
       rw [hX, ← actO_smul', ← actO_smul', GlobalTheory.SymplOInv.symplO_actO]; exact hpair
-    rw [partAt_eq_smul, partAt_eq_smul, smul_comm (cA D e) (2 : ℕ) X, two_nsmul, two_nsmul,
+    rw [_root_.GlobalTheory.LiftLevel.partAt_eq_smul, _root_.GlobalTheory.LiftLevel.partAt_eq_smul, smul_comm (cA D e) (2 : ℕ) X, two_nsmul, two_nsmul,
       GlobalTheory.SplitScalar.symplOH_add_left, GlobalTheory.SplitScalar.symplOH_add_self, GlobalTheory.LatVac.symplO_add_right,
       AddChar.map_add_eq_mul, hpair', one_mul]
 

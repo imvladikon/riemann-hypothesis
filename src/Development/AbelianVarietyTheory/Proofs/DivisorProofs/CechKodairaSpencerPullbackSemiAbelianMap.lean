@@ -104,20 +104,13 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.LogKSCoc
 
-theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (a : Γ(X, U)ˣ) :
-    res h' (res h a) = res (h'.trans h) a := by
-  ext
-  change (X.presheaf.map _).hom ((X.presheaf.map _).hom _) = (X.presheaf.map _).hom _
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem res_intertwines {Y : Scheme.{0}} {P Q A B V : Y.Opens} (a : Γ(Y, P)ˣ) (a' : Γ(Y, Q)ˣ) (m : Γ(Y, A)ˣ)
     (l : Γ(Y, B)ˣ) (hA : P ⊓ Q ≤ A) (hB : P ⊓ Q ≤ B)
     (e : res (inf_le_left : P ⊓ Q ≤ P) a = res hA m * (res hB l)⁻¹ * res (inf_le_right : P ⊓ Q ≤ Q) a')
     (h : V ≤ P) (h' : V ≤ Q) (hM : V ≤ A) (hL : V ≤ B) :
     res hM m * res h' a' = res h a * res hL l := by
   have e' := congrArg (res (le_inf h h')) e
-  simp only [map_mul, map_inv, res_res] at e'
+  simp only [map_mul, map_inv, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res'] at e'
   rw [e', _root_.mul_right_comm, inv_mul_cancel_right]
 
 theorem gen_intertwines {Y : Scheme.{0}} (M L : LB Y) (w : LB.Iso L M) (hw : w.IsGen) (i i' : M.ι) (k k' : L.ι)
@@ -136,10 +129,10 @@ theorem iso_pull_intertwines : ∀ (Y Z : Scheme.{0}) (φ : Y ⟶ Z) (L : LB Z) 
     unfold LB.pull LB.LinComb
     dsimp only
     rw [Fintype.prod_unique, zpow_one]
-    exact res_res _ _ _
+    exact _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res' _ _ _
   rw [g] at e
-  have e₁ := congrArg Units.val (res_res hO (inf_le_left : O ⊓ O' ≤ O) (w.s (fun _ => i, k)))
-  have e₂ := congrArg Units.val (res_res hO' (inf_le_right : O ⊓ O' ≤ O') (w.s (fun _ => i', k')))
+  have e₁ := congrArg Units.val (_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res' hO (inf_le_left : O ⊓ O' ≤ O) (w.s (fun _ => i, k)))
+  have e₂ := congrArg Units.val (_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res' hO' (inf_le_right : O ⊓ O' ≤ O') (w.s (fun _ => i', k')))
   exact (congrArg (_ * ·) e₂).trans ((congrArg Units.val e).trans (congrArg (· * _) e₁.symm))
 
 end GlobalTheory.LogKSCoc
@@ -284,11 +277,7 @@ namespace GlobalTheory.LogKS.Glue
 
 variable {Z : Scheme.{0}}
 
-theorem resG_resG {U V W : Z.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (f : Γ(Z, U)) :
-    resG Z h2 (resG Z h1 f) = resG Z (h2.trans h1) f := by
-  change (Z.presheaf.map (homOfLE h1).op ≫ Z.presheaf.map (homOfLE h2).op).hom f = _
-  rw [← Functor.map_comp]
-  rfl
+alias resG_resG := _root_.GlobalTheory.Cartier.resG_resG
 
 variable {J : Type} (V : J → Z.Opens) (e : J → ∀ O : Z.Opens, Γ(Z, O) → Γ(Z, O))
 
@@ -819,10 +808,6 @@ theorem top_le_of_mem {S : Type} [CommRing S] [IsLocalRing S] {Y : Scheme.{0}} (
     (PrimeSpectrum.le_iff_specializes _ _).mp (IsLocalRing.le_maximalIdeal x.isPrime.ne_top)
   exact (hs.map g₀.base.hom.continuous).mem_open V.isOpen hV
 
-theorem valR_one_of_le {A : Type} [CommRing A] {Y : Scheme.{0}} (x : Sp A ⟶ Y) (O : Y.Opens)
-    (h : ⊤ ≤ x ⁻¹ᵁ O) : valR x O 1 = 1 := by
-  simp only [valR, dif_pos h, map_one]
-
 theorem eq_zero_of_kills_both : ∀ (Z Z' X X' : Scheme.{0}) (p : Z ⟶ X) (p' : Z' ⟶ X') (φ : Z' ⟶ Z) (g : X' ⟶ X), IsPullback φ p' p g → ∀ (U : X.affineOpens) (U' : X'.affineOpens), U'.1 ≤ g ⁻¹ᵁ U.1 → ∀ (W₀ : Z.Opens), W₀ ≤ p ⁻¹ᵁ U.1 → ∀ (O : Z'.Opens), O ≤ φ ⁻¹ᵁ W₀ ⊓ p' ⁻¹ᵁ U'.1 → ∀ (S : Type) [CommRing S] [IsLocalRing S] (g₀ : Sp S ⟶ Z'), ⊤ ≤ g₀ ⁻¹ᵁ O → ∀ (Δ : ∀ O' : Z'.Opens, Γ(Z', O') → S), (∀ O' : Z'.Opens, O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f f', Δ O' (f + f') = Δ O' f + Δ O' f') → (∀ O' : Z'.Opens, O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f f', Δ O' (f * f') = valR g₀ O' f * Δ O' f' + valR g₀ O' f' * Δ O' f) → (∀ (O₁ O₂ : Z'.Opens) (h : O₂ ≤ O₁), O₁ ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O₂ → ∀ f, Δ O₂ (resG Z' h f) = Δ O₁ f) → (∀ (O₀ : Z.Opens) (O' : Z'.Opens) (h : O' ≤ φ ⁻¹ᵁ O₀), O₀ ≤ W₀ → O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f₀, Δ O' ((φ.appLE O₀ O' h).hom f₀) = 0) → (∀ (O' : Z'.Opens) (h : O' ≤ p' ⁻¹ᵁ U'.1), O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ r, Δ O' ((p'.appLE U'.1 O' h).hom r) = 0) → ∀ f, Δ O f = 0 := by
   intro Z Z' X X' p p' φ g hpb U U' hU'U W₀ hW₀ O hO S _ _ g₀ hg₀ Δ hadd hmul hres hφ hp' f
   set m := IsLocalRing.closedPoint S
@@ -841,7 +826,7 @@ theorem eq_zero_of_kills_both : ∀ (Z Z' X X' : Scheme.{0}) (p : Z ⟶ X) (p' :
   have hδ : ∀ a, δ a = Δ D a := fun _ => rfl
   have h1 : Δ D 1 = 0 := by
     have e := hmul D hDO htop 1 1
-    rw [_root_.mul_one, valR_one_of_le g₀ D htop, _root_.one_mul] at e
+    rw [_root_.mul_one, _root_.GlobalTheory.Points.valR_one g₀ D htop, _root_.one_mul] at e
     have : Δ D 1 + Δ D 1 - Δ D 1 = Δ D 1 - Δ D 1 := by rw [← e]
     simpa using this
   have hgen : ∀ a : Γ(Z', A), Δ D (resG Z' hDA a) = 0 := by
@@ -871,7 +856,7 @@ theorem eq_zero_of_kills_both : ∀ (Z Z' X X' : Scheme.{0}) (p : Z ⟶ X) (p' :
     have hunit : IsUnit (valR g₀ D (resG Z' hDA u)) := by
       obtain ⟨w, hw⟩ := hu
       refine IsUnit.of_mul_eq_one (valR g₀ D (w⁻¹ : (Γ(Z', D))ˣ)) ?_
-      rw [← hw, ← GlobalTheory.CechKSSmul.valR_mul_of_le g₀ D htop, Units.mul_inv, valR_one_of_le g₀ D htop]
+      rw [← hw, ← _root_.GlobalTheory.Points.valR_mul g₀ D htop, Units.mul_inv, _root_.GlobalTheory.Points.valR_one g₀ D htop]
     exact (hunit.mul_right_eq_zero).mp e.symm
   rw [← hres O D hDO le_rfl htop f]
   exact hall _
@@ -970,10 +955,6 @@ end GlobalTheory.KSBaseChange
 
 namespace GlobalTheory.KSBaseChange
 
-theorem valR_add_of_le {A : Type} [CommRing A] {Z : Scheme.{0}} (x : Sp A ⟶ Z) (O : Z.Opens)
-    (h : ⊤ ≤ x ⁻¹ᵁ O) (a b : Γ(Z, O)) : valR x O (a + b) = valR x O a + valR x O b := by
-  simp only [valR, dif_pos h, map_add (f := _)]
-
 theorem valR_zero' {A : Type} [CommRing A] {Z : Scheme.{0}} (x : Sp A ⟶ Z) (O : Z.Opens) :
     valR x O 0 = 0 := by
   unfold valR; split_ifs <;> simp
@@ -992,10 +973,6 @@ theorem fst_valR_of_red {Y : Scheme.{0}} {S : Type} [CommRing S] {g₀ : Sp S �
   conv_rhs => rw [← hr]
   rw [GlobalTheory.CechKS.valR_spMap_comp _ _ _ (GlobalTheory.CechKS.le_preimage_of_red hr h)]
   rfl
-
-theorem snd_dualMap {S S' : Type} [CommRing S] [CommRing S'] (σ : S →+* S') (y : DualNumber S) :
-    (dualMap σ y).snd = σ y.snd := by
-  simp [dualMap]
 
 theorem rel_pair {X X' : Scheme.{0}} {t : SAB H X} {t' : SAB H X'} {g : X' ⟶ X} (mu : SABMap t' t g)
     (U : X.affineOpens) (U' : X'.affineOpens) (hU : U'.1 ≤ g ⁻¹ᵁ U.1) {n : ℕ}
@@ -1059,7 +1036,7 @@ theorem rel_pair {X X' : Scheme.{0}} {t : SAB H X} {t' : SAB H X'} {g : X' ⟶ X
     refine Finset.sum_congr rfl fun b' _ => ?_
     rw [GlobalTheory.CechKS.valR_spMap_comp _ _ _ (GlobalTheory.CechKS.le_preimage_of_red (hred b') hΩ₀),
       GlobalTheory.CechKS.valR_spMap_comp _ _ _ (GlobalTheory.CechKS.le_preimage_of_red (hred b) hO₀),
-      GlobalTheory.CechKS.valR_spMap_comp σ g₀ Ω hΩ₀, snd_dualMap, snd_dualMap, map_mul, map_mul, map_mul]
+      GlobalTheory.CechKS.valR_spMap_comp σ g₀ Ω hΩ₀, _root_.GlobalTheory.CechKS.dualMap_snd, _root_.GlobalTheory.CechKS.dualMap_snd, map_mul, map_mul, map_mul]
     rfl
   intro S _ _ φS g₀ w hg₀ hO₀ hw
   set ψ := (g.appLE U.1 U'.1 hU).hom with hψ
@@ -1084,16 +1061,16 @@ theorem rel_pair {X X' : Scheme.{0}} {t : SAB H X} {t' : SAB H X'} {g : X' ⟶ X
   case add =>
     intro O' hO' h x y
     have hA : ∀ b, valR (w b) O' (x + y) = valR (w b) O' x + valR (w b) O' y := fun b =>
-      valR_add_of_le _ _ (hwO b h) x y
+      _root_.GlobalTheory.Points.valR_add _ _ (hwO b h) x y
     simp only [Δ, (he₁.1 O' (hreg₁ hO')), (he₂.1 O' (hreg₂ hO')), hA, TrivSqZeroExt.snd_add, mul_add,
       Finset.sum_add_distrib]
-    rw [add_sub_add_comm, valR_add_of_le _ _ h]
+    rw [add_sub_add_comm, _root_.GlobalTheory.Points.valR_add _ _ h]
     ring
   case mul =>
     intro O' hO' h x y
     have hM : ∀ b, (valR (w b) O' (x * y)).snd = valR g₀ O' x * (valR (w b) O' y).snd +
         valR g₀ O' y * (valR (w b) O' x).snd := fun b => by
-      rw [GlobalTheory.CechKSSmul.valR_mul_of_le _ _ (hwO b h), TrivSqZeroExt.snd_mul, fst_valR_of_red (hred b) h,
+      rw [_root_.GlobalTheory.Points.valR_mul _ _ (hwO b h), TrivSqZeroExt.snd_mul, fst_valR_of_red (hred b) h,
         fst_valR_of_red (hred b) h]
       simp [smul_eq_mul, MulOpposite.smul_eq_mul_unop]
       ring
@@ -1104,7 +1081,7 @@ theorem rel_pair {X X' : Scheme.{0}} {t : SAB H X} {t' : SAB H X'} {g : X' ⟶ X
     simp only [Δ, (he₁.2.1 O' (hreg₁ hO')), (he₂.2.1 O' (hreg₂ hO')), hM, mul_add, Finset.sum_add_distrib, hS]
     rw [GlobalTheory.CechKSSmul.valR_sub_of_le _ _ h, GlobalTheory.CechKSSmul.valR_sub_of_le _ _ h,
       GlobalTheory.CechKSSmul.valR_sub_of_le _ _ h]
-    simp only [valR_add_of_le _ _ h, GlobalTheory.CechKSSmul.valR_mul_of_le _ _ h]
+    simp only [_root_.GlobalTheory.Points.valR_add _ _ h, _root_.GlobalTheory.Points.valR_mul _ _ h]
     ring
   case res =>
     intro O₁ O₂ h hO₁ hO₂ x

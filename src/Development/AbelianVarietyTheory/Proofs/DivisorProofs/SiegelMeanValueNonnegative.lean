@@ -50,6 +50,7 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.RingTheory.WittVector.IsPoly
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntVZero
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOpenHopfOrder, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilocalConjugateSameCharpoly, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelMeanValueNonnegative
@@ -131,14 +132,12 @@ section -- clump:auto
 
 open Matrix
 
-theorem _root_.GlobalTheory.T.semilocal_conjugate_same_charpoly : ∀ (R : Type) [CommRing R], Set.Finite {I : Ideal R | I.IsMaximal} → ∀ (n : ℕ) (γ δ : Matrix (Fin n) (Fin n) R), γ.charpoly = δ.charpoly → γ.charpoly.Separable → ∃ u : GL (Fin n) R, (u : Matrix (Fin n) (Fin n) R) * δ = γ * u := by
-  first | (exact @GlobalTheory.SemilocalConj.conj_of_charpoly_eq_of_separable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilocalConjugateSameCharpoly =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelMeanValueNonnegative =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelMeanValueNonnegative", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvMemIntV\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIsIntegralInCompletedTensorBasisMulExp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilocalConjugateSameCharpoly\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelMeanValueNonnegative", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvMemIntV\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIsIntegralInCompletedTensorBasisMulExp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilocalConjugateSameCharpoly\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntVZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -150,18 +149,11 @@ namespace GlobalTheory.OrbFinAf.KottLat
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem isIntV_add (G : HTGroup p) (v : AwayP p) {a b : Qv v ⊗[ℚ] G.C} (ha : IsIntV G v a)
-    (hb : IsIntV G v b) : IsIntV G v (a + b) := fun i => by
-  rw [map_add (f := _), Finsupp.add_apply]; exact Subring.add_mem _ (ha i) (hb i)
-
-theorem isIntV_zero (G : HTGroup p) (v : AwayP p) : IsIntV G v 0 := fun i => by
-  rw [map_zero, Finsupp.zero_apply]; exact Subring.zero_mem _
-
 theorem eventually_isIntV_map (G : HTGroup p) (y : AfP p ⊗[ℚ] G.C) :
     ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)),
       IsIntV G v (Algebra.TensorProduct.map (AfP.eval v) (AlgHom.id ℚ G.C) y) := by
   induction y using TensorProduct.induction_on with
-  | zero => exact Filter.Eventually.of_forall fun v => by rw [map_zero]; exact isIntV_zero G v
+  | zero => exact Filter.Eventually.of_forall fun v => by rw [map_zero]; exact _root_.GlobalTheory.OrbFinAf.isIntV_zero G v
   | tmul a c =>
     have h1 : ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)),
         AfP.eval v a ∈ v.1.adicCompletionIntegers ℚ := a.2
@@ -174,7 +166,7 @@ theorem eventually_isIntV_map (G : HTGroup p) (y : AfP p ⊗[ℚ] G.C) :
     exact Subring.mul_mem _ hv1 (hv2 i)
   | add y z hy hz =>
     filter_upwards [hy, hz] with v h1 h2
-    rw [map_add (f := _)]; exact isIntV_add G v h1 h2
+    rw [map_add (f := _)]; exact _root_.GlobalTheory.OrbFinAf.isIntV_add' G v h1 h2
 
 end GlobalTheory.OrbFinAf.KottLat
 
@@ -206,7 +198,7 @@ theorem conj_integral {A K : Type} [Ring A] [CommRing K] {n : ℕ} (R : Subring 
     Polynomial.map_injective _ Subtype.val_injective
   have heq : Γ.charpoly = Δ.charpoly := hinj (hcΓ.trans hcΔ.symm)
   have hQ : Q = Γ.charpoly := hinj (hQm.trans hcΓ.symm)
-  obtain ⟨u, hu⟩ := GlobalTheory.T.semilocal_conjugate_same_charpoly R hfin n Γ Δ heq (hQ ▸ hQs)
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.SemilocalConj.conj_of_charpoly_eq_of_separable R hfin n Γ Δ heq (hQ ▸ hQs)
   let F : Matrix (Fin n) (Fin n) R →* A := (Φ.toRingHom.comp R.subtype.mapMatrix).toMonoidHom
   let U : Aˣ := Units.map F u
   have hUs : Φ.symm (U : A) = (u : Matrix (Fin n) (Fin n) R).map R.subtype := Φ.symm_apply_apply _

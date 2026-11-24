@@ -274,10 +274,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc UpperTheory.V.Loc
 
-private theorem ul_exp_onto {A : Type} [CommRing A] [Algebra ℚ A] {n : A} (hn : IsNilpotent n) :
-    ∃ x, IsNilpotent x ∧ IsNilpotent.exp x = 1 + n :=
-  _root_.UpperTheory.Reformulated.B.UnipotentExponentialSurjective.ul_exp_onto hn
-
 private theorem t2Space_finite_padic_module {l : ℕ} [Fact l.Prime] {V : Type} [AddCommGroup V] [Module ℚ_[l] V]
     [Module.Finite ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] : T2Space V := by
   haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup ℚ_[l] V
@@ -300,7 +296,7 @@ theorem UpperTheory.lift_unramified_unipotent_character :
   haveI : ContinuousSMul ℚ_[l] B' := IsModuleTopology.toContinuousSMul ℚ_[l] B'
   haveI : T2Space B' := t2Space_finite_padic_module (l := l)
   obtain ⟨σ, hσ⟩ := (iqBasic v).2.2.2.1
-  obtain ⟨x', hx', he'⟩ := ul_exp_onto (hn' σ)
+  obtain ⟨x', hx', he'⟩ := _root_.UpperTheory.Reformulated.B.UnipotentExponentialSurjective.ul_exp_onto (hn' σ)
   obtain ⟨x, rfl⟩ := hp x'
   have hx : IsNilpotent x := by
     obtain ⟨k, hk⟩ := hx'
@@ -643,10 +639,6 @@ section Alg
 
 variable {B : Type} [CommRing B]
 
-private theorem adj_mul (X Y : M4 B) : adj (X * Y) = adj Y * adj X := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_four, adj_apply, sgn, Fin.rev] <;> ring
-
 private theorem gsp_conj {ν : B} {h : (M4 B)ˣ} (hh : IsGSp 1 (h : M4 B)) {X : M4 B} (hX : IsGSp ν X) :
     IsGSp ν ((h⁻¹ : (M4 B)ˣ) * X * h) ∧ IsGSp ν (h * X * (h⁻¹ : (M4 B)ˣ)) := by
   have h1 : adj (h : M4 B) = (h⁻¹ : (M4 B)ˣ) := by
@@ -656,16 +648,16 @@ private theorem gsp_conj {ν : B} {h : (M4 B)ˣ} (hh : IsGSp 1 (h : M4 B)) {X : 
     ext i j
     fin_cases i <;> fin_cases j <;> simp [adj_apply, sgn, Fin.rev]
   have h2 : adj ((h⁻¹ : (M4 B)ˣ) : M4 B) = h := by
-    have := adj_mul (h : M4 B) (h⁻¹ : (M4 B)ˣ)
+    have := _root_.UpperTheory.V.Loc.SpFlag.adj_mul (h : M4 B) (h⁻¹ : (M4 B)ˣ)
     rw [Units.mul_inv, h0, h1] at this
     exact (Units.inv_eq_of_mul_eq_one_left this.symm).symm
   unfold IsGSp at hX ⊢
   constructor
-  · rw [adj_mul, adj_mul, h1, h2]
+  · rw [_root_.UpperTheory.V.Loc.SpFlag.adj_mul, _root_.UpperTheory.V.Loc.SpFlag.adj_mul, h1, h2]
     simp only [mul_assoc, Units.mul_inv_cancel_left]
     rw [← mul_assoc (adj X), hX]
     simp
-  · rw [adj_mul, adj_mul, h1, h2]
+  · rw [_root_.UpperTheory.V.Loc.SpFlag.adj_mul, _root_.UpperTheory.V.Loc.SpFlag.adj_mul, h1, h2]
     simp only [mul_assoc, Units.inv_mul_cancel_left]
     rw [← mul_assoc (adj X), hX]
     simp

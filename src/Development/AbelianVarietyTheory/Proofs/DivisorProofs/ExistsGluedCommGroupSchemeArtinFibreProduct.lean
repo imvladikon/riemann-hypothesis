@@ -211,12 +211,6 @@ theorem left_ext {Y Z : Over S} {W : Scheme.{0}} {u v : W ⟶ (Y ⊗ Z).left}
   rw [Over.snd_left] at h₂
   exact pullback.hom_ext h₁ h₂
 
-theorem lift_left_fst' {T X Y : Over S} (a : T ⟶ X) (b : T ⟶ Y) : (lift a b).left ≫ (fst X Y).left = a.left := by
-  rw [← Over.comp_left, lift_fst]
-
-theorem lift_left_snd' {T X Y : Over S} (a : T ⟶ X) (b : T ⟶ Y) : (lift a b).left ≫ (snd X Y).left = b.left := by
-  rw [← Over.comp_left, lift_snd]
-
 variable {G' : Over S'} [GrpObj G'] {G : Over S} [GrpObj G] {f : S' ⟶ S} {φ : G'.left ⟶ G.left}
 
 theorem one_left (h : IsGrpPullback G' G f φ) (T : Over S') :
@@ -245,7 +239,7 @@ theorem mul_compat (h : IsGrpPullback G' G f φ) (k : (G' ⊗ G').left ⟶ (G �
     rw [h.1.w, ← Category.assoc, Over.w])
   have e := h.2 (G' ⊗ G') (fst G' G') (snd G' G') x₀ y₀ rfl rfl
   rw [Hom.mul_def, Hom.mul_def, lift_fst_snd, Category.id_comp, Over.comp_left] at e
-  have hl : (lift x₀ y₀).left = k := left_ext (by rw [lift_left_fst', hk₁]; rfl) (by rw [lift_left_snd', hk₂]; rfl)
+  have hl : (lift x₀ y₀).left = k := left_ext (by rw [_root_.GlobalTheory.TripleDescent.lift_left_fst, hk₁]; rfl) (by rw [_root_.GlobalTheory.TripleDescent.lift_left_snd, hk₂]; rfl)
   rw [← e, hl]
 
 theorem inv_compat (h : IsGrpPullback G' G f φ) : φ ≫ ι[G].left = ι[G'].left ≫ φ := by
@@ -285,8 +279,8 @@ theorem push_mul (m : Y ⊗ Y ⟶ Y) (hj : j ≫ Y.hom = A.hom ≫ s) (k : (A �
     (hm : k ≫ m.left = μ[A].left ≫ j) {T : Over S'} (x y : T ⟶ A) :
     lift (push hj x) (push hj y) ≫ m = push hj (x * y) := by
   have hl : (lift (push hj x) (push hj y)).left = (lift x y).left ≫ k := left_ext
-    (by rw [lift_left_fst', Category.assoc, hk₁, ← Category.assoc, lift_left_fst', push_left])
-    (by rw [lift_left_snd', Category.assoc, hk₂, ← Category.assoc, lift_left_snd', push_left])
+    (by rw [_root_.GlobalTheory.TripleDescent.lift_left_fst, Category.assoc, hk₁, ← Category.assoc, _root_.GlobalTheory.TripleDescent.lift_left_fst, push_left])
+    (by rw [_root_.GlobalTheory.TripleDescent.lift_left_snd, Category.assoc, hk₂, ← Category.assoc, _root_.GlobalTheory.TripleDescent.lift_left_snd, push_left])
   apply Over.OverMorphism.ext
   rw [Over.comp_left, hl, Category.assoc, hm, push_left, Hom.mul_def, Over.comp_left, Category.assoc]
 

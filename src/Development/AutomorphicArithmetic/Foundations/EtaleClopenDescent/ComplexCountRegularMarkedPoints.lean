@@ -224,8 +224,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.centralizer_orbit_sum_conjugate : ∀ {Γ Y : Type} [Group Γ] [MulAction Γ Y] (F : Y → Γ → ℂ), (∀ (η : Γ) (y : Y) (γ : Γ), F (η • y) (η * γ * η⁻¹) = F y γ) → ∀ (γ g : Γ), ∑ᶠ o : MulAction.orbitRel.Quotient (Subgroup.centralizer {γ}) Y, ((Nat.card (MulAction.stabilizer Γ (Quotient.out o) ⊓ Subgroup.centralizer {γ} : Subgroup Γ) : ℕ) : ℂ)⁻¹ * F (Quotient.out o) γ = ∑ᶠ o : MulAction.orbitRel.Quotient (Subgroup.centralizer {g * γ * g⁻¹}) Y, ((Nat.card (MulAction.stabilizer Γ (Quotient.out o) ⊓ Subgroup.centralizer {g * γ * g⁻¹} : Subgroup Γ) : ℕ) : ℂ)⁻¹ * F (Quotient.out o) (g * γ * g⁻¹) := by
-  first | (exact @GlobalTheory.ClassPart.orbitSum_conj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerOrbitSumConjugate =====
@@ -280,8 +278,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.conj_by_carrying_unit_mem_positiveSimilitudeFormGroup : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (B y : G.Cˣ) (s : ℚ), 0 < s → 0 < ((P.c : ℚˣ) : ℚ) → (P.β : G.C) = algebraMap ℚ G.C s * (y * B * sh G y) → ((y⁻¹ * P.γ * y, P.c) : G.Cˣ × ℚˣ) ∈ grp G B := by
-  first | (exact @GlobalTheory.pair_conj_mem_grp)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjByCarryingUnitMemPositiveSimilitudeFormGroupStatement =====
@@ -351,8 +347,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_conj_of_rel_similitude_pairs_same_form : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P P' : Pair G) (B y y' : G.Cˣ) (s s' : ℚ), 0 < s → 0 < s' → (P.β : G.C) = algebraMap ℚ G.C s * (y * B * sh G y) → (P'.β : G.C) = algebraMap ℚ G.C s' * (y' * B * sh G y') → P.Rel P' → ∃ (g : G.Cˣ) (sg : ℚ), 0 < sg ∧ (g : G.C) * B * sh G g = algebraMap ℚ G.C sg * B ∧ g * (y⁻¹ * P.γ * y) * g⁻¹ = y'⁻¹ * P'.γ * y' := by
-  first | (exact @GlobalTheory.LKCx.ConjR.conj_of_rel)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjOfRelSimilitudePairsSameFormStatement =====
@@ -493,8 +487,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.finite_weightedPairOrbits_of_finite_weightedFixedPoints : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F) (wt : Polynomial G.F → ℂ) (Kf : Subgroup G.GAf) (f : G.GAf → ℂ), (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), (∀ k ∈ K', ∀ g, f' (k⁻¹ * g * k) = f' g) → ∀ (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) β x t), Set.Finite {q : Pts G v β x t hx Kf K' | ∃ y : grp G β, FixL G v β y (Quot.out q).2.1 ∧ f ((Quot.out q).1.1⁻¹ * toAfF G β x t hx y * (Quot.out q).1.1) * f' ((Quot.out q).1.2⁻¹ * toP1 G β y * (Quot.out q).1.2) ≠ 0} → {o : MulAction.orbitRel.Quotient (grp G β) (GlobalTheory.CxUnfold.Ys G v β x t hx Kf K') | ∃ y, GlobalTheory.CxUnfold.cxF G v wt β x t hx Kf f K' f' (Quotient.out o) y ≠ 0}.Finite := by
-  first | (exact @GlobalTheory.CxUnfold.finite_orbits_of_finite_pts)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeightedPairOrbitsOfFiniteWeightedFixedPoiStatement =====
@@ -556,8 +548,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.finsum_eq_finsum_finsum_of_fibre_bij : ∀ {α ι : Type} {κ : ι → Type} (U : α → ℂ) (W : (i : ι) → κ i → ℂ) (π : α → ι) (Φ : (i : ι) → α → κ i), (Function.support U).Finite → (∀ a, U a ≠ 0 → W (π a) (Φ (π a) a) = U a) → (∀ a a', U a ≠ 0 → U a' ≠ 0 → π a' = π a → Φ (π a) a = Φ (π a) a' → a = a') → (∀ i c, W i c ≠ 0 → ∃ a, π a = i ∧ U a ≠ 0 ∧ Φ i a = c) → ∑ᶠ a, U a = ∑ᶠ i, ∑ᶠ c, W i c := by
-  first | (exact @GlobalTheory.finsum_regroup_fibre_bij)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumRegroupFibreBijStatement =====
@@ -662,8 +652,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.pairWeight_invariant_form_group_conj : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F) (wt : Polynomial G.F → ℂ) (Kf : Subgroup G.GAf) (f : G.GAf → ℂ), (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), (∀ k ∈ K', ∀ g, f' (k⁻¹ * g * k) = f' g) → ∀ (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) β x t), ∀ (η : grp G β) (a : GlobalTheory.CxUnfold.Ys G v β x t hx Kf K') (y : grp G β), GlobalTheory.CxUnfold.cxF G v wt β x t hx Kf f K' f' (η • a) (η * y * η⁻¹) = GlobalTheory.CxUnfold.cxF G v wt β x t hx Kf f K' f' a y := by
-  first | (exact @GlobalTheory.CxUnfold.cxF_smul_conj_gen)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairWeightInvariantFormGroupConjStatement =====
@@ -708,8 +696,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.pairWeight_support_finite_of_finite_fixing : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F) (wt : Polynomial G.F → ℂ) (Kf : Subgroup G.GAf) (f : G.GAf → ℂ), (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → ∀ (K' : Subgroup (Gr G 1)) (f' : Gr G 1 → ℂ), (∀ k ∈ K', ∀ g, f' (k⁻¹ * g * k) = f' g) → ∀ (β : G.Cˣ) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) β x t), (∀ (h : G.GAf × Gr G 1) (z : Fin G.n → ℂ), 0 < (star z ⬝ᵥ (herm G v β *ᵥ z)).re → Set.Finite {y : grp G β | FixL G v β y z ∧ f (h.1⁻¹ * toAfF G β x t hx y * h.1) * f' (h.2⁻¹ * toP1 G β y * h.2) ≠ 0}) → ∀ a : GlobalTheory.CxUnfold.Ys G v β x t hx Kf K', (Function.support (GlobalTheory.CxUnfold.cxF G v wt β x t hx Kf f K' f' a)).Finite := by
-  first | (exact @GlobalTheory.CxUnfold.support_cxF_finite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairWeightSupportFiniteOfFiniteFixingStatement =====
@@ -722,8 +708,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.quot_mk_eq_iff_positiveScalarFormIsomorphic : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Form G), Quot.mk Form.Rel P = Quot.mk Form.Rel Q ↔ Form.Rel P Q := by
-  first | (exact @GlobalTheory.LKCx.Form.mk_eq_iff_rel)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotMkEqIffPositiveScalarFormIsomorphicStatement =====
@@ -774,8 +758,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.rel_of_conj_in_group_of_common_form : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P P' : Pair G) (B y y' g : G.Cˣ) (s s' sg : ℚ), 0 < s → 0 < s' → 0 < sg → (P.β : G.C) = algebraMap ℚ G.C s * (y * B * sh G y) → (P'.β : G.C) = algebraMap ℚ G.C s' * (y' * B * sh G y') → (g : G.C) * B * sh G g = algebraMap ℚ G.C sg * B → g * (y⁻¹ * P.γ * y) * g⁻¹ = y'⁻¹ * P'.γ * y' → P.Rel P' := by
-  first | (exact @GlobalTheory.RelConj.rel_of_conj_in_form)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelOfConjInGroupOfCommonFormStatement =====
@@ -788,8 +770,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.LKCx
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.separable_formGroup_element_fixes_unique_positive_line : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F), sigPosH (G.gram_herm v) = 1 → ∀ (β : G.Cˣ), sh G β = β → (∃ z : (ℝ ⊗[ℚ] G.C)ˣ, Triv G ℝ β z 1) → ∀ y₀ : grp G β, (minpoly G.F (((y₀ : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)).natDegree = G.n → (minpoly G.F (((y₀ : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)).Separable → ∀ z z' : Fin G.n → ℂ, 0 < (star z ⬝ᵥ (herm G v β *ᵥ z)).re → 0 < (star z' ⬝ᵥ (herm G v β *ᵥ z')).re → FixL G v β y₀ z → FixL G v β y₀ z' → ∃ c : ℂ, z' = c • z := by
-  first | (exact @GlobalTheory.LKCx.fixL_pos_unique_of_sep)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeparableFormGroupElementFixesUniquePositiveLineStatement =====
@@ -802,8 +782,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.kottwitzIsogenyClassPointSum_comp_mulEquiv : ∀ {Γ Γ' G₁ G₂ : Type} [Group Γ] [Group Γ'] [Group G₁] [Group G₂] (e : Γ' ≃* Γ) (ι₁ : Γ →* G₁) (ι₂ : Γ →* G₂) (θ : G₂ →* G₂) (K₁ : Subgroup G₁) (K₂ : Subgroup G₂) (γ : G₁) (δ : G₂) (f : G₁ → ℂ) (φ : G₂ → ℂ), pointSum (ι₁.comp e.toMonoidHom) (ι₂.comp e.toMonoidHom) θ K₁ K₂ γ δ f φ = pointSum ι₁ ι₂ θ K₁ K₂ γ δ f φ := by
-  first | (exact @GlobalTheory.pointSum_comp_mulEquiv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzIsogenyClassPointSumCompMulEquivStatement =====
@@ -816,8 +794,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.related_pairs_same_polarization : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Pair G), P.Rel Q → Q.pol = P.pol ∧ Q.c = P.c := by
-  first | (exact @GlobalTheory.LKMid.Pair.rel_pol_c)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelatedPairsSamePolarizationStatement =====
@@ -981,7 +957,7 @@ theorem term_eq_of_rel : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Pai
     P.Rel Q → Q.term Kf f r K φ = P.term Kf f r K φ := by
   intro p _ G P Q Kf f r K φ hr hf hφ hPQ
   obtain ⟨y, s, hs, hβ, hγ⟩ := hPQ
-  have hc : Q.c = P.c := (GlobalTheory.T.related_pairs_same_polarization p G P Q ⟨y, s, hs, hβ, hγ⟩).2
+  have hc : Q.c = P.c := (_root_.GlobalTheory.LKMid.Pair.rel_pol_c p G P Q ⟨y, s, hs, hβ, hγ⟩).2
   have hat : Q.atP = locC G (y, 1) * P.atP * (locC G (y, 1))⁻¹ := by
     have := locC_conj y (P.γ, P.c)
     simp only [Pair.atP, hγ, hc]
@@ -995,8 +971,8 @@ theorem term_eq_of_rel : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Pai
   · obtain ⟨⟨δ, z⟩, hδ⟩ := hP
     obtain ⟨x, t, hx⟩ := P.trivAf
     have hx' := triv_rel P Q y s hs.ne' hβ x t hx
-    rw [GlobalTheory.T.kottwitzPair_term_eq_pointSum_any_trivialisation p G P Kf f r K φ hr hf hφ x t hx δ z hδ,
-      GlobalTheory.T.kottwitzPair_term_eq_pointSum_any_trivialisation p G Q Kf f r K φ hr hf hφ _ _ hx' δ _ (hnrm δ z hδ)]
+    rw [_root_.GlobalTheory.LKMid.Pair.term_eq_termAt p G P Kf f r K φ hr hf hφ x t hx δ z hδ,
+      _root_.GlobalTheory.LKMid.Pair.term_eq_termAt p G Q Kf f r K φ hr hf hφ _ _ hx' δ _ (hnrm δ z hδ)]
     let e : P.cent ≃* Q.cent := ((cj y).subgroupMap P.cent).trans
       (MulEquiv.subgroupCongr (cent_map P Q y s hs.ne' hβ hγ))
     have he : ∀ v : P.cent, ((e v : Q.cent) : G.Cˣ × ℚˣ) = cj y v := fun v => rfl
@@ -1020,7 +996,7 @@ theorem term_eq_of_rel : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Pai
       exact Prod.ext hγ hc
     unfold termAt
     have hS' : Q.toAf _ _ hx' (e P.self) = P.toAf x t hx P.self := by rw [← hA]; rfl
-    rw [hS, ← GlobalTheory.T.kottwitzIsogenyClassPointSum_comp_mulEquiv e, hS', hA, hQr]
+    rw [hS, ← _root_.GlobalTheory.pointSum_comp_mulEquiv e, hS', hA, hQr]
   · have hQ : ¬ ∃ dz : Gr G r × Gr G r, IsNrm G r Q.atP dz.1 dz.2 := by
       rintro ⟨⟨δ, z⟩, h⟩
       apply hP
@@ -1045,8 +1021,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.term_eq_of_similitude_rel : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P Q : Pair G) (Kf : Subgroup G.GAf) (f : G.GAf → ℂ) (r : ℕ) (K : Subgroup (Gr G r)) (φ : Gr G r → ℂ), 0 < r → (∀ k ∈ Kf, ∀ g, f (k⁻¹ * g * k) = f g) → (∀ k ∈ K, ∀ g, φ (k⁻¹ * g * sigG G r k) = φ g) → P.Rel Q → Q.term Kf f r K φ = P.term Kf f r K φ := by
-  first | (exact @GlobalTheory.LKMid.Pair.term_eq_of_rel)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TermEqOfSimilitudeRelStatement =====
@@ -1146,7 +1120,7 @@ theorem cxM_smul_conj (η : grp G β) (a : Ys G v β x t hx Kf K') (y : grp G β
     rw [hc, eigL_smul _ (toV_ne_zero η hr) hc0, eigL_conj η y hr]
   unfold cxM
   rw [he]
-  exact GlobalTheory.T.pairWeight_invariant_form_group_conj p G v _ Kf f hf K' f' hf' β x t hx η a y
+  exact _root_.GlobalTheory.CxUnfold.cxF_smul_conj_gen p G v _ Kf f hf K' f' hf' β x t hx η a y
 
 theorem cxF_one_ne (wt : Polynomial G.F → ℂ) (a : Ys G v β x t hx Kf K') (y : grp G β)
     (h : cxF G v wt β x t hx Kf f K' f' a y ≠ 0) :
@@ -1296,7 +1270,7 @@ theorem cls_part
         rw [hmu, hcz, eigL_smul y₀ hz0 hc0]
     · rfl
   simp only [hpt]
-  rw [GlobalTheory.T.conjugacyClassPart_eq_weight_mul_kottwitzPointSum p G v _ Kf f hf K' f' hf' β x t hx hu y₀]
+  rw [_root_.GlobalTheory.CxUnfoldGen.cls_eq_of_uniq p G v _ Kf f hf K' f' hf' β x t hx hu y₀]
   rfl
 
 
@@ -1320,25 +1294,25 @@ theorem cxSumAtM_unfold
     fun η a γ => cxM_smul_conj w x t hx Kf f K' f' hf hf' η a γ
   have hsupp : ∀ a : Ys G v β x t hx Kf K', (Function.support (cxM w x t hx Kf f K' f' a)).Finite := by
     intro a
-    refine (GlobalTheory.T.pairWeight_support_finite_of_finite_fixing p G v (fun _ => 1) Kf f hf K' f' hf' β x t hx hA a).subset ?_
+    refine (_root_.GlobalTheory.CxUnfold.support_cxF_finite p G v (fun _ => 1) Kf f hf K' f' hf' β x t hx hA a).subset ?_
     intro y hy
     exact cxF_one_ne x t hx Kf f K' f'
       (fun P => w P (eigL G v β y (Projectivization.rep (a.2 : Projectivization ℂ (Fin G.n → ℂ))))) a y hy
   have hfin : {o : MulAction.orbitRel.Quotient (grp G β) (Ys G v β x t hx Kf K') |
       ∃ γ, cxM w x t hx Kf f K' f' (Quotient.out o) γ ≠ 0}.Finite := by
-    refine (GlobalTheory.T.finite_weightedPairOrbits_of_finite_weightedFixedPoints p G v (fun _ => 1) Kf f hf K' f' hf' β x t hx hB).subset ?_
+    refine (_root_.GlobalTheory.CxUnfold.finite_orbits_of_finite_pts p G v (fun _ => 1) Kf f hf K' f' hf' β x t hx hB).subset ?_
     rintro o ⟨γ, hγ⟩
     exact ⟨γ, cxF_one_ne x t hx Kf f K' f'
       (fun P => w P (eigL G v β γ (Projectivization.rep ((Quotient.out o).2 : Projectivization ℂ (Fin G.n → ℂ)))))
       _ γ hγ⟩
-  rw [GlobalTheory.T.orbit_sum_conj_classes _ hinv hsupp hfin]
+  rw [_root_.GlobalTheory.OrbitUnfold.finsum_orbits_eq_finsum_conjClasses_of_any_stabilizer _ hinv hsupp hfin]
   apply finsum_congr
   intro c
   have hc : IsConj (Quotient.out c) (Classical.choose (ConjClasses.exists_rep c)) := by
     rw [← ConjClasses.mk_eq_mk_iff_isConj, Classical.choose_spec (ConjClasses.exists_rep c)]
     exact Quotient.out_eq c
   obtain ⟨g, hg⟩ := isConj_iff.mp hc
-  rw [GlobalTheory.T.centralizer_orbit_sum_conjugate _ hinv (Quotient.out c) g, hg]
+  rw [_root_.GlobalTheory.ClassPart.orbitSum_conj _ hinv (Quotient.out c) g, hg]
   exact cls_part w x t hx Kf f K' f' hf hf' hu _
 
 end Inv
@@ -1374,7 +1348,7 @@ theorem muOf_eq_mark (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (P : Pair
       (minpoly G.F (((r : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C)).Separable := by
     rw [hr1]
     exact P.reg
-  obtain ⟨c, hc⟩ := GlobalTheory.T.separable_formGroup_element_fixes_unique_positive_line p G v hv P.β P.sym P.trivR r hreg.1 hreg.2 x _ hpos' hz1 ⟨μ, hxv⟩ hz2
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LKCx.fixL_pos_unique_of_sep p G v hv P.β P.sym P.trivR r hreg.1 hreg.2 x _ hpos' hz1 ⟨μ, hxv⟩ hz2
   have hc0 : c ≠ 0 := by
     rintro rfl
     rw [zero_smul] at hc
@@ -1384,7 +1358,7 @@ theorem muOf_eq_mark (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (P : Pair
 theorem mark_unique (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (P : Pair G) {μ μ' : ℂ}
     (h : P.Mark μ) (h' : P.Mark μ') : μ = μ' := by
   have hm : ((1 : G.Cˣ)⁻¹ * P.γ * 1, P.c) ∈ grp G P.β :=
-    GlobalTheory.T.conj_by_carrying_unit_mem_positiveSimilitudeFormGroup p G P P.β 1 1 one_pos (pair_sim_pos ha P h) (by simp [sh_one_eq])
+    _root_.GlobalTheory.pair_conj_mem_grp p G P P.β 1 1 one_pos (pair_sim_pos ha P h) (by simp [sh_one_eq])
   simp only [inv_one, _root_.one_mul, _root_.mul_one] at hm
   rw [← muOf_eq_mark (v := v) ha hv P ⟨_, hm⟩ rfl h, muOf_eq_mark (v := v) ha hv P ⟨_, hm⟩ rfl h']
 
@@ -1408,7 +1382,7 @@ theorem markTerm_rel (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) {P P' : P
   by_cases hM : ∃ μ, P.Mark μ
   · have hM' := hiff.mp hM
     rw [dite_eq_left hM, dite_eq_left hM', (Pair.rel_pol_c p G P P' h).1,
-      GlobalTheory.T.term_eq_of_similitude_rel p G P P' Kf f 1 K' f' one_pos hf hf' h]
+      _root_.GlobalTheory.LKMid.Pair.term_eq_of_rel p G P P' Kf f 1 K' f' one_pos hf hf' h]
     congr 2
     exact mark_unique ha hv P' hM'.choose_spec ((Pair.mark_iff_of_rel p G P P' _ h).mp hM.choose_spec)
   · rw [dif_neg hM, dif_neg (fun h' => hM (hiff.mpr h'))]
@@ -1435,7 +1409,7 @@ theorem carry_of_formCls {Q : Cls G} {q : FCls G} (h : formCls Q = q) :
       ((Quot.out Q).β : G.C) = algebraMap ℚ G.C s * (y * (Quot.out q).β * sh G y) := by
   have h1 : Quot.mk Form.Rel (Quot.out q) = Quot.mk Form.Rel (formOf (Quot.out Q)) :=
     (Quot.out_eq q).trans h.symm
-  obtain ⟨y, s, hs, he⟩ := (GlobalTheory.T.quot_mk_eq_iff_positiveScalarFormIsomorphic p G _ _).mp h1
+  obtain ⟨y, s, hs, he⟩ := (_root_.GlobalTheory.LKCx.Form.mk_eq_iff_rel p G _ _).mp h1
   exact ⟨y, s, hs, he⟩
 
 theorem phi_of_formCls {Q : Cls G} {q : FCls G} (h : formCls Q = q) (hc : 0 < (((Quot.out Q).c : ℚˣ) : ℚ)) :
@@ -1444,7 +1418,7 @@ theorem phi_of_formCls {Q : Cls G} {q : FCls G} (h : formCls Q = q) (hc : 0 < ((
       ∃ hm : ((y⁻¹ * (Quot.out Q).γ * y, (Quot.out Q).c) : G.Cˣ × ℚˣ) ∈ grp G (Quot.out q).β,
         phi q Q = ConjClasses.mk ⟨_, hm⟩ := by
   obtain ⟨y, s, hs, hβ⟩ := carry_of_formCls h
-  exact phi_spec q Q y s hs hβ (GlobalTheory.T.conj_by_carrying_unit_mem_positiveSimilitudeFormGroup p G _ _ y s hs hc hβ)
+  exact phi_spec q Q y s hs hβ (_root_.GlobalTheory.pair_conj_mem_grp p G _ _ y s hs hc hβ)
 
 theorem reg_of_conj {B : G.Cˣ} (r g : grp G B) (P : Pair G) (y : G.Cˣ)
     (e : (g : G.Cˣ × ℚˣ).1 * (r : G.Cˣ × ℚˣ).1 * (g : G.Cˣ × ℚˣ).1⁻¹ = y⁻¹ * P.γ * y) :
@@ -1465,7 +1439,7 @@ theorem ofGrp_rel (F : Form G) (r g : grp G F.β)
     (e : (g : G.Cˣ × ℚˣ).1 * (r : G.Cˣ × ℚˣ).1 * (g : G.Cˣ × ℚˣ).1⁻¹ = y⁻¹ * P.γ * y) :
     (ofGrp F r hrg).Rel P := by
   obtain ⟨hg1, hg2⟩ := g.2
-  refine GlobalTheory.T.rel_of_conj_in_group_of_common_form p G (ofGrp F r hrg) P F.β 1 y (g : G.Cˣ × ℚˣ).1 1 s ((g : G.Cˣ × ℚˣ).2 : ℚ)
+  refine _root_.GlobalTheory.RelConj.rel_of_conj_in_form p G (ofGrp F r hrg) P F.β 1 y (g : G.Cˣ × ℚˣ).1 1 s ((g : G.Cˣ × ℚˣ).2 : ℚ)
     one_pos hs hg2 ?_ hβ hg1 ?_
   · show (F.β : G.C) = _
     simp [sh_one_eq]
@@ -1516,7 +1490,7 @@ theorem markSumC_regroup (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (w : 
     · exact pair_sim_pos ha _ hμ.choose_spec
     · exact absurd rfl hQ
   show ∑ᶠ Q : Cls G, markTerm w L.K.toSubgroup f K' f' (Quot.out Q) = _
-  refine GlobalTheory.T.finsum_eq_finsum_finsum_of_fibre_bij (κ := fun q : FCls G => ConjClasses (grp G (Quot.out q).β))
+  refine _root_.GlobalTheory.finsum_regroup_fibre_bij (κ := fun q : FCls G => ConjClasses (grp G (Quot.out q).β))
     (fun Q : Cls G => markTerm w L.K.toSubgroup f K' f' (Quot.out Q))
     (fun q c => clsW (v := v) w (Quot.out q).trivAf.choose (Quot.out q).trivAf.choose_spec.choose
       (Quot.out q).trivAf.choose_spec.choose_spec L.K.toSubgroup f K' f'
@@ -1541,7 +1515,7 @@ theorem markSumC_regroup (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (w : 
     have e : (g : G.Cˣ × ℚˣ).1 * (y⁻¹ * (Quot.out a).γ * y) * (g : G.Cˣ × ℚˣ).1⁻¹ =
         y'⁻¹ * (Quot.out a').γ * y' := conj_comp hg
     obtain ⟨hg1, hg2⟩ := g.2
-    have hrel := GlobalTheory.T.rel_of_conj_in_group_of_common_form p G (Quot.out a) (Quot.out a') _ y y' _ s s' _ hs hs' hg2 hβ hβ' hg1 e
+    have hrel := _root_.GlobalTheory.RelConj.rel_of_conj_in_form p G (Quot.out a) (Quot.out a') _ y y' _ s s' _ hs hs' hg2 hβ hβ' hg1 e
     have hq : Quot.mk Pair.Rel (Quot.out a) = Quot.mk Pair.Rel (Quot.out a') :=
       ((Pair.mk_eq_iff_rel_and_out_rel p G _ _).1).mpr hrel
     exact (Quot.out_eq a).symm.trans (hq.trans (Quot.out_eq a'))
@@ -1570,14 +1544,14 @@ theorem markSumC_regroup (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (w : 
     have hform : formCls a = i := by
       obtain ⟨y, s, hs, hβ, -⟩ := hrel0
       have hR : (formOf (Quot.out a)).Rel (Quot.out i) := ⟨y, s, hs, hβ⟩
-      exact ((GlobalTheory.T.quot_mk_eq_iff_positiveScalarFormIsomorphic p G _ _).mpr hR).trans (Quot.out_eq i)
+      exact ((_root_.GlobalTheory.LKCx.Form.mk_eq_iff_rel p G _ _).mpr hR).trans (Quot.out_eq i)
     have hr2 : 0 < (((r : G.Cˣ × ℚˣ).2 : ℚˣ) : ℚ) := r.2.2
     have hPc : P.c = (Quot.out a).c := (Pair.rel_pol_c p G _ _ hrel0).2
     have hca : 0 < (((Quot.out a).c : ℚˣ) : ℚ) := by
       rw [← hPc]
       exact hr2
     obtain ⟨y₁, s₁, hs₁, hβ₁, hm₁, hphi₁⟩ := phi_of_formCls hform hca
-    obtain ⟨g, sg, hsg, hg, hγ⟩ := GlobalTheory.T.exists_conj_of_rel_similitude_pairs_same_form p G (Quot.out a) P (Quot.out i).β y₁ 1 s₁ 1 hs₁ one_pos hβ₁
+    obtain ⟨g, sg, hsg, hg, hγ⟩ := _root_.GlobalTheory.LKCx.ConjR.conj_of_rel p G (Quot.out a) P (Quot.out i).β y₁ 1 s₁ 1 hs₁ one_pos hβ₁
       (by
         show ((Quot.out i).β : G.C) = _
         simp [sh_one_eq]) hrel0
@@ -1621,7 +1595,7 @@ theorem UpperTheory.Cb.complex_count_regular_marked_points :
     (CxReg.finite_pts_reg G ha v hv L f hf hreg K' f' hf' _ _ _ _ (Quot.out q).sym (Quot.out q).trivR)
     (fun y₀ h hne z z' hz hz' hF hF' => by
       obtain ⟨hd, hs⟩ := CxReg.sep_of_regAf G v hv f hreg _ _ _ _ (Quot.out q).sym (Quot.out q).trivR y₀ h hne ⟨z, hz, hF⟩
-      exact GlobalTheory.T.separable_formGroup_element_fixes_unique_positive_line p G v hv _ (Quot.out q).sym (Quot.out q).trivR y₀ hd hs z z' hz hz' hF hF')
+      exact _root_.GlobalTheory.LKCx.fixL_pos_unique_of_sep p G v hv _ (Quot.out q).sym (Quot.out q).trivR y₀ hd hs z z' hz hz' hF hF')
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

@@ -508,10 +508,7 @@ theorem recentre_mul {n : ℕ} (t₀ : Fin n → ℂ) (ρ₀ ρ₁ : ℝ) (π : 
   funext i
   simp [HodgeMetric.recentre, _root_.mul_assoc]
 
-theorem star_mem_ball' {n : ℕ} {u : Fin n → ℂ} (hu : u ∈ Metric.ball (0 : Fin n → ℂ) 1) :
-    star u ∈ Metric.ball (0 : Fin n → ℂ) 1 := by
-  rw [mem_ball_zero_iff] at hu ⊢
-  rwa [norm_star]
+alias star_mem_ball' := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ConjPeriods.star_mem_ball
 
 theorem star_mem_punct' {n a : ℕ} {u : Fin n → ℂ} (hu : u ∈ Flat.punct n a 1) :
     star u ∈ Flat.punct n a 1 :=

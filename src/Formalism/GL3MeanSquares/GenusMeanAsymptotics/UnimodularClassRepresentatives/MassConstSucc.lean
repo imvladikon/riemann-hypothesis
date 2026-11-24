@@ -277,20 +277,6 @@ noncomputable section
 
 namespace Formalism.HermitianLattices.Ext.L3
 
-variable {K F V V' : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F]
-  [Algebra F K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V]
-  [IsScalarTower (𝓞 K) K V] [AddCommGroup V'] [Module K V'] [FiniteDimensional K V']
-  [Module (𝓞 K) V'] [IsScalarTower (𝓞 K) K V']
-
-variable {h : V →ₗ⋆[K] V →ₗ[K] K} {h' : V' →ₗ⋆[K] V' →ₗ[K] K}
-
-theorem repMass_eq_prod_psi (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) (hs : h.IsSymm)
-    (hd : IsTotPosDef h) (S : VecSplit h h') {L : Submodule (𝓞 K) V}
-    (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {c : ℝ}
-    (hc : MassConst K F (finrank K V - 1) c) :
-    repMass h L (h S.x₀ S.x₀) = c * ∏' 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, psiP S L 𝔭.1 :=
-  MassProductFormula.repMass_eq_prod_psi' hK hF hs hd S (by first | exact hL) hLi hc
-
 end Formalism.HermitianLattices.Ext.L3
 end -- clump:auto
 end -- clump:auto
@@ -377,13 +363,13 @@ theorem tprod_localPsi_eq (hLI : LIStat) (hK : Formalism.HermitianLatticesTheory
     unfold lamG
     exact tprod_eq_prod fun 𝔭 h𝔭 => localMassFactor_of_valuation_eq_zero hK hF hs hd hLfull hLi 𝔭.2 (hU1 𝔭 h𝔭)
   have e3 : normD h L = ∏ 𝔭 ∈ U, (Ideal.absNorm 𝔭.1 : ℝ) ^ vd h L 𝔭.1 := by
-    rw [normD_eq_prod hK hF hs hd hLfull hLi]
+    rw [_root_.Formalism.HermitianLattices.Ext.L3.BrA.normD_eq_tprod hK hF hs hd hLfull hLi]
     exact tprod_eq_prod fun 𝔭 h𝔭 => by rw [hU1 𝔭 h𝔭, pow_zero]
   have h4 : ∀ 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, 𝔭 ∉ U →
       alphaN h L 𝔭.1 n / (1 - etaF K F 𝔭.1 ^ finrank K V *
           (Ideal.absNorm 𝔭.1 : ℝ) ^ (-(finrank K V : ℤ))) = 1 := by
     intro 𝔭 h𝔭
-    rw [alphaN_of_vd_zero_unit hK hF hs hd hLfull hLi 𝔭.2 (hU1 𝔭 h𝔭) hm (hU2 𝔭 h𝔭)]
+    rw [_root_.Formalism.HermitianLattices.Ext.L3.unitaryAbsoluteValueBounds.alphaN_unit hK hF hs hd hLfull hLi 𝔭.2 (hU1 𝔭 h𝔭) hm (hU2 𝔭 h𝔭)]
     exact div_self (A5.eFac_pos 𝔭.2 hm).ne'
   have e4 : singS F h L n = ∏ 𝔭 ∈ U, alphaN h L 𝔭.1 n / (1 - etaF K F 𝔭.1 ^ finrank K V *
           (Ideal.absNorm 𝔭.1 : ℝ) ^ (-(finrank K V : ℤ))) := by
@@ -413,7 +399,7 @@ theorem repMass_eq (hH : HermRepUnram) (hLI : LIStat) (hK : Formalism.HermitianL
     apply hn0
     apply RingOfIntegers.ext
     exact (algebraMap F K).injective (by rw [e]; simp)
-  have h1 := repMass_eq_prod_psi (F := F) hK hF hs hd (vecSplitPerp h hne) hL hLi hc
+  have h1 := _root_.Formalism.HermitianLattices.Ext.L3.MassProductFormula.repMass_eq_prod_psi' (F := F) hK hF hs hd (vecSplitPerp h hne) hL hLi hc
   have h2 := tprod_localPsi_eq hLI hK hF hs hd (vecSplitPerp h hne) hL hLi (by omega) hn0 hx₀
   rw [h2] at h1
   have h3 : h (vecSplitPerp h hne).x₀ (vecSplitPerp h hne).x₀ = algebraMap F K (n : F) := hx₀
@@ -1173,7 +1159,7 @@ theorem massConst_succ (hH : HermRepUnram) (hLI : LIStat) (hK : Formalism.Hermit
       fun j : ℕ => (Formalism.HermitianLatticesTheory.mass h L + ∑ᶠ n ∈ boxSet K F ((j : ℝ) ^ 2),
         repMass h L (algebraMap F K (n : F))) / (j : ℝ) ^ (2 * Formalism.HermitianLatticesTheory.fDeg K * finrank K V) := by
     funext j
-    rw [sum_ballCount_eq hK hF hs hd hL.toIsLattice hLi hsr (by positivity)]
+    rw [_root_.Formalism.HermitianLattices.Ext.L3.BallSum.sum_ballCount hK hF hs hd hL.toIsLattice hLi hsr (by positivity)]
   rw [hfun] at hlim
   have hAB := tendsto_nhds_unique hlim hlim2
   have hn0 : 0 < finrank K V := by omega

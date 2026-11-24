@@ -388,9 +388,6 @@ open GlobalTheory.Hk3 (Core Good IsSF SchurAll TwoSided FixAll EEc Wcc eH IsLab 
 
 namespace GlobalTheory.DimPartsFull
 
-theorem dualLab_dualLab' (d : List ℤ) : dualLab (dualLab d) = d := by
-  simp [dualLab, List.map_reverse, List.map_map]
-
 section Tw
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] (s : Bool)
 
@@ -511,7 +508,7 @@ theorem dimParts_of_schur {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : 
     intro c c' hcc x hx
     refine hEchar c' x fun P d hP hd => ?_
     rw [hEev c P hP _ x hx, evC_single, if_pos hd]
-    have hl : IsLab (Wc D j) P (dualLab d) := (hlab P (dualLab d) hP).2 (by rwa [dualLab_dualLab'])
+    have hl : IsLab (Wc D j) P (dualLab d) := (hlab P (dualLab d) hP).2 (by rwa [_root_.GlobalTheory.SphLabelOps.dualLab_dualLab])
     exact congrArg (· • x) (congrFun hcc ⟨(P, dualLab d), hP, hl⟩)
   have hWcle : ∀ c c', lab c = lab c' → Wcc R.toRealDat R.SF j c ≤ Wcc R.toRealDat R.SF j c' := by
     intro c c' hcc x hx
@@ -523,7 +520,7 @@ theorem dimParts_of_schur {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : 
     (fun i => hE i.1.1 (Finsupp.single (dualLab i.1.2) 1)) (fun i => hWo i.1.1 (Finsupp.single i.1.2 1))
     (fun c => EEc R.toRealDat R.SF c ⊓ LevE) (fun c => Wcc R.toRealDat R.SF j c ⊓ LevW) lab ?_ ?_ ?_ ?_ (R.Carries p)
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
-    rw [hEev c P hP _ x hx.1, evC_single, if_pos ((hlab P d hP).1 hd), dualLab_dualLab']
+    rw [hEev c P hP _ x hx.1, evC_single, if_pos ((hlab P d hP).1 hd), _root_.GlobalTheory.SphLabelOps.dualLab_dualLab]
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
     rw [hWev c P hP _ x hx.1, evC_single, if_pos hd]
   · intro c c' hcc
@@ -1024,7 +1021,7 @@ theorem iC_principal_injective : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
     GlobalTheory.TwistPlacesObj.isForm_tw _ R.toRealDat.emb0 (GlobalTheory.QPosCompare.isForm_jX hC.base.models t)
   exact GlobalTheory.TwistPlacesObj.lin_injective ((R.toCx3 F).Θ t) hj
     ((A3.A.fam.R t).toF (A3.A.fam.lvl ⊥ 1) ((R.toCx3 F).zs.Z t))
-    (BlockDat.toF_injective _ _ _) (fun y => GlobalTheory.TwistPlacesObj.toF_mem _ _ _ y)
+    (BlockDat.toF_injective _ _ _) (fun y => _root_.Formalism.IndefR.Cx.BlockGood.toF_mem _ _ _ y)
 
 end GlobalTheory.PrimIn
 end -- clump:auto
@@ -1090,8 +1087,8 @@ theorem stage2_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems 
   refine ⟨x₀, ?_⟩
   intro D G _ _ Pl0 I0 T0 A3 Ks _ _ _ R F L hLe hLx hSz hPar hT hM hRow
   obtain ⟨pV⟩ := hPar
-  obtain ⟨_hGiven, _hGS, _hCD, _hLI, hTR, hUI, _hUIW⟩ := _root_.GlobalTheory.T.lift_data_of_multiplicity_one P R F hT hM
-  obtain ⟨_hOk, _hGU, hGE, hBlk, _hA, _hB⟩ := _root_.GlobalTheory.T.pgUnit_and_pgEquiv_of_multEq P R F hT hM
+  obtain ⟨_hGiven, _hGS, _hCD, _hLI, hTR, hUI, _hUIW⟩ := _root_.GlobalTheory.PrimBase.base_of_ties_alt P R F hT hM
+  obtain ⟨_hOk, _hGU, hGE, hBlk, _hA, _hB⟩ := _root_.GlobalTheory.Stage1.stage1_alt P R F hT hM
   have hJ := (GlobalTheory.Hk3.inertJunk_iff A3).1 hT.junk
   have hPos : ∀ b, (lv (F.fc (R.toCx3 F).zs) b).Pos :=
     hx₀ (s := 1) R F L pV hLe hLx hSz hT.ok hT.char hT.ex hT.host hT.ccK hT.guard hT.types hTR hGE hBlk hRow
@@ -1101,15 +1098,6 @@ theorem stage2_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems 
 end GlobalTheory.Stage2
 end
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
-open scoped TensorProduct InnerProductSpace Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.PrimIn
-
-theorem _root_.GlobalTheory.T.principalLevel_bijective_of_multEq : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T0 : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3), ∀ (L : SizeData₂ D), L.sc.eps = eps → x₀ ≤ L.sc.x → Formalism.MainNotions.SizesAt L → Nonempty (ParameterChoice' D L) → TiesB R F → GlobalTheory.CuspMult.MultEq R.toRealDat → Formalism.IndefR.Rat.RowTest (R.toCx3 F) → (∀ b, (lv (F.fc (R.toCx3 F).zs) b).Pos) ∧ (0 < R.kap ∧ ∀ i t p, 0 < R.lam3 i t p A3.A.v0) ∧ R.PrincipalLevelBijective F := by
-  first | exact @_root_.GlobalTheory.Stage2.stage2_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MultiplicityOneRationalRowsSized =====
@@ -1127,18 +1115,18 @@ open GlobalTheory.PrimIn
 namespace GlobalTheory.Closing3
 theorem primRows3_typesSep3_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → GlobalTheory.Published.HeckeLPartialContinuation → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T0 : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m} (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat3 D A3 T.Q.c.F) (F : Face3 D A3) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.toRealDat.MW i σ).Vec) (O : ∀ i, OMDat T.toCore R.toRealDat i Unit (fun _ => A3.A.μ0)), ∀ (L : SizeData₂ D), L.sc.eps = eps → x₀ ≤ L.sc.x → Formalism.MainNotions.SizesAt L → Nonempty (ParameterChoice' D L) → TiesB R F → TiesG T R κ v₀ O → GlobalTheory.CuspMult.MultEq R.toRealDat → Formalism.IndefR.Rat.RowTest (R.toCx3 F) → PrimRows3 R F ∧ A3.fam3.TypesSep3 ∧ ∃ tr, R.TrISem F tr ∧ GlobalTheory.Hk3.TrISepWith A3 tr := by
   intro P hHL eps heps
-  obtain ⟨x₀, hx₀⟩ := _root_.GlobalTheory.T.principalLevel_bijective_of_multEq P eps heps
+  obtain ⟨x₀, hx₀⟩ := _root_.GlobalTheory.Stage2.stage2_alt P eps heps
   refine ⟨x₀, ?_⟩
   intro D G _ _ Pl0 I0 T0 A3 T _ R F κ v₀ O L hLe hLx hSz hPar hT hG hM hRT
-  obtain ⟨_hGiven, hGS, hCD, hLI, _hTR, _hUI, _hUIW⟩ := _root_.GlobalTheory.T.lift_data_of_multiplicity_one P R F hT hM
-  obtain ⟨hOk, hGU, hGE, _hBlk, hA, hB⟩ := _root_.GlobalTheory.T.pgUnit_and_pgEquiv_of_multEq P R F hT hM
+  obtain ⟨_hGiven, hGS, hCD, hLI, _hTR, _hUI, _hUIW⟩ := _root_.GlobalTheory.PrimBase.base_of_ties_alt P R F hT hM
+  obtain ⟨hOk, hGU, hGE, _hBlk, hA, hB⟩ := _root_.GlobalTheory.Stage1.stage1_alt P R F hT hM
   obtain ⟨hPos, hK, hH2⟩ := hx₀ R F L hLe hLx hSz hPar hT hM hRT
   obtain ⟨hLT, hLTB, hML⟩ := GlobalTheory.T.liftTests_modularLattice_of_coreCompatibility T R F κ v₀ O hT hG
   have hU : R.toRealDat.LUnif := hG.unif
-  obtain ⟨_hLev, _hW, hHk, hTS, htr⟩ := _root_.GlobalTheory.T.pLevW_and_trISep_of_liftTest_pos P R F hT hM hU hLT hPos hK
-  obtain ⟨hGal, hPP⟩ := _root_.GlobalTheory.T.real_data_weight_vector_family_alt P hHL T R F κ v₀ O hT hG hM hRT hPos hK
+  obtain ⟨_hLev, _hW, hHk, hTS, htr⟩ := _root_.GlobalTheory.Stage3.stage3_alt P R F hT hM hU hLT hPos hK
+  obtain ⟨hGal, hPP⟩ := _root_.GlobalTheory.Stage4.stage4_alt P hHL T R F κ v₀ O hT hG hM hRT hPos hK
   have hJ := (GlobalTheory.Hk3.inertJunk_iff A3).1 hT.junk
-  have hOnto := _root_.GlobalTheory.T.partial_L_function_of_hypotheses_alt P.q5 P.q4 P.q2 P.q1 P.q7 P.q9 P.q10 P.q11 hHL R F hT.ok hT.char hT.ex hT.host hT.params
+  have hOnto := _root_.GlobalTheory.LiftOntoOfPublished.ontoC_of_hypotheses_alt P.q5 P.q4 P.q2 P.q1 P.q7 P.q9 P.q10 P.q11 hHL R F hT.ok hT.char hT.ex hT.host hT.params
     hT.ccK hT.guard hT.types hOk.2 hGE hU
   have hPrim := GlobalTheory.primRows3_of_parts P.q2 P.q1 R F hLI hT.ok hT.char hT.ex hJ hGS hCD hM hOk.1 hOk.2 hHk hGU hGE hRT hLT hLTB
     hOnto hPos hPP hH2 hB hU hML hA hGal
@@ -1146,15 +1134,6 @@ theorem primRows3_typesSep3_alt : _root_.GlobalTheory.PrimIn.PublishedThetaCondi
 end GlobalTheory.Closing3
 end
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
-open scoped TensorProduct InnerProductSpace Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.PrimIn
-
-theorem _root_.GlobalTheory.T.real_data_weight_vector_family_core_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → GlobalTheory.Published.HeckeLPartialContinuation → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T0 : Type} {A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T0 D.R.m} (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat3 D A3 T.Q.c.F) (F : Face3 D A3) (κ : ∀ i : Fin D.R.m, WeightFamilies.Wt D ((i : ℕ) + 1)) (v₀ : ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (R.toRealDat.MW i σ).Vec) (O : ∀ i, OMDat T.toCore R.toRealDat i Unit (fun _ => A3.A.μ0)), ∀ (L : SizeData₂ D), L.sc.eps = eps → x₀ ≤ L.sc.x → Formalism.MainNotions.SizesAt L → Nonempty (ParameterChoice' D L) → TiesB R F → TiesG T R κ v₀ O → GlobalTheory.CuspMult.MultEq R.toRealDat → Formalism.IndefR.Rat.RowTest (R.toCx3 F) → PrimRows3 R F ∧ A3.fam3.TypesSep3 ∧ ∃ tr, R.TrISem F tr ∧ GlobalTheory.Hk3.TrISepWith A3 tr := by
-  first | exact @_root_.GlobalTheory.Closing3.primRows3_typesSep3_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RealDataWeightVectorFamilyCore =====
@@ -1171,7 +1150,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PrimIn
 theorem GlobalTheory.PrimIn.holds_of_ties_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → GlobalTheory.Published.HeckeLPartialContinuation → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ (X : GlobalTheory.Mem.Stages) (px : GlobalTheory.Mem.PreX X.B.toPre) (I : GlobalTheory.Mem.Col2.ColIn X.B px) (hX : X.B.fields.Ok) (Tw : GlobalTheory.Mem.Top.TwDat X.B) (Wt : Set X.B.places.Pl) (z : GlobalTheory.Mem.R3.Dat X I hX Tw Wt) (L : SizeData₂ X.toD7), L.sc.eps = eps → x₀ ≤ L.sc.x → Formalism.MainNotions.SizesAt L → Nonempty (ParameterChoice' X.toD7 L) → TiesB z.R z.F → TiesG z.core z.R z.geo.κ z.geo.v₀ z.geo.O → GlobalTheory.CuspMult.MultEq z.R.toRealDat → Formalism.IndefR.Rat.RowTest (z.R.toCx3 z.F) → z.R.toRealDat.LIntegral → GlobalTheory.Mem.R3.Holds z.R z.F := by
   intro hP hHL eps heps
-  obtain ⟨x₀, hx⟩ := _root_.GlobalTheory.T.real_data_weight_vector_family_core_alt hP hHL eps heps
+  obtain ⟨x₀, hx⟩ := _root_.GlobalTheory.Closing3.primRows3_typesSep3_alt hP hHL eps heps
   refine ⟨x₀, ?_⟩
   intro X px I hX Tw Wt z L hLe hx0 hS hPar hB hG hM hRT hI
   have h := hx z.core z.R z.F z.geo.κ z.geo.v₀ z.geo.O L hLe hx0 hS hPar hB hG hM hRT
@@ -1184,15 +1163,6 @@ theorem GlobalTheory.PrimIn.holds_of_ties_alt : _root_.GlobalTheory.PrimIn.Publi
   exact ⟨h.1, ⟨hB.ex, hconj, hlev, hI⟩, hB.ok, h.2.1⟩
 end
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
-open scoped TensorProduct InnerProductSpace Matrix
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.PrimIn
-
-theorem _root_.GlobalTheory.T.rational_data_sized_family_alt : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → GlobalTheory.Published.HeckeLPartialContinuation → ∀ eps : ℝ, 0 < eps → ∃ x₀ : ℝ, ∀ (X : GlobalTheory.Mem.Stages) (px : GlobalTheory.Mem.PreX X.B.toPre) (I : GlobalTheory.Mem.Col2.ColIn X.B px) (hX : X.B.fields.Ok) (Tw : GlobalTheory.Mem.Top.TwDat X.B) (Wt : Set X.B.places.Pl) (z : GlobalTheory.Mem.R3.Dat X I hX Tw Wt) (L : SizeData₂ X.toD7), L.sc.eps = eps → x₀ ≤ L.sc.x → Formalism.MainNotions.SizesAt L → Nonempty (ParameterChoice' X.toD7 L) → TiesB z.R z.F → TiesG z.core z.R z.geo.κ z.geo.v₀ z.geo.O → GlobalTheory.CuspMult.MultEq z.R.toRealDat → Formalism.IndefR.Rat.RowTest (z.R.toCx3 z.F) → z.R.toRealDat.LIntegral → GlobalTheory.Mem.R3.Holds z.R z.F := by
-  first | exact @_root_.GlobalTheory.PrimIn.holds_of_ties_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RationalDataSizedFamily =====
@@ -1216,7 +1186,7 @@ open GlobalTheory.Mem.Top.GroupRetwisting
 theorem atDat_holds_alt (hP : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems) (hL : GlobalTheory.Published.HeckeLPartialContinuation) :
     AtDat fun _ _ _ _ _ _ _ _ z => GlobalTheory.CuspMult.MultEq z.R.toRealDat → Formalism.IndefR.Rat.RowTest (z.R.toCx3 z.F) →
       GlobalTheory.Mem.R3.Holds z.R z.F := by
-  have e1 := (evG_of_ev (ev_scale (_root_.GlobalTheory.T.rational_data_sized_family_alt hP hL))).inter
+  have e1 := (evG_of_ev (ev_scale (_root_.GlobalTheory.PrimIn.holds_of_ties_alt hP hL))).inter
     ((evG_of_ev LedRec.ev_exists_sizeData).inter (evG_of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev))
   have s1 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (evLgG_of_evLg GlobalTheory.T.valsIn_and_fam3_ok_of_coefficientField)
   have s2 : Step KPx (fun _ _ _ _ => True) _ := Step.of_evLgG (q := fun _ => CoverAt.WeberLev) (evG_all CoverAt.lg_weberLev)
@@ -1245,7 +1215,7 @@ theorem atDat_holds_alt (hP : _root_.GlobalTheory.PrimIn.PublishedThetaCondition
   exact hH (w.st Z') w.px w.I hX T Wt y L (by rw [hsc]) (by rw [hsc]; exact hx) hsz hpar
     ⟨(hOk w.px w.I hX w.ok w.C_eq w.xi_range).2 _ y.Xg y.tr y.good.irr, hch, hEx', hhost, ⟨L, hpar⟩, B.ccK_top, y.pins.keep.guard,
       GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue hch.base.lev hT, serClause_of_typesTrue hP.q12 _ hT,
-      GlobalTheory.Hk3.inertJunk_colIn3 _ _ _ hX _ _ _ _ _ _, y.pins.trSem, y.pins.keep.std, y.pins.phs, hn⟩
+      _root_.GlobalTheory.Hk3.FamModel.inertJunk_col _ _ _ hX _ _ _ _ _ _, y.pins.trSem, y.pins.keep.std, y.pins.phs, hn⟩
     (TiesG.of_dat y hU' hIo hOM (CoverAt.coverField_of_weberLev hW w Z' hX Wt y)) hM' hR' hI'
 theorem w_of_multEq_and_test_at_weights : _root_.GlobalTheory.PrimIn.PublishedThetaConditionTheorems → GlobalTheory.Published.HeckeLPartialContinuation → (StepW Start fun K B f T w => ∀ (Z : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl) (z : GlobalTheory.Mem.R3.Dat (w.st Z) w.I hX T Wt), GrpTrue Z.N f → GlobalTheory.Mem.R3.GrpAt (w.st Z) w.I → DV.KapDef (w.D Z) → z.R.toRealDat.ExAt → GlobalTheory.RealGeo.InGeo z.geo → CoreP z → GIs2 K w Z.G → Wt = z.W1 (F0K K.s (w.D Z)) → (∀ v ∈ Wt, B.places.resChar v ∈ T.pl) → GlobalTheory.CuspMult.MultEq z.R.toRealDat ∧ Formalism.IndefR.Rat.RowTest (z.R.toCx3 z.F)) → WeightCaseCondition := fun hP hL H =>
   (StepW.and H ((StepW.of_all fun _ _ _ _ _ _ _ s => s.1 : StepW Start Pinned).trans (_root_.GlobalTheory.Mem.R3.Rw.AtDatumEvaluation.atDat_holds_alt hP hL))).trans

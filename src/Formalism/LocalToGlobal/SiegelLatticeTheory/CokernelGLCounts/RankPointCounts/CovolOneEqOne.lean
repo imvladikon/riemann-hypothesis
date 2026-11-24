@@ -59,11 +59,6 @@ open MeasureTheory MeasurableSpace Set
 
 namespace Formalism.L2.SG.NGCut.SplitEmbedding
 
-theorem swap_mp {ι P β : Type} [Fintype ι] [Fintype P] [MeasurableSpace β] (μ0 : Measure β) [SigmaFinite μ0] :
-    MeasurePreserving (fun (x : ι → P → β) (p : P) (v : ι) => x v p)
-      (Measure.pi fun _ : ι => Measure.pi fun _ : P => μ0) (Measure.pi fun _ : P => Measure.pi fun _ : ι => μ0) := by
-  first | exact Bl.general_b_fact_third_bis_form.goal1 ..
-
 end Formalism.L2.SG.NGCut.SplitEmbedding
 end -- clump:auto
 end -- clump:auto
@@ -115,7 +110,7 @@ theorem pi_measure_eq_prod_absNorm_mul_sqrt_discr (K : Type) [Field K] [NumberFi
   let usw : (P → ι → ℂ) → (ι → P → ℂ) := fun y v p => y p v
   have h1 : ∀ x, usw (sw x) = x := fun x => rfl
   have h2 : ∀ y, sw (usw y) = y := fun y => rfl
-  have hsw : MeasurePreserving sw _ _ := swap_mp (ι := ι) (P := P) (ENNReal.ofReal c • (volume : Measure ℂ))
+  have hsw : MeasurePreserving sw _ _ := _root_.Bl.general_b_fact_third_bis_form.goal1 (ι := ι) (P := P) (ENNReal.ofReal c • (volume : Measure ℂ))
   have husw : Measurable usw :=
     Measurable.of_eval fun v => Measurable.of_eval fun p =>
       (measurable_pi_apply v).comp (measurable_pi_apply p)

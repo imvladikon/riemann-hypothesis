@@ -89,10 +89,7 @@ theorem bdd_sum {ι : Type*} (s : Finset ι) (f : ι → PowerSeries ℂ_[p]) (h
     rw [Finset.sum_insert ha]
     exact bdd_add (h a (Finset.mem_insert_self a s)) (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
-theorem lamC_one (lam : Qbar →+* ℂ_[p]) : lamC lam 1 = 1 := by
-  have h : (1 : ℂ) ∈ Qbar := one_mem _
-  rw [lamC, dite_eq_left h]
-  exact map_one lam
+alias lamC_one := _root_.GlobalTheory.ThetaParam.lamC_one
 
 theorem good_mul {g : GL3Theta.G1 p} {k l : ℕ} {F G : ℂ → ℂ} (hF : GoodAt g k F) (hG : GoodAt g l G) :
     GoodAt g (k + l) (fun z => F z * G z) := by

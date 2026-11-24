@@ -86,8 +86,7 @@ variable {Y : Scheme.{0}} [IsIntegral Y] [IsLocallyNoetherian Y]
 noncomputable def multHom (z : Y) : CartierDiv Y →+ ℤ :=
   AddMonoidHom.mk' (fun D => D.mult z) (fun D E => CartierDiv.mult_add D E z)
 
-theorem mult_neg' (D : CartierDiv Y) (z : Y) : (-D).mult z = -D.mult z :=
-  map_neg (multHom z) D
+alias mult_neg' := _root_.GlobalTheory.Cartier.MultEff.mult_neg
 
 theorem mult_sub' (D E : CartierDiv Y) (z : Y) : (D - E).mult z = D.mult z - E.mult z :=
   map_sub (multHom z) D E

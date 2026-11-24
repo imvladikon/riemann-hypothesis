@@ -107,14 +107,14 @@ theorem GlobalTheory.EtC.Pair.cup_assoc_of_mul_assoc : ∀ (R : Type) [CommRing 
   obtain ⟨α, rfl⟩ := CohomologyClass.mk_surjective a
   obtain ⟨β, rfl⟩ := CohomologyClass.mk_surjective b
   obtain ⟨γ, rfl⟩ := CohomologyClass.mk_surjective c
-  obtain ⟨δ, hδ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ h1).1 α β
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R μ h1).2 α β δ hδ]
-  obtain ⟨ε, hε⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R ν h2).1 δ γ
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R ν h2).2 δ γ ε hε]
-  obtain ⟨δ', hδ'⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ' h3).1 β γ
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R μ' h3).2 β γ δ' hδ']
-  obtain ⟨ε', hε'⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R ν' h4).1 α δ'
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R ν' h4).2 α δ' ε' hε']
+  obtain ⟨δ, hδ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h1).1 α β
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h1).2 α β δ hδ]
+  obtain ⟨ε, hε⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν h2).1 δ γ
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν h2).2 δ γ ε hε]
+  obtain ⟨δ', hδ'⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ' h3).1 β γ
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ' h3).2 β γ δ' hδ']
+  obtain ⟨ε', hε'⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν' h4).1 α δ'
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν' h4).2 α δ' ε' hε']
   suffices hh : ε.1 = ε'.1 by rw [show ε = ε' from Subtype.ext hh]
   apply (GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := L) (n := w)).2.2.1
   intro N s hs U x
@@ -569,28 +569,28 @@ theorem main : ∀ (q : ℕ) [NeZero q] (E : Spc) {n m k i j l : ℤ} (a : Ht q 
   have hfun := GlobalTheory.EtC.ZcFun.main (ZMod q)
   have cpush_id : ∀ (K I : Cx (ZMod q)) (n : ℤ) x, cpush K (𝟙 I) n x = x := fun K I n x => ((hfun.1 K I n x).2)
 
-  obtain ⟨hIi, hFi, -⟩ := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy q i
-  obtain ⟨hIj, hFj, -⟩ := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy q j
-  obtain ⟨hIl, hFl, -⟩ := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy q l
-  obtain ⟨-, -, hext⟩ := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy q (i + j + l)
-  obtain ⟨T, τ, hτ⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) (res _ (tw q i)) (res _ (tw q j))
-  obtain ⟨T3, τ', hτ'⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) T (res _ (tw q l))
+  obtain ⟨hIi, hFi, -⟩ := _root_.GlobalTheory.EtC.TwResExt.twRes_ext q i
+  obtain ⟨hIj, hFj, -⟩ := _root_.GlobalTheory.EtC.TwResExt.twRes_ext q j
+  obtain ⟨hIl, hFl, -⟩ := _root_.GlobalTheory.EtC.TwResExt.twRes_ext q l
+  obtain ⟨-, -, hext⟩ := _root_.GlobalTheory.EtC.TwResExt.twRes_ext q (i + j + l)
+  obtain ⟨T, τ, hτ⟩ := _root_.GlobalTheory.EtC.tensor_exists (ZMod q) (res _ (tw q i)) (res _ (tw q j))
+  obtain ⟨T3, τ', hτ'⟩ := _root_.GlobalTheory.EtC.tensor_exists (ZMod q) T (res _ (tw q l))
   have hT := _root_.GlobalTheory.EtC.isTwRes_tensor q i j (i + j) rfl _ _ hIi hIj hFj τ hτ
   have hT3 := _root_.GlobalTheory.EtC.isTwRes_tensor q (i + j) l (i + j + l) rfl _ _ hT hIl hFl τ' hτ'
 
-  obtain ⟨u, hu, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).1 μ (𝟙 _) (𝟙 _)
-  obtain ⟨u₁, hu₁, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ' hτ').1 P u (𝟙 _)
+  obtain ⟨u, hu, -⟩ := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod q) τ hτ).1 μ (𝟙 _) (𝟙 _)
+  obtain ⟨u₁, hu₁, -⟩ := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod q) τ' hτ').1 P u (𝟙 _)
   have L1 : μ.cup E rfl a b = cpush _ u (n + m) (τ.cup E rfl a b) := by
-    rw [GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing (ZMod q) τ μ (𝟙 _) (𝟙 _) u hu E rfl a b, cpush_id, cpush_id]
+    rw [_root_.GlobalTheory.cup_natural_in_pairing (ZMod q) τ μ (𝟙 _) (𝟙 _) u hu E rfl a b, cpush_id, cpush_id]
   have L2 : P.cup E rfl (cpush _ u (n + m) (τ.cup E rfl a b)) c = cpush _ u₁ (n + m + k) (τ'.cup E rfl (τ.cup E rfl a b) c) := by
-    rw [GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing (ZMod q) τ' P u (𝟙 _) u₁ hu₁ E rfl _ c, cpush_id]
+    rw [_root_.GlobalTheory.cup_natural_in_pairing (ZMod q) τ' P u (𝟙 _) u₁ hu₁ E rfl _ c, cpush_id]
 
   obtain ⟨ν, hν⟩ := _root_.GlobalTheory.EtC.tensor_assoc_desc (ZMod q) τ τ' hτ hτ' μ' Q'
   obtain ⟨u₂, hu₂, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ' hτ').1 ν (𝟙 _) (𝟙 _)
   have R1 : ν.cup E rfl (τ.cup E rfl a b) c = Q'.cup E hd a (μ'.cup E rfl b c) :=
     GlobalTheory.T.cupProduct_assoc_of_pairing_assoc (ZMod q) τ ν μ' Q' hν E rfl rfl rfl hd a b c
   have R2 : cpush _ u₂ (n + m + k) (τ'.cup E rfl (τ.cup E rfl a b) c) = ν.cup E rfl (τ.cup E rfl a b) c := by
-    rw [GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing (ZMod q) τ' ν (𝟙 _) (𝟙 _) u₂ hu₂ E rfl _ c, cpush_id, cpush_id]
+    rw [_root_.GlobalTheory.cup_natural_in_pairing (ZMod q) τ' ν (𝟙 _) (𝟙 _) u₂ hu₂ E rfl _ c, cpush_id, cpush_id]
 
   have hgen : ∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)),
       Sec.map (u₁.f 0) (τ'.mul U 0 0 0 (add_zero 0) (τ.mul U 0 0 0 (add_zero 0) (resGen i ζ) (resGen j ζ)) (resGen l ζ)) =

@@ -957,8 +957,6 @@ section -- clump:auto
 
 open GlobalTheory.UnitLemma Polynomial
 
-theorem _root_.GlobalTheory.T.isFullLattice_prod_of_comap_inl_map_snd : ∀ (K : UQ) (B₁ B₂ : InvAlg K) (M : Submodule K.O (B₁.A × B₂.A)), IsLat K.O K.E (M.comap (LinearMap.inl K.O B₁.A B₂.A)) → IsLat K.O K.E (M.map (LinearMap.snd K.O B₁.A B₂.A)) → IsLat K.O K.E M := by
-  first | exact @GlobalTheory.UnitLemma.isLat_of_comap_inl_of_map_snd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFullLatticeProdOfComapInlMapSndStatement =====
@@ -997,8 +995,7 @@ theorem clear_denominators (K : UQ) {V : Type} [AddCommGroup V] [Module (UQ.E K)
     rw [mul_comm, mul_smul, key, smul_smul, mul_comm, ← smul_smul]
     exact M.smul_mem _ h
 
-theorem main : ∀ (K : GlobalTheory.UnitLemma.UQ) {V : Type} [inst : AddCommGroup V] [inst_1 : Module (GlobalTheory.UnitLemma.UQ.E K) V] [inst_2 : Module (GlobalTheory.UnitLemma.UQ.O K) V] [IsScalarTower (GlobalTheory.UnitLemma.UQ.O K) (GlobalTheory.UnitLemma.UQ.E K) V] (M : Submodule (GlobalTheory.UnitLemma.UQ.O K) V) {x : V}, x ∈ Submodule.span (GlobalTheory.UnitLemma.UQ.E K) (↑M : Set V) → ∃ (d : GlobalTheory.UnitLemma.UQ.O K), d ≠ (0 : GlobalTheory.UnitLemma.UQ.O K) ∧ d • x ∈ M :=
-  fun K _ _ _ _ _ M _ hx => clear_denominators K M hx
+alias main := _root_.GlobalTheory.ClearDenominatorsIntegral.clear_denominators
 
 end GlobalTheory.ClearDenominatorsIntegral
 end -- clump:auto
@@ -1014,12 +1011,7 @@ open GlobalTheory.UnitLemma Polynomial
 
 namespace GlobalTheory.UnitLemma.LinPair
 
-theorem exists_smul_mem_of_mem_span (K : UQ) {V : Type} [AddCommGroup V] [Module K.E V] [Module K.O V]
-    [IsScalarTower K.O K.E V] (M : Submodule K.O V) {x : V} (hx : x ∈ Submodule.span K.E (M : Set V)) :
-    ∃ d : K.O, d ≠ 0 ∧ d • x ∈ M := by
-  first
-  | (apply _root_.GlobalTheory.ClearDenominatorsIntegral.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ClearDenominatorsIntegral.main ..)
+alias exists_smul_mem_of_mem_span := _root_.GlobalTheory.ClearDenominatorsIntegral.clear_denominators
 
 end GlobalTheory.UnitLemma.LinPair
 
@@ -1093,7 +1085,7 @@ theorem fib_card (K : UQ) (B₁ B₂ : InvAlg K) (hg₁ : B₁.σ B₁.g = B₁.
         ∀ y ∈ M, (B₁.σ y.1, B₂.σ y.2) ∈ M) ∧
         M.comap (LinearMap.inl K.O B₁.A B₂.A) = M₁ ∧ M.map (LinearMap.snd K.O B₁.A B₂.A) = M₂} :=
     { toFun := fun M => ⟨M.1, ⟨M.2.1.2.1, M.2.1.2.2⟩, M.2.2⟩
-      invFun := fun M => ⟨M.1, ⟨GlobalTheory.T.isFullLattice_prod_of_comap_inl_map_snd K B₁ B₂ M.1 (by rw [M.2.2.1]; exact h₁.1)
+      invFun := fun M => ⟨M.1, ⟨_root_.GlobalTheory.UnitLemma.isLat_of_comap_inl_of_map_snd K B₁ B₂ M.1 (by rw [M.2.2.1]; exact h₁.1)
           (by rw [M.2.2.2]; exact h₂.1), M.2.1.1, M.2.1.2⟩, M.2.2⟩
       left_inv := fun M => rfl
       right_inv := fun M => rfl }

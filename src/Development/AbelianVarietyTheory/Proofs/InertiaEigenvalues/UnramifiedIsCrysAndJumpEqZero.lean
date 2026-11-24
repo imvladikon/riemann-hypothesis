@@ -508,8 +508,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.period_data_comparison : ∀ {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K] [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K] {B BdR : Type} [CommRing B] [CommRing BdR] [Algebra Qp B] [Algebra K₀ B] [IsScalarTower Qp K₀ B] [Algebra Qp BdR] [Algebra K₀ BdR] [Algebra K BdR] [IsScalarTower Qp K BdR] [IsScalarTower K₀ K BdR] [IsScalarTower Qp K₀ BdR] (PD : Formalism.WeaklyAdmissibleFiltrations.PeriodData G Qp K₀ K B BdR) {LL : Type} [Field LL] [Algebra Qp LL] {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V] (ρ : Representation LL G V) {n : ℕ} (e : Module.Basis (Fin n) Qp V) (W W' : Matrix (Fin n) (Fin n) BdR), W * W' = 1 → (∀ i j, W i j ∈ PD.Fil 0) → (∀ i j, W' i j ∈ PD.Fil 0) → (∀ g, (Matrix.of fun i j => algebraMap Qp BdR (e.repr (ρ g (e j)) i)) * W.map (PD.actdR g) = W) → ∀ (τ : K →ₐ[Qp] LL) (a : ℤ), Formalism.WeaklyAdmissibleFiltrations.IsJumpV PD ρ τ a → a = 0 := by
-  first | exact @GlobalTheory.SplitJump.jump_eq_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodDataComparisonStatement =====
@@ -741,7 +739,7 @@ theorem isCrys_and_jump_eq_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       exact (ιA_zlW AI Ti (M g i j)).symm
     · ext i j
       exact (P.PD_actB K g _).trans (AI.ιA_act g _).symm
-  refine ⟨GlobalTheory.T.isCrys_of_split_alt (P.PD K) T.ρ e (AI.ιA.mapMatrix W) ?_ hB, ?_⟩
+  refine ⟨_root_.GlobalTheory.SplitCrys.isCrys_of_split (P.PD K) T.ρ e (AI.ιA.mapMatrix W) ?_ hB, ?_⟩
   · rw [← RingHom.map_det]
     exact hW.map _
   · let f : Ainf l →+* P.R.BdR := ((P.PD K).ι : P.R.B →+* P.R.BdR).comp AI.ιA
@@ -749,7 +747,7 @@ theorem isCrys_and_jump_eq_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       change (P.PD K).ι (AI.ιA a) ∈ _
       rw [P.PD_ι]
       exact AI.ainf_image_mem_filtration_zero K a
-    refine GlobalTheory.T.period_data_comparison (P.PD K) T.ρ e (f.mapMatrix W) (f.mapMatrix W⁻¹) ?_ (fun i j => hf _) (fun i j => hf _)
+    refine _root_.GlobalTheory.SplitJump.jump_eq_zero (P.PD K) T.ρ e (f.mapMatrix W) (f.mapMatrix W⁻¹) ?_ (fun i j => hf _) (fun i j => hf _)
       fun g => ?_
     · rw [← map_mul, Matrix.mul_nonsing_inv _ hW, map_one]
     · have hι : ∀ c : ℚ_[l], ((P.PD K).ι : P.R.B →+* P.R.BdR) (algebraMap ℚ_[l] P.R.B c) =

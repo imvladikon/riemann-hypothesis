@@ -366,7 +366,7 @@ theorem exists_conjPt_eq (x : Cone n (AlgebraicClosure ℚ)) (hx : BlockNonzero 
     rw [e1, e2] at this
     exact this
   obtain ⟨σ, hσ⟩ : ∃ σ : coordField x →+* ℂ, σ.comp (algebraMap L (coordField x)) = τ := by
-    have h := card_embeddings_restrict (K := L) (L := coordField x) τ
+    have h := _root_.UpperTheory.Reformulated.B.CardEmbeddingsRestrict.card_embeddings_restrict (K := L) (L := coordField x) τ
     have hpos : 0 < (Finset.univ.filter fun σ : coordField x →+* ℂ ↦
         σ.comp (algebraMap L (coordField x)) = τ).card := by
       rw [h]
@@ -426,7 +426,7 @@ theorem OrbitConjSum.proof : OrbitConjSum.Statement := by
       Module.finrank L (coordField x) := by
     intro q
     obtain ⟨σ₀, rfl⟩ := hΦ q
-    rw [← card_embeddings_restrict (K := L) (L := coordField x)
+    rw [← _root_.UpperTheory.Reformulated.B.CardEmbeddingsRestrict.card_embeddings_restrict (K := L) (L := coordField x)
       (σ₀.comp (algebraMap L (coordField x)))]
     congr 1
     ext σ

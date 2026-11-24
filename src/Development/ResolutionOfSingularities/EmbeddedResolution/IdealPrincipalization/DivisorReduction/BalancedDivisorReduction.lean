@@ -290,7 +290,7 @@ structure DivisorReductionProperties (hres : FunctorialResolution.Blowup.StrictT
                   T.structMap) J
                 (List.map (fun D => D.comap (T.boundary.get ⟨j, hj⟩).subschemeι)
                   (T.boundary.eraseIdx j))).IsAdmissible →
-            T.ideal = imageIdealSheaf (T.boundary.get ⟨j, hj⟩).subschemeι J →
+            T.ideal = _root_.FunctorialResolution.Blowup.schemeImageIdeal (T.boundary.get ⟨j, hj⟩).subschemeι J →
               DivisorReduction.containedComponentsIdeal T j hj = ⊤
 
 theorem DivisorReductionProperties.toDivisorReductionStepProperties {hres : FunctorialResolution.Blowup.StrictTransformIsBlowupOfClosedSubscheme.{u}}
@@ -1073,7 +1073,7 @@ theorem containedComponentsIdeal_eq_top_of_eq_imageIdealSheaf
         ((T.boundary.get ⟨j, hj⟩).subschemeι ≫ T.structMap) J
         (List.map (fun D => D.comap (T.boundary.get ⟨j, hj⟩).subschemeι)
           (T.boundary.eraseIdx j))).IsAdmissible)
-    (hpush : T.ideal = imageIdealSheaf (T.boundary.get ⟨j, hj⟩).subschemeι J) :
+    (hpush : T.ideal = _root_.FunctorialResolution.Blowup.schemeImageIdeal (T.boundary.get ⟨j, hj⟩).subschemeι J) :
     DivisorReduction.containedComponentsIdeal T j hj = ⊤ := by
   by_cases h : IsOpen (divisorComponentsInOrderLocus T j hj)
   · have hnz : NonzeroOnComponents J := hlow.nonzeroOnComponents

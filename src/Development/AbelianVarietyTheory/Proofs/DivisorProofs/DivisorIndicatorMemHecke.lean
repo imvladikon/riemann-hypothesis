@@ -117,8 +117,7 @@ theorem sameDiv_doubleCoset {n : ℕ} {O : Subring L}
         rw [e1, e2]; simp only [Matrix.mul_one, Matrix.mul_assoc]
     _ = _ := by simp only [Matrix.mul_assoc]
 
-theorem main : ∀ {L : Type} [inst : Field L] [inst_1 : Valued L (WithZero (Multiplicative ℤ))] {n : ℕ} {O : Subring L}, (∀ (x : L), (Valued.v : L → WithZero (Multiplicative ℤ)) x ≤ (1 : WithZero (Multiplicative ℤ)) → x ∈ O) → ∀ {d : List ℤ} {g s : GL (Fin n) L}, GlobalTheory.SphPar.HasDiv O d g → GlobalTheory.SphPar.HasDiv O d s → ∃ (a : ↥(Formalism.UG.GLint (Fin n) O)) (b : ↥(Formalism.UG.GLint (Fin n) O)), g = (↑a : GL (Fin n) L) * s * (↑b : GL (Fin n) L) :=
-  fun hO _ _ _ hg hs => sameDiv_doubleCoset hO hg hs
+alias main := _root_.GlobalTheory.DoubleCosetDivisors.sameDiv_doubleCoset
 
 end GlobalTheory.DoubleCosetDivisors
 end -- clump:auto
@@ -146,13 +145,6 @@ theorem hasDiv_mul_mul {O : Subring L} {d : List ℤ} {g : GL (Fin n) L} (h : Ha
   obtain ⟨ϖ, hϖ, a', ha', b', hb', e⟩ := h
   refine ⟨ϖ, hϖ, a * a', mul_mem ha ha', b' * b, mul_mem hb' hb, ?_⟩
   simp only [Units.val_mul, e, Matrix.mul_assoc]
-
-theorem HasDiv.exists_eq_mul_mul {O : Subring L} (hO : ∀ x : L, Valued.v x ≤ 1 → x ∈ O) {d : List ℤ}
-    {g s : GL (Fin n) L} (hg : HasDiv O d g) (hs : HasDiv O d s) :
-    ∃ a b : GLint (Fin n) O, g = a * s * b := by
-  first
-  | (apply _root_.GlobalTheory.DoubleCosetDivisors.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.DoubleCosetDivisors.main ..)
 
 end Local
 

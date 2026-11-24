@@ -324,18 +324,6 @@ open ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestrictio
 
 variable {S : Scheme.{0}} {R R' : Type} [CommRing R] [CommRing R']
 
-theorem dualMap_comp_algebraMap (c : R →+* R') :
-    (dualMap c).comp (algebraMap R (DualNumber R)) = (algebraMap R' (DualNumber R')).comp c := by
-  refine RingHom.ext fun r => TrivSqZeroExt.ext ?_ ?_
-  · simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-  · simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-
-theorem fst_comp_dualMap (c : R →+* R') :
-    (TrivSqZeroExt.fstHom R' R' R').toRingHom.comp (dualMap c) =
-      c.comp (TrivSqZeroExt.fstHom R R R).toRingHom := by
-  refine RingHom.ext fun a => ?_
-  simp [dualMap]
-
 theorem dualMap_comp_epsMul (c : R →+* R') (r : R) :
     (dualMap c).comp (epsMul r) = (epsMul (c r)).comp (dualMap c) := by
   refine RingHom.ext fun a => TrivSqZeroExt.ext ?_ ?_
@@ -347,7 +335,7 @@ def epsBase (c : R →+* R') (x : Sp R ⟶ S) : epsAt (spMap c ≫ x) ⟶ epsAt 
     change spMap (dualMap c) ≫ Spec.map _ ≫ x = Spec.map _ ≫ spMap c ≫ x
     simp only [spMap]
     rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← CommRingCat.ofHom_comp, dualMap_comp_algebraMap])
+      ← CommRingCat.ofHom_comp, _root_.GlobalTheory.CompanionTheory.Ar.SqAdd.dualMap_comp_algebraMap])
 
 def ptBase (c : R →+* R') (x : Sp R ⟶ S) : Over.mk (spMap c ≫ x) ⟶ Over.mk x :=
   Over.homMk (spMap c) rfl
@@ -362,7 +350,7 @@ theorem isTanAt_base (G : Over S) [GrpObj G] (c : R →+* R') (x : Sp R ⟶ S) (
   change Spec.map _ ≫ spMap (dualMap c) ≫ v.left = spMap c ≫ Spec.map _ ≫ v.left
   simp only [spMap]
   rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← CommRingCat.ofHom_comp, fst_comp_dualMap]
+      ← CommRingCat.ofHom_comp, _root_.GlobalTheory.CompanionTheory.Ar.SqAdd.fst_comp_dualMap]
 
 theorem exists_isBaseChange (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] (R R' : Type)
     [CommRing R] [CommRing R'] [Algebra R R'] (x : Sp R ⟶ S) (E' : Type) [AddCommGroup E'] [Module R' E']
@@ -616,11 +604,7 @@ theorem lat_fin (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smoo
     (fun s n hn => Submodule.smul_mem _ s hn) (fun a b ha hb => add_mem ha hb)
   exact Submodule.subset_span (by rw [hr]; exact ⟨m, rfl⟩)
 
-theorem dualMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    (dualMap g).comp (dualMap f) = dualMap (g.comp f) := by
-  apply RingHom.ext
-  intro a
-  ext <;> simp [dualMap]
+alias dualMap_comp := _root_.PositivityTheory.Xgn.NormalLatticeRange.dualMap_comp
 
 theorem lat_gen (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] {E : Type}
     [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) {p q : Cpt ξ} (hs : q.1 ⤳ p.1) :

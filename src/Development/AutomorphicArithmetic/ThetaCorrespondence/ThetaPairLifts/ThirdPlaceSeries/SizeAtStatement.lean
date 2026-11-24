@@ -419,11 +419,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.size_at' : _root_.GlobalTheory.BigTop.Fun.SizeAtAlt := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.SizeProof.sizeAt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SizeAtStatement =====

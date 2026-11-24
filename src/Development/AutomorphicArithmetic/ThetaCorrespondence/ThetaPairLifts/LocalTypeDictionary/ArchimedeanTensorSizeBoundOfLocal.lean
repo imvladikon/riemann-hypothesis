@@ -535,18 +535,6 @@ section
 open MeasureTheory ValuativeRel Matrix
 noncomputable section
 namespace GlobalTheory.ArchTens.Unfold
-open GlobalTheory.SplitWeil GlobalTheory.SplitFlip GlobalTheory.RootEx GlobalTheory.FunObj GlobalTheory.SumSize Formalism.BasicNotions
-section Integral
-variable {X : Type} [AddCommGroup X] [TopologicalSpace X] [IsTopologicalAddGroup X]
-end Integral
-section Local
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-end Local
-section Grid
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-variable {D : D7} (σ : D.what₂.LL →+* ℂ)
-variable [MeasurableSpace k] [BorelSpace k]
-end Grid
 end GlobalTheory.ArchTens.Unfold
 namespace GlobalTheory.ArchTens.Unfold
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
@@ -573,12 +561,6 @@ end GlobalTheory.ArchTens.Unfold
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim GlobalTheory.ArchTens
-
-theorem _root_.GlobalTheory.T.archimedean_tensor_factor_unfolding : _root_.GlobalTheory.FunPr.ThetaLocalInputs → BigC fun _ ch C _ => FlipAt ch (C / 2) → DatAt ch C := by
-  first | exact @_root_.GlobalTheory.ArchTens.Unfold.archimedean_tensor_unfold_datum
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanTensorFactorUnfolding =====
@@ -732,12 +714,6 @@ end GlobalTheory.ArchTens.VolSize
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim GlobalTheory.ArchTens
-
-theorem _root_.GlobalTheory.T.archimedean_tensor_volume_bound : _root_.GlobalTheory.FunPr.ThetaLocalInputs → BigC fun _ ch C _ => CoefAt ch C := by
-  first | exact @_root_.GlobalTheory.ArchTens.VolSize.archimedean_tensor_volume_coefficient
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanTensorVolumeCoefficient =====
@@ -757,8 +733,8 @@ end GlobalTheory.ArchTens
 open GlobalTheory.ArchTens in
 theorem _root_.GlobalTheory.SumSize.archimedean_tensor_size_bound_of_local (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) : InfTensK := by
   obtain ⟨F1, h1⟩ := _root_.GlobalTheory.T.local_character_power_conductor_bound hP
-  obtain ⟨F2, h2⟩ := _root_.GlobalTheory.T.archimedean_tensor_factor_unfolding hP
-  obtain ⟨F3, h3⟩ := _root_.GlobalTheory.T.archimedean_tensor_volume_bound hP
+  obtain ⟨F2, h2⟩ := _root_.GlobalTheory.ArchTens.Unfold.archimedean_tensor_unfold_datum hP
+  obtain ⟨F3, h3⟩ := _root_.GlobalTheory.ArchTens.VolSize.archimedean_tensor_volume_coefficient hP
   refine ⟨max F1 (max F2 F3), fun CF hCF => ?_⟩
   obtain ⟨C1, h1⟩ := h1 CF (le_trans (le_max_left _ _) hCF)
   obtain ⟨C2, h2⟩ := h2 CF (le_trans ((le_max_left _ _).trans (le_max_right _ _)) hCF)

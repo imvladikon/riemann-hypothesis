@@ -104,9 +104,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleSimplicialChainsFreeDescription
-theorem etale_cochain_complex_basic_properties_of_components : LateralTheory.EtaleFoundations.EtaleSimplicialChainsFreeDescription := by
-  apply LateralTheory.EtaleFoundations.etale_simplicial_chains_basic_properties_hold
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.EtaleSimplicialChainsFreeDescription := etale_cochain_complex_basic_properties_of_components
+alias intersectionNumber_baseChange := _root_.LateralTheory.EtaleFoundations.etale_simplicial_chains_basic_properties_hold
 end LateralTheory.Fin.EtaleSimplicialChainsFreeDescription
 end -- clump:auto
 end -- clump:auto
@@ -118,9 +116,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleCochainExistsOfNaturalEvaluation
-theorem etale_evaluation_map_construction_of_components : LateralTheory.EtaleFoundations.EtaleCochainExistsOfNaturalEvaluation := by
-  apply LateralTheory.EtaleFoundations.etale_chain_cochain_exists_of_eval_data
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.EtaleCochainExistsOfNaturalEvaluation := etale_evaluation_map_construction_of_components
+alias intersectionNumber_baseChange := _root_.LateralTheory.EtaleFoundations.etale_chain_cochain_exists_of_eval_data
 end LateralTheory.Fin.EtaleCochainExistsOfNaturalEvaluation
 end -- clump:auto
 end -- clump:auto
@@ -222,9 +218,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleFreeSheafUniversalProperty
-theorem etale_free_module_cohomology_hom_of_components : LateralTheory.EtaleFoundations.EtaleFreeSheafUniversalProperty := by
-  apply LateralTheory.EtaleFoundations.etale_free_sheaf_hom_universal_property_holds
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.EtaleFreeSheafUniversalProperty := etale_free_module_cohomology_hom_of_components
+alias intersectionNumber_baseChange := _root_.LateralTheory.EtaleFoundations.etale_free_sheaf_hom_universal_property_holds
 end LateralTheory.Fin.EtaleFreeSheafUniversalProperty
 end -- clump:auto
 end -- clump:auto

@@ -66,6 +66,7 @@ import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Tactic.TypeStar
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleGD
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.StarStartConjugationIdentity
 import Mathlib.Tactic.Lemma
@@ -927,7 +928,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormEntriesCommutatorMultiplier =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialMultipliersSatisfyNormalFormRelations =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialMultipliersSatisfyNormalFormRelations", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.SameFns\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConnectionMulRelOfEntryRelations\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EulerDerivMultipliersCommuteCoordOps\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormActualOperatorsAlgebraicHypotheses\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormEntriesCommutatorMultiplier\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialPairConstantsPointwiseAdjointBounded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialMultipliersSatisfyNormalFormRelations", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Jets.SameFns\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConnectionMulRelOfEntryRelations\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EulerDerivMultipliersCommuteCoordOps\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormActualOperatorsAlgebraicHypotheses\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormEntriesCommutatorMultiplier\npublic import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialPairConstantsPointwiseAdjointBounded\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnipotentComposition.Development\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -961,9 +962,6 @@ section hs
 
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
-
-omit [FiniteDimensional ℂ Wp] in
-theorem hsVec_smul (s : ℂ) (A : Wq →L[ℂ] Wp) : B.hsVec (s • A) = s • B.hsVec A := rfl
 
 omit [FiniteDimensional ℂ Wp] in
 theorem hsVec_sub (A A' : Wq →L[ℂ] Wp) : B.hsVec (A - A') = B.hsVec A - B.hsVec A' := rfl
@@ -1006,7 +1004,7 @@ theorem commute_of_adj {a b w : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π
   have h1 := hab (w Φ) (a (w Φ) - w (a Φ)) x hx
   have h2 := hab Φ (a (w Φ) - w (a Φ)) x hx
   unfold B.hsInner at h1 h2
-  rw [hw Φ, hsVec_smul, inner_smul_right, ← h2, ← inner_smul_right, ← hsVec_smul, ← hw (a Φ)] at h1
+  rw [hw Φ, _root_.PI.UnitaryGroupMassFormula.UsCompose.hsVec_smul, inner_smul_right, ← h2, ← inner_smul_right, ← _root_.PI.UnitaryGroupMassFormula.UsCompose.hsVec_smul, ← hw (a Φ)] at h1
   exact h1
 
 theorem commute_of_ptAdj {x : RA P Bs} (hx : PtAdj P Bs x) {w : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')}
@@ -1784,9 +1782,6 @@ variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [Norm
   [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
   {P : M.Par} {Bs : B.RealPlaceData P.k P.r Wp Wq}
 
-theorem nv_nonneg (Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (x : (Fin P.r → ℂ) × Q.Mx P.k P.r) :
-    0 ≤ nv Φ x := norm_nonneg _
-
 theorem nv_add (Φ Ψ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (x : (Fin P.r → ℂ) × Q.Mx P.k P.r) :
     nv (Φ + Ψ) x ≤ nv Φ x + nv Ψ x := by
   have h : ∀ A A' : Wq →L[ℂ] Wp, B.hsVec (A + A') = B.hsVec A + B.hsVec A' := fun _ _ => rfl
@@ -1870,7 +1865,7 @@ theorem span_bd {X : Q.ActualOps P.k P.r Bs.z Bs.z' Bs.π Bs.π'} {μ : Measure 
   | zero => simpa only [fst_zero, nv_zero] using Bd.zero
   | add y z _ _ hy hz =>
     refine Bd.mono (K := 1) (u := fun _ => 1) zero_le_one (fun _ _ => zero_le_one)
-      (Bd.add (fun _ _ => nv_nonneg _ _) hw hy hz) (fun q _ => ?_) (fun _ _ => (one_mul _).symm)
+      (Bd.add (fun _ _ => _root_.GlobalTheory.HatNF.PtBBasic.nv_nonneg _ _) hw hy hz) (fun q _ => ?_) (fun _ _ => (one_mul _).symm)
     rw [fst_add, one_mul, one_mul]
     exact nv_add _ _ _
   | smul c y _ hy =>
@@ -1894,7 +1889,7 @@ theorem word_bound : ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpa
   let G : ι → ℝ := fun q => (gR P Bs q.2.2.2.1 q.2.2.2.2)⁻¹ ^ (a * N)
   let Dd : ι → ℝ := fun q => (dR P Bs q.2.2.2.1 q.2.2.2.2)⁻¹ ^ N
   let Sg : ι → ℝ := fun q => ∑ j ∈ Finset.range (N * (P.r + 1) + 1), |LE.ld j q.1 (gR P Bs q.2.2.2.1 q.2.2.2.2)|
-  have hv : ∀ H q, 0 ≤ val H q := fun _ _ => nv_nonneg _ _
+  have hv : ∀ H q, 0 ≤ val H q := fun _ _ => _root_.GlobalTheory.HatNF.PtBBasic.nv_nonneg _ _
   have hG : ∀ q, p q → 0 ≤ G q := fun q hq => by
     have h2 := (hb q.2.2.1 q.2.2.2 hq.2.2).2.1
     positivity
@@ -1926,7 +1921,7 @@ theorem word_bound : ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpa
       refine mul_le_mul_of_nonneg_left ?_ (norm_nonneg _)
       change nv (q.2.1 (0 + t.1) _) _ ≤ _
       rw [nv_mulOp (hq.2.1 _), Complex.norm_real, Real.norm_eq_abs, zero_add]
-      refine mul_le_mul_of_nonneg_right ?_ (nv_nonneg _ _)
+      refine mul_le_mul_of_nonneg_right ?_ (_root_.GlobalTheory.HatNF.PtBBasic.nv_nonneg _ _)
       refine Finset.single_le_sum (f := fun j => |LE.ld j q.1 (gR P Bs q.2.2.2.1 q.2.2.2.2)|)
         (fun _ _ => abs_nonneg _) (Finset.mem_range.2 ?_)
       rw [hl] at hj
@@ -1955,7 +1950,7 @@ theorem word_bound : ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpa
   beta_reduce at h5
   rw [Finset.sum_map_toList] at h5
   refine (Finset.single_le_sum (f := fun e : Ix S => nv ((((ofWord L st w).F * TL.bTA L w) e e1).1 (W 0 Φ)) x)
-    (fun _ _ => nv_nonneg _ _) (Finset.mem_univ e)).trans (h5.trans (le_of_eq ?_))
+    (fun _ _ => _root_.GlobalTheory.HatNF.PtBBasic.nv_nonneg _ _) (Finset.mem_univ e)).trans (h5.trans (le_of_eq ?_))
   simp only [Dd, Sg, G, val]
   ring
 

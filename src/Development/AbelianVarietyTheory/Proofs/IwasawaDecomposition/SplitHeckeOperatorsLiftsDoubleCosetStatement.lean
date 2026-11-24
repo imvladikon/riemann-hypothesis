@@ -66,6 +66,7 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.LocalToGlobal.Columns.RecLevelHost
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteAdelicUnitaryConjIntegralFrameStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameTransportEtaIsHeckeElementLifts, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameTransportEtaIsHeckeElementLiftsStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftFormLevelSplitsAtOffLevelSplitPlace, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftFormLevelSplitsAtOffLevelSplitPlaceStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftLevelTypeTrivialSplitPlaceSupport, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftLevelTypeTrivialSplitPlaceSupportStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceSupportLevelStandardCoordinatesStatement, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCoset, Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCosetStatement
@@ -333,19 +334,12 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 open GlobalTheory.Mem.R3.LiftBrg
 
-theorem _root_.GlobalTheory.T.splitPlaceSupport_level_standardCoordinates : ∀ (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (hI : I.Ok) (hV : ValsIn I) (hL : LevOf X I U L) (cV : ∀ i, CoefA (Vc X.toD7 i)) (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (EA X)) (hF : FrameOK X I U i t A k) (x : (famR X I hX U Xg tr).A.ok t × ℕ) (v : HeightOneSpectrum (𝓞 X.toD7.host.F)) (Pb : HeightOneSpectrum (𝓞 X.toD7.host.E)) (hPb : Formalism.L2.Col.conjPrime₂ Pb = x.1.1.1) (hv : Formalism.L2.Col.IsOver v Pb) (g : Bridge.Gf (Vc X.toD7 i)) (u : Formalism.L2.Col.UAd X.toD7.sp.cm X.B.R.nV) (hg : castGL (rkEq X i).symm (Formalism.UG.bc (swapAE X.toD7) ((g : Bridge.Gf (Vc X.toD7 i)) : GL (Fin (Vc X.toD7 i).rank) _)) = A * k * (u : GL (Fin X.B.R.nV) (EA X)) * (A * k)⁻¹),
-    ((envL X I hX U Xg tr L cV i t).isLoc x g ↔
-      ∀ w : HeightOneSpectrum (𝓞 X.toD7.host.F), w ≠ v →
-        Formalism.UG.bc (Formalism.UG.prV (E := X.toD7.host.E) w) (u : GL (Fin X.B.R.nV) (EA X)) = 1) ∧
-    ((envL X I hX U Xg tr L cV i t).isLoc x g →
-      (g ∈ (envL X I hX U Xg tr L cV i t).lev.J ↔ u ∈ Formalism.L2.Col.mhlKv X.toD7.sp.cm X.B.R.nV v)) := by
-  first | exact @GlobalTheory.Mem.R3.LiftBrg.SplitLoc.loc_iff
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceSupportLevelStandardCoordinatesStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCoset =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCoset", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NVNeZero\npublic import Formalism.LocalToGlobal.Columns.MtHeckeLoc\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralEqZero\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteAdelicUnitaryConjIntegralFrameStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameTransportEtaIsHeckeElementLiftsStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftFormLevelSplitsAtOffLevelSplitPlaceStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftLevelTypeTrivialSplitPlaceSupportStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceSupportLevelStandardCoordinatesStatement\npublic import Formalism.LocalToGlobal.Columns.MtHeckeSum\nimport Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.HilbertRowConditions.CenterIdempotentAction\nimport Formalism.LocalToGlobal.IndefiniteReal.RecTie\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCoset", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NVNeZero\npublic import Formalism.LocalToGlobal.Columns.MtHeckeLoc\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralEqZero\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteAdelicUnitaryConjIntegralFrameStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameTransportEtaIsHeckeElementLiftsStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftFormLevelSplitsAtOffLevelSplitPlaceStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftLevelTypeTrivialSplitPlaceSupportStatement\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceSupportLevelStandardCoordinatesStatement\npublic import Formalism.LocalToGlobal.Columns.MtHeckeSum\nimport Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.HilbertRowConditions.CenterIdempotentAction\nimport Formalism.LocalToGlobal.IndefiniteReal.RecTie\nimport Formalism.LocalToGlobal.Columns.RecLevelHost\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -366,21 +360,6 @@ theorem frame_equiv (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (
     ∃ Φ : Formalism.L2.Col.UAd X.toD7.sp.cm X.B.R.nV ≃* Bridge.Gf (Vc X.toD7 i), ∀ u,
       castGL (rkEq X i).symm (Formalism.UG.bc (swapAE X.toD7) ((Φ u : Bridge.Gf (Vc X.toD7 i)) : GL (Fin (Vc X.toD7 i).rank) _)) = A * k * (u : GL (Fin X.B.R.nV) (EA X)) * (A * k)⁻¹ :=
   GlobalTheory.T.finiteAdelicUnitary_conj_integralFrame X I hX U Xg tr L i t A k hF
-
-theorem loc_iff (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι)
-    (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (hI : I.Ok) (hV : ValsIn I) (hL : LevOf X I U L) (cV : ∀ i, CoefA (Vc X.toD7 i))
-    (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (EA X)) (hF : FrameOK X I U i t A k)
-    (x : (famR X I hX U Xg tr).A.ok t × ℕ) (v : HeightOneSpectrum (𝓞 X.toD7.host.F))
-    (Pb : HeightOneSpectrum (𝓞 X.toD7.host.E)) (hPb : Formalism.L2.Col.conjPrime₂ Pb = x.1.1.1)
-    (hv : Formalism.L2.Col.IsOver v Pb)
-    (g : Bridge.Gf (Vc X.toD7 i)) (u : Formalism.L2.Col.UAd X.toD7.sp.cm X.B.R.nV)
-    (hg : castGL (rkEq X i).symm (Formalism.UG.bc (swapAE X.toD7) ((g : Bridge.Gf (Vc X.toD7 i)) : GL (Fin (Vc X.toD7 i).rank) _)) = A * k * (u : GL (Fin X.B.R.nV) (EA X)) * (A * k)⁻¹) :
-    ((envL X I hX U Xg tr L cV i t).isLoc x g ↔
-      ∀ w : HeightOneSpectrum (𝓞 X.toD7.host.F), w ≠ v →
-        Formalism.UG.bc (Formalism.UG.prV (E := X.toD7.host.E) w) (u : GL (Fin X.B.R.nV) (EA X)) = 1) ∧
-    ((envL X I hX U Xg tr L cV i t).isLoc x g →
-      (g ∈ (envL X I hX U Xg tr L cV i t).lev.J ↔ u ∈ Formalism.L2.Col.mhlKv X.toD7.sp.cm X.B.R.nV v)) :=
-  GlobalTheory.T.splitPlaceSupport_level_standardCoordinates X I hX U Xg tr L hI hV hL cV i t A k hF x v Pb hPb hv g u hg
 
 theorem lev_split (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι)
     (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (hI : I.Ok) (hV : ValsIn I) (hL : LevOf X I U L) (cV : ∀ i, CoefA (Vc X.toD7 i))
@@ -606,12 +585,12 @@ theorem loc_data (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX 
       Bridge.IsDC (envL X I hX U Xg tr L cV i t).lev.J hx hA ∧
       ∀ g, Set.BijOn (fun a => ptL X I U i t A k (g * a)) (hA : Set (Bridge.Gf (Vc X.toD7 i)))
         ((ptL X I U i t A k g).heckeSet (x.1.1.1 : Pl X.toD7.host.E).asIdeal x.2) := by
-  obtain ⟨Φ, hΦ⟩ := frame_equiv X I hX U Xg tr L i t A k hF
+  obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.Mem.R3.LiftBrg.FrameEquiv.frame_equiv X I hX U Xg tr L i t A k hF
   have hmem : (x.1.1.1 : HeightOneSpectrum (𝓞 X.toD7.host.E)) ∈ Formalism.L2.DIV.offSet (E := X.toD7.host.E) ∅ (sgL X I U t) ∅ := x.1.2
   obtain ⟨hc1, hc2, hc3⟩ := hmem
   let P : HeightOneSpectrum (𝓞 X.toD7.host.E) := x.1.1.1
   let Pb : HeightOneSpectrum (𝓞 X.toD7.host.E) := Formalism.L2.Col.conjPrime₂ P
-  have hcc : Formalism.L2.Col.conjPrime₂ Pb = P := Formalism.L2.Col.conjPrime_conjPrime P
+  have hcc : Formalism.L2.Col.conjPrime₂ Pb = P := _root_.Formalism.L2.Col.rlh_conjP_conjP P
   obtain ⟨v, hov⟩ : ∃ v : HeightOneSpectrum (𝓞 X.toD7.host.F), Formalism.L2.Col.IsOver v Pb :=
     ⟨HeightOneSpectrum.under (𝓞 X.toD7.host.F) Pb, rfl⟩
   have hsp : Formalism.L2.Col.conjPrime₂ Pb ≠ Pb := by
@@ -641,9 +620,9 @@ theorem loc_data (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX 
     intro u
     rw [Subgroup.mem_map_equiv, MulEquiv.symm_apply_apply]
   have hisLoc : ∀ u, (envL X I hX U Xg tr L cV i t).isLoc x (Φ u) ↔ u ∈ Off := fun u =>
-    (loc_iff X I hX U Xg tr L hI hV hL cV i t A k hF x v Pb hcc hov (Φ u) u (hΦ u)).1
+    (_root_.GlobalTheory.Mem.R3.LiftBrg.SplitLoc.loc_iff X I hX U Xg tr L hI hV hL cV i t A k hF x v Pb hcc hov (Φ u) u (hΦ u)).1
   have hJ : ∀ u, u ∈ Off → (Φ u ∈ (envL X I hX U Xg tr L cV i t).lev.J ↔ u ∈ Formalism.L2.Col.mhlKv X.toD7.sp.cm X.B.R.nV v) := fun u hu =>
-    (loc_iff X I hX U Xg tr L hI hV hL cV i t A k hF x v Pb hcc hov (Φ u) u (hΦ u)).2 ((hisLoc u).2 hu)
+    (_root_.GlobalTheory.Mem.R3.LiftBrg.SplitLoc.loc_iff X I hX U Xg tr L hI hV hL cV i t A k hF x v Pb hcc hov (Φ u) u (hΦ u)).2 ((hisLoc u).2 hu)
   have hLoc' : ∀ l, (envL X I hX U Xg tr L cV i t).isLoc x l ↔ l ∈ Lc := by
     intro l
     have := hisLoc (Φ.symm l)
@@ -665,12 +644,12 @@ theorem loc_data (X : Stages) {px : PreX X.B.toPre} (I : Col2.ColIn X.B px) (hX 
   have hDC : Bridge.IsDC (envL X I hX U Xg tr L cV i t).lev.J (Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2)) (R.map Φ.toEquiv.toEmbedding) := by
     refine GlobalTheory.RowPartsOrth.isDC_of_local (envL X I hX U Xg tr L cV i t).lev.J Lc (Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2)) (R.map Φ.toEquiv.toEmbedding) ((hLc _).2 hEtaOff) ?_ ?_ hDCl
     · intro j hj
-      obtain ⟨j₁, hj₁, j₂, hj₂, hl₁, e, hc⟩ := lev_split X I hX U Xg tr L hI hV hL cV i t x j hj
+      obtain ⟨j₁, hj₁, j₂, hj₂, hl₁, e, hc⟩ := _root_.GlobalTheory.Mem.R3.LiftBrg.LevSplitAt.lev_split_at X I hX U Xg tr L hI hV hL cV i t x j hj
       exact ⟨j₁, hj₁, j₂, hj₂, (hLoc' j₁).1 hl₁, e, fun l hl => hc l ((hLoc' l).2 hl)⟩
     · intro a ha
       obtain ⟨u, hu, rfl⟩ := hmemR a ha
       exact (hLc u).2 (hoffR u hu)
-  refine ⟨Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2), R.map Φ.toEquiv.toEmbedding, eta_isT X I hX U Xg tr L hI hV hL cV i t A k hF x hx1 hx2 v Pb hcc hov Ut (Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2)) (hΦ _), ?_, hDC, ?_⟩
+  refine ⟨Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2), R.map Φ.toEquiv.toEmbedding, _root_.GlobalTheory.Mem.R3.LiftBrg.eta_isHecke X I hX U Xg tr L hI hV hL cV i t A k hF x hx1 hx2 v Pb hcc hov Ut (Φ (Formalism.L2.Col.mhlEta X.toD7.sp.cm X.B.R.nV v Ut.hπ0 x.2)) (hΦ _), ?_, hDC, ?_⟩
   · intro a ha
     obtain ⟨u, hu, rfl⟩ := hmemR a ha
     exact (hisLoc u).2 (hoffR u hu)
@@ -698,7 +677,7 @@ theorem split_tie : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B p
     obtain ⟨hx', hA, h1, h2, h3, h4⟩ := loc_data X I hX U Xg tr L hI hV hL cV i t A k hF x hx.1 hx.2
     exact ⟨hx', hA, h1, h2, h3, fun f => op_eq_of_bij X I hX U Xg tr L cV i t A k x hA h4 P hR f⟩
   choose! hxf hAf hxok hAloc hDC hop using key
-  exact ⟨⟨hxf, hAf, hxok, hAloc, fun x _ j hj => chi_loc_lift X I hX U Xg tr L hI hV hL cV i t x j hj, hDC, hop⟩⟩
+  exact ⟨⟨hxf, hAf, hxok, hAloc, fun x _ j hj => _root_.GlobalTheory.Mem.R3.LiftBrg.SplitChi.chi_loc_lift X I hX U Xg tr L hI hV hL cV i t x j hj, hDC, hop⟩⟩
 
 end GlobalTheory.Mem.R3.LiftBrg.SplitTie
 end -- clump:auto
@@ -716,11 +695,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.splitHecke_operators_lifts_doubleCoset : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → ∀ (cV : ∀ i, CoefA (Vc X.toD7 i)) (i : Fin X.toD7.R.m) (t : TupU I U) (A k : GL (Fin X.B.R.nV) (LiftBrg.EA X)), LiftBrg.FrameOK X I U i t A k → ∀ P : LiftBrg.PresL X I hX U Xg tr L cV i t, LiftBrg.ReadsStd X I hX U Xg tr L cV i t A k P →
-    Nonempty (Bridge.HeckeTie (Bridge.ratF (Vc X.toD7 i)) P ((famR X I hX U Xg tr).A.heckeL i t)
-      (fun x => 1 ≤ x.2 ∧ x.2 ≤ (Vc X.toD7 i).rank) (LiftBrg.envL X I hX U Xg tr L cV i t).isT
-      (LiftBrg.envL X I hX U Xg tr L cV i t).isLoc) := by
-  first | exact @GlobalTheory.Mem.R3.LiftBrg.SplitTie.split_tie
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitHeckeOperatorsLiftsDoubleCosetStatement =====

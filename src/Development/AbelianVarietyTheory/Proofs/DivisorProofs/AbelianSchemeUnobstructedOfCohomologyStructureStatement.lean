@@ -1305,7 +1305,7 @@ theorem restrict_bijective_one : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s
   have hdir := BasisExt.hdir_of_basis s G h2
   have hs := _root_.GlobalTheory.sep_of_factoring_cover (OAff s) G H hcov
   have hg := _root_.GlobalTheory.CatCoh.Desc.glue_comma_of_basis (OAff s) G H hcov hdir
-  have hv := _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_vanishing_comma_of_basis (OAff s) G H hcov hdir
+  have hv := _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_coboundary_comma_localBasis (OAff s) G H hcov hdir
   exact ⟨_root_.GlobalTheory.CatCoh.CoefMap.restrict_pull1_injective_of_sep_glue _ _ hs hg,
     _root_.GlobalTheory.CatCoh.pull1_restrict_surjective_of_comma _ _ hs hg hv⟩
 
@@ -1573,8 +1573,7 @@ open scoped TensorProduct
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.CechDR GlobalTheory.LiftSys GlobalTheory.Obs
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianScheme_unobstructed_of_cohomology_structure : GlobalTheory.AbCoh.OStr → (∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → GlobalTheory.AbCoh.HasFrame (OAff A.hom) ∧ GlobalTheory.AbCoh.UConst A.hom ∧ GlobalTheory.AbCoh.PrimF A) → GlobalTheory.Published.AbelianUnobstructed := by
-  first | exact @GlobalTheory.abelianUnobstructed_of_struct
+alias _root_.GlobalTheory.T.abelianScheme_unobstructed_of_cohomology_structure := _root_.GlobalTheory.abelianUnobstructed_of_struct
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedOfCohomologyStructureStatement =====

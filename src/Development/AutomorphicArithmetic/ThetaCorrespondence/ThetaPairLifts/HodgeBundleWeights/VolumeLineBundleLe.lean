@@ -1384,13 +1384,6 @@ theorem exists_model_of_image : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
 end GlobalTheory.ImageModel
 end
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj Formalism.BasicNotions.TH Formalism.L2.Theta ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.CovTop GlobalTheory.CovHt GlobalTheory.Mean4 GlobalTheory.Mean4O
-open scoped ENNReal Classical
-
-theorem _root_.GlobalTheory.T.image_admits_model : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (K V Ω : Type) [Field K] [NumberField K] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [Field Ω] [Algebra K Ω] (Nm : (K →+* ℂ) → V → ℝ) (W : Submodule (𝓞 K) V) (ev : V →ₗ[K] Ω) (D : ℕ), (∀ σ : K →+* ℂ, (starRingEnd ℂ).comp σ ≠ σ) → HasGram Nm → (∀ σ x, Nm ((starRingEnd ℂ).comp σ) x = Nm σ x) → W.FG → Submodule.span K (W : Set V) = ⊤ → GlobalTheory.DegVal.GenRatios ev → 0 < imageDeg ev D → ∃ (X : AlgebraicGeometry.Scheme.{0}) (_ : AlgebraicGeometry.IsIntegral X) (p : X ⟶ Sp (𝓞 K)) (L : GlobalTheory.HermLB p) (ψ : Ω →+* X.functionField) (s : W → L.B.Sec), GlobalTheory.ImageModel.IsModelOf Nm W ev D p L ψ s := by
-  first | exact @_root_.GlobalTheory.ImageModel.exists_model_of_image
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ExistsModelOfImage =====
@@ -1420,7 +1413,7 @@ theorem exists_nef_model_of_image : _root_.SelfIntersectionVolumeEstimates.Volum
     simp only [Deep.dg, compDeg, Nat.cast_pos] at this
     exact this
   have hB' : GlobalTheory.DegVal.GenRatios (genPoint Z (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0))) := hB
-  obtain ⟨X, hX, p, L0, ψ, s, hM⟩ := _root_.GlobalTheory.T.image_admits_model hP Y.d.c₂.F (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0)) (Om Z)
+  obtain ⟨X, hX, p, L0, ψ, s, hM⟩ := _root_.GlobalTheory.ImageModel.exists_model_of_image hP Y.d.c₂.F (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0)) (Om Z)
     (normOn Y.U (xiR D) (fun _ => D.sp.W j) Y.dict Z (wtOf (T.Q.Dw j) u 0)) (latOn Y.U Z (wtOf (T.Q.Dw j) u 0))
     (genPoint Z (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0))) (dimFlag (T.Q.Dw j)) hK hgram hconj hfg hspan hB hdeg
   obtain ⟨h, hh, -⟩ := hP.q11.existsUnique hM.arith (L0.shift (fun _ => t) (fun _ => rfl))

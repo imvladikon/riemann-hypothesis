@@ -370,13 +370,6 @@ theorem exists_upUni (F : LFlag S r T) (n : S.V ≃ₗ[E] S.V)
     rw [Fin.sum_univ_castSucc]
     simp [frame, FlagG.fvec, add_comm]
 
-theorem upUni_mul {N : ℕ} {U W : Matrix (Fin N) (Fin N) E} (hU0 : ∀ a b, b < a → U a b = 0)
-    (hU1 : ∀ a, U a a = 1) (hW0 : ∀ a b, b < a → W a b = 0) (hW1 : ∀ a, W a a = 1) :
-    (∀ a b, b < a → (U * W) a b = 0) ∧ (∀ a, (U * W) a a = 1) := by
-  first
-  | (apply _root_.GlobalTheory.UpperUnitriangularMul.upperUnitriangular_mul <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UpperUnitriangularMul.upperUnitriangular_mul ..)
-
 theorem frame_mapLF (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (F : LFlag S r T) (b : Fin (r + 1)) :
     frame (mapLF γ F) b = γ (frame F b) := by
   unfold mapLF
@@ -411,8 +404,8 @@ theorem moved_frames : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.w
   obtain ⟨W', hW'0, hW'1, hW'e⟩ := exists_upUni _ m hm.2.1 hm.2.2
   have hlin : t₀.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t₀.rep.2.2.1
   have hγ : n⁻¹ * t₀.lin * m ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := mul_mem (mul_mem (inv_mem hn.1) hlin) hm.1
-  obtain ⟨hB0, hB1⟩ := upUni_mul (fun a b h => (hU a b).1 h) (fun a => (hU a a).2 rfl) hW0 hW1
-  obtain ⟨hB'0, hB'1⟩ := upUni_mul (fun a b h => (hU' a b).1 h) (fun a => (hU' a a).2 rfl) hW'0 hW'1
+  obtain ⟨hB0, hB1⟩ := _root_.GlobalTheory.UpperUnitriangularMul.upperUnitriangular_mul (fun a b h => (hU a b).1 h) (fun a => (hU a a).2 rfl) hW0 hW1
+  obtain ⟨hB'0, hB'1⟩ := _root_.GlobalTheory.UpperUnitriangularMul.upperUnitriangular_mul (fun a b h => (hU' a b).1 h) (fun a => (hU' a a).2 rfl) hW'0 hW'1
   refine ⟨U * W, U' * W', hB0, hB1, hB'0, hB'1, fun b => ⟨?_, ?_⟩⟩
   · rw [hWe]
     exact map_sum_frame ρ U W _ _ hF b
@@ -1002,7 +995,7 @@ theorem exists_admissible_integralFrame_of_localTerms_alt : ∀ (D : D7) (X : Hi
   have hpd := Formalism.L2.SG.TermDef.pd_self (X.Fu u) t₀.lam hrow
   refine ⟨lift_transport D _ hγ _ _ hlam _ hpd'.1, ?_, GlobalTheory.T.integralRowFrame_map_isometry D _ hγ _ _ hlam _ _ hpd'.2.2⟩
   have hloc := GlobalTheory.T.movedReferenceFrame_congruent_unitriangular D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv n m hn hm hlam hterm
-  obtain ⟨ξ, h1, h2, h3⟩ := GlobalTheory.T.glue_frame_congruences_unitriangular_integral (VS D) D.R.rS t₀.lam (gS D) (Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos)
+  obtain ⟨ξ, h1, h2, h3⟩ := _root_.GlobalTheory.FrameGlue.glue (VS D) D.R.rS t₀.lam (gS D) (Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos)
     (frame (lf D (X.Fu u))) (frame (mapLF (n⁻¹ * t₀.lin * m) (lf D (X.Fu u'))))
     (fun P hP a => frame_mem_locP D (X.Fu u) t₀.lam hpd.1 hpd.2.2 P hP a) hloc
   exact ⟨ξ, h1, h2, h3⟩
@@ -1275,7 +1268,7 @@ theorem global_witnesses : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
     rw [Set.mem_setOf_eq, hone p h] at hp
     exact hp (by simp)
   have hcfin : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) =
-      (Units.mk0 (G.S p).th (th_ne (G.S p)) : ((A.loc p).Fp)ˣ)}.Finite := by
+      (Units.mk0 (G.S p).th (_root_.GlobalTheory.FrameLevel.th_ne_zero (G.S p)) : ((A.loc p).Fp)ˣ)}.Finite := by
     refine G.gg_fin.subset fun p hp => ?_
     by_contra hg
     rw [Set.mem_setOf_eq] at hp hg
@@ -1520,7 +1513,7 @@ theorem exists_term_of_global : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv
   have hT0 := (GlobalTheory.T.movedTermLattice_isGlobalTerm_phase D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).1
   have ht0 : Formalism.HermitianLatticesTheory.gmap t₀.lin t₀.lam' = t₀.lam := t₀.rep.2.2.2.1
-  have e3 : c.lat ρ t₀.lam = c.lat (ρ * t₀.lin) t₀.lam' := by rw [← ht0, lat_gmap']
+  have e3 : c.lat ρ t₀.lam = c.lat (ρ * t₀.lin) t₀.lam' := by rw [← ht0, _root_.GlobalTheory.HL.GCoord.lat_gmap]
   obtain ⟨⟨x, hx, hΓx⟩, ⟨x', hx', hΓx'⟩⟩ := term_eq_map G hk hT0 hΓ
   obtain ⟨n, rfl⟩ := hsurj ρ x
   obtain ⟨m, rfl⟩ := hsurj (ρ * t₀.lin) x'
@@ -1530,7 +1523,7 @@ theorem exists_term_of_global : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
   have hΓm : Γ = c.lat (ρ * t₀.lin * m) t₀.lam' := by rw [hlat, hΓx', e3]
   have hγmap : Formalism.HermitianLatticesTheory.gmap (n⁻¹ * t₀.lin * m) t₀.lam' = t₀.lam := by
     apply lat_inj c (ρ * n)
-    rw [lat_gmap', ← hΓn, hΓm]
+    rw [_root_.GlobalTheory.HL.GCoord.lat_gmap, ← hΓn, hΓm]
     congr 1
     group
   have hγiso : n⁻¹ * t₀.lin * m ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT :=

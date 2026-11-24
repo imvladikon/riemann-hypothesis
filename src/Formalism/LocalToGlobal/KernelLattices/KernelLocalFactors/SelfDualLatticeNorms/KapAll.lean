@@ -60,6 +60,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -71,7 +72,6 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.Style
-import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
@@ -81,7 +81,7 @@ import Mathlib.RingTheory.SimpleRing.Principal
 -- Members: Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapNon, Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.RelIndexNeZeroOfNsmulMem, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapDet, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapSplit, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapVal, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.LiftOneFormsToCompatibleApply, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapAll
 
 -- ===== clump member: Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapNon =====
--- clump-header: {"m": "Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapNon", "h": "module\n\npublic import Formalism.LocalToGlobal.KernelLattices.KerStd\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.NormNatCoprime\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.NsmulRelIdxMem\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThU\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapNon", "h": "module\n\npublic import Formalism.LocalToGlobal.KernelLattices.KerStd\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.NormNatCoprime\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.NsmulRelIdxMem\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThU\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -232,7 +232,7 @@ open Formalism.FrobeniusOrbits
 variable {R : Ranks} (H : Host R)
 
 theorem K_repr (k : H.K) : ∃ a b : ℚ, (k : H.E) = (a : H.E) + (b : H.E) * H.sqd := by
-  have hβ := bE_sq H
+  have hβ := _root_.Formalism.BasicNotions.Examples₂.bE_sq H
   refine K_induction H (p := fun x => ∃ a b : ℚ, x = (a : H.E) + (b : H.E) * H.sqd) ?_ ?_ ?_ ?_ ?_ k
   · exact ⟨0, 1, by simp⟩
   · intro r
@@ -306,7 +306,7 @@ theorem nonsplit_conj (p : ℕ) [Fact p.Prime] (hs : ¬ SplitK D p) (ι : ℂ �
   have e1 : ι (D.host.φ₀ (x : D.host.E)) = (a : ℂ_[p]) + b * ι (Complex.I * (Real.sqrt D.host.d : ℂ)) := by
     rw [hx, map_add (f := _), map_mul, phi_b, map_ratCast, map_ratCast, map_add (f := _), map_mul, map_ratCast, map_ratCast]
   have e2 : ι (D.host.φ₀ (D.host.conj (x : D.host.E))) = (a : ℂ_[p]) - b * ι (Complex.I * (Real.sqrt D.host.d : ℂ)) := by
-    rw [hx, map_add (f := _), map_mul, conj_b, map_ratCast, map_ratCast, mul_neg, ← sub_eq_add_neg, map_sub, map_mul, phi_b,
+    rw [hx, map_add (f := _), map_mul, _root_.Formalism.BasicNotions.Examples₂.conj_bE, map_ratCast, map_ratCast, mul_neg, ← sub_eq_add_neg, map_sub, map_mul, phi_b,
       map_ratCast, map_ratCast, map_sub, map_mul, map_ratCast, map_ratCast]
   rw [e1, e2]
   exact (core_rat p D.host.d D.host.hyp.2.1 hJ (norm_int_unit p) (norm_p_lt p) _ hr a b).symm
@@ -314,7 +314,7 @@ theorem nonsplit_conj (p : ℕ) [Fact p.Prime] (hs : ¬ SplitK D p) (ι : ℂ �
 theorem det_unit_nonsplit (p : ℕ) [Fact p.Prime] (hs : ¬ SplitK D p) (ι : ℂ ≃+* ℂ_[p]) (x : D.host.K)
     (h : D.host.φ₀ (x : D.host.E) * (starRingEnd ℂ) (D.host.φ₀ (x : D.host.E)) = 1) : ‖ι (D.host.φ₀ (x : D.host.E))‖ = 1 := by
   have h1 := nonsplit_conj p hs ι x
-  rw [phi_conj] at h1
+  rw [_root_.Formalism.BasicNotions.Examples₂.emb_conj] at h1
   have h2 : ‖ι (D.host.φ₀ (x : D.host.E))‖ * ‖ι ((starRingEnd ℂ) (D.host.φ₀ (x : D.host.E)))‖ = 1 := by
     rw [← norm_mul, ← map_mul, h, map_one, norm_one]
   rw [h1] at h2
@@ -751,7 +751,7 @@ theorem relIdx_smul_mem_imgLat_of_mem_stdLat (hsd : IsSelfDual (Formalism.L2.Th1
   have hM : dualLat (Formalism.L2.Th1.H.stdH B.L (Ix D)) (imgLat (u : (Ix D → ℂ) →ₗ[ℂ] (Ix D → ℂ)) B.latA)
       = imgLat (u : (Ix D → ℂ) →ₗ[ℂ] (Ix D → ℂ)) B.latA := SO.selfDual_img _ _ u hiso _ hsd
   have hL : dualLat (Formalism.L2.Th1.H.stdH B.L (Ix D)) (stdLat B.L (Ix D)) = stdLat B.L (Ix D) :=
-    Formalism.L2.Th1.H.stdSelfDual B.L (Ix D)
+    _root_.Formalism.L2.Th1.H.StdSelfDual_proof B.L (Ix D)
   have hx' : x ∈ dualLat (Formalism.L2.Th1.H.stdH B.L (Ix D)) (stdLat B.L (Ix D)) := by rw [hL]; exact hx
   have key : ((relIdx (stdLat B.L (Ix D)) (imgLat (u : (Ix D → ℂ) →ₗ[ℂ] (Ix D → ℂ)) B.latA) : ℕ) : ℂ) • x
       ∈ dualLat (Formalism.L2.Th1.H.stdH B.L (Ix D)) (imgLat (u : (Ix D → ℂ) →ₗ[ℂ] (Ix D → ℂ)) B.latA) := by
@@ -872,7 +872,7 @@ theorem detRel_unitary (γ γ₀ : IsoK D) :
     simp only [LinearEquiv.apply_symm_apply] at h1
     have h3 := congrArg D.host.φ₀ h1
 
-    simp only [map_sum, map_mul, phi_conj] at h3
+    simp only [map_sum, map_mul, _root_.Formalism.BasicNotions.Examples₂.emb_conj] at h3
     exact h3
   set M : Matrix (Fin 4 × D.what₂.Tau) (Fin 4 × D.what₂.Tau) D.host.K := LinearMap.toMatrix' T with hM
   have hdet : f (γ.detRel γ₀) = (f.mapMatrix M).det := by
@@ -914,7 +914,7 @@ theorem exists_conj (a : 𝓞 D.host.K) :
 theorem repr_K (x : D.host.K) : ∃ r s : ℚ, (x : D.host.E) =
     algebraMap ℚ D.host.E r + algebraMap ℚ D.host.E s * D.host.sqd := by
   have hsq : D.host.sqd * D.host.sqd = -(D.host.d : D.host.E) := by
-    rw [← sq]; exact bE_sq D.host
+    rw [← sq]; exact _root_.Formalism.BasicNotions.Examples₂.bE_sq D.host
   refine K_induction D.host (p := fun x => ∃ r s : ℚ, x =
     algebraMap ℚ D.host.E r + algebraMap ℚ D.host.E s * D.host.sqd) ?_ ?_ ?_ ?_ ?_ x
   · exact ⟨0, 1, by simp⟩
@@ -954,11 +954,11 @@ theorem repr_K (x : D.host.K) : ∃ r s : ℚ, (x : D.host.E) =
 theorem norm_int (t t' : 𝓞 D.host.K) (h : ((t' : D.host.K) : D.host.E) = D.host.conj ((t : D.host.K) : D.host.E)) :
     ∃ n : ℤ, t * t' = (n : 𝓞 D.host.K) := by
   have hsq : D.host.sqd * D.host.sqd = -(D.host.d : D.host.E) := by
-    rw [← sq]; exact bE_sq D.host
+    rw [← sq]; exact _root_.Formalism.BasicNotions.Examples₂.bE_sq D.host
   obtain ⟨r, s, hrs⟩ := repr_K (t : D.host.K)
   have hc : ((t' : D.host.K) : D.host.E) =
       algebraMap ℚ D.host.E r - algebraMap ℚ D.host.E s * D.host.sqd := by
-    rw [h, hrs, map_add (f := _), map_mul, AlgEquiv.commutes, AlgEquiv.commutes, conj_b]
+    rw [h, hrs, map_add (f := _), map_mul, AlgEquiv.commutes, AlgEquiv.commutes, _root_.Formalism.BasicNotions.Examples₂.conj_bE]
     ring
   have hprod : (((t * t' : 𝓞 D.host.K) : D.host.K) : D.host.E) = algebraMap ℚ D.host.E (r ^ 2 + (D.host.d : ℚ) * s ^ 2) := by
     have e : (((t * t' : 𝓞 D.host.K) : D.host.K) : D.host.E) = ((t : D.host.K) : D.host.E) * ((t' : D.host.K) : D.host.E) := by
@@ -1230,7 +1230,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapVal =====
 
 -- ===== clump member: Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.LiftOneFormsToCompatibleApply =====
--- clump-header: {"m": "Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.LiftOneFormsToCompatibleApply", "h": "module\n\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapDet\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.NormNatCoprime\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapSplit\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapVal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.LiftOneFormsToCompatibleApply", "h": "module\n\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapDet\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.NormNatCoprime\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapSplit\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.KapVal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1254,7 +1254,7 @@ theorem liftOneFormsToCompatible_apply {p : ℕ} [Fact p.Prime] (ι : ℂ ≃+* 
 
 theorem conjugate_embedding_apply {p : ℕ} [Fact p.Prime] (ι : ℂ ≃+* ℂ_[p]) (x : D.host.K) :
     f2 ι x = ι (D.host.φ₀ (D.host.conj (x : D.host.E))) := by
-  rw [phi_conj]; rfl
+  rw [_root_.Formalism.BasicNotions.Examples₂.emb_conj]; rfl
 
 section Kap
 

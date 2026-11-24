@@ -96,17 +96,12 @@ theorem cone_sum {S : Finset (LinearMap.BilinForm ℤ X)} (h : ∀ x ∈ S, InRC
   rw [Finset.sum_insert ha]
   exact cone_add (h a (Finset.mem_insert_self a S)) (ih fun x hx => h x (Finset.mem_insert_of_mem hx))
 
-private theorem toReal_eq_sum_smul_toReal_of_coe_eq {x : LinearMap.BilinForm ℤ X} {c : Fin m → ℝ}
-    (h : ∀ a b, (x a b : ℝ) = ∑ i, c i * (γ i a b : ℝ)) : toReal x = ∑ i, c i • toReal (γ i) := by
-  ext a b
-  simp [toReal_apply, LinearMap.sum_apply, h a b]
-
 theorem cone_smul_iff {g : ℕ} (hg : 0 < g) {x : LinearMap.BilinForm ℤ X} : InRCone γ ((g : ℤ) • x) ↔ InRCone γ x := by
   have hg' : (g : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hg.ne'
   have hv : ∀ a b, ((((g : ℤ) • x) a b : ℤ) : ℝ) = g * x a b := fun a b => by simp
   constructor
   · rintro ⟨c, hc, h⟩
-    refine ⟨fun i => c i / g, fun i => div_nonneg (hc i) (Nat.cast_nonneg g), toReal_eq_sum_smul_toReal_of_coe_eq fun a b => ?_⟩
+    refine ⟨fun i => c i / g, fun i => div_nonneg (hc i) (Nat.cast_nonneg g), _root_.GlobalTheory.PolFan.Mark.Exist.toReal_eq_sum_smul_of_coe_eq_sum fun a b => ?_⟩
     have e := apply_of_cone h a b
     rw [hv] at e
     have hs : ∑ i, c i / g * (γ i a b : ℝ) = (∑ i, c i * (γ i a b : ℝ)) / g := by
@@ -115,7 +110,7 @@ theorem cone_smul_iff {g : ℕ} (hg : 0 < g) {x : LinearMap.BilinForm ℤ X} : I
     rw [hs, ← e]
     field_simp
   · rintro ⟨c, hc, h⟩
-    refine ⟨fun i => g * c i, fun i => mul_nonneg (Nat.cast_nonneg g) (hc i), toReal_eq_sum_smul_toReal_of_coe_eq fun a b => ?_⟩
+    refine ⟨fun i => g * c i, fun i => mul_nonneg (Nat.cast_nonneg g) (hc i), _root_.GlobalTheory.PolFan.Mark.Exist.toReal_eq_sum_smul_of_coe_eq_sum fun a b => ?_⟩
     rw [hv, apply_of_cone h a b, Finset.mul_sum]
     exact Finset.sum_congr rfl fun i _ => by ring
 

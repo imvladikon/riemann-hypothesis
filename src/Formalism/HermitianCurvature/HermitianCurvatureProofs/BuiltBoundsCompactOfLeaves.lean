@@ -134,7 +134,7 @@ theorem thr_lift (hCc : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting Cb
   have hCA : Cc ≤ S.CA := hB.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hN : (0:ℝ) ≤ S.G.N := by unfold Sz.Glob.N; positivity
   have hcg : (0:ℝ) ≤ (28 * S.G.N / S.G.lenI) ^ (2 * (b - 1) + s) := by positivity
-  have h := (Formalism.FourierDecayAlt.P.frame_threshold_bound_holds (InfinitePlace E) S.G S.CA S.de S.de' S.T S.T' S.l (S.pl v) hg hl
+  have h := (_root_.Formalism.FourierDecayAlt.P.PBD.frame_threshold_bound (InfinitePlace E) S.G S.CA S.de S.de' S.T S.T' S.l (S.pl v) hg hl
     (hCc.trans hCA) (fun one => supA_nonneg S hg hk v one)).1 b s (Real.exp 1)
     ((28 * S.G.N / S.G.lenI) ^ (2 * (b - 1) + s)) hb (Real.exp_pos 1).le le_rfl hcg le_rfl
   have hdec : decide (b = 1 ∧ s + 1 = 1) = false := decide_eq_false (by omega)
@@ -423,7 +423,7 @@ theorem Formalism.FourierDecayAlt.P.lift_local_compact_support_route : Formalism
   obtain ⟨-, -, -, -, -, -, -, -, -, -, hGo, hGr, -⟩ := hB'
   have hCI := Formalism.FourierDecayAlt.P.PBCut.cutInside_of_built hB
   obtain ⟨-, grid, hinj, hl1, hmem, hall, hlp, hlm⟩ :=
-    Formalism.FourierDecayAlt.P.new_letters_admissible E Wp Wq S hGo hGr hCI v a C.Kst (2 * (b + s - 1 - s) + s) ha' haK' (by omega)
+    _root_.Formalism.FourierDecayAlt.P.PBD.newLetters E Wp Wq S hGo hGr hCI v a C.Kst (2 * (b + s - 1 - s) + s) ha' haK' (by omega)
   have hnodes : ∀ n : Fin C.Kst → Fin (2 * (b + s - 1 - s) + s + 1),
       D.AdmAt S v (KB.plusW (List.ofFn fun c => grid c (n c)) a) ∧
       D.AdmAt S v (KB.minusW (List.ofFn fun c => grid c (n c)) a) ∧
@@ -863,7 +863,7 @@ theorem thr_wave (hCc : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting Cb
   have hCA : Cc ≤ S.CA := hB.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hN : (0:ℝ) ≤ S.G.N := by unfold Sz.Glob.N; positivity
   have hcg : (0:ℝ) ≤ (28 * S.G.N / S.G.lenI) ^ (2 * (i - 1) + 0) := by positivity
-  have h := (Formalism.FourierDecayAlt.P.frame_threshold_bound_holds (InfinitePlace E) S.G S.CA S.de S.de' S.T S.T' S.l (S.pl v) hg hl
+  have h := (_root_.Formalism.FourierDecayAlt.P.PBD.frame_threshold_bound (InfinitePlace E) S.G S.CA S.de S.de' S.T S.T' S.l (S.pl v) hg hl
     (hCc.trans hCA) (fun one => supA_nonneg S hg hk v one)).1 i 0 (Real.exp 1) ((28 * S.G.N / S.G.lenI) ^ (2 * (i - 1) + 0))
     hi1 (Real.exp_pos 1).le le_rfl hcg le_rfl
   refine ⟨xw_nonneg hB i v, ?_⟩
@@ -970,7 +970,7 @@ theorem Formalism.FourierDecayAlt.P.wave_local_compact_support_route : Formalism
   have hCI := Formalism.FourierDecayAlt.P.PBCut.cutInside_of_built hB
   obtain ⟨grid, hinj, hl1, hnodes, hlp, hlm⟩ := nodes_level hB v a ha' C.Kst haK' j hj
   have hwa : KB.CutWord (D.parOf S v) (S.l + 1) a :=
-    (Formalism.FourierDecayAlt.P.new_letters_admissible E Wp Wq S hGo hGr hCI v a C.Kst 0 ha' haK' (by omega)).1
+    (_root_.Formalism.FourierDecayAlt.P.PBD.newLetters E Wp Wq S hGo hGr hCI v a C.Kst 0 ha' haK' (by omega)).1
   refine ⟨PBD.pushU grid (fun ys => KB.plusW ys a), PBD.pushTh grid (fun ys => KB.plusW ys a),
     PBD.pushU grid (fun ys => KB.minusW ys a), PBD.pushTh grid (fun ys => KB.minusW ys a), hlp, hlm,
     fun ε hε l Y hY => ⟨?_, Complex.I ^ C.Kst, by simp, ?_⟩⟩
@@ -1045,7 +1045,7 @@ def BuiltBounds2CptOfLeaves : Prop :=
 theorem builtBounds2CptOfLeaves : BuiltBounds2CptOfLeaves := by
   intro hRH hHT hDL hTL hDT hTR hGP hD
   have hPSC : P5.ThmPActualCpt → StandardPairingDecay.PStdC := fun hA => StandardPairingDecay.pStdC_of hA hRH hHT
-  have hI : P5.ThmPActualCpt → IntB := fun hA => integral_bound_of_parts (hPSC hA) (hD hA)
+  have hI : P5.ThmPActualCpt → IntB := fun hA => _root_.Formalism.FourierDecayAlt.P.PBASM.intBOfParts (hPSC hA) (hD hA)
   exact builtBounds2CptOfParts (waveLocB_of_cpt hPSC) (liftLocB_of_cpt hDL) hTL (fun _ => hDT)
     (fun _ => vector_valued_types) (fun _ => hTR) (fun hA => germLocB_of (hI hA) hGP) positivity_bound hI hD
     (fun _ => thrPos)
@@ -1053,8 +1053,6 @@ theorem builtBounds2CptOfLeaves : BuiltBounds2CptOfLeaves := by
 end Formalism.FourierDecayAlt.P.PBASM
 
 namespace Formalism.FourierDecayAlt.P
-
-theorem built_bounds_compact_of_leaves : PBASM.BuiltBounds2CptOfLeaves := PBASM.builtBounds2CptOfLeaves
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

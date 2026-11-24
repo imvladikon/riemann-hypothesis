@@ -181,8 +181,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.exists_breuilKisin_frame_height_of_jumps_le : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l), bk.IsPer τ → ∀ (C : Core l), C.InvdR → ∀ (N N₀ d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) (ℤ_[l])) (F : Frame bk N d ρ), F.IsDR → ∀ H : Hodge C (bk.ev bk.E) (fun g => (ρ g).map (zOm l)) K, (∀ i, |(H.p i : ℤ) - H.q| ≤ N₀) → ∃ F₀ : Frame bk N₀ d ρ, F₀.T = F.T ∧ F₀.ε = F.ε := by
-  first | (exact @GlobalTheory.BKLim.Lower.exists_frame_of_jumps_le)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinFrameHeightOfJumpsLeStatement =====
@@ -631,7 +629,7 @@ theorem GlobalTheory.BKLim.exists_frame_sst : ∀ (l : ℕ) [Fact l.Prime] (K : 
   obtain ⟨C, hC⟩ := GlobalTheory.MemLoc.FitsEx.exists_fits l P AI T
   have hinv := GlobalTheory.MemLoc.fits_inv l P AI T C hC
   have hdr : IsDR (P.PD K) (qRep ρ) := GlobalTheory.sst_isDR l P AI T K _ (qRep ρ) hsst
-  obtain ⟨H, hH⟩ := GlobalTheory.T.exists_hodge_basis_deRham_lattice l K P AI T C hC (bk.ev bk.E) bk.span_ev d ρ hdr
+  obtain ⟨H, hH⟩ := _root_.GlobalTheory.HodgeEx.exists_hodge l K P AI T C hC (bk.ev bk.E) bk.span_ev d ρ hdr
   have hHN := hH N hjump
   have hunit : ∀ g, IsUnit ((ρ g).val) := fun g => (ρ g).isUnit
   obtain ⟨s, hs⟩ : ∃ s : WSeed bk d (fun g => (ρ g).val) τ, IsCrys (P.PD K) (qRep ρ) → ∀ g, s.κ g = 1 := by
@@ -644,8 +642,8 @@ theorem GlobalTheory.BKLim.exists_frame_sst : ∀ (l : ℕ) [Fact l.Prime] (K : 
       obtain ⟨s⟩ := _root_.GlobalTheory.BKLim.wseed_of_periods l K bk C τ hτ d (fun g => (ρ g).val) N' c₁ c₂ c₃ k₀ F F' X X' Z Z' κ
         ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
       exact ⟨s, fun h => absurd h hc⟩
-  obtain ⟨N', F, hFdr, hFcr⟩ := GlobalTheory.T.exists_breuilKisinFrame_semistablePeriods l K bk τ hτ d _ hunit s
-  obtain ⟨F₀, -, hε⟩ := GlobalTheory.T.exists_breuilKisin_frame_height_of_jumps_le l K bk τ hτ C hinv.2 N' N d _ F hFdr H hHN
+  obtain ⟨N', F, hFdr, hFcr⟩ := _root_.GlobalTheory.semistablePeriodFrame l K bk τ hτ d _ hunit s
+  obtain ⟨F₀, -, hε⟩ := _root_.GlobalTheory.BKLim.Lower.exists_frame_of_jumps_le l K bk τ hτ C hinv.2 N' N d _ F hFdr H hHN
   refine ⟨F₀, ?_, fun hc => ?_⟩
   · unfold Frame.IsDR Frame.IsBeta at hFdr ⊢
     rw [hε]; exact hFdr
@@ -664,8 +662,6 @@ section -- clump:auto
 open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N TensorProduct PowerSeries GlobalTheory.Prism GlobalTheory.BKReal GlobalTheory.Per GlobalTheory.BSP GlobalTheory.MemLoc GlobalTheory.Pst GlobalTheory.BKLim GlobalTheory.Cong Matrix
 open scoped Formalism.Per NNReal
 
-theorem _root_.GlobalTheory.T.exists_breuilKisinFrame_semistable_boundedJumps : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l), bk.IsPer τ → ∀ (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (N : ℕ) (d : ℕ) (ρ : ↥(GK K) →* GL (Fin d) ℤ_[l]), Continuous ρ → IsSst P (qRep ρ) → (DdR (P.PD K) (qRep ρ) ≤ FilV (P.PD K) (LL := ℚ_[l]) (V := Fin d → ℚ_[l]) (-(N : ℤ)) ∧ DdR (P.PD K) (qRep ρ) ⊓ FilV (P.PD K) (LL := ℚ_[l]) (V := Fin d → ℚ_[l]) ((N : ℤ) + 1) = ⊥) → ∃ F : Frame bk N d fun g => (ρ g).val, F.IsDR ∧ (IsCrys (P.PD K) (qRep ρ) → F.IsCr) := by
-  first | (exact @GlobalTheory.BKLim.exists_frame_sst)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinFrameSemistableBoundedJumpsStatement =====

@@ -267,10 +267,6 @@ private theorem smul_congr {K K' Ω : Type} [Field K] [Field K'] [Field Ω] [Alg
   ext x
   simp only [Set.mem_smul_set, AlgEquiv.smul_def, hg]
 
-private theorem mem_real_of_sq {Y : Type} [Field Y] {δ : Y} {q : ℕ} (hq : 0 < q) (hδ : δ ^ 2 = (q : Y)) :
-    δ ∈ maximalRealSubfield Y :=
-  _root_.UpperTheory.Reformulated.B.Qh55.mem_real_of_sq hq hδ
-
 private theorem algebraMap_mem_real {E Y : Type} [Field E] [Field Y] [Algebra E Y] {x : E}
     (hx : x ∈ maximalRealSubfield E) : algebraMap E Y x ∈ maximalRealSubfield Y :=
   (mem_maximalRealSubfield_iff _).2 fun φ => (mem_maximalRealSubfield_iff x).1 hx (φ.comp (algebraMap E Y))
@@ -287,7 +283,7 @@ private theorem apart_of_moves {E Y Ω : Type} [Field E] [NumberField E] [IsCMFi
   have h2 := over_under (F := maximalRealSubfield Y) hw₂
   rw [← hv] at h2
   obtain ⟨ρ, hρ⟩ := exists_smul_eq_of_isPlaceOver h1 h2
-  have hδr : δ ∈ maximalRealSubfield Y := mem_real_of_sq hq hδ
+  have hδr : δ ∈ maximalRealSubfield Y := _root_.UpperTheory.Reformulated.B.Qh55.mem_real_of_sq hq hδ
   have hρδ : ρ (algebraMap Y Ω δ) = algebraMap Y Ω δ := ρ.commutes (⟨δ, hδr⟩ : maximalRealSubfield Y)
   have hρF : ∀ x : maximalRealSubfield E, ρ.toRingEquiv (algebraMap (maximalRealSubfield E) Ω x) =
       algebraMap (maximalRealSubfield E) Ω x := fun x => by
@@ -1099,8 +1095,8 @@ theorem satSplit : SatSplit := by
   have hq : normV w = normV v ^ 1 := degOf K M Ω A v w hv hw (fun τ hτ => hD τ (Ine_le_Dec A hτ)) φ 1 one_pos hφ
     fun k => ⟨fun _ => one_dvd k, fun _ => hD _ (pow_mem (show φ ∈ Dec (F := K) A from hφ.1) k)⟩
   rw [pow_one] at hq
-  refine ((GlobalTheory.T.cuspRep_satake_iff_localComponent_satake M a P w σ' hσ').1 B).2 (GlobalTheory.IsoPull.hasSatGL_of_ringEquiv i hiv ?_ e (fun g x => (he g x).symm)
-    (((GlobalTheory.T.cuspRep_satake_iff_localComponent_satake K a π v σ hσ).1 B).1 hB))
+  refine ((_root_.GlobalTheory.Cong.satake_locComp M a P w σ' hσ').1 B).2 (GlobalTheory.IsoPull.hasSatGL_of_ringEquiv i hiv ?_ e (fun g x => (he g x).symm)
+    (((_root_.GlobalTheory.Cong.satake_locComp K a π v σ hσ).1 B).1 hB))
   first | (unfold normV at hq; simp only [Formalism.UG.qV, Ideal.absNorm_apply, Submodule.cardQuot_apply]; exact hq)
 
 end UpperTheory.Gal.UnramifiedFromSplittingCriterion
@@ -1224,7 +1220,7 @@ theorem noSelfTwist_holds : NoSelfTwist := noSelfTwist_of normRam
 theorem infinitely_many_real_quadratic_steps : Quad0 := quadraticCharTwist_of_exists_of_infinity (quad0Ex sqrtFix mkQ unrLarge) infOf
 theorem allUnr_holds : AllUnr := allUnr splitIff
 theorem threeApart_holds : ThreeApart := threeApart_of double apartUp
-theorem satSplit_holds : SatSplit := satSplit
+alias satSplit_holds := _root_.UpperTheory.Gal.UnramifiedFromSplittingCriterion.satSplit
 
 end UpperTheory.Gal.UnramifiedFromSplittingCriterion
 end -- clump:auto

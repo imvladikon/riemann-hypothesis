@@ -326,17 +326,13 @@ namespace GlobalTheory.NormCover
 
 open GlobalTheory.BplusDescent
 
-theorem genericPoint_mem {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} (hU : (U : Set X).Nonempty) :
-    genericPoint X ∈ U :=
-  ((genericPoint_spec X).mem_open_set_iff U.isOpen).2 (by simpa using hU)
-
 theorem isFinite_fromNormalization_fieldPt {X : Scheme.{0}} [IsIntegral X] [GlobalTheory.IsNormalScheme X]
     [IsLocallyNoetherian X] {L : Type} [Field L] [CharZero L]
     (ψ : X.presheaf.stalk (genericPoint X) ⟶ .of L) (hψ : ψ.hom.Finite) :
     IsFinite (fieldPt ψ).fromNormalization := by
   refine ⟨fun U hU => ?_⟩
   by_cases hne : (U : Set X).Nonempty
-  · have hη := genericPoint_mem hne
+  · have hη := _root_.GlobalTheory.SS.WtRat.genericPoint_mem hne
     haveI : Nonempty U := hne.to_subtype
     letI : Algebra Γ(X, U) Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) :=
       ((fieldPt ψ).fromNormalization.app U).hom.toAlgebra
@@ -392,7 +388,7 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
   have hρs : Function.Surjective ρ.hom := by
     intro x
     obtain ⟨U, f, hU, rfl⟩ := M.onto x
-    have hη := genericPoint_mem hU
+    have hη := _root_.GlobalTheory.SS.WtRat.genericPoint_mem hU
     refine ⟨M.Z.presheaf.germ U _ hη f, ?_⟩
     have key : ∀ (g : Sp Ω ⟶ M.Z) (_ : fieldPt ρ = g) (e : ⊤ ≤ g ⁻¹ᵁ U),
         g.appLE U ⊤ e ≫ (Scheme.ΓSpecIso (.of Ω)).hom = M.Z.presheaf.germ U _ hη ≫ ρ := by
@@ -437,7 +433,7 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
       (Algebra.IsIntegral.isIntegral (R := M.Z.functionField) x)
     have ha0 : a ≠ 0 := nonZeroDivisors.ne_zero ha
     have hηV : genericPoint M.Z ∈ M.Z.basicOpen a := by
-      refine genericPoint_mem ?_
+      refine _root_.GlobalTheory.SS.WtRat.genericPoint_mem ?_
       rw [Set.nonempty_iff_ne_empty]
       exact fun h => ha0 ((basicOpen_eq_bot_iff a).1 (SetLike.coe_injective h))
     have hV : IsAffineOpen (M.Z.basicOpen a) := hU.basicOpen a
@@ -691,14 +687,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.UMin.KeyOne
 
-theorem isNormalScheme_of_isOpenImmersion {X Y : Scheme.{0}} (f : Y ⟶ X) [IsOpenImmersion f]
-    (h : Geo.Tor.IsNormalScheme X) : Geo.Tor.IsNormalScheme Y := by
-  intro y
-  obtain ⟨h1, h2⟩ := h (f y)
-  let e : X.presheaf.stalk (f y) ≃+* Y.presheaf.stalk y :=
-    (asIso (f.stalkMap y)).commRingCatIsoToRingEquiv
-  exact ⟨MulEquiv.isDomain _ e.symm.toMulEquiv, IsIntegrallyClosed.of_equiv e⟩
-
 theorem exists_lift_of_dense {P U : Scheme.{0}} (i : U ⟶ P) [IsOpenImmersion i] (hi : Dense (Set.range i))
     {k Ω : Type} [CommRing k] [Field Ω] [Algebra k Ω] (M : RatModel k Ω) (a : M.Z ⟶ P) [IsOpenImmersion a] :
     ∃ y : Sp Ω ⟶ U, y ≫ i = M.pt ≫ a := by
@@ -755,7 +743,7 @@ theorem GlobalTheory.UMin.KeyOne.lbIso_pull_O1_hodge : ∀ (E : Type) [Field E] 
   intro E _ _ _ H Dw l Xo c o _ m n f hm hm3 hmu hn hf Y g hg Ω _ _ M io hio hs
   haveI := hio
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap c.F Ω).injective
-  have hMn : Geo.Tor.IsNormalScheme M.Z := GlobalTheory.UMin.KeyOne.isNormalScheme_of_isOpenImmersion io Y.normal
+  have hMn : Geo.Tor.IsNormalScheme M.Z := _root_.GlobalTheory.AbelianLocusNormalisation.isNormalScheme_of_open io Y.normal
   obtain ⟨y, hy⟩ := GlobalTheory.UMin.KeyOne.exists_pt_eq Y M io
   have hpol := GlobalTheory.T.universalTriple_fibre_principallyPolarised_dimension E H Dw l Xo c Ω (y ≫ pullback.fst _ _)
   obtain ⟨⟨θ, hθ⟩, hθup⟩ := GlobalTheory.T.principallyPolarisedFibre_exists_generator_stable Xo.X Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.isLB _ Ω _ hpol

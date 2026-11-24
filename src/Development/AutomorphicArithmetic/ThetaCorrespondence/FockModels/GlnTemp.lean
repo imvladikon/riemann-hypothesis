@@ -235,7 +235,7 @@ theorem heckeWeak_of_maxExpWeak (k : Type) [Field k] [ValuativeRel k] [Topologic
 theorem coeff_bound_rpow (p : ℝ) (hp : 2 < p) : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), IsSmooth π → IsAdmissible π → HeckeWeak π → ∀ m : ℕ, 1 ≤ m → ∀ v ∈ fixed π (Zls.Km k N m), ∀ l : Module.Dual ℂ V, (∀ x ∈ Zls.Km k N m, l ∘ₗ π x = l) → ∃ (C : ℝ) (ρ : Fin (N - 1) → ℝ), (∀ j, 0 ≤ ρ j) ∧ (∀ j : Fin (N - 1), (Nat.card 𝓀[k] : ℝ) ^ (((j : ℕ) + 1) * (N - ((j : ℕ) + 1))) * ρ j ^ p < 1) ∧ ∀ g : Fin (N - 1) → ℕ, ‖l (π (Zls.diagPow k N (Zls.lamOf g)) v)‖ ≤ C * ∏ j, ρ j ^ g j := by
   intro k _ _ _ _ N V _ _ π hsm hadm hsp m hm v hv l hl
   have hfd : FiniteDimensional ℂ (fixed π (Zls.Km k N m)) :=
-    hadm.2 _ (GlobalTheory.CompanionTheory.KmTop.isOpen_Km N m) (GlobalTheory.CompanionTheory.KmTop.isCompact_Km N m)
+    hadm.2 _ (GlobalTheory.CompanionTheory.KmTop.isOpen_Km N m) (_root_.GlobalTheory.CompanionTheory.HeckeKm.isCompact_Km N m)
   have hq : (0 : ℝ) < (Nat.card 𝓀[k] : ℝ) := by
     exact_mod_cast Nat.card_pos
   obtain ⟨d, e, φ, hφ, hev⟩ := exists_coordinates (fixed π (Zls.Km k N m))
@@ -1164,7 +1164,7 @@ theorem exists_isSocle_prodIrr_dec : ∀ {k : Type} [Field k] [ValuativeRel k] [
   intro k _ _ _ _ hA Δ N hd
   apply GlobalTheory.CompanionTheory.SocleJm.exists_isSocle_of_jm_le_one hA (dec Δ) hd
   have hc : ∀ a, (dec Δ a).IsCusp := fun a => Δ.isCusp_term (Fin.rev a)
-  rw [GlobalTheory.T.jacquet_multiplicity_cuspidal_product hA (dec Δ) (dec Δ) hd hd hc hc]
+  rw [_root_.GlobalTheory.CompanionTheory.CuspJm.main hA (dec Δ) (dec Δ) hd hd hc hc]
   exact_mod_cast ncard_perm_dec_le_one hA Δ
 
 end GlobalTheory.CompanionTheory.LkSegSocle

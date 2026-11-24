@@ -421,11 +421,6 @@ noncomputable section
 
 namespace UpperTheory.Gal.LocD
 
-private theorem common_eigenvector {T D : Type} [AddCommGroup D] [Module ℂ D] [FiniteDimensional ℂ D] [Nontrivial D]
-    (φ : T → Module.End ℂ D) (hc : ∀ s t, Commute (φ s) (φ t)) :
-    ∃ (l : D) (a : T → ℂ), l ≠ 0 ∧ ∀ t, φ t l = a t • l :=
-  _root_.UpperTheory.Reformulated.B.CommonEigenvectorExistence.common_eigenvector φ hc
-
 theorem eigZero : EigZero := by
   intro T J _ _ _ _ _ ρ
   have hcomm : ∀ s t, Commute (ρ s) (ρ t) := fun s t => by
@@ -439,7 +434,7 @@ theorem eigZero : EigZero := by
       exact hy ((Module.forall_dual_apply_eq_zero_iff ℂ y).1 h)
     obtain ⟨g, hg⟩ := hex
     exact ⟨g, 0, fun h => hg (by simp [h])⟩
-  obtain ⟨l, a, hl0, hl⟩ := common_eigenvector (fun t => (ρ t).dualMap) (fun s t => by
+  obtain ⟨l, a, hl0, hl⟩ := _root_.UpperTheory.Reformulated.B.CommonEigenvectorExistence.common_eigenvector (fun t => (ρ t).dualMap) (fun s t => by
     change (ρ s).dualMap * (ρ t).dualMap = (ρ t).dualMap * (ρ s).dualMap
     ext g y
     have h := congrArg (fun F : Module.End ℂ J => F y) (hcomm s t).eq
@@ -1620,8 +1615,6 @@ theorem scalar_holds : Scalar := by
   exact scalar_of (eig eigZero) toBorel jacSemi (core fi gLCells gLFacts)
 
 theorem locDesc_holds : LocDesc := locDesc_of scalar_holds tracePow
-
-theorem ofSupport_holds : OfSupport := ofSupport
 
 end UpperTheory.Gal.LocD
 end -- clump:auto

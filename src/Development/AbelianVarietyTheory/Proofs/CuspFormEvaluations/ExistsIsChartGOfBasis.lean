@@ -302,17 +302,10 @@ theorem aug_jS (m : ℕ) (p : Q R d n) : (jetAug R _ m).comp (jP m p) = jetAug R
   show (0 : R) = (MvPolynomial.aeval fun _ => (0 : R)) (MvPolynomial.X j)
   rw [MvPolynomial.aeval_X]
 
-private theorem spMap_jetAug_comp_x_eq_one (m : ℕ) : spMap (jetAug R (Fin d) m) ≫ x m = 1 := by
-  have e : (jetAug R (Fin d) 0).comp (jetZeroR R (Fin d) m) = jetAug R (Fin d) m := by
-    apply jetR_algHom_ext_of_eq_on_zR
-    intro j
-    rfl
-  rw [← e, jet_spMap_square_comm, Category.assoc, hx.2.1 m, MonObj.comp_one]
-
 theorem ptJ_aug (m : ℕ) (p : Q R d n) : spMap (jetAug R _ m) ≫ ptJ x m p = 1 := by
   unfold ptJ
   rw [← Category.assoc, ← jet_spMap_square_comm, aug_jS hx]
-  exact spMap_jetAug_comp_x_eq_one hx m
+  exact _root_.ReciprocityTheory.ChartRestriction.G.Chart.spMap_jetAug_alt hx m
 
 theorem ptJ_trunc (m : ℕ) (p : Q R d n) : spMap (jetTruncR R _ m) ≫ ptJ x (m + 1) p = ptJ x m p := by
   have e : (jetTruncR R (Fin n × Fin d) m).comp (jP (m + 1) p) = (jP m p).comp (jetTruncR R (Fin d) m) := by
@@ -383,7 +376,7 @@ theorem ptJ_zero (m : ℕ) : ptJ x m (0 : Q R d n) = 1 := by
     rw [MvPolynomial.aeval_X, map_zero]
     simp [pj]
   unfold ptJ
-  rw [e, jet_spMap_square_comm, Category.assoc, spMap_jetAug_comp_x_eq_one hx m, MonObj.comp_one]
+  rw [e, jet_spMap_square_comm, Category.assoc, _root_.ReciprocityTheory.ChartRestriction.G.Chart.spMap_jetAug_alt hx m, MonObj.comp_one]
 
 theorem exists_series [IsCommMonObj G] {O : Type} [CommRing O] (a : Geo.Tor.OAct O G) :
     ∃ (F : FGLaw R d) (A : OAct O F),
@@ -591,7 +584,7 @@ theorem exists_jet_coordinates : ∀ (R : Type) [CommRing R] (G : Over (Spec (Co
       have hb' : ∀ j, b j + δ j ∈ N := fun j =>
         add_mem (hb j) (Ideal.pow_le_self (by omega) (hδ j))
       refine ⟨fun j => b j + δ j, hb', ?_⟩
-      have h3 := GlobalTheory.T.jetPoint_add_sqZero_eq_prod_mul_tangent R G hG d v hv x ht h0 h1 B augB J hJN hJle m
+      have h3 := _root_.GlobalTheory.jet_add_sqZero_eq_prod_mul R G hG d v hv x ht h0 h1 B augB J hJN hJle m
         (π.comp (jetLift R _ hN b hb)) (π.comp (jetLift R _ hN (fun j => b j + δ j) hb'))
         (by rw [← AlgHom.comp_assoc, haug, aug_comp_jetLift])
         (by rw [← AlgHom.comp_assoc, haug, aug_comp_jetLift])
@@ -627,8 +620,6 @@ open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalC
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
 attribute [local instance] Over.cartesianMonoidalCategory
-theorem _root_.GlobalTheory.T.exists_jetChart_coordinates_nilpotent : ∀ (R : Type) [CommRing R] (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∀ (d : ℕ) (v : Fin d → (epsR R ⟶ G)), IsLieBasis v → ∀ (x : ∀ m : ℕ, sp (R₀ := R) (JetR R (Fin d) m) ⟶ G), (∀ m, spMap (jetTruncR R (Fin d) m) ≫ x (m + 1) = x m) → (∀ m, spMap (jetZeroR R (Fin d) m) ≫ x m = 1) → (∀ j, spMap (dualLift (Pi.single j (1 : R))) ≫ x 1 = v j) → ∀ (A : Type) [CommRing A] [Algebra R A] (aug : A →ₐ[R] R) (m : ℕ), (RingHom.ker aug) ^ (m + 1) = ⊥ → ∀ y : sp (R₀ := R) A ⟶ G, spMap aug ≫ y = 1 → ∃ ψ : JetR R (Fin d) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin d) m ∧ y = spMap ψ ≫ x m := by
-  first | exact @GlobalTheory.exists_jet_coordinates
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsJetChartCoordinatesNilpotentStatement =====
@@ -769,7 +760,7 @@ theorem jetCoord_eq_of_sub_mem {R : Type} [CommRing R] {G : Over (Spec (CommRing
   let c : Fin d → J := fun j => ⟨_, hδ j⟩
   have hc : ∀ j, (c j : A) * (c j : A) = 0 := fun j => mul_eq_zero_of_sq hJ2 (c j).2 (c j).2
   have he : ∀ j, epsTo R (c j : A) (hc j) (TrivSqZeroExt.inr 1) = c j := fun j => epsTo_eps _ _
-  have key := GlobalTheory.T.jetPoint_add_sqZero_eq_prod_mul_tangent R G hG d v hv x hx₁ hx₂ hx₃ A aug J hJ hJ' m ψ ψ' hψ hψ'
+  have key := _root_.GlobalTheory.jet_add_sqZero_eq_prod_mul R G hG d v hv x hx₁ hx₂ hx₃ A aug J hJ hJ' m ψ ψ' hψ hψ'
     (fun j => epsTo R (c j : A) (hc j)) (fun j => by rw [he]; exact (c j).2)
     (fun j => by rw [he]; exact (add_sub_cancel _ _).symm)
   rw [← h] at key
@@ -843,8 +834,6 @@ open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalC
 open scoped CategoryTheory.MonObj
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor (Sp epsR IsTangent IsLieComb IsLieBasis)
 attribute [local instance] Over.cartesianMonoidalCategory
-theorem _root_.GlobalTheory.T.jetChart_coordinates_unique_commGroup : ∀ (R : Type) [CommRing R] (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∀ (d : ℕ) (v : Fin d → (epsR R ⟶ G)), IsLieBasis v → ∀ (x : ∀ m : ℕ, sp (R₀ := R) (JetR R (Fin d) m) ⟶ G), (∀ m, spMap (jetTruncR R (Fin d) m) ≫ x (m + 1) = x m) → (∀ m, spMap (jetZeroR R (Fin d) m) ≫ x m = 1) → (∀ j, spMap (dualLift (Pi.single j (1 : R))) ≫ x 1 = v j) → ∀ (A : Type) [CommRing A] [Algebra R A] (aug : A →ₐ[R] R) (m : ℕ), (RingHom.ker aug) ^ (m + 1) = ⊥ → ∀ ψ ψ' : JetR R (Fin d) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin d) m → aug.comp ψ' = jetAug R (Fin d) m → spMap ψ ≫ x m = spMap ψ' ≫ x m → ψ = ψ' := by
-  first | exact @GlobalTheory.jetCoord_unique
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.JetChartCoordinatesUniqueCommGroupStatement =====
@@ -870,10 +859,10 @@ theorem exists_isUnivChart_of_isLieBasis :
   obtain ⟨x, h₁, h₂, h₃⟩ := GlobalTheory.exists_jetPoints_of_isLieBasis R G hG d v hv
   refine ⟨x, ⟨h₁, h₂, ?_⟩, h₃⟩
   intro A _ _ aug m hm y hy
-  obtain ⟨ψ, hψ, hyψ⟩ := GlobalTheory.T.exists_jetChart_coordinates_nilpotent R G hG d v hv x h₁ h₂ h₃ A aug m hm y hy
+  obtain ⟨ψ, hψ, hyψ⟩ := _root_.GlobalTheory.exists_jet_coordinates R G hG d v hv x h₁ h₂ h₃ A aug m hm y hy
   refine ⟨ψ, ⟨hψ, hyψ⟩, ?_⟩
   rintro ψ' ⟨hψ', hyψ'⟩
-  exact GlobalTheory.T.jetChart_coordinates_unique_commGroup R G hG d v hv x h₁ h₂ h₃ A aug m hm ψ' ψ hψ' hψ (hyψ'.symm.trans hyψ)
+  exact _root_.GlobalTheory.jetCoord_unique R G hG d v hv x h₁ h₂ h₃ A aug m hm ψ' ψ hψ' hψ (hyψ'.symm.trans hyψ)
 
 end GlobalTheory
 end -- clump:auto

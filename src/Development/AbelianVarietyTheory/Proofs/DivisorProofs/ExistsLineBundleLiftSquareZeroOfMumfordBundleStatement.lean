@@ -103,19 +103,12 @@ namespace GlobalTheory.LBFrameEx
 
 variable {X : Scheme.{0}}
 
-private theorem res_res' {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (x : Γ(X, U)ˣ) :
-    res h' (res h x) = res (h'.trans h) x := by
-  ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 private theorem coc {L : LB X} (hL : L.IsLB) (i j k : L.ι) {W : X.Opens} (h₁ : W ≤ L.U i ⊓ L.U j)
     (h₂ : W ≤ L.U j ⊓ L.U k) (h₃ : W ≤ L.U i ⊓ L.U k) :
     res h₁ (L.g i j) * res h₂ (L.g j k) = res h₃ (L.g i k) := by
   have hW : W ≤ L.U i ⊓ L.U j ⊓ L.U k := le_inf h₁ (h₂.trans inf_le_right)
   have := congrArg (res hW) (hL.cocycle i j k)
-  rwa [map_mul, res_res', res_res', res_res'] at this
+  rwa [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res'] at this
 
 structure Ch (L : LB X) where
   U : X.affineOpens
@@ -157,10 +150,10 @@ theorem isBas (L : LB X) (hL : L.IsLB) : IsBas (opOf (opF L)) := by
 theorem isFrame (L : LB X) (hL : L.IsLB) : IsFrame L (opOf (opF L)) (opOf_le (opF L)) (unit L) := by
   refine ⟨gen L, fun T m m' => ?_, fun T T' a m => ?_⟩
   · simp only [gen]
-    rw [res_res', res_res']
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
     exact (coc hL m m' T.m _ _ _).symm
   · simp only [gen, unit]
-    rw [res_res', res_res']
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
     rw [mul_comm]
     exact (coc hL m T'.m T.m _ _ _).symm
 
@@ -444,14 +437,6 @@ namespace GlobalTheory.LBTrans
 
 variable {X : Scheme.{0}}
 
-theorem res_comp {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (a : Γ(X, U)ˣ) :
-    res h' (res h a) = res (h'.trans h) a := by
-  apply Units.ext
-  change (X.presheaf.map (homOfLE h').op).hom ((X.presheaf.map (homOfLE h).op).hom a) =
-    (X.presheaf.map (homOfLE (h'.trans h)).op).hom a
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem units_eq_of_local {U : X.Opens} (a b : Γ(X, U)ˣ)
     (h : ∀ x ∈ U, ∃ (W : X.Opens) (hW : W ≤ U), x ∈ W ∧ res hW a = res hW b) : a = b := by
   let J := {W : X.Opens // ∃ hW : W ≤ U, res hW a = res hW b}
@@ -509,7 +494,7 @@ theorem transition_units (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : C →
     intro x hx
     obtain ⟨T, ⟨c⟩, ⟨d⟩, hxT, hle⟩ := hB.2 i.1 j.1 x (W i ⊓ W j) hx hx.1 hx.2
     refine ⟨V T, hle, hxT, ?_⟩
-    rw [res_comp, res_comp]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
     have e1 := res_quot hu i.2.1.some i.2.2.some c
     have e2 := res_quot hu j.2.1.some j.2.2.some d
     change res (hV c) (w i) = res (hV d) (w j)
@@ -549,8 +534,6 @@ open scoped TensorProduct
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.CechDR GlobalTheory.LiftSys GlobalTheory.Obs GlobalTheory.LBObs GlobalTheory.AbLaw GlobalTheory.AbDual GlobalTheory.CechPic
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.existsUnique_transition_units_cocycle_thin_basis : ∀ (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : C → X.Opens) (hV : ∀ ⦃T T' : C⦄, (T ⟶ T') → V T' ≤ V T) [Quiver.IsThin C] (u : ∀ (T T' : C) (_ : T ⟶ T'), Γ(X, V T')ˣ), IsBas V → IsCoc V hV u → ∀ T₁ T₂ : C, ∃! g : Γ(X, V T₁ ⊓ V T₂)ˣ, ∀ (T : C) (a : T₁ ⟶ T) (b : T₂ ⟶ T), res (le_inf (hV a) (hV b)) g * u T₁ T a = u T₂ T b := by
-  first | exact @GlobalTheory.LBTrans.transition_units
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueTransitionUnitsCocycleThinBasisStatement =====
@@ -567,26 +550,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.ThinGlue
 
-variable {X : Scheme.{0}}
-
-theorem res_res {U W W' : X.Opens} (h : W ≤ U) (h' : W' ≤ W) (x : Γ(X, U)ˣ) :
-    res h' (res h x) = res (h'.trans h) x := by
-  ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
-theorem units_eq_of_local {W : X.Opens} (x y : Γ(X, W)ˣ)
-    (h : ∀ p ∈ W, ∃ (W' : X.Opens) (hW : W' ≤ W), p ∈ W' ∧ res hW x = res hW y) : x = y := by
-  choose W' hW hp hxy using h
-  ext
-  refine TopCat.Sheaf.eq_of_locally_eq' X.sheaf (fun p : W => W' p.1 p.2) W (fun p => homOfLE (hW p.1 p.2)) ?_ _ _ ?_
-  · intro p hpW
-    exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨p, hpW⟩, hp _ hpW⟩
-  · intro p
-    have := congrArg Units.val (hxy p.1 p.2)
-    exact this
-
 end GlobalTheory.ThinGlue
 
 namespace GlobalTheory.ThinGlue
@@ -595,20 +558,20 @@ theorem exists_lb_frame : ∀ (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : 
     (hV : ∀ ⦃T T' : C⦄, (T ⟶ T') → V T' ≤ V T) [Quiver.IsThin C] (u : ∀ (T T' : C) (_ : T ⟶ T'), Γ(X, V T')ˣ),
     IsBas V → IsCoc V hV u → ∃ L : LB X, L.IsLB ∧ IsFrame L V hV u := by
   intro X C _ V hV _ u hB hC
-  have hE := fun T₁ T₂ => GlobalTheory.T.existsUnique_transition_units_cocycle_thin_basis X C V hV u hB hC T₁ T₂
+  have hE := fun T₁ T₂ => _root_.GlobalTheory.LBTrans.transition_units X C V hV u hB hC T₁ T₂
   choose g hg using fun T₁ T₂ => (hE T₁ T₂).exists
   have key : ∀ (T₁ T₂ S : C) (a : T₁ ⟶ S) (b : T₂ ⟶ S) (h : V S ≤ V T₁ ⊓ V T₂),
       res h (g T₁ T₂) * u T₁ S a = u T₂ S b := fun T₁ T₂ S a b _ => hg T₁ T₂ S a b
   have bas2 : ∀ (i j : C) (W : X.Opens) (hW : W ≤ V i ⊓ V j) (x y : Γ(X, W)ˣ),
       (∀ (S : C) (_ : i ⟶ S) (_ : j ⟶ S) (hS : V S ≤ W), res hS x = res hS y) → x = y := by
     intro i j W hW x y h
-    refine units_eq_of_local x y fun p hp => ?_
+    refine _root_.GlobalTheory.LBTrans.units_eq_of_local x y fun p hp => ?_
     obtain ⟨S, ⟨a⟩, ⟨b⟩, hpS, hSW⟩ := hB.2 i j p W hp (hW hp).1 (hW hp).2
     exact ⟨V S, hSW, hpS, h S a b hSW⟩
   have bas3 : ∀ (i j k : C) (W : X.Opens) (hW : W ≤ V i ⊓ V j ⊓ V k) (x y : Γ(X, W)ˣ),
       (∀ (S : C) (_ : i ⟶ S) (_ : j ⟶ S) (_ : k ⟶ S) (hS : V S ≤ W), res hS x = res hS y) → x = y := by
     intro i j k W hW x y h
-    refine units_eq_of_local x y fun p hp => ?_
+    refine _root_.GlobalTheory.LBTrans.units_eq_of_local x y fun p hp => ?_
     obtain ⟨S₀, ⟨a⟩, ⟨b⟩, hpS₀, hS₀W⟩ := hB.2 i j p W hp (hW hp).1.1 (hW hp).1.2
     obtain ⟨S, ⟨c⟩, ⟨d⟩, hpS, hSW⟩ := hB.2 S₀ k p W hp hpS₀ (hW hp).2
     exact ⟨V S, hSW, hpS, h S (a ≫ c) (b ≫ c) d hSW⟩
@@ -625,7 +588,7 @@ theorem exists_lb_frame : ∀ (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : 
   · intro i j k
     refine bas3 i j k _ le_rfl _ _ fun S a b c hS => ?_
     show res hS (res _ (g i j) * res _ (g j k)) = res hS (res _ (g i k))
-    simp only [map_mul, res_res]
+    simp only [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
     have e1 := key i j S a b (hS.trans inf_le_left)
     have e2 := key j k S b c (hS.trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right))
     have e3 := key i k S a c (hS.trans (le_inf (inf_le_left.trans inf_le_left) inf_le_right))
@@ -635,7 +598,7 @@ theorem exists_lb_frame : ∀ (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : 
     · intro m m'
       refine bas3 T m m' _ le_rfl _ _ fun S a b c hS => ?_
       show res hS (res _ (res _ (g m T))) = res hS (res _ (g m m') * res _ (res _ (g m' T)))
-      simp only [map_mul, res_res]
+      simp only [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
       have e1 := key m T S b a (hS.trans (le_inf (inf_le_left.trans inf_le_right) (inf_le_left.trans inf_le_left)))
       have e2 := key m m' S b c (hS.trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right))
       have e3 := key m' T S c a (hS.trans (le_inf inf_le_right (inf_le_left.trans inf_le_left)))
@@ -644,7 +607,7 @@ theorem exists_lb_frame : ∀ (X : Scheme.{0}) (C : Type) [Category.{0} C] (V : 
     · intro T T' a m
       refine bas2 T' m _ le_rfl _ _ fun S c d hS => ?_
       show res hS (res _ (res _ (g m T))) = res hS (res _ (u T T' a) * res _ (g m T'))
-      simp only [map_mul, res_res]
+      simp only [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res']
       have e1 := key m T S d (a ≫ c) (hS.trans (le_inf inf_le_right ((inf_le_left.trans (hV a)))))
       have e2 := key m T' S d c (hS.trans (le_inf inf_le_right inf_le_left))
       have e3 := hC a c
@@ -1470,8 +1433,8 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.Obs
 
 theorem primE2_any_ring : PrimitiveExtendedDegTwoVanish := by
-  apply GlobalTheory.T.primitive_degree_two_extension
-  apply GlobalTheory.T.additiveClassDegreeTwo_structureSheaf_vanish
+  apply _root_.GlobalTheory.Obs.primE2_of_primO2
+  apply _root_.GlobalTheory.Obs.primitiveStructureSheafDegTwoVanish_of_cup_iso
   intro R _ A _ g hA hs
   exact ⟨(GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).1,
     (GlobalTheory.T.abelian_structure_cohomology_statement R A g hA hs).2.1⟩

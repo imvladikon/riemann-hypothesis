@@ -177,9 +177,7 @@ open TensorProduct IsLocalRing Matrix CategoryTheory AlgebraicGeometry MonoidalC
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem exists_dualTower :
-  (∀ {R₀ : Type} [CommRing R₀] {p : ℕ} (Tw : ATowerL R₀ p), Nonempty (DualTower Tw)) :=
-  fun Tw => dualTower_nonempty Tw
+alias exists_dualTower := _root_.GlobalTheory.dualTower_nonempty
 
 end GlobalTheory
 end -- clump:auto

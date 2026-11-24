@@ -776,13 +776,9 @@ namespace GlobalTheory.LogResStep
 
 
 open GlobalTheory.Cartier.CartierDiv in
-theorem supp_neg_le {X : Scheme.{0}} [IsIntegral X] (D : CartierDiv X) : (-D).supp ≤ D.supp := fun x hx h =>
-  hx (by simpa using h.neg)
+alias supp_neg_le := _root_.GlobalTheory.AmpleUpstairs.supp_neg_le
 
-theorem supp_nsmul_le {X : Scheme.{0}} [IsIntegral X] (D : CartierDiv X) (m : ℕ) : (m • D).supp ≤ D.supp := by
-  induction m with
-  | zero => simp [(CartierDiv.supp_eq_bot_iff (D := (0 : CartierDiv X))).2 rfl]
-  | succ m ih => exact (succ_nsmul D m ▸ CartierDiv.supp_add_le _ _).trans (sup_le ih le_rfl)
+alias supp_nsmul_le := _root_.GlobalTheory.AmpleUpstairs.supp_nsmul_le
 
 theorem sup_ne_top {Y : Scheme.{0}} [IsIntegral Y] {Z W : Closeds Y} (hZ : Z ≠ ⊤) (hW : W ≠ ⊤) : Z ⊔ W ≠ ⊤ := by
   have key : ∀ C : Closeds Y, C ≠ ⊤ → genericPoint Y ∉ C := fun C hC h => hC <| by

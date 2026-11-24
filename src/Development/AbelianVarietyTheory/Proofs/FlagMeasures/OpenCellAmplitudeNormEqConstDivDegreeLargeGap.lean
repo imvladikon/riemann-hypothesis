@@ -345,7 +345,7 @@ theorem norm_eq_const_div_deg_gap : GlobalTheory.GapIn.Hyp → GlobalTheory.GapI
   obtain ⟨l, b1, e1⟩ := exists_bessel_scale_gap hH hc s1 ⟨A.H, A.σ⟩ hDS hU hgap hok
   obtain ⟨l', b2, e2⟩ := exists_bessel_scale_gap hH hc s2 ⟨A.H, A.σ⟩ hDS hU hgap hok
   obtain ⟨k1, k2, w0, η, hw0, hη, hJ⟩ :=
-    GlobalTheory.T.amplitude_eq_smul_normalisedAmplitude_largeGap hH D τ w w' θ W lam' A _ l l' hθ hkg hT hT' hW hA hgap hok b1 b2 e1 e2
+    _root_.GlobalTheory.AmpNormalGap.amp_eq_smul_normalised_gap hH D τ w w' θ W lam' A _ l l' hθ hkg hT hT' hW hA hgap hok b1 b2 e1 e2
   have hw0' : w0 ≠ 0 := by
     obtain ⟨P, -, h1, -⟩ := hw0
     rintro rfl

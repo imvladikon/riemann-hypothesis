@@ -117,20 +117,7 @@ theorem comb_apply' {S T : HSp D} (c : WO S T →₀ ℂ) (g : WO S T → ℂ) (
     comb ψ S T c g u = ∑ x ∈ c.support, c x * (ψ (symplOH S T u x) * g (u + x)) := by
   simp only [comb, Finset.sum_apply, Pi.smul_apply, heisO, smul_eq_mul]
 
-theorem isThetaFunO_add' {S T : HSp D} {f g : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) (hg : IsThetaFunO ψ S T g) :
-    IsThetaFunO ψ S T (f + g) := {
-  quasi γ w := by simp only [Pi.add_apply]; rw [hf.quasi, hg.quasi]; ring
-  level := by
-    obtain ⟨U, hUo, hU⟩ := hf.level
-    obtain ⟨U', hUo', hU'⟩ := hg.level
-    refine ⟨U ⊓ U', hUo.inter hUo', fun u hu hi => ?_⟩
-    funext w
-    have h1 := congrFun (hU u hu.1 hi) w
-    have h2 := congrFun (hU' u hu.2 hi) w
-    simp only [heisO, Pi.add_apply] at h1 h2 ⊢
-    rw [mul_add, h1, h2]
-  cont := hf.cont.add hg.cont
-  smooth k L hL hfin w := (hf.smooth k L hL hfin w).add (hg.smooth k L hL hfin w) }
+alias isThetaFunO_add' := _root_.GlobalTheory.OrientedHeis.theta_add
 
 theorem heisO_smul' {S T : HSp D} (u : WO S T) (r : ℂ) (f : WO S T → ℂ) :
     heisO ψ S T u (r • f) = r • heisO ψ S T u f := by
@@ -149,15 +136,7 @@ theorem isThetaFunO_zero' (S T : HSp D) : IsThetaFunO ψ S T (0 : WO S T → ℂ
   cont := continuous_const
   smooth k L hL hfin w := by simp only [Pi.zero_apply]; exact contDiff_const }
 
-theorem isThetaFunO_smul' {S T : HSp D} (r : ℂ) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
-    IsThetaFunO ψ S T (r • f) := {
-  quasi γ w := by simp only [Pi.smul_apply, smul_eq_mul]; rw [hf.quasi]; ring
-  level := by
-    obtain ⟨U, hUo, hU⟩ := hf.level
-    exact ⟨U, hUo, fun u hu hi => by rw [heisO_smul', hU u hu hi]⟩
-  cont := continuous_const.mul hf.cont
-  smooth k L hL hfin w := by
-    simp only [Pi.smul_apply, smul_eq_mul]; exact contDiff_const.mul (hf.smooth k L hL hfin w) }
+alias isThetaFunO_smul' := _root_.GlobalTheory.OrientedHeis.theta_smul
 
 variable {S T : HSp D} {LS : Lat S} {LT : Lat T} {P : Pl D → Prop}
 
@@ -391,19 +370,6 @@ theorem vac_sum {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {LS : Lat S} {LT 
     simp only [heisO] at h
     rw [mul_left_comm, h]
 
-theorem vac_zero {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {LS : Lat S} {LT : Lat T} {P : Pl D → Prop} :
-    Vac ψ S T LS LT P 0 := by
-  have h := vac_sum (ψ := ψ) (LS := LS) (LT := LT) (P := P) (∅ : Finset Unit) (fun _ => 0) (fun _ => 0) (by simp)
-  convert h using 1 <;> funext w <;> simp
-
-theorem vac_mono {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {LS : Lat S} {LT : Lat T} {P Q : Pl D → Prop}
-    (h : ∀ x, Q x → P x) {f : WO S T → ℂ} (hf : Vac ψ S T LS LT P f) : Vac ψ S T LS LT Q f := by
-  have hmono : latO S T (LS : Set _) (LT : Set _) Q ≤ latO S T (LS : Set _) (LT : Set _) P := by
-    apply AddSubgroup.closure_mono
-    rintro w ⟨α, hα, hv, rest⟩
-    exact ⟨α, hα, fun v hv' => hv v fun hq => hv' (h v hq), rest⟩
-  exact ⟨hf.1, fun u hu => hf.2.1 u (hmono hu), fun e he u hu hh => hf.2.2 e he u (hmono hu) hh⟩
-
 theorem biVac_biComb_off {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {A S A' : HSp D} {LA : Lat A}
     {LS : Lat S} {LA' : Lat A'} {Q P' : Pl D → Prop} (hd : ∀ x, Q x → ¬ P' x) {d : WO A S →₀ ℂ} {d' : WO S A' →₀ ℂ}
     (hd1 : CombAt Q d) (hd2 : CombAt Q d') {Y : WO A S → WO S A' → ℂ} (hY : BiVacAt ψ LA LS LA' P' Y) :
@@ -505,9 +471,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
   {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {α : ∀ i, Frame (p i) S n'} {β : ∀ i, Frame (p i) T n} {LS : Lat S}
   {LT : Lat T} {Ψ : ι → Matrix n n' k → ℂ}
 
-theorem overAll_cons' {i : ι} {J : List ι} {f f' : WO S T → ℂ} :
-    OverAll ψ α β LS LT Ψ (i :: J) f f' ↔
-      ∃ g, OverAll ψ α β LS LT Ψ J f g ∧ Over ψ (α i) (β i) LS LT g (Ψ i) f' := Iff.rfl
+alias overAll_cons' := _root_.GlobalTheory.FinPl.AllCombProof.overAll_cons
 
 theorem overAll_steps : ∀ (J : List ι) (f f' : WO S T → ℂ), OverAll ψ α β LS LT Ψ J f f' →
     ∀ j ∈ J, ∃ g g', Over ψ (α j) (β j) LS LT g (Ψ j) g' := by
@@ -555,7 +519,7 @@ theorem comb_eq_foldr (hP : Places p I P) (hψ : IsStdChar D ψ (-1)) (hLS : IsS
   intro f hf
   have hAC := _root_.GlobalTheory.FinPl.allComb D k ι p I P hP n n' ψ hψ S T α β LS LT hLS hLT Ψ
   exact hAC.2.1 f _ _ (hc.2 f hf) (overAll_foldr hψ hP.inj r hr1 hr2 I hP.nodup f fun i _ =>
-    vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) hf)
+    _root_.GlobalTheory.FinPl.AllCombProof.vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) hf)
 
 theorem over_of_overAll (hP : Places p I P) (hψ : IsStdChar D ψ (-1)) {f Ξ : WO S T → ℂ} (hf : Vac ψ S T LS LT P f)
     (hΞ : OverAll ψ α β LS LT Ψ I f Ξ) (i : ι) : ∃ g, Over ψ (α i) (β i) LS LT g (Ψ i) Ξ := by
@@ -571,7 +535,7 @@ theorem over_of_overAll (hP : Places p I P) (hψ : IsStdChar D ψ (-1)) {f Ξ : 
     (Ψ j) (hSB j)
   have hAC := _root_.GlobalTheory.FinPl.allComb D k ι p I P hP n n' ψ hψ S T α β LS LT hLS hLT Ψ
   have hE : Ξ = I.foldr (fun j f' => comb ψ S T (r j) f') f := hAC.2.1 f _ _ hΞ
-    (overAll_foldr hψ hP.inj r hr1 hr2 I hP.nodup f fun j _ => vac_mono (fun x hx => (hP.mem x).2 ⟨j, hx⟩) hf)
+    (overAll_foldr hψ hP.inj r hr1 hr2 I hP.nodup f fun j _ => _root_.GlobalTheory.FinPl.AllCombProof.vac_mono (fun x hx => (hP.mem x).2 ⟨j, hx⟩) hf)
   have hcomm : ∀ x ∈ I, ∀ y ∈ I, ∀ z : WO S T → ℂ,
       comb ψ S T (r y) (comb ψ S T (r x) z) = comb ψ S T (r x) (comb ψ S T (r y) z) := by
     intro x _ y _ z
@@ -583,7 +547,7 @@ theorem over_of_overAll (hP : Places p I P) (hψ : IsStdChar D ψ (-1)) {f Ξ : 
   rw [hperm.foldr_eq' hcomm f, List.foldr_cons] at hE
   refine ⟨_, hE ▸ hr2 i _ ?_⟩
   refine vac_foldr_off hψ r (fun j => (· = (p j).v)) (I.erase i) (fun j _ => hr1 j) (fun j hj h => ?_)
-    (vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) hf)
+    (_root_.GlobalTheory.FinPl.AllCombProof.vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) hf)
   exact ((hP.nodup.mem_erase_iff).1 hj).1 (hP.inj h).symm
 
 end Lists
@@ -604,10 +568,10 @@ theorem main : ∀ D : D7, GlobalTheory.FinPl.LastTAll D := by
   intro α α₀ β γ γ₀ hfr Q Λ _ Ψ LA LS LT LX L₁ hLA hLS hLT hLX hL₁ hlat c c' hc hc'
   have hdisj : ∀ i j, i ≠ j → ∀ x, x = (p i).v → ¬ x = (p j).v := fun i j h x h1 h2 => h (hP.inj (h1.symm.trans h2))
   have hSB : ∀ i, Ψ i ∈ SB (Matrix n n' k) := fun i => by
-    obtain ⟨g, g', h⟩ := overAll_steps I 0 _ (hc.2 0 vac_zero) i (hP.all i)
+    obtain ⟨g, g', h⟩ := overAll_steps I 0 _ (hc.2 0 _root_.GlobalTheory.LastSeeSawDatum.vac_zero) i (hP.all i)
     exact h.2.2.2.1
   have hSB' : ∀ i, phiOne (ε i • Q i) (lastPair q (Λ i)) ∈ SB _ := fun i => by
-    obtain ⟨g, g', h⟩ := overAll_steps I 0 _ (hc'.2 0 vac_zero) i (hP.all i)
+    obtain ⟨g, g', h⟩ := overAll_steps I 0 _ (hc'.2 0 _root_.GlobalTheory.LastSeeSawDatum.vac_zero) i (hP.all i)
     exact h.2.2.2.1
   choose r hr1 hr2 using fun i => (_root_.GlobalTheory.FinPl.Rebase.rebase D k (p i) n n' ψ hψ (hP.unit i) A S (α i) (β i) LA LA LS LS hLA hLS hLA
     hLS).2 (Ψ i) (hSB i)
@@ -634,7 +598,7 @@ theorem main : ∀ D : D7, GlobalTheory.FinPl.LastTAll D := by
       (he₂ i' y hy)⟩)
     (fun i _ t => by
       obtain ⟨g, hg⟩ := over_of_overAll hP hψ t.2.1 t.2.2.1 i
-      exact hE i L₁ LS g _ _ hg (vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) t.2.2.2))
+      exact hE i L₁ LS g _ _ hg (_root_.GlobalTheory.FinPl.AllCombProof.vac_mono (fun x hx => (hP.mem x).2 ⟨i, hx⟩) t.2.2.2))
     (fun i _ C hC => hC)
     (fun i _ i' _ hne C hC => by
       refine ⟨?_, ?_⟩
@@ -776,11 +740,6 @@ theorem exists_unit_idem {e : AE D} (he : e * e = e) (u : (AE D)ˣ) : ∃ x : (A
     linear_combination (2 - (u : AE D) - ((u⁻¹ : (AE D)ˣ) : AE D)) * he + e * e * hu
   exact ⟨⟨_, _, hk, by rw [mul_comm]; exact hk⟩, rfl⟩
 
-theorem isSplitIdem_conj' {e : AE D} (h : IsSplitIdem D e) : IsSplitIdem D (cA D e) := by
-  obtain ⟨h1, h2, v, ε, hε, h3⟩ := h
-  exact ⟨by rw [← map_mul, h1], by rw [Formalism.L2.Theta.cA_cA, mul_comm, h2], v, ε, hε,
-    by rw [Formalism.L2.Theta.cA_cA, add_comm, h3]⟩
-
 theorem isDetAt_one (e : AE D) (V : HSp D) : IsDetAt e V 1 1 := by
   change (1 : AE D) = e * (Formalism.L2.Theta.mt V 1).det + (1 - e)
   rw [Formalism.IndefR.flipTwoThree.mt_one', Matrix.det_one]
@@ -829,7 +788,7 @@ theorem eq_of_comp {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     (GlobalTheory.VacStabFixed.supp_iff hε _).2 ⟨by rw [map_sub, map_one, h1, sub_self],
       fun w hw => by rw [map_sub, map_sub, map_one, map_one, h2 w hw, sub_self]⟩
   have he : IsSplitIdem D p.e := p.split
-  have hce : IsSplitIdem D (cA D p.e) := isSplitIdem_conj' he
+  have hce : IsSplitIdem D (cA D p.e) := _root_.GlobalTheory.SplitScalar.isSplitIdem_conj he
   obtain ⟨x1, hx1⟩ := exists_unit_idem he.1 x
   obtain ⟨x2, hx2⟩ := exists_unit_idem hce.1 x
   have hprod : x = x1 * x2 := by
@@ -1409,8 +1368,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory Matrix ValuativeRel IsLocalRing GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil GlobalTheory.SeeSaw GlobalTheory.FinPl
 
-theorem _root_.GlobalTheory.T.levelPrime_law_last_two_steps_all_tuples : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type) (o : TDat c k ι), c.Is → v.Is → ShapeOff v o → ∀ j (h : j + 2 * 0 + 2 = D.R.m), ∃ (ε : ι → 𝓀[k]ˣ) (op : BiOp (c.X j) (c.X (j + 1)) (c.X (j + 1 + 1))) (r : ι → ℝ) (e : ι → ℤ), (∀ i, 0 < r i) ∧ OpAt (· ∈ v.tP) op ∧ ∀ t : Tup c, t.Is → WeilOK (t := t) v → t.UnrOn (· ∈ v.tP) → t.UnrK (· ∈ v.tP) → ∀ Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ v.tP) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) v.NT (· ∈ v.tP) Ψ₂ → BiVacAt c.ψ (c.x j).L (c.x (j + 1)).L (c.x (j + 1 + 1)).L (· ∈ v.tP) (op.app c.ψ (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂)) ∧ ∀ d d', CombAt (· ∉ v.tP) d → CombAt (· ∉ v.tP) d' → ∀ φ ∈ o.Ram j, ∀ f, IsContAut c.T f → ∫ h' in c.volT.𝓕, f h' * c.bl j (t.kom j) (t.kom (j + 1)) φ (biComb c.ψ _ _ _ d d' (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂)) ((c.oT (j + 1 + 1) h).emb (h', 1)) ∂c.volT.μ = o.mono r e (t.sBF j 0 h).χW * ∫ h' in c.volT.𝓕, f h' * c.bl j (t.kom j) (t.kom (j + 1)) (o.S (fun _ => ε) j φ) (biComb c.ψ _ _ _ d d' (biComb c.ψ _ _ _ (v.dT j) (v.dT (j + 1)) (op.app c.ψ (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂)))) ((c.oT (j + 1 + 1) h).emb (h', 1)) ∂c.volT.μ := by
-  first | exact @GlobalTheory.FinPl.TLastAll.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelPrimeLawLastTwoStepsAllTuplesStatement =====

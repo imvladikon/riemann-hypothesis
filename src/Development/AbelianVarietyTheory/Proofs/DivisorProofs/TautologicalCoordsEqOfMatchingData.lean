@@ -104,13 +104,6 @@ end GlobalTheory.SymMono
 
 namespace GlobalTheory.SymMono
 
-theorem zpow_finsum {G J : Type} [CommGroup G] (g : G) (s : Finset J) (f : J → ℤ) :
-    g ^ (∑ i ∈ s, f i) = ∏ i ∈ s, g ^ f i := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert j s hj ih => rw [Finset.sum_insert hj, Finset.prod_insert hj, zpow_add, ih]
-
 theorem symElem_mem {r : ℕ} (a b : Fin r) : symElem a b ∈ balForms (id : ℤ → ℤ) (Fin r → ℤ) :=
   mem_balForms_int.2 (symElem_symm a b)
 
@@ -145,9 +138,9 @@ theorem eq_of_prod_zpow_eq (F : Type) [Field F] (r : ℕ) (I : Type) [Fintype I]
       _ = ∏ i, ∏ a, ∏ b, ((X i / Y i) ^ ((ε i : LinearMap.BilinForm ℤ (Fin r → ℤ)) (Pi.single a 1)
             (Pi.single b 1))) ^ (ε.repr ⟨symElem a b, symElem_mem a b⟩ k) := by
           refine Finset.prod_congr rfl fun i _ => ?_
-          rw [repr_self_eq_sum, zpow_finsum]
+          rw [repr_self_eq_sum, _root_.GlobalTheory.SharpFamRel.zpow_finsetSum]
           refine Finset.prod_congr rfl fun a _ => ?_
-          rw [zpow_finsum]
+          rw [_root_.GlobalTheory.SharpFamRel.zpow_finsetSum]
           refine Finset.prod_congr rfl fun b _ => ?_
           rw [zpow_mul]
       _ = ∏ a, ∏ b, (∏ i, (X i / Y i) ^ ((ε i : LinearMap.BilinForm ℤ (Fin r → ℤ)) (Pi.single a 1)
@@ -177,8 +170,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TInj
 
-theorem _root_.GlobalTheory.T.eq_of_prod_zpow_symmetricFormBasis_eq : ∀ (F : Type) [Field F] (r : ℕ) (I : Type) [Fintype I] (ε : Module.Basis I ℤ (balForms (id : ℤ → ℤ) (Fin r → ℤ))) (x y : I → F), (∀ i, x i ≠ 0) → (∀ i, y i ≠ 0) → (∀ a b, ∏ i, x i ^ (ε i : LinearMap.BilinForm ℤ (Fin r → ℤ)) a b = ∏ i, y i ^ (ε i : LinearMap.BilinForm ℤ (Fin r → ℤ)) a b) → x = y := by
-  first | exact @GlobalTheory.SymMono.eq_of_prod_zpow_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfProdZpowSymmetricFormBasisEqStatement =====
@@ -252,7 +243,7 @@ theorem coords_eq_of_match : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLocal
     rw [hk₁, hk₂, hχ, e₂.apply_symm_apply] at this
     exact this
   simp only [hε₀] at key
-  have hx := GlobalTheory.T.eq_of_prod_zpow_symmetricFormBasis_eq F T.r I ε₀ (fun i => f (s₁ i)) (fun i => f (s₂ i))
+  have hx := _root_.GlobalTheory.SymMono.eq_of_prod_zpow_eq F T.r I ε₀ (fun i => f (s₁ i)) (fun i => f (s₂ i))
     (fun i => (map_ne_zero_iff f hf).2 (hs₁ i)) (fun i => (map_ne_zero_iff f hf).2 (hs₂ i)) (fun a b => key a b)
   funext i
   exact hf (congrFun hx i)

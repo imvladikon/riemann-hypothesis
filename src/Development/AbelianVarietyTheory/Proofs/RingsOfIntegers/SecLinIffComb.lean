@@ -76,8 +76,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 open scoped CategoryTheory.Obj
 
-theorem _root_.GlobalTheory.T.expansion_pullback_sourceLevelOne : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Geo.Tor.Host E) (t : Geo.Tor.SAB H (Spec (CommRingCat.of V))) (P : Geo.Tor.PELUnif (maximalIdeal V) t) (a : NumberField.RingOfIntegers E) (N : ℕ), (letI := H.starRing; a * star a = (N : NumberField.RingOfIntegers E)) → 0 < N → letI := H.starRing;  ∀ (s : P.U.SecK 1) (F : Fam P.D.toPre (FractionRing V) 1), P.U.Expands 1 s F → ∀ s' : P.U.SecK (1 * N), IsPullByEnd P.U (t.act.act a) 1 N s s' → ∃ F' : Fam P.D.toPre (FractionRing V) (1 * N), P.U.Expands (1 * N) s' F' ∧ PullAl P.D (FractionRing V) P.oD a 1 N F F' := by
-  first | exact @GlobalTheory.PullLevelOne.expands_pull_level_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionPullbackSourceLevelOneStatement =====
@@ -520,7 +518,7 @@ theorem main : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValu
   letI := H.starRing
   refine of_generic hL P.U P.oD a (t.act.act a) k N (by omega) ?_ u hu hc F σ' s hs σ'' hσ
   rcases hk with rfl | hk
-  · exact GlobalTheory.T.expansion_pullback_sourceLevelOne hL V E H t P a N hN hN0
+  · exact _root_.GlobalTheory.PullLevelOne.expands_pull_level_one hL V E H t P a N hN hN0
   · exact GlobalTheory.T.expansion_commutes_pullback_cmEndo_four_le hL V E H t P a N hN hN0 k hk
 
 end GlobalTheory.PullExpField

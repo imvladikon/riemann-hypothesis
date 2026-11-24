@@ -135,13 +135,6 @@ open MvPolynomial
 
 namespace GlobalTheory.CompanionTheory.ConeNoether
 
-theorem prod_pow_lead {R ι : Type*} [CommRing R] (s : Finset ι) (e : ι → ℕ)
-    (g : ι → Polynomial R) (c : ι → R) (hd : ∀ i, (g i).natDegree ≤ 1)
-    (hc : ∀ i, (g i).coeff 1 = c i) :
-    (∏ i ∈ s, g i ^ e i).natDegree ≤ ∑ i ∈ s, e i ∧
-      (∏ i ∈ s, g i ^ e i).coeff (∑ i ∈ s, e i) = ∏ i ∈ s, c i ^ e i :=
-  _root_.UpperTheory.Reformulated.B.Yra8.main s e g c hd hc
-
 theorem isIntegral_of_homogeneous_relation {K R S ι : Type*} [Field K] [CommRing R] [CommRing S]
     [Algebra K R] [Algebra K S] [Algebra R S] [IsScalarTower K R S] [Fintype ι]
     (F : MvPolynomial ι K) {n : ℕ} (hF : F.IsHomogeneous n) (a : ι → K) (ha : eval a F ≠ 0)
@@ -168,13 +161,13 @@ theorem isIntegral_of_homogeneous_relation {K R S ι : Type*} [Field K] [CommRin
     rw [hp]
     refine Polynomial.natDegree_sum_le_of_forall_le _ _ fun d hd => ?_
     refine (Polynomial.natDegree_C_mul_le _ _).trans ?_
-    have := (prod_pow_lead Finset.univ d g _ hgd hgc).1
+    have := (_root_.UpperTheory.Reformulated.B.Yra8.main Finset.univ d g _ hgd hgc).1
     rwa [hdeg d hd] at this
   have hpc : p.coeff n = algebraMap K R (eval a F) := by
 
     rw [hp, eval_eq', map_sum, Polynomial.finsetSum_coeff]
     refine Finset.sum_congr rfl fun d hd => ?_
-    have := (prod_pow_lead Finset.univ d g _ hgd hgc).2
+    have := (_root_.UpperTheory.Reformulated.B.Yra8.main Finset.univ d g _ hgd hgc).2
     rw [hdeg d hd] at this
     rw [Polynomial.coeff_C_mul, this]
     simp
@@ -522,8 +515,6 @@ set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
 attribute [local instance] MvPolynomial.gradedAlgebra
 
-theorem _root_.GlobalTheory.T.coords_of_etale_basic_open : ∀ {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) {W : X.Opens}, IsAffineOpen W → ∀ (g : Γ(X, W)) {d : ℕ} (s : Fin d → Γ(X, W)), letI := (strV q W).toAlgebra; (MvPolynomial.eval₂Hom (algebraMap K (Localization.Away g)) (fun k => algebraMap Γ(X, W) (Localization.Away g) (s k)) : MvPolynomial (Fin d) K →+* Localization.Away g).Etale → ∃ c : Coord q (X.basicOpen g) d, ∀ k, c.t k = resO (X.basicOpen_le g) (s k) := by
-  first | exact @GlobalTheory.CompanionTheory.GeoCoord.exists_coord_basicOpen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordsOfEtaleBasicOpenStatement =====
@@ -936,25 +927,6 @@ namespace CrystallineSemistableComparison.Pb
 
 attribute [local instance] MvPolynomial.gradedAlgebra
 
-theorem isIntegral_of_smooth {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K))
-    [ConnectedSpace X] (n : ℕ) [SmoothOfRelativeDimension n q] : IsIntegral X :=
-  isIntegral_of_smooth_pf q n
-
-theorem exists_etale_away {K A : Type} [Field K] [CharZero K] [CommRing A] [IsDomain A] [Algebra K A]
-    [Algebra.FiniteType K A] {d : ℕ} (s : Fin d → A) (hs : AlgebraicIndependent K s)
-    (halg : Algebra.IsAlgebraic (Algebra.adjoin K (Set.range s)) A) :
-    ∃ g : A, g ≠ 0 ∧ (MvPolynomial.eval₂Hom (algebraMap K (Localization.Away g))
-      (fun k => algebraMap A (Localization.Away g) (s k)) : MvPolynomial (Fin d) K →+* Localization.Away g).Etale :=
-  exists_etale_away_pf s hs halg
-
-theorem exists_coord_basicOpen {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K))
-    {W : X.Opens} (hW : IsAffineOpen W) (g : Γ(X, W)) {d : ℕ} (s : Fin d → Γ(X, W)) :
-    letI := (strV q W).toAlgebra
-    (MvPolynomial.eval₂Hom (algebraMap K (Localization.Away g))
-      (fun k => algebraMap Γ(X, W) (Localization.Away g) (s k)) : MvPolynomial (Fin d) K →+* Localization.Away g).Etale →
-    ∃ c : Coord q (X.basicOpen g) d, ∀ k, c.t k = resO (X.basicOpen_le g) (s k) :=
-  GlobalTheory.T.coords_of_etale_basic_open q hW g s
-
 theorem coord_card_eq {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) (n : ℕ)
     [SmoothOfRelativeDimension n q] {V : X.Opens} (hne : (V : Set X).Nonempty) {m : ℕ} (c : Coord q V m) : m = n :=
   GlobalTheory.T.coord_dim_eq_relative_dim q n hne c
@@ -1021,8 +993,6 @@ set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor CrystallineSemistableComparison.Pb
 attribute [local instance] MvPolynomial.gradedAlgebra
 
-theorem _root_.GlobalTheory.T.affine_open_finiteType : ∀ {K : Type} [Field K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) [LocallyOfFiniteType q] {W : X.Opens}, IsAffineOpen W → letI := (strV q W).toAlgebra; Algebra.FiniteType K Γ(X, W) := by
-  first | exact @GlobalTheory.CompanionTheory.GeoFT.finiteType_affine
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineOpenFiniteTypeStatement =====
@@ -1287,7 +1257,7 @@ theorem range_resO_eq (hci : IsClosedImmersion i) {g : MvPolynomial (Fin (N + 1)
     refine RingHom.ext fun a => ?_
     simp only [evV, resO, RingHom.comp_apply, ← e0]
     rfl
-  rw [hcomp, RingHom.coe_comp, Set.range_comp, (evV_surjective i hci hg he).range_eq, Set.image_univ]
+  rw [hcomp, RingHom.coe_comp, Set.range_comp, (_root_.GlobalTheory.CompanionTheory.Geo.evV_surjective i hci hg he).range_eq, Set.image_univ]
 
 theorem iSup_preimage_eq_top {m e : ℕ} (he : 0 < e) (y : Fin m → MvPolynomial (Fin (N + 1)) K)
     (hy : ∀ k, (y k).IsHomogeneous e)
@@ -1296,11 +1266,6 @@ theorem iSup_preimage_eq_top {m e : ℕ} (he : 0 < e) (y : Fin m → MvPolynomia
     ⨆ k, i ⁻¹ᵁ Proj.basicOpen (grK K N) (y k) = ⊤ := by
   first
     | (intros; apply GlobalTheory.T.basic_opens_cover_of_finite <;> assumption)
-
-theorem finiteType_affine (q : X ⟶ Spec (CommRingCat.of K)) [LocallyOfFiniteType q] {W : X.Opens}
-    (hW : IsAffineOpen W) : letI := (strV q W).toAlgebra; Algebra.FiniteType K Γ(X, W) := by
-  first
-    | (intros; apply GlobalTheory.T.affine_open_finiteType <;> assumption)
 
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
@@ -1565,7 +1530,7 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
             (∀ r : Γ(X, V), ∃ b ∈ B Finset.univ, ∃ b' ∈ B Finset.univ, b' ≠ 0 ∧ r * b' = b) := by
   classical
   haveI : IsClosedImmersion i := hci
-  haveI hXi : IsIntegral X := isIntegral_of_smooth q (n + 1)
+  haveI hXi : IsIntegral X := _root_.CrystallineSemistableComparison.Pb.isIntegral_of_smooth_pf q (n + 1)
   haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   obtain ⟨e, m, y, he, hy, halg, hfin⟩ :=
     _root_.GlobalTheory.CompanionTheory.ConeNoether.main K N (homIdeal i) (homIdeal_ne_top i) (homIdeal_homog i)
@@ -1600,7 +1565,7 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
     have := preimage_basicOpen_nonempty i (hpos _ Finset.univ_nonempty) (yS_mem y hy Finset.univ) hne0
     rwa [← biInf_preimage i y Finset.univ] at this
   letI algW : Algebra K Γ(X, W) := (strV q W).toAlgebra
-  have htW : ∀ k, IsUnit (tV i y hy W hWV k) := tV_isUnit i y hy hWV
+  have htW : ∀ k, IsUnit (tV i y hy W hWV k) := _root_.GlobalTheory.CompanionTheory.GeoUnit.tV_isUnit i y hy hWV
   have hindW : AlgebraicIndependent K (tV i y hy W hWV) :=
     algebraicIndependent_tV i y hy hWV he q hiq halg hWne
   haveI : Nonempty W := hWne.to_subtype
@@ -1609,20 +1574,20 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
     have hr : r ∈ Set.range (resO (le_refl W)) := ⟨r, by simp [resO]⟩
     rw [range_resO_eq i hci (yS_mem y hy _) (hpos _ Finset.univ_nonempty) (biInf_preimage i y _) le_rfl hWS] at hr
     obtain ⟨a, rfl⟩ := hr
-    exact isIntegral_torusS i y hy hWV he q hiq hfin Finset.univ hWS htW a
+    exact _root_.GlobalTheory.CompanionTheory.GeoInteg.isIntegral_torusS i y hy hWV he q hiq hfin Finset.univ hWS htW a
   have halgW : Algebra.IsAlgebraic (Algebra.adjoin K (Set.range (tV i y hy W hWV))) Γ(X, W) :=
     isAlgebraic_of_integral_torusS (fun k => (htW k).unit) hintW
   haveI hlft : LocallyOfFiniteType q := by
     first
       | (haveI : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q; infer_instance)
-  haveI : Algebra.FiniteType K Γ(X, W) := finiteType_affine q hWaff
-  obtain ⟨g, hg0, het⟩ := exists_etale_away (tV i y hy W hWV) hindW halgW
-  obtain ⟨c, hc⟩ := exists_coord_basicOpen q hWaff g (tV i y hy W hWV) het
+  haveI : Algebra.FiniteType K Γ(X, W) := _root_.GlobalTheory.CompanionTheory.GeoFT.finiteType_affine q hWaff
+  obtain ⟨g, hg0, het⟩ := _root_.CrystallineSemistableComparison.Pb.exists_etale_away_pf (tV i y hy W hWV) hindW halgW
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CompanionTheory.GeoCoord.exists_coord_basicOpen q hWaff g (tV i y hy W hWV) het
   have hVne : ((X.basicOpen g : X.Opens) : Set X).Nonempty := by
     rw [← TopologicalSpace.Opens.ne_bot_iff_nonempty]
     intro h
     exact hg0 ((basicOpen_eq_bot_iff g).1 h)
-  have hdn : d = n + 1 := coord_card_eq q (n + 1) hVne c
+  have hdn : d = n + 1 := _root_.GlobalTheory.CompanionTheory.CoordCard.main q (n + 1) hVne c
   subst hdn
   refine ⟨e, he, y, hy, ?_⟩
   intro U
@@ -1639,7 +1604,7 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
   refine ⟨hcov, fun S hS => haff S hS, X.basicOpen g, hV, c', ?_⟩
   letI algV : Algebra K Γ(X, X.basicOpen g) := (strV q _).toAlgebra
   haveI : Nonempty (X.basicOpen g) := hVne.to_subtype
-  refine ⟨inferInstance, fun k => rfl, tV_isUnit i y hy hV, algebraicIndependent_tV i y hy hV he q hiq halg hVne, ?_⟩
+  refine ⟨inferInstance, fun k => rfl, _root_.GlobalTheory.CompanionTheory.GeoUnit.tV_isUnit i y hy hV, algebraicIndependent_tV i y hy hV he q hiq halg hVne, ?_⟩
   let B : Finset (Fin (n + 2)) → Subalgebra K Γ(X, X.basicOpen g) := fun S =>
     { (resO (le_biInf_of_le hV S)).range with
       algebraMap_mem' := fun a => RingHom.mem_range.2 ⟨strV q _ a,
@@ -1653,12 +1618,12 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
       (le_biInf_of_le hV S).trans (biInf_preimage i y S).le
     refine Algebra.adjoin_le ?_
     rintro _ ⟨m, hm, rfl⟩
-    have h1 := tpow_mem_range i y hy hV he S hS' (tV_isUnit i y hy hV) m hm
+    have h1 := _root_.GlobalTheory.CompanionTheory.GeoTpow.tpow_mem_range i y hy hV he S hS' (_root_.GlobalTheory.CompanionTheory.GeoUnit.tV_isUnit i y hy hV) m hm
     rw [← range_resO_eq i hci (yS_mem y hy S) (hpos S hS) (biInf_preimage i y S) (le_biInf_of_le hV S) hS'] at h1
     exact (memB S _).2 h1
   · intro S hS
     letI : Algebra K Γ(X, ⨅ k ∈ S, U k) := (strV q _).toAlgebra
-    haveI : Algebra.FiniteType K Γ(X, ⨅ k ∈ S, U k) := finiteType_affine q (haff S hS)
+    haveI : Algebra.FiniteType K Γ(X, ⨅ k ∈ S, U k) := _root_.GlobalTheory.CompanionTheory.GeoFT.finiteType_affine q (haff S hS)
     let φ : Γ(X, ⨅ k ∈ S, U k) →ₐ[K] Γ(X, X.basicOpen g) :=
       { resO (le_biInf_of_le hV S) with
         commutes' := fun a => (RingHom.congr_fun (strV_res q (le_biInf_of_le hV S)) a).symm }
@@ -1673,7 +1638,7 @@ theorem geo_setup {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ 
       (le_biInf_of_le hV S).trans (biInf_preimage i y S).le
     rw [memB, range_resO_eq i hci (yS_mem y hy S) (hpos S hS) (biInf_preimage i y S) (le_biInf_of_le hV S) hS'] at hb
     obtain ⟨a, rfl⟩ := hb
-    exact isIntegral_torusS i y hy hV he q hiq hfin S hS' (tV_isUnit i y hy hV) a
+    exact _root_.GlobalTheory.CompanionTheory.GeoInteg.isIntegral_torusS i y hy hV he q hiq hfin S hS' (_root_.GlobalTheory.CompanionTheory.GeoUnit.tV_isUnit i y hy hV) a
   · intro j x hx
     rw [memB] at hx ⊢
     obtain ⟨a, rfl⟩ := hx

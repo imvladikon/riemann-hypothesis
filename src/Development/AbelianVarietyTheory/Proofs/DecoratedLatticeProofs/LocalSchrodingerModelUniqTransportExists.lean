@@ -169,7 +169,7 @@ theorem localModel_uniq_transport_exist : ∀ (D : D7) (k : Type) [Field k] [Val
       (WO S T → ℂ) (fun x => GlobalTheory.PlaceModel.heisL S T ψ (p.up FS FT x)) (fun z => GlobalTheory.PlaceModel.heisL S T ψ z.1)
       (fun x x' f => by
         rw [GlobalTheory.PlaceModel.heisL_half S T ψ hce _ ((GlobalTheory.PlaceModel.isHalf_iff S T).1 (hup x).1) _
-          ((GlobalTheory.PlaceModel.isHalf_iff S T).1 (hup x').1), upAdd])
+          ((GlobalTheory.PlaceModel.isHalf_iff S T).1 (hup x').1), _root_.GlobalTheory.LocMod.Witness.up_add])
       (fun z z' f => by
         rw [GlobalTheory.PlaceModel.heisL_half S T ψ hcce _ z.2 _ z'.2]
         rfl)

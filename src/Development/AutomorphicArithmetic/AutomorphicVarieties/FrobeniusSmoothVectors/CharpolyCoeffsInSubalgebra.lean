@@ -153,10 +153,6 @@ section -- clump:auto
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
-private theorem lc_of_open_ker {G H : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group H]
-    (f : G →* H) (hf : IsOpen (f.ker : Set G)) : IsLocallyConstant f :=
-  _root_.UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker f hf
-
 theorem UpperTheory.V.Fr.frame_extension_of_locallyConstant :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ : ℕ}, F.Ok C₀ → ∀ a ∈ F.strS k, ∃ x ∈ Z1C F.loc (chRep (F.Ψ⁻¹ ^ 2 * F.delK k)) (fun _ => ⊥), x.1 F.c = 0 ∧ ∀ g : F.G0, a g = x.1 g * F.Ψ g := by
   classical
@@ -183,7 +179,7 @@ theorem UpperTheory.V.Fr.frame_extension_of_locallyConstant :
   let b : F.G0 → k := fun g => a g * (((F.Ψ g)⁻¹ : kˣ) : k)
   have b1 : IsLocallyConstant b := by
     refine a1.mul ?_
-    exact ((lc_of_open_ker F.Ψ h.Ψ_open).comp_continuous continuous_subtype_val).comp
+    exact ((_root_.UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker F.Ψ h.Ψ_open).comp_continuous continuous_subtype_val).comp
       (fun u : kˣ => ((u⁻¹ : kˣ) : k))
   have b2 : ∀ g g' : F.G0, b (g * g') = b g + ((F.Ψ g : k)⁻¹) ^ 2 * b g' := fun g g' => by
     simp only [b, a2, smul_eq_mul, Subgroup.coe_mul, map_mul, Units.val_inv_eq_inv_val, Units.val_mul]
@@ -197,7 +193,7 @@ theorem UpperTheory.V.Fr.frame_extension_of_locallyConstant :
     rcases Int.units_eq_one_or (F.del s) with h1 | h1 <;> simp [e, h1, h.del_c]
   let p : F.Γ → F.G0 := fun s => ⟨s * e (F.del s), he s⟩
   have pc : Continuous p :=
-    Continuous.subtype_mk (continuous_id.mul ((lc_of_open_ker F.del h.del_open).comp e).continuous) _
+    Continuous.subtype_mk (continuous_id.mul ((_root_.UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker F.del h.del_open).comp e).continuous) _
   have p1 : ∀ g : F.G0, p g = g := fun g => Subtype.ext (by simp [p, e, hd])
   have p2 : ∀ g : F.G0, p (g * F.c) = g := fun g =>
     Subtype.ext (by simp [p, e, hd, h.del_c, mul_assoc, h.c_sq])
@@ -1244,15 +1240,6 @@ section -- clump:auto
 
 open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 
-private theorem lc_of_ker {G H : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group H]
-    (φ : G →* H) (h : IsOpen (φ.ker : Set G)) : IsLocallyConstant φ :=
-  _root_.UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker φ h
-
-private theorem diag_mul {n : ℕ} {Q : Type} [CommRing Q] (a b : Matrix (Fin n) (Fin n) Q)
-    (ha : ∀ i j, i < j → a i j = 0) (hb : ∀ i j, i < j → b i j = 0) (i : Fin n) :
-    (a * b) i i = a i i * b i i :=
-  _root_.UpperTheory.Reformulated.B.Qk64.diag_mul a b ha hb i
-
 private theorem key {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ n : ℕ}
     (hF : F.Ok C₀) {Q : Type} [CommRing Q] [IsDomain Q] [IsLocalRing Q] [IsNoetherianRing Q]
     [Finite (ResidueField Q)] (f : k →+* Q) (ρ : NRep F n Q) (hc : ρ.Cont (maximalIdeal Q))
@@ -1268,14 +1255,14 @@ private theorem key {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F
     { toFun := fun g => ρ.r g i i * f (((F.Ψ g ^ w n i)⁻¹ : kˣ) : k)
       map_one' := by simp
       map_mul' := fun a b => by
-        rw [map_mul, diag_mul _ _ (hz a) (hz b), Subgroup.coe_mul, map_mul, mul_zpow, mul_inv, Units.val_mul,
+        rw [map_mul, _root_.UpperTheory.Reformulated.B.Qk64.diag_mul _ _ (hz a) (hz b), Subgroup.coe_mul, map_mul, mul_zpow, mul_inv, Units.val_mul,
           map_mul]
         ring }
   have hχ : ∀ g, χ g = ρ.r g i i * f (((F.Ψ g ^ w n i)⁻¹ : kˣ) : k) := fun _ => rfl
   have hinv : ∀ g : F.G0, f (((F.Ψ g ^ w n i)⁻¹ : kˣ) : k) * f ((F.Ψ g ^ w n i : kˣ) : k) = 1 := fun g => by
     rw [← map_mul, Units.inv_mul, map_one]
   have hΨ : IsLocallyConstant fun g : F.G0 => F.Ψ g :=
-    (lc_of_ker F.Ψ hF.Ψ_open).comp_continuous continuous_subtype_val
+    (_root_.UpperTheory.Reformulated.B.LocallyConstantOfKernel.lc_of_ker F.Ψ hF.Ψ_open).comp_continuous continuous_subtype_val
   have h1 : χ g = 1 := by
     refine adic_char_unipotent_pgroup_quotient (l := l) χ h h0 (fun N => ?_) (fun g => ?_) (fun A _ _ hA ψ hψ hh => H A hA ψ hψ ?_) g
     · have := (hc.1 i i N).mul (hΨ.comp fun u : kˣ =>

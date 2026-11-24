@@ -378,17 +378,7 @@ lemma aChi_eq {𝓕 : LFam} {χ : AddChar 𝓕.G ℂ} (h : χ * χ = 1) (n : ℕ
   refine Finset.sum_congr rfl fun g _ => ?_
   rcases chi_real h g with e | e <;> simp [e]
 
-lemma a_le (𝓕 : LFam) (g : 𝓕.G) (n : ℕ) : 𝓕.a g n ≤ 14 * n := by
-  rcases Nat.eq_zero_or_pos n with rfl | hn
-  · simp [𝓕.a_zero]
-  have h1 : (1 : ℝ) ≤ n := by exact_mod_cast hn
-  have h := (abs_le.1 (𝓕.count g n h1)).2
-  rw [Nat.floor_natCast] at h
-  have h2 : 𝓕.a g n ≤ ∑ m ∈ Finset.Icc 1 n, 𝓕.a g m :=
-    Finset.single_le_sum (fun m _ => 𝓕.a_nonneg g m) (Finset.mem_Icc.2 ⟨hn, le_rfl⟩)
-  have h3 : Real.sqrt n ≤ n := Real.sqrt_le_iff.2 ⟨by positivity, by nlinarith⟩
-  have h4 : 𝓕.κ * n ≤ 4 * n := mul_le_mul_of_nonneg_right 𝓕.κ_le (by positivity)
-  linarith
+alias a_le := _root_.GlobalTheory.Hk.LFam.a_le_mul
 
 lemma bRe_le {𝓕 : LFam} {χ : AddChar 𝓕.G ℂ} (h : χ * χ = 1) (n : ℕ) :
     |bRe 𝓕 χ n| ≤ (Fintype.card 𝓕.G * 14 : ℝ) * n := by
@@ -1168,14 +1158,6 @@ open scoped Classical
 
 namespace GlobalTheory.Hk.ShortInt
 
-lemma one_le_ell (𝓕 : LFam) (t : ℝ) : 1 ≤ 𝓕.ell t := by
-  unfold LFam.ell
-  have hB := 𝓕.B_ge
-  have ht := abs_nonneg t
-  rw [Real.le_log_iff_exp_le (by positivity)]
-  have := Real.exp_one_lt_d9
-  nlinarith
-
 lemma zeros : ∃ c₀ A c : ℝ, 0 < c₀ ∧ c₀ ≤ 1 / 20 ∧ 0 < A ∧ 0 < c ∧ c ≤ 1 ∧ ∀ 𝓕 : LFam,
     ∃ Z : AddChar 𝓕.G ℂ → Finset ℝ, (∀ χ, 𝓕.ExcZ χ c₀ (Z χ)) ∧
       (∀ χ ψ β β', β ∈ Z χ → β' ∈ Z ψ → χ = ψ ∧ β = β') ∧
@@ -1194,7 +1176,7 @@ lemma zeros : ∃ c₀ A c : ℝ, 0 < c₀ ∧ c₀ ≤ 1 / 20 ∧ 0 < A ∧ 0 <
   have key : ∀ (χ : AddChar 𝓕.G ℂ) (s : ℂ), 1 - c₀ / 𝓕.ell s.im ≤ s.re → 𝓕.F χ s = 0 →
       3 / 4 ≤ s.re ∧ χ * χ = 1 ∧ s.im = 0 := by
     intro χ s hs hF
-    have hl := one_le_ell 𝓕 s.im
+    have hl := _root_.GlobalTheory.Hk.PsiExc.one_le_ell 𝓕 s.im
     have h1 : c₀ / 𝓕.ell s.im ≤ 1 / 20 := (div_le_self h0.le hl).trans h01
     have h2 : c₀ / 𝓕.ell s.im ≤ c4 / 𝓕.ell s.im := by gcongr
     have h34 : 3 / 4 ≤ s.re := by linarith
@@ -1206,7 +1188,7 @@ lemma zeros : ∃ c₀ A c : ℝ, 0 < c₀ ∧ c₀ ≤ 1 / 20 ∧ 0 < A ∧ 0 <
       3 / 4 ≤ β ∧ χ * χ = 1 ∧ 1 - c5 / 𝓕.ell 0 ≤ β := by
     intro χ β hβ hF
     have := key χ β (by simpa using hβ) hF
-    have hl := one_le_ell 𝓕 0
+    have hl := _root_.GlobalTheory.Hk.PsiExc.one_le_ell 𝓕 0
     have h2 : c₀ / 𝓕.ell 0 ≤ c5 / 𝓕.ell 0 := by gcongr
     exact ⟨by simpa using this.1, this.2.1, by linarith⟩
   have uniq : ∀ (χ ψ : AddChar 𝓕.G ℂ) (β β' : ℝ), 1 - c₀ / 𝓕.ell 0 ≤ β → 𝓕.F χ β = 0 →

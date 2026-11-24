@@ -286,8 +286,6 @@ open GlobalTheory.LiftRows
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.exists_localUnitaryGroupIso_conj_isometry : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) {r r' : ℕ} (J : Matrix (Fin r) (Fin r) E) (J' : Matrix (Fin r') (Fin r') E) (v : HeightOneSpectrum (𝓞 F)) (a : Matrix (Fin r') (Fin r) (Fv F v ⊗[F] E)) (b : Matrix (Fin r) (Fin r') (Fv F v ⊗[F] E)), a * b = 1 → b * a = 1 → Formalism.UG.cT (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (Fv F v) σ) a * JR (F := F) (Fv F v) J' * a = JR (F := F) (Fv F v) J → ∃ φ : GLoc σ J v ≃ₜ* GLoc σ J' v, ∀ g, (GlobalTheory.AdelicU.matHom _ σ J' (φ g)).val = a * (GlobalTheory.AdelicU.matHom _ σ J g).val * b := by
-  first | exact @GlobalTheory.LocIsoConj.exists_locIso
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLocalUnitaryGroupIsoConjIsometryStatement =====
@@ -362,8 +360,6 @@ open GlobalTheory.LiftRows
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.finiteAdelicUnitaryPoint_ext_localComponents : ∀ {D : D7} (V : HSp D) (x y : GfC V), (∀ u : HeightOneSpectrum (𝓞 D.host.F), (Formalism.IndefR.Lev.finE V (x : GA D V)).val.map (Formalism.UG.prV (E := D.host.E) u) = (Formalism.IndefR.Lev.finE V (y : GA D V)).val.map (Formalism.UG.prV (E := D.host.E) u)) → x = y := by
-  first | exact @GlobalTheory.TrFinExt.gfc_ext
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteAdelicUnitaryPointExtLocalComponentsStatement =====
@@ -436,8 +432,6 @@ open GlobalTheory.LiftRows
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.finitePart_localToFiniteAdelic_component_ne : ∀ {D : D7} (V : HSp D) {v u : HeightOneSpectrum (𝓞 D.host.F)}, u ≠ v → ∀ (g : Gv V v), (Formalism.IndefR.Lev.finE V (locFin V v g : GA D V)).val.map (Formalism.UG.prV (E := D.host.E) u) = 1 := by
-  first | exact @GlobalTheory.LocFinComp.finE_locFin_map_prV_ne
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FinitePartLocalToFiniteAdelicComponentNeStatement =====
@@ -505,8 +499,6 @@ open GlobalTheory.LiftRows
 open scoped TensorProduct
 
 
-theorem _root_.GlobalTheory.T.finitePart_localToFiniteAdelic_component_self : ∀ {D : D7} (V : HSp D) (v : HeightOneSpectrum (𝓞 D.host.F)) (g : Gv V v), (Formalism.IndefR.Lev.finE V (locFin V v g : GA D V)).val.map (Formalism.UG.prV (E := D.host.E) v) = (GlobalTheory.AdelicU.matHom _ D.sp.cm.sig V.gram g).val.map (Algebra.TensorProduct.comm D.host.F (Fv D.host.F v) D.host.E) := by
-  first | exact @GlobalTheory.FinLocSelf.finE_locFin_map_prV
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FinitePartLocalToFiniteAdelicComponentSelfStatement =====
@@ -711,7 +703,7 @@ theorem locData (σ : E →ₐ[F] E) {r r' : ℕ} (J : Matrix (Fin r) (Fin r) E)
     · ext i k; subst hcm; exact (comm_sigR' σ v _).symm
     · ext i k; subst hcm; simp [JR, Formalism.UG.inclE, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR]
     · ext i k; subst hcm; simp [JR, Formalism.UG.inclE, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR]
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.exists_localUnitaryGroupIso_conj_isometry σ J J' v _ _ hab hba hJ
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.LocIsoConj.exists_locIso σ J J' v _ _ hab hba hJ
   refine ⟨φ, ?_, hφ⟩
   have injv : Function.Injective jv.mulVec := fun x y hxy => by
     have := congrArg jv'.mulVec hxy
@@ -762,7 +754,7 @@ theorem isom_locComponents : ∀ (D : D7) (V V' : HSp D) (j : Matrix (Fin V'.ran
     (GlobalTheory.FinAdIdent.isLocLatIsom_map hj v).1.2 (GlobalTheory.FinAdIdent.isLocLatIsom_map hj v).2
   choose jl hjl hjm using key
   refine ⟨jl, hjl, fun v g => ?_⟩
-  apply GlobalTheory.T.finiteAdelicUnitaryPoint_ext_localComponents
+  apply _root_.GlobalTheory.TrFinExt.gfc_ext
   intro u
   have hc := hΦ (locFin V v g)
   have e1 := congrArg (fun X => GlobalTheory.IndefiniteRowSideFullHecke.IsometryCarriesCharacter.mmul X j') hc
@@ -770,10 +762,10 @@ theorem isom_locComponents : ∀ (D : D7) (V V' : HSp D) (j : Matrix (Fin V'.ran
   rw [e1, Matrix.map_mul, Matrix.map_mul]
   by_cases hu : u = v
   · subst hu
-    rw [GlobalTheory.T.finitePart_localToFiniteAdelic_component_self V u g, GlobalTheory.T.finitePart_localToFiniteAdelic_component_self V' u (jl u g), hjm]
+    rw [_root_.GlobalTheory.FinLocSelf.finE_locFin_map_prV V u g, _root_.GlobalTheory.FinLocSelf.finE_locFin_map_prV V' u (jl u g), hjm]
     rw [← Matrix.mul_assoc]
     exact assemble (F := D.host.F) (E := D.host.E) u _ _ _
-  · rw [GlobalTheory.T.finitePart_localToFiniteAdelic_component_ne V hu, GlobalTheory.T.finitePart_localToFiniteAdelic_component_ne V' hu, Matrix.one_mul, ← Matrix.map_mul, h1,
+  · rw [_root_.GlobalTheory.LocFinComp.finE_locFin_map_prV_ne V hu, _root_.GlobalTheory.LocFinComp.finE_locFin_map_prV_ne V' hu, Matrix.one_mul, ← Matrix.map_mul, h1,
       Matrix.map_one _ (map_zero _) (map_one _)]
 
 end GlobalTheory.TwistPC

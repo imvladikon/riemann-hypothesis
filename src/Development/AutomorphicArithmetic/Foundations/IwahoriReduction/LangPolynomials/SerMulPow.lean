@@ -1335,10 +1335,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.HV GlobalTheory.Ord2 GlobalTheory.KZ GlobalTheory.Col UpperTheory.Kd.C7
 
-private theorem pow_sub_one_mem {S : Type} [CommRing S] (J : Ideal S) (p : ℕ) (hp : p.Prime) (hpJ : (p : S) ∈ J)
-    (x : S) (hx : x - 1 ∈ J) (j : ℕ) : x ^ (p ^ j) - 1 ∈ J ^ (j + 1) :=
-  _root_.UpperTheory.Reformulated.B.Qf4.pow_sub_one_mem J p hp hpJ x hx j
-
 private theorem pow_sub_pow_mem {S : Type} [CommRing S] (J : Ideal S) (x y : S) (h : x - y ∈ J) (n : ℕ) :
     x ^ n - y ^ n ∈ J := by
   obtain ⟨c, hc⟩ := sub_dvd_pow_sub_pow x y n
@@ -1402,7 +1398,7 @@ private theorem conv {S : Type} [CommRing S] (J : Ideal S) [IsAdicComplete J S] 
   set y : ℕ → ℕ → S := fun r k => (N^[k] (w (r + k))) ^ p ^ ((r + k - c) - (r - c)) with hy
   have hex : ∀ r, ∃ W : S, W - 1 ∈ J ∧ ∀ n K, n + c ≤ K → W - ∏ k ∈ Finset.range K, y r k ∈ J ^ n := by
     intro r
-    have h0 := fun k => pow_sub_one_mem J p hp hpJ _ (hitJ k _ (hw (r + k))) ((r + k - c) - (r - c))
+    have h0 := fun k => _root_.UpperTheory.Reformulated.B.Qf4.pow_sub_one_mem J p hp hpJ _ (hitJ k _ (hw (r + k))) ((r + k - c) - (r - c))
     exact prod_limit J (y r) c (fun k => Ideal.pow_le_self (by omega) (h0 k))
       (fun k => Ideal.pow_le_pow_right (by omega) (h0 k))
   choose W hW1 hW2 using hex

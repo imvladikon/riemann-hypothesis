@@ -871,9 +871,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.Ar.Flat.CPoint
 
-theorem _root_.GlobalTheory.T.iota_multi_linear_combination_det : ∀ (Ω Vs : Type) [Field Ω] [AddCommGroup Vs] [Module Ω Vs] (p : ℕ) (P : Matrix (Fin p) (Fin p) Ω) (v : Fin p → Vs),
-    exteriorPower.ιMulti Ω p (fun i => ∑ k, P i k • v k) = P.det • exteriorPower.ιMulti Ω p v := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Flat.CPoint.ιMulti_matrix_transform
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.IotaMultiLinearCombinationDetStatement =====
@@ -1811,7 +1808,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     exact ⟨HodgeDeterminantLattice.linearIndependent_eigProj _ (ht ⟨_, h₂⟩ hU₁), HodgeDeterminantLattice.eigQuot_eq_span _ (ht ⟨_, h₂⟩ hU₁) hσx⟩
   have hgen := HodgeDeterminantLattice.detLat_of_frame huLI hframe
   have hVy := hrep K βK y _ _ b₁ b₂ (α / (Matrix.of P).det) (κ' / (Matrix.of Q).det) hFy
-    (by rw [hPb, GlobalTheory.T.iota_multi_linear_combination_det, smul_smul, div_mul_cancel₀ _ hP0]) (by rw [hQb, GlobalTheory.T.iota_multi_linear_combination_det, smul_smul, div_mul_cancel₀ _ hQ0])
+    (by rw [hPb, _root_.GlobalTheory.CompanionTheory.Ar.Flat.CPoint.ιMulti_matrix_transform, smul_smul, div_mul_cancel₀ _ hP0]) (by rw [hQb, _root_.GlobalTheory.CompanionTheory.Ar.Flat.CPoint.ιMulti_matrix_transform, smul_smul, div_mul_cancel₀ _ hQ0])
     (fun i => ⟨_, by rw [hx₁ i]; exact hVal (x₁ i), hSV _⟩) (fun i => ⟨_, by rw [hx₂ i]; exact hVal (x₂ i), hSV _⟩)
   obtain ⟨hd, hd'⟩ := hval' _ _ hVy
   obtain ⟨ud, hud⟩ := hA'

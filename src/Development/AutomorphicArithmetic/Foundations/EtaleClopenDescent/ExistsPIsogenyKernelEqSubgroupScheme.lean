@@ -443,7 +443,7 @@ private theorem two_locus (Y : Scheme.{0}) (A B₁ B₂ B' : Over Y) [GrpObj A] 
   let ff : ∀ i, A ⟶ Bf i := fun i => match i with
     | false => f₁
     | true => f₂
-  obtain ⟨W, o, c, H, G⟩ := GlobalTheory.T.isClopen_torsion_kernel_locus Y A n Bool Bf ff B' f' hA
+  obtain ⟨W, o, c, H, G⟩ := _root_.GlobalTheory.LevCover.kerlocus_open_closed Y A n Bool Bf ff B' f' hA
     (fun i => match i with
       | false => h₁
       | true => h₂) h'
@@ -527,7 +527,7 @@ theorem UpperTheory.exists_clopen_subgroup_locus :
   have hεm := Rd.o₀.act.hom (algebraMap (𝓞 D.F) D.O ε)
   obtain ⟨W₁, o₁, c₁, H₁, G₁⟩ := two_locus Rd.Y.left Rd.o₀.A Rd.o'.A Rd.o₀.A B₀ c Rd.ψ
     (Rd.o₀.act.act (algebraMap (𝓞 D.F) D.O ε)) q₀ Rd.o₀.ab Rd.o'.ab Rd.o₀.ab hB₀ hcu
-  obtain ⟨W₂, o₂, c₂, H₂, G₂⟩ := GlobalTheory.T.isClopen_torsion_kernel_locus Rd.Y.left Rd.o₀.A c Unit (fun _ => B₀)
+  obtain ⟨W₂, o₂, c₂, H₂, G₂⟩ := _root_.GlobalTheory.LevCover.kerlocus_open_closed Rd.Y.left Rd.o₀.A c Unit (fun _ => B₀)
     (fun _ => q₀) Rd.o'.A Rd.ψ Rd.o₀.ab (fun _ => hB₀) Rd.o'.ab (fun _ => hq₀m) hψm hcu
   refine ⟨W₁ ∩ W₂, o₁.inter o₂, c₁.inter c₂, fun Tb t hW => ?_, fun k _ _ y => ?_⟩
   · have hW₁ := H₁ Tb t (hW.trans Set.inter_subset_left)
@@ -596,7 +596,7 @@ theorem exists_isPIsog_pull {c : ℕ} {T Y : Scheme.{0}} {s₁ : T ⟶ Sp R} {s 
     ∃ ψ₁ : o₁.A ⟶ o₁'.A, m.φ ≫ ψ.left = ψ₁.left ≫ m'.φ ∧ IsPIsog c o₁ o₁' ψ₁ := by
   obtain ⟨ψ', hq⟩ := h.exists_quasiInv
   obtain ⟨B₁, _, _, θ, ψ₁, ψ₁', _, hpb, hq₁, h1, h2⟩ :=
-    GlobalTheory.T.quasiInverseIsogenyPair_baseChange_grpPullback T Y t o.A o'.A c ψ ψ' o₁.A m.φ o'.ab hq m.cart
+    _root_.GlobalTheory.UPel.HT.ES.pullQuasiInv T Y t o.A o'.A c ψ ψ' o₁.A m.φ o'.ab hq m.cart
   obtain ⟨e, he, heθ⟩ := grpPullback_iso hpb m'.cart
   have hψ : m.φ ≫ ψ.left = (ψ₁ ≫ e.hom).left ≫ m'.φ := by
     rw [h1, ← heθ, Over.comp_left, Category.assoc]
@@ -676,7 +676,7 @@ theorem UpperTheory.exists_isPIsog_isTj_of_section_repData :
   obtain ⟨ψ'', hsq, hiso⟩ := exists_isPIsog_pull m' m'' Rd.isog
   refine ⟨o'', ψ'', hiso, ?_, fun T a => ?_⟩
   · exact (tjAt_id_iff r w j o o'' ψ'').1
-      ((GlobalTheory.T.harrisTaylorType_iff_pulledBack_identity p D R b N _ _ _ _ _ o Rd.o₀ m' o''.A Rd.o'.A m''.φ ψ'' Rd.ψ r w j m''.cart hsq).1
+      ((_root_.GlobalTheory.UPel.HT.ES.tjAt_iff_tjAt_pull p D R b N _ _ _ _ _ o Rd.o₀ m' o''.A Rd.o'.A m''.φ ψ'' Rd.ψ r w j m''.cart hsq).1
         fun k _ _ _ x _ => Rd.tj k x)
   · refine ⟨pushHom m'.cart T a, ?_, comp_eq_one_iff m'.cart m''.cart hsq.symm a, fun v => ?_⟩
     · change (a.left ≫ m'.φ) ≫ Rd.m₀.φ = a.left
@@ -1050,7 +1050,7 @@ private theorem UpperTheory.exists_stable_maximal_isotropic_torsion_subgroup_ge 
     rw [he g g' hg hg']
     exact ⟨fun h => (hinj (hone.trans h)).symm, fun h => by rw [h]; exact hone.symm⟩
   let M := TjExists.torsSub o (𝟙_ (Over (Sp k))) c
-  haveI : Finite M := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+  haveI : Finite M := (_root_.GlobalTheory.AbTorsionGeomDescent.finite_torsion_and_descent k o.A o.ab c hck).1
   have hM0 : ∀ x : M, x = 0 ↔ x.1.toMul = 1 := fun x => ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
   have hkill : ∀ (v : Ideal (𝓞 D.F)) (x : M), (∀ a ∈ v, a • x = 0) ↔ KilledBy o v x.1.toMul :=
     fun v x => forall₂_congr fun a _ => hM0 (a • x)
@@ -1117,7 +1117,7 @@ theorem UpperTheory.exists_isogeny_with_kernel_subgroup :
     rw [hce, Nat.cast_pow]
     exact pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
   have hfin : Finite H := by
-    haveI := (GlobalTheory.T.finite_torsion_and_descent_abelianVariety_algClosed k o.A o.ab c hck).1
+    haveI := (_root_.GlobalTheory.AbTorsionGeomDescent.finite_torsion_and_descent k o.A o.ab c hck).1
     exact Finite.of_injective (fun h : H => (⟨h.1, hpow h.1 h.2⟩ : {g : 𝟙_ (Over (Sp k)) ⟶ o.A // g ^ c = 1}))
       fun a a' h => Subtype.ext (Subtype.mk.inj h)
   have hinj : ∀ (κ : Type) [Field κ] (x : Sp κ ⟶ Sp k) (h h' : 𝟙_ (Over (Sp k)) ⟶ o.A),
@@ -1318,7 +1318,7 @@ namespace UpperTheory.QO
 private theorem main' : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → IsUnit ((p : ℕ) : R) → D.m = 1 → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (j c : ℕ), w.IsMaximal → uIdeal D r ≤ w → j ≤ D.n → (∃ e : ℕ, c = p ^ e ∧ (0 < j → 0 < e)) → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s) (K : Over S) [GrpObj K] (i : K ⟶ o.A), IsMonHom i → Mono i → IsFinite K.hom → Etale K.hom → (∀ (T : Over S) (x : T ⟶ o.A), InSub i x → KilledBy o w x) → (∀ a : D.O, ∃ g : K ⟶ K, g ≫ i = i ≫ o.act.act a) → IsIsogDeg (toUnit K) (Ideal.absNorm w ^ j) → ∃ (o' : Obj b N s) (ψ : o.A ⟶ o'.A), IsPIsog c o o' ψ ∧ IsTj r w j o o' ψ ∧ ∀ (T : Over S) (x : T ⟶ o.A), (x ≫ ψ = 1 ∧ ∃ e : ℕ, KilledBy o (uIdeal D r ^ e) x) ↔ InSub i x := by
   intro p _ D R _ _ b N h3 hcop hp hm r w j c hw hle hj hc S _ s o K _ i hi hmono hfin het hkill hstab hdeg
   obtain ⟨Y, o₀, m₀, o', ψ, hYf, hYe, his, htj, hu⟩ :=
-    GlobalTheory.T.harrisTaylor_typeTj_isogenies_representable p D R b N h3 hcop hp r w j c hw hle hj hc hm S s o
+    _root_.GlobalTheory.UPel.HT.ES.IsogRep.exists_rep p D R b N h3 hcop hp r w j c hw hle hj hc hm S s o
   let Rd : RepData b N r w j c s o := ⟨Y, o₀, m₀, o', ψ, hYf, hYe, his, htj, hu⟩
   let Sd : SubData w j o := ⟨K, i, hi, hmono, hfin, het, hkill, hstab, hdeg⟩
   obtain ⟨W, hWo, hWc, hWat, hWgeo⟩ := UpperTheory.exists_clopen_subgroup_locus p D R b N r w j c hp hw hle hc S s o Rd Sd

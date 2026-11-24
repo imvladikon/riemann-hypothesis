@@ -907,17 +907,6 @@ end GlobalTheory.BigNZ
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.dominant_term_ne_zero : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → Big fun ch => ∀ i j t, ∃ M : Vol ch.G, M.Is t ∧ ∃ a τ τ' n Φ,
-    (∀ w ∈ locPl ch.G t, depthAt ch.G w ≤ n w ∧ IsNatDatum (unifAt w) (n w) (Φ w)) ∧ HasFlip ch.S.B t ch.rm i j n Φ τ τ' ∧
-    ∃ g g₁, ∫ u in M.fd _, kerBig ch.W (tensT ch.W a τ) g g₁ u ∂M.ν _ ≠ 0 := by
-  first | exact @_root_.GlobalTheory.BigNZ.large_term_nonzero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DominantTermNeZero =====
@@ -1008,7 +997,7 @@ theorem small_convolution_exists_integrable_translates : _root_.GlobalTheory.Fun
   have hst := hx D large₂ he hx0 Γ Pl0 T A Ks R F hS ch hch hsc
   intro i j t M hM Θ Θ' hΘ g g₁
   have hL : R.toLevCh.Is A.μ0 := hS.core.lev
-  obtain ⟨e, Bs, Γ', X, om, om', h, hTr, hv⟩ := GlobalTheory.T.squareThetaTripleHypotheses_of_standing hL ch.W t i j (hst t) M hM
+  obtain ⟨e, Bs, Γ', X, om, om', h, hTr, hv⟩ := _root_.GlobalTheory.FunObj.squareTriple_of_standing hL ch.W t i j (hst t) M hM
   obtain ⟨z, Φ, a, C₀, hz, hΦ, hid⟩ :=
     GlobalTheory.T.translatedKernel_le_thetaFunction_routeBigVertex hL ch.W ch.S.B ch.rm t i j M hM Θ Θ' hΘ g₁ e Bs Γ' X om om' h hTr hv
   have dec := (hK.1 D.host.F D.host.E D.sp.cm.sig Bs _ _ Γ' X om om' hTr).1
@@ -1046,16 +1035,6 @@ end GlobalTheory.SmallConv
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.exists_integrable_translates_small_convolution : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → Big fun ch => ∀ i j t (M : Vol ch.G), M.Is t → ∀ Θ Θ', IsMatched ch.S.B t ch.rm i j Θ Θ' → ∀ g g₁,
-    ∃ z, zdeg z ≠ 0 ∧ IntegrableOn (translates z (kerSmall ch.W Θ' g g₁)) (M.fd _) (M.ν _) := by
-  first | exact @_root_.GlobalTheory.SmallConv.small_convolution_exists_integrable_translates
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SmallConvolutionExistsIntegrableTranslates =====
@@ -1083,16 +1062,6 @@ end GlobalTheory.SquareConv
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.square_convolution_estimate : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → Big fun ch => ∀ i j t (M : Vol ch.G), M.Is t → ∀ Θ Θ', IsMatched ch.S.B t ch.rm i j Θ Θ' → ∀ g g₁,
-    IntegrableOn (kerBig ch.W Θ g g₁) (M.fd _) (M.ν _) := by
-  first | exact @_root_.GlobalTheory.SquareConv.square_convolution_large_bound
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SquareConvolutionLargeBound =====
@@ -1112,7 +1081,7 @@ namespace GlobalTheory.ConstNZ
 theorem constK_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
     GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → GlobalTheory.RowClaim.ConstK := by
   intro h1 h2 hLM h3 h4 h5
-  obtain ⟨CF0, hH⟩ := ((_root_.GlobalTheory.T.square_convolution_estimate h1 h2 h3 h4 h5).and (_root_.GlobalTheory.T.exists_integrable_translates_small_convolution h1 h2 h3 h4 h5)).and (_root_.GlobalTheory.T.dominant_term_ne_zero h1 h2 hLM h3 h4 h5)
+  obtain ⟨CF0, hH⟩ := ((_root_.GlobalTheory.SquareConv.square_convolution_large_bound h1 h2 h3 h4 h5).and (_root_.GlobalTheory.SmallConv.small_convolution_exists_integrable_translates h1 h2 h3 h4 h5)).and (_root_.GlobalTheory.BigNZ.large_term_nonzero h1 h2 hLM h3 h4 h5)
   refine ⟨CF0, fun ε CF hCF => ?_⟩
   obtain ⟨x₀, hx⟩ := hH ε CF hCF
   refine ⟨x₀, fun D large₂ he hx0 Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc => ?_⟩
@@ -1151,7 +1120,7 @@ theorem twisted_theta_lift_automorphic_of_convergent : _root_.GlobalTheory.FunPr
     HidaSetting large₂ R F → ∀ (ch : Choice R), ch.Is → ∀ (CF : ℝ), ch.AtScale CF large₂.sc.b → ∀ (a : Fin ch.n) (u : R.HE.H),
     ThetaConv ch.W ch.M ch.ρ (ch.Phi a) (ch.form u) ∧
       IsAutFun (ch.G.V (.grid D.R.m 0)) (thetaChi ch.W ch.M ch.ρ (ch.Phi a) (ch.form u)) :=
-  fun hP hL _ large₂ _ _ _ _ _ _ _ _ _ _ _ _ hS ch hch CF hsc a u => _root_.GlobalTheory.T.twisted_base_change_lift_exists hP hL large₂ hS ch hch.toIsBase CF hsc a u
+  fun hP hL _ large₂ _ _ _ _ _ _ _ _ _ _ _ _ hS ch hch CF hsc a u => _root_.GlobalTheory.RowLift.twisted_lift_from_base_field hP hL large₂ hS ch hch.toIsBase CF hsc a u
 end GlobalTheory
 end
 
@@ -1191,11 +1160,6 @@ end GlobalTheory.RowTest
 end
 end
 
-section
-
-theorem _root_.GlobalTheory.T.twisted_characters_linearly_independent : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal → GlobalTheory.RowClaim.LinK := by
-  first | exact @_root_.GlobalTheory.RowTest.twist_linear_independence_test
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedCharactersLinearlyIndependent =====
@@ -1320,16 +1284,14 @@ end
 end ThetaProjectionIdempotent
 section
 open GlobalTheory.RowClaim
-theorem _root_.GlobalTheory.Adopt.twisted_period_identity : _root_.GlobalTheory.FunPr.ThetaLocalInputs → StepProj := by
-  first | exact @_root_.ThetaProjectionIdempotent.CompanionTheory.Member.twisted_period_identity_local
+alias _root_.GlobalTheory.Adopt.twisted_period_identity := _root_.ThetaProjectionIdempotent.CompanionTheory.Member.twisted_period_identity_local
 end
 end
 
 section
 open GlobalTheory.RowClaim
 
-theorem _root_.GlobalTheory.T.twisted_period_identity : _root_.GlobalTheory.FunPr.ThetaLocalInputs → StepProj := by
-  first | exact @_root_.GlobalTheory.Adopt.twisted_period_identity
+alias _root_.GlobalTheory.T.twisted_period_identity := _root_.ThetaProjectionIdempotent.CompanionTheory.Member.twisted_period_identity_local
 end
 end -- clump:auto
 end -- clump:auto
@@ -1345,20 +1307,15 @@ namespace GlobalTheory.RowClaim.Join
 theorem thetaLift_row_properties_conj : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → GlobalTheory.RowClaim.SumOKK ∧ GlobalTheory.RowClaim.ConstK ∧ GlobalTheory.RowClaim.LinK ∧ GlobalTheory.RowClaim.Formula2K ∧ GlobalTheory.RowClaim.SumRatK := by
   intro P K L s1 s2 s3
   have c := _root_.GlobalTheory.ConstNZ.constK_alt P K L s1 s2 s3
-  have cusp := _root_.GlobalTheory.T.twisted_thetaLift_cuspidal P
-  have sum := _root_.GlobalTheory.T.sumOKK_of_theta_local_inputs P
-  exact ⟨sum, c, _root_.GlobalTheory.T.twisted_characters_linearly_independent P cusp,
-    _root_.GlobalTheory.RowClaim.FormulaTwo.formula2K (_root_.GlobalTheory.T.twisted_period_identity P) (_root_.GlobalTheory.T.twisted_lift_flip_invariant P cusp s1 K c) (_root_.GlobalTheory.T.twisted_theta_integral_unfolds P cusp sum)
+  have cusp := _root_.GlobalTheory.PairLift.thetaPairLift_cuspidal_of_hypotheses P
+  have sum := _root_.GlobalTheory.RowClaim.rowSum_of_hypotheses_alt P
+  exact ⟨sum, c, _root_.GlobalTheory.RowTest.twist_linear_independence_test P cusp,
+    _root_.GlobalTheory.RowClaim.FormulaTwo.formula2K (_root_.GlobalTheory.T.twisted_period_identity P) (_root_.GlobalTheory.FlipRun.twist_sign_flip_succ P cusp s1 K c) (_root_.GlobalTheory.RowUnfLast.twisted_theta_integral_unfolding P cusp sum)
       (_root_.GlobalTheory.T.twisted_jets_assemble P sum) c sum,
     _root_.GlobalTheory.RowTest.sumRatK_of_sumOKK sum⟩
 end GlobalTheory.RowClaim.Join
 end
 
-section
-
-theorem _root_.GlobalTheory.T.thetaLift_row_properties : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.SquareSt.WeilConvergence → GlobalTheory.SquareSt.LocalMatching → GlobalTheory.SquareSt.ThetaIntegralsAgree → GlobalTheory.RowClaim.SumOKK ∧ GlobalTheory.RowClaim.ConstK ∧ GlobalTheory.RowClaim.LinK ∧ GlobalTheory.RowClaim.Formula2K ∧ GlobalTheory.RowClaim.SumRatK := by
-  first | exact @_root_.GlobalTheory.RowClaim.Join.thetaLift_row_properties_conj
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaLiftRowPropertiesConj =====

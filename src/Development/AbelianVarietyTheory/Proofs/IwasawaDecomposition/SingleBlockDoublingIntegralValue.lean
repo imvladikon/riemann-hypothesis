@@ -59,6 +59,7 @@ import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HostPins
+import Formalism.DoubleCosetMeasures.LowerUnipotentOrbits.LemmaU
 
 @[expose] public section
 
@@ -475,7 +476,7 @@ theorem stepAt_one : ∀ (L : Type) [Field L] [NumberField L] (P : HeightOneSpec
       intro g k; rw [hc, hc]; simp
     have hρ : ∀ k, ‖(((δ.comp (GeneralLinearGroup.det.comp (GLint (OP P) r).subtype))⁻¹ k : ℂˣ) : ℂ)‖ = 1 := by
       intro k; simp [hδ.unitary]
-    have key := Formalism.DoubleCosetMeasures.Final.lemmaUSplit (P.adicCompletion L) r t (OP P) (isOpen_OP P) _ (Units.ne_zero (piP P))
+    have key := _root_.Formalism.DoubleCosetMeasures.P.LemmaU.lemmaU (P.adicCompletion L) r t (OP P) (isOpen_OP P) _ (Units.ne_zero (piP P))
       (GLint (OP P) r) (isCompact_GLint P r) (fun k hk => hk.1)
       ((δ.comp (GeneralLinearGroup.det.comp (GLint (OP P) r).subtype))⁻¹) hρ (ν * δ) nrm 1
       hchar

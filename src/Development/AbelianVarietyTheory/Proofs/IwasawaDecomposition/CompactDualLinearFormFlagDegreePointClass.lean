@@ -297,7 +297,7 @@ theorem chernRoots_X_of_lt (H : Host E) (Dw : Datum H) (τ : E →+* ℂ) (k : �
 theorem numLin_relPoly (H : Host E) (Dw : Datum H) (τ : GlobalTheory.AllWt.Psi H) (k : ℕ) (hk : 1 ≤ k)
     (a : MvPolynomial ((E →+* ℂ) × ℕ) ℝ) : numLin H Dw (GlobalTheory.PointChern.relPoly τ k * a) = 0 := by
   rw [numLin_apply, map_mul (chernRoots Dw.mult), mul_assoc, map_mul, GlobalTheory.Schubert.RelKill.flagMap_relPoly]
-  exact Formalism.DegreeFormula.degreeEsymmMulEqZero _ _ τ k _ hk
+  exact _root_.Formalism.DegreeFormula.PPowSum.degFlEsymm _ _ τ k _ hk
 
 theorem numLin_mul_eq_zero (H : Host E) (Dw : Datum H) (Q : MvPolynomial ((E →+* ℂ) × ℕ) ℝ)
     (hQ : Q ∈ relIdeal H Dw) : ∀ a, numLin H Dw (Q * a) = 0 := by
@@ -1481,21 +1481,6 @@ theorem add_mul_pred_div_two : ∀ (a b : ℕ), (a + b) * (a + b - 1) / 2 = a * 
   | succ b ih =>
     rw [← add_assoc, g (a + b), g b, ih]; ring
 
-theorem pointPoly_isWeightedHomogeneous : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), IsWeightedHomogeneous Prod.snd (pointPoly H Dw) (Fintype.card (GlobalTheory.AllWt.Psi H) * (Dw.p * Dw.q)) := by
-  intro E _ _ _ H Dw
-  unfold pointPoly
-  have hs : Fintype.card (GlobalTheory.AllWt.Psi H) * (Dw.p * Dw.q) = ∑ τ : GlobalTheory.AllWt.Psi H, Dw.p * Dw.q := by simp
-  rw [hs]
-  apply IsWeightedHomogeneous.prod
-  intro τ _
-  have hm : Dw.mult τ.1 = Dw.p := by simp [Datum.mult, τ.2]
-  rw [hm, show Dw.p + Dw.q - Dw.p = Dw.q by omega]
-  have h1 : IsWeightedHomogeneous (Prod.snd : (E →+* ℂ) × ℕ → ℕ)
-      (C ((-1 : ℝ) ^ Dw.p) * X (τ.1, Dw.p) : MvPolynomial ((E →+* ℂ) × ℕ) ℝ) Dw.p := by
-    simpa using (isWeightedHomogeneous_C (Prod.snd : (E →+* ℂ) × ℕ → ℕ) ((-1 : ℝ) ^ Dw.p)).mul
-      (isWeightedHomogeneous_X ℝ (Prod.snd : (E →+* ℂ) × ℕ → ℕ) (τ.1, Dw.p))
-  simpa [mul_comm] using h1.pow Dw.q
-
 theorem antisymm_isHomogeneous : ∀ {ι : Type} [Fintype ι] {m : ι → ℕ} (P : MvPolynomial (Root m) ℝ) (d : ℕ), P.IsHomogeneous d → (antisymm P).IsHomogeneous d := by
   intro ι _ m P d h
   unfold GlobalTheory.GoodMetric.antisymm
@@ -1594,7 +1579,7 @@ theorem grass_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     rw [intGr_sub, intGr_C_mul, _root_.GlobalTheory.GrassTop.intGr_pointPoly, mul_one, sub_eq_zero] at h2
     rw [hLR, h1, ← h2, ← hIR, _root_.GlobalTheory.GrassTop.intGr_eq_flagDeg H Dw la R D hD hR]
   · have h1 : L Re = 0 := hdeg Re e hReW (Ne.symm hn)
-    have h2 : L (pointPoly H Dw) = 0 := hdeg _ e (pointPoly_isWeightedHomogeneous H Dw) (Ne.symm hn)
+    have h2 : L (pointPoly H Dw) = 0 := hdeg _ e (_root_.GlobalTheory.GrassTopDim.pointPoly_isWeightedHomogeneous H Dw) (Ne.symm hn)
     rw [hLR, h1, h2, mul_zero]
 
 end GlobalTheory.GrassTop

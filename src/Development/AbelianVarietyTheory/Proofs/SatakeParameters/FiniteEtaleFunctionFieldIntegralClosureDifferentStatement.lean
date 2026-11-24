@@ -140,8 +140,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.W1 GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.finiteDimensional_of_finite_subring_hom_of_fractions : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] (B : Subring K) (B' : Subring L) (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.Finite → (∀ y : L, ∃ a ∈ B', ∃ b ∈ B', b ≠ 0 ∧ y * b = a) → FiniteDimensional K L := by
-  first | (exact @GlobalTheory.finiteDimensional_of_finite_subring_fraction)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDimensionalOfFiniteSubringFractionStatement =====
@@ -224,8 +222,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.W1 GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.formally_unramified_differentials_span : ∀ (k K L : Type) [Field k] [Field K] [Field L] [Algebra k K] [Algebra k L] [Algebra K L] [IsScalarTower k K L] (B : Subalgebra k K) (B' : Subalgebra k L) (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.FormallyUnramified → ∀ v ∈ B', ∃ (m : ℕ) (b : Fin m → L) (w : Fin m → K), (∀ j, b j ∈ B' ∧ w j ∈ B) ∧ ι1 (D k L v) = ∑ j, b j • mapDR k K L (ι1 (D k K (w j))) := by
-  first | (exact @GlobalTheory.W1.dv_mem_span_of_formallyUnramified)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FormallyUnramifiedDifferentialsSpan =====
@@ -276,8 +272,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.W1 GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.integralClosure_of_finite_map_integrallyClosed_subrings : ∀ (k K L : Type) [Field k] [Field K] [Field L] [Algebra k K] [Algebra k L] [Algebra K L] [IsScalarTower k K L] (B : Subalgebra k K) (B' : Subalgebra k L) (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.Finite → IsIntegrallyClosed B → IsIntegrallyClosed B' → (∀ x : K, ∃ a ∈ B, ∃ b ∈ B, b ≠ 0 ∧ x * b = a) → (∀ y : L, ∃ a ∈ B', ∃ b ∈ B', b ≠ 0 ∧ y * b = a) → (∀ y ∈ B', IsIntegral B (y : L)) ∧ (∀ x : K, IsIntegral B x → x ∈ B) ∧ (∀ y : L, IsIntegral B y → y ∈ B') := by
-  first | (exact @GlobalTheory.W1.integralClosure_of_finite_map)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralClosureOfFiniteMapIntegrallyClosedSubrinStatement =====
@@ -316,8 +310,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.W1 GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' : ∀ (Z : Scheme.{0}) [IsIntegral Z] (s : Z ⟶ Sp ℂ) [Smooth s] (U : Z.Opens), IsAffineOpen U → genericPoint Z ∈ U → IsIntegrallyClosed Γ(Z, U) := by
-  first | (exact @GlobalTheory.isIntegrallyClosed_sections_of_smooth_complex)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIntegrallyClosedSectionsOfSmoothComplexStatement =====
@@ -391,16 +383,16 @@ theorem finiteEtale_functionField : ∀ (Z Y : Scheme.{0}) [IsIntegral Z] [IsInt
     have hU₀g : genericPoint Z ∈ U₀ := GlobalTheory.VB.genericPoint_mem hm
     obtain ⟨φ, hφ1, hφ2, -, -, -⟩ := hφ U₀ hU₀g hU₀' (Z.presheaf.germ U₀ _ hU₀g).hom.range
       (Y.presheaf.germ _ _ hU₀').hom.range (fun y => RingHom.mem_range) (fun y => RingHom.mem_range) hU₀
-    exact GlobalTheory.T.finiteDimensional_of_finite_subring_hom_of_fractions _ _ _ _ φ hφ1 hφ2 (hfr Y _ hU₀' _ (fun y => RingHom.mem_range) (hU₀.preimage c))
+    exact _root_.GlobalTheory.finiteDimensional_of_finite_subring_fraction _ _ _ _ φ hφ1 hφ2 (hfr Y _ hU₀' _ (fun y => RingHom.mem_range) (hU₀.preimage c))
   · intro U hU hU' B B' hUa hB hB'
     obtain ⟨φ, hφ1, hφ2, hφ3, ⟨eB⟩, ⟨eB'⟩⟩ := hφ U hU hU' B B' hB hB' hUa
-    haveI := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Z s U hUa hU
-    haveI := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Y s' (c ⁻¹ᵁ U) (hUa.preimage c) hU'
+    haveI := _root_.GlobalTheory.isIntegrallyClosed_sections_of_smooth_complex Z s U hUa hU
+    haveI := _root_.GlobalTheory.isIntegrallyClosed_sections_of_smooth_complex Y s' (c ⁻¹ᵁ U) (hUa.preimage c) hU'
     haveI : IsIntegrallyClosed B := IsIntegrallyClosed.of_equiv eB
     haveI : IsIntegrallyClosed B' := IsIntegrallyClosed.of_equiv eB'
-    obtain ⟨r1, r2, r3⟩ := GlobalTheory.T.integralClosure_of_finite_map_integrallyClosed_subrings ℂ _ _ B B' φ hφ1 hφ2 inferInstance inferInstance (hfr Z U hU B hB hUa)
+    obtain ⟨r1, r2, r3⟩ := _root_.GlobalTheory.W1.integralClosure_of_finite_map ℂ _ _ B B' φ hφ1 hφ2 inferInstance inferInstance (hfr Z U hU B hB hUa)
       (hfr Y _ hU' B' hB' (hUa.preimage c))
-    exact ⟨r1, r2, r3, GlobalTheory.T.formally_unramified_differentials_span ℂ _ _ B B' φ hφ1 hφ3⟩
+    exact ⟨r1, r2, r3, _root_.GlobalTheory.W1.dv_mem_span_of_formallyUnramified ℂ _ _ B B' φ hφ1 hφ3⟩
 
 end GlobalTheory.W1.SchFF
 
@@ -416,8 +408,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.W1 GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.finiteEtale_functionField_integralClosure_differentials : ∀ (Z Y : Scheme.{0}) [IsIntegral Z] [IsIntegral Y] (s : Z ⟶ Sp ℂ) (s' : Y ⟶ Sp ℂ) (c : Y ⟶ Z), c ≫ s = s' → IsFinite c → Etale c → ∀ (d : ℕ) [SmoothOfRelativeDimension d s] [SmoothOfRelativeDimension d s'] [i1 : Algebra ℂ Z.functionField] [i2 : Algebra ℂ Y.functionField] [Algebra Z.functionField Y.functionField] [IsScalarTower ℂ Z.functionField Y.functionField], i1 = ffAlg s → i2 = ffAlg s' → (∀ (U : Z.Opens) (hU : genericPoint Z ∈ U) (hU' : genericPoint Y ∈ c ⁻¹ᵁ U) (f : Γ(Z, U)), (Y.presheaf.germ (c ⁻¹ᵁ U) (genericPoint Y) hU').hom ((c.app U).hom f) = algebraMap Z.functionField Y.functionField ((Z.presheaf.germ U (genericPoint Z) hU).hom f)) → FiniteDimensional Z.functionField Y.functionField ∧ ∀ (U : Z.Opens) (hU : genericPoint Z ∈ U) (hU' : genericPoint Y ∈ c ⁻¹ᵁ U) (B : Subalgebra ℂ Z.functionField) (B' : Subalgebra ℂ Y.functionField), IsAffineOpen U → (∀ y, y ∈ B ↔ ∃ f : Γ(Z, U), (Z.presheaf.germ U (genericPoint Z) hU).hom f = y) → (∀ y, y ∈ B' ↔ ∃ f : Γ(Y, c ⁻¹ᵁ U), (Y.presheaf.germ (c ⁻¹ᵁ U) (genericPoint Y) hU').hom f = y) → (∀ y ∈ B', IsIntegral B (y : Y.functionField)) ∧ (∀ x : Z.functionField, IsIntegral B x → x ∈ B) ∧ (∀ y : Y.functionField, IsIntegral B y → y ∈ B') ∧ (∀ v ∈ B', ∃ (m : ℕ) (b : Fin m → Y.functionField) (w : Fin m → Z.functionField), (∀ j, b j ∈ B' ∧ w j ∈ B) ∧ ι1 (D ℂ Y.functionField v) = ∑ j, b j • mapDR ℂ Z.functionField Y.functionField (ι1 (D ℂ Z.functionField (w j)))) := by
-  first | (exact @GlobalTheory.W1.SchFF.finiteEtale_functionField)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteEtaleFunctionFieldIntegralClosureDifferentStatement =====

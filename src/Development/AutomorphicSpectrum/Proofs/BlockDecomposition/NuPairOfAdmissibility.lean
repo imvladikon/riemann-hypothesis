@@ -85,6 +85,8 @@ import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApply
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousInvAddChar, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetTwistedQuotient, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetThetaReverseBlocks, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerKernelPullbackJacquet, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockInjectiveIrreducible, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientOfExtension, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientEquivOfIrreducibleImage, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensor, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NuPairOfAdmissibility
@@ -1052,7 +1054,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensor =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NuPairOfAdmissibility =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NuPairOfAdmissibility", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.SegmentDerivatives.CuspPairSubGeneric\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKerLeComapMap\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat\npublic import GroundTheory.LocalFields.PadicLogSeries\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousInvAddChar\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetTwistedQuotient\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetThetaReverseBlocks\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotient\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerKernelPullbackJacquet\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockInjectiveIrreducible\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensor\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarisableOfSquareIntegrable\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApply\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NuPairOfAdmissibility", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.SegmentDerivatives.CuspPairSubGeneric\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKerLeComapMap\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat\npublic import GroundTheory.LocalFields.PadicLogSeries\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousInvAddChar\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetTwistedQuotient\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetThetaReverseBlocks\npublic import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotient\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerKernelPullbackJacquet\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockInjectiveIrreducible\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensor\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarisableOfSquareIntegrable\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApply\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1118,18 +1120,6 @@ theorem deriv_equiv (ψ : AddChar k Circle) (n j : ℕ) {V : Type} [AddCommGroup
     rw [jac_mk, ← deltaHalf_firstEmb]
     rfl
 
-theorem isSubquotient_of_comp {G H V W : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
-    [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V} (θ : H →* G) (hθ : Function.Surjective θ)
-    (h : IsSubquotient (σ.comp θ) (ρ.comp θ)) : IsSubquotient σ ρ := by
-  obtain ⟨T, f, hf⟩ := h
-  let T' : Subrepresentation ρ := ⟨T.toSubmodule, fun g v hv => by
-    obtain ⟨c, rfl⟩ := hθ g
-    exact T.apply_mem_toSubmodule c hv⟩
-  refine ⟨T', .mk f.toLinearMap fun g => ?_, hf⟩
-  obtain ⟨c, rfl⟩ := hθ g
-  ext v
-  exact f.isIntertwining _ _ c v
-
 theorem thetaL_surjective {h : ℕ} (d : Fin h → ℕ) : Function.Surjective (thetaL (A := k) d) := by
   intro m
   let φ : ∀ a, GL (Fin (d a)) k := fun a =>
@@ -1163,7 +1153,7 @@ theorem jm_contra_gen (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {h N
   have T3 := equivOfEq (piTensor_comp_thetaL (k := k) (fun a => (u a).1) fun a => (dualRev hA u a).rep)
   have TT := (T1.trans T2).trans T3
   have h4 := (IsSubquotient.of_surjective TT.toIntertwiningMap TT.surjective).trans h3
-  exact jhMult_ne_zero_iff.2 (isSubquotient_of_comp _ (thetaL_surjective _) h4)
+  exact jhMult_ne_zero_iff.2 (_root_.GlobalTheory.JacStages.isSubquotient_of_comp _ (thetaL_surjective _) h4)
 
 theorem jm_contra (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (N : ℕ) {V : Type} [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin N) k) V) (hs : IsSmooth π) (hi : π.IsIrreducible) (x y : IrrGL (k := k))
@@ -1179,28 +1169,10 @@ theorem jm_contra (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (N : ℕ
   funext a
   fin_cases a <;> rfl
 
-theorem isSubquotient_twist {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
-    {σ : Representation ℂ G W} {ρ : Representation ℂ G V} (h : IsSubquotient σ ρ) (χ : G →* ℂˣ) :
-    IsSubquotient (twist σ χ) (twist ρ χ) := by
-  obtain ⟨T, f, hf⟩ := h
-  let T' : Subrepresentation (twist ρ χ) := ⟨T.toSubmodule, fun g v hv => by
-    rw [twist_apply]
-    exact T.toSubmodule.smul_mem _ (T.apply_mem_toSubmodule g hv)⟩
-  refine ⟨T', .mk f.toLinearMap fun g => ?_, hf⟩
-  ext v
-  have e : T'.toRepresentation g v = ((χ g : ℂˣ) : ℂ) • T.toRepresentation g v :=
-    Subtype.ext (by simp [twist_apply]; rfl)
-  have h2 := f.isIntertwining _ _ g v
-  simp only [LinearMap.comp_apply, twist_apply]
-  erw [e]
-  rw [map_smul]
-  erw [h2]
-  rfl
-
 theorem isSubquotient_untwist {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
     {σ : Representation ℂ G W} {ρ : Representation ℂ G V} {χ χ' : G →* ℂˣ} (h : IsSubquotient σ (twist ρ χ))
     (hm : χ' * χ = 1) : IsSubquotient (twist σ χ') ρ := by
-  have h2 := isSubquotient_twist h χ'
+  have h2 := _root_.GlobalTheory.LocGL.isSubquotient_twist h χ'
   have e : twist (twist ρ χ) χ' = ρ := by
     ext g v
     have : ((χ' g : ℂˣ) : ℂ) * ((χ g : ℂˣ) : ℂ) = 1 := by

@@ -877,22 +877,12 @@ namespace GlobalTheory.GeoTie
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem exists_intMul_mem_MK {LL Ks WL G : Type} [Field LL] [NumberField LL] [Field Ks]
-    [NumberField Ks] [Algebra Ks LL] [AddCommGroup WL] [Module LL WL] [Module Ks WL] [IsScalarTower Ks LL WL]
-    [Module (𝓞 Ks) WL] [IsScalarTower (𝓞 Ks) Ks WL] {W : (LL →+* ℂ) → Type} [∀ σ, NormedAddCommGroup (W σ)]
-    [∀ σ, InnerProductSpace ℂ (W σ)] [Group G] (Φ : Formalism.IndefR.Arith.FormsL LL Ks WL W G)
-    (hspan : Submodule.span Ks (Φ.MK : Set WL) = Φ.WK) (x : WL) (hx : x ∈ Φ.WK) :
-    ∃ a : 𝓞 Ks, a ≠ 0 ∧ a • x ∈ Φ.MK := by
-  first
-  | (apply _root_.GlobalTheory.ScalarMultipleMembership.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ScalarMultipleMembership.main ..)
-
 theorem exists_smul_mem_locBall : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ] (Pl0 I0 T1 : Type) (A3 : FamIn3 D.what₂.LL Γ Pl0 I0 (List ℕ) T1 D.R.m) (T0 : CoreJ D) [Algebra T0.Q.c.F D.what₂.LL] (Rl : RealDat3 D A3 T0.Q.c.F) (cG : Formalism.L2.DIV.G0 Rl.Pg D.R.r ≃* G0g D.nd) (S : NX.RatDat D.ntw) (YS : NX.NExpRealS Rl cG S) (κ : ∀ j : Fin D.R.m, WeightFamilies.Wt D ((j : ℕ) + 1)) (v₀ : ∀ (j : Fin D.R.m) (σ : D.what₂.LL →+* ℂ), (Rl.MW j σ).Vec) (fw : FWTie T0 Rl.toRealDat κ v₀) (i : D.ntw.Tw) (iC : FractionRing (D.ntw.O i) →+* ℂ_[D.ntw.l i]), (∀ x, ‖iC x‖ ≤ 1 ↔ x ∈ (algebraMap (D.ntw.O i) (FractionRing (D.ntw.O i))).range) → ∀ (b : Bool) (j : Fin D.R.m), (∀ f : NX.FmK S ((j : ℕ) + 1), (show ↥(S.A ((j : ℕ) + 1)).WK from f).1 ∈ (S.A ((j : ℕ) + 1)).MK → f ∈ locBall YS fw iC b j) → (∀ f : NX.FmK S ((j : ℕ) + 1), ∃ c : S.Ks, c ≠ 0 ∧ c • f ∈ locBall YS fw iC b j) := by
   intro D Γ _ _ Pl0 I0 T1 A3 T0 _ Rl cG S YS κ v₀ fw i iC _ b j hball f
   have hfull := GlobalTheory.GoodLat.Obj.mkFull_of_tie fw j
   have hwk : (YS.fi j).e (show ↥(S.A ((j : ℕ) + 1)).WK from f).1 ∈ (Rl.FW j).WK :=
     ((YS.fi j).wk _).1 (show ↥(S.A ((j : ℕ) + 1)).WK from f).2
-  obtain ⟨a, ha, hamk⟩ := exists_intMul_mem_MK (Rl.FW j) hfull.2 _ hwk
+  obtain ⟨a, ha, hamk⟩ := _root_.GlobalTheory.ScalarMultipleMembership.main (Rl.FW j) hfull.2 _ hwk
   refine ⟨(YS.fi j).eK.symm (a : T0.Q.c.F), ?_, hball _ ?_⟩
   · intro h
     apply ha
@@ -928,12 +918,6 @@ open scoped TensorProduct
 namespace GlobalTheory.GeoTie
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem norm_sum_le_of_le {p : ℕ} [Fact p.Prime] {ι : Type} (s : Finset ι) (g : ι → ℂ_[p]) {r : ℝ} (hr : 0 ≤ r)
-    (h : ∀ k ∈ s, ‖g k‖ ≤ r) : ‖∑ k ∈ s, g k‖ ≤ r := by
-  first
-  | (apply _root_.GlobalTheory.SingleStatement.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SingleStatement.main ..)
 
 section Core
 
@@ -1095,7 +1079,7 @@ theorem mem_span_locBall
         ring
       rw [e]
       refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hsum z) ?_)
-      refine norm_sum_le_of_le _ _ hϖ0.le fun s _ => ?_
+      refine _root_.GlobalTheory.SingleStatement.main _ _ hϖ0.le fun s _ => ?_
       rw [norm_mul]
       calc _ ≤ r * 1 := by
             refine mul_le_mul ?_ (hB s z) (norm_nonneg _) hϖ0.le
@@ -1122,7 +1106,7 @@ theorem mem_span_locBall
     have h1 : ‖φ' (a' s0 * (algebraMap S.Ks F' ϖ)⁻¹)‖ ≤ 1 := by
 
       rw [hco, map_sum]
-      refine norm_sum_le_of_le _ _ zero_le_one fun t _ => ?_
+      refine _root_.GlobalTheory.SingleStatement.main _ _ zero_le_one fun t _ => ?_
       rw [Algebra.smul_def, map_mul, hφ', norm_mul]
       calc _ ≤ 1 * 1 := mul_le_mul (hBc (g t) (hg t) s0) (hβ t) (norm_nonneg _) zero_le_one
         _ = 1 := one_mul 1

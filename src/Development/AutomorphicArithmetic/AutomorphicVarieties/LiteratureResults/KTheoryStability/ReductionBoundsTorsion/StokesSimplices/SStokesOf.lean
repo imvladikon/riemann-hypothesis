@@ -310,7 +310,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.InsertNthSuccEq =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.PInsertNth =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.PInsertNth", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.SubSlice\npublic import Mathlib.Analysis.Calculus.DifferentialForm.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.LocallyConvex.AbsConvexOpen\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Mathlib.MeasureTheory.Function.LocallyIntegrable\npublic import Mathlib.MeasureTheory.Integral.Bochner.Set\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.PInsertNth", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.SubSlice\npublic import Mathlib.Analysis.Calculus.DifferentialForm.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.LocallyConvex.AbsConvexOpen\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Mathlib.MeasureTheory.Function.LocallyIntegrable\npublic import Mathlib.MeasureTheory.Integral.Bochner.Set\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.ReductionBoundsTorsion.StokesSimplices.SumInsertNth\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -320,25 +320,25 @@ open MeasureTheory
 
 namespace PositivityTheory.KB.StokesSlices
 
+lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := by
+  have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
+    simp only [Set.ofPred_forall]
+    exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
+  have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
+    isClosed_le (by fun_prop) continuous_const
+  exact h1.inter h2
+
+lemma isCompact_Δ (m : ℕ) : IsCompact (Δ m) := by
+  refine (isCompact_Icc : IsCompact (Set.Icc (0 : Fin m → ℝ) 1)).of_isClosed_subset (isClosed_Δ m) ?_
+  rintro t ⟨h0, h1⟩
+  refine ⟨fun j => h0 j, fun j => ?_⟩
+  calc t j ≤ ∑ k, t k := Finset.single_le_sum (fun k _ => h0 k) (Finset.mem_univ j)
+    _ ≤ 1 := h1
+
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 def I {q : ℕ} (ω : V → V [⋀^Fin q]→L[ℝ] ℝ) (y : Fin (q + 1) → V) : ℝ :=
   ∫ t in Δ q, ω (y 0 + ∑ j, t j • (y j.succ - y 0)) fun j => y j.succ - y 0
-
-lemma isCompact_Δ' (m : ℕ) : IsCompact (Δ m) := by
-  have hsub : Δ m ⊆ Set.pi Set.univ (fun _ : Fin m => Set.Icc (0 : ℝ) 1) := by
-    intro t ht i _
-    refine ⟨ht.1 i, ?_⟩
-    calc t i ≤ ∑ j, t j := Finset.single_le_sum (fun j _ => ht.1 j) (Finset.mem_univ i)
-      _ ≤ 1 := ht.2
-  have hcl : IsClosed (Δ m) := by
-    have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
-      simp only [Set.setOf_forall]
-      exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
-    have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
-      isClosed_le (continuous_finsetSum _ fun j _ => continuous_apply j) continuous_const
-    exact h1.inter h2
-  exact (isCompact_univ_pi fun _ => isCompact_Icc).of_isClosed_subset hcl hsub
 
 lemma P_cons {q : ℕ} (y : Fin (q + 2) → V) (s : Fin q → ℝ) :
     y 0 + ∑ j, (Fin.cons (1 - ∑ k, s k) s : Fin (q + 1) → ℝ) j • (y j.succ - y 0) =
@@ -407,7 +407,7 @@ theorem asm (hA : StokesSimplexSubdivision) (hH : SubHyp) (hS : SubSlice) (U : S
     continuous_const.add (continuous_finsetSum _ fun j _ => (continuous_apply j).smul continuous_const)
   have hW : IsOpen (P ⁻¹' U) := hU.preimage hPc
   have hΔW : Δ (q + 1) ⊆ P ⁻¹' U := fun t ht => hmem (q + 1) y hy t ht
-  have hmeas : ∀ m, MeasurableSet (Δ m) := fun m => (isCompact_Δ' m).isClosed.measurableSet
+  have hmeas : ∀ m, MeasurableSet (Δ m) := fun m => (_root_.PositivityTheory.KB.StokesSlices.isCompact_Δ m).isClosed.measurableSet
   have hslice : ∀ i : Fin (q + 1),
       ∫ t in Δ (q + 1), fderiv ℝ (fun z => ω z (i.removeNth fun j => y j.succ - y 0)) (P t)
         (y i.succ - y 0) =
@@ -464,7 +464,7 @@ theorem asm (hA : StokesSimplexSubdivision) (hH : SubHyp) (hS : SubSlice) (U : S
     · intro i _
       have hc := (((hφdc (i.removeNth fun j => y j.succ - y 0)).comp hPc.continuousOn
         (fun t ht => ht)).clm_apply (continuousOn_const (c := y i.succ - y 0))).mono hΔW
-      exact (continuousOn_const.mul hc).integrableOn_compact (isCompact_Δ' _)
+      exact (continuousOn_const.mul hc).integrableOn_compact (_root_.PositivityTheory.KB.StokesSlices.isCompact_Δ _)
   have hface0 : I ω (fun j => y ((0 : Fin (q + 2)).succAbove j)) = ∑ i : Fin (q + 1), (-1 : ℝ) ^ (i : ℕ) *
       ∫ s in Δ q, ω (y 1 + ∑ j, s j • (y j.succ.succ - y 1)) (i.removeNth fun j => y j.succ - y 0) := by
     have hQ : ∀ s ∈ Δ q, y 1 + ∑ j, s j • (y j.succ.succ - y 1) ∈ U := fun s hs =>
@@ -487,7 +487,7 @@ theorem asm (hA : StokesSimplexSubdivision) (hH : SubHyp) (hS : SubSlice) (U : S
       have hc : ContinuousOn (fun s : Fin q → ℝ => y 1 + ∑ j, s j • (y j.succ.succ - y 1)) (Δ q) :=
         (continuous_const.add (continuous_finsetSum _ fun j _ =>
           (continuous_apply j).smul continuous_const)).continuousOn
-      exact (continuousOn_const.mul ((hφc (i.removeNth fun j => y j.succ - y 0)).comp hc hQ)).integrableOn_compact (isCompact_Δ' _)
+      exact (continuousOn_const.mul ((hφc (i.removeNth fun j => y j.succ - y 0)).comp hc hQ)).integrableOn_compact (_root_.PositivityTheory.KB.StokesSlices.isCompact_Δ _)
   rw [hR, Fin.sum_univ_succ]
   simp only [hslice, mul_sub, Finset.sum_sub_distrib, ← hface0, Fin.val_zero, pow_zero, one_mul,
     Fin.val_succ, pow_succ, mul_neg, mul_one, neg_mul, Finset.sum_neg_distrib]
@@ -526,21 +526,6 @@ lemma mem_Δ_insertNth {m : ℕ} (i : Fin (m + 1)) (x : ℝ) (s : Fin m → ℝ)
       linarith⟩, hx, by linarith⟩
   · rintro ⟨⟨hs, _⟩, hx, h⟩
     exact ⟨⟨hx, hs⟩, by linarith⟩
-
-lemma isClosed_Δ (m : ℕ) : IsClosed (Δ m) := by
-  have h1 : IsClosed {t : Fin m → ℝ | ∀ j, 0 ≤ t j} := by
-    simp only [Set.ofPred_forall]
-    exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
-  have h2 : IsClosed {t : Fin m → ℝ | ∑ j, t j ≤ 1} :=
-    isClosed_le (by fun_prop) continuous_const
-  exact h1.inter h2
-
-lemma isCompact_Δ (m : ℕ) : IsCompact (Δ m) := by
-  refine (isCompact_Icc : IsCompact (Set.Icc (0 : Fin m → ℝ) 1)).of_isClosed_subset (isClosed_Δ m) ?_
-  rintro t ⟨h0, h1⟩
-  refine ⟨fun j => h0 j, fun j => ?_⟩
-  calc t j ≤ ∑ k, t k := Finset.single_le_sum (fun k _ => h0 k) (Finset.mem_univ j)
-    _ ≤ 1 := h1
 
 lemma measurableSet_Δ (m : ℕ) : MeasurableSet (Δ m) := (isClosed_Δ m).measurableSet
 

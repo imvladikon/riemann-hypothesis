@@ -241,14 +241,14 @@ theorem lift_growth : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
     intro s
     by_cases hs : ∃ y₀ : GL (Fin 2) (InfinitePlace F → ℝ), ∀ v, 0 < y₀.val.det v ↔ s v
     · obtain ⟨y₀, h₀⟩ := hs
-      obtain ⟨τ, hτ⟩ := (GlobalTheory.T.rational_GL2_infinite_finite_factor F 1).2 (h * y₀)
+      obtain ⟨τ, hτ⟩ := (_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F 1).2 (h * y₀)
       rw [← mul_assoc] at hτ
       obtain ⟨C, N, hC, hb⟩ := sl_mul_bound k (Ψ (toFin τ * u)) (hgr _) (toInf τ * h)
       refine ⟨C, N, hC, fun y hy => ?_⟩
       have hp : Pos (toInf τ * h * y) := pos_of_sign _ y₀ y hτ fun v => (h₀ v).trans (hy v).symm
       have e : ratGL F 2 τ * (TR.infGL F 2 h * finGL F 2 u * TR.infGL F 2 y) =
           TR.infGL F 2 (toInf τ * h * y) * finGL F 2 (toFin τ * u) := by
-        rw [(GlobalTheory.T.rational_GL2_infinite_finite_factor F τ).1]
+        rw [(_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F τ).1]
         exact TR.ga_ext (by simp [mul_assoc]) (by simp)
       rw [← hl.1 τ, e, hl.2 _ hp]
       exact hb y hp
@@ -265,8 +265,6 @@ end GlobalTheory.HilbertThetaSeries.LiftGrowth
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.adelic_lift_has_moderate_growth : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ) (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ) (φ : GA F 2 → ℂ), (∀ g, Gr (Ψ g)) → IsLift k Ψ φ → ∀ g, ∃ (C : ℝ) (N : ℕ), ∀ y, ‖φ (g * TR.infGL F 2 y)‖ ≤ C * TR.height y ^ N := by
-  first | exact @GlobalTheory.HilbertThetaSeries.LiftGrowth.lift_growth
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.AdelicLiftHasModerateGrowth =====
@@ -401,8 +399,6 @@ end GlobalTheory.HilbertThetaSeries.LiftCpt
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.adelic_lift_kFinite_of_isLift : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ) (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ) (φ : TR.Sm F 2), IsLift k Ψ φ.1 → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun r => TR.cptRep F 2 r φ)) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.LiftCpt.lift_cpt_finite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.AdelicLiftKFiniteOfIsLift =====
@@ -597,8 +593,6 @@ theorem GlobalTheory.HilbertThetaSeries.arch_lift : ∀ (F : Type) [Field F] [Nu
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.hilbert_slash_eval_smooth_weight_lowering : ∀ (F : Type) [Field F] [NumberField F] [DecidableEq (InfinitePlace F)] (k : ℕ) (f : Hn F → ℂ), Hol f → ∃ A : (Fin 2 → Fin 2 → InfinitePlace F → ℝ) → ℂ, (∀ h : GL (Fin 2) (InfinitePlace F → ℝ), Pos h → A (Matrix.of.symm h.val) = sl k h f fun _ => UpperHalfPlane.I) ∧ ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) A {x | ∀ v, 0 < (Matrix.of x).det v} ∧ ∀ v, ∀ D : Fin 2 → Fin 2 → ℂ, (∀ i j, D i j = fderiv ℝ A (Matrix.of.symm 1) (Matrix.of.symm (Matrix.single i j (Pi.single v 1)))) → D 0 1 - D 1 0 = Complex.I * k * f (fun _ => UpperHalfPlane.I) ∧ D 0 0 - D 1 1 = Complex.I * (D 0 1 + D 1 0) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.arch_lift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.HilbertSlashEvalSmoothWeightLowering =====
@@ -638,8 +632,8 @@ theorem key (k : ℕ) (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ) (φ : GA F 2 →
         φ (g * TR.infGL F 2 u) = sl k u f fun _ => UpperHalfPlane.I := by
   set gi := Matrix.GeneralLinearGroup.map (TR.pInf F) g
   set gf := Matrix.GeneralLinearGroup.map (pFin F) g
-  obtain ⟨τ, hτ⟩ := (GlobalTheory.T.rational_GL2_infinite_finite_factor F 1).2 gi
-  have hdec := (GlobalTheory.T.rational_GL2_infinite_finite_factor F τ).1
+  obtain ⟨τ, hτ⟩ := (_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F 1).2 gi
+  have hdec := (_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F τ).1
   set M := toInf τ * gi
   set f := sl k M (Ψ (toFin τ * gf))
   have hf : Hol f := ((GlobalTheory.HilbertThetaSeries.HolKeep.main F k (Ψ (toFin τ * gf)) (Ψ (toFin τ * gf)) 1 (hΨ _) (hΨ _)).2.2.2.2.2 M hτ).2
@@ -682,7 +676,7 @@ theorem GlobalTheory.HilbertThetaSeries.lift_smooth_lowering : ∀ (F : Type) [F
     obtain ⟨u, hu⟩ := id hx
     have ex : x = TR.toL u.val := hu.symm
     obtain ⟨f, hf, -, hfe⟩ := key k Ψ φ hΨ hL (g * TR.infGL F 2 u)
-    obtain ⟨A, hA1, hA2, -⟩ := GlobalTheory.T.hilbert_slash_eval_smooth_weight_lowering F k f hf
+    obtain ⟨A, hA1, hA2, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.arch_lift F k f hf
     set L := TR.lmul (TR.toL (u⁻¹).val)
     refine ⟨L ⁻¹' PSet F, isOpen_PSet.preimage L.continuous, ?_, ?_⟩
     · show ∀ v, 0 < (Matrix.of (L x)).det v
@@ -714,7 +708,7 @@ theorem GlobalTheory.HilbertThetaSeries.lift_smooth_lowering : ∀ (F : Type) [F
           fderiv ℝ A (Matrix.of.symm 1) (Matrix.of.symm (Matrix.single 1 0 (Pi.single v 1)))) := by
     intro g
     obtain ⟨f, hf, hfg, hfe⟩ := key k Ψ φ hΨ hL g
-    obtain ⟨A, hA1, -, hA3⟩ := GlobalTheory.T.hilbert_slash_eval_smooth_weight_lowering F k f hf
+    obtain ⟨A, hA1, -, hA3⟩ := _root_.GlobalTheory.HilbertThetaSeries.arch_lift F k f hf
     obtain ⟨h1, h2⟩ := hA3 v _ fun _ _ => rfl
     refine ⟨A, ?_, ?_, h2⟩
     · have hmem : TR.oneL F 2 ∈ PSet F := fun w => by simp
@@ -733,8 +727,6 @@ theorem GlobalTheory.HilbertThetaSeries.lift_smooth_lowering : ∀ (F : Type) [F
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.adelic_lift_mem_smooth_killed_by_lowering : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ) (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ) (φ : GA F 2 → ℂ), (∀ g, Hol (Ψ g)) → IsLift k Ψ φ → ∃ h : φ ∈ TR.Sm F 2, ∀ v, TR.Eop v 0 1 ⟨φ, h⟩ - TR.Eop v 1 0 ⟨φ, h⟩ = (Complex.I * k) • (⟨φ, h⟩ : TR.Sm F 2) ∧ TR.Eop v 0 0 ⟨φ, h⟩ - TR.Eop v 1 1 ⟨φ, h⟩ = Complex.I • (TR.Eop v 0 1 ⟨φ, h⟩ + TR.Eop v 1 0 ⟨φ, h⟩) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.lift_smooth_lowering
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.AdelicLiftMemSmoothKilledByLowering =====
@@ -760,7 +752,7 @@ theorem sl_indep {k : ℕ} {Ψ : GL (Fin 2) (Af F) → Hn F → ℂ} (hΨ : Sys 
       rw [map_mul, map_inv]; group
     rw [e]
     exact (SlashCocycle.slash_cocycle F k _ _ 0 hτ hinv).1
-  have hTP : TP (τ * τ'⁻¹).val.det := ((GlobalTheory.T.hilbert_slash_rational_matrix_properties F k 0).2.1 _).1.1 hγ
+  have hTP : TP (τ * τ'⁻¹).val.det := ((_root_.GlobalTheory.HilbertThetaSeries.RatSlash.rat_slash F k 0).2.1 _).1.1 hγ
   have e1 : toInf τ * h = toInf (τ * τ'⁻¹) * (toInf τ' * h) := by
     rw [map_mul, map_inv]; group
   have e2 : toFin τ * g = toFin (τ * τ'⁻¹) * (toFin τ' * g) := by
@@ -782,14 +774,14 @@ theorem scalar_comm {R : Type} [CommRing R] (z : Rˣ) (g : GL (Fin 2) R) :
 
 theorem exists_lift : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ), Even k → ∀ (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ), Sys k Ψ → ∃ φ : GA F 2 → ℂ, IsLift k Ψ φ ∧ (∀ u ∈ KLev F 2 1, ∀ g, φ (g * finGL F 2 u) = φ g) ∧ ∀ (z : Ideles F) (g : GA F 2), φ (Matrix.GeneralLinearGroup.scalar (Fin 2) z * g) = φ g := by
   intro F _ _ _ k hk Ψ hΨ
-  choose τ hτ using (GlobalTheory.T.rational_GL2_infinite_finite_factor F 1).2
+  choose τ hτ using (_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F 1).2
   let G : GL (Fin 2) (InfinitePlace F → ℝ) → GL (Fin 2) (Af F) → Hn F → ℂ :=
     fun h g => sl k (toInf (τ h) * h) (Ψ (toFin (τ h) * g))
   have hG : ∀ h g σ, Pos (toInf σ * h) → G h g = sl k (toInf σ * h) (Ψ (toFin σ * g)) :=
     fun h g σ hσ => sl_indep hΨ h g _ _ (hτ h) hσ
   refine ⟨fun x => G (Matrix.GeneralLinearGroup.map (TR.pInf F) x) (Matrix.GeneralLinearGroup.map (pFin F) x)
     fun _ => UpperHalfPlane.I, ⟨fun γ x => ?_, fun h hh g => ?_⟩, fun u hu x => ?_, fun z x => ?_⟩
-  · rw [(GlobalTheory.T.rational_GL2_infinite_finite_factor F γ).1]
+  · rw [(_root_.GlobalTheory.HilbertThetaSeries.RatPts.ratGL_real_fin F γ).1]
     simp only [map_mul, TR.pInf_infGL, TR.pInf_finGL, TR.pFin_infGL, pFin_finGL, mul_one, one_mul]
     generalize Matrix.GeneralLinearGroup.map (TR.pInf F) x = h
     generalize Matrix.GeneralLinearGroup.map (pFin F) x = g
@@ -813,7 +805,7 @@ theorem exists_lift : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
     have e' : toFin (τ h) * (Matrix.GeneralLinearGroup.scalar (Fin 2) s * g) =
         Matrix.GeneralLinearGroup.scalar (Fin 2) s * (toFin (τ h) * g) := by
       rw [← mul_assoc, scalar_comm, mul_assoc]
-    have H := (GlobalTheory.T.hilbert_slash_rational_matrix_properties F k (Ψ (toFin (τ h) * g))).2.2.1 hk t _ (hτ h)
+    have H := (_root_.GlobalTheory.HilbertThetaSeries.RatSlash.rat_slash F k (Ψ (toFin (τ h) * g))).2.2.1 hk t _ (hτ h)
     rw [hG _ _ (τ h) (by rw [e]; exact H.1), e, e', hΨ.cent, H.2]
 
 end GlobalTheory.HilbertThetaSeries.AdelicLift
@@ -821,8 +813,6 @@ end GlobalTheory.HilbertThetaSeries.AdelicLift
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.exists_adelic_lift_of_hilbert_system : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ), Even k → ∀ (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ), Sys k Ψ → ∃ φ : GA F 2 → ℂ, IsLift k Ψ φ ∧ (∀ u ∈ KLev F 2 1, ∀ g, φ (g * finGL F 2 u) = φ g) ∧ ∀ (z : Ideles F) (g : GA F 2), φ (Matrix.GeneralLinearGroup.scalar (Fin 2) z * g) = φ g := by
-  first | exact @GlobalTheory.HilbertThetaSeries.AdelicLift.exists_lift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ExistsAdelicLiftOfHilbertSystem =====
@@ -840,8 +830,8 @@ namespace GlobalTheory.HilbertThetaSeries
 theorem lift_isHol : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ), Even k →
     ∀ (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ), Sys k Ψ → ∃ φ : TR.Sm F 2, IsLift k Ψ φ.1 ∧ IsHol k (fun _ => 0) 1 φ := by
   intro F _ _ _ k hk Ψ hΨ
-  obtain ⟨φ₀, hL, hR, hZ⟩ := GlobalTheory.T.exists_adelic_lift_of_hilbert_system F k hk Ψ hΨ
-  obtain ⟨hsm, hlie⟩ := GlobalTheory.T.adelic_lift_mem_smooth_killed_by_lowering F k Ψ φ₀ hΨ.hol hL
+  obtain ⟨φ₀, hL, hR, hZ⟩ := _root_.GlobalTheory.HilbertThetaSeries.AdelicLift.exists_lift F k hk Ψ hΨ
+  obtain ⟨hsm, hlie⟩ := _root_.GlobalTheory.HilbertThetaSeries.lift_smooth_lowering F k Ψ φ₀ hΨ.hol hL
   let φ : TR.Sm F 2 := ⟨φ₀, hsm⟩
   have hfix : ∀ u ∈ KLev F 2 1, TR.finRep F 2 u φ = φ := fun u hu =>
     Subtype.ext (funext fun g => hR u hu g)
@@ -863,10 +853,10 @@ theorem lift_isHol : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] 
     simp only [OneMemClass.coe_one, MonoidHom.one_apply, Units.val_one, one_mul]
     exact hZ z g
   have haut : TR.IsAutForm φ :=
-    ⟨hL.1, hlev, GlobalTheory.T.adelic_lift_kFinite_of_isLift F k Ψ φ hL,
+    ⟨hL.1, hlev, _root_.GlobalTheory.HilbertThetaSeries.LiftCpt.lift_cpt_finite F k Ψ φ hL,
       UpperTheory.V.Af.Nf.zFin F k 1 IsOfFinOrder.one φ hcen (fun v => (hlie v).1) (fun v => (hlie v).2),
-      GlobalTheory.T.adelic_lift_has_moderate_growth F k Ψ φ₀ hΨ.gr hL⟩
-  refine ⟨φ, hL, haut, fun w u hu => hfix _ ((GlobalTheory.T.maximalCompactGL2_finiteAdele_characterization F).2.2.1 w u hu), hcen, fun v => (hlie v).1,
+      _root_.GlobalTheory.HilbertThetaSeries.LiftGrowth.lift_growth F k Ψ φ₀ hΨ.gr hL⟩
+  refine ⟨φ, hL, haut, fun w u hu => hfix _ ((_root_.GlobalTheory.HilbertThetaSeries.kMem F).2.2.1 w u hu), hcen, fun v => (hlie v).1,
     fun v => (hlie v).2⟩
 
 end GlobalTheory.HilbertThetaSeries
@@ -874,8 +864,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.exists_isHol_adelic_lift_of_even_weight_system : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (k : ℕ), Even k → ∀ (Ψ : GL (Fin 2) (Af F) → Hn F → ℂ), Sys k Ψ → ∃ φ : TR.Sm F 2, IsLift k Ψ φ.1 ∧ IsHol k (fun _ => 0) 1 φ := by
-  first | exact @GlobalTheory.HilbertThetaSeries.lift_isHol
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ExistsIsHolAdelicLiftOfEvenWeightSystem =====

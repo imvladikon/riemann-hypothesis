@@ -619,11 +619,6 @@ section -- clump:auto
 
 namespace GlobalTheory.CompanionTheory.ZModDual
 
-theorem nat_card_dual_eq : ∀ (n : ℕ) [NeZero n] (N : Type) [AddCommGroup N] [Module (ZMod n) N] [Finite N],
-    Nat.card (Module.Dual (ZMod n) N) = Nat.card N := by
-  intro n _ N _ _ _
-  exact GlobalTheory.ZModDual.card_dual_eq n N
-
 end GlobalTheory.CompanionTheory.ZModDual
 end -- clump:auto
 end -- clump:auto
@@ -653,7 +648,7 @@ theorem card_sha2_mul_card_local_h2 : ∀ (F Ω : Type) [Field F] [NumberField F
   have htopc : Nat.card ↥(⊤ : Submodule (ZMod (l ^ r)) (Module.Dual (ZMod (l ^ r)) ↥(H0 (twDual μ ρ)))) =
       Nat.card (Module.Dual (ZMod (l ^ r)) ↥(H0 (twDual μ ρ))) :=
     Nat.card_congr Submodule.topEquiv.toEquiv
-  have hD := GlobalTheory.CompanionTheory.ZModDual.nat_card_dual_eq (l ^ r) ↥(H0 (twDual μ ρ))
+  have hD := _root_.GlobalTheory.ZModDual.card_dual_eq (l ^ r) ↥(H0 (twDual μ ρ))
   rw [hsha, h2, hker, htop, htopc, hD, h1]
   ring
 
@@ -880,10 +875,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem UpperTheory.Lit.greenbergWiles (hPT : GlobalTheory.Published.PoitouTateNormalised) (hGE : ReciprocityTheory.Gal.GlobalEulerChar)
-    (hLT : ReciprocityTheory.Gal.LocalTateDuality) (hLE : ReciprocityTheory.Gal.LocalEulerChar) (hLF : ReciprocityTheory.Gal.LocalFiniteness) :
-    ReciprocityTheory.Gal.GreenbergWiles :=
-  GlobalTheory.CompanionTheory.GreenbergWiles.Assembly.greenbergWiles_of_poitouTate hPT hGE hLT hLE hLF
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.GaloisRepresentations.GreenbergWiles =====

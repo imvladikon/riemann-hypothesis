@@ -362,14 +362,9 @@ namespace GlobalTheory.Mum.CubeCarried
 section
 variable {X Y Y' Z : Scheme.{0}}
 
-theorem gs_comp (g : Z ⟶ Y) (f : Y ⟶ X) (z : Z) (U : X.Opens) (h : f (g z) ∈ U) (a : Γ(X, U)) :
-    gs (g ≫ f) z U a = (g.stalkMap z).hom (gs f (g z) U a) := by
-  rw [← gs_pull g f z U h, gs_eq_map_gs g z (f ⁻¹ᵁ U) h, gs_eq (𝟙 Y) (g z) (f ⁻¹ᵁ U) h, gs_eq f (g z) U h]
-  rfl
-
 theorem gm_val_map (g : Z ⟶ Y) (z : Z) (U : Y.Opens) (h : g z ∈ U) (a : Γ(Y, U)ˣ) :
     (gm g z U a).val = (g.stalkMap z).hom (gm (𝟙 Y) (g z) U a).val := by
-  rw [gm_eq_map_gm g z U h]; rfl
+  rw [_root_.GlobalTheory.RigidTriv.gm_stalk g z U h]; rfl
 
 variable {L : LB X} {Γ' : Type} {F : Γ' → (X ⟶ X)}
 
@@ -455,7 +450,7 @@ theorem ctriv_of_sec (θ : L.Sec) (hθ : ∀ σ, SecCarried L θ (F σ) (w σ)) 
   generalize r ≫ f = g at hj hk ⊢
   have hj' : F σ (g z) ∈ L.U j := hj
   have e := hθ σ (g z) j k hk hj'
-  rw [gs_comp g (F σ) z _ hj', gs_eq_map_gs g z _ hk, gs_eq _ _ _ hj', e, map_mul, gs_eq (𝟙 X) (g z) _ hk]
+  rw [_root_.GlobalTheory.OneBasis.ThMove.gs_comp g (F σ) z _ hj', _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap g z _ hk, gs_eq _ _ _ hj', e, map_mul, gs_eq (𝟙 X) (g z) _ hk]
   exact congrArg₂ (· * ·) (gm_val_map g z ((L.pull (F σ)).U (fun _ => j) ⊓ L.U k)
     ⟨mem_pull.2 hj', hk⟩ _).symm rfl
 
@@ -681,7 +676,7 @@ theorem exists_secOver_of_gen {X : Scheme.{0}} (L : LB X) (W : X.Opens) (g : W.t
   have v : ∀ (z : W.toScheme) (k : L.ι), W.ι z ∈ L.U k →
       (W.ι.stalkMap z).hom (gs (𝟙 X) (W.ι z) (W ⊓ L.U k) (s k)) =
         (gm (𝟙 _) z ((L.pull W.ι).U (fun _ => k)) (t.s (fun _ => k))).val := fun z k hk => by
-    rw [← gs_eq_map_gs W.ι z _ (show W.ι z ∈ W ⊓ L.U k from ⟨z.2, hk⟩), ← hs _ (𝟙 _) z k hk, Category.id_comp]
+    rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap W.ι z _ (show W.ι z ∈ W ⊓ L.U k from ⟨z.2, hk⟩), ← hs _ (𝟙 _) z k hk, Category.id_comp]
   refine ⟨s, fun z k k' hz hk hk' => ?_, fun z k hz hk => ?_, fun f w hf H z j k hz hfz hk hj => ?_⟩
   · obtain ⟨z, rfl⟩ : ∃ z' : W.toScheme, W.ι z' = z := ⟨⟨z, hz⟩, rfl⟩
     apply inj z
@@ -701,7 +696,7 @@ theorem exists_secOver_of_gen {X : Scheme.{0}} (L : LB X) (W : X.Opens) (g : W.t
       rw [← Scheme.Hom.comp_apply, hr]; exact hj
     have e := congrArg Units.val (H _ (𝟙 _) (f.resLE W W hf) z j k hr hj' hk)
     rw [← hs _ _ z j hj', hr, Category.id_comp, Units.val_mul] at e
-    rw [map_mul, v z k hk, ← CubeCarried.gs_comp W.ι f z (W ⊓ L.U j) ⟨hfz, hj⟩, e]
+    rw [map_mul, v z k hk, ← _root_.GlobalTheory.OneBasis.ThMove.gs_comp W.ι f z (W ⊓ L.U j) ⟨hfz, hj⟩, e]
     exact congrArg₂ (· * ·) (gm_val_map W.ι z ((L.pull f).U (fun _ => j) ⊓ L.U k) ⟨mem_pull.2 hj, hk⟩ _) rfl
 
 
@@ -933,8 +928,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.uniformisationBundle_rigidLinearisations_same_localUnits : ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (D' : DegData R' (maximalIdeal R')) (A' : PolAV (Sp (FractionRing R'))) (G' : Over (Sp R')) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (U' : Unif (maximalIdeal R') D' A' G') (s : Sp R' ⟶ Sp R') (f₁ f₂ : G'.left ⟶ G'.left), f₁ = f₂ → ∀ (he₁ : eSec G' ≫ f₁ = s ≫ eSec G') (he₂ : eSec G' ≫ f₂ = s ≫ eSec G') (w₁ : LB.Iso U'.LG.L (U'.LG.L.pull f₁)) (w₂ : LB.Iso U'.LG.L (U'.LG.L.pull f₂)), w₁.IsGen → w₂.IsGen → LB.Gen.Maps (LB.linCombIso w₁ (K := PUnit) (fun _ => eSec G') (fun _ => 1)) U'.LG.rig (rigPullOf f₁ s he₁ U'.LG.L U'.LG.rig) → LB.Gen.Maps (LB.linCombIso w₂ (K := PUnit) (fun _ => eSec G') (fun _ => 1)) U'.LG.rig (rigPullOf f₂ s he₂ U'.LG.L U'.LG.rig) → ∀ (z : G'.left) (j k : U'.LG.L.ι), z ∈ U'.LG.L.U k → f₁ z ∈ U'.LG.L.U j → gw w₁ (𝟙 G'.left) z j k = gw w₂ (𝟙 G'.left) z j k := by
-  first | exact @GlobalTheory.Mum.RigLinUnique.gw_eq_of_rigidified
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationBundleRigidLinearisationsSameLocalStatement =====
@@ -972,7 +965,7 @@ theorem exists_carried_frame_off_closed : ∀ (R : Type) [CommRing R] [IsDomain 
   have s₁ := Classical.choose_spec hP.lg
   have s₀ := Classical.choose_spec hP₀.lg
   refine s₁.2.elim fun he₁ m₁ => s₀.2.elim fun he₀ m₀ => ?_
-  have hg := GlobalTheory.T.uniformisationBundle_rigidLinearisations_same_localUnits R' D' A' G' hS' U' (specOf (Gal.hom σ)) _ _ e he₀ he₁ _ _ s₀.1 s₁.1 m₀.1 m₁.1
+  have hg := _root_.GlobalTheory.Mum.RigLinUnique.gw_eq_of_rigidified R' D' A' G' hS' U' (specOf (Gal.hom σ)) _ _ e he₀ he₁ _ _ s₀.1 s₁.1 m₀.1 m₁.1
   intro z j k hz hfz hzk hfzj
   have h1 := hF₀ z j k hz (by rw [e]; exact hfz) hzk (by rw [e]; exact hfzj)
   rw [hg z j k hzk (by rw [e]; exact hfzj)] at h1

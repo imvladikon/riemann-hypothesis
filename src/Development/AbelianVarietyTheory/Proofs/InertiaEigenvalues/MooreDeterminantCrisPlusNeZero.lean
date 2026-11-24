@@ -353,7 +353,7 @@ theorem lead_target : ∀ (l : ℕ) [Fact l.Prime] (x : Formalism.Per.Acris l) (
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   have hρ₁ : 0 < ρ₁ := lt_of_lt_of_le (by positivity) hl1
   have hG : ∀ ρ ∈ Set.Icc ρ₁ ρ₂, IsGauss l ρ (gC l ρ) := fun ρ hρ =>
-    isGauss_gC_target l ρ (hl1.trans hρ.1) (hρ.2.trans_lt h21)
+    _root_.GlobalTheory.PMon.Gauss.isGauss_gC_of_le l ρ (hl1.trans hρ.1) (hρ.2.trans_lt h21)
   have hGl : ∀ ρ ∈ Set.Icc ρ₁ ρ₂, gC l ρ (l : Formalism.Per.Acris l) = ρ := by
     intro ρ hρ
     rw [← map_natCast (algebraMap (Formalism.Per.Ainf l) (Formalism.Per.Acris l)) l, (hG ρ hρ).2.2.2.2, gA,
@@ -843,7 +843,7 @@ theorem teich_eq_of_phi_ratio : ∀ (l : ℕ) [Fact l.Prime] (w' : Formalism.Per
     rcases _root_.GlobalTheory.PMon.Gauss.acris_mul_eq_zero l _ _ h0 with h0 | h0
     · exact hw h0
     · exact hφ h0
-  rw [map_mul, frob_teich] at h
+  rw [map_mul, _root_.GlobalTheory.PMon.Gauss.φc_tc] at h
   have h' : (tc l (ζ ^ l) - tc l ζ) * (w' * φc l w') = 0 := by
     linear_combination h
   rcases _root_.GlobalTheory.PMon.Gauss.acris_mul_eq_zero l _ _ h' with h0 | h0
@@ -950,7 +950,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
   have hzsucc : ∀ i, F^[i + 1] ζ = (F^[i] ζ) ^ l := fun i => Function.iterate_succ_apply' _ _ _
   have hzper : F^[o'] ζ = F^[0] ζ := Function.iterate_minimalPeriod
 
-  have hG : ∀ ρ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → IsGauss l ρ (gC l ρ) := fun ρ h0 h1 => isGauss_gC_target l ρ h0 h1
+  have hG : ∀ ρ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → IsGauss l ρ (gC l ρ) := fun ρ h0 h1 => _root_.GlobalTheory.PMon.Gauss.isGauss_gC_of_le l ρ h0 h1
   have htc1 : ∀ ρ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → ∀ i, gC l ρ (tc l (F^[i] ζ)) = 1 := by
     intro ρ h0 h1 i
     rw [(gC_basic_values l ρ h0 h1).2.2.2.1]
@@ -960,7 +960,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
   set x : ℕ → Formalism.Per.Acris l := fun i => w - tc l (F^[i] ζ) * w' with hx
   have hfrob : ∀ i, φc l (x i) * w' = x (i + 1) * φc l w' := by
     intro i
-    simp only [hx, map_sub, map_mul, frob_teich, hzsucc]
+    simp only [hx, map_sub, map_mul, _root_.GlobalTheory.PMon.Gauss.φc_tc, hzsucc]
     linear_combination hφ
 
   by_cases hA : ∃ i, x i = 0
@@ -1232,7 +1232,7 @@ theorem GlobalTheory.PMon.Gauss.one_digit : ∀ (l : ℕ) [Fact l.Prime] (h s : 
   · rw [hw1, gC_zero_of_radius l h0 h1]
     exact mul_nonneg hρ.le (hN.1 w').1
   have hφz : φc l (zc l c) = zc l c := by
-    rw [hc, frob_teich, hζl]
+    rw [hc, _root_.GlobalTheory.PMon.Gauss.φc_tc, hζl]
   have hrat1 : φc l (w - zc l c * w') * w' = (w - zc l c * w') * φc l w' := by
     rw [map_sub, map_mul, hφz]
     linear_combination hrat
@@ -1274,7 +1274,7 @@ namespace RatioProp
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem one_lt_l : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
+alias one_lt_l := _root_.GlobalTheory.PMon.Gauss.one_lt_natCast_of_prime
 
 theorem inv_l_pos : (0 : ℝ) < (l : ℝ)⁻¹ := inv_pos.2 (by linarith [(one_lt_l : (1 : ℝ) < l)])
 
@@ -1326,10 +1326,10 @@ theorem pert {ρ : ℝ} (h0 : (l : ℝ)⁻¹ ≤ ρ) (h1 : ρ < 1) (W W' : Forma
     simp only [map_add (f := _), map_mul, map_pow, map_natCast]
     ring
   rw [e]
-  refine ((gauss h0 h1).2.1 _ _).trans (max_le_max le_rfl ?_)
-  rw [(gauss h0 h1).2.2.1, gC_lpow h0 h1, (gauss h0 h1).2.2.2.1]
+  refine ((_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).2.1 _ _).trans (max_le_max le_rfl ?_)
+  rw [(_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).2.2.1, gC_lpow h0 h1, (_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).2.2.2.1]
   exact mul_le_mul_of_nonneg_left
-    (mul_le_of_le_one_left ((gauss h0 h1).1 _).1 ((gauss h0 h1).1 _).2) (pow_nonneg (rho_pos h0).le _)
+    (mul_le_of_le_one_left ((_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).1 _).1 ((_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).1 _).2) (pow_nonneg (rho_pos h0).le _)
 
 def digitSet (W W' : Formalism.Per.Acris l) (k : ℕ) : Set ℤ_[l] :=
   {c | ∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ (W - zc l c * W') ≤ ρ ^ k * gC l ρ W'}
@@ -1391,7 +1391,7 @@ theorem digit_step {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
   refine (hu ρ h0 h1).trans ?_
   rw [gC_lpow h0 h1, ← mul_assoc, ← pow_succ']
   exact mul_le_mul_of_nonneg_right (pow_le_pow_of_le_one (rho_pos h0).le h1.le (by omega))
-    ((gauss h0 h1).1 _).1
+    ((_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).1 _).1
 
 theorem eq_zc_mul {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
     (he : (φc l)^[h] W' = (l : Formalism.Per.Acris l) ^ s * W') (hW' : W' ≠ 0)
@@ -1400,7 +1400,7 @@ theorem eq_zc_mul {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
     ∃ c : ℤ_[l], W = zc l c * W' := by
   have hmono : ∀ i, digitSet W W' (i + 1) ⊆ digitSet W W' i := fun i c hc ρ h0 h1 =>
     (hc ρ h0 h1).trans (mul_le_mul_of_nonneg_right
-      (pow_le_pow_of_le_one (rho_pos h0).le h1.le (Nat.le_succ i)) ((gauss h0 h1).1 _).1)
+      (pow_le_pow_of_le_one (rho_pos h0).le h1.le (Nat.le_succ i)) ((_root_.GlobalTheory.GaussCancel.isGauss_gC h0 h1).1 _).1)
   have hne : ∀ i, (digitSet W W' i).Nonempty := by
     intro i
     induction i with

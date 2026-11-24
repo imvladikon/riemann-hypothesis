@@ -326,13 +326,9 @@ open MeasureTheory Filter Topology PositivityTheory.RgEis GlobalTheory.Companion
 
 namespace GlobalTheory.CompanionTheory.TubeFourier
 
-theorem integrable_exp_neg_mul_abs_alt {c : ℝ} (hc : 0 < c) :
-    Integrable (fun x : ℝ => Real.exp (-c * |x|)) :=
-  _root_.UpperTheory.Reformulated.B.Yha4.main hc
-
 theorem integrable_exp_neg_mul_abs_add {c : ℝ} (hc : 0 < c) (M : ℝ) :
     Integrable (fun t : ℝ × ℝ => M * Real.exp (-c * (|t.1| + |t.2|))) := by
-  have h := (integrable_exp_neg_mul_abs_alt hc).mul_prod (integrable_exp_neg_mul_abs_alt hc)
+  have h := (_root_.UpperTheory.Reformulated.B.Yha4.main hc).mul_prod (_root_.UpperTheory.Reformulated.B.Yha4.main hc)
   refine (h.const_mul M).congr (Eventually.of_forall fun t => ?_)
   simp only [mul_add, Real.exp_add]
 
@@ -1069,14 +1065,6 @@ open MeasureTheory Filter Topology PositivityTheory.RgEis GlobalTheory.Companion
 noncomputable section
 namespace GlobalTheory.CompanionTheory.TubeFourier
 
-theorem continuous_pt (x : ℝ × ℝ) : Continuous fun y : ℝ × ℝ => pt x y := by
-  have h : (fun y : ℝ × ℝ => pt x y) =
-      fun y => ((x.1 : ℂ) + (y.1 : ℂ) * Complex.I, (x.2 : ℂ) + (y.2 : ℂ) * Complex.I) := by
-    funext y
-    simp [pt, Complex.ext_iff]
-  rw [h]
-  fun_prop
-
 theorem pt_re_im (l : ℂ × ℂ) : pt (l.1.re, l.2.re) (l.1.im, l.2.im) = l := by
   exact Prod.ext (Complex.eta _) (Complex.eta _)
 
@@ -1127,7 +1115,7 @@ theorem tubeChain : TubeChain := by
     fun i g x hx t => (hQ g t i x0 hx0 x hx).symm
   have hGcont : ∀ i, ∀ x ∈ Ω i, Continuous (fun p : (ℝ × ℝ) × T => G i p.2 (pt x p.1)) := by
     intro i x hx
-    have hp : Continuous fun p : (ℝ × ℝ) × T => pt x p.1 := (continuous_pt x).comp continuous_fst
+    have hp : Continuous fun p : (ℝ × ℝ) × T => pt x p.1 := (_root_.GlobalTheory.CompanionTheory.TubeFourier.continuous_pt_shiftSnd x).comp continuous_fst
     have h1 : Continuous (fun p : (ℝ × ℝ) × T => F i (pt x p.1) p.2) := by
       refine (hΩ i).2.2.cont.comp_continuous (hp.prodMk continuous_snd) ?_
       intro p

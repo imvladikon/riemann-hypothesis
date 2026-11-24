@@ -749,19 +749,7 @@ open GlobalTheory.ZM.NearBuild
 
 namespace GlobalTheory.ZM.NearBuild
 
-private theorem isGrpPullback_pullback_fst {S S' : Scheme.{0}} (G : Over S) [GrpObj G] (f : S' ⟶ S) :
-    IsGrpPullback ((Over.pullback f).obj G) G f (pullback.fst G.hom f) := by
-  refine ⟨IsPullback.of_hasPullback G.hom f, ?_⟩
-  intro T x y x₀ y₀ hx hy
-  have h := GlobalTheory.UU.toBase_mul_pullback G f T x y
-  have ex : x₀ = Out.toBase (A := G) (A' := (Over.pullback f).obj G) (g := pullback.fst G.hom f) pullback.condition x := by
-    ext
-    simp [hx, Out.toBase]
-  have ey : y₀ = Out.toBase (A := G) (A' := (Over.pullback f).obj G) (g := pullback.fst G.hom f) pullback.condition y := by
-    ext
-    simp [hy, Out.toBase]
-  rw [ex, ey, ← h]
-  simp [Out.toBase]
+private alias isGrpPullback_pullback_fst := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback
 
 theorem kTriv_near_good_prime : ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Type) (b : TBase o (N' ^ 2)) (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ : ℕ) (R : Type) [CommRing R] [IsNoetherianRing R] (β : o →+* R) (v : Ix g (N' ^ 2) → R) (A : Over (Sp R)) [GrpObj A] (L : LB A.left) (act : J → (A ⟶ A)) (Q : Fin (2 * g) → (Out.baseOver (Sp R) ⟶ A)) (q₀ : Ideal R), q₀ ∈ objPrimes b Mat κ β v → PolFam b Mat κ β v A L act Q → ∃ f : R, f ∉ q₀ ∧ Out.KTriv ((Over.pullback (spMap (loc f))).obj A) (L.pull (pullback.fst A.hom (spMap (loc f)))) := by
   intro o _ g N' J b Mat κ R _ _ β v A _ L act Q q₀ hq hP
@@ -1411,9 +1399,7 @@ theorem hasTh_cast {N' : ℕ} {b : TBase o (N' ^ 2)} {s s₁ : S ⟶ Sp o} (t : 
     {R : Type} [CommRing R] (x : Sp R ⟶ S) (v : Ix g (N' ^ 2) → R) : (cast t h).HasTh x v ↔ t.HasTh x v := by
   subst h; exact Iff.rfl
 
-theorem exists_spMap {R R' : Type} [CommRing R] [CommRing R'] (x : Sp R' ⟶ Sp R) : ∃ φ : R →+* R', x = spMap φ := by
-  refine ⟨(Spec.preimage x).hom, ?_⟩
-  simp [spMap]
+alias exists_spMap := _root_.GlobalTheory.ZM.RepMap.exists_spMap
 
 theorem fromC_of_tmap {em : o →+* ℂ} {C : TObj g k J b (spMap em) → Prop} {K : Type} [Field K] {s' : Sp K ⟶ Sp o}
     {t' : TObj g k J b s'} {s : S ⟶ Sp o} {t : TObj g k J b s} {z : Sp K ⟶ S} (h : FromC em C t' (𝟙 _))

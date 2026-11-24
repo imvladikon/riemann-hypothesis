@@ -362,8 +362,6 @@ end GlobalTheory.HilbertThetaSeries.EvenLat
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.exists_evenPositiveDefinite_intMatrix_det_sq : ∀ p : ℕ, p.Prime → p ≠ 2 → ∃ (G S : Matrix (Fin (p - 1) ⊕ Fin (p - 1)) (Fin (p - 1) ⊕ Fin (p - 1)) ℤ) (t : ℕ), LatD p G S t := by
-  first | exact @GlobalTheory.HilbertThetaSeries.EvenLat.exists_latD
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ExistsEvenPositiveDefiniteIntMatrixDetSq =====
@@ -426,8 +424,8 @@ theorem sum_isReps_add_shift {V : Type} [AddCommGroup V] (A B : AddSubgroup V) (
 
 theorem gaussSum_dual_shift : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ (N : ℕ) (a b c d : F) (T : Finset (κ → F)), 0 < N → (∀ y ∈ dualL F G, (N : F) • y ∈ LL F κ ∧ IsIntegral ℤ ((N : F) * QF G y)) → IsIntegral ℤ a → IsIntegral ℤ b → IsIntegral ℤ (c / N) → IsIntegral ℤ d → a * d - b * c = 1 → c ≠ 0 → IsReps (aL κ c) (aL κ (1 : F)) T → ∀ y ∈ dualL F G, (∑ x ∈ T, et (a / c * QF G x) * et (BF G y x / c)) * et (d / c * QF G y) = oneL y * ∑ x ∈ T, et (a / c * QF G x) := by
   intro F _ _ κ _ _ G hG N a b c d T hN hNy ha hb hcN hd hdet hc hT y hy
-  obtain ⟨hBsymm, hsmul, hBadd, hint, hLLiff, haL, het, hLLdual⟩ := GlobalTheory.T.evenPos_gramForm_integral_lattice_properties F κ G hG
-  obtain ⟨-, -, hdd, -, -⟩ := GlobalTheory.T.dualLattice_index_eq_discr_pow_mul_det_pow F κ G hG
+  obtain ⟨hBsymm, hsmul, hBadd, hint, hLLiff, haL, het, hLLdual⟩ := _root_.GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hG
+  obtain ⟨-, -, hdd, -, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.DualLevel.dual_level_index F κ G hG
   have etadd : ∀ u v : F, et (u + v) = et u * et v := fun u v => (het u v).1
   have etint : ∀ u : F, IsIntegral ℤ u → et u = 1 := fun u hu => (het u 0).2.2.2 hu
   have etiff : ∀ u : F, et u = 1 ↔ ∃ n : ℤ, Algebra.trace ℚ F u = n := fun u => (het u 0).2.2.1
@@ -551,8 +549,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.lattice_gaussSum_twist_dual_eq_indicator : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ (N : ℕ) (a b c d : F) (T : Finset (κ → F)), 0 < N → (∀ y ∈ dualL F G, (N : F) • y ∈ LL F κ ∧ IsIntegral ℤ ((N : F) * QF G y)) → IsIntegral ℤ a → IsIntegral ℤ b → IsIntegral ℤ (c / N) → IsIntegral ℤ d → a * d - b * c = 1 → c ≠ 0 → IsReps (aL κ c) (aL κ (1 : F)) T → ∀ y ∈ dualL F G, (∑ x ∈ T, et (a / c * QF G x) * et (BF G y x / c)) * et (d / c * QF G y) = oneL y * ∑ x ∈ T, et (a / c * QF G x) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.gaussSum_dual_shift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.LatticeGaussSumTwistDualEqIndicator =====
@@ -904,8 +900,8 @@ open GaussPow in
 theorem gaussSum_pow_eight : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (N : ℕ) (a b c d : F) (T : Finset (κ → F)), 0 < N → (∀ y ∈ dualL F G, (N : F) • y ∈ LL F κ ∧ IsIntegral ℤ ((N : F) * QF G y)) → IsIntegral ℤ a → IsIntegral ℤ b → IsIntegral ℤ (c / N) → IsIntegral ℤ d → a * d - b * c = 1 → c ≠ 0 → IsReps (aL κ c) (aL κ (1 : F)) T → (wC k t c c * ∑ x ∈ T, et (a / c * QF G x)) ^ 8 = 1 := by
   intro F _ _ κ _ _ G hG t ht k hk N a b c d T hN hdual ha hb hcN hd hadbc hc0 hT
   classical
-  obtain ⟨hsym, hlin, hadd, hint, hLL, haL, het, hLd⟩ := GlobalTheory.T.evenPos_gramForm_integral_lattice_properties F κ G hG
-  obtain ⟨-, -, -, hdsmul, hidx⟩ := GlobalTheory.T.dualLattice_index_eq_discr_pow_mul_det_pow F κ G hG
+  obtain ⟨hsym, hlin, hadd, hint, hLL, haL, het, hLd⟩ := _root_.GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hG
+  obtain ⟨-, -, -, hdsmul, hidx⟩ := _root_.GlobalTheory.HilbertThetaSeries.DualLevel.dual_level_index F κ G hG
   have hN0 : (N : F) ≠ 0 := by exact_mod_cast hN.ne'
   have hNI : IsIntegral ℤ (N : F) := by
     simpa using (isIntegral_algebraMap (R := ℤ) (A := F) (x := (N : ℤ)))
@@ -1069,7 +1065,7 @@ theorem gaussSum_pow_eight : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
         exact hdsmul a y ha hy
   have hrel : (aL κ c).relIndex C = (LL F κ).relIndex (dualL F G) := by
     rw [hAeq, AddSubgroup.relIndex_comap, hdeq]
-  obtain ⟨T', hT', -, -, hT'c⟩ := GlobalTheory.T.exists_finite_reps_scaled_lattice_card_norm F κ c 1 hc0 one_ne_zero (by simpa using hcI)
+  obtain ⟨T', hT', -, -, hT'c⟩ := _root_.GlobalTheory.HilbertThetaSeries.exists_isReps_aL F κ c 1 hc0 one_ne_zero (by simpa using hcI)
   have hTc : (T.card : ℚ) = |Algebra.norm ℚ c| ^ (2 * k) := by
     rw [GaussPow.reps_card hT, ← GaussPow.reps_card hT', hT'c, div_one, hk]
   have hdet : G.det ≠ 0 := by
@@ -1117,8 +1113,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.lattice_normalized_gaussSum_eighth_root : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (N : ℕ) (a b c d : F) (T : Finset (κ → F)), 0 < N → (∀ y ∈ dualL F G, (N : F) • y ∈ LL F κ ∧ IsIntegral ℤ ((N : F) * QF G y)) → IsIntegral ℤ a → IsIntegral ℤ b → IsIntegral ℤ (c / N) → IsIntegral ℤ d → a * d - b * c = 1 → c ≠ 0 → IsReps (aL κ c) (aL κ (1 : F)) T → (wC k t c c * ∑ x ∈ T, et (a / c * QF G x)) ^ 8 = 1 := by
-  first | exact @GlobalTheory.HilbertThetaSeries.gaussSum_pow_eight
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.LatticeNormalizedGaussSumEighthRoot =====
@@ -1200,8 +1194,8 @@ theorem main_abcd {κ : Type} [Fintype κ] [DecidableEq κ] (G : Matrix κ κ �
   have hcI : IsIntegral ℤ c := by
     have h1 := (natCast_int (F := F) N).mul hcN
     rwa [mul_div_cancel₀ _ hNF] at h1
-  obtain ⟨T, hT, -, hTle, -⟩ := GlobalTheory.T.exists_finite_reps_scaled_lattice_card_norm F κ c 1 hc one_ne_zero (by rwa [div_one])
-  obtain ⟨hsymm, hsc, -, hint, hLL, haL, het, hLd⟩ := GlobalTheory.T.evenPos_gramForm_integral_lattice_properties F κ G hG
+  obtain ⟨T, hT, -, hTle, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.exists_isReps_aL F κ c 1 hc one_ne_zero (by rwa [div_one])
+  obtain ⟨hsymm, hsc, -, hint, hLL, haL, het, hLd⟩ := _root_.GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hG
   have hsupp : ∀ x : κ → F, (fun x => oneL x * et (a / c * QF G x)) x ≠ 0 → x ∈ aL κ (1 : F) := by
     intro x hx
     have hxL : x ∈ LL F κ := by
@@ -1235,14 +1229,14 @@ theorem main_abcd {κ : Type} [Fintype κ] [DecidableEq κ] (G : Matrix κ κ �
         apply hx
         simpa using sub_mem h hcm
       simp [oneL, hx, hxl]
-  have hW' := GlobalTheory.T.hilbertThetaSeries_periodic_inversion_formula F κ G hG t ht k hk c 1 (Units.mk0 c hc) T
+  have hW' := _root_.GlobalTheory.HilbertThetaSeries.thetaSeries_periodic_slash_frickeMatrix F κ G hG t ht k hk c 1 (Units.mk0 c hc) T
     (fun x => oneL x * et (a / c * QF G x)) hc one_ne_zero hTle hT hsupp hper
   have hW : Pos (toInf (wm (Units.mk0 c hc))) := pos_toInf (by simp [wm, Matrix.det_fin_two, hc])
   have hB : Pos (toInf (aff 1 (d / c))) := pos_toInf (by simp [aff, Matrix.det_fin_two])
-  rw [map_mul, sl0_mul_of_pos _ _ _ hB, map_mul, sl0_mul_of_pos _ _ _ hW, GlobalTheory.T.thetaSeries_translation_twists_coefficients, hW',
-    GlobalTheory.T.thetaSeries_translation_twists_coefficients]
+  rw [map_mul, sl0_mul_of_pos _ _ _ hB, map_mul, sl0_mul_of_pos _ _ _ hW, _root_.GlobalTheory.HilbertThetaSeries.th_translate, hW',
+    _root_.GlobalTheory.HilbertThetaSeries.th_translate]
   refine ⟨wC k t c c * ∑ x ∈ T, et (a / c * QF G x),
-    GlobalTheory.T.lattice_normalized_gaussSum_eighth_root F κ G hG t ht k hk N a b c d T hN0 hN ha hb hcN hd had hc hT, ?_⟩
+    _root_.GlobalTheory.HilbertThetaSeries.gaussSum_pow_eight F κ G hG t ht k hk N a b c d T hN0 hN ha hb hcN hd had hc hT, ?_⟩
   funext z
   simp only [th, Pi.smul_apply, smul_eq_mul]
   rw [← tsum_mul_left]
@@ -1260,7 +1254,7 @@ theorem main_abcd {κ : Type} [Fintype κ] [DecidableEq κ] (G : Matrix κ κ �
           rw [hxl, one_smul]
           exact hl
         simp [oneL, hxL]
-      have h62 := GlobalTheory.T.lattice_gaussSum_twist_dual_eq_indicator F κ G hG N a b c d T hN0 hN ha hb hcN hd had hc hT y hy
+      have h62 := _root_.GlobalTheory.HilbertThetaSeries.gaussSum_dual_shift F κ G hG N a b c d T hN0 hN ha hb hcN hd had hc hT y hy
       simp only [wT, Units.val_mk0, hcc, hy, ↓reduceIte]
       rw [hsum, mul_assoc, h62]
       ring
@@ -1294,7 +1288,7 @@ end GlobalTheory.HilbertThetaSeries.ThetaLevel
 open GlobalTheory.HilbertThetaSeries.ThetaLevel in
 theorem GlobalTheory.HilbertThetaSeries.theta_level_eighth_root : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∃ N : ℕ, 0 < N ∧ ∀ γ : GL (Fin 2) F, InGam N γ → ∃ ζ : ℂ, ζ ^ 8 = 1 ∧ sl0 k (toInf γ) (th G oneL) = ζ • th G oneL := by
   intro F _ _ _ κ _ _ G hG t ht k hk
-  obtain ⟨N, hN0, hN⟩ := (GlobalTheory.T.dualLattice_index_eq_discr_pow_mul_det_pow F κ G hG).2.1
+  obtain ⟨N, hN0, hN⟩ := (_root_.GlobalTheory.HilbertThetaSeries.DualLevel.dual_level_index F κ G hG).2.1
   refine ⟨N, hN0, fun γ hγ => ?_⟩
   by_cases hc : γ.val 1 0 = 0
   · have hNF : (N : F) ≠ 0 := by exact_mod_cast hN0.ne'
@@ -1349,8 +1343,6 @@ theorem GlobalTheory.HilbertThetaSeries.theta_level_eighth_root : ∀ (F : Type)
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.theta_slash_eighth_root_of_square_det : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∃ N : ℕ, 0 < N ∧ ∀ γ : GL (Fin 2) F, InGam N γ → ∃ ζ : ℂ, ζ ^ 8 = 1 ∧ sl0 k (toInf γ) (th G oneL) = ζ • th G oneL := by
-  first | exact @GlobalTheory.HilbertThetaSeries.theta_level_eighth_root
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1368,7 +1360,7 @@ namespace GlobalTheory.HilbertThetaSeries
 
 theorem seed_exists : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ), p ≠ 2 → ∀ δ : F, IsDel p δ → ∃ θ : Hn F → ℂ, Seed ι δ θ := by
   intro F _ _ _ p hp ι hp2 δ hδ
-  obtain ⟨G, S, t, hL⟩ := GlobalTheory.T.exists_evenPositiveDefinite_intMatrix_det_sq p hp.out hp2
+  obtain ⟨G, S, t, hL⟩ := _root_.GlobalTheory.HilbertThetaSeries.EvenLat.exists_latD p hp.out hp2
   have hsupp : ∀ x : (Fin (p - 1) ⊕ Fin (p - 1)) → F, (oneL x : ℂ) ≠ 0 → x ∈ aL (Fin (p - 1) ⊕ Fin (p - 1)) (1 : F) := by
     intro x hx
     have hx' : x ∈ LL F (Fin (p - 1) ⊕ Fin (p - 1)) := by
@@ -1379,17 +1371,15 @@ theorem seed_exists : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
     intro x
     unfold oneL
     split_ifs <;> simp
-  obtain ⟨-, hhol, hgr, -⟩ := GlobalTheory.T.thetaSeries_holomorphic_qExpansion_of_bounded_coeff F _ G hL.pos (1 : F) oneL 1 hsupp hbd
-  obtain ⟨N, hN, hlev⟩ := GlobalTheory.T.theta_slash_eighth_root_of_square_det F _ G hL.pos t hL.det (p - 1) hL.card
-  exact ⟨th G oneL, hhol, hgr, fun γ hγ => GlobalTheory.T.theta_translate_integral_congruent_one_mod_prime F p ι hp2 δ hδ _ G S t hL γ hγ, N, hN, hlev⟩
+  obtain ⟨-, hhol, hgr, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.th_expansion F _ G hL.pos (1 : F) oneL 1 hsupp hbd
+  obtain ⟨N, hN, hlev⟩ := _root_.GlobalTheory.HilbertThetaSeries.theta_level_eighth_root F _ G hL.pos t hL.det (p - 1) hL.card
+  exact ⟨th G oneL, hhol, hgr, fun γ hγ => _root_.GlobalTheory.HilbertThetaSeries.theta_translates_integral_one F p ι hp2 δ hδ _ G S t hL γ hγ, N, hN, hlev⟩
 
 end GlobalTheory.HilbertThetaSeries
 
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.exists_seed_theta_lattice_fixedPointFree : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (p : ℕ) [Fact p.Prime] (ι : Qbar p ≃+* ℂ), p ≠ 2 → ∀ δ : F, IsDel p δ → ∃ θ : Hn F → ℂ, Seed ι δ θ := by
-  first | exact @GlobalTheory.HilbertThetaSeries.seed_exists
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ExistsSeedThetaLatticeFixedPointFree =====

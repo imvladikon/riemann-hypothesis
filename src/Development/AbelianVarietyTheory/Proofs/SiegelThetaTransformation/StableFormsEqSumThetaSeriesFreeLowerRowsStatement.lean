@@ -327,7 +327,7 @@ theorem patch {M t : ℕ} (ht : 0 < t) (htM : t.Coprime M) (J J' : Ideal (𝓞 E
       rw [smul_comm _ j v, Nat.cast_mul, mul_smul]; exact this
     · rw [smul_comm _ j v]; exact A.smul_mem j ((mC v).1 hv).1
 
-theorem cc_mul (x y : E) : cc (x * y) = cc x * cc y := by simp [cc]
+alias cc_mul := _root_.ReciprocityTheory.ChartRestriction.G.FD.HermitianTraceFormVanishing.cc_mul
 
 theorem moved (d : Fin n → E) (hd : ∀ k, cc (d k) * d k = 1) (Λ : Lt E n) (hfg : Λ.FG)
     (hsd : ∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, IsIntegral ℤ (herm 1 x y)) :
@@ -1352,7 +1352,7 @@ theorem thP_phi_eq_thP_phiF : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   refine ⟨Λ', hΛ', (t / t') • P', Submodule.smul_mem _ _ hP', fun L hL x hx => ?_⟩
   have hSh : SelfD X (D.sh L) := ((_root_.GlobalTheory.SW.level_laws E r X g bas idx n hs hn D hrn).2.2.2.1 L hL).1
   have hv := hv₀ L hL
-  have hφ := isSB_unitv_projA idx hs hn D.w_int D.w_tr hSh (vset_one hΛ) hv.1
+  have hφ := isSB_unitv_projA idx hs hn D.w_int D.w_tr hSh (_root_.GlobalTheory.Dict.SumFree.mem_Vset_one hΛ) hv.1
   have hφ'' := isSB_unitv_projA idx hs hn D.w_int D.w_tr hSh hΛ'' hv.1
   have hheis : ∀ (y : Matrix (Fin n) (Fin r) E) (ψ : TF n g), IsSB ψ → IsSB (heisG X bas y ψ) :=
     fun y ψ hψ => ((heisG_laws E r X g bas idx n hs hn).2.2.2 y ψ hψ).1

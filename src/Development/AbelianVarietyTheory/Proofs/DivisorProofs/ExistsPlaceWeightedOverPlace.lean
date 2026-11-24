@@ -950,16 +950,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.Discrepancy GlobalTheory.FieldPair GlobalTheory.GraphLocal
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.flat_aeval_dvrPlaceRing_uniformiser_residueLifts : ∀ {K κ : Type} [Field K] [Field κ] [Algebra ℂ K] [Algebra ℂ κ] (k : ℕ) (R : Subring K)
-    (π : R →+* κ) (E : Place (algebraMap ℂ K)) (hER : E.Contains R) (t : E.ring) (zR : Fin k → R),
-    (∀ a (h : algebraMap ℂ K a ∈ R), π ⟨algebraMap ℂ K a, h⟩ = algebraMap ℂ κ a) →
-    (∀ a, algebraMap ℂ K a ∈ R) →
-    (∀ r : R, (r : K) ≠ 0 → (π r = 0 ↔ 0 < E.ord r)) →
-    Irreducible t → AlgebraicIndependent ℂ (fun i => π (zR i)) →
-    (MvPolynomial.aeval (Fin.cons (⟨(t : K), t.2⟩ : placeAlg E)
-        (fun i => (⟨(zR i : K), hER _ (zR i).2⟩ : placeAlg E))) :
-        MvPolynomial (Fin (k + 1)) ℂ →ₐ[ℂ] placeAlg E).toRingHom.Flat := by
-  first | exact @GlobalTheory.GraphLocal.FlatPlace.flat_aeval_placeAlg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatAevalDvrPlaceRingUniformiserResidueLiftsStatement =====
@@ -1124,7 +1114,7 @@ theorem dim_locAt_graph : ∀ {K κ κ' L : Type} [Field K] [Field κ] [Field κ
     let v : Fin (k + 1) → placeAlg E := Fin.cons (⟨(t : K), t.2⟩ : placeAlg E)
         (fun i => (⟨(zR i : K), hER _ (zR i).2⟩ : placeAlg E))
     have hf := _root_.GlobalTheory.GraphLocal.flat_polyMap_of_flat_aeval (κ' := κ') (placeAlg E) (k + 1) v
-      (GlobalTheory.T.flat_aeval_dvrPlaceRing_uniformiser_residueLifts k R π E hER t zR hc1 hc2 hcent ht hzR'.1)
+      (_root_.GlobalTheory.GraphLocal.FlatPlace.flat_aeval_placeAlg k R π E hER t zR hc1 hc2 hcent ht hzR'.1)
     have hle := height_le_height_of_flat v hf 𝔭
     have hgr : graphIdeal E R π ρ ≤ 𝔭 := h𝔭.1.2
     have hX : ∀ i, MvPolynomial.X i - MvPolynomial.C ((Fin.cons (0 : κ') fun j => ρ (π (zR j)) :

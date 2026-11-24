@@ -54,6 +54,6 @@ theorem massDataVolAll_of (hSW : PI.VolStabS.MassDataS.SWXS) :
       | apply level_s_at_instance
   · apply inMassesAt_holds
   · apply inColumnsAt_holds
-  · apply inIndicesAt_holds
+  · apply _root_.local_indices_at_instance
 
 end Formalism.L2.SG.Pf.MassDataX

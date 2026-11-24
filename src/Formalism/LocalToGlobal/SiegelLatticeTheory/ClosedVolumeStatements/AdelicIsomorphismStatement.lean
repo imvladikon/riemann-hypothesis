@@ -70,9 +70,6 @@ lemma sgn_mul_self {n : ℕ} (ε : Fin n → Bool) (a : Fin n) :
     (if ε a then (1 : ℂ) else -1) * (if ε a then (1 : ℂ) else -1) = 1 := by
   cases ε a <;> simp
 
-lemma jm_mul_jm {n : ℕ} (ε : Fin n → Bool) : Formalism.REAL.Jm ε * Formalism.REAL.Jm ε = 1 :=
-  Formalism.REAL.Jm_mul_self ε
-
 lemma jm_mul_apply {n : ℕ} (ε : Fin n → Bool) (k : Matrix (Fin n) (Fin n) ℂ) (a b : Fin n) :
     (Formalism.REAL.Jm ε * k) a b = (if ε a then (1 : ℂ) else -1) * k a b := by
   rw [jm_eq, Matrix.diagonal_mul]
@@ -114,11 +111,11 @@ theorem realK : PI.AdBridgeSteps.RealK := by
       _ = k * (kᴴ * Formalism.REAL.Jm ε * k) := by simp only [Matrix.mul_assoc]
       _ = k * Formalism.REAL.Jm ε := by rw [hk]
   · intro hc
-    calc kᴴ * k = kᴴ * k * (Formalism.REAL.Jm ε * Formalism.REAL.Jm ε) := by rw [jm_mul_jm, Matrix.mul_one]
+    calc kᴴ * k = kᴴ * k * (Formalism.REAL.Jm ε * Formalism.REAL.Jm ε) := by rw [_root_.Formalism.REAL.Jm_mul_self, Matrix.mul_one]
       _ = kᴴ * (k * Formalism.REAL.Jm ε) * Formalism.REAL.Jm ε := by simp only [Matrix.mul_assoc]
       _ = kᴴ * (Formalism.REAL.Jm ε * k) * Formalism.REAL.Jm ε := by rw [hc]
       _ = (kᴴ * Formalism.REAL.Jm ε * k) * Formalism.REAL.Jm ε := by simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [hk, jm_mul_jm]
+      _ = 1 := by rw [hk, _root_.Formalism.REAL.Jm_mul_self]
 
 end PI.UnitaryGroupMassFormula.BridgeRealK
 end -- clump:auto
@@ -237,23 +234,15 @@ open NumberField IsDedekindDomain Matrix
 open scoped TensorProduct
 open Formalism.MainNotions.S (AutInst uMat)
 
-private theorem thetaV_inclR' (I : AutInst) (v : InfinitePlace I.F) (y : I.E) :
-    thetaV I v (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) y) = I.φ v y := by
-  simp [thetaV, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR]
-
-private theorem tauF_inclR' (I : AutInst) (y : I.E) :
-    tauF I (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) y) = Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F) y := by
-  simp [tauF, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR, Formalism.UG.inclE]
-
 private theorem map_inclR_map_thetaV (I : AutInst) (v : InfinitePlace I.F) (M : Matrix (Fin I.n) (Fin I.n) I.E) :
     (M.map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F))).map (thetaV I v) = M.map (I.φ v) := by
   ext i j
-  simp only [Matrix.map_apply, thetaV_inclR']
+  simp only [Matrix.map_apply, _root_.Formalism.L2.SG.AdBridge.thetaV_inclR]
 
 private theorem map_inclR_map_tauF (I : AutInst) (M : Matrix (Fin I.n) (Fin I.n) I.E) :
     (M.map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F))).map (tauF I) = M.map (Formalism.UG.inclE (F := I.F) (Formalism.MainNotions.S.Af I.F)) := by
   ext i j
-  simp only [Matrix.map_apply, tauF_inclR']
+  simp only [Matrix.map_apply, _root_.Formalism.L2.SG.AdBridge.tauF_inclR]
 
 theorem bridge_apply_eq_of_comp (I : AutInst) (e : I.GA ≃ₜ* HAd I) (he : IsBridge I e)
     (x : I.GA) (h : HAd I) (h1 : ∀ v, uMat (x.1 v) = ofHAInf I h v)

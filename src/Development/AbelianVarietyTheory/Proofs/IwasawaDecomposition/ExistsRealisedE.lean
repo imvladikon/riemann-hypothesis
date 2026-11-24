@@ -104,8 +104,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.isSmoothAutomorphicFunction_translate_atRealPlace : ∀ (D : D7) (θ : InfF D), IsInfFam θ → ∀ (V : HSp D) (φ : GA D V → ℂ), IsAutFunSm θ V φ → ∀ τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ), IsAutFunSm θ V (rTr V (atTau θ V τ g) φ) := by
-  first | exact @GlobalTheory.Mem.RealTranslate.isAutFunSm_rTr_atTau
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlaceStatement =====
@@ -442,12 +440,6 @@ theorem fix_of_ExGe (d : BesselDatum A B ι) {ε : AE D} (he : IsSplitIdem D ε)
 theorem basis_castSucc (d : BesselDatum A B ι) (l : Fin d.ρ) : d.aux l.castSucc = d.e l := by
   unfold BesselDatum.aux; rw [Fin.snoc_castSucc]
 
-theorem hD_basis_e (d : BesselDatum A B ι) (m) (j : Fin d.ρ) : B.hD (d.aux m) (d.e j) = 0 := by
-  unfold BesselDatum.aux
-  refine Fin.lastCases ?_ (fun l => ?_) m
-  · rw [Fin.snoc_last]; exact hD_swap_zero (d.ez j)
-  · rw [Fin.snoc_castSucc]; exact d.ee l j
-
 theorem hD_basis_succ_f (d : BesselDatum A B ι) (i : Fin d.ρ) : B.hD (d.aux i.succ) (d.f i) = 0 := by
   have key : ∀ m : Fin (d.ρ + 1), m.1 = i.1 + 1 → B.hD (d.aux m) (d.f i) = 0 := by
     intro m
@@ -507,7 +499,7 @@ theorem mirror : ∀ (D : D7) (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V) (d :
     have e : ∀ i : Fin d.ρ, hA B (actV B (b * (b₀ * k * b₀⁻¹) * b⁻¹) (d.aux i.succ)) (vecA B (d.f i)) =
         if j = i then hA B ((mt B (b * b₀)⁻¹).mulVec (vecA B (d.aux i.succ))) (iA ι t) else 0 := by
       intro i
-      rw [hact _ (hD_basis_e d _ j), hA_add, hA_smul, hA_vec, hA_vec, hD_basis_succ_f, d.ef]
+      rw [hact _ (_root_.GlobalTheory.BesselDecomp.hD_basis_e d _ j), hA_add, hA_smul, hA_vec, hA_vec, hD_basis_succ_f, d.ef]
       split_ifs <;> simp
     simp only [e, Finset.sum_ite_eq, Finset.mem_univ, if_true]
     have hb' : (mt B b⁻¹).mulVec (vecA B (d.aux j.succ)) = vecA B (d.aux j.succ) :=
@@ -614,9 +606,6 @@ theorem exL_left (d : BesselDatum A B ι) (ψ) (ε : AE D) (m) {β : GA D B → 
 theorem isK_unique {v y : Fin B.rank → AE D} {k k' : GA D B} (h : IsK B v y k) (h' : IsK B v y k') : k = k' :=
   mt_ext fun x => by rw [h x, h' x]
 
-theorem isK_zero (v : Fin B.rank → AE D) : IsK B v 0 1 := fun x => by
-  rw [GlobalTheory.BesselCompare.mt_one, Matrix.one_mulVec, hA_zero_right, zero_smul, smul_zero, add_zero, sub_zero]
-
 theorem continuous_iA : Continuous (iA (A := A) (B := B) ι) := by
   haveI : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
   unfold iA
@@ -664,9 +653,9 @@ theorem exch_finite (d : BesselDatum A B ι) {ψ} (hψ : IsStdChar D ψ (-1)) {�
   have h0 : (0 : Fin A.rank → AE D) ∈ V := by
     have : (⟨0, smul_zero _⟩ : {t : Fin A.rank → AE D // cA D ε • t = t}) ∈ Subtype.val ⁻¹' V := by
       rw [hVe]
-      have e : K ⟨0, smul_zero _⟩ = 1 := isK_unique (hKk _) (by
+      have e : K ⟨0, smul_zero _⟩ = 1 := _root_.GlobalTheory.RootExch.ExStruct.isK_unique (hKk _) (by
         have : iA (A := A) (B := B) ι 0 = 0 := Matrix.mulVec_zero _
-        rw [this]; exact isK_zero _)
+        rw [this]; exact _root_.GlobalTheory.RootExch.ExStruct.isK_one _)
       simp [e]
     exact this
   obtain ⟨C, hC, hCm⟩ := GlobalTheory.PosLinVec.annihilator_subset_compact D ψ hψ ε hε A d.θ d.θ_ne V (hV.mem_nhds h0)
@@ -977,18 +966,13 @@ def actFin (hθ : IsInfFam θ) (V : HSp D) : GfC V →* Module.End ℂ (AFs θ V
 open Classical in
 def actReal (hθ : IsInfFam θ) (V : HSp D) (τ : D.what₂.Tau) (g : Matrix (Fin V.rank) (Fin V.rank) ℂ) :
     Module.End ℂ (AFs θ V) :=
-  if h : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) then trE hθ V (atTau θ V τ g) fun φ hφ => GlobalTheory.T.isSmoothAutomorphicFunction_translate_atRealPlace D θ hθ V φ hφ τ g h else 1
+  if h : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) then trE hθ V (atTau θ V τ g) fun φ hφ => _root_.GlobalTheory.Mem.RealTranslate.isAutFunSm_rTr_atTau D θ hθ V φ hφ τ g h else 1
 
 theorem actReal_apply (hθ : IsInfFam θ) (V : HSp D) (τ) {g} (h : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) (F : AFs θ V) (x) :
     (actReal hθ V τ g F).1 x = F.1 (x * atTau θ V τ g) := by
   rw [actReal, dif_pos h]; rfl
 
-theorem mul_mem_UH {n : ℕ} {H g h : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.QuantumDeterminants.UH H) (hh : h ∈ Formalism.QuantumDeterminants.UH H) :
-    g * h ∈ Formalism.QuantumDeterminants.UH H := by
-  simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at *
-  rw [conjTranspose_mul]
-  calc hᴴ * gᴴ * H * (g * h) = hᴴ * (gᴴ * H * g) * h := by simp only [Matrix.mul_assoc]
-    _ = H := by rw [hg, hh]
+alias mul_mem_UH := _root_.GlobalTheory.PointAtPlaceHom.mul_mem_UH
 
 def chrGrp (D : D7) : Subgroup (IdC D) := (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).1.choose
 

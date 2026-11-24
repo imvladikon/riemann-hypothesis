@@ -78,6 +78,7 @@ import Aesop.Main
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Tactic.TypeStar
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GlobalProofs.CmHeckeCharacterInfinityType, Development.AutomorphicSpectrum.Proofs.GlobalProofs.CmHeckeCharacterNotNormPower, Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteEpsilonFactorDependenceOnS, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HaarIntegralIntegersFiniteSum, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeCharacterConductorExponent, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeGaussSumLocalTerm, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeLFunctionEulerProduct, Development.AutomorphicSpectrum.Proofs.GlobalProofs.LocalAdditiveCharacterEqAdelic, Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeTateFunctionalEquation
@@ -752,7 +753,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeCharacterConductorExponent =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeGaussSumLocalTerm =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeGaussSumLocalTerm", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeTateFunctionalEquationCM\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousIdeleCircle\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactorsFinite\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.AutomorphicForms.GL2.FiniteIdeleDecomp\npublic import GroundTheory.AutomorphicForms.GL2.GodementSectionFactor\nimport GroundTheory.LocalFields.FilteredSurj\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeGaussSumLocalTerm", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeTateFunctionalEquationCM\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousIdeleCircle\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactorsFinite\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.AutomorphicForms.GL2.FiniteIdeleDecomp\npublic import GroundTheory.AutomorphicForms.GL2.GodementSectionFactor\nimport GroundTheory.LocalFields.FilteredSurj\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -780,17 +781,13 @@ theorem dvd_conductor (χ : HChar E) (hu : IsUnitary χ) (v : HeightOneSpectrum 
   rw [h1] at h2
   exact Units.ext (by simpa using h2.symm)
 
-theorem hval (v : HeightOneSpectrum (𝓞 E)) (x : E) :
-    Valued.v (algebraMap E (v.adicCompletion E) x) = v.valuation E x :=
-  HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v x
-
 theorem valued_eq_one {v : HeightOneSpectrum (𝓞 E)} {y : 𝓞 E} (hy : y ∉ v.asIdeal) :
     Valued.v (algebraMap E (v.adicCompletion E) (y : E)) = 1 := by
-  exact (hval v _).trans ((v.valuation_eq_one_iff_notMem (K := E)).2 hy)
+  exact (_root_.Formalism.UG.P.levelaf_valued_algebraMap v _).trans ((v.valuation_eq_one_iff_notMem (K := E)).2 hy)
 
 theorem valued_ne_one {v : HeightOneSpectrum (𝓞 E)} {y : 𝓞 E} (hy : y ∈ v.asIdeal) :
     Valued.v (algebraMap E (v.adicCompletion E) (y : E)) ≠ 1 := by
-  exact fun h => (v.valuation_eq_one_iff_notMem (K := E)).1 ((hval v _).symm.trans h) hy
+  exact fun h => (v.valuation_eq_one_iff_notMem (K := E)).1 ((_root_.Formalism.UG.P.levelaf_valued_algebraMap v _).symm.trans h) hy
 
 theorem term_of_notMem (χ : HChar E) (hu : IsUnitary χ) (v : HeightOneSpectrum (𝓞 E))
     (hv : v.asIdeal ∣ (toHecke χ hu).conductor) (c : Eˣ) {y : 𝓞 E} (hy : y ∉ v.asIdeal) :
@@ -1349,31 +1346,12 @@ theorem L_locRam (χ : HChar E) (hu : IsUnitary χ) (v : HeightOneSpectrum (𝓞
     field_simp
   linear_combination (((χ.loc v (atFin v (unif v ^ (m + diffExp v))) : ℂˣ) : ℂ) * gaussSumAt χ v m (unif v ^ (m + diffExp v))) * (h5 - h3)
 
-theorem bijective_mk {I : Type} {φ : I → E →+* ℂ} (hφ : IsCMType φ) :
-    Function.Bijective fun i => InfinitePlace.mk (φ i) := by
-  constructor
-  · intro i j h
-    have h' : InfinitePlace.mk (φ i) = InfinitePlace.mk (φ j) := h
-    obtain ⟨k, -, hk⟩ := hφ (φ i)
-    have h1 := hk i (Or.inl rfl)
-    rcases InfinitePlace.mk_eq_iff.1 h' with e | e
-    · exact h1.trans (hk j (Or.inl e)).symm
-    · exact h1.trans (hk j (Or.inr (by rw [← e]; ext x; simp))).symm
-  · intro w
-    obtain ⟨i, hi, -⟩ := hφ w.embedding
-    refine ⟨i, ?_⟩
-    rcases hi with e | e
-    · show InfinitePlace.mk (φ i) = w
-      rw [← e, InfinitePlace.mk_embedding]
-    · show InfinitePlace.mk (φ i) = w
-      rw [← InfinitePlace.mk_conjugate_eq, ← e, InfinitePlace.mk_embedding]
-
 section
 variable {I : Type} [Fintype I] {φ : I → E →+* ℂ} [_root_.NumberField.IsTotallyComplex E] {χ : HChar E} {n : I → ℤ}
 
 theorem gammaFactor_toHecke (hφ : IsCMType φ) (hu : IsUnitary χ) (hi : Formalism.L2.Host.HChar.HasInf χ φ n) (s : ℂ) :
     (toHecke χ hu).gammaFactor s = archFactor n s := by
-  rw [HeckeCharacter.gammaFactor, archFactor, ← (Equiv.ofBijective _ (bijective_mk hφ)).prod_comp]
+  rw [HeckeCharacter.gammaFactor, archFactor, ← (Equiv.ofBijective _ (_root_.GlobalTheory.CMTypeCard.bijective_mk_of_isCMType hφ)).prod_comp]
   refine Finset.prod_congr rfl fun i _ => ?_
   obtain ⟨h1, h2⟩ := L_inf φ hφ χ hu n hi i
   have hc : ¬ (InfinitePlace.mk (φ i)).IsReal := InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex _)
@@ -1385,7 +1363,7 @@ theorem gammaFactor_toHecke (hφ : IsCMType φ) (hu : IsUnitary χ) (hi : Formal
 
 theorem prod_weight_toHecke (hφ : IsCMType φ) (hu : IsUnitary χ) (hi : Formalism.L2.Host.HChar.HasInf χ φ n) :
     (∏ w, (-Complex.I) ^ ((toHecke χ hu).infiniteWeight w).natAbs) = archEps n := by
-  rw [archEps, ← Finset.prod_pow_eq_pow_sum, ← (Equiv.ofBijective _ (bijective_mk hφ)).prod_comp]
+  rw [archEps, ← Finset.prod_pow_eq_pow_sum, ← (Equiv.ofBijective _ (_root_.GlobalTheory.CMTypeCard.bijective_mk_of_isCMType hφ)).prod_comp]
   refine Finset.prod_congr rfl fun i _ => ?_
   show (-Complex.I) ^ ((toHecke χ hu).infiniteWeight (InfinitePlace.mk (φ i))).natAbs = _
   rw [(L_inf φ hφ χ hu n hi i).2]
@@ -1464,12 +1442,12 @@ end GlobalTheory.CompanionTheory.HeckeFE
 
 theorem GlobalTheory.CompanionTheory.HeckeFE.heckeTateFunctionalEquation : GlobalTheory.Published.HeckeTateFunctionalEquation := by
   intro E _ _ _ I _ φ hφ χ n a hu hi hn ha
-  have hu' := GlobalTheory.Published.HeckeFEModel.isUnitary_inv hu
+  have hu' := _root_.Formalism.L2.Host.HChar.IsUnitary.inv hu
   have hi' := GlobalTheory.Published.HeckeFEModel.hasInf_inv hi
   have hn' : ∃ i, -n i ≠ 0 := hn.imp fun i h => neg_ne_zero.2 h
   refine ⟨conductorNormalizedCompletedLFunction χ hu, conductorNormalizedCompletedLFunction χ⁻¹ hu', isCompletedL_completed hφ hu hi hn,
     isCompletedL_completed hφ hu' hi' hn', fun s => ?_⟩
-  rw [L_shift χ a s, ← discrNormConductor_toHecke hu ha, completed_eq hφ hu hi hn hu' s, rootNumber_toHecke hφ hu hi ha]
+  rw [_root_.GlobalTheory.HeckeEpsAbs.finEps_eq χ a s, ← discrNormConductor_toHecke hu ha, completed_eq hφ hu hi hn hu' s, rootNumber_toHecke hφ hu hi ha]
   ring
 end -- clump:auto
 end -- clump:auto

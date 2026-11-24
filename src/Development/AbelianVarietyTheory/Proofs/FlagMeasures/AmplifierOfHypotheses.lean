@@ -115,10 +115,6 @@ theorem gN_eq_norm (g : B.Mat k r) : B.gN g = ‖g‖ := by
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [Real.rpow_two, Complex.normSq_eq_norm_sq]
 
-open scoped Matrix.Norms.Frobenius in
-theorem gN_mul_le (x y : B.Mat k r) : B.gN (x * y) ≤ B.gN x * B.gN y := by
-  simpa only [gN_eq_norm] using Matrix.frobenius_norm_mul x y
-
 theorem left_inv {g : B.Mat k r} (hg : g ∈ B.GV k r) : Hpk k r * gᴴ * Hpk k r * g = 1 := by
   have h : gᴴ * Hpk k r * g = Hpk k r := hg
   calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by
@@ -128,11 +124,6 @@ theorem left_inv {g : B.Mat k r} (hg : g ∈ B.GV k r) : Hpk k r * gᴴ * Hpk k 
 theorem inv_eq {g : B.Mat k r} (hg : g ∈ B.GV k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
   have h := left_inv hg
   exact Matrix.inv_eq_left_inv h
-
-theorem gN_inv {g : B.Mat k r} (hg : g ∈ B.GV k r) : B.gN g⁻¹ = B.gN g := by
-  have h1 : (Hpk k r)ᴴ * Hpk k r = 1 := by rw [GBasic.Hpk_herm, GBasic.Hpk_sq]
-  have h2 : Hpk k r * (Hpk k r)ᴴ = 1 := by rw [GBasic.Hpk_herm, GBasic.Hpk_sq]
-  rw [inv_eq hg, gN_mul_unitary _ h2, gN_unitary_mul _ h1, gN_conjTranspose]
 
 end GlobalTheory.ThA.FrobNorm
 end -- clump:auto
@@ -566,7 +557,7 @@ theorem integrable_ker (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hp
   have key := rpow_bound (PI.PolynomialProperness.GN.gN_ge_one hA) (PI.PolynomialProperness.GN.gN_ge_one hB) (PI.PolynomialProperness.GN.gN_ge_one hu)
     (b := b) (e := e) (by
       rw [e1]
-      exact (GlobalTheory.ThA.FrobNorm.gN_mul_le _ _).trans (le_of_eq (by rw [GlobalTheory.ThA.FrobNorm.gN_inv hB]))) hb (by linarith)
+      exact (_root_.PI.PolynomialProperness.GN.gN_mul_le _ _).trans (le_of_eq (by rw [_root_.PI.PolynomialProperness.GN.gN_inv hB]))) hb (by linarith)
   have p1 : 0 ≤ Formalism.FourierDecayAlt.B.gN (lA γ q.1 * Matrix.of q.2) ^ (-e) := Real.rpow_nonneg (Real.sqrt_nonneg _) _
   have p2 : 0 ≤ Formalism.FourierDecayAlt.B.gN (lB q.1 * Matrix.of q.2) ^ (-e) := Real.rpow_nonneg (Real.sqrt_nonneg _) _
   have b1 := (hC _ hA).trans (mul_le_mul_of_nonneg_right (le_abs_self C) p1)

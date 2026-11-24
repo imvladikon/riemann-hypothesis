@@ -16,13 +16,13 @@ public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.ApplySu
 public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GsEulerRatioShortExactOfBijective
 public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.Shapiro
 public import GroundTheory.ProfiniteCohomology.PoitouTate.NonemptyOfNatCastMemOfNeOne
+public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.Reduce
 public import GroundTheory.ProfiniteCohomology.GlobalClassFormation.LocalLimits.IsScalarTowerFiniteSubfieldAlgebraicClosure
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.StabilizersDefs
 public import GroundTheory.ProfiniteCohomology.PoitouTate.PoitouTateInfinite.LevelModulesDefs
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerLocalVal
 public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.RatioOneKilled
-public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.Reduce
 public import GroundTheory.GlobalFields.CyclotomicCharacters.Character
 public import GroundTheory.LocalFields.LocalArtinBaseChange
 public import ReciprocityTheory.Hypotheses.GalCohDefs
@@ -83,6 +83,7 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.TypeStar
+import GroundTheory.ProfiniteCohomology.PoitouTate.RealEvenFree
 import GroundTheory.ProfiniteCohomology.LocalEulerCharacteristic.MainCoind
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Tactic.Polynomial.Basic
@@ -560,7 +561,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.ExistsPrimeToPart =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledB =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledB", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledA\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.Brauer\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GlobalEulerFormulaInf\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.PowDefs\npublic import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.ExistsPrimeToPart\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.ApplySubrepresentationCongr\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.DefsForms\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GsEulerRatioShortExactOfBijective\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.Shapiro\nimport GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.ShapiroReal\npublic import GroundTheory.ProfiniteCohomology.PoitouTate.NonemptyOfNatCastMemOfNeOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledB", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledA\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.Brauer\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GlobalEulerFormulaInf\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.PowDefs\npublic import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.ExistsPrimeToPart\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.ApplySubrepresentationCongr\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.DefsForms\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GsEulerRatioShortExactOfBijective\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.Shapiro\nimport GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.ShapiroReal\npublic import GroundTheory.ProfiniteCohomology.PoitouTate.NonemptyOfNatCastMemOfNeOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.Reduce\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -571,51 +572,6 @@ namespace PositivityTheory.Lit1.GEN.W_killed_b
 local notation "ℚ̄" => AlgebraicClosure ℚ
 
 
-theorem ratio_shortExact_prime (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set (HeightOneSpectrum (𝓞 K.1)))
-    (hS : S.Finite) (hSℓ : ∀ v : HeightOneSpectrum (𝓞 K.1), ((ℓ : ℕ) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S)
-    (ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal}, ℚ̄ →ₐ[K.1] AlgebraicClosure v.1.Completion)
-    (T : ShortComplex (Rep.{0} (ULift.{0} ℤ) (galUnramifiedOutside K.1 ℚ̄ S)))
-    (hT : T.ShortExact) [IsDiscreteRep T.X₁] [IsDiscreteRep T.X₂] [IsDiscreteRep T.X₃] [Finite T.X₂]
-    (hℓ : ∃ r : ℕ, ∀ m : T.X₂, (ℓ ^ r) • m = 0) :
-    haveI : Finite S := hS
-    gsEulerRatio S T.X₂ ιr = gsEulerRatio S T.X₁ ιr * gsEulerRatio S T.X₃ ιr := by
-  haveI : Finite S := hS
-  haveI : Fintype S := Fintype.ofFinite S
-  have hp : ℓ.Prime := Fact.out
-  haveI : Nonempty S := nonempty_of_natCast_mem_of_ne_one (N := ℓ) S hp.one_lt.ne' hSℓ
-  obtain ⟨r, hr⟩ := hℓ
-  have hinj : Function.Injective T.f.hom := (Rep.mono_iff_injective _).1 hT.mono_f
-  have hsurj : Function.Surjective T.g.hom := (Rep.epi_iff_surjective _).1 hT.epi_g
-  haveI : Finite T.X₁ := Finite.of_injective _ hinj
-  haveI : Finite T.X₃ := Finite.of_surjective _ hsurj
-  haveI : NeZero (ℓ ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  have hSN : ∀ v : HeightOneSpectrum (𝓞 K.1), (((ℓ ^ r : ℕ)) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S := by
-    intro v hv
-    apply hSℓ v
-    rw [Nat.cast_pow] at hv
-    exact v.isPrime.mem_of_pow_mem r hv
-  let ιs : ∀ v : S, AlgebraicClosure ℚ →ₐ[K.1]
-      AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1) := fun v =>
-    (nonempty_algHom_of_isSepClosed : Nonempty (AlgebraicClosure ℚ →ₐ[K.1]
-      AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1))).some
-  have h1 : ∀ m : T.X₁, (ℓ ^ r) • m = 0 := fun m => hinj (by
-    rw [map_nsmul, hr, map_zero])
-  have hA := bijective_gsRealRes (S := S) (ιr := ιr) (ιs := ιs) (hS := hSN) (M := T.X₁) (hM := h1)
-    (r := 3) le_rfl
-  have hB := bijective_gsRealRes (S := S) (ιr := ιr) (ιs := ιs) (hS := hSN) (M := T.X₂) (hM := hr)
-    (r := 3) le_rfl
-  have hpg : IsPGroup ℓ (Multiplicative T.X₂) := fun g => ⟨r, by
-    show Multiplicative.toAdd (g ^ (ℓ ^ r)) = Multiplicative.toAdd 1
-    rw [toAdd_pow]; exact hr _⟩
-  obtain ⟨n, hn⟩ := hpg.exists_card_eq
-  have hn2 : Nat.card T.X₂ = ℓ ^ n := by rw [← hn]; rfl
-  have hn' : ∀ v : HeightOneSpectrum (𝓞 K.1), ((Nat.card T.X₂ : ℕ) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S := by
-    intro v hv
-    apply hSℓ v
-    rw [hn2, Nat.cast_pow] at hv
-    exact v.isPrime.mem_of_pow_mem n hv
-  exact gsEulerRatio_shortExact_of_bijective S ιr hT hn' hA hB
-
 theorem ratio_shortExact_prime_card (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set (HeightOneSpectrum (𝓞 K.1)))
     (hS : S.Finite) (hSℓ : ∀ v : HeightOneSpectrum (𝓞 K.1), ((ℓ : ℕ) : 𝓞 K.1) ∈ v.asIdeal → v ∈ S)
     (ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal}, ℚ̄ →ₐ[K.1] AlgebraicClosure v.1.Completion)
@@ -625,7 +581,7 @@ theorem ratio_shortExact_prime_card (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubf
     haveI : Finite S := hS
     gsEulerRatio S T.X₂ ιr = gsEulerRatio S T.X₁ ιr * gsEulerRatio S T.X₃ ιr := by
   obtain ⟨n, hn⟩ := hc
-  exact ratio_shortExact_prime ℓ K S hS hSℓ ιr T hT ⟨n, fun m => by rw [← hn]; exact card_nsmul_eq_zero'⟩
+  exact _root_.PositivityTheory.Lit1.GEN.W_multl.ratio_shortExact_l ℓ K S hS hSℓ ιr T hT ⟨n, fun m => by rw [← hn]; exact card_nsmul_eq_zero'⟩
 
 noncomputable def coindStagesEquiv {k G : Type} [CommRing k] [Group G] (U W : Subgroup G) (hUW : U ≤ W)
     (A : Rep.{0} k G) :
@@ -850,7 +806,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkKilledB =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkSplit =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkSplit", "h": "module\n\npublic import GroundTheory.ProfiniteCohomology.GlobalClassFormation.LocalLimits.IsScalarTowerFiniteSubfieldAlgebraicClosure\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseChangeDefs\npublic import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.StabilizersDefs\npublic import GroundTheory.ProfiniteCohomology.PoitouTate.PoitouTateInfinite.LevelModulesDefs\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerLocalVal\nimport GroundTheory.ProfiniteCohomology.RestrictedRamification.SUnits\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.WorkSplit", "h": "module\n\npublic import GroundTheory.ProfiniteCohomology.GlobalClassFormation.LocalLimits.IsScalarTowerFiniteSubfieldAlgebraicClosure\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.BaseChangeDefs\npublic import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex\npublic import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.StabilizersDefs\npublic import GroundTheory.ProfiniteCohomology.PoitouTate.PoitouTateInfinite.LevelModulesDefs\npublic import GroundTheory.ProfiniteCohomology.RestrictedRamification.BrauerLocalVal\nimport GroundTheory.ProfiniteCohomology.RestrictedRamification.SUnits\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport GroundTheory.ProfiniteCohomology.PoitouTate.RealEvenFree\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -859,15 +815,6 @@ open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh GroundTheo
 namespace PositivityTheory.Lit1.GEN.W_split
 
 local notation "ℚ̄" => AlgebraicClosure ℚ
-
-theorem isTotallyComplex_of_sq_eq_neg_one {E : Type*} [Field E] (x : E) (hx : x ^ 2 = -1) :
-    NumberField.IsTotallyComplex E := by
-  refine ⟨fun w => ?_⟩
-  by_contra hw
-  have hr := InfinitePlace.not_isComplex_iff_isReal.1 hw
-  have h := congrArg (InfinitePlace.embedding_of_isReal hr) hx
-  rw [map_pow, map_neg, map_one] at h
-  nlinarith [sq_nonneg (InfinitePlace.embedding_of_isReal hr x)]
 
 set_option maxHeartbeats 800000 in
 theorem exists_split (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set (HeightOneSpectrum (𝓞 K.1)))
@@ -932,7 +879,7 @@ theorem exists_split (ℓ : ℕ) [Fact ℓ.Prime] (K : FiniteSubfield) (S : Set 
   · by_cases h2 : ℓ = 2
     · right
       have hξ4 : IsPrimitiveRoot ξ 4 := by simpa [n, h2] using hξ
-      refine isTotallyComplex_of_sq_eq_neg_one (⟨ξ, hξN⟩ : N.1) ?_
+      refine _root_.GroundTheory.ProfCoh.isTotallyComplex_of_sq_eq_neg_one (⟨ξ, hξN⟩ : N.1) ?_
       apply (algebraMap N.1 ℚ̄).injective
       rw [map_pow, map_neg, map_one]
       change ξ ^ 2 = -1
@@ -1059,7 +1006,7 @@ theorem ratioOne_of_killed_l (ℓ : ℕ) [Fact ℓ.Prime] (P : FiniteSubfield �
         fun _ _ h => Subtype.ext h
     have hl : ∃ r : ℕ, ∀ m : (rangeStepComplex T hT ⊤ hD).X₂, (ℓ ^ r) • m = 0 :=
       ⟨r + 1, fun m => Subtype.ext (hr m.1)⟩
-    have hmul := ratio_shortExact_l ℓ K S hS hSl ιr _ hSE hl
+    have hmul := _root_.PositivityTheory.Lit1.GEN.W_multl.ratio_shortExact_l ℓ K S hS hSl ιr _ hSE hl
     have h1 : gsEulerRatio S (rangeStepComplex T hT ⊤ hD).X₁ ιr = 1 := by
       refine h K S hS hSl hP ιr _ fun m => Subtype.ext ?_
       have h' : T m.1 = 0 := m.2.2
@@ -1089,12 +1036,8 @@ open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh GroundTheo
 
 namespace PositivityTheory.Lit1.GEN
 
-theorem ratioOne_of_killed_l (ℓ : ℕ) [Fact ℓ.Prime] (P : FiniteSubfield → Prop) (h : RatioOneKilled ℓ P) :
-    RatioOne ℓ P :=
-  W_devis.ratioOne_of_killed_l ℓ P h
-
 theorem ratioOne_of_lemmaX (ℓ : ℕ) [Fact ℓ.Prime] (hX : GlobalEulerCharCoprime) : RatioOne ℓ (fun _ => True) :=
-  ratioOne_of_killed_l ℓ _ (W_assemble.ratioOneKilled_of_lemmaX ℓ hX)
+  _root_.PositivityTheory.Lit1.GEN.W_devis.ratioOne_of_killed_l ℓ _ (W_assemble.ratioOneKilled_of_lemmaX ℓ hX)
 
 end PositivityTheory.Lit1.GEN
 end -- clump:auto
@@ -1498,10 +1441,6 @@ theorem card_fix_conj {k Γ : Type} [CommRing k] [Group Γ] (A : Rep.{0} k Γ) (
   · show A.ρ g⁻¹ (A.ρ g a.1) = a.1
     rw [key, inv_mul_cancel, map_one, Module.End.one_apply]
 
-theorem isCCAt_conj {w : InfinitePlace F} (hw : w.IsReal) {c c' : G F Ω} (hc : IsCCAt w c)
-    (hc' : IsCCAt w c') : ∃ g : G F Ω, c' = g * c * g⁻¹ := by
-  exact PositivityTheory.Lit1.GEN.W_dictfwd_b.isCCAt_conj hw hc hc'
-
 theorem exists_fieldTransport :
     ∃ (K : FiniteSubfield) (τ : Ω ≃+* AlgebraicClosure ℚ) (σ : F ≃+* K.1),
       ∀ x : F, τ (algebraMap F Ω x) = ((σ x : K.1) : AlgebraicClosure ℚ) := by
@@ -1522,16 +1461,6 @@ theorem exists_fieldTransport :
   show τ (algebraMap F Ω x) = _
   rw [τ.commutes]
   rfl
-
-theorem places_transport (K : FiniteSubfield) (τ : Ω ≃+* AlgebraicClosure ℚ) (σ : F ≃+* K.1)
-    (hτ : ∀ x : F, τ (algebraMap F Ω x) = ((σ x : K.1) : AlgebraicClosure ℚ))
-    (S : Finset (HeightOneSpectrum (𝓞 F))) :
-    ∃ (S' : Set (HeightOneSpectrum (𝓞 K.1))) (_ : S'.Finite),
-      (∀ n : ℕ, (∀ v : HeightOneSpectrum (𝓞 F), (n : 𝓞 F) ∈ v.asIdeal → v ∈ S) →
-        ∀ v' : HeightOneSpectrum (𝓞 K.1), (n : 𝓞 K.1) ∈ v'.asIdeal → v' ∈ S') ∧
-      ∀ x : Ω, x ∈ maxUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F))) ↔
-        τ x ∈ maxUnramifiedOutside K.1 (AlgebraicClosure ℚ) S' := by
-  exact PositivityTheory.Lit1.GEN.W_dictfwd_b.places_transport K τ σ hτ S
 
 def tauE (τ : Ω ≃+* AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 F))) {K : FiniteSubfield}
     (S' : Set (HeightOneSpectrum (𝓞 K.1)))
@@ -1647,7 +1576,7 @@ theorem gsTransport_compat (K : FiniteSubfield) (τ : Ω ≃+* AlgebraicClosure 
       ∀ (g : G F Ω) (g' : G K.1 (AlgebraicClosure ℚ)), (∀ x : Ω, g' (τ x) = τ (g x)) →
         θ (resS (Ω := Ω) (S : Set (HeightOneSpectrum (𝓞 F))) g) =
           resS (Ω := AlgebraicClosure ℚ) S' g' := by
-  obtain ⟨S', hS', hn, hmem⟩ := places_transport K τ σ hτ S
+  obtain ⟨S', hS', hn, hmem⟩ := _root_.PositivityTheory.Lit1.GEN.W_dictfwd_b.places_transport K τ σ hτ S
   obtain ⟨θ, hθ⟩ := galEquiv_transport K τ σ hτ _ S' hmem
   exact ⟨S', hS', θ, hn, hθ⟩
 
@@ -1660,14 +1589,6 @@ theorem exists_transport_elem (K : FiniteSubfield) (τ : Ω ≃+* AlgebraicClosu
     exact g'.commutes (σ x)
   · show g' (τ x) = τ (τ.symm (g' (τ x)))
     rw [RingEquiv.apply_symm_apply]
-
-theorem realPlaces_transport (K : FiniteSubfield) (τ : Ω ≃+* AlgebraicClosure ℚ) (σ : F ≃+* K.1)
-    (hτ : ∀ x : F, τ (algebraMap F Ω x) = ((σ x : K.1) : AlgebraicClosure ℚ)) :
-    ∃ e : {w : InfinitePlace F // w.IsReal} ≃ {v : InfinitePlace K.1 // v.IsReal},
-      Fintype.card (InfinitePlace F) = Fintype.card (InfinitePlace K.1) ∧
-      ∀ (w : {w : InfinitePlace F // w.IsReal}) (g : G F Ω) (g' : G K.1 (AlgebraicClosure ℚ)),
-        (∀ x : Ω, g' (τ x) = τ (g x)) → IsCCAt (e w).1 g' → IsCCAt w.1 g := by
-  exact PositivityTheory.Lit1.GEN.W_dictfwd_b.realPlaces_transport K τ σ hτ
 
 theorem real_H0_card_eq_fixed (K : FiniteSubfield) (S' : Set (HeightOneSpectrum (𝓞 K.1)))
     (ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal},
@@ -1700,7 +1621,7 @@ theorem transport_data {l : ℕ} [Fact l.Prime] (S : Finset (HeightOneSpectrum (
           Nat.card {a : A // A.ρ (resS (Ω := Ω) (S : Set (HeightOneSpectrum (𝓞 F))) (c' w.1)) a = a} := by
   obtain ⟨K, τ, σ, hτ⟩ := exists_fieldTransport (F := F) (Ω := Ω)
   obtain ⟨S', hS', θ, hn, hθ⟩ := gsTransport_compat K τ σ hτ S
-  obtain ⟨e, hcard, hcc⟩ := realPlaces_transport K τ σ hτ
+  obtain ⟨e, hcard, hcc⟩ := _root_.PositivityTheory.Lit1.GEN.W_dictfwd_b.realPlaces_transport K τ σ hτ
   set_option synthInstance.maxHeartbeats 200000 in
     let ιr : ∀ v : {v : InfinitePlace K.1 // v.IsReal},
         AlgebraicClosure ℚ →ₐ[K.1] AlgebraicClosure v.1.Completion := fun v => IsAlgClosed.lift
@@ -1758,7 +1679,7 @@ theorem ratio_F {l : ℕ} [Fact l.Prime] (h : RatioOne l (fun _ => True))
   obtain ⟨c', hc', hrat⟩ := ratio_F_exists (Ω := Ω) h S hS
   rw [hrat A r hA]
   refine Finset.prod_congr rfl fun w _ => ?_
-  obtain ⟨g, hg⟩ := isCCAt_conj w.2 (hc' w.1 w.2) (hc w.1 w.2)
+  obtain ⟨g, hg⟩ := _root_.PositivityTheory.Lit1.GEN.W_dictfwd_b.isCCAt_conj w.2 (hc' w.1 w.2) (hc w.1 w.2)
   have e := card_fix_conj A (resS (Ω := Ω) (S : Set (HeightOneSpectrum (𝓞 F))) g)
     (resS (Ω := Ω) (S : Set (HeightOneSpectrum (𝓞 F))) (c' w.1))
   rw [← map_inv, ← map_mul, ← map_mul, ← hg] at e
@@ -1838,14 +1759,6 @@ open NumberField IsDedekindDomain CategoryTheory GroundTheory.ProfCoh GroundTheo
 
 namespace PositivityTheory.Lit1.GEN
 
-theorem globalEulerCharAt_of_ratioOne {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
-    [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {r : ℕ} {M : Type} [AddCommGroup M]
-    [Module (ZMod (l ^ r)) M] [Finite M] [TopologicalSpace M] [DiscreteTopology M]
-    (S : Finset (HeightOneSpectrum (𝓞 F)))
-    (rhoS : Representation (ZMod (l ^ r)) (GS Ω (S : Set (HeightOneSpectrum (𝓞 F)))) M)
-    (h : RatioOne l (fun _ => True)) : GlobalEulerCharAt S rhoS :=
-  W_dictfwd_a.globalEulerCharAt_of_ratioOne S rhoS h
-
 end PositivityTheory.Lit1.GEN
 end -- clump:auto
 end -- clump:auto
@@ -1862,7 +1775,7 @@ namespace PositivityTheory.Lit1.GEN
 
 theorem globalEulerChar_of_lemmaX (hX : GlobalEulerCharCoprime) : ReciprocityTheory.Gal.GlobalEulerChar := by
   intro F Ω _ _ _ _ _ l _ r M _ _ _ _ _ S rhoS
-  exact globalEulerCharAt_of_ratioOne S rhoS (ratioOne_of_lemmaX l hX)
+  exact _root_.PositivityTheory.Lit1.GEN.W_dictfwd_a.globalEulerCharAt_of_ratioOne S rhoS (ratioOne_of_lemmaX l hX)
 
 theorem globalEulerChar_full : ReciprocityTheory.Gal.GlobalEulerChar :=
   globalEulerChar_of_lemmaX X.lemmaX

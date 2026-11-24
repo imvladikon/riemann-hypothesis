@@ -68,9 +68,9 @@ theorem exists_ext_chart_scale : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H Dw l Xo c
   letI := H.starRing
   intro T io y hy φ hφ
-  obtain ⟨S', io', z', r, hz', hr, hU, ψA, hv, hm⟩ := GlobalTheory.T.exists_extension_all_models_uniformized _ _ _ _ Xo c T io y hy
+  obtain ⟨S', io', z', r, hz', hr, hU, ψA, hv, hm⟩ := _root_.GlobalTheory.IntegralPull.exists_ext_all_models_uniformised _ _ _ _ Xo c T io y hy
   have hphi : ∀ φ' : ℝ, HasPhi z' φ' → φ' = r * φ := fun φ' h' =>
-    GlobalTheory.T.balancedPeriodSlope_mul_ramificationIndex _ _ _ _ Xo c T S' io io' y z' r hr ⟨ψA, hv, hm⟩ φ φ' hφ h'
+    _root_.GlobalTheory.SlopeRec.phi_eq_mul_of_frMap _ _ _ _ Xo c T S' io io' y z' r hr ⟨ψA, hv, hm⟩ φ φ' hφ h'
   letI := io.toAlgebra
   let ψ : T.Fr →+* S'.Fr := letI := io'.toAlgebra; ψA.toRingHom
   have hio : io' = ψ.comp io := by
@@ -82,7 +82,7 @@ theorem exists_ext_chart_scale : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · exact hv a ha
   have hev : ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ),
       ∀ f ∈ thGen Xo c nab a n, ψ (evI y f) = evI z' f := fun nab hn a n f hf =>
-    GlobalTheory.T.thetaRule_integralPoint_value_baseChange _ _ _ _ Xo c nab hn T S' io io' y z' ψA hm a n f hf
+    _root_.GlobalTheory.ThetaRuleValue.evI_baseChange _ _ _ _ Xo c nab hn T S' io io' y z' ψA hm a n f hf
   clear_value ψ
   clear hm hv ψA
   subst hio
@@ -111,8 +111,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth GlobalTheory.PtTie GlobalTheory.PlaceInt
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_finiteExtension_uniformisedChart_scale : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), y.IsAlg → ∀ φ : ℝ, HasPhi y φ → ∃ (T' : CDVR) (io' : c.F →+* T'.Fr) (y' : IntFr Xo c T' io') (r : ℕ) (C : IntegralChartA3 Xo c T' io' y') (P : PELUnif (maximalIdeal T'.V) C.I.G), y'.IsAlg ∧ 0 < r ∧ FrTrunc C.I.G (𝟙 (Sp T'.V)) (chD C.ch) C.xT C.eT ∧ P.TorsionIso ∧ HasPhi y' (r * φ) ∧ (∀ (la : HeightOneSpectrum (𝓞 c.F)) (e : ℕ), OverLa la T.V io e → OverLa la T'.V io' (r * e)) ∧ (∀ m : ℕ, m ≠ 0 → vV T'.V (m : T'.Fr) = (r : ℤ) * vV T.V (m : T.Fr)) ∧ ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n e : ℕ) (s : c.F), ∀ f ∈ thGen Xo c nab a n, nval T'.V (r * e) (io' s * evI y' f) = nval T.V e (io s * evI y f) := by
-  first | exact @GlobalTheory.ExtScale.exists_ext_chart_scale
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionUniformisedChartScaleStatement =====

@@ -254,11 +254,6 @@ theorem card_fixed_eq (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] [Finite R
     rw [← h3, h1, Nat.card_congr e]
   exact Nat.mul_self_inj.mp hsq
 
-theorem card_fixed (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] [Finite R]
-    (X : Matrix (Fin 2) (Fin 2) R) : IsUnit (2 : R) → X * X = 1 → X.det = -1 → X.trace = 0 →
-      Nat.card {v : Fin 2 → R // X *ᵥ v = v} = Nat.card R :=
-  fun h2 hXX hdet htr => card_fixed_eq l R X h2 hXX hdet htr
-
 end GlobalTheory.OddInvolution
 end -- clump:auto
 end -- clump:auto
@@ -319,7 +314,7 @@ theorem card_fixed_cc (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra �
     apply Subtype.ext
     simp only [Subalgebra.coe_sub, Subalgebra.coe_mul, Subalgebra.coe_neg, Subalgebra.coe_one]
     exact hd
-  exact GlobalTheory.OddInvolution.card_fixed l (Qn c n) _ (isUnit_two l hW.l_odd c n) hXX hdet
+  exact _root_.GlobalTheory.OddInvolution.card_fixed_eq l (Qn c n) _ (isUnit_two l hW.l_odd c n) hXX hdet
     (trace_eq_zero _ hXX hdet)
 
 theorem archimedean_h0_card_eq : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (e : ℕ) (S : Finset Pl) (A : ValuationSubring Ω) (W : R2 Ω l), Nf e S A W → ∀ (c : Coef l) (hint : ∀ s i j, mat W s i j ∈ c.O) (hN : ∀ a ∈ NS Ω (S : Set Pl), W a = 1) (n : ℕ), 1 ≤ n → ∀ cc : InfinitePlace ℚ → G ℚ Ω, (∀ w, w.IsReal → IsCCAt w (cc w)) → archH0Card S (rhoS c n W hint S hN) cc = Nat.card (Qn c n) := by

@@ -87,11 +87,6 @@ theorem hom_C (n : ℤ) : IsMultiHomog (MvPolynomial.C n : MRing ι) 0 := by
     exact hm rfl
   simp [this]
 
-theorem hom_mul {f g : MRing ι} {a b : K → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g b) :
-    IsMultiHomog (f * g) (a + b) := by
-  classical
-  exact ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hf hg
-
 theorem Q_chart (y : (Σ k, ι k) → Ω) (c : (k : K) → ι k) (hc : (∏ k, y ⟨k, c k⟩) ≠ 0) :
     ∀ a ∈ Algebra.adjoin ℤ (Set.range fun j : (k : K) → ι k => (∏ k, y ⟨k, j k⟩) / ∏ k, y ⟨k, c k⟩), Q y a := by
   classical
@@ -108,13 +103,13 @@ theorem Q_chart (y : (Σ k, ι k) → Ω) (c : (k : K) → ι k) (hc : (∏ k, y
   | add a b _ _ h1 h2 =>
     obtain ⟨d, g, h, hg, hh, h0, e⟩ := h1
     obtain ⟨d', g', h', hg', hh', h0', e'⟩ := h2
-    refine ⟨d + d', g * h' + h * g', h * h', hom_add (hom_mul hg hh') (hom_mul hh hg'), hom_mul hh hh', ?_, ?_⟩
+    refine ⟨d + d', g * h' + h * g', h * h', hom_add (_root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hg hh') (_root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hh hg'), _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hh hh', ?_, ?_⟩
     · rw [map_mul]; exact mul_ne_zero h0 h0'
     · simp only [map_add (f := _), map_mul, e, e']; ring
   | mul a b _ _ h1 h2 =>
     obtain ⟨d, g, h, hg, hh, h0, e⟩ := h1
     obtain ⟨d', g', h', hg', hh', h0', e'⟩ := h2
-    refine ⟨d + d', g * g', h * h', hom_mul hg hg', hom_mul hh hh', ?_, ?_⟩
+    refine ⟨d + d', g * g', h * h', _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hg hg', _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hh hh', ?_, ?_⟩
     · rw [map_mul]; exact mul_ne_zero h0 h0'
     · simp only [map_mul, e, e']; ring
 
@@ -131,7 +126,7 @@ theorem birational_of_tie {X : Scheme.{0}} {ξ : Spec (CommRingCat.of Ω) ⟶ X}
   obtain ⟨t, ht, ht0, hts⟩ := GlobalTheory.CompanionTheory.Ar.HtJoin.exists_mul_mem h hc s
   obtain ⟨d, g, k, hg, hk, k0, e⟩ := Q_chart y c hc _ ht
   obtain ⟨d', g', k', hg', hk', k0', e'⟩ := Q_chart y c hc _ hts
-  refine ⟨d' + d, g' * k, k' * g, hom_mul hg' hk, hom_mul hk' hg, ?_, ?_⟩
+  refine ⟨d' + d, g' * k, k' * g, _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hg' hk, _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul hk' hg, ?_, ?_⟩
   · rw [map_mul, e]; exact mul_ne_zero k0' (mul_ne_zero ht0 k0)
   · simp only [map_mul, e, e']; ring
 

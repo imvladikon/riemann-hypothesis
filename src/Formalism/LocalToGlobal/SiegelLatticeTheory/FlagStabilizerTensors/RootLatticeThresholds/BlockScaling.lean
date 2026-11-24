@@ -524,8 +524,8 @@ theorem w_symm (x : Fin (r + 1)) : (W).symm x = W x := wPt_symm pN x
 
 def sw (q : Formalism.FourierDecayAlt.C2.Lstidx W) : Formalism.FourierDecayAlt.C2.Lstidx W :=
   ⟨(W q.1.2, W q.1.1), by
-    exact ⟨by simpa only [w_symm] using q.2.2,
-      by simpa only [w_symm, wPt_invol] using q.2.1⟩⟩
+    exact ⟨by simpa only [_root_.Formalism.MainNotions.BigCellDensity.wPt_symm] using q.2.2,
+      by simpa only [_root_.Formalism.MainNotions.BigCellDensity.wPt_symm, wPt_invol] using q.2.1⟩⟩
 
 variable (d : Fin (r + 1) → ℂ)
 
@@ -567,12 +567,12 @@ theorem low_R_mono (hd : ∀ a, d a ≠ 0) (x' : Formalism.FourierDecayAlt.C2.Ls
   rw [low_apply', low_apply']
   by_cases h1 : i = (wPt pN) b
   · subst h1
-    simp [wPt_invol, w_symm]
+    simp [wPt_invol, _root_.Formalism.MainNotions.BigCellDensity.wPt_symm]
   · have h1' : b ≠ (wPt pN) i := fun h => h1 (by rw [h, wPt_invol])
     rw [ite_eq_right h1, ite_eq_right h1', zero_add, zero_add]
     have key : ((wPt pN) b < i ∧ (wPt pN).symm i < (wPt pN).symm ((wPt pN) b)) ↔
         ((wPt pN) i < b ∧ (wPt pN).symm b < (wPt pN).symm ((wPt pN) i)) := by
-      rw [Equiv.symm_apply_apply, Equiv.symm_apply_apply, w_symm, w_symm]
+      rw [Equiv.symm_apply_apply, Equiv.symm_apply_apply, _root_.Formalism.MainNotions.BigCellDensity.wPt_symm, _root_.Formalism.MainNotions.BigCellDensity.wPt_symm]
       exact And.comm
     by_cases h2 : (wPt pN) b < i ∧ (wPt pN).symm i < (wPt pN).symm ((wPt pN) b)
     · have h3 := key.1 h2
@@ -1627,7 +1627,7 @@ theorem measPinAt_of (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X
     refine Equiv.ext fun x => Fin.ext ?_
     calc ((hloc.2 ▸ Formalism.FourierDecayAlt.D.ptPerm p' : Equiv.Perm (Fin (D.R.rS + 1))) x).val
         = (Formalism.FourierDecayAlt.D.ptPerm p' ⟨x.val, by rw [hloc.2]; exact x.isLt⟩).val := Formalism.MainNotions.BigCellDensity.cast_perm_val _ _ _
-      _ = Formalism.FourierDecayAlt.D.ptPartner p' x.val := (Formalism.FourierDecayAlt.P.ptPerm_spec p' (D.R.rS + 1) hloc).1 _
+      _ = Formalism.FourierDecayAlt.D.ptPartner p' x.val := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec p' (D.R.rS + 1) hloc).1 _
       _ = Formalism.FourierDecayAlt.D.ptPartner (pN.1.map Prod.swap) x.val := by rw [hswap]
       _ = (Formalism.MainNotions.BigCellDensity.wPt pN x).val := (Formalism.MainNotions.BigCellDensity.wPt_val pN x).symm
   have hdm : ∀ q : Formalism.FourierDecayAlt.C2.Lstidx (Formalism.MainNotions.BigCellDensity.wPt pN),
@@ -1662,7 +1662,7 @@ theorem measPinAt_of (sc : ℝ) (hsc : 0 < sc) (i0 i0' : ∀ _ : InfinitePlace X
         (trG ((PP).Q v) ((PP).Qi v) ((h v)⁻¹ * (gamW X u u' w) v * h' v))} = 0 := by
     have hS : IsClosed {x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS | Matrix.of x ∈ Formalism.FourierDecayAlt.C6.Rset
         (trG ((PP).Q v) ((PP).Qi v) ((h v)⁻¹ * (gamW X u u' w) v * h' v))} :=
-      (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (Formalism.FourierDecayAlt.P.Dx2.Rad.isUnit_G hδG)).closed
+      (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hδG)).closed
     rw [Measure.map_map hΦ2 hΦ1]
     refine (Measure.map_apply (hΦ2.comp hΦ1) ?_).trans ?_
     · exact hS.measurableSet.compl

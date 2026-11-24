@@ -453,12 +453,12 @@ namespace PositivityTheory.HtPt.Htat
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct in
 open GlobalTheory.CompanionTheory.Ar.BT in
 theorem bt_sub_eq_top : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.btOrder U = Γ.btOrder ⊤ :=
-  @bt_sub_eq_top_of @hens_normal @PositivityTheory.UnitarySelfGeneration.bt_exists_bc @reg_pull
+  @_root_.PositivityTheory.HtPt.Htat.HopfOrderEqTop.btOrder_eq_top @hens_normal @PositivityTheory.UnitarySelfGeneration.bt_exists_bc @reg_pull
 
 open CategoryTheory Limits AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj TensorProduct in
 open GlobalTheory.CompanionTheory.Ar.BT in
 theorem bt_hopf : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] [IsNoetherianRing R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T), IsHopfOrder (Γ.btOrder ⊤) :=
-  @bt_hopf_of @hens_normal @PositivityTheory.UnitarySelfGeneration.bt_exists_bc @reg_pull
+  @_root_.PositivityTheory.HtPt.Htat.HopfOrderTop.btOrder_top_isHopfOrder @hens_normal @PositivityTheory.UnitarySelfGeneration.bt_exists_bc @reg_pull
 
 end PositivityTheory.HtPt.Htat
 end -- clump:auto
@@ -635,7 +635,7 @@ variable (hE : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exist
 include hE
 
 theorem sub_eq_top_of : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.btOrder U = Γ.btOrder ⊤ :=
-  Htat.bt_sub_eq_top_of @Htat.hens_normal hE @Htat.reg_pull
+  _root_.PositivityTheory.HtPt.Htat.HopfOrderEqTop.btOrder_eq_top @Htat.hens_normal hE @Htat.reg_pull
 
 
 omit hE in
@@ -806,11 +806,11 @@ theorem res_core {R : Type} [CommRing R] [IsDomain R] [IsIntegrallyClosed R] {T 
   haveI := Γ'.quasiCompact
   haveI := Γ'.finPres
   obtain ⟨U, hUfin, hUcl⟩ := Twhopf.finite_part R' Γ'.G.left Γ'.G.hom
-  have hU : Γ'.IsFinOpenSub U := Twhopf.finite_sub R' T Γ' U hUfin hUcl
+  have hU : Γ'.IsFinOpenSub U := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.isFinOpenSub_of_closedFibre R' T Γ' U hUfin hUcl
   have hres := (res_fin_core hE Γ' Γ₁' a' hmul' α hα' hcl' U hU).2
   refine ⟨R', inferInstance, inferInstance, inferInstance, hflat, hP', ?_⟩
   have h1 := OrderApi.comp_mem_extOrder (algebraMap R R') hg
-  rw [← Htat.bt_flat_bc R H Γ₁ R' Γ₁' F₁ hF₁ hflat, ← hres, Htat.bt_flat_bc R T Γ R' Γ' F hF hflat] at h1
+  rw [← _root_.PositivityTheory.HtPt.Htat.ValuationInjectivePi.btOrder_flat_baseChange R H Γ₁ R' Γ₁' F₁ hF₁ hflat, ← hres, _root_.PositivityTheory.HtPt.Htat.ValuationInjectivePi.btOrder_flat_baseChange R T Γ R' Γ' F hF hflat] at h1
   obtain ⟨f', hf', e⟩ := h1
   rw [← e]
   have hf'' := (Htat.ext_span R T R' _ _ f').1 hf'
@@ -1461,7 +1461,7 @@ theorem exists_struct (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNo
   have := Γ.quasiCompact
   have := Γ.finPres
   obtain ⟨W, hWf, hWc⟩ := PositivityTheory.HtPt.Twhopf.finite_part R Γ.G.left Γ.G.hom
-  have hsub := PositivityTheory.HtPt.Twhopf.finite_sub R T Γ W hWf hWc
+  have hsub := _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.isFinOpenSub_of_closedFibre R T Γ W hWf hWc
   obtain ⟨H, Γf, u, hH, _, hop, hcl, hr, hfin, hu⟩ := sub_qf R T Γ W hsub
   obtain ⟨M, C, _, _, ΓM, ΓB, iM, iB, a, b, hM, hB, _, _, ha, hbf, hbs, hpb, -⟩ :=
     PositivityTheory.HtPt.Stight.D1.finitePart_extension R D A G U p hp1 T Γ i hi H Γf u hop hfin fun g hg => hr ▸ hWc g hg

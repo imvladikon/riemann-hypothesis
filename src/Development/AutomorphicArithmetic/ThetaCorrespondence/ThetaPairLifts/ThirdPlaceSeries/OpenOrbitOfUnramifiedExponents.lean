@@ -184,8 +184,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
-theorem _root_.GlobalTheory.T.divisionPairing_rational_on_rationalPoints' : (GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalTheory.Published.HarishChandraModules ∧ GlobalTheory.Published.CasselmanWallach ∧ GlobalTheory.Published.HarishChandraFinite ∧ GlobalTheory.Published.CuspRapidDecay) → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y) (C : ReadC R F X0 Y), Pins R F cG → Holds R F → Formalism.MainNotions.WeightDegreeSizes.RationalMapValues D := by
-  first | exact @GlobalTheory.Mem.R3.divisionPairing_rational_on_rationalPoints
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DivisionPairingRationalOnRationalPointsStatement =====
@@ -215,9 +213,9 @@ theorem divisionRows_pairing_vanishes_of_rational_pairing_law
     (hC : GlobalTheory.Published.DiscreteSeriesCover ∧ GlobalTheory.Published.HarishChandraModules ∧ GlobalTheory.Published.CasselmanWallach ∧ GlobalTheory.Published.HarishChandraFinite ∧
       GlobalTheory.Published.CuspRapidDecay) (x : GlobalTheory.Mem.R3.TwIn ex) (hH : Holds x.R x.F) (hB : Rw.BkLaw D)
     (hV : CxData.BtVanish (fc := x.F.fc) (x.R.toCx3 x.F)) : GlobalTheory.Cp.DivRows3G (GlobalTheory.Mem.R3.divisionPairOfAdelicFormsFaceColumnsData x) := by
-  have hRational := GlobalTheory.T.divisionPairing_rational_on_rationalPoints'
+  have hRational := _root_.GlobalTheory.Mem.R3.divisionPairing_rational_on_rationalPoints
     hC D x.G x.Pl0 x.I0 x.T x.A3 _ x.R x.F x.cG ex.p0 x.Y x.Z x.C x.pins hH
-  have hRows := (GlobalTheory.T.divisionCompatible_at_readIdentifications
+  have hRows := (_root_.GlobalTheory.divTied3_read
     hC D x.G x.Pl0 x.I0 x.T x.A3 _ x.R x.F x.cG ex.p0 x.Y x.Z x.C x.sEE Yd x.JM x.pins hH
     (fun _ _ => x.div.grp)).2 x.mjH ex.idx (hB hRational) hV
   exact {
@@ -309,12 +307,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.bk_law_entries_alt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ (K : Ctx) (q : WPt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ).s K), GlobalTheory.Mem.R3.Rw.BkLaw (q.w.D q.Z)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) (fun Q L => Row Q L (AtAll fun _ _ _ (b : _root_.GlobalTheory.Fc.BundleCondition _ _ _) => (b.B.Q.Rl.toCx3 b.B.Q.F).MIstar2 (b.B.Q.F.eV (b.B.Q.Rl.toCx3 b.B.Q.F).zs) b.B.Q.sEE)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDivisorCondition :=
-  _root_.GlobalTheory.Fc.DivLinked.at_hDivG_main_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtHDivGOfMiStatement =====
@@ -369,15 +361,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
-open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.Lev
-open GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.bWit_zsc_F0_heq_F0K_local_of_sc_eq : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), GlobalTheory.Fc.EvP fun _ K => ∀ (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c) (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b), q.O.L.sc = K.s → HEq (w.a.Zsc (zsOf q.x.what₂.r.z.R q.x.what₂.r.z.F)).F0 (F0K K.s (q.w.D q.Z)) := by
-  exact GlobalTheory.Mem.Top.Bl.bWit_zsc_F0_heq_F0K_of_sc_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BundleWitnessZeroSectionEqStatement =====
@@ -423,19 +406,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
-open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.Lev
-open GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.bWit_C_eq_cf_of_sc_eq :
-    ∀ (hL : UpperTheory.Zero.LLC.RecTExists) (p : GlobalTheory.Mem.Top.Bl.Parameters hL),
-      GlobalTheory.Fc.EvP fun _ K =>
-        ∀ (q : WPt p.s K) (c : ℝ) (b : GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c)
-          (w : GlobalTheory.Mem.Top.Bl.BundleWitness q b), q.O.L.sc = K.s → w.x.R.C = b.R.T.n.cf :=
-  GlobalTheory.Mem.Top.Bl.bwit_cf_eq_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BwitCfEqStatement =====
@@ -473,15 +443,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
-open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.Lev
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.Mem GlobalTheory.Mem.R3
-
-theorem _root_.GlobalTheory.T.recursion_local_row_condition_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D) (K : Formalism.MainNotions.G.Consts) (Yd : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl K Yd cX) (x : TwIn ex) (Rc : _root_.Formalism.L2.RecTAlt ex) (S : _root_.Formalism.L2.SG.SpectralTiesReal.STiesRAlt Rc) (y : _root_.GlobalTheory.Mem.R3.RealInAlt x Rc S), ∀ r : _root_.GlobalTheory.Mem.R3.RecursiveInput y, (∀ hp : _root_.Formalism.IndefR.IndefiniteRealisationNormalisation (_root_.GlobalTheory.Mem.R3.realisationOfInput y), _root_.Formalism.IndefR.principalLevelFrame.RowLocPinAlt Rc.T.n.gal.lp x.R.θ x.Y.PY (x.R.MY 0) (fun b => levS _ (x.R.βY 0) (x.R.dat0 (x.R.toRealDat.levR x.F.lv2 b))) (fun b => Formalism.IndefR.Lev.levChi _ (x.R.βY 0) (x.R.dat0 (x.R.toRealDat.levR x.F.lv2 b))) (fun _ => x.R.e0) x.Y.eFT → _root_.Formalism.IndefR.IndefiniteRealisationCompatible hp (_root_.GlobalTheory.Mem.R3.realisationRecursionOfInput r)) ∧ (Formalism.IndefR.RecTie.PartsRec x.R.toRealDat x.F.lv2 x.Y.tupT x.Y.hm x.Y.PY x.Y.PW x.Y.eFT r.E r.labPi r.piOf x.Y.Ish.prt x.Y.IL.prtW → (_root_.GlobalTheory.Mem.R3.realisationRecursionOfInput r).PartsRow) ∧ PsiPPTie D (divisionPairOfAdelicFormsFaceColumnsData x).P0 (divisionPairOfAdelicFormsFaceColumnsData x).ψ0 (divisionPairOfAdelicFormsFaceColumnsData x).Ps (divisionPairOfAdelicFormsFaceColumnsData x).ψs (divisionPairOfAdelicFormsFaceColumnsData x).I.eG := by
-  first | exact @_root_.GlobalTheory.Mem.R3.RecPinsTie.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsTerLastStatement =====
@@ -568,15 +529,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
-open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.Lev
-open GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.bWit_Pg_eq_image_plMap_of_sc_eq : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), GlobalTheory.Fc.EvP fun _ K => ∀ (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c) (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b), q.O.L.sc = K.s → (open Classical in w.x.R.Pg = b.R.T.ker.Pr.vGs.image (Formalism.L2.Host.CT.plMap b.R.T.ker.seam.iE)) :=
-  _root_.GlobalTheory.Div.PgTie.pgEq_of_linked_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PgEqOfLinkedStatement =====
@@ -796,15 +748,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain
-open Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.IndefR.Lev
-open GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.theta_level_conjugate_character_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), GlobalTheory.Fc.EvP fun _ K => ∀ (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c) (w : _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b), q.O.L.sc = K.s → w.y.y.tS ∈ Formalism.L2.Theta.GfC (Yc (q.w.D q.Z) 0) ∧ Formalism.IndefR.AutomorphicEvaluation.ConjLevel w.y.y.tS⁻¹ (levS _ (w.x.R.βY 0) (w.x.R.dat0 (w.x.R.toRealDat.levR w.x.F.lv2 true))) (Formalism.IndefR.Lev.levChi _ (w.x.R.βY 0) (w.x.R.dat0 (w.x.R.toRealDat.levR w.x.F.lv2 true))) (w.y.y.ιS ⁻¹' seeKS b.S.X) (fun k => seeChiS b.S.X (w.y.y.ιS k)) ∧ Formalism.L2.SG.RowLevelMatch.RowLevelMatchAt w.x.R.toRealDat w.x.F.lv2 b.S.X w.y.y.instEq w.y.y.tS := by
-  exact _root_.GlobalTheory.Mem.R3.LinkLev.tS_fin_conj_match_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TSFinConjMatchStatement =====
@@ -847,7 +790,7 @@ theorem nonempty_tie_of_wit (q : WPt p.s K) {c : ℝ} (b : _root_.GlobalTheory.F
       (fun b => levS _ (w.x.R.βY 0) (w.x.R.dat0 (w.x.R.toRealDat.levR w.x.F.lv2 b)))
       (fun b => Formalism.IndefR.Lev.levChi _ (w.x.R.βY 0) (w.x.R.dat0 (w.x.R.toRealDat.levR w.x.F.lv2 b))) (fun _ => w.x.R.e0) w.x.Y.eFT) :
     Nonempty b.Comparison₂ := by
-  have hI := _root_.GlobalTheory.T.recursion_local_row_condition_alt _ _ _ _ _ _ _ _ q.O.ex w.x b.R b.S w.y.y w.y.r
+  have hI := _root_.GlobalTheory.Mem.R3.RecPinsTie.main_alt_alt _ _ _ _ _ _ _ _ q.O.ex w.x b.R b.S w.y.y w.y.r
   have h3 : _root_.Formalism.IndefR.IndefiniteRealisationNormalisationDegreeThree (_root_.GlobalTheory.Mem.R3.realisationOfInput w.y.y) := by
     obtain ⟨x, a, ax, y⟩ := w
     cases ax
@@ -856,7 +799,7 @@ theorem nonempty_tie_of_wit (q : WPt p.s K) {c : ℝ} (b : _root_.GlobalTheory.F
 theorem hasTie_of_linked {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL) (Q : V4.Slot) :
     RowE Q (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage p) fun _ => _root_.GlobalTheory.Fc.HasCompatibility := by
   have hH := EvP.of_ev GlobalTheory.Mem.HostFrames.hostHyp_frames_ev
-  refine ((((((_root_.GlobalTheory.T.bWit_zsc_F0_heq_F0K_local_of_sc_eq hL p).and (_root_.GlobalTheory.T.bWit_C_eq_cf_of_sc_eq hL p)).and (_root_.GlobalTheory.T.bWit_Pg_eq_image_plMap_of_sc_eq hL p)).and (_root_.GlobalTheory.T.theta_level_conjugate_character_alt hL p)).and (_root_.GlobalTheory.T.local_level_character_pin_of_witness hL p)).and hH).mono
+  refine ((((((_root_.GlobalTheory.Mem.Top.Bl.bWit_zsc_F0_heq_F0K_of_sc_eq hL p).and (_root_.GlobalTheory.Mem.Top.Bl.bwit_cf_eq_alt hL p)).and (_root_.GlobalTheory.Div.PgTie.pgEq_of_linked_alt hL p)).and (_root_.GlobalTheory.Mem.R3.LinkLev.tS_fin_conj_match_alt hL p)).and (_root_.GlobalTheory.Mem.Top.Bl.locPin_level_character_of_bWit hL p)).and hH).mono
     fun κ K _ h β _ c b hl => ?_
   obtain ⟨⟨⟨⟨⟨h0, hc⟩, hg⟩, ht⟩, hl'⟩, hh⟩ := h
   obtain ⟨q, b', ⟨w⟩, e⟩ := hl
@@ -907,12 +850,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.linkedAt_tie_of_nonempty_extensionWithLaw : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.Row_tie_alt := by
-  first | exact @_root_.GlobalTheory.Fc.RL.at_tie_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtTieStatement =====
@@ -956,11 +893,6 @@ section -- clump:auto
 
 open GlobalTheory.Mem.Top.Bl
 
-theorem GlobalTheory.T.linkedAt_hPA_prmR :
-    ∀ (hL : UpperTheory.Zero.LLC.RecTExists) (N : NormChoiceExtension hL) (S : SExt) (Γ : GeoP),
-      GlobalTheory.Fc.RL.LinkedAt (parametersOfExtension N S Γ)
-        GlobalTheory.Fc.R1.SlotPrimitivityCondition :=
-  GlobalTheory.Fc.RL.PrimAt.linkedAt_hPA
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HermWCellLastMulMulVecEqOfInWbStatement =====
@@ -1124,12 +1056,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.entries_combined_real_alt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotPrimitivityCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDecompositionPointCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.Row_tie_alt → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotSelectionJumpCondition := by
-  first | exact @_root_.GlobalTheory.Fc.JoinLinked.at_selJ_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.JoinLinkedRealizationStatement =====
@@ -1286,7 +1212,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
   have hj := fun k v => loc_piece π (s k v) (hs k v) (τ k v) (hτ k v) (I.i k v) (I.cont k v)
   choose j hjc hjP using hj
   have hinj := GlobalTheory.PlaceInj.splitPlace_v_injective D s hs
-  obtain ⟨c, hc, hKc⟩ := GlobalTheory.T.rowsAtLevels_fixed_principalCongruence_typePlaces R F cG Y hP s j hs hjc
+  obtain ⟨c, hc, hKc⟩ := _root_.GlobalTheory.RowLevConj.rows_fixed R F cG Y hP s j hs hjc
   obtain ⟨ρM, hρM⟩ := GlobalTheory.TypeAct.exists_rep D s j hinj _ ((principalLevelFrame.actM Y.PY (R.MY 0)).comp (MulAut.conj c).toMonoidHom)
   obtain ⟨ρV, hρV⟩ := GlobalTheory.TypeAct.exists_rep D s j hinj _ (rtHom D.host.E D.R.r)
   obtain ⟨b, hb⟩ := principalLevelFrame.rowRepR_occ R.θ (Y.eFT σ)
@@ -1299,7 +1225,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
   have hMult : Tm ∈ Mult.Mult R.θ (R.MY 0) (levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)))
       (levChi _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b))) := (Submodule.mem_inf.1 hG).1
   have hK := hKc b Tm hMult
-  have he := GlobalTheory.T.goodProjector_eq_goodIdempotent_typePlaces R F cG Y hP s j hs hjc c hc ρM hρM b Tm hK hG
+  have he := _root_.GlobalTheory.RowGood.good_idem_fix_conj R F cG Y hP s j hs hjc c hc ρM hρM b Tm hK hG
   obtain ⟨q1, hq10, hq1⟩ := GlobalTheory.isotIn_detect_by_eqv_map D (Mult.MMap (R.MY 0)) (principalLevelFrame.actM Y.PY (R.MY 0)) (principalLevelFrame.Minf R.θ Y.PY (R.MY 0))
     (principalLevelFrame.FinTyp.conjT π) Tm hN hT0
   obtain ⟨q, hq0, hq⟩ := conj_detect (principalLevelFrame.actM Y.PY (R.MY 0)) (principalLevelFrame.Minf R.θ Y.PY (R.MY 0))
@@ -1312,7 +1238,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
         ((ρV (GlobalTheory.GoodTypes.facHom D k v m) z' : KFix D s j (rtHom D.host.E D.R.r)) : GAf D.host.E D.R.r → ℂ) =
           q (ρM (GlobalTheory.GoodTypes.facHom D k v m) z) := by
     intro k v m z hz
-    obtain ⟨y, rfl⟩ := GlobalTheory.GLp.reduction_GL_surjective (D.host.g k) D.R.r m
+    obtain ⟨y, rfl⟩ := _root_.GlobalTheory.GLp.red_surjective (D.host.g k) D.R.r m
     obtain ⟨x, hx1, hx2⟩ := GlobalTheory.SplitSec.exists_trivOutside_loc D.host.E D.R.r (s k v)
       (Matrix.GeneralLinearGroup.map (j k v).toRingHom (GlobalTheory.GLp.inc _ _ y))
     have hl : IsLiftAt (s k v) (j k v) y x := ⟨hx1, hx2⟩
@@ -1360,7 +1286,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
       exact e1.symm
     · have hzf : conjL (z : GAf D.host.E D.R.r → ℂ) ∈ π.S := hz
       have hy0 : GlobalTheory.GLp.red (D.host.g k) D.R.r (Function.invFun (GlobalTheory.GLp.red (D.host.g k) D.R.r) h) = h :=
-        Function.invFun_eq (GlobalTheory.GLp.reduction_GL_surjective (D.host.g k) D.R.r h)
+        Function.invFun_eq (_root_.GlobalTheory.GLp.red_surjective (D.host.g k) D.R.r h)
       obtain ⟨x, hl⟩ : ∃ x, IsLiftAt (s k v) (j k v) (Function.invFun (GlobalTheory.GLp.red (D.host.g k) D.R.r) h) x :=
         GlobalTheory.SplitSec.exists_trivOutside_loc D.host.E D.R.r (s k v) _
       have eV := hρV k v _ x hl z
@@ -1451,7 +1377,7 @@ theorem goodFTAll_at_members_of_depthZero (h1 : GlobalTheory.GLq.Green) (h2 : Gl
     ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists,
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GoodFTAll (w.D Z) := by
   intro hL
-  have hA := _root_.GlobalTheory.T.coefficient_duty_pin_at_each_member hL
+  have hA := _root_.GlobalTheory.HeightCounting.Up.oPin_at_mem hL
   have hO := GlobalTheory.TypeVecConj.typeVec
   refine EvG.imp (EvG.inter hA hO) fun K _ _ _ _ h => ?_
   refine large₂.imp (large₂.inter h.1 h.2) fun B f T _ g => ?_
@@ -1509,12 +1435,6 @@ theorem row_good_alt_alt : GlobalTheory.GLq.Green → GlobalTheory.Published.Zel
   exact ⟨1, one_pos, fun _ _ _ => ⟨⟨0, fun _ => 0, fun _ => 0, fun _ => 0⟩, fun Fm _ _ _ hc => Ind.ev_of_atAll key Fm (w3_a hc)⟩⟩
 end GlobalTheory.Fc.GoodLinked
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.linked_bundles_good_of_local_langlands_alt_alt : GlobalTheory.GLq.Green → GlobalTheory.Published.ZelevinskyPolynomialRing → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) (fun Q L => Row Q L (AtAll fun D _ _ (_ : _root_.GlobalTheory.Fc.BundleCondition _ _ _) => Formalism.BasicNotions.GoodFTAll D)) ∧ _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.RowGoodnessCondition := by
-  first | exact @_root_.GlobalTheory.Fc.GoodLinked.row_good_alt_alt
 end
 end
 end -- clump:auto
@@ -1584,7 +1504,7 @@ theorem isotRank_of_wit_alt (h1 : GlobalTheory.Published.WeilRepresentationUnita
   have hT : TypesTrue (q.w.st q.Z).toD7.ntypes q.x.what₂.r.z.R.C.P q.x.what₂.r.z.R.C.W := by
     rw [q.x.what₂.r.z.lev.C, q.w.C_eq]
     exact q.x.what₂.grp
-  have hME := _root_.GlobalTheory.T.twisted_multiplicity_one a1 a2 h4 h3 a5 a6 a7 a12 a13 hG q.x.what₂.r.z.R q.x.what₂.r.z.F q.x.what₂.r.intersectionNumber_baseChange.ok
+  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq a1 a2 h4 h3 a5 a6 a7 a12 a13 hG q.x.what₂.r.z.R q.x.what₂.r.z.F q.x.what₂.r.intersectionNumber_baseChange.ok
     q.x.what₂.r.z.pins.char q.x.what₂.exAt hH hp q.B.ccK_top q.x.what₂.r.z.pins.keep.guard
     (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue q.x.what₂.r.z.pins.char.base.lev hT)
   exact GlobalTheory.Mem.R3.isotRank_of_multEq h1 h2 h3 h4 _ _ _ _ _ _ _ q.x.what₂.r.z.R q.x.what₂.r.z.F q.x.what₂.r.z.cG _ q.x.what₂.r.Y q.x.what₂.r.z.pins
@@ -1624,11 +1544,9 @@ theorem at_row_hLamP_alt_alt : GlobalTheory.Published.WeilRepresentationUnitaryP
   show Formalism.L2.Rows.RowsHoldLam3 b'.P
   rw [show b'.P = R3.divisionPairOfAdelicFormsFaceColumnsData w.x from congrArg _root_.GlobalTheory.Mem.Top.Bl.RealPackage.P w.y.eq]
   exact (GlobalTheory.Mem.R3.rowConditions_at_companion_from_readings _ _ _ _ _ _ _ _ _ w.x).1
-    (GlobalTheory.T.finiteTypes_via_full_heckeAlgebra_eigensystems h1 h2 h3 h4 _ _ _ _ _ w.x.A3 _ w.x.R w.x.F w.x.cG q.O.ex.p0 w.x.Y w.x.Z w.x.pins w.y.intersectionNumber_baseChange w.y.y.host hIR)
+    (_root_.GlobalTheory.Mem.R3.finiteTypes_of_full_heckeAlgebra_eigensystems h1 h2 h3 h4 _ _ _ _ _ w.x.A3 _ w.x.R w.x.F w.x.cG q.O.ex.p0 w.x.Y w.x.Z w.x.pins w.y.intersectionNumber_baseChange w.y.y.host hIR)
 end GlobalTheory.Fc.RL
 
-theorem _root_.GlobalTheory.T.real_group_inputs_combined_alt_alt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.HarishChandraAnalyticity → GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspTraceClass → GlobalTheory.Published.DixmierMalliavinFactorisation → GlobalTheory.Published.FlathFactorisation → GlobalTheory.Published.ZelevinskyPolynomialRing → GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.GreenCuspidal → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotLambdaPrimeCondition :=
-  _root_.GlobalTheory.Fc.RL.at_row_hLamP_alt_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -1675,12 +1593,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.linkedAt_hDcPtG_prmR : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDecompositionPointCondition := by
-  first | exact @_root_.GlobalTheory.Fc.RL.linkedAt_hDcPtG
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowEDcPtLinkedStatement =====
@@ -1744,7 +1656,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.Fc.GeoZeroAt
 theorem geometricWeakTies_of_linked_ties : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDivisorCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.Row_tie_alt → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.S0.GeometricWeakCompatibility' := by
   intro hR hL N S Γ hNE hD hT
-  have hA := _root_.GlobalTheory.T.class_sum_divisor_all_alt hR hL N S Γ hNE hD
+  have hA := _root_.GlobalTheory.GeoTies.linked_ties_alt hR hL N S Γ hNE hD
   refine AllAtMember.eventually_coreProperty_mono (_root_.GlobalTheory.Fc.AllAtMember.forall_linked_bundles_and_alt hA hT) fun Q h => ?_
   exact Row.imp h fun 𝒜 σ _ H _ Fm hc x hx i =>
     let ⟨t⟩ := H.2 Fm hc x hx i
@@ -1763,13 +1675,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.linkedAt_geometricWeakTies_of_tie : GlobalTheory.NT.RayField → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.R1.SlotDivisorCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.Row_tie_alt → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.S0.GeometricWeakCompatibility' := by
-  first | exact @_root_.GlobalTheory.Fc.GeoZeroAt.geometricWeakTies_of_linked_ties
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowGeo0AtStatement =====
@@ -1789,36 +1694,34 @@ theorem open_orbit_of_unramified_exponents_alt : _root_.GlobalTheory.Fc.S0.Unita
   have hNE : ∀ K B f T w Z Wt p0 t nch n xd c, _root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep K B f T w Z Wt p0 t nch n xd c →
       Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c) := fun _ _ _ _ _ _ _ _ _ _ _ _ _ x => ⟨x.1⟩
   have hB : ∀ (K : Ctx) (q : WPt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfDependence hL cDep).s K), GlobalTheory.Mem.R3.Rw.BkLaw (q.w.D q.Z) := fun _ q => q.x.nx.2.1.2.down
-  have hPA := _root_.GlobalTheory.T.linkedAt_hPA_prmR hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
-  have hDc := _root_.GlobalTheory.T.linkedAt_hDcPtG_prmR hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
-  have hTie := _root_.GlobalTheory.T.linkedAt_tie_of_nonempty_extensionWithLaw P.discreteSeriesCover P.harishChandraModules P.casselmanWallach P.weilRepresentationUnitaryPair
+  have hPA := _root_.GlobalTheory.Fc.RL.PrimAt.linkedAt_hPA hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
+  have hDc := _root_.GlobalTheory.Fc.RL.linkedAt_hDcPtG hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
+  have hTie := _root_.GlobalTheory.Fc.RL.at_tie_alt P.discreteSeriesCover P.harishChandraModules P.casselmanWallach P.weilRepresentationUnitaryPair
     P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay hL _ SExt.none (geoCl anyGeometry) hNE
-  have hJ := _root_.GlobalTheory.T.entries_combined_real_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.discreteSeriesCover P.harishChandraModules
+  have hJ := _root_.GlobalTheory.Fc.JoinLinked.at_selJ_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.discreteSeriesCover P.harishChandraModules
     P.casselmanWallach P.harishChandraFinite P.cuspRapidDecay hL _ SExt.none (geoCl anyGeometry) hPA hDc hTie
-  have hMi := _root_.GlobalTheory.T.main_theorem_published_inputs_third_alt_alt P.harishChandraFinite P.cuspRapidDecay P.discreteSeriesCover P.harishChandraModules P.casselmanWallach
+  have hMi := _root_.GlobalTheory.miStarRow_alt_alt P.harishChandraFinite P.cuspRapidDecay P.discreteSeriesCover P.harishChandraModules P.casselmanWallach
     GlobalTheory.Hk3.howeUnram_holds P.weilRepresentationUnitaryPair P.weilSiegelFormulaUnitary P.siegelWeilUnitaryConvergent
     P.doublingMethod P.unramifiedDoublingGL P.discreteSeriesClassification P.strongApproxSU P.siegelWeilUnitaryConvergent2
     hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
-  have hDiv := _root_.GlobalTheory.T.bk_law_entries_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
+  have hDiv := _root_.GlobalTheory.Fc.DivLinked.at_hDivG_main_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
     P.discreteSeriesCover P.harishChandraModules P.casselmanWallach hL _ SExt.none (geoCl anyGeometry) hB hMi.1
-  have hLam := _root_.GlobalTheory.T.real_group_inputs_combined_alt_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
+  have hLam := _root_.GlobalTheory.Fc.RL.at_row_hLamP_alt_alt P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
     P.harishChandraAnalyticity P.discreteSeriesClassification P.cuspTraceClass P.dixmierMalliavinFactorisation
     P.flathFactorisation
     P.zelevinskyPolynomialRing P.geometricLemma P.greenCuspidal hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
-  have hKap := _root_.GlobalTheory.T.harish_chandra_inputs_combined_alt_alt P.harishChandraFinite P.cuspRapidDecay P.discreteSeriesCover P.harishChandraModules
+  have hKap := _root_.GlobalTheory.Fc.KapLinked.row_kap_of_row_lam_alt_alt P.harishChandraFinite P.cuspRapidDecay P.discreteSeriesCover P.harishChandraModules
     P.casselmanWallach P.harishChandraAnalyticity P.discreteSeriesClassification P.cuspTraceClass
     P.dixmierMalliavinFactorisation P.flathFactorisation P.zelevinskyPolynomialRing P.geometricLemma P.greenCuspidal
     hL _ SExt.none (geoCl anyGeometry) hLam
-  have hGood := _root_.GlobalTheory.T.linked_bundles_good_of_local_langlands_alt_alt (GlobalTheory.GreenBridge.green_of_regular P.greenRegularCharacters) P.zelevinskyPolynomialRing hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry) hNE
-  have hLab := _root_.GlobalTheory.T.good_ft_entries_alt_alt (GlobalTheory.GreenBridge.green_of_regular P.greenRegularCharacters) P.zelevinskyPolynomialRing hL _ SExt.none (geoCl anyGeometry) hNE hGood.1
-  have hGeo := _root_.GlobalTheory.T.linkedAt_geometricWeakTies_of_tie P.rayClassFieldSt hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry) hNE hDiv hTie
-  have hDf := _root_.GlobalTheory.T.weil_unitary_entries' P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
+  have hGood := _root_.GlobalTheory.Fc.GoodLinked.row_good_alt_alt (GlobalTheory.GreenBridge.green_of_regular P.greenRegularCharacters) P.zelevinskyPolynomialRing hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry) hNE
+  have hLab := _root_.GlobalTheory.Fc.LabLinked.row_lab_of_layer_alt_alt (GlobalTheory.GreenBridge.green_of_regular P.greenRegularCharacters) P.zelevinskyPolynomialRing hL _ SExt.none (geoCl anyGeometry) hNE hGood.1
+  have hGeo := _root_.GlobalTheory.Fc.GeoZeroAt.geometricWeakTies_of_linked_ties P.rayClassFieldSt hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry) hNE hDiv hTie
+  have hDf := _root_.GlobalTheory.Fc.RL.linkedAt_prmR_df_of_cuspRapidDecay P.weilRepresentationUnitaryPair P.discreteSeriesExists P.harishChandraFinite P.cuspRapidDecay
     hL (_root_.GlobalTheory.HeightCounting.Up.extensionWithList hL cDep) SExt.none (geoCl anyGeometry)
   exact ⟨hPA, hLam, hDiv, hDc, hJ, hTie, hLab, hGood.2, hGeo, hMi.2, hKap, hDf⟩
 end GlobalTheory.Fc.S0.Open0ProofU
 
-theorem _root_.GlobalTheory.T.open0_of_unitary_group_hypotheses : _root_.GlobalTheory.Fc.S0.UnitaryGroupThirdPlaceHypotheses → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (cDep : ℝ), _root_.GlobalTheory.Fc.S0.OpenParameterStatements (_root_.GlobalTheory.Mem.Top.Bl.parametersOfDependence hL cDep) :=
-  _root_.GlobalTheory.Fc.S0.Open0ProofU.open_orbit_of_unramified_exponents_alt
 end
 end -- clump:auto
 end -- clump:auto

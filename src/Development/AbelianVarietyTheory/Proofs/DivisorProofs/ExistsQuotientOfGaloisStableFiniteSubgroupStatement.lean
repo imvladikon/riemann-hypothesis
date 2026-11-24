@@ -262,8 +262,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_finiteEtale_subgroupScheme_of_galoisStable_points : ∀ (K : Type) [Field K] (A : AbVar K) (G : Subgroup A.Pt), Finite G → ((Nat.card G : ℕ) : K) ≠ 0 → (∀ (σ : Gal K) (x : A.Pt), x ∈ G → galPts A.X σ x ∈ G) → ∃ (H : Over (Sp K)) (_ : GrpObj H) (i : H ⟶ A.X), IsMonHom i ∧ Mono i ∧ IsFinite H.hom ∧ Etale H.hom ∧ ∀ x : A.Pt, x ∈ G ↔ ∃ y, y ≫ i = x := by
-  first | (exact @GlobalTheory.FinEtSubgroup.exists_finiteEtale_subgroup_of_points)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleSubgroupSchemeOfGaloisStablePoiStatement =====
@@ -289,7 +287,7 @@ theorem exists_quotient_finite :
   have hflat : Flat H.hom := inferInstance
   obtain ⟨B', inst, q, -, hB, hq, hqfin, -, hqsurj, -, hsq⟩ :=
     AbQuotientAny.exists_quotient_abelianScheme K A.X H i A.ab hi hmono hfin hflat
-  obtain ⟨g, hg⟩ := GlobalTheory.T.abelianScheme_field_smoothOfRelativeDimension_exists K B' hB
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme K B' hB
   let B : AbVar K := ⟨B', hB, g, hg⟩
   refine ⟨B, Hom.mk (B := B) q, ⟨hqfin, hqsurj⟩, fun T x => ⟨fun hx => ?_, ?_⟩⟩
   · have e : x ≫ q = (1 : T ⟶ A.X) ≫ q := by
@@ -321,8 +319,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_quotient_abelianVariety_by_finiteSubgroup : ∀ (K : Type) [Field K] (A : AbVar K) (H : Over (Sp K)) [GrpObj H] (i : H ⟶ A.X), IsMonHom i → Mono i → IsFinite H.hom → ∃ (B : AbVar K) (q : A ⟶ B), IsIsogeny q ∧ ∀ (T : Over (Sp K)) (x : T ⟶ A.X), x ≫ q.hom = 1 ↔ ∃ y, y ≫ i = x := by
-  first | (exact @GlobalTheory.AV.AbVar.exists_quotient_finite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientAbelianVarietyByFiniteSubgroupStatement =====
@@ -378,8 +374,8 @@ theorem exists_quot_of_galois_stable : ∀ (K : Type) [Field K] (A : AbVar K) (G
     ∃ (B : AbVar K) (q : A ⟶ B), IsIsogeny q ∧ deg q = Nat.card G ∧ (ptMap q).ker = G ∧
       ∀ (C : AbVar K) (f : A ⟶ C), G ≤ (ptMap f).ker → ∃ g : B ⟶ C, q ≫ g = f := by
   intro K _ A G hfin hn hgal
-  obtain ⟨H, _, i, hi, hmono, hfinH, het, hG⟩ := GlobalTheory.T.exists_finiteEtale_subgroupScheme_of_galoisStable_points K A G hfin hn hgal
-  obtain ⟨B, q, hq, hker⟩ := GlobalTheory.T.exists_quotient_abelianVariety_by_finiteSubgroup K A H i hi hmono hfinH
+  obtain ⟨H, _, i, hi, hmono, hfinH, het, hG⟩ := _root_.GlobalTheory.FinEtSubgroup.exists_finiteEtale_subgroup_of_points K A G hfin hn hgal
+  obtain ⟨B, q, hq, hker⟩ := _root_.GlobalTheory.AV.AbVar.exists_quotient_finite K A H i hi hmono hfinH
   have : IsReduced H.left := GlobalTheory.isReduced_of_smooth_of_isReduced H.hom
 
   have hext : ∀ (Z : Over (Sp K)) [IsSeparated Z.hom] (a b : H ⟶ Z),
@@ -391,7 +387,7 @@ theorem exists_quot_of_galois_stable : ∀ (K : Type) [Field K] (A : AbVar K) (G
     ext x
     rw [MonoidHom.mem_ker, ptMap_apply, hker, hG]
   refine ⟨B, q, hq, ?_, hkerG, ?_⟩
-  · rw [GlobalTheory.AV.DegSep.deg_eq_card_ker_of_killed K A B q (Nat.card G) hn hq, hkerG]
+  · rw [_root_.GlobalTheory.AV.DegSep.deg_eq_card_ker K A B q (Nat.card G) hn hq, hkerG]
     intro T x hx
     obtain ⟨y, rfl⟩ := (hker T x).1 hx
     have := A.ab.proper
@@ -430,8 +426,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_quotient_of_galoisStable_finite_subgroup : ∀ (K : Type) [Field K] (A : AbVar K) (G : Subgroup A.Pt), Finite G → ((Nat.card G : ℕ) : K) ≠ 0 → (∀ (σ : Gal K) (x : A.Pt), x ∈ G → galPts A.X σ x ∈ G) → ∃ (B : AbVar K) (q : A ⟶ B), IsIsogeny q ∧ deg q = Nat.card G ∧ (ptMap q).ker = G ∧ ∀ (C : AbVar K) (f : A ⟶ C), G ≤ (ptMap f).ker → ∃ g : B ⟶ C, q ≫ g = f := by
-  first | (exact @GlobalTheory.AV.AbVar.exists_quot_of_galois_stable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientOfGaloisStableFiniteSubgroupStatement =====

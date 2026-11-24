@@ -92,6 +92,7 @@ import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic
 import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
 import Mathlib.Tactic.Linter.Style
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 import Mathlib.RingTheory.PiTensorProduct
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -104,79 +105,24 @@ section -- clump:auto
 
 section
 namespace ResidueCardinalityNilpotence
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SplitFlip GlobalTheory.SplitWeil
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 namespace GlobalTheory.CompanionTheory.ResCardPlace
 end GlobalTheory.CompanionTheory.ResCardPlace
-end
 section
 open GlobalTheory.SumSize GlobalTheory.RowClaim
 noncomputable section
 namespace GlobalTheory.CompanionTheory.VolVal
-open GlobalTheory.SplitWeil GlobalTheory.SplitFlip GlobalTheory.RootEx GlobalTheory.FunObj ValuativeRel Matrix
-section Unip
-variable {k : Type*} [Field k] {ι : Type*} [Fintype ι] [DecidableEq ι]
-end Unip
-section Sym
-variable {k : Type*} [Field k] {n : Type*} [Fintype n] [DecidableEq n] {c : ℕ}
-end Sym
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open GlobalTheory.SplitWeil GlobalTheory.SplitFlip GlobalTheory.RootEx GlobalTheory.FunObj ValuativeRel Matrix
-section Root
-variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-  {ι : Type} [Fintype ι] [DecidableEq ι]
-variable {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
-end Root
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open GlobalTheory.SplitWeil GlobalTheory.SplitFlip GlobalTheory.RootEx GlobalTheory.FunObj ValuativeRel Matrix
-open Formalism.BasicNotions Formalism.L2.DIV IsDedekindDomain NumberField
-open Formalism.DivisionValues (vw lw)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
-  GlobalTheory.FunObj.borelSpaceKw
-section Place
-variable {D : D7}
-end Place
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open Formalism.DivisionValues (vw lw)
-open IsDedekindDomain NumberField
-section Val
-variable {K : Type} [Field K] [NumberField K] [StarRing K]
-end Val
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField Matrix GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.SumSize GlobalTheory.FunObj.AaCoef
-open Formalism.DivisionValues (vw lw)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
-  GlobalTheory.FunObj.borelSpaceKw
-section Factors
-variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc)
-end Factors
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField Matrix GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.SumSize GlobalTheory.FunObj.AaCoef
-open Formalism.DivisionValues (vw lw)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
-  GlobalTheory.FunObj.borelSpaceKw
-section Coef
-variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {U : Set T}
-end Coef
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField Matrix GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.SumSize GlobalTheory.FunObj.AaCoef
-open Formalism.DivisionValues (vw lw)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
-  GlobalTheory.FunObj.borelSpaceKw
-section Loss
-variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc)
-end Loss
 end GlobalTheory.CompanionTheory.VolVal
 namespace GlobalTheory.CompanionTheory.VolVal
 open Formalism.BasicNotions Formalism.L2.DIV
@@ -203,11 +149,6 @@ end GlobalTheory.CompanionTheory.VolVal
 end
 end
 end ResidueCardinalityNilpotence
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-theorem _root_.GlobalTheory.Adopt.finCoefK_of_theta_inputs : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinCoefK := by
-  first | exact @_root_.ResidueCardinalityNilpotence.GlobalTheory.CompanionTheory.VolVal.finCoefK_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -221,23 +162,12 @@ section -- clump:auto
 section
 noncomputable section
 namespace GlobalTheory.ScalAA
-open IsDedekindDomain NumberField
-open Formalism.DivisionValues (vw lw)
-section Abstract
-variable {K : Type} [Field K] [NumberField K]
-end Abstract
 end GlobalTheory.ScalAA
 noncomputable section
 namespace GlobalTheory.ScalAA
-open IsDedekindDomain NumberField Formalism.BasicNotions
-open Formalism.DivisionValues (vw lw)
-open scoped nonZeroDivisors Pointwise
-section IdealSum
-variable {E : Type} [Field E] [NumberField E]
-end IdealSum
-section Host
-variable (D : D7)
-end Host
+end GlobalTheory.ScalAA
+noncomputable section
+namespace GlobalTheory.ScalAA
 end GlobalTheory.ScalAA
 noncomputable section
 namespace GlobalTheory.ScalAA
@@ -246,21 +176,6 @@ open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj Globa
 open Formalism.DivisionValues (vw lw)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
   GlobalTheory.FunObj.borelSpaceKw
-section Scalar
-variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} (W : G.Weil) {U : Set T}
-end Scalar
-end GlobalTheory.ScalAA
-noncomputable section
-namespace GlobalTheory.ScalAA
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.SumSize GlobalTheory.RowClaim GlobalTheory.RowTest
-open Formalism.DivisionValues (vw lw)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField GlobalTheory.FunObj.borelKw
-  GlobalTheory.FunObj.borelSpaceKw
-section Core
-variable {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn D.what₂.LL Γ Pl0 T D.R.m}
-  {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
-end Core
 theorem finScalK_and_infScalK_of_theta_inputs : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinScalK ∧ InfScalK := by
   intro _
   refine ⟨⟨0, fun CF _ => ⟨2, fun ε C hC => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F s ch _ _ hF => ?_⟩⟩⟩,
@@ -274,12 +189,6 @@ end
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.finite_and_infinite_scalar_bounds : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinScalK ∧ InfScalK := by
-  first | exact @_root_.GlobalTheory.ScalAA.finScalK_and_infScalK_of_theta_inputs
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.FiniteInfiniteScalarBounds =====
@@ -625,12 +534,6 @@ end GlobalTheory.SumSize.TopInt
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.sum_size_finite_top_term_integral : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → DictK → DepthK → FinTopK := by
-  first | exact @_root_.GlobalTheory.SumSize.TopInt.finite_top_term_integral_bound
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.FiniteTopTermIntegralBoundOfLocal =====
@@ -680,7 +583,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NotLossLeOne =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGammaBound =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGammaBound", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBelow\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardFiniteSubgroupGLIntDvd\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryRationalConjIntersectionCardDvdInvariant\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralEqVolMulSum\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NotLossLeOne\npublic import Formalism.LocalToGlobal.Divisibility.LinkDef\nimport Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic\nimport Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGammaBound", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.InfClassAt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBelow\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardFiniteSubgroupGLIntDvd\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryRationalConjIntersectionCardDvdInvariant\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralEqVolMulSum\npublic import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NotLossLeOne\npublic import Formalism.LocalToGlobal.Divisibility.LinkDef\nimport Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral\nimport Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic\nimport Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -728,12 +631,9 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formali
 
 variable {D : D7}
 
-theorem incA_inj' : Function.Injective (incA D) :=
-  Algebra.TensorProduct.includeRight_injective (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F)
-
 theorem bc_incA_injective (n : ℕ) : Function.Injective (Formalism.UG.bc (n := Fin n) (incA D)) := by
   intro a b e
-  exact Units.ext (Matrix.ext fun i j => incA_inj' (by simpa [Formalism.UG.bc] using congrArg (fun g => (Units.val g) i j) e))
+  exact Units.ext (Matrix.ext fun i j => _root_.GlobalTheory.MixModel.incA_injective (by simpa [Formalism.UG.bc] using congrArg (fun g => (Units.val g) i j) e))
 
 theorem exists_rat (V : HSp D) (q : GQ V) : ∃ u : GL (Fin V.rank) D.host.E, Formalism.UG.bc (incA D) u = matHom V q.1 := by
   obtain ⟨u, -, hu⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 q.2)
@@ -957,8 +857,6 @@ theorem finGamAt_of {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : Form
 end GlobalTheory.GamLoss
 
 namespace GlobalTheory.GamLoss
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
 end GlobalTheory.GamLoss
 end -- clump:auto
 end -- clump:auto
@@ -972,21 +870,12 @@ section -- clump:auto
 section
 open NumberField
 namespace GlobalTheory.GamLoss
-variable {E : Type} [Field E] [NumberField E]
 end GlobalTheory.GamLoss
 namespace GlobalTheory.GamLoss
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.FunObj
-variable {D : D7}
 end GlobalTheory.GamLoss
 namespace GlobalTheory.GamLoss
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SumSize
-open Formalism.DivisionValues (vw lw)
-variable {D : D7}
 end GlobalTheory.GamLoss
 namespace GlobalTheory.GamLoss
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.L2.Theta GlobalTheory.FunObj GlobalTheory.ChiGrid GlobalTheory.SumSize GlobalTheory.RowTest
-open Formalism.DivisionValues (vw lw)
-variable {D : D7}
 end GlobalTheory.GamLoss
 namespace GlobalTheory.GamLoss
 open GlobalTheory.SumSize GlobalTheory.RowClaim
@@ -1002,12 +891,6 @@ theorem finite_place_gamma_loss_bound : _root_.GlobalTheory.FunPr.ThetaLocalInpu
 end GlobalTheory.GamLoss
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.gamma_factor_loss_at_finite_places : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinGamK := by
-  first | exact @_root_.GlobalTheory.GamLoss.finite_place_gamma_loss_bound
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.GammaFactorLossAtFinitePlaces =====
@@ -1062,12 +945,6 @@ end GlobalTheory.KerConjMean
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.kernel_conjugation_mean_archimedean_top_term : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → DictK → DepthK → InfTopK := by
-  first | exact @_root_.GlobalTheory.KerConjMean.archimedean_top_term_kernel_conj_mean
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.KernelConjugationMeanArchimedeanTopTerm =====
@@ -1471,12 +1348,6 @@ end GlobalTheory.SumSize
 end
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.sum_size_bound_finite_places : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → DictK → DepthK → FinRowK := by
-  first | exact @_root_.GlobalTheory.SumSize.finite_place_sum_size_bound
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SumSizeBoundFinitePlaces =====
@@ -1490,7 +1361,7 @@ section
 open GlobalTheory.SumSize GlobalTheory.RowClaim
 namespace GlobalTheory.SumSize
 theorem sum_size_dictionary_of_local_bounds (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (hI : ∀ D, GlobalTheory.NormSum.Inp D) : DictK := by
-  obtain ⟨CF0, h⟩ := _root_.GlobalTheory.T.twisted_dictionary_correspondence hP hI
+  obtain ⟨CF0, h⟩ := _root_.GlobalTheory.DictFree.twisted_dictionary_eventually_large hP hI
   refine ⟨CF0, fun CF hCF => ⟨0, fun ε C _ => ?_⟩⟩
   obtain ⟨x₀, hx⟩ := h ε CF hCF
   exact ⟨x₀, fun D large₂ he hx0 Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hIs hAt _ =>
@@ -1498,12 +1369,6 @@ theorem sum_size_dictionary_of_local_bounds (hP : _root_.GlobalTheory.FunPr.Thet
 end GlobalTheory.SumSize
 end
 
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.sum_size_dictionary : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → DictK := by
-  first | exact @_root_.GlobalTheory.SumSize.sum_size_dictionary_of_local_bounds
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SumSizeDictionaryOfLocalBounds =====
@@ -1523,12 +1388,6 @@ open Formalism.UG
 open scoped ComplexOrder
 namespace GlobalTheory.CompanionTheory.TestVal
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-section Lat
-variable {E K : Type} [Field E] [NumberField E] [Field K] [NumberField K] {ι : Type} [Fintype ι] {n : ℕ}
-end Lat
-section Cast
-variable {K : Type} [Field K] {ι : Type} [Fintype ι] {n : ℕ}
-end Cast
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc}
 theorem test_value_psi_finite_infinite : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinPsiK ∧ InfPsiK := by
   intro _
@@ -1543,11 +1402,6 @@ end GlobalTheory.CompanionTheory.TestVal
 end
 end
 end TestFunctionNorms
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-theorem _root_.GlobalTheory.Adopt.test_vector_value_factorization : _root_.GlobalTheory.FunPr.ThetaLocalInputs → FinPsiK ∧ InfPsiK := by
-  first | exact @_root_.TestFunctionNorms.GlobalTheory.CompanionTheory.TestVal.test_value_psi_finite_infinite
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1602,11 +1456,6 @@ end GlobalTheory.CompanionTheory.Twist
 end
 end
 end TwistAwayFromPlace
-section
-open GlobalTheory.SumSize GlobalTheory.RowClaim
-theorem _root_.GlobalTheory.Adopt.twisted_local_factor_away_from_level : _root_.GlobalTheory.FunPr.ThetaLocalInputs → AwayK := by
-  first | exact @_root_.TwistAwayFromPlace.GlobalTheory.CompanionTheory.Twist.twist_trivial_away_from_level
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1623,29 +1472,24 @@ theorem sum_size_finite_away_archimedean_combined : _root_.GlobalTheory.FunPr.Th
   intro P
   have hInp : ∀ D, GlobalTheory.NormSum.Inp D := _root_.GlobalTheory.NormSum.inp_all
   have hOK : GlobalTheory.RowClaim.SumOKK := _root_.GlobalTheory.T.sumOKK_of_theta_local_inputs P
-  have hDep : GlobalTheory.SumSize.DepthK := _root_.GlobalTheory.T.depthK_of_sumOKK P hOK
-  have hDict : GlobalTheory.SumSize.DictK := _root_.GlobalTheory.T.sum_size_dictionary P hInp
-  have hScal := _root_.GlobalTheory.T.finite_and_infinite_scalar_bounds P
-  have hForm := _root_.GlobalTheory.T.form_value_finite_infinite_factorization P
-  have hPair := _root_.GlobalTheory.T.field_pair_comparison P
-  have hPsi := _root_.GlobalTheory.Adopt.test_vector_value_factorization P
-  have hTopF := _root_.GlobalTheory.T.sum_size_finite_top_term_integral P hInp hDict hDep
-  have hRowF := _root_.GlobalTheory.T.sum_size_bound_finite_places P hInp hDict hDep
-  have hTopI := _root_.GlobalTheory.T.kernel_conjugation_mean_archimedean_top_term P hInp hDict hDep
-  have hRowI := _root_.GlobalTheory.T.sum_size_bound_opposite_conjugation P hInp hDict hDep
-  refine ⟨?_, _root_.GlobalTheory.Adopt.twisted_local_factor_away_from_level P, ?_⟩
-  · exact GlobalTheory.Adopt.finiteSumDenominatorBound_of_factor_claims hOK hDep hScal.1 (_root_.GlobalTheory.Adopt.finCoefK_of_theta_inputs P) (_root_.GlobalTheory.T.finDatK_of_theta_inputs P) (_root_.GlobalTheory.T.gamma_factor_loss_at_finite_places P)
+  have hDep : GlobalTheory.SumSize.DepthK := _root_.GlobalTheory.DepthUnf.depthK_of_hypotheses_alt P hOK
+  have hDict : GlobalTheory.SumSize.DictK := _root_.GlobalTheory.SumSize.sum_size_dictionary_of_local_bounds P hInp
+  have hScal := _root_.GlobalTheory.ScalAA.finScalK_and_infScalK_of_theta_inputs P
+  have hForm := _root_.GlobalTheory.FormVal.form_value_eq_finite_mul_infinite P
+  have hPair := _root_.GlobalTheory.FPair.lift_splits_locally P
+  have hPsi := _root_.TestFunctionNorms.GlobalTheory.CompanionTheory.TestVal.test_value_psi_finite_infinite P
+  have hTopF := _root_.GlobalTheory.SumSize.TopInt.finite_top_term_integral_bound P hInp hDict hDep
+  have hRowF := _root_.GlobalTheory.SumSize.finite_place_sum_size_bound P hInp hDict hDep
+  have hTopI := _root_.GlobalTheory.KerConjMean.archimedean_top_term_kernel_conj_mean P hInp hDict hDep
+  have hRowI := _root_.GlobalTheory.SumSize.OppConj.archimedean_sum_size_opposite_conjugate P hInp hDict hDep
+  refine ⟨?_, _root_.TwistAwayFromPlace.GlobalTheory.CompanionTheory.Twist.twist_trivial_away_from_level P, ?_⟩
+  · exact _root_.DenominatorLossAdditivity.GlobalTheory.CompanionTheory.FinDen.fin_of_factors hOK hDep hScal.1 (_root_.ResidueCardinalityNilpotence.GlobalTheory.CompanionTheory.VolVal.finCoefK_alt P) (_root_.GlobalTheory.FunDat.finDatK_alt P) (_root_.GlobalTheory.GamLoss.finite_place_gamma_loss_bound P)
       hTopF hRowF hPair.1 hPsi.1 hForm.1
   · exact _root_.GlobalTheory.Adopt.archimedeanSumSizeBound_largeData_from_factors hOK hDep hScal.2 (_root_.GlobalTheory.T.sum_size_archimedean_tensor_bound P) (_root_.GlobalTheory.T.sum_count_bound_archimedean P hDep) (_root_.GlobalTheory.T.class_count_bound_archimedean P)
       hTopI hRowI hPair.2 hPsi.2 hForm.2
 end GlobalTheory.SumSize.Join
 end
 
-section
-
-theorem _root_.GlobalTheory.T.sum_size_bound_all_places : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.SumSize.FinK ∧ GlobalTheory.SumSize.AwayK ∧ GlobalTheory.SumSize.InfK := by
-  first | exact @_root_.GlobalTheory.SumSize.Join.sum_size_finite_away_archimedean_combined
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SumSizeFiniteAwayArchimedeanCombined =====

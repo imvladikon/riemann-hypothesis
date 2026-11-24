@@ -74,6 +74,7 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleIffIrreducible
 import Mathlib.Tactic.Linter.Style
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemRootsBarXSubC
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Counterexamples.SubgroupCharacterSums.SumSubgroupEqZeroIff, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalParametrization, Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.IntertwiningIsomorphisms.IsoIffIntertwiningHolds, Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.LabelMapNonempty, Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.GreenCuspLabels.GreenCuspidal
@@ -456,7 +457,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.LabelMapNonempty =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.GreenCuspLabels.GreenCuspidal =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.GreenCuspLabels.GreenCuspidal", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalOfUnipotentSumsVanish\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCuspidalWithLabel\npublic import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.LabelMapNonempty\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.GreenCuspLabels.GreenCuspidal", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalOfUnipotentSumsVanish\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCuspidalWithLabel\npublic import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.LabelMapNonempty\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemRootsBarXSubC\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -655,30 +656,6 @@ theorem isPrimeLab_iff {d : ℕ} {P : (ZMod g)[X]} :
     exact (Polynomial.eq_of_monic_of_associated Polynomial.monic_X hm
       (Polynomial.irreducible_X.associated_of_dvd hi hdvd)).symm
 
-theorem thetaOf_gen_pow (L : LabelDatum g) {d : ℕ} (hd : 0 < d) {x : Formalism.CyclotomicNorms.Fbar g} (hx : x ^ (g ^ d - 1) = 1)
-    (m : ℕ) : thetaOf L d x (L.gen d ^ m) = L.teich x ^ m := by
-  have hex : ∃ n : ℕ, L.gen d ^ m = L.gen d ^ n := ⟨m, rfl⟩
-  unfold thetaOf
-  rw [dif_pos hex]
-  have hc : L.gen d ^ m = L.gen d ^ hex.choose := hex.choose_spec
-  have hg2 := (Fact.out : g.Prime).two_le
-  have hgd : g ≤ g ^ d := Nat.le_self_pow hd.ne' g
-  have hN : 0 < orderOf (L.gen d) := by
-    rw [L.gen_order d hd]
-    omega
-  have heq : hex.choose % orderOf (L.gen d) = m % orderOf (L.gen d) := by
-    refine pow_injOn_Iio_orderOf (Nat.mod_lt _ hN) (Nat.mod_lt _ hN) ?_
-    simp only [pow_mod_orderOf]
-    exact hc.symm
-  have hmod : hex.choose ≡ m [MOD g ^ d - 1] := by
-    rw [← L.gen_order d hd]
-    exact heq
-  have ht : L.teich x ^ (g ^ d - 1) = 1 := by
-    rw [← map_pow, hx, map_one]
-  have hdvd : orderOf (L.teich x) ∣ g ^ d - 1 := orderOf_dvd_of_pow_eq_one ht
-  rw [← pow_mod_orderOf (L.teich x) hex.choose, ← pow_mod_orderOf (L.teich x) m]
-  exact congrArg _ (Nat.ModEq.of_dvd hdvd hmod)
-
 theorem isCuspOf_character (L : LabelDatum g) {d : ℕ} (hd : 0 < d) (τ : FDRep ℂ (Gn g d)) (P : (ZMod g)[X])
     (hs : Simple τ) (hc : IsCuspidal (ZMod g) τ) (hl : HasCuspLabel (conv L) τ P) : IsCuspOf L P τ.character := by
   obtain ⟨hm, hi, hX, hdeg, hlab⟩ := hl
@@ -713,7 +690,7 @@ theorem isCuspOf_character (L : LabelDatum g) {d : ℕ} (hd : 0 < d) (τ : FDRep
   rw [show τ.character y = _ from htr]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [← hmz, ← pow_mul, thetaOf_gen_pow L hd hx1]
+  rw [← hmz, ← pow_mul, _root_.GlobalTheory.GLq.Model.thetaOf_gen_pow L hd hx1]
 
 theorem hasCuspLabel_of_character {K : Type} [Field K] [Fintype K] [DecidableEq K] (C : LabelConv K) {d : ℕ}
     {τ τ' : FDRep ℂ (GL (Fin d) K)} (h : τ.character = τ'.character) {P : K[X]} (hl : HasCuspLabel C τ P) :

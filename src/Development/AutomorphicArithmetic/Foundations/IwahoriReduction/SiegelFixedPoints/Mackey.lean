@@ -409,18 +409,12 @@ private theorem diag_mul_T_pow_eq_T_pow_mul_mul_diag (D L : ℕ) (hD : 0 < D) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
-private theorem T_mem_Gamma (M : ℕ) : (ModularGroup.T ^ M : SL(2, ℤ)) ∈ CongruenceSubgroup.Gamma M := by
-  have he : ((ModularGroup.T ^ M : SL(2, ℤ)) : Matrix (Fin 2) (Fin 2) ℤ) = !![1, (M : ℤ); 0, 1] := by
-    rw [← ModularGroup.coe_T_zpow, zpow_natCast]
-  rw [CongruenceSubgroup.Gamma_mem]
-  simp [he]
-
 private theorem e_mem_KT (X : Tower Ω ε) {D L : ℕ} (hD : 0 < D) (g : SL(2, ℤ)) {y : X.K} (hy : y ∈ topL X (L * D)) :
     X.sl (toGQ !![(D : ℤ), 0; 0, 1]) (X.sl (ofSL g) y) ∈ KT X L := by
   rw [KT.mem_def]
   rw [mem_lev_iff] at hy
   have hn : g * ModularGroup.T ^ (D * L) * g⁻¹ ∈ CongruenceSubgroup.Gamma (L * D) := by
-    have := (CongruenceSubgroup.Gamma_normal (L * D)).conj_mem _ (T_mem_Gamma (L * D)) g
+    have := (CongruenceSubgroup.Gamma_normal (L * D)).conj_mem _ (_root_.GlobalTheory.Glue.DlUniq.T_pow_mem_Gamma (L * D)) g
     rwa [mul_comm L D] at this ⊢
   have h1 := hy _ hn
   simp only [← X.sl_mul]

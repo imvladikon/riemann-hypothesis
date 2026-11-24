@@ -168,7 +168,7 @@ private theorem henselianRing_of_le_nilradical {B : Type} [CommRing B] (J : Idea
 private theorem eqv_tw_map_closedImmersion_surjective_spec (hE1 : E1) (q : ℕ) (i : ℤ) {A' : Type} [CommRing A'] (hq : IsUnit (q : A'))
     {P : Scheme.{0}} (δ : P ⟶ Spec (CommRingCat.of A')) [IsClosedImmersion δ] [Surjective δ] :
     Eqv (ZMod q) (sch.map δ) (tw q i) := by
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   obtain ⟨I, e, hδ⟩ := (IsClosedImmersion.Spec_iff (R := CommRingCat.of A') (f := δ)).mp inferInstance
   have hs : Surjective (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I))) := by
     have h5 : Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) = e.inv ≫ δ := by
@@ -193,7 +193,7 @@ private theorem eqv_tw_map_closedImmersion_surjective_spec (hE1 : E1) (q : ℕ) 
 private theorem eqv_tw_map_closedImmersion_surjective (hB3 : B3) (hE1 : E1) (q : ℕ) (i : ℤ) {V Z : Scheme.{0}} (δ : V ⟶ Z)
     [IsClosedImmersion δ] [Surjective δ] (hq : IsUnit (q : Γ(Z, ⊤))) :
     Eqv (ZMod q) (sch.map δ) (tw q i) := by
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   refine hB3 q δ (𝟙 Z) hq i ?_
   intro A' _ s _
   have hqA : IsUnit (q : A') := by
@@ -211,7 +211,7 @@ private theorem eqv_tw_map_closedImmersion_surjective (hB3 : B3) (hE1 : E1) (q :
 private theorem eqv_tw_map_integral_univInjective_surjective (hA3 : A3) (hB3 : B3) (hB4 : B4) (hE1 : E1) (q : ℕ) (i : ℤ) {V W : Scheme.{0}}
     (h : V ⟶ W) [IsIntegralHom h] [UniversallyInjective h] [Surjective h] (hq : IsUnit (q : Γ(W, ⊤))) :
     Eqv (ZMod q) (sch.map h) (tw q i) := by
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   have hc := hB4 q h hq i
   have hd : Eqv (ZMod q) (dg h) (tw q i) := by
     apply hA3 (ZMod q) (dg h) (tw q i)
@@ -220,7 +220,7 @@ private theorem eqv_tw_map_integral_univInjective_surjective (hA3 : A3) (hB3 : B
       MorphismProperty.IsStableUnderBaseChange.inf
     haveI : MorphismProperty.IsMultiplicative (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) :=
       MorphismProperty.IsMultiplicative.inf
-    obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) V W h
+    obtain ⟨Z, π, e, hπ, he⟩ := _root_.GlobalTheory.EtC.cech_level_representable (@IsIntegralHom.{0} ⊓ @UniversallyInjective.{0}) V W h
       ⟨inferInstance, inferInstance⟩ n
     haveI : IsIntegralHom π := hπ.1
     haveI : UniversallyInjective π := hπ.2
@@ -260,7 +260,7 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
     Hyps → ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ {Y : Scheme.{0}} (g : Y ⟶ Sp A) [IsProper g] [Surjective g] (i : ℤ), Eqv _ (cechAug g) (tw q i) := by
   intro hH q _ A _ hA hq Y g _ _ i
   obtain ⟨-, -, hA3, -, -, -, -, -, -, -, -, -, hB3, hB4, -, -, -, -, -, -, -, -, -, -, hE1, hE2, -⟩ := hH
-  obtain ⟨hiso, hcomp, hqi, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨hiso, hcomp, hqi, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   obtain ⟨hHL, hsep⟩ := id hA
   haveI := hHL
   haveI := hsep
@@ -318,18 +318,18 @@ theorem UpperTheory.cech_descent_twist_of_proper_surjective_strictly_henselian :
   have hσ : σ ≫ pullback.snd g (bpt A) = 𝟙 _ := pointOfClosedPoint_comp _ _ _
   have hcg' : Eqv (ZMod q) (cechAug (pullback.snd g (bpt A))) (tw q i) := by
     apply hqi
-    apply GlobalTheory.T.quasiIso_chains_cechNerve_of_surjective (ZMod q) (yoneda.map (pullback.snd g (bpt A)))
+    apply _root_.GlobalTheory.EtC.chains_cechNerve_quasiIso_of_surjective (ZMod q) (yoneda.map (pullback.snd g (bpt A)))
     intro U x
     refine ⟨x ≫ σ, ?_⟩
     change (x ≫ σ) ≫ pullback.snd g (bpt A) = x
     rw [Category.assoc, hσ, Category.comp_id]
-  obtain ⟨m, hm, -⟩ := GlobalTheory.T.etaleCechNerve_baseChange_isPullback Y (Sp A) (pullback g (bpt A)) (Spec (CommRingCat.of K))
+  obtain ⟨m, hm, -⟩ := _root_.GlobalTheory.cech_baseChange Y (Sp A) (pullback g (bpt A)) (Spec (CommRingCat.of K))
     (pullback.fst g (bpt A)) (pullback.snd g (bpt A)) g (bpt A) (IsPullback.of_hasPullback g (bpt A))
   have hmE : Eqv (ZMod q) m (tw q i) := by
     apply hA3 (ZMod q) m (tw q i)
     intro n
     have hmn := hm.map ((evaluation SimplexCategoryᵒᵖ PSh).obj n)
-    obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsProper Y (Sp A) g inferInstance n
+    obtain ⟨Z, π, e, hπ, he⟩ := _root_.GlobalTheory.EtC.cech_level_representable @IsProper Y (Sp A) g inferInstance n
     haveI : IsProper π := hπ
     have sq0 := (IsPullback.of_hasPullback (π ≫ g) (bpt A)).map yoneda
     have sq : IsPullback (yoneda.map (pullback.fst (π ≫ g) (bpt A)) ≫ e.hom)
@@ -369,7 +369,7 @@ private theorem qcqs_id (X : Scheme.{0}) : QcqsOver (𝟙 (sch.obj X)) := by
 private theorem qcqs_cech {Y X : Scheme.{0}} (f : Y ⟶ X) [IsProper f] :
     QcqsOver (cechAug f ≫ 𝟙 (sch.obj X)) := by
   intro k
-  obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsProper Y X f inferInstance k
+  obtain ⟨Z, π, e, hπ, he⟩ := _root_.GlobalTheory.EtC.cech_level_representable @IsProper Y X f inferInstance k
   haveI := hπ
   refine ⟨Z, π ≫ f, e, inferInstance, inferInstance, ?_⟩
   simpa using he
@@ -377,8 +377,8 @@ private theorem qcqs_cech {Y X : Scheme.{0}} (f : Y ⟶ X) [IsProper f] :
 private theorem stalk_eqv (R : Type) [CommRing R] (F : Shv R) {Y X T : Scheme.{0}} (f : Y ⟶ X) (s : T ⟶ X)
     (h : Eqv R (cechAug (pullback.snd f s)) F) :
     Eqv R ((bcMap (cechAug f) (𝟙 (sch.obj X))).app (Over.mk s)) F := by
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
-  obtain ⟨m, hpb, -⟩ := GlobalTheory.T.etaleCechNerve_baseChange_isPullback Y X (pullback f s) T (pullback.fst f s) (pullback.snd f s) f s
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic R F
+  obtain ⟨m, hpb, -⟩ := _root_.GlobalTheory.cech_baseChange Y X (pullback f s) T (pullback.fst f s) (pullback.snd f s) f s
     (IsPullback.of_hasPullback f s)
   have hpb' : IsPullback m (cechAug (pullback.snd f s)) (cechAug f ≫ 𝟙 (sch.obj X)) (sch.map s) := by
     rw [Category.comp_id]

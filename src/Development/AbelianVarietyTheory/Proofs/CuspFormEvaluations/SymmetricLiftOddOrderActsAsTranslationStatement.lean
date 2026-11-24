@@ -262,8 +262,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.PullbackSections Formalism.L2.Pj Formalism.MainNotions.ModuliIntegralCharts.H1 GlobalTheory.AnVal
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.reading_twisted_pullback : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj A] (L : RigLB A) (x0 : Sp ℂ ⟶ S) (g : ℕ) (Φ : AnFr A L x0 g), ∀ (ψ : Over.mk x0 ⊗ A ⟶ Over.mk x0 ⊗ A) (m : Over.mk x0 ⊗ A ⟶ A) (hm : ψ ≫ snd (Over.mk x0) A = m) (a b : ℤ) (α : LB.Gen (LB.LinComb L.L (K := Fin 2) ![(snd (Over.mk x0) A).left, m.left] ![a, -b])) (s : LB.Sec (LPow A L.L b (Over.mk x0))) (s' : LB.Sec (LPow A L.L a (Over.mk x0))) (θ : (Fin g → ℂ) → ℂ) (p : (Fin g → ℂ) → Fin g → ℂ) (v : (Fin g → ℂ) → ℂ), ψ ≫ fst (Over.mk x0) A = fst (Over.mk x0) A → IsTwistPull A L.L ψ m hm a b α s s' → Φ.Rd b s θ → (∀ z, (ptSecT A (Φ.e z)).left ≫ m.left = (Φ.e (p z)).left ∧ ∃ j : Fin 2 → L.L.ι, ⊤ ≤ (ptSecT A (Φ.e z)).left ⁻¹ᵁ LB.wchart L.L ![(snd (Over.mk x0) A).left, m.left] j ∧ valAt' (ptSecT A (Φ.e z)).left (LB.wchart L.L ![(snd (Over.mk x0) A).left, m.left] j) (α.s j).val = v z * (Φ.fr (j 0) z ^ a * Φ.fr (j 1) (p z) ^ (-b))) → Φ.Rd a s' (fun z => v z * θ (p z)) := by
-  first | exact @GlobalTheory.AnVal.AnFr.rd_twistPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ReadingTwistedPullbackStatement =====
@@ -325,7 +323,7 @@ theorem AnFr.rd_of_isActOf : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
     refine ⟨j, hj, ?_⟩
     rw [hval j hj, Fin.prod_univ_two]
     simp
-  have key := GlobalTheory.T.reading_twisted_pullback S A L x0 g Φ (translT A U.pt) (translPt A U.pt) hsnd k k U.φ s s' θ
+  have key := _root_.GlobalTheory.AnVal.AnFr.rd_twistPull S A L x0 g Φ (translT A U.pt) (translPt A U.pt) hsnd k k U.φ s s' θ
     (fun z => x + z) (fun z => c * fock Φ.Hm k x (fun _ => 1) z) hfst htw hr hcond
   have hfun : (fun z => c * fock Φ.Hm k x (fun _ => 1) z * θ (x + z)) = fun z => c * fock Φ.Hm k x θ z := by
     funext z
@@ -418,14 +416,9 @@ section Frame
 
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : RigLB A} {x0 : Sp ℂ ⟶ S} {g : ℕ} (Φ : AnFr A L x0 g)
 
-theorem e_zero : Φ.e 0 = 1 := by
-  have h := Φ.e_add 0 0
-  rw [add_zero] at h
-  exact mul_left_cancel (a := Φ.e 0) (by rw [_root_.mul_one]; exact h.symm)
-
 theorem e_neg (z : Fin g → ℂ) : Φ.e (-z) = (Φ.e z)⁻¹ := by
   have h := Φ.e_add (-z) z
-  rw [neg_add_cancel, GlobalTheory.AnValSym.e_zero Φ] at h
+  rw [neg_add_cancel, _root_.GlobalTheory.AnVal.AnFr.genMove_e_zero Φ] at h
   exact eq_inv_of_mul_eq_one_left h.symm
 
 private theorem isHolFam_comp' {Y Y' : Scheme.{0}} {n : ℕ} {e : (Fin n → ℂ) → (Sp ℂ ⟶ Y)} (he : IsHolFam e)
@@ -529,7 +522,7 @@ theorem sq_const_eq_one : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMo
   unfold symGen at hcorr
   obtain ⟨hpt, hU⟩ := hT
   obtain ⟨v, hv, hnuR⟩ := neg_const Φ k nu hnu
-  have e0 : Φ.e 0 = 1 := e_zero Φ
+  have e0 : Φ.e 0 = 1 := _root_.GlobalTheory.AnVal.AnFr.genMove_e_zero Φ
   have hx' : Φ.e (-x) = U.pt⁻¹ := by rw [e_neg, hpt]
   have hp1 : (ptSecT A (Φ.e 0)).left ≫ (translT A U.pt⁻¹).left = (ptSecT A (Φ.e (-x))).left := by
     rw [← Over.comp_left, ptSecT_translT, e0, _root_.mul_one, hx']

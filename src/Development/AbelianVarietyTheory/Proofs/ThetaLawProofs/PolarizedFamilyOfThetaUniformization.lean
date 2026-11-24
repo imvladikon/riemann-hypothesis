@@ -330,7 +330,7 @@ theorem exists_known_point : Out.Laws → ThetaUnifAV → ∀ (h k : ℕ) (K : T
     IsPrimitiveRoot.of_map_of_injective (f := algebraMap k₁ ℂ) hprim (algebraMap k₁ ℂ).injective
   let ze : k₁ˣ := Units.mk0 (j ζ) (hprim₁.ne_zero hk0.ne')
   have ttors : ∀ a, t a ^ k = 1 := fun a => ρinj (by rw [map_pow, ht, ltors, map_one])
-  obtain ⟨c, e, he, pr, iP, hc⟩ := exists_siegPre_of_polAV hL Moduli.cube_of_isLB K k₁ j h k ζ ze y.P t hg
+  obtain ⟨c, e, he, pr, iP, hc⟩ := exists_siegPre_of_polAV hL _root_.GlobalTheory.AbLaw.CubeAssembly.cube_gen K k₁ j h k ζ ze y.P t hg
     (Nat.cast_ne_zero.2 hk0.ne') rfl (IsPrimitiveRoot.coe_units_iff.1 hprim₁)
     (fun a a' => ρinj (by rw [map_mul, ht, ht, ht, ladd])) ttors fun a a' =>
       ρw k _ _ _ (ttors a) (ttors a') (by
@@ -378,8 +378,6 @@ open scoped CategoryTheory.Obj TensorProduct
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.KeyPow GlobalTheory.KeyFam GlobalTheory.ZM GlobalTheory.AbLaw
 
-theorem _root_.GlobalTheory.T.exists_rigidTranslate_principalPolarisation_order_two : Out.Laws → ∀ (R : Type) [CommRing R] (P : Out.PolAV (Sp R)) (t : 𝟙_ (Over (Sp R)) ⟶ P.A), t ^ 2 = 1 → ∃ (P' : Out.PolAV (Sp R)) (e : P'.A ≅ P.A), IsMonHom e.hom ∧ P'.g = P.g ∧ LamIs P'.A P'.L P.A (abelian₂ P.A P.L) e.hom.left ∧ LBIso P'.L (LB.LinComb P.L (K := Fin 2) ![(e.hom ≫ ((toUnit P.A ≫ t) * 𝟙 P.A)).left, (toUnit P'.A ≫ t).left] ![1, -1]) := by
-  first | exact @GlobalTheory.RigidTranslate.exists_rigid_translate
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsRigidTranslatePrincipalPolarisationOrderTwStatement =====
@@ -751,7 +749,7 @@ theorem exists_translate (hL : Out.Laws) {h k : ℕ} {o : Type} [CommRing o] {ζ
   obtain ⟨e, he, -, hl⟩ := (sqOf_calculus h k o ζ S (Sp ℂ) (Sp ℂ) s c (x ≫ f)).2.1 P₁ P _ _ h₁ hP
   obtain ⟨t₁, ht₁, hi⟩ := GlobalTheory.T.exists_twoTorsion_translate_same_lambdaBundle hL ℂ P₁ P e he hl
   obtain ⟨t, ht, hy⟩ := hT ℂ _ (pushHom hπ.1 _ t₁) (by rw [← map_pow, ht₁, map_one])
-  obtain ⟨Q', e', he', hg', hl', hi'⟩ := GlobalTheory.T.exists_rigidTranslate_principalPolarisation_order_two hL R Q t ht
+  obtain ⟨Q', e', he', hg', hl', hi'⟩ := _root_.GlobalTheory.RigidTranslate.exists_rigid_translate hL R Q t ht
   have hy' : t₁.left ≫ π = x ≫ t.left := by
     refine (congrArg (fun q => q.left) hy).trans ?_
     refine congrArg (· ≫ t.left) ?_
@@ -812,8 +810,7 @@ theorem exists_affine {K : Type} [CommRing K] {X : Scheme.{0}} (s : X ⟶ Sp K) 
   · exact (congrArg (· ≫ hV.fromSpec) (Spec.map_preimage _)).trans (IsOpenImmersion.lift_fac _ _ _)
   · exact (congrArg (· ≫ hV.fromSpec) (Spec.map_preimage _)).trans (IsOpenImmersion.lift_fac _ _ _)
 
-theorem spMap_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) : f = g :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
+alias spMap_inj := _root_.GlobalTheory.ZM.DenseFib.spMap_inj
 
 end GlobalTheory.KeyFam.PolFamPf
 

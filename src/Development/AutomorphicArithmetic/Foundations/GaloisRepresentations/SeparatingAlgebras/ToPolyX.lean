@@ -56,8 +56,6 @@ open GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 open GlobalTheory.GalCut GlobalTheory.UnitaryBC GlobalTheory.Cong GlobalTheory.DefU GlobalTheory.CuspRep GlobalTheory.PRep
 
-theorem _root_.GlobalTheory.T.isAutomorphicOfWeight_of_nonzero_fixed_finPart_form : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (π : AutSub E n) (W : Wt E n) (K : Subgroup (UA E n)) (f : algForms W), f ∈ π.finPart W → f ≠ 0 → (∀ k ∈ K, ∀ v g, f.1 v (g * k) = f.1 v g) → OfType (fun τ => W.at τ) K π.V := by
-  first | (exact @GlobalTheory.Cong.ofType_of_finPart_fixed)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAutomorphicOfWeightOfNonzeroFixedFinPartFormStatement =====
@@ -76,7 +74,7 @@ theorem UpperTheory.Gal.Gen.toPolyX_pf :
     UpperTheory.Gal.Gen.PartFacts → UpperTheory.Gal.Gen.ToPolyX := by
   intro hPF E _ _ _ l _ ι a w₀ K hK lam P hD Jx t η hFr hact U hU ε hε
   classical
-  obtain ⟨W, f, hW, hf0, hfU, hfK, -⟩ := GlobalTheory.T.exists_algebraicForm_weight_level_smooth_at_place E a lam K U hK hU w₀
+  obtain ⟨W, f, hW, hf0, hfU, hfK, -⟩ := _root_.GlobalTheory.Cong.exists_algForm_ofType E a lam K U hK hU w₀
   have hWe : Wt.ofFam lam = W := funext fun v => by
     show lam v.embedding = W v
     rw [← hW, Wt.at_embedding]
@@ -142,14 +140,14 @@ theorem UpperTheory.Gal.Gen.toPolyX_pf :
     calc ‖ι.symm (e x.1)‖ * ‖ι.symm (f₁.1 (b x.1 x.2) x.1)‖ ≤ ε / R * R :=
           mul_le_mul (he _) (hR _ _) (norm_nonneg _) (div_pos hε hRpos).le
       _ = ε := div_mul_cancel₀ _ hRpos.ne'
-  obtain ⟨s, c, hs, hP⟩ := GlobalTheory.T.eigenvector_small_sub_finite_eigen_approx_inequality l ι (W.Sp →ₗ[ℂ] (UA E a → ℂ)) (UA E a × X) Jx
+  obtain ⟨s, c, hs, hP⟩ := _root_.GlobalTheory.Cong.eigen_small_sub_finite_approx l ι (W.Sp →ₗ[ℂ] (UA E a → ℂ)) (UA E a × X) Jx
     ↥I T ev hne' f₁.1 (η U) (g₀, i₀) heig0 hnorm vv η' heig ε hbound
   refine ⟨s, c, ?_, hP⟩
   intro z hz'
   obtain ⟨⟨π, hπ⟩, rfl⟩ := hs z hz'
   obtain ⟨hPπ, hfin, hfix, hF0⟩ := hI π hπ
   refine ⟨π.V, ?_, hPπ, rfl⟩
-  have h := GlobalTheory.T.isAutomorphicOfWeight_of_nonzero_fixed_finPart_form E a π W K (F π) hfin hF0 (fun k hk v g => hfix k hk v g)
+  have h := _root_.GlobalTheory.Cong.ofType_of_finPart_fixed E a π W K (F π) hfin hF0 (fun k hk v g => hfix k hk v g)
   have hl' : (fun τ => W.at τ) = lam := funext hW
   rwa [hl'] at h
 end -- clump:auto

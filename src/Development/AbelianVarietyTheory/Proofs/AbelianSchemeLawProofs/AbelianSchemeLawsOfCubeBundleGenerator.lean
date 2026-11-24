@@ -77,8 +77,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Semi
 attribute [local instance] Over.cartesianMonoidalCategory
-theorem _root_.GlobalTheory.T.formallyUnramified_mul_invertible_integer : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (n : ℕ), IsUnit (n : Γ(S, ⊤)) → FormallyUnramified (mulA G n).left := by
-  first | exact @GlobalTheory.formallyUnramified_mulA
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FormallyUnramifiedMulInvertibleIntegerStatement =====
@@ -164,7 +162,7 @@ theorem mulA_props (h : CubeGen) :
       (GlobalTheory.MulPull.mulPull_of_cube_of_symm h (GlobalTheory.exists_gen_negLB GlobalTheory.T.abelianScheme_laws_without_cohomology.1)).1
       GlobalTheory.T.abelianScheme_laws_without_cohomology.2.2.1 gi)
     (GlobalTheory.flat_and_surjective_of_isFinite_abelianEnd gi)
-    GlobalTheory.flat_of_isFinite_of_flat_geometric_fibres GlobalTheory.T.formallyUnramified_mul_invertible_integer
+    GlobalTheory.flat_of_isFinite_of_flat_geometric_fibres _root_.GlobalTheory.formallyUnramified_mulA
 
 theorem weilNondeg (h : CubeGen) : WeilNondegSt :=
   have g := GlobalTheory.T.abelianScheme_laws_without_cohomology.1

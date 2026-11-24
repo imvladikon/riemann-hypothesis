@@ -224,8 +224,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DownLift
 open GlobalTheory.DownLift.GenFinite
 
-theorem _root_.GlobalTheory.T.mem_span_annihilated_union_class_averages : ∀ {G M : Type} [Group G] [Fintype G] [AddCommGroup M] [Module ℂ M] (S : Submodule ℂ M) (π : G → Module.End ℂ M), (∀ g, ∀ v ∈ S, π g v ∈ S) → (∀ v ∈ S, π 1 v = v) → (∀ g h, ∀ v ∈ S, π (g * h) v = π h (π g v)) → ∀ (C : Set (G → ℂ)), (∀ c ∈ C, ∀ x : G, (fun g => c (x * g * x⁻¹)) ∈ C) → ∀ v ∈ S, v ∈ Submodule.span ℂ ({w | w ∈ S ∧ ∀ c ∈ C, ∑ g, c g • π g w = 0} ∪ {u | ∃ c ∈ C, ∃ w ∈ S, u = ∑ g, c g • π g w}) := by
-  first | exact @GlobalTheory.mem_span_killed_union_averages
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSpanKilledUnionAveragesStatement =====
@@ -547,7 +545,7 @@ theorem cleanSpan : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     unfold avgW
     refine Finset.sum_congr rfl fun g _ => ?_
     rw [hπ, ← pi_lift_indep R i t hP (hκ g) (hκ' g) ((hSm _).1 hw), smul_smul]
-  have key := GlobalTheory.T.mem_span_annihilated_union_class_averages S π hS h1 hmul C hC f hf
+  have key := _root_.GlobalTheory.mem_span_killed_union_averages S π hS h1 hmul C hC f hf
   refine Submodule.span_mono ?_ key
   rintro w (⟨hwS, hw⟩ | ⟨c, ⟨PP, a, ha, tr, ε, hε, rfl⟩, w', hw'S, rfl⟩)
   · exact Or.inl ⟨hwS, fun PP a ha tr ε hε κ' hκ' => by

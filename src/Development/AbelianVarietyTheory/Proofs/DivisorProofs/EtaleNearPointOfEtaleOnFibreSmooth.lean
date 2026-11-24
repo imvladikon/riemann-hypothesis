@@ -218,24 +218,6 @@ theorem bijective_of_bijective_lTensor_residueField {R M N : Type*} [CommRing R]
     rw [← LinearMap.range_eq_top]
     exact Submodule.Quotient.subsingleton_iff.mp hsub
 
-theorem formallyEtale_of_bijective_mapBaseChange (R P B : Type*) [CommRing R] [CommRing P]
-    [CommRing B] [Algebra R P] [Algebra R B] [Algebra P B] [IsScalarTower R P B]
-    [Algebra.FormallySmooth R B] (h : Function.Bijective (mapBaseChange R P B)) :
-    Algebra.FormallyEtale P B := by
-  have h1 : Subsingleton Ω[B⁄P] := by
-    refine subsingleton_of_forall_eq 0 fun x => ?_
-    obtain ⟨y, rfl⟩ := map_surjective R P B x
-    exact (exact_mapBaseChange_map R P B y).mpr (h.2 y)
-  have h2 : Subsingleton (Algebra.H1Cotangent P B) := by
-    refine subsingleton_of_forall_eq 0 fun x => ?_
-    have h3 : Algebra.H1Cotangent.δ R P B x = 0 := by
-      apply h.1
-      rw [map_zero]
-      exact (Algebra.H1Cotangent.exact_δ_mapBaseChange R P B _).mpr ⟨x, rfl⟩
-    obtain ⟨y, rfl⟩ := (Algebra.H1Cotangent.exact_map_δ R P B x).mp h3
-    rw [Subsingleton.elim y 0, map_zero]
-  exact ⟨h1, h2⟩
-
 theorem bijective_lTensor_baseChange_of_bijective {B M N : Type*} [CommRing B]
     [AddCommGroup M] [Module B M] [AddCommGroup N] [Module B N] (Q : Ideal B) [Q.IsPrime]
     (φ : M →ₗ[B] N) (h : Function.Bijective (φ.lTensor Q.ResidueField)) :
@@ -304,7 +286,7 @@ theorem exists_etale_away_of_bijective_mapBaseChange : ∀ (A C B : Type) [CommR
     exact eN.bijective.comp (hψ₀.comp eM.symm.bijective)
   haveI : Algebra.FormallySmooth B BQ := Algebra.FormallySmooth.of_isLocalization Q.primeCompl
   haveI : Algebra.FormallySmooth A BQ := Algebra.FormallySmooth.comp A B BQ
-  haveI : Algebra.IsEtaleAt C Q := formallyEtale_of_bijective_mapBaseChange A C BQ hψ
+  haveI : Algebra.IsEtaleAt C Q := _root_.GlobalTheory.SmoothDescent.formallyEtale_of_bijective_mapBaseChange A C BQ hψ
   haveI : Algebra.FinitePresentation C B :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation A C B
   exact Algebra.exists_etale_of_isEtaleAt Q
@@ -550,11 +532,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.Mum
 
-theorem etale_basicOpen_comp_SpecMap_iff (S R : CommRingCat.{0}) (θ : S ⟶ R) (f : R) :
-    Etale ((show (Spec R).Opens from PrimeSpectrum.basicOpen f).ι ≫ Spec.map θ) ↔
-      ((algebraMap R (Localization.Away f)).comp θ.hom).Etale := by
-  exact GlobalTheory.Mum.AffFib.etale_basicOpen_iff S R θ f
-
 theorem etale_image_comp_of_etale (X Z X' Z' : Scheme.{0}) (h : X ⟶ Z) (h' : X' ⟶ Z') (iX : X' ⟶ X) (iZ : Z' ⟶ Z)
     [IsOpenImmersion iX] [IsOpenImmersion iZ] (sh : iX ≫ h = h' ≫ iZ) (U : X'.Opens) :
     Etale (U.ι ≫ h') → Etale ((iX ''ᵁ U).ι ≫ h) := by
@@ -618,7 +595,7 @@ theorem GlobalTheory.Mum.etale_near_of_etale_fibre : ∀ (T X Z : Scheme.{0}) (p
   have hR : ((algebraMap Γ(X, UB) (Localization.Away g)).comp ψ.hom).Etale := by
     have := RingHom.etale_algebraMap.mpr hgEt
     rwa [IsScalarTower.algebraMap_eq Γ(Z, UC) Γ(X, UB) (Localization.Away g)] at this
-  have hV := (etale_basicOpen_comp_SpecMap_iff _ _ ψ g).mpr hR
+  have hV := (_root_.GlobalTheory.Mum.AffFib.etale_basicOpen_iff _ _ ψ g).mpr hR
   refine ⟨hUB'.fromSpec ''ᵁ (PrimeSpectrum.basicOpen g), ?_,
     etale_image_comp_of_etale X Z _ _ h (Spec.map ψ) hUB'.fromSpec hUC'.fromSpec
       (hUC'.SpecMap_appLE_fromSpec h hUB' hBC).symm _ hV⟩

@@ -272,14 +272,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.Ar.Plug.CuspHodge
 
-theorem mem_ptsOver_mcPts {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {P : Ideal (MRing ι)}
-    {z : (Σ k, ι k) → ℂ} (h : z ∈ mcPts P) : z ∈ Small.ptsOver ℂ P := by
-  refine ⟨h.1, fun f hf => ?_⟩
-  have := h.2 f hf
-  rw [MvPolynomial.eval_map] at this
-  rw [MvPolynomial.aeval_def]
-  exact this
-
 theorem exists_form_const {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {Ω : Type} [Field Ω]
     (y : (Σ k, ι k) → Ω) (hb : Birational y) {F : Type} [Field F] [NumberField F] (cst : F →+* Ω) :
     ∃ v : MRing ι, Small.IsFormOff (mCoordIdeal y) v ∧ ∀ z ∈ mcPts (mCoordIdeal y), MvPolynomial.aeval z v ≠ 0 →
@@ -290,7 +282,7 @@ theorem exists_form_const {K : Type} [Fintype K] {ι : K → Type} [∀ k, Finty
   obtain ⟨v, hv, H⟩ := GlobalTheory.CompanionTheory.Ar.Rec.FinRd.ValSub.exists_subring_val K ι Ω y hb
     (Finset.univ.image fun i => cst (b i))
   refine ⟨v, hv, fun z hz hzv => ?_⟩
-  obtain ⟨A, ev, hB, hinv, hval⟩ := H ℂ z (mem_ptsOver_mcPts hz) hzv
+  obtain ⟨A, ev, hB, hinv, hval⟩ := H ℂ z (_root_.PositivityTheory.UnitarySelfGeneration.RA.ptsOver_of_mcPts hz) hzv
   have hq : ∀ q : ℚ, cst (algebraMap ℚ F q) ∈ A := fun q => by
     have e : cst (algebraMap ℚ F q) = (q.num : Ω) * ((q.den : ℕ) : Ω)⁻¹ := by
       have e1 : cst (algebraMap ℚ F q) = (q : Ω) := eq_ratCast (cst.comp (algebraMap ℚ F)) q
@@ -347,7 +339,7 @@ theorem cusp_hodgeLe : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [I
   obtain ⟨k, -, y, hy, hr⟩ := hread σ z hz hσ (left_ne_zero_of_mul hne)
   obtain ⟨θ, hθ, hval⟩ := hr a (nOf u) hn'
   obtain ⟨hg, hb⟩ := hval f hsec
-  have hzp := mem_ptsOver_mcPts hz
+  have hzp := _root_.PositivityTheory.UnitarySelfGeneration.RA.ptsOver_of_mcPts hz
   have hw' : Small.HasVal RM.y (Top.combLine (RM.line 1) (nOf u)).a
       (Fr.rd f * ∏ r', Or.e r' ^ (-nOf u (some r'))) z w := by
     rw [← hgauge]
@@ -387,8 +379,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.comp_laws_model_root_bound : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : Comp Xo c) (Rd : Reading Fr h Z) (u : GlobalTheory.AllWt.Weight Dw), ∀ f ∈ GlobalTheory.AllWt.cuspOn U Z (GlobalTheory.AllWt.wtOf Dw u 0), ∃ R : ℝ, HodgeLe Or u (gauge Rd u * Rd.φ (evC h Z f)) R := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.CuspHodge.cusp_hodgeLe
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompLawsModelRootBoundStatement =====
@@ -1052,8 +1042,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.holomorphic_disc_orbit_bound : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (D : ℕ) (σ : Type) (S : PB.AnSys D σ) (P : Ideal (MRing ι)) (Re : PB.Realis S P), Re.J = ⊤ → ∀ Zf : ℂ → (Σ k, ι k) → ℂ, (∀ p, DifferentiableOn ℂ (fun z => Zf z p) (Metric.ball 0 1)) → (∀ z ∈ Metric.ball (0 : ℂ) 1, Zf z ∈ mcPts P) → (∀ z ∈ Metric.ball (0 : ℂ) 1, z ≠ 0 → ∀ x : Re.R.X, SameOrbit (Re.R.lift x x) (Zf z) → Re.π x ∈ S.open') → ∃ C ρ : ℝ, 0 < ρ ∧ ∀ z : ℂ, 0 < ‖z‖ → ‖z‖ < ρ → ∀ x : Re.R.X, SameOrbit (Re.R.lift x x) (Zf z) → ReciprocityTheory.AnForm.P.rW S.L S.s (Re.π x) ≤ C * (1 + |Real.log ‖z‖|) := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.rW_le_log_disc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscOrbitBoundStatement =====
@@ -1161,11 +1149,6 @@ theorem exists_dvd {P B : Type} [CommRing P] [IsDomain P] [CommRing B] [IsDomain
   have h4 : (⊥ : Ideal B) = Q := Algebra.QuasiFinite.eq_of_le_of_under_eq (R := P) ⊥ Q bot_le
     (le_antisymm (Ideal.comap_mono bot_le) (h3 ▸ bot_le))
   exact hc (by simpa [← h4] using h1)
-
-theorem exists_point {K A : Type} [Field K] [CommRing A] [Algebra K A] [Algebra.FiniteType K A] (σ : K →+* ℂ)
-    (p : Ideal A) [hp : p.IsPrime] {b : A} (hb : b ∉ p) :
-    ∃ ψ : A →+* ℂ, ψ.comp (algebraMap K A) = σ ∧ (∀ a ∈ p, ψ a = 0) ∧ ψ b ≠ 0 :=
-  _root_.UpperTheory.Reformulated.B.DYhc4.main σ p hb
 
 theorem der_zero_etale {K B : Type} [Field K] [CommRing B] [Algebra K B] {d : ℕ} [Algebra (MvPolynomial (Fin d) K) B]
     [IsScalarTower K (MvPolynomial (Fin d) K) B] [Algebra.FormallyUnramified (MvPolynomial (Fin d) K) B]
@@ -1279,7 +1262,7 @@ theorem disc_domain {K A S : Type} [Field K] [CommRing A] [IsDomain A] [Algebra 
   have g0 : g ≠ 0 := fun h => hg (h ▸ p.zero_mem)
   have hle : Submonoid.powers g ≤ nonZeroDivisors A := powers_le_nonZeroDivisors_of_noZeroDivisors g0
   have : IsDomain (Localization.Away g) := IsLocalization.isDomain_localization hle
-  obtain ⟨χ, h1, h2, h3⟩ := exists_point σ p (Ideal.IsPrime.mul_notMem ‹_› hb hg)
+  obtain ⟨χ, h1, h2, h3⟩ := _root_.UpperTheory.Reformulated.B.DYhc4.main σ p (Ideal.IsPrime.mul_notMem ‹_› hb hg)
   rw [map_mul] at h3
   let ψ₀ : Localization.Away g →+* ℂ := IsLocalization.Away.lift g (g := χ) (right_ne_zero_of_mul h3).isUnit
   have hψ : ∀ x, ψ₀ (algebraMap A _ x) = χ x := IsLocalization.Away.lift_eq g _
@@ -1794,8 +1777,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.root_origin_exists_form : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx), ∃ f : MRing RM.ι, Small.IsFormOff (mCoordIdeal RM.y) f ∧ ∀ w ∈ mcPts (mCoordIdeal RM.y), MvPolynomial.aeval w f ≠ 0 → ∀ x : Or.Re.R.X, SameOrbit (Or.Re.R.lift x x) w → Or.Re.π x ∈ Sys.open' := by
-  first | exact @GlobalTheory.CompanionTheory.RootForm.exists_form
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginExistsFormStatement =====
@@ -1911,8 +1892,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.root_origin_weight_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (n : RootIx Dw → ℤ), ∀ w₀ ∈ mcPts (mCoordIdeal RM.y), ∃ (C : ℝ) (M : ℕ), 0 ≤ C ∧ ∀ᶠ w in 𝓝 w₀, w ∈ mcPts (mCoordIdeal RM.y) → ∀ x : Or.Re.R.X, SameOrbit (Or.Re.R.lift x x) w → Or.Re.π x ∈ Sys.open' → ∏ r, (Or.sing r).h w ^ n r ≤ C * ReciprocityTheory.AnForm.P.rW Sys.L Sys.s (Or.Re.π x) ^ M := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.VsReg.sing_prod_le_rW_pow
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginWeightSectionStatement =====
@@ -1933,17 +1912,17 @@ namespace GlobalTheory.CompanionTheory.Ar.Plug
 
 theorem cusp_mem_chartLatNm : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : _root_.GlobalTheory.CompanionTheory.Ar.Top.GoodOrigin Y T) (B : ℕ) (b : T.Comp) (Fr : Small.GenFrame (o.toTowerOrigin.Or B b)) (Z : Comp Xo c) (Rd : Reading Fr h Z) (u : GlobalTheory.AllWt.Weight Dw), ∀ f ∈ GlobalTheory.AllWt.cuspOn U Z (GlobalTheory.AllWt.wtOf Dw u 0), ∃ N : ℕ, 0 < N ∧ (N : (T.M B b).Ω) * (gauge Rd u * Rd.φ (evC h Z f)) ∈ chartLatNm (T.M B b).y (degOf (T.M B b) u) 1 := by
   intro hG E _ _ _ H Dw l Xo c r U h e hL x hx Y _ T o B b Fr Z Rd u f hf
-  obtain ⟨R, w, hw, hval⟩ := GlobalTheory.T.comp_laws_model_root_bound hG E H Dw l Xo c r U h e hL x hx _ _ Y _ _ _ _ _ Fr Z Rd u f hf
-  obtain ⟨f₀, hf₀, hint⟩ := GlobalTheory.T.root_origin_exists_form E H Dw l Xo c _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b)
+  obtain ⟨R, w, hw, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.CuspHodge.cusp_hodgeLe hG E H Dw l Xo c r U h e hL x hx _ _ Y _ _ _ _ _ Fr Z Rd u f hf
+  obtain ⟨f₀, hf₀, hint⟩ := _root_.GlobalTheory.CompanionTheory.RootForm.exists_form E H Dw l Xo c _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b)
   obtain ⟨hJ, inst, hsm⟩ := o.smooth B b
   refine GlobalTheory.T.holomorphic_disc_component_growth _root_.GlobalTheory.CompanionTheory.Ar.Flat.PoleDisc.pole_disc _ _ _ (T.M B b).y (degOf (T.M B b) u) _
     (fun z => R * ∏ r, ((o.toTowerOrigin.Or B b).sing r).h z ^ nOf u (some r)) w f₀ (T.M B b).birational hsm hw hf₀
     hval ?_
   intro Zf hol hmem hne
   have hJ' : (o.toTowerOrigin.Or B b).Re.J = ⊤ := hJ
-  obtain ⟨C₁, ρ₁, hρ₁, hb⟩ := GlobalTheory.T.holomorphic_disc_orbit_bound _ _ _ _ _ _ (o.toTowerOrigin.Or B b).Re hJ' Zf hol hmem
+  obtain ⟨C₁, ρ₁, hρ₁, hb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.rW_le_log_disc _ _ _ _ _ _ (o.toTowerOrigin.Or B b).Re hJ' Zf hol hmem
     (fun z hz hz0 x' hx' => hint _ (hmem z hz) (hne z hz hz0) x' hx')
-  obtain ⟨C₂, M, hC₂, hev⟩ := GlobalTheory.T.root_origin_weight_section E H Dw l Xo c _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b)
+  obtain ⟨C₂, M, hC₂, hev⟩ := _root_.GlobalTheory.CompanionTheory.Ar.VsReg.sing_prod_le_rW_pow E H Dw l Xo c _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b)
     (fun r => nOf u (some r)) (Zf 0) (hmem 0 (by simp))
   have hcont : ContinuousAt Zf 0 := by
     refine continuousAt_pi.2 fun p => ?_

@@ -145,7 +145,7 @@ theorem GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split : ∀ (R : Type) [Comm
     ExactAt {w | w ∈ uniSeq R N ∧ ∀ y ∈ ρ, ∀ u ∈ w, y.2 ⬝ᵥ u = 0} q := by
   intro R _ s hs N m q ρ hρ hN hsm hex
   have hmN : m ≤ N := by omega
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_GL_splitSeq_standard_of_stableRangeLe R s hs N ρ hρ (by omega) (fun j => ⟨m + j, by omega⟩)
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.splitSeq_to_standard R s hs N ρ hρ (by omega) (fun j => ⟨m + j, by omega⟩)
     (by intro a b h; simp [Fin.ext_iff] at h; exact Fin.ext h)
   set G : Matrix (Fin N) (Fin N) R := (g : Matrix (Fin N) (Fin N) R) with hGdef
   set Gi : Matrix (Fin N) (Fin N) R := ((g⁻¹ : GL (Fin N) R) : Matrix (Fin N) (Fin N) R) with hGidef
@@ -223,12 +223,6 @@ theorem GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split : ∀ (R : Type) [Comm
   rw [hset]
   exact (GlobalTheory.T.seqChain_exactAt_map_iff _ _ e he _ q).mpr hex
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exactAt_uniSeq_orthogonal_splitSeq_of_exactAt_uniSeq : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ (N m q : ℕ) (ρ : List ((Fin N → R) × (Fin N → R))), ρ ∈ splitSeq R N → ρ.length + m = N → s ≤ m → ExactAt (uniSeq R m) q → ExactAt {w | w ∈ uniSeq R N ∧ ∀ y ∈ ρ, ∀ u ∈ w, y.2 ⬝ᵥ u = 0} q := by
-  first
-  | exact @GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtUniSeqOrthogonalSplitSeqOfExactAtUniSeq =====
@@ -246,7 +240,7 @@ theorem cycle_formsKill_bound_splitSeq : ∀ (R : Type) [CommRing R] (s : ℕ), 
   intro R _ s hs n hlow p u hu hpn c hc hcz
   obtain ⟨f, hf⟩ := hu
   obtain ⟨w, hwu⟩ : ∃ w : Fin n → R, w ⬝ᵥ u = 1 := ⟨_, by simpa using hf ⟨0, by simp⟩ ⟨0, by simp⟩⟩
-  obtain ⟨hsc, -, hchar, -⟩ := GlobalTheory.T.subClosed_splitSeq_and_uniSeq_with_mem_iff R n
+  obtain ⟨hsc, -, hchar, -⟩ := _root_.GlobalTheory.SeqCx.split_uni_closed R n
   have hγF : [(u, w)] ∈ splitSeq R n := by
     rw [hchar]
     simp [hwu]
@@ -271,13 +265,13 @@ theorem cycle_formsKill_bound_splitSeq : ∀ (R : Type) [CommRing R] (s : ℕ), 
       | nil => simp at hlast
       | cons a t => simp
     simp only [List.length_singleton] at hρlen
-    refine GlobalTheory.T.exactAt_linkIn_splitSeq_of_exactAt_splitSeq R s hs n (n - ρ.length) (p - τ.length) ρ hρ ?_ ?_ ?_
+    refine _root_.GlobalTheory.SeqCx.exactAt_link_splitSeq R s hs n (n - ρ.length) (p - τ.length) ρ hρ ?_ ?_ ?_
     · omega
     · omega
     · apply hlow
       · omega
       · omega
-  obtain ⟨b1, hb1, hc1, hz1⟩ := GlobalTheory.T.exists_homologous_cycle_with_entries_in_of_exactAt_links _ _ _ hG'sc p hlinks c hc hcz
+  obtain ⟨b1, hb1, hc1, hz1⟩ := _root_.GlobalTheory.SeqCx.exists_sub_bd_mem_chains_linkIn_nil _ _ _ hG'sc p hlinks c hc hcz
   have hcone : ∀ l ∈ linkIn {x | x ∈ splitSeq R n ∧ ∀ y ∈ x, ∀ z ∈ [(u, w)], y.2 ⬝ᵥ z.1 = 0}
       {y : (Fin n → R) × (Fin n → R) | ∀ z ∈ [(u, w)], z.2 ⬝ᵥ y.1 = 0} [],
       (u, w) :: l ∈ splitSeq R n := by
@@ -295,7 +289,7 @@ theorem cycle_formsKill_bound_splitSeq : ∀ (R : Type) [CommRing R] (s : ℕ), 
       refine ⟨fun z hz => ⟨?_, ?_⟩, hlF.2⟩
       · simpa using hlS z hz
       · simpa using hlo z hz
-  obtain ⟨b2, hb2, hbd2⟩ := GlobalTheory.T.seqChain_cycle_bounded_by_cone _ (splitSeq R n) _ (u, w) hcone p _ hc1 hz1
+  obtain ⟨b2, hb2, hbd2⟩ := _root_.GlobalTheory.cone_cycle_isBoundary _ (splitSeq R n) _ (u, w) hcone p _ hc1 hz1
   refine ⟨b1 + b2, ?_, ?_⟩
   · refine Submodule.add_mem _ ?_ hb2
     refine Finsupp.supported_mono ?_ hb1
@@ -306,12 +300,6 @@ theorem cycle_formsKill_bound_splitSeq : ∀ (R : Type) [CommRing R] (s : ℕ), 
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exists_bd_of_cycle_forms_kill_unimodular_vector : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ n : ℕ, (∀ n' < n, ∀ p' : ℕ, 2 * p' + s + 1 ≤ n' → ExactAt (splitSeq R n') p') → ∀ (p : ℕ) (u : Fin n → R), [u] ∈ uniSeq R n → 2 * p + s + 1 ≤ n → ∀ c ∈ chains {σ | σ ∈ splitSeq R n ∧ ∀ y ∈ σ, ∀ v ∈ [u], y.2 ⬝ᵥ v = 0} p, bd _ c = 0 → ∃ b ∈ chains (splitSeq R n) (p + 1), bd _ b = c := by
-  first
-  | exact @GlobalTheory.SeqCx.cycle_formsKill_bound_splitSeq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsBdOfCycleFormsKillUnimodularVector =====
@@ -469,12 +457,6 @@ theorem bd_of_oneTerm_cycle : ∀ (V W : Type) (D : Set (List V × List W)) (F :
 
 end GlobalTheory.SeqCx.OneTermEnd
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.exists_bd_of_vbd_eq_of_oneTerm_cycle : ∀ (V W : Type) (D : Set (List V × List W)) (F : Set (List V)) (p : ℕ), (∀ u : W, (∃ l, (l, [u]) ∈ D) → ∀ c ∈ chains {l | (l, [u]) ∈ D} p, bd V c = 0 → ∃ b ∈ chains F (p + 1), bd V b = c) → ∀ z ∈ chains2 D p 1, hbd V W z = 0 → ∀ c : List V →₀ ℤ, vbd V W z = Finsupp.mapDomain (fun l => (l, ([] : List W))) c → ∃ b ∈ chains F (p + 1), bd V b = c := by
-  first
-  | exact @GlobalTheory.SeqCx.OneTermEnd.bd_of_oneTerm_cycle
-end
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -523,12 +505,6 @@ theorem cycle_pair_empty (V W : Type) (D : Set (List V × List W)) (p : ℕ) (c 
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.pair_nil_hbd_vbd_eq_zero_of_cycle : ∀ (V W : Type) (D : Set (List V × List W)) (p : ℕ) (c : List V →₀ ℤ), c ∈ chains {l | (l, ([] : List W)) ∈ D} p → bd V c = 0 → Finsupp.mapDomain (fun l => (l, ([] : List W))) c ∈ chains2 D p 0 ∧ hbd V W (Finsupp.mapDomain (fun l => (l, ([] : List W))) c) = 0 ∧ vbd V W (Finsupp.mapDomain (fun l => (l, ([] : List W))) c) = 0 := by
-  first
-  | exact @GlobalTheory.SeqCx.cycle_pair_empty
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.PairNilHbdVbdEqZeroOfCycle =====
@@ -601,12 +577,6 @@ end GlobalTheory.SeqCx
 
 end
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.pairSeqBoundaries_lower_bidegree_of_subClosed : ∀ (V W : Type) (D : Set (List V × List W)), SubClosed2 D → (∀ a b, ∀ x ∈ chains2 D (a + 1) b, hbd V W x ∈ chains2 D a b) ∧ (∀ a b, ∀ x ∈ chains2 D a (b + 1), vbd V W x ∈ chains2 D a b) ∧ (∀ b, ∀ x ∈ chains2 D 0 b, hbd V W x = 0) := by
-  first
-  | exact @GlobalTheory.SeqCx.bd_chains2
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.PairSeqBoundariesLowerBidegreeOfSubClosed =====
@@ -705,12 +675,6 @@ theorem dbl_bd : ∀ (V W : Type), (∀ x, hbd V W (hbd V W x) = 0) ∧ (∀ x, 
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.pairSeqDoubleComplex_boundary_relations : ∀ (V W : Type), (∀ x, hbd V W (hbd V W x) = 0) ∧ (∀ x, vbd V W (vbd V W x) = 0) ∧ (∀ x, hbd V W (vbd V W x) = vbd V W (hbd V W x)) := by
-  first
-  | exact @GlobalTheory.SeqCx.dbl_bd
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.PairSeqDoubleComplexBoundaryRelations =====
@@ -832,12 +796,6 @@ end GlobalTheory.SeqCx
 
 end
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.pairSeqHorizontalCycle_is_boundary_of_slices_exact : ∀ (V W : Type) (D : Set (List V × List W)) (a b : ℕ), (∀ w : List W, w.length = b → (∃ l, (l, w) ∈ D) → ExactAt {l | (l, w) ∈ D} a) → ∀ x ∈ chains2 D a b, hbd V W x = 0 → ∃ y ∈ chains2 D (a + 1) b, hbd V W y = x := by
-  first
-  | exact @GlobalTheory.SeqCx.dblRow_exact
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.PairSeqHorizontalCycleIsBoundaryOfSlicesExact =====
@@ -945,12 +903,6 @@ theorem GlobalTheory.SeqCx.vertical_exact_of_columns : ∀ (V W : Type) (D : Set
   · rw [map_sum, hdec]
     exact Finset.sum_congr rfl (fun l hl => by rw [vbd_mapDomain, hybd l hl])
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.pairSeqVerticalCycle_is_boundary_of_slices_exact : ∀ (V W : Type) (D : Set (List V × List W)) (a b : ℕ), (∀ l : List V, l.length = a → (∃ w, (l, w) ∈ D) → ExactAt {w | (l, w) ∈ D} b) → ∀ x ∈ chains2 D a b, vbd V W x = 0 → ∃ y ∈ chains2 D a (b + 1), vbd V W y = x := by
-  first
-  | exact @GlobalTheory.SeqCx.vertical_exact_of_columns
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.PairSeqVerticalCycleIsBoundaryOfSlicesExact =====
@@ -970,7 +922,7 @@ theorem exactAt_split_kill_uni : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
     2 * a + w.length + s + 1 ≤ n →
     ExactAt {σ | σ ∈ splitSeq R n ∧ ∀ y ∈ σ, ∀ u ∈ w, y.2 ⬝ᵥ u = 0} a := by
   intro R _ s hs n hind a w hw hw1 hlen
-  obtain ⟨hsubS, -, -, huni⟩ := T.subClosed_splitSeq_and_uniSeq_with_mem_iff R n
+  obtain ⟨hsubS, -, -, huni⟩ := _root_.GlobalTheory.SeqCx.split_uni_closed R n
   obtain ⟨γ, hγ, hγw⟩ := (huni w).mp hw
   subst hγw
   rw [List.length_map] at hw1 hlen
@@ -986,23 +938,17 @@ theorem exactAt_split_kill_uni : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
       obtain ⟨z, hz, rfl⟩ := List.mem_map.mp hu
       exact h2 y hy z hz
   rw [hF]
-  refine T.seqComplex_exactAt_of_all_links_exactAt _ _ {y : (Fin n → R) × (Fin n → R) | ∀ z ∈ γ, z.2 ⬝ᵥ y.1 = 0} ?_ a ?_
+  refine _root_.GlobalTheory.SeqCx.exactAt_of_links _ _ {y : (Fin n → R) × (Fin n → R) | ∀ z ∈ γ, z.2 ⬝ᵥ y.1 = 0} ?_ a ?_
   · intro l hl l' hl'
     exact ⟨hsubS l hl.1 l' hl', fun y hy z hz => hl.2 y (hl'.subset hy) z hz⟩
   · intro σ hσ hσlen
     obtain ⟨ρ, hρ, hρlen, hlink⟩ := T.exists_splitSeq_linkIn_orthogonal_eq_linkIn R n γ σ hγ hσ.1 hσ.2
     rw [hlink]
-    exact T.exactAt_linkIn_splitSeq_of_exactAt_splitSeq R s hs n (n - ρ.length) (a - σ.length) ρ hρ (by omega) (by omega)
+    exact _root_.GlobalTheory.SeqCx.exactAt_link_splitSeq R s hs n (n - ρ.length) (a - σ.length) ρ hρ (by omega) (by omega)
       (hind (n - ρ.length) (by omega) (a - σ.length) (by omega))
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.splitSeq_forms_kill_uniSeq_exactAt : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ n : ℕ, (∀ n' < n, ∀ p' : ℕ, 2 * p' + s + 1 ≤ n' → ExactAt (splitSeq R n') p') → ∀ (a : ℕ) (w : List (Fin n → R)), w ∈ uniSeq R n → 1 ≤ w.length → 2 * a + w.length + s + 1 ≤ n → ExactAt {σ | σ ∈ splitSeq R n ∧ ∀ y ∈ σ, ∀ u ∈ w, y.2 ⬝ᵥ u = 0} a := by
-  first
-  | exact @GlobalTheory.SeqCx.exactAt_split_kill_uni
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.SplitSeqFormsKillUniSeqExactAt =====
@@ -1034,12 +980,6 @@ theorem splitPairs_subClosed2 : ∀ (R : Type) [CommRing R] (n : ℕ), SubClosed
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx
-theorem _root_.GlobalTheory.T.subClosed2_splitPairs : ∀ (R : Type) [CommRing R] (n : ℕ), SubClosed2 (splitPairs R n) := by
-  first
-  | exact @GlobalTheory.SeqCx.splitPairs_subClosed2
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.SubClosed2SplitPairs =====
@@ -1095,19 +1035,19 @@ theorem splitAcyclic_step (R : Type) [CommRing R] (s : ℕ) (hs : StableRangeLe 
     (ih : ∀ n' < n, ∀ p' : ℕ, 2 * p' + s + 1 ≤ n' → ExactAt (splitSeq R n') p') (p : ℕ)
     (hp : 2 * p + s + 1 ≤ n) : ExactAt (splitSeq R n) p := by
   intro c hc hbdc
-  obtain ⟨hhh, hvv, hhv⟩ := GlobalTheory.T.pairSeqDoubleComplex_boundary_relations ((Fin n → R) × (Fin n → R)) (Fin n → R)
-  obtain ⟨hmh, hmv, h0⟩ := GlobalTheory.T.pairSeqBoundaries_lower_bidegree_of_subClosed _ _ (splitPairs R n) (GlobalTheory.T.subClosed2_splitPairs R n)
+  obtain ⟨hhh, hvv, hhv⟩ := _root_.GlobalTheory.SeqCx.dbl_bd ((Fin n → R) × (Fin n → R)) (Fin n → R)
+  obtain ⟨hmh, hmv, h0⟩ := _root_.GlobalTheory.SeqCx.bd_chains2 _ _ (splitPairs R n) (_root_.GlobalTheory.SeqCx.splitPairs_subClosed2 R n)
   have hnil : ([] : List (Fin n → R)) ∈ uniSeq R n :=
     ⟨fun i => absurd i.2 (by simp), fun i => absurd i.2 (by simp)⟩
   have hc' : c ∈ chains {l | (l, ([] : List (Fin n → R))) ∈ splitPairs R n} p := by
     refine Finsupp.supported_mono ?_ hc
     rintro l ⟨hl, hlen⟩
     exact ⟨⟨hl, hnil, by simp⟩, hlen⟩
-  obtain ⟨he, hhe, hve⟩ := GlobalTheory.T.pair_nil_hbd_vbd_eq_zero_of_cycle _ _ (splitPairs R n) p c hc' hbdc
+  obtain ⟨he, hhe, hve⟩ := _root_.GlobalTheory.SeqCx.cycle_pair_empty _ _ (splitPairs R n) p c hc' hbdc
   have hcol : ∀ a b, a + b = p → ∀ x ∈ chains2 (splitPairs R n) a b,
       vbd _ _ x = 0 → ∃ y ∈ chains2 (splitPairs R n) a (b + 1), vbd _ _ y = x := by
     intro a b hab x hx hvx
-    refine GlobalTheory.T.pairSeqVerticalCycle_is_boundary_of_slices_exact _ _ _ a b ?_ x hx hvx
+    refine _root_.GlobalTheory.SeqCx.vertical_exact_of_columns _ _ _ a b ?_ x hx hvx
     rintro l hl ⟨w, hw⟩
     have hls : l ∈ splitSeq R n := hw.1
     have hset : {w | (l, w) ∈ splitPairs R n} =
@@ -1115,12 +1055,12 @@ theorem splitAcyclic_step (R : Type) [CommRing R] (s : ℕ) (hs : StableRangeLe 
       ext w
       exact ⟨fun h => ⟨h.2.1, h.2.2⟩, fun h => ⟨hls, h.1, h.2⟩⟩
     rw [hset]
-    exact GlobalTheory.T.exactAt_uniSeq_orthogonal_splitSeq_of_exactAt_uniSeq R s hs n (n - a) b l hls (by omega) (by omega)
-      (GlobalTheory.T.unimodularSeqComplex_exactAt_of_add_stableRank_le R s hs (n - a) b (by omega))
+    exact _root_.GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split R s hs n (n - a) b l hls (by omega) (by omega)
+      (_root_.GlobalTheory.uniSeq_exactAt_of_stableRangeLe R s hs (n - a) b (by omega))
   have hrow : ∀ a b, a + b = p + 1 → 2 ≤ b → ∀ x ∈ chains2 (splitPairs R n) a b,
       hbd _ _ x = 0 → ∃ y ∈ chains2 (splitPairs R n) (a + 1) b, hbd _ _ y = x := by
     intro a b hab hb x hx hhx
-    refine GlobalTheory.T.pairSeqHorizontalCycle_is_boundary_of_slices_exact _ _ _ a b ?_ x hx hhx
+    refine _root_.GlobalTheory.SeqCx.dblRow_exact _ _ _ a b ?_ x hx hhx
     rintro w hw ⟨l, hl⟩
     have hwu : w ∈ uniSeq R n := hl.2.1
     have hset : {l | (l, w) ∈ splitPairs R n} =
@@ -1128,10 +1068,10 @@ theorem splitAcyclic_step (R : Type) [CommRing R] (s : ℕ) (hs : StableRangeLe 
       ext σ
       exact ⟨fun h => ⟨h.1, h.2.2⟩, fun h => ⟨h.1, hwu, h.2⟩⟩
     rw [hset]
-    exact GlobalTheory.T.splitSeq_forms_kill_uniSeq_exactAt R s hs n ih a w hwu (by omega) (by omega)
+    exact _root_.GlobalTheory.SeqCx.exactAt_split_kill_uni R s hs n ih a w hwu (by omega) (by omega)
   obtain ⟨z, hz, hhz, hvz⟩ := GlobalTheory.zigzag_double_complex _ (chains2 (splitPairs R n)) (hbd _ _) (vbd _ _) p
     hhh hhv hmh hmv h0 hcol hrow hvv _ he hhe hve
-  refine GlobalTheory.T.exists_bd_of_vbd_eq_of_oneTerm_cycle _ _ (splitPairs R n) (splitSeq R n) p ?_ z hz hhz c hvz
+  refine _root_.GlobalTheory.SeqCx.OneTermEnd.bd_of_oneTerm_cycle _ _ (splitPairs R n) (splitSeq R n) p ?_ z hz hhz c hvz
   rintro u ⟨l, hl⟩ c' hc' hbc'
   have hu : [u] ∈ uniSeq R n := hl.2.1
   have hset : {l | (l, [u]) ∈ splitPairs R n} =
@@ -1139,7 +1079,7 @@ theorem splitAcyclic_step (R : Type) [CommRing R] (s : ℕ) (hs : StableRangeLe 
     ext σ
     exact ⟨fun h => ⟨h.1, h.2.2⟩, fun h => ⟨h.1, hu, h.2⟩⟩
   rw [hset] at hc'
-  exact GlobalTheory.T.exists_bd_of_cycle_forms_kill_unimodular_vector R s hs n ih p u hu hp c' hc' hbc'
+  exact _root_.GlobalTheory.SeqCx.cycle_formsKill_bound_splitSeq R s hs n ih p u hu hp c' hc' hbc'
 
 theorem exactAt_splitSeq_of_stableRange : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s →
     ∀ n p : ℕ, 2 * p + s + 1 ≤ n → ExactAt (splitSeq R n) p := by
@@ -1149,12 +1089,6 @@ theorem exactAt_splitSeq_of_stableRange : ∀ (R : Type) [CommRing R] (s : ℕ),
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.splitSeq_exactAt_of_two_mul_add_stableRange_le : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ n p : ℕ, 2 * p + s + 1 ≤ n → ExactAt (splitSeq R n) p := by
-  first
-  | exact @GlobalTheory.SeqCx.exactAt_splitSeq_of_stableRange
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.SplitSeqExactAtOfTwoMulAddStableRangeLe =====

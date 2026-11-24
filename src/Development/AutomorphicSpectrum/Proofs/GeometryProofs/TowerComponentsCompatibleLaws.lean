@@ -941,13 +941,9 @@ end GlobalTheory.CompanionTheory.Ar.Rec.ReadEx
 
 namespace GlobalTheory.CompanionTheory.Ar.Rec.ReadEx
 
-theorem dualMap_comp₂ {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R →+* R') (g : R' →+* R'') :
-    Formalism.L2.Pj.dualMap (g.comp f) = (Formalism.L2.Pj.dualMap g).comp (Formalism.L2.Pj.dualMap f) := by
-  ext a <;> simp [Formalism.L2.Pj.dualMap]
+alias dualMap_comp₂ := _root_.GlobalTheory.FramedBaseChange.dual_comp
 
-theorem spc {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : B →+* C) (g : A →+* B) :
-    spMap f ≫ spMap g = spMap (f.comp g) := by
-  rw [← Spec.map_comp]; rfl
+alias spc := _root_.Formalism.L2.Pj.spMap_comp_ring
 
 section Core
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H} {l : Level H}

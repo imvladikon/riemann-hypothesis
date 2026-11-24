@@ -134,9 +134,9 @@ theorem epi_of_loc (R : Type) [CommRing R] {P Q E : PSh} (f : P ⟶ E) (g : Q �
   have map_comp : ∀ {G H K : Shv R} (χ : G ⟶ H) (ω : H ⟶ K) {U : Scheme.{0}} (s : Sec G U),
       Sec.map (χ ≫ ω) s = Sec.map ω (Sec.map χ s) := by
     intros; rfl
-  obtain ⟨-, hext, hres, -⟩ := GlobalTheory.T.free_sections_ext_res_map R E F
-  obtain ⟨-, -, -, hmapP⟩ := GlobalTheory.T.free_sections_ext_res_map R P F
-  obtain ⟨-, -, -, hmapQ⟩ := GlobalTheory.T.free_sections_ext_res_map R Q F
+  obtain ⟨-, hext, hres, -⟩ := _root_.GlobalTheory.EtC.free_hom_sections R E F
+  obtain ⟨-, -, -, hmapP⟩ := _root_.GlobalTheory.EtC.free_hom_sections R P F
+  obtain ⟨-, -, -, hmapQ⟩ := _root_.GlobalTheory.EtC.free_hom_sections R Q F
   apply hext
   intro T x
   apply (_root_.GlobalTheory.EtC.sec_ext_glue R F T).1
@@ -160,7 +160,7 @@ theorem mv_right_epi : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [C
     HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr inferInstance)
   apply epi_of_loc
   intro T (x : T ⟶ Spec (CommRingCat.of A))
-  rw [GlobalTheory.T.etaleLocally_iff_affine_etale_point_cover]
+  rw [_root_.GlobalTheory.EtC.loc_iff_etale_affine_points]
   · intro t
     by_cases hf : f ∈ (x t).asIdeal
     · obtain ⟨q, hq⟩ := exists_prime_over A A' f hs hi (x t) hf
@@ -197,8 +197,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etaleMayerVietoris_free_right_epi : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] [Algebra.Etale A A'] (f : A), (∀ a' : A', ∃ a : A, a' - algebraMap A A' a ∈ Ideal.span {algebraMap A A' f}) → (∀ a : A, algebraMap A A' a ∈ Ideal.span {algebraMap A A' f} → a ∈ Ideal.span {f}) → Epi (biprod.desc ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))))) ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A A')))))) := by
-  first | (exact @GlobalTheory.EtC.MVEpi.mv_right_epi)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMayerVietorisFreeRightEpiStatement =====
@@ -211,8 +209,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.etale_mayerVietoris_free_sequence_exact : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] [Algebra.Etale A A'] (f : A), (∀ a' : A', ∃ a : A, a' - algebraMap A A' a ∈ Ideal.span {algebraMap A A' f}) → (∀ a : A, algebraMap A A' a ∈ Ideal.span {algebraMap A A' f} → a ∈ Ideal.span {f}) → ∃ w, (ShortComplex.mk (biprod.lift ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (Localization.awayMap (algebraMap A A') f))))) (-(free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f)))))))) (biprod.desc ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))))) ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A A')))))) w).Exact := by
-  first | (exact @GlobalTheory.EtC.MVExact.mv_exact)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMayerVietorisFreeSequenceExactStatement =====
@@ -265,8 +261,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.mono_free_etale_mayerVietoris_left_map : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] (f : A), Mono (biprod.lift ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (Localization.awayMap (algebraMap A A') f))))) (-(free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f)))))))) := by
-  first | (exact @GlobalTheory.EtC.MVLeft.left_mono)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonoFreeEtaleMayerVietorisLeftMapStatement =====
@@ -283,9 +277,9 @@ namespace GlobalTheory.EtC.MVFree
 theorem shortExact : ∀ (R : Type) [CommRing R] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] [Algebra.Etale A A'] (f : A), IsNbhd A A' f → ∀ (w : biprod.lift ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (Localization.awayMap (algebraMap A A') f))))) (-(free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A' (Localization.Away (algebraMap A A' f))))))) ≫ biprod.desc ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))))) ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A A'))))) = 0), (ShortComplex.mk _ _ w).ShortExact := by
   intro R _ A A' _ _ _ _ f hN w
   obtain ⟨h1, h2⟩ := hN
-  obtain ⟨w', hex⟩ := GlobalTheory.T.etale_mayerVietoris_free_sequence_exact R A A' f h1 h2
-  have hm := GlobalTheory.T.mono_free_etale_mayerVietoris_left_map R A A' f
-  have he := GlobalTheory.T.etaleMayerVietoris_free_right_epi R A A' f h1 h2
+  obtain ⟨w', hex⟩ := _root_.GlobalTheory.EtC.MVExact.mv_exact R A A' f h1 h2
+  have hm := _root_.GlobalTheory.EtC.MVLeft.left_mono R A A' f
+  have he := _root_.GlobalTheory.EtC.MVEpi.mv_right_epi R A A' f h1 h2
   exact { exact := hex, mono_f := hm, epi_g := he }
 
 end GlobalTheory.EtC.MVFree

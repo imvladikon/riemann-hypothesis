@@ -695,11 +695,6 @@ theorem npow_inv' {r : ℝ≥0} (hr : 0 < r) (t : ℂ) : npow r⁻¹ t = npow r 
   push_cast
   ring
 
-theorem npow_add' {r : ℝ≥0} (hr : 0 < r) (s t : ℂ) : npow r (s + t) = npow r s * npow r t := by
-  rw [npow_eq_exp hr, npow_eq_exp hr, npow_eq_exp hr, ← Complex.exp_add]
-  congr 1
-  ring
-
 theorem npow_zero' (r : ℝ≥0) (hr : 0 < r) : npow r 0 = 1 := by
   rw [npow_eq_exp hr]; simp
 
@@ -877,7 +872,7 @@ theorem whit_step (hK : WhitKA) {D : D7} {n : ℕ} {V : HSp D} {ψ : AddChar (AF
       simp only [hGz, hpt, integral_const_mul]
       rfl
     have h4 : npow A (n : ℂ) * npow A (-(n : ℂ)) = 1 := by
-      rw [← npow_add' hA, add_neg_cancel, npow_zero' A hA]
+      rw [← _root_.GlobalTheory.Doubling.npow_add hA, add_neg_cancel, npow_zero' A hA]
     rw [h3, h1] at h2
     calc ∫ b, Gz b ∂lam = (npow A (n : ℂ) * npow A (-(n : ℂ))) * ∫ b, Gz b ∂lam := by rw [h4, one_mul]
       _ = npow A (n : ℂ) * (npow A (-(n : ℂ)) * ∫ b, Gz b ∂lam) := by ring
@@ -891,7 +886,7 @@ theorem whit_step (hK : WhitKA) {D : D7} {n : ℕ} {V : HSp D} {ψ : AddChar (AF
       (npow (absA D (Matrix.GeneralLinearGroup.det a)) ((V.rank : ℂ) - n) *
         IfrB V ν (fun x => (ω k Φ).1 (HMul.hMul x a.1)) β) = IfrB V ν (ω (m * u * k) Φ).1 β := by
     have h5 : npow A (n : ℂ) * npow A (-(V.rank : ℂ)) * npow A ((V.rank : ℂ) - n) = 1 := by
-      rw [← npow_add' hA, ← npow_add' hA]
+      rw [← _root_.GlobalTheory.Doubling.npow_add hA, ← _root_.GlobalTheory.Doubling.npow_add hA]
       have : (n : ℂ) + -(V.rank : ℂ) + ((V.rank : ℂ) - n) = 0 := by ring
       rw [this, npow_zero' A hA]
     have h6 : ψ (halfTr (Matrix.trace (b1.1 * T))) = ct := by

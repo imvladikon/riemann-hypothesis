@@ -122,7 +122,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem TwChrOne : PI.TwChrOne.TwChrOne := PI.TwChrOne.Pf.twChrOne_main
+alias TwChrOne := _root_.PI.TwChrOne.Pf.twChrOne_main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TwChrOne =====

@@ -135,7 +135,7 @@ theorem exists_coeffs_translate : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     refine Over.OverMorphism.ext ?_
     change spMap (dualMap ρ) ≫ (u a).left = spMap (epsMul (ρ (c a))) ≫ (v'' a).left
     rw [hu a, hv'' a]
-    simp only [← Category.assoc, GlobalTheory.KSLin.spMap_comp_spMap]
+    simp only [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     congr 2
     refine RingHom.ext fun z => ?_
     ext <;> simp [epsMul, dualMap]
@@ -426,7 +426,7 @@ theorem vert_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
           valR (spMap ρ ≫ g₀) O (e O f) = ∑ a, ρ (c a) * (valR (wt a) O f).snd := by
     intro S _ g₀ hg
     obtain ⟨φ, hφg⟩ := hφ S g₀ hg
-    obtain ⟨w, hred, hw⟩ := exists_epsPt t.G.left W e he S g₀ hg
+    obtain ⟨w, hred, hw⟩ := _root_.GlobalTheory.EpsPoint.exists_epsPoint t.G.left W e he S g₀ hg
     have hwW : ⊤ ≤ w ⁻¹ᵁ W := GlobalTheory.CechKS.le_preimage_of_red hred hg
     have hid : spMap (RingHom.id S) = 𝟙 _ := Spec.map_id _
     have hid' : spMap (dualMap (RingHom.id S)) = 𝟙 _ := by
@@ -454,7 +454,7 @@ theorem vert_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         simp [TrivSqZeroExt.algebraMap_eq_inl]
       · rw [h₂]
         simp [TrivSqZeroExt.algebraMap_eq_inl]
-    obtain ⟨c, hc⟩ := exists_coeffs E H X t U n v hv hb S φ g₀ w hφg hred hover
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.VertSpan.exists_coeffs_translate E H X t U n v hv hb S φ g₀ w hφg hred hover
     exact ⟨c, fun S' _ ρ φ' wt h₁ h₂ O hO hgO f => by
       rw [← hw S' ρ O hO hgO f, hc S' ρ φ' wt h₁ h₂ O hgO f]⟩
   let F : ∀ (S : Type) [CommRing S], (Sp S ⟶ t.G.left) → Fin n → S := fun S _ g =>
@@ -477,7 +477,7 @@ theorem vert_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
       ⊤ ≤ g ⁻¹ᵁ W → F S' (spMap ρ ≫ g) = fun a => ρ (F S g a) := by
     intro S S' _ _ ρ g hg
     have hg' : ⊤ ≤ (spMap ρ ≫ g) ⁻¹ᵁ W := fun p _ => hg (Set.mem_univ (spMap ρ p))
-    have hz := coeffs_eq_zero E H X t U n v hv hb S' (spMap ρ ≫ g) W hW hg'
+    have hz := _root_.GlobalTheory.VertSpan.coeffs_zero E H X t U n v hv hb S' (spMap ρ ≫ g) W hW hg'
       (fun a => F S' (spMap ρ ≫ g) a - ρ (F S g a)) (fun S'' _ ρ' φ' wt h₁ h₂ O hO hgO f => by
         have hc : spMap (ρ'.comp ρ) ≫ g = spMap ρ' ≫ spMap ρ ≫ g := by
           rw [← Category.assoc, GlobalTheory.LogKSLoc.spMap_comp']
@@ -518,7 +518,7 @@ theorem vert_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have key : ∀ (S : Type) [CommRing S] (g : Sp S ⟶ t.G.left), ⊤ ≤ g ⁻¹ᵁ W →
       (fun a => valR g W (c' a) - valR g W (cs a)) = 0 := by
     intro S _ g hg
-    refine coeffs_eq_zero E H X t U n v hv hb S g W hW hg _ fun S' _ ρ φ' wt h₁ h₂ O hO hgO f => ?_
+    refine _root_.GlobalTheory.VertSpan.coeffs_zero E H X t U n v hv hb S g W hW hg _ fun S' _ ρ φ' wt h₁ h₂ O hO hgO f => ?_
     simp only [map_sub, sub_mul, Finset.sum_sub_distrib, ← GlobalTheory.Points.valR_spMap_comp ρ g W hg]
     rw [← hval S' (spMap ρ ≫ g) φ' wt h₁ h₂ O hO hgO c' f, ← hval S' (spMap ρ ≫ g) φ' wt h₁ h₂ O hO hgO cs f,
       ← hc' O hO f, ← hex O hO f, sub_self]
@@ -575,7 +575,7 @@ theorem exists_coboundary_add_dlog : ∀ (E : Type) [Field E] [NumberField E] [I
     · rw [← resG_appLE U (inf_le_left.trans (hWU i)) h3 r, (he i i'').2.2 _ _ h3 le_rfl, hev, map_zero]
     · intro O hO f
       rw [← hcoc i i' i'' O hO f, hc i i' O (hO.trans h1) f, hc i' i'' O (hO.trans h2) f]
-      simp only [map_add (f := _), resG_resG', add_mul, Finset.sum_add_distrib]
+      simp only [map_add (f := _), _root_.GlobalTheory.Cartier.resG_resG, add_mul, Finset.sum_add_distrib]
     · intro O hO f
       rw [hc i i'' O (hO.trans h3) f]
       simp only [resG_resG']
@@ -726,7 +726,7 @@ theorem cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
 
 theorem exists_isKS : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → Out.KTriv t.G t.PP.L → ∀ (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ i, IsTanAtG t (chart U) (v i)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ D : Derivation ℤ Γ(X, U.1) Γ(X, U.1), ∃ Θ, IsKS t ⊤ U v D Θ := by
   intro E _ _ _ H X t hP hA hK U n v hv hb D
-  obtain ⟨J, W, j, d, hWa, hcov, hWj, hd, hlift⟩ := lifts E H X t U D
+  obtain ⟨J, W, j, d, hWa, hcov, hWj, hd, hlift⟩ := _root_.GlobalTheory.KSLift.exists_lifts E H X t U D
   have hWU : ∀ i, W i ≤ t.G.hom ⁻¹ᵁ U.1 := fun i => hcov ▸ le_iSup W i
   have hres : ∀ i i' (r : Γ(X, U.1)), resG t.G.left (inf_le_left : W i ⊓ W i' ≤ W i)
       ((t.G.hom.appLE U.1 (W i) (hWU i)).hom r) = (t.G.hom.appLE U.1 (W i ⊓ W i') (inf_le_left.trans (hWU i))).hom r := by

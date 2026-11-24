@@ -304,7 +304,7 @@ theorem exists_hom_near_of_graphs : ∀ (R σ₁ σ₂ Hh : Type) [CommRing R] [
       (IsPullback.of_hasPullback _ _) (hG K x φ hx).1 fun T _ β v hv => ?_
     rw [hmap' K x x' hx']
     have hcut := (hG K x φ hx).2
-    exact ⟨eval₂_eq_zero_of_forms_le (homogeneousComponent_mem_vanIdeal d _)
+    exact ⟨eval₂_eq_zero_of_forms_le (_root_.GlobalTheory.ZM.FormsFamily.component_mem_vanIdeal d _)
         (fun e he F hF h => ((hcut e he).2 F hF).2 h) β v hv,
       eval₂_eq_zero_of_forms_le (GlobalTheory.ZM.ideals_homogeneous.2.1 K σ₁ σ₂ _ _ _ _ M₁ th₁ _ M₂ th₂ φ h₁.1 h₂.1)
         (fun e he F hF h => ((hcut e he).2 F hF).1 h) β v hv⟩

@@ -67,7 +67,9 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.TypeStar
 import Mathlib.Tactic.Linter.HaveILetI
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
 import Mathlib.Algebra.Order.Star.Int
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.ThetaLifts.SphericalLattices.MemIntGLIff, Development.WeilBound.ThetaLifts.SphericalLattices.ExistsFrameLag, Development.WeilBound.ThetaLifts.SphericalLattices.IndexComapOfCover, Development.WeilBound.ThetaLifts.SphericalLattices.IntMFromBlocks, Development.WeilBound.ThetaLifts.SphericalLattices.MemRangeOfEntries, Development.WeilBound.ThetaLifts.SphericalLattices.DgPerm, Development.WeilBound.ThetaLifts.SphericalLattices.MemIntGL, Development.WeilBound.ThetaLifts.SphericalLattices.OneAddNe, Development.WeilBound.ThetaLifts.SphericalLattices.OrdDetUniformizerImageEq, Development.WeilBound.ThetaLifts.SphericalLattices.LocMod, Development.WeilBound.ThetaLifts.SphericalLattices.RelIndexTransport, Development.WeilBound.ThetaLifts.SphericalLattices.ModSt2
@@ -918,7 +920,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.ThetaLifts.SphericalLattices.IntMFromBlocks =====
 
 -- ===== clump member: Development.WeilBound.ThetaLifts.SphericalLattices.MemRangeOfEntries =====
--- clump-header: {"m": "Development.WeilBound.ThetaLifts.SphericalLattices.MemRangeOfEntries", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SphericalLattices.LocCommSt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.ThetaLifts.SphericalLattices.MemRangeOfEntries", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SphericalLattices.LocCommSt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1060,17 +1062,15 @@ section Val
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 
-theorem mem_intL (x : L) : x ∈ intL L ↔ Valued.v x ≤ (1 : WithZero (Multiplicative ℤ)) := Iff.rfl
-
 theorem eventually_int (ϖ : L)
     (hv : Valued.v ϖ = ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ))) (x : L) :
     ∀ᶠ N : ℕ in Filter.atTop, ϖ ^ N * x ∈ intL L := by
   by_cases hx : Valued.v x = (0 : WithZero (Multiplicative ℤ))
   · refine Filter.Eventually.of_forall fun N => ?_
-    rw [mem_intL, map_mul, hx, mul_zero]; exact zero_le_one
+    rw [_root_.GlobalTheory.UnitarySwap.mem_int, map_mul, hx, mul_zero]; exact zero_le_one
   · obtain ⟨u, hu⟩ := WithZero.ne_zero_iff_exists.1 hx
     refine Filter.eventually_atTop.2 ⟨(Multiplicative.toAdd u).toNat, fun N hN => ?_⟩
-    rw [mem_intL, map_mul, map_pow, hv, ← hu, ← WithZero.coe_pow, ← WithZero.coe_mul, ← WithZero.coe_one,
+    rw [_root_.GlobalTheory.UnitarySwap.mem_int, map_mul, map_pow, hv, ← hu, ← WithZero.coe_pow, ← WithZero.coe_mul, ← WithZero.coe_one,
       WithZero.coe_le_coe, ← Multiplicative.toAdd_le]
     simp only [toAdd_mul, toAdd_pow, toAdd_ofAdd, toAdd_one, smul_neg, nsmul_eq_mul, mul_one]
     omega
@@ -1079,10 +1079,10 @@ theorem le_of_lt_one (ϖ : L)
     (hv : Valued.v ϖ = ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ))) (x : L)
     (hx : Valued.v x < (1 : WithZero (Multiplicative ℤ))) : x / ϖ ∈ intL L := by
   by_cases h0 : Valued.v x = (0 : WithZero (Multiplicative ℤ))
-  · rw [mem_intL, map_div₀, h0, zero_div]; exact zero_le_one
+  · rw [_root_.GlobalTheory.UnitarySwap.mem_int, map_div₀, h0, zero_div]; exact zero_le_one
   · obtain ⟨u, hu⟩ := WithZero.ne_zero_iff_exists.1 h0
     rw [← hu, ← WithZero.coe_one, WithZero.coe_lt_coe, ← Multiplicative.toAdd_lt] at hx
-    rw [mem_intL, map_div₀, hv, ← hu, ← WithZero.coe_div, ← WithZero.coe_one,
+    rw [_root_.GlobalTheory.UnitarySwap.mem_int, map_div₀, hv, ← hu, ← WithZero.coe_div, ← WithZero.coe_one,
       WithZero.coe_le_coe, ← Multiplicative.toAdd_le]
     simp only [toAdd_div, toAdd_ofAdd, toAdd_one] at hx ⊢
     omega
@@ -1091,7 +1091,7 @@ theorem finite_quot (ϖ : L) (c : L →+* L) (q : ℕ) (h : IsUnramInv ϖ c q) :
     ∃ a : intL L, (a : L) = ϖ ∧ ∀ N : ℕ, Finite (intL L ⧸ Ideal.span {a ^ N}) := by
   obtain ⟨-, -, -, hv, -, hq, hc⟩ := h
   have hϖ : ϖ ∈ intL L := by
-    rw [mem_intL, hv, ← WithZero.coe_one, WithZero.coe_le_coe, ← Multiplicative.toAdd_le]; simp
+    rw [_root_.GlobalTheory.UnitarySwap.mem_int, hv, ← WithZero.coe_one, WithZero.coe_le_coe, ← Multiplicative.toAdd_le]; simp
   have hϖ0 : ϖ ≠ 0 := by
     intro h0; rw [h0, map_zero] at hv; exact WithZero.zero_ne_coe hv
   refine ⟨⟨ϖ, hϖ⟩, rfl, fun N => ?_⟩
@@ -1573,7 +1573,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.ThetaLifts.SphericalLattices.OneAddNe =====
 
 -- ===== clump member: Development.WeilBound.ThetaLifts.SphericalLattices.OrdDetUniformizerImageEq =====
--- clump-header: {"m": "Development.WeilBound.ThetaLifts.SphericalLattices.OrdDetUniformizerImageEq", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SphericalLattices.LocCommSt\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeConjModularCharacter\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.ThetaLifts.SphericalLattices.OrdDetUniformizerImageEq", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SphericalLattices.LocCommSt\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeConjModularCharacter\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1588,22 +1588,8 @@ section Asm
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))]
 
-theorem asm_ordL_eq (x : L) : ordL x = -WithZero.log (Valued.v x : WithZero (Multiplicative ℤ)) := by
-  unfold ordL
-  split_ifs with h
-  · rw [h]; simp
-  · congr 1
-    conv_rhs => rw [← WithZero.coe_unzero h]
-    rfl
-
-theorem asm_ordL_mul {x y : L} (hx : x ≠ 0) (hy : y ≠ 0) : ordL (x * y) = ordL x + ordL y := by
-  have hx' : (Valued.v x : WithZero (Multiplicative ℤ)) ≠ 0 := by simpa using hx
-  have hy' : (Valued.v y : WithZero (Multiplicative ℤ)) ≠ 0 := by simpa using hy
-  rw [asm_ordL_eq, asm_ordL_eq, asm_ordL_eq, map_mul, WithZero.log_mul hx' hy']
-  ring
-
 theorem asm_ordL_pow (x : L) (n : ℕ) : ordL (x ^ n) = n * ordL x := by
-  rw [asm_ordL_eq, asm_ordL_eq, map_pow, WithZero.log_pow]
+  rw [_root_.GlobalTheory.LGrp.ordL_eq, _root_.GlobalTheory.LGrp.ordL_eq, map_pow, WithZero.log_pow]
   simp
 
 theorem asm_ordL_unit {x y : L} (hx : x ∈ intL L) (hy : y ∈ intL L) (h : x * y = 1) : ordL x = 0 := by
@@ -1615,7 +1601,7 @@ theorem asm_ordL_unit {x y : L} (hx : x ∈ intL L) (hy : y ∈ intL L) (h : x *
     calc (1 : WithZero (Multiplicative ℤ)) = Valued.v x * Valued.v y := h1.symm
       _ ≤ Valued.v x * 1 := mul_le_mul_right hy' _
       _ = _ := mul_one _
-  rw [asm_ordL_eq, h2]; simp
+  rw [_root_.GlobalTheory.LGrp.ordL_eq, h2]; simp
 
 variable {c : L →+* L} {m : ℕ}
 
@@ -1658,13 +1644,13 @@ theorem asm_ord_K {k : GL (Fin m ⊕ Fin m) L} (hk : k ∈ KPW L c m) : ordL (as
 
 theorem asm_ord_mul {a b : GL (Fin m ⊕ Fin m) L} (ha : a ∈ PW L c m) (hb : b ∈ PW L c m) :
     ordL (asmT (a * b)).det = ordL (asmT a).det + ordL (asmT b).det := by
-  rw [asmT_mul a hb, det_mul, asm_ordL_mul (asmT_det_ne ha) (asmT_det_ne hb)]
+  rw [asmT_mul a hb, det_mul, _root_.Formalism.UG.P.fSatake_ord_mul (asmT_det_ne ha) (asmT_det_ne hb)]
 
 theorem ord_det_uniformizer_image_eq {ϖ : L} {q : ℕ} (h : IsUnramInv ϖ c q) (x : Lˣ) (hx : (x : L) = ϖ) :
     ordL (asmT (zW L m x)).det = m := by
   have e : asmT (zW L m x) = (x : L) • (1 : Matrix (Fin m) (Fin m) L) := toBlocks_fromBlocks₁₁ _ _ _ _
   have o : ordL ϖ = 1 := by
-    rw [asm_ordL_eq, h.2.2.2.1]
+    rw [_root_.GlobalTheory.LGrp.ordL_eq, h.2.2.2.1]
     rfl
   rw [e, det_smul, det_one, mul_one, Fintype.card_fin, asm_ordL_pow, hx, o, mul_one]
 

@@ -679,8 +679,6 @@ open GlobalTheory.KeyPow GlobalTheory.KeyKa
 open GlobalTheory.SimilTheta
 
 
-theorem _root_.GlobalTheory.T.similitude_generator_eq_exp_in_frames : ∀ (g m : ℕ) (x : KeyIn ℂ) (h : x.P.g = g) (u : HolUnif x.P.A x.P.L g) (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g → ℂ) (al : Matrix (Fin 4) (Fin 4) ℤ), charHalf g a b → Wit x h u τ a b → 1 ≤ m → al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ) → ∀ (k n : Fin 4 → Fin g → ℤ) (ξ : Fin 4 → Pt x), (∀ r, ξ r = u.ex (tors τ al m k n r)) → ∀ w : LB.Gen (LB.LinComb x.P.L (K := Fin 4 ⊕ Fin 4) (Sum.elim (fun r => (alMap x al r (ξ r)).left) (fun c => (Out.powPr x.P.A c).left)) (Sum.elim (fun _ => 1) (fun _ => -(m : ℤ)))), w.IsGen → ∃ C : ℂ, C ≠ 0 ∧ ∀ (y : Fin 4 → Fin g → ℂ) (pt : 𝟙_ (Over (Sp ℂ)) ⟶ Out.powObj x.P.A 4), (∀ c, pt ≫ Out.powPr x.P.A c = u.ex (y c)) → ∀ j : Fin 4 ⊕ Fin 4 → x.P.L.ι, (∀ r, ⊤ ≤ (u.ex (∑ c, al r c • y c + tors τ al m k n r)).left ⁻¹ᵁ x.P.L.U (j (Sum.inl r))) → (∀ c, ⊤ ≤ (u.ex (y c)).left ⁻¹ᵁ x.P.L.U (j (Sum.inr c))) → valAt' pt.left (LB.wchart x.P.L (Sum.elim (fun r => (alMap x al r (ξ r)).left) (fun c => (Out.powPr x.P.A c).left)) j) (w.s j).val * Complex.exp (2 * Real.pi * Complex.I * ∑ c, (fun i => (n c i : ℂ)) ⬝ᵥ y c) = C * ((∏ r, u.fr (j (Sum.inl r)) (∑ c, al r c • y c + tors τ al m k n r)) * ∏ c, u.fr (j (Sum.inr c)) (y c) ^ (-(m : ℤ))) := by
-  first | exact @GlobalTheory.SimilTheta.simil_generator_eq_exp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.SimilitudeGeneratorEqExpInFramesStatement =====
@@ -788,8 +786,6 @@ open GlobalTheory.KeyPow GlobalTheory.KeyKa
 open GlobalTheory.SimilTheta
 
 
-theorem _root_.GlobalTheory.T.theta_generator_pullback_mul_const_in_frames : ∀ (g m : ℕ) (x : KeyIn ℂ) (h : x.P.g = g) (u : HolUnif x.P.A x.P.L g) (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g → ℂ) (al : Matrix (Fin 4) (Fin 4) ℤ), charHalf g a b → Wit x h u τ a b → 1 ≤ m → al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ) → ∀ mu : LB.Gen (LB.LinComb x.P.L (K := Fin 2) ![((𝟙 x.P.A) ^ m).left, 𝟙 x.P.A.left] ![1, -(m : ℤ) ^ 2]), mu.IsGen → ∃ C : ℂ, C ≠ 0 ∧ ∀ (z : Fin g → ℂ) (j : Fin 2 → x.P.L.ι), ⊤ ≤ (u.ex ((m : ℤ) • z)).left ⁻¹ᵁ x.P.L.U (j 0) → ⊤ ≤ (u.ex z).left ⁻¹ᵁ x.P.L.U (j 1) → valAt' (u.ex z).left (LB.wchart x.P.L ![((𝟙 x.P.A) ^ m).left, 𝟙 x.P.A.left] j) (mu.s j).val = C * (u.fr (j 0) ((m : ℤ) • z) * u.fr (j 1) z ^ (-(m : ℤ) ^ 2)) := by
-  first | exact @GlobalTheory.SimilTheta.generator_mul_const_in_frames
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ThetaGeneratorPullbackMulConstInFramesStatement =====
@@ -854,14 +850,6 @@ theorem ex_prod (s : Fin 4 → ℤ) (y : Fin 4 → Fin g → ℂ) :
   simp only [List.ofFn_succ, List.ofFn_zero, List.prod_cons, List.prod_nil, Fin.sum_univ_succ, Fin.sum_univ_zero,
     u.ex_add, ex_zsmul, CubeValues.ex_zero]
 
-theorem comp_alMap (al : Matrix (Fin 4) (Fin 4) ℤ) (r : Fin 4) (t : Fin g → ℂ) (y : Fin 4 → Fin g → ℂ)
-    (pt : 𝟙_ (Over (Sp ℂ)) ⟶ Out.powObj x.P.A 4) (hy : ∀ c, pt ≫ Out.powPr x.P.A c = u.ex (y c)) :
-    pt ≫ alMap x al r (u.ex t) = u.ex (∑ c, al r c • y c + t) := by
-  have e₀ : pt ≫ toUnit _ = 𝟙 _ := toUnit_unique _ _
-  rw [u.ex_add, ← ex_prod]
-  simp only [alMap, List.ofFn_succ, List.ofFn_zero, List.prod_cons, List.prod_nil, MonObj.comp_mul,
-    GrpObj.comp_zpow, MonObj.comp_one, hy, reassoc_of% e₀]
-
 theorem theta_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : Matrix (Fin 4) (Fin 4) ℤ} {m N : ℕ}
     (hth : u.IsFn x.th (thetaChar τ a b)) (bs : Fin N → RR x m) (Th : Fin N → (Fin g → ℂ) → ℂ)
     (hb : ∀ k, FnPw x u (bs k) (Th k)) (k n : Fin 4 → Fin g → ℤ) (ξ : Fin 4 → Pt x)
@@ -884,7 +872,7 @@ theorem theta_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : M
   have e₁ : ∀ c, p ≫ (Out.powPr x.P.A c).left = (u.ex (y c)).left := fun c => by
     rw [hp]; exact congrArg (·.left) (hy c)
   have e₂ : ∀ r, p ≫ (alMap x al r (ξ r)).left = (u.ex (∑ c, al r c • y c + tors τ al m k n r)).left := fun r => by
-    rw [hp, hξ]; exact congrArg (·.left) (comp_alMap x u al r _ y pt hy)
+    rw [hp, hξ]; exact congrArg (·.left) (_root_.GlobalTheory.SimilTheta.comp_alMap_ex x u al r _ y pt hy)
   obtain ⟨y₀, ev, hmem, hev⟩ := exists_ev p
   choose J hJ using fun ψ : (Out.powObj x.P.A 4).left ⟶ x.P.A.left => exists_chart x.P.isLB (ψ y₀)
   have m₁ : ∀ c, ⊤ ≤ (u.ex (y c)).left ⁻¹ᵁ x.P.L.U (J (Out.powPr x.P.A c).left) := fun c => by
@@ -1001,7 +989,7 @@ theorem rho_eq {τ : Matrix (Fin g) (Fin g) ℂ} {a b : Fin g → ℂ} {al : Mat
       (Sum.elim (fun r => J (u.ex (tors τ al m k n r)).left) fun _ => J (u.ex 0).left) (by
         rintro (r | c)
         · refine congrArg J ?_
-          have := congrArg (·.left) (comp_alMap x u al r (tors τ al m k n r) 0 1 hy)
+          have := congrArg (·.left) (_root_.GlobalTheory.SimilTheta.comp_alMap_ex x u al r (tors τ al m k n r) 0 1 hy)
           rw [ez, ← hξ] at this
           rw [← e1, ← hξ]
           exact this
@@ -1056,15 +1044,6 @@ theorem differentiableOn_prod {E K : Type} [NormedAddCommGroup E] [NormedSpace �
     exact (h i (Finset.mem_insert_self _ _)).fun_mul (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
 
 omit x u in
-theorem mul_transpose_eq {al : Matrix (Fin 4) (Fin 4) ℤ} {m : ℕ} (hm : 1 ≤ m)
-    (hal : al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ)) :
-    al * al.transpose = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ) := by
-  first
-  | (apply _root_.GlobalTheory.TransposeMulCommute.mul_transpose_eq_of_transpose_mul_eq <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TransposeMulCommute.mul_transpose_eq_of_transpose_mul_eq ..)
-
-
-omit x u in
 theorem eq_tors_add {τ : Matrix (Fin g) (Fin g) ℂ} {al : Matrix (Fin 4) (Fin 4) ℤ} {m : ℕ} (hm : 1 ≤ m)
     (hal : al.transpose * al = (m : ℤ) • (1 : Matrix (Fin 4) (Fin 4) ℤ)) (t : Fin 4 → Fin g → ℂ)
     (k n d e : Fin 4 → Fin g → ℤ)
@@ -1077,7 +1056,7 @@ theorem eq_tors_add {τ : Matrix (Fin g) (Fin g) ℂ} {al : Matrix (Fin 4) (Fin 
     simp only [Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm]
     have : ∀ r', ∑ c, (al r c * al r' c) • v r' = if r = r' then (m : ℤ) • v r' else 0 := fun r' => by
-      have := congrFun (congrFun (mul_transpose_eq hm hal) r) r'
+      have := congrFun (congrFun (_root_.GlobalTheory.TransposeMulCommute.mul_transpose_eq_of_transpose_mul_eq hm hal) r) r'
       simp only [Matrix.mul_apply, Matrix.transpose_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul] at this
       rw [← Finset.sum_smul, this]
       split_ifs <;> simp
@@ -1123,8 +1102,8 @@ theorem l2Val_holomorphic : Out.Laws → ThetaUnifAV → ∀ (g m : ℕ) (a b : 
   have hξ : ∀ I r, ξ I r = u.ex (tors (per p) al m (k (σ I)) (n (σ I)) r) := fun I => by
     obtain ⟨d, e, h⟩ := hσ I
     exact hx I _ _ d e h
-  obtain ⟨D, -, hD⟩ := GlobalTheory.T.theta_generator_pullback_mul_const_in_frames _ m x rfl u (per p) a b al hab hW hm hal mu hmu
-  choose C _ hC using fun I => GlobalTheory.T.similitude_generator_eq_exp_in_frames _ m x rfl u (per p) a b al hab hW hm hal (k (σ I)) (n (σ I)) (ξ I) (hξ I) (w I) (hw I)
+  obtain ⟨D, -, hD⟩ := _root_.GlobalTheory.SimilTheta.generator_mul_const_in_frames _ m x rfl u (per p) a b al hab hW hm hal mu hmu
+  choose C _ hC using fun I => _root_.GlobalTheory.SimilTheta.simil_generator_eq_exp _ m x rfl u (per p) a b al hab hW hm hal (k (σ I)) (n (σ I)) (ξ I) (hξ I) (w I) (hw I)
   have h₁ : ∀ I, (fun I' => C I * Q I I') = qa (σ I) p := fun I =>
     (hqa' (σ I) p hp _).1 (theta_eq x u hW.2.2.2.2.1 bs (fun i => Th i p) hb _ _ (ξ I) (hξ I) (w I) (C I) (hC I)
       (Q I) (hQ I))

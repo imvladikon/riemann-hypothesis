@@ -213,19 +213,6 @@ end GlobalTheory.BdEquation
 end
 end
 
-section
-open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory Formalism.L2.Pj Formalism.BasicNotions
-open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
-open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermTools GlobalTheory.Adelic GlobalTheory.CompHS GlobalTheory.CovTop
-open GlobalTheory.AllWt (Psi wtOf cuspOn latOn normOn petOn GoodOn GoodW bergOn framesOn)
-open GlobalTheory.FlagMod (FlagCover)
-open GlobalTheory.FlagTan (dimFlag)
-open GlobalTheory.HSApp
-
-theorem _root_.GlobalTheory.T.boundary_divisor_has_reduced_equation : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → IsVariety₀ TF.X Z → ∀ y : Y₀ TF.X Z, y ∉ U₀ TF.X Z → ∃ (V : (Y₀ TF.X Z).Opens) (_ : y ∈ V) (t : Γ(Y₀ TF.X Z, V)), (∀ z (hz : z ∈ V), IsUnit (ger z hz t) ↔ z ∈ U₀ TF.X Z) ∧ (∀ (W : (Y₀ TF.X Z).Opens) (hW : W ≤ V) (f : Γ(Y₀ TF.X Z, W)), (∀ z (hz : z ∈ W), z ∉ U₀ TF.X Z → ger z hz f ∈ IsLocalRing.maximalIdeal ((Y₀ TF.X Z).presheaf.stalk z)) → ∀ z (hz : z ∈ W), ger z (hW hz) t ∣ ger z hz f) := by
-  first | exact @_root_.GlobalTheory.BdEquation.exists_reduced_boundary_equation
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.BoundaryDivisorHasReducedEquation =====
@@ -238,15 +225,8 @@ section -- clump:auto
 section
 set_option autoImplicit false
 noncomputable section
-section
-open CategoryTheory AlgebraicGeometry MonoidalCategory CartesianMonoidalCategory MonObj
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.CechKS
-attribute [local instance] Over.cartesianMonoidalCategory
-open TopologicalSpace
 namespace GlobalTheory.CechKS
 end GlobalTheory.CechKS
-end
 section
 open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
@@ -274,20 +254,6 @@ end
 end
 end
 
-section
-open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj
-open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.CompHS
-open GlobalTheory.FlagMod (ev frX frVec)
-open GlobalTheory.FlagTan (psiSet HIx VIx TIx IsDef IsVert KSIso)
-open ReciprocityTheory.ChartRestriction.G.PullbackSections (tv)
-open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
-open GlobalTheory.LogPole
-open scoped Classical
-
-theorem _root_.GlobalTheory.T.cech_kodaira_spencer_class_constant : _root_.GlobalTheory.CovTop.Hypotheses'' → ∃ s : ℚ, s ≠ 0 ∧ ∀ (K : Type) [Field K] [CharZero K] (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (i : A.left ⟶ A'.left) (h : IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i) (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → IsAbelianScheme A' → SmoothOfRelativeDimension g A'.hom → ∀ (L : LB A.left), L.IsLB → ∀ ψ : LinearMap.BilinForm K (GlobalTheory.DeRham.HdR A), GlobalTheory.DeRham.IsPolForm (GlobalTheory.Cris.dp0 K) (𝟙 _) A L ψ → ∀ (n : ℕ) (u : Fin n → (epsR K ⟶ A)) (θ : Matrix (Fin n) (Fin n) K), (∀ a, IsTangent (u a)) → GlobalTheory.CechKS.IsCechKS A A' i L u θ → ∀ (hb : Fin n → GlobalTheory.DeRham.HdR A), (∀ b, GlobalTheory.DeRham.IsLieImage (hb b) (u b)) → ∀ f ∈ GlobalTheory.DeRham.Fil A, ∀ w : epsR K ⟶ A, IsLieComb (fun a => (s : K) * ∑ b, θ a b * ψ f (hb b)) u w → GlobalTheory.DeRham.IsKSValue h f w := by
-  first | exact @_root_.GlobalTheory.CechKS.exists_constant_cech_kodaira_spencer_value
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ExistsConstantCechKodairaSpencerValue =====
@@ -317,7 +283,7 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
   intro PP E _ _ _ H Dw l Xo c TF U δ K _ _ P hU y' hU' hs hev
   have hred : spMap (GlobalTheory.FlagTan.red c K).toRingHom ≫ y' = frX P := by
     apply GlobalTheory.FlagMod.xF_ext (Y := TF.Y)
-    · rw [Category.assoc, hs, spMap_comp_spMap]
+    · rw [Category.assoc, hs, _root_.GlobalTheory.spMap_comp_ring]
       congr 1
     · exact GlobalTheory.FlagMod.frX_snd P
     · have h1 : ⊤ ≤ (spMap (GlobalTheory.FlagTan.red c K).toRingHom ≫ (y' ≫ TF.Y.j)) ⁻¹ᵁ U.1 :=
@@ -330,7 +296,7 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
       simp [GlobalTheory.FlagTan.red]
   have hx : GlobalTheory.FlagTan.IsTanX P (y' ≫ pullback.fst _ _) := by
     refine ⟨?_, ?_⟩
-    · rw [Category.assoc, pullback.condition, ← Category.assoc, hs, spMap_comp_spMap]
+    · rw [Category.assoc, pullback.condition, ← Category.assoc, hs, _root_.GlobalTheory.spMap_comp_ring]
       rfl
     · rw [← Category.assoc, hred, GlobalTheory.FlagMod.frX_fst]
   have P5 := PP.p5
@@ -347,8 +313,8 @@ theorem kodaira_spencer_map_properties : _root_.GlobalTheory.CovTop.Hypotheses''
   have hA' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hUn hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
   have : IsCommMonObj A := hA.comm
-  obtain ⟨a', ha'⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ'
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ
+  obtain ⟨a', ha'⟩ := _root_.GlobalTheory.OActPull.exists_oAct_of_isGrpPullback Xo.univ.t.act hπ'
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.OActPull.exists_oAct_of_isGrpPullback Xo.univ.t.act hπ
   have hc : ∀ z, (a.act z).left ≫ j = j ≫ (a'.act z).left := fun z => by
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, ha' z, ← Category.assoc j π', ← ha z]
@@ -418,7 +384,7 @@ noncomputable section
 namespace GlobalTheory.LogPole
 theorem exists_kodaira_spencer_comparison_log_pole : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c), ∃ s : ℚ, s ≠ 0 ∧ KSCompare TF s := by
   intro PP E _ _ _ H Dw l Xo c TF
-  obtain ⟨s, hs0, hcore⟩ := _root_.GlobalTheory.T.cech_kodaira_spencer_class_constant PP
+  obtain ⟨s, hs0, hcore⟩ := _root_.GlobalTheory.CechKS.exists_constant_cech_kodaira_spencer_value PP
   refine ⟨s, hs0, ?_⟩
   intro U n e v hv D Θ hΘ K _ _ P hU hP y' hU' hy' hev
   obtain ⟨A, _, A', _, π, π', i, h, ψ, ub, hb, g, hπ, hπ', hi, hpol, hu, hbl, hrow, hA, hgA, hA', hgA', hL⟩ :=
@@ -622,19 +588,6 @@ end GlobalTheory.LogPole
 end
 end
 
-section
-open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory Formalism.L2.Pj Formalism.BasicNotions
-open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
-open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermTools GlobalTheory.Adelic GlobalTheory.CompHS GlobalTheory.CovTop
-open GlobalTheory.AllWt (Psi wtOf cuspOn latOn normOn petOn GoodOn GoodW bergOn framesOn)
-open GlobalTheory.FlagMod (FlagCover)
-open GlobalTheory.FlagTan (dimFlag)
-open GlobalTheory.HSApp
-
-theorem _root_.GlobalTheory.T.exists_simple_log_pole_along_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → (∀ (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), GlobalTheory.FlagTan.KSIso (GlobalTheory.FlagTan.psiSet H) y) → ∀ (hV : IsVariety₀ TF.X Z) (ω₀ : CanId (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z))) (y : Y₀ TF.X Z), y ∉ U₀ TF.X Z → ∀ (V : (Y₀ TF.X Z).Opens), y ∈ V → ∀ (t : Γ(Y₀ TF.X Z, V)), (∀ z (hz : z ∈ V), IsUnit (ger z hz t) ↔ z ∈ U₀ TF.X Z) → (∀ (W : (Y₀ TF.X Z).Opens) (hW : W ≤ V) (f : Γ(Y₀ TF.X Z, W)), (∀ z (hz : z ∈ W), z ∉ U₀ TF.X Z → ger z hz f ∈ IsLocalRing.maximalIdeal ((Y₀ TF.X Z).presheaf.stalk z)) → ∀ z (hz : z ∈ W), ger z (hW hz) t ∣ ger z hz f) → ∃ (V' : (Y₀ TF.X Z).Opens) (_ : y ∈ V') (hle : V' ≤ V) (i : (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).K.bundle.ι) (j : (common₀ TF.X Z).J) (u : Γ(Y₀ TF.X Z, V')), V' ≤ (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).K.bundle.U i ∧ V' ≤ (common₀ TF.X Z).U j ∧ (∀ z (hz : z ∈ V'), IsUnit (ger z hz u)) ∧ ∀ z (hz : z ∈ V') (ho : z ∈ (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).off) (hc : z ∈ (LB.div (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).K.bundle ((L₀ TF.X Z (FlagTan.kap Dw)).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ)).U (i, ((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).idx (FlagTan.kap Dw) j)), ger (Y := (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).X) z (hle hz) t * H0.germ (p := (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).str) (i, ((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).idx (FlagTan.kap Dw) j) z ho hc ω₀.ω = ger (Y := (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).X) z hz u := by
-  first | exact @_root_.GlobalTheory.LogPole.log_pole_along_boundary_is_simple
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ExistsSimpleLogPoleAlongBoundary =====
@@ -666,9 +619,9 @@ theorem logCanonical_refl_of_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' 
   have hpole : SimplePoleAlong (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).off (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).canChart (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).K.isLB hs) ω₀.ω := by
     intro y hy
     have hy' : y ∉ U₀ TF.X Z := fun h => hy ((hoff y).2 h)
-    obtain ⟨V, hyV, t, h1, h2⟩ := _root_.GlobalTheory.T.boundary_divisor_has_reduced_equation hP E H Dw l Xo c TF Z hF hV y hy'
+    obtain ⟨V, hyV, t, h1, h2⟩ := _root_.GlobalTheory.BdEquation.exists_reduced_boundary_equation hP E H Dw l Xo c TF Z hF hV y hy'
     obtain ⟨V', hyV', hle, i, j, u, hi, hj, hu, hpl⟩ :=
-      _root_.GlobalTheory.T.exists_simple_log_pole_along_boundary hP hG E H Dw l Xo c TF Z hF hKS hV ω₀ y hy' V hyV t h1 h2
+      _root_.GlobalTheory.LogPole.log_pole_along_boundary_is_simple hP hG E H Dw l Xo c TF Z hF hKS hV ω₀ y hy' V hyV t h1 h2
     refine ⟨V', hyV', (i, j), fun z hz => ⟨hi hz, (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz)⟩,
       fun z hz => (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz),
       fun z hz => ⟨hi hz, (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz)⟩,
@@ -687,7 +640,7 @@ theorem logCanonical_refl_of_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' 
     subst e
     congr 1
     exact (restr_pull (isLB_L₀ TF.X Z s) (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top le_top g).trans (H0.pull_restr (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).off_eq.le g).symm
-  · obtain ⟨g', hv, hr⟩ := GlobalTheory.T.extends_vanishing_of_simplePole_mul_extends hdense _ ω₀.ω hpole G ((Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).pullOff m) hG
+  · obtain ⟨g', hv, hr⟩ := _root_.GlobalTheory.LogCanonicalReflexive.extends_vanishing_of_mul hdense _ ω₀.ω hpole G ((Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).pullOff m) hG
     haveI : IsOpenImmersion (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ := inferInstanceAs (IsOpenImmersion (𝟙 _))
     obtain ⟨g, rfl⟩ := ((isoOver_of_isOpenImmersion (O := ⊤) (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ (fun x _ => ⟨x, rfl⟩)).bijective_pull
       (p := str₀ TF.X Z) (isLB_L₀ TF.X Z s) (W := ⊤) le_top le_top).2 g'
@@ -755,19 +708,6 @@ end GlobalTheory.LogCanon
 end
 end
 
-section
-open CategoryTheory AlgebraicGeometry TopologicalSpace Limits NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.GeometryOfNumbersTheory Formalism.L2.Pj Formalism.BasicNotions
-open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
-open GlobalTheory GlobalTheory.CechPic GlobalTheory.Vanishing GlobalTheory.HermTools GlobalTheory.Adelic GlobalTheory.CompHS GlobalTheory.CovTop
-open GlobalTheory.AllWt (Psi wtOf cuspOn latOn normOn petOn GoodOn GoodW bergOn framesOn)
-open GlobalTheory.FlagMod (FlagCover)
-open GlobalTheory.FlagTan (dimFlag)
-open GlobalTheory.HSApp
-
-theorem _root_.GlobalTheory.T.log_canonical_criterion_boundary : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (M : Modif (str₀ TF.X Z) (U₀ TF.X Z) (dimFlag Dw)) (ω : CanId M) (b s : AllWt.Weight Dw) (hs : FlagTan.kap Dw + b = s) (m : H0 (str₀ TF.X Z) (L₀ TF.X Z s) (U₀ TF.X Z)), (∃ g ∈ vanBd TF.X Z s, H0.restr le_top g = m) ↔ ∃ g : H0 M.str (tens M.K.bundle ((L₀ TF.X Z b).pull M.σ)) ⊤, H0.restr le_top g = (((common₀ TF.X Z).pull M.σ).canChart M.K.isLB hs).mul ω.ω (M.pullOff m) := by
-  first | exact @_root_.GlobalTheory.LogCanon.log_canonical_pair_iff
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.LogCanonicalCriterionBoundary =====

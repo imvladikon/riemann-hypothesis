@@ -224,8 +224,6 @@ section -- clump:auto
 open CategoryTheory AlgebraicGeometry NumberField MonoidalCategory CartesianMonoidalCategory MonObj ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
 attribute [local instance] Over.cartesianMonoidalCategory CategoryTheory.Hom.group
 
-theorem _root_.GlobalTheory.T.exists_ringAction_torus_and_abelian_quotient : ∀ (O : Type) [CommRing O] (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G] (act : OAct O G), IsSemiAbelian G → ∀ (T : TorusExtension G), letI := T.addCommGroup; letI := T.grpB; ∃ (actB : OAct O T.B) (actT : OAct O (splitTorus (Sp k) T.X)), (∀ a, T.q ≫ actB.act a = act.act a ≫ T.q) ∧ (∀ a, actT.act a ≫ T.i = T.i ≫ act.act a) := by
-  first | exact @GlobalTheory.SemiAbAct.exists_torus_quotient_act
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionTorusAndAbelianQuotientStatement =====
@@ -288,8 +286,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory Car
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory CategoryTheory.Hom.group
 
-theorem _root_.GlobalTheory.T.exists_section_nonzero_chart_of_effective_class : ∀ {X : Scheme.{0}} (N : LB X) (hN : N.IsLB), GlobalTheory.EffBound.Eff (GlobalTheory.CechPic.cls N hN) → ∃ (σ : LB.Sec N) (j : N.ι), σ.f j ≠ 0 := by
-  first | exact @GlobalTheory.EffBound.exists_sec_of_eff
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionNonzeroChartOfEffectiveClassStatement =====
@@ -303,8 +299,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory Car
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory CategoryTheory.Hom.group
 
-theorem _root_.GlobalTheory.T.isEffectivePicClass_add_integral : ∀ {X : Scheme.{0}} [IsIntegral X] (a b : GlobalTheory.CechPic.Pic X), GlobalTheory.EffBound.Eff a → GlobalTheory.EffBound.Eff b → GlobalTheory.EffBound.Eff (a + b) := by
-  first | exact @GlobalTheory.EffBound.eff_add
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEffectivePicClassAddIntegralStatement =====
@@ -393,7 +387,7 @@ theorem pull_zpow (k : Type) [Field k] (B : Over (Sp k)) [GrpObj B] [IsCommMonOb
 theorem eff_nsmul {X : Scheme.{0}} [IsIntegral X] (hE0 : Eff (0 : Pic X)) {x : Pic X} (hx : Eff x) :
     ∀ n : ℕ, Eff (n • x)
   | 0 => by rw [zero_smul]; exact hE0
-  | n + 1 => by rw [succ_nsmul]; exact GlobalTheory.T.isEffectivePicClass_add_integral _ _ (eff_nsmul hE0 hx n) hx
+  | n + 1 => by rw [succ_nsmul]; exact _root_.GlobalTheory.EffBound.eff_add _ _ (eff_nsmul hE0 hx n) hx
 
 theorem eff_sum {O : Type} [CommRing O] {S : Scheme.{0}} {B : Over S} [GrpObj B] (act : OAct O B)
     {X : Scheme.{0}} [IsIntegral X] (F : (B ⟶ B) → Pic X) (c0 : Pic X) (hE0 : Eff (0 : Pic X))
@@ -425,7 +419,7 @@ theorem eff_sum {O : Type} [CommRing O] {S : Scheme.{0}} {B : Over S} [GrpObj B]
       push_cast [Nat.cast_sub h2]
       module
     rw [e]
-    exact GlobalTheory.T.isEffectivePicClass_add_integral _ _ (GlobalTheory.T.isEffectivePicClass_add_integral _ _ (GlobalTheory.T.isEffectivePicClass_add_integral _ _ (hpar P g) (eff_nsmul hE0 hP 2)) (eff_nsmul hE0 (ht _) 2))
+    exact _root_.GlobalTheory.EffBound.eff_add _ _ (_root_.GlobalTheory.EffBound.eff_add _ _ (_root_.GlobalTheory.EffBound.eff_add _ _ (hpar P g) (eff_nsmul hE0 hP 2)) (eff_nsmul hE0 (ht _) 2))
       (eff_nsmul hE0 hc0 _)
 
 end GlobalTheory.OEndDegree
@@ -446,7 +440,7 @@ theorem exists_effective_bound : ∀ (E : Type) [Field E] [NumberField E] (k : T
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k A hB hproj
   obtain ⟨r, hr⟩ : ∃ r : LB.Gen (H.pull (eSec A)), r.IsGen :=
     DVR.exists_gen_of_isLB_local (V := k) _ (pull_isLB hH _)
-  obtain ⟨M, hM⟩ := (GlobalTheory.T.abelianScheme_cubical_bundle_exists_and_maps GlobalTheory.globalFns_holds _ A hB).1 ⟨H, r, hH, hr⟩
+  obtain ⟨M, hM⟩ := (_root_.GlobalTheory.AbPackage.abelian_cp GlobalTheory.globalFns_holds _ A hB).1 ⟨H, r, hH, hr⟩
     (GlobalTheory.AbLaw.CubeProj.exists_gen_theta_abelianVariety GlobalTheory.globalFns_holds k A hB hproj H hH) hsym
   have hL : M.L.L = H := by rw [hM]
   subst hL
@@ -498,10 +492,10 @@ theorem exists_effective_bound : ∀ (E : Type) [Field E] [NumberField E] (k : T
       push_cast [Nat.cast_sub hle]
       module
     rw [e]
-    exact GlobalTheory.T.isEffectivePicClass_add_integral _ _ (eff_nsmul hE0 (hci i) _) (eff_nsmul hE0 hEc _)
+    exact _root_.GlobalTheory.EffBound.eff_add _ _ (eff_nsmul hE0 (hci i) _) (eff_nsmul hE0 hEc _)
   have hsum := eff_sum act (fun φ => pull φ.left c0) c0 hE0 hEc h1 hpar d (fun i => n i • a i)
     (fun i => K ^ 2 * ci i) hterm
-  refine GlobalTheory.T.exists_section_nonzero_chart_of_effective_class _ (LB.isLB_div (isLB_pw M.L.isLB _) (pull_isLB M.L.isLB _)) ?_
+  refine _root_.GlobalTheory.EffBound.exists_sec_of_eff _ (LB.isLB_div (isLB_pw M.L.isLB _) (pull_isLB M.L.isLB _)) ?_
   rw [cls_div (isLB_pw M.L.isLB _) (pull_isLB M.L.isLB _), cls_pw M.L.isLB, cls_pull M.L.isLB, hc0]
   have e : (((2 ^ d * ∑ i, ci i + 1) * K ^ 2 : ℕ) : ℤ) • c0 - pull (act.act (∑ i, n i • a i)).left c0 =
       ((2 ^ d * ∑ i, K ^ 2 * ci i) • c0 - pull (act.act (∑ i, n i • a i)).left c0) + (K ^ 2) • c0 := by
@@ -509,7 +503,7 @@ theorem exists_effective_bound : ∀ (E : Type) [Field E] [NumberField E] (k : T
     push_cast
     module
   rw [e]
-  exact GlobalTheory.T.isEffectivePicClass_add_integral _ _ hsum (eff_nsmul hE0 hEc _)
+  exact _root_.GlobalTheory.EffBound.eff_add _ _ hsum (eff_nsmul hE0 hEc _)
 
 end GlobalTheory.OEndDegree
 end -- clump:auto
@@ -1203,7 +1197,7 @@ theorem finite_of_isClosed_of_no_torsion : ∀ (E : Type) [Field E] [NumberField
   haveI := T.isAbelian.proper
   haveI := T.isAbelian.smooth
   haveI := act.hom π
-  obtain ⟨actB, actT, hB, hT⟩ := GlobalTheory.T.exists_ringAction_torus_and_abelian_quotient (𝓞 E) k G act hG T
+  obtain ⟨actB, actT, hB, hT⟩ := _root_.GlobalTheory.SemiAbAct.exists_torus_quotient_act (𝓞 E) k G act hG T
   let φ : (𝟙_ (Over (Sp k)) ⟶ G) →* (𝟙_ (Over (Sp k)) ⟶ T.B) :=
     MonoidHom.mk' (fun x => x ≫ T.q) fun x y => MonObj.mul_comp x y T.q
   let j : (𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) T.X) →* (𝟙_ (Over (Sp k)) ⟶ G) :=

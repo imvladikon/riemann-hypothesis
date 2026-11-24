@@ -636,23 +636,6 @@ section -- clump:auto
 
 namespace ReciprocityTheory.ChartRestriction.G.I2
 
-open NumberField MeasureTheory
-
-theorem zm_mem {E : Type} [Field E] [NumberField E] [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF}
-    {I : Submodule ℤ (Vsp X.dim)} (hI : IsSplit P I) (hP : Ext.PackingCount)
-    {s : (Fin 1 → Vsp X.dim) → ℂ} (hs : s ∈ X.Sec 1 1) :
-    ZM.zmB hI s ∈ (Col.YB hI hP 1).Sec 1 :=
-  zeroMode_mem_sections hI hP hs
-
-theorem zm_pt {E : Type} [Field E] [NumberField E] [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF}
-    {I : Submodule ℤ (Vsp X.dim)} (hI : IsSplit P I) (hP : Ext.PackingCount)
-    {s : (Fin 1 → Vsp X.dim) → ℂ} (hs : s ∈ X.Sec 1 1) (w : Vsp X.dim) (T M : ℝ)
-    (hT : ∀ F : Finset (Vsp X.dim), (∀ y ∈ F, ∃ x ∈ X.L, y = uMap I x) →
-      ∑ y ∈ F, Real.exp (-Real.pi * ‖uMap I w - y‖ ^ 2) ≤ T)
-    (hM : ∀ t, (Col.YB hI hP 1).ptN2 1 (ZM.zmB hI s) t ≤ M) :
-    Real.sqrt (X.ptN2 1 s fun _ => w) ≤ Real.sqrt M * T :=
-  zeroMode_pointwise_bound hI hP hs w T M hT hM
-
 end ReciprocityTheory.ChartRestriction.G.I2
 end -- clump:auto
 end -- clump:auto
@@ -1226,7 +1209,7 @@ theorem zeroMode [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF} {I : Submodu
         (Col.ob (IR I)).toBasis.det a ≠ 0 ∧
         |(Col.ob (IR I)).toBasis.det a| * (2 : ℝ) ^ (-(Module.finrank ℝ (IR I) : ℝ) / 2) *
           (Col.YB hI hP 1).l2 1 β ≤ X.l2 1 s :=
-  ⟨ZM.zmB hI s, zm_mem hI hP hs, fun w T M hT hM => zm_pt hI hP hs w T M hT hM, ZM.Ib hI,
+  ⟨ZM.zmB hI s, _root_.ReciprocityTheory.ChartRestriction.G.I2.zeroMode_mem_sections hI hP hs, fun w T M hT hM => _root_.ReciprocityTheory.ChartRestriction.G.I2.zeroMode_pointwise_bound hI hP hs w T M hT hM, ZM.Ib hI,
     ZM.Ib_mem hI, ZM.Ib_det_ne hI, zm_norm hI hP hs⟩
 
 theorem tof_yb_sup [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF} {I : Submodule ℤ (Vsp X.dim)}

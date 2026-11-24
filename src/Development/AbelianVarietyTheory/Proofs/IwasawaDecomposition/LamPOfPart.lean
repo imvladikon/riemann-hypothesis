@@ -371,7 +371,7 @@ theorem gW_eq_chi_smul : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : 
     rw [h1]
     exact congrArg (· * (R.HW i σ).e w v h') hle.2
   have hA := level_action_spec hT ⟨κ', hκ'⟩ κ' hκ' h
-  rw [hA, GlobalTheory.ThetaShiftSmooth.levChi_flag_eq_one R i κ', inv_one, one_mul,
+  rw [hA, _root_.GlobalTheory.ThetaProjEquiv.realDatum_coeffFlagLevelCharacter_eq_one R i κ', inv_one, one_mul,
     hM.lev v κ' hmem h, hchi]
 
 end GlobalTheory.FormEigenW
@@ -407,7 +407,7 @@ theorem thG_equiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
     rw [MulEquiv.apply_symm_apply]; exact hκ'
   have hT : ∀ v, HasType (Wc D i) (R.βW i) (R.datWp i R.triv) (R.thF i t y v) := fun v k hk h =>
     (GlobalTheory.mult_value_left_cont_level R.θ (R.MW i (sg0 D A)) _ _ (R.thF i t y) hX v).2.2 k hk h
-  have h2 := GlobalTheory.ThetaShiftSmooth.levChi_flag_eq_one R i κ'
+  have h2 := _root_.GlobalTheory.ThetaProjEquiv.realDatum_coeffFlagLevelCharacter_eq_one R i κ'
   have hUe : ∀ v, R.thF i t (S y) v =
       actL (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG (R.eG.symm g0)) (R.thF i t y v) := fun v => by
     funext z
@@ -602,16 +602,6 @@ theorem ext_pre (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup → T)
     (Submodule.inclusion inf_le_left f)
   exact congrArg Subtype.val h
 
-theorem lift_postOn' {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S)
-    (L : (GA D V → ℂ) →ₗ[ℂ] (GA D V → ℂ)) (X : MMap M) :
-    PiTensorProduct.lift (postOn M L X) = L ∘ₗ PiTensorProduct.lift X := by
-  apply PiTensorProduct.ext
-  apply MultilinearMap.ext
-  intro v
-  simp [postOn]
-
-
-
 theorem thetaP_read (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup → T) (hm : 0 < D.R.m)
     (hTop : TopMultH R) (hinj : ∀ i t, Function.Injective (R.extV i t)) (hlev : R.toLevCh.Is A.μ0) (hgrp : R.IsGrp F)
     (hM : R.IsModels) (hE : R.IsThP) (IL : LiftIds (toLiftReal R F tupT hm hTop hinj))
@@ -645,7 +635,7 @@ theorem thetaP_read (R : RealDat D A Ks) (F : Face D A) (tupT : D.what₂.Tup �
   have hUw : PiTensorProduct.lift U = w' := LinearEquiv.apply_symm_apply _ w'
   refine hth.trans ?_
   change R.eWf i (sg0 D A) ∘ₗ w' = _
-  rw [← hUw, sub_eq_zero.1 hw0, ← lift_postOn', ← hE.thG i (tupT μ) z]
+  rw [← hUw, sub_eq_zero.1 hw0, ← _root_.GlobalTheory.ThetaFireLift.lift_postOn, ← hE.thG i (tupT μ) z]
 
 end Read
 
@@ -729,8 +719,6 @@ theorem adjoint_mem_base_level : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {
 end GlobalTheory.LamPrimeTransport
 
 namespace GlobalTheory.LamPrimeTransport
-
-open Formalism.IndefR.RecTie
 
 end GlobalTheory.LamPrimeTransport
 

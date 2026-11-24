@@ -199,14 +199,6 @@ namespace GlobalTheory.PlaceIdemFacts
 
 variable {D : D7}
 
-theorem cA_cA (z : AE D) : cA D (cA D z) = z := by
-  induction z using TensorProduct.induction_on with
-  | zero => rw [RingHom.map_zero, RingHom.map_zero]
-  | add x y hx hy => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), hx, hy]
-  | tmul a x =>
-    change a ⊗ₜ[D.host.F] star (star x) = _
-    rw [star_star]
-
 theorem algebraMap_pairA (α : Af D.host.F) :
     algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 α) = pairA D.host.F 0 α ⊗ₜ[D.host.F] (1 : D.host.E) := rfl
 
@@ -246,7 +238,7 @@ theorem idem_facts : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolog
         q.v ≠ q'.v → (q.e + cA D q.e) * (q'.e + cA D q'.e) = 0 := by
   intro D k _ _ _ _ q
   obtain ⟨ε, hε, heq⟩ := q.above
-  refine ⟨by rw [map_add (f := _), cA_cA, add_comm], fun P hP m n w hw => ⟨fun i j => ?_, ?_⟩,
+  refine ⟨by rw [map_add (f := _), _root_.Formalism.L2.Theta.cA_cA, add_comm], fun P hP m n w hw => ⟨fun i j => ?_, ?_⟩,
     fun k' _ _ _ _ q' hv => ?_⟩
   · rw [← hw i j, heq]
     exact Ideal.mul_mem_right _ _ (placeIdem_mem_idAt hε hP)
@@ -780,16 +772,13 @@ theorem conv_support_mem {G : Type} [Monoid G] (M : Submonoid G) (l : List (G �
     rw [Finset.mem_singleton.1 (Finsupp.support_single_subset hg)]
     exact M.mul_mem (h e List.mem_cons_self x hx) (ih' y hy)
 
-theorem comb_eq_fsum (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (c : WO S T →₀ ℂ) (f : WO S T → ℂ) :
-    comb ψ S T c f = c.sum fun u a => a • heisO ψ S T u f := rfl
-
 theorem comb_aconv_cons (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (c : WO S T →₀ ℂ) (l : List (WO S T →₀ ℂ))
     (h : ∀ x ∈ c.support, ∀ y ∈ (aconv l).support, symplO S T x y = 0) (f : WO S T → ℂ) :
     comb ψ S T (aconv (c :: l)) f = comb ψ S T c (comb ψ S T (aconv l) f) := by
   classical
   rw [GlobalTheory.HeisComb.comb_comb]
   show comb ψ S T ((c.sum fun g a => (aconv l).sum fun h b => Finsupp.single (g + h) (a * b))) f = _
-  rw [comb_eq_fsum, Finsupp.sum_sum_index (h := fun u a => a • heisO ψ S T u f) (fun _ => zero_smul ℂ _) (fun _ _ _ => add_smul _ _ _)]
+  rw [_root_.GlobalTheory.HeisComb.comb_eq_sum, Finsupp.sum_sum_index (h := fun u a => a • heisO ψ S T u f) (fun _ => zero_smul ℂ _) (fun _ _ _ => add_smul _ _ _)]
   refine Finset.sum_congr rfl fun x hx => ?_
   beta_reduce
   rw [Finsupp.sum_sum_index (h := fun u a => a • heisO ψ S T u f) (fun _ => zero_smul ℂ _) (fun _ _ _ => add_smul _ _ _)]
@@ -824,23 +813,6 @@ theorem grpAt_le_grpOff' (V : HSp D) {P P' : Pl D → Prop} (h : ∀ p, P p → 
   intro a ha
   refine (Submodule.mem_iInf _).2 fun w => ?_
   exact (Submodule.mem_iInf _).1 (Submodule.mem_inf.1 ha).2 ⟨w.1, fun hp => h w.1 hp w.2⟩
-
-theorem quotient_integral_fsum {G : Type} [Group G] [MeasurableSpace G] {R : Subgroup G} {ρ : Measure R} {μ : Measure G}
-    {ι : Type} (s : Finset ι) (g : ι → G → ℂ) (z : ι → ℂ) (hs : ∀ i ∈ s, IsQuotIntL1 ρ μ (g i) (z i)) :
-    IsQuotIntL1 ρ μ (fun h => ∑ i ∈ s, g i h) (∑ i ∈ s, z i) := by
-  classical
-  revert hs
-  refine Finset.induction_on s ?_ ?_
-  · intro _
-    have e : (fun h => ∑ i ∈ (∅ : Finset ι), g i h) = 0 := by funext h; simp
-    rw [e, Finset.sum_empty]
-    exact IsQuotIntL1.zero
-  · intro a s ha ih hs
-    have := (hs a (Finset.mem_insert_self a s)).add (ih fun i hi => hs i (Finset.mem_insert_of_mem hi))
-    rw [Finset.sum_insert ha]
-    convert this using 1
-    funext h
-    simp [Finset.sum_insert ha]
 
 end GlobalTheory.QValInner
 
@@ -933,10 +905,10 @@ theorem innerVal_iter2 : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCha
     ring
   refine ⟨fun x₀ => ∑ a' ∈ E.support, E a' * u a' x₀, ?_, fun x₀ => ?_⟩
   · rw [hI]
-    exact quotient_integral_fsum E.support (fun a' x₀ => E a' * u a' x₀) (fun a' => E a' * Z a')
+    exact _root_.GlobalTheory.SeeSaw.Assemble.quotient_integral_finset_sum_eq E.support (fun a' x₀ => E a' * u a' x₀) (fun a' => E a' * Z a')
       fun a' ha => ((hu a' ha).2.smul (E a'))
   · simp only [hK]
-    exact quotient_integral_fsum E.support (fun a' y₀ => E a' * Gf a' x₀ y₀) (fun a' => E a' * u a' x₀)
+    exact _root_.GlobalTheory.SeeSaw.Assemble.quotient_integral_finset_sum_eq E.support (fun a' y₀ => E a' * Gf a' x₀ y₀) (fun a' => E a' * u a' x₀)
       fun a' ha => (((hu a' ha).1 x₀).smul (E a'))
 
 end GlobalTheory.QValInner

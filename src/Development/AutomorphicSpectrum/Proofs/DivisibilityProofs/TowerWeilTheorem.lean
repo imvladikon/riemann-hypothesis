@@ -1078,11 +1078,7 @@ namespace RootFieldNumerics.EffN
 
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
 
-theorem smooth_comb {J : Type} [Fintype J] {ℓ : J → HermLine ι} (hℓ : ∀ j, IsSmoothHerm (ℓ j))
-    (n : J → ℤ) : IsSmoothHerm (combLine ℓ n) := by
-  show ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun z => ∏ j, (ℓ j).h z ^ n j)
-    {z : (k : K) × ι k → ℂ | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0}
-  exact contDiffOn_prod (fun j _ => RootFieldNumerics.Ii.contDiffOn_zpow_h (ℓ j) (hℓ j) (n j))
+alias smooth_comb := _root_.GlobalTheory.CompanionTheory.Ar.Top.GeoMix.smooth_comb
 
 theorem comb_a {J : Type} [Fintype J] (ℓ : J → HermLine ι) (n : J → ℤ) :
     (combLine ℓ n).a = ∑ j, n j • (ℓ j).a := rfl
@@ -1322,7 +1318,7 @@ theorem nef_comb (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) (
     {lam : Wt Ψ N} {s : ℝ} {q : ℕ} {n : Option (Ψ × Fin N) → ℤ} (hn : ∀ j, (n j : ℝ) = q * M.coef lam s j)
     (h : M.NefGen lam s) (W : Ideal (MRing M.ι)) (hW : IsArithVar W 2) (hP : M.P ≤ W) :
     0 ≤ geomDeg W (combLine (M.line 1) n) 1 := by
-  rw [geomDeg_comb II hII (smooth_line M 1) n W hW]
+  rw [geomDeg_comb II hII (_root_.RootFieldNumerics.GeoComb.line_smooth M 1) n W hW]
   simp only [hn, mul_assoc, ← Finset.mul_sum]
   exact mul_nonneg (Nat.cast_nonneg q) (h W hW hP)
 
@@ -1369,7 +1365,7 @@ theorem eff_prod (M : RootModel Ψ N) (e : ℕ) (he : dimFl Ψ N = e + 1) (lam :
     rwa [he] at this
   have h2 := _root_.GlobalTheory.CompanionTheory.Ar.Top.effective_mul_nef_nonneg hK hE hS II hII M.K M.ι M.Ω M.y e (fun k => combLine (M.line 1) (n k))
     (combLine (M.line 1) n0) σ har M.birational (fun k => smooth_comb (smooth_line M 1) _)
-    (smooth_comb (smooth_line M 1) _) hσ0 hσ
+    (_root_.GlobalTheory.CompanionTheory.Ar.Top.GeoMix.smooth_comb (_root_.RootFieldNumerics.GeoComb.line_smooth M 1) _) hσ0 hσ
     (fun k W hW hP => nef_comb II hII M (hn k) (hnef k) W hW hP)
   have h3 : (Fin.snoc (fun k => combLine (M.line 1) (n k)) (combLine (M.line 1) n0) :
       Fin (e + 1) → HermLine M.ι) = fun k =>

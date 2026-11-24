@@ -183,23 +183,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.theta_preserving_endomorphism_scalar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ → ∀ M : Module.End ℂ (WOF F E nS nT → ℂ),
-      (∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → IsThetaFunOF σ JS JT ξ₀ B.ψ (M f)) →
-      (∀ w f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → M (heisOF σ JS JT ξ₀ B.ψ w f) = heisOF σ JS JT ξ₀ B.ψ w (M f)) →
-      (∀ (μ : MeasureTheory.Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), μ.IsAddHaarMeasure →
-        MeasureTheory.IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 μ → ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f →
-          ∫⁻ w in 𝓕, ‖M f w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) →
-      ∃ c : ℂ, ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → M f = c • f := by
-  first | exact @_root_.GlobalTheory.ThetaSchurF.schur_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ThetaPreservingEndomorphismScalar =====
@@ -266,7 +249,7 @@ theorem schur_norm_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ
       IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 μ → ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f →
         ∫⁻ x in 𝓕, ‖M f x‖ₑ ^ 2 ∂μ = ∫⁻ x in 𝓕, ‖f x‖ₑ ^ 2 ∂μ) :
     ∃ c : ℂ, ‖c‖ = 1 ∧ ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → M f = c • f := by
-  obtain ⟨c, hc⟩ := _root_.GlobalTheory.T.theta_preserving_endomorphism_scalar F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ M h1 h2 h3
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.ThetaSchurF.schur_k F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ M h1 h2 h3
   have hψ : ∀ a, ‖B.ψ a‖ = 1 := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B C.good).1.2.1
   by_cases h0 : ∃ f y, IsThetaFunOF σ JS JT ξ₀ B.ψ f ∧ f y ≠ 0
   · obtain ⟨f, y, hf, hy⟩ := h0
@@ -327,7 +310,7 @@ theorem exists_isScalarF_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ
     rw [e1, map_mul, Module.End.mul_apply, hi.triv k.1 k1 k.2 k2 f h]
   have hof : ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → of p f = of k f := fun f h => by
     rw [e2, map_mul, Module.End.mul_apply, hf.triv a.1 a1 a.2 a2 f h]
-  have hth := _root_.GlobalTheory.T.theta_function_heisenberg_translate F E σ B C.good nS nT JS JT ξ₀
+  have hth := _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF_k F E σ B C.good nS nT JS JT ξ₀
   obtain ⟨c, hc, h⟩ := _root_.PositivityTheory.ThKW.schur_norm_k C (of p * oi p * substF σ JS JT p⁻¹)
     (fun f h => hf.pres _ _ (hi.pres _ _ (R f h).1))
     (fun u f h => by
@@ -366,7 +349,7 @@ theorem eta_cut_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) (h2 : ResEtaF η 1) 
     linear_combination (-(incAF F E u - 1) ^ 2) * hε.orth)
   have e2 := GlobalTheory.SplitDetCharF.char_norm hB.cm h2 (cutRat _ h3 u) (cutRat ε hε.idem (Units.map (σ : E →* E) u)) (by
     rw [cutRat_val, cutRat_val, map_add (f := _), map_sub, map_mul, map_one,
-      GlobalTheory.HeisLineF.cAF_cAF σ (GlobalTheory.SplitDetCharF.sig_invol hB.cm), cAF_incAF']
+      GlobalTheory.HeisLineF.cAF_cAF σ (GlobalTheory.SplitDetCharF.sig_invol hB.cm), _root_.PositivityTheory.ThKW.TauSpanIdentities.cAF_inc]
     rfl)
   rw [e1, map_mul, mul_assoc, e2, mul_one]
 theorem real_data_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (hs : CartF σ JS JT ξ₀ B θ s) {g : GAF σ JS} {h : GAF σ JT} {a b}
@@ -376,9 +359,9 @@ theorem real_data_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ 
       GlobalTheory.RealWeil.dP s (mMF σ JS JT θ (g, h)) ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧
       (∫ v, gaussV (HMF JS JT ξ₀ (tauB B)) s (mMF σ JS JT θ (g⁻¹, h⁻¹)) v) * ∏ v, tauB B v (b ⊗ₖ aᵀ - 1).det =
         r * (-s).det * ((∏ v, tauB B v (b ⊗ₖ aᵀ).det) * GlobalTheory.RealWeil.dP s (mMF σ JS JT θ (g, h))) := by
-  obtain ⟨q1, q2⟩ := _root_.PositivityTheory.ThKW.det_mMF_k C ha hb
-  have hH := _root_.GlobalTheory.T.hermitian_form_matrix_selfadjoint F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ
-  have hU := _root_.GlobalTheory.T.archimedean_chart_gaussian_vector F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ θ C.inf ι C.chart (g⁻¹, h⁻¹)
+  obtain ⟨q1, q2⟩ := _root_.PositivityTheory.ThKW.det_mMF_B_k C ha hb
+  have hH := _root_.GlobalTheory.RealWeilF.HMF_herm_det_k F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ
+  have hU := _root_.GlobalTheory.RealWeilF.mMF_unitary_k F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ θ C.inf ι C.chart (g⁻¹, h⁻¹)
   have c1 : s * mMF σ JS JT θ (g⁻¹, h⁻¹) = mMF σ JS JT θ (g⁻¹, h⁻¹) * s := by
     have := comm_inv (mMF σ JS JT θ) hcm
     rwa [Prod.inv_mk] at this
@@ -388,7 +371,7 @@ theorem real_data_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ 
     rw [q2]
     exact Finset.prod_ne_zero_iff.2 fun v _ => (map_ne_zero _).2 hd
   rw [← q1, ← q2]
-  exact integral_gaussV hH.1 hs.sq hs.pos hU c1 c2 c3
+  exact _root_.PositivityTheory.ThKW.integral_gaussV_B hH.1 hs.sq hs.pos hU c1 c2 c3
 theorem zF_rat_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (hε : ε * ε = ε) {g : GAF σ JS} {h : GAF σ JT} {a b}
     (ha : IsRatF σ JS g a) (hb : IsRatF σ JT h⁻¹ b) (hΔ : (b ⊗ₖ aᵀ).det ≠ 0) :
     zF σ JS JT η ε hε (g, h) * η (cutRat ε hε (Units.mk0 _ hΔ)) = 1 := by
@@ -494,17 +477,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix BoundedContinuousFunction ContDiff
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.IndefR.DatumF MeasureTheory Matrix GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open GlobalTheory.RealWeil GlobalTheory.RealWeilF
-open Classical
-
-theorem _root_.GlobalTheory.T.exists_chart_archimedean_family : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (B : Base F E), _root_.UpperTheory.TP.W.GoodK σ B → ∀ θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ),
-      IsInfFamF (fun w : InfinitePlace F => (B.emb w).1) θ → ∃ ι : (InfinitePlace F → ℂ) →+ AEF F E, IsChartF θ ι := by
-  first | exact @_root_.GlobalTheory.RealWeilF.CMChart.exists_chartF_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ExistsChartArchimedeanFamily =====
@@ -565,21 +537,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix Topology
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil
-
-theorem _root_.GlobalTheory.T.finite_lattice_theta_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ) (Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)) (w : 𝓞 E)
-        (lam : ℕ →* ℂ) (Om : GAF σ JS × GAF σ JT →* Module.End ℂ (GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ)),
-        _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om →
-        ∀ g ∈ GlobalTheory.WeilPartsF.GinfCF σ JS, ∀ h ∈ GlobalTheory.WeilPartsF.GinfCF σ JT, ∀ f, Om (g, h) f = f := by
-  first | exact @_root_.UpperTheory.TP.W.IsLatRepL.real_triv
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.FiniteLatticeThetaInvariant =====
@@ -651,21 +608,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix Topology
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil
-
-theorem _root_.GlobalTheory.T.finite_lattice_theta_level : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ) (Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)) (w : 𝓞 E)
-        (lam : ℕ →* ℂ) (Om : GAF σ JS × GAF σ JT →* Module.End ℂ (GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ)),
-        _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om →
-        ∀ f (w : WOF F E nS nT), Continuous fun p : GAF σ JS × GAF σ JT => (Om p f : WOF F E nS nT → ℂ) w := by
-  first | exact @_root_.GlobalTheory.FinLatF.latRepF_cont_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.FiniteLatticeThetaLevel =====
@@ -765,24 +707,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix Topology
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil
-
-theorem _root_.GlobalTheory.T.finite_lattice_theta_support : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ) (Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)) (w : 𝓞 E)
-        (lam : ℕ →* ℂ) (Om : GAF σ JS × GAF σ JT →* Module.End ℂ (GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ)),
-        _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om →
-        ∀ g ∈ GlobalTheory.WeilPartsF.GfCF σ JS, ∀ h ∈ GlobalTheory.WeilPartsF.GfCF σ JT, ∀ (w₀ : WOF F E nS nT)
-          (f f' : GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ),
-          (f' : WOF F E nS nT → ℂ) = heisOF σ JS JT ξ₀ B.ψ w₀ f →
-          (Om (g, h) f' : WOF F E nS nT → ℂ) = heisOF σ JS JT ξ₀ B.ψ (actOF σ JS JT g h w₀) (Om (g, h) f) := by
-  first | exact @_root_.GlobalTheory.FinLatHeis.isLatRepF_heis_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.FiniteLatticeThetaSupport =====
@@ -861,24 +785,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix Topology
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil
-
-theorem _root_.GlobalTheory.T.theta_subspace_haar_integral : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ M : Submodule ℂ (WOF F E nS nT → ℂ), (∀ f ∈ M, IsThetaFunOF σ JS JT ξ₀ B.ψ f) →
-      ∀ (μ : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), μ.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 μ →
-        ∃ Bf : M →ₗ[ℂ] M →ₗ⋆[ℂ] ℂ, (∀ (u : WOF F E nS nT) (f g f' g' : M),
-          (f' : WOF F E nS nT → ℂ) = heisOF σ JS JT ξ₀ B.ψ u f → (g' : WOF F E nS nT → ℂ) = heisOF σ JS JT ξ₀ B.ψ u g →
-            Bf f' g' = Bf f g) ∧
-          ∀ f : M, ∫⁻ w in 𝓕, ‖(f : WOF F E nS nT → ℂ) w‖ₑ ^ 2 ∂μ = ENNReal.ofReal (Bf f f).re := by
-  first | exact @_root_.GlobalTheory.ThetaMeanSquareF.exists_invariant_form_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ThetaSubspaceHaarIntegral =====
@@ -912,7 +818,7 @@ theorem lintegral_sq_Om_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ0 hξ hc Λ w lam Om h μ 𝓕 hμ h𝓕 p f
   have hσ : ∀ x, σ (σ x) = x := sigma_sigma hB.cm
   have hn : ∀ a, ‖B.ψ a‖ = 1 := GlobalTheory.StdCharWeilDatum.norm_psi hB.std
-  obtain ⟨Bf, hB1, hB2⟩ := _root_.GlobalTheory.T.theta_subspace_haar_integral F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hξ
+  obtain ⟨Bf, hB1, hB2⟩ := _root_.GlobalTheory.ThetaMeanSquareF.exists_invariant_form_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hξ
     (GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ) (fun _ hf => hf) μ 𝓕 hμ h𝓕
   rw [hB2, hB2, _root_.GlobalTheory.FinWeil.invForm_intertwiner (isHeis_opFF hσ hS hT hξ hc h.hw) (fun x y => hn _) lam h.good _ h.sd h.span
     (rhoFF σ JS JT p) (gamFF_rhoFF hS ξ₀ B.ψ p) (h.sd' p) (h.fin p) (Om p) (h.op p) (h.vac p) Bf]
@@ -938,23 +844,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix Topology
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil
-
-theorem _root_.GlobalTheory.T.lintegral_enorm_sq_latRep_apply_eq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ) (Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)) (w : 𝓞 E)
-        (lam : ℕ →* ℂ) (Om : GAF σ JS × GAF σ JT →* Module.End ℂ (GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ B.ψ)),
-        _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om →
-        ∀ (μ : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), μ.IsAddHaarMeasure →
-          IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 μ → ∀ p f,
-            ∫⁻ w in 𝓕, ‖(Om p f : WOF F E nS nT → ℂ) w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖(f : WOF F E nS nT → ℂ) w‖ₑ ^ 2 ∂μ := by
-  first | exact @_root_.GlobalTheory.FinLatUnitF.lintegral_sq_Om_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.LintegralEnormSqLatRepApplyEq =====
@@ -1045,8 +934,6 @@ variable {σ : E →ₐ[F] E} {B : Base F E} {nS nT : ℕ} {JS : Matrix (Fin nS)
   {Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)} {hc : HeisClosedF σ JS JT ξ₀ B.ψ} {w : 𝓞 E} {lam : ℕ →* ℂ}
   {Om : GAF σ JS × GAF σ JT →* Module.End ℂ (thetaSubF σ JS JT ξ₀ B.ψ)}
   {s : Matrix (IxF F nS nT) (IxF F nS nT) ℂ}
-theorem infinite_norm_one_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) : {t : E | t * σ t = 1}.Infinite :=
-  _root_.UpperTheory.Reformulated.B.InfiniteNormOneField.infinite_norm_one_k C
 theorem det_kron_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) {g : GAF σ JS} {h : GAF σ JT} {a b}
     (ha : IsRatF σ JS g a) (hb : IsRatF σ JT h⁻¹ b) :
     (b ⊗ₖ aᵀ).det * σ (b ⊗ₖ aᵀ).det = 1 ∧
@@ -1193,11 +1080,6 @@ variable {σ : E →ₐ[F] E} {B : Base F E} {nS nT : ℕ} {JS : Matrix (Fin nS)
   {Om : GAF σ JS × GAF σ JT →* Module.End ℂ (thetaSubF σ JS JT ξ₀ B.ψ)}
   {s : Matrix (IxF F nS nT) (IxF F nS nT) ℂ}
 variable {η : (AEF F E)ˣ →* Circle} {ε : AEF F E} {of oi : GAF σ JS × GAF σ JT →* Module.End ℂ (WOF F E nS nT → ℂ)}
-theorem fin_inf_comm_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (hO : _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om)
-    (hof : ∀ p, ∃ z : ℂ, ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, of p f = z • (Om p f : WOF F E nS nT → ℂ))
-    (hi : IsInfWeilF σ JS JT ξ₀ B.ψ oi) (p q : GAF σ JS × GAF σ JT) (f : WOF F E nS nT → ℂ)
-    (hf : IsThetaFunOF σ JS JT ξ₀ B.ψ f) : of p (oi q f) = oi q (of p f) :=
-  _root_.PositivityTheory.ThKW.fin_inf_comm_A_k C hO hof hi p q f hf
 theorem datum_of_aut_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) (hO : _root_.UpperTheory.TP.W.IsLatRepL σ JS JT ξ₀ B.ψ hc Λ w lam Om)
     (h1 : IsHeckeCharF η) (h2 : ResEtaF η 1) (hf : IsFinWeilF σ JS JT ξ₀ B.ψ (η ^ nS) (η ^ nT) of)
     (hof : ∀ p, ∃ z : ℂ, ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, of p f = z • (Om p f : WOF F E nS nT → ℂ))
@@ -1295,10 +1177,10 @@ theorem existsFinK_k (hI : IdxSign) (C : _root_.PositivityTheory.ThKW.Ctx_k σ B
     ((h1.1.mul hκ.cont).pow n).congr fun x => by simp
   have h2' := resEta_mul h2 hκ
   have hB := C.good
-  have hreal := _root_.GlobalTheory.T.finite_lattice_theta_invariant F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hheis := _root_.GlobalTheory.T.finite_lattice_theta_support F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hcont := _root_.GlobalTheory.T.finite_lattice_theta_level F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hunit := _root_.GlobalTheory.T.lintegral_enorm_sq_latRep_apply_eq F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hreal := _root_.UpperTheory.TP.W.IsLatRepL.real_triv F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hheis := _root_.GlobalTheory.FinLatHeis.isLatRepF_heis_k F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hcont := _root_.GlobalTheory.FinLatF.latRepF_cont_k F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hunit := _root_.GlobalTheory.FinLatUnitF.lintegral_sq_Om_k F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
   let z : GAF σ JS × GAF σ JT → Circle := zF σ JS JT (η * κ) ε hε.idem
   have z1 : z 1 = 1 := by simp [z, zF]
   have z2 : ∀ p q, z (p * q) = z p * z q := fun p q => by
@@ -1389,9 +1271,9 @@ theorem scalar_constK_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀
     fun g h a b ha hb hcm hd c hc0 H => ?_⟩
   obtain ⟨d1, d2⟩ := _root_.PositivityTheory.ThKW.det_kron_k C ha hb
   have hΔ := left_ne_zero_of_mul_eq_one d1
-  obtain ⟨hbij, n, t, c₀, N, M, hn, hc₀, hN, t1, t2, g1, g2, i1, i2⟩ := _root_.PositivityTheory.ThKW.finite_data_k C hG hR hO ha hb hΔ hd
+  obtain ⟨hbij, n, t, c₀, N, M, hn, hc₀, hN, t1, t2, g1, g2, i1, i2⟩ := _root_.PositivityTheory.ThKW.AutLatA.data_k C hG hR hO ha hb hΔ hd
   obtain ⟨hI, hδ0, r₂, p₂, h2⟩ := _root_.PositivityTheory.ThKW.real_data_k C hs ha hb hcm hd
-  obtain ⟨r₁, p₁, h1⟩ := _root_.PositivityTheory.ThKW.gauss_mul_integral_k C hG hR hO hs ha hb hbij hI _ (P.kappa hO hs hcm hc0 H) n t t1 t2
+  obtain ⟨r₁, p₁, h1⟩ := _root_.PositivityTheory.ThKW.Trc.gauss_mul_integral_A_k C hG hR hO hs ha hb hbij hI _ (P.kappa hO hs hcm hc0 H) n t t1 t2
   rw [g1] at h1
   have hN' : (N : E) ^ M ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hN)
   obtain ⟨r₃, p₃, h3⟩ := P.prod' hN' hd i1
@@ -1406,7 +1288,7 @@ theorem isScalar_one_of_commK_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS 
   obtain ⟨a, ha⟩ := exists_isRatF hg
   obtain ⟨b, hb⟩ := exists_isRatF (inv_mem hh)
   obtain ⟨e, s₀, hs₀, H⟩ := _root_.UpperTheory.TP.W.scalar_constK_k C hG hR hO P hs
-  obtain ⟨t, ht, ht'⟩ := (_root_.PositivityTheory.ThKW.infinite_norm_one_k C).exists_notMem_finite
+  obtain ⟨t, ht, ht'⟩ := (_root_.UpperTheory.Reformulated.B.InfiniteNormOneField.infinite_norm_one_k C).exists_notMem_finite
     ((GlobalTheory.RatAut.finite_det_smul_sub_one (b ⊗ₖ aᵀ)).union (GlobalTheory.RatAut.finite_det_smul_sub_one
       ((1 : Matrix (Fin nT) (Fin nT) E) ⊗ₖ (1 : Matrix (Fin nS) (Fin nS) E)ᵀ)))
   rw [Set.mem_union, not_or] at ht'
@@ -1418,7 +1300,7 @@ theorem isScalar_one_of_commK_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS 
       · simp [Matrix.one_apply_ne hij, Matrix.one_apply_ne (Ne.symm hij)]
     rw [e, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one, smul_smul, show t * σ t = 1 from ht, one_smul])
   have hk := rk.mem
-  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_k C hO (fun p => ⟨_, P.hof p⟩) P.hi
+  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_A_k C hO (fun p => ⟨_, P.hof p⟩) P.hi
   have ck : s * mMF σ JS JT θ (1, k⁻¹) = mMF σ JS JT θ (1, k⁻¹) * s := by
     have := comm_inv (mMF σ JS JT θ) (hs.cen k t rk)
     rwa [Prod.inv_mk, inv_one] at this
@@ -1453,15 +1335,15 @@ theorem datumK_of_k (hK : KapEx) (hE : EtaProdK) (hI : IdxSign) : ∀ (F E : Typ
       ∀ η : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF η → ResEtaF η 1 → HasExp B.emb η (fun _ => 1) → UnramInert σ η →
         ∃ ω, IsWeilDatumOF σ JS JT (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ (η ^ nS) (η ^ nT) ω := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ h0 hξ Λ hG hR hc w lam Om hO η h1 h2 h3 h4
-  obtain ⟨θ, hθ⟩ := (_root_.GlobalTheory.T.standard_additive_character_sign F E σ B hB).2.1
-  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.T.exists_chart_archimedean_family F E σ B hB θ hθ
+  obtain ⟨θ, hθ⟩ := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB).2.1
+  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.RealWeilF.CMChart.exists_chartF_k F E σ B hB θ hθ
   have C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι := ⟨hB, hS, hT, h0, hξ, hθ, hι⟩
   obtain ⟨κ, hκ⟩ := hK F E σ hB.cm lam hO.good
   obtain ⟨ε, hε, hprod⟩ := hE F E σ B hB.cm hB.unram η h1 h2 h3 h4 lam hO.good κ hκ
   obtain ⟨of, hf, hof⟩ := _root_.UpperTheory.TP.W.existsFinK_k hI C hG hO h1 h2 hκ hε
   obtain ⟨oi, hi, hvac⟩ := _root_.PositivityTheory.ThKW.exists_inf_k C
   have P : _root_.UpperTheory.TP.W.PartsK_k C hc lam Om (η * κ) (η ^ nS) (η ^ nT) ε of oi := ⟨resEta_mul h2 hκ, hε, hprod, hf, hof, hi, hvac⟩
-  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_k C hO (fun p => ⟨_, hof p⟩) hi
+  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_A_k C hO (fun p => ⟨_, hof p⟩) hi
   refine _root_.PositivityTheory.ThKW.datum_of_aut_k C hG hO h1 h2 hf (fun p => ⟨_, hof p⟩) hi fun γ hγ γ' hγ' f hf' => ?_
   have := _root_.PositivityTheory.ThKW.rat_gen_k C (fun p => IsScalarF B ξ₀ of oi p 1)
     (fun p q _ _ q1 q2 a b => mul_one (1 : ℂ) ▸ a.mul_k C hi hcomm b q1 q2)

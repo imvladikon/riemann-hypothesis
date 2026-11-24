@@ -188,8 +188,7 @@ theorem projU_apply (p : ℕ) (W : Frame Ψ r) (τ : Ψ) (a b : Fin r) : projU �
     if b < a then W τ a b else
       if a < b then -((sgn p a : ℝ) : ℂ) * ((sgn p b : ℝ) : ℂ) * (starRingEnd ℂ) (W τ b a) else 0 := rfl
 
-theorem sgn_mul_self (p a : ℕ) : ((sgn p a : ℝ) : ℂ) * ((sgn p a : ℝ) : ℂ) = 1 := by
-  unfold sgn; split_ifs <;> simp
+alias sgn_mul_self := _root_.GlobalTheory.FlagGS.sgn_mul_self
 
 theorem projU_mem [NumberField E] [IsCMField E] (X : Data E r) (W : Frame X.Ψ r) :
     projU X.Ψ r X.p0 W ∈ unitLie X := by
@@ -420,8 +419,6 @@ open NumberField IsDedekindDomain Matrix MeasureTheory ReciprocityTheory.ChartRe
 open scoped TensorProduct InnerProductSpace Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.differentiableOn_frames_of_killedNilpotentDerivative : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (la : ReciprocityTheory.ChartRestriction.G.FD.Wt X.Ψ r) (Q : Frame X.Ψ r → ℂ), (∀ x ∈ X.dom, ∀ b ∈ Bor X.Ψ r, Q (rmul x b) = bchar la b * Q x) → (∀ y, IsUnitFr X y → ∃ ℓ : Frame X.Ψ r →L[ℝ] ℂ, HasFDerivWithinAt (fun Z : Frame X.Ψ r => Q (rmul y (expFr Z))) ℓ (unitLie X) 0 ∧ ∀ (τ : X.Ψ) (c d : Fin r), c < d → ∀ Z ∈ unitLie X, ∀ Z' ∈ unitLie X, Z + Complex.I • Z' = unitFr τ c d → ℓ Z + Complex.I * ℓ Z' = 0) → DifferentiableOn ℂ Q X.dom := by
-  first | exact @GlobalTheory.HolRead.Holo.differentiableOn_of_killed
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableOnFramesOfKilledNilpotentDerivativStatement =====
@@ -986,8 +983,6 @@ open GlobalTheory.SW hiding Level
 open scoped TensorProduct ComplexConjugate Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.realPlaceDeterminantPower_mul_compactTorusElement : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C.Bas), C.IsB B → ∀ (m : D.what₂.Tau → ℤ) (ρ : D.what₂.Tau) (t : Fin T.rank → ℝ) (g : GA D T), detPow C.θ T m (g * torAt C.θ T B ρ t) = cexp (((∑ a, ((m ρ : ℤ) : ℝ) * t a : ℝ) : ℂ) * I) * detPow C.θ T m g := by
-  first | exact @GlobalTheory.AdSpan.DetTor.detPow_mul_torAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlaceDeterminantPowerMulCompactTorusElementStatement =====
@@ -1200,7 +1195,7 @@ theorem holUpTo_of_lowKilled : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C.B
     have e1 := xB_mvB_mul C B hB a (torProd C.θ T B s) (fun τ => diagonal fun c => cexp ((t τ c : ℂ) * I)) fun ρ => ?_
     · erw [← e1]
       rw [hF _ (mul_mem ha hk), hF a ha, ← mul_assoc,
-      apply_mul_torProd C.θ T B _ φ htor, apply_mul_torProd C.θ T B _ _ (GlobalTheory.T.realPlaceDeterminantPower_mul_compactTorusElement D S T C B hB m)]
+      apply_mul_torProd C.θ T B _ φ htor, apply_mul_torProd C.θ T B _ _ (_root_.GlobalTheory.AdSpan.DetTor.detPow_mul_torAt D S T C B hB m)]
       have hb : (bchar la fun τ => (diagonal fun c => cexp ((t τ c : ℂ) * I) : Matrix (Fin T.rank) (Fin T.rank) ℂ)) =
           cexp (((∑ ρ, ∑ c, ((la (C.m.e ρ) c : ℝ)) * t (C.m.e ρ) c : ℝ) : ℂ) * I) := by
         unfold bchar
@@ -1234,7 +1229,7 @@ theorem holUpTo_of_lowKilled : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (B : C.B
       simp only [s]; push_cast; ring_nf)
   have hQ : ∀ a ∈ GinfC T, Q (C.xB (C.mvB a B)) = φ (g * a) / detPow C.θ T m a := fun a ha => by
     rw [Q1 _ (U1 a), hF a ha]
-  refine ⟨Q, GlobalTheory.T.differentiableOn_frames_of_killedNilpotentDerivative _ _ C.X la Q Q2 fun y hy => ?_, Q2, fun a ha => ?_⟩
+  refine ⟨Q, _root_.GlobalTheory.HolRead.Holo.differentiableOn_of_killed _ _ C.X la Q Q2 fun y hy => ?_, Q2, fun a ha => ?_⟩
   swap
   · rw [hQ a ha]; field_simp [dNe a]
   obtain ⟨a, ha, rfl⟩ := U2 y hy

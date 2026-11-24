@@ -54,6 +54,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ValueAtNormalForm
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueInvariantVectorFieldOfTangent
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.KsCocLinear
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
@@ -95,22 +96,9 @@ section Calc
 
 variable {X Y Z : Scheme.{0}}
 
-theorem pbT_pbT' (h : Z ⟶ Y) (f : Y ⟶ X) {U : X.Opens} {V : Y.Opens} {O : Z.Opens} (h₁ : V ≤ f ⁻¹ᵁ U)
-    (h₂ : O ≤ h ⁻¹ᵁ V) (s : Γ(X, U)) : pbT h (pbT f s V) O = pbT (h ≫ f) s O := by
-  rw [pbT_of_le f h₁, pbT_of_le h h₂, pbT_of_le (h ≫ f) (h₂.trans (h.preimage_mono h₁))]
-  exact congrArg (fun φ => φ.hom s) (Scheme.Hom.appLE_comp_appLE h f U V O h₁ h₂)
-
-theorem app_eq_pbT' (f : Z ⟶ Y) (U : Y.Opens) (s : Γ(Y, U)) : (f.app U).hom s = pbT f s (f ⁻¹ᵁ U) := by
-  rw [pbT_of_le f le_rfl, Scheme.Hom.app_eq_appLE]
-
-theorem val_res' {U V : X.Opens} (h : V ≤ U) (u : Γ(X, U)ˣ) : (res h u).val = rsT u.val V := (rsT_of_le h _).symm
-
 theorem pbT_id_le' {O₀ O : X.Opens} (h : O ≤ O₀) (s : Γ(X, O₀)) : pbT (𝟙 X) s O = rsT s O := by
   rw [pbT, rsT, dite_eq_left (show O ≤ (𝟙 X : X ⟶ X) ⁻¹ᵁ O₀ from h), dite_eq_left h]
   rfl
-
-theorem constFn_zero' {R : Type} [CommRing R] (q : X ⟶ Sp R) (O : X.Opens) : constFn q O 0 = 0 := by
-  rw [constFn, map_zero, map_zero]
 
 theorem constFn_comp_spMap' {R S : Type} [CommRing R] [CommRing S] (q : Y ⟶ Sp S) (x : R →+* S)
     (W : Y.Opens) (t : R) : constFn (q ≫ spMap x) W t = constFn q W (x t) := by
@@ -126,10 +114,6 @@ theorem constFn_comp_spMap' {R S : Type} [CommRing R] [CommRing S] (q : Y ⟶ Sp
 
 theorem isUnit_of_mul_eq_one' {M : Type*} [CommMonoid M] (a b : M) (h : a * b = 1) : IsUnit a :=
   ⟨⟨a, b, h, by rw [mul_comm]; exact h⟩, rfl⟩
-
-theorem isUnit_pbT (f : Z ⟶ Y) {U : Y.Opens} {O : Z.Opens} (h : O ≤ f ⁻¹ᵁ U) (u : Γ(Y, U)ˣ) :
-    IsUnit (pbT f u.val O) :=
-  isUnit_of_mul_eq_one' _ (pbT f (u⁻¹).val O) (by rw [← pbT_mul, Units.mul_inv, pbT_one f h])
 
 theorem exists_unit_glue {J : Type} (V : J → Y.Opens) (hV : ⨆ i, V i = ⊤) (a : ∀ i, Γ(Y, V i))
     (ha : ∀ i, IsUnit (a i)) (h : ∀ i l, rsT (a i) (V i ⊓ V l) = rsT (a l) (V i ⊓ V l)) :
@@ -169,7 +153,7 @@ theorem pbT_pull_g {W : Scheme.{0}} (L : LB X) (π : Y ⟶ X) (j : W ⟶ Y) (a b
     pbT j (res h₁ ((L.pull π).g a b)).val O = pbT (j ≫ π) (L.g (a PUnit.unit) (b PUnit.unit)).val O := by
   have hle : (L.pull π).U a ⊓ (L.pull π).U b ≤ π ⁻¹ᵁ (L.U (a PUnit.unit) ⊓ L.U (b PUnit.unit)) :=
     fun y hy => ⟨Set.mem_iInter.1 hy.1 PUnit.unit, Set.mem_iInter.1 hy.2 PUnit.unit⟩
-  rw [val_res', pbT_rsT j h₁ hO, val_pull_g, pbT_pbT' j π hle (hO.trans (j.preimage_mono h₁))]
+  rw [_root_.GlobalTheory.KS.AdjDlog.val_res, pbT_rsT j h₁ hO, val_pull_g, _root_.GlobalTheory.KS.InvField.pbT_pbT j π hle (hO.trans (j.preimage_mono h₁))]
 
 theorem pbT_div_g_pull {W : Scheme.{0}} (L : LB X) (π₁ π₂ : Y ⟶ X) (j : W ⟶ Y) (a b : PUnit → L.ι) (O : W.Opens)
     (hO : O ≤ j ⁻¹ᵁ ((LB.div (L.pull π₂) (L.pull π₁)).U (a, a) ⊓ (LB.div (L.pull π₂) (L.pull π₁)).U (b, b)))
@@ -257,7 +241,7 @@ theorem unitPart : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolAV (
     obtain ⟨ab, hab, -⟩ := GlobalTheory.T.existsUnique_add_eps_mul_on_dualNumber_thickening k A₀.left B'.left A₀.hom B'.hom pr HP (m₀ ⁻¹ᵁ V i)
       (rsT (w.s (c i, c i)).val (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ V i)))
     refine ⟨ab, ?_⟩
-    rw [app_eq_pbT', app_eq_pbT'] at hab
+    rw [_root_.GlobalTheory.KS.AdjDlog.app_eq_pbT, _root_.GlobalTheory.KS.AdjDlog.app_eq_pbT] at hab
     exact hab
   choose ab hab using hdec
 
@@ -265,9 +249,9 @@ theorem unitPart : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolAV (
       pbT j (rsT (w.s (c i, c i)).val ((pr ≫ m₀) ⁻¹ᵁ V i)) O = rsT (ab i).1 O := by
     intro i O hO
     have hle : (pr ≫ m₀) ⁻¹ᵁ V i ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ V i) := le_rfl
-    rw [hab i, pbT_add, pbT_mul, pbT_pbT' j pr hle (hOj i O hO), pbT_pbT' j pr hle (hOj i O hO), hj1,
+    rw [hab i, pbT_add, pbT_mul, _root_.GlobalTheory.KS.InvField.pbT_pbT j pr hle (hOj i O hO), _root_.GlobalTheory.KS.InvField.pbT_pbT j pr hle (hOj i O hO), hj1,
       pbT_constFn _ _ (hOj i O hO), hj2, constFn_comp_spMap']
-    rw [show (TrivSqZeroExt.fstHom k k k).toRingHom DualNumber.eps = 0 from rfl, constFn_zero', zero_mul, add_zero,
+    rw [show (TrivSqZeroExt.fstHom k k k).toRingHom DualNumber.eps = 0 from rfl, _root_.GlobalTheory.KS.EndClass.constFn_zero', zero_mul, add_zero,
       pbT_id_le' hO]
   have hagr : ∀ i i', rsT (ab i).1 (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i') = rsT (ab i').1 (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i') := by
     intro i i'
@@ -277,7 +261,7 @@ theorem unitPart : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolAV (
     rw [← hmod i _ inf_le_left, ← hmod i' _ inf_le_right,
       pbT_rsT j (hWC i) ((hOj i _ inf_le_left)), pbT_rsT j (hWC i') ((hOj i' _ inf_le_right))]
     have hr := congrArg (fun u : Γ(B'.left, C i ⊓ C i')ˣ => pbT j u.val (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i')) (hw (c i, c i) (c i', c i'))
-    rw [val_res', pbT_rsT j inf_le_left hOC, Units.val_mul, pbT_mul, val_res', pbT_rsT j inf_le_right hOC] at hr
+    rw [_root_.GlobalTheory.KS.AdjDlog.val_res, pbT_rsT j inf_le_left hOC, Units.val_mul, pbT_mul, _root_.GlobalTheory.KS.AdjDlog.val_res, pbT_rsT j inf_le_right hOC] at hr
     rw [hr]
     have hg : pbT j ((LB.div (P.L.pull (pr ≫ m₀)) (P.L.pull π₁)).g (c i, c i) (c i', c i')).val
         (m₀ ⁻¹ᵁ V i ⊓ m₀ ⁻¹ᵁ V i') = 1 := by
@@ -288,7 +272,7 @@ theorem unitPart : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolAV (
     have h1 := hmod i (m₀ ⁻¹ᵁ V i) le_rfl
     rw [rsT_self, pbT_rsT j (hWC i) (hOj i _ le_rfl)] at h1
     rw [← h1]
-    exact isUnit_pbT j ((hOj i _ le_rfl).trans (j.preimage_mono (hWC i))) (w.s (c i, c i))
+    exact _root_.GlobalTheory.KS.AdjDlog.isUnit_pbT j ((hOj i _ le_rfl).trans (j.preimage_mono (hWC i))) (w.s (c i, c i))
   have hcov : ⨆ i, m₀ ⁻¹ᵁ V i = ⊤ := by
     refine eq_top_iff.2 fun x _ => ?_
     have : m₀ x ∈ ⨆ i, V i := by rw [hV]; trivial
@@ -329,7 +313,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoPullbackIsomorphismUnitConstantPlusEpsFunctioStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectionClosedFibreOfPulledBackIso =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectionClosedFibreOfPulledBackIso", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConnK\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueAddEpsMulOnDualNumberThickeningStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreimageEqOfAgreeOnClosedFibreDualNumbersStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoPullbackIsomorphismUnitConstantPlusEpsFunctioStatement\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.CohomologyLogDerivativeAdjointEndomorphisms\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeISupInfPreimage\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectionClosedFibreOfPulledBackIso", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsConnK\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueAddEpsMulOnDualNumberThickeningStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreimageEqOfAgreeOnClosedFibreDualNumbersStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoPullbackIsomorphismUnitConstantPlusEpsFunctioStatement\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.CohomologyLogDerivativeAdjointEndomorphisms\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeISupInfPreimage\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ValueAtNormalForm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -350,30 +334,6 @@ noncomputable section
 namespace GlobalTheory.PotIso
 
 open GlobalTheory.KS GlobalTheory.KS.AdjDlog
-
-theorem constFn_mul_c {R : Type} [CommRing R] {Y : Scheme.{0}} (q : Y ⟶ Sp R) (W : Y.Opens) (a b : R) :
-    constFn q W (a * b) = constFn q W a * constFn q W b := by
-  simp only [constFn, map_mul]
-
-theorem constFn_one_c {R : Type} [CommRing R] {Y : Scheme.{0}} (q : Y ⟶ Sp R) (W : Y.Opens) :
-    constFn q W 1 = 1 := by
-  simp only [constFn, map_one]
-
-theorem constFn_zero_c {R : Type} [CommRing R] {Y : Scheme.{0}} (q : Y ⟶ Sp R) (W : Y.Opens) :
-    constFn q W 0 = 0 := by
-  simp only [constFn, map_zero]
-
-theorem constFn_comp_spMap_c {R S : Type} [CommRing R] [CommRing S] {Y : Scheme.{0}} (q : Y ⟶ Sp S) (x : R →+* S)
-    (W : Y.Opens) (t : R) : constFn (q ≫ spMap x) W t = constFn q W (x t) := by
-  have e1 : (q ≫ spMap x).appLE ⊤ W le_top = (spMap x).appLE ⊤ ⊤ le_top ≫ q.appLE ⊤ W le_top :=
-    (Scheme.Hom.appLE_comp_appLE _ _ _ _ _ _ _).symm
-  have h2 := congrArg (fun k => k.hom t) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom x))
-  change ((q ≫ spMap x).appLE ⊤ W le_top).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom t) =
-    (q.appLE ⊤ W le_top).hom ((Scheme.ΓSpecIso (CommRingCat.of S)).inv.hom (x t))
-  rw [e1, CommRingCat.comp_apply]
-  congr 1
-  simp only at h2
-  exact h2.symm
 
 theorem pull_g_val {X Y : Scheme.{0}} (L : LB X) (f : Y ⟶ X) (j j' : PUnit → L.ι) {O : Y.Opens}
     (h : O ≤ (L.pull f).U j ⊓ (L.pull f).U j') :
@@ -432,13 +392,13 @@ theorem conn_of_iso : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolA
       rsT_pbT pr (show (pr ≫ m₀) ⁻¹ᵁ V l ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ V l) from le_rfl) hl', pbT_rsT pr (m₀.preimage_mono hl) hO]
   have hA : constFn B'.hom ((pr ≫ m₀) ⁻¹ᵁ (V i ⊓ V i')) (algebraMap k (DualNumber k) (a : k)) =
       pbT pr (constFn A₀.hom (m₀ ⁻¹ᵁ (V i ⊓ V i')) (a : k)) ((pr ≫ m₀) ⁻¹ᵁ (V i ⊓ V i')) := by
-    rw [GlobalTheory.KS.pbT_constFn A₀.hom pr hO, hprb, GlobalTheory.PotIso.constFn_comp_spMap_c]
+    rw [GlobalTheory.KS.pbT_constFn A₀.hom pr hO, hprb, _root_.GlobalTheory.KS.DerMorK.constFn_spMap]
   have hd' := hdB (V i ⊓ V i') (rsT (P.L.g (jj i) (jj i')).val (V i ⊓ V i'))
   rw [pbT_rsT π₁ hW (hpre _).ge, pbT_rsT (pr ≫ m₀) hW le_rfl, ← pbT_pbT pr m₀ hO₀ hO] at hd'
   rw [← pbT_pbT pr m₀ hO₀ hO, hd', hs i inf_le_left, hs i' inf_le_right, hA] at iso
   have hee : constFn B'.hom ((pr ≫ m₀) ⁻¹ᵁ (V i ⊓ V i')) DualNumber.eps *
       constFn B'.hom ((pr ≫ m₀) ⁻¹ᵁ (V i ⊓ V i')) DualNumber.eps = 0 := by
-    rw [← GlobalTheory.PotIso.constFn_mul_c, DualNumber.eps_mul_eps, GlobalTheory.PotIso.constFn_zero_c]
+    rw [← _root_.GlobalTheory.KeyPow.constFn_mul, DualNumber.eps_mul_eps, _root_.GlobalTheory.KS.InvField.constFn_zero]
   generalize d (V i ⊓ V i') (rsT (P.L.g (jj i) (jj i')).val (V i ⊓ V i')) = D at iso ⊢
   generalize pbT m₀ (P.L.g (jj i) (jj i')).val (m₀ ⁻¹ᵁ (V i ⊓ V i')) = g₀ at iso ⊢
   have key : constFn B'.hom ((pr ≫ m₀) ⁻¹ᵁ (V i ⊓ V i')) DualNumber.eps *
@@ -459,7 +419,7 @@ theorem conn_of_iso : ∀ (k : Type) [Field k] (R : Type) [CommRing R] (P : PolA
   have hX := congrArg Prod.snd (u₁.trans u₂.symm)
   simp only at hX
   have hc : constFn A₀.hom (m₀ ⁻¹ᵁ (V i ⊓ V i')) ((a⁻¹ : kˣ) : k) * constFn A₀.hom (m₀ ⁻¹ᵁ (V i ⊓ V i')) (a : k) = 1 := by
-    rw [← GlobalTheory.PotIso.constFn_mul_c, Units.inv_mul, GlobalTheory.PotIso.constFn_one_c]
+    rw [← _root_.GlobalTheory.KeyPow.constFn_mul, Units.inv_mul, _root_.GlobalTheory.KeyPow.constFn_one]
   show D = g₀ * (rsT (constFn A₀.hom (m₀ ⁻¹ᵁ V i') ((a⁻¹ : kˣ) : k) * b i') (m₀ ⁻¹ᵁ (V i ⊓ V i')) -
     rsT (constFn A₀.hom (m₀ ⁻¹ᵁ V i) ((a⁻¹ : kˣ) : k) * b i) (m₀ ⁻¹ᵁ (V i ⊓ V i')))
   rw [rsT_mul, rsT_mul, GlobalTheory.KS.rsT_constFn _ (m₀.preimage_mono inf_le_right),
@@ -513,66 +473,14 @@ namespace GlobalTheory.KS.TwoPull
 
 variable {X Y Z : Scheme.{0}}
 
-theorem pull_pull (f : Z ⟶ Y) (g : Y ⟶ X) (h : Z ⟶ X) (e : f ≫ g = h) {U : X.Opens} {V : Y.Opens} {W : Z.Opens}
-    (e₁ : V ≤ g ⁻¹ᵁ U) (e₂ : W ≤ f ⁻¹ᵁ V) (e₃ : W ≤ h ⁻¹ᵁ U) (a : Γ(X, U)) :
-    (f.appLE V W e₂).hom ((g.appLE U V e₁).hom a) = (h.appLE U W e₃).hom a := by
-  subst e
-  exact congrArg (fun φ => φ.hom a) (Scheme.Hom.appLE_comp_appLE f g U V W e₁ e₂)
-
-theorem res_pull (φ : Y ⟶ X) {U : X.Opens} {V W : Y.Opens} (h : V ≤ φ ⁻¹ᵁ U) (h' : W ≤ V) (a : Γ(X, U)) :
-    resG Y h' ((φ.appLE U V h).hom a) = (φ.appLE U W (h'.trans h)).hom a :=
-  congrArg (fun q => q.hom a) (φ.appLE_map h (homOfLE h').op)
-
-theorem pull_res (φ : Y ⟶ X) {U U' : X.Opens} {V : Y.Opens} (h : V ≤ φ ⁻¹ᵁ U') (h' : U' ≤ U) (a : Γ(X, U)) :
-    (φ.appLE U' V h).hom (resG X h' a) = (φ.appLE U V (h.trans fun _ hy => h' hy)).hom a :=
-  congrArg (fun q => q.hom a) (φ.map_appLE h (homOfLE h').op)
-
-theorem app_res (φ : Y ⟶ X) {U U' : X.Opens} (h' : U' ≤ U) (a : Γ(X, U)) :
-    (φ.app U').hom (resG X h' a) = resG Y (fun _ hy => h' hy) ((φ.app U).hom a) := by
-  rw [Scheme.Hom.app_eq_appLE, Scheme.Hom.app_eq_appLE]
-  exact (pull_res φ _ _ _).trans (res_pull φ _ _ _).symm
-
-theorem id_pull {U : X.Opens} (h : U ≤ (𝟙 X : X ⟶ X) ⁻¹ᵁ U) (a : Γ(X, U)) :
-    ((𝟙 X : X ⟶ X).appLE U U h).hom a = a := by
-  have : (𝟙 X : X ⟶ X).appLE U U h = 𝟙 _ := by
-    rw [Scheme.Hom.appLE, Scheme.Hom.id_app]
-    exact (Category.id_comp _).trans (X.presheaf.map_id _)
-  rw [this]
-  rfl
-
-theorem spec_pull_inv {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (e : ⊤ ≤ spMap f ⁻¹ᵁ ⊤)
-    (r : R) :
-    ((spMap f).appLE ⊤ ⊤ e).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r) =
-      (Scheme.ΓSpecIso (CommRingCat.of R')).inv.hom (f r) := by
-  have h := congrArg (fun q => q.hom r) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom f))
-  have h2 : (spMap f).appLE ⊤ ⊤ e = (spMap f).appTop := (Scheme.Hom.app_eq_appLE (spMap f) (U := ⊤)).symm
-  rw [h2]
-  exact h.symm
-
-theorem pull_const {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (φ : Y ⟶ X) (p : X ⟶ Sp R)
-    (p' : Y ⟶ Sp R') (hφ : φ ≫ p = p' ≫ spMap f) {U : X.Opens} {V : Y.Opens} (h : V ≤ φ ⁻¹ᵁ U) (r : R) :
-    (φ.appLE U V h).hom (constFn p U r) = constFn p' V (f r) := by
-  unfold constFn
-  rw [← spec_pull_inv f le_top r]
-  exact (pull_pull φ p _ hφ _ _ le_top _).trans (pull_pull p' (spMap f) _ rfl _ _ _ _).symm
-
-theorem res_const {R : Type} [CommRing R] (q : X ⟶ Sp R) {U V : X.Opens} (h : V ≤ U) (a : R) :
-    resG X h (constFn q U a) = constFn q V a :=
-  res_pull q _ h _
-
-def twoPullConstantsRingHom {R : Type} [CommRing R] (q : X ⟶ Sp R) (U : X.Opens) : R →+* Γ(X, U) :=
-  (q.appLE ⊤ U (fun _ _ => trivial)).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
+alias res_pull := _root_.GlobalTheory.LB.resG_appLE
 
 theorem const_eq {R : Type} [CommRing R] (q : X ⟶ Sp R) (U : X.Opens) (a : R) :
-    constFn q U a = twoPullConstantsRingHom q U a := rfl
+    constFn q U a = _root_.GlobalTheory.KS.EpsDer.constHom q U a := rfl
 
 theorem dual_decomp {k : Type} [Field k] (x : DualNumber k) :
     x = algebraMap k (DualNumber k) x.fst + DualNumber.eps * algebraMap k (DualNumber k) x.snd := by
   ext <;> simp [TrivSqZeroExt.algebraMap_eq_inl]
-
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
 
 end GlobalTheory.KS.TwoPull
 
@@ -583,12 +491,12 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
   subst hpr
   have hsp : spMap (constHom ρ) =
       spMap (algebraMap k (DualNumber k)) ≫ spMap ((TrivSqZeroExt.fstHom k k k).toRingHom.comp ρ) := by
-    rw [← spMap_comp]; rfl
+    rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]; rfl
   have hpb : IsPullback pr B'.hom A₀.hom (spMap (algebraMap k (DualNumber k))) := by
     refine IsPullback.of_right ?_ hprA hm₀.1
     rw [← hsp]; exact hπ₂.1
   have hid : spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ spMap (algebraMap k (DualNumber k)) = 𝟙 _ := by
-    rw [← spMap_comp]
+    rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
     have : ((TrivSqZeroExt.fstHom k k k).toRingHom.comp (algebraMap k (DualNumber k))) = RingHom.id k := by
       ext x; simp
     rw [this]; simp [spMap]
@@ -618,10 +526,10 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
     have hle : m₀ ⁻¹ᵁ W ≤ j ⁻¹ᵁ (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W)) := by
       rw [← Scheme.Hom.comp_preimage, hjρ]; exact le_rfl
     have h1 := congrArg (j.appLE _ _ hle).hom hab
-    rw [map_add (f := _), map_mul, pull_const _ j B'.hom A₀.hom hjπ, pull_pull j π₁ m₀ hm _ _ le_rfl] at h1
+    rw [map_add (f := _), map_mul, _root_.GlobalTheory.KS.EpsDer.pull_const _ j B'.hom A₀.hom hjπ, _root_.GlobalTheory.KS.EpsDer.pull_pull j π₁ m₀ hm _ _ le_rfl] at h1
     have h2 : (j.appLE _ _ hle).hom ((pr.app (m₀ ⁻¹ᵁ W)).hom a) = a := by
       rw [Scheme.Hom.app_eq_appLE]
-      exact (pull_pull j pr (𝟙 _) hjρ (U := m₀ ⁻¹ᵁ W) (W := m₀ ⁻¹ᵁ W) le_rfl hle le_rfl a).trans (id_pull _ a)
+      exact (_root_.GlobalTheory.KS.EpsDer.pull_pull j pr (𝟙 _) hjρ (U := m₀ ⁻¹ᵁ W) (W := m₀ ⁻¹ᵁ W) le_rfl hle le_rfl a).trans (_root_.GlobalTheory.KS.EpsDer.id_pull _ a)
     have h3 : constFn A₀.hom (m₀ ⁻¹ᵁ W) ((TrivSqZeroExt.fstHom k k k).toRingHom DualNumber.eps) = 0 := by
       have : (TrivSqZeroExt.fstHom k k k).toRingHom DualNumber.eps = 0 := by simp
       rw [this, const_eq, map_zero]
@@ -649,14 +557,14 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
     refine uniq _ ((m₀.app W').hom (resG _ h f)) _ ((m₀.app W').hom (resG _ h f)) _ ?_
     have h0' : pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W') ≤ pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W) := fun _ hy => h hy
     have h1 := congrArg (resG _ h0') (hd W f)
-    rw [res_pull, map_add (f := _), map_mul, res_const] at h1
-    rw [← hd, pull_res]
+    rw [res_pull, map_add (f := _), map_mul, _root_.GlobalTheory.KS.EpsDer.res_const] at h1
+    rw [← hd, _root_.GlobalTheory.KS.EpsDer.pull_res]
     refine h1.trans ?_
-    rw [app_res m₀ h f]
-    exact congrArg₂ (· + ·) (app_res pr h0 _).symm (congrArg (_ * ·) (app_res pr h0 _).symm)
+    rw [_root_.GlobalTheory.KS.DerMor.res_app m₀ h f]
+    exact congrArg₂ (· + ·) (_root_.GlobalTheory.KS.DerMor.res_app pr h0 _).symm (congrArg (_ * ·) (_root_.GlobalTheory.KS.DerMor.res_app pr h0 _).symm)
   · refine uniq _ ((m₀.app W).hom (constFn P.A.hom W r)) _ (constFn A₀.hom _ (ρ r).fst) _ ?_
-    rw [← hd, pull_const ρ π₁ P.A.hom B'.hom hp, Scheme.Hom.app_eq_appLE, pull_const _ pr A₀.hom B'.hom hpb.w,
-      pull_const _ pr A₀.hom B'.hom hpb.w]
+    rw [← hd, _root_.GlobalTheory.KS.EpsDer.pull_const ρ π₁ P.A.hom B'.hom hp, Scheme.Hom.app_eq_appLE, _root_.GlobalTheory.KS.EpsDer.pull_const _ pr A₀.hom B'.hom hpb.w,
+      _root_.GlobalTheory.KS.EpsDer.pull_const _ pr A₀.hom B'.hom hpb.w]
     simp only [const_eq]
     rw [← map_mul, ← map_add (f := _)]
     exact congrArg _ (dual_decomp _)
@@ -665,7 +573,7 @@ theorem GlobalTheory.KS.TwoPull.exists_locDerK_of_two_pullbacks : ∀ (k : Type)
       constFn B'.hom (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W)) DualNumber.eps * pbT pr (d W f) (pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W))
     unfold pbT
     rw [dif_pos (hW W).le, dif_pos le_rfl, dif_pos (show pr ⁻¹ᵁ (m₀ ⁻¹ᵁ W) ≤ (pr ≫ m₀) ⁻¹ᵁ W from le_rfl), hd W f, Scheme.Hom.app_eq_appLE, Scheme.Hom.app_eq_appLE,
-      pull_pull pr m₀ (pr ≫ m₀) rfl]
+      _root_.GlobalTheory.KS.EpsDer.pull_pull pr m₀ (pr ≫ m₀) rfl]
 
 end
 end -- clump:auto
@@ -713,14 +621,6 @@ noncomputable section
 namespace GlobalTheory.ConnUnit
 open GlobalTheory.KS
 
-theorem constFn_mul {R : Type} [CommRing R] {X : Scheme.{0}} (q : X ⟶ Sp R) (O : X.Opens) (a b : R) :
-    constFn q O (a * b) = constFn q O a * constFn q O b := by
-  simp only [constFn, map_mul]
-
-theorem constFn_eps_sq {k : Type} [Field k] {X : Scheme.{0}} (q : X ⟶ Sp (DualNumber k)) (O : X.Opens) :
-    constFn q O DualNumber.eps * constFn q O DualNumber.eps = 0 := by
-  rw [← constFn_mul, DualNumber.eps_mul_eps]; simp only [constFn, map_zero]
-
 theorem rsT_resG {Y : Scheme.{0}} {U V : Y.Opens} (h : V ≤ U) (x : Γ(Y, U)) {Q : Y.Opens} (hQ : Q ≤ V) :
     rsT (resG Y h x) Q = rsT x Q := by
   rw [← rsT_of_le h, rsT_rsT h hQ]
@@ -729,12 +629,6 @@ theorem rsT_app {Y Z : Scheme.{0}} (f : Z ⟶ Y) (U : Y.Opens) (x : Γ(Y, U)) {Q
     rsT ((f.app U).hom x) Q = pbT f x Q := by
   rw [rsT_of_le hQ, pbT_of_le f hQ]
   rfl
-
-theorem pbT_pbT {X Y Z : Scheme.{0}} (f : Z ⟶ Y) (g : Y ⟶ X) {O₀ : X.Opens} {O₁ : Y.Opens} {O₂ : Z.Opens}
-    (h₁ : O₁ ≤ g ⁻¹ᵁ O₀) (h₂ : O₂ ≤ f ⁻¹ᵁ O₁) (s : Γ(X, O₀)) :
-    pbT f (pbT g s O₁) O₂ = pbT (f ≫ g) s O₂ := by
-  rw [pbT_of_le g h₁, pbT_of_le f h₂, pbT_of_le (f ≫ g) (h₂.trans (f.preimage_mono h₁))]
-  exact congrArg (fun φ => φ.hom s) (Scheme.Hom.appLE_comp_appLE f g O₀ O₁ O₂ h₁ h₂)
 
 theorem constFn_top_appTop {R : Type} [CommRing R] {X : Scheme.{0}} (q : X ⟶ Sp R) (x : Γ(Sp R, ⊤)) :
     constFn q ⊤ ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom x) = q.appTop.hom x := by
@@ -753,7 +647,7 @@ theorem preimage_le_of_eps {k : Type} [Field k] {B X : Scheme.{0}} (q : B ⟶ Sp
   rw [pbT, dite_eq_right h, pbT_one π₂ le_rfl] at h1
   have hu : (1 + constFn q (π₂ ⁻¹ᵁ W) DualNumber.eps * e W 1) *
       (1 - constFn q (π₂ ⁻¹ᵁ W) DualNumber.eps * e W 1) = 1 := by
-    linear_combination (-(e W 1) ^ 2) * constFn_eps_sq q (π₂ ⁻¹ᵁ W)
+    linear_combination (-(e W 1) ^ 2) * _root_.GlobalTheory.KS.DerMorK.eps_sq q (π₂ ⁻¹ᵁ W)
   rw [← h1, zero_mul] at hu
   apply h
   intro y hy
@@ -815,7 +709,7 @@ theorem unit_mul_one_add_eps : ∀ (k : Type) [Field k] (R : Type) [CommRing R] 
     preimage_le_of_eps B'.hom π₁ π₂ (fun W f => pbT pr (ed W f) (π₂ ⁻¹ᵁ W)) hid
   have hpre : ∀ U, π₂ ⁻¹ᵁ U = pr ⁻¹ᵁ (m₀ ⁻¹ᵁ U) := fun U => by rw [← hpr]; rfl
   have hE2 : ∀ O : B'.left.Opens, constFn B'.hom O DualNumber.eps * constFn B'.hom O DualNumber.eps = 0 :=
-    fun O => constFn_eps_sq B'.hom O
+    fun O => _root_.GlobalTheory.KS.DerMorK.eps_sq B'.hom O
   have hchart : ∀ i, π₂ ⁻¹ᵁ V i ≤ ((P.L.pull π₂).div (P.L.pull π₁)).U (fun _ => jj i, fun _ => jj i) :=
     fun i y hy => ⟨Set.mem_iInter.2 fun _ => hVU i hy, Set.mem_iInter.2 fun _ => hVU i (hle _ hy)⟩
   have hcovB : (⊤ : B'.left.Opens) ≤ ⨆ i, π₂ ⁻¹ᵁ V i := by
@@ -854,7 +748,7 @@ theorem unit_mul_one_add_eps : ∀ (k : Type) [Field k] (R : Type) [CommRing R] 
     have rel := isGen_rel P.L π₁ π₂ w hw (jj i) (jj i') (π₂ ⁻¹ᵁ V i ⊓ π₂ ⁻¹ᵁ V i')
       (hQ1.trans (π₁.preimage_mono hVV)) (hQ2.trans (π₂.preimage_mono hVV))
     have h := hid (V i ⊓ V i') (rsT (P.L.g (jj i) (jj i')).val (V i ⊓ V i'))
-    rw [hcoc i i', pbT_mul, pbT_sub, pbT_pbT pr m₀ (m₀.preimage_mono hVV) (hpre _).le, hpr,
+    rw [hcoc i i', pbT_mul, pbT_sub, _root_.GlobalTheory.KS.InvField.pbT_pbT pr m₀ (m₀.preimage_mono hVV) (hpre _).le, hpr,
       pbT_rsT pr (m₀.preimage_mono inf_le_right) (hpre _).le, pbT_rsT pr (m₀.preimage_mono inf_le_left) (hpre _).le,
       pbT_rsT π₁ hVV (hle _), pbT_rsT π₂ hVV le_rfl] at h
     have hQeq : π₂ ⁻¹ᵁ (V i ⊓ V i') = π₂ ⁻¹ᵁ V i ⊓ π₂ ⁻¹ᵁ V i' := rfl
@@ -1262,13 +1156,6 @@ theorem prod_one_add_eps {S : Type} [CommRing S] (ee : S) (hee : ee * ee = 0) {I
     rw [Finset.prod_insert ha, Finset.sum_insert ha, ih]
     linear_combination (b a * ∑ j ∈ s, b j) * hee
 
-theorem zpow_sum_u {G I : Type} [CommGroup G] (a : G) (s : Finset I) (f : I → ℤ) :
-    a ^ (∑ i ∈ s, f i) = ∏ i ∈ s, a ^ f i := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert b s hb ih => rw [Finset.sum_insert hb, Finset.prod_insert hb, zpow_add, ih]
-
 theorem prod3 {G : Type} [CommGroup G] (f g h : Fin 4 → G) (n : Fin 4 → ℤ) :
     ∏ j, (f j * (g j)⁻¹ * h j) ^ n j = (∏ j, f j ^ n j) * (∏ j, g j ^ n j)⁻¹ * ∏ j, h j ^ n j := by
   simp only [mul_zpow, inv_zpow, Finset.prod_mul_distrib, Finset.prod_inv_distrib]
@@ -1447,7 +1334,7 @@ theorem core {R : Type} [CommRing R] {k : Type} [Field k] [CharZero k] (A : Over
       fun j => (mul_inv_cancel_left κu _).symm
     rw [Finset.prod_congr rfl fun j _ => by rw [hsplit j]]
     simp only [mul_zpow, Finset.prod_mul_distrib]
-    rw [← zpow_sum_u, hes, zpow_natCast, Units.val_mul, hκu, Units.coe_prod]
+    rw [← _root_.GlobalTheory.SharpFamRel.zpow_finsetSum, hes, zpow_natCast, Units.val_mul, hκu, Units.coe_prod]
     simp only [fun j => val_zpow_eps E hEE _ (a j) (hEj j) (es j)]
     rw [← prod_one_add_eps E hEE Finset.univ (fun j => (es j : Z.presheaf.stalk z) * a j)]
     congr 1
@@ -1506,7 +1393,7 @@ theorem uconn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
           (TrivSqZeroExt.inr ((2 * (e : k))⁻¹))) * sval σ' (x ≫ π₂) z J) := by
     intro e
     by_cases he : 1 ≤ e
-    · obtain ⟨V, ed, pb, hconn, -, hF⟩ := GlobalTheory.T.heatOperator_connection_closedFibre E H k m d t P gam hmon hlin hab Y n' v' dd hdd D q hq h hB
+    · obtain ⟨V, ed, pb, hconn, -, hF⟩ := _root_.GlobalTheory.HeatConn.heat_connection E H k m d t P gam hmon hlin hab Y n' v' dd hdd D q hq h hB
         hdef hΘ ρ hρ e he A₀ m₀ hA₀
       obtain ⟨hA, κ, hκ⟩ := GlobalTheory.T.connection_closedFibre_eq_derivation_identification k (ChartRing k m d) P.D.toPre.P ρ B' π₁ π₂ hπ₁ hπ₂ hcl A₀ m₀ hA₀ pr hpr
         hpr' V h.j ed pb hconn w hw
@@ -1557,8 +1444,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.RigChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.heatOperator_symbolZero_eq_connection : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k : Type) [Field k] [CharZero k] (m d : ℕ) (t : SAB H (Sp (ChartRing k m d))) (P : PELUnif (maximalIdeal (ChartRing k m d)) t) (gam : Fin m → LinearMap.BilinForm ℤ P.D.toPre.X), IsMonomial P.D.toPre (bdParam k m d) gam → LinearIndependent ℤ gam → (∀ p : Sp (ChartRing k m d), p ∈ abLocus t.G ↔ ∏ i, bdParam k m d i ∉ p.asIdeal) → letI := H.starRing; ∀ (Y : Ray P.oD) (n' : ℕ) (v' : Module.Basis (Fin n') (ChartRing k m d) (TanM (𝟙 (Sp (ChartRing k m d))) Y.H)) (dd : Fin n' → Fld Y.H.left), (∀ a, IsInv Y.H (v' a) (dd a)) → ∀ (D : Derivation ℤ (ChartRing k m d) (ChartRing k m d)) (q : Fin m → ChartRing k m d), (∀ i, D (bdParam k m d i) = q i * bdParam k m d i) → ∀ h : Heat Y.H Y.q.left P.D.toPre.P.L dd ⇑D, IsBasic Y h → HasDefect Y h (fun _ _ _ => 0) → (∀ a b, h.Θ a b ∈ maximalIdeal (ChartRing k m d)) → ∀ ρ : ChartRing k m d →+* DualNumber k, (∀ r, ρ r = TrivSqZeroExt.inl (MvPowerSeries.constantCoeff r) + TrivSqZeroExt.inr (MvPowerSeries.constantCoeff (D r))) → ∀ (B' : Over (Sp (DualNumber k))) [GrpObj B'] (π₁ π₂ : B'.left ⟶ P.D.toPre.P.A.left) (c' : P.D.toPre.X → (Sp (DualNumber k) ⟶ B'.left)), IsGrpPullback B' P.D.toPre.P.A (spMap ρ) π₁ → IsGrpPullback B' P.D.toPre.P.A (spMap (constHom ρ)) π₂ → (∀ (Z : Scheme.{0}) (x : Z ⟶ B'.left) (y : Z ⟶ Sp k), x ≫ B'.hom = y ≫ spMap (TrivSqZeroExt.fstHom k k k).toRingHom → x ≫ π₁ = x ≫ π₂) → (∀ y, c' y ≫ B'.hom = 𝟙 _ ∧ c' y ≫ π₁ = spMap ρ ≫ (P.D.toPre.c y).left ∧ c' y ≫ π₂ = spMap (constHom ρ) ≫ (P.D.toPre.c y).left) → ∀ w : LB.Iso (P.D.toPre.P.L.pull π₁) (P.D.toPre.P.L.pull π₂), w.IsGen → ∃ (κ : ℕ → (DualNumber k)ˣ) (ℓ : ℕ → P.D.toPre.X →+ k), ∀ (e : ℕ), 1 ≤ e → ∀ (α : P.D.toPre.X) (σ σ' : P.D.toPre.SecB e α), TActs Y h e α σ σ' → ∀ (Z : Scheme.{0}) (x : Z ⟶ B'.left) (xs : Fin 4 → (Z ⟶ B'.left)), (∀ j, xs j ≫ π₁ = (x ≫ π₁) ≫ P.D.toPre.famφB α j ∧ xs j ≫ π₂ = (x ≫ π₂) ≫ P.D.toPre.famφB α j ∧ xs j ≫ B'.hom = x ≫ B'.hom) → ∀ z J, Good P.D.toPre.P.L z J → sval σ (x ≫ π₁) z J * (∏ j, gm (xs j) z _ (w.s (fun _ => J (xs j ≫ π₂), fun _ => J (xs j ≫ π₁))) ^ DegPre.famε e j).val = gs (x ≫ B'.hom) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (DualNumber k))).inv.hom ((κ e).val * (1 + TrivSqZeroExt.inr (ℓ e α)))) * (sval σ (x ≫ π₂) z J + gs (x ≫ B'.hom) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of (DualNumber k))).inv.hom (TrivSqZeroExt.inr ((2 * (e : k))⁻¹))) * sval σ' (x ≫ π₂) z J) := by
-  first | exact @GlobalTheory.HeatUConn.uconn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorSymbolZeroEqConnectionStatement =====

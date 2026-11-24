@@ -72,6 +72,7 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+import Formalism.LocalToGlobal.Columns.BaseLemmas
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.Divisibility.DivisibilityProofs.TuplesP
 
@@ -577,7 +578,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ColumnPrimeToBasePrimePreservesCommonPlace =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTypePrimeUnderEq =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTypePrimeUnderEq", "h": "module\n\npublic import Formalism.LocalToGlobal.Columns.AbelianHostFieldConditions\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTypePrimeUnderEq", "h": "module\n\npublic import Formalism.LocalToGlobal.Columns.AbelianHostFieldConditions\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.Columns.BaseLemmas\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -598,16 +599,6 @@ theorem conjO_algebraMap (X : Fields) (hX : X.Ok) (x : 𝓞 X.F) :
   have : ((algebraMap (𝓞 X.F) (𝓞 X.E) x : 𝓞 X.E) : X.E) = algebraMap X.F X.E (x : X.F) := rfl
   rw [this]
   exact hX.star_F _
-
-theorem mem_divs_iff {A : Type} [CommRing A] [IsDedekindDomain A] {a : A} (ha : a ≠ 0) (P : HeightOneSpectrum A) :
-    P ∈ divs a ↔ a ∈ P.asIdeal := by
-  have hfin : {P : HeightOneSpectrum A | a ∈ P.asIdeal}.Finite := by
-    have h0 : Ideal.span {a} ≠ ⊥ := by simpa using ha
-    refine (Ideal.finite_factors h0).subset fun v hv => ?_
-    exact Ideal.dvd_span_singleton.2 hv
-  unfold divs
-  rw [dite_eq_left hfin, Set.Finite.mem_toFinset]
-  rfl
 
 def conjPrime (X : Fields) (P : HeightOneSpectrum (𝓞 X.E)) : HeightOneSpectrum (𝓞 X.E) where
   asIdeal := P.asIdeal.comap X.conjO
@@ -641,11 +632,11 @@ theorem exists_vG_under : ∀ (X : Fields) (Pr : Primes X), X.Ok → Pr.Ok → �
     have h1 := hPr.piG_norm i
     rw [h, mul_zero] at h1
     exact hg0 h1.symm
-  have hvG : ∀ v, v ∈ Pr.vG i ↔ X.conjO (Pr.piG i) ∈ v.asIdeal := fun v => mem_divs_iff hc0 v
+  have hvG : ∀ v, v ∈ Pr.vG i ↔ X.conjO (Pr.piG i) ∈ v.asIdeal := fun v => _root_.Formalism.L2.Col.mem_divs hc0 v
   rw [← hPr.piG_norm i] at hP
   rcases P.isPrime.mem_or_mem hP with h | h
   · refine ⟨conjPrime X P, (hvG _).2 ?_, under_conjPrime X hX P⟩
-    rw [mem_conjPrime, conjO_conjO]
+    rw [mem_conjPrime, _root_.Formalism.L2.Col.Fields.conjO_invol]
     exact h
   · exact ⟨P, (hvG P).2 h, rfl⟩
 
@@ -690,10 +681,6 @@ open GlobalTheory.Mem.Col2 (afIso mem_rInt_iff mem_suppAt_iff)
 
 section Cut
 
-theorem apply_mul (a b : FiniteAdeleRing (𝓞 E) E) (P : HeightOneSpectrum (𝓞 E)) : (a * b) P = a P * b P := rfl
-
-theorem apply_one (P : HeightOneSpectrum (𝓞 E)) : (1 : FiniteAdeleRing (𝓞 E) E) P = 1 := rfl
-
 theorem int_val {x : (AfE F E)ˣ} (hx : x ∈ intU F E) (P : HeightOneSpectrum (𝓞 E)) :
     Valued.v (afIso F E (x : AfE F E) P) ≤ 1 :=
   (mem_rInt_iff F E _).1 hx.1 P
@@ -704,7 +691,7 @@ theorem int_inv {x : (AfE F E)ˣ} (hx : x ∈ intU F E) (P : HeightOneSpectrum (
 
 theorem afIso_mul_inv (x : (AfE F E)ˣ) (P : HeightOneSpectrum (𝓞 E)) :
     afIso F E (x : AfE F E) P * afIso F E ((x⁻¹ : (AfE F E)ˣ) : AfE F E) P = 1 := by
-  rw [← apply_mul, ← map_mul, Units.mul_inv, map_one, apply_one]
+  rw [← _root_.Formalism.UG.P.afsplit_mul_apply, ← map_mul, Units.mul_inv, map_one, _root_.Formalism.UG.P.afsplit_one_apply]
 
 theorem eq_of_afIso {y y' : (AfE F E)ˣ} (h : ∀ P, afIso F E (y : AfE F E) P = afIso F E (y' : AfE F E) P) : y = y' :=
   Units.ext ((afIso F E).injective (FiniteAdeleRing.ext _ h))
@@ -715,14 +702,14 @@ def cutU (x : (AfE F E)ˣ) (hx : x ∈ intU F E) (S : Set (HeightOneSpectrum (�
   val_inv := by
     rw [← map_mul, (afIso F E).symm_apply_eq, map_one]
     refine FiniteAdeleRing.ext _ fun P => ?_
-    rw [apply_mul, cutA_apply, cutA_apply, apply_one]
+    rw [_root_.Formalism.UG.P.afsplit_mul_apply, cutA_apply, cutA_apply, _root_.Formalism.UG.P.afsplit_one_apply]
     split_ifs
     · exact afIso_mul_inv x P
     · exact one_mul 1
   inv_val := by
     rw [← map_mul, (afIso F E).symm_apply_eq, map_one]
     refine FiniteAdeleRing.ext _ fun P => ?_
-    rw [apply_mul, cutA_apply, cutA_apply, apply_one]
+    rw [_root_.Formalism.UG.P.afsplit_mul_apply, cutA_apply, cutA_apply, _root_.Formalism.UG.P.afsplit_one_apply]
     split_ifs
     · rw [mul_comm]; exact afIso_mul_inv x P
     · exact one_mul 1
@@ -754,7 +741,7 @@ theorem cutU_mem_intU (x : (AfE F E)ˣ) (hx : x ∈ intU F E) (S : Set (HeightOn
 theorem cutU_union (x : (AfE F E)ˣ) (hx : x ∈ intU F E) {S S' : Set (HeightOneSpectrum (𝓞 E))} (hd : Disjoint S S') :
     cutU x hx (S ∪ S') = cutU x hx S * cutU x hx S' := by
   refine eq_of_afIso fun P => ?_
-  rw [Units.val_mul, map_mul, apply_mul, afIso_cutU, afIso_cutU, afIso_cutU]
+  rw [Units.val_mul, map_mul, _root_.Formalism.UG.P.afsplit_mul_apply, afIso_cutU, afIso_cutU, afIso_cutU]
   by_cases h : P ∈ S
   · have h' : P ∉ S' := Set.disjoint_left.1 hd h
     simp [h, h']
@@ -764,7 +751,7 @@ theorem cutU_univ (x : (AfE F E)ˣ) (hx : x ∈ intU F E) : cutU x hx Set.univ =
   eq_of_afIso fun P => by rw [afIso_cutU]; simp
 
 theorem cutU_empty (x : (AfE F E)ˣ) (hx : x ∈ intU F E) : cutU x hx ∅ = 1 :=
-  eq_of_afIso fun P => by rw [afIso_cutU, Units.val_one, map_one, apply_one]; simp
+  eq_of_afIso fun P => by rw [afIso_cutU, Units.val_one, map_one, _root_.Formalism.UG.P.afsplit_one_apply]; simp
 
 theorem cutU_mem_inertAt (x : (AfE F E)ˣ) (hx : x ∈ intU F E) (v : HeightOneSpectrum (𝓞 F)) :
     cutU x hx {P | P.under (𝓞 F) = v} ∈ inertAt E v :=
@@ -835,7 +822,7 @@ theorem map_eq_one_of_one_at_ramified : ∀ (F E L : Type) [Field F] [NumberFiel
       rw [e, cutU_union x hx hd, map_mul, ih, mul_one]
       by_cases hq : v ∈ Qprime ξ
       · have e1 : cutU x hx {P | P.under (𝓞 F) = v} = 1 := eq_of_afIso fun P => by
-          rw [afIso_cutU, Units.val_one, map_one, apply_one]
+          rw [afIso_cutU, Units.val_one, map_one, _root_.Formalism.UG.P.afsplit_one_apply]
           split_ifs with hP
           · have h2 : P.under (𝓞 F) = v := hP
             exact h1 P (by rw [h2]; exact hq)

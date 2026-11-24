@@ -109,7 +109,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem UpperTheory.Zero.LLC.IsRecT.recLaws : type_of% (@UpperTheory.One.M.recLawsH_alt) := @UpperTheory.One.M.recLawsH_alt
+alias UpperTheory.Zero.LLC.IsRecT.recLaws := _root_.UpperTheory.One.M.recLawsH_alt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AlIsRecrecLaws =====

@@ -74,6 +74,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCM
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsCompactAdeleRingModNumberField
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
@@ -86,7 +87,7 @@ import Development.WeilBound.ThetaLifts.SmallCones.WittOf
 -- Members: Development.WeilBound.ThetaLifts.SmallCones.ConstantTermRationalUnipotentInvariant, Development.WeilBound.ThetaLifts.SmallCones.ContinuousEvI, Development.WeilBound.ThetaLifts.SmallCones.Kernel, Development.WeilBound.ThetaLifts.SmallCones.ThetaExp
 
 -- ===== clump member: Development.WeilBound.ThetaLifts.SmallCones.ConstantTermRationalUnipotentInvariant =====
--- clump-header: {"m": "Development.WeilBound.ThetaLifts.SmallCones.ConstantTermRationalUnipotentInvariant", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SmallCones.KerPol\nimport Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneAd\nimport Development.WeilBound.ThetaLifts.SmallCones.ExpAlg\nimport Development.WeilBound.ThetaLifts.SmallCones.FourierUniq\npublic import Development.WeilBound.ThetaLifts.SmallCones.KerUni\nimport Development.WeilBound.ThetaLifts.SmallCones.MatCancel\npublic import Development.WeilBound.ThetaLifts.TowerModels.PlaneForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\n\n"}
+-- clump-header: {"m": "Development.WeilBound.ThetaLifts.SmallCones.ConstantTermRationalUnipotentInvariant", "h": "module\n\npublic import Development.WeilBound.ThetaLifts.SmallCones.KerPol\nimport Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.PlaneAd\nimport Development.WeilBound.ThetaLifts.SmallCones.ExpAlg\nimport Development.WeilBound.ThetaLifts.SmallCones.FourierUniq\npublic import Development.WeilBound.ThetaLifts.SmallCones.KerUni\nimport Development.WeilBound.ThetaLifts.SmallCones.MatCancel\npublic import Development.WeilBound.ThetaLifts.TowerModels.PlaneForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCM\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -176,10 +177,6 @@ theorem MeanOK.sum (h : MeanOK σ W H' μ 𝓕) {ι : Type} [Countable ι] {f : 
 theorem MeanOK.const (h : MeanOK σ W H' μ 𝓕) (c : ℂ) : ∫ _x in 𝓕, c ∂μ = c := by
   rw [setIntegral_const, Measure.real, h.one, ENNReal.toReal_one, one_smul]
 
-theorem exists_psi {ψ : AddChar (AF F) ℂ} (h : IsStd ψ) : ∃ a, ψ a ≠ 1 := by
-  obtain ⟨a, ha⟩ := DFunLike.ne_iff.1 (std_ne_one h)
-  exact ⟨a, by simpa using ha⟩
-
 theorem bf0 {R : Type} [CommRing R] {c : R →+* R} {J : Matrix (Fin n) (Fin n) R} (u) : bf c J u 0 = 0 := by
   simpa using bf_smul_r (c := c) (J := J) 0 u 0
 
@@ -223,7 +220,7 @@ theorem constant_term_anisotropic_integral_zero (hm : MeanOK σ W H' μ 𝓕) (h
     (hi : ∀ u ∈ unip σ W H', ∀ Φ ∈ schA F (Fin n × Fin d), e₀ (om (1, u) Φ) = e₀ Φ) {x : Fin n → E} (hx : form σ X.J x x ≠ 0) {Φ}
     (hΦ : Φ ∈ schA F (Fin n × Fin d)) : ∫ u in 𝓕, tm B M om H' e₀ (vecMulVec x H'.y) Φ u ∂μ = 0 := by
   have h := hp.base.std
-  obtain ⟨a, ha⟩ := exists_psi h
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.StdCharWeilDatum.exists_ne_one h
   have hq : σ (form σ X.J x x) = form σ X.J x x := by
     rw [PositivityTheory.ThKG.Tow.Pln.form_swap hp.base.cm (ε := 1) (fun i j => by rw [hp.herm.herm, one_mul]), one_mul]
   set c : AE F E := algebraMap (AF F) (AE F E) a * inclR (F := F) (AF F) (form σ X.J x x)⁻¹ with hc
@@ -268,7 +265,7 @@ theorem tA_zero (hm : MeanOK σ W H' μ 𝓕) (hp : IsPair B M χX χW om r s r'
     (hi : ∀ u ∈ unip σ W H', ∀ Φ ∈ schA F (Fin n × Fin d), e (om (1, u) Φ) = e Φ) {w : Fin d₁ → E} (hw : w ≠ 0) {Φ}
     (hΦ : Φ ∈ schA F (Fin n × Fin d)) : ∫ u in 𝓕, tm B M om H' e (vA H.y H'.y H'.ι (H.x, w)) Φ u ∂μ = 0 := by
   have hψ := hp.base.std
-  obtain ⟨a, ha⟩ := exists_psi hψ
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.StdCharWeilDatum.exists_ne_one hψ
   obtain ⟨z₀, hz₀⟩ : ∃ z, bf σ.toRingHom W.J (H'.ι *ᵥ z) (H'.ι *ᵥ w) ≠ 0 := by
     by_contra h0
     push Not at h0
@@ -500,8 +497,6 @@ variable {n d n₁ d₁ m : ℕ} {B : Base F E} {X : Spc F E n} {W : Spc F E d} 
 variable {H : Plane E n n₁} {H' : Plane E d d₁} {M : Model σ X W} {χX χW : Chr F E} {om : Rep σ X W} {r s r' s' i₀ i₁ j₀ j₁ : ℕ}
   {μ : Measure (unip σ W H')} {𝓕 : Set (unip σ W H')} {M₁ : Model σ X W₁} {e₀ : Fn F n d →ₗ[ℂ] Fn F n d₁}
 
-theorem countable_E : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-
 theorem pair_low (hP : PairEx) (hL : Low) (hp : IsPair B M χX χW om r s r' s') (hH' : H'.IsAdapted σ B W W₁ i₀ i₁)
     (hM₁ : M₁.IsGood B.ψ) : ∃ om₁, IsPair B M₁ χX χW om₁ r s (r' - 1) (s' - 1) :=
   (hP F E σ B hp.base n d₁ X W₁ r s _ _ hp.herm ((hL F E σ B d d₁ W W₁ H' i₀ i₁ r' s' hp.base hH').2 hp.skew).2.2).2 χX χW hp.hX hp.hW
@@ -524,7 +519,7 @@ theorem sum0 (hS : Slice) (hA : EvAdm) (hm : MeanOK σ W H' μ 𝓕) (hp : IsPai
     (hC : ∀ Φ ∈ schA F _, HasSum (fun t => C * thetaSum F (e₀ (M.co.rho B.ψ (incM F (vL n H'.y t)) Φ))) (thetaSum F Φ)) {Φ}
     (hΦ : Φ ∈ schA F (Fin n × Fin d)) :
     HasSum (fun x => C * ∫ u in 𝓕, tm B M om H' e₀ (vecMulVec x H'.y) Φ u ∂μ) (∫ u in 𝓕, thetaSum F (om (1, u.1) Φ) ∂μ) := by
-  have := countable_E (E := E)
+  have := _root_.Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableE (E := E)
   obtain ⟨m, b, z, hP⟩ := pol0 (F := F) (herm_det hp.herm) h'
   obtain ⟨β, h1, h2⟩ := slice_unif hS hp.base hp.good hM₁ he hP.toDual hΦ
   simp only [← integral_const_mul]
@@ -560,7 +555,7 @@ theorem constant_term_cone_integral_eq (hA : EvAdm) (hm : MeanOK σ W H' μ 𝓕
     (hc : c ≠ 0) (hC : ∀ Φ ∈ schA F _, HasSum (fun t => C * thetaSum F (eX (M₁.co.rho B.ψ (incM F (vR d₁ H.y t)) Φ))) (thetaSum F Φ))
     (hce : ∀ Φ ∈ schA F _, eX (e₀ Φ) = c • e Φ) {Φ} (hΦ : Φ ∈ schA F (Fin n × Fin d)) :
     ∫ u in 𝓕, tm B M om H' e₀ (vecMulVec H.x H'.y) Φ u ∂μ = C * c * thetaSum F (e (M.co.rho B.ψ (shiftA H H' 1) Φ)) := by
-  have := countable_E (E := E)
+  have := _root_.Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableE (E := E)
   have hψ := hp.base.std
   have hi : ∀ u ∈ unip σ W H', ∀ Φ ∈ schA F (Fin n × Fin d), e (om (1, u) Φ) = e Φ := fun u hu Φ hΦ =>
     smul_right_injective _ hc (by simp only [← hce _ hΦ, ← hce _ (om_mem hp _ hΦ), hi₀ u hu Φ hΦ])

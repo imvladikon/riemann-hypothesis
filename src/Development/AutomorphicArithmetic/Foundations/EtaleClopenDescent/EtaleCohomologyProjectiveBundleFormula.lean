@@ -7,6 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeEtaleShe
 public import Development.AutomorphicArithmetic.BlowupCategories.SpanScale
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernClassTateTwistCocycleUniqueNaturalAddiStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.FirstChernClassEqZeroOfIsTrivialized
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankTwo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupHypercohomologyPullbackStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.MayerVietorisConnectingCupPullback
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.MayerVietorisConnectingExistsUniqueAdditiveExact
@@ -27,7 +28,6 @@ public import Development.AutomorphicArithmetic.CommutativeAlgebra.IsIsoStackPro
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjBundleFormulaIffPglForm
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankOneOfHomotopyInvarian
 public import Development.AutomorphicArithmetic.BlowupCategories.AffC
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankTwo
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.PullCupPowEqCupPowPull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.LerayHirschOneIffTwistEquiv
@@ -78,6 +78,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
+import Development.AutomorphicArithmetic.CupPullbacks.TwoChart
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 
@@ -226,7 +227,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ChernClassPullbackBlowupFirstLocusEqZero =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.ChernClassPullbackBlowupSecondLocusEq =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.ChernClassPullbackBlowupSecondLocusEq", "h": "module\n\npublic import Development.AutomorphicArithmetic.BlowupCategories.SpanScale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernClassTateTwistCocycleUniqueNaturalAddiStatement\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.FirstChernClassEqZeroOfIsTrivialized\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.ChernClassPullbackBlowupSecondLocusEq", "h": "module\n\npublic import Development.AutomorphicArithmetic.BlowupCategories.SpanScale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernClassTateTwistCocycleUniqueNaturalAddiStatement\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.FirstChernClassEqZeroOfIsTrivialized\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankTwo\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -239,18 +240,13 @@ namespace UpperTheory.LineUnitTrivialization
 private def arr {a : Act} {E : Spc} {U : Scheme.{0}} (x : Sx (Sp E a) 1 U) : a.G.obj Γ(U, ⊤) :=
   (show ComposableArrows (Ob a Γ(U, ⊤)) 1 from x.2).hom.1
 
-private theorem det_scalar {A : Type} [CommRing A] (u : Aˣ) :
-    Matrix.GeneralLinearGroup.det (Matrix.GeneralLinearGroup.scalar (Fin 1) u) = u := by
-  ext
-  simp
-
 private theorem lineUnit_line {a : Act} {E : Spc} (χ : a.G ⟶ gmF) {U : Scheme.{0}} (x : Sx (Sp E a) 1 U) :
     lineUnit (Sp.line E χ) x = (show (Γ(U, ⊤))ˣ from χ.app Γ(U, ⊤) (arr x)) :=
-  det_scalar _
+  _root_.UpperTheory.MayerVietorisKummerChernClass.det_scalar1 _
 
 private theorem lineUnit_map {a b : Act} {E : Spc} (φ : Act.Hom a b) (χ : b.G ⟶ gmF) {U : Scheme.{0}} (x : Sx (Sp E a) 1 U) :
     lineUnit (Sp.map E φ ≫ Sp.line E χ) x = (show (Γ(U, ⊤))ˣ from χ.app Γ(U, ⊤) (φ.g.app Γ(U, ⊤) (arr x))) :=
-  det_scalar _
+  _root_.UpperTheory.MayerVietorisKummerChernClass.det_scalar1 _
 
 private def chiM (N : ℕ) (Q : Pred (BC N)) : ((BC N).sub Q).G ⟶ gmF where
   app A := GrpCat.ofHom (MonoidHom.snd Aˣ Aˣ / MonoidHom.fst Aˣ Aˣ)
@@ -375,7 +371,7 @@ private theorem ht_cast_injective (q : ℕ) {E : Spc} {n i n' i' : ℤ} (h1 : n 
 
 private theorem pull_cup_commutative_algebra (q : ℕ) {E E' : Spc} (s : E ⟶ E') {n m i j : ℤ} (x : Ht q E' n i) (y : Ht q E' m j) :
     pull _ s _ _ (cup q x y) = cup q (pull _ s _ _ x) (pull _ s _ _ y) :=
-  GlobalTheory.T.cup_hypercohomologyPullback _ _ s _ x y
+  _root_.GlobalTheory.EtC.Pair.cup_pull _ _ s _ x y
 
 private theorem lhmv_phi_add (q : ℕ) {X E : Spc} (π : X ⟶ E) {m : ℕ} (d e : Fin m → ℤ) (c : ∀ j, Ht q X (d j) (e j))
     (n i : ℤ) (a b : ∀ j, Ht q E (n - d j) (i - e j)) :
@@ -974,10 +970,7 @@ private theorem eqv_comp {R : Type} [CommRing R] {X Y Z : Spc} {f : X ⟶ Y} {g 
   rw [e]
   exact (hf n).comp (hg n)
 
-private theorem eqv_iso {R : Type} [CommRing R] {X Y : Spc} (f : X ⟶ Y) [IsIso f] (F : Shv R) : Eqv R f F := fun n => by
-  refine Function.bijective_iff_has_inverse.2 ⟨pull R (inv f) F n, fun x => ?_, fun x => ?_⟩
-  · rw [← pull_comp, IsIso.inv_hom_id, pull_id]
-  · rw [← pull_comp, IsIso.hom_inv_id, pull_id]
+private alias eqv_iso := _root_.GlobalTheory.EtC.eqv_of_isIso
 
 private theorem inv_sp {E : Spc} (hE : Inv q E) (a : Act) : Inv q (Sp E a) :=
   fun U ⟨x⟩ => hE U ⟨((Sp.fst E a).app _).app _ x⟩
@@ -1235,7 +1228,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.LeraHirschChernPowersOnUnitChart =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.LeraHirschUnitOnBlowupChart =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.LeraHirschUnitOnBlowupChart", "h": "module\n\npublic import Development.AutomorphicArithmetic.BlowupCategories.SpanScale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.AffineLineActionFstTwistEquiv\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.IsIsoStackProductPairOfBijective\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.LerayHirschOneIffTwistEquiv\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjBundleFormulaIffPglForm\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankOneOfHomotopyInvarian\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AutomorphicArithmetic.BlowupCategories.AffC\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.LeraHirschUnitOnBlowupChart", "h": "module\n\npublic import Development.AutomorphicArithmetic.BlowupCategories.SpanScale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.AffineLineActionFstTwistEquiv\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.IsIsoStackProductPairOfBijective\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.LerayHirschOneIffTwistEquiv\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjBundleFormulaIffPglForm\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankOneOfHomotopyInvarian\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AutomorphicArithmetic.BlowupCategories.AffC\nimport Development.AutomorphicArithmetic.CupPullbacks.TwoChart\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1350,11 +1343,6 @@ private def tVec (x : (aC N Q).D.obj A) : Um 1 A :=
 
 end
 
-private theorem unimodularRow_one_isUnit {A : Type} [CommRing A] (w : Um 1 A) : IsUnit (w.1 0) := by
-  have h := w.2
-  rw [Set.range_unique] at h
-  exact Ideal.span_singleton_eq_top.1 h
-
 private theorem join_last {N : ℕ} {A : Type} [CommRing A] (x : Um N A × Um 2 A) :
     (Um.join x).1 (Fin.last N) = x.2.1 1 := by
   simp [Um.join]
@@ -1375,11 +1363,11 @@ private def mkA {N : ℕ} {Q : Pred (XC N)} (i : Fin N) {A : CommRingCat.{0}} (v
     (aC N Q).D.obj A :=
   Subtype.mk (Subtype.mk
     ((v, ⟨![r * w.1 0 * Ring.inverse (v.1 i), w.1 0],
-      Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨1, rfl⟩) (unimodularRow_one_isUnit w)⟩) : Um N A × Um 2 A)
+      Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨1, rfl⟩) (_root_.UpperTheory.P2.unimodularRow_one_isUnit w)⟩) : Um N A × Um 2 A)
     (by
       change IsUnit ((Um.join _).1 (Fin.last N))
       rw [join_last]
-      exact unimodularRow_one_isUnit w)) hv
+      exact _root_.UpperTheory.P2.unimodularRow_one_isUnit w)) hv
 
 private theorem d_bij {N : ℕ} {Q : Pred (XC N)} {i : Fin N} (hQ : Q.Le (unitAt i)) (A : CommRingCat.{0}) :
     Function.Bijective (fun x : (aC N Q).D.obj A =>
@@ -1402,7 +1390,7 @@ private theorem d_bij {N : ℕ} {Q : Pred (XC N)} {i : Fin N} (hQ : Q.Le (unitAt
     let w : Um 1 A := y.2
     have hvu : IsUnit (v.1 i) := hQ A v hv
     have hv1 : v.1 i * Ring.inverse (v.1 i) = 1 := Ring.mul_inverse_cancel _ hvu
-    have ht1 : w.1 0 * Ring.inverse (w.1 0) = 1 := Ring.mul_inverse_cancel _ (unimodularRow_one_isUnit w)
+    have ht1 : w.1 0 * Ring.inverse (w.1 0) = 1 := Ring.mul_inverse_cancel _ (_root_.UpperTheory.P2.unimodularRow_one_isUnit w)
     refine ⟨mkA i v hv r w, Prod.ext (Prod.ext (Subtype.ext rfl) ?_) (Subtype.ext (funext fun j => ?_))⟩
     · change r * w.1 0 * Ring.inverse (v.1 i) * v.1 i * Ring.inverse (w.1 0) = r
       linear_combination (r * w.1 0 * Ring.inverse (w.1 0)) * hv1 + r * ht1
@@ -1452,17 +1440,6 @@ private theorem rHom_fst {N : ℕ} (Q : Pred (XC N)) (i : Fin N) :
     (rHom Q i).comp (prFst ((XC N).sub Q)) = (piC N).sub Q :=
   hom_ext' rfl (Category.comp_id _)
 
-private theorem eqv_comp {R : Type} [CommRing R] {X Y Z : Spc} (f : X ⟶ Y) (g : Y ⟶ Z) (F : Shv R) (hf : Eqv R f F)
-    (hg : Eqv R g F) : Eqv R (f ≫ g) F := fun n => by
-  have h : ⇑(pull R (f ≫ g) F n) = ⇑(pull R f F n) ∘ ⇑(pull R g F n) := funext fun x => pull_comp R f g F n x
-  rw [h]
-  exact (hf n).comp (hg n)
-
-private theorem eqv_iso {R : Type} [CommRing R] {X Y : Spc} (f : X ⟶ Y) [IsIso f] (F : Shv R) : Eqv R f F := fun n =>
-  Function.bijective_iff_has_inverse.2 ⟨pull R (inv f) F n,
-    fun x => by rw [← pull_comp, IsIso.inv_hom_id, pull_id],
-    fun x => by rw [← pull_comp, IsIso.hom_inv_id, pull_id]⟩
-
 private theorem lh_one {q : ℕ} {X E : Spc} (π : X ⟶ E) (d e : Fin 1 → ℤ) (c : ∀ j, Ht q X (d j) (e j))
     (hd : ∀ j, 0 = d j) (he : ∀ j, 0 = e j) (hc : ∀ j, c j = (one q X).cast (hd j) (he j)) (h : LH q π d e c) :
     LH q π (fun _ : Fin 1 => (0 : ℤ)) (fun _ : Fin 1 => (0 : ℤ)) (fun _ => one q X) := by
@@ -1493,8 +1470,8 @@ private theorem eqv_main (q : ℕ) [NeZero q] (N : ℕ) (E : Spc) (i : Fin N) (Q
   have e2 : Sp.map E (prFst ((XC N).sub Q)) =
       Sp.pair E (prFst ((XC N).sub Q)) (prSnd ((XC N).sub Q)) ≫ Sp.fst (Sp E ((XC N).sub Q)) affC := rfl
   rw [← rHom_fst Q i, sp_comp, e1, e2]
-  exact eqv_comp _ _ _ (eqv_comp _ _ _ (eqv_iso _ _) (eqv_fst q _ hS1 j))
-    (eqv_comp _ _ _ (eqv_iso _ _) (UpperTheory.affineLineAction_fst_twistEquiv q _ j hS))
+  exact _root_.GlobalTheory.HInvAic.eqv_comp _ _ _ (_root_.GlobalTheory.HInvAic.eqv_comp _ _ _ (_root_.GlobalTheory.EtC.eqv_of_isIso _ _) (eqv_fst q _ hS1 j))
+    (_root_.GlobalTheory.HInvAic.eqv_comp _ _ _ (_root_.GlobalTheory.EtC.eqv_of_isIso _ _) (UpperTheory.affineLineAction_fst_twistEquiv q _ j hS))
 
 end UpperTheory.ProjectiveLineCharts
 
@@ -1568,7 +1545,7 @@ private theorem pull_cast {q : ℕ} {X Y : Spc} (f : X ⟶ Y) {n i n' i' : ℤ} 
 
 private theorem pull_cup {q : ℕ} {X Y : Spc} (f : X ⟶ Y) {n m i j : ℤ} (a : Ht q Y n i) (b : Ht q Y m j) :
     pull _ f _ _ (cup q a b) = cup q (pull _ f _ _ a : Ht q X n i) (pull _ f _ _ b : Ht q X m j) :=
-  GlobalTheory.T.cup_hypercohomologyPullback (ZMod q) (twPair q i j) f rfl a b
+  _root_.GlobalTheory.EtC.Pair.cup_pull (ZMod q) (twPair q i j) f rfl a b
 
 private theorem cup_one_right {q : ℕ} [NeZero q] {E : Spc} (hE : Inv q E) {n i : ℤ} (a : Ht q E n i) :
     cup q a (one q E) = Ht.cast (by ring) (by ring) a := by
@@ -1736,7 +1713,7 @@ theorem UpperTheory.pullback_cube_faces_equiv_tate_twist :
           (Sp.map E (incl (Q1 N))) (Sp.map E (incl (Q2 N))) (Sp.map E ((βC N).sub (Q1 N))) (Sp.map E ((βC N).sub (Q2 N)))
           (Sp.map E (βC N)) h₁ h₂) (tw q i) := by
   intro q _ N E i h₁ h₂ hE
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   have hP := pb_sub E ((Q1 N).inf (Q2 N)) (Q1 N) (Q2 N) (fun A x hx => hx.1) (fun A x hx => hx.2)
     (fun A x ha hb => ⟨ha, hb⟩)
   have hP' := pb_sub E (((Q1 N).inf (Q2 N)).comap (βC N)) ((Q1 N).comap (βC N)) ((Q2 N).comap (βC N))

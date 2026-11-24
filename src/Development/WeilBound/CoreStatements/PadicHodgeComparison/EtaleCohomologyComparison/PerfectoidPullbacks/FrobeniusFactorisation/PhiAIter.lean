@@ -1045,35 +1045,6 @@ theorem tens_change {W A R R' : Type} [CommRing W] [CommRing A] [CommRing R] [Co
   rw [hP, hg]
   exact (comm a y).symm
 
-theorem mapH_bijective {R R' : Type} [CommRing R] [CommRing R'] {σ : R →+* R'} {K : Cx.{w} R} {L : Cx.{w'} R'}
-    (φ : Cx.Hom K L σ) (h : ∀ n, Function.Bijective (φ.f n)) (n : ℕ) : Function.Bijective (φ.mapH n) := by
-  constructor
-  · rw [injective_iff_map_eq_zero]
-    intro c hc
-    obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ c
-    have h1 : φ.mapZ n z ∈ (L.B n).submoduleOf (L.Z n) := (Submodule.Quotient.mk_eq_zero _).1 hc
-    have h2 : φ.f n z.1 ∈ L.B n := h1
-    refine (Submodule.Quotient.mk_eq_zero _).2 ?_
-    change z.1 ∈ K.B n
-    cases n with
-    | zero =>
-      have h3 : φ.f 0 z.1 = 0 := h2
-      have h4 : z.1 = 0 := (h 0).1 (h3.trans (map_zero _).symm)
-      rw [h4]
-      exact Submodule.zero_mem _
-    | succ n =>
-      obtain ⟨v, hv⟩ := h2
-      obtain ⟨v', rfl⟩ := (h n).2 v
-      rw [φ.comm] at hv
-      exact ⟨v', (h (n + 1)).1 hv⟩
-  · intro c
-    obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ c
-    obtain ⟨y, hy⟩ := (h n).2 z.1
-    have hd : K.d n y = 0 := (h (n + 1)).1 (by
-      rw [← φ.comm, hy, map_zero]
-      exact z.2)
-    exact ⟨Submodule.Quotient.mk ⟨y, hd⟩, congrArg (Submodule.Quotient.mk (p := _)) (Subtype.ext hy)⟩
-
 theorem pullC_bijective {R R' : Type} [CommRing R] [CommRing R'] {σ : R →+* R'} {C : Type 1} [Category.{0} C]
     (Q : ObjectProperty C) (hQ : ∀ T, Q T) {F : C ⥤ ModuleCat.{w} R} {F' : Q.FullSubcategory ⥤ ModuleCat.{w'} R'}
     (m : CH.Mor F F' σ) (hG : m.G = Q.ι) (hτ : ∀ T, Function.Bijective (m.τ T)) (n : ℕ) :
@@ -1128,7 +1099,7 @@ theorem toQ_bijective (T : Q.FullSubcategory) : Function.Bijective ((toQ Q c).τ
     exact ⟨x, Subtype.ext rfl⟩
 
 theorem toQ_pull_bijective (hQ : ∀ T, Q T) (j : ℕ) : Function.Bijective ((toQ Q c).pull j) :=
-  mapH_bijective _ (fun n => pullC_bijective Q hQ _ rfl (toQ_bijective Q c) n) j
+  _root_.CrystallineSemistableComparison.P.mapH_bij _ (fun n => pullC_bijective Q hQ _ rfl (toQ_bijective Q c) n) j
 
 end ToQ
 
@@ -1294,8 +1265,6 @@ set_option backward.isDefEq.respectTransparency false
 
 open CategoryTheory AlgebraicGeometry TensorProduct GroundTheory.PAdicHodge GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison CrystallineSemistableComparison.PAlg CrystallineSemistableComparison.Pb
 
-theorem _root_.GlobalTheory.T.flat_acris_truncated_witt : ∀ {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} (r : Res l K) (n : ℕ), letI := (Mid.wn r n).toAlgebra; Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := by
-  first | exact @GlobalTheory.CompanionTheory.CrisFlat.flat_acr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatAcrisTruncatedWittStatement =====
@@ -1541,7 +1510,7 @@ theorem bc_tens : ∀ {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (P
       (M' := Mid.HM r M n j) fun _ a y => idA r a • bWL r M n j y := by
   intro l _ K r M hM j n
   letI := (Mid.wn r n).toAlgebra
-  haveI : Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := GlobalTheory.T.flat_acris_truncated_witt r n
+  haveI : Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := _root_.GlobalTheory.CompanionTheory.CrisFlat.flat_acr r n
   obtain ⟨U⟩ := cov_of_sm M hM
   let m := nm r M n
   let Q : ObjectProperty (Thick (nlFun (Wc.pd l r.k n) l M.X M.p ((Wc.res l r.k n).comp r.ρ))) := St ⊤ {⊤}
@@ -1622,15 +1591,15 @@ def sT (M : Model l K) (j : ℕ) : Sys.{1} (AW r) := HMS r M j
 def sH (M : Model l K) (j : ℕ) : Sys.{1} (AW r) := M.HS true j
 
 def gH (M : Model l K) (j : ℕ) : Sys.Hom (HSW r M j) (sT r M j) (algebraMap (WittVector l r.k) (AW r)) :=
-  ⟨fun n => bW r M n j, fun n y => bW_red r M n j y⟩
+  ⟨fun n => bW r M n j, fun n y => _root_.GlobalTheory.CompanionTheory.CrisBaseChange.bW_red r M n j y⟩
 
 def ψA (N : ℕ) : AW r →+* AW r := Mid.phiA l N
 
 variable {N : ℕ} (hT : Mid.TeichmullerCongruence r N)
 
-def nuH (M : Model l K) (j : ℕ) : Sys.Hom (sH r M j) (sT r M j) (ψA r N) := ⟨fun n => Mid.nu r M n j hT, fun n x => nu_red r hT M n j x⟩
+def nuH (M : Model l K) (j : ℕ) : Sys.Hom (sH r M j) (sT r M j) (ψA r N) := ⟨fun n => Mid.nu r M n j hT, fun n x => _root_.GlobalTheory.CompanionTheory.NuRed.nu_red r hT M n j x⟩
 
-def muH (M : Model l K) (j : ℕ) : Sys.Hom (sT r M j) (sH r M j) (RingHom.id _) := ⟨fun n => Mid.mu r M n j hT, fun n x => mu_red r hT M n j x⟩
+def muH (M : Model l K) (j : ℕ) : Sys.Hom (sT r M j) (sH r M j) (RingHom.id _) := ⟨fun n => Mid.mu r M n j hT, fun n x => _root_.GlobalTheory.CompanionTheory.CrysMid.mu_redHc r hT M n j x⟩
 
 theorem lw_fin (M : Model l K) (hM : M.Sm) (j : ℕ) : Module.Finite (WittVector l r.k) (HSW r M j).lim := by
   obtain ⟨E⟩ := LsG.ls_seq r M hM j
@@ -1699,20 +1668,20 @@ theorem fac_ex (hmn : MuNu r hT)
     exact (h M j hM).fac (muH r hT M j) x _ fun n => (hmn M n j _).trans (iter_lim (M.phiH j) N n x).symm
   · intro M hM j x
     exact ((h M j hM).op (h M j hM) (τ := φA r) (fun n => phiM r M n j) (Wc.phiS l (B.schFn M.p) r.ρ j).lim
-      (fun n y => (bW_phi r M n j _).symm) _ (fun _ _ => rfl) x (phiL M j x) fun n => nu_phi r hT M n j _).2 rfl
+      (fun n y => (_root_.GlobalTheory.CompanionTheory.BaseChangeFrob.phiM_bW r M n j _).symm) _ (fun _ _ => rfl) x (phiL M j x) fun n => _root_.GlobalTheory.CompanionTheory.NuPhi.nu_phi r hT M n j _).2 rfl
   · intro M hM j g x
     exact ((h M j hM).op (h M j hM) (τ := σA r (IntermediateField.fixingSubgroupEquiv K g)) (fun n => galM r M _ (hσ g) n j) id
-      (fun n y => (bW_gal r M _ (hσ g) n j _).symm) _ (fun _ _ => rfl) x (galL M j g x) fun n => nu_gal r hT M _ (hσ g) n j _).2 rfl
+      (fun n y => (_root_.GlobalTheory.CompanionTheory.BWGal.bW_gal r M _ (hσ g) n j _).symm) _ (fun _ _ => rfl) x (galL M j g x) fun n => _root_.GlobalTheory.CompanionTheory.NuGalSquare.nu_gal r hT M _ (hσ g) n j _).2 rfl
   · intro M hM j g y
-    refine Subtype.ext (funext fun n => (mu_gal r hT M _ (hσ g) n j _).trans (congrArg (Mid.mu r M n j hT) ?_))
+    refine Subtype.ext (funext fun n => (_root_.GlobalTheory.CompanionTheory.MuGal.mu_gal r hT M _ (hσ g) n j _).trans (congrArg (Mid.mu r M n j hT) ?_))
     have e1 : Fa.E (gH r M j) n ((1 : AW r) ⊗ₜ y) = bW r M n j (y.1 n) := (Fa.E_tmul _ n 1 y).trans (one_smul _ _)
-    exact (congrArg (galM r M _ (hσ g) n j) e1).trans ((bW_gal r M _ (hσ g) n j _).trans e1.symm)
+    exact (congrArg (galM r M _ (hσ g) n j) e1).trans ((_root_.GlobalTheory.CompanionTheory.BWGal.bW_gal r M _ (hσ g) n j _).trans e1.symm)
   · intro M M' u hu hM hM' j x
     refine ⟨0, ?_⟩
     rw [pow_zero, one_smul, sub_eq_zero]
     exact ((h M' j hM').op (h M j hM) (τ := RingHom.id _) (fun n => pullM r u hu n j) (Wc.pullS l r.ρ (B.schMap u hu) j).lim
-      (fun n y => (bW_pull r u hu n j _).symm) (LinearMap.lTensor (AW r) (Wc.pullS l r.ρ (B.schMap u hu) j).lim).toAddMonoidHom
-      (fun _ _ => rfl) x (pullL u hu j x) fun n => nu_pull r hT u hu n j _).1
+      (fun n y => (_root_.GlobalTheory.CompanionTheory.CrisBase.pullM_bW r u hu n j _).symm) (LinearMap.lTensor (AW r) (Wc.pullS l r.ρ (B.schMap u hu) j).lim).toAddMonoidHom
+      (fun _ _ => rfl) x (pullL u hu j x) fun n => _root_.GlobalTheory.CompanionTheory.NuPull.nu_pull r hT u hu n j _).1
 
 end CrystallineSemistableComparison.Pb
 end -- clump:auto

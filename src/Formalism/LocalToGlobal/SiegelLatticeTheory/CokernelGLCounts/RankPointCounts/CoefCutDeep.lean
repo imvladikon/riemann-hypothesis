@@ -583,13 +583,6 @@ theorem denE (p : PlF D) (a : (D.s.atP p).Ep) :
   rw [map_mul, iE_alg] at h2
   exact h2
 
-theorem baseChangeAt_frame (p : PlF D) (j : Fin (nV D)) : baseChange₂ D p ((VS D).frame j) = Pi.single j 1 := by
-  funext i
-  simp only [baseChange₂, AddMonoidHom.coe_mk, ZeroHom.coe_mk, Module.Basis.repr_self, Finsupp.single_apply, Pi.single_apply]
-  split_ifs with h1 h2 h2 <;> simp_all [eq_comm]
-
-
-
 theorem exists_isLattice_eq_localLattice (Zd : LocDat D) (p : PlF D) (M : Submodule (Zd.M p).L.O (Vp D p)) (hfg : M.FG)
     (hsp : Submodule.span (D.s.atP p).Ep (M : Set (Vp D p)) = ⊤) :
     ∃ Λ' : Submodule (𝓞 D.host.E) (VS D).V, Submodule.IsFullLattice D.host.E Λ' ∧ M = lattice₂ D Zd.M p Λ' := by
@@ -668,7 +661,7 @@ theorem exists_isLattice_eq_localLattice (Zd : LocDat D) (p : PlF D) (M : Submod
   obtain ⟨Λ', hΛ'⟩ : ∃ Λ' : Submodule (𝓞 D.host.E) (VS D).V, Λ' = Submodule.span (𝓞 D.host.E) G := ⟨_, rfl⟩
   have hbcf : ∀ i, baseChange₂ D p (algebraMap D.host.F D.host.E (c : D.host.F) • (VS D).frame i) = u c • (Pi.single i 1 : Vp D p) := by
     intro i
-    rw [baseChange_smul₂, baseChangeAt_frame, iE_alg]
+    rw [baseChange_smul₂, _root_.Formalism.L2.SG.TermLoc.baseChangeAt_frame, iE_alg]
   have hlat : Submodule.IsFullLattice D.host.E Λ' := by
     have hfg' : Λ'.FG := by
       rw [hΛ']
@@ -1373,8 +1366,8 @@ theorem mem_CZ_glob (hA : ∀ p, Agree δ M p) (L U : Formalism.L2.SG.PairVal.Ma
     exact ⟨hl, hρ⟩
   · intro hp
     set a'm := L * gm * L⁻¹ with ha'm
-    have ha'lo : IsLoUni a'm := ZsVolGrp.isLoUni_mul (ZsVolGrp.isLoUni_mul hL ha) hLi.1
-    have hb'up : IsUpUni (U⁻¹ * b * U) := ZsVolGrp.isUpUni_mul (ZsVolGrp.isUpUni_mul hUi.1 hb) hU
+    have ha'lo : IsLoUni a'm := _root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul (_root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul hL ha) hLi.1
+    have hb'up : IsUpUni (U⁻¹ * b * U) := _root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul (_root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul hUi.1 hb) hU
     have hginv : ((((g : Formalism.L2.SG.PairVal.GLR D))⁻¹ : Formalism.L2.SG.PairVal.GLR D) : Formalism.L2.SG.PairVal.MatR D) * gm = 1 := by
       rw [hgm, ← Units.val_mul, inv_mul_cancel, Units.val_one]
     have hginv' : gm * ((((g : Formalism.L2.SG.PairVal.GLR D))⁻¹ : Formalism.L2.SG.PairVal.GLR D) : Formalism.L2.SG.PairVal.MatR D) = 1 := by
@@ -1422,8 +1415,8 @@ theorem cz_le (L U : Formalism.L2.SG.PairVal.MatR D) (hL : IsLoUni L) (hU : IsUp
   rw [Subgroup.closure_le]
   intro a ha
   obtain ⟨a', ha'eq, ha'lo, b', hb'up, hZ', -⟩ := ha
-  refine ⟨?_, U * b' * U⁻¹, ZsVolGrp.isUpUni_mul (ZsVolGrp.isUpUni_mul hU hb'up) hUi.1, ?_⟩
-  · rw [ha'eq]; exact ZsVolGrp.isLoUni_mul (ZsVolGrp.isLoUni_mul hLi.1 ha'lo) hL
+  refine ⟨?_, U * b' * U⁻¹, _root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul (_root_.GlobalTheory.UpperUnipotentProductInertiaEigenvalues.isUpUni_mul hU hb'up) hUi.1, ?_⟩
+  · rw [ha'eq]; exact _root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul (_root_.PI.TermAttrConst.UnitaryGroupMassFormula.isLoUni_mul hLi.1 ha'lo) hL
   · rw [ha'eq]
     rw [hZ] at hZ'
     calc L⁻¹ * (a' : Formalism.L2.SG.PairVal.MatR D) * L * ptMat w * (U * b' * U⁻¹)
@@ -1805,8 +1798,8 @@ theorem cutAt_of_deep {D : Formalism.BasicNotions.D7} {M : ∀ p : PlF D, Loc.Mo
     fun Λ hΛ Z => ZsVolFin.finR D u u' F0 what₂ hrows Z Λ hΛ
   have hN : PairVal.NormRepExists D u u' F0 what₂ := PCount.normRepExists_ctx ⟨hc, hrows, hP⟩
   have hM : Formalism.L2.SG.Pf.NormRepMove D u u' :=
-    norm_representative_move D u u' (Formalism.L2.SG.Closed.TermStable_holds D u u') (Formalism.L2.SG.Closed.TermEqIff_holds D u u')
-      (Formalism.L2.SG.Closed.TermFun_holds D u u') hP hsig
+    norm_representative_move D u u' (_root_.PI.TCS.termStable_holds D u u') (_root_.term_eq_iff_relation D u u')
+      (_root_.term_function_const D u u') hP hsig
   exact cutAt_of_leaves hA hc hP hrows hN hM (local_phase_typed_places hA) (ZsVolAsm.volIdxProd_of_prodE M δ u u' F0 what₂ hP
       (ProdE.prodE_CZ_of_approxC M δ u u' F0 what₂ (ProdEApprox.approxC M δ u u' F0 what₂) hst))
     (fun _ => PCountEx.exist_holds hA u u')
@@ -1832,7 +1825,7 @@ theorem rowsDatumP_of_deep {D : Formalism.BasicNotions.D7} (h : CutLeavesDeep D)
   intro hsig δ M hA L u u' hc hP F0 what₂ hrows ϖ hϖ nc hnc
   obtain ⟨hst, hSA, hFS⟩ := h hsig δ M hA L u u' hc hP F0 what₂ hrows
   exact rowsDatum_at (cutAt_of_deep (L := L) hsig hA hc hP hrows hst hSA hFS)
-    (eligFinite_of (Formalism.L2.SG.Closed.TermsAtFinite_holds D u u') hsig hrows) hrows ϖ hϖ nc hnc
+    (eligFinite_of (_root_.terms_at_point_finite D u u') hsig hrows) hrows ϖ hϖ nc hnc
 
 end Formalism.L2.SG.Pf.Coef
 end -- clump:auto

@@ -147,8 +147,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting (SplitPro
 open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric datum)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem _root_.GlobalTheory.T.boundedAutomorphic_parameters_star_stable : ∀ (D : D7) (V : HSp D) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))), ∀ f ∈ GlobalTheory.FinZeta.bddAut V, ∀ B : GlobalTheory.LFun.Fam D.host.E, GlobalTheory.LFun.IsParamFunV V S f B → ∀ w ∉ GlobalTheory.LFun.above D.host.E (S : Set (HeightOneSpectrum (𝓞 D.host.F))), (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = w.under (𝓞 D.host.F) → w ≠ w' → B w' = (B w).map star) ∧ (¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) (w.under (𝓞 D.host.F)) → (B w).map star = B w) := by
-  first | exact @GlobalTheory.LFun.StarParam.param_star
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BoundedAutomorphicParametersStarStableStatement =====
@@ -243,8 +241,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting (SplitPro
 open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric datum)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-theorem _root_.GlobalTheory.T.euler_product_conjugation_stable_parameters_pos : ∀ (D : D7) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) (B : GlobalTheory.LFun.Fam D.host.E) (μ : (AE D)ˣ →* Circle) (r : ℕ) (κ s : ℝ), IsHeckeChar D μ → ResEta D μ 0 → GlobalTheory.LFun.UnrOff (F := D.host.F) μ (S : Set (HeightOneSpectrum (𝓞 D.host.F))) → GlobalTheory.LFun.Bounded (GlobalTheory.LFun.above D.host.E (S : Set (HeightOneSpectrum (𝓞 D.host.F)))) B r κ → κ + 1 < s → (∀ w ∉ GlobalTheory.LFun.above D.host.E (S : Set (HeightOneSpectrum (𝓞 D.host.F))), (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = w.under (𝓞 D.host.F) → w ≠ w' → B w' = (B w).map star) ∧ (¬ Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) (w.under (𝓞 D.host.F)) → (B w).map star = B w)) → ∃ l : ℝ, 0 < l ∧ GlobalTheory.LFun.LSD D S B μ (s : ℂ) = l := by
-  first | exact @GlobalTheory.EulerConjPos.lsd_pos
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EulerProductConjugationStableParametersPosStatement =====
@@ -307,7 +303,7 @@ theorem conjStable_first_member (hCRD : GlobalTheory.Published.CuspRapidDecay) {
     refine ⟨(Complex.continuous_conj).comp hcont, fun γ hγ g => ?_, C, fun g => ?_⟩
     · simp only [hfdef, hinv γ hγ g]
     · simpa [hfdef] using hC g
-  exact GlobalTheory.T.boundedAutomorphic_parameters_star_stable D s'.V c.S f hfmem B h3
+  exact _root_.GlobalTheory.LFun.StarParam.param_star D s'.V c.S f hfmem B h3
 
 end GlobalTheory.ChainTw
 
@@ -329,7 +325,7 @@ theorem lPos_of_rapidDecay : GlobalTheory.Published.CuspRapidDecay → ∀ D : D
     have h5 : D.R.r + 5 ≤ D.R.t := by simpa [Formalism.BasicNotions.Ranks.r] using D.R.rank_add_five_le
     have h5' : (D.R.r : ℝ) + 5 ≤ D.R.t := by exact_mod_cast h5
     linarith
-  obtain ⟨l, hl, he⟩ := GlobalTheory.T.euler_product_conjugation_stable_parameters_pos D c.S B (c.μ (k + 1)) D.R.r ((D.R.r : ℝ) / 2) ((1 + (D.R.t : ℝ)) / 2) hch.1 hch.2
+  obtain ⟨l, hl, he⟩ := _root_.GlobalTheory.EulerConjPos.lsd_pos D c.S B (c.μ (k + 1)) D.R.r ((D.R.r : ℝ) / 2) ((1 + (D.R.t : ℝ)) / 2) hch.1 hch.2
     (hc.unr ⟨k, hk⟩) hbd hrt hst
   refine ⟨l, hl, ?_⟩
   rw [← he]

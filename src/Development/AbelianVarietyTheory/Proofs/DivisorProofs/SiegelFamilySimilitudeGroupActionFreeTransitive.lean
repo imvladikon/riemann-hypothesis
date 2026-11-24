@@ -83,21 +83,9 @@ noncomputable section
 
 namespace GlobalTheory.SiegAct
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
+alias spMap_comp' := _root_.GlobalTheory.spMap_comp_ring
 
-theorem spMap_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spMap f = spMap g) : f = g :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-
-theorem spMap_id' (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 (Sp A) := Spec.map_id _
-
-theorem exists_spMap {k B : Type} [CommRing k] [CommRing B] (x : Sp k ⟶ Sp B) : ∃ β : B →+* k, x = spMap β :=
-  ⟨(Spec.preimage x).hom, by rw [spMap, CommRingCat.ofHom_hom, Spec.map_preimage]⟩
-
-theorem unit_left' {S T : Scheme.{0}} {G : Over S} (x : T ⟶ S) (σ : 𝟙_ (Over S) ⟶ G) :
-    (toUnit (Over.mk x) ≫ σ).left = x ≫ σ.left := by
-  simp
+alias spMap_id' := _root_.GlobalTheory.LevelFibre.spMap_id'
 
 variable {h N m : ℕ} {B B' : Type} [CommRing B] [CommRing B'] {ζ : B} {ζ' : B'} {S : Scheme.{0}} {s : S ⟶ Sp B}
 
@@ -130,8 +118,8 @@ def relabel (C : SiegPre h N ζ s) (T : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (F
   lev_add a b := by rw [map_add (f := _), C.lev_add]
   lev_tors a := C.lev_tors _
   geom k _ _ x β z hx hz := by
-    obtain ⟨β₀, hβ₀⟩ := exists_spMap (x ≫ s)
-    have hb : β = β₀.comp σ := spMap_inj (by rw [← hx, ← Category.assoc, hβ₀, spMap_comp'])
+    obtain ⟨β₀, hβ₀⟩ := _root_.GlobalTheory.LevCover.exists_spMap (x ≫ s)
+    have hb : β = β₀.comp σ := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← hx, ← Category.assoc, hβ₀, spMap_comp'])
     have h1 : β₀ ζ ^ N = 1 := by rw [← map_pow, hζ, map_one]
     let z₀ : kˣ := Units.ofPowEqOne (β₀ ζ) N h1 hN
     obtain ⟨g1, g2, g3⟩ := C.geom k x β₀ z₀ hβ₀ rfl
@@ -758,19 +746,19 @@ theorem exists_eq_nsmul_of_pull (hN : N ≠ 0) {R : Type} [CommRing R] [IsLocalR
     rw [← hp4 v, hv, ← this]
   let K := AlgebraicClosure (IsLocalRing.ResidueField R)
   let z : Sp K ⟶ Sp R := spMap ((algebraMap (IsLocalRing.ResidueField R) K).comp (IsLocalRing.residue R))
-  obtain ⟨β, hβ⟩ := exists_spMap ((z ≫ y) ≫ F.s)
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.LevCover.exists_spMap ((z ≫ y) ≫ F.s)
   let u : Kˣ := Units.ofPowEqOne (β (zetaAway N)) N (by rw [← map_pow, zeta_pow hN, map_one]) hN
   obtain ⟨g1, -, -⟩ := F.univ.geom K (z ≫ y) β u hβ rfl
   refine (g1 v).1 (Over.OverMorphism.ext ?_)
-  rw [unit_left', Category.assoc, e, ← Category.assoc, ← unit_left', MonObj.comp_one]
+  rw [_root_.GlobalTheory.LevelFibre.unit_left, Category.assoc, e, ← Category.assoc, ← _root_.GlobalTheory.LevelFibre.unit_left, MonObj.comp_one]
 
 theorem Twist.eq_id_of_fixed (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj : j (zetaAway n) = zetaAway N ^ (N / n))
     {T : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)} {m : ℕ} {σ : cycAway N →+* cycAway N} {f : F.X ⟶ F.X}
     (t : Twist F j T m σ f) {k : Type} [Field k] [IsAlgClosed k] (y : Sp k ⟶ F.X) (hy : y ≫ f = y) : f = 𝟙 _ := by
   have hN0 : N ≠ 0 := hN.pos.ne'
-  obtain ⟨β, hβ⟩ := exists_spMap (y ≫ F.s)
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.LevCover.exists_spMap (y ≫ F.s)
   have hσβ : β.comp σ = β :=
-    spMap_inj (by rw [← spMap_comp', ← hβ, Category.assoc, ← t.comm, ← Category.assoc, hy])
+    _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by rw [← spMap_comp', ← hβ, Category.assoc, ← t.comm, ← Category.assoc, hy])
   have e : β (zetaAway N) ^ m = β (zetaAway N) ^ 1 := by
     rw [pow_one, ← map_pow, ← t.root, ← RingHom.comp_apply, hσβ]
   have hσ1 : σ = RingHom.id _ := (cycAway_galois N hN0).2.1 _ σ (RingHom.id _) (by
@@ -792,7 +780,7 @@ theorem Twist.eq_id_of_fixed (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj : j
   obtain ⟨g1, -, -⟩ := F.univ.geom k y β z hβ rfl
   have hT : ∀ x, F.univ.lev (T x) = F.univ.lev x := fun x => by
     have e1 : toUnit (Over.mk y) ≫ F.univ.lev (T x) = toUnit (Over.mk y) ≫ F.univ.lev x :=
-      Over.OverMorphism.ext (by rw [unit_left', unit_left', hlev])
+      Over.OverMorphism.ext (by rw [_root_.GlobalTheory.LevelFibre.unit_left, _root_.GlobalTheory.LevelFibre.unit_left, hlev])
     have e2 : toUnit (Over.mk y) ≫ F.univ.lev (T x - x) = 1 := by
       have := F.univ.lev_add (T x - x) x
       rw [sub_add_cancel] at this
@@ -815,8 +803,8 @@ theorem exists_twist_of_points (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj :
     ∃ T m σ f, Twist F j T m σ f ∧ y ≫ f = y' := by
   have hN0 : N ≠ 0 := hN.pos.ne'
   have hn0 : n ≠ 0 := by omega
-  obtain ⟨β, hβ⟩ := exists_spMap (y ≫ F.s)
-  obtain ⟨β', hβ'⟩ := exists_spMap (y' ≫ F.s)
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.LevCover.exists_spMap (y ≫ F.s)
+  obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.LevCover.exists_spMap (y' ≫ F.s)
   have G := cycAway_galois N hN0
   obtain ⟨m, hmc, hm⟩ := G.2.2 R β β'
   obtain ⟨σ, hσ⟩ := G.1 m hmc
@@ -849,7 +837,7 @@ theorem exists_twist_of_points (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj :
       _root_.one_mul] at e4
     exact e4
 
-  have hbj : β.comp j = β'.comp j := spMap_inj (by
+  have hbj : β.comp j = β'.comp j := _root_.GlobalTheory.ZM.DenseFib.spMap_inj (by
     rw [← spMap_comp', ← spMap_comp', ← hβ, ← hβ', Category.assoc, Category.assoc, hs])
   let r := IsLocalRing.residue R
   have e5 : (r.comp β) (zetaAway N) ^ (N / n) = (r.comp β) (zetaAway N) ^ (m * (N / n)) := by

@@ -100,8 +100,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar GlobalTheory.PDivGroup GlobalTheory.Dieu GlobalTheory.UPel.HT GlobalTheory.LKTrip GlobalTheory.LKMid GlobalTheory.LKGeo GlobalTheory.LKRes
 open ReciprocityTheory.DiscreteGroups.LocalClassField
 
-theorem _root_.GlobalTheory.T.exists_tateSimilitude_heckeTranslate_latticeSystem : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (h : ℕ → D.La →+ D.La) (u : ℕ → ℤ) (c k N : ℕ), c.Coprime p → k.Coprime p → 3 ≤ N → N.Coprime p → c ∣ k ^ 2 → (∀ n, 0 < n → n.Coprime p → ∀ (a : D.O) (x : D.La), ∃ z, h n (a • x) = a • h n x + n • z) → (∀ n m, 0 < n → 0 < m → (n * m).Coprime p → (∀ x, ∃ z, h (n * m) x = h n x + n • z) ∧ (n : ℤ) ∣ u (n * m) - u n) → (∀ n, 0 < n → n.Coprime p → IsCoprime (u n) (n : ℤ) ∧ ∀ x y, (n : ℤ) ∣ D.EF (h n x) (h n y) - c * u n * D.EF x y) → (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ y z, h n y = k • x + n • z) → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b (N * k) s), ∀ (A' : Over S) [GrpObj A'] [IsCommMonObj A'] (act' : OActN D.O A') (ψ : o.A ⟶ A'), IsAbelianScheme A' → IsMonHom ψ → GlobalTheory.ZM.IsGaloisCover (GlobalTheory.UPel.HT.HeckeAd.heckeSubA o (h (N * k)) N) (fun g => (GlobalTheory.UPel.HT.Hecke.transl g.1).left) ψ.left → (∀ c' : D.O, o.act.act c' ≫ ψ = ψ ≫ act'.act c') → ∀ P' : LB (G2 A').left, P'.IsLB → (∃ t : (P'.pull (lift (1 : A' ⟶ A') (𝟙 A')).left).Gen, t.IsGen) → (∃ t : (P'.pull (lift (𝟙 A') (1 : A' ⟶ A')).left).Gen, t.IsGen) → LBIso (GlobalTheory.UPel.HT.Hecke.lbPow o.P (k ^ 2 / c)) (P'.pull (GlobalTheory.UPel.HT.Hecke.sq2 ψ)) → ∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ S) (β : R →+* κ), x ≫ s = spMap β → ∃ I : TateIsoO D κ (Over.mk x ⟶ A') (fun c g => g ≫ act'.act c) (fun n g g' z => Out.WeilIs A' (P'.pull (lift (𝟙 A') (𝟙 A')).left) n g g' (unitOn z)), ∀ y, toUnit _ ≫ (o.eta (h (N * k) y) ≫ ψ) = I.ev N y := by
-  first | (exact @GlobalTheory.UPel.HT.HeckeAd.TateTranslSys.exists_tateIsoO_transl_sys)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTateSimilitudeHeckeTranslateLatticeSystemStatement =====
@@ -221,7 +219,7 @@ theorem weilIs_heckeSubA_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : 
       lift (1 ^ (j * k)) (y ^ (j * k)) := by
     rw [comp_lift, hdown, ← hy, one_pow, MonObj.comp_one]
   rw [ha, hb] at hv
-  have e1 := GlobalTheory.T.commutatorPairing_pullback_powerMap_level S o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) o.P o.ab (pull_isLB hPL _) o.ample hPL
+  have e1 := _root_.GlobalTheory.HeckePullLevel.weilIs_powPull S o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) o.P o.ab (pull_isLB hPL _) o.ample hPL
     o.rig₁ o.rig₂ m (j * k) (j * k) 1 (Over.mk x) w 1 1 y v hv
   have hwn : w ^ n₀ = 1 := (I.onto n₀ hn0 hjp w).2 ⟨f x₁, hw.symm⟩
   have hyn : y ^ n₀ = 1 := (I.onto n₀ hn0 hjp y).2 ⟨f x₂, hy.symm⟩
@@ -258,7 +256,7 @@ theorem weilIs_heckeSubA_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : 
       (lift (1 ^ (j * m)) (y ^ 1)) (F ^ (j * m)) := by
     rw [one_pow, one_pow, pow_one]
     exact GlobalTheory.PELFamily.weilIs_of_lbIso hG hA2 hl1 hPL iso1 hFjm
-  have e2 := GlobalTheory.T.commutatorPairing_pullback_powerMap_level S o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) o.P o.ab (pull_isLB hPL _) o.ample hPL
+  have e2 := _root_.GlobalTheory.HeckePullLevel.weilIs_powPull S o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) o.P o.ab (pull_isLB hPL _) o.ample hPL
     o.rig₁ o.rig₂ 1 (j * m) 1 (n₀ : ℤ) (Over.mk x) w 1 1 y _ e2'
   have hlev : (1 : ℤ) * ((m * (j * k) * (j * k) : ℕ) : ℤ) = (n₀ : ℤ) * ((1 * (j * m) * 1 : ℕ) : ℤ) := by
     rw [hn₀]; push_cast; ring
@@ -274,10 +272,10 @@ theorem weilIs_heckeSubA_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : 
   have hs := GlobalTheory.CommPairing.weilIs_symm hPL (GlobalTheory.SiegelTypings.weilIs_mul hA2 hPL
     (GlobalTheory.CommPairing.weilIs_symm hPL hA) (GlobalTheory.CommPairing.weilIs_symm hPL hB))
   rw [liftSq_mul', _root_.mul_one, _root_.one_mul] at hs
-  have hd := GlobalTheory.T.weilPairing_diagonal_pullback_eq S o.A o.P o.ab hPL _ (Over.mk x) w y _ _ hs hgeo
-  have e11 := (GlobalTheory.T.weilPairing_birigidified_trivial_on_axes S o.A o.P o.ab hPL o.rig₁ o.rig₂ _ (Over.mk x) w y c11).1 h11
-  have e22 := (GlobalTheory.T.weilPairing_birigidified_trivial_on_axes S o.A o.P o.ab hPL o.rig₁ o.rig₂ _ (Over.mk x) w y c22).2 h22
-  have e21 := GlobalTheory.T.commutatorPairing_swap_eq_of_swap_invariant S o.A o.P o.ab hPL o.symm _ (Over.mk x) w y c21 F h21 hF
+  have hd := _root_.GlobalTheory.DiagPull.weilIs_diag_eq S o.A o.P o.ab hPL _ (Over.mk x) w y _ _ hs hgeo
+  have e11 := (_root_.GlobalTheory.AxisPairing.axes S o.A o.P o.ab hPL o.rig₁ o.rig₂ _ (Over.mk x) w y c11).1 h11
+  have e22 := (_root_.GlobalTheory.AxisPairing.axes S o.A o.P o.ab hPL o.rig₁ o.rig₂ _ (Over.mk x) w y c22).2 h22
+  have e21 := _root_.GlobalTheory.SwapPairing.weilIs_swap_eq S o.A o.P o.ab hPL o.symm _ (Over.mk x) w y c21 F h21 hF
   rw [e11, e22, e21] at hd
   have hF2 : F ^ 2 = unitOn (I.ζ n₀ ^ (2 * ((c : ℤ) * e'))) := by
     rw [← he', ← hd]; group
@@ -323,8 +321,6 @@ open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar GlobalTheory.PDivGroup G
 open ReciprocityTheory.DiscreteGroups.LocalClassField
 
 
-theorem _root_.GlobalTheory.T.hecke_coefficients_congruence_scaled : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (h : ℕ → D.La →+ D.La) (u : ℕ → ℤ) (c k N : ℕ), c.Coprime p → k.Coprime p → 3 ≤ N → N.Coprime p → c ∣ k ^ 2 → (∀ n, 0 < n → n.Coprime p → ∀ (a : D.O) (x : D.La), ∃ z, h n (a • x) = a • h n x + n • z) → (∀ n m, 0 < n → 0 < m → (n * m).Coprime p → (∀ x, ∃ z, h (n * m) x = h n x + n • z) ∧ (n : ℤ) ∣ u (n * m) - u n) → (∀ n, 0 < n → n.Coprime p → IsCoprime (u n) (n : ℤ) ∧ ∀ x y, (n : ℤ) ∣ D.EF (h n x) (h n y) - c * u n * D.EF x y) → (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ y z, h n y = k • x + n • z) → ∀ (S : Scheme.{0}) (s : S ⟶ Sp R) (o : Obj b (N * k) s), ∀ g₁ ∈ GlobalTheory.UPel.HT.HeckeAd.heckeSubA o (h (N * k)) N, ∀ g₂ ∈ GlobalTheory.UPel.HT.HeckeAd.heckeSubA o (h (N * k)) N, ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ S) (β : R →+* K), x ≫ s = spMap β → ∀ v : Γ((Over.mk x).left, ⊤)ˣ, Out.WeilIs (G2 o.A) (GlobalTheory.UPel.HT.Hecke.lbPow o.P (k ^ 2 / c)) 1 (toUnit (Over.mk x) ≫ (lift g₁ 1 : 𝟙_ (Over S) ⟶ G2 o.A)) (toUnit (Over.mk x) ≫ (lift 1 g₂ : 𝟙_ (Over S) ⟶ G2 o.A)) v → v = 1 := by
-  first | (exact @GlobalTheory.UPel.HT.HeckeAd.weilIs_heckeSubA_geom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCoefficientsCongruenceScaled =====
@@ -385,8 +381,8 @@ theorem exists_weilIs_heckeA : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
       unfold qc
       rw [hcls, map_nsmul, map_nsmul, map_nsmul]
       exact (congrArg _ (hB' T x y y')).trans (smul_add _ _ _)
-  obtain ⟨t₁, -⟩ := GlobalTheory.T.hecke_coefficients_congruence p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₁ hg₁
-  obtain ⟨-, t₂⟩ := GlobalTheory.T.hecke_coefficients_congruence p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₂ hg₂
+  obtain ⟨t₁, -⟩ := _root_.GlobalTheory.UPel.HT.HeckeAd.KerPol.hecke_sections_triv p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₁ hg₁
+  obtain ⟨-, t₂⟩ := _root_.GlobalTheory.UPel.HT.HeckeAd.KerPol.hecke_sections_triv p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₂ hg₂
   have hA2 : IsAbelianScheme (G2 o.A) := AbelianSchemeGerms.isAbelianScheme_tensor o.A o.A o.ab o.ab
   exact CommutatorPairing.exists_weilIs hG hA2 hQ
     (fun _ => ⟨⊤, trivial, exists_theta_left hQB (Out.overResι ⊤) g₁ t₁⟩)
@@ -433,7 +429,7 @@ theorem weilIs_heckeSubA_one : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
       (weilIs_heckeA_pow_eq_one (h (N * k)) c k N o g₁ hg₁ g₂ v hv) ?_
     intro K _ _ x β hx
     have hp := GlobalTheory.CommPairing.weilIs_pull (A := G2 o.A) GlobalTheory.globalFns_holds hA2 hQ (toUnit (Over.mk x)) hv
-    exact GlobalTheory.T.hecke_coefficients_congruence_scaled p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₁ hg₁ g₂ hg₂ K x β hx _ hp
+    exact _root_.GlobalTheory.UPel.HT.HeckeAd.weilIs_heckeSubA_geom p D R b h u c k N hc hk hN hNp hdiv hlin hcomp hsim honto S s o g₁ hg₁ g₂ hg₂ K x β hx _ hp
   subst h1
   exact hv
 
@@ -506,14 +502,14 @@ theorem exists_isTranslA : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type)
         rw [← cancel_epi ψ, (hactf _).2, o.act.add, mul_comp, comp_mul, (hactf _).2, (hactf _).2] }
   have hcomp' : ∀ c' : D.O, o.act.act c' ≫ ψ = ψ ≫ act'.act c' := fun c' => ((hactf c').2).symm
 
-  have hker := GlobalTheory.T.hecke_coefficients_congruence p D R b h u c k N hc hk hN hNp hck hlin hcomp hsim honto S s o
+  have hker := _root_.GlobalTheory.UPel.HT.HeckeAd.KerPol.hecke_sections_triv p D R b h u c k N hc hk hN hNp hck hlin hcomp hsim honto S s o
   obtain ⟨u₀, hu₀, hcoc⟩ := _root_.GlobalTheory.IsoLin.exists_linearisation_isotropic S o.A o.ab o.P o.isLB o.rig₁ o.rig₂ (k ^ 2 / c)
     (GlobalTheory.UPel.HT.HeckeAd.heckeSubA o f N) (fun g hg => (hker g hg).1) (fun g hg => (hker g hg).2)
     (GlobalTheory.T.heckeSections_isotropic_commutatorPairing_power p D R b h u c k N hc hk hN hNp hck hlin hcomp hsim honto S s o)
   have hGC := _root_.GlobalTheory.UPel.HT.Hecke.isGaloisCover_grpSchemeSquareProductMap S o.A A' (GlobalTheory.UPel.HT.HeckeAd.heckeSubA o f N) ψ hψ hgal
   obtain ⟨P₀, hP₀, w₀⟩ := GlobalTheory.LinDescent.exists_descent_of_isGaloisCover _ _ (GlobalTheory.UPel.HT.Hecke.sq2 ψ) _ _
     (GlobalTheory.UPel.HT.Hecke.lbPow o.P (k ^ 2 / c)) hGC (DVR.linComb_isLB _ o.isLB _ _) u₀ hu₀ hcoc
-  obtain ⟨P', hP', r1, r2, w⟩ := GlobalTheory.T.exists_birigidified_bundle_of_descent p D R b (N * k) S s o A' ψ hψ _ P₀ hP₀ w₀
+  obtain ⟨P', hP', r1, r2, w⟩ := _root_.GlobalTheory.UPel.HT.Hecke.exists_birigidified_of_descent p D R b (N * k) S s o A' ψ hψ _ P₀ hP₀ w₀
   have hk2 : 0 < k ^ 2 := by positivity
   have hc0 : 0 < c := Nat.pos_of_ne_zero (by rintro rfl; rw [zero_dvd_iff] at hck; omega)
   have hm1 : 1 ≤ k ^ 2 / c := Nat.div_pos (Nat.le_of_dvd hk2 hck) hc0
@@ -524,7 +520,7 @@ theorem exists_isTranslA : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type)
   have hkerP := _root_.GlobalTheory.UPel.HT.Hecke.kernel_descent p D R b (N * k) S s o A' ψ _ hA' hψ hgal _ hmp P' hP' w
   have hros := _root_.GlobalTheory.UPel.HT.Hecke.rosati_of_descent p D R b (N * k) S s o A' act' ψ _ hA' hψ hgal hcomp' _ P' hP' w r1 r2
   obtain ⟨hlie, hlieR⟩ := GlobalTheory.UPel.HT.EtaleLie.lie_of_etale p D R b (N * k) S s o A' act' ψ _ _ hA' hψ hgal hcomp'
-  have hgeom := GlobalTheory.T.exists_tateSimilitude_heckeTranslate_latticeSystem p D R b h u c k N hc hk hN hNp hck hlin hcomp hsim honto S s o A' act' ψ hA' hψ hgal
+  have hgeom := _root_.GlobalTheory.UPel.HT.HeckeAd.TateTranslSys.exists_tateIsoO_transl_sys p D R b h u c k N hc hk hN hNp hck hlin hcomp hsim honto S s o A' act' ψ hA' hψ hgal
     hcomp' P' hP' r1 r2 w
   let o' : Obj b N s :=
     { A := A'
@@ -567,8 +563,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.AV GlobalTheory.AV.AbVar GlobalTheory.PDivGroup GlobalTheory.Dieu GlobalTheory.UPel.HT GlobalTheory.LKTrip GlobalTheory.LKMid GlobalTheory.LKGeo GlobalTheory.LKRes
 open ReciprocityTheory.DiscreteGroups.LocalClassField GlobalTheory.UPel.HT.HeckeAd
 
-theorem _root_.GlobalTheory.T.exists_hecke_translate_locallyNoetherian_base : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (h : ℕ → D.La →+ D.La) (u : ℕ → ℤ) (c k N : ℕ), 3 ≤ N → N.Coprime p → c.Coprime p → k.Coprime p → c ∣ k ^ 2 → (∀ n, 0 < n → n.Coprime p → ∀ (a : D.O) (x : D.La), ∃ z, h n (a • x) = a • h n x + n • z) → (∀ n m, 0 < n → 0 < m → (n * m).Coprime p → (∀ x, ∃ z, h (n * m) x = h n x + n • z) ∧ (n : ℤ) ∣ u (n * m) - u n) → (∀ n, 0 < n → n.Coprime p → IsCoprime (u n) (n : ℤ) ∧ ∀ x y, (n : ℤ) ∣ D.EF (h n x) (h n y) - c * u n * D.EF x y) → (∀ n, 0 < n → n.Coprime p → ∀ x, ∃ y z, h n y = k • x + n • z) → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b (N * k) s), ∃ (o' : Obj b N s) (ψ : o.A ⟶ o'.A), IsTranslA (h (N * k)) c k N o o' ψ := by
-  first | (exact @GlobalTheory.UPel.HT.HeckeAd.exists_isTranslA)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeTranslateLocallyNoetherianBaseStatement =====

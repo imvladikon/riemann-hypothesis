@@ -1,6 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStable
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ConjugatePrimeBoundPointKernelOfCoefficientKerne
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InvTrKEmbGLApply
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemClosureIff
@@ -13,7 +14,6 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelP
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemFormsIffExistsEquivariantExtension
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UopIsExt
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ValueLatticeAddSubgroupSmulMoveLaws
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStable
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InvSmulMemOfRedL
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.DoubleCosetDecompositionAll
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
@@ -71,7 +71,7 @@ import Mathlib.RingTheory.HopfAlgebra.Basic
 -- Members: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernel, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsCoordinatesValueLatticesEqWeylLattices, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPointKernelRealisedModels, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ValBOfInc, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExtInOfValIn, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FormsStableOfTgtEq, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeLawPointKernelOfCoefficientKernel, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntPOfKerP, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainSharpColumnValuationOfStability, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainUOperatorCommutationOfPointPairLaw, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NotDvdCardStabilizerForm, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WtBoundsOfNonneg, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SharpBoundStabilityLatticeColumnChain
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernel =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernel", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm\nimport Formalism.LocalToGlobal.Columns.PolyFnLemmas\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernel", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm\nimport Formalism.LocalToGlobal.Columns.PolyFnLemmas\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStable\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -81,20 +81,6 @@ noncomputable section
 namespace GlobalTheory.LvT.Built.DilPass
 
 variable {D : D7} {u : D.what₂.Word}
-
-theorem isAct_unique {q : ℕ} {F : Type} [Field F] {Lc : LocF q F} {n : ℕ} {g : GL (Fin n) Lc.K} {p p₁ p₂ : LocF.PP Lc n}
-    (h₁ : p.IsAct g p₁) (h₂ : p.IsAct g p₂) : p₁ = p₂ := by
-  have hs : ∀ x : Fin n → Lc.K, ∃ y, Matrix.mulVec (g : Matrix (Fin n) (Fin n) Lc.K) y = x := fun x =>
-    ⟨Matrix.mulVec ((g⁻¹ : GL (Fin n) Lc.K) : Matrix (Fin n) (Fin n) Lc.K) x, by
-      rw [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec]⟩
-  apply Subtype.ext
-  apply LocF.Raw.ext
-  · ext x
-    obtain ⟨y, rfl⟩ := hs x
-    rw [(h₁ y).1, (h₂ y).1]
-  · funext x
-    obtain ⟨y, rfl⟩ := hs x
-    rw [(h₁ y).2, (h₂ y).2]
 
 theorem isDil_act {q : ℕ} {F : Type} [Field F] {Lc : LocF q F} {n : ℕ} {g : GL (Fin n) Lc.K} {a : F}
     {p p' p₁ p₁' : LocF.PP Lc n} (h : LocF.PP.IsDil a p p') (h₁ : p.IsAct g p₁) (h₂ : p'.IsAct g p₁') :
@@ -114,7 +100,7 @@ theorem dil_smul {X : Ch D u} {i : ℕ} (M : PtModel X i) {v : X.A.vT} {a : X.A.
   refine ⟨M.smul_fst g q p h.1, fun v' hv => ?_, isDil_act h.2.2 (M.smul_snd g p v) (M.smul_snd g q v)⟩
   have h1 := M.smul_snd g q v'
   rw [h.2.1 v' hv] at h1
-  exact isAct_unique h1 (M.smul_snd g p v')
+  exact _root_.GlobalTheory.LvT.LocF.incf_act_unique h1 (M.smul_snd g p v')
 
 theorem dil_unique {X : Ch D u} {i : ℕ} (M : PtModel X i) {v : X.A.vT} {a : X.A.Fv v} {p q q' : M.Pt} (h : M.Dil v a p q)
     (h' : M.Dil v a p q') : q = q' := by
@@ -875,12 +861,7 @@ namespace GlobalTheory.LvT.UKS
 
 variable {D : D7} {u : D.what₂.Word} {X : Ch D u}
 
-theorem emb_mem_Fi (X : Ch D u) (i : ℕ) (x : Vl X i) : X.fm.emb i x ∈ X.fm.Fi i := by
-
-  rw [← (X.fm.emb_basis i).2, ← (X.fm.lat i).b.sum_repr x, map_sum]
-  refine Submodule.sum_mem _ fun a _ => ?_
-  rw [LinearMap.map_smulₛₗ]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
+alias emb_mem_Fi := _root_.GlobalTheory.LvT.emb_mem_Fi
 
 theorem inv_natCast_mem (w : D.what₂.places.Pl) (n : ℕ) (hn : ¬ D.what₂.places.resChar w ∣ n) :
     ((n : D.what₂.LL))⁻¹ ∈ Ow D w := by
@@ -1501,13 +1482,6 @@ theorem colUp_eq (i : ℕ) (φ : Fn X 0) : colUp X i φ = Formalism.ThetaLiftInd
 
 theorem colT_eq (φ : Fn X 0) : colT X φ = colUp X D.R.m φ := (colUp_eq X _ φ).symm
 
-theorem emb_mem (i : ℕ) (x : Vl X i) : X.fm.emb i x ∈ X.fm.Fi i := by
-
-  rw [← (X.fm.emb_basis i).2, ← (X.fm.lat i).b.sum_repr x, map_sum]
-  refine Submodule.sum_mem _ fun a _ => ?_
-  rw [LinearMap.map_smulₛₗ]
-  exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
-
 variable {X}
 
 theorem fold_mem (hF : FormsStable X) {i : ℕ} (hi : i ≤ D.R.m) (l : List X.A.vT) {φ : Fn X i}
@@ -1580,7 +1554,7 @@ theorem chain_into (hF : FormsStable X) (h4 : LevelChainUOperatorCommutation X) 
     obtain ⟨y, hy, hy'⟩ := ih hi'.le x hx
     obtain ⟨z, hz, hz'⟩ := hU i hi' y hy
     refine ⟨z, hz, ?_⟩
-    have hm := Upow_mem hF w i (emb_mem X 0 x)
+    have hm := Upow_mem hF w i (_root_.GlobalTheory.LvT.emb_mem_Fi X 0 x)
     have key := Uprod_colUp hF h4 hs hi w hm
     have e1 : colUp X (i + 1) ((Uprod X 0 w ^ i) (X.fm.emb 0 x)) =
       KT X i (colUp X i ((Uprod X 0 w ^ i) (X.fm.emb 0 x))) := rfl

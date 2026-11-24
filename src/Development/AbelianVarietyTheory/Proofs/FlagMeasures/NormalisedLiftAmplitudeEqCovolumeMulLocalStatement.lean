@@ -430,20 +430,9 @@ private lemma mulVec_mem_spanLt' {n r : ℕ} {e : Fin r → Fin n → ℂ} {A : 
   intro y hy
   exact hle hy
 
-private lemma inN_mul' {n r : ℕ} {ε : Fin n → Bool} {e : Fin r → Fin n → ℂ} {z : Fin n → ℂ}
-    {A B : Matrix (Fin n) (Fin n) ℂ} (hA : InN ε e z A) (hB : InN ε e z B) : InN ε e z (A * B) := by
-  have key : ∀ x : Fin n → ℂ, (A * B - 1) *ᵥ x = A *ᵥ ((B - 1) *ᵥ x) + (A - 1) *ᵥ x := by
-    intro x
-    simp only [Matrix.sub_mulVec, Matrix.one_mulVec, Matrix.mulVec_sub, Matrix.mulVec_mulVec]
-    abel
-  refine ⟨⟨fun a => ?_, ?_⟩, fun y hy => ?_⟩
-  · rw [key]; exact add_mem (mulVec_mem_spanLt' hA.1.1 _ _ (hB.1.1 a)) (hA.1.1 a)
-  · rw [key]; exact add_mem (mulVec_mem_spanLt' hA.1.1 _ _ hB.1.2) hA.1.2
-  · rw [key]; exact add_mem (mulVec_mem_spanLt' hA.1.1 _ _ (hB.2 y hy)) (hA.2 y hy)
-
 theorem ninf_mul {a b : X.B.I.Ginf} (ha : a ∈ X.NinfU u) (hb : b ∈ X.NinfU u) : a * b ∈ X.NinfU u := by
   intro v
-  exact inN_mul' (ha v) (hb v)
+  exact _root_.Formalism.L2.SG.Pf.WFL.HNL.inN_mul (ha v) (hb v)
 
 private lemma mulVec_mem_spanLt_of_left_inv {n r : ℕ} {e : Fin r → Fin n → ℂ} {A Ai : Matrix (Fin n) (Fin n) ℂ}
     (hA : ∀ b : Fin r, (A - 1) *ᵥ e b ∈ spanLt e b.1) (h2 : Ai * A = 1) (a : ℕ) :
@@ -474,12 +463,9 @@ private lemma inN_of_left_inv {n r : ℕ} {ε : Fin n → Bool} {e : Fin r → F
   · rw [key]; exact neg_mem (mulVec_mem_spanLt_of_left_inv hA.1.1 h2 _ _ hA.1.2)
   · rw [key]; exact neg_mem (mulVec_mem_spanLt_of_left_inv hA.1.1 h2 _ _ (hA.2 y hy))
 
-private lemma uMat_expU_inv_mul {n : ℕ} {ε : Fin n → Bool} (g : Formalism.REAL.UJ ε) : uMat g⁻¹ * uMat g = 1 := by
-  simp [uMat]
-
 theorem ninf_inv {a : X.B.I.Ginf} (ha : a ∈ X.NinfU u) : a⁻¹ ∈ X.NinfU u := by
   intro v
-  exact inN_of_left_inv (uMat_expU_inv_mul (a v)) (ha v)
+  exact inN_of_left_inv (_root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_inv_mul (a v)) (ha v)
 
 theorem sinf_conj {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) {n : X.B.I.Ginf} (hn : n ∈ X.NinfU u) :
     a * n * a⁻¹ ∈ X.NinfU u := by
@@ -591,10 +577,6 @@ theorem eq_one_of_smul {α : Type*} [MeasurableSpace α] (μ : Measure α) [Sigm
       μ (spanningSets μ k) / μ (spanningSets μ k) := by rw [← hx]
   rwa [ENNReal.mul_div_cancel_right hk htop, ENNReal.div_self hk htop] at h3
 
-private lemma inN_one' {n r : ℕ} (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) :
-    InN ε e z 1 :=
-  ⟨⟨fun a => by simp, by simp⟩, fun y _ => by simp⟩
-
 section Loc
 
 variable {D : D7} (X : HidaSetting D) (u : D.what₂.Word)
@@ -616,7 +598,7 @@ theorem conj_loc_of {a : X.B.I.Ginf} (ha : a ∈ X.SinfU u) (v : InfinitePlace X
     · have e : n' w = 1 := by simp [n', Function.update_of_ne hw]
       show InN _ _ _ (uMat (n' w))
       rw [e]
-      exact inN_one' _ _ _
+      exact _root_.Formalism.L2.SG.Pf.WFL.HNL.inN_one _ _ _
   have h := sinf_conj X u ha hn' v
   have e : n' v = n := by simp [n']
   show InN _ _ _ (uMat (a v * n * (a v)⁻¹))
@@ -885,15 +867,12 @@ theorem sinf_conj_iff (u : D.what₂.Word) {a : X.B.I.Ginf} (ha : a ∈ X.SinfU 
     rwa [e] at h2
   · exact sinf_conj X u ha
 
-private lemma uMat_mul_flag_measures {n : ℕ} {ε : Fin n → Bool} (g h : Formalism.REAL.UJ ε) :
-    uMat (g * h) = uMat g * uMat h := rfl
-
 variable {θ : ℝ} (C : Choice X θ) (τ : D.what₂.Tau)
 
 theorem trG_mul (x y : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
     trG (C.Q τ) (C.Qi τ) (x * y) = trG (C.Q τ) (C.Qi τ) x * trG (C.Q τ) (C.Qi τ) y := by
   have hQ : C.Q τ * C.Qi τ = 1 := (C.isT τ).2.1
-  simp only [trG, uMat_mul_flag_measures, Matrix.mul_assoc]
+  simp only [trG, _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_mul, Matrix.mul_assoc]
   rw [← Matrix.mul_assoc (C.Q τ) (C.Qi τ), hQ, Matrix.one_mul]
 
 theorem trG_inv (x : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
@@ -904,14 +883,14 @@ theorem trG_inv (x : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
   apply Matrix.inv_eq_left_inv
   simp only [trG, Matrix.mul_assoc]
   rw [← Matrix.mul_assoc (C.Q τ) (C.Qi τ), hQ, Matrix.one_mul, ← Matrix.mul_assoc (uMat x⁻¹) (uMat x),
-    uMat_expU_inv_mul, Matrix.one_mul, hQi]
+    _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_inv_mul, Matrix.one_mul, hQi]
 
 theorem cMr_trG (γ : X.B.I.Ginf) (y : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :
     Matrix.of (Formalism.L2.SG.RealConjugatorData.cMr C γ τ y) =
       trG (C.Q τ) (C.Qi τ) ((γ (vOf X τ))⁻¹ * y * γ (vOf X τ)) := by
   show C.Qi τ * (uMat (γ (vOf X τ)))⁻¹ * uMat y * (uMat (γ (vOf X τ)) * C.Q τ) =
     trG (C.Q τ) (C.Qi τ) ((γ (vOf X τ))⁻¹ * y * γ (vOf X τ))
-  rw [trG, uMat_mul_flag_measures, uMat_mul_flag_measures, Formalism.L2.SG.RealConjugatorData.uMat_inv']
+  rw [trG, _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_mul, _root_.Formalism.L2.SG.PoincareInHH.Cut.uMat_mul, Formalism.L2.SG.RealConjugatorData.uMat_inv']
   simp only [Matrix.mul_assoc]
 
 private lemma trG_mem_UH {D : D7} {X : HidaSetting D} {θ : ℝ} (C : Choice X θ) (τ : D.what₂.Tau)
@@ -1074,20 +1053,8 @@ open Formalism.L2.SG.HidaSetting Formalism.L2.SG.RealObj.InfCut.JacobianCoordina
 
 variable {n r : ℕ}
 
-theorem hJ_sub_right (ε : Fin n → Bool) (x y w : Fin n → ℂ) : hJ ε x (y - w) = hJ ε x y - hJ ε x w := by
-  unfold hJ; rw [mulVec_sub, dotProduct_sub]
-
-theorem hJ_sub_left (ε : Fin n → Bool) (x y w : Fin n → ℂ) : hJ ε (x - y) w = hJ ε x w - hJ ε y w := by
-  unfold hJ; rw [star_sub, sub_dotProduct]
-
-theorem hJ_add_left (ε : Fin n → Bool) (x y w : Fin n → ℂ) : hJ ε (x + y) w = hJ ε x w + hJ ε y w := by
-  unfold hJ; rw [star_add, add_dotProduct]
-
 theorem hJ_smul_left (ε : Fin n → Bool) (c : ℂ) (x w : Fin n → ℂ) : hJ ε (c • x) w = star c * hJ ε x w := by
   unfold hJ; rw [star_smul, smul_dotProduct, smul_eq_mul]
-
-theorem hJ_zero_left' (ε : Fin n → Bool) (w : Fin n → ℂ) : hJ ε 0 w = 0 := by
-  unfold hJ; simp
 
 theorem orth_span (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (b : ℕ) (w : Fin n → ℂ)
     (hw : ∀ c : Fin r, c.1 < b → hJ ε (e c) w = 0) : ∀ v ∈ spanLt e b, hJ ε v w = 0 := by
@@ -1096,8 +1063,8 @@ theorem orth_span (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (b : ℕ) 
   | mem y hy =>
     obtain ⟨c, hc, rfl⟩ := hy
     exact hw c hc
-  | zero => exact hJ_zero_left' ε w
-  | add x y _ _ hx hy => rw [hJ_add_left, hx, hy, add_zero]
+  | zero => exact _root_.Formalism.L2.SG.RealObj.InfCut.UnitaryIsometries.hJ_zero_left ε w
+  | add x y _ _ hx hy => rw [_root_.Formalism.L2.SG.RealObj.InfCut.UnitaryIsometries.hJ_add_left, hx, hy, add_zero]
   | smul c x _ hx => rw [hJ_smul_left, hx, mul_zero]
 
 theorem spanLt_zero (e : Fin r → Fin n → ℂ) : spanLt e 0 = ⊥ := by
@@ -1142,7 +1109,7 @@ theorem nilp (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → 
       have := hiso (Formalism.MainNotions.S.uMat g⁻¹ *ᵥ e b) w
       rw [mulVec_mulVec, hGG', one_mulVec] at this
       exact this
-    rw [sub_mulVec, one_mulVec, hJ_sub_right, h1, sub_mulVec, one_mulVec, hJ_sub_left]
+    rw [sub_mulVec, one_mulVec, _root_.Formalism.L2.SG.PoincareInHH.Cut.hJ_sub_right, h1, sub_mulVec, one_mulVec, _root_.Formalism.L2.SG.PoincareInHH.Cut.hJ_sub_left]
 
   have step1 : ∀ k, ∀ x, ∀ b : Fin r, b.1 < k → hJ ε (e b) ((G - 1) ^ k *ᵥ x) = 0 := by
     intro k
@@ -1611,11 +1578,6 @@ namespace GlobalTheory.OrbQuotProd
 
 open Formalism.L2.SG.RealObj Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates
 
-theorem norm_rankOneInnerOperator {V V' : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [NormedAddCommGroup V']
-    [InnerProductSpace ℂ V'] (a : V) (b : V') : ‖Formalism.L2.SG.TermOp.rk1 a b‖ = ‖a‖ * ‖b‖ := by
-  unfold Formalism.L2.SG.TermOp.rk1
-  rw [ContinuousLinearMap.norm_smulRight_apply, innerSL_apply_norm, mul_comm]
-
 theorem continuous_rankOneOperator {Y V V' : Type*} [TopologicalSpace Y] [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     [NormedAddCommGroup V'] [InnerProductSpace ℂ V'] {f : Y → V} {g : Y → V'} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun y => Formalism.L2.SG.TermOp.rk1 (f y) (g y) := by
@@ -1792,7 +1754,7 @@ theorem oo_quot : ∀ (D : D7) (X : HidaSetting D) (u u' : D.what₂.Word) (γ :
   have hψi : ∀ v, ∀ s ∈ R v, ∀ x, ψ v (s * x) = ψ v x := fun v s hs x => hinv v s hs x
   have hΦr : ∀ x, ‖Φ x‖ = ∏ v, ‖ψ v (x v)‖ := by
     intro x
-    simp only [Φ, ψ, norm_rankOneInnerOperator, X.Wu_tens, Formalism.L2.SG.RealObj.RankOneTensors.norm_tens (X.tensU u) (X.tensU_inner u),
+    simp only [Φ, ψ, _root_.Formalism.L2.SG.RealObj.RankOneTensors.norm_rankOneInnerOperator, X.Wu_tens, Formalism.L2.SG.RealObj.RankOneTensors.norm_tens (X.tensU u) (X.tensU_inner u),
       Formalism.L2.SG.RealObj.RankOneTensors.norm_tens (X.tensU u') (X.tensU_inner u'), ← Finset.prod_mul_distrib]
     rfl
   have hΦn : ∀ x, ‖Φ x‖ₑ = ∏ v, ‖ψ v (x v)‖ₑ := by
@@ -1901,8 +1863,6 @@ open scoped Classical ENNReal
 open Matrix MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.L2.SG.LocWSOf
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.realOrbitalIntegral_hsNorm_eq_prod_local : ∀ (D : D7) (X : HidaSetting D) (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (μl νl : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v))) (ν : Measure X.B.I.Ginf), (∀ v, Formalism.L2.SG.RealObj.IsHaarLoc (Formalism.L2.SG.RealObj.StSet (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u))) (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u'))) (γ v)) (μl v)) → (∀ v, Formalism.L2.SG.RealObj.IsQuotLoc (μl v) (νl v)) → IsQuotMeasS X.B.I (Measure.pi μl) ν → (∀ v, ∀ s ∈ Formalism.L2.SG.RealObj.StSet (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u))) (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u'))) (γ v), ∀ x, Formalism.L2.SG.TermOp.rk1 (X.Wloc u v (s * x)) (X.Wloc u' v ((γ v)⁻¹ * (s * x))) = Formalism.L2.SG.TermOp.rk1 (X.Wloc u v x) (X.Wloc u' v ((γ v)⁻¹ * x))) → hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vpi u); Formalism.L2.SG.TermOp.OO ν Set.univ (X.Wu u) (X.Wu u') γ) = ∏ v, hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u v); Formalism.L2.SG.RealObj.Jv (νl v) (X.Wloc u v) (X.Wloc u' v) (γ v)) := by
-  first | exact @GlobalTheory.OrbQuotProd.oo_quot
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealOrbitalIntegralHsNormEqProdLocalStatement =====
@@ -1925,7 +1885,7 @@ theorem GlobalTheory.AmpLift.amp_lift : ∀ (D : D7) (X : HidaSetting D) (Y : Fu
   have hν' : IsQuotMeasS X.B.I x.2.1 ν := hμeq ▸ hν
   have hOO := Formalism.L2.SG.Pf.formAllC_holds D X Y u u' s x.2.1 ν x.2.2
     (Formalism.L2.SG.Pf.RelChar.relCharC_holds D X Y u u' s hrel) hHR hν' hfund.1 hfund.2
-  have hprod := GlobalTheory.T.realOrbitalIntegral_hsNorm_eq_prod_local D X u u' s.pt.1 μl νl ν hHaar hνl hν hinv
+  have hprod := _root_.GlobalTheory.OrbQuotProd.oo_quot D X u u' s.pt.1 μl νl ν hHaar hνl hν hinv
   unfold Formalism.L2.SG.TermOp.ampN
   rw [Formalism.L2.SG.LoopTerm.hsNormSq_smul, Formalism.L2.SG.LoopTerm.hsNormSq_smul, hOO,
     ← Complex.coe_smul, Formalism.L2.SG.LoopTerm.hsNormSq_smul, hprod]
@@ -1946,8 +1906,6 @@ open scoped Classical ENNReal
 open Matrix MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.L2.SG.TermTieOf Formalism.L2.SG.LocWSOf Formalism.L2.SG.LoopTerm
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.normalisedLift_amplitude_eq_covolume_mul_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (θ : ℝ) (C : Choice X θ) (u u' : D.what₂.Word) (s : TT Y u u') (x : Point D.host.E (D.R.rS + 1) × Measure X.B.I.Ginf × Set X.B.I.Ginf), s.relevant → s.G ≠ 0 → s.toTerm.atPt x.1 → Formalism.L2.SG.VolPin.IsPinnedR s x.1 x.2.1 → IsFundR s x.2.2 → (∀ v, ∀ r ∈ Formalism.L2.SG.RealObj.StSet (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u))) (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u'))) (s.pt.1 v), ∀ y, Formalism.L2.SG.TermOp.rk1 (X.Wloc u v (r * y)) (X.Wloc u' v ((s.pt.1 v)⁻¹ * (r * y))) = Formalism.L2.SG.TermOp.rk1 (X.Wloc u v y) (X.Wloc u' v ((s.pt.1 v)⁻¹ * y))) → ∃ μl νl : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v)), (∀ v, Formalism.L2.SG.RealObj.IsHaarLoc (Formalism.L2.SG.RealObj.StSet (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u))) (Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.NLoc (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u'))) (s.pt.1 v)) (μl v)) ∧ (∀ v, Formalism.L2.SG.RealObj.IsQuotLoc (μl v) (νl v)) ∧ (∀ τ, ∃ p, IsRootMeasR D (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u' τ) p (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) (s.pt.1 (vOf X τ))) ((μl (vOf X τ)).map (fun y => Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) ((s.pt.1 (vOf X τ))⁻¹ * y * (s.pt.1 (vOf X τ))))))) ∧ hsNormSq (Formalism.L2.SG.TermOp.ampN (Y.cs u) (Y.cs u') (Y.FN u) (Y.FN u') s) = (Formalism.L2.SG.TermOp.scl (Y.FN u) (Y.FN u') (X := X) (u := u) (u' := u') * X.volK2) ^ 2 * (x.2.1 x.2.2).toReal ^ 2 * ∏ v, hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u v); Formalism.L2.SG.RealObj.Jv (νl v) (X.Wloc u v) (X.Wloc u' v) (s.pt.1 v)) := by
-  first | exact @GlobalTheory.AmpLift.amp_lift
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalisedLiftAmplitudeEqCovolumeMulLocalStatement =====

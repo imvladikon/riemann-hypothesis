@@ -109,32 +109,13 @@ section
 variable {R V E : Type*} [Ring R] [AddCommGroup V] [Module R V] [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (ρ : V →+ E)
 
-theorem hnSum_mem_zl (N : Submodule R V) (y : E) :
-    y ∈ zl ρ N ↔ ∃ x ∈ N, ρ x = y :=
-  Iff.rfl
-
-theorem hnSum_zl_mono {A B : Submodule R V} (h : A ≤ B) : zl ρ A ≤ zl ρ B := by
-  intro y hy
-  obtain ⟨x, hx, rfl⟩ := (hnSum_mem_zl ρ A y).1 hy
-  exact (hnSum_mem_zl ρ B _).2 ⟨x, h hx, rfl⟩
-
-theorem hnSum_zl_sup (A B : Submodule R V) : zl ρ (A ⊔ B) = zl ρ A ⊔ zl ρ B := by
-  apply le_antisymm
-  · intro y hy
-    obtain ⟨x, hx, rfl⟩ := (hnSum_mem_zl ρ _ y).1 hy
-    obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.1 hx
-    rw [map_add (f := _)]
-    exact Submodule.add_mem_sup ((hnSum_mem_zl ρ A _).2 ⟨a, ha, rfl⟩)
-      ((hnSum_mem_zl ρ B _).2 ⟨b, hb, rfl⟩)
-  · exact sup_le (hnSum_zl_mono ρ le_sup_left) (hnSum_zl_mono ρ le_sup_right)
-
 variable [FiniteDimensional ℝ E]
 
 theorem hnSum_isLat_mono {L N : Submodule R V} (hL : IsLat ρ L) (h : N ≤ L) : IsLat ρ N := by
   refine ⟨hL.1.mono h, ?_⟩
   haveI := hL.2
   exact DiscreteTopology.of_continuous_injective
-    (f := fun y : zl ρ N => (⟨y.1, hnSum_zl_mono ρ h y.2⟩ : zl ρ L))
+    (f := fun y : zl ρ N => (⟨y.1, _root_.Formalism.HN.satBasic_zl_mono ρ h y.2⟩ : zl ρ L))
     (continuous_subtype_val.subtype_mk _)
     (by
       intro a b hab
@@ -151,8 +132,8 @@ theorem hnSum_orth {A B : Submodule R V} (hA : IsLat ρ A) (hB : IsLat ρ B)
     IsLat ρ (A ⊔ B) ∧ A ⊓ B = ⊥ ∧ deg ρ (A ⊔ B) = deg ρ A + deg ρ B := by
   have horth : ∀ x ∈ zl ρ A, ∀ y ∈ zl ρ B, inner ℝ x y = 0 := by
     intro x hx y hy
-    obtain ⟨a, ha, rfl⟩ := (hnSum_mem_zl ρ A x).1 hx
-    obtain ⟨b, hb, rfl⟩ := (hnSum_mem_zl ρ B y).1 hy
+    obtain ⟨a, ha, rfl⟩ := (_root_.Formalism.HN.satR_mem_zl ρ A x).1 hx
+    obtain ⟨b, hb, rfl⟩ := (_root_.Formalism.HN.satR_mem_zl ρ B y).1 hy
     exact h a ha b hb
   obtain ⟨hd, hdeg, -⟩ := Formalism.F.orthSum E (zl ρ A) (zl ρ B) hA.2 hB.2 horth
   refine ⟨⟨?_, ?_⟩, ?_, ?_⟩
@@ -172,13 +153,13 @@ theorem hnSum_orth {A B : Submodule R V} (hA : IsLat ρ A) (hB : IsLat ρ B)
       nth_rewrite 2 [e]
       exact h _ (A.sub_mem ha ha') _ (B.sub_mem hb' hb)
     rw [sub_eq_zero.1 hu, sub_eq_zero.1 hv]
-  · rw [hnSum_zl_sup]
+  · rw [_root_.Formalism.HN.degSupermod_zl_sup]
     exact hd
   · rw [eq_bot_iff]
     intro x hx
     exact (Submodule.mem_bot R).2 (hnSum_orth_zero ρ hA hx.1 (h x hx.1 x hx.2))
   · unfold deg
-    rw [hnSum_zl_sup]
+    rw [_root_.Formalism.HN.degSupermod_zl_sup]
     exact hdeg
 
 end
@@ -193,7 +174,7 @@ variable {R : Type u} {V : Type v} {E : Type w} [Ring R] [AddCommGroup V] [Modul
 theorem hnSum_rk_bot : rk ρ (⊥ : Submodule R V) = 0 := by
   have e : zl ρ (⊥ : Submodule R V) = ⊥ := by
     ext y
-    simp [hnSum_mem_zl, eq_comm]
+    simp [_root_.Formalism.HN.satR_mem_zl, eq_comm]
   unfold rk Formalism.F.rk
   rw [e]
   simp
@@ -876,10 +857,6 @@ namespace Formalism.HN
 
 universe u v w
 
-theorem hnExtreme_mem_iff {n : ℕ} (f : Fin n → ℝ) (hf : Antitone f) (θ : ℝ) (j : Fin n) :
-    θ ≤ f j ↔ (j : ℕ) < (Finset.univ.filter (fun i => θ ≤ f i)).card := by
-  first | (apply Bl.general_b_fact_left_form.goal1 <;> assumption)
-
 theorem hnExtreme_of (h1 : HNSlopes.{u, v, w}) (h2 : MuChar.{u, v, w}) (h3 : HNStep.{u, v, w})
     (h4 : SatBasic.{u, v, w}) : HNExtreme.{u, v, w} := by
   intro R V E _ _ _ _ _ _ ρ L hL hL0
@@ -890,7 +867,7 @@ theorem hnExtreme_of (h1 : HNSlopes.{u, v, w}) (h2 : MuChar.{u, v, w}) (h3 : HNS
       θ ≤ slopeList ρ L j ↔ (j : ℕ) < rk ρ (hnStep ρ L θ) := by
     intro θ j
     rw [← hcard θ]
-    exact hnExtreme_mem_iff _ hanti θ j
+    exact _root_.Bl.general_b_fact_left_form.goal1 _ hanti θ j
   have hSL : ∀ θ : ℝ, hnStep ρ L θ ≤ L := fun θ => (h3 R V E ρ L hL θ).1.1
   have hbot : rk ρ (⊥ : Submodule R V) = 0 := (B4 ⊥ bot_le).2 rfl
   have hrkpos : 0 < rk ρ L := by
@@ -1381,29 +1358,26 @@ section -- clump:auto
 
 namespace Formalism.HN
 
-theorem satR : SatR := real_saturation_property
-theorem finSup : FinSup := finite_supremum_slopes
-theorem satBasic : SatBasic := saturation_basic_properties
-theorem ratioMax : RatioMax := maximal_slope_ratio
-theorem degSupermod : DegSupermod := degree_supermodular
-theorem muChar : MuChar := slope_characterization
-theorem hnStep_spec : HNStep := hnStep_of degSupermod muChar ratioMax finSup satR satBasic
-theorem hnSum : HNSum := polygon_slope_sum
-theorem hnSlopes : HNSlopes := polygon_slopes_characterization
-theorem shiftInvariance : ShiftInvariance := shiftInvariance_of muChar muChar hnSlopes
-theorem plLat : PlLat := place_lattice_structure
-theorem sizeMu : SizeMu := size_maximal_slope
-theorem rescaleCovol : RescaleCovol := rescale_covolume_formula
-theorem twist : Twist := twist_of rescaleCovol plLat shiftInvariance
-theorem slopeIneqMean : SlopeIneqMean := slope_inequality_mean
-theorem htGram : HtGram := height_gram_determinant
+alias satR := _root_.Formalism.HN.real_saturation_property
+alias finSup := _root_.Formalism.HN.finite_supremum_slopes
+alias satBasic := _root_.Formalism.HN.saturation_basic_properties
+alias degSupermod := _root_.Formalism.HN.degree_supermodular
+alias muChar := _root_.Formalism.HN.slope_characterization
+theorem hnStep_spec : HNStep := hnStep_of degSupermod muChar _root_.Formalism.HN.maximal_slope_ratio finSup satR satBasic
+alias hnSum := _root_.Formalism.HN.polygon_slope_sum
+theorem shiftInvariance : ShiftInvariance := shiftInvariance_of muChar muChar _root_.Formalism.HN.polygon_slopes_characterization
+alias plLat := _root_.Formalism.HN.place_lattice_structure
+alias sizeMu := _root_.Formalism.HN.size_maximal_slope
+theorem twist : Twist := twist_of _root_.Formalism.HN.rescale_covolume_formula plLat shiftInvariance
+alias slopeIneqMean := _root_.Formalism.HN.slope_inequality_mean
+alias htGram := _root_.Formalism.HN.height_gram_determinant
 theorem htImage : HtImage := height_image_formula
 theorem sizeIneq : SizeIneq := sizeIneq_of size_maximal_slope height_image_formula place_lattice_structure
 theorem rerealize : Rerealize := lattice_rerealization
 theorem quotRealize : QuotRealize := quotient_lattice_realization
-theorem theoremFSharp : TheoremFSharp := frame_theorem_sharp
-theorem theoremF : TheoremF := frame_theorem_log_ideal
-theorem dualPl : DualPl := dual_polygon_identity
+alias theoremFSharp := _root_.Formalism.HN.frame_theorem_sharp
+alias theoremF := _root_.Formalism.HN.frame_theorem_log_ideal
+alias dualPl := _root_.Formalism.HN.dual_polygon_identity
 
 end Formalism.HN
 end -- clump:auto

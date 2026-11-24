@@ -917,17 +917,7 @@ theorem exists_cball_sup (a b : Fˣ) : ∃ s : Fˣ, cball a ⊆ cball s ∧ cbal
   · exact ⟨a, Set.Subset.rfl,
       fun x (hx : ValuativeRel.valuation F x ≤ _) => (le_trans hx h : ValuativeRel.valuation F x ≤ _)⟩
 
-theorem exists_cball_of_isCompact {K : Set F} (hK : IsCompact K) : ∃ s : Fˣ, K ⊆ cball s := by
-  have hcov : K ⊆ ⋃ s : Fˣ, cball s := by
-    intro x _
-    by_cases hx : x = 0
-    · exact Set.mem_iUnion.mpr ⟨1, by simp [cball, hx]⟩
-    · exact Set.mem_iUnion.mpr ⟨Units.mk0 x hx, by simp [cball]⟩
-  have hd : Directed (· ⊆ ·) (fun s : Fˣ => cball s) := by
-    intro a b
-    obtain ⟨s, h1, h2⟩ := exists_cball_sup a b
-    exact ⟨s, h1, h2⟩
-  exact hK.elim_directed_cover _ (fun s => GlobalTheory.SplitWeil.isOpen_cball s) hcov hd
+alias exists_cball_of_isCompact := _root_.GlobalTheory.KSp.Cancel.compact_subset_cball
 
 theorem mul_mem_cball_iff (t s : Fˣ) (x : F) : (t : F) * x ∈ cball s ↔ x ∈ cball (t⁻¹ * s) := by
   simp only [cball, Set.mem_setOf_eq, Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀]

@@ -91,8 +91,8 @@ theorem isPullback_bc {E : Spc} {S : Scheme.{0}} (p : E ⟶ sch.obj S) {V U : Ov
 
 theorem main : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (E : Spc) (p : E ⟶ sch.obj S) (U : Over S) (ι : Type) (V : ι → Over S) (j : ∀ i, V i ⟶ U), IsColimit (Cofan.mk U.left (fun i => (j i).left)) → ∀ n : ℤ, Function.Bijective (fun (x : H R ((bc p).obj U) F n) (i : ι) => pull R ((bc p).map (j i)) F n x) := by
   intro R _ F S E p U ι V j hc n
-  refine GlobalTheory.T.etaleSpaceCohomology_levelwise_coproduct_bijective R F ((bc p).obj U) ι (fun i => (bc p).obj (V i)) (fun i => (bc p).map (j i)) (fun k => ?_) n
-  refine GlobalTheory.T.freeEtaleSheaf_presheaf_over_coproduct_eq_sum R U.left ι (fun i => (V i).left) (fun i => (j i).left) hc (((bc p).obj U).obj k)
+  refine _root_.GlobalTheory.EtC.HCofan.main R F ((bc p).obj U) ι (fun i => (bc p).obj (V i)) (fun i => (bc p).map (j i)) (fun k => ?_) n
+  refine _root_.GlobalTheory.EtC.FreeCofan.main R U.left ι (fun i => (V i).left) (fun i => (j i).left) hc (((bc p).obj U).obj k)
     ((pullback.snd p (sch.map U.hom)).app k) (fun i => ((bc p).obj (V i)).obj k)
     (fun i => ((bc p).map (j i)).app k) (fun i => (pullback.snd p (sch.map (V i).hom)).app k) (fun i => ?_)
   exact (isPullback_bc p (j i)).map ((evaluation _ _).obj k)
@@ -109,8 +109,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleSpaceCohomology_baseChange_coprod_bijective : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (E : Spc) (p : E ⟶ sch.obj S) (U : Over S) (ι : Type) (V : ι → Over S) (j : ∀ i, V i ⟶ U), IsColimit (Cofan.mk U.left (fun i => (j i).left)) → ∀ n : ℤ, Function.Bijective (fun (x : H R ((bc p).obj U) F n) (i : ι) => pull R ((bc p).map (j i)) F n x) := by
-  first | (exact @GlobalTheory.EtC.BcCoprod.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceCohomologyBaseChangeCoprodBijectiveStatement =====
@@ -126,7 +124,7 @@ namespace GlobalTheory.EtC
 
 theorem stalk_local_classes : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (Θ Θ₂ : Over S ⥤ Spc) (α : Θ ⟶ Θ₂), (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F (Θ.mapCone c)) → (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F (Θ₂.mapCone c)) → ∀ (O : Type) [CommRing O] (s : Spec (CommRingCat.of O) ⟶ S), IsStalk O s → Eqv R (α.app (Over.mk s)) F → ∀ (U : Over S), Etale U.hom → ∀ (g : Over.mk s ⟶ U) (n : ℤ), (∀ x : H R (Θ.obj U) F n, ∃ (V : Over S) (g₁ : Over.mk s ⟶ V) (h : V ⟶ U) (y : H R (Θ₂.obj V) F n), Etale V.hom ∧ g₁ ≫ h = g ∧ pull R (α.app V) F n y = pull R (Θ.map h) F n x) ∧ ∀ y : H R (Θ₂.obj U) F n, pull R (α.app U) F n y = 0 → ∃ (V : Over S) (g₁ : Over.mk s ⟶ V) (h : V ⟶ U), Etale V.hom ∧ g₁ ≫ h = g ∧ pull R (Θ₂.map h) F n y = 0 := by
   intro R _ F S Θ Θ' α hΘ hΘ' O _ s hs hα U hU g n
-  obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := GlobalTheory.T.exists_cofiltered_limit_affine_etale_of_isStalk' S O s hs
+  obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := _root_.GlobalTheory.EtC.exists_cofiltered_limit_affine_etale_of_isStalk S O s hs
   haveI : IsConnected I := IsCofiltered.isConnected I
   have hcF : IsLimit ((Over.forget S).mapCone (Cone.mk _ π)) := isLimitOfPreserves (Over.forget S) hl
   haveI : ∀ i, IsAffine ((G ⋙ Over.forget S).obj i) := fun i => (hG i).1
@@ -190,8 +188,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleSpaceCohomology_stalk_local_classes : ∀ (R : Type) [CommRing R] (F : Shv R) (S : Scheme.{0}) (Θ Θ' : Over S ⥤ Spc) (α : Θ ⟶ Θ'), (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F ((Θ).mapCone c)) → (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F ((Θ').mapCone c)) → ∀ (O : Type) [CommRing O] (s : Spec (CommRingCat.of O) ⟶ S), IsStalk O s → Eqv R (α.app (Over.mk s)) F → ∀ (U : Over S), Etale U.hom → ∀ (g : Over.mk s ⟶ U) (n : ℤ), (∀ x : H R (Θ.obj U) F n, ∃ (V : Over S) (g' : Over.mk s ⟶ V) (h : V ⟶ U) (y : H R (Θ'.obj V) F n), Etale V.hom ∧ g' ≫ h = g ∧ pull R (α.app V) F n y = pull R (Θ.map h) F n x) ∧ ∀ y : H R (Θ'.obj U) F n, pull R (α.app U) F n y = 0 → ∃ (V : Over S) (g' : Over.mk s ⟶ V) (h : V ⟶ U), Etale V.hom ∧ g' ≫ h = g ∧ pull R (Θ'.map h) F n y = 0 := by
-  first | (exact @GlobalTheory.EtC.stalk_local_classes)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceCohomologyStalkLocalClassesStatement =====
@@ -254,7 +250,7 @@ theorem contCone_bc_sch_qcqs (R : Type) [CommRing R] (F : Shv R) (hF : Finitary 
 
 theorem contCone_bc_qcqsOver : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (S : Scheme.{0}) (E : Spc) (p : E ⟶ sch.obj S), QcqsOver p → (∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i).left) → ContCone R F ((bc p).mapCone c)) := by
   intro R _ F hF S E p hp I _ _ G c hc hG
-  refine GlobalTheory.T.cohomologyContinuous_base_change_of_levels R F S E p I G c ?_
+  refine _root_.GlobalTheory.EtC.CcStep.cc_step R F S E p I G c ?_
   intro k
   obtain ⟨X, r, e, hqc, hqs, he⟩ := hp k
   exact ⟨X, r, e, he, contCone_bc_sch_qcqs R F hF S X r hqc hqs I G c hc hG⟩
@@ -306,8 +302,8 @@ theorem GlobalTheory.EtC.loc_glob_classes : ∀ (R : Type) [CommRing R] (F : Shv
   intro R _ F S E E' α p hF hq1 hq2 hEqv U hU n
   have cont1 := _root_.GlobalTheory.EtC.contCone_bc_qcqsOver R F hF S E (α ≫ p) hq1
   have cont2 := _root_.GlobalTheory.EtC.contCone_bc_qcqsOver R F hF S E' p hq2
-  choose O instO s g hs v hv using GlobalTheory.T.exists_strictlyHenselianEtaleStalk_over_point S U hU
-  have loc := fun u => @GlobalTheory.T.etaleSpaceCohomology_stalk_local_classes R _ F S _ _ (bcMap α p) cont1 cont2 (O u) (instO u) (s u) (hs u)
+  choose O instO s g hs v hv using _root_.GlobalTheory.EtC.exists_isStalk_over_point S U hU
+  have loc := fun u => @_root_.GlobalTheory.EtC.stalk_local_classes R _ F S _ _ (bcMap α p) cont1 cont2 (O u) (instO u) (s u) (hs u)
     (@hEqv (O u) (instO u) (s u) (hs u)) U hU (g u) n
   have surjOf : ∀ (V : U.left → Over S) (g' : ∀ u, Over.mk (s u) ⟶ V u) (h : ∀ u, V u ⟶ U),
       (∀ u, g' u ≫ h u = g u) → Surjective (cdesc V h).left := by
@@ -316,9 +312,9 @@ theorem GlobalTheory.EtC.loc_glob_classes : ∀ (R : Type) [CommRing R] (F : Shv
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, Category.assoc, cι_cdesc, hg, hv]
   refine ⟨fun x => ?_, fun y hy => ?_⟩
   · choose V g' h y hV hg hy using fun u => (loc u).1 x
-    obtain ⟨Y, hY⟩ := (GlobalTheory.T.etaleSpaceCohomology_baseChange_coprod_bijective R F S E' p (cop V) U.left V (cι V) (cop_isColimit V) n).2 y
+    obtain ⟨Y, hY⟩ := (_root_.GlobalTheory.EtC.BcCoprod.main R F S E' p (cop V) U.left V (cι V) (cop_isColimit V) n).2 y
     refine ⟨cop V, cdesc V h, Y, cop_etale V hV, surjOf V g' h hg, ?_⟩
-    apply (GlobalTheory.T.etaleSpaceCohomology_baseChange_coprod_bijective R F S E (α ≫ p) (cop V) U.left V (cι V) (cop_isColimit V) n).1
+    apply (_root_.GlobalTheory.EtC.BcCoprod.main R F S E (α ≫ p) (cop V) U.left V (cι V) (cop_isColimit V) n).1
     funext u
     simp only
     have hYu : pull R ((bc p).map (cι V u)) F n Y = y u := congrFun hY u
@@ -326,7 +322,7 @@ theorem GlobalTheory.EtC.loc_glob_classes : ∀ (R : Type) [CommRing R] (F : Shv
       hYu, hy u]
   · choose V g' h hV hg hy0 using fun u => (loc u).2 y hy
     refine ⟨cop V, cdesc V h, cop_etale V hV, surjOf V g' h hg, ?_⟩
-    apply (GlobalTheory.T.etaleSpaceCohomology_baseChange_coprod_bijective R F S E' p (cop V) U.left V (cι V) (cop_isColimit V) n).1
+    apply (_root_.GlobalTheory.EtC.BcCoprod.main R F S E' p (cop V) U.left V (cι V) (cop_isColimit V) n).1
     funext u
     simp only [map_zero]
     rw [← pull_comp, ← Functor.map_comp, cι_cdesc, hy0 u]

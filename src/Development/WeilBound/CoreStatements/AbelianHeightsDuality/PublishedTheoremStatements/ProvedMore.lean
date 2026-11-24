@@ -115,6 +115,7 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Topology.Sheaves.Init
 import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOnePOf
+import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.KsetSubset
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -621,7 +622,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.DiscreteSeriesHermitianUnique =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.SemilocalMultiplicity.LowKMultOneP =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.SemilocalMultiplicity.LowKMultOneP", "h": "module\n\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.DiscreteSeriesWeylDimension\npublic import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AdmissibleSmoothVectors.FinalAll\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.Bridge\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.CreAnnApply\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.CycDense\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.FilterAll\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.GeneralizedVermaModulePolynomial\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.KoszulDifferentialAnticommutator\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.RhoSurj\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.WtProj\nimport CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOnePOf\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.CompactFiniteAdelesAwayPBoundedDenominators\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsAdFam\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsPowEqZero\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InNOfMem\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.OrthCycCycStable\npublic import Development.AutomorphicSpectrum.Proofs.SemilocalMultiplicity.DsInfCharCap\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.DifferentialCommutesWeightOperator\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.SemilocalMultiplicity.LowKMultOneP", "h": "module\n\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.DiscreteSeriesWeylDimension\npublic import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AdmissibleSmoothVectors.FinalAll\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.Bridge\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.CreAnnApply\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.CycDense\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.FilterAll\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.GeneralizedVermaModulePolynomial\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.KoszulDifferentialAnticommutator\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.RhoSurj\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.WtProj\nimport CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOnePOf\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.CompactFiniteAdelesAwayPBoundedDenominators\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsAdFam\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsPowEqZero\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InNOfMem\npublic import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.OrthCycCycStable\npublic import Development.AutomorphicSpectrum.Proofs.SemilocalMultiplicity.DsInfCharCap\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.CreationOperators.DifferentialCommutesWeightOperator\nimport Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.KsetSubset\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -633,20 +634,18 @@ theorem hGenCO : GenCO := genCO_of koszul_differential_sq_zero (cover2_of (acycA
 
 theorem hInj : Inj :=
   inj_of (vanK_of (cok_of hGenCO) GlobalTheory.CompanionTheory.LKWtProj.wtProj
-    (GlobalTheory.CompanionTheory.KWeightMajor.wtMajor_of GlobalTheory.CompanionTheory.TransS.InfChar.hLowSpan)) GlobalTheory.CompanionTheory.LKWtProj.wtProj koszul_differential_sq_zero
+    (GlobalTheory.CompanionTheory.KWeightMajor.wtMajor_of _root_.GlobalTheory.CompanionTheory.KLowSpan.lowSpan_holds)) GlobalTheory.CompanionTheory.LKWtProj.wtProj koszul_differential_sq_zero
 
 theorem hMultAlg : MultAlg :=
-  multAlg_of GlobalTheory.CompanionTheory.TransS.InfChar.hLowSpan GlobalTheory.CompanionTheory.TransS.InfChar.hHWMap GlobalTheory.CompanionTheory.LKDens.dens
+  multAlg_of _root_.GlobalTheory.CompanionTheory.KLowSpan.lowSpan_holds GlobalTheory.CompanionTheory.TransS.InfChar.hHWMap GlobalTheory.CompanionTheory.LKDens.dens
     GlobalTheory.CompanionTheory.LKInvLift.invLift GlobalTheory.CompanionTheory.HCdecomp.hcdec hGenCO top_degree_cycle hInj
 
 theorem hKModExists : KModExists :=
   GlobalTheory.CompanionTheory.KModExists.kModExists GlobalTheory.CompanionTheory.TransS.InfChar.hSmMod CompanionTheory.D.gk.admitted.kFin_mem_smoothVecs
-    GlobalTheory.CompanionTheory.TransS.InfChar.hKFinStab GlobalTheory.CompanionTheory.TransS.InfChar.hStabLink GlobalTheory.CompanionTheory.TransS.InfChar.hHWofType
+    _root_.UpperTheory.Reformulated.B.Gc1.kFinStab GlobalTheory.CompanionTheory.TransS.InfChar.hStabLink GlobalTheory.CompanionTheory.TransS.InfChar.hHWofType
     GlobalTheory.CompanionTheory.TransS.InfChar.hTypeOfHW
 
-theorem hOrthCyc : OrthCyc := GlobalTheory.CompanionTheory.LowKType.orthCyc
-
-theorem lowKMultOneP : LowKMultOneP := lowKMultOneP_of hMultAlg hKModExists cyclic_vectors_dense hOrthCyc
+theorem lowKMultOneP : LowKMultOneP := lowKMultOneP_of hMultAlg hKModExists cyclic_vectors_dense _root_.GlobalTheory.CompanionTheory.LowKType.orthCyc
 
 theorem lowKMultOne : Formalism.MainNotions.DiscreteSeriesWeylDimension.LowKMultOne := low_K_type_multiplicity_one_of lowKMultOneP
 
@@ -879,7 +878,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FunctionalEquationOfUnramified =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteEmbeddingMemStandardOpenSubgroup =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteEmbeddingMemStandardOpenSubgroup", "h": "module\n\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactors\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactorsInverse\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteEmbeddingMemStandardOpenSubgroup", "h": "module\n\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactors\npublic import GroundTheory.GlobalFields.TateThesis.EulerFactorsInverse\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.GlobalFields.IdeleGroups.LocalConditionIndex\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -888,25 +887,12 @@ open scoped nonZeroDivisors
 
 namespace GlobalTheory.CompanionTheory.PartialZeta
 
-theorem infiniteEmbedding_mem_standardOpenSubgroup {F : Type*} [Field F] [NumberField F]
-    (w : InfinitePlace F) (a : (w.Completion)ˣ) :
-    infiniteEmbedding w a ∈ standardOpenSubgroup F := by
-  refine (mem_standardOpenSubgroup F).2 fun v ↦ ?_
-  have h1 : ((infiniteEmbedding w a : IdeleGroup F) : AdeleRing (𝓞 F) F).2 v = 1 := by
-    rw [coe_infiniteEmbedding]
-    rfl
-  have h2 : (((infiniteEmbedding w a)⁻¹ : IdeleGroup F) : AdeleRing (𝓞 F) F).2 v = 1 := by
-    rw [← map_inv, coe_infiniteEmbedding]
-    rfl
-  rw [h1, h2]
-  exact ⟨one_mem _, one_mem _⟩
-
 theorem infiniteParams_eq_zero {F : Type*} [Field F] [NumberField F] (χ : HeckeCharacter F)
     (hχ : standardOpenSubgroup F ≤ χ.toIdele.ker) (w : InfinitePlace F) :
     χ.infiniteParams w = (0, 0) := by
   refine (χ.infiniteParams_unique w (p := (0, 0)) (fun _ ↦ ⟨le_rfl, by norm_num⟩) fun a ↦ ?_).symm
   have h : χ.toIdele (infiniteEmbedding w a) = 1 :=
-    hχ (infiniteEmbedding_mem_standardOpenSubgroup w a)
+    hχ (_root_.GroundTheory.Global.IdeleGroup.infiniteEmbedding_mem_standardOpenSubgroup w a)
   simp [HeckeCharacter.infiniteComponent_apply, h]
 
 theorem gammaFactor_eq_of_unramified : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
@@ -1362,35 +1348,7 @@ section -- clump:auto
 
 namespace PositivityTheory.Prw
 
-theorem idealInvariantsOneOrbitSt_holds : GlobalTheory.Published.IdealInvariantsOneOrbitSt :=
-  GlobalTheory.CompanionTheory.CM.idealInvariantsOneOrbit
-
-theorem discreteSeriesHermitianUnique_holds : GlobalTheory.Published.DiscreteSeriesHermitianUnique :=
-  GlobalTheory.CompanionTheory.Front.discreteSeriesHermitianUnique
-
-theorem discreteSeriesLowestKType_holds : GlobalTheory.Published.DiscreteSeriesLowestKType :=
-  GlobalTheory.CompanionTheory.Glob.discreteSeriesLowestKType
-
-theorem bernsteinZelevinskyFiniteness_holds : GlobalTheory.Published.BernsteinZelevinskyFiniteness :=
-  GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness
-
-theorem partialZetaFunctionalEquation_holds : GlobalTheory.Published.PartialZetaFunctionalEquation :=
-  GlobalTheory.CompanionTheory.Hypotheses₂.partialZetaFunctionalEquation
-
-theorem moyPrasadJacquetIso_holds : GlobalTheory.Published.MoyPrasadJacquetIso :=
-  GlobalTheory.CompanionTheory.MoyPrasadTop.moyPrasadJacquetIso
-
-theorem weberRayFieldSt_holds : GlobalTheory.Published.WeberRayFieldSt :=
-  GlobalTheory.CompanionTheory.WeberRay.weberRayField
-
-theorem ellipticMainTheoremCM_holds : GlobalTheory.Published.EllipticMainTheoremCM :=
-  GlobalTheory.CompanionTheory.Hypotheses₂.ellipticMainTheoremCM
-
-theorem dixmierMalliavinFactorisation_holds : GlobalTheory.Published.DixmierMalliavinFactorisation :=
-  PositivityTheory.DM.dixmierMalliavinFactorisation_holds
-
-theorem siegelKlingen_holds : GlobalTheory.Published.SiegelKlingen :=
-  GlobalTheory.CompanionTheory.Hypotheses₂.siegelKlingen
+alias bernsteinZelevinskyFiniteness_holds := _root_.GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness
 
 end PositivityTheory.Prw
 end -- clump:auto

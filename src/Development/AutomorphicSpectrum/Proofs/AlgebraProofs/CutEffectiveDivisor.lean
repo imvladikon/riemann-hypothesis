@@ -441,8 +441,7 @@ section -- clump:auto
 
 namespace GlobalTheory.CompanionTheory.CommAlg.BlowUpFibre
 
-theorem main : GroundTheory.Heights₂.Heights.NumbersDVR.BlowUpFibreSemilocal.Statement.{0} :=
-  PositivityTheory.Xgn.t_s_blowupfibre
+alias main := _root_.PositivityTheory.Xgn.t_s_blowupfibre
 
 end GlobalTheory.CompanionTheory.CommAlg.BlowUpFibre
 end -- clump:auto

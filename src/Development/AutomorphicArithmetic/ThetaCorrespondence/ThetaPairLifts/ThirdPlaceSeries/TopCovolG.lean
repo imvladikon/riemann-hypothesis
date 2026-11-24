@@ -295,12 +295,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.coreLe_of_gram_meas_liftRational : _root_.GlobalTheory.CovTop.GramCondition → _root_.GlobalTheory.CovTop.MeasureCondition → _root_.GlobalTheory.CovTop.LiftRational → _root_.GlobalTheory.CovTop.CoreBound' := by
-  first | exact @_root_.GlobalTheory.CoreSlope.coreLe_of_gram_meas_rat_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CoreLeOfGramMeasRatStatement =====
@@ -329,9 +323,9 @@ namespace GlobalTheory.CovTop.DegProof
 theorem covering_degree_eq_alt : HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.GrothendieckDeformation →
     GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree := by
   intro hX h2 hS hT hG hQ hN hDG hSz hF
-  have hP := _root_.GlobalTheory.T.covering_topology_refinement h2
-  refine Closed.imp (Closed.and (Closed.and (_root_.GlobalTheory.T.valuation_multiplicity_run_estimate_alt h2 hG hQ hS hT hN hDG hSz hF) _root_.GlobalTheory.HSApp.wtBig_run_alt)
-    (Closed.and (Closed.and (_root_.GlobalTheory.T.weight_parameter_strict_antitone_alt hSz) (_root_.GlobalTheory.T.size_bounds_for_family_alt hSz)) hDG)) ?_
+  have hP := _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems.toClassicalTheorems h2
+  refine Closed.imp (Closed.and (Closed.and (_root_.GlobalTheory.ValMultRun.valuation_multiplicity_of_consecutive_run_alt h2 hG hQ hS hT hN hDG hSz hF) _root_.GlobalTheory.HSApp.wtBig_run_alt)
+    (Closed.and (Closed.and (_root_.GlobalTheory.QuoWt.weights_at_point_alt hSz) (_root_.GlobalTheory.CovTop.CovSz.size_rows_alt hSz)) hDG)) ?_
   rintro eps Fm CH - ⟨⟨⟨_, -, a₁⟩, _, -, a₂⟩, ⟨⟨_, -, a₃⟩, _, -, a₄⟩, _, -, a₅⟩
   obtain ⟨x0, a⟩ := (a₁.and a₂).and ((a₃.and a₄).and a₅)
   clear a₁ a₂ a₃ a₄ a₅
@@ -344,9 +338,9 @@ theorem covering_degree_eq_alt : HypothesesX → _root_.GlobalTheory.CovTop.Publ
   have hW := a₂ i hi
   have hV := a₁ i hi Y hY
   rw [hQuo u1 hu1]
-  have hPr := _root_.GlobalTheory.T.proportionality_principle_compactification h2 hS hT hN _ p.T hLaw _ hp1 hq1 hE hIn Y _ _ hY.1
-  have hEq := _root_.GlobalTheory.T.compactification_top_chern_eq_volume h2 hS hT hN _ p.T hLaw _ hp1 hq1 hE hIn Y _ _ hY.1
-  have hBir := _root_.GlobalTheory.T.birOn_wtOf_of_consecutive_gap_bound hX hG hQ hS hP h2.q15 h2.q16 _ p.T hLaw _ hp1 hq1 Y _ _ hY.1 _ (fun τ a b hab => by
+  have hPr := _root_.GlobalTheory.CompProport.hirzebruch_proportionality_toroidal h2 hS hT hN _ p.T hLaw _ hp1 hq1 hE hIn Y _ _ hY.1
+  have hEq := _root_.GlobalTheory.CompEqVol.equal_volume_of_compactification h2 hS hT hN _ p.T hLaw _ hp1 hq1 hE hIn Y _ _ hY.1
+  have hBir := _root_.GlobalTheory.DegVal.birOn_of_weight_gaps_large hX hG hQ hS hP h2.q15 h2.q16 _ p.T hLaw _ hp1 hq1 Y _ _ hY.1 _ (fun τ a b hab => by
     have hb := b.2
     have h := hW.gaps τ a (by rw [← hab]; exact hb)
     rw [gap_eq _ hab] at h
@@ -358,20 +352,6 @@ theorem covering_degree_eq_alt : HypothesesX → _root_.GlobalTheory.CovTop.Publ
   refine ⟨CompHt.delPrime Y.U Z' _, ?_, fun Z => key Z Z'⟩
   exact mul_pos (hPr.2 Z') (Int.cast_pos.2 (CompHt.vdm_pos fun τ => (hAnti τ).2))
 end GlobalTheory.CovTop.DegProof
-end
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.coverDegree_of_grothendieck_deformation : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree := by
-  first | exact @_root_.GlobalTheory.CovTop.DegProof.covering_degree_eq_alt
 end
 end
 end -- clump:auto
@@ -596,19 +576,10 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.Basi
 open GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.AllWt GlobalTheory.LevDesc
 open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
 namespace GlobalTheory.CovGminTop
-section Abstract
-variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
-variable [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
-end Abstract
-section Point
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ} (p : PtAt ex Csz) (i : Fin D.R.m)
-end Point
 theorem covering_gmin_of_gram_deep_size : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.GramCondition → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.MinimalGenerator := by
   intro hP hGr hDG hS
   obtain ⟨C, hC, hg⟩ := GlobalTheory.CovGmin.minimal_level_cover_is_good hP
-  refine Closed.imp (((_root_.GlobalTheory.T.weight_parameter_strict_antitone_alt hS).and (_root_.GlobalTheory.T.size_bounds_for_family_alt hS)).and ((_root_.GlobalTheory.T.exists_psi_isTypeLevel_latDeep_eq_latN hP hGr hDG).and hDG)) ?_
+  refine Closed.imp (((_root_.GlobalTheory.QuoWt.weights_at_point_alt hS).and (_root_.GlobalTheory.CovTop.CovSz.size_rows_alt hS)).and ((_root_.GlobalTheory.CovTop.TypeLattice.exists_psi_latDeep_eq_latN_of_covers hP hGr hDG).and hDG)) ?_
   rintro eps Fm CH - ⟨⟨⟨_, -, h1⟩, _, -, h2⟩, ⟨_, -, h3⟩, _, -, h4⟩
   obtain ⟨x1, h5⟩ := GlobalTheory.family_sizes_eventually_large eps Fm (C + 45)
   obtain ⟨x0, h⟩ := (h1.and h2).and (h3.and h4)
@@ -630,20 +601,6 @@ theorem covering_gmin_of_gram_deep_size : _root_.GlobalTheory.CovTop.PublishedHo
   have f2 : (1 : ℝ) ≤ (Fm.D x ι).R.r := by exact_mod_cast (by omega : 1 ≤ (Fm.D x ι).R.r)
   exact le_mul_of_one_le_left (by linarith) (one_le_mul_of_one_le_of_one_le f1 f2)
 end GlobalTheory.CovGminTop
-end
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.covering_gmin_of_prints_gram_deep_size : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.GramCondition → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.MinimalGenerator := by
-  first | exact @_root_.GlobalTheory.CovGminTop.covering_gmin_of_gram_deep_size
 end
 end
 end -- clump:auto
@@ -681,20 +638,6 @@ theorem covering_rank_of_descent_steps_alt : GlobalTheory.CovTop.HypothesesX →
   refine H.trans (mul_le_mul_of_nonneg_right ?_ (Nat.cast_nonneg _))
   exact add_le_add le_rfl (min_le_right _ _)
 end GlobalTheory.CovTop
-end
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.coverRank_of_coverDegree_and_share : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree → _root_.GlobalTheory.CovTop.ShareCondition → _root_.GlobalTheory.CovTop.CoverRank := by
-  first | exact @_root_.GlobalTheory.CovTop.covering_rank_of_descent_steps_alt
 end
 end
 end -- clump:auto
@@ -825,7 +768,7 @@ theorem slope_good_ge : ∀ (K V : Type) [Field K] [NumberField K] [_root_.Numbe
     intro x y
     simp only [(hG v).2]
     exact hpyth v.embedding x y
-  obtain ⟨hrkadd, hcut, hmaj⟩ := Formalism.ExtensionFiltration.goodBadCut K V (Fin n) b X hX e g L hLfg hg hee hsa hint
+  obtain ⟨hrkadd, hcut, hmaj⟩ := _root_.Formalism.ExtensionFiltration.good_bad_split K V (Fin n) b X hX e g L hLfg hg hee hsa hint
   have hM0 : M ≠ ⊥ := fun h => hL0 (le_bot_iff.mp (h ▸ hLM))
   rw [slope_sq_eq hG hLfg] at hmin ⊢
   rw [slope_sq_eq hG hRfg]
@@ -995,12 +938,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.covolX_of_truncation_badSet_lambda_lowBound : _root_.GlobalTheory.CovTop.GramCondition → _root_.GlobalTheory.CovTop.LiftRecursive → _root_.GlobalTheory.CovTop.LiftTruncation → _root_.GlobalTheory.CovTop.LiftBadSet → _root_.GlobalTheory.CovTop.LiftLambdaBound → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.CoreBound' → _root_.GlobalTheory.CovTop.LiftLowBound → _root_.GlobalTheory.CovTop.CovolumeBoundOfX := by
-  first | exact @_root_.GlobalTheory.CovTop.Assembly.covolX_of_lift_bounds_and_coreLe
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CovolXOfStepsStatement =====
@@ -1254,12 +1191,6 @@ theorem exists_deep_covering_level_alt (hP : _root_.GlobalTheory.CovTop.Publishe
 end GlobalTheory.CovTop.DeepExist
 end
 end
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.covering_deepEx_of_prints : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.DeepExistence := by
-  first | exact @_root_.GlobalTheory.CovTop.DeepExist.exists_deep_covering_level_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1430,7 +1361,7 @@ theorem flat_at_of_split_covering (p : PtAt ex Csz) (i : Fin D.R.m) (Y : Cov p i
     FlatAt p i Y (11 * CA + 83) := by
   obtain ⟨hcx, hgood, hflat, hc1, hlog⟩ := hc
   have hj : InR D ((i : ℕ) + 1) := ⟨by omega, by have := i.2; omega⟩
-  have hUn := _root_.GlobalTheory.T.unramified_points_of_deep_cover hP D p.T ((i : ℕ) + 1) Y _ _ p.fw.laws hj hY.1
+  have hUn := _root_.GlobalTheory.UnramCover.unramified_points_at_deep_level hP D p.T ((i : ℕ) + 1) Y _ _ p.fw.laws hj hY.1
   have hrank : 1 ≤ (dat p i).p + (dat p i).q := Inhab.rank_pos p.T.toCore p.fw.laws.pins ((i : ℕ) + 1) hj
   have hev : Even (p.κ i).n := hW.dom.2
   have hFL := ((_root_.GlobalTheory.FlatRootTwist.flat_root_twist hP.p5 D p.T.Q.H (dat p i) Y.d.l₂ Y.d.Xo₂ Y.d.c₂ D.R.r Y.U (fun _ => D.sp.W ((i : ℕ) + 1))
@@ -1509,26 +1440,15 @@ noncomputable section
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.L2 Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.FlatLine GlobalTheory.FlatTw
 namespace GlobalTheory.FlatSplit
-section Congr
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
-  {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ} {D : D7}
-end Congr
-section Weights
-variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} (Dw : Datum H)
-  (a : (E →+* ℂ) × ℕ → ℕ)
-end Weights
 end GlobalTheory.FlatSplit
 namespace GlobalTheory.FlatSplit
 end GlobalTheory.FlatSplit
 namespace GlobalTheory.FlatSplit
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-variable {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts}
-  {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ}
 end GlobalTheory.FlatSplit
 namespace GlobalTheory.FlatSplit
 theorem flat_alt_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.AnchorCondition → _root_.GlobalTheory.CovTop.FlatnessCondition := by
   intro hP hDG hFD hA
-  refine Closed.imp (Closed.and (Closed.and (Closed.and (Closed.and hDG (_root_.GlobalTheory.T.abs_flat_c1_add_logOm_le_and_logSum_badPrimes_le hFD)) hA) _root_.GlobalTheory.T.lift_weight_numerator)
+  refine Closed.imp (Closed.and (Closed.and (Closed.and (Closed.and hDG (_root_.GlobalTheory.CovTop.FlatVal.flat_val_alt hFD)) hA) _root_.GlobalTheory.CovTop.WtShape.wtN_z)
     (_root_.GlobalTheory.CovTop.Sizes.hostN_alt 0)) ?_
   rintro eps Fm CH - ⟨⟨⟨⟨⟨C1, -, h1⟩, ⟨C2, -, h2⟩⟩, ⟨CA, hCA, h3⟩⟩, ⟨C4, -, h4⟩⟩, ⟨C5, -, h5⟩⟩
   refine ⟨11 * CA + 83, by positivity, ?_⟩
@@ -1538,12 +1458,6 @@ theorem flat_alt_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems �
   exact _root_.GlobalTheory.FlatSplit.flat_at_of_split_covering p i Y hY hP (a1 i hi Y hY) (a2 i hi Y hY) (a3 i) (a4 i) (a5 i)
 end GlobalTheory.FlatSplit
 end
-end
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.flat_of_prints_deepGood_flatDeg_anchor : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.AnchorCondition → _root_.GlobalTheory.CovTop.FlatnessCondition := by
-  first | exact @_root_.GlobalTheory.FlatSplit.flat_alt_alt
 end
 end
 end -- clump:auto
@@ -1693,18 +1607,12 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.sum_c_of_deep_good : _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SumBoundCondition := by
-  first | exact @_root_.GlobalTheory.CovTop.sumC_of_deepGood_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SumCOfDeepGoodStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformLowerBoundOfSums =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformLowerBoundOfSums", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol\npublic import Formalism.MeanHeightDescent.DivisionInequalityWithCovolume\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformLowerBoundOfSums", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.CovolXOfCovol\npublic import Formalism.MeanHeightDescent.DivisionInequalityWithCovolume\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.MeanHeightDescent.DivisionInequalityWithCovolume\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1731,7 +1639,7 @@ theorem core (ι : Type) [Finite ι] [Nonempty ι] (T D A cs X cc z ρ R Bn δ' 
   rw [finsum_eq_sum_of_fintype] at h5
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype] at h11
   rw [Nat.card_eq_fintype_card] at h5
-  have := Formalism.ExtensionFiltration.mean_height_sum_bound ι T D A cs X cc z ρ R 0 Bn δ' h sl δ dc degc 0 0 (4 * ((3 * C1 + C2 + 4) * E)) 0 0 0
+  have := _root_.Formalism.ExtensionFiltration.mean_height_sum_bound_holds ι T D A cs X cc z ρ R 0 Bn δ' h sl δ dc degc 0 0 (4 * ((3 * C1 + C2 + 4) * E)) 0 0 0
     (C1 * E) (C1 * E) mu hD hT hA hcs hX hcc hz0 hz1 hρ0 hρ1 hR le_rfl hBn hδ h1 h2 h3 h4 h5
     (fun c => by simpa using h6 c) (by linarith) (by linarith) (by linarith) (by linarith)
   linarith
@@ -1809,12 +1717,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.uniform_lower_bound_of_sums' : _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.CoverDegree → _root_.GlobalTheory.CovTop.ShareCondition → _root_.GlobalTheory.CovTop.HeightCondition → _root_.GlobalTheory.CovTop.CoverHeightSum → _root_.GlobalTheory.CovTop.SumBoundCondition → _root_.GlobalTheory.CovTop.UniformLowerBound := by
-  first | exact @_root_.GlobalTheory.CovTop.FromComp.u_low_of_cover_hyps
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ULowOfStatement =====
@@ -1837,20 +1739,20 @@ theorem topCovolG_alt_alt : _root_.SelfIntersectionVolumeEstimates.VolumeEstimat
   have hS := hH.sieg
   have hK := hX.ks
   have hN := hX.lie
-  have gram := _root_.GlobalTheory.T.covering_gram_of_prints hP
-  have size := _root_.GlobalTheory.T.cov_size_bound
-  have meas := _root_.GlobalTheory.T.covering_meas_of_prints hP
-  have anc := _root_.GlobalTheory.T.anchor_bound
-  have dex := _root_.GlobalTheory.T.covering_deepEx_of_prints hP
-  have dg := _root_.GlobalTheory.T.deepGood_of_toroidal_and_semiabelian hP hGD hQ hS hK hN
-  have fd := _root_.GlobalTheory.T.flatDeg_of_scholzeWeinstein_of_prints hP
-  have deg := _root_.GlobalTheory.T.coverDegree_of_grothendieck_deformation hX hP hS hK hGD hQ hN dg size fd
-  have sh := _root_.GlobalTheory.T.share_of_deep_good_size_flat_deg_cover_degree hX hP hS hK hGD hQ hN dg size fd deg
+  have gram := _root_.GlobalTheory.CovTop.covering_gram_matrix_of_local_traces_alt hP
+  have size := _root_.GlobalTheory.CovTop.SizeRows.size_alt_bis
+  have meas := _root_.GlobalTheory.CovTop.MeasRd.covering_measure_reduction_alt hP
+  have anc := _root_.GlobalTheory.CovTop.anchor_holds_alt
+  have dex := _root_.GlobalTheory.CovTop.DeepExist.exists_deep_covering_level_alt hP
+  have dg := _root_.GlobalTheory.CovTop.DeepGoodAll.deepGood_alt_alt hP hGD hQ hS hK hN
+  have fd := _root_.GlobalTheory.CovTop.FlatDegProof.flatDeg_alt_alt hP
+  have deg := _root_.GlobalTheory.CovTop.DegProof.covering_degree_eq_alt hX hP hS hK hGD hQ hN dg size fd
+  have sh := _root_.GlobalTheory.CovTop.ShareRowsNef.share_alt_alt hX hP hS hK hGD hQ hN dg size fd deg
   have ht := _root_.SelfIntersectionVolumeEstimates.height_lower_bound_general_alt hSB hX hGD hQ hP hH hD dg size deg fd
-  have hs := _root_.GlobalTheory.T.coverHeightSum_of_flatDeg_coverDegree_share hX hP hGD hQ hS hK hN dg size fd deg sh
-  have ul := _root_.GlobalTheory.T.uniform_lower_bound_of_sums' dg size deg sh ht hs (_root_.GlobalTheory.T.sum_c_of_deep_good dg)
-  have low := _root_.GlobalTheory.T.liftLowBound_of_cover_estimates size (_root_.GlobalTheory.T.lowDef_of_gram_of_anchor hP gram anc) dex dg (_root_.GlobalTheory.T.covering_ring_of_prints_gram_deepGood hP gram dg) (_root_.GlobalTheory.T.covering_maps_of_gram_deep_size_flatDeg hP hGD hQ hS hK hN gram dg size fd) (_root_.GlobalTheory.T.coverRank_of_coverDegree_and_share hX hP hGD hQ hS hK hN dg size fd deg sh) (_root_.GlobalTheory.T.covering_gmin_of_prints_gram_deep_size hP gram dg size) (_root_.GlobalTheory.T.flat_of_prints_deepGood_flatDeg_anchor hP dg fd anc) ul
-  exact _root_.GlobalTheory.T.covolX_of_truncation_badSet_lambda_lowBound gram (_root_.GlobalTheory.T.lift_recursion_of_gram_bound gram) (_root_.GlobalTheory.T.liftTruncation_of_prints hP) (_root_.GlobalTheory.T.liftBadSet_of_deep_size_flatDeg_share hX hP hGD hQ hS hK hN hX.green gram dex dg size fd deg sh) (_root_.GlobalTheory.T.liftLambdaBound_of_gram_meas hP gram meas) size (_root_.GlobalTheory.T.coreLe_of_gram_meas_liftRational gram meas (_root_.GlobalTheory.T.liftRational_of_prints hP)) low
+  have hs := _root_.GlobalTheory.CovTop.ShortRoad.hilbertSamuel_of_component_estimates_alt hX hP hGD hQ hS hK hN dg size fd deg sh
+  have ul := _root_.GlobalTheory.CovTop.FromComp.u_low_of_cover_hyps dg size deg sh ht hs (_root_.GlobalTheory.CovTop.sumC_of_deepGood_alt dg)
+  have low := _root_.GlobalTheory.CovTop.LowCover.low_of_cover_hypotheses size (_root_.GlobalTheory.CovTop.DefLow.covering_low_defect_alt hP gram anc) dex dg (_root_.GlobalTheory.CovTop.RingStep.ring_of_covering_descent_alt hP gram dg) (_root_.GlobalTheory.CovTop.DescentMaps.covering_descent_maps_compatible_alt hP hGD hQ hS hK hN gram dg size fd) (_root_.GlobalTheory.CovTop.covering_rank_of_descent_steps_alt hX hP hGD hQ hS hK hN dg size fd deg sh) (_root_.GlobalTheory.CovGminTop.covering_gmin_of_gram_deep_size hP gram dg size) (_root_.GlobalTheory.FlatSplit.flat_alt_alt hP dg fd anc) ul
+  exact _root_.GlobalTheory.CovTop.Assembly.covolX_of_lift_bounds_and_coreLe gram (_root_.GlobalTheory.CovTop.liftRecursive_of_gram gram) (_root_.GlobalTheory.CovTop.covering_cut_of_local_traces_alt hP) (_root_.GlobalTheory.CovTop.covering_bad_locus_of_descent_steps_alt hX hP hGD hQ hS hK hN hX.green gram dex dg size fd deg sh) (_root_.GlobalTheory.CovTop.LamAll.covering_lambda_all_places_alt hP gram meas) size (_root_.GlobalTheory.CoreSlope.coreLe_of_gram_meas_rat_alt gram meas (_root_.GlobalTheory.CovTop.covering_rational_of_local_traces_alt hP)) low
 end SelfIntersectionVolumeEstimates
 end
 end

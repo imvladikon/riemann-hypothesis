@@ -111,7 +111,7 @@ theorem kappa_window_bound : KapWin := by
           push_cast; rfl
       _ ≤ ∑ k, ((L k : ℝ) / ((ℓ : ℝ) - 1) + Real.logb ℓ D) := by
           refine Finset.sum_le_sum fun k _ => ?_
-          refine Formalism.WindowSums.arc_WindowSum ℓ (a k) (L k) D _ ?_ ?_ ?_
+          refine _root_.Formalism.WindowSums.sum_padicValInt_le ℓ (a k) (L k) D _ ?_ ?_ ?_
           · intro i hi
             exact (Finset.mem_filter.mp hi).2
           · intro h0
@@ -382,10 +382,6 @@ end Kap
 
 theorem content_divisibility_clause (D : Formalism.BasicNotions.D7) : adm9 D := content_divisibility
 
-theorem killerVal_holds : Formalism.WindowSums.KillerVal := Formalism.WindowSums.arc_KillerVal
-
-theorem killerKills_holds : Formalism.WindowSums.KillerKills := Formalism.WindowSums.arc_KillerKills
-
 theorem killerKap_of_le {C : ℝ} (hC : 8 ≤ C) : KillerKap C := by
   intro l hl hl5 G S h ell ro a hGh hh ha
   have h8 := killerKap_holds l hl hl5 G S h ell ro a hGh hh ha
@@ -398,7 +394,7 @@ theorem killerKap_of_le {C : ℝ} (hC : 8 ≤ C) : KillerKap C := by
 
 theorem lemma_M_prime_hypothesis (D : Formalism.BasicNotions.D7) (HW : Formalism.BasicNotions.HWOf D.loc) (F : Formalism.BasicNotions.FonOf D.loc D.locA HW) {C : ℝ} (hC : 8 ≤ C) (hLev : KillerLevL D.loc D.locA HW F)
     (hMod : KillerModL D.loc D.locA HW F) : adm8 D HW F C :=
-  ⟨killerVal_holds, killerKills_holds, hLev, hMod, killerKap_of_le hC⟩
+  ⟨_root_.Formalism.WindowSums.arc_KillerVal, _root_.Formalism.WindowSums.annihilatorPoly_kills, hLev, hMod, killerKap_of_le hC⟩
 
 open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.BasicNotions.Loc
 

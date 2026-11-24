@@ -78,6 +78,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.RingTheory.SimpleRing.Principal
 import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.AnalyticDeterminants.SingToDiffAlt
 import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.MollifiedIntegrability.NormMono
+import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.AnalyticDeterminants.HermRealSmul
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.RhoPSmul, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.SpanUnitaryMatrix, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LamTrace, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LoweringDerivativeVacuum, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.DetFirstCayleyBlockNeGroup, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.Imports, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.TraceTransposeMul, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.InnerGen, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.VanishInv, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.EventuallyUnit, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.SingularTestsKillVacuum, Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LocTau
@@ -128,7 +129,7 @@ theorem continuous_integrand (z : ℂ) (X : Matrix (Fin n) (Fin n) ℂ) :
   have hG : ∀ k, InG (ι k) := fun k => LoweringDerivative.inG_of_inK ((hK (ι k)).2 ⟨k, rfl⟩)
   have h1 : Continuous (rhoP (⇑ι) m e X) := LoweringDerivative.continuous_rhoP (⇑ι) hι hG m e X
   have h2 := continuous_Hf m e hψ hψc ha hb
-  have h3 : Continuous fun k : Kg => ((⟨ι k, hG k⟩ : Gs n), z) :=
+  have h3 : Continuous fun k : Kg => ((⟨ι k, hG k⟩ : _root_.PositivityTheory.Rg.Sw.LVs.GSet n), z) :=
     (Continuous.subtype_mk hι (fun k => hG k)).prodMk continuous_const
   have h4 : Continuous fun k : Kg => Hf m e ψ a b z (ι k) := by
     have h5 := h2.comp h3
@@ -422,12 +423,12 @@ theorem Lam_diff : Differentiable ℂ fun z => abelian₂ μ ι m e ψ a b z 1 :
   have hRc : Continuous (rhoP ⇑ι m e 1) := by
     rw [hR]
     refine Continuous.star (Continuous.mul (Continuous.mul ?_ ?_) ?_)
-    · exact hι.matrix_det.zpow₀ e fun k => Or.inl (LoweringDerivative.isUnit_det_of_inG (hιG k)).ne_zero
+    · exact hι.matrix_det.zpow₀ e fun k => Or.inl (_root_.PositivityTheory.Rg.Sw.LVs.isUnit_det_of_inG' (hιG k)).ne_zero
     · exact (hu1.comp hι).matrix_det.zpow₀ _ fun k => Or.inl (det_first_block_ne_zero_group (hιG k))
     · exact (((hu2.comp hι).matrix_conjTranspose).matrix_mul (hu1.comp hι)).matrix_trace
   have hH : Continuous fun p : Kg × ℂ => Hf m e ψ a b p.2 (ι p.1) := by
     have h1 := continuous_Hf m e hψ hψc ha hb
-    refine h1.comp (f := fun p : Kg × ℂ => ((⟨ι p.1, hιG p.1⟩ : Gs n), p.2)) ?_
+    refine h1.comp (f := fun p : Kg × ℂ => ((⟨ι p.1, hιG p.1⟩ : _root_.PositivityTheory.Rg.Sw.LVs.GSet n), p.2)) ?_
     refine Continuous.prodMk ?_ continuous_snd
     refine Continuous.subtype_mk ?_ _
     exact hι.comp continuous_fst
@@ -502,7 +503,7 @@ end PositivityTheory.Rg.Sw.HSt.CompactCayleyBlocks
 
 namespace PositivityTheory.Rg.Sw.HSt
 
-theorem lt2 : MultiplicityOneTestOperators := CompactCayleyBlocks.lt2
+alias lt2 := _root_.PositivityTheory.Rg.Sw.HSt.CompactCayleyBlocks.lt2
 
 end PositivityTheory.Rg.Sw.HSt
 end -- clump:auto
@@ -545,7 +546,7 @@ theorem det_product_mem_slitPlane {x : M2 n} (hx : InG x) : (u1 x).det * (ub1 x)
 
 theorem diff_fz {x : M2 n} (hx : InG x) (m : ℕ) (e : ℤ) (z : ℂ) : DifferentiableAt ℂ (fz m e z) x := by
   have hU : IsOpen {y : M2 n | det y ≠ 0} := isOpen_det_ne
-  have hxU : x ∈ {y : M2 n | det y ≠ 0} := (isUnit_det_of_inG hx).ne_zero
+  have hxU : x ∈ {y : M2 n | det y ≠ 0} := (_root_.PositivityTheory.Rg.Sw.LVs.isUnit_det_of_inG' hx).ne_zero
   have hdet : DifferentiableAt ℂ (fun y : M2 n => det y) x :=
     diffAt_of_cdo (cdo_det (fun i j => (contDiff_apply_apply ℂ i j).contDiffOn)) hU hxU
   have hu1 : DifferentiableAt ℂ (fun y : M2 n => (u1 y).det) x :=
@@ -632,7 +633,7 @@ end PositivityTheory.Rg.Sw.HSt.LoweringDerivative
 
 namespace PositivityTheory.Rg.Sw.HSt
 
-theorem lt1 : LoweringDerivativeVacuum := LoweringDerivative.lt1
+alias lt1 := _root_.PositivityTheory.Rg.Sw.HSt.LoweringDerivative.lt1
 
 end PositivityTheory.Rg.Sw.HSt
 end -- clump:auto
@@ -664,16 +665,12 @@ theorem nbar_block (y : M2 n) (t : ℝ) : (y * nbar t).toBlocks₂₁ = y.toBloc
   conv_lhs => rw [← Matrix.fromBlocks_toBlocks y]
   simp [nbar, Matrix.fromBlocks_multiply]
 
-private theorem JJ_mul_JJ_eq_neg_one : JJ n * JJ n = -1 := by
-  rw [JJ, Matrix.fromBlocks_multiply, ← Matrix.fromBlocks_one, Matrix.fromBlocks_neg]
-  simp
-
 theorem det_ne_of_inG (x : M2 n) (hx : InG x) : x.det ≠ 0 := by
   have hx' : xᴴ * JJ n * x = JJ n := hx
   have h : (-(JJ n * xᴴ * JJ n)) * x = 1 := by
     calc (-(JJ n * xᴴ * JJ n)) * x = -(JJ n * (xᴴ * JJ n * x)) := by
           simp [Matrix.mul_assoc]
-      _ = 1 := by rw [hx', JJ_mul_JJ_eq_neg_one, neg_neg]
+      _ = 1 := by rw [hx', _root_.PositivityTheory.Rg.Sw.AbsSt.IwaPf.JJ_mul_self, neg_neg]
   exact (Matrix.isUnit_det_of_left_inverse h).ne_zero
 
 theorem det_first_cayley_block_ne_group (x : M2 n) (hx : InG x) : (u1 x).det ≠ 0 := by
@@ -1021,7 +1018,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.VanishInv =====
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.EventuallyUnit =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.EventuallyUnit", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.DetFirstCayleyBlockNeGroup\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LocTauAlt\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.SecondCoordMulInner\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.VanishInv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.EventuallyUnit", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.DetFirstCayleyBlockNeGroup\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.LocTauAlt\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.SecondCoordMulInner\npublic import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.CayleyCosetSums.VanishInv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.AnalyticDeterminants.HermRealSmul\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1070,12 +1067,6 @@ theorem eventually_unit (y : M2 n) (hy : InG y) :
   rw [nbar_block, ← hev]
   exact isUnit_iff_ne_zero.2 (fun h => ht ⟨h, ht0⟩)
 
-private theorem inG_mul' {x y : M2 n} (hx : InG x) (hy : InG y) : InG (x * y) := by
-  unfold InG at *
-  rw [Matrix.conjTranspose_mul]
-  calc yᴴ * xᴴ * JJ n * (x * y) = yᴴ * (xᴴ * JJ n * x) * y := by simp only [Matrix.mul_assoc]
-    _ = JJ n := by rw [hx, hy]
-
 private theorem inG_nU_herm' (s : Fin n → Fin n → ℝ) : InG (nU (herm s)) := by
   have hh : (herm s)ᴴ = herm s := by
     ext i j
@@ -1091,7 +1082,7 @@ theorem vanish_all (hmn : m < n) (e : ℤ) (y b : M2 n) (hy : InG y) (hb : InG b
   let G : ℝ → (Fin n → Fin n → ℝ) → ℂ := fun t s => fz m e 0 (y * nbar t * nU (herm s) * b) * ψ s
   let X : ℝ × (Fin n → Fin n → ℝ) → M2 n := fun p => y * nbar p.1 * nU (herm p.2) * b
   have hIn : ∀ p, InG (X p) := fun p =>
-    inG_mul' (inG_mul' (inG_mul' hy (inG_nbar p.1)) (inG_nU_herm' p.2)) hb
+    _root_.PositivityTheory.Rg.Sw.LVs.HolB.inG_mul (_root_.PositivityTheory.Rg.Sw.LVs.HolB.inG_mul (_root_.PositivityTheory.Rg.Sw.LVs.HolB.inG_mul hy (inG_nbar p.1)) (inG_nU_herm' p.2)) hb
   have h1 : Continuous fun p : ℝ × (Fin n → Fin n → ℝ) => nbar (n := n) p.1 := by
     unfold nbar
     exact Continuous.matrix_fromBlocks continuous_const continuous_const
@@ -1124,7 +1115,7 @@ theorem vanish_all (hmn : m < n) (e : ℤ) (y b : M2 n) (hy : InG y) (hb : InG b
   have hev : ∀ᶠ t in 𝓝[≠] (0 : ℝ), ∫ s in tsupport ψ, G t s = 0 := by
     filter_upwards [eventually_unit y hy] with t ht
     rw [← hInt]
-    exact vanish_inv hmn e (y * nbar t) b (inG_mul' hy (inG_nbar t)) hb ht ψ hψ
+    exact vanish_inv hmn e (y * nbar t) b (_root_.PositivityTheory.Rg.Sw.LVs.HolB.inG_mul hy (inG_nbar t)) hb ht ψ hψ
   have hlim : Tendsto (fun t => ∫ s in tsupport ψ, G t s) (𝓝[≠] 0) (𝓝 (∫ s in tsupport ψ, G 0 s)) :=
     (hc.tendsto 0).mono_left nhdsWithin_le_nhds
   have h0 : ∫ s in tsupport ψ, G 0 s = 0 :=

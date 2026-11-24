@@ -1544,17 +1544,12 @@ section Roots
 
 variable {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P)
 
-theorem zeta_pow (j k : ℕ) : AI.ζ (j + k) ^ l ^ k = AI.ζ j := by
-  induction k with
-  | zero => simp
-  | succ k ih => rw [pow_succ', pow_mul, ← add_assoc, AI.ζ_succ, ih]
-
 theorem zeta_prim (j : ℕ) (hj : 1 ≤ j) :
     IsPrimitiveRoot ((AI.ζ j : OC l) : PadicComplex l) (l ^ j) := by
   obtain ⟨i, rfl⟩ := Nat.exists_eq_add_of_le hj
-  have hnot : ¬ AI.ζ (1 + i) ^ l ^ i = 1 := by rw [zeta_pow]; exact AI.ζ_one
+  have hnot : ¬ AI.ζ (1 + i) ^ l ^ i = 1 := by rw [_root_.GlobalTheory.Cyc.ζ_add_pow]; exact AI.ζ_one
   have hfin : AI.ζ (1 + i) ^ l ^ (i + 1) = 1 := by
-    rw [pow_succ, pow_mul, zeta_pow, AI.ζ_succ 0, AI.ζ_zero]
+    rw [pow_succ, pow_mul, _root_.GlobalTheory.Cyc.ζ_add_pow, AI.ζ_succ 0, AI.ζ_zero]
   have h := IsPrimitiveRoot.orderOf (AI.ζ (1 + i))
   rw [orderOf_eq_prime_pow hnot hfin, add_comm i 1] at h
   exact h.map_of_injective (f := (PadicComplexInt l).subtype) Subtype.val_injective
@@ -1565,7 +1560,7 @@ theorem zetaQ_mem (K : FinExt l) {j m : ℕ} (hj : j ≤ m) : P.ζQ j ∈ Ks K m
   refine (le_sup_right : _ ≤ Ks K j) (IntermediateField.subset_adjoin _ _ ?_)
   change P.ζQ j ^ l ^ j = 1
   apply (algebraMap (Om l) (PadicComplex l)).injective
-  have h := congrArg (fun x : OC l => (x : PadicComplex l)) (zeta_pow AI 0 j)
+  have h := congrArg (fun x : OC l => (x : PadicComplex l)) (_root_.GlobalTheory.Cyc.ζ_add_pow AI 0 j)
   rw [map_pow, map_one, ← PadicComplex.coe_eq, ← AI.ζ_eq]
   simpa [AI.ζ_zero] using h
 
@@ -1648,7 +1643,7 @@ theorem exists_decompletion : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.l
     rw [map_add (f := _), map_one, map_pow, map_add (f := _), map_one, E.io_π, h2, h3] at h1
     exact add_left_cancel (h1.trans (one_add_pow_sub LL _ _))
   have hθw : θ w = AI.ζ (1 + n) - 1 := by
-    rw [map_sub, map_one, map_pow, hθ.2, show s + n = (1 + n) + (s - 1) by omega, zeta_pow]
+    rw [map_sub, map_one, map_pow, hθ.2, show s + n = (1 + n) + (s - 1) by omega, _root_.GlobalTheory.Cyc.ζ_add_pow]
   let c : PadicComplex l := ((AI.ζ (1 + n) : OC l) : PadicComplex l) - 1
   have hprim := zeta_prim AI (1 + n) (by omega)
   obtain ⟨u, hu, hlu⟩ := _root_.GlobalTheory.Cyc.Decomp.exists_prime_eq_mul_primitiveRoot_sub_one_pow l (M0 + h0) _ (by rw [hn]; exact hprim)

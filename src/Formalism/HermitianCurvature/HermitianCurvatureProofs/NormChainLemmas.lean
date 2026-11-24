@@ -308,9 +308,9 @@ end Formalism.HermitianLatticeCounting.P.S4aux
 
 namespace Formalism.HermitianLatticeCounting.P
 
-theorem orbit_count_formula : Formalism.HermitianLatticeCounting.S4.OmCount := S4aux.orbit_count_formula
-theorem weighted_cauchy_schwarz : Formalism.HermitianLatticeCounting.S4.WeightedCS := S4aux.weighted_cauchy_schwarz
-theorem fourth_reduction_identity : Formalism.HermitianLatticeCounting.S4.Step4 := S4aux.fourth_reduction_identity
+alias orbit_count_formula := _root_.Formalism.HermitianLatticeCounting.P.S4aux.orbit_count_formula
+alias weighted_cauchy_schwarz := _root_.Formalism.HermitianLatticeCounting.P.S4aux.weighted_cauchy_schwarz
+alias fourth_reduction_identity := _root_.Formalism.HermitianLatticeCounting.P.S4aux.fourth_reduction_identity
 
 end Formalism.HermitianLatticeCounting.P
 end -- clump:auto
@@ -324,9 +324,7 @@ section -- clump:auto
 
 namespace Formalism.HermitianLatticeCounting.Final.S4
 
-theorem weightedCS : Formalism.HermitianLatticeCounting.S4.WeightedCS := Formalism.HermitianLatticeCounting.P.weighted_cauchy_schwarz
-theorem omCount : Formalism.HermitianLatticeCounting.S4.OmCount := Formalism.HermitianLatticeCounting.P.orbit_count_formula
-theorem step4 : Formalism.HermitianLatticeCounting.S4.Step4 := Formalism.HermitianLatticeCounting.P.fourth_reduction_identity
+alias step4 := _root_.Formalism.HermitianLatticeCounting.P.S4aux.fourth_reduction_identity
 
 end Formalism.HermitianLatticeCounting.Final.S4
 end -- clump:auto
@@ -347,28 +345,24 @@ open scoped ComplexOrder ComplexConjugate
 open Classical
 
 theorem exactCores : Formalism.FourierDecayAlt.PN.ExactCores :=
-  ⟨Formalism.HermitianLatticeCounting.Final.S4.step4, Formalism.HermitianLatticeCounting.Final.S4.omCount, Formalism.HermitianLatticeCounting.Final.S4.weightedCS,
-   Formalism.HermitianLatticeCounting.Final.ExpansionTerms.component_total_sixty_four⟩
+  ⟨Formalism.HermitianLatticeCounting.Final.S4.step4, _root_.Formalism.HermitianLatticeCounting.P.S4aux.orbit_count_formula, _root_.Formalism.HermitianLatticeCounting.P.S4aux.weighted_cauchy_schwarz,
+   _root_.Formalism.HermitianLatticeCounting.P.block_minor_sum_pow_sixty_four⟩
 
 theorem loopCores : Formalism.FourierDecayAlt.PN.LoopCores :=
-  ⟨Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.nonDegSum, Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.degSum, Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.single_row_lattice_sum_bound,
-   Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.gainSqrt, Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.lattice_exp_sum_upper_bound, Formalism.FourierDecayAlt.Final.pb_loopsJoint,
-   Formalism.FourierDecayAlt.Final.pb_loopsGiveRows⟩
+  ⟨_root_.Formalism.HermitianLatticeCounting.P.sumNondegenerateRowsLe, _root_.Formalism.HermitianLatticeCounting.P.sumDegenerateRowsLe, _root_.Formalism.HermitianLatticeCounting.P.singleRowBound,
+   _root_.Formalism.HermitianLatticeCounting.P.invSqrtPowLeExp, _root_.Formalism.HermitianLatticeCounting.P.expSumLe', _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_LoopsJoint,
+   _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_LoopsGiveRows⟩
 
 theorem nGChain : Formalism.FourierDecayAlt.PN.NGChain :=
-  ⟨exactCores, Formalism.FourierDecayAlt.Final.pn_classSquaresSum, Formalism.FourierDecayAlt.Final.pn_rowFromClasses,
-   Formalism.FourierDecayAlt.Final.pn_classCS, Formalism.FourierDecayAlt.Final.pn_firstBracket, Formalism.FourierDecayAlt.Final.pn_secondBracket,
-   Formalism.FourierDecayAlt.Final.pn_meanAmpJoint, Formalism.FourierDecayAlt.Final.pn_rowNGAbstract, Formalism.FourierDecayAlt.Final.pn_normBound,
-   Formalism.FourierDecayAlt.Final.pn_framePassage, Formalism.FourierDecayAlt.Final.pn_normRe, Formalism.FourierDecayAlt.Final.pn_exponentSum,
-   Formalism.FourierDecayAlt.Final.pn_nGNumbers⟩
+  ⟨exactCores, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.C.t_ClassSquaresSum, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.E.t_RowFromClasses,
+   _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.C.t_ClassCS, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.D1.t_FirstBracket, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.D2.t_SecondBracket,
+   _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.B.t_MeanAmpJoint, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.E.t_RowNGAbstract, _root_.Formalism.FourierDecayAlt.P.pn_norm_bound,
+   _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.A.t_FramePassage, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.A.t_NormRe, _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.D1.t_ExponentSum,
+   _root_.Formalism.FourierDecayAlt.P.HermitianFormNormLemmas.D3.t_NGNumbers⟩
 
 end Formalism.FourierDecayAlt.P.NormChainLemmas
 
 namespace Formalism.FourierDecayAlt.P
-
-theorem loop_kernels : Formalism.FourierDecayAlt.PN.LoopCores := NormChainLemmas.loopCores
-
-theorem norm_chain : Formalism.FourierDecayAlt.PN.NGChain := NormChainLemmas.nGChain
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

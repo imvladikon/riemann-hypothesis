@@ -594,22 +594,6 @@ noncomputable section
 
 namespace GlobalTheory.GenSpread
 
-theorem exists_ratio {X Y : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K₁ K₂ : Type} [Fintype K₁] [Fintype K₂]
-    {φ₁ : K₁ → (Y ⟶ X)} {ε₁ : K₁ → ℤ} {φ₂ : K₂ → (Y ⟶ X)} {ε₂ : K₂ → ℤ} (hF : FormEq φ₁ ε₁ φ₂ ε₂)
-    {t₁ : LB.Gen (LB.LinComb L φ₁ ε₁)} {t₂ : LB.Gen (LB.LinComb L φ₂ ε₂)} (h₁ : t₁.IsGen) (h₂ : t₂.IsGen) :
-    ∃ c : Γ(Y, ⊤), ∀ (Z : Scheme.{0}) (r : Z ⟶ Y) (z : Z) (J), Good L z J →
-      (val t₁ r z J * (val t₂ r z J)⁻¹).val = gs r z ⊤ c := by
-  obtain ⟨t, -, hv⟩ := exists_gen hL (K' := PEmpty) (φ' := PEmpty.elim) (ε' := PEmpty.elim) (fun U _ h => by
-      refine (Fintype.prod_sum_type _).trans (Eq.trans ?_ (Fintype.prod_empty _).symm)
-      simp only [Sum.elim_inl, Sum.elim_inr, zpow_neg, Finset.prod_inv_distrib]
-      exact mul_inv_eq_one.2 (hF U h))
-    (LB.mulGen L _ _ _ _ t₁ (LB.invGen L _ _ t₂)) (DVR.mulGen_isGen _ _ _ _ _ _ _ h₁ (DVR.invGen_isGen _ _ _ _ h₂))
-  have le : (⊤ : Y.Opens) ≤ LB.wchart L (PEmpty.elim : PEmpty → (Y ⟶ X)) PEmpty.elim := fun _ _ =>
-    Set.mem_iInter.2 fun k => k.elim
-  refine ⟨(res le (t.s PEmpty.elim)).val, fun Z r z J hJ => ?_⟩
-  rw [← val_inv, ← val_mul hJ, ← hv Z r z J hJ, val_of t r z J PEmpty.elim (fun k => k.elim)]
-  exact (congrArg Units.val (gm_res r z le trivial _)).symm.trans (gs_unit r z ⊤ trivial _).symm
-
 def fnOn {R : Type} [CommRing R] : R →+* Γ(Sp R, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
 
 theorem gs_spMap {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (z : Sp S) (a : R) :
@@ -660,7 +644,7 @@ theorem eq_zero_of_generic {R : Type} [CommRing R] [IsDomain R] (W : (Sp R).Open
 
 theorem val_spread : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (θ : R →+* V) (W : (Sp R).Opens) (X : Scheme.{0}) (L : LB X), L.IsLB → ∀ (K₁ K₂ : Type) [Fintype K₁] [Fintype K₂] (φ₁ : K₁ → (W.toScheme ⟶ X)) (ε₁ : K₁ → ℤ) (φ₂ : K₂ → (W.toScheme ⟶ X)) (ε₂ : K₂ → ℤ), (∀ (U : Type) [CommGroup U] (h : (W.toScheme ⟶ X) → U), ∏ i, h (φ₁ i) ^ ε₁ i = ∏ i, h (φ₂ i) ^ ε₂ i) → ∀ (t₁ : LB.Gen (LB.LinComb L φ₁ ε₁)) (t₂ : LB.Gen (LB.LinComb L φ₂ ε₂)), t₁.IsGen → t₂.IsGen → ∀ (lam : (TK R).left ⟶ W.toScheme), lam ≫ W.ι = jK R → ∀ (g : (TK V).left ⟶ W.toScheme), g ≫ W.ι = jK V ≫ spMap θ → ∀ (x y : R) (k : (FractionRing R)ˣ) (k' : (FractionRing V)ˣ), θ y ≠ 0 → (k : FractionRing R) * algebraMap R _ y = algebraMap R _ x → (k' : FractionRing V) * algebraMap V _ (θ y) = algebraMap V _ (θ x) → (∀ z J, Good L z J → val t₁ lam z J = gm (𝟙 (TK R).left) z ⊤ (unitOn k) * val t₂ lam z J) → ∀ z J, Good L z J → val t₁ g z J = gm (𝟙 (TK V).left) z ⊤ (unitOn k') * val t₂ g z J := by
   intro R V _ _ _ _ θ W X L hL K₁ K₂ _ _ φ₁ ε₁ φ₂ ε₂ hF t₁ t₂ h₁ h₂ lam hl g hg x y k k' hy hk hk' H z J hJ
-  obtain ⟨c, hc⟩ := exists_ratio hL hF h₁ h₂
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.RigidLinearisation.exists_ratio hL hF h₁ h₂
   have hu : ∀ {F : Type} [Field F] (u : Fˣ) (w : Sp F),
       (gm (𝟙 (Sp F)) w ⊤ (unitOn u)).val = gsHom (𝟙 (Sp F)) w (fnOn (u : F)) := fun u w =>
     ((gsHom_apply _ _ _).trans (gs_unit _ w ⊤ trivial (unitOn u))).symm
@@ -916,10 +900,6 @@ open GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan GlobalTheory.ZM
 
 namespace GlobalTheory.Mum.CanonPull
 
-theorem lam_isLB {S : Scheme.{0}} (G : Over S) [GrpObj G] [IsCommMonObj G] {L : LB G.left} (hL : L.IsLB) :
-    (abelian₂ G L).IsLB :=
-  ReciprocityTheory.ChartRestriction.G.DVR.linComb_isLB L hL _ _
-
 end GlobalTheory.Mum.CanonPull
 
 
@@ -950,8 +930,8 @@ theorem GlobalTheory.Mum.canon_pull_unif : ∀ (R V' : Type) [CommRing R] [IsDom
     (by rw [← CategoryTheory.Functor.map_comp, hpi]; exact (ha _).symm)
   refine ⟨(Over.pullback (specOf θ)).obj G₁, inferInstance, inferInstance, _, π₂, A, U, isGrpPullback_pullback G₁ (specOf θ), sq, ?_⟩
   rw [show oG₁.act F₁.f = (Over.pullback (specOf θ)).map (oG.act F.f) from ha _] at hU
-  exact LBIso.trans (GlobalTheory.Mum.CanonPull.lam_isLB _ U.LG.isLB)
-    (pull_isLB (GlobalTheory.Mum.CanonPull.lam_isLB _ U₁.LG.isLB) _) (pull_isLB hPl _) hU hl
+  exact LBIso.trans (_root_.GlobalTheory.Mum.UExt.lam_isLB _ U.LG.isLB)
+    (pull_isLB (_root_.GlobalTheory.Mum.UExt.lam_isLB _ U₁.LG.isLB) _) (pull_isLB hPl _) hU hl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalMumfordFamilyPullbackLocalUniformised =====
@@ -1143,14 +1123,6 @@ noncomputable section
 
 namespace GlobalTheory.PullFrom
 
-theorem spMap_comp_ring {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap]
-
-theorem good_exists {X Z : Scheme.{0}} {L : LB X} (hL : L.IsLB) (z : Z) : ∃ J, Good L z J := by
-  obtain ⟨J, hJ, -⟩ := exists_good L hL z (K := Empty) Empty.elim Empty.elim (fun a => a.elim) (fun k => k.elim)
-  exact ⟨J, hJ⟩
-
 private theorem sq_ext_lemma {S Z : Scheme.{0}} {G : Over S} {f g : Z ⟶ (G2 G).left}
     (h₁ : f ≫ (fst G G).left = g ≫ (fst G G).left) (h₂ : f ≫ (snd G G).left = g ≫ (snd G G).left) : f = g :=
   Over.tensorObj_ext _ _ h₁ h₂
@@ -1159,7 +1131,7 @@ theorem pullData_of_dataFrom : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLoc
   intro o W _ _ _ T R V _ _ _ _ θ iw I _ s ε n Q e Q' e' hs hQ hQ'
   obtain ⟨β₀, β₀₂, w₀, hpb₀, hsq₀, hw₀, hc₀, hτ₀⟩ := hQ
   obtain ⟨β₁, β₁₂, w₁, hpb₁, hsq₁, hw₁, hc₁, hτ₁⟩ := hQ'
-  have hcomp : spMap θ ≫ spMap iw = spMap (θ.comp iw) := (spMap_comp_ring iw θ).symm
+  have hcomp : spMap θ ≫ spMap iw = spMap (θ.comp iw) := (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp iw θ).symm
 
   obtain ⟨β, β₂, hpb, hsq, hβ, hβ₂⟩ := GlobalTheory.T.exists_cancel_grpPullback_with_squares (Sp V) (Sp R) (Sp W) Q'.B Q.B T.B (spMap θ) (spMap iw)
     β₁ β₀ β₁₂ β₀₂ (hcomp ▸ hpb₁) hpb₀ hsq₁ hsq₀
@@ -1217,14 +1189,14 @@ theorem pullData_of_dataFrom : ∀ {o W : Type} [CommRing o] [CommRing W] [IsLoc
   · rw [hk₁]
     exact hxy'
   · intro z J hJ
-    obtain ⟨J₀, hJ₀⟩ := good_exists T.M.isLB z
+    obtain ⟨J₀, hJ₀⟩ := _root_.GlobalTheory.UU.exists_good_pt T.M.isLB z
     have hl : (toUnit (TK R)).left ≫ (lift (Q.c a₀) (Q.c b₀)).left =
         (lift (toUnit (TK R) ≫ Q.c a₀) (toUnit (TK R) ≫ Q.c b₀)).left := by
       rw [← Over.comp_left, comp_lift]
     rw [hv₀ z J₀ J hJ₀ hJ, hvu _ _ z J₀ J hJ₀ hJ, hl]
     rfl
   · intro z J J' hJ hJ'
-    obtain ⟨J₀, hJ₀⟩ := good_exists T.M.isLB z
+    obtain ⟨J₀, hJ₀⟩ := _root_.GlobalTheory.UU.exists_good_pt T.M.isLB z
     rw [ha₀, hb₀] at hvu
     rw [hv₁ z J₀ J' hJ₀ hJ', hrel _ _ z J' J J₀ hJ' hJ hJ₀, hvu _ ((TK V).hom ≫ spMap θ) z J₀ J hJ₀ hJ, hsqQ,
       Category.assoc ((TK V).hom) (spMap θ) (spMap iw), hcomp, _root_.mul_assoc]

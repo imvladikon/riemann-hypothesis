@@ -119,7 +119,7 @@ theorem inter_top_pos : ∀ (K : Type) [Field K] (A : AbVar K) (c : Pic A.X.left
   have e : Fin A.dim ≃ J := (Fintype.equivFinOfCardEq hJ).symm
   have h1 : inter A (fun _ : J => cls L hL) = inter A (fun _ : Fin A.dim => cls L hL) :=
     (inter_comp_equiv A e (fun _ : J => cls L hL)).symm
-  rw [h1, GlobalTheory.T.abelianVariety_intersection_eq_lineBundleIntersection K A (Fin A.dim) (fun _ => L) (fun _ => hL)]
+  rw [h1, _root_.GlobalTheory.AV.AbVar.inter_cls_eq_interNum K A (Fin A.dim) (fun _ => L) (fun _ => hL)]
   letI := A.algΓ
   obtain ⟨hI, -, -⟩ := GlobalTheory.AV.AbVar.isIntegral_isLocallyNoetherian_compactSpace K A
   obtain ⟨hs, hp⟩ := GlobalTheory.AV.AbVarProj.strHom_eq_and_isProjOver K A
@@ -144,8 +144,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.abelianVariety_topSelfIntersection_ample_pos : ∀ (K : Type) [Field K] (A : AbVar K) (c : Pic A.X.left), IsAmpleCls c → ∀ (J : Type) [Fintype J], Fintype.card J = A.dim → 0 < inter A (fun _ : J => c) := by
-  first | (exact @GlobalTheory.AV.AmpleTopPos.inter_top_pos)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyTopSelfIntersectionAmplePosStatement =====
@@ -201,7 +199,7 @@ theorem inter_pull_eq_zero_of_not_surjective : ∀ (K : Type) [Field K] (A B : A
     exact (Homeomorph.Set.univ B.X.left).isHomeomorph.topologicalKrullDim_eq
   have hB : topologicalKrullDim B.X.left ≤ (A.dim : ℕ) := by
     rw [GlobalTheory.AV.AbVar.topologicalKrullDim_eq_dim K B, hdim]
-  have h3 := GlobalTheory.PullVanish.withBot_lt_of_add_one_le_nat (h1.trans (h2.trans_le hB))
+  have h3 := _root_.GlobalTheory.VB.lt_of_add_one_le_natCast (h1.trans (h2.trans_le hB))
   have hA : topologicalKrullDim A.X.left ≤ ((0 + A.dim : ℕ) : WithBot ℕ∞) := by
     rw [Nat.zero_add, GlobalTheory.AV.AbVar.topologicalKrullDim_eq_dim K A]
   let e : Fin 0 ⊕ Fin A.dim ≃ J := (Equiv.emptySum (Fin 0) (Fin A.dim)).trans (Fintype.equivFinOfCardEq hJ).symm
@@ -234,8 +232,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.intersection_number_pullback_not_surjective_eq_zero : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), A.dim = B.dim → ¬ Surjective f.hom.left → ∀ (J : Type) [Fintype J], Fintype.card J = A.dim → ∀ c : J → Pic B.X.left, inter A (fun j => CechPic.pull f.hom.left (c j)) = 0 := by
-  first | (exact @GlobalTheory.AV.AbVar.inter_pull_eq_zero_of_not_surjective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberPullbackNotSurjectiveEqZeroStatement =====
@@ -434,8 +430,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.intersection_pullback_isogeny_eq_degree_mul : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), IsIsogeny f → ∀ (J : Type) [Fintype J], Fintype.card J = A.dim → ∀ c : J → Pic B.X.left, inter A (fun j => CechPic.pull f.hom.left (c j)) = deg f * inter B c := by
-  first | (exact @GlobalTheory.AV.AbVar.inter_pull_isogeny_eq_deg_mul)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionPullbackIsogenyEqDegreeMulStatement =====
@@ -458,11 +452,11 @@ theorem inter_pull_eq_deg_mul_inter : ∀ (K : Type) [Field K] (A B : AbVar K) (
       inter A (fun j => CechPic.pull f.hom.left (c j)) = deg f * inter B c := by
   intro K _ A B f hd J _ hJ c
   by_cases hi : IsIsogeny f
-  · exact GlobalTheory.T.intersection_pullback_isogeny_eq_degree_mul K A B f hi J hJ c
+  · exact _root_.GlobalTheory.AV.AbVar.inter_pull_isogeny_eq_deg_mul K A B f hi J hJ c
   · have hs : ¬ Surjective f.hom.left := by
       intro hs
       exact hi ⟨GlobalTheory.AV.AbVar.isFinite_of_surjective_of_dim_eq K A B f hd hs, hs⟩
-    rw [GlobalTheory.T.intersection_number_pullback_not_surjective_eq_zero K A B f hd hs J hJ c, deg, if_neg hi]
+    rw [_root_.GlobalTheory.AV.AbVar.inter_pull_eq_zero_of_not_surjective K A B f hd hs J hJ c, deg, if_neg hi]
     simp
 
 end GlobalTheory.AV.AbVar
@@ -481,8 +475,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.intersection_pullback_eq_degree_mul_intersection : ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B), A.dim = B.dim → ∀ (J : Type) [Fintype J], Fintype.card J = A.dim → ∀ c : J → Pic B.X.left, inter A (fun j => CechPic.pull f.hom.left (c j)) = deg f * inter B c := by
-  first | (exact @GlobalTheory.AV.AbVar.inter_pull_eq_deg_mul_inter)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionPullbackEqDegreeMulIntersectionStatement =====
@@ -551,37 +543,31 @@ theorem hom_finset_sum {B A : AbVar K} {J : Type} (s : Finset J) (g : J → (B �
   | empty => simp
   | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, add_hom, ih]
 
-theorem lam_symm {A : AbVar K} (c : Pic A.X.left) {Y : Over (Sp K)} (x y : Y ⟶ A.X) :
-    AbVar.lam c x y = AbVar.lam c y x := by
-  unfold AbVar.lam
-  rw [mul_comm x y]
-  abel
-
 theorem lam_prod_right {A : AbVar K} (c : Pic A.X.left) {Y : Over (Sp K)} (x : Y ⟶ A.X) {J : Type}
     (s : Finset J) (y : J → (Y ⟶ A.X)) :
     AbVar.lam c x (∏ j ∈ s, y j) = ∑ j ∈ s, AbVar.lam c x (y j) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using (GlobalTheory.T.abelianVarietyMumfordClass_bilinear K A c Y x 1 1 0).2.2.1
+  | empty => simpa using (_root_.GlobalTheory.AV.AbVar.lam_bilinear K A c Y x 1 1 0).2.2.1
   | insert a s ha ih =>
-    rw [Finset.prod_insert ha, Finset.sum_insert ha, (GlobalTheory.T.abelianVarietyMumfordClass_bilinear K A c Y x (y a) _ 0).1, ih]
+    rw [Finset.prod_insert ha, Finset.sum_insert ha, (_root_.GlobalTheory.AV.AbVar.lam_bilinear K A c Y x (y a) _ 0).1, ih]
 
 theorem lam_prod_left {A : AbVar K} (c : Pic A.X.left) {Y : Over (Sp K)} {J : Type}
     (s : Finset J) (x : J → (Y ⟶ A.X)) (y : Y ⟶ A.X) :
     AbVar.lam c (∏ i ∈ s, x i) y = ∑ i ∈ s, AbVar.lam c (x i) y := by
-  rw [lam_symm, lam_prod_right]
-  exact Finset.sum_congr rfl (fun i _ => lam_symm c y (x i))
+  rw [_root_.GlobalTheory.AV.AbVar.lam_swap_of_comm, lam_prod_right]
+  exact Finset.sum_congr rfl (fun i _ => _root_.GlobalTheory.AV.AbVar.lam_swap_of_comm c y (x i))
 
 theorem lam_zpow_zpow {A : AbVar K} (c : Pic A.X.left) {Y : Over (Sp K)} (x y : Y ⟶ A.X) (m n : ℤ) :
     AbVar.lam c (x ^ m) (y ^ n) = (m * n) • AbVar.lam c x y := by
-  rw [(GlobalTheory.T.abelianVarietyMumfordClass_bilinear K A c Y (x ^ m) y y n).2.2.2.2, (GlobalTheory.T.abelianVarietyMumfordClass_bilinear K A c Y x y y m).2.2.2.1, smul_smul,
+  rw [(_root_.GlobalTheory.AV.AbVar.lam_bilinear K A c Y (x ^ m) y y n).2.2.2.2, (_root_.GlobalTheory.AV.AbVar.lam_bilinear K A c Y x y y m).2.2.2.1, smul_smul,
     mul_comm n m]
 
 end GlobalTheory.AV.QuadSum
 
 theorem GlobalTheory.AV.QuadSum.pull_sum_smul : ∀ (K : Type) [Field K] (B A : AbVar K) (c : Pic A.X.left), CechPic.pull (Hom.hom (-(𝟙 A))).left c = c → ∀ (n : ℕ) (f : Fin n → (B ⟶ A)) (m : Fin n → ℤ), 2 • CechPic.pull (Hom.hom (A := B) (B := A) (show B ⟶ A from ∑ i, m i • f i)).left c = ∑ i, ∑ j, (m i * m j) • AbVar.lam c (f i).hom (f j).hom := by
   intro K _ B A c hc n f m
-  rw [← (GlobalTheory.T.mumfordClass_symmetric_pullback_quadratic K B A c hc (∑ i, m i • f i) 1).1, QuadSum.hom_finset_sum, QuadSum.lam_prod_left]
+  rw [← (_root_.GlobalTheory.AV.AbVar.pull_zsmul_of_symm K B A c hc (∑ i, m i • f i) 1).1, QuadSum.hom_finset_sum, QuadSum.lam_prod_left]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [QuadSum.lam_prod_right]
   refine Finset.sum_congr rfl (fun j _ => ?_)
@@ -601,8 +587,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.HTLat GlobalTheory.Published.AbVarRed GlobalTheory.CechPic GlobalTheory.AV GlobalTheory.AV.AbVar
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.two_smul_pullback_symmetric_class_integral_combination : ∀ (K : Type) [Field K] (B A : AbVar K) (c : Pic A.X.left), CechPic.pull (Hom.hom (-(𝟙 A))).left c = c → ∀ (n : ℕ) (f : Fin n → (B ⟶ A)) (m : Fin n → ℤ), 2 • CechPic.pull (Hom.hom (A := B) (B := A) (show B ⟶ A from ∑ i, m i • f i)).left c = ∑ i, ∑ j, (m i * m j) • AbVar.lam c (f i).hom (f j).hom := by
-  first | (exact @GlobalTheory.AV.QuadSum.pull_sum_smul)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoSmulPullbackSymmetricClassIntegralCombinationStatement =====
@@ -645,17 +629,17 @@ theorem GlobalTheory.AV.AbVar.multilinear_quadratic_isHomogeneous' (P : Type*) [
 theorem GlobalTheory.AV.AbVar.deg_isHomogeneousPoly : ∀ (K : Type) [Field K] (A B : AbVar K), A.dim = B.dim → ∀ (n : ℕ) (f : Fin n → (A ⟶ B)), ∃ F : MvPolynomial (Fin n) ℚ, F.IsHomogeneous (2 * A.dim) ∧ ∀ m : Fin n → ℤ, MvPolynomial.eval (fun i => (m i : ℚ)) F = (deg (∑ i, m i • f i) : ℚ) := by
   intro K _ A B hAB n f
   obtain ⟨c, hamp, hsym⟩ := GlobalTheory.AV.AbVar.exists_symm_ample K B
-  obtain ⟨⟨M, hM⟩, -⟩ := GlobalTheory.T.intersection_number_multilinear_symm K A (Fin A.dim) (Fintype.card_fin _)
+  obtain ⟨⟨M, hM⟩, -⟩ := _root_.GlobalTheory.AV.AbVar.inter_multilinear_and_symm K A (Fin A.dim) (Fintype.card_fin _)
   set D : ℤ := inter B (fun _ : Fin A.dim => c) with hD
-  have hDpos : 0 < D := GlobalTheory.T.abelianVariety_topSelfIntersection_ample_pos K B c hamp (Fin A.dim) (by rw [Fintype.card_fin, hAB])
+  have hDpos : 0 < D := _root_.GlobalTheory.AV.AmpleTopPos.inter_top_pos K B c hamp (Fin A.dim) (by rw [Fintype.card_fin, hAB])
   obtain ⟨F, hFh, hFe⟩ := GlobalTheory.AV.AbVar.multilinear_quadratic_isHomogeneous' (Pic A.X.left) A.dim n M
     (fun i j => AbVar.lam c (f i).hom (f j).hom)
   refine ⟨MvPolynomial.C ((1 : ℚ) / ((2 : ℚ) ^ A.dim * D)) * MvPolynomial.map (Int.castRingHom ℚ) F, ?_, ?_⟩
   · have := (MvPolynomial.isHomogeneous_C (Fin n) ((1 : ℚ) / ((2 : ℚ) ^ A.dim * D))).mul (hFh.map (Int.castRingHom ℚ))
     rwa [zero_add] at this
   · intro m
-    have hq := GlobalTheory.T.two_smul_pullback_symmetric_class_integral_combination K A B c hsym n f m
-    have hp := GlobalTheory.T.intersection_pullback_eq_degree_mul_intersection K A B (show A ⟶ B from ∑ i, m i • f i) hAB (Fin A.dim) (Fintype.card_fin _) (fun _ => c)
+    have hq := _root_.GlobalTheory.AV.QuadSum.pull_sum_smul K A B c hsym n f m
+    have hp := _root_.GlobalTheory.AV.AbVar.inter_pull_eq_deg_mul_inter K A B (show A ⟶ B from ∑ i, m i • f i) hAB (Fin A.dim) (Fintype.card_fin _) (fun _ => c)
     have key : MvPolynomial.eval m F = 2 ^ A.dim * ((deg (show A ⟶ B from ∑ i, m i • f i) : ℤ) * D) := by
       rw [hFe m, ← hq, ← hp, ← hM]
       simpa only [RingHom.id_apply, Finset.prod_const, Finset.card_univ, Fintype.card_fin,

@@ -73,6 +73,7 @@ import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Star.Real
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetIteratedPhiEquiv
 import Mathlib.Tactic.Linter.HaveILetI
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBijectiveOfIsSubquotient
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.CentralGenerators.CentralSubGen, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.CentralSub, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.EigenInjectivity.SubInjective, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerCharEqOneOfMemUnipRad, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.LeviScalars.EmbScalarMemLevi, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.PositiveProducts.NontrivialOfNeBot, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.PositiveProducts.PosProdOf, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.SubquotientBounds.LeOfSubsingletonSubQuot, Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.BernOf
@@ -229,9 +230,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace PositivityTheory.RgUd.Prod.CSel
-
-theorem centralSub (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] :
-    CentralSub k := PositivityTheory.RgUd.Prod.CS.centralSub k
 
 end PositivityTheory.RgUd.Prod.CSel
 end -- clump:auto
@@ -1190,7 +1188,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.PositiveProducts.PosProdOf =====
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.SubquotientBounds.LeOfSubsingletonSubQuot =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.SubquotientBounds.LeOfSubsingletonSubQuot", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.TopProdD\npublic import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd\npublic import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.BernsteinExponentBounds.IsInvForm\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdjacentQuotientOfTwoSegment\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCIndValue\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNontrivialDerivative\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeibnizOrderOfExactSequences\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetIteratedPhiEquiv\nimport GroundTheory.LocalFields.PadicLogSeries\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.SubquotientBounds.LeOfSubsingletonSubQuot", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.CentralProducts.TopProdD\npublic import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd\npublic import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.BernsteinExponentBounds.IsInvForm\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdjacentQuotientOfTwoSegment\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCIndValue\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNontrivialDerivative\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeibnizOrderOfExactSequences\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB\nimport Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetIteratedPhiEquiv\nimport GroundTheory.LocalFields.PadicLogSeries\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBijectiveOfIsSubquotient\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1205,13 +1203,6 @@ namespace PositivityTheory.RgUd.Prod.Pos2
 section Gen
 
 variable {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] {ρ : Representation ℂ G V}
-
-theorem nontrivial_of_irr (h : ρ.IsIrreducible) : Nontrivial V := by
-  by_contra hV
-  rw [not_nontrivial_iff_subsingleton] at hV
-  have h2 : (⊥ : Subrepresentation ρ) = ⊤ := Subrepresentation.toSubmodule_injective
-    (Submodule.ext fun x => ⟨fun _ => Submodule.mem_top, fun _ => (Submodule.mem_bot ℂ).2 (Subsingleton.elim _ _)⟩)
-  exact bot_ne_top h2
 
 theorem isUnitarisable_twist_one (hu : IsUnitarisable ρ) (χ : G →* ℂˣ) (hχ : ∀ g, χ g = 1) :
     IsUnitarisable (twist ρ χ) := by
@@ -1302,9 +1293,6 @@ theorem nontrivial_cast_iff {a b : ℕ} (e : a = b) (π : GRep k a) : Nontrivial
 theorem subsingleton_cast_iff {a b : ℕ} (e : a = b) (π : GRep k a) :
     Subsingleton (π.cast e).V ↔ Subsingleton π.V := by
   subst e; rfl
-
-theorem isSmooth_cast {a b : ℕ} (e : a = b) {π : GRep k a} (h : IsSmooth π.ρ) : IsSmooth (π.cast e).ρ := by
-  subst e; exact h
 
 theorem isIrr_cast {a b : ℕ} (e : a = b) {π : GRep k a} (h : π.ρ.IsIrreducible) : (π.cast e).ρ.IsIrreducible := by
   subst e; exact h
@@ -1432,10 +1420,10 @@ theorem piece_iso {r t h₁ n : ℕ} (π₁ : GRep k r) (π₂ : GRep k t) (hh�
         ((derivB ψ m (π₂.cast (Nat.sub_add_cancel hmt).symm)).tw ((1 - (m : ℝ)) / 2))).cast hsz).tw ((L - 1) / 2)) := by
   have e1 : (1 - (h₁ : ℝ)) / 2 + (L - 1) / 2 = ((m : ℕ) : ℝ) / 2 := by rw [← hL]; ring
   have e2 : (1 - (m : ℝ)) / 2 + (L - 1) / 2 = (h₁ : ℝ) / 2 := by rw [← hL]; ring
-  have i1 := GlobalTheory.CompanionTheory.LeibOrd.Main.tw_tw (derivB ψ h₁ (π₁.cast (Nat.sub_add_cancel hh₁).symm)) ((1 - (h₁ : ℝ)) / 2)
+  have i1 := _root_.GlobalTheory.CompanionTheory.LeibOrd.DerivTw.tw_tw (derivB ψ h₁ (π₁.cast (Nat.sub_add_cancel hh₁).symm)) ((1 - (h₁ : ℝ)) / 2)
     ((L - 1) / 2)
   rw [e1] at i1
-  have i2 := GlobalTheory.CompanionTheory.LeibOrd.Main.tw_tw (derivB ψ m (π₂.cast (Nat.sub_add_cancel hmt).symm)) ((1 - (m : ℝ)) / 2)
+  have i2 := _root_.GlobalTheory.CompanionTheory.LeibOrd.DerivTw.tw_tw (derivB ψ m (π₂.cast (Nat.sub_add_cancel hmt).symm)) ((1 - (m : ℝ)) / 2)
     ((L - 1) / 2)
   rw [e2] at i2
   have iPQ := GlobalTheory.CompanionTheory.LeibOrd.giso_symm (GlobalTheory.CompanionTheory.LeibOrd.giso_trans (GlobalTheory.CompanionTheory.LeibOrd.Main.tw_prod _ _ ((L - 1) / 2))
@@ -1457,7 +1445,7 @@ theorem sigma_facts (hT : DerivTop k) (hc : Continuous ψ) (h1 : ψ ≠ 1) {r : 
       Nontrivial ((derivB ψ h (π.cast (Nat.sub_add_cancel hh).symm)).tw ((1 - (h : ℝ)) / 2)).V := by
   set σ := (derivB ψ h (π.cast (Nat.sub_add_cancel hh).symm)).tw ((1 - (h : ℝ)) / 2) with hσ
   suffices hIU : σ.ρ.IsIrreducible ∧ IsUnitarisable σ.ρ by
-    exact ⟨isSmooth_tw (isSmooth_derivB ψ h (isSmooth_cast _ hs)) _, hIU.1, hIU.2, T.2.1 _ _⟩
+    exact ⟨isSmooth_tw (isSmooth_derivB ψ h (_root_.GlobalTheory.CompanionTheory.LeibOrd.Main.isSmooth_gcast _ hs)) _, hIU.1, hIU.2, T.2.1 _ _⟩
   rw [hσ]
   by_cases h0 : h = 0
   · subst h0
@@ -1467,7 +1455,7 @@ theorem sigma_facts (hT : DerivTop k) (hc : Continuous ψ) (h1 : ψ ≠ 1) {r : 
       omega
     exact ⟨isIrreducible_twist (isIrr_cast _ hi) _,
       isUnitarisable_twist_one (isUnit_cast _ hu) _ (dpow_eq_one hr0 _)⟩
-  · exact hT ψ hc h1 (r - h) h (π.cast (Nat.sub_add_cancel hh).symm) (by omega) (isSmooth_cast _ hs)
+  · exact hT ψ hc h1 (r - h) h (π.cast (Nat.sub_add_cancel hh).symm) (by omega) (_root_.GlobalTheory.CompanionTheory.LeibOrd.Main.isSmooth_gcast _ hs)
       (isIrr_cast _ hi) (isUnit_cast _ hu) (T.2.1 _ _)
       (fun n' h' e2 hlt => by rw [cast_cast]; exact T.2.2 _ _ _ hlt)
 
@@ -1477,8 +1465,8 @@ variable (k) in
 theorem topProd_of : DerivTop k → DerivPos k → GlobalTheory.RgGu.Leib.LeibnizOrd k → LFDeriv k → CentralSub k → EigProd k →
     EigFilt k → TopProdD k := by
   intro hT _ hL _ _ _ _ ψ hc h1 r t π₁ π₂ s₁ i₁ u₁ s₂ i₂ u₂ hrt
-  haveI := nontrivial_of_irr i₁
-  haveI := nontrivial_of_irr i₂
+  haveI := _root_.GlobalTheory.JacFactor.nontrivial_of_isIrreducible i₁
+  haveI := _root_.GlobalTheory.JacFactor.nontrivial_of_isIrreducible i₂
   obtain ⟨h₁, T₁⟩ := exists_isTop ψ π₁
   obtain ⟨h₂, T₂⟩ := exists_isTop ψ π₂
   have p₁ : 0 < r → 1 ≤ h₁ := isTop_pos ψ hc h1 π₁ s₁ T₁
@@ -1540,8 +1528,8 @@ variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem bern_of (hT : DerivTop k) (hP : DerivPos k) (hL : GlobalTheory.RgGu.Leib.LeibnizOrd k) : BernAt k :=
   Asm.bern_of_parts k hT
-    (Pos.posProd_of k hT hP hL (LF.lfDeriv k) (CSel.centralSub k) (Eig.eigProd k) (Eig.eigFilt k))
-    (Pos2.topProd_of k hT hP hL (LF.lfDeriv k) (CSel.centralSub k) (Eig.eigProd k) (Eig.eigFilt k))
+    (Pos.posProd_of k hT hP hL (LF.lfDeriv k) (_root_.PositivityTheory.RgUd.Prod.CS.centralSub k) (Eig.eigProd k) (Eig.eigFilt k))
+    (Pos2.topProd_of k hT hP hL (LF.lfDeriv k) (_root_.PositivityTheory.RgUd.Prod.CS.centralSub k) (Eig.eigProd k) (Eig.eigFilt k))
 
 end PositivityTheory.RgUd.Prod.Final
 end -- clump:auto

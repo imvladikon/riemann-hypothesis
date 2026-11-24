@@ -142,7 +142,7 @@ theorem IsOpp.exists_isometry_extend {E : Type} [Field E] [NumberField E] [IsCMF
     have f1 := hZ' (c a) (c a')
     have f2 : D.EF (t (q a) - q a) (c a') = 0 := hδ (q a) _ (c a').2
     have f3 : D.EF (c a) (t (q a') - q a') = 0 := by
-      rw [ef_swap, hδ (q a') _ (c a).2, neg_zero]
+      rw [_root_.GlobalTheory.SimLift.form_skew, hδ (q a') _ (c a).2, neg_zero]
     have f4 := hiso (q a) (q a')
     have f5 := hZ (q a) (q a')
     have f7 : D.EF a (c a') = D.EF (t (q a) - q a) (a' - q a') := by
@@ -153,7 +153,7 @@ theorem IsOpp.exists_isometry_extend {E : Type} [Field E] [NumberField E] [IsCMF
     have f8 : D.EF (c a) a' = D.EF (a - q a) (t (q a') - q a') := by
       have := hr a' _ (c a).2
       have h2 := hc a (q a')
-      rw [ef_swap D (c a) a', ef_swap D (a - q a)]
+      rw [_root_.GlobalTheory.SimLift.form_skew D (c a) a', _root_.GlobalTheory.SimLift.form_skew D (a - q a)]
       simp only [map_sub, LinearMap.sub_apply] at this h2 ⊢
       linear_combination -this - h2
     rw [hg, hg]
@@ -162,13 +162,13 @@ theorem IsOpp.exists_isometry_extend {E : Type} [Field E] [NumberField E] [IsCMF
   · obtain ⟨e, -, he⟩ := ht (q a)
     obtain ⟨e', he'⟩ := GlobalTheory.ModuliGenus.exists_eq_nsmul_of_dvd D hN (c a : D.La) fun b => by
       obtain ⟨e₁, -, he₁⟩ := ht (q b)
-      have h1 : D.EF (c a) (b - q b) = 0 := by rw [ef_swap, hr b _ (c a).2, neg_zero]
+      have h1 : D.EF (c a) (b - q b) = 0 := by rw [_root_.GlobalTheory.SimLift.form_skew, hr b _ (c a).2, neg_zero]
       have h2 := hc a (q b)
       rw [he₁, add_sub_cancel_left, map_nsmul, LinearMap.smul_apply] at h2
       refine ⟨-D.EF e₁ (a - q a), ?_⟩
       have h3 : D.EF (c a) b = D.EF (c a) (q b) := by
         rw [map_sub] at h1; linear_combination h1
-      rw [h3, ef_swap, h2, nsmul_eq_mul]
+      rw [h3, _root_.GlobalTheory.SimLift.form_skew, h2, nsmul_eq_mul]
       ring
     refine ⟨e - e', ?_⟩
     rw [hg, he, he', smul_sub]
@@ -222,7 +222,7 @@ theorem exists_shear_of_adjoint : ∀ {E : Type} [Field E] [NumberField E] [IsCM
     intro z hz
     obtain ⟨e, he⟩ := exists_eq_nsmul_of_forall_ef_dvd D hN (w z - z) fun b => by
       obtain ⟨b', hb', e, he⟩ := hσN b
-      have h0 : D.EF z b' = 0 := by rw [ef_swap, hb' z hz, neg_zero]
+      have h0 : D.EF z b' = 0 := by rw [_root_.GlobalTheory.SimLift.form_skew, hb' z hz, neg_zero]
       refine ⟨D.EF z e, ?_⟩
       simp only [map_sub, LinearMap.sub_apply, hw, he, map_add (f := _), map_nsmul, h0, nsmul_eq_mul]
       ring
@@ -250,7 +250,7 @@ theorem exists_shear_of_adjoint : ∀ {E : Type} [Field E] [NumberField E] [IsCM
       fun _ _ => rfl⟩
   have hskew : ∀ a b, β a b = -β b a := fun a b => by
     rw [hβ, hβ]
-    exact mul_left_cancel₀ hnZ (by rw [mul_neg, hf, hf, ef_swap])
+    exact mul_left_cancel₀ hnZ (by rw [mul_neg, hf, hf, _root_.GlobalTheory.SimLift.form_skew])
   have hadj : ∀ (c : 𝓞 E) a b, β (c • a) b = β a (H.bar c • b) := fun c a b => by
     rw [hβ, hβ]
     exact mul_left_cancel₀ hnZ (by rw [hf, hf, Submodule.coe_smul, Submodule.coe_smul, w.map_smul, w.map_smul, D.adj])
@@ -262,7 +262,7 @@ theorem exists_shear_of_adjoint : ∀ {E : Type} [Field E] [NumberField E] [IsCM
     rw [ht, hwz, hk, smul_sub, mul_smul]
     abel
   · have e1 : D.EF (w z) (c z') = D.EF z (c z') := by rw [hw, hσb _ (c z').2]
-    have e2 : D.EF (c z) (w z') = D.EF (c z) z' := by rw [ef_swap, hw, hσb _ (c z).2, ← ef_swap]
+    have e2 : D.EF (c z) (w z') = D.EF (c z) z' := by rw [_root_.GlobalTheory.SimLift.form_skew, hw, hσb _ (c z).2, ← _root_.GlobalTheory.SimLift.form_skew]
     have e3 : D.EF (c z) (c z') = 0 := hO.2.1 (c z).2 _ (c z').2
     have e4 : (n : ℤ) * β z z' = D.EF (w z) (w z') := by rw [hβ, hf]
     have e5 := hc z z'
@@ -400,12 +400,12 @@ theorem ker_mod_eq_perp_range_add : ∀ {E : Type} [Field E] [NumberField E] [Is
       have e1 := hb'' ⟨w, hw⟩
       simp only [φ, AddMonoidHom.mk'_apply] at e1
       have e2 : (n : ℤ) ∣ D.EF w b := hx ⟨w, hw⟩
-      rw [ef_swap, map_sub, map_nsmul, e1, nsmul_eq_mul, Int.mul_ediv_cancel' e2]
+      rw [_root_.GlobalTheory.SimLift.form_skew, map_sub, map_nsmul, e1, nsmul_eq_mul, Int.mul_ediv_cancel' e2]
       simp
     exact (sub_eq_zero.1 h0).symm
   have hperp0 : ∀ (k : D.La), k ∈ perp D (LinearMap.range t) → ∀ z : Z, D.EF (t z) k = 0 := by
     intro k hk z
-    rw [ef_swap, hk _ ⟨z, rfl⟩, neg_zero]
+    rw [_root_.GlobalTheory.SimLift.form_skew, hk _ ⟨z, rfl⟩, neg_zero]
   constructor
   · rintro ⟨e, he⟩
     obtain ⟨b, hb, hk⟩ := hW.exists_sub_mem_perp a
@@ -601,7 +601,7 @@ theorem exists_succ (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D
       exact h
     rw [hg, hg]
     simp only [map_add (f := _), LinearMap.add_apply]
-    rw [e1, e2, e3, ef_swap, e2]
+    rw [e1, e2, e3, _root_.GlobalTheory.SimLift.form_skew, e2]
     simp)
   refine ⟨Z', h1, ?_⟩
   rw [h2, ← (LinearEquiv.ofInjective g hinj).finrank_eq]
@@ -691,7 +691,7 @@ theorem exists_ext (hZ : IsIsoSat D Z) (φ : Z →+ ℤ) : ∃ y : D.La, ∀ z :
     rw [← map_add (f := _)]; congr 1; ext; simp only [map_add (f := _), Submodule.coe_add]; abel)
   refine ⟨-y, fun z => ?_⟩
   have h0 : (Z.restrictScalars ℤ).mkQ (z : D.La) = 0 := (Submodule.Quotient.mk_eq_zero _).2 z.2
-  rw [map_neg, ef_swap, neg_neg, hy]
+  rw [map_neg, _root_.GlobalTheory.SimLift.form_skew, neg_neg, hy]
   simp only [AddMonoidHom.mk'_apply, h0, map_zero, sub_zero]
 
 theorem mem_of_perp_perp (hZ : IsIsoSat D Z) (y : D.La) (hy : ∀ p ∈ perp D Z, D.EF y p = 0) : y ∈ Z := by
@@ -707,7 +707,7 @@ theorem mem_of_perp_perp (hZ : IsIsoSat D Z) (y : D.La) (hy : ∀ p ∈ perp D Z
     have h0 : (Z.restrictScalars ℤ).mkQ z = 0 := (Submodule.Quotient.mk_eq_zero _).2 hz
     rw [hp, LinearMap.toAddMonoidHom_coe, LinearMap.comp_apply, h0, map_zero]
   have := hy p hpZ
-  rw [ef_swap, hp, neg_eq_zero] at this
+  rw [_root_.GlobalTheory.SimLift.form_skew, hp, neg_eq_zero] at this
   exact hχ this
 
 theorem perp_sat (D : Datum H) (Z : Submodule (𝓞 E) D.La) (a : 𝓞 E) (ha : a ≠ 0) (y : D.La) (hy : a • y ∈ perp D Z) :
@@ -739,13 +739,13 @@ theorem exists_opp (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D 
   have hZx : ∀ (z : D.La), z ∈ Z → ∀ x, D.EF z x = D.EF z (s ((perp D Z).mkQ x)) := fun z hz x => by
     have := hdec x z hz
     rw [map_sub, LinearMap.sub_apply, sub_eq_zero] at this
-    rw [ef_swap, this, ← ef_swap]
+    rw [_root_.GlobalTheory.SimLift.form_skew, this, ← _root_.GlobalTheory.SimLift.form_skew]
   have A1 : ∀ φ : Z →+ ℤ, ∃! b : C, ∀ a : Z, D.EF a b = φ a := by
     intro φ
     obtain ⟨y, hy⟩ := exists_ext hZ φ
     refine ⟨⟨s ((perp D Z).mkQ y), _, rfl⟩, fun a => (hZx a a.2 y).symm.trans (hy a), fun b hb => Subtype.ext ?_⟩
     have h1 : (b : D.La) - s ((perp D Z).mkQ y) ∈ perp D Z := fun z hz => by
-      rw [ef_swap, map_sub, hb ⟨z, hz⟩, ← hZx z hz, hy ⟨z, hz⟩, sub_self, neg_zero]
+      rw [_root_.GlobalTheory.SimLift.form_skew, map_sub, hb ⟨z, hz⟩, ← hZx z hz, hy ⟨z, hz⟩, sub_self, neg_zero]
     exact sub_eq_zero.1 (hC0 _ (sub_mem b.2 ⟨_, rfl⟩) h1)
 
   have A2 : ∀ φ : C →+ ℤ, ∃! z : Z, ∀ c : C, D.EF c z = φ c := by
@@ -760,20 +760,20 @@ theorem exists_opp (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D 
       have : (⟨s ((perp D Z).mkQ p), hmC p⟩ : C) = 0 := Subtype.ext (by show s ((perp D Z).mkQ p) = 0; rw [h0, map_zero])
       rw [this, map_zero, neg_zero]
     have key : ∀ c : C, D.EF c (-y) = φ c := fun c => by
-      rw [ef_swap, map_neg, LinearMap.neg_apply, neg_neg, hy]
+      rw [_root_.GlobalTheory.SimLift.form_skew, map_neg, LinearMap.neg_apply, neg_neg, hy]
       congr 1; exact Subtype.ext (hsC c c.2)
     refine ⟨⟨-y, hyZ⟩, key, fun z hz => Subtype.ext ?_⟩
     have hw : ∀ x, D.EF ((z : D.La) - -y) x = 0 := fun x => by
       have h1 := hz ⟨_, hmC x⟩
       have h2 := key ⟨_, hmC x⟩
-      rw [hZx _ (sub_mem z.2 hyZ), ef_swap, map_sub]
+      rw [hZx _ (sub_mem z.2 hyZ), _root_.GlobalTheory.SimLift.form_skew, map_sub]
       rw [h1, h2, sub_self, neg_zero]
     exact sub_eq_zero.1 (D.unimod.1 (LinearMap.ext fun x => by rw [hw, map_zero, LinearMap.zero_apply]))
   let β : LinearMap.BilinForm ℤ C := LinearMap.mk₂ ℤ (fun a b : C => -D.EF a b)
     (fun a a' b => by simp only [Submodule.coe_add, map_add (f := _), LinearMap.add_apply]; abel) (fun n a b => by simp) (fun a b b' => by simp only [Submodule.coe_add, map_add (f := _)]; abel) (fun n a b => by simp)
   obtain ⟨t, ht⟩ := exists_skew_solve A2 β (fun a b => by
       show -D.EF a b = -(-D.EF b a)
-      rw [ef_swap D a b]) (fun c a b => by
+      rw [_root_.GlobalTheory.SimLift.form_skew D a b]) (fun c a b => by
       show -D.EF ((c • a : C) : D.La) b = -D.EF a ((H.bar c • b : C) : D.La)
       rw [Submodule.coe_smul, Submodule.coe_smul, D.adj])
   have ht' : ∀ a b : C, D.EF a (t b) + D.EF (t a) b = -D.EF a b := ht
@@ -796,10 +796,10 @@ theorem exists_opp (D : Datum H) (Z : Submodule (𝓞 E) D.La) (hZ : IsIsoSat D 
     refine ⟨a, ?_, fun a' ha' => hu a' fun c => ?_⟩
     · rintro ⟨_, c, rfl⟩
       show D.EF a (g c) = φ ⟨g c, c, rfl⟩
-      rw [kZ, ef_swap, ha c, AddMonoidHom.neg_apply, neg_neg]
+      rw [kZ, _root_.GlobalTheory.SimLift.form_skew, ha c, AddMonoidHom.neg_apply, neg_neg]
       rfl
     · have h1 := ha' ⟨g c, c, rfl⟩
-      rw [ef_swap, ← kZ a' c]
+      rw [_root_.GlobalTheory.SimLift.form_skew, ← kZ a' c]
       show -D.EF a' (g c) = -φ ⟨g c, c, rfl⟩
       rw [← h1]
 
@@ -944,7 +944,7 @@ theorem exists_compatible_isometries : ∀ {E : Type} [Field E] [NumberField E] 
     exact hZ₀.2 n _ hn this
   have hrk : Module.finrank (𝓞 E) Z = Module.finrank (𝓞 E) X := by
     rw [← hrk₀]; exact (g₀.submoduleMap Z₀).finrank_eq.symm
-  obtain ⟨FinalForm, hop⟩ := GlobalTheory.T.exists_oppositeIsotropicPair D Z hZ
+  obtain ⟨FinalForm, hop⟩ := _root_.GlobalTheory.LowFilt.Opp.exists_opp D Z hZ
   have hbase : KerIs D (y N) Z N := by
     intro a
     have h1 := hk₀ (g₀.symm a)
@@ -1183,15 +1183,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_levelIsometry_extension_algClosed : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} (Xo : Moduli Dw l) (c : Coeff l) (R : Type) [CommRing R] [IsDomain R]
-    [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : GlobalTheory.UChart.Fam Xo c R) (tK : SAB H (Sp (FractionRing R)))
-    (m1 : SABMap tK C.t (jK R)) (m2 : SABMap tK Xo.univ.t (C.y ≫ pullback.fst _ _))
-    (I₀ : letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD (AlgebraicClosure (FractionRing R))),
-    GlobalTheory.LowDat.XFLevel C tK m1 m2 (AlgebraicClosure (FractionRing R)) I₀ →
-    ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
-    ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F), GlobalTheory.LowDat.XFLevel C tK m1 m2 F I ∧
-      ∀ n a, (I.ev n a).y = (I₀.ev n a).y := by
-  first | exact @GlobalTheory.LowDat.exists_xfLevel_ext
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1478,12 +1469,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.exists_levelIsometry_genericFibre_boundaryChart : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} (Xo : Moduli Dw l) (c : Coeff l) (R : Type) [CommRing R] [IsDomain R]
-    [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : GlobalTheory.UChart.Fam Xo c R) (tK : SAB H (Sp (FractionRing R)))
-    (m1 : SABMap tK C.t (jK R)) (m2 : SABMap tK Xo.univ.t (C.y ≫ pullback.fst _ _))
-    (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F],
-    ∃ I : (letI := H.starRing; TateIsoQ Dw C.P.D.toPre C.P.oD F), GlobalTheory.LowDat.XFLevel C tK m1 m2 F I := by
-  first | exact @GlobalTheory.LowDat.exists_xfLevel
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1592,20 +1577,6 @@ namespace GlobalTheory.LowFilt
 open GlobalTheory.Ex
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
-
-theorem exists_nsmul_of_dvd (D : Datum H) {n : ℕ} (hn : 0 < n) {b : D.La} (h : ∀ a, (n : ℤ) ∣ D.EF b a) :
-    ∃ e, b = n • e := by
-  choose f hf using h
-  have hn' : (n : ℤ) ≠ 0 := Int.natCast_ne_zero.2 hn.ne'
-  let g : D.La →ₗ[ℤ] ℤ :=
-    { toFun := f
-      map_add' := fun a a' => mul_left_cancel₀ hn' (by rw [mul_add, ← hf, ← hf, ← hf, map_add (f := _)])
-      map_smul' := fun c a => mul_left_cancel₀ hn' (by
-        rw [← hf, map_smul, hf, smul_eq_mul, RingHom.id_apply, smul_eq_mul, mul_left_comm]) }
-  obtain ⟨e, he⟩ := D.unimod.2 g
-  refine ⟨e, D.unimod.1 (LinearMap.ext fun a => ?_)⟩
-  rw [map_nsmul, LinearMap.smul_apply, he, nsmul_eq_mul]
-  exact hf a
 
 theorem exists_linear_lift {R M X : Type} [CommRing R] [AddCommGroup M] [Module R M] [Module.Projective R M]
     [AddCommGroup X] [Module R X] (n : ℕ) (Y : M → X) (hadd : ∀ a b, ∃ e, Y (a + b) = Y a + Y b + n • e)
@@ -1786,7 +1757,7 @@ theorem tateIsoQ_y_cois : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     obtain ⟨e, he⟩ := hy n hn a
     rw [he, ofAdd_add, map_mul, ofAdd_nsmul, map_pow, ← MonoidHom.pow_apply, ht, MonoidHom.one_apply, _root_.mul_one]
   have dv : ∀ c : D.La, (∀ a, I.ζ n ^ D.EF c a = 1) → ∃ e, c = n • e := fun c h =>
-    exists_nsmul_of_dvd D hn fun a => ((I.ζ_prim n hn).zpow_eq_one_iff_dvd _).1 (h a)
+    _root_.GlobalTheory.Ex.Specialise.exists_eq_smul_of_dvd D hn fun a => ((I.ζ_prim n hn).zpow_eq_one_iff_dvd _).1 (h a)
   refine ⟨fun x => ?_, fun a ha => ?_⟩
   · by_contra hx
     push_neg at hx
@@ -1808,7 +1779,7 @@ theorem tateIsoQ_y_cois : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     obtain ⟨e', he'⟩ := hy n hn b
     obtain ⟨k, hk⟩ := ha b ⟨e + e', by rw [he', he, smul_add]⟩
     apply hx'
-    rw [← tv t ht, ← h1, ef_swap, hk]
+    rw [← tv t ht, ← h1, _root_.GlobalTheory.SimLift.form_skew, hk]
     exact ((I.ζ_prim n hn).zpow_eq_one_iff_dvd _).2 ⟨-k, by ring⟩
 
 end GlobalTheory.LowFilt
@@ -1832,12 +1803,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.tateIso_latticePart_surjective_coisotropicKernel : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
-    (D₀ : DegPre R) [Module (𝓞 E) D₀.X] (oa : letI := H.starRing; D₀.OAct (𝓞 E)), D₀.PsiEven → D₀.TauBimult →
-    ∀ (F : Type) [Field F] [IsAlgClosed F] [CharZero F] [Algebra (FractionRing R) F] (I : TateIsoQ D D₀ oa F),
-    ∃ y : ℕ → D.La →ₗ[𝓞 E] D₀.X, (∀ n, 0 < n → ∀ a, ∃ e, y n a = (I.ev n a).y + n • e) ∧
-      ∀ n, 0 < n → Cois D (y n) n := by
-  first | exact @GlobalTheory.LowFilt.tateIsoQ_y_cois
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1906,8 +1871,8 @@ theorem GlobalTheory.LowFilt.exists_filt : ∀ {E : Type} [Field E] [NumberField
   let F₀ := AlgebraicClosure (FractionRing R)
   haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R _)
   haveI : CharZero F₀ := charZero_of_injective_algebraMap (algebraMap (FractionRing R) F₀).injective
-  obtain ⟨I₀, hI₀⟩ := GlobalTheory.T.exists_levelIsometry_genericFibre_boundaryChart Xo c R hR C tK m1 m2 F₀
-  obtain ⟨y, hy, hcois⟩ := GlobalTheory.T.tateIso_latticePart_surjective_coisotropicKernel Dw R C.P.D.toPre C.P.oD C.P.D.psi_even hB F₀ I₀
+  obtain ⟨I₀, hI₀⟩ := _root_.GlobalTheory.LowDat.exists_xfLevel Xo c R hR C tK m1 m2 F₀
+  obtain ⟨y, hy, hcois⟩ := _root_.GlobalTheory.LowFilt.tateIsoQ_y_cois Dw R C.P.D.toPre C.P.oD C.P.D.psi_even hB F₀ I₀
   have htow : ∀ n m, 0 < n → 0 < m → ∀ a, ∃ e, y (n * m) a = y n a + n • e := by
     intro n m hn hm a
     obtain ⟨q, h₁, -, z, h₃, -⟩ := I₀.tower n m hn hm a
@@ -1936,7 +1901,7 @@ theorem GlobalTheory.LowFilt.exists_filt : ∀ {E : Type} [Field E] [NumberField
     obtain ⟨e, he⟩ := hgN k a
     obtain ⟨j, hj⟩ := hk1.2
     exact ⟨j • e, by rw [smul_smul, ← hj]; exact he⟩
-  obtain ⟨I, hIl, hIy⟩ := GlobalTheory.T.exists_levelIsometry_extension_algClosed Xo c R hR C tK m1 m2 I₁ hI₁ F
+  obtain ⟨I, hIl, hIy⟩ := _root_.GlobalTheory.LowDat.exists_xfLevel_ext Xo c R hR C tK m1 m2 I₁ hI₁ F
   refine ⟨I, hIl, fun n hn a => ?_⟩
   rw [GlobalTheory.T.exists_equiv_latticePart_zero_iff_mem_nsmul R _ hB F n hn, hIy, ← hker n hn a]
   obtain ⟨e, he⟩ := hy n hn (g n a)

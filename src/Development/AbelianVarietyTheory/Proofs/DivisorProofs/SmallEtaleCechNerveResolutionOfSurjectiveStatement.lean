@@ -90,7 +90,7 @@ theorem bc_isPullback {E : Spc} {S : Scheme.{0}} (p : E ⟶ sch.obj S) {U V : Ov
 
 theorem hyp_coAug : ∀ (R : Type) [CommRing R] (S : Scheme.{0}) (E : Spc) (p : E ⟶ sch.obj S) [HasFiniteWidePushouts (S.Etale)ᵒᵖ] (U V : (S.Etale)ᵒᵖ) (g : U ⟶ V), Surjective g.unop.left → Hyp R ((Scheme.Etale.forget S ⋙ bc p).op) (coAug g) := by
   intro R _ S E p _ U V g hg k
-  refine GlobalTheory.T.cechConerve_chains_quasiIso_of_locallySurjective R _ _ (fun n => ?_) U V g ?_
+  refine _root_.GlobalTheory.EtC.chains_cech_conerve_quasiIso R _ _ (fun n => ?_) U V g ?_
   · have h1 := bc_preserves p (WidePullbackShape (Fin (n + 1)))
     have h2 : PreservesLimitsOfShape (WidePullbackShape (Fin (n + 1)))
         ((Scheme.Etale.forget S ⋙ bc p) ⋙ (evaluation _ PSh).obj k) := inferInstance
@@ -119,8 +119,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.smallEtale_cechNerve_resolution_of_surjective : ∀ (R : Type) [CommRing R] (S : Scheme.{0}) (E : Spc) (p : E ⟶ sch.obj S) [HasFiniteWidePushouts (S.Etale)ᵒᵖ] (U V : (S.Etale)ᵒᵖ) (g : U ⟶ V), Surjective g.unop.left → Hyp R ((Scheme.Etale.forget S ⋙ bc p).op) (coAug g) := by
-  first | (exact @GlobalTheory.EtC.SmallEtaleCech.hyp_coAug)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallEtaleCechNerveResolutionOfSurjectiveStatement =====

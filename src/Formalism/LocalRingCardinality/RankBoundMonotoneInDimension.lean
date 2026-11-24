@@ -74,6 +74,7 @@ import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.DualWeylModuleStable
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.ThetaLiftIndependence.ThetaOrbitSums.GaussOp, Formalism.ThetaLiftIndependence.FinalThetaLiftAMFKIndep, Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
@@ -176,7 +177,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.ThetaLiftIndependence.FinalThetaLiftAMFKIndep =====
 
 -- ===== clump member: Formalism.LocalRingCardinality.RankBoundMonotoneInDimension =====
--- clump-header: {"m": "Formalism.LocalRingCardinality.RankBoundMonotoneInDimension", "h": "module\n\nimport Formalism.SharpRestriction.AdmissibleParameterJoins.SumLogPrimeFactorsLe\npublic import Formalism.LocalRingCardinality.DataParams₂\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.FrameCyclicGenerator\npublic import Formalism.GradedWeylDivisibility.StatementE\npublic import Formalism.FrobeniusOrbits.HostCorollaries\nimport Formalism.GradedWeylDivisibility.DualWeylDominanceOf\nimport Formalism.GradedWeylDivisibility.FinalB\npublic import Formalism.GradedWeylDivisibility.FinalD\npublic import Formalism.HarderNarasimhan.ShiftInvariance\npublic import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant\npublic import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform\npublic import Formalism.SatakeDualWeyl.KpqSubgroupCompact\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.FrameFacts\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts\npublic import Formalism.ThetaLiftIndependence.FinalThetaLiftAMFKIndep\nimport Mathlib.Algebra.AffineMonoid.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Ideal.Int\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.LocalRingCardinality.RankBoundMonotoneInDimension", "h": "module\n\nimport Formalism.SharpRestriction.AdmissibleParameterJoins.SumLogPrimeFactorsLe\npublic import Formalism.LocalRingCardinality.DataParams₂\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.FrameCyclicGenerator\npublic import Formalism.GradedWeylDivisibility.StatementE\npublic import Formalism.FrobeniusOrbits.HostCorollaries\nimport Formalism.GradedWeylDivisibility.DualWeylDominanceOf\nimport Formalism.GradedWeylDivisibility.FinalB\npublic import Formalism.GradedWeylDivisibility.FinalD\npublic import Formalism.HarderNarasimhan.ShiftInvariance\npublic import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant\npublic import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Stdform\npublic import Formalism.SatakeDualWeyl.KpqSubgroupCompact\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.FrameFacts\npublic import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts\npublic import Formalism.ThetaLiftIndependence.FinalThetaLiftAMFKIndep\nimport Mathlib.Algebra.AffineMonoid.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Ideal.Int\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.DualWeylModuleStable\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -568,9 +569,6 @@ open Formalism.FrobeniusOrbits Formalism.TwoAdicCyclotomicDecomposition
 theorem orderOf_unit_class_eq_two_pow (e : ℕ) : orderOf (hcl e (u5 (e + 2))) = 2 ^ e :=
   (Formalism.FrobeniusOrbits.Final.host_field.2.1 e).2.2.2.2.2.2.2.1
 
-theorem card_HGrp (e : ℕ) : Nat.card (HGrp e) = 2 ^ e :=
-  (Formalism.FrobeniusOrbits.Final.host_field.2.1 e).2.2.2.2.2.2.1
-
 theorem iotaH_add (e : ℕ) (i j : ZMod (2 ^ e)) : iotaH e (i + j) = iotaH e i * iotaH e j := by
   simp only [iotaH]
   rw [← pow_add, ZMod.val_add]
@@ -594,7 +592,7 @@ theorem iotaH_bijective (e : ℕ) : Function.Bijective (iotaH e) := by
     simp only [iotaH] at hij
     rw [pow_inj_mod, orderOf_unit_class_eq_two_pow e, Nat.mod_eq_of_lt (ZMod.val_lt i), Nat.mod_eq_of_lt (ZMod.val_lt j)] at hij
     exact ZMod.val_injective _ hij
-  exact inj.bijective_of_nat_card_le (by rw [card_HGrp, Nat.card_zmod])
+  exact inj.bijective_of_nat_card_le (by rw [_root_.Formalism.FrobeniusOrbits.Group.card_H, Nat.card_zmod])
 
 theorem factIota : FactIota := fun e => ⟨iotaH_bijective e, iotaH_add e, iotaH_one e⟩
 
@@ -965,7 +963,7 @@ theorem bridge_round_square_holds : bridge_round_square := by
 
 theorem factSqActMul : FactSqActMul := by
   intro R _ N lam g h f
-  have hmul := Formalism.UG.Final.DwActMul R N N
+  have hmul := _root_.Formalism.UG.P.dual_weyl_action_mul R N N
   refine ⟨?_, ?_⟩
   · unfold sqAct
     rw [rowAct_tr_eq, rowAct_tr_eq, rowAct_tr_eq, invTr_mul, (hmul _ _).1, AlgHom.comp_apply,
@@ -1016,7 +1014,7 @@ theorem factNormFockUnitary : FactNormFockUnitary := by
       Matrix.star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose]
   unfold Formalism.UG.dwAct
   rw [Formalism.GradedWeylDivisibility.fockRowAdj, hinv]
-  have h1 := Formalism.UG.Final.DwActMul ℂ N N g⁻¹ g
+  have h1 := _root_.Formalism.UG.P.dual_weyl_action_mul ℂ N N g⁻¹ g
   have key : Formalism.UG.dwAct ℂ N N g⁻¹ (Formalism.UG.dwAct ℂ N N g h) = h := by
     rw [← AlgHom.comp_apply, ← h1.1, inv_mul_cancel, h1.2, AlgHom.id_apply]
   simpa [Formalism.UG.dwAct] using congrArg (Formalism.REAL.fockF f) key

@@ -259,8 +259,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.exists_finiteGroupIdentification_fixedPlaces : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (U : Set I.ι) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)), I.Ok → GrpAt X I → LevOf X I U L → ∃ (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (cG : G0 L.Pg X.toD7.R.r ≃* G0g X.toD7.nd) (plg : (Σ k : Fin 2, X.toD7.nd.PlG k) ≃ L.Pg) (iso : ∀ kv : (Σ k : Fin 2, X.toD7.nd.PlG k), ZMod (X.toD7.host.g kv.1) ≃+* kP (plg kv).1), IsPlacewiseIdentity X (px := px) eG ∧ (∀ kv, ((plg kv : L.Pg) : Pl X.toD7.host.E) = X.toD7.naut.plGw kv.1 kv.2) ∧ (∀ kv, L.C.P.Div kv.1 (plg kv).1) ∧ ∀ g kv, eG g (plg kv) = Formalism.UG.bc (iso kv : ZMod (X.toD7.host.g kv.1) →+* kP (plg kv).1) ((eG.trans cG) g kv) := by
-  first | exact @GlobalTheory.Mem.R3.exists_grpIdent
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteGroupIdentificationFixedPlacesStatement =====
@@ -316,8 +314,6 @@ section -- clump:auto
 
 open Formalism.L2.DIV
 
-theorem _root_.GlobalTheory.T.absIrrChar_comp_mem_complexIrrCharSet : ∀ {G : Type} [inst : Group G] [inst_1 : Fintype G] {K : Type} [inst_2 : Field K] [inst_3 : CharZero K] (σ : K →+* ℂ) (χ : G → K), IsAbsIrrChar χ → (fun g => σ (χ g)) ∈ Formalism.L2.Col.gxIrrSet (G := G) ℂ := by
-  first | exact @GlobalTheory.absIrrChar_comp_mem_gxIrrSet
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharCompMemComplexIrrCharSetStatement =====
@@ -389,8 +385,6 @@ section -- clump:auto
 
 open Formalism.L2.DIV
 
-theorem _root_.GlobalTheory.T.absIrrChar_realise_of_primitiveRoot_card : ∀ {G : Type} [inst : Group G] [inst_1 : Fintype G] {K : Type} [inst_2 : Field K] (σ : K →+* ℂ) (z : K), IsPrimitiveRoot z (Fintype.card G) → ∀ (ψ : G → ℂ), ψ ∈ Formalism.L2.Col.gxIrrSet (G := G) ℂ → ∃ χ : G → K, IsAbsIrrChar χ ∧ ∀ g, σ (χ g) = ψ g := by
-  first | exact @GlobalTheory.BrauerRealise.absIrr_realise_of_isPrimitiveRoot
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharRealiseOfPrimitiveRootCardStatement =====
@@ -688,12 +682,12 @@ theorem exists_goodSet_Ks (eR : Gc X.B px ≃* G0g X.toD7.nd) :
       simp only [Finset.mem_filter, Finset.mem_image, hA, Formalism.L2.Col.mem_XgE]
       constructor
       · rintro ⟨hψ, hs⟩
-        obtain ⟨χ, hχ, hχψ⟩ := GlobalTheory.T.absIrrChar_realise_of_primitiveRoot_card σ z hzp ψ hψ
+        obtain ⟨χ, hχ, hχψ⟩ := _root_.GlobalTheory.BrauerRealise.absIrr_realise_of_isPrimitiveRoot σ z hzp ψ hψ
         refine ⟨χ, ⟨hχ, ?_⟩, funext hχψ⟩
         simp only [hχψ]
         exact hs
       · rintro ⟨χ, ⟨hχ, hs⟩, rfl⟩
-        exact ⟨GlobalTheory.T.absIrrChar_comp_mem_complexIrrCharSet σ χ hχ, hs⟩
+        exact ⟨_root_.GlobalTheory.absIrrChar_comp_mem_gxIrrSet σ χ hχ, hs⟩
     have hinj : Set.InjOn (fun (χ : Gc X.B px → X.B.LL) g => σ (χ g)) (Formalism.L2.Col.XgE σ e : Set _) :=
       fun χ _ χ' _ h => funext fun g => σ.injective (congrFun h g)
     rw [← hcoeff g]
@@ -780,11 +774,6 @@ theorem baseLevel_character_preserved_placewiseIdentity {E : Type} [Field E] [Nu
   refine ⟨fun g => by rw [hid], fun g h => ?_⟩
   exact congrArg _ (Subtype.ext (hid g).symm)
 
-theorem piChar_apply' {K : Type} [Field K] {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (G i)] (H : ∀ i, Subgroup (G i))
-    (lam : ∀ i, ↥(H i) →* Kˣ) (x : ↥(Subgroup.pi Set.univ H)) :
-    Formalism.L2.Col.piChar H lam x = ∏ i, lam i (Formalism.L2.Col.piProj H i x) :=
-  by simp [Formalism.L2.Col.piChar]
-
 theorem ofLocal_chi_apply {E : Type} [Field E] [NumberField E] {LL : Type} [CommRing LL] {r : ℕ} {Pg : Finset (Pl E)}
     (Hl : ∀ PP : ↥Pg, Subgroup (GL (Fin r) (kP PP.1))) (cl : ∀ PP : ↥Pg, Hl PP →* LLˣ) (x : ↥(Subgroup.pi Set.univ Hl)) :
     (LevelP.ofLocal Hl cl).chi x = ∏ PP, cl PP (LevelP.prj Hl PP x) :=
@@ -822,7 +811,7 @@ theorem sym_tie {X : Formalism.L2.Col.Fields} {Pr : Formalism.L2.Col.Primes X} {
       rw [Formalism.L2.Col.HPsymF_eq_comap_unipSym, Subgroup.mem_comap, (symPos_entries_iff hr _ _).1 (hyg PP)]
       exact (Subgroup.mem_pi _).1 hy PP (Set.mem_univ _)
   · rw [hid] at hgy
-    have h1 := piChar_apply' (fun w => (Formalism.L2.Col.rPsymF Ch w).H) (fun w => (Formalism.L2.Col.rPsymF Ch w).lam) g
+    have h1 := _root_.Formalism.L2.Col.piChar_apply (fun w => (Formalism.L2.Col.rPsymF Ch w).H) (fun w => (Formalism.L2.Col.rPsymF Ch w).lam) g
     have h2 := ofLocal_chi_apply (fun PP : ↥Pr.vGs => unipSym (kP PP.1) R.r R.rS R.k)
       (fun PP => addCharHom (ψ PP.1) (symHom (kP PP.1) R.r R.rS R.k)) y
     refine h1.trans (Eq.trans ?_ h2.symm)
@@ -993,7 +982,7 @@ theorem idemOf_coeff_conj : ∀ (X : Stages) (px : PreX X.B.toPre) (eR : Gc X.B 
 
 theorem grp_levels_exist : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)), I.Ok → GrpAt X I → LevOf X I U L → ∃ (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (cG : G0 L.Pg X.toD7.R.r ≃* G0g X.toD7.nd) (Xg : Finset (Gc X.B px → X.B.LL)), IsPlacewiseIdentity X (px := px) eG ∧ GoodSet X (px := px) (eG.trans cG) Xg ∧ PsiPPTie X.toD7 (lev0 I) (chr0 I) (lev1 I) (chr1 I) (eG.trans cG) ∧ (∀ g, (idemOf Xg).coeff g ∈ X.B.Ks) ∧ (∀ p, ((chr0 I p : X.B.LLˣ) : X.B.LL) ∈ X.B.Ks) ∧ ∀ tr, IdemClass (D := X.toD7) (famR X I hX U Xg tr).A ∧ Seed.LevelsL (famR X I hX U Xg tr) L eG (face0 X I hX U Xg tr).lv2 ∧ ∃ (plg : (Σ k : Fin 2, X.toD7.nd.PlG k) ≃ L.Pg) (iso : ∀ kv : (Σ k : Fin 2, X.toD7.nd.PlG k), ZMod (X.toD7.host.g kv.1) ≃+* kP (plg kv).1), (∀ kv, ((plg kv : L.Pg) : Pl X.toD7.host.E) = X.toD7.naut.plGw kv.1 kv.2) ∧ (∀ kv, L.C.P.Div kv.1 (plg kv).1) ∧ ∀ g kv, eG g (plg kv) = Formalism.UG.bc (iso kv : ZMod (X.toD7.host.g kv.1) →+* kP (plg kv).1) ((eG.trans cG) g kv) := by
   intro X px I hX U L hI hG hL
-  obtain ⟨eG, cG, plg, iso, hid, hpl, hdiv, hbc⟩ := GlobalTheory.T.exists_finiteGroupIdentification_fixedPlaces X px I U L hI hG hL
+  obtain ⟨eG, cG, plg, iso, hid, hpl, hdiv, hbc⟩ := _root_.GlobalTheory.Mem.R3.exists_grpIdent X px I U L hI hG hL
   obtain ⟨Xg, hgood, hKs⟩ := GlobalTheory.T.exists_goodCharacterSet_idempotent_coeff_coefficientField X px (eG.trans cG)
   refine ⟨eG, cG, Xg, hid, hgood, GlobalTheory.T.psiLevelPairCompatible_of_columnLevels X px I U L eG cG plg iso hI hL hid hpl hbc, hKs, GlobalTheory.T.upperUnipotentGenericCharacter_mem_integralField X.B px I,
     fun tr => ⟨?_, GlobalTheory.T.columnFaceLevels_baseLevel_symmetricLevel X px I hX U Xg tr L eG hI hL hid, plg, iso, hpl, hdiv, hbc⟩⟩
@@ -1016,8 +1005,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.exists_finite_group_goodSet_levels_characters : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)), I.Ok → GrpAt X I → LevOf X I U L → ∃ (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r) (cG : G0 L.Pg X.toD7.R.r ≃* G0g X.toD7.nd) (Xg : Finset (Gc X.B px → X.B.LL)), IsPlacewiseIdentity X (px := px) eG ∧ GoodSet X (px := px) (eG.trans cG) Xg ∧ PsiPPTie X.toD7 (lev0 I) (chr0 I) (lev1 I) (chr1 I) (eG.trans cG) ∧ (∀ g, (idemOf Xg).coeff g ∈ X.B.Ks) ∧ (∀ p, ((chr0 I p : X.B.LLˣ) : X.B.LL) ∈ X.B.Ks) ∧ ∀ tr, IdemClass (D := X.toD7) (famR X I hX U Xg tr).A ∧ Seed.LevelsL (famR X I hX U Xg tr) L eG (face0 X I hX U Xg tr).lv2 ∧ ∃ (plg : (Σ k : Fin 2, X.toD7.nd.PlG k) ≃ L.Pg) (iso : ∀ kv : (Σ k : Fin 2, X.toD7.nd.PlG k), ZMod (X.toD7.host.g kv.1) ≃+* kP (plg kv).1), (∀ kv, ((plg kv : L.Pg) : Pl X.toD7.host.E) = X.toD7.naut.plGw kv.1 kv.2) ∧ (∀ kv, L.C.P.Div kv.1 (plg kv).1) ∧ ∀ g kv, eG g (plg kv) = Formalism.UG.bc (iso kv : ZMod (X.toD7.host.g kv.1) →+* kP (plg kv).1) ((eG.trans cG) g kv) := by
-  first | exact @GlobalTheory.Mem.R3.Grp.grp_levels_exist
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteGroupGoodSetLevelsCharactersStatement =====

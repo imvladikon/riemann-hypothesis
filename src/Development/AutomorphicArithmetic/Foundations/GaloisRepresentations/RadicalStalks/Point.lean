@@ -202,8 +202,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.finite_group_scheme_stalk_length_constant : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G], IsFinite G.hom → ∀ x x' : G.left, Module.length (G.left.presheaf.stalk x) (G.left.presheaf.stalk x) = Module.length (G.left.presheaf.stalk x') (G.left.presheaf.stalk x') := by
-  first | (exact @GlobalTheory.FiniteGroupSchemeLength.length_stalk_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGroupSchemeStalkLengthConstantStatement =====
@@ -218,8 +216,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.finrank_fiber_eq_card_sections_mul_length : ∀ (k : Type) [Field k] [IsAlgClosed k] (P : Scheme.{0}) (q : P ⟶ Sp k), IsFinite q → ∀ (m : ℕ∞), (∀ x : P, Module.length (P.presheaf.stalk x) (P.presheaf.stalk x) = m) → ∀ z : Sp k, (q.finrank z : ℕ∞) = (Nat.card {s : Sp k ⟶ P // s ≫ q = 𝟙 _} : ℕ∞) * m := by
-  first | (exact @GlobalTheory.FinSchemeRank.finrank_eq_card_sections_mul)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFiberEqCardSectionsMulLengthStatement =====
@@ -672,7 +668,7 @@ private theorem exists_stalkPt [IsAlgClosed k] (K : Over (Sp k)) [GrpObj K] [IsF
   haveI : Module.Finite k (K.left.presheaf.stalk x₀) := stalkAlg_finite K x₀
   obtain ⟨c, hc⟩ := exists_alg K x₀ g₁ rfl
   refine ⟨K.left.presheaf.stalk x₀, inferInstance, inferInstance, inferInstance, inferInstance, stalkPt K x₀,
-    ?_, fun x => GlobalTheory.T.finite_group_scheme_stalk_length_constant k K inferInstance x x₀, ⟨c, hc⟩, fun v hv => ?_⟩
+    ?_, fun x => _root_.GlobalTheory.FiniteGroupSchemeLength.length_stalk_eq k K inferInstance x x₀, ⟨c, hc⟩, fun v hv => ?_⟩
   · show Mono (K.left.fromSpecStalk x₀)
     infer_instance
   · apply exists_alg
@@ -882,7 +878,7 @@ theorem UpperTheory.Gal.Ord.cnt :
     intro T _ _ u
     exact (hKiff _ _).mp ⟨spOver u ≫ y, Category.assoc _ _ _⟩
   let pt : ↥(Sp k) := IsLocalRing.closedPoint k
-  have hI := GlobalTheory.T.finrank_fiber_eq_card_sections_mul_length k K.left K.hom inferInstance (Module.length B B) hlen pt
+  have hI := _root_.GlobalTheory.FinSchemeRank.finrank_eq_card_sections_mul k K.left K.hom inferInstance (Module.length B B) hlen pt
   have hrank : Scheme.Hom.finrank K.hom pt = (Ideal.absNorm w ^ D.m) ^ D.n := by
     rw [← hqK]
     exact hdeg.rank pt
@@ -1049,7 +1045,7 @@ private theorem frobN_mor (p : ℕ) [Fact p.Prime] {k : Type} [Field k] (hk : (p
     have F := frobMor p k hk A (cast_left p k hk A)
     have K : GrpMor (dp0 k) (𝟙 _) A (dp0 k) (𝟙 _) A ((frobR p k hk).comp ρ) (spMap ((frobR p k hk).comp ρ))
         (frobN p A.left (cast_left p k hk A) (j + 1)) := by
-      rw [GlobalTheory.SchRing.spMap_comp']
+      rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
       exact u.comp F
     refine ⟨_, K, fun c ↦ ?_⟩
     rw [Function.iterate_succ_apply', ← hu]
@@ -1103,7 +1099,7 @@ theorem UpperTheory.Gal.Ord.rel :
       have := congrArg (e.left ≫ ·) e3
       simpa only [← Category.assoc, e4, Category.id_comp] using this
     apply GlobalTheory.SchRing.spMap_inj
-    rw [GlobalTheory.SchRing.spMap_comp']
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
     exact e5
   rw [← hu]
   exact (congrArg m.pull (GrpMor.pull_pull gm u K1 (fun _ ↦ rfl) rfl y)).trans
@@ -1405,29 +1401,9 @@ namespace UpperTheory.Gal.Ord.HasseL
 
 variable {p : ℕ} [Fact p.Prime]
 
-private theorem sub_dual (k : Type) [Field k] : Subsingleton (PrimeSpectrum (DualNumber k)) := by
-  have key : ∀ (P : PrimeSpectrum (DualNumber k)) (x : DualNumber k), x ∈ P.asIdeal ↔ x.fst = 0 := by
-    intro P x
-    have hε : (DualNumber.eps : DualNumber k) ∈ P.asIdeal :=
-      P.2.mem_of_pow_mem 2 (by rw [pow_two, DualNumber.eps_mul_eps]; exact P.asIdeal.zero_mem)
-    constructor
-    · intro hx
-      by_contra h0
-      have hu : IsUnit x := TrivSqZeroExt.isUnit_iff_isUnit_fst.2 (isUnit_iff_ne_zero.2 h0)
-      exact P.2.ne_top (Ideal.eq_top_of_isUnit_mem _ hx hu)
-    · intro h0
-      have e : x = (TrivSqZeroExt.inl x.snd : DualNumber k) * DualNumber.eps := by
-        apply TrivSqZeroExt.ext
-        · rw [TrivSqZeroExt.fst_mul, h0, DualNumber.fst_eps, mul_zero]
-        · simp only [TrivSqZeroExt.snd_mul, TrivSqZeroExt.fst_inl, TrivSqZeroExt.snd_inl, DualNumber.snd_eps, DualNumber.fst_eps]
-          simp
-      rw [e]
-      exact P.asIdeal.mul_mem_left _ hε
-  exact ⟨fun P Q => PrimeSpectrum.ext (Ideal.ext fun x => (key P x).trans (key Q x).symm)⟩
-
 private theorem cancel_sp {k T : Type} [Field k] [CommRing T] (j : DualNumber k →+* T) (hj : Function.Injective j)
     {Y : Scheme.{0}} {g₁ g₂ : Sp (DualNumber k) ⟶ Y} (e : spMap j ≫ g₁ = spMap j ≫ g₂) : g₁ = g₂ := by
-  haveI hs : Subsingleton (Sp (DualNumber k)) := sub_dual k
+  haveI hs : Subsingleton (Sp (DualNumber k)) := _root_.GlobalTheory.DualOpen.subsingleton_spectrum_dualNumber k
   haveI : Nontrivial T := hj.nontrivial
   obtain ⟨t⟩ : Nonempty (Sp T) := inferInstanceAs (Nonempty (PrimeSpectrum T))
   let x : Sp (DualNumber k) := spMap j t
@@ -1825,7 +1801,7 @@ theorem UpperTheory.Gal.Ord.rankV :
   intro p _ k _ _ hk A _ _ hA σ V m hσ hV y hy
   obtain ⟨e, he, -⟩ := GlobalTheory.deRhamVectorExtension p
   have hn : IsNilpotent (p : k) := ⟨1, by rw [pow_one, hk]⟩
-  obtain ⟨g, hg⟩ : ∃ g, SmoothOfRelativeDimension g A.hom := GlobalTheory.T.abelianScheme_specField_smoothOfRelativeDimension k A hA
+  obtain ⟨g, hg⟩ : ∃ g, SmoothOfRelativeDimension g A.hom := _root_.GlobalTheory.AbFieldDim.exists_smoothOfRelativeDimension k A hA
   obtain ⟨G, t, -⟩ := GlobalTheory.AbelianTower.exists_pDivGroup_tower p k hn A g hA hg
   let A₁ := (Over.pullback (spMap (frobR p k hk))).obj A
   have hπ : IsGrpPullback A₁ A _ _ := isGrpPullback_pullback A (spMap (frobR p k hk))

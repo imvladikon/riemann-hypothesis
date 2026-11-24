@@ -332,14 +332,6 @@ noncomputable section
 
 namespace GlobalTheory.SatInvUnit
 
-theorem perfectRing_tilt_fraction_field (l : ℕ) [Fact l.Prime] : PerfectRing (Cb l) l := by
-  refine PerfectRing.ofSurjective _ l fun x => ?_
-  obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
-  obtain ⟨a', rfl⟩ := surjective_frobenius (OCb l) l a
-  obtain ⟨b', rfl⟩ := surjective_frobenius (OCb l) l b
-  exact ⟨algebraMap (OCb l) (Cb l) a' / algebraMap (OCb l) (Cb l) b', by
-    simp [frobenius_def, map_pow]⟩
-
 theorem constantCoeff_frobW (l : ℕ) [Fact l.Prime] (x : WCb l) :
     WittVector.constantCoeff (frobW l x) = frobenius (Cb l) l (WittVector.constantCoeff x) :=
   WittVector.map_coeff (frobenius (Cb l) l) x 0
@@ -358,7 +350,7 @@ theorem isUnit_of_saturated : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : 
     (∀ v : Fin d → WCb l, (∀ i, v i ∈ bk.OE) → (∀ i, ((l : ℕ) : WCb l) ∣ Y.mulVec v i) → ∀ i, ((l : ℕ) : WCb l) ∣ v i) →
     IsUnit Y := by
   intro l _ K bk d Y A hY hA hφ hg hsat
-  haveI : PerfectRing (Cb l) l := perfectRing_tilt_fraction_field l
+  haveI : PerfectRing (Cb l) l := _root_.GlobalTheory.FrobInt.perfectRing_Cb l
   set c : WCb l →+* Cb l := WittVector.constantCoeff (p := l) (R := Cb l) with hc
 
   have hdetA : IsUnit A.det := by

@@ -119,14 +119,7 @@ theorem lintegral_div_inv (κ : ℝ) (hκ : 0 < κ) (w : ℝ → ENNReal) :
     _ = w t * (ENNReal.ofReal t)⁻¹ := by
       rw [ENNReal.mul_inv_cancel hne ENNReal.ofReal_ne_top, one_mul]
 
-theorem measurable_detNorm (E : Type) [Field E] [NumberField E] (j : ℕ) :
-    Measurable (detNorm E j) := by
-  have hc : Continuous (fun x : InfinitePlace E → Fin j → Fin j → ℂ =>
-      ∏ w, ‖(Matrix.of (x w)).det‖ ^ 2) := by
-    refine continuous_finsetProd _ (fun w _ => ?_)
-    exact ((Continuous.matrix_det
-      (A := fun x : InfinitePlace E → Fin j → Fin j → ℂ => Matrix.of (x w)) (continuous_apply w)).norm).pow 2
-  exact hc.measurable
+alias measurable_detNorm := _root_.GlobalTheory.DetSlab.measurable_detNorm
 
 theorem ae_detNorm_pos (E : Type) [Field E] [NumberField E] (j : ℕ) (hj : 1 ≤ j) :
     ∀ᵐ g ∂(haarGL E j), 0 < detNorm E j g := by
@@ -198,14 +191,6 @@ theorem measurable_detNorm : Measurable (detNorm E j) := by
     exact continuous_apply w
   exact h.measurable
 
-theorem ae_detNorm_pos (hj : 1 ≤ j) : ∀ᵐ g ∂(haarGL E j), 0 < detNorm E j g := by
-  unfold haarGL
-  refine (ae_withDensity_iff (((measurable_detNorm E j).inv.pow_const j).ennreal_ofReal)).2
-    (Filter.Eventually.of_forall fun g hg => ?_)
-  have h0 : 0 ≤ detNorm E j g := by unfold detNorm; positivity
-  refine lt_of_le_of_ne h0 fun h => hg ?_
-  simp [← h, show j ≠ 0 by omega]
-
 theorem latMean_congr (hj : 1 ≤ j) {F G : Submodule ℤ (VecInf E j) → ENNReal}
     (h : ∀ Λ : Submodule (𝓞 E) (Fin j → E), Submodule.IsFullLattice E Λ → ∀ g, 0 < detNorm E j g →
       F (latAt E j Λ g) = G (latAt E j Λ g)) : latMean E j F = latMean E j G := by
@@ -213,7 +198,7 @@ theorem latMean_congr (hj : 1 ≤ j) {F G : Submodule ℤ (VecInf E j) → ENNRe
   refine tsum_congr fun c => ?_
   congr 1
   refine withDensity_congr_ae ?_
-  filter_upwards [ae_detNorm_pos E j hj] with g hg using h _ (Quot.out c).2 g hg
+  filter_upwards [_root_.GlobalTheory.FlagBase.MeanCov.ae_detNorm_pos E j hj] with g hg using h _ (Quot.out c).2 g hg
 
 theorem latMean_add (hE : IsTotallyComplex E) (hj : 1 ≤ j) {F G : Submodule ℤ (VecInf E j) → ENNReal}
     (hF : ∀ Λ : Submodule (𝓞 E) (Fin j → E), Submodule.IsFullLattice E Λ →
@@ -227,7 +212,7 @@ theorem latMean_add (hE : IsTotallyComplex E) (hj : 1 ≤ j) {F G : Submodule �
   obtain ⟨Λ, hΛ⟩ := Quot.out c
   obtain ⟨D, hD, hDP, -, -, H⟩ := _root_.GlobalTheory.LatDom.exists_cone_domain E hE j Λ hΛ
   have hP : MeasurableSet {g | 0 < detNorm E j g} := measurableSet_lt measurable_const (measurable_detNorm E j)
-  rw [Measure.restrict_eq_self_of_ae_mem (s := {g | 0 < detNorm E j g}) (ae_detNorm_pos E j hj)] at H
+  rw [Measure.restrict_eq_self_of_ae_mem (s := {g | 0 < detNorm E j g}) (_root_.GlobalTheory.FlagBase.MeanCov.ae_detNorm_pos E j hj)] at H
   have hinv : ∀ γ ∈ autGL E j Λ, ∀ g ∈ {g | 0 < detNorm E j g}, γ * g ∈ {g | 0 < detNorm E j g} := by
     rintro γ ⟨c, -, hc⟩ g hg
     simp only [Set.mem_setOf_eq, detNorm] at hg ⊢

@@ -97,6 +97,7 @@ import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.CategoryTheory.EffectiveEpi.Comp
 import Mathlib.CategoryTheory.ExtremalEpi
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchClsCocycleSec
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.CommutativeAlgebra.CohomologyClassInLSurjectiveAndInjective, Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCocycleProductEqPullAddCup, Development.AutomorphicArithmetic.CommutativeAlgebra.ExteriorCupCocycleExistsOfPairing, Development.AutomorphicArithmetic.CommutativeAlgebra.CohomologySubsingletonPosOfStrictlyHenselian, Development.AutomorphicArithmetic.CommutativeAlgebra.ConnectedSpaceSpecLocalAndLaurent, Development.AutomorphicArithmetic.CommutativeAlgebra.DvdExponentOfPowEqLaurentMonomial, Development.AutomorphicArithmetic.CommutativeAlgebra.NonemptyPrimitiveRootOfStrictlyHenselian, Development.AutomorphicArithmetic.CommutativeAlgebra.BijectiveEtaleCohomologyLaurentPolynomialOfCoord, Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.LaurentCharacterLambda, Development.AutomorphicArithmetic.CommutativeAlgebra.BijectiveEtaleCohomologyMultiplicativeGroupProd, Development.AutomorphicArithmetic.CommutativeAlgebra.LocallySurjectiveMultiplicativeGroupKunnethMap, Development.AutomorphicArithmetic.CommutativeAlgebra.PsiCommDifferentialOfCocycle, Development.AutomorphicArithmetic.CommutativeAlgebra.BijectiveCohomologyGmProductKummerCup
@@ -211,8 +212,8 @@ theorem UpperTheory.exists_cocycle_product_eq_pull_add_cup :
   let A := zcomp (Cocycle.ofHom ((chains R).map (sch.map (prod.snd : W ⨯ X ⟶ X)))) α₂ (zero_add m)
   let B := zcomp (Cocycle.ofHom ((chains R).map (sch.map (prod.fst : W ⨯ X ⟶ W)))) κ (zero_add 1)
   let C := zcomp (Cocycle.ofHom ((chains R).map (sch.map (prod.snd : W ⨯ X ⟶ X)))) α₁ (zero_add n)
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ h).1 A B
-  have hc := (GlobalTheory.T.cup_eq_class_of_isAW R μ h).2 A B γ hγ
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h).1 A B
+  have hc := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h).2 A B γ hγ
   refine ⟨C + γ, ?_, ?_⟩
   · rw [CohomologyClass.mk_add, ← hc]
     rfl
@@ -367,8 +368,8 @@ theorem UpperTheory.exteriorCup_cocycle_exists_of_pairing :
     zcomp (Cocycle.ofHom ((chains R).map (prod.snd : sch.obj W ⨯ E ⟶ E))) α₂ (zero_add m)
   let B : Cocycle ((chains R).obj (sch.obj W ⨯ E)) P 1 :=
     zcomp (Cocycle.ofHom ((chains R).map (prod.fst : sch.obj W ⨯ E ⟶ _))) z' (zero_add 1)
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ h).1 A B
-  have hc := (GlobalTheory.T.cup_eq_class_of_isAW R μ h).2 A B γ hγ
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h).1 A B
+  have hc := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ h).2 A B γ hγ
   have evA : ∀ (p : ℕ) s hs (T : Scheme.{0}) (y : Sx (sch.obj W ⨯ E) p T), ev (R := R) A.1 p s hs T y = ev (R := R) α₂.1 p s hs T (y.map prod.snd) :=
     fun p s hs T y => (GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := Q) (n := m)).2.2.2.1 prod.snd α₂.1 p s hs T y
   have evB : ∀ (p : ℕ) s hs (T : Scheme.{0}) (y : Sx (sch.obj W ⨯ E) p T), ev (R := R) B.1 p s hs T y = ev (R := R) z'.1 p s hs T (y.map prod.fst) :=
@@ -696,13 +697,13 @@ private theorem root_tors {X : Scheme.{0}} [Nonempty X] (ζ : Prim q Γ(X, ⊤))
   rw [root_eq, ← map_nsmul] at h
   have hinj : Function.Injective (secHom (q := q) i X) := (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.1.1
   have h0 : c • twGen i ζ = 0 := hinj (h.trans (map_zero _).symm)
-  exact (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.1 X ζ c h0
+  exact (_root_.GlobalTheory.EtC.twist_sections q i).2.2.1 X ζ c h0
 
 private theorem pull_root {Y X : Scheme.{0}} (f : Y ⟶ X) (ζ : Prim q Γ(X, ⊤)) (i : ℤ) :
     pull _ (sch.map f) _ _ (rootClass i ζ) = rootClass i (ζ.map f.appTop.hom) := by
   rw [root_eq, root_eq]
   refine ((_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.2.2.1 f _).trans ?_
-  rw [(GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 Y X f ζ]
+  rw [(_root_.GlobalTheory.EtC.twist_sections q i).2.2.2.1 Y X f ζ]
   rfl
 
 private theorem deg0 {X Y : Scheme.{0}} [ConnectedSpace X] [ConnectedSpace Y] (f : Y ⟶ X) (ζ : Prim q Γ(X, ⊤)) (i n : ℤ) (hn : n = 0) :
@@ -1033,7 +1034,7 @@ private theorem coord (q : ℕ) (hq : IsUnit (q : S)) :
 
 private theorem pull_cup {q : ℕ} {E E' : Spc} (s : E ⟶ E') {n m i j : ℤ} (x : Ht q E' n i) (y : Ht q E' m j) :
     pull _ s _ _ (cup q x y) = cup q (pull _ s _ _ x) (pull _ s _ _ y) :=
-  GlobalTheory.T.cup_hypercohomologyPullback (ZMod q) (twPair q i j) s rfl x y
+  _root_.GlobalTheory.EtC.Pair.cup_pull (ZMod q) (twPair q i j) s rfl x y
 
 end UpperTheory.KG
 
@@ -1080,7 +1081,7 @@ namespace UpperTheory.KunRed
 
 private theorem pull_cup' {q : ℕ} {E E' : Spc} (f : E ⟶ E') {n m i j : ℤ} (a : Ht q E' n i) (b : Ht q E' m j) :
     pull _ f _ _ (cup q a b) = cup q (pull _ f _ _ a) (pull _ f _ _ b) :=
-  GlobalTheory.T.cup_hypercohomologyPullback _ (twPair q i j) f rfl a b
+  _root_.GlobalTheory.EtC.Pair.cup_pull _ (twPair q i j) f rfl a b
 
 private noncomputable def Phi (q : ℕ) (m j : ℤ) (V : Scheme.{0})
     (p : Ht q (sch.obj V) (m + 1) (j + 1) × Ht q (sch.obj V) m j) : Ht q (sch.obj (Gq q ⨯ V)) (m + 1) (j + 1) :=
@@ -1108,9 +1109,6 @@ private theorem pull_prod (q : ℕ) {n i : ℤ} {V'' V' V : Scheme.{0}} (h : V''
       pull _ (sch.map (prod.map (𝟙 (Gq q)) (h ≫ g))) _ _ y := by
   rw [← pull_comp, ← sch.map_comp, prod.map_map, Category.comp_id]
 
-private theorem tw_finitary (q : ℕ) (i : ℤ) : Finitary (tw q i) :=
-  _root_.GlobalTheory.ofRings_finitary (ZMod q) (twF q i) (GlobalTheory.T.tateTwistRingFunctor_preservesFilteredColimits q i)
-
 private theorem affine_prod (W X : Scheme.{0}) [IsAffine W] [IsAffine X] : IsAffine (W ⨯ X) := by
   haveI : IsAffine (⊤_ Scheme.{0}) := IsAffine.of_isIso (terminalIsoIsTerminal specZIsTerminal).hom
   haveI : IsAffine (pullback (terminal.from W) (terminal.from X)) :=
@@ -1129,8 +1127,8 @@ private theorem exists_nbhd (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (
       (∀ n i' : ℤ, ∀ (k : I) (y : Ht q (sch.obj (Gq q ⨯ D.obj k)) n i'),
         pull _ (sch.map (prod.map (𝟙 (Gq q)) (e k))) _ _ y = 0 →
           ∃ (k' : I) (f : k' ⟶ k), pull _ (sch.map (prod.map (𝟙 (Gq q)) (D.map f))) _ _ y = 0) := by
-  obtain ⟨O, _, s, g, hs, v, hv⟩ := GlobalTheory.T.exists_strictlyHenselianEtaleStalk_over_point T (Over.mk (𝟙 T)) (by dsimp; infer_instance) u
-  obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := GlobalTheory.T.exists_cofiltered_limit_affine_etale_of_isStalk' T O s hs
+  obtain ⟨O, _, s, g, hs, v, hv⟩ := _root_.GlobalTheory.EtC.exists_isStalk_over_point T (Over.mk (𝟙 T)) (by dsimp; infer_instance) u
+  obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := _root_.GlobalTheory.EtC.exists_cofiltered_limit_affine_etale_of_isStalk T O s hs
   haveI : IsConnected I := IsCofiltered.isConnected I
   have hgs : g.left = s := by simpa using Over.w g
   have hc : IsLimit ((Over.forget T).mapCone (Cone.mk _ π)) := isLimitOfPreserves (Over.forget T) hl
@@ -1147,18 +1145,18 @@ private theorem exists_nbhd (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (
     simpa using this
   · rw [← hgs]; exact hv
   · intro n i'
-    exact _root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (tw_finitary q i') I (G ⋙ Over.forget T) _ hc (fun i => (hG i).1) n
+    exact _root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (_root_.GlobalTheory.EtC.tw_finitary q i') I (G ⋙ Over.forget T) _ hc (fun i => (hG i).1) n
   · intro n i' k y hy
     have hA : ∀ i, IsAffine (((G ⋙ Over.forget T) ⋙ prod.functor.obj (Gq q)).obj i) := fun i => by
       haveI := (hG i).1
       exact affine_prod (Gq q) (G.obj i).left
-    exact (_root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (tw_finitary q i') I ((G ⋙ Over.forget T) ⋙ prod.functor.obj (Gq q)) _ hc2
+    exact (_root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (_root_.GlobalTheory.EtC.tw_finitary q i') I ((G ⋙ Over.forget T) ⋙ prod.functor.obj (Gq q)) _ hc2
       hA n).2 k y hy
 
 private theorem surj_part (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (q : Γ(T, ⊤))) (m j : ℤ)
     (y : Ht q (sch.obj (Gq q ⨯ T)) (m + 1) (j + 1)) :
     Loc T fun V g => ∃ p, Phi q m j V p = pull _ (sch.map (prod.map (𝟙 (Gq q)) g)) _ _ y := by
-  refine (GlobalTheory.T.etaleLocally_iff_affine_etale_point_cover T _ ?_).2 ?_
+  refine (_root_.GlobalTheory.EtC.loc_iff_etale_affine_points T _ ?_).2 ?_
   · rintro V W g k ⟨p, hp⟩
     refine ⟨(pull _ (sch.map k) _ _ p.1, pull _ (sch.map k) _ _ p.2), ?_⟩
     rw [← Phi_nat, hp, pull_prod]
@@ -1192,7 +1190,7 @@ private theorem surj_part (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (q 
 private theorem inj_part (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (q : Γ(T, ⊤))) (m j : ℤ)
     (p : Ht q (sch.obj T) (m + 1) (j + 1) × Ht q (sch.obj T) m j) (hp : Phi q m j T p = 0) :
     Loc T fun V g => pull _ (sch.map g) _ _ p.1 = 0 ∧ pull _ (sch.map g) _ _ p.2 = 0 := by
-  refine (GlobalTheory.T.etaleLocally_iff_affine_etale_point_cover T _ ?_).2 ?_
+  refine (_root_.GlobalTheory.EtC.loc_iff_etale_affine_points T _ ?_).2 ?_
   · rintro V W g k ⟨h1, h2⟩
     refine ⟨?_, ?_⟩
     · rw [sch.map_comp, pull_comp, h1, map_zero]
@@ -1244,15 +1242,11 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.LocallySurjectiveMultiplicativeGroupKunnethMap =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.PsiCommDifferentialOfCocycle =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.PsiCommDifferentialOfCocycle", "h": "module\n\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.MapZeroS\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.CommutativeAlgebra.PsiCommDifferentialOfCocycle", "h": "module\n\npublic import Development.AutomorphicArithmetic.CommutativeAlgebra.MapZeroS\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchClsCocycleSec\n\n"}
 section -- clump:auto
 @[expose] public section
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC UpperTheory.Pbf UpperTheory.Kun
-
-private theorem map_units {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (ε : ℤˣ) (x : Sec F U) :
-    Sec.map φ (ε • x) = ε • Sec.map φ x := by
-  rcases Int.units_eq_one_or ε with rfl | rfl <;> simp
 
 private theorem map_add' {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (x y : Sec F U) :
     Sec.map φ (x + y) = Sec.map φ x + Sec.map φ y :=
@@ -1285,7 +1279,7 @@ theorem UpperTheory.psi_comm_differential_of_cocycle :
       Sec.res (prod.snd : W ⨯ T ⟶ T) (c₁ (Sec.map ((LL I Q).d s (s + 1)) a)) +
         (s + 1).negOnePow • μ.mul (W ⨯ T) (s + 1 + -1) 1 (s + 1) (by omega)
           (Sec.res (prod.snd : W ⨯ T ⟶ T) (c₂ (Sec.map ((LL I Q).d s (s + 1)) a))) (Sec.res (prod.fst : W ⨯ T ⟶ W) z)
-    rw [map_add', map_units, hL, c₁_d, c₂_d, res_map, Int.negOnePow_succ]
+    rw [map_add', _root_.GlobalTheory.EtC.SchCls.map_units_smul, hL, c₁_d, c₂_d, res_map, Int.negOnePow_succ]
     congr 1
     have hn : Sec.res (prod.snd : W ⨯ T ⟶ T) (- Sec.map (Q.d (s + -1) (s + 1 + -1)) (c₂ a)) =
         - Sec.map (Q.d (s + -1) (s + 1 + -1)) (Sec.res (prod.snd : W ⨯ T ⟶ T) (c₂ a)) := by

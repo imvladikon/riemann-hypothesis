@@ -273,7 +273,7 @@ theorem sq_norm_le {a : ℕ} {π : CG E a} (hu : π.IsUnitary) {T : Finset (Heig
   have hx : 1 < x := by
     rw [hxdef, Real.lt_logb_iff_rpow_lt hq hM0, Real.rpow_one]; exact hlt
   have hqx : (Ideal.absNorm w.asIdeal : ℝ) ^ x = M := Real.rpow_logb hq0 hq.ne' hM0
-  obtain ⟨L, hL, -, -⟩ := GlobalTheory.T.rankinSelberg_partialL_pole_at_one_conj E a π ha hu T hT
+  obtain ⟨L, hL, -, -⟩ := _root_.GlobalTheory.RSPole.rs_pole_conj E a π ha hu T hT
   obtain ⟨hP, hL1⟩ := hL x hx
   have hzero : locL (Ideal.absNorm (⟨w, hw⟩ : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}).1.asIdeal)
       (sat π w) ((sat π w).map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ) = 0 := by
@@ -334,7 +334,7 @@ theorem summable_diag {a : ℕ} (σ : CG E a) (hσ : σ.IsUnitary)
   rcases Nat.eq_zero_or_pos a with rfl | ha
   · simp only [sat_zero, Multiset.map_zero, Multiset.sum_zero, map_zero, mul_zero, zero_div]
     exact summable_zero
-  obtain ⟨L, hL, -, -⟩ := GlobalTheory.T.rankinSelberg_partialL_pole_at_one_conj E a σ ha hσ T hT
+  obtain ⟨L, hL, -, -⟩ := _root_.GlobalTheory.RSPole.rs_pole_conj E a σ ha hσ T hT
   obtain ⟨hP, -⟩ := hL x hx
   have hloc : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, ∃ Lw : ℝ,
       HasSum (fun n : ℕ => ((Ideal.absNorm w.1.asIdeal : ℝ) ^ (-x)) ^ n *
@@ -481,8 +481,7 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain GlobalTheory.CuspRep GlobalTheory.JSW
 
-theorem _root_.GlobalTheory.T.localRankinSelberg_logarithm_formula : (∀ (q : ℕ) (A B : Multiset ℂˣ) (s : ℂ), 1 < q → (∀ α ∈ A, ∀ β ∈ B, ‖(α : ℂ) * (β : ℂ)‖ * (q : ℝ) ^ (-s.re) < 1) → ∃ L : ℂ, HasSum (fun r : ℕ => (A.map fun α => (α : ℂ) ^ (r + 1)).sum * (B.map fun β => (β : ℂ) ^ (r + 1)).sum * (q : ℂ) ^ (-(((r : ℂ) + 1) * s)) / ((r : ℂ) + 1)) L ∧ locL q A B s = Complex.exp L) ∧ (∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a b : ℕ) (σ : CG E a) (σ' : CG E b), σ.IsUnitary → σ'.IsUnitary → ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T σ → UnrOutside T σ' → ∀ x : ℝ, 1 < x → Summable (fun p : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} × ℕ => ‖((sat σ p.1.1).map fun α => (α : ℂ) ^ (p.2 + 1)).sum * ((sat σ' p.1.1).map fun β => (starRingEnd ℂ (β : ℂ)) ^ (p.2 + 1)).sum * (Ideal.absNorm p.1.1.asIdeal : ℂ) ^ (-(((p.2 : ℂ) + 1) * (x : ℂ))) / ((p.2 : ℂ) + 1)‖) ∧ HasProd (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => locL (Ideal.absNorm w.1.asIdeal) (sat σ w.1) ((sat σ' w.1).map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ)) (Complex.exp (∑' p : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} × ℕ, ((sat σ p.1.1).map fun α => (α : ℂ) ^ (p.2 + 1)).sum * ((sat σ' p.1.1).map fun β => (starRingEnd ℂ (β : ℂ)) ^ (p.2 + 1)).sum * (Ideal.absNorm p.1.1.asIdeal : ℂ) ^ (-(((p.2 : ℂ) + 1) * (x : ℂ))) / ((p.2 : ℂ) + 1)))) := by
-  first | (exact @GlobalTheory.JSLog.logRankinSelberg)
+alias _root_.GlobalTheory.T.localRankinSelberg_logarithm_formula := _root_.GlobalTheory.JSLog.logRankinSelberg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalRankinSelbergLogarithmFormulaStatement =====

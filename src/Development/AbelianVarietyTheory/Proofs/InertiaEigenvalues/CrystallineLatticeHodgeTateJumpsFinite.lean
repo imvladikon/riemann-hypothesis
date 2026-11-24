@@ -56,8 +56,6 @@ section -- clump:auto
 open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.BasicNotions.Loc TensorProduct GlobalTheory.NL Formalism.MainNotions.DeltaInvariantLattices
 
 
-theorem _root_.GlobalTheory.T.exists_crystallineLetter_of_hodgeJump : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), ∀ T : Lt K LL, IsCrys ((D.loc l).PD K) T.ρ → ∀ (i : Let K) (ζ : ↥LL.1) τ, Pt (HW l) h i ζ τ → ∀ a : ℤ, IsJumpV ((D.loc l).PD K) T.ρ τ a → ∃ d ∈ Di (HW l) h T i, ιV ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V) d ∈ FilAt ((D.loc l).PD K) T τ a ∧ ιV ((D.loc l).PD K) (LL := ↥LL.1) (V := T.V) d ∉ FilAt ((D.loc l).PD K) T τ (a + 1) := by
-  first | exact @GlobalTheory.NL.JumpVec.exists_letter_of_jump
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCrystallineLetterOfHodgeJumpStatement =====
@@ -118,7 +116,7 @@ theorem jumps_finite : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l 
     Submodule.finrank_mono inf_le_left
   have hlt : ∀ a b, IsJumpV ((D.loc l).PD K) T.ρ τ a → a < b → f b < f a := by
     intro a b ha hab
-    obtain ⟨d, hd, h1, h2⟩ := GlobalTheory.T.exists_crystallineLetter_of_hodgeJump D HW l K s LL h T hcrys i ζ τ hpt a ha
+    obtain ⟨d, hd, h1, h2⟩ := _root_.GlobalTheory.NL.JumpVec.exists_letter_of_jump D HW l K s LL h T hcrys i ζ τ hpt a ha
     have hle : S b ≤ S (a + 1) := hSanti (by omega)
     have hlt' : S (a + 1) < S a := by
       refine lt_of_le_of_ne (hSanti (by omega)) fun heq => h2 ?_

@@ -83,6 +83,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineXiPowSaturatedQuotientComplete
 import Mathlib.Tactic.Linter.Style
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.PiTensorProduct
@@ -560,7 +561,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfEqZero =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBFrame =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBFrame", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfEqZero\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.FontaineAinfLocalDomainXiAdicOrder\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.MuDvdOfDvdIterates\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBFrame", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfEqZero\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.FontaineAinfLocalDomainXiAdicOrder\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.MuDvdOfDvdIterates\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineXiPowSaturatedQuotientComplete\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -610,11 +611,6 @@ theorem sat (hv : v.Integers O) (b : O) (h : (p : O) * b = 0) : b = 0 := by
     Function.Injective.isDomain (algebraMap O C) hv.hom_inj
   exact (mul_eq_zero.1 h).resolve_left hp
 
-theorem smod_iff {R : Type} [CommRing R] (q : R) (n : ℕ) (x y : R) :
-    x ≡ y [SMOD (Ideal.span {q}) ^ n • (⊤ : Submodule R R)] ↔ q ^ n ∣ x - y := by
-  rw [SModEq.sub_mem, Ideal.span_singleton_pow, smul_eq_mul, Ideal.mul_top,
-    Ideal.mem_span_singleton]
-
 theorem lim_series (u0 : Ainf p O) (u : ℕ → Ainf p O) : ∃ L : Ainf p O, ∀ n,
     (p : Ainf p O) ^ n ∣ (u0 + ∑ k ∈ Finset.range n, (p : Ainf p O) ^ k * u k) - L := by
   haveI : IsAdicComplete (Ideal.span {(p : Ainf p O)}) (Ainf p O) :=
@@ -622,14 +618,14 @@ theorem lim_series (u0 : Ainf p O) (u : ℕ → Ainf p O) : ∃ L : Ainf p O, �
   obtain ⟨L, hL⟩ := IsPrecomplete.prec' (I := Ideal.span {(p : Ainf p O)})
     (fun N => u0 + ∑ k ∈ Finset.range N, (p : Ainf p O) ^ k * u k) (by
       intro m n hmn
-      rw [smod_iff, ← dvd_neg, neg_sub]
+      rw [_root_.GlobalTheory.MemLoc.XiSat.smodEq_iff, ← dvd_neg, neg_sub]
       induction n, hmn using Nat.le_induction with
       | base => simp
       | succ n hmn ih =>
         rw [Finset.sum_range_succ, show ∀ s t w : Ainf p O, u0 + (s + t) - w = (u0 + s - w) + t
           from fun _ _ _ => by ring]
         exact dvd_add ih (Dvd.dvd.mul_right (pow_dvd_pow _ hmn) _))
-  exact ⟨L, fun n => (smod_iff _ _ _ _).1 (hL n)⟩
+  exact ⟨L, fun n => (_root_.GlobalTheory.MemLoc.XiSat.smodEq_iff _ _ _ _).1 (hL n)⟩
 
 theorem complete (hv : v.Integers O) (hε : IsPrimitiveSystem ε) :
     IsAdicComplete (Ideal.span {(p : BR ε)}) (BR ε) := by
@@ -637,7 +633,7 @@ theorem complete (hv : v.Integers O) (hε : IsPrimitiveSystem ε) :
     WittVector.isAdicCompleteIdealSpanP
   refine { haus' := ?_, prec' := ?_ }
   · intro x hx
-    have hx' : ∀ n, (p : BR ε) ^ n ∣ x := fun n => by simpa using (smod_iff _ n x 0).1 (hx n)
+    have hx' : ∀ n, (p : BR ε) ^ n ∣ x := fun n => by simpa using (_root_.GlobalTheory.MemLoc.XiSat.smodEq_iff _ n x 0).1 (hx n)
     obtain ⟨u, w, rfl⟩ := gen ε x
     refine eq_zero_of_dvd hv hε u w (GlobalTheory.MuDivides.dvd_of_step (p : Ainf p O) (mu ε ^ 2)
       (fun z => ∀ n, ∃ s t, z = (p : Ainf p O) ^ n * s + mu ε ^ 2 * t) ?_ _ ?_)
@@ -657,7 +653,7 @@ theorem complete (hv : v.Integers O) (hε : IsPrimitiveSystem ε) :
       exact ⟨p * s' + mu ε * t', e, by linear_combination he⟩
   · intro f hf
     have hstep : ∀ n, ∃ c, f (n + 1) - f n = (p : BR ε) ^ n * c := fun n => by
-      obtain ⟨c, hc⟩ := (smod_iff _ n (f n) (f (n + 1))).1 (hf (Nat.le_succ n))
+      obtain ⟨c, hc⟩ := (_root_.GlobalTheory.MemLoc.XiSat.smodEq_iff _ n (f n) (f (n + 1))).1 (hf (Nat.le_succ n))
       exact ⟨-c, by linear_combination -hc⟩
     choose c hc using hstep
     choose u w huw using fun n => gen ε (c n)
@@ -674,7 +670,7 @@ theorem complete (hv : v.Integers O) (hε : IsPrimitiveSystem ε) :
         rw [huw N] at this
         simp only [Finset.sum_range_succ, map_add (f := _), map_mul, map_pow, map_natCast] at ih ⊢
         linear_combination this + ih
-    refine ⟨a ε LX + τ ε * a ε LY, fun n => (smod_iff _ _ _ _).2 ?_⟩
+    refine ⟨a ε LX + τ ε * a ε LY, fun n => (_root_.GlobalTheory.MemLoc.XiSat.smodEq_iff _ _ _ _).2 ?_⟩
     obtain ⟨e1, he1⟩ := hX n
     obtain ⟨e2, he2⟩ := hY n
     refine ⟨a ε e1 + τ ε * a ε e2, ?_⟩
@@ -831,10 +827,7 @@ namespace GlobalTheory.PDivLat.Frob
 variable {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬IsUnit (p : O)]
   [IsAdicComplete (Ideal.span {(p : O)}) O]
 
-theorem frob_phiInv (a : Ainf p O) : WittVector.frobenius (phiInv p O a) = a := by
-  ext n
-  rw [WittVector.coeff_frobenius_charP, phiInv, WittVector.map_coeff]
-  exact frobeniusEquiv_symm_pow_p _ p _
+alias frob_phiInv := _root_.GlobalTheory.Dieudonne.frobenius_phiInv
 
 theorem phiInv_ofPadic' (c : ℤ_[p]) : phiInv p O (ofPadic p O c) = ofPadic p O c := by
   ext n
@@ -843,16 +836,11 @@ theorem phiInv_ofPadic' (c : ℤ_[p]) : phiInv p O (ofPadic p O c) = ofPadic p O
     (((_root_.frobeniusEquiv (PreTilt O p) p).symm : PreTilt O p →+* PreTilt O p).comp
       (ZMod.castHom (dvd_refl p) (PreTilt O p))) (ZMod.castHom (dvd_refl p) (PreTilt O p))) _
 
-theorem frob_ofPadic (c : ℤ_[p]) :
-    WittVector.frobenius (ofPadic p O c) = ofPadic p O c := by
-  conv_lhs => rw [← phiInv_ofPadic' c]
-  exact frob_phiInv _
-
 def frobT (G : PDivGroup p O) (y : TDual G) : TDual G where
   toFun t := WittVector.frobenius (y t)
   map_add' s t := by rw [map_add (f := _), map_add (f := _)]
   map_smul' c t := by
-    rw [LinearMap.map_smulₛₗ, smul_eq_mul, map_mul, frob_ofPadic, smul_eq_mul]
+    rw [LinearMap.map_smulₛₗ, smul_eq_mul, map_mul, _root_.GlobalTheory.PDivLat.frobenius_ofPadic, smul_eq_mul]
 
 def xiPhiInvT (ε : PreTilt O p) (G : PDivGroup p O) (m : TDual G) : TDual G where
   toFun t := xi ε * phiInv p O (m t)
@@ -1130,26 +1118,6 @@ open CategoryTheory Opposite Matrix GlobalTheory GlobalTheory.PDivGroup GlobalTh
 
 namespace GlobalTheory.PDivLat.ConstMu
 
-theorem frobenius_ofPadic {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬IsUnit (p : O)]
-    [IsAdicComplete (Ideal.span {(p : O)}) O] (c : ℤ_[p]) :
-    WittVector.frobenius (ofPadic p O c) = ofPadic p O c := by
-  ext n
-  rw [WittVector.coeff_frobenius_charP]
-  simp only [ofPadic, RingHom.comp_apply, WittVector.map_coeff]
-  rw [← map_pow, ZMod.pow_card]
-
-theorem frobenius_phiInv' {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬IsUnit (p : O)]
-    [IsAdicComplete (Ideal.span {(p : O)}) O] (a : Ainf p O) :
-    WittVector.frobenius (phiInv p O a) = a := by
-  ext n
-  rw [WittVector.coeff_frobenius_charP, phiInv, WittVector.map_coeff]
-  exact frobeniusEquiv_symm_pow_p _ p _
-
-theorem frobenius_mu' {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬IsUnit (p : O)]
-    [IsAdicComplete (Ideal.span {(p : O)}) O] (ε : PreTilt O p) :
-    WittVector.frobenius (Sandwich.mu ε) = WittVector.frobenius (xi ε) * Sandwich.mu ε := by
-  conv_lhs => rw [← xi_mul_nu, map_mul, ← phiInv_mu, frobenius_phiInv']
-
 theorem existsUnique_lattMap : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ g : latt (PDivGroup.mu p O) →ₗ[Ainf p O] latt (const p O), (∀ m m' : latt (PDivGroup.mu p O), (∀ t, m'.1 t = WittVector.frobenius (m.1 t)) → ∀ t, (g m').1 t = WittVector.frobenius ((g m).1 t)) → ∃! f : const p O ⟶ PDivGroup.mu p O, lattMap f = g := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε g hg
   obtain ⟨ec, hec⟩ := _root_.GlobalTheory.PDivLat.latt_const_equiv p C v O hv ε hε
@@ -1181,7 +1149,7 @@ theorem existsUnique_lattMap : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C]
       intro t
       obtain ⟨a, rfl⟩ := htate t
       rw [Submodule.coe_smul, LinearMap.smul_apply, hlval, smul_eq_mul, map_mul,
-        frobenius_ofPadic, frobenius_mu']
+        _root_.GlobalTheory.PDivLat.frobenius_ofPadic, _root_.GlobalTheory.Dieudonne.frobenius_mu]
       ring) (constGen p O)
     rw [map_smul, Submodule.coe_smul, LinearMap.smul_apply, smul_eq_mul] at h1
     rw [hb_def, ← h1]

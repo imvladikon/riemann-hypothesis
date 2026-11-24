@@ -662,11 +662,6 @@ noncomputable section
 
 namespace PI.WGB
 
-open Formalism.BasicNotions MvPolynomial
-
-theorem fixed_line_exists : FixedLine :=
-  fixedLine_proof_A
-
 end PI.WGB
 end -- clump:auto
 end -- clump:auto
@@ -1193,12 +1188,6 @@ section -- clump:auto
 noncomputable section
 
 namespace PI.WGB
-
-open Formalism.BasicNotions MvPolynomial
-
-theorem stable_complement_exists : StableCompl := stableCompl_B
-
-theorem highest_weight_vector_exists : HighestVec := highestVec_B
 
 end PI.WGB
 end -- clump:auto
@@ -1737,10 +1726,10 @@ section -- clump:auto
 @[expose] public section
 
 theorem gelfand_tsetlin_branching : PI.GTBranch :=
-  PI.WGB.gTBranch_of_steps highest_weight_irreducible (PI.WGB.extremalFacts_of_A highest_weight_irreducible) PI.WGB.fixed_line_exists
-    PI.WGB.stable_complement_exists PI.WGB.highest_weight_vector_exists
-    (PI.WGB.realize_of highest_weight_irreducible (PI.WGB.extremalFacts_of_A highest_weight_irreducible) PI.WGB.fixed_line_exists
-      PI.WGB.stable_complement_exists PI.WGB.highest_weight_vector_exists)
+  PI.WGB.gTBranch_of_steps highest_weight_irreducible (PI.WGB.extremalFacts_of_A highest_weight_irreducible) _root_.PI.WGB.fixedLine_proof_A
+    _root_.PI.WGB.stableCompl_B _root_.PI.WGB.highestVec_B
+    (PI.WGB.realize_of highest_weight_irreducible (PI.WGB.extremalFacts_of_A highest_weight_irreducible) _root_.PI.WGB.fixedLine_proof_A
+      _root_.PI.WGB.stableCompl_B _root_.PI.WGB.highestVec_B)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.GTBranch =====

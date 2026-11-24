@@ -72,8 +72,8 @@ theorem exists_isNorm : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
   haveI : Finite (GL (Fin n) F') := inferInstance
   letI := Fintype.ofFinite (GL (Fin n) F)
   letI := Fintype.ofFinite (GL (Fin n) F')
-  have hfib := GlobalTheory.T.card_isGaloisTwistedNormGL_mul_card_GL F F' s hs n
-  have hnd := GlobalTheory.T.isConj_of_isConj_glFieldExtensionInclusion F F' n
+  have hfib := _root_.GlobalTheory.Shin.NormFibre.card_isNorm_mul_card F F' s hs n
+  have hnd := _root_.GlobalTheory.Shin.isConj_of_isConj_incl F F' n
   let cl : GL (Fin n) F → ℕ := fun γ => Nat.card {γ' : GL (Fin n) F // IsConj γ γ'}
   have hcl_pos : ∀ γ, 0 < cl γ := fun γ => Nat.card_pos_iff.2 ⟨⟨⟨γ, IsConj.refl γ⟩⟩, inferInstance⟩
   have hcl_eq : ∀ γ, (cl γ : ℚ) = ((Finset.univ.filter fun γ' => IsConj γ γ').card : ℚ) := by
@@ -155,8 +155,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.every_element_is_norm : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (n : ℕ) (δ : GL (Fin n) F'), ∃ γ : GL (Fin n) F, IsNorm s δ γ := by
-  first | (exact @GlobalTheory.Shin.exists_isNorm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EveryElementIsNorm =====

@@ -1331,7 +1331,7 @@ theorem zcusp_lift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
   have : SecondCountableTopology (ZI T ξ) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
   obtain ⟨⟨μ₀, 𝓖₀, hμ₀, h𝓖₀, hc₀⟩, hfin, -⟩ := GlobalTheory.TransvMeasure.transvection_measure D θ T hθ ξ hξ
-  obtain ⟨C, hC, hcov⟩ := GlobalTheory.definite_unitary_cocompact S hpos
+  obtain ⟨C, hC, hcov⟩ := _root_.GlobalTheory.DefiniteQuotient.exists_compact S hpos
   have hG : μ 𝓖 ≠ ⊤ := (hfin μ 𝓖 hμ h𝓖).2
   have hN : ν 𝓕 ≠ ⊤ := GlobalTheory.TransvMeasure.measure_ne_top_of_cocompact (GQ S) hC (fun x => by
     obtain ⟨γ, hγ, c, hc, rfl⟩ := hcov x
@@ -1427,7 +1427,7 @@ theorem lift_growth (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS
     ∃ N : ℕ, ∀ L : X →ₗ[ℂ] (WO S T → ℂ), (∀ x, IsThetaFunO ψ S T (L x)) → ∀ x : GA D T,
       ∃ c : ℝ, ∀ g ∈ GinfC T, ‖lift om ν 𝓕 (fun h => L (F h)) (x * g)‖ ≤ c * normInf θ T g ^ N := by
   obtain ⟨N, hN⟩ := GlobalTheory.ThetaGrowth.thetaKO_growth ψ S T χS χT om hW θ hθ
-  obtain ⟨C, hC, hcov⟩ := GlobalTheory.definite_unitary_cocompact S hS
+  obtain ⟨C, hC, hcov⟩ := _root_.GlobalTheory.DefiniteQuotient.exists_compact S hS
   have hfin : ν 𝓕 < ⊤ := lt_top_iff_ne_top.2 (GlobalTheory.Mem.QuotVol.quot_volume_ne_zero_ne_top D S ν 𝓕 ⟨hν, h𝓕⟩).2
   refine ⟨N, fun L hL x => ?_⟩
   let b := Module.finBasis ℂ X

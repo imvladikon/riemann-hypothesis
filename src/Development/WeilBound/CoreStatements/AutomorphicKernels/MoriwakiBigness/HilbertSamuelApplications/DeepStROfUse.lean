@@ -126,6 +126,7 @@ import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.IsStrictDom
 import Mathlib.AlgebraicGeometry.QuasiAffine
 import Mathlib.Tactic.TypeStar
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
@@ -510,8 +511,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.cost_two_log_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : Level H) (B : ℝ), 128 ≤ B → (Nat.primeFactors (2 * (discr E).natAbs) ∪ l.M'.primeFactors).card ≤ ⌊B⌋₊ → 0 ≤ costTwo l B ∧ costTwo l B ≤ 60 * (Real.log B + Real.log (hostRd E)) := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.costTwo_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.CostTwoLogBoundStatement =====
@@ -542,7 +541,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsIsGlobal =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPPowerLevelFromPrimesAboveP =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPPowerLevelFromPrimesAboveP", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps\npublic import Formalism.LocalToGlobal.ProjectiveLattices.CompHt\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitCompsOfIsTowerOf\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenPtSpecializes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.QuasiAffine\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPPowerLevelFromPrimesAboveP", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps\npublic import Formalism.LocalToGlobal.ProjectiveLattices.CompHt\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitCompsOfIsTowerOf\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenPtSpecializes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.QuasiAffine\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -555,10 +554,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Level H}
   {Xo : Moduli D l} {c : Coeff l}
-
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [← Spec.map_comp]; rfl
 
 theorem isPreimmersion_fst (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) :
     IsPreimmersion (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))) := by
@@ -605,7 +600,7 @@ theorem mem_range_j (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) {Ω : Type} [Fi
     (ξ : Spec (CommRingCat.of Ω) ⟶ Y.X) (cst : c.F →+* Ω) (hmax : ∀ y, y ⤳ genPt ξ → y = genPt ξ)
     (hs : ξ ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F))) : genPt ξ ∈ Set.range Y.j := by
   have hpr := projProper _ _ _ Y.proj
-  have sq : ξ ≫ Y.s = spMap cst ≫ spMap (algebraMap (𝓞 c.F) c.F) := by rw [hs, spMap_comp']
+  have sq : ξ ≫ Y.s = spMap cst ≫ spMap (algebraMap (𝓞 c.F) c.F) := by rw [hs, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   let P := pullback Y.s (spMap (algebraMap (𝓞 c.F) c.F))
   let ξ₁ : Spec (CommRingCat.of Ω) ⟶ P := pullback.lift ξ (spMap cst) sq
   have hf : ξ₁ ≫ pullback.fst _ _ = ξ := pullback.lift_fst _ _ _
@@ -666,8 +661,8 @@ theorem splitComps_of_fnAlgClosed (Y : Model Xo c (algebraMap (𝓞 c.F) c.F))
       apply TowerOfTest.spec_inj
       have : spMap ((i.comp cst).comp (algebraMap (𝓞 c.F) c.F)) =
           spMap i ≫ spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) := by
-        rw [RingHom.comp_assoc, spMap_comp']
-      exact this.trans (h2.symm.trans (spMap_comp' _ _).symm)
+        rw [RingHom.comp_assoc, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
+      exact this.trans (h2.symm.trans (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ _).symm)
     exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 c.F)) e0
   have hb : IsAlgebraic c.F (algebraMap (Formalism.L2.Pj.kap Z) (Formalism.L2.Pj.Om Z) (i a)) := by
     obtain ⟨p, hp0, hp⟩ := ha
@@ -844,7 +839,7 @@ theorem top_meanAll : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → GlobalTheory
   obtain ⟨Y, T, o, κ, -, hCO, hTbad, hProp, hT1, -, hMS⟩ :=
     hT E H Dw l Xo c II hII hFn hGood hA hq hpq hbadT
   have hj : T.j = Dw.p := o.toTowerOrigin.j_eq
-  have hW := GlobalTheory.T.tower_weight_of_zero E H Dw l Xo c (T.M 0 (Classical.arbitrary T.Comp))
+  have hW := _root_.GlobalTheory.CompanionTheory.Ar.Plug.integer_weights_vocab E H Dw l Xo c (T.M 0 (Classical.arbitrary T.Comp))
   intro u g hgap
   obtain ⟨-, -, -, -, hl1, -, -, -, hB⟩ := hW u
   obtain ⟨hBeq, hWH⟩ := hB g
@@ -867,9 +862,9 @@ theorem top_meanAll : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → GlobalTheory
     nlinarith
   have hTb : T.bad.card ≤ ⌊B⌋₊ := by rw [hTbad]; exact hbadT.trans hKB
   have hM := hMS (reW u) g hWH' ⌊B⌋₊ hfl128 hflt hTb
-  have hsl := fun Z => GlobalTheory.T.uniform_all_norm_height_bound hNef hG hG6 E H Dw l Xo c r U h e hLaws hUnif x hx Y T o κ II hCO hII hProp hT1 Z u g B
+  have hsl := fun Z => _root_.GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM.slope_sub_cost_le_compVolSlope hNef hG hG6 E H Dw l Xo c r U h e hLaws hUnif x hx Y T o κ II hCO hII hProp hT1 Z u g B
     hgap.2.1 hWH' (le_of_eq hBeq.symm)
-  obtain ⟨hc0, hc⟩ := GlobalTheory.T.cost_two_log_bound E H l B hB128 (hbad.trans hKB)
+  obtain ⟨hc0, hc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.costTwo_bound E H l B hB128 (hbad.trans hKB)
   refine ⟨fun Z => T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo l B * GlobalTheory.CovHt.l1 u, hsl, ?_⟩
 
   have hfin : (∑ᶠ Z, (T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo l B * GlobalTheory.CovHt.l1 u)) =
@@ -926,8 +921,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.abelian_cm_comp_laws_bound : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → GlobalTheory.CompanionTheory.Ar.Top.Given → ArithIntersectionSystemStatement → BirationalPullbackPushforwardFormula → GlobalTheory.CompanionTheory.Ar.Top.GoodTowerExistsX → GlobalTheory.CompanionTheory.Ar.Top.VolumeTheoremX → ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → FnAlgClosed (Xo := Xo) (c := c) → (∀ p : ℕ, p.Prime → l.GoodAt p) → l.A = 1 → 1 ≤ Dw.q → 3 * Dw.q + 1 ≤ Dw.p + Dw.q → 2 ≤ Fintype.card (CMType H) → (Nat.primeFactors (2 * (discr E).natAbs) ∪ l.M'.primeFactors).card ≤ 4 * Fintype.card (CMType H) * (Dw.p + Dw.q) ^ 2 → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → GlobalTheory.CovHt.MeanAll U x (Real.log (hostRd E) + |hostLval H|) C := by
-  exact GlobalTheory.CompanionTheory.Ar.Plug.top_meanAll
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianCmCompLawsBoundStatement =====
@@ -944,13 +937,6 @@ open scoped Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.CompanionTheory.Ar.Rec
-
-theorem field_of_datum_abelian : ∀ D : D7, IsAbelianGalois ℚ D.host.E := by
-  intro D
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
-  haveI : IsMulCommutative (D.host.E ≃ₐ[ℚ] D.host.E) :=
-    ⟨⟨fun s t => GlobalTheory.Mem.FieldsLaws.gal_comm D.host s t⟩⟩
-  exact {}
 
 end GlobalTheory.CompanionTheory.Ar.Rec
 end -- clump:auto
@@ -1096,8 +1082,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.good_datum_parameters : Top.Given → ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ j → j < D.R.m → ∀ (Y : GlobalTheory.CovTop.Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → (∃ h e', CompLaws Y.U h e') ∧ (∀ p : ℕ, p.Prime → Y.d.l₂.GoodAt p) ∧ (T.Q.Dw j).q = D.R.m - j ∧ (T.Q.Dw j).p + (T.Q.Dw j).q = D.R.r ∧ Fintype.card (CMType T.Q.H) = D.R.f ∧ hostRd D.host.E = D.host.rdE ∧ hostLval T.Q.H = dlogL D 1 := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.vs_laws
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodDatumParametersStatement =====
@@ -1117,11 +1101,11 @@ namespace GlobalTheory.CompanionTheory.Ar.Plug
 theorem deepStR_of_volume : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → Top.Given → ArithIntersectionSystemStatement → BirationalPullbackPushforwardFormula → Top.GoodTowerExistsX →
     Top.VolumeTheoremX → DeepStR := by
   intro hN hG hA hG6 hTw hV
-  obtain ⟨C, hC0, hC⟩ := GlobalTheory.T.abelian_cm_comp_laws_bound hN hG hA hG6 hTw hV
+  obtain ⟨C, hC0, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.top_meanAll hN hG hA hG6 hTw hV
   refine ⟨C, hC0, ?_⟩
   intro D T hT hmk j hj1 hjm Y e o hY hcard
-  obtain ⟨⟨h, e', hCL⟩, hgood, hq, hpq, hf, hrd, hL⟩ := GlobalTheory.T.good_datum_parameters hG D T hT j hj1 hjm Y e o hY
-  haveI := GlobalTheory.CompanionTheory.Ar.Rec.field_of_datum_abelian D
+  obtain ⟨⟨h, e', hCL⟩, hgood, hq, hpq, hf, hrd, hL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.vs_laws hG D T hT j hj1 hjm Y e o hY
+  haveI := _root_.GlobalTheory.FlatRow.isAbelianGalois_host D
   have hm2 := D.R.two_le_m
   have h2m : 2 * D.R.m ≤ D.R.m ^ 2 := by nlinarith
   have hr : D.R.r = D.R.k + D.R.m - 1 := rfl

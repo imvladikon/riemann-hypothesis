@@ -278,22 +278,22 @@ theorem UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward :
   have idBij : ∀ (K : Cx R) (U : Scheme.{0}) (s : ℤ),
       Function.Bijective ((idSemi (Int.castRingHom R) K).app U s) :=
     fun _ _ _ => ⟨fun _ _ h => h, fun b => ⟨b, rfl⟩⟩
-  have bL := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective R ℤ (idSemi (Int.castRingHom R) L) (idSemi (Int.castRingHom R) L) (𝟙 _)
+  have bL := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij R ℤ (idSemi (Int.castRingHom R) L) (idSemi (Int.castRingHom R) L) (𝟙 _)
     (fun _ _ _ => rfl)).2 (idBij L) E n
-  have bB := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective R ℤ (idSemi (Int.castRingHom R) B) (idSemi (Int.castRingHom R) B) (𝟙 _)
+  have bB := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij R ℤ (idSemi (Int.castRingHom R) B) (idSemi (Int.castRingHom R) B) (𝟙 _)
     (fun _ _ _ => rfl)).2 (idBij B) E n
   have key : ∀ x, (idSemi (Int.castRingHom R) B).op.app E n (ρ.op.app E n x) =
       cpush ((chains ℤ).obj E) ρ.toZ n ((idSemi (Int.castRingHom R) L).op.app E n x) := by
     intro x
     obtain ⟨α, rfl⟩ := x.mk_surjective
-    obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R R ρ).1 E n α
-    obtain ⟨γ, hγ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R ℤ (idSemi (Int.castRingHom R) B)).1 E n β
-    have h1 := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R R ρ).2 E n α β hβ
-    have h2 := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R ℤ (idSemi (Int.castRingHom R) B)).2 E n β γ hγ
-    have h3 := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R ℤ (UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward.toRcx ρ)).2 E n α γ
+    obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R R ρ).1 E n α
+    obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R ℤ (idSemi (Int.castRingHom R) B)).1 E n β
+    have h1 := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R R ρ).2 E n α β hβ
+    have h2 := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R ℤ (idSemi (Int.castRingHom R) B)).2 E n β γ hγ
+    have h3 := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R ℤ (UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward.toRcx ρ)).2 E n α γ
       (fun p s h U y => (hγ p s h U y).trans (congrArg _ (hβ p s h U y)))
     rw [h1, h2, ← h3]
-    exact (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective R ℤ (idSemi (Int.castRingHom R) L) (UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward.toRcx ρ) ρ.toZ
+    exact (_root_.GlobalTheory.EtC.OpComp.op_comp_bij R ℤ (idSemi (Int.castRingHom R) L) (UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward.toRcx ρ) ρ.toZ
       (fun _ _ _ => rfl)).1 E n _
   have comp : Function.Bijective
       ((idSemi (Int.castRingHom R) B).op.app E n ∘ ρ.op.app E n) := by
@@ -474,14 +474,6 @@ private theorem upL_d (I : Cx R) {T : Scheme.{0}} (g : T ⟶ W) (s t : ℤ) (a :
     Sec.map (I.d s t) (upL I g s a) = upL I g t (Sec.map ((Bc W I).d s t) a) :=
   map_sec_res (I.d s t) (prod.lift g (𝟙 T)) (show Sec (I.X s) (W ⨯ T) from a)
 
-private theorem ev_nat' {E : Spc} {I : Cx R} {n : ℤ} (α : Cochain ((chains R).obj E) I n) (p : ℕ) (s : ℤ)
-    (h : -(p : ℤ) + n = s) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sx E p U) :
-    Sec.res g (ev α p s h U x) = ev α p s h V (x.res g) := by
-  let f := (chainsXIso R E p).inv ≫ α.v _ _ h
-  change Sec.res g (Sec.map f (freeGen R _ U x)) = _
-  rw [CupSpec.map_res, CupSpec.freeGen_res]
-  rfl
-
 private theorem ev_ext' {E : Spc} {I : Cx R} {n : ℤ} {α β : Cochain ((chains R).obj E) I n}
     (h : ∀ p s h U x, ev α p s h U x = ev β p s h U x) : α = β := by
   ext i j hij : 1
@@ -520,7 +512,7 @@ private theorem up_ex {I : Cx R} {n : ℤ} (γ : Cochain ((chains R).obj E) (Bc 
       ∀ p s h T y, ev β p s h T y = upL I (fstW y) s (ev γ p s h T (sndE y)) :=
   cochain_of_natural_values (fun p s h T y => upL I (fstW y) s (ev γ p s h T (sndE y))) (by
     intro p s h V U g y
-    rw [upL_nat, ev_nat', fst_res, snd_res])
+    rw [upL_nat, _root_.GlobalTheory.EtC.CupSpec.ev_res, fst_res, snd_res])
 
 private theorem down_ex {I : Cx R} {n : ℤ} (β : Cochain ((chains R).obj (sch.obj W ⨯ E)) I n) :
     ∃ γ : Cochain ((chains R).obj E) (Bc W I) n, ∀ p s h T x, ev γ p s h T x =
@@ -530,7 +522,7 @@ private theorem down_ex {I : Cx R} {n : ℤ} (β : Cochain ((chains R).obj (sch.
     intro p s h V U g x
     change Sec.res (Limits.prod.map (𝟙 W) g) (ev β p s h (W ⨯ U) (mkP prod.fst (x.res prod.snd))) =
       ev β p s h (W ⨯ V) (mkP prod.fst ((x.res g).res prod.snd))
-    rw [ev_nat']
+    rw [_root_.GlobalTheory.EtC.CupSpec.ev_res]
     congr 1
     apply pair_ext
     · rw [fst_res, fst_mkP, fst_mkP]
@@ -561,7 +553,7 @@ private theorem up_down {I : Cx R} {n : ℤ} (β : Cochain ((chains R).obj (sch.
   intro p s h T y
   rw [ev_up, ev_down]
   change Sec.res (prod.lift (fstW y) (𝟙 T)) (ev β p s h (W ⨯ T) (mkP prod.fst ((sndE y).res prod.snd))) = _
-  rw [ev_nat']
+  rw [_root_.GlobalTheory.EtC.CupSpec.ev_res]
   congr 1
   apply pair_ext
   · rw [fst_res, fst_mkP]
@@ -574,7 +566,7 @@ private theorem down_up {I : Cx R} {n : ℤ} (γ : Cochain ((chains R).obj E) (B
   intro p s h T x
   rw [ev_down]
   change ev (up γ) p s h (W ⨯ T) (mkP prod.fst (x.res prod.snd)) = _
-  rw [ev_up, fst_mkP, snd_mkP, ← ev_nat']
+  rw [ev_up, fst_mkP, snd_mkP, ← _root_.GlobalTheory.EtC.CupSpec.ev_res]
   exact upL_res I s _
 
 private theorem up_add {I : Cx R} {n : ℤ} (a b : Cochain ((chains R).obj E) (Bc W I) n) :
@@ -904,7 +896,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.acy_right_of_shortExact :
     ∀ (Q : Scheme.{0} → Prop) (S : ShortComplex (Shv ℤ)), S.ShortExact → Acy Q S.X₁ → Acy Q S.X₂ → Acy Q S.X₃ := by
   intro Q S hS h1 h2 P hP n hn
-  obtain ⟨z, hz⟩ := GlobalTheory.T.etaleCohomology_coefficient_longExactSequence ℤ S hS
+  obtain ⟨z, hz⟩ := _root_.GlobalTheory.EtC.coefSeq_exact ℤ S hS
   have e := (hz (sgl ((free ℤ).obj P)) n).2.1
   haveI := h1 P hP (n + 1) (by omega)
   haveI := h2 P hP n hn
@@ -973,7 +965,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.exists_lift_free_to_middle_of_shortExact_acy :
     ∀ (Q : Scheme.{0} → Prop) (S : ShortComplex (Shv ℤ)), S.ShortExact → Acy Q S.X₁ → ∀ P : PSh, Supp Q P → ∀ f : (free ℤ).obj P ⟶ S.X₃, ∃ h : (free ℤ).obj P ⟶ S.X₂, h ≫ S.g = f := by
   intro Q S hS hA P hP f
-  obtain ⟨z, hz⟩ := GlobalTheory.T.etaleCohomology_coefficient_longExactSequence ℤ S hS
+  obtain ⟨z, hz⟩ := _root_.GlobalTheory.EtC.coefSeq_exact ℤ S hS
   have e := (hz (sgl ((free ℤ).obj P)) 0).2.1
   have hsub := hA P hP (0 + 1) (by norm_num)
   have h0 : HK.ext ℤ (sgl ((free ℤ).obj P)) z 0 (0 + 1) rfl (cl f) = 0 := Subsingleton.elim _ _
@@ -1042,7 +1034,7 @@ theorem UpperTheory.acy_and_lift_of_locally_surjective_exact :
     refine ⟨fun s t => ?_⟩
     have hz : ∀ s : Sec (cokernel d) U, s = 0 := by
       intro s
-      have hl := ((GlobalTheory.T.bigEtaleModuleSheaf_mono_epi_iff_sections ℤ (cokernel.π d)).2.2.1.1 inferInstance) U s
+      have hl := ((_root_.GlobalTheory.EtC.mono_epi_sections ℤ (cokernel.π d)).2.2.1.1 inferInstance) U s
       have hl2 : Loc U fun W k => Sec.res k s = Sec.res k (0 : Sec (cokernel d) U) := by
         refine local_bind hl ?_
         rintro V g ⟨z, hz⟩
@@ -1245,7 +1237,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.subsingleton_cohomologyClass_chains_of_acy_locally_exact :
     ∀ (C : Cx ℤ) (a : ℤ) [C.IsStrictlyGE a] (E : Spc), (∀ s, Acy (fun U => Nonempty (Sx E 0 U)) (C.X s)) → (∀ (U : Scheme.{0}), Nonempty (Sx E 0 U) → ∀ (n : ℤ) (b : Sec (C.X n) U), Sec.map (C.d n (n + 1)) b = 0 → Loc U fun V g => ∃ c : Sec (C.X (n - 1)) V, Sec.map (C.d (n - 1) n) c = Sec.res g b) → ∀ n : ℤ, Subsingleton (CohomologyClass ((chains ℤ).obj E) C n) := by
   intro C a _ E hAcy hLoc n
-  haveI : IsStrictlyLE ((chains ℤ).obj E) 0 := (GlobalTheory.T.chains_map_and_d_eq_sum_neg_one_pow_smul_delta ℤ).1 E
+  haveI : IsStrictlyLE ((chains ℤ).obj E) 0 := (_root_.GlobalTheory.EtC.chains_basic ℤ).1 E
   refine UpperTheory.subsingleton_cohomologyClass_of_bounded_of_cycles_lift ((chains ℤ).obj E) C a ?_ n
   intro p j f hf
   rcases le_or_gt p 0 with hp | hp
@@ -1311,12 +1303,12 @@ private theorem semi_bij (R : Type) [CommRing R] (L B : Cx R) [L.IsStrictlyGE 0]
       (UpperTheory.bijective_semiMap_of_locally_surjective_on_cocycles R L B ρ (fun T => Nonempty (Sx E 0 T)) hQ hs hi)
   obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by ring⟩
   constructor
-  · have ex := (GlobalTheory.T.hypercohomology_mappingCone_second_variable_exact ℤ ((chains ℤ).obj E) ρ.toZ m).2.2
+  · have ex := (_root_.GlobalTheory.EtC.coneSeqTgt_exact ℤ ((chains ℤ).obj E) ρ.toZ m).2.2
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     obtain ⟨y, rfl⟩ := (ex x).1 hx
     rw [Subsingleton.elim y 0, map_zero]
-  · have ex := (GlobalTheory.T.hypercohomology_mappingCone_second_variable_exact ℤ ((chains ℤ).obj E) ρ.toZ (m + 1)).1
+  · have ex := (_root_.GlobalTheory.EtC.coneSeqTgt_exact ℤ ((chains ℤ).obj E) ρ.toZ (m + 1)).1
     intro x
     exact (ex x).1 (Subsingleton.elim _ _)
 
@@ -1357,8 +1349,8 @@ theorem UpperTheory.injectiveComplex_productSection_map_quasiIso :
   choose Θ hΘ hΘf using fun n => UpperTheory.exists_bijective_cohomologyClass_product_adjunction R W I E n
   refine ⟨fun n => (Θ n).comp (ρ.op.app E n), fun n => (hΘ n).comp (hbij n), ?_⟩
   intro n α
-  obtain ⟨β', hβ'⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R R ρ).1 E n α
-  have e1 := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R R ρ).2 E n α β' hβ'
+  obtain ⟨β', hβ'⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R R ρ).1 E n α
+  have e1 := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R R ρ).2 E n α β' hβ'
   obtain ⟨β, hβ, hβf⟩ := hΘf n β'
   refine ⟨β, ?_, ?_⟩
   · show Θ n (ρ.op.app E n (CohomologyClass.mk α)) = _

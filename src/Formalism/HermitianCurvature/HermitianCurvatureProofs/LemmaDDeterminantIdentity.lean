@@ -485,8 +485,6 @@ theorem Formalism.FourierDecayAlt.P.generator_action_preserved : Formalism.Fouri
 
 theorem Formalism.FourierDecayAlt.P.quantum_minor_left_hermitian : Formalism.FourierDecayAlt.Q.QMinorLeftH := quantum_minor_left
 
-theorem Formalism.FourierDecayAlt.P.right_differential_skew : Formalism.FourierDecayAlt.Q.RdSkew := qnRdSkew
-
 theorem Formalism.FourierDecayAlt.P.right_action_rule : Formalism.FourierDecayAlt.Q.RuleRight := _root_.Formalism.FourierDecayAlt.Q.QRR.ruleRight_main
 
 theorem Formalism.FourierDecayAlt.P.weyl_level_element_properties : Formalism.FourierDecayAlt.Q.WeylLevelElementFacts := _root_.PI.IsotropicReflections.isotropic_reflection_properties

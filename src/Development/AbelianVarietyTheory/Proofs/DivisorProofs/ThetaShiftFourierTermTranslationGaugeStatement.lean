@@ -67,9 +67,13 @@ import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ProportionalRaw
 import Mathlib.Algebra.Order.Star.Int
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.LevelFrameOfLaws
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitGeneratingSectionPullbackField
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PolarizedAbelianValueTableMapsUnderBaseChange
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationChartValueFormsCorrespond
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatEpiLiftRaynaudExtensionFractionPointStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodUnitPartGenerator, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodUnitPartGeneratorStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudGaugeGeneratorWeightNeg, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudGaugeGeneratorWeightNegStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudPointUnitPartCoordinates, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudPointUnitPartCoordinatesStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.FstGenericAppInjective, Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibre, Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibreStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudShiftUnitIdentityFractionField, Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudShiftUnitIdentityFractionFieldStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGauge, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGaugeStatement
@@ -206,8 +210,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_monomialPeriod_unitPart_generator : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : DegPre R) (m : ℕ) (t : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ Q.X), IsMonomial Q t gam → ∀ (χ : Q.X) (n : Fin m → ℕ), (∀ i, gam i χ χ = 2 * n i) → ∃ ψ₀ : LB.Gen (LB.LinComb Q.P.L (K := PUnit) (fun _ => (Q.c χ).left) fun _ => -1), ψ₀.IsGen ∧ ∀ (Z : Scheme.{0}) (r : Z ⟶ (TK R).left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → (val (Q.psi χ) r z J).val = cst (r ≫ jK R) z (∏ i, t i ^ n i) * (val ψ₀ (r ≫ jK R) z J).val := by
-  first | exact @GlobalTheory.UnitPart.exists_psi_val_eq_monomial_mul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodUnitPartGeneratorStatement =====
@@ -363,8 +365,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_raynaudGauge_generator_weight_neg : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (mu : Q.X) (x : 𝟙_ (Over (Sp R)) ⟶ Y.H), (x ≫ Y.q) * Q.c mu = 1 → ∀ ψ₀ : LB.Gen (LB.LinComb Q.P.L (K := PUnit) (fun _ => (Q.c mu).left) fun _ => -1), ψ₀.IsGen → ∃ e : LB.Gen (LB.LinComb Q.P.L (K := Fin 2) ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] ![1, -1]), e.IsGen ∧ (∀ (j : Fin 2 → Q.P.L.ι) (V : Q.P.A.left.Opens), Y.q.left ⁻¹ᵁ V ≤ LB.wchart Q.P.L ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] j → IsWt Y (-mu) (Y.q.left ⁻¹ᵁ V) (rsT (e.s j).val (Y.q.left ⁻¹ᵁ V))) ∧ ∀ (T : Over (Sp R)) (y : T ⟶ Y.H) (z : T.left) (J : (T.left ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → val e y.left z J * val ψ₀ T.hom z J * val Q.rig T.hom z J * val ((Y.Φ T (y * (toUnit T ≫ x))).s mu) (𝟙 _) z J = 1 := by
-  first | exact @GlobalTheory.Heat.ShiftGauge.exists_gauge
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudGaugeGeneratorWeightNegStatement =====
@@ -486,13 +486,6 @@ namespace GlobalTheory.UnitPartPt
 
 variable {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R}
 
-theorem cst_mul'' {V : Type} [CommRing V] {Z : Scheme.{0}} (q : Z ⟶ Sp V) (z : Z) (a b : V) :
-    cst q z (a * b) = cst q z a * cst q z b := by
-  simp only [cst, map_mul, gs_mul q z ⊤ trivial]
-
-theorem cst_one'' {V : Type} [CommRing V] {Z : Scheme.{0}} (q : Z ⟶ Sp V) (z : Z) : cst q z 1 = 1 := by
-  rw [cst, map_one, gs_eq _ _ ⊤ trivial, map_one, map_one]
-
 section
 variable (ψ₀ : ∀ χ : Q.X, LB.Gen (LB.LinComb Q.P.L (K := PUnit) (fun _ => (Q.c χ).left) fun _ => -1))
 
@@ -564,7 +557,7 @@ theorem exists_unitPartPt : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre
       have p0 : val (ψ₀ 0) (jK R) z J = (val Q.rig (jK R) z J)⁻¹ := by
         refine Units.ext ?_
         have e := hψ 0 _ (𝟙 _) z J hJ
-        simp only [n0, pow_zero, Finset.prod_const_one, cst_one'', _root_.one_mul, Category.id_comp] at e
+        simp only [n0, pow_zero, Finset.prod_const_one, _root_.ReciprocityTheory.ChartRestriction.G.H1.cst_one, _root_.one_mul, Category.id_comp] at e
         rw [← e, GlobalTheory.PsiZero.val_psi_zero hB hJ]
       have hp : ∀ a, a = mu → val (ψ₀ a) (jK R) z J = val (ψ₀ mu) (jK R) z J := by rintro a rfl; rfl
       rw [hp _ (add_zero mu), p0, inv_inv, mul_inv_cancel, _root_.one_mul, mul_inv_cancel]
@@ -623,7 +616,7 @@ theorem exists_unitPartPt : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre
       rw [show χ + χ' + mu = mu + (χ + χ') by abel, add_comm χ mu, add_comm χ' mu] at eB
       have eC : C (mu + (χ + χ')) * C mu * C χ * C χ' = C (mu + χ) * C (mu + χ') * C (χ + χ') := by
         apply Units.ext
-        simp only [Units.val_mul, hC, ← cst_mul'']
+        simp only [Units.val_mul, hC, ← _root_.ReciprocityTheory.ChartRestriction.G.H1.cst_mul]
         congr 1
         simp only [← Finset.prod_mul_distrib, ← pow_add, exp_id gam n hn]
       have eB' := congrArg Additive.ofMul eB
@@ -647,7 +640,7 @@ theorem exists_unitPartPt : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre
         _root_.mul_one]
     have e2 : cst (g ≫ jK R) z (∏ i, t i ^ (n mu i + n χ i)) =
         cst (g ≫ jK R) z (∏ i, t i ^ n mu i) * cst (g ≫ jK R) z (∏ i, t i ^ n χ i) := by
-      rw [← cst_mul'', ← Finset.prod_mul_distrib]
+      rw [← _root_.ReciprocityTheory.ChartRestriction.G.H1.cst_mul, ← Finset.prod_mul_distrib]
       simp only [pow_add]
     rw [e2, ← hC, ← hC, ← hC, ← Units.val_mul, ← Units.val_mul, ← Units.val_mul]
     congr 1
@@ -677,8 +670,6 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_raynaudPoint_unitPart_coordinates : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (m : ℕ) (t : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ Q.X), Q.TauBimult → (∀ i, t i ≠ 0) → ∀ (n : Q.X → Fin m → ℕ), (∀ χ i, gam i χ χ = 2 * n χ i) → ∀ (ψ₀ : ∀ χ : Q.X, LB.Gen (LB.LinComb Q.P.L (K := PUnit) (fun _ => (Q.c χ).left) fun _ => -1)), (∀ χ, (ψ₀ χ).IsGen) → (∀ χ (Z : Scheme.{0}) (r : Z ⟶ (TK R).left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → (val (Q.psi χ) r z J).val = cst (r ≫ jK R) z (∏ i, t i ^ n χ i) * (val (ψ₀ χ) (r ≫ jK R) z J).val) → ∀ mu : Q.X, ∃ xp : 𝟙_ (Over (Sp R)) ⟶ Y.H, xp ≫ Y.q = Q.c mu ∧ ∀ (Z : Scheme.{0}) (g : Z ⟶ (TK R).left) (χ : Q.X) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → cst (g ≫ jK R) z (∏ i, t i ^ n (mu + χ) i) * (val ((Y.Φ (Over.mk (g ≫ jK R)) (toUnit _ ≫ xp)).s χ) (𝟙 Z) z J).val = cst (g ≫ jK R) z (∏ i, t i ^ (n mu i + n χ i)) * (val (Q.tau mu χ) g z J).val := by
-  first | exact @GlobalTheory.UnitPartPt.exists_unitPartPt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudPointUnitPartCoordinatesStatement =====
@@ -718,7 +709,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FstGenericAppInjective =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibre =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibre", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantTangentBasisRaynaudExtension\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FstGenericAppInjective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibre", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantTangentBasisRaynaudExtension\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FstGenericAppInjective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ProportionalRaw\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -736,13 +727,6 @@ open ReciprocityTheory.ChartRestriction.G.DVR
 noncomputable section
 
 namespace GlobalTheory.RayFlatDesc
-
-theorem gs_sub_of {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) (a b : Γ(X, U)) :
-    gs f y U (a - b) = gs f y U a - gs f y U b := by
-  simp only [gs, dif_pos h, map_sub]
-
-theorem gs_zero_of {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
-  unfold gs; split_ifs <;> simp
 
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (k : ℕ) (ρ τ : SecM Y.q.left Q.P.L k) (a b : R), (∀ (Z : Scheme.{0}) (g : Z ⟶ (TK R).left) (r : Z ⟶ Y.H.left), r ≫ Y.H.hom = g ≫ jK R → ∀ (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → gs r z ⊤ (scal Y.H.hom a) * sval ρ r z J = gs r z ⊤ (scal Y.H.hom b) * sval τ r z J) → ∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → gs r z ⊤ (scal Y.H.hom a) * sval ρ r z J = gs r z ⊤ (scal Y.H.hom b) * sval τ r z J := by
   intro R _ _ Q O _ _ _ oa Y k ρ τ a b H Z r z J hJ
@@ -765,14 +749,14 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type
       rw [Subsingleton.elim i 0]; exact e ()
     have h1 := H _ (pullback.snd _ _) (pullback.fst _ _) pullback.condition y J' hJ'
     rw [sval_of ρ _ y J' j ej, sval_of τ _ y J' j ej] at h1
-    rw [gs_pull (𝟙 _) (pullback.fst Y.H.hom (jK R)) y _ hy', Category.id_comp, gs_zero_of _ _ _,
-      gs_sub_of _ _ _ hy', gs_mul _ _ _ hy', gs_mul _ _ _ hy', gs_res _ _ _ hy', gs_res _ _ _ hy']
+    rw [gs_pull (𝟙 _) (pullback.fst Y.H.hom (jK R)) y _ hy', Category.id_comp, _root_.GlobalTheory.UU.SchurComp.gs_zero _ _ _,
+      _root_.GlobalTheory.LBGerm.gs_sub _ _ _ hy', gs_mul _ _ _ hy', gs_mul _ _ _ hy', gs_res _ _ _ hy', gs_res _ _ _ hy']
     exact sub_eq_zero.2 h1
   have hm : r z ∈ (LB.LinComb Q.P.L (fun _ : Fin 1 => Y.q.left) (fun _ => (k : ℤ))).U
       (fun _ => J (r ≫ Y.q.left)) :=
     Set.mem_iInter.2 fun _ => hJ (r ≫ Y.q.left)
   have e := congrArg (gs r z _) (key fun _ => J (r ≫ Y.q.left))
-  rw [gs_sub_of _ _ _ hm, gs_mul _ _ _ hm, gs_mul _ _ _ hm, gs_res _ _ _ hm, gs_res _ _ _ hm, gs_zero_of _ _ _,
+  rw [_root_.GlobalTheory.LBGerm.gs_sub _ _ _ hm, gs_mul _ _ _ hm, gs_mul _ _ _ hm, gs_res _ _ _ hm, gs_res _ _ _ hm, _root_.GlobalTheory.UU.SchurComp.gs_zero _ _ _,
     sub_eq_zero] at e
   rw [sval_of ρ r z J _ (fun _ => rfl), sval_of τ r z J _ (fun _ => rfl)]
   exact e
@@ -933,14 +917,12 @@ open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheo
 attribute [local instance] Over.cartesianMonoidalCategory
 open ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.raynaudShift_unitIdentity_fractionField : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa), Q.TauBimult → ∀ (k : ℕ) (mu α : Q.X) (xp : 𝟙_ (Over (Sp R)) ⟶ Y.H) (A₀ B₀ P₀ : R) (ψ₀ : LB.Gen (LB.LinComb Q.P.L (K := PUnit) (fun _ => (Q.c mu).left) fun _ => -1)) (e : LB.Gen (LB.LinComb Q.P.L (K := Fin 2) ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ xp⁻¹)).left ≫ Y.q.left] ![1, -1])), xp ≫ Y.q = Q.c mu → (∀ (Z : Scheme.{0}) (g : Z ⟶ (TK R).left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → cst (g ≫ jK R) z A₀ * (val ((Y.Φ (Over.mk (g ≫ jK R)) (toUnit _ ≫ xp)).s α) (𝟙 Z) z J).val = cst (g ≫ jK R) z B₀ * (val (Q.tau mu α) g z J).val) → (∀ (Z : Scheme.{0}) (g : Z ⟶ (TK R).left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → (val (Q.psi mu) g z J).val = cst (g ≫ jK R) z P₀ * (val ψ₀ (g ≫ jK R) z J).val) → (∀ (T : Over (Sp R)) (y : T ⟶ Y.H) (z : T.left) (J : (T.left ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → val e y.left z J * val ψ₀ T.hom z J * val Q.rig T.hom z J * val ((Y.Φ T (y * (toUnit T ≫ xp⁻¹))).s mu) (𝟙 _) z J = 1) → ∀ (u : LB.Gen (LB.LinComb Q.P.L (DegPre.deltaφ Q (FractionRing R) k α mu) (DegPre.deltaε k))), u.IsGen → LB.Gen.Corr Q.P.L _ _ _ _ (LB.pullGen Q.P.L _ _ u (DegPre.zF Q (FractionRing R)).left) (DegPre.famMult Q (FractionRing R) k mu α) → ∀ (Z : Scheme.{0}) (g : Z ⟶ (TK R).left) (pp : Over.mk (g ≫ jK R) ⟶ DegPre.BF Q (FractionRing R)) (yp : Over.mk (g ≫ jK R) ⟶ Y.H), (pp ≫ fst _ _).left ≫ jFK (R := R) (FractionRing R) = g → pp ≫ DegPre.prB Q (FractionRing R) = yp ≫ Y.q → ∀ (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → cst (g ≫ jK R) z B₀ * (val u (show Z ⟶ _ from pp.left) z J).val * (val ((Y.Φ _ yp).s (α + k • mu)) (𝟙 Z) z J).val * ((val e (show Z ⟶ Y.H.left from (yp * (toUnit _ ≫ xp)).left) z J) ^ k).val = cst (g ≫ jK R) z (P₀ ^ k * A₀) * (val ((Y.Φ _ (yp * (toUnit _ ≫ xp))).s α) (𝟙 Z) z J).val := by
-  first | exact @GlobalTheory.ShiftUnit.shift_unit_identity
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudShiftUnitIdentityFractionFieldStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGauge =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGauge", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatEpiLiftRaynaudExtensionFractionPointStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodUnitPartGeneratorStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudGaugeGeneratorWeightNegStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudPointUnitPartCoordinatesStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorPeriodDefectIsCocycle\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibreStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudShiftUnitIdentityFractionFieldStatement\nimport Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom\npublic import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.LevelFrameOfLaws\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGauge", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatEpiLiftRaynaudExtensionFractionPointStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonomialPeriodUnitPartGeneratorStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudGaugeGeneratorWeightNegStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRaynaudPointUnitPartCoordinatesStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorPeriodDefectIsCocycle\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudSectionIdentityOfGenericFibreStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudShiftUnitIdentityFractionFieldStatement\nimport Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom\npublic import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.LevelFrameOfLaws\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitGeneratingSectionPullbackField\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.PolarizedAbelianValueTableMapsUnderBaseChange\nimport Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UniformisationChartValueFormsCorrespond\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -973,17 +955,6 @@ theorem cst_add' {R : Type} [CommRing R] {Z : Scheme.{0}} (q : Z ⟶ Sp R) (z : 
     cst q z (a + b) = cst q z a + cst q z b := by
   unfold cst; rw [map_add (f := _), gs_add q z ⊤ trivial]
 
-theorem cst_sub' {R : Type} [CommRing R] {Z : Scheme.{0}} (q : Z ⟶ Sp R) (z : Z) (a b : R) :
-    cst q z (a - b) = cst q z a - cst q z b := by
-  have := cst_add' q z (a - b) b
-  rw [sub_add_cancel] at this
-  rw [this, add_sub_cancel_right]
-
-theorem cst_zero' {R : Type} [CommRing R] {Z : Scheme.{0}} (q : Z ⟶ Sp R) (z : Z) : cst q z 0 = 0 := by
-  have := cst_add' q z 0 0
-  rw [add_zero] at this
-  exact left_eq_add.1 this
-
 theorem shiftEq_pt {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R} {k : ℕ} {mu α : Q.X} {σ : Q.SecB k α}
     {σ₁ σ₂ : Q.SecB k (α + k • mu)} {c : R} (H : ShiftEq Q k mu α σ σ₁ c σ₂)
     (u : LB.Gen (LB.LinComb Q.P.L (DegPre.deltaφ Q (FractionRing R) k α mu) (DegPre.deltaε k))) (hu : u.IsGen)
@@ -995,13 +966,13 @@ theorem shiftEq_pt {R : Type} [CommRing R] [IsDomain R] {Q : DegPre R} {k : ℕ}
       (val u p z J).val * sval σ (p ≫ (DegPre.trF Q (FractionRing R) mu ≫ DegPre.prB Q (FractionRing R)).left) z J +
         cst (p ≫ (DegPre.BF Q (FractionRing R)).hom) z c * sval σ₂ (p ≫ (DegPre.prB Q (FractionRing R)).left) z J := by
   have e := congrArg (p.stalkMap z).hom (H u hu hc (p z) _ (good_comp' p z hJ))
-  rw [GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ hJ, GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ hJ,
-    GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ hJ, e, map_add, map_mul, map_mul]
+  rw [_root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ hJ, _root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ hJ,
+    _root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ hJ, e, map_add, map_mul, map_mul]
   congr 2
   · have := GlobalTheory.HeatDefect.val_comp_stalk u (𝟙 _) p z hJ
     rw [Category.comp_id] at this
     exact this.symm
-  · rw [← GlobalTheory.HeatDefect.gs_comp_stalk p (𝟙 _) z ⊤ trivial, Category.comp_id]
+  · rw [← _root_.GlobalTheory.OneBasis.ThMove.gs_comp p (𝟙 _) z ⊤ trivial, Category.comp_id]
     exact gs_scal_eq _ p z c
 
 theorem der_prod {R : Type} [CommRing R] {m : ℕ} (D : Derivation ℤ R R) (t d : Fin m → R) (hd : ∀ i, D (t i) = d i * t i)
@@ -1031,12 +1002,12 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
     obtain ⟨u, n, h, -⟩ := hmon y
     exact ⟨n, h⟩
   choose n hn using hn
-  choose ψ₀ hψ₀g hψ₀v using fun χ => GlobalTheory.T.exists_monomialPeriod_unitPart_generator R Dd.toPre m t gam hmon χ (n χ) (hn χ)
-  obtain ⟨xp, hxq, hxv⟩ := GlobalTheory.T.exists_raynaudPoint_unitPart_coordinates R Dd.toPre O oa Y m t gam Dd.tau_bimult ht n hn ψ₀ hψ₀g hψ₀v mu
+  choose ψ₀ hψ₀g hψ₀v using fun χ => _root_.GlobalTheory.UnitPart.exists_psi_val_eq_monomial_mul R Dd.toPre m t gam hmon χ (n χ) (hn χ)
+  obtain ⟨xp, hxq, hxv⟩ := _root_.GlobalTheory.UnitPartPt.exists_unitPartPt R Dd.toPre O oa Y m t gam Dd.tau_bimult ht n hn ψ₀ hψ₀g hψ₀v mu
   have hqm : IsMonHom Y.q := Y.q_linear.isMonHom
   have hx : (xp⁻¹ ≫ Y.q) * Dd.toPre.c mu = 1 := by
     rw [← hxq, ← MonObj.mul_comp, inv_mul_cancel, MonObj.one_comp]
-  obtain ⟨e, heg, hew, hev⟩ := GlobalTheory.T.exists_raynaudGauge_generator_weight_neg R Dd.toPre O oa Y mu xp⁻¹ hx (ψ₀ mu) (hψ₀g mu)
+  obtain ⟨e, heg, hew, hev⟩ := _root_.GlobalTheory.Heat.ShiftGauge.exists_gauge R Dd.toPre O oa Y mu xp⁻¹ hx (ψ₀ mu) (hψ₀g mu)
   have hd : ∀ i, ∃ d : R, D (t i) = d * t i := fun i => by
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton.1 (hD i)
     exact ⟨c, by rw [hc, mul_comm]⟩
@@ -1100,7 +1071,7 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
   refine ⟨B₀, b, ht0 _, ?_⟩
   intro σ σ₁ τ τ₁ ρ hS hT hT₁ hρ
 
-  have key := fun u hu hc => GlobalTheory.T.raynaudShift_unitIdentity_fractionField R Dd.toPre O oa Y Dd.tau_bimult k mu α xp A₀ B₀ P₀ (ψ₀ mu) e hxq
+  have key := fun u hu hc => _root_.GlobalTheory.ShiftUnit.shift_unit_identity R Dd.toPre O oa Y Dd.tau_bimult k mu α xp A₀ B₀ P₀ (ψ₀ mu) e hxq
     (fun Z g z J hJ => hxv Z g α z J hJ) (fun Z g z J hJ => hψ₀v mu Z g z J hJ) hev u hu hc
   obtain ⟨⟨u, hu, hc⟩, -⟩ := gen_fe (D := Dd.toPre) (F := FractionRing R) GlobalTheory.SemiRigid.globalFns k mu α
   have C1 : ∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Dd.toPre.P.A.left) → Dd.toPre.P.L.ι),
@@ -1119,7 +1090,7 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
     have hK := key u hu hc Z g pp yp hpp1 hpp2 z J hJ
     rw [hsq T y] at hK
     have hsh := shiftEq_pt hS u hu hc pp.left z J hJ
-    rw [cst_zero', zero_mul, add_zero, ← Over.comp_left, ← Over.comp_left, hpp2, htr T pp yp hpp2, hsq T y] at hsh
+    rw [_root_.GlobalTheory.GenSecField.cst_zero', zero_mul, add_zero, ← Over.comp_left, ← Over.comp_left, hpp2, htr T pp yp hpp2, hsq T y] at hsh
     have e1 := hρ Z r z J hJ
     have e1' : r ≫ (𝟙 Y.H * (toUnit Y.H ≫ xp⁻¹)).left = yp.left := by
       show y.left ≫ _ = _
@@ -1157,8 +1128,8 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
   apply hinj
   have hv := GlobalTheory.HeatDefect.val_comp_stalk u' (𝟙 _) p w0 gJ₁
   rw [Category.comp_id] at hv
-  rw [map_add (f := _), map_mul, map_mul, ← GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ gJ₁, ← GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ gJ₁,
-    ← GlobalTheory.HeatDefect.sval_comp_stalk _ _ _ _ gJ₁, ← hv, ← GlobalTheory.HeatDefect.gs_comp_stalk p (𝟙 _) w0 ⊤ trivial,
+  rw [map_add (f := _), map_mul, map_mul, ← _root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ gJ₁, ← _root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ gJ₁,
+    ← _root_.GlobalTheory.LN.PreForm.sval_comp_stalk _ _ _ _ gJ₁, ← hv, ← _root_.GlobalTheory.OneBasis.ThMove.gs_comp p (𝟙 _) w0 ⊤ trivial,
     Category.comp_id, gs_scal_eq]
   clear hv eJ₁ hJ hinj
   set g : Z ⟶ (TK R).left := p ≫ (fst (TF (R := R) (FractionRing R)) Dd.toPre.P.A).left ≫ jFK (R := R) (FractionRing R)
@@ -1217,7 +1188,7 @@ theorem GlobalTheory.HeatShift.shift_term : ∀ (R : Type) [CommRing R] [IsDomai
     ring
   have e10 : cst (g ≫ jK R) w0 (2 * (k : R) * w α + 2 * (k : R) ^ 2 * (∑ i, (n mu i : R) * d i) + 2 * (k : R) * 0) =
       cst (g ≫ jK R) w0 (2 * k * δb) - cst (g ≫ jK R) w0 (2 * k * δa) := by
-    rw [hc1, cst_sub']
+    rw [hc1, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.cst_sub]
   have hU : IsUnit (cst (g ≫ jK R) w0 B₀ * (val ((Y.Φ T yp).s (α + k • mu)) (𝟙 Z) w0 J₁).val * (val e r w0 J₁ ^ k).val) :=
     ((GlobalTheory.ExpInt.isUnit_cst g w0 (ht0 _)).mul (Units.isUnit _)).mul (Units.isUnit _)
   rw [hb'] at f7 f8
@@ -1251,8 +1222,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.thetaShift_fourierTerm_translation_gauge : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (Dd : DegData R (maximalIdeal R)) (O : Type) [CommRing O] [StarRing O] [Module O Dd.toPre.X] (oa : Dd.toPre.OAct O) (Y : Ray oa) (m : ℕ) (t : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ Dd.toPre.X), IsMonomial Dd.toPre t gam → (∀ i, t i ≠ 0) → ∀ D : Derivation ℤ R R, (∀ i, D (t i) ∈ Ideal.span {t i}) → ∀ mu : Dd.toPre.X, ∃ (x : 𝟙_ (Over (Sp R)) ⟶ Y.H) (e : LB.Gen (LB.LinComb Dd.toPre.P.L (K := Fin 2) ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] ![1, -1])) (β : Dd.toPre.X) (w : Dd.toPre.X →+ R) (π π' : R), e.IsGen ∧ (∀ (j : Fin 2 → Dd.toPre.P.L.ι) (V : Dd.toPre.P.A.left.Opens), Y.q.left ⁻¹ᵁ V ≤ LB.wchart Dd.toPre.P.L ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] j → IsWt Y β (Y.q.left ⁻¹ᵁ V) (rsT (e.s j).val (Y.q.left ⁻¹ᵁ V))) ∧ ∀ (k : ℕ) (α : Dd.toPre.X), 1 ≤ k → ∃ a b : R, a ≠ 0 ∧ ∀ (σ : Dd.toPre.SecB k α) (σ₁ : Dd.toPre.SecB k (α + k • mu)) (τ τ₁ ρ : SecM Y.q.left Dd.toPre.P.L k), ShiftEq Dd.toPre k mu α σ σ₁ 0 σ₁ → IsTerm Y k α σ τ → IsTerm Y k (α + k • mu) σ₁ τ₁ → (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Dd.toPre.P.A.left) → Dd.toPre.P.L.ι), Good Dd.toPre.P.L z J → sval ρ r z J = sval τ₁ (r ≫ (𝟙 Y.H * (toUnit Y.H ≫ x)).left) z J * ((val e r z J) ^ k).val) → (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Dd.toPre.P.A.left) → Dd.toPre.P.L.ι), Good Dd.toPre.P.L z J → gs r z ⊤ (scal Y.H.hom a) * sval ρ r z J = gs r z ⊤ (scal Y.H.hom b) * sval τ r z J) ∧ ∀ (σ'' : Dd.toPre.SecB k α) (σ₁' : Dd.toPre.SecB k (α + k • mu)) (τ'' τ₁' ρ' : SecM Y.q.left Dd.toPre.P.L k), IsTerm Y k α σ'' τ'' → IsTerm Y k (α + k • mu) σ₁' τ₁' → (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Dd.toPre.P.A.left) → Dd.toPre.P.L.ι), Good Dd.toPre.P.L z J → sval ρ' r z J = sval τ₁' (r ≫ (𝟙 Y.H * (toUnit Y.H ≫ x)).left) z J * ((val e r z J) ^ k).val) → (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Dd.toPre.P.A.left) → Dd.toPre.P.L.ι), Good Dd.toPre.P.L z J → gs r z ⊤ (scal Y.H.hom a) * sval ρ' r z J + gs r z ⊤ (scal Y.H.hom (2 * (k : R) * D a)) * sval ρ r z J = gs r z ⊤ (scal Y.H.hom b) * sval τ'' r z J + gs r z ⊤ (scal Y.H.hom (2 * (k : R) * D b)) * sval τ r z J) → ShiftEq Dd.toPre k mu α σ'' σ₁' (2 * (k : R) * w α + 2 * (k : R) ^ 2 * π + 2 * (k : R) * π') σ₁ := by
-  first | exact @GlobalTheory.HeatShift.shift_term
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaShiftFourierTermTranslationGaugeStatement =====

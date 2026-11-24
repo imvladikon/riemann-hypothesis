@@ -468,22 +468,8 @@ open GlobalTheory.SplitScalar
 
 variable {D : D7}
 
-theorem isHalf_add {m n : ℕ} {e : AE D} {u v : Mx D m n} (hu : IsHalf e u) (hv : IsHalf e v) :
-    IsHalf e (u + v) := fun i j => by
-  simp only [Matrix.add_apply, mul_add, hu i j, hv i j]
-
 theorem isHalf_neg {m n : ℕ} {e : AE D} {u : Mx D m n} (hu : IsHalf e u) : IsHalf e (-u) := fun i j => by
   simp only [Matrix.neg_apply, mul_neg, hu i j]
-
-theorem isHalf_sub {m n : ℕ} {e : AE D} {u v : Mx D m n} (hu : IsHalf e u) (hv : IsHalf e v) :
-    IsHalf e (u - v) := by
-  rw [sub_eq_add_neg]; exact GlobalTheory.DownLift.SplitCoef.Cons.isHalf_add hu (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_neg hv)
-
-theorem isHalf_nsmul {m n : ℕ} {e : AE D} {u : Mx D m n} (hu : IsHalf e u) (k : ℕ) : IsHalf e (k • u) :=
-  fun i j => by rw [Matrix.smul_apply, nsmul_eq_mul, mul_left_comm, hu i j]
-
-theorem isHalf_zero {m n : ℕ} (e : AE D) : IsHalf e (0 : Mx D m n) := fun i j => by
-  simp only [Matrix.zero_apply, mul_zero]
 
 theorem isHalf_place_of_left {m n : ℕ} {a : AE D} (ha : a * cA D a = 0) {u : Mx D m n} (hu : IsHalf a u) :
     IsHalf (a + cA D a) u := fun i j => by
@@ -502,7 +488,7 @@ theorem heisO_mem_locSpan (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE
   | mem p hp =>
     obtain ⟨u, hu, rfl⟩ := hp
     rw [heisO_heisO]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨w + u, GlobalTheory.DownLift.SplitCoef.Cons.isHalf_add hw hu, rfl⟩)
+    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨w + u, _root_.GlobalTheory.SplitScalar.isHalf_add hw hu, rfl⟩)
   | zero =>
     rw [show heisO ψ S T w 0 = 0 from (heisL ψ S T w).map_zero]
     exact Submodule.zero_mem _
@@ -515,7 +501,7 @@ theorem heisO_mem_locSpan (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE
 
 theorem self_mem_locSpan (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (a : AE D) (f : WO S T → ℂ) :
     f ∈ locSpan ψ S T a f :=
-  Submodule.subset_span ⟨0, GlobalTheory.DownLift.SplitCoef.Cons.isHalf_zero _, (heisO_zero ψ S T f).symm⟩
+  Submodule.subset_span ⟨0, _root_.GlobalTheory.SplitScalar.isHalf_zero _, (heisO_zero ψ S T f).symm⟩
 
 end GlobalTheory.DownLift.SplitCoef.Cons
 
@@ -538,9 +524,9 @@ theorem GlobalTheory.DownLift.SplitCoef.exists_locSpan_coef_eq : ∀ (D : D7) (�
     refine ⟨k₀ * kΦ * k₁, by positivity, fun u hu hua => ?_, fun u hu hua t => ?_, ?_, fun y hy => ?_,
       fun y hy => ?_⟩
     · rw [mul_assoc, mul_smul]
-      exact hinv _ (AddSubgroup.nsmul_mem _ hu _) (Or.inl (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_nsmul hua _))
+      exact hinv _ (AddSubgroup.nsmul_mem _ hu _) (Or.inl (_root_.GlobalTheory.SplitScalar.isHalf_nsmul hua _))
     · rw [show k₀ * kΦ * k₁ = kΦ * (k₀ * k₁) by ring, mul_smul]
-      exact hΦinv _ (AddSubgroup.nsmul_mem _ hu _) (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_nsmul hua _) t
+      exact hΦinv _ (AddSubgroup.nsmul_mem _ hu _) (_root_.GlobalTheory.SplitScalar.isHalf_nsmul hua _) t
     · rw [mul_smul]
       exact AddSubgroup.nsmul_mem _ hx₁Λ _
     · rw [show k₀ * kΦ * k₁ = (kΦ * k₁) * k₀ by ring, mul_smul]
@@ -573,16 +559,16 @@ theorem GlobalTheory.DownLift.SplitCoef.exists_locSpan_coef_eq : ∀ (D : D7) (�
     split_ifs with hP
     · obtain ⟨u, hu, hua, rfl⟩ := hP
       have hkx : k • (k • u) ∈ latH S T ΛS ΛT := AddSubgroup.nsmul_mem _ (AddSubgroup.nsmul_mem _ hu _) _
-      rw [Finset.sum_congr rfl fun y hy => (hYsum (k • u) (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_nsmul hua k) hkx).1 ⟨u, hu, hua, rfl⟩ y hy,
+      rw [Finset.sum_congr rfl fun y hy => (hYsum (k • u) (_root_.GlobalTheory.SplitScalar.isHalf_nsmul hua k) hkx).1 ⟨u, hu, hua, rfl⟩ y hy,
         Finset.sum_const, nsmul_eq_mul, mul_one]
-      have horth : symplO S T x₁ (k • u) = 0 := symplO_eq_zero S T hcaa hx₁ (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_nsmul hua k)
+      have horth : symplO S T x₁ (k • u) = 0 := symplO_eq_zero S T hcaa hx₁ (_root_.GlobalTheory.SplitScalar.isHalf_nsmul hua k)
       rw [add_comm, heisO_add_of_orth ψ S T horth f, hfix u hu hua]
     · by_cases hkx : k • x ∈ latH S T ΛS ΛT
       · rw [(hYsum x hx hkx).2 hP, zero_mul]
       · have h3 : ℓ (heisO ψ S T (x + x₁) f) = 0 := by
           by_contra hne
           apply hkx
-          have h4 := hk0 _ (hsupp ℓ hℓ (x + x₁) (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_add hx hx₁) hne)
+          have h4 := hk0 _ (hsupp ℓ hℓ (x + x₁) (_root_.GlobalTheory.SplitScalar.isHalf_add hx hx₁) hne)
           have h5 : k • x = k • (x + x₁) - k • x₁ := by rw [nsmul_add, add_sub_cancel_right]
           rw [h5]
           exact AddSubgroup.sub_mem _ h4 hkx₁
@@ -607,7 +593,7 @@ theorem GlobalTheory.DownLift.SplitCoef.exists_locSpan_coef_eq : ∀ (D : D7) (�
       have hzh := (hX z hz).1
       rw [heisO_smul, ℓ.map_smul, smul_eq_mul,
         ← heisO_add_of_orth ψ S T (symplO_eq_zero S T hcaa hx (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_neg hzh)) n, ← sub_eq_add_neg,
-        hA ℓ hℓ (x - z) (GlobalTheory.DownLift.SplitCoef.Cons.isHalf_sub hx hzh)]
+        hA ℓ hℓ (x - z) (_root_.GlobalTheory.SplitScalar.isHalf_sub hx hzh)]
       split_ifs with hP
       · obtain ⟨u, hu, hua, hxu⟩ := hP
         rw [(sub_eq_iff_eq_add').1 hxu, hΦk u hu hua]
@@ -1285,7 +1271,7 @@ theorem mem_span_of_coef_mem_span : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   choose! φ hφm hφe using hφ
   have hsum : (∑ x₁ ∈ X, φ x₁) ∈ Submodule.span ℂ 𝒯 := Submodule.sum_mem _ hφm
   have h0 : IsThetaFunO ψ S T 0 := by simpa using theta_sub hf hf
-  have hzero := GlobalTheory.T.splitPlace_invariantForms_separate_thetaFunctions D ψ S T hψ a ha (f - ∑ x₁ ∈ X, φ x₁)
+  have hzero := _root_.GlobalTheory.DownLift.SplitSep.invForms_separate D ψ S T hψ a ha (f - ∑ x₁ ∈ X, φ x₁)
     (theta_sub hf (theta_of_mem_span h0 h𝒯 hsum)) (by
       intro ℓ hℓ x hx
 
@@ -1456,7 +1442,7 @@ theorem rel_extend {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) 
       (c.sum fun u z => z • heisO ψ S T u g₂) = 0)
     (c : WO S T →₀ ℂ) (hc : ∀ u ∈ c.support, Q' u) (h1 : (c.sum fun u z => z • heisO ψ S T u g₁) = 0) :
     (c.sum fun u z => z • heisO ψ S T u g₂) = 0 := by
-  have hsep := GlobalTheory.T.splitPlace_invariantForms_separate_thetaFunctions D ψ S T hψ a ha
+  have hsep := _root_.GlobalTheory.DownLift.SplitSep.invForms_separate D ψ S T hψ a ha
   have hz : ∀ x, heisO ψ S T x (0 : WO S T → ℂ) = 0 := fun x => (heisL ψ S T x).map_zero
   have hlc : ∀ (k : WO S T → ℂ) (τ : WO S T → WO S T) (g : WO S T → ℂ), IsThetaFunO ψ S T g →
       IsThetaFunO ψ S T (c.sum fun u z => (z * k u) • heisO ψ S T (τ u) g) := fun k τ g hg =>
@@ -1582,25 +1568,6 @@ section Generic
 
 variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D}
 
-theorem suppAt_conj {e : AE D} {V : HSp D} {g : GA D V} (h : SuppAt e V g) : SuppAt (cA D e) V g := by
-  intro i j
-  rw [GlobalTheory.DualPairCheck.cA_cA, add_comm]
-  exact h i j
-
-theorem suppAt_one (e : AE D) (V : HSp D) : SuppAt e V 1 := by
-  intro i j
-  have : mt V (1 : GA D V) = 1 := by
-    unfold Formalism.L2.Theta.mt
-    rw [map_one]; rfl
-  rw [this, sub_self, Matrix.zero_apply, mul_zero]
-
-theorem suppAt_inv {e : AE D} {V : HSp D} {g : GA D V} (h : SuppAt e V g) : SuppAt e V g⁻¹ := by
-  intro i j
-  have := congrFun (congrFun (GlobalTheory.SplitScalar.off_smul_mt_inv h) i) j
-  simp only [Matrix.smul_apply, smul_eq_mul] at this
-  rw [Matrix.sub_apply]
-  linear_combination -this
-
 theorem om_form {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
     (hW : IsWeilDatumO ψ S T χS χT om) {a : AE D} (ha : IsSplitIdem D a) {g : GA D S} {h : GA D T}
     (hg : SuppAt a S g) (hh : SuppAt a T h) :
@@ -1619,9 +1586,9 @@ theorem cross_law {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T →* M
     (hs : HasShape ψ S T a Φ w) {c : ℂ} (hc : c ≠ 0) (ef : om (κ, 1) f = c • f) (ew : om (κ, 1) w = c • w)
     {ℓ : (WO S T → ℂ) →ₗ[ℂ] ℂ} (hℓ : InvForm ψ S T a ℓ) {x x' : WO S T} (hx : IsHalf a x) (hx' : IsHalf a x') :
     coef ψ S T a ℓ f (actO S T κ 1 x) * Φ x' = coef ψ S T a ℓ f x * Φ (actO S T κ 1 x') := by
-  obtain ⟨s, hs0, H⟩ := om_form hW ha hκ (suppAt_one a T)
+  obtain ⟨s, hs0, H⟩ := om_form hW ha hκ (_root_.GlobalTheory.WeilUniq.suppAt_one a T)
   have hne : ¬ ∀ ℓ, InvForm ψ S T a ℓ → ∀ x, IsHalf a x → ℓ (heisO ψ S T x w) = 0 := fun h =>
-    hw0 (GlobalTheory.T.splitPlace_invariantForms_separate_thetaFunctions D ψ S T hW.std a ha w hw h)
+    hw0 (_root_.GlobalTheory.DownLift.SplitSep.invForms_separate D ψ S T hW.std a ha w hw h)
   push Not at hne
   obtain ⟨ℓ₀, hℓ₀, x₀, hx₀, hne⟩ := hne
   obtain ⟨c₀, hc₀⟩ := hs ℓ₀ hℓ₀
@@ -1702,8 +1669,8 @@ theorem step_of_shape (R : RealDat D A Ks) (hW : R.thP_ωP) (i : Fin D.R.m) (t :
     obtain ⟨p1, p2, p3⟩ := GlobalTheory.T.localHeisenbergSpan_preserves_type_relations D G Pl0 T A Ks R hW i t Sb v hv ε a hε hae f hT hC hL f' hf'
     have p4 := GlobalTheory.T.thetaShapeRelation_drop_splitPlace D G Pl0 T A Ks R hψ i t Sb v ε a ha hε hae hth Φ f' hs
       (fun ℓ hℓ => ⟨_, fun x hx => (H ℓ hℓ x hx).trans (mul_comm _ _)⟩) p3
-    have hg' : SuppAt a (Wc D i) g⁻¹ := suppAt_inv hg
-    obtain ⟨s, hs0, E⟩ := om_form (hW i t) ha (suppAt_one a (Vc D i)) hg'
+    have hg' : SuppAt a (Wc D i) g⁻¹ := _root_.GlobalTheory.SplitPlace.suppAt_inv hg
+    obtain ⟨s, hs0, E⟩ := om_form (hW i t) ha (_root_.GlobalTheory.WeilUniq.suppAt_one a (Vc D i)) hg'
     refine ⟨s⁻¹ • R.ωP i t (1, g⁻¹) f', Submodule.smul_mem _ _ (Submodule.subset_span ⟨g⁻¹, f', p1, p2, p4, rfl⟩),
       fun ℓ hℓ x hx => ?_⟩
     have e := E ℓ hℓ f' p1.1 (actO _ _ 1 g x)
@@ -1810,7 +1777,7 @@ theorem step_twist : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type
       show upperLeftBlock _ (redFn (R.βV i) P'.1 (finE (Vc D i) κ)) = 1
       rw [k5 P'.1 ((hP P').2 (Or.inl P'.2)) (hne P'.1 P'.2)]
       exact blockDiagonalExtendByOnePrimeField_one _ _
-  exact cross_law (hW i t) ha (suppAt_conj k1) hT.1 hth hv0 hs (inv_ne_zero (levChi_ne_zero _ κ))
+  exact cross_law (hW i t) ha (_root_.GlobalTheory.SplitPlace.suppAt_conj k1) hT.1 hth hv0 hs (inv_ne_zero (levChi_ne_zero _ κ))
     (hT.2 κ hκ (suppIn_of_suppAt hv h0.1 hε hae k1)) (law_vP R hc.lev hW hc.thP.vP i t hκ) hℓ hx hx'
 
 end GlobalTheory.DownLift.GenTwist

@@ -393,7 +393,7 @@ noncomputable section
 namespace GlobalTheory.TameEig
 open Formalism.BasicNotions Formalism.ConjugateSelfDual Formalism.MainNotions Formalism.MainNotions.N Polynomial NumberField IsDedekindDomain ReciprocityTheory.Gal GlobalTheory.StringRepresentationDecomposition Topology
 variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R}
-abbrev _root_.GlobalTheory.TameEig.eigPd_holds_tyz : Prop :=  ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.AdmAAlt D → _root_.GlobalTheory.StringRepresentationDecomposition.LocalGlobalCompatible D → RbEx D → EigPd D
+abbrev _root_.GlobalTheory.TameEig.eigPd_holds_tyz : Prop :=  ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.AdmAAlt D → _root_.UpperTheory.GalS.LGCN D → RbEx D → EigPd D
 end GlobalTheory.TameEig
 end
 end
@@ -1017,12 +1017,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.ConjugateSelfDual ReciprocityTheory.Gal
-
-theorem _root_.GlobalTheory.T.algebraicCharacter_of_adm2 : ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.adm2_alt D → GlobalTheory.JumpDictionaryFoundation.AlgebraicCharacter_at D := by
-  first | exact @_root_.GlobalTheory.AlgCharFromGal.main_alt_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AlgebraicCharacterOfAdm =====
@@ -1039,7 +1033,7 @@ open NumberField IsDedekindDomain Formalism Formalism.BasicNotions Formalism.Bas
 namespace GlobalTheory.BridgeAdmDict
 theorem main_alt_alt : GlobalTheory.TwSys.Cheb → ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.adm2_alt D → WeightParam D → BlockCharParam D → AdmissibleParameterJ.AdmDict D := by
   intro hC D hA hW hB
-  have hAC := _root_.GlobalTheory.T.algebraicCharacter_of_adm2 D hA
+  have hAC := _root_.GlobalTheory.AlgCharFromGal.main_alt_alt_alt D hA
   refine ⟨false, ?_⟩
   rintro i τ₀ g ρ ⟨hτ, hP⟩
   obtain ⟨b, hb, hU⟩ : ∃ b : Bool, (D.naut.iotaQC i).toRingHom.comp τ₀ = GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.embOver D ρ b ∧
@@ -1114,7 +1108,7 @@ theorem duties_of_large_aux41 (hC : GlobalTheory.TwSys.Cheb) (D : D7) (hL : Glob
 theorem prvG5_of_admissible_cutRec : LocalFiniteness → LocalTateDuality → LocalEulerChar →
     ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.AdmissibleDatum D → RbEx D → CutRec D → SumRepresentations.ConclusionG5 D := by
   intro h1 h2 h3 D hA hRb hC
-  have hLGC : _root_.GlobalTheory.StringRepresentationDecomposition.LocalGlobalCompatible D := _root_.UpperTheory.GalS.lgc_of_cut'_alt D hA.1.1 hC
+  have hLGC : _root_.UpperTheory.GalS.LGCN D := _root_.UpperTheory.GalS.lgc_of_cut'_alt D hA.1.1 hC
   have hEig : EigPd D := _root_.UpperTheory.GalS.eigPd_holds_alt D hA.1.1 hLGC hRb
   have hH : HOneTwo D := _root_.GlobalTheory.HOneTwoLevel.hOneTwo_holds h1 h2 h3 D
   refine _root_.Formalism.MainNotions.SumRepresentations.galois_clause_of_sufficient_alt D hA.1.1 fun i hg r hr w hw => ⟨hLGC i r hr w hw, fun hS => ⟨hRb i hg, fun rb hrb => ?_⟩⟩

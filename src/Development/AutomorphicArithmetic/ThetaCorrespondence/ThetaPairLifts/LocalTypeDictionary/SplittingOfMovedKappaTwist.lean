@@ -79,6 +79,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TwistPlacesOffPrimeQZero
+import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntStd
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousCharacterFiniteOrderIntegralUnits
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
@@ -132,7 +133,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.
 -- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarIdempotentValue, Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentUnitDecomposition, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitCharValueSplitCharacters, Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarLocalIdentity, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaFunctionInfiniteRationalLaw, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistJetKappaSplitMove, Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarUnitModulus, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistNormKappaMovedPlace, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplittingOfMovedKappaTwist
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarIdempotentValue =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarIdempotentValue", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitOff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TwistPlacesOffPrimeQZero\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.JetScalarIdempotentValue", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitOff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TwistPlacesOffPrimeQZero\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT\nimport Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntStd\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -167,33 +168,30 @@ theorem mod1All_root {ζ : ℂ} {n : ℕ} (hn : 0 < n) (hζ : ζ ^ n = 1) : Mod1
   have h2 : (σ ⟨ζ, qbar_of_root hn hζ⟩) ^ n = 1 := by rw [← map_pow, h1, map_one]
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 (by rw [← norm_pow, h2, norm_one])
 
-theorem lamC_mem {q : ℕ} [Fact q.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[q]) {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) :
-    TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
-
 theorem unitAt_mul {q : ℕ} [Fact q.Prime] {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar)
     (ux : GlobalTheory.MovedKappaEx.UnitAt q x) (uy : GlobalTheory.MovedKappaEx.UnitAt q y) : GlobalTheory.MovedKappaEx.UnitAt q (x * y) := by
   intro lam
   have e : (⟨x * y, mul_mem hx hy⟩ : TaylorLogMetric.Qbar) = ⟨x, hx⟩ * ⟨y, hy⟩ := rfl
   have hx' := ux lam
   have hy' := uy lam
-  rw [lamC_mem lam hx] at hx'
-  rw [lamC_mem lam hy] at hy'
-  rw [lamC_mem lam (mul_mem hx hy), e, map_mul, norm_mul, hx', hy', one_mul]
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam hx] at hx'
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam hy] at hy'
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam (mul_mem hx hy), e, map_mul, norm_mul, hx', hy', one_mul]
 
 theorem unitAt_inv {q : ℕ} [Fact q.Prime] {x : ℂ} (hx : x ∈ TaylorLogMetric.Qbar)
     (ux : GlobalTheory.MovedKappaEx.UnitAt q x) : GlobalTheory.MovedKappaEx.UnitAt q x⁻¹ := by
   intro lam
   have e : (⟨x⁻¹, inv_mem hx⟩ : TaylorLogMetric.Qbar) = (⟨x, hx⟩ : TaylorLogMetric.Qbar)⁻¹ := rfl
   have hx' := ux lam
-  rw [lamC_mem lam hx] at hx'
-  rw [lamC_mem lam (inv_mem hx), e, map_inv₀, norm_inv, hx', inv_one]
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam hx] at hx'
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam (inv_mem hx), e, map_inv₀, norm_inv, hx', inv_one]
 
 theorem unitAt_root (q : ℕ) [Fact q.Prime] {ζ : ℂ} {n : ℕ} (hn : 0 < n) (hζ : ζ ^ n = 1) :
     GlobalTheory.MovedKappaEx.UnitAt q ζ := by
   intro lam
   have h1 : (⟨ζ, qbar_of_root hn hζ⟩ : TaylorLogMetric.Qbar) ^ n = 1 := by ext; simpa using hζ
   have h2 : (lam ⟨ζ, qbar_of_root hn hζ⟩) ^ n = 1 := by rw [← map_pow, h1, map_one]
-  rw [lamC_mem lam (qbar_of_root hn hζ)]
+  rw [_root_.Formalism.L2.KerInert.ISd.lamC_of_mem lam (qbar_of_root hn hζ)]
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 (by rw [← norm_pow, h2, norm_one])
 
 end GlobalTheory.SplitMoveKappa
@@ -436,28 +434,6 @@ end GlobalTheory.SplitCharValue
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx
-open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-
-theorem _root_.GlobalTheory.T.twist_split_character_values : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
-    {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
-    (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (e : Formalism.L2.Theta.AE D), IsSplitIdem D e → ∀ x₀ : (Formalism.L2.Theta.AE D)ˣ,
-    (∃ a : Formalism.L2.Theta.AE D, (x₀ : Formalism.L2.Theta.AE D) = e * a + (1 - e) ∨ (x₀ : Formalism.L2.Theta.AE D) = cA D e * a + (1 - cA D e)) →
-    (Mod1All ((ch.G.chrS p x₀ : Circle) : ℂ) ∧ Mod1All ((ch.G.chrT p x₀ : Circle) : ℂ)) ∧
-    ∀ (q : ℕ) [Fact q.Prime], GlobalTheory.MovedKappaEx.OffPrime e q →
-      GlobalTheory.MovedKappaEx.UnitAt q ((ch.G.chrS p x₀ : Circle) : ℂ) ∧ GlobalTheory.MovedKappaEx.UnitAt q ((ch.G.chrT p x₀ : Circle) : ℂ) := by
-  first | exact @_root_.GlobalTheory.SplitCharValue.splitCharValue_split_characters
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitCharValueSplitCharacters =====
@@ -997,7 +973,7 @@ private theorem lattice_orbit_negated_space {D : D7} (S T : HSp D) (LS : Set (Fi
 private theorem actO_mul_mul {D : D7} (S T : HSp D) (g a : GA D S) (h b : GA D T) (w : WO S T) :
     actO S T (g * a) (h * b) w = actO S T g h (actO S T a b w) := by
   simp only [actO]
-  rw [_root_.mul_inv_rev, GlobalTheory.LatMoveStd.mt_mul'', GlobalTheory.LatMoveStd.mt_mul'']
+  rw [_root_.mul_inv_rev, _root_.GlobalTheory.BesselCompare.mt_mul, _root_.GlobalTheory.BesselCompare.mt_mul]
   simp only [Matrix.mul_assoc]
 private theorem orbit_membership_of_onto_moves {D : D7} {S T : HSp D} {g a : GA D S} {h b : GA D T} {Λ₀ Λ Λ' : AddSubgroup (WO S T)}
     (h1 : (∀ w ∈ Λ₀, actO S T a b w ∈ Λ) ∧ ∀ w' ∈ Λ, ∃ w ∈ Λ₀, actO S T a b w = w')
@@ -1011,13 +987,7 @@ private theorem orbit_membership_of_onto_moves {D : D7} {S T : HSp D} {g a : GA 
     obtain ⟨w, hw, rfl⟩ := h1.2 u₀ hu₀
     rw [← actO_mul_mul]
     exact h2.1 w hw
-private theorem exists_unit_det_of_idempotent {D : D7} {e : Formalism.L2.Theta.AE D} (he : e * e = e) (V : HSp D) (g : GA D V) :
-    ∃ x : (Formalism.L2.Theta.AE D)ˣ, IsDetAt e V g x := by
-  have hu : IsUnit (mt V g).det := (Matrix.isUnit_iff_isUnit_det _).1 (matHom V g).isUnit
-  obtain ⟨d', hd⟩ := hu.exists_right_inv
-  have h1 : (e * (mt V g).det + (1 - e)) * (e * d' + (1 - e)) = 1 := by
-    linear_combination (e * e) * hd + (2 - (mt V g).det - d') * he
-  exact ⟨⟨_, _, h1, by rw [mul_comm]; exact h1⟩, rfl⟩
+private alias exists_unit_det_of_idempotent := _root_.GlobalTheory.WeilUniq.exists_isDetAt
 private theorem idempotent_unit_inverse_shape {R : Type} [CommRing R] {e a : R} (he : e * e = e) {x : Rˣ} (hx : (x : R) = e * a + (1 - e)) :
     ((x⁻¹ : Rˣ) : R) = e * ((x⁻¹ : Rˣ) : R) + (1 - e) := by
   have h1 : (x : R) * ((x⁻¹ : Rˣ) : R) = 1 := x.mul_inv
@@ -1083,11 +1053,11 @@ theorem _root_.GlobalTheory.T.twist_splitMoveFrames_jets : _root_.GlobalTheory.F
   intro hP hI D Γ _ _ Pl0 T A Ks _ _ _ R ch hch p hp x y e he s s' hs hs'
   have hC := ch.S.Z.crv
   have hδ : ch.S.Z.δ ≠ 0 := GlobalTheory.InertSign.delta_ne_zero hC
-  have hsd := _root_.GlobalTheory.T.twisted_moved_series_decomposition hP hI ch hch p hp x y
-  have hsd' := _root_.GlobalTheory.T.twisted_moved_series_decomposition hP hI ch hch p hp (s * x) (s' * y)
-  have hvac := _root_.GlobalTheory.T.twisted_moved_vacuum_integral hP hI ch hch p hp x y
-  have hact := _root_.GlobalTheory.T.twisted_moved_lattice_action hP hI ch hch p hp x y
-  have hact' := _root_.GlobalTheory.T.twisted_moved_lattice_action hP hI ch hch p hp (s * x) (s' * y)
+  have hsd := _root_.GlobalTheory.MovedSD.moved_series_decomposition hP hI ch hch p hp x y
+  have hsd' := _root_.GlobalTheory.MovedSD.moved_series_decomposition hP hI ch hch p hp (s * x) (s' * y)
+  have hvac := _root_.GlobalTheory.MovedDict.moved_vacuum_isVacuumIntegral hP hI ch hch p hp x y
+  have hact := _root_.GlobalTheory.MovedDict.moved_lattice_action_compat hP hI ch hch p hp x y
+  have hact' := _root_.GlobalTheory.MovedDict.moved_lattice_action_compat hP hI ch hch p hp (s * x) (s' * y)
   have hc0 : (ch.S.Z.c0 p : ℂ) ≠ 0 := Units.ne_zero _
   have hn := DefPair.nodes hp
   obtain ⟨x₀, hx₀⟩ := exists_unit_det_of_idempotent he.1 _ (s : Formalism.L2.Theta.GA D (ch.G.V p.small))
@@ -1185,8 +1155,8 @@ theorem jetKappa_split_move : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (�
   obtain ⟨x₀, y₀, hx₀, hy₀, ζ, ⟨n, hn, hζ⟩, r, hr, hread⟩ := _root_.GlobalTheory.T.twist_splitMoveFrames_jets hP hI ch hch p hp x y e he s s' hs hs'
   have hC := ch.S.Z.crv
   have he0 := ch.S.Z.e0_is p hp
-  have hsd := _root_.GlobalTheory.T.twisted_moved_series_decomposition hP hI ch hch p hp x y
-  have hsd' := _root_.GlobalTheory.T.twisted_moved_series_decomposition hP hI ch hch p hp (s * x) (s' * y)
+  have hsd := _root_.GlobalTheory.MovedSD.moved_series_decomposition hP hI ch hch p hp x y
+  have hsd' := _root_.GlobalTheory.MovedSD.moved_series_decomposition hP hI ch hch p hp (s * x) (s' * y)
   have hG := (GlobalTheory.InducedType.induced_type D).1
   have he0ne : ch.S.Z.e0 p ≠ 0 := by
     intro h
@@ -1220,32 +1190,6 @@ end GlobalTheory.SplitMoveKappa
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx
-open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-
-theorem _root_.GlobalTheory.T.twist_jetKappa_split_move : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
-    {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
-    (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (x : FinPt ch.G p.small) (y : FinPt ch.G p.big) (κ : ℂ), GlobalTheory.MovedKappaEx.JetKap ch p x y κ →
-    ∀ (e : Formalism.L2.Theta.AE D), IsSplitIdem D e → ∀ (s : FinPt ch.G p.small) (s' : FinPt ch.G p.big),
-    SuppAt e _ (s : GA D (ch.G.V p.small)) → SuppAt e _ (s' : GA D (ch.G.V p.big)) →
-    ∃ x₀ y₀ : (Formalism.L2.Theta.AE D)ˣ,
-      (∃ a : Formalism.L2.Theta.AE D, (x₀ : Formalism.L2.Theta.AE D) = e * a + (1 - e) ∨ (x₀ : Formalism.L2.Theta.AE D) = cA D e * a + (1 - cA D e)) ∧
-      (∃ b : Formalism.L2.Theta.AE D, (y₀ : Formalism.L2.Theta.AE D) = e * b + (1 - e) ∨ (y₀ : Formalism.L2.Theta.AE D) = cA D e * b + (1 - cA D e)) ∧
-      ∃ ζ : ℂ, (∃ n : ℕ, 0 < n ∧ ζ ^ n = 1) ∧ ∃ r : ℝ, 0 < r ∧
-        GlobalTheory.MovedKappaEx.JetKap ch p (s * x) (s' * y)
-          ((r : ℂ) * ζ * ((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ) * κ) := by
-  first | exact @_root_.GlobalTheory.SplitMoveKappa.jetKappa_split_move
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistJetKappaSplitMove =====
@@ -1559,18 +1503,14 @@ open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
 namespace GlobalTheory.MovedKappaNorm
-section Mean
-open MeasureTheory
-open scoped Pointwise
-end Mean
 theorem norm_kappa_of_moved_place : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
     {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
     (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (x : FinPt ch.G p.small) (y : FinPt ch.G p.big) (κ : ℂ), GlobalTheory.MovedKappaEx.JetKap ch p x y κ → ‖κ‖ = 1 := by
   intro hP hI D Γ _ _ Pl0 T A Ks _ _ _ R ch hch p hp x y κ hκ
   have hC := ch.S.Z.crv
   have he0 := ch.S.Z.e0_is p hp
-  have hsd := _root_.GlobalTheory.T.twisted_moved_series_decomposition hP hI ch hch p hp x y
-  have hvac := _root_.GlobalTheory.T.twisted_moved_vacuum_integral hP hI ch hch p hp x y
+  have hsd := _root_.GlobalTheory.MovedSD.moved_series_decomposition hP hI ch hch p hp x y
+  have hvac := _root_.GlobalTheory.MovedDict.moved_vacuum_isVacuumIntegral hP hI ch hch p hp x y
   have hvac0 := ch.S.Z.vac_is p hp
   have hc0 := ch.S.Z.kernelNorm_constant_spec p hp
   have hd := _root_.GlobalTheory.MovedDict.Entire.differentiable_moved_operator_eval hP hI ch hch p hp x y
@@ -1624,24 +1564,6 @@ end GlobalTheory.MovedKappaNorm
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx
-open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-
-theorem _root_.GlobalTheory.T.twist_norm_kappa_moved_place : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
-    {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
-    (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (x : FinPt ch.G p.small) (y : FinPt ch.G p.big) (κ : ℂ), GlobalTheory.MovedKappaEx.JetKap ch p x y κ → ‖κ‖ = 1 := by
-  first | exact @_root_.GlobalTheory.MovedKappaNorm.norm_kappa_of_moved_place
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistNormKappaMovedPlace =====
@@ -1673,9 +1595,9 @@ theorem movedKappa_split : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D
     ∃ c : ℂ, Mod1All c ∧ (∀ (q : ℕ) [Fact q.Prime], GlobalTheory.MovedKappaEx.OffPrime e q → GlobalTheory.MovedKappaEx.UnitAt q c) ∧
       GlobalTheory.MovedKappaEx.JetKap ch p (s * x) (s' * y) (c * κ) := by
   intro hP hI D Γ _ _ Pl0 T A Ks _ _ _ R ch hch p hp x y κ hJ e he s s' hs hs'
-  obtain ⟨x₀, y₀, hx₀, hy₀, ζ, ⟨n, hn, hζ⟩, r, hr, hJ'⟩ := _root_.GlobalTheory.T.twist_jetKappa_split_move hP hI ch hch p hp x y κ hJ e he s s' hs hs'
-  have h1 := _root_.GlobalTheory.T.twist_norm_kappa_moved_place hP hI ch hch p hp x y κ hJ
-  have h2 := _root_.GlobalTheory.T.twist_norm_kappa_moved_place hP hI ch hch p hp _ _ _ hJ'
+  obtain ⟨x₀, y₀, hx₀, hy₀, ζ, ⟨n, hn, hζ⟩, r, hr, hJ'⟩ := _root_.GlobalTheory.SplitMoveKappa.jetKappa_split_move hP hI ch hch p hp x y κ hJ e he s s' hs hs'
+  have h1 := _root_.GlobalTheory.MovedKappaNorm.norm_kappa_of_moved_place hP hI ch hch p hp x y κ hJ
+  have h2 := _root_.GlobalTheory.MovedKappaNorm.norm_kappa_of_moved_place hP hI ch hch p hp _ _ _ hJ'
   have hζn : ‖ζ‖ = 1 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn.ne').1 (by rw [← norm_pow, hζ, norm_one])
   have hχn : ‖((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ)‖ = 1 := Circle.norm_coe _
   have hr1 : (r : ℂ) = 1 := by
@@ -1683,15 +1605,15 @@ theorem movedKappa_split : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D
     simp only [mul_one] at h2
     rw [h2]; simp
   rw [hr1, one_mul] at hJ'
-  have hA := _root_.GlobalTheory.T.twist_split_character_values hP hI ch hch p hp e he x₀ hx₀
-  have hB := _root_.GlobalTheory.T.twist_split_character_values hP hI ch hch p hp e he y₀ hy₀
+  have hA := _root_.GlobalTheory.SplitCharValue.splitCharValue_split_characters hP hI ch hch p hp e he x₀ hx₀
+  have hB := _root_.GlobalTheory.SplitCharValue.splitCharValue_split_characters hP hI ch hch p hp e he y₀ hy₀
   have hco : ((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ) =
       ((ch.G.chrT p x₀ : Circle) : ℂ)⁻¹ * ((ch.G.chrS p y₀ : Circle) : ℂ) := by
     rw [Circle.coe_mul, Circle.coe_inv]
   have hm : Mod1All ((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ) := by
     rw [hco]
-    exact GlobalTheory.FamilyTieProof.mod1All_mul' (GlobalTheory.FamilyTieProof.mod1All_inv hA.1.2) hB.1.1
-  refine ⟨ζ * ((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ), GlobalTheory.FamilyTieProof.mod1All_mul' (mod1All_root hn hζ) hm,
+    exact _root_.GlobalTheory.KappaPowMod.algebraicModulusOneAll_mul (_root_.GlobalTheory.KappaPowMod.algebraicModulusOneAll_inv hA.1.2) hB.1.1
+  refine ⟨ζ * ((((ch.G.chrT p x₀)⁻¹ * ch.G.chrS p y₀ : Circle)) : ℂ), _root_.GlobalTheory.KappaPowMod.algebraicModulusOneAll_mul (mod1All_root hn hζ) hm,
     fun q _ hq => ?_, hJ'⟩
   refine unitAt_mul (qbar_of_root hn hζ) hm.1 (unitAt_root q hn hζ) ?_
   rw [hco]
@@ -1700,28 +1622,6 @@ end GlobalTheory.SplitMoveKappa
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx
-open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-open scoped TensorProduct
-open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
-
-theorem _root_.GlobalTheory.T.splitting_of_moved_kappa_twist : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
-    {A : FamIn D.what₂.LL Γ Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks}
-    (ch : Choice R), ch.Is → ∀ (p : Pair T), DefPair D.R.m p → ∀ (x : FinPt ch.G p.small) (y : FinPt ch.G p.big) (κ : ℂ), GlobalTheory.MovedKappaEx.JetKap ch p x y κ →
-    ∀ (e : Formalism.L2.Theta.AE D), IsSplitIdem D e → ∀ (s : FinPt ch.G p.small) (s' : FinPt ch.G p.big),
-    SuppAt e _ (s : GA D (ch.G.V p.small)) → SuppAt e _ (s' : GA D (ch.G.V p.big)) →
-    ∃ c : ℂ, Mod1All c ∧ (∀ (q : ℕ) [Fact q.Prime], GlobalTheory.MovedKappaEx.OffPrime e q → GlobalTheory.MovedKappaEx.UnitAt q c) ∧
-      GlobalTheory.MovedKappaEx.JetKap ch p (s * x) (s' * y) (c * κ) := by
-  first | exact @_root_.GlobalTheory.SplitMoveKappa.movedKappa_split
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplittingOfMovedKappaTwist =====

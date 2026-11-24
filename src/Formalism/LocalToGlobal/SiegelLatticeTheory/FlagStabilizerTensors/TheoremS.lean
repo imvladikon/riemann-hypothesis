@@ -84,6 +84,7 @@ import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.Linter.Style
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegralLatticeRefinementIdentity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.KernelQuotientFinite
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.PsdFormConjRewrite
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ParametersTermRelations
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.PoincareConstantEq
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
@@ -1511,15 +1512,15 @@ end Formalism.FourierDecayAlt.P.A6x2
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem parsevalGroup_statement : Formalism.FourierDecayAlt.A6.ParsevalGroup := A6x2.parsevalGroup
+alias parsevalGroup_statement := _root_.Formalism.FourierDecayAlt.P.A6x2.parsevalGroup
 
-theorem gramRealisation : Formalism.FourierDecayAlt.A6.GramRealiseCut := A6x2.gramRealiseCut
+alias gramRealisation := _root_.Formalism.FourierDecayAlt.P.A6x2.gramRealiseCut
 
-theorem posSemidefEntryBound : Formalism.FourierDecayAlt.A6.PSDEntryBound := A6x2.pSDEntryBound
+alias posSemidefEntryBound := _root_.Formalism.FourierDecayAlt.P.A6x2.pSDEntryBound
 
-theorem posSemidefClosed : Formalism.FourierDecayAlt.A6.PSDClosed := A6x2.pSDClosed
+alias posSemidefClosed := _root_.Formalism.FourierDecayAlt.P.A6x2.pSDClosed
 
-theorem boundedSubsequence : Formalism.FourierDecayAlt.A6.BoundedSubseq := A6x2.boundedSubseq
+alias boundedSubsequence := _root_.Formalism.FourierDecayAlt.P.A6x2.boundedSubseq
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -1666,7 +1667,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.GermExpansionMatrixFunction =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondDerivativeHolds =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondDerivativeHolds", "h": "module\n\npublic import Formalism.HermitianCurvature.StatementPB\npublic import Formalism.HermitianCurvature.HeisenbergConjugationMeasurePreserving\npublic import Formalism.LatticeRigidity.HeightMinimum.SqrtAbsNormLeProd\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondDerivativeHolds", "h": "module\n\npublic import Formalism.HermitianCurvature.StatementPB\npublic import Formalism.HermitianCurvature.HeisenbergConjugationMeasurePreserving\npublic import Formalism.LatticeRigidity.HeightMinimum.SqrtAbsNormLeProd\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianCurvature.HeisenbergConjugationMeasurePreserving\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.PsdFormConjRewrite\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondVanishingOffRing\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1679,67 +1680,67 @@ open scoped ComplexOrder ComplexConjugate
 open Classical
 
 theorem localCores : Formalism.FourierDecayAlt.PB.LocalCores :=
-  ⟨Formalism.FourierDecayAlt.Final.jx_pSDAgree,
-   Formalism.FourierDecayAlt.Final.jx_schurProduct,
-   Formalism.FourierDecayAlt.Final.jx_productDomination,
-   Formalism.FourierDecayAlt.Final.jx_diagScale,
-   Formalism.FourierDecayAlt.Final.jx_diagPhase,
-   Formalism.FourierDecayAlt.Final.jx_blockDiagPSD,
-   Formalism.FourierDecayAlt.Final.jx_productLemma,
-   Formalism.FourierDecayAlt.Final.jx_scaleOk,
-   Formalism.FourierDecayAlt.Final.jx_phaseOk,
-   Formalism.FourierDecayAlt.Final.jx_outsideSysOk,
-   Formalism.FourierDecayAlt.Final.jx_outsideDomination,
-   Formalism.FourierDecayAlt.Final.jx_localPullback,
-   Formalism.FourierDecayAlt.Final.jx_localUnitHeads,
-   Formalism.FourierDecayAlt.Final.jx_topPullback,
-   Formalism.FourierDecayAlt.Final.jx_topUnitHeads,
-   Formalism.FourierDecayAlt.Final.jx_globalOfLocal,
-   Formalism.FourierDecayAlt.Final.jx_uniformMajorantOn,
-   Formalism.FourierDecayAlt.Final.jx_axiomsFromSystems,
-   Formalism.FourierDecayAlt.Final.jx_axiomsFromFamilies,
-   Formalism.FourierDecayAlt.Final.jx_kernelOfLocal,
-   Formalism.FourierDecayAlt.Final.jx_localKernelPSD,
-   Formalism.FourierDecayAlt.Final.tc_domMinOfText,
-   Formalism.FourierDecayAlt.Final.tc_domAfterOfLocal,
-   Formalism.FourierDecayAlt.Final.gram_determinant_dual_bound_a,
-   Formalism.FourierDecayAlt.Final.parahoric_gram_matrix,
-   Formalism.FourierDecayAlt.Final.zero_level_ones_vector,
-   Formalism.FourierDecayAlt.Final.singleBlockParseval_true,
-   Formalism.FourierDecayAlt.Final.theta_equality_first,
-   Formalism.FourierDecayAlt.Final.singleBlockThetaProps_true,
-   Formalism.FourierDecayAlt.Final.ns_support,
-   Formalism.FourierDecayAlt.Final.ns_block_diagonal,
-   Formalism.FourierDecayAlt.Final.latticeAverage_of_gram⟩
+  ⟨_root_.Formalism.FourierDecayAlt.P.Jx1.t_PSDAgree,
+   _root_.Formalism.FourierDecayAlt.P.Jx7.t_SchurProduct,
+   _root_.Formalism.FourierDecayAlt.P.Jx7.t_ProductDomination,
+   _root_.Formalism.FourierDecayAlt.P.Jx7.t_DiagScale,
+   _root_.Formalism.FourierDecayAlt.P.diagonal_phase_conj,
+   _root_.Formalism.FourierDecayAlt.P.block_diagonal_psd,
+   _root_.Formalism.FourierDecayAlt.P.Jx7.t_ProductLemma',
+   _root_.Formalism.FourierDecayAlt.P.scaling_bound,
+   _root_.Formalism.FourierDecayAlt.P.Jx8.t_PhaseOk,
+   _root_.Formalism.FourierDecayAlt.P.Jx8.t_OutsideSysOk,
+   _root_.Formalism.FourierDecayAlt.P.Jx8.t_OutsideDomination,
+   _root_.Formalism.FourierDecayAlt.P.local_pullback,
+   _root_.Formalism.FourierDecayAlt.P.local_unit_heads,
+   _root_.Formalism.FourierDecayAlt.P.top_pullback,
+   _root_.Formalism.FourierDecayAlt.P.top_unit_heads,
+   _root_.Formalism.FourierDecayAlt.P.global_of_local,
+   _root_.Formalism.FourierDecayAlt.P.Jx8.t_UniformMajorantOn,
+   _root_.Formalism.FourierDecayAlt.P.axioms_from_systems,
+   _root_.Formalism.FourierDecayAlt.P.axioms_from_families,
+   _root_.Formalism.FourierDecayAlt.P.kernel_of_local,
+   _root_.Formalism.FourierDecayAlt.P.local_kernel_psd,
+   _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.B1.domMinOfText,
+   _root_.Formalism.FourierDecayAlt.P.DensitySumsAndDomination.domAfterOfLocal,
+   _root_.Formalism.FourierDecayAlt.P.second_gram_and_vanishing,
+   _root_.Formalism.FourierDecayAlt.P.kernel_gram_property,
+   _root_.Formalism.FourierDecayAlt.P.zero_kernel_all_ones,
+   _root_.Formalism.FourierDecayAlt.P.first_kernel_parseval,
+   _root_.Formalism.FourierDecayAlt.P.first_theta_kernel_equality,
+   _root_.Formalism.FourierDecayAlt.P.first_theta_equals_first_kernel,
+   _root_.Formalism.FourierDecayAlt.P.added_block_kernel_support,
+   _root_.Formalism.FourierDecayAlt.P.added_block_kernel_block_diagonal,
+   _root_.Formalism.FourierDecayAlt.P.lattice_average_lemma_from_parts⟩
 
 theorem globalCores : Formalism.FourierDecayAlt.PB.GlobalCores :=
-  ⟨Formalism.FourierDecayAlt.Final.tc_theoremAAfter,
-   Formalism.FourierDecayAlt.Final.tc_recursionWithDens,
-   Formalism.FourierDecayAlt.Final.tc_domScaleTop,
-   Formalism.FourierDecayAlt.Final.tc_sumBoundMax,
-   Formalism.FourierDecayAlt.Final.tc_recHypScaleTop,
-   Formalism.FourierDecayAlt.Final.tc_densSum,
-   Formalism.FourierDecayAlt.Final.tc_densLeTwo,
-   Formalism.FourierDecayAlt.Final.tc_densSize,
-   Formalism.FourierDecayAlt.Final.tc_densChain,
-   Formalism.FourierDecayAlt.Final.poisson_summation_text,
-   Formalism.FourierDecayAlt.Final.jx_poissonJoint,
-   Formalism.FourierDecayAlt.Final.jx_poissonStepJoint,
+  ⟨_root_.Formalism.FourierDecayAlt.P.theorem_a_after,
+   _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.J1.t_RecursionWithDens,
+   _root_.Formalism.FourierDecayAlt.P.DensitySumsAndDomination.domScaleTop,
+   _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.J1.t_SumBoundMax,
+   _root_.Formalism.FourierDecayAlt.P.DensitySumsAndDomination.recHypScaleTop,
+   _root_.Formalism.FourierDecayAlt.P.DensitySumsAndDomination.densSum,
+   _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.J1.t_DensLeTwo,
+   _root_.Formalism.FourierDecayAlt.P.RecursionWithDensities.J1.t_DensSize,
+   _root_.Formalism.FourierDecayAlt.P.DensitySumsAndDomination.densChain,
+   _root_.Formalism.FourierDecayAlt.P.poisson_summation_level_statement,
+   _root_.Formalism.FourierDecayAlt.P.Jx3.t_PoissonJoint,
+   _root_.Formalism.FourierDecayAlt.P.poisson_level_joint,
    Formalism.SA.P.smoothedSumBound,
-   Formalism.FourierDecayAlt.Final.lattices_general_position_bound,
-   Formalism.FourierDecayAlt.Final.ideals_match,
-   Formalism.FourierDecayAlt.Final.ideal_norm_formula,
-   Formalism.FourierDecayAlt.Final.field_extension_degree_facts,
-   Formalism.FourierDecayAlt.Final.jx_frameProducts,
-   Formalism.FourierDecayAlt.Final.jx_xIsLamOne,
-   Formalism.FourierDecayAlt.Final.jx_latticeSumsJoint,
-   Formalism.FourierDecayAlt.Final.jx_instSizes,
-   Formalism.FourierDecayAlt.Final.jx_instLatticeSums,
-   Formalism.FourierDecayAlt.Final.sz_sizesMain,
-   Formalism.FourierDecayAlt.Final.jx_sizesToRecursion,
-   Formalism.FourierDecayAlt.Final.jx_globPositive,
-   Formalism.FourierDecayAlt.Final.counting_theorem,
-   Formalism.FourierDecayAlt.Final.jx_formGivesMain⟩
+   _root_.Formalism.FourierDecayAlt.P.lattice_facts_general,
+   _root_.Formalism.FourierDecayAlt.P.dualIdealEqLiftIdeal,
+   _root_.Formalism.FourierDecayAlt.P.scaledIdealNorm,
+   _root_.Formalism.FourierDecayAlt.P.degreeFacts_statement,
+   _root_.Formalism.FourierDecayAlt.P.frame_product_identities,
+   _root_.Formalism.FourierDecayAlt.P.lattice_x_eq_lambda_one,
+   _root_.Formalism.FourierDecayAlt.P.Jx2.t_LatticeSumsJoint,
+   _root_.Formalism.FourierDecayAlt.P.instance_sizes,
+   _root_.Formalism.FourierDecayAlt.P.instance_lattice_sums,
+   _root_.Formalism.FourierDecayAlt.P.size_bounds_conclusion,
+   _root_.Formalism.FourierDecayAlt.P.sizes_to_recursion,
+   _root_.Formalism.FourierDecayAlt.P.global_positive,
+   _root_.Formalism.FourierDecayAlt.P.mass_formula_constant_one,
+   _root_.Formalism.FourierDecayAlt.P.form_gives_theorem_A⟩
 
 end Formalism.FourierDecayAlt.P.HilbertSchmidtNorm
 

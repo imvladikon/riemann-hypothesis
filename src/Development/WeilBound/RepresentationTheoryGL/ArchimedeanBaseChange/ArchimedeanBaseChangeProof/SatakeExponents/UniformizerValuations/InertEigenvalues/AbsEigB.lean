@@ -1082,11 +1082,6 @@ open scoped Pointwise
 
 namespace GlobalTheory.CompanionTheory.EigTorus
 
-theorem exists_common_eigenvector : ∀ (d : ℕ) (E : Type) [AddCommGroup E] [Module ℂ E] [FiniteDimensional ℂ E]
-    {I : Type} (T : I → Module.End ℂ E), (∀ a b, Commute (T a) (T b)) → Module.finrank ℂ E = d → 0 < d →
-    ∃ w : E, w ≠ 0 ∧ ∃ c : I → ℂ, ∀ i, T i w = c i • w :=
-  _root_.UpperTheory.Reformulated.B.Ygb8.main
-
 theorem diag_commute {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {n : ℕ} {g h : GL (Fin n) L}
     (hg : IsDiagM g) (hh : IsDiagM h) : g * h = h * g := by
   have key : ∀ a : GL (Fin n) L, IsDiagM a →
@@ -1221,7 +1216,7 @@ theorem eigU_of (hIw : IwahoriU) (hDom : DomU) (hKU : KUFacts)
   have hpos : 0 < Module.finrank ℂ S := by
     have : Nontrivial S := ⟨⟨⟨_, hw₀⟩, 0, fun h => hw₀0 (congrArg Subtype.val h)⟩⟩
     exact Module.finrank_pos
-  obtain ⟨w, hw0, c, hc⟩ := exists_common_eigenvector _ S (fun t : D.T => (D.piN ρ t).restrict (hst t))
+  obtain ⟨w, hw0, c, hc⟩ := _root_.UpperTheory.Reformulated.B.Ygb8.main _ S (fun t : D.T => (D.piN ρ t).restrict (hst t))
     (fun a b => by
       ext x
       have h : D.piN ρ a (D.piN ρ b x) = D.piN ρ b (D.piN ρ a x) := by
@@ -1427,20 +1422,6 @@ section Grp
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {σ : L →+* L} {n : ℕ}
 
-theorem diag_comm {a b : GL (Fin n) L} (ha : IsDiagM a) (hb : IsDiagM b) : a * b = b * a := by
-  have hd : ∀ c : GL (Fin n) L, IsDiagM c →
-      (c : Matrix (Fin n) (Fin n) L) = Matrix.diagonal (fun i => (c : Matrix (Fin n) (Fin n) L) i i) := by
-    intro c hc
-    ext i j
-    by_cases h : i = j
-    · subst h; simp
-    · rw [Matrix.diagonal_apply_ne _ h, hc i j h]
-  ext1
-  rw [Units.val_mul, Units.val_mul, hd a ha, hd b hb, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
-  congr 1
-  funext i
-  ring
-
 theorem isBorelU_of_diag {t : GU σ n} (ht : IsDiagM (t : GL (Fin n) L)) : IsBorelU t :=
   fun i j hij => ht i j (ne_of_gt hij)
 
@@ -1549,7 +1530,7 @@ theorem main_D [CompleteSpace L] {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ σ q) (D
   let ξ : ι → ℂ := fun i => chiDeltaU q (fun j => (β j : ℂ)) (i.1.1 : GU σ n)
   have hcommT : ∀ a ∈ D.T, ∀ b ∈ D.T, a * b * a⁻¹ * b⁻¹ ∈ D.J := by
     intro a ha b hb
-    have e : a * b = b * a := Subtype.ext (diag_comm ((hDT a).1 ha) ((hDT b).1 hb))
+    have e : a * b = b * a := Subtype.ext (_root_.GlobalTheory.CompanionTheory.EigTorus.diag_commute ((hDT a).1 ha) ((hDT b).1 hb))
     have e2 : a * b * a⁻¹ * b⁻¹ = 1 := by rw [e]; group
     rw [e2]
     exact D.J.one_mem

@@ -392,7 +392,7 @@ theorem GlobalTheory.Pst.UnitLetter.exists_unit_Dpst : ∀ {l : ℕ} [Fact l.Pri
     rw [← toA_stRep ρm χ hm, hK' i g.1 g.2]
   have hK : LinearIndependent ↥(MaximalUnramifiedExtension l) w := linearIndependent_toA P ρm bD
   have hB : LinearIndependent (Bst P) w := by
-    have := GlobalTheory.RegularRing.linearIndepOn_of_invariant (K := ↥(MaximalUnramifiedExtension l)) (B := Bst P)
+    have := _root_.GlobalTheory.LinearIndependentFixed.linearIndepOn_of_fixed (K := ↥(MaximalUnramifiedExtension l)) (B := Bst P)
       (W := Bst P ⊗[ℚ_[l]] ↥L.1)
       (G := G) (fun g => actSt P ((g.1 : ↥(GK K)) : GQ l)) σ hσ hreg w hv Finset.univ
       (hK.linearIndepOn _)

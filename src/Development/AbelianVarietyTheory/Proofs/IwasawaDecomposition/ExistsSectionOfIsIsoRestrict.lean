@@ -108,7 +108,7 @@ theorem exists_blowup {R : Type} [CommRing R] [IsNoetherianRing R] {X : Scheme.{
   have hjb : j ≫ b = U.ι := graphClosure.incl_fst ..
   have hjc : j ≫ c = φ := graphClosure.incl_snd ..
   have hbc : Proportional σ b c := .of_comp j (by rwa [hjb, hjc])
-  refine ⟨_, b, ⟨GlobalTheory.T.effCartier_of_proportional_sections R X _ U _ L m σ b c j (_root_.GlobalTheory.ProjBlowup.generatesAlong_comap_of_generates X _ J L m σ b hσ) hbc inferInstance inferInstance fun t => ?_,
+  refine ⟨_, b, ⟨_root_.GlobalTheory.ProjBlowup.effCartier_of_proportional R X _ U _ L m σ b c j (_root_.GlobalTheory.ProjBlowup.generatesAlong_comap_of_generates X _ J L m σ b hσ) hbc inferInstance inferInstance fun t => ?_,
     fun W g hg => ?_⟩, ?_,
     fun V hV => graphClosure.isIso_fst_restrict_of_le _ _ _ _ _ V (by rw [Scheme.Opens.opensRange_ι]; exact hV)⟩
   · rw [mem_support_comap, ← Scheme.Hom.comp_apply, hjb]; exact hU t

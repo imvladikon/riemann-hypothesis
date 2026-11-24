@@ -246,8 +246,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.LN
 
-theorem _root_.GlobalTheory.T.arcDatumMatch_length_symm_preimages : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (O' : Type) [CommRing O'] [IsDomain O'] (b : O →+* O') (a : ArcIn D l β O' b) (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (f : O' →+* R) (u : R), (∀ x, x ≠ 0 → IsUnit (f x)) → ¬ IsUnit u → ∀ (P : DegPre R) [Module (𝓞 E) P.X] (oP : letI := H.starRing; P.OAct (𝓞 E)) (φ₁ φ₂ : P.P.A.left ⟶ a.D₀.P.A.left) (he₁ : eSec P.P.A ≫ φ₁ = spMap f ≫ eSec a.D₀.P.A) (he₂ : eSec P.P.A ≫ φ₂ = spMap f ≫ eSec a.D₀.P.A) (w₁ : LB.Iso P.P.L (a.D₀.P.L.pull φ₁)) (w₂ : LB.Iso P.P.L (a.D₀.P.L.pull φ₂)) (e₁ e₂ : a.D₀.X ≃ₗ[𝓞 E] P.X), Match a f u P oP φ₁ he₁ w₁ e₁ → Match a f u P oP φ₂ he₂ w₂ e₂ → ∀ y, a.be (e₁.symm y) (e₁.symm y) = a.be (e₂.symm y) (e₂.symm y) := by
-  first | exact @GlobalTheory.LN.be_symm_eq_of_match
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcDatumMatchLengthSymmPreimagesStatement =====
@@ -717,7 +715,7 @@ theorem same_rel (hL : Laws) (h2 : Laws2) (h4 : Laws4) (h5 : Laws5) (h6 : Laws6)
   have M₂ : Match a f u D''.toPre oD'' _ he₂ w₂ e₂ :=
     ⟨d1', d2', d3', d4', d5', fun F _ _ _ _ uF h1 h2 => (d6' F uF h1 h2).1⟩
   obtain ⟨hφe, hee, -⟩ := GlobalTheory.MatchRigid.rigid hL h2 E H D l c W₀ O' b a R f u hfi D''.toPre oD'' _ _ he₁ he₂ w₁ w₂ e₁ e₂
-    D''.tau_bimult M₁ M₂ (GlobalTheory.T.arcDatumMatch_length_symm_preimages E H D l c _ _ O' b a R f u hf hu' D''.toPre oD'' _ _ he₁ he₂ w₁ w₂ e₁ e₂ M₁ M₂)
+    D''.tau_bimult M₁ M₂ (_root_.GlobalTheory.LN.be_symm_eq_of_match E H D l c _ _ O' b a R f u hf hu' D''.toPre oD'' _ _ he₁ he₂ w₁ w₂ e₁ e₂ M₁ M₂)
     (fun F _ _ _ _ uF hF hu v hv q₀ q₁ q₂ hq₀ hy₁ hy₂ hg₁ hg₂ => by
       have hn : 1 ≤ l.M := le_trans (by norm_num) l.three_le
       have hσ : (l.M = l.A ∧ ∃ v', HEq (a.eta v) (a.etaA v') ∧ Y.oF.eta v = Y.oF.etaA v') ∨

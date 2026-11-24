@@ -849,8 +849,6 @@ section -- clump:auto
 
 open CategoryTheory TensorProduct MvPowerSeries GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Katz
 
-theorem _root_.GlobalTheory.T.rigidifiedExtension_presentation_natural_semilinear : ∀ (p : ℕ) (k k' : Type) [CommRing k] [CommRing k'] (σ : k →+* k') (d e : ℕ) (G : PDivGroup p k) (G' : PDivGroup p k') (c : Chart G d) (c' : Chart G' e) (s : SemiHom σ G' G) (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) k) (φ : Fin d → MvPowerSeries (Fin e) k') (ρ : MvPowerSeries (Fin d ⊕ Fin d) k × (Fin d → k) →ₗ[k] ((G.cocycles × G.omega) ⧸ _root_.LinearMap.range (G.cob.prod (_root_.LinearMap.codRestrict G.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G.A i))).domRestrict G.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n))))))) (ρ' : MvPowerSeries (Fin e ⊕ Fin e) k' × (Fin e → k') →ₗ[k'] ((G'.cocycles × G'.omega) ⧸ _root_.LinearMap.range (G'.cob.prod (_root_.LinearMap.codRestrict G'.omegaSub ((_root_.LinearMap.piMap fun i => _root_.GlobalTheory.AugCot.d (_root_.Bialgebra.counitAlgHom _ (G'.A i))).domRestrict G'.funs) (fun b n => (_root_.GlobalTheory.PDiv.cotMap_d _ _).trans (_root_.congrArg _ (b.2 n))))))), c.IsLawOf μ → (∀ n j, c'.ev n (φ j) = s.app n (c.x n j)) → (∀ t w (z : G.cocycles) (u : G.omega), (∀ n, z.1 n = c.ev₂ n t) → (∀ n, u.1 n = ∑ i, w i • dUnit (R := k) (c.x n i)) → ρ (t, w) = G.rigMk (z, u)) → (∀ t w (z : G'.cocycles) (u : G'.omega), (∀ n, z.1 n = c'.ev₂ n t) → (∀ n, u.1 n = ∑ i, w i • dUnit (R := k') (c'.x n i)) → ρ' (t, w) = G'.rigMk (z, u)) → ∀ t w, IsCoc μ t → ρ' (pull2 φ (MvPowerSeries.map σ t), pullLin φ (fun i => σ (w i))) = s.rig (ρ (t, w)) := by
-  first | (exact @GlobalTheory.Katz.rig_pull_natural_semi)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidifiedExtensionPresentationNaturalSemilinearStatement =====
@@ -1155,7 +1153,7 @@ theorem chartPull_exists {k k' : Type} [Field k] [CharP k p] [PerfectRing k p] [
     {ν : Fin e → MvPowerSeries (Fin e ⊕ Fin e) k'} (hμ : IsLaw μ) (hν : IsLaw ν) (hc : c.IsLawOf μ)
     (hc' : c'.IsLawOf ν) (s : SemiHom σ G' G) :
     ∃ m : Mod p hμ →ₛₗ[WittVector.map (p := p) σ] Mod p hν, IsChartPull c c' hμ hν s m := by
-  obtain ⟨φ, hφ, huniq⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k k' σ d e G G' c c' s
+  obtain ⟨φ, hφ, huniq⟩ := _root_.GlobalTheory.Katz.existsUnique_semiHom_ev p k k' σ d e G G' c c' s
   obtain ⟨m, hm⟩ := semiPull_exists σ hμ hν φ (_root_.GlobalTheory.Katz.isHom_map_of_semiHom_ev p k k' σ d e G G' c c' s μ ν φ hc hc' hφ)
   refine ⟨m, fun ψ hψ f => ?_⟩
   rw [huniq ψ hψ]
@@ -1184,7 +1182,7 @@ theorem chartPull_comp {k k' k'' : Type} [Field k] [CharP k p] [PerfectRing k p]
     (hmu : IsChartPull c c'' hμ hκ u mu) (x : Mod p hμ) : mu x = mt (ms x) := by
   obtain rfl := ringHom_eq_of_app s t u hu
   induction x using Submodule.Quotient.induction_on with | _ f => ?_
-  obtain ⟨φs, hφs, -⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k k' σ d e G G' c c' s
+  obtain ⟨φs, hφs, -⟩ := _root_.GlobalTheory.Katz.existsUnique_semiHom_ev p k k' σ d e G G' c c' s
   obtain ⟨φt, hφt, -⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k' k'' τ e e' G' G'' c' c'' t
   have h3s := _root_.GlobalTheory.Katz.semiHom_constantCoeff_and_ev p k k' σ d e G G' c c' s φs hφs
   have h3t := _root_.GlobalTheory.Katz.semiHom_constantCoeff_and_ev p k' k'' τ e e' G' G'' c' c'' t φt hφt
@@ -1233,7 +1231,7 @@ theorem chartPull_add {k : Type} [Field k] [CharP k p] [PerfectRing k p] {G H : 
     (hfg : IsChartPull cH cG hν hμ (SemiHom.ofHom (f + g)) mfg) (x : Mod p hν) :
     mfg x = mf x + mg x := by
   induction x using Submodule.Quotient.induction_on with | _ y => ?_
-  obtain ⟨φf, hφf, -⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k k (RingHom.id k) e d H G cH cG (SemiHom.ofHom f)
+  obtain ⟨φf, hφf, -⟩ := _root_.GlobalTheory.Katz.existsUnique_semiHom_ev p k k (RingHom.id k) e d H G cH cG (SemiHom.ofHom f)
   obtain ⟨φg, hφg, -⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k k (RingHom.id k) e d H G cH cG (SemiHom.ofHom g)
   have c1 := (_root_.GlobalTheory.Katz.semiHom_constantCoeff_and_ev p k k (RingHom.id k) e d H G cH cG _ φf hφf).1
   have c2 := (_root_.GlobalTheory.Katz.semiHom_constantCoeff_and_ev p k k (RingHom.id k) e d H G cH cG _ φg hφg).1
@@ -1266,7 +1264,7 @@ theorem chartPull_red {k k' : Type} [Field k] [CharP k p] [PerfectRing k p] [Fie
       r' (Submodule.Quotient.mk f) = ρ' (t, w)) (x : Mod p hμ) :
     r' (m x) = s.rig (r x) := by
   induction x using Submodule.Quotient.induction_on with | _ f => ?_
-  obtain ⟨φ, hφ, -⟩ := GlobalTheory.T.existsUnique_powerSeries_semilinear_pDivGroupHom_chart p k k' σ d e G G' c c' s
+  obtain ⟨φ, hφ, -⟩ := _root_.GlobalTheory.Katz.existsUnique_semiHom_ev p k k' σ d e G G' c c' s
   have hhom := _root_.GlobalTheory.Katz.isHom_map_of_semiHom_ev p k k' σ d e G G' c c' s μ ν φ hc hc' hφ
   obtain ⟨g, hg, hmg⟩ := hm φ hφ f
   have hD := _root_.GlobalTheory.quasiLog_reduces p k d μ hμ
@@ -1277,7 +1275,7 @@ theorem chartPull_red {k k' : Type} [Field k] [CharP k p] [PerfectRing k p] [Fie
   have hP := GlobalTheory.KatzPull.quasiLog_pull p k' e d ν _ hν hσμ φ hhom _ hB.1
   rw [hmg, hr f t w ht hw, hr' g (pull2 φ (MvPowerSeries.map σ t)) (pullLin φ (fun i => σ (w i)))
     (by rw [hg]; exact hP.2.1 _ (hB.2.2.1 t ht)) (by rw [hg]; exact hP.2.2 _ (hB.2.2.2 w hw))]
-  exact GlobalTheory.T.rigidifiedExtension_presentation_natural_semilinear p k k' σ d e G G' c c' s μ φ ρ ρ' hc hφ hρ hρ' t w hcoc
+  exact _root_.GlobalTheory.Katz.rig_pull_natural_semi p k k' σ d e G G' c c' s μ φ ρ ρ' hc hφ hρ hρ' t w hcoc
 
 theorem chartPull_frob {k : Type} [Field k] [CharP k p] [PerfectRing k p] {G : PDivGroup p k} {d : ℕ}
     (c : Chart G d) {μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) k} (hμ : IsLaw μ)

@@ -86,9 +86,6 @@ theorem lineUnit_of_tied (T : LocTied l P AI) (K : FinExt l) : LineUnit (P.PD K)
   obtain ⟨x, hx⟩ := h ⟨g, hg⟩
   exact ⟨x, by rw [← P.PD_actB K ⟨g, hg⟩, hx, Algebra.smul_def]⟩
 
-theorem matRep_apply {L Γ : Type} [CommRing L] [Group Γ] {k : ℕ} (M : Γ →* Matrix (Fin k) (Fin k) L)
-    (g : Γ) (x : Fin k → L) : matRep M g x = (M g).mulVec x := rfl
-
 theorem dot_dual {L Γ : Type} [CommRing L] [Group Γ] {k : ℕ} (M : Γ →* Matrix (Fin k) (Fin k) L)
     (g : Γ) (x y : Fin k → L) : (M g).mulVec x ⬝ᵥ (M g⁻¹).transpose.mulVec y = x ⬝ᵥ y := by
   rw [Matrix.mulVec_transpose, dotProduct_comm, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec,
@@ -119,7 +116,7 @@ theorem tateDual (T : LocTied l P AI) (K LL : FinExt l)
       LinearMap.id 1 rfl (fun g x => ?_) (fun g x => ?_)
       (GlobalTheory.CycPow.cyc_zpow_crys_dR_jump l P AI T K LL 1).1 h1
     · rw [zpow_one]; rfl
-    · rw [matRep_apply, hM, Matrix.smul_mulVec]; rfl
+    · rw [_root_.GlobalTheory.SummandJumps.matRep_apply, hM, Matrix.smul_mulVec]; rfl
   · intro τ a
     have h := (GlobalTheory.DRDual.twisted_dual_deRham l P AI T K LL _ (matRep M) _ (matRep M')
       (dotProductEquiv ↥LL.1 (Fin k)).toLinearMap 1 (dotProductEquiv ↥LL.1 (Fin k)).bijective

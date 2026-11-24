@@ -365,7 +365,7 @@ theorem inv_iso (hT : Formalism.GaloisCohomology.LocalTateDualityK) : InvIso := 
       ext y; simp [F, Submodule.mem_one]
     rw [this]
     exact hF.emb.isOpen_range.preimage (continuous_const_smul _)
-  have hFfg := frac_isFGTop hO hF
+  have hFfg := _root_.GlobalTheory.isFGTop_comap_lsmul_one hO hF
   have hred : ∀ n, ∀ y ∈ F n, toKO O y ∈ T n := fun n y hy => by
     simp only [T, LinearMap.mem_ker, LinearMap.lsmul_apply, F, Submodule.mem_comap] at hy ⊢
     rw [← map_smul]

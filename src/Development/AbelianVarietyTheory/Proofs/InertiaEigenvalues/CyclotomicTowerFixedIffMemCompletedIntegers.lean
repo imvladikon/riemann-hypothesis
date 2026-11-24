@@ -133,14 +133,6 @@ theorem exists_reps {G : Type} [Group G] (H N : Subgroup G) [(N.subgroupOf H).Fi
       rw [QuotientGroup.out_eq'] at this
       rw [this]
 
-theorem sum_reps_invariant {G M : Type} [Group G] [AddCommMonoid M] (H N : Subgroup G)
-    (S : Finset G) (hS : ∀ s ∈ S, s ∈ H) (hu : ∀ h ∈ H, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ N)
-    (f : G → M) (hf : ∀ g, ∀ n ∈ N, f (g * n) = f g) (h : G) (hh : h ∈ H) :
-    ∑ s ∈ S, f (h * s) = ∑ s ∈ S, f s := by
-  first
-  | (apply _root_.GlobalTheory.LeftTransversalSum.sum_mul_left_transversal <;> assumption)
-  | (intros; exact _root_.GlobalTheory.LeftTransversalSum.sum_mul_left_transversal ..)
-
 variable {l : ℕ} [Fact l.Prime]
 
 theorem stabilizer_finiteIndex (x : Om l) : (MulAction.stabilizer (GQ l) x).FiniteIndex := by
@@ -214,7 +206,7 @@ theorem fixed_iff_mem_Ohat : ∀ (l : ℕ) [Fact l.Prime]
       intro h hh
 
       rw [hw, map_sum]
-      refine sum_reps_invariant _ _ S hS hu (fun g => g (b * x)) ?_ h hh
+      refine _root_.GlobalTheory.LeftTransversalSum.sum_mul_left_transversal _ _ S hS hu (fun g => g (b * x)) ?_ h hh
       intro g n hn
       have := (IntermediateField.mem_fixingSubgroup_iff _ _).1 hn _ (L.mul_mem hbL hxL)
       simp only [AlgEquiv.mul_apply, this]

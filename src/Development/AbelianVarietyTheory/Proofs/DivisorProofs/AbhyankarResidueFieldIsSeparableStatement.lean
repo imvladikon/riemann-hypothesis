@@ -131,12 +131,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.dvr_exists_unit_pow_eq_mul_uniformizer : ∀ (T V : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [CommRing V] [IsDomain V]
-    [IsDiscreteValuationRing V] [Algebra T V], Function.Injective (algebraMap T V) →
-    ∀ (α : V) (ϖ u : T) (m k : ℕ), Irreducible ϖ → IsUnit u → 0 < k →
-    α ^ (m * k) = algebraMap T V (u * ϖ ^ k) →
-    ∃ γ : V, IsUnit γ ∧ α ^ m = γ * algebraMap T V ϖ ∧ γ ^ k = algebraMap T V u := by
-  first | (exact @GlobalTheory.dvr_pow_mul_eq_unit_mul_pow_unif)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrExistsUnitPowEqMulUniformizerStatement =====
@@ -269,15 +263,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.kummer_aeval_valuation_dvr : ∀ (T V : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [CommRing V] [IsDomain V]
-    [IsDiscreteValuationRing V] [Algebra T V] [IsLocalHom (algebraMap T V)],
-    Function.Injective (algebraMap T V) →
-    ∀ (γ : V) (ϖ u : T) (k : ℕ), Irreducible ϖ → IsUnit u → IsUnit (k : T) → 0 < k →
-    γ ^ k = algebraMap T V u →
-    ∀ h : Polynomial T, Polynomial.aeval γ h = 0 ∨
-      ∃ (a : ℕ) (h' c : Polynomial T), IsUnit (Polynomial.aeval γ c) ∧ IsUnit (Polynomial.aeval γ h') ∧
-        Polynomial.aeval γ c * Polynomial.aeval γ h = algebraMap T V ϖ ^ a * Polynomial.aeval γ h' := by
-  first | (exact @GlobalTheory.kummer_valuation)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerAevalValuationDvrStatement =====
@@ -433,18 +418,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.kummer_residue_mem_adjoin_unit : ∀ (T V : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [CommRing V] [IsDomain V]
-    [IsDiscreteValuationRing V] [Algebra T V] [IsLocalHom (algebraMap T V)],
-    Function.Injective (algebraMap T V) →
-    ∀ (α γ : V) (ϖ : T) (m : ℕ), Irreducible ϖ → 0 < m → IsUnit γ →
-    α ^ m = γ * algebraMap T V ϖ →
-    (∀ h : Polynomial T, Polynomial.aeval γ h = 0 ∨
-      ∃ (a : ℕ) (h' c : Polynomial T), IsUnit (Polynomial.aeval γ c) ∧ IsUnit (Polynomial.aeval γ h') ∧
-        Polynomial.aeval γ c * Polynomial.aeval γ h = algebraMap T V ϖ ^ a * Polynomial.aeval γ h') →
-    (∀ v : V, ∃ f g : Polynomial T, Polynomial.aeval α g ≠ 0 ∧ Polynomial.aeval α g * v = Polynomial.aeval α f) →
-    ∀ v : V, IsLocalRing.residue V v ∈
-      IntermediateField.adjoin (IsLocalRing.ResidueField T) {IsLocalRing.residue V γ} := by
-  first | (exact @GlobalTheory.kummer_residue_mem_adjoin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerResidueMemAdjoinUnitStatement =====
@@ -884,13 +857,6 @@ open IsLocalRing
 
 
 
-theorem _root_.GlobalTheory.T.localization_normalization_rootAdjoin_isDVR : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D],
-    Nonempty (D ≃ₐ[S] AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) → Irreducible π → IsUnit (e : S) →
-    ∀ [IsDomain D] [IsDiscreteValuationRing D] (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
-    ∃ _ : IsDomain (Localization.AtPrime Q), IsDiscreteValuationRing (Localization.AtPrime Q) := by
-  first | (exact @GlobalTheory.LocNormDVR.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationNormalizationRootAdjoinIsDVRStatement =====
@@ -988,16 +954,6 @@ open IsLocalRing
 
 
 
-theorem _root_.GlobalTheory.T.exists_mul_eq_aeval_root_normalisation : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D]
-    (φ : D ≃ₐ[S] AdjoinRoot (Polynomial.X ^ e - Polynomial.C π))
-    (b : integralClosure D (TensorProduct S D L)),
-    ∃ (f : Polynomial (integralClosure S L)) (s : S), s ≠ 0 ∧
-      algebraMap S (integralClosure D (TensorProduct S D L)) s * b =
-        Polynomial.aeval (algebraMap D (integralClosure D (TensorProduct S D L))
-          (φ.symm (AdjoinRoot.root (Polynomial.X ^ e - Polynomial.C π)))) f := by
-  first | (exact @GlobalTheory.normalisation_mul_eq_aeval_root)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisationMulEqAevalRootStatement =====
@@ -1009,10 +965,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.uniformizer_eq_pow_ramificationIdx_mul_unit_integralClosure : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D] (P : Ideal (integralClosure S L)) [P.IsMaximal], Irreducible π → algebraMap S (integralClosure S L) π ∈ P → ∃ ϖ : Localization.AtPrime P, Irreducible ϖ ∧ ∃ u : (Localization.AtPrime P)ˣ, algebraMap S (Localization.AtPrime P) π = ϖ ^ P.ramificationIdx S * (u : Localization.AtPrime P) := by
-  first | (exact @GlobalTheory.pi_eq_pow_ramificationIdx_mul_unit)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformizerEqPowRamificationIdxMulUnitIntegralClStatement =====
@@ -1035,9 +987,9 @@ theorem residueField_isSeparable_of_kummer_root (T V : Type) [CommRing T] [IsDom
     (hα : α ^ (m * k) = algebraMap T V (u * ϖ ^ k))
     (hgen : ∀ v : V, ∃ f g : Polynomial T, Polynomial.aeval α g ≠ 0 ∧ Polynomial.aeval α g * v = Polynomial.aeval α f) :
     Algebra.IsSeparable (IsLocalRing.ResidueField T) (IsLocalRing.ResidueField V) := by
-  obtain ⟨γ, hγu, hαγ, hγk⟩ := GlobalTheory.T.dvr_exists_unit_pow_eq_mul_uniformizer T V hinj α ϖ u m k hϖ hu hk0 hα
-  have hK := GlobalTheory.T.kummer_aeval_valuation_dvr T V hinj γ ϖ u k hϖ hu hk hk0 hγk
-  have hres := GlobalTheory.T.kummer_residue_mem_adjoin_unit T V hinj α γ ϖ m hϖ hm0 hγu hαγ hK hgen
+  obtain ⟨γ, hγu, hαγ, hγk⟩ := _root_.GlobalTheory.dvr_pow_mul_eq_unit_mul_pow_unif T V hinj α ϖ u m k hϖ hu hk0 hα
+  have hK := _root_.GlobalTheory.kummer_valuation T V hinj γ ϖ u k hϖ hu hk hk0 hγk
+  have hres := _root_.GlobalTheory.kummer_residue_mem_adjoin T V hinj α γ ϖ m hϖ hm0 hγu hαγ hK hgen
   set g := IsLocalRing.residue V γ
   have hsepg : IsSeparable (IsLocalRing.ResidueField T) g := by
     have hroot : Polynomial.aeval g (Polynomial.X ^ k - Polynomial.C (IsLocalRing.residue T u)) = 0 := by
@@ -1096,7 +1048,7 @@ theorem abhyankar_residueField_isSeparable : ∀ (S K L : Type) [CommRing S] [Is
   haveI : P.LiesOver (maximalIdeal S) :=
     ⟨(IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal P)).symm⟩
   letI := Localization.AtPrime.algebraOfLiesOver P Q
-  obtain ⟨hVd, hVdvr⟩ := GlobalTheory.T.localization_normalization_rootAdjoin_isDVR S K L π e D ⟨φ⟩ hπ he Q
+  obtain ⟨hVd, hVdvr⟩ := _root_.GlobalTheory.LocNormDVR.main S K L π e D ⟨φ⟩ hπ he Q
   have hinj : Function.Injective
       (algebraMap (Localization.AtPrime P) (Localization.AtPrime Q)) := by
     rw [injective_iff_map_eq_zero]
@@ -1129,7 +1081,7 @@ theorem abhyankar_residueField_isSeparable : ∀ (S K L : Type) [CommRing S] [Is
     exact IsLocalization.mk'_zero _
   have hπP : algebraMap S (integralClosure S L) π ∈ P :=
     (Ideal.mem_of_liesOver P (maximalIdeal S) π).mp ((IsLocalRing.mem_maximalIdeal π).2 hπ.not_isUnit)
-  obtain ⟨ϖ, hϖ, u', hπu'⟩ := GlobalTheory.T.uniformizer_eq_pow_ramificationIdx_mul_unit_integralClosure S K L π e D P hπ hπP
+  obtain ⟨ϖ, hϖ, u', hπu'⟩ := _root_.GlobalTheory.pi_eq_pow_ramificationIdx_mul_unit S K L π e D P hπ hπP
   set u : Localization.AtPrime P := (u' : Localization.AtPrime P) with hu_def
   have hu : IsUnit u := u'.isUnit
   have hπu : algebraMap S (Localization.AtPrime P) π = u * ϖ ^ P.ramificationIdx S := by
@@ -1200,8 +1152,8 @@ theorem abhyankar_residueField_isSeparable : ∀ (S K L : Type) [CommRing S] [Is
         (algebraMap D _ t)) f := by
     intro v
     obtain ⟨⟨b, c⟩, rfl⟩ := IsLocalization.mk'_surjective Q.primeCompl v
-    obtain ⟨fb, sb, hsb, hb⟩ := GlobalTheory.T.exists_mul_eq_aeval_root_normalisation S K L π e D φ b
-    obtain ⟨fc, sc, hsc, hc⟩ := GlobalTheory.T.exists_mul_eq_aeval_root_normalisation S K L π e D φ c.1
+    obtain ⟨fb, sb, hsb, hb⟩ := _root_.GlobalTheory.normalisation_mul_eq_aeval_root S K L π e D φ b
+    obtain ⟨fc, sc, hsc, hc⟩ := _root_.GlobalTheory.normalisation_mul_eq_aeval_root S K L π e D φ c.1
     refine ⟨Polynomial.C (algebraMap S _ sc) * fb.map (algebraMap (integralClosure S L) (Localization.AtPrime P)),
       Polynomial.C (algebraMap S _ sb) * fc.map (algebraMap (integralClosure S L) (Localization.AtPrime P)), ?_, ?_⟩
     · rw [map_mul, Polynomial.aeval_C, hpoly, ← hc]
@@ -1274,17 +1226,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.abhyankar_residueField_isSeparable_alt : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
-    [Field K] [Algebra S K] [IsFractionRing S K] [Field L] [Algebra K L] [Algebra S L] [IsScalarTower S K L]
-    [FiniteDimensional K L] [Algebra.IsSeparable K L] (π : S) (e : ℕ) (D : Type) [CommRing D] [Algebra S D],
-    Nonempty (D ≃ₐ[S] AdjoinRoot (Polynomial.X ^ e - Polynomial.C π)) → Irreducible π → IsUnit (e : S) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → P.ramificationIdx S ∣ e) →
-    (∀ P : Ideal (integralClosure S L), P.IsMaximal → ∀ [P.LiesOver (maximalIdeal S)],
-      Algebra.IsSeparable (S ⧸ maximalIdeal S) (integralClosure S L ⧸ P)) →
-    ∀ [IsDomain D] [IsDiscreteValuationRing D] (Q : Ideal (integralClosure D (TensorProduct S D L))) [Q.IsMaximal],
-    ∀ [Q.LiesOver (maximalIdeal D)],
-    Algebra.IsSeparable (D ⧸ maximalIdeal D) (integralClosure D (TensorProduct S D L) ⧸ Q) := by
-  first | (exact @GlobalTheory.abhyankar_residueField_isSeparable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarResidueFieldIsSeparableStatement =====

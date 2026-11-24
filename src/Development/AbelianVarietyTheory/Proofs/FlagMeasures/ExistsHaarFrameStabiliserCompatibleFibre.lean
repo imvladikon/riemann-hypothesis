@@ -997,12 +997,7 @@ open scoped TensorProduct ENNReal
 
 namespace GlobalTheory.LocalStabiliserHaar
 
-theorem gramR_ratTup {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R]
-    [Algebra F R] (σ : E →ₐ[F] E) {n a : ℕ} (J : Matrix (Fin n) (Fin n) E)
-    (X : Fin a → Fin n → E) :
-    gramR R σ J (ratTup (F := F) R X) = (gramE σ J X).map (inclR R) := by
-  ext i j
-  simp [gramR, gramE, hE, hR, Formalism.UG.hform, ratTup, JR, sigR, inclR, Matrix.map_apply, mul_assoc]
+alias gramR_ratTup := _root_.GlobalTheory.LocalWittND.gramR_ratTup
 
 theorem linearIndependent_smul {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type)
     [CommRing R] [Algebra F R] (σ : E →ₐ[F] E) {n a : ℕ} (J : Matrix (Fin n) (Fin n) E)

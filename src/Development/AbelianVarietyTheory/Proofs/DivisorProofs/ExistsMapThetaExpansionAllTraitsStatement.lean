@@ -383,8 +383,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum GlobalTheory.Mum.Desc
 
-theorem _root_.GlobalTheory.T.lineBundlePowSections_algClosure_fieldBaseChange : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R))) (F : Type) [Field F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) (N : ℕ), letI : Algebra (Kb R) F := em.toRingHom.toAlgebra; GlobalTheory.FieldBaseChange.IsExtension (secExt A em N) := by
-  first | exact @GlobalTheory.Mum.Desc.isExtension_secExt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundlePowSectionsAlgClosureFieldBaseChangeStatement =====
@@ -422,8 +420,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum GlobalTheory.Mum.Desc
 
-theorem _root_.GlobalTheory.T.thetaGroup_symmetricLift_action_fieldExtension : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R))) (F : Type) [Field F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) (N : ℕ), Odd N → ∀ (x : TFK (R := R) (Kb R) ⟶ A.A) (θ : ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) (Kb R))) (θ' : ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) F)), SymLift A.A A.L N N x θ → SymLift A.A A.L N N (baseEm em ≫ x) θ' → ∀ t t' : SecF A (Kb R) N, IsActOf A.A A.L N θ t t' → IsActOf A.A A.L N θ' (secExt A em N t) (secExt A em N t') := by
-  first | exact @GlobalTheory.Mum.Desc.isActOf_secExt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGroupSymmetricLiftActionFieldExtensionStatement =====
@@ -500,8 +496,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum GlobalTheory.Mum.Desc
 
-theorem _root_.GlobalTheory.T.torsionLabels_surjective_of_larger_algClosed_field : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (N : ℕ), 1 ≤ N → ∀ (lab : QkPt D (Kb R) N → (TFK (R := R) (Kb R) ⟶ A.A)) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) (lab' : QkPt D F N → (TFK (R := R) F ⟶ A.A)), LabExt em lab lab' → (∀ x : TFK (R := R) F ⟶ A.A, x ^ N = 1 ↔ ∃ p, lab' p = x) → ∀ x : TFK (R := R) (Kb R) ⟶ A.A, x ^ N = 1 ↔ ∃ p, lab p = x := by
-  first | exact @GlobalTheory.Mum.Desc.lab_onto_of_labExt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelsSurjectiveOfLargerAlgClosedFieldStatement =====
@@ -628,9 +622,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.Mum.Desc
 
-theorem lawsLL : GlobalTheory.UT.LL :=
-  ⟨GlobalTheory.allSixLaws.1, GlobalTheory.allSixLaws.2.1, GlobalTheory.allSixLaws.2.2.1, GlobalTheory.allSixLaws.2.2.2.1, GlobalTheory.allSixLaws.2.2.2.2.1⟩
-
 theorem eqv_down : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R))
     (A : PolAV (Sp (FractionRing R))) (N : ℕ), Odd N → ∀ (lab : QkPt D.toPre (Kb R) N → (TFK (R := R) (Kb R) ⟶ A.A))
     (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) lab' E',
@@ -638,10 +629,10 @@ theorem eqv_down : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Bas
   intro R _ _ _ hB D A N hN lab F _ _ _ em lab' E' hL hE
   obtain ⟨hAdm, hC⟩ := hB
   have hN1 : 1 ≤ N := hN.pos
-  have honto := GlobalTheory.T.torsionLabels_surjective_of_larger_algClosed_field R D.toPre A N hN1 lab F em lab' hL hE.onto
+  have honto := _root_.GlobalTheory.Mum.Desc.lab_onto_of_labExt R D.toPre A N hN1 lab F em lab' hL hE.onto
   have hframe : ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing R) K] (p : QkPt D.toPre K N),
       ∃ w, GlobalTheory.UT.TXFrame N p w := fun K _ _ _ p =>
-    (GlobalTheory.UT.SymFrame.main lawsLL R (maximalIdeal R) hAdm D K N hN p).1
+    (GlobalTheory.UT.SymFrame.main _root_.GlobalTheory.firstFiveLaws R (maximalIdeal R) hAdm D K N hN p).1
   let J := {q : (p : QkPt D.toPre (Kb R) N) × GlobalTheory.UT.Frm D.toPre (Kb R) N p.g.b ×
       ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) (Kb R)) // GlobalTheory.UT.TXFrame N q.1 q.2.1 ∧ SymLift A.A A.L N N (lab q.1) q.2.2}
   choose a ha using fun i : J => GlobalTheory.T.exists_linearMap_torsionPoint_symmetricFrame_operator R (maximalIdeal R) hAdm D (Kb R) N hN i.1.1 i.1.2.1 i.2.1
@@ -661,12 +652,12 @@ theorem eqv_down : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Bas
     (GlobalTheory.UU.finrank_fam_of_laws GlobalTheory.allSixLaws.1 GlobalTheory.allSixLaws.2.1 R D.toPre D.tau_bimult F N hN1).1
   have hfamExt : GlobalTheory.FieldBaseChange.IsExtension (famExt D.toPre em N) :=
     GlobalTheory.FieldBaseChange.isExtension_famPull D.toPre (Kb R) F _ hN1
-  have hsecExt := GlobalTheory.T.lineBundlePowSections_algClosure_fieldBaseChange R A F em N
+  have hsecExt := _root_.GlobalTheory.Mum.Desc.isExtension_secExt R A F em N
   have ca : ∀ i v, a' i (famExt D.toPre em N v) = famExt D.toPre em N (a i v) := fun i v =>
     ((ha' i _ _).1 (GlobalTheory.T.torsionPointOperator_symmetricFrame_fieldExtension R (maximalIdeal R) hAdm D F em N hN i.1.1 i.1.2.1 (p' i) (w' i) i.2.1 (hw' i) (hp' i) v _
       ((ha i v _).2 rfl))).symm
   have cb : ∀ i t, b' i (secExt A em N t) = secExt A em N (b i t) := fun i t =>
-    ((hb' i _ _).1 (GlobalTheory.T.thetaGroup_symmetricLift_action_fieldExtension R A F em N hN (lab i.1.1) i.1.2.2 (θ' i) i.2.2 (by rw [← hlab i]; exact hθ' i) t _
+    ((hb' i _ _).1 (_root_.GlobalTheory.Mum.Desc.isActOf_secExt R A F em N hN (lab i.1.1) i.1.2.2 (θ' i) i.2.2 (by rw [← hlab i]; exact hθ' i) t _
       ((hb i t _).2 rfl))).symm
   let E'' : Fam D.toPre F N →ₗ[F] SecF A F N :=
     { toFun := E'
@@ -922,8 +913,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum GlobalTheory.Mum.UpExt GlobalTheory.FieldBaseChange ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.equivariant_linearExtension_to_algClosedField : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (N : ℕ), Odd N → ∀ (lab : QkPt D.toPre (Kb R) N → (TFK (R := R) (Kb R) ⟶ A.A)) (E₀ : Fam D.toPre (Kb R) N → SecK A.L (snd (TFK (R := R) (Kb R)) A.A).left N), Eqv D.toPre A (Kb R) N lab E₀ → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] [Algebra (Kb R) F] [IsScalarTower (FractionRing R) (Kb R) F] (lab' : QkPt D.toPre F N → (TFK (R := R) F ⟶ A.A)), LabExt (IsScalarTower.toAlgHom (FractionRing R) (Kb R) F) lab lab' → ∀ (E' : Fam D.toPre F N →ₗ[F] SecF A F N), (∀ s, E' (famPull D.toPre (Kb R) F GlobalTheory.globalFns_holds N s) = secPull A (Kb R) F N (E₀ s)) → ∀ (p : QkPt D.toPre F N) w (θ : ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) F)) (s s' : Fam D.toPre F N), GlobalTheory.UT.TXFrame N p w → SymLift A.A A.L N N (lab' p) θ → PhiRel D.toPre F N p w s s' → IsActOf A.A A.L N θ (E' s) (E' s') := by
-  first | exact @GlobalTheory.Mum.UpAct.act_extension
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivariantLinearExtensionToAlgClosedFieldStatement =====
@@ -1064,8 +1053,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum GlobalTheory.Mum.UpExt GlobalTheory.FieldBaseChange ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_torsion_point_from_fractionAlgClosure : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R))) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) (N : ℕ), 1 ≤ N → ∀ x : TFK (R := R) F ⟶ A.A, x ^ N = 1 → ∃ y : TFK (R := R) (Kb R) ⟶ A.A, y ^ N = 1 ∧ x.left = spMap em.toRingHom ≫ y.left := by
-  first | exact @GlobalTheory.Mum.UpExt.torsion_from_closure
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionPointFromFractionAlgClosureStatement =====
@@ -1156,7 +1143,7 @@ theorem exists_eqv_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
     intro x
     constructor
     · intro hx
-      obtain ⟨y, hy, hxy⟩ := GlobalTheory.T.exists_torsion_point_from_fractionAlgClosure R A F em N hN1 x hx
+      obtain ⟨y, hy, hxy⟩ := _root_.GlobalTheory.Mum.UpExt.torsion_from_closure R A F em N hN1 x hx
       obtain ⟨p₀, hp₀⟩ := (hE.onto y).1 hy
       obtain ⟨p', hp', -⟩ := hq.1 p₀
       refine ⟨p', Over.OverMorphism.ext ?_⟩
@@ -1169,7 +1156,7 @@ theorem exists_eqv_ext : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
   refine ⟨fun s => e' s, ⟨he', fun s s' s'' h j => ?_, fun c s s' h j => ?_, onto,
     fun p => ((GlobalTheory.UT.SymFrame.main GlobalTheory.firstFiveLaws R (maximalIdeal R) hR.1 D F N hN p).1),
     fun p => GlobalTheory.SymFrameClause.exists_symLift R A F N hN (lab' p) ((onto _).2 ⟨p, rfl⟩),
-    fun p w θ s s' hw hθ hs => GlobalTheory.T.equivariant_linearExtension_to_algClosedField R hR D A N hN lab E₀ hE F lab' (hem ▸ hlab) e' hc p w θ s s' hw hθ hs⟩, ?_⟩
+    fun p w θ s s' hw hθ hs => _root_.GlobalTheory.Mum.UpAct.act_extension R hR D A N hN lab E₀ hE F lab' (hem ▸ hlab) e' hc p w θ s s' hw hθ hs⟩, ?_⟩
   · obtain rfl : s'' = s + s' := fam_ext h
     rw [map_add (f := _)]
     rfl
@@ -1202,8 +1189,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_equivariant_bijection_larger_closed_field : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (N : ℕ), Odd N → ∀ (lab : QkPt D.toPre (Kb R) N → (TFK (R := R) (Kb R) ⟶ A.A)) E₀ (Φ : IntFam (maximalIdeal R) D.toPre N → H0 A.L N), Eqv D.toPre A (Kb R) N lab E₀ → (∀ F₀ s, F₀.Over s → Agree A.L (E₀ s) (Φ F₀)) → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (em : Kb R →ₐ[FractionRing R] F) lab', LabExt em lab lab' → ∃ E', Eqv D.toPre A F N lab' E' ∧ ∀ F₀ s, F₀.Over s → Agree A.L (E' s) (Φ F₀) := by
-  first | exact @GlobalTheory.Mum.UpExt.exists_eqv_ext
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivariantBijectionLargerClosedFieldStatement =====
@@ -1228,9 +1213,9 @@ theorem gs_liftFun_top {S0 : Scheme.{0}} (A : Over S0) {T : Over S0} (W : (T ⊗
 
 theorem fvalue_const : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (C : LabCover D) (j : ℕ) (wA : LB.Iso C.A.L (C.P.L.L.pull C.α)), wA.IsGen → ∀ E₀ (Φ₀ : IntFam (maximalIdeal R) D.toPre (C.n ^ j) → H0 C.A.L (C.n ^ j)), Eqv D.toPre C.A (Kb R) (C.n ^ j) (C.lab j) E₀ → (∀ F₀ s, F₀.Over s → Agree C.A.L (E₀ s) (Φ₀ F₀)) → ∀ (Φ : IntFam (maximalIdeal R) D.toPre (C.n ^ j) → SecK C.P.L.L C.α (C.n ^ j)), (∀ F₀ (Z : Scheme.{0}) (p : Z ⟶ C.A.A.left) (z : Z) J J', Good C.P.L.L z J → Good C.A.L z J' → sval (Φ F₀) p z J = (gw wA p z (J (p ≫ C.α)) (J' p) ^ (C.n ^ j)).val * sval (Φ₀ F₀) p z J') → ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] [Algebra (FractionRing W) F] (em : Kb R →ₐ[FractionRing R] F), (∀ r, algebraMap (FractionRing R) F (algebraMap R _ r) = algebraMap (FractionRing W) F (algebraMap W _ (T.φ r))) → ∃ c : F, c ≠ 0 ∧ ∀ (F₀ : IntFam (maximalIdeal R) D.toPre (C.n ^ j)) (σ : SecK C.P.L.L T.β (C.n ^ j)), T.ExpBy 1 σ F₀ → ∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ (TFK (R := R) F ⊗ C.A.A).left), p ≫ T.β = p' ≫ (snd (TFK (R := R) F) C.A.A).left ≫ C.α → p ≫ T.G.hom = p' ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _)) → ∀ z J, Good C.P.L.L z J → sval σ p z J = gs (p' ≫ (fst (TFK (R := R) F) C.A.A).left) z ⊤ (fnF F c) * sval (Φ F₀) (p' ≫ (snd (TFK (R := R) F) C.A.A).left) z J := by
   intro R _ _ _ hR D C j wA hwA E₀ Φ₀ hE₀ hΦ₀ Φ hΦ W _ _ _ T F _ _ _ _ em hem
-  obtain ⟨lab, E, hlab, hE, hT⟩ := GlobalTheory.T.trait_inverse_expansion_equivariant_labels R hR D C j wA hwA W T F em hem
+  obtain ⟨lab, E, hlab, hE, hT⟩ := _root_.GlobalTheory.Mum.traitInv_eqv_value R hR D C j wA hwA W T F em hem
   have hodd : Odd (C.n ^ j) := C.n_odd.pow
-  obtain ⟨E', hE', hAg⟩ := GlobalTheory.T.exists_equivariant_bijection_larger_closed_field R hR D C.A (C.n ^ j) hodd (C.lab j) E₀ Φ₀ hE₀ hΦ₀ F em lab hlab
+  obtain ⟨E', hE', hAg⟩ := _root_.GlobalTheory.Mum.UpExt.exists_eqv_ext R hR D C.A (C.n ^ j) hodd (C.lab j) E₀ Φ₀ hE₀ hΦ₀ F em lab hlab
   haveI : CharZero R := hR.2
   obtain ⟨c₀, hc₀⟩ := GlobalTheory.Mum.eqv_eq_smul R (maximalIdeal R) D C.A F (C.n ^ j) hodd lab E E' hE hE'
   refine ⟨(c₀ : F)⁻¹, inv_ne_zero c₀.ne_zero, ?_⟩
@@ -1508,8 +1493,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.relatingConstant_mem_traitFractionField : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (C : LabCover D) (k : ℕ) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (F : Type) [Field F] [Algebra (FractionRing R) F] [Algebra (FractionRing W) F], (∀ r, algebraMap (FractionRing R) F (algebraMap R _ r) = algebraMap (FractionRing W) F (algebraMap W _ (T.φ r))) → ∀ (σ : SecK C.P.L.L T.β k) (s : SecK C.P.L.L C.α k) (c : F), (∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ (TFK (R := R) F ⊗ C.A.A).left), p ≫ T.β = p' ≫ (snd (TFK (R := R) F) C.A.A).left ≫ C.α → p ≫ T.G.hom = p' ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _)) → ∀ z J, Good C.P.L.L z J → sval σ p z J = gs (p' ≫ (fst (TFK (R := R) F) C.A.A).left) z ⊤ (fnF F c) * sval s (p' ≫ (snd (TFK (R := R) F) C.A.A).left) z J) → (∃ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ (TFK (R := R) F ⊗ C.A.A).left) (_ : p ≫ T.β = p' ≫ (snd (TFK (R := R) F) C.A.A).left ≫ C.α) (_ : p ≫ T.G.hom = p' ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _))) (z : Z) (J : (Z ⟶ C.G.left) → C.P.L.L.ι), Good C.P.L.L z J ∧ sval σ p z J ≠ 0) → ∃ x : FractionRing W, algebraMap (FractionRing W) F x = c := by
-  first | exact @GlobalTheory.Mum.RatConst.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelatingConstantMemTraitFractionFieldStatement =====
@@ -1529,10 +1512,7 @@ noncomputable section
 
 namespace GlobalTheory.Mum.ValDescent
 
-theorem spMap_comp {A B C' : Type} [CommRing A] [CommRing B] [CommRing C'] (f : A →+* B) (g : B →+* C') :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  show Spec.map _ = Spec.map _ ≫ Spec.map _
-  rw [← Spec.map_comp]; rfl
+alias spMap_comp := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem eq_of_comp_jK {R : Type} [CommRing R] [IsDomain R] {X : Scheme.{0}} {f g : X ⟶ Sp (FractionRing R)}
     (h : f ≫ jK R = g ≫ jK R) : f = g := by
@@ -1661,8 +1641,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.sectionValues_identity_descends_to_fibreProduct : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (C : LabCover D) (k : ℕ) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (F : Type) [Field F] [Algebra (FractionRing R) F] [Algebra (FractionRing W) F], (∀ r, algebraMap (FractionRing R) F (algebraMap R _ r) = algebraMap (FractionRing W) F (algebraMap W _ (T.φ r))) → ∀ (σ : SecK C.P.L.L T.β k) (s : SecK C.P.L.L C.α k) (w : W), (∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ (TFK (R := R) F ⊗ C.A.A).left), p ≫ T.β = p' ≫ (snd (TFK (R := R) F) C.A.A).left ≫ C.α → p ≫ T.G.hom = p' ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _)) → ∀ z J, Good C.P.L.L z J → sval σ p z J = gs p z ⊤ (scal T.G.hom w) * sval s (p' ≫ (snd (TFK (R := R) F) C.A.A).left) z J) → ∀ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ C.A.A.left), p ≫ T.β = p' ≫ C.α → ∀ z J, Good C.P.L.L z J → sval σ p z J = gs p z ⊤ (scal T.G.hom w) * sval s p' z J := by
-  first | exact @GlobalTheory.Mum.ValDescent.desc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionValuesIdentityDescendsToFibreProductStatement =====
@@ -1682,15 +1660,9 @@ noncomputable section
 
 namespace GlobalTheory.Mum.TraitDescent
 
-theorem gs_one {Y Z : Scheme.{0}} (p : Z ⟶ Y) (z : Z) : gs p z ⊤ (1 : Γ(Y, ⊤)) = 1 := by
-  rw [gs_eq p z ⊤ trivial, map_one, map_one]
-
 theorem scal_mul {A : Type} [CommRing A] {Y : Scheme.{0}} (g : Y ⟶ Spec (CommRingCat.of A)) (a b : A) :
     scal g (a * b) = scal g a * scal g b := by
   unfold scal; rw [map_mul, map_mul]
-
-theorem scal_one {A : Type} [CommRing A] {Y : Scheme.{0}} (g : Y ⟶ Spec (CommRingCat.of A)) : scal g 1 = 1 := by
-  unfold scal; rw [map_one, map_one]
 
 theorem gs_scal_eq {A F : Type} [CommRing A] [Field F] {Y Z : Scheme.{0}} (g : Y ⟶ Spec (CommRingCat.of A))
     (io : A →+* F) (p : Z ⟶ Y) (q : Z ⟶ Spec (CommRingCat.of F)) (h : p ≫ g = q ≫ spMap io) (z : Z) (w : A) :
@@ -1710,11 +1682,6 @@ end GlobalTheory.Mum.TraitDescent
 noncomputable section
 namespace GlobalTheory.Mum.TraitDescent
 
-theorem sval_scale {X Y Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
-    (c : Γ(Y, ⊤)) (s : LB.Sec (LB.LinComb L φ ε)) (r : Z ⟶ Y) (z : Z) {J} (hJ : Good L z J) :
-    sval (ReciprocityTheory.ChartRestriction.G.DVR.SecOps.secScale c s) r z J = gs r z ⊤ c * sval s r z J :=
-  (gs_mul r z _ (hJ.mem φ r) _ _).trans (congrArg (· * _) (gs_res r z le_top (hJ.mem φ r) c))
-
 theorem expBy_scale {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {D : DegData R (maximalIdeal R)}
     {C : LabCover D} {W : Type} [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W) (u a : W) {k : ℕ}
     {σ : SecK C.P.L.L T.β k} {F₀ : IntFam (maximalIdeal R) D.toPre k} (h : T.ExpBy u σ F₀) :
@@ -1723,7 +1690,7 @@ theorem expBy_scale {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {D : De
   obtain ⟨σ', f', hc, hp, he⟩ := h
   have hv : ∀ (Z : Scheme.{0}) (r : Z ⟶ T.G.left) z J, Good C.P.L.L z J →
       sval (ReciprocityTheory.ChartRestriction.G.DVR.SecOps.secScale (scal T.G.hom a) σ) r z J = gs r z ⊤ (scal T.G.hom a) * sval σ r z J :=
-    fun Z r z J hJ => sval_scale _ σ r z hJ
+    fun Z r z J hJ => _root_.GlobalTheory.KunnethDomain.sval_scale _ σ r z hJ
   refine ⟨_, ⟨σ', f', fun Z r z J J' hJ hJ' => ?_, hp, he⟩, hv⟩
   rw [hv Z r z J hJ, hc Z r z J J' hJ hJ', scal_mul, gs_mul r z ⊤ trivial]
   ring
@@ -1737,7 +1704,7 @@ theorem exp_of_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   intro R _ _ _ hR D C k W _ _ _ T F _ _ _ _ hF Φ c hc h1 h2
   by_cases hB : ∃ (F₀ : IntFam (maximalIdeal R) D.toPre k) (σ : SecK C.P.L.L T.β k), T.ExpBy 1 σ F₀ ∧ ∃ (Z : Scheme.{0}) (p : Z ⟶ T.G.left) (p' : Z ⟶ (TFK (R := R) F ⊗ C.A.A).left) (_ : p ≫ T.β = p' ≫ (snd (TFK (R := R) F) C.A.A).left ≫ C.α) (_ : p ≫ T.G.hom = p' ≫ (fst (TFK (R := R) F) C.A.A).left ≫ spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _))) (z : Z) (J : (Z ⟶ C.G.left) → C.P.L.L.ι), Good C.P.L.L z J ∧ sval σ p z J ≠ 0
   · obtain ⟨F₀, σ, hσ, hw⟩ := hB
-    obtain ⟨x, hx⟩ := GlobalTheory.T.relatingConstant_mem_traitFractionField R hR D C k W T F hF σ (Φ F₀) c (h2 F₀ σ hσ) hw
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.Mum.RatConst.main R hR D C k W T F hF σ (Φ F₀) c (h2 F₀ σ hσ) hw
     have hx0 : x ≠ 0 := by rintro rfl; exact hc (by rw [← hx, map_zero])
     obtain ⟨⟨b, ⟨a, ha⟩⟩, rfl⟩ := IsLocalization.mk'_surjective (nonZeroDivisors W) x
     have ha0 : a ≠ 0 := nonZeroDivisors.ne_zero ha
@@ -1751,7 +1718,7 @@ theorem exp_of_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     obtain ⟨σ₁, hσ₁⟩ := h1 F₁
     obtain ⟨σ₂, hσ₂, hv⟩ := expBy_scale T 1 a hσ₁
     rw [_root_.mul_one] at hσ₂
-    refine ⟨σ₂, hσ₂, GlobalTheory.T.sectionValues_identity_descends_to_fibreProduct R hR D C k W T F hF σ₂ (Φ F₁) b ?_⟩
+    refine ⟨σ₂, hσ₂, _root_.GlobalTheory.Mum.ValDescent.desc R hR D C k W T F hF σ₂ (Φ F₁) b ?_⟩
     intro Z p p' e1 e2 z J hJ
     have e2' : p ≫ T.G.hom = (p' ≫ (fst (TFK (R := R) F) C.A.A).left) ≫
         spMap ((algebraMap (FractionRing W) F).comp (algebraMap W _)) := by rw [e2, Category.assoc]
@@ -1761,15 +1728,15 @@ theorem exp_of_values : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   · push_neg at hB
     refine ⟨1, 1, one_ne_zero, one_ne_zero, fun F₀ => ?_⟩
     obtain ⟨σ, hσ⟩ := h1 F₀
-    refine ⟨σ, hσ, GlobalTheory.T.sectionValues_identity_descends_to_fibreProduct R hR D C k W T F hF σ (Φ F₀) 1 ?_⟩
+    refine ⟨σ, hσ, _root_.GlobalTheory.Mum.ValDescent.desc R hR D C k W T F hF σ (Φ F₀) 1 ?_⟩
     intro Z p p' e1 e2 z J hJ
     have h0 := hB F₀ σ hσ Z p p' e1 e2 z J hJ
     have e := h2 F₀ σ hσ Z p p' e1 e2 z J hJ
     rw [h0] at e
-    rw [h0, scal_one, gs_one, _root_.one_mul]
+    rw [h0, _root_.GlobalTheory.UnifBaseChange.scal_one, _root_.GlobalTheory.FramePull.gs_one, _root_.one_mul]
     have hu : gs (p' ≫ (fst (TFK (R := R) F) C.A.A).left) z ⊤ (fnF F c⁻¹) *
         gs (p' ≫ (fst (TFK (R := R) F) C.A.A).left) z ⊤ (fnF F c) = 1 := by
-      rw [← gs_mul _ z ⊤ trivial, fnF, fnF, ← map_mul, inv_mul_cancel₀ hc, map_one, gs_one]
+      rw [← gs_mul _ z ⊤ trivial, fnF, fnF, ← map_mul, inv_mul_cancel₀ hc, map_one, _root_.GlobalTheory.FramePull.gs_one]
     rw [← _root_.one_mul (sval (Φ F₀) _ z J), ← hu, _root_.mul_assoc, ← e, mul_zero]
 
 end GlobalTheory.Mum.TraitDescent
@@ -1831,7 +1798,7 @@ theorem exists_map_exp_all_traits : ∀ (R : Type) [CommRing R] [IsDomain R] [Is
   by_cases hT : ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W), Nonempty (Trait C W)
   · obtain ⟨W₀, _, _, _, ⟨T₀⟩⟩ := hT
     obtain ⟨K₀, _, _, _, _, em₀, hK₀⟩ := exists_field_over_trait R W₀ T₀.φ T₀.inj
-    obtain ⟨lab, E, hlab, hE, -⟩ := GlobalTheory.T.trait_inverse_expansion_equivariant_labels R hR D C j wA hwA W₀ T₀ K₀ em₀ hK₀
+    obtain ⟨lab, E, hlab, hE, -⟩ := _root_.GlobalTheory.Mum.traitInv_eqv_value R hR D C j wA hwA W₀ T₀ K₀ em₀ hK₀
     obtain ⟨Eb, hEb⟩ := GlobalTheory.Mum.Desc.eqv_down R hR D C.A (C.n ^ j) hodd (C.lab j) K₀ em₀ lab E hlab hE
     have hgal := GlobalTheory.Mum.labExt_of_trait R hR D C j W₀ ⟨T₀⟩
     obtain ⟨Φ₀, E₀, hE₀, hΦ₀⟩ := GlobalTheory.Mum.exists_eqv_rational R hR D C.A (C.n ^ j) hodd (C.lab j) Eb hEb hgal

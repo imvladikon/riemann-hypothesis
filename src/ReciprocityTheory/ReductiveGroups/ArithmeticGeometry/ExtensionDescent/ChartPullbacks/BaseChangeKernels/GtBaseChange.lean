@@ -48,6 +48,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Splits
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CoordOfHasWeight
@@ -164,7 +165,7 @@ end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.UnitNorm =====
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.UnitsEq =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.UnitsEq", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.PreLe\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.UnitsEq", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.PreLe\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Splits\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -183,10 +184,6 @@ namespace ReciprocityTheory.ChartRestriction.G.Out.GtBCPf
 open Semi Geo.Tor PullGtPf
 
 section General
-
-theorem gmRP {X Z : Scheme.{0}} (a : Z ⟶ X) (z : Z) (U : X.Opens) (V : Z.Opens) (hle : V ≤ a ⁻¹ᵁ U)
-    (hz : z ∈ V) (u : Γ(X, U)ˣ) : gm (𝟙 Z) z V (res hle (pullU a U u)) = gm a z U u :=
-  (gm_res (𝟙 Z) z hle hz _).trans ((gm_pull (𝟙 Z) a z U (hle hz) u).trans (by rw [Category.id_comp]))
 
 theorem act_le_of_hom {S : Scheme.{0}} {B G T : Over S} [GrpObj G] [GrpObj B] (q : G ⟶ B)
     [IsMonHom q] (i : T ⟶ G) (hk : i ≫ q = toUnit _ ≫ η[B]) (U : B.left.Opens) :
@@ -229,7 +226,7 @@ theorem equivPullL {T₁ T₂ Y Z P₁ P₂ : Scheme.{0}} (act₁ s₁ : P₁ �
     subst hc
     refine (gm_res f₂ y (V := ⊤) (U := h ⁻¹ᵁ ⊤) (fun _ _ => trivial) trivial _).trans ?_
     exact gm_pull f₂ h y ⊤ trivial c
-  rw [map_mul, gmRP act₂ y W' _ le₂ hy, gmRP f₂ y ⊤ _ t₂ hy,
+  rw [map_mul, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_rp₁ act₂ y W' _ le₂ hy, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_rp₁ f₂ y ⊤ _ t₂ hy,
     gm_res act₂ y hW' hay, gm_pull act₂ a y W (hW' hay), e3]
   have e2 : gm (𝟙 P₂) y (s₂ ⁻¹ᵁ W') (pullU s₂ W' (res hW' (pullU a W u))) =
       gm (s₂ ≫ a) y W u := by
@@ -254,13 +251,13 @@ theorem charUnit_hTB (χ : X) :
       pullback.fst (splitTorusAff ZU X).hom (toZ S') := pullback.lift_fst _ _ _
   have e1 : gm (𝟙 _) x ⊤ (charUnit S' X χ) =
       gm (pullback.fst (splitTorusAff ZU X).hom (toZ S')) x ⊤ w :=
-    gmRP (pullback.fst (splitTorusAff ZU X).hom (toZ S')) x ⊤ ⊤ _ trivial w
+    _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_rp₁ (pullback.fst (splitTorusAff ZU X).hom (toZ S')) x ⊤ ⊤ _ trivial w
   have e2 : gm (hT f X) x ⊤ (charUnit S X χ) =
       gm (hT f X ≫ pullback.fst (splitTorusAff ZU X).hom (toZ S)) x ⊤ w :=
     (gm_res (hT f X) x (V := ⊤) (U := pullback.fst (splitTorusAff ZU X).hom (toZ S) ⁻¹ᵁ ⊤) _
       trivial _).trans (gm_pull _ _ x ⊤ trivial w)
   rw [e3] at e2
-  exact (gmRP (hT f X) x ⊤ ⊤ _ trivial _).trans (e2.trans e1.symm)
+  exact (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_rp₁ (hT f X) x ⊤ ⊤ _ trivial _).trans (e2.trans e1.symm)
 
 end Torus
 
@@ -564,26 +561,6 @@ def datum : (pullExt f E).GtDatum ((Over.pullback f).obj G) where
   unit_norm := unit_normB f E d
 
 end Datum
-
-private lemma res_res_lemma {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V)
-    (u : Γ(X, U)ˣ) : res h' (res h u) = res (h'.trans h) u := by
-  ext
-  exact (res_val_res (h'.trans h) h h' u).symm
-
-private lemma gen_div_self_lemma_2 {X : Scheme.{0}} (M : LB X) (hM : M.IsLB) :
-    ∃ t : LB.Gen (LB.div M M), t.IsGen := by
-  refine ⟨⟨fun p => M.g p.1 p.2⟩, ?_⟩
-  rintro ⟨a, b⟩ ⟨c, d⟩
-  try dsimp only [LB.div]
-  have e1 := congrArg (res (show M.U a ⊓ M.U b ⊓ (M.U c ⊓ M.U d) ≤ M.U a ⊓ M.U c ⊓ M.U d from
-    le_inf (le_inf (inf_le_left.trans inf_le_left) (inf_le_right.trans inf_le_left))
-      (inf_le_right.trans inf_le_right))) (hM.cocycle a c d)
-  have e2 := congrArg (res (show M.U a ⊓ M.U b ⊓ (M.U c ⊓ M.U d) ≤ M.U a ⊓ M.U b ⊓ M.U d from
-    le_inf inf_le_left (inf_le_right.trans inf_le_right))) (hM.cocycle a b d)
-  simp only [map_mul, res_res_lemma] at e1 e2
-  have e3 := eq_mul_inv_of_mul_eq e2
-  rw [← e1] at e3
-  exact e3.trans (mul_right_comm _ _ _)
 
 theorem gtBaseChange : GtBaseChangeSt :=
   GlobalTheory.gtBaseChange

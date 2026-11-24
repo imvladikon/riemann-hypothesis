@@ -55,6 +55,7 @@ import Formalism.MeanHeightDescent.AverageDegreeBounds.GoodBadCut
 import Formalism.MeanHeightDescent.AverageDegreeBounds.SpanMuMin
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
+import Formalism.MeanHeightDescent.AverageDegreeBounds.DescentSlope
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHalfRankSub, Development.AbelianVarietyTheory.Proofs.DivisorProofs.HtMapLeOfPoints, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowerBoundOfAllEstimates, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LowOfCoverHypotheses, Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LowOfCoverHypothesesStatement
@@ -81,7 +82,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHalfRankSub =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HtMapLeOfPoints =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.HtMapLeOfPoints", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart\npublic import Formalism.BranchSandwichDivisors.BranchIsometryProofs.OrthSum\npublic import Formalism.BranchSandwichDivisors.BranchIsometryProofs.Transfer\nimport Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean\npublic import Formalism.LocalToGlobal.LatticeGeometry.OperatorNormFibers.PDescentCutA\nimport Formalism.MeanHeightDescent.AverageDegreeBounds.GoodBadCut\nimport Formalism.MeanHeightDescent.AverageDegreeBounds.SpanMuMin\npublic import Formalism.MeanHeightDescent.DivisionInequalityWithCovolume\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.HtMapLeOfPoints", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart\npublic import Formalism.BranchSandwichDivisors.BranchIsometryProofs.OrthSum\npublic import Formalism.BranchSandwichDivisors.BranchIsometryProofs.Transfer\nimport Formalism.HarderNarasimhan.HarderNarasimhanProofs.SlopeIneqMean\npublic import Formalism.LocalToGlobal.LatticeGeometry.OperatorNormFibers.PDescentCutA\nimport Formalism.MeanHeightDescent.AverageDegreeBounds.GoodBadCut\nimport Formalism.MeanHeightDescent.AverageDegreeBounds.SpanMuMin\npublic import Formalism.MeanHeightDescent.DivisionInequalityWithCovolume\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Formalism.MeanHeightDescent.AverageDegreeBounds.DescentSlope\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -191,7 +192,7 @@ theorem descent : ∀ (K V W : Type) [Field K] [NumberField K] [_root_.NumberFie
     exact_mod_cast hnorm v.embedding f
   have hmm : -(2 * Λ) ≤ muMinDef bn Xn Bn := by
     obtain ⟨s, hsB, hsn, hsp⟩ := hs
-    refine Formalism.ExtensionFiltration.spanMuMin K _ _ bn Xn hXn Bn Λ hBnfg hBn0
+    refine _root_.Formalism.ExtensionFiltration.span_min_slope K _ _ bn Xn hXn Bn Λ hBnfg hBn0
       ⟨⋃ i : Fin n, (fun y => (Pi.single i y : Fin n → W)) '' s, ?_, ?_, ?_⟩
     · intro x hx
       obtain ⟨i, y, hy, rfl⟩ := Set.mem_iUnion.1 hx
@@ -211,7 +212,7 @@ theorem descent : ∀ (K V W : Type) [Field K] [NumberField K] [_root_.NumberFie
       rw [Submodule.map_span] at h2
       exact Submodule.span_mono (Set.subset_iUnion
         (fun i : Fin n => (fun y => (Pi.single i y : Fin n → W)) '' s) i) h2
-  have hd := Formalism.ExtensionFiltration.descentSlope K V _ (Fin n → W) _ b X bn Xn hX hXn Φ A Bn hAfg hBnfg hA0 hΦinj hΦle
+  have hd := _root_.Formalism.ExtensionFiltration.descent_slope K V _ (Fin n → W) _ b X bn Xn hX hXn Φ A Bn hAfg hBnfg hA0 hΦinj hΦle
   rw [p2] at hd
   have hle : rkK A ≤ rkK Bn := by
     haveI : Module.Finite K (Fin n → W) := Module.Finite.of_basis bn
@@ -387,12 +388,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.liftLowBound_of_cover_estimates : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.LowDefectCondition → _root_.GlobalTheory.CovTop.DeepExistence → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.RingCondition → _root_.GlobalTheory.CovTop.MapsCondition → _root_.GlobalTheory.CovTop.CoverRank → _root_.GlobalTheory.CovTop.MinimalGenerator → _root_.GlobalTheory.CovTop.FlatnessCondition → _root_.GlobalTheory.CovTop.UniformLowerBound → _root_.GlobalTheory.CovTop.LiftLowBound := by
-  first | exact @_root_.GlobalTheory.CovTop.LowCover.low_of_cover_hypotheses
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LowOfCoverHypothesesStatement =====

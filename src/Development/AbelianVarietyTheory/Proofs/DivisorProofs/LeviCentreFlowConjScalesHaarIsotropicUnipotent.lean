@@ -101,11 +101,6 @@ namespace GlobalTheory.ImaginaryModulus
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem sig_sig {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) : σ (σ x) = x := by
-  obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-  apply τ.injective
-  rw [h.2.2.2, h.2.2.2, star_star]
-
 theorem exists_anti {σ : E →ₐ[F] E} (h : IsCMExt F E σ) : ∃ δ : E, δ ≠ 0 ∧ σ δ = -δ := by
   apply PositivityTheory.ThKG.Tow.Pln.exists_skew <;> assumption
 
@@ -117,13 +112,6 @@ theorem cA_eq_sigR (σ : E →ₐ[F] E) (z : _root_.GlobalTheory.IndefiniteRowSi
   | zero => simp
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
   | tmul a x => simp [cA, sigR]
-
-section Iso
-
-variable (σ : E →ₐ[F] E) [IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))]
-
-end Iso
-
 
 end GlobalTheory.ImaginaryModulus
 end -- clump:auto
@@ -266,7 +254,7 @@ open GlobalTheory.ResidueEisenstein.ModConj.SkewSplit in
 theorem addEquivAddHaarChar_skewA_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (j : ℕ) [LocallyCompactSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [SecondCountableTopology (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [MeasurableSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] [BorelSpace (GlobalTheory.ResidueEisenstein.ModConj.skewA σ j)] (l : (AF F ⊗[F] E)ˣ) (L : GlobalTheory.ResidueEisenstein.ModConj.skewA σ j ≃ₜ+ GlobalTheory.ResidueEisenstein.ModConj.skewA σ j), (∀ s, (L s : Matrix (Fin j) (Fin j) (AF F ⊗[F] E)) = ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) • (s : Matrix (Fin j) (Fin j) (AF F ⊗[F] E))) → addEquivAddHaarChar L = absE F E l ^ (j * j) := by
   intro F E _ _ _ _ _ σ hcm j _ _ _ _ l L hL
   haveI : IsTotallyReal F := hcm.1
-  have hσ := GlobalTheory.ImaginaryModulus.sig_sig hcm
+  have hσ := _root_.GlobalTheory.AdelicU.cm_conj_conj hcm
   obtain ⟨δ, hδ0, hδ⟩ := GlobalTheory.ImaginaryModulus.exists_anti hcm
   obtain ⟨-, hlc, hsc, ht2⟩ := topAE F E
   haveI : LocallyCompactSpace (AF F ⊗[F] E) := hlc
@@ -1017,7 +1005,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hJ0 : cT (σ : E →+* E) J₀⁻¹ = J₀⁻¹ := GlobalTheory.SphEis.UnipCrd.cT_inv_herm σ J₀ hF.herm₀
   have hpx : ∀ x y : Matrix (Fin (r + 1)) (Fin m) (AF F ⊗[F] E),
       cT (sigR (AF F) σ) (x * GlobalTheory.SphEis.plus σ J₀ y) = y * GlobalTheory.SphEis.plus σ J₀ x := fun x y => by
-    simp only [GlobalTheory.SphEis.plus, GlobalTheory.SphEis.crdLaw_cT_mul, GlobalTheory.SphEis.UnipCrd.cT_cT σ h, GlobalTheory.SphEis.UnipCrd.cT_adMat, hJ0,
+    simp only [GlobalTheory.SphEis.plus, _root_.Formalism.UG.cT_mul, GlobalTheory.SphEis.UnipCrd.cT_cT σ h, GlobalTheory.SphEis.UnipCrd.cT_adMat, hJ0,
       Matrix.mul_assoc]
   set hf2 : AF F ⊗[F] E := inclR (F := F) (AF F) (2⁻¹ : E) with hhf2
   have hh : hf2 + hf2 = 1 := by
@@ -1195,7 +1183,7 @@ theorem modulus_conj_flow : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     have e3 : sA a * GlobalTheory.SphEis.plus σ J₀ (sA a) =
         ((l : AF F ⊗[F] E) * sigR (AF F) σ (l : AF F ⊗[F] E)) • (a * GlobalTheory.SphEis.plus σ J₀ a) := by
       rw [hsA]
-      simp only [GlobalTheory.SphEis.plus, cTsmul, GlobalTheory.SphEis.crdLaw_cT_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
+      simp only [GlobalTheory.SphEis.plus, cTsmul, _root_.Formalism.UG.cT_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
         Matrix.mul_assoc, hδJ']
       rw [mul_comm (sigR (AF F) σ (l : AF F ⊗[F] E))]
     rw [e3, hsC] at h2

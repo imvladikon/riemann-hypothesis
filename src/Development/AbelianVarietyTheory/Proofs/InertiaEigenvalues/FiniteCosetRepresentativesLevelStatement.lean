@@ -139,12 +139,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 noncomputable section
 namespace GlobalTheory.LevReps
 
-theorem reps : ∀ {D : D7} {S T : HSp D} (B : Base S T), B.Good → ∀ (ψ : Twist D Circle), B.admitted ψ.Q →
-    ∃ F : Finset (Bridge.Gf S), (∀ u ∈ F, u ∈ B.levJ ψ) ∧
-      ∀ κ ∈ B.levJ ψ, ∃! u, u ∈ F ∧ u⁻¹ * κ ∈ (GlobalTheory.FlatVecSum.princ B).levJ ψ := by
-  first
-  | exact @_root_.GlobalTheory.FirstBlocksReduction.exists_reps_levJ
-  | (intros; exact _root_.GlobalTheory.FirstBlocksReduction.exists_reps_levJ ..)
+alias reps := _root_.GlobalTheory.FirstBlocksReduction.exists_reps_levJ
 
 end GlobalTheory.LevReps
 end

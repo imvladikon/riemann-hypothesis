@@ -341,7 +341,7 @@ theorem glue_l : MVBij → CovDesc → ∀ {K : Type} [Field K] (E : XD K) (U₂
     rw [_root_.GlobalTheory.CompanionTheory.KunGlue.pr_res E r₁.1 r₁.2 r₂.1 r₂.2 k (le_refl U₂) k' (show a' + a = c by omega) (show j + i = n by omega) y x,
       _root_.GlobalTheory.CompanionTheory.KunGlue.resU_self_pullC (E.F₂ a) U₂ (le_refl U₂) i x]
   have key := _root_.GlobalTheory.CompanionTheory.KunGlue.glue_gen hMV hCD E.F₁ E.F₃ (fun a => CH.cx (U₂.ι ⋙ E.F₂ a)) Rel prr hnat V W hV hW
-    (fun S => ⟨h₁ S, h₂ S⟩) (fun S hS => GlobalTheory.T.kuenneth_swap _ (hK S hS))
+    (fun S => ⟨h₁ S, h₂ S⟩) (fun S hS => _root_.GlobalTheory.CompanionTheory.KunGlue.kunE_swap _ (hK S hS))
   have k2 := GlobalTheory.T.kuenneth_swap _ key
   refine (_root_.GlobalTheory.CompanionTheory.KunGlue.Transfer.kunE_iff _ _ (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _)
     (fun a n => mapH_id_bij _ n) (fun a n => mapH_id_bij _ n) (fun a n => mapH_id_bij _ n) ?_).1 k2
@@ -432,10 +432,6 @@ theorem tensor_sub_left (M N : Type u) [AddCommMonoid M] [AddCommMonoid N] [Modu
     | add x y hx hy => rw [hx, hy, add_zero]
   exact ⟨fun a b => by rw [key a, key b]⟩
 
-theorem tensor_sub_right (M N : Type u) [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N] [Subsingleton N] :
-    Subsingleton (M ⊗[R] N) :=
-  _root_.UpperTheory.Reformulated.B.Qn17.tensor_sub_right M N
-
 variable {I A : Type} [DecidableEq I] [Fintype A] [DecidableEq A] (M : I → Type u) [∀ t, AddCommMonoid (M t)]
   [∀ t, Module R (M t)] (ι : A → I)
 
@@ -505,7 +501,7 @@ theorem kunE_of_diag {P Q T : ℕ → Cx.{w} K} (pr : ∀ {a a' c : ℕ}, a + a'
     exact tensor_sub_left _ _
   have offR : ∀ t : Idx c n, t.j ≠ t.a' → Subsingleton ((P t.a).H t.i ⊗[K] (Q t.a').H t.j) := fun t h => by
     have := hQ t.a' t.j h
-    exact tensor_sub_right _ _
+    exact _root_.UpperTheory.Reformulated.B.Qn17.tensor_sub_right _ _
   by_cases hn : n = c
   · subst hn
     obtain ⟨e, he⟩ := hE n
@@ -563,11 +559,6 @@ theorem xd_kun (E : XD K) (U₁ : ObjectProperty E.C₁) (U₂ : ObjectProperty 
   kunE_of_diag (P := fun a => CH.cx (U₁.ι ⋙ E.F₁ a)) (Q := fun a => CH.cx (U₂.ι ⋙ E.F₂ a)) (T := fun a => CH.cx (U₃.ι ⋙ E.F₃ a))
     (fun {a a' c} ha => E.pr U₁ U₂ U₃ h₁ h₂ ha) hP hQ hT hE
 
-theorem cls_eq {R : Type} [CommRing R] (L : Cx.{w} R) {n : ℕ} {x y : L.X n} (e : x = y) (hx : L.d n x = 0) (hy : L.d n y = 0) :
-    L.cls x hx = L.cls y hy := by
-  subst e
-  rfl
-
 section
 variable {X X' P : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) (q' : X' ⟶ Spec (CommRingCat.of K)) (p₁ : P ⟶ X) (p₂ : P ⟶ X')
     (hw : p₂ ≫ q' = p₁ ≫ q)
@@ -597,7 +588,7 @@ theorem kun_aff : SiteLaws → AffOm → KunAff → ∀ (K : Type) [Field K] [Ch
     have hz' : (CH.cx ((inU (p₁ ≫ q) (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ V')).ι ⋙ G (p₁ ≫ q) c)).d c (cupU (p₁ ≫ q) _ hc hc ((morV p₁ rfl a h₁).pullC a x) ((morV p₂ hP.w.symm (c - a) h₂).pullC (c - a) y)) = 0 := by
       rw [← eq]
       exact hz
-    exact (he a hc x y hx hy hz').trans (cls_eq _ eq.symm _ _)
+    exact (he a hc x y hx hy hz').trans (_root_.CrystallineSemistableComparison.Auxff.cls_congr _ eq.symm _ _)
 
 end GlobalTheory.CompanionTheory.KunGlue.Aff
 end -- clump:auto

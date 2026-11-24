@@ -96,9 +96,7 @@ theorem exists_matrix {M : Type} [AddCommGroup M] [Module (𝓞 E) M] (φ ψ : M
   exact IsLocalizedModule.lift_apply (𝓞 E)⁰ φ ψ
     (fun s => (isLocalizedModule_id (𝓞 E)⁰ (Fin r → E) E).map_units s) x
 
-theorem herm_add_left (G : Matrix (Fin r) (Fin r) E) (x x' y : Fin r → E) :
-    FD.herm G (x + x') y = FD.herm G x y + FD.herm G x' y := by
-  simp [FD.herm, add_mul, Finset.sum_add_distrib]
+alias herm_add_left := _root_.ReciprocityTheory.ChartRestriction.G.FD.HermitianTraceFormVanishing.herm_add_left
 
 theorem herm_zero_left (G : Matrix (Fin r) (Fin r) E) (x : Fin r → E) : FD.herm G 0 x = 0 := by
   simp [FD.herm]

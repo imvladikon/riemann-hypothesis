@@ -205,16 +205,6 @@ open scoped ENNReal ComplexConjugate ContDiff
 open GlobalTheory.MirTower GlobalTheory.CuspGeneric
 open GroundTheory.Automorphic.FourierWhittaker (partialCoeff blockGL uGL)
 
-theorem _root_.GlobalTheory.T.adelicGLLastRow_and_detModule_under_left_multiplication : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (m : ℕ),
-    (∀ (γ : GL (Fin (m + 1)) E) (g : GA E (m + 1)), GlobalTheory.ZEul.lastRow (ratGL E (m + 1) γ * g) =
-      Matrix.vecMul (algebraMap E (Ad E) ∘ Matrix.vecMul (Pi.single (Fin.last m) 1 : Fin (m + 1) → E) γ.val) g.val) ∧
-    (∀ g : GA E (m + 1), GlobalTheory.ZEul.lastRow g = Matrix.vecMul (algebraMap E (Ad E) ∘ (Pi.single (Fin.last m) 1 : Fin (m + 1) → E)) g.val) ∧
-    (∀ γ : GL (Fin (m + 1)) E, IsMir m γ → Matrix.vecMul (Pi.single (Fin.last m) 1 : Fin (m + 1) → E) γ.val = Pi.single (Fin.last m) 1) ∧
-    (∀ (r l : ℕ) (y : UnipotentBlockColumnIndex (m + 1) r l → Ad E) (g : GA E (m + 1)), GlobalTheory.ZEul.lastRow (blkU y * g) = GlobalTheory.ZEul.lastRow g ∧
-      GlobalTheory.RSnm.detAbs (blkU y * g) = GlobalTheory.RSnm.detAbs g) ∧
-    (∀ (X : GroundTheory.Automorphic.FourierWhittaker.Pos (m + 1) → Ad E) (g : GA E (m + 1)),
-      GlobalTheory.RSnm.detAbs (uGL X * g) = GlobalTheory.RSnm.detAbs g) := by
-  first | (exact @GlobalTheory.UnfoldRows.rows_main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicGLLastRowAndDetModuleUnderLeftMultiplicatiStatement =====
@@ -583,10 +573,6 @@ open scoped ENNReal ComplexConjugate ContDiff
 open GlobalTheory.MirTower GlobalTheory.CuspGeneric
 open GroundTheory.Automorphic.FourierWhittaker (partialCoeff blockGL uGL)
 
-theorem _root_.GlobalTheory.T.isMirabolicWhittakerStage_mul_invariant_continuous : ∀ (E : Type) [Field E] [NumberField E] (a m : ℕ) (ψ : AddChar (Ad E) ℂ) (f c : GA E a → ℂ),
-    Good ψ m f → Continuous c → (∀ γ : GL (Fin a) E, IsMir m γ → ∀ g, c (ratGL E a γ * g) = c g) →
-    (∀ (r l : ℕ) (y : UnipotentBlockColumnIndex a r l → Ad E) (g : GA E a), c (blkU y * g) = c g) → Good ψ m (fun g => c g * f g) := by
-  first | (exact @GlobalTheory.GoodMul.good_mul_invariant)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageMulInvariantContinuousStatement =====
@@ -601,10 +587,6 @@ open scoped ENNReal ComplexConjugate ContDiff
 open GlobalTheory.MirTower GlobalTheory.CuspGeneric
 open GroundTheory.Automorphic.FourierWhittaker (partialCoeff blockGL uGL)
 
-theorem _root_.GlobalTheory.T.isMirabolicWhittakerStage_top_of_vanishing_blockAverages : ∀ (E : Type) [Field E] [NumberField E] (m : ℕ) (ψ : AddChar (Ad E) ℂ) (f : GA E (m + 1) → ℂ),
-    Continuous f → (∀ γ g, f (ratGL E (m + 1) γ * g) = f g) →
-    (∀ r, 0 < r → r ≤ m → ∀ g, avg (ratV E (UnipotentBlockColumnIndex (m + 1) r m)) (fun x => f (blkU x * g)) = 0) → Good ψ m f := by
-  first | (exact @GlobalTheory.CuspGeneric.good_top)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageTopOfVanishingBlockAverStatement =====
@@ -861,8 +843,6 @@ open scoped ENNReal ComplexConjugate ContDiff
 open GlobalTheory.MirTower GlobalTheory.CuspGeneric
 open GroundTheory.Automorphic.FourierWhittaker (partialCoeff blockGL uGL)
 
-theorem _root_.GlobalTheory.T.continuous_mul_norm_rpow_neg_half' : Continuous fun z : ℂ => z * ((‖z‖ ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) := by
-  first | (exact @GlobalTheory.continuous_mul_norm_rpow_neg_half)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VerticalStatementHoldsStatement =====
@@ -975,7 +955,7 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   obtain ⟨hc', hl', hv'⟩ := _root_.GlobalTheory.JSW.mspanR_cont_left_avg E m π' oc' hoc' hπoc' φ' hφ'
   have hb : ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C := (GlobalTheory.JSWPosR.mspanR_le_bddForms hoc hπoc hφ).2.2.2
   have hmk : m + 1 ≤ m + r + 1 := by omega
-  obtain ⟨hR1, hR2, hR3, hR4, hR5⟩ := GlobalTheory.T.adelicGLLastRow_and_detModule_under_left_multiplication E m
+  obtain ⟨hR1, hR2, hR3, hR4, hR5⟩ := _root_.GlobalTheory.UnfoldRows.rows_main E m
   obtain ⟨Fh, hFh⟩ : ∃ Fh, Fh = GroundTheory.Automorphic.GJMatrix.adelicFourierPi E F := ⟨_, rfl⟩
   have hFhc : Continuous Fh := hFh ▸ GroundTheory.Automorphic.GJMatrix.continuous_of_mem_schwartzBruhatPi
     (GroundTheory.Automorphic.GJMatrix.adelicFourierPi_mem_schwartzBruhatPi hF)
@@ -993,7 +973,7 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     rw [hR1, hR3 γ hγ, ← hR2]
 
   obtain ⟨sq, hsq⟩ : ∃ sq : ℂ → ℂ, sq = fun z => z * ((‖z‖ ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) := ⟨_, rfl⟩
-  have hsqc : Continuous sq := hsq ▸ GlobalTheory.T.continuous_mul_norm_rpow_neg_half'
+  have hsqc : Continuous sq := hsq ▸ _root_.GlobalTheory.continuous_mul_norm_rpow_neg_half
   have hsqn : ∀ z, ‖sq z‖ = Real.sqrt ‖z‖ := by
     intro z
     rw [hsq]
@@ -1038,9 +1018,9 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     intro X g; rw [hc2]; simp only [GlobalTheory.ZUnf.lastRow_uGL_mul, hR5]
   obtain ⟨f1, hf1⟩ : ∃ f1 : GA E (m + 1) → ℂ, f1 = fun g => c1 g * Q g := ⟨_, rfl⟩
   obtain ⟨f2, hf2⟩ : ∃ f2 : GA E (m + 1) → ℂ, f2 = fun g => c2 g * φ' g := ⟨_, rfl⟩
-  have hG1 : Good (GlobalTheory.StdCharConductor.psi E) m f1 := hf1 ▸ GlobalTheory.T.isMirabolicWhittakerStage_mul_invariant_continuous E (m + 1) m _ Q c1 hGQ hc1c hc1γ hc1b
+  have hG1 : Good (GlobalTheory.StdCharConductor.psi E) m f1 := hf1 ▸ _root_.GlobalTheory.GoodMul.good_mul_invariant E (m + 1) m _ Q c1 hGQ hc1c hc1γ hc1b
   have hG2 : Good (GlobalTheory.StdCharConductor.psi E) m f2 :=
-    hf2 ▸ GlobalTheory.T.isMirabolicWhittakerStage_mul_invariant_continuous E (m + 1) m _ φ' c2 (GlobalTheory.T.isMirabolicWhittakerStage_top_of_vanishing_blockAverages E m _ φ' hc' hl' hv') hc2c hc2γ hc2b
+    hf2 ▸ _root_.GlobalTheory.GoodMul.good_mul_invariant E (m + 1) m _ φ' c2 (_root_.GlobalTheory.CuspGeneric.good_top E m _ φ' hc' hl' hv') hc2c hc2γ hc2b
   have whit_mul : ∀ (c f : GA E (m + 1) → ℂ), (∀ X g, c (uGL X * g) = c g) → ∀ g,
       GlobalTheory.JSW.whit (fun g => c g * f g) g = c g * GlobalTheory.JSW.whit f g := by
     intro c f hcu g

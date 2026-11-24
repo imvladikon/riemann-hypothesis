@@ -263,14 +263,6 @@ namespace GlobalTheory.CompanionTheory.NForm
 
 open Matrix
 
-private theorem hermForm_cols {g : ℕ} (N P Q : Matrix (Fin g) (Fin g) ℂ) (i j : Fin g) :
-    hermForm N (P *ᵥ Pi.single i 1) (Q *ᵥ Pi.single j 1) =
-      (Pᵀ * N * Q.map (starRingEnd ℂ)) i j := by
-  simp only [mulVec_single_one, hermForm]
-  simp [Matrix.mul_apply, dotProduct, mulVec, Finset.sum_mul, Finset.mul_sum, col_apply]
-  rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
-
 private theorem re_of_real_add {g : ℕ} (B C : Matrix (Fin g) (Fin g) ℝ) (i j : Fin g) :
     ((B.map (fun x : ℝ => (x : ℂ)) + Complex.I • C.map (fun x : ℝ => (x : ℂ))) i j).re = B i j := by
   simp
@@ -312,7 +304,7 @@ theorem gram_eq_siegelGram {g : ℕ} {X Y : Matrix (Fin g) (Fin g) ℝ} (hX : X.
   have mm : ∀ B C, c (B * C) = c B * c C := map_ofReal_mul
   ext α β
   rcases α with i | i <;> rcases β with j | j <;>
-    simp only [of_apply, Sum.elim_inl, Sum.elim_inr, hermForm_cols, imInv_periodMatrix, siegelGram,
+    simp only [of_apply, Sum.elim_inl, Sum.elim_inr, _root_.GlobalTheory.RiemannRel.hermForm_col, imInv_periodMatrix, siegelGram,
       fromBlocks_apply₁₁, fromBlocks_apply₁₂, fromBlocks_apply₂₁, fromBlocks_apply₂₂, transpose_one, h1c, hτt, hτc,
       Matrix.one_mul, Matrix.mul_one]
   · simp
@@ -1541,7 +1533,7 @@ theorem nform : ∃ C₀ : ℝ, 0 ≤ C₀ ∧ ∀ {S : Scheme.{0}} {G : Over S}
   obtain ⟨hH, hpos, hχn, -⟩ := a.ah
   obtain ⟨bs, h, X, Y, ρ, hh, hX, hY, hR, hHh, hcoord, him⟩ :=
     exists_reduced g a.u.Λ a.Hm a.u.discrete a.u.full hH hpos hint hdual
-  have hτim : (periodMatrix X Y).map Complex.im = Y := periodMatrix_im X Y
+  have hτim : (periodMatrix X Y).map Complex.im = Y := _root_.GlobalTheory.CompanionTheory.Ar.Nform.periodMatrix_map_im X Y
   have hYs : Y.IsSymm := by
     have := hY.isHermitian
     rwa [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial] at this

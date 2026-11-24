@@ -99,9 +99,6 @@ open GlobalTheory.CompanionTheory.Ar.Num.FamEx GlobalTheory.CompanionTheory.Ar.B
 
 namespace GlobalTheory.CompanionTheory.Ar.Num.FamEx
 
-theorem chartPoint_inChart_dominated : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω] (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → ∀ (P : ChartPack G O c') (z : Spec (CommRingCat.of (CR O y c'))), InChart 𝔐.ξ (mseg y) c' ⟨P.x z, 𝔐.all _⟩ ∧ (∀ o : O, algebraMap O Ω o ∈ regAt 𝔐.ξ ⟨P.x z, 𝔐.all _⟩) ∧ ∀ a ∈ regAt 𝔐.ξ ⟨P.x z, 𝔐.all _⟩, ∃ r s : CR O y c', s ∉ z.asIdeal ∧ (s : Ω) * a = r :=
-  @PositivityTheory.Xgn.exists_function_at_point
-
 end GlobalTheory.CompanionTheory.Ar.Num.FamEx
 end -- clump:auto
 end -- clump:auto
@@ -312,9 +309,6 @@ open GlobalTheory.CompanionTheory.Ar.Num.FamEx GlobalTheory.CompanionTheory.Ar.B
 
 namespace GlobalTheory.CompanionTheory.Ar.Num.FamEx
 
-theorem chartRing_noetherian_normal_fraction : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω] (c' : ∀ k, J k), mseg y c' ≠ 0 → IsNoetherianRing (CR O y c') ∧ IsIntegrallyClosed (CR O y c') ∧ IsFractionRing (CR O y c') Ω :=
-  @PositivityTheory.Xgn.exists_function_on_chart
-
 end GlobalTheory.CompanionTheory.Ar.Num.FamEx
 end -- clump:auto
 end -- clump:auto
@@ -332,9 +326,6 @@ open Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open GlobalTheory.CompanionTheory.Ar.Num.FamEx GlobalTheory.CompanionTheory.Ar.BT
 
 namespace GlobalTheory.CompanionTheory.Ar.Num.FamEx
-
-theorem isDerAtOne_comp_endo : ∀ (R : Type) [CommRing R] [IsDomain R] (T : Type) [CommGroup T] (Γ : QFGroup R T) (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (x : Spec (CommRingCat.of R) ⟶ S) (i : Γ.G.left ⟶ G.left) (N : ℕ), Γ.IsTorsionAlong G x N i → ∀ (L : Type) [AddCommGroup L] [Module R L] (M : LieModel G x L) (a : G ⟶ G) [IsMonHom a] (B : L →ₗ[R] L), M.IsDiffOf a B → ∀ (α : T →* T), (∀ t, (Γ.pt (α t)).left ≫ i = (Γ.pt t).left ≫ i ≫ a.left) → ∀ (f : T → R) (w : Module.Dual R L), Γ.IsDerAtOne i M N f w → Γ.IsDerAtOne i M N (fun t => f (α t)) (w ∘ₗ B) :=
-  @PositivityTheory.Xgn.isDerAtOne_comp_of_isDiffOf
 
 end GlobalTheory.CompanionTheory.Ar.Num.FamEx
 end -- clump:auto
@@ -792,9 +783,6 @@ open GlobalTheory.CompanionTheory.Ar.Num.FamEx GlobalTheory.CompanionTheory.Ar.B
 
 namespace GlobalTheory.CompanionTheory.Ar.Num.FamEx.StalkPt
 
-theorem spMap_eq_fromSpecStalk : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X), IsCptGen ξ → ∀ (U : X.Opens), IsAffineOpen U → ∀ (R : Type) [CommRing R] (φ : R →+* Ω) (x : Spec (CommRingCat.of R) ⟶ X), spMap φ ≫ x = ξ → (∀ z, x z ∈ U) → ∀ (q : Cpt ξ), q.1 ∈ U → ∀ ψ : R →+* X.presheaf.stalk q.1, (genMap ξ q).comp ψ = φ → spMap ψ ≫ x = X.fromSpecStalk q.1 :=
-  @PositivityTheory.Xgn.stalk_point_factorization
-
 end GlobalTheory.CompanionTheory.Ar.Num.FamEx.StalkPt
 end -- clump:auto
 end -- clump:auto
@@ -1239,7 +1227,7 @@ theorem chartD_fun_clauses : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   classical
   obtain ⟨-, -, -, -, hres, -, ⟨-, -, hpnu⟩, -⟩ := hO
   have hpp : p.Prime := Fact.out
-  obtain ⟨hnoeth, hint, -⟩ := GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartRing_noetherian_normal_fraction E H D l Xo c O₀ β Y S Ω K J y 𝔐 d harith p hpS A m hpm O c' hc
+  obtain ⟨hnoeth, hint, -⟩ := _root_.PositivityTheory.Xgn.exists_function_on_chart E H D l Xo c O₀ β Y S Ω K J y 𝔐 d harith p hpS A m hpm O c' hc
   haveI := hnoeth
   haveI := hint
   haveI hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
@@ -1278,7 +1266,7 @@ theorem chartD_fun_clauses : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨l1, l2, l3, l4⟩ := lat_clauses (CR O y c') hHopf (toN sc) (fromN pq) (fromN_toN hsc) hst
     ((p : CR O y c') ^ k) (by rw [hck]; exact pow_ne_zero _ hpΩ) hk (funLat P sc) hM
   have hP : Dominated P := fun z => by
-    obtain ⟨h1, h2, h3⟩ := GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartPoint_inChart_dominated E H D l Xo c O₀ β Y S Ω K J y 𝔐 d harith p hpS A m hpm O G c' hc P z
+    obtain ⟨h1, h2, h3⟩ := _root_.PositivityTheory.Xgn.exists_function_at_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 d harith p hpS A m hpm O G c' hc P z
     exact ⟨⟨h1, h2⟩, h3⟩
   have hψ : ∀ q, OnChart 𝔐 O c' q → ∃ ψ : CR O y c' →+* 𝔐.X.presheaf.stalk q.1,
       spMap ψ ≫ P.x = 𝔐.X.fromSpecStalk q.1 ∧ (genMap 𝔐.ξ q).comp ψ = algebraMap (CR O y c') Ω := by
@@ -1291,7 +1279,7 @@ theorem chartD_fun_clauses : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have h2 : (genMap 𝔐.ξ q).comp ψ = algebraMap (CR O y c') Ω := by
       ext a
       exact LieStalk.genMap_regIso_symm 𝔐.tie.gen q (ψ₀ a)
-    exact ⟨ψ, GlobalTheory.CompanionTheory.Ar.Num.FamEx.StalkPt.spMap_eq_fromSpecStalk 𝔐.X Ω 𝔐.ξ 𝔐.tie.gen U hU (CR O y c') (algebraMap (CR O y c') Ω) P.x P.x_gen
+    exact ⟨ψ, _root_.PositivityTheory.Xgn.stalk_point_factorization 𝔐.X Ω 𝔐.ξ 𝔐.tie.gen U hU (CR O y c') (algebraMap (CR O y c') Ω) P.x P.x_gen
       (fun z => (hUq _).2 ⟨𝔐.all _, (hP z).1.1⟩) q ((hUq _).2 ⟨q.2, hq.1⟩) ψ h2, h2⟩
   have hsec := mem_range_toLi_iff P hP hψ
 
@@ -1373,7 +1361,7 @@ theorem chartD_fun_clauses : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
         ring
       obtain ⟨f₀, hf₀⟩ := augCl_surjective (P.Γ₁.btOrder ⊤) (θ u)
       have d₀ := (hder (toAug f₀) u).1 hf₀.symm
-      have d₁ := GlobalTheory.CompanionTheory.Ar.Num.FamEx.isDerAtOne_comp_endo (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ 𝔐.X 𝔐.t.G P.x P.i₁ p P.tors₁ P.L P.M
+      have d₁ := _root_.PositivityTheory.Xgn.isDerAtOne_comp_of_isDiffOf (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ 𝔐.X 𝔐.t.G P.x P.i₁ p P.tors₁ P.L P.M
         (𝔐.t.act.act ε) (P.ρ ε) (P.act ε) (idem pq sc) (pts_idem P hε) _ u d₀
       let f₁ : augSub (P.Γ₁.btOrder ⊤) := ⟨fun t => f₀.1 (idem pq sc t), hst _ f₀.2.1, by
         change f₀.1 (idem pq sc 1) = 0

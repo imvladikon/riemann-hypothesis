@@ -260,7 +260,7 @@ theorem sharp_s_eq (t : PAlg l) (x : Ob l) :
 
 theorem eq_zero_of_sharp (t : PAlg l) {e : t.A} (he : IsIdempotentElem e) (h : t.sharp e = 0) :
     e = 0 :=
-  (RL.idem_au t 0 IsIdempotentElem.zero).unique ⟨he, h⟩ ⟨IsIdempotentElem.zero, sharp_zero t⟩
+  (RL.idem_au t 0 IsIdempotentElem.zero).unique ⟨he, h⟩ ⟨IsIdempotentElem.zero, _root_.GlobalTheory.CompanionTheory.RootsLC.sharp_zero t⟩
 
 theorem idem_unique : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l) (t : PAlg l) (m : ℕ) (x : t.U)
     (e e' : ZMod (l ^ m) → t.A),
@@ -404,7 +404,7 @@ theorem sharp_powSum (A : PAlg l) {u : ℕ → (A.cont ℤ_[l]).A} (hu : ∀ n, 
     rw [← map_mul, h1, map_mul, map_pow, hT, Finset.mul_sum, Finset.sum_eq_single (ZMod.cast c')]
     · rw [← mul_assoc, ← map_mul, h3, h4]
     · intro c _ hc
-      rw [← mul_assoc, ← map_mul, h2 c' c (Ne.symm hc), sharp_zero, zero_mul]
+      rw [← mul_assoc, ← map_mul, h2 c' c (Ne.symm hc), _root_.GlobalTheory.CompanionTheory.RootsLC.sharp_zero, zero_mul]
     · simp
   have hsum := sum_sharp_eq_one (A.cont ℤ_[l]) (coi_ind A (m + k))
   calc (A.cont ℤ_[l]).sharp B = (∑ c', (A.cont ℤ_[l]).sharp (ind A (m + k) c')) * (A.cont ℤ_[l]).sharp B := by
@@ -660,7 +660,7 @@ theorem rel_of_formula {t : PAlg l} {m : ℕ} {E : ZMod (l ^ m) → t.A} (hE : C
     {x ξ : t.U} (hx : x = ∑ c, t.sharp (E c) * ξ ^ c.val) (c : ZMod (l ^ m)) :
     t.sharp (E c) * (x - ξ ^ c.val) = 0 :=
   mul_sub_eq_zero_of_sum (a := fun c => t.sharp (E c)) (b := fun c : ZMod (l ^ m) => ξ ^ c.val)
-    (fun i => by rw [← map_mul, hE.idem i]) (fun i j h => by rw [← map_mul, hE.ortho h, sharp_zero]) hx c
+    (fun i => by rw [← map_mul, hE.idem i]) (fun i j h => by rw [← map_mul, hE.ortho h, _root_.GlobalTheory.CompanionTheory.RootsLC.sharp_zero]) hx c
 
 theorem continuous_algebra_universal_existsUnique (ε : Eps l) {ρ : ℕ → ((base l).cont ℤ_[l]).A} (hρ : ∀ m, ρ (m + 1) ^ l = ρ m)
     (hF : ∀ m, ((base l).cont ℤ_[l]).sharp (ρ m) =

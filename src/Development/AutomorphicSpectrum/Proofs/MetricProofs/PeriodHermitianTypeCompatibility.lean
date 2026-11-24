@@ -69,13 +69,6 @@ namespace GlobalTheory.CompanionTheory.Ar.HT.LatTest
 
 open Module NumberField TensorProduct
 
-section Norms
-
-variable {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O] [Algebra O C]
-  {V : Type} [AddCommGroup V] [Module C V] [Module O V] [IsScalarTower O C V]
-
-end Norms
-
 section Eigen
 
 variable {A : Type} [CommRing A] {K : Type} [Field K] [Algebra A K]
@@ -91,14 +84,6 @@ theorem trace_dualInt (k j) :
   convert this using 1
   rfl
 
-theorem expand_dual (x : E) :
-    x = ∑ k, Algebra.trace ℚ E (x * integralBasis E k) • dualInt E k := by
-  classical
-  have h := ((Algebra.traceForm ℚ E).dualBasis (traceForm_nondegenerate ℚ E)
-    (integralBasis E)).sum_repr x
-  simp only [LinearMap.BilinForm.dualBasis_repr_apply, Algebra.traceForm_apply] at h
-  exact h.symm
-
 theorem repr_eq_trace (a : 𝓞 E) (k) :
     (((RingOfIntegers.basis E).repr a k : ℤ) : ℚ) = Algebra.trace ℚ E (dualInt E k * (a : E)) := by
   classical
@@ -109,22 +94,6 @@ theorem repr_eq_trace (a : 𝓞 E) (k) :
   simp
 
 end Eigen
-
-section Further
-
-variable {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O] [Algebra O C]
-  {V : Type} [AddCommGroup V] [Module C V] [Module O V] [IsScalarTower O C V]
-
-end Further
-
-section FurtherEigen
-
-variable {A : Type} [CommRing A] {K : Type} [Field K] [Algebra A K]
-  {V : Type} [AddCommGroup V] [Module K V] [Module A V] [IsScalarTower A K V]
-  {E : Type} [Field E] [NumberField E]
-
-
-end FurtherEigen
 
 end GlobalTheory.CompanionTheory.Ar.HT.LatTest
 end -- clump:auto
@@ -231,7 +200,7 @@ theorem trace_mul_sesq (D : Datum H) (a : 𝓞 E) (x y : D.La) :
 theorem sesq_smul_left (D : Datum H) (a : 𝓞 E) (x y : D.La) :
     sesq D (a • x) y = (a : E) * sesq D x y := by
   classical
-  conv_rhs => rw [HT.LatTest.expand_dual ((a : E) * sesq D x y)]
+  conv_rhs => rw [_root_.GlobalTheory.CompanionTheory.Ar.HT.LatBasic.expand_dual ((a : E) * sesq D x y)]
   rw [sesq]
   refine Finset.sum_congr rfl fun k _ => ?_
   have e1 : (a : E) * sesq D x y * integralBasis E k =

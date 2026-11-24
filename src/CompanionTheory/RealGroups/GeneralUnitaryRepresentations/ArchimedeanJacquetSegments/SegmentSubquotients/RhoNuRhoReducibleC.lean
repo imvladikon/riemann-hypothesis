@@ -1444,15 +1444,7 @@ theorem nontrivial_of_irr {G : Type} [Group G] [TopologicalSpace G] (τ : IrrRep
   rw [Subsingleton.elim x 0]
   exact ⟨fun _ => zero_mem _, fun _ => zero_mem _⟩
 
-theorem nontrivial_of_isIrreducible {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
-    {π : Representation ℂ G V} (hi : π.IsIrreducible) : Nontrivial V := by
-  by_contra hs
-  rw [not_nontrivial_iff_subsingleton] at hs
-  apply (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤)
-  apply Subrepresentation.ext
-  ext x
-  rw [Subsingleton.elim x 0]
-  exact ⟨fun _ => zero_mem _, fun _ => zero_mem _⟩
+alias nontrivial_of_isIrreducible := _root_.GlobalTheory.JacFactor.nontrivial_of_isIrreducible
 
 theorem continuous_inv_addChar (ψ : AddChar k Circle) (hc : Continuous ψ) : Continuous (ψ⁻¹ : AddChar k Circle) := by
   have : (⇑(ψ⁻¹ : AddChar k Circle)) = fun a => ψ (-a) := funext fun a => AddChar.inv_apply ψ a
@@ -1814,10 +1806,7 @@ theorem nontriv {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Rep
   have hne : (⊥ : Subrepresentation ρ) ≠ ⊤ := bot_ne_top
   exact hne (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
 
-theorem congrProd {h N : ℕ} {x y : Fin h → IrrGL (k := k)} (e : x = y) (hx : ∑ a, (x a).1 = N) (hy : ∑ a, (y a).1 = N) :
-    Nonempty ((prodIrr x hx).Equiv (prodIrr y hy)) := by
-  subst e
-  exact ⟨Representation.Equiv.refl _⟩
+alias congrProd := _root_.GlobalTheory.CompanionTheory.LSocle.prodIrr_congr
 
 def yy (x : IrrGL (k := k)) (s : ℝ) : Fin 2 → IrrGL (k := k) := ![x.nu (-(s : ℂ)), x.nu (s : ℂ)]
 

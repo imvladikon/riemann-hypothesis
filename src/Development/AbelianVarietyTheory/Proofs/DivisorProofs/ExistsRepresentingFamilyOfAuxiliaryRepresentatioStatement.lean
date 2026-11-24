@@ -563,9 +563,6 @@ namespace GlobalTheory.HTLocSim
 
 variable {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ}
 
-theorem exists_spMap_eq {A B : Type} [CommRing A] [CommRing B] (f : Sp B ⟶ Sp A) : ∃ β : A →+* B, f = spMap β :=
-  ⟨(Spec.preimage f).hom, by simp [spMap]⟩
-
 theorem exists_open_eq_cycAway {M : ℕ} (hM : M ≠ 0) {T : Scheme.{0}} (f g : T ⟶ Sp (cycAway M)) (k : Type) [Field k]
     (y : Sp k ⟶ T) (hy : y ≫ f = y ≫ g) : ∃ V : T.Opens, Set.range y ⊆ (V : Set T) ∧ V.ι ≫ f = V.ι ≫ g := by
   haveI : FormallyUnramified (spMap (algebraMap ℤ (cycAway M))) := by
@@ -635,9 +632,9 @@ theorem exists_local_similitude : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
     ⟨(⊥ : PrimeSpectrum k), (Scheme.Hom.comp_apply _ _ _).trans (Scheme.fromSpecResidueField_apply q _)⟩
   have hM0 : 0 < M := by omega
   haveI : NeZero M := ⟨hM0.ne'⟩
-  obtain ⟨β, hβ⟩ := exists_spMap_eq (y ≫ x ≫ s₁)
-  obtain ⟨β', hβ'⟩ := exists_spMap_eq (y ≫ x' ≫ s₁)
-  obtain ⟨βR, hβR⟩ := exists_spMap_eq (y ≫ t)
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (y ≫ x ≫ s₁)
+  obtain ⟨β', hβ'⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (y ≫ x' ≫ s₁)
+  obtain ⟨βR, hβR⟩ := _root_.GlobalTheory.ZM.RepMap.exists_spMap (y ≫ t)
   obtain ⟨a, i, hmul, hzi, ha⟩ := exists_sim_point hM0 hodd o hl hl' k y β β' hβ hβ'
   obtain ⟨hρs, ⟨n, σ, hn, hσ, hρ1⟩, ma, hma⟩ := hρ a
   have hz := isPrimitiveRoot_map hM0.ne' β
@@ -739,16 +736,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor
 
 
-theorem _root_.GlobalTheory.T.exists_local_symplecticSimilitude_classifyingMaps : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ),
-  3 ≤ N → N.Coprime p → 3 ≤ M → Odd M → M.Coprime p →
-  ∀ (X : Scheme.{0}) (s : X ⟶ Sp R) (s₁ : X ⟶ Sp (cycAway M)) (u : Obj b N s)
-    (lev : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over X) ⟶ u.A)),
-    IsSympLev u.P h M (zetaAway M) s₁ lev → HarrisTaylorSymplecticLevelFamilyUniversalProperty b N h M s s₁ u lev →
-    ∀ ρ : sympSimGrp h M → (X ⟶ X), SympActs s s₁ u lev ρ →
-    ∀ (T : Scheme.{0}) (t : T ⟶ Sp R) (o : Obj b N t) (x x' : T ⟶ X), x ≫ s = t → x' ≫ s = t →
-      Nonempty (ObjMap o u x) → Nonempty (ObjMap o u x') →
-      ∀ q : T, ∃ (V : T.Opens) (a : sympSimGrp h M), q ∈ V ∧ V.ι ≫ x ≫ ρ a = V.ι ≫ x' := by
-  first | (exact @GlobalTheory.HTLocSim.exists_local_similitude)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalSymplecticSimilitudeClassifyingMapsStatement =====
@@ -1222,12 +1209,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor
 
 
-theorem _root_.GlobalTheory.T.harrisTaylor_moduliMap_descends_galoisCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ)
-  (S S₁ Y : Scheme.{0}) (t : S ⟶ Sp R) (sY : Y ⟶ Sp R) (π₁ : S₁ ⟶ S) (Ga : Type) [Group Ga]
-  (ρ₁ : Ga → (S₁ ⟶ S₁)) (f : S ⟶ Y) (o : Obj b N t) (o' : Obj b N (π₁ ≫ t)) (u : Obj b N sY),
-  3 ≤ N → N.Coprime p → GlobalTheory.ZM.IsGaloisCover Ga ρ₁ π₁ → ObjMap o' o π₁ → ObjMap o' u (π₁ ≫ f) →
-  Nonempty (ObjMap o u f) := by
-  first | (exact @GlobalTheory.UPel.HT.MapDesc.nonempty_objMap_of_galoisCover)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorModuliMapDescendsGaloisCoverStatement =====
@@ -1241,12 +1222,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor
 
 
-theorem _root_.GlobalTheory.T.harrisTaylor_similitude_fixing_point_eq_one : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 3 ≤ N → N.Coprime p → 0 < M →
-  ∀ (X : Scheme.{0}) (s : X ⟶ Sp R) (s₁ : X ⟶ Sp (cycAway M)) (u : Obj b N s)
-    (lev : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over X) ⟶ u.A)),
-    IsSympLev u.P h M (zetaAway M) s₁ lev → ∀ ρ : sympSimGrp h M → (X ⟶ X), SympActs s s₁ u lev ρ →
-    ∀ (k : Type) [Field k] [IsAlgClosed k] (y : Sp k ⟶ X) (a : sympSimGrp h M), y ≫ ρ a = y → a = 1 := by
-  first | (exact @GlobalTheory.HTQuotRigid.eq_one_of_fixes_point)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorSimilitudeFixingPointEqOneStatement =====
@@ -1456,29 +1431,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 namespace GlobalTheory.HTQuot
 
-theorem objMap_comp_φ_of_comp {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] {b : Base D R} {N : ℕ}
-    {S₁ S₂ S₃ : Scheme.{0}} {s₁ : S₁ ⟶ Sp R} {s₂ : S₂ ⟶ Sp R} {s₃ : S₃ ⟶ Sp R} {o₁ : Obj b N s₁} {o₂ : Obj b N s₂}
-    {o₃ : Obj b N s₃} {f : S₁ ⟶ S₂} {g : S₂ ⟶ S₃} (h₁ : ObjMap o₁ o₂ f) (h₂ : ObjMap o₂ o₃ g) :
-    ∃ m : ObjMap o₁ o₃ (f ≫ g), m.φ = h₁.φ ≫ h₂.φ := by
-  have sq : IsSquare (h₁.φ ≫ h₂.φ) (h₁.φ₂ ≫ h₂.φ₂) := by
-    constructor
-    · rw [Category.assoc, h₂.sq.1, ← Category.assoc, h₁.sq.1, Category.assoc]
-    · rw [Category.assoc, h₂.sq.2, ← Category.assoc, h₁.sq.2, Category.assoc]
-  have act : ∀ c, (o₁.act.act c).left ≫ (h₁.φ ≫ h₂.φ) = (h₁.φ ≫ h₂.φ) ≫ (o₃.act.act c).left := by
-    intro c
-    rw [← Category.assoc, h₁.act, Category.assoc, h₂.act, Category.assoc]
-  have eta : ∀ y, (o₁.eta y).left ≫ (h₁.φ ≫ h₂.φ) = (f ≫ g) ≫ (o₃.eta y).left := by
-    intro y
-    rw [← Category.assoc, h₁.eta, Category.assoc, h₂.eta, Category.assoc]
-  have H : LBIso (o₂.P.pull h₁.φ₂) ((o₃.P.pull h₂.φ₂).pull h₁.φ₂) :=
-    LBIso.chartPull (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull o₂.P h₁.φ₂ h₁.φ₂ rfl)
-      (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull (o₃.P.pull h₂.φ₂) h₁.φ₂ h₁.φ₂ rfl) h₂.pol
-  have H' : LBIso (o₂.P.pull h₁.φ₂) (o₃.P.pull (h₁.φ₂ ≫ h₂.φ₂)) :=
-    LBIso.chartPull (chartPullId _) (chartPullIn o₃.P (fun _ : PUnit => h₂.φ₂) (fun _ => 1) h₁.φ₂) H
-  have pol : LBIso o₁.P (o₃.P.pull (h₁.φ₂ ≫ h₂.φ₂)) :=
-    LBIso.trans o₁.isLB (pull_isLB o₂.isLB _) (pull_isLB o₃.isLB _) h₁.pol H'
-  exact ⟨⟨h₁.φ ≫ h₂.φ, h₁.φ₂ ≫ h₂.φ₂, h₁.cart.comp h₂.cart, sq, act, pol, eta⟩, rfl⟩
-
 theorem obj_descends_galoisCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R]
     (b : Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (X Y : Scheme.{0}) (π : X ⟶ Y) (sY : Y ⟶ Sp R) (G : Type)
     [Group G] (ρ : G → (X ⟶ X)) (o : Obj b N (π ≫ sY)), GlobalTheory.ZM.IsGaloisCover G ρ π → IsQProjOver (π ≫ sY) →
@@ -1500,7 +1452,7 @@ theorem obj_descends_galoisCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R
     exact key hG.one (m 1)
   have νmul : ∀ a c, ν (a * c) = ν a ≫ ν c := by
     intro a c
-    obtain ⟨m', hm'⟩ := objMap_comp_φ_of_comp (m a) (m c)
+    obtain ⟨m', hm'⟩ := _root_.GlobalTheory.HTQuotRigid.objMap_comp_φ (m a) (m c)
     exact (uniq (hG.mul a c) (m (a * c)) m').trans hm'
   have hcart : ∀ a, IsGrpPullback o.A o.A (ρ a) (ν a) := fun a => (m a).cart
   have hqA : IsQProjOver (o.A.hom ≫ π ≫ sY) :=
@@ -1569,7 +1521,7 @@ theorem exists_repFam_of_levelCover : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p)
     have hmf : Nonempty (ObjMap o uY f) := by
       obtain ⟨m₃⟩ := GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ o' u uY y π m₂ mu
       rw [← hf] at m₃
-      exact GlobalTheory.T.harrisTaylor_moduliMap_descends_galoisCover p D R b N S S₁ Y s' sY π₁ Ga ρ₁ f o o' uY hN hNp hgal₁ m₁ m₃
+      exact _root_.GlobalTheory.UPel.HT.MapDesc.nonempty_objMap_of_galoisCover p D R b N S S₁ Y s' sY π₁ Ga ρ₁ f o o' uY hN hNp hgal₁ m₁ m₃
     refine ⟨f, ⟨hfs, hmf⟩, ?_⟩
     rintro f' ⟨hf's, ⟨m'⟩⟩
     obtain ⟨m₄⟩ := GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ o' o uY π₁ f' m₁ m'
@@ -1601,9 +1553,9 @@ theorem exists_representing_family_of_level_structure : ∀ (p : ℕ) [Fact p.Pr
   obtain ⟨ρ, h1, hmul, hact⟩ := _root_.GlobalTheory.UPel.HT.SympAct.exists_sympActs p D R b N _ M (by omega) X s s₁ u lev hlev huniv
   exact exists_repFam_of_levelCover p D R b N hN hNp X s u _ ρ hq h1 hmul (fun a => (hact a).1)
     (fun a => let ⟨m, _⟩ := (hact a).2.2; ⟨m⟩)
-    (GlobalTheory.T.harrisTaylor_similitude_fixing_point_eq_one p D R b N _ M hN hNp (by omega) X s s₁ u lev hlev ρ hact)
-    (GlobalTheory.T.symplectic_level_over_cyclotomic p D R b N M e hN hNp hM hodd hMp hep hMe hperf X s s₁ u lev hlev huniv ρ hact)
-    (GlobalTheory.T.exists_local_symplecticSimilitude_classifyingMaps p D R b N _ M hN hNp hM hodd hMp X s s₁ u lev hlev huniv ρ hact)
+    (_root_.GlobalTheory.HTQuotRigid.eq_one_of_fixes_point p D R b N _ M hN hNp (by omega) X s s₁ u lev hlev ρ hact)
+    (_root_.GlobalTheory.HTSympCover.exists_galoisCover p D R b N M e hN hNp hM hodd hMp hep hMe hperf X s s₁ u lev hlev huniv ρ hact)
+    (_root_.GlobalTheory.HTLocSim.exists_local_similitude p D R b N _ M hN hNp hM hodd hMp X s s₁ u lev hlev huniv ρ hact)
 
 end GlobalTheory.HTQuot
 end -- clump:auto
@@ -1619,8 +1571,6 @@ section -- clump:auto
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.SiegelTor
 
-theorem _root_.GlobalTheory.T.exists_representingFamily_of_auxiliaryRepresentation : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N M e : ℕ), 3 ≤ N → N.Coprime p → 3 ≤ M → Odd M → M.Coprime p → e.Coprime p → M.Coprime e → (∀ f : D.La →ₗ[ℤ] ℤ, ∃ x, D.EF x = e • f) → HasLevelStructureOfLevel b N (Module.finrank ℤ D.La / 2) M → ∃ F : RepFam b N, IsQProjOver F.s := by
-  first | (exact @GlobalTheory.HTQuot.exists_representing_family_of_level_structure)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRepresentingFamilyOfAuxiliaryRepresentatioStatement =====

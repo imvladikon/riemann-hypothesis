@@ -207,10 +207,6 @@ section -- clump:auto
 open HeckeCharacterZeroLocus.SiegelWeilU GlobalTheory.CompanionTheory.SW NumberField IsDedekindDomain MeasureTheory Topology Filter GroundTheory.Global PositivityTheory.Rg.Base1 GlobalTheory.CompanionTheory.BasePsi
 open scoped ENNReal NNReal Classical
 
-theorem _root_.GlobalTheory.T.measurable_pure_adelic_function : ∀ (F : Type) [Field F] [NumberField F] (S : Finset (HeightOneSpectrum (𝓞 F))) (G : Ainf F → ℝ)
-    (g : ∀ v : HeightOneSpectrum (𝓞 F), Fv F v → ℝ), Continuous G → (∀ v ∈ S, Continuous (g v)) →
-    Measurable (PositivityTheory.Rg.Base1.pure S G g fun v => rv v 0) := by
-  first | exact @GlobalTheory.CompanionTheory.BasePsi.measurable_pure_rv_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MeasurablePureAdelicFunctionStatement =====
@@ -923,7 +919,7 @@ theorem limit (hE : PositivityTheory.Rg.Mass.Equi) (hF : IsTotallyReal F) (θ : 
 
 theorem psiSide_of_equi : PositivityTheory.Rg.Mass.Equi → PsiSide := by
   intro hE F _ _ hF θ hθ r hr li lam hli hlam S G g hG hGc hG0 hg0 hgS
-  refine ⟨GlobalTheory.T.measurable_pure_adelic_function F S G g hG fun v hv => (hgS v hv).1, ?_⟩
+  refine ⟨_root_.GlobalTheory.CompanionTheory.BasePsi.measurable_pure_rv_zero F S G g hG fun v hv => (hgS v hv).1, ?_⟩
   obtain ⟨D, hD, hD1, hDk⟩ := IdeleGroup.exists_isCompact_normOneSubgroup F
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.BasePsi.th_pure_rv_zero_bound F hF θ hθ r hr S G g hG hGc hgS D hD
   set d := Module.finrank ℚ F with hd

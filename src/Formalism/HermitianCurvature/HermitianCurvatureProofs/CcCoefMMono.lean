@@ -195,9 +195,9 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
       γ ∈ B.GV k ρ → F (U.gaXi k ρ σ d ξ (Zv n t v) γ) = F₁ (U.gaXi k ρ σ d ξ (Zv n t v) γ) := by
     intro t ht ξ v γ hγ
     obtain ⟨-, ht', hc'⟩ := hnear t ht
-    apply hB _ (Formalism.FourierDecayAlt.P.Ux10.gaXi_mem Formalism.FourierDecayAlt.P.slice_membership Formalism.FourierDecayAlt.P.radical_parametrisation σ d hd ξ _
+    apply hB _ (Formalism.FourierDecayAlt.P.Ux10.gaXi_mem _root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem _root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam σ d hd ξ _
       (hZne t ht' v) hγ)
-    rw [Formalism.FourierDecayAlt.P.Ux10.DjU_gaXi Formalism.FourierDecayAlt.P.hat_z_on_slice]
+    rw [Formalism.FourierDecayAlt.P.Ux10.DjU_gaXi _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice]
     have e : G.detM (Zv n t v) = t ^ (n + 1) * (G.wMat (n + 1)).det := detM_Zv n t v
     rw [e]
     exact hc'
@@ -397,7 +397,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
 
   have hAa : A ≤ a := le_trans hA ha128
   have hCCv : ∀ w : V, B.CCle A mm (fun γ => MM.ev w γ ()) ‖w‖ := fun w =>
-    Formalism.FourierDecayAlt.P.compactly_supported_monotone k ρ (Wq →L[ℂ] Wp) a A ‖w‖ mm _ hAa (ccle_unit (MM.mem w))
+    _root_.Formalism.FourierDecayAlt.P.Ux8.ccMono k ρ (Wq →L[ℂ] Wp) a A ‖w‖ mm _ hAa (ccle_unit (MM.mem w))
   set πc : ℂ := ((Real.pi ^ ((n + 1) * n / 2) : ℝ) : ℂ) with hπc
   have hWfc : ContinuousAt (fun t => πc • Wt t) t0 := continuousAt_const.smul hWc
   obtain ⟨δ2, hδ2, hδ2c⟩ := Metric.continuousAt_iff.mp hWfc 1 one_pos
@@ -468,8 +468,8 @@ theorem xs_eq_phi {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProdu
       subst hb
       exact ⟨by omega, ht⟩
   have hlocH := Formalism.FourierDecayAlt.P.Dx2.SL.isLocPt_head hloc
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hlocH).1
+  have hspec := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hloc).1
+  have hspec' := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hlocH).1
   have hσ : ∀ q : Fin (D.ptSize (h0 ++ [(n + 1, t)])),
       ((Formalism.FourierDecayAlt.P.Dx2.SL.sigP (n := n) (D.ptPerm h0)) (Fin.cast hP q)).val = (D.ptPerm (h0 ++ [(n + 1, t)]) q).val := by
     intro q

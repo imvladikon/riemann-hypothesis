@@ -500,7 +500,7 @@ theorem herm_mulVec {n : ℕ} {H g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UH 
 theorem gramProj_le {n r : ℕ} (P : Submodule ℂ (EuclideanSpace ℂ (Fin n))) (v : Fin r → Fin n → ℂ)
     (U : Matrix (Fin r) (Fin r) ℂ) (hU : U.det = 1) (R : ℝ) (hR : ∀ a, eucl (∑ b, U b a • v b) ≤ R) :
     gramProj P v ≤ R ^ r := by
-  have h := (Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.gramHadamard (EuclideanSpace ℂ (Fin n)) r
+  have h := (_root_.Formalism.HermitianLatticeCounting.P.gram_hadamard_inequality (EuclideanSpace ℂ (Fin n)) r
     (fun a => ∑ b, U b a • P.starProjection (WithLp.toLp 2 (v b)))).2 R (fun a => by
       refine le_trans ?_ (hR a)
       rw [eucl_eq, WithLp.toLp_sum]
@@ -530,7 +530,7 @@ theorem dr_y_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (γ : M
     rw [(hu' a).1]; exact (((LInv.lengths_basic k r z' hz').2.2 _).2.1 _).2
   have hD0 : 0 ≤ Dr k r z z' γ := norm_nonneg _
   refine ⟨?_, div_nonneg (Real.sqrt_nonneg _) hD0, ?_⟩
-  · have h := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.wedgeHadamard _ _ (formE (Hpk k r))
+  · have h := _root_.Formalism.HermitianLatticeCounting.P.wedge_hadamard_inequality _ _ (formE (Hpk k r))
       (formE_le _ (by rw [(hpkFacts k r).1, (hpkFacts k r).2.1])) r
       (fun a => ∑ b, upper u' b a • WithLp.toLp 2 (x⁻¹ *ᵥ bvec (eI k r b)))
       (fun a => ∑ b, upper u b a • WithLp.toLp 2 ((γ * x)⁻¹ *ᵥ bvec (eI k r b)))
@@ -851,7 +851,7 @@ theorem Yv_mul_Yv_mul_Dr_le : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → �
   intro k r z z' γ ⟨hz, _, hT, _, hγ, _, hD⟩ x hx
   have hD' : (Zm k r γ).det ≠ 0 := by rw [Dr_eq] at hD; exact norm_ne_zero_iff.1 hD
   have hZ : IsUnit (Zm k r γ).det := hD'.isUnit
-  have h := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.absA (Ppos k r z z' γ x) (Ppos k r z' z γ⁻¹ (γ * x)) r
+  have h := _root_.Formalism.HermitianLatticeCounting.P.absolute_value_bound (Ppos k r z z' γ x) (Ppos k r z' z γ⁻¹ (γ * x)) r
     (fun a => (Ppos k r z z' γ x).orthogonalProjectionOnto (WithLp.toLp 2 (x⁻¹ *ᵥ (γ⁻¹ *ᵥ bvec (eI k r a)))))
     (fun a => (Ppos k r z' z γ⁻¹ (γ * x)).orthogonalProjectionOnto
       (WithLp.toLp 2 ((γ * x)⁻¹ *ᵥ (γ⁻¹⁻¹ *ᵥ bvec (eI k r a))))) (Zm k r γ)⁻¹ᵀ (fun p q => by
@@ -884,35 +884,24 @@ namespace GlobalTheory.Amp.AbsConv
 
 variable {k r : ℕ}
 
-theorem dmin_inv (z z' : Fin (2 * r + k + 1) → ℂ) {γ : Mat k r} (hγ : γ ∈ GG k r) (l : Fin (r + 2)) :
-    Dmin k r z' z γ⁻¹ l = star (Dmin k r z z' γ l) := by
-  unfold Dmin
-  rw [(_root_.GlobalTheory.SgInf.RegInv.zhat_inv_and_reg k r z z' γ hγ).1, ← Matrix.det_conjTranspose, Matrix.conjTranspose_submatrix]
-
 theorem dr_inv (z z' : Fin (2 * r + k + 1) → ℂ) {γ : Mat k r} (hγ : γ ∈ GG k r) :
     Dr k r z' z γ⁻¹ = Dr k r z z' γ := by
   unfold Dr
-  rw [dmin_inv z z' hγ, norm_star]
+  rw [_root_.GlobalTheory.SgInf.RegInv.dmin_inv z z' hγ, norm_star]
 
 theorem twoFl_inv {z z' : Fin (2 * r + k + 1) → ℂ} {γ : Mat k r} (h : TwoFl k r z z' γ) : TwoFl k r z' z γ⁻¹ := by
   obtain ⟨h1, h2, h3, h4, h5, h6, h7⟩ := h
   refine ⟨h2, h1, h4, h3, isClosedSub_GG.2.2.2.2 _ h5, ?_, by rwa [dr_inv z z' h5]⟩
   unfold Gf at h6 ⊢
-  rw [dmin_inv z z' h5, dmin_inv z z' h5, mul_comm (Tz k r z')]
+  rw [_root_.GlobalTheory.SgInf.RegInv.dmin_inv z z' h5, _root_.GlobalTheory.SgInf.RegInv.dmin_inv z z' h5, mul_comm (Tz k r z')]
   simpa only [Complex.star_def, Complex.normSq_conj] using h6
 
 theorem deOK_inv {z z' : Fin (2 * r + k + 1) → ℂ} {γ : Mat k r} {De : ℝ} (hγ : γ ∈ GG k r)
     (h : DeOK k r z z' γ De) : DeOK k r z' z γ⁻¹ De := by
   refine ⟨h.1, fun l hl h0 => ?_⟩
-  rw [dmin_inv z z' hγ] at h0 ⊢
+  rw [_root_.GlobalTheory.SgInf.RegInv.dmin_inv z z' hγ] at h0 ⊢
   rw [norm_star]
   exact h.2 l hl fun h' => h0 (by rw [h', star_zero])
-
-theorem continuous_lmul (a : Mat k r) : Continuous (lmulM a : Mt k r → Mt k r) :=
-  continuous_const.matrix_mul (continuous_id (X := Mat k r))
-
-theorem continuous_conj (a : Mat k r) : Continuous (conjM a : Mt k r → Mt k r) :=
-  (continuous_const.matrix_mul (continuous_id (X := Mat k r))).matrix_mul continuous_const
 
 theorem lmul_inv_lmul {γ : Mat k r} (hγ : γ ∈ GG k r) (x : Mt k r) : lmulM γ⁻¹ (lmulM γ x) = x :=
   Matrix.nonsing_inv_mul_cancel_left γ (Matrix.of x) (isUnit_det_of_mem_GG hγ)
@@ -922,27 +911,25 @@ def lmulEquiv {γ : Mat k r} (hγ : γ ∈ GG k r) : Mt k r ≃ᵐ Mt k r where
   invFun := lmulM γ⁻¹
   left_inv := lmul_inv_lmul hγ
   right_inv x := Matrix.mul_nonsing_inv_cancel_left γ (Matrix.of x) (isUnit_det_of_mem_GG hγ)
-  measurable_toFun := (continuous_lmul γ).measurable
-  measurable_invFun := (continuous_lmul γ⁻¹).measurable
+  measurable_toFun := (_root_.GlobalTheory.Amp.StabMeas.cont_lmul γ).measurable
+  measurable_invFun := (_root_.GlobalTheory.Amp.StabMeas.cont_lmul γ⁻¹).measurable
 
 theorem quot_map {γ : Mat k r} (hγ : γ ∈ GG k r) {μG μR ν : Measure (Mt k r)} (hG : IsHaarOn (GG k r) μG)
     (h : IsQuotMeas μG μR ν) : IsQuotMeas μG (μR.map (conjM γ)) (ν.map (lmulEquiv hγ)) := by
   apply _root_.GlobalTheory.Amp.DegConv.quot_map <;> assumption
 
-def Gs (k r : ℕ) : Set (Mt k r) := {x | Matrix.of x ∈ GG k r}
-
-def ext0 (f : Mat k r → ℝ) : Mt k r → ℝ := Set.indicator (Gs k r) fun x => f (Matrix.of x)
+def ext0 (f : Mat k r → ℝ) : Mt k r → ℝ := Set.indicator (_root_.GlobalTheory.Amp.OnePiece.grp k r) fun x => f (Matrix.of x)
 
 theorem cochainExtendByZeroSubgroup_of_mem (f : Mat k r → ℝ) {x : Mt k r} (hx : Matrix.of x ∈ GG k r) : ext0 f x = f (Matrix.of x) :=
-  Set.indicator_of_mem (s := Gs k r) hx _
+  Set.indicator_of_mem (s := _root_.GlobalTheory.Amp.OnePiece.grp k r) hx _
 
 theorem amplifierAbsConvExtendByZero_of_not_mem (f : Mat k r → ℝ) {x : Mt k r} (hx : Matrix.of x ∉ GG k r) : ext0 f x = 0 :=
-  Set.indicator_of_notMem (s := Gs k r) hx _
+  Set.indicator_of_notMem (s := _root_.GlobalTheory.Amp.OnePiece.grp k r) hx _
 
 theorem measurable_amplifierAbsConvExtendByZero {f : Mat k r → ℝ} (hf : ContinuousOn f (GG k r)) : Measurable (ext0 f) := by
   classical
-  have hc : IsClosed (Gs k r) := isClosedSub_GG.2.1
-  have h1 : ContinuousOn (fun x : Mt k r => f (Matrix.of x)) (Gs k r) := hf
+  have hc : IsClosed (_root_.GlobalTheory.Amp.OnePiece.grp k r) := isClosedSub_GG.2.1
+  have h1 : ContinuousOn (fun x : Mt k r => f (Matrix.of x)) (_root_.GlobalTheory.Amp.OnePiece.grp k r) := hf
   have := ContinuousOn.measurable_piecewise (g := fun _ => (0 : ℝ)) h1 continuousOn_const hc.measurableSet
   convert this using 1
   exact (Set.piecewise_eq_indicator).symm
@@ -1037,7 +1024,7 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
     have : (0 : ℝ) < ((k - 2 - r : ℕ) : ℝ) := by exact_mod_cast hkk
     unfold Kc
     positivity
-  have me : Measurable (lmulM γ : Mt k r → Mt k r) := (continuous_lmul γ).measurable
+  have me : Measurable (lmulM γ : Mt k r → Mt k r) := (_root_.GlobalTheory.Amp.StabMeas.cont_lmul γ).measurable
   have main := _root_.GlobalTheory.Amp.OpNorm.integrable_and_norm_ampJ_le k r νR Φ Φ' γ c (κ / s * Kc k r De * c * 24 * (r : ℝ) ^ (2 * r) * H₁ ^ (24 * r ^ 3) *
     De ^ (2 * r) * (2 ^ r / Dr k r z z' γ) ^ (k - 2 - r)) hγ n0 cΦ cΦ' hc (by positivity) ?_
   · refine ⟨main.1, main.2.trans ?_⟩

@@ -459,9 +459,7 @@ theorem symplO_extX_extY {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (T :
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun j _ => Finset.sum_comm
 
-theorem heisO_zero' (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ) : heisO ψ S T 0 f = f := by
-  funext w
-  simp [heisO, symplOH, symplO, hO]
+alias heisO_zero' := _root_.GlobalTheory.SplitScalar.heisO_zero
 
 theorem exists_mixS_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S S₀ T : HSp D} {ρ : ℕ}
     (d : HypDec S S₀ ρ) {μ : Measure (Mx D T.rank ρ)} {𝓕 : Set (Mx D T.rank ρ)}
@@ -822,9 +820,7 @@ theorem circle_eq_one_of_pos {u : Circle} {t : ℝ} (ht : 0 < t) (h : (u : ℂ) 
 
 variable {D : D7}
 
-theorem suppAt_one (e : AE D) (V : HSp D) : SuppAt e V 1 := by
-  intro i j
-  simp [Formalism.L2.Theta.mt]
+alias suppAt_one := _root_.GlobalTheory.WeilUniq.suppAt_one
 
 theorem isDetAt_one (e : AE D) (V : HSp D) : IsDetAt e V 1 1 := by
   simp [Formalism.L2.Theta.IsDetAt, Formalism.L2.Theta.mt]

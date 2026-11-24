@@ -41,6 +41,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianTorsionFiniteAndClosedPointFiniteOrde
 
 @[expose] public section
 
@@ -65,12 +66,6 @@ theorem evc_pow_left {A B Y : Over S} [GrpObj A] {P : LB (A ⊗ B).left} (hP : P
     rw [pow_zero, zero_smul]
     exact left_eq_add.1 e
   | succ n ih => rw [pow_succ, hadd, ih, succ_nsmul]
-
-theorem comp_pow_pt {A T Y : Over S} [GrpObj A] (f : Y ⟶ T) (g : T ⟶ A) (n : ℕ) :
-    f ≫ g ^ n = (f ≫ g) ^ n := by
-  induction n with
-  | zero => rw [pow_zero, pow_zero, MonObj.comp_one]
-  | succ n ih => rw [pow_succ, pow_succ, MonObj.comp_mul, ih]
 
 theorem cls_heckePow {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) (m : ℕ)
     (h : (GlobalTheory.UPel.HT.Hecke.lbPow L m).IsLB) : cls _ h = m • cls L hL := by
@@ -121,9 +116,9 @@ theorem triv_pow_of_translDiff : ∀ {S : Scheme.{0}} (A : Over S) [GrpObj A] [I
   have h2 : 2 • evc hP (snd A T ≫ h' ^ m) (fst A T) = 0 := by
     rw [two_nsmul, ← key]
     abel
-  rw [comp_pow_pt, evc_pow_left hP (fun a a' t => eL a a' t)] at h2
+  rw [_root_.GlobalTheory.SemiAbTorsion.comp_pow_points, evc_pow_left hP (fun a a' t => eL a a' t)] at h2
   have hsq' : toUnit (A ⊗ T) ≫ h₀ = (snd A T ≫ h') ^ 2 := by
-    rw [← comp_pow_pt, hsq, ← Category.assoc, toUnit_unique (snd A T ≫ toUnit T) (toUnit _)]
+    rw [← _root_.GlobalTheory.SemiAbTorsion.comp_pow_points, hsq, ← Category.assoc, toUnit_unique (snd A T ≫ toUnit T) (toUnit _)]
   have hQ : (GlobalTheory.UPel.HT.Hecke.lbPow P m).IsLB := LB.isLB_linComb hP _ _
   have eQ : ∀ {Y : Over S} (a b : Y ⟶ A), evc hQ a b = m • evc hP a b := by
     intro Y a b

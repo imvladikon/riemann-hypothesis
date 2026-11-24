@@ -438,7 +438,7 @@ theorem tl_mul_comm [_root_.NumberField.IsTotallyComplex E] {n : ℕ} (ϖ : ∀ 
     GlobalTheory.CellDec.tl n ϖ l * p = p * GlobalTheory.CellDec.tl n ϖ l := by
   apply ga_ext
   · simp [GlobalTheory.CellDec.tl, map_mul]
-  · apply GlobalTheory.CellDec.GL_ext_pLoc
+  · apply _root_.GlobalTheory.CuspRep.LocUniq.gl_ext
     intro w
     change GlobalTheory.CellDec.compV E n w (GlobalTheory.CellDec.tl n ϖ l * p) = GlobalTheory.CellDec.compV E n w (p * GlobalTheory.CellDec.tl n ϖ l)
     rw [map_mul, map_mul]
@@ -920,12 +920,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.CuspRep GlobalTheory.JSW GroundTheory.Global.IdeleGroup Formalism.L2.Host Formalism.UG GlobalTheory.LFun
 open scoped ENNReal nonZeroDivisors Classical
 
-theorem _root_.GlobalTheory.T.exists_cuspRep_bump_data_satake_unitary : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CG E a), π.IsUnitary →
-    ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T π →
-    ∃ (α : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} → Fin a → ℂˣ) (π₀ : CuspSub E a) (ω : HChar E),
-      (∀ w, Finset.univ.val.map (α w) = sat π w) ∧ CG.mk π₀ = π ∧ ω.IsUnitary ∧ π₀.HasCentChar ω ∧ π₀.IsUnitary ∧
-      ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, HasSatGL w.1 (π₀.locRep w.1) (Finset.univ.val.map (α w)) := by
-  first | (exact @GlobalTheory.BumpData.bumpData)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCuspRepBumpDataSatakeUnitaryStatement =====
@@ -1301,7 +1295,7 @@ theorem GlobalTheory.RamShift.exists_shifted_bump_shintani : ∀ (E : Type) [Fie
     funext z
     exact hφ' z
   obtain ⟨F₀, hF₀V, hF₀b, hF₀U, hF₀inv, hF₀rel⟩ :=
-    GlobalTheory.T.kirillov_semilocal_smooth_bump E m T b hbN hbC hbU hbS π φ' hφ'V ⟨x₀, hx₀, by rw [hWφ']; exact hW₀⟩
+    _root_.GlobalTheory.JSW.KirSemi.kirillov_semilocal_bump E m T b hbN hbC hbU hbS π φ' hφ'V ⟨x₀, hx₀, by rw [hWφ']; exact hW₀⟩
   have hWF : ∀ y, whit (fun g => F₀ (g * t₀⁻¹)) y = whit F₀ (y * t₀⁻¹) := fun y =>
     (whit_mul_right F₀ y t₀⁻¹).symm
   refine ⟨fun g => F₀ (g * t₀⁻¹), mspanR_rt hF₀V _, l₀, fun w => shift_last m T ϖ w, ?_, ?_, ?_, ?_, ?_⟩
@@ -1316,7 +1310,7 @@ theorem GlobalTheory.RamShift.exists_shifted_bump_shintani : ∀ (E : Type) [Fie
       exact hU _ hu _
   ·
     intro k hk hkinf hkT g
-    have hkf := eq_finGL_of_pInf hkinf
+    have hkf := _root_.GlobalTheory.JSW.KirArchTransfer.eq_finGL hkinf
     set kf := GeneralLinearGroup.map (pFin E) k with hkfdef
     have hφk : act (.fin kf) φ = φ := _root_.GlobalTheory.CuspRep.fixed_of_locFixed E (m + 1) φ (π.cusp φ hφV).1 T hφK kf
       (fun w hw => by
@@ -1556,7 +1550,7 @@ theorem lintegral_unfolded_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_
               (fun w i => ((α w i : ℂˣ) : ℂ)) x := by
   intro E _ _ _ a π ha hπ T hT
   obtain ⟨m, rfl⟩ : ∃ m, a = m + 1 := ⟨a - 1, by omega⟩
-  obtain ⟨α, π₀, ω, hα, hmk, hωu, hω, hπ₀, hsat⟩ := GlobalTheory.T.exists_cuspRep_bump_data_satake_unitary E (m + 1) π hπ T hT
+  obtain ⟨α, π₀, ω, hα, hmk, hωu, hω, hπ₀, hsat⟩ := _root_.GlobalTheory.BumpData.bumpData E (m + 1) π hπ T hT
   obtain ⟨ϖ, hϖ⟩ := exists_isUnifV E
   obtain ⟨F, hF, l₀, hl₀, ⟨U, hUo, hU⟩, hK, hW0, ⟨C, hC, hCp⟩, hprof⟩ := _root_.GlobalTheory.RamShift.exists_shifted_bump_shintani E m T π₀ hπ₀ α hsat ϖ hϖ
   have hSm : F ∈ Sm E (m + 1) := (GlobalTheory.MSpanDecay.mspanR_le_goodSub hπ₀ hF : GlobalTheory.MSpanDecay.Good F).mem_Sm
@@ -1742,22 +1736,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.CuspRep GlobalTheory.JSW GroundTheory.Global.IdeleGroup Formalism.L2.Host
 open scoped ENNReal nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.unfolded_theta_integral_eq_mul_schur_euler_product : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CG E a), 1 ≤ a → π.IsUnitary →
-    ∀ T : Finset (HeightOneSpectrum (𝓞 E)), UnrOutside T π →
-    ∃ (α : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} → Fin a → ℂˣ) (ℓ : Fin a) (Φ : (Fin a → Cinf E) → ℂ)
-      (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ) (η : Fin a → Af E) (π₀ : CuspSub E a) (ω : HChar E) (φ : Sm E a),
-      (∀ w, Finset.univ.val.map (α w) = sat π w) ∧ CG.mk π₀ = π ∧ ω.IsUnitary ∧ π₀.HasCentChar ω ∧
-      (φ ∈ π₀.V ∨ φ.1 ∈ GlobalTheory.JSW.mspanR π₀) ∧ φ ≠ 0 ∧
-      ContDiff ℝ (⊤ : ℕ∞) Φ ∧ HasCompactSupport Φ ∧ tsupport Φ ⊆ GlobalTheory.RSTheta.rowSet E ℓ ∧
-      (∀ u, 0 ≤ (Φ u).re ∧ (Φ u).im = 0) ∧ Φ ≠ 0 ∧
-      ∀ (μ : Measure (GA E a)) [μ.IsHaarMeasure] (𝓕 : Set (GA E a)), IsFundamentalDomain (ratGL E a).range 𝓕 μ →
-        ∃ H : ℝ → ℝ, ContinuousWithinAt H (Set.Ioi 1) 1 ∧ 0 < H 1 ∧ ∀ x : ℝ, 1 < x → 0 < H x ∧
-          GlobalTheory.RSPole.eulD (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => Ideal.absNorm w.1.asIdeal)
-                       (fun w i => ((α w i : ℂˣ) : ℂ)) x ≠ ⊤ ∧
-          GlobalTheory.RSPole.thetaZ μ 𝓕 ℓ φ.1 φ.1 Φ J η x =
-            ((H x * (GlobalTheory.RSPole.eulD (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => Ideal.absNorm w.1.asIdeal)
-              (fun w i => ((α w i : ℂˣ) : ℂ)) x).toReal : ℝ) : ℂ) := by
-  first | (exact @GlobalTheory.RSEulerId.thetaZ_eq_mul_eulD)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedThetaIntegralEqMulSchurEulerProductStatement =====

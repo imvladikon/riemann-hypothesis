@@ -61,6 +61,7 @@ import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Separation.CompletelyRegular
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResFinEqOneOfAway
 import Development.WeilBound.RepresentationTheoryGL.JacquetShalikaBounds.AbsoluteRigidity.NonnegativeCoefficients.DirichletSeriesUnbounded
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
 import Development.WeilBound.RepresentationTheoryGL.JacquetShalikaBounds.AbsoluteRigidity.ConjugateAnalyticity.RankinSelbergUnitaryOfPole
@@ -382,19 +383,15 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.BcSumD =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.CoverEx =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.CoverEx", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.SumSatUnit\npublic import Development.AbelianVarietyTheory.BlockTheory.AdelicCMFields.UnitaryHeckeCharacterIdele\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.CoverEx", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.NormCharacterPowers.SumSatUnit\npublic import Development.AbelianVarietyTheory.BlockTheory.AdelicCMFields.UnitaryHeckeCharacterIdele\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.GelfandKazhdanReal\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResFinEqOneOfAway\n\n"}
 section -- clump:auto
 @[expose] public section
 
 open UpperTheory.ConvolutionTheory.R
 open NumberField IsDedekindDomain Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V.Published PositivityTheory.RgJS
 
-private theorem normV_eq {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) :
-    normV v = Ideal.absNorm v.asIdeal := by
-  rw [normV, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-
 private theorem one_lt_normV {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) : 1 < normV v := by
-  rw [normV_eq]
+  rw [_root_.GlobalTheory.ToricDistribution.normV_eq]
   exact NumberField.HeightOneSpectrum.one_lt_absNorm v
 
 theorem UpperTheory.ConvolutionTheory.R.coverEx :
@@ -468,7 +465,7 @@ theorem UpperTheory.ConvolutionTheory.R.coverEx :
     obtain ⟨w, hw⟩ := hex v.1 v.2
     exact hw ▸ (hgood w (hw ▸ v.2)).2.1
   · intro w
-    simpa only [nq, normV_eq] using hnorm w
+    simpa only [nq, _root_.GlobalTheory.ToricDistribution.normV_eq] using hnorm w
   · intro v
     obtain ⟨w₀, hw₀⟩ := hex v.1 v.2
     have hg := hgood w₀ (hw₀ ▸ v.2)
@@ -886,11 +883,6 @@ private theorem unr_pow {χ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (h : χ.
   have e : (χ ^ j).loc w x = χ.loc w x ^ j := MonoidHom.pow_apply χ.1 j _
   rw [e, h x hx, one_pow]
 
-private theorem unr_inv {χ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (h : χ.UnrAt w) : (χ⁻¹).UnrAt w := by
-  intro x hx
-  have e : (χ⁻¹).loc w x = (χ.loc w x)⁻¹ := rfl
-  rw [e, h x hx, inv_one]
-
 private theorem unit_of_pow {χ : HChar E} {l : ℕ} (hl : l ≠ 0) (h : χ ^ l = 1) : χ.IsUnitary := by
   intro x
   have e : χ.1 x ^ l = 1 := by
@@ -901,17 +893,10 @@ private theorem unit_of_pow {χ : HChar E} {l : ℕ} (hl : l ≠ 0) (h : χ ^ l 
 
 variable [_root_.NumberField.IsTotallyComplex E]
 
-private theorem unit_twist {n : ℕ} {π : CG E n} (h : π.IsUnitary) {χ : HChar E} (hχ : χ.IsUnitary) :
-    (π.twist χ).IsUnitary := by
-  obtain ⟨ω, hω, hc⟩ := h
-  refine ⟨_, fun x => ?_, hc.twist χ⟩
-  have e : (ω * χ ^ n).1 x = ω.1 x * χ.1 x ^ n := congrArg (ω.1 x * ·) (MonoidHom.pow_apply χ.1 n _)
-  rw [e, Units.val_mul, Units.val_pow_eq_pow_val, norm_mul, norm_pow, hω x, hχ x, one_pow, one_mul]
-
 private theorem sat_untw {n : ℕ} {π : CG E n} {χ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (hχ : χ.UnrAt w)
     (h : ∃ B, (π.twist χ).HasSat w B) : ∃ B, π.HasSat w B := by
   obtain ⟨B, hB⟩ := h
-  have := satake_twist_holds E n _ χ⁻¹ w B (unr_inv hχ) hB
+  have := satake_twist_holds E n _ χ⁻¹ w B (_root_.Formalism.L2.Host.HChar.UnrAt.inv hχ) hB
   rw [← CG.twist_mul, mul_inv_cancel, CG.twist_one] at this
   exact ⟨_, this⟩
 
@@ -1001,7 +986,7 @@ theorem UpperTheory.ConvolutionTheory.R.count :
   obtain ⟨S0, hS0⟩ := hS K X hXf (by
     rintro _ (rfl | ⟨j, rfl⟩)
     · exact ⟨hn, hu1, e1.mono fun v hv => sat_untw ((hν _).1 v) hv⟩
-    · refine ⟨hn, unit_twist hu0 (hηu j), ?_⟩
+    · refine ⟨hn, _root_.GlobalTheory.CuspRep.CG.IsUnitary.twist hu0 (hηu j), ?_⟩
       filter_upwards [e0, S1.eventually_cofinite_notMem] with v hv hvS
       obtain ⟨B, hB⟩ := sat_untw ((hν _).1 v) hv
       exact ⟨_, satake_twist_holds K n π0 _ v B (unr_pow (hunr1 ⟨v, hvS⟩) j) hB⟩)

@@ -412,12 +412,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.anchor_bound : _root_.GlobalTheory.CovTop.AnchorCondition := by
-  first | exact @_root_.GlobalTheory.CovTop.anchor_holds_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AnchorHoldsStatement =====

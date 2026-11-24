@@ -523,9 +523,6 @@ theorem conj_ip (R : RiemLat E g Λ) (x y : Fin g → ℂ) : starRingEnd ℂ (R.
   rw [starRingEnd_apply, ← Matrix.star_dotProduct_star, Matrix.star_mulVec, star_star, R.herm.eq,
     ← Matrix.dotProduct_mulVec]
 
-theorem ip_add_left (R : RiemLat E g Λ) (x y z : Fin g → ℂ) : R.ip (x + y) z = R.ip x z + R.ip y z := by
-  simp only [RiemLat.ip, star_add, Matrix.mulVec_add, dotProduct_add]
-
 theorem ip_smul_left (R : RiemLat E g Λ) (x y : Fin g → ℂ) (r : ℂ) :
     R.ip (r • x) y = starRingEnd ℂ r * R.ip x y := by
   simp only [RiemLat.ip, star_smul, Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul, starRingEnd_apply]
@@ -547,7 +544,7 @@ theorem ip_self_definite (R : RiemLat E g Λ) (x : Fin g → ℂ) (h : R.ip x x 
   inner x y := R.ip x y
   conj_inner_symm x y := conj_ip R x y
   re_inner_nonneg x := ip_self_nonneg R x
-  add_left x y z := ip_add_left R x y z
+  add_left x y z := _root_.LevelTowerAlt.ip_add_left R x y z
   smul_left x y r := ip_smul_left R x y r
   definite x h := ip_self_definite R x h
 
@@ -607,24 +604,15 @@ theorem exists_mul_eq_int {a : 𝓞 E} (ha : a ≠ 0) : ∃ (c : 𝓞 E) (N : �
     exact ha
   exact_mod_cast this
 
-theorem ringHom_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
-  intro a ha
-  by_contra h
-  obtain ⟨c, N, hN, hc⟩ := exists_mul_eq_int h
-  have h2 := congrArg s hc
-  rw [map_mul, ha, mul_zero, map_intCast] at h2
-  exact hN (by exact_mod_cast h2.symm)
-
 theorem comp_bijective : Function.Bijective (fun s : E →+* ℂ => s.comp (algebraMap (𝓞 E) E)) := by
   constructor
   · intro s s' h
     exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) h
   · intro s
-    refine ⟨IsFractionRing.lift (K := E) (ringHom_injective s), ?_⟩
-    show (IsFractionRing.lift (K := E) (ringHom_injective s)).comp (algebraMap (𝓞 E) E) = s
+    refine ⟨IsFractionRing.lift (K := E) (_root_.LevelTowerAlt.emb_inj s), ?_⟩
+    show (IsFractionRing.lift (K := E) (_root_.LevelTowerAlt.emb_inj s)).comp (algebraMap (𝓞 E) E) = s
     refine RingHom.ext fun a => ?_
-    exact IsFractionRing.lift_algebraMap (K := E) (ringHom_injective s) a
+    exact IsFractionRing.lift_algebraMap (K := E) (_root_.LevelTowerAlt.emb_inj s) a
 
 variable [IsCMField E]
 
@@ -1010,15 +998,11 @@ theorem ringOfIntegers_hom_injective (s : 𝓞 E →+* ℂ) : Function.Injective
   rw [hk] at this
   simpa using this
 
-theorem finrank_eq_two_mul_card {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) :
-    Module.finrank ℚ E = 2 * Fintype.card Ψ := by
-  apply GlobalTheory.CompanionTheory.Ar.Cusp.ShortVec.finrank_eq_two_mul <;> assumption
-
 theorem finrank_real_eq_card {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) :
     Module.finrank ℚ (maximalRealSubfield E) = Fintype.card Ψ := by
   have h1 := (letI : Module.Free (maximalRealSubfield E) E := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield E) E)
   rw [Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield E) E,
-    finrank_eq_two_mul_card hσ] at h1
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ShortVec.finrank_eq_two_mul hσ] at h1
   omega
 
 end Card
@@ -1117,7 +1101,7 @@ theorem group_mean_logPlus_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hcard : Module.finrank ℚ (maximalRealSubfield E) = Fintype.card Ψ := finrank_real_eq_card F.cm
   have hdeg : Module.finrank ℚ E = 2 * Module.finrank ℚ (maximalRealSubfield E) := by
     rw [hcard]
-    exact finrank_eq_two_mul_card F.cm
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ShortVec.finrank_eq_two_mul F.cm
   have hfam' : ∃ a : Fin (2 * Module.finrank ℚ (maximalRealSubfield E)) → 𝓞 E,
       LinearIndependent ℚ (fun i => (a i : E)) ∧ ∀ i (s : E →+* ℂ), ‖s (a i)‖ ≤ vr := by
     obtain ⟨a, hli, hb⟩ := hfam
@@ -1365,15 +1349,7 @@ theorem isPreconnected_ballDom {Ψ : Type} [Fintype Ψ] {j j' n : ℕ} (q : Ψ �
     IsPreconnected (ballDom q) := by
   apply SheetDecomposition.ballDom_preconnected <;> assumption
 
-theorem measurable_ballDens {Ψ : Type} [Fintype Ψ] {j j' n : ℕ} (q : Ψ × Fin j × Fin j' ≃ Fin n) :
-    Measurable (ballDens q) := by
-  have hm : ∀ τ, Continuous fun t : Fin n → ℂ => ballMat q t τ := fun τ =>
-    continuous_matrix fun a b => continuous_apply _
-  have hd : ∀ τ, Measurable fun t : Fin n → ℂ => Real.log (1 - (ballMat q t τ)ᴴ * ballMat q t τ).det.re := fun τ =>
-    Real.measurable_log.comp (Complex.continuous_re.comp
-      (continuous_const.sub ((hm τ).matrix_conjTranspose.matrix_mul (hm τ))).matrix_det).measurable
-  unfold ballDens ballPot
-  exact Real.measurable_exp.comp (measurable_const.mul (Finset.measurable_sum _ fun τ _ => hd τ).neg)
+alias measurable_ballDens := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.DictMeas.measurable_ballDens
 
 end Ball
 
@@ -1736,54 +1712,7 @@ section Card
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
-theorem hom_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
-  set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
-  have hk : RingHom.ker s = ⊥ := by
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
-    rw [eq_bot_iff]
-    intro m hm
-    have h1 : s (algebraMap ℤ (𝓞 E) m) = 0 := hm
-    have h2 : ((m : ℤ) : ℂ) = 0 := by simpa using h1
-    simpa using (Int.cast_eq_zero.1 h2)
-  intro a ha
-  have : a ∈ RingHom.ker s := ha
-  rw [hk] at this
-  simpa using this
-
-theorem finrank_eq_two_mul {Ψ : Type} [Fintype Ψ] {σ : Ψ → (𝓞 E →+* ℂ)} (hσ : IsCMFam σ) :
-    Module.finrank ℚ E = 2 * Fintype.card Ψ := by
-  classical
-  let e : (E →+* ℂ) ≃ (𝓞 E →+* ℂ) :=
-    { toFun := fun φ => φ.comp (algebraMap (𝓞 E) E)
-      invFun := fun s => IsFractionRing.lift (hom_injective s)
-      left_inv := fun φ => by
-        apply IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E))
-        ext x
-        simp
-      right_inv := fun s => by
-        ext x
-        simp }
-  haveI : Fintype (𝓞 E →+* ℂ) := Fintype.ofEquiv _ e
-  have hc : Fintype.card (𝓞 E →+* ℂ) = Module.finrank ℚ E := by
-    rw [← Fintype.card_congr e]
-    exact NumberField.Embeddings.card E ℂ
-  let P : (𝓞 E →+* ℂ) → Prop := fun s => ∃ τ, σ τ = s
-  let c : (𝓞 E →+* ℂ) → (𝓞 E →+* ℂ) := fun s => (starRingEnd ℂ).comp s
-  have hcc : ∀ s, c (c s) = s := fun s => by
-    ext x
-    simp [c]
-  have hP : ∀ s, P s ↔ ¬ P (c s) := hσ.2
-  have e1 : {s // P s} ≃ Ψ := (Equiv.ofInjective σ hσ.1).symm
-  have e2 : {s // ¬ P s} ≃ {s // P s} :=
-    { toFun := fun s => ⟨c s.1, by
-        by_contra hn
-        exact s.2 ((hP s.1).2 hn)⟩
-      invFun := fun s => ⟨c s.1, (hP s.1).1 s.2⟩
-      left_inv := fun s => Subtype.ext (hcc s.1)
-      right_inv := fun s => Subtype.ext (hcc s.1) }
-  have := Fintype.card_congr (Equiv.sumCompl P)
-  rw [Fintype.card_sum, Fintype.card_congr e2, Fintype.card_congr e1, hc] at this
-  omega
+alias finrank_eq_two_mul := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ShortVec.finrank_eq_two_mul
 
 theorem one_le_rd : 1 ≤ hostRd E := by
   unfold hostRd

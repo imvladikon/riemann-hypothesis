@@ -5,11 +5,11 @@ public import Mathlib.Algebra.Ring.Opposite
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCyclotomicExtensionQI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutantOfMaximalDegreeElement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugatePairRelated
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.GroupTheory.FiniteAbelian.Basic
 public import GroundTheory.GlobalFields.SemilocalAlgebras.Galois
 public import GroundTheory.Brauer.SkolemNoether
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugatePairRelated
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiagHermitianTrivialOfSumFourSquares
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefinitePairsRatioLocallyRationalTimesNormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedEigenvaluesClasses
@@ -128,15 +128,10 @@ theorem sh_mul' (G : HTGroup p) (x y : G.C) : sh G (x * y) = sh G y * sh G x := 
 theorem sh_add' (G : HTGroup p) (x y : G.C) : sh G (x + y) = sh G x + sh G y := by
   simp only [sh, map_add (f := _), MulOpposite.unop_add]
 
-theorem sh_one' (G : HTGroup p) : sh G 1 = 1 := by
-  simp only [sh, map_one, MulOpposite.unop_one]
-
-theorem sh_sh' (G : HTGroup p) (x : G.C) : sh G (sh G x) = x := G.star_star x
-
 theorem sh_inv_of_sym (G : HTGroup p) (β : G.Cˣ) (hβ : sh G β = β) :
     sh G ((β⁻¹ : G.Cˣ) : G.C) = ((β⁻¹ : G.Cˣ) : G.C) := by
   have e : sh G ((β⁻¹ : G.Cˣ) : G.C) * β = 1 := by
-    rw [← hβ, ← sh_mul', Units.mul_inv, sh_one']
+    rw [← hβ, ← sh_mul', Units.mul_inv, _root_.GlobalTheory.LKMid.sh_one_eq]
   calc sh G ((β⁻¹ : G.Cˣ) : G.C) = sh G ((β⁻¹ : G.Cˣ) : G.C) * β * ((β⁻¹ : G.Cˣ) : G.C) := by
         rw [mul_assoc, Units.mul_inv, mul_one]
     _ = _ := by rw [e, one_mul]
@@ -145,8 +140,6 @@ end GlobalTheory.CentConj
 
 namespace GlobalTheory.CentConj
 
-variable {p : ℕ} [Fact p.Prime]
-
 end GlobalTheory.CentConj
 end -- clump:auto
 end -- clump:auto
@@ -154,7 +147,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentraliserInvolution =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldInvolutionSimilitudeCentralizer =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldInvolutionSimilitudeCentralizer", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentraliserInvolution\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutantOfMaximalDegreeElement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldInvolutionSimilitudeCentralizer", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentraliserInvolution\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutantOfMaximalDegreeElement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugatePairRelated\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -175,7 +168,7 @@ theorem commute_conj_sh_sim (G : HTGroup p) (β γ : G.Cˣ) (c₀ : ℚ)
   set Y := sh G (y : G.C)
   set Yi := sh G ((y⁻¹ : G.Cˣ) : G.C)
   have hYYi : Y * Yi = 1 := by
-    simp only [Y, Yi, ← GlobalTheory.CentConj.sh_mul', Units.inv_mul, GlobalTheory.CentConj.sh_one']
+    simp only [Y, Yi, ← GlobalTheory.CentConj.sh_mul', Units.inv_mul, _root_.GlobalTheory.LKMid.sh_one_eq]
   have hzi : Commute z ((y⁻¹ : G.Cˣ) : G.C) := hz.units_inv_right
   have hcomm : Yi * sh G z = sh G z * Yi := by
     simp only [Yi, ← GlobalTheory.CentConj.sh_mul']; rw [hzi.eq]
@@ -215,7 +208,7 @@ theorem centraliser_field_involution : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup
     intro e
     apply hj
     rw [ht, hw]; dsimp only
-    rw [ht, GlobalTheory.CentConj.sh_mul', GlobalTheory.CentConj.sh_mul', GlobalTheory.CentConj.sh_sh', hβ,
+    rw [ht, GlobalTheory.CentConj.sh_mul', GlobalTheory.CentConj.sh_mul', _root_.GlobalTheory.LKMid.PairConj.sh_sh, hβ,
       GlobalTheory.CentConj.sh_inv_of_sym G β hβ]
     simp only [mul_assoc, Units.mul_inv, mul_one]
     rw [← mul_assoc, Units.mul_inv, one_mul]
@@ -234,7 +227,7 @@ theorem centraliser_field_involution : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup
   have h1 : t 1 = 1 := by
     apply hj
     rw [ht, hw]; dsimp only
-    rw [map_one, GlobalTheory.CentConj.sh_one', mul_one, Units.mul_inv]
+    rw [map_one, _root_.GlobalTheory.LKMid.sh_one_eq, mul_one, Units.mul_inv]
   have h0 : t 0 = 0 := by
     have h := ha 0 0
     rw [add_zero] at h
@@ -260,13 +253,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_numberField_involution_similitudeCentralizer : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (β γ : G.Cˣ) (c₀ : ℚˣ), sh G β = β →
-    (γ : G.C) * β * sh G γ = algebraMap ℚ G.C c₀ * β → Irreducible (minpoly G.F (γ : G.C)) →
-    (minpoly G.F (γ : G.C)).natDegree = G.n →
-    ∃ (L : Type) (_ : Field L) (_ : NumberField L) (ι : L →ₐ[ℚ] G.C) (c : L →ₐ[ℚ] L),
-      Function.Injective ι ∧ (∀ z : G.C, z * γ = γ * z ↔ ∃ w, ι w = z) ∧
-      (∀ x, ι (c x) = β * sh G (ι x) * ((β⁻¹ : G.Cˣ) : G.C)) ∧ ∀ x, c (c x) = x := by
-  first | (exact @GlobalTheory.CentSim.centraliser_field_involution)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldInvolutionSimilitudeCentralizerStatement =====
@@ -828,14 +814,6 @@ theorem exists_finset_classes (L : Type) [Field L] [NumberField L] (c : L →ₐ
   rw [hab, hb', hε', map_mul]
   ring
 
-theorem finite_classes_mod_rat_norms : ∀ (L : Type) [Field L] [NumberField L] (c : L →ₐ[ℚ] L), (∀ x, c (c x) = x) →
-    ∀ (S : Finset (IsDedekindDomain.HeightOneSpectrum ℤ)) (X : Set L),
-    (∀ a ∈ X, a ≠ 0 ∧ c a = a ∧ ∀ v ∉ S, ∃ (r : (v.adicCompletion ℚ)ˣ) (y : (v.adicCompletion ℚ ⊗[ℚ] L)ˣ),
-          (1 : v.adicCompletion ℚ) ⊗ₜ[ℚ] a = algebraMap (v.adicCompletion ℚ) (v.adicCompletion ℚ ⊗[ℚ] L) (r : v.adicCompletion ℚ) *
-            ((y : v.adicCompletion ℚ ⊗[ℚ] L) * Algebra.TensorProduct.map (AlgHom.id ℚ (v.adicCompletion ℚ)) c y)) →
-    ∃ R : Finset L, ∀ a ∈ X, ∃ b ∈ R, ∃ (q : ℚ) (z : L), q ≠ 0 ∧ z ≠ 0 ∧ a = algebraMap ℚ L q * b * (z * c z) :=
-  fun L _ _ c hc S X hX => exists_finset_classes L c hc S X hX
-
 end GlobalTheory.FixedNormCls
 end -- clump:auto
 end -- clump:auto
@@ -1169,14 +1147,14 @@ theorem finite_of_compact (Ω : Set G.GAf) (hΩ : IsCompact Ω) (γ₀ : G.Cˣ)
   · rw [hY, Set.image_empty]; exact Set.finite_empty
   have hirr₁ : Irreducible (minpoly G.F (P₁.γ : G.C)) := by rw [hP₁.1]; exact hirr
   obtain ⟨L, _, _, ι, c, hinj, hcent, hc, hcc⟩ :=
-    GlobalTheory.T.exists_numberField_involution_similitudeCentralizer p G P₁.β P₁.γ P₁.c P₁.sym P₁.sim hirr₁ P₁.reg.1
-  obtain ⟨S, hloc⟩ := GlobalTheory.T.definitePairs_ratio_locally_rational_times_norm p G Ω hΩ P₁ L ι c hinj hcent hc
+    _root_.GlobalTheory.CentSim.centraliser_field_involution p G P₁.β P₁.γ P₁.c P₁.sym P₁.sim hirr₁ P₁.reg.1
+  obtain ⟨S, hloc⟩ := _root_.GlobalTheory.LocTriv.ratio_local_norm_dpair p G Ω hΩ P₁ L ι c hinj hcent hc
   have hγ : ∀ P ∈ Y, P.γ = P₁.γ := fun P hP => hP.1.trans hP₁.1.symm
   have hcc' : ∀ P ∈ Y, P.c = P₁.c := fun P hP => hP.2.1.trans hP₁.2.1.symm
   have ha : ∀ P ∈ Y, ∃ a : L, ι a = ((P.β * P₁.β⁻¹ : G.Cˣ) : G.C) := fun P hP =>
     (hcent _).1 (quot_commute_and_fixed P P₁ (hγ P hP) (hcc' P hP)).1
   set X : Set L := {a | ∃ P ∈ Y, ι a = ((P.β * P₁.β⁻¹ : G.Cˣ) : G.C)} with hXdef
-  obtain ⟨R, hR⟩ := GlobalTheory.FixedNormCls.finite_classes_mod_rat_norms L c hcc S X (by
+  obtain ⟨R, hR⟩ := _root_.GlobalTheory.FixedNormCls.exists_finset_classes L c hcc S X (by
     rintro a ⟨P, hP, hPa⟩
     refine ⟨fun h0 => ?_, hinj ?_, fun v hv => hloc P (hγ P hP) (hcc' P hP) hP.2.2 a hPa v hv⟩
     · rw [h0, map_zero] at hPa
@@ -1503,9 +1481,9 @@ theorem integral_of_term_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) 
   classical
   intro p _ G L f r K φ hr hf hφ
   letI : Inv (Set G.GAf) := Set.inv
-  obtain ⟨Ω, hΩc, hΩ⟩ := GlobalTheory.T.twistedHeckeTestFunction_support_compact p G L f hf
-  obtain ⟨D, hD, hDp⟩ := GlobalTheory.T.compact_conj_charpoly_bounded_denominators_awayP p G (Ω ∪ Ω⁻¹) (hΩc.union hΩc.inv)
-  obtain ⟨k, hk⟩ := GlobalTheory.T.twisted_orbit_norm_bounds p G r K φ hr hφ
+  obtain ⟨Ω, hΩc, hΩ⟩ := _root_.GlobalTheory.isTest_support_compact p G L f hf
+  obtain ⟨D, hD, hDp⟩ := _root_.GlobalTheory.AwayPDen.charpoly_den_bounded p G (Ω ∪ Ω⁻¹) (hΩc.union hΩc.inv)
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.AtPBd.main p G r K φ hr hφ
   have hp := (Fact.out : p.Prime)
   refine ⟨D * p ^ (2 * k * Module.finrank ℚ G.C), Nat.mul_pos hD (pow_pos hp.pos _), ?_⟩
   intro P hirr hP
@@ -1525,12 +1503,12 @@ theorem integral_of_term_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) 
         ((LinearMap.mulLeft ℚ (y0 : G.C)).charpoly.map (algebraMap ℚ (PadicAlgCl p))).IsRoot μ →
         ‖μ‖ ≤ (p : ℝ) ^ (2 * k) := fun μ hμ => by
       rw [show 2 * k = k + k by ring, pow_add]; exact hroots μ hμ
-    have h6 := GlobalTheory.T.padic_coeff_denominator_bound_of_bounded_roots p _ (LinearMap.charpoly_monic _) (2 * k) hroots'
+    have h6 := _root_.GlobalTheory.padic_denom_coeff_of_roots_bounded p _ (LinearMap.charpoly_monic _) (2 * k) hroots'
     rw [LinearMap.charpoly_natDegree] at h6
-    apply GlobalTheory.T.isIntegral_natCast_smul_of_mul_charpoly_coeff_int G.C
+    apply _root_.GlobalTheory.isIntegral_smul_of_charpoly_coeff_mul_int G.C
     intro i
     obtain ⟨kk, hkk⟩ := hAf i
-    exact GlobalTheory.T.den_bound_combine_padic_primeToP p D (2 * k * Module.finrank ℚ G.C) kk hp _ (h6 i) hkk
+    exact _root_.GlobalTheory.den_comb p D (2 * k * Module.finrank ℚ G.C) kk hp _ (h6 i) hkk
   rw [DPair.term] at hP
   split_ifs at hP with h
   swap
@@ -1697,7 +1675,7 @@ variable {p : ℕ} [Fact p.Prime]
 theorem finite_pol_int (G : HTGroup p) (N : ℕ) (hN : 0 < N) :
     {P0 : Polynomial G.F | ∃ P : DPair G, P.pol = P0 ∧
       IsIntegral ℤ ((N : ℤ) • (P.γ : G.C)) ∧ IsIntegral ℤ ((N : ℤ) • ((P.γ⁻¹ : G.Cˣ) : G.C))}.Finite := by
-  refine (GlobalTheory.T.finite_monic_of_roots_bdd_of_mul_isIntegral G.F G.n N N hN).subset ?_
+  refine (_root_.GlobalTheory.finite_monic_roots_bdd_mul_isIntegral G.F G.n N N hN).subset ?_
   rintro _ ⟨P, rfl, hI1, hI2⟩
   have hc0 : ((P.c : ℚ) : ℝ) ≠ 0 := by exact_mod_cast P.c.ne_zero
   have hint : ∀ (v : InfinitePlace G.F) (w : ℂ) (x : Fin G.n → ℂ), x ≠ 0 → G.psi v P.γ *ᵥ x = w • x →

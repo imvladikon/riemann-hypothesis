@@ -553,18 +553,6 @@ namespace Formalism.L2.SG.Pf.Slab
 
 open Formalism.L2.SG.FoldBound Formalism.L2.SG.PoincareSeriesSquareIntegrable NumberField Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.L2.SG.TermOp
 
-section TilingE
-
-variable {G : Type} [Group G] [MeasurableSpace G] [MeasurableMul G] (μ : Measure G) [μ.IsMulLeftInvariant]
-
-theorem fd_tilingE (Γ : Subgroup G) [Countable Γ] (FS : Set G) (hFS : IsFundamentalDomain Γ FS μ)
-    (P : Set G) (hP : MeasurableSet P) (f : G → ℝ≥0∞) (hfm : Measurable f) (hfi : ∀ s ∈ Γ, ∀ y, f (s * y) = f y)
-    (hcov : ∀ y, f y ≠ 0 → ∃ s ∈ Γ, s * y ∈ P) (huniq : ∀ y ∈ P, ∀ s ∈ Γ, s * y ∈ P → s = 1) :
-    ∫⁻ x in FS, f x ∂μ = ∫⁻ x in P, f x ∂μ :=
-  tiling_lemma μ Γ FS hFS P hP f hfm hfi hcov huniq
-
-end TilingE
-
 section SlabE
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
@@ -754,7 +742,7 @@ theorem Slab.ooLintSum_of {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting 
       congr 1
       refine tsum_congr fun δ => ?_
       rw [← mul_assoc, enorm_ph_right Y.hK hWD' (T' j) _ k hk]
-    have e1 := fd_tilingE (X.B.I.muA X.B.μf) (Srat X u) FS (hFS _) _ hPm G hGm hGi hGs hGu
+    have e1 := _root_.Formalism.L2.SG.Pf.Slab.tiling_lemma (X.B.I.muA X.B.μf) (Srat X u) FS (hFS _) _ hPm G hGm hGi hGs hGu
     have e2 : ∫⁻ z in ⋃ ρ, slab (Y.cs u) ρ (Ωs ρ), G z ∂(X.B.I.muA X.B.μf) =
         ∑ ρ, ∫⁻ z in slab (Y.cs u) ρ (Ωs ρ), G z ∂(X.B.I.muA X.B.μf) := by
       rw [lintegral_iUnion hsm hdisj, tsum_fintype]

@@ -159,8 +159,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open scoped TensorProduct ContDiff ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_le_of_continuous_of_spanning_periods : ∀ (R : Type) [NormedAddCommGroup R] [NormedSpace ℝ R] [FiniteDimensional ℝ R] (g : R → ℝ), Continuous g → ∀ S : Set R, Submodule.span ℝ S = ⊤ → (∀ s ∈ S, ∃ N : ℕ, 0 < N ∧ ∀ x, g (x + (N : ℝ) • s) = g x) → ∃ C : ℝ, ∀ x, g x ≤ C := by
-  first | exact @GlobalTheory.bddAbove_of_spanning_periods
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.BddAboveOfSpanningPeriodsStatement =====
@@ -222,13 +220,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.WeylNumber
 
-theorem exists_parseval_family {R : Type} [AddCommGroup R] [Module ℝ R] [FiniteDimensional ℝ R]
-    (g : R →ₗ[ℝ] R →ₗ[ℝ] ℝ) (hs : ∀ u v, g u v = g v u) (hp : ∀ u, u ≠ 0 → 0 < g u u) :
-    ∃ (n : ℕ) (e : Fin n → R), ∀ x, ∑ k, g x (e k) • e k = x := by
-  first
-  | (apply _root_.GlobalTheory.PolynomialCoeffEq.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PolynomialCoeffEq.main ..)
-
 theorem weyl_number : ∀ (M R : Type) [AddCommGroup M] [Module ℂ M] [AddCommGroup R] [Module ℝ R] [FiniteDimensional ℝ R] (Dop : R → Module.End ℂ M) (om : R →ₗ[ℝ] R →ₗ[ℝ] ℝ) (κ : ℂ) (j : R →ₗ[ℝ] R), (∀ u v, Dop (u + v) = Dop u + Dop v) → (∀ (c : ℝ) u, Dop (c • u) = (c : ℂ) • Dop u) → κ ≠ 0 → (∀ u v, Dop u * Dop v - Dop v * Dop u = (κ * (om u v : ℝ)) • (1 : Module.End ℂ M)) → (∀ u v, om v u = -om u v) → (∀ u, j (j u) = -u) → (∀ u v, om (j u) (j v) = om u v) → (∀ u, u ≠ 0 → 0 < om u (j u)) → (∀ u v, ∃ β : ℂ, (Dop u + Complex.I • Dop (j u)) * (Dop v - Complex.I • Dop (j v)) - (Dop v - Complex.I • Dop (j v)) * (Dop u + Complex.I • Dop (j u)) = β • (1 : Module.End ℂ M)) ∧ ∃ (n : ℕ) (e : Fin n → R) (lam : ℂ), lam ≠ 0 ∧ ∀ u, (Dop u + Complex.I • Dop (j u)) * (∑ k, (Dop (e k) - Complex.I • Dop (j (e k))) * (Dop (e k) + Complex.I • Dop (j (e k)))) = ((∑ k, (Dop (e k) - Complex.I • Dop (j (e k))) * (Dop (e k) + Complex.I • Dop (j (e k)))) + lam • (1 : Module.End ℂ M)) * (Dop u + Complex.I • Dop (j u)) := by
   intro M R _ _ _ _ _ Dop om κ j hadd hsmul hκ hcomm hanti hjj hom hpos
   have h1 : ∀ u v, om (j u) v = -om u (j v) := fun u v => by
@@ -254,7 +245,7 @@ theorem weyl_number : ∀ (M R : Type) [AddCommGroup M] [Module ℂ M] [AddCommG
     push_cast
     match_scalars <;> (try ring_nf) <;> (try simp)
   refine ⟨fun u v => ⟨_, by rw [hac u v, add_sub_cancel_left]⟩, ?_⟩
-  obtain ⟨n, e, he⟩ := exists_parseval_family (om.compl₂ j)
+  obtain ⟨n, e, he⟩ := _root_.GlobalTheory.PolynomialCoeffEq.main (om.compl₂ j)
     (fun u v => by
       simp only [LinearMap.compl₂_apply]
       rw [hanti (j u) v, h1, neg_neg])
@@ -1334,8 +1325,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open scoped TensorProduct ContDiff ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.span_realProjection_rationalPoints_eq_top : ∀ (D : D7) (θ : InfFam D) (σ : (D.what₂.Tau → ℂ) →+ AE D), Chart θ σ → ∀ (V W : HSp D), Submodule.span ℝ (Set.range fun γ : Matrix (Fin V.rank) (Fin W.rank) D.host.E => piW θ V W (ratW V W γ)) = ⊤ := by
-  first | exact @GlobalTheory.FockCompare.span_piW_ratW_eq_top
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.SpanRealProjectionRationalPointsEqTopStatement =====
@@ -1475,7 +1464,7 @@ theorem isFockCx_sign (h : Chart θ σ) {V W : HSp D} (hV : V.SigOK) (hW : W.Sig
   have hs' := fun τ => ((hB τ).cart hW).1
   choose g hg g' hg' hgj using fun τ => (GlobalTheory.T.complexStructureOfInvolutions_properties D V W τ _ _ (hs τ) (hs' τ)).2.2.2
   obtain ⟨k, hk, hkg⟩ := GlobalTheory.T.exists_real_point_unitary_with_components D θ σ h V g fun τ => (hg τ).1
-  obtain ⟨k', hk', hkg'⟩ := GlobalTheory.T.exists_real_point_unitary_with_components D θ σ h W g' fun τ => (hg' τ).1
+  obtain ⟨k', hk', hkg'⟩ := _root_.GlobalTheory.FockCompare.LiftUnitary.lift_unitary D θ σ h W g' fun τ => (hg' τ).1
   have hK : IsKinf θ V A k := (isKinf_iff hV hA k).2 ⟨hk, fun τ => by rw [hkg]; exact (hg τ).2⟩
   have hK' : IsKinf θ W B k' := (isKinf_iff hW hB k').2 ⟨hk', fun τ => by rw [hkg']; exact (hg' τ).2⟩
   have hact := (GlobalTheory.T.adelicUnitary_action_at_real_place D θ h.inf).2 V W k k'
@@ -1662,8 +1651,8 @@ theorem Chart.theta_hD (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) {f : WA V W
 
 theorem Chart.bounded (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) {f : WA V W → ℂ} (hf : IsThetaFun ψ V W f)
     (w : WA V W) : ∃ C : ℝ, ∀ x, ‖f (w + iotaW σ V W x)‖ ≤ C := by
-  refine GlobalTheory.T.exists_le_of_continuous_of_spanning_periods _ (fun x => ‖f (w + iotaW σ V W x)‖) (h.sm hf w).continuous.norm _
-    (GlobalTheory.T.span_realProjection_rationalPoints_eq_top D θ σ h V W) ?_
+  refine _root_.GlobalTheory.bddAbove_of_spanning_periods _ (fun x => ‖f (w + iotaW σ V W x)‖) (h.sm hf w).continuous.norm _
+    (_root_.GlobalTheory.FockCompare.span_piW_ratW_eq_top D θ σ h V W) ?_
   rintro _ ⟨γ, rfl⟩
   obtain ⟨N, hN, e⟩ := GlobalTheory.T.norm_thetaFunction_periodic_real_variables D θ σ h ψ hψ.1.2.1 (GlobalTheory.T.exists_pos_nat_mem_open_adele_subgroup D.host.F) V W f hf γ
   exact ⟨N, hN, fun x => by rw [map_add (f := _), ← add_assoc, e]⟩

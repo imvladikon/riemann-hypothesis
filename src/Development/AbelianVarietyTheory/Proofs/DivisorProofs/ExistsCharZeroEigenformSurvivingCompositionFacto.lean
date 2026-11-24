@@ -343,13 +343,6 @@ end GlobalTheory.DeligneSerre
 
 namespace GlobalTheory.DeligneSerre
 
-theorem norm_eigen_le_one (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] (emb : O →+* PadicAlgCl l)
-    (hle : ∀ a, ‖emb a‖ ≤ 1) (n : ℕ) (N : Matrix (Fin n) (Fin n) O) (c : Fin n → PadicAlgCl l)
-    (μ : PadicAlgCl l) (hc : c ≠ 0) (hN : N.map emb *ᵥ c = μ • c) : ‖μ‖ ≤ 1 := by
-  first
-  | (rename_i h_1 h_3; revert l h_1 O h_3 emb hle n N c μ hc hN; exact @_root_.GlobalTheory.EigenvalueNormAtMostOne.norm_eigenvalue_le_one)
-  | (intros; exact _root_.GlobalTheory.EigenvalueNormAtMostOne.norm_eigenvalue_le_one ..)
-
 end GlobalTheory.DeligneSerre
 
 namespace GlobalTheory.DeligneSerre
@@ -404,7 +397,7 @@ theorem core (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] (emb : O →+* Pad
     exact ⟨c, hc, hχ⟩
   have hXle : ∀ χ ∈ X, ∀ p, ‖χ p‖ ≤ 1 := by
     rintro χ ⟨c, hc, hχ⟩ p
-    exact norm_eigen_le_one l O emb hle n (σ p) c (χ p) hc (hχ p)
+    exact _root_.GlobalTheory.EigenvalueNormAtMostOne.norm_eigenvalue_le_one l O emb hle n (σ p) c (χ p) hc (hχ p)
   have hP : ∀ χ ∈ X, ∃ P : Ideal R, P.IsPrime ∧ ∀ p, p ∈ P ↔ ‖χ p‖ < 1 :=
     fun χ hχ => unitBall_prime R l χ (hXle χ hχ)
   choose! P hPprime hPmem using hP

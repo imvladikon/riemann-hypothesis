@@ -166,8 +166,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isExcisionNbhd_away_of_isUnit_mod' : ∀ (B A' : Type) [CommRing B] [CommRing A'] [Algebra B A'] (f s : B), IsExcisionNbhd B A' f → IsUnit (Ideal.Quotient.mk (Ideal.span {f}) s) → IsExcisionNbhd B (Localization.Away (algebraMap B A' s)) f := by
-  first | (exact @GlobalTheory.EtC.isExcisionNbhd_away_of_isUnit_mod)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsExcisionNbhdAwayOfIsUnitModStatement =====
@@ -278,8 +276,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.subsingleton_pic_etale_localization_unitsModulo : ∀ (B : Type) [CommRing B] [IsDedekindDomain B] (f : B) (A' : Type) [CommRing A'] [Algebra B A'] [Algebra.Etale B A'], Subsingleton (CommRing.Pic (Localization (Algebra.algebraMapSubmonoid A' ((IsUnit.submonoid (B ⧸ Ideal.span {f})).comap (Ideal.Quotient.mk (Ideal.span {f})).toMonoidHom ⊔ Submonoid.powers f)))) := by
-  first | (exact @GlobalTheory.PicLoc.subsingleton_pic_localization)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonPicEtaleLocalizationUnitsModuloStatement =====
@@ -479,8 +475,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistCohomology_class_dies_on_localizationAway : B1 → ∀ (q : ℕ) (A : Type) [CommRing A] (M : Submonoid A) (n i : ℤ), IsUnit (q : A) → ∀ m ∈ M, ∀ y : Ht q (sp (Localization.Away m)) n i, ∀ φ : Localization.Away m →+* Localization M, φ.comp (algebraMap A _) = algebraMap A _ → pull _ (spMap φ) _ _ y = 0 → ∃ m' ∈ M, ∀ ψ : Localization.Away m →+* Localization.Away (m * m'), ψ.comp (algebraMap A _) = algebraMap A _ → pull _ (spMap ψ) _ _ y = 0 := by
-  first | (exact @GlobalTheory.EtC.AwayCont.kill_of_loc)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyClassDiesOnLocalizationAwayStatement =====
@@ -554,8 +548,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_away_unit_map_eq : ∀ (A : Type) [CommRing A] (M : Submonoid A) (u : (Localization M)ˣ), ∃ m ∈ M, ∃ v : (Localization.Away m)ˣ, ∀ φ : Localization.Away m →+* Localization M, φ.comp (algebraMap A _) = algebraMap A _ → Units.map φ.toMonoidHom v = u := by
-  first | (exact @GlobalTheory.units_localization_descend_away)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitsLocalizationDescendAwayStatement =====
@@ -605,12 +597,12 @@ theorem exists_kummer_on_finer_nbhd : ∀ (q : ℕ) [NeZero q] (k B : Type) [Fie
   let φf : Localization.Away (algebraMap B A' f) →+* Localization M :=
     IsLocalization.Away.lift (algebraMap B A' f) (IsLocalization.map_units (Localization M) (⟨(algebraMap B A' f), hfM⟩ : M))
   have hφf : φf.comp (algebraMap A' _) = algebraMap A' (Localization M) := IsLocalization.Away.lift_comp _ _
-  haveI := GlobalTheory.T.subsingleton_pic_etale_localization_unitsModulo B f A'
+  haveI := _root_.GlobalTheory.PicLoc.subsingleton_pic_localization B f A'
   have hqL : IsUnit (q : Localization M) := by simpa using hqA.map (algebraMap A' (Localization M))
-  obtain ⟨u, hu⟩ := GlobalTheory.T.exists_unit_kummer_eq_of_picard_torsionFree q (Localization M) hqL (fun c _ => Subsingleton.elim _ _) (pull _ (spMap φf) _ _ w)
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.EtC.kum_surjective q (Localization M) hqL (fun c _ => Subsingleton.elim _ _) (pull _ (spMap φf) _ _ w)
   let u₀ : (Localization M)ˣ := Units.map (Scheme.ΓSpecIso (CommRingCat.of (Localization M))).hom.hom.toMonoidHom u
   have hu₀ : gU _ u₀ = u := by ext; simp [u₀]
-  obtain ⟨m₀, hm₀, v, hv⟩ := GlobalTheory.T.exists_away_unit_map_eq A' M u₀
+  obtain ⟨m₀, hm₀, v, hv⟩ := _root_.GlobalTheory.units_localization_descend_away A' M u₀
   have hm₁ : (algebraMap B A' f) * m₀ ∈ M := M.mul_mem hfM hm₀
   have hunit1 : IsUnit (algebraMap A' (Localization.Away ((algebraMap B A' f) * m₀)) ((algebraMap B A' f) * m₀)) := IsLocalization.Away.algebraMap_isUnit _
   let α : Localization.Away (algebraMap B A' f) →+* Localization.Away ((algebraMap B A' f) * m₀) :=
@@ -624,7 +616,7 @@ theorem exists_kummer_on_finer_nbhd : ∀ (q : ℕ) [NeZero q] (k B : Type) [Fie
   have hφ₁ : φ₁.comp (algebraMap A' _) = algebraMap A' _ := IsLocalization.Away.lift_comp _ _
   have hqm₀ : IsUnit (q : Localization.Away m₀) := by simpa using hqA.map (algebraMap A' _)
   have hqm₁ : IsUnit (q : Localization.Away ((algebraMap B A' f) * m₀)) := by simpa using hqA.map (algebraMap A' _)
-  have hnat := GlobalTheory.T.cup_chern_kummer_pullback_naturality
+  have hnat := _root_.GlobalTheory.EtC.a6nat_holds
   set y := pull _ (spMap α) _ _ w - kum q (gU _ (Units.map β.toMonoidHom v)) with hy
   have hy0 : pull _ (spMap φ₁) _ _ y = 0 := by
     rw [hy, map_sub, ← pull_spMap_comp, pull_kum_gU hnat q _ hqm₁]
@@ -632,13 +624,13 @@ theorem exists_kummer_on_finer_nbhd : ∀ (q : ℕ) [NeZero q] (k B : Type) [Fie
     have e2 : Units.map φ₁.toMonoidHom (Units.map β.toMonoidHom v) = u₀ := by
       rw [← hv (φ₁.comp β) (by rw [RingHom.comp_assoc, hβ, hφ₁])]; ext; rfl
     rw [e1, e2, hu₀, hu, sub_self]
-  obtain ⟨m', hm', hψ⟩ := GlobalTheory.T.tateTwistCohomology_class_dies_on_localizationAway GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q A' M 1 1 hqA ((algebraMap B A' f) * m₀) hm₁ y φ₁ hφ₁ hy0
+  obtain ⟨m', hm', hψ⟩ := _root_.GlobalTheory.EtC.AwayCont.kill_of_loc _root_.GlobalTheory.EtC.pairingProperties q A' M 1 1 hqA ((algebraMap B A' f) * m₀) hm₁ y φ₁ hφ₁ hy0
   obtain ⟨b, hb, hbm⟩ := M.mul_mem hm₁ hm'
   obtain ⟨s, hs, t, ht, rfl⟩ := Submonoid.mem_sup.1 hb
   obtain ⟨n, rfl⟩ := ht
   have hs' : IsUnit (Ideal.Quotient.mk (Ideal.span {f}) s) := hs
   refine ⟨Localization.Away (algebraMap B A' s), inferInstance, inferInstance, inferInstance, inferInstance,
-    GlobalTheory.T.isExcisionNbhd_away_of_isUnit_mod' B A' f s hA' hs', ?_⟩
+    _root_.GlobalTheory.EtC.isExcisionNbhd_away_of_isUnit_mod B A' f s hA' hs', ?_⟩
   set A₂ := Localization.Away (algebraMap B A' s)
   set g : A' →+* Localization.Away (algebraMap B A₂ f) := (algebraMap A₂ _).comp (algebraMap A' A₂) with hg
   have hgu : IsUnit (g ((algebraMap B A' f) * m₀ * m')) := by
@@ -691,8 +683,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_kummerClass_on_finer_etaleNbhd_curve : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A' : Type) [CommRing A'] [Algebra B A'], IsExcisionNbhd B A' f → ∀ w : Ht q (sp (Localization.Away (algebraMap B A' f))) 1 1, ∃ (A₂ : Type) (_ : CommRing A₂) (_ : Algebra B A₂) (_ : Algebra A' A₂) (_ : IsScalarTower B A' A₂), IsExcisionNbhd B A₂ f ∧ ∃ c : (Γ(Spec (CommRingCat.of (Localization.Away (algebraMap B A₂ f))), ⊤))ˣ, ∀ φ : Localization.Away (algebraMap B A' f) →+* Localization.Away (algebraMap B A₂ f), φ.comp (algebraMap A' _) = (algebraMap A₂ _).comp (algebraMap A' A₂) → pull _ (spMap φ) _ _ w = kum q c := by
-  first | (exact @GlobalTheory.EtC.KummerLoc.exists_kummer_on_finer_nbhd)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKummerClassOnFinerEtaleNbhdCurveStatement =====
@@ -714,7 +704,7 @@ theorem unit_isPow_on_excisionNbhd : ∀ (k B : Type) [Field k] [IsAlgClosed k] 
   have hw : (a * a' * g - a - a') * g = n' * d' * (bn * bd) - 1 := by
     linear_combination (-(bd * d')) * ha + (a * g - 1) * hb
   have hC' : IsExcisionNbhd B (Localization.Away (n' * d')) g :=
-    GlobalTheory.T.isExcisionNbhd_away_of_inverse_mod B B g (isExcisionNbhd_self B g) (n' * d') (bn * bd)
+    _root_.GlobalTheory.EtC.isExcisionNbhd_away B B g (isExcisionNbhd_self B g) (n' * d') (bn * bd)
       (Ideal.mem_span_singleton'.mpr ⟨_, hw⟩)
   set C' := Localization.Away (n' * d') with hC'def
   have hnd : IsUnit (algebraMap B C' (n' * d')) := IsLocalization.Away.algebraMap_isUnit _
@@ -726,7 +716,7 @@ theorem unit_isPow_on_excisionNbhd : ∀ (k B : Type) [Field k] [IsAlgClosed k] 
   set ε : C' := algebraMap B C' n' * Di with hεdef
   have hε : IsUnit ε := hnC.mul (Units.isUnit _)
   have hεd : ε * algebraMap B C' d' = algebraMap B C' n' := by rw [hεdef, mul_assoc, hDi1, mul_one]
-  obtain ⟨r, hr⟩ := GlobalTheory.T.exists_pow_sub_mem_span_of_isUnit_mod k B q hq g hg (n' * bd) (bn * d')
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.exists_pow_sub_mem_span_of_isUnit_mod_of_isAlgClosed k B q hq g hg (n' * bd) (bn * d')
     (Ideal.mem_span_singleton'.mpr ⟨a * a' * g - a - a', by linear_combination hw⟩)
   obtain ⟨w, hw'⟩ := Ideal.mem_span_singleton'.mp hr
   have hqC : IsUnit (q : C') := by simpa using hq.map ((algebraMap B C').comp (algebraMap k B))
@@ -737,10 +727,10 @@ theorem unit_isPow_on_excisionNbhd : ∀ (k B : Type) [Field k] [IsAlgClosed k] 
     simp only [map_mul, map_sub, map_add (f := _), map_pow, map_one] at e1 e2
     rw [hεdef]
     linear_combination e1 + (algebraMap B C' n' * Di) * e2 - (algebraMap B C' n' * algebraMap B C' bd) * hDi1
-  obtain ⟨C, _, _, hC, x, hx⟩ := GlobalTheory.T.exists_excisionNbhd_with_root_of_isUnit C' (algebraMap B C' g) q hqC ε (algebraMap B C' r) hε hεr
+  obtain ⟨C, _, _, hC, x, hx⟩ := _root_.GlobalTheory.EtC.exists_excisionNbhd_adjoin_root C' (algebraMap B C' g) q hqC ε (algebraMap B C' r) hε hεr
   letI : Algebra B C := ((algebraMap C' C).comp (algebraMap B C')).toAlgebra
   haveI : IsScalarTower B C' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  refine ⟨C, inferInstance, inferInstance, GlobalTheory.T.isExcisionNbhd_trans' B C' C g hC' hC, ?_⟩
+  refine ⟨C, inferInstance, inferInstance, _root_.GlobalTheory.EtC.isExcisionNbhd_trans B C' C g hC' hC, ?_⟩
   set L := Localization.Away (algebraMap B C (f * g))
   set ψ : B →+* L := (algebraMap C L).comp (algebraMap B C) with hψ
   set ρ : C' →+* L := (algebraMap C L).comp (algebraMap C' C) with hρ
@@ -783,8 +773,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.coprime_unit_etale_extension : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), IsUnit (q : k) → ∀ f g : B, g ≠ 0 → ∀ (u : (Localization.Away (f * g))ˣ) (t n' d' : B), IsCoprime g n' → IsCoprime g d' → (u : Localization.Away (f * g)) * algebraMap B (Localization.Away (f * g)) (t ^ q * d') = algebraMap B (Localization.Away (f * g)) n' → ∃ (C : Type) (_ : CommRing C) (_ : Algebra B C), IsExcisionNbhd B C g ∧ ∃ v' : (Localization.Away (algebraMap B C (f * g)))ˣ, Localization.awayMap (algebraMap B C) (f * g) (u : Localization.Away (f * g)) = (v' : Localization.Away (algebraMap B C (f * g))) ^ q := by
-  first | (exact @GlobalTheory.EtC.unit_isPow_on_excisionNbhd)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoprimeUnitEtaleExtension =====
@@ -867,8 +855,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_unit_form_localization_etale_nbhd : ∀ (B A₂ : Type) [CommRing B] [CommRing A₂] [Algebra B A₂] (f : B), IsExcisionNbhd B A₂ f → ∀ c : (Localization.Away (algebraMap B A₂ f))ˣ, ∃ (b₁ : B) (m : ℕ) (e : A₂), e - 1 ∈ Ideal.span {algebraMap B A₂ f} ∧ algebraMap A₂ (Localization.Away (algebraMap B A₂ f)) (algebraMap B A₂ b₁) = (c : Localization.Away (algebraMap B A₂ f)) * algebraMap A₂ (Localization.Away (algebraMap B A₂ f)) (e * algebraMap B A₂ f ^ m) := by
-  first | (exact @GlobalTheory.DivUnitForm.unit_form)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitFormLocalizationEtaleNbhdStatement =====
@@ -880,8 +866,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.pic_divisible_dedekind_finiteType_algClosed : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDomain B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), IsUnit (q : k) → ∀ c : CommRing.Pic B, ∃ d, d ^ q = c := by
-  first | (exact @GlobalTheory.PicDiv.pic_divisible)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicDivisibleDedekindFiniteTypeAlgClosedStatement =====
@@ -899,7 +883,7 @@ theorem classGroup_divisible : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommR
     [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), (q : k) ≠ 0 →
     ∀ c : ClassGroup B, ∃ d : ClassGroup B, d ^ q = c := by
   intro k B _ _ _ _ _ _ _ q hq c
-  obtain ⟨d, hd⟩ := GlobalTheory.T.pic_divisible_dedekind_finiteType_algClosed k B q (Ne.isUnit hq) (ClassGroup.equivPic B c)
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.PicDiv.pic_divisible k B q (Ne.isUnit hq) (ClassGroup.equivPic B c)
   refine ⟨(ClassGroup.equivPic B).symm d, ?_⟩
   apply (ClassGroup.equivPic B).injective
   rw [map_pow, MulEquiv.apply_symm_apply, hd]
@@ -916,8 +900,6 @@ section -- clump:auto
 
 open Polynomial
 
-theorem _root_.GlobalTheory.T.classGroup_dedekind_algClosed_divisible : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDomain B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), (q : k) ≠ 0 → ∀ c : ClassGroup B, ∃ d : ClassGroup B, d ^ q = c := by
-  first | (exact @GlobalTheory.PicDiv.classGroup_divisible)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassGroupDedekindAlgClosedDivisibleStatement =====
@@ -1104,7 +1086,7 @@ theorem divisor_step : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [
   have hq0 : q ≠ 0 := by
     rintro rfl
     exact hqk (by simp)
-  have hdiv : ∀ c : ClassGroup B, ∃ d : ClassGroup B, d ^ q = c := GlobalTheory.T.classGroup_dedekind_algClosed_divisible k B q hqk
+  have hdiv : ∀ c : ClassGroup B, ∃ d : ClassGroup B, d ^ q = c := _root_.GlobalTheory.PicDiv.classGroup_divisible k B q hqk
   obtain ⟨g, n, t, w, N, hg0, hfg, hfn, hgw, hbd, hnd, hw⟩ := core q hq0 hdiv f b hf hb
   refine ⟨g, hg0, hfg, ?_⟩
   set L := Localization.Away (f * g)
@@ -1146,8 +1128,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.smoothAffineCurve_divisor_unit_decomposition : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ b : B, b ≠ 0 → ∀ m : ℕ, ∃ g : B, g ≠ 0 ∧ IsCoprime f g ∧ ∃ u : (Localization.Away (f * g))ˣ, ∃ n d t n' d' : B, IsCoprime f n ∧ IsCoprime f d ∧ IsCoprime g n' ∧ IsCoprime g d' ∧ algebraMap B (Localization.Away (f * g)) (b * d) = (u : Localization.Away (f * g)) * algebraMap B (Localization.Away (f * g)) (n * f ^ m) ∧ (u : Localization.Away (f * g)) * algebraMap B (Localization.Away (f * g)) (t ^ q * d') = algebraMap B (Localization.Away (f * g)) n' := by
-  first | (exact @GlobalTheory.KummerDiv.divisor_step)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAffineCurveDivisorUnitDecompositionStatement =====
@@ -1176,7 +1156,7 @@ theorem unit_eq_mul_qth_power_near_zeroLocus : ∀ (k B : Type) [Field k] [IsAlg
     refine ⟨-(algebraMap B A₂ x₁) * e + t, ?_⟩
     simp only [map_mul]
     linear_combination e * h1 + ht
-  have hA₂' : IsExcisionNbhd B (Localization.Away a) f := GlobalTheory.T.isExcisionNbhd_away_of_inverse_mod B A₂ f hA₂ a (algebraMap B A₂ y₁) hab
+  have hA₂' : IsExcisionNbhd B (Localization.Away a) f := _root_.GlobalTheory.EtC.isExcisionNbhd_away B A₂ f hA₂ a (algebraMap B A₂ y₁) hab
   have hdvd : ∀ z : A₂, z ∣ a → IsUnit (algebraMap A₂ (Localization.Away a) z) := fun z hz =>
     isUnit_of_dvd_unit (map_dvd _ hz) (IsLocalization.Away.algebraMap_isUnit a)
   have hgu := hdvd (algebraMap B A₂ g) ⟨algebraMap B A₂ n * algebraMap B A₂ d * e, by rw [ha]; simp only [map_mul]; ring⟩
@@ -1187,7 +1167,7 @@ theorem unit_eq_mul_qth_power_near_zeroLocus : ∀ (k B : Type) [Field k] [IsAlg
   have hεu : IsUnit (algebraMap A₂ (Localization.Away a) ε₀) := by
     rw [hε₀, map_mul, map_pow, map_mul]; exact hnu.mul ((hdu.mul heu).pow j)
   obtain ⟨x₂, y₂, h₂⟩ := hn.mul_right (hd.pow_right (n := j))
-  obtain ⟨r, hr⟩ := GlobalTheory.T.exists_pow_sub_mem_span_of_isUnit_mod k B (j + 1) hq f hf (n * d ^ j) y₂
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.exists_pow_sub_mem_span_of_isUnit_mod_of_isAlgClosed k B (j + 1) hq f hf (n * d ^ j) y₂
     (Ideal.mem_span_singleton.mpr ⟨-x₂, by linear_combination h₂⟩)
   have hcong : ε₀ - algebraMap B A₂ r ^ (j + 1) ∈ Ideal.span {algebraMap B A₂ f} := by
     have h1 : algebraMap B A₂ f ∣ algebraMap B A₂ (n * d ^ j - r ^ (j + 1)) :=
@@ -1206,7 +1186,7 @@ theorem unit_eq_mul_qth_power_near_zeroLocus : ∀ (k B : Type) [Field k] [IsAlg
     exact map_dvd _ (Ideal.mem_span_singleton.mp hcong)
   have hqu : IsUnit ((j + 1 : ℕ) : Localization.Away a) := by
     have := hq.map ((algebraMap B (Localization.Away a)).comp (algebraMap k B)); rwa [map_natCast] at this
-  obtain ⟨A₃, _, _, hA₃, x, hx⟩ := GlobalTheory.T.exists_excisionNbhd_with_root_of_isUnit (Localization.Away a) (algebraMap B (Localization.Away a) f)
+  obtain ⟨A₃, _, _, hA₃, x, hx⟩ := _root_.GlobalTheory.EtC.exists_excisionNbhd_adjoin_root (Localization.Away a) (algebraMap B (Localization.Away a) f)
     (j + 1) hqu _ _ hεu hcong'
   letI : Algebra B A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap B (Localization.Away a)))
   letI : Algebra A₂ A₃ := RingHom.toAlgebra ((algebraMap (Localization.Away a) A₃).comp (algebraMap A₂ (Localization.Away a)))
@@ -1215,7 +1195,7 @@ theorem unit_eq_mul_qth_power_near_zeroLocus : ∀ (k B : Type) [Field k] [IsAlg
     show algebraMap (Localization.Away a) A₃ (algebraMap B (Localization.Away a) z) =
       algebraMap (Localization.Away a) A₃ (algebraMap A₂ (Localization.Away a) (algebraMap B A₂ z))
     rw [IsScalarTower.algebraMap_apply B A₂ (Localization.Away a) z])
-  refine ⟨A₃, inferInstance, inferInstance, inferInstance, t3, GlobalTheory.T.isExcisionNbhd_trans' B (Localization.Away a) A₃ f hA₂' hA₃, ?_, ?_⟩
+  refine ⟨A₃, inferInstance, inferInstance, inferInstance, t3, _root_.GlobalTheory.EtC.isExcisionNbhd_trans B (Localization.Away a) A₃ f hA₂' hA₃, ?_, ?_⟩
   · have : algebraMap B A₃ g = algebraMap (Localization.Away a) A₃
         (algebraMap A₂ (Localization.Away a) (algebraMap B A₂ g)) := by
       rw [← IsScalarTower.algebraMap_apply B A₂ (Localization.Away a)]; rfl
@@ -1277,8 +1257,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.unit_eq_mul_pow_on_etaleExcisionNbhd_zeroLocus : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B] (q : ℕ), IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A₂ : Type) [CommRing A₂] [Algebra B A₂], IsExcisionNbhd B A₂ f → ∀ c : (Localization.Away (algebraMap B A₂ f))ˣ, ∀ (b₁ : B) (m : ℕ) (e : A₂), e - 1 ∈ Ideal.span {algebraMap B A₂ f} → algebraMap A₂ (Localization.Away (algebraMap B A₂ f)) (algebraMap B A₂ b₁) = (c : Localization.Away (algebraMap B A₂ f)) * algebraMap A₂ (Localization.Away (algebraMap B A₂ f)) (e * algebraMap B A₂ f ^ m) → ∀ g : B, IsCoprime f g → ∀ (u : (Localization.Away (f * g))ˣ) (n d : B), IsCoprime f n → IsCoprime f d → algebraMap B (Localization.Away (f * g)) (b₁ * d) = (u : Localization.Away (f * g)) * algebraMap B (Localization.Away (f * g)) (n * f ^ m) → ∃ (A₃ : Type) (_ : CommRing A₃) (_ : Algebra B A₃) (_ : Algebra A₂ A₃) (_ : IsScalarTower B A₂ A₃), IsExcisionNbhd B A₃ f ∧ IsUnit (algebraMap B A₃ g) ∧ ∃ v : (Localization.Away (algebraMap B A₃ f))ˣ, ∀ (φ : Localization.Away (algebraMap B A₂ f) →+* Localization.Away (algebraMap B A₃ f)) (ψ : Localization.Away (f * g) →+* Localization.Away (algebraMap B A₃ f)), φ.comp (algebraMap A₂ _) = (algebraMap A₃ _).comp (algebraMap A₂ A₃) → ψ.comp (algebraMap B _) = (algebraMap A₃ _).comp (algebraMap B A₃) → φ (c : Localization.Away (algebraMap B A₂ f)) = ψ (u : Localization.Away (f * g)) * (v : Localization.Away (algebraMap B A₃ f)) ^ q := by
-  first | (exact @GlobalTheory.EtC.unit_eq_mul_qth_power_near_zeroLocus)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitEqMulPowOnEtaleExcisionNbhdZeroLocusStatement =====
@@ -1292,10 +1270,10 @@ namespace GlobalTheory.EtC
 
 theorem kummer_divisor_step : ∀ (q : ℕ) (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A₂ : Type) [CommRing A₂] [Algebra B A₂], IsExcisionNbhd B A₂ f → ∀ c : (Localization.Away (algebraMap B A₂ f))ˣ, ∃ g : B, IsCoprime f g ∧ ∃ u : (Localization.Away (f * g))ˣ, (∃ (A₃ : Type) (_ : CommRing A₃) (_ : Algebra B A₃) (_ : Algebra A₂ A₃) (_ : IsScalarTower B A₂ A₃), IsExcisionNbhd B A₃ f ∧ IsUnit (algebraMap B A₃ g) ∧ ∃ v : (Localization.Away (algebraMap B A₃ f))ˣ, ∀ (φ : Localization.Away (algebraMap B A₂ f) →+* Localization.Away (algebraMap B A₃ f)) (ψ : Localization.Away (f * g) →+* Localization.Away (algebraMap B A₃ f)), φ.comp (algebraMap A₂ _) = (algebraMap A₃ _).comp (algebraMap A₂ A₃) → ψ.comp (algebraMap B _) = (algebraMap A₃ _).comp (algebraMap B A₃) → φ (c : Localization.Away (algebraMap B A₂ f)) = ψ (u : Localization.Away (f * g)) * (v : Localization.Away (algebraMap B A₃ f)) ^ q) ∧ ∃ (C : Type) (_ : CommRing C) (_ : Algebra B C), IsExcisionNbhd B C g ∧ ∃ v' : (Localization.Away (algebraMap B C (f * g)))ˣ, Localization.awayMap (algebraMap B C) (f * g) (u : Localization.Away (f * g)) = (v' : Localization.Away (algebraMap B C (f * g))) ^ q := by
   intro q k B _ _ _ _ _ _ hq f hf A₂ _ _ hA c
-  obtain ⟨b₁, m, e, he, hc⟩ := GlobalTheory.T.exists_unit_form_localization_etale_nbhd B A₂ f hA c
+  obtain ⟨b₁, m, e, he, hc⟩ := _root_.GlobalTheory.DivUnitForm.unit_form B A₂ f hA c
   by_cases hb : b₁ = 0
   · refine ⟨1, isCoprime_one_right, 1, ?_, ⟨B, inferInstance, inferInstance, isExcisionNbhd_self B 1, 1, by simp⟩⟩
-    have hL := GlobalTheory.T.isExcisionNbhd_away_of_inverse_mod B A₂ f hA e 1 (by simpa using he)
+    have hL := _root_.GlobalTheory.EtC.isExcisionNbhd_away B A₂ f hA e 1 (by simpa using he)
     refine ⟨Localization.Away e, inferInstance, inferInstance, inferInstance, inferInstance, hL, by simp, 1, ?_⟩
     intro φ ψ hφ hψ
     subst hb
@@ -1314,9 +1292,9 @@ theorem kummer_divisor_step : ∀ (q : ℕ) (k B : Type) [Field k] [IsAlgClosed 
     rw [← hc'] at hu
     haveI := subsingleton_of_zero_eq_one (isUnit_zero_iff.mp hu)
     exact Subsingleton.elim _ _
-  · obtain ⟨g, hg0, hfg, u, n, d, t, n', d', hn, hd, hn', hd', h1, h2⟩ := GlobalTheory.T.smoothAffineCurve_divisor_unit_decomposition k B q hq f hf b₁ hb m
-    exact ⟨g, hfg, u, GlobalTheory.T.unit_eq_mul_pow_on_etaleExcisionNbhd_zeroLocus k B q hq f hf A₂ hA c b₁ m e he hc g hfg u n d hn hd h1,
-      GlobalTheory.T.coprime_unit_etale_extension k B q hq f g hg0 u t n' d' hn' hd' h2⟩
+  · obtain ⟨g, hg0, hfg, u, n, d, t, n', d', hn, hd, hn', hd', h1, h2⟩ := _root_.GlobalTheory.KummerDiv.divisor_step k B q hq f hf b₁ hb m
+    exact ⟨g, hfg, u, _root_.GlobalTheory.EtC.unit_eq_mul_qth_power_near_zeroLocus k B q hq f hf A₂ hA c b₁ m e he hc g hfg u n d hn hd h1,
+      _root_.GlobalTheory.EtC.unit_isPow_on_excisionNbhd k B q hq f g hg0 u t n' d' hn' hd' h2⟩
 
 end GlobalTheory.EtC
 end -- clump:auto
@@ -1330,8 +1308,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.unit_localization_etaleNbhd_eq_unit_mul_pow : ∀ (q : ℕ) (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A₂ : Type) [CommRing A₂] [Algebra B A₂], IsExcisionNbhd B A₂ f → ∀ c : (Localization.Away (algebraMap B A₂ f))ˣ, ∃ g : B, IsCoprime f g ∧ ∃ u : (Localization.Away (f * g))ˣ, (∃ (A₃ : Type) (_ : CommRing A₃) (_ : Algebra B A₃) (_ : Algebra A₂ A₃) (_ : IsScalarTower B A₂ A₃), IsExcisionNbhd B A₃ f ∧ IsUnit (algebraMap B A₃ g) ∧ ∃ v : (Localization.Away (algebraMap B A₃ f))ˣ, ∀ (φ : Localization.Away (algebraMap B A₂ f) →+* Localization.Away (algebraMap B A₃ f)) (ψ : Localization.Away (f * g) →+* Localization.Away (algebraMap B A₃ f)), φ.comp (algebraMap A₂ _) = (algebraMap A₃ _).comp (algebraMap A₂ A₃) → ψ.comp (algebraMap B _) = (algebraMap A₃ _).comp (algebraMap B A₃) → φ (c : Localization.Away (algebraMap B A₂ f)) = ψ (u : Localization.Away (f * g)) * (v : Localization.Away (algebraMap B A₃ f)) ^ q) ∧ ∃ (C : Type) (_ : CommRing C) (_ : Algebra B C), IsExcisionNbhd B C g ∧ ∃ v' : (Localization.Away (algebraMap B C (f * g)))ˣ, Localization.awayMap (algebraMap B C) (f * g) (u : Localization.Away (f * g)) = (v' : Localization.Away (algebraMap B C (f * g))) ^ q := by
-  first | (exact @GlobalTheory.EtC.kummer_divisor_step)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitLocalizationEtaleNbhdEqUnitMulPowStatement =====
@@ -1345,9 +1321,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
 namespace GlobalTheory.EtC.KummerStep
 
-noncomputable abbrev gU (A : Type) [CommRing A] : Aˣ →* (Γ(Spec (CommRingCat.of A), ⊤))ˣ :=
-  Units.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom.toMonoidHom
-
 theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
     spMap (g.comp f) = spMap g ≫ spMap f := by
   simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp, Functor.map_comp]
@@ -1357,35 +1330,35 @@ theorem isUnit_natCast_of {k R : Type} [Field k] [CommRing R] (φ : k →+* R) {
   simpa using hq.map φ
 
 theorem kum_spMap (q : ℕ) [NeZero q] {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) (hq : IsUnit (q : A))
-    (u : Aˣ) : pull _ (spMap φ) _ _ (kum q (gU A u)) = kum q (gU B (Units.map φ.toMonoidHom u)) := by
+    (u : Aˣ) : pull _ (spMap φ) _ _ (kum q (_root_.GlobalTheory.EtC.KummerLoc.gU A u)) = kum q (_root_.GlobalTheory.EtC.KummerLoc.gU B (Units.map φ.toMonoidHom u)) := by
   have hq' : IsUnit (q : Γ(Spec (CommRingCat.of A), ⊤)) := by
     simpa using hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  rw [(GlobalTheory.T.cup_chern_kummer_pullback_naturality q).2.2.2 (Spec.map (CommRingCat.ofHom φ)) (gU A u) hq']
+  rw [(_root_.GlobalTheory.EtC.a6nat_holds q).2.2.2 (Spec.map (CommRingCat.ofHom φ)) (_root_.GlobalTheory.EtC.KummerLoc.gU A u) hq']
   congr 1
   ext
   have h := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom φ)
   have h2 : (Spec.map (CommRingCat.ofHom φ)).appTop = (Scheme.ΓSpecIso (CommRingCat.of A)).hom ≫ CommRingCat.ofHom φ ≫
       (Scheme.ΓSpecIso (CommRingCat.of B)).inv := by
     rw [← Category.assoc, ← h]; simp
-  simp only [gU, Units.coe_map]
+  simp only [_root_.GlobalTheory.EtC.KummerLoc.gU, Units.coe_map]
   rw [h2]
   simp only [CommRingCat.hom_comp, CommRingCat.hom_ofHom]
   simp
 
 theorem kum_pow_eq (q : ℕ) [NeZero q] {A : Type} [CommRing A] (hq : IsUnit (q : A)) (u v : Aˣ) :
-    kum q (gU A (u * v ^ q)) = kum q (gU A u) := by
+    kum q (_root_.GlobalTheory.EtC.KummerLoc.gU A (u * v ^ q)) = kum q (_root_.GlobalTheory.EtC.KummerLoc.gU A u) := by
   have hq' : IsUnit (q : Γ(Spec (CommRingCat.of A), ⊤)) := by
     simpa using hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  rw [map_mul, map_pow, ((GlobalTheory.T.chernClass_kummerClass_additive q).2 (gU A u) _ hq').1, ((GlobalTheory.T.chernClass_kummerClass_additive q).2 (gU A v) (gU A v) hq').2, add_zero]
+  rw [map_mul, map_pow, ((_root_.GlobalTheory.EtC.a6add_holds q).2 (_root_.GlobalTheory.EtC.KummerLoc.gU A u) _ hq').1, ((_root_.GlobalTheory.EtC.a6add_holds q).2 (_root_.GlobalTheory.EtC.KummerLoc.gU A v) (_root_.GlobalTheory.EtC.KummerLoc.gU A v) hq').2, add_zero]
 
 theorem kum_pow (q : ℕ) [NeZero q] {A : Type} [CommRing A] (hq : IsUnit (q : A)) (v : Aˣ) :
-    kum q (gU A (v ^ q)) = 0 := by
+    kum q (_root_.GlobalTheory.EtC.KummerLoc.gU A (v ^ q)) = 0 := by
   have := kum_pow_eq q hq 1 v
   rw [one_mul] at this
   rw [this, map_one]
   have hq' : IsUnit (q : Γ(Spec (CommRingCat.of A), ⊤)) := by
     simpa using hq.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  have h := ((GlobalTheory.T.chernClass_kummerClass_additive q).2 (1 : (Γ(Spec (CommRingCat.of A), ⊤))ˣ) 1 hq').1
+  have h := ((_root_.GlobalTheory.EtC.a6add_holds q).2 (1 : (Γ(Spec (CommRingCat.of A), ⊤))ˣ) 1 hq').1
   rw [one_mul] at h
   simpa using h
 
@@ -1394,8 +1367,8 @@ theorem of_steps (L1 : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClo
   obtain ⟨A₂, _, _, _, _, hA₂, c, hc⟩ := L1 q k B hq f hf A' hA' w
   set c₀ : (Localization.Away (algebraMap B A₂ f))ˣ :=
     Units.map (Scheme.ΓSpecIso (CommRingCat.of (Localization.Away (algebraMap B A₂ f)))).hom.hom.toMonoidHom c with hc₀
-  have hcc : gU _ c₀ = c := by
-    ext; simp [c₀, gU]
+  have hcc : _root_.GlobalTheory.EtC.KummerLoc.gU _ c₀ = c := by
+    ext; simp [c₀, _root_.GlobalTheory.EtC.KummerLoc.gU]
   obtain ⟨g, hfg, u, ⟨A₃, _, _, _, _, hA₃, hg, v, hv⟩, C, _, _, hC, v', hv'⟩ := L2 q k B hq f hf A₂ hA₂ c₀
   letI : Algebra A' A₃ := ((algebraMap A₂ A₃).comp (algebraMap A' A₂)).toAlgebra
   haveI : IsScalarTower B A' A₃ := IsScalarTower.of_algebraMap_eq (fun b => by
@@ -1404,7 +1377,7 @@ theorem of_steps (L1 : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClo
   have hkB : ∀ (R : Type) [CommRing R] [Algebra B R], IsUnit (q : R) := fun R _ _ =>
     isUnit_natCast_of ((algebraMap B R).comp (algebraMap k B)) hq
   refine ⟨g, hfg, A₃, C, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
-    hA₃, hg, hC, kum q (gU _ u), ?_, ?_⟩
+    hA₃, hg, hC, kum q (_root_.GlobalTheory.EtC.KummerLoc.gU _ u), ?_, ?_⟩
   · rw [kum_spMap q _ (hkB _)]
     have : Units.map (Localization.awayMap (algebraMap B C) (f * g)).toMonoidHom u = v' ^ q := by
       ext; simpa using hv'
@@ -1438,7 +1411,7 @@ theorem of_steps (L1 : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClo
       kum_spMap q ψ (hkB _)]
 
 theorem exists_class_agreeing_near_zeros : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A' : Type) [CommRing A'] [Algebra B A'], IsExcisionNbhd B A' f → ∀ w : Ht q (sp (Localization.Away (algebraMap B A' f))) 1 1, ∃ g : B, IsCoprime f g ∧ ∃ (A₂ C : Type) (_ : CommRing A₂) (_ : CommRing C) (_ : Algebra B A₂) (_ : Algebra A' A₂) (_ : IsScalarTower B A' A₂) (_ : Algebra B C), IsExcisionNbhd B A₂ f ∧ IsUnit (algebraMap B A₂ g) ∧ IsExcisionNbhd B C g ∧ ∃ a : Ht q (sp (Localization.Away (f * g))) 1 1, pull _ (spMap (Localization.awayMap (algebraMap B C) (f * g))) _ _ a = 0 ∧ ∀ (φ : Localization.Away (algebraMap B A' f) →+* Localization.Away (algebraMap B A₂ f)) (ψ : Localization.Away (f * g) →+* Localization.Away (algebraMap B A₂ f)), φ.comp (algebraMap A' _) = (algebraMap A₂ _).comp (algebraMap A' A₂) → ψ.comp (algebraMap B _) = (algebraMap A₂ _).comp (algebraMap B A₂) → pull _ (spMap φ) _ _ w = pull _ (spMap ψ) _ _ a :=
-  of_steps GlobalTheory.T.exists_kummerClass_on_finer_etaleNbhd_curve GlobalTheory.T.unit_localization_etaleNbhd_eq_unit_mul_pow
+  of_steps _root_.GlobalTheory.EtC.KummerLoc.exists_kummer_on_finer_nbhd _root_.GlobalTheory.EtC.kummer_divisor_step
 
 end GlobalTheory.EtC.KummerStep
 end -- clump:auto
@@ -1452,8 +1425,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_kummerClass_agreeing_near_zeros : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (A' : Type) [CommRing A'] [Algebra B A'], IsExcisionNbhd B A' f → ∀ w : Ht q (sp (Localization.Away (algebraMap B A' f))) 1 1, ∃ g : B, IsCoprime f g ∧ ∃ (A₂ C : Type) (_ : CommRing A₂) (_ : CommRing C) (_ : Algebra B A₂) (_ : Algebra A' A₂) (_ : IsScalarTower B A' A₂) (_ : Algebra B C), IsExcisionNbhd B A₂ f ∧ IsUnit (algebraMap B A₂ g) ∧ IsExcisionNbhd B C g ∧ ∃ a : Ht q (sp (Localization.Away (f * g))) 1 1, pull _ (spMap (Localization.awayMap (algebraMap B C) (f * g))) _ _ a = 0 ∧ ∀ (φ : Localization.Away (algebraMap B A' f) →+* Localization.Away (algebraMap B A₂ f)) (ψ : Localization.Away (f * g) →+* Localization.Away (algebraMap B A₂ f)), φ.comp (algebraMap A' _) = (algebraMap A₂ _).comp (algebraMap A' A₂) → ψ.comp (algebraMap B _) = (algebraMap A₂ _).comp (algebraMap B A₂) → pull _ (spMap φ) _ _ w = pull _ (spMap ψ) _ _ a := by
-  first | (exact @GlobalTheory.EtC.KummerStep.exists_class_agreeing_near_zeros)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKummerClassAgreeingNearZerosStatement =====

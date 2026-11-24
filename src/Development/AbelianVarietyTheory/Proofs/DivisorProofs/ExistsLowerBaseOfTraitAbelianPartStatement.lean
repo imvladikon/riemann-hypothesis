@@ -527,11 +527,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.WeilDomain
 
-theorem appTop_spMap_inv {A B : Type} [CommRing A] [CommRing B] (g : A →+* B) (a : A) :
-    (spMap g).appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom a) =
-      (Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom (g a) :=
-  (congrArg (fun q => q.hom a) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom g))).symm
-
 theorem weilIs_of_fractionField : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (P : PolAV (Sp R)) (W L : Type) [CommRing W] [IsDomain W] [Field L] [Algebra W L] [IsFractionRing W L] (f : R →+* W) (e : Over.mk (spMap ((algebraMap W L).comp f)) ⟶ Over.mk (spMap f)), e.left = spMap (algebraMap W L) → ∀ (n : ℕ) (x y : Over.mk (spMap f) ⟶ P.A), x ^ n = 1 → y ^ n = 1 → ∀ (w : Wˣ), Out.WeilIs P.A P.L n (e ≫ x) (e ≫ y) (unitOn (Units.map (algebraMap W L).toMonoidHom w)) → Out.WeilIs P.A P.L n x y (unitOn w) := by
   intro R _ _ P W L _ _ _ _ _ f e he n x y hx hy w H
   have hL := (GlobalTheory.firstFiveLaws).1
@@ -543,7 +538,7 @@ theorem weilIs_of_fractionField : ∀ (R : Type) [CommRing R] [IsNoetherianRing 
     intro a b hab
     have ia := CommRingCat.inv_hom_apply (Scheme.ΓSpecIso (CommRingCat.of W)) a
     have ib := CommRingCat.inv_hom_apply (Scheme.ΓSpecIso (CommRingCat.of W)) b
-    rw [← ia, ← ib, appTop_spMap_inv, appTop_spMap_inv] at hab
+    rw [← ia, ← ib, _root_.GlobalTheory.SecSpread.spMap_appTop, _root_.GlobalTheory.SecSpread.spMap_appTop] at hab
     have h1 := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of L)).inv).1 hab
     have h2 := IsFractionRing.injective W L h1
     rw [← ia, ← ib, h2]
@@ -554,7 +549,7 @@ theorem weilIs_of_fractionField : ∀ (R : Type) [CommRing R] [IsNoetherianRing 
     refine this.trans ?_
     show (Scheme.ΓSpecIso (CommRingCat.of L)).inv.hom (algebraMap W L w) = _
     rw [he]
-    exact (appTop_spMap_inv (algebraMap W L) (w : W)).symm
+    exact (_root_.GlobalTheory.SecSpread.spMap_appTop (algebraMap W L) (w : W)).symm
   exact hc' ▸ hc
 
 end GlobalTheory.WeilDomain
@@ -1201,10 +1196,6 @@ end GlobalTheory.LowLift
 
 namespace GlobalTheory.LowLift
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
 theorem main : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (h : ℕ) (F : SFam h n (zetaAway n)) (r : ℕ) (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → IsDiscreteValuationRing V₁ → ∀ (b₁ : cycAway n →+* V₁) (v : Sp V₁ ⟶ (GlobalTheory.LowChart.powA F r).left) (hs : v ≫ GlobalTheory.LowChart.toO F r = spMap b₁), ∃ (L : LowBase (zetaAway n) n) (V' : Type) (_ : CommRing V') (_ : IsDomain V') (_ : IsLocalRing V') (f : V₁ →+* V') (κ : L.W →+* V') (e : (Fin L.T.r → ℤ) ≃+ (Fin r → ℤ)), L.h = h ∧ IsCN V' ∧ IsDiscreteValuationRing V' ∧ Function.Injective f ∧ f.Finite ∧ IsLocalHom f ∧ IsLocalHom κ ∧ κ.comp L.T.b = f.comp b₁ ∧ ∃ (B' : Over (Sp V')) (_ : GrpObj B') (β' : B'.left ⟶ (GlobalTheory.LowChart.siegAt F v _ hs).A.left) (β'' : B'.left ⟶ L.T.B.left) (β₂ : (G2 B').left ⟶ (G2 (GlobalTheory.LowChart.siegAt F v _ hs).A).left) (β₂' : (G2 B').left ⟶ (G2 L.T.B).left), IsGrpPullback B' (GlobalTheory.LowChart.siegAt F v _ hs).A (spMap f) β' ∧ IsGrpPullback B' L.T.B (spMap κ) β'' ∧ IsSquare β' β₂ ∧ IsSquare β'' β₂' ∧ LBIso ((GlobalTheory.LowChart.siegAt F v _ hs).P.pull β₂) ((abelian₂ L.T.B L.T.M.L).pull β₂') ∧ ∀ a : Fin L.T.r → ℤ, ∃ x : Sp V' ⟶ B'.left, x ≫ B'.hom = 𝟙 _ ∧ x ≫ β' = spMap f ≫ (GlobalTheory.LowChart.cAt F v _ hs ((n : ℤ) • e a)).left ∧ x ≫ β'' = spMap κ ≫ (L.T.c₀ ((n : ℤ) • a)).left := by
   intro n hn _ h F r V₁ _ _ _ hV hdvr b₁ v hs
   have hV0 := hV
@@ -1274,7 +1265,7 @@ theorem main : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (h : ℕ) (F : SFam h n 
       u_sep := hur
       u_base := by
         show _ = spMap (ρ.comp (GlobalTheory.LowChart.base F w))
-        rw [spMap_comp', GlobalTheory.LowChart.spMap_base, Category.assoc]
+        rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, GlobalTheory.LowChart.spMap_base, Category.assoc]
       dim := rfl
       β := β
       β₂ := β₂
@@ -1288,11 +1279,11 @@ theorem main : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (h : ℕ) (F : SFam h n 
   obtain ⟨V', _, _, _, f, κ, hV', hdvr', hfi, hff, hfl, hκl, hκρ⟩ :=
     GlobalTheory.T.exists_completeDVR_of_finite_etale_baseChange (GlobalTheory.LowChart.W F w) R' V₁ ρ ψ hloc hfin het hV0 hdvr hψl
   have hspec : spMap κ ≫ (spMap ρ ≫ GlobalTheory.LowChart.toPow F w) = spMap f ≫ v := by
-    rw [← Category.assoc, ← spMap_comp', hκρ, spMap_comp', Category.assoc, hψ]
+    rw [← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hκρ, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc, hψ]
   have hb : κ.comp T.b = f.comp b₁ := by
     have e : spMap (κ.comp T.b) = spMap (f.comp b₁) := by
       show spMap (κ.comp (ρ.comp (GlobalTheory.LowChart.base F w))) = _
-      rw [spMap_comp', spMap_comp', spMap_comp', GlobalTheory.LowChart.spMap_base, ← hs]
+      rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, GlobalTheory.LowChart.spMap_base, ← hs]
       simpa only [Category.assoc] using congrArg (· ≫ GlobalTheory.LowChart.toO F r) hspec
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
 

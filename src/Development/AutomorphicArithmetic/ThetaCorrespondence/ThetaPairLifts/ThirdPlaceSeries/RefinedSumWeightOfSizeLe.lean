@@ -164,8 +164,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth GlobalTheory.PtTie GlobalTheory.PlaceInt
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_harmonicPolynomial_localDepth_between : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c) (a : (D.host.E →+* ℂ) × ℕ → ℕ), (∀ τ, Antitone fun i => a (τ, i)) → ∀ n : ℕ, ∑ f : Lt1 Dw, 2 * rk f ≤ n → ∀ A B : ℝ, NuBetween Xo la (gap Dw a) A B → ∃ P₁ ∈ harmA (Dw := Dw) c a n, PolyBetween Xo la P₁ A B := by
-  first | exact @GlobalTheory.RefSum.GlobalPoly.exists_polyBetween
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHarmonicPolynomialLocalDepthBetweenStatement =====
@@ -200,9 +198,9 @@ theorem iInf_thRule_le_nuLocOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     obtain ⟨v, hv⟩ := GlobalTheory.ValClosure.exists_valuation_closure T.V ϖ hϖ
     exact ⟨AlgebraicClosure T.Fr, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
       inferInstance, v, hv⟩
-  obtain ⟨TI⟩ := GlobalTheory.T.nonempty_tateIsometry_integralFramedPoint_chart E H Dw l Xo c T io y C P F
+  obtain ⟨TI⟩ := _root_.GlobalTheory.IntegralTate.nonempty_tateIso_of_intChart E H Dw l Xo c T io y C P F
   obtain ⟨D', A', G', _, _, pD, pA, pG, U', PU, _, oD', hx, hact, hθ⟩ :=
-    (GlobalTheory.T.exists_productData_copies_trivialisation_valuation E H Dw l Xo c T io y C P ϖ hϖ).2 n
+    (_root_.GlobalTheory.PowData.exists_powData E H Dw l Xo c T io y C P ϖ hϖ).2 n
   obtain ⟨θ, θα, hθ1, hθ2, hθ3⟩ := hθ F v hv Q hQ α l.M (by have := l.three_le; omega) hα
   have hcop : ∃ u u' : 𝓞 E, u * α + u' * star α = 1 := by
     have h1 := l.coprime
@@ -293,7 +291,7 @@ theorem harmonic_value_ge_local_depth : ∀ (E : Type) [Field E] [NumberField E]
   have hg := fun b => (GlobalTheory.T.regular_section_integral_germ_unique_scale E H Dw l Xo c hst T io y C hC.1 _ (hh b)).1
     (GlobalTheory.T.reachedSection_regular_on_integralModel E H Dw l Xo c hst T io y C hC _ (hh b) (hre b))
   choose f hf using hg
-  obtain ⟨B, hB1, -⟩ := GlobalTheory.T.integralChart_formalBiextension_gauge_bound E H Dw l Xo c hst T io y C
+  obtain ⟨B, hB1, -⟩ := _root_.GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hst T io y C
   have hHH : P ∈ HH c w n := hP.1
   have hni := GlobalTheory.T.harmonicValue_integralPoint_eq_value_on_biextensionCopies E H Dw l Xo c hst T io y C nab hnab B hB1 _ n hh f hf w P hHH
   have hch := GlobalTheory.T.harmonic_value_chain_rule_normalized_pullback E H Dw l Xo c hst nab hnab T.Fr y.1 1 1 (N ^ 2 * 1) (N ^ 2) (by simp) (by ring) n hh
@@ -305,12 +303,12 @@ theorem harmonic_value_ge_local_depth : ∀ (E : Type) [Field E] [NumberField E]
   have eF : B.FK T.Fr = C.ch.B.FK T.Fr := by
     funext i
     change MvPowerSeries.map _ (B.G.F i) = MvPowerSeries.map _ (C.ch.B.G.F i)
-    rw [GlobalTheory.ChartBiext.toK_self, hF', e1]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.gt_map_id, hF', e1]
   have eA : ∀ a, B.actK T.Fr a = C.ch.B.actK T.Fr a := by
     intro a
     funext i
     change MvPowerSeries.map _ (B.A.act a i) = MvPowerSeries.map _ (C.ch.B.A.act a i)
-    rw [GlobalTheory.ChartBiext.toK_self, hA', e2]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.gt_map_id, hA', e2]
   rw [GlobalTheory.ChartBiext.nabValN_congr B C.ch.B eF eA]
   refine (hloc (N ^ 2 * 1)).trans ?_
   unfold nuLocOf
@@ -334,8 +332,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth GlobalTheory.PtTie GlobalTheory.PlaceInt
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.harmonic_value_ge_local_depth_prime_to_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmA (Dw := Dw) c w n → (∀ k, (ρ : EReal) ≤ nuLocOf C e k (MvPolynomial.map io P)) → ∀ (N : ℕ), Odd N → IsUnit (N : T.V) → ∀ (x₂ : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ b, x₂ b ^ (N ^ 2) = 1 ∧ IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) 1 (x₂ b) (F b)) → letI := io.toAlgebra; (ρ : EReal) ≤ nval T.V e (hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F b)) P) := by
-  first | exact @GlobalTheory.RefSum.TermLoc.harmonic_value_ge_local_depth
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarmonicValueGeLocalDepthPrimeToPStatement =====
@@ -396,7 +392,7 @@ theorem thRule_lower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     (RatData.exists_thetaVal_data E H Dw l Xo c T'.Fr y'.1).1 hrat (x b)
   have hev : iT (evI y f) = thExpr Xo c nab y'.1 P₁ F := by
     letI : Algebra T.Fr T'.Fr := iT.toAlgebra
-    exact GlobalTheory.T.thetaRule_value_integral_framed_point_extension_field E H Dw l Xo c nab hnab T io y T'.Fr φ hφ y'.1 hmap a n x P₁ hP₁ F hF f hf
+    exact _root_.GlobalTheory.PtTie.evI_eq_thExpr_ext E H Dw l Xo c nab hnab T io y T'.Fr φ hφ y'.1 hmap a n x P₁ hP₁ F hF f hf
   have ht : ∀ b, ∃ t' : ptO Xo (xOf y') ⟶ Xo.univ.t.G, t' ^ (l.M ^ 2) = 1 ∧
       IsUUOver Xo.univ.t.G Xo.univ.t.PP l.M (sOf1 y') 1 t' (F b) := by
     intro b
@@ -410,7 +406,7 @@ theorem thRule_lower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   choose t' ht1 ht2 using ht
   have hρ : ∀ k, (A : EReal) ≤ nuLocOf C' (vV T'.V (p : T'.Fr)).toNat k (MvPolynomial.map (iT.comp io) P₁) :=
     fun k => (hPB T' (iT.comp io) (r * e) ho' y' hfin C' k).1
-  have hb := GlobalTheory.T.harmonic_value_ge_local_depth_prime_to_p E H Dw l Xo c T' (iT.comp io) y' C' hgood nab hnab _ A a n he'pos P₁ hP₁ hρ l.M l.odd hu
+  have hb := _root_.GlobalTheory.RefSum.TermLoc.harmonic_value_ge_local_depth E H Dw l Xo c T' (iT.comp io) y' C' hgood nab hnab _ A a n he'pos P₁ hP₁ hρ l.M l.odd hu
     t' F (fun b => ⟨ht1 b, ht2 b⟩)
   have hh := (hv_linear E H Dw l Xo c hnab.1 nab hnab T'.Fr y'.1 n P₁).2.2 l.M F
   rw [← hh] at hb
@@ -444,19 +440,6 @@ theorem vLa_nat_eq_zero {K : Type} [Field K] [NumberField K] (la : HeightOneSpec
   rw [vLa, ← map_natCast (algebraMap (𝓞 K) K) N, HeightOneSpectrum.valuation_of_algebraMap,
     (la.intValuation_eq_one_iff_mem_primeCompl _).2 hN]
   simp
-
-theorem vLa_nat_pos {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) {N : ℕ} (h0 : N ≠ 0)
-    (hN : ((N : ℕ) : 𝓞 K) ∈ la.asIdeal) : 0 < vLa la (N : K) := by
-  have h1 : la.valuation K (N : K) < 1 := by
-    rw [← map_natCast (algebraMap (𝓞 K) K) N]
-    exact (la.valuation_lt_one_iff_mem _).2 hN
-  have h2 : la.valuation K (N : K) ≠ 0 := by
-    rw [Ne, Valuation.zero_iff]
-    exact_mod_cast h0
-  have h3 := (WithZero.log_lt_log h2 one_ne_zero).2 h1
-  rw [WithZero.log_one] at h3
-  unfold vLa
-  omega
 
 theorem isUnit_nat {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K)) (S : CDVR)
     (io : K →+* S.Fr) (e : ℕ) (ho : OverLa la S.V io e) (N : ℕ) (hN : ((N : ℕ) : 𝓞 K) ∉ la.asIdeal) :
@@ -539,13 +522,13 @@ theorem refExp_le_of_oscLe : ∀ (D : D7) (T : Core D), LawsM T → ∀ (_ : Err
   obtain ⟨st, nab, hnab⟩ := GlobalTheory.CanonConn.exists_isNab_uncond _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c
   obtain rfl := GlobalTheory.PowGerm.starSt _ T.Q.H st hnab.1
   obtain ⟨A, hA⟩ := hO la
-  obtain ⟨P₁, hP₁, hPB⟩ := GlobalTheory.T.exists_harmonicPolynomial_localDepth_between D T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c q la a hD.1 n hs _ _ hA
+  obtain ⟨P₁, hP₁, hPB⟩ := _root_.GlobalTheory.RefSum.GlobalPoly.exists_polyBetween D T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c q la a hD.1 n hs _ _ hA
   obtain ⟨S', io', y', r, C, P, hy', hr0, hC, hP, hφ', hov, hvm, hsc⟩ :=
-    GlobalTheory.T.exists_finiteExtension_uniformisedChart_scale _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S io y hy φ hφ
+    _root_.GlobalTheory.ExtScale.exists_ext_chart_scale _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S io y hy φ hφ
   have ho' := hov la.1 e ho
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S'.V
   obtain ⟨⟨Q, hQ⟩, -⟩ := GlobalTheory.PowData.exists_powData _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' C P ϖ hϖ
-  obtain ⟨ρ, hρ, hSB⟩ := GlobalTheory.T.exists_short_periodLattice_basis_balanced_slope _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' _ hφ' C P ϖ hϖ Q hQ
+  obtain ⟨ρ, hρ, hSB⟩ := _root_.GlobalTheory.ShortPhi.exists_shortBasis _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' _ hφ' C P ϖ hϖ Q hQ
   obtain ⟨⟨α, hα1, hα2⟩, -⟩ := GlobalTheory.HalfGen.half_principal_and_split D T hL EX
   obtain ⟨π, π', hsplit⟩ := GlobalTheory.SplitLevel.level_halfSplit D T hL EX
   have hM : T.Q.l.M = D.host.g 0 * D.host.g 1 := hL.pins.2.1.1
@@ -574,7 +557,7 @@ theorem refExp_le_of_oscLe : ∀ (D : D7) (T : Core D), LawsM T → ∀ (_ : Err
     refine lt_of_le_of_lt ?_ ((hJ 0).2.1.trans_le hle')
     gcongr
 
-  have hε : 0 < vLa la.1 (q : T.Q.c.F) := vLa_nat_pos la.1 hqp.ne_zero la.2
+  have hε : 0 < vLa la.1 (q : T.Q.c.F) := _root_.GlobalTheory.RefSum.GlobalPoly.vLa_pos_of_mem la.1 hqp.ne_zero la.2
   have hv0 : 0 < vV S.V (q : S.Fr) := by
     rw [vV_nat_eq ho]
     exact mul_pos (by exact_mod_cast ho.1) hε
@@ -611,7 +594,7 @@ theorem refExp_le_of_oscLe : ∀ (D : D7) (T : Core D), LawsM T → ∀ (_ : Err
       a n hD hLP f hf
     have hlow := GlobalTheory.RefSum.LowP.thRule_lower _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c nab hnab q hqp
       (hqp.coprime_iff_not_dvd.1 hcop) la a n P₁ hP₁ _ _ hPB x f hx
-    obtain ⟨s, hs0, hsv, g, hg, hgs⟩ := GlobalTheory.T.cuspForm_clear_denominators_away_from_place _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r (T.U j) (wtZ a n)
+    obtain ⟨s, hs0, hsv, g, hg, hgs⟩ := _root_.GlobalTheory.RefSum.Clear.clear _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r (T.U j) (wtZ a n)
       ⟨f, hcusp⟩ m hm (hmlow f hf) la.1 (vLa la.1 (q : T.Q.c.F) * A) (by
         rintro _ ⟨⟨_, S₁, io₁, e₁, ho₁, y₁, hy₁, η, hη, rfl⟩, rfl⟩
         exact le_nval_place ho₁ hε A _ (hlow S₁ io₁ e₁ ho₁ y₁ hy₁))
@@ -776,12 +759,12 @@ theorem refExp_le_of_halfSplit (D : D7) (T : Core D) (hM : LawsM T) (j : ℕ) (h
   obtain ⟨hTot, hcusp⟩ := GlobalTheory.thetaRules_exist_and_cusp D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r (T.U j) hr1
     (hM.unf j hj) nab hn
   obtain ⟨S', io', y', r, C, P, hy', hr, hFT, hTI, hφ', hOv, hvv, hnv⟩ :=
-    GlobalTheory.T.exists_finiteExtension_uniformisedChart_scale D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S io y hy φ hφ
+    _root_.GlobalTheory.ExtScale.exists_ext_chart_scale D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S io y hy φ hφ
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S'.V
   obtain ⟨⟨Q, hQ⟩, -⟩ :=
     GlobalTheory.PowData.exists_powData D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' C P ϖ hϖ
   obtain ⟨s, hs, hΦ, b, hb1, hb2⟩ :=
-    GlobalTheory.T.exists_short_periodLattice_basis_balanced_slope D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' _ hφ' C P ϖ hϖ Q hQ
+    _root_.GlobalTheory.ShortPhi.exists_shortBasis D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S' io' y' _ hφ' C P ϖ hϖ Q hQ
   obtain ⟨m, hmfin, hmle, hmeq⟩ :=
     GlobalTheory.ThetaLow.thetaRule_bounded_below D T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c nab hn g g' ρ ρ' hH hcop a n
   obtain ⟨hgp, hgp', hne, hMl, hρ, hρ', hMb, hsp, -⟩ := hH
@@ -830,7 +813,7 @@ theorem refExp_le_of_halfSplit (D : D7) (T : Core D) (hM : LawsM T) (j : ℕ) (h
     linarith
   simp only [iInf_lt_iff] at hlt
   obtain ⟨f, hf, hlt⟩ := hlt
-  obtain ⟨t, ht0, htv, w, hw, hwe⟩ := GlobalTheory.T.cuspForm_clear_denominators_away_from_place D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r (T.U j)
+  obtain ⟨t, ht0, htv, w, hw, hwe⟩ := _root_.GlobalTheory.RefSum.Clear.clear D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c D.R.r (T.U j)
     (wtZ a n) ⟨f, hcusp a n hDom hLast f hf⟩ m hmfin (hmle f hf) la.1 (-vLa la.1 ν) fun v hv => by
       have h := hmle f hf la.1 v hv
       rw [hmeq la.1 (Or.inl la.2)] at h
@@ -892,7 +875,7 @@ open GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.SlopeRec GlobalTheory
 attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.RefSum.refCore_of_size_sumPt : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.RefSum.SumPtAlt → _root_.GlobalTheory.RefSum.ReferenceCore := by
   intro hS hSum
-  refine Closed.imp (Closed.and hSum (Closed.and (_root_.GlobalTheory.T.quotient_weight_gap_bounds' hS) (_root_.GlobalTheory.T.jetNum_nCol_lenT_bounds_of_quo hS))) ?_
+  refine Closed.imp (Closed.and hSum (Closed.and (_root_.GlobalTheory.RefSum.QuoShape.quo_shape_dom_lastPos_weight_eq hS) (_root_.GlobalTheory.RefSum.NumPtAlt.numbers_at_point hS))) ?_
   rintro eps Fm CH - ⟨⟨C1, hC1, h1⟩, ⟨C2, -, h2⟩, C3, hC3, h3⟩
   refine ⟨C1 + C3, add_nonneg hC1 hC3, (h1.and (h2.and h3)).imp fun x0 h x hx hle ι p hp i hi u1 hu => ?_⟩
   obtain ⟨k1, k2, k3⟩ := h x hx hle ι p hp
@@ -925,15 +908,6 @@ section -- clump:auto
 
 
 
-section
-open AlgebraicGeometry CategoryTheory NumberField IsLocalRing IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.PGsh
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Geo.Tor.Germ ReciprocityTheory.ChartRestriction.G.DVR ReciprocityTheory.ChartRestriction.G.DVR.QForm Formalism.MainNotions.ModuliIntegralCharts.H1
-open GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum GlobalTheory.FactorDepth GlobalTheory.CharDepth GlobalTheory.FGDepth GlobalTheory.PtTie GlobalTheory.PlaceInt
-attribute [local instance] Over.cartesianMonoidalCategory
-
-theorem _root_.GlobalTheory.T.reference_core_of_size_and_sum_point : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.RefSum.SumPtAlt → _root_.GlobalTheory.RefSum.ReferenceCore := by
-  first | exact @_root_.GlobalTheory.RefSum.refCore_of_size_sumPt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RefCoreOfSumPtStatement =====
@@ -1138,7 +1112,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberFie
 namespace GlobalTheory.RefSum
 theorem refTheta_of_refCore_alt : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.RefSum.ReferenceCore → _root_.GlobalTheory.RefSum.ReferenceTheta := by
   intro hS hR
-  have hW := _root_.GlobalTheory.T.quotient_weight_gap_bounds' hS
+  have hW := _root_.GlobalTheory.RefSum.QuoShape.quo_shape_dom_lastPos_weight_eq hS
   refine Closed.imp (Closed.and hR hW) ?_
   intro eps Fm CH inst H
   obtain ⟨⟨C, hC, a, h⟩, _, _, b, h'⟩ := H
@@ -1161,12 +1135,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum
-
-theorem _root_.GlobalTheory.T.refTheta_of_size_refCore : _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.RefSum.ReferenceCore → _root_.GlobalTheory.RefSum.ReferenceTheta := by
-  first | exact @_root_.GlobalTheory.RefSum.refTheta_of_refCore_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RefThetaOfRefCoreStatement =====
@@ -1487,16 +1455,13 @@ open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberFie
 
 namespace GlobalTheory.RefSum.WFree
 
-theorem conj_eq_neg {z : ℂ} {d : ℕ} (hd : 0 < d) (h : z ^ 2 = -(d : ℂ)) : (starRingEnd ℂ) z = -z ∧ z ≠ 0 :=
-  _root_.GlobalTheory.ClosingLemmaFourth.main hd h
-
 theorem two_mul_sum_mult {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
     (Dw : Datum H) : 2 * ∑ τ : E →+* ℂ, Dw.mult τ = Module.finrank ℚ E * (Dw.p + Dw.q) := by
   have key : ∀ τ : E →+* ℂ, Dw.mult τ + Dw.mult (ComplexEmbedding.conjugate τ) = Dw.p + Dw.q := fun τ => by
     have hs : τ (H.rt : E) ^ 2 = -(H.d : ℂ) := by
       have := congrArg (fun a : 𝓞 E => τ (a : E)) H.rt_sq
       simpa using this
-    obtain ⟨h1, h2⟩ := conj_eq_neg H.d_prime.pos hs
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.ClosingLemmaFourth.main H.d_prime.pos hs
     have h3 : ComplexEmbedding.conjugate τ (H.rt : E) = -τ (H.rt : E) := h1
     unfold Datum.mult
     rw [h3]
@@ -1604,12 +1569,6 @@ theorem refExp_padicVal_le_shift_of_weightFree : _root_.GlobalTheory.CovTop.Publ
 end GlobalTheory.RefSum.WFree
 end
 
-section
-open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum
-
-theorem _root_.GlobalTheory.T.reference_exponent_valuation_bound : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), LawsJ T → InR D j → Y.Good e o → 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → FlatExists Y.U (xiR D) → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)) (w₀ : Psi T.Q.H → ℤ) (m : ℕ) (cst : ℝ) (q : ℕ), q.Prime → refExp_vp Y.U cst (wtOf (T.Q.Dw j) u 0) q ≤ refExp_vp Y.U cst (wtOf (T.Q.Dw j) (u + parWt (T.Q.Dw j) w₀) m) q + (((if q ∈ badPrimes T.Q.H Y.d.l₂ then (m * (D.R.f * D.R.r) * (different_vp D.host.E q : ℝ) + 1) else 0 : ℝ)) : EReal) := by
-  first | exact @_root_.GlobalTheory.RefSum.WFree.refExp_padicVal_le_shift_of_weightFree
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.RefExpPadicValLeShiftOfWeightFree =====
@@ -1654,7 +1613,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberFie
 namespace GlobalTheory.RefSum.ToWeight
 theorem refinedSum_weight_of_refinedTheta_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.RefSum.ReferenceTheta → _root_.GlobalTheory.RefSum.ReferenceWeight := fun hP hS hF hT =>
   Closed.imp (Closed.and (Closed.and hT (_root_.GlobalTheory.BadLog.logSum_badPrimes_le_alt hS))
-      (Closed.and hF (Closed.and (_root_.GlobalTheory.T.lenT_zBase_unitE_nCol_bounds hS) (_root_.GlobalTheory.T.quotient_weight_gap_bounds' hS))))
+      (Closed.and hF (Closed.and (_root_.GlobalTheory.RefSum.SizeTZ.parameters_scale_rank_gap_bounds hS) (_root_.GlobalTheory.RefSum.QuoShape.quo_shape_dom_lastPos_weight_eq hS))))
     fun Fm _ _ ⟨⟨⟨C₁, h₁, hT⟩, C₂, h₂, hB⟩, ⟨_, _, hF⟩, ⟨_, _, hZ⟩, _, _, hW⟩ => by
       obtain ⟨x0, h⟩ := ((hT.and hB).and hF).and (hZ.and hW)
       refine ⟨C₁ + (30 + C₂), by positivity, x0, fun x hx hle ι p hp i hi Y hY u1 hq => ?_⟩
@@ -1672,18 +1631,12 @@ theorem refinedSum_weight_of_refinedTheta_alt : _root_.GlobalTheory.CovTop.Publi
         have a2 := mul_le_mul_of_nonneg_left z1 (show (0 : ℝ) ≤ 30 + C₂ by positivity)
         unfold zBase at a2
         linarith
-      · refine (_root_.GlobalTheory.T.reference_exponent_valuation_bound hP _ p.T _ Y _ _ p.fw.laws ⟨Nat.le_add_left _ _, hi.le⟩ hY.1 w1 w2 ⟨_, hF i hi Y hY⟩ u1
+      · refine (_root_.GlobalTheory.RefSum.WFree.refExp_padicVal_le_shift_of_weightFree hP _ p.T _ Y _ _ p.fw.laws ⟨Nat.le_add_left _ _, hi.le⟩ hY.1 w1 w2 ⟨_, hF i hi Y hY⟩ u1
           (shift (dat p i) u1 (nCol (dat p i))) (nCol (dat p i) / 2) (1 / 2500) q hq').trans ?_
         rw [EReal.coe_add]
         exact add_le_add (w3 ▸ he q hq') le_rfl
 end GlobalTheory.RefSum.ToWeight
 end
-end
-section
-open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum
-
-theorem _root_.GlobalTheory.T.refW_of_prints_size_flatDeg_refTheta : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.RefSum.ReferenceTheta → _root_.GlobalTheory.RefSum.ReferenceWeight := by
-  first | exact @_root_.GlobalTheory.RefSum.ToWeight.refinedSum_weight_of_refinedTheta_alt
 end
 end
 end -- clump:auto
@@ -1702,14 +1655,8 @@ section
 open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum
 namespace GlobalTheory.RefSum
 theorem refinedSum_weight_of_size_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.RefSum.ReferenceWeight :=
-  fun hP _ hS hF => _root_.GlobalTheory.T.refW_of_prints_size_flatDeg_refTheta hP hS hF (_root_.GlobalTheory.T.refTheta_of_size_refCore hS (_root_.GlobalTheory.T.reference_core_of_size_and_sum_point hS (_root_.GlobalTheory.T.sum_pt_of_size hS)))
+  fun hP _ hS hF => _root_.GlobalTheory.RefSum.ToWeight.refinedSum_weight_of_refinedTheta_alt hP hS hF (_root_.GlobalTheory.RefSum.refTheta_of_refCore_alt hS (_root_.GlobalTheory.RefSum.refCore_of_size_sumPt hS (_root_.GlobalTheory.RefSum.sumPt_of_size_alt hS)))
 end GlobalTheory.RefSum
-end
-section
-open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.AllWt GlobalTheory.FlatLine GlobalTheory.FlatTw GlobalTheory.SlopeRec GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.RefSum
-
-theorem _root_.GlobalTheory.T.refW_of_prints_deepGood_size_flatDeg : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.RefSum.ReferenceWeight := by
-  first | exact @_root_.GlobalTheory.RefSum.refinedSum_weight_of_size_alt
 end
 end
 end -- clump:auto

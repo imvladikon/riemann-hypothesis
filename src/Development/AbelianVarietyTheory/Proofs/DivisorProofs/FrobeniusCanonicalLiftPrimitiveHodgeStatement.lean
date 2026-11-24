@@ -127,8 +127,6 @@ open ReciprocityTheory.ChartRestriction.G.Semi (IsAbelianScheme LB RigLB Cubical
 open GlobalTheory GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham GlobalTheory.PDiv GlobalTheory.PtExt
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.symmetric_two_cocycle_sum_pow_mul : ∀ (Γ D : Type) [CommGroup Γ] [AddCommGroup D] (c : Γ → Γ → D), (∀ x y, c x y = c y x) → (∀ x y z, c y z - c (x * y) z + c x (y * z) - c x y = 0) → ∀ (n : ℕ) (x y : Γ), ∑ i ∈ Finset.range n, c ((x * y) ^ i) (x * y) + n • c x y = ∑ i ∈ Finset.range n, c (x ^ i) x + ∑ i ∈ Finset.range n, c (y ^ i) y + c (x ^ n) (y ^ n) - c 1 1 := by
-  first | exact @GlobalTheory.TwoCocycle.sum_pow_mul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricTwoCocycleSumPowMulStatement =====
@@ -210,7 +208,7 @@ theorem chi_indep [IsCommMonObj A] {p : ℕ} (hp : (p : R) = 0) {g : Fn2 A} (hg 
     PtExt.chi p g D z = PtExt.chi p g D z' := by
   obtain ⟨t, rfl⟩ : ∃ t, z = z' * t := ⟨z'⁻¹ * z, by simp⟩
   have ht : t ^ p = 1 := by rwa [mul_pow, mul_eq_left] at h
-  have h1 := GlobalTheory.T.symmetric_two_cocycle_sum_pow_mul (Pt A D) D (g D) (hg D).1 (hg D).2 p z' t
+  have h1 := _root_.GlobalTheory.TwoCocycle.sum_pow_mul (Pt A D) D (g D) (hg D).1 (hg D).2 p z' t
   have h2 := (hg D).2 (z' ^ p) 1 1
   have h3 := h0 D t ht
   have h4 : (p : D) = 0 := by rw [← map_natCast (algebraMap R D), hp, map_zero]

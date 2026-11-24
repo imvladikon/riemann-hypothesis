@@ -749,11 +749,6 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
     [CommRing O] [Algebra O LL] [TopologicalSpace LL] {v : AddValuation LL (WithTop ℚ)} {f : ℕ}
     (W : LocWach PD LL O v f)
 
-theorem φD_smul_A (T : LocLat G Qp LL O) (a : LetA O f) (x : W.DD T) :
-    W.φD T (a • x) = W.φA a • W.φD T x := by
-  have := W.φD_smul T (algebraMap (LetA O f) W.EE a) x
-  rwa [algebraMap_smul, W.φE_ext, algebraMap_smul] at this
-
 theorem φpull_le_span {n : ℕ} (T : LocLat G Qp LL O) (b : Module.Basis (Fin n) (LetA O f) ↥(W.N T)) :
     W.φpull T ≤ Submodule.span (LetA O f) (Set.range fun j => W.φD T (b j : W.DD T)) := by
   refine Submodule.span_le.2 ?_
@@ -763,7 +758,7 @@ theorem φpull_le_span {n : ℕ} (T : LocLat G Qp LL O) (b : Module.Basis (Fin n
 
   rw [← e, map_sum]
   refine Submodule.sum_mem _ fun j _ => ?_
-  rw [φD_smul_A]
+  rw [_root_.GlobalTheory.NL.Heights.φD_smulA]
   exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
 
 theorem exists_inv {n : ℕ} (T : LocLat G Qp LL O) (b : Module.Basis (Fin n) (LetA O f) ↥(W.N T))
@@ -958,13 +953,6 @@ open NumberField PowerSeries Formalism.WeaklyAdmissibleFiltrations Formalism.Bas
 
 namespace GlobalTheory.WachPlace.FullRankSum
 
-theorem joint_inj {O L : Type} [CommRing O] [IsDomain O] [Field L] [Algebra O L] [IsFractionRing O L] {a b c : ℕ}
-    (B : Mx O a c) (C : Mx O b c) (h : ∀ v, B.mulVec v = 0 → C.mulVec v = 0 → v = 0) (x : Fin c → L)
-    (hB : (B.map (algebraMap O L)).mulVec x = 0) (hC : (C.map (algebraMap O L)).mulVec x = 0) : x = 0 := by
-  first
-  | (rename_i h_2 h_3 h_4 h_5 h_6; revert O L h_2 h_3 h_4 h_5 h_6 a b c B C h x hB hC; exact @_root_.GlobalTheory.MulVecZeroDenominator.target)
-  | (intros; exact _root_.GlobalTheory.MulVecZeroDenominator.target ..)
-
 theorem exists_equiv {L : Type} [Field L] {n : ℕ} (B : Mx L n (n + 1)) (C : Mx L 1 (n + 1))
     (h : ∀ v, B.mulVec v = 0 → C.mulVec v = 0 → v = 0) :
     ∃ e : (Fin (n + 1) → L) ≃ₗ[L] (Fin n → L) × (Fin 1 → L), ∀ v, e v = (B.mulVec v, C.mulVec v) := by
@@ -988,7 +976,7 @@ theorem matGood_sum : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAin
   intro l _ P AI T K LL f n emb r ρ r₂ U U' B C hr hρ hB hC hinj
   obtain ⟨_, -, -, -, -, -, hF⟩ := GlobalTheory.Per.integers_completeDVR l LL
   obtain ⟨e, he⟩ := exists_equiv (B.map (algebraMap ↥(OL LL) ↥LL.1)) (C.map (algebraMap ↥(OL LL) ↥LL.1))
-    (joint_inj B C hinj)
+    (_root_.GlobalTheory.MulVecZeroDenominator.target B C hinj)
   have hq : ∀ g v, e (repOf r₂ g v) = (repOf r g (e v).1, repOf ρ g (e v).2) := fun g v => by
     rw [he, he, tw_mulVec hB, tw_mulVec hC]
   obtain ⟨-, hc, hm⟩ := GlobalTheory.Per.DirectSumHT.directSum_hodgeTate l P AI T K LL _ (repOf r₂) _ (repOf r) _ (repOf ρ) e hq

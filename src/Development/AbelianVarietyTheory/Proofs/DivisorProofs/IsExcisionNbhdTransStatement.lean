@@ -91,8 +91,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isExcisionNbhd_trans' : ∀ (A A' A'' : Type) [CommRing A] [CommRing A'] [CommRing A''] [Algebra A A'] [Algebra A' A''] [Algebra A A''] [IsScalarTower A A' A''] (h : A), IsExcisionNbhd A A' h → IsExcisionNbhd A' A'' (algebraMap A A' h) → IsExcisionNbhd A A'' h := by
-  first | (exact @GlobalTheory.EtC.isExcisionNbhd_trans)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsExcisionNbhdTransStatement =====

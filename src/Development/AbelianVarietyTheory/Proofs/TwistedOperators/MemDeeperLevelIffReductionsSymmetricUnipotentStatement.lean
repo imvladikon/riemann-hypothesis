@@ -97,7 +97,7 @@ theorem redFn_col {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : Subm
     (hmem : (M.val - 1) *ᵥ w ∈ Formalism.L2.Herm.hatL (F := F) Λ ∧
       redV β PP ((M.val - 1) *ᵥ w) ∈ Submodule.pi {q | q ∉ A} (fun _ => (⊥ : Submodule (kP PP) (kP PP)))) :
     ∀ q, q ∉ A → ((redFn β PP M : GL (Fin n) (kP PP)) : Matrix (Fin n) (Fin n) (kP PP)) q j = if q = j then 1 else 0 := by
-  obtain ⟨hadd, -, hMv⟩ := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β Λ hβ PP
+  obtain ⟨hadd, -, hMv⟩ := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β Λ hβ PP
   intro q hq
   have e1 : (M.val - 1) *ᵥ w + w = (M : Matrix (Fin n) (Fin n) _) *ᵥ w := by
     rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_add_cancel]
@@ -115,7 +115,7 @@ end Gen
 theorem redV_zero_of_frame {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
     {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : Submodule (𝓞 E) (Fin n → E)} (hβ : IsFrame β Λ) (PP : Pl E) :
     redV β PP 0 = 0 := by
-  obtain ⟨hadd, -, -⟩ := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β Λ hβ PP
+  obtain ⟨hadd, -, -⟩ := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β Λ hβ PP
   have := hadd 0 (Submodule.zero_mem _) 0 (Submodule.zero_mem _)
   rw [add_zero] at this
   simpa using this
@@ -178,7 +178,7 @@ theorem redV_mL (D : D7) (g : ℕ) (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : P
     (hg : ((g : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal) :
     ∀ v ∈ Formalism.L2.SG.HidaSetting.mL (II D) g,
       v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L ∧ redV β PP v = 0 := by
-  obtain ⟨hadd, hsmul, -⟩ := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β (II D).L hβ PP
+  obtain ⟨hadd, hsmul, -⟩ := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β (II D).L hβ PP
   intro v hv
   unfold mL at hv
   induction hv using Submodule.span_induction with
@@ -219,7 +219,7 @@ theorem redV_span (D : D7) (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : Pl D.host
     (hS : ∀ s ∈ S, s ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L ∧ redV β PP s ∈ T) :
     ∀ v ∈ Submodule.span (IntAf (II D).F (II D).E) S,
       v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L ∧ redV β PP v ∈ T := by
-  obtain ⟨hadd, hsmul, -⟩ := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β (II D).L hβ PP
+  obtain ⟨hadd, hsmul, -⟩ := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β (II D).L hβ PP
   intro v hv
   induction hv using Submodule.span_induction with
   | mem y hy => exact hS y hy
@@ -244,7 +244,7 @@ theorem redV_Mo (D : D7) (g : ℕ) (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : P
     (hS : ∀ s ∈ S, s ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L ∧ redV β PP s ∈ T) :
     ∀ v ∈ Formalism.L2.SG.Pf.unitaryCongruence.Mo (II D) g S,
       v ∈ Formalism.L2.Herm.hatL (F := D.host.F) (E := D.host.E) (n := (Yc D 0).rank) (II D).L ∧ redV β PP v ∈ T := by
-  obtain ⟨hadd, -, -⟩ := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β (II D).L hβ PP
+  obtain ⟨hadd, -, -⟩ := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β (II D).L hβ PP
   intro v hv
   obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 hv
   obtain ⟨hy1, hy2⟩ := redV_span D β PP hβ T S hS y hy
@@ -378,8 +378,6 @@ open GlobalTheory.SeeConjGroup Formalism.L2.SG.HidaSetting
 open scoped Matrix
 
 
-theorem _root_.GlobalTheory.T.reduction_mem_unipSym_of_flag_congruences : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z0 : VA (II D)) (bb cc : Fin D.R.k → VA (II D)) (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : Pl D.host.E), IsFrame β (II D).L → ((g : 𝓞 D.host.E) ∈ PP.asIdeal) → RedIs β PP (flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 bb z0) → (∀ i, cc i ∈ (II D).Lf ∧ redV β PP (cc i) = 0) → ∀ M : GL (Fin (Yc D 0).rank) (EAf D), M ∈ St β → (∀ a, (M.val - 1) *ᵥ e0 a ∈ Formalism.L2.SG.Pf.unitaryCongruence.Mo (II D) g (e0 '' {b | b.1 < a.1})) → ((M.val - 1) *ᵥ z0 ∈ Formalism.L2.SG.Pf.unitaryCongruence.Mo (II D) g (Set.range e0)) → (∀ i, (M.val - 1) *ᵥ bb i ∈ Formalism.L2.SG.Pf.unitaryCongruence.Mo (II D) g (Set.range e0 ∪ Set.range cc ∪ bb '' {j | j.1 < i.1})) → (∀ b, (M.val - 1) *ᵥ f0 b ∈ Formalism.L2.SG.Pf.unitaryCongruence.Mo (II D) g (Set.range e0 ∪ {z0} ∪ Set.range bb ∪ Set.range cc ∪ f0 '' {c | b < c})) → upperLeftBlock (r_le_Y (D := D) 0) (redFn β PP M) ∈ unipSym (kP PP) D.R.r D.R.rS D.R.k := by
-  first | exact @GlobalTheory.SeeConjGroup.redFn_mem_unipSym_of_cong
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ReductionMemUnipSymOfFlagCongruencesStatement =====
@@ -481,7 +479,7 @@ namespace GlobalTheory.SeeConjGroup
 
 theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z0 : VA (II D)) (bw bwd : Fin D.R.k → VA (II D)) (ew : EAf D), Formalism.L2.SG.Pf.BunEx.Unip.FH (II D) g e0 f0 z0 bw bwd ew → ∀ (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : Pl D.host.E) (w : Bool), IsFrame β (II D).L → LocAt g e0 f0 z0 bw bwd ew β PP w → ∀ (x : (II D).Gf) (M : GL (Fin (Yc D 0).rank) (EAf D)), x ∈ (II D).Kset → (II D).fmat x = M.val → M ∈ St β → K2cong (II D) g e0 z0 bw x → upperLeftBlock (r_le_Y (D := D) 0) (redFn β PP M) ∈ unipSym (kP PP) D.R.r D.R.rS D.R.k := by
   intro D g e0 f0 z0 bw bwd ew hF β PP w hβ hL x M hx hM hSt hc
-  have hred := GlobalTheory.T.residueCoordinatesInFrame_linear_stabiliser β (II D).L hβ PP
+  have hred := _root_.GlobalTheory.SeeConjGroup.redV_add_smul_stab β (II D).L hβ PP
   have hLf : ∀ v, v ∈ (II D).Lf → v ∈ Formalism.L2.Herm.hatL (F := ↥D.host.F) (E := D.host.E) (II D).L := by
     intro v hv
     have e := Formalism.IndefR.Eqv.lamAf_eq_hatL (V := Yc D 0) (II D).L
@@ -504,7 +502,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
   cases w
   ·
     have hR : RedIs β PP (flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 (fun i => bwd (Fin.rev i)) z0) := hL.2.2.2
-    refine GlobalTheory.T.reduction_mem_unipSym_of_flag_congruences g e0 f0 z0 (fun i => bwd (Fin.rev i)) bw β PP hβ hL.1 hR ?_ M hSt ?_ ?_ ?_ ?_
+    refine _root_.GlobalTheory.SeeConjGroup.redFn_mem_unipSym_of_cong g e0 f0 z0 (fun i => bwd (Fin.rev i)) bw β PP hβ hL.1 hR ?_ M hSt ?_ ?_ ?_ ?_
     · intro i
       refine ⟨(hF.mem.2.2 i).1, ?_⟩
       have hi : ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).1
@@ -543,7 +541,7 @@ theorem congr_red_mem_unipSym : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → V
       exact Formalism.L2.SG.Pf.unitaryCongruence.Mo_mono (II D) hsub hf
   ·
     have hR : RedIs β PP (flagV D.R.rS D.R.k (Yc D 0).rank e0 f0 bw z0) := hL.2.2.2
-    refine GlobalTheory.T.reduction_mem_unipSym_of_flag_congruences g e0 f0 z0 bw bwd β PP hβ hL.1 hR ?_ M hSt ?_ ?_ ?_ ?_
+    refine _root_.GlobalTheory.SeeConjGroup.redFn_mem_unipSym_of_cong g e0 f0 z0 bw bwd β PP hβ hL.1 hR ?_ M hSt ?_ ?_ ?_ ?_
     · intro i
       refine ⟨(hF.mem.2.2 i).2, ?_⟩
       have hi : sigA (II D) ew ∈ Formalism.L2.Herm.intAf D.host.F D.host.E := (hint i).2
@@ -581,8 +579,6 @@ open GlobalTheory.SeeConjGroup Formalism.L2.SG.HidaSetting
 open scoped Matrix
 
 
-theorem _root_.GlobalTheory.T.congruences_reduction_mem_symmetricUnipotent : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z0 : VA (II D)) (bw bwd : Fin D.R.k → VA (II D)) (ew : EAf D), Formalism.L2.SG.Pf.BunEx.Unip.FH (II D) g e0 f0 z0 bw bwd ew → ∀ (β : GL (Fin (Yc D 0).rank) (EAf D)) (PP : Pl D.host.E) (w : Bool), IsFrame β (II D).L → LocAt g e0 f0 z0 bw bwd ew β PP w → ∀ (x : (II D).Gf) (M : GL (Fin (Yc D 0).rank) (EAf D)), x ∈ (II D).Kset → (II D).fmat x = M.val → M ∈ St β → K2cong (II D) g e0 z0 bw x → upperLeftBlock (r_le_Y (D := D) 0) (redFn β PP M) ∈ unipSym (kP PP) D.R.r D.R.rS D.R.k := by
-  first | exact @GlobalTheory.SeeConjGroup.congr_red_mem_unipSym
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.CongruencesReductionMemSymmetricUnipotentStatement =====
@@ -778,8 +774,6 @@ open GlobalTheory.SeeConjGroup Formalism.L2.SG.HidaSetting
 open scoped Matrix
 
 
-theorem _root_.GlobalTheory.T.local_frame_hermitian_ideal : ∀ {D : D7} (g : ℕ) (e0 f0 : Fin D.R.rS → VA (II D)) (z0 : VA (II D)) (bw bwd : Fin D.R.k → VA (II D)) (ew : EAf D), Formalism.L2.SG.Pf.BunEx.Unip.FH (II D) g e0 f0 z0 bw bwd ew → ∀ (β : GL (Fin (Yc D 0).rank) (EAf D)) (Pg : Finset (Pl D.host.E)), IsFrame β (II D).L → (∀ PP ∈ Pg, ∃ w : Bool, LocAt g e0 f0 z0 bw bwd ew β PP w) → (∀ (c : EAf D) (hc : c ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) (hc' : sigA (II D) c ∈ Formalism.L2.Herm.intAf D.host.F D.host.E), (∀ PP ∈ Pg, resS D.host.F PP ⟨c, hc⟩ = 0 ∧ resS D.host.F PP ⟨sigA (II D) c, hc'⟩ = 0) → ZMod' (II D) g c) → ∀ (x : (II D).Gf) (M : GL (Fin (Yc D 0).rank) (EAf D)), x ∈ (II D).Kset → (II D).fmat x = M.val → M ∈ St β → (∀ PP ∈ Pg, upperLeftBlock (r_le_Y (D := D) 0) (redFn β PP M) ∈ unipSym (kP PP) D.R.r D.R.rS D.R.k) → K2cong (II D) g e0 z0 bw x := by
-  first | exact @GlobalTheory.SeeConjGroup.Bwd.k2cong_of_unipSym
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalFrameHermitianIdealStatement =====
@@ -1024,9 +1018,9 @@ theorem GlobalTheory.SeeConjRead.mem_deeperLevel_iff_reductions_symmetricUnipote
   constructor
   · rintro ⟨-, hc⟩ PP hP
     obtain ⟨w, hw⟩ := hloc PP hP
-    exact GlobalTheory.T.congruences_reduction_mem_symmetricUnipotent _ e0 f0 z0 bw bwd ew hFH β PP w hβ' hw _ (finE (Yc D 0) κ) hK hxM hS hc
+    exact _root_.GlobalTheory.SeeConjGroup.congr_red_mem_unipSym _ e0 f0 z0 bw bwd ew hFH β PP w hβ' hw _ (finE (Yc D 0) κ) hK hxM hS hc
   · intro hu
-    exact ⟨hK, GlobalTheory.T.local_frame_hermitian_ideal _ e0 f0 z0 bw bwd ew hFH β R.Pg hβ' hloc hZ _ (finE (Yc D 0) κ) hK hxM hS hu⟩
+    exact ⟨hK, _root_.GlobalTheory.SeeConjGroup.Bwd.k2cong_of_unipSym _ e0 f0 z0 bw bwd ew hFH β R.Pg hβ' hloc hZ _ (finE (Yc D 0) κ) hK hxM hS hu⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemDeeperLevelIffReductionsSymmetricUnipotent =====
@@ -1042,8 +1036,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.SeeConjRead
 
 
-theorem _root_.GlobalTheory.T.mem_K2_iff_upperLeftBlock_reductions : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → ∀ β : GL (Fin (Yc D 0).rank) (EAf D), IsFrame β (Formalism.L2.Herm.crdLat (Yc D 0) (Yc D 0).L0) → (∀ PP ∈ R.Pg, RedIs β PP (flagAt X h PP)) → ∀ κ : GA D (Yc D 0), ((iotaX X h).toMulEquiv κ).2 ∈ X.B.I.Kset → finE (Yc D 0) κ ∈ St β → (((iotaX X h).toMulEquiv κ).2 ∈ X.K2 ↔ ∀ PP ∈ R.Pg, upperLeftBlock (r_le_Y (D := D) 0) (redFn β PP (finE (Yc D 0) κ)) ∈ unipSym (kP PP) D.R.r D.R.rS D.R.k) := by
-  first | exact @GlobalTheory.SeeConjRead.mem_deeperLevel_iff_reductions_symmetricUnipotent
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemDeeperLevelIffReductionsSymmetricUnipotentStatement =====

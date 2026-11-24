@@ -237,21 +237,7 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD GlobalTheory.CechDR GlobalTheory.HodgeCoh ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem _root_.GlobalTheory.T.genericGerm_differentialForm_pullback_dominant : ∀ (Z Z' : Scheme.{0}) [IsIntegral Z] [IsIntegral Z'] (p : Z ⟶ Sp ℂ) (p' : Z' ⟶ Sp ℂ),
-    letI := algΓ p; letI := algΓ p'
-    ∀ [inst : Algebra ℂ Z.functionField] [inst' : Algebra ℂ Z'.functionField] (hinst : inst = ffAlg p)
-      (hinst' : inst' = ffAlg p') (f : Z' ⟶ Z) (hf : f ≫ p = p') (ψ : Z.functionField →ₐ[ℂ] Z'.functionField)
-      (φ : DR ℂ Z.functionField →ₗ[ℂ] DR ℂ Z'.functionField), IsDRMap ℂ ψ φ →
-      (∀ (V : Z.Opens) (hV : genericPoint Z ∈ V) (hV' : genericPoint Z' ∈ f ⁻¹ᵁ V) (g : Γ(Z, V)),
-        ψ ((Z.presheaf.germ V (genericPoint Z) hV).hom g) =
-          (Z'.presheaf.germ (f ⁻¹ᵁ V) (genericPoint Z') hV').hom (f.app V g)) →
-      ∀ (j : ℕ) (V : Z.Opens) (V' : Z'.Opens) (hV : IsAffineOpen V) (hV' : IsAffineOpen V')
-        (hη : genericPoint Z ∈ V) (hη' : genericPoint Z' ∈ V') (h : V' ≤ f ⁻¹ᵁ V)
-        (y : sectionsOn (Omega p j) V),
-        formGermI p' j hV' hη' hinst' (sectionsOn.res ℂ (Omega p' j) h
-          (sectionsOn.mapOver (appTop_algebraMap hf) (omegaPull hf j) V y)) =
-          φ (formGermI p j hV hη hinst y) := by
-  first | (exact @GlobalTheory.HodgeCoh.formGermI_res_mapOver)
+alias _root_.GlobalTheory.T.genericGerm_differentialForm_pullback_dominant := _root_.GlobalTheory.HodgeCoh.formGermI_res_mapOver
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermDifferentialFormPullbackDominantStatement =====
@@ -741,7 +727,7 @@ theorem cmp_trace (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [
     cmp d p hinst hU a b (hodgeTrace hc a b z) = Cx.hmap _ _ (LinearMap.pi fun s : Finset ι => (GlobalTheory.W1.trDR ℂ Z.functionField Y.functionField).comp (LinearMap.proj s)) hm b (cmp d p' hinst' hU' a b z) := by
   letI := algΓ p
   letI := algΓ p'
-  have hfin := (GlobalTheory.T.finiteEtale_functionField_integralClosure_differentials Z Y p p' c hc inferInstance inferInstance d hinst hinst' hg).1
+  have hfin := (_root_.GlobalTheory.W1.SchFF.finiteEtale_functionField Z Y p p' c hc inferInstance inferInstance d hinst hinst' hg).1
   obtain ⟨z1, hz1⟩ := cechClass_surjective
     (cechCube ℂ ((Scheme.Modules.pushforward c).obj (Omega p' a)) ⊤ U) b
     ((cechHEquivCoh ℂ hU.cover (cover_biInf hU) ((Scheme.Modules.pushforward c).obj (Omega p' a)) b).symm

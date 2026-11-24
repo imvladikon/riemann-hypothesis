@@ -72,6 +72,7 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsDPMorphismBot
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ValuationSquareOfValuationMod
 import Mathlib.Tactic.TypeStar
 import Mathlib.RingTheory.DividedPowers.Basic
 import Mathlib.Topology.Sheaves.Presheaf
@@ -265,7 +266,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLine =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentLocalizationUniversal =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentLocalizationUniversal", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsDPMorphismBot\nimport Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.XSmulSucc\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentLocalizationUniversal", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsDPMorphismBot\nimport Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.XSmulSucc\nimport Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ValuationSquareOfValuationMod\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -332,10 +333,6 @@ theorem tf_quot (he : IsIdempotentElem e) {π : R} (h : π ∈ nonZeroDivisors R
   have : π * (e * x) = 0 := by rw [mul_left_comm]; exact hx
   exact (mem_nonZeroDivisors_iff_left.1 h) _ this
 
-theorem smod_iff {S : Type} [CommRing S] (a x y : S) (n : ℕ) :
-    x ≡ y [SMOD (Ideal.span {a}) ^ n • (⊤ : Submodule S S)] ↔ a ^ n ∣ x - y := by
-  rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-
 theorem dvd_of_mk_dvd (he : IsIdempotentElem e) {a x : R} (n : ℕ)
     (h : Ideal.Quotient.mk (Ideal.span {1 - e}) a ^ n ∣ Ideal.Quotient.mk (Ideal.span {1 - e}) x) :
     a ^ n ∣ e * x := by
@@ -349,18 +346,18 @@ theorem complete_quot (he : IsIdempotentElem e) {π : R} (hc : IsAdicComplete (I
   have hH : IsHausdorff (Ideal.span {Ideal.Quotient.mk (Ideal.span {1 - e}) π}) (Q e) := ⟨fun x hx => by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
     refine (mk_eq_zero_iff he x).2 (hc.toIsHausdorff.haus' _ fun n => ?_)
-    have := (smod_iff _ _ _ n).1 (hx n)
+    have := (_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ n).1 (hx n)
     rw [sub_zero] at this
-    exact (smod_iff _ _ _ n).2 (by rw [sub_zero]; exact dvd_of_mk_dvd he n this)⟩
+    exact (_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ n).2 (by rw [sub_zero]; exact dvd_of_mk_dvd he n this)⟩
   have hP : IsPrecomplete (Ideal.span {Ideal.Quotient.mk (Ideal.span {1 - e}) π}) (Q e) := ⟨fun f hf => by
     choose g hg using fun n => Ideal.Quotient.mk_surjective (f n)
-    obtain ⟨L, hL⟩ := hc.toIsPrecomplete.prec' (fun n => e * g n) fun {m n} hmn => (smod_iff _ _ _ m).2 (by
-      have := (smod_iff _ _ _ m).1 (hf hmn)
+    obtain ⟨L, hL⟩ := hc.toIsPrecomplete.prec' (fun n => e * g n) fun {m n} hmn => (_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ m).2 (by
+      have := (_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ m).1 (hf hmn)
       rw [← hg m, ← hg n, ← map_sub] at this
       rw [← mul_sub]
       exact dvd_of_mk_dvd he m this)
-    refine ⟨Ideal.Quotient.mk _ L, fun n => (smod_iff _ _ _ n).2 ?_⟩
-    have h1 := map_dvd (Ideal.Quotient.mk (Ideal.span {1 - e})) ((smod_iff _ _ _ n).1 (hL n))
+    refine ⟨Ideal.Quotient.mk _ L, fun n => (_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ n).2 ?_⟩
+    have h1 := map_dvd (Ideal.Quotient.mk (Ideal.span {1 - e})) ((_root_.GlobalTheory.CompanionTheory.PowComp.smodEq_span_iff _ _ _ n).1 (hL n))
     rw [map_pow, map_sub, map_mul, mk_e, one_mul, hg n] at h1
     exact h1⟩
   exact { hH, hP with }
@@ -1668,9 +1665,6 @@ theorem xi_thick (T : (F.pt κ).Elements) :
     ((gE F κ k n).obj T).i ((base l).cris n (∑ i ∈ Finset.range l, ε.qk 1 ^ i)) ∈ ((gE F κ k n).obj T).J :=
   xi_mem F κ k n T _ ((GlobalTheory.CompanionTheory.EpsFacts.eps_facts ε).2.2.1 T.1 n)
 
-theorem mu_factor : ε.μ = (ε.qk 1 - 1) * ∑ i ∈ Finset.range l, ε.qk 1 ^ i :=
-  (GlobalTheory.CompanionTheory.EpsFacts.eps_facts ε).2.2.2.1
-
 end
 
 
@@ -1681,7 +1675,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime], D.Out l → ∀ {O : Type} [CommRin
   intro l _ hOut O _ F κ ε k n ρ hρ hk
   exact desc_flt (b := bs l k n) (L := Lc F κ k n) (Λ := Acris l) (F.pt κ) ((base l).cris n) (gE F κ k n) ρ hρ
     ε.μ (ε.μ_mem k (base l) n) (jE (F.pt κ)) (ε.qk 1 - 1) (∑ i ∈ Finset.range l, ε.qk 1 ^ i)
-    (mu_factor ε) (xi_thick F κ ε k n) (step_desc F κ ε k n ρ hρ hOut hk)
+    (_root_.GlobalTheory.CompanionTheory.EpsFacts.mu_eq ε) (xi_thick F κ ε k n) (step_desc F κ ε k n ρ hρ hOut hk)
 
 end GlobalTheory.CompanionTheory.DescTest
 end -- clump:auto

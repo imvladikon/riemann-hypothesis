@@ -167,7 +167,7 @@ theorem cocycle_mem_coboundaries_of_tate_orthogonal' : Formalism.GaloisCohomolog
   have hl : ((l : ℕ) : O) ∉ nonunits O → False := by
     intro hu
     have hu' : IsUnit ((l : ℕ) : O) := by simpa [mem_nonunits_iff] using hu
-    have hc := (GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO).2.2.2
+    have hc := (_root_.GlobalTheory.PowerImageOpen.main l LL O hO).2.2.2
     have htop : Ideal.span {((l : ℕ) : O)} = ⊤ := Ideal.span_singleton_eq_top.2 hu'
     have h10 : (1 : O) = 0 := by
       apply hc.toIsHausdorff.haus 1

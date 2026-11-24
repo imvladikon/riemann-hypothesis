@@ -384,12 +384,6 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.InertialTypesAlt.G
 
-theorem varTrace_holds : VarTrace := varTrace
-
-theorem varEx_holds : VarEx := varEx
-
-theorem normInt_holds : NormInt := normInt
-
 end UpperTheory.Gal.InertialTypesAlt.G
 end -- clump:auto
 end -- clump:auto
@@ -403,7 +397,7 @@ section -- clump:auto
 namespace UpperTheory.Gal.InertialTypesAlt.L
 
 theorem finTrace_of_matching (h : GlobalTheory.DZA.InflMatching) : FinTrace :=
-  finTrace_holds h G.varEx_holds G.varTrace_holds G.normInt_holds
+  finTrace_holds h _root_.UpperTheory.Gal.InertialTypesAlt.G.varEx _root_.UpperTheory.Gal.InertialTypesAlt.G.varTrace _root_.UpperTheory.Gal.InertialTypesAlt.G.normInt
 
 end UpperTheory.Gal.InertialTypesAlt.L
 end -- clump:auto
@@ -743,8 +737,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraInductionGL_isCharacter : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ), IsChar ℂ ℂ α → IsChar ℂ ℂ β → IsChar ℂ ℂ (hc a b α β n) := by
-  first | (exact @GlobalTheory.Shin.HCChar.hc_isChar)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionGLIsCharacterStatement =====
@@ -763,7 +755,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem UpperTheory.Gal.InertialTypesAlt.hcChar :
     HcChar := by
   intro F _ _ a b n hn A B hA hB
-  exact GlobalTheory.T.harishChandraInductionGL_isCharacter F a b n hn A B hA hB
+  exact _root_.GlobalTheory.Shin.HCChar.hc_isChar F a b n hn A B hA hB
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PHcChar =====
@@ -879,7 +871,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.jdChar :
   intro hH F _ _ θ hθ
   refine ⟨detc_isChar θ, fun a hok hq => ?_⟩
   obtain ⟨-, -, hL⟩ := hok
-  have hJ := GlobalTheory.T.isCharacter_harishChandraProductCuspidalGL_of_regular F θ hθ a.L (fun p hp => by rw [← hq]; exact hL p hp) _ rfl
+  have hJ := _root_.GlobalTheory.Shin.isChar_J_of_reg F θ hθ a.L (fun p hp => by rw [← hq]; exact hL p hp) _ rfl
   exact jd_isChar hH θ a.L hJ a.D
 end -- clump:auto
 end -- clump:auto
@@ -1878,8 +1870,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.jdEq :
   | nil =>
     cases L with
     | nil => intro x y; rfl
-    | cons p L => exact (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) _ _ n _ _).2.1
-  | cons p D => exact (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) _ _ n _ _).2.1
+    | cons p L => exact (_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) _ _ n _ _).2.1
+  | cons p D => exact (_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) _ _ n _ _).2.1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.SumFstMap =====
@@ -1891,19 +1883,19 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.InertialTypesAlt
 
-theorem killsAll_holds : KillsAll := GlobalTheory.T.shintani_lift_kills_product_of_cusp_forms
+theorem killsAll_holds : KillsAll := _root_.GlobalTheory.Shin.DescentAll.kills_liftAll
 
-theorem liftHc_holds : LiftHc := GlobalTheory.T.shintaniLift_harishChandraInduction_eq_twisted
+theorem liftHc_holds : LiftHc := _root_.GlobalTheory.Shin.shLift_hc_eq_hcTw
 
-theorem killsHc_holds : KillsHc := GlobalTheory.T.twistedHarishChandra_isotypic_part
+theorem killsHc_holds : KillsHc := _root_.GlobalTheory.Shin.HcIso.kills_hcTw
 
-theorem jAppend_holds : JAppend := fun F _ _ θ => (GlobalTheory.T.harishChandraProductCuspidalGL_list_properties F θ).2.1
+theorem jAppend_holds : JAppend := fun F _ _ θ => (_root_.GlobalTheory.Shin.J_list_props F θ).2.1
 
 theorem normEx_holds : NormEx := by
   intro F F' _ _ _ _ s hs t δ
   haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
   haveI : Fintype F := Fintype.ofFinite F
-  refine GlobalTheory.T.every_element_is_norm F F' s (fun τ => ?_) t δ
+  refine _root_.GlobalTheory.Shin.exists_isNorm F F' s (fun τ => ?_) t δ
   have e : s = FiniteField.frobeniusAlgEquivOfAlgebraic F F' := by
     ext z; rw [hs z, Nat.card_eq_fintype_card]; rfl
   obtain ⟨⟨i, _⟩, hi⟩ := (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow F F').2 τ

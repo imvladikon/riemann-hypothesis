@@ -1453,7 +1453,7 @@ theorem lieScalarD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       sumPl (fun w => fockAct2 (P w) (Q w) (R w) (S w) (Y w) + (c₀ w * (Y w).trace) • (1 : Module.End ℂ _)) +
         (∑ w, k w * (Y w).trace) • (1 : Module.End ℂ (TensD F P Q R S)) := by
     simp only [add_mul, add_smul, ← add_assoc]
-    exact GlobalTheory.LieScal.sumPl_add_smul
+    exact _root_.GlobalTheory.ArchRep.sumPl_add_smul
       (fun w => fockAct2 (P w) (Q w) (R w) (S w) (Y w) + (c₀ w * (Y w).trace) • (1 : Module.End ℂ _)) _
   rw [e2, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply, map_add (f := _), map_smul]
   have key : ∀ (z : ℂ) (f f' : SInf F κ), pureA F ⇑(f' + z • f) g = z • pureA F ⇑f g + pureA F ⇑f' g := by

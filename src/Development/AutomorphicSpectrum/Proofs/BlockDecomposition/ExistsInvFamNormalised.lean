@@ -805,7 +805,7 @@ theorem exists_cochain_cup (l : ℕ) [Fact l.Prime] (r : ℕ) (hr : 0 < r) {ζ :
     have := hlift (θ.symm σ) x
     rwa [MulEquiv.apply_symm_apply] at this
 
-  have hq : 1 < normV v := ReciprocityTheory.Gal.one_lt_normV v
+  have hq : 1 < normV v := _root_.GlobalTheory.WeilDeligne.one_lt_normV v
   obtain ⟨n, hn⟩ : ∃ n, n = normV v ^ l ^ r - 1 := ⟨_, rfl⟩
   have hn0 : n ≠ 0 := by
     have := one_lt_pow₀ hq hN.ne'

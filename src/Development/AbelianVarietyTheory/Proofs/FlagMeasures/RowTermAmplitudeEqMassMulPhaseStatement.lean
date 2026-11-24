@@ -127,37 +127,6 @@ private theorem coprime_absNorm_of_isCoprime_span {K : Type} [Field K] [NumberFi
     rw [hx0, addOrderOf_zero] at hx
     exact hp.one_lt.ne hx
 
-private theorem hidaSetting_modGAt {D : D7} (X : HidaSetting D) : Formalism.L2.SG.NormCut.ModGAt X := by
-  intro g1 Λ hΛ v hv
-  have hgg : X.B.g = gS D := X.g_eq
-  have hg0 : ((gS D : ℕ) : 𝓞 D.host.E) ≠ 0 := by
-    have : (gS D) ≠ 0 := hgg ▸ Formalism.L2.SG.Pf.modulus_g_ne_zero X
-    exact_mod_cast this
-  let J : Ideal (𝓞 D.host.E) :=
-    Submodule.comap (LinearMap.toSpanSingleton (𝓞 D.host.E) (VS D).V v) (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ)
-  have hJ : J ⊔ Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} = ⊤ := by
-    by_contra hne
-    obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
-    have hgM : ((gS D : ℕ) : 𝓞 D.host.E) ∈ M := hle (Ideal.mem_sup_right (Ideal.mem_span_singleton_self _))
-    have hMb : M ≠ ⊥ := fun h => hg0 (by rw [h] at hgM; exact (Submodule.mem_bot _).1 hgM)
-    obtain ⟨s, hs, hsv⟩ := hv ⟨M, hM.isPrime, hMb⟩ hgM
-    exact hs (hle (Ideal.mem_sup_left (show s ∈ J from hsv)))
-  have hcop : Nat.Coprime (Ideal.absNorm J) (gS D) := coprime_absNorm_of_isCoprime_span J (gS D) hJ
-  have hcJ : ((Ideal.absNorm J : ℕ) : 𝓞 D.host.E) ∈ J := Ideal.absNorm_mem J
-  have hcv : ((Ideal.absNorm J : ℕ) : 𝓞 D.host.E) • v ∈ Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ := hcJ
-  rw [Submodule.ideal_span_singleton_smul, Submodule.mem_smul_pointwise_iff_exists] at hcv
-  obtain ⟨w, hw, hwv⟩ := hcv
-  have hlin : ∀ (n : ℕ) (y : (VS D).V), X.B.I.fmat g1⁻¹ *ᵥ incl X.B.I (X.crd (((n : 𝓞 D.host.E)) • y)) =
-      (n : X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) • (X.B.I.fmat g1⁻¹ *ᵥ incl X.B.I (X.crd y)) := by
-    intro n y
-    have h1 : ((n : 𝓞 D.host.E)) • y = ((n : D.host.E)) • y := by
-      rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
-    rw [h1, Formalism.L2.SG.NormCut.crd_smul' X, map_natCast, Formalism.L2.SG.NormCut.incl_smul' X, map_natCast,
-      Matrix.mulVec_smul]
-  refine ⟨Ideal.absNorm J, hgg ▸ hcop, ?_⟩
-  rw [← hlin, ← hwv, hlin]
-  exact Submodule.subset_span ⟨_, (hΛ w).1 hw, by rw [hgg]⟩
-
 private theorem psiEf_divN_eq {D : D7} (X : HidaSetting D) (y : X.B.I.E) :
     X.psiEf (Formalism.L2.SG.HidaSetting.divN X.B.I X.B.g (Formalism.UG.inclE (F := X.B.I.F) (Af X.B.I.F) y)) =
       (Formalism.L2.SG.PairVal.psiInf (gS D) (X.ιE y))⁻¹ := by
@@ -260,7 +229,7 @@ theorem chiN_kOf_eq_inv_psiInf_sgUp : ∀ (D : D7) (X : HidaSetting D) (Y : Full
   have hK := Formalism.L2.SG.NormCut.termK_car (Y.cs u) (Y.cs u') t.mem t.mem' t.rep
   have hRL : Formalism.L2.SG.TermOp.RatLink X t.pt t.lin := t.rep.2.1
   have hiso : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
-  have hM : Formalism.L2.SG.NormCut.ModGAt X := hidaSetting_modGAt X
+  have hM : Formalism.L2.SG.NormCut.ModGAt X := _root_.Formalism.L2.SG.Pf.modGAt X
   have hξm : ∀ c, ModG (VS D) t.lam (gS D) (t.lin (frame (lf D (X.Fu u')) c) - frameAct (frame (lf D (X.Fu u))) ξ c) := by
     intro c
     have h3 := hξ.2.2 c
@@ -354,7 +323,7 @@ theorem amp_eq_mass_phase : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
   intro D X Y u u' hS hk w F00 F'0 FP hZ hG hAt G c ν hν t₀ ρ U U' hmv hrel hpt
   have hG0 : t₀.G ≠ 0 := by
     rw [G_eq_gval]; exact fun h => hG ((gval_of_movesTo hmv).symm.trans h)
-  obtain ⟨-, T0, hT0, hform⟩ := GlobalTheory.T.orbital_integrals_terms_one_doubleCoset D X Y u u' hS ν hν t₀ hrel hG0 w hpt.symm
+  obtain ⟨-, T0, hT0, hform⟩ := _root_.GlobalTheory.CosetOrbital.coset_orbital_form D X Y u u' hS ν hν t₀ hrel hG0 w hpt.symm
   have hpU : psiInf (gS D) (sgUp U) ≠ 0 := by
     intro h; have := norm_psiInf (gS D) (sgUp U); rw [h, norm_zero] at this; exact zero_ne_one this
   have hpU' : psiInf (gS D) (sgUp U') ≠ 0 := by
@@ -372,7 +341,7 @@ theorem amp_eq_mass_phase : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
     obtain ⟨xm, hxm, -⟩ := hL.1 m hm.1
     obtain ⟨μR, K, hpin, hK, hOO⟩ := hform t n m xn xm ⟨hn, hm, hlin⟩ hxn hxm
     obtain ⟨-, -, -, -, -, hgrp⟩ :=
-      GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hS hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv
+      _root_.GlobalTheory.HL.GrpCoord.grp_coords D X Y u u' hS hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv
     obtain ⟨A, A', hA, hA', hnA, hmA', hmv'⟩ := hgrp t n m ⟨hn, hm, hlin⟩
     have hcos := GlobalTheory.T.flagTerm_invariants_const_on_rationalDoubleCoset D X Y u u' hS t₀ t n m hrel hG0 ⟨hn, hm, hlin⟩
     have hvol := GlobalTheory.T.automorphismCovolume_eq_latticeMass D X Y u u' hS hk w F00 F'0 FP hZ hG hAt G c t (ρ * n) (U * A) (U' * A')

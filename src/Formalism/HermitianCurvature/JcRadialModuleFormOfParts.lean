@@ -476,7 +476,7 @@ section -- clump:auto
 @[expose] public section
 
 theorem Formalism.FourierDecayAlt.P.germ_rate_bound : Formalism.FourierDecayAlt.P.GermFibreKernels.GermRateB :=
-  Formalism.FourierDecayAlt.P.germ_rate_bound_of_split Formalism.FourierDecayAlt.P.germ_rate_lower_bound Formalism.FourierDecayAlt.P.germ_rate_top_bound
+  _root_.Formalism.FourierDecayAlt.P.GermRateSplit.germRateB_of Formalism.FourierDecayAlt.P.germ_rate_lower_bound Formalism.FourierDecayAlt.P.germ_rate_top_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.GermRateBound =====
@@ -808,7 +808,7 @@ theorem topLocB : TopLocB := by
   have hds : d + s = S.G.r + 1 := by omega
   have hd2 : d ≤ 2 * S.G.r := by omega
   obtain ⟨-, grid, hinj, hbnd, hmem, hwords, hprob, -⟩ :=
-    Formalism.FourierDecayAlt.P.new_letters_admissible E Wp Wq S hGo hGr hCI v a C.Kst d ha' haN' hd2
+    _root_.Formalism.FourierDecayAlt.P.PBD.newLetters E Wp Wq S hGo hGr hCI v a C.Kst d ha' haN' hd2
   refine ⟨PBD.pushU grid (fun ys => KB.plusW ys a), PBD.pushTh grid (fun ys => KB.plusW ys a), hprob, ?_⟩
   intro ε hε t Y ht hY
   have hY' : ∀ P ∈ Y, D.ptSize P = d := fun P hP => by rw [hd]; exact hY P hP
@@ -877,7 +877,7 @@ theorem topLocB : TopLocB := by
             ∑ e', ∑ ρ, (del2 S p v (KB.plusW (List.ofFn fun b => grid b (n b)) a) e' ρ : ℂ) *
               gramH (vecT S p F v ε s t (KB.plusW (List.ofFn fun b => grid b (n b)) a) e' ρ) P Q)) := by
     intro P hP Q hQ
-    refine (mix_pushT (setC S p F) v ε (S.G.r + 1) grid (fun ys => KB.plusW ys a) _ _).trans ?_
+    refine (_root_.Formalism.FourierDecayAlt.P.PBL.mix_push (setC S p F) v ε (S.G.r + 1) grid (fun ys => KB.plusW ys a) _ _).trans ?_
     refine Finset.sum_congr rfl fun n _ => ?_
     rw [thGrid_eq, ← hΛ, gN_top hVT hB F v ε s hs2 t _ P Q (hsz P hP) (hsz Q hQ), sizeAt_plusW]
     have hk : 1 / (ΓS S (S.G.r + 1) * (((List.ofFn fun b => grid b (n b)).map fun y => |S.P v y|).prod *
@@ -920,7 +920,7 @@ theorem topLocB : TopLocB := by
       have e2 : (S.G.r : ℤ) + 2 - ((S.G.r + 2 - s : ℕ) : ℤ) = (s : ℤ) := by push_cast; omega
       have e3 : (S.g : ℝ) = S.G.g := by unfold C.HidaSetting.g Sz.Glob.g; push_cast; ring
       have e4 : S.G.r + 2 - s - 1 = d := by omega
-      rw [e2, e1, e4, hlvdef, zpow_sq_eq _ (by positivity), inv_div, e3, hBdef, ← pow_mul, ntop_eq_N'',
+      rw [e2, e1, e4, hlvdef, zpow_sq_eq _ (by positivity), inv_div, e3, hBdef, ← pow_mul, _root_.Formalism.FourierDecayAlt.P.PBL.ntop_eq_N',
         len_eq_lenI', hC0, mul_comm d 2]
       ring
     have hfin : ‖c‖ ^ 2 * Λ * C0 ^ C.Kst * Λ ≤ (‖t‖ * lamTop S (S.G.r + 2 - s) v) ^ (2 * C.Kst) := by
@@ -941,7 +941,6 @@ end
 
 end Formalism.FourierDecayAlt.P.PBL
 
-theorem Formalism.FourierDecayAlt.P.top_local_built_places : Formalism.FourierDecayAlt.P.PBL.TopLocB := Formalism.FourierDecayAlt.P.PBL.topLocB
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.TopLocalBuiltPlaces =====
@@ -1150,13 +1149,13 @@ theorem topRatio : TopRatio := by
   set wr : List (Wd.Letter ℝ (Fin w.length)) :=
     (D.positionted w).map fun l => (⟨l.plus, l.intersection_update_fsHerm_neg_one, l.pt.re⟩ : Wd.Letter ℝ (Fin w.length)) with hwr
   have hQ : Wd.qw (M.qC (D.parOf S v)) (D.positionted w) (y : ℂ) = ((Wd.qw q' wr y : ℝ) : ℂ) :=
-    weighted_quadratic_of_real (Fin w.length) (M.qC (D.parOf S v)) (D.positionted w) y
+    _root_.Formalism.FourierDecayAlt.P.RealWeightedForms.qwOfReal (Fin w.length) (M.qC (D.parOf S v)) (D.positionted w) y
       (by rw [PBF.qC_ofReal, Complex.ofReal_im])
       (by intro l hl; unfold D.positionted at hl; obtain ⟨j, rfl⟩ := List.mem_ofFn.1 hl; simp)
   have hLQ : Real.exp (-(1 / 2)) ≤ Wd.qw q' wr y / q' y := by
     have h4 : 4 ≤ S.Ntop := by exact_mod_cast (by linarith : (4 : ℝ) ≤ S.Ntop)
     have hlen' : wr.length ≤ S.Ntop := by simp [hwr, D.positionted]; omega
-    refine (lemma_Q_estimate (Fin w.length) q' wr S.Ntop ((S.Ntop : ℝ) ^ 2 + 1) y h4 hlen' le_rfl ?_ hqy.ne').1
+    refine (_root_.Formalism.FourierDecayAlt.P.GramProductIdentities.lemmaQ (Fin w.length) q' wr S.Ntop ((S.Ntop : ℝ) ^ 2 + 1) y h4 hlen' le_rfl ?_ hqy.ne').1
     intro l hl
     obtain ⟨l0, hl0, rfl⟩ := List.mem_map.1 hl
     unfold D.positionted at hl0
@@ -1196,7 +1195,7 @@ theorem topRatio : TopRatio := by
     push_cast
     rfl
   have hinter := Formalism.FourierDecayAlt.P.types_interlace (D.parOf S v) hOK ρ
-  have hx0pos : 0 < x0r := Formalism.FourierDecayAlt.P.interlacing_sign S.G.k (D.parOf S v).u (D.parOf S v).u' (M.rho (D.parOf S v) ρ) (S.l + 1) y (by omega)
+  have hx0pos : 0 < x0r := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign S.G.k (D.parOf S v).u (D.parOf S v).u' (M.rho (D.parOf S v) ρ) (S.l + 1) y (by omega)
     (by omega) hinter hycut 1 (by simp)
   have hD2 : (2 : ℝ) ≤ (S.Ntop : ℝ) ^ 2 - 1 := by nlinarith
   have hrf : ∀ j, 0 < rf j ∧ rf j ≤ 1 + 1 / ((S.Ntop : ℝ) ^ 2 - 1) := by
@@ -1236,7 +1235,7 @@ theorem topRatio : TopRatio := by
   obtain ⟨hg, hk⟩ := glob_posT hB
   have hsA := supA_nonneg S hg hk v false
 
-  have hIR := Formalism.FourierDecayAlt.P.interlacing_ratio S.G.k (D.parOf S v).u (D.parOf S v).u' (M.rho (D.parOf S v) ρ)
+  have hIR := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceRatio S.G.k (D.parOf S v).u (D.parOf S v).u' (M.rho (D.parOf S v) ρ)
     (S.l + 1) y (by omega) (by omega) hinter hycut
   have hul : 1 ≤ |y + 1 / 2 + (D.parOf S v).u (S.l + 1)| * |y + 1 / 2 + (D.parOf S v).u' (S.l + 1)| := by
     rcases hycut with ⟨h1, h2⟩ | ⟨h1, h2⟩
@@ -1351,7 +1350,6 @@ end
 
 end Formalism.FourierDecayAlt.P.PBL
 
-theorem Formalism.FourierDecayAlt.P.top_ratio : Formalism.FourierDecayAlt.P.PBL.TopRatio := Formalism.FourierDecayAlt.P.PBL.topRatio
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.TopRatioAlt =====
@@ -1515,10 +1513,10 @@ section -- clump:auto
 namespace Formalism.FourierDecayAlt.P
 
 theorem built_bounds_compact_of_head_top (hH : Formalism.FourierDecayAlt.KB.HeadTop) : Formalism.FourierDecayAlt.KB.BuiltBounds2Cpt := fun hA =>
-  built_bounds_compact_of_leaves radial_head hH degree_of_lift_pairing top_local_built_places degree_top
-    top_ratio (germ_parts_compact_support kernel_continuity_built germ_rate_bound hA)
+  _root_.Formalism.FourierDecayAlt.P.PBASM.builtBounds2CptOfLeaves radial_head hH degree_of_lift_pairing _root_.Formalism.FourierDecayAlt.P.PBL.topLocB degree_top
+    _root_.Formalism.FourierDecayAlt.P.PBL.topRatio (_root_.Formalism.FourierDecayAlt.P.GermFibreKernels.germPartsC_of _root_.Formalism.FourierDecayAlt.P.LastBlockContinuity.level_forms_joint_continuity germ_rate_bound hA)
     (fun hA' => uniform_decay_of_place hA' radial_head hH
-      (uniform_decay_of_heads radial_head hH)) hA
+      (_root_.Formalism.FourierDecayAlt.P.PBO.decayUnifOfHeads radial_head hH)) hA
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -1560,8 +1558,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace Formalism.FourierDecayAlt.Final
-
-theorem pb_builtBounds2Cpt : Formalism.FourierDecayAlt.KB.BuiltBounds2Cpt := Formalism.FourierDecayAlt.P.built_bounds_compact
 
 end Formalism.FourierDecayAlt.Final
 end -- clump:auto

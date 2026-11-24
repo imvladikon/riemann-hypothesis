@@ -587,15 +587,10 @@ open Finset MvPolynomial
 
 namespace UpperTheory.Gal.Schur
 
-private theorem aeval_mul_of_isHomogeneous {σ R : Type} [Fintype σ] [CommRing R] [Algebra ℚ R]
-    {P : MvPolynomial σ ℚ} {d : ℕ} (hP : P.IsHomogeneous d) (y : R) (g : σ → R) :
-    aeval (fun k => y * g k) P = y ^ d * aeval g P :=
-  _root_.UpperTheory.Reformulated.B.Qh65.aeval_mul_of_isHomogeneous hP y g
-
 theorem schurHomog : SchurHomog := by
   intro R _ _ n lam g y
   unfold sch
-  exact aeval_mul_of_isHomogeneous
+  exact _root_.UpperTheory.Reformulated.B.Qh65.aeval_mul_of_isHomogeneous
     (GroundTheory.Heights₂.Heights.RestTerms.SchSchurHomogeneous.proof (Fin n) n lam) y g
 
 end UpperTheory.Gal.Schur
@@ -1428,7 +1423,6 @@ theorem SchurY_holds : SchurY := schurY_of SchurYClr_holds VdmSplit_holds
 theorem SchurYOff_holds : SchurYOff :=
   schurYOff_of (offClrRed_of (offClrPow_of SchurYOffClr_holds VdmSplit_holds (pairCount_of pairSplit)))
     VdmSplit_holds
-theorem SchurHomog_holds : SchurHomog := schurHomog
 theorem SchurDet_holds : SchurDet := schurDet_of tie
 theorem WeylTie_holds : WeylTie := weylTie_of tie
 theorem SpanE_holds : SpanE := spanE_of eSpanMul

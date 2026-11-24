@@ -471,11 +471,7 @@ theorem rt_sq' (H : Host E) : (H.rt : E) ^ 2 = -(H.d : E) := by
   have := congrArg (algebraMap (𝓞 E) E) H.rt_sq
   simpa using this
 
-theorem conj_of_sq {z : ℂ} {d : ℕ} (hd : 0 < d) (h : z ^ 2 = -(d : ℂ)) :
-    starRingEnd ℂ z = -z := by
-  first
-  | (apply _root_.GlobalTheory.ConjNegSquareNat.conj_eq_neg_of_sq_eq_neg_nat <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ConjNegSquareNat.conj_eq_neg_of_sq_eq_neg_nat ..)
+alias conj_of_sq := _root_.GlobalTheory.ConjNegSquareNat.conj_eq_neg_of_sq_eq_neg_nat
 
 theorem emb_rt_sq (H : Host E) (τ : E →+* ℂ) : τ (H.rt : E) ^ 2 = -(H.d : ℂ) := by
   rw [← map_pow, rt_sq']; simp

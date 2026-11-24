@@ -70,8 +70,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.complementaryModule_eq_topForms_of_finiteCover : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → Algebra.Smooth k B → ∀ τ : DR k K →ₗ[K] K, τ (ExteriorAlgebra.ιMulti K d fun j => D k K (algebraMap F K (u j))) = 1 → ∀ z : K, (∀ b : B, Algebra.trace F K (z * b) ∈ A) ↔ ∃ y ∈ omB k K B d, τ y = z := by
-  first | (exact @GlobalTheory.ComplementaryForms.complementary_eq_topForms)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryModuleEqTopFormsOfFiniteCoverStatement =====
@@ -231,8 +229,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.exists_sign_iMulti_D_chart_change : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ i : Fin (d + 1), ∃ ε : ℤˣ, (ExteriorAlgebra.ιMulti K d fun j => D k K (algebraMap F K (x (i.succAbove j) / x i))) = ε • algebraMap F K (∏ j, x j / x i) • vol0 k K x := by
-  first | (exact @GlobalTheory.PD.volume_chart_change)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeChartChangeStatement =====
@@ -271,7 +267,7 @@ theorem single (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K
     (∀ b ∈ rB k K x {i}, Algebra.trace F K (z * b) ∈ omA k x {i}) ↔ ∃ y ∈ omB k K (rB k K x {i}) d, τ y = z := by
   haveI := hc.fin
   have hx := hc.pd.ne
-  obtain ⟨e, he⟩ := GlobalTheory.T.standardAffineOpen_ring_polynomialEquiv k F d x hc.pd i
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.PD.rA_single_polyEquiv k F d x hc.pd i
   set u : Fin d → F := fun j => x (i.succAbove j) / x i with hu_def
   have hu : AlgebraicIndependent k u := by
     rw [algebraicIndependent_iff_injective_aeval]
@@ -292,8 +288,8 @@ theorem single (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K
     · apply Algebra.adjoin_le
       rintro y ⟨j, rfl⟩
       exact Algebra.subset_adjoin ⟨i, Finset.mem_singleton_self _, _, rfl⟩
-  haveI : IsFractionRing (rA k x {i}) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x hc.pd {i} (Finset.singleton_nonempty _)).1
-  obtain ⟨ε, hε⟩ := GlobalTheory.T.exists_sign_iMulti_D_chart_change k F K d x hc i
+  haveI : IsFractionRing (rA k x {i}) F := (_root_.GlobalTheory.PD.rA_isFractionRing_isNoetherianRing k F d x hc.pd {i} (Finset.singleton_nonempty _)).1
+  obtain ⟨ε, hε⟩ := _root_.GlobalTheory.PD.volume_chart_change k F K d x hc i
   set P : F := ∏ j, x i / x j with hP
   set C : F := ∏ j, x j / x i with hC
   have hPC : algebraMap F K P * algebraMap F K C = 1 := by
@@ -309,7 +305,7 @@ theorem single (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K
     have hε2 : ((ε : ℤ) : K) * ((ε : ℤ) : K) = 1 := by
       rw [← Int.cast_mul, ← Units.val_mul, Int.units_mul_self, Units.val_one, Int.cast_one]
     linear_combination (algebraMap F K P * algebraMap F K C) * hε2 + hPC
-  have key := GlobalTheory.T.complementaryModule_eq_topForms_of_finiteCover k F K d u hu (rA k x {i}) hA (rB k K x {i}) rfl (hc.smooth i) τ' hτ'
+  have key := _root_.GlobalTheory.ComplementaryForms.complementary_eq_topForms k F K d u hu (rA k x {i}) hA (rB k K x {i}) rfl (hc.smooth i) τ' hτ'
     (algebraMap F K P * z)
   have lhs : (∀ b ∈ rB k K x {i}, Algebra.trace F K (z * b) ∈ omA k x {i}) ↔
       ∀ b : rB k K x {i}, Algebra.trace F K (algebraMap F K P * z * b) ∈ rA k x {i} := by
@@ -342,15 +338,15 @@ theorem unif (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] 
   have hs1 : s ∈ rA k x {i} :=
     Subalgebra.prod_mem _ fun j _ => Algebra.subset_adjoin ⟨i, Finset.mem_singleton_self _, j, rfl⟩
   have hle : rB k K x {i} ≤ rB k K x I :=
-    (GlobalTheory.T.finite_cover_ring_localization_chart k F K d x hc {i} i (Finset.mem_singleton_self _)).1 I (Finset.singleton_subset_iff.2 hi)
+    (_root_.GlobalTheory.PD.rB_mono_loc k F K d x hc {i} i (Finset.mem_singleton_self _)).1 I (Finset.singleton_subset_iff.2 hi)
   haveI : Module.Finite (rA k x {i}) (integralClosure (rA k x {i}) K) :=
-    (GlobalTheory.T.finite_cover_chart_smooth_normal k F K d x hc {i} (Finset.singleton_nonempty _)).1
+    (_root_.GlobalTheory.PD.rB_finite_frac_smooth k F K d x hc {i} (Finset.singleton_nonempty _)).1
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := rA k x {i}) (M := integralClosure (rA k x {i}) K)
   have hg : ∀ g : integralClosure (rA k x {i}) K, ∃ N : ℕ,
       P * Algebra.trace F K (z * g) * s ^ N ∈ rA k x {i} := by
     intro g
     have hgI : (g : K) ∈ rB k K x I := hle g.2
-    exact (GlobalTheory.T.mem_standardOpenCoordinateRing_iff_localization_chart k F d x hc.pd I i hi _).1 ((mem_omA_iff hx hi _).1 (h _ hgI))
+    exact (_root_.GlobalTheory.PD.rA_eq_loc k F d x hc.pd I i hi _).1 ((mem_omA_iff hx hi _).1 (h _ hgI))
   choose Nf hNf using hg
   refine ⟨∑ g ∈ S, Nf g, fun b hb => ?_⟩
   rw [mem_omA_iff hx (Finset.mem_singleton_self i)]
@@ -396,16 +392,16 @@ theorem complementary_iff : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [
   · intro h
     obtain ⟨N, hN⟩ := unif k F K d x hc I i hi z h
     obtain ⟨y', hy', hτy'⟩ := (single k F K d x hc τ hτ i _).1 hN
-    refine ⟨(algebraMap F K s ^ N)⁻¹ • y', (GlobalTheory.T.kahlerFormsOverSubalgebra_standardOpen_iff_pow_smul k F K d x hc I i hi d _).2 ⟨N, ?_⟩, ?_⟩
+    refine ⟨(algebraMap F K s ^ N)⁻¹ • y', (_root_.GlobalTheory.omB_iff_pow_smul k F K d x hc I i hi d _).2 ⟨N, ?_⟩, ?_⟩
     · rw [smul_smul, mul_inv_cancel₀ (pow_ne_zero _ hsne), one_smul]; exact hy'
     · rw [map_smul, hτy', smul_eq_mul]; field_simp; exact mul_comm _ _
   · rintro ⟨y, hy, rfl⟩
-    obtain ⟨N, hN⟩ := (GlobalTheory.T.kahlerFormsOverSubalgebra_standardOpen_iff_pow_smul k F K d x hc I i hi d y).1 hy
+    obtain ⟨N, hN⟩ := (_root_.GlobalTheory.omB_iff_pow_smul k F K d x hc I i hi d y).1 hy
     have h1 := (single k F K d x hc τ hτ i _).2 ⟨_, hN, rfl⟩
     intro b hb
-    obtain ⟨M, hM⟩ := ((GlobalTheory.T.finite_cover_ring_localization_chart k F K d x hc I i hi).2 b).1 hb
+    obtain ⟨M, hM⟩ := ((_root_.GlobalTheory.PD.rB_mono_loc k F K d x hc I i hi).2 b).1 hb
     have h2 := (mem_omA_iff hx (Finset.mem_singleton_self i) _).1 (h1 _ hM)
-    rw [mem_omA_iff hx hi, GlobalTheory.T.mem_standardOpenCoordinateRing_iff_localization_chart k F d x hc.pd I i hi]
+    rw [mem_omA_iff hx hi, _root_.GlobalTheory.PD.rA_eq_loc k F d x hc.pd I i hi]
     refine ⟨N + M, ?_⟩
     convert h2 using 1
     rw [map_smul, smul_eq_mul, show algebraMap F K s ^ N * τ y * (b * algebraMap F K s ^ M) =
@@ -424,8 +420,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.complementaryModule_standardOpens_iff : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (τ : DR k K →ₗ[K] K), IsTop k K x τ → ∀ I : Finset (Fin (d + 1)), I.Nonempty → ∀ z : K, (∀ b ∈ rB k K x I, Algebra.trace F K (z * b) ∈ omA k x I) ↔ ∃ y ∈ omB k K (rB k K x I) d, τ y = z := by
-  first | (exact @GlobalTheory.ComplStd.complementary_iff)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplementaryModuleStandardOpensIffStatement =====

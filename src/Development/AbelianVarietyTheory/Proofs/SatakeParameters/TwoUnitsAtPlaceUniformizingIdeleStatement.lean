@@ -547,12 +547,6 @@ theorem transfer_eq_zero {F E F' E' : Type} [Field F] [NumberField F] [Field E] 
     ι (iA.symm z) P = 0 :=
   _root_.GlobalTheory.TwV.Xc.adIso_comp_zero_of_div iE iA hrat hint ι hι z ℓ D hℓ hD hz P hP
 
-theorem exists_div_int {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (w : HeightOneSpectrum (𝓞 F)) (z : AfE F E) (hz : ∀ w', w' ≠ w → prV (E := E) w' z = 0)
-    (ℓ : ℕ) (hℓ : ((ℓ : ℕ) : 𝓞 F) ∉ w.asIdeal) :
-    ∃ D : ℕ, 0 < D ∧ ∀ n : ℕ, (((D : E) / (ℓ : E) ^ n) ⊗ₜ[F] (1 : FiniteAdeleRing (𝓞 F) F)) * z ∈ RInt F E :=
-  _root_.GlobalTheory.DivInt.exists_nat_mul_div_pow_mem w z hz ℓ hℓ
-
 theorem exists_h90_oneOff_preimage_at_splitPlace {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (w : HeightOneSpectrum (𝓞 F))
     (spl : E ⊗[F] w.adicCompletion F ≃+* w.adicCompletion F × w.adicCompletion F)
@@ -610,7 +604,7 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S _hDict _hSpl hK v π hπ j hj
   have hpp : (D.what₂.places.resChar w).Prime := Fact.out
   have hpw0 : (((D.what₂.places.resChar w : ℕ)) : 𝓞 D.host.F) ∈ ((A0 J).pl v).1.asIdeal := ((A0 J).pl v).2
-  obtain ⟨x', hx'h, hx'off⟩ := exists_h90_oneOff_preimage_at_splitPlace (sigD D) ((A0 J).pl v).1 ((A0 J).spl v) (J.one.good.sig v) π hπ.1 hπ.2.1
+  obtain ⟨x', hx'h, hx'off⟩ := _root_.GlobalTheory.TwV.Xc.Unif.exists_h90_eq_oneOff_of_normOne_at_split_place (sigD D) ((A0 J).pl v).1 ((A0 J).spl v) (J.one.good.sig v) π hπ.1 hπ.2.1
   obtain ⟨y, hy⟩ := exists_unitaryOneFiniteAdelic_of_det_normOne D π hπ.1
   set x : (AfE t.X.F t.X.E)ˣ := Units.map J.A.iA.symm.toRingHom.toMonoidHom x' with hxdef
   have hxx : Units.map J.A.iA.toRingHom.toMonoidHom x = x' := by ext; simp [hxdef]
@@ -633,15 +627,15 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
   have h1 : ∀ P, P ∉ T → (b : AdeleRing (𝓞 t.X.E) t.X.E).2 P = 1 := by
     intro P hP
     rw [hmemT] at hP
-    obtain ⟨ℓ, hℓ0, hℓP, hcop⟩ := exists_nat_mem_coprime _ hpp P hP
+    obtain ⟨ℓ, hℓ0, hℓP, hcop⟩ := _root_.GlobalTheory.natCast_mem_heightOneSpectrum_coprime _ hpp P hP
     have hℓw : ((ℓ : ℕ) : 𝓞 D.host.F) ∉ ((A0 J).pl v).1.asIdeal :=
       natCast_not_mem_of_coprime _ ((A0 J).pl v).1.isPrime.ne_top ℓ _ hcop hpw0
     set z : AfE D.host.F D.host.E := (x' : AfE D.host.F D.host.E) - 1 with hzdef
     have hz : ∀ w', w' ≠ ((A0 J).pl v).1 → prV (E := D.host.E) w' z = 0 := by
       intro w' hw'
       rw [hzdef, map_sub, hx'off w' hw', map_one, sub_self]
-    obtain ⟨Dd, hDd, hdiv⟩ := exists_div_int _ z hz ℓ hℓw
-    have h0 := transfer_eq_zero t.seam.iE J.A.iA J.pins.iA_rat J.pins.iA_int ι hι z ℓ Dd hℓ0 hDd hdiv P hℓP
+    obtain ⟨Dd, hDd, hdiv⟩ := _root_.GlobalTheory.DivInt.exists_nat_mul_div_pow_mem _ z hz ℓ hℓw
+    have h0 := _root_.GlobalTheory.TwV.Xc.adIso_comp_zero_of_div t.seam.iE J.A.iA J.pins.iA_rat J.pins.iA_int ι hι z ℓ Dd hℓ0 hDd hdiv P hℓP
     have e1 : ((x : (AfE t.X.F t.X.E)ˣ) : AfE t.X.F t.X.E) = J.A.iA.symm z + 1 := by
       rw [hzdef, map_sub, map_one, sub_add_cancel]
       rfl
@@ -659,7 +653,7 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
     have hcop : Nat.Coprime (t.Pr.g i) (D.what₂.places.resChar w) :=
       (Nat.coprime_primes (t.pr_ok.g_prime i) hpp).2 hne.symm
     exact natCast_not_mem_of_coprime _ P.isPrime.ne_top _ _ hcop hP hgi
-  obtain ⟨n, hn⟩ := hchar_eq_prod_val (t.glob.mu0 ⟨j, hj⟩) T b hb h1 hu
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.HeckeFinVal.eq_prod_val_zpow (t.glob.mu0 ⟨j, hj⟩) T b hb h1 hu
   set kU : t.X.Kˣ := ∏ P ∈ T, t.Ch.muVal ⟨j, hj⟩ P ^ n P with hkU
   have hk : Units.map t.seam.σ₀.toMonoidHom kU = (t.glob.mu0 ⟨j, hj⟩).1 b := by
     rw [hn, hkU, map_prod]
@@ -748,7 +742,7 @@ theorem GlobalTheory.TwV.Xc.two_units : Sites (fun {D L hT Gi Gl Kc Dx cX ex u �
   obtain ⟨ra, hra⟩ := GlobalTheory.T.kernelSite_normalisingCharPow_values_in_coeffField S hD hS j hj.le hcj π hπU
   obtain ⟨rb, hrb⟩ := GlobalTheory.T.kernelSite_normalisingCharPow_values_in_coeffField S hD hS (j + 1) hj hcj1 π hπU
   have hfill := GlobalTheory.T.systemWeights_eq_shifted_character_exponents S hD hS j hj hcj1
-  have hnorm := GlobalTheory.T.norm_lambdaCharacter_normOne_idele_eq_p_pow S hD hS hPos j hj hfill π hπU
+  have hnorm := _root_.GlobalTheory.TwV.Xc.lambdaCharacter_norm_eq_p_pow_of_pos S hD hS hPos j hj hfill π hπU
   have hord : ∀ v' : (sysS H X std).Pl, ordA (A0 J) v' π = if v' = v then 1 else 0 := by
     intro v'
     split_ifs with h

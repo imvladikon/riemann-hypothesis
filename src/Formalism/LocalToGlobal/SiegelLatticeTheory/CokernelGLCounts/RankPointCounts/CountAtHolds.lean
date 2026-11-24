@@ -980,12 +980,6 @@ section Corner
 
 variable {R : Type*} [CommRing R] {n : ℕ}
 
-theorem isLo_of_uni {L : Matrix (Fin n) (Fin n) R} (h : IsLoUni L) : IsLo L :=
-  ⟨fun a => (h a a).2 rfl, fun a b hab => (h a b).1 hab⟩
-
-theorem isUp_of_uni {U : Matrix (Fin n) (Fin n) R} (h : IsUpUni U) : IsUp U :=
-  ⟨fun a => (h a a).2 rfl, fun a b hab => (h b a).1 hab⟩
-
 theorem uni_of_isLo {L : Matrix (Fin n) (Fin n) R} (h : IsLo L) : IsLoUni L :=
   fun a b => ⟨fun hab => h.2 a b hab, fun e => by subst e; exact h.1 a⟩
 
@@ -1023,9 +1017,9 @@ theorem corner_fix {Fp K : Type} [Field Fp] [CommRing K] [Algebra Fp K] (e : K �
     (h1 : Δ.map (p1 e) = k1 • Ecorner n) (h2 : Δ.map (p2 e) = k2 • Ecorner n) : l * Δ * ρ = Δ := by
   apply mat_eq e
   · rw [Matrix.map_mul, Matrix.map_mul, h1, Matrix.mul_smul, Matrix.smul_mul,
-      lo_corner_up (isLo_map _ (isLo_of_uni hl)) (isUp_map _ (isUp_of_uni hρ))]
+      lo_corner_up (isLo_map _ (_root_.Formalism.L2.SG.Pf.PCount.isLo_of_uni hl)) (isUp_map _ (_root_.Formalism.L2.SG.Pf.PCount.isUp_of_uni hρ))]
   · rw [Matrix.map_mul, Matrix.map_mul, h2, Matrix.mul_smul, Matrix.smul_mul,
-      lo_corner_up (isLo_map _ (isLo_of_uni hl)) (isUp_map _ (isUp_of_uni hρ))]
+      lo_corner_up (isLo_map _ (_root_.Formalism.L2.SG.Pf.PCount.isLo_of_uni hl)) (isUp_map _ (_root_.Formalism.L2.SG.Pf.PCount.isUp_of_uni hρ))]
 
 
 
@@ -1225,7 +1219,7 @@ theorem int_zzp (γ : Formalism.L2.SG.TermDef.Term D u u' F0 what₂) (w : Point
     ∀ i j, (Formalism.L2.SG.CntLocal.ZZP (M := M) δ u u' p (ZhatL (lf D F0) F') * Formalism.L2.SG.LsDatumB.sgnP p) i j ∈
       (M p).R := by
   obtain ⟨hAg, hT, hrows, -, hel, ⟨hPD, hmk⟩, hadm, -⟩ := hE
-  have hTF := Formalism.L2.SG.Closed.TermFun_holds D u u' F0 γ.lam (hrows.1 γ.lam γ.mem)
+  have hTF := _root_.term_function_const D u u' F0 γ.lam (hrows.1 γ.lam γ.mem)
   have hGt := Formalism.L2.SG.TermDef.Gt_mk hTF.1 ⟨F', hPD⟩
   have hGen := Formalism.L2.SG.TermDef.isGen_mk (gS D) hTF.2.2.2.1 ⟨F', hPD⟩
   rw [hmk] at hGt hGen

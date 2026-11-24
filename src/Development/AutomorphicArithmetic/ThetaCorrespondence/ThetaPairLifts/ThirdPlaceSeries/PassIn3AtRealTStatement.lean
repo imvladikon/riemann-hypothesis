@@ -818,10 +818,6 @@ namespace GlobalTheory.FinGL.PosOne
 
 open GlobalTheory.FinGL Formalism.L2.DIV Module Matrix
 
-theorem mem_eig {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (τ : Representation ℂ G V) (S : Set G) (χ : G → ℂ)
-    (v : V) : v ∈ eig τ S χ ↔ ∀ g ∈ S, τ g v = χ g • v := by
-  simp [eig, Submodule.mem_iInf, sub_eq_zero]
-
 theorem exists_descent {G P V : Type} [Group G] [Group P] [AddCommGroup V] [Module ℂ V] (τ : Representation ℂ G V)
     (Q : Subgroup G) (ρ : Q →* P) (hρ : Function.Surjective ρ) (χ : Q →* ℂˣ) :
     ∃ (M : Submodule ℂ V) (π : Representation ℂ P M), ∀ (S : Set P) (c : P → ℂ) (T : Set G) (d : G → ℂ),
@@ -835,7 +831,7 @@ theorem exists_descent {G P V : Type} [Group G] [Group P] [AddCommGroup V] [Modu
   have hσ : ∀ (g : Q) (v : V), σ g v = (((χ g)⁻¹ : ℂˣ) : ℂ) • τ g v := fun g v => rfl
   let M : Submodule ℂ V := eig σ (ρ.ker : Set Q) fun _ => 1
   have hM : ∀ v, v ∈ M ↔ ∀ g : Q, ρ g = 1 → σ g v = v := fun v => by
-    simp [M, mem_eig]
+    simp [M, _root_.GlobalTheory.FinGL.Mir.mem_eig]
   have hst : ∀ g : Q, ∀ v ∈ M, σ g v ∈ M := by
     intro g v hv
     rw [hM] at hv ⊢
@@ -877,7 +873,7 @@ theorem exists_descent {G P V : Type} [Group G] [Group P] [AddCommGroup V] [Modu
     · intro h; rw [h, smul_smul]; simp
   have e : (eig π S c).map M.subtype = eig τ T d := by
     ext v
-    simp only [Submodule.mem_map, mem_eig]
+    simp only [Submodule.mem_map, _root_.GlobalTheory.FinGL.Mir.mem_eig]
     constructor
     · rintro ⟨w, hw, rfl⟩ g hg
       obtain ⟨h, hh⟩ := (hT g).1 hg
@@ -1704,7 +1700,7 @@ theorem passIn3_of_rows : ∀ (D : D7) [_root_.NumberField.IsTotallyComplex D.wh
   have hlev : R.toRealDat.grp_levels F.lv2 := hC.base.grp.levels
   have hrec : R.toRealDat.grp_record := hC.base.grp.record
   have hirr : ∀ χ ∈ A3.A.X, IsAbsIrrChar χ := hOk.ok2.irr
-  have hind := GlobalTheory.T.goodCharacter_placewise_cuspidal_parabolic_product D G Pl0 T A3.A Ks R.toRealDat hrec hser hirr
+  have hind := _root_.GlobalTheory.GoodCharProd.isProdCuspChar_good D G Pl0 T A3.A Ks R.toRealDat hrec hser hirr
   letI i0 : Fintype F.P0 := Fintype.ofFinite _
   letI i1 : Fintype F.P1 := Fintype.ofFinite _
   have hone : ∀ χ ∈ A3.A.X, ∑ h : F.P0, χ (h : G) * (((F.ψ0 h)⁻¹ : D.what₂.LLˣ) : D.what₂.LL) = (Fintype.card F.P0 : D.what₂.LL) :=
@@ -1764,13 +1760,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField IsDedekindDomain Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Rows Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx Formalism.L2.Pj Formalism.IndefR.FWT
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.indefScale_theta_degree : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : Formalism.MainNotions.G.Inst D L) (Gl : Formalism.MainNotions.G.LatInst D) (K : Formalism.MainNotions.G.Consts) (Y : DivX D) (cX : ExtraC) (ex : Extra D L hT Gi Gl K Y cX) (Rc : _root_.Formalism.L2.RecTAlt ex) (P : RowSideFamily ex) (Dcf : ∀ Zs : DefSub P.A3.fam3.amb3, DefCols (P.A3.side3 P.Ps P.ψs Zs)) (Spf : ∀ Zs : DefSub P.A3.fam3.amb3, SPer (Dcf Zs)) (Del h0 : ℕ) (c : ℝ) (S : _root_.Formalism.L2.SG.SpectralTiesReal.STiesRAlt Rc) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (Q : _root_.Formalism.IndefR.IndefiniteRealisation Rc P Dcf Spf (fun Zs => let z := Formalism.L2.DIV.ZscOfNum3 P.A3 P.P0 P.ψ0 (Formalism.L2.DIV.ofRecord D L Del h0) (Equiv.refl _) L.Nc Zs; { z with l6m := fun j => z.l6m j - c * z.l6u, l6u := 0 }) S Ks), IsTotallyComplex D.what₂.LL → Formalism.MainNotions.PrimeDegreeVariant.LevelRatioBound D → P.A3.fam3.Ok3 1 → PrimRows3 Q.Rl Q.F → ∀ C CH : ℝ, PassIn3 Q.Rl Q.F C CH := by
-  first | exact @_root_.GlobalTheory.passIn3_at_realT_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PassIn3AtRealTStatement =====

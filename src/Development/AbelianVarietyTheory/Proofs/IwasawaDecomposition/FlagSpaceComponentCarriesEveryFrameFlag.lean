@@ -260,16 +260,7 @@ open GlobalTheory.Toroidal GlobalTheory.Cartier GlobalTheory.ShFam
 
 namespace GlobalTheory.CarrySpec
 
-theorem upper_mul {n : ℕ} {R : Type} [CommRing R] {M N : Matrix (Fin n) (Fin n) R}
-    (hM : ∀ a i, i < a → M a i = 0) (hN : ∀ a i, i < a → N a i = 0) :
-    (∀ a i, i < a → (M * N) a i = 0) ∧ ∀ i, (M * N) i i = M i i * N i i := by
-  first
-  | (apply _root_.GlobalTheory.UpperTriangularMul.upperTriangular_mul <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UpperTriangularMul.upperTriangular_mul ..)
-
-theorem spMap_comp {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (ρ : R →+* R') (ψ : R' →+* R'') :
-    spMap (ψ.comp ρ) = spMap ψ ≫ spMap ρ := by
-  simp [spMap, Spec.map_comp]
+alias spMap_comp := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Z : Model Xo c β}
@@ -335,7 +326,7 @@ theorem tri_spec {R V L k : Type} [CommRing R] [CommRing V] [CommRing L] [CommRi
   have key : ∀ τ, (∀ a i, i < a → hkf.co gk τ a i = 0) ∧ ∀ i, hkf.co gk τ i i = r (h.co gV τ i i) * tk τ i := by
     intro τ
     obtain ⟨hN, hNd⟩ := EigFrame.Tri.co τ hk hgVk
-    have hm := upper_mul (M := (h.co gV τ).map r) (fun a i hia => by rw [Matrix.map_apply, hA τ a i hia, map_zero]) hN
+    have hm := _root_.GlobalTheory.UpperTriangularMul.upperTriangular_mul (M := (h.co gV τ).map r) (fun a i hia => by rw [Matrix.map_apply, hA τ a i hia, map_zero]) hN
     rw [hco]
     exact ⟨hm.1, fun i => by rw [hm.2, Matrix.map_apply, hNd]⟩
   refine ⟨fun τ i => ((hAd τ i).map r).unit * tk τ i, tri_of_co hfhk ?_ ?_ _ (fun τ => (key τ).1) fun τ i => ?_⟩
@@ -675,9 +666,7 @@ theorem isMap_id {R : Type} [CommRing R] {φ : c.F →+* R} {x : Sp R ⟶ Z.X} (
     ext r <;> simp [dualMap]
   rw [h1, Category.id_comp]
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  rw [← Spec.map_comp]; rfl
+alias spMap_comp := _root_.GlobalTheory.spMap_comp_ring
 
 end GlobalTheory.GenFrame
 
@@ -752,12 +741,7 @@ open Classical
 
 namespace GlobalTheory.FlagFibre
 
-theorem sp_comp {A B C' : Type} [CommRing A] [CommRing B] [CommRing C'] (a : B →+* C') (b : A →+* B) :
-    spMap (a.comp b) = spMap a ≫ spMap b := by
-  simp only [spMap, ← Spec.map_comp]; rfl
-
-theorem sp_id (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  simp only [spMap]; exact Spec.map_id _
+alias sp_comp := _root_.GlobalTheory.ZM.NearBuild.spMap_comp
 
 theorem carries_every : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (F : Type) [Field F] (e : F ≃+* c.F) (σ : c.F →+* ℂ) (N : ℕ) (U : Formalism.L2.PjFree.Unf Xo c σ N) (Φ : FlagTor Z e U), ∀ (i : U.Comp) (K : Type) [Field K] [IsAlgClosed K] (χ : c.F →+* K) (x : Sp K ⟶ gen Z), x ≫ genStr Z = spMap χ → ∀ (g g' : EigFrame Z χ (x ≫ genι Z)) (p : Sp K ⟶ (Φ.C i).Y.X), p ≫ (Φ.C i).π = x → (Φ.C i).Carries p g → ∃ p' : Sp K ⟶ (Φ.C i).Y.X, p' ≫ (Φ.C i).π = x ∧ (Φ.C i).Carries p' g' := by
   intro E _ _ _ H Dw l Xo c O _ β Z F _ e σ N U Φ i K _ _ χ x hx g g' p hp hc
@@ -784,7 +768,7 @@ theorem carries_every : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       rw [← Category.assoc q, hq1, Category.assoc]
     refine ⟨spMap r ≫ q, ?_, _root_.GlobalTheory.CarrySpec.carries_spec E H Dw l Xo c O β Z F e (Φ.C j) V L (algebraMap V L)
       (IsFractionRing.injective V L) K r h3 q (ιV.comp χ) _ hxV gV (ι.comp χ) _ gL tL hTL hc' χ _ b tk hTk⟩
-    rw [Category.assoc, hq1, ← Category.assoc, ← sp_comp, h2, sp_id, Category.id_comp]
+    rw [Category.assoc, hq1, ← Category.assoc, ← sp_comp, h2, _root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp]
   obtain ⟨p₀, hp₀, hc₀⟩ := spec 0 g fun V ιV r sV h1 h2 h3 h4 h5 => (hgL V _ ιV r sV h1 h2 h3 h4).1 h5
   obtain ⟨p₁, hp₁, hc₁⟩ := spec 1 g' fun V ιV r sV h1 h2 h3 h4 h5 => (hgL V _ ιV r sV h1 h2 h3 h4).2 h5
   obtain ⟨_, -, hu⟩ := Φ.lifts K χ x hx g

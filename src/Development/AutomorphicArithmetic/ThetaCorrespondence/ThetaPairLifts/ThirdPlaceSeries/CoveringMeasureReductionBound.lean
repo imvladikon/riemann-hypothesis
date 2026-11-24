@@ -355,7 +355,7 @@ theorem exact_covolume_ratio : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHod
       (T.dict ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)) (muQ1 (T.V ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)))
       (modelWt (T.U ((i : ℕ) + 1) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.gd T σ)) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.expW D i)) f).toReal := by
     rw [Lp.norm_toLp, hE]
-  rw [Formalism.IndefR.Links.ipAt, ← h1, hI, L1 D i σ, hL]
+  rw [Formalism.IndefR.Links.ipAt, ← h1, hI, _root_.GlobalTheory.DimProdLab.prod_dims D i σ, hL]
   unfold GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.ratio GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.probSq
   push_cast
   ring
@@ -368,8 +368,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 open Formalism.MainNotions
 open MeasureTheory Formalism.IndefR.Lev Formalism.IndefR.Datum Formalism.IndefR.Mult Formalism.BasicNotions.TH Formalism.L2.Theta
 
-theorem _root_.GlobalTheory.T.covolume_ratio_eq_index : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems) (D : D7) (Tu : Type) (C : LevCh D Tu) (t0 : Tu) (hC : C.Is t0) (i : Fin D.R.m) (P : LevelP C.Pg D.R.r ℂ) (μ : MeasureTheory.Measure (GA D (Wc D i))) (𝓕 : Set (GA D (Wc D i))) (hF : IsMeasFD (Wc D i) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.levW C i P) μ 𝓕), GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.ExactRatio C i P μ 𝓕 := by
-  first | exact @_root_.GlobalTheory.ExactRatioProof.exact_covolume_ratio
+alias _root_.GlobalTheory.T.covolume_ratio_eq_index := _root_.GlobalTheory.ExactRatioProof.exact_covolume_ratio
 end
 end -- clump:auto
 end -- clump:auto
@@ -424,8 +423,8 @@ open MeasureTheory Formalism.IndefR.Lev Formalism.IndefR.Datum Formalism.IndefR.
 namespace GlobalTheory.OneMeasureRatio
 theorem log_covolume_ratio_le : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems) (D : D7) (Tu : Type) (C : LevCh D Tu) (t0 : Tu) (hC : C.Is t0) (i : Fin D.R.m) (P : LevelP C.Pg D.R.r ℂ) (μ : MeasureTheory.Measure (GA D (Wc D i))) (𝓕 : Set (GA D (Wc D i))) (hF : IsMeasFD (Wc D i) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.levW C i P) μ 𝓕) (L : ℝ) (hL : GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.Sizes D L), Real.log (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.ratio D i μ 𝓕) ≤ 122 * (D.R.f * (D.R.r : ℝ) ^ 2 * L) := by
   intro hP D Tu C t0 hC i P μ 𝓕 hF L hL
-  have h0 := _root_.GlobalTheory.T.fundamentalDomain_volume_ne_zero hP D Tu C t0 hC i P μ 𝓕 hF
-  have ht := _root_.GlobalTheory.T.quotient_measure_lt_top_of_finite_covolume hP D Tu C t0 hC i P μ 𝓕 hF
+  have h0 := _root_.GlobalTheory.CovTop.haarMeasure_fundamentalDomain_ne_zero_of_cocompact hP D Tu C t0 hC i P μ 𝓕 hF
+  have ht := _root_.GlobalTheory.CovTop.MeasFin.volume_fundamentalDomain_ne_top_of_finite_covolume hP D Tu C t0 hC i P μ 𝓕 hF
   have hv := _root_.MainStatements.Tam.Plug.tamagawa_pairs_compatible hP D Tu C t0 hC i P μ 𝓕 hF L hL
   have hd : ∀ τ, Real.log (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.dimAt D i τ) ≤ 3 / 2 * (D.R.r : ℝ) ^ 2 * L :=
     _root_.GlobalTheory.OneMeasDim.log_dimAt_le D i L hL
@@ -481,14 +480,6 @@ theorem covolume_measure_eq_one : _root_.GlobalTheory.CovTop.PublishedHodgeBundl
 end GlobalTheory.OneMeasureAll
 end
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.CovTop.MeasRd
-open Formalism.MainNotions
-
-theorem _root_.GlobalTheory.T.normalized_covolume_eq_one : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.OneMeasure D := by
-  first | exact @_root_.GlobalTheory.OneMeasureAll.covolume_measure_eq_one
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.NormalizedCovolumeEqOne =====
@@ -813,14 +804,6 @@ theorem nef_share_lower_bound_alt (hP : _root_.GlobalTheory.CovTop.PublishedHodg
 end GlobalTheory.CovTop.MeasLow
 end
 end
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.CovTop.MeasRd
-open Formalism.MainNotions
-
-theorem _root_.GlobalTheory.T.exists_neg_unitE_le_log_ratAt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → Closed FamHyp fun Fm _ => ∃ K : ℝ, 0 ≤ K ∧ _root_.GlobalTheory.CovTop.EventuallyAtAllPoints Fm fun _ _ _ p => ∀ i, -(K * unitE p) ≤ Real.log (ratAt p i) := by
-  first | exact @_root_.GlobalTheory.CovTop.MeasLow.nef_share_lower_bound_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -994,14 +977,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.CovTop.MeasRd
-open Formalism.MainNotions
-
-theorem _root_.GlobalTheory.T.exactAt_of_oneMeasure : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ} (p : PtAt ex Csz), p.PointConditions' → GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.OneMeasure D → ∀ i : Fin D.R.m, ExactAt p i := by
-  first | exact @_root_.GlobalTheory.CovTop.MeasRd.exactAt_of_rows_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExactAtOfRowsStatement =====
@@ -1277,14 +1252,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2 Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Pj Formalism.IndefR.Links Formalism.IndefR.FWT
-open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.AllWt GlobalTheory.CompHt GlobalTheory.BigTop GlobalTheory.CovTop GlobalTheory.CovTop.MeasRd
-open Formalism.MainNotions
-
-theorem _root_.GlobalTheory.T.exists_log_ratAt_le_mul_unitE : (∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.OneMeasure D) → Closed FamHyp fun Fm _ => ∃ K : ℝ, 0 ≤ K ∧ _root_.GlobalTheory.CovTop.EventuallyAtAllPoints Fm fun _ _ _ p => ∀ i, 0 < ratAt p i ∧ Real.log (ratAt p i) ≤ K * unitE p := by
-  first | exact @_root_.GlobalTheory.CovTop.MeasRd.ratAt_upper_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RatAtUpperStatement =====
@@ -1305,22 +1272,16 @@ open Formalism.MainNotions
 namespace GlobalTheory.CovTop.MeasRd
 theorem covering_measure_reduction_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.MeasureCondition := by
   intro h
-  have h2 := _root_.GlobalTheory.T.normalized_covolume_eq_one h
-  refine Closed.imp (Closed.and (_root_.GlobalTheory.T.exists_log_ratAt_le_mul_unitE h2) (_root_.GlobalTheory.T.exists_neg_unitE_le_log_ratAt h)) ?_
+  have h2 := _root_.GlobalTheory.OneMeasureAll.covolume_measure_eq_one h
+  refine Closed.imp (Closed.and (_root_.GlobalTheory.CovTop.MeasRd.ratAt_upper_alt h2) (_root_.GlobalTheory.CovTop.MeasLow.nef_share_lower_bound_alt h)) ?_
   intro _ Fm _ _ hh
   obtain ⟨⟨K1, hK1, a, ha⟩, ⟨K2, hK2, b, hb⟩⟩ := hh
   refine ⟨(K1 + K2) / 2, by positivity, max a b, fun x hx hle ι p hp i => ?_⟩
   obtain ⟨hr, hu⟩ := ha x hx ((le_max_left _ _).trans hle) ι p hp i
   have hl := hb x hx ((le_max_right _ _).trans hle) ι p hp i
-  exact measAt_of p i (_root_.GlobalTheory.T.exactAt_of_oneMeasure p hp.1 (h2 _) i) hr hK1 hK2 hu hl
+  exact measAt_of p i (_root_.GlobalTheory.CovTop.MeasRd.exactAt_of_rows_alt p hp.1 (h2 _) i) hr hK1 hK2 hu hl
 end GlobalTheory.CovTop.MeasRd
 end
-end
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.covering_meas_of_prints : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.MeasureCondition := by
-  first | exact @_root_.GlobalTheory.CovTop.MeasRd.covering_measure_reduction_alt
 end
 end
 end -- clump:auto

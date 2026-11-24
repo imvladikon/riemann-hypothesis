@@ -215,16 +215,6 @@ theorem sq_tsum_le {ι : Type*} (t : ι → ℝ≥0) (k : ℕ) (h : (Function.su
     exact h5.trans (by gcongr)
   exact_mod_cast h3
 
-theorem sq_lintegral_mul_le {X : Type*} [MeasurableSpace X] (ν : Measure X) {f g : X → ℝ≥0∞}
-    (hf : AEMeasurable f ν) (hg : AEMeasurable g ν) :
-    (∫⁻ a, f a * g a ∂ν) ^ 2 ≤ (∫⁻ a, f a ^ 2 ∂ν) * ∫⁻ a, g a ^ 2 ∂ν := by
-  have h := ENNReal.lintegral_mul_le_Lp_mul_Lq ν Real.HolderConjugate.two_two hf hg
-  simp only [Pi.mul_apply, ENNReal.rpow_ofNat] at h
-  refine (pow_le_pow_left' h 2).trans (le_of_eq ?_)
-  rw [mul_pow, ← ENNReal.rpow_natCast, ← ENNReal.rpow_natCast (_ ^ _), ← ENNReal.rpow_mul,
-    ← ENNReal.rpow_mul]
-  norm_num
-
 theorem encard_support_le {G : Type*} [Group G] [TopologicalSpace G] (Γ : Subgroup G) (α : G → ℂ) (x w : G)
     (k : ℕ)
     (hk : {γ : G | γ ∈ Γ ∧ ∃ a ∈ tsupport α, ∃ b ∈ tsupport α, γ = x * a * b⁻¹ * x⁻¹}.encard ≤ k) :
@@ -278,7 +268,7 @@ theorem sq_lintegral_le (μ : Measure G) [μ.IsMulLeftInvariant] (Γ : Subgroup 
       exact ((htr γ).pow_const 2).aemeasurable
   have hK : Measurable fun w => ∑' γ : Γ, a ((γ : G) * w) := Measurable.tsum htr
   rw [e1, e2, ← lintegral_const_mul' _ _ (ENNReal.natCast_ne_top k)]
-  refine (sq_lintegral_mul_le _ hK.aemeasurable hψm.aemeasurable).trans ?_
+  refine (_root_.GroundTheory.Automorphic.L2Kernel.lintegral_mul_sq_le _ hK.aemeasurable hψm.aemeasurable).trans ?_
   rw [hn, mul_one]
   refine lintegral_mono fun w => ?_
   have := sq_tsum_le (fun γ : Γ => ‖α (x⁻¹ * ((γ : G) * w))‖₊) k (encard_support_le Γ α x w k hk)
@@ -420,11 +410,6 @@ namespace GlobalTheory.CompanionTheory.Conc.WeightedCauchySchwarzLintegral
 
 open scoped Pointwise
 
-theorem sq_lintegral_mul_le {X : Type*} [MeasurableSpace X] (ν : Measure X) {a b : X → ℝ≥0∞}
-    (ha : Measurable a) (hb : Measurable b) :
-    (∫⁻ w, a w * b w ∂ν) ^ 2 ≤ (∫⁻ w, a w ∂ν) * ∫⁻ w, a w * b w ^ 2 ∂ν :=
-  _root_.UpperTheory.Reformulated.B.P6.r96a.GlobalTheory.CompanionTheory.Conc.WeightedCauchySchwarzLintegral.sq_lintegral_mul_le ν ha hb
-
 variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [MeasurableSpace G] [BorelSpace G]
 
 theorem eventually_lintegral_translate_le [LocallyCompactSpace G]
@@ -522,7 +507,7 @@ theorem sq_mean_translate_le (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightI
           gcongr
           exact enorm_translate_sub_le μ hα hs hψ hrep x y
     _ ≤ ∫⁻ x in F, (∫⁻ w, a w ∂μ) * ∫⁻ w, a w * ‖ψ (x * w)‖ₑ ^ 2 ∂μ ∂μ :=
-        lintegral_mono fun x => sq_lintegral_mul_le μ ha (by
+        lintegral_mono fun x => _root_.UpperTheory.Reformulated.B.P6.r96a.GlobalTheory.CompanionTheory.Conc.WeightedCauchySchwarzLintegral.sq_lintegral_mul_le μ ha (by
           have : Continuous fun w => ‖ψ (x * w)‖ₑ := by fun_prop
           exact this.measurable)
     _ = (∫⁻ w, a w ∂μ) * ∫⁻ x in F, ∫⁻ w, a w * ‖ψ (x * w)‖ₑ ^ 2 ∂μ ∂μ :=

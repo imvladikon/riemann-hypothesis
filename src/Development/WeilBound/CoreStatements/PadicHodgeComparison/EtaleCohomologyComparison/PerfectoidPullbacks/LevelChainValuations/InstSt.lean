@@ -115,31 +115,6 @@ namespace CrystallineSemistableComparison.Pb.Kap.DividedPowerIdealFacts
 
 variable {A B : Type} [CommRing A] [CommRing B] {I : Ideal A} {J : Ideal B}
 
-theorem dividedPowerFiltration_anti (γ : DividedPowers I) {r r' : ℕ} (h : r ≤ r') : pdP γ r' ≤ pdP γ r := by
-  refine Ideal.span_le.2 ?_
-  rintro _ ⟨L, hL, hr, rfl⟩
-  exact Ideal.subset_span ⟨L, hL, h.trans hr, rfl⟩
-
-theorem dividedPowerFiltration_zero (γ : DividedPowers I) : pdP γ 0 = ⊤ := by
-  rw [Ideal.eq_top_iff_one]
-  exact Ideal.subset_span ⟨[], by simp, by simp, by simp⟩
-
-theorem dpow_mem_pdP (γ : DividedPowers I) (n : ℕ) {x : A} (hx : x ∈ I) : γ.dpow n x ∈ pdP γ n :=
-  Ideal.subset_span ⟨[(n, x)], by simpa using hx, by simp, by simp⟩
-
-theorem dividedPowerFiltration_mul (γ : DividedPowers I) (a b : ℕ) : pdP γ a * pdP γ b ≤ pdP γ (a + b) := by
-  unfold pdP
-  rw [Ideal.span_mul_span']
-  refine Ideal.span_le.2 ?_
-  rintro _ ⟨x, ⟨L1, h1, r1, rfl⟩, y, ⟨L2, h2, r2, rfl⟩, rfl⟩
-  refine Ideal.subset_span ⟨L1 ++ L2, ?_, ?_, ?_⟩
-  · intro q hq
-    rcases List.mem_append.1 hq with hq | hq
-    · exact h1 q hq
-    · exact h2 q hq
-  · simp only [List.map_append, List.sum_append]; omega
-  · simp [List.prod_append]
-
 theorem dividedPowerFiltration_le_map (γ : DividedPowers I) (δ : DividedPowers J) (f : A →+* B) (hf : IsDPMorphism γ δ f)
     (hJ : J = I.map f) (r : ℕ) : pdP δ r ≤ (pdP γ r).map f := by
 
@@ -151,11 +126,11 @@ theorem dividedPowerFiltration_le_map (γ : DividedPowers I) (δ : DividedPowers
       obtain ⟨a, ha, rfl⟩ := hy
       intro n
       rw [hf.dpow_comp (n := n) a ha]
-      exact Ideal.mem_map_of_mem _ (dpow_mem_pdP γ n ha)
+      exact Ideal.mem_map_of_mem _ (_root_.GlobalTheory.CompanionTheory.DPFil.dpow_mem_pdP γ n ha)
     | zero =>
       intro n
       rcases Nat.eq_zero_or_pos n with rfl | hn
-      · rw [δ.dpow_zero J.zero_mem, dividedPowerFiltration_zero, Ideal.map_top]; exact Submodule.mem_top
+      · rw [δ.dpow_zero J.zero_mem, _root_.GlobalTheory.CompanionTheory.GrTens.dividedPowerFiltration_zero_eq, Ideal.map_top]; exact Submodule.mem_top
       · rw [δ.dpow_eval_zero hn.ne']; exact Ideal.zero_mem _
     | add y z hy hz ihy ihz =>
       intro n
@@ -167,7 +142,7 @@ theorem dividedPowerFiltration_le_map (γ : DividedPowers I) (δ : DividedPowers
       have := Ideal.mul_mem_mul (ihy hyJ k.1) (ihz hzJ k.2)
       rw [← Ideal.map_mul] at this
       rw [← hk']
-      exact Ideal.map_mono (dividedPowerFiltration_mul γ k.1 k.2) this
+      exact Ideal.map_mono (_root_.GlobalTheory.CompanionTheory.DPFil.dividedPowerFiltration_mul_le γ k.1 k.2) this
     | smul c y hy ihy =>
       intro n
       have hyJ : y ∈ J := hJ ▸ hy
@@ -175,17 +150,17 @@ theorem dividedPowerFiltration_le_map (γ : DividedPowers I) (δ : DividedPowers
       exact Ideal.mul_mem_left _ _ (ihy hyJ n)
   refine Ideal.span_le.2 ?_
   rintro _ ⟨L, hL, hr, rfl⟩
-  refine Ideal.map_mono (dividedPowerFiltration_anti γ hr) ?_
+  refine Ideal.map_mono (_root_.GlobalTheory.CompanionTheory.BasisBase.dividedPowerFiltration_anti' γ hr) ?_
   clear hr
   induction L with
-  | nil => simp [dividedPowerFiltration_zero, Ideal.map_top]
+  | nil => simp [_root_.GlobalTheory.CompanionTheory.GrTens.dividedPowerFiltration_zero_eq, Ideal.map_top]
   | cons q L ih =>
     simp only [List.map_cons, List.prod_cons, List.sum_cons]
     have h1 := key q.2 (hL q (by simp)) q.1
     have h2 := ih (fun q' hq' => hL q' (by simp [hq']))
     have := Ideal.mul_mem_mul h1 h2
     rw [← Ideal.map_mul] at this
-    exact Ideal.map_mono (dividedPowerFiltration_mul γ _ _) this
+    exact Ideal.map_mono (_root_.GlobalTheory.CompanionTheory.DPFil.dividedPowerFiltration_mul_le γ _ _) this
 
 end CrystallineSemistableComparison.Pb.Kap.DividedPowerIdealFacts
 
@@ -302,7 +277,7 @@ theorem level_system_good [FiniteDimensional ℚ_[l] K] (hM : M.Sm) (U : Cov M.q
       fin := fun j => (m_fin M hM j).1
       basis := fun j _ bs w => cg_basis_pf hL M hM s U hU j bs w
       r_tr := hr
-      red_tr := fun n j z => trM_redM (QA L M s) none (l : L.A) n j z
+      red_tr := fun n j z => _root_.GlobalTheory.CompanionTheory.RedTower.trM_redM (QA L M s) none (l : L.A) n j z
       lift := ?_
       sep := ?_ }
   · intro j x hx
@@ -350,18 +325,13 @@ variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)}
 theorem qb_le {L : Lev R m} (hL : L.Good) (M : Model l K) (s : ℕ) :
     ∀ T, QB L M s T → QA L M s (((nmB M hL).mor 0).obj T) := qb_le_pf hL M s
 
-theorem unit_B {L : Lev R m} (hL : L.Good) : IsUnit ((l : L.B)) := unit_B_pf hL
-
-theorem cg_lift [FiniteDimensional ℚ_[l] K] {L : Lev R m} (hL : L.Good) (M : Model l K) (hM : M.Sm) (s : ℕ) (hs : m ≤ s)
-    (j : ℕ) : ∃ e : ℕ, LiftP (QA L M s) (l : L.A) s j e := cg_lift_pf hL M hM s hs j
-
 section
 variable {m : ℕ} {L : Lev (per l K) m} (hL : L.Good) (M : Model l K) (s : ℕ)
 
 theorem chain_good [FiniteDimensional ℚ_[l] K] (hM : M.Sm) (U : Cov M.q) (hU : ∀ α, U.d α + m ≤ s) (hs : m ≤ s)
     (rH : ∀ n j, M.Hc false n j →ₛₗ[L.lam] HM (QA L M s) none ((l : L.A) ^ n) j)
     (hr : ∀ n j x, trM (QA L M s) none (l : L.A) n j (rH (n + 1) j x) = rH n j ((M.HS false j).r n x)) :
-    (chainOf hL M s (qb_le hL M s) rH).Good := level_system_good hL M s hM U hU hs rH hr
+    (chainOf hL M s (_root_.CrystallineSemistableComparison.Pb.Kap.qb_le_pf hL M s) rH).Good := level_system_good hL M s hM U hU hs rH hr
 
 end
 

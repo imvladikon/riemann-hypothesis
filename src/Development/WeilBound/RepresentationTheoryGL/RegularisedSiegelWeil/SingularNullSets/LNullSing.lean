@@ -1748,8 +1748,6 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.Rsw.L
 
-theorem nullSing : IdemEx → NullSing := GlobalTheory.CompanionTheory.NullFr.nullSing_of_idemEx
-
 end PositivityTheory.Rg.Rsw.L
 end -- clump:auto
 end -- clump:auto

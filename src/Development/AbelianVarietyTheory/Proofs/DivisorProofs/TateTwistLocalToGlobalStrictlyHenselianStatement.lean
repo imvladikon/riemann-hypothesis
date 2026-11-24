@@ -57,7 +57,7 @@ namespace GlobalTheory.EtC
 
 theorem tateTwist_local_to_global_strictlyHenselian : B3 := by
   intro q Y X S f p _ _ _ _ _ i h
-  exact _root_.GlobalTheory.EtC.eqv_sch_of_stalks (ZMod q) (tw q i) (GlobalTheory.T.tateTwist_finitary q i) Y X S f p
+  exact _root_.GlobalTheory.EtC.eqv_sch_of_stalks (ZMod q) (tw q i) (_root_.GlobalTheory.EtC.tw_finitary q i) Y X S f p
     (fun O _ s hs => h O s hs.1)
 
 end GlobalTheory.EtC

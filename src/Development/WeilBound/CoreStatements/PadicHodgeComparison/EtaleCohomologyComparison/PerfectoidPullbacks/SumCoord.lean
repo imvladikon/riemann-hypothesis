@@ -457,7 +457,7 @@ theorem psiF_lin (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C
     psiF r F c k hk hl M j (a • x) f = c ((per l K).φ^[N] a) * psiF r F c k hk hl M j x f := by
   rw [psiF_apply, psiF_apply, F.lin M hM j a x]
   have e : ((per l K).φ^[N] a • F.α M j x : AL r M j) = ((show AW r from (per l K).φ^[N] a) • F.α M j x) := rfl
-  rw [e, Psi.T_smul, show cA r c ((⇑(per l K).φ)^[N] a) = c ((⇑(per l K).φ)^[N] a) from rfl]
+  rw [e, _root_.GlobalTheory.CompanionTheory.FrobPairing.T_smul, show cA r c ((⇑(per l K).φ)^[N] a) = c ((⇑(per l K).φ)^[N] a) from rfl]
   ring
 
 theorem psiF_lin' (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C₀] (c : Acris l →+* C₀) (k : Wc.K₀ l r.k →+* C₀)
@@ -466,7 +466,7 @@ theorem psiF_lin' (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing 
     psiF r F c k hk hl M j x (z • f) = k z * psiF r F c k hk hl M j x f := by
   rw [psiF_apply, psiF_apply]
   rw [show Psi.T (cA r c) k (hkA r c k hk) (z • f) (F.α M j x) = k z * Psi.T (cA r c) k (hkA r c k hk) f (F.α M j x) from
-    Psi.T_ksmul (cA r c) k (hkA r c k hk) z f (F.α M j x)]
+    _root_.GlobalTheory.CompanionTheory.FrobPsi.T_ksmul (cA r c) k (hkA r c k hk) z f (F.α M j x)]
   ring
 
 theorem psiF_act (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C₀] (c : Acris l →+* C₀) (k : Wc.K₀ l r.k →+* C₀)
@@ -476,7 +476,7 @@ theorem psiF_act (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C
     (f : Module.Dual (Wc.K₀ l r.k) (Wc.D l (B.schFn M.p) r.ρ j)) :
     psiF r F c k hk hl M j (galL M j g x) f = σC g (psiF r F c k hk hl M j x f) := by
   rw [psiF_apply, psiF_apply, F.gal M hM j g x,
-    Psi.T_gal (cA r c) k (hkA r c k hk) ((per l K).σA g : AW r →+* AW r) (σC g) (F.galT M j g)
+    _root_.GlobalTheory.CompanionTheory.FrobPairing.T_gal (cA r c) k (hkA r c k hk) ((per l K).σA g : AW r →+* AW r) (σC g) (F.galT M j g)
       (fun a y => F.galT_tmul M hM j g a y) (fun a => hσc g a) (hσk g),
     map_mul, map_pow, map_vinv c hl (σC g) (by rw [hσc, map_natCast])]
 
@@ -488,7 +488,7 @@ theorem psiF_phi (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C
     psiF r F c k hk hl M j (phiL M j x) f =
       ∑ s, φC (psiF r F c k hk hl M j x (b.coord s)) * k (f (Wc.phiD l (B.schFn M.p) r.ρ j (b s))) := by
   rw [psiF_apply, F.phi M hM j x,
-    Psi.T_phi (cA r c) k (hkA r c k hk) ((per l K).φ : AW r →+* AW r) φC (Wc.phiS l (B.schFn M.p) r.ρ j).lim
+    _root_.GlobalTheory.CompanionTheory.FrobPairing.T_phi_expand (cA r c) k (hkA r c k hk) ((per l K).φ : AW r →+* AW r) φC (Wc.phiS l (B.schFn M.p) r.ρ j).lim
       (WittVector.FractionRing.frobeniusRingHom l r.k) (Wc.phiD l (B.schFn M.p) r.ρ j)
       (fun x y => TensorProduct.map_tmul _ _ x y) (F.phiT M j) (fun a y => F.phiT_tmul M hM j a y) hφc hφk b f,
     Finset.mul_sum]
@@ -504,7 +504,7 @@ theorem psiF_nat (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C
   have h0 := congrArg (Psi.T (cA r c) k (hkA r c k hk) f) hm
   rw [map_zero] at h0
   have e1 : ∀ (a : (per l K).A) (z : AL r M j), (a • z : AL r M j) = ((show AW r from a) • z) := fun _ _ => rfl
-  rw [e1, Psi.T_smul, map_sub, e1, e1, Psi.T_smul, Psi.T_smul, Psi.T_lTensor] at h0
+  rw [e1, _root_.GlobalTheory.CompanionTheory.FrobPairing.T_smul, map_sub, e1, e1, _root_.GlobalTheory.CompanionTheory.FrobPairing.T_smul, _root_.GlobalTheory.CompanionTheory.FrobPairing.T_smul, _root_.GlobalTheory.CompanionTheory.FrobPsi.T_lTensor] at h0
   have hc : ∀ n : ℕ, cA r c (show AW r from ((l : (per l K).A) ^ n)) = c l ^ n := fun n => by
     change c ((l : Acris l) ^ n) = _
     rw [map_pow]
@@ -550,12 +550,12 @@ theorem psiF_fac (r : Res l K) {N : ℕ} (F : Fac r N) {C₀ : Type} [CommRing C
       (∀ x y, E (x ⊗ₜ y) = ι (k x) * hF r F M j f y) ∧
       ∀ G : AL r M j →+ (per l K).B, (∀ a y, G (a ⊗ₜ y) = ((per l K).i : AW r →+* (per l K).B) a * hF r F M j f y) →
         ∀ z, G z = ∑ s, ι (Psi.T (cA r c) k (hkA r c k hk) (b.coord s) z) * E (b s) := fun f hf =>
-    Psi.T_fac (cA r c) k (hkA r c k hk) ι ((per l K).i : AW r →+* (per l K).B) hιc (hF r F M j f) (hh f hf) b
+    _root_.GlobalTheory.CompanionTheory.FrobFac.T_fac (cA r c) k (hkA r c k hk) ι ((per l K).i : AW r →+* (per l K).B) hιc (hF r F M j f) (hh f hf) b
   refine ⟨fun s f => if hf : GMod.Fn (per l K) (M.HA true).toGMod j f then (hE f hf).choose (b s) else 0, ?_, ?_⟩
   · intro f hf s σ
     dsimp only
     rw [dite_eq_left hf]
-    refine Psi.E_fix k ι ((per l K).σ σ) (hF r F M j f) _ (hE f hf).choose_spec.1 (fun w => ?_) (fun y => ?_) (b s)
+    refine _root_.GlobalTheory.CompanionTheory.FrobFix.extension_fixed k ι ((per l K).σ σ) (hF r F M j f) _ (hE f hf).choose_spec.1 (fun w => ?_) (fun y => ?_) (b s)
     · rw [hk, hιc, ← hR.i_σ, hσw]
     · change (per l K).σ σ (f (F.β M j ((1 : AW r) ⊗ₜ y))) = f (F.β M j ((1 : AW r) ⊗ₜ y))
       rw [← hf.2]
@@ -681,26 +681,6 @@ open CategoryTheory Limits AlgebraicGeometry TensorProduct GroundTheory.PAdicHod
 
 namespace CrystallineSemistableComparison.Pb
 
-variable {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)}
-
-theorem perC_hk (r : Res l K) (w : WittVector l r.k) :
-    r.perC.k (algebraMap (WittVector l r.k) (Wc.K₀ l r.k) w) = r.perC.c (r.w w) := G3.perC_hk r w
-
-theorem perC_hl (r : Res l K) : IsUnit (r.perC.c (l : (per l K).A)) := G3.perC_hl r
-
-theorem perC_hφk (r : Res l K) (x : Wc.K₀ l r.k) : r.perC.φ (r.perC.k x) = r.perC.k (Wc.frob₀ l r.k x) := G3.perC_hφk r x
-
-theorem w_fix (r : Res l K) [FiniteDimensional ℚ_[l] K] (g : K.fixingSubgroup) (w : WittVector l r.k) :
-    (per l K).σA g (r.w w) = r.w w := G3.w_fix r g w
-
-theorem perC_hσk (r : Res l K) [FiniteDimensional ℚ_[l] K] (g : K.fixingSubgroup) (x : Wc.K₀ l r.k) :
-    r.perC.σ g (r.perC.k x) = r.perC.k x := G3.perC_hσk r g x
-
-theorem w_phi (r : Res l K) (w : WittVector l r.k) :
-    ACris.phi (K := ℂ_[l]) (p := l) (r.w w) = r.w (WittVector.frobenius w) := G3.w_phi r w
-
-theorem teich (r : Res l K) [FiniteDimensional ℚ_[l] K] : ∃ N : ℕ, Mid.TeichmullerCongruence r N := G3.teich r
-
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
 end -- clump:auto
@@ -791,10 +771,10 @@ def pull' (Amp : ∀ M : Model l K, E.LineData M.X → Prop) {M N : Model l K} {
 
 theorem fmap (r : Res l K) [FiniteDimensional ℚ_[l] K] (Amp : ∀ M : Model l K, E.LineData M.X → Prop) :
     Nonempty (FMap Model.Sm r.perC r.iso (dat Amp) (pull' Amp)) := by
-  obtain ⟨N, hT⟩ := teich r
-  obtain ⟨F, -⟩ := fac_ex r hT (fun M n j x => Mid.mu_nu r N hT M n j x) (w_phi r) (fun g w => w_fix r g w)
+  obtain ⟨N, hT⟩ := _root_.CrystallineSemistableComparison.Pb.G3.teich r
+  obtain ⟨F, -⟩ := fac_ex r hT (fun M n j x => _root_.CrystallineSemistableComparison.Pb.Mid.frobenius_mu_nu_iterate r N hT M n j x) (_root_.CrystallineSemistableComparison.Pb.G3.w_phi r) (fun g w => _root_.CrystallineSemistableComparison.Pb.G3.w_fix r g w)
   exact fmap_of r Amp N F _ r.perC.c r.perC.ι r.perC.φ r.perC.σ r.perC.q r.perC.k (factsC l K r).1 (facts l K)
-    (perC_hk r) (perC_hl r) (perC_hφk r) (perC_hσk r) (w_fix r) (fun M hM j => lw_fin r M hM j)
+    (_root_.CrystallineSemistableComparison.Pb.G3.perC_hk r) (_root_.CrystallineSemistableComparison.Pb.G3.perC_hl r) (_root_.CrystallineSemistableComparison.Pb.G3.perC_hφk r) (_root_.CrystallineSemistableComparison.Pb.G3.perC_hσk r) (_root_.CrystallineSemistableComparison.Pb.G3.w_fix r) (fun M hM j => lw_fin r M hM j)
     (fun M _ j x => CompanionTheory.KM.Cris.pullD_schMap_id l r.ρ M.p (Category.id_comp _) j x)
 
 end CrystallineSemistableComparison.Pb
@@ -868,9 +848,9 @@ theorem pmap [FiniteDimensional ℚ_[l] K] : Nonempty (PMap Model.Sm (dat (l := 
   · intro M a hM d hd
     have := hd.1
     have := hd.2
-    have hK : IsTautologicalLine M.q (lineK a.1) := isTwistingSheaf_pullback (OK l K).subtype M.p a.1 a.2
+    have hK : IsTautologicalLine M.q (lineK a.1) := _root_.GlobalTheory.CompanionTheory.ConeTwistingSheaf.isTwistingSheaf_pullback (OK l K).subtype M.p a.1 a.2
     obtain ⟨N, i, -, -, hi⟩ := a.2
-    obtain ⟨x, hx⟩ := firstChern_acris_family_exists M a.1 (sSup_𝒱D a.1 N i hi)
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.FirstChernClassFactorial.exists_C1H M a.1 (sSup_𝒱D a.1 N i hi)
     obtain ⟨c, hc⟩ := isFirstChernDeRham_exists M.q d _ hK
     obtain ⟨z, hz⟩ := pow_ex a x d
     obtain ⟨φ, hφ⟩ := Module.Projective.exists_dual_eq_one K (powK_ne_zero M.q d _ hK c hc)

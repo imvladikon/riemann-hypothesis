@@ -665,9 +665,6 @@ section -- clump:auto
 
 namespace GlobalTheory
 
-theorem unramifiedOrthogonality_holds : ReciprocityTheory.Gal.UnramifiedOrthogonality :=
-  GlobalTheory.CompanionTheory.Hypotheses₂.unramifiedOrthogonality
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto

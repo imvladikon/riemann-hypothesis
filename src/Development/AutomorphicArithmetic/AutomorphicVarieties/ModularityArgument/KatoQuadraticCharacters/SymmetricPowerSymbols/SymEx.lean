@@ -185,25 +185,13 @@ private theorem siegel_admissible_to_rat (c M : ℕ) [NeZero M] (h1 : 1 < c) (h6
   · exact key 0 n0 hn0
   · exact key 1 n1 hn1
 
-private theorem neBot : (Filter.codiscreteWithin Hs).NeBot := by
-  have hI : Complex.I ∈ Hs := by simp [Hs]
-  have hopen : IsOpen Hs := by
-    show IsOpen {z : ℂ | 0 < z.im}
-    exact isOpen_lt continuous_const Complex.continuous_im
-  have hnb : (nhdsWithin Complex.I (Hs \ {Complex.I})).NeBot := by
-    rw [Set.diff_eq, nhdsWithin_inter_of_mem
-      (mem_nhdsWithin_of_mem_nhds (hopen.mem_nhds hI))]
-    infer_instance
-  refine hnb.mono ?_
-  exact le_iSup₂ (f := fun x (_ : x ∈ Hs) => nhdsWithin x (Hs \ {x})) Complex.I hI
-
 private theorem mob_dg (k : ℕ) (hk : 0 < k) (z : ℂ) : mob (dg k) z = k * z := by
   simp [mob, dg, toGQ, ent, Matrix.det_fin_two, hk]
 
 private theorem prod_siegel {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε)
     (c k : ℕ) (x : Fin 2 → ℚ) (hA : GlobalTheory.Sieg.admitted c x) (hk : 0 < k) (hc : Nat.Coprime c k) :
     ∏ j ∈ Finset.range k, siegel X c ![x 0, (x 1 + j) / k] = X.sl (dg k) (siegel X c x) := by
-  haveI := neBot
+  haveI := _root_.GlobalTheory.KZ.SiegelModel.neBot_Hs
   have hk0 : (k : ℚ) ≠ 0 := by exact_mod_cast hk.ne'
   have hAj : ∀ j ∈ Finset.range k, GlobalTheory.Sieg.admitted c ![x 0, (x 1 + j) / k] := by
     intro j _
@@ -839,16 +827,14 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 private def Nr (X : Tower Ω ε) (f : X.K) : Prop :=
   ∃ T : Finset Ω, ∀ s : Ω ≃ₐ[ℚ] Ω, (∀ z ∈ T, s z = z) → X.gal s f = f
 
-private theorem exp_inj (X : Tower Ω ε) : Function.Injective X.exp := X.exp.toRingHom.injective
-
 private theorem nr_j (X : Tower Ω ε) : Nr X X.jK := by
-  refine ⟨∅, fun s _ => exp_inj X ?_⟩
+  refine ⟨∅, fun s _ => _root_.GlobalTheory.K4.exp_injective X ?_⟩
   ext r
   obtain ⟨n, hn⟩ := X.j_exp.2.2 r
   rw [X.gal_exp, hn, map_intCast]
 
 private theorem nr_c (X : Tower Ω ε) (c : Ω) : Nr X (algebraMap Ω X.K c) := by
-  refine ⟨{c}, fun s hs => exp_inj X ?_⟩
+  refine ⟨{c}, fun s hs => _root_.GlobalTheory.K4.exp_injective X ?_⟩
   ext r
   rw [X.gal_exp, AlgHom.commutes, HahnSeries.algebraMap_apply']
   by_cases h : r = 0 <;> simp [h, hs c (Finset.mem_singleton_self c)]
@@ -894,7 +880,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PC.galNear :
     intro b hb
     by_contra h
     push_neg at h
-    exact hb (exp_inj X (HahnSeries.ext (funext h)))
+    exact hb (_root_.GlobalTheory.K4.exp_injective X (HahnSeries.ext (funext h)))
   choose TC hTC using hc
   choose! rr hrr using hd
   refine ⟨(q.support.biUnion TC) ∪ ((q.roots.toFinset.erase f).image (fun b => (X.exp f).coeff (rr b))), ?_⟩

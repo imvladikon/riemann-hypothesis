@@ -1213,15 +1213,6 @@ section Units
 
 variable {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommRingCat.of Ω) ⟶ X} {p : Cpt ξ}
 
-theorem unit_mul {a b : Ω} (ha : unitAt ξ p a) (hb : unitAt ξ p b) : unitAt ξ p (a * b) :=
-  ⟨mul_ne_zero ha.1 hb.1, mul_mem ha.2.1 hb.2.1, by rw [mul_inv]; exact mul_mem ha.2.2 hb.2.2⟩
-
-theorem unit_inv {a : Ω} (ha : unitAt ξ p a) : unitAt ξ p a⁻¹ :=
-  ⟨inv_ne_zero ha.1, ha.2.2, by rw [inv_inv]; exact ha.2.1⟩
-
-theorem unit_pow {a : Ω} (ha : unitAt ξ p a) (n : ℕ) : unitAt ξ p (a ^ n) :=
-  ⟨pow_ne_zero _ ha.1, pow_mem ha.2.1 _, by rw [← inv_pow]; exact pow_mem ha.2.2 _⟩
-
 theorem span_eq_of_unit {a b : Ω} (h : unitAt ξ p (a / b)) :
     Submodule.span (regAt ξ p) {a} = Submodule.span (regAt ξ p) {b} := by
   have hb : b ≠ 0 := fun hb => h.1 (by rw [hb, div_zero])
@@ -1260,7 +1251,7 @@ theorem step_unit {n r : ℕ} {Fm : Matrix (Fin n) (Fin r) Ω} {U : Matrix (Fin 
   have hw : unitAt ξ p _ := ⟨h3, h1, h2⟩
   have hb : Xb ≠ 0 := fun hb => hX.1 (by rw [hb, zero_div])
   have hc : Xc ≠ 0 := fun hb => hX.1 (by rw [hb, div_zero])
-  have e := unit_mul hw (unit_inv (unit_pow hX (((t : ℕ) + 1) * mm)))
+  have e := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ZUnit.mul hw (_root_.GlobalTheory.CompanionTheory.Ar.Flat.ZUnit.inv (_root_.GlobalTheory.CompanionTheory.Ar.Flat.ZUnit.pow hX (((t : ℕ) + 1) * mm)))
   convert e using 1
   rw [hZ, div_pow, ← pow_mul, mul_comm mm]
   field_simp
@@ -1347,7 +1338,7 @@ theorem point_gen {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
       have e : Ee i = _ := e2 hi'
       rw [e, g2 hi', div_div_eq_mul_div, pow_add, mul_mul_mul_comm, mul_div_mul_comm]
       have hl : (i : ℕ) - D.p < D.q := by have := i.2; omega
-      refine unit_mul ?_ (unitO ⟨(i : ℕ) - D.p, hl⟩)
+      refine _root_.GlobalTheory.CompanionTheory.Ar.Flat.ZUnit.mul ?_ (unitO ⟨(i : ℕ) - D.p, hl⟩)
       by_cases h0 : 0 < D.p
       · rw [dif_pos h0]
         have e1 : D.p - 1 + 1 = D.p := by omega

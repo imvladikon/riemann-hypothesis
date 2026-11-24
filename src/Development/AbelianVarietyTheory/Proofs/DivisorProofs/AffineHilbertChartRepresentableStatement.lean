@@ -131,8 +131,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.affineHilbertTensorToSubschemeSections_surjective : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A)) (I : (pullback (GlobalTheory.HilbAff.str A B) g).IdealSheafData) (U : T.affineOpens), Function.Surjective (GlobalTheory.HilbAff.kappa A B g I U) := by
-  first | (exact @GlobalTheory.HilbAff.kappa_surjective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineHilbertTensorToSubschemeSectionsSurjectiveStatement =====
@@ -288,8 +286,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.basis_quotient_tensor_base_change : ∀ (A B C R : Type) [CommRing A] [CommRing B] [Algebra A B] [CommRing C] [Algebra A C] [CommRing R] [Algebra A R] {r : ℕ} (v : Fin r → B) (J : Ideal (C ⊗[A] B)) (ψ : C →ₐ[A] R), LinearIndependent C (fun k => Ideal.Quotient.mk J ((1 : C) ⊗ₜ[A] v k)) → Submodule.span C (Set.range (fun k => Ideal.Quotient.mk J ((1 : C) ⊗ₜ[A] v k))) = ⊤ → LinearIndependent R (fun k => Ideal.Quotient.mk (J.map (Algebra.TensorProduct.map ψ (AlgHom.id A B))) ((1 : R) ⊗ₜ[A] v k)) ∧ Submodule.span R (Set.range (fun k => Ideal.Quotient.mk (J.map (Algebra.TensorProduct.map ψ (AlgHom.id A B))) ((1 : R) ⊗ₜ[A] v k))) = ⊤ := by
-  first | (exact @GlobalTheory.quotient_basis_baseChange)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BasisQuotientTensorBaseChangeStatement =====
@@ -626,8 +622,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_hom_affineHilbertBaseSectionRingHom : ∀ (Z : Scheme.{0}) (C : Type) [CommRing C] (Φ : C →+* Γ(Z, ⊤)), ∃ h : Z ⟶ Spec (CommRingCat.of C), GlobalTheory.HilbAff.secAlg C h ⊤ = Φ := by
-  first | (exact @GlobalTheory.HilbAff.exists_hom_secAlg_top)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomAffineHilbertBaseSectionRingHomStatement =====
@@ -640,8 +634,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.idealSheaf_eq_of_ker_tensorToSubschemeSections : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A)) (I₁ I₂ : (pullback (GlobalTheory.HilbAff.str A B) g).IdealSheafData), (∀ U : T.affineOpens, RingHom.ker (GlobalTheory.HilbAff.kappa A B g I₁ U) = RingHom.ker (GlobalTheory.HilbAff.kappa A B g I₂ U)) → I₁ = I₂ := by
-  first | (exact @GlobalTheory.HilbAff.IdealDet.eq_of_ker_kappa_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafEqOfKerTensorToSubschemeSectionsStatement =====
@@ -700,8 +692,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.ideals_eq_of_span_independent : ∀ (A B R : Type) [CommRing A] [CommRing B] [Algebra A B] [CommRing R] [Algebra A R] {r : ℕ} (v : Fin r → B) (J₁ J₂ : Ideal (R ⊗[A] B)), J₁ ≤ J₂ → Submodule.span R (Set.range (fun k => Ideal.Quotient.mk J₁ ((1 : R) ⊗ₜ[A] v k))) = ⊤ → LinearIndependent R (fun k => Ideal.Quotient.mk J₂ ((1 : R) ⊗ₜ[A] v k)) → J₁ = J₂ := by
-  first | (exact @GlobalTheory.tensor_ideal_eq_of_span_of_linearIndependent)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealsEqOfSpanIndependent =====
@@ -760,8 +750,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.isFiniteFlatRankClosedSubscheme_of_quotient_basis : ∀ (A B C : Type) [CommRing A] [CommRing B] [Algebra A B] [CommRing C] [Algebra A C] (J : Ideal (C ⊗[A] B)) {r : ℕ} (v : Fin r → B), LinearIndependent C (fun k => Ideal.Quotient.mk J ((1 : C) ⊗ₜ[A] v k)) → Submodule.span C (Set.range (fun k => Ideal.Quotient.mk J ((1 : C) ⊗ₜ[A] v k))) = ⊤ → GlobalTheory.HilbAff.Good A B r (Spec.map (CommRingCat.ofHom (algebraMap A C))) (GlobalTheory.HilbAff.xI A B C J) := by
-  first | (exact @GlobalTheory.HilbAff.good_xI)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteFlatRankClosedSubschemeOfQuotientBasisStatement =====
@@ -1021,8 +1009,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.ring_map_from_affine_opens : ∀ (Z : Scheme.{0}) (R : Type) [CommRing R] (φ : ∀ U : Z.affineOpens, R →+* Γ(Z, U)), (∀ (U V : Z.affineOpens) (h : (U : Z.Opens) ≤ V), (Z.presheaf.map (homOfLE h).op).hom.comp (φ V) = φ U) → ∃! Φ : R →+* Γ(Z, ⊤), ∀ U : Z.affineOpens, (Z.presheaf.map (homOfLE (le_top : (U : Z.Opens) ≤ ⊤)).op).hom.comp Φ = φ U := by
-  first | (exact @GlobalTheory.AffGlue.existsUnique_ringHom_of_affineOpens)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingMapFromAffineOpens =====
@@ -1104,8 +1090,6 @@ section -- clump:auto
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry Opposite
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.tensor_basis_criterion : ∀ (A B R S : Type) [CommRing A] [CommRing B] [Algebra A B] [CommRing R] [Algebra A R] [CommRing S] (κ : R ⊗[A] B →+* S) {r : ℕ} (v : Fin r → B), Function.Bijective (fun c : Fin r → R => κ (∑ k, c k ⊗ₜ[A] v k)) ↔ (Function.Surjective κ ∧ LinearIndependent R (fun k => Ideal.Quotient.mk (RingHom.ker κ) ((1 : R) ⊗ₜ[A] v k)) ∧ Submodule.span R (Set.range (fun k => Ideal.Quotient.mk (RingHom.ker κ) ((1 : R) ⊗ₜ[A] v k))) = ⊤) := by
-  first | (exact @GlobalTheory.tensorSum_bijective_iff)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorBasisCriterion =====
@@ -1145,7 +1129,7 @@ theorem exists_unique_lift (A B : Type) [CommRing A] [CommRing B] [Algebra A B] 
         J.map (Algebra.TensorProduct.map ψ (AlgHom.id A B)) → ψ.toRingHom = φ := by
     intro U
     letI := (secAlg A g U).toAlgebra
-    obtain ⟨-, hli', hsp'⟩ := (GlobalTheory.T.tensor_basis_criterion A B Γ(Z, U) _ _ (fun k => e (σ k))).mp (hy U)
+    obtain ⟨-, hli', hsp'⟩ := (_root_.GlobalTheory.tensorSum_bijective_iff A B Γ(Z, U) _ _ (fun k => e (σ k))).mp (hy U)
     obtain ⟨φ, hφ, hφu⟩ := huniv Γ(Z, U) _ hli' hsp'
     exact ⟨φ.toRingHom, φ.commutes, hφ, fun ψ hψ => congrArg AlgHom.toRingHom (hφu ψ hψ)⟩
   choose φ hφA hφ hφu using hch
@@ -1164,19 +1148,19 @@ theorem exists_unique_lift (A B : Type) [CommRing A] [CommRing B] [Algebra A B] 
         rw [← Algebra.TensorProduct.map_comp, AlgHom.comp_id]]
       exact (Ideal.map_map (Algebra.TensorProduct.map φV (AlgHom.id A B)).toRingHom
         (Algebra.TensorProduct.map ρ (AlgHom.id A B)).toRingHom).symm
-    have hsp2 := (GlobalTheory.T.basis_quotient_tensor_base_change A B C Γ(Z, U) (fun k => e (σ k)) J (ρ.comp φV) hli hsp).2
-    have hliU := ((GlobalTheory.T.tensor_basis_criterion A B Γ(Z, U) _ _ (fun k => e (σ k))).mp (hy U)).2.1
-    have heq := GlobalTheory.T.ideals_eq_of_span_independent A B Γ(Z, U) (fun k => e (σ k)) _ _ (hmap ▸ hle) hsp2 hliU
+    have hsp2 := (_root_.GlobalTheory.quotient_basis_baseChange A B C Γ(Z, U) (fun k => e (σ k)) J (ρ.comp φV) hli hsp).2
+    have hliU := ((_root_.GlobalTheory.tensorSum_bijective_iff A B Γ(Z, U) _ _ (fun k => e (σ k))).mp (hy U)).2.1
+    have heq := _root_.GlobalTheory.tensor_ideal_eq_of_span_of_linearIndependent A B Γ(Z, U) (fun k => e (σ k)) _ _ (hmap ▸ hle) hsp2 hliU
     rw [← hφu U (ρ.comp φV) heq.symm, ← hρ]
     rfl
-  obtain ⟨Φ, hΦ, hΦu⟩ := GlobalTheory.T.ring_map_from_affine_opens Z C φ compat
-  obtain ⟨h, hh⟩ := GlobalTheory.T.exists_hom_affineHilbertBaseSectionRingHom Z C Φ
+  obtain ⟨Φ, hΦ, hΦu⟩ := _root_.GlobalTheory.AffGlue.existsUnique_ringHom_of_affineOpens Z C φ compat
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.HilbAff.exists_hom_secAlg_top Z C Φ
   have hhU : ∀ U : Z.affineOpens, secAlg C h U = φ U := fun U => by
     rw [← secAlg_res C h (le_top : (U : Z.Opens) ≤ ⊤), hh, hΦ U]
   have hgA : h ≫ Spec.map (CommRingCat.ofHom (algebraMap A C)) = g := by
     apply eq_of_secAlg_top
     rw [secAlg_comp, hh]
-    obtain ⟨Ψ, -, hΨu⟩ := GlobalTheory.T.ring_map_from_affine_opens Z A (fun U => secAlg A g U) (fun U V hUV => secAlg_res A g hUV)
+    obtain ⟨Ψ, -, hΨu⟩ := _root_.GlobalTheory.AffGlue.existsUnique_ringHom_of_affineOpens Z A (fun U => secAlg A g U) (fun U V hUV => secAlg_res A g hUV)
     have h1 := hΨu (Φ.comp (algebraMap A C)) (fun U => by
       rw [← RingHom.comp_assoc, hΦ U]; ext a; exact hφA U a)
     have h2 := hΨu (secAlg A g ⊤) (fun U => secAlg_res A g le_top)
@@ -1184,7 +1168,7 @@ theorem exists_unique_lift (A B : Type) [CommRing A] [CommRing B] [Algebra A B] 
   refine ⟨h, ?_, ?_⟩
   · subst hgA
     refine Sigma.ext rfl (heq_of_eq (Subtype.ext ?_))
-    apply GlobalTheory.T.idealSheaf_eq_of_ker_tensorToSubschemeSections
+    apply _root_.GlobalTheory.HilbAff.IdealDet.eq_of_ker_kappa_eq
     intro U
     obtain ⟨φ', hφ', hker⟩ := GlobalTheory.T.ker_affineHilbertTensor_pullback_eq_map A B C J Z h U
     letI := (secAlg A (h ≫ Spec.map (CommRingCat.ofHom (algebraMap A C))) U).toAlgebra
@@ -1208,7 +1192,7 @@ theorem chart_represents (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N
         ∃! g : Z ⟶ X, (functor A B r).map g.op x = y := by
   obtain ⟨C, _, _, J, hfp, hli, hsp, huniv⟩ := GlobalTheory.hilbChart_representable A B N r e σ
   have hgood : Good A B r (Spec.map (CommRingCat.ofHom (algebraMap A C))) (xI A B C J) :=
-    GlobalTheory.T.isFiniteFlatRankClosedSubscheme_of_quotient_basis A B C J (fun k => e (σ k)) hli hsp
+    _root_.GlobalTheory.HilbAff.good_xI A B C J (fun k => e (σ k)) hli hsp
   let x : (functor A B r).obj (op (Spec (CommRingCat.of C))) :=
     ⟨Spec.map (CommRingCat.ofHom (algebraMap A C)), ⟨xI A B C J, hgood⟩⟩
   have hBx : ∀ (Z : Scheme.{0}) (h : Z ⟶ Spec (CommRingCat.of C)),
@@ -1218,8 +1202,8 @@ theorem chart_represents (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N
     intro U
     obtain ⟨φ, -, hker⟩ := GlobalTheory.T.ker_affineHilbertTensor_pullback_eq_map A B C J Z h U
     letI := (secAlg A (h ≫ Spec.map (CommRingCat.ofHom (algebraMap A C))) U).toAlgebra
-    obtain ⟨hli', hsp'⟩ := GlobalTheory.T.basis_quotient_tensor_base_change A B C Γ(Z, U) (fun k => e (σ k)) J φ hli hsp
-    refine (GlobalTheory.T.tensor_basis_criterion A B Γ(Z, U) _ _ (fun k => e (σ k))).mpr ⟨GlobalTheory.T.affineHilbertTensorToSubschemeSections_surjective A B _ _ U, ?_, ?_⟩
+    obtain ⟨hli', hsp'⟩ := _root_.GlobalTheory.quotient_basis_baseChange A B C Γ(Z, U) (fun k => e (σ k)) J φ hli hsp
+    refine (_root_.GlobalTheory.tensorSum_bijective_iff A B Γ(Z, U) _ _ (fun k => e (σ k))).mpr ⟨_root_.GlobalTheory.HilbAff.kappa_surjective A B _ _ U, ?_, ?_⟩
     · rw [hker]; exact hli'
     · rw [hker]; exact hsp'
   have hBasic : Basic A B e σ x := by
@@ -1245,8 +1229,6 @@ section -- clump:auto
 
 open AlgebraicGeometry CategoryTheory CategoryTheory.Limits Opposite
 
-theorem _root_.GlobalTheory.T.affineHilbertChart_representable : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N r : ℕ) (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N), ∃ (X : Scheme.{0}) (x : (GlobalTheory.HilbAff.functor A B r).obj (op X)), IsAffine X ∧ LocallyOfFiniteType x.1 ∧ GlobalTheory.HilbAff.Basic A B e σ x ∧ ∀ (Z : Scheme.{0}) (y : (GlobalTheory.HilbAff.functor A B r).obj (op Z)), GlobalTheory.HilbAff.Basic A B e σ y → ∃! g : Z ⟶ X, (GlobalTheory.HilbAff.functor A B r).map g.op x = y := by
-  first | (exact @GlobalTheory.HilbAff.chart_represents)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineHilbertChartRepresentableStatement =====

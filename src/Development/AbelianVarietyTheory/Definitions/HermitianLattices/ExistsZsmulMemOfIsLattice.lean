@@ -117,12 +117,6 @@ section Lattice
 variable {K : Type} [Field K] [NumberField K]
 variable {M M' : Type} [AddCommGroup M] [Module (𝓞 K) M] [AddCommGroup M'] [Module (𝓞 K) M']
 
-theorem exists_zsmul_mem_of_isLattice {Λ : Submodule (𝓞 K) (Fin r → K)} (hΛ : IsLattice Λ)
-    (v : Fin r → K) : ∃ n : ℤ, n ≠ 0 ∧ n • v ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.IntSmulIntegral.exists_int_smul_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntSmulIntegral.exists_int_smul_mem ..)
-
 def IsLatticeEmb (φ : M →ₗ[𝓞 K] (Fin r → K)) : Prop :=
   Function.Injective φ ∧ IsLattice (LinearMap.range φ)
 
@@ -136,7 +130,7 @@ variable {φ : M →ₗ[𝓞 K] (Fin r → K)}
 
 theorem exists_zsmul (h : IsLatticeEmb φ) (v : Fin r → K) :
     ∃ n : ℤ, n ≠ 0 ∧ ∃ x, φ x = n • v :=
-  exists_zsmul_mem_of_isLattice h.2 v
+  _root_.GlobalTheory.IntSmulIntegral.exists_int_smul_mem h.2 v
 
 theorem isLocalizedModule_int (h : IsLatticeEmb φ) :
     IsLocalizedModule ℤ⁰ (φ.restrictScalars ℤ) := by

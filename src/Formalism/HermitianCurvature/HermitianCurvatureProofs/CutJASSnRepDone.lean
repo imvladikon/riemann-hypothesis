@@ -1089,13 +1089,6 @@ theorem up_relation_source_unique {P : M.Par} {l : ℕ} {a b c : M.Ty P} (h1 : M
   have e2 := h2 i
   omega
 
-theorem up_tgt {P : M.Par} {l : ℕ} {a b c : M.Ty P} (h1 : M.Up P l a b) (h2 : M.Up P l a c) : b = c := by
-  funext i
-  apply Fin.ext
-  have e1 := h1 i
-  have e2 := h2 i
-  omega
-
 section line
 
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
@@ -1240,7 +1233,7 @@ theorem cross_section_at_point : AtCSec := by
       (Z : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) (c1 P.r) (NF.muZ P.k P.r Bs.μsec ζ) ∈
         NF.Fib P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' ζ := by
     intro Z
-    have hmem := (Formalism.FourierDecayAlt.P.radical_reduction_mem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _ Z.2).2.1
+    have hmem := (_root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _ Z.2).2.1
       (c1 P.r, ζ) hq
     simpa only [NF.radR, Set.indicator_of_mem hq] using hmem
   have hexp := (he.2 ζ hζT).2.2
@@ -1411,7 +1404,7 @@ theorem cross_section_at_point : AtCSec := by
     exact k2
   · have hc0 : ∀ ρ', ρ' ≠ ρ → inner ℂ (B.hsVec (e ρ' ζ)) (B.hsVec Y) = 0 := by
       intro ρ' hne
-      have hn : ¬ M.Up P l π ρ' := fun h2 => hne (up_tgt hUp h2).symm
+      have hn : ¬ M.Up P l π ρ' := fun h2 => hne (_root_.Formalism.FourierDecayAlt.P.NFx4.NO.up_unique hUp h2).symm
       have h := hY ρ'
       rw [hraw, hK2 ρ' hn, zero_mul] at h
       exact (mul_eq_zero.1 h).resolve_left hw

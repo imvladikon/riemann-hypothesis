@@ -2,13 +2,13 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.RedMk
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.InstAddCommGroup
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalisationLadders.CriterionTruncation
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.Coords
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiltrationCriticalComparisonMap
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalisationLadders.TruncationHomExt
 public import Mathlib.Algebra.Exact.Basic
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MemBoundariesZeroIff
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.InUQT
@@ -137,7 +137,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompareQuotientBijective =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullEqOfNatTrans =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullEqOfNatTrans", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.InstAddCommGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.CategoryTheory.Monoidal.Mon\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullEqOfNatTrans", "h": "module\n\npublic import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.InstAddCommGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.CategoryTheory.Monoidal.Mon\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -172,10 +172,6 @@ theorem cyl_step {G₁ G₂ : C' ⥤ C} (α : G₁ ⟶ G₂) (T : C') :
 
 variable {n p : ℕ}
 
-theorem map_map {X Y Z : C} (F : C ⥤ ModuleCat.{w} R) (φ : X ⟶ Y) (ψ : Y ⟶ Z) (x : F.obj X) :
-    (F.map ψ).hom ((F.map φ).hom x) = (F.map (φ ≫ ψ)).hom x := by
-  rw [F.map_comp]; rfl
-
 def chain {G₁ G₂ : C' ⥤ C} (α : G₁ ⟶ G₂) {a : Fin (p + 1) → Fin 2} {t : Fin (p + 1) → Fin (n + 1)}
     (ha : Monotone a) (ht : Monotone t) (s : ComposableArrows C' n) : ComposableArrows C p :=
   (ha.functor.prod' (ht.functor ⋙ s)) ⋙ cyl α
@@ -208,7 +204,7 @@ theorem val_face (s : ComposableArrows C' (n + 1)) (f : CH.Cn F p) (j : Fin (n +
     rw [← s.map_comp]; rfl
   unfold val
   rw [← m₂.nat]
-  exact congrArg (m₂.τ _) ((map_map F _ _ _).trans
+  exact congrArg (m₂.τ _) ((_root_.CrystallineSemistableComparison.Auxfc.Fmc F _ _ _).trans
     (congrArg (fun q => (F.map q).hom (f (chain α ha ht (face j s)))) e))
 
 theorem val_d (s : ComposableArrows C' n) (f : CH.Cn F p) {a : Fin (p + 2) → Fin 2} {t : Fin (p + 2) → Fin (n + 1)}
@@ -230,22 +226,10 @@ theorem val_d (s : ComposableArrows C' n) (f : CH.Cn F p) {a : Fin (p + 2) → F
   rw [map_sum, map_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [map_zsmul, map_zsmul]
-  exact congrArg (fun y => (-1 : ℤ) ^ (k : ℕ) • m₂.τ _ y) ((map_map F _ _ _).trans
+  exact congrArg (fun y => (-1 : ℤ) ^ (k : ℕ) • m₂.τ _ y) ((_root_.CrystallineSemistableComparison.Auxfc.Fmc F _ _ _).trans
     (congrArg (fun q => (F.map q).hom (f (face k (chain α ha ht s)))) (e k)))
 
 section Combinatorics
-
-theorem succAbove_val {m : ℕ} (p : Fin (m + 1)) (q : Fin m) :
-    (p.succAbove q : ℕ) = if (q : ℕ) < p then (q : ℕ) else q + 1 := by
-  unfold Fin.succAbove
-  simp only [Fin.lt_def, Fin.val_castSucc]
-  split_ifs <;> simp
-
-theorem predAbove_val {m : ℕ} (p : Fin m) (q : Fin (m + 1)) :
-    (p.predAbove q : ℕ) = if (p : ℕ) < q then (q : ℕ) - 1 else q := by
-  unfold Fin.predAbove
-  simp only [Fin.lt_def, Fin.val_castSucc]
-  split_ifs <;> simp
 
 theorem sign_of_odd (a b c e : ℕ) (h : Odd (a + b + c + e)) :
     (-1 : ℤ) ^ a * (-1) ^ b = -((-1) ^ c * (-1) ^ e) := by
@@ -260,7 +244,7 @@ def skip {m : ℕ} (i : Fin (m + 1)) (l : Fin m) : Fin (m + 2) := i.castSucc.suc
 theorem skip_val {m : ℕ} (i : Fin (m + 1)) (l : Fin m) :
     (skip i l : ℕ) = if (l : ℕ) < i then (l : ℕ) else l + 2 := by
   unfold skip
-  simp only [succAbove_val, Fin.val_castSucc]
+  simp only [_root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_castSucc]
   split_ifs <;> omega
 
 theorem prism_tele {A : Type*} [AddCommGroup A] (m : ℕ) (X : Fin (m + 1) → Fin (m + 2) → A)
@@ -301,7 +285,7 @@ theorem prism_cancel {A : Type*} [AddCommGroup A] (n : ℕ) (X : Fin (n + 2) →
   rintro ⟨i, l⟩ _
   simp only [Function.Involutive.coe_toPerm, smul_smul]
   rw [h, sign_of_odd (i : ℕ) (skip i l : ℕ) (i.succAbove l : ℕ) (l.predAbove i : ℕ), neg_smul, neg_add_cancel]
-  rw [Nat.odd_iff, skip_val, succAbove_val, predAbove_val]
+  rw [Nat.odd_iff, skip_val, _root_.CrystallineSemistableComparison.Auxfc.vsA, _root_.CrystallineSemistableComparison.Auxfc.vpA]
   split_ifs <;> omega
 
 end Combinatorics
@@ -326,49 +310,49 @@ theorem sa_mono {m : ℕ} (k : Fin (m + 1)) : Monotone k.succAbove := (Fin.stric
 
 theorem pa_diag {m : ℕ} (i : Fin m) : pa i.succ ∘ i.succ.castSucc.succAbove = pa i.castSucc ∘ i.castSucc.succ.succAbove := by
   funext x
-  simp only [Function.comp, pa, succAbove_val, Fin.val_succ, Fin.val_castSucc]
+  simp only [Function.comp, pa, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_succ, Fin.val_castSucc]
   split_ifs <;> first | rfl | (exfalso; omega)
 
 theorem pt_diag {m : ℕ} (i : Fin m) : i.succ.predAbove ∘ i.succ.castSucc.succAbove = i.castSucc.predAbove ∘ i.castSucc.succ.succAbove := by
   funext x
   apply Fin.ext
-  simp only [Function.comp, predAbove_val, succAbove_val, Fin.val_succ, Fin.val_castSucc]
+  simp only [Function.comp, _root_.CrystallineSemistableComparison.Auxfc.vpA, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_succ, Fin.val_castSucc]
   split_ifs <;> omega
 
 theorem pa_first {m : ℕ} : pa (0 : Fin (m + 1)) ∘ (0 : Fin (m + 2)).succAbove = fun _ => Fin.last 1 := by
   funext x
-  simp only [Function.comp, pa, succAbove_val, Fin.val_zero]
+  simp only [Function.comp, pa, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_zero]
   split_ifs <;> first | rfl | (exfalso; omega)
 
 theorem pt_first {m : ℕ} : (0 : Fin (m + 1)).predAbove ∘ (0 : Fin (m + 2)).succAbove = id := by
   funext x
   apply Fin.ext
-  simp only [Function.comp, predAbove_val, succAbove_val, Fin.val_zero, id]
+  simp only [Function.comp, _root_.CrystallineSemistableComparison.Auxfc.vpA, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_zero, id]
   split_ifs <;> omega
 
 theorem prism_last_comp_succAbove_zero {m : ℕ} : pa (Fin.last m) ∘ (Fin.last (m + 1)).succAbove = fun _ => 0 := by
   funext x
   have := x.2
-  simp only [Function.comp, pa, succAbove_val, Fin.val_last]
+  simp only [Function.comp, pa, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_last]
   split_ifs <;> first | rfl | (exfalso; omega)
 
 theorem predAbove_last_comp_succAbove_id {m : ℕ} : (Fin.last m).predAbove ∘ (Fin.last (m + 1)).succAbove = id := by
   funext x
   have := x.2
   apply Fin.ext
-  simp only [Function.comp, predAbove_val, succAbove_val, Fin.val_last, id]
+  simp only [Function.comp, _root_.CrystallineSemistableComparison.Auxfc.vpA, _root_.CrystallineSemistableComparison.Auxfc.vsA, Fin.val_last, id]
   split_ifs <;> omega
 
 theorem pa_skip {m : ℕ} (i : Fin (m + 2)) (l : Fin (m + 1)) : pa i ∘ (skip i l).succAbove = pa (l.predAbove i) := by
   funext x
-  simp only [Function.comp, pa, succAbove_val, predAbove_val, skip_val]
+  simp only [Function.comp, pa, _root_.CrystallineSemistableComparison.Auxfc.vsA, _root_.CrystallineSemistableComparison.Auxfc.vpA, skip_val]
   split_ifs <;> first | rfl | (exfalso; omega)
 
 theorem pt_skip {m : ℕ} (i : Fin (m + 2)) (l : Fin (m + 1)) :
     i.predAbove ∘ (skip i l).succAbove = (i.succAbove l).succAbove ∘ (l.predAbove i).predAbove := by
   funext x
   apply Fin.ext
-  simp only [Function.comp, succAbove_val, predAbove_val, skip_val]
+  simp only [Function.comp, _root_.CrystallineSemistableComparison.Auxfc.vsA, _root_.CrystallineSemistableComparison.Auxfc.vpA, skip_val]
   split_ifs <;> omega
 
 end Prism
@@ -1193,8 +1177,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry GlobalTheory.LogCris CrystallineSemistableComparison CrystallineSemistableComparison.Ls CrystallineSemistableComparison.Pb CrystallineSemistableComparison.Pb.LsG CrystallineSemistableComparison.Pb.SubquotientResolution CrystallineSemistableComparison.Pb.LsQ
 
-theorem _root_.GlobalTheory.T.witt_chart_descend_level : ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] [PerfectRing k l] {O : Type} [CommRing O] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) (ρ : O →+* k) {n : ℕ} (hn : n ≠ 0) {W : X.Opens} {d : ℕ} (c' : Chart (Wc.pd l k (n + 1)) l q ((Wc.res l k (n + 1)).comp ρ) W d), ∃ (c : Chart (Wc.pd l k n) l q ((Wc.res l k n).comp ρ) W d) (e : c.D ≅ (qF (F := B.schFn q) (ρ := ρ) hn).obj c'.D), (∀ i, e.hom.φ (c.t i) = Ideal.Quotient.mk _ (c'.t i)) ∧ (FlatT ((qF (F := B.schFn q) (ρ := ρ) hn).obj c'.D) → FlatT c.D) := by
-  first | exact @GlobalTheory.CompanionTheory.ChartRed.chart_q
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittChartDescendLevelStatement =====
@@ -1261,7 +1243,7 @@ theorem local_bij (q : X ⟶ Spec (CommRingCat.of O)) (ρ : O →+* k) {n : ℕ}
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   obtain ⟨c', hF', -⟩ := GlobalTheory.CompanionTheory.FlatChartP.exists_flat_chart (Wc.pd l k (n + 1)) l hl0 (nil_m k (n + 1)) q
     ((Wc.res l k (n + 1)).comp ρ) cW
-  obtain ⟨c, e, hec, hfl⟩ := GlobalTheory.T.witt_chart_descend_level q ρ hn c'
+  obtain ⟨c, e, hec, hfl⟩ := _root_.GlobalTheory.CompanionTheory.ChartRed.chart_q q ρ hn c'
   have hF : FlatT c.D := hfl (_root_.GlobalTheory.CompanionTheory.FlatThick.flatT_qT l k O (B.schFn q) ρ n hn c'.D hF')
   obtain ⟨PA, hPA⟩ := poly_all (Wc.pd l k n) l hl0 q ((Wc.res l k n).comp ρ) FlatT (Or.inr rfl) {W}
   obtain ⟨PB, hPB⟩ := poly_all (Wc.pd l k (n + 1)) l hl0 q ((Wc.res l k (n + 1)).comp ρ) FlatT (Or.inr rfl) {W}

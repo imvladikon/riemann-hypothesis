@@ -179,7 +179,7 @@ theorem framepf_Ψβ_Lam (hT : IsCrys PD T.ρ) (F : Matrix (Fin Bs.r) (Fin Bs.r)
     refine Submodule.mem_inf.2 ⟨Submodule.mem_inf.2 ⟨(Submodule.restrictScalars_mem _ _ _).2 h1, ?_⟩, ?_⟩
     · rw [mem_DelS]
       intro δ hδ
-      rw [gradNPf_γD_smul, map_pow, hEΔ δ hδ, hΔ δ hδ]
+      rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, map_pow, hEΔ δ hδ, hΔ δ hδ]
     · rw [mem_letS, smul_smul, mul_comm, ← smul_smul, hl]
   obtain ⟨t, ht⟩ := framepf_Ψβ_Pc Bs π' c hπ0 hΔπ hR2 γ0 hu βφ hβφ hT F _ hP
   refine Submodule.mem_comap.2 ⟨t, ?_⟩
@@ -278,7 +278,7 @@ theorem framepf_αβ_core (Bs : FramepfBas W T) (hT : IsCrys PD T.ρ) (π' Eπ :
     (y : W.DD T) (hy : y ∈ LamPS W T Eπ h' c) : Ψ (Φ y) - lam • y ∈ JP W T π' Eπ h' M c := by
   obtain ⟨h1, hΔ, hl⟩ := (mem_LamPS W T Eπ h' c y).1 hy
   obtain ⟨a, haΔ, hac, ha⟩ := framepf_phi_coordΔ Bs hT c (framepf_φspan_le (c - 1) h1)
-    (fun δ hδ => by rw [gradNPf_γD_smul, map_pow, hEΔ δ hδ, hΔ δ hδ])
+    (fun δ hδ => by rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, map_pow, hEΔ δ hδ, hΔ δ hδ])
     (by rw [smul_comm, hl])
   refine ⟨∑ m, (∑ k, a k * S m k) • W.φD T (Bs.b m), framepf_mem_Pc Bs c _
     (fun m => Subalgebra.sum_mem _ fun k _ => W.AΔ.mul_mem (haΔ k) (hS m k)) (fun m => ?_), ?_⟩
@@ -359,7 +359,7 @@ theorem framepf_βα_core (Bs : FramepfBas W T) (π' Eπ : LetA O n) (h' M : ℕ
     (x : LA W T π' c) (hx : x ∈ LamLA W T π' Eπ h' c ⊤) :
     Φ (Ψ x) - lam • x ∈ JLA W T π' Eπ h' M c := by
   choose a haΔ ha using (framepf_mem_toLA π' c eb _).1 hx
-  have hee : (letE c : LetA O n) * letE c = letE c := Formalism.MainNotions.LiftingTheory.wmap_letE_idem c
+  have hee : (letE c : LetA O n) * letE c = letE c := _root_.Formalism.MainNotions.LiftingTheory.letter_idempotent_sq c
   have hx' : algebraMap (LetA O n) W.EE (Eπ ^ h') • x =
       ∑ k, algebraMap (LetA O n) W.EE ((letE c : LetA O n) * a k) ⊗ₜ[O] eb k := by
     rw [← framepf_smulLA_alg, ← (Algebra.TensorProduct.basis W.EE eb).sum_repr (smulLA W T π' c _ x)]

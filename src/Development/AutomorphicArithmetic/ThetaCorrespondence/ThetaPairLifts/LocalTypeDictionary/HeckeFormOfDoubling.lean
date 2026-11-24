@@ -133,7 +133,7 @@ theorem heckeForm_of_global_euler : ∀ D : D7, GlobalForm D → EulerRight D �
     have := hfz.1.1 (sZero A B) (by simp only [Set.mem_setOf_eq, Complex.ofReal_re, hs0re]; linarith)
     rwa [GlobalTheory.IndefiniteRowSideFullHecke.FlatZetaIntegral.flatIntegrand_self] at this
   refine ⟨hUp₁, hUp₂, hint0, fun l hl => ?_⟩
-  have hd := GlobalTheory.T.partialNormalizingFactorProduct_analytic_ne_zero D (Sf : Set (FinPl D)) A.rank B.rank
+  have hd := _root_.GlobalTheory.Core.Rk.IP.dSfun_analytic_ne_zero D (Sf : Set (FinPl D)) A.rank B.rank
   have hER : EqRight (fun s => ∫ g, integrand om m ν 𝓕 LA a Φ₁ Φ₂ u₁ u₂ s g ∂m)
       (fun s => LFun.LSD D Sf par χB (s + 1 / 2) / LFun.dSfun D.host.E (Sf : Set (FinPl D)) A.rank B.rank s *
         ∫ g in openOff A LA Sf, integrand om m ν 𝓕 LA a Φ₁ Φ₂ u₁ u₂ s g ∂m) := by
@@ -454,7 +454,7 @@ theorem globalFormAt_frameLat_nc : GlobalTheory.Published.WeilRepresentationUnit
     · obtain ⟨C, N, hCN⟩ := GlobalTheory.T.theta_kernel_moderate_growth_both_variables D ψ A B χA χB om hP.weil Φ hΦ.1
       refine ⟨C * GlobalTheory.Grow.height B h ^ N, N, fun g => (hCN g h).trans (le_of_eq ?_)⟩
       rw [mul_pow]; ring
-  obtain ⟨i₁, i₂, l₁, l₂, hss⟩ := GlobalTheory.T.seesaw_fubini_two_lifts_moderate_growth_kernels D A B m mH hm hmH (fun g h => thetaKO om g h Φ₁)
+  obtain ⟨i₁, i₂, l₁, l₂, hss⟩ := _root_.GlobalTheory.Core.Rk.Seesaw.seesaw_fubini D A B m mH hm hmH (fun g h => thetaKO om g h Φ₁)
     (fun g h => thetaKO om g h Φ₂) (fun K hK => by
       rcases hK with rfl | rfl
       exacts [hKer Φ₁ hΦ₁, hKer Φ₂ hΦ₂]) u₁ u₂ (rd u₁ hu₁) (rd u₂ hu₂)
@@ -581,7 +581,7 @@ theorem heckeForm_of_doubling' : GlobalTheory.Published.WeilRepresentationUnitar
   intro p1 p2 p3 p4 p5 p6 D
   have hU := _root_.GlobalTheory.InertZeta.unramDoublingInert
   have hG : GlobalForm D := _root_.GlobalTheory.T.globalForm_of_siegel_weil p1 p2 p3 p4 p5 D
-  have hPB := paramBoundOn_all_of_split_inert D (GlobalTheory.T.sphericalParameterBound_split_place D) (GlobalTheory.T.sphericalParameterBound_nonsplit_places hU D)
+  have hPB := paramBoundOn_all_of_split_inert D (_root_.GlobalTheory.Core.Rk.BdSplit.paramBound_split D) (_root_.GlobalTheory.Core.Rk.ParamInert.paramBoundOn_nonsplit hU D)
   have hLZ := localZetaOn_all_of_split_inert D (GlobalTheory.T.unramifiedDoublingIntegral_splitPlace_adelic p6 D) (GlobalTheory.T.unramified_doubling_integral_inert_adelic hU D (GlobalTheory.T.sphericalParameterBound_nonsplit_places hU D))
   have hE : EulerRight D := GlobalTheory.T.doubling_eulerProduct_farRight p2 D (GlobalTheory.T.doublingSphericalFactorization_of_weilDualPair p1 D) hLZ hPB
   exact GlobalTheory.T.heckeInnerProductFormula_of_doublingEuler D hG hE

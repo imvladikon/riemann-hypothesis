@@ -300,8 +300,8 @@ theorem cech_level_eqv_of_integral_pullback :
 
   have hn : IsPullback (m.app n) ((cechAug f').app n) ((cechAug f).app n) (yoneda.map b) :=
     hm.map ((evaluation SimplexCategoryᵒᵖ PSh).obj n)
-  obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable (@IsIntegralHom) Y X f hf n
-  obtain ⟨Z', π', e', hπ', he'⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable (@IsIntegralHom) Y' X' f' hf' n
+  obtain ⟨Z, π, e, hπ, he⟩ := _root_.GlobalTheory.EtC.cech_level_representable (@IsIntegralHom) Y X f hf n
+  obtain ⟨Z', π', e', hπ', he'⟩ := _root_.GlobalTheory.EtC.cech_level_representable (@IsIntegralHom) Y' X' f' hf' n
   have hh : IsIntegralHom (π ≫ f) := inferInstance
   have hh' : IsIntegralHom (π' ≫ f') := inferInstance
   let φ : Z' ⟶ Z := yoneda.preimage (e'.hom ≫ m.app n ≫ e.inv)
@@ -317,7 +317,7 @@ theorem cech_level_eqv_of_integral_pullback :
     apply yoneda.map_injective
     simpa using hsqY.w
   have hE := H Z Z' (π ≫ f) (π' ≫ f') φ hh hsq
-  obtain ⟨hiso, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
+  obtain ⟨hiso, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic R F
   have hdec : disc.map (m.app n) = disc.map e'.inv ≫ sch.map φ ≫ disc.map e.hom := by
     change _ = disc.map e'.inv ≫ disc.map (yoneda.map φ) ≫ disc.map e.hom
     simp only [hφ, ← Functor.map_comp, Iso.inv_hom_id_assoc, Category.assoc, Iso.inv_hom_id, Category.comp_id]
@@ -337,11 +337,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.cechNerve_levelwise_equivalence_integral_pullback : ∀ (R : Type) [CommRing R] (F : Shv R) (Y X Y' X' : Scheme.{0}) (a : Y' ⟶ Y) (f' : Y' ⟶ X') (f : Y ⟶ X) (b : X' ⟶ X),
-    IsPullback a f' f b → IsIntegralHom f →
-    (∀ (Z Z' : Scheme.{0}) (h : Z ⟶ X) (h' : Z' ⟶ X') (φ : Z' ⟶ Z), IsIntegralHom h → IsPullback φ h' h b → Eqv R (sch.map φ) F) →
-    ∀ (m : cech f' ⟶ cech f), IsPullback m (cechAug f') (cechAug f) (sch.map b) → ∀ n, Eqv R (disc.map (m.app n)) F := by
-  first | (exact @GlobalTheory.cech_level_eqv_of_integral_pullback)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechNerveLevelwiseEquivalenceIntegralPullbackStatement =====
@@ -353,8 +348,7 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isLocallySurjective_etale_baseChange : (∀ (Y X : Scheme.{0}) (f : Y ⟶ X), Etale f → Surjective f → Presheaf.IsLocallySurjective Scheme.etaleTopology.{0} (yoneda.map f)) ∧ (∀ (P Q : PSh) (f : P ⟶ Q) (s : Q ⟶ P), s ≫ f = 𝟙 Q → Presheaf.IsLocallySurjective Scheme.etaleTopology.{0} f) ∧ ∀ (P Q P' Q' : PSh) (a : P' ⟶ P) (f' : P' ⟶ Q') (f : P ⟶ Q) (b : Q' ⟶ Q), IsPullback a f' f b → Presheaf.IsLocallySurjective Scheme.etaleTopology.{0} f → Presheaf.IsLocallySurjective Scheme.etaleTopology.{0} f' := by
-  first | (exact @GlobalTheory.EtC.locallySurjective_etale_section_baseChange)
+alias _root_.GlobalTheory.T.isLocallySurjective_etale_baseChange := _root_.GlobalTheory.EtC.locallySurjective_etale_section_baseChange
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallySurjectiveEtaleSectionBaseChangeStatement =====
@@ -398,7 +392,7 @@ theorem eqv_pullback_integral_affine : ∀ (R : Type) [CommRing R] (F : Shv R) (
     ∀ (Z Z' : Scheme.{0}) (h : Z ⟶ Spec (CommRingCat.of A)) (h' : Z' ⟶ Spec (CommRingCat.of C)) (φ : Z' ⟶ Z),
     IsIntegralHom h → IsPullback φ h' h (Spec.map (CommRingCat.ofHom (algebraMap A C))) → Eqv R (sch.map φ) F := by
   intro R _ F A C _ _ _ hB Z Z' h h' φ hh hP
-  have E := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
+  have E := _root_.GlobalTheory.EtC.eqv_basic R F
   haveI : IsAffine Z := isAffine_of_isAffineHom h
 
   set f : CommRingCat.of A ⟶ Γ(Z, ⊤) := Spec.preimage (Z.isoSpec.inv ≫ h) with hf
@@ -436,12 +430,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleCohomologyEquivalence_pullback_integral_affine : ∀ (R : Type) [CommRing R] (F : Shv R) (A C : Type) [CommRing A] [CommRing C] [Algebra A C],
-    (∀ (B : Type) [CommRing B] [Algebra A B] [Algebra.IsIntegral A B],
-      Eqv R (spMap (Algebra.TensorProduct.includeRight : B →ₐ[A] C ⊗[A] B).toRingHom) F) →
-    ∀ (Z Z' : Scheme.{0}) (h : Z ⟶ Spec (CommRingCat.of A)) (h' : Z' ⟶ Spec (CommRingCat.of C)) (φ : Z' ⟶ Z),
-    IsIntegralHom h → IsPullback φ h' h (Spec.map (CommRingCat.ofHom (algebraMap A C))) → Eqv R (sch.map φ) F := by
-  first | (exact @GlobalTheory.EtC.eqv_pullback_integral_affine)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalencePullbackIntegralAffineStatement =====
@@ -540,13 +528,13 @@ theorem L1 : ∀ (q : ℕ) (i : ℤ) (A : Type) [CommRing A] [HenselianLocalRing
     Eqv (ZMod q) (spMap (Algebra.TensorProduct.includeRight : B →ₐ[A] AlgebraicClosure (IsLocalRing.ResidueField A) ⊗[A] B).toRingHom) (tw q i) := by
   intro q i A _ _ _ hq B _ _ _
   have hSH : SH A := ⟨inferInstance, inferInstance⟩
-  obtain ⟨ζ0⟩ := GlobalTheory.T.nonempty_cyclotomicPrimitiveRoots_of_strictlyHenselian q A hSH hq
+  obtain ⟨ζ0⟩ := _root_.GlobalTheory.EtC.prim_of_strictlyHenselian q A hSH hq
   let ζ : Prim q Γ(Spec (CommRingCat.of A), ⊤) := ζ0.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
-  have hgen := GlobalTheory.T.tateTwist_isFreeRankOne_on_generatorSection q i (Spec (CommRingCat.of A)) ζ
+  have hgen := _root_.GlobalTheory.twGen_gen q i (Spec (CommRingCat.of A)) ζ
   haveI := isIntegral_algClosure_residue A
   haveI := isIntegral_tensor A (AlgebraicClosure (IsLocalRing.ResidueField A)) B
-  have hfin := GlobalTheory.T.tateTwist_finitary q i
-  have hU := GlobalTheory.T.integral_strictHenselian_acyclic_finitary (ZMod q) (tw q i) hfin A B hSH
+  have hfin := _root_.GlobalTheory.EtC.tw_finitary q i
+  have hU := _root_.GlobalTheory.EtC.IntAcyc.acycF_of_isIntegral (ZMod q) (tw q i) hfin A B hSH
   have hU' := GlobalTheory.T.integral_strictHenselian_acyclic_finitary (ZMod q) (tw q i) hfin A (AlgebraicClosure (IsLocalRing.ResidueField A) ⊗[A] B) hSH
   have hbij := _root_.GlobalTheory.bijective_locallyConstant_comap_algebraicClosure_tensor (ZMod q) A B
   exact _root_.GlobalTheory.EtC.eqv_of_gen_lc (ZMod q) (tw q i) _ _ hgen (Spec (CommRingCat.of B)) _
@@ -565,19 +553,19 @@ theorem cechAug_eqv_of_isIntegralHom_of_strictlyHenselian : ∀ (q : ℕ) (i : �
   set Ω := AlgebraicClosure (IsLocalRing.ResidueField A)
   set u : Spec (CommRingCat.of Ω) ⟶ Spec (CommRingCat.of A) := Spec.map (CommRingCat.ofHom (algebraMap A Ω)) with hu_def
   have hpb : IsPullback (pullback.fst g u) (pullback.snd g u) g u := IsPullback.of_hasPullback g u
-  obtain ⟨m, hm, -⟩ := GlobalTheory.T.etaleCechNerve_baseChange_isPullback _ _ _ _ (pullback.fst g u) (pullback.snd g u) g u hpb
+  obtain ⟨m, hm, -⟩ := _root_.GlobalTheory.cech_baseChange _ _ _ _ (pullback.fst g u) (pullback.snd g u) g u hpb
   have hsq : ∀ (Z Z' : Scheme.{0}) (h : Z ⟶ Spec (CommRingCat.of A)) (h' : Z' ⟶ Spec (CommRingCat.of Ω)) (φ : Z' ⟶ Z),
       IsIntegralHom h → IsPullback φ h' h u → Eqv (ZMod q) (sch.map φ) (tw q i) :=
-    GlobalTheory.T.etaleCohomologyEquivalence_pullback_integral_affine (ZMod q) (tw q i) A Ω (fun B _ _ _ => L1 q i A hq B)
+    _root_.GlobalTheory.EtC.eqv_pullback_integral_affine (ZMod q) (tw q i) A Ω (fun B _ _ _ => L1 q i A hq B)
   have hEm : Eqv (ZMod q) m (tw q i) :=
-    GlobalTheory.T.levelwiseEquivalence_isEquivalence (ZMod q) m (tw q i) (GlobalTheory.T.cechNerve_levelwise_equivalence_integral_pullback (ZMod q) (tw q i) _ _ _ _ _ _ g u hpb hg hsq m hm)
+    _root_.GlobalTheory.EtC.levelwise_eqv (ZMod q) m (tw q i) (_root_.GlobalTheory.cech_level_eqv_of_integral_pullback (ZMod q) (tw q i) _ _ _ _ _ _ g u hpb hg hsq m hm)
   have hEu : Eqv (ZMod q) (sch.map u) (tw q i) :=
     hsq _ _ (𝟙 _) (𝟙 _) u inferInstance (IsPullback.id_vert u)
   obtain ⟨s, hs⟩ := _root_.GlobalTheory.exists_point_algClosure_residueField_of_isIntegralHom A Y g hg hsurj
   have hEs : Eqv (ZMod q) (cechAug (pullback.snd g u)) (tw q i) :=
     _root_.GlobalTheory.cechAug_eqv_of_section (ZMod q) (tw q i) _ _ (pullback.snd g u) (pullback.lift s (𝟙 _) (by rw [hs, Category.id_comp]))
       (pullback.lift_snd _ _ _)
-  obtain ⟨-, hcomp, -, -⟩ := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
+  obtain ⟨-, hcomp, -, -⟩ := _root_.GlobalTheory.EtC.eqv_basic (ZMod q) (tw q i)
   have h1 : Eqv (ZMod q) (cechAug (pullback.snd g u) ≫ sch.map u) (tw q i) :=
     (hcomp _ _ _ _ _).1 hEs hEu
   rw [← hm.w] at h1

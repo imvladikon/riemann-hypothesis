@@ -274,8 +274,6 @@ open scoped TensorProduct InnerProductSpace ComplexConjugate
 open GlobalTheory.EvenOnto
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.quotient_char_partial_L_entire_nonvanishing_integers : ∀ (D : D7) (c : Com D), c.Is → ∀ i j : ℕ, i < j → j < c.m → ∃ Λ : ℂ → ℂ, Differentiable ℂ Λ ∧ (∀ z : ℂ, 1 < z.re → Λ z = GlobalTheory.LFun.eulerProd (GlobalTheory.LFun.above D.host.E (c.S : Set (HeightOneSpectrum (𝓞 D.host.F)))) (fun w => {GlobalTheory.LFun.val (F := D.host.F) (c.χ i * (c.χ j)⁻¹) w}) z) ∧ ∀ n : ℕ, 1 ≤ n → Λ n ≠ 0 := by
-  first | exact @GlobalTheory.EvenOnto.QuotL.quotL_entire_ne_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientCharPartialLEntireNonvanishingIntegersStatement =====
@@ -375,7 +373,7 @@ theorem GlobalTheory.EvenOnto.chainL_and_inj : ∀ D : D7, ChainL D ∧ ∀ (c :
         ∀ n : ℕ, 1 ≤ n → Λ n ≠ 0 := by
       intro i
       by_cases hi : i ∈ Finset.range k
-      · obtain ⟨Λ, h⟩ := GlobalTheory.T.quotient_char_partial_L_entire_nonvanishing_integers D c hc i k (Finset.mem_range.1 hi) hk
+      · obtain ⟨Λ, h⟩ := _root_.GlobalTheory.EvenOnto.QuotL.quotL_entire_ne_zero D c hc i k (Finset.mem_range.1 hi) hk
         exact ⟨Λ, fun _ => h⟩
       · exact ⟨0, fun h => absurd h hi⟩
     choose Λ hΛ using hΛ
@@ -1599,7 +1597,7 @@ theorem upNe_of_heckeForm : ∀ D : D7, GlobalTheory.Core.Rk.IP.HeckeForm D → 
     have := hs'.haar; exact GlobalTheory.RallisIP.Model.vol_pos s'.ν
   have hd : GlobalTheory.LFun.dSfun (F := D.host.F) D.host.E (c.S : Set (GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.FinPl D)) s.V.rank s'.V.rank
       ((c.t : ℂ) / 2) ≠ 0 := by
-    refine ((GlobalTheory.T.partialNormalizingFactorProduct_analytic_ne_zero D _ _ _).2 _ ?_).1
+    refine ((_root_.GlobalTheory.Core.Rk.IP.dSfun_analytic_ne_zero D _ _ _).2 _ ?_).1
     simp only [Complex.div_ofNat_re, Complex.natCast_re]; positivity
   have hI' : ∫ g in GlobalTheory.Core.Rk.IP.openOff s.V s.Λ c.S, GlobalTheory.Core.Rk.IP.wcoef p.ω m₁ X₁ (p.pt φ) (p.pt φ) g *
       GlobalTheory.Core.Rk.IP.rcoef s.ν (fun x => conj (F x)) (fun x => conj (F x)) g ∂s.ν ≠ 0 := by

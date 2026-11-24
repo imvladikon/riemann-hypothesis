@@ -797,14 +797,6 @@ theorem sgnPt_bcMap {S S' : Scheme.{0}} {X : Type} [AddCommGroup X] (f : S' ⟶ 
     refine ((congrArg f.appTop.hom a).trans (map_intCast _ _)).trans (b.symm.trans ?_)
     exact congrArg (sgnPt (𝟙_ (Over S')) φ).left.appTop.hom (bcMap_charUnit f χ).symm
 
-theorem appTop_injective {A B : Type} [CommRing A] [CommRing B] {f : A →+* B} (hf : Function.Injective f) :
-    Function.Injective (spMap f).appTop.hom := fun a b h => by
-  apply (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of A)).hom).1
-  have key : ∀ c : Γ(Sp A, ⊤), f ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) =
-      (Scheme.ΓSpecIso (CommRingCat.of B)).hom.hom ((spMap f).appTop.hom c) := fun c =>
-    (congrArg (fun q => q.hom c) (Scheme.ΓSpecIso_naturality (CommRingCat.ofHom f))).symm
-  exact hf ((key a).trans ((congrArg _ h).trans (key b).symm))
-
 section Formal
 open GlobalTheory.IndefiniteRowSideFullHecke.AlgebraLevelSetting (FormalTorus Lv pr)
 variable {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {G : Over (Sp R)} [GrpObj G] [IsCommMonObj G]
@@ -941,8 +933,8 @@ theorem exists_even_of_transl : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoca
   have htΩ : ∀ φ, (tΩ φ)⁻¹ = tΩ φ := fun φ => by rw [← map_inv, sgn_inv]
   let m : Γ(Sp R, ⊤)ˣ →* Γ((TF (R := R) Ω).left, ⊤)ˣ := Units.map ρ.left.appTop.hom.toMonoidHom
   have hm : Function.Injective m := Units.map_injective
-    ((appTop_injective (algebraMap (FractionRing R) Ω).injective).comp
-      (appTop_injective (IsFractionRing.injective R (FractionRing R))))
+    ((_root_.GlobalTheory.Ex.ThetaDescent.appTop_injective (algebraMap (FractionRing R) Ω).injective).comp
+      (_root_.GlobalTheory.Ex.ThetaDescent.appTop_injective (IsFractionRing.injective R (FractionRing R))))
   have vq : ∀ {P' : CP G} {φ v}, SymVal P' (t φ).left v → ∀ z J, Good P'.L.L z J →
       val P'.sym (tΩ φ).left z J = gm (𝟙 _) z ⊤ (m v) := fun h z J hJ => (h _ ρ.left z J hJ).trans (gm_top _ z _)
   let ε₀ : Γ(Sp Ω, ⊤) ≃+* Ω := (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv
@@ -1129,7 +1121,7 @@ theorem GlobalTheory.Mum.exists_transl_pkg : ∀ (R : Type) [CommRing R] [IsDoma
 
   have hext : ExtLam G LG (abelian₂ G P.L.L) := by
     refine ⟨DVR.linComb_isLB _ hPL _ _, fun κ₂ hκ => ?_⟩
-    obtain ⟨c, hc⟩ := GlobalTheory.Moduli.cube_of_isLB _ A A.L A.isLB
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.AbLaw.CubeAssembly.cube_gen _ A A.L A.isLB
     have e1 : LBIso (abelian₂ _ LG) ((abelian₂ A.A L₁).pull (gen.hom ⊗ₘ gen.hom).left) :=
       GlobalTheory.ZM.SiegClause.lbIso_lam_pull gen.hom hLG hL₁ (GlobalTheory.PolBaseChange.lbIso_refl hLG)
     have e2 : LBIso (abelian₂ _ (P.L.L.pull (pullback.fst G.hom (jK R))))
@@ -1563,8 +1555,7 @@ theorem lam_isLB {S : Scheme.{0}} (G : Over S) [GrpObj G] [IsCommMonObj G] {L : 
     (abelian₂ G L).IsLB :=
   DVR.linComb_isLB L hL _ _
 
-theorem lbIso_pull {X Y : Scheme.{0}} {P Q : LB X} (h : LBIso P Q) (f : Y ⟶ X) : LBIso (P.pull f) (Q.pull f) :=
-  h.chartPull (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull P f f rfl) (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull Q f f rfl)
+alias lbIso_pull := _root_.GlobalTheory.RigidBundleGlue.LBIso.pull
 
 end GlobalTheory.Mum.UExt
 

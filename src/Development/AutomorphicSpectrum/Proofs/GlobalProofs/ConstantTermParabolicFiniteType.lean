@@ -95,6 +95,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Tactic.Linter.Style
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
@@ -252,7 +253,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedFrameOrthogonalSubspace =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterLocalNontrivial =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterLocalNontrivial", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterLocalNontrivial", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatSelfDualOfUnimod\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -417,19 +418,10 @@ theorem pair_frame (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V) {p : ℕ} (U 
   rw [← h, Matrix.mul_apply]
   simp only [Matrix.mulVec, dotProduct, Formalism.L2.Theta.frameMat, LinearMap.toMatrix_apply]
 
-private theorem cT_mul_global {A : Type} [CommRing A] (σ : A →+* A) {l q s : Type} [Fintype q]
-    (M : Matrix l q A) (N : Matrix q s A) :
-    Formalism.UG.cT σ (M * N) = Formalism.UG.cT σ N * Formalism.UG.cT σ M := by
-  simp only [Formalism.UG.cT, Matrix.map_mul, Matrix.transpose_mul]
-
 private theorem cT_cT_of_involutive_global {A : Type} [CommRing A] (σ : A →+* A) (hσ : ∀ x, σ (σ x) = x) {l q : Type}
     (M : Matrix l q A) : Formalism.UG.cT σ (Formalism.UG.cT σ M) = M := by
   ext i j
   simp [Formalism.UG.cT, hσ]
-
-private theorem cT_one_global {A : Type} [CommRing A] (σ : A →+* A) {q : Type} [DecidableEq q] :
-    Formalism.UG.cT σ (1 : Matrix q q A) = 1 := by
-  simp [Formalism.UG.cT, Matrix.map_one]
 
 theorem frame_cols : ∀ (D : D7) (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V), HSpace.IsIsomEmb V' V ι →
     ∀ (m : ℕ) (X Y : Matrix (Fin V.rank) (Fin m) D.host.E), GlobalTheory.SiegelSet.IsWittFrame D.sp.cm.sig V.gram X Y →
@@ -457,7 +449,7 @@ theorem frame_cols : ∀ (D : D7) (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V
     exact (hherm _ _).symm
   have hyx : Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) Y * V.gram * X = 1 := by
     have h := congrArg (Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E)) hW.xy
-    rw [cT_mul_global, cT_mul_global, cT_cT_of_involutive_global _ hinvol, hG, cT_one_global, ← Matrix.mul_assoc] at h
+    rw [_root_.Formalism.UG.cT_mul, _root_.Formalism.UG.cT_mul, cT_cT_of_involutive_global _ hinvol, hG, _root_.GlobalTheory.StdFrames.cT_one', ← Matrix.mul_assoc] at h
     exact h
   have hperp : ∀ v ∈ LinearMap.range ι, ∀ i : Fin m, i.val < a →
       V.hT (V.frame.equivFun.symm fun j => X j i) v = 0 ∧
@@ -754,15 +746,6 @@ section Abstract
 
 variable {W : Type} [AddCommGroup W] [Module ℂ W]
 
-theorem qdet_commute {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} {E : Fin n → Fin n → A} (hE : Formalism.REAL.GlRel E) (u v : ℂ) :
-    Commute (Formalism.REAL.qdet E u) (Formalism.REAL.qdet E v) := by
-  have h : Formalism.REAL.qdet E v ∈ Subalgebra.centralizer ℂ {Formalism.REAL.qdet E u} := by
-    refine GlobalTheory.CompanionTheory.CTFin.CapFactor.qdet_mem _ _ (fun i j => ?_) _
-    rw [Subalgebra.mem_centralizer_iff]
-    rintro _ rfl
-    exact Formalism.REAL.qDetCentral A n E hE u i j
-  exact (Subalgebra.mem_centralizer_iff ℂ).1 h _ rfl
-
 def nW {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (Xf : Fin N → Fin N → Module.End ℂ W) (Wn : Submodule ℂ W) : Submodule ℂ W :=
   Submodule.span ℂ {G | ∃ p q, GlobalTheory.SmGL.blk (GlobalTheory.SmGL.stdBlocks n h) p < GlobalTheory.SmGL.blk (GlobalTheory.SmGL.stdBlocks n h) q ∧ ∃ F ∈ Wn, G = Xf p q F}
 
@@ -816,7 +799,7 @@ theorem monic_gelf_block {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (X
   let s : Set (Module.End ℂ W) := Set.range (Formalism.REAL.qdet Ei)
   have hcomm : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := by
     rintro _ ⟨u, rfl⟩ _ ⟨v, rfl⟩
-    exact (qdet_commute hEg u v).eq
+    exact (_root_.GlobalTheory.CompanionTheory.CTFin.CapComm.qdet_commute_self hEg u v).eq
   letI : IsMulCommutative (Algebra.adjoin ℂ s) :=
     Algebra.isMulCommutative_adjoin ℂ (fun x hx y hy _ => hcomm x hx y hy)
   letI : CommRing (Algebra.adjoin ℂ s) := by

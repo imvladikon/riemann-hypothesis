@@ -206,8 +206,6 @@ open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.card_mul_finrank_subgroupEigenspace_of_trace_vanishes : ∀ (G M : Type) [Group G] [Finite G] [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M] (ρ : Representation ℂ G M) (P : Subgroup G) (χ : P →* ℂˣ), (∀ g ∈ P, g ≠ 1 → LinearMap.trace ℂ M (ρ g) = 0) → Nat.card P * Module.finrank ℂ (eig ρ P fun g => ((χ g : ℂˣ) : ℂ)) = Module.finrank ℂ M := by
-  first | exact @GlobalTheory.DefFree.card_mul_finrank_eig
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardMulFinrankSubgroupEigenspaceOfTraceVanishesStatement =====
@@ -980,7 +978,7 @@ theorem isOfFinOrder_of_conjIn_mem_St :
     · obtain ⟨a, ha, hsign⟩ := hneg z hz
       rw [hann z hzL, ← map_zero (algebraMap F E)] at ha
       exact (lt_irrefl (0 : ℝ)) (by simpa [(algebraMap F E).injective ha] using hsign)
-  have hfin := Formalism.UG.Final.AdelicStabFiniteL F E (Fin n) hc.sig J (cm_comp hc) hU.herm hU.unit hU.tdef L
+  have hfin := _root_.Formalism.UG.P.adelic_stabilizer_finite_lattice_holds F E (Fin n) hc.sig J (cm_comp hc) hU.herm hU.unit hU.tdef L
     (Module.Finite.iff_fg.2 hU.lat.fg) hspan x
   have hb := base_level_eq_adelic_level F E hc n J L β hβ
   let H : Subgroup (UR hc J) :=
@@ -1171,8 +1169,6 @@ open GlobalTheory.DefFree GlobalTheory.DefLift Polynomial
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.range_levelIdempotentProduct_and_centralProduct : ∀ (g₁ g₂ N : ℕ) [Fact g₁.Prime] [Fact g₂.Prime] (ι₁ ι₂ G M : Type) [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂] [Group G] [Fintype G] [AddCommGroup M] [Module ℂ M] (Φ : G ≃* (ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N)) (L₁ : ι₁ → GlobalTheory.BadShare.Lev g₁ N) (L₂ : ι₂ → GlobalTheory.BadShare.Lev g₂ N) (P : Subgroup G) (χ : P → ℂ) (ρ : Representation ℂ G M) [Fintype ((ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N))] (c : (ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N) → ℂ), (∀ g : G, g ∈ P ↔ (∀ v, (L₁ v).Mem ((Φ g).1 v)) ∧ ∀ v, (L₂ v).Mem ((Φ g).2 v)) → (∀ g : P, χ g = (∏ v, (L₁ v).chi ((Φ g).1 v)) * ∏ v, (L₂ v).chi ((Φ g).2 v)) → GlobalTheory.BadShare.conv c c = c → (∀ a, GlobalTheory.BadShare.conv c a = GlobalTheory.BadShare.conv a c) → LinearMap.range (GlobalTheory.BadShare.op (M := M) (ρ.comp Φ.symm.toMonoidHom) (GlobalTheory.BadShare.tens2 (GlobalTheory.BadShare.tens fun v => (L₁ v).e) (GlobalTheory.BadShare.tens fun v => (L₂ v).e))) = eig ρ P χ ∧ LinearMap.range (GlobalTheory.BadShare.op (M := M) (ρ.comp Φ.symm.toMonoidHom) (GlobalTheory.BadShare.conv c (GlobalTheory.BadShare.tens2 (GlobalTheory.BadShare.tens fun v => (L₁ v).e) (GlobalTheory.BadShare.tens fun v => (L₂ v).e)))) = eig ρ P χ ⊓ LinearMap.ker ((∑ g : G, c (Φ g) • ρ g) - LinearMap.id) := by
-  first | exact @GlobalTheory.LevRange.ranges
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.RangeLevelIdempotentProductAndCentralProductStatement =====
@@ -1582,8 +1578,6 @@ theorem posDef_last {i : Fin D.R.m} (hi : (i : ℕ) + 1 = D.R.m) : (Wc D i).IsPo
   rw [hi]
   exact factWmPosDef D.R D.host.F D.host.E D.sp
 
-theorem rank_weight_component_eq (i : Fin D.R.m) : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
-
 theorem allPlus_last (h : HidaSetting R F) {i : Fin D.R.m} (hi : (i : ℕ) + 1 = D.R.m) : AllPlus (R.MW i (sg0 D A)) := by
   intro τ a
   rw [h.models.order i τ a, posDef_last hi (tauE D τ)]
@@ -1616,8 +1610,8 @@ theorem fixed_last (h : HidaSetting R F) (hbig : ∀ k, Module.finrank ℚ D.hos
     (hfix : clsOf R i (x * κ) = clsOf R i x) :
     rTup (R.βW i) (R.datWp i R.triv) (κ : GL (Fin (Wc D i).rank) (EAf D)) = 1 := by
   obtain ⟨k, PP, hc, hn⟩ := hn
-  exact rTup_eq_one_of_fixed (L := R.datWp i R.triv) (unimod_last h hi).1 (unimod_last h hi).2 (rank_weight_component_eq i).symm PP
-    (D.host.g_prime k) hc (by rw [rank_weight_component_eq]; exact hbig k) x κ hκ hn hfix
+  exact rTup_eq_one_of_fixed (L := R.datWp i R.triv) (unimod_last h hi).1 (unimod_last h hi).2 (_root_.Formalism.IndefR.FWT.rank_Wc i).symm PP
+    (D.host.g_prime k) hc (by rw [_root_.Formalism.IndefR.FWT.rank_Wc]; exact hbig k) x κ hκ hn hfix
 
 theorem unipAt_one (h : HidaSetting R F) : UnipAt R 1 := by
   obtain ⟨Φ, -, -, -, -, h3, -⟩ := GlobalTheory.T.levels_read_on_product_primeFieldGL D G Pl0 T A Ks R F h.grp false
@@ -1633,8 +1627,8 @@ theorem gam_last (h : HidaSetting R F) (hbig : ∀ k, Module.finrank ℚ D.host.
   refine (Subgroup.eq_bot_iff_forall _).2 fun u hu => ?_
   obtain ⟨k, PP, hc, hn⟩ := unipAt_one h
   have h2 : rTup (R.βW i) (R.datWp i R.triv) (conjIn D.sp.cm (Wc D i).gram (rep c : UA D.sp.cm (Wc D i).gram) u) = 1 := hu.2
-  exact eq_one_of_unipotent (L := R.datWp i R.triv) (unimod_last h hi).1 (unimod_last h hi).2 (rank_weight_component_eq i).symm PP
-    (D.host.g_prime k) hc (by rw [rank_weight_component_eq]; exact hbig k) u (rep c) hu.1 (by rw [h2]; exact hn)
+  exact eq_one_of_unipotent (L := R.datWp i R.triv) (unimod_last h hi).1 (unimod_last h hi).2 (_root_.Formalism.IndefR.FWT.rank_Wc i).symm PP
+    (D.host.g_prime k) hc (by rw [_root_.Formalism.IndefR.FWT.rank_Wc]; exact hbig k) u (rep c) hu.1 (by rw [h2]; exact hn)
 
 theorem principal_last (h : HidaSetting R F) (hbig : ∀ k, Module.finrank ℚ D.host.E * D.R.r + 1 < D.host.g k) {i : Fin D.R.m}
     (hi : (i : ℕ) + 1 = D.R.m) : PrincipalCount R i ∧ Module.finrank ℂ (R.HW i (sg0 D A)).H = dK R i ∧
@@ -1750,7 +1744,7 @@ theorem free_last (h : HidaSetting R F) (hbig : ∀ k, Module.finrank ℚ D.host
     fun g hg h1 => htr g h1 (unipAt_of_mem h b hg)
   have h0 : Nat.card (F.lvl b).P * d0 R F b i = dK R i := by
     rw [d0_eq h, ← hdim]
-    exact GlobalTheory.T.card_mul_finrank_subgroupEigenspace_of_trace_vanishes G _ _ _ _ htr'
+    exact _root_.GlobalTheory.DefFree.card_mul_finrank_eig G _ _ _ _ htr'
   refine ⟨⟨fun u hu => ?_, fun x κ hκ e => ?_⟩, ?_, h0, ?_⟩
   · obtain ⟨κ, -, h2, h3⟩ := GlobalTheory.GeoActRoad.levelLiftsExist_gridVertexSpaces h.lev i u
     have h3' : rTup (R.βW i) (R.datWp i (levB R F b)) (finE (Wc D i) κ) = u := h3
@@ -1810,7 +1804,7 @@ theorem definiteGoodShare (hG : GlobalTheory.Published.GreenCuspidal) : Definite
   have p1 := eGood_isProj_central _ _ _ _ (fun _ : D.nd.PlG 1 => τ 1) (D.nd.chiT 1) fun _ => hτ1 1
   have hcc : conv c c = c := (Basic.isProj_tens2 p0.1 p1.1).1
   have hcz : ∀ a, conv c a = conv a c := central_tens2 p0.2 p1.2
-  obtain ⟨r1, r2⟩ := GlobalTheory.T.range_levelIdempotentProduct_and_centralProduct _ _ _ _ _ G _ Φ L₁ L₂ (F.lvl b).P (fun g => ((chiB F b g : ℂˣ) : ℂ)) (R.gW i (sg0 D A)) c l1
+  obtain ⟨r1, r2⟩ := _root_.GlobalTheory.LevRange.ranges _ _ _ _ _ G _ Φ L₁ L₂ (F.lvl b).P (fun g => ((chiB F b g : ℂˣ) : ℂ)) (R.gW i (sg0 D A)) c l1
     (fun g => by rw [← l2 g, ← sign_at_base_place_eq_embedding R]; rfl) hcc hcz
   haveI : Nontrivial (R.HW i (sg0 D A)).H := Module.finrank_pos_iff.1 (by rw [hdim]; exact hPC.2.2.2.2.2.2.2)
   have hcount : CountAt (M := (R.HW i (sg0 D A)).H) ((R.gW i (sg0 D A)).comp Φ.symm.toMonoidHom) 0 := by

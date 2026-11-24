@@ -114,23 +114,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-
-theorem _root_.GlobalTheory.T.lagrangian_integral_theta_model : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JT : Matrix (Fin nT) (Fin nT) E) (JB : Matrix (Fin nS) (Fin nS) E) (ξ : AF F ⊗[F] E)
-      (κ : Type) [Fintype κ]
-      (co : Darboux (symp (cA σ) ξ (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) (incM F JB)) κ),
-      (∀ x : Matrix (Fin (nT + nT)) (Fin nS) E, ∃ y z : κ → F,
-        co.e (incM F x) = (fun i => algebraMap F (AF F) (y i), fun i => algebraMap F (AF F) (z i))) →
-      ∀ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν →
-      ∃ l₂ ∈ (adeleClass F).adm κ, ∀ Φ ∈ schA F κ, l₂ Φ = GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) := by
-  first | exact @_root_.GlobalTheory.LagrThetaAdm.exists_admissible_eq_lagrangian_integral
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.LagrangianIntegralThetaModel =====
@@ -183,7 +166,7 @@ theorem exists_coord_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) 
       GlobalTheory.TransportF.numCoordF (σ := σ) co τ (ratWF x) = (GlobalTheory.SWQ.rat y, GlobalTheory.SWQ.rat z) := fun x => by
     obtain ⟨y, z, h⟩ := hrat x
     exact ⟨y ∘ τ.symm, z ∘ τ.symm, by rw [GlobalTheory.TransportF.numCoordF_apply]; erw [h]; rfl⟩
-  obtain ⟨Φ, hΦ, h⟩ := _root_.GlobalTheory.T.schrodinger_model_intertwining F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ
+  obtain ⟨Φ, hΦ, h⟩ := _root_.GlobalTheory.ThetaOntoF.exists_thV_eqF_k F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ
     (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB) _ (GlobalTheory.TransportF.numCoordF (σ := σ) co τ) he hr f hf
   refine ⟨_, GlobalTheory.TransportF.comp_mem_schA τ.symm hΦ, ?_⟩
   rw [GlobalTheory.TransportF.thetaTr_eqF (σ := σ) co τ, ← h]
@@ -211,9 +194,9 @@ theorem cont_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   obtain ⟨Φ, hΦ, rfl⟩ := hon f hf
   obtain ⟨om, hom⟩ := _root_.GlobalTheory.TransportF.exists_isTransportF_k F E σ B hB _ _ JS _ hS hT' ξ₀ hξ hσ χS 1 hω.hecS hω.hecT hω.resS
     hω.resT ωd hω _ _ _ rfl eB _ co hrat
-  have hc := _root_.GlobalTheory.T.weil_representation_pair_equivariant F E σ B hB _ _ JS _ hS hT' ξ₀ hξ hσ χS 1 hω.hecS hω.hecT hω.resS
+  have hc := _root_.GlobalTheory.WeilContF.continuous_transportF_k F E σ B hB _ _ JS _ hS hT' ξ₀ hξ hσ χS 1 hω.hecS hω.hecT hω.resS
     hω.resT ωd hω _ _ _ rfl eB _ co hrat om hom
-  obtain ⟨l, hl, hl'⟩ := _root_.GlobalTheory.T.lagrangian_integral_theta_model F E σ B hB nS nT JT _ _ _ co hrat ν 𝓕 hν h𝓕
+  obtain ⟨l, hl, hl'⟩ := _root_.GlobalTheory.LagrThetaAdm.exists_admissible_eq_lagrangian_integral F E σ B hB nS nT JT _ _ _ co hrat ν 𝓕 hν h𝓕
   let a : GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →
       UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) := fun h => ⟨matHomF σ _ h, mem_UG h⟩
   have ha : Continuous a := Continuous.subtype_mk continuous_subtype_val _
@@ -1446,28 +1429,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes MeasureTheory
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF
-theorem _root_.GlobalTheory.T.fundamental_domain_haar_plancherel : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      ∀ (ν : Measure (WOF F E nS nT)) (𝓕 : Set (WOF F E nS nT)), ν.IsAddHaarMeasure →
-        IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν →
-      ∀ (χS : (AF F ⊗[F] E)ˣ →* Circle) (ωd : GAF σ JS × GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →*
-            Module.End ℂ (WOF F E nS (nT + nT) → ℂ)),
-        IsWeilDatumOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)
-            (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ χS 1 ωd →
-      ∃ α : GL (Fin nT) (AF F ⊗[F] E) →* Circle, Continuous α ∧
-        (∀ a : GL (Fin nT) E, α (Matrix.GeneralLinearGroup.map (incAF F E) a) = 1) ∧
-        ∀ (h : GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)) (t : GL (Fin nT) (AF F ⊗[F] E)),
-          mtF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) h * ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) = ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) * t.1 →
-          ∀ f, IsThetaFunOF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ f →
-            GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (ωd (1, h) f) = (α t : ℂ) * ((((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AF F ⊗[F] E →* AF F) (Matrix.GeneralLinearGroup.det t)) : ℝ) ^ ((Fintype.card (Fin nS) : ℝ) / 2) : ℝ) : ℂ) * GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) f := by
-  first | exact @_root_.PositivityTheory.ThKW.fundamental_domain_plancherel_global
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.FundamentalDomainHaarPlancherel =====

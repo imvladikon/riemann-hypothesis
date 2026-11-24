@@ -1341,7 +1341,7 @@ theorem etaLoc_le_rhs_alt (hPr : Hypotheses₂) (D : D7) (L : SizeData₂ D) (P 
     (i : D.nd.Loc) (hi : TwistedPlaces.TwLoc D i) (k k' : Fin 2) (hkk : k ≠ k') (hlk : D.nd.l i = D.host.g k) :
     (D.nd.etaLoc i : ℝ) ≤ ∑ π ∈ D.nd.Zgood i, (D.nd.mult i π : ℝ) * PairedCharacterCondition.rhs constantSecondHub X.eta i (X.ρ i) π := by
   by_cases hHG : HG D.nd D.naut i
-  · have hX := _root_.GlobalTheory.T.split_bound_of_params_alt hPr.font hPr.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 CT hS.canon P
+  · have hX := _root_.GlobalTheory.HubX.Assembly.main_alt_alt hPr.font hPr.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 CT hS.canon P
       (by linarith [hS.big]) (by norm_num) hCT (hS.facts.admJ L hS.par) hS.par67 hS.facts.toCore.admA
       hS.facts.Conclusion1.1 hS.facts.Conclusion1.2.2 hS.facts.Conclusion2.1 hS.facts.Conclusion2.2.2 hS.facts.rhoBar hS.facts.large.2.1
       hS.facts.large.2.2 hS.facts.nct hS.facts.trip hS.facts.same hS.facts.block hS.facts.muUnr hS.facts.depthG
@@ -1419,12 +1419,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.star_bound_of_paired_character_condition : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ (constantSecondHub C1 : ℝ) (CT : ℕ), 0 ≤ constantSecondHub → 1 ≤ C1 → (CT : ℝ) ≤ L.sc.b → _root_.Formalism.MainNotions.PairedCharacterCondition.PairedCharacterConditionAlt (D := D) constantSecondHub CT → MultLe L → TwistedPlaces.ParametersPolynomiallyBounded L C1 P → SizeG L → StarH L (2000 * (constantSecondHub + 1) + 5 * C1) := by
-  first | exact @_root_.GlobalTheory.NLinkTyp.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EtaLocLeRhsStatement =====
@@ -1565,12 +1559,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Module
-
-theorem _root_.GlobalTheory.T.galoisRepsCusp_of_adm2 : ∀ D : D7, _root_.Formalism.MainNotions.SumRepresentations.adm2_alt D → GlobalTheory.BlockComplement.GaloisRepsCusp D := by
-  first | exact @_root_.GlobalTheory.GaloisFromAdm.main_alt_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GaloisRepsCuspidal =====
@@ -1587,7 +1575,7 @@ open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual Reciproc
 namespace GlobalTheory.HubX
 theorem exists_canonical_hubData_with_bounds : GlobalTheory.TwSys.Cheb → ∀ (D : D7) (L : SizeData₂ D) (HW : HWOf D.loc) (R : KillingConditions.RowK), _root_.Formalism.MainNotions.SumRepresentations.adm2_alt D → _root_.Formalism.MainNotions.SumRepresentations.provisionFortyOne D → ∀ (e' : FamilyRepresentationConstants.RFam D → FamilyRepresentationConstants.RhoFam D → D.nd.Loc → HeightOneSpectrum (𝓞 D.host.E) → ℕ) (exc : FamilyRepresentationConstants.RhoFam D → Finset ℕ) (I : TwIn D), ∃ X : KillingConditions.HubData D, GlobalTheory.HubX.Canon L HW R X ∧ X.e' = e' X.r X.ρ ∧ X.exc = exc X.ρ ∧ X.I = I ∧ (∀ i, GoodR D.nd i (X.r i)) ∧ (0 ≤ L.etaSz → (X.eta : ℝ) ≤ 2 * L.etaSz) ∧ ∀ i, GlobalTheory.HubLoc.cBnum (D.nd.l i) ⌊2 * L.sc.b⌋₊ D.R.t (4 * D.R.n * D.R.nV) ≤ X.cB i := by
   intro hC D L HW R h2 h41 e' exc I
-  obtain ⟨r, ρ, h⟩ := GlobalTheory.PtCore.exists_ptFam hC D (_root_.GlobalTheory.T.galoisRepsCusp_of_adm2 D h2) (fun i => (h41 i).1.2)
+  obtain ⟨r, ρ, h⟩ := GlobalTheory.PtCore.exists_ptFam hC D (_root_.GlobalTheory.GaloisFromAdm.main_alt_alt_alt D h2) (fun i => (h41 i).1.2)
   have hc := canon_ourX L HW R r ρ (e' r ρ) (exc ρ) I h
   refine ⟨ourX L HW R r ρ (e' r ρ) (exc ρ) I, hc, rfl, rfl, rfl, hc.fam.good, ?_, ?_⟩
   · intro hL
@@ -1806,7 +1794,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C
   obtain ⟨xsm, hsm⟩ := _root_.GlobalTheory.SpecialSmall.special_primes_small Fm Cs hCs1
   obtain ⟨xE, hE⟩ := _root_.GlobalTheory.T.eventually_congBound_of_facts hP Fm
   obtain ⟨xbcd, hbcd⟩ := _root_.GlobalTheory.HTW.RecS.fam_jointBCD_closed_alt hP.font GlobalTheory.Per.FontaineAll.fontaine_bounds
-    GlobalTheory.FontaineAdm.fontaineProperties_all_places _root_.GlobalTheory.JumpStatement.holds_all_alt Fm (rowC C₂)
+    GlobalTheory.FontaineAdm.fontaineProperties_all_places _root_.GlobalTheory.JumpSets.stmtJ_holds_alt Fm (rowC C₂)
   refine ⟨Cs, max xset (max xexc (max xsm (max xE (max xbcd (max xpar x23))))), ?_⟩
   intro x hx0 hx i hSha
   simp only [ge_iff_le, max_le_iff] at hx0
@@ -1816,13 +1804,13 @@ theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C
   obtain ⟨hFa, hEx⟩ := hF x hx i
   obtain ⟨hSm, -, -, hb⟩ := hsm x h3 hx i
   have hBCD := hbcd x h5 hx i HW X hAdmJ hS.canon.fam
-  have hmid := _root_.GlobalTheory.T.star_ad_and_bb_le_of_joint_cond hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS hC₂1
+  have hmid := _root_.GlobalTheory.NLink.rowsAD_in_setting_alt hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS hC₂1
     ((h03 (Fm.D x i) HW F Cm).2 C₂ hC₂0) hBCD
   have hparC1 := hpar x h6 hx i
   have hmult := _root_.GlobalTheory.NLink.multLe_of_rank (Fm.D x i) (Fm.L x i) hFa.Conclusion1.2.2 hFa.Conclusion2.2.2 hFa.toCore.isot hFa.c2
   have hSizeG : SizeG (Fm.L x i) := (Fm.sizes x hx i).2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hCTb : (CT : ℝ) ≤ (Fm.L x i).sc.b := le_trans hCT hb
-  have htyp := _root_.GlobalTheory.T.star_bound_of_paired_character_condition hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS C C1 CT
+  have htyp := _root_.GlobalTheory.NLinkTyp.main_alt_alt hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS C C1 CT
     hC0 hC1 hCTb hEx.2 hmult hparC1 hSizeG
   have hmono := _root_.GlobalTheory.NLinkMono.main (Fm.D x i) (Fm.L x i) (Fm.params x hx i) X
   have hCong := hE x h4 hx i hFa

@@ -166,8 +166,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC GlobalTheory.EtC.KummerSplit
 
-theorem _root_.GlobalTheory.T.primitiveRoot_free_action_finsupp_sum : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A] [Nontrivial A] (ζ : Prim q A) (ι : Type) (s : Finset ι) (c : ι → ULift.{1} (ZMod q)) (a : ι → ℕ) (v w : ι → Aˣ), (∀ i ∈ s, (w i : A) = ζ.1 ^ a i * v i) → (∑ i ∈ s, (Finsupp.single (w i) (c i) - Finsupp.single (v i) (c i))) = 0 → ∑ i ∈ s, (c i).down * (a i : ZMod q) = 0 := by
-  first | (exact @GlobalTheory.EtC.FreeActSum.free_act_sum)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimitiveRootFreeActionFinsuppSumStatement =====
@@ -188,9 +186,9 @@ theorem res_resGen_of_pow (q : ℕ) [NeZero q] {W V : Scheme.{0}} (k : W ⟶ V) 
     Sec.res k (resGen 1 ξ) = (a : ZMod q).val • resGen 1 (ζ.map k.appTop.hom) := by
   have e1 : Sec.res k (resGen 1 ξ) = resGen 1 (ξ.map k.appTop.hom) := by
     unfold resGen
-    rw [sec_res_map, (GlobalTheory.T.tateTwist_sections_locally_generated q 1).2.2.2.1]
+    rw [sec_res_map, (_root_.GlobalTheory.EtC.twist_sections q 1).2.2.2.1]
   rw [e1]
-  have e2 := (GlobalTheory.T.tateTwist_sections_locally_generated q 1).2.2.2.2.1 W (ζ.map k.appTop.hom) (ξ.map k.appTop.hom) a h
+  have e2 := (_root_.GlobalTheory.EtC.twist_sections q 1).2.2.2.2.1 W (ζ.map k.appTop.hom) (ξ.map k.appTop.hom) a h
   simp only [zpow_one] at e2
   unfold resGen
   rw [e2]
@@ -214,7 +212,7 @@ theorem relation_kernel (q : ℕ) [NeZero q] (V : Scheme.{0}) (c : (tripP q).obj
     rw [← Finsupp.linearCombination_apply, hd_def, map_finsuppSum, ← hc]
     refine Finsupp.sum_congr fun x _ => ?_
     rw [map_sub, Finsupp.linearCombination_single, Finsupp.linearCombination_single, smul_sub]
-  have hloc := (GlobalTheory.T.freeEtaleSheaf_section_locally_finite_combination (ZMod q) unitsP V).2 d hd
+  have hloc := (_root_.GlobalTheory.EtC.free_sec_loc (ZMod q) unitsP V).2 d hd
   by_cases hc0 : c = 0
   · simp [hc0]
   obtain ⟨x₀, -⟩ := Finsupp.support_nonempty_iff.2 hc0
@@ -243,7 +241,7 @@ theorem relation_kernel (q : ℕ) [NeZero q] (V : Scheme.{0}) (c : (tripP q).obj
     refine Finset.sum_congr rfl fun x hx => ?_
     rw [res_resGen_of_pow q k (tripP.get x₀).root _ (a ⟨x, hx⟩) (ha ⟨x, hx⟩), ← hax x hx, mul_smul,
       Nat.cast_smul_eq_nsmul]
-  have halg := GlobalTheory.T.primitiveRoot_free_action_finsupp_sum q Γ(W, ⊤) ((tripP.get x₀).root.map k.appTop.hom) ((tripP q).obj (op V)) c.support
+  have halg := _root_.GlobalTheory.EtC.FreeActSum.free_act_sum q Γ(W, ⊤) ((tripP.get x₀).root.map k.appTop.hom) ((tripP q).obj (op V)) c.support
     (fun x => c x) a'
     (fun x => Units.map k.appTop.hom.toMonoidHom (tripP.get x).src)
     (fun x => Units.map k.appTop.hom.toMonoidHom (tripP.get x).tgt) ?_ ?_
@@ -285,17 +283,12 @@ theorem exists_comp_eq_of_injective {R : Type} [CommRing R] {A B K : Shv R} [Inj
   let S := ShortComplex.mk (kernel.ι g) g (kernel.condition g)
   have hS : S.Exact := S.exact_of_f_is_kernel (kernelIsKernel g)
   have hf : S.f ≫ φ = 0 := by
-    refine (GlobalTheory.T.bigEtaleModuleSheaf_mono_epi_iff_sections R (S.f ≫ φ)).2.2.2 0 fun U a => ?_
+    refine (_root_.GlobalTheory.EtC.mono_epi_sections R (S.f ≫ φ)).2.2.2 0 fun U a => ?_
     have h0 : Sec.map g (Sec.map (kernel.ι g) a) = 0 := by
       rw [← sec_map_comp, kernel.condition]; rfl
     change Sec.map φ (Sec.map (kernel.ι g) a) = Sec.map (0 : kernel g ⟶ K) a
     rw [h U _ h0]; rfl
   exact ⟨hS.descToInjective φ hf, hS.comp_descToInjective φ hf⟩
-
-theorem kernel_local (q : ℕ) [NeZero q] (V : Scheme.{0}) (c : (tripP q).obj (op V) →₀ ULift.{1} (ZMod q))
-    (h : (c.sum fun x r => r • (freeGen (ZMod q) unitsP V (unitsP.mk (tripP.get x).tgt) -
-      freeGen (ZMod q) unitsP V (unitsP.mk (tripP.get x).src))) = 0) :
-    (c.sum fun x r => r • resGen 1 (tripP.get x).root) = 0 := _root_.GlobalTheory.EtC.KummerSplit.relation_kernel q V c h
 
 theorem exists_isKum (q : ℕ) [NeZero q] : ∃ t, IsKum q t := by
   have hinj : Injective ((res (ZMod q) (tw q 1)).X 0) := (_root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q 1)).2.1 0
@@ -310,18 +303,18 @@ theorem exists_isKum (q : ℕ) [NeZero q] : ∃ t, IsKum q t := by
     (fun U x => resGen 1 (tripP.get x).root)
     (fun V U g x => by
       unfold resGen
-      rw [sec_res_map, (GlobalTheory.T.tateTwist_sections_locally_generated q 1).2.2.2.1]
+      rw [sec_res_map, (_root_.GlobalTheory.EtC.twist_sections q 1).2.2.2.1]
       rfl)
   obtain ⟨ψ, hψ⟩ := exists_comp_eq_of_injective G Φ (fun U a ha => by
     apply sec_eq_zero_of_loc
-    refine loc_calculus.2.1 U _ _ ((GlobalTheory.T.freeEtaleSheaf_section_locally_finite_combination (ZMod q) (tripP q) U).1 a) ?_
+    refine loc_calculus.2.1 U _ _ ((_root_.GlobalTheory.EtC.free_sec_loc (ZMod q) (tripP q) U).1 a) ?_
     rintro V g ⟨c, hc⟩
     have hc' := congrArg (Sec.map G) hc
     rw [← sec_res_map, ha, res_zero', smap_sum] at hc'
     rw [sec_res_map, hc, smap_sum]
     simp only [hG] at hc'
     simp only [hΦ]
-    exact kernel_local q V c hc'.symm)
+    exact _root_.GlobalTheory.EtC.KummerSplit.relation_kernel q V c hc'.symm)
   refine ⟨fun U v => Sec.map ψ (freeGen (ZMod q) unitsP U (unitsP.mk v)), ?_, ?_⟩
   · intro V U g v _
     rw [sec_res_map, hu.2.2.1]

@@ -1883,7 +1883,7 @@ theorem PlueckerUnitBound.full : PlueckerUnitBound.Statement :=
 theorem PlueckerKernel.full : PlueckerKernel.Statement :=
   PlueckerKernel.proof PlueckerNormSq.full PlueckerUnitBound.full
 
-theorem RootsOfUnityDense.full : RootsOfUnityDense.Statement := RootsOfUnityDense.proof
+alias RootsOfUnityDense.full := _root_.GroundTheory.Heights₂.Heights.RootsOfUnityDense.proof
 
 end GroundTheory.Heights₂.Heights
 end -- clump:auto

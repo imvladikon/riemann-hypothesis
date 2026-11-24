@@ -709,10 +709,6 @@ open GlobalTheory.CechPic GlobalTheory.AbDual
 open GlobalTheory.IndefiniteRowSideFullHecke.ZeroSectionBase (IsPrincipalPol sqToBase)
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.picard_mayer_vietoris_extend : ∀ (X : Scheme.{0}) (W V : X.Opens) (p : Pic W.toScheme),
-    pull (X.homOfLE (inf_le_left : W ⊓ V ≤ W)) p = 0 →
-    ∃ q : Pic (W ⊔ V).toScheme, pull (X.homOfLE (le_sup_left : W ≤ W ⊔ V)) q = p := by
-  first | exact @GlobalTheory.CompanionTheory.CechMV.exists_extend_of_pull_inf_eq_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PicardMayerVietorisExtendStatement =====
@@ -1161,7 +1157,7 @@ theorem extend : ∀ (C : Type) [Field C] [IsAlgClosed C] (R : Type) [CommRing R
           exact morphismRestrict_ι _ _
         rw [← pull_comp, e, pull_comp, hp]
         exact pull_eq_zero_of_mem (j ⁻¹ᵁ V) (j ⁻¹ᵁ (W ⊓ V)).ι (fun z ↦ (show _ ∈ W ⊓ V from z.2).2) hl
-    obtain ⟨q, hq⟩ := GlobalTheory.T.picard_mayer_vietoris_extend A.left W V p hz
+    obtain ⟨q, hq⟩ := _root_.GlobalTheory.CompanionTheory.CechMV.exists_extend_of_pull_inf_eq_zero A.left W V p hz
     refine ⟨hW.union hV, r ≫ A.left.homOfLE le_sup_left, q, by simp [hr], ?_⟩
     rw [pull_comp, hq, hp]
   have hN : ∀ z : A.left, ∃ N : A.left.Opens, z ∈ N ∧ ∀ W, Q W → Q (W ⊔ N) := fun z ↦ by

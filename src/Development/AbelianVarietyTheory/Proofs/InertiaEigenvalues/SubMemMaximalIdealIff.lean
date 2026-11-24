@@ -90,10 +90,7 @@ theorem rootsOfUnity_inj {O k : Type} [CommRing O] [IsDomain O] [Field k] (f : O
     _ = (x * y ^ (M - 1)) * y := by ring
     _ = y := by rw [h1, one_mul]
 
-theorem main : ∀ {O k : Type} [inst : CommRing O] [IsDomain O] [inst_2 : Field k] (f : O →+* k) {M : ℕ},
-    (↑M : k) ≠ (0 : k) → ∀ {x y : O}, x ^ M = (1 : O) → y ^ M = (1 : O) →
-      (f : O → k) x = (f : O → k) y → x = y :=
-  fun f _ hM _ _ hx hy hf => rootsOfUnity_inj f hM hx hy hf
+alias main := _root_.GlobalTheory.RootsOfUnityInjectiveInertiaEigenvalues.rootsOfUnity_inj
 
 end GlobalTheory.RootsOfUnityInjectiveInertiaEigenvalues
 end -- clump:auto
@@ -131,12 +128,6 @@ theorem part_spec {G : Type} [Monoid G] {l : ℕ} (hl : l.Prime) {x : G} (hx : I
   · rw [hz, ← pow_mul, mul_comm, pow_mul]
     have := pow_eq_pow_of_modEq hmod hone
     rwa [pow_one] at this
-
-theorem eq_of_map_eq {O k : Type} [CommRing O] [IsDomain O] [Field k] (f : O →+* k) {M : ℕ} (hM : (M : k) ≠ 0)
-    {x y : O} (hx : x ^ M = 1) (hy : y ^ M = 1) (h : f x = f y) : x = y := by
-  first
-  | (rename_i h_2 h_3 h_4; revert O k h_2 h_3 h_4 f M hM x y hx hy h; exact @_root_.GlobalTheory.RootsOfUnityInjectiveInertiaEigenvalues.main)
-  | (intros; exact _root_.GlobalTheory.RootsOfUnityInjectiveInertiaEigenvalues.main ..)
 
 end GlobalTheory.TameRed
 end -- clump:auto

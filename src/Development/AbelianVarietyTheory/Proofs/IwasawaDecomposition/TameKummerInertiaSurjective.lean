@@ -175,13 +175,6 @@ theorem val_int_le {E Ω : Type*} [Field E] [Field Ω] (ι : E →+* Ω) (A : Va
   (A.valuation_le_one_iff _).2
     (ReciprocityTheory.Gal.mem_of_isIntegral_int A (a.isIntegral_coe.map ι.toIntAlgHom))
 
-theorem exists_den_field {E Ω : Type*} [Field E] [NumberField E] [Field Ω] (ι : E →+* Ω)
-    (A : ValuationSubring Ω) {x : E} (hx : A.valuation (ι x) ≤ 1) :
-    ∃ s t : 𝓞 E, A.valuation (ι s) = 1 ∧ (s : E) * x = t := by
-  first
-  | (apply _root_.GlobalTheory.UnitDenominatorValuation.exists_unit_denominator <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UnitDenominatorValuation.exists_unit_denominator ..)
-
 end GlobalTheory.CMRam
 end -- clump:auto
 end -- clump:auto
@@ -212,7 +205,7 @@ theorem unram_of_fixed : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] 
   have hlift : ∀ x : L, A.valuation (algebraMap L Ω x) ≤ 1 →
       A.valuation (algebraMap L Ω (τ x) - algebraMap L Ω x) < 1 := by
     intro x hx
-    obtain ⟨s, t, hs, e⟩ := GlobalTheory.CMRam.exists_den_field (algebraMap L Ω) A (x := x) hx
+    obtain ⟨s, t, hs, e⟩ := _root_.GlobalTheory.UnitDenominatorValuation.exists_unit_denominator (algebraMap L Ω) A (x := x) hx
     have hτs : A.valuation (algebraMap L Ω (τ (s : L))) = 1 := by
       refine le_antisymm ?_ ?_
       · have := hint (τ • s); rwa [hsm] at this

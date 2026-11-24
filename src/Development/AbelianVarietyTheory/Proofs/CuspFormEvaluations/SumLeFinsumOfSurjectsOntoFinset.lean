@@ -1287,17 +1287,13 @@ theorem gSup_holds : GSupStatement := gSup GlobalTheory.packingCount
 
 theorem propA_holds : PropAStatement := propA GlobalTheory.packingCount GlobalTheory.gaussTail_of_card_le
 
-theorem dim_holds : DimStatement := dim
-
 theorem J_holds : JStatement :=
   jOf GlobalTheory.ext_all_inputs _root_.ReciprocityTheory.ChartRestriction.G.I2.split_holds GlobalTheory.charStatement_holds
     (colTorus GlobalTheory.ext_all_inputs propA_holds gSup_holds)
-    (colAbel GlobalTheory.ext_all_inputs propA_holds gSup_holds)
-    (colEmpty GlobalTheory.ext_all_inputs propA_holds gSup_holds)
+    (colAbel GlobalTheory.ext_all_inputs propA_holds _root_.GlobalTheory.sup_le_l2_principal_torus)
+    (colEmpty GlobalTheory.ext_all_inputs propA_holds _root_.GlobalTheory.sup_le_l2_principal_torus)
 
-theorem N_holds : NStatement := lemmaN dim_holds
-
-theorem I_holds : IStatement := iOf J_holds N_holds
+theorem I_holds : IStatement := iOf J_holds _root_.ReciprocityTheory.ChartRestriction.G.I2.thetaBasis_holds
 
 end GlobalTheory.ThetaTorus
 end -- clump:auto
@@ -1344,14 +1340,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 attribute [local instance] Over.cartesianMonoidalCategory
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-
-theorem norm_dmin {r : ℕ} (X : FD.Data E r) {x : FD.Frame X.Ψ r} (hx : X.IsOrtho x) (τ : X.Ψ) (i : Fin (r + 1)) :
-    ‖FD.dmin X.Gm x τ i‖ = 1 := by
-  unfold FD.dmin FD.lminor
-  rw [hx τ, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal, norm_prod]
-  refine Finset.prod_eq_one fun a _ => ?_
-  simp only [Function.comp, FD.sgn]
-  split_ifs <;> simp
 
 theorem finite_levQ {H : Host E} (Dw : Datum H) (l : Geo.Tor.Level H) : Finite (LevQ Dw l) := by
   have hne : l.Mb ≠ ⊥ := by
@@ -1548,7 +1536,7 @@ theorem thetaRule_sum_lower : ChartIndepSt2 → ∀ (E : Type) [Field E] [Number
   intro hCI E _ _ _ H Dw l Xo c _ σ r U k x xR nab hnab hσ hU hft hx hxR α hα hMb a n P₁ hP hB R0 m hrun hm
   classical
   obtain ⟨W⟩ := nonempty_unfAt hU k x
-  have hu := norm_dmin (U.X k) hx
+  have hu := _root_.GlobalTheory.RiemMaj.norm_dmin_ortho (U.X k) hx
   obtain ⟨Wu⟩ := nonempty_unitAt W hu
   have hM0 : (0 : ℝ) < l.M := by have := l.three_le; exact_mod_cast (by omega : 0 < l.M)
   have hxR0 : 0 < xR := by

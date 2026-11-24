@@ -47,6 +47,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SymmetricScalarBlockMatrixMul
 
 @[expose] public section
 
@@ -101,11 +102,6 @@ theorem mem_Sset_of_UW {z : Fin (2 * r + k + 1) → ℂ} {g : Matrix (Fin (2 * r
   refine ⟨g, hg, 1, ⟨one_mem_UH, fun a i _ => ?_, fun i j _ _ _ => ?_⟩, (Matrix.mul_one g).symm⟩ <;>
     exact Matrix.one_apply
 
-theorem mem_Sset_of_N (z : Fin (2 * r + k + 1) → ℂ) {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
-    (hg : g ∈ Nset k r) : g ∈ Sset k r z :=
-  ⟨1, ⟨one_mem_UH, fun _ => ⟨Matrix.one_mulVec _, Matrix.one_mulVec _⟩, Matrix.one_mulVec _⟩, g, hg,
-    (Matrix.one_mul g).symm⟩
-
 theorem herm_cell {ι : Type} [Fintype ι] [DecidableEq ι]
     {ρ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → Matrix ι ι ℂ} {Γ : Matrix ι ι ℂ} {d : ℕ}
     (hρ : IsFRep ρ Γ d) {om om' : ι → ℂ} {z z' : Fin (2 * r + k + 1) → ℂ}
@@ -121,9 +117,9 @@ theorem herm_cell {ι : Type} [Fintype ι] [DecidableEq ι]
   have h2 := mul h1 hn'.1
   refine ⟨mul h2 ha'.1, ?_⟩
   rw [hρ.2.2.2.1 _ h2 _ ha'.1, hρ.2.2.2.1 _ h1 _ hn'.1, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec,
-    hom' _ (mem_Sset_of_UW ha'), hom' _ (mem_Sset_of_N z' hn'), Matrix.mul_assoc,
+    hom' _ (mem_Sset_of_UW ha'), hom' _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z' hn'), Matrix.mul_assoc,
     herm_inv hρ ha.1 (mul hni hγ) (hom _ (mem_Sset_of_UW ha)),
-    herm_inv hρ hn.1 hγ (hom _ (mem_Sset_of_N z hn))]
+    herm_inv hρ hn.1 hγ (hom _ (_root_.Formalism.FourierDecayAlt.P.Ux3.nset_sset z hn))]
 
 end GlobalTheory.CellPieri
 

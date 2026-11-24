@@ -300,9 +300,7 @@ section -- clump:auto
 
 namespace Formalism.E
 
-theorem subIndexNorm : SubIndexNorm := indexEqNormDet
-
-theorem hermDual : HermDual := hermDual_of subIndexNorm
+theorem hermDual : HermDual := hermDual_of _root_.Formalism.E.indexEqNormDet
 
 end Formalism.E
 end -- clump:auto

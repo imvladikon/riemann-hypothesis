@@ -862,11 +862,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.aut_statement_of_small_exponent_statement : _root_.GlobalTheory.ExpTie.SmallnessCondition → _root_.GlobalTheory.FrameAut.AutStAlt := by
-  first | exact @_root_.GlobalTheory.FrameAut.autSt_of_smallSt'
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AutAtOfStatement =====
@@ -878,10 +873,6 @@ section -- clump:auto
 
 
 
-section
-theorem GlobalTheory.FrameAut.frame_autSt_of_smallSt : _root_.GlobalTheory.ExpTie.SmallnessCondition → _root_.GlobalTheory.FrameAut.AutStAlt :=
-  _root_.GlobalTheory.T.aut_statement_of_small_exponent_statement
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AutStOfSmallSt =====
@@ -893,11 +884,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.frame_aut_of_small_estimate : _root_.GlobalTheory.ExpTie.SmallnessCondition → _root_.GlobalTheory.FrameAut.AutStAlt := by
-  first | exact @_root_.GlobalTheory.FrameAut.frame_autSt_of_smallSt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AutStOfSmallStStatement =====

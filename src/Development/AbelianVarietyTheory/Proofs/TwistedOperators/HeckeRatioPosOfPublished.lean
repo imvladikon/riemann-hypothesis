@@ -200,14 +200,6 @@ open scoped TensorProduct ContDiff nonZeroDivisors
 namespace GlobalTheory
 
 
-open NumberField IsDedekindDomain NumberField.mixedEmbedding Complex Classical in
-open scoped TensorProduct ContDiff nonZeroDivisors in
-theorem _root_.GlobalTheory.cA_incA_apply {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
-    [Algebra F E] (σ : E →ₐ[F] E) (x : E) :
-    _root_.HeckeCharacterZeroLocus.ThmBIn.cA σ (_root_.HeckeCharacterZeroLocus.ThmBIn.incA F E x) = _root_.HeckeCharacterZeroLocus.ThmBIn.incA F E (σ x) := by
-  unfold _root_.HeckeCharacterZeroLocus.ThmBIn.cA _root_.HeckeCharacterZeroLocus.ThmBIn.incA _root_.HeckeCharacterZeroLocus.ThmBIn.AE
-  exact rfl
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -599,7 +591,7 @@ theorem exists_conj_prime (hσ : IsCMExt F E σ) (χ : (AE F E)ˣ →* Circle)
     refine ⟨cA σ e, f, RingOfIntegers.mapRingHom σ.toRingHom ϖ, hidem P e f he,
       ((hmem P _ _ hy).1).2 h1, fun h => h2 (((hmem P _ _ hy).2).1 h), ?_⟩
     change cA σ (x : AE F E) = _
-    rw [h3, map_add (f := _), map_mul, map_sub, map_one, GlobalTheory.cA_incA_apply, hy]
+    rw [h3, map_add (f := _), map_mul, map_sub, map_one, _root_.GlobalTheory.PrimeIdemExists.cA_incA, hy]
   refine ⟨c, hN, fun P => ((hund P (c P)).2 (Or.inr rfl)).symm, fun P => ?_⟩
   by_cases hP : IsUnramAt σ χ P
   · obtain ⟨x, hx⟩ := (hun P).1

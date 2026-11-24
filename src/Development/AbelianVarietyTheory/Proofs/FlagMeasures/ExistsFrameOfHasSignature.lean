@@ -94,11 +94,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card {A : Type} [CommRing A] {S : Subring
       rw [this, smul_comm]
       exact Submodule.smul_mem _ a hx
 
-theorem main : ∀ {A : Type} [inst : CommRing A] {S : Subring A} {n : Type} [inst_1 : Fintype n] [DecidableEq n]
-    (Λ : Submodule (↥S) (n → A)), Submodule.FG Λ →
-    (∀ (v : n → A), ∃ (N : ℕ), (1 : ℕ) ≤ N ∧ (↑N : A) • v ∈ Λ) →
-    ∀ (X : Matrix n n A), ∃ (N : ℕ), (1 : ℕ) ≤ N ∧ ∀ y ∈ Λ, (↑N : A) • Matrix.mulVec X y ∈ Λ :=
-  fun Λ hfg hden X => finiteRing_sq_sub_mul_sq_eq_of_card Λ hfg hden X
+alias main := _root_.GlobalTheory.SublatticeFacts.finiteRing_sq_sub_mul_sq_eq_of_card
 
 end GlobalTheory.SublatticeFacts
 end -- clump:auto
@@ -177,8 +173,7 @@ theorem lamAf_fg (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) :
     rw [← hs] at hx
     exact key x hx
 
-theorem main : ∀ {F E : Type} [inst : Field F] [inst_1 : NumberField F] [inst_2 : Field E] [inst_3 : NumberField E] [inst_4 : Algebra F E] {n : ℕ} (L : Submodule (NumberField.RingOfIntegers E) (Fin n → E)), Submodule.FG L → Submodule.FG (R := ↥(Formalism.MainNotions.S.IntAf F E)) (Formalism.MainNotions.S.lamAf L) :=
-  fun L hL => lamAf_fg L hL
+alias main := _root_.GlobalTheory.VectorInclusion.lamAf_fg
 
 end GlobalTheory.VectorInclusion
 
@@ -258,12 +253,7 @@ theorem conj_mem_congSub (Λ : Submodule S (n → A)) (x : GL n A) {M N : ℕ} (
   rwa [Matrix.mulVec_mulVec, ← Units.val_mul, show x * k⁻¹ * x⁻¹ * (x * k * x⁻¹) = 1 by group,
     Units.val_one, Matrix.one_mulVec] at this
 
-theorem exists_denom (Λ : Submodule S (n → A)) (hfg : Λ.FG)
-    (habs : ∀ v : n → A, ∃ N : ℕ, 1 ≤ N ∧ (N : A) • v ∈ Λ) (X : Matrix n n A) :
-    ∃ N : ℕ, 1 ≤ N ∧ ∀ y ∈ Λ, (N : A) • X *ᵥ y ∈ Λ := by
-  first
-  | (apply _root_.GlobalTheory.SublatticeFacts.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SublatticeFacts.main ..)
+alias exists_denom := _root_.GlobalTheory.SublatticeFacts.finiteRing_sq_sub_mul_sq_eq_of_card
 
 @[reducible] def congBasis (Λ : Submodule S (n → A)) (hfg : Λ.FG)
     (habs : ∀ v : n → A, ∃ N : ℕ, 1 ≤ N ∧ (N : A) • v ∈ Λ) (hu : ∀ N : ℕ, 1 ≤ N → IsUnit (N : A))
@@ -303,11 +293,6 @@ theorem isUnit_natCast (N : ℕ) (hN : 1 ≤ N) : IsUnit (N : E ⊗[F] Af F) := 
   have : IsUnit (N : E) := IsUnit.mk0 _ (Nat.cast_ne_zero.2 (by omega))
   simpa using this.map (inclE (F := F) (Af F))
 
-theorem lamAf_fg (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) : (lamAf (F := F) L).FG := by
-  first
-  | (apply _root_.GlobalTheory.VectorInclusion.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.VectorInclusion.main ..)
-
 theorem exists_nat_multiple (d : 𝓞 F) (hd : d ≠ 0) : ∃ N : ℕ, 1 ≤ N ∧ ∃ d' : 𝓞 F, d' * d = N := by
   have h := Ideal.absNorm_mem (Ideal.span {d})
   obtain ⟨d', hd'⟩ := Ideal.mem_span_singleton'.1 h
@@ -345,7 +330,7 @@ theorem lamAf_absorbs (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.spa
 @[reducible] def adelicBasis (L : Submodule (𝓞 E) (Fin n → E))
     (hs : Submodule.span E (L : Set (Fin n → E)) = ⊤) (hL : L.FG)
     (H : Subgroup (GL (Fin n) (E ⊗[F] Af F))) : GroupFilterBasis H :=
-  congBasis (lamAf (F := F) L) (lamAf_fg L hL) (lamAf_absorbs L hs) isUnit_natCast H
+  congBasis (lamAf (F := F) L) (_root_.GlobalTheory.VectorInclusion.lamAf_fg L hL) (lamAf_absorbs L hs) isUnit_natCast H
 
 end Adelic
 

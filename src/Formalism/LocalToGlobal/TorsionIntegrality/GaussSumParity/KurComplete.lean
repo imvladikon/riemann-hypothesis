@@ -162,7 +162,7 @@ theorem inS_root (hU : UnrOK K l σ) (hB : BetaHyp l F be0) {ζ : K} (hζ : ζ ^
   have hN0 : l ^ 2 - 1 ≠ 0 := by
     have : 2 ^ 2 ≤ l ^ 2 := Nat.pow_le_pow_left hl 2
     omega
-  have hσ : σ ζ = ζ ^ l := teichSigma K l 2 σ hU (by norm_num) ζ hζ
+  have hσ : σ ζ = ζ ^ l := _root_.Formalism.L2.Th1.D.teichmuller_sigma K l 2 σ hU (by norm_num) ζ hζ
   have hζl : (ζ ^ l) ^ (l ^ 2 - 1) = 1 := by
     rw [← pow_mul, mul_comm, pow_mul, hζ, one_pow]
   refine ⟨(FormalExponential.norm_eq_one_of_pow hN0 hζ).le, ?_, ?_⟩
@@ -176,7 +176,7 @@ theorem inS_root (hU : UnrOK K l σ) (hB : BetaHyp l F be0) {ζ : K} (hζ : ζ ^
 theorem inS_add (hU : UnrOK K l σ) (hF : IsLawOfLog l F) (hF1 : F1 F be0) {α β : K}
     (hα : InS l σ be0 α) (hβ : InS l σ be0 β) : InS l σ be0 (α + β) := by
   obtain ⟨hadd1, hadd2, -⟩ := pairRules K l σ hU F hF be0 hF1 (Fin 2)
-  obtain ⟨-, -, hmul⟩ := ipClosure K l σ (Fin 2)
+  obtain ⟨-, -, hmul⟩ := _root_.Formalism.L2.Th1.D.integral_part_closure K l σ (Fin 2)
   have hσ1 := (frobSq K l σ hU).2
   have hG := integral_part_at_variable hU.1 σ (0 : Fin 2)
   have hH := integral_part_at_variable hU.1 σ (1 : Fin 2)
@@ -347,15 +347,12 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.D
 
-theorem ringAFacts : RingAFacts := ring_a_facts
-theorem kurIntegers : KurIntegers := KurIntegers_of ringAFacts
+theorem kurIntegers : KurIntegers := KurIntegers_of _root_.Formalism.L2.Th1.D.ring_a_facts
 theorem kurUnram : KurUnram := KurUnram_of kurIntegers
-theorem kurRoots : KurRoots := unramified_completion_roots
-theorem kurComplete : KurComplete := unramified_completion_complete
-theorem frobAIsom : FrobAIsom := FrobAIsom_of ringAFacts
-theorem kurFrob : KurFrob := KurFrob_of frobA frobAIsom kurIntegers kurUnram
-theorem fOfBetaHyp : FOfBetaHyp := f_of_beta_hypotheses
-
+alias kurRoots := _root_.Formalism.L2.Th1.D.unramified_completion_roots
+alias kurComplete := _root_.Formalism.L2.Th1.D.unramified_completion_complete
+theorem frobAIsom : FrobAIsom := FrobAIsom_of _root_.Formalism.L2.Th1.D.ring_a_facts
+theorem kurFrob : KurFrob := KurFrob_of _root_.Formalism.L2.Th1.D.frobenius_on_ring_a frobAIsom kurIntegers kurUnram
 end Formalism.L2.Th1.D
 end -- clump:auto
 end -- clump:auto

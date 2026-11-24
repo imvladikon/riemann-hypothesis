@@ -57,11 +57,6 @@ open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 
 namespace GlobalTheory.SchrSB
 
-theorem eq_one_of_pow_two_pow (z : ℂ) (h : ∀ k : ℕ, ‖z ^ (2 ^ k) - 1‖ < 1 / 2) : z = 1 := by
-  first
-  | (apply _root_.GlobalTheory.IterativeScalingBound.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IterativeScalingBound.main ..)
-
 theorem isLocallyConstant_addChar {G : Type} [AddCommGroup G] [TopologicalSpace G] [NonarchimedeanAddGroup G]
     (ψ : AddChar G ℂ) (hψ : Continuous ψ) : IsLocallyConstant ψ := by
   have hU : (⇑ψ) ⁻¹' Metric.ball 1 (1 / 2) ∈ nhds (0 : G) := by
@@ -71,7 +66,7 @@ theorem isLocallyConstant_addChar {G : Type} [AddCommGroup G] [TopologicalSpace 
   obtain ⟨V, hV⟩ := NonarchimedeanAddGroup.is_nonarchimedean _ hU
   have hker : ∀ y ∈ V, ψ y = 1 := by
     intro y hy
-    apply eq_one_of_pow_two_pow
+    apply _root_.GlobalTheory.IterativeScalingBound.main
     intro k
     have hm : (2 ^ k) • y ∈ V := V.toAddSubgroup.nsmul_mem hy _
     have := hV hm

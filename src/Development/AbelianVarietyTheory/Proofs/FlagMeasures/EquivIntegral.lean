@@ -244,7 +244,7 @@ theorem _root_.GlobalTheory.ReducedGram.exists_reduced : ∀ (K : Type) [Field K
     intro t I J
     rw [hmin, det_submatrix_mul_diagonal, map_mul, norm_mul, hsign, mul_one, ← hmin]
     exact _root_.GlobalTheory.LoopC.CovTerm.minor_pt_le τ p t I J
-  have hbound := _root_.Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.minorBound (r + 1) (A.map τ) (W.map τ) (B.map τ) c Pb hc hA hB hW t I J
+  have hbound := _root_.Formalism.HermitianLatticeCounting.P.normMinorMulLe (r + 1) (A.map τ) (W.map τ) (B.map τ) c Pb hc hA hB hW t I J
   have hlead : ∀ l, ‖τ (_root_.Formalism.MainNotions.S.leadMinorE Z l)‖ = ‖τ (_root_.Formalism.MainNotions.S.leadMinorE P l)‖ := by
     intro l
     unfold _root_.Formalism.MainNotions.S.leadMinorE
@@ -395,12 +395,6 @@ theorem equiv_integral {N : ℕ} {Z Z₂ : Matrix (Fin N) (Fin N) D.host.E} (h :
   refine IsIntegral.sum _ (fun j _ => IsIntegral.mul (IsIntegral.sum _ (fun i _ => ?_)) (hB _ _))
   exact IsIntegral.mul (hA _ _) (h _ _)
 
-theorem frameExp_le (r l : ℕ) (hl : l ≤ r + 1) : frameExp r l ≤ (r + 1) ^ 2 := by
-  unfold frameExp
-  calc ∑ a ∈ Finset.Icc 1 l, (r + 1 - a) ≤ ∑ a ∈ Finset.Icc 1 l, (r + 1) := Finset.sum_le_sum (fun _ _ => Nat.sub_le _ _)
-    _ = l * (r + 1) := by simp
-    _ ≤ (r + 1) ^ 2 := by rw [sq]; exact Nat.mul_le_mul_right _ hl
-
 theorem frameExp_succ (r : ℕ) : frameExp r (r + 1) = frameExp r r := by
   unfold frameExp
   rw [Finset.sum_Icc_succ_top (by omega)]
@@ -431,7 +425,7 @@ theorem QQ_le (Z : GramM D) {b C Y : ℝ} (hH : 1 ≤ b ^ (C * (D.R.m : ℝ) ^ 2
     have hl' : l ≤ D.R.rS + 1 := (Finset.mem_Icc.mp hl).2
     have hp : D.host.rdE ^ (2 * frameExp D.R.rS l) ≤ Y := by
       refine le_trans (pow_le_pow_right₀ hrd ?_) hY
-      have := frameExp_le D.R.rS l hl'
+      have := _root_.GlobalTheory.LoopC.CovTerm.frameExp_le D.R.rS l hl'
       omega
     have hpos : 0 < D.host.rdE ^ (2 * frameExp D.R.rS l) := pow_pos (by linarith) _
     have heq : ‖embS D τ (leadMinorE Z l)‖ = absDl D Z l τ * D.host.rdE ^ (2 * frameExp D.R.rS l) := by
@@ -504,7 +498,7 @@ theorem G_inv_le (Z : GramM D) (h : ∀ a b, IsIntegral ℤ (Z a b)) (hr : 1 ≤
     rw [this, Complex.norm_real, Real.norm_eq_abs]
   have hρY : D.host.rdE ^ (2 * frameExp D.R.rS D.R.rS) ≤ Y := by
     refine le_trans (pow_le_pow_right₀ hrd ?_) hY
-    have := frameExp_le D.R.rS D.R.rS (by omega)
+    have := _root_.GlobalTheory.LoopC.CovTerm.frameExp_le D.R.rS D.R.rS (by omega)
     omega
   have hρ1 : 1 ≤ D.host.rdE ^ (2 * frameExp D.R.rS D.R.rS) := one_le_pow₀ hrd
   have key : ∀ τ, max 1 (Gz D T T' Z τ)⁻¹ ≤ Y ^ 2 * max 1 ‖embS D τ (leadMinorE Z (D.R.rS + 1) * star (leadMinorE Z (D.R.rS + 1)) - ((T : D.host.E) * (T' : D.host.E)) * (leadMinorE Z D.R.rS * star (leadMinorE Z D.R.rS)))‖⁻¹ := by

@@ -230,8 +230,6 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.F
 
-theorem taylorTh0 : TaylorTh0 := taylor_even_theta
-
 end Formalism.L2.Th1.F
 end -- clump:auto
 end -- clump:auto

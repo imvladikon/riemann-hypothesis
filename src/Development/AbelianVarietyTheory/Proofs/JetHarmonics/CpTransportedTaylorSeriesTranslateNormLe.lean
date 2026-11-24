@@ -402,10 +402,7 @@ lemma bd_X : Bd 1 (X : ℂ_[q]⟦X⟧) := by
   rw [coeff_X]
   split_ifs <;> simp
 
-lemma bd_pow {f : ℂ_[q]⟦X⟧} (hf : Bd 1 f) (n : ℕ) : Bd 1 (f ^ n) := by
-  induction n with
-  | zero => simpa using bd_one
-  | succ n ih => rw [pow_succ]; exact bd_mul_one ih hf
+alias bd_pow := _root_.GlobalTheory.MomOne.Triang.bd_one_pow
 
 lemma bd_sum {α : Type} (s : Finset α) (f : α → ℂ_[q]⟦X⟧) {B : ℝ} (hB : 0 ≤ B)
     (hf : ∀ i ∈ s, Bd B (f i)) : Bd B (∑ i ∈ s, f i) := by
@@ -485,17 +482,6 @@ lemma norm_coeff_prod (ι : ℂ ≃+* ℂ_[q]) {m : ℕ} (a : Fin m → ℂ) (ha
   rw [e] at this
   simpa only [Polynomial.coeToPowerSeries.ringHom_apply, Polynomial.coeff_coe, Polynomial.coeff_map, RingHom.coe_coe] using this
 
-lemma analyticAt_x_of_not_mem_lattice (M : Mdl q) {t : ℂ} (ht : t ∉ M.L.lattice) : AnalyticAt ℂ M.x t := by
-  have := M.L.analyticOnNhd_weierstrassP t ht
-  unfold Mdl.x
-  fun_prop
-
-lemma analyticAt_y (M : Mdl q) {t : ℂ} (ht : t ∉ M.L.lattice) : AnalyticAt ℂ M.y t := by
-  have := M.L.analyticOnNhd_derivWeierstrassP t ht
-  have := analyticAt_x_of_not_mem_lattice M ht
-  unfold Mdl.y
-  fun_prop
-
 lemma analyticAt_shift {F : ℂ → ℂ} {t : ℂ} (hF : AnalyticAt ℂ F t) :
     AnalyticAt ℂ (fun z => F (z + t)) 0 :=
   AnalyticAt.comp_of_eq (g := F) (f := fun z => z + t) hF (by fun_prop) (by simp)
@@ -525,8 +511,8 @@ theorem translate_norm_le : ∀ (q : ℕ) [Fact q.Prime] (M : Mdl q) (ℓ : ℂ_
     hxs hys hxs0 hys0 hS
   obtain ⟨hxt, hyt, hbig⟩ := _root_.GlobalTheory.MomOne.Transl.translate_integral q M ℓ t hc hts
   have htl : t ∉ M.L.lattice := fun h => hts (Or.inl h)
-  have ax := analyticAt_shift (analyticAt_x_of_not_mem_lattice M htl)
-  have ay := analyticAt_shift (analyticAt_y M htl)
+  have ax := analyticAt_shift (_root_.GlobalTheory.MomOne.UW.analyticAt_x_of_not_mem_lattice M htl)
+  have ay := analyticAt_shift (_root_.GlobalTheory.MomOne.UW.analyticAt_y M htl)
   have aφ := analyticAt_shift ht
   have hev : ∀ᶠ z in 𝓝[≠] (0 : ℂ), φ (z + t) * D.eval (M.x (z + t)) =
       A.eval (M.x (z + t)) + B'.eval (M.x (z + t)) * M.y (z + t) := by

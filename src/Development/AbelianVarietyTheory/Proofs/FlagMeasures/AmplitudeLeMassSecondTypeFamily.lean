@@ -1070,12 +1070,6 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 variable {L : LocE F E} {r k : ℕ} (S : Frames L r k)
 
-theorem th_ne : S.th ≠ 0 := by
-  unfold Frames.th
-  split_ifs
-  · exact fun h => S.ϖ_irr.ne_zero (Subtype.ext h)
-  · exact one_ne_zero
-
 noncomputable def sumDiv : S.V × S.V →+ S.V :=
   (algebraMap F E S.th⁻¹ • (LinearMap.id : S.V →ₗ[E] S.V)).toAddMonoidHom.comp
     (AddMonoidHom.fst S.V S.V + AddMonoidHom.snd S.V S.V)
@@ -1083,7 +1077,7 @@ noncomputable def sumDiv : S.V × S.V →+ S.V :=
 theorem sumDiv_apply (p : S.V × S.V) : sumDiv S p = algebraMap F E S.th⁻¹ • (p.1 + p.2) := rfl
 
 theorem th_mul : algebraMap F E S.th * algebraMap F E S.th⁻¹ = 1 := by
-  rw [← map_mul, mul_inv_cancel₀ (th_ne S), map_one]
+  rw [← map_mul, mul_inv_cancel₀ (_root_.GlobalTheory.FrameLevel.th_ne_zero S), map_one]
 
 theorem refB_eq (J : ℕ) (Λ : Submodule L.O S.V) :
     S.refB J Λ = ((S.spanTo S.f J).toAddSubgroup.prod (S.spanTo S.f' J).toAddSubgroup) ⊓
@@ -1273,39 +1267,13 @@ section
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
-open scoped Pointwise ENNReal Classical in
-open ValuativeRel MeasureTheory in
-variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] in
-variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] in
-theorem _root_.GlobalTheory.HL.KernelWeight.hf_add_left (L : _root_.Formalism.MainNotions.S.Loc.LocE F E) {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
-    (a b y : Fin n → E) :
-    _root_.GlobalTheory.HL.hf L Hm (a + b) y =
-      _root_.GlobalTheory.HL.hf L Hm a y + _root_.GlobalTheory.HL.hf L Hm b y := by
-  have h := _root_.GlobalTheory.HL.DualInter.sub_l L Hm (a + b) b y
-  rw [add_sub_cancel_right] at h
-  linear_combination -h
-
-open scoped Pointwise ENNReal Classical in
-open ValuativeRel MeasureTheory in
-variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] in
-variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] in
-theorem _root_.GlobalTheory.HL.KernelWeight.hf_smul_left (L : _root_.Formalism.MainNotions.S.Loc.LocE F E) {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
-    (c : E) (a y : Fin n → E) :
-    _root_.GlobalTheory.HL.hf L Hm (c • a) y = c * _root_.GlobalTheory.HL.hf L Hm a y :=
-  _root_.GlobalTheory.HL.DualInter.smul_l L Hm c a y
-
 def hfLin (L : LocE F E) {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (y : Fin n → E) :
     (Fin n → E) →ₗ[E] E where
   toFun x := hf L Hm x y
-  map_add' a b := hf_add_left L Hm a b y
-  map_smul' c a := hf_smul_left L Hm c a y
+  map_add' a b := _root_.GlobalTheory.HL.Eichler.hf_add_l L Hm a b y
+  map_smul' c a := _root_.GlobalTheory.HL.Eichler.hf_smul_l L Hm c a y
 
-theorem exists_coord {L : LocE F E} {r k : ℕ} (S : Frames L r k) (g : Fin (r + 1) → S.V)
-    (gs : Fin r → S.V)
-    (hd : ∀ a j, hf L S.Hm (g a) (gs j) = if a = j.castSucc then 1 else 0)
-    (n : S.GLV) (hn : n ∈ S.Nof g) (j : Fin r) (x : S.V) (hx : x ∈ S.spanTo g (j + 1)) :
-    ∃ al : Fin (r + 1) → E, x = ∑ i, al i • n (g i) ∧ al j.castSucc = S.h x (gs j) := by
-  apply GlobalTheory.HL.MoveTotal.exists_coords <;> assumption
+alias exists_coord := _root_.GlobalTheory.HL.MoveTotal.exists_coords
 
 end
 

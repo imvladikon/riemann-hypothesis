@@ -58,6 +58,7 @@ import Formalism.SharpRestriction.GrowthBounds.ScaleEdges.DvdOfAdd
 import Formalism.SharpRestriction.GrowthBounds.WittFrameLocaliserOrders
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.ValuationOneEqZero
 import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.SlackBoundReal
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.Tactic.ReduceModChar
@@ -94,23 +95,6 @@ namespace XXb
 section Fr
 
 variable {n' r : ℕ} [NeZero n'] {Fr : Frames n' r} {L₁ N₁ : ℕ}
-
-private theorem fr_lt_fr_of_lt (hV : Fr.Valid L₁ N₁) (j : ℤ) :
-    ∀ i i', i < i' → i' < r → Fr.fr j i < Fr.fr j i' := by
-  intro i i' hii' hi'
-  induction i' with
-  | zero => omega
-  | succ k ih =>
-    rcases Nat.lt_succ_iff_lt_or_eq.mp hii' with h | h
-    · exact (ih h (by omega)).trans (hV.2.2.1 j k hi')
-    · subst h
-      exact hV.2.2.1 j i hi'
-
-private theorem fr_le_fr_of_le (hV : Fr.Valid L₁ N₁) (j : ℤ) (i : ℕ) (hi : i < r) :
-    Fr.fr j 0 ≤ Fr.fr j i := by
-  rcases Nat.eq_zero_or_pos i with h | h
-  · rw [h]
-  · exact (fr_lt_fr_of_lt hV j 0 i h hi).le
 
 theorem exists_posU (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ) (hN : N = (Fr.LLset j).card) (x : ℤ)
     (hx : x ∈ Fr.letters j) (hW : ¬ Fr.IsW j x) : ∃ u, u < N + r ∧ posU Fr N j u = x := by
@@ -161,8 +145,8 @@ theorem posU_letter (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ)
     refine ⟨?_, ?_⟩
     · simp only [Frames.letters, Finset.mem_filter, Finset.mem_Icc]
       refine ⟨⟨?_, ?_⟩, hx.2⟩
-      · exact (fr_le_fr_of_le hV (j - 1) (r - 1) (by omega)).trans hx.1.1.le
-      · exact hx.1.2.le.trans (fr_le_fr_of_le hV j (r - 1) (by omega))
+      · exact (_root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_first_entry_le hV (j - 1) (r - 1) (by omega)).trans hx.1.1.le
+      · exact hx.1.2.le.trans (_root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_first_entry_le hV j (r - 1) (by omega))
     · unfold Frames.IsW
       push_neg
       exact hx.1.1
@@ -180,7 +164,7 @@ theorem posU_letter (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (j : ℤ) (N : ℕ)
     rw [sub_add_cancel] at hg
     refine ⟨?_, ?_⟩
     · simp only [Frames.letters, Finset.mem_filter, Finset.mem_Icc]
-      exact ⟨⟨(fr_le_fr_of_le hV (j - 1) (r - 1) (by omega)).trans hg.le, fr_le_fr_of_le hV j (r - 1) (by omega)⟩,
+      exact ⟨⟨(_root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_first_entry_le hV (j - 1) (r - 1) (by omega)).trans hg.le, _root_.Formalism.MainNotions.G.WittFrameLocaliserOrders.frame_first_entry_le hV j (r - 1) (by omega)⟩,
         (hV.2.2.2.2.1 j 0 (by omega)).1⟩
     · unfold Frames.IsW
       push_neg
@@ -819,7 +803,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.DecIdentity =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.HomCompRename =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.HomCompRename", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.MembDefs\npublic import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.NoMonMultideg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.HomCompRename", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.MembDefs\npublic import Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.NoMonMultideg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.DiagonalSupport.ValuationOneEqZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -882,28 +866,6 @@ section Big
 variable {n' r K m : ℕ} [NeZero n'] (Fr : Frames n' r) (p : ℕ) (O : Type) [CommRing O] [IsDomain O]
   (hk : m + 1 = r + K) {J : ℕ} [NeZero J] (nL : ZMod J → ℕ)
 
-private theorem upPl_monomial_eq_monomial_mPl (bp : TL J nL r × Fin r →₀ ℕ) (c : KK O) :
-    upPl Fr p O hk nL (monomial bp c) = monomial (mPl Fr p hk nL bp) c := by
-  rw [show monomial (mPl Fr p hk nL bp) c = C c * monomial (mPl Fr p hk nL bp) 1 by
-      rw [C_mul_monomial, mul_one]]
-  simp only [upPl, aeval_monomial, algebraMap_eq]
-  rw [Finsupp.prod_fintype _ _ (fun _ => pow_zero _), mPl, MvPolynomial.monomial_sum_one]
-  congr 1
-  apply Finset.prod_congr rfl
-  intro v _
-  rw [← pow_mul, X_pow_eq_monomial]
-
-private theorem upNo_monomial_eq_monomial_mNo (bn : TL J nL r × Fin K →₀ ℕ) (c : KK O) :
-    upNo Fr p O hk nL (monomial bn c) = monomial (mNo Fr p hk nL bn) c := by
-  rw [show monomial (mNo Fr p hk nL bn) c = C c * monomial (mNo Fr p hk nL bn) 1 by
-      rw [C_mul_monomial, mul_one]]
-  simp only [upNo, aeval_monomial, algebraMap_eq]
-  rw [Finsupp.prod_fintype _ _ (fun _ => pow_zero _), mNo, MvPolynomial.monomial_sum_one]
-  congr 1
-  apply Finset.prod_congr rfl
-  intro v _
-  rw [← pow_mul, X_pow_eq_monomial]
-
 theorem asm_support (rho : TL J nL r × Fin (r + K) → ℕ) (A : MvPolynomial (TL J nL r × Fin r) (KK O))
     (N : MvPolynomial (TL J nL r × Fin K) (KK O)) (mm : TV n' (m + 1) →₀ ℕ)
     (h : mm ∈ (asm Fr p O hk nL rho A N).support) :
@@ -913,7 +875,7 @@ theorem asm_support (rho : TL J nL r × Fin (r + K) → ℕ) (A : MvPolynomial (
       monomial (bigM Fr p hk nL rho bp bn) (A.coeff bp * N.coeff bn) := by
     conv_lhs => rw [asm, A.as_sum, N.as_sum]
 
-    simp only [map_sum, upPl_monomial_eq_monomial_mPl, upNo_monomial_eq_monomial_mNo, Finset.mul_sum, Finset.sum_mul]
+    simp only [map_sum, _root_.Formalism.MainNotions.Proposition5Numerics.upPl_monomial, _root_.Formalism.MainNotions.Proposition5Numerics.upNo_monomial, Finset.mul_sum, Finset.sum_mul]
     rw [Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro bp _

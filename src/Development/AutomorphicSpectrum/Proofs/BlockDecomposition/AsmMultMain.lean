@@ -358,8 +358,6 @@ open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem _root_.GlobalTheory.T.cosh_transform_convolution : ∀ (g g' : ℝ → ℝ) (T T' : ℝ) (c : ℂ), IsBump g T → IsBump g' T' → coshT g c * coshT g' c = coshT (gconv g g') c := by
-  first | exact @GlobalTheory.CompanionTheory.WaveMult.CoshMul.coshT_mul_coshT
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoshTransformConvolutionStatement =====
@@ -944,10 +942,6 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace GlobalTheory.CompanionTheory.WaveMult
 
-theorem isOpen_GLs_kerconv (n : ℕ) : IsOpen (GLs n) := by
-  have hc : Continuous fun g : Mat n => g.det := Continuous.matrix_det continuous_id
-  exact isOpen_ne.preimage hc
-
 theorem mul_unitary_mem_GLs_kerconv {n : ℕ} {y : Mat n} (hy : y ∈ GLs n)
     (k₂ : Matrix.unitaryGroup (Fin n) ℂ) : y * k₂.1 ∈ GLs n := by
   have h1 : y.det ≠ 0 := hy
@@ -994,7 +988,7 @@ theorem conv_eq_of_isKer : LgFacts → Unimod → RCalc → WaveSpeed → WaveEx
     have := hK.2.2.1 y hy 1 k₂
     simpa using this
   have hceq := conv_right_equivariant hLg n μ E k k' rk rk' hk'eq
-  have key := hKU n μ E (fun y => conv μ E k k' y - K y) (GLs n) (isOpen_GLs_kerconv n) subset_rfl
+  have key := hKU n μ E (fun y => conv μ E k k' y - K y) (GLs n) (_root_.GlobalTheory.CompanionTheory.WaveMult.ZOpAvg.isOpen_invertible_matrices n) subset_rfl
     (fun y hy k₂ => mul_unitary_mem_GLs_kerconv hy k₂) (rc.1.sub rK.1)
     (fun y hy k₂ => by
       simp only [hceq y hy k₂, hKeq y hy k₂]
@@ -1057,8 +1051,6 @@ open PositivityTheory.RgBcC
 open GlobalTheory.CompanionTheory.WaveMult
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem _root_.GlobalTheory.T.wave_kernel_decomposition : LgFacts → Unimod → RCalc → WaveSpeed → WaveEx → KerUniq → KerOne → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) (w : List (Bool × ℕ)) (g : ℝ → ℝ) (T : ℝ) (k : Mat n → (E.V →L[ℂ] E.V)), IsBump g T → IsKer μ E w g k → ∃ (N : ℕ) (c : Fin N → ℂ) (w₁ : Fin N → List (Bool × ℕ)) (K : Fin N → Mat n → (E.V →L[ℂ] E.V)), (∀ i, IsKer μ E (w₁ i) g (K i)) ∧ (haveI := FiniteDimensional.complete ℂ E.V; ∀ y ∈ GLs n, ContinuousLinearMap.adjoint (k y⁻¹) = ∑ i, c i • K i y) ∧ ∀ χ : Inf n, IsHerm χ → conj (zVal w χ) = ∑ i, c i * zVal (w₁ i) χ := by
-  first | exact @GlobalTheory.CompanionTheory.WaveMult.KerAdj.kernel_adjoint
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelDecompositionStatement =====
@@ -1160,11 +1152,11 @@ theorem asmMult_main : AsmMult := by
       (fun p => gconv (g p.1) (g' p.2)) K (fun p => ⟨hbp p, hK p⟩) hconv fun χ => ?_
     rw [Pi.mul_apply, hv χ, hv' χ, Finset.sum_mul_sum, Fintype.sum_prod_type]
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-    rw [zVal_append, ← GlobalTheory.T.cosh_transform_convolution _ _ _ _ _ (hb i).1 (hb' j).1]
+    rw [zVal_append, ← _root_.GlobalTheory.CompanionTheory.WaveMult.CoshMul.coshT_mul_coshT _ _ _ _ _ (hb i).1 (hb' j).1]
     ring
   · haveI := FiniteDimensional.complete ℂ E.V
     choose N d w₁ K₁ hK₁ hadj hval using fun i =>
-      GlobalTheory.T.wave_kernel_decomposition hL hU hR hS hE hQ h1 n μ E (w i) (g i) T (ks i) (hb i).1 (hb i).2
+      _root_.GlobalTheory.CompanionTheory.WaveMult.KerAdj.kernel_adjoint hL hU hR hS hE hQ h1 n μ E (w i) (g i) T (ks i) (hb i).1 (hb i).2
     refine ⟨fun χ => ∑ q : (Σ i, Fin (N i)), (conj (c q.1) * d q.1 q.2) * zVal (w₁ q.1 q.2) χ * coshT (g q.1) (cas χ), ?_, ?_⟩
     · refine isMult_of_fintype μ E (fun q : (Σ i, Fin (N i)) => conj (c q.1) * d q.1 q.2) (fun q => w₁ q.1 q.2)
         (fun q => g q.1) (fun q => K₁ q.1 q.2) (fun q => ⟨(hb q.1).1, hK₁ q.1 q.2⟩) (fun y hy => ?_) fun χ => rfl

@@ -61,8 +61,6 @@ open GlobalTheory.PointChern Filter Topology
 open scoped Matrix
 
 
-theorem _root_.GlobalTheory.T.topDegreeFormCoeff_linearSubst_eq_absDet_sq_mul : ∀ {n : ℕ} (J : Matrix (Fin n) (Fin n) ℂ) (P : MvPolynomial (Fin n × Fin n) ℂ), topCoeff (aeval (fun x : Fin n × Fin n => ∑ a, ∑ b, C (J x.1 a * starRingEnd ℂ (J x.2 b)) * X (a, b)) P) = J.det * starRingEnd ℂ J.det * topCoeff P := by
-  first | exact @GlobalTheory.GoodMetric.topCoeff_subst_conj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffLinearSubstEqAbsDetSqMulStatement =====
@@ -220,7 +218,7 @@ theorem GlobalTheory.ChernPull.chernTop_comp : ∀ {n : ℕ} {ι : Type} {m : ι
     (f := fun x : ι × ℕ => chernPoly (fun u => K u x.1) (φ v) x.2)
     ((GlobalTheory.ChernPull.substAlg (GlobalTheory.ChernPull.jac φ v)).restrictScalars ℝ))
   simp only [AlgHom.comp_apply, AlgHom.coe_restrictScalars'] at ha
-  rw [← ha, GlobalTheory.ChernPull.substAlg, GlobalTheory.T.topDegreeFormCoeff_linearSubst_eq_absDet_sq_mul, Complex.mul_conj, GlobalTheory.ChernPull.jac_eq_toMatrix,
+  rw [← ha, GlobalTheory.ChernPull.substAlg, _root_.GlobalTheory.GoodMetric.topCoeff_subst_conj, Complex.mul_conj, GlobalTheory.ChernPull.jac_eq_toMatrix,
     LinearMap.det_toMatrix, Complex.re_ofReal_mul]
   ring
 end -- clump:auto

@@ -612,18 +612,11 @@ namespace GlobalTheory.EvenTheta
 section General
 variable {p : ℕ} [Fact p.Prime]
 
-theorem lamC_coe (lam : Qbar →+* ℂ_[p]) {x : ℂ} (hx : x ∈ Qbar) : lamC lam x = lam ⟨x, hx⟩ := dif_pos hx
+alias lamC_coe := _root_.Formalism.L2.KerInert.ISd.lamC_of_mem
 
-theorem lamC_mul (lam : Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ Qbar) (hy : y ∈ Qbar) :
-    lamC lam (x * y) = lamC lam x * lamC lam y := by
-  rw [lamC_coe lam hx, lamC_coe lam hy, lamC_coe lam (mul_mem hx hy), ← map_mul]; rfl
+alias lamC_mul := _root_.GlobalTheory.ThetaParam.lamC_mul
 
-theorem lamC_sub (lam : Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ Qbar) (hy : y ∈ Qbar) :
-    lamC lam (x - y) = lamC lam x - lamC lam y := by
-  rw [lamC_coe lam hx, lamC_coe lam hy, lamC_coe lam (sub_mem hx hy), ← map_sub]; rfl
-
-theorem lamC_one (lam : Qbar →+* ℂ_[p]) : lamC lam 1 = 1 := by
-  rw [lamC_coe lam (one_mem _)]; exact map_one lam
+alias lamC_one := _root_.GlobalTheory.ThetaParam.lamC_one
 
 theorem lamC_neg_one (lam : Qbar →+* ℂ_[p]) : lamC lam (-1) = -1 := by
   rw [lamC_coe lam (neg_mem (one_mem _)), ← map_one lam, ← map_neg]; rfl
@@ -639,7 +632,7 @@ theorem xAt_inj (g : GL3Theta.G1 p) {v w : ℂ} (hv : wpF g.abelian₂ v ∈ Qba
   have := mul_left_cancel₀ (pow_ne_zero 2 (Units.ne_zero _)) h
   linear_combination this
 
-theorem IntSer.bdd {f : PowerSeries ℂ_[p]} (h : IntSer f) : BddSer f := ⟨1, h⟩
+alias IntSer.bdd := _root_.GlobalTheory.EvenTheta.Isog.IntSer.bdd
 
 theorem IntSer.mul {f g : PowerSeries ℂ_[p]} (hf : IntSer f) (hg : IntSer g) : IntSer (f * g) :=
   ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).1 f g hf hg).2.2
@@ -647,23 +640,15 @@ theorem IntSer.add {f g : PowerSeries ℂ_[p]} (hf : IntSer f) (hg : IntSer g) :
   ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).1 f g hf hg).1
 theorem IntSer.sub {f g : PowerSeries ℂ_[p]} (hf : IntSer f) (hg : IntSer g) : IntSer (f - g) :=
   ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).1 f g hf hg).2.1
-theorem BddSer.mul {f g : PowerSeries ℂ_[p]} (hf : BddSer f) (hg : BddSer g) : BddSer (f * g) :=
-  ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 f g hf hg).2.2
-theorem BddSer.add {f g : PowerSeries ℂ_[p]} (hf : BddSer f) (hg : BddSer g) : BddSer (f + g) :=
-  ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 f g hf hg).1
-theorem bdd_C (c : ℂ_[p]) : BddSer (PowerSeries.C c) := ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 c).1
+alias BddSer.mul := _root_.GlobalTheory.ThetaTransl.bdd_mul
+alias BddSer.add := _root_.GlobalTheory.ThetaTransl.bdd_add
 theorem int_C {c : ℂ_[p]} (h : ‖c‖ ≤ 1) : IntSer (PowerSeries.C c) := ((GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 c).2 h
 theorem int_X : IntSer (PowerSeries.X : PowerSeries ℂ_[p]) := (GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.2.1
 theorem IntSer.inv {f : PowerSeries ℂ_[p]} (hf : IntSer f) (h : ‖PowerSeries.constantCoeff f‖ = 1) :
     IntSer f⁻¹ := (GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.2.2.1 f hf h
 theorem IntSer.sq {f : PowerSeries ℂ_[p]} (hf : IntSer f) : IntSer (f ^ 2) := by
   rw [_root_.sq]; exact hf.mul hf
-theorem intSer_iff {f : PowerSeries ℂ_[p]} : IntegralMv f ↔ IntSer f := by
-  constructor
-  · intro h n; exact h (Finsupp.single () n)
-  · intro h n
-    have := h (n ())
-    rwa [PowerSeries.coeff_def (s := n) rfl] at this
+alias intSer_iff := _root_.GlobalTheory.CMNormPhi.intSer_iff'
 
 theorem int_of_sq {f : PowerSeries ℂ_[p]} (hb : BddSer f) (h : IntSer (f ^ 2)) : IntSer f := by
   intro n
@@ -687,31 +672,14 @@ theorem atU_mul {F G : ℂ → ℂ} (hF : AlgEnt F) (hG : AlgEnt G) :
 theorem atU_add {F G : ℂ → ℂ} (hF : AlgEnt F) (hG : AlgEnt G) :
     AlgEnt (fun z => F z + G z) ∧ g.atU (fun z => F z + G z) = g.atU F + g.atU G :=
   ((GlobalTheory.SerTransport.transport p g).1 F G hF hG).2
-theorem atU_smul {c : ℂ} (hc : c ∈ Qbar) {F : ℂ → ℂ} (hF : AlgEnt F) :
-    AlgEnt (fun z => c * F z) ∧ g.atU (fun z => c * F z) = PowerSeries.C (lamC g.lam c) * g.atU F := by
-  obtain ⟨h1, h2⟩ := (GlobalTheory.SerTransport.transport p g).2.1 c hc
-  rw [← h2]
-  exact atU_mul g h1 hF
+alias atU_smul := _root_.GlobalTheory.ThetaUnit.atU_smul'
 theorem atU_sq {F : ℂ → ℂ} (hF : AlgEnt F) :
     AlgEnt (fun z => F z ^ 2) ∧ g.atU (fun z => F z ^ 2) = g.atU F ^ 2 := by
   simp only [_root_.sq]
   exact atU_mul g hF hF
-theorem atU_prod {ι : Type} (s : Finset ι) {F : ι → ℂ → ℂ} (hF : ∀ i, AlgEnt (F i)) :
-    AlgEnt (fun z => ∏ i ∈ s, F i z) ∧ g.atU (fun z => ∏ i ∈ s, F i z) = ∏ i ∈ s, g.atU (F i) := by
-  induction s using Finset.induction_on with
-  | empty =>
-    obtain ⟨h1, h2⟩ := (GlobalTheory.SerTransport.transport p g).2.1 1 (one_mem _)
-    simp only [Finset.prod_empty]
-    exact ⟨h1, by rw [h2, lamC_one, map_one]⟩
-  | insert a s ha ih =>
-    simp only [Finset.prod_insert ha]
-    rw [← ih.2]
-    exact atU_mul g (hF a) ih.1
-
 end General
 
-theorem thetaTranslation_zero (Λ : AddSubgroup ℂ) (F : ℂ → ℂ) : U1 Λ 0 F = F := by
-  funext z; simp [U1]
+alias thetaTranslation_zero := _root_.GlobalTheory.ThetaParam.thetaTranslation_zero
 
 section Two
 variable {g : GL3Theta.G1 2} {t₀ : ℂ} (hok : g.Ok) (hlat : IsLat g.abelian₂) (hdisc : TaylorLogMetric.discr g.abelian₂ = 1)
@@ -776,11 +744,11 @@ theorem int_th {β : ℂ} {k : ℕ} (hβ : β ∈ Qbar) (hn : ‖lamC g.lam β�
     have h4 : ‖(k : ℂ_[2])‖ ≤ 1 := IsUltrametricDist.norm_natCast_le_one _ _
     nlinarith [norm_nonneg ((2 : ℕ) : ℂ_[2]), norm_nonneg (k : ℂ_[2])]
   · rw [← (hsub _ (alg_th hlat halg hnm htwo)).2, funext e1,
-      (atU_prod g Finset.univ fun i => (hd _ (hQ i).1 (hQ i).2).1).2,
+      (_root_.GlobalTheory.CMNormPhi.atU_prod' g Finset.univ fun i => (hd _ (hQ i).1 (hQ i).2).1).2,
       Finset.prod_congr rfl fun i _ => (hd _ (hQ i).1 (hQ i).2).2, Finset.prod_mul_distrib]
     simp
   · rw [← (hd _ hb1 hq1).2, ← (hsub _ (hd _ hb1 hq1).1).2, funext e2,
-      (atU_prod g Finset.univ fun i => (hd _ (hQ' i).1 (hQ' i).2).1).2,
+      (_root_.GlobalTheory.CMNormPhi.atU_prod' g Finset.univ fun i => (hd _ (hQ' i).1 (hQ' i).2).1).2,
       Finset.prod_congr rfl fun i _ => (hd _ (hQ' i).1 (hQ' i).2).2, Finset.prod_mul_distrib]
     simp
   · exact fun i j h => hne i j (xAt_inj g (hwp _ (hQ i).2 (hQ i).1) (hwp _ (hQ' j).2 (hQ' j).1) h)
@@ -898,7 +866,7 @@ theorem transl_sq {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) : ∃ H : Pow
   set κ := lamC g.lam (wpF g.abelian₂ t - wpF g.abelian₂ t₀) with hκ
   have hκ1 : ‖κ‖ ≤ 1 := by
     have e1 : ε ^ 2 * κ = xAt g t - xAt g t₀ := by
-      rw [hκ, lamC_sub _ w1 w0, xAt, xAt]; ring
+      rw [hκ, _root_.GlobalTheory.ThetaPar.lamC_sub' _ w1 w0, xAt, xAt]; ring
     have e2 : ‖xAt g t - xAt g t₀‖ ≤ 1 := by
       rw [sub_eq_add_neg]
       refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ (by rwa [norm_neg]))
@@ -966,8 +934,8 @@ theorem transl_bdd {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) :
   have m1 := atU_smul g hc1 (atU_sq g hAs).1
   have m2 := atU_smul g hc2 (atU_sq g hs1).1
   rw [hid, (atU_add g m1.1 m2.1).2, m1.2, m2.2, (atU_sq g hAs).2, (atU_sq g hs1).2, a5, b2, mul_pow] at e
-  have hb := (((bdd_C (lamC g.lam c₁)).mul (hE2.mul b1).bdd).add
-    ((bdd_C (lamC g.lam c₂)).mul (hE2.mul a1.sq).bdd)).mul (hf.inv (by rw [hf0, norm_one])).bdd
+  have hb := (((_root_.GlobalTheory.ThetaTransl.bdd_C (lamC g.lam c₁)).mul (hE2.mul b1).bdd).add
+    ((_root_.GlobalTheory.ThetaTransl.bdd_C (lamC g.lam c₂)).mul (hE2.mul a1.sq).bdd)).mul (hf.inv (by rw [hf0, norm_one])).bdd
   rwa [e, mul_assoc, PowerSeries.mul_inv_cancel _ (by rw [hf0]; exact one_ne_zero), mul_one] at hb
 
 

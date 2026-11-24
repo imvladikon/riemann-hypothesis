@@ -603,8 +603,7 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_twisted_groupLike' : ∀ (K H : Type) [Field K] [IsAlgClosed K] [CommRing H] [Bialgebra K H] [Coalgebra.IsCocomm K H] [Module.Finite K H] (c : H ⊗[K] H), IsUnit c → c ⊗ₜ[K] (1 : H) * Algebra.TensorProduct.map (Bialgebra.comulAlgHom K H) (AlgHom.id K H) c = (Algebra.TensorProduct.assoc K K K H H H).symm ((1 : H) ⊗ₜ[K] c * Algebra.TensorProduct.map (AlgHom.id K H) (Bialgebra.comulAlgHom K H) c) → Algebra.TensorProduct.comm K H H c = c → ∃ u : H, u ≠ 0 ∧ c * Coalgebra.comul (R := K) u = u ⊗ₜ[K] u := by
-  first | exact @GlobalTheory.exists_twisted_groupLike
+alias _root_.GlobalTheory.T.exists_twisted_groupLike' := _root_.GlobalTheory.exists_twisted_groupLike
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistedGroupLikeStatement =====
@@ -758,12 +757,6 @@ theorem tensor_assoc_comul_placement_eq (K B : Type) [CommRing K] [CommRing B] [
   rw [hab, map_mul]
   simp [Algebra.TensorProduct.one_def]
 
-theorem over_comp_appTop {S : Scheme.{0}} {X Y Z : Over S} (f : X ⟶ Y) (g : Y ⟶ Z) (v : Γ(Z.left, ⊤)) :
-    (f ≫ g).left.appTop.hom v = f.left.appTop.hom (g.left.appTop.hom v) := by
-  rw [Over.comp_left, Scheme.Hom.comp_appTop]; rfl
-
-
-
 theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (Sp K)) [GrpObj N] [IsCommMonObj N], IsFinite N.hom → ∀ c : Γ((N ⊗ N).left, ⊤)ˣ, (∀ (T : Over (Sp K)) (x y z : T ⟶ N), GlobalTheory.CharKer.pullTop (lift x y).left c * GlobalTheory.CharKer.pullTop (lift (x * y) z).left c = GlobalTheory.CharKer.pullTop (lift y z).left c * GlobalTheory.CharKer.pullTop (lift x (y * z)).left c) → (∀ (T : Over (Sp K)) (x y : T ⟶ N), GlobalTheory.CharKer.pullTop (lift x y).left c = GlobalTheory.CharKer.pullTop (lift y x).left c) → ∃ u : Γ(N.left, ⊤)ˣ, ∀ (T : Over (Sp K)) (x y : T ⟶ N), GlobalTheory.CharKer.pullTop (lift x y).left c * GlobalTheory.CharKer.pullTop (x * y).left u = GlobalTheory.CharKer.pullTop x.left u * GlobalTheory.CharKer.pullTop y.left u := by
   intro K _ _ N _ _ hf c hcoc hsym
   obtain ⟨B, _, _, hcc, hfin, e, he⟩ := GlobalTheory.CharExists.pres K N hf
@@ -857,7 +850,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
       (z ≫ e.inv).left.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom (hu.unit : B)) := by
     intro z
     rw [hw]
-    exact (over_comp_appTop z e.inv _).symm
+    exact (_root_.GlobalTheory.SplitTorusHom.appTop_comp z e.inv _).symm
   letI : Algebra K Γ(T.left, ⊤) :=
     (T.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom).toAlgebra
   let sh : (T ⟶ (Spec (CommRingCat.of B)).asOver (Sp K)) → (B →ₐ[K] Γ(T.left, ⊤)) := fun f =>
@@ -1092,10 +1085,6 @@ end GlobalTheory.TwoTors
 
 namespace GlobalTheory.TwoTors
 
-theorem pullTop_pullTop {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (u : Γ(Z, ⊤)ˣ) :
-    GlobalTheory.CharKer.pullTop f (GlobalTheory.CharKer.pullTop g u) = GlobalTheory.CharKer.pullTop (f ≫ g) u := by
-  ext; simp [GlobalTheory.CharKer.pullTop]; rfl
-
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsCommMonObj A]
 
 def inclHom (T : Over S) : (T ⟶ Two A) →* (T ⟶ A) := MonoidHom.mk' (· ≫ incl A) mul_incl
@@ -1181,7 +1170,7 @@ theorem killsSq_of (c : Γ((Two A ⊗ Two A).left, ⊤)ˣ) (w : Γ((Two A).left,
       GlobalTheory.CharKer.pullTop (x * y).left w = GlobalTheory.CharKer.pullTop x.left w * GlobalTheory.CharKer.pullTop y.left w) :
     KillsSq (sq A).left D (GlobalTheory.CharKer.pullTop (δ A).left w⁻¹) := by
   unfold KillsSq
-  rw [pullTop_pullTop, pullTop_pullTop, pullTop_pullTop, fst_δ, snd_δ, tripleFibreProjOneThree_comp_fiberProductMulTwoToTwoTorsion, ← hc, map_inv, map_inv, map_inv]
+  rw [_root_.GlobalTheory.CharKer.pullTop_pullTop_comp, _root_.GlobalTheory.CharKer.pullTop_pullTop_comp, _root_.GlobalTheory.CharKer.pullTop_pullTop_comp, fst_δ, snd_δ, tripleFibreProjOneThree_comp_fiberProductMulTwoToTwoTorsion, ← hc, map_inv, map_inv, map_inv]
   have H := hw (tripO A) (dif (t₁ A) (t₂ A) (t₁₂_sq A)) (dif (t₂ A) (t₃ A) (t₂₃_sq A))
   rw [map_pow] at H
   have hψ : (ψ A).left = (lift (dif (t₁ A) (t₂ A) (t₁₂_sq A)) (dif (t₂ A) (t₃ A) (t₂₃_sq A))).left := rfl
@@ -1200,7 +1189,7 @@ theorem GlobalTheory.TwoTors.killsSq_of_triCocycle : ∀ (K : Type) [Field K] [I
       GlobalTheory.CharKer.pullTop (tri (sq A).left a.left b.left d.left p₁ p₂) D =
         GlobalTheory.CharKer.pullTop (lift (dif a b h₁) (dif b d h₂)).left c := by
     intro T a b d h₁ h₂ p₁ p₂
-    rw [← hc, pullTop_pullTop, ← tpt_ψ a b d h₁ h₂]
+    rw [← hc, _root_.GlobalTheory.CharKer.pullTop_pullTop_comp, ← tpt_ψ a b d h₁ h₂]
     rfl
   have hcoc : ∀ (T : Over (Sp K)) (x y z : T ⟶ Two A),
       GlobalTheory.CharKer.pullTop (lift x y).left c * GlobalTheory.CharKer.pullTop (lift (x * y) z).left c =

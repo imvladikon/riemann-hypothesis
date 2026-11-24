@@ -114,8 +114,6 @@ open GlobalTheory.UPel GlobalTheory.UPel.Sm GlobalTheory.Cris GlobalTheory.DeRha
 open scoped TensorProduct
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.crystal_finite_free_reduces_to_deRham : ∀ (F : Type) [Field F] [NumberField F] (Λ : Type) [CommRing Λ] (k : Type) [Field k] (π : Λ →+* k) (hπ : Function.Surjective π) (hI : RingHom.ker π ^ 2 = 0) (A₀ : Over (Sp k)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ a : OAct (𝓞 F) A₀, letI := tensorModule (divided₂ hI) (spMap π) a; letI := tensorModule (dp0 k) (𝟙 _) a; Module.Finite Λ (Crys (divided₂ hI) (spMap π) A₀) ∧ Module.Free Λ (Crys (divided₂ hI) (spMap π) A₀) ∧ ∃ f : Crys (divided₂ hI) (spMap π) A₀ →ₛₗ[(Algebra.TensorProduct.map π.toIntAlgHom (AlgHom.id ℤ (𝓞 F))).toRingHom] HdR A₀, Function.Surjective f ∧ ∀ m, f m = 0 → m ∈ (RingHom.ker π) • (⊤ : Submodule Λ (Crys (divided₂ hI) (spMap π) A₀)) := by
-  first | exact @GlobalTheory.CrysFree.crys_free_and_red
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalFiniteFreeReducesToDeRhamStatement =====
@@ -427,8 +425,6 @@ open GlobalTheory.UPel GlobalTheory.UPel.Sm GlobalTheory.Cris GlobalTheory.DeRha
 open scoped TensorProduct
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.de_rham_cohomology_projective_module : ∀ (F : Type) [Field F] [NumberField F] (k : Type) [Field k], (∀ (B₀ : Over (Sp (AlgebraicClosure k))) [GrpObj B₀] [IsCommMonObj B₀], IsAbelianScheme B₀ → ∀ b : OAct (𝓞 F) B₀, letI := tensorModule (dp0 (AlgebraicClosure k)) (𝟙 _) b; Module.Projective (AlgebraicClosure k ⊗[ℤ] 𝓞 F) (HdR B₀)) → ∀ (A₀ : Over (Sp k)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ a : OAct (𝓞 F) A₀, letI := tensorModule (dp0 k) (𝟙 _) a; Module.Projective (k ⊗[ℤ] 𝓞 F) (HdR A₀) := by
-  first | exact @GlobalTheory.HdRDescent.projective_of_algebraicClosure
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamCohomologyProjectiveModuleStatement =====
@@ -1112,14 +1108,14 @@ theorem hdR_projective : ∀ (F : Type) [Field F] [NumberField F] (k : Type) [Fi
   intro F _ _ k _ A₀ _ _ hA a
   rcases CharP.char_is_prime_or_zero k (ringChar k) with hp | hp
   · haveI : Fact (ringChar k).Prime := ⟨hp⟩
-    refine GlobalTheory.T.de_rham_cohomology_projective_module F k ?_ A₀ hA a
+    refine _root_.GlobalTheory.HdRDescent.projective_of_algebraicClosure F k ?_ A₀ hA a
     intro B₀ _ _ hB b
     set K := AlgebraicClosure k
     haveI : CharP K (ringChar k) := charP_of_injective_algebraMap (algebraMap k K).injective _
     obtain ⟨Λ, _, π, hπ, hker, hp2, hann⟩ := _root_.GlobalTheory.exists_flat_lift_mod_p_sq (ringChar k) K
     have hI : RingHom.ker π ^ 2 = 0 := by
       rw [hker, Ideal.span_singleton_pow, hp2, Ideal.span_singleton_eq_bot.2 rfl]; rfl
-    obtain ⟨hfin, hfree, f, hf, hk⟩ := GlobalTheory.T.crystal_finite_free_reduces_to_deRham F Λ K π hπ hI B₀ hB b
+    obtain ⟨hfin, hfree, f, hf, hk⟩ := _root_.GlobalTheory.CrysFree.crys_free_and_red F Λ K π hπ hI B₀ hB b
     letI := tensorModule (divided₂ hI) (spMap π) b
     haveI := isScalarTower_tensorModule (divided₂ hI) (spMap π) b
     letI := tensorModule (dp0 K) (𝟙 _) b

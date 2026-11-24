@@ -117,7 +117,7 @@ theorem compV_infGL (w : HeightOneSpectrum (𝓞 E)) (y : GL (Fin n) (Cinf E)) :
 
 theorem comm_of_supp {x y : GA E n} (hinf : GeneralLinearGroup.map (pInf E) x = 1)
     (hw : ∀ w, GlobalTheory.CellDec.compV E n w x = 1 ∨ GlobalTheory.CellDec.compV E n w y = 1) : x * y = y * x := by
-  refine ga_ext (by rw [map_mul, map_mul, hinf, one_mul, mul_one]) (GlobalTheory.CellDec.GL_ext_pLoc fun w => ?_)
+  refine ga_ext (by rw [map_mul, map_mul, hinf, one_mul, mul_one]) (_root_.GlobalTheory.CuspRep.LocUniq.gl_ext fun w => ?_)
   rw [map_mul, map_mul, map_mul, map_mul, ← compV_eq, ← compV_eq]
   rcases hw w with h | h <;> rw [h] <;> simp
 
@@ -505,12 +505,6 @@ open scoped ENNReal nonZeroDivisors Classical
 
 namespace GlobalTheory.RSCell
 
-theorem wtS_eq_sum (N : ℕ) (a : Fin N → ℤ) :
-    GlobalTheory.CellDec.wtS N a = ∑ i : Fin N, ((N : ℤ) - 1 - 2 * ((i : ℕ) : ℤ)) * a i := by
-  first
-  | (apply _root_.GlobalTheory.WeightSumSplit.wtS_eq <;> assumption)
-  | (intros; exact _root_.GlobalTheory.WeightSumSplit.wtS_eq ..)
-
 theorem locFac_eq_wtS_sphZ : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α : Fin (n + 1) → ℂ) (x : ℝ) (ν : Fin (n + 1) → ℤ), 0 ≤ ν (Fin.last n) →
     ENNReal.ofReal ((q : ℝ) ^ GlobalTheory.CellDec.wtS (n + 1) ν) * ENNReal.ofReal ((q : ℝ) ^ (-((∑ i, (ν i : ℝ)) * x))) *
       ‖GlobalTheory.RSCell.sphZ q α ν‖ₑ ^ 2 = GlobalTheory.RSCell.locFac q α x ν := by
@@ -522,7 +516,7 @@ theorem locFac_eq_wtS_sphZ : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α : Fin (n
     set s := GlobalTheory.JSW.schurAt (fun i => (ν i).toNat) α
     set w : ℤ := GlobalTheory.CellDec.wtS (n + 1) ν with hw
     have hc : (∑ i : Fin (n + 1), ((((n + 1 : ℕ)) : ℂ) - 1 - 2 * ((i : ℕ) : ℂ)) * (((ν i).toNat : ℕ) : ℂ)) = ((w : ℤ) : ℂ) := by
-      rw [hw, wtS_eq_sum]
+      rw [hw, _root_.GlobalTheory.WeightSumSplit.wtS_eq]
       push_cast
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [show (((ν i).toNat : ℕ) : ℂ) = ((ν i : ℤ) : ℂ) by exact_mod_cast Int.toNat_of_nonneg (hnn i)]

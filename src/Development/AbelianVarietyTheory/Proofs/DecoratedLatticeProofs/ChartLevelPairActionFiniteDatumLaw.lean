@@ -520,11 +520,6 @@ end GlobalTheory.AdForm.DeepMove
 
 namespace GlobalTheory.AdForm.DeepMove
 
-theorem map_sub_one_apply {R R' : Type} [CommRing R] [CommRing R'] {n : ℕ} (f : R →+* R') (A : Matrix (Fin n) (Fin n) R)
-    (r s : Fin n) : f ((A - 1) r s) = (A.map f - 1) r s := by
-  simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.map_apply, map_sub]
-  split_ifs <;> simp
-
 theorem exists_den_mat {D : D7} {m n : ℕ} (M : Matrix (Fin m) (Fin n) (AE D)) : ∃ d : ℕ, 0 < d ∧
     ∀ r s, toEAf D ((d : AE D) * M r s) ∈ Formalism.L2.DIV.RInt D.host.F D.host.E := by
   choose x y hy e using fun r s => GlobalTheory.AdeleBaseChange.exists_approx (F := D.host.F) (E := D.host.E) (toEAf D (M r s))
@@ -597,15 +592,15 @@ theorem actO_deep : ∀ (D : D7) (S T : HSp D) {a b : ℕ} (ha : S.rank = a) (hb
     have hXw : ∀ r s, Valued.v (((Formalism.L2.Theta.mt S w).map φ - 1) r s) ≤ WithZero.exp (-(N₀ : ℤ)) := fun r s => by
       have h := hA P r s
       rw [GlobalTheory.AdForm.CongAtIdem.finM_rfl] at h
-      rw [← map_sub_one_apply]
+      rw [← _root_.GlobalTheory.SplitCharTrivial.map_sub_one]
       simpa [φ, Matrix.sub_apply, Matrix.one_apply, Matrix.map_apply, apply_ite] using h
     have hXw' : ∀ r s, Valued.v (((Formalism.L2.Theta.mt T w').map φ - 1) r s) ≤ WithZero.exp (-(N₀ : ℤ)) := fun r s => by
       have h := hB P r s
       rw [GlobalTheory.AdForm.CongAtIdem.finM_rfl] at h
-      rw [← map_sub_one_apply]
+      rw [← _root_.GlobalTheory.SplitCharTrivial.map_sub_one]
       simpa [φ, Matrix.sub_apply, Matrix.one_apply, Matrix.map_apply, apply_ite] using h
     have hinv : (Formalism.L2.Theta.mt T w').map φ * (Formalism.L2.Theta.mt T w'⁻¹).map φ = 1 := by
-      rw [← Matrix.map_mul, ← GlobalTheory.AdForm.CongAtIdem.mt_mul', mul_inv_cancel, GlobalTheory.AdForm.CongAtIdem.mt_one',
+      rw [← Matrix.map_mul, ← GlobalTheory.AdForm.CongAtIdem.mt_mul', mul_inv_cancel, _root_.GlobalTheory.BesselCompare.mt_one,
         Matrix.map_one _ (map_zero _) (map_one _)]
     have hY' := inv_entry_le Valued.v _ _ hinv hε hXw'
     let Md : Matrix (Fin T.rank) (Fin S.rank) (AE D) := Matrix.of fun r s => (d : AE D) * M r s
@@ -964,14 +959,10 @@ open GlobalTheory.SeeSaw GlobalTheory.Unf
 
 namespace GlobalTheory.AdForm.RatApprox
 
-theorem mt_mul' {D : D7} (V : HSp D) (g h : GA D V) :
-    Formalism.L2.Theta.mt V (g * h) = Formalism.L2.Theta.mt V g * Formalism.L2.Theta.mt V h := by
-  unfold Formalism.L2.Theta.mt; rw [map_mul]; rfl
-
 theorem actO_actO' {D : D7} (S T : HSp D) (g g' : GA D S) (h h' : GA D T) (x : WO S T) :
     actO S T g h (actO S T g' h' x) = actO S T (g * g') (h * h') x := by
   unfold actO
-  rw [_root_.mul_inv_rev, mt_mul', mt_mul']
+  rw [_root_.mul_inv_rev, _root_.GlobalTheory.BesselCompare.mt_mul, _root_.GlobalTheory.BesselCompare.mt_mul]
   simp only [Matrix.mul_assoc]
 
 theorem isHalf_actO' {D : D7} {S T : HSp D} {e : AE D} (g : GA D S) (h : GA D T) {u : WO S T} (hu : IsHalf e u) :
@@ -1254,7 +1245,7 @@ theorem chr_root_eq_prod (hI : I.Ok) (hA : A.Is) (j : Fin B.R.m) (k : ℕ) (hk :
   have hfin : finM _ (rankN (I.rec7 l Z) k hk) (κ.1 * A.kA k β) = (κ₀ * A.kb k β).1 := by
     rw [GlobalTheory.RepLattice.finM_mul', h0, hkAm, Units.val_mul]
     rfl
-  have e1 := chr_root_eq hI hA j k hk _ (mul_mem hκ hkA) _ hfin _ (GlobalTheory.TwistFinPart.isDetRoot_mul' _ _ _ _ _ hx hxr) _ hq
+  have e1 := chr_root_eq hI hA j k hk _ (mul_mem hκ hkA) _ hfin _ (_root_.GlobalTheory.Member.isDetRoot_mul _ _ _ _ _ hx hxr) _ hq
   have e2 := chr_root_eq hI hA j k hk _ hkA _ hkAm _ hxr _ ((hA.base k hk β).1.of_extTo (ColIn.Q_subset_SQ I a) hd)
   have hD := muDetLaw_chain (Pr := B.primes X) I.Ch I.sel (I.tup a) (I.cst a) j.1 (B.R.N k)
   rw [muAt_eq_muAtT I.Ch I.sel (I.tup a) (I.cst a) (muqTie_of_ok _ _ _ _ _ (hI.idx_ok a)) j.1 j.2] at hD
@@ -1465,14 +1456,6 @@ open GlobalTheory.SeeSaw GlobalTheory.Unf
 
 namespace GlobalTheory.AdForm.RatLaw
 
-theorem isHalf_actO {D : D7} {S T : HSp D} {e : AE D} (g : GA D S) (h : GA D T) {u : WO S T} (hu : IsHalf e u) :
-    IsHalf e (actO S T g h u) := by
-  intro i j
-  simp only [actO, Matrix.mul_apply, Finset.mul_sum, Finset.sum_mul]
-  refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
-  conv_rhs => rw [← hu l k]
-  ring
-
 theorem law_rat : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : TwDat I l Z u a Ch), A.Is → ∀ (i : ℕ) (hi : i + 1 ≤ B.R.m) α γ, ∀ Φ : WO ((I.rec7 l Z).sp.X i) ((I.rec7 l Z).sp.X (i + 1)) → ℂ, IsSBHalf A.e (stdHom _ _) Φ → ∀ p : ℂ, (∀ z, Φ (z.map fun r => A.e * incA (I.rec7 l Z) r) = p * A.xi i hi α γ z) → ∀ (κ : A.U i α) (κ' : A.U (i + 1) γ) x y, IsDetRoot _ κ.1 x → IsDetRoot _ κ'.1 y → ∀ z : Matrix (Fin ((I.rec7 l Z).sp.X (i + 1)).rank) (Fin ((I.rec7 l Z).sp.X i).rank) (I.rec7 l Z).host.E, (A.chr (i + 1) x : ℂ)⁻¹ * (A.chr (i + 1) y : ℂ) * Φ (actO _ _ κ.1⁻¹ κ'.1⁻¹ (z.map fun r => A.e * incA (I.rec7 l Z) r)) = ((A.chi i α κ : ℂˣ) : ℂ)⁻¹ * ((A.chi (i + 1) γ κ' : ℂˣ) : ℂ) * Φ (z.map fun r => A.e * incA (I.rec7 l Z) r) := by
   intro B X I hI hP l Z u a Ch A hA i hi α γ Φ hΦ p hp κ κ' x y hx hy z
   obtain ⟨hsupp, k, hk, hper, -⟩ := hΦ
@@ -1499,7 +1482,7 @@ theorem law_rat : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pi
       exact hw (hsupp _ h)
     have h2 : Φ ez = 0 := by
       by_contra h
-      exact hw (GlobalTheory.AdForm.RatLaw.isHalf_actO _ _ (hsupp _ h))
+      exact hw (_root_.GlobalTheory.SplitHecke.isHalf_actO _ _ (hsupp _ h))
     rw [h1, h2]
     simp
 
@@ -1611,16 +1594,11 @@ end GlobalTheory.SBMove
 
 namespace GlobalTheory.SBMove
 
-theorem mt_mul_inv_eq {D : D7} (V : HSp D) (g : GA D V) :
-    Formalism.L2.Theta.mt V g * Formalism.L2.Theta.mt V g⁻¹ = 1 := by
-  simp only [Formalism.L2.Theta.mt]
-  rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
-
 theorem actO_actO_inv {D : D7} {S T : HSp D} (g : GA D S) (h : GA D T) (x : WO S T) :
     actO S T g h (actO S T g⁻¹ h⁻¹ x) = x := by
   simp only [actO, inv_inv]
   simp only [← Matrix.mul_assoc]
-  rw [mt_mul_inv_eq, Matrix.one_mul, Matrix.mul_assoc, mt_mul_inv_eq, Matrix.mul_one]
+  rw [_root_.GlobalTheory.MixModel.mt_mul_inv, Matrix.one_mul, Matrix.mul_assoc, _root_.GlobalTheory.MixModel.mt_mul_inv, Matrix.mul_one]
 
 theorem actO_add' {D : D7} {S T : HSp D} (g : GA D S) (h : GA D T) (x y : WO S T) :
     actO S T g h (x + y) = actO S T g h x + actO S T g h y := by
@@ -1969,7 +1947,7 @@ theorem lev_law : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X
   have hvth : IsThetaFunO ψ _ _ (vac j) := (hX.vc j hj).2.theta
   have hp : kom j (κ.1, κ'.1) (vac j) = p • vac j := by
     have hf : IsThetaFunO ψ _ _ (kom j (κ.1, κ'.1) (vac j) - p • vac j) :=
-      GlobalTheory.AvgKill.theta_sub' (hom.om_pres _ _ hvth) (GlobalTheory.LocMod.LinSpace.isThetaFunO_smul p hvth)
+      _root_.GlobalTheory.OrientedHeis.theta_sub (hom.om_pres _ _ hvth) (GlobalTheory.LocMod.LinSpace.isThetaFunO_smul p hvth)
     have hz : xiN θ _ _ (rankN (I.rec7 l Z) j (Nat.le_of_succ_le hj1)) (rankN (I.rec7 l Z) (j + 1) hj1) I.A.δ I.A.sc
         (kom j (κ.1, κ'.1) (vac j) - p • vac j) = 0 := by
       funext z

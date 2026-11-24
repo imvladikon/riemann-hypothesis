@@ -74,12 +74,6 @@ theorem twKer_eq_map_of_surjective {G V W : Type} [Group G] [AddCommGroup V] [Mo
   · rintro ⟨_, ⟨n, v, rfl⟩, rfl⟩
     exact ⟨n, f v, by rw [map_sub, map_smul, hint]⟩
 
-theorem twKer_map_closed : ∀ {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
-    [Module ℂ W] (ρ : Representation ℂ G V) (σ : Representation ℂ G W) (N : Subgroup G)
-    (θ : N →* ℂˣ) (f : V →ₗ[ℂ] W), Function.Surjective f → (∀ g v, f (ρ g v) = σ g (f v)) →
-    twKer σ N θ = (twKer ρ N θ).map f :=
-  fun ρ σ N θ f hf hint => GlobalTheory.CompanionTheory.PRep.twKer_eq_map_of_surjective ρ σ N θ f hf hint
-
 end GlobalTheory.CompanionTheory.PRep
 end -- clump:auto
 end -- clump:auto
@@ -155,7 +149,7 @@ theorem twMap_range_eq_ker : ∀ {G V₁ V₂ V₃ : Type} [Group G] [Topologica
       exact hg x w0
     have hmem : (Submodule.Quotient.mk w : V₂ ⧸ LinearMap.ker g) ∈ GlobalTheory.PRep.twKer ρq N θ :=
       GlobalTheory.CompanionTheory.PRep.JacExact.twKer_reflect ρq ρ₃ hq h₃ N θ hθ hN gb hgb_inj hgb_eq _ hx
-    rw [GlobalTheory.CompanionTheory.PRep.twKer_map_closed ρ₂ ρq N θ (LinearMap.ker g).mkQ
+    rw [_root_.GlobalTheory.CompanionTheory.PRep.twKer_eq_map_of_surjective ρ₂ ρq N θ (LinearMap.ker g).mkQ
       (Submodule.mkQ_surjective _) (fun x v => rfl)] at hmem
     obtain ⟨w', hw', hw'eq⟩ := hmem
     rw [Submodule.mkQ_apply, Submodule.Quotient.eq, ← hfg, LinearMap.mem_range] at hw'eq

@@ -65,6 +65,7 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.BitVec
+import Formalism.SharpRestriction.GrowthBounds.FrobeniusPaths.DividedPowerZeroOfGlActionZero
 import Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition
 import Mathlib.Tactic.Polynomial.Basic
 import Formalism.SharpRestriction.GrowthBounds.CoarseMultiplicity.Lemma44IdentityOfRawTail
@@ -642,7 +643,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXPH =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSum =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSum", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColsS\npublic import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.CardEqChainSum\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.TCoreDef\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXCnt\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSeg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.BitVec\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSum", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColsS\npublic import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.CardEqChainSum\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.TCoreDef\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXCnt\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSeg\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.BitVec\nimport Formalism.SharpRestriction.GrowthBounds.FrobeniusPaths.DividedPowerZeroOfGlActionZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -656,12 +657,6 @@ section General
 
 variable {N K : ℕ}
 
-theorem abs_le_colT (ka : Fin (N + 1) → Fin K → ℤ) (i : Fin (N + 1)) (a : Fin K) :
-    |ka i a| ≤ ∑ i, ∑ m, |ka i m| :=
-  le_trans (Finset.single_le_sum (f := fun m => |ka i m|) (fun _ _ => abs_nonneg _) (Finset.mem_univ a))
-    (Finset.single_le_sum (f := fun i => ∑ m, |ka i m|) (fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _)
-      (Finset.mem_univ i))
-
 theorem mem_colRange_iff (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) :
     c ∈ colRange ka ↔ -(∑ i, ∑ m, |ka i m|) ≤ c ∧ c ≤ ∑ i, ∑ m, |ka i m| := by
   unfold colRange
@@ -670,8 +665,8 @@ theorem mem_colRange_iff (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) :
 theorem mem_colRange_of (ka : Fin (N + 1) → Fin K → ℤ) (i i' : Fin (N + 1)) (a : Fin K) (c : ℤ)
     (h1 : ka i a < c) (h2 : c ≤ ka i' a) : c ∈ colRange ka := by
   rw [mem_colRange_iff]
-  have e1 := abs_le.1 (abs_le_colT ka i a)
-  have e2 := abs_le.1 (abs_le_colT ka i' a)
+  have e1 := abs_le.1 (_root_.Formalism.MainNotions.LemmaBAlt.abs_entry_le_total ka i a)
+  have e2 := abs_le.1 (_root_.Formalism.MainNotions.LemmaBAlt.abs_entry_le_total ka i' a)
   constructor <;> omega
 
 variable {vecc : Fin N → Bool} {B : Fin N → ℕ} {ka : Fin (N + 1) → Fin K → ℤ} {nu : ℕ → ℤ}
@@ -726,7 +721,7 @@ theorem colH_above (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) (hc : ∑ i, �
   unfold colH
   rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
   intro m _ hle
-  have := (abs_le.1 (abs_le_colT ka i m)).2
+  have := (abs_le.1 (_root_.Formalism.MainNotions.LemmaBAlt.abs_entry_le_total ka i m)).2
   omega
 
 theorem Kcol_above (R : Type) [CommRing R] (ka : Fin (N + 1) → Fin K → ℤ) (c : ℤ) (hc : ∑ i, ∑ m, |ka i m| < c)
@@ -920,7 +915,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSum =====
 
 -- ===== clump member: Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.IoDChain =====
--- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.IoDChain", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColsS\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.IdentityLiftWeightedHomog\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.TCoreDef\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.YcondFactor\nimport Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSeg\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.HomGMonomial\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.IoDChain", "h": "module\n\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColsS\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.IdentityLiftWeightedHomog\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.TCoreDef\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.YcondFactor\nimport Formalism.SharpRestriction.GrowthBounds.ProjectionOfIsotypicDecomposition\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.ColXSeg\npublic import Formalism.SharpRestriction.GrowthBounds.StandardPolynomials.HomGMonomial\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.SharpRestriction.GrowthBounds.FrobeniusPaths.DividedPowerZeroOfGlActionZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1064,14 +1059,6 @@ theorem nd_single (v : VarH X) : ndHom X (Finsupp.single v 1) = wN X v := by
   rw [degUS, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same]
   simp [wN, hhLetters]
 
-private theorem colH_mono_of_forall_le {n : ℕ} {u v : Fin n → ℤ} (huv : ∀ b, u b ≤ v b) (c : ℤ) :
-    colH u c ≤ colH v c := by
-  unfold colH
-  apply Finset.card_le_card
-  intro b hb
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
-  exact le_trans hb (huv b)
-
 private theorem colH_eq_zero_of_forall_lt {n : ℕ} {u : Fin n → ℤ} (c : ℤ) (hu : ∀ b, u b < c) : colH u c = 0 := by
   unfold colH
   rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
@@ -1153,10 +1140,10 @@ private theorem colH_ka_le_by_vecc_of_PH {N K : ℕ} {vecc : Fin N → Bool} {B 
   constructor
   · intro hv
     rw [if_pos hv] at hs
-    exact colH_mono_of_forall_le hs.1 c
+    exact _root_.Formalism.MainNotions.LemmaBAlt.column_height_mono hs.1 c
   · intro hv
     rw [if_neg (by simp [hv])] at hs
-    exact ⟨colH_mono_of_forall_le hs.1 c, h.nucov a hv⟩
+    exact ⟨_root_.Formalism.MainNotions.LemmaBAlt.column_height_mono hs.1 c, h.nucov a hv⟩
 
 private theorem wN_phiS_castAdd_zero_eq_ite_lamS (X : Loc) (j : Fin (numSeg X.TT)) (t : Fin (2 * segS X.TT j + 1 + 1)) :
     wN X (Formalism.MainNotions.ColumnSystems.Pf.phiS X j (t, Fin.castAdd X.m 0)) = if (lamS X j t).2 = false then 1 else 0 := by

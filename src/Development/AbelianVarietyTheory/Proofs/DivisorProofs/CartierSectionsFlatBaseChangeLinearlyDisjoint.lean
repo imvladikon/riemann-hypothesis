@@ -275,8 +275,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.Desc
 open TensorProduct
 
-theorem _root_.GlobalTheory.T.linearlyDisjoint_of_flat_baseChange_embeds : ∀ (R R₁ K L : Type) [CommRing R] [CommRing R₁] [CommRing K] [CommRing L] [Algebra R R₁] [Algebra R K] [Module.Flat R R₁] (θ : K →+* L) (c : R₁ →+* L), (∀ (n : ℕ) (u : Fin n → K) (r : Fin n → R₁), ∑ j, c (r j) * θ (u j) = 0 → ∑ j, u j ⊗ₜ[R] r j = 0) → LinDisj (algebraMap R K) c θ := by
-  first | exact @GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearlyDisjointOfFlatBaseChangeEmbedsStatement =====
@@ -450,8 +448,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.Desc
 open TensorProduct
 
-theorem _root_.GlobalTheory.T.tensor_fraction_injective_of_tensor_injective : ∀ (R R₁ B K L : Type) [CommRing R] [CommRing R₁] [CommRing B] [Field K] [Field L] [Algebra R R₁] [Algebra R B] [Algebra R K] [Algebra B K] [IsScalarTower R B K] [IsFractionRing B K] (θ : K →+* L) (c : R₁ →+* L) (β : B ⊗[R] R₁ →+ L), Function.Injective β → (∀ b r, β (b ⊗ₜ[R] r) = θ (algebraMap B K b) * c r) → ∀ (n : ℕ) (u : Fin n → K) (r : Fin n → R₁), ∑ j, c (r j) * θ (u j) = 0 → ∑ j, u j ⊗ₜ[R] r j = 0 := by
-  first | exact @GlobalTheory.tensor_fraction_injective_of_injective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFractionInjectiveOfTensorInjectiveStatement =====
@@ -566,9 +562,9 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
     haveI : IsScalarTower R Γ(X, U₀) X.functionField :=
       IsScalarTower.of_algebraMap_eq fun a => ((hal _).trans (fnOf_algX p U₀ hg₀ a)).symm
     obtain ⟨β, hβi, hβ, -⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
-    exact GlobalTheory.T.tensor_fraction_injective_of_tensor_injective R R₁ Γ(X, U₀) X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) β hβi
+    exact _root_.GlobalTheory.tensor_fraction_injective_of_injective R R₁ Γ(X, U₀) X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) β hβi
       (fun b r => (hβ b r).trans (by rw [hal]))
-  refine ⟨GlobalTheory.T.linearlyDisjoint_of_flat_baseChange_embeds R R₁ X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) hinj, fun k => ?_⟩
+  refine ⟨_root_.GlobalTheory.Desc.FlatLinDisj.linDisj_of_flat R R₁ X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) hinj, fun k => ?_⟩
   have hloc : ∀ x : X, ∃ (U : X.Opens) (g : X.functionFieldˣ), IsAffineOpen U ∧ x ∈ U ∧ ∀ y ∈ U, D.IsEqn y g := by
     intro x
     obtain ⟨W, hxW, g, hg⟩ := D.exists_isEqn_nhds x

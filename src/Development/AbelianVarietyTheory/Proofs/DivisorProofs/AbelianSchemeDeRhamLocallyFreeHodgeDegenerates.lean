@@ -200,11 +200,6 @@ section Wsum
 
 variable {R : Type} [CommRing R] {C : Type} [Category.{0} C] (F : C ⥤ CommAlgCat.{0} R)
 
-theorem wsum_finAppend {n n' : ℕ} (u v : Fin n → Glob1 F) (u' v' : Fin n' → Glob1 F) :
-    wsum F (Fin.append u u') (Fin.append v v') = wsum F u v + wsum F u' v' := by
-  funext T
-  simp only [wsum, Fin.sum_univ_add, Fin.append_left, Fin.append_right, Pi.add_apply]
-
 theorem wsum_neg_first {n : ℕ} (u v : Fin n → Glob1 F) : wsum F (fun k ↦ -u k) v = -wsum F u v := by
   funext T
   simp only [wsum, Submodule.coe_neg, Pi.neg_apply, map_neg, LinearMap.neg_apply, Finset.sum_neg_distrib]
@@ -220,8 +215,8 @@ theorem wsum_eq_add_of_cupSum_eq (hc : Closed1 F = ⊤) (hsur : Function.Surject
     simp only [Fin.append_left, Fin.append_right, map_neg, LinearMap.neg_apply, Finset.sum_neg_distrib]
     rw [h]
     abel
-  have h3 := (GlobalTheory.T.cupSum_closedGlobalOneForms_eq_zero_iff_sumWedge R C F hc hsur _ _ _).1 h2
-  rw [wsum_finAppend, wsum_finAppend, wsum_neg_first, wsum_neg_first] at h3
+  have h3 := (_root_.GlobalTheory.AbCoh.cupSum_eq_zero_iff_wsum_eq_zero R C F hc hsur _ _ _).1 h2
+  rw [_root_.GlobalTheory.AbCoh.wsum_append, _root_.GlobalTheory.AbCoh.wsum_append, wsum_neg_first, wsum_neg_first] at h3
   rw [← sub_eq_zero, ← h3]
   abel
 
@@ -317,7 +312,7 @@ theorem cupHH_self_eq_zero : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpO
     exact wsum_eq_add_of_cupSum_eq _ hc2 hsur2 _ _ _ _ _ _ h
   have hw0 := GlobalTheory.T.sum_wedge_primitive_oneForms_eq_zero_abelianScheme R A g hA hs m u Φ.w hwp
   rw [hz2]
-  exact (GlobalTheory.T.cupSum_closedGlobalOneForms_eq_zero_iff_sumWedge R _ _ hc hsur m u Φ.w).2 hw0
+  exact (_root_.GlobalTheory.AbCoh.cupSum_eq_zero_iff_wsum_eq_zero R _ _ hc hsur m u Φ.w).2 hw0
 
 end GlobalTheory.AbCoh
 end -- clump:auto
@@ -1075,8 +1070,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry KaehlerDifferential 
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.CechDR GlobalTheory.AbCoh
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_sum_ιMulti_of_exteriorSquare_map_eq_zero : ∀ (R : Type) [CommRing R] (W M H : Type) [AddCommGroup W] [Module R W] [AddCommGroup M] [Module R M] [AddCommGroup H] [Module R H] (i : W →ₗ[R] M) (p : M →ₗ[R] H), Function.Surjective p → Function.Exact i p → ∀ t : ⋀[R]^2 M, exteriorPower.map 2 p t = 0 → ∃ (n : ℕ) (a : Fin n → M) (w : Fin n → W), t = ∑ k, exteriorPower.ιMulti R 2 ![a k, i (w k)] := by
-  first | exact @GlobalTheory.exteriorSquare_ker_of_surjective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExteriorSquareKerOfSurjectiveStatement =====
@@ -1345,7 +1338,7 @@ theorem exists_wedge_hyp_equiv : ∀ (R : Type) [CommRing R] (C : Type) [Categor
       have := LinearMap.congr_fun hcomm t
       simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe] at this
       rw [this, ht, map_zero, map_zero]
-    obtain ⟨m, a, w, rfl⟩ := GlobalTheory.T.exists_sum_ιMulti_of_exteriorSquare_map_eq_zero R (Glob1 F) (Hyp1 F) (CatCoh.H1 F) (clAll F hc) (toO F) hs hex t h1
+    obtain ⟨m, a, w, rfl⟩ := _root_.GlobalTheory.exteriorSquare_ker_of_surjective R (Glob1 F) (Hyp1 F) (CatCoh.H1 F) (clAll F hc) (toO F) hs hex t h1
     simp only [← ιTwo_apply] at ht ⊢
     have hsum : ∑ k, cupHyp F (a k) (clAll F hc (w k)) = 0 := by
 

@@ -79,9 +79,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory
 
-theorem vacuum_unique_all : ∀ D : D7, VacUniqueO D :=
-  fun D => GlobalTheory.VacUnique.vacUniqueO D
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -350,7 +347,7 @@ theorem vec_unique (kV : V.SigOK) (kW : W.SigOK) {sS : D.what₂.Tau → Matrix 
     exact Finset.sum_congr rfl fun PP hPP =>
       (((GlobalTheory.IdemSupport.supported_group_and_prime_idempotents V).2.2.1 PP _ _ (Or.inl ⟨hes PP hPP, rfl⟩)).2.2.2.1 _ _
         (Or.inl ⟨hes' PP hPP, rfl⟩)).1
-  obtain ⟨a, ha, rfl⟩ := GlobalTheory.vacuum_unique_all D ψ θ h₀.1 h₀.2.inf V W sS sT kV kW hS hT ΛS ΛT dS dT f₀ f₀' h₀ h₀'
+  obtain ⟨a, ha, rfl⟩ := _root_.GlobalTheory.VacUnique.vacUniqueO D ψ θ h₀.1 h₀.2.inf V W sS sT kV kW hS hT ΛS ΛT dS dT f₀ f₀' h₀ h₀'
   refine ⟨a, ha, ?_⟩
   rw [hall T hT₀]
   exact hall' (a • T)

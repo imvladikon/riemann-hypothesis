@@ -282,9 +282,6 @@ theorem zeta_muZ (hB : RadBase k r z z' μsec π π') {ζ : ℂ} (hζ : Tz k r z
   obtain ⟨-, hz, hz', -, -, hsec, -, -, -, -⟩ := hB
   exact Formalism.FourierDecayAlt.P.NFRadRedA.zeta_muZ hz hz' hsec hζ
 
-theorem isOpen_QR : IsOpen (QR k r z z') := by
-  exact Formalism.FourierDecayAlt.P.NFRadRedA.qr_open
-
 theorem radR_mulZ (hB : RadBase k r z z' μsec π π') (f : ℂ → ℂ) {Φ : Fn k r (Wq →L[ℂ] Wp)}
     (hΦ : Φ ∈ RadSp k r z z' π π') {x : (Fin r → ℂ) × ℂ} (hx : x ∈ QR k r z z') :
     radR k r z z' μsec (mulZ k r z z' f Φ) x = f x.2 • radR k r z z' μsec Φ x := by
@@ -456,7 +453,7 @@ theorem radOrder0_of (hMem : RadRedMem) (hInj : RadRedInj) : RadOrder0 := by
   intro Wp Wq _ _ _ _ _ _ k r z z' μsec π π' hB T a b hT ha hb f hf Φ Ψ hΨ
   obtain ⟨n, A, -, hA⟩ := hT
   have hUo : IsOpen {ζ : ℂ | Tz k r z * Tz k r z' < Complex.normSq ζ} := isOpen_U
-  have hQo : IsOpen (QR k r z z') := isOpen_QR
+  have hQo : IsOpen (QR k r z z') := _root_.Formalism.FourierDecayAlt.P.NFRadRedA.qr_open
   have hg : ContDiffOn ℝ ∞ (fun ζ => a * dZ f ζ + b * dZb f ζ) {ζ : ℂ | Tz k r z * Tz k r z' < Complex.normSq ζ} :=
     (contDiffOn_const.mul (contDiffOn_dZ hUo hf)).add (contDiffOn_const.mul (contDiffOn_dZb hUo hf))
   have hsm : ContDiffOn ℝ ∞ (radR k r z z' μsec (Φ : Fn k r (Wq →L[ℂ] Wp))) (QR k r z z') :=
@@ -529,11 +526,8 @@ end Formalism.FourierDecayAlt.P.NFRO
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem nf_radOrder0_of_radRed : Formalism.FourierDecayAlt.NF.RadRedMem → Formalism.FourierDecayAlt.NF.RadRedInj → Formalism.FourierDecayAlt.NF.RadOrder0 :=
-  NFRO.radOrder0_of
-
 theorem radical_order_zero : Formalism.FourierDecayAlt.NF.RadOrder0 :=
-  nf_radOrder0_of_radRed radical_reduction_mem radical_reduction_injective
+  _root_.Formalism.FourierDecayAlt.P.NFRO.radOrder0_of _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedInj
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto

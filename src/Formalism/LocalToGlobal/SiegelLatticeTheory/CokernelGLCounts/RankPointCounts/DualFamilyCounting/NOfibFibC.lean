@@ -556,7 +556,7 @@ theorem mul_mem_cancel {I J K : FI} (hK : K ≠ 0) {x y : D.host.E} (hx : x ∈ 
 
 variable (X : HidaSetting D)
 
-theorem aa_ne (Y : HidaSetting D) (a : Fin D.R.rS) : aaD D a ≠ 0 := Formalism.L2.SG.Pf.NcReal.JX.CovB.aaD_ne_zero Y a
+alias aa_ne := _root_.Formalism.L2.SG.Pf.NcReal.JX.CovB.aaD_ne_zero
 
 theorem e_mem {a : Fin D.R.rS} {c : D.host.E} (hc : c ∈ aaD D a) : c • X.eX a ∈ (VS D).L0 := by
   rw [X.Lam_split]
@@ -923,7 +923,7 @@ theorem hJ_span_ef (v : InfinitePlace X.B.I.F) (α β : Fin D.R.rS → D.host.E)
     (he : ∀ c, hJ (X.B.I.ε v) (rv X.B.I v (X.crd (X.eX c))) w = 0)
     (hf : ∀ c, hJ (X.B.I.ε v) (rv X.B.I v (X.crd (X.fY c))) w = 0) :
     hJ (X.B.I.ε v) (rv X.B.I v (X.crd (∑ c, α c • X.eX c + ∑ c, β c • X.fY c))) w = 0 := by
-  rw [Formalism.L2.SG.NormCut.crd_add', Formalism.L2.SG.NormCut.crd_sum', Formalism.L2.SG.NormCut.crd_sum']
+  rw [_root_.Formalism.L2.SG.Pf.crd_add, Formalism.L2.SG.NormCut.crd_sum', Formalism.L2.SG.NormCut.crd_sum']
   simp only [Formalism.L2.SG.NormCut.crd_smul']
   have rv_add (a b : Fin X.B.I.n → X.B.I.E) : rv X.B.I v (a + b) = rv X.B.I v a + rv X.B.I v b := by
     unfold rv
@@ -978,7 +978,7 @@ theorem dictionary_place_holds : DictPlace := by
       congr 1
       ext i
       simp
-    rw [hy, Formalism.L2.SG.NormCut.crd_add', rv_add, Formalism.L2.SG.RealObj.InfCut.ProductExactness.hJ_add_l,
+    rw [hy, _root_.Formalism.L2.SG.Pf.crd_add, rv_add, Formalism.L2.SG.RealObj.InfCut.ProductExactness.hJ_add_l,
       hJ_span_ef X v _ _ w he hf, add_zero]
   funext p
   rcases p with ((p | b) | (p | a))

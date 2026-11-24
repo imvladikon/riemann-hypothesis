@@ -209,11 +209,7 @@ namespace GlobalTheory.SgInf.AbsConv
 
 variable {k r : ℕ}
 
-theorem measurable_lmul : Measurable (fun p : Mt k r × Mt k r => lmulM (Matrix.of p.2 : Mat k r) p.1) := by
-  apply Continuous.measurable
-  refine continuous_pi fun i => continuous_pi fun j => ?_
-  simp only [lmulM, Matrix.mul_apply, Matrix.of_apply]
-  fun_prop
+alias measurable_lmul := _root_.GlobalTheory.SgInf.measurable_lmul_swap
 
 theorem lintegral_lt_top {μG μS ν : Measure (Mt k r)} [SFinite μG] [SFinite μS] [SFinite ν]
     {S : Set (Mat k r)} (hq : IsQuotMeas μG μS ν)
@@ -434,12 +430,7 @@ namespace GlobalTheory.SgInf.KernelRe
 
 variable {k r : ℕ}
 
-theorem hpk_unit : IsUnit (Hpk k r).det :=
-  Matrix.isUnit_det_of_left_inverse (hpkFacts k r).2.1
-
-theorem GG_unit {a : Mat k r} (ha : a ∈ GG k r) : IsUnit a.det := ((uHGroup _ _ hpk_unit).2.2 a ha).1
-
-theorem GG_inv {a : Mat k r} (ha : a ∈ GG k r) : a⁻¹ ∈ GG k r := ((uHGroup _ _ hpk_unit).2.2 a ha).2
+theorem GG_inv {a : Mat k r} (ha : a ∈ GG k r) : a⁻¹ ∈ GG k r := ((uHGroup _ _ _root_.GlobalTheory.SgInf.isUnit_det_Hpk).2.2 a ha).2
 
 def lmulEquiv (a : Mat k r) (ha : IsUnit a.det) : Mt k r ≃ᵐ Mt k r where
   toFun x := lmulM a x
@@ -459,7 +450,7 @@ theorem rconv_eq_translate {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ
     (μG : Measure (Mt k r)) (e : Mat k r → ℂ) (W : Mat k r → Wp) (hμ : IsHaarOn (GG k r) μG)
     {y : Mat k r} (hy : y ∈ GG k r) :
     rconv μG e W y = ∫ g, e (y⁻¹ * Matrix.of g) • W (Matrix.of g) ∂μG := by
-  have hyu : IsUnit y⁻¹.det := GG_unit (GG_inv hy)
+  have hyu : IsUnit y⁻¹.det := _root_.GlobalTheory.SgInf.isUnit_det_of_mem_GG (GG_inv hy)
   have hmap : μG.map (lmulM y⁻¹) = μG := hμ.2.2.2 _ (GG_inv hy)
   have hme : MeasurableEmbedding (lmulM (k := k) (r := r) y⁻¹) :=
     (lmulEquiv y⁻¹ hyu).measurableEmbedding
@@ -469,7 +460,7 @@ theorem rconv_eq_translate {Wp : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ
   congr 1; funext g
   show e (Matrix.of (lmulM y⁻¹ g)) • W (y * Matrix.of (lmulM y⁻¹ g)) = _
   show e (y⁻¹ * Matrix.of g) • W (y * (y⁻¹ * Matrix.of g)) = _
-  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (GG_unit hy), Matrix.one_mul]
+  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (_root_.GlobalTheory.SgInf.isUnit_det_of_mem_GG hy), Matrix.one_mul]
 
 theorem kernel_rconv : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [CompleteSpace Wp] (σ : Mat k r → (H →L[ℂ] H)) (w : H) (a : ℝ) (μG : Measure (Mt k r)) (d : ℝ) (z : Fin (2 * r + k + 1) → ℂ) (c : Fin r → ℂ) (π : Mat k r → (Wp →L[ℂ] Wp)) (μS : Measure (Mt k r)) , Std σ w a μG d → Side z π μS → ∀ ν : Measure (Mt k r), IsQuotMeas μG μS ν → ∀ W : Mat k r → Wp, AEStronglyMeasurable (fun x : Mt k r => W (Matrix.of x)) μG → AEStronglyMeasurable (fun x : Mt k r => W (Matrix.of x)) ν → IsSPsiEquiv z (psiGen k r z c) π W → l2SG ν W < ⊤ → ∀ y ∈ GG k r, Integrable (fun g : Mt k r => be (psiGen k r z c) π μS σ (σ y w) (σ (Matrix.of g) w) (W (Matrix.of g))) ν ∧ rconv μG (eFun μG σ w) W y = (d : ℂ) • ∫ g, be (psiGen k r z c) π μS σ (σ y w) (σ (Matrix.of g) w) (W (Matrix.of g)) ∂ν := by
   intro k r H _ _ _ Wp _ _ _ _ σ w a μG d z c π μS hStd hSide ν hν W hWG hWν hW hL2 y hy

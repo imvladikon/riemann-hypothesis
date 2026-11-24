@@ -474,11 +474,6 @@ theorem relIndex_ne_zero_of_cover {G : Type} [Group G] (M W : Subgroup G) (S : S
   have : Finite (W ⧸ M.subgroupOf W) := Finite.of_injective ψ hinj
   exact Subgroup.index_ne_zero_of_finite
 
-theorem exists_pow_mem {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (L : Subgroup G)
-    (hL : IsOpen (L : Set G)) (t : G) (hc : IsCompact (closure (Subgroup.zpowers t : Set G))) :
-    ∃ k : ℕ, 0 < k ∧ t ^ k ∈ L :=
-  _root_.Bl.FirstLemmaC.goal1 L hL t hc
-
 theorem cover_cosets {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     (L T Γ : Subgroup G) (C : Set G) (hLo : IsOpen (L : Set G)) (hTc : IsClosed (T : Set G)) (hΓ : Γ ≤ T)
     (hC : IsCompact C) (hcov : ∀ t ∈ T, ∃ γ ∈ Γ, ∃ c ∈ C, t = γ * c) :
@@ -517,7 +512,7 @@ theorem cptPart_le_powRad {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
     cptPart T ≤ powRad T (T ⊓ L) hcomm := by
   rw [cptPart, Subgroup.closure_le]
   rintro t ⟨ht, hc⟩
-  obtain ⟨k, hk, hkL⟩ := exists_pow_mem L hLo t hc
+  obtain ⟨k, hk, hkL⟩ := _root_.Bl.FirstLemmaC.goal1 L hLo t hc
   exact ⟨ht, k, hk, T.pow_mem ht k, hkL⟩
 
 theorem inf_le_cptPart' {G : Type} [Group G] [TopologicalSpace G] [T2Space G] (T L : Subgroup G)
@@ -1151,23 +1146,16 @@ theorem selberg {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 abbrev gam1 (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (δ : GL (Fin n) E) : Subgroup (GL (Fin n) (Af E)) :=
   (ratF E n).range ⊓ twCent (thF E n) (ratF E n δ)
 
-theorem algebraMap_inj (E : Type) [Field E] [NumberField E] : Function.Injective (algebraMap E (Af E)) := by
-  haveI : Nontrivial (Af E) := by
-    obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
-    exact (Formalism.UG.evalV E ⟨P, hP.isPrime,
-      Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩).toRingHom.domain_nontrivial
-  exact (algebraMap E (Af E)).injective
-
 theorem ratF_injective (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) :
     Function.Injective (ratF E n) := by
   intro a b h
-  refine Units.ext (Matrix.ext fun i j => algebraMap_inj E ?_)
+  refine Units.ext (Matrix.ext fun i j => _root_.GlobalTheory.CompanionTheory.DefiniteTransport.algebraMap_injective E ?_)
   exact congrArg (fun g : GL (Fin n) (Af E) => g.val i j) h
 
 theorem ratF_mem_UJ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (H : Matrix (Fin n) (Fin n) E)
     (γ : GL (Fin n) E) : ratF E n γ ∈ UJ (conjFin (IsCMField.complexConj E).toRingEquiv) (H.map (algebraMap E (Af E))) ↔
       γ ∈ UJ (IsCMField.complexConj E).toRingEquiv.toRingHom H := by
-  have hi := algebraMap_inj E
+  have hi := _root_.GlobalTheory.CompanionTheory.DefiniteTransport.algebraMap_injective E
   have hv : (ratF E n γ).val = γ.val.map (algebraMap E (Af E)) := rfl
   have hcT : cT (conjFin (IsCMField.complexConj E).toRingEquiv) (γ.val.map (algebraMap E (Af E))) =
       (cT (IsCMField.complexConj E).toRingEquiv.toRingHom γ.val).map (algebraMap E (Af E)) := by

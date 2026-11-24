@@ -52,15 +52,6 @@ import Mathlib.Tactic.Linter.HaveILetI
 section -- clump:auto
 @[expose] public section
 
-theorem traceSurjective_holds : PI.CMTraceOnto := by
-  intro K _ _ _ hK a ha
-
-  have hfix : PI.CMT.conj a = a := by
-    apply NumberField.RingOfIntegers.ext
-    rw [PI.CMT.coe_conj, ha]
-  obtain ⟨x, hx⟩ := PI.CMT.isTr_mul_fixed hfix (PI.CMT.isTr_one hK.2.2)
-  refine ⟨x, PI.CMT.conj x, PI.CMT.coe_conj x, ?_⟩
-  rw [hx, mul_one]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.CMTraceOnto =====
@@ -106,7 +97,7 @@ theorem traceOne_holds (D : D7) : TraceOne D := by
         apply hx
         rw [← neg_sub]
         exact P.neg_mem hmem
-  obtain ⟨x, y, hy, hxy⟩ := traceSurjective_holds D.host.E hU 1 (by simp)
+  obtain ⟨x, y, hy, hxy⟩ := _root_.PI.CMT.main D.host.E hU 1 (by simp)
   exact ⟨x, by
     simpa [← hy] using congrArg (fun z : 𝓞 D.host.E => (z : D.host.E)) hxy⟩
 

@@ -79,22 +79,13 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem cc_cc (x : E) : cc (cc x) = x := by simp [cc]
 
-theorem cc_integral {x : E} (hx : IsIntegral ℤ x) : IsIntegral ℤ (cc x) :=
-  hx.map ((IsCMField.complexConj E).toRingEquiv.toRingHom.toIntAlgHom)
+omit [IsCMField E] in
+alias mem_stdL := _root_.GlobalTheory.SW.Base.mem_stdL
+
+alias herm_one := _root_.GlobalTheory.SW.Base.herm_one
 
 omit [IsCMField E] in
-theorem mem_stdL {m : ℕ} (x : Fin m → E) : x ∈ stdL E m ↔ ∀ a, IsIntegral ℤ (x a) := by
-  apply GlobalTheory.SW.Base.mem_stdL <;> assumption
-
-theorem herm_one {m : ℕ} (x y : Fin m → E) : herm 1 x y = ∑ a, x a * cc (y a) := by
-  unfold herm
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_eq_single a] <;> simp +contextual [eq_comm]
-
-omit [IsCMField E] in
-theorem nat_smul_mem {m : ℕ} (Λ : Lt E m) (s : ℕ) {v : Fin m → E} (hv : v ∈ Λ) :
-    (s : E) • v ∈ Λ := by
-  rw [Nat.cast_smul_eq_nsmul]; exact Λ.toAddSubgroup.nsmul_mem hv s
+alias nat_smul_mem := _root_.GlobalTheory.SW.Base.nat_smul_mem
 
 
 
@@ -347,7 +338,7 @@ theorem levelL_of_fix (hΛ : ∀ x, x ∈ Λ ↔ ∀ y ∈ Λ, IsIntegral ℤ (h
         apply mul_right_cancel₀ hp
         rw [← hk, smul_eq_mul]; push_cast; ring
       exact_mod_cast this
-    have h2 := Model.cc_integral (discr_mul_integral _ key)
+    have h2 := _root_.GlobalTheory.SW.Base.isIntegral_cc (discr_mul_integral _ key)
     convert h2 using 1
     rw [Model.herm_one, Model.herm_one, cc_mul, cc_mul, cc_nat, cc_nat, cc_sum, Finset.mul_sum,
       Finset.mul_sum]

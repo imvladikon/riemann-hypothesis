@@ -88,12 +88,7 @@ theorem exists_top_extension (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ]
   rw [dite_eq_left IntermediateField.mem_top, dite_eq_left hxM]
   exact h
 
-theorem ee_add (s t : ℝ) : ee (s + t) = ee s * ee t := by
-  unfold ee
-  rw [← Complex.exp_add]
-  congr 1
-  push_cast
-  ring
+alias ee_add := _root_.GlobalTheory.WeilPairingGalois.ee_add
 
 theorem ee_zero : ee 0 = 1 := by simp [ee]
 
@@ -260,11 +255,7 @@ open scoped BigOperators
 
 namespace GlobalTheory.ProdThetaConj
 
-theorem ee_add (a b : ℝ) : ee (a + b) = ee a * ee b := by
-  simp only [ee, ← Complex.exp_add]
-  congr 1
-  push_cast
-  ring
+alias ee_add := _root_.GlobalTheory.WeilPairingGalois.ee_add
 
 theorem ee_sum {κ : Type*} [Fintype κ] (a : κ → ℝ) : ee (∑ j, a j) = ∏ j, ee (a j) := by
   simp only [ee, ← Complex.exp_sum]

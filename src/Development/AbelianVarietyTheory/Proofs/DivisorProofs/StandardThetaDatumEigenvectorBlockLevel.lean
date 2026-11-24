@@ -182,29 +182,6 @@ theorem pow_add_mul_factorial {M : Type*} [Monoid M] [Finite M] (y : M) (n : ℕ
   rw [hc, show j * (p * c) = (j * c) * p by ring]
   exact iter _ _ (by omega)
 
-theorem finite_quot (D : D7) (N : ℕ) (hN : 0 < N) :
-    Finite (OhE D ⧸ Ideal.span {(N : OhE D)}) := by
-  let ι : 𝓞 D.host.E →+* OhE D :=
-    ((inc D).comp (algebraMap (𝓞 D.host.E) D.host.E)).codRestrict _
-      fun x => GlobalTheory.CongApprox.inc_mem_OhE D x
-  haveI : Finite (𝓞 D.host.E ⧸ Ideal.span {(N : 𝓞 D.host.E)}) :=
-    Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hN.ne')
-  refine Finite.of_surjective (Ideal.quotientMap (I := Ideal.span {(N : 𝓞 D.host.E)})
-    (Ideal.span {(N : OhE D)}) ι ?_) ?_
-  · rw [Ideal.span_le, Set.singleton_subset_iff]
-    change ι N ∈ Ideal.span {(N : OhE D)}
-    rw [map_natCast]
-    exact Ideal.mem_span_singleton_self _
-  · intro z
-    obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective z
-    obtain ⟨x, w, hw, h⟩ := GlobalTheory.CongApprox.exists_int_approx D N hN z z.2
-    refine ⟨Ideal.Quotient.mk _ x, ?_⟩
-    rw [Ideal.quotientMap_mk, eq_comm, Ideal.Quotient.eq, Ideal.mem_span_singleton]
-    refine ⟨⟨w, hw⟩, Subtype.ext ?_⟩
-    change (z : AE D) - inc D (x : D.host.E) = ((N : OhE D) : AE D) * w
-    rw [h, add_sub_cancel_left]
-    simp
-
 theorem exists_of_mk_eq (D : D7) (N : ℕ) (a b : OhE D)
     (h : Ideal.Quotient.mk (Ideal.span {(N : OhE D)}) a = Ideal.Quotient.mk _ b) :
     ∃ w ∈ OhE D, (a : AE D) = b + (N : AE D) * w := by
@@ -250,7 +227,7 @@ theorem exists_idem : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠ ⊥ 
       (Ideal.Quotient.mk (Ideal.span {(N : OhE D)}) ys) ^ (k + j * (R N).factorial) =
         (Ideal.Quotient.mk (Ideal.span {(N : OhE D)}) ys) ^ k := by
     intro N hN k j hk
-    haveI := finite_quot D N hN
+    haveI := _root_.GlobalTheory.HeckeVal.finite_quot D N hN
     exact pow_add_mul_factorial _ _ (hR N) k j hk
   have he : ∀ N : ℕ, R N ≤ e N := by
     intro N
@@ -658,7 +635,7 @@ theorem om_cosetV_block : ∀ (D : D7) (δ t0 : ℂ), Crv D ⊤ δ → ∀ {a d 
   obtain ⟨χ, hχ⟩ : ∃ χ : ℂ, χ = ((W.chV.f x' ^ W.ep * W.chV'.f 1 ^ W.ep' : ℂˣ) : ℂ) := ⟨_, rfl⟩
   have hJ : W.Om 1 g' e0 = χ • G := by
     rw [W.split 1 g' 1 x' (stdL D a) (skewLat D 𝔪 d) (FixKey.suppSplit_one D a) hg's
-      (fun q hq hi => ⟨by simpa using FixKey.zeroAt_zero D q, hx'q q hq hi⟩) (by simp) hx'd (VacMove.moves_one D a) hg'm, hχ, hGdef]
+      (fun q hq hi => ⟨by simpa using _root_.GlobalTheory.NormSum.VacInt.zeroAt_zero D q, hx'q q hq hi⟩) (by simp) hx'd (VacMove.moves_one D a) hg'm, hχ, hGdef]
     rfl
   have hc0 : χ ≠ 0 := by rw [hχ]; exact Units.ne_zero _
   have hJe : G = χ⁻¹ • W.Om 1 g' e0 := by
@@ -804,16 +781,6 @@ theorem sum_mul_right_eq {G M : Type} [Group G] [AddCommMonoid M] (H K : Subgrou
 
 variable {D : D7}
 
-theorem mul_mem_hatId {𝔪 : Ideal (𝓞 D.host.E)} {x y : AE D} (hx : x ∈ OhE D) (hy : y ∈ hatId D 𝔪) :
-    x * y ∈ hatId D 𝔪 := by
-  induction hy using AddSubgroup.closure_induction with
-  | mem y hy =>
-    obtain ⟨b, hb, s, hs, rfl⟩ := hy
-    exact AddSubgroup.subset_closure ⟨b, hb, x * s, mul_mem hx hs, by ring⟩
-  | zero => rw [mul_zero]; exact zero_mem _
-  | add y z _ _ h1 h2 => rw [mul_add]; exact add_mem h1 h2
-  | neg y _ h => rw [mul_neg]; exact neg_mem h
-
 theorem congOne_conj {𝔪 : Ideal (𝓞 D.host.E)} {N : ℕ} {g κ : GA D N} (hg : g ∈ intG D N) (hκ : CongOne D 𝔪 κ) :
     CongOne D 𝔪 (g⁻¹ * κ * g) := by
   intro i j
@@ -830,9 +797,9 @@ theorem congOne_conj {𝔪 : Ideal (𝓞 D.host.E)} {N : ℕ} {g κ : GA D N} (h
   rw [e, Matrix.mul_apply]
   refine sum_mem fun l _ => ?_
   rw [mul_comm]
-  refine mul_mem_hatId (hgi l j).1 ?_
+  refine _root_.GlobalTheory.FunObj.StdDatum.mul_mem_hatId (hgi l j).1 ?_
   rw [Matrix.mul_apply]
-  exact sum_mem fun m _ => mul_mem_hatId (hgi i m).2 (hκ m l)
+  exact sum_mem fun m _ => _root_.GlobalTheory.FunObj.StdDatum.mul_mem_hatId (hgi i m).2 (hκ m l)
 
 theorem om_finsum {δ : ℂ} {a d : ℕ} {e0 : VC D a d → ℂ} (W : WeilO D ⊤ δ a d e0) (g : GA D a) (g' : GA D d) {ι : Type}
     (s : Finset ι) (F : ι → VC D a d → ℂ) (hF : ∀ i ∈ s, F i ∈ TT D (tor0 D ⊤ δ) a d) :

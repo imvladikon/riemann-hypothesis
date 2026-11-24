@@ -158,9 +158,6 @@ theorem homog_eq (C : Core l) (a b : Per.Acris l) (y : Om l) (hy : ‖y‖ ≤ 1
   simp only [RingHom.comp_apply, PadicInt.algebraMap_apply]
   ring
 
-theorem untilt_zero : (0 : Per.Fl l).untilt = 0 := by
-  rw [← WittVector.fontaineTheta_teichmuller, WittVector.teichmuller_zero, map_zero]
-
 theorem gauss_l (r : ℝ) (hr : 0 ≤ r) :
     (⨆ n : ℕ, ‖(((((l : ℕ) : Per.Ainf l).coeff n).untilt : Per.OC l) : ℂ_[l])‖ ^
       ((1 : ℝ) / (l : ℝ) ^ n) * r ^ n) = r := by

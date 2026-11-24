@@ -156,14 +156,6 @@ open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 open GlobalTheory GlobalTheory.Cartier GlobalTheory.TopForm GlobalTheory.CechPic GlobalTheory.QCoh GlobalTheory.Discrepancy GlobalTheory.LogPair
 namespace GlobalTheory.LogResBig
 
-theorem supp_nsmul_le {Y : Scheme.{0}} [IsIntegral Y] (D : CartierDiv Y) : ∀ c : ℕ, (c • D).supp ≤ D.supp
-  | 0 => by
-    rw [zero_smul, CartierDiv.supp_eq_bot_iff.2 rfl]
-    exact bot_le
-  | c + 1 => by
-    rw [succ_nsmul]
-    exact (CartierDiv.supp_add_le _ _).trans (sup_le (supp_nsmul_le D c) le_rfl)
-
 theorem eff_nsmul {Y : Scheme.{0}} [IsIntegral Y] {D : CartierDiv Y} (hD : D.Eff) : ∀ c : ℕ, (c • D).Eff
   | 0 => by
     rw [zero_smul]
@@ -212,7 +204,7 @@ theorem exists_logRes_smul_eq_ample_add_eff :
     refine hmem y (Or.inl ?_)
     show s₀ (t y) ∈ (Z : Set X)
     simpa using hy
-  · refine (CartierDiv.supp_add_le _ _).trans (sup_le hEB ((supp_nsmul_le _ c).trans ?_))
+  · refine (CartierDiv.supp_add_le _ _).trans (sup_le hEB ((_root_.GlobalTheory.AmpleUpstairs.supp_nsmul_le _ c).trans ?_))
     intro y hy
     exact hmem y (Or.inr ((_root_.GlobalTheory.Discrepancy.pullCart_supp_and_eff Y₀ Y t D₀).1 y hy))
   · have e₀' : a₀ • CechPic.pull s₀ (cls M hM) = cls A hA.isLB + toPic D₀ := e₀

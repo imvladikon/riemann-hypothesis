@@ -128,8 +128,6 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.normalisedMulIso_uniformisation_genericFibre_one_constant : ∀ (V : Type) [CommRing V] [IsDomain V] (I : Ideal V) (D : DegData V I) (A : PolAV (Sp (FractionRing V))) (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G] (U : UnifPre I D A G) (w₀ : W0 U), w₀.IsGen → ∀ (N : ℕ) (α : LB.Gen (LB.LinComb A.L (K := Fin 2) ![𝟙 A.A.left, (mulA A.A N).left] ![(N : ℤ) ^ 2, -1])), α.IsGen → ∀ (β : LB.Gen (LB.LinComb U.LG.L (K := Fin 2) ![𝟙 G.left, (mulA G N).left] ![(N : ℤ) ^ 2, -1])), β.IsGen → ∃ c : FractionRing V, c ≠ 0 ∧ ∀ (r : (TF (R := V) (FractionRing V)).left ⟶ ((Over.pullback (jK V)).obj G).left), r ≫ ((Over.pullback (jK V)).obj G).hom = 𝟙 _ → ∀ (z : (TF (R := V) (FractionRing V)).left) (JA : ((TF (R := V) (FractionRing V)).left ⟶ A.A.left) → A.L.ι) (JG : ((TF (R := V) (FractionRing V)).left ⟶ G.left) → U.LG.L.ι), Good A.L z JA → Good U.LG.L z JG → (val β (r ≫ pullback.fst G.hom (jK V)) z JG).val = GlobalTheory.UT.cst (FractionRing V) z c * (GlobalTheory.TorsFrameInt.wv w₀ r z JG JA ^ ((N : ℤ) ^ 2) * (GlobalTheory.TorsFrameInt.wv w₀ (r ≫ (mulA ((Over.pullback (jK V)).obj G) N).left) z JG JA)⁻¹ * val α (r ≫ U.gen.hom.left) z JA).val := by
-  first | exact @GlobalTheory.GenericMove.move_one_const
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedMulIsoUniformisationGenericFibreOneConStatement =====
@@ -147,8 +145,6 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.uniformisedFrame_ratio_integralFrame_chart_independent : ∀ (V : Type) [CommRing V] [IsDomain V] (I : Ideal V) (D : DegData V I) (A : PolAV (Sp (FractionRing V))) (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G] (U : UnifPre I D A G) (w₀ : W0 U), w₀.IsGen → ∀ (x : TFK (R := V) (FractionRing V) ⟶ A.A) (e : FrAt x), e.IsGen → ∀ (h : 𝟙_ (Over (Sp V)) ⟶ G) (f : LB.Gen (LB.LinComb U.LG.L (K := Fin 1) (fun _ => h.left) (fun _ => 1))), f.IsGen → GlobalTheory.Poinc.IntTerm.Ext U x h → ∀ (z : (TF (R := V) (FractionRing V)).left) (JA JA' : ((TF (R := V) (FractionRing V)).left ⟶ A.A.left) → A.L.ι) (JG JG' : ((TF (R := V) (FractionRing V)).left ⟶ G.left) → U.LG.L.ι), Good A.L z JA → Good U.LG.L z JG → Good A.L z JA' → Good U.LG.L z JG' → Geo.Tor.gw (Y := (TF (R := V) (FractionRing V)).left) w₀ (x.left ≫ U.gen.inv.left) z (JG (toUnit (TF (R := V) (FractionRing V)) ≫ h).left) (fun _ => JA x.left) * val (Z := (TF (R := V) (FractionRing V)).left) e (𝟙 _) z JA * (val f (toUnit (TF (R := V) (FractionRing V))).left z JG)⁻¹ = Geo.Tor.gw (Y := (TF (R := V) (FractionRing V)).left) w₀ (x.left ≫ U.gen.inv.left) z (JG' (toUnit (TF (R := V) (FractionRing V)) ≫ h).left) (fun _ => JA' x.left) * val (Z := (TF (R := V) (FractionRing V)).left) e (𝟙 _) z JA' * (val f (toUnit (TF (R := V) (FractionRing V))).left z JG')⁻¹ := by
-  first | exact @GlobalTheory.Poinc.FrameIndep.frame_ratio_indep
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedFrameRatioIntegralFrameChartIndependeStatement =====
@@ -301,7 +297,7 @@ theorem exists_frRel : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V],
   refine ⟨l, hl0, fun x e h hx hh hext => ?_⟩
 
   obtain ⟨α, hα, hα₀, hαx⟩ := frame_values' A hx
-  obtain ⟨c, hc0, hc⟩ := GlobalTheory.T.normalisedMulIso_uniformisation_genericFibre_one_constant V _ D A G U.toUnifPre w₀ hw₀ N α hα β' hβ'
+  obtain ⟨c, hc0, hc⟩ := _root_.GlobalTheory.GenericMove.move_one_const V _ D A G U.toUnifPre w₀ hw₀ N α hα β' hβ'
   obtain ⟨u₀, hu₀⟩ := unit_origin (V := V) G U.LG N β' hβ'
   obtain ⟨i, hi⟩ := exists_chart U.LG.isLB (h.left (cpt V))
   obtain ⟨f₀, hf₀⟩ := GlobalTheory.TorsFrameInt.exists_gen_of_chart U.LG.isLB (K := Fin 1) (fun _ => h.left) (fun _ => 1)
@@ -390,7 +386,7 @@ theorem exists_frRel : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V],
     abel
   refine ⟨f, GlobalTheory.TorsFrameInt.scale_isGen f₀ hf₀ c', fun z JA JG hA hG => ?_⟩
   obtain rfl := pt_eq z₀ z
-  have ind := GlobalTheory.T.uniformisedFrame_ratio_integralFrame_chart_independent V _ D A G U.toUnifPre w₀ hw₀ x e hx.2.1 h f (GlobalTheory.TorsFrameInt.scale_isGen f₀ hf₀ c') hext
+  have ind := _root_.GlobalTheory.Poinc.FrameIndep.frame_ratio_indep V _ D A G U.toUnifPre w₀ hw₀ x e hx.2.1 h f (GlobalTheory.TorsFrameInt.scale_isGen f₀ hf₀ c') hext
     z₀ JA JA₀ JG JG₀ hA hG hA₀ hG₀
   have w₁ : GlobalTheory.TorsFrameInt.wv w₀ x' z₀ JG₀ JA₀ = Geo.Tor.gw (Y := (TF (R := V) (FractionRing V)).left) w₀
       (x.left ≫ U.gen.inv.left) z₀ (JG₀ (toUnit (TF (R := V) (FractionRing V)) ≫ h).left) (fun _ => JA₀ x.left) := by

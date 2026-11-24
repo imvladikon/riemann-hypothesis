@@ -843,9 +843,6 @@ open scoped ComplexConjugate ValuativeRel
 
 namespace GlobalTheory.CompanionTheory.ZetaSph
 
-theorem zeta_spherical : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] {O : Subring F} {ϖ : F} {nrm : AbsoluteValue F ℝ} {q : ℕ}, LF O ϖ nrm q → ∀ {c : ℕ} (χ : Fin c → F → ℂ) (α : Fin c → ℂ), UnrChar nrm q χ α → ∀ (φ : GL (Fin c) F → ℂ), IsSphFn O nrm χ φ → ∀ (κ : Measure (GL (Fin c) F)), κ.IsMulLeftInvariant → κ (GLint O c : Set (GL (Fin c) F)) = 1 → ∀ σ : ℝ, (∀ i, ‖α i‖ * (q : ℝ) ^ (((c : ℝ) - 1) / 2 - σ) < 1) → IntegrableOn (fun g => φ g * ((nrm (g : Matrix (Fin c) (Fin c) F).det ^ (σ) : ℝ) : ℂ)) (Mint O c) κ ∧ ∫ g in Mint O c, φ g * ((nrm (g : Matrix (Fin c) (Fin c) F).det ^ (σ) : ℝ) : ℂ) ∂κ = ∏ i : Fin c, (1 - α i * (((q : ℝ) ^ (((c : ℝ) - 1) / 2 - σ) : ℝ) : ℂ))⁻¹ :=
-  _root_.UpperTheory.Reformulated.B.SphericalZetaCosets.zeta_spherical
-
 end GlobalTheory.CompanionTheory.ZetaSph
 end -- clump:auto
 end -- clump:auto
@@ -988,7 +985,7 @@ theorem zeta (h : LF O (ϖ : k) nrm q) {A : kˣ →* ℂ} (hA : ∀ u : kˣ, nrm
     have := i.2
     rw [← Real.rpow_add hq, ← Real.rpow_natCast, Nat.cast_sub (by omega), Nat.cast_sub (by omega)]
     congr 1; simp only [a]; push_cast; ring
-  have := GlobalTheory.CompanionTheory.ZetaSph.zeta_spherical h (fun i x => if hx : x = 0 then 0 else A (Units.mk0 x hx) * (nrm x ^ (-a i) : ℝ))
+  have := _root_.UpperTheory.Reformulated.B.SphericalZetaCosets.zeta_spherical h (fun i x => if hx : x = 0 then 0 else A (Units.mk0 x hx) * (nrm x ^ (-a i) : ℝ))
     (fun i => A ϖ * ((q : ℝ) ^ a i : ℝ)) ⟨fun i => mul_ne_zero hϖ
       (by exact_mod_cast (Real.rpow_pos_of_pos hq _).ne'), fun i x m hx => ?_⟩ (fun g => A (GeneralLinearGroup.det g))
     (fun b hb κ hκ => ?_) κ hκ h1 0 fun i => ?_

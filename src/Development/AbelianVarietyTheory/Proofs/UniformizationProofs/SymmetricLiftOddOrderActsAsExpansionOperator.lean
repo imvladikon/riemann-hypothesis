@@ -72,8 +72,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
-theorem _root_.GlobalTheory.T.frame_sq_eq_of_symmetric_thetaElement : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∀ (N : ℕ), 1 ≤ N → ∀ (p : QkPt D.toPre F N) (θ : ThetaGrp A.A A.L (N : ℤ) (TFK (R := R) F)) (w₀ : W0 U.toUnifPre) (w : Frm D.toPre F N p.g.b), w₀.IsGen → w.IsGen → (∀ t t' s s', U.ExpandsF F N w₀ t s → U.ExpandsF F N w₀ t' s' → IsActOf A.A A.L N θ t t' → PhiRel D.toPre F N p w s s') → (∃ nu : LB.Gen (negLB A.A A.L N (TFK (R := R) F)), nu.IsGen ∧ LB.Gen.Corr A.L _ _ _ _ (symGen A.A A.L N θ nu) (LB.oneGen A.L)) → ∀ ν : LB.Gen (LB.LinComb D.toPre.P.L (K := Fin 4) ![(𝟙 D.toPre.P.A ^ (N + 1)).left, (𝟙 D.toPre.P.A ^ N).left, 𝟙 _, (1 : D.toPre.P.A ⟶ D.toPre.P.A).left] ![1, -1, -(2 * (N : ℤ) + 1), 2 * (N : ℤ) + 1]), Normd ν → ∀ z J, Good D.toPre.P.L z J → val w (𝟙 _) z J ^ 2 = val (p.g.s p.y) (𝟙 _) z J * val ν p.g.b.left z J := by
-  first | exact @GlobalTheory.SymFrame.sq_frame_of_symmetric
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FrameSqEqOfSymmetricThetaElementStatement =====
@@ -475,8 +473,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
-theorem _root_.GlobalTheory.T.symmetricFrame_phi_pow_order_eq_id : LL → AllD fun {R} _ _ {I} D F _ _ => ∀ (N : ℕ), Odd N → ∀ (p : QkPt D.toPre F N) (w : Frm D.toPre F N p.g.b), TXFrame N p w → ∀ ss : Fin (N + 1) → Fam D.toPre F N, (∀ i : Fin N, PhiRel D.toPre F N p w (ss i.castSucc) (ss i.succ)) → ss (Fin.last N) = ss 0 := by
-  first | exact @GlobalTheory.UT.PhiOrder.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SymmetricFramePhiPowOrderEqIdStatement =====
@@ -552,7 +548,7 @@ theorem symLift_acts_as_phi : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _
   obtain ⟨c, hc, hcΦ⟩ := exists_ratio gf p hw.1 hw'
   have e : Φ' = c • Φ := LinearMap.ext fun u => ((hΦ' _ _).1 (hcΦ u _ ((hΦ _ _).2 rfl))).symm
   have h₁ : ∀ u, (Φ ^ N) u = u := fun u => by
-    have := GlobalTheory.T.symmetricFrame_phi_pow_order_eq_id hL R I hI D F N hN p w hw (fun i => (Φ ^ (i : ℕ)) u) (fun i => (hΦ _ _).2 (by
+    have := _root_.GlobalTheory.UT.PhiOrder.main hL R I hI D F N hN p w hw (fun i => (Φ ^ (i : ℕ)) u) (fun i => (hΦ _ _).2 (by
       simp [pow_succ']))
     simpa using this
   have h₂ : ∀ u, (Φ' ^ N) u = u := fun u => by
@@ -574,7 +570,7 @@ theorem symLift_acts_as_phi : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _
     rw [hp'] at kN
     exact (b₁ v).unique kN hv
   by_cases hcN : c ^ N = 1
-  · have hT : TXFrame N p w' := ⟨hw', GlobalTheory.T.frame_sq_eq_of_symmetric_thetaElement hL R I hI D A G hG U F N hN1 p θ w₀ w' hw₀ hw' H hθ.sym,
+  · have hT : TXFrame N p w' := ⟨hw', _root_.GlobalTheory.SymFrame.sq_frame_of_symmetric hL R I hI D A G hG U F N hN1 p θ w₀ w' hw₀ hw' H hθ.sym,
       fun κ hκ z J hJ => by
         have a := hc z J hJ
         rw [hcN, map_one, gs_eq _ z ⊤ trivial, map_one, map_one, _root_.one_mul,

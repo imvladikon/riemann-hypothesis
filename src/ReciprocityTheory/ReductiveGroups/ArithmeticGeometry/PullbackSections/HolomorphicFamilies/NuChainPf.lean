@@ -81,10 +81,6 @@ namespace ReciprocityTheory.ChartRestriction.G.DVR
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem away_fractionRing {V : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] {ϖ : V}
-    (hϖ : Irreducible ϖ) : IsLocalization.Away ϖ (FractionRing V) := by
-  first | (apply Bl.SecondBlockLemmaO.goal1 <;> assumption)
-
 theorem gs_zero' {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
   unfold gs; split_ifs <;> simp
 
@@ -222,7 +218,7 @@ theorem secB_dvd_of_vge {V : Type} [CommRing V] [IsDomain V] [IsDiscreteValuatio
     infer_instance
   have hjK : IsOpenImmersion (jK V) := by
     obtain ⟨ϖ₀, h₀⟩ := IsDiscreteValuationRing.exists_irreducible V
-    have := away_fractionRing h₀
+    have := _root_.Bl.SecondBlockLemmaO.goal1 h₀
     exact IsOpenImmersion.of_isLocalization ϖ₀
   have hjFK : IsIso (jFK (R := V) (FractionRing V)) := by
     show IsIso (Spec.map (CommRingCat.ofHom (RingHom.id (FractionRing V))))

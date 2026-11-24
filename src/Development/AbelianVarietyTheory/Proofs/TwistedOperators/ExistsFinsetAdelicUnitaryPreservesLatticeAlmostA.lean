@@ -70,8 +70,7 @@ theorem exists_int_smul_mem {E : Type} [Field E] [NumberField E] {n : ℕ}
     (v : Fin n → E) : ∃ c : ℤ, c ≠ 0 ∧ c • v ∈ L := by
   apply GlobalTheory.LatticeIndicator.exists_int_smul_mem <;> assumption
 
-theorem exists_nonzero_int_smul_mem_of_isLattice : ∀ {E : Type} [inst : Field E] [NumberField E] {n : ℕ} (L : Submodule (NumberField.RingOfIntegers E) (Fin n → E)), Submodule.IsFullLattice E L → ∀ (v : Fin n → E), ∃ (c : ℤ), c ≠ (0 : ℤ) ∧ c • v ∈ L :=
-  fun L hL v => exists_int_smul_mem L hL v
+alias exists_nonzero_int_smul_mem_of_isLattice := _root_.GlobalTheory.IntSmulMemLatticeTwistedOperators.exists_int_smul_mem
 
 end GlobalTheory.IntSmulMemLatticeTwistedOperators
 end -- clump:auto
@@ -120,7 +119,7 @@ theorem exists_int_mulVec_mem (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.IsF
     intro L' hL'
     induction L', hL' using Submodule.fg_induction with
     | singleton x =>
-      obtain ⟨c, hc, hx⟩ := exists_int_smul_mem L hL (N *ᵥ x)
+      obtain ⟨c, hc, hx⟩ := _root_.GlobalTheory.IntSmulMemLatticeTwistedOperators.exists_int_smul_mem L hL (N *ᵥ x)
       refine ⟨c, hc, fun y hy => ?_⟩
       obtain ⟨r, rfl⟩ := Submodule.mem_span_singleton.1 hy
       rw [Matrix.mulVec_smul, smul_comm]

@@ -88,9 +88,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain MeasureTheory GlobalTheory.CuspRep Formalism.L2.Host Formalism.UG GlobalTheory.LFun
 open scoped ENNReal ComplexConjugate nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.continuous_globalWhittakerCoefficientGLAdeles : ∀ (E : Type) [Field E] [NumberField E] (a : ℕ) (F : GA E a → ℂ), Continuous F →
-    (∃ C : ℝ, ∀ g, ‖F g‖ ≤ C) → Continuous (GlobalTheory.JSW.whit F) := by
-  first | (exact @GlobalTheory.JSW.WhitCont.continuous_whit)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousGlobalWhittakerCoefficientGLAdelesStatement =====
@@ -467,17 +464,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain MeasureTheory GlobalTheory.CuspRep Formalism.L2.Host Formalism.UG GlobalTheory.LFun
 open scoped ENNReal ComplexConjugate nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.mirabolicCell_decomposition_lastRow : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (m : ℕ)
-    (S : Finset (HeightOneSpectrum (𝓞 E))) (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ),
-    (∀ v ∈ S, 0 < FractionalIdeal.count E v (J : FractionalIdeal (𝓞 E)⁰ E)) → ∀ N : ℕ,
-    (∀ z ∈ GlobalTheory.RSJ.natLat E N, ∀ v ∈ S,
-        Valued.v (z v) ≤ WithZero.exp (-FractionalIdeal.count E v (J : FractionalIdeal (𝓞 E)⁰ E))) →
-    ∀ Φ : (Fin (m + 1) → Cinf E) → ℂ, tsupport Φ ⊆ GlobalTheory.RSTheta.rowSet E (Fin.last m) →
-    ∀ g ∈ GlobalTheory.CellDec.C0 E (m + 1) S, Φ (fun i => pInf E (GlobalTheory.ZEul.lastRow g i)) ≠ 0 →
-    GlobalTheory.RSJ.indN N (fun i => GlobalTheory.RSJ.pFin E (GlobalTheory.ZEul.lastRow g i)) ≠ 0 →
-    ∃ u ∈ GlobalTheory.JSW.NA (E := E) (a := (m + 1)), ∃ p ∈ (GlobalTheory.JSW.supS (E := E) (a := m + 1) S ∩ GlobalTheory.JSW.mirSet (GlobalTheory.CuspRep.Ad E) m), ∃ κ ∈ GlobalTheory.RSLocalPart.levelAt (m + 1) S J,
-      g * infGL E (m + 1) (GlobalTheory.RSJ.secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i)) = u * p * finGL E (m + 1) κ := by
-  first | (exact @GlobalTheory.ZEul.decomp_lastRow)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MirabolicCellDecompositionLastRowStatement =====
@@ -490,11 +476,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain MeasureTheory GlobalTheory.CuspRep Formalism.L2.Host Formalism.UG GlobalTheory.LFun
 open scoped ENNReal ComplexConjugate nonZeroDivisors
 
-theorem _root_.GlobalTheory.T.rankinSelbergLocalTerm_eq_sphericalWhittaker_product : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α β : Fin n → ℂ) (x : ℝ) (v : Fin n → ℤ), (∀ i, 0 ≤ v i) → Antitone v →
-    (((q : ℝ) ^ GlobalTheory.CellDec.wtS n v : ℝ) : ℂ) *
-      (GlobalTheory.JSW.sphW q α (fun i => (v i).toNat) * conj (GlobalTheory.JSW.sphW q β (fun i => (v i).toNat))) *
-      (((q : ℝ) ^ (-x * ∑ i, (v i : ℝ)) : ℝ) : ℂ) = GlobalTheory.ZEul.rsTerm q α β x v := by
-  first | (exact @GlobalTheory.ZEulLocal.localTerm_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergLocalTermEqSphericalWhittakerProducStatement =====
@@ -671,7 +652,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
         GlobalTheory.ZEul.uInt φ' φ' Φ N 0 g = b p * conj (b p) * Φ (fun i => pInf E (GlobalTheory.ZEul.lastRow g i)) *
           GlobalTheory.RSJ.indN N (fun i => GlobalTheory.RSJ.pFin E (GlobalTheory.ZEul.lastRow g i)) := by
     intro h1 h2
-    obtain ⟨u, hu, p, hp, κ, hκ, he⟩ := GlobalTheory.T.mirabolicCell_decomposition_lastRow E m S J hJ N hS Φ hΦ g hg h1 h2
+    obtain ⟨u, hu, p, hp, κ, hκ, he⟩ := _root_.GlobalTheory.ZEul.decomp_lastRow E m S J hJ N hS Φ hΦ g hg h1 h2
     have k1 : GlobalTheory.JSW.whit φ (g * infGL E (m + 1) (GlobalTheory.RSJ.secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i))) =
         GlobalTheory.JSW.psiN u * b p := by rw [he, hKφ κ hκ, hNφ u hu, (hWp p hp).1]
     have k2 : GlobalTheory.JSW.whit φ' (g * infGL E (m + 1) (GlobalTheory.RSJ.secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i))) =
@@ -780,7 +761,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     refine Finset.prod_congr rfl fun w _ => ?_
     have hq : 0 < qV E w := Nat.pos_of_ne_zero fun h => w.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
     rw [hl'app]
-    exact GlobalTheory.T.rankinSelbergLocalTerm_eq_sphericalWhittaker_product (qV E w) hq (m + 1) _ _ x (l.1 w) (hnn w) (hanti w)
+    exact _root_.GlobalTheory.ZEulLocal.localTerm_eq (qV E w) hq (m + 1) _ _ x (l.1 w) (hnn w) (hanti w)
   rw [← key]
   simp only [map_mul, Complex.ofReal_mul]
   ring
@@ -858,8 +839,8 @@ theorem unfolded_bump_eq :
     fun u hu g => GlobalTheory.JSW.WhitModel.whit_mul hc.cont (fun γ g => hc.left γ g) hu g
   have hW' : ∀ u ∈ GlobalTheory.JSW.NA (E := E) (a := (m + 1)), ∀ g, GlobalTheory.JSW.whit φ' (u * g) = GlobalTheory.JSW.psiN u * GlobalTheory.JSW.whit φ' g :=
     fun u hu g => GlobalTheory.JSW.WhitModel.whit_mul hc'.cont (fun γ g => hc'.left γ g) hu g
-  have hWc := GlobalTheory.T.continuous_globalWhittakerCoefficientGLAdeles E (m + 1) φ hc.cont hc.bdd
-  have hWc' := GlobalTheory.T.continuous_globalWhittakerCoefficientGLAdeles E (m + 1) φ' hc'.cont hc'.bdd
+  have hWc := _root_.GlobalTheory.JSW.WhitCont.continuous_whit E (m + 1) φ hc.cont hc.bdd
+  have hWc' := _root_.GlobalTheory.JSW.WhitCont.continuous_whit E (m + 1) φ' hc'.cont hc'.bdd
   obtain ⟨U, hUo, hUi⟩ := hU
   obtain ⟨U', hUo', hUi'⟩ := hU'
   let stab : (GA E (m + 1) → ℂ) → Subgroup (GL (Fin (m + 1)) (Af E)) := fun F =>

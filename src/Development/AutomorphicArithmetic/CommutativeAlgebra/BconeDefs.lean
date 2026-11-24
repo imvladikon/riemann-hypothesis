@@ -57,8 +57,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.mem_etale_covering_sieves_iff_points : ∀ (U : Scheme.{0}) (S : Sieve U), S ∈ Scheme.etaleTopology.{0} U ↔ ∀ u : U, ∃ (V : Scheme.{0}) (j : V ⟶ U) (v : V), Etale j ∧ j v = u ∧ S.arrows j := by
-  first | (exact @GlobalTheory.etale_mem_iff_points)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMemIffPointsStatement =====
@@ -105,9 +103,9 @@ theorem prodW_cover (W : Scheme.{0}) :
     CoverPreserving Scheme.etaleTopology.{0} Scheme.etaleTopology.{0} (prodW W) := by
   constructor
   intro U S hS
-  rw [GlobalTheory.T.mem_etale_covering_sieves_iff_points]
+  rw [_root_.GlobalTheory.etale_mem_iff_points]
   intro u
-  obtain ⟨V, j, v, hj, hv, hS'⟩ := (GlobalTheory.T.mem_etale_covering_sieves_iff_points U S).1 hS ((prod.snd : W ⨯ U ⟶ U) u)
+  obtain ⟨V, j, v, hj, hv, hS'⟩ := (_root_.GlobalTheory.etale_mem_iff_points U S).1 hS ((prod.snd : W ⨯ U ⟶ U) u)
   obtain ⟨z, hz1, hz2⟩ := Scheme.Pullback.exists_preimage_pullback (f := (prod.snd : W ⨯ U ⟶ U)) (g := j) u v hv.symm
   haveI := hj
   refine ⟨pullback (prod.snd : W ⨯ U ⟶ U) j, pullback.fst _ _, z, ?_, hz1, ?_⟩

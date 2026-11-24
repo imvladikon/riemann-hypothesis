@@ -62,8 +62,6 @@ section -- clump:auto
 
 open GlobalTheory.NL
 
-theorem _root_.GlobalTheory.T.powerSeriesTwistedScaling_triangular_laurent : ∀ {L M : Type} [Field L] [TopologicalSpace L] [AddCommGroup M] [Module L M] (w : PowerSeries L) (u : L) (Sub : ℤ → Submodule L M), Monotone Sub → ∀ (y : ℕ) (f : ℤ → M), (∃ m : ℤ, ∀ j < m, f j = 0) → (∀ j, f j ∈ Sub j) → ∀ k : ℤ, (∀ j < k, f j ∈ Sub (j - y)) → (∃ m : ℤ, ∀ j < m, conv w (fun m => u ^ m • f m) j = 0) ∧ (∀ j, conv w (fun m => u ^ m • f m) j ∈ Sub j) ∧ (∀ j < k, conv w (fun m => u ^ m • f m) j ∈ Sub (j - y)) ∧ conv w (fun m => u ^ m • f m) k - (PowerSeries.constantCoeff w * u ^ k) • f k ∈ Sub (k - y) := by
-  first | exact @GlobalTheory.NL.Twist.tri
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesTwistedScalingTriangularLaurentStatement =====
@@ -316,7 +314,7 @@ theorem step (C : LocCmpT l P AI H F) (h : Good K s LL) (T : Lt K LL) (i : Let K
   have hbdd : ∃ m : ℤ, ∀ j < m, Ex C h T i ζ y z j = 0 := by
     obtain ⟨m, hm⟩ := (C.C K s LL h).tie.levB_supp T i ζ ⟨_, hz⟩
     exact ⟨m, fun j hj => by rw [Ex_eq C h T i ζ y z hz]; exact hm j hj⟩
-  obtain ⟨-, -, h3, h4⟩ := GlobalTheory.T.powerSeriesTwistedScaling_triangular_laurent w
+  obtain ⟨-, -, h3, h4⟩ := _root_.GlobalTheory.NL.Twist.tri w
     (algebraMap ↥(OL LL) ↥LL.1 ((H.W K s LL h).χΓ (H.W K s LL h).gam : ↥(OL LL)))
     (SubF H h T i τ) (SubF_mono H h T i τ) y (Ex C h T i ζ y z) hbdd (hE z hz) k hk
   refine ⟨fun j hj => ?_, fun hd => ?_⟩

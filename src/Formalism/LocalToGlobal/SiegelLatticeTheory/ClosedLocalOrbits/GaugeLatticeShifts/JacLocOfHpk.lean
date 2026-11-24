@@ -60,12 +60,6 @@ open Formalism.L2.SG.RealObj Formalism.L2.SG.HidaSetting
 
 namespace JL
 
-def RightInvS : Prop :=
-  ∀ (n r k : ℕ) (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z z' : Fin n → ℂ) (T T' : ℝ),
-    FrameLoc ε k e z z' T T' →
-    ∀ μ : Measure (Formalism.REAL.UJ ε), IsHaarS (SLoc ε e z) μ →
-    ∀ s ∈ SLoc ε e z, μ.map (fun x => x * s) = μ
-
 theorem frameLoc_swap {n r k : ℕ} {ε : Fin n → Bool} {e : Fin r → Fin n → ℂ} {z z' : Fin n → ℂ} {T T' : ℝ}
     (hF : FrameLoc ε k e z z' T T') : FrameLoc ε k e z' z T' T :=
   ⟨hF.dim, hF.k_pos, hF.sig, hF.e_li, hF.ee, hF.ez', hF.ez, hF.zz', hF.zz, hF.T'_pos, hF.T_pos⟩
@@ -150,11 +144,11 @@ def HpkEx : Prop :=
           ∫⁻ s, ∫⁻ s', φ (fun i j => (Matrix.of s * Formalism.QuantumDeterminants.bigCell k r q.1 (μsec q.2) * (Matrix.of s')⁻¹) i j)
             ∂(Formalism.MainNotions.S.muS μW' μN) ∂(Formalism.MainNotions.S.muS μW μN)
 
-def TransEx : Prop := HpkEx → RightInvS → JacExGood
+def TransEx : Prop := HpkEx → _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc → JacExGood
 
-def DegRed : Prop := RightInvS → JacExGood → JacEx
+def DegRed : Prop := _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc → JacExGood → JacEx
 
-theorem jacLoc_of_ex (h1 : DiagDCLoc) (hR : RightInvS) (hE : JacEx) : JacLoc := by
+theorem jacLoc_of_ex (h1 : DiagDCLoc) (hR : _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc) (hE : JacEx) : JacLoc := by
   intro n r k ε e z z' T T' sc hF hsc μS μS' hμ hμ' h hh
   obtain ⟨h0, hh0, hD⟩ := hE n r k ε e z z' T T' sc hF hsc
   obtain ⟨C, hC, hDC⟩ := hD μS μS' hμ hμ'

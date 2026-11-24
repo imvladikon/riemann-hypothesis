@@ -883,14 +883,6 @@ private theorem mult_operator_shifts_twist {Λ R B M : Type} [CommRing Λ] [Comm
   apply h2
   rw [← h3, ← h3, hxy]
 
-theorem UpperTheory.V.AlgebraTools.IsCplAt.finite_free_baseChange :
-    ∀ (Λ R : Type) [CommRing Λ] [IsNoetherianRing Λ] [CommRing R] [IsNoetherianRing R] [Algebra Λ R]
-      (p : Ideal Λ) (q : Ideal R) (L B : Type) [CommRing L] [IsLocalRing L] [CommRing B] [IsLocalRing B]
-      [Algebra Λ L] [Algebra R B] [Algebra L B] [Algebra Λ B] [IsScalarTower Λ R B] [IsScalarTower Λ L B]
-      (M : Type) [AddCommGroup M] [Module R M] [Module Λ M] [IsScalarTower Λ R M] [Module.Finite Λ M] [Module.Flat Λ M],
-      IsCplAt Λ p L → IsCplAt R q B → q.comap (algebraMap Λ R) = p →
-      Module.Finite L (TensorProduct R B M) ∧ Module.Free L (TensorProduct R B M) :=
-  _root_.UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseChange
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CaCplModfree =====
@@ -1023,7 +1015,7 @@ theorem UpperTheory.V.Pa.Core.pmDim :
     show (c a * r) • x = a • (r • x)
     rw [mul_smul, hc]⟩
   obtain ⟨hfin, hfree⟩ :=
-    UpperTheory.V.AlgebraTools.IsCplAt.finite_free_baseChange Λ R (q.comap c) q La B X hLa hRB rfl
+    _root_.UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseChange Λ R (q.comap c) q La B X hLa hRB rfl
   haveI := hfin
   haveI := hfree
   let y' : σ → B := fun i => algebraMap P.BB B (algebraMap R P.BB (y i))

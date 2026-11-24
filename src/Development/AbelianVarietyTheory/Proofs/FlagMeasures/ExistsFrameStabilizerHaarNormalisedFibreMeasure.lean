@@ -1259,12 +1259,6 @@ section Alg
 variable {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] [Algebra F R]
   (σ : E →ₐ[F] E)
 
-theorem sigR_invol (hσ : ∀ x, σ (σ x) = x) (z : R ⊗[F] E) : sigR R σ (sigR R σ z) = z := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a b => simp [sigR, hσ]
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
-
 theorem gramR_comb {M a : ℕ} (J : Matrix (Fin M) (Fin M) E) (u : Matrix (Fin a) (Fin a) (R ⊗[F] E))
     (X : Fin a → Fin M → R ⊗[F] E) :
     gramR R σ J (fun b => ∑ c, u c b • X c) = (u.map (sigR R σ)).transpose * gramR R σ J X * u := by
@@ -1300,7 +1294,7 @@ theorem cgr_mem (hσ : ∀ x, σ (σ x) = x) {a : ℕ} (m : Matrix (Fin a) (Fin 
   intro p q
 
   simp only [cgr, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, map_sum, map_mul,
-  sigR_invol R σ hσ, Finset.sum_mul]
+  _root_.PI.VolStabS.sigR_invol R σ hσ, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun l _ => ?_
   rw [hS]
@@ -1720,11 +1714,6 @@ theorem gramR_mv (u : Matrix (Fin a) (Fin a) (R ⊗[F] E)) (X : Fin a → Fin n 
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun d _ => by ring
 
-theorem gramR_ratTup (X : Fin a → Fin n → E) :
-    gramR R σ J (ratTup (F := F) R X) = (gramE σ J X).map (inclR R) := by
-  ext i j
-  simp [gramR, gramE, hE, hR, Formalism.UG.hform, ratTup, JR, sigR, inclR, Matrix.map_apply, mul_assoc]
-
 theorem gramR_smul [TopologicalSpace R] (g : HA R σ J) (X : Fin a → Fin n → R ⊗[F] E) :
     gramR R σ J (g • X) = gramR R σ J X := by
   ext i j
@@ -1753,7 +1742,7 @@ theorem conj_preserves_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   set x0 := ratTup (F := F) (Fv F v) (F0 P) with hx0def
   set S := hermOf (Fv F v) σ (gramE σ J (F0 P)) hT with hS
   have hgram : gramR (Fv F v) σ J x0 = (S : Matrix (Fin (r + 1)) (Fin (r + 1)) (Fv F v ⊗[F] E)) :=
-    gramR_ratTup (Fv F v) σ J (F0 P)
+    _root_.GlobalTheory.LocalWittND.gramR_ratTup (Fv F v) σ J (F0 P)
   obtain ⟨co, -, hco⟩ := GlobalTheory.UnitriangularCoeff.exists_coeff F E σ hCM n J hJ v r P T hP
   let u : Matrix (Fin (r + 1)) (Fin (r + 1)) (Fv F v ⊗[F] E) := fun a b =>
     if a = b then 1 else if h : a < b then co ⟨s, hs⟩ ⟨(a, b), h⟩ else 0

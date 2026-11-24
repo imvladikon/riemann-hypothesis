@@ -490,15 +490,6 @@ open AlgebraicGeometry CategoryTheory NumberField Matrix
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.PB GlobalTheory.CompanionTheory.Ar.PB.FMX GlobalTheory.CompanionTheory.Ar.FlagBun GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm
 
-theorem _root_.GlobalTheory.T.minor_expansion_of_scaled_product : ∀ {Ψ : Type} {p q : ℕ} {Ω : Type} [Field Ω] {n : Ψ ⊕ Ψ → ℕ}
-    (A C : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω)
-    (Ts : ∀ s, Matrix (Fin (rk Ψ p q s)) (Fin (rk Ψ p q s)) Ω) (x : Ω) (m : Ψ ⊕ Ψ → ℕ)
-    (hAT : ∀ s, A s * Ts s = (x ^ m s) • C s) (τ : Ψ) (t : StepIx Ψ p q) (hs : t.1 = .inl τ ∨ t.1 = .inr τ)
-    (J : Fin ((t.2 : ℕ) + 1) → Fin (n t.1)) (h : Matrix (Fin (p + q)) (Fin (p + q)) Ω)
-    (S : Finset (Fin (p + q))) (hS : S.card = (t.2 : ℕ) + 1),
-    ∑ I, cMin A t J I * minorIJ (tMat Ts τ * h) I S =
-      x ^ (m t.1 * ((t.2 : ℕ) + 1)) * ∑ I, cMin C t J I * minorIJ h I S := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.sum_cMin_tMat_mul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorExpansionOfScaledProductStatement =====
@@ -915,7 +906,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
       unfold blkF at hk
       split_ifs at hk with hp
       exact ⟨hp, (Option.some.inj hk).symm⟩
-    have e1 := GlobalTheory.T.minor_expansion_of_scaled_product A C Ts (xcOf x₀ c) m hAT r.1 (stepOf Ψ p q r) (BlockEmbeddings.stepOf_fst r) i h
+    have e1 := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.sum_cMin_tMat_mul A C Ts (xcOf x₀ c) m hAT r.1 (stepOf Ψ p q r) (BlockEmbeddings.stepOf_fst r) i h
       (stepCols (p + q) p r.2) (card_stepCols r)
     have key : detFac p r.2 (tMat Ts r.1) * xcOf x₀ c ^ (m (stepOf Ψ p q r).1 * (((stepOf Ψ p q r).2 : ℕ) + 1)) =
         (∏ k', xb A x₀ ⟨k', c k'⟩ ^ bF m r k') * wt (stepOf Ψ p q r) := by

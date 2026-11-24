@@ -72,16 +72,16 @@ theorem twRes_ext : ∀ (q : ℕ) [NeZero q] (i : ℤ), IsTwRes q i (res _ (tw q
   obtain ⟨hKI, hInj, hGE, hQI, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
   refine ⟨⟨hGE, resAug _, hQI, fun _ _ => rfl⟩, fun t => ?_, ?_⟩
   · haveI := hInj t
-    exact (GlobalTheory.T.flat_sections_of_injective_zmodEtaleSheaf q ((res _ (tw q i)).X t)).2
+    exact (_root_.GlobalTheory.EtC.InjFlat.flat_of_injective q ((res _ (tw q i)).X t)).2
   intro T e ⟨_, ε, hε, he⟩
-  have hext := GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective (ZMod q) (tw q i) T (res _ (tw q i)) ε
+  have hext := _root_.GlobalTheory.EtC.extHom_of_quasiIso (ZMod q) (tw q i) T (res _ (tw q i)) ε
   refine ⟨?_, fun u u' huu => ?_⟩
   · obtain ⟨m, hm⟩ := hext.1 (resAug _)
     refine ⟨m, fun U ζ => ?_⟩
     rw [← he U ζ, ← sec_map_comp, ← HomologicalComplex.comp_f, hm]
     rfl
   · refine hext.2 u u' ?_
-    have htw := (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2
+    have htw := (_root_.GlobalTheory.EtC.twist_sections q i).2.2.2
     obtain ⟨hres, hrel, huniq⟩ := htw
     let ψ : (T ⟶ res _ (tw q i)) → (tw q i ⟶ (res _ (tw q i)).X 0) := fun v => sglι (tw q i) ≫ (ε ≫ v).f 0
     have key : ∀ v : T ⟶ res _ (tw q i), ∀ U ζ, Sec.map (ψ v) (twGen i ζ) = Sec.map (v.f 0) (e U ζ) := by
@@ -119,8 +119,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy : ∀ (q : ℕ) [NeZero q] (i : ℤ), IsTwRes q i (res _ (tw q i)) (fun _ ζ => resGen i ζ) ∧ (∀ t, FlatS ((res _ (tw q i)).X t)) ∧ ∀ {T : Cx (ZMod q)} (e : ∀ U : Scheme.{0}, Prim q Γ(U, ⊤) → Sec (T.X 0) U), IsTwRes q i T e → (∃ u : T ⟶ res _ (tw q i), ∀ U ζ, Sec.map (u.f 0) (e U ζ) = resGen i ζ) ∧ ∀ u u' : T ⟶ res _ (tw q i), (∀ U ζ, Sec.map (u.f 0) (e U ζ) = Sec.map (u'.f 0) (e U ζ)) → Nonempty (Homotopy u u') := by
-  first | (exact @GlobalTheory.EtC.TwResExt.twRes_ext)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistResolutionMapExistsUniqueHomotopyStatement =====

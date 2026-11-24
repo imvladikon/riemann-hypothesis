@@ -676,7 +676,7 @@ theorem main : GlobalTheory.TwSys.Cheb → ∀ {R : Ranks} {H : Host R} {what₂
   have hconj := _root_.GlobalTheory.PointRepConj.main hC N i r₀ r h₀ hr
   have hd₀ : ∃ e, GlobalTheory.IndefiniteRowSideFullHecke.CongruenceModuleMatrices.IsDecomp (t := R.t) (r₀ π) (ρ₀ π) (N.chi i) e := by
     refine ⟨S₀.e, fun g u => ?_⟩
-    rw [GlobalTheory.ConsExists.overK_apply, GlobalTheory.ConsExists.overK_apply]
+    rw [_root_.GlobalTheory.SpanIdem.overK_apply, _root_.GlobalTheory.SpanIdem.overK_apply]
     exact hS₀.2.1 g u
   have hρ := _root_.GlobalTheory.CharCancel.main N i r₀ r ρ₀ ρ π (h₀ π).2.1 (hconj π) hd₀ hd
   obtain ⟨S, hSg, hS⟩ := _root_.GlobalTheory.Proof.pointObjects_transport_along_conjugation_over_fraction_field.main N i r₀ r ρ₀ ρ π hconj hρ S₀ hS₀

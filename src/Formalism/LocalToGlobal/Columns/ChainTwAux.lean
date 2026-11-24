@@ -1383,7 +1383,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem TwNormLat : PI.TwNormLat.TwNormLat := PI.TwNormLat.W.twNormLat_main
+alias TwNormLat := _root_.PI.TwNormLat.W.twNormLat_main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TwNormLat =====

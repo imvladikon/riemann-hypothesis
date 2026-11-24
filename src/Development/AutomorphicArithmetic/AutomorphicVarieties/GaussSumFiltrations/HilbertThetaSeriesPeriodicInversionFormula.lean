@@ -495,8 +495,6 @@ end GlobalTheory.HilbertThetaSeries.LatBasis
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.exists_realMatrix_for_lattice_and_dual_with_det : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] [DecidableEq (InfinitePlace F)] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ a : F, a ≠ 0 → ∃ (e : (κ → F) →+ (InfinitePlace F × κ → ℝ)) (B : Matrix (InfinitePlace F × κ) (InfinitePlace F × κ) ℝ) (α : (InfinitePlace F × κ → ℤ) ≃ aL κ a) (β : (InfinitePlace F × κ → ℤ) ≃ {y : κ → F // a • y ∈ dualL F G}), (∀ x y v, ∑ i, e x (v, i) * e y (v, i) = reAt v (BF G x y)) ∧ (∀ m, e (α m) = B *ᵥ fun i => (m i : ℝ)) ∧ (∀ m, e (β m) = B⁻¹ᵀ *ᵥ fun i => (m i : ℝ)) ∧ B.det ≠ 0 ∧ |B.det| = ((Algebra.norm ℚ a : ℚ) : ℝ) ^ (2 * k) * ((discr F).natAbs : ℝ) ^ k * (t : ℝ) ^ Module.finrank ℚ F := by
-  first | exact @GlobalTheory.HilbertThetaSeries.LatBasis.lattice_matrix
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.ExistsRealMatrixForLatticeAndDualWithDet =====
@@ -613,8 +611,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.poisson_summation_gaussian_constant_on_even_blocks : ∀ (V κ : Type) [Fintype V] [DecidableEq V] [Fintype κ] [DecidableEq κ] (k : ℕ), Fintype.card κ = 2 * k → ∀ (B : Matrix (V × κ) (V × κ) ℝ), B.det ≠ 0 → ∀ (u : V × κ → ℝ) (z : V → ℂ), (∀ v, 0 < (z v).im) → ∑' m : V × κ → ℤ, Complex.exp (Real.pi * Complex.I * ∑ j, (-(z j.1)⁻¹) * (((B *ᵥ fun i => (m i : ℝ)) j + u j : ℝ) : ℂ) ^ 2) = ((|B.det| : ℝ) : ℂ)⁻¹ * (∏ v, (-Complex.I * z v)) ^ k * ∑' m : V × κ → ℤ, Complex.exp (Real.pi * Complex.I * ∑ j, z j.1 * (((B⁻¹ᵀ *ᵥ fun i => (m i : ℝ)) j : ℝ) : ℂ) ^ 2) * Complex.exp (2 * Real.pi * Complex.I * ∑ j, (((B⁻¹ᵀ *ᵥ fun i => (m i : ℝ)) j * u j : ℝ) : ℂ)) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.tsum_cexp_block_gaussian
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.PoissonSummationGaussianConstantOnEvenBlocks =====
@@ -635,7 +631,7 @@ variable {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
 noncomputable def sg (v : InfinitePlace F) : F →+* ℝ := (Pi.evalRingHom (fun _ : InfinitePlace F => ℝ) v).comp rhom
 
 theorem reAt_eq (v : InfinitePlace F) (x : F) : reAt v x = sg v x :=
-  ((GlobalTheory.T.hilbert_slash_rational_matrix_properties F 0 (fun _ => 0)).1 v x).symm
+  ((_root_.GlobalTheory.HilbertThetaSeries.RatSlash.rat_slash F 0 (fun _ => 0)).1 v x).symm
 
 theorem cmp_wm (c : Fˣ) (v : InfinitePlace F) (i j : Fin 2) :
     ((HilbertThetaSeries.cmp v (toInf (wm c)) : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ) i j
@@ -682,7 +678,7 @@ theorem et_BF {κ : Type} [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ) (
     et (BF G x y) = Complex.exp (2 * Real.pi * Complex.I * ∑ j : InfinitePlace F × κ, ((e x j * e y j : ℝ) : ℂ)) := by
   unfold et
   congr 2
-  rw [← Complex.ofReal_ratCast, ← ((GlobalTheory.T.hilbert_slash_rational_matrix_properties F 0 (fun _ => 0)).2.2.2.2 (BF G x y)).2, ← Complex.ofReal_sum,
+  rw [← Complex.ofReal_ratCast, ← ((_root_.GlobalTheory.HilbertThetaSeries.RatSlash.rat_slash F 0 (fun _ => 0)).2.2.2.2 (BF G x y)).2, ← Complex.ofReal_sum,
     Fintype.sum_prod_type]
   simp only [he]
 
@@ -696,7 +692,7 @@ theorem const_eq (k t : ℕ) (a : F) (c : Fˣ) (z : Hn F) (d : ℝ)
     rw [InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, ← InfinitePlace.card_add_two_mul_card_eq_rank,
       IsTotallyReal.nrComplexPlaces_eq_zero]
   have hN : (∏ v, (sg v (c : F) : ℂ)) = ((Algebra.norm ℚ (c : F) : ℚ) : ℂ) := by
-    rw [← Complex.ofReal_ratCast, ← ((GlobalTheory.T.hilbert_slash_rational_matrix_properties F 0 (fun _ => 0)).2.2.2.2 (c : F)).1, Complex.ofReal_prod]
+    rw [← Complex.ofReal_ratCast, ← ((_root_.GlobalTheory.HilbertThetaSeries.RatSlash.rat_slash F 0 (fun _ => 0)).2.2.2.2 (c : F)).1, Complex.ofReal_prod]
     simp only [reAt_eq]
   have h : (∏ v, -Complex.I * ((sg v (c : F) : ℂ) ^ 2 * (z v : ℂ)))
       = (-Complex.I) ^ Module.finrank ℚ F * ((Algebra.norm ℚ (c : F) : ℚ) : ℂ) * ∏ v, (sg v (c : F) : ℂ) * (z v : ℂ) := by
@@ -714,14 +710,14 @@ theorem const_eq (k t : ℕ) (a : F) (c : Fˣ) (z : Hn F) (d : ℝ)
 theorem wcos : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (a : F) (c : Fˣ) (x₀ : κ → F), a ≠ 0 → sl0 k (toInf (wm c)) (th G fun x => open Classical in if x - x₀ ∈ aL κ a then 1 else 0) = th G (wT G k t a c {x₀} fun _ => 1) := by
   intro F _ _ _ κ _ _ G hG t ht k hk a c x₀ ha
   letI : DecidableEq (InfinitePlace F) := Classical.decEq _
-  obtain ⟨e, B, α, β, he, hα, hβ, hB, hdet⟩ := GlobalTheory.T.exists_realMatrix_for_lattice_and_dual_with_det F κ G hG t ht k hk a ha
+  obtain ⟨e, B, α, β, he, hα, hβ, hB, hdet⟩ := _root_.GlobalTheory.HilbertThetaSeries.LatBasis.lattice_matrix F κ G hG t ht k hk a ha
   have hsm := (GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hG).2.1
   have hc : (c : F) ≠ 0 := c.ne_zero
   funext z
   have hz : ∀ v, 0 < ((sg v (c : F) : ℂ) ^ 2 * (z v : ℂ)).im := fun v => by
     rw [← Complex.ofReal_pow, Complex.im_ofReal_mul]
     exact mul_pos (sq_pos_of_ne_zero (sg_ne c v)) (z v).im_pos
-  have hP := GlobalTheory.T.poisson_summation_gaussian_constant_on_even_blocks (InfinitePlace F) κ k hk B hB (e x₀) (fun v => (sg v (c : F) : ℂ) ^ 2 * (z v : ℂ)) hz
+  have hP := _root_.GlobalTheory.HilbertThetaSeries.tsum_cexp_block_gaussian (InfinitePlace F) κ k hk B hB (e x₀) (fun v => (sg v (c : F) : ℂ) ^ 2 * (z v : ℂ)) hz
   have hL : ∀ Φ : (κ → F) → ℂ, (∀ x, x - x₀ ∈ aL κ a → Φ x = 1) → (∀ x, x - x₀ ∉ aL κ a → Φ x = 0) →
       th G Φ (HilbertThetaSeries.act (toInf (wm c)) z)
       = ∑' m : InfinitePlace F × κ → ℤ, Complex.exp (Real.pi * Complex.I * ∑ j, (-((sg j.1 (c : F) : ℂ) ^ 2 * (z j.1 : ℂ))⁻¹)
@@ -769,8 +765,6 @@ end GlobalTheory.WCos
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.hilbertThetaSeries_coset_inversion_formula : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (a : F) (c : Fˣ) (x₀ : κ → F), a ≠ 0 → sl0 k (toInf (wm c)) (th G fun x => open Classical in if x - x₀ ∈ aL κ a then 1 else 0) = th G (wT G k t a c {x₀} fun _ => 1) := by
-  first | exact @GlobalTheory.WCos.wcos
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.HilbertThetaSeriesCosetInversionFormula =====
@@ -818,7 +812,7 @@ theorem thetaSeries_periodic_slash_frickeMatrix : ∀ (F : Type) [Field F] [Numb
     · simp
   have hsumL : ∀ x₀ ∈ T, ∀ z : Hn F, Summable fun x => (if x - x₀ ∈ aL κ a then (1:ℂ) else 0) * ez (QF G x) z := by
     intro x₀ hx₀ z
-    refine (_root_.GlobalTheory.T.thetaSeries_holomorphic_qExpansion_of_bounded_coeff F κ G hG b _ 1 ?_ ?_).1 z
+    refine (_root_.GlobalTheory.HilbertThetaSeries.th_expansion F κ G hG b _ 1 ?_ ?_).1 z
     · intro x hx
       have hm : x - x₀ ∈ aL κ a := by
         by_contra hm
@@ -829,10 +823,10 @@ theorem thetaSeries_periodic_slash_frickeMatrix : ∀ (F : Type) [Field F] [Numb
       split_ifs <;> simp
   have hsumR : ∀ (x₀ : κ → F) (z : Hn F), Summable fun y => wT G k t a c {x₀} (fun _ => (1:ℂ)) y * ez (QF G y) z := by
     intro x₀ z
-    obtain ⟨-, ⟨N, hN, hN2⟩, -⟩ := _root_.GlobalTheory.T.dualLattice_index_eq_discr_pow_mul_det_pow F κ G hG
+    obtain ⟨-, ⟨N, hN, hN2⟩, -⟩ := _root_.GlobalTheory.HilbertThetaSeries.DualLevel.dual_level_index F κ G hG
     have hc : (c : F) ≠ 0 := c.ne_zero
     have hNF : (N : F) ≠ 0 := by exact_mod_cast hN.ne'
-    refine (_root_.GlobalTheory.T.thetaSeries_holomorphic_qExpansion_of_bounded_coeff F κ G hG ((c:F) / ((N:F) * a)) _ ‖wC k t a (c:F)‖ ?_ ?_).1 z
+    refine (_root_.GlobalTheory.HilbertThetaSeries.th_expansion F κ G hG ((c:F) / ((N:F) * a)) _ ‖wC k t a (c:F)‖ ?_ ?_).1 z
     · intro y hy
       have hd : (a / c) • y ∈ dualL F G := by
         by_contra hd
@@ -870,7 +864,7 @@ theorem thetaSeries_periodic_slash_frickeMatrix : ∀ (F : Type) [Field F] [Numb
   simp only [sl0]
   rw [thL, Finset.mul_sum]
   refine Finset.sum_congr rfl (fun x₀ _ => ?_)
-  have := congrFun (_root_.GlobalTheory.T.hilbertThetaSeries_coset_inversion_formula F κ G hG t ht k hk a c x₀ ha) z
+  have := congrFun (_root_.GlobalTheory.WCos.wcos F κ G hG t ht k hk a c x₀ ha) z
   simp only [sl0] at this
   rw [← this]
   ring
@@ -880,8 +874,6 @@ end GlobalTheory.HilbertThetaSeries
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspRep UpperTheory.V UpperTheory.V.Af UpperTheory.V.Sd GlobalTheory.HilbertThetaSeries
 open scoped Matrix
 
-theorem _root_.GlobalTheory.T.hilbertThetaSeries_periodic_inversion_formula : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (a b : F) (c : Fˣ) (T : Finset (κ → F)) (Φ : (κ → F) → ℂ), a ≠ 0 → b ≠ 0 → aL κ a ≤ aL κ b → IsReps (aL κ a) (aL κ b) T → (∀ x, Φ x ≠ 0 → x ∈ aL κ b) → (∀ x, ∀ l ∈ aL κ a, Φ (x + l) = Φ x) → sl0 k (toInf (wm c)) (th G Φ) = th G (wT G k t a c T Φ) := by
-  first | exact @GlobalTheory.HilbertThetaSeries.thetaSeries_periodic_slash_frickeMatrix
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaussSumFiltrations.HilbertThetaSeriesPeriodicInversionFormula =====

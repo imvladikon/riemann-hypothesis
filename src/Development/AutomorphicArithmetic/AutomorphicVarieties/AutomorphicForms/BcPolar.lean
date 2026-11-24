@@ -120,7 +120,7 @@ open UpperTheory.V UpperTheory.V.Af UpperTheory.V.Af.Bc UpperTheory.V.Published
 
 theorem UpperTheory.V.Af.Bc.bcAtt : BcAtt := UpperTheory.baseChange_attached_of_frobenius_restriction UpperTheory.frobenius_power_compatibility
 
-theorem UpperTheory.V.Af.Bc.irrBasic : IrrBasic := UpperTheory.galoisRep_irreducibility_criterion
+alias UpperTheory.V.Af.Bc.irrBasic := _root_.UpperTheory.galoisRep_irreducibility_criterion
 
 theorem UpperTheory.V.Af.Bc.normGal : NormGal := UpperTheory.galois_norm_compatibility_of_frobenius_restriction UpperTheory.frobenius_power_compatibility (UpperTheory.ideleNorm_valuation_of_local_compatibility UpperTheory.ideleNorm_local_compatibility)
 end -- clump:auto

@@ -342,8 +342,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
-theorem _root_.GlobalTheory.T.exists_symmetric_thetaElement_level_four_square : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Spec (CommRingCat.of (FractionRing R)))) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (x : TFK (R := R) F ⟶ A.A), x ^ 4 = 1 → ∀ σ : LB.Gen (LB.LinComb A.L (K := Fin 2) ![(ι[A.A]).left, 𝟙 A.A.left] ![1, -1]), σ.IsGen → LB.Gen.Corr A.L _ _ _ _ (LB.pullGen A.L _ _ σ (eSec A.A)) (LB.oneGen A.L) → ∃ θ : ThetaGrp A.A A.L ((4 : ℕ) : ℤ) (TFK (R := R) F), θ.pt = x ∧ (∃ nu : LB.Gen (negLB A.A A.L ((4 : ℕ) : ℤ) (TFK (R := R) F)), nu.IsGen ∧ LB.Gen.Corr A.L _ _ _ _ (symGen A.A A.L ((4 : ℕ) : ℤ) θ nu) (LB.oneGen A.L)) ∧ ∃ c : F, (∀ z J, Good A.L z J → (val σ (x ^ 2).left z J).val = @id ((TFK (R := R) F).left.presheaf.stalk z) (cst (R := R) F z c)) ∧ ∀ (ψ : TFK (R := R) F ⊗ A.A ⟶ TFK (R := R) F ⊗ A.A) (m : TFK (R := R) F ⊗ A.A ⟶ A.A) (hm : ψ ≫ snd _ _ = m), ψ ≫ fst _ _ = fst _ _ → m = snd _ _ ^ 2 → ∀ α : LB.Gen (LB.LinComb A.L (K := Fin 2) ![(snd (TFK (R := R) F) A.A).left, m.left] ![((4 : ℕ) : ℤ), -((1 : ℕ) : ℤ)]), α.IsGen → ∀ (t : SecA A F 1) (t₁ t₂ t₃ : SecA A F 4), IsTwistPull A.A A.L ψ m hm ((4 : ℕ) : ℤ) ((1 : ℕ) : ℤ) α t t₁ → IsActOf A.A A.L ((4 : ℕ) : ℤ) θ t₁ t₂ → IsActOf A.A A.L ((4 : ℕ) : ℤ) θ t₂ t₃ → ∀ j, t₃.f j = liftFun A.A _ ((Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom c) * t₁.f j := by
-  first | exact @GlobalTheory.ThetaSquare.exists_symmetric_square
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymmetricThetaElementLevelFourSquareStatement =====
@@ -612,8 +610,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
-theorem _root_.GlobalTheory.T.psi_eq_tau_from_sign_relation_four_torsion : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPre R) (F : Type) [Field F] [Algebra (FractionRing R) F] (O : Type) [CommRing O] [StarRing O] [Module O D.X] (o : D.OAct O) (w : O), w + star w = 1 → ∀ u : GlobalTheory.PsiRescale.FourGen D.P.L (o.onB.act w), Normd u → ∀ gam : LB.Gen (LB.LinComb D.P.L (K := Fin 4) ![(𝟙 D.P.A ^ 5).left, (𝟙 D.P.A ^ 4).left, 𝟙 _, (1 : D.P.A ⟶ D.P.A).left] ![2, -3, -2, 3]), Normd gam → ∀ p q r : QkPt D F 4, q.y = w • p.y → r.y = (1 + w) • p.y → GtAct o w p.g q.g → GtAct o (1 + w) p.g r.g → ∀ (z : (TF (R := R) F).left) J, Good D.P.L z J → ∀ s s' s'' : ((TF (R := R) F).left.presheaf.stalk z)ˣ, s * (@id ((TF (R := R) F).left.presheaf.stalk z)ˣ (val (D.psi (p.y)) (jFK (R := R) F) z J) * rigV D (TF (R := R) F).hom z J) = val (p.g.s p.y) (𝟙 _) z J ^ 2 * val gam p.g.b.left z J → s' * (@id ((TF (R := R) F).left.presheaf.stalk z)ˣ (val (D.psi (q.y)) (jFK (R := R) F) z J) * rigV D (TF (R := R) F).hom z J) = val (q.g.s q.y) (𝟙 _) z J ^ 2 * val gam q.g.b.left z J → s'' * (@id ((TF (R := R) F).left.presheaf.stalk z)ˣ (val (D.psi (r.y)) (jFK (R := R) F) z J) * rigV D (TF (R := R) F).hom z J) = val (r.g.s r.y) (𝟙 _) z J ^ 2 * val gam r.g.b.left z J → s'' = s ^ 2 * s' → @id ((TF (R := R) F).left.presheaf.stalk z)ˣ (val (D.tau p.y (w • p.y)) (jFK (R := R) F) z J) * val u (cP D (TF (R := R) F) p.y).left z J = @id ((TF (R := R) F).left.presheaf.stalk z)ˣ (val (D.psi (p.y)) (jFK (R := R) F) z J) * rigV D (TF (R := R) F).hom z J := by
-  first | exact @GlobalTheory.PsiSignRel.sign_rel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiEqTauFromSignRelationFourTorsionStatement =====
@@ -774,8 +770,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT
 
-theorem _root_.GlobalTheory.T.symmetry_signs_two_torsion_relation_of_lbIso : AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (O : Type) [CommRing O] [StarRing O] [Module O D.toPre.X] (o : D.toPre.OAct O) (oA : A.OAct O) (oG : RingAct G O), U.toUnifPre.OLinear O o oA oG → ∀ w : O, LBIso U.LG.L (cubeLB G ![𝟙 G, oG.act w] U.LG.L) → ∃ σ : LB.Gen (LB.LinComb A.L (K := Fin 2) ![(ι[A.A]).left, 𝟙 A.A.left] ![1, -1]), σ.IsGen ∧ LB.Gen.Corr A.L _ _ _ _ (LB.pullGen A.L _ _ σ (eSec A.A)) (LB.oneGen A.L) ∧ ∀ (T : Over (Spec (CommRingCat.of (FractionRing R)))) (x : T ⟶ A.A), x ^ 2 = 1 → ∀ z J, Good A.L z J → val σ (x * (x ≫ oA.act w)).left z J = val σ x.left z J ^ 2 * val σ (x ≫ oA.act w).left z J := by
-  first | exact @GlobalTheory.SignSym.sign_sym
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetrySignsTwoTorsionRelationOfLbIsoStatement =====
@@ -895,7 +889,7 @@ theorem pull_val : AllUF fun {R} _ _ {_} {D} {A} {G} _ _ U F _ _ => ∀ (E : End
   obtain ⟨α, hα, hαn⟩ := exists_normalised A.isLB hw₀.2.1 (snd (TFK (R := R) F) A.A ≫ E.aA) (by
     rw [← Over.comp_left, ptSecT, lift_snd_assoc, MonObj.one_comp]; rfl) _ _ α₀ hα₀
   refine ⟨α, hα, fun t t' s s' ht ht' htt χ b z J hJ => ?_⟩
-  have H := (GlobalTheory.T.expansion_pullback_section_endomorphism hL R I hI D A G hG U F E hE ν 1 le_rfl hν ⟨β, hβ⟩).2 w₀ ρ hw₀ _ _ (lift_snd _ _) (lift_fst _ _)
+  have H := (_root_.GlobalTheory.UT.PullExp.main hL R I hI D A G hG U F E hE ν 1 le_rfl hν ⟨β, hβ⟩).2 w₀ ρ hw₀ _ _ (lift_snd _ _) (lift_fst _ _)
     rfl α hα hαn t t' s s' ht ht' htt κ hκ
   obtain ⟨g, rfl⟩ := (gt_onto_divisible_kernel hL R I hI D F).1 b
   obtain ⟨g', hg', -⟩ := (GlobalTheory.T.uniformizationEndomorphism_calculus hL R I hI D A G hG U F E E E).1 g
@@ -951,14 +945,14 @@ theorem sign_eq : AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∃ gam : LB.
   have hβ : ∃ β : LB.Gen (LB.LinComb U.LG.L (K := Fin 2) ![𝟙 _, E.aG.left] ![((4 : ℕ) : ℤ), -((1 : ℕ) : ℤ)]),
       β.IsGen := by
     rw [eG]; exact exists_gen_mulPull_pow_unif R I D A G U.toUnifPre 2 1 4 rfl
-  obtain ⟨κ, hκ⟩ := (GlobalTheory.T.expansion_pullback_section_endomorphism hL R I hI D A G hG U F E hE 4 1 le_rfl (by omega) hβ).1
+  obtain ⟨κ, hκ⟩ := (_root_.GlobalTheory.UT.PullExp.main hL R I hI D A G hG U F E hE 4 1 le_rfl (by omega) hβ).1
   obtain ⟨ν, hν⟩ := exists_nu (D := D.toPre) hL.1.mulPull 4
   obtain ⟨gam, hgam, canon⟩ := exists_gam hGF eB κ hκ ν hν
   refine ⟨gam, hgam, fun p x hx σ hσ nσ z JA J hJA hJ => ?_⟩
   have C : IsCub (th D.toPre (T := TF (R := R) F) z J) := isCub_cubV D.toPre.cub hJ
   obtain ⟨w₀, hw₀⟩ := U.ext
   obtain ⟨h4, hx'⟩ := hx w₀ hw₀
-  obtain ⟨θ, hθ, hsym, c, hc, hsq⟩ := GlobalTheory.T.exists_symmetric_thetaElement_level_four_square R A F x h4 σ hσ nσ
+  obtain ⟨θ, hθ, hsym, c, hc, hsq⟩ := _root_.GlobalTheory.ThetaSquare.exists_symmetric_square R A F x h4 σ hσ nσ
   obtain ⟨w, hw, hΦ⟩ := hx' θ hθ
   have sq := GlobalTheory.SymFrame.sq_frame_of_symmetric hL R I hI D A G hG U F 4 (by omega) p θ w₀ w hw₀ hw hΦ hsym ν hν z J hJ
   obtain ⟨α, hα, pull⟩ := pull_val R I hI D A G hG U F E hE 4 (by omega) hβ κ hκ w₀ hw₀
@@ -1074,7 +1068,7 @@ theorem psi_eq_tau_of_bundle_primitive_for_endomorphism : ∀ (R : Type) [CommRi
   let F := AlgebraicClosure (FractionRing R)
   obtain ⟨u₀, hu₀⟩ := GlobalTheory.T.polarisationBundle_symmetric_pullback_of_uniformisation R _ hR.1 D A G hG U O o oA oG hlin w hprim
   obtain ⟨u, hu, hn⟩ := GlobalTheory.PsiRescale.exists_normalised D.toPre.P.isLB (o.onB.act w) u₀ hu₀
-  obtain ⟨σ, hσ, nσ, vσ⟩ := GlobalTheory.T.symmetry_signs_two_torsion_relation_of_lbIso R _ hR.1 D A G hG U O o oA oG hlin w hprim
+  obtain ⟨σ, hσ, nσ, vσ⟩ := _root_.GlobalTheory.SignSym.sign_sym R _ hR.1 D A G hG U O o oA oG hlin w hprim
   obtain ⟨gam, hgam, key⟩ := sign_eq R _ hR.1 D A G hG U F
   refine ⟨u, hu, hn, fun y => corr_of_ext F D.toPre.P.isLB _ _ fun z J hJ => ?_⟩
   obtain ⟨h, hh⟩ := TorusExt.exists_iota (F := F) D.tau_bimult y
@@ -1094,7 +1088,7 @@ theorem psi_eq_tau_of_bundle_primitive_for_endomorphism : ∀ (R : Type) [CommRi
   have h2 : (f p ^ 2) ^ 2 = 1 := by rw [← pow_mul]; exact h4
   have hv := vσ (TFK (R := R) F) (f p ^ 2) h2 z JA hJA
   rw [← e₂, ← e₁] at hv
-  have H := GlobalTheory.T.psi_eq_tau_from_sign_relation_four_torsion R D.toPre F O o w hw u ⟨hu, hn⟩ gam hgam p q r qy ry qg rg z J hJ _ _ _
+  have H := _root_.GlobalTheory.PsiSignRel.sign_rel R D.toPre F O o w hw u ⟨hu, hn⟩ gam hgam p q r qy ry qg rg z J hJ _ _ _
     (key p _ hx σ hσ nσ z JA J hJA hJ) (key q _ hq σ hσ nσ z JA J hJA hJ) (key r _ hr σ hσ nσ z JA J hJA hJ) hv
   have r₁ : val D.toPre.rigK (jFK (R := R) F) z J = rigV D.toPre (TF (R := R) F).hom z J := val_pull hJ _ _ _
   have r₂ : jFK (R := R) F ≫ D.toPre.xK y = (cP D.toPre (TF (R := R) F) y).left := (Category.assoc _ _ _).symm
@@ -1127,10 +1121,6 @@ section Ring
 
 variable {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
 
-theorem isMonHom_mul' (f g : G ⟶ G) [IsMonHom f] [IsMonHom g] : IsMonHom (f * g) := by
-  rw [Hom.mul_def]
-  infer_instance
-
 def evId (e : AddMonoid.End (Additive (G ⟶ G))) : G ⟶ G := (e (Additive.ofMul (𝟙 _))).toMul
 
 structure IsEnd (e : AddMonoid.End (Additive (G ⟶ G))) : Prop where
@@ -1151,14 +1141,14 @@ def endRing : Subring (AddMonoid.End (Additive (G ⟶ G))) where
   add_mem' {a b} ha hb := by
     have := ha.hom; have := hb.hom
     have e : evId (a + b) = evId a * evId b := rfl
-    refine ⟨by rw [e]; exact isMonHom_mul' _ _, fun x => ?_⟩
+    refine ⟨by rw [e]; exact _root_.GlobalTheory.Balanced.isMonHom_mul _ _, fun x => ?_⟩
     rw [e, MonObj.comp_mul, ← ha.eq, ← hb.eq]
     rfl
   zero_mem' := by
     refine ⟨?_, fun x => (MonObj.comp_one x.toMul).symm⟩
     have e : evId (0 : AddMonoid.End (Additive (G ⟶ G))) = 𝟙 G * (𝟙 G)⁻¹ := (mul_inv_cancel (𝟙 G)).symm
     rw [e]
-    exact isMonHom_mul' _ _
+    exact _root_.GlobalTheory.Balanced.isMonHom_mul _ _
   neg_mem' {a} ha := by
     have := ha.hom
     have e : evId (-a) = (evId a)⁻¹ := rfl

@@ -192,15 +192,6 @@ namespace GlobalTheory.BaseCmp
 
 open GlobalTheory.FlatVecSum (princ princ_good)
 
-theorem unitOff_mul {N : ℕ} {u v : ℂ} (hu : UnitOff N u) (hv : UnitOff N v) : UnitOff N (u * v) := by
-  obtain ⟨hu0, n, hn1, hn2⟩ := hu
-  obtain ⟨hv0, m, hm1, hm2⟩ := hv
-  refine ⟨mul_ne_zero hu0 hv0, n + m, ?_, ?_⟩
-  · rw [show (N : ℂ) ^ (n + m) * (u * v) = ((N : ℂ) ^ n * u) * ((N : ℂ) ^ m * v) by ring]
-    exact hn1.mul hm1
-  · rw [show (N : ℂ) ^ (n + m) * (u * v)⁻¹ = ((N : ℂ) ^ n * u⁻¹) * ((N : ℂ) ^ m * v⁻¹) by rw [mul_inv]; ring]
-    exact hn2.mul hm2
-
 theorem exists_uniformiser (E : Type) [Field E] [NumberField E] (Q : Finset (HeightOneSpectrum (𝓞 E))) :
     ∃ ϖ : 𝓞 E, ϖ ≠ 0 ∧ ∀ PP ∈ Q, ϖ ∈ PP.asIdeal ∧ ϖ ∉ PP.asIdeal ^ 2 := by
   have hx : ∀ PP : HeightOneSpectrum (𝓞 E), ∃ x ∈ PP.asIdeal, x ∉ PP.asIdeal ^ 2 := fun PP => by
@@ -244,7 +235,7 @@ theorem exists_om_eq (hC : GlobalTheory.Hk3.Core R F) (hG : QGuard R) (hV : VStd
     (by first | exact hϖE) hϖ z hzm
   obtain ⟨Gc, hGc, hSB, hvP⟩ := GlobalTheory.T.tameKernel_vector_unit_mul_dilated_flat D G Pl0 T0 A Ks R F hC hG i hV ξ χ ξR _ ω φ hK hQ N hN hNQ eg eQ fg heg heQ hfg ϖ hϖ0 hϖ
   obtain ⟨Tm, hTm⟩ := hf.1
-  refine ⟨z, κ * Gc, hz, unitOff_mul hκ hGc, ?_⟩
+  refine ⟨z, κ * Gc, hz, _root_.GlobalTheory.BaseCmp.unitOff_mul' hκ hGc, ?_⟩
   have hcomp : ∀ x : WO (Vc D i) (Wc D i), dil i (ϖ : D.host.E) (dil i (ϖ : D.host.E)⁻¹ x) = x := by
     intro x
     ext a b
@@ -702,12 +693,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.baseLe_of_cuspRapidDecay_artin_rayClassField : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → _root_.GlobalTheory.BigOn.Exp.BaseUpperBound₂ := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.baseLe_of_cusp_decay_and_ray_class_field
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsSeriesStatement =====

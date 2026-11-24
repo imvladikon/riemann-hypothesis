@@ -103,8 +103,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isEtaleCohomologyEquivalence_iff_elementwise : ∀ (R : Type) [CommRing R] (F : Shv R) (E E' : Spc) (f : E ⟶ E'), Eqv R f F ↔ SurjH ((HC R F).map f.op) ∧ InjH ((HC R F).map f.op) := by
-  first | (exact @GlobalTheory.EtC.HCEqv.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCohomologyEquivalenceIffElementwiseStatement =====
@@ -122,11 +120,11 @@ theorem main : ∀ (R : Type) [CommRing R] (F : Shv R) (T : Type 1) [Category.{0
   intro R _ F T _ Cov _ Φ Φ' α hRef hS hI U
   obtain ⟨hneg, cl, hcl_surj, hcl_eq, hcl_zero, hpull⟩ := _root_.GlobalTheory.EtC.HCElements.main R F
   have key := GlobalTheory.T.cartan_quasiIso_of_localQuasiIso_boundedBelow_descent T Cov (Φ' ⋙ HC R F) (Φ ⋙ HC R F) (Functor.whiskerRight α (HC R F)) ?_ ?_ ?_ ?_ U
-  · exact (GlobalTheory.T.isEtaleCohomologyEquivalence_iff_elementwise R F _ _ (α.app U).unop).2 key
+  · exact (_root_.GlobalTheory.EtC.HCEqv.main R F _ _ (α.app U).unop).2 key
   · exact ⟨0, fun n hn V => ⟨hneg _ n hn, hneg _ n hn⟩⟩
   · intro U' V' g hg
     obtain ⟨X, a, h, hga, h1, h2⟩ := hRef U' V' g hg
-    exact ⟨X, a, h, hga, fun n => ⟨GlobalTheory.T.complexFunctorDegreeTerm_augmented_exact_resolution R F T Φ' U' X a h2 n, GlobalTheory.T.complexFunctorDegreeTerm_augmented_exact_resolution R F T Φ U' X a h1 n⟩⟩
+    exact ⟨X, a, h, hga, fun n => ⟨_root_.GlobalTheory.EtC.wExact_term_HC R F T Φ' U' X a h2 n, _root_.GlobalTheory.EtC.wExact_term_HC R F T Φ U' X a h1 n⟩⟩
   · intro n U' z hz
     obtain ⟨V, g, hg, y, hy⟩ := hS U' n (cl (Φ.obj U').unop n z hz)
     obtain ⟨c, hc, rfl⟩ := hcl_surj (Φ'.obj V).unop n y
@@ -158,8 +156,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleSpace_descent_local_equivalence : ∀ (R : Type) [CommRing R] (F : Shv R) (T : Type 1) [Category.{0} T] (Cov : MorphismProperty T) [Cov.IsStableUnderComposition] (Φ Φ' : T ⥤ Spcᵒᵖ) (α : Φ' ⟶ Φ), Refines Cov (fun U X a => Hyp R Φ a ∧ Hyp R Φ' a) → (∀ (U : T) (n : ℤ) (x : H R (Φ.obj U).unop F n), ∃ (V : T) (g : U ⟶ V), Cov g ∧ ∃ y : H R (Φ'.obj V).unop F n, pull R (α.app V).unop F n y = pull R (Φ.map g).unop F n x) → (∀ (U : T) (n : ℤ) (y : H R (Φ'.obj U).unop F n), pull R (α.app U).unop F n y = 0 → ∃ (V : T) (g : U ⟶ V), Cov g ∧ pull R (Φ'.map g).unop F n y = 0) → ∀ U, Eqv R (α.app U).unop F := by
-  first | (exact @GlobalTheory.EtC.Descent.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceDescentLocalEquivalenceStatement =====

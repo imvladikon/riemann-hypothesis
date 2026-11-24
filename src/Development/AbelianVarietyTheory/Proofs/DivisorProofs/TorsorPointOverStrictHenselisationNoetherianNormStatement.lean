@@ -168,14 +168,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.exists_point_closureFiniteEtale_strictHenselian : ∀ (A R O B : Type) [CommRing A] [IsDomain A] [CommRing R] [IsLocalRing R] [Algebra A R]
-    [CommRing O] [IsLocalRing O] [HenselianLocalRing O] [IsSepClosed (ResidueField O)] [CommRing B]
-    (j : R →+* O) (β : O →+* B) (ψ : GlobalTheory.LocAcyc.GenFib A R →+* B),
-    ψ.comp (algebraMap R (GlobalTheory.LocAcyc.GenFib A R)) = β.comp j →
-    ∀ (D : Type) [CommRing D] [Algebra (GlobalTheory.LocAcyc.GenFib A R) D],
-      Module.Finite (GlobalTheory.LocAcyc.GenFib A R) D → GlobalTheory.KeyOriginNoeth.ClosureFiniteEtale A R D →
-      ∃ σ : D →+* B, σ.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A R) D) = ψ := by
-  first | (exact @GlobalTheory.KeyOriginNoeth.exists_point_of_closureFiniteEtale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointClosureFiniteEtaleStrictHenselianStatement =====
@@ -431,45 +423,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.fittingDatum_baseChange_localEnlargement : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (q : ℕ), 0 < q → IsUnit (q : T) →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A] (i : A →+* T)
-      (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime] (jA : Localization.AtPrime QA →+* O)
-      (ψA : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib T O)
-      (DA : Type) [CommRing DA] [Algebra (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA]
-      (actA : Multiplicative (ZMod q) →* (DA ≃ₐ[GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)] DA)),
-    GlobalTheory.KeyOriginEnlarge.Fits T O q A i EA QA jA ψA DA actA →
-    ∀ (A₁ : Type) [CommRing A₁] [IsDomain A₁] [IsLocalRing A₁] (f : A →+* A₁) (i₁ : A₁ →+* T),
-    Function.Injective i₁ → IsLocalHom i₁ → i₁.comp f = i →
-    ∃ (EA' : Type) (_ : CommRing EA') (_ : Algebra (Polynomial A₁) EA') (_ : Algebra A₁ EA')
-      (_ : IsScalarTower A₁ (Polynomial A₁) EA') (_ : Algebra.Etale (Polynomial A₁) EA')
-      (QA' : Ideal EA') (_ : QA'.IsPrime) (jA' : Localization.AtPrime QA' →+* O)
-      (ψA' : GlobalTheory.LocAcyc.GenFib A₁ (Localization.AtPrime QA') →+* GlobalTheory.LocAcyc.GenFib T O)
-      (DA' : Type) (_ : CommRing DA') (_ : Algebra (GlobalTheory.LocAcyc.GenFib A₁ (Localization.AtPrime QA')) DA')
-      (actA' : Multiplicative (ZMod q) →* (DA' ≃ₐ[GlobalTheory.LocAcyc.GenFib A₁ (Localization.AtPrime QA')] DA')),
-      GlobalTheory.KeyOriginEnlarge.Fits T O q A₁ i₁ EA' QA' jA' ψA' DA' actA' ∧
-      (∃ (β : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib A₁ (Localization.AtPrime QA'))
-        (h : DA →+* DA'), ψA'.comp β = ψA ∧
-        h.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA) =
-          (algebraMap (GlobalTheory.LocAcyc.GenFib A₁ (Localization.AtPrime QA')) DA').comp β) ∧
-      ∃ γ : EA →+* EA',
-        γ.comp (algebraMap (Polynomial A) EA) = (algebraMap (Polynomial A₁) EA').comp (Polynomial.mapRingHom f) ∧
-        jA'.comp ((algebraMap EA' (Localization.AtPrime QA')).comp γ) = jA.comp (algebraMap EA (Localization.AtPrime QA)) ∧
-        QA' = (maximalIdeal O).comap (jA'.comp (algebraMap EA' (Localization.AtPrime QA'))) ∧
-        (∀ (Z : Type) [CommRing Z] (u : Polynomial A₁ →+* Z) (v : EA →+* Z),
-          u.comp (Polynomial.mapRingHom f) = v.comp (algebraMap (Polynomial A) EA) →
-          ∃ w : EA' →+* Z, w.comp (algebraMap (Polynomial A₁) EA') = u ∧ w.comp γ = v) ∧
-        (∀ (Z : Type) [CommRing Z] (w₁ w₂ : EA' →+* Z),
-          w₁.comp (algebraMap (Polynomial A₁) EA') = w₂.comp (algebraMap (Polynomial A₁) EA') →
-          w₁.comp γ = w₂.comp γ → w₁ = w₂) := by
-  first | (exact @GlobalTheory.EnlargeBaseChange.fits_baseChange)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FittingDatumBaseChangeLocalEnlargementStatement =====
@@ -544,8 +497,6 @@ section -- clump:auto
 
 open IsLocalRing
 
-theorem _root_.GlobalTheory.T.etale_hom_to_field_factors_algClosed_subfield : ∀ (A B K L : Type) [CommRing A] [IsLocalRing A] [CommRing B] [Algebra A B] [Algebra.Etale A B] [Field K] [IsAlgClosed K] [Field L] (α : A →+* K) (ι : K →+* L) (β : B →+* L), (∀ a ∈ maximalIdeal A, α a = 0) → β.comp (algebraMap A B) = ι.comp α → ∃ ψ : B →+* K, ψ.comp (algebraMap A B) = α ∧ ι.comp ψ = β := by
-  first | (exact @GlobalTheory.etale_hom_to_field_lands_in_algClosed_subfield)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomToFieldFactorsAlgClosedSubfieldStatement =====
@@ -576,7 +527,7 @@ theorem exists_section_mod (T O : Type) [CommRing T] [IsLocalRing T] [HenselianL
     (by rw [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top]; exact le_maximalIdeal hI)
   haveI : IsLocalHom π := inferInstance
   have het : (algebraMap A B).Etale := RingHom.etale_algebraMap.mpr inferInstance
-  obtain ⟨ψ, hψ1, hψ2⟩ := GlobalTheory.T.etale_hom_to_field_factors_algClosed_subfield A B (ResidueField T) (ResidueField (O ⧸ I))
+  obtain ⟨ψ, hψ1, hψ2⟩ := _root_.GlobalTheory.etale_hom_to_field_lands_in_algClosed_subfield A B (ResidueField T) (ResidueField (O ⧸ I))
     ((residue T).comp i) (ResidueField.map π) ((residue (O ⧸ I)).comp b)
     (fun a ha => by
       simp only [RingHom.comp_apply, residue_eq_zero_iff]
@@ -724,20 +675,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.localRing_mod_t_embeds_strictHenselian : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [HenselianLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    IsLocalHom (algebraMap T O) → algebraMap (Polynomial T) O Polynomial.X ∈ maximalIdeal O →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A] (i : A →+* T), Function.Injective i → IsLocalHom i →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA] (j : EA →+* O),
-      j.comp (algebraMap (Polynomial A) EA) = (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∃ (A₁ : Type) (_ : CommRing A₁) (_ : IsDomain A₁) (_ : IsLocalRing A₁) (_ : IsNoetherianRing A₁)
-      (_ : IsIntegrallyClosed A₁) (_ : Algebra.EssFiniteType ℤ A₁) (f : A →+* A₁) (i₁ : A₁ →+* T) (e : EA →+* A₁),
-      Function.Injective i₁ ∧ IsLocalHom i₁ ∧ i₁.comp f = i ∧
-      e.comp (algebraMap (Polynomial A) EA) = f.comp (Polynomial.evalRingHom 0) ∧
-      ∀ x : EA, algebraMap T O (i₁ (e x)) - j x ∈ Ideal.span {algebraMap (Polynomial T) O Polynomial.X} := by
-  first | (exact @GlobalTheory.FibreRetract.fibre_retract)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalRingModTEmbedsStrictHenselianStatement =====
@@ -751,9 +688,7 @@ open IsLocalRing Polynomial
 
 namespace GlobalTheory.KeyOriginRetract
 
-theorem mem_originIdeal {R : Type} [CommRing R] [IsLocalRing R] (p : Polynomial R) :
-    p ∈ GlobalTheory.KeyOriginCut.originIdeal R ↔ p.coeff 0 ∈ maximalIdeal R := by
-  apply GlobalTheory.VertUnitsNoeth.mem_originIdeal_iff' <;> assumption
+alias mem_originIdeal := _root_.GlobalTheory.VertUnitsNoeth.mem_originIdeal_iff'
 
 theorem sub_coeff_zero_mem {R B : Type} [CommRing R] [CommRing B] [Algebra R B] [Algebra (Polynomial R) B]
     [IsScalarTower R (Polynomial R) B] (p : Polynomial R) :
@@ -869,9 +804,9 @@ theorem enlarge_retract : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRin
       (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) := by
     rw [RingHom.comp_assoc, ← IsScalarTower.algebraMap_eq, hjA]
   obtain ⟨A₁, _, _, _, _, _, _, f, i₁, e, hi₁, hil₁, hfi, he, hag⟩ :=
-    GlobalTheory.T.localRing_mod_t_embeds_strictHenselian T O hT hTO hX A i hi hil EA (jA.comp (algebraMap EA (Localization.AtPrime QA))) hj
+    _root_.GlobalTheory.FibreRetract.fibre_retract T O hT hTO hX A i hi hil EA (jA.comp (algebraMap EA (Localization.AtPrime QA))) hj
   obtain ⟨EA', _, _, _, _, _, QA', _, jA', ψA', DA', _, _, actA', hF', ⟨β, h, hβ, hh⟩, γ, hγ, hjγ, hQ',
-    hex, huniq⟩ := GlobalTheory.T.fittingDatum_baseChange_localEnlargement T O hT P φ hφ hsh hP q hq0 hqT A i EA QA jA ψA DA actA hF0 A₁ f i₁ hi₁ hil₁ hfi
+    hex, huniq⟩ := _root_.GlobalTheory.EnlargeBaseChange.fits_baseChange T O hT P φ hφ hsh hP q hq0 hqT A i EA QA jA ψA DA actA hF0 A₁ f i₁ hi₁ hil₁ hfi
   haveI := hil₁
   obtain ⟨σ, hσC, hσγ⟩ := hex A₁ (Polynomial.evalRingHom 0) e (by
     rw [he]
@@ -1003,36 +938,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.enlarge_strictHenselisation_retract_mod : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (q : ℕ), 0 < q → IsUnit (q : T) →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A]
-      [Algebra.EssFiniteType ℤ A] (i : A →+* T)
-      (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime] (jA : Localization.AtPrime QA →+* O)
-      (ψA : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib T O)
-      (DA : Type) [CommRing DA] [Algebra (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA]
-      (actA : Multiplicative (ZMod q) →* (DA ≃ₐ[GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)] DA)),
-    GlobalTheory.KeyOriginEnlarge.Fits T O q A i EA QA jA ψA DA actA →
-    ∃ (A' : Type) (_ : CommRing A') (_ : IsDomain A') (_ : IsLocalRing A') (_ : IsNoetherianRing A')
-      (_ : IsIntegrallyClosed A') (_ : Algebra.EssFiniteType ℤ A') (i' : A' →+* T)
-      (EA' : Type) (_ : CommRing EA') (_ : Algebra (Polynomial A') EA') (_ : Algebra A' EA')
-      (_ : IsScalarTower A' (Polynomial A') EA') (_ : Algebra.Etale (Polynomial A') EA')
-      (QA' : Ideal EA') (_ : QA'.IsPrime) (jA' : Localization.AtPrime QA' →+* O)
-      (ψA' : GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA') →+* GlobalTheory.LocAcyc.GenFib T O)
-      (DA' : Type) (_ : CommRing DA') (_ : Algebra (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) DA')
-      (actA' : Multiplicative (ZMod q) →* (DA' ≃ₐ[GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')] DA')),
-      GlobalTheory.KeyOriginEnlarge.Fits T O q A' i' EA' QA' jA' ψA' DA' actA' ∧
-      (∃ ρ' : Localization.AtPrime QA' →+* A',
-        GlobalTheory.KeyOriginEnlarge.Retracts T O A' i' EA' QA' jA' ρ' ∧ True) ∧
-      ∃ (β : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) (h : DA →+* DA'),
-        ψA'.comp β = ψA ∧
-        h.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA) = (algebraMap (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) DA').comp β := by
-  first | (exact @GlobalTheory.KeyOriginEnlarge.enlarge_retract)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EnlargeStrictHenselisationRetractModStatement =====
@@ -1094,13 +999,13 @@ theorem enlarge_good : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T
   have hF : GlobalTheory.KeyOriginEnlarge.Fits T O q A i EA QA jA ψA DA actA :=
     ⟨hi, hil, hqA, hQA, hjA, hψA, htor⟩
   obtain ⟨A₁, _, _, _, _, _, _, i₁, EA₁, _, _, _, _, _, QA₁, _, jA₁, ψA₁, DA₁, _, _, act₁, hF₁,
-    ⟨ρ₁, hR₁, -⟩, β₁, h₁, hβ₁, hh₁⟩ := GlobalTheory.T.enlarge_strictHenselisation_retract_mod T O hT P φ hφ hsh hP q hq0 hqT A i EA QA jA ψA DA actA hF
+    ⟨ρ₁, hR₁, -⟩, β₁, h₁, hβ₁, hh₁⟩ := _root_.GlobalTheory.KeyOriginEnlarge.enlarge_retract T O hT P φ hφ hsh hP q hq0 hqT A i EA QA jA ψA DA actA hF
   obtain ⟨A₂, _, _, _, _, _, _, i₂, EA₂, _, _, _, _, _, QA₂, _, jA₂, ψA₂, DA₂, _, _, act₂, hF₂,
     ⟨ρ₂, hR₂, hpt₂⟩, β₂, h₂, hβ₂, hh₂⟩ :=
-    GlobalTheory.T.enlarge_base_separable_point_integralClosure T O hT P φ hφ hsh hP q hq0 hqT A₁ i₁ EA₁ QA₁ jA₁ ψA₁ DA₁ act₁ hF₁ ρ₁ hR₁
+    _root_.GlobalTheory.KeyOriginEnlargePoint.enlarge_point T O hT P φ hφ hsh hP q hq0 hqT A₁ i₁ EA₁ QA₁ jA₁ ψA₁ DA₁ act₁ hF₁ ρ₁ hR₁
   obtain ⟨A₃, _, _, _, _, _, _, i₃, EA₃, _, _, _, _, _, QA₃, _, jA₃, ψA₃, DA₃, _, _, act₃, hF₃,
     ⟨ρ₃, hR₃, hgood⟩, β₃, h₃, hβ₃, hh₃⟩ :=
-    GlobalTheory.T.etale_enlarge_by_uniformiser_roots T O hT P φ hφ hsh hP q hq0 hqT A₂ i₂ EA₂ QA₂ jA₂ ψA₂ DA₂ act₂ hF₂ ρ₂ hR₂ hpt₂
+    _root_.GlobalTheory.KeyOriginEnlarge.etale_enlarge T O hT P φ hφ hsh hP q hq0 hqT A₂ i₂ EA₂ QA₂ jA₂ ψA₂ DA₂ act₂ hF₂ ρ₂ hR₂ hpt₂
   refine ⟨A₃, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     EA₃, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, QA₃, inferInstance,
     hF₃.2.2.2.1, hF₃.2.2.1, ρ₃, hR₃.1, hR₃.2.1, jA₃, ψA₃, hF₃.2.2.2.2.2.1, DA₃, inferInstance,
@@ -1130,50 +1035,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.strictHenselisation_enlarge_good_at_origin : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (q : ℕ), 0 < q → IsUnit (q : T) →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A] [Algebra.EssFiniteType ℤ A]
-      (i : A →+* T), Function.Injective i → IsLocalHom i → IsUnit (q : A) →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (jA : Localization.AtPrime QA →+* O),
-      jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-        (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∀ (ψA : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib T O),
-      ψA.comp (algebraMap (Localization.AtPrime QA) (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA))) =
-        (algebraMap O (GlobalTheory.LocAcyc.GenFib T O)).comp jA →
-    ∀ (DA : Type) [CommRing DA] [Algebra (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA]
-      (actA : Multiplicative (ZMod q) →* (DA ≃ₐ[GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)] DA)),
-      GlobalTheory.KeyOriginCut.IsZTorsor (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA q actA →
-    ∃ (A' : Type) (_ : CommRing A') (_ : IsDomain A') (_ : IsLocalRing A') (_ : IsNoetherianRing A')
-      (_ : IsIntegrallyClosed A') (_ : Algebra.EssFiniteType ℤ A')
-      (EA' : Type) (_ : CommRing EA') (_ : Algebra (Polynomial A') EA') (_ : Algebra A' EA')
-      (_ : IsScalarTower A' (Polynomial A') EA') (_ : Algebra.Etale (Polynomial A') EA')
-      (QA' : Ideal EA') (_ : QA'.IsPrime),
-      QA'.comap (algebraMap (Polynomial A') EA') = GlobalTheory.KeyOriginCut.originIdeal A' ∧ IsUnit (q : A') ∧
-      ∃ (ρ' : Localization.AtPrime QA' →+* A'),
-        ρ'.comp (algebraMap A' (Localization.AtPrime QA')) = RingHom.id A' ∧
-        RingHom.ker ρ' = Ideal.span {algebraMap (Polynomial A') (Localization.AtPrime QA') Polynomial.X} ∧
-      ∃ (jA' : Localization.AtPrime QA' →+* O)
-        (ψA' : GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA') →+* GlobalTheory.LocAcyc.GenFib T O),
-        ψA'.comp (algebraMap (Localization.AtPrime QA') (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA'))) =
-          (algebraMap O (GlobalTheory.LocAcyc.GenFib T O)).comp jA' ∧
-      ∃ (DA' : Type) (_ : CommRing DA') (_ : Algebra (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) DA')
-        (actA' : Multiplicative (ZMod q) →* (DA' ≃ₐ[GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')] DA')),
-        GlobalTheory.KeyOriginCut.IsZTorsor (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) DA' q actA' ∧
-        GlobalTheory.KeyOriginNoeth.Good A' (Localization.AtPrime QA') DA' ρ' ∧
-        ∃ (β : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA'))
-          (h : DA →+* DA'),
-          ψA'.comp β = ψA ∧
-          h.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA) =
-            (algebraMap (GlobalTheory.LocAcyc.GenFib A' (Localization.AtPrime QA')) DA').comp β := by
-  first | (exact @GlobalTheory.KeyOriginEnlarge.enlarge_good)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictHenselisationEnlargeGoodAtOriginStatement =====
@@ -1213,11 +1074,11 @@ theorem torsor_point_of_essFiniteType : ∀ (T O : Type) [CommRing T] [IsDomain 
     ψA hψA DA _ _ actA htor
   obtain ⟨A', _, _, _, _, _, _, EA', _, _, _, _, _, QA', _, hQ', hq', ρ', hρ1, hρ2, jA', ψA', hψ', DA', _, _,
     actA', htor', hgood', β, h, hβ1, hβ2⟩ :=
-    GlobalTheory.T.strictHenselisation_enlarge_good_at_origin T O hT P φ hφ hsh hP q hq0 hqT A i hi hil hqA EA QA hQA jA hjA ψA hψA DA actA htor
-  have hce := GlobalTheory.T.integralClosure_finiteEtale_originKeyLemma_essFiniteType A' EA' QA' hQ' ρ' hρ1 hρ2 q hq0 hq' DA' actA' htor' hgood'
+    _root_.GlobalTheory.KeyOriginEnlarge.enlarge_good T O hT P φ hφ hsh hP q hq0 hqT A i hi hil hqA EA QA hQA jA hjA ψA hψA DA actA htor
+  have hce := _root_.GlobalTheory.GoodEtale.closure_finiteEtale A' EA' QA' hQ' ρ' hρ1 hρ2 q hq0 hq' DA' actA' htor' hgood'
   haveI : HenselianLocalRing O := hsh.1
   haveI : IsSepClosed (ResidueField O) := hsh.2.1
-  obtain ⟨σ', hσ'⟩ := GlobalTheory.T.exists_point_closureFiniteEtale_strictHenselian A' (Localization.AtPrime QA') O (GlobalTheory.LocAcyc.GenFib T O) jA'
+  obtain ⟨σ', hσ'⟩ := _root_.GlobalTheory.KeyOriginNoeth.exists_point_of_closureFiniteEtale A' (Localization.AtPrime QA') O (GlobalTheory.LocAcyc.GenFib T O) jA'
     (algebraMap O (GlobalTheory.LocAcyc.GenFib T O)) ψA' hψ' DA' htor'.1 hce
   refine ⟨σ'.comp h, ?_⟩
   rw [RingHom.comp_assoc, hβ2, ← RingHom.comp_assoc, hσ', hβ1]
@@ -1234,29 +1095,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.torsor_point_over_strictHenselisation_noetherianNormal : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O], GlobalTheory.LocAcyc.AbsIntClosed T →
-    ∀ (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ → P = GlobalTheory.KeyOriginCut.originIdeal T →
-    ∀ (q : ℕ), 0 < q → IsUnit (q : T) →
-    ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [IsIntegrallyClosed A] [Algebra.EssFiniteType ℤ A]
-      (i : A →+* T), Function.Injective i → IsLocalHom i → IsUnit (q : A) →
-    ∀ (EA : Type) [CommRing EA] [Algebra (Polynomial A) EA] [Algebra A EA]
-      [IsScalarTower A (Polynomial A) EA] [Algebra.Etale (Polynomial A) EA]
-      (QA : Ideal EA) [QA.IsPrime],
-      QA.comap (algebraMap (Polynomial A) EA) = GlobalTheory.KeyOriginCut.originIdeal A →
-    ∀ (jA : Localization.AtPrime QA →+* O),
-      jA.comp (algebraMap (Polynomial A) (Localization.AtPrime QA)) =
-        (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i) →
-    ∀ (ψA : GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA) →+* GlobalTheory.LocAcyc.GenFib T O),
-      ψA.comp (algebraMap (Localization.AtPrime QA) (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA))) =
-        (algebraMap O (GlobalTheory.LocAcyc.GenFib T O)).comp jA →
-    ∀ (DA : Type) [CommRing DA] [Algebra (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA]
-      (actA : Multiplicative (ZMod q) →* (DA ≃ₐ[GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)] DA)),
-      GlobalTheory.KeyOriginCut.IsZTorsor (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA q actA →
-    ∃ σ : DA →+* GlobalTheory.LocAcyc.GenFib T O, σ.comp (algebraMap (GlobalTheory.LocAcyc.GenFib A (Localization.AtPrime QA)) DA) = ψA := by
-  first | (exact @GlobalTheory.KeyOriginNoeth.torsor_point_of_essFiniteType)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsorPointOverStrictHenselisationNoetherianNormStatement =====

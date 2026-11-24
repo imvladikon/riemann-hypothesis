@@ -1688,7 +1688,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
   have hθ : ∀ i, 0 < (φ i θ).im := fun i => by
     rw [hθdef, map_add (f := _), he]; simpa using hθ₀ i
   obtain ⟨G, ⟨hG1, hG2, hG3⟩, hG0, -⟩ := hH (maximalRealSubfield E) hF 𝔞 𝔟
-  have hP := GlobalTheory.WeightTwoSum.isOpen_polydisc I
+  have hP := _root_.GlobalTheory.DerivAtOrigin.isOpen_polydisc I
   have hmaps : Set.MapsTo (modPt φ e θ) (polydisc I) (upperHalf _) := fun z hz τ => modPt_im_pos φ e θ hθ hz τ
   set cw : ℂ := (cWt E 2 : ℂ) with hcw
   set b : (I → ℂ) → ℂ := fun z => (homFac z)⁻¹ ^ 2 with hb

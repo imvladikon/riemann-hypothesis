@@ -80,7 +80,7 @@ theorem diag_inv_eq (z : Fin n → ℂ) (hz : ∀ a, ‖z a‖ = 1) :
 
 theorem isLefK_of (hGT : GamTrace) (hlam : Antitone lam) : Real.IsLefK lam (lefE n lam) (lefT n lam) := by
   have hu := (avg n lam).1
-  have hS := swapLaws_of rmLaws
+  have hS := _root_.PositivityTheory.RgBcC.Cxe.swapLaws_of _root_.PositivityTheory.RgBcC.Cxc.rmLaws'
   refine ⟨fun k => TK_f hu hS k, Tsq_f hu hS, fun k z hk hinj => ?_⟩
   have hz : ∀ a, ‖z a‖ = 1 := by
     intro a
@@ -100,7 +100,7 @@ theorem isLefK_of (hGT : GamTrace) (hlam : Antitone lam) : Real.IsLefK lam (lefE
   have hinjc : Function.Injective fun a => conj (z a) := fun a b h =>
     hinj1 ((RingHom.injective (starRingEnd ℂ)) h)
   have hρ : ((lefE n lam).ρ k) = lefFr n lam (diagonal z) := by rw [← hk]; rfl
-  have hR := rmLaws n lam
+  have hR := _root_.PositivityTheory.RgBcC.Cxc.rmLaws' n lam
   have hd : IsUnit (diagonal z).det := by
     rw [det_diagonal]; exact isUnit_iff_ne_zero.mpr (Finset.prod_ne_zero_iff.mpr fun a _ => hz0 a)
   have hdi : IsUnit ((diagonal z)⁻¹).det := by
@@ -109,7 +109,7 @@ theorem isLefK_of (hGT : GamTrace) (hlam : Antitone lam) : Real.IsLefK lam (lefE
     apply Matrix.inv_eq_right_inv
     rw [← hR.2.1 _ _ hd hdi, Matrix.mul_nonsing_inv _ hd, hR.1]
   have hch : (Rm lam (diagonal fun a => conj (z a))).trace = conj (weylChar lam z) := by
-    rw [rmChar n lam hlam _ hne hinjc, weylChar_conj]
+    rw [_root_.PositivityTheory.RgBcC.Cxc.rmChar' n lam hlam _ hne hinjc, weylChar_conj]
   constructor
   · rw [hρ]
     show LinearMap.trace ℂ (EV n lam) ((lefFr n lam (diagonal z) : EV n lam →L[ℂ] EV n lam) : EV n lam →ₗ[ℂ] EV n lam) = _
@@ -125,7 +125,7 @@ theorem isLefK_of (hGT : GamTrace) (hlam : Antitone lam) : Real.IsLefK lam (lefE
     have hinj2 : Function.Injective fun a => conj (z a) * conj (z a) := fun a b h => hinj (by
       have h' : conj (z a ^ 2) = conj (z b ^ 2) := by simpa [pow_two] using h
       exact (RingHom.injective (starRingEnd ℂ)) h')
-    rw [rmChar n lam hlam _ hne2 hinj2, ← weylChar_conj]
+    rw [_root_.PositivityTheory.RgBcC.Cxc.rmChar' n lam hlam _ hne2 hinj2, ← weylChar_conj]
     congr 2; funext a; simp [pow_two]
 
 end PositivityTheory.RgBcC
@@ -165,26 +165,8 @@ private theorem trace_single_mul_single_eq_ite (a b c d : Fin n) :
   · rw [single_mul_single_of_ne (h := h)]
     simp [h]
 
-private theorem trace_hb_mul_hb_eq_ite (p q : Fin n × Fin n) : (hb p * hb q).trace = if p = q then 1 else 0 := by
-  obtain ⟨a, b⟩ := p
-  obtain ⟨c, d⟩ := q
-  have hs : ((↑√2 : ℂ))⁻¹ * (↑√2 : ℂ)⁻¹ = (1 / 2 : ℂ) := by
-    rw [← mul_inv, ← Complex.ofReal_mul, Real.mul_self_sqrt (by norm_num)]
-    norm_num
-  simp only [hb, Prod.mk.injEq]
-  split_ifs <;>
-    (try simp only [Matrix.mul_add, Matrix.add_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.smul_mul,
-      Matrix.mul_smul, Matrix.trace_add, Matrix.trace_sub, Matrix.trace_smul, trace_single_mul_single_eq_ite, smul_eq_mul]) <;>
-    (try split_ifs) <;>
-    (try simp only [Fin.ext_iff, Fin.lt_def, not_and, not_lt] at *) <;>
-    first
-    | omega
-    | ring1
-    | linear_combination 2 * hs
-    | linear_combination 2 * hs - 2 * (↑√2 : ℂ)⁻¹ * (↑√2 : ℂ)⁻¹ * Complex.I_sq
-
 private theorem trace_hbM_mul_hbM_eq_ite (p q : Md n) : (hbM p * hbM q).trace = if p = q then 1 else 0 := by
-  simp only [hbM, trace_hb_mul_hb_eq_ite, EmbeddingLike.apply_eq_iff_eq]
+  simp only [hbM, _root_.PositivityTheory.RgBcC.Cxa.hb_ortho, EmbeddingLike.apply_eq_iff_eq]
 
 theorem hbM_li : LinearIndependent ℂ (hbM (n := n)) := by
   rw [linearIndependent_iff']

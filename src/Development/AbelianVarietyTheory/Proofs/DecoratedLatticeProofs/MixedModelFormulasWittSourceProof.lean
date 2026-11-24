@@ -203,11 +203,7 @@ noncomputable section
 
 namespace GlobalTheory.UnipZero
 
-theorem heisO_zero {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ) : heisO ψ S T 0 f = f := by
-  funext w
-  have h : symplOH S T w 0 = 0 := by
-    first | exact symplOH_zero_right ..
-  simp [heisO, h]
+alias heisO_zero := _root_.GlobalTheory.SplitScalar.heisO_zero
 
 theorem mixS_zero_unip : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (χS χT : (AE D)ˣ →* Circle) (om : Om S T), IsWeilDatumO ψ S T χS χT om → ∀ (μ : Measure (Mx D T.rank ρ)) (𝓕 : Set (Mx D T.rank ρ)), IsCovolOne (ratMx D T.rank ρ) μ 𝓕 → ∀ f, IsThetaFunO ψ S T f → (∀ b, (_root_.I195MixedCoordinates_069c5864e5661f762e792771.source d) T ψ μ 𝓕 (om (d.nB b, 1) f) 0 = (_root_.I195MixedCoordinates_069c5864e5661f762e792771.source d) T ψ μ 𝓕 (f) 0) ∧ ∀ c, (_root_.I195MixedCoordinates_069c5864e5661f762e792771.source d) T ψ μ 𝓕 (om (d.nC c, 1) f) 0 = (_root_.I195MixedCoordinates_069c5864e5661f762e792771.source d) T ψ μ 𝓕 (f) 0 := by
   intro D ψ S S₀ T ρ d χS χT om hW μ 𝓕 hμ f hf
@@ -308,9 +304,6 @@ theorem symplOH_antisymm {S T : HSp D} (a b : WO S T) : symplOH S T b a = -sympl
 theorem symplO_zero_left' {S T : HSp D} (y : WO S T) : symplO S T 0 y = 0 := by
   simp [symplO, hO]
 
-theorem symplO_eq_two {S T : HSp D} (x y : WO S T) : symplO S T x y = symplOH S T x y + symplOH S T x y := by
-  rw [symplOH, ← add_mul, ← map_add (f := _), add_halves, map_one, one_mul]
-
 theorem heisO_smul (ψ : AddChar (AF D.host.F) ℂ) {S T : HSp D} (w : WO S T) (c : ℂ) (f : WO S T → ℂ) :
     heisO ψ S T w (c • f) = c • heisO ψ S T w f := by
   funext v
@@ -383,7 +376,7 @@ theorem mixS_unip : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HS
         ψ (d.qS T c x) • ψ (d.qS T c x) • (_root_.I195MixedCoordinates_c87fda97bbaf39bed14145da.source d) T ψ μ 𝓕 f x := by
       have h2 := eY (x ⬝ c.1) f hf
       have h3 := eX x (heisO ψ S T (d.extY T (x ⬝ c.1)) f) (hth _ _ hf)
-      rw [h3, h2, GlobalTheory.MixUnip.symplO_eq_two, AddChar.map_add_eq_mul, ← hq, mul_smul]
+      rw [h3, h2, _root_.GlobalTheory.ThetaCoefficient.symplO_eq, AddChar.map_add_eq_mul, ← hq, mul_smul]
     have hc' : heisO ψ S T (d.extX T x) (heisO ψ S T (d.extY T (x ⬝ c.1)) f) =
         ψ (d.qS T c x) • heisO ψ S T (d.extX T x + d.extY T (x ⬝ c.1)) f := hcomp _ _ _
     have h1 := congrArg (fun g => (_root_.I195MixedCoordinates_c87fda97bbaf39bed14145da.source d) T ψ μ 𝓕 g 0) hc'

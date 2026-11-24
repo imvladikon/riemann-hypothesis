@@ -125,9 +125,6 @@ theorem sgUpF_mul {A B : Matrix (Fin N) (Fin N) K} (hA : IsUpUni A) (hB : IsUpUn
   · exact mul_apply_superdiag_of_isUpUni hA hB a h
   · simp
 
-def sameBF (bs : List (K × ℕ)) (N a : ℕ) : Prop :=
-  a + 1 < N ∧ pσ bs (a + 1) + 1 = pσ bs a ∧ pv bs (a + 1) = pv bs a
-
 private theorem pv_psigma_eq_pv : ∀ (bs : List (K × ℕ)) (i : ℕ), i < (bs.map Prod.snd).sum →
     pv bs (pσ bs i) = pv bs i := by
   intro bs
@@ -144,10 +141,10 @@ private theorem pv_psigma_eq_pv : ∀ (bs : List (K × ℕ)) (i : ℕ), i < (bs.
       simp only [pσ, pv, hi, h1, if_false, Nat.add_sub_cancel_left]
       exact ih (i - s) (by omega)
 
-theorem same_phiF (p : Point K N) {a : ℕ} (hs : sameBF p.1 N a) :
-    sameBF p.1 N (pσ p.1 (a + 1)) ∧ pσ p.1 (pσ p.1 (a + 1) + 1) = a := by
+theorem same_phiF (p : Point K N) {a : ℕ} (hs : _root_.Formalism.L2.SG.Pf.sameB p.1 N a) :
+    _root_.Formalism.L2.SG.Pf.sameB p.1 N (pσ p.1 (a + 1)) ∧ pσ p.1 (pσ p.1 (a + 1) + 1) = a := by
   have hsum : (p.1.map Prod.snd).sum = N := p.2.2
-  unfold sameBF at hs ⊢
+  unfold _root_.Formalism.L2.SG.Pf.sameB at hs ⊢
   obtain ⟨h1, h2, h3⟩ := hs
   have ha : a < N := by omega
   have hσlt (bs : List (K × ℕ)) (i : ℕ) (hi : i < (bs.map Prod.snd).sum) :
@@ -264,7 +261,7 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
     have := congrFun (congrFun h i) j
     rwa [mul_ptMat_apply_eq p n i j k hk, ptMat_mul_apply_eq p m i j l hl] at this
   have hlo : ∀ a : Fin N, (if h : a.val + 1 < N then n ⟨a.val + 1, h⟩ a else 0) =
-      if hS : sameBF p.1 N a.val then
+      if hS : _root_.Formalism.L2.SG.Pf.sameB p.1 N a.val then
         m ⟨pσ p.1 (a.val + 1), hlt _ hS.1⟩ ⟨pσ p.1 (a.val + 1) + 1, by rw [hS.2.1]; exact hlt _ a.isLt⟩
       else 0 := by
     intro a
@@ -287,7 +284,7 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
           exact (mul_eq_zero.1 K1).resolve_right (hv _ a.isLt)
     · rw [dite_eq_right ha, dite_eq_right (fun hS => ha hS.1)]
   have hup : ∀ b : Fin N, (if h : b.val + 1 < N then m b ⟨b.val + 1, h⟩ else 0) =
-      if hS : sameBF p.1 N b.val then m b ⟨b.val + 1, hS.1⟩ else 0 := by
+      if hS : _root_.Formalism.L2.SG.Pf.sameB p.1 N b.val then m b ⟨b.val + 1, hS.1⟩ else 0 := by
     intro b
     by_cases hb : b.val + 1 < N
     · rw [dite_eq_left hb]
@@ -305,16 +302,16 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
   unfold sgLoF sgUpF
   rw [Finset.sum_congr rfl (fun a _ => hlo a), Finset.sum_congr rfl (fun b _ => hup b)]
   set fe : Fin N → Fin N := fun a =>
-    if hS : sameBF p.1 N a.val then ⟨pσ p.1 (a.val + 1), hlt _ hS.1⟩ else a with hfe
+    if hS : _root_.Formalism.L2.SG.Pf.sameB p.1 N a.val then ⟨pσ p.1 (a.val + 1), hlt _ hS.1⟩ else a with hfe
   have hinvol : Function.Involutive fe := by
     intro a
-    by_cases hS : sameBF p.1 N a.val
+    by_cases hS : _root_.Formalism.L2.SG.Pf.sameB p.1 N a.val
     · have h2 := same_phiF p hS
       apply Fin.ext
       simp [hfe, hS, h2.1, h2.2]
     · simp [hfe, hS]
   refine Fintype.sum_equiv (hinvol.toPerm _) _ _ (fun a => ?_)
-  by_cases hS : sameBF p.1 N a.val
+  by_cases hS : _root_.Formalism.L2.SG.Pf.sameB p.1 N a.val
   · have h2 := same_phiF p hS
     simp [hfe, hS, h2.1]
   · simp [hfe, hS]
@@ -491,12 +488,6 @@ theorem sgUpF_one {K : Type} [Field K] {N : ℕ} : sgUpF (1 : Matrix (Fin N) (Fi
   · exact Matrix.one_apply_ne (fun e => by have := congrArg Fin.val e; simp at this)
   · rfl
 
-theorem isLoUni_one {K : Type} [Field K] {N : ℕ} : IsLoUni (1 : Matrix (Fin N) (Fin N) K) := fun i j =>
-  ⟨fun h => Matrix.one_apply_ne (ne_of_lt h), fun h => by subst h; exact Matrix.one_apply_eq i⟩
-
-theorem isUpUni_one {K : Type} [Field K] {N : ℕ} : IsUpUni (1 : Matrix (Fin N) (Fin N) K) := fun i j =>
-  ⟨fun h => Matrix.one_apply_ne (ne_of_lt h).symm, fun h => by subst h; exact Matrix.one_apply_eq i⟩
-
 theorem isUpUni_sgnT {P : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (h : IsLoUni P) :
     IsUpUni (FormRegularity.sgn r * Pᵀ * FormRegularity.sgn r) := by
   intro i j
@@ -582,8 +573,8 @@ theorem place_id (u u' : D.what₂.Word) {γ γw g g' : X.B.I.Ginf} (hg : g ∈ 
                 simp only [Matrix.mul_assoc]
             _ = _ := by rw [FormRegularity.sgn_sq, Matrix.mul_one]
   have hLo := Formalism.MainNotions.BridgeLemma.bru_lo_mul (FormRegularity.isLoUni_star hPg) (FormRegularity.isLoUni_map ψ hL)
-  have hUp := Formalism.MainNotions.BridgeLemma.bru_up_mul (FormRegularity.isUpUni_map ψ hU) (isUpUni_sgnT hPg')
-  have hds := decompSimpleF (mapPt ψ w) hLo hUp isLoUni_one isUpUni_one hw'
+  have hUp := _root_.GlobalTheory.UpperUnipotentMul.isUpUni_mul (FormRegularity.isUpUni_map ψ hU) (isUpUni_sgnT hPg')
+  have hds := decompSimpleF (mapPt ψ w) hLo hUp _root_.Formalism.MainNotions.BridgeLemma.bru_lo_one _root_.Formalism.MainNotions.BridgeLemma.bru_up_one hw'
   rw [sgLoF_mul (FormRegularity.isLoUni_star hPg) (FormRegularity.isLoUni_map ψ hL),
     sgUpF_mul (FormRegularity.isUpUni_map ψ hU) (isUpUni_sgnT hPg'), sgLoF_one, sgUpF_one, sgLoF_map, sgUpF_map] at hds
   have e1 : sgLoF (Pg.map star) = ∑ a, star (rootCoord ε e f z (uMat (g v)) a) := by

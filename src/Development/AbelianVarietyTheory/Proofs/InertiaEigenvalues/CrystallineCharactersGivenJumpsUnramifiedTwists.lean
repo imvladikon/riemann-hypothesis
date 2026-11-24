@@ -351,7 +351,7 @@ theorem jumps_of_exact_degree : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
         cont := fun x => by
           show Continuous fun g => ((μ g : (↥LL.1)ˣ) : ↥LL.1) • LinearMap.id x
           exact hμ.smul continuous_const }
-    exact ((GlobalTheory.Per.FontaineTied.fontCore_all_of_tied l P AI T K) ↥LL.1 ↥(OL LL)
+    exact ((_root_.GlobalTheory.Per.FontaineAll.fontCore_of_tied l P AI T K) ↥LL.1 ↥(OL LL)
       (GlobalTheory.LocalIntegers.good_integers l LL).1 A).2.2 hcrys
   obtain ⟨-, -, hdim⟩ := (GlobalTheory.Per.Components.components_finrank l P AI T K LL ↥LL.1 (charRep μ)).1 τ
   set_option synthInstance.maxHeartbeats 200000 in
@@ -562,7 +562,7 @@ theorem isCrys_of_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : 
       cont := fun x => (hμ.mul continuous_const :
         Continuous fun g : ↥(GK K) => ((μ g : (↥LL.1)ˣ) : ↥LL.1) * x) }
   obtain ⟨⟨hfin, hle⟩, -, -⟩ :=
-    GlobalTheory.Per.FontaineTied.fontCore_all_of_tied l P AI hT K ↥LL.1 ↥(OL LL) hgood A
+    _root_.GlobalTheory.Per.FontaineAll.fontCore_of_tied l P AI hT K ↥LL.1 ↥(OL LL) hgood A
   haveI : Module.Finite ↥LL.1 ↥(Dcris (P.PD K) (charRep μ)) := hfin
   unfold IsCrys
   refine le_antisymm hle ?_
@@ -772,9 +772,7 @@ theorem exists_unit_char (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (τ₀ : ↥
 
 end GlobalTheory.ContCharUnitsOL
 
-theorem GlobalTheory.ContCharUnitsOL.main : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (τ₀ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (c : ↥(GK K) →* (↥(K0 K))ˣ), Continuous (fun g : ↥(GK K) => (((c g : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l)) → ∃ χ : ↥(GK K) →* (↥(OL LL))ˣ, Continuous (fun g : ↥(GK K) => (((χ g : (↥(OL LL))ˣ) : ↥(OL LL)) : ↥LL.1)) ∧ ∀ g : ↥(GK K), (((χ g : (↥(OL LL))ˣ) : ↥(OL LL)) : ↥LL.1) * τ₀ (algebraMap ↥(K0 K) ↥K.1 ((c g : (↥(K0 K))ˣ) : ↥(K0 K))) = 1 := by
-  intro l _ K LL τ₀ c hc
-  exact GlobalTheory.ContCharUnitsOL.exists_unit_char l K LL τ₀ c hc
+alias GlobalTheory.ContCharUnitsOL.main := _root_.GlobalTheory.ContCharUnitsOL.exists_unit_char
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousIntegralUnitCharOfChar =====

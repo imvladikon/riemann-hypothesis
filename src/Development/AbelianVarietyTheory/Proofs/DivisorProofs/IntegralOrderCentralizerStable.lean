@@ -133,13 +133,6 @@ open Polynomial
 
 namespace GlobalTheory
 
-theorem binQuad_represents_unit_of_finite_reduced (S : Type) [CommRing S] [Finite S]
-    [IsReduced S] (t m f : S) (hd : IsUnit (t ^ 2 - 4 * m)) (hf : IsUnit f) :
-    ∃ a b : S, a ^ 2 + t * a * b + m * b ^ 2 = f := by
-  first
-  | (apply _root_.GlobalTheory.FieldCaseReduction.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.FieldCaseReduction.main ..)
-
 theorem norm_surj_of_finite_reduced_involution : ∀ (R : Type) [CommRing R] [Finite R]
     [IsReduced R] (τ : R →+* R), (∀ x, τ (τ x) = x) → ∀ θ : R, IsUnit (θ - τ θ) →
     ∀ f : R, IsUnit f → τ f = f → ∃ c : R, τ c * c = f := by
@@ -182,7 +175,7 @@ theorem norm_surj_of_finite_reduced_involution : ∀ (R : Type) [CommRing R] [Fi
     push_cast [fA, vA]
     rw [← hv, v.mul_inv]
   haveI : IsReduced A := ⟨fun x hx => Subtype.ext (IsNilpotent.eq_zero (hx.map A.subtype))⟩
-  obtain ⟨a, b, hab⟩ := binQuad_represents_unit_of_finite_reduced A tA mA fA hdisc hfA
+  obtain ⟨a, b, hab⟩ := _root_.GlobalTheory.FieldCaseReduction.main A tA mA fA hdisc hfA
   have hab' := congrArg Subtype.val hab
   push_cast [tA, mA, fA] at hab'
   refine ⟨(a : R) + θ * b, ?_⟩
@@ -288,8 +281,6 @@ section -- clump:auto
 
 open IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.exists_isUnit_mul_involution_sub_mem_jacobson : ∀ (O : Type) [CommRing O] [IsLocalRing O] [Finite (IsLocalRing.ResidueField O)] (A : Type) [CommRing A] [Algebra O A] [Module.Finite O A] (τ : A →+* A), (∀ a, τ (τ a) = a) → ∀ θ : A, IsUnit (θ - τ θ) → ∀ a : A, IsUnit a → τ a = a → ∃ t : A, IsUnit t ∧ t * τ t - a ∈ (⊥ : Ideal A).jacobson := by
-  first | (exact @GlobalTheory.exists_isUnit_mul_sub_mem_jacobson_of_finite_residueField)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsUnitMulSubMemJacobsonOfFiniteResidueFielStatement =====
@@ -363,8 +354,6 @@ section -- clump:auto
 
 open IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.henselian_norm_lift : ∀ (A : Type) [CommRing A] (I : Ideal A) [HenselianRing A I] (τ : A →+* A), (∀ a, τ (τ a) = a) → IsUnit (2 : A) → (∀ a ∈ I, τ a ∈ I) → ∀ a t₀ : A, IsUnit a → τ a = a → IsUnit t₀ → t₀ * τ t₀ - a ∈ I → ∃ t : A, IsUnit t ∧ t * τ t = a := by
-  first | (exact @GlobalTheory.hensel_norm_lift_of_involution)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HenselianNormLift =====
@@ -376,8 +365,6 @@ section -- clump:auto
 
 open IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.padicIntegers_henselian_finiteResidue : ∀ (v : HeightOneSpectrum ℤ), HenselianLocalRing (v.adicCompletionIntegers ℚ) ∧ Finite (IsLocalRing.ResidueField (v.adicCompletionIntegers ℚ)) := by
-  first | (exact @GlobalTheory.IntAdicHensel.henselianLocalRing_and_finite_residueField)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicIntegersHenselianFiniteResidueStatement =====
@@ -511,7 +498,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
     apply (basV G v).repr.injective
     exact Finsupp.ext fun i => congrArg (fun f => ((f i : O) : Qv v)) hab
   haveI : Module.Finite O A := Module.Finite.of_injective cf hinj
-  obtain ⟨hhen, hfin⟩ := GlobalTheory.T.padicIntegers_henselian_finiteResidue v.1
+  obtain ⟨hhen, hfin⟩ := _root_.GlobalTheory.IntAdicHensel.henselianLocalRing_and_finite_residueField v.1
   haveI := hhen
   haveI := hfin
   let θA : A := ⟨θ, hθg, hθi⟩
@@ -521,7 +508,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
   let siA : A := ⟨↑s⁻¹, congrArg Units.val hsg', hsii⟩
   have hsu : IsUnit sA := IsUnit.of_mul_eq_one (a := sA) siA (Subtype.ext s.mul_inv)
   have hτs : τ sA = sA := Subtype.ext hsfix
-  obtain ⟨t₀, ht₀, ht₀J⟩ := GlobalTheory.T.exists_isUnit_mul_involution_sub_mem_jacobson O A τ hτinv θA hθu sA hsu hτs
+  obtain ⟨t₀, ht₀, ht₀J⟩ := _root_.GlobalTheory.exists_isUnit_mul_sub_mem_jacobson_of_finite_residueField O A τ hτinv θA hθu sA hsu hτs
   haveI : HenselianRing A (⊥ : Ideal A).jacobson := GlobalTheory.henselianRing_of_finite O _ le_rfl
   have hτJ : ∀ a ∈ (⊥ : Ideal A).jacobson, τ a ∈ (⊥ : Ideal A).jacobson := by
     intro a ha
@@ -533,7 +520,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
     show ((2 : A) : Qv v ⊗[ℚ] G.C) * h = 1
     rw [show ((2 : A) : Qv v ⊗[ℚ] G.C) = 2 from map_ofNat A.subtype 2]
     exact h2))
-  obtain ⟨t, ht, htt⟩ := GlobalTheory.T.henselian_norm_lift A _ τ hτinv h2A hτJ sA t₀ hsu hτs ht₀ ht₀J
+  obtain ⟨t, ht, htt⟩ := _root_.GlobalTheory.hensel_norm_lift_of_involution A _ τ hτinv h2A hτJ sA t₀ hsu hτs ht₀ ht₀J
   refine ⟨Units.map (A.subtype : A →* Qv v ⊗[ℚ] G.C) ht.unit, ?_, ?_, ?_, ?_⟩
   · exact Units.ext t.2.1
   · exact t.2.2
@@ -554,8 +541,6 @@ section -- clump:auto
 open Matrix NumberField IsDedekindDomain GlobalTheory.LKTrip GlobalTheory.LKMid GlobalTheory.OrbFinAf
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.integral_order_centralizer_stable : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (g : (Qv v ⊗[ℚ] G.C)ˣ) (c : (Qv v)ˣ), (g : Qv v ⊗[ℚ] G.C) * (starT G.star (Qv v) g).unop = algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) c → IsIntV G v 1 → (∀ y z : Qv v ⊗[ℚ] G.C, IsIntV G v y → IsIntV G v z → IsIntV G v (y * z)) → (∀ y : Qv v ⊗[ℚ] G.C, IsIntV G v y → IsIntV G v (starT G.star (Qv v) y).unop) → (∀ y z : Qv v ⊗[ℚ] G.C, y * g = g * y → z * g = g * z → y * z = z * y) → ∀ θ θ' h : Qv v ⊗[ℚ] G.C, θ * g = g * θ → θ' * g = g * θ' → h * g = g * h → IsIntV G v θ → IsIntV G v θ' → IsIntV G v h → (θ - (starT G.star (Qv v) θ).unop) * θ' = 1 → 2 * h = 1 → ∀ s : (Qv v ⊗[ℚ] G.C)ˣ, s * g = g * s → IsIntV G v (s : Qv v ⊗[ℚ] G.C) → IsIntV G v ((s⁻¹ : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) → (starT G.star (Qv v) s).unop = s → ∃ u : (Qv v ⊗[ℚ] G.C)ˣ, u * g = g * u ∧ IsIntV G v (u : Qv v ⊗[ℚ] G.C) ∧ IsIntV G v ((u⁻¹ : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) ∧ (u : Qv v ⊗[ℚ] G.C) * (starT G.star (Qv v) u).unop = s := by
-  first | (exact @GlobalTheory.OrbFinAf.normStep_exists)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralOrderCentralizerStable =====

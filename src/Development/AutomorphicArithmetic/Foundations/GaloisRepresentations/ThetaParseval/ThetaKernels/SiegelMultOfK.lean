@@ -68,6 +68,13 @@ import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardCompact
 import Development.WeilBound.CoreStatements.AutomorphicKernels.EisensteinSeriesG2.AdelicHomeomorphisms.IsTopologicalGroupG2
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantMultiplierMirabolic
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrossingOfWallsAndHeights
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SphericalTestFunctionExists
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeChainHolds
+import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.MirabolicGenerators.MirGen
+import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.ContinuousOnThetaCFunLtr
+import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SgOneHd
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisBLOfK, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisHalfPlaneK, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesAbsoluteConvergence, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisHalfPlaneKAlt, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesLeftInvariance, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisHalfK, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinHalfPlaneHolds, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultOfKAlt, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultiplicityOfLaws, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultOfK
@@ -147,10 +154,10 @@ open GlobalTheory.Doubling (absE)
 namespace GlobalTheory.CompanionTheory.SiegelEis
 theorem eis_half_plane_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ Ê : ℂ → G2 σ Y → ℂ, ∃ t : ℝ, (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) ∧ ∀ x, DifferentiableOn ℂ (Ê · x) {s | t < s.re} := by
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY b K a hb hK hH χ s₁ f hf
-  have hKc : IsCompact (K : Set (G2 σ Y)) := _root_.GlobalTheory.T.isCompact_standard_maximal_compact F E σ B n Y r s hB hn hY b K a hb hK hH
-  obtain ⟨-, hpos⟩ := _root_.GlobalTheory.T.height_function_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK hH
+  have hKc : IsCompact (K : Set (G2 σ Y)) := _root_.GlobalTheory.CompanionTheory.StdK.isCompact_K_k F E σ B n Y r s hB hn hY b K a hb hK hH
+  obtain ⟨-, hpos⟩ := _root_.GlobalTheory.CompanionTheory.Iwasawa.height_continuous_pos_k F E σ B n Y r s hB hn hY b K a hb hK hH
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a hKc hH hpos χ s₁ f hf
-  obtain ⟨σ₀, hσ⟩ := _root_.GlobalTheory.T.eisenstein_series_convergence_bound F E σ B n Y r s hB hn hY b K a hb hK hH
+  obtain ⟨σ₀, hσ⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.godement_sum_k F E σ B n Y r s hB hn hY b K a hb hK hH
   have hsum : ∀ σ' : ℝ, σ₀ < σ' → ∀ x : G2 σ Y,
       Summable (fun q : Cos σ Y => a ((Quotient.out q).1 * x) ^ σ') := by
     intro σ' h x
@@ -207,15 +214,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct NNReal Matrix
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl
-open GlobalTheory.Doubling (absE)
-
-theorem _root_.GlobalTheory.T.eisenstein_series_absolute_convergence : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ Ê : ℂ → G2 σ Y → ℂ, ∃ t : ℝ, (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) ∧ ∀ x, DifferentiableOn ℂ (Ê · x) {s | t < s.re} := by
-  first | exact @_root_.GlobalTheory.CompanionTheory.SiegelEis.eis_half_plane_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesAbsoluteConvergence =====
@@ -238,10 +236,10 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem eis_half_plane_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ t₀ : ℝ, ∀ (t : ℝ) (Ê : ℂ → G2 σ Y → ℂ), t₀ ≤ t → (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) → (∀ s : ℂ, t < s.re → (fun x => Ê s x) ∈ modFun σ Y) ∧ ContinuousOn (fun y : ℂ × G2 σ Y => Ê y.1 y.2) ({s : ℂ | t < s.re} ×ˢ Set.univ) ∧ ∀ c c' : ℝ, t < c → ∃ (C : ℝ) (N : ℕ), ∀ s : ℂ, c ≤ s.re → s.re ≤ c' → ∀ x, ‖Ê s x‖ ≤ C * (ht2 x : ℝ) ^ N := by
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY b K a hb hK ha χ s₁ f hf
   haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  obtain ⟨ac, a0⟩ := _root_.GlobalTheory.T.height_function_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK ha
-  have kc := _root_.GlobalTheory.T.isCompact_standard_maximal_compact F E σ B n Y r s hB hn hY b K a hb hK ha
+  obtain ⟨ac, a0⟩ := _root_.GlobalTheory.CompanionTheory.Iwasawa.height_continuous_pos_k F E σ B n Y r s hB hn hY b K a hb hK ha
+  have kc := _root_.GlobalTheory.CompanionTheory.StdK.isCompact_K_k F E σ B n Y r s hB hn hY b K a hb hK ha
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a kc ha a0 χ s₁ f hf
-  obtain ⟨σ₀, hG⟩ := _root_.GlobalTheory.T.eisenstein_series_convergence_bound F E σ B n Y r s hB hn hY b K a hb hK ha
+  obtain ⟨σ₀, hG⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.godement_sum_k F E σ B n Y r s hB hn hY b K a hb hK ha
   obtain ⟨W, hW, h1W, hWa⟩ := exists_nhd_one kc ac ha a0
   refine ⟨σ₀ - n / 2, fun t Ê ht hE => ?_⟩
   have tb : ∀ (z : ℂ) (c c' : ℝ), c ≤ z.re → z.re ≤ c' → ∀ g,
@@ -331,15 +329,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct NNReal Matrix
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl
-open GlobalTheory.Doubling (absE)
-
-theorem _root_.GlobalTheory.T.eisenstein_series_left_invariance : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ t₀ : ℝ, ∀ (t : ℝ) (Ê : ℂ → G2 σ Y → ℂ), t₀ ≤ t → (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) → (∀ s : ℂ, t < s.re → (fun x => Ê s x) ∈ modFun σ Y) ∧ ContinuousOn (fun y : ℂ × G2 σ Y => Ê y.1 y.2) ({s : ℂ | t < s.re} ×ˢ Set.univ) ∧ ∀ c c' : ℝ, t < c → ∃ (C : ℝ) (N : ℕ), ∀ s : ℂ, c ≤ s.re → s.re ≤ c' → ∀ x, ‖Ê s x‖ ≤ C * (ht2 x : ℝ) ^ N := by
-  first | exact @_root_.GlobalTheory.CompanionTheory.EisHalf.eis_half_plane_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesLeftInvariance =====
@@ -360,8 +349,8 @@ open GlobalTheory.Doubling (absE)
 namespace GlobalTheory.CompanionTheory.SiegelEisHalf
 theorem eisHalf_k : _root_.SiegelEisensteinSeries.EisHalf_k := by
   intro F E _ _ _ _ _ σ B n Y r' s' hB hn hY χ _ c _ b K a hb hK ha s₁ f hf
-  obtain ⟨Ê, t, hsum, hhol⟩ := _root_.GlobalTheory.T.eisenstein_series_absolute_convergence F E σ B n Y r' s' hB hn hY b K a hb hK ha χ s₁ f hf
-  obtain ⟨t₀, hmod⟩ := _root_.GlobalTheory.T.eisenstein_series_left_invariance F E σ B n Y r' s' hB hn hY b K a hb hK ha χ s₁ f hf
+  obtain ⟨Ê, t, hsum, hhol⟩ := _root_.GlobalTheory.CompanionTheory.SiegelEis.eis_half_plane_k F E σ B n Y r' s' hB hn hY b K a hb hK ha χ s₁ f hf
+  obtain ⟨t₀, hmod⟩ := _root_.GlobalTheory.CompanionTheory.EisHalf.eis_half_plane_k F E σ B n Y r' s' hB hn hY b K a hb hK ha χ s₁ f hf
   obtain ⟨t', ht, ht₀⟩ : ∃ t' : ℝ, t ≤ t' ∧ t₀ ≤ t' := ⟨max t t₀, le_max_left _ _, le_max_right _ _⟩
   have hsum' : ∀ s : ℂ, t' < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x) :=
     fun s hs => hsum s (lt_of_le_of_lt ht hs)
@@ -402,15 +391,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct NNReal Matrix
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl SiegelEisensteinSeries
-open GlobalTheory.Doubling (absE)
-
-theorem _root_.GlobalTheory.T.eisenstein_half_plane_holds : _root_.SiegelEisensteinSeries.EisHalf_k := by
-  first | exact @_root_.GlobalTheory.CompanionTheory.SiegelEisHalf.eisHalf_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinHalfPlaneHolds =====
@@ -492,17 +472,12 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.siegel_multiplicity_of_laws : PositivityTheory.RgEis.SecLaw → PositivityTheory.RgEis.WallLaw → PositivityTheory.RgEis.Dict → PositivityTheory.RgEis.DictInf → PositivityTheory.RgEis.CMGood → PositivityTheory.RgEis.GrpTop → PositivityTheory.RgEis.BdetLaw → PositivityTheory.RgEis.ExtLaw → PositivityTheory.RgEis.ParLaw → PositivityTheory.RgEis.SgAll → _root_.SiegelEisensteinSeries.BRoad.SiegelMult_k := by
-  first | exact @_root_.GlobalTheory.CompanionTheory.SiegelFrame.siegelMult_of_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultiplicityOfLaws =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultOfK =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultOfK", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.BaseKnownTheoremsE\npublic import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinContinuation.DictInf\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisBLOfK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinHalfPlaneHolds\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultiplicityOfLaws\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFactorisationHolomorphic\npublic import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SiegelMultOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultOfK", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.BaseKnownTheoremsE\npublic import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinContinuation.DictInf\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisBLOfK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinHalfPlaneHolds\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelMultiplicityOfLaws\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFactorisationHolomorphic\npublic import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SiegelMultOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantMultiplierMirabolic\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrossingOfWallsAndHeights\nimport Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SiegelMultOf\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SphericalTestFunctionExists\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeChainHolds\nimport Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.MirabolicGenerators.MirGen\nimport Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.ContinuousOnThetaCFunLtr\nimport Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SgOneHd\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -512,20 +487,18 @@ section
 noncomputable section
 namespace PositivityTheory.RgEis.Hd
 open Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-theorem siegelMult_of_k : SecLaw → WallLaw → Dict → DictInf → CMGood → GrpTop → BdetLaw → ExtLaw → ParLaw → SgAll →
-    _root_.SiegelEisensteinSeries.BRoad.SiegelMult_k := _root_.GlobalTheory.T.siegel_multiplicity_of_laws
 theorem eisBL_k : _root_.GlobalTheory.ThK.Dbl.EisBL_k :=
   have hW := wallLaw_of secLaw
   have hP := parLaw_of bdetLaw extLaw grpTop
   have hG := cmGood_of stdGood dict dictInf
-  have hM := mirGen_of secLaw stdGood bdetLaw epConv (epMain_of epConv) testFun testSph
-  _root_.SiegelEisensteinSeries.BRoad.eisBL_of_k _root_.GlobalTheory.T.eisenstein_half_plane_holds
-    (_root_.PositivityTheory.RgEis.Hd.siegelMult_of_k secLaw hW dict dictInf hG grpTop bdetLaw extLaw hP
-      (sgAll_of hG (cmMir_of dict hG grpTop bdetLaw extLaw hP hM)
-        (sgOne_of secLaw hW scale stdGood dict dictInf hG grpTop bdetLaw extLaw hP hM)
-        (sgStep_of (gallery_of secLaw idTube tubeChain (cross_of secLaw htLip stage hW)) (transfer_of secLaw hW)
-          (twist_of secLaw) grpTop hP (leviS_of bdetLaw extLaw grpTop) (leviQ_of bdetLaw extLaw grpTop)
-          (convGrOf_of bdetLaw extLaw) (convU_of hP))))
+  have hM := _root_.PositivityTheory.RgEis.MG.mirGen secLaw stdGood bdetLaw _root_.GlobalTheory.CompanionTheory.EpConvB.epConv (_root_.GlobalTheory.CompanionTheory.EpsteinMain.Hd.epMain_of_epConv _root_.GlobalTheory.CompanionTheory.EpConvB.epConv) _root_.PositivityTheory.RgEis.TF.testFun _root_.GlobalTheory.CompanionTheory.RgEisTestSph.testSph
+  _root_.SiegelEisensteinSeries.BRoad.eisBL_of_k _root_.GlobalTheory.CompanionTheory.SiegelEisHalf.eisHalf_k
+    (_root_.GlobalTheory.CompanionTheory.SiegelFrame.siegelMult_of_k secLaw hW dict dictInf hG grpTop bdetLaw extLaw hP
+      (sgAll_of hG (_root_.GlobalTheory.CompanionTheory.CMMirror.cmMir dict hG grpTop bdetLaw extLaw hP hM)
+        (_root_.PositivityTheory.RgEis.So.sgOne_hd secLaw hW _root_.GlobalTheory.CompanionTheory.RgEisScale.scale stdGood dict dictInf hG grpTop bdetLaw extLaw hP hM)
+        (_root_.GlobalTheory.CompanionTheory.RgEis.sgStep (_root_.GlobalTheory.CompanionTheory.RgEisGal.gallery secLaw _root_.GlobalTheory.CompanionTheory.Eis.idTube _root_.GlobalTheory.CompanionTheory.TubeFourier.tubeChain (_root_.GlobalTheory.CompanionTheory.RgEisCross.cross secLaw htLip _root_.GlobalTheory.CompanionTheory.RgEis.stage hW)) (_root_.GlobalTheory.CompanionTheory.RgTransfer.transfer secLaw hW)
+          (_root_.GlobalTheory.CompanionTheory.RgEisTwist.twist secLaw) grpTop hP (_root_.GlobalTheory.CompanionTheory.RgEisLevi.leviS bdetLaw extLaw grpTop) (_root_.GlobalTheory.CompanionTheory.RgEisLeviQUnit.leviQ bdetLaw extLaw grpTop)
+          (_root_.GlobalTheory.CompanionTheory.Plucker.convGrOf bdetLaw extLaw) (_root_.GlobalTheory.CompanionTheory.RgEis.UnitaryConv.convU_of_parLaw hP))))
     GlobalTheory.CompanionTheory.Entire.local_factorisation
 end PositivityTheory.RgEis.Hd
 end

@@ -165,7 +165,7 @@ theorem givenFn_eq_extDat : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
   have hAA' : ∀ w ∈ locPl G t \ (L.Pg ∪ L.Q t), ((∀ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) ≤ 1) ∧
       ∃ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) = 1) := fun w hw =>
     hAA w (Finset.mem_sdiff.1 hw).1 (Finset.mem_sdiff.1 hw).2
-  have hlat := GlobalTheory.T.mem_completedHomLattice_iff_integral_on_unit_half hS hT (B.isFrame_β hL (Nat.zero_le _) hj.le) (B.isFrame_β hL (Nat.zero_le _) hj) he₁ hAA'
+  have hlat := _root_.GlobalTheory.ColLatDict.mem_latO_iff_intM hS hT (B.isFrame_β hL (Nat.zero_le _) hj.le) (B.isFrame_β hL (Nat.zero_le _) hj) he₁ hAA'
     (x.map ((e - e') * ·)) hx1
   have k1 : x.map ((e - e') * ·) ∈ latO (G.pS (.mu t 0 j)) (G.pT (.mu t 0 j)) (G.latS (.mu t 0 j) : Set _)
       (G.latT (.mu t 0 j) : Set _) (fun _ => True) ↔
@@ -462,10 +462,6 @@ theorem half_add_iff {e : AE D} {t x : Mx D m n} (hx : IsHalf e x) : IsHalf e (t
   · intro h i j
     rw [Matrix.add_apply, mul_add, h i j, hx i j]
 
-theorem map_add_mul (a : AE D) (t x : Mx D m n) : (t + x).map (a * ·) = t.map (a * ·) + x.map (a * ·) := by
-  ext i j
-  simp only [Matrix.map_apply, Matrix.add_apply, mul_add]
-
 theorem mul_nsmul_comm' (a x : AE D) (k : ℕ) : a * (k • x) = k • (a * x) := by
   rw [nsmul_eq_mul, nsmul_eq_mul, mul_left_comm]
 
@@ -499,7 +495,7 @@ theorem extDat_trans {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : 
     GlobalTheory.ChainCol.extDat e e' Λ (fun t => Φ (t + x)) = fun t => GlobalTheory.ChainCol.extDat e e' Λ Φ (t + x) := by
   funext t
   have hxe : IsHalf e x := half_of_half h1 hx
-  simp only [GlobalTheory.ChainCol.extDat, half_add_iff hxe, map_add_mul, map_sub_half h1 h2 hx, add_zero, map_half hx]
+  simp only [GlobalTheory.ChainCol.extDat, half_add_iff hxe, _root_.GlobalTheory.SemiChar.map_mul_add, map_sub_half h1 h2 hx, add_zero, map_half hx]
 
 theorem extDat_sb {e e' : AE D} (h1 : e * e' = e') (h2 : e' * e' = e') (Λ : AddSubgroup (Mx D m n))
     (hstab : ∀ u ∈ Λ, u.map (e' * ·) ∈ Λ) {Φ : Mx D m n → ℂ} (hΦ : IsSBHalf e' Λ Φ) :
@@ -733,7 +729,7 @@ theorem locVec_col {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {
     have hb := GlobalTheory.FunObj.Good.badInt_notMem hL (GlobalTheory.FlipIntegrand.pde_ne_q_of_setting s) (hch.guard t) hw
     have h2q := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro _ rfl))
     have hN := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro_left _ rfl))
-    refine ⟨fun a ha => ?_, ⟨_, GlobalTheory.HostClear.absNorm_mem_AA D, ?_⟩⟩
+    refine ⟨fun a ha => ?_, ⟨_, _root_.Formalism.L2.Pj.normK_mem_AA D, ?_⟩⟩
     · rw [GlobalTheory.FunObj.Good.valued_alg]
       exact GlobalTheory.FunObj.Good.valuation_le_one_of_mem h2q (Or.inl ha)
     · rw [GlobalTheory.FunObj.Good.valued_alg]
@@ -773,14 +769,6 @@ end GlobalTheory.ChainCol
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.twist_chainColumn_inner_succ_eq : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (j : Fin D.R.m) (g : Sch ch.G (.down t 0 j)), (j : ℕ) + 1 < D.R.m → HEq g (R.vY t j) → ∃ c : ℂˣ, c ∈ xiVals R.toLevCh t ∧ ∀ e : AE D, IsIdemSum e (locPl ch.G t) → ∀ Φ : ch.G.Datum, IsLocVec ch.W (.mu t 0 j) e (ch.rm.vT 0 j) ((c : ℂ) • GlobalTheory.FlipStart.givenFn ch.S.B t Φ e (.down t 0 j)) g := by
-  first | exact @_root_.GlobalTheory.ChainCol.chainColumn_inner_succ
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistChainColumnInnerSuccEq =====
@@ -795,8 +783,6 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 
 
-theorem _root_.GlobalTheory.T.mem_completedGridArrowLattice_iff_integral_frameMatrix : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T}, L.Is μ₀ → ∀ (B : Frames G) (t : T) {e₁ : AE D} {P₁ : Finset (Pl D.host.E)}, IsIdemSum e₁ P₁ → (∀ w ∈ P₁, ((∀ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) ≤ 1) ∧ ∃ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) = 1)) → ∀ (i : Fin D.R.m) (z : WO (G.pS (.chi (i : ℕ) 0)) (G.pT (.chi (i : ℕ) 0))), IsHalf e₁ z → (z ∈ (latO (G.pS (.chi (i : ℕ) 0)) (G.pT (.chi (i : ℕ) 0)) (G.latS (.chi (i : ℕ) 0) : Set _) (G.latT (.chi (i : ℕ) 0) : Set _) fun _ => True) ↔ ∀ w ∈ P₁, GlobalTheory.StepData.IntM (B.coord t w (X := ((i : ℕ), 0)) (Y := ((i : ℕ) + 1, 0)) ⟨i.2.le, Nat.zero_le _⟩ ⟨i.2, Nat.zero_le _⟩ (z.map (cpt (D := D) w ∘ toEAf D)))) := by
-  first | exact @GlobalTheory.RowLatChi.mem_latO_iff_intM
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemCompletedGridArrowLatticeIffIntegralFrameMatrStatement =====
@@ -876,7 +862,7 @@ theorem givenFn_right_eq_extFn {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
       then 1 else 0 := by
     unfold halfInd
     refine if_congr ?_ rfl rfl
-    rw [and_iff_left hx1, GlobalTheory.T.mem_completedGridArrowLattice_iff_integral_frameMatrix hL B t he₁ hAA' i _ hx1]
+    rw [and_iff_left hx1, _root_.GlobalTheory.RowLatChi.mem_latO_iff_intM hL B t he₁ hAA' i _ hx1]
     refine forall₂_congr fun w hw => ?_
     rw [hmap _ w (c1 w hw), GlobalTheory.FunObj.Comparison₂.cosetSet_of_notMem B t w hL (Finset.mem_sdiff.1 hw).2 i.2 (Φ i)]
     rfl
@@ -897,8 +883,6 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 
 
-theorem _root_.GlobalTheory.T.givenStageFunction_rowArrow_eq_halfExtension : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T}, L.Is μ₀ → ∀ (B : Frames G) (t : T) (Φ : G.Datum) {e e₀ : AE D}, IsIdemSum e (locPl G t) → IsIdemSum e₀ G.pl.W0 → (∀ w ∈ L.Q t, w ∉ G.pl.W0 → ((∀ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) ≤ 1) ∧ ∃ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) = 1)) → ∀ (i : Fin D.R.m), GlobalTheory.FlipStart.givenFn B t Φ e (.right i 0) = GlobalTheory.CosetRow.extFn e₀ (e - e₀) (latO (G.pS (.chi (i : ℕ) 0)) (G.pT (.chi (i : ℕ) 0)) (G.latS (.chi (i : ℕ) 0) : Set _) (G.latT (.chi (i : ℕ) 0) : Set _) fun _ => True) (cosInd e₀ (Φ i)) := by
-  first | exact @GlobalTheory.CosetRow.givenFn_right_eq_extFn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.GivenStageFunctionRowArrowEqHalfExtensionStatement =====
@@ -958,11 +942,6 @@ theorem smul_eq_zero_of_isHalf {e e' : AE D} (h : e' * e = 0) {x : Mx D m n} (hx
   simp only [Matrix.smul_apply, smul_eq_mul, Matrix.zero_apply]
   rw [← hx i j, ← mul_assoc, h, zero_mul]
 
-theorem isHalf_smul_idem {e : AE D} (he : e * e = e) (t : Mx D m n) : IsHalf e (e • t) := by
-  intro i j
-  simp only [Matrix.smul_apply, smul_eq_mul]
-  rw [← mul_assoc, he]
-
 def extLin (e₀ e₁ : AE D) (Λ : AddSubgroup (Mx D m n)) : (Mx D m n → ℂ) →ₗ[ℂ] (Mx D m n → ℂ) where
   toFun := extFn e₀ e₁ Λ
   map_add' Φ Ψ := by
@@ -1004,8 +983,8 @@ theorem extFn_halfInd {e₀ e₁ : AE D} (h00 : e₀ * e₀ = e₀) (h11 : e₁ 
       constructor
       · rintro ⟨h0, h1⟩; rw [hdec]; exact Λ.add_mem h0 h1
       · intro h; exact ⟨hΛ0 t h, hΛ1 t h⟩
-    have a0 := isHalf_smul_idem h00 t
-    have a1 := isHalf_smul_idem h11 t
+    have a0 := _root_.GlobalTheory.SplitScalar.isHalf_smul h00 t
+    have a1 := _root_.GlobalTheory.SplitScalar.isHalf_smul h11 t
     rw [if_pos ht]
     by_cases h0 : e₀ • t ∈ Λ <;> by_cases h1 : e₁ • t ∈ Λ
     · rw [if_pos ⟨h0, a0⟩, if_pos ⟨h1, a1⟩, if_pos ⟨hiff.1 ⟨h0, h1⟩, ht⟩, one_mul]
@@ -1091,7 +1070,7 @@ theorem GlobalTheory.CosetRow.coset_function_isLocalVector : _root_.GlobalTheory
     refine GlobalTheory.T.host_ideal_unit_at_places_prime_to_level D w (fun h => (hL.Q_off t w hw).1 ?_) (fun h => s.guard.2 t w hw ?_)
     · rw [Nat.cast_mul]; exact Ideal.mul_mem_right _ _ h
     · rw [Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h
-  rw [GlobalTheory.T.givenStageFunction_rowArrow_eq_halfExtension hL ch.S.B t Φ he he₀ hAA i, ch.rm.vX_row]
+  rw [_root_.GlobalTheory.CosetRow.givenFn_right_eq_extFn hL ch.S.B t Φ he he₀ hAA i, ch.rm.vX_row]
   obtain ⟨dS, dT⟩ := selfDual_chi hL ch.G i i.2
   have h0 := GlobalTheory.PlaceDatum.idemSum_mul_self he₀
   have h1 := GlobalTheory.PlaceDatum.idemSum_mul_self he₁
@@ -1109,14 +1088,6 @@ theorem GlobalTheory.CosetRow.coset_function_isLocalVector : _root_.GlobalTheory
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.twist_coset_function_isLocalVector : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (e : AE D), IsIdemSum e (locPl ch.G t) → ∀ (Φ : ch.G.Datum) (i : Fin D.R.m), IsLocVec ch.W (.chi i 0) e (ch.rm.vX i 0) (GlobalTheory.FlipStart.givenFn ch.S.B t Φ e (.right i 0)) (ch.W.cosVec i (Φ i)) := by
-  first | exact @_root_.GlobalTheory.CosetRow.coset_function_isLocalVector
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistCosetFunctionIsLocalVector =====
@@ -1205,7 +1176,7 @@ theorem prodHalf_topFn_eq_givenFn : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
   have hT : IsSelfDualC (G.pT (.mu t 0 j)) (G.latT (.mu t 0 j)) := (colY_isV D T L μ₀ hL (j + 1) hj).sd
   have hAA' : ∀ w ∈ locPl G t \ GlobalTheory.FlipTop.topPl L t, ((∀ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) ≤ 1) ∧ ∃ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) = 1) := fun w hw =>
     hAA w (Finset.mem_sdiff.1 hw).1 (Finset.mem_sdiff.1 hw).2
-  have hlat := GlobalTheory.T.mem_completedHomLattice_iff_integral_on_unit_half hS hT (B.isFrame_β hL (Nat.zero_le _) hj.le) (B.isFrame_β hL (Nat.zero_le _) hj) he₁ hAA'
+  have hlat := _root_.GlobalTheory.ColLatDict.mem_latO_iff_intM hS hT (B.isFrame_β hL (Nat.zero_le _) hj.le) (B.isFrame_β hL (Nat.zero_le _) hj) he₁ hAA'
     ((e - e') • x) hx1
   have k1 : halfInd (e - e') (latO (G.pS (.mu t 0 j)) (G.pT (.mu t 0 j)) (G.latS (.mu t 0 j) : Set _)
       (G.latT (.mu t 0 j) : Set _) fun _ => True) ((e - e') • x) =
@@ -1501,7 +1472,7 @@ theorem flipStart_highestVector : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
     have hb := GlobalTheory.FunObj.Good.badInt_notMem hL (GlobalTheory.FlipIntegrand.pde_ne_q_of_setting s) (hch.guard t) hw
     have h2q := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro _ rfl))
     have hN := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro_left _ rfl))
-    refine ⟨fun a ha => ?_, ⟨_, GlobalTheory.HostClear.absNorm_mem_AA D, ?_⟩⟩
+    refine ⟨fun a ha => ?_, ⟨_, _root_.Formalism.L2.Pj.normK_mem_AA D, ?_⟩⟩
     · rw [GlobalTheory.FunObj.Good.valued_alg]
       exact GlobalTheory.FunObj.Good.valuation_le_one_of_mem h2q (Or.inl ha)
     · rw [GlobalTheory.FunObj.Good.valued_alg]
@@ -1512,14 +1483,6 @@ end GlobalTheory.FlipStart
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.twist_flipStart_highestVector : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (j : Fin D.R.m) (g : Sch ch.G (.down t 0 j)), (j : ℕ) + 1 = D.R.m → HEq g (R.vX t) → ∃ c : ℂˣ, c ∈ xiVals R.toLevCh t ∧ ∀ e : AE D, IsIdemSum e (locPl ch.G t) → ∀ Φ : ch.G.Datum, IsLocVec ch.W (.mu t 0 j) e (ch.rm.vT 0 j) ((c : ℂ) • GlobalTheory.FlipStart.givenFn ch.S.B t Φ e (.down t 0 j)) g := by
-  first | exact @_root_.GlobalTheory.FlipStart.flipStart_highestVector
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistFlipStartHighestVector =====
@@ -1536,7 +1499,7 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 theorem GlobalTheory.FlipStart.theta_first_occurrence_finite_swapped_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (f : ∀ j : Fin D.R.m, Sch ch.G (.down t 0 j)), GlobalTheory.FlipStart.ChainVecs ch t f → ∃ z : ℂˣ, z ∈ xiVals R.toLevCh t ∧ ∀ Φ : ch.G.Datum, RepFin ch.S.B ch.rm t (givenPath t D.R.m) (Finsupp.single (GlobalTheory.FlipStart.givenFin ch.W t f Φ) (z : ℂ)) (fun w => (givenStage t w ch.S.B Φ).tensor) := by
   intro hP
-  obtain ⟨C, h⟩ := Big.and (Big.and (_root_.GlobalTheory.T.twist_chainColumn_inner_succ_eq hP) (_root_.GlobalTheory.T.twist_flipStart_highestVector hP)) (_root_.GlobalTheory.T.twist_coset_function_isLocalVector hP)
+  obtain ⟨C, h⟩ := Big.and (Big.and (_root_.GlobalTheory.ChainCol.chainColumn_inner_succ hP) (_root_.GlobalTheory.FlipStart.flipStart_highestVector hP)) (_root_.GlobalTheory.CosetRow.coset_function_isLocalVector hP)
   refine ⟨C, fun ε CF hC => ?_⟩
   obtain ⟨x₀, h⟩ := h ε CF hC
   refine ⟨x₀, fun D large₂ he hx Γ _ _ Pl0 T A Ks _ _ _ R F s ch hi ha => ?_⟩
@@ -1557,14 +1520,6 @@ theorem GlobalTheory.FlipStart.theta_first_occurrence_finite_swapped_pair : _roo
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.twisted_theta_first_occurrence_finite_swapped_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.RowClaim.Big fun {D} _ _ _ _ {T} _ _ _ _ _ {R} ch => ∀ (t : T) (f : ∀ j : Fin D.R.m, Sch ch.G (.down t 0 j)), GlobalTheory.FlipStart.ChainVecs ch t f → ∃ z : ℂˣ, z ∈ xiVals R.toLevCh t ∧ ∀ Φ : ch.G.Datum, RepFin ch.S.B ch.rm t (givenPath t D.R.m) (Finsupp.single (GlobalTheory.FlipStart.givenFin ch.W t f Φ) (z : ℂ)) (fun w => (givenStage t w ch.S.B Φ).tensor) := by
-  first | exact @_root_.GlobalTheory.FlipStart.theta_first_occurrence_finite_swapped_pair | exact _root_.GlobalTheory.FlipStart.theta_first_occurrence_finite_swapped_pair | (intros; apply _root_.GlobalTheory.FlipStart.theta_first_occurrence_finite_swapped_pair <;> assumption)
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedThetaFirstOccurrenceFiniteSwappedPair =====

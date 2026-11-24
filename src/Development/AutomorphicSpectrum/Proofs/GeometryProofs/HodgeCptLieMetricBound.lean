@@ -348,11 +348,6 @@ theorem span_tmul (σ : L →+* ℂ) (V : Type) [AddCommGroup V] [Module (𝓞 L
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨e, rfl⟩)
   | add a b ha hb => exact Submodule.add_mem _ ha hb
 
-theorem spComp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (d : A →+* B) (c : B →+* C) :
-    spMap c ≫ spMap d = spMap (c.comp d) := by
-  simp only [spMap, ← Spec.map_comp]
-  rfl
-
 def lf {S : Scheme.{0}} {G : Over S} {R : Type} [CommRing R] {x : Sp R ⟶ S} (v : epsAt x ⟶ G) :
     Sp (DualNumber R) ⟶ G.left :=
   v.left
@@ -405,11 +400,11 @@ theorem GlobalTheory.CompanionTheory.Ar.SlopeNorm.sqAt_le : ∀ (E : Type) [Fiel
   obtain ⟨Mσ, hMσ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieSigma.lieModel_fibre X t.G L z B.carrier MB σ
   obtain ⟨Mσ', hMσ'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieSigma.lieModel_fibre (Sp (𝓞 L)) t'.G L (𝟙 _) B'.carrier MB' σ
   have hb : spMap (σ.comp (algebraMap (𝓞 L) L)) ≫ z = spMap (σ.comp e₂) ≫ z₁ := by
-    rw [← spComp (algebraMap (𝓞 L) L) σ, ← spComp e₂ σ, Category.assoc, Category.assoc, hz]
+    rw [← _root_.GlobalTheory.spMap_comp_ring (algebraMap (𝓞 L) L) σ, ← _root_.GlobalTheory.spMap_comp_ring e₂ σ, Category.assoc, Category.assoc, hz]
   have hb' : spMap (σ.comp (algebraMap (𝓞 L) L)) ≫ 𝟙 _ = spMap σ ≫ spMap (algebraMap (𝓞 L) L) := by
-    rw [Category.comp_id, spComp]
+    rw [Category.comp_id, _root_.GlobalTheory.spMap_comp_ring]
   have hb2 : spMap σ ≫ spMap e₂ = 𝟙 _ ≫ spMap (σ.comp e₂) := by
-    rw [Category.id_comp, spComp]
+    rw [Category.id_comp, _root_.GlobalTheory.spMap_comp_ring]
 
   obtain ⟨core₁, hcore₁⟩ := h.herm _ (Fibre σ B.carrier) Mσ
   have h1 : ∀ a b, (B.metric.form σ).inner a b = h.ip _ (Mσ.pt a) (Mσ.pt b) := by
@@ -471,8 +466,7 @@ open scoped BigOperators ComplexOrder
 
 namespace GlobalTheory.CompanionTheory.Ar.MapCompare
 
-theorem main : ∀ (K : Type) [Field K] [NumberField K] (E E' : HermitianBundle.{0} K) (φ : E.carrier →ₗ[𝓞 K] E'.carrier) (c : ℝ), Function.Injective φ → 0 < c → (∀ (σ : K →+* ℂ) (x : Fibre σ E.carrier), sqAt E' σ (φ.lTensor (ComplexAt σ) x) ≤ c * sqAt E σ x) → (∀ F : Submodule (𝓞 K) E.carrier, E.normDegree F ≤ E'.normDegree (F.map φ) + E.rank F / 2 * Real.log c) ∧ E.slopeMax ≤ E'.slopeMax + ((Real.log c / 2 : ℝ) : EReal) :=
-  CoverDenseAlt.normDegree_le_of_metric_bounded_map
+alias main := _root_.CoverDenseAlt.normDegree_le_of_metric_bounded_map
 
 end GlobalTheory.CompanionTheory.Ar.MapCompare
 end -- clump:auto
@@ -1018,18 +1012,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.Ar.SlopeUnif
 
-theorem isGrpPullback_iso {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] (e : A ≅ B) [IsMonHom e.hom] :
-    IsGrpPullback A B (𝟙 S) e.hom.left := by
-  refine ⟨?_, fun T x y x₀ y₀ hx hy => ?_⟩
-  · haveI : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
-    exact IsPullback.of_horiz_isIso ⟨by simp⟩
-  · have e₁ : (x * y) ≫ e.hom = (x ≫ e.hom) * (y ≫ e.hom) := by
-      first | exact MonObj.mul_comp _ _ _
-    have : (x * y).left ≫ e.hom.left = ((x ≫ e.hom) * (y ≫ e.hom)).left := by
-      rw [← e₁]; rfl
-    rw [this]
-    exact mul_left_congr (Category.comp_id _) _ _ _ _ hx hy
-
 theorem exists_compare {S S₁ : Scheme.{0}} {f : S₁ ⟶ S} {A A' : Over S₁} {C : Over S} [GrpObj A] [GrpObj A'] [GrpObj C]
     {a : A.left ⟶ C.left} {a' : A'.left ⟶ C.left} (hA : IsGrpPullback A C f a) (hA' : IsGrpPullback A' C f a') :
     ∃ w : A.left ⟶ A'.left, w ≫ a' = a ∧ w ≫ A'.hom = A.hom ∧ IsGrpPullback A A' (𝟙 S₁) w := by
@@ -1072,7 +1054,7 @@ theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
   letI := P₂.τ.grpB
   haveI := P₂.e_hom
   have hφ' : IsGrpPullback P₂.τ.B t'.G (spMap (algebraMap (𝓞 L) L)) (P₂.e.hom.left ≫ w ≫ m'.φ) := by
-    have := (isGrpPullback_iso P₂.e).comp (hwp.comp m'.cart)
+    have := (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso P₂.e).comp (hwp.comp m'.cart)
     simpa using this
   obtain ⟨MT, hMT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusLie.exists_lieModel_splitTorus (Sp L) P₂.τ.X L (𝟙 _)
   have hcart : IsGrpPullback P₂.tK.G 𝔐.t.G (spMap (algebraMap (𝓞 L) L) ≫ (spMap (RingOfIntegers.mapRingHom (e₂.comp e₁)) ≫ z₀)) P₂.m.φ := by

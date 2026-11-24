@@ -92,6 +92,7 @@ import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.Co
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusRestrictScalarsPowModInertia
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.LocTrans
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TPropEGW
 
@@ -676,7 +677,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GeneralizedEigenspaces.PlacesOverFinite.ExistsType =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.CharpolyConjugation.CharpolyRootPow =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.CharpolyConjugation.CharpolyRootPow", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.IsAutomorphicOverImagQuad\nimport Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeMatchBaseChange\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\npublic import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.SphericalOfHasSat\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.CharpolyConjugation.CharpolyRootPow", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.IsAutomorphicOverImagQuad\nimport Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks\npublic import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeMatchBaseChange\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\npublic import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AdmissibleResidues.SphericalOfHasSat\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusRestrictScalarsPowModInertia\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -733,56 +734,6 @@ private theorem ine_descend {A : ValuationSubring Ω} {u : G K Ω}
     (h : (AlgEquiv.restrictScalarsHom F : G K Ω →* G F Ω) u ∈ Ine (F := F) A) :
     u ∈ Ine (F := K) A :=
   ⟨h.1, h.2⟩
-
-private theorem isFrob_pow {A : ValuationSubring Ω} {q : ℕ} {σ : G F Ω} (h : IsFrob A q σ) (k : ℕ) :
-    IsFrob A (q ^ k) (σ ^ k) := by
-  obtain ⟨hd, hf⟩ := h
-  have hint : ∀ τ : G F Ω, τ ∈ ValuationSubring.decompositionSubgroup F A →
-      ∀ y : Ω, A.valuation y ≤ 1 → A.valuation (τ y) ≤ 1 := by
-    intro τ hτ y hy
-    by_contra hc
-    push_neg at hc
-    have hy0 : y ≠ 0 := by
-      rintro rfl
-      rw [map_zero, map_zero] at hc
-      exact absurd hc (not_lt.2 zero_le')
-    have hprod : ∀ z : Ω, z ≠ 0 → A.valuation z * A.valuation z⁻¹ = 1 := fun z hz => by
-      rw [← map_mul, mul_inv_cancel₀ hz, map_one]
-    have h1 : A.valuation (τ y⁻¹) < 1 := by
-      by_contra h'
-      push_neg at h'
-      have e := hprod (τ y) (by simpa using hy0)
-      rw [← map_inv₀ τ] at e
-      exact absurd e (ne_of_gt (one_lt_mul_of_lt_of_le hc h'))
-    rw [valuation_apply_lt_one_iff (A := A) hτ] at h1
-    have e := hprod y hy0
-    exact absurd e (ne_of_lt (lt_of_le_of_lt (mul_le_of_le_one_left' hy) h1))
-  refine ⟨pow_mem hd k, ?_⟩
-  induction k with
-  | zero =>
-    intro x _
-    rw [pow_zero, pow_zero, pow_one, AlgEquiv.one_apply, sub_self]
-    exact (A.valuation_lt_one_iff 0).1 (Ideal.zero_mem _)
-  | succ k ih =>
-    intro x hx
-    set y := (σ ^ k) x with hydef
-    have hy : A.valuation y ≤ 1 := hint _ (pow_mem hd k) x hx
-    have hz : A.valuation (x ^ q ^ k) ≤ 1 := by
-      rw [map_pow]
-      exact pow_le_one' hx _
-    have e : (σ ^ (k + 1)) x - x ^ q ^ (k + 1) = (σ y - y ^ q) + (y ^ q - (x ^ q ^ k) ^ q) := by
-      rw [show σ ^ (k + 1) = σ * σ ^ k from pow_succ' σ k, show q ^ (k + 1) = q ^ k * q from pow_succ q k,
-        pow_mul, AlgEquiv.mul_apply]
-      ring
-    rw [e]
-    refine lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt (hf y hy) ?_)
-    rw [← geom_sum₂_mul, map_mul]
-    have hs : A.valuation (∑ i ∈ Finset.range q, y ^ i * (x ^ q ^ k) ^ (q - 1 - i)) ≤ 1 := by
-      apply Valuation.map_sum_le
-      intro i _
-      rw [map_mul, map_pow, map_pow]
-      exact mul_le_one' (pow_le_one' hy _) (pow_le_one' hz _)
-    exact lt_of_le_of_lt (mul_le_of_le_one_left' hs) (ih x hx)
 
 private theorem ine_finite [Finite (K →ₐ[F] Ω)] {l : ℕ} [Fact l.Prime] {n : ℕ}
     (r : G F Ω →* GL (Fin n) (Qbar l)) (A : ValuationSubring Ω)
@@ -856,7 +807,7 @@ theorem UpperTheory.GalN.V.L.wup :
   refine ⟨u ^ f, j * m, Nat.mul_pos hj hm, ?_, ?_⟩
   · apply isFrob_descend (F := F)
     rw [map_pow, hu, ← pow_mul, e]
-    exact isFrob_pow hfrob (m * f)
+    exact _root_.GlobalTheory.FrobRestrict.isFrob_pow hfrob (m * f)
   · rw [MonoidHom.comp_apply, map_pow, hu, ← pow_mul, e, map_pow r]
     exact noLink_pow hnl (Nat.mul_pos hm hf)
 end -- clump:auto

@@ -93,6 +93,7 @@ import Mathlib.RingTheory.RegularLocalRing.Defs
 import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalE
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.TwoTorsionU
 import Mathlib.Algebra.Order.Star.Real
+import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.TransW
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.FibreIntegerInstanceHolds, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.PhENormOf, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.BiextensionFormalMulMul, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.TwoAdicScalarConditions, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalI, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.TwoTorsionCurveToSeries, Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.ThetaFromPhiDerivative, Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.Th0FromPhPrime, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.Th0TwoAnalyticOf, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalJ, Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.LatticePointInKernelSubgroup
@@ -364,7 +365,7 @@ theorem PhENorm_of (hI : Th0Isogeny) : PhENorm := by
   have hS' : (al ^ 2 - 2 * (Fintype.card ι : K)) * s2 = S := by rw [← hN, ← hS]; ring
   have hF := hI K g2 g3 s2 c0 xT al S P ι (fun Q => xQ Q + c0) wp wm hP hT hZ hS'
   obtain ⟨hph0, hphd⟩ :=
-    phEDef K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl
+    _root_.Formalism.L2.Th1.B.Ph.logSigmaOnePullbackSpec K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl
   generalize hn : Fintype.card ι = n at *
   have hthl : PowerSeries.subst l (thTw g2 s2 c0 xT P) = mvExp (-(phTw g2 s2 c0 xT P l)) := hphd
   have hph0' : PowerSeries.constantCoeff (phTw g2 s2 c0 xT P l) = 0 := hph0
@@ -605,19 +606,19 @@ theorem Th0Vanish_of (hC : CubeE) (hN : PhENorm) : ThetaZeroVanishing := by
     hCu3 hT hQ hFib hN1 hS hEnd hcl h0 hne h1 hb1 hb2
   have hl0 : PowerSeries.constantCoeff l = 0 := hL.2.2.1
   obtain ⟨hc0, hth⟩ :=
-    phEDef K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl0
+    _root_.Formalism.L2.Th1.B.Ph.logSigmaOnePullbackSpec K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl0
   obtain ⟨-, -, hd1, -⟩ := hC K g2 g3 s2 c0 a1 a3 xT yT P l i ep F hP hL hI hCu hCu3 hT
   obtain ⟨-, hFG, hF1⟩ := Formalism.L2.Th1.C.first_level_from_universal_law K F l linv _ hlp hL hc0 hd1
   have hPN := hN K g2 g3 s2 c0 xT al albar S P l linv i ep F ι xQ wp wm hP hT.2.1 hlp hCu
     hT.2.2.1 hQ hFib hN1 hS
   have hLG : LG (unitBall K) (phTw g2 s2 c0 xT P l) :=
-    Split.split_vanishing_at_two K (unitBall K) (Formalism.L2.Th1.C.unitBallClosed K) l linv _ al albar
+    Split.split_vanishing_at_two K (unitBall K) (_root_.Formalism.L2.Th1.C.unit_ball_closed K) l linv _ al albar
       ⟨hlp, hFG, hc0⟩ hF1 hEnd hcl hPN h0 hne h1 hb1 hb2
   have hth' : PowerSeries.subst l (thTw g2 s2 c0 xT P) = fExp (-phTw g2 s2 c0 xT P l) := hth
   have hneg : LG (unitBall K) (-phTw g2 s2 c0 xT P l) :=
     (Formalism.L2.Th1.C.lGSubgroup K (unitBall K) Unit).2.2 _ hLG
   refine ⟨?_, ?_, ?_⟩
-  · refine (Formalism.L2.Th1.C.simeqIffCong K Unit _ _).2 ?_
+  · refine (_root_.Formalism.L2.Th1.C.simeq_iff_congruence K Unit _ _).2 ?_
     rw [Formalism.L2.Th1.C.Cong, sub_zero]
     exact hLG
   · rw [hth']
@@ -682,7 +683,7 @@ theorem endInt_int {K : Type} [Field K] (R : Subring K) {l linv : PowerSeries K}
 
 theorem two_adic_scalar_conditions : TwoAdicScalars := by
   intro K _ _ _ _ F l linv b b' hL hlp hb hb' al albar
-  have hcl := Formalism.L2.Th1.C.unitBallClosed K
+  have hcl := _root_.Formalism.L2.Th1.C.unit_ball_closed K
   have hFG : FGInt (unitBall K) l linv := by
     rw [FGInt, ← Formalism.L2.Th1.C.Dict.law_eq hlp hL.1 hL.2.2.2.2]
     exact hL.2.1
@@ -694,7 +695,7 @@ theorem two_adic_scalar_conditions : TwoAdicScalars := by
   have h1b' : ‖(1 : ℤ_[2]) - b'‖ = 1 := norm_sub_eq_one norm_one hb'
   have hbb' : ‖b - b'‖ = 1 := norm_sub_eq_one hb hb'
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact phi_mem_of_closed (Formalism.L2.Th1.C.endIntClosed K (unitBall K) hcl l linv hlp.1)
+  · exact phi_mem_of_closed (_root_.Formalism.L2.Th1.C.integralEndoClosed' K (unitBall K) hcl l linv hlp.1)
       (endInt_int (unitBall K) hlp hFG) b
   · exact phi_mem_closure b
   · rw [hal, ← map_zero (phi K)]
@@ -736,11 +737,8 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.B
 
-theorem th0Isogeny : Th0Isogeny := Iso.theta_zero_isogeny_holds
-theorem phENorm : PhENorm := Nrm.PhENorm_of th0Isogeny
+theorem phENorm : PhENorm := Nrm.PhENorm_of _root_.Formalism.L2.Th1.B.Iso.theta_zero_isogeny_holds
 theorem th0Vanish : ThetaZeroVanishing := Van.Th0Vanish_of cubeE phENorm
-theorem twoAdicScalars : TwoAdicScalars := Van.two_adic_scalar_conditions
-
 end Formalism.L2.Th1.B
 end -- clump:auto
 end -- clump:auto
@@ -762,15 +760,6 @@ open Formalism.G (unitBall)
 open Formalism.L2.Th1.C (wpShift HasSecondLogDeriv wTr IsLogPair mulBy EndInt PhNormAt IsBinomScalar)
 open Formalism.L2.Th1.A (fgl iSer logSer expSer wpReg g₂ g₃ IntModel xS tS xPlus bridgeWp bridgeLaw
   bridgeCurve bridgeCurve3)
-
-section Alg
-
-variable {K : Type} [Field K] [CharZero K]
-
-theorem logPair (W : WeierstrassCurve K) : IsLogPair (logSer W) (expSer W) :=
-  (Formalism.L2.Th1.C.curveFrame K ⊤ W ⟨trivial, trivial, trivial, trivial, trivial⟩).1
-
-end Alg
 
 section Norm
 
@@ -840,15 +829,13 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.E
 
-theorem inWTh0 : InWTh0 := even_theta_half_period_in_model
-
 end Formalism.L2.Th1.E
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.Th0FromPhPrime =====
 
 -- ===== clump member: Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.Th0TwoAnalyticOf =====
--- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.Th0TwoAnalyticOf", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.StatementJ\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EllipticOnePole\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.QuasiPeriodConstIsogeny\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalI\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.BaseChangeCompatible\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.TwoTorsionCurveToSeries\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.AnaSysW\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.ThetaFromPhiDerivative\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.Th0FromPhPrime\nimport Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.BridgeTwoMore\nimport Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.TwoTorsionU\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.Th0TwoAnalyticOf", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.StatementJ\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EllipticOnePole\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.QuasiPeriodConstIsogeny\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalI\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.BaseChangeCompatible\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.TwoTorsionCurveToSeries\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.AnaSysW\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.ThetaFromPhiDerivative\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.Th0FromPhPrime\nimport Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.BridgeTwoMore\nimport Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.TwoTorsionU\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.TwoAdicScalarConditions\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -899,12 +886,12 @@ theorem Th0TwoAnalytic_of (hE : HalfFibreExists) (hF : FibreZInstance) (hH : Hal
     rw [hd, map_zero]
     ring
   have hy : ‖Formalism.L2.Th1.E.AnaSysW.yc 2 L ι W (ω₀ / 2)‖ ≤ 1 :=
-    ((Formalism.L2.Th1.A.bridgeTwoMore ℂ_[2] W _ _ hEq h2).2.2 hW hxT).1
+    ((_root_.Formalism.L2.Th1.A.two_curves_relation ℂ_[2] W _ _ hEq h2).2.2 hW hxT).1
 
   obtain ⟨hLaw, hi, -⟩ := Formalism.L2.Th1.A.bridgeLaw ℂ_[2] W hW
-  have hlp := Crv2.logPair W
+  have hlp := _root_.Formalism.L2.Th1.C.WeierstrassCurveSeries.logPair W
   obtain ⟨hEnd, hcl, h0, hne, h1, hb1, hb2⟩ :=
-    twoAdicScalars ℂ_[2] (fgl W) (logSer W) (expSer W) b b' hLaw hlp hnb hnb'
+    _root_.Formalism.L2.Th1.B.Van.two_adic_scalar_conditions ℂ_[2] (fgl W) (logSer W) (expSer W) b b' hLaw hlp hnb hnb'
 
   have hQn : ∀ Q : Sq, (Q : ℂ) ∉ L.lattice := by
     intro Q hQ
@@ -935,7 +922,7 @@ theorem Th0TwoAnalytic_of (hE : HalfFibreExists) (hF : FibreZInstance) (hH : Hal
     rw [norm_transport ι α S.card (Formalism.L2.Th1.F.kerRepsCard L α S hα hmul hS), Fintype.card_coe]
     exact_mod_cast hcard.symm
   have hS2 : ι α * (ι α - ι (conj α)) * ι (Formalism.L2.Th1.F.s2 L) = ι (∑ P ∈ S, L.weierstrassP P) := by
-    rw [← Formalism.L2.Th1.F.quasiPeriodConstIsogeny L α S hα hmul hS, ← Complex.mul_conj, ← map_sub, ← map_mul,
+    rw [← _root_.Formalism.L2.Th1.F.quasiPeriodConstIsogeny_thm L α S hα hmul hS, ← Complex.mul_conj, ← map_sub, ← map_mul,
       ← map_mul]
     congr 1
     ring
@@ -952,7 +939,7 @@ theorem Th0TwoAnalytic_of (hE : HalfFibreExists) (hF : FibreZInstance) (hH : Hal
   have hV' : Simeq (ι := Unit)
       (evenSigmaLogAtTwoTorsion W (ι (Formalism.L2.Th1.F.s2 L)) (px W (ptW 2 L ι W (ω₀ / 2)))) 0 := hV
   refine ⟨hV', ?_⟩
-  rw [Formalism.L2.Th1.E.inWTh0 2 L ι W hU ω₀ hω hω2]
+  rw [_root_.Formalism.L2.Th1.E.even_theta_half_period_in_model 2 L ι W hU ω₀ hω hω2]
   exact Formalism.L2.Th1.E.Two.oneUnit_fExp_neg hV'
 
 end Formalism.L2.Th1.B.An2
@@ -968,12 +955,8 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.B
 
-theorem halfFibreExists : HalfFibreExists := Half.half_fibre_exists_holds
-theorem fibreZInstance : FibreZInstance := Fib.fibre_integer_instance_holds
-theorem halfShiftSeries : HalfShiftSeries := Fib.half_shift_series_holds
-theorem fibreMap : FibreMap := Half.fibre_map_holds
 theorem th0TwoAnalytic : ThetaZeroTwoAnalytic :=
-  An2.Th0TwoAnalytic_of halfFibreExists fibreZInstance halfShiftSeries fibreMap
+  An2.Th0TwoAnalytic_of _root_.Formalism.L2.Th1.B.Half.half_fibre_exists_holds _root_.Formalism.L2.Th1.B.Fib.fibre_integer_instance_holds _root_.Formalism.L2.Th1.B.Fib.half_shift_series_holds _root_.Formalism.L2.Th1.B.Half.fibre_map_holds
 
 end Formalism.L2.Th1.B
 end -- clump:auto
@@ -981,7 +964,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalJ =====
 
 -- ===== clump member: Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.LatticePointInKernelSubgroup =====
--- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.LatticePointInKernelSubgroup", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.StatementK\npublic import Mathlib.Analysis.Normed.Field.Instances\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalJ\nimport Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.NormXLeOneOfNotInKernel\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.AnaSysW\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.ShiftAnalyticW\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.Padics.RingHoms\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.LatticePointInKernelSubgroup", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.StatementK\npublic import Mathlib.Analysis.Normed.Field.Instances\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.FinalJ\nimport Formalism.LocalToGlobal.TorsionIntegrality.FrobeniusFibreCurves.LogarithmicSubstitution.NormXLeOneOfNotInKernel\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.AnaSysW\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.ShiftAnalyticW\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.Padics.RingHoms\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.TransW\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1069,20 +1052,20 @@ theorem mem_kernel_subgroup_iff_norm (hU : Unif 2 L ι W) (t : ℂ) (ht : t ∉ 
   exact Iff.rfl
 
 theorem lattice_point_in_kernel_subgroup (hU : Unif 2 L ι W) (t : ℂ) (ht : t ∈ L.lattice) : InFormalGroupPoints (ptW 2 L ι W t) := by
-  rw [(Formalism.L2.Th1.E.ptWZero 2 L ι W hU t).2 ht]
+  rw [(_root_.Formalism.L2.Th1.E.analytic_point_eq_zero_iff 2 L ι W hU t).2 ht]
   trivial
 
 open Classical in
 theorem ptW_neg (hU : Unif 2 L ι W) (t : ℂ) : ptW 2 L ι W (-t) = - ptW 2 L ι W t := by
   apply eq_neg_of_add_eq_zero_left
-  rw [← Formalism.L2.Th1.E.ptWAdd 2 L ι W hU, neg_add_cancel]
-  exact (Formalism.L2.Th1.E.ptWZero 2 L ι W hU 0).2 L.lattice.zero_mem
+  rw [← _root_.Formalism.L2.Th1.E.analytic_point_map_add 2 L ι W hU, neg_add_cancel]
+  exact (_root_.Formalism.L2.Th1.E.analytic_point_eq_zero_iff 2 L ι W hU 0).2 L.lattice.zero_mem
 
 open Classical in
 theorem kernel_subgroup_add_mem (hU : Unif 2 L ι W) (hW : IntCurve W) (s t : ℂ) (hs : InFormalGroupPoints (ptW 2 L ι W s))
     (ht : InFormalGroupPoints (ptW 2 L ι W t)) : InFormalGroupPoints (ptW 2 L ι W (s + t)) := by
   obtain ⟨a1, a2, a3, a4, a6, hΔ⟩ := hW
-  rw [Formalism.L2.Th1.E.ptWAdd 2 L ι W hU]
+  rw [_root_.Formalism.L2.Th1.E.analytic_point_map_add 2 L ι W hU]
   exact (Formalism.ELL.formal_group_points_subgroup.{0} ℂ_[2] W ⟨a1, a2, a3, a4, a6⟩ hΔ _ _ hs ht).1
 
 open Classical in
@@ -1174,8 +1157,8 @@ theorem PointsTwoFinal_of (hK : KernelIntegral) (hS : KernelStableUnderMultiplie
   intro L ι W hU hW ha1 α ω₀ b b' hα hmul hb hb' hnb hnb' hω hc
   have hK' := hK L ι W hU hW ha1 α b hα hmul hb hnb
   have hS' := hS L ι W hU hW ha1 α b hα hmul hb hnb
-  have hadd := Formalism.L2.Th1.E.ptWAdd 2 L ι W hU
-  have hzero := Formalism.L2.Th1.E.ptWZero 2 L ι W hU
+  have hadd := _root_.Formalism.L2.Th1.E.analytic_point_map_add 2 L ι W hU
+  have hzero := _root_.Formalism.L2.Th1.E.analytic_point_eq_zero_iff 2 L ι W hU
   obtain ⟨tr, n, htr, hn, -⟩ := Formalism.L2.Th1.F.mulStableIntegral L α hmul
   have hcm : MulStable L (conj α) := by
     intro ω hω'
@@ -1256,7 +1239,7 @@ theorem Th0TwoFinal_of (hP : PointsTwoFinal) : ThetaZeroAtTwo := by
   have hI : Formalism.L2.Th1.A.IntModel W := ⟨hW.1, hW.2.1, hW.2.2.1, hW.2.2.2.1, hW.2.2.2.2.1⟩
   obtain ⟨q1, q2⟩ := th0TwoAnalytic L ι W hU hI α ω₀ b b' hα hmul hω ht0 hb hb' hnb hnb' p3 hx
     (fun z hz => Half.norm_x_le_one_of_not_in_kernel _ (p2 z hz))
-  exact ⟨q1, q2, Formalism.L2.Th1.E.shiftAnalyticW 2 L ι W hU hW ω₀ hω ht0 hx q2⟩
+  exact ⟨q1, q2, _root_.Formalism.L2.Th1.E.shift_analytic_model 2 L ι W hU hW ω₀ hω ht0 hx q2⟩
 
 end Formalism.L2.Th1.B.KFin
 end -- clump:auto

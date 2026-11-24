@@ -57,6 +57,7 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodularSpan
+import Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfCyclic, Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfLocalDiscriminant
@@ -66,41 +67,16 @@ import Formalism.HermitianLattices.HermitianLatticesProofs.UnimodularSpan
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
 namespace Formalism.MainNotions.BridgeRowsGenus
-
-open NumberField Formalism.HermitianLatticesTheory
-
-section Cyc
-
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-  {V : Type} [AddCommGroup V] [Module E V] [Module (𝓞 E) V] [IsScalarTower (𝓞 E) E V]
-
-theorem cyc_star_int (o : 𝓞 E) : star (algebraMap (𝓞 E) E o) ∈ Set.range (algebraMap (𝓞 E) E) := by
-  have h : IsIntegral ℤ (starRingEnd E (algebraMap (𝓞 E) E o)) :=
-    (RingOfIntegers.isIntegral_coe o).map (starRingEnd E).toIntAlgHom
-  exact ⟨⟨_, h⟩, rfl⟩
-
-end Cyc
-
-section Rows
-
-open Module Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S Formalism.MainNotions.S.Lat Formalism.MainNotions.S.Cnt Formalism.MainNotions.BridgeLemma₂
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-end Rows
 
 end Formalism.MainNotions.BridgeRowsGenus
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfCyclic =====
 
 -- ===== clump member: Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfLocalDiscriminant =====
--- clump-header: {"m": "Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfLocalDiscriminant", "h": "module\n\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.LocSplitType\npublic import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice\npublic import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfCyclic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.ForPrimeFlagLattice\nimport Formalism.HermitianLattices.HermitianLatticesProofs.UnimodularSpan\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfLocalDiscriminant", "h": "module\n\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.LocSplitType\npublic import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice\npublic import Formalism.HermitianLattices.HermitianLatticesProofs.LocDual\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.RowsOneGenusOfCyclic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.ForPrimeFlagLattice\nimport Formalism.HermitianLattices.HermitianLatticesProofs.UnimodularSpan\nimport Formalism.HermitianLattices.HermitianLatticesProofs.GenusCovol\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -119,7 +95,7 @@ theorem unimodAt_of_unimod {V : Type} [AddCommGroup V] [Module E V] [Module (�
     (p : Ideal (𝓞 E)) : IsUnimodularAt h p L := by
   have hinj : Function.Injective (algebraMap (𝓞 E) E) := FaithfulSMul.algebraMap_injective _ _
   have hst : ∀ r : 𝓞 E, star (algebraMap (𝓞 E) E r) ∈ Set.range (algebraMap (𝓞 E) E) :=
-    fun r => cyc_star_int r
+    fun r => _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range r
   have hfg : L.FG := Submodule.IsLattice.fg (A := E) (self := hlat)
   unfold IsUnimodularAt
   rw [locDual_dualAt_loc h hinj hst]

@@ -105,8 +105,7 @@ open Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.Fourier
 
 variable {k r : ℕ}
 
-theorem meas_invM : Measurable (invM : Mt k r → Mt k r) := by
-  apply ReciprocityTheory.ChartRestriction.DS.Mult1.BesselPositivity.bp_meas_inv <;> assumption
+alias meas_invM := _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas
 
 theorem meas_mulM : Measurable (mulM : Mt k r × Mt k r → Mt k r) := by
   unfold mulM
@@ -254,13 +253,13 @@ namespace Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.JL
 theorem transEx_holds (hHC : HaarCorr) (hW : CoordW) : TransEx := fun hH _ =>
   jacExGood_of_N (jacExGoodN_of_hpkEx_of_pFrame_of_haarCorr hH pFrame_holds hHC zBig bigMem_holds hW secWb_holds)
 
-theorem local_jacobian_of_double_coset (h1 : DiagDCLoc) (hR : RightInvS) (hHC : HaarCorr) (hW : CoordW) : JacLoc :=
+theorem local_jacobian_of_double_coset (h1 : DiagDCLoc) (hR : _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc) (hHC : HaarCorr) (hW : CoordW) : JacLoc :=
   jacLoc_of_ex h1 hR (degRed_holds hR (transEx_holds hHC hW hpkEx_holds hR))
 
-theorem jacLoc_of_rightInv_haarCorr (hR : RightInvS) (hHC : HaarCorr) (hW : CoordW) : JacLoc :=
+theorem jacLoc_of_rightInv_haarCorr (hR : _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc) (hHC : HaarCorr) (hW : CoordW) : JacLoc :=
   local_jacobian_of_double_coset Formalism.L2.SG.RealObj.InfCut.UnitaryIsometries.DiagDCLoc_holds hR hHC hW
 
-theorem jacLoc_of_rightInv_setCorr (hR : RightInvS) (hSC : SetCorr) (hW : CoordW) : JacLoc :=
+theorem jacLoc_of_rightInv_setCorr (hR : _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc) (hSC : SetCorr) (hW : CoordW) : JacLoc :=
   jacLoc_of_rightInv_haarCorr hR (haarCorr_of hSC) hW
 
 theorem jacLoc_of_setCorr' (hSC : SetCorr) (hW : CoordW) : JacLoc :=
@@ -289,7 +288,7 @@ section -- clump:auto
 namespace Formalism.L2.SG.RealObj.InfCut.ProductExactness
 
 theorem haar_disintegration_real_holds : HaarDisintegrationReal := by
-  have hR : JacobianCoordinates.JL.RightInvS :=
+  have hR : _root_.Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.UnimodLoc :=
     JacobianCoordinates.JL.rightInvS_of JacobianCoordinates.JL.setCorr_holds (JacobianCoordinates.JL.haarCorr_of JacobianCoordinates.JL.setCorr_holds)
   have hU : JacobianCoordinates.UnimodLoc := hR
   exact UnitaryIsometries.haar_disintegration_of_local ProductExactness.product_formula_holds JacobianCoordinates.JL.jacLoc_holds ProductExactness.SecMeasLoc_holds hU

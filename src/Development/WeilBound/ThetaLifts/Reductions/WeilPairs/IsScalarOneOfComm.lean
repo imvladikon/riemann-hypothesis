@@ -417,17 +417,6 @@ variable {σ : E →ₐ[F] E} {B : Base F E} {nS nT : ℕ} {JS : Matrix (Fin nS)
 
 variable {η : (AEF F E)ˣ →* Circle} {ε : AEF F E} {of oi : GAF σ JS × GAF σ JT →* Module.End ℂ (WOF F E nS nT → ℂ)}
 
-theorem exists_fin (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT ξ₀ B.ψ hc Λ w lam Om) (h1 : IsHeckeCharF η)
-    (h2 : ResEtaF η 1) (hε : IsHalfF σ ε) : ∃ of, IsFinWeilF σ JS JT ξ₀ B.ψ (η ^ nS) (η ^ nT) of ∧
-      ∀ p (f : thetaSubF σ JS JT ξ₀ B.ψ), of p f = (zF σ JS JT η ε hε.idem p : ℂ) • (Om p f : WOF F E nS nT → ℂ) :=
-  exists_fin_A C hO h1 h2 hε
-
-theorem fin_inf_comm (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT ξ₀ B.ψ hc Λ w lam Om)
-    (hof : ∀ p, ∃ z : ℂ, ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, of p f = z • (Om p f : WOF F E nS nT → ℂ))
-    (hi : IsInfWeilF σ JS JT ξ₀ B.ψ oi) (p q : GAF σ JS × GAF σ JT) (f : WOF F E nS nT → ℂ)
-    (hf : IsThetaFunOF σ JS JT ξ₀ B.ψ f) : of p (oi q f) = oi q (of p f) :=
-  fin_inf_comm_A C hO hof hi p q f hf
-
 theorem datum_of_aut (C : Ctx σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) (hO : IsLatRepF σ JS JT ξ₀ B.ψ hc Λ w lam Om)
     (h1 : IsHeckeCharF η) (h2 : ResEtaF η 1) (hf : IsFinWeilF σ JS JT ξ₀ B.ψ (η ^ nS) (η ^ nT) of)
     (hof : ∀ p, ∃ z : ℂ, ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, of p f = z • (Om p f : WOF F E nS nT → ℂ))
@@ -543,39 +532,10 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
-open scoped TensorProduct Matrix Topology Kronecker ComplexOrder Classical
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Matrix
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open Formalism.IndefR.DatumF MeasureTheory GlobalTheory.FinWeil GlobalTheory.FinLatF GlobalTheory.RealWeilF GlobalTheory.WeilPartsF
-
 namespace PositivityTheory.ThKW
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-variable {σ : E →ₐ[F] E} {B : Base F E} {nS nT : ℕ} {JS : Matrix (Fin nS) (Fin nS) E} {JT : Matrix (Fin nT) (Fin nT) E}
-  {ξ₀ : E} {θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ)} {ι : (InfinitePlace F → ℂ) →+ AEF F E}
-  {Λ : Submodule (𝓞 E) (Matrix (Fin nT) (Fin nS) E)} {hc : HeisClosedF σ JS JT ξ₀ B.ψ} {w : 𝓞 E} {lam : ℕ →* ℂ}
-  {Om : GAF σ JS × GAF σ JT →* Module.End ℂ (thetaSubF σ JS JT ξ₀ B.ψ)}
-  {s : Matrix (IxF F nS nT) (IxF F nS nT) ℂ}
-
-theorem gauss_mul_integral (C : Ctx σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) (hR : RatSD σ JS JT ξ₀ Λ)
-    (hO : IsLatRepF σ JS JT ξ₀ B.ψ hc Λ w lam Om) (hs : CartF σ JS JT ξ₀ B θ s) {g : GAF σ JS} {h : GAF σ JT} {a b}
-    (ha : IsRatF σ JS g a) (hb : IsRatF σ JT h⁻¹ b)
-    (hbij : Function.Bijective (fun x : Matrix (Fin nT) (Fin nS) E => b * x * a - x))
-    (hF : Integrable (gaussV (HMF JS JT ξ₀ (tauB B)) s (mMF σ JS JT θ (g⁻¹, h⁻¹))) volume) (κ : ℂ)
-    (hκ : ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, Fixes (opFF hc w) (latF F E nS nT Λ) f → IsVacF σ JS JT ξ₀ B.ψ ι s f → ∀ x,
-      (f : WOF F E nS nT → ℂ) (actOF σ JS JT g⁻¹ h⁻¹ x) = κ * ((sumOp (opFF hc w) (latF F E nS nT Λ)
-        ((latF F E nS nT Λ).map (rhoFF σ JS JT (g, h))) f : thetaSubF σ JS JT ξ₀ B.ψ) : WOF F E nS nT → ℂ) x)
-    (n : ℕ) (t : Fin n → Matrix (Fin nT) (Fin nS) E) (ht : ∀ k, b * t k * a - t k ∈ Λ)
-    (hu : ∀ y, b * y * a - y ∈ Λ → ∃! k, y - t k ∈ Λ) :
-    ∃ r : ℝ, 0 < r ∧ (∑ k, gamQF σ JS JT ξ₀ B.ψ (sgOF σ w • (b * t k * a - t k)) (t k)) *
-      ∫ v, gaussV (HMF JS JT ξ₀ (tauB B)) s (mMF σ JS JT θ (g⁻¹, h⁻¹)) v = r * κ :=
-  Trc.gauss_mul_integral_A C hG hR hO hs ha hb hbij hF κ hκ n t ht hu
 
 end PositivityTheory.ThKW
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutTrace =====
@@ -689,8 +649,6 @@ def cutRat (x : AEF F E) (h : x * x = x) : Eˣ →* (AEF F E)ˣ :=
 
 theorem cutRat_val (x : AEF F E) (h : x * x = x) (u : Eˣ) : (cutRat x h u : AEF F E) = (1 - x) + x * incAF F E u := rfl
 
-theorem cAF_incAF' (x : E) : cAF σ (incAF F E x) = incAF F E (σ x) := GlobalTheory.HeisLineF.cAF_incAF σ x
-
 theorem half_add (hB : B.IsGood σ) (hε : IsHalfF σ ε) : (ε + cAF σ ε) * (ε + cAF σ ε) = ε + cAF σ ε := by
   have h3 : cAF σ ε * cAF σ ε = cAF σ ε := by rw [← map_mul, hε.idem]
   linear_combination hε.idem + h3 + 2 * hε.orth
@@ -703,7 +661,7 @@ theorem eta_cut (hB : B.IsGood σ) (h2 : ResEtaF η 1) (hε : IsHalfF σ ε) (u 
     linear_combination (-(incAF F E u - 1) ^ 2) * hε.orth)
   have e2 := GlobalTheory.SplitDetCharF.char_norm hB.cm h2 (cutRat _ h3 u) (cutRat ε hε.idem (Units.map (σ : E →* E) u)) (by
     rw [cutRat_val, cutRat_val, map_add (f := _), map_sub, map_mul, map_one,
-      GlobalTheory.HeisLineF.cAF_cAF σ (GlobalTheory.SplitDetCharF.sig_invol hB.cm), cAF_incAF']
+      GlobalTheory.HeisLineF.cAF_cAF σ (GlobalTheory.SplitDetCharF.sig_invol hB.cm), _root_.PositivityTheory.ThKW.TauSpanIdentities.cAF_inc]
     rfl)
   rw [e1, map_mul, mul_assoc, e2, mul_one]
 
@@ -747,7 +705,7 @@ theorem real_data (C : Ctx σ B JS JT ξ₀ θ ι) (hs : CartF σ JS JT ξ₀ B 
     rw [q2]
     exact Finset.prod_ne_zero_iff.2 fun v _ => (map_ne_zero _).2 hd
   rw [← q1, ← q2]
-  exact integral_gaussV hH.1 hs.sq hs.pos hU c1 c2 c3
+  exact _root_.PositivityTheory.ThKW.integral_gaussV_B hH.1 hs.sq hs.pos hU c1 c2 c3
 
 theorem zF_rat (C : Ctx σ B JS JT ξ₀ θ ι) (hε : ε * ε = ε) {g : GAF σ JS} {h : GAF σ JT} {a b}
     (ha : IsRatF σ JS g a) (hb : IsRatF σ JT h⁻¹ b) (hΔ : (b ⊗ₖ aᵀ).det ≠ 0) :
@@ -814,9 +772,9 @@ theorem scalar_const (C : Ctx σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) (hR : Ra
     fun g h a b ha hb hcm hd c hc0 H => ?_⟩
   obtain ⟨d1, d2⟩ := det_kron C ha hb
   have hΔ := left_ne_zero_of_mul_eq_one d1
-  obtain ⟨hbij, n, t, c₀, N, M, hn, hc₀, hN, t1, t2, g1, g2, i1, i2⟩ := finite_data C hG hR hO ha hb hΔ hd
+  obtain ⟨hbij, n, t, c₀, N, M, hn, hc₀, hN, t1, t2, g1, g2, i1, i2⟩ := _root_.PositivityTheory.ThKW.AutLatA.data C hG hR hO ha hb hΔ hd
   obtain ⟨hI, hδ0, r₂, p₂, h2⟩ := real_data C hs ha hb hcm hd
-  obtain ⟨r₁, p₁, h1⟩ := gauss_mul_integral C hG hR hO hs ha hb hbij hI _ (P.kappa hO hs hcm hc0 H) n t t1 t2
+  obtain ⟨r₁, p₁, h1⟩ := _root_.PositivityTheory.ThKW.Trc.gauss_mul_integral_A C hG hR hO hs ha hb hbij hI _ (P.kappa hO hs hcm hc0 H) n t t1 t2
   rw [g1] at h1
   have hN' : (N : E) ^ M ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hN)
   obtain ⟨r₃, p₃, h3⟩ := P.prod' hN' hd i1
@@ -833,7 +791,7 @@ theorem isScalar_one_of_comm (C : Ctx σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) 
   obtain ⟨a, ha⟩ := exists_isRatF hg
   obtain ⟨b, hb⟩ := exists_isRatF (inv_mem hh)
   obtain ⟨e, s₀, hs₀, H⟩ := scalar_const C hG hR hO P hs
-  obtain ⟨t, ht, ht'⟩ := (infinite_norm_one C).exists_notMem_finite
+  obtain ⟨t, ht, ht'⟩ := (_root_.UpperTheory.Reformulated.B.InfiniteNormOne.infinite_norm_one C).exists_notMem_finite
     ((GlobalTheory.RatAut.finite_det_smul_sub_one (b ⊗ₖ aᵀ)).union (GlobalTheory.RatAut.finite_det_smul_sub_one
       ((1 : Matrix (Fin nT) (Fin nT) E) ⊗ₖ (1 : Matrix (Fin nS) (Fin nS) E)ᵀ)))
   rw [Set.mem_union, not_or] at ht'
@@ -845,7 +803,7 @@ theorem isScalar_one_of_comm (C : Ctx σ B JS JT ξ₀ θ ι) (hG : GoodLat Λ) 
       · simp [Matrix.one_apply_ne hij, Matrix.one_apply_ne (Ne.symm hij)]
     rw [e, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one, smul_smul, show t * σ t = 1 from ht, one_smul])
   have hk := rk.mem
-  have hcomm := fin_inf_comm C hO (fun p => ⟨_, P.hof p⟩) P.hi
+  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_A C hO (fun p => ⟨_, P.hof p⟩) P.hi
   have ck : s * mMF σ JS JT θ (1, k⁻¹) = mMF σ JS JT θ (1, k⁻¹) * s := by
     have := comm_inv (mMF σ JS JT θ) (hs.cen k t rk)
     rwa [Prod.inv_mk, inv_one] at this
@@ -885,10 +843,10 @@ theorem datumEta : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   obtain ⟨ι, hι⟩ := _root_.GlobalTheory.RealWeilF.CMChart.exists_chartF F E σ B hB θ hθ
   have C : Ctx σ B JS JT ξ₀ θ ι := ⟨hB, hS, hT, h0, hξ, hθ, hι⟩
   obtain ⟨ε, hε, hprod⟩ := eta_prod hB h1 h2 h3 h4 hO.good hO.sqrt
-  obtain ⟨of, hf, hof⟩ := exists_fin C hO h1 h2 hε
+  obtain ⟨of, hf, hof⟩ := _root_.PositivityTheory.ThKW.exists_fin_A C hO h1 h2 hε
   obtain ⟨oi, hi, hvac⟩ := exists_inf C
   have P : Parts C hc lam Om η ε of oi := ⟨h2, hε, hprod, hf, hof, hi, hvac⟩
-  have hcomm := fin_inf_comm C hO (fun p => ⟨_, hof p⟩) hi
+  have hcomm := _root_.PositivityTheory.ThKW.fin_inf_comm_A C hO (fun p => ⟨_, hof p⟩) hi
   refine datum_of_aut C hG hO h1 h2 hf (fun p => ⟨_, hof p⟩) hi fun γ hγ γ' hγ' f hf' => ?_
   have := rat_gen C (fun p => IsScalarF B ξ₀ of oi p 1)
     (fun p q _ _ q1 q2 a b => mul_one (1 : ℂ) ▸ a.mul C hi hcomm b q1 q2)

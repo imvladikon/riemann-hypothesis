@@ -95,13 +95,7 @@ namespace GlobalTheory.Mum
 
 namespace ClosedInj
 
-theorem epi_spMap_field {Ω Ω' : Type} [Field Ω] [Field Ω'] (io : Ω →+* Ω') : Epi (spMap io) := by
-  have : Flat (spMap io) := by
-    rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := io.toAlgebra
-    exact RingHom.flat_algebraMap_iff.mpr inferInstance
-  have : Surjective (spMap io) := ⟨fun t ↦ ⟨IsLocalRing.closedPoint Ω', Subsingleton.elim _ _⟩⟩
-  exact Flat.epi_of_flat_of_surjective _
+alias epi_spMap_field := _root_.GlobalTheory.ThetaDescent.epi_spMap
 
 theorem exists_residue_factor {R Ω : Type} [CommRing R] [IsLocalRing R] [Field Ω] (y : Sp Ω ⟶ Sp R)
     (hy : ∀ t, y t = closedPoint R) : ∃ κ : ResidueField R →+* Ω, y = spMap (κ.comp (residue R)) := by
@@ -751,26 +745,6 @@ open GlobalTheory.Mum
 
 namespace GlobalTheory.Mum.EtChart
 
-theorem mvPolynomial_stdSmooth (R : Type) [CommRing R] (n : ℕ) :
-    Algebra.IsStandardSmoothOfRelativeDimension n R (MvPolynomial (Fin n) R) := by
-  let P₀ : Algebra.Presentation R (MvPolynomial (Fin n) R) (Fin n) Empty :=
-    { __ := Algebra.Generators.mvPolynomial R (Fin n)
-      relation := Empty.elim
-      span_range_relation_eq_ker := by
-        rw [Algebra.Generators.ker_mvPolynomial]
-        simp }
-  let P₁ : Algebra.PreSubmersivePresentation R (MvPolynomial (Fin n) R) (Fin n) Empty :=
-    { __ := P₀
-      map := Empty.elim
-      map_inj := fun a => a.elim }
-  let P₂ : Algebra.SubmersivePresentation R (MvPolynomial (Fin n) R) (Fin n) Empty :=
-    { __ := P₁
-      jacobian_isUnit := by
-        rw [Algebra.PreSubmersivePresentation.jacobian_eq_jacobiMatrix_det]
-        simp }
-  exact P₂.isStandardSmoothOfRelativeDimension (by simp [Algebra.Presentation.dimension])
-
-
 set_option backward.isDefEq.respectTransparency false in
 theorem affineSpace_smooth (S : Scheme.{0}) (n : ℕ) : Smooth (𝔸(Fin n; S) ↘ S) := by
   have : SmoothOfRelativeDimension n (𝔸(Fin n; S) ↘ S) := by
@@ -782,7 +756,7 @@ theorem affineSpace_smooth (S : Scheme.{0}) (n : ℕ) : Smooth (𝔸(Fin n; S) �
       HasRingHomProperty.Spec_iff (P := @SmoothOfRelativeDimension n)]
     refine RingHom.locally_of RingHom.isStandardSmoothOfRelativeDimension_respectsIso _ ?_
     exact (RingHom.isStandardSmoothOfRelativeDimension_algebraMap n).2
-      (mvPolynomial_stdSmooth (ULift ℤ) n)
+      (_root_.GlobalTheory.isStandardSmoothOfRelativeDimension_mvPolynomial_fin (ULift ℤ) n)
   exact SmoothOfRelativeDimension.smooth n _
 
 end GlobalTheory.Mum.EtChart

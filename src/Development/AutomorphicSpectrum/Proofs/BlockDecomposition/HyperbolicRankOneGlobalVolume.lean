@@ -253,7 +253,7 @@ theorem finite_case (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {M d : ℕ} (J :
       ((∫⁻ y, Ψinf y ∂minf) * ∏ v ∈ S, ∫⁻ y, Ψ v y ∂(m v)) *
         ENNReal.ofReal (∏' v : {v // v ∉ S}, (m v.1 (primV σ J b v.1)).toReal) := by
   classical
-  haveI := GlobalTheory.CompanionTheory.SW.EulerZero.countable_places F
+  haveI := _root_.GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   obtain ⟨u, hu, hut⟩ :=
     exists_seq_monotone_tendsto_atTop_atTop (Finset (HeightOneSpectrum (𝓞 F)))
   let T : ℕ → Finset (HeightOneSpectrum (𝓞 F)) := fun k => S ∪ u k
@@ -921,7 +921,7 @@ theorem val_eq_one_eventually {F : Type} [Field F] [NumberField F] (a : F) (ha :
   have hc1 : ¬ 1 < v.valuation F a := fun h => hc (Or.inl h)
   have hc2 : ¬ 1 < v.valuation F a⁻¹ := fun h => hc (Or.inr h)
   apply hv
-  rw [GlobalTheory.CompanionTheory.SW.Growth.val_alg]
+  rw [_root_.GlobalTheory.CompanionTheory.SW.GoodInt.valued_algebraMap]
   have hne : v.valuation F a ≠ 0 := (Valuation.ne_zero_iff _).2 ha
   rw [not_lt] at hc1 hc2
   rw [map_inv₀] at hc2

@@ -81,7 +81,7 @@ open GlobalTheory.PlaceInt
 
 theorem GlobalTheory.PlaceInt.exists_ext_intChart_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), T.FinRes → ∃ (T' : CDVR) (iT : T.Fr →+* T'.Fr) (e : ℕ) (y' : IntFr Xo c T' (iT.comp io)) (C' : IntegralChartA3 Xo c T' (iT.comp io) y'), IsExt y iT e y' ∧ T'.FinRes ∧ Good3 C' := by
   intro E _ _ _ H Dw l Xo c _ hstar T io y hT
-  obtain ⟨T', io', y', e, hA, he, hU, φ, hv, hφ⟩ := GlobalTheory.T.exists_extension_all_models_uniformized E H Dw l Xo c T io y hT
+  obtain ⟨T', io', y', e, hA, he, hU, φ, hv, hφ⟩ := _root_.GlobalTheory.IntegralPull.exists_ext_all_models_uniformised E H Dw l Xo c T io y hT
   obtain ⟨iT, hiT⟩ : ∃ iT : T.Fr →+* T'.Fr,
       (letI := io.toAlgebra; letI := io'.toAlgebra; φ.toRingHom) = iT := ⟨_, rfl⟩
   have hio : io' = iT.comp io := by
@@ -355,7 +355,7 @@ theorem GlobalTheory.PlaceInt.short_value_on_cover : ∀ (E : Type) [Field E] [N
   intro E _ _ _ H Dw l Xo c n d _ hlev hnab m₀ hm₀ Λ N hU hT hL w P hP x0 g hg hsh T io y hfin
   have laws : Laws := GlobalTheory.firstFiveLaws.1
   obtain ⟨T₁, i₁, e₁, y₁, io₁, z₁, ⟨he₁, hv₁, φ₁, hφ₁, hm₁⟩, hfin₁, hio₁, hover⟩ :=
-    GlobalTheory.T.exists_finiteExtension_integralFramedPoint_lift_cover E H Dw l Xo c n d hlev T io y hfin
+    _root_.GlobalTheory.CoverPoint.exists_ext_lift_to_cover E H Dw l Xo c n d hlev T io y hfin
   have hN : 0 < N := hL.1.pos
   obtain ⟨T₂, i₂, e₂, z₂, C, ⟨he₂, hv₂, φ₂, hφ₂, hm₂⟩, hfin₂, hgood, hrat⟩ :=
     GlobalTheory.T.exists_finiteExt_uniformisedChart_rationalTorsion E H Dw d.l₂ d.Xo₂ d.c₂ hnab.1 T₁ io₁ z₁ hfin₁ (N ^ 2) (pow_pos hN 2)

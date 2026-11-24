@@ -605,12 +605,6 @@ theorem tr_comb {T : Tor D} {b : Fin r → Matrix (Fin N') (Fin N) D.host.E} {F 
     simp only [comb, Finset.sum_apply, hg]
     rfl
 
-theorem ee_half_int (m : ℤ) : ee ((m : ℝ) / 2) = (-1 : ℂ) ^ m := by
-  unfold ee
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
-  congr 1
-  push_cast; ring
-
 theorem al_eq {T : Tor D} {x : VC D N N'} {m : ℤ} (h : qH D T x = m) :
     al D T x = (-1 : ℂ) ^ m ∧ wdPh D T x = (-1 : ℂ) ^ m := by
   constructor
@@ -618,7 +612,7 @@ theorem al_eq {T : Tor D} {x : VC D N N'} {m : ℤ} (h : qH D T x = m) :
     have : Real.sqrt D.host.d / 2 * (Hf D T x x).re = m := h
     rw [this, round_intCast]
   · unfold wdPh
-    rw [h, ee_half_int]
+    rw [h, _root_.GlobalTheory.ThetaConj.ee_intCast_half]
 
 theorem al_eq_wdPh {T : Tor D} {x : VC D N N'} (h : wdPh D T x ^ 2 = 1) : al D T x = wdPh D T x := by
   have h1 : Complex.exp (2 * (Real.pi : ℂ) * Complex.I * (qH D T x : ℂ)) = 1 := by
@@ -744,8 +738,7 @@ theorem galRel_fix (hK : FixK D Qbar ρ) {F F' : VC D N N' → ℂ} (hF : F ∈ 
 
 end Fix
 
-theorem vBar_invol (x : VC D N N') : vBar D (vBar D x) = x := by
-  funext τ i j; simp [vBar]
+alias vBar_invol := _root_.GlobalTheory.ThetaConj.vBar_vBar
 
 theorem vBar_sub (x y : VC D N N') : vBar D (x - y) = vBar D x - vBar D y := by
   funext τ i j; simp [vBar]
@@ -794,27 +787,16 @@ theorem area_bar (T : Tor D) : area (torBar D T).abelian₂ = area T.abelian₂ 
     refine ⟨_, ⟨w₁, h1, rfl⟩, _, ⟨w₂, h2, rfl⟩, ?_⟩
     rw [← abs_neg]; congr 1; simp; ring
 
-theorem Hf_torBar (T : Tor D) (x y : VC D N N') :
-    Hf D (torBar D T) (vBar D x) (vBar D y) = (starRingEnd ℂ) (Hf D T x y) := by
-  simp [Hf, area_bar, vBar]
-
 theorem cBar_aU (T : Tor D) (x : VC D N N') (F : VC D N N' → ℂ) :
     cBar D (aU D T (vBar D x) F) = aU D (torBar D T) x (cBar D F) := by
   funext z
-  have h1 := Hf_torBar T (vBar D z) (vBar D x)
-  have h2 := Hf_torBar T (vBar D x) (vBar D x)
+  have h1 := _root_.GlobalTheory.ThetaConj.Hf_bar T (vBar D z) (vBar D x)
+  have h2 := _root_.GlobalTheory.ThetaConj.Hf_bar T (vBar D x) (vBar D x)
   rw [vBar_invol] at h1 h2
   rw [vBar_invol] at h1
   have h3 : vBar D (z + x) = vBar D z + vBar D x := by funext τ i j; simp [vBar]
   simp only [cBar, aU, U, al, h1, h2, h3, map_mul, ← Complex.exp_conj, map_zpow₀, Complex.conj_re]
   simp [map_ofNat]
-
-theorem entire_cBar {F : VC D N N' → ℂ} (hF : Differentiable ℂ F) :
-    Differentiable ℂ (cBar D F) := by
-  intro z
-  have h := (hF (star z)).star_star
-  rw [star_star] at h
-  exact h
 
 theorem cBar_cBar (F : VC D N N' → ℂ) : cBar D (cBar D F) = F := by
   funext z; simp [cBar]
@@ -826,7 +808,7 @@ theorem CjF.bar {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F F' :
     (h : CjF D M ρ F F') (he : fnConj D M (rhoBar M ρ) F = cBar D (fnConj D M ρ F)) :
     CjF D M (rhoBar M ρ) F (cBar D F') := by
   rw [h.fnConj_eq] at he
-  refine cjF_of h.1 (fun α => (h.2.2 α).1) he (entire_cBar h.2.1) fun h0 => ?_
+  refine cjF_of h.1 (fun α => (h.2.2 α).1) he (_root_.GlobalTheory.ThetaConj.differentiable_cBar h.2.1) fun h0 => ?_
   have : F' = 0 := by
     rw [← cBar_cBar F', h0]; funext z; simp [cBar]
   subst this

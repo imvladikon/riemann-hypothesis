@@ -56,6 +56,7 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.ReduceModChar
+import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InvariantOperatorValueTriangularChangeStatement, Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicSumTriangularFrameChange, Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicSumTriangularFrameChangeStatement, Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueWeightTriangularFrame
@@ -271,7 +272,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicSumTriangularFrameChangeStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueWeightTriangularFrame =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueWeightTriangularFrame", "h": "module\n\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ThShort\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConnectionLinearInSectionStatement\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHomStatement\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicSumTriangularFrameChangeStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueWeightTriangularFrame", "h": "module\n\npublic import Formalism.LocalToGlobal.ProjectiveLattices.ThShort\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConnectionLinearInSectionStatement\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHomStatement\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws\npublic import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicSumTriangularFrameChangeStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -440,21 +441,13 @@ theorem sum_eq (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} (hn : 
     (fun b => isPullSec_id _ (F b))
   have h2 : ∀ b q, nab d.pt ((N : ℤ) ^ 2) (scaleSec Xo.univ.t.G (toΓ S (t none : S)) (F b)) q =
       (t none : S) * nab d.pt ((N : ℤ) ^ 2) (F b) q :=
-    fun b q => _root_.GlobalTheory.T.connection_linear_in_section E H Dw l Xo c nab hn S d.pt N (F b) _ (t none : S) (fun _ => rfl) q
+    fun b q => _root_.GlobalTheory.nab_smul_section E H Dw l Xo c nab hn S d.pt N (F b) _ (t none : S) (fun _ => rfl) q
   have hw : wchar (ex Dw a n) t = (t none : S) ^ n * ∏ ℓ : Lt1 Dw, ((t (some ℓ) : Sˣ) : S) ^ a (ℓ.1, ℓ.2) := by
     unfold wchar ex
     simp [Fintype.prod_option]
   simp only [h2, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
   rw [hw, _root_.mul_assoc, ← h1, Finset.mul_sum]
   exact Finset.sum_congr rfl fun m _ => by ring
-
-private lemma dualMap_comp_epsMul_cusp_form_evaluations {S T : Type} [CommRing S] [CommRing T] (f : S →+* T) (a : S) :
-    (dualMap f).comp (epsMul a) = (epsMul (f a)).comp (dualMap f) := by
-  refine RingHom.ext fun x => TrivSqZeroExt.ext ?_ ?_ <;> simp [dualMap, epsMul, mul_comm]
-
-private lemma dualMap_comp_algebraMap_cusp_form_evaluations {S T : Type} [CommRing S] [CommRing T] (f : S →+* T) :
-    (dualMap f).comp (algebraMap S (DualNumber S)) = (algebraMap T (DualNumber T)).comp f := by
-  refine RingHom.ext fun x => TrivSqZeroExt.ext ?_ ?_ <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
 
 private lemma appLE_appLE_eq_of_comp_eq {X Y Z₁ Z₂ : Scheme.{0}} (p : X ⟶ Y) (f₁ : Y ⟶ Z₁) (f₂ : X ⟶ Z₂) (g : Z₂ ⟶ Z₁)
     (e : p ≫ f₁ = f₂ ≫ g) (W : Y.Opens) (W' : X.Opens) (h : W' ≤ p ⁻¹ᵁ W) (h₁ : W ≤ f₁ ⁻¹ᵁ ⊤)
@@ -487,7 +480,7 @@ private theorem frBor_units_map_of_frMap {S T : Type} [CommRing S] [Algebra c.F 
       show spMap (dualMap φ.toRingHom) ≫ spMap (algebraMap S (DualNumber S)) ≫ y.x =
         spMap (algebraMap T (DualNumber T)) ≫ z.x
       rw [zx, ← Category.assoc, ← Category.assoc, ← FramedBaseChange.spec_comp, ← FramedBaseChange.spec_comp,
-        dualMap_comp_algebraMap_cusp_form_evaluations])
+        _root_.Formalism.L2.Pj.dualMap_alg])
     let Fm : (tEps y.x ⟶ Xo.univ.t.G) →* (tEps z.x ⟶ Xo.univ.t.G) :=
       { toFun := fun v => g ≫ v
         map_one' := by simp
@@ -497,7 +490,7 @@ private theorem frBor_units_map_of_frMap {S T : Type} [CommRing S] [Algebra c.F 
       rw [Over.comp_left, hu1 j, zu τ j]
       change spMap (dualMap φ.toRingHom) ≫ _ = _
       rw [← Category.assoc, ← Category.assoc, ← FramedBaseChange.spec_comp, ← FramedBaseChange.spec_comp,
-        dualMap_comp_epsMul_cusp_form_evaluations]
+        _root_.Formalism.L2.Pj.dualMap_eps]
     · have hprod : (List.ofFn fun j => g ≫ u j).prod = g ≫ (List.ofFn u).prod := by
         have := map_list_prod Fm (List.ofFn u)
         simpa [Fm, List.map_ofFn, Function.comp_def] using this.symm

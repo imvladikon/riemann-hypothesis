@@ -58,6 +58,9 @@ import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.DerivDerivNonpos
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfC
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfE
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfH
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExtFStatementPfB
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowCoefficientBounds
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPf, ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfM
@@ -232,7 +235,7 @@ end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPf =====
 
 -- ===== clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfM =====
--- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfM", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfK\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfG\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.WeightFunctionOnFrames\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.DerivDerivNonposOfIsLocalMax\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPf\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPfD\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPfE\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfC\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfE\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfH\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfJ\n\n"}
+-- clump-header: {"m": "ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfM", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfK\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfG\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.WeightFunctionOnFrames\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.DerivDerivNonposOfIsLocalMax\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPf\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPfD\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPfE\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfC\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfE\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfH\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfJ\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExtFStatementPfB\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FlowCoefficientBounds\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -261,8 +264,7 @@ theorem eF_levi (x0 : Frame X.Ψ r) (ho : IsOrth X x0) :
 theorem eF_smooth (x0 : Frame X.Ψ r) (ho : IsOrth X x0) : ContDiffOn ℝ ∞ (eF X x0) (OmF X x0) :=
   fun z hz => (ExF.eF_contDiffAt X x0 ho hz).contDiffWithinAt
 
-theorem eF_compact (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (a : ℝ) :
-    IsCompact {y | y ∈ OmF X x0 ∧ eF X x0 y ≤ a} := ExF.isCompact_subF X x0 ho a
+alias eF_compact := _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.ExF.isCompact_subF
 
 def psie (x0 : Frame X.Ψ r) (Fp L : Wt X.Ψ r) (ψ : Frame X.Ψ r → ℝ) (bb : ℝ) (w : V (nd X)) : ℝ :=
   phla X Fp (cpt X x0 w) + ψ (cpt X x0 w) - (nd X : ℝ) * phla X L (cpt X x0 w) - bb * rhF X x0 w -
@@ -465,17 +467,6 @@ theorem densF_pos (x0 : Frame X.Ψ r) {z : V (nd X)} (hz : z ∈ OmF X x0) : 0 <
   first
   | exact zpow_pos (norm_pos_iff.mpr hne) _
 
-private lemma continuous_dmin_Gm (τ : X.Ψ) (i : Fin (r + 1)) :
-    Continuous fun y : Frame X.Ψ r => dmin X.Gm y τ i := by
-  unfold dmin lminor
-  refine (Continuous.matrix_submatrix ?_ _ _).matrix_det
-  refine continuous_pi fun a => continuous_pi fun b => ?_
-  have hc : ∀ i j, Continuous fun y : Frame X.Ψ r => mat y τ i j := fun i j =>
-    (continuous_apply j).comp ((continuous_apply i).comp (continuous_apply τ))
-  simp only [FD.gram, FD.hermC, FD.col, Matrix.of_apply]
-  exact continuous_finsetSum _ fun a' _ => continuous_finsetSum _ fun b' _ =>
-    ((hc a' a).mul continuous_const).mul (Complex.continuous_conj.comp (hc b' b))
-
 private lemma continuous_cpt' (x0 : Frame X.Ψ r) : Continuous (cpt X x0) := by
   have hr : Continuous fun y : Frame X.Ψ r => rmul x0 y := continuous_pi fun τ =>
     (show Continuous fun y : Frame X.Ψ r => (mat x0 τ * mat y τ : Matrix (Fin r) (Fin r) ℂ) from
@@ -493,42 +484,22 @@ private lemma continuous_cpt' (x0 : Frame X.Ψ r) : Continuous (cpt X x0) := by
 theorem densF_meas (x0 : Frame X.Ψ r) : Measurable (densF X x0) := by
   unfold densF
   refine Finset.measurable_prod _ fun τ _ => Finset.measurable_prod _ fun i _ => ?_
-  have hm := ((continuous_dmin_Gm X τ i.castSucc).comp (continuous_cpt' X x0)).norm.measurable
+  have hm := ((_root_.ReciprocityTheory.ChartRestriction.G.AR.Up.ExtFPf.cont_dmin X τ i.castSucc).comp (continuous_cpt' X x0)).norm.measurable
   first
   | exact hm.pow_const _
 
 def rhoF (x0 : Frame X.Ψ r) (Fp : Wt X.Ψ r) (ψ : Frame X.Ψ r → ℝ) (bb : ℝ) (z : V (nd X)) : ℝ :=
   Real.exp (-(phla X Fp (cpt X x0 z) + ψ (cpt X x0 z)) + bb * rhF X x0 z + Real.log (densF X x0 z))
 
-private lemma dmin_ne_zero_of_mem_dom' {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (i : Fin (r + 1)) :
-    dmin X.Gm x τ i ≠ 0 := by
-  intro h0
-  have h := (hx τ).2 i
-  rw [h0] at h
-  simp at h
-
-private lemma isOpen_data_dom : IsOpen X.dom := by
-  have h : X.dom = ⋂ τ : X.Ψ, ({x : Frame X.Ψ r | (mat x τ).det ≠ 0} ∩
-      ⋂ i : Fin (r + 1), {x : Frame X.Ψ r | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
-    ext x
-    simp [FD.GG]
-  rw [h]
-  refine isOpen_iInter_of_finite fun τ => ?_
-  refine IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
-  · exact isOpen_ne_fun
-      ((show Continuous fun x : Frame X.Ψ r => mat x τ from continuous_apply τ).matrix_det) continuous_const
-  · exact isOpen_lt continuous_const
-      (continuous_const.mul (Complex.continuous_re.comp (continuous_dmin_Gm X τ i)))
-
 theorem rhoF_cont (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (Fp : Wt X.Ψ r) (ψ : Frame X.Ψ r → ℝ)
     (hψs : ContDiffOn ℝ ∞ (fun z => ψ (cpt X x0 z)) (OmF X x0)) (bb : ℝ) :
     ContinuousOn (rhoF X x0 Fp ψ bb) (OmF X x0) := by
-  have hO : IsOpen (OmF X x0) := (isOpen_data_dom X).preimage (continuous_cpt' X x0)
+  have hO : IsOpen (OmF X x0) := (_root_.ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom X).preimage (continuous_cpt' X x0)
   refine fun z hz => ContinuousAt.continuousWithinAt ?_
   have hc : cpt X x0 z ∈ X.dom := hz
   have hdm : ∀ τ i, ContinuousAt (fun w => dmin X.Gm (cpt X x0 w) τ i) z := fun τ i =>
-    ((continuous_dmin_Gm X τ i).comp (continuous_cpt' X x0)).continuousAt
-  have hne : ∀ τ i, dmin X.Gm (cpt X x0 z) τ i ≠ 0 := fun τ i => dmin_ne_zero_of_mem_dom' X hc τ i
+    ((_root_.ReciprocityTheory.ChartRestriction.G.AR.Up.ExtFPf.cont_dmin X τ i).comp (continuous_cpt' X x0)).continuousAt
+  have hne : ∀ τ i, dmin X.Gm (cpt X x0 z) τ i ≠ 0 := fun τ i => _root_.ReciprocityTheory.ChartRestriction.G.FD.FlowCoefficientBounds.dmin_ne X hc τ i
   have hnf : ContinuousAt (fun w => X.nfac Fp (cpt X x0 w)) z := by
     show ContinuousAt (fun w => ∏ τ, ∏ i : Fin r, ‖dmin X.Gm (cpt X x0 w) τ i.succ /
       dmin X.Gm (cpt X x0 w) τ i.castSucc‖ ^ (-(Fp τ i : ℝ) / 2)) z
@@ -559,7 +530,7 @@ theorem rhoF_cont (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (Fp : Wt X.Ψ r) (ψ : 
 theorem nfac_pos' (la : Wt X.Ψ r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) : 0 < X.nfac la x := by
   unfold Data.nfac
   refine Finset.prod_pos fun τ _ => Finset.prod_pos fun i _ => Real.rpow_pos_of_pos
-    (norm_pos_iff.mpr (div_ne_zero (dmin_ne_zero_of_mem_dom' X hx τ _) (dmin_ne_zero_of_mem_dom' X hx τ _))) _
+    (norm_pos_iff.mpr (div_ne_zero (_root_.ReciprocityTheory.ChartRestriction.G.FD.FlowCoefficientBounds.dmin_ne X hx τ _) (_root_.ReciprocityTheory.ChartRestriction.G.FD.FlowCoefficientBounds.dmin_ne X hx τ _))) _
 
 theorem exp_neg_phla (la : Wt X.Ψ r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) :
     Real.exp (-phla X la x) = X.nfac la x ^ 2 := by

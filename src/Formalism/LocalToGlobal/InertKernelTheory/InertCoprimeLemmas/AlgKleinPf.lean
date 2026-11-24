@@ -55,6 +55,7 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
+import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.IntegerEndomorphismInstance
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKlein, Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKleinPf
@@ -365,7 +366,7 @@ section AllK
 theorem th0TransAll_of (hP : PTorsAll) (hK : KleinAll) : PeriodTranscendenceAllLattices := by
   intro D cc δ B hcc hδ
   have sd : B.StdOK := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.stdOK B hcc hδ
-  obtain ⟨h2, h3⟩ := Sigma.invAlg' D cc δ hcc hδ B.L B.lat
+  obtain ⟨h2, h3⟩ := _root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic D cc δ hcc hδ B.L B.lat
   exact th0TransAlg_of B.L B.ω₀ sd.per sd.half h2 h3 (Sigma.secondEisensteinAlgebraic D cc δ hcc hδ B.L B.lat)
     (hP D cc δ B hcc hδ) (hK D cc δ B hcc hδ)
 
@@ -382,7 +383,7 @@ theorem pTorsAlg_of (L : PeriodPair) (hg2 : L.g₂ ∈ Formalism.MainNotions.Tay
     (PI.GalTorsConj.W.alg_of_sq hsq hx (mem_algebraicClosure_iff.1 hg2) (mem_algebraicClosure_iff.1 hg3))⟩
 
 theorem torsion_points_algebraic : PTorsAll := fun D cc δ B hcc hδ =>
-  pTorsAlg_of B.L (Sigma.invAlg' D cc δ hcc hδ B.L B.lat).1 (Sigma.invAlg' D cc δ hcc hδ B.L B.lat).2
+  pTorsAlg_of B.L (_root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic D cc δ hcc hδ B.L B.lat).1 (_root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic D cc δ hcc hδ B.L B.lat).2
 
 theorem kerTransAll_of_klein (hP : PTorsAll) (hK : KleinAll) : KerTransAll :=
   kerTransAll_of (th0TransAll_of hP hK)
@@ -401,7 +402,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKlein =====
 
 -- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKleinPf =====
--- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKleinPf", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKlein\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsMM\nimport Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\nimport Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.FourthTensorThetaEqKernel\nimport Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SigmaAlg\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.PDeriv\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.Taylor\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.IsogenyFormulaInstance\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.QuasiPeriodConstUnique\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.Th0TranslateProduct\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKleinPf", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.AlgKlein\npublic import Formalism.LocalToGlobal.InertKernelTheory.DefsMM\nimport Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\nimport Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.FourthTensorThetaEqKernel\nimport Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.SigmaAlg\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.PDeriv\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.Taylor\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.IsogenyFormulaInstance\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.QuasiPeriodConstUnique\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.Th0TranslateProduct\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.IntegerEndomorphismInstance\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -497,14 +498,9 @@ theorem sg_neg_deriv (L : PeriodPair) (u : ℂ) :
   rw [e, h2.deriv]
   simp
 
-theorem ev_add_notMem (L : PeriodPair) {P : ℂ} (hP : P ∉ L.lattice) : ∀ᶠ z in 𝓝 (0 : ℂ), z + P ∉ L.lattice := by
-  have h1 := PDeriv.eventually_notMem L hP
-  have h2 : Filter.Tendsto (fun z : ℂ => z + P) (𝓝 0) (𝓝 P) := (continuous_add_const P).tendsto' 0 _ (by simp)
-  exact h2.eventually h1
-
 theorem wp_analytic (L : PeriodPair) {P : ℂ} (hP : P ∉ L.lattice) :
     AnalyticAt ℂ (fun z => L.weierstrassP (z + P)) 0 :=
-  analyticAt_of_eventually ((ev_add_notMem L hP).mono fun z hz =>
+  analyticAt_of_eventually ((_root_.Formalism.L2.Th1.F.EndoZ.ev_shift_notMem L hP).mono fun z hz =>
     ((PDeriv.hasDerivAt_P L hz).comp_add_const z P).differentiableAt)
 
 theorem tp_series (L : PeriodPair) (P Q : ℂ) (hQ : Q ∉ L.lattice) (hP : P ∉ L.lattice) :
@@ -544,7 +540,7 @@ theorem tp_series (L : PeriodPair) (P Q : ℂ) (hQ : Q ∉ L.lattice) (hP : P �
       (g := fun z => (L.weierstrassP Q + (-1 : ℂ) * L.weierstrassP (z + P)) *
         (opU L P (sgStar L) z * opU L P (sgStar L) z)) analyticAt_const a5, Taylor.taylor0_const, e5]
   rw [← e1, ← e6]
-  refine Taylor.taylor0_congr ((ev_add_notMem L hP).mono fun z hz => ?_)
+  refine Taylor.taylor0_congr ((_root_.Formalism.L2.Th1.F.EndoZ.ev_shift_notMem L hP).mono fun z hz => ?_)
   have h := translateProduct L P Q z hQ hz
   linear_combination h
 
@@ -568,7 +564,7 @@ theorem wp_coeffs (L : PeriodPair) {P : ℂ} (hP : P ∉ L.lattice) :
     PowerSeries.coeff 1 (taylor0 (fun z => L.weierstrassP (z + P))) = L.derivWeierstrassP P ∧
     PowerSeries.coeff 2 (taylor0 (fun z => L.weierstrassP (z + P))) =
       (6 * L.weierstrassP P ^ 2 - L.g₂ / 2) / 2 := by
-  have hev := ev_add_notMem L hP
+  have hev := _root_.Formalism.L2.Th1.F.EndoZ.ev_shift_notMem L hP
   have hW : ∀ z, z + P ∉ L.lattice → HasDerivAt (fun z => L.weierstrassP (z + P)) (L.derivWeierstrassP (z + P)) z :=
     fun z hz => (PDeriv.hasDerivAt_P L hz).comp_add_const z P
   have hP0 : (0 : ℂ) + P ∉ L.lattice := by rwa [zero_add]
@@ -963,7 +959,7 @@ section KleinAllPf
 theorem klein_forms_algebraic : KleinAll := by
   intro D cc δ B hcc hδ
   have sd : B.StdOK := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.stdOK B hcc hδ
-  obtain ⟨h2, h3⟩ := Sigma.invAlg' D cc δ hcc hδ B.L B.lat
+  obtain ⟨h2, h3⟩ := _root_.Formalism.L2.KerInert.Sigma.ChartWirtingerDerivatives.weierstrass_invariants_algebraic D cc δ hcc hδ B.L B.lat
   exact kleinAlg_of B.L B.ω₀ sd.per sd.half h2 h3
 
 theorem kernel_torsion_translates_algebraic : KerTransAll := kerTransAll_of_kleinAll klein_forms_algebraic

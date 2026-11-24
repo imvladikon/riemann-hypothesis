@@ -183,8 +183,6 @@ section -- clump:auto
 
 open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 
-theorem _root_.GlobalTheory.T.trace_wedge_pairing_perfect_rational_forms : ∀ (k : Type) [Field k] [CharZero k] (F K : Type) [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x → ∀ (τ : DR k K →ₗ[K] K), IsTop k K x τ → ∀ p q : ℕ, p + q = d → (∀ y ∈ ⋀[K]^q Ω[K⁄k], (∀ a ∈ ⋀[K]^p Ω[K⁄k], Algebra.trace F K (τ (a * y)) = 0) → y = 0) ∧ Module.finrank K (⋀[K]^p Ω[K⁄k]) = Module.finrank K (⋀[K]^q Ω[K⁄k]) ∧ FiniteDimensional K (⋀[K]^p Ω[K⁄k]) := by
-  first | (exact @GlobalTheory.PD.IsFinCover.trace_wedge_perfect)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceWedgePairingPerfectRationalFormsStatement =====
@@ -218,8 +216,8 @@ private lemma perfectPairing_surjective {F Q P : Type*} [Field F] [AddCommGroup 
 theorem UpperTheory.Gal.productCup_of_system.dualForm_of :
     DualForm := by
   intro F K _ _ _ _ _ _ d x hc τ ht a ha ψ
-  obtain ⟨hinj, hrk, hfdP⟩ := GlobalTheory.T.trace_wedge_pairing_perfect_rational_forms ℂ F K d (xv x) hc τ ht (d - a) a (by omega)
-  obtain ⟨-, -, hfdQ⟩ := GlobalTheory.T.trace_wedge_pairing_perfect_rational_forms ℂ F K d (xv x) hc τ ht a (d - a) (by omega)
+  obtain ⟨hinj, hrk, hfdP⟩ := _root_.GlobalTheory.PD.IsFinCover.trace_wedge_perfect ℂ F K d (xv x) hc τ ht (d - a) a (by omega)
+  obtain ⟨-, -, hfdQ⟩ := _root_.GlobalTheory.PD.IsFinCover.trace_wedge_perfect ℂ F K d (xv x) hc τ ht a (d - a) (by omega)
   haveI : FiniteDimensional F K := hc.fin
   haveI : FiniteDimensional F (⋀[K]^(d - a) Ω[K⁄ℂ]) := Module.Finite.trans K _
   haveI : FiniteDimensional F (⋀[K]^a Ω[K⁄ℂ]) := Module.Finite.trans K _

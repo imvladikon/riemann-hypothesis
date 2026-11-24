@@ -374,20 +374,9 @@ section Helpers
 
 variable {k Γ Δ V : Type*} [CommRing k] [Group Γ] [Group Δ] [AddCommGroup V] [Module k V]
 
-theorem invariants_comp_surjective (σ : Representation k Γ V) (f : Δ →* Γ)
-    (hf : Function.Surjective f) : Representation.invariants (σ.comp f) = σ.invariants := by
-  ext n
-  simp only [Representation.mem_invariants, MonoidHom.coe_comp, Function.comp_apply]
-  constructor
-  · intro h g
-    obtain ⟨d, rfl⟩ := hf g
-    exact h d
-  · intro h d
-    exact h (f d)
-
 theorem invariants_comp_subtype_top (σ : Representation k Γ V) (R : Subgroup Γ)
     (hR : ∀ γ, γ ∈ R) : Representation.invariants (σ.comp R.subtype) = σ.invariants :=
-  invariants_comp_surjective σ R.subtype fun γ => ⟨⟨γ, hR γ⟩, rfl⟩
+  _root_.GroundTheory.ProfCoh.invariants_comp_of_surjective σ R.subtype fun γ => ⟨⟨γ, hR γ⟩, rfl⟩
 
 theorem invariants_comp_equiv_map (σ : Representation k Γ V) (e : Γ ≃* Δ) (R : Subgroup Γ)
     (D : Subgroup Δ) (hD : R.map e.toMonoidHom = D) :
@@ -459,7 +448,7 @@ theorem global_dual_invariants_finrank (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞
     exact ⟨x, rfl⟩
   have e1 : Representation.invariants ((dualRep (gsRootsZMod S ℓ) M).ρ.comp
       (MonoidHom.id (galUnramifiedOutside K.1 ℚ̄ S))) = (dualRep (gsRootsZMod S ℓ) M).ρ.invariants :=
-    invariants_comp_surjective (dualRep (gsRootsZMod S ℓ) M).ρ
+    _root_.GroundTheory.ProfCoh.invariants_comp_of_surjective (dualRep (gsRootsZMod S ℓ) M).ρ
       (MonoidHom.id (galUnramifiedOutside K.1 ℚ̄ S)) Function.surjective_id
   have e2 : Representation.invariants ((quotientRep (PP hL) (homRep (gsRootsZMod S ℓ) M) hN).comp
       ((QuotientGroup.mk' (PP hL)).comp (MonoidHom.id (galUnramifiedOutside K.1 ℚ̄ S))).range.subtype) =
@@ -473,7 +462,7 @@ theorem global_dual_invariants_finrank (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞
   have e3 : Representation.invariants (nRep hL hζ M hM) =
       (quotientRep (PP hL) (homRep (gsRootsZMod S ℓ) M) hN).invariants := by
     unfold nRep
-    exact invariants_comp_surjective _ _ (gsQuotientGalEquiv hL).symm.surjective
+    exact _root_.GroundTheory.ProfCoh.invariants_comp_of_surjective _ _ (gsQuotientGalEquiv hL).symm.surjective
   have e4 := finrank_invariants_trivial_tprod (nRep hL hζ M hM)
   have e4' := e4.trans (congrArg (fun p : Submodule (ZMod ℓ) _ => Module.finrank (ZMod ℓ) p) e3)
   have e5 : (dN hL hζ M hM hΓ).one = (Module.finrank (ZMod ℓ)
@@ -930,16 +919,6 @@ variable {K L : FiniteSubfield} [Fact (K ≤ L)] {S : Set (HeightOneSpectrum (�
   (hM : ∀ (g : (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))) (m : M), M.ρ g m = m)
   (hΓ : Nat.Coprime (Nat.card (L.1 ≃ₐ[K.1] L.1)) ℓ)
 
-theorem dMod_one_eq [Finite (ModN (AA hL 1) ℓ)] :
-    dMod hL (dN hL hζ M hM hΓ) 1 =
-      Module.finrank (ZMod ℓ) ((gsH1SUnitsModRep ℓ hL).tprod
-        (quotientRep (gsOpenSubgroup S hL : Subgroup (galUnramifiedOutside K.1 ℚ̄ S))
-          (homRep (gsRootsZMod S ℓ) M)
-          (homRep_ρ_of_mem (gsOpenSubgroup S hL) (gsRootsZMod S ℓ) M (roots_trivial hL hζ) hM))).invariants := by
-  exact dMod_one_eq_pf hL hζ M hM hΓ
-
-
-
 theorem poitou_tate_H2_nat [Fintype S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞 K.1) ∉ v.asIdeal)
     (hKK : Odd ℓ ∨ IsTotallyComplex K.1)
     (ιs : ∀ v : S, ℚ̄ →ₐ[K.1] AlgebraicClosure ((v : HeightOneSpectrum (𝓞 K.1)).adicCompletion K.1)) :
@@ -987,7 +966,7 @@ theorem poitou_tate_H2_int [Fintype S] (hℓS : ∀ v ∉ S, ((ℓ : ℕ) : 𝓞
   have hKL : Odd ℓ ∨ IsTotallyComplex L.1 := hK.imp_left fun h => hℓ.odd_of_ne_two h
   have hn := poitou_tate_H2_nat M hℓS hKK ιs
   have hsha := finrank_shaSubmodule_two_eq_finrank_invariants ℓ hL ιs hℓS hKL hcop (roots_trivial hL hζ) M hM
-  have e1 := dMod_one_eq hL hζ M hM hΓ
+  have e1 := _root_.PositivityTheory.Lit1.GEN.X.dMod_one_eq_pf hL hζ M hM hΓ
   have hz := congrArg (Nat.cast : ℕ → ℤ) hn
   have hz2 := congrArg (Nat.cast : ℕ → ℤ) hsha
   simp only [Nat.cast_add, Nat.cast_sum] at hz

@@ -52,6 +52,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.Topology.Separation.CompletelyRegular
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 import Mathlib.FieldTheory.Galois.Profinite
 import Mathlib.Topology.Algebra.ClopenNhdofOne
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -60,7 +61,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 -- Members: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.MuChar, Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.UnitDivNear
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.MuChar =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.MuChar", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.NearSplit\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.GalEmbTop\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.Places\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.FrobDense\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.QuadFacts\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.RayChar\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.GroupTheory.Nilpotent\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PicardGroup\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Connected.Separation\nimport Mathlib.Topology.MetricSpace.Ultra.TotallySeparated\nimport Mathlib.Topology.Separation.CompletelyRegular\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.MuChar", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.NearSplit\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.GalEmbTop\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.SelmerTransport.Places\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.FrobDense\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.QuadFacts\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.FrobeniusDensity.RayChar\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.GroupTheory.Nilpotent\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PicardGroup\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Connected.Separation\nimport Mathlib.Topology.MetricSpace.Ultra.TotallySeparated\nimport Mathlib.Topology.Separation.CompletelyRegular\nimport Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -105,13 +106,6 @@ private theorem exists_iota {R : Type} [CommRing R] {l : ℕ} [Fact l.Prime] (w 
   refine ⟨PadicInt.lift hc, fun n x => ?_⟩
   rw [← RingHom.comp_apply, PadicInt.lift_spec, ← hφ, RingHom.mem_ker]
 
-private theorem cont_of_open {Γ C : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [Group C]
-    [TopologicalSpace C] [IsTopologicalGroup C] (κ : Γ →* C) (h : IsOpen (κ.ker : Set Γ)) : Continuous κ := by
-  refine continuous_of_continuousAt_one κ ?_
-  refine (continuousAt_const (y := (1 : C))).congr ?_
-  filter_upwards [h.mem_nhds (one_mem κ.ker)] with x hx
-  exact (MonoidHom.mem_ker.1 hx).symm
-
 private theorem exists_limit {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] {l : ℕ} [hl : Fact l.Prime]
     (D : Set Γ) (hD : Dense D) (κ : ∀ k : ℕ, Γ →* (ZMod (l ^ k))ˣ) (ho : ∀ k, IsOpen ((κ k).ker : Set Γ))
     (hx : ∀ s ∈ D, ∃ u : ℤ_[l], ∀ k, (κ k s : ZMod (l ^ k)) = PadicInt.toZModPow k u) :
@@ -124,9 +118,9 @@ private theorem exists_limit {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTop
     refine MonoidAlgebra.ringHom_ext' (RingHom.ext_int _ _) (MonoidHom.ext fun s => ?_)
     show ZMod.castHom (pow_dvd_pow l hk) (ZMod (l ^ k1)) (f k2 (MonoidAlgebra.of ℤ Γ s)) = f k1 (MonoidAlgebra.of ℤ Γ s)
     rw [hf, hf]
-    have c1 : Continuous fun s => (κ k1 s : ZMod (l ^ k1)) := Units.continuous_val.comp (cont_of_open _ (ho k1))
+    have c1 : Continuous fun s => (κ k1 s : ZMod (l ^ k1)) := Units.continuous_val.comp (_root_.GlobalTheory.HeckeGal.continuous_of_isOpen_ker' _ (ho k1))
     have c2 : Continuous fun s => ZMod.castHom (pow_dvd_pow l hk) (ZMod (l ^ k1)) (κ k2 s : ZMod (l ^ k2)) :=
-      continuous_of_discreteTopology.comp (Units.continuous_val.comp (cont_of_open _ (ho k2)))
+      continuous_of_discreteTopology.comp (Units.continuous_val.comp (_root_.GlobalTheory.HeckeGal.continuous_of_isOpen_ker' _ (ho k2)))
     refine congrFun (Continuous.ext_on hD c2 c1 fun t ht => ?_) s
     obtain ⟨u, hu⟩ := hx t ht
     show ZMod.castHom _ _ _ = _
@@ -137,7 +131,7 @@ private theorem exists_limit {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTop
   have cν : Continuous ν := by
     refine continuous_iff_continuousAt.2 fun s => Metric.continuousAt_iff'.2 fun ε hε => ?_
     obtain ⟨k, hk⟩ := PadicInt.exists_pow_neg_lt l hε
-    have c1 : Continuous fun s => (κ k s : ZMod (l ^ k)) := Units.continuous_val.comp (cont_of_open _ (ho k))
+    have c1 : Continuous fun s => (κ k s : ZMod (l ^ k)) := Units.continuous_val.comp (_root_.GlobalTheory.HeckeGal.continuous_of_isOpen_ker' _ (ho k))
     filter_upwards [((isOpen_discrete {(κ k s : ZMod (l ^ k))}).preimage c1).mem_nhds rfl] with t ht
     refine lt_of_le_of_lt ?_ hk
     rw [dist_eq_norm, PadicInt.norm_le_pow_iff_mem_span_pow, ← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, hν, hν,

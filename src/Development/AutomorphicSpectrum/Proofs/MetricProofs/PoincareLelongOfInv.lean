@@ -1398,8 +1398,6 @@ section -- clump:auto
 
 open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo MeasureTheory GlobalTheory.CompanionTheory.Ar.Tw
 
-theorem _root_.GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (p : ℕ) (W : Ideal (MRing ι)), W.IsPrime → NoRoot p W → (twist p W).IsPrime := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Tw.twist_isPrime
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistIsPrimeStatement =====
@@ -1446,7 +1444,7 @@ theorem isArithVar_twist {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintyp
     {Q : Ideal (MRing ι)} {d : ℕ} (hQ : IsArithVar Q d) (hR : NoRoot p Q) :
     IsArithVar (twist p Q) d := by
   obtain ⟨hK, hM, hH, hd⟩ := hQ
-  refine ⟨⟨none⟩, ⟨GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p Q hM.1 hR, _root_.GlobalTheory.CompanionTheory.Ar.Tw.isMultiHomogIdeal_twist K ι p Q hM.2.1,
+  refine ⟨⟨none⟩, ⟨_root_.GlobalTheory.CompanionTheory.Ar.Tw.twist_isPrime K ι p Q hM.1 hR, _root_.GlobalTheory.CompanionTheory.Ar.Tw.isMultiHomogIdeal_twist K ι p Q hM.2.1,
     isRelevant_twist p hM.1.ne_top hM.2.2⟩, isHorizontal_twist p hH, ?_⟩
   haveI := hM.1
   rw [_root_.GlobalTheory.CompanionTheory.Ar.Tw.ringKrullDim_twist K ι p Q hM.1, hd, Fintype.card_option, ← add_assoc]
@@ -1457,19 +1455,13 @@ theorem inc_notMem {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
     {Q : Ideal (MRing ι)} {s : MRing ι} (hs : s ∉ Q) : inc s ∉ twist p Q := fun h =>
   hs (by rw [← comap_inc_twist p Q]; exact h)
 
-theorem oldIdx_injective {K : Type} {ι : K → Type} : Function.Injective (oldIdx (ι := ι)) := by
-  rintro ⟨k, i⟩ ⟨k', i'⟩ h
-  obtain rfl : k = k' := Option.some_injective _ (congrArg Sigma.fst h)
-  have : i = i' := eq_of_heq (Sigma.mk.inj h).2
-  rw [this]
-
 theorem isMultiHomog_inc {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
     {s : MRing ι} {a : K → ℕ} (hs : IsMultiHomog s a) :
     IsMultiHomog (inc s) (fun o => match o with | none => 0 | some k => a k) := by
   classical
   intro m hm o
   simp only [inc, AlgHom.toRingHom_eq_coe, RingHom.coe_coe] at hm
-  rw [MvPolynomial.support_rename_of_injective oldIdx_injective] at hm
+  rw [MvPolynomial.support_rename_of_injective _root_.GlobalTheory.CompanionTheory.Ar.Tw.oldIdx_injective] at hm
   obtain ⟨m0, hm0, rfl⟩ := Finset.mem_image.mp hm
   cases o with
   | none =>
@@ -1482,7 +1474,7 @@ theorem isMultiHomog_inc {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintyp
     show ∑ i, (Finsupp.mapDomain oldIdx m0) ⟨some k, i⟩ = a k
     rw [← hs m0 hm0 k]
     refine Finset.sum_congr rfl fun i _ => ?_
-    exact Finsupp.mapDomain_apply_of_injective (f := oldIdx (ι := ι)) oldIdx_injective m0 ⟨k, i⟩
+    exact Finsupp.mapDomain_apply_of_injective (f := oldIdx (ι := ι)) _root_.GlobalTheory.CompanionTheory.Ar.Tw.oldIdx_injective m0 ⟨k, i⟩
 
 theorem isSectionOn_twist {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {p : ℕ}
     {Q : Ideal (MRing ι)} {A : HermLine ι} {s : MRing ι} (hs : IsSectionOn Q A s) :
@@ -1692,7 +1684,7 @@ theorem poincareLelong_of_inv :
       (P ⊔ Ideal.span {s}).map inc ⊔ Ideal.span {quad p} := by
     rw [Ideal.map_sup, Ideal.map_span, Set.image_singleton, twist, sup_right_comm]
   have hdiv := _root_.GlobalTheory.CompanionTheory.Ar.Tw.horizontal_divSupp_twist K ι p P s (fun W hW hh =>
-    GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p W (hHar W ⟨hW, hh⟩).2.1.1 (hRW W ⟨hW, hh⟩))
+    _root_.GlobalTheory.CompanionTheory.Ar.Tw.twist_isPrime K ι p W (hHar W ⟨hW, hh⟩).2.1.1 (hRW W ⟨hW, hh⟩))
   have hsum : (∑ᶠ (W') (_ : W' ∈ divSupp (twist p P) (inc s) ∧ IsHorizontal W'),
         (multAt (twist p P ⊔ Ideal.span {inc s}) W' : ℝ) *
           ptsIntegral W' (pot fun j => twLine p (L j)) (fun z => Real.log ((twLine p B).h z))) =
@@ -1709,7 +1701,7 @@ theorem poincareLelong_of_inv :
         ∑ᶠ W ∈ H, (multAt (P ⊔ Ideal.span {s}) W : ℝ) * ptsIntegral W (pot L) (fun z => Real.log (B.h z)) := rfl
     rw [h1, h2, hdiv, finsum_mem_image (twist_injective p).injOn, mul_finsum_mem]
     refine finsum_mem_congr rfl fun W hW => ?_
-    rw [e2 W hW, hsup, _root_.GlobalTheory.CompanionTheory.Ar.Tw.multAt_twist K ι p _ W hW.1.1 (GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p W (hHar W hW).2.1.1 (hRW W hW))]
+    rw [e2 W hW, hsup, _root_.GlobalTheory.CompanionTheory.Ar.Tw.multAt_twist K ι p _ W hW.1.1 (_root_.GlobalTheory.CompanionTheory.Ar.Tw.twist_isPrime K ι p W (hHar W hW).2.1.1 (hRW W hW))]
     ring
   have hInv2 : ptsIntegral (twist p P)
       (Fin.cons (fun z => Real.log ((twLine p B).h z)) (pot fun j => twLine p (L j)))

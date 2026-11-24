@@ -1157,8 +1157,6 @@ section -- clump:auto
 
 open AlgebraicGeometry CategoryTheory
 
-theorem _root_.GlobalTheory.T.hasStrictlySemistableChartAt_of_smooth : ∀ (O : Type) [CommRing O] (ϖ : O) (X : Scheme.{0}) (p : X ⟶ Spec (CommRingCat.of O)) (V : X.Opens) (x : X), x ∈ V → Smooth (V.ι ≫ p) → GlobalTheory.SSG.ChartAt ϖ p x := by
-  first | (exact @GlobalTheory.SSG.chartAt_of_smooth)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasStrictlySemistableChartAtOfSmoothStatement =====
@@ -1218,7 +1216,7 @@ theorem retract_pf : Retract := by
   · rw [Category.assoc, retractPt_str, Category.comp_id, Category.id_comp]
   · exact GlobalTheory.ProjSpace.isProjOver_pullback hproj (GlobalTheory.ProjSpace.isProjOver_pspace_str _ 2)
   · intro x
-    exact GlobalTheory.T.hasStrictlySemistableChartAt_of_smooth _ ϖ N.X N.p ⊤ x trivial inferInstance
+    exact _root_.GlobalTheory.SSG.chartAt_of_smooth _ ϖ N.X N.p ⊤ x trivial inferInstance
 
 end CrystallineSemistableComparison.Onto
 

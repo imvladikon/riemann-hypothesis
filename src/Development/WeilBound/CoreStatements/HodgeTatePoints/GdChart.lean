@@ -67,7 +67,7 @@ import Mathlib.RingTheory.PiTensorProduct
 -- Members: Development.WeilBound.CoreStatements.HodgeTatePoints.GdDual, Development.WeilBound.CoreStatements.HodgeTatePoints.TorusExtensionPairCorrectionEqValueQuotient, Development.WeilBound.CoreStatements.HodgeTatePoints.GdChart
 
 -- ===== clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.GdDual =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.HodgeTatePoints.GdDual", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.OmStable\npublic import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RelatedPairsOrbitalTermEq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.FiniteDimensional\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.Valuation.Integral\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.HodgeTatePoints.GdDual", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.OmStable\npublic import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RelatedPairsOrbitalTermEq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.FiniteDimensional\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.Valuation.Integral\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.CoreStatements.HodgeTatePoints.TorusExtensionPairCorrectionEqValueQuotient\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -83,6 +83,12 @@ variable {C : Type} [Field C] {v : Valuation C NNReal} {O : Type} [CommRing O] [
   {V : Type} [AddCommGroup V] [Module C V] [Module O V] [IsScalarTower O C V]
   {Ω : Type} [AddCommGroup Ω] [Module C Ω] [Module O Ω] [IsScalarTower O C Ω]
 
+omit [IsAlgClosed C] [CharZero C] in
+private theorem gdChart_e_swap (P : HTPoint C O c κ N V Ω) (x y : V) :
+    P.e x y = -P.e y x := by
+  have h := P.alt (x + y)
+  simp only [map_add (f := _), LinearMap.add_apply, P.alt, zero_add, add_zero] at h
+  linear_combination h
 
 omit [IsAlgClosed C] [CharZero C] in
 theorem proj_ht_mem (P : HTPoint C O c κ N V Ω) (τ : E →+* C) {y : V} (hy : y ∈ P.T) :
@@ -90,14 +96,8 @@ theorem proj_ht_mem (P : HTPoint C O c κ N V Ω) (τ : E →+* C) {y : V} (hy :
   exact ⟨P.ht y, ⟨y, hy, rfl⟩, rfl⟩
 
 omit [IsAlgClosed C] [CharZero C] in
-private theorem htPoint_e_antisymm (P : HTPoint C O c κ N V Ω) (x y : V) : P.e x y = - P.e y x := by
-  have h := P.alt (x + y)
-  simp only [map_add (f := _), LinearMap.add_apply, P.alt, zero_add, add_zero] at h
-  linear_combination h
-
-omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_eq_zero_of_e_left_eq_zero (P : HTPoint C O c κ N V Ω) {x : V} (h : ∀ y, P.e x y = 0) : x = 0 :=
-  P.nondeg x (fun z => by rw [htPoint_e_antisymm P z x, h z, neg_zero])
+  P.nondeg x (fun z => by rw [gdChart_e_swap P z x, h z, neg_zero])
 
 omit [IsAlgClosed C] [CharZero C] in
 private theorem htPoint_exists_basis_rho_t_span (P : HTPoint C O c κ N V Ω) :
@@ -323,7 +323,7 @@ theorem exists_alt_bis (hv : v.Integers O) (hc : ∀ x, c (c x) = x) (P : HTPoin
     exact LinearMap.mem_ker.mpr hker
   · rw [← P.perfect]
     intro x hx
-    rw [htPoint_e_antisymm P x w, hw, hℓ x hx]
+    rw [gdChart_e_swap P x w, hw, hℓ x hx]
     exact RingHom.mem_range.mpr ⟨_, map_neg _ _⟩
   · rw [Submodule.restrictScalars_mem]
     simp only [eigSp, Submodule.mem_iInf, LinearMap.mem_ker]

@@ -91,14 +91,14 @@ theorem inPar_one (a n : ℕ) : InPar a (1 : GL (Fin n) F) := by
 
 theorem coe_tlG {a b n : ℕ} (hn : n = a + b) (x : GL (Fin n) F) (hx : InPar a x) :
     ((tlG a x : GL (Fin a) F) : Matrix (Fin a) (Fin a) F) = tl a (x : Matrix (Fin n) (Fin n) F) := by
-  obtain ⟨H, π, hH, -, hπ, hπ', -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
+  obtain ⟨H, π, hH, -, hπ, hπ', -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
   have h := (hπ' ⟨x, (hH x).2 hx⟩).1
   rw [hπ] at h
   exact h
 
 theorem coe_brG {a b n : ℕ} (hn : n = a + b) (x : GL (Fin n) F) (hx : InPar a x) :
     ((brG a b x : GL (Fin b) F) : Matrix (Fin b) (Fin b) F) = br a b (x : Matrix (Fin n) (Fin n) F) := by
-  obtain ⟨H, π, hH, -, hπ, hπ', -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
+  obtain ⟨H, π, hH, -, hπ, hπ', -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
   have h := (hπ' ⟨x, (hH x).2 hx⟩).2
   rw [hπ] at h
   exact h
@@ -107,7 +107,7 @@ theorem conj_blocks {a b n : ℕ} (hn : n = a + b) (h₁ : GL (Fin a) F) (h₂ :
     ∃ s : GL (Fin n) F, ∀ z : GL (Fin n) F, (InPar a (s⁻¹ * z * s) ↔ InPar a z) ∧
       (InPar a z → tlG a (s⁻¹ * z * s) = h₁⁻¹ * tlG a z * h₁ ∧
         brG a b (s⁻¹ * z * s) = h₂⁻¹ * brG a b z * h₂) := by
-  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
+  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
   obtain ⟨s, hs⟩ := hsu (h₁, h₂)
   refine ⟨s.1, fun z => ⟨?_, fun hz => ?_⟩⟩
   · rw [← hH, ← hH]
@@ -321,8 +321,8 @@ theorem card_comap {H L : Type} [Group H] [Group L] (π : H →* L) (hπ : Funct
 theorem card_left [Finite F] {a b c n : ℕ} (hn : n = a + b + c) :
     Nat.card {x : GL (Fin n) F // InPar (a + b) x ∧ InPar a (tlG (a + b) x)} * Nat.card (GL (Fin (a + b)) F) =
       Nat.card {p : GL (Fin (a + b)) F // InPar a p} * Nat.card {p : GL (Fin n) F // InPar (a + b) p} := by
-  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F (a + b) c n hn
-  obtain ⟨H', -, hH', -, -, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b (a + b) rfl
+  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F (a + b) c n hn
+  obtain ⟨H', -, hH', -, -, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b (a + b) rfl
   have k := card_comap π hsu (H'.prod ⊤)
   have mem : ∀ p : H, p ∈ (H'.prod ⊤).comap π ↔ InPar a (tlG (a + b) p.1) := by
     intro p
@@ -347,8 +347,8 @@ theorem card_left [Finite F] {a b c n : ℕ} (hn : n = a + b + c) :
 theorem card_right [Finite F] {a b c n : ℕ} (hn : n = a + b + c) :
     Nat.card {x : GL (Fin n) F // InPar a x ∧ InPar b (brG a (b + c) x)} * Nat.card (GL (Fin (b + c)) F) =
       Nat.card {p : GL (Fin (b + c)) F // InPar b p} * Nat.card {p : GL (Fin n) F // InPar a p} := by
-  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a (b + c) n (by omega)
-  obtain ⟨H', -, hH', -, -, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F b c (b + c) rfl
+  obtain ⟨H, π, hH, hsu, hπ, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a (b + c) n (by omega)
+  obtain ⟨H', -, hH', -, -, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F b c (b + c) rfl
   have k := card_comap π hsu ((⊤ : Subgroup (GL (Fin a) F)).prod H')
   have mem : ∀ p : H, p ∈ ((⊤ : Subgroup (GL (Fin a) F)).prod H').comap π ↔ InPar b (brG a (b + c) p.1) := by
     intro p
@@ -438,8 +438,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraInductionGL_assoc : ∀ (F : Type) [Field F] [Finite F], ∀ (a b c n : ℕ) (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ) (γ : GL (Fin c) F → ℂ), IsCl α → IsCl β → IsCl γ → n = a + b + c → hc (a + b) c (hc a b α β (a + b)) γ n = hc a (b + c) α (hc b c β γ (b + c)) n := by
-  first | (exact @GlobalTheory.Shin.HcAssoc.hc_assoc)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionGLAssocStatement =====
@@ -680,7 +678,7 @@ variable [Finite F]
 
 theorem isCl_cusp (θ : AlgebraicClosure F →* ℂ) (m k : ℕ) : IsCl (cusp θ m k) := by
 
-  have h := ((GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) 0 0 m (fun _ => 0) (fun _ => 0)).2.2 (rootSum θ k)).1
+  have h := ((_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) 0 0 m (fun _ => 0) (fun _ => 0)).2.2 (rootSum θ k)).1
   intro x y
   simp only [cusp]
   rw [h x y]
@@ -693,7 +691,7 @@ theorem isCl_J (θ : AlgebraicClosure F →* ℂ) (L : List (ℕ × ℕ)) (n : �
     rfl
   | cons p L =>
     rw [J_cons]
-    exact (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) _ _ n _ _).2.1
+    exact (_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) _ _ n _ _).2.1
 
 theorem J_append (θ : AlgebraicClosure F →* ℂ) (L L' : List (ℕ × ℕ)) (n : ℕ) (hn : n = deg L + deg L') :
     J θ (L ++ L') n = hc (deg L) (deg L') (J θ L (deg L)) (J θ L' (deg L')) n := by
@@ -705,7 +703,7 @@ theorem J_append (θ : AlgebraicClosure F →* ℂ) (L L' : List (ℕ × ℕ)) (
     subst hn'
     change J θ L' (deg L') = hc 0 (deg L') (J θ [] 0) (J θ L' (deg L')) (deg L')
     rw [J_nil]
-    exact ((GlobalTheory.T.harishChandraInductionGL_one_left_right_unit F (deg L') (J θ L' (deg L')) (isCl_J θ L' _)).1).symm
+    exact ((_root_.GlobalTheory.Shin.HcUnit.main F (deg L') (J θ L' (deg L')) (isCl_J θ L' _)).1).symm
   | cons p L ih =>
 
     rw [List.cons_append, J_cons, ih (deg (L ++ L')) (deg_append' L L'), J_cons]
@@ -714,7 +712,7 @@ theorem J_append (θ : AlgebraicClosure F →* ℂ) (L L' : List (ℕ × ℕ)) (
     refine Eq.trans ?_ (hc_congr_left _ _ (deg L') (deg_cons' p L).symm
       (fun m => hc p.1 (deg L) (cusp θ p.1 p.2) (J θ L (deg L)) m) (J θ L' (deg L')) n)
     have hn' : n = p.1 + deg L + deg L' := by rw [hn, deg_cons']
-    exact (GlobalTheory.T.harishChandraInductionGL_assoc F p.1 (deg L) (deg L') n (cusp θ p.1 p.2) (J θ L (deg L)) (J θ L' (deg L'))
+    exact (_root_.GlobalTheory.Shin.HcAssoc.hc_assoc F p.1 (deg L) (deg L') n (cusp θ p.1 p.2) (J θ L (deg L)) (J θ L' (deg L'))
       (isCl_cusp θ _ _) (isCl_J θ L _) (isCl_J θ L' _) hn').symm
 
 theorem J_perm (θ : AlgebraicClosure F →* ℂ) (L L' : List (ℕ × ℕ)) (n : ℕ) (hn : n = deg L) (h : L.Perm L') :
@@ -740,8 +738,8 @@ theorem J_perm (θ : AlgebraicClosure F →* ℂ) (L L' : List (ℕ × ℕ)) (n 
       (fun m => hc q.1 (deg l) (cusp θ q.1 q.2) (J θ l (deg l)) m) n).trans ?_
     refine Eq.trans ?_ (hc_congr_right q.1 _ _ (deg_cons' p l).symm (cusp θ q.1 q.2)
       (fun m => hc p.1 (deg l) (cusp θ p.1 p.2) (J θ l (deg l)) m) n)
-    rw [← GlobalTheory.T.harishChandraInductionGL_assoc F p.1 q.1 (deg l) n _ _ _ hcp hcq hl e1,
-      ← GlobalTheory.T.harishChandraInductionGL_assoc F q.1 p.1 (deg l) n _ _ _ hcq hcp hl e2,
+    rw [← _root_.GlobalTheory.Shin.HcAssoc.hc_assoc F p.1 q.1 (deg l) n _ _ _ hcp hcq hl e1,
+      ← _root_.GlobalTheory.Shin.HcAssoc.hc_assoc F q.1 p.1 (deg l) n _ _ _ hcq hcp hl e2,
       GlobalTheory.T.harishChandraInductionGL_comm F p.1 q.1 (p.1 + q.1) _ _ hcp hcq rfl]
     exact hc_congr_left _ _ (deg l) (Nat.add_comm p.1 q.1)
       (fun m => hc q.1 p.1 (cusp θ q.1 q.2) (cusp θ p.1 p.2) m) (J θ l (deg l)) n
@@ -773,8 +771,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraProductCuspidalGL_list_properties : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ), (∀ L n, IsCl (J θ L n)) ∧ (∀ (L L' : List (ℕ × ℕ)) (n : ℕ), n = deg L + deg L' → J θ (L ++ L') n = hc (deg L) (deg L') (J θ L (deg L)) (J θ L' (deg L')) n) ∧ ∀ (L L' : List (ℕ × ℕ)) (n : ℕ), n = deg L → L.Perm L' → J θ L n = J θ L' n := by
-  first | (exact @GlobalTheory.Shin.J_list_props)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraProductCuspidalGLListPropertiesStatement =====

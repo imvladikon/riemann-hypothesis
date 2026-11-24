@@ -89,6 +89,7 @@ import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueTangentLift
 import Mathlib.Tactic.Linter.Style
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothGrpSchemeDescendsToFgSubring
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
@@ -338,8 +339,6 @@ open GlobalTheory.ZM GlobalTheory.SiegelTor
 open scoped CategoryTheory.Obj
 
 
-theorem _root_.GlobalTheory.T.exists_birigidified_kth_root_pullback_bundle : ∀ (Y : Scheme.{0}) (A D : Over Y) [GrpObj A] [IsCommMonObj A] [GrpObj D] (Q : LB (A ⊗ D).left) (h : A ⟶ D) (k : ℕ) (X : Scheme.{0}) (M : LB X) (c : (A ⊗ A).left ⟶ X), IsAbelianScheme A → IsAbelianScheme D → GlobalTheory.AbDual.IsDual A D Q → GlobalTheory.AbDual.IsAdditive (GlobalTheory.AbDual.swap Q) → IsMonHom h → 0 < k → IsUnit (k : Γ(Y, ⊤)) → M.IsLB → LBIso (M.pull c) (Q.pull (lift (fst A A) (snd A A ≫ h)).left) → ∀ (U : Scheme.{0}) (t : U ⟶ Y) (AU : Over U) [GrpObj AU] [IsCommMonObj AU] (φ : AU.left ⟶ A.left) (φ₂ : (G2 AU).left ⟶ (G2 A).left), IsGrpPullback AU A t φ → IsSquare φ φ₂ → (∀ (T : Over Y) (s : T.left ⟶ U), s ≫ t = T.hom → ∀ a : T ⟶ A, a ^ k = 1 → a ≫ h = 1) → ∃ P : LB (G2 AU).left, P.IsLB ∧ (∃ t : (P.pull (lift (1 : AU ⟶ AU) (𝟙 AU)).left).Gen, t.IsGen) ∧ (∃ t : (P.pull (lift (𝟙 AU) (1 : AU ⟶ AU)).left).Gen, t.IsGen) ∧ LBIso (M.pull (φ₂ ≫ c)) (lbPow P k) := by
-  first | (exact @GlobalTheory.KthRoot.exists_birigid_kth_root)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBirigidifiedKthRootPullbackBundleStatement =====
@@ -356,8 +355,6 @@ open GlobalTheory.ZM GlobalTheory.SiegelTor
 open scoped CategoryTheory.Obj
 
 
-theorem _root_.GlobalTheory.T.exists_dual_abelian_scheme : ∀ (Y : Scheme.{0}) (A G : Over Y) [GrpObj A] [IsCommMonObj A] [GrpObj G] [IsCommMonObj G] (χ : A ⟶ G) (P'' : LB (G2 G).left), IsAbelianScheme A → IsAbelianScheme G → IsMonHom χ → P''.IsLB → (∃ t : (P''.pull (lift (1 : G ⟶ G) (𝟙 G)).left).Gen, t.IsGen) → (∃ t : (P''.pull (lift (𝟙 G) (1 : G ⟶ G)).left).Gen, t.IsGen) → ∃ (D : Over Y) (_ : GrpObj D) (Q : LB (A ⊗ D).left) (h : A ⟶ D), IsAbelianScheme D ∧ GlobalTheory.AbDual.IsDual A D Q ∧ GlobalTheory.AbDual.IsAdditive (GlobalTheory.AbDual.swap Q) ∧ IsMonHom h ∧ LBIso (P''.pull (χ ⊗ₘ χ).left) (Q.pull (lift (fst A A) (snd A A ≫ h)).left) := by
-  first | (exact @GlobalTheory.DualHomPull.exists_dual_hom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualAbelianScheme =====
@@ -372,8 +369,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.ZM GlobalTheory.SiegelTor
 
 
-theorem _root_.GlobalTheory.T.lineBundle_prod_iso_of_pow_iso_birigidified : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj A] (k : ℕ) (P₁ P₂ : LB (G2 A).left), IsAbelianScheme A → 0 < k → IsUnit (k : Γ(S, ⊤)) → P₁.IsLB → (∃ t : (P₁.pull (lift (1 : A ⟶ A) (𝟙 A)).left).Gen, t.IsGen) → (∃ t : (P₁.pull (lift (𝟙 A) (1 : A ⟶ A)).left).Gen, t.IsGen) → P₂.IsLB → (∃ t : (P₂.pull (lift (1 : A ⟶ A) (𝟙 A)).left).Gen, t.IsGen) → (∃ t : (P₂.pull (lift (𝟙 A) (1 : A ⟶ A)).left).Gen, t.IsGen) → LBIso (lbPow P₁ k) (lbPow P₂ k) → LBIso P₁ P₂ := by
-  first | (exact @GlobalTheory.BirigidRoot.iso_of_lbPow_iso)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleProdIsoOfPowIsoBirigidifiedStatement =====
@@ -399,7 +394,7 @@ theorem UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny :
     unfold Hecke.lbPow
     exact LB.isLB_linComb hP _ _
   obtain ⟨Dd, _, Q, h, hD, hdual, hadd, hh, hiso⟩ :=
-    GlobalTheory.T.exists_dual_abelian_scheme Y B o.A ψ' o.P hB o.ab hψ' hP o.rig₁ o.rig₂
+    _root_.GlobalTheory.DualHomPull.exists_dual_hom Y B o.A ψ' o.P hB o.ab hψ' hP o.rig₁ o.rig₂
   have hQ := hdual.isLB
   have etens : (ψ' ⊗ₘ ψ') = lift (fst B B ≫ ψ') (snd B B ≫ ψ') := by
     ext <;> simp
@@ -434,7 +429,7 @@ theorem UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny :
     rw [map_natCast] at h3
     simpa using h3.pow e
   obtain ⟨P', hP'lb, hr1, hr2, hP'iso⟩ :=
-    GlobalTheory.T.exists_birigidified_kth_root_pullback_bundle Y B Dd Q h (p ^ e) _ o.P (Over.Hom.left (ψ' ⊗ₘ ψ')) hB hD hdual hadd hh hc0 hunit hP
+    _root_.GlobalTheory.KthRoot.exists_birigid_kth_root Y B Dd Q h (p ^ e) _ o.P (Over.Hom.left (ψ' ⊗ₘ ψ')) hB hD hdual hadd hh hc0 hunit hP
       hiso Y (𝟙 Y) B (𝟙 _) (𝟙 _) (GlobalTheory.SiegLower.isGrpPullback_id B) ⟨by simp, by simp⟩ hkerh
   have kP' := (GlobalTheory.CechPic.cls_eq_iff (pull_isLB hP _) (GlobalTheory.isLB_lbPow hP'lb _)).2 hP'iso
   rw [Category.id_comp, GlobalTheory.CechPic.cls_lbPow hP'lb, GlobalTheory.CechPic.cls_pull hP, ← esq] at kP'
@@ -456,7 +451,7 @@ theorem UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny :
   refine ⟨P', ⟨hP'lb, hr1, hr2⟩, ?_, ?_⟩
   · rw [← GlobalTheory.CechPic.cls_eq_iff (pull_isLB hP _) (by unfold Hecke.lbPow; exact LB.isLB_linComb hP'lb _ _),
       GlobalTheory.BirigidPow.cls_lbPow hP'lb, GlobalTheory.CechPic.cls_pull hP, kP']
-  · refine GlobalTheory.T.lineBundle_prod_iso_of_pow_iso_birigidified Y o.A (p ^ e) _ _ o.ab hc0 hunit (hlb _) ?_ ?_ hP2 ?_ ?_ ?_
+  · refine _root_.GlobalTheory.BirigidRoot.iso_of_lbPow_iso Y o.A (p ^ e) _ _ o.ab hc0 hunit (hlb _) ?_ ?_ hP2 ?_ ?_ ?_
     · rw [← GlobalTheory.CechPic.cls_eq_zero_iff (pull_isLB (hlb _) _), GlobalTheory.CechPic.cls_pull (hlb _),
         GlobalTheory.BirigidPow.cls_lbPow hP, map_nsmul, ← GlobalTheory.CechPic.cls_pull hP _ (pull_isLB hP _),
         (GlobalTheory.CechPic.cls_eq_zero_iff _).2 o.rig₁, nsmul_zero]
@@ -473,7 +468,7 @@ theorem UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny :
         GlobalTheory.CechPic.cls_lbPow (hlb _), GlobalTheory.CechPic.cls_lbPow hP2, GlobalTheory.BirigidPow.cls_lbPow hP, smul_smul,
         ← pow_two, ← GlobalTheory.BirigidPow.cls_lbPow hP _ (hlb _),
         (GlobalTheory.CechPic.cls_eq_iff (hlb _) (pull_isLB hP _)).2
-          (GlobalTheory.T.lbIso_lbPow_sq_pull_sq2_of_isGen_of_relAmple Y o.A o.ab o.P hP o.rig₁ o.rig₂ o.ample (p ^ e)),
+          (_root_.GlobalTheory.BirigidPow.birigidified_pullback_mulPair_iso_tensorPowSq Y o.A o.ab o.P hP o.rig₁ o.rig₂ o.ample (p ^ e)),
         ← h1, sqc, GlobalTheory.CechPic.cls_pull hP, GlobalTheory.CechPic.pull_comp, kP', map_nsmul,
         ← GlobalTheory.CechPic.cls_pull hP'lb _ hP2]
 end -- clump:auto
@@ -631,8 +626,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 
 
-theorem _root_.GlobalTheory.T.harrisTaylor_pullback_bundle_dual_hom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (Y : Scheme.{0}) (s : Y ⟶ Sp R) (o : Obj b N s) (B : Over Y) [GrpObj B] [IsCommMonObj B] (ψ' : B ⟶ o.A), IsAbelianScheme B → IsMonHom ψ' → ∃ (C : Over Y) (_ : GrpObj C) (Q : LB (B ⊗ C).left) (h : B ⟶ C), IsAbelianScheme C ∧ GlobalTheory.AbDual.IsDual B C Q ∧ GlobalTheory.AbDual.IsAdditive (GlobalTheory.AbDual.swap Q) ∧ IsMonHom h ∧ LBIso (o.P.pull (ψ' ⊗ₘ ψ').left) (Q.pull (lift (fst B B) (snd B B ≫ h)).left) ∧ ∀ (T : Over Y) (x : T ⟶ B), PullPolTriv o ψ' x ↔ x ≫ h = 1 := by
-  first | (exact @GlobalTheory.UPel.HT.ES.pullPol_dual_hom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorPullbackBundleDualHomStatement =====
@@ -664,13 +657,13 @@ theorem polKer_locus_clopen : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   have hn : IsUnit ((c ^ 3 : ℕ) : Γ(Y, ⊤)) := by
     rw [hc, ← pow_mul, Nat.cast_pow]
     exact hpY.pow _
-  obtain ⟨C, _, Q, h, hC, -, -, hh, -, hT⟩ := GlobalTheory.T.harrisTaylor_pullback_bundle_dual_hom p D R b N Y s o B ψ' hB hq.2.1
+  obtain ⟨C, _, Q, h, hC, -, -, hh, -, hT⟩ := _root_.GlobalTheory.UPel.HT.ES.pullPol_dual_hom p D R b N Y s o B ψ' hB hq.2.1
   haveI := isMonHom_id_npow B c
   have hcomp : ∀ {T : Over Y} (x : T ⟶ B), x ≫ (𝟙 B) ^ c = x ^ c := fun x => by
     rw [MonObj.comp_pow, Category.comp_id]
-  obtain ⟨W₁, o₁, c₁, H₁, -⟩ := GlobalTheory.T.isClopen_torsion_kernel_locus Y B (c ^ 3) Unit (fun _ => C) (fun _ => h) B ((𝟙 B) ^ c) hB
+  obtain ⟨W₁, o₁, c₁, H₁, -⟩ := _root_.GlobalTheory.LevCover.kerlocus_open_closed Y B (c ^ 3) Unit (fun _ => C) (fun _ => h) B ((𝟙 B) ^ c) hB
     (fun _ => hC) hB (fun _ => hh) inferInstance hn
-  obtain ⟨W₂, o₂, c₂, H₂, -⟩ := GlobalTheory.T.isClopen_torsion_kernel_locus Y B (c ^ 3) Unit (fun _ => B) (fun _ => (𝟙 B) ^ c) C h hB
+  obtain ⟨W₂, o₂, c₂, H₂, -⟩ := _root_.GlobalTheory.LevCover.kerlocus_open_closed Y B (c ^ 3) Unit (fun _ => B) (fun _ => (𝟙 B) ^ c) C h hB
     (fun _ => hB) hC (fun _ => inferInstance) hh hn
   refine ⟨W₁ ∩ W₂, o₁.inter o₂, c₁.inter c₂, fun Tb t => ?_⟩
   rw [Set.subset_inter_iff, H₁, H₂]
@@ -786,7 +779,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelStableIffPulledBackIdentityStatement =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.PolKerAtPullbackOfIsGrpPullback =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.PolKerAtPullbackOfIsGrpPullback", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInv\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.PolKerAtPullbackOfIsGrpPullback", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInv\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothGrpSchemeDescendsToFgSubring\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -794,20 +787,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 
 namespace UpperTheory.Cb.PairEqualityCriteria
-
-private theorem eq_of_fst_snd {S : Scheme.{0}} {G : Over S} {Z : Scheme.{0}} {a b : Z ⟶ (G ⊗ G).left}
-    (h₁ : a ≫ (fst G G).left = b ≫ (fst G G).left) (h₂ : a ≫ (snd G G).left = b ≫ (snd G G).left) : a = b := by
-  have hw : b ≫ (G ⊗ G).hom = a ≫ (G ⊗ G).hom := by
-    simp only [← Over.w (fst G G), ← Category.assoc, h₁]
-  let a' : Over.mk (a ≫ (G ⊗ G).hom) ⟶ G ⊗ G := Over.homMk a
-  let b' : Over.mk (a ≫ (G ⊗ G).hom) ⟶ G ⊗ G := Over.homMk b hw
-  have e : a' = b' := by
-    apply CartesianMonoidalCategory.hom_ext
-    · apply Over.OverMorphism.ext
-      simpa [a', b'] using h₁
-    · apply Over.OverMorphism.ext
-      simpa [a', b'] using h₂
-  exact congrArg (fun u => u.left) e
 
 private theorem one_push {S S' : Scheme.{0}} {f : S' ⟶ S} {G : Over S} {G' : Over S'} [GrpObj G] [GrpObj G']
     {φ : G'.left ⟶ G.left} (h : IsGrpPullback G' G f φ) (W : Over S') :
@@ -901,12 +880,12 @@ private theorem triv_iff {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Comm
     exact hc.lift_fst _ _ hw
   have E1 : (lift (fst B₁ T₁ ≫ ψ₁') (snd B₁ T₁ ≫ x₁ ≫ ψ₁')).left ≫ m.φ₂ =
       κ ≫ (lift (fst B (Over.mk (T₁.hom ≫ t)) ≫ ψ') (snd B (Over.mk (T₁.hom ≫ t)) ≫ x ≫ ψ')).left := by
-    apply eq_of_fst_snd (G := o.A)
+    apply _root_.GlobalTheory.GrpSpread.sq_ext (G := o.A)
     · simp only [Category.assoc, m.sq.1, lfr, lf, Over.comp_left, hψ, reassoc_of% hκ1]
     · simp only [Category.assoc, m.sq.2, lsr, ls, Over.comp_left, hx, hψ, reassoc_of% hκ2]
   have E2 : lm ≫ (lift (fst B₁ T₁ ≫ ψ₁') (snd B₁ T₁ ≫ x₁ ≫ ψ₁')).left ≫ m.φ₂ =
       (lift (fst B (Over.mk (T₁.hom ≫ t)) ≫ ψ') (snd B (Over.mk (T₁.hom ≫ t)) ≫ x ≫ ψ')).left := by
-    apply eq_of_fst_snd (G := o.A)
+    apply _root_.GlobalTheory.GrpSpread.sq_ext (G := o.A)
     · simp only [Category.assoc, m.sq.1, lfr, lf, Over.comp_left, ← hψ, reassoc_of% hl1]
     · simp only [Category.assoc, m.sq.2, lsr, ls, Over.comp_left, hx, hψ, reassoc_of% hl2]
   have hL₁ : (o₁.P.pull (lift (fst B₁ T₁ ≫ ψ₁') (snd B₁ T₁ ≫ x₁ ≫ ψ₁')).left).IsLB :=
@@ -1348,7 +1327,7 @@ theorem UpperTheory.Cb.pow_polarization_iso_pullback_of_descent :
       have h3 := (b.unit n hnp).map β
       rw [map_natCast] at h3
       exact h3.ne_zero
-    obtain ⟨u, hu⟩ := GlobalTheory.T.exists_weilCommutatorPairing_torsion_geometricPoint Y B _ hB hMB κ x n hn hnκ _ _ (htor n hn hnp z) (htor n hn hnp z')
+    obtain ⟨u, hu⟩ := _root_.GlobalTheory.WeilGeomPt.exists_weilIs_geomPt Y B _ hB hMB κ x n hn hnκ _ _ (htor n hn hnp z) (htor n hn hnp z')
     have h3 := (GlobalTheory.weilIs_along_hom GlobalTheory.globalFns_holds Y o.A B ψ _ _ (p ^ e) (n : ℤ) (Over.mk x)
       (I.ev n z) (I.ev n z') _ u o.ab hB hLA hMB hψ hiso hu).2 hA
     rw [h3] at hu
@@ -1399,8 +1378,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 
 
-theorem _root_.GlobalTheory.T.quasiInverseIsogeny_square_compat_comp_quasiInv : ∀ (T Y : Scheme.{0}) (t : T ⟶ Y) (A B : Over Y) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (k : ℕ) (ψ : A ⟶ B) (ψ' : B ⟶ A) (A₁ B₁ : Over T) [GrpObj A₁] [IsCommMonObj A₁] [GrpObj B₁] [IsCommMonObj B₁] (φ : A₁.left ⟶ A.left) (θ : B₁.left ⟶ B.left) (ψ₁ : A₁ ⟶ B₁) (ψ₁' : B₁ ⟶ A₁), IsAbelianScheme B₁ → 0 < k → IsQuasiInv k ψ ψ' → IsQuasiInv k ψ₁ ψ₁' → IsGrpPullback A₁ A t φ → φ ≫ ψ.left = ψ₁.left ≫ θ → θ ≫ ψ'.left = ψ₁'.left ≫ φ := by
-  first | (exact @GlobalTheory.UPel.HT.ES.QCompat.comp_quasiInv)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiInverseIsogenySquareCompatCompQuasiInvStatement =====
@@ -1579,8 +1556,6 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.UPel.HT GlobalTheory.UPel.HT.Hecke GlobalTheory.UPel.HT.ES
 
 
-theorem _root_.GlobalTheory.T.quasiInverse_root_bundle_symmetric : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (c : ℕ) (Y : Scheme.{0}) (s : Y ⟶ Sp R) (o : Obj b N s) (B : Over Y) [GrpObj B] [IsCommMonObj B] (ψ : o.A ⟶ B) (ψ' : B ⟶ o.A), IsUnit ((p : ℕ) : R) → (∃ e : ℕ, c = p ^ e) → IsAbelianScheme B → IsQuasiInv c ψ ψ' → ∀ P' : LB (G2 B).left, IsAxesTriv B P' → LBIso (o.P.pull (Hecke.sq2 ψ')) (Hecke.lbPow P' c) → LBIso (Hecke.lbPow o.P c) (P'.pull (Hecke.sq2 ψ)) → LBIso P' (P'.pull (lift (snd B B) (fst B B)).left) := by
-  first | (exact @GlobalTheory.QuasiInvPull.root_symm)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiInverseRootBundleSymmetricStatement =====
@@ -1770,7 +1745,7 @@ theorem exists_obj {c : ℕ} {Y : Scheme.{0}} [IsLocallyNoetherian Y] {s : Y ⟶
   haveI := hq.1
   let o' : Obj b N s :=
     { A := B, ab := hB, act := act', P := P', isLB := hP'.1, rig₁ := hP'.2.1, rig₂ := hP'.2.2
-      symm := GlobalTheory.T.quasiInverse_root_bundle_symmetric p D R b N c Y s o B ψ ψ' hp hc hB hq P' hP' w1 w2
+      symm := _root_.GlobalTheory.QuasiInvPull.root_symm p D R b N c Y s o B ψ ψ' hp hc hB hq P' hP' w1 w2
       ample := GlobalTheory.T.relAmple_diag_root_pullback_quasiInverse p D R b N c Y s o B ψ ψ' hp hc hB hq P' hP' w1 w2
       kerP := _root_.UpperTheory.Cb.polarization_descent_along_quasi_isogeny_compat p D R b N c Y s o B ψ ψ' hp hc hB hq h2 P' hP' w1 w2
       rosati := GlobalTheory.T.quasiInverse_root_bundle_rosati_descended_action p D R b N c Y s o B ψ ψ' hp hc hB hq P' hP' w1 w2 act' hact
@@ -1811,21 +1786,21 @@ theorem exists_rep : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
       exact exists_comp mi mZ
     exact H _ (Over.w i)
   obtain ⟨B₀, _, _, θ₀, ψ₀, ψ₀', hB₀, hθ₀, hq₀, e₀, e₀'⟩ :=
-    GlobalTheory.T.quasiInverseIsogenyPair_baseChange_grpPullback _ _ i.left oZ.A B c ψ ψ' o₀.A mi.φ hB hq mi.cart
+    _root_.GlobalTheory.UPel.HT.ES.pullQuasiInv _ _ i.left oZ.A B c ψ ψ' o₀.A mi.φ hB hq mi.cart
   obtain ⟨o', χ, θ₁, hχ, hθ₁, e₁⟩ := exists_obj o₀ B₀ ψ₀ ψ₀' hp hc hB₀ hq₀
     ((GlobalTheory.T.kernelStable_iff_pulledBack_identity p D R b N _ _ _ _ _ o₀ oZ mi B₀ B θ₀ ψ₀ ψ hθ₀ e₀).1 ((H₁ _ _).1 fun z hz => (hi hz).1.1))
     ((_root_.UpperTheory.Cb.polKerAt_pullback_of_isGrpPullback p D R b N _ _ _ _ _ o₀ oZ mi B₀ B θ₀ ψ₀' ψ' c hθ₀ e₀').1 ((H₂ _ _).1 fun z hz => (hi hz).1.2))
   have hθ : IsGrpPullback o'.A B i.left (θ₁ ≫ θ₀) := (hθ₁.comp hθ₀).congr (Category.id_comp _) rfl
   have eχ : mi.φ ≫ ψ.left = χ.left ≫ θ₁ ≫ θ₀ := by rw [e₀, e₁, Category.assoc]
   have htj : IsTj r w j o₀ o' χ := (tjAt_id_iff r w j o₀ o' χ).1
-    ((GlobalTheory.T.harrisTaylorType_iff_pulledBack_identity p D R b N _ _ _ _ _ o₀ oZ mi o'.A B (θ₁ ≫ θ₀) χ ψ r w j hθ eχ).1
+    ((_root_.GlobalTheory.UPel.HT.ES.tjAt_iff_tjAt_pull p D R b N _ _ _ _ _ o₀ oZ mi o'.A B (θ₁ ≫ θ₀) χ ψ r w j hθ eχ).1
       ((H₃ _ _).1 fun z hz => (hi hz).2))
   refine ⟨Y, o₀, m₀, o', χ, hYf, hYe, hχ, htj, fun T x o₁ o₁' m ψ₁ h1 h2 => ?_⟩
   obtain ⟨ψ₁', hq₁⟩ := h1.exists_quasiInv
   obtain ⟨z, ⟨hz, θ, θ', eθ, hθa, hθb, eψ⟩, zu⟩ := huniv T x o₁.A m.φ o₁'.A ψ₁ ψ₁' m.cart o₁'.ab hq₁
   obtain ⟨mz, hmz⟩ := exists_factor hN hNp hz mZ m
   obtain rfl : θ = mz.φ := mZ.cart.1.hom_ext (eθ.trans hmz.symm) (hθa.1.w.trans mz.cart.1.w.symm)
-  have eψ' := GlobalTheory.T.quasiInverseIsogeny_square_compat_comp_quasiInv _ _ z oZ.A B c ψ ψ' o₁.A o₁'.A mz.φ θ' ψ₁ ψ₁' o₁'.ab hcpos hq hq₁ mz.cart eψ
+  have eψ' := _root_.GlobalTheory.UPel.HT.ES.QCompat.comp_quasiInv _ _ z oZ.A B c ψ ψ' o₁.A o₁'.A mz.φ θ' ψ₁ ψ₁' o₁'.ab hcpos hq hq₁ mz.cart eψ
   have hr : Set.range z.base ⊆ W₁ ∩ W₂ ∩ W₃ := Set.subset_inter (Set.subset_inter
     ((H₁ _ z).2 ((GlobalTheory.T.kernelStable_iff_pulledBack_identity p D R b N _ _ _ _ _ o₁ oZ mz o₁'.A B θ' ψ₁ ψ hθb eψ).2 (h1.kerStableAt _)))
     ((H₂ _ z).2 ((_root_.UpperTheory.Cb.polKerAt_pullback_of_isGrpPullback p D R b N _ _ _ _ _ o₁ oZ mz o₁'.A B θ' ψ₁' ψ' c hθb eψ').2

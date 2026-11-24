@@ -164,7 +164,7 @@ theorem exists_linear (hT : ThetaUnifAV) {g : ℕ} (ex : (Fin g → ℂ) → Out
     simp
   let L : d.A.X → (Fin g → ℂ) →L[ℂ] ℂ := fun x => fderiv ℂ (fun z => eTwoPi (l z x)) 0
   have hL : ∀ x z, eTwoPi (l z x) = Complex.exp (L x z) := fun x =>
-    Doubling.eq_cexp_fderiv_of_map_add (hd x) (AnArc.e_ne_zero _) (hmul x)
+    _root_.GlobalTheory.ExpOfFrechetDerivative.eq_exp_fderiv (hd x) (AnArc.e_ne_zero _) (hmul x)
   have hadd : ∀ x x' z, L (x + x') z = L x z + L x' z := fun x x' z => by
     rw [← sub_eq_zero]
     refine eq_zero_of_forall_smul_mem_countable

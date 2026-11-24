@@ -1009,16 +1009,6 @@ noncomputable section
 
 namespace CrystallineSemistableComparison.Pb
 
-variable {K : Type} [Field K] {R : Type} [CommRing R] [IsDomain R] [Algebra K R]
-
-theorem chart_ext (A T B0 Bu : Subalgebra K R) (hAT : A ≤ T) (hAB0 : A ≤ B0) (hB0 : B0 ≤ Bu) (hTBu : T ≤ Bu)
-    (hB0FG : B0.FG) (hB0Int : ∀ b ∈ B0, IsIntegral A b) (hBuFG : Bu.FG) (hBuInt : ∀ b ∈ Bu, IsIntegral T b)
-    (hFrac : ∀ r : R, ∃ b ∈ Bu, ∃ b' ∈ Bu, b' ≠ 0 ∧ r * b' = b)
-    (w : R) (hwA : w ∈ A) (hw0 : w ≠ 0) (hscale : ∀ x ∈ T, ∃ N : ℕ, w ^ N * x ∈ A) :
-    ∃ B' : Subalgebra K R, B0 ≤ B' ∧ B'.FG ∧ (∀ b ∈ B', IsIntegral A b) ∧
-      ∀ r : R, ∃ b ∈ B', ∃ b' ∈ B', b' ≠ 0 ∧ r * b' = b :=
-  chart_ext_pf A T B0 Bu hAT hAB0 hB0 hTBu hB0FG hB0Int hBuFG hBuInt hFrac w hwA hw0 hscale
-
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
 end -- clump:auto
@@ -1553,15 +1543,6 @@ noncomputable section
 
 namespace CrystallineSemistableComparison.Pb
 
-variable {K : Type} [Field K] {R : Type} [CommRing R] [Algebra K R] {n : ℕ}
-
-theorem res_R (t : Fin (n + 1) → Rˣ) (ht : AlgebraicIndependent K fun k => (t k : R))
-    (D : Fin (n + 1) → Derivation K R R) (hD : ∀ k j, D k (t j) = if k = j then 1 else 0) :
-    ∃ res : R →ₗ[K] K, res (((∏ k, t k)⁻¹ : Rˣ) : R) = 1 ∧
-      (∀ x ∈ Submodule.span K (tpow t '' {m | m ≠ fun _ => -1}), res x = 0) ∧
-      ∀ k, ∀ x ∈ torusS K t Finset.univ, res (D k x) = 0 :=
-  res_R_pf t ht D hD
-
 end CrystallineSemistableComparison.Pb
 end -- clump:auto
 end -- clump:auto
@@ -1596,8 +1577,8 @@ theorem resid_alg : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (R : Type) [
     simp
   have hune : (Finset.univ : Finset (Fin (n + 2))).Nonempty := Finset.univ_nonempty
   have hfin : FiniteDimensional (fldF K t) (FractionRing R) :=
-    fldF_findim t (B Finset.univ) (hTB _ hune) (hFG _ hune) (hInt _ hune) hFrac
-  obtain ⟨res, hres1, hres0, hresD⟩ := res_R t ht D hD
+    _root_.CrystallineSemistableComparison.Pb.fldF_findim_pf t (B Finset.univ) (hTB _ hune) (hFG _ hune) (hInt _ hune) hFrac
+  obtain ⟨res, hres1, hres0, hresD⟩ := _root_.CrystallineSemistableComparison.Pb.res_R_pf t ht D hD
 
   let Φ : R →+ FractionRing R :=
     ((algebraMap (fldF K t) (FractionRing R)).toAddMonoidHom.comp
@@ -1611,7 +1592,7 @@ theorem resid_alg : ∀ (K : Type) [Field K] [CharZero K] (n : ℕ) (R : Type) [
       (∀ b ∈ B', IsIntegral (torusS K t (Finset.univ.erase i)) b) ∧
       ∀ r : R, ∃ b ∈ B', ∃ b' ∈ B', b' ≠ 0 ∧ r * b' = b := fun i => by
     obtain ⟨w, hwA, hw0, hscale⟩ := torus_scale (K := K) t i
-    obtain ⟨B', hB', hFG', hInt', hFrac'⟩ := chart_ext (torusS K t (Finset.univ.erase i)) (torusS K t Finset.univ)
+    obtain ⟨B', hB', hFG', hInt', hFrac'⟩ := _root_.CrystallineSemistableComparison.Pb.chart_ext_pf (torusS K t (Finset.univ.erase i)) (torusS K t Finset.univ)
       (B (Finset.univ.erase i)) (B Finset.univ) (torusS_le_univ t _) (hTB _ (hne i)) (hMono i) (hTB _ hune)
       (hFG _ (hne i)) (hInt _ (hne i)) (hFG _ hune) (hInt _ hune) hFrac w hwA hw0 hscale
     exact ⟨B', hB', (hTB _ (hne i)).trans hB', hFG', hInt', hFrac'⟩

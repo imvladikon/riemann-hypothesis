@@ -148,8 +148,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.inPar_conj_of_mem_adjoin_incl_of_inPar_conj : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] (a n : ℕ) (γ y₀ : GL (Fin n) F) (δ : GL (Fin n) F'), (δ : Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} → InPar a (y₀⁻¹ * γ * y₀) → InPar a ((incl F F' n y₀)⁻¹ * δ * incl F F' n y₀) := by
-  first | (exact @GlobalTheory.adjoin_conj_inPar)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinConjInParStatement =====
@@ -271,7 +269,7 @@ end GlobalTheory.Shin.FlagDesc
 open GlobalTheory.Shin.FlagDesc in
 theorem GlobalTheory.Shin.inPar_twistedConj_iff : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (a n : ℕ), a ≤ n → ∀ (γ : GL (Fin n) F) (δ y : GL (Fin n) F'), (δ : Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} → nrm s δ = incl F F' n γ → (InPar a (y⁻¹ * δ * galAct F F' n s y) ↔ ∃ (y₀ : GL (Fin n) F) (p : GL (Fin n) F'), InPar a p ∧ y = incl F F' n y₀ * p ∧ InPar a (y₀⁻¹ * γ * y₀)) := by
   intro F F' _ _ _ _ s hs a n _ γ δ y hδ hN
-  obtain ⟨hfix, -, hconj, -, -⟩ := GlobalTheory.T.galoisTwistedNormGL_basic_properties F F' s hs n
+  obtain ⟨hfix, -, hconj, -, -⟩ := _root_.GlobalTheory.Shin.NrmBasic.main F F' s hs n
   have hB : ∀ x ∈ parAlg F' a n, x.map s ∈ parAlg F' a n := by
     intro M hM i j hj hi
     simp only [Matrix.map_apply]
@@ -292,7 +290,7 @@ theorem GlobalTheory.Shin.inPar_twistedConj_iff : ∀ (F F' : Type) [Field F] [F
       have := hconj 1 y
       rw [nrm_one', mul_one, inv_mul_cancel] at this
       exact this
-    obtain ⟨x, hxB, hε⟩ := GlobalTheory.T.exists_coboundary_of_norm_one_in_subalgebra F F' s hs n (parAlg F' a n) hB _ hεP hεN
+    obtain ⟨x, hxB, hε⟩ := _root_.GlobalTheory.HilbertNinety.hilbert90_matrix_subalgebra_norm_one F F' s hs n (parAlg F' a n) hB _ hεP hεN
     have hfx : galAct F F' n s (y * x⁻¹) = y * x⁻¹ := by
       rw [map_mul, map_inv]
       calc galAct F F' n s y * (galAct F F' n s x)⁻¹
@@ -329,8 +327,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.blockUpper_twistedConj_iff_defined_over_base : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (a n : ℕ), a ≤ n → ∀ (γ : GL (Fin n) F) (δ y : GL (Fin n) F'), (δ : Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} → nrm s δ = incl F F' n γ → (InPar a (y⁻¹ * δ * galAct F F' n s y) ↔ ∃ (y₀ : GL (Fin n) F) (p : GL (Fin n) F'), InPar a p ∧ y = incl F F' n y₀ * p ∧ InPar a (y₀⁻¹ * γ * y₀)) := by
-  first | (exact @GlobalTheory.Shin.inPar_twistedConj_iff)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUpperTwistedConjIffDefinedOverBaseStatement =====
@@ -395,8 +391,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.card_comap_mul_finsum_eq_finsum_fibres : ∀ (G₀ G : Type) [Group G₀] [Group G] [Finite G₀] [Finite G] (ι : G₀ →* G) (H : Subgroup G) (T : G → ℂ), (∀ y, T y ≠ 0 → ∃ k p, p ∈ H ∧ y = ι k * p) → (Nat.card (H.comap ι) : ℂ) * ∑ᶠ y, T y = ∑ᶠ k : G₀, ∑ᶠ p : H, T (ι k * p) := by
-  first | (exact @GlobalTheory.fibre_count_comap_mul)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardComapMulFinsumEqFinsumFibresStatement =====
@@ -410,14 +404,6 @@ open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin Semidirect
 open scoped Classical
 
 namespace GlobalTheory.Shin
-
-theorem stdForm_incl_map_eq {F F' : Type} [Field F] [Field F'] [Algebra F F'] (n : ℕ) (t : F' ≃ₐ[F] F')
-    (γ : GL (Fin n) F) :
-    ((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F').map t =
-      ((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') := by
-  ext i j
-  show t (algebraMap F F' ((γ : Matrix (Fin n) (Fin n) F) i j)) = algebraMap F F' ((γ : Matrix (Fin n) (Fin n) F) i j)
-  exact t.commutes _
 
 theorem stdForm_adjoin_map_mem {F F' : Type} [Field F] [Field F'] [Algebra F F'] (n : ℕ) (t : F' ≃ₐ[F] F')
     (γ : GL (Fin n) F) {M : Matrix (Fin n) (Fin n) F'}
@@ -436,10 +422,10 @@ theorem isNorm_exists_twistedConj_adjoin :
         Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} ∧
         nrm s (y⁻¹ * δ * galAct F F' n s y) = incl F F' n γ := by
   intro F F' _ _ _ _ s hs n δ γ hN
-  obtain ⟨_, -, h3, h4, h5⟩ := GlobalTheory.T.galoisTwistedNormGL_basic_properties F F' s hs n
+  obtain ⟨_, -, h3, h4, h5⟩ := _root_.GlobalTheory.Shin.NrmBasic.main F F' s hs n
 
   have hgfix : ∀ t : F' ≃ₐ[F] F', galAct F F' n t (incl F F' n γ) = incl F F' n γ := fun t =>
-    Units.ext (stdForm_incl_map_eq n t γ)
+    Units.ext (_root_.GlobalTheory.Shin.NormSurj.map_incl n t γ)
 
   have hC : ∀ z w : GL (Fin n) F',
       (z : Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} →
@@ -461,7 +447,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     rw [hn1, hgfix s] at this
     exact this
 
-  obtain ⟨δ₀, hδ₀A, hn0⟩ := GlobalTheory.T.norm_map_surjective_finite_field F F' s hs n γ
+  obtain ⟨δ₀, hδ₀A, hn0⟩ := _root_.GlobalTheory.Shin.NormSurj.nrm_surj_adjoin F F' s hs n γ
   have hδ₀g : Commute δ₀ (incl F F' n γ) := hC δ₀ _ hδ₀A (Commute.refl _)
   have hεg : Commute (δ₀⁻¹ * (c⁻¹ * δ * galAct F F' n s c)) (incl F F' n γ) :=
     (hδ₀g.inv_left).mul_left hcomm1
@@ -481,7 +467,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     subst hg'
     have e := congrArg (fun N => ((s : F' ≃+* F') : F' →+* F').mapMatrix N) (hM _ rfl)
     simp only [map_mul] at e
-    rw [← stdForm_incl_map_eq n s γ]
+    rw [← _root_.GlobalTheory.Shin.NormSurj.map_incl n s γ]
     exact e
   have hεB : ((δ₀⁻¹ * (c⁻¹ * δ * galAct F F' n s c) : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈
       Subalgebra.centralizer F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} := by
@@ -490,7 +476,7 @@ theorem isNorm_exists_twistedConj_adjoin :
     rw [Set.mem_singleton_iff] at hg'
     subst hg'
     exact ((stdForm_commute_iff _ _).1 hεg).eq.symm
-  obtain ⟨x, hxB, hεx⟩ := GlobalTheory.T.exists_coboundary_of_norm_one_in_subalgebra F F' s hs n _ hBst _ hεB hεn
+  obtain ⟨x, hxB, hεx⟩ := _root_.GlobalTheory.HilbertNinety.hilbert90_matrix_subalgebra_norm_one F F' s hs n _ hBst _ hεB hεn
   have hxg : Commute x (incl F F' n γ) := by
     rw [stdForm_commute_iff]
     exact ((Subalgebra.mem_centralizer_iff F').1 hxB _ rfl).symm
@@ -518,8 +504,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.conjugate_into_adjoined_algebra : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (n : ℕ) (δ : GL (Fin n) F') (γ : GL (Fin n) F), IsNorm s δ γ → ∃ y : GL (Fin n) F', ((y⁻¹ * δ * galAct F F' n s y : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈ Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')} ∧ nrm s (y⁻¹ * δ * galAct F F' n s y) = incl F F' n γ := by
-  first | (exact @GlobalTheory.Shin.isNorm_exists_twistedConj_adjoin)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateIntoAdjoinedAlgebra =====
@@ -600,8 +584,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.diagonalBlocks_twistedConj_blockUpperTriangular : ∀ (F : Type) [Field F] (t : F →+* F) (a b n : ℕ), n = a + b → ∀ (p x : GL (Fin n) F), InPar a p → InPar a x → tlG a (p⁻¹ * x * gal t n p) = (tlG a p)⁻¹ * tlG a x * gal t a (tlG a p) ∧ brG a b (p⁻¹ * x * gal t n p) = (brG a b p)⁻¹ * brG a b x * gal t b (brG a b p) := by
-  first | (exact @GlobalTheory.Shin.BlocksTwist.blocks_twist)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlocksTwistedConjBlockUpperTriangularStatement =====
@@ -825,8 +807,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.galoisTwistedNormGL_diagonal_blocks : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (a b n : ℕ), n = a + b → ∀ (γ : GL (Fin n) F) (δ : GL (Fin n) F'), InPar a γ → InPar a δ → nrm s δ = incl F F' n γ → nrm s (tlG a δ) = incl F F' a (tlG a γ) ∧ nrm s (brG a b δ) = incl F F' b (brG a b γ) := by
-  first | (exact @GlobalTheory.ShinBlock.nrm_blocks)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisTwistedNormGLDiagonalBlocksStatement =====
@@ -841,10 +821,6 @@ open scoped Classical
 
 namespace GlobalTheory.Shin.LiftHc
 
-theorem galAct_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (n : ℕ) (t : F' ≃ₐ[F] F')
-    (x : GL (Fin n) F) : galAct F F' n t (incl F F' n x) = incl F F' n x := by
-  ext i j; simp [galAct_apply, gal, incl]
-
 theorem inPar_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (a n : ℕ) (x : GL (Fin n) F) :
     InPar a (incl F F' n x) ↔ InPar a x := by
   simp [InPar, incl, gal]
@@ -852,9 +828,6 @@ theorem inPar_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (a n : ℕ)
 theorem inPar_gal {F : Type} [Field F] (t : F →+* F) (a n : ℕ) (x : GL (Fin n) F) (hx : InPar a x) :
     InPar a (gal t n x) := by
   intro i j hj hi; simp [gal, hx i j hj hi]
-
-theorem gal_id {F : Type} [Field F] (n : ℕ) (x : GL (Fin n) F) : gal (RingHom.id F) n x = x := by
-  ext i j; simp [gal]
 
 theorem nrm_conj_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (s : F' ≃ₐ[F] F') {n : ℕ}
     (δ : GL (Fin n) F') (y₀ : GL (Fin n) F) :
@@ -865,7 +838,7 @@ theorem nrm_conj_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (s : F' 
   have h : ∀ i : ℕ, galAct F F' n (s ^ i) (c⁻¹ * δ * c) =
       MulAut.conj c⁻¹ (galAct F F' n (s ^ i) δ) := by
     intro i
-    rw [map_mul, map_mul, map_inv, galAct_incl, MulAut.conj_apply, inv_inv]
+    rw [map_mul, map_mul, map_inv, _root_.GlobalTheory.Shin.NormFibre.galAct_incl, MulAut.conj_apply, inv_inv]
   simp only [h]
   have e := map_list_prod (MulAut.conj c⁻¹) (L.map fun i => galAct F F' n (s ^ i) δ)
   rw [List.map_map] at e
@@ -875,20 +848,20 @@ theorem nrm_conj_incl {F F' : Type} [Field F] [Field F'] [Algebra F F'] (s : F' 
 theorem count {G₀ G : Type} [Group G₀] [Group G] [Finite G₀] [Finite G] (ι : G₀ →* G)
     (H : Subgroup G) (T : G → ℂ) (hT : ∀ y, T y ≠ 0 → ∃ k p, p ∈ H ∧ y = ι k * p) :
     (Nat.card (H.comap ι) : ℂ) * ∑ᶠ y, T y = ∑ᶠ k : G₀, ∑ᶠ p : H, T (ι k * p) :=
-  GlobalTheory.T.card_comap_mul_finsum_eq_finsum_fibres G₀ G ι H T hT
+  _root_.GlobalTheory.fibre_count_comap_mul G₀ G ι H T hT
 
 theorem blocks_twist {F : Type} [Field F] (t : F →+* F) (a b n : ℕ) (hn : n = a + b)
     (p x : GL (Fin n) F) (hp : InPar a p) (hx : InPar a x) :
     tlG a (p⁻¹ * x * gal t n p) = (tlG a p)⁻¹ * tlG a x * gal t a (tlG a p) ∧
     brG a b (p⁻¹ * x * gal t n p) = (brG a b p)⁻¹ * brG a b x * gal t b (brG a b p) :=
-  GlobalTheory.T.diagonalBlocks_twistedConj_blockUpperTriangular F t a b n hn p x hp hx
+  _root_.GlobalTheory.Shin.BlocksTwist.blocks_twist F t a b n hn p x hp hx
 
 theorem inPar_conj_adjoin {F F' : Type} [Field F] [Field F'] [Algebra F F'] (a n : ℕ)
     (γ y₀ : GL (Fin n) F) (δ : GL (Fin n) F')
     (hA : (δ : Matrix (Fin n) (Fin n) F') ∈
       Algebra.adjoin F' {((incl F F' n γ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F')})
     (hP : InPar a (y₀⁻¹ * γ * y₀)) : InPar a ((incl F F' n y₀)⁻¹ * δ * incl F F' n y₀) :=
-  GlobalTheory.T.inPar_conj_of_mem_adjoin_incl_of_inPar_conj F F' a n γ y₀ δ hA hP
+  _root_.GlobalTheory.adjoin_conj_inPar F F' a n γ y₀ δ hA hP
 
 theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F')
     (hs : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) (a b n : ℕ) (hn : n = a + b)
@@ -903,11 +876,11 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
       else 0) =
     (if InPar a (y₀⁻¹ * γ * y₀) then α (tlG a (y₀⁻¹ * γ * y₀)) * β (brG a b (y₀⁻¹ * γ * y₀)) else 0) := by
   have hle : a ≤ n := by omega
-  obtain ⟨H, π, hH, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F' a b n hn
-  obtain ⟨H₀, π₀, hH₀, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
+  obtain ⟨H, π, hH, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F' a b n hn
+  obtain ⟨H₀, π₀, hH₀, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
   set c := incl F F' n y₀ with hc
   set δ₁ := c⁻¹ * δ * c with hδ₁def
-  have hgc : gal (s : F' →+* F') n c = c := galAct_incl n s y₀
+  have hgc : gal (s : F' →+* F') n c = c := _root_.GlobalTheory.Shin.NormFibre.galAct_incl n s y₀
   have key : (c * p)⁻¹ * δ * gal (s : F' →+* F') n (c * p) = p⁻¹ * δ₁ * gal (s : F' →+* F') n p := by
     rw [map_mul, hgc, hδ₁def]; group
   by_cases h1 : InPar a (y₀⁻¹ * γ * y₀)
@@ -921,9 +894,9 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
     obtain ⟨et, eb⟩ := blocks_twist (s : F' →+* F') a b n hn p δ₁ hp hδ₁
     have hN₁ : nrm s δ₁ = incl F F' n (y₀⁻¹ * γ * y₀) := by
       rw [hδ₁def, nrm_conj_incl, hN, map_mul, map_mul, map_inv]
-    obtain ⟨nt, nb⟩ := GlobalTheory.T.galoisTwistedNormGL_diagonal_blocks F F' s hs a b n hn _ δ₁ h1 hδ₁ hN₁
-    have lα := GlobalTheory.T.base_change_lift_class_function F F' s hs a α hα
-    have lβ := GlobalTheory.T.base_change_lift_class_function F F' s hs b β hβ
+    obtain ⟨nt, nb⟩ := _root_.GlobalTheory.ShinBlock.nrm_blocks F F' s hs a b n hn _ δ₁ h1 hδ₁ hN₁
+    have lα := _root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs a α hα
+    have lβ := _root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs b β hβ
     rw [et, eb]
     have eα := lα.2 (tlG a δ₁) (tlG a p)
     have eβ := lβ.2 (brG a b δ₁) (brG a b p)
@@ -931,7 +904,7 @@ theorem term (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : 
     rw [eα, eβ, lα.1 _ _ (by unfold IsNorm; rw [nt]), lβ.1 _ _ (by unfold IsNorm; rw [nb])]
   · rw [if_neg h1, if_neg]
     intro hin
-    obtain ⟨y₁, p₁, hp₁, e, hγ₁⟩ := (GlobalTheory.T.blockUpper_twistedConj_iff_defined_over_base F F' s hs a n hle γ δ (c * p) hA hN).1 hin
+    obtain ⟨y₁, p₁, hp₁, e, hγ₁⟩ := (_root_.GlobalTheory.Shin.inPar_twistedConj_iff F F' s hs a n hle γ δ (c * p) hA hN).1 hin
     have hh : incl F F' n (y₁⁻¹ * y₀) = p₁ * p⁻¹ := by
       rw [map_mul, map_inv, ← hc, show c = incl F F' n y₁ * p₁ * p⁻¹ by rw [← e]; group]
       group
@@ -952,7 +925,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
     (hN : nrm s δ = incl F F' n γ) :
     hcTw (s : F' →+* F') a b (shLift s α) (shLift s β) n δ = hc a b α β n γ := by
   haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  obtain ⟨H, -, hH, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F' a b n hn
+  obtain ⟨H, -, hH, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F' a b n hn
   set T : GL (Fin n) F' → ℂ := fun y => if InPar a (y⁻¹ * δ * gal (s : F' →+* F') n y) then
       shLift s α (tlG a (y⁻¹ * δ * gal (s : F' →+* F') n y)) *
       shLift s β (brG a b (y⁻¹ * δ * gal (s : F' →+* F') n y)) else 0 with hTdef
@@ -962,7 +935,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
     intro y hy
     have hin : InPar a (y⁻¹ * δ * gal (s : F' →+* F') n y) := by
       by_contra h; exact hy (if_neg h)
-    obtain ⟨k, p, hp, e, -⟩ := (GlobalTheory.T.blockUpper_twistedConj_iff_defined_over_base F F' s hs a n (by omega) γ δ y hA hN).1 hin
+    obtain ⟨k, p, hp, e, -⟩ := (_root_.GlobalTheory.Shin.inPar_twistedConj_iff F F' s hs a n (by omega) γ δ y hA hN).1 hin
     exact ⟨k, p, (hH p).2 hp, e⟩
   have hcnt := count (incl F F' n) H T hsupp
   have hterm : ∀ k (p : H), T (incl F F' n k * p) = c₀ k := fun k p =>
@@ -982,7 +955,7 @@ theorem pointwise (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] 
   simp only [hconst] at hcnt
   rw [← mul_finsum] at hcnt
   have hhc : hc a b α β n γ = (Nat.card {p : GL (Fin n) F // InPar a p} : ℂ)⁻¹ * ∑ᶠ y₀, c₀ y₀ := by
-    simp only [hc, hcTw, gal_id, hc₀]
+    simp only [hc, hcTw, _root_.GlobalTheory.Shin.gal_id_eq, hc₀]
   rw [hhc, e1, e2] at *
   unfold hcTw
   rw [← hTdef]
@@ -995,12 +968,12 @@ theorem GlobalTheory.Shin.shLift_hc_eq_hcTw : ∀ (F F' : Type) [Field F] [Field
   intro F F' _ _ _ _ s hs a b n hn α β hα hβ
   haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
   funext δ
-  obtain ⟨γ, hγ⟩ := GlobalTheory.T.every_element_is_norm F F' s hs n δ
-  obtain ⟨y, hyA, hyN⟩ := GlobalTheory.T.conjugate_into_adjoined_algebra F F' s hs n δ γ hγ
-  have hcl := (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) a b n α β).2.1
-  have hL := (GlobalTheory.T.base_change_lift_class_function F F' s hs n _ hcl).2 δ y
-  have hR := (GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F' (s : F' →+* F') a b n (shLift s α) (shLift s β)).1 δ y
-  rw [← hL, ← hR, (GlobalTheory.T.base_change_lift_class_function F F' s hs n _ hcl).1 _ γ (by unfold IsNorm; rw [hyN])]
+  obtain ⟨γ, hγ⟩ := _root_.GlobalTheory.Shin.exists_isNorm F F' s hs n δ
+  obtain ⟨y, hyA, hyN⟩ := _root_.GlobalTheory.Shin.isNorm_exists_twistedConj_adjoin F F' s hs n δ γ hγ
+  have hcl := (_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) a b n α β).2.1
+  have hL := (_root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs n _ hcl).2 δ y
+  have hR := (_root_.GlobalTheory.Shin.twisted_class_main F' (s : F' →+* F') a b n (shLift s α) (shLift s β)).1 δ y
+  rw [← hL, ← hR, (_root_.GlobalTheory.Shin.shLift_isNorm_and_twisted_inv F F' s hs n _ hcl).1 _ γ (by unfold IsNorm; rw [hyN])]
   exact (GlobalTheory.Shin.LiftHc.pointwise F F' s hs a b n hn α β hα hβ γ _ hyA hyN).symm
 end -- clump:auto
 end -- clump:auto
@@ -1014,8 +987,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.shintaniLift_harishChandraInduction_eq_twisted : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ), IsCl α → IsCl β → shLift s (hc a b α β n) = hcTw (s : F' →+* F') a b (shLift s α) (shLift s β) n := by
-  first | (exact @GlobalTheory.Shin.shLift_hc_eq_hcTw)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShintaniLiftHarishChandraInductionEqTwistedStatement =====

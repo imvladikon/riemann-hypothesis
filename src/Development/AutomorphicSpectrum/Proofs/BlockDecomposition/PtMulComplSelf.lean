@@ -43,12 +43,13 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BlockMatrixTwoByTwoFinStandardSkewMap
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PtMMapOfZero, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PtMulComplSelf
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PtMMapOfZero =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PtMMapOfZero", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.HermitianCellMeasures.CellDefs\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLeviBlock\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PtMMapOfZero", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.HermitianCellMeasures.CellDefs\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLeviBlock\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BlockMatrixTwoByTwoFinStandardSkewMap\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -122,28 +123,16 @@ section Blocks
 
 variable {R : Type} [CommRing R] {n : ℕ}
 
-theorem blk_mul (a b c d a' b' c' d' : Matrix (Fin n) (Fin n) R) :
-    blk4 a b c d * blk4 a' b' c' d' =
-      blk4 (a * a' + b * c') (a * b' + b * d') (c * a' + d * c') (c * b' + d * d') := by
-  rw [blk4, blk4, Matrix.submatrix_mul_equiv, Matrix.fromBlocks_multiply, blk4]
-
-theorem blk_one : blk4 (1 : Matrix (Fin n) (Fin n) R) 0 0 1 = 1 := by
-  rw [blk4, Matrix.fromBlocks_one, Matrix.submatrix_one_equiv]
-
 theorem blk_add (a b c d a' b' c' d' : Matrix (Fin n) (Fin n) R) :
     blk4 a b c d + blk4 a' b' c' d' = blk4 (a + a') (b + b') (c + c') (d + d') := by
   rw [blk4, blk4, blk4, ← Matrix.fromBlocks_add]; rfl
-
-theorem blk_smul (r : R) (a b c d : Matrix (Fin n) (Fin n) R) :
-    r • blk4 a b c d = blk4 (r • a) (r • b) (r • c) (r • d) := by
-  rw [blk4, blk4, ← Matrix.fromBlocks_smul]; rfl
 
 theorem ptM_unip {e : R} (he : e * e = e) {y : Matrix (Fin n) (Fin n) R} (hy : e • y = y) :
     ptM e he (blk4 1 y 0 1) = blk4 1 y 0 1 := by
   have h1 : (1 - e) • (1 : Matrix (Fin n) (Fin n) R) + e • 1 = 1 := by rw [← add_smul]; simp
   rw [ptM_apply]
-  nth_rw 1 [← blk_one]
-  rw [blk_smul, blk_smul, blk_add]
+  nth_rw 1 [← _root_.GlobalTheory.StdUnn.Frame.block_matrix_one]
+  rw [_root_.GlobalTheory.StdUnn.Frame.blockMatrixTwoByTwoFin_smul, _root_.GlobalTheory.StdUnn.Frame.blockMatrixTwoByTwoFin_smul, blk_add]
   simp [h1, hy]
 
 theorem blk_apply (a b c d : Matrix (Fin n) (Fin n) R) (x y : Fin n ⊕ Fin n) :
@@ -170,22 +159,11 @@ section Gen2
 
 variable {R R' : Type} [CommRing R] [CommRing R'] {n : ℕ}
 
-theorem weyl_map (φ : R →+* R') :
-    (blk4 (0 : Matrix (Fin n) (Fin n) R) 1 (-1) 0).map φ = blk4 (0 : Matrix (Fin n) (Fin n) R') 1 (-1) 0 := by
-  ext i j
-  obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-  obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-  rw [Matrix.map_apply, blk_apply, blk_apply]
-  rcases i with i | i <;> rcases j with j | j <;> by_cases h : i = j <;> simp [h]
-
 theorem map_compl_zero (φ : R →+* R') {e : R} (h : φ e = 1) : φ (1 - e) = 0 := by
   rw [map_sub, map_one, h, sub_self]
 
 theorem map_compl_one (φ : R →+* R') {e : R} (h : φ e = 0) : φ (1 - e) = 1 := by
   rw [map_sub, map_one, h, sub_zero]
-
-theorem bc_val {m : Type} [Fintype m] [DecidableEq m] (φ : R →+* R') (g : GL m R) :
-    (Formalism.UG.bc φ g).1 = g.1.map φ := rfl
 
 theorem cell_alg {e : R} {c d y : Matrix (Fin n) (Fin n) R} (h : (e • c) * y = e • d) :
     e • (c * -y + d * 1) = 0 := by
@@ -193,7 +171,7 @@ theorem cell_alg {e : R} {c d y : Matrix (Fin n) (Fin n) R} (h : (e • c) * y =
 
 theorem weyl_inv (y : Matrix (Fin n) (Fin n) R) :
     blk4 (0 : Matrix (Fin n) (Fin n) R) 1 (-1) 0 * blk4 1 y 0 1 * blk4 (-y) (-1) 1 0 = 1 := by
-  rw [blk_mul, blk_mul, ← blk_one]
+  rw [_root_.GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul, _root_.GlobalTheory.StdUnn.Frame.submatrix_fromBlocks_mul, ← _root_.GlobalTheory.StdUnn.Frame.block_matrix_one]
   simp
 
 end Gen2
@@ -295,7 +273,7 @@ theorem cB_pt (e : AE D) (he : e * e = e) (hc : cA D e = e) (x : G D n) : cB (pt
     Matrix.smul_apply, Matrix.one_apply_ne hne, smul_zero, zero_add]
 
 theorem cB_inv {q : G D n} (h : cB q = 0) : cB q⁻¹ = 0 := by
-  have h1 : mat (1 : G D n) = blk4 1 0 0 1 := by rw [mat_one', blk_one]
+  have h1 : mat (1 : G D n) = blk4 1 0 0 1 := by rw [mat_one', _root_.GlobalTheory.StdUnn.Frame.block_matrix_one]
   have c1 := cB_mul q q⁻¹
   have d1 := dB_mul q q⁻¹
   rw [mul_inv_cancel, cB_of h1, h, zero_mul, zero_add] at c1
@@ -355,8 +333,8 @@ theorem matHom_proj_weyl (σ : E →ₐ[F] E) (J : Matrix (Fin (n + n)) (Fin (n 
     (v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)) (g : GAd σ J)
     (hg : (matHom _ σ J g).1 = blk4 0 1 (-1) 0) :
     (matHom _ σ J (proj σ J v g)).1 = blk4 (0 : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) 1 (-1) 0 := by
-  rw [matHom_proj, bc_val, hg]
-  exact weyl_map _
+  rw [matHom_proj, _root_.Formalism.UG.P.bc_coe, hg]
+  exact _root_.GlobalTheory.StdUnn.Frame.blockMatrixTwoByTwoFin_standardSkew_map _
 
 theorem stab_of_weyl (σ : E →ₐ[F] E) (J : Matrix (Fin (n + n)) (Fin (n + n)) E)
     (v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)) (k : GLoc σ J v)
@@ -443,19 +421,19 @@ theorem proj_weyl {w : G D n} (hw : IsW w) (v : Pl D) :
 theorem proj_pt_zero {f : AE D} (hf : f * f = f) (hc : cA D f = f) (x : G D n) {v : Pl D} (h : cv D v f = 0) :
     proj D.sp.cm.sig (Jst D n) v (pt f hf hc x) = 1 := by
   refine matHom_injective _ _ _ (Units.ext ?_)
-  rw [matHom_proj, map_one, bc_val]
+  rw [matHom_proj, map_one, _root_.Formalism.UG.P.bc_coe]
   exact ptM_map_of_zero (cv D v) hf h (mat x)
 
 theorem proj_pt_one {f : AE D} (hf : f * f = f) (hc : cA D f = f) (x : G D n) {v : Pl D} (h : cv D v f = 1) :
     proj D.sp.cm.sig (Jst D n) v (pt f hf hc x) = proj D.sp.cm.sig (Jst D n) v x := by
   refine matHom_injective _ _ _ (Units.ext ?_)
-  rw [matHom_proj, matHom_proj, bc_val, bc_val]
+  rw [matHom_proj, matHom_proj, _root_.Formalism.UG.P.bc_coe, _root_.Formalism.UG.P.bc_coe]
   exact ptM_map_of_one (cv D v) hf h (mat x)
 
 theorem projArch_pt_zero {f : AE D} (hf : f * f = f) (hc : cA D f = f) (x : G D n) {w : NumberField.InfinitePlace D.host.F}
     (h : compInf D.host.F D.host.E w f = 0) : projArch D.sp.cm.sig (Jst D n) w (pt f hf hc x) = 1 := by
   refine matHom_injective _ _ _ (Units.ext ?_)
-  rw [matHom_projArch, map_one, bc_val]
+  rw [matHom_projArch, map_one, _root_.Formalism.UG.P.bc_coe]
   exact ptM_map_of_zero (compInf D.host.F D.host.E w) hf h (mat x)
 
 theorem cv_of_mem {S : Finset (Pl D)} {e : AE D} (hS : IsIdem S e) {v : Pl D} (hv : v ∈ S) : cv D v e = 1 := by

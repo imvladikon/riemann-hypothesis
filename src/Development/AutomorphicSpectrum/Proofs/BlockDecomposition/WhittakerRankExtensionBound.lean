@@ -452,8 +452,6 @@ section -- clump:auto
 open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.LocGL GlobalTheory.RgGu
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.irreducible_subquotients_equiv_of_not_le : ∀ {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ G V) (E K L : Subrepresentation ρ), (subQuot E K).IsIrreducible → (subQuot E L).IsIrreducible → ¬ E ≤ E ⊓ K ⊔ E ⊓ L → Nonempty ((subQuot E K).Equiv (subQuot E L)) := by
-  first | exact @GlobalTheory.CompanionTheory.GenCore.nonempty_equiv_subQuot
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientsEquivOfNotLeStatement =====
@@ -649,7 +647,7 @@ theorem nonempty_equiv_of_generic {G V : Type} [Group G] [AddCommGroup V] [Modul
         Subrepresentation.toSubmodule_inf]
       exact sup_le (inf_le_right.trans hBT) (inf_le_right.trans hDT)
     exact (fun v hv => h3 (h hv) : (A ⊓ C).toSubmodule ≤ T)
-  obtain ⟨e₃⟩ := GlobalTheory.T.irreducible_subquotients_equiv_of_not_le ρ (A ⊓ C) B D hiB hiD hnot
+  obtain ⟨e₃⟩ := _root_.GlobalTheory.CompanionTheory.GenCore.nonempty_equiv_subQuot ρ (A ⊓ C) B D hiB hiD hnot
   exact ⟨(e₁.symm.trans e₃).trans e₂⟩
 
 end GlobalTheory.CompanionTheory.GenCoreMain

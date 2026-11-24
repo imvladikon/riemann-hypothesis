@@ -68,6 +68,7 @@ import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.ReduceModChar
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightIrreducible.ConstructionB
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Tactic.Linter.HaveILetI
@@ -181,10 +182,6 @@ def capZ {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (sg : DomWeight n) :
   ((List.finRange n).map fun i =>
     ((((Rset h lam sg i).erase (sg.w i)).toList.map fun v => capF h lam i v).prod)).prod
 
-theorem list_scalar {V ι : Type*} [AddCommGroup V] [Module ℂ V] (L : List ι) (F : ι → Module.End ℂ V)
-    (c : ι → ℂ) (x : V) (hL : ∀ j ∈ L, F j x = c j • x) : (L.map F).prod x = (L.map c).prod • x := by
-  first | (apply Bl.general_b_fact_right.goal1 <;> assumption)
-
 theorem capF_scalar (hC : CapScalar) {n N : ℕ} (h : n + 1 = N) (lam : DomWeight N) (mu : DomWeight n)
     (φ : MvPolynomial (Fin n × Fin n) ℂ →ₗ[ℂ] MvPolynomial (Fin N × Fin N) ℂ) (hφ : IsEqv h mu lam φ)
     (s : MvPolynomial (Fin n × Fin n) ℂ) (hs : s ∈ nablaSq ℂ n mu) (i : Fin n) (v : ℤ) :
@@ -201,7 +198,7 @@ theorem capZ_scalar (hC : CapScalar) {n N : ℕ} (h : n + 1 = N) (lam : DomWeigh
     (s : MvPolynomial (Fin n × Fin n) ℂ) (hs : s ∈ nablaSq ℂ n mu) :
     capZ h lam sg (φ s) = ((zScalar h lam sg mu : ℤ) : ℂ) • φ s := by
   unfold capZ
-  rw [list_scalar (List.finRange n) _
+  rw [_root_.Bl.general_b_fact_right.goal1 (List.finRange n) _
     (fun i => ∏ v ∈ (Rset h lam sg i).erase (sg.w i),
       ∏ j : Fin n, ((((v - (i.1 : ℤ)) - mu.w j + (j.1 : ℤ) : ℤ)) : ℂ)) (φ s)]
   · rw [← Fin.prod_univ_def]
@@ -209,7 +206,7 @@ theorem capZ_scalar (hC : CapScalar) {n N : ℕ} (h : n + 1 = N) (lam : DomWeigh
     push_cast
     rfl
   · intro i _
-    rw [list_scalar _ _ (fun v => ∏ j : Fin n, ((((v - (i.1 : ℤ)) - mu.w j + (j.1 : ℤ) : ℤ)) : ℂ)) (φ s),
+    rw [_root_.Bl.general_b_fact_right.goal1 _ _ (fun v => ∏ j : Fin n, ((((v - (i.1 : ℤ)) - mu.w j + (j.1 : ℤ) : ℤ)) : ℂ)) (φ s),
       Finset.prod_map_toList]
     intro v _
     exact capF_scalar hC h lam mu φ hφ s hs i v
@@ -418,7 +415,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GelfandTsetlinLowering.SqActMemNabla =====
 
 -- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitPowerNormScale.NormUnitsZpowSq =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitPowerNormScale.NormUnitsZpowSq", "h": "module\n\npublic import Formalism.LocalRingCardinality.DataCoeff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.Params\n\n"}
+-- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitPowerNormScale.NormUnitsZpowSq", "h": "module\n\npublic import Formalism.LocalRingCardinality.DataCoeff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.Params\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -428,20 +425,10 @@ namespace PI.GTS
 
 open Formalism.BasicNotions MvPolynomial
 
-private theorem fockF_eq_sum_lemma {σ : Type*} (f g : MvPolynomial σ ℂ) (S : Finset (σ →₀ ℕ))
-    (hS : f.support ⊆ S) :
-    Formalism.REAL.fockF f g =
-      ∑ m ∈ S, f.coeff m * star (g.coeff m) * ((∏ k ∈ m.support, (m k).factorial : ℕ) : ℂ) := by
-  unfold Formalism.REAL.fockF
-  apply Finset.sum_subset hS
-  intro m _ hm
-  have h0 : f.coeff m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm
-  simp [h0]
-
 theorem fockF_smul_self {σ : Type*} (c : ℂ) (f : MvPolynomial σ ℂ) :
     Formalism.REAL.fockF (c • f) (c • f) = (c * star c) * Formalism.REAL.fockF f f := by
-  rw [fockF_eq_sum_lemma (c • f) _ f.support MvPolynomial.support_smul,
-    fockF_eq_sum_lemma f f f.support subset_rfl, Finset.mul_sum]
+  rw [_root_.Formalism.REAL.fischerInner_eq_sum_of_subset (c • f) _ f.support MvPolynomial.support_smul,
+    _root_.Formalism.REAL.fischerInner_eq_sum_of_subset f f f.support subset_rfl, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   simp only [MvPolynomial.coeff_smul, smul_eq_mul, star_mul']
   ring
@@ -818,39 +805,21 @@ theorem normFock_map {N : ℕ} (lam : DomWeight N) (a b : MvPolynomial (Fin N ×
   rw [brFockF_map, extremal_map, brFockF_map]
   exact (Rat.cast_div _ _).symm
 
-private theorem fockQ_eq_sum_of_support_subset {σ : Type*} (f g : MvPolynomial σ ℚ) (S : Finset (σ →₀ ℕ))
-    (hS : f.support ⊆ S) :
-    fockQ f g = ∑ m ∈ S, f.coeff m * g.coeff m * ((∏ k ∈ m.support, (m k).factorial : ℕ) : ℚ) := by
-  unfold fockQ
-  apply Finset.sum_subset hS
-  intro m _ hm
-  have h0 : f.coeff m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm
-  simp [h0]
-
 theorem normFockQ_symm {N : ℕ} (lam : DomWeight N) (a b : MvPolynomial (Fin N × Fin N) ℚ) :
     normFockQ lam a b = normFockQ lam b a := by
   classical
   unfold normFockQ
   congr 1
-  rw [fockQ_eq_sum_of_support_subset a b (a.support ∪ b.support) Finset.subset_union_left,
-    fockQ_eq_sum_of_support_subset b a (a.support ∪ b.support) Finset.subset_union_right]
+  rw [_root_.Formalism.GradedWeylDivisibility.lfockq_eq_sum a b (a.support ∪ b.support) Finset.subset_union_left,
+    _root_.Formalism.GradedWeylDivisibility.lfockq_eq_sum b a (a.support ∪ b.support) Finset.subset_union_right]
   refine Finset.sum_congr rfl fun m _ => ?_
   ring
-
-private theorem fockF_eq_sum_lemma {σ : Type*} (f g : MvPolynomial σ ℂ) (S : Finset (σ →₀ ℕ))
-    (hS : f.support ⊆ S) :
-    fockF f g = ∑ m ∈ S, f.coeff m * star (g.coeff m) * ((∏ k ∈ m.support, (m k).factorial : ℕ) : ℂ) := by
-  unfold fockF
-  apply Finset.sum_subset hS
-  intro m _ hm
-  have h0 : f.coeff m = 0 := by simpa [MvPolynomial.mem_support_iff] using hm
-  simp [h0]
 
 private theorem fockF_swap_eq_star {σ : Type*} [DecidableEq σ] (f g : MvPolynomial σ ℂ) :
     fockF g f = star (fockF f g) := by
   classical
-  rw [fockF_eq_sum_lemma g f (f.support ∪ g.support) Finset.subset_union_right,
-    fockF_eq_sum_lemma f g (f.support ∪ g.support) Finset.subset_union_left, star_sum]
+  rw [_root_.Formalism.REAL.fischerInner_eq_sum_of_subset g f (f.support ∪ g.support) Finset.subset_union_right,
+    _root_.Formalism.REAL.fischerInner_eq_sum_of_subset f g (f.support ∪ g.support) Finset.subset_union_left, star_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   simp only [star_mul', star_star, star_natCast]
   ring
@@ -1103,11 +1072,6 @@ section -- clump:auto
 noncomputable section
 
 namespace PI.WGL
-
-open Formalism.BasicNotions MvPolynomial
-
-theorem ioExists_of (h3 : PI.HwIrred) (h4 : PI.GTBranch) (hx : XiFacts) : IoExists :=
-  ioExists_of' h3 h4 hx
 
 end PI.WGL
 end -- clump:auto
@@ -1869,7 +1833,7 @@ theorem gTLower_of (h2 : Formalism.BasicNotions.FactDelDualNabla) (h3 : PI.HwIrr
   have hX : XiFacts := xi_coefficient_facts
   have hZ : CapelliZ := capelli_scalar_identity
   have hV : ZScalarVanish := scalar_vanishing_criterion
-  exact gTLower_of_steps hN hX (ioExists_of h3 h4 hX)
+  exact gTLower_of_steps hN hX (_root_.PI.WGL.ioExists_of' h3 h4 hX)
     (ioIntegral_of hZ (liftMod_of h3 h4 hZ hV hN hX) hV)
     (adjointBr_of h3 h5 hN hX) (brIntegral_of h2 h3)
 

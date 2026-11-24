@@ -95,9 +95,9 @@ theorem twist_mul_map : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
     (τ : Pair (sgl (tw q i)) (sgl (tw q j)) K), ∃ φ : tw q k ⟶ K.X 0, ∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)),
       Sec.map φ (twGen k ζ) = τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ)) := by
   intro q _ i j k hk K τ
-  obtain ⟨-, -, -, h4i, h5i, -⟩ := GlobalTheory.T.tateTwist_sections_locally_generated q i
-  obtain ⟨-, -, -, h4j, h5j, -⟩ := GlobalTheory.T.tateTwist_sections_locally_generated q j
-  obtain ⟨-, -, -, -, -, h6⟩ := GlobalTheory.T.tateTwist_sections_locally_generated q k
+  obtain ⟨-, -, -, h4i, h5i, -⟩ := _root_.GlobalTheory.EtC.twist_sections q i
+  obtain ⟨-, -, -, h4j, h5j, -⟩ := _root_.GlobalTheory.EtC.twist_sections q j
+  obtain ⟨-, -, -, -, -, h6⟩ := _root_.GlobalTheory.EtC.twist_sections q k
   let e : ∀ U : Scheme.{0}, Prim q Γ(U, ⊤) → Sec (K.X 0) U := fun U ζ =>
     τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))
   have hnat : ∀ (V U : Scheme.{0}) (g : V ⟶ U) ζ, Sec.res g (e U ζ) = e V (ζ.map g.appTop.hom) := by
@@ -128,8 +128,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_tateTwist_mul_degreeZero_hom : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → ∀ {K : Cx (ZMod q)} (τ : Pair (sgl (tw q i)) (sgl (tw q j)) K), ∃ φ : tw q k ⟶ K.X 0, ∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)), Sec.map φ (twGen k ζ) = τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ)) := by
-  first | (exact @GlobalTheory.EtC.twist_mul_map)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTateTwistMulDegreeZeroHomStatement =====
@@ -201,8 +199,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.isTensor_of_compat_isIso_target : ∀ (R : Type) [CommRing R] {I J K K' : Cx R} (τ : Pair I J K) (ν : Pair I J K') (u : K ⟶ K'), IsIso u → τ.Compat ν (𝟙 I) (𝟙 J) u → τ.IsTensor → ν.IsTensor := by
-  first | (exact @GlobalTheory.EtC.Pair.isTensor_of_compat_isIso)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTensorOfCompatIsIsoTargetStatement =====
@@ -281,10 +277,7 @@ noncomputable section
 
 namespace GlobalTheory.TwMulOrder
 
-theorem loc_mono {U : Scheme.{0}} {P Q : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P)
-    (hPQ : ∀ V g, P V g → Q V g) : Loc U Q := by
-  obtain ⟨S, hS, hP⟩ := h
-  exact ⟨S, hS, fun V g hg => hPQ V g (hP V g hg)⟩
+alias loc_mono := _root_.GlobalTheory.EtC.TensLocBij.locMono
 
 theorem loc_bind {U : Scheme.{0}} {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} {Q : Scheme.{0} → Prop} (h : Loc U P)
     (hPQ : ∀ V (g : V ⟶ U), P V g → Loc V fun W _ => Q W) : Loc U fun W _ => Q W := by
@@ -376,8 +369,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.tateTwistGenerator_tmul_order_locally : ∀ (q : ℕ) [NeZero q] (i j : ℤ) (W : Scheme.{0}) (ζ : Prim q Γ(W, ⊤)) (c : ℕ), c • (twGen i ζ ⊗ₜ[ULift.{1} (ZMod q)] twGen j ζ) = 0 → Loc W fun V _ => Nonempty V → q ∣ c := by
-  first | (exact @GlobalTheory.TwMulOrder.tw_mul_order)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistGeneratorTmulOrderLocallyStatement =====
@@ -401,15 +392,10 @@ theorem loc_bind {U : Scheme.{0}} {P Q : ∀ V : Scheme.{0}, (V ⟶ U) → Prop}
   · rintro W _ ⟨V, k, g, hg, hk, rfl⟩
     exact hRQ V g hg W k hk
 
-theorem loc_top {U : Scheme.{0}} {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : ∀ V g, P V g) : Loc U P :=
-  ⟨⊤, (Scheme.etaleTopology).top_mem U, fun V g _ => h V g⟩
-
 theorem loc_empty {U : Scheme.{0}} [IsEmpty U] {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} : Loc U P :=
   ⟨⊥, Scheme.bot_mem_grothendieckTopology (P := @Etale) U, fun _ _ hg => hg.elim⟩
 
-theorem res_comp {R : Type} [CommRing R] {F : Shv R} {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (x : Sec F U) :
-    Sec.res (k ≫ g) x = Sec.res k (Sec.res g x) := by
-  simp [Sec.res, op_comp, Functor.map_comp]
+alias res_comp := _root_.GlobalTheory.TwSec.res_comp
 
 theorem map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
     Sec.map φ (Sec.res g x) = Sec.res g (Sec.map φ x) :=
@@ -429,12 +415,7 @@ theorem nsmul_eq_zero_of_dvd {q : ℕ} {M : Type*} [AddCommGroup M] [Module (ULi
     exact (CharP.cast_eq_zero_iff (ZMod q) q c).2 h
   rw [this, zero_smul]
 
-theorem res_zero {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) : Sec.res (F := F) g 0 = 0 :=
-  map_zero _
-
-theorem res_nsmul {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) (c : ℕ) (x : Sec F U) :
-    Sec.res g (c • x) = c • Sec.res g x :=
-  map_nsmul _ _ _
+alias res_zero := _root_.GlobalTheory.TwSec.res_zero
 
 theorem map_nsmul' {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (c : ℕ) (x : Sec F U) :
     Sec.map φ (c • x) = c • Sec.map φ x :=
@@ -479,16 +460,16 @@ namespace GlobalTheory.EtC.TwMulInj
 
 theorem tw_mul_loc_injective : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → (∀ (W : Scheme.{0}) (ζ : Prim q Γ(W, ⊤)) (c : ℕ), c • (twGen i ζ ⊗ₜ[ULift.{1} (ZMod q)] twGen j ζ) = 0 → Loc W fun V _ => Nonempty V → q ∣ c) → ∀ {K : Cx (ZMod q)} (τ : Pair (sgl (tw q i)) (sgl (tw q j)) K), τ.IsTensor → ∀ φ : tw q k ⟶ K.X 0, (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)), Sec.map φ (twGen k ζ) = τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))) → ∀ (U : Scheme.{0}) (a : Sec (tw q k) U), Sec.map φ a = 0 → Loc U fun _ g => Sec.res g a = 0 := by
   intro q _ i j k hk hyp K τ hτ φ hφ U a ha
-  have Tk := GlobalTheory.T.tateTwist_sections_locally_generated q k
-  have Ti := GlobalTheory.T.tateTwist_sections_locally_generated q i
-  have Tj := GlobalTheory.T.tateTwist_sections_locally_generated q j
+  have Tk := _root_.GlobalTheory.EtC.twist_sections q k
+  have Ti := _root_.GlobalTheory.EtC.twist_sections q i
+  have Tj := _root_.GlobalTheory.EtC.twist_sections q j
   refine loc_bind (Tk.1 U a) ?_
   rintro V g (h0 | ⟨ζ, c, hc⟩)
-  · exact loc_top fun W k' => by rw [res_comp, h0, res_zero]
+  · exact _root_.GlobalTheory.TwSec.loc_all fun W k' => by rw [res_comp, h0, res_zero]
   ·
     have hres : ∀ (W : Scheme.{0}) (h : W ⟶ V), Sec.res (h ≫ g) a = c • Sec.res h (twGen k ζ) := by
       intro W h
-      rw [res_comp, hc, res_nsmul]
+      rw [res_comp, hc, _root_.GlobalTheory.TwSec.res_nsmul]
     set A := Sec.map (sglι (tw q i)) (twGen i ζ) with hA
     set B := Sec.map (sglι (tw q j)) (twGen j ζ) with hB
     have h1 : c • τ.mul V 0 0 0 (add_zero 0) A B = 0 := by
@@ -529,7 +510,7 @@ theorem tw_mul_loc_injective : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k
     rcases isEmpty_or_nonempty V'' with hV | hV
     · exact loc_empty
     · have hqc := hq hV
-      exact loc_top fun W h => by
+      exact _root_.GlobalTheory.TwSec.loc_all fun W h => by
         rw [hres, nsmul_eq_zero_of_dvd hqc]
 
 end GlobalTheory.EtC.TwMulInj
@@ -545,8 +526,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.tateTwist_mul_degreeZero_locally_injective : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → (∀ (W : Scheme.{0}) (ζ : Prim q Γ(W, ⊤)) (c : ℕ), c • (twGen i ζ ⊗ₜ[ULift.{1} (ZMod q)] twGen j ζ) = 0 → Loc W fun V _ => Nonempty V → q ∣ c) → ∀ {K : Cx (ZMod q)} (τ : Pair (sgl (tw q i)) (sgl (tw q j)) K), τ.IsTensor → ∀ φ : tw q k ⟶ K.X 0, (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)), Sec.map φ (twGen k ζ) = τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))) → ∀ (U : Scheme.{0}) (a : Sec (tw q k) U), Sec.map φ a = 0 → Loc U fun _ g => Sec.res g a = 0 := by
-  first | (exact @GlobalTheory.EtC.TwMulInj.tw_mul_loc_injective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistMulDegreeZeroLocallyInjectiveStatement =====
@@ -566,16 +545,7 @@ variable {R : Type} [CommRing R]
 theorem loc_top (U : Scheme.{0}) {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : ∀ V g, P V g) : Loc U P :=
   ⟨⊤, Scheme.etaleTopology.top_mem U, fun V g _ => h V g⟩
 
-theorem loc_mono {U : Scheme.{0}} {P P' : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P) (h' : ∀ V g, P V g → P' V g) :
-    Loc U P' := by
-  obtain ⟨S, hS, hP⟩ := h
-  exact ⟨S, hS, fun V g hg => h' V g (hP V g hg)⟩
-
-theorem loc_and {U : Scheme.{0}} {P P' : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P) (h' : Loc U P') :
-    Loc U fun V g => P V g ∧ P' V g := by
-  obtain ⟨S, hS, hP⟩ := h
-  obtain ⟨S', hS', hP'⟩ := h'
-  exact ⟨S ⊓ S', GrothendieckTopology.intersection_covering _ hS hS', fun V g hg => ⟨hP V g hg.1, hP' V g hg.2⟩⟩
+alias loc_mono := _root_.GlobalTheory.TwSec.loc_mono
 
 theorem loc_bind {U : Scheme.{0}} {P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} {P' : ∀ V : Scheme.{0}, (V ⟶ U) → Prop}
     (h : Loc U P) (h' : ∀ V g, P V g → Loc V fun W k => P' W (k ≫ g)) : Loc U P' := by
@@ -596,21 +566,15 @@ theorem res_map {F G : Shv R} (f : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x 
   have := congrArg (fun m => m.hom x) (f.hom.naturality g.op)
   simpa using this.symm
 
-theorem res_comp {F : Shv R} {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (x : Sec F U) :
-    Sec.res (k ≫ g) x = Sec.res k (Sec.res g x) := by
-  simp [Sec.res]
+alias res_comp := _root_.GlobalTheory.TwSec.res_comp
 
 theorem smap_add {F G : Shv R} (f : F ⟶ G) {U : Scheme.{0}} (x y : Sec F U) :
     Sec.map f (x + y) = Sec.map f x + Sec.map f y := map_add _ x y
 
-theorem sres_add {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) (x y : Sec F U) :
-    Sec.res g (x + y) = Sec.res g x + Sec.res g y := map_add _ x y
-
 theorem smap_nsmul {F G : Shv R} (f : F ⟶ G) {U : Scheme.{0}} (n : ℕ) (x : Sec F U) :
     Sec.map f (n • x) = n • Sec.map f x := map_nsmul _ n x
 
-theorem sres_nsmul {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) (n : ℕ) (x : Sec F U) :
-    Sec.res g (n • x) = n • Sec.res g x := map_nsmul _ n x
+alias sres_nsmul := _root_.GlobalTheory.TwSec.res_nsmul
 
 theorem smap_zero {F G : Shv R} (f : F ⟶ G) {U : Scheme.{0}} : Sec.map f (0 : Sec F U) = 0 := map_zero _
 
@@ -635,7 +599,7 @@ theorem good_bind {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (x : Sec G U) {P
 
 theorem good_add {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} {x x' : Sec G U} (h : Good φ U x) (h' : Good φ U x') :
     Good φ U (x + x') :=
-  loc_mono (loc_and h h') fun _ g ⟨⟨z, hz⟩, ⟨z', hz'⟩⟩ => ⟨z + z', by rw [smap_add, sres_add, hz, hz']⟩
+  loc_mono (_root_.GlobalTheory.TwSec.loc_and h h') fun _ g ⟨⟨z, hz⟩, ⟨z', hz'⟩⟩ => ⟨z + z', by rw [smap_add, _root_.GlobalTheory.TwSec.res_add, hz, hz']⟩
 
 theorem good_zero {F G : Shv R} (φ : F ⟶ G) (U : Scheme.{0}) : Good φ U 0 := good_of φ ⟨0, smap_zero _⟩
 
@@ -651,7 +615,7 @@ theorem tw_mul_locSurj : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
       τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))) →
     ∀ (U : Scheme.{0}) (y : Sec (K.X 0) U), Loc U fun V g => ∃ z : Sec (tw q k) V, Sec.map φ z = Sec.res g y := by
   intro q _ i j k hk K τ hτ φ hφ
-  have hT := GlobalTheory.T.tateTwist_sections_locally_generated
+  have hT := _root_.GlobalTheory.EtC.twist_sections
   have key_gen : ∀ V (a : Sec (tw q i) V) (b : Sec (tw q j) V),
       Good φ V (τ.mul V 0 0 0 (add_zero 0) (Sec.map (sglι _) a) (Sec.map (sglι _) b)) := by
     intro V a b
@@ -715,8 +679,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.tateTwist_mul_degreeZero_locally_surjective : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → ∀ {K : Cx (ZMod q)} (τ : Pair (sgl (tw q i)) (sgl (tw q j)) K), τ.IsTensor → ∀ φ : tw q k ⟶ K.X 0, (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)), Sec.map φ (twGen k ζ) = τ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))) → ∀ (U : Scheme.{0}) (y : Sec (K.X 0) U), Loc U fun V g => ∃ z : Sec (tw q k) V, Sec.map φ z = Sec.res g y := by
-  first | (exact @GlobalTheory.EtC.tw_mul_locSurj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistMulDegreeZeroLocallySurjectiveStatement =====
@@ -730,21 +692,18 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 namespace GlobalTheory.EtC.TwMul
 
-theorem secMap_comp {R : Type} [CommRing R] {F G H : Shv R} (f : F ⟶ G) (g : G ⟶ H) {U : Scheme.{0}} (x : Sec F U) :
-    Sec.map (f ≫ g) x = Sec.map g (Sec.map f x) := rfl
-
-theorem secMap_id {R : Type} [CommRing R] {F : Shv R} {U : Scheme.{0}} (x : Sec F U) : Sec.map (𝟙 F) x = x := rfl
+alias secMap_id := _root_.GlobalTheory.EtC.TwMulSurj.map_id_apply
 
 theorem tw_mul_isTensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → ∃ μ : Pair (sgl (tw q i)) (sgl (tw q j)) (sgl (tw q k)), μ.IsTensor ∧ ∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)), μ.mul U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ)) = Sec.map (sglι _) (twGen k ζ) := by
   intro q _ i j k hk
-  obtain ⟨K, τ, hτ⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) (sgl (tw q i)) (sgl (tw q j))
+  obtain ⟨K, τ, hτ⟩ := _root_.GlobalTheory.EtC.tensor_exists (ZMod q) (sgl (tw q i)) (sgl (tw q j))
   have hzK : ∀ w : ℤ, w ≠ 0 → IsZero (K.X w) :=
     _root_.GlobalTheory.EtC.isZero_tensor_of_deg_zero (ZMod q) τ hτ (fun s hs => HomologicalComplex.isZero_single_obj_X _ _ _ _ hs)
       (fun t ht => HomologicalComplex.isZero_single_obj_X _ _ _ _ ht)
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.exists_tateTwist_mul_degreeZero_hom q i j k hk τ
-  have hsurj := GlobalTheory.T.tateTwist_mul_degreeZero_locally_surjective q i j k hk τ hτ φ hφ
-  have hinj := GlobalTheory.T.tateTwist_mul_degreeZero_locally_injective q i j k hk (GlobalTheory.T.tateTwistGenerator_tmul_order_locally q i j) τ hτ φ hφ
-  have hM := GlobalTheory.T.bigEtaleModuleSheaf_mono_epi_iff_sections (ZMod q) φ
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.EtC.twist_mul_map q i j k hk τ
+  have hsurj := _root_.GlobalTheory.EtC.tw_mul_locSurj q i j k hk τ hτ φ hφ
+  have hinj := _root_.GlobalTheory.EtC.TwMulInj.tw_mul_loc_injective q i j k hk (_root_.GlobalTheory.TwMulOrder.tw_mul_order q i j) τ hτ φ hφ
+  have hM := _root_.GlobalTheory.EtC.mono_epi_sections (ZMod q) φ
   haveI : Mono φ := hM.2.1.2 hinj
   haveI : Epi φ := hM.2.2.1.2 hsurj
   haveI : IsIso φ := isIso_of_mono_of_epi φ
@@ -756,11 +715,11 @@ theorem tw_mul_isTensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → 
     · subst hw; rw [hu0]; unfold sglι; exact IsIso.comp_isIso' inferInstance (Iso.isIso_inv _)
     · exact ⟨⟨0, (hzK w hw).eq_of_src _ _, (HomologicalComplex.isZero_single_obj_X _ _ _ _ hw).eq_of_src _ _⟩⟩
   haveI : IsIso u := HomologicalComplex.Hom.isIso_of_components u
-  obtain ⟨ν, hν⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).2.2 u
-  refine ⟨ν, GlobalTheory.T.isTensor_of_compat_isIso_target (ZMod q) τ ν u inferInstance hν hτ, fun U ζ => ?_⟩
+  obtain ⟨ν, hν⟩ := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod q) τ hτ).2.2 u
+  refine ⟨ν, _root_.GlobalTheory.EtC.Pair.isTensor_of_compat_isIso (ZMod q) τ ν u inferInstance hν hτ, fun U ζ => ?_⟩
   have h := hν U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))
   simp only [HomologicalComplex.id_f, secMap_id] at h
-  rw [← h, ← hφ, hu0, secMap_comp, ← secMap_comp φ (inv φ), IsIso.hom_inv_id, secMap_id]
+  rw [← h, ← hφ, hu0, _root_.GlobalTheory.EtC.TensUniv.map_comp', ← _root_.GlobalTheory.EtC.TensUniv.map_comp' φ (inv φ), IsIso.hom_inv_id, secMap_id]
 
 end GlobalTheory.EtC.TwMul
 end -- clump:auto
@@ -774,8 +733,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.sectionwiseTensor_presheaf_locallyBijective : ∀ (R : Type) [CommRing R] (C P Q : Scheme.{0}ᵒᵖ ⥤ ModuleCat.{1} (ULift.{1} R)) (φ : P ⟶ Q), (∀ (U : Scheme.{0}) (y : Q.obj (op U)), Loc U fun V g => ∃ x, (φ.app (op V)).hom x = (Q.map g.op).hom y) → (∀ (U : Scheme.{0}) (x : P.obj (op U)), (φ.app (op U)).hom x = 0 → Loc U fun _ g => (P.map g.op).hom x = 0) → ∀ U : Scheme.{0}, (∀ y : TensorProduct (ULift.{1} R) (C.obj (op U)) (Q.obj (op U)), Loc U fun V g => ∃ x, LinearMap.lTensor _ (φ.app (op V)).hom x = TensorProduct.map (C.map g.op).hom (Q.map g.op).hom y) ∧ ∀ x : TensorProduct (ULift.{1} R) (C.obj (op U)) (P.obj (op U)), LinearMap.lTensor _ (φ.app (op U)).hom x = 0 → Loc U fun _ g => TensorProduct.map (C.map g.op).hom (P.map g.op).hom x = 0 := by
-  first | (exact @GlobalTheory.EtC.tensor_loc_bij)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionwiseTensorPresheafLocallyBijectiveStatement =====
@@ -859,14 +816,14 @@ open TensFlat in
 theorem tensor_flat_loc_exact : ∀ (R : Type) [CommRing R] (M : Shv R), FlatS M → ∀ {A B C : Shv R} (f : A ⟶ B) (g : B ⟶ C), f ≫ g = 0 → (∀ U (b : Sec B U), Sec.map g b = 0 → Loc U fun V k => ∃ a : Sec A V, Sec.map f a = Sec.res k b) → ∀ U (x : TensorProduct (ULift.{1} R) (Sec B U) (Sec M U)), (Loc U fun V k => LinearMap.rTensor _ (g.hom.app (op V)).hom (TensorProduct.map (B.obj.map k.op).hom (M.obj.map k.op).hom x) = 0) → Loc U fun V k => ∃ y : TensorProduct (ULift.{1} R) (Sec A V) (Sec M V), LinearMap.rTensor _ (f.hom.app (op V)).hom y = TensorProduct.map (B.obj.map k.op).hom (M.obj.map k.op).hom x := by
   intro R _ M hM A B C f g _ hex U x hx
   obtain ⟨P, φ, hsurj, hinj, hflat⟩ := hM
-  have h1 := (GlobalTheory.T.sectionwiseTensor_presheaf_locallyBijective R B.obj P M.obj φ hsurj hinj U).1 x
+  have h1 := (_root_.GlobalTheory.EtC.TensLocBij.main R B.obj P M.obj φ hsurj hinj U).1 x
   apply loc_trans
   refine loc_mono U _ _ (loc_and U _ _ h1 hx) ?_
   rintro V k ⟨⟨x', hx'⟩, hz⟩
   have hz0 : LinearMap.lTensor _ (φ.app (op V)).hom (LinearMap.rTensor _ (g.hom.app (op V)).hom x') = 0 := by
     rw [← rl_comm, hx']
     exact hz
-  have h2 := (GlobalTheory.T.sectionwiseTensor_presheaf_locallyBijective R C.obj P M.obj φ hsurj hinj V).2 _ hz0
+  have h2 := (_root_.GlobalTheory.EtC.TensLocBij.main R C.obj P M.obj φ hsurj hinj V).2 _ hz0
   apply loc_trans
   refine loc_mono V _ _ h2 ?_
   intro W m hm
@@ -897,8 +854,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tensor_flat_etaleSheaf_preserves_local_exactness : ∀ (R : Type) [CommRing R] (M : Shv R), FlatS M → ∀ {A B C : Shv R} (f : A ⟶ B) (g : B ⟶ C), f ≫ g = 0 → (∀ U (b : Sec B U), Sec.map g b = 0 → Loc U fun V k => ∃ a : Sec A V, Sec.map f a = Sec.res k b) → ∀ U (x : TensorProduct (ULift.{1} R) (Sec B U) (Sec M U)), (Loc U fun V k => LinearMap.rTensor _ (g.hom.app (op V)).hom (TensorProduct.map (B.obj.map k.op).hom (M.obj.map k.op).hom x) = 0) → Loc U fun V k => ∃ y : TensorProduct (ULift.{1} R) (Sec A V) (Sec M V), LinearMap.rTensor _ (f.hom.app (op V)).hom y = TensorProduct.map (B.obj.map k.op).hom (M.obj.map k.op).hom x := by
-  first | (exact @GlobalTheory.EtC.tensor_flat_loc_exact)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFlatEtaleSheafPreservesLocalExactnessStatement =====
@@ -1197,13 +1152,13 @@ theorem Tens.cycle_loc_boundary {C J : Cx R} (a b : ℤ) [C.IsStrictlyGE a] [J.I
       exact this.symm
     have hexact : ∀ (U : Scheme.{0}) (b : Sec (C.X (w - n + 1)) U), Sec.map (C.d (w - n + 1) (w - n + 1 + 1)) b = 0 →
         Loc U fun V k => ∃ a : Sec (C.X (w - n)) V, Sec.map (C.d (w - n) (w - n + 1)) a = Sec.res k b :=
-      (GlobalTheory.T.etaleSheaf_shortComplex_exact_iff_locally R (C.sc' (w - n) (w - n + 1) (w - n + 1 + 1))).mp
+      (_root_.GlobalTheory.EtC.exactIff R (C.sc' (w - n) (w - n + 1) (w - n + 1 + 1))).mp
         ((C.exactAt_iff' (w - n) (w - n + 1) (w - n + 1 + 1) (by simp) (by simp)).mp (hC (w - n + 1)))
     have hloc : Loc U fun V k => LinearMap.rTensor _ ((C.d (w - n + 1) (w - n + 1 + 1)).hom.app (op V)).hom
         (TensorProduct.map ((C.X (w - n + 1)).obj.map k.op).hom ((J.X n).obj.map k.op).hom
           (x ⟨(w - n + 1, n), by simp only; omega⟩)) = 0 :=
       L_all _ _ fun V k => by rw [rTensor_res_comm, hedge, map_zero]
-    have hrow := GlobalTheory.T.tensor_flat_etaleSheaf_preserves_local_exactness R (J.X n) (hJ n) (C.d (w - n) (w - n + 1)) (C.d (w - n + 1) (w - n + 1 + 1))
+    have hrow := _root_.GlobalTheory.EtC.tensor_flat_loc_exact R (J.X n) (hJ n) (C.d (w - n) (w - n + 1)) (C.d (w - n + 1) (w - n + 1 + 1))
       (C.d_comp_d _ _ _) hexact U _ hloc
     apply L_trans
     refine L_mono _ _ _ hrow ?_
@@ -1260,7 +1215,7 @@ theorem acyclic_of_isTensor : ∀ (R : Type) [CommRing R] {C J T : Cx R} (a b : 
   intro R _ C J T a b _ _ τ hT hJ hC j
   obtain ⟨L_all, L_mono, -, -, L_trans, -, -⟩ := loc_calculus
   obtain ⟨w, rfl⟩ : ∃ w, j = w + 1 := ⟨j - 1, by ring⟩
-  rw [T.exactAt_iff' w (w + 1) (w + 1 + 1) (by simp) (by simp), GlobalTheory.T.etaleSheaf_shortComplex_exact_iff_locally]
+  rw [T.exactAt_iff' w (w + 1) (w + 1 + 1) (by simp) (by simp), _root_.GlobalTheory.EtC.exactIff]
   rintro U (z : Sec (T.X (w + 1)) U) (hz' : Sec.map (T.d (w + 1) (w + 1 + 1)) z = 0)
   apply L_trans
   refine L_mono _ _ _ (hT.1 U (w + 1) z) ?_
@@ -1292,8 +1247,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.acyclic_tensor_acyclic_flatEtaleComplex : ∀ (R : Type) [CommRing R] {C J T : Cx R} (a b : ℤ) [C.IsStrictlyGE a] [J.IsStrictlyGE b] (τ : Pair C J T), τ.IsTensor → (∀ t, FlatS (J.X t)) → C.Acyclic → T.Acyclic := by
-  first | (exact @GlobalTheory.EtC.acyclic_of_isTensor)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AcyclicTensorAcyclicFlatEtaleComplexStatement =====
@@ -1308,13 +1261,10 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 noncomputable section
 namespace GlobalTheory.EtC.TensQis
 variable {R : Type} [CommRing R]
-theorem sm_comp {F G H : Shv R} (φ : F ⟶ G) (ψ : G ⟶ H) {U : Scheme.{0}} (x : Sec F U) : Sec.map (φ ≫ ψ) x = Sec.map ψ (Sec.map φ x) := rfl
 theorem sm_add {F G : Shv R} (φ ψ : F ⟶ G) {U : Scheme.{0}} (x : Sec F U) : Sec.map (φ + ψ) x = Sec.map φ x + Sec.map ψ x := rfl
 theorem sm_neg {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (x : Sec F U) : Sec.map (-φ) x = -Sec.map φ x := rfl
 theorem sm_zero {F G : Shv R} {U : Scheme.{0}} (x : Sec F U) : Sec.map (0 : F ⟶ G) x = 0 := rfl
 theorem sm_id {F : Shv R} {U : Scheme.{0}} (x : Sec F U) : Sec.map (𝟙 F) x = x := rfl
-theorem sm_res {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) : Sec.map φ (Sec.res g x) = Sec.res g (Sec.map φ x) :=
-  congrArg (fun k => k.hom x) (φ.hom.naturality g.op)
 theorem sm_madd {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (x y : Sec F U) : Sec.map φ (x + y) = Sec.map φ x + Sec.map φ y := map_add _ _ _
 theorem sm_mzero {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} : Sec.map φ (0 : Sec F U) = 0 := map_zero _
 theorem sm_munits {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (e : ℤˣ) (x : Sec F U) : Sec.map φ (e • x) = e • Sec.map φ x := by
@@ -1326,22 +1276,22 @@ variable {K L : Cx R} (φ : K ⟶ L) {U : Scheme.{0}}
 
 theorem fst_inl (p : ℤ) (a : Sec (K.X (p + 1)) U) :
     Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) (Sec.map ((mappingCone.inl φ).v (p + 1) p (by omega)) a) = a := by
-  rw [← sm_comp, mappingCone.inl_v_fst_v φ (p + 1) p rfl, sm_id]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.inl_v_fst_v φ (p + 1) p rfl, sm_id]
 theorem fst_inr (p : ℤ) (a : Sec (L.X p) U) :
     Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) (Sec.map ((mappingCone.inr φ).f p) a) = 0 := by
-  rw [← sm_comp, mappingCone.inr_f_fst_v φ p (p + 1) rfl, sm_zero]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.inr_f_fst_v φ p (p + 1) rfl, sm_zero]
 theorem snd_inl (p : ℤ) (a : Sec (K.X (p + 1)) U) :
     Sec.map ((mappingCone.snd φ).v p p (add_zero p)) (Sec.map ((mappingCone.inl φ).v (p + 1) p (by omega)) a) = 0 := by
-  rw [← sm_comp, mappingCone.inl_v_snd_v φ (p + 1) p (by omega), sm_zero]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.inl_v_snd_v φ (p + 1) p (by omega), sm_zero]
 theorem snd_inr (p : ℤ) (a : Sec (L.X p) U) :
     Sec.map ((mappingCone.snd φ).v p p (add_zero p)) (Sec.map ((mappingCone.inr φ).f p) a) = a := by
-  rw [← sm_comp, mappingCone.inr_f_snd_v φ p, sm_id]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.inr_f_snd_v φ p, sm_id]
 theorem cone_eta (p : ℤ) (z : Sec ((mappingCone φ).X p) U) :
     z = Sec.map ((mappingCone.inl φ).v (p + 1) p (by omega)) (Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) z) +
       Sec.map ((mappingCone.inr φ).f p) (Sec.map ((mappingCone.snd φ).v p p (add_zero p)) z) := by
   have := congrArg (fun k => Sec.map k z) (mappingCone.id_X φ p (p + 1) rfl)
   beta_reduce at this
-  rw [sm_add, sm_comp, sm_comp, sm_id] at this
+  rw [sm_add, _root_.GlobalTheory.EtC.exactIff_map_comp, _root_.GlobalTheory.EtC.exactIff_map_comp, sm_id] at this
   exact this.symm
 theorem cone_ext {p : ℤ} {z z' : Sec ((mappingCone φ).X p) U}
     (h1 : Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) z = Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) z')
@@ -1350,12 +1300,12 @@ theorem cone_ext {p : ℤ} {z z' : Sec ((mappingCone φ).X p) U}
 theorem fst_d (p : ℤ) (z : Sec ((mappingCone φ).X p) U) :
     Sec.map ((mappingCone.fst φ).1.v (p + 1) (p + 1 + 1) rfl) (Sec.map ((mappingCone φ).d p (p + 1)) z) =
       -Sec.map (K.d (p + 1) (p + 1 + 1)) (Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) z) := by
-  rw [← sm_comp, mappingCone.d_fst_v φ p (p + 1) (p + 1 + 1) rfl rfl, sm_neg, sm_comp]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.d_fst_v φ p (p + 1) (p + 1 + 1) rfl rfl, sm_neg, _root_.GlobalTheory.EtC.exactIff_map_comp]
 theorem snd_d (p : ℤ) (z : Sec ((mappingCone φ).X p) U) :
     Sec.map ((mappingCone.snd φ).v (p + 1) (p + 1) (add_zero _)) (Sec.map ((mappingCone φ).d p (p + 1)) z) =
       Sec.map (φ.f (p + 1)) (Sec.map ((mappingCone.fst φ).1.v p (p + 1) rfl) z) +
         Sec.map (L.d p (p + 1)) (Sec.map ((mappingCone.snd φ).v p p (add_zero p)) z) := by
-  rw [← sm_comp, mappingCone.d_snd_v φ p (p + 1) rfl, sm_add, sm_comp, sm_comp]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.d_snd_v φ p (p + 1) rfl, sm_add, _root_.GlobalTheory.EtC.exactIff_map_comp, _root_.GlobalTheory.EtC.exactIff_map_comp]
 end Cone
 
 variable {I I' J T T' : Cx R}
@@ -1379,14 +1329,14 @@ def conePair (τ : Pair I J T) (τ' : Pair I' J T') (f : I ⟶ I') (u : T ⟶ T'
   mul := coneMul τ τ' f u
   nat := by
     intro V U g s t w h c b
-    rw [coneMul_apply, coneMul_apply, rs_madd, ← sm_res, ← sm_res, τ.nat, τ'.nat, ← sm_res, ← sm_res]
+    rw [coneMul_apply, coneMul_apply, rs_madd, ← _root_.GlobalTheory.EtC.exactIff_map_res, ← _root_.GlobalTheory.EtC.exactIff_map_res, τ.nat, τ'.nat, ← _root_.GlobalTheory.EtC.exactIff_map_res, ← _root_.GlobalTheory.EtC.exactIff_map_res]
   leibniz := by
     intro U s t w h c b
     apply cone_ext u
-    · rw [← sm_comp, mappingCone.d_fst_v u w (w + 1) (w + 1 + 1) rfl rfl, sm_neg, sm_comp]
+    · rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.d_fst_v u w (w + 1) (w + 1 + 1) rfl rfl, sm_neg, _root_.GlobalTheory.EtC.exactIff_map_comp]
       simp only [coneMul_apply, sm_madd, sm_munits, fst_inl, fst_inr, add_zero, fst_d, map_neg, LinearMap.neg_apply, τ.leibniz]
       rw [Int.negOnePow_succ, Units.neg_smul, neg_add, neg_neg]
-    · rw [← sm_comp, mappingCone.d_snd_v u w (w + 1) rfl, sm_add, sm_comp, sm_comp]
+    · rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.d_snd_v u w (w + 1) rfl, sm_add, _root_.GlobalTheory.EtC.exactIff_map_comp, _root_.GlobalTheory.EtC.exactIff_map_comp]
       simp only [coneMul_apply, sm_madd, sm_munits, snd_inl, snd_inr, fst_inl, fst_inr, zero_add, add_zero, snd_d,
         LinearMap.map_add₂, τ'.leibniz]
       rw [hc U (s + 1) t (w + 1) (by omega), HomologicalComplex.id_f, sm_id]
@@ -1435,7 +1385,7 @@ theorem mul_fst_inl (f : I ⟶ I') (τ : Pair I J T) (U : Scheme.{0}) (s t w' : 
     τ.mul U s' t w' h1 (Sec.map ((mappingCone.fst f).1.v (s - 1) s' h2) (Sec.map ((mappingCone.inl f).v s (s - 1) (by omega)) a)) b =
       τ.mul U s t w' hst a b := by
   subst e
-  rw [← sm_comp, mappingCone.inl_v_fst_v, sm_id]
+  rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, mappingCone.inl_v_fst_v, sm_id]
 
 theorem lift_tInl (τ : Pair I J T) (τ' : Pair I' J T') (f : I ⟶ I') (u : T ⟶ T') (hc : τ.Compat τ' f (𝟙 J) u)
     (U : Scheme.{0}) (w : ℤ) (x : Tens I J U (w + 1)) :
@@ -1447,7 +1397,7 @@ theorem lift_tInl (τ : Pair I J T) (τ' : Pair I' J T') (f : I ⟶ I') (u : T �
     simp only [LinearMap.comp_apply, tInl, Pair.lift, DirectSum.toModule_lof, TensorProduct.lift.tmul]
     change coneMul τ τ' f u U (s - 1) t w (by omega) (Sec.map ((mappingCone.inl f).v s (s - 1) (by omega)) a) b =
       Sec.map ((mappingCone.inl u).v (w + 1) w (by omega)) (τ.mul U s t (w + 1) hp a b)
-    rw [coneMul_apply, ← sm_comp _ ((mappingCone.snd f).v _ _ _), mappingCone.inl_v_snd_v, sm_zero, map_zero,
+    rw [coneMul_apply, ← _root_.GlobalTheory.EtC.exactIff_map_comp _ ((mappingCone.snd f).v _ _ _), mappingCone.inl_v_snd_v, sm_zero, map_zero,
       LinearMap.zero_apply, sm_mzero, add_zero, mul_fst_inl f τ U s t (w + 1) hp _ (by omega)]
   exact congrArg (fun k => k x) this
 
@@ -1503,7 +1453,7 @@ theorem res_tInl (f : I ⟶ I') {V U : Scheme.{0}} (g : V ⟶ U) (w : ℤ) (x : 
     congr 1
     change Sec.res g (Sec.map ((mappingCone.inl f).v s (s - 1) (by omega)) a) ⊗ₜ[ULift.{1} R] Sec.res g b =
       Sec.map ((mappingCone.inl f).v s (s - 1) (by omega)) (Sec.res g a) ⊗ₜ[ULift.{1} R] Sec.res g b
-    rw [sm_res]
+    rw [_root_.GlobalTheory.EtC.exactIff_map_res]
   exact congrArg (fun k => k x) this
 
 theorem res_tInr (f : I ⟶ I') {V U : Scheme.{0}} (g : V ⟶ U) (w : ℤ) (x : Tens I' J U w) :
@@ -1517,7 +1467,7 @@ theorem res_tInr (f : I ⟶ I') {V U : Scheme.{0}} (g : V ⟶ U) (w : ℤ) (x : 
     congr 1
     change Sec.res g (Sec.map ((mappingCone.inr f).f s) a) ⊗ₜ[ULift.{1} R] Sec.res g b =
       Sec.map ((mappingCone.inr f).f s) (Sec.res g a) ⊗ₜ[ULift.{1} R] Sec.res g b
-    rw [sm_res]
+    rw [_root_.GlobalTheory.EtC.exactIff_map_res]
   exact congrArg (fun k => k x) this
 
 theorem conePair_isTensor (τ : Pair I J T) (τ' : Pair I' J T') (f : I ⟶ I') (u : T ⟶ T') (hc : τ.Compat τ' f (𝟙 J) u)
@@ -1530,7 +1480,7 @@ theorem conePair_isTensor (τ : Pair I J T) (τ' : Pair I' J T') (f : I ⟶ I') 
     refine loc_mono _ _ _ (loc_and _ _ _ h1 h2) ?_
     rintro V g ⟨⟨x1, hx1⟩, ⟨x2, hx2⟩⟩
     refine ⟨tInl f V w x1 + tInr f V w x2, ?_⟩
-    rw [map_add (f := _), lift_tInl, lift_tInr, hx1, hx2, sm_res, sm_res, ← rs_madd, ← cone_eta]
+    rw [map_add (f := _), lift_tInl, lift_tInr, hx1, hx2, _root_.GlobalTheory.EtC.exactIff_map_res, _root_.GlobalTheory.EtC.exactIff_map_res, ← rs_madd, ← cone_eta]
   · intro U w x hx
     rw [← tDecomp f U w x, map_add (f := _), lift_tInl, lift_tInr] at hx
     have e1 : τ.lift U (w + 1) (tFst f U w x) = 0 := by
@@ -1563,7 +1513,7 @@ theorem tensor_quasiIso : ∀ (R : Type) [CommRing R] {I I' J T T' : Cx R} [I.Is
   intro R _ I I' J T T' _ _ _ τ τ' hτ hτ' hJ f _ u hc
   haveI : (mappingCone f).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone f 0 0 (-1)
   have hC := GlobalTheory.mappingCone_acyclic_of_quasiIso f
-  exact TensQis.quasiIso_of_cone_acyclic u (GlobalTheory.T.acyclic_tensor_acyclic_flatEtaleComplex R (-1) 0 (TensQis.conePair τ τ' f u hc)
+  exact TensQis.quasiIso_of_cone_acyclic u (_root_.GlobalTheory.EtC.acyclic_of_isTensor R (-1) 0 (TensQis.conePair τ τ' f u hc)
     (TensQis.conePair_isTensor τ τ' f u hc hτ hτ') hJ hC)
 
 end GlobalTheory.EtC
@@ -1579,8 +1529,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tensor_flat_complex_preserves_quasiIso : ∀ (R : Type) [CommRing R] {I I' J T T' : Cx R} [I.IsStrictlyGE 0] [I'.IsStrictlyGE 0] [J.IsStrictlyGE 0] (τ : Pair I J T) (τ' : Pair I' J T'), τ.IsTensor → τ'.IsTensor → (∀ t, FlatS (J.X t)) → ∀ (f : I ⟶ I') [QuasiIso f] (u : T ⟶ T'), τ.Compat τ' f (𝟙 J) u → QuasiIso u := by
-  first | (exact @GlobalTheory.EtC.tensor_quasiIso)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFlatComplexPreservesQuasiIsoStatement =====
@@ -1598,15 +1546,6 @@ namespace GlobalTheory.EtC
 section
 variable {R : Type} [CommRing R]
 
-theorem sec_map_res' {F G : Shv R} (ψ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (z : Sec F U) :
-    Sec.map ψ (Sec.res g z) = Sec.res g (Sec.map ψ z) :=
-  congrArg (fun f => f.hom z) (ψ.hom.naturality g.op)
-
-theorem sec_map_comp' {F G H : Shv R} (φ : F ⟶ G) (ψ : G ⟶ H) {U : Scheme.{0}} (x : Sec F U) :
-    Sec.map (φ ≫ ψ) x = Sec.map ψ (Sec.map φ x) := rfl
-
-theorem sec_map_id' {F : Shv R} {U : Scheme.{0}} (x : Sec F U) : Sec.map (𝟙 F) x = x := rfl
-
 theorem flatS_of_iso {M N : Shv R} (i : M ≅ N) (h : FlatS M) : FlatS N := by
   obtain ⟨P, φ, hs, hi, hf⟩ := h
   refine ⟨P, φ ≫ i.hom.hom, ?_, ?_, hf⟩
@@ -1616,12 +1555,12 @@ theorem flatS_of_iso {M N : Shv R} (i : M ≅ N) (h : FlatS M) : FlatS N := by
     obtain ⟨x, hx⟩ := hP V g hg
     refine ⟨x, ?_⟩
     change Sec.map i.hom ((φ.app (op V)).hom x) = Sec.res g y
-    rw [hx, sec_map_res', ← sec_map_comp', i.inv_hom_id, sec_map_id']
+    rw [hx, _root_.GlobalTheory.EtC.exactIff_map_res, ← _root_.GlobalTheory.EtC.exactIff_map_comp, i.inv_hom_id, _root_.GlobalTheory.EtC.TwMulSurj.map_id_apply]
   · intro U x hx
     refine hi U x ?_
     have h1 : Sec.map i.inv (Sec.map i.hom ((φ.app (op U)).hom x)) = Sec.map i.inv (0 : Sec N U) :=
       congrArg (Sec.map i.inv) hx
-    rw [← sec_map_comp', i.hom_inv_id, sec_map_id'] at h1
+    rw [← _root_.GlobalTheory.EtC.exactIff_map_comp, i.hom_inv_id, _root_.GlobalTheory.EtC.TwMulSurj.map_id_apply] at h1
     exact h1.trans (map_zero _)
 
 theorem flatS_of_isZero {M : Shv R} (h : IsZero M) : FlatS M := by
@@ -1647,9 +1586,9 @@ theorem isTwRes_tensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
   obtain ⟨hIge, εI, hεI, heI⟩ := hI
   obtain ⟨hJge, εJ, hεJ, heJ⟩ := hJ
   obtain ⟨μ, hμ, hμgen⟩ := _root_.GlobalTheory.EtC.TwMul.tw_mul_isTensor q i j k hk
-  obtain ⟨T₁, τ₁, hτ₁⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) (sgl (tw q i)) J
-  have hTge : T.IsStrictlyGE 0 := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).2.1 hIge hJge
-  obtain ⟨u₁, hu₁, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) μ hμ).1 τ₁ (𝟙 _) εJ
+  obtain ⟨T₁, τ₁, hτ₁⟩ := _root_.GlobalTheory.EtC.tensor_exists (ZMod q) (sgl (tw q i)) J
+  have hTge : T.IsStrictlyGE 0 := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod q) τ hτ).2.1 hIge hJge
+  obtain ⟨u₁, hu₁, -⟩ := (_root_.GlobalTheory.EtC.Pair.isTensor_universal (ZMod q) μ hμ).1 τ₁ (𝟙 _) εJ
   obtain ⟨u₂, hu₂, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ₁ hτ₁).1 τ εI (𝟙 J)
   obtain ⟨ν, hμν, -, hνt⟩ := _root_.GlobalTheory.EtC.Pair.exists_isFlip (ZMod q) μ
   obtain ⟨ν₁, hν₁, -, hν₁t⟩ := _root_.GlobalTheory.EtC.Pair.exists_isFlip (ZMod q) τ₁
@@ -1668,8 +1607,8 @@ theorem isTwRes_tensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
     rw [hid] at h1
     rw [← h1]
     exact map_zsmul ((u₁.f w).hom.app (op U)).hom _ _
-  have hq1 : QuasiIso u₁ := GlobalTheory.T.tensor_flat_complex_preserves_quasiIso (ZMod q) ν ν₁ (hνt hμ) (hν₁t hτ₁) hflati εJ u₁ hc
-  have hq2 : QuasiIso u₂ := GlobalTheory.T.tensor_flat_complex_preserves_quasiIso (ZMod q) τ₁ τ hτ₁ hτ hflat εI u₂ hu₂
+  have hq1 : QuasiIso u₁ := _root_.GlobalTheory.EtC.tensor_quasiIso (ZMod q) ν ν₁ (hνt hμ) (hν₁t hτ₁) hflati εJ u₁ hc
+  have hq2 : QuasiIso u₂ := _root_.GlobalTheory.EtC.tensor_quasiIso (ZMod q) τ₁ τ hτ₁ hτ hflat εI u₂ hu₂
   refine ⟨hTge, u₁ ≫ u₂, quasiIso_comp (hφ := hq1) (hφ' := hq2) _ _, fun U ζ => ?_⟩
   rw [← hμgen U ζ]
   change Sec.map (u₂.f 0) (Sec.map (u₁.f 0) _) = _

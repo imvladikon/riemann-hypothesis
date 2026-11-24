@@ -247,7 +247,7 @@ theorem exists_comb_sub_mem_sup_pow : Out.Laws → ∀ (O : Type) [CommRing O] [
       exact ha
     · exact ⟨0, fun y h => (hz ⟨y, h⟩).elim⟩
   choose a ha using ha
-  obtain ⟨sg₀, hsg₀⟩ := (GlobalTheory.T.koszul_sections_exact_algClosed_polarisedAV hL K x' n l s' b' m' c' hn (hg ▸ hl) hZ' hB' hm' hc').2.1 a
+  obtain ⟨sg₀, hsg₀⟩ := (_root_.GlobalTheory.koszul_sections_exact_field hL K x' n l s' b' m' c' hn (hg ▸ hl) hZ' hB' hm' hc').2.1 a
   obtain ⟨sg, hsg⟩ := exists_sec_cast x' (show l = l - 0 * n by simp) sg₀
   obtain ⟨v, hv, -⟩ := hB' 0 (Nat.zero_le _) sg
   have hN : (l - 0 * n) ^ x'.P.g = (l - 0 * n) ^ x.P.g := congrArg (fun r => (l - 0 * n) ^ r) hg
@@ -877,7 +877,7 @@ theorem main : Out.Laws → ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoeth
     inferInstanceAs (Finite (PrimeSpectrum (AlgebraicClosure k)))
   have hc : ∀ y : x'.P.A.left, ∃ i, y ∈ x'.P.L.U i := fun y => exists_chart x'.P.isLB y
   choose c hc using hc
-  have H := (GlobalTheory.T.koszul_sections_exact_algClosed_polarisedAV hL (AlgebraicClosure k) x' n l s' b' m' c hn (by rw [hg]; exact hl)
+  have H := (_root_.GlobalTheory.koszul_sections_exact_field hL (AlgebraicClosure k) x' n l s' b' m' c hn (by rw [hg]; exact hl)
     (hZ' hfin hZ) hb' hm' hc).1
   have H' := transport ((algebraMap k (AlgebraicClosure k)).comp f) hg l n m m' hmm H
   exact descend (K := AlgebraicClosure k) (N := fun j => (l - j * n) ^ x.P.g)
@@ -900,8 +900,6 @@ open GlobalTheory.AbLaw
 open GlobalTheory.KeyKa
 
 
-theorem _root_.GlobalTheory.T.transversal_zeros_of_jacobian_ne_zero_domain : ∀ (O K : Type) [CommRing O] [IsDomain O] [Field K] (x : KeyIn O) (x' : KeyIn K) (f : O →+* K) φ w (n d : ℕ) (hg : x'.P.g = x.P.g) (s : Fin x.P.g → RR x n) (s' : Fin x'.P.g → RR x' n) (z : Fin d → Pt x) (ch : Fin d → x.P.L.ι), Function.Injective f → KeyVia x' x f φ w → (∀ i, SecVia x' x φ w (s' i) (s (i.cast hg))) → (∀ a, ⊤ ≤ (z a).left ⁻¹ᵁ x.P.L.U (ch a)) → (∀ a i, valT (T := O) (z a).left (x.P.L.U (ch a)) ((s i).f (ch a)) = 0) → (∀ a, jac x s (z a) (ch a) ≠ 0) → Function.Injective z → (∀ y : x.P.A.left, (∃ q : Sp K, spMap f q = x.P.A.hom y) → (∀ i, y ∉ Out.nonzeroLocus (s i)) → ∃ a, ∃ p : Sp O, (z a).left p = y) → ∃ (z' : Fin d → Pt x') (ch' : Fin d → x'.P.L.ι) (u : Fin d → Kˣ), EtZ x' s' z' ch' ∧ ∀ (l : ℕ) (sg : RR x l) (sg' : RR x' l) (a), SecVia x' x φ w sg' sg → valT (T := K) (z' a).left (x'.P.L.U (ch' a)) (sg'.f (ch' a)) * (u a : K) ^ l = f (valT (T := O) (z a).left (x.P.L.U (ch a)) (sg.f (ch a))) := by
-  first | exact @GlobalTheory.KeyKa.etZ_of_jac_ne_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.TransversalZerosOfJacobianNeZeroDomainStatement =====
@@ -1008,7 +1006,7 @@ theorem kosD_exact_generic : Out.Laws → ∀ (O : Type) [CommRing O] [IsDomain 
   obtain ⟨x', φ, w, hg, s', b', m', hkv, hsv, hbv, hb', hmul', hm', -⟩ :=
     GlobalTheory.T.exists_keyData_baseChange_sections_matrices hL O K f x n l s b m hl hb hmul
   obtain ⟨z', ch', u, het, hval⟩ :=
-    GlobalTheory.T.transversal_zeros_of_jacobian_ne_zero_domain O K x x' f φ w n d hg s s' z ch hf hkv hsv hz0 hs0 hjac hzi hcov
+    _root_.GlobalTheory.KeyKa.etZ_of_jac_ne_zero O K x x' f φ w n d hg s s' z ch hf hkv hsv hz0 hs0 hjac hzi hcov
   have hl' : x'.P.g * n < l := by rw [hg]; exact hl
   obtain ⟨-, t, m'', hmul'', ht⟩ := GlobalTheory.T.exists_koszulTorsion_transversal_split_zeros hL K x' n l d s' b' z' ch' hn hl' hb' het
   refine exact_kosD_map f hg (fun j => l - j * n) m
@@ -1574,10 +1572,6 @@ noncomputable section
 namespace GlobalTheory.DiscrJacGlobal
 open EtBaseChange
 
-theorem top_le_of_closedPoint {T : Type} [CommRing T] [IsLocalRing T] {X : Scheme.{0}} (w : Sp T ⟶ X) {U : X.Opens}
-    (h : w (IsLocalRing.closedPoint T) ∈ U) : ⊤ ≤ w ⁻¹ᵁ U :=
-  fun p _ => ((IsLocalRing.specializes_closedPoint p).map w.continuous).mem_open U.isOpen h
-
 theorem exists_unit_chart {R T : Type} [CommRing R] [CommRing T] (x : KeyIn R) (w : Sp T ⟶ x.P.A.left)
     (c c' : x.P.L.ι) (h : ⊤ ≤ w ⁻¹ᵁ x.P.L.U c) (h' : ⊤ ≤ w ⁻¹ᵁ x.P.L.U c') :
     ∃ ω : Tˣ, ∀ (l : ℕ) (s : RR x l), valT w (x.P.L.U c) (s.f c) = (ω : T) ^ l * valT w (x.P.L.U c') (s.f c') := by
@@ -1596,7 +1590,7 @@ theorem notMem_nonzeroLocus {R T : Type} [CommRing R] [CommRing T] [IsLocalRing 
     (hs : valT w (x.P.L.U c) (s.f c) = 0) : w (IsLocalRing.closedPoint T) ∉ Out.nonzeroLocus s := by
   intro hy
   obtain ⟨k, hk⟩ := TopologicalSpace.Opens.mem_iSup.1 hy
-  have h₁ := top_le_of_closedPoint w hk
+  have h₁ := _root_.GlobalTheory.KeyKa.ClosedApprox.top_le_of_closedPoint w hk
   have hle := x.P.A.left.basicOpen_le (s.f k)
   obtain ⟨ω, hω⟩ := exists_unit_chart x w k c (fun p hp => hle (h₁ hp)) h
   have e := valT_res w hle h₁ (s.f k)
@@ -1642,9 +1636,9 @@ theorem main : Out.Laws → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscrete
   have hθ : ∀ y : Y, θ y (IsLocalRing.closedPoint _) = y.1 := fun y => (hθ₀ y).trans (hr y)
   choose e he₁ he₂ using fun a => hθ₃ (p a) O (z a).left
     ((Over.w (z a)).trans (Spec.map_id _).symm) (hθ (p a)).symm
-  have hc : ∀ y, ⊤ ≤ θ y ⁻¹ᵁ x.P.L.U (ch (r y)) := fun y => top_le_of_closedPoint _ (by
+  have hc : ∀ y, ⊤ ≤ θ y ⁻¹ᵁ x.P.L.U (ch (r y)) := fun y => _root_.GlobalTheory.KeyKa.ClosedApprox.top_le_of_closedPoint _ (by
     rw [hθ₀]; exact hz (r y) (x := IsLocalRing.closedPoint O) trivial)
-  have hc' : ∀ a, ⊤ ≤ θ (p a) ⁻¹ᵁ x.P.L.U (ch a) := fun a => top_le_of_closedPoint _ (by
+  have hc' : ∀ a, ⊤ ≤ θ (p a) ⁻¹ᵁ x.P.L.U (ch a) := fun a => _root_.GlobalTheory.KeyKa.ClosedApprox.top_le_of_closedPoint _ (by
     rw [hθ]; exact hz a (x := IsLocalRing.closedPoint O) trivial)
   choose ω hω using fun a => exists_unit_chart x (θ (p a)) (ch a) (ch (r (p a))) (hc' a) (hc (p a))
   let F : Y → Fin x.P.g → MvPowerSeries (Fin x.P.g) O := fun y i =>
@@ -1741,8 +1735,6 @@ open GlobalTheory.AbLaw
 open GlobalTheory.KeyKa
 
 
-theorem _root_.GlobalTheory.T.discriminant_eq_jacobian_complete_intersection_dvr : Out.Laws → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O] (x : KeyIn O) (n l d : ℕ) (s : Fin x.P.g → RR x n) (b : ∀ j, Fin ((l - j * n) ^ x.P.g) → RR x (l - j * n)) (m) (z : Fin d → Pt x) (ch : Fin d → x.P.L.ι), 1 ≤ n → x.P.g * n < l → (∀ j ≤ x.P.g, IsBasis x (b j)) → IsMul x l s b m → {y : x.P.A.left | x.P.A.hom y = IsLocalRing.closedPoint O ∧ ∀ i, y ∉ Out.nonzeroLocus (s i)}.Finite → (∀ a, ⊤ ≤ (z a).left ⁻¹ᵁ x.P.L.U (ch a)) → (∀ a i, valT (T := O) (z a).left (x.P.L.U (ch a)) ((s i).f (ch a)) = 0) → (∀ a, jac x s (z a) (ch a) ≠ 0) → Function.Injective z → (∀ y : x.P.A.left, x.P.A.hom y ≠ IsLocalRing.closedPoint O → (∀ i, y ∉ Out.nonzeroLocus (s i)) → ∃ a, ∃ p : Sp O, (z a).left p = y) → ∃ (ev₀ : ∀ j, Matrix (Fin d) (Fin ((l - j * n) ^ x.P.g)) O) (Pm : Matrix (Fin d) (Fin d) O) (t₀ : O), (Matrix.of fun a k => valT (T := O) (z a).left (x.P.L.U (ch a)) ((b 0 k).f (ch a))) = Pm * ev₀ 0 ∧ IsCx kdeg (kosD (N := fun j => (l - j * n) ^ x.P.g) m ev₀) ∧ TorsSq kdeg (kosD (N := fun j => (l - j * n) ^ x.P.g) m ev₀) t₀ ∧ Associated (Pm.det ^ 2) (∏ a, jac x s (z a) (ch a)) := by
-  first | exact @GlobalTheory.DiscrJacGlobal.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.DiscriminantEqJacobianCompleteIntersectionDvrStatement =====

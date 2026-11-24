@@ -1642,7 +1642,7 @@ theorem meanGamX : MeanGamX :=
 theorem theoremMXB : TheoremMXB :=
   Formalism.InvariantFactorPaths.MC.theoremMXB_of_point meanGamX
     Formalism.GM.DimensionMonotonicity.highest_weight_dim_monotone
-    Formalism.CountingSumsFrames.monomial_count Formalism.GM.Top.smithZp
+    Formalism.CountingSumsFrames.monomial_count _root_.Formalism.GM.smith_form_p_adic_integers
     Formalism.GM.TM.existsAdaptedBasis
     (pointMX_of_partner Formalism.GM.bad_criterion_holds
       (partnerMX_of_parts tieOpsX_main partner_condition_holds))
@@ -1878,8 +1878,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace Formalism.InvariantFactorPaths.MC.Top
-
-theorem theoremMV7 : Formalism.CountingSumsFrames.TheoremMV7 := Formalism.InvariantFactorPaths.MC.theoremMV7
 
 end Formalism.InvariantFactorPaths.MC.Top
 end -- clump:auto

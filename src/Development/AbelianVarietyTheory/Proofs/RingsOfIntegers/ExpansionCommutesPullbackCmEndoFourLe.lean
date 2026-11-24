@@ -79,13 +79,6 @@ namespace GlobalTheory.GenericUnitValue
 
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
-theorem sval_of_secScal {X Y Y' Z : Scheme.{0}} {L : LB X} {K K' : Type} [Fintype K] [Fintype K']
-    {φ₁ : K → (Y' ⟶ X)} {ε₁ : K → ℤ} {s₁ : LB.Sec (LB.LinComb L φ₁ ε₁)} {φ₂ : K' → (Y ⟶ X)} {ε₂ : K' → ℤ}
-    {s₂ : LB.Sec (LB.LinComb L φ₂ ε₂)} {h : Y' ⟶ Y} {c : Γ(Y', ⊤)} (H : GeneratorPullback.SecScal L φ₁ ε₁ s₁ φ₂ ε₂ s₂ h c)
-    (r : Z ⟶ Y') (z : Z) {J} (hJ : Good L z J) :
-    sval s₂ (r ≫ h) z J = gs r z ⊤ c * sval s₁ r z J := by
-  apply GlobalTheory.UU.sval_of_secScal <;> assumption
-
 theorem isUnit_cst_generic {V : Type} [CommRing V] [IsDomain V] (y : Spec (CommRingCat.of (FractionRing V)))
     {c : V} (hc : c ≠ 0) : IsUnit (cst (jK V) y c) := by
   have hK : IsUnit (algebraMap V (FractionRing V) c) :=
@@ -122,8 +115,8 @@ theorem value_at_generic_unit : Laws → ∀ (V : Type) [CommRing V] [IsDomain V
   obtain ⟨c, σ'', τ, hc, hsτ, huσ, hth⟩ :=
     GlobalTheory.PullExpInt.main hL.globalFns V E H t P a N hN hN0 X hX hXc k s F u F' hs hu hpull
   have hv := GlobalTheory.UnitValue.value_at_unit_section V E H t P a N hN hN0 X hX hXc k σ'' τ hth _ (jK V) y J hJ
-  have e₁ := sval_of_secScal huσ unitK y hJ
-  have e₂ := sval_of_secScal hsτ unitK y hJ
+  have e₁ := _root_.GlobalTheory.PullIntegral.sval_of_secScal huσ unitK y hJ
+  have e₂ := _root_.GlobalTheory.PullIntegral.sval_of_secScal hsτ unitK y hJ
   rw [unitK_fst, gs_unitK_scal] at e₁ e₂
   rw [e₁, e₂] at hv
   apply (isUnit_cst_generic y hc).mul_left_cancel
@@ -145,8 +138,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry MonoidalCategory Car
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.DVR
 attribute [local instance] Over.cartesianMonoidalCategory
 open scoped CategoryTheory.Obj
-theorem _root_.GlobalTheory.T.value_at_unitSection_genericFibre : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Geo.Tor.Host E) (t : Geo.Tor.SAB H (Spec (CommRingCat.of V))) (P : Geo.Tor.PELUnif (maximalIdeal V) t) (a : NumberField.RingOfIntegers E) (N : ℕ), (letI := H.starRing; a * star a = (N : NumberField.RingOfIntegers E)) → 0 < N → letI := H.starRing;  ∀ (k : ℕ) (s : P.U.SecK k) (F : Fam P.D.toPre (FractionRing V) k) (u : P.U.SecK (k * N)) (F' : Fam P.D.toPre (FractionRing V) (k * N)), P.U.Expands k s F → P.U.Expands (k * N) u F' → PullAl P.D (FractionRing V) P.oD a k N F F' → ∀ (y : Spec (CommRingCat.of (FractionRing V))) (J), Geo.Tor.Good P.U.LG.L y J → Geo.Tor.sval u unitK y J = (Geo.Tor.val (L := P.U.LG.L) P.U.LG.rig (jK V) y J ^ (k * (N - 1))).val * Geo.Tor.sval s unitK y J := by
-  first | exact @GlobalTheory.GenericUnitValue.value_at_generic_unit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ValueAtUnitSectionGenericFibreStatement =====
@@ -227,7 +218,7 @@ theorem expands_pull_of_four_le : Laws → ∀ (V : Type) [CommRing V] [IsDomain
     (endK (t.act.act a)) hF u hu (P.U.SecK k) (fun s₀ => sp (Fp (Fx s₀))) (fun s₀ => s₀)
     (fun y J hJ => GlobalTheory.GenericGenerated.exists_secK_isUnit hLaws.ample V _ P.D P.A t.G P.U.toUnifPre k hk _ _ y J hJ)
     (fun i i' y J hJ => by
-      have e := GlobalTheory.T.mixed_cross_identity_genericFibre hLaws V E H t P a N hN hN0 k i _ _ _ (hFx i) (hsp _) (hFp _) k i' _ _ _ (hFx i') (hsp _)
+      have e := _root_.GlobalTheory.GenericCross.main hLaws V E H t P a N hN hN0 k i _ _ _ (hFx i) (hsp _) (hFp _) k i' _ _ _ (hFx i') (hsp _)
         (hFp _) 1 1 rfl y J hJ
       simpa only [pow_one] using e)
   obtain ⟨c₀, rfl⟩ := (GlobalTheory.unifPre_genericFibre_surjective_appTop_and_isIntegral hLaws.globalFns V _ P.D P.A t.G
@@ -243,7 +234,7 @@ theorem expands_pull_of_four_le : Laws → ∀ (V : Type) [CommRing V] [IsDomain
       rw [hb _ _ y J hJ, sval_pullMulSec _ _ u hu _ y hJ, Category.id_comp]
       exact hc s₀ y J hJ) unitK y J hJ'
     rw [hb _ _ y J hJ', sval_pullMulSec _ _ u hu _ y hJ', unitK_endK] at e₁
-    have e₂ := GlobalTheory.T.value_at_unitSection_genericFibre hLaws V E H t P a N hN hN0 k s₀ _ _ _ (hFx s₀) (hsp _) (hFp _) y J hJ'
+    have e₂ := _root_.GlobalTheory.GenericUnitValue.value_at_generic_unit hLaws V E H t P a N hN hN0 k s₀ _ _ _ (hFx s₀) (hsp _) (hFp _) y J hJ'
     have e₃ : val u unitK y J = val (L := P.U.LG.L) P.U.LG.rig (jK V) y J ^ (k * (N - 1)) := by
       have e := val_corr hJ' hn (𝟙 _)
       rw [val_pull hJ', val_pull hJ', Category.id_comp, Category.id_comp, val_pow] at e

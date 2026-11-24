@@ -152,11 +152,7 @@ theorem minpoly_unramifiedSubfield_eq_cyclotomic (K : FinExt l) (j : ℕ) (hj : 
   · rw [taylor_apply, aeval_comp]
     simp
 
-theorem exists_primitiveRoot_Om (j : ℕ) : ∃ ζ : Om l, IsPrimitiveRoot ζ (l ^ j) := by
-  have hlp : l.Prime := Fact.out
-  haveI : NeZero (l ^ j) := ⟨(pow_pos hlp.pos j).ne'⟩
-  haveI : CharZero (Om l) := algebraRat.charZero _
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ j)
+alias exists_primitiveRoot_Om := _root_.GlobalTheory.Cyc.exists_primRoot_pow
 
 theorem Ks_eq_restrictScalars (K : FinExt l) (j : ℕ) (ζ : Om l)
     (hζ : IsPrimitiveRoot ζ (l ^ j)) :

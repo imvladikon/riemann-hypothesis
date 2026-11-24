@@ -196,10 +196,10 @@ open GlobalTheory.ZH.CrdCalc (valR_res valR_spMap valR_eq valHom)
 theorem dlg_sub {A : Type} [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (L : LB B.left)
     (δ : Fld B.left) (hδ : IsField ⊤ δ) (i j : L.ι) {O T : B.left.Opens} (hO : O ≤ L.U i ⊓ L.U j) (hT : T ≤ O) :
     rsT (dlg B (𝟙 _) L δ i j O) T = rsT (dlg B (𝟙 _) L δ i j (L.U i ⊓ L.U j)) T := by
-  rw [GlobalTheory.CoverRefinementPullback.dlg_res' B L δ hδ i j (hT.trans hO)]
+  rw [_root_.GlobalTheory.DlogBasis.dlg_res B L δ hδ i j (hT.trans hO)]
   unfold dlg
-  rw [GlobalTheory.KS.rsT_of_le hT, map_mul, GlobalTheory.CoverRefinementPullback.pbT_id' _ hO, GlobalTheory.CoverRefinementPullback.pbT_id' _ hO, ← hδ.2.2 _ _ hT le_top,
-    GlobalTheory.CoverRefinementPullback.resG_resG', GlobalTheory.CoverRefinementPullback.resG_resG']
+  rw [GlobalTheory.KS.rsT_of_le hT, map_mul, _root_.GlobalTheory.DlogBasis.pbT_id _ hO, _root_.GlobalTheory.DlogBasis.pbT_id _ hO, ← hδ.2.2 _ _ hT le_top,
+    _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG]
   rfl
 
 theorem lie_inj : ∀ (R : Type) [CommRing R] [IsLocalRing R] (P : PolAV (Sp R)) (w : TanM (𝟙 (Sp R)) P.A) (δ : Fld P.A.left), IsInv P.A w δ → ∀ (K : Type) (V : K → P.A.left.Opens) (jk : K → P.L.ι), ⨆ k, V k = ⊤ → (∀ k, V k ≤ P.L.U (jk k)) → ∀ (b : ∀ k, Γ(P.A.left, V k)), (∀ k k', rsT (b k') (V k ⊓ V k') - rsT (b k) (V k ⊓ V k') = dlg P.A (𝟙 _) P.L δ (jk k) (jk k') (V k ⊓ V k')) → w = 0 := by
@@ -228,7 +228,7 @@ theorem lie_inj : ∀ (R : Type) [CommRing R] [IsLocalRing R] (P : PolAV (Sp R))
       abel
   obtain ⟨H, hH⟩ := hcob
 
-  have hgp := GlobalTheory.Heat.DlogIndep.isGrpPullback_self P.A
+  have hgp := _root_.GlobalTheory.ObjComp.isGrpPullback_id P.A
   obtain ⟨u, hu⟩ := ReciprocityTheory.ChartRestriction.G.PullbackSections.push_surj hgp (tv w)
   have hul : u.left = (tv w).left := (Category.comp_id _).symm.trans (congrArg (fun q => q.left) hu)
   have hut : IsTangent u :=
@@ -325,7 +325,7 @@ theorem comb_kills_weight_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
     intro W s
     have h := GlobalTheory.Heat.LiePush.isInv_pbT (𝟙 Y.H) hdw (w := v) hinv e
       (PullbackSections.tanM_ext (by rw [GlobalTheory.Heat.LiePush.tv_pushL]; exact Category.comp_id _)) W s W le_rfl
-    simpa only [Over.id_left, GlobalTheory.Heat.LiePush.pbT_id] using h
+    simpa only [Over.id_left, _root_.GlobalTheory.KS.InvField.pbT_id] using h
   have hpull : ∀ (U : Q.P.A.left.Opens) (s : Γ(Q.P.A.left, U)) (W : Y.H.left.Opens), W ≤ Y.q.left ⁻¹ᵁ U →
       dw W (pbT Y.q.left s W) = pbT Y.q.left (δ U s) W := by
     intro U s W hW
@@ -343,7 +343,7 @@ theorem comb_kills_weight_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
     have h := GlobalTheory.Heat.LiePush.isInv_pbT (𝟙 Q.P.A) hδ (g := 0) (w := Fin.elim0) (d' := Fin.elim0)
       (fun a => a.elim0) Fin.elim0
       (by rw [hw0, map_zero]; simp) U s U le_rfl
-    simpa only [Over.id_left, GlobalTheory.Heat.LiePush.pbT_id, Finset.univ_eq_empty, Finset.sum_empty] using h
+    simpa only [Over.id_left, _root_.GlobalTheory.KS.InvField.pbT_id, Finset.univ_eq_empty, Finset.sum_empty] using h
   obtain ⟨g, hg⟩ := GlobalTheory.Heat.AbConst.exists_app_eq Y hf
   have hfg : f = pbT Y.q.left g (Y.q.left ⁻¹ᵁ V) := by
     rw [← hg, GlobalTheory.KS.pbT_of_le _ le_rfl, Scheme.Hom.app_eq_appLE]

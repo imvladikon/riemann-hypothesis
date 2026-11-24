@@ -576,7 +576,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaFixingKummerRootMovesLess =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemInertiaQlIffResidueTrivial =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemInertiaQlIffResidueTrivial", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemInertiaQlIffResidueTrivial", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResEqIff\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -586,9 +586,6 @@ open scoped Formalism.Per
 noncomputable section
 
 namespace GlobalTheory.IKRes
-
-theorem norm_gal_ql {l : ℕ} [Fact l.Prime] (g : GQ l) (x : Om l) : ‖g x‖ = ‖x‖ :=
-  (spectralNorm_eq_of_equiv g x).symm
 
 theorem mem_IK_ql_iff : ∀ (l : ℕ) [Fact l.Prime] (g : Gl l), g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l) ↔ ∀ x : Om l, ‖x‖ ≤ 1 → ‖(g : GQ l) x - x‖ < 1 := by
   intro l _ g
@@ -600,7 +597,7 @@ theorem mem_IK_ql_iff : ∀ (l : ℕ) [Fact l.Prime] (g : Gl l), g ∈ IK (Forma
     | mul σ τ _ _ hσ hτ =>
       intro x hx
       have h1 : ‖(σ : GQ l) ((τ : GQ l) x) - (τ : GQ l) x‖ < 1 :=
-        hσ _ (by rwa [norm_gal_ql])
+        hσ _ (by rwa [_root_.GlobalTheory.MemLoc.FrobLaws.norm_gal])
       have h2 := hτ x hx
       have he : ((σ * τ : Gl l) : GQ l) x - x =
           ((σ : GQ l) ((τ : GQ l) x) - (τ : GQ l) x) + ((τ : GQ l) x - x) := by
@@ -609,7 +606,7 @@ theorem mem_IK_ql_iff : ∀ (l : ℕ) [Fact l.Prime] (g : Gl l), g ∈ IK (Forma
       exact (IsUltrametricDist.norm_add_le_max _ _).trans_lt (max_lt h1 h2)
     | inv σ _ hσ =>
       intro x hx
-      have hy : ‖((σ : GQ l)⁻¹) x‖ ≤ 1 := by rwa [norm_gal_ql]
+      have hy : ‖((σ : GQ l)⁻¹) x‖ ≤ 1 := by rwa [_root_.GlobalTheory.MemLoc.FrobLaws.norm_gal]
       have h := hσ _ hy
       have hx' : (σ : GQ l) (((σ : GQ l)⁻¹) x) = x := by
         rw [← AlgEquiv.mul_apply, mul_inv_cancel, AlgEquiv.one_apply]
@@ -660,7 +657,7 @@ variable {l : ℕ} [hl : Fact l.Prime]
 open GlobalTheory.MemLoc.FrobLaws in
 theorem fix_root (g : Gl l) (hg : g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l)) {ζ : Om l} {m : ℕ} (hm : 0 < m)
     (hlm : ¬ l ∣ m) (hζ : ζ ^ m = 1) : (g : GQ l) ζ = ζ := by
-  have h1 := (mem_IK_iff l g).1 hg ζ (norm_root hm hζ).le
+  have h1 := (_root_.GlobalTheory.IKRes.mem_IK_ql_iff l g).1 hg ζ (norm_root hm hζ).le
   have hgζ : ((g : GQ l) ζ) ^ m = 1 := by rw [← map_pow, hζ, map_one]
   let a : OO l := ⟨(g : GQ l) ζ, show ‖(g : GQ l) ζ‖ ≤ 1 from (norm_root hm hgζ).le⟩
   let b : OO l := ⟨ζ, show ‖ζ‖ ≤ 1 from (norm_root hm hζ).le⟩
@@ -691,7 +688,7 @@ theorem mem_IK_of_fix_Kur (g : Gl l) (hg : ∀ x ∈ MaximalUnramifiedExtension 
     refine (IsUltrametricDist.norm_add_le_max _ _).trans_lt (max_lt ?_ ?_)
     · rw [norm_gal]; exact hy
     · rw [norm_neg]; exact hy
-  rw [mem_IK_iff]
+  rw [_root_.GlobalTheory.IKRes.mem_IK_ql_iff]
   intro x hx
   rcases hx.lt_or_eq with h | h
   · exact key x h
@@ -703,7 +700,7 @@ theorem mem_IK_of_fix_Kur (g : Gl l) (hg : ∀ x ∈ MaximalUnramifiedExtension 
 
 theorem exists_inertia {M : ℕ} (hM : 0 < M) (ρ ζ : Om l) (hρ : ρ ^ M = -(l : Om l)) (hζ : ζ ^ M = 1) :
     ∃ g : Gl l, g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l) ∧ (g : GQ l) ρ = ζ * ρ := by
-  obtain ⟨g, hgK, hgρ⟩ := exists_lift l ρ (ζ * ρ) (minpoly_root l M hM ρ ζ hρ hζ)
+  obtain ⟨g, hgK, hgρ⟩ := _root_.GlobalTheory.LiftKur.exists_gal_fix_Kur_map l ρ (ζ * ρ) (_root_.GlobalTheory.MinpolyKummerUr.aeval_mul_root l M hM ρ ζ hρ hζ)
   have hmem : g ∈ GK (Formalism.MainNotions.ElementDenominator.qlExt l) := by
     rw [GK, IntermediateField.mem_fixingSubgroup_iff]
     intro x hx
@@ -716,12 +713,12 @@ theorem chi_trivial (LL : FinExt l) (χ : ↥(IK (Formalism.MainNotions.ElementD
     (ho : IsOpen (χ.ker : Set ↥(IK (Formalism.MainNotions.ElementDenominator.qlExt l)))) (hc : Nat.Coprime (orderOf χ) l) :
     ∃ M : ℕ, 0 < M ∧ ¬ l ∣ M ∧ ∀ ρ : Om l, ρ ^ M = -(l : Om l) →
       ∀ g : ↥(IK (Formalism.MainNotions.ElementDenominator.qlExt l)), ((g : Gl l) : GQ l) ρ = ρ → χ g = 1 := by
-  obtain ⟨F, hFn, hF⟩ := exists_open_normal l LL χ ho
-  obtain ⟨M, hM, hlM, hnear⟩ := near_of_fix_root l F
+  obtain ⟨F, hFn, hF⟩ := _root_.GlobalTheory.InertiaEigenvalues.char_inertia_trivial_on_fixing_normal l LL χ ho
+  obtain ⟨M, hM, hlM, hnear⟩ := _root_.GlobalTheory.NearRoot.near_root l F
   refine ⟨M, hM, hlM, fun ρ hρ g hg => ?_⟩
-  have hres := (mem_IK_iff l (g : Gl l)).1 g.2
+  have hres := (_root_.GlobalTheory.IKRes.mem_IK_ql_iff l (g : Gl l)).1 g.2
   have h1 := hnear ρ hρ _ hres hg
-  obtain ⟨s, hs⟩ := exists_pow_fix l F hFn _ h1
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.PowFixNear.main l F hFn _ h1
   have h2 : χ (g ^ l ^ s) = 1 := hF _ (fun x hx => by simpa using hs x hx)
   have h3 : χ g ^ orderOf χ = 1 := by rw [← MonoidHom.pow_apply, pow_orderOf_eq_one]; rfl
   rw [map_pow] at h2

@@ -73,8 +73,6 @@ open Classical
 open ReciprocityTheory.ChartRestriction.G.Out
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_labelMap_torsion_characters : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀), ∃ yy : S.Gam →+ u.D.toPre.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : u.D.toPre.X →+ u.D.toPre.X).range, Function.Surjective yy ∧ (∀ (a : S.Gam) (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x → x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left → yy a = QuotientAddGroup.mk pk.y) := by
-  first | exact @GlobalTheory.ZH.LabelMap.exists_labelMap
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLabelMapTorsionCharactersStatement =====
@@ -91,8 +89,6 @@ open Classical
 open ReciprocityTheory.ChartRestriction.G.Out
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.isoFree_perp_labelKernel_weights : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (yy : S.Gam →+ u.D.toPre.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : u.D.toPre.X →+ u.D.toPre.X).range), Function.Surjective yy → (∀ (a : S.Gam) (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x → x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left → yy a = QuotientAddGroup.mk pk.y) → S.IsoFree (S.perp yy.ker) ∧ ∃ wt : u.D.toPre.X →+ (S.perp yy.ker →+ ZMod S.N), ∀ (x : S.Gam) (α : u.D.toPre.X), yy x = QuotientAddGroup.mk α → ∀ t : S.perp yy.ker, wt α t = ZMod.castHom (dvd_mul_left S.N S.r) (ZMod S.N) (eStd S.g _ t x) := by
-  first | exact @GlobalTheory.ZH.TorusPerp.isoFree_perp_and_weights
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsoFreePerpLabelKernelWeightsStatement =====
@@ -297,7 +293,7 @@ theorem exists_pair_of_integral (hL : Laws) (X : 𝟙_ (Over (Sp V)) ⟶ G) (x :
   have hX : X ^ k = 1 := Over.OverMorphism.ext
     (ext_of_separated (B := G) base_injective (toUnit_left (V := V) (F := F)) _ _ (congrArg (fun q => q.left) e₁))
   obtain ⟨gp, hgp, -⟩ := existsUnique_gtPt_of_point V I hR hI D A G U.toUnifPre X
-  obtain ⟨p, hp, hpg⟩ := (T.torsionPoint_qk_alt hL.globalFns V I hR hI D A G U.toUnifPre k X gp hX hgp).2 F
+  obtain ⟨p, hp, hpg⟩ := (_root_.GlobalTheory.TorsionQk.torsionPoint_qk hL.globalFns V I hR hI D A G U.toUnifPre k X gp hX hgp).2 F
   exact ⟨p, hp, qkToAkU_of_integral_torsion hL V I hR hI D A G U k hk X gp hX hgp F p x hp hpg h⟩
 
 
@@ -316,7 +312,7 @@ theorem exists_integral_of_pair [ValuationRing V] [CharZero V] [IsAlgClosed F] (
     intro σ
     have hσ : (σ : F →+* F).comp (algebraMap (FractionRing V) F) = algebraMap (FractionRing V) F :=
       RingHom.ext σ.commutes
-    have e := (T.qkToAkU_iff_galois_equivariant ⟨hL, hL₂, l₃, l₄, l₅⟩ V I hR D A G hG U F F σ.toAlgHom k hk p (qkExt hB _ hσ p) (f p) (f p)
+    have e := (_root_.GlobalTheory.TorsionExt.qkToAkU_iff_of_qkExt ⟨hL, hL₂, l₃, l₄, l₅⟩ V I hR D A G hG U F F σ.toAlgHom k hk p (qkExt hB _ hσ p) (f p) (f p)
       ((qkExt_iff hB _ hσ _ _).2 rfl) (hx.trans ((congrArg (· ≫ xK) (spMap_jFK σ).symm).trans
         ((Category.assoc _ _ _).trans (congrArg (spMap (σ : F →+* F) ≫ ·) hx.symm))))).1 ((h₁ _ _).2 rfl)
     obtain ⟨z, hz, hg⟩ := (equiv_iff hB _ _).1 ((h₂ _ _).1 ((h₁ _ _).1 e))
@@ -421,8 +417,6 @@ open Classical
 open ReciprocityTheory.ChartRestriction.G.Out
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.label_map_kernel_eq_integral_torsion : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (yy : S.Gam →+ u.D.toPre.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : u.D.toPre.X →+ u.D.toPre.X).range), Function.Surjective yy → (∀ (a : S.Gam) (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x → x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left → yy a = QuotientAddGroup.mk pk.y) → (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → ∀ a, a ∈ yy.ker ↔ u.Integral a := by
-  first | exact @GlobalTheory.ZH.LabelKernel.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LabelMapKernelEqIntegralTorsionStatement =====
@@ -444,9 +438,9 @@ namespace GlobalTheory.ZH
 theorem labels_exist : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → Nonempty u.Lab := by
   intro h₁ h₂ h₃ o Ω _ _ _ _ S ρ p _ y₀ u hy
   obtain ⟨q, hq, hq'⟩ := GlobalTheory.ZH.PsiForm.main o Ω S ρ p y₀ u
-  obtain ⟨yy, hs, he⟩ := GlobalTheory.T.exists_labelMap_torsion_characters h₁ h₂ h₃ o Ω S ρ p y₀ u
-  have hk := GlobalTheory.T.label_map_kernel_eq_integral_torsion h₁ h₂ h₃ o Ω S ρ p y₀ u yy hs he hy
-  obtain ⟨hi, wt, hw⟩ := GlobalTheory.T.isoFree_perp_labelKernel_weights h₁ h₂ h₃ o Ω S ρ p y₀ u yy hs he
+  obtain ⟨yy, hs, he⟩ := _root_.GlobalTheory.ZH.LabelMap.exists_labelMap h₁ h₂ h₃ o Ω S ρ p y₀ u
+  have hk := _root_.GlobalTheory.ZH.LabelKernel.main h₁ h₂ h₃ o Ω S ρ p y₀ u yy hs he hy
+  obtain ⟨hi, wt, hw⟩ := _root_.GlobalTheory.ZH.TorusPerp.isoFree_perp_and_weights h₁ h₂ h₃ o Ω S ρ p y₀ u yy hs he
   exact ⟨⟨q, hq, hq', yy, hs, he, hk, hi, wt, hw⟩⟩
 
 end GlobalTheory.ZH

@@ -83,6 +83,7 @@ import Mathlib.Tactic.Lemma
 import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresSplit
+import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.GenSemiOf, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.GenericWeilRepresentation, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.ContinuousHPart, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.Proper, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.TargetOfInstDecomp, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScMuExists, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.ContinuousOnTensOp, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.LocFrame, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.InnerOfNorm, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.PosOfPerp, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.FrameCore, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.FrameHolds, Formalism.SharpRestriction.CuspSpanNormBounds.BridgeHW, Formalism.SharpRestriction.CuspSpanNormBounds.HCFiniteKMultiplicityGapped, Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.CoefWeightedLocHolds
@@ -359,7 +360,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.GenericWeilRepresentation =====
 
 -- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.ContinuousHPart =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.ContinuousHPart", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.InstDecomp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.HJMulVecGen\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.ContinuousHPart", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.InstDecomp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.HJMulVecGen\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MeasureDecomposition.ContinuousUMatApply\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -504,27 +505,21 @@ theorem hPart_mulVec (g : Matrix (Fin n) (Fin n) ℂ) (x : Fin n → ℂ) :
     rw [PwM, ← Matrix.toLin'_apply, Matrix.toLin'_toMatrix']
   simp only [hPart, Matrix.add_mulVec, Matrix.sub_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hP]
 
-private theorem hJ_mulVec_of_inUJ' {h : Matrix (Fin n) (Fin n) ℂ} (hU : Formalism.REAL.inUJ ε h) (u v : Fin n → ℂ) :
-    hJ ε (h *ᵥ u) (h *ᵥ v) = hJ ε u v := by
-  unfold Formalism.REAL.inUJ at hU
-  unfold hJ
-  rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hU]
-
 theorem hPart_mul (hF : RFrame ε e f z) {nm h : Matrix (Fin n) (Fin n) ℂ} (hn : InN ε e z nm)
     (hU : Formalism.REAL.inUJ ε h) (he : ∀ a, h *ᵥ e a = e a) (hf : ∀ a, h *ᵥ f a = f a) (hz : h *ᵥ z = z) :
     hPart ε e f z (nm * h) = h := by
   refine Matrix.toLin'.injective (LinearMap.ext fun x => ?_)
   rw [Matrix.toLin'_apply, Matrix.toLin'_apply, hPart_mulVec]
   have hey : ∀ a, hJ ε (e a) (h *ᵥ piW ε e f z x) = 0 := fun a => by
-    have := hJ_mulVec_of_inUJ' hU (e a) (piW ε e f z x)
+    have := _root_.PI.ScMuExists.UnitaryGroupMassFormula.hJ_mulVec hU (e a) (piW ε e f z x)
     rw [he a] at this
     rw [this]; exact hJ_e_piW hF a x
   have hfy : ∀ a, hJ ε (f a) (h *ᵥ piW ε e f z x) = 0 := fun a => by
-    have := hJ_mulVec_of_inUJ' hU (f a) (piW ε e f z x)
+    have := _root_.PI.ScMuExists.UnitaryGroupMassFormula.hJ_mulVec hU (f a) (piW ε e f z x)
     rw [hf a] at this
     rw [this]; exact hJ_f_piW hF a x
   have hzy : hJ ε z (h *ᵥ piW ε e f z x) = 0 := by
-    have := hJ_mulVec_of_inUJ' hU z (piW ε e f z x)
+    have := _root_.PI.ScMuExists.UnitaryGroupMassFormula.hJ_mulVec hU z (piW ε e f z x)
     rw [hz] at this
     rw [this]; exact hJ_z_piW hF x
   have h0 : piW ε e f z ((nm - 1) *ᵥ (h *ᵥ piW ε e f z x)) = 0 :=
@@ -1272,7 +1267,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.CuspSpanNormBounds.HCFiniteKMultiplicityGapped =====
 
 -- ===== clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.CoefWeightedLocHolds =====
--- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.CoefWeightedLocHolds", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks\npublic import Formalism.PeriodIntegrals.ScPsiExists\npublic import Formalism.PeriodIntegrals.ScMuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.DiscreteSeriesWeylDimension\npublic import Formalism.PeriodIntegrals.ScPiExists\npublic import Formalism.PeriodIntegrals.ScXuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeLitG\npublic import Formalism.LocalRingCardinality.IntCastDvdOfDvdIntegers\npublic import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.BesselDiscreteSeries.BesselNVGapPf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BunExists\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.ScWlocExists\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresInt\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScMuExists\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.InnerOfNorm\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.FrameHolds\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.EmbeddingTraceSumAlt.NormUnitsOfCalculation\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScRefExists\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScXuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeHW\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.HCFiniteKMultiplicityGapped\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HCReprodM\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresSplit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.CoefWeightedLocHolds", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks\npublic import Formalism.PeriodIntegrals.ScPsiExists\npublic import Formalism.PeriodIntegrals.ScMuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.DiscreteSeriesWeylDimension\npublic import Formalism.PeriodIntegrals.ScPiExists\npublic import Formalism.PeriodIntegrals.ScXuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeLitG\npublic import Formalism.LocalRingCardinality.IntCastDvdOfDvdIntegers\npublic import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.BesselDiscreteSeries.BesselNVGapPf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BunExists\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.ScWlocExists\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresInt\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScMuExists\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.InnerOfNorm\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.FrameHolds\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.EmbeddingTraceSumAlt.NormUnitsOfCalculation\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScRefExists\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScXuExists\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeHW\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.HCFiniteKMultiplicityGapped\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HCReprodM\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresSplit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1372,10 +1367,7 @@ theorem hform_crdA {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
   simp only [← Formalism.BasicNotions.bridge_star_holds D.R D.host, RingHom.id_apply]
   ring
 
-theorem hform_eq {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
-    Formalism.UG.hform (starRingEnd A.I.E) A.I.J (crdOf A.I A.ιE A.bas v) (crdOf A.I A.ιE A.bas w) =
-      A.ιE.symm ((VS D).hT v w) := by
-  rw [← hform_crdA, RingEquiv.symm_apply_apply]
+alias hform_eq := _root_.Formalism.L2.SG.Closed.ScMu.ChkScMu.hform_eq
 
 def SplitAtG (D : D7) : Prop :=
   ∀ (A : UnitaryGroupInstance D) (v : IsDedekindDomain.HeightOneSpectrum (𝓞 A.I.F)), ((gD D : ℕ) : 𝓞 A.I.F) ∈ v.asIdeal →
@@ -1446,10 +1438,7 @@ theorem hform_crdA {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
   simp only [← Formalism.BasicNotions.bridge_star_holds D.R D.host, RingHom.id_apply]
   ring
 
-theorem hform_eq {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
-    Formalism.UG.hform (starRingEnd A.I.E) A.I.J (crdOf A.I A.ιE A.bas v) (crdOf A.I A.ιE A.bas w) =
-      A.ιE.symm ((VS D).hT v w) := by
-  rw [← hform_crdA, RingEquiv.symm_apply_apply]
+alias hform_eq := _root_.Formalism.L2.SG.Closed.ScMu.ChkScMu.hform_eq
 
 def SplitAtG (D : D7) : Prop :=
   ∀ (A : UnitaryGroupInstance D) (v : IsDedekindDomain.HeightOneSpectrum (𝓞 A.I.F)), ((gD D : ℕ) : 𝓞 A.I.F) ∈ v.asIdeal →
@@ -1537,10 +1526,7 @@ theorem hform_crdA {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
   simp only [← Formalism.BasicNotions.bridge_star_holds D.R D.host, RingHom.id_apply]
   ring
 
-theorem hform_eq {D : D7} (A : UnitaryGroupInstance D) (v w : (VS D).V) :
-    Formalism.UG.hform (starRingEnd A.I.E) A.I.J (crdOf A.I A.ιE A.bas v) (crdOf A.I A.ιE A.bas w) =
-      A.ιE.symm ((VS D).hT v w) := by
-  rw [← hform_crdA, RingEquiv.symm_apply_apply]
+alias hform_eq := _root_.Formalism.L2.SG.Closed.ScMu.ChkScMu.hform_eq
 
 theorem isFrame {D : D7} (A : UnitaryGroupInstance D) (L : UnitaryLatticeData D) (u : D.what₂.Word) :
     PI.ScPiExists.IsFrame A.I (eC A L) (fC A L) (zC A L u) := by
@@ -1560,22 +1546,9 @@ theorem T_pos {D : D7} (u : D.what₂.Word) : 0 < (D.mem u).A.T := by
   · rw [h] at h2; simp at h2
   · exact h
 
-theorem strictAnti_fin {k : ℕ} (g : Fin k → ℝ) (hs : ∀ (i j : Fin k), j.1 = i.1 + 1 → g j < g i) :
-    StrictAnti g := by
-  have key : ∀ a : ℕ, ∀ i j : Fin k, j.1 = i.1 + a + 1 → g j < g i := by
-    intro a
-    induction a with
-    | zero => intro i j h; exact hs i j (by omega)
-    | succ a ih =>
-      intro i j h
-      have hm : i.1 + a + 1 < k := by omega
-      exact lt_trans (hs ⟨i.1 + a + 1, hm⟩ j (by simp; omega)) (ih i ⟨i.1 + a + 1, hm⟩ rfl)
-  intro i j hij
-  exact key (j.1 - i.1 - 1) i j (by have : i.1 < j.1 := hij; omega)
-
 theorem hcParam (D : D7) (P : HCParam D.R) : PI.UpqRep.IsHCParam (fun i => ((P.u i : ℚ) : ℝ)) := by
   refine ⟨?_, ?_⟩
-  · apply strictAnti_fin
+  · apply _root_.Formalism.MainNotions.StandardLattice.strictAnti_of_succ_lt_alt
     intro i j hj
     have hi : i.1 < D.R.k - 1 := by omega
     have h1 := P.u_gt_v ⟨i.1, hi⟩
@@ -1669,9 +1642,6 @@ theorem BunExists_holds (D : D7) : BunExists D :=
 
 theorem CoefWeightedLoc_holds [Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc] : CoefWeightedLoc := Fact.out
 
-
-variable [Fact Formalism.L2.SG.SplitPrimeNormLemmas.BesselNVGap] in
-theorem BesselNVGap_holds : BesselNVGap := Formalism.L2.SG.BesselDiscreteSeries.besselNVGap
 
 theorem WlocExists_holds : WlocExists := scWlocExists Formalism.L2.SG.HCReprodM.hcReprodDSm
 

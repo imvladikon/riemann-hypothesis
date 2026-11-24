@@ -642,8 +642,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain MeasureTheory ValuativeRel Matrix Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.StepData GlobalTheory.TwBridge
 
-theorem _root_.GlobalTheory.T.firstStep_completionRepresentatives_eq_one : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S₀ : Set ℕ) (mu : Tup X.F X.E X.K S₀) (cst : LocCst X (rowSG Pr sel mu)) (σ₀ : X.K →+* ℂ) (P : rowSG Pr sel mu) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : X.E →+* k) (s : ℕ) (W : TwData k) [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → cst.Ok → AtTwist (R := R) sel mu cst σ₀ P ι s W → ∀ (L : ChIdx X Pr R (QE sel (mu : Chr X.F X.E X.K))) (G : ChGlob X R.m), L.Ok Ch sel mu cst G s → IdxProd sel mu cst L → ∀ c (h : 0 + c = s), {g : GL (XIx (Fin R.k) (Fin R.t) (0) ⊕ Fin (c + 1)) k | ∃ b : L.β 0, IsGL ι (L.h 0 b P) g} = {1} := by
-  first | exact @GlobalTheory.TwBridge.ZeroReps.reps_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FirstStepCompletionRepresentativesEqOneStatement =====
@@ -697,13 +695,6 @@ theorem adapted_of_normal (hϖ : valuation k (ϖ : k) = uniformizer k) (hb : ∀
       exact pow_mono hϖ (by have := he 0; omega) (pow_mul_pow ((hbox w).1 hw r) ((mem_normal.1 hv).2 0))
     · exact r.elim0
 
-theorem val_unif (h : GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum.IsUnif ϖ) : valuation k (ϖ : k) = uniformizer k := by
-  apply le_antisymm
-  · rw [le_uniformizer_iff]; exact (h _).2 le_rfl
-  · obtain ⟨x, hx⟩ := ValuativeRel.valuation_surjective (uniformizer k)
-    rw [← hx]
-    exact (h x).1 (by rw [hx]; exact uniformizer_lt_one)
-
 theorem continuous_of_cond {ψ : AddChar k Circle} (h : HasConductor ψ 1) : Continuous ψ := by
   have h0 : ∀ x ∈ (𝒪[k] : Set k), ψ x = 1 := fun x hx =>
     (h x).2 (by simpa [Valuation.mem_integer_iff] using hx) x le_rfl
@@ -743,7 +734,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
   have hnorm := GlobalTheory.T.completion_representatives_normal_form_mod_unipotent X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI hmaps
   have honto := GlobalTheory.T.exists_rational_double_coset_representative_bounds X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI
   haveI := hν.1
-  have hϖ := val_unif W.unif
+  have hϖ := _root_.GlobalTheory.TwBridge.PsiRat.val_unif' W.unif
   have hb : ∀ j c h, latOf ((W.T s R).bas j c h) = latOf 1 := fun _ _ _ => rfl
   obtain ⟨hs, hp, hJ⟩ := GlobalTheory.Proof.TwistSupportPeriodicLevels.ofTwist_support_periodic_levels k s (Fin R.k ⊕ Fin (s + 1)) (Fin R.t)
     (Ix (Fin R.k ⊕ Fin (s + 1)) (Fin R.t) (s + 2)) (XIx (Fin R.k) (Fin R.t)) W.δ W.tame W.η
@@ -764,7 +755,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
         else σ (j + 1) c h '' ⋃ g ∈ B (c + 1) (by omega), (W.T s R).idx W.ψ ν j c h g) j
   have hrat : ∀ j c h, Nonempty (L.β j) → A j c h = {g | ∃ b : L.β j, IsGL ι (L.h j b P) g} := by
     rintro (_ | j) c h hne
-    · exact (GlobalTheory.T.firstStep_completionRepresentatives_eq_one X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI c h).symm
+    · exact (_root_.GlobalTheory.TwBridge.ZeroReps.reps_zero X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI c h).symm
     · exact if_pos hne
   have hneg : ∀ j c (h : j + 1 + c = s), ¬ Nonempty (L.β (j + 1)) →
       A (j + 1) c h = σ (j + 1) c h '' ⋃ g ∈ A j (c + 1) (by omega), (W.T s R).idx W.ψ ν j c h g := fun j c h hne => if_neg hne

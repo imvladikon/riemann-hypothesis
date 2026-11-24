@@ -261,8 +261,6 @@ section -- clump:auto
 
 open Polynomial
 
-theorem _root_.GlobalTheory.T.reduced_fibres_almost_all_of_separable_dedekind_curve : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A] [Algebra k A] (y : A), (Polynomial.aeval (R := k) y).Finite → Function.Injective (Polynomial.aeval (R := k) y) → Algebra.IsSeparable (IntermediateField.adjoin k {algebraMap A (FractionRing A) y}) (FractionRing A) → ∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal A, Q.IsMaximal → y - algebraMap k A α ∉ Q ^ 2 := by
-  first | (exact @GlobalTheory.reduced_fibres_almost_all_sep)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReducedFibresAlmostAllOfSeparableDedekindCurveStatement =====
@@ -428,7 +426,7 @@ theorem exists_separable_normalisation_reduced_fibres : ∀ (k A : Type) [Field 
     · exact ⟨t, ht, hD⟩
   obtain ⟨y, hy, hDy⟩ := key
   haveI := isSeparable_of_D_ne_zero hDy
-  exact ⟨y, hy, GlobalTheory.T.reduced_fibres_almost_all_of_separable_dedekind_curve k A y hy (aeval_injective_of_finite_of_not_isField k A y hy hA) this⟩
+  exact ⟨y, hy, _root_.GlobalTheory.reduced_fibres_almost_all_sep k A y hy (aeval_injective_of_finite_of_not_isField k A y hy hA) this⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -442,8 +440,6 @@ section -- clump:auto
 
 open Polynomial
 
-theorem _root_.GlobalTheory.T.exists_separable_normalization_reduced_fibers : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A] [Algebra k A] [Algebra.FiniteType k A], ¬ IsField A → ∃ y : A, (Polynomial.aeval (R := k) y).Finite ∧ ∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal A, Q.IsMaximal → y - algebraMap k A α ∉ Q ^ 2 := by
-  first | (exact @GlobalTheory.exists_separable_normalisation_reduced_fibres)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparableNormalisationReducedFibresStatement =====

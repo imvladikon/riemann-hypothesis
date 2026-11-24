@@ -57,8 +57,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.SiegelFormula
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.theta_convergence_of_siegel_set : GlobalTheory.Published.SiegelSetUnitary → GlobalTheory.Published.WeilThetaConvergence := by
-  first | exact @GlobalTheory.CompanionTheory.WeilTheta.weilThetaConvergence_of_siegelSet
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaConvergenceOfSiegelSetStatement =====
@@ -71,7 +69,7 @@ section -- clump:auto
 namespace GlobalTheory.CompanionTheory.WTC
 
 theorem weilThetaConvergence_of_core (h : PositivityTheory.ThKR.SiegelCore) : GlobalTheory.Published.WeilThetaConvergence :=
-  GlobalTheory.T.theta_convergence_of_siegel_set (PositivityTheory.ThKR.siegel_of_core h)
+  _root_.GlobalTheory.CompanionTheory.WeilTheta.weilThetaConvergence_of_siegelSet (PositivityTheory.ThKR.siegel_of_core h)
 
 end GlobalTheory.CompanionTheory.WTC
 end -- clump:auto

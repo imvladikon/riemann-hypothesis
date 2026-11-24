@@ -155,7 +155,7 @@ theorem cptPart_iff_intUnits_of_model : ∀ (E : Type) [Field E] [NumberField E]
           WithZero.exp m := by
       rw [hinv, isIntegral_iff_of_mulVec B ψ _ _ (hτ s⁻¹), GlobalTheory.T.isIntegral_matrix_iff_bounded_powers K e hint n]
       simp only [hmat, Subgroup.coe_inv]
-    rw [GlobalTheory.T.isCompact_closure_zpowers_iff_bounded_entries w n (UL n w) hcl (s : UL n w)]
+    rw [_root_.GlobalTheory.PowersCompact.isCompact_closure_zpowers_iff w n (UL n w) hcl (s : UL n w)]
     show _ ↔ IsIntegral K.O _ ∧ IsIntegral K.O _
     rw [hI1, hI2]
     simp only [SubgroupClass.coe_zpow]
@@ -913,18 +913,6 @@ noncomputable section
 
 namespace GlobalTheory.InertUnitOrb.LatOnto
 
-open GlobalTheory.InertUnitOrb.ModelOfN
-
-theorem exists_orthonormal_mem {K : UQ} (n : ℕ) : ∀ (V : Type) [AddCommGroup V] [Module K.E V] [Module K.O V]
-    [IsScalarTower K.O K.E V] [FiniteDimensional K.E V] (h : V → V → K.E),
-    (∀ y y' z, h (y + y') z = h y z + h y' z) → (∀ (a : K.E) y z, h (a • y) z = a * h y z) →
-    (∀ y z, h z y = K.c (h y z)) → Module.finrank K.E V = n → ∀ L : Submodule K.O V, L.FG →
-    Submodule.span K.E (L : Set V) = ⊤ → (∀ y, y ∈ L ↔ ∀ z ∈ L, h y z ∈ (algebraMap K.O K.E).range) →
-    ∃ v : Fin n → V, (∀ i, v i ∈ L) ∧ ∀ i j, h (v i) (v j) = if i = j then 1 else 0 := by
-  first
-  | (apply _root_.GlobalTheory.InvolutionTraceUnit.exists_orthonormal <;> assumption)
-  | (intros; exact _root_.GlobalTheory.InvolutionTraceUnit.exists_orthonormal ..)
-
 end GlobalTheory.InertUnitOrb.LatOnto
 
 namespace GlobalTheory.InertUnitOrb.LatOnto
@@ -946,7 +934,7 @@ theorem exists_unitLat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     congr 1
     ring
   have hn : Module.finrank K.E B.A = n := by rw [ψ.finrank_eq, Module.finrank_fin_fun]
-  obtain ⟨v, hvL, hv⟩ := exists_orthonormal_mem n B.A (B.herm x) hadd hsmul hsym hn L hLat.1 hLat.2 hdual
+  obtain ⟨v, hvL, hv⟩ := _root_.GlobalTheory.InvolutionTraceUnit.exists_orthonormal n B.A (B.herm x) hadd hsmul hsym hn L hLat.1 hLat.2 hdual
   obtain ⟨b, hb⟩ := exists_basis_of_orthonormal (B.herm x) hadd hsmul hn v hv
   let P : Matrix (Fin n) (Fin n) K.E := Matrix.of fun i j => ψ (v j) i
   let Pc : Matrix (Fin n) (Fin n) K.E := Formalism.UG.cT (K.c : K.E →+* K.E) P
@@ -1558,12 +1546,12 @@ theorem finsum_ite_subtype' {α M : Type} [AddCommMonoid M] (p : α → Prop) [D
 theorem orb_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → ∀ (n : ℕ) (B : GlobalTheory.UnitLemma.InvAlg K), B.P.Separable → ∀ (γ : UL n w) (x : B.Aˣ) (ψ : B.A ≃ₗ[K.E] (Fin n → K.E)), GlobalTheory.InertUnitOrb.IsModel B (γ.1.val.map e.symm) x ψ → twOrb (MonoidHom.id _) (KL n w) γ ((KL n w : Set (UL n w)).indicator 1) = ((B.N x : ℚ) : ℂ) := by
   intro E _ _ _ hE w hw K e he hint n B hsep γ x ψ hM
   obtain ⟨hx, hg, hh⟩ := hM
-  obtain ⟨τ, hτ⟩ := exists_torus_equiv E hE w hw K e he hint n B ψ x γ ⟨hx, hg, hh⟩ hsep
-  have hcpt := cptPart_iff_intUnits E hE w hw K e he hint n B ψ x γ ⟨hx, hg, hh⟩ hsep τ hτ
-  have hS1 := unitLat_selfDual E hE w hw K e he hint n B ψ x hx hh
-  have hS1b := unitLat_stable_iff E hE w hw K e he hint n B ψ γ hg
-  have hS2 := unitLat_eq_iff E hE w hw K e he hint n B ψ
-  have hS3 := exists_unitLat_eq E hE w hw K e he hint n B ψ x hx hh
+  obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CentTorusModel.cent_equiv_torus E hE w hw K e he hint n B ψ x γ ⟨hx, hg, hh⟩ hsep
+  have hcpt := _root_.GlobalTheory.InertUnitOrb.cptPart_iff_intUnits_of_model E hE w hw K e he hint n B ψ x γ ⟨hx, hg, hh⟩ hsep τ hτ
+  have hS1 := _root_.GlobalTheory.InertUnitOrb.SelfDualLat.unitLat_isLat_selfDual E hE w hw K e he hint n B ψ x hx hh
+  have hS1b := _root_.GlobalTheory.InertUnitOrb.LatStable.unitLat_stable_iff E hE w hw K e he hint n B ψ γ hg
+  have hS2 := _root_.GlobalTheory.InertUnitLat.unitLat_eq_iff E hE w hw K e he hint n B ψ
+  have hS3 := _root_.GlobalTheory.InertUnitOrb.LatOnto.exists_unitLat_eq E hE w hw K e he hint n B ψ x hx hh
   have hS6 : ∀ (t : twCent (MonoidHom.id (UL n w)) γ) (q : UL n w),
       unitLat e B ψ ((t : UL n w) * q) = mulLat K.O ((τ t : B.Aˣ) : B.A) (unitLat e B ψ q) :=
     fun t q => unitLat_mul E hE w hw K e he hint n B ψ t q (τ t) (hτ t)
@@ -1582,7 +1570,7 @@ theorem orb_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E
   have hconj : ∀ (Q s : UL n w), s ∈ (KL n w).map (MulAut.conj Q).toMonoidHom ↔ Q⁻¹ * s * Q ∈ KL n w := by
     intro Q s
     rw [Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
-  rw [twOrb_unit]
+  rw [_root_.GlobalTheory.OrbIndUnit.twOrb_id_indicator]
   unfold InvAlg.N orbSum
   rw [ratCast_finsum']
   rw [finsum_ite_subtype']
@@ -1630,7 +1618,7 @@ theorem orb_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E
     rw [← hta, ← hS6] at hRa
     simp only [one_mul, Rat.cast_natCast]
     congr 1
-    refine relIndex_transport (UL n w) B.Aˣ _ B.T τ _ _ (stabLat K.O R.1) (intUnits K.O B.A) inf_le_left hcle ?_ hcpt
+    refine _root_.GlobalTheory.relIndex_eq_of_mulEquiv_subgroup (UL n w) B.Aˣ _ B.T τ _ _ (stabLat K.O R.1) (intUnits K.O B.A) inf_le_left hcle ?_ hcpt
     intro s
     rw [mem_stabLat_iff, hRa, ← hS6, hS2, Subgroup.mem_inf, hconj]
     simp only [SetLike.coe_mem, true_and]

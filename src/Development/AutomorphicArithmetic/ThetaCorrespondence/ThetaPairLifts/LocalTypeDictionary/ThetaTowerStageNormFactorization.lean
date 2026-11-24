@@ -246,7 +246,7 @@ theorem theta_stage_converges : _root_.GlobalTheory.FunPr.ThetaLocalInputs → G
     NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
       ∀ t P h, MeasureTheory.IntegrableOn (X.ker W.ψ W.θ t P h) X.fd X.m := by
   intro hP _ _
-  have hW := _root_.GlobalTheory.T.twisted_theta_integral_converges hP.siegelSetUnitary hP
+  have hW := _root_.GlobalTheory.WeilConv.twisted_weil_representation_convergence hP.siegelSetUnitary hP
   refine ⟨0, fun ε CF _ => ⟨0, 0, fun C _ D large₂ _ _ hRec T Lc μ₀ _ G => ?_⟩⟩
   intro W S _ _ i j p q A A' WW X hX t P h
   obtain ⟨hp, hq, hA, hA', hnA, _, _, hXi⟩ := hX
@@ -260,23 +260,6 @@ theorem theta_stage_converges : _root_.GlobalTheory.FunPr.ThetaLocalInputs → G
 end GlobalTheory.StageConv
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.theta_integral_stage_convergent : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) →
-    NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
-      ∀ t P h, MeasureTheory.IntegrableOn (X.ker W.ψ W.θ t P h) X.fd X.m := by
-  first | exact @_root_.GlobalTheory.StageConv.theta_stage_converges
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralStageConvergent =====
@@ -298,24 +281,10 @@ open scoped TensorProduct
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-noncomputable section
-
 namespace GlobalTheory.StageKer
-
-theorem tmul_ne_zero_of_ne {Pr Pf : Type} [AddCommGroup Pr] [Module ℂ Pr] [AddCommGroup Pf] [Module ℂ Pf] {x : Pr} {y : Pf}
-    (hx : x ≠ 0) (hy : y ≠ 0) : x ⊗ₜ[ℂ] y ≠ 0 := by
-  obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ Pf, φ y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
-    exact hy ((Module.forall_dual_apply_eq_zero_iff ℂ y).1 hc)
-  intro h0
-  have := congrArg ((TensorProduct.rid ℂ Pr).toLinearMap ∘ₗ LinearMap.lTensor Pr φ) h0
-  simp only [LinearMap.comp_apply, LinearMap.lTensor_tmul, LinearEquiv.coe_coe, TensorProduct.rid_tmul, map_zero] at this
-  exact hx ((smul_eq_zero.1 this).resolve_left hφ)
 
 end GlobalTheory.StageKer
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.StageTriangleIntegralVanishing =====
@@ -451,30 +420,13 @@ theorem GlobalTheory.StageKer.theta_stage_kernel_eq : _root_.GlobalTheory.FunPr.
     intro P
     rw [eI, map_eq_zero_iff J hJi]
     constructor
-    · intro h0; by_contra hq0; exact GlobalTheory.StageKer.tmul_ne_zero_of_ne hq0 hy h0
+    · intro h0; by_contra hq0; exact _root_.GlobalTheory.PolKer.tmul_ne_zero_of_ne hq0 hy h0
     · intro h0; rw [h0, TensorProduct.zero_tmul]
   intro t t' P h0
   exact (key t' P).2 ((key t P).1 h0)
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.theta_stage_kernel_characterization : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) →
-    NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
-      ∀ t t' P, X.I W.ψ W.θ t P = 0 → X.I W.ψ W.θ t' P = 0 := by
-  first | exact @_root_.GlobalTheory.StageKer.theta_stage_kernel_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaStageKernelCharacterization =====
@@ -496,8 +448,6 @@ open GlobalTheory.ConstRatio (NegIdx Factor)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 noncomputable section
 namespace GlobalTheory.StageFactor
-open MeasureTheory
-variable {D : D7} {T : Type} {A A' WW : HSp D}
 end GlobalTheory.StageFactor
 open GlobalTheory.StageFactor
 theorem GlobalTheory.StageFactor.theta_tower_stage_norm_factorization : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
@@ -505,8 +455,8 @@ theorem GlobalTheory.StageFactor.theta_tower_stage_norm_factorization : _root_.G
     NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
       ∃ lam : T → ℂ, Factor X W.ψ W.θ lam := by
   intro hP hK hL
-  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and (GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.T.theta_integral_stage_convergent hP hK hL) (_root_.GlobalTheory.T.theta_stage_kernel_characterization hP hK hL))
-    (GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.T.theta_stage_liftable hP hK hL) (_root_.GlobalTheory.T.theta_small_rank_stage_holds hP hK hL))
+  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and (GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.StageConv.theta_stage_converges hP hK hL) (_root_.GlobalTheory.StageKer.theta_stage_kernel_eq hP hK hL))
+    (GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.StageLift.theta_stage_lift_exists hP hK hL) (_root_.GlobalTheory.StageSmall.theta_stage_of_small_rank hP hK hL))
   refine ⟨c, fun ε CF hCF => ?_⟩
   obtain ⟨C0, x0, h⟩ := hc ε CF hCF
   refine ⟨C0, x0, fun C hC D large₂ a b r T Lc μ hL G W S hW hN i j p q A A' WW X hX => ?_⟩
@@ -517,23 +467,6 @@ theorem GlobalTheory.StageFactor.theta_tower_stage_norm_factorization : _root_.G
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.exists_factor_of_isStageC : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) →
-    NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
-      ∃ lam : T → ℂ, Factor X W.ψ W.θ lam := by
-  first | exact @_root_.GlobalTheory.StageFactor.theta_tower_stage_norm_factorization
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaTowerStageNormFactorization =====

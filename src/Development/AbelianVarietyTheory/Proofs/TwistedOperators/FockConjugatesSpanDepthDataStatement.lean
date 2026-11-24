@@ -87,8 +87,10 @@ import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymplOHEqZ
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHomLatticeIffIntegralMatrixSplitChart
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSquareIntegrable
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 import Std.Tactic.BVDecide.Normalize.Bool
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsWeilDatumConjNegHermitianSpaces
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantPartChosenPlacesMemCompletedLattice, Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantPartChosenPlacesMemCompletedLatticeStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalHomApproxHalfModIdeal, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalHomApproxHalfModIdealStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantDepthLatticePermutesCosetVectors, Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantDepthLatticePermutesCosetVectorsStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateHalfCommutantActsOnCosetVectorByScalarStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOffPartVacuumCommutantActsByScalar, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOffPartVacuumCommutantActsByScalarStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorEigenOfThetaVectorAtPlace, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorEigenOfThetaVectorAtPlaceStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticFormOffIdempotentPartOrthogonalHalf, Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticFormOffIdempotentPartOrthogonalHalfStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectors, Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectorsStatement, Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockConjugatesSpanDepthData, Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockConjugatesSpanDepthDataStatement
@@ -113,7 +115,7 @@ theorem idemSum_mul_conj {D : D7} {P : Finset (Formalism.L2.DIV.Pl D.host.E)} {e
   obtain ⟨q0, q1, -⟩ := GlobalTheory.FunObj.Comparison₂.cpt_idemSum he₀
   obtain ⟨-, d2⟩ := GlobalTheory.StdFrames.cpt_of_isIdemAt ha
   have k : e₀ * a = a := by
-    refine GlobalTheory.DepthFix.ext_cpt ?_ fun R => ?_
+    refine _root_.GlobalTheory.FunObj.ae_ext ?_ fun R => ?_
     · rw [RingHom.map_mul, q0, zero_mul, GlobalTheory.SplitScalar.infPart_splitIdem ha.1]
     · rw [RingHom.map_mul, RingHom.map_mul]
       by_cases hR : R = Q
@@ -267,12 +269,6 @@ namespace GlobalTheory.CosShift
 variable {D : D7} {m n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)}
   {Λ' : Submodule (𝓞 D.host.E) (Fin m → D.host.E)} {𝔪 : Ideal (𝓞 D.host.E)}
 
-theorem isHalf_sub' {e : AE D} {x y : Mx D m n} (hx : IsHalf e x) (hy : IsHalf e y) : IsHalf e (x - y) := fun i j => by
-  simp only [Matrix.sub_apply, mul_sub, hx i j, hy i j]
-
-theorem isHalf_add' {e : AE D} {x y : Mx D m n} (hx : IsHalf e x) (hy : IsHalf e y) : IsHalf e (x + y) := fun i j => by
-  simp only [Matrix.add_apply, mul_add, hx i j, hy i j]
-
 theorem map_smul_sub (e : AE D) (a b : homLat Λ Λ') : e • ((a - b : homLat Λ Λ') : Matrix (Fin m) (Fin n) D.host.E).map (incA D) =
     e • (a : Matrix (Fin m) (Fin n) D.host.E).map (incA D) - e • (b : Matrix (Fin m) (Fin n) D.host.E).map (incA D) := by
   rw [Submodule.coe_sub, Matrix.map_sub _ (incA D).map_sub, smul_sub]
@@ -297,7 +293,7 @@ theorem mem_cosSet_add {e : AE D} {z : Mx D m n} (hz : IsHalf e z) (x₀ x₁ : 
   constructor
   · rintro ⟨ht, y, hy, hm⟩
     refine ⟨?_, y - x₁, ?_, ?_⟩
-    · have := isHalf_sub' ht hz
+    · have := _root_.GlobalTheory.SplitScalar.isHalf_sub ht hz
       rwa [add_sub_cancel_right] at this
     · rw [mk_sub', mk_sub']
       exact congrArg (· - _) hy
@@ -309,7 +305,7 @@ theorem mem_cosSet_add {e : AE D} {z : Mx D m n} (hz : IsHalf e z) (x₀ x₁ : 
         abel
       rwa [e2] at h2
   · rintro ⟨ht, y, hy, hm⟩
-    refine ⟨isHalf_add' ht hz, y + x₁, ?_, ?_⟩
+    refine ⟨_root_.GlobalTheory.SplitScalar.isHalf_add ht hz, y + x₁, ?_, ?_⟩
     · rw [mk_add']
       rw [mk_sub'] at hy
       have hy' : (Submodule.Quotient.mk y : homLat Λ Λ' ⧸ (𝔪 • ⊤ : Submodule (𝓞 D.host.E) (homLat Λ Λ'))) =
@@ -497,22 +493,9 @@ namespace GlobalTheory.CommVac
 
 variable {D : D7}
 
-theorem symplO_add_right (S T : HSp D) (x y y' : WO S T) :
-    symplO S T x (y + y') = symplO S T x y + symplO S T x y' := by
-  unfold symplO hO
-  simp only [Matrix.add_apply, map_add (f := _), mul_add, add_mul, Finset.sum_add_distrib]
+alias hO_smul_left := _root_.GlobalTheory.PlaceModel.hO_smul_left
 
-theorem hO_smul_left (S T : HSp D) (a : AE D) (x y : WO S T) : hO S T (a • x) y = a * hO S T x y := by
-  unfold hO
-  simp only [Matrix.smul_apply, smul_eq_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ =>
-    Finset.sum_congr rfl fun _ _ => by ring
-
-theorem hO_smul_right (S T : HSp D) (a : AE D) (x y : WO S T) : hO S T x (a • y) = cA D a * hO S T x y := by
-  unfold hO
-  simp only [Matrix.smul_apply, smul_eq_mul, map_mul, Finset.mul_sum]
-  exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ =>
-    Finset.sum_congr rfl fun _ _ => by ring
+alias hO_smul_right := _root_.GlobalTheory.PlaceModel.hO_smul_right
 
 theorem symplO_smul_comm (S T : HSp D) {a : AE D} (ha : cA D a = a) (x y : WO S T) :
     symplO S T (a • x) y = symplO S T x (a • y) := by
@@ -557,7 +540,7 @@ theorem heisO_offPart_vac : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → �
       exact hdep _ (GlobalTheory.LatticeStable.smul_mem_latO D _ _ _ _ _ c hc u hu)
     have hadd : ∀ a b : AE D, W.ψ (symplO _ _ w (a • v)) = 1 → W.ψ (symplO _ _ w (b • v)) = 1 →
         W.ψ (symplO _ _ w ((a + b) • v)) = 1 := fun a b ha hb => by
-      rw [add_smul, symplO_add_right, AddChar.map_add_eq_mul, ha, hb, one_mul]
+      rw [add_smul, _root_.GlobalTheory.LatVac.symplO_add_right, AddChar.map_add_eq_mul, ha, hb, one_mul]
     have hsplit : ∀ e₁, IsSplitIdem D e₁ → W.ψ (symplO _ _ w (e₁ • v)) = 1 := fun e₁ h₁ =>
       hw.2 e₁ h₁ _ (hpiece _ (GlobalTheory.SplitHomLattice.idem_int h₁))
         (fun a b => by rw [Matrix.smul_apply, smul_eq_mul, ← mul_assoc, h₁.1])
@@ -586,14 +569,14 @@ theorem heisO_offPart_vac : All fun {D} _ _ _ {G} W _ => ∀ i, i < D.R.m → �
       rw [e2]
       exact hw.1 _ (hpiece _ hβ)
     · refine Finset.sum_induction _ (fun c => W.ψ (symplO _ _ w (c • v)) = 1) hadd ?_ ?_
-      · have h0 := symplO_add_right (G.pS (.chi i 0)) (G.pT (.chi i 0)) w 0 0
+      · have h0 := _root_.GlobalTheory.LatVac.symplO_add_right (G.pS (.chi i 0)) (G.pT (.chi i 0)) w 0 0
         rw [add_zero] at h0
         have h0' : symplO (G.pS (.chi i 0)) (G.pT (.chi i 0)) w 0 = 0 := by linear_combination -h0
         show W.ψ (symplO _ _ w ((0 : AE D) • v)) = 1
         rw [zero_smul, h0', AddChar.map_zero_eq_one]
       · intro x hx
         rw [← hsum x hx]
-        exact hadd _ _ (hsplit _ (hes x hx)) (hsplit _ (GlobalTheory.IdemSumVac.isSplitIdem_cA (hes x hx)))
+        exact hadd _ _ (hsplit _ (hes x hx)) (hsplit _ (_root_.GlobalTheory.SplitScalar.isSplitIdem_conj (hes x hx)))
   have hfin' : ((1 - e - cA D e) • w).map (infPart D) = 0 := by
     ext a b
     have := congrFun (congrFun hinf a) b
@@ -659,9 +642,6 @@ def heisLin (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (w : WO S T) :
 theorem heisLin_apply (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (w : WO S T) (f : WO S T → ℂ) :
     heisLin ψ S T w f = heisO ψ S T w f := rfl
 
-theorem heisO_smul_comm (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (w : WO S T) (k : ℂ) (f : WO S T → ℂ) :
-    heisO ψ S T w (k • f) = k • heisO ψ S T w f := (heisLin ψ S T w).map_smul k f
-
 theorem addChar_ne_zero (ψ : AddChar (AF D.host.F) ℂ) (a : AF D.host.F) : ψ a ≠ 0 := by
   intro h
   have h1 := AddChar.map_zero_eq_one ψ
@@ -684,9 +664,9 @@ theorem heisO_eigen_of_isThetaAt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     have hT' : IsPlaceModel ψ (symplO S T) (heisO ψ S T) e Λ 1 f₀ (k • (heisLin ψ S T w ∘ₗ T₀)) := by
       refine ⟨fun Φ' hΦ' x hxe => ?_, fun Φ' hΦ' y hye => ?_, ?_⟩
       · simp only [LinearMap.smul_apply, LinearMap.comp_apply, heisLin_apply]
-        rw [hT₀.trans Φ' hΦ' x hxe, GlobalTheory.Asc.heisO_comm, hx x hxe, hψ0, one_smul, heisO_smul_comm]
+        rw [hT₀.trans Φ' hΦ' x hxe, GlobalTheory.Asc.heisO_comm, hx x hxe, hψ0, one_smul, _root_.GlobalTheory.SplitScalar.heisO_smul]
       · simp only [LinearMap.smul_apply, LinearMap.comp_apply, heisLin_apply]
-        rw [hT₀.modul Φ' hΦ' y hye, GlobalTheory.Asc.heisO_comm, hy y hye, hψ0, one_smul, heisO_smul_comm]
+        rw [hT₀.modul Φ' hΦ' y hye, GlobalTheory.Asc.heisO_comm, hy y hye, hψ0, one_smul, _root_.GlobalTheory.SplitScalar.heisO_smul]
       · simp only [LinearMap.smul_apply, LinearMap.comp_apply, heisLin_apply]
         rw [hT₀.vac, hk]
     have h2 : f = (k • (heisLin ψ S T w ∘ₗ T₀)) Φ := hall _ hT'
@@ -791,7 +771,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticFormOffIdempotentPartOrthogonalHalfStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectors =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectors", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantDepthLatticePermutesCosetVectorsStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateHalfCommutantActsOnCosetVectorByScalarStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CosetVectorsNonzeroDepthFockVacuaStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOffPartVacuumCommutantActsByScalarStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorEigenOfThetaVectorAtPlaceStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticFormOffIdempotentPartOrthogonalHalfStatement\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSquareIntegrable\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectors", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CommutantDepthLatticePermutesCosetVectorsStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjugateHalfCommutantActsOnCosetVectorByScalarStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CosetVectorsNonzeroDepthFockVacuaStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOffPartVacuumCommutantActsByScalarStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorEigenOfThetaVectorAtPlaceStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticFormOffIdempotentPartOrthogonalHalfStatement\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSquareIntegrable\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixedModelFormulasWittSourceProof\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -806,10 +786,6 @@ open GlobalTheory.AscFin
 namespace GlobalTheory.CosPerm
 
 variable {D : D7}
-
-theorem heisO_smul_fun (ψ : AddChar (AF D.host.F) ℂ) {S T : HSp D} (w : WO S T) (c : ℂ) (f : WO S T → ℂ) :
-    heisO ψ S T w (c • f) = c • heisO ψ S T w f := by
-  funext x; simp only [heisO, Pi.smul_apply, smul_eq_mul]; ring
 
 theorem heisO_star {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (S T : HSp D) (w : WO S T) (f : WO S T → ℂ) :
     heisO ψ S T w (star f) = star (heisO ψ (negSp S) T w f) := by
@@ -863,13 +839,13 @@ theorem GlobalTheory.CosPerm.cosVec_perm : All fun {D} _ _ _ {G} W _ => ∀ i, i
     exact one_ne_zero this
   have e1 := GlobalTheory.OrientedHeis.heisO_heisO (ψ := W.ψ) (S := G.pS (.chi i 0)) (T := G.pT (.chi i 0))
     (cA D e • w) ((1 - e - cA D e) • w) (W.cosVec i κ)
-  rw [h₃, heisO_smul_fun, h₂, smul_smul] at e1
+  rw [h₃, _root_.GlobalTheory.MixUnip.heisO_smul, h₂, smul_smul] at e1
   have e1' : heisO W.ψ (G.pS (.chi i 0)) (G.pT (.chi i 0)) (cA D e • w + (1 - e - cA D e) • w) (W.cosVec i κ) =
       (W.ψ (symplOH (G.pS (.chi i 0)) (G.pT (.chi i 0)) (cA D e • w) ((1 - e - cA D e) • w)))⁻¹ • ((c₃ * c₂) • W.cosVec i κ) := by
     rw [e1, inv_smul_smul₀ (hne _)]
   have e2 := GlobalTheory.OrientedHeis.heisO_heisO (ψ := W.ψ) (S := G.pS (.chi i 0)) (T := G.pT (.chi i 0))
     (e • w) (cA D e • w + (1 - e - cA D e) • w) (W.cosVec i κ)
-  rw [← hdec, e1', heisO_smul_fun, heisO_smul_fun, h₁] at e2
+  rw [← hdec, e1', _root_.GlobalTheory.MixUnip.heisO_smul, _root_.GlobalTheory.MixUnip.heisO_smul, h₁] at e2
   have hC : heisO W.ψ (G.pS (.chi i 0)) (G.pT (.chi i 0)) w (W.cosVec i κ) =
       ((W.ψ (symplOH (G.pS (.chi i 0)) (G.pT (.chi i 0)) (e • w) (cA D e • w + (1 - e - cA D e) • w)))⁻¹ *
         ((W.ψ (symplOH (G.pS (.chi i 0)) (G.pT (.chi i 0)) (cA D e • w) ((1 - e - cA D e) • w)))⁻¹ * (c₃ * c₂))) • W.cosVec i κ' := by
@@ -902,7 +878,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectorsStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockConjugatesSpanDepthData =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockConjugatesSpanDepthData", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx\npublic import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.SobFrame\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitLocalPlaceLocalModelsLinearSubspace\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectorsStatement\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameFunctionalKillsFockVacuumRealTranslatesStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameFunctionalVacuumIrreducibilityStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionNegPairPureTensorFock\npublic import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.SymplOHSmulRight\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Bool\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockConjugatesSpanDepthData", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TowerEx\npublic import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.SobFrame\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitLocalPlaceLocalModelsLinearSubspace\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaHeisenbergConjugationNegHermitianSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergCommutantPermutesFirstRowCosetVectorsStatement\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameFunctionalKillsFockVacuumRealTranslatesStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameFunctionalVacuumIrreducibilityStatement\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionNegPairPureTensorFock\npublic import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.SymplOHSmulRight\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Bool\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsWeilDatumConjNegHermitianSpaces\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -920,9 +896,6 @@ variable {D : D7}
 
 open GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger (cj)
 
-theorem cj_cj {X : Type} (f : X → ℂ) : cj id (cj id f) = f := by
-  funext x; simp [GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj]
-
 theorem cj_eq_star {X : Type} (f : X → ℂ) : cj id f = star f := by
   funext x; simp [GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.cj]
 
@@ -938,14 +911,14 @@ def conjFun {S T : HSp D} (ℓ : (WO S T → ℂ) → ℂ) : (WO (negSp S) T →
 theorem theta_cj {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T : HSp D} (f : WO (negSp S) T → ℂ)
     (hf : IsThetaFunO ψ (negSp S) T f) : IsThetaFunO ψ S T (cj id f : WO S T → ℂ) := by
   have h := (((GlobalTheory.CjNeg.theta_heis_neg D ψ hψ S T).1 (cj id f : WO S T → ℂ)).2).1
-  rw [cj_cj] at h
+  rw [_root_.GlobalTheory.ConjWeil.cj_id_cj_id] at h
   exact h hf
 
 theorem cj_heisO {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T : HSp D} (w : WO S T)
     (f : WO (negSp S) T → ℂ) : (cj id (heisO ψ (negSp S) T w f) : WO S T → ℂ) = heisO ψ S T w (cj id f) := by
   have h := ((GlobalTheory.CjNeg.theta_heis_neg D ψ hψ S T).2 w (cj id f : WO S T → ℂ)).2
-  rw [cj_cj] at h
-  rw [h, cj_cj]
+  rw [_root_.GlobalTheory.ConjWeil.cj_id_cj_id] at h
+  rw [h, _root_.GlobalTheory.ConjWeil.cj_id_cj_id]
 
 theorem tame_conjFun {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {S T : HSp D} {ℓ : (WO S T → ℂ) → ℂ}
     (h : Tame ψ S T ℓ) : Tame ψ (negSp S) T (conjFun ℓ) := by
@@ -1055,25 +1028,11 @@ theorem eInf_mul_self : Eqv.eInf D * Eqv.eInf D = Eqv.eInf D :=
 theorem eFin_mul_self : Eqv.eFin D * Eqv.eFin D = Eqv.eFin D :=
   Prod.ext (show (0 : Ainf D.host.F) * 0 = 0 from mul_zero _) (show (1 : Af D.host.F) * 1 = 1 from mul_one _)
 
-theorem infPart_latO' {S T : HSp D} {LS : Set (Fin S.rank → D.host.E)} {LT : Set (Fin T.rank → D.host.E)} {u : WO S T}
-    (hu : u ∈ latO S T LS LT fun _ => True) : u.map (infPart D) = 0 := by
-  ext i j
-  rw [Matrix.map_apply, Matrix.zero_apply]
-  unfold latO at hu
-  refine AddSubgroup.closure_induction (p := fun u _ => infPart D (u i j) = 0) ?_ ?_ ?_ ?_ hu
-  · rintro w ⟨α, -, -, a, -, s, -, t, -, rfl⟩
-    rw [Matrix.of_apply]
-    exact (show infPart D (pairA D.host.F 0 α ⊗ₜ[D.host.F] (a * t i * ∑ k, star (s k) * S.gram k j)) =
-      (0 : Ainf D.host.F) ⊗ₜ[D.host.F] (a * t i * ∑ k, star (s k) * S.gram k j) from rfl).trans (TensorProduct.zero_tmul _ _)
-  · simp
-  · intro x y _ _ hx hy; rw [Matrix.add_apply, RingHom.map_add (f := _), hx, hy, add_zero]
-  · intro x _ hx; rw [Matrix.neg_apply, RingHom.map_neg, hx, neg_zero]
-
 section
 variable {T : Type} {L : LevCh D T} {sc : Consts}
 
 theorem depLat_fin {G : GridData L sc} (p : Pair T) {u : WO (G.pS p) (G.pT p)} (hu : u ∈ depLat G p) :
-    u.map (infPart D) = 0 := infPart_latO' hu.1
+    u.map (infPart D) = 0 := _root_.GlobalTheory.SplitScalar.latO_fin hu.1
 
 theorem latRow_fin {G : GridData L sc} (i : ℕ) : ∀ u ∈ latRow G i, Eqv.eFin D • u = u := fun u hu =>
   (Eqv.wo_fin_iff u).1 (depLat_fin (.chi i 0) hu)

@@ -433,16 +433,16 @@ theorem col (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
     have hpos : b.1 ≤ i.1 := by
       rcases hij with h | ⟨-, h⟩
       · simpa [xI, wI, yI, zI] using h
-      · exact absurd h (ne_val (by simp [xI, wI, yI, zI] <;> omega))
+      · exact absurd h (_root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega))
     refine cong_dir hg (frd_L X ob) hgr i (xI (hrD D) b) (S := X.e0 '' {c | c.1 < b.1}) ?_ ?_
     · rintro s ⟨c, hc', rfl⟩
-      exact ⟨xI (hrD D) c, (frame_isotropic X ob c).symm, ne_val (by simp [xI, wI, yI, zI] at hc' ⊢; omega)⟩
+      exact ⟨xI (hrD D) c, (frame_isotropic X ob c).symm, _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] at hc' ⊢; omega)⟩
     · rw [frame_isotropic]; exact hc.1 b
   ·
     have hpos : D.R.rS + l.1 ≤ i.1 := by
       rcases hij with h | ⟨-, h⟩
       · simpa [xI, wI, yI, zI] using h
-      · exact absurd h (ne_val (by simp [xI, wI, yI, zI] <;> omega))
+      · exact absurd h (_root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega))
     cases ob
     ·
       rcases kind_cases (hrD D) i with ⟨a, rfl⟩ | ⟨l', rfl⟩ | rfl | ⟨a, rfl⟩
@@ -451,23 +451,23 @@ theorem col (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
         refine cong_dual hg (fr_L X false) hgr (wI (hrD D) l') (wI (hrD D) l)
           (S := Set.range X.e0 ∪ X.bw '' {c | c.1 < (rv l').1}) ?_ ?_
         · rintro s (⟨c, rfl⟩ | ⟨c, hc', rfl⟩)
-          · exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], ne_val (by simp [xI, wI, yI, zI] <;> omega)⟩
-          · exact ⟨wI (hrD D) (rv c), by rw [frd_wf, rv_rv], ne_val (by simp [xI, wI, yI, zI, rv] at hc' ⊢; omega)⟩
+          · exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega)⟩
+          · exact ⟨wI (hrD D) (rv c), by rw [frd_wf, rv_rv], _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI, rv] at hc' ⊢; omega)⟩
         · rw [frd_wf]; exact hci.2.2 (rv l')
       · refine cong_dual hg (fr_L X false) hgr (zI (hrD D)) (wI (hrD D) l) (S := Set.range X.e0) ?_ ?_
         · rintro s ⟨c, rfl⟩
-          exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], ne_val (by simp [xI, wI, yI, zI] <;> omega)⟩
+          exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega)⟩
         · rw [dual_frame_anisotropic, Matrix.mulVec_neg]; exact inMod_neg hci.2.1
       · refine cong_dual hg (fr_L X false) hgr (yI (hrD D) a) (wI (hrD D) l)
           (S := X.e0 '' {c | c.1 < (rv a).1}) ?_ ?_
         · rintro s ⟨c, -, rfl⟩
-          exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], ne_val (by simp [xI, wI, yI, zI] <;> omega)⟩
+          exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega)⟩
         · rw [frd_y]; exact hci.1 (rv a)
     ·
       refine cong_dir hg (frd_L X true) hgr i (wI (hrD D) l) (S := Set.range X.e0 ∪ X.bw '' {c | c.1 < l.1}) ?_ ?_
       · rintro s (⟨c, rfl⟩ | ⟨c, hc', rfl⟩)
-        · exact ⟨xI (hrD D) c, (frame_isotropic X true c).symm, ne_val (by simp [xI, wI, yI, zI]; omega)⟩
-        · exact ⟨wI (hrD D) c, (fr_wt X c).symm, ne_val (by simp [xI, wI, yI, zI] at hc' ⊢; omega)⟩
+        · exact ⟨xI (hrD D) c, (frame_isotropic X true c).symm, _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI]; omega)⟩
+        · exact ⟨wI (hrD D) c, (fr_wt X c).symm, _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] at hc' ⊢; omega)⟩
       · rw [fr_wt]; exact hc.2.2 l
   ·
     have hpos : D.R.rS ≤ i.1 := by
@@ -476,13 +476,13 @@ theorem col (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
       · simp [wI]
     refine cong_dir hg (frd_L X ob) hgr i (zI (hrD D)) (S := Set.range X.e0) ?_ ?_
     · rintro s ⟨c, rfl⟩
-      exact ⟨xI (hrD D) c, (frame_isotropic X ob c).symm, ne_val (by simp [xI, wI, yI, zI]; omega)⟩
+      exact ⟨xI (hrD D) c, (frame_isotropic X ob c).symm, _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI]; omega)⟩
     · rw [frame_anisotropic]; exact hc.2.1
   ·
     have hpos : D.R.rS + D.R.k + 1 + b.1 ≤ i.1 := by
       rcases hij with h | ⟨-, h⟩
       · simpa [xI, wI, yI, zI] using h
-      · exact absurd h (ne_val (by simp [xI, wI, yI, zI] <;> omega))
+      · exact absurd h (_root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega))
     rcases kind_cases (hrD D) i with ⟨a, rfl⟩ | ⟨l', rfl⟩ | rfl | ⟨a, rfl⟩
     · exfalso; simp [xI] at hpos; omega
     · exfalso; simp [wI] at hpos; omega
@@ -491,7 +491,7 @@ theorem col (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
       refine cong_dual hg (fr_L X ob) hgr (yI (hrD D) a) (yI (hrD D) b)
         (S := X.e0 '' {c | c.1 < (rv a).1}) ?_ ?_
       · rintro s ⟨c, hc', rfl⟩
-        exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], ne_val (by simp [xI, wI, yI, zI, rv] at hc' ⊢; omega)⟩
+        exact ⟨yI (hrD D) (rv c), by rw [frd_y, rv_rv], _root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI, rv] at hc' ⊢; omega)⟩
       · rw [frd_y]; exact hci.1 (rv a)
 
 theorem shape (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
@@ -508,7 +508,7 @@ theorem shape (ob : Bool) (hg : ((X.B.g : ℕ) : 𝓞 X.B.I.E) ∈ w.asIdeal)
     rw [if_pos rfl] at h
     exact congW_unique hp hcard hn (hN a a) h
   · have h := col (p := p) X ob hg hew hsew hx (wI (hrD D) l) (zI (hrD D)) (Or.inr ⟨⟨l, rfl⟩, rfl⟩)
-    rw [if_neg (ne_val (by simp [xI, wI, yI, zI] <;> omega))] at h
+    rw [if_neg (_root_.Fin.ne_of_val_ne (by simp [xI, wI, yI, zI] <;> omega))] at h
     exact congW_unique hp hcard hn (hN _ _) h
 
 end Formalism.L2.SG.Pf.KppLoc
@@ -535,10 +535,6 @@ open Formalism.BasicNotions Formalism.MainNotions.S Formalism.MainNotions.Arithm
   Formalism.L2.SG.Pf.AllRowsRhoX Formalism.L2.SG.Pf.AllRowsKpp
 
 variable {D : D7} (X : HidaSetting D)
-
-theorem n_pos : 0 < X.B.I.n := by
-  rw [X.n_eq, hrD D]
-  omega
 
 theorem Wq_of_smul {I : AutInst} {w : HeightOneSpectrum (𝓞 I.E)} {p : ℕ} (hp : p.Prime)
     (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) (hn : 0 < I.n) {t : I.E ⊗[I.F] Af I.F} (ht : t ∈ IntAf I.F I.E)
@@ -583,7 +579,7 @@ theorem ew_res (kv : Σ k : Fin 2, D.nd.PlG k) :
       sg X.B.I X.ew - (if ob then 0 else 1) ∈ Wq X.B.I (wK X kv) := by
   have hp := D.host.g_prime kv.1
   have hcard := card_wK X kv
-  have hn := n_pos X
+  have hn := _root_.MassDataIdxSteps.imA_n_pos X
   have : Fact (D.host.g kv.1).Prime := ⟨hp⟩
   have hsI : sg X.B.I X.ew ∈ IntAf X.B.I.F X.B.I.E := by
     obtain ⟨m0, c, -, hc⟩ := congW_exists (w := wc X.B.I (wK X kv)) hp (card_wKc X kv) X.ew_int
@@ -636,7 +632,7 @@ private theorem exists_conj_rhoX_JPred_of_mem_K2 (kv : Σ k : Fin 2, D.nd.PlG k)
           Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g kv.1))) := by
   have hp := D.host.g_prime kv.1
   have hcard := card_wK X kv
-  have hn := n_pos X
+  have hn := _root_.MassDataIdxSteps.imA_n_pos X
   have hg := level_mem_wB' X kv
   have : NeZero (D.host.g kv.1) := ⟨hp.ne_zero⟩
   obtain ⟨ob, hew, hsew⟩ := ew_res X kv
@@ -660,7 +656,7 @@ private theorem exists_conj_rhoX_JPred_of_mem_K2 (kv : Σ k : Fin 2, D.nd.PlG k)
   obtain ⟨Pm, hPm1, hPm2⟩ := hPm
   refine ⟨Pm, fun x hx => ?_⟩
   have hxK : (x : X.B.I.Gf) ∈ X.B.I.Kset := hx.1
-  have hxi : (x : X.B.I.Gf)⁻¹ ∈ X.K2 := (Formalism.L2.SG.Closed.level_subgroup_is_group X).2.2.1 _ hx
+  have hxi : (x : X.B.I.Gf)⁻¹ ∈ X.K2 := (_root_.Formalism.L2.SG.Pf.level_subgroup_character_unitary X).2.2.1 _ hx
   have hxiK : (x : X.B.I.Gf)⁻¹ ∈ X.B.I.Kset := hxi.1
   have hM : RedMatB X.B.I (wK X kv) (D.host.g kv.1) (redBX X kv).b (x : X.B.I.Gf)
       ((rhoX X x kv : GL (Fin D.R.r) (ZMod (D.host.g kv.1))) :
@@ -713,7 +709,7 @@ theorem kppFwd_holds : KppFwd X := by
   rw [hs]
   choose t1 t2 h1 h2 h12 using fun kv => (hPm kv x hx).2
   refine ⟨fun kv => (hPm kv x hx).1, ?_⟩
-  rw [quadratic_character_eq_additive X (x : X.B.I.Gf), chi_split X ε hε1 hεP hε (n_pos X) (argC_int X hx.1) t1 t2 h1 h2]
+  rw [quadratic_character_eq_additive X (x : X.B.I.Gf), chi_split X ε hε1 hεP hε (_root_.MassDataIdxSteps.imA_n_pos X) (argC_int X hx.1) t1 t2 h1 h2]
   exact Finset.prod_congr rfl fun kv _ => by rw [h12 kv]
 
 end Formalism.L2.SG.Pf.KppFwdPf

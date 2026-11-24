@@ -78,16 +78,7 @@ def CovolTie : Prop :=
     (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) X.measG.μG =
     X.B.I.vol X.B.μf X.B.fund
 
-theorem chi2_apply_one (hK : X.LevelSubgroupCharacter) : X.chi2 1 = 1 := by
-  obtain ⟨h1, -, -, hmul, hnorm⟩ := hK
-  have hm := hmul 1 h1 1 h1
-  simp only [mul_one] at hm
-  have hne : X.chi2 1 ≠ 0 := by
-    intro h0
-    have hn := hnorm 1 h1
-    rw [h0, norm_zero] at hn
-    exact zero_ne_one hn
-  exact mul_left_cancel₀ hne (hm.symm.trans (mul_one _).symm)
+alias chi2_apply_one := _root_.Formalism.L2.SG.PoincareInHH.PoincareSetting.chi2_apply_one
 
 theorem e_one_re (hK : X.LevelSubgroupCharacter) : (X.B.e 1).re = ((X.B.μf X.K2).toReal)⁻¹ := by
   have h := X.e_eq 1
@@ -185,7 +176,7 @@ theorem finiteLevelVolume_of_measure (hM : X.MeasTie hb) : FiniteLevelVolumeEqua
 theorem mem_rr_iff (x : X.B.I.GA) :
     x ∈ Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I ↔
       toHA X.B.I hb x ∈ HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J := by
-  have hGF := Formalism.L2.SG.Closed.AdBridgeGF_holds X.B.I (toHA X.B.I hb) (toHA_isBridge X.B.I hb)
+  have hGF := _root_.Formalism.L2.SG.AdBridge.adBridgeGF_main X.B.I (toHA X.B.I hb) (toHA_isBridge X.B.I hb)
   have hrat : ∀ h : HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J,
       h ∈ ratHA X.B.I ↔ h ∈ HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J := fun h => Iff.rfl
   rw [← hrat, ← hGF, Formalism.MainNotions.LeviCoordinates.rr_mem_GF]

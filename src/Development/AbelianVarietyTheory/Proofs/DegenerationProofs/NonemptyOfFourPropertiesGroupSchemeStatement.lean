@@ -259,8 +259,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.ZH ReciprocityTheory.ChartRestriction.G.Out Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_secOn_power_of_local_bases : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Q : ZHPre ρ M U₀), (U₀ : Set M.Z).Nonempty → (∀ (W : M.Z.Opens) (x₀ : S.Gam) (b : Matrix S.J S.J Ω), (∀ z ∈ W, x₀ ∈ S.supI M z ∧ EE.E z = Submodule.span (M.O z) (Set.range b)) → ∃ σ : S.J → ∀ j, Γ(Q.G.left, Q.G.hom ⁻¹ᵁ W ⊓ (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))).U j), ∀ i, σ i ∈ secOn (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))) (Q.G.hom ⁻¹ᵁ W) ∧ GenVal ρ M U₀ Q.u₀ Q.G Q.φ Q.L.L Q.w S.N ρ.s (fun l => b i l / S.th x₀) _ (σ i)) → ∀ (W : M.Z.Opens) (x₀ : S.Gam) (v : S.J → Ω), (∀ z ∈ W, x₀ ∈ S.supI M z ∧ v ∈ EE.E z) → ∃ σ ∈ secOn (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))) (Q.G.hom ⁻¹ᵁ W), GenVal ρ M U₀ Q.u₀ Q.G Q.φ Q.L.L Q.w S.N ρ.s (fun l => v l / S.th x₀) _ σ := by
-  first | exact @GlobalTheory.ZH.exists_secOn_genVal_of_bases
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSecOnPowerOfLocalBasesStatement =====
@@ -1236,8 +1234,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.ZH ReciprocityTheory.ChartRestriction.G.Out Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_sections_pow_line_bundle_from_local_basis : GlobalTheory.Published.SemistableReductionSt → ThmUSt → Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (Q : ZHPre ρ M U₀), S.Over₀ M U₀ → S.IsEE M U₀ EE → Q.SecO EE → ∀ (W : M.Z.Opens) (x₀ : S.Gam) (b : Matrix S.J S.J Ω), (∀ z ∈ W, x₀ ∈ S.supI M z ∧ EE.E z = Submodule.span (M.O z) (Set.range b)) → ∃ σ : S.J → ∀ j, Γ(Q.G.left, Q.G.hom ⁻¹ᵁ W ⊓ (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))).U j), (∀ i, σ i ∈ secOn (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))) (Q.G.hom ⁻¹ᵁ W) ∧ GenVal ρ M U₀ Q.u₀ Q.G Q.φ Q.L.L Q.w S.N ρ.s (fun l => b i l / S.th x₀) _ (σ i)) ∧ ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ M.Z), Set.range x ⊆ W → (∀ g : Sp K ⟶ Q.G.left, g ≫ Q.G.hom = x → ∃ i j, valF g _ (σ i j) ≠ 0) ∧ ∀ c : S.J → K, (∀ (g : Sp K ⟶ Q.G.left) (j : _), g ≫ Q.G.hom = x → ∑ i, c i * valF g _ (σ i j) = 0) → c = 0 := by
-  first | exact @GlobalTheory.ZH.PowSec.exists_sections
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionsPowLineBundleFromLocalBasisStatement =====
@@ -1871,7 +1867,7 @@ theorem ZHPre.nonempty_out : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDisc
   have hOpen : IsOpen (abLocus Q.G) := by
     rw [hAb.1]
     exact S.isOpen_setOf_TT_eq_bot M
-  have hS' := GlobalTheory.T.exists_sections_pow_line_bundle_from_local_basis hSS hU hL hL2 hT o Ω S ρ M U₀ EE Q hO hEE hSecO
+  have hS' := _root_.GlobalTheory.ZH.PowSec.exists_sections hSS hU hL hL2 hT o Ω S ρ M U₀ EE Q hO hEE hSecO
   have hcrd : ∀ (u : U₀.toScheme ⟶ Sp S.R) (a : pullback ρ.P.A.hom u ⟶ C.G.toScheme), u = C.u₀ → HEq a ex.a →
       ∀ (K : Type) [Field K] (x : Sp K ⟶ pullback ρ.P.A.hom u) (v : S.J → K),
         ρ.Crd (x ≫ pullback.fst _ _) v → Crd C.O1 C.st (x ≫ a ≫ C.G.ι) v := by
@@ -1903,8 +1899,8 @@ theorem ZHPre.nonempty_out : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDisc
     pol := hPol
     sec := hSec
     unif := unif_pullback_of_unif_ring hUnif o Ω S ρ M U₀ Q hO hOpen hAb hLoc hS hPol
-    theta := GlobalTheory.T.thetaDividedByConstant_nonvanishing_fibres hExt hSS hU hL hL2 hT o Ω S ρ M U₀ Q hBig hO hSec hLoc
-    secOf := GlobalTheory.T.exists_secOn_power_of_local_bases o Ω S ρ M U₀ EE Q hO.ne fun W x₀ b hb => (hS' W x₀ b hb).imp fun _ h => h.1
+    theta := _root_.GlobalTheory.ZH.ZHPre.exists_theta_div hExt hSS hU hL hL2 hT o Ω S ρ M U₀ Q hBig hO hSec hLoc
+    secOf := _root_.GlobalTheory.ZH.exists_secOn_genVal_of_bases o Ω S ρ M U₀ EE Q hO.ne fun W x₀ b hb => (hS' W x₀ b hb).imp fun _ h => h.1
     sections := hS'
     imm := fun W x₀ b hb σ hσ => by
       obtain ⟨σ', h1, h2⟩ := hS' W x₀ b hb

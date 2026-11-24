@@ -375,11 +375,9 @@ section Adelic
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
   (p : Place D k)
 
-theorem e_mul_ι (x : k) : p.e * p.ι x = p.ι x := by rw [← p.ι_π, p.π_ι]
-
 theorem incA_mul_ι (a : D.host.E) (x : k) : (incA D a : AE D) * p.ι x = p.ι (p.pr a * x) := by
   have h : p.pr a * x = p.π ((incA D a : AE D) * p.ι x) := by rw [map_mul, p.π_ι]; rfl
-  rw [h, p.ι_π, mul_left_comm, e_mul_ι]
+  rw [h, p.ι_π, mul_left_comm, _root_.GlobalTheory.LocMod.Witness.e_ι]
 
 theorem rat_mul_ι {l m n : ℕ} (M : Matrix (Fin l) (Fin m) D.host.E) (N : Matrix (Fin m) (Fin n) k) :
     (rat M : Mx D l m) * (N.map p.ι : Mx D m n) = (M.map p.pr * N).map p.ι := by
@@ -480,7 +478,7 @@ theorem factor_isModel : ∀ (D : D7), GlobalTheory.FinPl.FlatLaws D → OmLoc D
     have h' : Ψ'.1 = flRow ψk ν (σ + 1) Φ'.1 := funext fun x => by
       rw [hΨ', h]; exact (flRow_translate ψk ν l (σ + 1) rfl Φ.1 x₀ x).symm
     rw [← hT Φ' Ψ' h', ← hT Φ Ψ h, hTm.trans (embR l x₀) Φ Φ' fun _ => rfl, up_embR hJF hCF hBF l rfl]
-    exact hF.core _ (hTm.theta Φ) _ (mxAt_of_half p.split (Or.inl fun i j => e_mul_ι p _))
+    exact hF.core _ (hTm.theta Φ) _ (mxAt_of_half p.split (Or.inl fun i j => _root_.GlobalTheory.LocMod.Witness.e_ι p _))
   · obtain ⟨Φ, h⟩ := hon Ψ
     have hY : IsHalf (cA D p.e) (J.d.ext0 B.V (B.d.inc0 J.W₀ y)) := isHalf_mul B.d.j0 hy J.d.p0
     have hlc : IsLocallyConstant fun t : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k =>
@@ -802,14 +800,9 @@ theorem xLast_eq_rat {T T₀ : HSp D} {σ : ℕ} (d : HypDec T T₀ σ) (z : Fin
   · simp [xLast, lastMat, rat, HypDec.j0, ratV, Matrix.mulVec, dotProduct, map_sum]
   · simp [xLast, lastMat, rat, HypDec.jX]
 
-theorem e_mul_ι (x : k) : p.e * p.ι x = p.ι x := by
-  have h := p.ι_π (p.ι x)
-  rw [p.π_ι] at h
-  exact h.symm
-
 theorem ι_mul_incA (x : k) (b : D.host.E) : p.ι x * incA D b = p.ι (x * p.pr b) := by
   have h := p.ι_π (p.ι x * incA D b)
-  rw [map_mul, p.π_ι, ← mul_assoc, e_mul_ι] at h
+  rw [map_mul, p.π_ι, ← mul_assoc, _root_.GlobalTheory.LocMod.Witness.e_ι] at h
   rw [← h]; rfl
 
 theorem incA_mul_ι (x : k) (b : D.host.E) : incA D b * p.ι x = p.ι (p.pr b * x) := by
@@ -830,7 +823,7 @@ theorem infPart_e : infPart D p.e = 0 := by
   rw [h4, map_mul, h5, mul_zero]
 
 theorem infPart_ι (x : k) : infPart D (p.ι x) = 0 := by
-  rw [← e_mul_ι, map_mul, infPart_e, zero_mul]
+  rw [← _root_.GlobalTheory.LocMod.Witness.e_ι, map_mul, infPart_e, zero_mul]
 
 theorem mxAt_of_ι {m' n' : ℕ} (M : Mx D m' n') (hM : ∀ i j, ∃ x, M i j = p.ι x) :
     GlobalTheory.FinPl.MxAt (fun _ => True) M := by

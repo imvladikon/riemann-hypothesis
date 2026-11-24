@@ -78,20 +78,8 @@ section -- clump:auto
 
 
 
-section
-noncomputable section
-open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Polynomial
-open GlobalTheory GlobalTheory.CuspRep GlobalTheory.WeilDeligne GlobalTheory.Pst GlobalTheory.LocLanglands GlobalTheory.HeckeGal GlobalTheory.LocGL GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 namespace UpperTheory.GalN.V
-variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-  {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w} {l : ℕ} [Fact l.Prime] {n : ℕ}
-  {ι : Qbar l ≃+* ℂ} {r : G E Ω →* GL (Fin n) (Qbar l)} {y : WD h}
-theorem woConj'_alt (k : _root_.UpperTheory.V.Z.Win.WDT ι r y) (hl : ((l : ℕ) : 𝓞 E) ∉ w.asIdeal) {r' : G E Ω →* GL (Fin n) (Qbar l)}
-    (P : GL (Fin n) (Qbar l)) (hP : ∀ g : ↥(Weil h), P * r g = r' g * P) : _root_.UpperTheory.V.Z.Win.WDT ι r' y := k.of_conj hl P hP
 end UpperTheory.GalN.V
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WoConj =====
@@ -569,7 +557,7 @@ private theorem piPts_conj (hH : H.Ax) (ι : Qbar l ≃+* ℂ) (lam : Wt L l n) 
     _root_.UpperTheory.V.Z.Win.WOT ι (Y.r.comp H.prj) (rc (algNorm (Y'.σq q))) := by
   obtain ⟨P, hP⟩ := AlgebraTools.Det.bnRep (W.mat Y.r) (W.mat Y'.r) Y.ss Y'.ss fun g => by
     rw [← piPts_chi, ← piPts_chi, h]
-  exact _root_.UpperTheory.GalN.V.woConj'_alt (Y'.atQ q B hB rc hrc) (hH.Q_away q) (r' := Y.r.comp H.prj) P fun g => Units.ext (hP _)
+  exact _root_.UpperTheory.V.Z.Win.WDT.of_conj (Y'.atQ q B hB rc hrc) (hH.Q_away q) (r' := Y.r.comp H.prj) P fun g => Units.ext (hP _)
 private theorem piPts_dir (hH : H.Ax) (A : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] (θ : H.X.I.T →* Aˣ)
     (hθ : H.IsWt θ) (a : H.Op → c.O) (s : Finset (⨆ K, H.MK θ a K : Submodule A (H.X.Fn A H.m))) :
     ∃ K, ∀ f ∈ s, (f : H.X.Fn A H.m) ∈ H.MK θ a K := by

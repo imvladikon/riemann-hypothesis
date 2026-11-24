@@ -170,8 +170,7 @@ section -- clump:auto
 open scoped UpperHalfPlane MatrixGroups Manifold
 open GlobalTheory.Sieg GlobalTheory.QFam
 
-theorem _root_.GlobalTheory.T.modular_law_of_s_and_t : ∀ (P : (Fin 2 → ℚ) → Prop) (f : (Fin 2 → ℚ) → ℍ → ℂ), (∀ x γ, P x → P (act x γ)) → (∀ x τ, P x → f x (ModularGroup.S • τ) = f (act x ModularGroup.S) τ) → (∀ x τ, P x → f x (ModularGroup.T • τ) = f (act x ModularGroup.T) τ) → ∀ (γ : SL(2, ℤ)) x τ, P x → f x (γ • τ) = f (act x γ) τ := by
-  first | exact @GlobalTheory.Sieg.modular_law_of_generators
+alias _root_.GlobalTheory.T.modular_law_of_s_and_t := _root_.GlobalTheory.Sieg.modular_law_of_generators
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularLawOfSAndTStatement =====
@@ -587,12 +586,6 @@ namespace GlobalTheory
 
 open GlobalTheory.Sieg
 
-lemma Sieg.cthS_ee_pow (w : ℂ) (n : ℕ) : ee w ^ n = ee ((n : ℂ) * w) := by
-  unfold ee
-  rw [← Complex.exp_nat_mul]
-  congr 1
-  ring
-
 lemma Sieg.cthS_negI_pow (c : ℕ) (hc : Nat.Coprime c 6) : (-Complex.I) ^ (c ^ 2) = -Complex.I := by
   have h2 : Nat.Coprime c 2 := Nat.Coprime.coprime_dvd_right (by norm_num) hc
   have hodd : Odd c := by
@@ -638,7 +631,7 @@ theorem Sieg.cth_modular_S (c : ℕ) (τ : ℍ) (z : ℂ) (h1 : 1 < c) (hc : Nat
   rw [show (c : ℂ) * (z / (τ : ℂ)) = ((c : ℂ) * z) / (τ : ℂ) by ring]
   rw [_root_.GlobalTheory.Sieg.ThInv.th_S τ z, _root_.GlobalTheory.Sieg.ThInv.th_S τ ((c : ℂ) * z)]
   have hee : ee (z ^ 2 / (2 * (τ : ℂ))) ^ (c ^ 2) = ee (((c : ℂ) * z) ^ 2 / (2 * (τ : ℂ))) := by
-    rw [Sieg.cthS_ee_pow]
+    rw [_root_.GlobalTheory.ThZero.ee_pow]
     congr 1
     push_cast
     ring

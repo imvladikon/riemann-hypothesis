@@ -431,11 +431,6 @@ open GlobalTheory.Nef.OrdCalc
 
 variable {k F : Type} [Field k] [Field F] [Algebra k F]
 
-theorem const_le_one (v : Place k F) (c : k) : v.1 (algebraMap k F c) ≤ 1 := by
-  by_cases hc : c = 0
-  · simp [hc]
-  · exact (v.2.2 c hc).le
-
 theorem div_unif (v : Place k F) {π : F} (hπ : π ≠ 0) (h1 : ord v π = 1) {y : F}
     (hy : v.1 y < 1) : v.1 (π⁻¹ * y) ≤ 1 := by
   by_cases h0 : y = 0
@@ -458,7 +453,7 @@ theorem exists_residue (v : Place k F)
       smul_mem' := fun c y hy => by
         show v.1 (c • y) < 1
         rw [Algebra.smul_def, map_mul]
-        exact lt_of_le_of_lt (mul_le_of_le_one_left' (const_le_one v c)) hy }
+        exact lt_of_le_of_lt (mul_le_of_le_one_left' (_root_.GlobalTheory.Nef.place_le_one_const v c)) hy }
   have h1 : (1 : F) ∉ m := by
     show ¬ v.1 1 < 1
     simp
@@ -946,10 +941,7 @@ theorem ord_prod {ι : Type} (v : Place k F) (s : Finset ι) (x : ι → F) (hx 
         (Finset.prod_ne_zero_iff.2 fun i hi => hx i (Finset.mem_insert_of_mem hi)),
       ih fun i hi => hx i (Finset.mem_insert_of_mem hi)]
 
-theorem val_algebraMap_le (v : Place k F) (c : k) : v.1 (algebraMap k F c) ≤ 1 := by
-  by_cases hc : c = 0
-  · simp [hc]
-  · rw [v.2.2 c hc]
+alias val_algebraMap_le := _root_.GlobalTheory.Nef.place_le_one_const
 
 end RiemannCofinal
 
@@ -1143,17 +1135,12 @@ theorem val_le_exp_of_ord (v : Place k F) (x : F) (d : ℤ) (hd : 0 ≤ d) (h : 
   · rw [← WithZero.exp_log hx, WithZero.exp_le_exp]
     unfold ord at h; omega
 
-theorem val_algebraMap_le_one (v : Place k F) (c : k) : v.1 (algebraMap k F c) ≤ 1 := by
-  by_cases hc : c = 0
-  · simp [hc]
-  · exact (v.2.2 c hc).le
-
 theorem val_comb_le (v : Place k F) {m : ℕ} (f : Fin m → F) (c : Fin m → k)
     (B : WithZero (Multiplicative ℤ)) (h : ∀ j, v.1 (f j) ≤ B) : v.1 (∑ j, c j • f j) ≤ B := by
   apply v.1.map_sum_le
   intro j _
   rw [Algebra.smul_def, map_mul]
-  calc v.1 (algebraMap k F (c j)) * v.1 (f j) ≤ 1 * B := mul_le_mul' (val_algebraMap_le_one v _) (h j)
+  calc v.1 (algebraMap k F (c j)) * v.1 (f j) ≤ 1 * B := mul_le_mul' (_root_.GlobalTheory.Nef.place_le_one_const v _) (h j)
     _ = B := one_mul B
 
 theorem val_mulVec_le_one (v : Place k F) {n : ℕ} (M : Matrix (Fin n) (Fin n) F)

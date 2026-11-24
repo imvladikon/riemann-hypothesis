@@ -309,11 +309,6 @@ theorem stalkMap_gs {Z : Scheme.{0}} (r : Z ⟶ Y) (q : Y ⟶ X) (z : Z) (W : X.
   rw [gs_eq q (r z) W h, gs_eq (r ≫ q) z W h]
   exact Scheme.Hom.germ_stalkMap_apply r (q ⁻¹ᵁ W) z h _
 
-theorem valAt'_ne (x : Sp ℂ ⟶ X) {U : X.Opens} (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)ˣ) : valAt' x U f.val ≠ 0 := fun h0 => by
-  have := gm_eq_toStalk x U h f
-  rw [h0, map_zero] at this
-  exact Units.ne_zero _ this
-
 theorem val_zpow_eq {W : ((Sp ℂ).presheaf.stalk pt)ˣ} {c : ℂ} (h : W.val = toStalk c) (k : ℤ) :
     (W ^ k).val = toStalk (c ^ k) := by
   have hc : c ≠ 0 := fun h0 => W.ne_zero (by rw [h, h0, map_zero])
@@ -336,7 +331,7 @@ theorem gw_eq_toStalk (w : LB.Iso L' (L.pull F)) {y : Sp ℂ ⟶ Y} {j : L.ι} {
   gm_eq_toStalk y _ (le_isoChart hj hk) _
 
 theorem isoVal_ne (w : LB.Iso L' (L.pull F)) {y : Sp ℂ ⟶ Y} {j : L.ι} {k : L'.ι} (hj : ⊤ ≤ (y ≫ F) ⁻¹ᵁ L.U j)
-    (hk : ⊤ ≤ y ⁻¹ᵁ L'.U k) : isoVal w y j k ≠ 0 := valAt'_ne y (le_isoChart hj hk) _
+    (hk : ⊤ ≤ y ⁻¹ᵁ L'.U k) : isoVal w y j k ≠ 0 := _root_.GlobalTheory.valAt'_unit_ne_zero y (le_isoChart hj hk) _
 
 theorem isoVal_trans {w : LB.Iso L' (L.pull F)} (hw : w.IsGen) {y : Sp ℂ ⟶ Y} {j j' : L.ι} {k k' : L'.ι}
     (hj : ⊤ ≤ (y ≫ F) ⁻¹ᵁ L.U j) (hj' : ⊤ ≤ (y ≫ F) ⁻¹ᵁ L.U j') (hk : ⊤ ≤ y ⁻¹ᵁ L'.U k) (hk' : ⊤ ≤ y ⁻¹ᵁ L'.U k') :
@@ -812,8 +807,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.KeyPow GlobalTheory.KeyKa
 open GlobalTheory.KeyEq
 
-theorem _root_.GlobalTheory.T.keyNormalFormDetRatio_twoTorsion_translate : Out.Laws → ThetaUnifAV → ∀ (x x' : KeyIn ℂ) (p : 𝟙_ (Over (Sp ℂ)) ⟶ x.P.A) (ν : ℂˣ) (t : ℂ), IsTrl x' x p ν → Val x t → Val x' (t * (ν : ℂ) ^ 2) := by
-  first | exact @GlobalTheory.KeyEq.val_of_isTrl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyNormalFormDetRatioTwoTorsionTranslateStatement =====
@@ -1288,7 +1281,7 @@ theorem known_of_translate : Out.Laws → ThetaUnifAV → ∀ (K : Type) [Field 
     have b : f (t₀ * (ν : K) ^ 2) = f t₀ * ((Units.map f.toMonoidHom ν : ℂˣ) : ℂ) ^ 2 := by
       rw [map_mul, map_pow]; rfl
     rw [b]
-    exact GlobalTheory.T.keyNormalFormDetRatio_twoTorsion_translate laws hU x x' p _ _ hp a
+    exact _root_.GlobalTheory.KeyEq.val_of_isTrl laws hU x x' p _ _ hp a
   obtain ⟨φ, hφ⟩ := polPB_of_eq hP
   exact GlobalTheory.T.thetaFrameValueKnown_of_polarizedPullback laws K y₁ y' φ hφ k₁
 

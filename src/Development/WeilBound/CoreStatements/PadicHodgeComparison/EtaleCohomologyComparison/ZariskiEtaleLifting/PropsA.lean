@@ -139,8 +139,6 @@ section -- clump:auto
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry Polynomial DividedPowers GlobalTheory.LogCris GlobalTheory.PDA CrystallineSemistableComparison CrystallineSemistableComparison.CH CrystallineSemistableComparison.B
 
-theorem _root_.GlobalTheory.T.exists_lift_to_thickening : ∀ {O : Type} [CommRing O] {F : Fn O} {d : ℕ} (s : F.Small d) {b : Base} (ht : b.t = 1) {κ : O →+* b.R ⧸ b.I} (𝓛 : Lift s.a (fun k => (s.T k : s.R)) b.R b.I κ) (δ : DividedPowers (b.I.map 𝓛.i)) (hδ : IsDPMorphism b.γ δ 𝓛.i) (hp : b.p ≠ 0) (hn : IsNilpotent (b.p : b.R)) (T : Thick (F.cr b ht κ)), ∃ g : s.R →+* T.B ⧸ T.J, (∀ (c : liftObj s ht 𝓛 δ hδ hp hn ⟶ T) (r : s.R) (z : 𝓛.D), Ideal.Quotient.mk _ z = 𝓛.j r → Ideal.Quotient.mk T.J (c.φ z) = g r) ∧ F.Pt.map (CommRingCat.ofHom g) s.y₀ = T.y.1.2 ∧ ∀ u : Fin d → T.B, (∀ k, Ideal.Quotient.mk T.J (u k) = g (s.T k)) → ∃! c : liftObj s ht 𝓛 δ hδ hp hn ⟶ T, ∀ k, c.φ (𝓛.t k) = u k := by
-  first | exact @GlobalTheory.CompanionTheory.ThickHom.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLiftToThickeningStatement =====
@@ -243,7 +241,7 @@ theorem exists_act_of_hom {b : Base} {L : b.Fun} (q : b.Rˣ) (hq : (q : b.R) - 1
 
 theorem thick_act : ∀ {O : Type} [CommRing O] {F : Fn O} {d : ℕ} (s : F.Small d) {b : Base} (ht : b.t = 1) {κ : O →+* b.R ⧸ b.I} (𝓛 : Lift s.a (fun k => (s.T k : s.R)) b.R b.I κ) (δ : DividedPowers (b.I.map 𝓛.i)) (hδ : IsDPMorphism b.γ δ 𝓛.i) (hp : b.p ≠ 0) (hn : IsNilpotent (b.p : b.R)) (q : b.Rˣ) (hq : (q : b.R) - 1 ∈ b.I), ∃ A : Act (𝟭 _) (thU (F.cr b ht κ) q hq) d (liftObj s ht 𝓛 δ hδ hp hn), ∀ (T : Thick (F.cr b ht κ)) (a : Fin d → (thU (F.cr b ht κ) q hq).U T) (c : liftObj s ht 𝓛 δ hδ hp hn ⟶ T) (k : Fin d), (A.act a c).φ (𝓛.t k) = ((a k).1 : T.B) * c.φ (𝓛.t k) := by
   intro O _ F d s b ht κ 𝓛 δ hδ hp hn q hq
-  choose g hg using fun T => GlobalTheory.T.exists_lift_to_thickening s ht 𝓛 δ hδ hp hn T
+  choose g hg using fun T => _root_.GlobalTheory.CompanionTheory.ThickHom.main s ht 𝓛 δ hδ hp hn T
   exact exists_act_of_hom q hq (liftObj s ht 𝓛 δ hδ hp hn) s.T 𝓛.t g
     (fun T c k => (hg T).1 c (s.T k) (𝓛.t k) (𝓛.hT k).symm) (fun T u hu => (hg T).2.2 u hu)
 
@@ -767,10 +765,6 @@ theorem le_fil_one (δ : DividedPowers J) : J ≤ fil δ 1 := by
   intro j hj
   refine Ideal.subset_span ⟨[(1, j)], by simpa using hj, by simp, by simp [δ.dpow_one hj]⟩
 
-theorem algebraMap_mem_ext (Q : PDPoly B) {j : B} (hj : j ∈ J) :
-    algebraMap B Q.P j ∈ Q.ext J :=
-  Ideal.mem_sup_left (Ideal.mem_map_of_mem _ hj)
-
 theorem e_one_mem_ext (Q : PDPoly B) : Q.e 1 ∈ Q.ext J :=
   Ideal.mem_sup_right (Ideal.subset_span ⟨0, rfl⟩)
 
@@ -779,7 +773,7 @@ theorem map_e {δ : DividedPowers J} {Q : PDPoly B} {η : DividedPowers (Q.ext J
     (h1 : g (Q.e 1) = algebraMap B Q.P μ + algebraMap B Q.P q * Q.e 1) (k : ℕ) :
     g (Q.e k) = ∑ j ∈ Finset.range (k + 1), (δ.dpow j μ * q ^ (k - j)) • Q.e (k - j) := by
   have he1 : Q.e 1 ∈ Q.ext J := e_one_mem_ext Q
-  have hm : algebraMap B Q.P μ ∈ Q.ext J := algebraMap_mem_ext Q hμ
+  have hm : algebraMap B Q.P μ ∈ Q.ext J := _root_.GlobalTheory.PDA.PDPoly.algebraMap_mem_ext Q hμ
   have hq : algebraMap B Q.P q * Q.e 1 ∈ Q.ext J := Ideal.mul_mem_left _ _ he1
   have h0 : g (Q.e k) = η.dpow k (g (Q.e 1)) := by
     rw [hgd.dpow_comp _ he1, hS.var]
@@ -891,18 +885,10 @@ open CategoryTheory AlgebraicGeometry Polynomial DividedPowers GlobalTheory.LogC
 
 namespace GlobalTheory.CompanionTheory.ThickLine
 
-theorem pow_dvd_factorial_mul {p : ℕ} (hp : p.Prime) (N : ℕ) : p ^ N ∣ (p * N).factorial := by
-  induction N with
-  | zero => simp
-  | succ N ih =>
-    rw [Nat.mul_succ, pow_succ]
-    exact (mul_dvd_mul ih (Nat.dvd_factorial hp.pos le_rfl)).trans
-      (Nat.factorial_mul_factorial_dvd_factorial_add _ _)
-
 theorem isNilpotent_of_mem {A : Type} [CommRing A] {J : Ideal A} (δ : DividedPowers J) {p : ℕ} (hp : p.Prime)
     (hn : IsNilpotent (p : A)) {x : A} (hx : x ∈ J) : IsNilpotent x := by
   obtain ⟨N, hN⟩ := hn
-  obtain ⟨k, hk⟩ := pow_dvd_factorial_mul hp N
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.CompanionTheory.QPd.pow_dvd_factorial hp N
   refine ⟨p * N, ?_⟩
   rw [← δ.factorial_mul_dpow_eq_pow hx, hk]
   push_cast
@@ -918,9 +904,6 @@ theorem ringHom_eq {B C : Type} [CommRing B] [CommRing C] (Q : PDPoly B) {f g : 
   | zero => simp
   | add x y _ _ hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
   | smul b x _ hx => rw [Algebra.smul_def, map_mul, map_mul, hx, h1]
-
-theorem e_one_mem {B : Type} [CommRing B] (Q : PDPoly B) (J : Ideal B) : Q.e 1 ∈ Q.ext J :=
-  Ideal.mem_sup_right (Ideal.subset_span ⟨0, rfl⟩)
 
 theorem le_comap_ext {B : Type} [CommRing B] (Q : PDPoly B) (J : Ideal B) :
     J ≤ (Q.ext J).comap (algebraMap B Q.P) :=
@@ -1007,8 +990,8 @@ theorem hom_unique {T' : Thick (F.cr b ht κ)} {ψ ψ' : line T Q η₀ hη hp �
     (h : toLine T Q η₀ hη hp ≫ ψ = toLine T Q η₀ hη hp ≫ ψ') (he : ψ.φ (Q.e 1) = ψ'.φ (Q.e 1)) : ψ = ψ' := by
   refine Thick.Hom.ext (ringHom_eq Q (fun a => ?_) fun k => ?_) (funext fun j => j.elim)
   · exact congrArg (fun f : T ⟶ T' => f.φ a) h
-  · have h1 : T'.δ.dpow k (ψ.φ (Q.e 1)) = ψ.φ (η₀.dpow k (Q.e 1)) := ψ.dp.2 (Q.e 1) (e_one_mem Q T.J)
-    have h2 : T'.δ.dpow k (ψ'.φ (Q.e 1)) = ψ'.φ (η₀.dpow k (Q.e 1)) := ψ'.dp.2 (Q.e 1) (e_one_mem Q T.J)
+  · have h1 : T'.δ.dpow k (ψ.φ (Q.e 1)) = ψ.φ (η₀.dpow k (Q.e 1)) := ψ.dp.2 (Q.e 1) (_root_.GlobalTheory.PDA.PDPoly.e_one_mem_ext Q T.J)
+    have h2 : T'.δ.dpow k (ψ'.φ (Q.e 1)) = ψ'.φ (η₀.dpow k (Q.e 1)) := ψ'.dp.2 (Q.e 1) (_root_.GlobalTheory.PDA.PDPoly.e_one_mem_ext Q T.J)
     rw [hη.var k] at h1 h2
     have h3 : T'.δ.dpow k (ψ.φ (Q.e 1)) = T'.δ.dpow k (ψ'.φ (Q.e 1)) := congrArg _ he
     exact h1.symm.trans (h3.trans h2)
@@ -1016,10 +999,10 @@ theorem hom_unique {T' : Thick (F.cr b ht κ)} {ψ ψ' : line T Q η₀ hη hp �
 def lineU (q : b.Rˣ) (hq : (q : b.R) - 1 ∈ b.I) (hpp : b.p.Prime) :
     (thU (F.cr b ht κ) q hq).U (line T Q η₀ hη hpp.ne_zero) :=
   ⟨(isNilpotent_of_mem η₀ hpp (by simpa using (T.adm.1 hpp.ne_zero).map (algebraMap T.B Q.P))
-      (e_one_mem Q T.J)).isUnit_one_add.unit,
+      (_root_.GlobalTheory.PDA.PDPoly.e_one_mem_ext Q T.J)).isUnit_one_add.unit,
     MonoidHom.mem_ker.2 (Units.ext (by
       change Ideal.Quotient.mk (Q.ext T.J) (1 + Q.e 1) = Ideal.Quotient.mk (Q.ext T.J) 1
-      exact Ideal.Quotient.eq.2 (by simpa using e_one_mem Q T.J)))⟩
+      exact Ideal.Quotient.eq.2 (by simpa using _root_.GlobalTheory.PDA.PDPoly.e_one_mem_ext Q T.J)))⟩
 
 theorem map_lineU {T' : Thick (F.cr b ht κ)} (q : b.Rˣ) (hq : (q : b.R) - 1 ∈ b.I) (hpp : b.p.Prime)
     (ψ : line T Q η₀ hη hpp.ne_zero ⟶ T') :
@@ -1370,8 +1353,6 @@ theorem CrystallineSemistableComparison.B.P.thick_act : ∀ {O : Type} [CommRing
 theorem CrystallineSemistableComparison.B.P.thick_line : ∀ {O : Type} [CommRing O] (F : Fn O) (b : Base) (ht : b.t = 1) (κ : O →+* b.R ⧸ b.I) {Λ : Type} [CommRing Λ] (c : Λ →+* b.R) (ρ : ℕ → ℕ) (hρ : Slow ρ) (μ : Λ) (hμ : c μ ∈ b.I) (q : b.Rˣ) (hq : (q : b.R) - 1 ∈ b.I) (x : b.R), b.p.Prime → (q : b.R) = x ^ b.p → c μ = q - 1 → (∑ i ∈ Finset.range b.p, x ^ i) ∈ b.I → ∀ T : Thick (F.cr b ht κ), ∃ (T₁ : Thick (F.cr b ht κ)) (i : T ⟶ T₁) (η : (thU (F.cr b ht κ) q hq).U T₁), (∀ (T' : Thick (F.cr b ht κ)) (φ : T ⟶ T') (a : (thU (F.cr b ht κ) q hq).U T'), ∃! ψ : T₁ ⟶ T', i ≫ ψ = φ ∧ (thU (F.cr b ht κ) q hq).map ψ η = a) ∧ ∀ g : T₁ ⟶ T₁, i ≫ g = i → (thU (F.cr b ht κ) q hq).map g η = (thU (F.cr b ht κ) q hq).q _ * η → (pdFlt (F.cr b ht κ) c ρ hρ μ hμ).FAcyc i g :=
   @GlobalTheory.CompanionTheory.ThickLine.main
 
-theorem CrystallineSemistableComparison.B.P.atlas : ∀ {O : Type} [CommRing O] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [Smooth q] [IsSeparated q] [QuasiCompact q], ∃ d, Nonempty ((schFn q).Atlas d) :=
-  @GlobalTheory.CompanionTheory.SchAtlas.exists_atlas
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.PropsA =====

@@ -147,8 +147,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.implicit_root_analytic : ∀ (E : Type) [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E] (n : ℕ) (c : ℕ → E → ℂ) (w₀ : E) (τ₀ : ℂ), (∀ j, AnalyticAt ℂ (c j) w₀) → ∑ j ∈ Finset.range (n + 1), c j w₀ * τ₀ ^ j = 0 → ∑ j ∈ Finset.range (n + 1), (j : ℂ) * c j w₀ * τ₀ ^ (j - 1) ≠ 0 → ∃ (V : Set E) (W : Set ℂ) (g : E → ℂ), IsOpen V ∧ w₀ ∈ V ∧ IsOpen W ∧ τ₀ ∈ W ∧ AnalyticOnNhd ℂ g V ∧ ∀ w ∈ V, ∀ τ ∈ W, ∑ j ∈ Finset.range (n + 1), c j w * τ ^ j = 0 → τ = g w := by
-  first | exact @GlobalTheory.CompanionTheory.SimpleRoot.exists_analytic_simple_root
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ImplicitRootAnalyticStatement =====
@@ -173,13 +171,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Chg.DegBlock
 
 variable {K₀ K : Type} [Fintype K₀] [Fintype K] {J₀ : K₀ → Type} {J : K → Type} [∀ k, Fintype (J₀ k)] [∀ k, Fintype (J k)]
 
-theorem isMultiHomog_mul' {f g : MRing J₀} {a b : K₀ → ℕ} (hf : IsMultiHomog f a) (hg : IsMultiHomog g b) :
-    IsMultiHomog (f * g) (a + b) := by
-  intro m hm k
-  obtain ⟨m1, hm1, m2, hm2, rfl⟩ := Finset.mem_add.mp (MvPolynomial.support_mul _ _ hm)
-  have h1 := hf m1 hm1 k
-  have h2 := hg m2 hm2 k
-  simp [Finset.sum_add_distrib, h1, h2]
+alias isMultiHomog_mul' := _root_.ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.isMultiHomog_mul
 
 theorem isMultiHomog_rename' {κ : K₀ → K} {v : (Σ k, J₀ k) → (Σ k, J k)} (hv : IsBlockMap κ v) {f : MRing J₀}
     {a : K₀ → ℕ} (hf : IsMultiHomog f a) : IsMultiHomog (rename v f : MRing J) (Function.extend κ a 0) := by
@@ -259,25 +251,10 @@ theorem not_mem_mcPts_top {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintyp
   have := h.2 1 trivial
   simp at this
 
-theorem sameOrbit_trans' {K : Type} {J : K → Type} {a b c : (Σ k, J k) → ℂ} (h1 : SameOrbit a b) (h2 : SameOrbit b c) :
-    SameOrbit a c := by
-  obtain ⟨s, hs, rfl⟩ := h1
-  obtain ⟨t, ht, rfl⟩ := h2
-  exact ⟨fun k => s k * t k, fun k => mul_ne_zero (hs k) (ht k), by funext p; ring⟩
-
-theorem sameOrbit_symm' {K : Type} {J : K → Type} {a b : (Σ k, J k) → ℂ} (h : SameOrbit a b) : SameOrbit b a := by
-  obtain ⟨s, hs, rfl⟩ := h
-  refine ⟨fun k => (s k)⁻¹, fun k => inv_ne_zero (hs k), ?_⟩
-  funext p
-  exact (inv_mul_cancel_left₀ (hs p.1) _).symm
-
 theorem sameOrbit_restr {bk : K₀ → K} (bx : ∀ k, J₀ k ≃ J (bk k)) {a b : (Σ k, J k) → ℂ} (h : SameOrbit a b) :
     SameOrbit (fun p => a (blkV bk bx p)) (fun p => b (blkV bk bx p)) := by
   obtain ⟨s, hs, rfl⟩ := h
   exact ⟨fun k => s (bk k), fun k => hs _, rfl⟩
-
-theorem holoMap_id' {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) : HoloMap A A (id : X → X) :=
-  ⟨continuous_id, fun j k => A.holo j k⟩
 
 theorem isMultiHomog_one' : IsMultiHomog (1 : MRing J₀) (0 : K₀ → ℕ) := by
   intro m hm k
@@ -337,7 +314,7 @@ theorem exists_local_section {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] [CharZer
     intro q
     have h1 := _root_.GlobalTheory.CompanionTheory.Ar.Rel.ratio_relation_at_complex_points K₀ K J₀ J Ω₀ Ω y₀ y bk bx i q (r q.1) (n q (r q.1)) (c q (r q.1)) (a q (r q.1)) hy rfl
       (hyr _) (hc _ _) (hsum _ _) z hz (hrr _) w₀ hr
-    exact GlobalTheory.T.implicit_root_analytic _ (n q (r q.1)) (fun j w => eval w (map (Int.castRingHom ℂ) (c q (r q.1) j))) w₀ _
+    exact _root_.GlobalTheory.CompanionTheory.SimpleRoot.exists_analytic_simple_root _ (n q (r q.1)) (fun j w => eval w (map (Int.castRingHom ℂ) (c q (r q.1) j))) w₀ _
       (fun j => AnalyticOnNhd.eval_mvPolynomial _ _ (Set.mem_univ _)) h1
       (hsimple _ _ w₀ hw₀ (hGw _ _) _ h1)
   choose V W g hVo hV hWo hW hga huniq using hroot
@@ -395,16 +372,16 @@ theorem isDegreeOff_of_block : ∀ (K₀ K : Type) [Fintype K₀] [Fintype K] (J
     hGn (himg ▸ (show G₁ * G₂ ∈ imageZ (blkV bk bx) (mCoordIdeal y) from hm))
   refine ⟨_, _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.Deg.isDegreeOff_of_correspondence K₀ J₀ K J (mCoordIdeal y₀) ⊤ (mCoordIdeal y) ⊤ D R₀.X R₀.A R₀ id R h
     (fun z w => SameOrbit (fun p => z (blkV bk bx p)) w) (G₁ * G₂) (rename (blkV bk bx) (G₁ * G₂)) (a₁ + a₂)
-    (Function.extend bk (a₁ + a₂) 0) d rfl hA₀ hA (holoMap_id' R₀.A) (isDegreeOff_id R₀.A) hh hGh hGn
+    (Function.extend bk (a₁ + a₂) 0) d rfl hA₀ hA (_root_.ReciprocityTheory.AnForm.M.holoMap_id R₀.A) (isDegreeOff_id R₀.A) hh hGh hGn
     (isMultiHomog_rename' hv hGh) hrn
-    (fun z z₁ w w₁ hr h1 h2 => sameOrbit_trans' (sameOrbit_restr bx h1)
-      (sameOrbit_trans' hr (sameOrbit_symm' h2))) ?_ ?_ ?_ ?_ ?_ ?_⟩
+    (fun z z₁ w w₁ hr h1 h2 => _root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_comp (sameOrbit_restr bx h1)
+      (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_comp hr (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip h2))) ?_ ?_ ?_ ?_ ?_ ?_⟩
   · intro x x₀ e
     have e' : x₀ = h x := e
     subst e'
-    exact sameOrbit_symm' (hlift x)
+    exact _root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip (hlift x)
   · intro x x₀ hr
-    exact R₀.inj x₀ (h x) (not_mem_mcPts_top _) (sameOrbit_trans' (sameOrbit_symm' hr) (sameOrbit_symm' (hlift x)))
+    exact R₀.inj x₀ (h x) (not_mem_mcPts_top _) (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_comp (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip hr) (_root_.GroundTheory.Heights₂.Heights.Inter.PullbackDegreeCount.sameOrbit_flip (hlift x)))
   · intro w hw h0
     exact hcount w hw (hev w h0).1
   · intro z hz hzJ

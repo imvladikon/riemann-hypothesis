@@ -109,7 +109,7 @@ theorem compRed_of (hR : KRepRelStatement) (hS : KRepStableStatement) (hP : KRep
   refine ⟨m, x, μ, fun i => ⟨(hx i).2.1, (hx i).2.2⟩, horth, htop, ?_, ?_, ?_⟩
   · exact finrank_eq_sum_of_orth _ horth htop
   · intro i k v hv
-    exact (hS n ε R _).mpr (Formalism.REAL.isCompactInvariant_compactSpan (x i)) k v hv
+    exact (hS n ε R _).mpr (_root_.Formalism.REAL.compact_span_stable (x i)) k v hv
   · intro i
     obtain ⟨T, φ, h1, h2, h3⟩ := hP n ε R (μ i) (x i) (hx i).2.1 (hx i).2.2
     exact ⟨T, φ, φ.toLinearEquiv.finrank_eq, h1, h2, h3⟩
@@ -361,7 +361,7 @@ def pieceKType {n : ℕ} {ε : Fin n → Bool} (R : KRep ε)
     (hS : KRepStableStatement) (hR : KRepRelStatement) (μ : Fin n → ℝ) (x : R.V) (hx : x ≠ 0)
     (hhi : Formalism.REAL.KHighest ε R.units μ x) : KType ε μ :=
   let W := Formalism.REAL.kSpan ε R.units x
-  have hK : Formalism.REAL.KStable ε R.units W := Formalism.REAL.isCompactInvariant_compactSpan x
+  have hK : Formalism.REAL.KStable ε R.units W := _root_.Formalism.REAL.compact_span_stable x
   have hτ : ∀ k : KG ε, ∀ v ∈ W, R.op k v ∈ W := (hS n ε R W).mpr hK
   have hxW : x ∈ W := Formalism.REAL.mem_compactSpan x
   { V := W
@@ -429,7 +429,7 @@ open PieceCon in
 theorem kRepPiece_of (hR : KRepRelStatement) (hS : KRepStableStatement) : KRepPieceStatement := by
   intro n ε R μ x hx hhi
   set W := Formalism.REAL.kSpan ε R.units x with hWdef
-  have hK : Formalism.REAL.KStable ε R.units W := Formalism.REAL.isCompactInvariant_compactSpan x
+  have hK : Formalism.REAL.KStable ε R.units W := _root_.Formalism.REAL.compact_span_stable x
   have hτ : ∀ k : KG ε, ∀ v ∈ W, R.op k v ∈ W := (hS n ε R W).mpr hK
   refine ⟨pieceKType R hS hR μ x hx hhi, LinearIsometryEquiv.refl ℂ W, ?_, ?_, ?_⟩
   · intro k v

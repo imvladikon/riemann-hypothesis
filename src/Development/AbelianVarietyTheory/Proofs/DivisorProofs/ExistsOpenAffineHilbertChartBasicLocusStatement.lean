@@ -188,8 +188,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.linearCombination_bijective_of_rankAtStalk_eq : ∀ (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Module.Finite R M] [Module.Flat R M] (r : ℕ), (∀ p : PrimeSpectrum R, Module.rankAtStalk M p = r) → ∀ s : Fin r → M, Module.support R (M ⧸ Submodule.span R (Set.range s)) = ∅ → Function.Bijective (Fintype.linearCombination R s) := by
-  first | (exact @GlobalTheory.bijective_linearCombination_of_rankAtStalk)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveLinearCombinationOfRankAtStalkStatement =====
@@ -430,8 +428,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.free_module_complement_support_compact : ∀ (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Module.Finite R M] [Module.Flat R M] (r : ℕ), (∀ p : PrimeSpectrum R, Module.rankAtStalk M p = r) → ∀ s : Fin r → M, IsCompact (Module.support R (M ⧸ Submodule.span R (Set.range s)))ᶜ := by
-  first | (exact @GlobalTheory.isCompact_compl_support_quotient_span)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeModuleComplementSupportCompact =====
@@ -524,8 +520,6 @@ section -- clump:auto
 
 open CategoryTheory CategoryTheory.Limits
 
-theorem _root_.GlobalTheory.T.mem_support_quotient_span_iff_of_isPushout' : ∀ (R S R' S' : CommRingCat.{0}) (qa : R ⟶ S) (ba : R ⟶ R') (ga : S ⟶ S') (qa' : R' ⟶ S'), IsPushout qa ba ga qa' → qa.hom.Finite → ∀ {ι : Type} (s : ι → S) (p : PrimeSpectrum R'), ((letI := qa'.hom.toAlgebra; p ∈ Module.support R' (S' ⧸ Submodule.span R' (Set.range (fun i => ga.hom (s i))))) ↔ (letI := qa.hom.toAlgebra; PrimeSpectrum.comap ba.hom p ∈ Module.support R (S ⧸ Submodule.span R (Set.range s)))) := by
-  first | (exact @_root_.GlobalTheory.QuotientSupportBaseChange.mem_support_quotient_iff) | (exact _root_.GlobalTheory.QuotientSupportBaseChange.mem_support_quotient_iff) | (intros; apply _root_.GlobalTheory.QuotientSupportBaseChange.mem_support_quotient_iff  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSupportQuotientSpanIffOfIsPushoutStatement =====
@@ -577,7 +571,7 @@ theorem isCompact_bad_compl (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N
     IsCompact (bad e σ y U)ᶜ := by
   letI := ((proj y).app U).hom.toAlgebra
   obtain ⟨h1, h2, h3⟩ := secs_props y U hU
-  exact GlobalTheory.T.free_module_complement_support_compact _ _ r h3 (gens e σ y U)
+  exact _root_.GlobalTheory.isCompact_compl_support_quotient_span _ _ r h3 (gens e σ y U)
 
 theorem basic_iff (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T : Scheme.{0}}
     (y : (functor A B r).obj (op T)) :
@@ -593,7 +587,7 @@ theorem basic_iff (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T : Sch
   change Function.Bijective (fun c : Fin r → Γ(T, U) =>
     ∑ k, ((proj y).app U).hom (c k) * gens e σ y U k) ↔ _
   rw [hf]
-  refine ⟨fun hb => ?_, fun hb => GlobalTheory.T.linearCombination_bijective_of_rankAtStalk_eq _ _ r h3 _ hb⟩
+  refine ⟨fun hb => ?_, fun hb => _root_.GlobalTheory.bijective_linearCombination_of_rankAtStalk _ _ r h3 _ hb⟩
   show Module.support _ _ = ∅
   rw [Module.support_eq_empty_iff, Submodule.Quotient.subsingleton_iff,
     ← Fintype.range_linearCombination, LinearMap.range_eq_top]
@@ -627,7 +621,7 @@ theorem bad_nat (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) {T T' : Sc
   haveI : IsFinite (proj y) := y.2.2.1
   have hP := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE sq inferInstance hU hU' h hleG
   have fin : ((proj y).app U).hom.Finite := (secs_props y U hU).1
-  have H := GlobalTheory.T.mem_support_quotient_span_iff_of_isPushout' _ _ _ _ _ _ _ _ hP fin (gens e σ y U) (hU'.primeIdealOf ⟨x, hx⟩)
+  have H := _root_.GlobalTheory.QuotientSupportBaseChange.mem_support_quotient_iff _ _ _ _ _ _ _ _ hP fin (gens e σ y U) (hU'.primeIdealOf ⟨x, hx⟩)
   rw [IsAffineOpen.comap_primeIdealOf_appLE U hU U' hU' h hx] at H
   have hg : (fun i => ((pbMap a y).appLE (proj y ⁻¹ᵁ U) _ hleG).hom (gens e σ y U i)) =
       gens e σ ((functor A B r).map a.op y) U' := funext (gens_pbMap e σ a y U U' hleG)
@@ -747,8 +741,6 @@ section -- clump:auto
 
 open AlgebraicGeometry CategoryTheory CategoryTheory.Limits Opposite
 
-theorem _root_.GlobalTheory.T.exists_open_affineHilbertChartBasic_locus : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N r : ℕ) (e : Module.Basis (Fin N) A B) (σ : Fin r ↪ Fin N) (Z : Scheme.{0}) (y : (GlobalTheory.HilbAff.functor A B r).obj (op Z)), ∃ W : Z.Opens, (∀ (Z' : Scheme.{0}) (a : Z' ⟶ Z), Set.range a ⊆ (W : Set Z) ↔ GlobalTheory.HilbAff.Basic A B e σ ((GlobalTheory.HilbAff.functor A B r).map a.op y)) ∧ (CompactSpace Z → IsCompact (W : Set Z)) := by
-  first | (exact @GlobalTheory.HilbAff.Locus.exists_basic_locus)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenAffineHilbertChartBasicLocusStatement =====

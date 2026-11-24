@@ -50,6 +50,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.InvarianceRepresentativesLaw
 
 @[expose] public section
 
@@ -286,10 +287,6 @@ theorem linSub_lkB (f : MvPowerSeries (X.ZA j) Kc) : linSub (LkB X Kc j A) f = S
   congr 1
   funext z
   exact linS_LkB X Kc j A z
-
-theorem SA_C_mul' (a : Kc) (f : MvPowerSeries (X.ZA j) Kc) :
-    SA X Kc j A (MvPowerSeries.C a * f) = MvPowerSeries.C a * SA X Kc j A f := by
-  rw [← linSub_lkB, ← linSub_lkB, linSub_C_mul']
 
 end Lk
 
@@ -685,7 +682,7 @@ theorem kapLawLt_frecG : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (cc :
   have hFG : ∀ v, IsUnit (fd.frM j (c0, (X.Lv.lev j c0).smul γ L) v).det := fun v => (hFrG v).1
   unfold thFOf
   rw [frecG_eq, frecG_eq, hserG, hserL, MvPowerSeries.smul_eq_C_mul, MvPowerSeries.smul_eq_C_mul, ← mul_assoc, ← mul_assoc,
-    ← map_mul, ← map_mul, linSub_C_mul', linSub_C_mul', resV_C_mul', resV_C_mul', SA_C_mul', ← mul_assoc, ← map_mul, hsc,
+    ← map_mul, ← map_mul, linSub_C_mul', linSub_C_mul', resV_C_mul', resV_C_mul', _root_.Formalism.L2.G.Pend.SA_C_mul, ← mul_assoc, ← map_mul, hsc,
     ← frm_move X E pos fd cc δ lam cS ρ hLP j c0 L La' γ e he hFL hFG hT]
 
 end GlobalTheory.TwU.LawAll

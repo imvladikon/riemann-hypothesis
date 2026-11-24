@@ -266,8 +266,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_tensorInduction_char' : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (∀ t : Γ, t ∈ Subgroup.zpowers s) → ∀ χ : G → ℂ, IsChar ℂ ℂ χ → ∃ X : G ⋊[φ] Γ → ℂ, IsChar ℂ ℂ X ∧ (∀ g, X (inl g) = ∏ t : Γ, χ (φ t g)) ∧ ∀ δ, X (inl δ * inr s) = χ (nrmG φ s (Nat.card Γ) δ) := by
-  first | (exact @GlobalTheory.Shin.TensorInd.exists_tensorInduction_char)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorInductionCharStatement =====
@@ -543,8 +541,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_virtualCharacter_semidirect_orbit_cross_terms : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ a b : G → ℂ, a ∈ Virt ℂ ℂ G → b ∈ Virt ℂ ℂ G → ∃ Z ∈ Virt ℂ ℂ (G ⋊[φ] Γ), (∀ g, Z (inl g) = ∏ t : Γ, (a (φ t g) + b (φ t g)) - ∏ t : Γ, a (φ t g) - ∏ t : Γ, b (φ t g)) ∧ ∀ δ, Z (inl δ * inr s) = 0 := by
-  first | (exact @GlobalTheory.CrossOrbit.cross_terms_induced)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVirtualCharacterSemidirectOrbitCrossTermsStatement =====
@@ -565,9 +561,9 @@ theorem tensorInd_virt_prime : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ]
     intro t
     exact mem_zpowers_of_prime_card rfl hs
   obtain ⟨a, b, ha, hb, rfl⟩ := (mem_virt_iff_sub ℂ ℂ G χ).1 hχ
-  obtain ⟨A, hA, hA1, hA2⟩ := GlobalTheory.T.exists_tensorInduction_char' G Γ φ s hgen a ha
-  obtain ⟨B, hB, hB1, hB2⟩ := GlobalTheory.T.exists_tensorInduction_char' G Γ φ s hgen b hb
-  obtain ⟨Z, hZ, hZ1, hZ2⟩ := GlobalTheory.T.exists_virtualCharacter_semidirect_orbit_cross_terms G Γ φ s hp hs (a - b) b
+  obtain ⟨A, hA, hA1, hA2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen a ha
+  obtain ⟨B, hB, hB1, hB2⟩ := _root_.GlobalTheory.Shin.TensorInd.exists_tensorInduction_char G Γ φ s hgen b hb
+  obtain ⟨Z, hZ, hZ1, hZ2⟩ := _root_.GlobalTheory.CrossOrbit.cross_terms_induced G Γ φ s hp hs (a - b) b
     ((mem_virt_iff_sub ℂ ℂ G _).2 ⟨a, b, ha, hb, rfl⟩)
     ((mem_virt_iff_sub ℂ ℂ G b).2 ⟨b, 0, hb, (_root_.GlobalTheory.BI.isChar_zero_and_add ℂ ℂ G).1, by simp⟩)
   have hAv : A ∈ Virt ℂ ℂ (G ⋊[φ] Γ) := AddSubgroup.subset_closure hA
@@ -592,8 +588,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_tensorInduction_virtualCharacter_prime : ∀ (G Γ : Type) [Group G] [Finite G] [Group Γ] [Fintype Γ] (φ : Γ →* MulAut G) (s : Γ), (Nat.card Γ).Prime → s ≠ 1 → ∀ χ ∈ Virt ℂ ℂ G, ∃ X ∈ Virt ℂ ℂ (G ⋊[φ] Γ), (∀ g, X (inl g) = ∏ t : Γ, χ (φ t g)) ∧ ∀ δ, X (inl δ * inr s) = χ (nrmG φ s (Nat.card Γ) δ) := by
-  first | (exact @GlobalTheory.Shin.tensorInd_virt_prime)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorInductionVirtualCharacterPrimeStatement =====
@@ -620,7 +614,7 @@ theorem par_facts {F' : Type} [Field F'] (a b n : ℕ) (h : n = a + b) :
     (∀ x y : GL (Fin n) F', InPar a x → InPar a y → tlG a (x * y) = tlG a x * tlG a y) ∧
     (∀ x : GL (Fin n) F', InPar a x →
       ((tlG a x : GL (Fin a) F') : Matrix (Fin a) (Fin a) F') = tl a (x : Matrix (Fin n) (Fin n) F')) := by
-  obtain ⟨H, π, hH, -, hπ, hmat, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F' a b n h
+  obtain ⟨H, π, hH, -, hπ, hmat, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F' a b n h
   refine ⟨fun x y hx hy => (hH _).1 (H.mul_mem ((hH x).2 hx) ((hH y).2 hy)), (hH 1).1 H.one_mem,
     fun x hx => (hH _).1 (H.inv_mem ((hH x).2 hx)), fun x y hx hy => ?_, fun x hx => ?_⟩
   · have := π.map_mul ⟨x, (hH x).2 hx⟩ ⟨y, (hH y).2 hy⟩
@@ -771,8 +765,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_virtualCharacter_twistedHarishChandraInductionGL : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (a b n : ℕ), n = a + b → ∀ X ∈ Virt ℂ ℂ (GHat F F' a), ∃ Z ∈ Virt ℂ ℂ (GHat F F' n), ∀ (t : F' ≃ₐ[F] F') (δ : GL (Fin n) F'), Z (inl δ * inr t) = hcTw (t : F' →+* F') a b (fun d => X (inl d * inr t)) (fun _ => 1) n δ := by
-  first | (exact @GlobalTheory.Shin.HatInd.hat_ind)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVirtualCharacterTwistedHarishChandraInductStatement =====
@@ -807,7 +799,7 @@ theorem charpoly_of_isConj {K : Type} [Field K] {n : ℕ} {a b : GL (Fin n) K} (
 
 theorem shLift_chG_rootSum : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ) (k n : ℕ) (δ : GL (Fin n) F'), shLift s (chG (rootSum (pullθ ι θ) k) n) δ = chG (rootSum θ k) n (nrm s δ) := by
   intro F F' _ _ _ _ s hs ι θ k n δ
-  have hex : ∃ γ, IsNorm s δ γ := GlobalTheory.T.every_element_is_norm F F' s hs n δ
+  have hex : ∃ γ, IsNorm s δ γ := _root_.GlobalTheory.Shin.exists_isNorm F F' s hs n δ
   unfold shLift
   rw [dite_eq_left hex]
   generalize hex.choose = γ, hex.choose_spec = hγ
@@ -832,8 +824,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.shintaniLift_charpoly_rootPowerSum_eq_norm : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ) (k n : ℕ) (δ : GL (Fin n) F'), shLift s (chG (rootSum (pullθ ι θ) k) n) δ = chG (rootSum θ k) n (nrm s δ) := by
-  first | (exact @GlobalTheory.Shin.shLift_chG_rootSum)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShintaniLiftCharpolyRootPowerSumEqNormStatement =====
@@ -865,7 +855,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
     rw [zpowers_eq_top_of_prime_card hcard hs]; intro t; trivial
   have hlift1 : ∀ (m : ℕ) (δ : GL (Fin m) F'), shLift s (fun _ : GL (Fin m) F => (1 : ℂ)) δ = 1 := by
     intro m δ
-    exact shLift_eq_of_exists s δ (GlobalTheory.T.every_element_is_norm F F' s hgen m δ) _
+    exact shLift_eq_of_exists s δ (_root_.GlobalTheory.Shin.exists_isNorm F F' s hgen m δ) _
   intro n
   induction n using Nat.strong_induction_on with
   | _ n ih =>
@@ -876,7 +866,7 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
         (shLift s (psiG (rootSum (pullθ ι θ) k) a)) (fun _ => 1) n δ := by
     intro a
     obtain ⟨Xa, hXa, h1, h2⟩ := ih a a.2
-    obtain ⟨Z, hZv, hZe⟩ := GlobalTheory.T.exists_virtualCharacter_twistedHarishChandraInductionGL F F' a (n - a) n (by omega) Xa hXa
+    obtain ⟨Z, hZv, hZe⟩ := _root_.GlobalTheory.Shin.HatInd.hat_ind F F' a (n - a) n (by omega) Xa hXa
     refine ⟨Z, hZv, fun δ => ?_, fun δ => ?_⟩
     · have e := hZe 1 δ
       simp only [map_one, mul_one] at e
@@ -888,12 +878,12 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
       have e2 : (fun d => Xa (inl d * inr s)) = shLift s (psiG (rootSum (pullθ ι θ) k) a) := funext h2
       rw [e2]
   choose Z hZv hZ1 hZ2 using hZ
-  obtain ⟨A, hA, hA1, hA2⟩ := GlobalTheory.T.exists_tensorInduction_virtualCharacter_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s
+  obtain ⟨A, hA, hA1, hA2⟩ := _root_.GlobalTheory.Shin.tensorInd_virt_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s
     (by rw [hcard]; exact hp) hs (fun x => rootSum θ k (Matrix.charpoly (x : Matrix (Fin n) (Fin n) F')))
     (_root_.GlobalTheory.CuspGL.rootSum_charpoly_mem_virt F' θ hθ n k)
   refine ⟨A - ∑ a : Fin n, Z a, sub_mem hA (sum_mem fun a _ => hZv a), fun g => ?_, fun δ => ?_⟩
   · simp only [Pi.sub_apply, Finset.sum_apply, hA1, hZ1]
-    rw [GlobalTheory.T.primitiveFunctionCharpolyGL_harishChandra_recursion F' _ n g]
+    rw [_root_.GlobalTheory.ShinPsiRec.psiG_eq_chG_sub_hc F' _ n g]
     rw [Fin.sum_univ_eq_sum_range (fun a => hc a (n - a)
         (psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) a) (fun _ => 1) n g) n]
     congr 1
@@ -902,9 +892,9 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
     rw [galAct_apply, ← Matrix.charpoly_map]
     congr 2
   · simp only [Pi.sub_apply, Finset.sum_apply, hA2, hZ2]
-    have hex := GlobalTheory.T.every_element_is_norm F F' s hgen n δ
-    rw [shLift_eq_of_exists s δ hex, GlobalTheory.T.primitiveFunctionCharpolyGL_harishChandra_recursion F _ n, ← shLift_eq_of_exists s δ hex (chG _ n),
-      GlobalTheory.T.shintaniLift_charpoly_rootPowerSum_eq_norm F F' s hgen ι θ k n δ]
+    have hex := _root_.GlobalTheory.Shin.exists_isNorm F F' s hgen n δ
+    rw [shLift_eq_of_exists s δ hex, _root_.GlobalTheory.ShinPsiRec.psiG_eq_chG_sub_hc F _ n, ← shLift_eq_of_exists s δ hex (chG _ n),
+      _root_.GlobalTheory.Shin.shLift_chG_rootSum F F' s hgen ι θ k n δ]
     rw [Fin.sum_univ_eq_sum_range (fun a => hcTw (s : F' →+* F') a (n - a)
         (shLift s (psiG (rootSum (pullθ ι θ) k) a)) (fun _ => 1) n δ) n]
     congr 1
@@ -913,8 +903,8 @@ theorem exists_virt_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F
     · refine Finset.sum_congr rfl fun a ha => ?_
       have han : n = a + (n - a) := by have := Finset.mem_range.1 ha; omega
       rw [← shLift_eq_of_exists s δ hex (hc a (n - a) (psiG (rootSum (pullθ ι θ) k) a) (fun _ => 1) n),
-        GlobalTheory.T.shintaniLift_harishChandraInduction_eq_twisted F F' s hgen a (n - a) n han _ _
-          ((GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) 0 0 a (fun _ => 1) (fun _ => 1)).2.2 _).1 (fun _ _ => rfl)]
+        _root_.GlobalTheory.Shin.shLift_hc_eq_hcTw F F' s hgen a (n - a) n han _ _
+          ((_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) 0 0 a (fun _ => 1) (fun _ => 1)).2.2 _).1 (fun _ _ => rfl)]
       congr 1
       funext x
       exact (hlift1 _ x).symm
@@ -932,8 +922,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_virtualCharacter_shintani_psi_lift : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (Module.finrank F F').Prime → s ≠ 1 → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ), (∀ x y : AlgebraicClosure F', x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ k n : ℕ, ∃ X ∈ Virt ℂ ℂ (GHat F F' n), (∀ g, X (inl g) = psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n g) ∧ ∀ δ, X (inl δ * inr s) = shLift s (psiG (rootSum (pullθ ι θ) k) n) δ := by
-  first | (exact @GlobalTheory.Shin.exists_virt_psi_lift)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVirtualCharacterShintaniPsiLiftStatement =====

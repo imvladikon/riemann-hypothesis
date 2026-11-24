@@ -129,6 +129,7 @@ import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseCha
 import Development.AbelianVarietyTheory.Statements.FundamentalDomains.ExistsIsAddFundamentalDomain
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelOfSplitAndLevelCoeffExist
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv
@@ -1224,7 +1225,7 @@ theorem key_unit {κ : KeyRule} (hκ : IsKeyRule κ) (hpq : 1 ≤ Dw.p + Dw.q) (
   obtain ⟨mK, -⟩ := sabCancel pullCubCancel E H _ _ _ Y.t tP t' yt (Out.jK T.V) mP' (PullbackSections.sabMapCast mJ hj)
   have hprop : IsProper t'.G.hom :=
     MorphismProperty.of_isPullback (P := @IsProper) m1.cart.1 Xo.univ.proper
-  obtain ⟨ψ, -⟩ := GlobalTheory.semiAbelian_model_determined_by_generic_fibre E H T.V inferInstance G tP t' hprop m2 mK
+  obtain ⟨ψ, -⟩ := _root_.GlobalTheory.ModelUniqueChecks.extV_holds E H T.V inferInstance G tP t' hprop m2 mK
   obtain ⟨n', -⟩ := sabComp pullCubComp E H _ _ _ Y.t tP G yt (𝟙 _) mP' ψ
   exact (((_root_.GlobalTheory.KeyUnitModels.keyUnitOnModels κ hκ E H Dw l Xo c _ _ Y p hpq (isBaseRing_local c W) hp h2 h3 h4 h5).1 T.V T.Fr z yt h1 G
     (PullbackSections.sabMapCast n' (Category.id_comp yt)) n w hw θ k hk).1 hθ).1
@@ -1403,7 +1404,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoPoint =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoSquare =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoSquare", "h": "module\n\npublic import Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoDefs\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalisedModelUniformisationBaseChange\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PullRigIsSymmetric\npublic import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRuleOneOfKeyFormula\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple\npublic import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.PowObjGeometricallyConnected\nimport Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal\npublic import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLbHermitian\npublic import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.NonemptyTorusExtensionOfIsPowGrp\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsIsGrpPullbackPow\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieCombIffProd\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.MemNonzeroLocusProdSec\nimport Development.AbelianVarietyTheory.Statements.FundamentalDomains.ExistsIsAddFundamentalDomain\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoSquare", "h": "module\n\npublic import Development.WeilBound.CoreStatements.HodgeTatePoints.KftwoDefs\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalisedModelUniformisationBaseChange\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PullRigIsSymmetric\npublic import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRuleOneOfKeyFormula\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple\npublic import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.PowObjGeometricallyConnected\nimport Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal\npublic import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLbHermitian\npublic import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.NonemptyTorusExtensionOfIsPowGrp\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsIsGrpPullbackPow\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieCombIffProd\npublic import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.MemNonzeroLocusProdSec\nimport Development.AbelianVarietyTheory.Statements.FundamentalDomains.ExistsIsAddFundamentalDomain\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1524,11 +1525,6 @@ omit [IsCommMonObj G] [IsCommMonObj G₂] in
 theorem pow_ext {T : Over S} {u v : T ⟶ G₂} (h : ∀ i, u ≫ p.pr i = v ≫ p.pr i) : u = v :=
   p.lim.hom_ext fun ⟨i⟩ => h i
 
-theorem act_zero' : a.act 0 = 1 := by
-  have h := a.add 0 0
-  rw [add_zero] at h
-  exact left_eq_mul.1 h
-
 omit [IsCommMonObj G₂] in
 theorem isMonHom_matEnd (m : Matrix (Fin 2) (Fin 2) O) : IsMonHom (matEnd a p m) := by
   have := p.hom
@@ -1543,7 +1539,7 @@ theorem isMonHom_matEnd (m : Matrix (Fin 2) (Fin 2) O) : IsMonHom (matEnd a p m)
 omit [IsCommMonObj G₂] in
 theorem matEnd_scalar (c : O) (i : Fin 2) : matEnd a p (Matrix.scalar (Fin 2) c) ≫ p.pr i = p.pr i ≫ a.act c := by
   rw [matEnd_pr]
-  fin_cases i <;> simp [act_zero', MonObj.comp_one]
+  fin_cases i <;> simp [_root_.ReciprocityTheory.ChartRestriction.G.PullbackSections.oact_zero, MonObj.comp_one]
 
 omit [IsCommMonObj G₂] in
 theorem matEnd_one : matEnd a p 1 = 𝟙 G₂ := pow_ext p fun i => by
@@ -1747,10 +1743,6 @@ theorem exists_type (Q : PairHost H H') {V Ω : Type} [CommRing V] [Field Ω] [I
   rw [h₁]
   exact ((sq_eq_sq_iff_eq_or_eq_neg.1 ((sq τ).trans (sq τ₀).symm)).resolve_left e).symm
 
-theorem exists_pull {S S' : Scheme.{0}} (f : S' ⟶ S) (t : SAB H S) : ∃ t' : SAB H S', Nonempty (SABMap t' t f) := by
-  obtain ⟨_, _, _, _, _, m, -⟩ := sabPull Out.CubePf.cubePull f t
-  exact ⟨_, ⟨m⟩⟩
-
 theorem key_isUnit {κ : KeyRule} (hκ : IsKeyRule κ) (hpow : ∀ (K : Type) [Field K] [CharZero K] (x y : KeyIn K) (j : ℕ),
       GlobalTheory.KeyPow.IsKeyPow y x j → κ K y = κ K x ^ j)
     {V K : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [Field K] [CharZero K] [Algebra V K]
@@ -1763,9 +1755,9 @@ theorem key_isUnit {κ : KeyRule} (hκ : IsKeyRule κ) (hpow : ∀ (K : Type) [F
   let Ω := AlgebraicClosure K
   let i := algebraMap K Ω
   obtain ⟨ρ, p, q, hρ, hty⟩ := exists_type Q (i.comp (algebraMap V K)) T s hs₂ hw₂
-  obtain ⟨tK, ⟨mK⟩⟩ := exists_pull (spMap (algebraMap V K)) T
+  obtain ⟨tK, ⟨mK⟩⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_sab (spMap (algebraMap V K)) T
   obtain ⟨TK, rfl, hgK⟩ := exists_pat_of_isFibreOf mK hy₂
-  obtain ⟨tΩ, ⟨mΩ⟩⟩ := exists_pull (spMap i) TK.t
+  obtain ⟨tΩ, ⟨mΩ⟩⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_sab (spMap i) TK.t
   obtain ⟨⟨TΩ, rfl, hgΩ⟩, hL⟩ := GlobalTheory.CM.PAT.exists_of_sabMap E' H' _ _ _ TK tΩ mΩ
   have lK : ∀ τ N, LieMult T.act (spMap (i.comp (algebraMap V K))) τ N → LieMult TK.t.act (spMap i) τ N := fun τ N h =>
     (GlobalTheory.LiePull.lieMult_pull _ _ _ _ _ _ _ T.act TK.t.act mK.cart mK.act Ω (spMap i) τ N).2 (by rwa [← spMap_comp])
@@ -1782,8 +1774,8 @@ theorem key_isUnit {κ : KeyRule} (hκ : IsKeyRule κ) (hpow : ∀ (K : Type) [F
   obtain ⟨T₀, g, j, _, hgj⟩ := exists_cdvr (V := V) (K := K) (K' := K')
   have : CharZero T₀.Fr := charZero_of_injective_algebraMap (IsFractionRing.injective T₀.V T₀.Fr)
   let j₀ : K →+* T₀.Fr := j.comp (algebraMap K K')
-  obtain ⟨G, ⟨mG⟩⟩ := exists_pull (spMap g) T
-  obtain ⟨t'', ⟨m₃⟩⟩ := exists_pull (spMap j) t'
+  obtain ⟨G, ⟨mG⟩⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_sab (spMap g) T
+  obtain ⟨t'', ⟨m₃⟩⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_sab (spMap j) t'
   obtain ⟨n₁, -⟩ := sabComp pullCubComp E' H' _ _ _ _ _ _ _ _ m₂ m₃
   obtain ⟨n₂, -⟩ := sabComp pullCubComp E' H' _ _ _ _ _ _ _ _ m₁ m₃
   obtain ⟨n₃, -⟩ := sabComp pullCubComp E' H' _ _ _ _ _ _ _ _ mK n₂

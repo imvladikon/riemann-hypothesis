@@ -315,8 +315,6 @@ open scoped Topology
 open GlobalTheory.CompanionTheory.MirPair
 
 
-theorem _root_.GlobalTheory.T.shear_orbit_box_finite_of_isSmooth : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (T : Representation ℂ (Mir k (n + 1)) V), IsSmooth T → ∀ (v : V) (r : kˣ), valuation k (r : k) < 1 → ((fun b => T (levi k (n + 1) (shearGL n b)) v) '' (box (n + 1) r : Set (Fin (n + 1) → k))).Finite := by
-  first | exact @GlobalTheory.CompanionTheory.MirPair.ShearOrbit.shear_orbit_finite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearOrbitFiniteStatement =====
@@ -414,7 +412,7 @@ theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
     obtain ⟨τ, hτ⟩ := hA
     exact ⟨τ, fun u hu => (hτ u hu).trans h0⟩
   choose τ hτ using hev
-  obtain ⟨u, htu, hu⟩ := exists_unit_bound (GlobalTheory.T.shear_orbit_box_finite_of_isSmooth T' hT' v' r hr) τ t
+  obtain ⟨u, htu, hu⟩ := exists_unit_bound (_root_.GlobalTheory.CompanionTheory.MirPair.ShearOrbit.shear_orbit_finite T' hT' v' r hr) τ t
   have hz : ∀ b ∈ box (n + 1) (c * t⁻¹), ∫ x in (box (n + 1) u : Set (Fin (n + 1) → k)),
       ((ψ (-(b ⬝ᵥ x)) : Circle) : ℂ) * (wt ψ n x * coef T B v v' x) ∂(piHaar ν (n + 1)) = 0 := by
     intro b hb
@@ -595,8 +593,6 @@ open scoped Topology
 open GlobalTheory.CompanionTheory.MirPair
 
 
-theorem _root_.GlobalTheory.T.mirabolic_coefficient_translation : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ} {V V' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V'] (T : Representation ℂ (Mir k (n + 1)) V) (T' : Representation ℂ (Mir k (n + 1)) V') (B : V →ₗ[ℂ] V' →ₗ[ℂ] ℂ) (s : ℕ), TwInv T T' B s → (∀ (y x : Fin (n + 1) → k) (v : V) (v' : V'), coef T B (T (uM (n + 1) y) v) v' x = coef T B v v' (x + y)) ∧ (∀ (y x : Fin (n + 1) → k) (v : V) (v' : V'), coef T B v (T' (uM (n + 1) y) v') x = coef T B v v' (x - y)) ∧ (∀ (g : GL (Fin (n + 1)) k) (x : Fin (n + 1) → k) (v : V) (v' : V'), coef T B (T (levi k (n + 1) g) v) (T' (levi k (n + 1) g) v') x = ((detChar (Fin (n + 1)) (absPow k (s : ℂ)) g : ℂˣ) : ℂ) * coef T B v v' (((g⁻¹ : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) *ᵥ x)) := by
-  first | exact @GlobalTheory.CompanionTheory.MirPair.coef_rules
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicCoefficientTranslationStatement =====
@@ -678,7 +674,7 @@ theorem EvVal_translate : ∀ {k : Type} [Field k] [ValuativeRel k] [Topological
   intro k _ _ _ _ _ _ ν _ ψ n V V' _ _ _ _ T T' B s _ _ hB y v v' A hA
   obtain ⟨t₀, ht₀⟩ := hA
   obtain ⟨t₁, h01, h1⟩ := exists_threshold_mem_box y t₀
-  obtain ⟨hc1, hc2, -⟩ := GlobalTheory.T.mirabolic_coefficient_translation T T' B s hB
+  obtain ⟨hc1, hc2, -⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.coef_rules T T' B s hB
   refine ⟨⟨t₁, fun t ht => ?_⟩, ⟨t₁, fun t ht => ?_⟩⟩
   · have hy := h1 t ht
     have hJ := ht₀ t (h01.trans ht)
@@ -930,7 +926,7 @@ theorem isSmooth_resM {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] {π :
 
 theorem isSmooth_deriv (ψ : AddChar k Circle) {n : ℕ} (j : ℕ) {V : Type} [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ (GL (Fin (n + j + 1)) k) V} (h : IsSmooth π) : IsSmooth (GlobalTheory.BZMir.deriv k ψ j π) :=
-  GlobalTheory.T.smooth_psi_minus k _ _ _ (isSmooth_iterPhi ψ n j _ (isSmooth_resM h))
+  _root_.GlobalTheory.CompanionTheory.BZMirFun.smPsiMinus k _ _ _ (isSmooth_iterPhi ψ n j _ (isSmooth_resM h))
 
 theorem iterPhi_derUnip (ψ : AddChar k Circle) (n₂ n' : ℕ) (hn : n₂ ≤ n') : ∀ (j : ℕ) (τ : MRep k (n' + j)),
     Nonempty (TwJacquet (iterPhi k ψ j τ).ρ (derUnipM k n' n₂) (derCharM k ψ n' n₂) ≃ₗ[ℂ]

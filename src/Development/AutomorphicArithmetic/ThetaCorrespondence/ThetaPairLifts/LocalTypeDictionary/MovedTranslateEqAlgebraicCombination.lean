@@ -231,11 +231,8 @@ open Formalism.L2.Host (HChar)
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
-noncomputable section
 namespace GlobalTheory.MovedJetNZ
-open GlobalTheory.Grid (neg ofSgn)
 end GlobalTheory.MovedJetNZ
-end
 namespace GlobalTheory.MovedJetNZ
 open GlobalTheory.Grid (neg ofSgn)
 theorem moved_vacuum_jet_ne_zero : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
@@ -297,21 +294,6 @@ theorem moved_vacuum_jet_ne_zero : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh
 end GlobalTheory.MovedJetNZ
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.jet_of_moved_vacuum_nonvanishing : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T), ∀ γ ∈ Formalism.L2.Theta.GQ A, ∀ a ∈ GinfC A, ∀ γ' ∈ Formalism.L2.Theta.GQ WW, ∀ a' ∈ GinfC WW,
-      γ * a ∈ GfC A → γ' * a' ∈ GfC WW →
-      ∃ k : FVar D WW.rank A.rank →₀ ℕ, pureTensorO W.ψ W.θ (GlobalTheory.Grid.neg A) WW (fun τ => -X.rA.s τ) X.rW.s X.rA.B X.rW.B (X.ω t (γ, γ') X.vac) (MvPolynomial.monomial k 1) 0 ≠ 0 := by
-  first | exact @_root_.GlobalTheory.MovedJetNZ.moved_vacuum_jet_ne_zero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.JetOfMovedVacuumNonvanishing =====
@@ -373,7 +355,7 @@ theorem conj_invT_of_unitary' {n : ℕ} {M : Matrix (Fin n) (Fin n) ℂ} (h : Ma
 theorem conjT_mul_compAt {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) {V : HSp D} (hV : V.gram = 1) (g : GA D V)
     (τ : D.what₂.Tau) :
     Matrix.conjTranspose (compAt θ τ (Formalism.L2.Theta.mt V g)) * compAt θ τ (Formalism.L2.Theta.mt V g) = 1 := by
-  have h1 := GlobalTheory.StdUnn.CartanMove.compAt_isom hθ V g τ
+  have h1 := _root_.GlobalTheory.RealWeil.compAt_unitary hθ V g τ
   have hg : gramAt D V τ = 1 := by
     unfold gramAt
     rw [hV]
@@ -469,12 +451,8 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 namespace GlobalTheory.MovedJet
-open GlobalTheory.Grid (neg sgn ofSgn)
-open MvPolynomial
 end GlobalTheory.MovedJet
 namespace GlobalTheory.MovedJet
-open GlobalTheory.Grid (neg sgn ofSgn)
-open MvPolynomial
 end GlobalTheory.MovedJet
 namespace GlobalTheory.MovedJet
 open GlobalTheory.Grid (neg sgn ofSgn)
@@ -545,23 +523,6 @@ end GlobalTheory.MovedJet
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.moved_vacuum_jet_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T), ∀ γ ∈ Formalism.L2.Theta.GQ A, ∀ a ∈ GinfC A, ∀ γ' ∈ Formalism.L2.Theta.GQ WW, ∀ a' ∈ GinfC WW,
-      γ * a ∈ GfC A → γ' * a' ∈ GfC WW →
-      ∀ k : FVar D WW.rank A.rank →₀ ℕ, ∃ (n : ℕ) (c : Fin n → ℂ) (k' : Fin n → FVar D WW.rank A.rank →₀ ℕ),
-        (∀ p, IsAlgebraic ℚ (c p)) ∧ (∀ p, Finsupp.mapDomain Prod.fst (k' p) = Finsupp.mapDomain Prod.fst k) ∧
-        pureTensorO W.ψ W.θ (GlobalTheory.Grid.neg A) WW (fun τ => -X.rA.s τ) X.rW.s X.rA.B X.rW.B (X.ω t (γ, γ') X.vac) (MvPolynomial.monomial k 1) 0 = ∑ p, c p * pureTensorO W.ψ W.θ (GlobalTheory.Grid.neg A) WW (fun τ => -X.rA.s τ) X.rW.s X.rA.B X.rW.B (X.vac) (MvPolynomial.monomial (k' p) 1) 0 := by
-  first | exact @_root_.GlobalTheory.MovedJet.jet_moved_vacuum_algebraic
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MovedVacuumJetAlgebraicCombination =====
@@ -620,22 +581,6 @@ end GlobalTheory.RatVacAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.rational_vacuum_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T), ∀ γ ∈ Formalism.L2.Theta.GQ A, ∀ a ∈ GinfC A, ∀ γ' ∈ Formalism.L2.Theta.GQ WW, ∀ a' ∈ GinfC WW,
-      γ * a ∈ GfC A → γ' * a' ∈ GfC WW →
-      ∃ (κ : ℂ) (F : WO (GlobalTheory.Grid.neg A) WW → ℂ), GlobalTheory.MovedAlg.IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac F ∧
-        X.ω t (γ, γ') X.vac = κ • F := by
-  first | exact @_root_.GlobalTheory.RatVacAlg.rational_vacuum_eq_smul_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RationalVacuumEqSmulAlgebraicCombination =====
@@ -661,9 +606,9 @@ theorem rational_moved_scalar_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L 
       ∀ (κ : ℂ) (F : WO (GlobalTheory.Grid.neg A) WW → ℂ), GlobalTheory.MovedAlg.IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac F →
         X.ω t (γ, γ') X.vac = κ • F → IsAlgebraic ℚ κ := by
   intro D T _ L μ₀ sc G W i j A A' WW X hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2 κ F hF e
-  obtain ⟨k, hk⟩ := _root_.GlobalTheory.T.jet_of_moved_vacuum_nonvanishing hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2
-  obtain ⟨Ω, hΩ, hJ⟩ := _root_.GlobalTheory.T.bottom_translate_jets_algebraic hP hI hL hX (Finsupp.mapDomain Prod.fst k)
-  obtain ⟨n', c', k', hc', hk', he'⟩ := _root_.GlobalTheory.T.moved_vacuum_jet_algebraic_combination hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2 k
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.MovedJetNZ.moved_vacuum_jet_ne_zero hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2
+  obtain ⟨Ω, hΩ, hJ⟩ := _root_.GlobalTheory.BotTransJet.isAlgebraic_pureTensorO_div_period hP hI hL hX (Finsupp.mapDomain Prod.fst k)
+  obtain ⟨n', c', k', hc', hk', he'⟩ := _root_.GlobalTheory.MovedJet.jet_moved_vacuum_algebraic hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2 k
   have hψ : IsStdChar D W.ψ (-1) := (hX.is.weil t).std
   have hθ : IsInfFam W.θ := hX.is.isVac.2.inf
   have hv : IsThetaFunO W.ψ (GlobalTheory.Grid.neg A) WW X.vac := hX.is.isVac.2.theta
@@ -704,7 +649,7 @@ theorem rational_translate_algebraic_combination : ∀ {D : D7} {T : Type} [Fini
         (∀ p, (w p).map (infPart D) = 0) ∧
         X.ω t (γ, γ') X.vac = ∑ p, c p • heisO W.ψ (GlobalTheory.Grid.neg A) WW (w p) X.vac := by
   intro D T _ L μ₀ sc G W i j A A' WW X hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2
-  obtain ⟨κ, F, hF, e⟩ := _root_.GlobalTheory.T.rational_vacuum_algebraic_combination hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2
+  obtain ⟨κ, F, hF, e⟩ := _root_.GlobalTheory.RatVacAlg.rational_vacuum_eq_smul_algebraic_combination hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2
   have hk := _root_.GlobalTheory.RatMovedAlg.rational_moved_scalar_algebraic hP hI hL hX t γ hγ a ha γ' hγ' a' ha' h1 h2 κ F hF e
   obtain ⟨n, c, w, hc, hw, he⟩ := hF.smul hk
   exact ⟨n, c, w, hc, hw, e.trans he⟩
@@ -712,23 +657,6 @@ end GlobalTheory.RatMovedAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.rationally_moved_vector_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T), ∀ γ ∈ Formalism.L2.Theta.GQ A, ∀ a ∈ GinfC A, ∀ γ' ∈ Formalism.L2.Theta.GQ WW, ∀ a' ∈ GinfC WW,
-      γ * a ∈ GfC A → γ' * a' ∈ GfC WW →
-      ∃ (n : ℕ) (c : Fin n → ℂ) (w : Fin n → WO (GlobalTheory.Grid.neg A) WW), (∀ p, IsAlgebraic ℚ (c p)) ∧
-        (∀ p, (w p).map (infPart D) = 0) ∧
-        X.ω t (γ, γ') X.vac = ∑ p, c p • heisO W.ψ (GlobalTheory.Grid.neg A) WW (w p) X.vac := by
-  first | exact @_root_.GlobalTheory.RatMovedAlg.rational_translate_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RationalTranslateAlgebraicCombination =====
@@ -756,7 +684,7 @@ theorem rat_real_algebraic_combination_of_moved : ∀ {D : D7} {T : Type} [Finit
   intro D T _ L μ₀ sc G W i j A A' WW X hP hI hL hX t γ hγ a ha γ' hγ' a' ha' hfin hfin'
   obtain ⟨C, hC, hCe⟩ := GlobalTheory.T.realPoint_acts_on_vacuum_by_algebraicScalar hX t γ hγ a ha γ' hγ' a' ha' hfin hfin'
   have hR : GlobalTheory.MovedAlg.IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (γ, γ') X.vac) :=
-    _root_.GlobalTheory.T.rationally_moved_vector_algebraic hP hI hL hX t γ hγ a ha γ' hγ' a' ha' hfin hfin'
+    _root_.GlobalTheory.RatMovedAlg.rational_translate_algebraic_combination hP hI hL hX t γ hγ a ha γ' hγ' a' ha' hfin hfin'
   have e : X.ω t (γ * a, γ' * a') X.vac = C • X.ω t (γ, γ') X.vac := by
     have hm : ((γ * a, γ' * a') : GA D A × GA D WW) = (γ, γ') * (a, a') := rfl
     rw [hm, map_mul, Module.End.mul_apply, hCe, map_smul]
@@ -765,23 +693,6 @@ theorem rat_real_algebraic_combination_of_moved : ∀ {D : D7} {T : Type} [Finit
 end GlobalTheory.MovedAlgRat
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.exists_rat_real_algebraic_combination_twist : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T), ∀ γ ∈ Formalism.L2.Theta.GQ A, ∀ a ∈ GinfC A, ∀ γ' ∈ Formalism.L2.Theta.GQ WW, ∀ a' ∈ GinfC WW,
-      γ * a ∈ GfC A → γ' * a' ∈ GfC WW →
-      ∃ (n : ℕ) (c : Fin n → ℂ) (w : Fin n → WO (GlobalTheory.Grid.neg A) WW), (∀ p, IsAlgebraic ℚ (c p)) ∧
-        (∀ p, (w p).map (infPart D) = 0) ∧
-        X.ω t (γ * a, γ' * a') X.vac = ∑ p, c p • heisO W.ψ (GlobalTheory.Grid.neg A) WW (w p) X.vac := by
-  first | exact @_root_.GlobalTheory.MovedAlgRat.rat_real_algebraic_combination_of_moved
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsRatRealAlgebraicCombinationTwist =====
@@ -944,21 +855,6 @@ end GlobalTheory.SplitSourceAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.split_source_vector_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T) (N : ℕ) (e : AE D) (P : Pl D.host.E), Formalism.L2.NTheta.IsIdemAt e P → ((N : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal →
-    ∀ g ∈ GfC A, Formalism.L2.Theta.SuppAt e A g →
-      GlobalTheory.MovedAlg.IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (g, 1) X.vac) := by
-  first | exact @_root_.GlobalTheory.SplitSourceAlg.split_source_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitSourceAlgebraicCombination =====
@@ -1627,10 +1523,6 @@ open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 namespace GlobalTheory.SplitVacAlg
 open GlobalTheory.MovedAlg
-section Comb
-variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f₀ : WO S T → ℂ}
-end Comb
-
 theorem split_vacuum_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
     IsBottomTri W i j X → ∀ (t : T) (N : ℕ) (e : AE D) (P : Pl D.host.E), Formalism.L2.NTheta.IsIdemAt e P → ((N : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal →
@@ -1683,21 +1575,6 @@ end GlobalTheory.SplitVacAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.split_place_vacuum_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T) (N : ℕ) (e : AE D) (P : Pl D.host.E), Formalism.L2.NTheta.IsIdemAt e P → ((N : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal →
-    ∀ h ∈ GfC WW, Formalism.L2.Theta.SuppAt e WW h →
-      GlobalTheory.MovedAlg.IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (1, h) X.vac) := by
-  first | exact @_root_.GlobalTheory.SplitVacAlg.split_vacuum_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitVacuumAlgebraicCombination =====
@@ -1741,11 +1618,11 @@ theorem support_split_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T]
   have hW : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (1, g') X.vac) :=
     GlobalTheory.T.unitary_induction_on_splitPlaceSupport WW N (fun h => IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (1, h) X.vac)) hone
       (fun x y hx hy => by simpa using hmul _ _ hx hy)
-      (fun e P hP' hN' x hx hsx => _root_.GlobalTheory.T.split_place_vacuum_algebraic hP hI hL hX t N e P hP' hN' x hx hsx) g' hg' hs'
+      (fun e P hP' hN' x hx hsx => _root_.GlobalTheory.SplitVacAlg.split_vacuum_algebraic_combination hP hI hL hX t N e P hP' hN' x hx hsx) g' hg' hs'
   have hA : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (g, 1) X.vac) :=
     GlobalTheory.T.unitary_induction_on_splitPlaceSupport A N (fun x => IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (x, 1) X.vac)) hone
       (fun x y hx hy => by simpa using hmul _ _ hx hy)
-      (fun e P hP' hN' x hx hsx => _root_.GlobalTheory.T.split_source_vector_algebraic hP hI hL hX t N e P hP' hN' x hx hsx) g hg hs
+      (fun e P hP' hN' x hx hsx => _root_.GlobalTheory.SplitSourceAlg.split_source_algebraic_combination hP hI hL hX t N e P hP' hN' x hx hsx) g hg hs
   have := hmul _ _ hA hW
   simp only [Prod.mk_mul_mk, mul_one, one_mul] at this
   exact this
@@ -1753,24 +1630,6 @@ end GlobalTheory.MovedAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.moved_support_theta_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X → ∀ (t : T) (N : ℕ), 0 < N → ∀ g ∈ GfC A, ∀ g' ∈ GfC WW,
-      GlobalTheory.UnRep.SuppSplit (GlobalTheory.Member.cF D) N ((finHom A) g : Matrix (Fin A.rank) (Fin A.rank) _) →
-      GlobalTheory.UnRep.SuppSplit (GlobalTheory.Member.cF D) N ((finHom WW) g' : Matrix (Fin WW.rank) (Fin WW.rank) _) →
-      ∃ (n : ℕ) (c : Fin n → ℂ) (w : Fin n → WO (GlobalTheory.Grid.neg A) WW), (∀ p, IsAlgebraic ℚ (c p)) ∧
-        (∀ p, (w p).map (infPart D) = 0) ∧
-        X.ω t (g, g') X.vac = ∑ p, c p • heisO W.ψ (GlobalTheory.Grid.neg A) WW (w p) X.vac := by
-  first | exact @_root_.GlobalTheory.MovedAlg.support_split_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SupportSplitAlgebraicCombination =====
@@ -1867,12 +1726,12 @@ theorem moved_translate_eq_algebraic_combination : ∀ {D : D7} {T : Type} [Fini
     simp only [Prod.mk_mul_mk, mul_assoc]
   obtain ⟨ζ, hζ, hkv⟩ := hlev k hk k' hk' hkc hkc'
   have h1 : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (s, s') X.vac) :=
-    _root_.GlobalTheory.T.moved_support_theta_algebraic hP hI hL hX t N hN s hs s' hs' hss hss'
+    _root_.GlobalTheory.MovedAlg.support_split_algebraic_combination hP hI hL hX t N hN s hs s' hs' hss hss'
   have h2 : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t ((s, s') * (k, k')) X.vac) := by
     rw [map_mul, Module.End.mul_apply, hkv, map_smul]
     exact h1.smul hζ
   have h3 : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (γ * a, γ' * a') X.vac) :=
-    _root_.GlobalTheory.T.exists_rat_real_algebraic_combination_twist hP hI hL hX t γ hγ a ha γ' hγ' a' ha' hga hga'
+    _root_.GlobalTheory.MovedAlgRat.rat_real_algebraic_combination_of_moved hP hI hL hX t γ hγ a ha γ' hγ' a' ha' hga hga'
   have h4 : IsAlgComb W.ψ (GlobalTheory.Grid.neg A) WW X.vac (X.ω t (x, h) X.vac) := by
     rw [hpair, map_mul, Module.End.mul_apply]
     exact om_algComb hX hψ t _ _ h3 h2
@@ -1883,23 +1742,6 @@ end GlobalTheory.MovedAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.twisted_moved_translate_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∀ (t : T), ∀ x ∈ GfC A, ∀ h ∈ GfC WW, ∀ u : WO (GlobalTheory.Grid.neg A) WW, u.map (infPart D) = 0 →
-      ∃ (n : ℕ) (c : Fin n → ℂ) (w : Fin n → WO (GlobalTheory.Grid.neg A) WW), (∀ p, IsAlgebraic ℚ (c p)) ∧
-        (∀ p, (w p).map (infPart D) = 0) ∧
-        X.ω t (x, h) (heisO W.ψ (GlobalTheory.Grid.neg A) WW u X.vac) = ∑ p, c p • heisO W.ψ (GlobalTheory.Grid.neg A) WW (w p) X.vac := by
-  first | exact @_root_.GlobalTheory.MovedAlg.moved_translate_eq_algebraic_combination
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MovedTranslateEqAlgebraicCombination =====

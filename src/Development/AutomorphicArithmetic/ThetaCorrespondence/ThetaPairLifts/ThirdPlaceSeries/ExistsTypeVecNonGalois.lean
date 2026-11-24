@@ -208,7 +208,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
   have hj := fun k v => loc_piece π (s k v) (hs k v) (τ k v) (hτ k v) (I.i k v) (I.cont k v)
   choose j hjc hjP using hj
   have hinj := GlobalTheory.PlaceInj.splitPlace_v_injective D s hs
-  obtain ⟨c, hA, hKc⟩ := GlobalTheory.T.rowsAtLevels_fixed_principalCongruence_typePlaces R F cG Y hP s j hs hjc
+  obtain ⟨c, hA, hKc⟩ := _root_.GlobalTheory.RowLevConj.rows_fixed R F cG Y hP s j hs hjc
   obtain ⟨ρM, hρM⟩ := GlobalTheory.TypeAct.exists_rep D s j hinj _ ((principalLevelFrame.actM Y.PY (R.MY 0)).comp (MulAut.conj c).toMonoidHom)
   obtain ⟨ρV, hρV⟩ := GlobalTheory.TypeAct.exists_rep D s j hinj _ (rtHom D.host.E D.R.r)
   obtain ⟨b, hb⟩ := principalLevelFrame.rowRepR_occ R.θ (Y.eFT σ)
@@ -221,7 +221,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
   have hMult : Tm ∈ Mult.Mult R.θ (R.MY 0) (levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)))
       (levChi _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b))) := (Submodule.mem_inf.1 hG).1
   have hK := hKc b Tm hMult
-  have he := GlobalTheory.T.goodProjector_eq_goodIdempotent_typePlaces R F cG Y hP s j hs hjc c hA ρM hρM b Tm hK hG
+  have he := _root_.GlobalTheory.RowGood.good_idem_fix_conj R F cG Y hP s j hs hjc c hA ρM hρM b Tm hK hG
   obtain ⟨q, hq0, hq⟩ := detect_conj (principalLevelFrame.actM Y.PY (R.MY 0)) (principalLevelFrame.Minf R.θ Y.PY (R.MY 0))
     (principalLevelFrame.FinTyp.conjT π) c Tm hN hT0
 
@@ -233,7 +233,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
         ((ρV (GlobalTheory.GoodTypes.facHom D k v m) z' : KFix D s j (rtHom D.host.E D.R.r)) : GAf D.host.E D.R.r → ℂ) =
           q (ρM (GlobalTheory.GoodTypes.facHom D k v m) z) := by
     intro k v m z hz
-    obtain ⟨y, rfl⟩ := GlobalTheory.GLp.reduction_GL_surjective (D.host.g k) D.R.r m
+    obtain ⟨y, rfl⟩ := _root_.GlobalTheory.GLp.red_surjective (D.host.g k) D.R.r m
     obtain ⟨x, hx1, hx2⟩ := GlobalTheory.SplitSec.exists_trivOutside_loc D.host.E D.R.r (s k v)
       (Matrix.GeneralLinearGroup.map (j k v).toRingHom (GlobalTheory.GLp.inc _ _ y))
     have hl : IsLiftAt (s k v) (j k v) y x := ⟨hx1, hx2⟩
@@ -281,7 +281,7 @@ theorem typeVec_rows {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type}
       exact e1.symm
     · have hzf : conjL (z : GAf D.host.E D.R.r → ℂ) ∈ π.S := hz
       have hy0 : GlobalTheory.GLp.red (D.host.g k) D.R.r (Function.invFun (GlobalTheory.GLp.red (D.host.g k) D.R.r) h) = h :=
-        Function.invFun_eq (GlobalTheory.GLp.reduction_GL_surjective (D.host.g k) D.R.r h)
+        Function.invFun_eq (_root_.GlobalTheory.GLp.red_surjective (D.host.g k) D.R.r h)
       obtain ⟨x, hl⟩ : ∃ x, IsLiftAt (s k v) (j k v) (Function.invFun (GlobalTheory.GLp.red (D.host.g k) D.R.r) h) x :=
         GlobalTheory.SplitSec.exists_trivOutside_loc D.host.E D.R.r (s k v) _
       have eV := hρV k v _ x hl z
@@ -351,13 +351,6 @@ theorem exists_typeVec_nonGalois_ne_zero : _root_.GlobalTheory.HeightCounting.Up
 end Target
 end GlobalTheory.TypeVec
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.nonGalois_typeVec_fixed_by_e0 : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → OverRows fun _ _ _ _ w Z _ _ z _ Y => ∀ (I : GlobalTheory.TypeRec.Ident (w.st Z).toD7) cp, GlobalTheory.TypeRec.IsComp I (repOf Y) cp → ∀ σ, ∃ (V : Type) (_ : AddCommGroup V) (_ : Module ℂ V) (ρ : Representation ℂ (G0g (w.st Z).toD7.nd) V) (W : Submodule ℂ V) (x : V), (∀ k v, GlobalTheory.GoodTypes.ConjIn ρ W (GlobalTheory.GoodTypes.facHom (w.st Z).toD7 k v) (cp σ k v).ρ) ∧ x ≠ 0 ∧ (∀ a, ρ.asAlgebraHom a x ∈ W) ∧ ρ.asAlgebraHom (w.st Z).toD7.ntypes.e0 x = x := by
-  first | exact @_root_.GlobalTheory.TypeVec.exists_typeVec_nonGalois_ne_zero
 end
 end
 end -- clump:auto

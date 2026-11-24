@@ -960,7 +960,7 @@ theorem _root_.UpperTheory.Gal.Int.Inp.holdsS_all_phi : UpperTheory.Gal.Int.Inp.
   intro hIn _ hgood E Ω _ _ _ _ _ _ l _ ι a ha π χ hsc r hr w _ B hB Pr AI hT A h O _ _ _ Bw hj g
   have hF := GlobalTheory.automorphicFormsFiniteGL
   have hQ := GlobalTheory.QuadLiftBridge.quadLift hIn.ac hIn.js
-  obtain ⟨Q, hQdec, hQsplit, hQram, hQgood⟩ := (GlobalTheory.T.infinite_quadraticCM_goodBaseChange_split hF E Ω l a π w).nonempty
+  obtain ⟨Q, hQdec, hQsplit, hQram, hQgood⟩ := (_root_.GlobalTheory.GalCut.infinite_qcm_split_good hF E Ω l a π w).nonempty
   obtain ⟨P, hP⟩ := hQ E Q.K Q.two a ha π hQram
   obtain ⟨⟨χ', hsc'⟩, -⟩ := GlobalTheory.T.polarizedPair_baseChange_polarized_same_weight hF hIn.js hIn.gk E Q.K l a ha π χ P hP hsc.all
   have hsc'' : InScope .good l P χ' := ⟨hsc'.1, hsc'.2.1, hQgood P hP⟩

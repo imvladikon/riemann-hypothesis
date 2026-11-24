@@ -1041,9 +1041,6 @@ theorem ε_mulVec {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {d : ℕ} 
     (S.ε f g).mulVec ((S.ε g h).mulVec v) = (S.ε f h).mulVec v := by
   rw [Matrix.mulVec_mulVec, S.ε_trans]
 
-theorem hom_comp_assoc {l : ℕ} {R : Type} [CommRing R] {X Y Z W : Obj l R} (p : Hom Z W) (q : Hom Y Z)
-    (r : Hom X Y) : (p.comp q).comp r = p.comp (q.comp r) := Hom.ext' rfl
-
 end GlobalTheory.BSP.EvalEx
 
 namespace GlobalTheory.BSP
@@ -1109,11 +1106,11 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d
     obtain ⟨Q₁, a₁, h₁, hcomm, -, hinj⟩ := hp
     apply hinj
     have e1 := congrFun (hvv Q' (c.comp a) (c.comp g) Q₁ h₁ a₁ hcomm x) i
-    have e2 := congrFun (hvv Q a g Q₁ (h₁.comp c) a₁ (hcomm.trans (EvalEx.hom_comp_assoc h₁ c a).symm) x) i
+    have e2 := congrFun (hvv Q a g Q₁ (h₁.comp c) a₁ (hcomm.trans (_root_.GlobalTheory.BSP.LevH.hom_comp_assoc h₁ c a).symm) x) i
     have e3 : (h₁.comp c).f ((vv Q a g) x i) = h₁.f (c.f ((vv Q a g) x i)) := rfl
     refine e1.trans (Eq.trans ?_ (e3 ▸ e2).symm)
     exact congrArg (fun φ => (S.ε φ (a₁.comp f)).mulVec (fun j => a₁.f (u x j)) i)
-      (EvalEx.hom_comp_assoc h₁ c g).symm
+      (_root_.GlobalTheory.BSP.LevH.hom_comp_assoc h₁ c g).symm
 
 end GlobalTheory.BSP
 end -- clump:auto
@@ -1322,22 +1319,6 @@ section Algebra
 variable {A B M N : Type} [CommRing A] [CommRing B] [AddCommGroup M] [Module A M] [AddCommGroup N] [Module B N]
   {f : A →+* B} {u : M →ₛₗ[f] N}
 
-theorem span_range_eq_top (h : SemiBC u) : Submodule.span B (Set.range u) = ⊤ := by
-  obtain ⟨w, -, hw⟩ := h (N ⧸ Submodule.span B (Set.range u)) 0
-  have h1 := hw (Submodule.mkQ _) fun x =>
-    (Submodule.Quotient.mk_eq_zero _).2 (Submodule.subset_span ⟨x, rfl⟩)
-  have h2 := hw 0 fun _ => rfl
-  rw [← Submodule.ker_mkQ (Submodule.span B (Set.range u)), h1, ← h2, LinearMap.ker_zero]
-
-theorem induction_bc (h : SemiBC u) (p : N → Prop) (h0 : ∀ x, p (u x)) (h1 : ∀ y z, p y → p z → p (y + z))
-    (h2 : ∀ (b : B) y, p y → p (b • y)) (y : N) : p y := by
-  have hy : y ∈ Submodule.span B (Set.range u) := by rw [span_range_eq_top h]; trivial
-  induction hy using Submodule.span_induction with
-  | mem _ hx => obtain ⟨x, rfl⟩ := hx; exact h0 x
-  | zero => rw [← map_zero u]; exact h0 0
-  | add y z _ _ hy hz => exact h1 y z hy hz
-  | smul b y _ hy => exact h2 b y hy
-
 theorem exists_ext {C P : Type} [CommRing C] [AddCommGroup P] [Module C P] (h : SemiBC u) (τ : B →+* C)
     (w : M →+ P) (hw : ∀ (a : A) x, w (a • x) = τ (f a) • w x) :
     ∃ κ : N →ₛₗ[τ] P, ∀ x, κ (u x) = w x := by
@@ -1354,7 +1335,7 @@ theorem semiBC_cancel {C P : Type} [CommRing C] [AddCommGroup P] [Module C P] {�
       map_add' := fun x y => by rw [map_add (f := _), map_add (f := _)]
       map_smul' := fun a x => by rw [u.map_smulₛₗ, m.map_smulₛₗ, hρ] }
   refine ⟨W, fun y => ?_, fun W' hW' => hU W' fun x => by rw [← hκ]; exact hW' (u x)⟩
-  refine induction_bc h (fun y => W (κ y) = m y) (fun x => ?_) (fun y z hy hz => ?_) (fun b y hy => ?_) y
+  refine _root_.GlobalTheory.BSP.ProjDescent.induction h (fun y => W (κ y) = m y) (fun x => ?_) (fun y z hy hz => ?_) (fun b y hy => ?_) y
   · show W (κ (u x)) = m (u x)
     rw [hκ]; exact hW x
   · show W (κ (y + z)) = m (y + z)
@@ -1583,7 +1564,7 @@ theorem coord_relation {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {d : 
     (f : Hom bk.prism C) (hEnzd : BK.hf f bk.E ∈ nonZeroDivisors C.A) (κ : P →ₛₗ[h.f] (Fin d → C.A))
     (hκu : ∀ x i, κ (u x) i = C.D.φ (V.v h f x i)) (c : C.A) (hc : c * BK.hf f bk.E = h.f t) (y : P) :
     V.v h f (L y) = c ^ S.a • (S.A.map (BK.hf f)) *ᵥ (κ y) := by
-  refine induction_bc hu (fun y => V.v h f (L y) = c ^ S.a • (S.A.map (BK.hf f)) *ᵥ (κ y))
+  refine _root_.GlobalTheory.BSP.ProjDescent.induction hu (fun y => V.v h f (L y) = c ^ S.a • (S.A.map (BK.hf f)) *ᵥ (κ y))
     (fun x => ?_) (fun y z (hy : V.v h f (L y) = _) (hz : V.v h f (L z) = _) => ?_)
     (fun b y (hy : V.v h f (L y) = _) => ?_) y
   · show V.v h f (L (u x)) = c ^ S.a • (S.A.map (BK.hf f)) *ᵥ (κ (u x))
@@ -1640,7 +1621,7 @@ theorem linFrob_inv_pow : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
     ⟨piMapMul q.f _, piMapMul_apply q.f _⟩
   have hw1 : ∀ y, κD y = u₁ (κ y) := by
     intro y
-    refine induction_bc hu (fun y => κD y = u₁ (κ y)) (fun x => ?_)
+    refine _root_.GlobalTheory.BSP.ProjDescent.induction hu (fun y => κD y = u₁ (κ y)) (fun x => ?_)
       (fun y z (hy : κD y = _) (hz : κD z = _) => ?_) (fun b y (hy : κD y = _) => ?_) y
     · exact (funext fun i => (hκDu x i).trans ((congrArg D.D.φ (V.v_nat p h f x i)).trans
         ((p.f_φ _).symm.trans (congrArg p.f (hκu x i).symm)))).trans (hu₁ _).symm
@@ -1650,7 +1631,7 @@ theorem linFrob_inv_pow : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
         ((congrArg u₁ (κ.map_smulₛₗ b y)).trans (u₁.map_smulₛₗ _ _)).symm)
   have hw2 : ∀ y, κD y = u₂ (κ y) := by
     intro y
-    refine induction_bc hu (fun y => κD y = u₂ (κ y)) (fun x => ?_)
+    refine _root_.GlobalTheory.BSP.ProjDescent.induction hu (fun y => κD y = u₂ (κ y)) (fun x => ?_)
       (fun y z (hy : κD y = _) (hz : κD z = _) => ?_) (fun b y (hy : κD y = _) => ?_) y
     · refine (funext fun i => ?_).trans (hu₂ _).symm
       exact (hκDu x i).trans ((congrArg (fun v => D.D.φ (v i)) (e1 x)).trans

@@ -359,7 +359,7 @@ def IW : Ideal (LamL (hsW hw)) := Ideal.span (Set.range fun i : Fin (WeightFamil
   ιW (hsW hw) (sfr (xplus X E hM) la G.w i.succ : Lw (xplus X E hM) la G.w))
 
 def RGW : Subring (LamL (hsW hw)) :=
-  stabSub (hdL_zero (hsW hw)) (hdW_mul (hsW hw)) (intSub (fun ζ => (hsW hw ζ).T) (evL (hsW hw))) ⊓
+  stabSub (hdL_zero (hsW hw)) (_root_.Formalism.L2.Pj.hdL_mul (hsW hw)) (intSub (fun ζ => (hsW hw ζ).T) (evL (hsW hw))) ⊓
     appSub (ιW (hsW hw)) (Frac0 (xplus X E hM) la G.w).toSubring (IW hw)
 
 theorem ιW_Jid {z : ↥(Frac0 (xplus X E hM) la G.w)} (hz : z ∈ Jid (xplus X E hM) la G.w) :
@@ -371,7 +371,7 @@ theorem ιW_Jid {z : ↥(Frac0 (xplus X E hM) la G.w)} (hz : z ∈ Jid (xplus X 
   | smul a x _ hx => rw [smul_eq_mul, Subalgebra.coe_mul, map_mul]; exact Ideal.mul_mem_left _ _ hx
 
 theorem RGW_hd (β : Idx D j G.N →₀ ℕ) (r : LamL (hsW hw)) (hr : r ∈ RGW hw) : hdL (hsW hw) β r ∈ RGW hw :=
-  ⟨stabSub_hd _ _ _ β hr.1, appSub_hd (hdL_zero (hsW hw)) (hdW_mul (hsW hw)) (ιW (hsW hw)) _ _
+  ⟨stabSub_hd _ _ _ β hr.1, appSub_hd (hdL_zero (hsW hw)) (_root_.Formalism.L2.Pj.hdL_mul (hsW hw)) (ιW (hsW hw)) _ _
     (fun β x => hasse (xplus X E hM) la G.w β x) (hdW_ι (hsW hw))
     (fun β f hf => (mem_Frac0 _ _ _).2 (hasse_mem_Hfr _ _ _ ((mem_Frac0 _ _ _).1 hf) β)) β hr.2⟩
 
@@ -681,7 +681,7 @@ theorem liftModelSt_of (G : GlobalFamilyData (xplus X E hM) ka wL wF) (la : Heig
     hd := hdL (hsW hw)
     hd_zero := hdL_zero (hsW hw)
     hd_ι := hdW_ι (hsW hw)
-    hd_mul := hdW_mul (hsW hw)
+    hd_mul := _root_.Formalism.L2.Pj.hdL_mul (hsW hw)
     ev := evL (hsW hw)
     ev_ι := evW_ι (hsW hw)
     RG := RGW hw
@@ -690,8 +690,8 @@ theorem liftModelSt_of (G : GlobalFamilyData (xplus X E hM) ka wL wF) (la : Heig
     e' := (ιW (hsW hw) (FP : Lw (xplus X E hM) la G.w) * ↑uFQ.unit⁻¹) * g0L hw g0
     e'_hd := fun β hβ => by
       rw [hs_eq]
-      exact hd_mul_const (hdW_mul _) (hd_mul_const (hdW_mul _) (hconst p hpc)
-        (hd_inv_const (hdL_zero _) (hdW_mul _) uQ (hconst q hqc))) (hconst _ fun β hβ => hasseRp_emb _ _ hβ _) β hβ
+      exact hd_mul_const (_root_.Formalism.L2.Pj.hdL_mul _) (hd_mul_const (_root_.Formalism.L2.Pj.hdL_mul _) (hconst p hpc)
+        (hd_inv_const (hdL_zero _) (_root_.Formalism.L2.Pj.hdL_mul _) uQ (hconst q hqc))) (hconst _ fun β hβ => hasseRp_emb _ _ hβ _) β hβ
     e'_int := fun ζ => by
       rw [hs_eq, map_mul, map_mul, evL_inv, evW_ι, evW_ι, evW_ι, SecPt.lift_alg, SecPt.lift_alg, SecPt.lift_alg]
       obtain ⟨h1, h2, h3⟩ := hpq ζ

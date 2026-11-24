@@ -46,6 +46,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InnerKAvgNeZero
 import Mathlib.Tactic.Linter.HaveILetI
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingReindex
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
@@ -61,7 +62,7 @@ import Mathlib.Tactic.TypeStar
 -- Members: Development.AbelianVarietyTheory.Proofs.HeightProofs.AvgDerFamGrowth, Development.AbelianVarietyTheory.Proofs.HeightProofs.AvgDerFamGrowthStatement, Development.AbelianVarietyTheory.Proofs.HeightProofs.ContinuousOnAvgRightTranslates, Development.AbelianVarietyTheory.Proofs.HeightProofs.ContinuousOnAvgRightTranslatesStatement, Development.AbelianVarietyTheory.Proofs.HeightProofs.DerFamExpandWords, Development.AbelianVarietyTheory.Proofs.HeightProofs.DerFamExpandWordsStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdOfFnEqSingle, Development.AbelianVarietyTheory.Proofs.HeightProofs.ExpSecondKindCoordinates, Development.AbelianVarietyTheory.Proofs.HeightProofs.ExpSecondKindCoordinatesStatement, Development.AbelianVarietyTheory.Proofs.HeightProofs.HasFDerivAtDerFamProdExp, Development.AbelianVarietyTheory.Proofs.HeightProofs.HasFDerivAtDerFamProdExpStatement, Development.AbelianVarietyTheory.Proofs.HeightProofs.MeasurableDerFamComp, Development.AbelianVarietyTheory.Proofs.HeightProofs.MeasurableDerFamCompStatement, Development.AbelianVarietyTheory.Proofs.HeightProofs.CompactAverageContinuousOnUniformModerateGrowth, Development.AbelianVarietyTheory.Proofs.HeightProofs.CompactAverageContinuousOnUniformModerateGrowthStatement
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.AvgDerFamGrowth =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.HeightProofs.AvgDerFamGrowth", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormSubLeOfDerivIcc\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddHsConjLe\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactHaarRightInvariantInst\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.HeightProofs.AvgDerFamGrowth", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormSubLeOfDerivIcc\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddHsConjLe\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactHaarRightInvariantInst\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InnerKAvgNeZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -77,10 +78,6 @@ noncomputable section
 namespace GlobalTheory.KAvgDeriv
 
 variable {n : ℕ} {ε : Fin n → Bool}
-
-theorem hs_nonneg' (g : GlobalTheory.TypeSum.Mx n) : 0 ≤ hs g := by
-  show 0 ≤ ∑ i, ∑ j, ‖g i j‖ ^ 2
-  positivity
 
 theorem continuous_hs' : Continuous (fun g : GlobalTheory.TypeSum.Mx n => hs g) := by
   show Continuous (fun g : GlobalTheory.TypeSum.Mx n => ∑ i, ∑ j, ‖g i j‖ ^ 2)
@@ -127,27 +124,6 @@ private theorem toMK_conjTranspose_mul_Jm_mul_toMK_eq_Jm (k : ↥(Formalism.REAL
     (Formalism.REAL.toMK k)ᴴ * Formalism.REAL.Jm ε * Formalism.REAL.toMK k = Formalism.REAL.Jm ε :=
   (k : Formalism.REAL.UJ ε).2
 
-private theorem toMK_mem_UJset (k : ↥(Formalism.REAL.KG ε)) : Formalism.REAL.toMK k ∈ UJset ε :=
-  toMK_conjTranspose_mul_Jm_mul_toMK_eq_Jm k
-
-private theorem mul_mem_UJset_height {g h : GlobalTheory.TypeSum.Mx n} (hg : g ∈ UJset ε) (hh : h ∈ UJset ε) :
-    g * h ∈ UJset ε := by
-  have hg' : gᴴ * Formalism.REAL.Jm ε * g = Formalism.REAL.Jm ε := hg
-  have hh' : hᴴ * Formalism.REAL.Jm ε * h = Formalism.REAL.Jm ε := hh
-  show (g * h)ᴴ * Formalism.REAL.Jm ε * (g * h) = Formalism.REAL.Jm ε
-  rw [Matrix.conjTranspose_mul,
-    show hᴴ * gᴴ * Formalism.REAL.Jm ε * (g * h) = hᴴ * (gᴴ * Formalism.REAL.Jm ε * g) * h by
-      simp only [mul_assoc], hg', hh']
-
-private theorem exp_smul_mem_UJset_of_mem_lieSet' {X : GlobalTheory.TypeSum.Mx n} (hX : X ∈ lieSet ε) (t : ℝ) :
-    NormedSpace.exp (t • X) ∈ UJset ε := by
-  have hX' : Xᴴ * Formalism.REAL.Jm ε + Formalism.REAL.Jm ε * X = 0 := hX
-  have hG : Formalism.REAL.inG ε (t • X) := by
-    show (t • X)ᴴ * Formalism.REAL.Jm ε + Formalism.REAL.Jm ε * (t • X) = 0
-    rw [Matrix.conjTranspose_smul, star_trivial, Matrix.smul_mul, Matrix.mul_smul, ← smul_add, hX',
-      smul_zero]
-  exact Formalism.REAL.f1alg_exp_inUJ ε (t • X) hG
-
 private theorem toMK_inv_mul_mul_toMK_mem_lieSet (k : ↥(Formalism.REAL.KG ε)) {X : GlobalTheory.TypeSum.Mx n} (hX : X ∈ lieSet ε) :
     (Formalism.REAL.toMK k)⁻¹ * X * Formalism.REAL.toMK k ∈ lieSet ε :=
   GlobalTheory.TypeSum.GrowthAtPlace.conj_lie (isUnit_toMK k) (toMK_conjTranspose_mul_Jm_mul_toMK_eq_Jm k) hX
@@ -160,7 +136,7 @@ private theorem mem_lieSet_of_mem_map_toMK_conj (k : ↥(Formalism.REAL.KG ε)) 
   exact toMK_inv_mul_mul_toMK_mem_lieSet k (hl Z hZ)
 
 private theorem one_add_hs_nonneg (g : GlobalTheory.TypeSum.Mx n) : 0 ≤ 1 + hs g := by
-  have := hs_nonneg' g
+  have := _root_.GlobalTheory.TypeSum.hs_nonneg g
   linarith
 
 private theorem mul_one_add_hs_mul_pow_le_abs_mul_pow {N : ℕ} {C MK ML : ℝ} {z k : GlobalTheory.TypeSum.Mx n}
@@ -203,7 +179,7 @@ theorem avg_derFam_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (N : ℕ) (F : L
     obtain ⟨C, hC⟩ := hG (X :: l) hXl
     obtain ⟨C0, hC0⟩ := hG l hl
     obtain ⟨ML, hML⟩ := bound_line g X
-    have hgt : ∀ t : ℝ, g * NormedSpace.exp (t • X) ∈ UJset ε := fun t => mul_mem_UJset_height hg (exp_smul_mem_UJset_of_mem_lieSet' hX t)
+    have hgt : ∀ t : ℝ, g * NormedSpace.exp (t • X) ∈ UJset ε := fun t => _root_.GlobalTheory.TypeSum.mul_mem_UJ hg (_root_.GlobalTheory.TypeSum.exp_mem_UJ hX t)
     have hb : ∀ (L : List (GlobalTheory.TypeSum.Mx n)) (C : ℝ),
         (∀ k : ↥(Formalism.REAL.KG ε), ∀ z ∈ UJset ε,
           ‖F (L.map fun Y => (Formalism.REAL.toMK k)⁻¹ * Y * Formalism.REAL.toMK k) z‖ ≤ C * (1 + hs z) ^ N) →
@@ -214,7 +190,7 @@ theorem avg_derFam_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (N : ℕ) (F : L
       intro L C hC k t ht
       rw [norm_mul]
       exact mul_le_mul (hE k)
-        ((hC k _ (mul_mem_UJset_height (hgt t) (toMK_mem_UJset k))).trans (mul_one_add_hs_mul_pow_le_abs_mul_pow (hMK k) (hML t ht)))
+        ((hC k _ (_root_.GlobalTheory.TypeSum.mul_mem_UJ (hgt t) (_root_.GlobalTheory.TypeSum.KCoef.toMK_mem_UJ k))).trans (mul_one_add_hs_mul_pow_le_abs_mul_pow (hMK k) (hML t ht)))
         (norm_nonneg _) hE0
     have h0 : (0 : ℝ) ∈ Set.Icc (-1 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
     have key := hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := Formalism.REAL.muK ε) (x₀ := (0 : ℝ))
@@ -240,7 +216,7 @@ theorem avg_derFam_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (N : ℕ) (F : L
           intro s
           rw [mul_assoc g (Formalism.REAL.toMK k), mul_exp_conj hk X s, mul_assoc]
         have hd := GlobalTheory.TypeSum.IsDerFam.hasDerivAt_exp hF (mem_lieSet_of_mem_map_toMK_conj k hl) (toMK_inv_mul_mul_toMK_mem_lieSet k hX)
-          (mul_mem_UJset_height hg (toMK_mem_UJset k)) t
+          (_root_.GlobalTheory.TypeSum.mul_mem_UJ hg (_root_.GlobalTheory.TypeSum.KCoef.toMK_mem_UJ k)) t
         simp only [hm]
         exact hd.const_mul (e k))
     refine key.2.congr_deriv ?_
@@ -255,7 +231,7 @@ theorem avg_derFam_growth : ∀ (n : ℕ) (ε : Fin n → Bool) (N : ℕ) (F : L
       intro k
       rw [norm_mul]
       exact mul_le_mul (hE k)
-        ((hC k _ (mul_mem_UJset_height hg (toMK_mem_UJset k))).trans (mul_one_add_hs_mul_pow_le_abs_mul_pow (hMK k) le_rfl))
+        ((hC k _ (_root_.GlobalTheory.TypeSum.mul_mem_UJ hg (_root_.GlobalTheory.TypeSum.KCoef.toMK_mem_UJ k))).trans (mul_one_add_hs_mul_pow_le_abs_mul_pow (hMK k) le_rfl))
         (norm_nonneg _) hE0
     refine (norm_integral_le_of_norm_le_const (Filter.Eventually.of_forall hk)).trans (le_of_eq ?_)
     rw [mul_pow, mul_pow]
@@ -325,10 +301,6 @@ theorem mul_mem_UJset_of_inUJ {n : ℕ} {ε : Fin n → Bool} {y m : Matrix (Fin
         simp only [Matrix.mul_assoc]
     _ = Formalism.REAL.Jm ε := by rw [hy', hm']
 
-theorem continuous_maximalCompactSubgroup_toMatrix {n : ℕ} (ε : Fin n → Bool) :
-    Continuous (fun k : Formalism.REAL.KG ε => Formalism.REAL.toMK k) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
-
 theorem continuousOn_avg_right_translates : ∀ (n : ℕ) (ε : Fin n → Bool) (f : GlobalTheory.TypeSum.Mx n → ℂ),
     ContinuousOn f (UJset ε) →
     ∀ e : ↥(Formalism.REAL.KG ε) → ℂ, Continuous e →
@@ -349,7 +321,7 @@ theorem continuousOn_avg_right_translates : ∀ (n : ℕ) (ε : Fin n → Bool) 
       fun p => mul_mem_UJset_of_inUJ p.1.2 ((p.2 : Formalism.REAL.UJ ε).2)
     exact hf.comp_continuous
       ((continuous_subtype_val.comp continuous_fst).matrix_mul
-        ((continuous_maximalCompactSubgroup_toMatrix ε).comp continuous_snd)) hmaps
+        ((_root_.GlobalTheory.TypeSum.continuous_toMK ε).comp continuous_snd)) hmaps
   have h := continuous_parametric_integral_of_continuous (μ := Formalism.REAL.muK ε) hF isCompact_univ
   simp only [Measure.restrict_univ] at h
   exact h
@@ -506,12 +478,6 @@ open scoped Matrix.Norms.Operator ContDiff
 
 variable {n : ℕ}
 
-theorem ofFn_prod_single {M : Type*} [Monoid M] : ∀ {d : ℕ} (g : Fin d → M) (j : Fin d),
-    (∀ i, i ≠ j → g i = 1) → (List.ofFn g).prod = g j := by
-  first
-  | exact _root_.GlobalTheory.ProductOfFnSingle.prod_ofFn_eq_single
-  | (intros; exact _root_.GlobalTheory.ProductOfFnSingle.prod_ofFn_eq_single ..)
-
 def lc {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) : (Fin d → ℝ) →L[ℝ] Matrix (Fin n) (Fin n) ℂ :=
   ∑ i, (ContinuousLinearMap.proj i : (Fin d → ℝ) →L[ℝ] ℝ).smulRight (b i)
 
@@ -521,7 +487,7 @@ theorem lc_apply {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) (v : Fin d
 theorem expProd_line {d : ℕ} (b : Fin d → Matrix (Fin n) (Fin n) ℂ) (j : Fin d) (r : ℝ) :
     (List.ofFn fun i => NormedSpace.exp ((r • Pi.single j (1 : ℝ) : Fin d → ℝ) i • b i)).prod =
       NormedSpace.exp (r • b j) := by
-  rw [ofFn_prod_single _ j]
+  rw [_root_.GlobalTheory.ProductOfFnSingle.prod_ofFn_eq_single _ j]
   · simp
   · intro i hi
     simp [hi]
@@ -946,11 +912,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open MeasureTheory Filter Topology
 
 
-theorem _root_.GlobalTheory.T.measurable_derFam_comp_continuous_of_mem_UJset : ∀ (n : ℕ) (ε : Fin n → Bool) (F : List (GlobalTheory.TypeSum.Mx n) → GlobalTheory.TypeSum.Mx n → ℂ), GlobalTheory.TypeSum.IsDerFam ε F →
-    ContinuousOn (F []) (UJset ε) → ∀ l : List (GlobalTheory.TypeSum.Mx n), (∀ Y ∈ l, Y ∈ lieSet ε) →
-    ∀ (T : Type) [TopologicalSpace T] [MeasurableSpace T] [OpensMeasurableSpace T] (φ : T → GlobalTheory.TypeSum.Mx n),
-      Continuous φ → (∀ t, φ t ∈ UJset ε) → Measurable (fun t => F l (φ t)) := by
-  first | exact @GlobalTheory.TypeSum.measurable_derFam_comp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.HeightProofs.MeasurableDerFamCompStatement =====
@@ -1081,7 +1042,7 @@ theorem continuousOn_and_umg_kAvg : ∀ (n : ℕ) (ε : Fin n → Bool) (f : Glo
     refine Finset.measurable_sum _ fun J _ => Measurable.mul ?_ ?_
     · exact Finset.measurable_prod _ fun j _ =>
         Complex.measurable_ofReal.comp (hcc _ _ (hl _ (List.get_mem l j))).measurable
-    · exact GlobalTheory.T.measurable_derFam_comp_continuous_of_mem_UJset n ε F hFd hF0c _ (hbw J) (↥(KG ε)) (fun k => z * toMK k)
+    · exact _root_.GlobalTheory.TypeSum.measurable_derFam_comp n ε F hFd hF0c _ (hbw J) (↥(KG ε)) (fun k => z * toMK k)
         (continuous_const.matrix_mul (continuous_toMK ε)) fun k => mul_mem_UJ hz (hK k)
   obtain ⟨hA, hB⟩ := GlobalTheory.T.avg_derFam_growth_alt n ε N F hFd hUb hMs e he
   refine ⟨N, _, fun y hy => ?_, hA, hB⟩

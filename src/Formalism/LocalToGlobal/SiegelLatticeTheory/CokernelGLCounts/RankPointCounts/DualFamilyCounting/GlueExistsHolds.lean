@@ -386,10 +386,7 @@ namespace Formalism.L2.SG.Pf.FamilyMeetLattice
 
 open Formalism.HermitianLattices.Ext.L3 Formalism.L2.SG.Pf.Cnt Formalism.L2.SG.Pf.GluingBases
 
-theorem alg_eq {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberField F] [Algebra F K]
-    (t : 𝓞 F) : algebraMap (𝓞 K) K (algebraMap (𝓞 F) (𝓞 K) t) = algebraMap F K (t : F) := by
-  first
-    | rfl
+alias alg_eq := _root_.Formalism.HermitianLattices.Ext.L3.MeanB.algebraMap_comp
 
 theorem family_meet_holds : FamMeet := by
   intro K F V _ _ _ _ _ _ _ _ _ _ _ hK hF h hs hnd U hUc M hM hMi 𝔭 h𝔭 b a hba π w c τ hg
@@ -584,7 +581,7 @@ theorem badFinite {Λ₀ : Submodule (𝓞 K) V} (hΛ₀ : Submodule.IsFullLatti
     rw [← hM.2]; exact Submodule.subset_span hy
   obtain ⟨n₁, hn₁, h₁⟩ : ∃ n : ℤ, n ≠ 0 ∧ ∀ x ∈ M, n • x ∈ N := by
     refine exists_zsmul_of_fg hM.1 fun y hy => ?_
-    obtain ⟨m, hm, hmy⟩ := Formalism.HermitianLatticesTheory.traceReal_mult Λ₀ hΛ₀ y
+    obtain ⟨m, hm, hmy⟩ := _root_.Bl.general_b_fact_second'''''.goal1 Λ₀ hΛ₀ y
     exact ⟨m, hm, Submodule.mem_inf.2 ⟨hmy, zsmul_mem (hMU y hy) m⟩⟩
   have hNfg : N.FG := Submodule.FG.of_le hΛ₀.fg inf_le_left
   obtain ⟨n₂, hn₂, h₂⟩ : ∃ n : ℤ, n ≠ 0 ∧ ∀ x ∈ N, n • x ∈ M := by
@@ -712,13 +709,10 @@ section -- clump:auto
 
 namespace Formalism.L2.SG.Pf.Cnt
 
-theorem glueExists_of (hloc : Formalism.L2.SG.Pf.G7.GlueLocal) : GlueExists :=
-  Formalism.L2.SG.Pf.G7.glueExists_of_local hloc
-
 theorem glueExists_of_fam (hJ : JordanExists) (hV : Formalism.L2.SG.Pf.GluingBases.GlueVecs)
     (h0 : Formalism.L2.SG.Pf.GluingBases.FamTop) (h1 : Formalism.L2.SG.Pf.GluingBases.FamGram) (h2 : Formalism.L2.SG.Pf.GluingBases.FamDual) :
     GlueExists :=
-  glueExists_of (Formalism.L2.SG.Pf.GluingBases.glueLocal_of_fam hJ hV h0 h1 h2 Formalism.L2.SG.Pf.FamilyMeetLattice.family_meet_holds)
+  _root_.Formalism.L2.SG.Pf.G7.glueExists_of_local (Formalism.L2.SG.Pf.GluingBases.glueLocal_of_fam hJ hV h0 h1 h2 Formalism.L2.SG.Pf.FamilyMeetLattice.family_meet_holds)
 
 end Formalism.L2.SG.Pf.Cnt
 end -- clump:auto

@@ -1545,15 +1545,9 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.UCanon
 
-theorem spMap_isDominant_of_injective {A B : Type} [CommRing A] [CommRing B] (f : A →+* B)
-    (hf : Function.Injective f) : IsDominant (spMap f) :=
-  ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical f).2 (by
-    rw [(RingHom.injective_iff_ker_eq_bot _).1 hf]
-    exact bot_le)⟩
-
 theorem spMap_ext_of_injective {A B : Type} [CommRing A] [IsDomain A] [CommRing B] {S : Scheme.{0}} [S.IsSeparated]
     (f : A →+* B) (hf : Function.Injective f) {a b : Sp A ⟶ S} (h : spMap f ≫ a = spMap f ≫ b) : a = b := by
-  haveI := spMap_isDominant_of_injective f hf
+  haveI := _root_.GlobalTheory.Ex.GoodTrait.isDominant_spMap f hf
   exact ext_of_isDominant_of_isSeparated (terminal.from S) (terminal.hom_ext _ _) (spMap f) h
 
 theorem isSeparated_of_projOver {R : Type} [CommRing R] {X : Scheme.{0}} {f : X ⟶ Sp R} (h : IsProjOver f) :
@@ -1689,8 +1683,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.ideal_eq_span_monomial_of_orders_along_completeDVR : ∀ (k : Type) [Field k] [CharZero k] (m e : ℕ) (I : Ideal (ChartRing k m e)) (a : Fin m → ℕ), (∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ ψ : ChartRing k m e →+* W, Function.Injective ψ → IsLocalHom ψ → I.map ψ = Ideal.span {ψ (∏ i, bdParam k m e i ^ a i)}) → I = Ideal.span {∏ i, bdParam k m e i ^ a i} := by
-  first | exact @GlobalTheory.MonoVal.eq_span_monomial_of_forall_cdvr
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealEqSpanMonomialOfOrdersAlongCompleteDVRStatement =====
@@ -1866,7 +1858,7 @@ theorem boundary_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
 
   have hdiv : idlAlong BD.idealSheaf ξ = Ideal.span {∏ i, C.s i ^ a i} := by
     rw [hprod]
-    refine GlobalTheory.T.ideal_eq_span_monomial_of_orders_along_completeDVR k m e _ _ fun W _ _ _ hW ψ hψ hψl => ?_
+    refine _root_.GlobalTheory.MonoVal.eq_span_monomial_of_forall_cdvr k m e _ _ fun W _ _ _ hW ψ hψ hψl => ?_
     rw [← hprod, ← idlAlong_comp_local]
     haveI : IsDiscreteValuationRing W := hW.1
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W

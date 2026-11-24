@@ -908,20 +908,6 @@ theorem ft_uniq_pf {m : ℕ} (s : ℂ) (hs : s ≠ 0) (g : (Fin m → Fin n → 
       ((s * Matrix.trace ((Matrix.of u)ᴴ * Matrix.of v)).re : ℂ)) * g v = 0) : g = 0 :=
   _root_.GlobalTheory.CompanionTheory.FourierMat.fourier_uniqueness m n s hs g hg hgi h0
 
-theorem up_decomp_closed : type_of% @up_decomp_pf := @up_decomp_pf
-
-theorem fam_deriv_closed : type_of% @fam_deriv_pf := @fam_deriv_pf
-
-theorem fam_int_hol_closed : type_of% @fam_int_hol_pf := @fam_int_hol_pf
-
-theorem iteratedDeriv_eq_of_real_closed : type_of% @iteratedDeriv_eq_of_real_pf := @iteratedDeriv_eq_of_real_pf
-
-theorem dcell_closed : type_of% @dcell_pf := @dcell_pf
-
-theorem hol_int_closed : type_of% @hol_int_pf := @hol_int_pf
-
-theorem ft_uniq_closed : type_of% @ft_uniq_pf := @ft_uniq_pf
-
 end PositivityTheory.SiegelWeilFormula.Kdil
 
 end

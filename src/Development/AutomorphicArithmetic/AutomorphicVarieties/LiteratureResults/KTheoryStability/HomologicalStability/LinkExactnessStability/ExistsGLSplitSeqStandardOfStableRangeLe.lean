@@ -165,18 +165,6 @@ end GlobalTheory.UnimodTransvect
 
 end
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exists_GL_moving_unimodular_pair_to_last_basis : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ (n : ℕ), s ≤ n → ∀ v f : Fin (n + 1) → R, f ⬝ᵥ v = 1 → ∃ g : GL (Fin (n + 1)) R, (g : Matrix (Fin (n + 1)) (Fin (n + 1)) R) *ᵥ v = Pi.single (Fin.last n) 1 ∧ f ᵥ* ((g⁻¹ : GL (Fin (n + 1)) R) : Matrix (Fin (n + 1)) (Fin (n + 1)) R) = Pi.single (Fin.last n) 1 := by
-  first
-  | exact @GlobalTheory.UnimodTransvect.main
-  | exact @GlobalTheory.UnimodTransvect.reach_last_one
-  | exact @GlobalTheory.UnimodTransvect.reach_of_last_one
-  | exact @GlobalTheory.UnimodTransvect.reach_trans
-  | exact @GlobalTheory.UnimodTransvect.vecMul_tv_inv
-  | exact @GlobalTheory.UnimodTransvect.tv_mulVec
-  | exact @GlobalTheory.UnimodTransvect.vecMulVec_zero'
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsGLMovingUnimodularPairToLastBasis =====
@@ -252,7 +240,7 @@ theorem core (s : ℕ) (hs : StableRangeLe R s) : ∀ (k m : ℕ) (v f : Fin k �
   | succ k ih =>
     intro m v f hvf hkm
     obtain ⟨m, rfl⟩ : ∃ m', m = m' + 1 := ⟨m - 1, by omega⟩
-    obtain ⟨g₁, hg₁v, hg₁f⟩ := GlobalTheory.T.exists_GL_moving_unimodular_pair_to_last_basis R s hs m (by omega) (v 0) (f 0) (by simpa using hvf 0 0)
+    obtain ⟨g₁, hg₁v, hg₁f⟩ := _root_.GlobalTheory.UnimodTransvect.main R s hs m (by omega) (v 0) (f 0) (by simpa using hvf 0 0)
     have hvl : ∀ j : Fin k, ((g₁ : Matrix _ _ R) *ᵥ v j.succ) (Fin.last m) = 0 := by
       intro j
       have key := dot_conj g₁ (f 0) (v j.succ)
@@ -348,12 +336,6 @@ theorem GlobalTheory.splitSeq_to_standard : ∀ (R : Type) [CommRing R] (s : ℕ
   · rw [Units.val_mul, ← mulVec_mulVec, (hg j).1, pGL_mulVec, hπ]
   · rw [_root_.mul_inv_rev, Units.val_mul, ← vecMul_vecMul, (hg j).2, vecMul_pGL_inv, hπ]
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exists_GL_splitSeq_standard_of_stableRangeLe : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ (n : ℕ) (l : List ((Fin n → R) × (Fin n → R))), l ∈ splitSeq R n → l.length + s ≤ n → ∀ ι : Fin l.length → Fin n, Function.Injective ι → ∃ g : GL (Fin n) R, ∀ j : Fin l.length, (g : Matrix (Fin n) (Fin n) R) *ᵥ (l.get j).1 = Pi.single (ι j) 1 ∧ (l.get j).2 ᵥ* ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) = Pi.single (ι j) 1 := by
-  first
-  | exact @GlobalTheory.splitSeq_to_standard
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsGLSplitSeqStandardOfStableRangeLe =====

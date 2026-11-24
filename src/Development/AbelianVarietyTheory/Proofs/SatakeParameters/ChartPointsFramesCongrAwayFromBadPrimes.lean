@@ -196,18 +196,6 @@ theorem intAt_single {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum
   · simpa using GlobalTheory.TopInv.intAt_nat (P := P) 1
   · simpa using GlobalTheory.TopInv.intAt_nat (P := P) 0
 
-theorem intAt_of_seam {D : D7} {X : Fields} (s : Seam D X) (P : HeightOneSpectrum (𝓞 X.E)) (z : X.E)
-    (h : IntAt (seamP s P) (s.iE z)) : IntAt P z := by
-  obtain ⟨r, c, hc, e⟩ := h
-  refine ⟨(RingOfIntegers.mapRingEquiv s.iE).symm r, (RingOfIntegers.mapRingEquiv s.iE).symm c, ?_, ?_⟩
-  · rwa [← mem_seamP s P, RingEquiv.apply_symm_apply]
-  · apply s.iE.injective
-    have k : ∀ w : 𝓞 D.host.E, s.iE (algebraMap (𝓞 X.E) X.E ((RingOfIntegers.mapRingEquiv s.iE).symm w)) = algebraMap _ _ w := by
-      intro w
-      conv_rhs => rw [← RingEquiv.apply_symm_apply (RingOfIntegers.mapRingEquiv s.iE) w]
-      rfl
-    rw [map_mul, k, k, e]
-
 theorem mem_stdAt_of_int {E : Type} [Field E] [NumberField E] [StarRing E] (P : HeightOneSpectrum (𝓞 E)) {n : ℕ}
     (g : Sp E n ≃ₗ[E] Sp E n) (hg : ∀ s l, IntAt P (g (Pi.single s 1) l)) (w : Sp E n) (hw : w ∈ stdAt E n P) :
     g w ∈ stdAt E n P := by
@@ -259,7 +247,7 @@ theorem frames_away : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a 
           (1 : Matrix (Fin (D.R.N j)) (Fin (D.R.N j)) D.host.E) l s))) →
       ∀ s l, IntAt P.1 ((((qOf P.1 : ℕ) : t.X.E) ^ ((t.cst μ).D P))⁻¹ * (g (Pi.single s 1) l - (Pi.single s 1 : Sp t.X.E (D.R.N j)) l)) := by
     intro g h s l
-    apply intAt_of_seam t.seam P.1
+    apply _root_.GlobalTheory.LevFrame.intAt_of_seam t.seam P.1
     have := h l s
     rw [entry, Matrix.one_apply] at this
     convert this using 1

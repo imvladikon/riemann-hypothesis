@@ -5,9 +5,9 @@ public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRulesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonHypercohomologyOfLocallyExactOnSuppoStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyMappingConeSecondVariableExactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonHypercohomologyOfLocallyExactOnSuppoStatement
 public import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,6 +48,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
 import Mathlib.Tactic.Linter.HaveILetI
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -137,7 +138,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeLocallyExactOfComponentSections =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeResolutionLocalChaseOnSupport =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeResolutionLocalChaseOnSupport", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass\npublic import Mathlib.Algebra.Homology.HomotopyCategory.KInjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRulesStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeResolutionLocalChaseOnSupport", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass\npublic import Mathlib.Algebra.Homology.HomotopyCategory.KInjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRulesStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonHypercohomologyOfLocallyExactOnSuppoStatement\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -147,8 +148,7 @@ namespace GlobalTheory.EtC.ConeChase
 
 variable {R : Type} [CommRing R]
 
-theorem map_comp {F G K : Shv R} (a : F ⟶ G) (b : G ⟶ K) {U : Scheme.{0}} (x : Sec F U) :
-    Sec.map (a ≫ b) x = Sec.map b (Sec.map a x) := rfl
+alias map_comp := _root_.GlobalTheory.EtC.exactIff_map_comp
 
 theorem map_congr {F G : Shv R} {a b : F ⟶ G} (h : a = b) {U : Scheme.{0}} (x : Sec F U) :
     Sec.map a x = Sec.map b x := by rw [h]
@@ -162,19 +162,11 @@ theorem map_add' {F G : Shv R} (a : F ⟶ G) {U : Scheme.{0}} (x y : Sec F U) :
 theorem map_neg' {F G : Shv R} (a : F ⟶ G) {U : Scheme.{0}} (x : Sec F U) :
     Sec.map a (-x) = -Sec.map a x := map_neg _ _
 
-theorem map_zero' {F G : Shv R} (a : F ⟶ G) {U : Scheme.{0}} :
-    Sec.map a (0 : Sec F U) = 0 := map_zero _
-
 theorem res_add {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) (x y : Sec F U) :
     Sec.res g (x + y) = Sec.res g x + Sec.res g y := map_add _ _ _
 
 theorem res_zero {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) :
     Sec.res g (0 : Sec F U) = 0 := map_zero _
-
-theorem res_map {F G : Shv R} (a : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.res g (Sec.map a x) = Sec.map a (Sec.res g x) := by
-  have := congrArg (fun t => t.hom x) (a.hom.naturality g.op)
-  exact this.symm
 
 theorem res_comp {F : Shv R} {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (x : Sec F U) :
     Sec.res (k ≫ g) x = Sec.res k (Sec.res g x) := by
@@ -198,40 +190,40 @@ theorem mappingCone_resolution_localChase_of_succ (E : Spc) {F G : Shv R} (φ : 
   have hι := ((_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.2.2.2.2.2 G φ).2
   have hd := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.2.2.2.2.1
   rcases lt_or_ge n 0 with hn | hn
-  · have hb₂ : b₂ = 0 := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R G U).2.2.2 n hn).elim _ _
+  · have hb₂ : b₂ = 0 := ((_root_.GlobalTheory.EtC.resSec R G U).2.2.2 n hn).elim _ _
     have hb₁ : b₁ = 0 := by
       rcases lt_or_ge k 0 with hk0 | hk0
-      · exact ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R F U).2.2.2 k hk0).elim _ _
+      · exact ((_root_.GlobalTheory.EtC.resSec R F U).2.2.2 k hk0).elim _ _
       · obtain rfl : k = 0 := by omega
         obtain rfl : l = 1 := by omega
-        obtain ⟨s, rfl⟩ := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R F U).1 b₁).1 h₁
-        rw [hb₂, map_zero', add_zero, ← map_comp, map_congr hι, map_comp] at h₂
-        have h3 : Sec.map φ s = 0 := (GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R G U).2.1 (by rw [h₂, map_zero'])
-        have h4 : s = 0 := (hφ U hU).1 (by rw [h3, map_zero'])
-        rw [h4, map_zero']
+        obtain ⟨s, rfl⟩ := ((_root_.GlobalTheory.EtC.resSec R F U).1 b₁).1 h₁
+        rw [hb₂, _root_.GlobalTheory.EtC.SuppAcyc.map_zero', add_zero, ← map_comp, map_congr hι, map_comp] at h₂
+        have h3 : Sec.map φ s = 0 := (_root_.GlobalTheory.EtC.resSec R G U).2.1 (by rw [h₂, _root_.GlobalTheory.EtC.SuppAcyc.map_zero'])
+        have h4 : s = 0 := (hφ U hU).1 (by rw [h3, _root_.GlobalTheory.EtC.SuppAcyc.map_zero'])
+        rw [h4, _root_.GlobalTheory.EtC.SuppAcyc.map_zero']
     refine Lall _ _ fun V g => ⟨0, 0, ?_, ?_⟩
-    · rw [hb₁, map_zero', res_zero, neg_zero]
-    · rw [hb₂, map_zero', map_zero', res_zero, add_zero]
+    · rw [hb₁, _root_.GlobalTheory.EtC.SuppAcyc.map_zero', res_zero, neg_zero]
+    · rw [hb₂, _root_.GlobalTheory.EtC.SuppAcyc.map_zero', _root_.GlobalTheory.EtC.SuppAcyc.map_zero', res_zero, add_zero]
   · apply Ltrans
-    refine Lmono _ _ _ ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R F U).2.2.1 n k l (by omega) hk b₁ hl h₁) ?_
+    refine Lmono _ _ _ ((_root_.GlobalTheory.EtC.resSec R F U).2.2.1 n k l (by omega) hk b₁ hl h₁) ?_
     rintro V g ⟨y, hy⟩
     have hc : Sec.map ((res R G).d n k) (Sec.res g b₂ + Sec.map ((resMap R φ).f n) y) = 0 := by
-      rw [map_add', comm', hy, ← res_map, ← res_map, ← res_add, add_comm, h₂, res_zero]
+      rw [map_add', comm', hy, ← _root_.GlobalTheory.EtC.CupSpec.map_res, ← _root_.GlobalTheory.EtC.CupSpec.map_res, ← res_add, add_comm, h₂, res_zero]
     rcases lt_or_eq_of_le hn with hn' | hn'
-    · refine Lmono _ _ _ ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R G V).2.2.1 m n k hn' hm _ hk hc) ?_
+    · refine Lmono _ _ _ ((_root_.GlobalTheory.EtC.resSec R G V).2.2.1 m n k hn' hm _ hk hc) ?_
       rintro W j ⟨z, hz⟩
       refine ⟨-Sec.res j y, z, ?_, ?_⟩
-      · rw [map_neg', ← res_map, hy, res_comp]
-      · rw [hz, map_neg', res_add, res_map, res_comp]; abel
+      · rw [map_neg', ← _root_.GlobalTheory.EtC.CupSpec.map_res, hy, res_comp]
+      · rw [hz, map_neg', res_add, _root_.GlobalTheory.EtC.CupSpec.map_res, res_comp]; abel
     · subst hn'
       obtain rfl : k = 1 := by omega
-      obtain ⟨s, hs⟩ := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R G V).1 _).1 hc
+      obtain ⟨s, hs⟩ := ((_root_.GlobalTheory.EtC.resSec R G V).1 _).1 hc
       obtain ⟨x⟩ := hU
       obtain ⟨t, rfl⟩ := (hφ V ⟨Sx.res g x⟩).2 s
       refine Lall _ _ fun W j => ⟨Sec.res j (-y + Sec.map (resι R F) t), 0, ?_, ?_⟩
-      · rw [← res_map, map_add', map_neg', hy, ← map_comp, map_congr hd, map_zero_hom, add_zero, res_comp]
+      · rw [← _root_.GlobalTheory.EtC.CupSpec.map_res, map_add', map_neg', hy, ← map_comp, map_congr hd, map_zero_hom, add_zero, res_comp]
         exact map_neg _ _
-      · rw [map_zero', add_zero, ← res_map, map_add', map_neg', ← map_comp, map_congr hι, map_comp, hs, res_comp]
+      · rw [_root_.GlobalTheory.EtC.SuppAcyc.map_zero', add_zero, ← _root_.GlobalTheory.EtC.CupSpec.map_res, map_add', map_neg', ← map_comp, map_congr hι, map_comp, hs, res_comp]
         congr 1
         abel
 
@@ -291,8 +283,8 @@ end GlobalTheory.EtC.ConeLocalization
 theorem GlobalTheory.EtC.a10 : GlobalTheory.EtC.A10 := by
   intro R _ E F G φ hφ
   haveI := GlobalTheory.EtC.ConeLocalization.cone_kinj R φ
-  have hC := GlobalTheory.T.subsingleton_hypercohomology_of_locallyExact_on_support R E (mappingCone (resMap R φ)) (GlobalTheory.EtC.ConeLocalization.cone_loc R E φ hφ)
-  have ex := GlobalTheory.T.hypercohomology_mappingCone_second_variable_exact R ((chains R).obj E) (resMap R φ)
+  have hC := _root_.GlobalTheory.EtC.subsingleton_of_locExact_supp R E (mappingCone (resMap R φ)) (GlobalTheory.EtC.ConeLocalization.cone_loc R E φ hφ)
+  have ex := _root_.GlobalTheory.EtC.coneSeqTgt_exact R ((chains R).obj E) (resMap R φ)
   intro n
   constructor
   · obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by ring⟩

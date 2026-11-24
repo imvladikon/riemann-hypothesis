@@ -132,7 +132,7 @@ theorem reciprocity_unramified_and_norm_frobenius_eigenvalue_le (hL : _root_.Upp
   have h1 := GlobalTheory.SatHecke.isUnitarySatakeAt_of_hasSatake E w n (GlobalTheory.SplitRead.Irr.ofIrrRep σ) α hα hu
   have h2 : GlobalTheory.RowSatakeBound.IsUnitarySatakeAt w n
       ((Finset.univ.val.map fun i => (α i : ℂ)).map (·⁻¹)) := by
-    have := GlobalTheory.RowSatakeBound.finite_residue w
+    have := _root_.Formalism.UG.P.glint_finite_residueField w
     exact GlobalTheory.SatakeInv.isUnitarySatake_map_inv _ _ _ _ h1
   intro b hb
   apply h2.norm_le
@@ -590,7 +590,7 @@ theorem fixed_kO_ne_bot : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     exact ht
   let K : Subgroup H := (GlobalTheory.SplitWeil.KO (s.w.adicCompletion L) (Fin n)).comap φ
   have hfixK : ∀ k ∈ K, ρ' k f = f := fun k hk =>
-    hfix k.1 k.2 (mem_KO_of_map c hc _ hk)
+    hfix k.1 k.2 (_root_.GlobalTheory.IntegralPullback.mem_KO_of_map c hc _ hk)
   have hne := GlobalTheory.UnrLoc.fixed_ne_bot_of_mem_iSup_range hσ' T K hf' hf0 hfixK
   rw [Submodule.ne_bot_iff] at hne ⊢
   obtain ⟨y, hy, hy0⟩ := hne
@@ -601,7 +601,7 @@ theorem fixed_kO_ne_bot : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
 theorem levS_of_kO_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0), Pins R F cG → ∀ (s : SplitPlace D.host.E), (∀ k : Fin 2, s.w ∉ placesOver D.host.E (D.host.g k)) → ∃ h : GL (Fin D.R.r) (s.v.adicCompletion (maximalRealSubfield D.host.E)), ∀ (b : Bool) (κ : Formalism.AUTREP.GAf D.host.E D.R.r), TrivOutside {s.v} κ → h⁻¹ * s.loc D.R.r κ * h ∈ GlobalTheory.SplitWeil.KO (s.v.adicCompletion (maximalRealSubfield D.host.E)) (Fin D.R.r) → Y.PY.ψ κ ∈ levS _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)) ∧ levChi _ (R.βY 0) (R.dat0 (R.toRealDat.levR F.lv2 b)) (Y.PY.ψ κ) = 1 := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F cG X0 Y hP s hoff
   have hβ := hP.char.base.lev.βY 0 Y.hm
-  obtain ⟨h, hh⟩ := kO_frame_cpt D (Yc D 0) D.R.r Y.hF Y.PY (R.βY 0) Y.stdPsi.1 s
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.SplitFrameKO.main D (Yc D 0) D.R.r Y.hF Y.PY (R.βY 0) Y.stdPsi.1 s
 
   have hPgOver : ∀ P ∈ R.Pg, ∃ k, P ∈ placesOver D.host.E (D.host.g k) := by
     intro P hP'
@@ -628,7 +628,7 @@ theorem levS_of_kO_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 
     by_cases hQ : Q.asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E)) = s.v.asIdeal
     · rcases GlobalTheory.T.placeOver_splitPlace_eq_chosen_or_conjugate D Y.hF s Q hQ with rfl | rfl
       · exact hh κ' hκ' hk1 a c
-      · refine int_cP_of_inv D (Yc D 0) (R.βY 0) _ _ hβ (Y.PY.ψ κ') s.w (fun a' c' => ?_) a c
+      · refine _root_.GlobalTheory.ConjInt.frame_mat_le_one D (Yc D 0) (R.βY 0) _ _ hβ (Y.PY.ψ κ') s.w (fun a' c' => ?_) a c
         have := hh κ'⁻¹ (GlobalTheory.RowLevelSplit.trivOutside_inv hκ') hk2 a' c'
         rwa [map_inv, map_inv] at this
     · rw [GlobalTheory.T.frameComponent_eq_one_off_splitPlace_of_trivOutside D (Yc D 0) D.R.r Y.hF Y.PY (R.βY 0) Y.stdPsi.1 s κ' hκ' Q hQ a c, Matrix.one_apply]
@@ -764,13 +764,8 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-section SphOffSec
-open Formalism.BasicNotions Formalism.MainNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.RecTie Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2
-open scoped TensorProduct
-open Formalism.IndefR.principalLevelFrame Formalism.IndefR.Mult
 namespace GlobalTheory.RowSphOff
 end GlobalTheory.RowSphOff
-end SphOffSec
 namespace GlobalTheory.RowSphOff
 theorem spherical_localComponent_away_from_level_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → OverRows fun _ _ _ _ w Z _ _ z _ Y => ∀ (σ : (w.st Z).toD7.what₂.FT) (s : ReciprocityTheory.Aut.SplitPlace (w.st Z).toD7.host.E), (∀ k : Fin 2, s.w ∉ placesOver (w.st Z).toD7.host.E ((w.st Z).toD7.host.g k)) → ∃ τ, IsLocS (repOf Y σ).S s τ ∧ GlobalTheory.SmGL.IsSpherical τ.ρ := by
   intro hPr
@@ -807,14 +802,6 @@ theorem spherical_localComponent_away_from_level_alt : _root_.GlobalTheory.Heigh
     rw [← hmul, show κ * x⁻¹ = x⁻¹ * (x * κ * x⁻¹) by group, hmul, h1]
 end GlobalTheory.RowSphOff
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.exists_spherical_loc_comp_at_split_place_off_g : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → OverRows fun _ _ _ _ w Z _ _ z _ Y => ∀ (σ : (w.st Z).toD7.what₂.FT) (s : ReciprocityTheory.Aut.SplitPlace (w.st Z).toD7.host.E), (∀ k : Fin 2, s.w ∉ placesOver (w.st Z).toD7.host.E ((w.st Z).toD7.host.g k)) → ∃ τ, IsLocS (repOf Y σ).S s τ ∧ GlobalTheory.SmGL.IsSpherical τ.ρ := by
-  first | exact @_root_.GlobalTheory.RowSphOff.spherical_localComponent_away_from_level_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -836,7 +823,7 @@ namespace GlobalTheory.RowSphSmall
 theorem spherical_localComponent_of_small_prime_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, OverRows fun _ _ _ _ w Z _ _ z _ Y =>
     ∀ Rw, _root_.GlobalTheory.HeightCounting.Up.ParityConditions hL (w.st Z).toD7 (TC.cf w.I w.l Z) (repOf Y) Rw → ∀ σ, RowLoc (w.st Z).toD7 Rw σ := by
   intro hP hL
-  refine EvG.imp (_root_.GlobalTheory.T.exists_spherical_loc_comp_at_split_place_off_g hP) fun K _ _ _ _ hK => large₂.imp hK fun B f T _ H => ?_
+  refine EvG.imp (_root_.GlobalTheory.RowSphOff.spherical_localComponent_away_from_level_alt hP) fun K _ _ _ _ hK => large₂.imp hK fun B f T _ H => ?_
   intro hKP w hpin Z Wt hX z p0 Y hH hEx hGeo hGrp hGA Rw hPar σ w' hsplit hoff
   have H' := H hKP w hpin Z Wt hX z p0 Y hH hEx hGeo hGrp hGA σ
   obtain ⟨s, rfl⟩ := GlobalTheory.OffBad.splitPlace_of_isSplitPl _ w' hsplit

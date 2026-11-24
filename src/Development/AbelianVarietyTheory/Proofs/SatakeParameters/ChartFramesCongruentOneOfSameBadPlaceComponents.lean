@@ -155,11 +155,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.mem_integralGLAtPrime_of_congruent_one_mod_pow : ∀ {E : Type} [Field E] [NumberField E] {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (d : ℕ) (g : Formalism.L2.Col.Sp E n ≃ₗ[E] Formalism.L2.Col.Sp E n),
-  (∀ a b, Formalism.L2.Col.IntAt P (((Formalism.L2.Col.qOf P : E) ^ d)⁻¹ * (LinearMap.toMatrix' g.toLinearMap a b - (1 : Matrix (Fin n) (Fin n) E) a b))) →
-  (∀ a b, Formalism.L2.Col.IntAt P (((Formalism.L2.Col.qOf P : E) ^ d)⁻¹ * (LinearMap.toMatrix' g.symm.toLinearMap a b - (1 : Matrix (Fin n) (Fin n) E) a b))) →
-  g ∈ Formalism.L2.Col.GLint E n P ∧ ∀ w ∈ Formalism.L2.Col.stdAt E n P, ((Formalism.L2.Col.qOf P : E) ^ d)⁻¹ • (g w - w) ∈ Formalism.L2.Col.stdAt E n P := by
-  first | exact @GlobalTheory.Proof.mem_integralGLAtPrime_of_congruent_one_mod_pow.glint_of_cong
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralGLAtPrimeOfCongruentOneModPowStatement =====
@@ -182,13 +177,6 @@ theorem inv_mul_cong {K : Type} [Field K] [Valued K (WithZero (Multiplicative �
     (ha₁ : ∀ i j, Valued.v (π⁻¹ * ((a₁ : Matrix (Fin N) (Fin N) K) - 1) i j) ≤ 1) :
     ∀ i j, Valued.v (π⁻¹ * (((a⁻¹ * a₁ : GL (Fin N) K) : Matrix (Fin N) (Fin N) K) - 1) i j) ≤ 1 :=
   _root_.GlobalTheory.GL_inv_mul_congr_one π hπ0 hπ a a₁ ha ha₁
-
-theorem glint_of_cong {E : Type} [Field E] [NumberField E] {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (d : ℕ)
-    (g : Sp E n ≃ₗ[E] Sp E n)
-    (hg : ∀ a b, IntAt P (((qOf P : E) ^ d)⁻¹ * (LinearMap.toMatrix' g.toLinearMap a b - (1 : Matrix (Fin n) (Fin n) E) a b)))
-    (hg' : ∀ a b, IntAt P (((qOf P : E) ^ d)⁻¹ * (LinearMap.toMatrix' g.symm.toLinearMap a b - (1 : Matrix (Fin n) (Fin n) E) a b))) :
-    g ∈ GLint E n P ∧ ∀ w ∈ stdAt E n P, ((qOf P : E) ^ d)⁻¹ • (g w - w) ∈ stdAt E n P :=
-  GlobalTheory.T.mem_integralGLAtPrime_of_congruent_one_mod_pow P d g hg hg'
 
 section Loc
 
@@ -226,14 +214,10 @@ theorem loc_agree (Q : HeightOneSpectrum (𝓞 E)) {x x₁ : GL (Fin N) (E ⊗[F
   rw [map_sub, sub_eq_zero] at h2
   exact h2
 
-theorem val_alg (Q : HeightOneSpectrum (𝓞 E)) (e : E) :
-    Valued.v (algebraMap E (Q.adicCompletion E) e) = Q.valuation E e :=
-  HeightOneSpectrum.valuedAdicCompletion_eq_valuation' Q e
-
 theorem intAt_of_val (Q : HeightOneSpectrum (𝓞 E)) (c m o : E)
     (h : Valued.v ((algebraMap E (Q.adicCompletion E) c)⁻¹ * (algebraMap E (Q.adicCompletion E) m - algebraMap E (Q.adicCompletion E) o)) ≤ 1) :
     IntAt Q (c⁻¹ * (m - o)) := by
-  rw [GlobalTheory.Proof.IntegralPowerExpansion.intAt_iff_val, ← val_alg, map_mul, map_inv₀, map_sub]
+  rw [GlobalTheory.Proof.IntegralPowerExpansion.intAt_iff_val, ← _root_.Formalism.UG.P.levelaf_valued_algebraMap, map_mul, map_inv₀, map_sub]
   exact h
 
 theorem one_entry {E₀ : Type} [Field E₀] (Q : HeightOneSpectrum (𝓞 E)) (ψ : E₀ ≃+* E) (a b : Fin N) :
@@ -302,12 +286,12 @@ theorem core (hTie : AdTie A dtU a) (j : ℕ) (hj : j ≤ D.R.m) (β : (St j hj)
     rw [Ne, map_eq_zero_iff _ (algebraMap D.host.E _).injective]
     exact pow_ne_zero _ (by exact_mod_cast hq0)
   have hπ : Valued.v (algebraMap D.host.E (Q.adicCompletion D.host.E) (((qOf Q : ℕ) : D.host.E) ^ (t.cst μ).D P)) < 1 := by
-    rw [val_alg, map_pow]
+    rw [_root_.Formalism.UG.P.levelaf_valued_algebraMap, map_pow]
     refine pow_lt_one₀ zero_le' ?_ (by omega)
     have e : ((qOf Q : ℕ) : D.host.E) = algebraMap (𝓞 D.host.E) D.host.E (qOf Q : 𝓞 D.host.E) := by rw [map_natCast]
     rw [e, HeightOneSpectrum.valuation_of_algebraMap]
     exact (Q.intValuation_lt_one_iff_mem _).2 (Ideal.absNorm_mem _)
-  have key := inv_mul_cong _ hπ0 hπ _ _ c0 c1
+  have key := _root_.GlobalTheory.GL_inv_mul_congr_one _ hπ0 hπ _ _ c0 c1
   have hs : (frsF t.sel (t.tup μ) p₁ P).trans (frsF t.sel (t.tup μ) p P).symm =
       (frsF t.sel (t.tup μ) p P)⁻¹ * frsF t.sel (t.tup μ) p₁ P := by
     ext w; rfl
@@ -356,7 +340,7 @@ theorem frame_away : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =
   have hsymm : ((frsF t.sel (t.tup μ) p₁ P).trans (frsF t.sel (t.tup μ) p P).symm).symm =
       (frsF t.sel (t.tup μ) p P).trans (frsF t.sel (t.tup μ) p₁ P).symm := by
     ext w; rfl
-  exact glint_of_cong P.1 ((t.cst μ).D P) _ h1 (by rw [hsymm]; exact h2)
+  exact _root_.GlobalTheory.Proof.mem_integralGLAtPrime_of_congruent_one_mod_pow.glint_of_cong P.1 ((t.cst μ).D P) _ h1 (by rw [hsymm]; exact h2)
 
 end GlobalTheory.FrameAgree
 end -- clump:auto

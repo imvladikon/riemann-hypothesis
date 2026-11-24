@@ -185,10 +185,7 @@ theorem exists_prime_gt_dvd_eval_of_natDegree_pos (f : Polynomial ℤ) (hf : 0 <
     · rw [hw]
       exact Dvd.dvd.mul_left hpv _
 
-theorem GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.exists_large_prime_dvd_eval :
-    ∀ (f : Polynomial ℤ), OfNat.ofNat (nat_lit 0) < f.natDegree → ∀ (N : ℕ), ∃ (p : ℕ) (m : ℤ), Nat.Prime p ∧ N < p ∧ p.cast ∣ Polynomial.eval m f := by
-  intro f hf N
-  exact exists_prime_gt_dvd_eval_of_natDegree_pos f hf N
+alias GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.exists_large_prime_dvd_eval := _root_.UpperTheory.Reformulated.B.P6.LargePrimeDivisors.exists_prime_gt_dvd_eval_of_natDegree_pos
 
 end UpperTheory.Reformulated.B.P6.LargePrimeDivisors
 end -- clump:auto
@@ -290,7 +287,7 @@ theorem exists_prime_absNorm_avoiding : ∀ (F : Type) [Field F] [NumberField F]
     ∃ 𝔠 : Ideal (𝓞 F), 𝔠.IsPrime ∧ (Ideal.absNorm 𝔠).Prime ∧ B < Ideal.absNorm 𝔠 ∧ 𝔠 ⊔ 𝔣 = ⊤ ∧ ∀ x ∈ W, x ∉ 𝔠 := by
   intro F _ _ 𝔣 h𝔣 W B hW
   obtain ⟨θ, hθ⟩ := exists_exponent_ne_zero F
-  obtain ⟨p, m, hp, hN, hdvd⟩ := exists_large_prime_dvd_eval (minpoly ℤ θ)
+  obtain ⟨p, m, hp, hN, hdvd⟩ := _root_.UpperTheory.Reformulated.B.P6.LargePrimeDivisors.exists_prime_gt_dvd_eval_of_natDegree_pos (minpoly ℤ θ)
     (minpoly.natDegree_pos θ.isIntegral)
     (B + RingOfIntegers.exponent θ + Ideal.absNorm 𝔣 + ∑ x ∈ W, Ideal.absNorm (Ideal.span {x}))
   have := Fact.mk hp
@@ -651,18 +648,6 @@ section -- clump:auto
 
 open NumberField Formalism.MainNotions.ShortIntervalPrimes GlobalTheory.RayZeta GlobalTheory.CompanionTheory.Hypotheses₂.Shintani
 
-theorem _root_.GlobalTheory.T.partial_zeta_prime_twist_summable : ∀ (F : Type) [Field F] [NumberField F] (𝔣 𝔠 A B : Ideal (𝓞 F)), (Ideal.absNorm 𝔠).Prime →
-  ∀ e : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I A} ≃
-      {I : Ideal (𝓞 F) // (CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B) ∧ I ≤ 𝔠}, (∀ J, (e J).1 = 𝔠 * J.1) →
-  ∀ (s : ℂ) (t : ℂ), 1 < s.re →
-    Summable (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I A} => ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) →
-    Summable (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B} => ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) →
-    HasSum (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B} =>
-      (classWeight (Ideal.absNorm 𝔠) 𝔠 I.1 : ℂ) * ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) t →
-    ((Ideal.absNorm 𝔠 : ℕ) : ℂ) ^ (1 - s) *
-        (∑' I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I A}, ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) -
-      (∑' I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I B}, ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) = t := by
-  first | exact @GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.classWeight_relation
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialZetaPrimeTwistSummableStatement =====
@@ -848,7 +833,7 @@ theorem exists_classZeta (𝔣 : Ideal (𝓞 F)) (h𝔣 : 𝔣 ≠ ⊥) (S : Fin
     choose T hTd hTs hTq using hWt 𝔠 hpr hl hav
     refine ⟨𝔠, hl, hB, τ, T, hTd, fun c s hs => ?_, hTq⟩
     obtain ⟨e, he⟩ := hτ c
-    exact GlobalTheory.T.partial_zeta_prime_twist_summable F 𝔣 𝔠 (τ c).1 c.1 hl e he s _ hs (hsum _ s hs) (hsum _ s hs) (hTs c s hs)
+    exact _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.classWeight_relation F 𝔣 𝔠 (τ c).1 c.1 hl e he s _ hs (hsum _ s hs) (hsum _ s hs) (hTs c s hs)
   obtain ⟨𝔠, hl, -, τ, T, hTd, hTr, hTq⟩ := key 0
   obtain ⟨𝔠', hl', hB', τ', T', hTd', hTr', -⟩ := key (Ideal.absNorm 𝔠)
   obtain ⟨Z, hZd, hZD, hZq⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.TwoRelations.continuation_of_two_relations S (fun c => classSeries 𝔣 c.1) T T' _ _ τ τ' hl hl' hB'.ne hTd hTd' hTr hTr'

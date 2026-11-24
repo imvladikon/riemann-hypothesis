@@ -781,12 +781,6 @@ namespace GlobalTheory.Honda
 theorem unitFix_subMax {K : Type} [NormedField K] [IsUltrametricDist K] (x y : K) : ‖x - y‖ ≤ max ‖x‖ ‖y‖ := by
   rw [sub_eq_add_neg, ← norm_neg y]; exact IsUltrametricDist.norm_add_le_max _ _
 
-theorem unitFix_powSub {K : Type} [NormedField K] [IsUltrametricDist K] (a b : K) (ha : ‖a‖ ≤ 1)
-    (hb : ‖b‖ ≤ 1) (hab : ‖a - b‖ < 1) : ∀ n : ℕ, ‖a ^ n - b ^ n‖ < 1 := by
-  first
-  | (apply _root_.GlobalTheory.UltrametricPowerDifference.norm_pow_sub_pow_lt_one <;> assumption)
-  | (intros; exact _root_.GlobalTheory.UltrametricPowerDifference.norm_pow_sub_pow_lt_one ..)
-
 theorem unitFix_sq_apply {K : Type} [NormedField K] (σ : K →+* K) (x : K) : (σ ^ 2) x = σ (σ x) := by
   rw [pow_two]; rfl
 
@@ -796,7 +790,7 @@ theorem unitFix_frob2 {K : Type} [NormedField K] [IsUltrametricDist K] (l : ℕ)
   have hsx : ‖σ x‖ ≤ 1 := by rw [hiso]; exact hx
   have h1 := hfr (σ x) hsx
   have h2 : ‖(σ x) ^ l - (x ^ l) ^ l‖ < 1 :=
-    unitFix_powSub _ _ hsx (by rw [norm_pow]; exact pow_le_one₀ (norm_nonneg _) hx) (hfr x hx) l
+    _root_.GlobalTheory.UltrametricPowerDifference.norm_pow_sub_pow_lt_one _ _ hsx (by rw [norm_pow]; exact pow_le_one₀ (norm_nonneg _) hx) (hfr x hx) l
   have hq : x ^ (l ^ 2) = (x ^ l) ^ l := by rw [← pow_mul, sq]
   have e2 : σ (σ x) - x ^ (l ^ 2) = (σ (σ x) - σ x ^ l) + ((σ x) ^ l - (x ^ l) ^ l) := by rw [hq]; ring
   rw [unitFix_sq_apply, e2]
@@ -1495,11 +1489,6 @@ theorem coeff_frobOp (τ : K →+* K) {q : ℕ} (hq : q ≠ 0) (i : ℕ) (f : K�
 theorem pow_apply_pow (τ : K →+* K) (i k : ℕ) (x : K) : (τ ^ i) ((τ ^ k) x) = (τ ^ (i + k)) x := by
   rw [pow_add]; rfl
 
-theorem norm_pow_apply (τ : K →+* K) (hτ : ∀ x, ‖τ x‖ = ‖x‖) (i : ℕ) (x : K) : ‖(τ ^ i) x‖ = ‖x‖ := by
-  induction i generalizing x with
-  | zero => rfl
-  | succ i ih => rw [← pow_apply_pow, ih, pow_one, hτ]
-
 theorem coeff_frobOp_eq_zero (τ : K →+* K) {q : ℕ} (hq : 2 ≤ q) {f : K⟦X⟧} (hf : constantCoeff f = 0)
     {k n : ℕ} (h : n ≤ k) : coeff n (frobOp τ q k f) = 0 := by
   rw [coeff_frobOp τ (by omega)]
@@ -1602,7 +1591,7 @@ theorem exists_one_term : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [
     refine le_trans (mul_le_of_le_one_left (norm_nonneg _) (ht1 i)) ?_
     rw [coeff_frobOp τ (by omega)]
     split_ifs
-    · rw [norm_pow_apply τ hτ]; exact hg _
+    · rw [_root_.GlobalTheory.Honda.TwistedDivision.norm_pow_apply τ hτ]; exact hg _
     · simp
 
 end GlobalTheory.Honda.OneTerm

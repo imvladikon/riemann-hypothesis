@@ -78,11 +78,6 @@ theorem thetaPairLift_cuspidal_of_hypotheses : _root_.GlobalTheory.FunPr.ThetaLo
 end GlobalTheory.PairLift
 end
 
-section
-
-theorem _root_.GlobalTheory.T.twisted_thetaLift_cuspidal : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal := by
-  first | exact @_root_.GlobalTheory.PairLift.thetaPairLift_cuspidal_of_hypotheses
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaPairLiftCuspidalOfHypotheses =====

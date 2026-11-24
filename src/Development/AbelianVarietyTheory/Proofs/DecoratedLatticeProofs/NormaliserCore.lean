@@ -483,8 +483,6 @@ section -- clump:auto
 
 open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
 
-theorem _root_.GlobalTheory.T.exists_normOne_with_residues_at_splitPlaces : ∀ {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A), (∀ a, σ (σ a) = a) → (∀ a ∈ S, σ a ∈ S) → ∀ (T : Finset P), (∀ Q ∈ T, ∀ Q' ∈ T, σ (Z.e Q) ≠ Z.e Q') → ∀ c : ∀ Q, (k Q)ˣ, ∃ z : S, (z : A) * σ z = 1 ∧ (∀ Q ∈ T, r Q z = c Q) ∧ ∀ b : A, (∀ Q ∈ T, Z.p Q b ∈ Z.O Q ∧ Z.p Q (σ b) ∈ Z.O Q) → (1 - (z : A)) * b ∈ S := by
-  first | exact @GlobalTheory.LevNorm.exists_normOne_residues
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement =====
@@ -1780,8 +1778,8 @@ theorem normaliser_core (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈
       exact ⟨s, c, fun _ => h⟩
     · exact ⟨1, 1, fun h => absurd h hQ⟩
   choose s c hsc using fin
-  obtain ⟨z₂, hz₂, hr₂, -⟩ := GlobalTheory.T.exists_normOne_with_residues_at_splitPlaces Z σ hσ hS T hT s
-  obtain ⟨c', hc', hrc, hsup⟩ := GlobalTheory.T.exists_normOne_with_residues_at_splitPlaces Z σ hσ hS T hT fun Q => (s Q)⁻¹ * c Q
+  obtain ⟨z₂, hz₂, hr₂, -⟩ := _root_.GlobalTheory.LevNorm.exists_normOne_residues Z σ hσ hS T hT s
+  obtain ⟨c', hc', hrc, hsup⟩ := _root_.GlobalTheory.LevNorm.exists_normOne_residues Z σ hσ hS T hT fun Q => (s Q)⁻¹ * c Q
   let w : S := ⟨σ z₂, hS _ z₂.2⟩
   have hw : z₂ * w = 1 := Subtype.ext hz₂
   have hw' : w * z₂ = 1 := by rw [mul_comm, hw]

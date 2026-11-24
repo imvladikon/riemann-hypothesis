@@ -382,8 +382,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.hyperplaneFixerSumVanishes_cuspidalCharacterGLFiniteField : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ), (∀ x y : AlgebraicClosure F, x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ m k : ℕ, (2 ≤ m ∨ ¬ k ≡ 0 [MOD Nat.card F - 1]) → HFree (cusp θ m k) := by
-  first | (exact @GlobalTheory.Shin.hFree_cusp)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperplaneFixerSumVanishesCuspidalCharacterGLFinStatement =====
@@ -718,7 +716,7 @@ theorem core [Finite F] (a b : ℕ) [Fintype (GL (Fin (a + b)) F)] (A : GL (Fin 
     (hA : IsChar ℂ ℂ A) (hB : IsChar ℂ ℂ B) (hfA : HFree A) (hfB : HFree B) (f : Fin (a + b) → F) (hf : f ≠ 0) :
     (∑ g, if g ∈ fixSet f then
       (if InPar a g then A (tlG a g) * B (brG a b g) else 0) else 0) = 0 := by
-  obtain ⟨P, π, hmem, -, hπ, -, -⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b (a + b) rfl
+  obtain ⟨P, π, hmem, -, hπ, -, -⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b (a + b) rfl
   have hmul : ∀ p q : GL (Fin (a + b)) F, InPar a p → InPar a q →
       InPar a (p * q) ∧ tlG a (p * q) = tlG a p * tlG a q ∧ brG a b (p * q) = brG a b p * brG a b q := by
     intro p q hp hq
@@ -827,8 +825,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.hyperplaneFixerSumVanishes_harishChandraInduction : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (A : GL (Fin a) F → ℂ) (B : GL (Fin b) F → ℂ), IsChar ℂ ℂ A → IsChar ℂ ℂ B → HFree A → HFree B → HFree (hc a b A B n) := by
-  first | (exact @GlobalTheory.Shin.FreeHc.hfree_hc)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperplaneFixerSumVanishesHarishChandraInductionStatement =====
@@ -862,8 +858,8 @@ theorem aux (A B k N s : ℂ) (h : k * (A * B) ≠ 0) : A * B * ((k * (A * B))�
 
 theorem mass : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ) (S : F[X] → ℂ), (Nat.card (GL (Fin a) F) : ℂ) * (Nat.card (GL (Fin b) F) : ℂ) * ∑ᶠ x, hc a b α β n x * star (chG S n x) = (Nat.card (GL (Fin n) F) : ℂ) * ∑ᶠ x : GL (Fin a) F, ∑ᶠ y : GL (Fin b) F, α x * β y * star (S (Matrix.charpoly (x : Matrix (Fin a) (Fin a) F) * Matrix.charpoly (y : Matrix (Fin b) (Fin b) F))) := by
   intro F _ _ a b n hn α β S
-  obtain ⟨H, π, hH, hsurj, hπ, -, hchar⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
-  have hcl : IsCl (chG S n) := ((GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) a b n α β).2.2 S).2
+  obtain ⟨H, π, hH, hsurj, hπ, -, hchar⟩ := _root_.GlobalTheory.Shin.BlockPar.block_par F a b n hn
+  have hcl : IsCl (chG S n) := ((_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) a b n α β).2.2 S).2
   haveI : Fintype F := Fintype.ofFinite F
   set g : GL (Fin a) F × GL (Fin b) F → ℂ := fun z => α z.1 * β z.2 *
     star (S (Matrix.charpoly (z.1 : Matrix (Fin a) (Fin a) F) * Matrix.charpoly (z.2 : Matrix (Fin b) (Fin b) F)))
@@ -921,8 +917,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.pairing_harishChandraInduction_charpolyFunction : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → ∀ (α : GL (Fin a) F → ℂ) (β : GL (Fin b) F → ℂ) (S : F[X] → ℂ), (Nat.card (GL (Fin a) F) : ℂ) * (Nat.card (GL (Fin b) F) : ℂ) * ∑ᶠ x, hc a b α β n x * star (chG S n x) = (Nat.card (GL (Fin n) F) : ℂ) * ∑ᶠ x : GL (Fin a) F, ∑ᶠ y : GL (Fin b) F, α x * β y * star (S (Matrix.charpoly (x : Matrix (Fin a) (Fin a) F) * Matrix.charpoly (y : Matrix (Fin b) (Fin b) F))) := by
-  first | (exact @GlobalTheory.Shin.Mass.mass)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairingHarishChandraInductionCharpolyFunctionStatement =====
@@ -1024,7 +1018,7 @@ theorem pair_J_prod_rootSum : ∀ (F : Type) [Field F] [Finite F], ∀ (θ : Alg
     have hnd' : L.Nodup := (List.nodup_cons.1 hnd).2
     have hb := deg_map_const_fst m e L
     have hn' : n = m + deg (L.map fun i => (m, e i)) := by rw [hn, hb, List.length_cons]; ring
-    have hmass := GlobalTheory.T.pairing_harishChandraInduction_charpolyFunction F m (deg (L.map fun i => (m, e i))) n hn' (cusp θ m (e i))
+    have hmass := _root_.GlobalTheory.Shin.Mass.mass F m (deg (L.map fun i => (m, e i))) n hn' (cusp θ m (e i))
       (J θ (L.map fun i => (m, e i)) (deg (L.map fun i => (m, e i)))) (fun P => ∏ j ∈ T, rootSum θ (e j) P)
     have hs := pair_prod_split (cusp θ m (e i))
       (J θ (L.map fun i => (m, e i)) (deg (L.map fun i => (m, e i))))
@@ -1073,8 +1067,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.pairing_cuspidalCharacterGL_rootPowerSumCharacter : ∀ (F : Type) [Field F] [Finite F], ∀ (θ : AlgebraicClosure F →* ℂ) (m : ℕ) (e : ℕ → ℕ) (ε : ℤ), (∀ i, ∑ᶠ x, cusp θ m (e i) x = 0) → ∀ N : ℕ, (∀ i j, i < N → j < N → ∑ᶠ x, cusp θ m (e i) x * star (chG (rootSum θ (e j)) m x) = if i = j then (ε : ℂ) * (Nat.card (GL (Fin m) F) : ℂ) else 0) → ∀ (L : List ℕ) (T : Finset ℕ), L.Nodup → (∀ i ∈ L, i < N) → (∀ j ∈ T, j < N) → T.card ≤ L.length → ∀ n, n = m * L.length → ∑ᶠ x, J θ (L.map fun i => (m, e i)) n x * star (chG (fun P => ∏ j ∈ T, rootSum θ (e j) P) n x) = if T = L.toFinset then (ε : ℂ) ^ L.length * (Nat.card (GL (Fin n) F) : ℂ) else 0 := by
-  first | (exact @GlobalTheory.Shin.pair_J_prod_rootSum)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairingCuspidalCharacterGLRootPowerSumCharacterStatement =====
@@ -1194,8 +1186,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraInductionGL_trivial_orthogonal_hyperplaneFixer : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b → 0 < b → ∀ (α : GL (Fin a) F → ℂ) (Y : GL (Fin n) F → ℂ), IsChar ℂ ℂ Y → HFree Y → ∑ᶠ x, hc a b α (fun _ => 1) n x * star (Y x) = 0 := by
-  first | (exact @GlobalTheory.Shin.hc_one_orth_hfree)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionGLTrivialOrthogonalHyperplStatement =====
@@ -1220,11 +1210,11 @@ theorem psiG_pairing_eq_chG_pairing : ∀ (F : Type) [Field F] [Finite F], ∀ (
       ∑ᶠ x, hc a (n - a) (psiG S a) (fun _ => 1) n x * star (Y x) = 0 := by
     intro a ha
     have ha' : a < n := Finset.mem_range.mp ha
-    exact GlobalTheory.T.harishChandraInductionGL_trivial_orthogonal_hyperplaneFixer F a (n - a) n (by omega) (by omega) (psiG S a) Y hY hF
+    exact _root_.GlobalTheory.Shin.hc_one_orth_hfree F a (n - a) n (by omega) (by omega) (psiG S a) Y hY hF
   have hrec : ∀ x, psiG S n x * star (Y x) = chG S n x * star (Y x)
       - ∑ a ∈ Finset.range n, hc a (n - a) (psiG S a) (fun _ => 1) n x * star (Y x) := by
     intro x
-    rw [GlobalTheory.T.primitiveFunctionCharpolyGL_harishChandra_recursion F S n x, sub_mul, Finset.sum_mul]
+    rw [_root_.GlobalTheory.ShinPsiRec.psiG_eq_chG_sub_hc F S n x, sub_mul, Finset.sum_mul]
   simp_rw [hrec]
   rw [finsum_sub_distrib (hfs _) (hfs _), finsum_sum_comm (Finset.range n) _ (fun a _ => hfs _),
     Finset.sum_eq_zero hz, sub_zero]
@@ -1242,8 +1232,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.finsum_psiG_mul_star_eq_chG : ∀ (F : Type) [Field F] [Finite F], ∀ (S : F[X] → ℂ) (n : ℕ) (Y : GL (Fin n) F → ℂ), IsChar ℂ ℂ Y → HFree Y → ∑ᶠ x, psiG S n x * star (Y x) = ∑ᶠ x, chG S n x * star (Y x) := by
-  first | (exact @GlobalTheory.psiG_pairing_eq_chG_pairing)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiGPairingEqChGPairingStatement =====
@@ -1322,10 +1310,10 @@ theorem hfree_J {K : Type} [Field K] [Finite K] (θ : AlgebraicClosure K →* �
         (2 ≤ p.1 ∨ ¬ p.2 ≡ 0 [MOD Nat.card K - 1]) := fun p' h' => hL p' (List.mem_cons_of_mem _ h')
     rw [J_cons]
     have hdeg : deg (p :: L) = p.1 + deg L := by simp [deg]
-    exact GlobalTheory.T.hyperplaneFixerSumVanishes_harishChandraInduction K p.1 (deg L) (deg (p :: L)) hdeg _ _
-      (GlobalTheory.T.cuspidalCharacterGL_isCharacter_norm_one_of_regular K θ hθ p.1 p.2 hp.1 hp.2.1).1
-      (GlobalTheory.T.isCharacter_harishChandraProductCuspidalGL_of_regular K θ hθ L (fun p' h' => ⟨(hL' p' h').1, (hL' p' h').2.1⟩) _ rfl)
-      (GlobalTheory.T.hyperplaneFixerSumVanishes_cuspidalCharacterGLFiniteField K θ hθ p.1 p.2 hp.2.2) (hfree_J θ hθ L hL')
+    exact _root_.GlobalTheory.Shin.FreeHc.hfree_hc K p.1 (deg L) (deg (p :: L)) hdeg _ _
+      (_root_.GlobalTheory.Shin.isChar_cusp_and_norm_of_reg K θ hθ p.1 p.2 hp.1 hp.2.1).1
+      (_root_.GlobalTheory.Shin.isChar_J_of_reg K θ hθ L (fun p' h' => ⟨(hL' p' h').1, (hL' p' h').2.1⟩) _ rfl)
+      (_root_.GlobalTheory.Shin.hFree_cusp K θ hθ p.1 p.2 hp.2.2) (hfree_J θ hθ L hL')
 
 end GlobalTheory.Shin.PairPM
 
@@ -1349,13 +1337,13 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
   have hR := reg_step_of_dvd q l m k hq hl0 hm hreg'
   have hLL : liftL q l [(n, k)] = (List.range l).map (fun i => (m, k * q ^ i)) := by
     simp [liftL, hn, Nat.mul_div_cancel_left _ hl0]
-  obtain ⟨hdeg, hmem⟩ := GlobalTheory.T.deg_liftL_and_reg_pow q l [(n, k)] hq hl0 (by
+  obtain ⟨hdeg, hmem⟩ := _root_.GlobalTheory.Shin.liftL_deg_reg q l [(n, k)] hq hl0 (by
     intro p hp
     rw [List.mem_singleton] at hp
     subst hp
     exact ⟨by rw [hn]; exact Nat.mul_pos hl0 hm, by rw [hn]; exact dvd_mul_right _ _, hreg⟩)
   have hdeg' : deg (liftL q l [(n, k)]) = n := by rw [hdeg]; simp [deg]
-  have hY := GlobalTheory.T.isCharacter_harishChandraProductCuspidalGL_of_regular F' θ hθ (liftL q l [(n, k)]) (fun p hp => by rw [hK]; exact hmem p hp) n hdeg'.symm
+  have hY := _root_.GlobalTheory.Shin.isChar_J_of_reg F' θ hθ (liftL q l [(n, k)]) (fun p hp => by rw [hK]; exact hmem p hp) n hdeg'.symm
   have hF := hfree_J θ hθ (liftL q l [(n, k)]) (by
     intro p hp
     refine ⟨(hmem p hp).1, by rw [hK]; exact (hmem p hp).2, ?_⟩
@@ -1373,14 +1361,14 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
   refine ⟨((-1 : ℤ) ^ (m - 1)) ^ l, ?_, ?_⟩
   · rw [← pow_mul]
     exact neg_one_pow_eq_or ℤ _
-  · rw [GlobalTheory.T.finsum_psiG_mul_star_eq_chG F' _ n _ hY hF]
+  · rw [_root_.GlobalTheory.psiG_pairing_eq_chG_pairing F' _ n _ hY hF]
     have hS : chG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n =
         chG (fun P => ∏ j ∈ Finset.range l, rootSum θ (k * q ^ j) P) n := by
       funext x
       simp only [chG]
-      exact GlobalTheory.T.prod_rootPowerSum_map_galois_eq F F' θ k _
+      exact _root_.GlobalTheory.Shin.prod_rootSum_map_algEquiv F F' θ k _
     rw [hS]
-    have hZ := GlobalTheory.T.pairing_cuspidalCharacterGL_rootPowerSumCharacter F' θ m (fun i => k * q ^ i) ((-1) ^ (m - 1))
+    have hZ := _root_.GlobalTheory.Shin.pair_J_prod_rootSum F' θ m (fun i => k * q ^ i) ((-1) ^ (m - 1))
       (fun i => sum_cusp_eq_zero θ hθ m _ hm (by
         intro a
         rw [hK, ← pow_mul, ← pow_mul, mul_assoc, ← pow_add]
@@ -1412,8 +1400,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.cuspidal_galois_pairing_eq_pm_one_prime_degree : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (Module.finrank F F').Prime → s ≠ 1 → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ), (∀ x y : AlgebraicClosure F', x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ m k n : ℕ, 0 < m → n = Module.finrank F F' * m → Reg (Nat.card F) n k → ∃ z : ℤ, (z = 1 ∨ z = -1) ∧ ∑ᶠ x, psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n x * star (J θ (liftL (Nat.card F) (Module.finrank F F') [(n, k)]) n x) = z * (Nat.card (GL (Fin n) F') : ℂ) := by
-  first | (exact @GlobalTheory.Shin.PairPM.pairing_pm_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalGaloisPairingEqPmOnePrimeDegreeStatement =====
@@ -1447,9 +1433,9 @@ theorem J_gal : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →
   | nil => intro n x; rfl
   | cons p L ih =>
     intro n x
-    rw [List.map_cons, J_cons, J_cons, GlobalTheory.T.harishChandraInductionGL_fieldAutomorphism F t]
+    rw [List.map_cons, J_cons, J_cons, _root_.GlobalTheory.Shin.HcGal.hc_gal F t]
     have h1 : (fun y => cusp θ p.1 p.2 (gal (t : F →+* F) p.1 y)) = cusp θ p.1 (p.2 * ringChar F ^ j) := by
-      funext y; exact GlobalTheory.T.cuspidalCharacterGLFiniteField_frobenius_pow F θ t j ht p.1 p.2 y
+      funext y; exact _root_.GlobalTheory.Shin.cusp_gal F θ t j ht p.1 p.2 y
     have h2 : (fun y => J θ L (deg L) (gal (t : F →+* F) (deg L) y)) =
         J θ (L.map fun p => (p.1, p.2 * ringChar F ^ j)) (deg L) := by
       funext y; exact ih (deg L) y
@@ -1470,8 +1456,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraProductCuspidalGL_frobenius_pow : ∀ (F : Type) [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ) (t : F ≃+* F) (j : ℕ), (∀ x, t x = x ^ (ringChar F ^ j)) → ∀ (L : List (ℕ × ℕ)) (n : ℕ) (x : GL (Fin n) F), J θ L n (gal (t : F →+* F) n x) = J θ (L.map fun p => (p.1, p.2 * ringChar F ^ j)) n x := by
-  first | (exact @GlobalTheory.Shin.J_gal)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraProductCuspidalGLFrobeniusPowStatement =====
@@ -1533,7 +1517,7 @@ theorem cusp_mul_card_pow (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fin
   have hchar : ringChar F' = ringChar F := (Algebra.ringChar_eq F F').symm
   have hq : Nat.card F = ringChar F' ^ (r : ℕ) := by rw [Nat.card_eq_fintype_card, hcard, hchar]
   funext x
-  have key := GlobalTheory.T.cuspidalCharacterGLFiniteField_frobenius_pow F' θ (RingEquiv.refl F') (r * Module.finrank F F') (fun y => by
+  have key := _root_.GlobalTheory.Shin.cusp_gal F' θ (RingEquiv.refl F') (r * Module.finrank F F') (fun y => by
     rw [pow_mul, ← hq, Nat.card_eq_fintype_card, ← Module.card_eq_pow_finrank, FiniteField.pow_card]
     rfl) m K x
   rw [hq, ← pow_mul, ← key]
@@ -1557,7 +1541,7 @@ theorem J_liftL_galAct_frob (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
   set l := Module.finrank F F' with hldef
   have hl : 0 < l := Module.finrank_pos
   obtain ⟨l', hl'⟩ : ∃ l', l = l' + 1 := ⟨l - 1, by omega⟩
-  have key := GlobalTheory.T.harishChandraProductCuspidalGL_frobenius_pow F' θ (FiniteField.frobeniusAlgEquivOfAlgebraic F F').toRingEquiv r (fun y => by
+  have key := _root_.GlobalTheory.Shin.J_gal F' θ (FiniteField.frobeniusAlgEquivOfAlgebraic F F').toRingEquiv r (fun y => by
     rw [← hq]
     show (FiniteField.frobeniusAlgEquivOfAlgebraic F F') y = _
     rw [FiniteField.coe_frobeniusAlgEquivOfAlgebraic, hqdef, Nat.card_eq_fintype_card]) (liftL q l L) n x
@@ -1595,7 +1579,7 @@ theorem J_liftL_galAct_frob (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
     unfold deg
     exact (hP.map Prod.fst).sum_eq
   rw [J_congr_forall₂ θ hF]
-  exact ((GlobalTheory.T.harishChandraProductCuspidalGL_list_properties F' θ).2.2 R (liftL q l L) n (hn.trans hdeg.symm) hP) ▸ rfl
+  exact ((_root_.GlobalTheory.Shin.J_list_props F' θ).2.2 R (liftL q l L) n (hn.trans hdeg.symm) hP) ▸ rfl
 
 end GlobalTheory.Shin
 
@@ -1634,8 +1618,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.harishChandraProduct_shintaniLift_galois : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (θ : AlgebraicClosure F' →* ℂ) (t : F' ≃ₐ[F] F') (L : List (ℕ × ℕ)) (n : ℕ), n = deg (liftL (Nat.card F) (Module.finrank F F') L) → ∀ x : GL (Fin n) F', J θ (liftL (Nat.card F) (Module.finrank F F') L) n (galAct F F' n t x) = J θ (liftL (Nat.card F) (Module.finrank F F') L) n x := by
-  first | (exact @GlobalTheory.Shin.J_liftL_galAct)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraProductShintaniLiftGaloisStatement =====
@@ -1684,7 +1666,7 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
   have hq2 : 2 ≤ q := Finite.one_lt_card
   have hcardF' : Nat.card F' = q ^ l := Module.natCard_eq_pow_finrank
 
-  obtain ⟨X, hX, hXg, hXs⟩ := GlobalTheory.T.exists_virtualCharacter_shintani_psi_lift F F' s hl hs ι θ hθ k n
+  obtain ⟨X, hX, hXg, hXs⟩ := _root_.GlobalTheory.Shin.exists_virt_psi_lift F F' s hl hs ι θ hθ k n
   set c : ℂ := (-1) ^ (n - 1) with hc
   have hc2 : c = 1 ∨ c = -1 := neg_one_pow_eq_or ℂ (n - 1)
   set X' : GHat F F' n → ℂ := fun g => c * X g with hX'
@@ -1699,13 +1681,13 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
     intro δ
     rw [hcusp, shLift_const_mul, ← hXs δ]
 
-  obtain ⟨hchar, hnorm⟩ := GlobalTheory.T.cuspidalCharacterGL_isCharacter_norm_one_of_regular F (pullθ ι θ) hθ' n k hn hreg
+  obtain ⟨hchar, hnorm⟩ := _root_.GlobalTheory.Shin.isChar_cusp_and_norm_of_reg F (pullθ ι θ) hθ' n k hn hreg
   have hclc : IsCl (cusp (pullθ ι θ) n k) := by
     intro x y
     rw [hcusp]
     simp only
-    rw [((GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) 0 0 n (fun _ => 0) (fun _ => 0)).2.2 (rootSum (pullθ ι θ) k)).1 x y]
-  have hiso := GlobalTheory.T.shintaniLiftClassFunction_isometry F F' s hgen n _ _ hclc hclc
+    rw [((_root_.GlobalTheory.Shin.twisted_class_main F (RingHom.id F) 0 0 n (fun _ => 0) (fun _ => 0)).2.2 (rootSum (pullθ ι θ) k)).1 x y]
+  have hiso := _root_.GlobalTheory.Shin.shLift_isometry F F' s hgen n _ _ hclc hclc
   rw [hnorm] at hiso
   have hGne : (Nat.card (GL (Fin n) F) : ℂ) ≠ 0 := by
     exact_mod_cast (Nat.card_pos (α := GL (Fin n) F)).ne'
@@ -1714,26 +1696,26 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
     apply mul_left_cancel₀ hGne
     rw [hiso, mul_comm]
 
-  obtain ⟨hdeg, hlift⟩ := GlobalTheory.T.deg_liftL_and_reg_pow q l [(n, k)] hq2 hl.pos (by
+  obtain ⟨hdeg, hlift⟩ := _root_.GlobalTheory.Shin.liftL_deg_reg q l [(n, k)] hq2 hl.pos (by
     intro p hp
     simp only [List.mem_singleton] at hp
     subst hp
     exact ⟨hn, hln, hreg⟩)
   have hdegn : deg (liftL q l [(n, k)]) = n := by rw [hdeg]; simp [deg]
   have hYchar : IsChar ℂ ℂ (J θ (liftL q l [(n, k)]) n) := by
-    apply GlobalTheory.T.isCharacter_harishChandraProductCuspidalGL_of_regular F' θ hθ _ _ n hdegn.symm
+    apply _root_.GlobalTheory.Shin.isChar_J_of_reg F' θ hθ _ _ n hdegn.symm
     intro p hp
     rw [hcardF']
     exact hlift p hp
   have hYst : ∀ g, J θ (liftL q l [(n, k)]) n (galAct F F' n s g) = J θ (liftL q l [(n, k)]) n g :=
-    GlobalTheory.T.harishChandraProduct_shintaniLift_galois F F' θ s [(n, k)] n hdegn.symm
+    _root_.GlobalTheory.Shin.J_liftL_galAct F F' θ s [(n, k)] n hdegn.symm
 
   obtain ⟨m, hm⟩ := hln
   have hm0 : 0 < m := by
     rcases Nat.eq_zero_or_pos m with h | h
     · subst h; simp at hm; omega
     · exact h
-  obtain ⟨z, hz, hzsum⟩ := GlobalTheory.T.cuspidal_galois_pairing_eq_pm_one_prime_degree F F' s hl hs ι θ hθ m k n hm0 hm hreg
+  obtain ⟨z, hz, hzsum⟩ := _root_.GlobalTheory.Shin.PairPM.pairing_pm_one F F' s hl hs ι θ hθ m k n hm0 hm hreg
   have hpair : ∑ᶠ g, X' (inl g) * star (J θ (liftL q l [(n, k)]) n g)
       = ((if c = 1 then z else -z : ℤ) : ℂ) * (Nat.card (GL (Fin n) F') : ℂ) := by
     have : (fun g : GL (Fin n) F' => X' (inl g) * star (J θ (liftL q l [(n, k)]) n g))
@@ -1759,7 +1741,7 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
       · rw [h] at hd'; exact (dvd_neg).1 hd'
     have : l ∣ 1 := by exact_mod_cast h1
     exact hl.one_lt.ne' (Nat.dvd_one.1 this)
-  have hK := GlobalTheory.T.twisted_virtualCharacter_norm_one_support (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X' hX'v hnorm'
+  have hK := _root_.GlobalTheory.Shin.kills_of_norm_one_of_pairing_prime (GL (Fin n) F') (F' ≃ₐ[F] F') (galAct F F' n) s (hΓ ▸ hl) hs X' hX'v hnorm'
     (J θ (liftL q l [(n, k)]) n) hYchar hYst _ hpair hndvd
   have hfun : (fun δ => X' (inl δ * inr s)) = shLift s (cusp (pullθ ι θ) n k) := funext hX's
   rw [hfun] at hK
@@ -1778,8 +1760,6 @@ section -- clump:auto
 open Polynomial GlobalTheory.CuspGL GlobalTheory.BI GlobalTheory.Shin SemidirectProduct
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.shintani_lift_kills_cusp_divisible_degree : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] (s : F' ≃ₐ[F] F'), (Module.finrank F F').Prime → s ≠ 1 → ∀ (ι : AlgebraicClosure F →ₐ[F] AlgebraicClosure F') (θ : AlgebraicClosure F' →* ℂ), (∀ x y : AlgebraicClosure F', x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ n k : ℕ, 0 < n → Module.finrank F F' ∣ n → Reg (Nat.card F) n k → Kills (shLift s (cusp (pullθ ι θ) n k)) (J θ (liftL (Nat.card F) (Module.finrank F F') [(n, k)]) n) := by
-  first | (exact @GlobalTheory.Shin.shLift_cusp_kills_J)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShintaniLiftKillsCuspDivisibleDegree =====

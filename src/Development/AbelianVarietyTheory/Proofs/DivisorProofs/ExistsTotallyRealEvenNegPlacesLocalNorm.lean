@@ -435,8 +435,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_base_element_negative_at_two_embeddings : ∀ (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L], Module.finrank K L = 2 → ∀ σ : L →+* L, σ ≠ RingHom.id L → (∀ x : K, σ (algebraMap K L x) = algebraMap K L x) → (∀ (φ : L →+* ℂ) (x : L), φ (σ x) = (starRingEnd ℂ) (φ x)) → ∀ ε ε' : L →+* ℂ, ε ≠ ε' → ε ≠ ComplexEmbedding.conjugate ε' → ∃ h : K, h ≠ 0 ∧ (ε (algebraMap K L h)).re < 0 ∧ (ε' (algebraMap K L h)).re < 0 ∧ (∀ φ : L →+* ℂ, φ ≠ ε → φ ≠ ComplexEmbedding.conjugate ε → φ ≠ ε' → φ ≠ ComplexEmbedding.conjugate ε' → 0 < (φ (algebraMap K L h)).re) ∧ ∀ v : HeightOneSpectrum (𝓞 K), ∃ z : v.adicCompletion K ⊗[K] L, Algebra.norm (v.adicCompletion K) z = algebraMap K (v.adicCompletion K) h := by
-  first | (exact @GlobalTheory.QuadSigns.exists_signs)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBaseElementNegativeAtTwoEmbeddingsStatement =====
@@ -587,8 +585,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.exists_finiteAdele_sq_sub_mul_sq_eq_of_local : ∀ (K : Type) [Field K] [NumberField K] (δ a : K), δ ≠ 0 → a ≠ 0 → (∀ v : HeightOneSpectrum (𝓞 K), ∃ x y : v.adicCompletion K, x ^ 2 - algebraMap K (v.adicCompletion K) δ * y ^ 2 = algebraMap K (v.adicCompletion K) a) → ∃ x y : FiniteAdeleRing (𝓞 K) K, x ^ 2 - algebraMap K (FiniteAdeleRing (𝓞 K) K) δ * y ^ 2 = algebraMap K (FiniteAdeleRing (𝓞 K) K) a := by
-  first | (exact @GlobalTheory.AdelicQuadSol.exists_finiteAdele_sq_sub_mul_sq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdeleSqSubMulSqStatement =====
@@ -694,7 +690,7 @@ theorem exists_neg_two_norm_away : ∀ (M : Type) [Field M] [NumberField M] (σ 
     rw [IntermediateField.finrank_fixedField_eq_card, Nat.card_zpowers]
     exact orderOf_eq_prime hσe2 hσe1
   have hσK : ∀ x : K, σ (algebraMap K M x) = algebraMap K M x := fun x => (hmem _).1 x.2
-  obtain ⟨h, h0, hε, hε', hpos, hloc⟩ := GlobalTheory.T.exists_base_element_negative_at_two_embeddings K M hrank σ hσ hσK hconj ε ε' hεε' hεc
+  obtain ⟨h, h0, hε, hε', hpos, hloc⟩ := _root_.GlobalTheory.QuadSigns.exists_signs K M hrank σ hσ hσK hconj ε ε' hεε' hεc
   obtain ⟨s, hs⟩ : ∃ s, σ s ≠ s := by
     by_contra hc; push_neg at hc; exact hσ (RingHom.ext hc)
   set t := s - σ s with ht
@@ -708,7 +704,7 @@ theorem exists_neg_two_norm_away : ∀ (M : Type) [Field M] [NumberField M] (σ 
     have : t * t = 0 := by rw [htt, hd, map_zero]
     exact mul_self_eq_zero.1 this
   have hform := fun v => form_of_norm hrank σ hσK ht0 hσt htt v h0 (hloc v)
-  obtain ⟨x, y, hxy⟩ := GlobalTheory.T.exists_finiteAdele_sq_sub_mul_sq_eq_of_local K δ h hδ0 h0 hform
+  obtain ⟨x, y, hxy⟩ := _root_.GlobalTheory.AdelicQuadSol.exists_finiteAdele_sq_sub_mul_sq K δ h hδ0 h0 hform
   obtain ⟨Φ, hΦ⟩ := exists_toAfP K p
   let j : AfP p ⊗[ℚ] K →ₐ[ℚ] AfP p ⊗[ℚ] M :=
     Algebra.TensorProduct.map (AlgHom.id ℚ (AfP p)) (IsScalarTower.toAlgHom ℚ K M)
@@ -756,8 +752,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_realSubfield_negative_twoPlaces_normEverywhere : ∀ (M : Type) [Field M] [NumberField M] (σ : M →+* M), σ ≠ RingHom.id M → (∀ (φ : M →+* ℂ) (x : M), φ (σ x) = (starRingEnd ℂ) (φ x)) → ∀ ε ε' : M →+* ℂ, ε ≠ ε' → ε ≠ ComplexEmbedding.conjugate ε' → ∀ (p : ℕ) [Fact p.Prime], ∃ a : M, a ≠ 0 ∧ σ a = a ∧ (ε a).re < 0 ∧ (ε' a).re < 0 ∧ (∀ φ : M →+* ℂ, φ ≠ ε → φ ≠ ComplexEmbedding.conjugate ε → φ ≠ ε' → φ ≠ ComplexEmbedding.conjugate ε' → 0 < (φ a).re) ∧ ∃ u : (AfP p ⊗[ℚ] M)ˣ, (u : AfP p ⊗[ℚ] M) * Algebra.TensorProduct.map (AlgHom.id ℚ (AfP p)) σ.toRatAlgHom u = 1 ⊗ₜ a := by
-  first | (exact @GlobalTheory.NormSign.exists_neg_two_norm_away)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealSubfieldNegativeTwoPlacesNormEverywherStatement =====
@@ -858,7 +852,7 @@ theorem GlobalTheory.NormSign.exists_neg_even_norm_away : ∀ (M : Type) [Field 
       · exact hcc _ _ h
     obtain ⟨b, hb0, hbσ, hbneg, hbpos, ub, hub⟩ := ih S' hS'stab hcard
     obtain ⟨c, hc0, hcσ, hcε, hcε', hcpos, uc, huc⟩ :=
-      GlobalTheory.T.exists_realSubfield_negative_twoPlaces_normEverywhere M σ hσ hc ε ε' (Ne.symm h2) h3 p
+      _root_.GlobalTheory.NormSign.exists_neg_two_norm_away M σ hσ hc ε ε' (Ne.symm h2) h3 p
     have hcneg : ∀ φ, φ = ε ∨ φ = ComplexEmbedding.conjugate ε ∨ φ = ε' ∨ φ = ComplexEmbedding.conjugate ε' →
         (φ c).re < 0 := by
       rintro φ (rfl | rfl | rfl | rfl)

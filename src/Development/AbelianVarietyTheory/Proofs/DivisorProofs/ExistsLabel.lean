@@ -1085,11 +1085,7 @@ theorem eq_top_of_nilpotent {F V : Type} [Field F] [AddCommGroup V] [Module F V]
   obtain ⟨w, hw, u, rfl⟩ := key m v
   simpa [hN] using hw
 
-theorem aeval_mem {F V : Type} [Field F] [AddCommGroup V] [Module F V] (g : Module.End F V)
-    (W : Submodule F V) (hW : ∀ x ∈ W, g x ∈ W) (p : F[X]) : ∀ x ∈ W, aeval g p x ∈ W := by
-  first
-  | (apply _root_.GlobalTheory.PolynomialEvaluationMembership.aeval_apply_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PolynomialEvaluationMembership.aeval_apply_mem ..)
+alias aeval_mem := _root_.GlobalTheory.PolynomialEvaluationMembership.aeval_apply_mem
 
 theorem mem_image_of_mem_span {F V : Type} [Field F] [AddCommGroup V] [Module F V] (g : Module.End F V)
     (f : F[X]) {t : ℕ} (π : V →ₗ[F] (Fin t → AdjoinRoot f)) (hπ : ∀ v, π (g v) = AdjoinRoot.root f • π v)

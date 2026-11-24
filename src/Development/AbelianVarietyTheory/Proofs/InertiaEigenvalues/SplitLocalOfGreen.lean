@@ -361,21 +361,9 @@ theorem list_sum_nat (l : List ℂ) (h : ∀ z ∈ l, ∃ n : ℕ, z = n) :
     · obtain ⟨k', hk'⟩ := H w hw hw0
       exact ⟨m + k', by rw [List.sum_cons, hk', hm]; push_cast; ring⟩
 
-theorem isClass_of_isChar {G : Type} [Group G] {χ : G → ℂ} (h : IsChar χ) : IsClass χ := by
-  obtain ⟨V, hV⟩ := h
-  intro x y
-  rw [← hV, ← hV]
-  exact FDRep.char_conj V x y
+alias isClass_of_isChar := _root_.GlobalTheory.CharDec.isClass_of_isChar
 
-theorem ip_nat {G : Type} [Group G] [Fintype G] {α β : G → ℂ} (hα : IsChar α) (hβ : IsChar β) :
-    ∃ n : ℕ, ip α β = n := by
-  obtain ⟨W, hW⟩ := hα
-  obtain ⟨V, hV⟩ := hβ
-  refine ⟨Module.finrank ℂ (V ⟶ W), ?_⟩
-  rw [← FDRep.scalar_product_char_eq_finrank_equivariant]
-  unfold ip
-  rw [Fintype.card_eq_nat_card]
-  simp [hW, hV]
+alias ip_nat := _root_.GlobalTheory.CharDec.ip_char_nat
 
 theorem ip_self {G : Type} [Group G] [Fintype G] {α : G → ℂ} (hα : IsIrr α) : ip α α = 1 := by
   obtain ⟨V, hs, hV⟩ := hα
@@ -387,9 +375,7 @@ theorem ip_self {G : Type} [Group G] [Fintype G] {α : G → ℂ} (hα : IsIrr �
   rw [Fintype.card_eq_nat_card]
   simpa [hV] using this
 
-theorem isChar_of_isIrr {G : Type} [Group G] {α : G → ℂ} (h : IsIrr α) : IsChar α := by
-  obtain ⟨V, -, hV⟩ := h
-  exact ⟨V, hV⟩
+alias isChar_of_isIrr := _root_.GlobalTheory.CharDec.isChar_of_isIrr
 
 end GlobalTheory.GLq.StdRes
 
@@ -880,9 +866,9 @@ theorem hasLabelO_of_mul {p : ℕ} [Fact p.Prime] {C : Formalism.IrreducibleCoun
   rw [GlobalTheory.SerOSys.eSerO_eq_sum, Finset.mul_sum] at h
   obtain ⟨z, hz, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero (h.trans_ne h0)
   obtain ⟨τ, hτ, rfl, hl⟩ := (GlobalTheory.SerOSys.Zl_finite O r f).mem_toFinset.1 hz
-  refine GlobalTheory.SerOSys.hasLabelO_of_repIso O hl (GlobalTheory.SerOSys.repIso_of_zIdem_eq ρ τ hρ hτ ?_)
+  refine GlobalTheory.SerOSys.hasLabelO_of_repIso O hl (_root_.GlobalTheory.SerOSys.repIso_of_zIdem_eq_of_simple ρ τ hρ hτ ?_)
   by_contra e
-  exact hne (GlobalTheory.SerOSys.zIdem_mul_eq_zero ρ τ hρ hτ e)
+  exact hne (_root_.GlobalTheory.SerOSys.zIdem_mul_eq_zero_of_ne ρ τ hρ hτ e)
 
 theorem exists_hasLabel {p : ℕ} [Fact p.Prime] (t : Formalism.CyclotomicNorms.Fbar p →* ℂ)
     (ht : ∀ x y : Formalism.CyclotomicNorms.Fbar p, x ≠ 0 → y ≠ 0 → t x = t y → x = y) (ζ : ℕ → Formalism.CyclotomicNorms.Fbar p) (hζ : Formalism.L2.NT.IsGenSys ζ)

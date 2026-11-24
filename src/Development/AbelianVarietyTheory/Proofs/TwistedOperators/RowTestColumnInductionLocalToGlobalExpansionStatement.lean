@@ -398,15 +398,6 @@ open GlobalTheory.FinTranslate GlobalTheory.FockCompare
 
 variable {D : D7}
 
-theorem finPart_eInf_smul (a : AE D) : finPart D (eInf D • a) = 0 := by
-  induction a using TensorProduct.induction_on with
-  | zero => simp only [smul_zero, map_zero]
-  | add a b ha hb => rw [smul_add, RingHom.map_add (f := _), ha, hb, add_zero]
-  | tmul a x =>
-    rw [TensorProduct.smul_tmul']
-    show (sndA D.host.F (eInf D • a)) ⊗ₜ[D.host.F] x = 0
-    rw [show sndA D.host.F (eInf D • a) = 0 from zero_mul _, TensorProduct.zero_tmul]
-
 theorem infPart_eInf_smul (a : AE D) : infPart D (eInf D • a) = infPart D a := by
   induction a using TensorProduct.induction_on with
   | zero => simp only [smul_zero]
@@ -419,7 +410,7 @@ theorem infPart_eInf_smul (a : AE D) : infPart D (eInf D • a) = infPart D a :=
 theorem infPart_eq_zero {θ : InfFam D} (hθ : IsInfFam θ) {a : AE D} (h : ∀ τ, θ τ (infPart D a) = 0) :
     infPart D a = 0 := by
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  have := hσ.ext (eInf D • a) (finPart_eInf_smul a) fun τ => by rw [infPart_eInf_smul, h]
+  have := hσ.ext (eInf D • a) (_root_.GlobalTheory.ThetaClosed.finPart_eInf_smul a) fun τ => by rw [infPart_eInf_smul, h]
   rw [← infPart_eInf_smul, this, map_zero]
 
 variable {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D}
@@ -450,7 +441,7 @@ theorem exists_extension (hψ : IsStdChar D ψ (-1)) (F₀ : (WO S T → ℂ) �
   obtain ⟨L, hL⟩ := L₀.exists_extend
   have hL' : ∀ g, IsThetaFunO ψ S T g → L g = F₀ g := fun g hg => LinearMap.congr_fun hL ⟨g, hg⟩
   have hr : ∀ w : WO S T, (eInf D • w).map (finPart D) = 0 := fun w =>
-    Matrix.ext fun i j => finPart_eInf_smul (w i j)
+    Matrix.ext fun i j => _root_.GlobalTheory.ThetaClosed.finPart_eInf_smul (w i j)
   have hf : ∀ w : WO S T, (w - eInf D • w).map (infPart D) = 0 := fun w => Matrix.ext fun i j => by
     show infPart D (w i j - eInf D • w i j) = 0
     rw [RingHom.map_sub, infPart_eInf_smul, sub_self]
@@ -617,7 +608,7 @@ theorem main : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T) (e : AE D) 
   refine ⟨0, fun _ _ _ => ⟨0, fun D _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ch _ _ t e v f P j φ hv h => ?_⟩⟩
   exact ⟨GlobalTheory.GalLift.Vec.theta_pureTensorO ch.W.ψ_std ch.W.θ_is _ _ _ _ hv (P j), h.1,
     isThetaAt_pureTensorO ch.W.ψ_std ch.W.θ_is (ch.W.cart_is (.grid D.R.m j) ⟨le_rfl, j.2.le⟩)
-      (ch.W.cart_is (.grid D.R.m (j + 1)) ⟨le_rfl, j.2⟩) _ _ (fun _ hu => GlobalTheory.VacGood.infPart_latO hu) hv h.1 h.2 (P j)⟩
+      (ch.W.cart_is (.grid D.R.m (j + 1)) ⟨le_rfl, j.2⟩) _ _ (fun _ hu => _root_.GlobalTheory.SplitScalar.latO_fin hu) hv h.1 h.2 (P j)⟩
 
 end GlobalTheory.FockPlace
 
@@ -1219,7 +1210,7 @@ theorem subset_vectors : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T) (
     have hb := GlobalTheory.FunObj.Good.badInt_notMem hL (GlobalTheory.FlipIntegrand.pde_ne_q_of_setting s) (hch.guard t) hw
     have h2q := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro _ rfl))
     have hN := fun h => hb (GlobalTheory.HalfCompare.mem_of_dvd h (Dvd.intro_left _ rfl))
-    refine ⟨fun a ha => ?_, ⟨_, GlobalTheory.HostClear.absNorm_mem_AA D, ?_⟩⟩
+    refine ⟨fun a ha => ?_, ⟨_, _root_.Formalism.L2.Pj.normK_mem_AA D, ?_⟩⟩
     · rw [GlobalTheory.FunObj.Good.valued_alg]
       exact GlobalTheory.FunObj.Good.valuation_le_one_of_mem h2q (Or.inl ha)
     · rw [GlobalTheory.FunObj.Good.valued_alg]
@@ -1319,17 +1310,6 @@ theorem eq_zero_of_isHalf_zero {m n : ℕ} {x : Mx D m n} (hx : IsHalf (0 : AE D
   simp at this
   simpa using this.symm
 
-theorem isHalf_zero_zero {m n : ℕ} (e : AE D) : IsHalf e (0 : Mx D m n) := by
-  intro i j
-  simp
-
-theorem heisenbergSymplecticForm_zero_right_eq_zero (S T : HSp D) (x : WO S T) : symplO S T x 0 = 0 := by
-  simp [symplO, hO]
-
-theorem heisO_zero_eq_self (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ) : heisO ψ S T 0 f = f := by
-  funext w
-  simp [heisO, symplOH, heisenbergSymplecticForm_zero_right_eq_zero]
-
 theorem heisenbergTranslationCombination_single_one_eq_translate (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (w : WO S T) (f : WO S T → ℂ) :
     GlobalTheory.SeeSaw.comb ψ S T (Finsupp.single w 1) f = heisO ψ S T w f := by
   unfold GlobalTheory.SeeSaw.comb
@@ -1348,21 +1328,21 @@ theorem vacuum_isCombOf {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L
   · intro u hu
     rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
     subst hu
-    exact isHalf_zero_zero _
+    exact _root_.GlobalTheory.SplitScalar.isHalf_zero _
   · have he : (FinDatum.vacuum G t p).e = 0 := rfl
     intro f₀ _ _
     show AllSome _ _
-    rw [heisenbergTranslationCombination_single_one_eq_translate, heisO_zero_eq_self]
+    rw [heisenbergTranslationCombination_single_one_eq_translate, _root_.GlobalTheory.SplitScalar.heisO_zero]
     refine ⟨⟨(LinearMap.proj (R := ℂ) (φ := fun _ : WO (G.pS p) (G.pT p) => ℂ) 0).smulRight f₀, ?_, ?_, ?_⟩, ?_⟩
     · intro Φ _ x hx
       obtain rfl := eq_zero_of_isHalf_zero hx
-      simp [heisO_zero_eq_self]
+      simp [_root_.GlobalTheory.SplitScalar.heisO_zero]
     · intro Φ _ y hy
       have hy0 : IsHalf (0 : AE D) y := by rw [he, map_zero] at hy; exact hy
       obtain rfl := eq_zero_of_isHalf_zero hy0
-      simp [heisO_zero_eq_self, heisenbergSymplecticForm_zero_right_eq_zero]
+      simp [_root_.GlobalTheory.SplitScalar.heisO_zero, _root_.GlobalTheory.PlaceModel.symplO_zero_right]
     · have h0 : halfInd (0 : AE D) (latO (G.pS p) (G.pT p) ↑(G.latS p) ↑(G.latT p) fun _ => True) 0 = 1 := by
-        rw [halfInd, if_pos ⟨zero_mem _, isHalf_zero_zero _⟩]
+        rw [halfInd, if_pos ⟨zero_mem _, _root_.GlobalTheory.SplitScalar.isHalf_zero _⟩]
       rw [he]
       simp [h0]
     · intro Tm hT

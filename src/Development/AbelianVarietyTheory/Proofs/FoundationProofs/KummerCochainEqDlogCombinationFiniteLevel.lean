@@ -1649,9 +1649,9 @@ theorem core (hp2 : p ≠ 2) (hΩ : IsClo p Ω) (T : Tower p Ω) (n : ℕ) (hn :
   have pn : IsInt (p := p) ((p : Ω) ^ n) := int_pow (int_nat p) n
   have p6 : IsInt (p := p) ((p : Ω) ^ 6) := int_pow (int_nat p) 6
   refine ⟨_, int_add (int_add (int_add (int_add b2
-    (int_mul (int_mul (int_add (int_nat (lz g).val) (int_mul pn (int_int s))) p2) gz))
-    (int_mul (int_mul (int_add (int_nat (lq g).val) (int_mul pn (int_int t))) p2) gq))
-    (int_mul (int_mul p6 (hI B)) (int_int s))) (int_mul (int_mul p6 (hI A)) (int_int t)), ?_⟩
+    (int_mul (int_mul (int_add (int_nat (lz g).val) (int_mul pn (_root_.GlobalTheory.K5.Basic.isInt_intCast s))) p2) gz))
+    (int_mul (int_mul (int_add (int_nat (lq g).val) (int_mul pn (_root_.GlobalTheory.K5.Basic.isInt_intCast t))) p2) gq))
+    (int_mul (int_mul p6 (hI B)) (_root_.GlobalTheory.K5.Basic.isInt_intCast s))) (int_mul (int_mul p6 (hI A)) (_root_.GlobalTheory.K5.Basic.isInt_intCast t)), ?_⟩
   simp only [map_sub, map_mul, map_div₀, map_pow, map_natCast, hfix]
   have c1 : g r ^ N * T.ζ n ^ (a g).val = r ^ N := by
     rw [ha g hg, mul_pow, mul_right_comm, ← pow_succ, ← hN, ← pow_mul, mul_comm (a g).val, pow_mul,
@@ -1723,7 +1723,7 @@ theorem kummer_eq_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, 
   have hpπ : IsInt (p := p) ((p : Ω) / (T.ζ n - 1)) := by
     simpa using GlobalTheory.T.isInt_prime_div_rootOfUnity_sub_one_pow p Ω T n 1 hn (Nat.totient_pos.2 (ppow_pos n))
   have j1 := int_mul (int_nat (Ω := Ω) (p := p) p) (hI (↑w⁻¹ : On p n))
-  have j2 := int_mul (int_int (Ω := Ω) (p := p) k) hpπ
+  have j2 := int_mul (_root_.GlobalTheory.K5.Basic.isInt_intCast (Ω := Ω) (p := p) k) hpπ
   refine ⟨_, int_add (int_mul j1 i1) (int_mul j2 i2), fun g hg => ?_⟩
   obtain ⟨z1, l1, f1⟩ := e1 g hg
   obtain ⟨z2, l2, f2⟩ := e2 g hg
@@ -1741,7 +1741,7 @@ theorem kummer_eq_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, 
     have := congrArg (Int.cast : ℤ → Ω) ht
     simpa only [Int.cast_sub, Int.cast_mul, Int.cast_natCast, Nat.cast_pow, Int.cast_pow] using this
   refine ⟨_, int_add (int_add (int_mul j1 l1) (int_mul j2 l2))
-    (int_mul (int_pow (int_nat p) 7) (int_int t)), ?_⟩
+    (int_mul (int_pow (int_nat p) 7) (_root_.GlobalTheory.K5.Basic.isInt_intCast t)), ?_⟩
   simp only [map_add (f := _), map_sub, map_mul, map_div₀, map_natCast, map_intCast, map_one, map_zero,
     hfix g hg, hι.1, (mem_Gn.1 hg).1] at f1 f2 ⊢
   have hinv : (T.ζ n - 1) * (T.ζ n - 1)⁻¹ = 1 := mul_inv_cancel₀ hπ

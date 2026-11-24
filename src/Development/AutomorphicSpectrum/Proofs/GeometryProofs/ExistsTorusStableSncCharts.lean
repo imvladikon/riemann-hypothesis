@@ -14,6 +14,7 @@ public import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffCha
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterPC
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RationalRelationInChartIdeal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionRegularLocalRing
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
 public import Mathlib.Topology.Algebra.MvPolynomial
 public import Mathlib.Basic.Complex.Basic
@@ -25,7 +26,6 @@ public import ReciprocityTheory.AnalyticForms.RegularLocalRings.AtlasA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterAlgRes
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionCoverAndCone
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionRegularLocalRing
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.ProjectiveLineMultihomogClassify
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.StalkLocA
 import Mathlib.Algebra.Order.Floor.Extended
@@ -265,7 +265,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHomAdjoinInv =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartIdealLocalizationMap =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartIdealLocalizationMap", "h": "module\n\npublic import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterPC\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHomAdjoinInv\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RationalRelationInChartIdeal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv\nimport Mathlib.CategoryTheory.Monoidal.Cartesian.Basic\nimport Mathlib.CategoryTheory.Monoidal.Category\nimport Mathlib.CategoryTheory.Monoidal.Mon\nimport Mathlib.Topology.Sheaves.Presheaf\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartIdealLocalizationMap", "h": "module\n\npublic import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterPC\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHomAdjoinInv\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RationalRelationInChartIdeal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv\nimport Mathlib.CategoryTheory.Monoidal.Cartesian.Basic\nimport Mathlib.CategoryTheory.Monoidal.Category\nimport Mathlib.CategoryTheory.Monoidal.Mon\nimport Mathlib.Topology.Sheaves.Presheaf\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst\nimport Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionRegularLocalRing\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -287,7 +287,7 @@ theorem exists_hom_chart : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, F
   intro K _ J _ Ω _ _ y c hc R _ θ hθ F hF S hS
   exact exists_hom_adjoin_inv (fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩)
     (θ.comp (map (algebraMap ℚ ℂ)))
-    (fun G hG => hθ _ (GlobalTheory.CompanionTheory.Ar.ChartDehom.map_mem_chartIdeal K J Ω y c hc G hG)) F hF S hS
+    (fun G hG => hθ _ (_root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Reg.ker_le_chart K J Ω y c hc G hG)) F hF S hS
 
 end GlobalTheory.CompanionTheory.Ar.ChartHom
 end -- clump:auto
@@ -814,10 +814,6 @@ theorem span_eq_of_unit {B ι' : Type*} [CommRing B] (a b : ι' → B) (u : ι' 
     rw [this]
     exact Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨i, rfl⟩)
 
-theorem exists_perm (n a : ℕ) (G : Finset (Fin n)) (hG : G.card = a) :
-    ∃ τ : Equiv.Perm (Fin n), ∀ j : Fin n, (j : ℕ) < a ↔ τ j ∈ G :=
-  _root_.UpperTheory.Reformulated.B.DYdc4.main n a G hG
-
 end GlobalTheory.CompanionTheory.Ar.SncCpt
 
 namespace GlobalTheory.CompanionTheory.Ar.SncCpt
@@ -1019,7 +1015,7 @@ theorem snc_params : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
     exact hl0
   let Gd : Finset (Fin n) := Finset.univ.filter fun i => (i : ℕ) < nn ∧ φ0 (z i) = 0
   let Bad : Finset (Fin n) := Finset.univ.filter fun i => (i : ℕ) < nn ∧ φ0 (z i) ≠ 0
-  obtain ⟨τ, hτ⟩ := exists_perm n Gd.card Gd rfl
+  obtain ⟨τ, hτ⟩ := _root_.UpperTheory.Reformulated.B.DYdc4.main n Gd.card Gd rfl
   refine ⟨Gd.card, fun i => r0 (τ i), Fr * ∏ i ∈ Bad, Zr i, by simpa using Gd.card_le_univ, ?_, ?_, ?_, ?_⟩
   · rw [← hm, ← hspan0]
     apply congrArg

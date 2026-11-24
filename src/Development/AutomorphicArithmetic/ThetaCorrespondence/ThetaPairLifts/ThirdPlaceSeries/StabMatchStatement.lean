@@ -755,7 +755,7 @@ theorem latV_normalFrame_zero_loc : ∀ {D : D7} {c : Comm D} {v : VCom c} (G : 
   have hb := GlobalTheory.LocMod.liftM_map β.val
   have h1 := hM _ hb
   have h2 := hB1 _ hb
-  rw [GlobalTheory.LocMod.mt_one_gaMat, Matrix.one_mul] at h2
+  rw [_root_.GlobalTheory.BesselCompare.mt_one, Matrix.one_mul] at h2
   rw [Matrix.map_mul, h2] at h1
   let ε := e.symm.trans (GlobalTheory.StepData.stdOrd (Fin D.R.k) (Fin D.R.t) 0 (G.s + 1) hn)
   let X := (G.FY 0 (G.s + 1) hn).β * ((G.S.T (Fin D.R.t)).bas 0 (G.s + 1) hn).val
@@ -764,11 +764,11 @@ theorem latV_normalFrame_zero_loc : ∀ {D : D7} {c : Comm D} {v : VCom c} (G : 
   have h1' : P * B.val = X.submatrix id ε := h1
   have hPPi : P * Pi = 1 := by
     change (mt (c.V 0) b).map G.q.pr * (mt (c.V 0) b⁻¹).map G.q.pr = 1
-    rw [← Matrix.map_mul, ← GlobalTheory.LocMod.mt_mul_gaMat, mul_inv_cancel, GlobalTheory.LocMod.mt_one_gaMat,
+    rw [← Matrix.map_mul, ← _root_.GlobalTheory.BesselCompare.mt_mul, mul_inv_cancel, _root_.GlobalTheory.BesselCompare.mt_one,
       Matrix.map_one _ (map_zero _) (map_one _)]
   have hPiP : Pi * P = 1 := by
     change (mt (c.V 0) b⁻¹).map G.q.pr * (mt (c.V 0) b).map G.q.pr = 1
-    rw [← Matrix.map_mul, ← GlobalTheory.LocMod.mt_mul_gaMat, inv_mul_cancel, GlobalTheory.LocMod.mt_one_gaMat,
+    rw [← Matrix.map_mul, ← _root_.GlobalTheory.BesselCompare.mt_mul, inv_mul_cancel, _root_.GlobalTheory.BesselCompare.mt_one,
       Matrix.map_one _ (map_zero _) (map_one _)]
   have hX : X = (P * B.val).submatrix id ε.symm := by
     rw [h1', submatrix_submatrix, Function.comp_id, Equiv.self_comp_symm, submatrix_id_id]
@@ -1045,11 +1045,9 @@ namespace GlobalTheory.Core.Mi.LatGlue
 
 variable {D : D7}
 
-theorem mt_mul (S : HSp D) (a b : GA D S) : Formalism.L2.Theta.mt S (a * b) = Formalism.L2.Theta.mt S a * Formalism.L2.Theta.mt S b := by
-  first | rfl
+alias mt_mul := _root_.GlobalTheory.BesselCompare.mt_mul
 
-theorem mt_one (S : HSp D) : Formalism.L2.Theta.mt S 1 = 1 := by
-  first | rfl
+alias mt_one := _root_.GlobalTheory.BesselCompare.mt_one
 
 theorem mem_congGrp {V : HSp D} {I : Ideal (AE D)} {g : GA D V} :
     g ∈ GlobalTheory.FinPl.congGrp V I ↔ ∀ i j, Formalism.L2.Theta.mt V g i j - (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j ∈ I := by
@@ -1879,16 +1877,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum MeasureTheory IsDedekindDomain NumberField Matrix
-open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.SeeSaw GlobalTheory.StepData GlobalTheory.SymChain GlobalTheory.LocMod GlobalTheory.MiS GlobalTheory.MiTop GlobalTheory.Fam GlobalTheory.Core.Mi ValuativeRel
-open Formalism.L2.SG.RowsJoinPinned Formalism.L2.SG.RowDict Formalism.L2.SG.PoincareInHH.PoincareSetting
-open scoped TensorProduct Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.exists_central_stab_of_transport_correction : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.PackageHypotheses W → ∀ (u : D.what₂.Word) (f : _root_.GlobalTheory.Fam.FamilyCharacter W u) (B : SBes W.S.X W.Q.instEq u W.Q.Rl.ψ (D.sp.X 0)), _root_.GlobalTheory.MiTop.PlacedAlt f B → Framed B → ∀ a₀ : GA D (D.sp.X 0), IsTransportAdelicCorrection (W.S.tr u) a₀ → ∃ a ∈ GfC (D.sp.X 0), a ∈ Subgroup.center (GA D (D.sp.X 0)) ∧ _root_.GlobalTheory.LevZero.StabiliserCondition f B a₀ a := by
-  first | exact @_root_.GlobalTheory.LevZero.StabMatch.exists_center_stab_at_of_transport_correction
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.StabMatchStatement =====

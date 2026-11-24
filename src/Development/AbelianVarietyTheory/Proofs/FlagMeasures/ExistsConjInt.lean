@@ -429,29 +429,14 @@ theorem count_fibres {W W' : Type} [AddCommGroup W] [AddCommGroup W'] (T : AddSu
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E)
 
-theorem form_add_left {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (x y z : Fin n → E) :
-    hf L Hm (x + y) z = hf L Hm x z + hf L Hm y z := by
-  simp [hf, add_mul, Finset.sum_add_distrib]
-
 theorem form_add_right {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (x y z : Fin n → E) :
     hf L Hm x (y + z) = hf L Hm x y + hf L Hm x z := by
   simp [hf, mul_add, Finset.sum_add_distrib]
-
-theorem form_smul_left {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (c : E) (x z : Fin n → E) :
-    hf L Hm (c • x) z = c * hf L Hm x z := by
-  simp [hf, Finset.mul_sum, mul_assoc]
 
 theorem form_smul_right {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (c : E) (x z : Fin n → E) :
     hf L Hm x (c • z) = L.cj c * hf L Hm x z := by
   simp only [hf, Finset.mul_sum, Pi.smul_apply, smul_eq_mul, map_mul]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
-
-theorem form_sum_left {n k : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (c : Fin k → E)
-    (v : Fin k → Fin n → E) (z : Fin n → E) :
-    hf L Hm (∑ i, c i • v i) z = ∑ i, c i * hf L Hm (v i) z := by
-  induction (Finset.univ : Finset (Fin k)) using Finset.induction_on with
-  | empty => simp [hf]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, form_add_left, ih, form_smul_left]
 
 theorem form_sum_right {n k : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (c : Fin k → E)
     (v : Fin k → Fin n → E) (z : Fin n → E) :
@@ -459,14 +444,6 @@ theorem form_sum_right {n k : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (c : Fin k �
   induction (Finset.univ : Finset (Fin k)) using Finset.induction_on with
   | empty => simp [hf]
   | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, form_add_right, ih, form_smul_right]
-
-theorem form_conj {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm) (x y : Fin n → E) :
-    L.cj (hf L Hm x y) = hf L Hm y x := by
-  have h' : ∀ i j, L.cj (Hm i j) = Hm j i := fun i j => congrFun (congrFun h j) i
-
-  simp only [hf, map_sum, map_mul, L.cj_cj, h']
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
 theorem mem_hermLat {m : ℕ} (X : Matrix (Fin m) (Fin m) E) :
     X ∈ hermLat L m ↔ IsHerm L X ∧ IsIntM L X := by
@@ -523,7 +500,7 @@ theorem prim_add {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} {Λ : Submodule L.O
   set M := (1 + p' • C) with hM
   have hMv : ∀ a b, hf L Hm ((z + p • w) a) (y b) = (M a b : E) := by
     intro a b
-    simp only [Pi.add_apply, Pi.smul_apply, form_add_left, form_smul_left, hzy, hM, Matrix.add_apply,
+    simp only [Pi.add_apply, Pi.smul_apply, _root_.GlobalTheory.HL.Eichler.hf_add_l, _root_.GlobalTheory.HL.Eichler.hf_smul_l, hzy, hM, Matrix.add_apply,
       Matrix.smul_apply, smul_eq_mul, Matrix.one_apply, C, p', Matrix.of_apply]
     split_ifs <;> simp
   refine ⟨fun b => ∑ c, L.cj (M⁻¹ c b : E) • y c, fun b => Λ.sum_mem fun c _ =>
@@ -540,7 +517,7 @@ theorem prim_add {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} {Λ : Submodule L.O
 theorem gram_herm {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm) (z : Fin m → Fin n → E) :
     IsHerm L (gramT L Hm z) := by
   ext i j
-  simp [cT, gramT, form_conj L h]
+  simp [cT, gramT, _root_.GlobalTheory.HL.Eichler.hf_cj L h]
 
 theorem herm_sub {m : ℕ} {X Y : Matrix (Fin m) (Fin m) E} (hX : IsHerm L X) (hY : IsHerm L Y) :
     IsHerm L (X - Y) := by
@@ -559,8 +536,8 @@ theorem gram_add {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
   refine ⟨hf L Hm (z b) (w a) + hf L Hm (w b) (z a) + p * hf L Hm (w b) (w a),
     L.O.add_mem (L.O.add_mem (hi _ (hz b) _ (hw a)) (hi _ (hw b) _ (hz a)))
       (L.O.mul_mem hp (hi _ (hw b) _ (hw a))), ?_⟩
-  simp only [gramT, Matrix.sub_apply, Matrix.of_apply, Pi.add_apply, Pi.smul_apply, form_add_left,
-    form_add_right, form_smul_left, form_smul_right, hc]
+  simp only [gramT, Matrix.sub_apply, Matrix.of_apply, Pi.add_apply, Pi.smul_apply, _root_.GlobalTheory.HL.Eichler.hf_add_l,
+    form_add_right, _root_.GlobalTheory.HL.Eichler.hf_smul_l, form_smul_right, hc]
   ring
 
 theorem fibre_card {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
@@ -584,7 +561,7 @@ theorem fibre_card {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
   let φ : (Fin n → E) → (Fin n → E) := fun x => ∑ i, x i • b i
   have hφb : ∀ x i, hf L Hm (φ x) (b i) = x i := by
     intro x i
-    simp [φ, form_sum_left, hb]
+    simp [φ, _root_.GlobalTheory.HL.LatCard.hf_sum_smul, hb]
   have hφ : ∀ x y, hf L Hm (φ x) (φ y) = hf L 1 x y := by
     intro x y
     rw [show φ y = ∑ i, y i • b i from rfl, form_sum_right]
@@ -649,7 +626,7 @@ theorem fibre_card {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
     simp only [Pi.sub_apply, Pi.smul_apply] at this
     rw [← this]; abel
   have h2 : x a i - x' a i = p * hf L Hm (w a) (b i) := by
-    rw [← hφb (x a) i, h1, form_add_left, form_smul_left, hφb]; ring
+    rw [← hφb (x a) i, h1, _root_.GlobalTheory.HL.Eichler.hf_add_l, _root_.GlobalTheory.HL.Eichler.hf_smul_l, hφb]; ring
   exact (hR' (x a i) (hR _ (hx.1 a i))).unique ⟨hx.1 a i, 0, L.O.zero_mem, by simp⟩
     ⟨hx'.1 a i, _, hi _ (hw a) _ (hbm i), h2⟩
 
@@ -832,42 +809,21 @@ theorem hf_sum_left (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
   rw [Finset.sum_comm (s := Finset.univ (α := Fin m))]
   exact Finset.sum_congr rfl fun a _ => Finset.sum_comm
 
-theorem hf_cj (L : LocE F E) {n : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
-    (x y : Fin n → E) : L.cj (hf L Hm x y) = hf L Hm y x := by
-
-  simp only [hf, map_sum, map_mul, L.cj_cj]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
-  have : L.cj (Hm b a) = Hm a b := congrFun (congrFun h a) b
-  rw [this]; ring
-
 theorem gramT_rmul (L : LocE F E) {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
     (x : Fin m → Fin n → E) (A : Matrix (Fin m) (Fin m) E) :
     gramT L Hm (rmul x A) = cT L A * gramT L Hm x * A := by
   ext a b
   have h1 : ∀ y, hf L Hm y (∑ i, A i a • x i) = ∑ i, L.cj (A i a) * hf L Hm y (x i) := by
     intro y
-    rw [← hf_cj L h, hf_sum_left]
+    rw [← _root_.GlobalTheory.HL.Eichler.hf_cj L h, hf_sum_left]
 
-    simp only [map_sum, map_mul, hf_cj L h]
+    simp only [map_sum, map_mul, _root_.GlobalTheory.HL.Eichler.hf_cj L h]
   simp only [gramT, rmul, Matrix.of_apply, hf_sum_left, h1, Matrix.mul_apply, cT]
   exact Finset.sum_congr rfl fun i _ => mul_comm _ _
 
-theorem isHerm_gramT (L : LocE F E) {n m : ℕ} {Hm : Matrix (Fin n) (Fin n) E} (h : IsHerm L Hm)
-    (x : Fin m → Fin n → E) : IsHerm L (gramT L Hm x) := by
-  ext a b
-  exact hf_cj L h _ _
+alias cT_mul := _root_.GlobalTheory.CongTrans.cT_mul
 
-theorem cT_mul (L : LocE F E) {m : ℕ} (A B : Matrix (Fin m) (Fin m) E) :
-    cT L (A * B) = cT L B * cT L A := by
-  ext a b
-
-  simp only [cT, Matrix.mul_apply, map_sum, map_mul, mul_comm]
-
-theorem cT_one (L : LocE F E) {m : ℕ} : cT L (1 : Matrix (Fin m) (Fin m) E) = 1 := by
-  ext a b
-  simp only [cT, Matrix.one_apply, eq_comm (a := b)]
-  split_ifs <;> simp
+alias cT_one := _root_.GlobalTheory.CongTrans.cT_one
 
 theorem rmul_rmul {n m : ℕ} (x : Fin m → Fin n → E) (A B : Matrix (Fin m) (Fin m) E) :
     rmul (rmul x A) B = rmul x (A * B) := by
@@ -942,7 +898,7 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
   have hAA' : A⁻¹ * A = 1 := Matrix.nonsing_inv_mul _ hA
   have hcA : cT L A * cT L A⁻¹ = 1 := by rw [← cT_mul, hAA', cT_one]
   have hcA' : cT L A⁻¹ * cT L A = 1 := by rw [← cT_mul, hAA, cT_one]
-  have hΓ := isHerm_gramT L hH.1 x
+  have hΓ := _root_.GlobalTheory.HL.PrimVol.gram_herm L hH.1 x
   set O := horb L ϖ (gramT L Hm x) i with hOdef
   have hOco : IsCO (hermLat L m) O :=
     ((_root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i (le_of_max_le_right hi)).2.2 _ hΓ hx).1
@@ -972,7 +928,7 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
     refine AddSubgroup.subset_closure ⟨?_, ?_⟩
     · change IsHerm L (cT L A⁻¹ * (cT L K * gramT L Hm x * K) * A⁻¹)
       rw [← gramT_rmul L hH.1, ← gramT_rmul L hH.1]
-      exact isHerm_gramT L hH.1 _
+      exact _root_.GlobalTheory.HL.PrimVol.gram_herm L hH.1 _
     · change IsIntM L (cT L A⁻¹ * (cT L K * gramT L Hm x * K) * A⁻¹)
       rw [h1]
       exact isIntM_mul L (isIntM_mul L (fun a b => (hO.2.1 _ (hK' b a)).1) hint) hK'

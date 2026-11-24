@@ -172,7 +172,7 @@ theorem exists_chart_cm (hc : CMData (maximalRealSubfield E) E)
   · obtain ⟨a, ha⟩ : ∃ a, finP _ E a = sgT E v (ψ.symm z) :=
       Algebra.TensorProduct.map_surjective _ _ (fun b => ⟨pairA _ 0 b, rfl⟩) Function.surjective_id _
     exact ⟨a, by rw [hπ, ha, evF_sgT_self, ψ.apply_symm_apply]⟩
-  · refine GlobalTheory.LatVac.tensor_prod_eq_zero (F := maximalRealSubfield E) (A := Ainf (maximalRealSubfield E))
+  · refine _root_.GlobalTheory.ProductLeftMaps.main (F := maximalRealSubfield E) (A := Ainf (maximalRealSubfield E))
       (B := Af (maximalRealSubfield E)) _ ?_ ?_
     · show infP _ E (e * a) = 0
       rw [map_mul, he.1, zero_mul]

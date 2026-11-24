@@ -117,12 +117,6 @@ section Abstract
 
 variable {R O : Type} [CommRing R] [CommRing O] (p : ℕ)
 
-theorem exists_lim [IsAdicComplete (Ideal.span {(p : R)}) R] (f : ℕ → R)
-    (h : ∀ n, (p : R) ^ n ∣ f (n + 1) - f n) : ∃ L, ∀ n, (p : R) ^ n ∣ L - f n := by
-  first
-  | (apply _root_.GlobalTheory.LimitOfDivisibility.exists_limit_of_pow_dvd_sub <;> assumption)
-  | (intros; exact _root_.GlobalTheory.LimitOfDivisibility.exists_limit_of_pow_dvd_sub ..)
-
 theorem eq_zero_of_dvd [IsAdicComplete (Ideal.span {(p : R)}) R] (x : R)
     (h : ∀ n, (p : R) ^ n ∣ x) : x = 0 := by
   refine IsHausdorff.haus (IsAdicComplete.toIsHausdorff (I := Ideal.span {(p : R)}) (M := R)) x fun n => ?_
@@ -174,7 +168,7 @@ theorem exists_log [IsAdicComplete (Ideal.span {(p : R)}) R] (tf : ∀ x : R, (p
     have h := congrArg φ (hW n)
     rw [map_pow, hu, ← pow_mul, ← pow_succ', hW, map_add (f := _), map_one, map_mul, map_pow, map_natCast] at h
     linear_combination -h
-  obtain ⟨y, hy⟩ := exists_lim p W h1
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.LimitOfDivisibility.exists_limit_of_pow_dvd_sub p W h1
   refine ⟨y, ?_, ?_⟩
   · rw [← sub_eq_zero]
     refine eq_zero_of_dvd p _ fun n => ?_
@@ -215,7 +209,7 @@ theorem exists_exact [IsAdicComplete (Ideal.span {(p : R)}) R] [IsAdicComplete (
     | succ n ih =>
       rw [hS, map_add (f := _), ih, map_mul, map_pow, map_natCast, hcs]
       linear_combination (p : O) ^ n * hd (cs n)
-  obtain ⟨y, hy⟩ := exists_lim p S fun n => ⟨Y (cs n), by rw [hS]; ring⟩
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.LimitOfDivisibility.exists_limit_of_pow_dvd_sub p S fun n => ⟨Y (cs n), by rw [hS]; ring⟩
   refine ⟨y, ?_, ?_⟩
   · rw [← sub_eq_zero]
     refine eq_zero_of_dvd p _ fun n => ?_

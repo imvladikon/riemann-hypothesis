@@ -487,9 +487,9 @@ theorem exists_levelCover : ∀ (h n N : ℕ) (B B' : Type) [CommRing B] [CommRi
     refine (locEq Z.left N v (Units.map (fnOn (Z.hom ≫ s')).toMonoidHom (b.ζ ^ (2 * omegaStd a a'))) hNZ hv
       fun k _ _ g => ?_).congr fun k _ _ g => ?_
     · obtain ⟨β, hβ⟩ := exists_spMap (g ≫ Z.hom ≫ s')
-      rw [map_fnOn _ g β hβ, ← unitOn_pow', map_zpow, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast,
+      rw [map_fnOn _ g β hβ, ← _root_.GlobalTheory.HeckePoint.unitOn_pow, map_zpow, ← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast,
         hzN, one_zpow]
-      exact unitOn_one'
+      exact _root_.GlobalTheory.HeckePoint.unitOn_one
     · have hW' := CommPairing.weilIs_pull hG c₀.ab hLB (Over.homMk g rfl : Over.mk (g ≫ Z.hom) ⟶ Z) hW
       obtain ⟨β, hβ⟩ := exists_spMap (g ≫ Z.hom ≫ s')
       have hu := map_fnOn _ g β hβ (b.ζ ^ (2 * omegaStd a a'))

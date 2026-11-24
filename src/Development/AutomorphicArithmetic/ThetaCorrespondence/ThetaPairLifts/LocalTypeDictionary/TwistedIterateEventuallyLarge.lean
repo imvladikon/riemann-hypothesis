@@ -271,14 +271,6 @@ variable {D : D7} {X : HidaSetting.HidaSetting D} {h : X.B.I = instOf D} {u : D.
   {V₀ A L : HSp D} {d : HypDec (D.sp.Y 0) V₀ D.R.rS} {o : OrthDec V₀ A L}
   {ζ : Fin L.rank → D.host.E} {lam : D.host.E}
 
-theorem hyp_linIndep {S S₀ : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) :
-    LinearIndependent D.host.E d.e.transpose := by
-  have h1 : Function.Injective d.e.mulVec := by
-    intro x y hxy
-    have := congrArg (fun v => (d.e'.conjTranspose * HSpace.gram S).mulVec v) hxy
-    simpa [Matrix.mulVec_mulVec, d.e'e] using this
-  exact Matrix.mulVec_injective_iff.mp h1
-
 theorem besPer_domN {S S₀ A L : HSp D} {ρ : ℕ} (d : HypDec S S₀ ρ) (o : OrthDec S₀ A L)
     (ζ : Fin L.rank → D.host.E) {ψ : AddChar (AF ↥D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
     (θ : D.host.E) (μ 𝓕) (ν : Measure (flagN d)) (hν : ν.IsHaarMeasure) {𝓝 𝓝' : Set (flagN d)}
@@ -644,7 +636,7 @@ theorem per_indep {ρ : ℕ} (B : GlobalTheory.Unf.BesLev D ρ) {ψ : AddChar (A
     {ν : Measure (flagN B.d)} {𝓝 : Set (flagN B.d)} (hu : GlobalTheory.Per.IsUnitN B.V B.d.e ν 𝓝) (φ : GA D B.A → ℂ) (f : GA D B.V → ℂ)
     (hφ : ∀ γ ∈ GQ B.A, ∀ g, φ (γ * g) = φ g) (hf : ∀ γ ∈ GQ B.V, ∀ g, f (γ * g) = f g) :
     besPer ψ 1 B.d B.o B.ζ μ 𝓕 ν 𝓝 φ f = B.per ψ φ f := by
-  have hI : IsIsoSub B.V B.d.e := ⟨GlobalTheory.Core.Mi.PerCmp.hyp_linIndep B.d, by rw [cT_sig]; exact B.d.ee⟩
+  have hI : IsIsoSub B.V B.d.e := ⟨_root_.GlobalTheory.MixPer.Decomp.linInd B.d, by rw [cT_sig]; exact B.d.ee⟩
   obtain rfl : ν = B.vN.ν := unitN_unique hI hu B.vN.unit
   subst hA
   exact (GlobalTheory.Core.Mi.PerCmp.besPer_domN B.d B.o B.ζ hψ 1 _ _ B.vN.ν B.vN.unit.1 hu.2.1 B.vN.unit.2.1 φ f hf).trans
@@ -921,7 +913,7 @@ variable {T : Type} {D : D7} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {
 end Lin
 theorem placeValuation_linAt_large : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal → Big fun ch => LinAt ch := by
   intro hP hL
-  obtain ⟨a0, ha⟩ := Big.and (Big.and (_root_.GlobalTheory.T.flipRun_cusp_transition hL hP) (_root_.GlobalTheory.EndCusp.leadingForm_mem_cuspList hP)) colFn_cont_left
+  obtain ⟨a0, ha⟩ := Big.and (Big.and (_root_.GlobalTheory.FlipRun.cuspStep_of_large_flipRun hL hP) (_root_.GlobalTheory.EndCusp.leadingForm_mem_cuspList hP)) colFn_cont_left
   refine ⟨a0, fun ε CF hC => ?_⟩
   obtain ⟨x, hx⟩ := ha ε CF hC
   refine ⟨x, fun D large₂ he hxx Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch hsc => ?_⟩
@@ -979,7 +971,7 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Fl
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc)
 theorem twisted_iterate_eventually_large : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal → Big fun ch => IterAt ch := by
   intro hP hL
-  obtain ⟨c0, h0⟩ := Big.and (_root_.GlobalTheory.T.flipRun_cusp_transition hL hP) (Big.and (_root_.GlobalTheory.EndCusp.leadingForm_mem_cuspList hP) GlobalTheory.RowClaim.colFn_cont_left)
+  obtain ⟨c0, h0⟩ := Big.and (_root_.GlobalTheory.FlipRun.cuspStep_of_large_flipRun hL hP) (Big.and (_root_.GlobalTheory.EndCusp.leadingForm_mem_cuspList hP) GlobalTheory.RowClaim.colFn_cont_left)
   refine ⟨c0, fun ε CF hC => ?_⟩
   obtain ⟨x0, hx⟩ := h0 ε CF hC
   refine ⟨x0, fun D large₂ he hxx Γ _ _ Pl0 T A Ks _ _ _ R Fc hS ch hch hsc => ?_⟩

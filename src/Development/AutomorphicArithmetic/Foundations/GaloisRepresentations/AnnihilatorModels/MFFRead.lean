@@ -131,8 +131,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.finrank_finiteFlat_torsion_subscheme_eq_card_points : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ (K : Over S) (i : K ⟶ A) (c : ℕ), Mono i → IsFinite K.hom → Flat K.hom → i ^ c = 1 → ∀ (k : Type) [Field k] [IsAlgClosed k], (c : k) ≠ 0 → ∀ (y : Sp k ⟶ S) (z : Sp k), K.hom.finrank (y z) = Nat.card (Over.mk y ⟶ K) := by
-  first | (exact @GlobalTheory.TorsionRank.finrank_eq_card)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFiniteFlatTorsionSubschemeEqCardPointsStatement =====
@@ -166,7 +164,7 @@ private theorem count_eq (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj 
     apply IsFractionRing.injective V (FractionRing V)
     simpa using h
   let pt : Sp (FractionRing V) := (⊥ : PrimeSpectrum (FractionRing V))
-  have h1 := GlobalTheory.T.finrank_finiteFlat_torsion_subscheme_eq_card_points S A hab K i c hm hfin hfl hi (FractionRing V) hcF
+  have h1 := _root_.GlobalTheory.TorsionRank.finrank_eq_card S A hab K i c hm hfin hfl hi (FractionRing V) hcF
     (spMap (algebraMap V (FractionRing V)) ≫ z) pt
   have h2 := Scheme.Hom.finrank_of_isPullback k (spMap (algebraMap V B)) K.hom z hk
     (spMap (algebraMap V (FractionRing V)) pt)

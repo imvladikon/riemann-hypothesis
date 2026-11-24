@@ -112,14 +112,9 @@ theorem homEquiv_symm_mul' (φ : S' ⟶ S) (X : Over S') (A : Over S) [GrpObj A]
   apply ((Over.mapPullbackAdj φ).homEquiv X A).injective
   rw [homEquiv_mul', Equiv.apply_symm_apply, Equiv.apply_symm_apply, Equiv.apply_symm_apply]
 
-theorem homEquiv_left' (t : S' ⟶ S) {Y : Over S'} {A : Over S} (k : (Over.map t).obj Y ⟶ A) :
-    ((Over.mapPullbackAdj t).homEquiv Y A k).left ≫ pullback.fst A.hom t = k.left := by
-  rw [Over.mapPullbackAdj, Adjunction.mkOfHomEquiv_homEquiv]
-  exact pullback.lift_fst _ _ _
-
 theorem homEquiv_symm_left' (t : S' ⟶ S) {Y : Over S'} {A : Over S} (q : Y ⟶ (Over.pullback t).obj A) :
     (((Over.mapPullbackAdj t).homEquiv Y A).symm q).left = q.left ≫ pullback.fst A.hom t := by
-  have := homEquiv_left' t (((Over.mapPullbackAdj t).homEquiv Y A).symm q)
+  have := _root_.GlobalTheory.ZJ.GenericTorus.homEquiv_left t (((Over.mapPullbackAdj t).homEquiv Y A).symm q)
   rw [Equiv.apply_symm_apply] at this
   exact this.symm
 
@@ -180,7 +175,7 @@ def red (e : ℕ) (x : Over.mk (Spec.map φ) ⟶ G) : lvl hI e ⟶ thickObj R I 
 
 theorem red_fst (e : ℕ) (x : Over.mk (Spec.map φ) ⟶ G) :
     (red hI e x).left ≫ pullback.fst G.hom (thick R I e) = thick B (maximalIdeal B) e ≫ x.left :=
-  homEquiv_left' _ _
+  _root_.GlobalTheory.ZJ.GenericTorus.homEquiv_left _ _
 
 theorem red_snd (e : ℕ) (x : Over.mk (Spec.map φ) ⟶ G) :
     (red hI e x).left ≫ pullback.snd G.hom (thick R I e) = lev I φ hI e :=
@@ -317,18 +312,6 @@ instance flat_bc (K : Type) [Field K] : Flat (bc K) := by
 instance surjective_bc (K : Type) [Field K] : Surjective (bc K) :=
   ⟨Function.surjective_to_subsingleton _⟩
 
-theorem isPullback_map_left {S T : Scheme.{0}} (φ : T ⟶ S) {X Y : Over S} (u : X ⟶ Y) :
-    IsPullback ((Over.pullback φ).map u).left (pullback.fst X.hom φ) (pullback.fst Y.hom φ) u.left := by
-  refine IsPullback.of_right (h₁₂ := pullback.snd Y.hom φ) (v₁₃ := φ) (h₂₂ := Y.hom) ?_ ?_
-    (IsPullback.of_hasPullback Y.hom φ).flip
-  · have e1 : ((Over.pullback φ).map u).left ≫ pullback.snd Y.hom φ = pullback.snd X.hom φ :=
-      Over.w ((Over.pullback φ).map u)
-    have e2 : u.left ≫ Y.hom = X.hom := Over.w u
-    rw [e1, e2]
-    exact (IsPullback.of_hasPullback X.hom φ).flip
-  · simp only [Over.pullback_map_left]
-    exact pullback.lift_fst _ _ _
-
 variable {K : Type} [Field K]
 
 theorem map_injective {X Y : Over (Sp K)} {u v : X ⟶ Y}
@@ -336,7 +319,7 @@ theorem map_injective {X Y : Over (Sp K)} {u v : X ⟶ Y}
   have : Epi (pullback.fst X.hom (bc K)) := Flat.epi_of_flat_of_surjective _
   ext1
   apply (cancel_epi (pullback.fst X.hom (bc K))).1
-  rw [← (isPullback_map_left (bc K) u).w, ← (isPullback_map_left (bc K) v).w, h]
+  rw [← (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) u).w, ← (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) v).w, h]
 
 theorem map_mul' {X M : Over (Sp K)} [MonObj M] (a b : X ⟶ M) :
     (Over.pullback (bc K)).map (a * b) = (Over.pullback (bc K)).map a * (Over.pullback (bc K)).map b :=
@@ -380,13 +363,13 @@ theorem surjective_mul {K : Type} [Field K] (H V : Over (Sp K)) [GrpObj H] (hH :
   have : IsIntegral ((Over.pullback (bc K)).obj H).left :=
     isIntegral_of_smooth_of_geometricallyConnected ((Over.pullback (bc K)).obj H).hom
   have hj' : IsOpenImmersion ((Over.pullback (bc K)).map j).left :=
-    MorphismProperty.of_isPullback (isPullback_map_left (bc K) j).flip inferInstance
+    MorphismProperty.of_isPullback (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) j).flip inferInstance
   have hV' : Nonempty ((Over.pullback (bc K)).obj V).left := by
     obtain ⟨v⟩ := ‹Nonempty V.left›
     obtain ⟨w, -⟩ := (pullback.fst V.hom (bc K)).surjective v
     exact ⟨w⟩
   have hflat : Flat ((Over.pullback (bc K)).map ((fst V V ≫ j) * (snd V V ≫ j))).left :=
-    MorphismProperty.of_isPullback (isPullback_map_left (bc K) _).flip (flat_mul H V j)
+    MorphismProperty.of_isPullback (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) _).flip (flat_mul H V j)
   have htr : ∀ (a x : 𝟙_ (Over (Sp (AlgebraicClosure K))) ⟶ (Over.pullback (bc K)).obj H),
       x ≫ (GlobalTheory.SS.transl a).hom = a * x := fun a x =>
     (GlobalTheory.GenericHom.point_comp_mul x a (𝟙 _)).trans (by rw [Category.comp_id])
@@ -423,12 +406,12 @@ theorem surjective_mul {K : Type} [Field K] (H V : Over (Sp K)) [GrpObj H] (hH :
   obtain ⟨yb, rfl⟩ := (pullback.fst H.hom (bc K)).surjective y
   obtain ⟨w, rfl⟩ := hrange yb
   exact ⟨pullback.fst _ (bc K) w, by
-    rw [← Scheme.Hom.comp_apply, ← (isPullback_map_left (bc K) _).w, Scheme.Hom.comp_apply]⟩
+    rw [← Scheme.Hom.comp_apply, ← (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) _).w, Scheme.Hom.comp_apply]⟩
 
 theorem exists_monHom_extension_of_field : ∀ (K : Type) [Field K] (H G V : Over (Sp K)) [GrpObj H] [GrpObj G], GlobalTheory.SS.SmConn H → GlobalTheory.SS.SmConn G → ∀ (j : V ⟶ H) (f : V ⟶ G), IsOpenImmersion j.left → Nonempty V.left → (∀ (Z : Over (Sp K)) (u₁ u₂ u₃ : Z ⟶ V), (u₁ ≫ j) * (u₂ ≫ j) = u₃ ≫ j → (u₁ ≫ f) * (u₂ ≫ f) = u₃ ≫ f) → ∃ F : H ⟶ G, IsMonHom F ∧ j ≫ F = f := by
   intro K _ H G V _ _ hH hG j f hj hV hm
   have hj' : IsOpenImmersion ((Over.pullback (bc K)).map j).left :=
-    MorphismProperty.of_isPullback (isPullback_map_left (bc K) j).flip hj
+    MorphismProperty.of_isPullback (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) j).flip hj
   have hV' : Nonempty ((Over.pullback (bc K)).obj V).left := by
     obtain ⟨v⟩ := hV
     obtain ⟨w, -⟩ := (pullback.fst V.hom (bc K)).surjective v
@@ -478,9 +461,9 @@ theorem exists_monHom_extension_of_field : ∀ (K : Type) [Field K] (H G V : Ove
   have hmF : m ≫ F = g := Over.OverMorphism.ext hF₀
   have hmb : Epi ((Over.pullback (bc K)).map m).left := by
     have : Flat ((Over.pullback (bc K)).map m).left :=
-      MorphismProperty.of_isPullback (isPullback_map_left (bc K) m).flip hflat
+      MorphismProperty.of_isPullback (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) m).flip hflat
     have : Surjective ((Over.pullback (bc K)).map m).left :=
-      MorphismProperty.of_isPullback (isPullback_map_left (bc K) m).flip hsurj
+      MorphismProperty.of_isPullback (_root_.GlobalTheory.isPullback_overPullback_map_left (bc K) m).flip hsurj
     exact Flat.epi_of_flat_of_surjective _
   have hPF : (Over.pullback (bc K)).map F = Fb := by
     ext1
@@ -1085,8 +1068,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.veryAmpleAlongPullback_transport_iso : ∀ {K : Type} [Field K] {X Y XA : Scheme.{0}} (p : Y ⟶ Spec (CommRingCat.of K)) (pA : XA ⟶ Spec (CommRingCat.of K)) (gn : Y ⟶ XA) [IsIso gn], gn ≫ pA = p → ∀ (π : Y ⟶ X) {L : LB X}, L.IsLB → ∀ {LA : LB XA}, LA.IsLB → ∀ {k m : ℕ} (b : Fin (m + 1) → H0 LA k), VeryAmpleAlong pA (𝟙 XA) LA b → ∀ (σ : Fin (m + 1) → H0 L k) (c : Fin (m + 1) → Kˣ), (∀ (y : Y) (j : Fin 1 → L.ι) (jA : Fin 1 → LA.ι), π y ∈ L.U (j 0) → gn y ∈ LA.U (jA 0) → ∃ u : (Y.presheaf.stalk y)ˣ, ∀ i, secGerm π y (σ i) j = u.val * gs p y ⊤ ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom (c i : K)) * secGerm gn y (b i) jA) → VeryAmpleAlong p π L σ := by
-  first | exact @GlobalTheory.Mum.veryAmpleAlong_transport
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.VeryAmpleAlongPullbackTransportIsoStatement =====
@@ -1107,7 +1088,7 @@ theorem GlobalTheory.Mum.exists_veryAmpleAlong_unif : ∀ (R : Type) [CommRing R
   obtain ⟨m, b, hb⟩ := GlobalTheory.T.exists_veryAmple_fourthPower_polarisedAbelian_field GlobalTheory.lawsAndExpansions.1.1.ample _ A
   obtain ⟨σ, c, H⟩ := GlobalTheory.T.exists_integral_sections_uniformisedGroup_power R I D A G U (k := 4) (by norm_num) b
   have : IsIso U.gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map U.gen.hom))
-  exact ⟨m, σ, GlobalTheory.T.veryAmpleAlongPullback_transport_iso _ A.A.hom U.gen.hom.left (Over.w U.gen.hom) _ U.LG.isLB A.isLB b hb σ c H⟩
+  exact ⟨m, σ, _root_.GlobalTheory.Mum.veryAmpleAlong_transport _ A.A.hom U.gen.hom.left (Over.w U.gen.hom) _ U.LG.isLB A.isLB b hb σ c H⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVeryAmpleFourthPowerUniformisedGroup =====

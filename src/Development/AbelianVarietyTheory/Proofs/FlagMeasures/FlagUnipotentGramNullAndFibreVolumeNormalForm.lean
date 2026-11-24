@@ -109,22 +109,6 @@ theorem idx_cases (i : Fin (2 * r + k + 1)) :
   · exact Or.inr (Or.inl ⟨⟨i.val - r, by omega⟩, Fin.ext (by simp only [wI]; omega)⟩)
   · exact Or.inr (Or.inr ⟨⟨2 * r + k - i.val, by omega⟩, Fin.ext (by simp only [esI]; omega)⟩)
 
-theorem wI_inj : Function.Injective (wI k r) := by
-  intro a b h
-  have := congrArg Fin.val h
-  simp only [wI] at this
-  exact Fin.ext (by omega)
-
-theorem sum_mid (f : Fin (2 * r + k + 1) → ℂ) (hf : inWb k r f) : ∑ i, f i = ∑ j, f (wI k r j) := by
-  symm
-  refine Finset.sum_of_injOn (wI k r) wI_inj.injOn (by simp) ?_ (by simp)
-  intro i _ hi
-  apply hf
-  by_contra hc
-  apply hi
-  refine ⟨⟨i.val - r, by omega⟩, by simp, Fin.ext ?_⟩
-  simp only [wI]; omega
-
 theorem mulVec_of_row {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (v : Fin n → ℂ) (i i' : Fin n) (c : ℂ)
     (h : ∀ j, A i j = if j = i' then c else 0) : (A *ᵥ v) i = c * v i' := by
   simp [Matrix.mulVec, dotProduct, h]
@@ -152,15 +136,10 @@ theorem H_wI (v : Fin (2 * r + k + 1) → ℂ) (b : Fin (k + 1)) :
   simp only [Hpk, Fin.ext_iff, Fin.val_last]
   split_ifs <;> first | rfl | omega
 
-theorem herm_eI (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) :
-    herm (Hpk k r) v (bvec (eI k r a)) = v (esI k r a) := by
-  rw [← H_eI v a]
-  simp [herm, bvec, dotProduct, Pi.single_apply]
-
 theorem herm_mid (v z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) :
     herm (Hpk k r) v z = herm (Hb k) (mid k r v) (mid k r z) := by
   unfold herm dotProduct
-  rw [sum_mid]
+  rw [_root_.GlobalTheory.Amp.NfMid.sum_mid]
   · refine Finset.sum_congr rfl fun j _ => ?_
     rw [H_wI]
     simp [Hb, mid, Matrix.mulVec_diagonal]
@@ -182,7 +161,7 @@ theorem mid_mEmb (m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (v : Fin (2 * r + 
   funext b
   simp only [mid, Matrix.mulVec, dotProduct]
   have := b.2
-  rw [sum_mid]
+  rw [_root_.GlobalTheory.Amp.NfMid.sum_mid]
   · refine Finset.sum_congr rfl fun j _ => ?_
     have := j.2
     congr 1
@@ -283,7 +262,7 @@ theorem gramProj_mul {n j : ℕ} (P : Submodule ℂ (EuclideanSpace ℂ (Fin n))
 theorem inner_mid (v u : EuclideanSpace ℂ (Fin (2 * r + k + 1))) (hu : inWb k r u.ofLp) :
     ⟪v, u⟫_ℂ = ⟪(WithLp.toLp 2 (mid k r v.ofLp) : EuclideanSpace ℂ (Fin (k + 1))), WithLp.toLp 2 (mid k r u.ofLp)⟫_ℂ := by
   simp only [PiLp.inner_apply]
-  rw [sum_mid]
+  rw [_root_.GlobalTheory.Amp.NfMid.sum_mid]
   · rfl
   · intro i hi
     simp [hu i hi]
@@ -378,13 +357,13 @@ theorem mem_Ppos_iff (z z' : Fin (2 * r + k + 1) → ℂ) (hz' : inWb k r z') (g
     · intro h
       refine ⟨fun a => ?_, ?_⟩
       · have := h a.castSucc
-        rw [← herm_eI (x *ᵥ v.ofLp) a]
+        rw [← _root_.GlobalTheory.Amp.NfMid.herm_e (x *ᵥ v.ofLp) a]
         simpa [fvec] using this
       · simpa [fvec] using h (Fin.last r)
     · rintro ⟨h1, h2⟩ a
       unfold fvec
       split_ifs
-      · rw [herm_eI]; exact h1 _
+      · rw [_root_.GlobalTheory.Amp.NfMid.herm_e]; exact h1 _
       · exact h2
   have hm : v ∈ Ppos k r z z' g x ↔ Hpk k r *ᵥ v.ofLp = v.ofLp ∧ x *ᵥ v.ofLp ∈ Hcom k r z z' g ⊔ Xsp k r := by
     simp only [Ppos, Submodule.mem_comap, Submodule.mem_inf, LinearMap.mem_ker, Matrix.toLin'_apply,
@@ -460,7 +439,7 @@ theorem Dj_eq {j : ℕ} (hj : j ≤ r) (z z' : Fin (2 * r + k + 1) → ℂ) (g :
   have ha : a.val < r := lt_of_lt_of_le a.2 hj
   have hb : b.val < r := lt_of_lt_of_le b.2 hj
   simp only [Matrix.submatrix_apply, Zhat, fvec, Fin.val_castLE, Matrix.of_apply]
-  rw [dite_eq_left ha, dite_eq_left hb, herm_eI]
+  rw [dite_eq_left ha, dite_eq_left hb, _root_.GlobalTheory.Amp.NfMid.herm_e]
   rfl
 
 theorem Yj_eq_gramProj : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ (g₀ : Mat k r) (β : Fin r → ℕ) (c : ℂ), inWb k r z → inWb k r z' → 0 < Tz k r z → IsNormal0 k r hj β c z z' g₀ → ∀ m ∈ UH (Hb k), ∃ P₀ : Submodule ℂ (EuclideanSpace ℂ (Fin (k + 1))), k - 1 ≤ Module.finrank ℂ P₀ ∧ ∀ (q : PSec k r j × (UToff β → ℂ)) (a : Fin r → ℝ), (∀ b, 0 < a b) → Yj k r hj z z' g₀ (sEl k r j β q * (uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m)) = gramProj P₀ fun b : Fin j => m⁻¹ *ᵥ q.1.1 ⟨Fin.castLE hj b, b.2⟩ := by
@@ -1301,12 +1280,6 @@ theorem herm_midVec (v : Fin (2 * r + k + 1) → ℂ) (w : Fin (k + 1) → ℂ) 
   · simp [midVec_out w hi]
   · simp only [Pi.star_apply, midVec_wI, Hpk_mulVec_wI]
 
-theorem herm_UH {n : ℕ} {G m : Matrix (Fin n) (Fin n) ℂ} (hm : m ∈ UH G) (v w : Fin n → ℂ) :
-    herm G (m *ᵥ v) (m *ᵥ w) = herm G v w := by
-  have h : mᴴ * G * m = G := hm
-  unfold herm
-  rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, h]
-
 theorem UH_mul {n : ℕ} {G g h : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ UH G) (hh : h ∈ UH G) : g * h ∈ UH G := by
   have h1 : gᴴ * G * g = G := hg
   have h2 : hᴴ * G * h = G := hh
@@ -1327,10 +1300,6 @@ theorem isUnit_det_of_UH {m : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hm : m �
   refine isUnit_iff_ne_zero.2 fun e => h3 ?_
   rw [← h2, e, mul_zero]
 
-theorem eucl_eq_norm {n : ℕ} (v : Fin n → ℂ) : eucl v = ‖(WithLp.toLp 2 v : EuclideanSpace ℂ (Fin n))‖ := by
-  rw [EuclideanSpace.norm_eq]
-  simp [eucl, Complex.normSq_eq_norm_sq]
-
 theorem eucl_Hb (v : Fin (k + 1) → ℂ) : eucl (Hb k *ᵥ v) = eucl v := by
   unfold eucl Hb
   congr 1
@@ -1339,7 +1308,7 @@ theorem eucl_Hb (v : Fin (k + 1) → ℂ) : eucl (Hb k *ᵥ v) = eucl v := by
   split_ifs <;> simp
 
 theorem norm_herm_Hb_le (v w : Fin (k + 1) → ℂ) : ‖herm (Hb k) v w‖ ≤ eucl v * eucl w := by
-  rw [← eucl_Hb v, eucl_eq_norm, eucl_eq_norm, mul_comm]
+  rw [← eucl_Hb v, _root_.GlobalTheory.Amp.GramFlag.eucl_eq, _root_.GlobalTheory.Amp.GramFlag.eucl_eq, mul_comm]
   refine le_trans (le_of_eq ?_) (norm_inner_le_norm (𝕜 := ℂ) _ _)
   rw [EuclideanSpace.inner_toLp_toLp, dotProduct_comm]; rfl
 
@@ -1356,7 +1325,7 @@ theorem eucl_le_of_herm (v : Fin (k + 1) → ℂ) {M : ℝ} (hM : 0 ≤ M)
   rcases h0.eq_or_lt with e | hpos
   · rw [← e]; exact hM
   have h1 := h ((((eucl v)⁻¹ : ℝ) : ℂ) • (Hb k *ᵥ v)) (by
-    rw [eucl_eq_norm, WithLp.toLp_smul, norm_smul, ← eucl_eq_norm, eucl_Hb, Complex.norm_real,
+    rw [_root_.GlobalTheory.Amp.GramFlag.eucl_eq, WithLp.toLp_smul, norm_smul, ← _root_.GlobalTheory.Amp.GramFlag.eucl_eq, eucl_Hb, Complex.norm_real,
       Real.norm_of_nonneg (inv_nonneg.2 h0), inv_mul_cancel₀ hpos.ne'])
   have h2 : herm (Hb k) v ((((eucl v)⁻¹ : ℝ) : ℂ) • (Hb k *ᵥ v)) = ((eucl v : ℝ) : ℂ) := by
     have := herm_Hb_self v
@@ -1552,7 +1521,7 @@ theorem section_coord_le (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
         rw [Pi.add_apply, Pi.add_apply, midVec_wI, yVec_out _ (by simp only [wI]; omega),
           xVec_out _ (by simp only [wI]; omega), zero_add, add_zero]
       rw [e] at this
-      rw [← herm_UH hm, Matrix.mulVec_mulVec, hmm, Matrix.one_mulVec]
+      rw [← _root_.GlobalTheory.Amp.NfComp.herm_iso hm, Matrix.mulVec_mulVec, hmm, Matrix.one_mulVec]
       simpa [herm, Matrix.mulVec_neg] using this
     · have : B b = 0 := by rw [hB]; exact dif_neg hb
       rw [this]
@@ -1560,7 +1529,7 @@ theorem section_coord_le (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
   have k2' : ∀ b d, ‖herm (Hb k) (B b) (B d)‖ ≤ M ^ 2 := by
     intro b d
     have e : herm (Hb k) (B b) (B d) = herm (Hb k) (m⁻¹ *ᵥ B b) (m⁻¹ *ᵥ B d) := by
-      rw [← herm_UH hm (m⁻¹ *ᵥ B b), Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hmm, Matrix.one_mulVec, Matrix.one_mulVec]
+      rw [← _root_.GlobalTheory.Amp.NfComp.herm_iso hm (m⁻¹ *ᵥ B b), Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hmm, Matrix.one_mulVec, Matrix.one_mulVec]
     rw [e, sq]
     exact (norm_herm_Hb_le _ _).trans (mul_le_mul (k2 b) (k2 d) (Real.sqrt_nonneg _) (le_trans zero_le_one hM))
 
@@ -1765,8 +1734,7 @@ theorem ae_mem_range {k r j : ℕ} (β : Fin r → ℕ) {S : Set (Mat k r)} (hS 
   rw [ae_map_iff hm hS'.measurableSet]
   exact Filter.Eventually.of_forall fun q => h ⟨q, rfl⟩
 
-theorem N_sub_S {k r : ℕ} (z : Fin (2 * r + k + 1) → ℂ) {n : Mat k r} (hn : n ∈ Nset k r) : n ∈ Sset k r z :=
-  ⟨1, (isClosedSub_UWset z).2.2.1, n, hn, (Matrix.one_mul n).symm⟩
+alias N_sub_S := _root_.GlobalTheory.Amp.YInv.N_sub_S
 
 theorem Sg2_N {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z) {n x : Mat k r}
     (hn : n ∈ Nset k r) (hx : x ∈ GG k r) : Sg2 k r z (n * x) = Sg2 k r z x := by

@@ -862,17 +862,6 @@ noncomputable section
 open Polynomial Classical GlobalTheory.BadShare
 namespace GlobalTheory.BadShare.FirstRows
 
-theorem inv_mem_of_mul_mem {G : Type} [Group G] [Finite G] (S : G → Prop) (h1 : S 1)
-    (hm : ∀ u v, S u → S v → S (u * v)) (u : G) (hu : S u) : S u⁻¹ := by
-  have hp : ∀ n : ℕ, S (u ^ n) := by
-    intro n
-    induction n with
-    | zero => simpa using h1
-    | succ n ih => rw [pow_succ]; exact hm _ _ ih hu
-  have : u⁻¹ = u ^ (orderOf u - 1) := by
-    rw [inv_eq_iff_mul_eq_one, ← pow_succ', Nat.sub_add_cancel (orderOf_pos u), pow_orderOf_eq_one]
-  rw [this]; exact hp _
-
 variable {g : ℕ} [Fact g.Prime] {N : ℕ}
 
 def InBlock (k : ℕ) (h : GG g N) : Prop :=
@@ -900,7 +889,7 @@ theorem InBlock.mul {k : ℕ} (h h' : GG g N) (hh : InBlock k h) (hh' : InBlock 
   · rw [hh'.mul_right _ _ _ hb]; exact hh a b (Or.inr hb)
 
 theorem InBlock.inv {k : ℕ} {h : GG g N} (hh : InBlock k h) : InBlock k h⁻¹ :=
-  inv_mem_of_mul_mem _ (inBlock_one k) InBlock.mul h hh
+  _root_.GlobalTheory.BadShare.Indep.inv_of_mul_closed _ (inBlock_one k) InBlock.mul h hh
 
 theorem conj_entry {k : ℕ} {h n : GG g N} (hh : InBlock k h)
     (hn : ∀ a b : Fin N, (b : ℕ) ≤ k → n.val a b = if a = b then 1 else 0)
@@ -969,14 +958,6 @@ theorem chi_congr {L : Lev g N} (hL : L.sharp = false) {u v : GG g N}
   · rw [h a b (by simpa [Lev.Edge, hL] using he)]
   · rfl
 
-theorem chi_ne_zero (L : Lev g N) (u : GG g N) : L.chi u ≠ 0 := by
-  intro h
-  unfold Lev.chi at h
-  have := AddChar.map_add_eq_mul L.ψ (∑ a, ∑ b, if L.Edge a b then (L.co a : ZMod g) * u.val a b else 0)
-    (-(∑ a, ∑ b, if L.Edge a b then (L.co a : ZMod g) * u.val a b else 0))
-  rw [h] at this
-  simp at this
-
 def blockUp (g : ℕ) [Fact g.Prime] (N k : ℕ) : Finset (GG g N) :=
   Finset.univ.filter fun u => IsUp g N u ∧ InBlock k u
 
@@ -994,7 +975,7 @@ theorem avg_eigen {L : Lev g N} (hL : L.sharp = false) {x : M} (hx : ∀ u, IsUp
     ρ j (avg ρ L k x w) = L.chi j • avg ρ L k x w := by
   obtain ⟨h1, hm, -, hc, -⟩ := _root_.GlobalTheory.BadShare.LevGroup.lev_group g N L
   simp only [mem_iff_isUp hL] at h1 hm hc
-  have hi := inv_mem_of_mul_mem _ h1 hm
+  have hi := _root_.GlobalTheory.BadShare.Indep.inv_of_mul_closed _ h1 hm
   obtain ⟨u, hu, hub, hn⟩ := exists_block hj hk
   have hnu : IsUp g N (u⁻¹ * j) := hm _ _ (hi _ hu) hj
   obtain ⟨n, rfl⟩ : ∃ n, j = u * n := ⟨u⁻¹ * j, by simp⟩
@@ -1028,7 +1009,7 @@ theorem avg_eigen {L : Lev g N} (hL : L.sharp = false) {x : M} (hx : ∀ u, IsUp
       rwa [inv_mul_cancel_left] at this
     · intro v hv
       rw [map_smul, ← Module.End.mul_apply, ← map_mul, mul_assoc, hc _ _ hu (mem_blockUp.1 hv).1, smul_smul,
-        mul_inv, mul_inv_cancel_left₀ (chi_ne_zero L u)]
+        mul_inv, mul_inv_cancel_left₀ (_root_.GlobalTheory.BadShare.Basic.chi_ne L u)]
   rw [map_mul, Module.End.mul_apply, e1, map_smul, e2, smul_smul, hc _ _ hu hnu, mul_comm]
 
 theorem avg_independent [FiniteDimensional ℂ M] {L : Lev g N} (hL : L.sharp = false) {x : M} (hx0 : x ≠ 0)
@@ -1070,7 +1051,7 @@ theorem avg_independent [FiniteDimensional ℂ M] {L : Lev g N} (hL : L.sharp = 
     · refine Finset.sum_congr rfl fun u hu => ?_
       have hu := mem_blockUp.1 hu
       split_ifs with h
-      · rw [hχ w₀ w₀.2 u u' hu.1 hu'.1 hu.2 hu'.2 h.symm, mul_assoc, inv_mul_cancel₀ (chi_ne_zero L u')]
+      · rw [hχ w₀ w₀.2 u u' hu.1 hu'.1 hu.2 hu'.2 h.symm, mul_assoc, inv_mul_cancel₀ (_root_.GlobalTheory.BadShare.Basic.chi_ne L u')]
         simp
       · simp
     · intro w _ hw
@@ -1223,14 +1204,6 @@ open Polynomial Classical GlobalTheory.BadShare
 
 namespace GlobalTheory.BadShare
 
-theorem eq_zero_of_sum_joint_eigenvectors {ι κ M : Type} [AddCommGroup M] [Module ℂ M]
-    (T : κ → M →ₗ[ℂ] M) (l : ι → κ → ℂ) (hl : ∀ i j, i ≠ j → ∃ k, l i k ≠ l j k)
-    (s : Finset ι) : ∀ u : ι → M, (∀ i k, T k (u i) = l i k • u i) → ∑ i ∈ s, u i = 0 →
-      ∀ i ∈ s, u i = 0 := by
-  first
-  | (apply _root_.GlobalTheory.ComplexValueBound.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ComplexValueBound.main ..)
-
 theorem root_exchange : ∀ (G : Type) [Group G] [Fintype G] (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M] (ρ : Representation ℂ G M), ∀ (B X Y : Subgroup G) (χ : G → ℂ), (∀ x ∈ X, x ∈ B → x = 1) → (∀ b ∈ B, ∀ x ∈ X, ∃ x' ∈ X, ∃ b' ∈ B, b * x = x' * b' ∧ χ b' = χ b) → (∀ x ∈ X, ∀ y ∈ Y, y⁻¹ * x⁻¹ * y * x ∈ B) → (∀ x ∈ X, ∀ x' ∈ X, x ≠ x' → ∃ y ∈ Y, χ (y⁻¹ * x⁻¹ * y * x) ≠ χ (y⁻¹ * x'⁻¹ * y * x')) → ∀ (n : ℕ) (v : Fin n → M), LinearIndependent ℂ v → (∀ i, (∀ b ∈ B, ρ b (v i) = χ b • v i) ∧ ∀ y ∈ Y, ρ y (v i) = v i) → ∃ w : Fin n → M, LinearIndependent ℂ w ∧ ∀ i, (∀ b ∈ B, ρ b (w i) = χ b • w i) ∧ ∀ x ∈ X, ρ x (w i) = w i := by
   intro G _ _ M _ _ _ ρ B X Y χ hXB hBX hc hsep n v hv hvi
   have hmul : ∀ (g h : G) (m : M), ρ (g * h) m = ρ g (ρ h m) := fun g h m => by
@@ -1241,7 +1214,7 @@ theorem root_exchange : ∀ (G : Type) [Group G] [Fintype G] (M : Type) [AddComm
   have hinj : ∀ m : M, (∀ b ∈ B, ρ b m = χ b • m) → (∀ y ∈ Y, ρ y m = m) → S m = 0 → m = 0 := by
     intro m hb hy h0
     rw [hS] at h0
-    have := eq_zero_of_sum_joint_eigenvectors (ι := X) (κ := Y) (fun y => ρ (y : G))
+    have := _root_.GlobalTheory.ComplexValueBound.main (ι := X) (κ := Y) (fun y => ρ (y : G))
       (fun x y => χ ((y : G)⁻¹ * (x : G)⁻¹ * y * x))
       (fun x x' hne => by
         obtain ⟨y, hyY, h⟩ := hsep x x.2 x' x'.2 (fun h => hne (Subtype.ext h))

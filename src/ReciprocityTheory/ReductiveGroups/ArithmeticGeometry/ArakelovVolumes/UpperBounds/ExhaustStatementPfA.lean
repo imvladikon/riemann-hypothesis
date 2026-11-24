@@ -133,11 +133,7 @@ theorem quad_im {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A.IsHermitian) 
   rw [Complex.star_def] at h
   rw [h]; ring
 
-theorem posDef_eventually {X : Type*} [TopologicalSpace X] {m : ℕ}
-    (A : X → Matrix (Fin m) (Fin m) ℂ) (hc : ∀ i j, Continuous fun x => A x i j)
-    (hH : ∀ x, (A x).IsHermitian) (x0 : X) (h0 : (A x0).PosDef) :
-    ∀ᶠ x in 𝓝 x0, (A x).PosDef := by
-  first | (apply Bl.PosDefOfRealQuadratic.goal1 <;> assumption)
+alias posDef_eventually := _root_.Bl.PosDefOfRealQuadratic.goal1
 
 theorem cont_coord {n : ℕ} (i : Fin n) : Continuous fun v : V n => v i := by
   have h : (fun v : V n => v i) = ⇑(EuclideanSpace.proj i : V n →L[ℂ] ℂ) := by

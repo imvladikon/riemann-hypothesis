@@ -654,10 +654,6 @@ open GlobalTheory.KZ GlobalTheory.K4 UpperTheory.Kd.K4 Polynomial
 open scoped Matrix MatrixGroups
 
 namespace UpperTheory.Kd.K4.EisensteinBasis
-open Filter Topology
-
-variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
-
 end UpperTheory.Kd.K4.EisensteinBasis
 
 namespace UpperTheory.Kd.K4.EisensteinBasis
@@ -725,24 +721,12 @@ private noncomputable def resA (X : Tower Ω ε) (M : ℕ) (γ : SL(2, ℤ)) :
 
 end UpperTheory.Kd.K4.EisensteinBasis
 
-private theorem jPoly_coe_eq_aeval_jK {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε)
-    (Γ' : Subgroup SL(2, ℤ)) (p : Polynomial Ω) :
-    ((jPoly X Γ' p : lev X Γ') : X.K) = Polynomial.aeval X.jK p := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add (f := _), Subfield.coe_add, hp, hq]
-  | monomial n c =>
-    rw [← Polynomial.C_mul_X_pow_eq_monomial]
-    simp only [jPoly, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_C,
-      Polynomial.eval₂_X, map_mul, map_pow, Polynomial.aeval_C, Polynomial.aeval_X]
-    push_cast
-    rfl
-
 private theorem jRat_coe_div_eq_aeval_div_aeval {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε)
     (Γ' : Subgroup SL(2, ℤ)) (p q : Polynomial Ω) :
     ((jRat X Γ' (algebraMap (Polynomial Ω) (RatFunc Ω) p / algebraMap (Polynomial Ω) (RatFunc Ω) q) :
       lev X Γ') : X.K) = Polynomial.aeval X.jK p / Polynomial.aeval X.jK q := by
   simp only [jRat, RatFunc.liftRingHom_apply_div]
-  rw [Subfield.coe_div, jPoly_coe_eq_aeval_jK, jPoly_coe_eq_aeval_jK]
+  rw [Subfield.coe_div, _root_.GlobalTheory.K4.coe_jPoly, _root_.GlobalTheory.K4.coe_jPoly]
 
 private theorem eventually_eq_of_mero_coe_eq {τ : ℂ} (hτ : τ ∈ Hs) {f g : ℂ → ℂ} (h : (f : Mero) = g) :
     ∀ᶠ y in nhdsWithin τ {τ}ᶜ, f y = g y := by
@@ -1177,13 +1161,6 @@ namespace UpperTheory.Kd.K4.LiftH
 
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 
-private theorem toGQ_sl (γ : SL(2, ℤ)) : toGQ (γ : Matrix (Fin 2) (Fin 2) ℤ) = ofSL γ := by
-  have h : 0 < (γ : Matrix (Fin 2) (Fin 2) ℤ).det := by simp
-  unfold toGQ
-  rw [dite_eq_left h]
-  ext i j
-  simp [ofSL]
-
 private theorem ev_smul (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) (s : ℤ_[l]) (hs : PadicInt.toZModPow n s = 0)
     (y : X.Khat l) : AdicCompletion.eval (idl l) (X.Kl l) n (s • y) = 0 := by
   rw [map_smul]
@@ -1214,7 +1191,7 @@ private theorem tr_z_eq_transfer (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (w n
   rw [Finset.sum_apply, Finset.sum_apply, ← Finset.sum_add_distrib, map_sum]
   refine Finset.sum_eq_zero fun i _ => ?_
   simp only [Tower.act, LinearMap.coe_mk, AddHom.coe_mk, sec, map_smul]
-  rw [toGQ_sl, toGQ_sl, map_mul ofSL, Tower.sl_mul_toRingEquiv, ← Tower.kmap_kmap, ← add_smul]
+  rw [_root_.GlobalTheory.KZ.Betti.toGQ_sl, _root_.GlobalTheory.KZ.Betti.toGQ_sl, map_mul ofSL, Tower.sl_mul_toRingEquiv, ← Tower.kmap_kmap, ← add_smul]
   apply ev_smul
   rw [Matrix.SpecialLinearGroup.coe_mul, mZl_mul, ← Matrix.mulVec_mulVec]
   generalize mZl l (γ i : Matrix (Fin 2) (Fin 2) ℤ) *ᵥ u = v

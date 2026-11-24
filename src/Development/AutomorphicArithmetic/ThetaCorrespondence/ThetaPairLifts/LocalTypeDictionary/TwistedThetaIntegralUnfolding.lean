@@ -1415,12 +1415,6 @@ theorem twisted_theta_integral_unfolding : _root_.GlobalTheory.FunPr.ThetaLocalI
 end GlobalTheory.RowUnfLast
 end
 
-section
-open GlobalTheory.RowClaim
-
-theorem _root_.GlobalTheory.T.twisted_theta_integral_unfolds : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmoothLifts.LiftsCuspidal → SumOKK → StepUnfold := by
-  first | exact @_root_.GlobalTheory.RowUnfLast.twisted_theta_integral_unfolding
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.TwistedThetaIntegralUnfolding =====

@@ -292,15 +292,6 @@ noncomputable section
 namespace GlobalTheory.Mum.RatTors
 
 
-open Polynomial in
-theorem exists_split_ext (K : Type) [Field K] (C : Type) [CommRing C] (φ : K →+* C) (hφ : φ.Finite) :
-    ∃ E : IntermediateField K (AlgebraicClosure K), FiniteDimensional K E ∧
-      ∀ (K₂ Ω : Type) [Field K₂] [Field Ω] (e : E →+* K₂) (j : K₂ →+* Ω) (ψ : C →+* Ω),
-        ψ.comp φ = j.comp (e.comp (algebraMap K E)) → ∃ ψ₀ : C →+* K₂, j.comp ψ₀ = ψ := by
-  first
-  | (apply _root_.GlobalTheory.FiniteFieldOfPoints.exists_finite_field_of_points <;> assumption)
-  | (intros; exact _root_.GlobalTheory.FiniteFieldOfPoints.exists_finite_field_of_points ..)
-
 end GlobalTheory.Mum.RatTors
 
 namespace GlobalTheory.Mum.RatTors
@@ -341,37 +332,14 @@ end GlobalTheory.Mum.RatTors
 
 namespace GlobalTheory.Mum.RatTors
 
-section Push
-variable {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [GrpObj G'] {f : S' ⟶ S} {φ : G'.left ⟶ G.left}
-
-theorem mulA_push (h : IsGrpPullback G' G f φ) (n : ℕ) : (mulA G' n).left ≫ φ = φ ≫ (mulA G n).left := by
-  have e := congrArg (fun z => z.left) (map_pow (pushHom h G') (𝟙 G') n)
-  have e2 : (pushHom h G' (𝟙 G')) ^ n = pushHom h G' (𝟙 G') ≫ mulA G n := by
-    rw [MonObj.comp_pow, Category.comp_id]
-  rw [e2] at e
-  calc (mulA G' n).left ≫ φ = (pushHom h G' (𝟙 G' ^ n)).left := rfl
-    _ = (pushHom h G' (𝟙 G') ≫ mulA G n).left := e
-    _ = (𝟙 G'.left ≫ φ) ≫ (mulA G n).left := rfl
-    _ = _ := by rw [Category.id_comp]
-
-theorem eta_push (h : IsGrpPullback G' G f φ) : (η[G']).left ≫ φ = f ≫ (η[G]).left := by
-  have e := congrArg (fun z => z.left) (map_one (pushHom h (Over.mk (𝟙 S'))))
-  have e' : (𝟙 S' ≫ (η[G']).left) ≫ φ = (𝟙 S' ≫ f) ≫ (η[G]).left := e
-  rwa [Category.id_comp, Category.id_comp] at e'
-
-end Push
-
 end GlobalTheory.Mum.RatTors
 
 namespace GlobalTheory.Mum.RatTors
 
-theorem spMap_inj {P Q : Type} [CommRing P] [CommRing Q] {u v : P →+* Q} (h : spMap u = spMap v) : u = v :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-
 theorem torsion_rational : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsLocalRing R₁], Base R₁ → ∀ (A : PolAV (Sp (FractionRing R₁))) (n : ℕ), 1 ≤ n → ∃ E : IntermediateField (FractionRing R₁) (Kb R₁), FiniteDimensional (FractionRing R₁) E ∧ ∀ (R₂ : Type) [CommRing R₂] [IsDomain R₂] [IsLocalRing R₂] (i₁₂ : R₁ →+* R₂) (e : E →+* FractionRing R₂), Function.Injective i₁₂ → (∀ r : R₁, e (algebraMap (FractionRing R₁) E (algebraMap R₁ (FractionRing R₁) r)) = algebraMap R₂ (FractionRing R₂) (i₁₂ r)) → ∀ (A₂ : PolAV (Sp (FractionRing R₂))) (a : A₂.A.left ⟶ A.A.left), IsFib i₁₂ A A₂ a → ∀ x : TFK (R := R₂) (Kb R₂) ⟶ A₂.A, x ^ n = 1 → ∃ x₀ : Sp (FractionRing R₂) ⟶ A₂.A.left, x.left = spMap (algebraMap (FractionRing R₂) (Kb R₂)) ≫ x₀ := by
   intro R₁ _ _ _ _ A n hn
   obtain ⟨C, _, φ, p, hφ, hp, hpt⟩ := exists_finite_tors _ A n hn
-  obtain ⟨E, hE, hEs⟩ := exists_split_ext (FractionRing R₁) C φ hφ
+  obtain ⟨E, hE, hEs⟩ := _root_.GlobalTheory.FiniteFieldOfPoints.exists_finite_field_of_points (FractionRing R₁) C φ hφ
   refine ⟨E, hE, ?_⟩
   rintro R₂ _ _ _ i₁₂ e _ he A₂ a ⟨ga, hga, hpb, -⟩ x hx
   let j := algebraMap (FractionRing R₂) (Kb R₂)
@@ -388,11 +356,11 @@ theorem torsion_rational : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [Is
     rfl
   have htors : y ≫ (mulA A.A n).left = y ≫ A.A.hom ≫ (η[A.A]).left := by
     change (x.left ≫ a) ≫ _ = (x.left ≫ a) ≫ _
-    rw [Category.assoc, ← mulA_push hpb, ← Category.assoc, h1, Category.assoc, eta_push hpb,
+    rw [Category.assoc, ← _root_.GlobalTheory.ZH.TorsFrame.mulA_comm hpb, ← Category.assoc, h1, Category.assoc, _root_.GlobalTheory.TorsFrameInt.one_comm hpb,
       ← Category.assoc (x.left ≫ a), hyh, Category.assoc]
   obtain ⟨ψ, hψ⟩ := hpt (Kb R₂) y htors
   have hψφ : ψ.comp φ = j.comp ga := by
-    refine spMap_inj ?_
+    refine _root_.GlobalTheory.ZM.DenseFib.spMap_inj ?_
     rw [GlobalTheory.Ex.spMap_comp', GlobalTheory.Ex.spMap_comp', ← hp, ← Category.assoc, ← hψ, hyh]
   obtain ⟨ψ₀, hψ₀⟩ := hEs (FractionRing R₂) (Kb R₂) e j ψ (by rw [hψφ, hge])
   have hψ₀φ : ψ₀.comp φ = ga := by
@@ -655,8 +623,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_finite_ext_rational_torsion_uniformised_trait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)), ∀ n : ℕ, n.Prime → Odd n → IsUnit (n : R) → ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsLocalRing R₁] (ρ : R →+* R₁) (D₁ : DegData R₁ (maximalIdeal R₁)) (A : PolAV (Sp (FractionRing R₁))), FinExt ρ → Nonempty (IsPullDeg ρ D.toPre D₁.toPre) → (letI := A.isAb.comm; GlobalTheory.ZH.HypS A.A A.L) → UniTrait D₁.toPre A → ∃ (R₂ : Type) (_ : CommRing R₂) (_ : IsDomain R₂) (_ : IsLocalRing R₂) (ρ₂ : R →+* R₂) (D₂ : DegData R₂ (maximalIdeal R₂)) (A₂ : PolAV (Sp (FractionRing R₂))), FinExt ρ₂ ∧ Nonempty (IsPullDeg ρ₂ D.toPre D₂.toPre) ∧ (letI := A₂.isAb.comm; GlobalTheory.ZH.HypS A₂.A A₂.L) ∧ UniTrait D₂.toPre A₂ ∧ ∀ σ : Kb R₂ →ₐ[FractionRing R₂] Kb R₂, (∀ p p' : QkPt D₂.toPre (Kb R₂) n, QkExt σ.toRingHom p p' → QkPt.Equiv D₂.toPre (Kb R₂) p p') ∧ ∀ x : TFK (R := R₂) (Kb R₂) ⟶ A₂.A, x ^ n = 1 → spMap σ.toRingHom ≫ x.left = x.left := by
-  first | exact @GlobalTheory.Mum.Enlarge.exists_rational_ext
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtRationalTorsionUniformisedTraitStatement =====
@@ -780,9 +746,7 @@ theorem tauHom_comp_eq_id (f g : Kb R →ₐ[FractionRing R] Kb R) (h : ∀ a, f
   rw [e, CommRingCat.ofHom_id, Spec.map_id]
   rfl
 
-theorem map_unitOn' {k k' : Type} [CommRing k] [CommRing k'] (σ : k →+* k') (u : kˣ) :
-    Units.map (spMap σ).appTop.hom.toMonoidHom (unitOn u) = unitOn (Units.map σ.toMonoidHom u) :=
-  Units.ext (congrArg (fun q => q.hom u.val) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom σ))).symm
+alias map_unitOn' := _root_.GlobalTheory.Ex.Specialise.map_unitOn
 
 end GlobalTheory.Mum.GalConjLabels
 
@@ -963,8 +927,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.thetaPoint_conj_algClosure_automorphism : ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Sp (FractionRing R))) (k : ℕ) (σ : Kb R →ₐ[FractionRing R] Kb R) (I : Type) (x x' : I → (TFK (R := R) (Kb R) ⟶ A.A)) (v : I → Kb R), (∀ i, (x' i).left = spMap σ.toRingHom ≫ (x i).left) → IsThetaPt A k x (fun i => GlobalTheory.Ex.fnOf (v i)) → IsThetaPt A k x' (fun i => GlobalTheory.Ex.fnOf (σ (v i))) := by
-  first | exact @GlobalTheory.isThetaPt_conj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPointConjAlgClosureAutomorphismStatement =====
@@ -1060,8 +1022,8 @@ theorem eq_of_isAlgClosed {K : Type} [Field K] [IsAlgClosed K] [CharZero K] (P :
   have e₁ : (fun a => y₁ (q a)) = GlobalTheory.levelPoint lev rfl := funext hq
   have e₂ : (fun a => y₂ (q a)) = GlobalTheory.levelPoint lev' rfl := funext fun a =>
     (comb _ _ (hq a)).trans (by rw [← hl']; rfl)
-  have w₁ := ThetaDescentLevel.isThetaPt_reindex v₁ q
-  have w₂ := ThetaDescentLevel.isThetaPt_reindex v₂ q
+  have w₁ := _root_.GlobalTheory.Ex.AllLevels.isThetaPt_comp v₁ q
+  have w₂ := _root_.GlobalTheory.Ex.AllLevels.isThetaPt_comp v₂ q
   rw [e₁] at w₁
   rw [e₂] at w₂
   obtain ⟨φ, ⟨hφ, t, ht⟩, hl⟩ := GlobalTheory.thetaPtDetermines_and_endDeterminedOnTorsion.1 P.g n 2 j _ m hn ho le_rfl rfl hm hb K
@@ -1143,8 +1105,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.torsionLabelings_eq_of_thetaPoint_pairings_order_n : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (n j m : ℕ), n.Prime → Odd n → m = n ^ j * (n ^ 2) ^ 2 → ((n ^ 2) ^ 2) ^ A.g * A.g.factorial < m → ∀ (x₁ x₂ : QkPt D (Kb R) (m ^ 2) → (TFK (R := R) (Kb R) ⟶ A.A)), LabTors D A (m ^ 2) x₁ → LabTors D A (m ^ 2) x₂ → (∀ p, x₁ p ^ n = 1 → x₂ p = x₁ p) → ∀ v : QkPt D (Kb R) (m ^ 2) → Kb R, IsThetaPt A m x₁ (fun p => GlobalTheory.Ex.fnOf (v p)) → IsThetaPt A m x₂ (fun p => GlobalTheory.Ex.fnOf (v p)) → ∀ p, x₂ p = x₁ p := by
-  first | exact @GlobalTheory.Mum.LabelRigid.labels_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelingsEqOfThetaPointPairingsOrderNStatement =====
@@ -1397,14 +1357,14 @@ theorem GlobalTheory.Mum.thetaLevels_galois : ∀ (R : Type) [CommRing R] [IsDom
       (d := n ^ (2 * i - 1)) (Nat.one_le_pow _ _ hn.pos)
       (by rw [← pow_mul, ← pow_succ']; congr 1; omega) x₂ hx₂ H₂ q hq
   obtain ⟨c, hc'⟩ := hc σ
-  have h₁ := GlobalTheory.ThetaDescentLevel.isThetaPt_reindex hv pre
-  have h₂ := GlobalTheory.T.thetaPoint_conj_algClosure_automorphism R A (n ^ i) σ _ (fun q => lab ((n ^ i) ^ 2) (pre q)) x₂ (fun q => v (pre q)) (fun q => rfl) h₁
+  have h₁ := _root_.GlobalTheory.Ex.AllLevels.isThetaPt_comp hv pre
+  have h₂ := _root_.GlobalTheory.isThetaPt_conj R A (n ^ i) σ _ (fun q => lab ((n ^ i) ^ 2) (pre q)) x₂ (fun q => v (pre q)) (fun q => rfl) h₁
   have h₃ : IsThetaPt A (n ^ i) x₂ (fun q => GlobalTheory.Ex.fnOf (v q)) :=
     GlobalTheory.Ex.ThetaDescent.isThetaPt_unit_mul A (n ^ i) x₂ _ _ (GlobalTheory.Ex.fnOf ((c⁻¹ : (Kb R)ˣ) : Kb R))
       ((Units.isUnit c⁻¹).map _) (fun q => by
         unfold GlobalTheory.Ex.fnOf
         rw [← map_mul, hc' _ _ (hpre q), ← _root_.mul_assoc, Units.inv_mul, _root_.one_mul]) h₂
-  have key := GlobalTheory.T.torsionLabelings_eq_of_thetaPoint_pairings_order_n R D.toPre A n (i - 4) (n ^ i) hn ho hmj hbound (lab ((n ^ i) ^ 2)) x₂ H₁ H₂ Hn v hv h₃ p'
+  have key := _root_.GlobalTheory.Mum.LabelRigid.labels_eq R D.toPre A n (i - 4) (n ^ i) hn ho hmj hbound (lab ((n ^ i) ^ 2)) x₂ H₁ H₂ Hn v hv h₃ p'
   rw [← key]
   exact hx₂ p p' hpp'
 end -- clump:auto
@@ -1689,7 +1649,7 @@ theorem exists_finExt_galEqN : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   have hU₁ : UniTrait D₁.toPre A := by
     obtain ⟨W, i1, i2, i3, φ, G', i4, i5, D', A', U', hD, a, i6, em, hW, hφ, hloc, hG, hF, -, -⟩ := hOT
     exact ⟨W, i1, i2, i3, φ, G', i4, i5, D', A', U', hD, a, hW, hφ, hloc, hG, hF⟩
-  obtain ⟨R₂, _, _, _, ρ₂, D₂, A₂, hρ₂, hP₂, hS₂, hU₂, hRat⟩ := GlobalTheory.T.exists_finite_ext_rational_torsion_uniformised_trait R hR D n hn ho hu R₁ ρ D₁ A hρ hP hS hU₁
+  obtain ⟨R₂, _, _, _, ρ₂, D₂, A₂, hρ₂, hP₂, hS₂, hU₂, hRat⟩ := _root_.GlobalTheory.Mum.Enlarge.exists_rational_ext R hR D n hn ho hu R₁ ρ D₁ A hρ hP hS hU₁
   have hB₂ : Base R₂ := by
     have := hR.2
     exact ⟨hρ₂.1, charZero_of_injective_ringHom hρ₂.2.1⟩

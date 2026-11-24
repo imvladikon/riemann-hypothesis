@@ -334,10 +334,7 @@ theorem valAt_congr {x y : Spec (CommRingCat.of B) ⟶ X} (e : x = y) (U : X.Ope
     (h' : ⊤ ≤ y ⁻¹ᵁ U) (s : Γ(X, U)) : valAt x U h s = valAt y U h' s := by
   subst e; rfl
 
-theorem valAt_res (x : Spec (CommRingCat.of B) ⟶ X) {U V : X.Opens} (i : V ⟶ U) (hV : ⊤ ≤ x ⁻¹ᵁ V)
-    (hU : ⊤ ≤ x ⁻¹ᵁ U) (s : Γ(X, U)) :
-    valAt x V hV ((X.presheaf.map i.op).hom s) = valAt x U hU s :=
-  congrArg (fun φ => (Scheme.ΓSpecIso (CommRingCat.of B)).hom.hom (φ.hom s)) (x.map_appLE hV i.op)
+alias valAt_res := _root_.PositivityTheory.HtPt.Unc.valAt_restrict
 
 theorem valAt_mul (x : Spec (CommRingCat.of B) ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (a b : Γ(X, U)) :
     valAt x U h (a * b) = valAt x U h a * valAt x U h b := by
@@ -547,7 +544,7 @@ theorem btOrder_eq_top (hHenselian : type_of% @_root_.GlobalTheory.CompanionTheo
     simpa only [hκa] using this
   rw [← PositivityTheory.HtPt.Twhopf.mem_order, ← _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.btOrder_eq_of_le R' T Γ' U' _ hU' hFU hle, PositivityTheory.HtPt.Twhopf.mem_order] at h1
   rw [← hg1]
-  refine PositivityTheory.HtPt.Htat.bt_reg_descent R T Γ R' Γ' F hF hflat κ hκ _ g' ?_
+  refine _root_.PositivityTheory.HtPt.Htat.StalkDivisibility.regularAt_of_baseChange R T Γ R' Γ' F hF hflat κ hκ _ g' ?_
   simpa only [hκa] using h1 t g' (hU'cl g' hg2)
 
 end PositivityTheory.HtPt.Htat.HopfOrderEqTop

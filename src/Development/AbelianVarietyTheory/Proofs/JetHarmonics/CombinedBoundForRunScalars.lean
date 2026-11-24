@@ -101,10 +101,6 @@ open Formalism.MainNotions.ModuliIntegralCharts.H1.BoxTuple Formalism.MainNotion
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 open IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.theta_generators_least_value_over_level_prime : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.HTFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l),
- letI := H.starRing
- ∀ (nab : NabV Xo c), IsNab Xo c nab → ThValTot Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (maximalIdeal T.V) C.I.G), P.TorsionIso → y.IsAlg → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (Φ M0 : ℝ) (r : ℕ) (b : Module.Basis (Fin r) ℤ P.D.toPre.X), 0 ≤ Φ → (∀ j, (Q (b j) : ℝ) ≤ Φ) → (∀ j z, |((Q (b j + z) - Q (b j) - Q z : ℤ) : ℝ)| ≤ M0 * Q z) → ∀ (g g' : ℕ), g.Prime → g'.Prime → g ≠ g' → l.M = g' * g → ∀ (π π' : 𝓞 E), π * star π = (g : 𝓞 E) → π' * star π' = (g' : 𝓞 E) → l.Mb = Ideal.span {π * π'} → (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {(g : 𝓞 E)})).card = Module.finrank ℚ E → (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {(g : 𝓞 E)})).Nodup → ¬ IsUnit ((g : ℕ) : T.V) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n e : ℕ), (∀ τ, Antitone fun i => a (τ, i)) → 2 * (Dw.p + Dw.q) ≤ n → 1 ≤ n → 0 < e → DF Dw a < g - 1 → 4 * DF Dw a + 4 ≤ g' → (DF Dw a : ℝ) * M0 < g' → (⨅ f ∈ thGen Xo c nab a n, nval T.V e (evI y f)) + nval T.V e (∏ τ : E →+* ℂ, (io (embK c τ (star π * star π'))) ^ (∑ i : Fin (Dw.mult τ), a (τ, i))) ≤ ((((vV T.V ((g : ℕ) : T.Fr) : ℤ) : ℝ) * DF Dw a / (g - 1) + (Dw.p + Dw.q : ℕ) * r * Φ / (4 * g') + 2 * (DF Dw a : ℝ) ^ 2 * Φ / g') / e : ℝ) := by
-  first | exact @GlobalTheory.LevelPrimePoint.least_value_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaGeneratorsLeastValueOverLevelPrimeStatement =====
@@ -257,7 +253,7 @@ theorem depth_le_over_level : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p
     by_cases hlt : j < D.R.m
     · exact lt_of_le_of_lt (mul_le_mul_of_nonneg_left hM0 (Nat.cast_nonneg _)) (hc hlt i').1
     · rw [(hjm (not_lt.1 hlt)).1, mul_zero]; exact hg'
-  have hA := GlobalTheory.T.theta_generators_least_value_over_level_prime hHT _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (h.thTot j hj) S io z C hC
+  have hA := _root_.GlobalTheory.LevelPrimePoint.least_value_le hHT _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (h.thTot j hj) S io z C hC
     Pu hPu hz ϖ hϖ Q hQ Φ M0 r b hΦ hb1 hb2 (D.host.g i) (D.host.g i') (D.host.g_prime i) (D.host.g_prime i') hne hMg
     (piBarO EX i) (piBarO EX i') (hst i).2 (hst i').2 hMb' hsp.1 hsp.2 hnu (wtA w) w.n e
     (wtA_antitone w) (by rw [hpq]; exact hnr) (by omega) ho.1
@@ -342,9 +338,9 @@ theorem iInf_thGen_le_nuLocC : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     obtain ⟨v, hv⟩ := GlobalTheory.ValClosure.exists_valuation_closure T.V ϖ hϖ
     exact ⟨AlgebraicClosure T.Fr, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
       inferInstance, v, hv⟩
-  obtain ⟨TI⟩ := GlobalTheory.T.nonempty_tateIsometry_integralFramedPoint_chart E H Dw l Xo c T io y C P F
+  obtain ⟨TI⟩ := _root_.GlobalTheory.IntegralTate.nonempty_tateIso_of_intChart E H Dw l Xo c T io y C P F
   obtain ⟨D', A', G', _, _, pD, pA, pG, U', PU, _, oD', hx, hact, hθ⟩ :=
-    (GlobalTheory.T.exists_productData_copies_trivialisation_valuation E H Dw l Xo c T io y C P ϖ hϖ).2 n
+    (_root_.GlobalTheory.PowData.exists_powData E H Dw l Xo c T io y C P ϖ hϖ).2 n
   obtain ⟨θ, θα, hθ1, hθ2, hθ3⟩ := hθ F v hv Q hQ α l.M (by have := l.three_le; omega) hα
   have hcop : ∃ u u' : 𝓞 E, u * α + u' * star α = 1 := by
     have h1 := l.coprime
@@ -376,7 +372,7 @@ theorem iInf_thGen_le_nuLocC : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (fun i => algebraMap T.Fr F (algebraMap T.V T.Fr (cf i))) (fun i => val_algebraMap_nonneg T v hvx _)
       (by rw [hmap]; exact hdeg) f hf ((vV T.V x0 : ℤ) : ℚ)
       (by rw [hmap, Nat.one_mul, hval]; exact hvx x0 hx0)
-  obtain ⟨g, hg, ε, hε, hgv⟩ := GlobalTheory.T.value_translate_pullback_eq_generator' E H Dw l Xo c nab hnab hth T io y C hTr P hP hy ϖ hϖ Q hQ F v hv n D' A' G'
+  obtain ⟨g, hg, ε, hε, hgv⟩ := _root_.GlobalTheory.value_translate_pullback_eq_generator E H Dw l Xo c nab hnab hth T io y C hTr P hP hy ϖ hϖ Q hQ F v hv n D' A' G'
     pD pA pG U' PU oD' hx hact α hα hMb θ θα hθ1 hθ2 hθ3 p w ζ x t₀ t σ' h h1 h2 h3 h4' h5 h6 h7 h8 h9 a (Qs i) (hQs i)
   rw [hgv] at hρ
   have hint : ∀ τ : E →+* ℂ, ∃ z : T.V, algebraMap T.V T.Fr z = io (embK c τ α) := fun τ => by
@@ -409,10 +405,6 @@ open Formalism.MainNotions.ModuliIntegralCharts.H1.BoxTuple Formalism.MainNotion
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 open IsDedekindDomain
 
-theorem _root_.GlobalTheory.T.iInf_theta_generators_le_local_depth_prime_to_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l),
- letI := H.starRing
- ∀ (nab : NabV Xo c), IsNab Xo c nab → ThValTot Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (maximalIdeal T.V) C.I.G), P.TorsionIso → y.IsAlg → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (Φ M0 : ℝ) (r : ℕ) (b : Module.Basis (Fin r) ℤ P.D.toPre.X), 0 ≤ Φ → (∀ j, (Q (b j) : ℝ) ≤ Φ) → (∀ j z, |((Q (b j + z) - Q (b j) - Q z : ℤ) : ℝ)| ≤ M0 * Q z) → ∀ (α : 𝓞 E), α * star α = ((l.M : ℕ) : 𝓞 E) → l.Mb = Ideal.span {star α} → IsUnit ((l.M : ℕ) : T.V) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n Dg e : ℕ), 1 ≤ n → 0 < e → DF Dw a ≤ Dg → 4 * Dg + 4 ≤ l.M → (Dg : ℝ) * M0 < l.M → (⨅ f ∈ thGen Xo c nab a n, nval T.V e (evI y f)) ≤ nuLocC C e l.M a n + (((Dg : ℝ) ^ 2 * Φ / l.M / e : ℝ) : EReal) := by
-  first | exact @GlobalTheory.ThetaLeast.iInf_thGen_le_nuLocC
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.IInfThetaGeneratorsLeLocalDepthPrimeToLevelStatement =====
@@ -530,7 +522,7 @@ theorem depth_le : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D 
     · unfold WeightAlgebra.PJ.phiC
       rw [(hjm hjm').2, if_neg (not_lt.2 hjm')]
       simp
-  have hA := GlobalTheory.T.iInf_theta_generators_le_local_depth_prime_to_level _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (h.thTot j hj) S io z C hC
+  have hA := _root_.GlobalTheory.ThetaLeast.iInf_thGen_le_nuLocC _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (h.thTot j hj) S io z C hC
     Pu hPu hz ϖ hϖ Q hQ Φ M0 r b hΦ0 hb1 hb2 α hα1 hα2 hMu (wtA w) w.n (WeightAlgebra.DF w) e hn1 ho.1
     (ReciprocityTheory.ChartRestriction.G.PullbackSections.PfTies1.DF_wtA_le _ _) (by rw [hM]; exact (h4 0).trans hle) hDM
   have hB := (_root_.GlobalTheory.DepthBd.nuWt_bounds D T h j hj w hn la).2.2.2.2 S io e ho z hz C

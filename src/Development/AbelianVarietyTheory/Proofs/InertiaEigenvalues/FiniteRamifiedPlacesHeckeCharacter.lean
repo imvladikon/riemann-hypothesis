@@ -211,11 +211,7 @@ theorem finite_ramified_places_hecke_character {D : D7} (χ : Formalism.L2.Host.
   · exact Ideal.mul_mem_right _ _ hk
   · exact Ideal.mul_mem_left _ _ hk
 
-theorem not_mem_of_prime_ne {L : Type} [Field L] [NumberField L] (w : IsDedekindDomain.HeightOneSpectrum (𝓞 L))
-    {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hne : q ≠ p) (hqw : (q : 𝓞 L) ∈ w.asIdeal) : (p : 𝓞 L) ∉ w.asIdeal := by
-  first
-  | (apply _root_.GlobalTheory.NatCastNotMemPrimeIdeal.natCast_notMem_of_prime_ne <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NatCastNotMemPrimeIdeal.natCast_notMem_of_prime_ne ..)
+alias not_mem_of_prime_ne := _root_.GlobalTheory.NatCastNotMemPrimeIdeal.natCast_notMem_of_prime_ne
 
 end GlobalTheory.ChiUnit
 end -- clump:auto

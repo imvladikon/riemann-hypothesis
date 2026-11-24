@@ -137,8 +137,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.betaTwistedInvolution_eq_complexConj_of_marked : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (μ : ℂ), G.a = 1 → P.Mark μ → ∀ (τ : FM P →+* ℂ) (a : FM P), τ (iM P a) = (starRingEnd ℂ) (τ a) := by
-  first | (exact @GlobalTheory.StabFin.iM_conj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BetaTwistedInvolutionEqComplexConjOfMarkedStatement =====
@@ -199,8 +197,6 @@ section -- clump:auto
 
 open NumberField
 
-theorem _root_.GlobalTheory.T.bounded_powers_padic_integral : ∀ (M : Type) [CommRing M] [Algebra ℚ M] (q : ℕ) [Fact q.Prime] (ι : Type) [Fintype ι] (f : M →ₗ[ℚ] (ι → ℚ)), Function.Injective f → ∀ (a : M) (B : ℝ), (∀ (k : ℕ) (i : ι), ‖((f (a ^ k) i : ℚ) : ℚ_[q])‖ ≤ B) → ∀ τ : M →+* PadicAlgCl q, ‖τ a‖ ≤ 1 := by
-  first | (exact @GlobalTheory.norm_conj_le_one_of_bounded_coords)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedPowersPadicIntegral =====
@@ -324,8 +320,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.eigenvalue_integral_norm_bound : ∀ (p : ℕ) [Fact p.Prime] (Kw : IntermediateField ℚ_[p] (PadicAlgCl p)) (n r : ℕ) (N : Matrix (Fin n) (Fin n) Kw) (H k : GL (Fin n) (KQ p Kw r)), k ∈ Kres p Kw n r → N.map (inclK p Kw r) = ((H * k * H⁻¹ : GL (Fin n) (KQ p Kw r)) : Matrix (Fin n) (Fin n) (KQ p Kw r)) → ∀ (v : Fin n → PadicAlgCl p) (c : PadicAlgCl p), v ≠ 0 → N.map (fun x => (x : PadicAlgCl p)) *ᵥ v = c • v → ‖c‖ ≤ 1 := by
-  first | (exact @GlobalTheory.StabFin.norm_eigen_le_one_of_conj_Kres)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenvalueIntegralNormBound =====
@@ -402,8 +396,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.exists_common_eigenvector_rho_adjoinRoot_embedding : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (i : Fin G.m) (τ : FM P →+* PadicAlgCl p), τ.comp (algebraMap G.F (FM P)) = G.emb i → ∃ v : Fin G.n → PadicAlgCl p, v ≠ 0 ∧ ∀ a : FM P, (G.rho i (jM P a)).map (fun x => (x : PadicAlgCl p)) *ᵥ v = τ a • v := by
-  first | (exact @GlobalTheory.StabFin.rho_jM_common_eigvec)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonEigenvectorRhoAdjoinRootEmbeddingStatement =====
@@ -433,7 +425,7 @@ theorem norm_le_one_at_u : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pai
   rw [hnorm]
   obtain ⟨m, hm0, hm⟩ := exists_pow_mem_conj K (KHT p G.m G.n r G.Fw) g _ hK hw
   obtain ⟨k, hk, hkeq⟩ := hm
-  obtain ⟨v, hv0, hv⟩ := GlobalTheory.T.exists_common_eigenvector_rho_adjoinRoot_embedding p G P i τ' hτ'F
+  obtain ⟨v, hv0, hv⟩ := _root_.GlobalTheory.StabFin.rho_jM_common_eigvec p G P i τ' hτ'F
   have hjm : jM P (a ^ m) = (((w ^ m : P.cent) : G.Cˣ × ℚˣ).1 : G.C) := by
     rw [map_pow, ha]; rfl
   have key : (z * g) * k * (z * g)⁻¹ = inclG G r (locC G ((w ^ m : P.cent) : G.Cˣ × ℚˣ)) := by
@@ -447,7 +439,7 @@ theorem norm_le_one_at_u : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pai
     group
   have hcomp := congrArg (fun x : Gr G r => ((x.2 i : GL (Fin G.n) (KQ p (G.Fw i) r)) : Matrix (Fin G.n) (Fin G.n) (KQ p (G.Fw i) r))) key
   have hk' : k.2 i ∈ Kres p (G.Fw i) G.n r := hk.2 i (Set.mem_univ _)
-  have hb := GlobalTheory.T.eigenvalue_integral_norm_bound p (G.Fw i) G.n r (G.rho i (jM P (a ^ m))) ((z * g).2 i) (k.2 i) hk'
+  have hb := _root_.GlobalTheory.StabFin.norm_eigen_le_one_of_conj_Kres p (G.Fw i) G.n r (G.rho i (jM P (a ^ m))) ((z * g).2 i) (k.2 i) hk'
     (by rw [hjm]; exact hcomp.symm) v (τ' (a ^ m)) hv0 (hv _)
   rw [map_pow, norm_pow] at hb
   exact (pow_le_one_iff_of_nonneg (norm_nonneg _) hm0.ne').1 hb
@@ -466,8 +458,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.centralizer_element_padic_bounded : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (r : ℕ) (z : Gr G r) (K : Subgroup (Gr G r)) (g : Gr G r), 0 < r → Subgroup.Commensurable K (KHT p G.m G.n r G.Fw) → ∀ w : P.cent, P.toQr r z w ∈ K.map (MulAut.conj g).toMonoidHom → ∀ (a : FM P), jM P a = ((w : G.Cˣ × ℚˣ).1 : G.C) → ∀ τ : FM P →+* PadicAlgCl p, LiesOver G.Kq G.u (τ.comp (algebraMap G.F (FM P))) → ‖τ a‖ ≤ 1 := by
-  first | (exact @GlobalTheory.StabFin.norm_le_one_at_u)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerElementPadicBounded =====
@@ -542,8 +532,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.centralizer_scalar_padic_bounded : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (r : ℕ) (z : Gr G r) (K : Subgroup (Gr G r)) (g : Gr G r), 0 < r → Subgroup.Commensurable K (KHT p G.m G.n r G.Fw) → ∀ w : P.cent, P.toQr r z w ∈ K.map (MulAut.conj g).toMonoidHom → ‖(((w : G.Cˣ × ℚˣ).2 : ℚ) : ℚ_[p])‖ ≤ 1 := by
-  first | (exact @GlobalTheory.StabFin.sim_norm_le_one)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerScalarPadicBounded =====
@@ -577,8 +565,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount GlobalTheory.StabFin
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.conjugate_place_lies_over : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (ψ : G.F →+* PadicAlgCl p), ¬ LiesOver G.Kq G.u ψ → LiesOver G.Kq G.u (ψ.comp (IsCMField.complexConj G.F : G.F →+* G.F)) := by
-  first | (exact @GlobalTheory.StabFinOver.liesOver_comp_complexConj_of_not_liesOver)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugatePlaceLiesOver =====
@@ -591,8 +577,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.kottwitz_pointCount_one_class_commensurable : ∀ {Γ G₁ G₂ : Type} [Group Γ] [Group G₁] [Group G₂] (ι₁ : Γ →* G₁) (ι₂ : Γ →* G₂) (θ : G₂ →* G₂) (K₁ : Subgroup G₁) (K₂ : Subgroup G₂) (γ : G₁) (δ : G₂) (f₁ : G₁ → ℂ) (φ : G₂ → ℂ), (∀ g : G₁, Subgroup.Commensurable (K₁.map (MulAut.conj g).toMonoidHom) K₁) → (∀ g : G₂, Subgroup.Commensurable (K₂.map (MulAut.conj g).toMonoidHom) K₂) → K₂.map θ ≤ K₂ → (∀ k ∈ K₁, ∀ x, f₁ (k⁻¹ * x * k) = f₁ x) → (∀ k ∈ K₂, ∀ x, φ (k⁻¹ * x * θ k) = φ x) → (∀ g : Γ, ι₁ g * γ = γ * ι₁ g) → (∀ g : Γ, ι₂ g * δ = δ * θ (ι₂ g)) → Function.Injective (ι₁.prod ι₂) → (∀ x : G₁ × G₂, Finite (stab ι₁ ι₂ K₁ K₂ x)) → {q : DoubleCoset.Quotient ((ι₁.prod ι₂).range : Set (G₁ × G₂)) ((K₁.prod K₂ : Subgroup (G₁ × G₂)) : Set (G₁ × G₂)) | f₁ ((Quotient.out q).1⁻¹ * γ * (Quotient.out q).1) * φ ((Quotient.out q).2⁻¹ * δ * θ (Quotient.out q).2) ≠ 0}.Finite → pointSum ι₁ ι₂ θ K₁ K₂ γ δ f₁ φ = pointSide ι₁ ι₂ θ K₁ K₂ γ δ f₁ φ := by
-  first | (exact @GlobalTheory.LKCountComm.pointSum_eq_pointSide_of_commensurable)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzPointCountOneClassCommensurableStatement =====
@@ -667,8 +651,6 @@ section -- clump:auto
 open Matrix NumberField GlobalTheory.LKTrip GlobalTheory.LKRes GlobalTheory.LKMid GlobalTheory.LKCount
 open scoped TensorProduct Classical
 
-theorem _root_.GlobalTheory.T.similitudePair_adelicProdUnramifiedEmbedding_injective : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) (x : (AfP p ⊗[ℚ] G.C)ˣ) (t : (AfP p)ˣ) (hx : Triv G (AfP p) P.β x t) (r : ℕ) (z : Gr G r), Function.Injective ((P.toAf x t hx).prod (P.toQr r z)) := by
-  first | (exact @GlobalTheory.LKMid.pair_embedding_injective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairAdelicProdUnramifiedEmbeddingInjecStatement =====
@@ -891,8 +873,8 @@ private theorem stab_finite {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
     by_cases hq : q = p
     · subst hq
       by_cases hov : LiesOver G.Kq G.u (τ.comp (algebraMap G.F (FM P)))
-      · exact GlobalTheory.T.centralizer_element_padic_bounded q G P r z K y.2 hr hK w ((hmem w).1 hw).2 _ (hA w) τ hov
-      · have hov' := GlobalTheory.T.conjugate_place_lies_over q G _ hov
+      · exact _root_.GlobalTheory.StabFin.norm_le_one_at_u q G P r z K y.2 hr hK w ((hmem w).1 hw).2 _ (hA w) τ hov
+      · have hov' := _root_.GlobalTheory.StabFinOver.liesOver_comp_complexConj_of_not_liesOver q G _ hov
         set τ' := τ.comp (iM P).toRingHom
         have hτ' : LiesOver G.Kq G.u (τ'.comp (algebraMap G.F (FM P))) := by
           intro k
@@ -902,8 +884,8 @@ private theorem stab_finite {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
           show τ (iM P (algebraMap G.F (FM P) k)) = _
           rw [iM_algF]; rfl
         have hwi : w⁻¹ ∈ S := S.inv_mem hw
-        have h1 := GlobalTheory.T.centralizer_element_padic_bounded q G P r z K y.2 hr hK w⁻¹ ((hmem _).1 hwi).2 _ (hA _) τ' hτ'
-        have h2 := GlobalTheory.T.centralizer_scalar_padic_bounded q G P r z K y.2 hr hK w ((hmem w).1 hw).2
+        have h1 := _root_.GlobalTheory.StabFin.norm_le_one_at_u q G P r z K y.2 hr hK w⁻¹ ((hmem _).1 hwi).2 _ (hA _) τ' hτ'
+        have h2 := _root_.GlobalTheory.StabFin.sim_norm_le_one q G P r z K y.2 hr hK w ((hmem w).1 hw).2
         have e : A w = iM P (algebraMap ℚ (FM P) (((w : G.Cˣ × ℚˣ).2 : ℚ)) * A w⁻¹) := by
           have e0 : algebraMap ℚ (FM P) (((w : G.Cˣ × ℚˣ).2 : ℚ)) * A w⁻¹ = iM P (A w) := by
             rw [← mul_iM_of_cent P w (A w) (hA w), mul_comm (A w), mul_assoc, hAinv, mul_one]
@@ -921,13 +903,13 @@ private theorem stab_finite {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
         intro a b hab
         apply jM_injective P
         simpa [f] using hab
-      refine GlobalTheory.T.bounded_powers_padic_integral (FM P) q _ f hf (A w) B (fun k i => ?_) τ
+      refine _root_.GlobalTheory.norm_conj_le_one_of_bounded_coords (FM P) q _ f hf (A w) B (fun k i => ?_) τ
       rw [← hApow]
       have := hB (w ^ k) (S.pow_mem hw k).1 i
       simpa [f, hA] using this
   haveI := fm_reduced P
   haveI := fm_finite P
-  have hfin := units_finite (iM P) (GlobalTheory.T.betaTwistedInvolution_eq_complexConj_of_marked p G P μ ha hM)
+  have hfin := units_finite (iM P) (_root_.GlobalTheory.StabFin.iM_conj p G P μ ha hM)
   let U : S → (FM P)ˣ := fun w => ⟨A w, A (w : P.cent)⁻¹, hAinv w, by rw [mul_comm]; exact hAinv w⟩
   have hU : ∀ w : S, U w ∈ {x : (FM P)ˣ | x ∈ GlobalTheory.LKTorus.simT ℚ (iM P) ∧
       (∀ (q : ℕ) [Fact q.Prime] (τ : FM P →+* PadicAlgCl q), ‖τ (x : FM P)‖ ≤ 1) ∧
@@ -966,7 +948,7 @@ private theorem pointSum_zero {Γ G₁ G₂ : Type} [Group Γ] [Group G₁] [Gro
       ((K₁.prod K₂ : Subgroup (G₁ × G₂)) : Set (G₁ × G₂)) |
       f₁ ((Quotient.out q).1⁻¹ * γ * (Quotient.out q).1) *
         φ ((Quotient.out q).2⁻¹ * δ * θ (Quotient.out q).2) ≠ 0}.Finite
-  · rw [GlobalTheory.T.kottwitz_pointCount_one_class_commensurable ι₁ ι₂ θ K₁ K₂ γ δ f₁ φ hK₁ hK₂ hθ hf₁ hφ hc₁ hc₂ hι hstab hs]
+  · rw [_root_.GlobalTheory.LKCountComm.pointSum_eq_pointSide_of_commensurable ι₁ ι₂ θ K₁ K₂ γ δ f₁ φ hK₁ hK₂ hθ hf₁ hφ hc₁ hc₂ hι hstab hs]
     unfold pointSide
     rw [h0]
     simp
@@ -980,9 +962,9 @@ private theorem termAt_zero {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
     (hx : Triv G (AfP p) Q.β x t) (δ z : Gr G 1) (hn : IsNrm G 1 Q.atP δ z)
     (h0 : orbK (MonoidHom.id G.GAf) Lv.K.toSubgroup (Q.toAf x t hx Q.self) f = 0) :
     Q.termAt Lv.K.toSubgroup f 1 (Kp G) (oneP G) x t hx δ z = 0 := by
-  have hreg := GlobalTheory.T.similitudePair_regular_image_at_p p G Q
-  have hB := GlobalTheory.T.map_centralizer_regular_twistedCentraliser p G 1 Q.atP δ z one_pos hreg.2.1 hn
-  have hK184 := GlobalTheory.T.unitarySimilitudeIntegralSubgroup_commensurated_frobenius p G 1 one_pos
+  have hreg := _root_.GlobalTheory.LKMid.atP_regular p G Q
+  have hB := _root_.GlobalTheory.CarryCent.map_centralizer_carry p G 1 Q.atP δ z one_pos hreg.2.1 hn
+  have hK184 := _root_.GlobalTheory.heckeOperator_integral p G 1 one_pos
   have hc1 : ∀ g : Q.cent, Q.toAf x t hx g * Q.toAf x t hx Q.self = Q.toAf x t hx Q.self * Q.toAf x t hx g := by
     intro g
     rw [← map_mul, ← map_mul]
@@ -1008,8 +990,8 @@ private theorem termAt_zero {p : ℕ} [Fact p.Prime] (G : HTGroup p) (ha : G.a =
       rfl
     · rw [Set.indicator_of_notMem (show _ ∉ (Kp G : Set (Gr G 1)) from fun h => hw (hiff.1 h)),
         Set.indicator_of_notMem (show _ ∉ (Kp G : Set (Gr G 1)) from hw)]
-  exact pointSum_zero _ _ _ _ _ _ _ _ _ (GlobalTheory.T.compactOpenLevel_conj_commensurable p G Lv) hK184.1 hK184.2.2
-    (fun k hk y => hbi ⟨k⁻¹, Subgroup.inv_mem _ hk⟩ ⟨k, hk⟩ _) hφ hc1 hc2 (GlobalTheory.T.similitudePair_adelicProdUnramifiedEmbedding_injective p G Q x t hx 1 z)
+  exact pointSum_zero _ _ _ _ _ _ _ _ _ (_root_.GlobalTheory.LKMid.level_conj_commensurable p G Lv) hK184.1 hK184.2.2
+    (fun k hk y => hbi ⟨k⁻¹, Subgroup.inv_mem _ hk⟩ ⟨k, hk⟩ _) hφ hc1 hc2 (_root_.GlobalTheory.LKMid.pair_embedding_injective p G Q x t hx 1 z)
     (stab_finite G ha Q μ hM x t hx 1 z Lv (Kp G) one_pos (Subgroup.Commensurable.refl _)) h0
 
 private theorem charpoly_at_self {p : ℕ} [Fact p.Prime] {G : HTGroup p} {k : Type} [Field k] [Algebra G.F k] (R : Pl G k)

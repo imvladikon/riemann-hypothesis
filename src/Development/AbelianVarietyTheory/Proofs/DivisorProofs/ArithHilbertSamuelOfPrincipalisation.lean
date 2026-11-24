@@ -142,6 +142,7 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import ReciprocityTheory.L2DbarEstimates.ChartDerivatives.HoloSmooth
 import ReciprocityTheory.L2DbarEstimates.LeviForms.EventuallyDifferentiableAtOfContDiffAt
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqGenericPoint
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionCalculusCycleHeightsOfAnalytic
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArCalcOfPrincipalisation
 
 -- This file was produced by scripts/clump.py from the modules listed below.
@@ -1430,7 +1431,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPositivePullbackGenericallyEtale =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPullOfPrincipalisation =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPullOfPrincipalisation", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArithmeticCoverOverModification\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpensEtaleGenericallyFiniteDominant\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueDegreeEqOneOfComp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPosOfPullbackGenericallyEtale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPosPullOfGenericallySmooth\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPositivePullbackGenericallyEtale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemipositiveOfIsometric\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqGenericPoint\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPullOfPrincipalisation", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArithmeticCoverOverModification\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpensEtaleGenericallyFiniteDominant\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueDegreeEqOneOfComp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPosOfPullbackGenericallyEtale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPosPullOfGenericallySmooth\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPositivePullbackGenericallyEtale\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemipositiveOfIsometric\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqGenericPoint\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionCalculusCycleHeightsOfAnalytic\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1443,27 +1444,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory GlobalTheory.ArInt GlobalTheory.CxPts GlobalTheory.Cartier GlobalTheory.VolBr GlobalTheory.HSNef
 
 namespace GlobalTheory.SemiPullAll
-
-theorem isometric_pull_pull {k : Type} [CommRing k] {X Y Z : Scheme.{0}} {p : X ⟶ Sp k} {q : Y ⟶ Sp k}
-    {s : Z ⟶ Sp k} (L : HermLB p) (f : Y ⟶ X) (hf : f ≫ p = q) (g : Z ⟶ Y) (hg : g ≫ q = s) (c : Z ⟶ X)
-    (hc : c ≫ p = s) (e : g ≫ f = c) : ((L.pull f hf).pull g hg).Isometric (L.pull c hc) := by
-  subst e
-  have R : GlobalTheory.TwistTop.Refines ((L.pull f hf).pull g hg) (L.pull (g ≫ f) hc)
-      (fun c => c PUnit.unit) 0 := by
-    refine ⟨fun c y hy => Set.mem_iInter.2 fun a => Set.mem_iInter.1 (Set.mem_iInter.1 hy PUnit.unit) a, ?_, ?_⟩
-    · intro W r z c c' hc₁ hc₂
-      have h₁ := Set.mem_iInter.1 hc₁ PUnit.unit
-      have h₂ := Set.mem_iInter.1 hc₂ PUnit.unit
-      refine (gm_pull_g _ g r z c c' hc₁ hc₂).trans ((gm_pull_g _ f (r ≫ g) z _ _ h₁ h₂).trans ?_)
-      refine Eq.trans ?_ (gm_pull_g _ (g ≫ f) r z (c PUnit.unit) (c' PUnit.unit)
-        (Set.mem_iInter.2 fun a => Set.mem_iInter.1 h₁ a) (Set.mem_iInter.2 fun a => Set.mem_iInter.1 h₂ a)).symm
-      rw [Category.assoc]
-    · intro σ c y hy
-      refine (((L.pull f hf).φ σ).pull_φ g hg c y).trans (((L.φ σ).pull_φ f hf _ _).trans ?_)
-      refine Eq.trans ?_ (((L.φ σ).pull_φ (g ≫ f) hc (c PUnit.unit) y).symm.trans (add_zero _).symm)
-      exact congrArg _ (Subtype.ext (Category.assoc _ _ _))
-  exact HermLB.isometric_of_chart _ R.le (fun x => R.g Z (𝟙 Z) x) fun σ c y hy =>
-    ((R.φ σ c y hy).trans (add_zero _)).symm
 
 theorem semiPull_of_principalisation : GlobalTheory.Published.Principalisation → SemiPull := by
   intro hP k _ X Y p q D E hp hq π hπ L hL
@@ -1480,8 +1460,8 @@ theorem semiPull_of_principalisation : GlobalTheory.Published.Principalisation �
   have h₂ : ((L.pull ρ rfl).pull π' e₁).SemiPos E :=
     _root_.GlobalTheory.HermLB.semiPos_pull_of_genSmooth k X' Y' (ρ ≫ p) (g ≫ q) D E hsm π' e₁ (L.pull ρ rfl) h₁
   have iso : ((L.pull ρ rfl).pull π' e₁).Isometric ((L.pull π hπ).pull g rfl) :=
-    (isometric_pull_pull L ρ rfl π' e₁ (g ≫ π) e₂ hcomm).trans
-      (isometric_pull_pull L π hπ g rfl (g ≫ π) e₂ rfl).symm
+    (_root_.GlobalTheory.MixHt.StepVal.isometric_pull_pull' L ρ rfl π' e₁ (g ≫ π) e₂ hcomm).trans
+      (_root_.GlobalTheory.MixHt.StepVal.isometric_pull_pull' L π hπ g rfl (g ≫ π) e₂ rfl).symm
   have h₃ : ((L.pull π hπ).pull g rfl).SemiPos E :=
     HermLB.Isometric.semiPos _ _ E iso h₂
   obtain ⟨W, hW, hWet⟩ := _root_.GlobalTheory.GenEtale.exists_opens_etale k Y Y' q (g ≫ q) E hq hY'q g rfl hggen hgdeg

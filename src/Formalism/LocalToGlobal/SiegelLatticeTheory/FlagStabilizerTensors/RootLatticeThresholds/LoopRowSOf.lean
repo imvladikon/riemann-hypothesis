@@ -221,7 +221,7 @@ theorem hOf : TieHyp (wOf X) hI :=
   { lat := Formalism.L2.SG.Pf.WittFlags.LatIso_holds D
     idG := fun u u' => identityCell_vanishes u u'
     atSome := fun u u' => Formalism.L2.SG.LeadingMinorsNonvanishing.atSomeAll_holds _ _ Y u u'
-    autFin := fun u => Formalism.L2.SG.Pf.autFin_of (automorphism_lattice_finite D) (D.sp.Y_sig 0)
+    autFin := fun u => Formalism.L2.SG.Pf.autFin_of (_root_.PI.AutLzFinite.SlopeTestRemainingChoices.autLzFin_main D) (D.sp.Y_sig 0)
       (Formalism.MainNotions.BridgeLemma.tie_Tu_pos D u)
       (Formalism.L2.SG.Pf.WittFlags.RowRepsIso_holds D ((wOf X).δ u) ((wOf X).isom u) (X.Fu u) (Y.what₂ u) (Y.rowsOK u))
     dim := fun u => Formalism.L2.SG.Pf.dimTie X u
@@ -395,7 +395,7 @@ theorem loopRowS_of_raised (hyF : YFOK sel yF) (C1f : List ℝ → ℝ) (C₀f :
     LoopRowS C0 𝒞 sel := by
   intro aF
   choose f g hfg using fun p : ℝ × ℝ × ℝ × ℝ =>
-    loop_evaluation_threshold_zero Formalism.FourierDecayAlt.P.loop_kernels Formalism.FourierDecayAlt.P.subfamilyAlt Formalism.HermitianLattices.Ext.L3.siegelMassRatio
+    loop_evaluation_threshold_zero _root_.Formalism.FourierDecayAlt.P.NormChainLemmas.loopCores _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_SubFamily Formalism.HermitianLattices.Ext.L3.siegelMassRatio
       (p.1 + 1) (1 / 4) 3 (1 / 2) p.2.1 C0 p.2.2.1 p.2.2.2
   let par : List ℝ → ℝ × ℝ × ℝ × ℝ := fun l => (l.getD 6 0, l.getD 13 0, aF (l.take 16), C₀f aF l)
   obtain ⟨e1, he1, H1⟩ := hRowsF aF

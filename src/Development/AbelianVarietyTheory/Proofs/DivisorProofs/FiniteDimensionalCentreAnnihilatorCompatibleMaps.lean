@@ -59,8 +59,6 @@ section -- clump:auto
 
 open NumberField GlobalTheory.CuspRep GlobalTheory.CuspQuot GlobalTheory.AutGrowth MeasureTheory Filter Topology
 
-theorem _root_.GlobalTheory.T.centre_comp_mem_kinfEquivariantAutomorphicMaps : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (L : Subgroup (GL (Fin a) (Af E))) (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈ W, cptRep E a k w ∈ W) (T : W →ₗ[ℂ] Sm E a), T ∈ maps L W hW → ∀ z ∈ Zalg E a, z ∘ₗ T ∈ maps L W hW := by
-  first | exact @GlobalTheory.AutGrowth.comp_mem_maps
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentreCompMemKinfEquivariantAutomorphicMapsStatement =====
@@ -139,16 +137,10 @@ namespace GlobalTheory.AutGrowth
 
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
 
-theorem isContRep_sub_cptRep (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈ W, cptRep E a k w ∈ W)
-    [FiniteDimensional ℂ W] : GlobalTheory.Published.AutFin.IsContRep (GlobalTheory.PRep.sub (cptRep E a) W hW) := by
-  first
-  | (apply _root_.GlobalTheory.ContinuousRepresentationCoefficients.isContRep_sub <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ContinuousRepresentationCoefficients.isContRep_sub ..)
-
 theorem finiteDimensional_capEigen_maps : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (L : Subgroup (GL (Fin a) (Af E))), IsOpen (L : Set (GL (Fin a) (Af E))) → ∀ (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈ W, cptRep E a k w ∈ W), FiniteDimensional ℂ W → ∀ (c : (E →+* ℂ) → ℂ → ℂ) (N : Submodule ℂ (W →ₗ[ℂ] Sm E a)), N ≤ maps L W hW → (∀ T ∈ N, ∀ τ u, cap τ u ∘ₗ T = c τ u • T) → FiniteDimensional ℂ N := by
   intro hHC E _ _ _ a L hL W hW hWf c N hN hcap
   haveI := hWf
-  have hF := hHC E a L hL W (GlobalTheory.PRep.sub (cptRep E a) W hW) (isContRep_sub_cptRep W hW) c
+  have hF := hHC E a L hL W (GlobalTheory.PRep.sub (cptRep E a) W hW) (_root_.GlobalTheory.ContinuousRepresentationCoefficients.isContRep_sub W hW) c
   haveI := hF
   have hmem : ∀ T ∈ N, ∀ w, T w ∈ GlobalTheory.Published.AutFinGL.forms L (GlobalTheory.PRep.sub (cptRep E a) W hW) c := by
     intro T hT w
@@ -237,7 +229,7 @@ def postZ (z : Module.End ℂ (Sm E a)) (hz : z ∈ Zalg E a) : Module.End ℂ (
     have hT : T.1 ∈ maps L (spanK E a φ) (spanK_stable φ) ∧
         ∀ z ∈ Zalg E a, z φ = 0 → ∀ w, z (T.1 w) = 0 := T.2
     show _ ∧ _
-    refine ⟨GlobalTheory.T.centre_comp_mem_kinfEquivariantAutomorphicMaps E a L (spanK E a φ) (spanK_stable φ) T.1 hT.1 z hz, fun z' hz' h0 w => ?_⟩
+    refine ⟨_root_.GlobalTheory.AutGrowth.comp_mem_maps E a L (spanK E a φ) (spanK_stable φ) T.1 hT.1 z hz, fun z' hz' h0 w => ?_⟩
     show z' (z (T.1 w)) = 0
     rw [← Module.End.mul_apply, ← (Zalg_commute hz hz').eq, Module.End.mul_apply, hT.2 z' hz' h0 w, map_zero]⟩
   map_add' T T' := by ext; simp

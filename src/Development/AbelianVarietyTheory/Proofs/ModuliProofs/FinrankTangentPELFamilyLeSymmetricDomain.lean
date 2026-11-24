@@ -972,27 +972,6 @@ theorem ex_add_lattice (z : Fin g → ℂ) (l : u.Λ) : u.ex (z + l) = u.ex z :=
 
 theorem isHolFamily_ex_comp (m : A₀.left ⟶ X) : PowUnif.IsHolFamily fun z => (u.ex z).left ≫ m := PowUnif.IsHolFamily.comp (c := fun z => (u.ex z).left) u.hol m
 
-private theorem top_le_preimage_inf_iff {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (A B : X.Opens) :
-    ⊤ ≤ x ⁻¹ᵁ (A ⊓ B) ↔ ⊤ ≤ x ⁻¹ᵁ A ∧ ⊤ ≤ x ⁻¹ᵁ B := by
-  show ⊤ ≤ x ⁻¹ᵁ A ⊓ x ⁻¹ᵁ B ↔ _
-  exact le_inf_iff
-
-private theorem valAt'_units_val_ne_zero {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W)
-    (f : (Γ(X, W))ˣ) : valAt' y W f.val ≠ 0 := by
-  have h1 : valAt' y W (f.val * f.inv) = valAt' y W f.val * valAt' y W f.inv := by
-    unfold valAt'
-    simp only [dif_pos hW]
-    unfold valAt
-    simp only [map_mul]
-  have h2 : valAt' y W (1 : Γ(X, W)) = 1 := by
-    unfold valAt'
-    simp only [dif_pos hW]
-    unfold valAt
-    simp only [map_one]
-  intro h0
-  rw [f.val_inv, h2, h0, zero_mul] at h1
-  exact one_ne_zero h1
-
 theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB X) (hL : L.IsLB)
     (hw : LBIso L₀ (L.pull m)) :
     ∃ a : L.ι → (Fin g → ℂ) → ℂ,
@@ -1012,7 +991,7 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
         ((L.pull m).g (fun _ => i) (fun _ => j)).val = fn u m (L.U i ⊓ L.U j) (L.g i j).val z := by
     intro i j z hi hj
     have h := PowUnif.val_linComb_g (u.ex z).left L (fun _ : PUnit => m) (fun _ => i) (fun _ => j)
-      ((top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z hi, hJ j z hj⟩)
+      ((_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hi, hJ j z hj⟩)
     rw [Fintype.prod_unique] at h
     exact h
 
@@ -1024,7 +1003,7 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
     intro i z b b' hi hb hb'
     have hbb : ⊤ ≤ (u.ex z).left ⁻¹ᵁ (((L.pull m).div L₀).U ((fun _ => i), b) ⊓
         ((L.pull m).div L₀).U ((fun _ => i), b')) :=
-      (top_le_preimage_inf_iff _ _ _).2 ⟨(top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z hi, hb⟩, (top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z hi, hb'⟩⟩
+      (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨(_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hi, hb⟩, (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hi, hb'⟩⟩
     have h1 := PowUnif.val_gen hw (u.ex z).left ((fun _ => i), b) ((fun _ => i), b') hbb
     have h2 : valAt' (u.ex z).left (((L.pull m).div L₀).U ((fun _ => i), b) ⊓
         ((L.pull m).div L₀).U ((fun _ => i), b'))
@@ -1037,9 +1016,9 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
         ((L.pull m).g (fun _ => i) (fun _ => i)).val = 1 := by
       rw [hM i i z hi hi]
       exact PowUnif.val_g_self hL ((u.ex z).left ≫ m) i hi
-    have hbb' : ⊤ ≤ (u.ex z).left ⁻¹ᵁ (L₀.U b ⊓ L₀.U b') := (top_le_preimage_inf_iff _ _ _).2 ⟨hb, hb'⟩
+    have hbb' : ⊤ ≤ (u.ex z).left ⁻¹ᵁ (L₀.U b ⊓ L₀.U b') := (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hb, hb'⟩
     have h4 := u.fr_compat b b' z hbb'
-    have n4 := valAt'_units_val_ne_zero (u.ex z).left hbb' (L₀.g b b')
+    have n4 := _root_.GlobalTheory.valAt'_unit_ne_zero (u.ex z).left hbb' (L₀.g b b')
     rw [h1, h2, h3, h4]
     field_simp
 
@@ -1057,23 +1036,23 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
       obtain ⟨b₀, hb₀⟩ := PowUnif.exists_chart hL₀ (u.ex z₀).left
       have hO := (u.hol (((L.pull m).div L₀).U ((fun _ => i), b₀)) (w.s ((fun _ => i), b₀)).val)
       have hz : z₀ ∈ {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ (((L.pull m).div L₀).U ((fun _ => i), b₀))} :=
-        (top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z₀ hz₀, hb₀⟩
+        (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z₀ hz₀, hb₀⟩
       have hsub : {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ (((L.pull m).div L₀).U ((fun _ => i), b₀))} ⊆
-          {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ L₀.U b₀} := fun z hz => ((top_le_preimage_inf_iff _ _ _).1 hz).2
+          {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ L₀.U b₀} := fun z hz => ((_root_.GlobalTheory.top_le_preimage_inf _ _ _).1 hz).2
       have hd : DifferentiableAt ℂ (fun z => valAt' (u.ex z).left (((L.pull m).div L₀).U ((fun _ => i), b₀))
           (w.s ((fun _ => i), b₀)).val * u.fr b₀ z) z₀ :=
         (hO.2.mul ((u.fr_hol b₀).mono hsub)).differentiableAt (hO.1.mem_nhds hz)
       refine (hd.congr_of_eventuallyEq ?_).differentiableWithinAt
       filter_upwards [hO.1.mem_nhds hz] with z hz'
-      have hz1 := (top_le_preimage_inf_iff _ _ _).1 hz'
+      have hz1 := (_root_.GlobalTheory.top_le_preimage_inf _ _ _).1 hz'
       have hi : ⊤ ≤ ((u.ex z).left ≫ m) ⁻¹ᵁ L.U i :=
         (PowUnif.le_wchart_iff (u.ex z).left L (fun _ : PUnit => m) (fun _ => i)).1 hz1.1 PUnit.unit
       exact indep i z _ _ hi (ch z) hz1.2
     · intro z hz
       have hzz : ⊤ ≤ (u.ex z).left ⁻¹ᵁ (((L.pull m).div L₀).U ((fun _ => i),
           Classical.choose (PowUnif.exists_chart hL₀ (u.ex z).left))) :=
-        (top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z hz, ch z⟩
-      exact mul_ne_zero (valAt'_units_val_ne_zero _ hzz _) (u.fr_ne _ z (ch z))
+        (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hz, ch z⟩
+      exact mul_ne_zero (_root_.GlobalTheory.valAt'_unit_ne_zero _ hzz _) (u.fr_ne _ z (ch z))
   · intro i j z hz
     dsimp only
     obtain ⟨hzi, hzj⟩ := hz
@@ -1082,7 +1061,7 @@ theorem exists_frame_on_family (hL₀ : L₀.IsLB) (m : A₀.left ⟶ X) (L : LB
     set b := Classical.choose (PowUnif.exists_chart hL₀ (u.ex z).left) with hbdef
     have hbb : ⊤ ≤ (u.ex z).left ⁻¹ᵁ (((L.pull m).div L₀).U ((fun _ => i), b) ⊓
         ((L.pull m).div L₀).U ((fun _ => j), b)) :=
-      (top_le_preimage_inf_iff _ _ _).2 ⟨(top_le_preimage_inf_iff _ _ _).2 ⟨hJ i z hzi', ch z⟩, (top_le_preimage_inf_iff _ _ _).2 ⟨hJ j z hzj', ch z⟩⟩
+      (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨(_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ i z hzi', ch z⟩, (_root_.GlobalTheory.top_le_preimage_inf _ _ _).2 ⟨hJ j z hzj', ch z⟩⟩
     have h1 := PowUnif.val_gen hw (u.ex z).left ((fun _ => i), b) ((fun _ => j), b) hbb
     have h2 : valAt' (u.ex z).left (((L.pull m).div L₀).U ((fun _ => i), b) ⊓
         ((L.pull m).div L₀).U ((fun _ => j), b))
@@ -1110,18 +1089,11 @@ private theorem valAt'_mul_of_whole_le_preimage {X : Scheme.{0}} (y : Sp ℂ ⟶
   unfold valAt
   simp only [map_mul]
 
-private theorem valAt'_one_of_whole_le_preimage {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W) :
-    valAt' y W 1 = 1 := by
-  unfold valAt'
-  simp only [dif_pos hW]
-  unfold valAt
-  simp only [map_one]
-
 private theorem valAt'_unit_ne_zero' {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W)
     (f : (Γ(X, W))ˣ) : valAt' y W f.val ≠ 0 := by
   intro h0
   have h1 := valAt'_mul_of_whole_le_preimage y hW f.val f.inv
-  rw [f.val_inv, valAt'_one_of_whole_le_preimage y hW, h0, zero_mul] at h1
+  rw [f.val_inv, _root_.GlobalTheory.valAt'_one y hW, h0, zero_mul] at h1
   exact one_ne_zero h1
 
 theorem PtDer.log_cocycle {y : Sp ℂ ⟶ X} {δ : ∀ W : X.Opens, Γ(X, W) → ℂ} (h : PtDer y δ) {L : LB X} (hL : L.IsLB)
@@ -1146,27 +1118,6 @@ theorem PtDer.log_cocycle {y : Sp ℂ ⟶ X} {δ : ∀ W : X.Opens, Γ(X, W) →
   field_simp
   ring
 
-private theorem top_le_preimage_inf_iff_and {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (A B : X.Opens) :
-    ⊤ ≤ x ⁻¹ᵁ (A ⊓ B) ↔ ⊤ ≤ x ⁻¹ᵁ A ∧ ⊤ ≤ x ⁻¹ᵁ B := by
-  show ⊤ ≤ x ⁻¹ᵁ A ⊓ x ⁻¹ᵁ B ↔ _
-  exact le_inf_iff
-
-private theorem valAt'_val_unit_ne_zero {X : Scheme.{0}} (y : Sp ℂ ⟶ X) {W : X.Opens} (hW : ⊤ ≤ y ⁻¹ᵁ W)
-    (f : (Γ(X, W))ˣ) : valAt' y W f.val ≠ 0 := by
-  have h1 : valAt' y W (f.val * f.inv) = valAt' y W f.val * valAt' y W f.inv := by
-    unfold valAt'
-    simp only [dif_pos hW]
-    unfold valAt
-    simp only [map_mul]
-  have h2 : valAt' y W (1 : Γ(X, W)) = 1 := by
-    unfold valAt'
-    simp only [dif_pos hW]
-    unfold valAt
-    simp only [map_one]
-  intro h0
-  rw [f.val_inv, h2, h0, zero_mul] at h1
-  exact one_ne_zero h1
-
 theorem isSymm_of_lift : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.L P₀.g) (Hm : Matrix (Fin P₀.g) (Fin P₀.g) ℂ) (χ : u.Λ → ℂ), GoodU u Hm χ → ∀ (R : Type) [CommRing R] (x₀ : R →+* ℂ) (X : Scheme.{0}) (p : X ⟶ Sp R) (m : P₀.A.left ⟶ X), Smooth p → IsPullback m P₀.A.hom p (spMap x₀) → ∀ D Θ s, KSRel u p m D Θ s → ∀ L : LB X, L.IsLB → LBIso P₀.L (L.pull m) → IsSymm Hm Θ := by
   intro P₀ u Hm χ hG R _ x₀ X p m hp hpb D Θ s hks L hL hw
   obtain ⟨a, ha1, ha2, ha3⟩ := exists_frame_on_family u P₀.isLB m L hL hw
@@ -1177,7 +1128,7 @@ theorem isSymm_of_lift : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P�
   have hdom : ∀ A B : X.Opens, dom u m (A ⊓ B) = dom u m A ∩ dom u m B := by
     intro A B
     ext z
-    exact top_le_preimage_inf_iff_and _ _ _
+    exact _root_.GlobalTheory.top_le_preimage_inf _ _ _
   have hfnper : ∀ (W : X.Opens) (f : Γ(X, W)) (z : Fin P₀.g → ℂ) (l : u.Λ),
       fn u m W f (z + l) = fn u m W f z := by
     intro W f z l
@@ -1206,7 +1157,7 @@ theorem isSymm_of_lift : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P�
         hks.hol _ _
       have h2 : DifferentiableOn ℂ (fn u m (L.U i ⊓ L.U j) (L.g i j).val) (dom u m (L.U i ⊓ L.U j)) := hfn _ _
       have h3 : ∀ z ∈ dom u m (L.U i ⊓ L.U j), fn u m (L.U i ⊓ L.U j) (L.g i j).val z ≠ 0 :=
-        fun z hz => valAt'_val_unit_ne_zero _ hz _
+        fun z hz => _root_.GlobalTheory.valAt'_unit_ne_zero _ hz _
       refine (h1.mul (h2.inv h3)).congr fun z _ => ?_
       exact div_eq_mul_inv _ _)
     (by
@@ -1229,7 +1180,7 @@ theorem isSymm_of_lift : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P�
         filter_upwards [(hopen _).mem_nhds hzW] with y hy
         rw [hdom] at hy
         exact ha2 i j y hy
-      have nf : fn u m (L.U i ⊓ L.U j) (L.g i j).val z ≠ 0 := valAt'_val_unit_ne_zero _ hzW _
+      have nf : fn u m (L.U i ⊓ L.U j) (L.g i j).val z ≠ 0 := _root_.GlobalTheory.valAt'_unit_ne_zero _ hzW _
       have na : a j z ≠ 0 := (ha1 j).2 z hz.2
       rw [hEq, fderiv_fun_mul hdf hda, ha2 i j z hz]
       simp only [FunLike.coe_add, FunLike.coe_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -1275,18 +1226,6 @@ noncomputable section
 
 namespace GlobalTheory.KS.Endo
 
-private theorem valAt'_comp_lemma {Y Z : Scheme.{0}} (x : Sp ℂ ⟶ Y) (φ : Y ⟶ Z) (U : Z.Opens) (a : Γ(Z, U)) :
-    valAt' (x ≫ φ) U a = valAt' x (φ ⁻¹ᵁ U) ((φ.app U).hom a) := by
-  unfold valAt'
-  by_cases h : ⊤ ≤ (x ≫ φ) ⁻¹ᵁ U
-  · have h' : ⊤ ≤ x ⁻¹ᵁ φ ⁻¹ᵁ U := h
-    rw [dite_eq_left h, dite_eq_left h']
-    unfold valAt
-    rw [Scheme.Hom.comp_appLE]
-    rfl
-  · have h' : ¬ ⊤ ≤ x ⁻¹ᵁ φ ⁻¹ᵁ U := h
-    rw [dite_eq_right h, dite_eq_right h']
-
 theorem ptDer_push {X Y : Scheme.{0}} (y : Sp ℂ ⟶ X) (f : X ⟶ Y) (δ : ∀ W : X.Opens, Γ(X, W) → ℂ) (h : PtDer y δ) :
     PtDer (y ≫ f) (fun W a => δ (f ⁻¹ᵁ W) ((f.app W).hom a)) := by
   constructor
@@ -1294,7 +1233,7 @@ theorem ptDer_push {X Y : Scheme.{0}} (y : Sp ℂ ⟶ X) (f : X ⟶ Y) (δ : ∀
     rw [(f.app W).hom.map_add]
     exact h.add (f ⁻¹ᵁ W) hW _ _
   · intro W hW a b
-    rw [map_mul, valAt'_comp_lemma y f W a, valAt'_comp_lemma y f W b]
+    rw [map_mul, _root_.GlobalTheory.KS.VertField.valAt'_comp y f W a, _root_.GlobalTheory.KS.VertField.valAt'_comp y f W b]
     exact h.mul (f ⁻¹ᵁ W) hW _ _
   · intro W W' hle hW a
     have hle' : f ⁻¹ᵁ W' ≤ f ⁻¹ᵁ W := fun x hx => hle hx
@@ -1340,7 +1279,7 @@ theorem fn_differentiableAt (m : A₀.left ⟶ X) (W : X.Opens) (a : Γ(X, W)) (
   have hz' : z ∈ {z | ⊤ ≤ (u.ex z).left ⁻¹ᵁ (m ⁻¹ᵁ W)} := hz
   have heq : fn u m W a = fun z => valAt' (u.ex z).left (m ⁻¹ᵁ W) ((m.app W).hom a) := by
     funext w
-    exact valAt'_comp_lemma (u.ex w).left m W a
+    exact _root_.GlobalTheory.KS.VertField.valAt'_comp (u.ex w).left m W a
   rw [heq]
   exact hU.2.differentiableAt (hU.1.mem_nhds hz')
 
@@ -1382,7 +1321,7 @@ theorem comm_of_endo : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.
   have hfn : ∀ W a z, fn u m (f ⁻¹ᵁ W) ((f.app W).hom a) z = fn u m W a (F z) := by
     intro W a z
     show valAt' ((u.ex z).left ≫ m) (f ⁻¹ᵁ W) ((f.app W).hom a) = valAt' ((u.ex (F z)).left ≫ m) W a
-    rw [← hpt z, ← Category.assoc, valAt'_comp_lemma ((u.ex z).left ≫ m) f W a]
+    rw [← hpt z, ← Category.assoc, _root_.GlobalTheory.KS.VertField.valAt'_comp ((u.ex z).left ≫ m) f W a]
   have hfd : ∀ W a z, F z ∈ dom u m W → fderiv ℂ (fn u m (f ⁻¹ᵁ W) ((f.app W).hom a)) z =
       (fderiv ℂ (fn u m W a) (F z)).comp (LinearMap.toContinuousLinearMap F) := by
     intro W a z hz
@@ -1501,14 +1440,9 @@ open GlobalTheory.KS
 noncomputable section
 namespace GlobalTheory.KS.Exist
 
-theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (f : Γ(X, U)) :
-    resG X h' (resG X h f) = resG X (h'.trans h) f := by
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]; rfl
+alias res_res := _root_.GlobalTheory.KS.VertReg.resG_resG
 
-theorem res_const {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) {U V : X.Opens}
-    (h : V ≤ U) (a : R) : resG X h (constFn p U a) = constFn p V a :=
-  congrArg (fun φ => φ.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom a))
-    (Scheme.Hom.appLE_map p (U := ⊤) (V := U) (fun _ _ => trivial) (homOfLE h).op)
+alias res_const := _root_.GlobalTheory.LocDerExt.res_const
 
 theorem const_zero {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (U : X.Opens) :
     constFn p U 0 = 0 := by
@@ -1545,8 +1479,6 @@ theorem locDer_sub {R : Type} [CommRing R] {Y X : Scheme.{0}} {q : Y ⟶ Sp ℂ}
 variable {g : ℕ} {A₀ : Over (Sp ℂ)} [GrpObj A₀] {L₀ : LB A₀.left} (u : HolUnif A₀ L₀ g) {X : Scheme.{0}}
   (m : A₀.left ⟶ X)
 
-theorem ex_hom (z : Fin g → ℂ) : (u.ex z).left ≫ A₀.hom = 𝟙 _ := Over.w (u.ex z)
-
 theorem ex_per (l : u.Λ) (z : Fin g → ℂ) : u.ex (z + l) = u.ex z := by
   rw [u.ex_add, (u.ker l).2 l.2, _root_.mul_one]
 
@@ -1571,12 +1503,6 @@ theorem fn_diffAt {W : X.Opens} (f : Γ(X, W)) {z : Fin g → ℂ} (hz : z ∈ d
     DifferentiableAt ℂ (fn u m W f) z :=
   (fn_hol u m W f).differentiableAt ((dom_open u m W).mem_nhds hz)
 
-theorem fderiv_res {W W' : X.Opens} (h : W' ≤ W) (f : Γ(X, W)) {z : Fin g → ℂ}
-    (hz : z ∈ dom u m W') : fderiv ℂ (fn u m W' (resG X h f)) z = fderiv ℂ (fn u m W f) z := by
-  refine Filter.EventuallyEq.fderiv_eq ?_
-  filter_upwards [(dom_open u m W').mem_nhds hz] with y hy
-  exact valAt'_res _ h f hy
-
 theorem fderiv_per (l : u.Λ) (W : X.Opens) (f : Γ(X, W)) (z : Fin g → ℂ) :
     fderiv ℂ (fn u m W f) (z + l) = fderiv ℂ (fn u m W f) z := by
   rw [← fderiv_comp_add_right]
@@ -1594,7 +1520,7 @@ theorem ptDer_fderiv (z w : Fin g → ℂ) :
     have : fn u m W (f * f') = fn u m W f * fn u m W f' := funext fun y => valAt'_mul _ _ _ _
     rw [this, fderiv_mul (fn_diffAt u m f hW) (fn_diffAt u m f' hW)]; rfl
   · intro W W' h hW f
-    rw [fderiv_res u m h f hW]
+    rw [_root_.GlobalTheory.KS.fderiv_fn_resG u m h f hW]
 
 theorem fderiv_const_eq {R : Type} [CommRing R] {x₀ : R →+* ℂ} {p : X ⟶ Sp R} (hm : m ≫ p = A₀.hom ≫ spMap x₀)
     (r : R) (z w : Fin g → ℂ) : fderiv ℂ (fn u m ⊤ (constFn p ⊤ r)) z w = 0 := by
@@ -1602,7 +1528,7 @@ theorem fderiv_const_eq {R : Type} [CommRing R] {x₀ : R →+* ℂ} {p : X ⟶ 
       fun _ => valAt' (spMap x₀) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r) := by
     funext y
     refine (valAt'_appLE _ p ⊤ ⊤ le_top _ le_top).trans ?_
-    rw [Category.assoc, hm, ← Category.assoc, ex_hom]
+    rw [Category.assoc, hm, ← Category.assoc, _root_.GlobalTheory.KS.VertFamily.ex_over]
     exact congrArg (fun x => valAt' x ⊤ _) (Category.id_comp _)
   rw [this]
   simp
@@ -1636,7 +1562,7 @@ theorem ptDer_ev (hd : LocDer A₀.hom p m D W₀ d) {z : Fin g → ℂ} (hz : z
 theorem ev_base (hd : LocDer A₀.hom p m D W₀ d) {z : Fin g → ℂ} (hz : z ∈ dom u m W₀) (r : R) :
     ev u m W₀ d z ⊤ (constFn p ⊤ r) = D r := by
   rw [ev_eq u m hd le_top le_rfl hz, res_const, hd.base _ le_rfl]
-  exact valAt'_constFn _ _ (ex_hom u z) _ _ hz
+  exact valAt'_constFn _ _ (_root_.GlobalTheory.KS.VertFamily.ex_over u z) _ _ hz
 
 theorem ev_hol (W : X.Opens) (f : Γ(X, W)) :
     DifferentiableOn ℂ (fun z => ev u m W₀ d z W f) (dom u m (W ⊓ W₀)) := val_hol u m _ _
@@ -1677,7 +1603,7 @@ theorem exists_ksRel : ∀ (P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P₀.A P₀.
     have h : z ∈ dom u m (W ⊓ (i.1 ⊓ j.1)) := (dom_inf u m).2 ⟨hW, (dom_inf u m).2 ⟨hi, hj⟩⟩
     rw [ev_eq u m (hd i) inf_le_left (inf_le_right.trans inf_le_left) h,
       ev_eq u m (hd j) inf_le_left (inf_le_right.trans inf_le_right) h, ← valAt'_sub,
-      hc i j _ inf_le_right _ z h, fderiv_res u m _ _ h]
+      hc i j _ inf_le_right _ z h, _root_.GlobalTheory.KS.fderiv_fn_resG u m _ _ h]
   have hco : ∀ i j k z, z ∈ dom u m i.1 → z ∈ dom u m j.1 → z ∈ dom u m k.1 → C i j z + C j k z = C i k z := by
     intro i j k z hi hj hk
     refine (_root_.GlobalTheory.KS.VertFamily.existsUnique_vector P₀ u Hm χ hu R x₀ X p m hp hm z _ (ptDer_fderiv u m z (C i k z))

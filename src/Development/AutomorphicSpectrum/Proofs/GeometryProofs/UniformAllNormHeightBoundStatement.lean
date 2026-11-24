@@ -90,6 +90,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.
 import Mathlib.Algebra.Azumaya.Basic
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Tactic.TypeStar
+import Formalism.LocalRingCardinality.SpanPowerMembership.Places
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.CountVolumePowerComparison, Development.AutomorphicSpectrum.Proofs.GeometryProofs.CountVolumePowerComparisonStatement, Development.WeilBound.CoreStatements.RationalSupMetrics.AevalEqZeroOfMem, Development.WeilBound.CoreStatements.RationalSupMetrics.HermitianLineShiftProperties, Development.AutomorphicSpectrum.Proofs.MetricProofs.HermitianLineShiftProperties, Development.AutomorphicSpectrum.Proofs.MetricProofs.ShiftHEqTensorConstLine, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionWeightBound, Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionWeightBoundStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundStatementHolds, Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBLieEqSmul, Development.AutomorphicSpectrum.Proofs.GeometryProofs.LowHeightOfGiven, Development.AutomorphicSpectrum.Proofs.GeometryProofs.LowHeightOfGivenStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBound, Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBoundStatement
@@ -205,8 +206,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.count_volume_power_comparison : ∀ (D n d k₀ : ℕ) (m m' : ℕ → ℕ∞), 0 < n → 0 < d → 8 ∣ k₀ → (∀ᶠ τ : ℕ in atTop, m τ ≤ m' (τ + k₀) ^ d) → GlobalTheory.CompHt.countVol D (n * d) 8 m ≤ GlobalTheory.CompHt.countVol D n 8 m' := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.countVol_le_of_le_shift_pow
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.CountVolumePowerComparisonStatement =====
@@ -540,8 +539,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.full_intersection_weight_bound : GlobalTheory.CompanionTheory.Ar.Top.Given → BirationalPullbackPushforwardFormula → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : Top.GoodOrigin Y T) (B : ℕ) (b : T.Comp) (II : IntersectionSystem) (u : GlobalTheory.AllWt.Weight Dw) (g : ℝ), IsFullIntersectionSystem II → T.T1 II → Top.WeightHyp T.j (reW u) g → Top.bigB0 (reW u) g < B + 1 → ∀ t : ℝ, ENNReal.ofReal (T.vol b * Top.flagDeg (reW u) * (T.slope II B b (reW u) + t)) ≤ GlobalTheory.CompHt.countVol (Top.dimFl (CMType H) (Dw.p + Dw.q)) (T.M B b).δ 8 fun τ => (modelSmall (o.toTowerOrigin.Or B b) (τ • u) (Real.exp (τ * t))).encard := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.volume_ge_slope
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionWeightBoundStatement =====
@@ -750,7 +747,7 @@ theorem delta_smul_proj_mem {_ : DecidableEq (E →+* C)} (i : E →+* C) {δ : 
 
     simp only [t, map_sum, Finset.sum_apply, splitMap_tmul, RingHom.comp_apply, Pi.smul_apply, smul_eq_mul,
     algebraMap_embO]
-    have h := _root_.idempotent_evaluation E C _ (integralBasis E) k i
+    have h := _root_.PI.UnitaryGroupMassFormula.TBIdemDen.idemEval E C _ (integralBasis E) k i
     have h2 : ∑ j, i (ReciprocityTheory.ChartRestriction.G.TB.trDual (integralBasis E) j) * k (integralBasis E j) =
         ReciprocityTheory.ChartRestriction.G.TB.evAt i (ReciprocityTheory.ChartRestriction.G.TB.idemOf (integralBasis E) k) := by
 
@@ -1222,14 +1219,12 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.low_height_of_given : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), HTLow Xo c := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.htLow
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.LowHeightOfGivenStatement =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBound =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.NefRR\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GeoRead\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CountVolumePowerComparisonStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionWeightBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFrameComponentBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LowHeightOfGivenStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelSmallSectionsMulStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerOriginComponentBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormAllTowerBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormDegreeBoundStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.FreeModule.IdealQuotient\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.NefRR\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GeoRead\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CountVolumePowerComparisonStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionWeightBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFrameComponentBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LowHeightOfGivenStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelSmallSectionsMulStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerOriginComponentBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormAllTowerBoundStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormDegreeBoundStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.FreeModule.IdealQuotient\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Formalism.LocalRingCardinality.SpanPowerMembership.Places\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1278,17 +1273,7 @@ section Val
 
 variable {K : Type} [Field K] [NumberField K] (la : HeightOneSpectrum (𝓞 K))
 
-theorem vLa_mul {a b : K} (ha : a ≠ 0) (hb : b ≠ 0) : vLa la (a * b) = vLa la a + vLa la b := by
-  simp only [vLa, map_mul]
-  rw [WithZero.log_mul ((Valuation.ne_zero_iff _).2 ha) ((Valuation.ne_zero_iff _).2 hb)]
-  ring
-
 theorem vLa_one : vLa la (1 : K) = 0 := by simp [vLa]
-
-theorem vLa_pow {a : K} (ha : a ≠ 0) (n : ℕ) : vLa la (a ^ n) = n * vLa la a := by
-  induction n with
-  | zero => simp [vLa_one]
-  | succ n ih => rw [pow_succ, vLa_mul la (pow_ne_zero _ ha) ha, ih]; push_cast; ring
 
 theorem vLa_natCast_nonneg {n : ℕ} (hn : n ≠ 0) : 0 ≤ vLa la (n : K) := by
   have e : (n : K) = algebraMap (𝓞 K) K (n : 𝓞 K) := (map_natCast _ n).symm
@@ -1300,22 +1285,13 @@ theorem vLa_natCast_nonneg {n : ℕ} (hn : n ≠ 0) : 0 ≤ vLa la (n : K) := by
   simp only [vLa]
   omega
 
-theorem exists_prime_mem : ∃ p : ℕ, p.Prime ∧ (p : 𝓞 K) ∈ la.asIdeal := by
-  haveI := la.isMaximal
-  haveI : Finite (𝓞 K ⧸ la.asIdeal) := la.asIdeal.finiteQuotientOfFreeOfNeBot la.ne_bot
-  letI := Ideal.Quotient.field la.asIdeal
-  obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ la.asIdeal)
-  refine ⟨p, CharP.char_is_prime (𝓞 K ⧸ la.asIdeal) p, ?_⟩
-  rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  exact CharP.cast_eq_zero _ p
-
 theorem vLa_prod_ge {S : Finset ℕ} (hS : ∀ p ∈ S, p ≠ 0) (e : ℕ → ℕ) {q : ℕ} (hq : q ∈ S) :
     (e q : ℤ) * vLa la (q : K) ≤ vLa la (((∏ p ∈ S, p ^ e p : ℕ)) : K) := by
   have hM : (∏ p ∈ S.erase q, p ^ e p) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun p hp => pow_ne_zero _ (hS p (Finset.mem_of_mem_erase hp))
   have hq0 : (q : K) ≠ 0 := Nat.cast_ne_zero.2 (hS q hq)
   rw [← Finset.mul_prod_erase S _ hq, Nat.cast_mul, Nat.cast_pow,
-    vLa_mul la (pow_ne_zero _ hq0) (Nat.cast_ne_zero.2 hM), vLa_pow la hq0]
+    _root_.Formalism.L2.Pj.Crude.crv_vLa_mul la (pow_ne_zero _ hq0) (Nat.cast_ne_zero.2 hM), _root_.Formalism.L2.Pj.Crude.crv_vLa_pow la hq0]
   have := vLa_natCast_nonneg (K := K) la hM
   omega
 
@@ -1396,7 +1372,7 @@ theorem clear_integral {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hH
   have hSp : ∀ p ∈ S, p.Prime := fun p hp => by
     have : p ∈ GlobalTheory.CompHt.htPrimes l Bd := by rw [hS]; exact hp
     exact this.1
-  obtain ⟨p, hp, hpl⟩ := exists_prime_mem la
+  obtain ⟨p, hp, hpl⟩ := _root_.Formalism.BasicNotions.Examples₂.PlacesToy.exists_prime_mem la
   have hval := (GlobalTheory.CompHt.mixVals Xo c Bd).2 la w hw
   have hN0 := clearN_ne_zero (E := E) hSp u
   have hN : ((clearN E S u : ℕ) : c.F) ≠ 0 := Nat.cast_ne_zero.2 hN0
@@ -1490,9 +1466,9 @@ theorem modelSmall_encard_le [IsGalois ℚ E] (hGv : Top.Given) {r : ℕ} (U : �
     ∃ g : Rul Xo c, (b' : Rul Xo c) = ((clearN E (o.toTowerOrigin.S Bn) ((τ + k₀) • u) : ℕ) : c.F) • g ∧
       evC h Z g = trOf Rd ((τ + k₀) • u) (s * f i)) ?_ ?_
   · intro s hs i
-    have hprod := GlobalTheory.T.model_small_sections_mul E H Dw l Xo c Y T o Bn b (τ • u) (k₀ • u) R R₀ hR hR₀ s hs (f i) (hfs i)
+    have hprod := _root_.GlobalTheory.CompanionTheory.Ar.Plug.modelSmall_mul_mem E H Dw l Xo c Y T o Bn b (τ • u) (k₀ • u) R R₀ hR hR₀ s hs (f i) (hfs i)
     rw [← add_nsmul] at hprod
-    obtain ⟨g, hg, hev, hnorm, hval⟩ := GlobalTheory.T.uniform_norm_all_tower_bound hGv E H Dw l Xo c r U h e hL hUn x hx Y T o Bn b Fr Z Rd hGeo
+    obtain ⟨g, hg, hev, hnorm, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.descent_small hGv E H Dw l Xo c r U h e hL hUn x hx Y T o Bn b Fr Z Rd hGeo
       ((τ + k₀) • u) (R * R₀) (strictAnti_nsmul hanti (by omega)) (mul_nonneg hR hR₀) (s * f i) hprod
     refine ⟨⟨((clearN E (o.toTowerOrigin.S Bn) ((τ + k₀) • u) : ℕ) : c.F) • g, Submodule.smul_mem _ _ hg⟩,
       ⟨clear_integral U hHT hS Z _ g hg hval, fun σ hσ z hz => ?_⟩, g, rfl, hev⟩
@@ -1516,13 +1492,13 @@ open GlobalTheory.CompanionTheory.Ar.Plug.SlopeVol
 
 theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → Top.Given → BirationalPullbackPushforwardFormula → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : Top.GoodOrigin Y T) (κ : Comp Xo c ≃ T.Comp) (II : IntersectionSystem), CompOf o.toTowerOrigin κ → IsFullIntersectionSystem II → T.Proportional → T.T1 II → ∀ (Z : Comp Xo c) (u : GlobalTheory.AllWt.Weight Dw) (g B : ℝ), (∀ τ, StrictAnti (u τ)) → Top.WeightHyp T.j (reW u) g → Top.bigB0 (reW u) g ≤ B → ((T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo l B * GlobalTheory.CovHt.l1 u : ℝ) : EReal) ≤ GlobalTheory.CompHt.compVolSlope U x 8 (GlobalTheory.CompHt.mixVals Xo c B) Z u := by
   intro hNef hGv h6 E _ _ _ _ H Dw l Xo c r U h e hL hUn x hx Y _ T o κ II hCO hII hProp hT1 Z u g B hanti hW hB
-  obtain ⟨-, hdeg, hpos⟩ := (GlobalTheory.T.uniform_norm_degree_bound hNef hGv E H Dw l Xo c r U h e hL x hx Y T o κ II hCO hII hProp hT1).1 Z u hanti
+  obtain ⟨-, hdeg, hpos⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Plug.topGrowth hNef hGv E H Dw l Xo c r U h e hL x hx Y T o κ II hCO hII hProp hT1).1 Z u hanti
   have hBn : Top.bigB0 (reW u) g < (⌊B⌋₊ : ℝ) + 1 := lt_of_le_of_lt hB (Nat.lt_floor_add_one B)
-  obtain ⟨Fr, Rd, hGeo⟩ := GlobalTheory.T.tower_origin_component_bound E H Dw l Xo c r U h e hL Y T o.toTowerOrigin κ hCO ⌊B⌋₊ Z
-  obtain ⟨k₀, R₀, f, h8, hR₀, hfs, -, hinj⟩ := GlobalTheory.T.generic_frame_component_bound hGv E H Dw l Xo c h Y T o ⌊B⌋₊ (κ Z) Fr Z Rd II u g hII hT1 hW hBn
-  have hHT : HTLow Xo c := GlobalTheory.T.low_height_of_given hGv E H Dw l Xo c
+  obtain ⟨Fr, Rd, hGeo⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.exists_geoRead E H Dw l Xo c r U h e hL Y T o.toTowerOrigin κ hCO ⌊B⌋₊ Z
+  obtain ⟨k₀, R₀, f, h8, hR₀, hfs, -, hinj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.exists_small_basis hGv E H Dw l Xo c h Y T o ⌊B⌋₊ (κ Z) Fr Z Rd II u g hII hT1 hW hBn
+  have hHT : HTLow Xo c := _root_.GlobalTheory.CompanionTheory.Ar.Plug.htLow hGv E H Dw l Xo c
   have hdim : GlobalTheory.CompHt.dimFlag Dw = Top.dimFl (CMType H) (Dw.p + Dw.q) :=
-    (GlobalTheory.T.tower_weight_of_zero E H Dw l Xo c (T.M ⌊B⌋₊ (κ Z)) u).2.2.2.2.2.1
+    (_root_.GlobalTheory.CompanionTheory.Ar.Plug.integer_weights_vocab E H Dw l Xo c (T.M ⌊B⌋₊ (κ Z)) u).2.2.2.2.2.1
   have hS : GlobalTheory.CompHt.htPrimes l B = ↑(o.toTowerOrigin.S ⌊B⌋₊) := by
     ext p
     simp only [GlobalTheory.CompHt.htPrimes, Set.mem_setOf_eq, Finset.mem_coe, o.toTowerOrigin.S_iff, Top.RootTower.InS,
@@ -1547,7 +1523,7 @@ theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.Nef
       (T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo (E := E) l B * GlobalTheory.CovHt.l1 u + t) := rfl
   refine ofReal_mul_le_of_forall_pos fun ε hε => ?_
   set t' : ℝ := t - 2 * costTwo (E := E) l B * GlobalTheory.CovHt.l1 u - ε with ht'
-  have hcount := GlobalTheory.T.full_intersection_weight_bound hGv h6 E H Dw l Xo c Y T o ⌊B⌋₊ (κ Z) II u g hII hT1 hW hBn t'
+  have hcount := _root_.GlobalTheory.CompanionTheory.Ar.Plug.volume_ge_slope hGv h6 E H Dw l Xo c Y T o ⌊B⌋₊ (κ Z) II u g hII hT1 hW hBn t'
   have hev : ∀ᶠ τ : ℕ in atTop, (modelSmall (o.toTowerOrigin.Or ⌊B⌋₊ (κ Z)) (τ • u) (Real.exp (τ * t'))).encard ≤
       (GlobalTheory.CompHt.smallOn U x (GlobalTheory.CompHt.mixVals Xo c B) Z ((τ + k₀) • GlobalTheory.AllWt.wtOf Dw u 0)
         (Real.exp (((τ + k₀ : ℕ) : ℝ) * t))).encard ^ (o.toTowerOrigin.Or ⌊B⌋₊ (κ Z)).Fl.deg := by
@@ -1573,7 +1549,7 @@ theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.Nef
     rw [← Real.exp_add, Real.exp_le_exp, ht']
     push_cast
     nlinarith [hτ1]
-  have hshift := GlobalTheory.T.count_volume_power_comparison (GlobalTheory.CompHt.dimFlag Dw) (Module.finrank ℚ c.F) (o.toTowerOrigin.Or ⌊B⌋₊ (κ Z)).Fl.deg k₀
+  have hshift := _root_.GlobalTheory.CompanionTheory.Ar.Plug.countVol_le_of_le_shift_pow (GlobalTheory.CompHt.dimFlag Dw) (Module.finrank ℚ c.F) (o.toTowerOrigin.Or ⌊B⌋₊ (κ Z)).Fl.deg k₀
     (fun τ => (modelSmall (o.toTowerOrigin.Or ⌊B⌋₊ (κ Z)) (τ • u) (Real.exp (τ * t'))).encard)
     (fun τ => (GlobalTheory.CompHt.smallOn U x (GlobalTheory.CompHt.mixVals Xo c B) Z (τ • GlobalTheory.AllWt.wtOf Dw u 0) (Real.exp (τ * t))).encard)
     hn hd h8 hev
@@ -1590,8 +1566,7 @@ theorem slope_sub_cost_le_compVolSlope : GlobalTheory.CompanionTheory.Ar.Pub.Nef
 
 end GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM
 
-theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_norm_height_bound : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → Top.Given → BirationalPullbackPushforwardFormula → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : Top.GoodOrigin Y T) (κ : Comp Xo c ≃ T.Comp) (II : IntersectionSystem), CompOf o.toTowerOrigin κ → IsFullIntersectionSystem II → T.Proportional → T.T1 II → ∀ (Z : Comp Xo c) (u : GlobalTheory.AllWt.Weight Dw) (g B : ℝ), (∀ τ, StrictAnti (u τ)) → Top.WeightHyp T.j (reW u) g → Top.bigB0 (reW u) g ≤ B → ((T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo l B * GlobalTheory.CovHt.l1 u : ℝ) : EReal) ≤ GlobalTheory.CompHt.compVolSlope U x 8 (GlobalTheory.CompHt.mixVals Xo c B) Z u :=
-  GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM.slope_sub_cost_le_compVolSlope
+alias _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_norm_height_bound := _root_.GlobalTheory.CompanionTheory.Ar.Plug.SlopeVolM.slope_sub_cost_le_compVolSlope
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1607,8 +1582,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.uniform_all_norm_height_bound : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → Top.Given → BirationalPullbackPushforwardFormula → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : Top.GoodOrigin Y T) (κ : Comp Xo c ≃ T.Comp) (II : IntersectionSystem), CompOf o.toTowerOrigin κ → IsFullIntersectionSystem II → T.Proportional → T.T1 II → ∀ (Z : Comp Xo c) (u : GlobalTheory.AllWt.Weight Dw) (g B : ℝ), (∀ τ, StrictAnti (u τ)) → Top.WeightHyp T.j (reW u) g → Top.bigB0 (reW u) g ≤ B → ((T.slope II ⌊B⌋₊ (κ Z) (reW u) - 2 * costTwo l B * GlobalTheory.CovHt.l1 u : ℝ) : EReal) ≤ GlobalTheory.CompHt.compVolSlope U x 8 (GlobalTheory.CompHt.mixVals Xo c B) Z u := by
-  first | exact @GlobalTheory.CompanionTheory.Relay.uniform_all_norm_height_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllNormHeightBoundStatement =====

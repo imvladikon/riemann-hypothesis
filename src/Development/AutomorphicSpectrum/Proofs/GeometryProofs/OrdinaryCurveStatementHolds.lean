@@ -552,8 +552,6 @@ open ReciprocityTheory.ChartRestriction.G.Chart (sp spMap)
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.order_p_squared_extremal_colength : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N], (∀ x : N, p • x = 0) → Fintype.card N = p ^ 2 → ∀ AA : HopfOrder (C := C) R N, ∀ cN, HasColen R v AA.carrier cN → cN ^ 2 = v (p : C) ^ (p ^ 2) → (∃ t : N, ∃ g ∈ AA.carrier, v (g t - g 0) = 1) → ∃ e : ZMod p × ZMod p ≃+ N, AA.carrier.map (LinearMap.funLeft R C (e : ZMod p × ZMod p → N)) = tens (Submodule.span R (Set.range fun (ψ : AddChar (ZMod p) C) (x : (ZMod p)) => ψ x)) (intFun R (ZMod p)) := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.GR.OrdSplit.ord_split
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.OrderPSquaredExtremalColengthStatement =====
@@ -1085,8 +1083,6 @@ open ReciprocityTheory.ChartRestriction.G.Chart (sp spMap)
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.polarised_abelian_variety_p_torsion : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → IsAdicComplete (Ideal.span {(p : R)}) R → ∃ (P : Out.PolAV (Spec (CommRingCat.of R))) (z : sp (R₀ := R) R ⟶ P.A), P.g = 1 ∧ z ^ p = 1 ∧ ∀ (k : Type) [Field k] [Algebra R k], spMap (Algebra.ofId R k) ≫ z ≠ 1 := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.GR.exists_ord_point
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PolarisedAbelianVarietyPTorsionStatement =====
@@ -1230,7 +1226,7 @@ theorem reindex {p : ℕ} [Fact p.Prime] {C : Type} [Field C] [IsAlgClosed C] [C
   have hkill : ∀ x : Nb p 1, p • x = 0 := fun x => by
     ext i
     simp
-  obtain ⟨e, he⟩ := GlobalTheory.T.order_p_squared_extremal_colength p C v R hs.integers hlt (Nb p 1) hkill hcard H.AA cN hN hcN hfar
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GR.OrdSplit.ord_split p C v R hs.integers hlt (Nb p 1) hkill hcard H.AA cN hN hcN hfar
   refine ⟨fun x => pt (e x), isTorsPts_comp hpt e, ?_⟩
   rw [torsFun_comp, ← hH, he]
 
@@ -1242,7 +1238,7 @@ theorem ordinaryCurve_of_hodgeTate : HodgeTateDatumStatement → OrdinaryCurveSt
   intro hht p _ C _ _ _ v R _ _ hv hlt hc
   obtain ⟨f⟩ := OrdCurve.nonempty_padicInt_hom p R hc
   letI : Algebra ℤ_[p] R := f.toAlgebra
-  obtain ⟨P, z, hg, hz, hk⟩ := GlobalTheory.T.polarised_abelian_variety_p_torsion p C v R hv hlt hc
+  obtain ⟨P, z, hg, hz, hk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GR.exists_ord_point p C v R hv hlt hc
   obtain ⟨⟨T⟩, cp, hs, H, pt, hpt, hH⟩ := hht p C v R hv hlt hc P
   obtain ⟨pt', h1, h2⟩ := OrdCurve.reindex _root_.GlobalTheory.CompanionTheory.Ar.GR.polarisedAF hlt hs T P.g hg H pt hpt (hH T) hz hk
   exact ⟨P.A, P.grp, P.L, P.isAb, P.isLB, P.ample, T, pt', h1, h2⟩

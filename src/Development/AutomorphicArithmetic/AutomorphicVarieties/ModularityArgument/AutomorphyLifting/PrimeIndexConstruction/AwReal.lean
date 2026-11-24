@@ -94,6 +94,8 @@ import Mathlib.RingTheory.Ideal.Norm.RelNorm
 import Mathlib.Topology.Algebra.MvPolynomial
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCharpolyCoeffOfMatrix
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValSubLtIff
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.StarEqOfSq, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitCM, Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.AwReal
@@ -193,7 +195,7 @@ private theorem family (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F]
       ∀ (u : HeightOneSpectrum (𝓞 F)) (A' : ValuationSubring Ω), ((p : ℕ) : 𝓞 F) ∈ u.asIdeal →
         IsPlaceOver A' u → ¬ Ine (F := F) A' ≤ (UpperTheory.V.Af.Bc.res F Ω ↥Q.K).range := by
     intro p hp Q hQK u A' hu hA' hle
-    obtain ⟨s, hs, hne⟩ := GlobalTheory.T.inertia_moves_square_root F Ω p hp.1 hp.2.2.1 hp.2.2.2 (δ p) (hδ p) u A' hu hA'
+    obtain ⟨s, hs, hne⟩ := _root_.GlobalTheory.SqrtNegRam.sqrt_neg_moved_by_inertia F Ω p hp.1 hp.2.2.1 hp.2.2.2 (δ p) (hδ p) u A' hu hA'
     refine hne ((GlobalTheory.ExSplitCM.mem_range_res_iff Q.K s).1 (hle hs) (δ p) ?_)
     rw [hQK]
     exact IntermediateField.mem_adjoin_simple_self F (δ p)
@@ -231,9 +233,6 @@ private theorem family (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F]
   obtain ⟨A', hA'⟩ := ReciprocityTheory.Gal.exists_isPlaceOver Ω u
   exact ⟨u, fun hall => hmove p hp Q hQK u A' hu hA' (hall A' hA'), hu⟩
 
-private theorem star_eq_of_sq {z : ℂ} {r : ℝ} (hr : 0 ≤ r) (h : z * z = r) : star z = z :=
-  _root_.UpperTheory.Reformulated.B.Ra8.star_eq_of_sq hr h
-
 private theorem exists_real_emb (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (ψ : F →+* ℂ) :
     ∃ φ : F →+* ℝ, ∀ x, ψ x = (φ x : ℂ) := by
   have hr : ComplexEmbedding.IsReal ψ := by
@@ -262,7 +261,7 @@ private theorem exists_sq_neg (F K : Type) [Field F] [NumberField F] [IsTotallyR
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hF : ∀ a : F, τ (algebraMap F K a) = (φ a : ℂ) := fun a => τ.commutes a
   have ht : star (τ (e 1)) = τ (e 1) := by
-    refine star_eq_of_sq (not_lt.1 hnn) ?_
+    refine _root_.UpperTheory.Reformulated.B.Ra8.star_eq_of_sq (not_lt.1 hnn) ?_
     rw [← map_mul, h1, hF]
   have hall : ∀ x, star (τ x) = τ x := fun x => by
     obtain ⟨a, b, rfl⟩ := hx x
@@ -296,7 +295,7 @@ private theorem cm_of_sq (F M : Type) [Field F] [NumberField F] [IsTotallyReal F
       rintro x rfl
       show ρ ⟨a * b, hc⟩ = star (ρ ⟨a * b, hc⟩)
       symm
-      refine star_eq_of_sq (r := φ α * φ β) (mul_nonneg_of_nonpos_of_nonpos (hα φ).le (hβ φ).le) ?_
+      refine _root_.UpperTheory.Reformulated.B.Ra8.star_eq_of_sq (r := φ α * φ β) (mul_nonneg_of_nonpos_of_nonpos (hα φ).le (hβ φ).le) ?_
       have h2 : (⟨a * b, hc⟩ : K) * ⟨a * b, hc⟩ = algebraMap F K (α * β) := by
         apply Subtype.ext
         show a * b * (a * b) = algebraMap F M (α * β)
@@ -557,7 +556,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitCM =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.AwReal =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.AwReal", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.ThruBad\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder\npublic import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenKerOfInfConn\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcPolar\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.PlainOf\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SatNumInj\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitCM\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitTr\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.ThruTr\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.WinPt\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.BaseChangeUnits.CycFree\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.PrincipalSeriesMatching.NormAbsPowUnif\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.PrincipalSeriesMatching.WinUpDown\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.QuadBC2\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.BaseChangeNoSelfTwistOfFrobeniusSignIrreducible\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ExistsQuadraticSignCharacter\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusEigenvaluesTwist\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowerCompatibility\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusSignCompatibility\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.GaloisRepIrreducibilityCriterion\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs\nimport Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.SchurTwistHolds\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.GammaLaurentFactors.LocalEmbeddingNorms.SuppFacts\nimport Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData\nimport Formalism.SharpRestriction.LevelLetterCocycles.ExistsInertiaCharpolyFactorOfTameType\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.Charpoly.Univ\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Ideal.Norm.RelNorm\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Algebra.MvPolynomial\nimport Mathlib.Topology.Connected.Separation\nimport Mathlib.Topology.MetricSpace.Ultra.TotallySeparated\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.AwReal", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PrimeIndexConstruction.ThruBad\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne\npublic import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder\npublic import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenKerOfInfConn\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcPolar\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.PlainOf\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SatNumInj\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitCM\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.SplitTr\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.ThruTr\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.AutomorphyLifting.PAdicTorsionHoms.WinPt\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.BaseChangeUnits.CycFree\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.PrincipalSeriesMatching.NormAbsPowUnif\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LeviSmoothLocalization.PrincipalSeriesMatching.WinUpDown\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.QuadBC2\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.BaseChangeNoSelfTwistOfFrobeniusSignIrreducible\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.ExistsQuadraticSignCharacter\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusEigenvaluesTwist\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowerCompatibility\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusSignCompatibility\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.GaloisRepIrreducibilityCriterion\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BcDefs\nimport Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.SchurTwistHolds\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.GammaLaurentFactors.LocalEmbeddingNorms.SuppFacts\nimport Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData\nimport Formalism.SharpRestriction.LevelLetterCocycles.ExistsInertiaCharpolyFactorOfTameType\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.Charpoly.Univ\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Ideal.Norm.RelNorm\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Algebra.MvPolynomial\nimport Mathlib.Topology.Connected.Separation\nimport Mathlib.Topology.MetricSpace.Ultra.TotallySeparated\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCharpolyCoeffOfMatrix\nimport Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValSubLtIff\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -566,17 +565,6 @@ open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.Conjuga
   UpperTheory.V.Z.Gam UpperTheory.V.Z.Win GroundTheory.Global.SemiLocal
 
 namespace UpperTheory.V.Z.Win.Birth.RealAlgebraicWindow
-
-private theorem coeffCont {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRing K] (n i : ℕ) :
-    Continuous fun M : Matrix (Fin n) (Fin n) K => M.charpoly.coeff i := by
-  have h : (fun M : Matrix (Fin n) (Fin n) K => M.charpoly.coeff i) =
-      fun M => MvPolynomial.eval (fun ij : Fin n × Fin n => M ij.1 ij.2)
-        ((Matrix.charpoly.univ K (Fin n)).coeff i) := by
-    funext M
-    exact (Matrix.charpoly.univ_coeff_eval₂Hom (Fin n) (RingHom.id K) (fun ij : Fin n × Fin n => M ij.1 ij.2) i).symm
-  rw [h]
-  exact (MvPolynomial.continuous_eval _).comp
-    (continuous_pi fun ij => (continuous_apply ij.2).comp (continuous_apply ij.1))
 
 private theorem isoFrob : IsoOfFrob := by
   intro F Ω _ _ _ _ _ l _ ι n r r' hr hr' hs hs' hw
@@ -587,9 +575,9 @@ private theorem isoFrob : IsoOfFrob := by
     intro g
     ext i
     have h1 : Continuous fun g : G F Ω => (r g⁻¹ : Matrix (Fin n) (Fin n) (Qbar l)).charpoly.coeff i :=
-      (coeffCont n i).comp (Units.continuous_val.comp (hr.comp continuous_inv))
+      (_root_.GlobalTheory.TypeLeaf.continuous_charpoly_coeff_of_matrix n i).comp (Units.continuous_val.comp (hr.comp continuous_inv))
     have h2 : Continuous fun g : G F Ω => (r' g⁻¹ : Matrix (Fin n) (Fin n) (Qbar l)).charpoly.coeff i :=
-      (coeffCont n i).comp (Units.continuous_val.comp (hr'.comp continuous_inv))
+      (_root_.GlobalTheory.TypeLeaf.continuous_charpoly_coeff_of_matrix n i).comp (Units.continuous_val.comp (hr'.comp continuous_inv))
     refine congrFun (Continuous.ext_on hD h1 h2 ?_) g
     rintro σ ⟨v, hv, -, A, hA, hσ⟩
     obtain ⟨B, hB, hB'⟩ := not_not.1 hv
@@ -601,15 +589,6 @@ private theorem isoFrob : IsoOfFrob := by
 
 private theorem noTw : NoTwist :=
   UpperTheory.baseChange_noSelfTwist_of_frobenius_sign_irreducible isoFrob UpperTheory.frobenius_eigenvalues_twist UpperTheory.exists_quadratic_sign_character UpperTheory.frobenius_sign_compatibility _root_.UpperTheory.Reformulated.B.H13.schur_twist_holds UpperTheory.galoisRep_irreducibility_criterion
-
-private theorem normUnder {K K' : Type} [Field K] [NumberField K] [Field K'] [NumberField K'] [Algebra K K']
-    (w : HeightOneSpectrum (𝓞 K')) : normV w = normV (w.under (𝓞 K)) ^ w.asIdeal.inertiaDeg (𝓞 K) := by
-  have : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := ⟨rfl⟩
-  have := w.isMaximal
-  have := (w.under (𝓞 K)).isMaximal
-  simp only [normV, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]
-  rw [← Ideal.absNorm_relNorm (𝓞 K) (𝓞 K') w.asIdeal,
-    Ideal.relNorm_eq_pow_of_isMaximal w.asIdeal (w.under (𝓞 K)).asIdeal, map_pow]
 
 private theorem satEq (n q : ℕ) (B : Multiset ℂˣ) :
     algSat n q B = B.map fun α : ℂˣ => (((q : ℝ) ^ (((n : ℝ) - 1) / 2) : ℝ) : ℂ) * (α : ℂ) := by
@@ -671,7 +650,7 @@ private theorem selfTw : Sd.SelfTwGal := by
     haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
     have hw : ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, CharEig ι (δ.comp (res F Ω E)) w 1 := by
       filter_upwards [hN.2.2, (underTendsto (K := F) (K' := E)).eventually hT] with w h1 h2
-      have hf := normUnder (K := F) w
+      have hf := _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w
       have h3 := (UpperTheory.frobenius_power_compatibility F E Ω l ι w _ hf).2 δ _ (hE _ h2.1)
       rwa [← Units.val_pow_eq_pow_val, h1 _ hf, Units.val_one] at h3
     have key := GlobalTheory.Published.ChebotarevDegreeOne.eq_of_frob (F := E) (Ω := Ω) GlobalTheory.Published.chebotarevDegreeOne'
@@ -705,12 +684,12 @@ private theorem upCycle : Sd.UpCyc := by
       rw [CG.HasInfChar.infChar_eq (π := CG.mk P) (hinf τ _ hm)]
       exact h
     · filter_upwards [hbc, (underTendsto (K := F) (K' := E)).eventually hatt.2] with w h1 h2
-      obtain ⟨B, hB, hPw⟩ := h1 _ (normUnder (K := F) w)
+      obtain ⟨B, hB, hPw⟩ := h1 _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)
       obtain ⟨B', hB', hF⟩ := h2
       obtain rfl := hB.unique hB'
       refine ⟨_, hPw, ?_⟩
-      have h3 := (UpperTheory.frobenius_power_compatibility F E Ω l ι w _ (normUnder (K := F) w)).1 n r _ hF
-      rw [← satPow, ← normUnder] at h3
+      have h3 := (UpperTheory.frobenius_power_compatibility F E Ω l ι w _ (_root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow (K := F) w)).1 n r _ hF
+      rw [← satPow, ← _root_.GlobalTheory.DelEps.WeilRes.normV_eq_pow] at h3
       exact h3
 
 private theorem quadGalois (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]

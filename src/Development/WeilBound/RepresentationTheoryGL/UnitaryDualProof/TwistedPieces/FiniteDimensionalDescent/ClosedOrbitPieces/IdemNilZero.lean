@@ -70,9 +70,6 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 open PositivityTheory.RgUd.TP.Desc.Piece
 
-def Cx (Z : Subalgebra k (Matrix (Fin N) (Fin N) k)) (x : Matrix (Fin N) (Fin N) k) : Subalgebra k (Matrix (Fin N) (Fin N) k) :=
-  Algebra.adjoin k (insert x (Z : Set (Matrix (Fin N) (Fin N) k)))
-
 section
 variable {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} {x : Matrix (Fin N) (Fin N) k}
 
@@ -90,7 +87,7 @@ theorem cx_gens (hZ : CR Z) (hx : x ∈ Bz Z) :
       exact hx a h1
     · exact hZ.1 a h1 b h2
 
-theorem cx_comm (hZ : CR Z) (hx : x ∈ Bz Z) : ∀ a ∈ Cx Z x, ∀ b ∈ Cx Z x, a * b = b * a := by
+theorem cx_comm (hZ : CR Z) (hx : x ∈ Bz Z) : ∀ a ∈ _root_.PositivityTheory.RgUd.T.adj Z x, ∀ b ∈ _root_.PositivityTheory.RgUd.T.adj Z x, a * b = b * a := by
   intro a ha b hb
   have key := cx_gens hZ hx
   have h : Commute a b := by
@@ -101,11 +98,11 @@ theorem cx_comm (hZ : CR Z) (hx : x ∈ Bz Z) : ∀ a ∈ Cx Z x, ∀ b ∈ Cx Z
     exact key c hc d hd
   exact h.eq
 
-theorem z_le_cx : Z ≤ Cx Z x := fun _ h => Algebra.subset_adjoin (Set.mem_insert_of_mem _ h)
+theorem z_le_cx : Z ≤ _root_.PositivityTheory.RgUd.T.adj Z x := fun _ h => Algebra.subset_adjoin (Set.mem_insert_of_mem _ h)
 
-theorem x_mem_cx : x ∈ Cx Z x := Algebra.subset_adjoin (Set.mem_insert _ _)
+theorem x_mem_cx : x ∈ _root_.PositivityTheory.RgUd.T.adj Z x := Algebra.subset_adjoin (Set.mem_insert _ _)
 
-theorem pe_mem {d : ℕ} {c : Fin d → Matrix (Fin N) (Fin N) k} (hc : ∀ l, c l ∈ Z) : pe c x ∈ Cx Z x :=
+theorem pe_mem {d : ℕ} {c : Fin d → Matrix (Fin N) (Fin N) k} (hc : ∀ l, c l ∈ Z) : pe c x ∈ _root_.PositivityTheory.RgUd.T.adj Z x :=
   Subalgebra.sum_mem _ fun l _ => Subalgebra.mul_mem _ (z_le_cx (hc l)) (Subalgebra.pow_mem _ x_mem_cx _)
 
 end
@@ -138,11 +135,11 @@ variable {Z : Subalgebra k (Matrix (Fin N) (Fin N) k)} {χ : k[X]} {q : ℕ} (D 
   {x : Matrix (Fin N) (Fin N) k}
 
 def Nx (x : Matrix (Fin N) (Fin N) k) : Submodule k (Matrix (Fin N) (Fin N) k) :=
-  (Cx Z x).toSubmodule.map (LinearMap.mulLeft k (pe D.b x))
+  (_root_.PositivityTheory.RgUd.T.adj Z x).toSubmodule.map (LinearMap.mulLeft k (pe D.b x))
 
 theorem s_mem (j : Fin D.r) : pe (D.a j) x ∈ Sx D x := Algebra.subset_adjoin ⟨j, rfl⟩
 
-theorem sx_le : Sx D x ≤ Cx Z x := Algebra.adjoin_le (by rintro _ ⟨j, rfl⟩; exact pe_mem (D.ha j))
+theorem sx_le : Sx D x ≤ _root_.PositivityTheory.RgUd.T.adj Z x := Algebra.adjoin_le (by rintro _ ⟨j, rfl⟩; exact pe_mem (D.ha j))
 
 theorem sx_toSub (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) :
     (Sx D x).toSubmodule = Submodule.span k (Set.range fun j => pe (D.a j) x) := by
@@ -189,11 +186,11 @@ theorem sx_cr (hZ : CR Z) (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) : CR (Sx D x)
   refine ⟨fun a ha b hb => cx_comm hZ hx a (sx_le D ha) b (sx_le D hb), ⟨fun y hy => ?_⟩⟩
   exact Subtype.ext (sx_nil D hx hχ y.1 y.2 (hy.map (Sx D x).val))
 
-theorem nx_le : Nx D x ≤ (Cx Z x).toSubmodule := by
+theorem nx_le : Nx D x ≤ (_root_.PositivityTheory.RgUd.T.adj Z x).toSubmodule := by
   refine Submodule.map_le_iff_le_comap.2 ?_
   intro y hy
   rw [Submodule.mem_comap, LinearMap.mulLeft_apply]
-  exact (Cx Z x).mul_mem (pe_mem D.hb) hy
+  exact (_root_.PositivityTheory.RgUd.T.adj Z x).mul_mem (pe_mem D.hb) hy
 
 theorem nx_nil (hZ : CR Z) (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) : ∀ n ∈ Nx D x, IsNilpotent n := by
   obtain ⟨-, -, -, -, hεq, -⟩ := D.spec x hx hχ
@@ -202,10 +199,10 @@ theorem nx_nil (hZ : CR Z) (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) : ∀ n ∈ 
   simp only [LinearMap.mulLeft_apply]
   rw [(Commute.mul_pow (cx_comm hZ hx _ (pe_mem D.hb) c hc) q), hεq, zero_mul]
 
-theorem nx_mul (hZ : CR Z) (hx : x ∈ Bz Z) : ∀ c ∈ Cx Z x, ∀ n ∈ Nx D x, c * n ∈ Nx D x := by
+theorem nx_mul (hZ : CR Z) (hx : x ∈ Bz Z) : ∀ c ∈ _root_.PositivityTheory.RgUd.T.adj Z x, ∀ n ∈ Nx D x, c * n ∈ Nx D x := by
   intro c hc n hn
   obtain ⟨y, hy, rfl⟩ := Submodule.mem_map.1 hn
-  refine Submodule.mem_map.2 ⟨c * y, (Cx Z x).mul_mem hc hy, ?_⟩
+  refine Submodule.mem_map.2 ⟨c * y, (_root_.PositivityTheory.RgUd.T.adj Z x).mul_mem hc hy, ?_⟩
   rw [LinearMap.mulLeft_apply, LinearMap.mulLeft_apply, ← mul_assoc, ← mul_assoc,
     cx_comm hZ hx _ hc _ (pe_mem D.hb)]
 
@@ -223,11 +220,11 @@ theorem re_mem (hZ : CR Z) (hx : x ∈ Bz Z) (γ' : Fin D.d → Fin D.r → k) :
     · exact Or.inr ⟨m, rfl⟩
   · rw [h, pow_zero, mul_one]
     exact Submodule.mem_sup_left (s_mem D j)
-  · have hs : pe (D.a j) x ∈ Cx Z x := pe_mem (D.ha j)
-    have he : pe D.b x ∈ Cx Z x := pe_mem D.hb
+  · have hs : pe (D.a j) x ∈ _root_.PositivityTheory.RgUd.T.adj Z x := pe_mem (D.ha j)
+    have he : pe D.b x ∈ _root_.PositivityTheory.RgUd.T.adj Z x := pe_mem D.hb
     rw [hm, pow_succ', ← mul_assoc, cx_comm hZ hx _ hs _ he, mul_assoc]
     refine Submodule.mem_sup_right (Submodule.mem_map.2 ⟨pe (D.a j) x * pe D.b x ^ m, ?_, ?_⟩)
-    · exact (Cx Z x).mul_mem hs ((Cx Z x).pow_mem he m)
+    · exact (_root_.PositivityTheory.RgUd.T.adj Z x).mul_mem hs ((_root_.PositivityTheory.RgUd.T.adj Z x).pow_mem he m)
     · rw [LinearMap.mulLeft_apply]
 
 theorem z_le (hZ : CR Z) (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) : Z.toSubmodule ≤ (Sx D x).toSubmodule ⊔ Nx D x := by
@@ -248,9 +245,9 @@ theorem idem_mem (hZ : CR Z) (hx : x ∈ Bz Z) (hχ : aeval x χ = 0) {f : Matri
   have hfm : f ∈ (Sx D x).toSubmodule ⊔ Nx D x := z_le D hZ hx hχ hf
   obtain ⟨s, hs, n, hn, hsn⟩ := Submodule.mem_sup.1 hfm
   have hsS : s ∈ Sx D x := hs
-  have hsC : s ∈ Cx Z x := sx_le D hsS
-  have hnC : n ∈ Cx Z x := nx_le D hn
-  have hfC : f ∈ Cx Z x := z_le_cx hf
+  have hsC : s ∈ _root_.PositivityTheory.RgUd.T.adj Z x := sx_le D hsS
+  have hnC : n ∈ _root_.PositivityTheory.RgUd.T.adj Z x := nx_le D hn
+  have hfC : f ∈ _root_.PositivityTheory.RgUd.T.adj Z x := z_le_cx hf
   have hnn : IsNilpotent n := nx_nil D hZ hx hχ n hn
   have cfn : Commute f n := cx_comm hZ hx f hfC n hnC
   have cfs : Commute f s := cx_comm hZ hx f hfC s hsC
@@ -374,14 +371,14 @@ def Tef (e f : Matrix (Fin N) (Fin N) k) : Submodule k (Matrix (Fin N) (Fin N) k
 
 omit hχ in
 theorem tef_zero {e f : Matrix (Fin N) (Fin N) k} (heid : IsIdempotentElem e) (hne : e ≠ 0) (hf : f ∈ primIdem Z)
-    (hef : e * f = e) (hC : e ∈ Cx Z x) {z : Matrix (Fin N) (Fin N) k} (hz : z ∈ Z) (hn : IsNilpotent (e * (f * z))) :
+    (hef : e * f = e) (hC : e ∈ _root_.PositivityTheory.RgUd.T.adj Z x) {z : Matrix (Fin N) (Fin N) k} (hz : z ∈ Z) (hn : IsNilpotent (e * (f * z))) :
     f * z = 0 := by
   rcases pi_field hZ hf hz with h0 | ⟨b, hb, hfb⟩
   · exact h0
   · exfalso
     apply hne
-    have hfzC : f * z ∈ Cx Z x := (Cx Z x).mul_mem (z_le_cx hf.1) (z_le_cx hz)
-    have hefz : e * (f * z) ∈ Cx Z x := (Cx Z x).mul_mem hC hfzC
+    have hfzC : f * z ∈ _root_.PositivityTheory.RgUd.T.adj Z x := (_root_.PositivityTheory.RgUd.T.adj Z x).mul_mem (z_le_cx hf.1) (z_le_cx hz)
+    have hefz : e * (f * z) ∈ _root_.PositivityTheory.RgUd.T.adj Z x := (_root_.PositivityTheory.RgUd.T.adj Z x).mul_mem hC hfzC
     have hcb : Commute (e * (f * z)) b := cx_comm hZ hx _ hefz b (z_le_cx hb)
     have hnb : IsNilpotent (e * (f * z) * b) := Commute.isNilpotent_mul_right hcb hn
     have heq : e * (f * z) * b = e := by

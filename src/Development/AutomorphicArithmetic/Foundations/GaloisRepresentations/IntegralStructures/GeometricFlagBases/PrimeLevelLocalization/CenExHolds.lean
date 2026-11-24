@@ -56,6 +56,7 @@ import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.GlintPrincRelIndexNeZero
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Tjcosets
 import Mathlib.RingTheory.Coalgebra.CoassocSimps
 import Mathlib.RingTheory.Etale.Weakly
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormCloseToOneOfCloseAbovePlace
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFinite
 import Mathlib.Tactic.Lemma
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -84,16 +85,7 @@ namespace UpperTheory.Gal.Int.Geo.Pl.Tj.TorusKilling
 
 variable {E : Type} [Field E] [NumberField E]
 
-private theorem val_alg (u : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) :
-    Valued.v (algebraMap (𝓞 E) (u.adicCompletion E) c) = u.intValuation c := by
-  have h := HeightOneSpectrum.valuedAdicCompletion_eq_valuation' u (c : E)
-  rw [show (u.valuation E) (c : E) = u.intValuation c from HeightOneSpectrum.valuation_of_algebraMap u c] at h
-  exact h
-
-private theorem alg_int (u : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) :
-    algebraMap (𝓞 E) (u.adicCompletion E) c ∈ u.adicCompletionIntegers E := by
-  rw [HeightOneSpectrum.mem_adicCompletionIntegers, val_alg]
-  exact u.intValuation_le_one c
+private alias alg_int := _root_.Formalism.UG.P.levelaf_int_mem_v
 
 private theorem exS (w : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) (hc : c ≠ 0) :
     ∃ s : 𝓞 E, s ∉ w.asIdeal ∧ ∀ u : HeightOneSpectrum (𝓞 E), u ≠ w →
@@ -110,7 +102,7 @@ private theorem exS (w : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) (hc : c ≠ 0)
     exact w.isPrime.ne_top hQ
   obtain ⟨s, hsQ, hsw⟩ := hex
   refine ⟨s, hsw, fun u hu => ?_⟩
-  rw [val_alg, val_alg]
+  rw [_root_.Formalism.UG.P.csApprox_val_int, _root_.Formalism.UG.P.csApprox_val_int]
   rw [HeightOneSpectrum.intValuation_if_neg u hc]
   refine (HeightOneSpectrum.intValuation_le_pow_iff_mem u s _).2 ?_
   set e := (Associates.mk u.asIdeal).count (Associates.mk (Ideal.span {c})).factors with he
@@ -144,7 +136,7 @@ private theorem diag_int {n : ℕ} (u : HeightOneSpectrum (𝓞 E)) (ϖ : u.adic
       Matrix.diagonal fun k : Fin n => if (k : ℕ) < i then ϖ⁻¹ else 1) a b ∈ u.adicCompletionIntegers E := by
   rw [Matrix.smul_apply, Matrix.diagonal_apply, smul_eq_mul]
   split_ifs with h1 h2
-  · rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, val_alg]
+  · rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, _root_.Formalism.UG.P.csApprox_val_int]
     have h3 : u.intValuation y ≤ Valued.v ϖ := by
       rw [hϖ]
       have := (HeightOneSpectrum.intValuation_le_pow_iff_mem u y 1).2 (by rwa [pow_one])
@@ -695,7 +687,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.LocIdx =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.MulVecInt =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.MulVecInt", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.LevLocAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocEqOneOfMemGam\nimport GroundTheory.GlobalFields.CompletionAtPlace.Integers\npublic import GroundTheory.GlobalFields.LocalAtPlace\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.MulVecInt", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.PrimeLevelLocalization.CongruenceReduction.LevLocAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocEqOneOfMemGam\nimport GroundTheory.GlobalFields.CompletionAtPlace.Integers\npublic import GroundTheory.GlobalFields.LocalAtPlace\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormCloseToOneOfCloseAbovePlace\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -719,15 +711,6 @@ private theorem alg_int {E : Type} [Field E] [NumberField E] (u : Plc E) (c : �
   rw [HeightOneSpectrum.mem_adicCompletionIntegers, val_alg]
   exact HeightOneSpectrum.valuation_le_one u c
 
-private theorem lt_one_le {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
-  rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
-  · rw [← WithZero.exp_log h0] at h ⊢
-    rw [WithZero.exp_le_exp]
-    have : WithZero.log x < 0 := by
-      rwa [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
-    omega
-
 private theorem split_at {E : Type} [Field E] [NumberField E] (w u : Plc E) (a b : 𝓞 E)
     (hab : Ideal.span {a} ⊔ Ideal.span {b} = w.asIdeal) (y : u.adicCompletion E)
     (hy : y ∈ u.adicCompletionIntegers E) (hw : u = w → Valued.v y < 1) :
@@ -745,7 +728,7 @@ private theorem split_at {E : Type} [Field E] [NumberField E] (w u : Plc E) (a b
       · rintro rfl
         simp at hv
         exact WithZero.exp_ne_zero hv.symm
-      · rw [hv]; exact lt_one_le (hw rfl)
+      · rw [hv]; exact _root_.GlobalTheory.NormCompat.NormCont.le_exp_neg_one_of_lt_one (hw rfl)
     · have : ¬ w.asIdeal ≤ u.asIdeal := fun hle => huw
         (HeightOneSpectrum.ext (w.isMaximal.eq_of_le u.isPrime.ne_top hle).symm)
       obtain ⟨e, he, heu⟩ := SetLike.not_le_iff_exists.1 this

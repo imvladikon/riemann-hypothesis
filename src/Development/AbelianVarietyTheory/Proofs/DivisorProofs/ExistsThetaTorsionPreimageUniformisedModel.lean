@@ -65,15 +65,8 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open Classical
 open ReciprocityTheory.ChartRestriction.G.Out
 attribute [local instance] Over.cartesianMonoidalCategory
-noncomputable section
 namespace GlobalTheory.RealCompare
-open GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds hiding fn PsiNorm
-variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
-
-theorem one_le_rN (S : ThetaSys o Ω) : 1 ≤ S.r * S.N := Nat.mul_pos S.r_pos (by have := S.N_ge; omega)
-
 end GlobalTheory.RealCompare
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ModuliProofs.MulEqOneOfComb =====
@@ -97,7 +90,7 @@ theorem exists_qkPt_of_utest : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebr
   intro o Ω _ _ _ S ρ p _ y₀ u a
   haveI : CharZero u.V := ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V _)).charZero
   obtain ⟨x, hx, hadd, -⟩ := utest_torsion_points o Ω S ρ p y₀ u
-  obtain ⟨f, f₁, f₂, -⟩ := uTors_closed u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) _ (GlobalTheory.RealCompare.one_le_rN S)
+  obtain ⟨f, f₁, f₂, -⟩ := uTors_closed u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) _ (_root_.GlobalTheory.ZH.WeightZeroUnit.level_pos S)
   have hx1 : x a ^ (S.r * S.N) = 1 := by
     have := u.A.isAb.comm
     obtain ⟨h0, hsm⟩ := ThetaReal.pt_nsmul x hadd

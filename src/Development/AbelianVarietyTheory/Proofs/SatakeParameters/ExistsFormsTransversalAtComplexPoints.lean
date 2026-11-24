@@ -290,13 +290,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.ker_evalComplexPoint_le_span_jacobian : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d : ℕ) [SmoothOfRelativeDimension d p] (U : X.Opens), IsAffineOpen U →
-    ∀ (ch : GlobalTheory.AlgChart p (RingHom.id ℂ) d) (φ : Fin d → Γ(X, U)) (z : GlobalTheory.CxPts p (RingHom.id ℂ))
-      (_hzc : z ∈ ch.e.source) (hz : z ∈ GlobalTheory.CxPts.ptsIn p (RingHom.id ℂ) U), (ch.jacMat φ z).det ≠ 0 →
-      RingHom.ker (GlobalTheory.CxPts.evHom hz) ≤
-        Ideal.span (Set.range fun j => φ j - ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U (GlobalTheory.CxPts.evHom hz (φ j))) ⊔
-          RingHom.ker (GlobalTheory.CxPts.evHom hz) ^ 2 := by
-  first | (exact @GlobalTheory.JacSpan.ker_le_span_jac)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.KerEvalComplexPointLeSpanJacobianStatement =====
@@ -371,11 +364,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.null_negEval_of_jacobian_det_eq_zero : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d : ℕ) (U : X.Opens) (ch : GlobalTheory.AlgChart p (RingHom.id ℂ) d)
-    (φ : Fin d → Γ(X, U)), ∃ E : Set (Fin d → ℂ), MeasureTheory.volume E = 0 ∧
-      ∀ z ∈ ch.e.source, ∀ hz : z ∈ GlobalTheory.CxPts.ptsIn p (RingHom.id ℂ) U,
-        (ch.jacMat φ z).det = 0 → (fun j => -GlobalTheory.CxPts.evHom hz (φ j)) ∈ E := by
-  first | (exact @GlobalTheory.ChartSard.null_negEv_of_det_eq_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.NullNegEvalOfJacobianDetEqZeroStatement =====
@@ -433,14 +421,14 @@ theorem GlobalTheory.AlgSard.main : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d :
           Ideal.span (Set.range fun j => φ j + ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U (c j)) ⊔ RingHom.ker (CxPts.evHom hz) ^ 2 := by
   intro X p d _ U hU φ
   obtain ⟨C, hC, hcov⟩ := countable_charts (p := p) (d := d) hU
-  choose E hE0 hE using fun ch : AlgChart p (RingHom.id ℂ) d => GlobalTheory.T.null_negEval_of_jacobian_det_eq_zero X p d U ch φ
+  choose E hE0 hE using fun ch : AlgChart p (RingHom.id ℂ) d => _root_.GlobalTheory.ChartSard.null_negEv_of_det_eq_zero X p d U ch φ
   refine ⟨⋃ ch ∈ C, E ch, (measure_biUnion_null_iff hC).2 fun ch _ => hE0 ch, ?_⟩
   intro c hc z hz hzero
   obtain ⟨ch, hchC, hzc⟩ := hcov z hz
   have hcz : c = fun j => -evHom hz (φ j) := funext fun j => by linear_combination hzero j
   have hdet : (ch.jacMat φ z).det ≠ 0 := fun h0 =>
     hc (mem_biUnion hchC (hcz ▸ hE ch z hzc hz h0))
-  have key := GlobalTheory.T.ker_evalComplexPoint_le_span_jacobian X p d U hU ch φ z hzc hz hdet
+  have key := _root_.GlobalTheory.JacSpan.ker_le_span_jac X p d U hU ch φ z hzc hz hdet
   have e : (fun j => φ j + algX p U (c j)) = fun j => φ j - algX p U (evHom hz (φ j)) := by
     funext j; rw [hcz, map_neg, sub_eq_add_neg]
   rw [e]; exact key
@@ -456,13 +444,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.algebraicSard_shifted_functions_regularZeros : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (d : ℕ) [SmoothOfRelativeDimension d p] (U : X.Opens), IsAffineOpen U →
-    ∀ φ : Fin d → Γ(X, U), ∃ E : Set (Fin d → ℂ), MeasureTheory.volume E = 0 ∧
-      ∀ c ∉ E, ∀ (z : CxPts p (RingHom.id ℂ)) (hz : z ∈ CxPts.ptsIn p (RingHom.id ℂ) U),
-        (∀ j, CxPts.evHom hz (φ j) + c j = 0) →
-        RingHom.ker (CxPts.evHom hz) ≤
-          Ideal.span (Set.range fun j => φ j + ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U (c j)) ⊔ RingHom.ker (CxPts.evHom hz) ^ 2 := by
-  first | (exact @GlobalTheory.AlgSard.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AlgebraicSardShiftedFunctionsRegularZerosStatement =====
@@ -551,9 +532,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.eq_top_of_forall_complexPoints_mem_opens : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [LocallyOfFiniteType p] (U : X.Opens),
-    (∀ z : CxPts p (RingHom.id ℂ), z ∈ CxPts.ptsIn p (RingHom.id ℂ) U) → U = ⊤ := by
-  first | (exact @GlobalTheory.MaxPt.eq_top_of_forall_cxPts_mem)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqTopOfForallComplexPointsMemOpensStatement =====
@@ -565,20 +543,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.exists_forms_vanishing_complexPoints_fullJets : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ) (d : ℕ) [SmoothOfRelativeDimension d p] (N : ℕ)
-    (ι : X ⟶ PSpace ℂ N), IsClosedImmersion ι → ι ≫ PSpace.str ℂ N = p → ∀ S : Finset (CxPts p (RingHom.id ℂ)),
-    ∃ (n : ℕ) (h : MvPolynomial (Fin (N + 1)) ℂ) (g : Fin d → MvPolynomial (Fin (N + 1)) ℂ)
-      (hh : h ∈ GlobalTheory.ProjSpace.grading ℂ N n) (hg : ∀ j, g j ∈ GlobalTheory.ProjSpace.grading ℂ N n), 0 < n ∧
-      (∀ j, genericPoint X ∈ GlobalTheory.EtProj.fOpen ι (g j)) ∧
-      (∀ y ∈ S, ∀ j, y ∉ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι (g j))) ∧
-      (∀ z : CxPts p (RingHom.id ℂ), z ∉ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι h) →
-        (∀ j, z ∉ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι (g j))) → z ∈ S) ∧
-      ∀ y ∈ S, ∀ (f₀ : MvPolynomial (Fin (N + 1)) ℂ) (hf₀ : f₀ ∈ GlobalTheory.ProjSpace.grading ℂ N n)
-        (hy : y ∈ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι f₀)),
-        GlobalTheory.EtProj.fRatio ι h f₀ hh hf₀ ∈ RingHom.ker (CxPts.evHom hy) ^ 2 ∧
-        RingHom.ker (CxPts.evHom hy) ≤ Ideal.span (Set.range fun j => GlobalTheory.EtProj.fRatio ι (g j) f₀ (hg j) hf₀) ⊔
-          RingHom.ker (CxPts.evHom hy) ^ 2 := by
-  first | (exact @GlobalTheory.EtProj.Jets.exists_jet_forms)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFormsVanishingComplexPointsFullJetsStatement =====
@@ -590,10 +554,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.exists_projForm_nonvanishing_genericPoint_complexPoints : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ) (N : ℕ) (ι : X ⟶ PSpace ℂ N) (n : ℕ)
-    (F : Finset (CxPts p (RingHom.id ℂ))), ∃ f ∈ GlobalTheory.ProjSpace.grading ℂ N n,
-      genericPoint X ∈ GlobalTheory.EtProj.fOpen ι f ∧ ∀ z ∈ F, z ∈ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι f) := by
-  first | (exact @GlobalTheory.EtProj.exists_form_genericPoint_cxPts)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsProjFormNonvanishingGenericPointComplexPoiStatement =====
@@ -716,11 +676,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.finite_complexPoints_transversal_zeros : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [LocallyOfFiniteType p] (U : X.Opens), IsAffineOpen U →
-    ∀ (k : ℕ) (φ : Fin k → Γ(X, U)), {z : CxPts p (RingHom.id ℂ) | ∃ hz : z ∈ CxPts.ptsIn p (RingHom.id ℂ) U,
-      (∀ j, CxPts.evHom hz (φ j) = 0) ∧
-        RingHom.ker (CxPts.evHom hz) ≤ Ideal.span (Set.range φ) ⊔ RingHom.ker (CxPts.evHom hz) ^ 2}.Finite := by
-  first | (exact @GlobalTheory.TransvZeros.finite_transv_zeros)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteComplexPointsTransversalZerosStatement =====
@@ -732,17 +687,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.ratio_span_cotangent_change_denominator : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) (N : ℕ) (ι : X ⟶ PSpace ℂ N), IsClosedImmersion ι → ∀ (n : ℕ), 0 < n →
-    ∀ (k : ℕ) (f : Fin k → MvPolynomial (Fin (N + 1)) ℂ) (a b : MvPolynomial (Fin (N + 1)) ℂ)
-      (hf : ∀ j, f j ∈ GlobalTheory.ProjSpace.grading ℂ N n) (ha : a ∈ GlobalTheory.ProjSpace.grading ℂ N n)
-      (hb : b ∈ GlobalTheory.ProjSpace.grading ℂ N n) (z : CxPts p (RingHom.id ℂ))
-      (hza : z ∈ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι a))
-      (hzb : z ∈ CxPts.ptsIn p (RingHom.id ℂ) (GlobalTheory.EtProj.fOpen ι b)),
-      RingHom.ker (CxPts.evHom hza) ≤ Ideal.span (Set.range fun j => GlobalTheory.EtProj.fRatio ι (f j) a (hf j) ha) ⊔
-          RingHom.ker (CxPts.evHom hza) ^ 2 →
-      RingHom.ker (CxPts.evHom hzb) ≤ Ideal.span (Set.range fun j => GlobalTheory.EtProj.fRatio ι (f j) b (hf j) hb) ⊔
-          RingHom.ker (CxPts.evHom hzb) ^ 2 := by
-  first | (exact @GlobalTheory.EtProj.span_ratio_of_span_ratio)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.RatioSpanCotangentChangeDenominatorStatement =====
@@ -770,18 +714,6 @@ theorem mem_ptsIn_fOpen_iff {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {N : ℕ} (ι : 
       q ∉ (ι.base (z.1 (IsLocalRing.closedPoint ℂ))).asHomogeneousIdeal :=
   CxPts.mem_ptsIn.trans (mem_fOpen ι q _)
 
-theorem evHom_fRatio_eq_zero_iff {X : Scheme.{0}} {p : X ⟶ Sp ℂ} {N n : ℕ} (ι : X ⟶ PSpace ℂ N)
-    {f g : MvPolynomial (Fin (N + 1)) ℂ} (hf : f ∈ grading ℂ N n) (hg : g ∈ grading ℂ N n)
-    {z : CxPts p (RingHom.id ℂ)} (hz : z ∈ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι g)) :
-    CxPts.evHom hz (fRatio ι f g hf hg) = 0 ↔ z ∉ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι f) := by
-  apply GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff <;> assumption
-
-theorem frac_smul_deg {N n : ℕ} (V : (PSpace ℂ N).Opens) (f g : MvPolynomial (Fin (N + 1)) ℂ)
-    (hf : f ∈ grading ℂ N n) (hg : g ∈ grading ℂ N n) (hV : V ≤ Proj.basicOpen (grading ℂ N) g) (c : ℂ)
-    (hcf : c • f ∈ grading ℂ N n) :
-    frac (grading ℂ N) V (c • f) g hcf hg hV = algebraMap ℂ Γ(PSpace ℂ N, V) c * frac (grading ℂ N) V f g hf hg hV := by
-  apply GlobalTheory.EtProj.Jets.frac_smul_n <;> assumption
-
 theorem fRatio_add_smul {X : Scheme.{0}} (p : X ⟶ Sp ℂ) {N n : ℕ} (ι : X ⟶ PSpace ℂ N)
     (hp : ι ≫ PSpace.str ℂ N = p) {g h f₀ : MvPolynomial (Fin (N + 1)) ℂ} (hg : g ∈ grading ℂ N n)
     (hh : h ∈ grading ℂ N n) (hf₀ : f₀ ∈ grading ℂ N n) (c : ℂ) (hgh : g + c • h ∈ grading ℂ N n) :
@@ -789,7 +721,7 @@ theorem fRatio_add_smul {X : Scheme.{0}} (p : X ⟶ Sp ℂ) {N n : ℕ} (ι : X 
       fRatio ι g f₀ hg hf₀ + ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p (fOpen ι f₀) c * fRatio ι h f₀ hh hf₀ := by
   have hch : c • h ∈ grading ℂ N n := Submodule.smul_mem _ c hh
   unfold fRatio
-  rw [frac_add (ha := hg) (ha₂ := hch), frac_smul_deg _ h f₀ hh hf₀ _ c hch, map_add (f := _), map_mul]
+  rw [frac_add (ha := hg) (ha₂ := hch), _root_.GlobalTheory.EtProj.Jets.frac_smul_n _ h f₀ hh hf₀ _ c hch, map_add (f := _), map_mul]
   congr 2
   subst hp
   rw [algebraMap_sections_eq]
@@ -819,9 +751,9 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
   classical
   haveI : IsClosedImmersion ι := hι
   haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
-  obtain ⟨n, h, g, hh, hg, hn, hgen, hgS, hbase, hjet⟩ := GlobalTheory.T.exists_forms_vanishing_complexPoints_fullJets X p d N ι hι hp S
+  obtain ⟨n, h, g, hh, hg, hn, hgen, hgS, hbase, hjet⟩ := _root_.GlobalTheory.EtProj.Jets.exists_jet_forms X p d N ι hι hp S
   have hUh : IsAffineOpen (fOpen ι h) := (Proj.isAffineOpen_basicOpen (grading ℂ N) h hh hn).preimage ι
-  obtain ⟨E, hE, hEgood⟩ := GlobalTheory.T.algebraicSard_shifted_functions_regularZeros X p d (fOpen ι h) hUh (fun j => fRatio ι (g j) h (hg j) hh)
+  obtain ⟨E, hE, hEgood⟩ := _root_.GlobalTheory.AlgSard.main X p d (fOpen ι h) hUh (fun j => fRatio ι (g j) h (hg j) hh)
   have hB : ∀ j, ∃ a : ℂ, ∀ c : ℂ, genericPoint X ∉ fOpen ι (g j + c • h) → c = a := by
     intro j
     by_cases hx : ∃ c₀ : ℂ, genericPoint X ∉ fOpen ι (g j + c₀ • h)
@@ -871,7 +803,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
         RingHom.ker (CxPts.evHom hz) ^ 2 := by
     intro z hz hzF
     have h0 : ∀ j, CxPts.evHom hz (fRatio ι (F j) h (hF j) hh) = 0 :=
-      fun j => (evHom_fRatio_eq_zero_iff ι (hF j) hh hz).2 (hzF j)
+      fun j => (_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff ι (hF j) hh hz).2 (hzF j)
     refine ⟨h0, ?_⟩
     have hc : ∀ j, CxPts.evHom hz (fRatio ι (g j) h (hg j) hh) + c j = 0 := by
       intro j
@@ -881,8 +813,8 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
       exact this
     have := hEgood c hcE z hz hc
     simpa only [hFh] using this
-  have hfin := GlobalTheory.T.finite_complexPoints_transversal_zeros X p (fOpen ι h) hUh d (fun j => fRatio ι (F j) h (hF j) hh)
-  obtain ⟨f₀, hf₀, hf₀gen, hf₀F⟩ := GlobalTheory.T.exists_projForm_nonvanishing_genericPoint_complexPoints X p N ι n (S ∪ hfin.toFinset)
+  have hfin := _root_.GlobalTheory.TransvZeros.finite_transv_zeros X p (fOpen ι h) hUh d (fun j => fRatio ι (F j) h (hF j) hh)
+  obtain ⟨f₀, hf₀, hf₀gen, hf₀F⟩ := _root_.GlobalTheory.EtProj.exists_form_genericPoint_cxPts X p N ι n (S ∪ hfin.toFinset)
   have hbase' : ∀ z : CxPts p (RingHom.id ℂ), z ∉ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι h) →
       (∀ j, z ∉ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι (F j))) → z ∈ S := by
     intro z hzh hzF
@@ -896,7 +828,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
     have := P.sub_mem h1 (P.mul_mem_left (MvPolynomial.C (c j)) hzh)
     rwa [← MvPolynomial.smul_eq_C_mul, add_sub_cancel_right] at this
   refine ⟨n, f₀, F, hf₀, hF, hn, ?_, hf₀gen, ?_, ?_, ?_⟩
-  · refine GlobalTheory.T.eq_top_of_forall_complexPoints_mem_opens X p _ fun z => ?_
+  · refine _root_.GlobalTheory.MaxPt.eq_top_of_forall_cxPts_mem X p _ fun z => ?_
     by_cases hz0 : z ∈ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι f₀)
     · exact CxPts.ptsIn_mono le_sup_left hz0
     by_cases hzj : ∃ j, z ∈ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι (F j))
@@ -914,13 +846,13 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
     exact hcB j (ha j (c j) hj)
   · intro y hy
     refine ⟨hf₀F y (Finset.mem_union_left _ hy), fun j => ?_⟩
-    rw [evHom_fRatio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not]
+    rw [_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not]
     have hyh : h ∈ (ι.base (y.1 (IsLocalRing.closedPoint ℂ))).asHomogeneousIdeal := by
       have hyf₀ := hf₀F y (Finset.mem_union_left _ hy)
       have h2 := (hjet y hy f₀ hf₀ hyf₀).1
       have h3 : CxPts.evHom hyf₀ (fRatio ι h f₀ hh hf₀) = 0 :=
         RingHom.mem_ker.1 (Ideal.pow_le_self two_ne_zero h2)
-      rw [evHom_fRatio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not] at h3
+      rw [_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff, mem_ptsIn_fOpen_iff, not_not] at h3
       exact h3
     have hyg := hgS y hy j
     rw [mem_ptsIn_fOpen_iff, not_not] at hyg
@@ -929,7 +861,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
     rwa [← MvPolynomial.smul_eq_C_mul] at this
   · intro z hz h0
     have hzF : ∀ j, z ∉ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι (F j)) :=
-      fun j => (evHom_fRatio_eq_zero_iff ι (hF j) hf₀ hz).1 (h0 j)
+      fun j => (_root_.GlobalTheory.EtProj.Jets.ev_ratio_eq_zero_iff ι (hF j) hf₀ hz).1 (h0 j)
     by_cases hzS : z ∈ S
     · obtain ⟨h2, hJ⟩ := hjet z hzS f₀ hf₀ hz
       refine hJ.trans (sup_le ?_ le_sup_right)
@@ -946,7 +878,7 @@ theorem exists_transversal_forms_first_separate (X : Scheme.{0}) [IsIntegral X] 
     · have hzh : z ∈ CxPts.ptsIn p (RingHom.id ℂ) (fOpen ι h) := by
         by_contra hzh
         exact hzS (hbase' z hzh hzF)
-      exact GlobalTheory.T.ratio_span_cotangent_change_denominator X p N ι hι n hn d F h f₀ hF hh hf₀ z hzh hz (htrh z hzh hzF).2
+      exact _root_.GlobalTheory.EtProj.span_ratio_of_span_ratio X p N ι hι n hn d F h f₀ hF hh hf₀ z hzh hz (htrh z hzh hzF).2
 
 end GlobalTheory.EtProj.Transv
 

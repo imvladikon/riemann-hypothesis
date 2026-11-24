@@ -305,7 +305,7 @@ theorem lemGAla_dl_smul (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) {i : ZM
     (ha : a ∈ W.AΔ) {x : W.DD T} (hx : Formalism.MainNotions.CrystallineLiftingInputs.DL W T i x) : Formalism.MainNotions.CrystallineLiftingInputs.DL W T i (a • x) := by
   refine ⟨?_, fun δ hδ => ?_⟩
   · rw [smul_smul, mul_comm, ← smul_smul, hx.1]
-  · rw [Formalism.MainNotions.LiftingTheory.wmap_γD_smul, ha δ hδ, hx.2 δ hδ]
+  · rw [_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear, ha δ hδ, hx.2 δ hδ]
 
 theorem lemGAla_dl_φpow (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) {i : ZMod n} {x : W.DD T}
     (hx : Formalism.MainNotions.CrystallineLiftingInputs.DL W T i x) (k : ℕ) :
@@ -535,7 +535,7 @@ theorem lemGA_la_of [NeZero n] (W : LocWach PD LL O v n) (hT2 : Formalism.MainNo
   refine ⟨la, hla, hDLi, hpull, z, hzN, ⟨hcancel _ _ ?_, fun δ hδ => hcancel _ _ ?_⟩, ?_⟩
   · rw [smul_smul, mul_comm, ← smul_smul, hz_eq, hwDL.1]
   · calc a • W.γD T₂ δ z = W.γA δ a • W.γD T₂ δ z := by rw [haΔ δ hδ]
-      _ = W.γD T₂ δ (a • z) := (Formalism.MainNotions.LiftingTheory.wmap_γD_smul W T₂ δ a z).symm
+      _ = W.γD T₂ δ (a • z) := (_root_.Formalism.MainNotions.LiftingTheory.gammaD_semilinear W T₂ δ a z).symm
       _ = a • z := by rw [hz_eq, hwDL.2 δ hδ]
   · rw [← hw_def, ← hz_eq]
 
@@ -1221,7 +1221,7 @@ theorem rhoLift_of [NeZero n] (W : LocWach PD LL O v n) (hT2 : Formalism.MainNot
       ((((PD.p : O) ^ k) • x - yu : ↥(W.wachCocyclesDelta T₂)) : W.DD T₂ × W.DD T₂).1 := by
     rw [hdd1]
     refine ⟨?_, hD1Δ⟩
-    rw [smul_sub, smul_comm, RL.trunc_letter W T₂ c hwI.1.1 htr, ← RL.map_smulA, hzuL]
+    rw [smul_sub, smul_comm, RL.trunc_letter W T₂ c hwI.1.1 htr, ← _root_.Formalism.MainNotions.LiftingTheory.wmap_map_smul, hzuL]
   have hPN2 : Formalism.MainNotions.CrystallineLiftingInputs.InPN W T₂ (Formalism.MainNotions.CrystallineLiftingInputs.Mpar PD.p (Formalism.MainNotions.RamifiedCoefficientChains.hpar n b S))
       ((((PD.p : O) ^ k) • x - yu : ↥(W.wachCocyclesDelta T₂)) : W.DD T₂ × W.DD T₂).2 := by
     rw [hdd2]
@@ -1336,29 +1336,10 @@ section Rec
 
 variable (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F)
 
-theorem caseA_loc {l : ℕ} [Fact l.Prime] {K LL : Loc.FinExt l} (hg : Loc.Good K 1 LL)
-    (hCA : Formalism.MainNotions.LiftingTheory.CaseA ((HW l).W K 1 LL hg)) : Loc.CaseA K LL := by
-  have hpl : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
-  refine ⟨fun x hx => ?_, by rw [← hpl]; exact hCA.2.2, hg⟩
-  obtain ⟨y, hy⟩ := hCA.1.2 ⟨x, hx⟩
-  have h2 := y.2.2
-  have : ((y : ↥(K0 K)) : Om l) = x := congrArg Subtype.val hy
-  rw [this] at h2
-  exact h2
-
 variable {CR CA CB CK : ℝ}
 
 theorem crystalline_clause_of_admitted (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.DeltaInvariantLattices.P3 D HW F Cm :=
   fun l _ K s LL h => (hA.1 l K s LL h).2.2.1
-
-theorem laurent_clause_of_admitted (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.DeltaInvariantLattices.P4 D HW F Cm :=
-  fun l _ K s LL h => (hA.1 l K s LL h).2.2.2.1
-
-theorem gamma_sub_one_in_coordinates (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.DeltaInvariantLattices.P9 D HW F :=
-  fun l _ K s LL h => (hA.1 l K s LL h).2.2.2.2.2.2.2.2.1
-
-theorem level_tools_of_admitted (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.WachCoordinates.adm7 D HW F Cm :=
-  Formalism.MainNotions.UnusedSlot80.tools_unramified_statement D HW F Cm ⟨crystalline_clause_of_admitted D HW F Cm hA, laurent_clause_of_admitted D HW F Cm hA, gamma_sub_one_in_coordinates D HW F Cm hA⟩
 
 theorem truncation_clause_of_admitted (hA : admitted D HW F Cm CR CA CB CK) : Formalism.MainNotions.CrystallineLiftingInputs.adm15 D HW F Cm := by
   refine ⟨Formalism.MainNotions.CrystallineLiftingInputs.TToolAlg_holds, fun l _ K LL hg _ => ?_⟩
@@ -1385,20 +1366,20 @@ theorem h2_bound_of_admitted (hA : admitted D HW F Cm CR CA CB CK) (l : ℕ) [Fa
   intro d T₁ T₂ F' b S η m hset
   have hCA : Formalism.MainNotions.LiftingTheory.CaseA ((HW l).W K 1 LL hg) := hset.1
   have hpl : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
-  have hCAl : Loc.CaseA K LL := caseA_loc D HW hg hCA
+  have hCAl : Loc.CaseA K LL := _root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA
   have h5l : 5 ≤ l := by have := hset.2.1; rw [hpl] at this; omega
   have h1 := hA.1 l K 1 LL hg
   obtain ⟨hE, hC, hQ⟩ := hA.2.2.2.2.2.2.2.2.2.2.1 l K LL
   have hs : ((HW l).W K 1 LL hg).s = 1 := hCA.2.1
   have C := ((Cm l).C K 1 LL hg).tie
   have hG := Formalism.MainNotions.N.Pv.LocalLengthBound.gam_of_tie _ hs C
-  have hLev : Formalism.MainNotions.WachCoordinates.LevelMapHodgeFiltration ((HW l).W K 1 LL hg) := (level_tools_of_admitted D HW F Cm hA l K LL hCAl h5l).2
+  have hLev : Formalism.MainNotions.WachCoordinates.LevelMapHodgeFiltration ((HW l).W K 1 LL hg) := (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.level_tools_of_admitted' D HW F Cm hA l K LL hCAl h5l).2
   haveI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) :=
     Formalism.MainNotions.UnusedSlot80.eq_sum_herm_smul_frame_of_inW (D.loc l) K LL
   have hΔ : IsUnit ((((HW l).W K 1 LL hg).DelF.card : ℕ) : ↥(OL LL)) := by
     haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
     have hcard : ((HW l).W K 1 LL hg).DelF.card = l - 1 :=
-      Formalism.MainNotions.UnusedSlot80.LevR.card_delF D HW F (gamma_sub_one_in_coordinates D HW F Cm hA) l K LL hCAl
+      Formalism.MainNotions.UnusedSlot80.LevR.card_delF D HW F (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.uniformizer_clause_of_admitted D HW F Cm hA) l K LL hCAl
     by_contra hnu
     have hm : ((((HW l).W K 1 LL hg).DelF.card : ℕ) : ↥(OL LL)) ∈ IsLocalRing.maximalIdeal ↥(OL LL) := hnu
     have hlm := Formalism.BasicNotions.Examples₂.LB.l_mem_max LL
@@ -1424,8 +1405,8 @@ theorem lemGA_rec (hA : admitted D HW F Cm CR CA CB CK) (l : ℕ) [Fact l.Prime]
   have hT2 := ((truncation_clause_of_admitted D HW F Cm hA).2 l K LL hg).2
   have hTH := Formalism.MainNotions.CrystallineLiftingInputs.Tools.frobenius_power_congruence_of_admitted D HW F Cm hA l K LL hg
   obtain ⟨hE, hC, hQ⟩ := hA.2.2.2.2.2.2.2.2.2.2.1 l K LL
-  have hP9 := gamma_sub_one_in_coordinates D HW F Cm hA
-  have hLev := Formalism.MainNotions.UnusedSlot80.levCoeff_of_pt D HW F Cm (laurent_clause_of_admitted D HW F Cm hA) (Formalism.MainNotions.UnusedSlot80.points_exist_of_ring_condition D HW F hP9)
+  have hP9 := _root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.uniformizer_clause_of_admitted D HW F Cm hA
+  have hLev := Formalism.MainNotions.UnusedSlot80.levCoeff_of_pt D HW F Cm (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.laurent_clause_of_admitted' D HW F Cm hA) (Formalism.MainNotions.UnusedSlot80.points_exist_of_ring_condition D HW F hP9)
   have hB : ∀ (l : ℕ) [Fact l.Prime] (K LL : Loc.FinExt l) (hg : Loc.Good K 1 LL)
       [NeZero (Module.finrank ℚ_[l] ↥(Loc.K0 K))], Formalism.MainNotions.RamifiedCoefficientChains.Sh.BasTool ((HW l).W K 1 LL hg) := by
     intro l _ K LL hg _
@@ -1437,7 +1418,7 @@ theorem lemGA_rec (hA : admitted D HW F Cm CR CA CB CK) (l : ℕ) [Fact l.Prime]
   have hCA := hS.1
   have hl11 : 11 ≤ ((D.loc l).PD K).p := hS.2.1
   rw [(D.loc l).PD_p K] at hl11
-  have hrec : Loc.CaseA K LL := caseA_loc D HW hg hCA
+  have hrec : Loc.CaseA K LL := _root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA
   have hR : Formalism.MainNotions.UnusedSlot80.ToolsR.RingP ((HW l).W K 1 LL hg) :=
     Formalism.MainNotions.UnusedSlot80.ring_condition_uniformizer_polynomial D HW F hP9 l K LL hrec
   have hG : Formalism.MainNotions.N.Pv.LocalLengthBound.GamN ((HW l).W K 1 LL hg) ∧
@@ -1469,7 +1450,7 @@ theorem lemGB_rec (hA : admitted D HW F Cm CR CA CB CK) (h23 : Formalism.MainNot
   refine lemGB_of _ hQ (fun hCA => Formalism.MainNotions.CrystallineLiftingInputs.RToolNum_holds (D.loc l) (HW l) K LL hg hCA)
     (hC4 l K 1 LL hg) h9 (Formalism.MainNotions.LiftingTheory.lattice_clause_every_situation D HW F l K 1 LL hg)
     (fun _ => lemmaGD_cc (HW l) hg) (fun _ => ?_)
-    (Formalism.MainNotions.CrystallineLiftingInputs.truncatedSeriesData.gamma_lemma_of_crystalline D HW F (gamma_sub_one_in_coordinates D HW F Cm hA) l K LL hg)
+    (Formalism.MainNotions.CrystallineLiftingInputs.truncatedSeriesData.gamma_lemma_of_crystalline D HW F (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.uniformizer_clause_of_admitted D HW F Cm hA) l K LL hg)
   rw [(D.loc l).PD_p K]
   exact Formalism.MainNotions.UnusedSlot80.Split2.isUnit_pred l LL
 
@@ -1485,9 +1466,9 @@ theorem wach_basis_lemma_of_admitted (hA : admitted D HW F Cm CR CA CB CK)
     (l : ℕ) [Fact l.Prime] (K LL : Loc.FinExt l) (hg : Loc.Good K 1 LL)
     [NeZero (Module.finrank ℚ_[l] ↥(Loc.K0 K))] : Formalism.MainNotions.N.Pv.LocalLengthBound.ContentBoundLevel ((HW l).W K 1 LL hg) :=
   content_bound_level_of_dcris_exact _ (hA.1 l K 1 LL hg).2.2.2.1 (hA.1 l K 1 LL hg).2.2.2.2.1 (hA.1 l K 1 LL hg).2.2.2.2.2.2.2.2.1
-    (fun hCA h11 => (level_tools_of_admitted D HW F Cm hA l K LL (caseA_loc D HW hg hCA)
+    (fun hCA h11 => (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.level_tools_of_admitted' D HW F Cm hA l K LL (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA)
       (by rw [(D.loc l).PD_p K] at h11; omega)).2)
-    (fun hCA h11 c ζ hζ => Formalism.MainNotions.UnusedSlot80.points_exist_of_ring_condition D HW F (gamma_sub_one_in_coordinates D HW F Cm hA) l K LL (caseA_loc D HW hg hCA)
+    (fun hCA h11 c ζ hζ => Formalism.MainNotions.UnusedSlot80.points_exist_of_ring_condition D HW F (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.uniformizer_clause_of_admitted D HW F Cm hA) l K LL (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA)
       (by rw [(D.loc l).PD_p K] at h11; omega) c ζ (by rwa [(D.loc l).PD_p K] at hζ))
     (((truncation_clause_of_admitted D HW F Cm hA).2 l K LL hg).2) (Formalism.MainNotions.CrystallineLiftingInputs.Tools.frobenius_power_congruence_of_admitted D HW F Cm hA l K LL hg)
     (hGs l K LL hg) (hA.2.2.2.2.2.2.2.2.2.2.1 l K LL).1 (hA.2.2.2.2.2.2.2.2.2.2.1 l K LL).2.1
@@ -1506,9 +1487,9 @@ theorem frobenius_lift_lemmas_of_admitted (hA : admitted D HW F Cm CR CA CB CK)
   frobenius_lift_lemmas_general _ (hA.1 l K 1 LL hg).1 (hA.1 l K 1 LL hg).2.2.1 (hA.1 l K 1 LL hg).2.2.2.2.1
     (hA.1 l K 1 LL hg).2.2.2.2.2.2.2.2.1 (hA.2.2.2.2.2.2.2.2.2.2.1 l K LL).1
     (hA.2.2.2.2.2.2.2.2.2.2.1 l K LL).2.1 (hA.2.2.2.2.2.2.2.2.2.2.1 l K LL).2.2 ((Cm l).C K 1 LL hg).tie
-    (fun hCA h11 => (level_tools_of_admitted D HW F Cm hA l K LL (caseA_loc D HW hg hCA)
+    (fun hCA h11 => (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.level_tools_of_admitted' D HW F Cm hA l K LL (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA)
       (by rw [(D.loc l).PD_p K] at h11; omega)).2)
-    (fun hCA h11 => Formalism.MainNotions.N.Pv.LocalLengthBound.ptTrans_rec D HW F (gamma_sub_one_in_coordinates D HW F Cm hA) l K LL (caseA_loc D HW hg hCA)
+    (fun hCA h11 => Formalism.MainNotions.N.Pv.LocalLengthBound.ptTrans_rec D HW F (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.uniformizer_clause_of_admitted D HW F Cm hA) l K LL (_root_.Formalism.MainNotions.RamifiedCoefficientChains.S9.LocalLemmasFromLiterature.caseA_loc' D HW hg hCA)
       (by rw [(D.loc l).PD_p K] at h11; omega))
     (hH2 l K LL hg) (wach_basis_lemma_of_admitted D HW F Cm hA hGs l K LL hg) (hDN l K LL hg) (hDN0 l K LL hg)
 

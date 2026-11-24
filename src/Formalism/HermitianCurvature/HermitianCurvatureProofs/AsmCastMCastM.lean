@@ -84,8 +84,8 @@ theorem integrable_slice_append_single {k r : ℕ} {E : Type} [NormedAddCommGrou
             (D.ptDiag (h ++ [(1, c)])) ξ (fun a => a.elim0) γ'))
       (U.muXi k (D.ptSize (h ++ [(1, c)])) 0 (r - D.ptSize (h ++ [(1, c)])) (D.ptPerm (h ++ [(1, c)]))) := by
   have hP : D.ptSize (h ++ [(1, c)]) = D.ptSize h + (0 + 1) := point_size_append_single h c
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ (Dx2.SL.isLocPt_head hloc)).1
+  have hspec := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hloc).1
+  have hspec' := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ (Dx2.SL.isLocPt_head hloc)).1
   have hσ : ∀ a : Fin (D.ptSize (h ++ [(1, c)])),
       ((Dx2.SL.sigP (n := 0) (D.ptPerm h)) (Fin.cast hP a)).val = (D.ptPerm (h ++ [(1, c)]) a).val := by
     intro a
@@ -180,15 +180,8 @@ theorem asm_psi_cast {a b : ℕ} (h : a = b) (z : Fin (2 * a + k + 1) → ℂ) (
     psi k b (D.castV h z) cc (D.castM h g) = psi k a z cc g := by
   subst h; rw [P.JCTx5.castV_rfl, P.JCTx5.castM_rfl]
 
-theorem asm_castM_mul {a b : ℕ} (h : a = b) (g g' : B.Mat k a) : D.castM h (g * g') = D.castM h g * D.castM h g' := by
-  subst h; simp only [P.JCTx5.castM_rfl]
-
 theorem asm_castM_inv {a b : ℕ} (h : a = b) (g : B.Mat k a) : D.castM h g⁻¹ = (D.castM h g)⁻¹ := by
   subst h; simp only [P.JCTx5.castM_rfl]
-
-theorem asm_castM_castM {a b d : ℕ} (h1 : a = b) (h2 : b = d) (g : B.Mat k a) :
-    D.castM h2 (D.castM h1 g) = D.castM (h1.trans h2) g := by
-  subst h1; subst h2; rfl
 
 theorem asm_castM_symm {a b : ℕ} (h : a = b) (g : B.Mat k a) : D.castM h.symm (D.castM h g) = g := by
   subst h; simp only [P.JCTx5.castM_rfl]
@@ -247,7 +240,7 @@ theorem asm_bridge {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [Comple
   rw [hl, hl', ← asm_psi_cast (Nat.add_comm 1 ρ1) _ _ (U.Rn k 1 ρ1 xx.1),
     ← asm_psi_cast (Nat.add_comm 1 ρ1) _ _ (U.Rn k 1 ρ1 xx.2)]
   congr 1
-  rw [← asm_castM_inv, ← asm_castM_mul, ← asm_castM_mul, asm_castM_castM]
+  rw [← asm_castM_inv, ← _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, ← _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, _root_.Formalism.FourierDecayAlt.P.Dx2.SplitF.castM_castM]
   exact asm_phiFun_lev (by omega) _ _ σ d _ _ _ _
 
 theorem asm_pointStepT (hPS : PointStep) : PointStepT := by
@@ -271,7 +264,7 @@ theorem asm_pointStepT (hPS : PointStep) : PointStepT := by
   have hd0 : ∀ q, D.ptDiag h q ≠ 0 := fun q => Formalism.FourierDecayAlt.P.JCTx6.Link2.ptScal_ne h hlocH.1 q q.2
   have hI := asm_gInt_int (k := P.k) (D.ptSize h) (P.r - D.ptSize (h ++ [(1, c)])) (D.ptPerm h) (D.ptDiag h) c hd0 hc0
     (D.castV e2.symm p.T.base.z) (D.castV e2.symm p.T.base.z') (D.castF e2 F) hFs R hRs _ hγ'
-  have hS := Formalism.FourierDecayAlt.P.slice_measure_identity P.k P.r (Wq →L[ℂ] Wp) p.T.base.z p.T.base.z' F h (h ++ [(1, c)]) 0 c rfl hle
+  have hS := _root_.Formalism.FourierDecayAlt.P.Dx2.SL.sliceOm P.k P.r (Wq →L[ℂ] Wp) p.T.base.z p.T.base.z' F h (h ++ [(1, c)]) 0 c rfl hle
     (D.castM (by omega : P.r - (D.ptSize h + 1) = P.r - D.ptSize (h ++ [(1, c)])) γ) hloc
     (integrable_slice_append_single p.T.base.z p.T.base.z' F h c hle hloc _ hI)
   rw [asm_omLong_zero] at hS

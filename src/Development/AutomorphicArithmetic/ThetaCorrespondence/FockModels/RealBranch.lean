@@ -891,12 +891,6 @@ section -- clump:auto
 open MeasureTheory GlobalTheory.CompanionTheory.UnitaryFramesMetricPeriods
 open scoped InnerProductSpace
 
-theorem _root_.GlobalTheory.T.matrix_coefficient_integrable_square : ∀ {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [LocallyCompactSpace Γ]
-    [SecondCountableTopology Γ] [MeasurableSpace Γ] [BorelSpace Γ] (ν : Measure Γ) [ν.IsHaarMeasure] [ν.IsMulRightInvariant]
-    {B : Type} [NormedAddCommGroup B] [InnerProductSpace ℂ B] [CompleteSpace B] (ρ : Γ → (B →L[ℂ] B)), IsU ρ → ∀ v : B, Integrable (fun g => ⟪v, ρ g v⟫_ℂ) ν → ∀ b : B,
-    Integrable (fun g => ‖⟪b, ρ g v⟫_ℂ‖ ^ 2) ν ∧
-    ∫ g, ‖⟪b, ρ g v⟫_ℂ‖ ^ 2 ∂ν ≤ (∫ g, ‖⟪v, ρ g v⟫_ℂ‖ ∂ν) * ‖b‖ ^ 2 := by
-  first | exact @GlobalTheory.CompanionTheory.GodementCoeff.sq_integrable_and_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixCoefficientIntegrableSquareStatement =====
@@ -918,9 +912,6 @@ section Unitary
 variable {Γ : Type} [Group Γ] [TopologicalSpace Γ] {A : Type} [NormedAddCommGroup A] [InnerProductSpace ℂ A]
   {ρ : Γ → (A →L[ℂ] A)}
 
-theorem isU_inner (hU : IsU ρ) (g : Γ) (x y : A) : ⟪ρ g x, ρ g y⟫_ℂ = ⟪x, y⟫_ℂ :=
-  (LinearIsometry.mk (ρ g).toLinearMap (hU.norm g)).inner_map_map x y
-
 theorem isU_apply_inv (hU : IsU ρ) (g : Γ) (x : A) : ρ g (ρ g⁻¹ x) = x := by
   have h := hU.mul g g⁻¹
   rw [mul_inv_cancel, hU.one] at h
@@ -929,7 +920,7 @@ theorem isU_apply_inv (hU : IsU ρ) (g : Γ) (x : A) : ρ g (ρ g⁻¹ x) = x :=
 
 theorem isU_inner_left (hU : IsU ρ) (k : Γ) (x y : A) : ⟪ρ k x, y⟫_ℂ = ⟪x, ρ k⁻¹ y⟫_ℂ := by
   conv_lhs => rw [← isU_apply_inv hU k y]
-  exact isU_inner hU k x _
+  exact _root_.GlobalTheory.CompanionTheory.Godement.inner_map hU k x _
 
 end Unitary
 
@@ -981,7 +972,7 @@ theorem form_facts (hρ : IsU ρ) (hσ : IsU σ) (hF : IsFd ν σ d) {v : B}
     Integrable (fun g => ⟪b, ρ g v⟫_ℂ * ⟪σ g w, a⟫_ℂ) ν ∧
       ‖∫ g, ⟪b, ρ g v⟫_ℂ * ⟪σ g w, a⟫_ℂ ∂ν‖ ^ 2 ≤
         ((∫ g, ‖⟪v, ρ g v⟫_ℂ‖ ∂ν) * ‖b‖ ^ 2) * (‖a‖ ^ 2 * ‖w‖ ^ 2 / d) := by
-  obtain ⟨hb1, hb2⟩ := GlobalTheory.T.matrix_coefficient_integrable_square ν ρ hρ v hv b
+  obtain ⟨hb1, hb2⟩ := _root_.GlobalTheory.CompanionTheory.GodementCoeff.sq_integrable_and_bound ν ρ hρ v hv b
   have hc : Continuous fun g => ⟪b, ρ g v⟫_ℂ := continuous_const.inner (hρ.cont v)
   have hφ : MemLp (fun g => ⟪b, ρ g v⟫_ℂ) 2 ν := (memLp_two_iff_integrable_sq_norm hc.aestronglyMeasurable).2 hb1
   obtain ⟨hψ, hψ2⟩ := coeff_sq ν hσ hF w a
@@ -1045,7 +1036,7 @@ theorem tMap : TMap := by
     refine (integral_mul_left_eq_self (μ := ν) (fun g => ⟪ρ k b, ρ g v⟫_ℂ * ⟪σ g w, a⟫_ℂ) k).symm.trans
       (integral_congr_ae (ae_of_all _ fun g => ?_))
     simp only [hρ.mul, hσ.mul, ContinuousLinearMap.mul_apply]
-    rw [isU_inner hρ, isU_inner_left hσ]
+    rw [_root_.GlobalTheory.CompanionTheory.Godement.inner_map hρ, isU_inner_left hσ]
   have hv' : T v = (c : ℂ) • w := ext_inner_right ℂ fun a => by
     rw [hT, inner_smul_left, Complex.conj_ofReal]
     have h1 := congrArg (starRingEnd ℂ) (h a)
@@ -1438,19 +1429,6 @@ theorem heWord_of (hP : Par e ε lam ε' mu B) : GlobalTheory.CompanionTheory.Pa
   simp only [ne_eq] at h
   tauto
 
-private theorem exists_uj_umat_eq_of_mem_UJset {m : ℕ} {ε : Fin m → Bool} {h : Mat m} (hh : h ∈ UJset ε) :
-    ∃ g : UJ ε, umat g = h := by
-  have hJ : Jm ε * Jm ε = 1 := by
-    rw [Formalism.REAL.Jm, Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-    congr 1
-    funext a
-    split_ifs <;> norm_num
-  have hh' : hᴴ * Jm ε * h = Jm ε := hh
-  have h1 : (Jm ε * hᴴ * Jm ε) * h = 1 := by
-    calc (Jm ε * hᴴ * Jm ε) * h = Jm ε * (hᴴ * Jm ε * h) := by simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [hh', hJ]
-  exact ⟨⟨⟨h, Jm ε * hᴴ * Jm ε, mul_eq_one_comm.mp h1, h1⟩, hh⟩, rfl⟩
-
 private theorem embH_mem_UJset_of_signs {e : Option (Fin n) ≃ Fin (n + 1)} {ε : Fin (n + 1) → Bool}
     {ε' : Fin n → Bool} (hs : Signs e ε ε') {h : Mat n} (hh : h ∈ UJset ε') : embH e h ∈ UJset ε := by
   have hJ : Jm ε = embH e (Jm ε') := by
@@ -1481,7 +1459,7 @@ private theorem isU_comp_umat_of_isURepOn {m : ℕ} {ε : Fin m → Bool} {K : T
   · intro g x
     exact hρ.2.1 _ (GlobalTheory.SepReal.RealAsm.umat_mem ε g) x
   · intro x
-    exact (hρ.2.2 x).comp_continuous (GlobalTheory.SepReal.RealAsm.continuous_umat ε)
+    exact (hρ.2.2 x).comp_continuous (_root_.ReciprocityTheory.ChartRestriction.DS.continuous_umatA ε)
       (GlobalTheory.SepReal.RealAsm.umat_mem ε)
 
 private theorem isURepOn_embH_of_signs {e : Option (Fin n) ≃ Fin (n + 1)} {ε : Fin (n + 1) → Bool}
@@ -1532,7 +1510,7 @@ theorem projLarge_of (hS : PositivityTheory.RgHe.A.SchurEigenProjectionExists) (
     ⟨?_, hiso, fun v y => (ContinuousLinearMap.adjoint_inner_right i y v).symm⟩,
     umat g₀, GlobalTheory.SepReal.RealAsm.umat_mem ε g₀, ?_, ?_⟩
   · intro h hh y
-    obtain ⟨g, rfl⟩ := exists_uj_umat_eq_of_mem_UJset hh
+    obtain ⟨g, rfl⟩ := _root_.GlobalTheory.SepReal.IntBd.exists_umat hh
     have h2 := hieq g y
     rwa [emb_sumNum] at h2
   · rw [show (10 : ℝ) * ((n : ℝ) + 1) = ((10 * (n + 1) : ℕ) : ℝ) by push_cast; ring,
@@ -1581,7 +1559,7 @@ theorem eigMap_of (hE : PositivityTheory.RgHe.A.EigA) (hT : PositivityTheory.RgH
     hU' hU hFd v hv w c hcpos.ne' (fun b => (hb b).2)
   refine ⟨w, c, T, hw0, hc, fun b => (hb b).2, ?_, hTv⟩
   intro h hh x
-  obtain ⟨g, rfl⟩ := exists_uj_umat_eq_of_mem_UJset hh
+  obtain ⟨g, rfl⟩ := _root_.GlobalTheory.SepReal.IntBd.exists_umat hh
   exact hT g x
 
 end UpperTheory.Lit.Branch
@@ -1592,7 +1570,7 @@ namespace UpperTheory.Lit
 
 theorem realInputE_holds : Branch.RealInputE :=
   Branch.realInputE
-    (Branch.projLarge_of (PositivityTheory.RgHe.A.Pf.seedB_of PositivityTheory.RgHe.LowestKTypeModel.seed PositivityTheory.RgHe.occ)
+    (Branch.projLarge_of (PositivityTheory.RgHe.A.Pf.seedB_of _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.lowestKTypeModel PositivityTheory.RgHe.occ)
       (PositivityTheory.RgHe.A.Pf.bigProjP PositivityTheory.RgHe.A.Pf.momentP CompanionTheory.Lime.T3.analytic_estimates))
     (Branch.eigMap_of GlobalTheory.CompanionTheory.RgHeA.eigA GlobalTheory.CompanionTheory.RgHeA.TMapPf.tMap)
 

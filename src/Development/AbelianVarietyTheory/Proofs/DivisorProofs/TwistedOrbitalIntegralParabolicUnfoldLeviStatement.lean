@@ -708,15 +708,6 @@ noncomputable section
 namespace GlobalTheory.LeviDesc.OrbFin
 open GlobalTheory.LeviDesc.Krylov
 
-theorem exists_cyclic {F : Type} [Field F] {r : ℕ} (y : Matrix (Fin r) (Fin r) F) (hy : y.charpoly.Separable) :
-    ∃ e : Fin r → F, IsUnit (krylov y e).det :=
-  _root_.GlobalTheory.LeviDesc.Krylov.exists_isUnit_det_krylov_of_separable y hy
-
-theorem krylov_conj_eq {F : Type} [Field F] {r : ℕ} (y y' : Matrix (Fin r) (Fin r) F) (e e' : Fin r → F)
-    (hc : y.charpoly = y'.charpoly) (he : IsUnit (krylov y e).det) (he' : IsUnit (krylov y' e').det) :
-    (krylov y e)⁻¹ * y * krylov y e = (krylov y' e')⁻¹ * y' * krylov y' e' :=
-  _root_.GlobalTheory.LeviDesc.Krylov.krylov_conj_eq_of_charpoly_eq y y' e e' hc he he'
-
 theorem isClosed_charpoly_eq (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ)
     (χ : (w.adicCompletion E)[X]) : IsClosed {y : GLw r w | y.val.charpoly = χ} := by
   haveI : CharZero (w.adicCompletion E) :=
@@ -749,9 +740,9 @@ theorem orbit_fin (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) (γ 
   set Ωχ := Ω ∩ {y : GLw r w | y.val.charpoly = γ.val.charpoly} with hΩχ
   have hcpt : IsCompact Ωχ := hΩ.inter_right (isClosed_charpoly_eq E w r _)
   have hcyc : ∀ y ∈ Ωχ, ∃ e, IsUnit (krylov y.val e).det := fun y hy =>
-    exists_cyclic _ (by rw [hy.2]; exact hs)
-  obtain ⟨C, hC, hCy⟩ := exists_compact_krylov E w r Ωχ hcpt hcyc
-  obtain ⟨f, hf⟩ := exists_cyclic γ.val hs
+    _root_.GlobalTheory.LeviDesc.Krylov.exists_isUnit_det_krylov_of_separable _ (by rw [hy.2]; exact hs)
+  obtain ⟨C, hC, hCy⟩ := _root_.GlobalTheory.LeviDesc.Krylov.exists_isCompact_krylov_units E w r Ωχ hcpt hcyc
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.LeviDesc.Krylov.exists_isUnit_det_krylov_of_separable γ.val hs
   have hfu : IsUnit (krylov γ.val f) := (Matrix.isUnit_iff_isUnit_det _).2 hf
   set Bf : GLw r w := hfu.unit with hBf
   set D : Set (GLw r w) := (fun c => Bf * c⁻¹) '' C with hD
@@ -768,7 +759,7 @@ theorem orbit_fin (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ) (γ 
   obtain ⟨e, c, hcC, hce⟩ := hCy _ hy
   have he : IsUnit (krylov (q⁻¹ * γ * q : GLw r w).val e).det := by
     rw [← hce, ← Matrix.isUnit_iff_isUnit_det]; exact c.isUnit
-  have hconj := krylov_conj_eq _ _ e f (hy.2) he hf
+  have hconj := _root_.GlobalTheory.LeviDesc.Krylov.krylov_conj_eq_of_charpoly_eq _ _ e f (hy.2) he hf
   have h1 : c⁻¹ * (q⁻¹ * γ * q) * c = Bf⁻¹ * γ * Bf := by
     ext1
     rw [Units.val_mul (c⁻¹ * (q⁻¹ * γ * q)) c, Units.val_mul c⁻¹ (q⁻¹ * γ * q), Units.val_mul (Bf⁻¹ * γ) Bf,
@@ -1021,8 +1012,8 @@ theorem twCent_blk_eq {n a b : ℕ} (h : a + b = n) (w : Pl E) (m : GLw a w × G
     have hc2 := (reindex e e).injective hc
     simp only [fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add] at hc2
     rw [Matrix.fromBlocks_inj] at hc2
-    have h21 := GlobalTheory.LeviDesc.intertwiner_eq_zero_of_isCoprime _ _ _ hcop hc2.2.2.1
-    have h12 := GlobalTheory.LeviDesc.intertwiner_eq_zero_of_isCoprime _ _ _ hcop.symm hc2.2.1
+    have h21 := _root_.GlobalTheory.IntertwiningOperators.main _ _ _ hcop hc2.2.2.1
+    have h12 := _root_.GlobalTheory.IntertwiningOperators.main _ _ _ hcop.symm hc2.2.1
     obtain ⟨t, rfl⟩ := exists_jHom h g h12 h21
     refine ⟨t, ?_, rfl⟩
     show t * m = m * MonoidHom.id _ t
@@ -1117,11 +1108,7 @@ theorem eq_zero_of_intertwine_of_isCoprime_charpoly {K : Type} [Field K] {a b : 
     _ = aeval B u * (aeval B A.charpoly * C) := Matrix.mul_assoc _ _ _
     _ = 0 := by rw [h2, Matrix.mul_zero]
 
-theorem main : ∀ {K : Type} [inst : Field K] {a b : ℕ} (A : Matrix (Fin a) (Fin a) K)
-    (B : Matrix (Fin b) (Fin b) K) (C : Matrix (Fin b) (Fin a) K),
-    IsCoprime (Matrix.charpoly A) (Matrix.charpoly B) → C * A = B * C →
-      C = (0 : Matrix (Fin b) (Fin a) K) :=
-  fun A B C hcop h => eq_zero_of_intertwine_of_isCoprime_charpoly A B C hcop h
+alias main := _root_.GlobalTheory.IntertwinerCoprimeCharpoly.eq_zero_of_intertwine_of_isCoprime_charpoly
 
 end GlobalTheory.IntertwinerCoprimeCharpoly
 end -- clump:auto
@@ -1142,12 +1129,7 @@ noncomputable section
 
 namespace GlobalTheory.LeviDesc.CentPar
 
-theorem intertwiner_eq_zero {K : Type} [Field K] {a b : ℕ}
-    (A : Matrix (Fin a) (Fin a) K) (B : Matrix (Fin b) (Fin b) K) (C : Matrix (Fin b) (Fin a) K)
-    (hc : IsCoprime A.charpoly B.charpoly) (hC : C * A = B * C) : C = 0 := by
-  first
-  | (apply _root_.GlobalTheory.IntertwinerCoprimeCharpoly.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntertwinerCoprimeCharpoly.main ..)
+alias intertwiner_eq_zero := _root_.GlobalTheory.IntertwinerCoprimeCharpoly.eq_zero_of_intertwine_of_isCoprime_charpoly
 
 variable {E : Type} [Field E] [NumberField E]
 

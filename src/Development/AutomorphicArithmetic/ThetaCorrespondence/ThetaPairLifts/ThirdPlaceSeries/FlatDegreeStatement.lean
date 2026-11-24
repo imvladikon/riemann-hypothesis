@@ -170,12 +170,6 @@ theorem flatDeg_alt_alt : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorem
     ⟨0, le_rfl, 0, fun x hx _ ι p _ i _ Y hY => flatDegAt_of_st p i Y hY hS⟩⟩⟩
 end GlobalTheory.CovTop.FlatDegProof
 end
-section
-open GlobalTheory.CovTop GlobalTheory.BigTop
-
-theorem _root_.GlobalTheory.T.flatDeg_of_scholzeWeinstein_of_prints : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → _root_.GlobalTheory.CovTop.FlatDegreeCondition := by
-  first | exact @_root_.GlobalTheory.CovTop.FlatDegProof.flatDeg_alt_alt
-end
 end
 end -- clump:auto
 end -- clump:auto

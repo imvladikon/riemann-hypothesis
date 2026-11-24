@@ -211,7 +211,7 @@ theorem UpperTheory.Gal.crystallineComparison.detCommon_of :
     mapRep (IntermediateField.inclusion l₂).toRingHom c₂, hm₁.enlarge l₁, hm₂.enlarge l₂, hs, ?_,
     GlobalTheory.PstExt.isPst_enlarge P Bw l₂ c₂ hp₂⟩
   haveI : FiniteDimensional ℚ_[l] (Fin a → ↥(supExt L₁ L₂).1) := Module.Finite.trans ↥(supExt L₁ L₂).1 _
-  exact GlobalTheory.GalCut.IwaTwist.isPst_of_isSst P AI T _ hs
+  exact _root_.GlobalTheory.GalCut.IwaAll.isPst_of_isSst P AI T _ hs
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.PDetCommon =====

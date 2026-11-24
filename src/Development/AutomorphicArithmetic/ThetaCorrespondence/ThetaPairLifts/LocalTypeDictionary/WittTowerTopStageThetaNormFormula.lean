@@ -154,41 +154,10 @@ import Mathlib.Tactic.Linter.Style
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
 namespace GlobalTheory.SqTower
-
-theorem gBig_of₃ {Q₁ Q₂ Q₃ Q : GP} (h₁ : GBig Q₁) (h₂ : GBig Q₂) (h₃ : GBig Q₃)
-    (H : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.ChiGrid.Consts} (G : GridData Lc sc) (μ₀ : T) (C x b : ℝ),
-      Q₁ G μ₀ C x b → Q₂ G μ₀ C x b → Q₃ G μ₀ C x b → Q G μ₀ C x b) : GBig Q := by
-  obtain ⟨F₁, h₁⟩ := h₁
-  obtain ⟨F₂, h₂⟩ := h₂
-  obtain ⟨F₃, h₃⟩ := h₃
-  refine ⟨max F₁ (max F₂ F₃), fun ε CF hCF => ?_⟩
-  obtain ⟨C₁, x₁, k₁⟩ := h₁ ε CF (le_trans (le_max_left _ _) hCF)
-  obtain ⟨C₂, x₂, k₂⟩ := h₂ ε CF (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hCF)
-  obtain ⟨C₃, x₃, k₃⟩ := h₃ ε CF (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hCF)
-  refine ⟨max C₁ (max C₂ C₃), max x₁ (max x₂ x₃), fun C hC D large₂ he hx hR T Lc μ₀ hL G => H G μ₀ C _ _ ?_ ?_ ?_⟩
-  · exact k₁ C (le_trans (le_max_left _ _) hC) D large₂ he (le_trans (le_max_left _ _) hx) hR T Lc μ₀ hL G
-  · exact k₂ C (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hC) D large₂ he
-      (le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx) hR T Lc μ₀ hL G
-  · exact k₃ C (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hC) D large₂ he
-      (le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx) hR T Lc μ₀ hL G
 
 end GlobalTheory.SqTower
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStageConstantTriangle =====
@@ -490,17 +459,6 @@ end GlobalTheory.SqTower.TopGridExists
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop GlobalTheory.SqTower GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames GlobalTheory.ChainFr GlobalTheory.SquareDict GlobalTheory.SquareComm
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.ConstRatio (Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.exists_grid_of_square_tower : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
-  GBig fun {D} T _ _ G _ _ _ _ => ∀ (W : G.Weil) (i j : Fin D.R.m), ∃ X : TriG G i j, TopGrid W i j X ∧ IsStageC W i j (pp D j) (qq D j) X := by
-  first | exact @_root_.GlobalTheory.SqTower.TopGridExists.square_tower_grid_exists
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsGridOfSquareTower =====
@@ -953,25 +911,6 @@ open GlobalTheory.ChainFr Matrix
 open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 noncomputable section
 namespace GlobalTheory.RealSep
-section Generic
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.BigNZ
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-  {a a' : ℕ} {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep σ G.V G.W} {om' : Rep σ G.V' G.W}
-end Generic
-section Nonzero
-open GlobalTheory.BigNZ GlobalTheory.AdelicU
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (spV spW spW₁ spV₁ blkU conjU UB)
-end Nonzero
-section Read
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree GlobalTheory.Grid GlobalTheory.TripleRead GlobalTheory.SquareIdent
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (incM conjU)
-variable {D : D7}
-end Read
-section Grid
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree GlobalTheory.TripleRead GlobalTheory.SquareIdent GlobalTheory.SquareDict GlobalTheory.BigNZ
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (alpha beta blkU spV spW spW₁ spV₁ xiV xiV₁)
-variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc}
-end Grid
 section Null
 open GlobalTheory.SquareComm GlobalTheory.SquareIdent GlobalTheory.SquareDict
 open GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation (alpha beta spV spW spW₁ spV₁)
@@ -1000,7 +939,7 @@ theorem exists_nullSpace_realPlace (hP : _root_.GlobalTheory.FunPr.ThetaLocalInp
   choose a b ha hb _ using (hT μ₀).gap
   obtain ⟨Pr, q, H⟩ := _root_.GlobalTheory.T.thetaIntegral_factors_through_kType hP hK hLM D W.ψ W.θ W.ψ_std W.θ_is _ _ _ A A₁ (frSum AV AV₁) a b
   replace H := fun t => H _ _ (hT t) fun τ => ⟨GlobalTheory.SquareRel.hasInfExp_alpha G i j hL μ₀ t τ (ha τ), hb τ⟩
-  choose ωA ωB hωA hωB using fun t => _root_.GlobalTheory.T.weilRepresentation_square_comm hP D W.ψ W.ψ_std _ _ _ _ _ (hT t)
+  choose ωA ωB hωA hωB using fun t => _root_.GlobalTheory.SquareComm.WeilOfTriple.exists_weilPair_of_triple hP D W.ψ W.ψ_std _ _ _ _ _ (hT t)
   have hbig : Node.InRange D.R.m (.grid (i + 1) (j + 1)) := ⟨i.2, j.2⟩
   have form : ∀ B (ρ : RealMatch W) t (M : Vol G), M.Is t → ∀ n Φ τ τ',
       (∀ w ∈ locPl G t, depthAt G w ≤ n w ∧ IsNatDatum (unifAt w) (n w) (Φ w)) → HasFlip B t ρ i j n Φ τ τ' →
@@ -1119,18 +1058,6 @@ end GlobalTheory.RealSep
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop GlobalTheory.SqTower GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames GlobalTheory.ChainFr GlobalTheory.SquareDict GlobalTheory.SquareComm
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.ConstRatio (Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.theta_real_places_separation : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G _ _ _ _ => ∀ (W : G.Weil) (B : Frames G) (ρ ρ₀ : RealMatch W), ρ₀.vX = ρ.vX → ρ₀.vT = ρ.vT →
-    ∀ i j : Fin D.R.m, ∃ lam : ℂ, lam ≠ 0 ∧ ∀ (t : T) (c' c₀ : ℂ), IsSquareConst W B ρ t i j c' → RegConst W B ρ₀ t i j c₀ → c₀ ≠ 0 ∧ c' = lam * c₀ := by
-  first | exact @_root_.GlobalTheory.RealSep.realPlace_theta_matching
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsScalarOfRealStandingData =====
@@ -1423,7 +1350,7 @@ theorem exists_tied_pair_of_standing_hypotheses (hP : _root_.GlobalTheory.FunPr.
     (hst : ∀ t, SquareStanding G t) (W : G.Weil) (rm : RealMatch W) :
     ∃ ρ : RealMatch W, ρ.vX = rm.vX ∧ ρ.vT = rm.vT ∧ ρ.Tied ∧
       ∀ (B : Frames G) (i j : Fin D.R.m) (t : T), ∃ c : ℂ, GlobalTheory.SqTower.RegConst W B ρ t i j c := by
-  have hLM := _root_.GlobalTheory.T.twisted_local_factors_match hP.howeDualityReal hP hK hTL
+  have hLM := _root_.GlobalTheory.SquareLM.twisted_square_local_matching hP.howeDualityReal hP hK hTL
   choose r hr1 hr2 hr3 hr4 using _root_.GlobalTheory.GridFrameExistence.tied_pair_square_relation hP.howeDualityReal hP hTL hLM hL hst W
   let rel' : ∀ i j : ℕ, Submodule ℂ (PolRoute G (.grid i (j + 1)) (.grid (i + 1) (j + 1)) (.grid (i + 1) j) ×
       PolRoute G (.grid i (j + 1)) (.grid i j) (.grid (i + 1) j)) := fun i j =>
@@ -1456,7 +1383,7 @@ theorem exists_tied_pair_of_standing_hypotheses (hP : _root_.GlobalTheory.FunPr.
   obtain ⟨Pr, q, q', -, -, H⟩ := hLM D W.ψ W.θ W.ψ_std W.θ_is _ _ _ A A₁ (frSum AV AV₁) a b
   obtain ⟨ωA, ωB, Pi, rf, rl, p, p', hm⟩ := (H _ _ hT fun τ => ⟨ha τ, hb τ⟩).1
   obtain ⟨c, hc⟩ := hr4 i j ρ A A₁ AV AV₁ hA hA₁ hV hV₁ t ωA ωB Pi rf rl p p' hm B
-  refine _root_.GlobalTheory.GridFrameExistence.tied_pair_regularization_constant hP hK (_root_.GlobalTheory.T.twisted_theta_integral_converges hP.siegelSetUnitary hP) (_root_.GlobalTheory.T.twisted_square_theta_integrals_eq hP hK hTL) hL W B ρ t (hst t) i j
+  refine _root_.GlobalTheory.GridFrameExistence.tied_pair_regularization_constant hP hK (_root_.GlobalTheory.WeilConv.twisted_weil_representation_convergence hP.siegelSetUnitary hP) (_root_.GlobalTheory.SquareAgree.twisted_theta_integrals_agree hP hK hTL) hL W B ρ t (hst t) i j
     hA hA₁ hV hV₁ hm (lam := c) ?_
   rintro _ _ ⟨a', b', τ, τ', n, Φ, hab, hn, hF, rfl, rfl⟩
   exact hc n Φ τ τ' hn hF a' b' (e i j ▸ hab)
@@ -1472,18 +1399,6 @@ end GlobalTheory.GridFrameExistence
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop GlobalTheory.SqTower GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames GlobalTheory.ChainFr GlobalTheory.SquareDict GlobalTheory.SquareComm
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.ConstRatio (Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.exists_tied_theta_pair : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G _ _ _ _ => ∀ (W : G.Weil) (B : Frames G) (ρ : RealMatch W), ∃ ρ₀ : RealMatch W, ρ₀.vX = ρ.vX ∧ ρ₀.vT = ρ.vT ∧ ρ₀.Tied ∧
-    ∀ (i j : Fin D.R.m) (t : T), ∃ c₀ : ℂ, RegConst W B ρ₀ t i j c₀ := by
-  first | exact @_root_.GlobalTheory.GridFrameExistence.exists_tied_pair
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsTiedPairOfStandingHypotheses =====
@@ -1507,7 +1422,7 @@ theorem theta_square_comparison : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
     ∃ κ : T → ℂ, (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
       ∀ (t : T) (c' : ℂ), SquareNonzero W S.B ρ t i j → IsSquareConst W S.B ρ t i j c' → c' = κ t * lam t := by
   intro hP hK hM
-  refine gBig_three (_root_.GlobalTheory.T.exists_tied_theta_pair hP hK hM) (_root_.GlobalTheory.T.theta_real_places_separation hP hK hM) (_root_.GlobalTheory.T.regConst_eq_away_unit_mul_factor hP hK hM) ?_
+  refine gBig_three (_root_.GlobalTheory.GridFrameExistence.exists_tied_pair hP hK hM) (_root_.GlobalTheory.RealSep.realPlace_theta_matching hP hK hM) (_root_.GlobalTheory.ThetaRegularizationComparison.regulator_constant_eq hP hK hM) ?_
   intro D T Lc sc G μ₀ C x b hex hreal hcmp W S hstd hN ρ i j X lam hT hX hl
   obtain ⟨ρ₀, hvX, hvT, htied, hreg⟩ := hex W S.B ρ
   obtain ⟨l, hl0, hl1⟩ := hreal W S.B ρ ρ₀ hvX hvT i j
@@ -1526,20 +1441,6 @@ end GlobalTheory.SqCompare
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop GlobalTheory.SqTower GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames GlobalTheory.ChainFr GlobalTheory.SquareDict GlobalTheory.SquareComm
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.ConstRatio (Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.theta_square_norm_comparison : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) → NumbersIn D.what₂.embLL S μ₀ → ∀ (ρ : RealMatch W) (i j : Fin D.R.m) (X : TriG G i j) (lam : T → ℂ),
-    TopGrid W i j X → IsStageC W i j (pp D j) (qq D j) X → Factor X W.ψ W.θ lam →
-    ∃ κ : T → ℂ, (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
-      ∀ (t : T) (c' : ℂ), SquareNonzero W S.B ρ t i j → IsSquareConst W S.B ρ t i j c' → c' = κ t * lam t := by
-  first | exact @_root_.GlobalTheory.SqCompare.theta_square_comparison
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaSquareNormComparison =====
@@ -1568,7 +1469,7 @@ theorem theta_tower_top_stage_norm_eq : _root_.GlobalTheory.FunPr.ThetaLocalInpu
       (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
       ∀ (t : T) (c' : ℂ), SquareNonzero W S.B ρ t i j → IsSquareConst W S.B ρ t i j c' → c' = κ t * c t := by
   intro hP hK hM
-  refine gBig_of₃ (_root_.GlobalTheory.T.exists_grid_of_square_tower hP) (_root_.GlobalTheory.T.exists_factor_of_isStageC hP hK hM) (_root_.GlobalTheory.T.theta_square_norm_comparison hP hK hM) ?_
+  refine _root_.GlobalTheory.SqCompare.gBig_three (_root_.GlobalTheory.SqTower.TopGridExists.square_tower_grid_exists hP) (_root_.GlobalTheory.StageFactor.theta_tower_stage_norm_factorization hP hK hM) (_root_.GlobalTheory.SqCompare.theta_square_comparison hP hK hM) ?_
   intro D T Lc sc G μ₀ C x b hex hfac hcmp W S hstd hN ρ i j
   obtain ⟨X, hT, hX⟩ := hex W i j
   obtain ⟨lam, hl⟩ := hfac W S hstd hN i j (pp D j) (qq D j) _ _ _ X hX
@@ -1579,25 +1480,6 @@ end GlobalTheory.SqTower
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.witt_tower_top_stage_theta_norm_formula : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) →
-    NumbersIn D.what₂.embLL S μ₀ → ∀ (ρ : RealMatch W) (i j : Fin D.R.m), ∃ (A A' WW : HSp D) (X : Tri T A A' WW) (c κ : T → ℂ),
-      GlobalTheory.SqTower.IsStageC W i j (pp D j) (qq D j) X ∧ X.IsConst W.ψ W.θ c ∧
-      (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
-      ∀ (t : T) (c' : ℂ), SquareNonzero W S.B ρ t i j → IsSquareConst W S.B ρ t i j c' → c' = κ t * c t := by
-  first | exact @_root_.GlobalTheory.SqTower.theta_tower_top_stage_norm_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.WittTowerTopStageThetaNormFormula =====

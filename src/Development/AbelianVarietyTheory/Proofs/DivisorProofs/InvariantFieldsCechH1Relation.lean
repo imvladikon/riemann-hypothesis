@@ -78,6 +78,7 @@ import Mathlib.Tactic.Basify
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
 import Mathlib.Tactic.ReduceModChar
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalDerivationExtensionOfAffine
 import Mathlib.AlgebraicGeometry.QuasiAffine
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
 
@@ -828,7 +829,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivativesCoboundaryCoeffsMemMaximalIdealStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsBasisTangent =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsBasisTangent", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianCechH1BasisCocyclesStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivativesCoboundaryCoeffsMemMaximalIdealStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsBasisTangent", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianCechH1BasisCocyclesStatement\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivativesCoboundaryCoeffsMemMaximalIdealStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalDerivationExtensionOfAffine\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -852,23 +853,11 @@ variable {A : Type} [CommRing A] {Y : Scheme.{0}} {I : Type} (q : Y ⟶ Sp A) (U
 
 def kap (r : A) : C1 U := fun i j => constFn q (U i ⊓ U j) r
 
-theorem rsT_le {O₀ O : Y.Opens} (h : O ≤ O₀) (s : Γ(Y, O₀)) : rsT s O = resG Y h s := by simp [rsT, h]
-
-theorem resG_constFn' {O₀ O : Y.Opens} (h : O ≤ O₀) (r : A) : resG Y h (constFn q O₀ r) = constFn q O r := by
-  simp only [constFn, resG]
-  rw [← RingHom.comp_apply, ← CommRingCat.hom_comp]
-  first
-    | (erw [Scheme.Hom.appLE_map])
-
-theorem rsT_add' {O₀ : Y.Opens} (s t : Γ(Y, O₀)) (O : Y.Opens) : rsT (s + t) O = rsT s O + rsT t O := by
-  unfold rsT; split_ifs <;> simp
-
-theorem rsT_neg' {O₀ : Y.Opens} (s : Γ(Y, O₀)) (O : Y.Opens) : rsT (-s) O = -rsT s O := by
-  unfold rsT; split_ifs <;> simp
+alias rsT_add' := _root_.GlobalTheory.KS.rsT_add
 
 theorem rsT_mulc {O₀ O : Y.Opens} (h : O ≤ O₀) (r : A) (s : Γ(Y, O₀)) :
     rsT (constFn q O₀ r * s) O = constFn q O r * rsT s O := by
-  rw [rsT_le h, rsT_le h, map_mul, resG_constFn' q h]
+  rw [_root_.GlobalTheory.KS.rsT_of_le h, _root_.GlobalTheory.KS.rsT_of_le h, map_mul, _root_.GlobalTheory.LocDerExt.res_const q h]
 
 theorem kap_add (r s : A) : kap q U (r + s) = kap q U r + kap q U s := by funext i j; simp [kap, constFn]
 
@@ -880,20 +869,11 @@ variable {q U}
 
 theorem isCob_zero : IsCob U 0 := ⟨0, fun i j => by simp only [Pi.zero_apply]; unfold rsT; split_ifs <;> simp⟩
 
-theorem isCob_add {c d : C1 U} (hc : IsCob U c) (hd : IsCob U d) : IsCob U (c + d) := by
-  obtain ⟨b, hb⟩ := hc
-  obtain ⟨b', hb'⟩ := hd
-  refine ⟨b + b', fun i j => ?_⟩
-  simp only [Pi.add_apply, hb, hb', rsT_add']
-  ring
-
 theorem isCob_neg {c : C1 U} (hc : IsCob U c) : IsCob U (-c) := by
   obtain ⟨b, hb⟩ := hc
   refine ⟨-b, fun i j => ?_⟩
-  simp only [Pi.neg_apply, hb, rsT_neg']
+  simp only [Pi.neg_apply, hb, _root_.GlobalTheory.KS.rsT_neg]
   ring
-
-theorem isCob_sub {c d : C1 U} (hc : IsCob U c) (hd : IsCob U d) : IsCob U (c - d) := by simpa [sub_eq_add_neg] using isCob_add hc (isCob_neg hd)
 
 theorem isCob_kap_mul (r : A) {c : C1 U} (hc : IsCob U c) : IsCob U (kap q U r * c) := by
   obtain ⟨b, hb⟩ := hc
@@ -901,7 +881,7 @@ theorem isCob_kap_mul (r : A) {c : C1 U} (hc : IsCob U c) : IsCob U (kap q U r *
   simp only [Pi.mul_apply, hb, kap, rsT_mulc q inf_le_right, rsT_mulc q inf_le_left]
   ring
 
-theorem isCob_sum {n : ℕ} (c : Fin n → C1 U) (hc : ∀ a, IsCob U (c a)) : IsCob U (∑ a, c a) := Finset.sum_induction _ (fun x => IsCob U x) (fun _ _ => isCob_add) isCob_zero (fun a _ => hc a)
+theorem isCob_sum {n : ℕ} (c : Fin n → C1 U) (hc : ∀ a, IsCob U (c a)) : IsCob U (∑ a, c a) := Finset.sum_induction _ (fun x => IsCob U x) (fun _ _ => _root_.GlobalTheory.KS.IsCob.add) isCob_zero (fun a _ => hc a)
 
 theorem isCob_congr {c d : C1 U} (h : c = d) (hc : IsCob U c) : IsCob U d := h ▸ hc
 
@@ -923,7 +903,7 @@ theorem dlg_res {A : Type} [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonO
   have e : ∀ s : Γ(B.left, L.U i ⊓ L.U j), pbT (𝟙 _) s (L.U i ⊓ L.U j) = s := fun s => by
     rw [pbT_id s le_rfl]; simp [resG]
   simp only [dlg, e]
-  rw [rsT_le hT, map_mul, ← hδ.2.2 _ _ hT le_top]
+  rw [_root_.GlobalTheory.KS.rsT_of_le hT, map_mul, ← hδ.2.2 _ _ hT le_top]
   rfl
 
 theorem s1 : ∀ (A : Type) [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (L : LB B.left), L.IsLB → ∀ δ : Fld B.left, IsField ⊤ δ → IsCoc L.U (fun i j => dlg B (𝟙 _) L δ i j (L.U i ⊓ L.U j)) := by
@@ -982,7 +962,7 @@ theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] 
   intro A _ _ _ B _ _ g L hab hsm hL hamp hK haff hfin v dd hinv hbasis c hc
   haveI := hfin
   let φ : Fin g → C1 L.U := fun a i j => dlg B (𝟙 _) L (dd a) i j (L.U i ⊓ L.U j)
-  obtain ⟨b, -, hb⟩ := s2 A B g L.ι L.U hab hsm hL.cover haff
+  obtain ⟨b, -, hb⟩ := _root_.GlobalTheory.CechFree.cech_free A B g L.ι L.U hab hsm hL.cover haff
   have hφ : ∀ a, IsCoc L.U (φ a) := fun a => s1 A B L hL (dd a) (hinv a).1
   choose P hP using fun a => (hb (φ a) (hφ a)).exists
   have key : ∀ y : Fin g → A, IsCob L.U
@@ -992,7 +972,7 @@ theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] 
     exact isCob_sum _ fun a => isCob_kap_mul _ (isCob_congr (lin_eq B.hom L.U (φ a) (P a) b) (hP a))
   have hmem : ∀ y : Fin g → A, (∀ k, (y ᵥ* Matrix.of P) k ∈ maximalIdeal A) → ∀ a, y a ∈ maximalIdeal A := by
     intro y hy
-    exact s3 A B g L hab hsm hL hamp hK haff hfin v dd hinv hbasis y g (y ᵥ* Matrix.of P) b hy
+    exact _root_.GlobalTheory.Heat.DlogIndep.mem_maximalIdeal_of_isCob A B g L hab hsm hL hamp hK haff hfin v dd hinv hbasis y g (y ᵥ* Matrix.of P) b hy
       (isCob_congr (cechCochain_sum_sub_sum_constFn_eq_ringHom B.hom L.U y φ (y ᵥ* Matrix.of P) b).symm (key y))
   have hdet : IsUnit (Matrix.of P).det := by
     by_contra hnd
@@ -1016,10 +996,10 @@ theorem main : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] 
   refine ⟨e ᵥ* (Matrix.of P)⁻¹, ?_, ?_⟩
   · have h1 := key (e ᵥ* (Matrix.of P)⁻¹)
     rw [Matrix.vecMul_vecMul, Matrix.nonsing_inv_mul _ hdet, Matrix.vecMul_one] at h1
-    have h2 := isCob_sub (isCob_congr (lin_eq B.hom L.U c e b) he) h1
+    have h2 := _root_.GlobalTheory.KS.IsCob.sub (isCob_congr (lin_eq B.hom L.U c e b) he) h1
     exact isCob_congr (lin_eq B.hom L.U c _ φ).symm (isCob_congr (sub_sub_sub_cancel_right _ _ _) h2)
   · intro cc' hcc'
-    have h3 := isCob_add (isCob_congr (lin_eq B.hom L.U c cc' φ) hcc') (key cc')
+    have h3 := _root_.GlobalTheory.KS.IsCob.add (isCob_congr (lin_eq B.hom L.U c cc' φ) hcc') (key cc')
     have h4 : IsCob L.U (fun i j => c i j - ∑ a, constFn B.hom (L.U i ⊓ L.U j) ((cc' ᵥ* Matrix.of P) a) * b a i j) :=
       isCob_congr (lin_eq B.hom L.U c _ b).symm (isCob_congr (sub_add_sub_cancel _ _ _) h3)
     have h5 := heu _ h4
@@ -1071,28 +1051,12 @@ set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CoverRefinementPullback
 
-theorem resG_resG' {X : Scheme.{0}} {O₀ O₁ O₂ : X.Opens} (h : O₁ ≤ O₀) (h' : O₂ ≤ O₁) (s : Γ(X, O₀)) :
-    resG X h' (resG X h s) = resG X (h'.trans h) s := by
-  simp only [resG]; rw [← CommRingCat.comp_apply, ← Functor.map_comp]; rfl
-
-theorem pbT_id' {X : Scheme.{0}} {O₀ : X.Opens} (s : Γ(X, O₀)) {O : X.Opens} (h : O ≤ O₀) :
-    pbT (𝟙 X) s O = resG X h s := by
-  unfold pbT; rw [dite_eq_left (show O ≤ (𝟙 X) ⁻¹ᵁ O₀ from h)]; simp [Scheme.Hom.appLE, resG]; rfl
-
-theorem dlg_res' {A : Type} [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (L : LB B.left)
-    (δ : Fld B.left) (hδ : IsField ⊤ δ) (i j : L.ι) {T : B.left.Opens} (hT : T ≤ L.U i ⊓ L.U j) :
-    rsT (dlg B (𝟙 _) L δ i j (L.U i ⊓ L.U j)) T =
-      δ T (res hT (L.g i j)).val * (res hT (L.g i j))⁻¹.val := by
-  unfold dlg
-  rw [GlobalTheory.KS.rsT_of_le hT, map_mul, pbT_id' _ le_rfl, pbT_id' _ le_rfl, ← hδ.2.2 _ _ hT le_top, resG_resG', resG_resG']
-  rfl
-
 theorem dlg_tri {A : Type} [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommMonObj B] (L : LB B.left) (hL : L.IsLB)
     (δ : Fld B.left) (hδ : IsField ⊤ δ) (i j k : L.ι) {T : B.left.Opens} (h₁ : T ≤ L.U i ⊓ L.U j)
     (h₂ : T ≤ L.U j ⊓ L.U k) (h₃ : T ≤ L.U i ⊓ L.U k) :
     rsT (dlg B (𝟙 _) L δ i j (L.U i ⊓ L.U j)) T + rsT (dlg B (𝟙 _) L δ j k (L.U j ⊓ L.U k)) T =
       rsT (dlg B (𝟙 _) L δ i k (L.U i ⊓ L.U k)) T := by
-  rw [dlg_res' B L δ hδ i j h₁, dlg_res' B L δ hδ j k h₂, dlg_res' B L δ hδ i k h₃,
+  rw [_root_.GlobalTheory.DlogBasis.dlg_res B L δ hδ i j h₁, _root_.GlobalTheory.DlogBasis.dlg_res B L δ hδ j k h₂, _root_.GlobalTheory.DlogBasis.dlg_res B L δ hδ i k h₃,
     ← FinAffineCharts.cocycle_on hL i j k h₁ h₂ h₃]
   set u := res h₁ (L.g i j)
   set w := res h₂ (L.g j k)
@@ -1106,8 +1070,8 @@ theorem dlg_refine {A : Type} [CommRing A] (B : Over (Sp A)) [GrpObj B] [IsCommM
     (a b : κ) {T : B.left.Opens} (hT : T ≤ W a ⊓ W b) :
     rsT (dlg B (𝟙 _) (FinAffineCharts.refineLB L W c h) δ a b (W a ⊓ W b)) T =
       rsT (dlg B (𝟙 _) L δ (c a) (c b) (L.U (c a) ⊓ L.U (c b))) T := by
-  refine (dlg_res' B (FinAffineCharts.refineLB L W c h) δ hδ a b hT).trans ?_
-  rw [dlg_res' B L δ hδ (c a) (c b) (hT.trans (inf_le_inf (h a) (h b)))]
+  refine (_root_.GlobalTheory.DlogBasis.dlg_res B (FinAffineCharts.refineLB L W c h) δ hδ a b hT).trans ?_
+  rw [_root_.GlobalTheory.DlogBasis.dlg_res B L δ hδ (c a) (c b) (hT.trans (inf_le_inf (h a) (h b)))]
   have e : res hT ((FinAffineCharts.refineLB L W c h).g a b) =
       res (hT.trans (inf_le_inf (h a) (h b))) (L.g (c a) (c b)) := FinAffineCharts.res_res _ _ _
   exact congrArg (fun u : Γ(B.left, T)ˣ => δ T u.val * (u⁻¹).val) e

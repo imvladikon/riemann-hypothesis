@@ -135,10 +135,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory
 
-theorem _root_.GlobalTheory.T.exists_complexPoint_ker_eval_eq_maximal : ∀ (X : Scheme.{0}) (p : X ⟶ Sp ℂ) [LocallyOfFiniteType p] (U : X.Opens), IsAffineOpen U →
-    ∀ m : Ideal Γ(X, U), m.IsMaximal → ∃ (y : CxPts p (RingHom.id ℂ)) (hy : y ∈ CxPts.ptsIn p (RingHom.id ℂ) U),
-      m = RingHom.ker (CxPts.evHom hy) := by
-  first | (exact @GlobalTheory.MaxPt.exists_cxPts_ker_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsComplexPointKerEvalEqMaximalStatement =====
@@ -255,10 +251,6 @@ section -- clump:auto
 
 open GlobalTheory.PD
 
-theorem _root_.GlobalTheory.T.isArtinianRing_rB_quot_span_tco_of_isFinCover : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (F : Type) [Field F] [Algebra k F] [Algebra F K]
-    [IsScalarTower k F K] (d : ℕ) (x : Fin (d + 1) → F), IsFinCover k K x →
-    IsArtinianRing (rB k K x {0} ⧸ Ideal.span (Set.range fun j : Fin d => (⟨_, tco_mem k K x j⟩ : rB k K x {0}))) := by
-  first | (exact @GlobalTheory.PD.isArtinianRing_fib_quot)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsArtinianRingFibQuotStatement =====
@@ -355,9 +347,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.isReduced_quotient_of_artinian_of_maximal_le' : ∀ (A : Type) [CommRing A] (I : Ideal A), IsArtinianRing (A ⧸ I) →
-    (∀ m : Ideal A, m.IsMaximal → I ≤ m → m ≤ I ⊔ m ^ 2) → IsReduced (A ⧸ I) := by
-  first | (exact @GlobalTheory.isReduced_quotient_of_artinian_of_maximal_le)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsReducedQuotientOfArtinianOfMaximalLeStatement =====
@@ -387,8 +376,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PD.XCover
 
-theorem _root_.GlobalTheory.T.affine_germ_subalgebra_smooth : ∀ (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [Smooth p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (U : Z.Opens), IsAffineOpen U → ∀ (h : genericPoint Z ∈ U) (B : Subalgebra ℂ Z.functionField), (∀ y, y ∈ B ↔ ∃ f : Γ(Z, U), (Z.presheaf.germ U (genericPoint Z) h).hom f = y) → Algebra.Smooth ℂ B := by
-  first | (exact @GlobalTheory.germImage_smooth)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AffineGermSubalgebraSmooth =====
@@ -502,8 +489,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PD.XCover
 
-theorem _root_.GlobalTheory.T.algebraicIndependent_pulledBackProjCoordinateRatios : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (φ : Z ⟶ PSpace ℂ d) [IsFinite φ], φ ≫ PSpace.str ℂ d = p → (∀ i, genericPoint Z ∈ φ ⁻¹ᵁ chart d i) → AlgebraicIndependent ℂ (fun j : Fin d => rat φ 0 j.succ) := by
-  first | (exact @GlobalTheory.PD.XCover.algebraicIndependent_rat)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.AlgebraicIndependentPulledBackProjCoordinateRatiStatement =====
@@ -524,7 +509,7 @@ theorem mem_germ_range_of_mem_rB : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z]
       (p.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom r)) := by
     subst hinst; intro r; rfl
   set U : Z.Opens := I.inf fun i => φ ⁻¹ᵁ chart d i with hU
-  have hUa : IsAffineOpen U := (GlobalTheory.T.projective_chart_affine_cover d Z φ).2 I hI
+  have hUa : IsAffineOpen U := (_root_.GlobalTheory.PD.XCover.preimage_chart_cover d Z φ).2 I hI
   haveI : Nonempty U := ⟨⟨_, h⟩⟩
   haveI := functionField_isFractionRing_of_isAffineOpen Z U hUa
   have halg : ∀ b, algebraMap Γ(Z, U) Z.functionField b = (Z.presheaf.germ U (genericPoint Z) h).hom b := fun _ => rfl
@@ -545,7 +530,7 @@ theorem mem_germ_range_of_mem_rB : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z]
       have hle : U ≤ φ ⁻¹ᵁ chart d i := Finset.inf_le hi
       refine ⟨Z.presheaf.map (homOfLE hle).op (φ.app (chart d i) (ratioSec d i j)), ?_⟩
       rw [Z.presheaf.germ_res_apply]
-      have hr := (GlobalTheory.T.pulledBackProjCoordinateRatio_overlap_div d Z φ 0 i j (hgen 0) (hgen i)).2
+      have hr := (_root_.GlobalTheory.PD.XCover.rat_overlap d Z φ 0 i j (hgen 0) (hgen i)).2
       simp only [IntermediateField.coe_div, crd_val]
       rw [← hr, rat, dite_eq_left (hgen i)]
     | algebraMap r =>
@@ -588,8 +573,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PD.XCover
 
-theorem _root_.GlobalTheory.T.chart_function_field_integral : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (φ : Z ⟶ PSpace ℂ d) [IsFinite φ], φ ≫ PSpace.str ℂ d = p → (∀ i, genericPoint Z ∈ φ ⁻¹ᵁ chart d i) → ∀ (I : Finset (Fin (d + 1))), I.Nonempty → ∀ (h : genericPoint Z ∈ I.inf fun i => φ ⁻¹ᵁ chart d i) (y : Z.functionField), y ∈ rB ℂ Z.functionField (crd φ) I → ∃ f : Γ(Z, I.inf fun i => φ ⁻¹ᵁ chart d i), (Z.presheaf.germ _ (genericPoint Z) h).hom f = y := by
-  first | (exact @GlobalTheory.PD.XCover.mem_germ_range_of_mem_rB)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChartFunctionFieldIntegral =====
@@ -713,8 +696,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PD.XCover
 
-theorem _root_.GlobalTheory.T.finite_projection_function_field : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (φ : Z ⟶ PSpace ℂ d) [IsFinite φ], φ ≫ PSpace.str ℂ d = p → (∀ i, genericPoint Z ∈ φ ⁻¹ᵁ chart d i) → FiniteDimensional (fld φ) Z.functionField := by
-  first | (exact @GlobalTheory.PD.XCover.finiteDimensional_fld)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteProjectionFunctionField =====
@@ -869,8 +850,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry KaehlerDifferential GlobalTheory GlobalTheory.PD ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.PD.XCover
 
-theorem _root_.GlobalTheory.T.genericGerm_chartInter_integral_coordinateRatios : ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField], inst = ffAlg p → ∀ (φ : Z ⟶ PSpace ℂ d) [IsFinite φ], φ ≫ PSpace.str ℂ d = p → (∀ i, genericPoint Z ∈ φ ⁻¹ᵁ chart d i) → ∀ (I : Finset (Fin (d + 1))), I.Nonempty → ∀ (h : genericPoint Z ∈ I.inf fun i => φ ⁻¹ᵁ chart d i) (f : Γ(Z, I.inf fun i => φ ⁻¹ᵁ chart d i)), (Z.presheaf.germ _ (genericPoint Z) h).hom f ∈ rB ℂ Z.functionField (crd φ) I := by
-  first | (exact @GlobalTheory.PD.XCover.germ_mem_rB)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.GenericGermChartInterIntegralCoordinateRatiosStatement =====
@@ -963,15 +942,12 @@ theorem germ_appLE {Y : Scheme.{0}} (φ : X ⟶ Y) (U : Y.Opens) (W : X.Opens) (
       (X.presheaf.germ (φ ⁻¹ᵁ U) x (h hx)).hom ((φ.app U).hom s) := by
   rw [Scheme.Hom.appLE, CommRingCat.comp_apply, TopCat.Presheaf.germ_res_apply]
 
-theorem ratioSec_eq (i j : Fin (d + 1)) : XCover.ratioSec d i j = ratio ℂ d i j :=
-  (awayToSection_mk _ 1 _).trans (frac_eq (by ring))
-
 theorem rat_formMap [IsIntegral X] (j : Fin (d + 1)) (hg : genericPoint X ∈ fOpen ι (f 0)) :
     XCover.rat (formMap ι f hf p hcov) 0 j =
       (X.presheaf.germ (fOpen ι (f 0)) (genericPoint X) hg).hom (fRatio ι (f j) (f 0) (hf j) (hf 0)) := by
   have hmem : genericPoint X ∈ formMap ι f hf p hcov ⁻¹ᵁ XCover.chart d 0 :=
     (formMap_preimage ι f hf p hcov 0).ge hg
-  rw [XCover.rat, dite_eq_left hmem, ← pullRatio_formMap ι f hf p hcov 0 j, pullRatio, germ_appLE, ratioSec_eq]
+  rw [XCover.rat, dite_eq_left hmem, ← pullRatio_formMap ι f hf p hcov 0 j, pullRatio, germ_appLE, _root_.GlobalTheory.PD.XCover.Integ.ratioSec_eq_ratio]
 
 
 open XCover in
@@ -979,12 +955,12 @@ theorem exists_finCover_of_isFinite {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ S
     [inst : Algebra ℂ X.functionField] (hinst : inst = ffAlg p) (φ : X ⟶ PSpace ℂ d) [IsFinite φ]
     (hφ : φ ≫ PSpace.str ℂ d = p) (hgen : ∀ i, genericPoint X ∈ φ ⁻¹ᵁ XCover.chart d i) :
     IsFinCover ℂ X.functionField (crd φ) ∧ IsAffCover p (fun i => φ ⁻¹ᵁ XCover.chart d i) (rB ℂ X.functionField (crd φ)) := by
-  have hrat := GlobalTheory.T.pulledBackProjCoordinateRatio_overlap_div d X φ
+  have hrat := _root_.GlobalTheory.PD.XCover.rat_overlap d X φ
   have h00 : rat φ 0 0 = 1 := by
     obtain ⟨h1, h2⟩ := hrat 0 0 0 (hgen 0) (hgen 0)
     rw [div_self h1] at h2
     exact h2
-  have hch := GlobalTheory.T.projective_chart_affine_cover d X φ
+  have hch := _root_.GlobalTheory.PD.XCover.preimage_chart_cover d X φ
   have hne : ∀ I : Finset (Fin (d + 1)), genericPoint X ∈ I.inf fun i => φ ⁻¹ᵁ XCover.chart d i := by
     intro I
     induction I using Finset.induction_on with
@@ -994,18 +970,18 @@ theorem exists_finCover_of_isFinite {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ S
       ∃ f : Γ(X, I.inf fun i => φ ⁻¹ᵁ XCover.chart d i), (X.presheaf.germ _ (genericPoint X) (hne I)).hom f = y := by
     intro I hI y
     constructor
-    · exact GlobalTheory.T.chart_function_field_integral d X p hinst φ hφ hgen I hI (hne I) y
+    · exact _root_.GlobalTheory.PD.XCover.mem_germ_range_of_mem_rB d X p hinst φ hφ hgen I hI (hne I) y
     · rintro ⟨f, rfl⟩
-      exact GlobalTheory.T.genericGerm_chartInter_integral_coordinateRatios d X p hinst φ hφ hgen I hI (hne I) f
+      exact _root_.GlobalTheory.PD.XCover.germ_mem_rB d X p hinst φ hφ hgen I hI (hne I) f
   have h1 : crd φ 0 = 1 := Subtype.ext h00
   haveI : CharZero (fld φ) := charZero_of_injective_algebraMap (algebraMap ℂ (fld φ)).injective
   haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
-  refine ⟨IsFinCover.of_charZero ⟨?_, ?_, ?_⟩ (GlobalTheory.T.finite_projection_function_field d X p hinst φ hφ hgen) ?_,
+  refine ⟨IsFinCover.of_charZero ⟨?_, ?_, ?_⟩ (_root_.GlobalTheory.PD.XCover.finiteDimensional_fld d X p hinst φ hφ hgen) ?_,
     ⟨?_, fun I hI => hch.2 I hI, hch.1, hne, hring⟩⟩
   · intro i h
     exact (hrat 0 i i (hgen 0) (hgen i)).1 (by simpa [crd_val] using congrArg (fun z : fld φ => (z : X.functionField)) h)
   · simp only [h1, div_one]
-    exact AlgebraicIndependent.of_comp (fld φ).val (GlobalTheory.T.algebraicIndependent_pulledBackProjCoordinateRatios d X p hinst φ hφ hgen)
+    exact AlgebraicIndependent.of_comp (fld φ).val (_root_.GlobalTheory.PD.XCover.algebraicIndependent_rat d X p hinst φ hφ hgen)
   · simp only [h1, div_one]
     rw [eq_top_iff]
     intro z _
@@ -1020,7 +996,7 @@ theorem exists_finCover_of_isFinite {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ S
     have : w = z := Subtype.ext hwz
     rwa [← this]
   · intro i
-    exact GlobalTheory.T.affine_germ_subalgebra_smooth X p hinst _ (hch.2 {i} (Finset.singleton_nonempty i)) (hne {i}) _
+    exact _root_.GlobalTheory.germImage_smooth X p hinst _ (hch.2 {i} (Finset.singleton_nonempty i)) (hne {i}) _
       (hring {i} (Finset.singleton_nonempty i))
   · subst hinst
     rfl
@@ -1056,8 +1032,6 @@ section -- clump:auto
 
 open CategoryTheory AlgebraicGeometry ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.CechDR GlobalTheory.PD
 
-theorem _root_.GlobalTheory.T.exists_finiteCover_affineCover_of_forms_no_commonZero : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ) (d : ℕ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ X.functionField], inst = ffAlg p → ∀ (N : ℕ) (ι : X ⟶ PSpace ℂ N), IsClosedImmersion ι → ι ≫ PSpace.str ℂ N = p → ∀ (n : ℕ) (f : Fin (d + 1) → MvPolynomial (Fin (N + 1)) ℂ) (hf : ∀ i, f i ∈ GlobalTheory.ProjSpace.grading ℂ N n), 0 < n → (⨆ i, GlobalTheory.EtProj.fOpen ι (f i) = ⊤) → ∀ hg : (∀ i, genericPoint X ∈ GlobalTheory.EtProj.fOpen ι (f i)), ∃ (F : IntermediateField ℂ X.functionField) (x : Fin (d + 1) → F), IsFinCover ℂ X.functionField x ∧ IsAffCover p (fun i => GlobalTheory.EtProj.fOpen ι (f i)) (rB ℂ X.functionField x) ∧ ∀ j, algebraMap F X.functionField (x j) = (X.presheaf.germ (GlobalTheory.EtProj.fOpen ι (f 0)) (genericPoint X) (hg 0)).hom (GlobalTheory.EtProj.fRatio ι (f j) (f 0) (hf j) (hf 0)) := by
-  first | (exact @GlobalTheory.EtProj.isFinCover_of_forms)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSmoothFiniteCoverOfFormsNoCommonZeroStatement =====
@@ -1100,7 +1074,7 @@ theorem exists_finCover_fibre_reduced : ∀ (X : Scheme.{0}) [IsIntegral X] (p :
   intro X _ p d _ inst hinst hproj S
   obtain ⟨N, ι, hι, hιp⟩ := hproj
   obtain ⟨n, f, hf, hn, hcov, hgen, hS, htr⟩ := _root_.GlobalTheory.EtProj.Transv.exists_forms_transversal X p d N ι hι hιp S
-  obtain ⟨F, x, hFC, hAC, hx⟩ := GlobalTheory.T.exists_finiteCover_affineCover_of_forms_no_commonZero X p d hinst N ι hι hιp n f hf hn hcov hgen
+  obtain ⟨F, x, hFC, hAC, hx⟩ := _root_.GlobalTheory.EtProj.isFinCover_of_forms X p d hinst N ι hι hιp n f hf hn hcov hgen
   set U0 := GlobalTheory.EtProj.fOpen ι (f 0) with hU0
   set t : Fin d → Γ(X, U0) := fun j => GlobalTheory.EtProj.fRatio ι (f j.succ) (f 0) (hf j.succ) (hf 0) with ht_def
   have hx0 : x 0 = 1 := by
@@ -1127,11 +1101,11 @@ theorem exists_finCover_fibre_reduced : ∀ (X : Scheme.{0}) [IsIntegral X] (p :
     simpa [hU0] using hAC.affine {0} (Finset.singleton_nonempty 0)
   haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
   haveI hart : IsArtinianRing (Γ(X, U0) ⧸ Ideal.span (Set.range t)) := by
-    haveI := GlobalTheory.T.isArtinianRing_rB_quot_span_tco_of_isFinCover ℂ X.functionField F d x hFC
+    haveI := _root_.GlobalTheory.PD.isArtinianRing_fib_quot ℂ X.functionField F d x hFC
     exact RingEquiv.isArtinianRing E.symm
   have hred : IsReduced (Γ(X, U0) ⧸ Ideal.span (Set.range t)) := by
-    refine GlobalTheory.T.isReduced_quotient_of_artinian_of_maximal_le' _ _ hart fun m hm hIm => ?_
-    obtain ⟨y, hy, rfl⟩ := GlobalTheory.T.exists_complexPoint_ker_eval_eq_maximal X p U0 hU0aff m hm
+    refine _root_.GlobalTheory.isReduced_quotient_of_artinian_of_maximal_le _ _ hart fun m hm hIm => ?_
+    obtain ⟨y, hy, rfl⟩ := _root_.GlobalTheory.MaxPt.exists_cxPts_ker_eq X p U0 hU0aff m hm
     refine htr y hy fun j => ?_
     exact hIm (Ideal.subset_span ⟨j, rfl⟩)
   refine ⟨F, x, fun i => GlobalTheory.EtProj.fOpen ι (f i), hFC, hAC, ?_, fun y hyS => ⟨(hS y hyS).1, ?_⟩⟩

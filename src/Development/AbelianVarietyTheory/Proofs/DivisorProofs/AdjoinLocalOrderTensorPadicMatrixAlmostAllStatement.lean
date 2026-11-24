@@ -213,8 +213,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.nonempty_algEquiv_matrix_of_isAzumaya_of_full_idempotent : ∀ (A : Type) [CommRing A] [IsLocalRing A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ] (n : ℕ), Module.finrank A Λ = n ^ 2 → ∀ e : Λ, IsIdempotentElem e → (∀ y : Λ, ∃ c : A, e * y * e = c • e) → (∃ (N : ℕ) (a b : Fin N → Λ), ∑ i, a i * e * b i = 1) → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
-  first | (exact @GlobalTheory.azumaya_algEquiv_matrix_of_idempotent)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AzumayaAlgEquivMatrixOfIdempotentStatement =====
@@ -359,8 +357,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_idempotent_lift_adicComplete_free_algebra : ∀ (A : Type) [CommRing A] (I : Ideal A) [IsAdicComplete I A] (Λ : Type) [Ring Λ] [Algebra A Λ] [Module.Free A Λ] [Module.Finite A Λ] (x : Λ), x * x - x ∈ I • (⊤ : Submodule A Λ) → ∃ e : Λ, IsIdempotentElem e ∧ e - x ∈ I • (⊤ : Submodule A Λ) := by
-  first | (exact @GlobalTheory.IdemNewton.exists_idem)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentLiftAdicCompleteFreeAlgebraStatement =====
@@ -492,12 +488,6 @@ theorem mem_smul_top_of_one_tmul_eq_zero (A : Type) [CommRing A] [IsLocalRing A]
   rw [← Submodule.Quotient.mk_eq_zero, ← this]
   exact (congrArg (TensorProduct.quotTensorEquivQuotSMul Λ (maximalIdeal A)) h).trans (map_zero _)
 
-theorem one_tmul_surjective (A : Type) [CommRing A] [IsLocalRing A] (Λ : Type)
-    [Ring Λ] [Algebra A Λ] (z : ResidueField A ⊗[A] Λ) : ∃ y : Λ, (1 : ResidueField A) ⊗ₜ[A] y = z := by
-  first
-  | (apply _root_.GlobalTheory.OneTensorExistence.exists_one_tmul_eq <;> assumption)
-  | (intros; exact _root_.GlobalTheory.OneTensorExistence.exists_one_tmul_eq ..)
-
 theorem exists_residue_idempotent : ∀ (A : Type) [CommRing A] [IsLocalRing A] [Finite (IsLocalRing.ResidueField A)] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ] [Nontrivial Λ], ∃ x : Λ, x * x - x ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ) ∧ (∀ y : Λ, ∃ c : A, x * y * x - c • x ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ)) ∧ ∃ (N : ℕ) (a b : Fin N → Λ), ∑ i, a i * x * b i - 1 ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ) := by
   intro A _ _ _ Λ _ _ _ _ _
   classical
@@ -513,7 +503,7 @@ theorem exists_residue_idempotent : ∀ (A : Type) [CommRing A] [IsLocalRing A] 
   have hπ : ∀ y, π y = (1 : k) ⊗ₜ[A] y := fun y => rfl
   have hker : ∀ y, π y = 0 → y ∈ (maximalIdeal A) • (⊤ : Submodule A Λ) := fun y h =>
     mem_smul_top_of_one_tmul_eq_zero A Λ y ((hπ y).symm.trans h)
-  have hsurj : ∀ z, ∃ y, π y = z := one_tmul_surjective A Λ
+  have hsurj : ∀ z, ∃ y, π y = z := _root_.GlobalTheory.OneTensorExistence.exists_one_tmul_eq A Λ
   obtain ⟨xb, hxx, hxy, N, ab, bb, hsum⟩ := exists_rankOne_idempotent k (k ⊗[A] Λ)
   obtain ⟨x, rfl⟩ := hsurj xb
   choose a ha using fun i => hsurj (ab i)
@@ -541,8 +531,6 @@ section -- clump:auto
 open IsLocalRing
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_residue_idempotent' : ∀ (A : Type) [CommRing A] [IsLocalRing A] [Finite (IsLocalRing.ResidueField A)] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ] [Nontrivial Λ], ∃ x : Λ, x * x - x ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ) ∧ (∀ y : Λ, ∃ c : A, x * y * x - c • x ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ)) ∧ ∃ (N : ℕ) (a b : Fin N → Λ), ∑ i, a i * x * b i - 1 ∈ (IsLocalRing.maximalIdeal A) • (⊤ : Submodule A Λ) := by
-  first | (exact @GlobalTheory.AzumayaResidue.exists_residue_idempotent)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsResidueIdempotentStatement =====
@@ -635,8 +623,8 @@ theorem azumaya_local_matrix : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [Comm
     exact zero_ne_one (FaithfulSMul.algebraMap_injective A Λ
       (Subsingleton.elim (algebraMap A Λ 0) (algebraMap A Λ 1)))
   set M := (maximalIdeal A) • (⊤ : Submodule A Λ) with hM
-  obtain ⟨x, h1, h2, N, a, b, h3⟩ := GlobalTheory.T.exists_residue_idempotent' A Λ
-  obtain ⟨e, he, hex⟩ := GlobalTheory.T.exists_idempotent_lift_adicComplete_free_algebra A (maximalIdeal A) Λ x h1
+  obtain ⟨x, h1, h2, N, a, b, h3⟩ := _root_.GlobalTheory.AzumayaResidue.exists_residue_idempotent A Λ
+  obtain ⟨e, he, hex⟩ := _root_.GlobalTheory.IdemNewton.exists_idem A (maximalIdeal A) Λ x h1
   have hcorner : ∀ y : Λ, ∃ c : A, e * y * e - c • e ∈ M := by
     intro y
     obtain ⟨c, hc⟩ := h2 y
@@ -651,7 +639,7 @@ theorem azumaya_local_matrix : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [Comm
     rw [this]
     exact M.add_mem h3 (M.sum_mem fun i _ => mem_right _ (mem_left _ hex))
   obtain ⟨v, hv⟩ := GlobalTheory.AzumayaLocal.exists_right_inverse A Λ _ hu
-  exact GlobalTheory.T.nonempty_algEquiv_matrix_of_isAzumaya_of_full_idempotent A Λ n hn e he (GlobalTheory.AzumayaLocal.corner_eq_smul A Λ e he hcorner) ⟨N, a, fun i => b i * v, by
+  exact _root_.GlobalTheory.azumaya_algEquiv_matrix_of_idempotent A Λ n hn e he (GlobalTheory.AzumayaLocal.corner_eq_smul A Λ e he hcorner) ⟨N, a, fun i => b i * v, by
     rw [← hv, Finset.sum_mul]; simp only [mul_assoc]⟩
 
 end GlobalTheory.AzumayaLocal
@@ -665,10 +653,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.azumaya_free_rank_sq_equiv_matrix_over_local : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [IsLocalRing A] [Algebra ℤ_[ℓ] A]
-    [Module.Finite ℤ_[ℓ] A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ]
-    (n : ℕ), Module.finrank A Λ = n ^ 2 → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
-  first | (exact @GlobalTheory.AzumayaLocal.azumaya_local_matrix)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AzumayaFreeRankSqEquivMatrixOverLocalStatement =====
@@ -714,8 +698,6 @@ section -- clump:auto
 open scoped TensorProduct
 open Function
 
-theorem _root_.GlobalTheory.T.algEquiv_matrix_glue_crt : ∀ (A Λ : Type) [CommRing A] [Ring Λ] [Algebra A Λ] (ι : Type) [Fintype ι] (I : ι → Ideal A), Pairwise (IsCoprime on I) → ⨅ i, I i = ⊥ → ∀ (n : ℕ), (∀ i, Nonempty ((A ⧸ I i) ⊗[A] Λ ≃ₐ[A ⧸ I i] Matrix (Fin n) (Fin n) (A ⧸ I i))) → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
-  first | (exact @GlobalTheory.matrix_glue_crt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgEquivMatrixGlueCrtStatement =====
@@ -728,8 +710,6 @@ section -- clump:auto
 open scoped TensorProduct
 open Function
 
-theorem _root_.GlobalTheory.T.azumaya_base_change : ∀ (A S Λ : Type) [CommRing A] [CommRing S] [Algebra A S] [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ], IsAzumaya S (S ⊗[A] Λ) := by
-  first | (exact @GlobalTheory.isAzumaya_baseChange)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AzumayaBaseChangeStatement =====
@@ -783,8 +763,6 @@ section -- clump:auto
 open scoped TensorProduct
 open Function
 
-theorem _root_.GlobalTheory.T.exists_localRing_quotients_coprime_iInf_eq_bot : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [Algebra ℤ_[ℓ] A] [Module.Finite ℤ_[ℓ] A], ∃ (ι : Type) (_ : Fintype ι) (I : ι → Ideal A), (∀ i, IsLocalRing (A ⧸ I i)) ∧ Pairwise (IsCoprime on I) ∧ ⨅ i, I i = ⊥ := by
-  first | (exact @GlobalTheory.exists_isLocalRing_quotient_pairwise_isCoprime_iInf_eq_bot_padicInt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsLocalRingQuotientPairwiseIsCoprimeIInfEqStatement =====
@@ -806,10 +784,10 @@ theorem of_local : (∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [Is
     [Module.Finite ℤ_[ℓ] A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ]
     (n : ℕ), Module.finrank A Λ = n ^ 2 → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
   intro hloc ℓ _ A _ _ _ Λ _ _ _ _ n hn
-  obtain ⟨ι, _, I, hlocI, hcop, hbot⟩ := GlobalTheory.T.exists_localRing_quotients_coprime_iInf_eq_bot ℓ A
-  refine GlobalTheory.T.algEquiv_matrix_glue_crt A Λ ι I hcop hbot n fun i => ?_
+  obtain ⟨ι, _, I, hlocI, hcop, hbot⟩ := _root_.GlobalTheory.exists_isLocalRing_quotient_pairwise_isCoprime_iInf_eq_bot_padicInt ℓ A
+  refine _root_.GlobalTheory.matrix_glue_crt A Λ ι I hcop hbot n fun i => ?_
   haveI := hlocI i
-  haveI : IsAzumaya (A ⧸ I i) ((A ⧸ I i) ⊗[A] Λ) := GlobalTheory.T.azumaya_base_change A (A ⧸ I i) Λ
+  haveI : IsAzumaya (A ⧸ I i) ((A ⧸ I i) ⊗[A] Λ) := _root_.GlobalTheory.isAzumaya_baseChange A (A ⧸ I i) Λ
   haveI : Module.Finite ℤ_[ℓ] (A ⧸ I i) :=
     Module.Finite.of_surjective ((IsScalarTower.toAlgHom ℤ_[ℓ] A (A ⧸ I i)).toLinearMap)
       Ideal.Quotient.mk_surjective
@@ -828,13 +806,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.azumaya_matrix_of_finite_padic_algebra_of_local : (∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [IsLocalRing A] [Algebra ℤ_[ℓ] A]
-    [Module.Finite ℤ_[ℓ] A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ]
-    (n : ℕ), Module.finrank A Λ = n ^ 2 → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A)) →
-  ∀ (ℓ : ℕ) [Fact ℓ.Prime] (A : Type) [CommRing A] [Algebra ℤ_[ℓ] A]
-    [Module.Finite ℤ_[ℓ] A] (Λ : Type) [Ring Λ] [Algebra A Λ] [IsAzumaya A Λ] [Module.Free A Λ]
-    (n : ℕ), Module.finrank A Λ = n ^ 2 → Nonempty (Λ ≃ₐ[A] Matrix (Fin n) (Fin n) A) := by
-  first | (exact @GlobalTheory.AzumayaMatrixReduction.of_local)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AzumayaMatrixOfFinitePadicAlgebraOfLocalStatement =====
@@ -989,12 +960,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.exists_order_containing_integers : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra F B] [Algebra ℚ B]
-    [IsScalarTower ℚ F B] (OB : Subring B), Module.Finite ℤ OB →
-    (∀ b : B, ∃ m : ℕ, 0 < m ∧ (m : B) * b ∈ OB) →
-    ∃ Λ : Subring B, OB ≤ Λ ∧ (∀ a : NumberField.RingOfIntegers F, algebraMap F B (a : F) ∈ Λ) ∧
-      Module.Finite ℤ Λ ∧ ∃ N : ℕ, 0 < N ∧ ∀ x ∈ Λ, (N : B) * x ∈ OB := by
-  first | (exact @GlobalTheory.exists_order_integers_mul_finite_index)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrderContainingIntegers =====
@@ -1006,48 +971,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 open GlobalTheory.LKInvGood
-open GlobalTheory.LocMatrix in
-
-theorem _root_.GlobalTheory.T.localOrderTensorPadic_free_almost_all : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra F B] [Algebra ℚ B]
-    [IsScalarTower ℚ F B] [FiniteDimensional F B] (Λ : Subring B)
-    (hΛ : ∀ a : NumberField.RingOfIntegers F, algebraMap F B (a : F) ∈ Λ),
-    Module.Finite ℤ Λ → (∀ b : B, ∃ m : ℕ, 0 < m ∧ (m : B) * b ∈ Λ) →
-    ∃ N : ℕ, 0 < N ∧ ∀ (ℓ : ℕ) [Fact ℓ.Prime], ¬ ℓ ∣ N →
-      letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ;
-      Module.Free (cenOrder ℓ F) (locOrder ℓ Λ) ∧
-        Module.finrank (cenOrder ℓ F) (locOrder ℓ Λ) = Module.finrank F B := by
-  intro F B _ _ _ _ _ _ _ Λ hΛ hfin hspan
-  obtain ⟨v, hvΛ⟩ := exists_basis_mem (F := F) Λ hspan
-  obtain ⟨D, hD, hDΛ⟩ := exists_den Λ hfin v
-  refine ⟨D, hD, fun ℓ _ hℓ => ?_⟩
-  let inst := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
-  have hBasis : Nonempty (Module.Basis (Fin (Module.finrank F B)) (cenOrder ℓ F) (locOrder ℓ Λ)) := by
-    let w : Fin (Module.finrank F B) → locOrder ℓ Λ := fun i =>
-      ⟨(1 : ℚ_[ℓ]) ⊗ₜ v i, Algebra.subset_adjoin ⟨_, hvΛ i, rfl⟩⟩
-    have hsum (c : Fin (Module.finrank F B) → cenOrder ℓ F) :
-        ((∑ i, c i • w i : locOrder ℓ Λ) : ℚ_[ℓ] ⊗[ℚ] B) =
-          combMap (F := F) ℓ v (fun i => (c i : ℚ_[ℓ] ⊗[ℚ] F)) := by
-      rw [AddSubmonoidClass.coe_finsetSum, combMap_apply]
-      rfl
-    have hli : LinearIndependent (cenOrder ℓ F) w := by
-      rw [Fintype.linearIndependent_iff]
-      intro c hc i
-      have h0 : combMap (F := F) ℓ v (fun i => (c i : ℚ_[ℓ] ⊗[ℚ] F)) = combMap (F := F) ℓ v 0 := by
-        rw [← hsum, hc, map_zero]
-        rfl
-      exact Subtype.ext (congrFun (combMap_injective ℓ v h0) i)
-    have hsp : ⊤ ≤ Submodule.span (cenOrder ℓ F) (Set.range w) := by
-      rintro ⟨z, hz⟩ -
-      obtain ⟨c, hc⟩ := exists_coeffs ℓ Λ v D hDΛ hℓ z hz
-      rw [Submodule.mem_span_range_iff_exists_fun]
-      exact ⟨c, Subtype.ext ((hsum c).trans hc.symm)⟩
-    exact ⟨Module.Basis.mk hli hsp⟩
-  have : Nontrivial (ℚ_[ℓ] ⊗[ℚ] F) := by
-    apply Module.nontrivial_of_finrank_pos (R := ℚ_[ℓ])
-    rw [Module.finrank_baseChange]
-    exact Module.finrank_pos
-  obtain ⟨basis⟩ := hBasis
-  exact ⟨Module.Free.of_basis basis, by rw [Module.finrank_eq_card_basis basis, Fintype.card_fin]⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOrderTensorPadicFreeAlmostAllStatement =====
@@ -1080,7 +1003,7 @@ theorem exists_coords_of_mem_locOrder : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (F B : 
     conv_lhs => rw [← e.sum_repr x]
     rw [TensorProduct.tmul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    rw [GlobalTheory.LocMatrix.cenMap_tmul, Algebra.TensorProduct.tmul_mul_tmul, one_mul, Algebra.smul_def]
+    rw [_root_.GlobalTheory.CentralizerMapTensor.cenMap_tmul_eq, Algebra.TensorProduct.tmul_mul_tmul, one_mul, Algebra.smul_def]
   intro y hy
   induction hy using Algebra.adjoin_induction with
   | mem y hy =>
@@ -1112,7 +1035,7 @@ theorem exists_coords_of_mem_locOrder : ∀ (ℓ : ℕ) [Fact ℓ.Prime] (F B : 
           ∑ k, cenMap ℓ F B (c i * c' j * ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e.repr (e i * e j) k)) *
             ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e k) := by
         intro i j
-        have hcomm := (GlobalTheory.LocMatrix.cenMap_commute ℓ F B (c' j) ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i)).eq
+        have hcomm := (_root_.GlobalTheory.CentralizerMapTensor.commute_cenMap ℓ F B (c' j) ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i)).eq
         have h1 : cenMap ℓ F B (c i) * ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i) *
             (cenMap ℓ F B (c' j) * ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e j)) =
             cenMap ℓ F B (c i * c' j) * ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] (e i * e j)) := by
@@ -1139,7 +1062,7 @@ theorem exists_coordProj (ℓ : ℕ) [Fact ℓ.Prime] (F B : Type) [Field F] [Nu
   induction a using TensorProduct.induction_on with
   | zero => simp
   | tmul q x =>
-    rw [GlobalTheory.LocMatrix.cenMap_tmul, Algebra.TensorProduct.tmul_mul_tmul, mul_one, ← Algebra.smul_def]
+    rw [_root_.GlobalTheory.CentralizerMapTensor.cenMap_tmul_eq, Algebra.TensorProduct.tmul_mul_tmul, mul_one, ← Algebra.smul_def]
     simp only [LinearMap.lTensor_tmul, LinearMap.coe_restrictScalars, map_smul, Basis.coord_apply,
       Basis.repr_self, Finsupp.single_apply, smul_eq_mul]
     split_ifs <;> simp
@@ -1300,110 +1223,6 @@ section -- clump:auto
 
 open scoped TensorProduct
 open GlobalTheory.LKInvGood
-open GlobalTheory.LocAzumaya Module in
-
-theorem _root_.GlobalTheory.T.localOrderTensorPadic_isAzumaya_almost_all : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra F B] [Algebra ℚ B]
-    [IsScalarTower ℚ F B] [Algebra.IsCentral F B] [IsSimpleRing B] [FiniteDimensional F B]
-    (Λ : Subring B) (hΛ : ∀ a : NumberField.RingOfIntegers F, algebraMap F B (a : F) ∈ Λ),
-    Module.Finite ℤ Λ → (∀ b : B, ∃ m : ℕ, 0 < m ∧ (m : B) * b ∈ Λ) →
-    ∃ N : ℕ, 0 < N ∧ ∀ (ℓ : ℕ) [Fact ℓ.Prime], ¬ ℓ ∣ N →
-      letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ;
-      IsAzumaya (cenOrder ℓ F) (locOrder ℓ Λ) := by
-  intro F B _ _ _ _ _ _ _ _ _ Λ hΛ hfin hspan
-  classical
-  have hlocalBasis : ∀ (ι : Type) [Fintype ι] (e : Module.Basis ι F B), (∀ i, e i ∈ Λ) →
-      ∃ D : ℕ, 0 < D ∧ ∀ (ℓ : ℕ) [Fact ℓ.Prime], ¬ ℓ ∣ D →
-        letI := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ;
-        ∃ f : Module.Basis ι (cenOrder ℓ F) (locOrder ℓ Λ),
-          (∀ i, (f i : ℚ_[ℓ] ⊗[ℚ] B) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i) ∧
-          ∀ (y : locOrder ℓ Λ) (b : B), (y : ℚ_[ℓ] ⊗[ℚ] B) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] b →
-            ∀ k, ((f.repr y k : cenOrder ℓ F) : ℚ_[ℓ] ⊗[ℚ] F) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e.repr b k := by
-    intro ι _ e he
-    obtain ⟨D, hD, hDint⟩ := exists_den_coords F B Λ hfin ι e
-    refine ⟨D, hD, fun ℓ _ hℓ => ?_⟩
-    let _ := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
-    have hco : ∀ x ∈ Λ, ∀ k, (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e.repr x k ∈ cenOrder ℓ F :=
-      fun x hx k => GlobalTheory.SepModel.tmul_mem_cenOrder ℓ hℓ (hDint x hx k)
-    have hv : ∀ i, (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i ∈ locOrder ℓ Λ := fun i => Algebra.subset_adjoin ⟨_, he i, rfl⟩
-    let v : ι → locOrder ℓ Λ := fun i => ⟨_, hv i⟩
-    have hsmul : ∀ (c : cenOrder ℓ F) (y : locOrder ℓ Λ),
-        ((c • y : locOrder ℓ Λ) : ℚ_[ℓ] ⊗[ℚ] B) = cenMap ℓ F B c * y := fun c y => rfl
-    have hsum : ∀ c : ι → cenOrder ℓ F, ((∑ i, c i • v i : locOrder ℓ Λ) : ℚ_[ℓ] ⊗[ℚ] B) =
-        ∑ i, cenMap ℓ F B (c i) * ((1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e i) := by
-      intro c
-      rw [AddSubmonoidClass.coe_finsetSum]
-      simp only [hsmul, v]
-    have hcoef : ∀ (c : ι → cenOrder ℓ F) (b : B),
-        ((∑ i, c i • v i : locOrder ℓ Λ) : ℚ_[ℓ] ⊗[ℚ] B) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] b →
-        ∀ k, ((c k : cenOrder ℓ F) : ℚ_[ℓ] ⊗[ℚ] F) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] e.repr b k := by
-      intro c b h k
-      obtain ⟨π, hπ1, hπ2⟩ := exists_coordProj ℓ F B e k
-      have h' := congrArg π h
-
-      rw [hsum, map_sum, hπ1] at h'
-      simp only [hπ2, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h'
-      exact h'
-    have hli : LinearIndependent (cenOrder ℓ F) v := by
-      rw [Fintype.linearIndependent_iff]
-      intro c hc k
-      have h0 : ((∑ i, c i • v i : locOrder ℓ Λ) : ℚ_[ℓ] ⊗[ℚ] B) = (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] (0 : B) := by
-        rw [hc, TensorProduct.tmul_zero]; rfl
-      have := hcoef c 0 h0 k
-      apply Subtype.ext
-      simpa using this
-    have hsp : ⊤ ≤ Submodule.span (cenOrder ℓ F) (Set.range v) := by
-      rintro y -
-      obtain ⟨c, hc, hy⟩ := exists_coords_of_mem_locOrder ℓ F B Λ ι e he hco y y.2
-      rw [Submodule.mem_span_range_iff_exists_fun]
-      refine ⟨fun i => ⟨c i, hc i⟩, Subtype.ext ?_⟩
-      rw [hsum, hy]
-    let f := Basis.mk hli hsp
-    have hfv : ∀ i, f i = v i := fun i => Basis.mk_apply hli hsp i
-    refine ⟨f, fun i => by rw [hfv], fun y b hy k => ?_⟩
-    apply hcoef (fun i => f.repr y i) b _ k
-    have hs := f.sum_repr y
-    simp only [hfv] at hs
-    rw [hs, hy]
-  obtain ⟨e, he⟩ := exists_basis_mem (F := F) Λ hspan
-  have hδ : IsUnit (structMat e).det :=
-    (bijective_iff_isUnit_det e).1 (GroundTheory.Brauer.mulLeftRight_bijective F B)
-  obtain ⟨m, hm, hmint⟩ := GlobalTheory.SepModel.exists_nat_integral ({((structMat e).det)⁻¹} : Finset F)
-  obtain ⟨D, hD, hbasis⟩ := hlocalBasis _ e he
-  refine ⟨D * m, by positivity, fun ℓ _ hℓ => ?_⟩
-  let _ := GlobalTheory.LocMatrix.cenAlgebra ℓ F B Λ hΛ
-  obtain ⟨f, hf1, hf2⟩ := hbasis ℓ (fun h => hℓ (Dvd.dvd.mul_right h _))
-  have hinv : (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] ((structMat e).det)⁻¹ ∈ cenOrder ℓ F :=
-    GlobalTheory.SepModel.tmul_mem_cenOrder ℓ (fun h => hℓ (Dvd.dvd.mul_left h _))
-      (hmint _ (Finset.mem_singleton_self _))
-  have hent : (cenOrder ℓ F).val.toRingHom.mapMatrix (structMat f) =
-      (Algebra.TensorProduct.includeRight (R := ℚ) (A := ℚ_[ℓ]) (B := F)).toRingHom.mapMatrix
-        (structMat e) := by
-    ext ⟨k, l⟩ ⟨i, j⟩
-    simp only [RingHom.mapMatrix_apply, Matrix.map_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
-      Subalgebra.coe_val, Algebra.TensorProduct.includeRight_apply, structMat_apply]
-    apply hf2
-    simp only [Subalgebra.coe_mul, hf1, Algebra.TensorProduct.tmul_mul_tmul, mul_one]
-  have hdet : (((structMat f).det : cenOrder ℓ F) : ℚ_[ℓ] ⊗[ℚ] F) =
-      (1 : ℚ_[ℓ]) ⊗ₜ[ℚ] (structMat e).det := by
-    have h1 := RingHom.map_det (cenOrder ℓ F).val.toRingHom (structMat f)
-    have h2 := RingHom.map_det
-      (Algebra.TensorProduct.includeRight (R := ℚ) (A := ℚ_[ℓ]) (B := F)).toRingHom (structMat e)
-    rw [hent, ← h2] at h1
-    simpa using h1
-  have hunit : IsUnit (structMat f).det := by
-    refine isUnit_iff_exists_inv.2 ⟨⟨_, hinv⟩, Subtype.ext ?_⟩
-    rw [Subalgebra.coe_mul, hdet, Subalgebra.coe_one, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
-      mul_inv_cancel₀ hδ.ne_zero, Algebra.TensorProduct.one_def]
-  have : Nontrivial B := inferInstance
-  have : FaithfulSMul (cenOrder ℓ F) (locOrder ℓ Λ) := by
-    rw [faithfulSMul_iff_algebraMap_injective]
-    intro a b hab
-    have h : cenMap ℓ F B a = cenMap ℓ F B b :=
-      congrArg (fun x : locOrder ℓ Λ => (x : ℚ_[ℓ] ⊗[ℚ] B)) hab
-    exact Subtype.ext (cenMap_injective ℓ F B h)
-  have := Module.Projective.of_basis f
-  have := Module.Finite.of_basis f
-  exact ⟨(bijective_iff_isUnit_det f).2 hunit⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOrderTensorPadicIsAzumayaAlmostAllStatement =====
@@ -1476,11 +1295,11 @@ theorem locOrder_matrix : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [A
     ∃ N : ℕ, 0 < N ∧ ∀ (ℓ : ℕ) [Fact ℓ.Prime], ¬ ℓ ∣ N →
       ∃ ψ : locOrder ℓ OB ≃ₐ[ℤ_[ℓ]] Matrix (Fin n) (Fin n) (cenOrder ℓ F), CentreCompat ℓ OB ψ := by
   intro F B _ _ _ _ _ _ _ _ _ n hn OB hfin hspan
-  obtain ⟨Λ, hle, hΛ, hΛfin, N₁, hN₁, hN₁Λ⟩ := GlobalTheory.T.exists_order_containing_integers F B OB hfin hspan
+  obtain ⟨Λ, hle, hΛ, hΛfin, N₁, hN₁, hN₁Λ⟩ := _root_.GlobalTheory.exists_order_integers_mul_finite_index F B OB hfin hspan
   have hspanΛ : ∀ b : B, ∃ m : ℕ, 0 < m ∧ (m : B) * b ∈ Λ := fun b => by
     obtain ⟨m, hm, hmb⟩ := hspan b; exact ⟨m, hm, hle hmb⟩
-  obtain ⟨N₂, hN₂, hfree⟩ := GlobalTheory.T.localOrderTensorPadic_free_almost_all F B Λ hΛ hΛfin hspanΛ
-  obtain ⟨N₃, hN₃, hazu⟩ := GlobalTheory.T.localOrderTensorPadic_isAzumaya_almost_all F B Λ hΛ hΛfin hspanΛ
+  obtain ⟨N₂, hN₂, hfree⟩ := _root_.GlobalTheory.LocMatrix.locOrder_free F B Λ hΛ hΛfin hspanΛ
+  obtain ⟨N₃, hN₃, hazu⟩ := _root_.GlobalTheory.LocAzumaya.locOrder_isAzumaya F B Λ hΛ hΛfin hspanΛ
   refine ⟨N₁ * N₂ * N₃, by positivity, fun ℓ _ hℓ => ?_⟩
   have h₁ : ¬ ℓ ∣ N₁ := fun h => hℓ (Dvd.dvd.mul_right (Dvd.dvd.mul_right h _) _)
   have h₂ : ¬ ℓ ∣ N₂ := fun h => hℓ (Dvd.dvd.mul_right (Dvd.dvd.mul_left h _) _)
@@ -1492,7 +1311,7 @@ theorem locOrder_matrix : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [A
   obtain ⟨hF, hrank⟩ := hfree ℓ h₂
   haveI := hF
   haveI := hazu ℓ h₃
-  obtain ⟨φ⟩ := GlobalTheory.T.azumaya_matrix_of_finite_padic_algebra_of_local GlobalTheory.T.azumaya_free_rank_sq_equiv_matrix_over_local ℓ (cenOrder ℓ F) (locOrder ℓ Λ) n (hrank.trans hn)
+  obtain ⟨φ⟩ := _root_.GlobalTheory.AzumayaMatrixReduction.of_local _root_.GlobalTheory.AzumayaLocal.azumaya_local_matrix ℓ (cenOrder ℓ F) (locOrder ℓ Λ) n (hrank.trans hn)
   refine ⟨(Subalgebra.equivOfEq _ _ heq).trans (φ.restrictScalars ℤ_[ℓ]), fun a => ?_⟩
   refine ⟨heq ▸ cenMap_mem ℓ F B Λ hΛ a.2, ?_⟩
   have h2 : (Subalgebra.equivOfEq _ _ heq) ⟨cenMap ℓ F B a, heq ▸ cenMap_mem ℓ F B Λ hΛ a.2⟩ =
@@ -1515,13 +1334,6 @@ section -- clump:auto
 open scoped TensorProduct
 open GlobalTheory.LKInvGood
 
-theorem _root_.GlobalTheory.T.adjoinLocalOrderTensorPadic_matrix_almost_all : ∀ (F B : Type) [Field F] [NumberField F] [Ring B] [Algebra F B] [Algebra ℚ B]
-    [IsScalarTower ℚ F B] [Algebra.IsCentral F B] [IsSimpleRing B] [FiniteDimensional F B] (n : ℕ),
-    Module.finrank F B = n ^ 2 → ∀ (OB : Subring B), Module.Finite ℤ OB →
-    (∀ b : B, ∃ m : ℕ, 0 < m ∧ (m : B) * b ∈ OB) →
-    ∃ N : ℕ, 0 < N ∧ ∀ (ℓ : ℕ) [Fact ℓ.Prime], ¬ ℓ ∣ N →
-      ∃ ψ : locOrder ℓ OB ≃ₐ[ℤ_[ℓ]] Matrix (Fin n) (Fin n) (cenOrder ℓ F), CentreCompat ℓ OB ψ := by
-  first | (exact @GlobalTheory.LocMatrix.locOrder_matrix)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinLocalOrderTensorPadicMatrixAlmostAllStatement =====

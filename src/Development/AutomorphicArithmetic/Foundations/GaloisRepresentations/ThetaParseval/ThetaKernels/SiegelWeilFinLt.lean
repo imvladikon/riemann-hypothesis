@@ -547,25 +547,8 @@ section -- clump:auto
 
 
 
-section
-noncomputable section
-open scoped TensorProduct NNReal Matrix SchwartzMap Classical InnerProductSpace
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl PositivityTheory.Rg.Sw
 namespace PositivityTheory.SiegelWeilFormula.KFP
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-variable {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ}
-theorem hg_sch_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {νf : Measure (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d)} (hνf : νf.IsAddHaarMeasure) {f : Mx F E d.m d.n → ℂ} (hf : f ∈ d.schM)
-    {g : _root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d → ℂ} (hg' : g ∈ SB (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d)) : ∃ h : 𝓢(_root_.PositivityTheory.SiegelWeilFormula.KFP.Vw_k d, ℂ), ⇑h = _root_.PositivityTheory.SiegelWeilFormula.KFP.hg_k R νf f g := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.hg_sch_k R hνf hf hg'
-theorem mem_fock_of_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {νf : Measure (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d)} (hνf : νf.IsAddHaarMeasure) {f : Mx F E d.m d.n → ℂ}
-    (hf : f ∈ d.schM) (H : ∀ g ∈ SB (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d), ∃ P : MvPolynomial (_root_.PositivityTheory.SiegelWeilFormula.KFP.Iw_k d) ℂ,
-      ∀ u, _root_.PositivityTheory.SiegelWeilFormula.KFP.hg_k R νf f g u = MvPolynomial.eval (fun i => ((u i : ℝ) : ℂ)) P * Real.exp (-(2 * Real.pi * ‖u‖ ^ 2))) :
-    f ∈ R.fock := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.mem_fock_of_k R hνf hf H
 end PositivityTheory.SiegelWeilFormula.KFP
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKfpFin =====
@@ -592,24 +575,17 @@ theorem cw_add'_k (w : InfinitePlace F) {p q : Type} (A B : Matrix p q (AE F E))
 theorem cw_one'_k (w : InfinitePlace F) : d.cw w (1 : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) (AE F E)) = 1 :=
   Matrix.map_one _ (map_zero _) (map_one _)
 theorem cw_transpose'_k (w : InfinitePlace F) {p q : Type} (A : Matrix p q (AE F E)) : d.cw w Aᵀ = (d.cw w A)ᵀ := rfl
-theorem incM_b_mul_inv_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) : incM F (d.b : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) *
-    incM F ((d.b⁻¹ : GL (Fin d.n ⊕ Fin d.n) E) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) = 1 := by
-  rw [incM, incM, ← Matrix.map_mul, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _)]
-theorem incM_b_inv_mul_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) :
-    incM F ((d.b⁻¹ : GL (Fin d.n ⊕ Fin d.n) E) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) *
-      incM F (d.b : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) = 1 := by
-  rw [incM, incM, ← Matrix.map_mul, Units.inv_mul, Matrix.map_one _ (map_zero _) (map_one _)]
 theorem inFrame_mul'_k (x y : d.G) : inFrame d.b (x * y) = inFrame d.b x * inFrame d.b y := by
   have e : mat2 (x * y) = mat2 x * mat2 y := rfl
   simp only [inFrame, e, Matrix.mul_assoc]
-  rw [← Matrix.mul_assoc (incM F (d.b : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E)), _root_.PositivityTheory.SiegelWeilFormula.KFP.incM_b_mul_inv_k, Matrix.one_mul]
+  rw [← Matrix.mul_assoc (incM F (d.b : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E)), _root_.PositivityTheory.SiegelWeilFormula.Krd.bb_k, Matrix.one_mul]
 theorem inFrame_one'_k : inFrame d.b (1 : d.G) = 1 := by
   have e : mat2 (1 : d.G) = 1 := rfl
-  simp only [inFrame, e, Matrix.mul_one, _root_.PositivityTheory.SiegelWeilFormula.KFP.incM_b_inv_mul_k]
+  simp only [inFrame, e, Matrix.mul_one, _root_.PositivityTheory.SiegelWeilFormula.Krd.bb'_k]
 theorem matrixRep_eq_frameConj (x : d.G) : mat2 x = incM F (d.b : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) * inFrame d.b x *
     incM F ((d.b⁻¹ : GL (Fin d.n ⊕ Fin d.n) E) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E) := by
   simp only [inFrame, Matrix.mul_assoc]
-  rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.incM_b_mul_inv_k, Matrix.mul_one, ← Matrix.mul_assoc, _root_.PositivityTheory.SiegelWeilFormula.KFP.incM_b_mul_inv_k, Matrix.one_mul]
+  rw [_root_.PositivityTheory.SiegelWeilFormula.Krd.bb_k, Matrix.mul_one, ← Matrix.mul_assoc, _root_.PositivityTheory.SiegelWeilFormula.Krd.bb_k, Matrix.one_mul]
 theorem cw_inFrame_prod'_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (f : InfinitePlace F → GR d.n) (w' : InfinitePlace F) :
     ∀ L : List (InfinitePlace F), L.Nodup → d.cw w' (inFrame d.b ((L.map fun w => R.ι w (f w)).prod)) =
       if w' ∈ L then d.cw w' (inFrame d.b (R.ι w' (f w'))) else 1 := by
@@ -680,7 +656,7 @@ theorem actB_rot_vline'_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d)
       _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_realAd_smul'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_realAd_smul'_k, show d.cw w (_root_.PositivityTheory.SiegelWeilFormula.KFP.tw_k R W) = _ from htw.2 w]
     have hinv : d.cw w (incM F ((d.b⁻¹ : GL (Fin d.n ⊕ Fin d.n) E) : Matrix (Fin d.n ⊕ Fin d.n) (Fin d.n ⊕ Fin d.n) E)) *
         d.cw w (incM F d.b.1) = 1 := by
-      rw [← _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_mul'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.incM_b_inv_mul_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_one'_k]
+      rw [← _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_mul'_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.bb'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_one'_k]
     rw [Matrix.transpose_mul, Matrix.transpose_mul, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
       Matrix.mul_assoc _ (d.cw w (incM F d.b.1))ᵀ, ← Matrix.transpose_mul, hinv, Matrix.transpose_one, Matrix.mul_one,
       rot_cols' d.n d.m hζ (R.sg w) t z.re z.im (d.cw w W) _ (_root_.PositivityTheory.SiegelWeilFormula.KFP.dZ_cw_rot'_k R t w)]
@@ -767,9 +743,9 @@ theorem T_vline_k (hH : _root_.PositivityTheory.SiegelWeilFormula.THeis_k) (R : 
     {W : Mx F E d.m d.n} (hW : finOne F • W = 0) (z : ℂ) (X : Mx F E d.m d.n) :
     d.T (d.dd.rho d.B.ψ (_root_.PositivityTheory.SiegelWeilFormula.KFP.vline_k R W z) Ω) X = _root_.PositivityTheory.SiegelWeilFormula.KFP.bv_k (_root_.PositivityTheory.SiegelWeilFormula.KFP.arc_k R W) z (_root_.PositivityTheory.SiegelWeilFormula.KFP.arc_k R X) * g (_root_.PositivityTheory.SiegelWeilFormula.KFP.fin_k d X) := by
   unfold _root_.PositivityTheory.SiegelWeilFormula.KFP.vline_k
-  rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.T_rho_sum'_k hH hΩ, _root_.PositivityTheory.SiegelWeilFormula.KFP.psi_sp_k R hW, _root_.PositivityTheory.SiegelWeilFormula.KFP.psi_tw_k R hW, hTΩ]
+  rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.T_rho_sum'_k hH hΩ, _root_.PositivityTheory.SiegelWeilFormula.KFP.psi_sp'_k R hW, _root_.PositivityTheory.SiegelWeilFormula.KFP.psi_tw'_k R hW, hTΩ]
   simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.vac_k]
-  rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.gau_eq_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.arc_add_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.arc_realAd_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.fin_add_of_k R (_root_.PositivityTheory.SiegelWeilFormula.KFP.fin_realAd_smul_k hW z.re)]
+  rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.gau_eq'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.arc_add'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.arc_realAd'_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.fin_add_of'_k R (_root_.PositivityTheory.SiegelWeilFormula.KFP.fin_realAd_smul'_k hW z.re)]
   simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.bv_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.ev_k]
   rw [show star (Complex.exp _) = Complex.exp (conj _) from (Complex.exp_conj _).symm, Complex.ofReal_exp,
     ← mul_assoc, ← mul_assoc, ← Complex.exp_add, ← Complex.exp_add]
@@ -1042,7 +1018,7 @@ theorem om_rot_vac'_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (h
       obtain ⟨p, q, e, hw⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFP.om_place_k hT hLO hLI R w
       refine ⟨F0 p q e (yrot d.n (R.sg w) t) * χ, mul_ne_zero (weight_factor_rotation_ne_zero p q e d.n (R.sg w) t) hχ,
         fun g hg Ω hΩ hTΩ => ?_⟩
-      have hK : InK (mR (yrot d.n (R.sg w) t)) := by rw [mR_yrot]; exact inK_yrotM' _ _ _
+      have hK : InK (mR (yrot d.n (R.sg w) t)) := by rw [mR_yrot]; exact _root_.PositivityTheory.SiegelWeilFormula.KFP.inK_yrotM _ _ _
       rw [List.map_cons, List.prod_cons, map_mul, Module.End.mul_apply, h g hg Ω hΩ hTΩ, map_smul,
         hw _ hK g hg Ω hΩ hTΩ, smul_smul, mul_comm]
   exact key _
@@ -1107,13 +1083,6 @@ theorem line_data_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU 
     linarith
   · have := hB g hg Ω hΩ hTΩ Φ hΦ (W ξ) (hW ξ) z
     rwa [hsW] at this
-theorem B_rel_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU : _root_.PositivityTheory.SiegelWeilFormula.TUnit_k) {ν : Measure (Mx F E d.m d.n)} (hν : ν.IsAddHaarMeasure) {k : d.G} {χ : ℂ}
-    (hχ : χ ≠ 0) {Ω : d.Fn} (hΩ : Ω ∈ d.sch) (hk : d.om k Ω = χ • Ω) {Φ : d.Fn} (hΦ : Φ ∈ d.sch) (q : Polynomial ℂ)
-    (hq : ∑ i ∈ Finset.range (q.natDegree + 1), q.coeff i • d.om (k ^ i) Φ = 0)
-    (v : Matrix (Fin d.m) (Fin d.n ⊕ Fin d.n) (AE F E)) :
-    ∑ i ∈ Finset.range (q.natDegree + 1),
-      q.coeff i * (star χ)⁻¹ ^ i * _root_.PositivityTheory.SiegelWeilFormula.KFP.B_k ν Φ (d.dd.rho d.B.ψ (actB (cA σ) (k⁻¹ ^ i) v) Ω) = 0 := by
-  exact _root_.PositivityTheory.SiegelWeilFormula.KFP.B_rel'_k hT hU hν hχ hΩ hk hΦ q hq v
 end PositivityTheory.SiegelWeilFormula.KFP
 end
 end
@@ -1152,7 +1121,7 @@ theorem kFinPoly_of_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (h
     intro h; rw [h, norm_zero] at hω1; exact zero_ne_one hω1
   have hωi : ∀ j : ℕ, 0 < j → ω⁻¹ ^ j ≠ 1 := fun j hj h => hω j hj (by rw [inv_pow] at h; exact inv_eq_one.1 h)
   have hμ : (star χ)⁻¹ ≠ 0 := inv_ne_zero (star_ne_zero.2 hχ)
-  obtain ⟨N, hN⟩ := poly_of_rot q hq0 (star χ)⁻¹ ω⁻¹ hμ (inv_ne_zero hω0) hωi
+  obtain ⟨N, hN⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFPB.poly_of_rot q hq0 (star χ)⁻¹ ω⁻¹ hμ (inv_ne_zero hω0) hωi
   have hinv : ∀ ξ z, actB (cA σ) k⁻¹ (vv ξ z) = vv ξ (ω⁻¹ * z) := fun ξ z => by
     have := congrArg (actB (cA σ) k⁻¹) (hrot ξ (ω⁻¹ * z))
     rwa [← _root_.PositivityTheory.SiegelWeilFormula.KFP.actB_mul_k, inv_mul_cancel, _root_.PositivityTheory.SiegelWeilFormula.KFP.actB_one_k, ← mul_assoc, mul_inv_cancel₀ hω0, one_mul, eq_comm] at this
@@ -1162,18 +1131,18 @@ theorem kFinPoly_of_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (h
     | zero => intro ξ z; simp [_root_.PositivityTheory.SiegelWeilFormula.KFP.actB_one_k]
     | succ i ih => intro ξ z; rw [pow_succ, _root_.PositivityTheory.SiegelWeilFormula.KFP.actB_mul_k, hinv, ih, pow_succ, mul_assoc]
   have hTΦ : d.T Φ ∈ d.schM := (hT.1 F E σ d).1 Φ hΦ
-  refine _root_.PositivityTheory.SiegelWeilFormula.KFP.mem_fock_of_k R hνf hTΦ fun g hg' => ?_
+  refine _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.mem_fock_of_k R hνf hTΦ fun g hg' => ?_
   obtain ⟨Ω, hΩ, hTΩ⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFP.exists_lift_k hT hF R hg'
-  obtain ⟨h, hh⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFP.hg_sch_k R hνf hTΦ hg'
+  obtain ⟨h, hh⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.hg_sch_k R hνf hTΦ hg'
   have hpi : (0 : ℝ) < 2 * Real.pi := by positivity
-  obtain ⟨P, -, hP⟩ := poly_gauss_of_lines (2 * Real.pi) hpi N h fun ξ => by
+  obtain ⟨P, -, hP⟩ := _root_.PositivityTheory.SiegelWeilFormula.KFPB.poly_gauss_of_lines (2 * Real.pi) hpi N h fun ξ => by
     set I : ℂ → ℂ := fun z => ∫ u, h u * Real.exp (-(2 * Real.pi * ‖u‖ ^ 2)) * Complex.exp (z * ⟪ξ, u⟫_ℝ) with hI
     set Eξ : ℂ → ℂ := fun z => Complex.exp (-(z ^ 2 * ‖ξ‖ ^ 2 / (16 * Real.pi))) * I z with hE
     have hdiff : Differentiable ℂ Eξ :=
-      (Differentiable.cexp (by fun_prop)).mul (entire_laplace (2 * Real.pi) hpi h ξ)
+      (Differentiable.cexp (by fun_prop)).mul (_root_.PositivityTheory.SiegelWeilFormula.KFPB.entire_laplace (2 * Real.pi) hpi h ξ)
     have hrel : ∀ z, ∑ i ∈ Finset.range (q.natDegree + 1), q.coeff i * (star χ)⁻¹ ^ i * Eξ (ω⁻¹ ^ i * z) = 0 := by
       intro z
-      have e0 := _root_.PositivityTheory.SiegelWeilFormula.KFP.B_rel_k hT hU hν hχ hΩ (heig g hg' Ω hΩ hTΩ) hΦ q hq (vv ξ z)
+      have e0 := _root_.PositivityTheory.SiegelWeilFormula.KFP.B_rel'_k hT hU hν hχ hΩ (heig g hg' Ω hΩ hTΩ) hΦ q hq (vv ξ z)
       simp only [hact, hB g hg' Ω hΩ hTΩ Φ hΦ, ← hh] at e0
       have hn : ∀ i : ℕ, ‖ω⁻¹ ^ i * z‖ = ‖z‖ := fun i => by
         rw [norm_mul, norm_pow, norm_inv, hω1, inv_one, one_pow, one_mul]

@@ -66,6 +66,7 @@ import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
@@ -371,34 +372,16 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.L2.DIV
-open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.Grow
-open GlobalTheory.ChainFr GlobalTheory.SepRows Matrix
-open scoped TensorProduct InnerProductSpace
-
 namespace GlobalTheory.SepPer
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-variable {D : D7}
-
-theorem gramAt_conjTranspose (V : HSp D) (τ : D.what₂.Tau) : (gramAt D V τ)ᴴ = gramAt D V τ := by
-  have h : (HSpace.gram V)ᴴ = HSpace.gram V := by
-    funext i j
-    exact V.herm.eq (V.frame j) (V.frame i)
-  rw [gramAt, ← Matrix.conjTranspose_map _ (GlobalTheory.FockCompare.tauE_star τ), h]
 
 end GlobalTheory.SepPer
 
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.GramAtConjTranspose =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsBesselFrameOfBesselDatumRealPlace =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsBesselFrameOfBesselDatumRealPlace", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.BesselFormsTrivialNeBot\npublic import Formalism.LocalToGlobal.BesselHermitianTheta.TiedBessel\nimport Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique\npublic import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselCharacterGenericCharacterLaws\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GramAtConjTranspose\npublic import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsBesselFrameOfBesselDatumRealPlace", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.BesselFormsTrivialNeBot\npublic import Formalism.LocalToGlobal.BesselHermitianTheta.TiedBessel\nimport Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique\npublic import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselCharacterGenericCharacterLaws\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GramAtConjTranspose\npublic import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -463,7 +446,7 @@ theorem isFrame_of_besDat : ∀ (D : D7) (A B : HSp D) (ι : A.V →ₗ[D.host.E
     exact isUnit_iff_ne_zero.2 ((map_ne_zero _).2 (Formalism.L2.Theta.gram_det_ne V))
   obtain ⟨L, hL⟩ := GlobalTheory.BesselChar.exists_leftInv d.e d.e_iso.1
   refine
-    { herm := GlobalTheory.SepPer.gramAt_conjTranspose B τ
+    { herm := _root_.GlobalTheory.SmoothForms.RealPts.gramAt_herm B τ
       unit := hunit B
       unit₀ := hunit A
       codim := d.codim
@@ -732,11 +715,6 @@ theorem e_add_le_b {l : ℕ} (h1 : 1 ≤ l) (h2 : l + 1 ≤ D.R.m) :
 theorem b_lt {l l' : ℕ} (h1 : 1 ≤ l) (h2 : l < l') (h3 : l' ≤ D.R.m) : ((num D C τ).b l : ℚ) < (num D C τ).b l' := by
   exact_mod_cast (num D C τ).b_mono l l' h1 h2 h3
 
-theorem b_le {l l' : ℕ} (h1 : 1 ≤ l) (h2 : l ≤ l') (h3 : l' ≤ D.R.m) : ((num D C τ).b l : ℚ) ≤ (num D C τ).b l' := by
-  rcases h2.eq_or_lt with rfl | h
-  · exact le_rfl
-  · exact (b_lt D C τ h1 h h3).le
-
 theorem cloud_gt {x : ℚ} (h : x ∈ (num D C τ).cloud) : -((num D C τ).b 1 : ℚ) < x := by
   obtain ⟨i, h1, h2, rfl⟩ := GlobalTheory.SignedHC.GridData.mem_cloud.1 h
   have hk : D.R.m + 3 ≤ D.R.k := D.R.m_add_three_le_k
@@ -757,12 +735,6 @@ theorem cloud_gt {x : ℚ} (h : x ∈ (num D C τ).cloud) : -((num D C τ).b 1 :
     · exact le_rfl
     · exact_mod_cast ((num D C τ).v_anti i D.R.k h1 h le_rfl).le
   linarith
-
-theorem blockM_bound {a : ℕ} {x : ℚ} (h : x ∈ (num D C τ).blockM a) :
-    -((num D C τ).e a : ℚ) - ((D.R.t : ℚ) - 1) / 2 ≤ x ∧ x ≤ -((num D C τ).e a : ℚ) + ((D.R.t : ℚ) - 1) / 2 := by
-  have := abs_le.1 (abs_sub_le_of_mem_block (c := -((num D C τ).e a : ℚ)) (t := D.R.t) h)
-  constructor <;> linarith [this.1, this.2]
-
 
 variable {D} in
 theorem blockC_gt {a : ℕ} (h1 : 1 ≤ a) (h2 : a ≤ D.R.m) {x : ℚ} (h : x ∈ (num D C τ).blockC a) :
@@ -810,7 +782,7 @@ theorem b_gap (C : ℝ) (hS : LowsOver D g) (τ : D.what₂.Tau) {l l' : ℕ} (h
   obtain ⟨a, rfl⟩ : ∃ a, l' = a + 2 := ⟨l' - 2, by omega⟩
   have h := hS τ a (by omega)
   rw [b_spec D C τ (by omega), b_spec D C τ (by omega)] at h
-  have := b_le D C τ h1 (show l ≤ a + 1 by omega) (by omega)
+  have := _root_.GlobalTheory.FunObj.num_b_le D C τ h1 (show l ≤ a + 1 by omega) (by omega)
   linarith
 
 theorem gap_true (C : ℝ) (hS : LowsOver D g) (τ : D.what₂.Tau) {i j l : ℕ} (hi : i ≤ D.R.m) (hl1 : j + 2 ≤ l)
@@ -834,7 +806,7 @@ theorem gap_true (C : ℝ) (hS : LowsOver D g) (τ : D.what₂.Tau) {i j l : ℕ
       refine lt_abs.2 (Or.inl (by linarith))
     · have := b_gap C hS τ (show 1 ≤ l by omega) h h2
       refine lt_abs.2 (Or.inr (by linarith))
-  · have a0 := (blockM_bound D C τ hm).1
+  · have a0 := (_root_.GlobalTheory.FunObj.blockM_bd D C τ hm).1
     have a1 := e_add_le_b D C τ h1 (show a + 1 ≤ D.R.m by omega)
     have a2 := b_gap C hS τ (show 1 ≤ a + 1 by omega) (show a + 1 < l by omega) hl2
     refine lt_abs.2 (Or.inl (by linarith))

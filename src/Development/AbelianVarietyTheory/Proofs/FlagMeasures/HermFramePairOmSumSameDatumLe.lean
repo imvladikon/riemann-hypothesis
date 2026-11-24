@@ -66,6 +66,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Formalism.HyperbolicPlaceProducts.SubgroupIndexCounts.CountO
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.HaveILetI
@@ -87,7 +88,7 @@ import Mathlib.Tactic.TypeStar
 -- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesDefiniteQuotientNormalFormLe, Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardLatticesNearReferenceLatticeLe, Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardUnimodularHermGluingsLe, Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairExistsUnipotentSplitLattice, Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormIdealDivisibility, Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormExistsConjNearReference, Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairOmSumSameDatumLe
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesDefiniteQuotientNormalFormLe =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesDefiniteQuotientNormalFormLe", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary\npublic import Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesDefiniteQuotientNormalFormLe", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary\npublic import Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HyperbolicPlaceProducts.SubgroupIndexCounts.CountO\nimport Formalism.HyperbolicPlaceProducts.SecondLevelArithmeticNorm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -106,7 +107,7 @@ theorem count_index_fg {K Q : Type} [Field K] [NumberField K] [AddCommGroup Q] [
   have : Module.IsTorsionFree (𝓞 K) Q := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K Q
   have : Module.FinitePresentation (𝓞 K) M := Module.finitePresentation_of_finite _ _
   have : Module.Projective (𝓞 K) M := Module.Flat.projective_of_finitePresentation
-  obtain ⟨h1, h2⟩ := Formalism.SLP.Final.submoduleIndexCountO K M x hx
+  obtain ⟨h1, h2⟩ := _root_.Formalism.SLP.P.card_submodules_of_index_le K M x hx
   refine ⟨h1, ?_⟩
   have hr : Module.finrank (𝓞 K) M ≤ k := by
     refine le_trans ?_ hk
@@ -118,7 +119,7 @@ theorem count_index_fg {K Q : Type} [Field K] [NumberField K] [AddCommGroup Q] [
   have hn : 1 ≤ Module.finrank ℚ K := Module.finrank_pos
   have hx1 : (1:ℝ) ≤ x := by exact_mod_cast hx
   have hx0 : (0:ℝ) < x := by linarith
-  have h4 := Formalism.SLP.Final.omegaPow (Module.finrank ℚ K) x hn hx
+  have h4 := _root_.Formalism.SLP.P.pow_primeFactors_length_le (Module.finrank ℚ K) x hn hx
   have h3 : (({N : Submodule (𝓞 K) M | N.toAddSubgroup.index = x}.ncard : ℕ) : ℝ) ≤
       ((Module.finrank ℚ K : ℕ) : ℝ) ^ (Nat.primeFactorsList x).length *
         (x : ℝ) ^ Module.finrank (𝓞 K) M := by exact_mod_cast h2
@@ -1505,18 +1506,6 @@ theorem line_le (A : Submodule (𝓞 K) K) (v : V) (S : Submodule K V) (hv : v �
   exact S.smul_mem t hv
 
 omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
-theorem e_mem_II (N : NF H r) (a : Fin r) (ha : N.j ≤ a.val) : N.F.e a.castSucc ∈ II N.F N.F' := by
-  have hc : N.c ≠ 0 := by
-    intro h
-    have := N.c_norm
-    rw [h, zero_mul] at this
-    exact zero_ne_one this
-  refine ⟨Submodule.subset_span ⟨a, a.2, rfl⟩, ?_⟩
-  have h1 : N.F'.e a.castSucc ∈ N.F'.X := Submodule.subset_span ⟨a, a.2, rfl⟩
-  have h2 := N.F'.X.smul_mem N.c⁻¹ h1
-  rwa [N.same a.castSucc ha, smul_smul, inv_mul_cancel₀ hc, one_smul] at h2
-
-omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem isotropicMeet_le_jointSpan (N : NF H r) : II N.F N.F' ≤ V0 N.F N.F' :=
   inf_le_left.trans (le_sup_left.trans le_sup_left)
 
@@ -1542,13 +1531,9 @@ theorem eq_zero_of_mem (N : NF H r)
   simp only [φ, LinearMap.sum_apply, LinearMap.smulRight_apply, LinearMap.flip_apply]
   refine Finset.sum_eq_zero fun a ha => ?_
   have ha' : N.j ≤ a.val := by simpa using ha
-  have he := e_mem_II N a ha'
+  have he := _root_.GlobalTheory.DegCnt.NFGeom.e_mem_II N a ha'
   rw [← H.herm, (hrad _ (isotropicMeet_le_jointSpan N he)).2 he d hd']
   simp
-
-omit [NumberField K] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
-theorem Xa_le_X (F : FlagD H r) (j : ℕ) : F.Xa j ≤ F.X :=
-  Submodule.span_mono (Set.image_mono fun b _ => b.2)
 
 theorem P0_inf_V0_le_sup_of_radical (N : NF H r)
     (hrad : ∀ v ∈ V0 N.F N.F', (∀ w ∈ V0 N.F N.F', H.B v w = 0) ↔ v ∈ II N.F N.F') :
@@ -1559,9 +1544,9 @@ theorem P0_inf_V0_le_sup_of_radical (N : NF H r)
   have hQV : Q ≤ rs (𝓞 K) (V0 N.F N.F') := by
     refine sup_le (sup_le (sup_le ?_ ?_) ?_) ?_
     · exact inf_le_right.trans fun x hx =>
-        ((Xa_le_X N.F N.j).trans (le_sup_left.trans le_sup_left) : N.F.Xa N.j ≤ V0 N.F N.F') hx
+        ((_root_.GlobalTheory.DegCnt.Kill.Xa_le N.F N.j).trans (le_sup_left.trans le_sup_left) : N.F.Xa N.j ≤ V0 N.F N.F') hx
     · exact inf_le_right.trans fun x hx =>
-        ((Xa_le_X N.F' N.j).trans (le_sup_right.trans le_sup_left) : N.F'.Xa N.j ≤ V0 N.F N.F') hx
+        ((_root_.GlobalTheory.DegCnt.Kill.Xa_le N.F' N.j).trans (le_sup_right.trans le_sup_left) : N.F'.Xa N.j ≤ V0 N.F N.F') hx
     · exact inf_le_right.trans fun x hx => isotropicMeet_le_jointSpan N hx
     · exact line_le _ _ _ (Submodule.mem_sup_right (Submodule.subset_span (by simp)))
   have hP : N.P0 ≤ Q ⊔ rs (𝓞 K) N.Ist := by
@@ -1574,7 +1559,7 @@ theorem P0_inf_V0_le_sup_of_radical (N : NF H r)
       · exact le_sup_of_le_left (le_sup_of_le_left (le_sup_of_le_left
           (le_inf h0 (line_le _ _ _ (Submodule.subset_span ⟨a, ha, rfl⟩)))))
       · exact le_sup_of_le_left (le_sup_of_le_right
-          (le_inf h0 (line_le _ _ _ (e_mem_II N a (not_lt.1 ha)))))
+          (le_inf h0 (line_le _ _ _ (_root_.GlobalTheory.DegCnt.NFGeom.e_mem_II N a (not_lt.1 ha)))))
     · refine iSup₂_le fun a ha => ?_
       have h0 : line (N.aa a) (N.F'.e a.castSucc) ≤ N.P0 :=
         le_sup_of_le_left (le_sup_of_le_left (le_sup_of_le_right

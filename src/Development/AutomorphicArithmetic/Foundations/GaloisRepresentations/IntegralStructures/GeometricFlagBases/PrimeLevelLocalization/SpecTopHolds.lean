@@ -78,6 +78,7 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Geometry.Manifold.StructureGroupoid
 import Mathlib.Algebra.Order.Star.Real
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HermitianFormsSameSignatureSameSpace
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Linter.Style
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -352,7 +353,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ConjEqNegOfSq =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ProjectiveAutomorphicHecke.PEpsIff =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ProjectiveAutomorphicHecke.PEpsIff", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ProjectiveAutomorphicHecke.CharConj\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.AgreeOfAdjoin\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ConjEqNegOfSq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ProjectiveAutomorphicHecke.PEpsIff", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ProjectiveAutomorphicHecke.CharConj\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.AgreeOfAdjoin\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ConjEqNegOfSq\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HermitianFormsSameSignatureSameSpace\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -362,30 +363,22 @@ open NumberField
 
 namespace UpperTheory.Gal.CertificateRingHomMap
 
-private theorem agree_of_adjoin {E : Type} [Field E] [NumberField E] (φ ψ : E →+* ℂ) {a b : E}
-    (h : φ a = ψ a) (hb : b ∈ IntermediateField.adjoin ℚ {a}) : φ b = ψ b :=
-  _root_.UpperTheory.Reformulated.B.Qk58.agree_of_adjoin φ ψ h hb
-
-private theorem conj_eq_neg_of_sq {z : ℂ} {d : ℕ} (hd : 0 < d) (hz : z ^ 2 = -(d : ℂ)) :
-    (starRingEnd ℂ) z = -z :=
-  _root_.UpperTheory.Reformulated.B.Qk60.conj_eq_neg_of_sq hd hz
-
 theorem pEpsIff_of : EpsIff := by
   intro E _ _ _ d x ω hd hx hω hx' τ φ
   have hτ : (τ x) ^ 2 = -(d : ℂ) := by
     rw [← map_pow, hx, map_neg, map_natCast]
   have hc : ComplexEmbedding.conjugate τ x = -τ x := by
     rw [ComplexEmbedding.conjugate_coe_eq]
-    exact conj_eq_neg_of_sq hd hτ
+    exact _root_.GlobalTheory.ConjNegSquareNat.conj_eq_neg_of_sq_eq_neg_nat hd hτ
   constructor
   · intro h
     have h' : φ ω = ComplexEmbedding.conjugate τ ω := by
       rw [ComplexEmbedding.conjugate_coe_eq]
       exact h
-    rw [agree_of_adjoin φ _ h' hx', hc]
+    rw [_root_.UpperTheory.Reformulated.B.Qk58.agree_of_adjoin φ _ h' hx', hc]
   · intro h
     have h' : φ x = ComplexEmbedding.conjugate τ x := by rw [h, hc]
-    rw [agree_of_adjoin φ _ h' hω, ComplexEmbedding.conjugate_coe_eq]
+    rw [_root_.UpperTheory.Reformulated.B.Qk58.agree_of_adjoin φ _ h' hω, ComplexEmbedding.conjugate_coe_eq]
 
 end UpperTheory.Gal.CertificateRingHomMap
 
@@ -568,10 +561,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Matrix Polynomial GlobalTheory.CuspRep GlobalTheory.UnitaryBC GlobalTheory.DefU Formalism.BasicNotions UpperTheory.Gal.CertificateRingHomMap
 open scoped Classical
 
-private theorem imag_of_sq {c : ℂ} {d : ℕ} (hd : 0 < d) (h : c ^ 2 = -(d : ℂ)) :
-    (starRingEnd ℂ) c = -c ∧ c ≠ 0 :=
-  _root_.UpperTheory.Reformulated.B.Qh67.imag_of_sq hd h
-
 private theorem sum_emb {E : Type} [Field E] [NumberField E]
     (hc : ∀ φ : E →+* ℂ, ComplexEmbedding.conjugate φ ≠ φ) (f : (E →+* ℂ) → ℤ) :
     ∑ φ, f φ = ∑ v : InfinitePlace E, (f v.embedding + f (ComplexEmbedding.conjugate v.embedding)) := by
@@ -596,13 +585,13 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pExpSum_of :
   intro E _ _ _ n d x hd hx W m hm τ
   have hsq : ∀ φ : E →+* ℂ, (φ x) ^ 2 = -(d : ℂ) := fun φ => by
     rw [← map_pow, hx]; simp
-  have hτ0 : τ x ≠ 0 := (imag_of_sq hd (hsq τ)).2
+  have hτ0 : τ x ≠ 0 := (_root_.UpperTheory.Reformulated.B.Qh67.imag_of_sq hd (hsq τ)).2
   have hcj : ∀ φ : E →+* ℂ, ComplexEmbedding.conjugate φ x = -φ x := fun φ => by
-    rw [ComplexEmbedding.conjugate_coe_eq]; exact (imag_of_sq hd (hsq φ)).1
+    rw [ComplexEmbedding.conjugate_coe_eq]; exact (_root_.UpperTheory.Reformulated.B.Qh67.imag_of_sq hd (hsq φ)).1
   have hne : ∀ φ : E →+* ℂ, ComplexEmbedding.conjugate φ ≠ φ := fun φ h => by
     have h1 := hcj φ
     rw [h] at h1
-    have h2 : φ x ≠ 0 := (imag_of_sq hd (hsq φ)).2
+    have h2 : φ x ≠ 0 := (_root_.UpperTheory.Reformulated.B.Qh67.imag_of_sq hd (hsq φ)).2
     exact h2 (self_eq_neg.1 h1)
   have hpm : ∀ φ : E →+* ℂ, φ x = τ x ∨ φ x = -τ x := fun φ =>
     sq_eq_sq_iff_eq_or_eq_neg.1 ((hsq φ).trans (hsq τ).symm)
@@ -677,7 +666,7 @@ open scoped Classical
 theorem UpperTheory.Gal.CertificateRingHomMap.pSchHom_of :
     UpperTheory.Gal.CertificateRingHomMap.SchHom := by
   intro n t _
-  refine ⟨fun lam c _ => UpperTheory.Gal.Schur.SchurHomog_holds ℂ n lam t c, fun m => ?_⟩
+  refine ⟨fun lam c _ => _root_.UpperTheory.Gal.Schur.schurHomog ℂ n lam t c, fun m => ?_⟩
   obtain ⟨h0, h1⟩ := UpperTheory.Gal.Schur.SchurDet_holds ℂ n t
   have h := h1 (fun _ => 0) m
   simp only [zero_add] at h
@@ -886,7 +875,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pWtCore_of :
     simp only [g, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, if_neg (conjugate_ne v.embedding)]
   have hL : LocalSmoothExtension.Lists (LocalSmoothExtension.invPol y.val.charpoly) g := by
     intro τ
-    rw [LocalSmoothExtension.InvRoots_holds E _ h0 τ]
+    rw [_root_.UpperTheory.Gal.LocalSmoothExtension.invRoots_of E _ h0 τ]
     obtain ⟨v, hv⟩ : ∃ v : InfinitePlace E, τ = v.embedding ∨ τ = ComplexEmbedding.conjugate v.embedding := by
       refine ⟨InfinitePlace.mk τ, ?_⟩
       rcases InfinitePlace.embedding_mk_eq τ with h | h
@@ -951,26 +940,18 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.CertificateRingHomMap
 
-theorem trRho_holds : TrRho := pTrRho_of
-theorem trSch_holds : TrSch := pTrSch_of
-theorem schHom_holds : SchHom := pSchHom_of
-theorem charConj_holds : CharConj := pCharConj_of
-theorem wtCore_holds : WtCore := pWtCore_of trRho_holds trSch_holds schHom_holds charConj_holds
-theorem autEx_holds : AutEx := pAutEx_of
-theorem wtAt_holds : WtAt := pWtAt_of
-theorem epsIff_holds : EpsIff := pEpsIff_of
-theorem expSum_holds : ExpSum := pExpSum_of
-theorem expCore_holds : ExpCore := pExpCore_of expSum_holds
+theorem wtCore_holds : WtCore := pWtCore_of _root_.UpperTheory.Gal.CertificateRingHomMap.pTrRho_of _root_.UpperTheory.Gal.CertificateRingHomMap.pTrSch_of _root_.UpperTheory.Gal.CertificateRingHomMap.pSchHom_of _root_.UpperTheory.Gal.CertificateRingHomMap.pCharConj_of
+theorem expCore_holds : ExpCore := pExpCore_of _root_.UpperTheory.Gal.CertificateRingHomMap.pExpSum_of
 
 end UpperTheory.Gal.CertificateRingHomMap
 
 namespace UpperTheory.Gal.Int.Geo.Pl
 
-theorem vecEx_holds : VecEx := vecEx_of CertificateRingHomMap.seedGU_holds CertificateRingHomMap.wtAt_holds
+theorem vecEx_holds : VecEx := vecEx_of CertificateRingHomMap.seedGU_holds _root_.UpperTheory.Gal.CertificateRingHomMap.pWtAt_of
 
 theorem wtOf_holds : WtOf := wtOf_of CertificateRingHomMap.wtCore_holds
 
-theorem expOf_holds : ExpOf := expOf_of CertificateRingHomMap.expCore_holds CertificateRingHomMap.autEx_holds CertificateRingHomMap.wtAt_holds CertificateRingHomMap.epsIff_holds
+theorem expOf_holds : ExpOf := expOf_of CertificateRingHomMap.expCore_holds _root_.UpperTheory.Gal.CertificateRingHomMap.pAutEx_of _root_.UpperTheory.Gal.CertificateRingHomMap.pWtAt_of _root_.UpperTheory.Gal.CertificateRingHomMap.pEpsIff_of
 
 end UpperTheory.Gal.Int.Geo.Pl
 end -- clump:auto

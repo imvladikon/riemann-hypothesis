@@ -204,13 +204,6 @@ theorem fg_of_le_fg {R M : Type*} [CommRing R] [IsNoetherianRing R] [AddCommGrou
   have h2 := h1.map Q.subtype
   rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hPQ] at h2
 
-theorem exists_smul_mem {E : Type} [Field E] [NumberField E] {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N → E))
-    (hsp : Submodule.span E (Lb : Set (Fin N → E)) = ⊤) (v : Fin N → E) :
-    ∃ c : 𝓞 E, c ≠ 0 ∧ c • v ∈ Lb := by
-  first
-  | (apply _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem ..)
-
 theorem hform_single {E : Type} [Field E] {N : ℕ} (σ : E →+* E) (J : Matrix (Fin N) (Fin N) E)
     (c : E) (i : Fin N) (y : Fin N → E) :
     hform σ J (c • Pi.single i 1) y = σ c * (J *ᵥ y) i := by
@@ -220,7 +213,7 @@ theorem dualSet_le_fg {E : Type} [Field E] [NumberField E] {N : ℕ} (σ : E →
     (J : Matrix (Fin N) (Fin N) E) (hJ : IsUnit J.det) (Lb : Submodule (𝓞 E) (Fin N → E))
     (hsp : Submodule.span E (Lb : Set (Fin N → E)) = ⊤) :
     ∃ M : Submodule (𝓞 E) (Fin N → E), M.FG ∧ dualSet σ J Lb ⊆ M := by
-  choose c hc0 hcm using fun i : Fin N => exists_smul_mem Lb hsp (Pi.single i 1)
+  choose c hc0 hcm using fun i : Fin N => _root_.GlobalTheory.ExistsSmulMem.exists_smul_mem Lb hsp (Pi.single i 1)
   refine ⟨Submodule.span (𝓞 E) (Set.range fun i => (σ (c i : E))⁻¹ • (J⁻¹ *ᵥ Pi.single i 1)),
     Submodule.fg_span (Set.finite_range _), ?_⟩
   intro y hy
@@ -632,25 +625,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.BaseFrameLat
 
-theorem locP_map_equiv' {R W W' : Type*} [CommRing R] [AddCommGroup W] [Module R W] [AddCommGroup W'] [Module R W']
-    (e : W ≃ₗ[R] W') (q : Ideal R) [q.IsPrime] (Λ : Submodule R W) :
-    Formalism.HermitianLatticesTheory.localization₂ q (Λ.map (e : W →ₗ[R] W')) = (Formalism.HermitianLatticesTheory.localization₂ q Λ).map (e : W →ₗ[R] W') := by
-  ext x
-  constructor
-  · rintro ⟨s, hs, z, hz, hzx⟩
-    refine ⟨e.symm x, ⟨s, hs, ?_⟩, by simp⟩
-    have : s • e.symm x = z := by
-      apply e.injective
-      rw [map_smul, e.apply_symm_apply]
-      exact hzx.symm
-    rw [this]
-    exact hz
-  · rintro ⟨y, ⟨s, hs, hy⟩, rfl⟩
-    exact ⟨s, hs, s • y, hy, by simp⟩
-
 theorem locP_mvL_comm {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (c : GL (Fin N) E) (q : Ideal (𝓞 E)) [q.IsPrime]
     (Λ : Submodule (𝓞 E) (Fin N → E)) : Formalism.HermitianLatticesTheory.localization₂ q (mvL c Λ) = mvL c (Formalism.HermitianLatticesTheory.localization₂ q Λ) :=
-  locP_map_equiv' ((toLE c).restrictScalars (𝓞 E)) q Λ
+  _root_.GlobalTheory.LatAway.locP_map_equiv ((toLE c).restrictScalars (𝓞 E)) q Λ
 
 theorem mvL_one' {E : Type} [Field E] [NumberField E] [StarRing E] {N : ℕ} (Λ : Submodule (𝓞 E) (Fin N → E)) : mvL 1 Λ = Λ := by
   unfold mvL
@@ -715,8 +692,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.chartBaseFrame_badPrime_eq_companion_lattice : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x : UA D i hi) p, IsPtAd A a i hi β x p → ∀ P : SB t μ, mvL (A.fb i hi β P) (stdAt D.host.E (D.R.N i) (seamP t.seam P.1)) = Formalism.HermitianLatticesTheory.localization₂ (seamP t.seam P.1).asIdeal (compan (sp := D.sp) (gramN D i hi) a ((St i hi).K β).lev.Lb)) := by
-  first | exact @GlobalTheory.TwV.baseFrame_std_eq_compan
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ChartBaseFrameBadPrimeEqCompanionLatticeStatement =====
@@ -957,7 +932,7 @@ namespace GlobalTheory.TwV
 
 theorem congAt_fb_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x : UA D i hi) p (κ : ((St i hi).K β).lev.U), IsPtAd A a i hi β x p → ∀ P : SB t μ, CongAt (seamP t.seam P.1) 0 ((ratA D.host.F (A.fb i hi β P))⁻¹ * κ.1 * ratA D.host.F (A.fb i hi β P)) ∧ CongAt (seamP t.seam P.1) 0 ((ratA D.host.F (A.fb i hi β P))⁻¹ * κ.1 * ratA D.host.F (A.fb i hi β P))⁻¹) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP H i hi β x p κ hp P
-  exact GlobalTheory.LevStab.lev_stab_cong i hi _ a κ _ _ (GlobalTheory.T.chartBaseFrame_badPrime_eq_companion_lattice A dtU a hP H i hi β x p hp P)
+  exact GlobalTheory.LevStab.lev_stab_cong i hi _ a κ _ _ (_root_.GlobalTheory.TwV.baseFrame_std_eq_compan A dtU a hP H i hi β x p hp P)
 
 end GlobalTheory.TwV
 
@@ -1288,37 +1263,6 @@ namespace GlobalTheory.TwV
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-section Hat
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-  {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin n) (Fin n) E} {T f : ℕ} {bad : Set (HeightOneSpectrum (𝓞 F))}
-
-theorem levU_mulVec_mem_hatL (S : StepLevel F E σ J T f bad) (g : GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (hg : g ∈ S.U)
-    (z : Fin n → E ⊗[F] FiniteAdeleRing (𝓞 F) F) (hz : z ∈ Formalism.L2.Herm.hatL (F := F) S.Lb) :
-    (g : Matrix (Fin n) (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) *ᵥ z ∈ Formalism.L2.Herm.hatL (F := F) S.Lb := by
-  refine Formalism.L2.Geo.Def.PN.latS_of_loc S.Lb S.Lb_span _ fun v => ?_
-  have h1 := Formalism.L2.Geo.Def.PN.prV_latS S.Lb v hz
-  have h2 : bc (prV (E := E) v) g ∈ levelVL σ J v S.Lb := S.Uloc_lev v (((S.U_eq g).1 hg).2 v)
-  have h3 := (h2.2 _).1 h1
-  have e : (fun i => prV (E := E) v (((g : Matrix (Fin n) (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) *ᵥ z) i)) =
-      ((bc (prV (E := E) v) g : GL (Fin n) (E ⊗[F] v.adicCompletion F)) : Matrix (Fin n) (Fin n) (E ⊗[F] v.adicCompletion F)) *ᵥ
-        fun i => prV (E := E) v (z i) := by
-    funext i
-    exact RingHom.map_mulVec (prV (E := E) v) (g : Matrix (Fin n) (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) z i
-  rw [e]
-  exact h3
-
-theorem hatStab_of_levU (S : StepLevel F E σ J T f bad) (κ : S.U) : HatStab S.Lb κ.1 := by
-  intro z
-  constructor
-  · intro hz
-    have := levU_mulVec_mem_hatL S κ.1 κ.2 _ hz
-    rwa [Matrix.mulVec_mulVec, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.one_mulVec] at this
-  · intro hz
-    exact levU_mulVec_mem_hatL S κ.1⁻¹ (S.U.inv_mem κ.2) z hz
-
-end Hat
-
 theorem isPtAd_mul_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x x' : UA D i hi) p (κ : ((St i hi).K β).lev.U), x'.1 = x.1 * κ.1 → IsPtAd A a i hi β x p → ∃ p', IsPtAd A a i hi β x' p') := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hP H i hi β x x' p κ hx hp
   obtain ⟨p', hN, hf, hfr⟩ := _root_.GlobalTheory.FrameShift.exists_pt_mul A dtU a hP H i p
@@ -1328,7 +1272,7 @@ theorem isPtAd_mul_lev : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU
   refine ⟨p', ⟨?_, ?_, ?_⟩⟩
   · rw [hN, hp.lat]
     unfold latCo
-    rw [hx, latAd_stab _ _ _ (hatStab_of_levU _ κ)]
+    rw [hx, latAd_stab _ _ _ (_root_.GlobalTheory.TwU.hatStab_of_lev _ κ)]
   · intro P
     have e : ratA D.host.F (A.crd i hi) * x'.1 * ratA D.host.F (A.fb i hi β P) =
         ratA D.host.F (A.crd i hi) * x.1 * ratA D.host.F (A.fb i hi β P) *

@@ -172,7 +172,7 @@ open ReciprocityTheory.ChartRestriction.G.Key
 
 namespace GlobalTheory.ThetaInversion
 
-theorem inversion : Chi.InversionStatement := GlobalTheory.inversionStatement_holds
+alias inversion := _root_.GlobalTheory.inversionStatement_holds
 
 end GlobalTheory.ThetaInversion
 end -- clump:auto
@@ -197,10 +197,7 @@ namespace GlobalTheory.KeyDesc
 
 open GlobalTheory.KeyCancel
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  show Spec.map _ = Spec.map _ ≫ Spec.map _
-  rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+alias spMap_comp := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem dualMapR_algebraMap {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (a : A) :
     Chart.dualMapR f (algebraMap A _ a) = algebraMap B _ (f a) := by
@@ -364,10 +361,7 @@ theorem exists_factor {S K : Type} [CommRing S] [Countable S] [Field K] (i : S �
   exact (Subfield.cardinalMk_closure_le_max _).trans
     (max_le (Cardinal.le_aleph0_iff_set_countable.2 hc) le_rfl)
 
-theorem spMap_comp' {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R →+* R') (f' : R' →+* R'') :
-    spMap (f'.comp f) = spMap f' ≫ spMap f := by
-  show Spec.map _ = Spec.map _ ≫ Spec.map _
-  rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+alias spMap_comp' := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem exists_common_countable {k K : Type} [Field k] [Countable k] [Field K] (σ : k →+* K) (y₀ y₁ : KeyIn k)
     (x : KeyIn K) (h₀ : KeyPB x y₀ σ) (h₁ : KeyPB x y₁ σ) :

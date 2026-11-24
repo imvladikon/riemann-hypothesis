@@ -211,11 +211,11 @@ theorem prod_famB {T : Over (Spec (CommRingCat.of V))} (p : T ⟶ D.P.A) {U : Ty
   have e₀ : p.left ≫ D.famφB 0 0 = p.left := Category.comp_id _
   have e₁ : p.left ≫ D.famφB 0 1 = p.left := by
     refine (Over.comp_left _ _ _ p (padd D.P.A (𝟙 D.P.A) (toUnit _ ≫ D.c 0))).symm.trans (congrArg (fun q : T ⟶ D.P.A => q.left) ?_)
-    rw [ThetaOne.c_zero, MonObj.comp_one]
+    rw [_root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, MonObj.comp_one]
     exact (congrArg (p ≫ ·) (_root_.mul_one (𝟙 D.P.A))).trans (Category.comp_id p)
   have e₂ : D.famφB 0 2 = D.famφB 0 3 := by
     show (toUnit D.P.A ≫ D.c 0).left = (toUnit D.P.A ≫ η[D.P.A]).left
-    rw [ThetaOne.c_zero, eta_eq]
+    rw [_root_.GlobalTheory.IndivisibleSection.c_zero_eq_one, eta_eq]
   rw [e₀, e₁, e₂]
   simp [DegPre.famε]
 
@@ -503,8 +503,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.USep
 
-theorem _root_.GlobalTheory.T.theta_terms_separation_algebraically_closed : ∀ (m : ℕ), Odd m → 3 ≤ m → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → IsUnit (m : V₁) → ∀ (D : DegPre V₁) (X C : Type) [AddCommGroup X] (e : X ≃+ D.X) (u : X → C → V₁) (mo : X → V₁), (∀ mu, mo mu ≠ 0 ∧ ∃ c, IsUnit (u mu c)) → GlobalTheory.Poinc.Sep.IsThetaTerms D (m ^ 2) e (fun mu c => u mu c * mo mu) → ∀ (K : Type) [Field K] [IsAlgClosed K] (ev : V₁ →+* K) (ρ₀ : LB.Gen (D.P.L.pull (eSec D.P.A))), ρ₀.IsGen → ∀ (th : LB.Sec (LPow D.P.A D.P.L ((1 : ℕ) : ℤ) (Over.mk (spMap ev)))), IsGenSec D.P.A D.P.L ((1 : ℕ) : ℤ) th → ∃ (M : ℕ) (lam : K), 1 ≤ M ∧ ∀ (x : Over.mk (spMap ev) ⟶ D.P.A) (τ : LB.Gen (LB.LinComb D.P.L (Y := (Over.mk (spMap ev)).left) (K := Fin 1) (fun _ => x.left) (fun _ => 1))) (c : K), IsTorsFrame D.P ρ₀ (m ^ 2) x τ → IsValueAt D.P.A D.P.L ((1 : ℕ) : ℤ) th x (powFrame D.P.A D.P.L x τ ((1 : ℕ) : ℤ)) (GlobalTheory.Ex.fnOf c) → ∃ (c₀ : C) (ζ : K), ζ ^ M = 1 ∧ c = lam * ζ * ev (u 0 c₀) := by
-  first | exact @GlobalTheory.Poinc.Sep.TorsValue.values_in_torsFrames
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTermsSeparationAlgebraicallyClosedStatement =====
@@ -535,10 +533,10 @@ theorem GlobalTheory.USep.thetaConst_eq_lam_root_mul_unit : ∀ (n : ℕ), n.Pri
     omega
   have hm3 : 3 ≤ n ^ j := le_trans hn3 (Nat.le_self_pow (by omega) n)
   have hmu : IsUnit ((n ^ j : ℕ) : V₁) := by push_cast; exact hunit.pow j
-  obtain ⟨M, lam, hM, H⟩ := GlobalTheory.T.theta_terms_separation_algebraically_closed (n ^ j) (hodd.pow) hm3 V₁ hV hmu D X C e u mo hmo hT K ev ρ₀ hρ₀ th hth
+  obtain ⟨M, lam, hM, H⟩ := _root_.GlobalTheory.Poinc.Sep.TorsValue.values_in_torsFrames (n ^ j) (hodd.pow) hm3 V₁ hV hmu D X C e u mo hmo hT K ev ρ₀ hρ₀ th hth
   refine ⟨M, lam, hM, fun y c hc => ?_⟩
   haveI : IsNoetherianRing V₁ := hV.1
-  obtain ⟨τ, hτ, hv⟩ := GlobalTheory.T.exists_torsionFrame_isValueAt_thetaConstant (Sp V₁) D.P ρ₀ hρ₀ (n ^ j) (hodd.pow) _ th y _ hc
+  obtain ⟨τ, hτ, hv⟩ := _root_.GlobalTheory.Ex.OneGen.ThG.exists_isTorsFrame_isValueAt (Sp V₁) D.P ρ₀ hρ₀ (n ^ j) (hodd.pow) _ th y _ hc
   exact H (y ^ n ^ j) τ c (GlobalTheory.USep.isTorsFrame_sq _ D.P ρ₀ (n ^ j) _ (y ^ n ^ j) τ hτ) hv
 end -- clump:auto
 end -- clump:auto

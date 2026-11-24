@@ -83,6 +83,7 @@ import Mathlib.Tactic.ReduceModChar
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.LocModel
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.GramNondeg
 import Mathlib.Tactic.Linter.Style
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TermAttractorConstant.GenericityConstantDoubleCosets
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarFrame
 import Mathlib.Tactic.Basify
@@ -172,7 +173,7 @@ theorem repG_holds : RepG u u' F0 what₂ := by
   obtain ⟨⟨hPD, hmk⟩, -⟩ := hex.choose_spec
   refine ⟨⟨hex.choose.2.1, hPD⟩, hrep.symm, hmk, ?_⟩
   have hrow := hC.2.1.1 γ.lam γ.mem
-  have hEq := Formalism.L2.SG.Closed.TermEqIff_holds D u u' F0 γ.lam hrow
+  have hEq := _root_.term_eq_iff_relation D u u' F0 γ.lam hrow
   have hrel := (hEq ⟨hex.choose.2.1, hPD⟩ (Quot.out γ.cls)).1 (hmk.trans (Quot.out_eq γ.cls).symm)
   have e := Formalism.L2.SG.Pf.g_value_function _ _ _ _ _ hrel
   exact fun h0 => hG (e.symm.trans h0)
@@ -279,7 +280,7 @@ theorem exists_y (γ : TermDef.Term D u u' F0 what₂) {Λ₂ : Submodule (𝓞 
       rw [BwdNA.hsw (VS D) w (F0.e i), ← frame_cs, hw, hρe, star_zero]
     | zero => simp
     | add a b _ _ ha hb => rw [map_add (f := _), LinearMap.add_apply, ha, hb, add_zero]
-    | smul c x _ hx => rw [BwdNA.hT_smulL, hx, mul_zero]
+    | smul c x _ hx => rw [_root_.PI.ScalarPairDr.W.hT_smul_left, hx, mul_zero]
   · have : frame (lf D F0) (Fin.last D.R.rS) = F0.z := by simp [frame, FlagG.fvec]
     rw [← this, hw, hρl]
 
@@ -489,7 +490,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmDetPf =====
 
 -- ===== clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmRepPf =====
--- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmRepPf", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmPart\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.GramNondeg\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmRepPf", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarOmPart\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FStarNMove\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.GramNondeg\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BetaUniqueness.Lemmas\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -507,22 +508,16 @@ namespace OmR
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ}
 
-theorem mem_orth' {U : Submodule E S.V} {v : S.V} : v ∈ orth S U ↔ ∀ x ∈ U, S.hT x v = 0 :=
-  PI.UnitaryGroupMassFormula.BetaLUniq.mem_orth S
-
-theorem hswap (x y : S.V) : S.hT y x = star (S.hT x y) := NMoveP.hsw S x y
-
-theorem orthX_of {T : E} (F : FlagG S r T) {v : S.V} (h : ∀ i, S.hT (F.e i) v = 0) : v ∈ orth S F.X :=
-  mem_orth'.2 fun x hx => NMoveP.spanL S F.e v h x hx
+alias mem_orth' := _root_.Formalism.MainNotions.LatticeGluingRadicals.p_mem_orth
 
 theorem orthX_of_f {T : E} (F : FlagG S r T) {v : S.V} (h : ∀ a, S.hT (F.fvec a) v = 0) : v ∈ orth S F.X :=
-  orthX_of F fun i => by rw [← fvec_cs]; exact h _
+  _root_.Formalism.MainNotions.S.Inh.tie_mem_orth F fun i => by rw [← fvec_cs]; exact h _
 
 theorem om_orthX {T T' : E} {F : FlagG S r T} {F' : FlagG S r T'} {v : S.V} (h : OmV F F' v) :
     v ∈ orth S F.X :=
-  orthX_of F fun i => by rw [← fvec_cs, h.2]; simp [Fin.castSucc_ne_last]
+  _root_.Formalism.MainNotions.S.Inh.tie_mem_orth F fun i => by rw [← fvec_cs, h.2]; simp [Fin.castSucc_ne_last]
 
-theorem z_orthX {T : E} (F : FlagG S r T) : F.z ∈ orth S F.X := orthX_of F F.z_orth
+theorem z_orthX {T : E} (F : FlagG S r T) : F.z ∈ orth S F.X := _root_.Formalism.MainNotions.S.Inh.tie_mem_orth F F.z_orth
 
 theorem X_le_sp {T : E} (F : FlagG S r T) : F.X ≤ Submodule.span E (Set.range F.fvec) := by
   apply Submodule.span_mono
@@ -535,33 +530,13 @@ variable {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n : S.V ≃ₗ
 
 theorem nl_isom (hn : n ∈ NLam Λ F) (x y : S.V) : S.hT (n x) (n y) = S.hT x y := hn.1.1 x y
 
-theorem e_mem_flag (F : LFlag S r T) (i : Fin r) : F.fl.e i ∈ Xflag F (i.1 + 1) :=
-  Submodule.subset_span ⟨i, show i.1 < i.1 + 1 from Nat.lt_succ_self _, rfl⟩
-
-theorem flag_le_X (F : LFlag S r T) (j : ℕ) : Xflag F j ≤ Xsp F :=
-  Submodule.span_mono (Set.image_subset_range _ _)
-
 theorem nl_e (hn : n ∈ NLam Λ F) (i : Fin r) : n (F.fl.e i) - F.fl.e i ∈ Xsp F :=
-  flag_le_X F i.1 (hn.2.1 i.1 _ (e_mem_flag F i))
-
-theorem nl_X (hn : n ∈ NLam Λ F) {x : S.V} (hx : x ∈ Xsp F) : n x ∈ Xsp F := by
-  have : Xsp F ≤ (Xsp F).comap (n : S.V →ₗ[E] S.V) := by
-    show Submodule.span E (Set.range F.fl.e) ≤ _
-    rw [Submodule.span_le]
-    rintro _ ⟨i, rfl⟩
-    show n (F.fl.e i) ∈ Xsp F
-    have h := nl_e hn i
-    have e : n (F.fl.e i) = (n (F.fl.e i) - F.fl.e i) + F.fl.e i := by abel
-    rw [e]
-    exact Submodule.add_mem _ h (Submodule.subset_span ⟨i, rfl⟩)
-  exact this hx
-
-theorem nl_orth (hn : n ∈ NLam Λ F) {v : S.V} (hv : v ∈ orth S (Xsp F)) : n v - v ∈ Xsp F := hn.2.2 v hv
+  _root_.PI.DCRelEquiv.UnitaryGroupMassFormula.Xflag_le_X F i.1 (hn.2.1 i.1 _ (_root_.PI.DCRelEquiv.UnitaryGroupMassFormula.e_mem_Xflag F i))
 
 theorem nl_symm_orth (hn : n ∈ NLam Λ F) {v : S.V} (hv : v ∈ orth S (Xsp F)) : n.symm v ∈ orth S (Xsp F) := by
   refine mem_orth'.2 fun x hx => ?_
   rw [← nl_isom hn x, LinearEquiv.apply_symm_apply]
-  exact mem_orth'.1 hv _ (nl_X hn hx)
+  exact mem_orth'.1 hv _ (_root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_X_mem hn hx)
 
 theorem sp_map_eq (hn : n ∈ NLam Λ F) :
     (Submodule.span E (Set.range F.fl.fvec)).map (n : S.V →ₗ[E] S.V) = Submodule.span E (Set.range F.fl.fvec) := by
@@ -574,7 +549,7 @@ theorem sp_map_eq (hn : n ∈ NLam Λ F) :
   rw [e]
   refine Submodule.add_mem _ (Submodule.subset_span ⟨b, rfl⟩) (hX ?_)
   refine Fin.lastCases ?_ (fun i => ?_) b
-  · rw [fvec_last]; exact nl_orth hn (z_orthX F.fl)
+  · rw [fvec_last]; exact _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_orth hn (z_orthX F.fl)
   · rw [fvec_cs]; exact nl_e hn i
 
 end NL
@@ -604,7 +579,7 @@ theorem inv_dc {Ωγ : S.V} {F₁ F₂ : LFlag S r T'} (h : DCRel Λ F F₁ F₂
   have hsp := sp_dc hm hf
   constructor
   · rintro ⟨v, hv, hvγ⟩
-    have hd := nl_orth hn (om_orthX hv)
+    have hd := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_orth hn (om_orthX hv)
     refine ⟨n v, ⟨?_, fun a => ?_⟩, ?_⟩
     · rw [hsp, Submodule.mem_map_equiv, LinearEquiv.symm_apply_apply]; exact hv.1
     · have e : n v = v + (n v - v) := by abel
@@ -613,7 +588,7 @@ theorem inv_dc {Ωγ : S.V} {F₁ F₂ : LFlag S r T'} (h : DCRel Λ F F₁ F₂
       rw [e]; exact Submodule.add_mem _ hd hvγ
   · rintro ⟨v, hv, hvγ⟩
     have ho := nl_symm_orth hn (om_orthX hv)
-    have hd := nl_orth hn ho
+    have hd := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_orth hn ho
     rw [LinearEquiv.apply_symm_apply] at hd
     refine ⟨n.symm v, ⟨?_, fun a => ?_⟩, ?_⟩
     · have h1 := hv.1
@@ -631,7 +606,7 @@ theorem qu_dc {F₁ F₂ : LFlag S r T'} (h : DCRel Λ F F₁ F₂) : QU F F₁ 
   · intro hq d hd h0
     have ho : d ∈ orth S (Xsp F) := orthX_of_f F.fl h0
     have ho' := nl_symm_orth hn ho
-    have hdd := nl_orth hn ho'
+    have hdd := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_orth hn ho'
     rw [LinearEquiv.apply_symm_apply] at hdd
     rw [hsp, Submodule.mem_map_equiv] at hd
     have : n.symm d = 0 := hq _ hd fun a => by
@@ -640,7 +615,7 @@ theorem qu_dc {F₁ F₂ : LFlag S r T'} (h : DCRel Λ F F₁ F₂) : QU F F₁ 
     simpa using congrArg n this
   · intro hq d hd h0
     have ho : d ∈ orth S (Xsp F) := orthX_of_f F.fl h0
-    have hdd := nl_orth hn ho
+    have hdd := _root_.PI.UnitaryGroupMassFormula.ScalRelRepFree.nl_orth hn ho
     have hnd : n d ∈ Submodule.span E (Set.range F₂.fl.fvec) := by
       rw [hsp, Submodule.mem_map_equiv, LinearEquiv.symm_apply_apply]; exact hd
     have : n d = 0 := hq _ hnd fun a => by
@@ -661,16 +636,6 @@ end DC
 section Pair
 
 variable {Λ : Submodule (𝓞 E) S.V} {T T' : E}
-
-theorem orth_orth (U : Submodule E S.V) : orth S (orth S U) = U := by
-  symm
-  apply Submodule.eq_of_le_of_finrank_eq
-  · intro u hu
-    refine mem_orth'.2 fun x hx => ?_
-    rw [hswap, mem_orth'.1 hx u hu, star_zero]
-  · have h1 := PI.UnitaryGroupMassFormula.BetaLUniq.finrank_orth_add S U
-    have h2 := PI.UnitaryGroupMassFormula.BetaLUniq.finrank_orth_add S (orth S U)
-    omega
 
 theorem z_mem_UUE (F : LFlag S r T) (F' : LFlag S r T') (hF : IsLift Λ F) : F.fl.z ∈ UUE Λ F F' := by
   refine Submodule.subset_span ?_
@@ -730,10 +695,10 @@ theorem pair_core (hΛ : Submodule.IsFullLattice E Λ) (F : LFlag S r T) (F' F''
     simp only [LinearMap.fst_apply]
     rw [e, LinearMap.map_add₂, mem_orth'.1 hνX _ hp.1.2]
     have h2 : S.hT ν p.2 = 0 := mem_orth'.1 hp.1.1.2 ν hνU''
-    rw [hswap, h2, star_zero, add_zero]
+    rw [_root_.Formalism.MainNotions.LatticeGluingRadicals.a_herm, h2, star_zero, add_zero]
   have hνU' : ν ∈ UUE Λ F F' := by
     have := hνH
-    rw [show Hp Λ F F' = orth S (UUE Λ F F') from rfl, orth_orth] at this
+    rw [show Hp Λ F F' = orth S (UUE Λ F F') from rfl, _root_.PI.UnitaryGroupMassFormula.ScalEquivGen.orthOrthQ] at this
     exact this
   have hzz : S.hT F.fl.z ν = 0 := by
     have h1 : S.hT F.fl.z Ω'' = 1 := by rw [← fvec_last, hΩ.2]; simp
@@ -1445,10 +1410,6 @@ theorem sign_norm {l : ℕ} (hl : l ≤ D.R.rS + 1) :
   rw [hdet, star_pow, star_neg, star_one, ← pow_add]
   exact Even.neg_one_pow ⟨_, rfl⟩
 
-theorem conjF_star (x : D.host.E) : D.conjF x = star x := by
-  rw [D.conjF_eq]
-  exact (Formalism.BasicNotions.Examples₂.star_eq_conj D.host x).symm
-
 private lemma submatrix_castLE_mul_of_upper {K : Type*} [Field K] {n l : ℕ} (hl : l ≤ n) (A B : Matrix (Fin n) (Fin n) K)
     (hB : ∀ i j, j < i → B i j = 0) :
     (A * B).submatrix (Fin.castLE hl) (Fin.castLE hl) =
@@ -1527,7 +1488,7 @@ theorem gflag_ne (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D)
       unfold Dmin Formalism.MainNotions.S.leadMinorE
       simp only [dif_pos hl]
       rw [← Matrix.det_mul, ← submatrix_castLE_mul_of_upper hl _ _ hS, ← zhatOM_eq_mul_zhatOM_one, hM, det_submatrix_castLE_LPU_eq hl _ _ _ hL hU]
-    rw [h1, conjF_star, star_mul']
+    rw [h1, _root_.Formalism.L2.SG.Pf.AtPt.conjF_star, star_mul']
     linear_combination (-(Formalism.MainNotions.S.leadMinorE Z l * star (Formalism.MainNotions.S.leadMinorE Z l))) * sign_norm hl
   intro h0
   apply hG

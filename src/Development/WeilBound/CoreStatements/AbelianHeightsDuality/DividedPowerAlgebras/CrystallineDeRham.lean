@@ -624,14 +624,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestric
 
 namespace FubiniStudyChowHeightFormula₂.Adr
 
-variable {R : Type} [CommRing R] {I : Ideal R} {X : Scheme.{0}} {κ : DividedPowers I} {s : X ⟶ Sp R}
-
-theorem exists_adj (S : Thick (dp0 R) s) (hS : InN κ S) (d n : ℕ) (hn : 1 ≤ n) :
-    ∃ (P : Thick (dp0 R) s) (i : S ⟶ P) (y : Fin d → P.B), InN κ P ∧ IsLev P.δ n ∧ (∀ k, y k ∈ P.J) ∧
-      ∀ (V : Thick (dp0 R) s), IsLev V.δ n → ∀ (φ : S ⟶ V) (z : Fin d → V.B), (∀ k, z k ∈ V.J) →
-        ∃! ψ : P ⟶ V, i ≫ ψ = φ ∧ ∀ k, ψ.φ (y k) = z k :=
-  exists_adj' S hS d n hn
-
 end FubiniStudyChowHeightFormula₂.Adr
 end -- clump:auto
 end -- clump:auto
@@ -880,7 +872,7 @@ theorem exists_coprod (U : Chart s) (S : Thick (dp0 R) s) (hS : InN κ S) (h : �
   obtain ⟨fS, hfS⟩ := @exists_hom_of_le R _ X s U.1 S.B₀ S.ring₀ S.x h
   choose zS hzS using fun k : Fin d => S.surj (fS (t (MvPolynomial.X k)))
   obtain ⟨jS, -⟩ := exists_lift_of_coord U.1 t ht S fS hfS zS hzS
-  obtain ⟨P, i, y, hP, hlev, hy, huniv⟩ := exists_adj S hS d n hn
+  obtain ⟨P, i, y, hP, hlev, hy, huniv⟩ := _root_.FubiniStudyChowHeightFormula₂.Adr.exists_adj' S hS d n hn
   have hbπ : ∀ {T : Thick (dp0 R) s} (a : bas s U.1 ⟶ T) (c : Sec s U.1.1), T.π (a.φ c) = a.φ₀ c :=
     fun a c => (a.comm c).symm
   have hyπ : ∀ k, P.π (y k) = 0 := fun k => (P.ker _).2 (hy k)

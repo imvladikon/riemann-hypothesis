@@ -78,7 +78,7 @@ section -- clump:auto
 
 namespace Formalism.DworkPowerSeriesWeights
 
-theorem oneLetterGauss : OneLetterGauss := one_letter_gauss_sum
+alias oneLetterGauss := _root_.Formalism.DworkPowerSeriesWeights.one_letter_gauss_sum
 
 end Formalism.DworkPowerSeriesWeights
 end -- clump:auto

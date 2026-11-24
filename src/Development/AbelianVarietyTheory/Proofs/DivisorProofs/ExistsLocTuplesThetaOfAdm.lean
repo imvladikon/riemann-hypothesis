@@ -841,10 +841,7 @@ theorem factor_stalk (X : Scheme.{0}) (x : X) (V : Type) [CommRing V] [IsLocalRi
   rw [← Category.assoc, ← Spec.map_comp]
   rfl
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (a : A →+* B) (b : B →+* C) :
-    spMap (b.comp a) = spMap b ≫ spMap a := by
-  rw [← Spec.map_comp]
-  rfl
+alias spMap_comp' := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
 theorem subset_abLocus {o' Ω : Type} [CommRing o'] [Field Ω] [Algebra o' Ω] {S : ThetaSys o' Ω} {ρ : S.Real}
     {M : RatModel o' Ω} {U₀ : M.Z.Opens} {EE : M.Lat S.J} (FinalForm : ZHOut ρ M U₀ EE) :
@@ -1464,7 +1461,7 @@ theorem GlobalTheory.Poinc.exists_locTuples_theta_of_adm : ∀ (g n : ℕ), 1 �
         algebraMap T.V (FractionRing T.V) (w' : T.V) := by
       rw [hunitK, mul_comm (S.N : ℤ) (v c), zpow_mul, zpow_natCast, zpow_natCast, ← mul_pow, ← hvw c, hw',
         map_mul, map_pow, zpow_natCast]
-    have := GlobalTheory.T.uniformiser_zpow_mul_unit_exponent_unique T.irr _ _ _ _ h2
+    have := _root_.GlobalTheory.exponent_uniformiser_unique T.irr _ _ _ _ h2
     rw [this, Int.toNat_of_nonneg hq0]
   have hmR : (∏ R', ιf R') = ιf R * mult R := (Finset.mul_prod_erase Finset.univ ιf (Finset.mem_univ R)).symm
   let E : ((Fin 8 → Fin r → ZMod S.N) → ℤ) → ℤ := fun ν => ∑ c, v c * ((mult R : ℤ) * ν c)

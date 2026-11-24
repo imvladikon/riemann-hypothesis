@@ -91,6 +91,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Algebra.Order.Star.Real
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.TypeStar
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective
 import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.HaarBumpFunctions.PoulsenSmoothVectorsDense
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmoothVectorsComplexDerivedActionCayleyTransport
 import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.NumericSettingWithGapSatisfiable
@@ -964,7 +965,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDiagonalBlockConjugateFormula =====
 
 -- ===== clump member: Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.Assembly =====
--- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.Assembly", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WeightOccurrence.OccSome\npublic import Mathlib.Basic.Complex.Basic\npublic import Mathlib.LinearAlgebra.Matrix.NonsingularInverse\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutantAnnihilatingVectorZero\npublic import Formalism.RealPlaceAnalysis.Complexify\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutatorCoerciveOnAnnihilator\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.PfD\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitaryInterlacingRealization\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HilbertSchmidtNormSubmultiplicative\npublic import Development.WeilBound.CoreStatements.BranchingTraces.HeBranching\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterlacingSignatureParity\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionCoefficientSigns\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDiagonalBlockConjugateFormula\npublic import Development.WeilBound.CoreStatements.BranchingTraces.ContinuousEmb\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.Assembly", "h": "module\n\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WeightOccurrence.OccSome\npublic import Mathlib.Basic.Complex.Basic\npublic import Mathlib.LinearAlgebra.Matrix.NonsingularInverse\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutantAnnihilatingVectorZero\npublic import Formalism.RealPlaceAnalysis.Complexify\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutatorCoerciveOnAnnihilator\npublic import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.PfD\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitaryInterlacingRealization\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HilbertSchmidtNormSubmultiplicative\npublic import Development.WeilBound.CoreStatements.BranchingTraces.HeBranching\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterlacingSignatureParity\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionCoefficientSigns\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDiagonalBlockConjugateFormula\npublic import Development.WeilBound.CoreStatements.BranchingTraces.ContinuousEmb\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1052,7 +1053,7 @@ theorem frame : PositivityTheory.RgHe.Frame := by
       rw [hX] at hA
       exact _root_.GlobalTheory.CompanionTheory.RgHeFrame.commutant_cyclic_eq_zero g _ v hdet hdi (fun i => by rw [hinv]; exact hβ i) A hA hAv
     obtain ⟨c, hc, hAc⟩ := _root_.GlobalTheory.CompanionTheory.RgHeFrame.hs_le_commutator X v hcyc
-    refine ⟨c * hs g * hs g⁻¹ + 1, by have := hs_nonneg' g; have := hs_nonneg' g⁻¹; positivity, fun h => ?_⟩
+    refine ⟨c * hs g * hs g⁻¹ + 1, by have := _root_.Formalism.REAL.frobenius_nonneg_matrix g; have := _root_.Formalism.REAL.frobenius_nonneg_matrix g⁻¹; positivity, fun h => ?_⟩
     set B := emb e (um h) with hB
     set B' := emb e (um h⁻¹) with hB'
     have hBB : B * B' = 1 := by
@@ -1083,7 +1084,7 @@ theorem frame : PositivityTheory.RgHe.Frame := by
       refine (_root_.GlobalTheory.CompanionTheory.RgHe.hs_mul_le_mul _ _).trans (mul_le_mul_of_nonneg_right (_root_.GlobalTheory.CompanionTheory.RgHe.hs_mul_le_mul _ _) (hs_nonneg' _))
     have i3 : hs (um h - 1) = hs (B - 1) := (hs_emb_sub (e := e) (um h)).symm
     rw [i3]
-    have := hs_nonneg' B; have := hs_nonneg' δ; have := hs_nonneg' g; have := hs_nonneg' g⁻¹
+    have := _root_.Formalism.REAL.frobenius_nonneg_matrix B; have := _root_.Formalism.REAL.frobenius_nonneg_matrix δ; have := _root_.Formalism.REAL.frobenius_nonneg_matrix g; have := _root_.Formalism.REAL.frobenius_nonneg_matrix g⁻¹
     calc hs (B - 1) ≤ c * (hs B * (hs g * hs δ * hs g⁻¹)) := i1.trans (mul_le_mul_of_nonneg_left i2 hc.le)
       _ = (c * hs g * hs g⁻¹) * hs B * hs δ := by ring
       _ ≤ (c * hs g * hs g⁻¹ + 1) * hs B * hs δ := by gcongr; linarith
@@ -1100,8 +1101,6 @@ section -- clump:auto
 @[expose] public section
 
 namespace PositivityTheory.RgHe.FrameF
-
-theorem frame : PositivityTheory.RgHe.Frame := PositivityTheory.RgHe.FrameA.frame
 
 end PositivityTheory.RgHe.FrameF
 end -- clump:auto
@@ -1712,8 +1711,6 @@ theorem decEx2_of (h1 : DecLe) (h2 : FlipDS) (h3 : FlipDec) : DecEx2 := by
 
 theorem decomposition_existence_holds : DecEx2 := decEx2_of decomposition_le_holds flip_discrete_series_holds flip_decomposition_holds
 
-theorem walk : StepL → StepM → Base → Occ := occurrence_of_walk
-
 end PositivityTheory.RgHe.Dec
 end -- clump:auto
 end -- clump:auto
@@ -1913,9 +1910,6 @@ section -- clump:auto
 
 namespace PositivityTheory.RgHe.Sl
 
-theorem stepL : PositivityTheory.RgHe.Models → PositivityTheory.RgHe.OfInt → PositivityTheory.RgHe.Seed → PositivityTheory.RgHe.DecEx2 → PositivityTheory.RgHe.StepL :=
-  stepL_of
-
 end PositivityTheory.RgHe.Sl
 end -- clump:auto
 end -- clump:auto
@@ -1929,9 +1923,9 @@ section -- clump:auto
 namespace PositivityTheory.RgHe
 
 theorem occ : Occ :=
-  Dec.walk (Sl.stepL LowestKTypeModel.models LowestKTypeModel.ofInt LowestKTypeModel.seed Dec.decomposition_existence_holds)
-    (SM.stepM LowestKTypeModel.models LowestKTypeModel.ofInt LowestKTypeModel.seed Dec.decomposition_existence_holds)
-    (PositivityTheory.RgHe3.base LowestKTypeModel.models FrameF.frame)
+  _root_.PositivityTheory.RgHe.Dec.occurrence_of_walk (_root_.PositivityTheory.RgHe.Sl.stepL_of _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.models_holds _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.of_integral_holds _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.lowestKTypeModel Dec.decomposition_existence_holds)
+    (_root_.PositivityTheory.RgHe.SM.model_walk_of_inputs _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.models_holds _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.of_integral_holds _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.lowestKTypeModel Dec.decomposition_existence_holds)
+    (PositivityTheory.RgHe3.base _root_.PositivityTheory.RgHe.LowestKTypeUnitIntegral.models_holds _root_.PositivityTheory.RgHe.FrameA.frame)
 
 end PositivityTheory.RgHe
 end -- clump:auto

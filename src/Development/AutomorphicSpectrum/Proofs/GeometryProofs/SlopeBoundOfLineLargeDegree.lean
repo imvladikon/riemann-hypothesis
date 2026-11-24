@@ -311,7 +311,7 @@ theorem saturatedLine_eq_ideal_div :
     change g t ∈ M ↔ _
     rw [hg_apply]
   have hI : I ≠ ⊥ := by
-    obtain ⟨c, hc, hcv⟩ := exists_smul_mem M (show v ∈ Submodule.span K (M : Set (Fin n → K)) by
+    obtain ⟨c, hc, hcv⟩ := _root_.UpperTheory.Reformulated.B.P6.r03a.GlobalTheory.CompanionTheory.Adelic.SatLine.exists_smul_mem M (show v ∈ Submodule.span K (M : Set (Fin n → K)) by
       rw [hspan]; exact Submodule.mem_top)
     intro h
     have hcd : c * d ∈ I := by

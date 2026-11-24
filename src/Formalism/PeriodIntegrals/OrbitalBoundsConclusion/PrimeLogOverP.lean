@@ -478,7 +478,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem sum_log_p_over_p : PI.PrimeLogOverP := PI.PrimeLogOverPWork.sum_log_div_prime_le
+alias sum_log_p_over_p := _root_.PI.PrimeLogOverPWork.sum_log_div_prime_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PrimeLogOverP =====

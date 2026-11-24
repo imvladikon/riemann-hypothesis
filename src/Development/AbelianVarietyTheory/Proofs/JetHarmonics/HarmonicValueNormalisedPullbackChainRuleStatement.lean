@@ -217,7 +217,7 @@ theorem exists_gen_norm (wP : PrimTy H Xo) (hwP : wP.IsGen) (β : 𝓞 E) (N : �
       (LB.pullGen Xo.univ.t.PP.L _ _ wL (lift (𝟙 _) (Xo.univ.t.act.act (H.w0 * β))).left))
       (LB.invGen Xo.univ.t.PP.L _ _ (LB.mulGen Xo.univ.t.PP.L _ _ _ _
         (LB.pullGen Xo.univ.t.PP.L _ _ wP (Xo.univ.t.act.act β).left) t)))
-    (DVR.mulGen_isGen _ _ _ _ _ _ _ (DVR.mulGen_isGen _ _ _ _ _ _ _ (FrameGeo.powGen_isGen _ _ _ _ hwP N)
+    (DVR.mulGen_isGen _ _ _ _ _ _ _ (DVR.mulGen_isGen _ _ _ _ _ _ _ (_root_.ReciprocityTheory.ChartRestriction.G.DVR.powGen_isGen _ _ _ _ hwP N)
       (DVR.pullGen_isGen _ _ _ _ hwL _)) (DVR.invGen_isGen _ _ _ _
       (DVR.mulGen_isGen _ _ _ _ _ _ _ (DVR.pullGen_isGen _ _ _ _ hwP _) ht)))
   refine ⟨mu, hmu, fun T y z J hJ => ?_⟩
@@ -253,7 +253,7 @@ theorem val_norm (wP : PrimTy H Xo) (hwP : IsPrim wP) (β : 𝓞 E) (N k : ℕ) 
   obtain ⟨nu, hnu, hw⟩ := exists_gen Xo.univ.t.PP.isLB (K' := Fin 2)
     (φ' := ![𝟙 Xo.univ.t.G.left, (Xo.univ.t.act.act β).left]) (ε' := ![((k * N : ℕ) : ℤ), -(k : ℤ)]) (fun U _ h => by
       simp only [Fin.prod_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Nat.cast_mul, mul_neg, _root_.mul_one])
-    (GeneratorPullback.powGen Xo.univ.t.PP.L _ _ mu k) (FrameGeo.powGen_isGen _ _ _ _ hmu k)
+    (GeneratorPullback.powGen Xo.univ.t.PP.L _ _ mu k) (_root_.ReciprocityTheory.ChartRestriction.G.DVR.powGen_isGen _ _ _ _ hmu k)
   obtain ⟨a, -, va⟩ := FrameGeo.exists_ratio Xo.univ.t.PP.isLB Xo.univ.t.G.hom η[Xo.univ.t.G].left
     (Over.w η[Xo.univ.t.G]) (GlobalTheory.SemiRigid.globalFns _ _ (isAbelianScheme_univ Xo)).2 hα hnu
   have o : ∀ b, (1 : T ⟶ Xo.univ.t.G) ≫ Xo.univ.t.act.act b = 1 := fun b => by
@@ -617,8 +617,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory GlobalTheory.PowGerm GlobalTheory.PtTie
 open ReciprocityTheory.ChartRestriction.G.TB (colM dAct)
 
-theorem _root_.GlobalTheory.T.harmonic_value_normalised_pullback_chain_rule : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (F : Type) [Field F] [Algebra c.F F] (yF : FrPt Xo c F) (β : 𝓞 E) (N k : ℕ) (z : ℤ), β * star β = (N : 𝓞 E) → z = ((k * N : ℕ) : ℤ) → ∀ (n : ℕ) (hh : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (k : ℤ) (ptO Xo yF.x))) (hh' : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L z (ptO Xo yF.x))), (∀ i, IsNormPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act β) z (k : ℤ) (hh i) (hh' i)) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF z (hh' i) (colOf m i) = algebraMap c.F F (nrm Dw c a β) * ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF (k : ℤ) (hh i) (colOf m i) := by
-  first | exact @GlobalTheory.ChainRule.harmonic_value_normPull
+alias _root_.GlobalTheory.T.harmonic_value_normalised_pullback_chain_rule := _root_.GlobalTheory.ChainRule.harmonic_value_normPull
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.HarmonicValueNormalisedPullbackChainRuleStatement =====

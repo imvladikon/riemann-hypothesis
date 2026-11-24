@@ -490,15 +490,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct NNReal Matrix
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl
-open GlobalTheory.Doubling (absE)
-
-theorem _root_.GlobalTheory.T.eisenstein_series_moderate_growth : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → IsHecke F E χ → ∀ (t : ℝ) (Ê : ℂ → G2 σ Y → ℂ), (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) → ∀ s : ℂ, t < s.re → ∀ γ ∈ rat2 σ Y, ∀ x, Ê s (γ * x) = Ê s x := by
-  first | exact @_root_.GlobalTheory.CompanionTheory.EisRat.eis_left_rat_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesModerateGrowth =====
@@ -606,7 +597,7 @@ theorem eisStrong_of_k : _root_.GlobalTheory.ThK.Dbl.EisBL_k → _root_.Positivi
   obtain ⟨U, p, G, hUo, hUr, hs₀, hp0, hreg, heq⟩ := strip one_le_height_GL2 hp hr s₀
   obtain ⟨hGd, hGc⟩ := diff_cont_of_reg hreg
   obtain ⟨t2, hmaj⟩ := _root_.PositivityTheory.SiegelWeilFormula.Khead.majorant_k d ⟨r', s', hY⟩ hf
-  have hinv := _root_.GlobalTheory.T.eisenstein_series_moderate_growth F E σ d.B d.n d.Y r' s' d.ok.good d.ok.hn hY d.b d.K d.a d.ok.frame d.ok.stdK d.ok.hgt d.χ s₁ f hf
+  have hinv := _root_.GlobalTheory.CompanionTheory.EisRat.eis_left_rat_k F E σ d.B d.n d.Y r' s' d.ok.good d.ok.hn hY d.b d.K d.a d.ok.frame d.ok.stdK d.ok.hgt d.χ s₁ f hf
     d.ok.hecke t Ê hsum
   have hfl : ∀ z, (fun y => ((d.Ht y : ℝ) : ℂ) ^ (z - s₁) * f y) = flat d.a f s₁ z := fun z => funext fun y => by
     simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.Ht, flat]

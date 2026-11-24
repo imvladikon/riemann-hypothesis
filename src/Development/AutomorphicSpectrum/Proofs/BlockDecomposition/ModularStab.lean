@@ -68,6 +68,7 @@ import Mathlib.Topology.Compactness.Paracompact
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKA
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RegularisedSiegelWeilFirstTerm
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.NnrealEqOneOfMulSelf
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.WittHyperbolicAnisotropicCommuteLevi
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
@@ -260,7 +261,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarSkewMatricesConjScalingStatement =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StabilizerImageNoDualComponent =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StabilizerImageNoDualComponent", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixSDblDecZero\nimport Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RegularisedSiegelWeilFirstTerm\nimport Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StabilizerImageNoDualComponent", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing\npublic import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MixSDblDecZero\nimport Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RegularisedSiegelWeilFirstTerm\nimport Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemidirectVolume.NnrealEqOneOfMulSelf\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -280,14 +281,10 @@ variable {D : D7} {T T₀ T' : HSp D} {r : ℕ}
 theorem mul_eq_one_of_gram {R : Type} [CommRing R] {c x G Gi : R} (hg : G * Gi = 1) (h : c * (G * x) = G) : c * x = 1 := by
   linear_combination Gi * h + (1 - c * x) * hg
 
-theorem nnreal_eq_one_of_sq {x : ℝ≥0} (h : x * x = 1) : x = 1 := by
-  rw [← sq] at h
-  exact (pow_eq_one_iff_of_nonneg zero_le (n := 2) (by norm_num)).1 h
-
 theorem absA_eq_one_of_conj (u : (AE D)ˣ) (h : conjUnit D.sp.cm.sig u * u = 1) : absA D u = 1 := by
   have h3 := congrArg (absE D.host.F D.host.E) h
   rw [map_mul, absE_conjUnit, map_one] at h3
-  exact nnreal_eq_one_of_sq h3
+  exact _root_.PI.VolSemiDirect.W.Cj.nnreal_eq_one_of_mul_self h3
 
 theorem absA_det_matHom (g : GA D T₀) : absA D (Matrix.GeneralLinearGroup.det (matHom T₀ g)) = 1 := by
   have hg : (gA T₀).det * (giA T₀).det = 1 := by rw [← Matrix.det_mul, gA_mul_giA, Matrix.det_one]
@@ -299,12 +296,6 @@ theorem absA_det_matHom (g : GA D T₀) : absA D (Matrix.GeneralLinearGroup.det 
   have h2 : conjUnit D.sp.cm.sig (Matrix.GeneralLinearGroup.det (matHom T₀ g)) *
       Matrix.GeneralLinearGroup.det (matHom T₀ g) = 1 := Units.ext (mul_eq_one_of_gram hg h)
   exact absA_eq_one_of_conj _ h2
-
-section Blocks
-
-variable {R : Type} [CommRing R] {n a b : ℕ}
-
-end Blocks
 
 end GlobalTheory.CompanionTheory.HyperbolicDecompositionLaw
 
@@ -361,23 +352,6 @@ theorem measurePreserving_shear {A C : Type*} [AddCommGroup A] [MeasurableSpace 
   rw [hfun]
   exact h2
 
-private theorem isMulRightInvariant_map_of_exists_measurePreserving {X G : Type*} [MeasurableSpace X] [MeasurableSpace G] [Mul G] (P : Measure X)
-    (e : X ≃ᵐ G) (h : ∀ q, ∃ T : X → X, MeasurePreserving T P P ∧ ∀ p, e (T p) = e p * e q) :
-    (P.map e).IsMulRightInvariant := by
-  refine ⟨fun g => ?_⟩
-  obtain ⟨T, hT, hTe⟩ := h (e.symm g)
-  have h1 : (fun x => x * g) = e ∘ T ∘ e.symm := by
-    funext x
-    simp [hTe]
-  have hm : Measurable (fun x => x * g) := by
-    rw [h1]
-    exact e.measurable.comp (hT.measurable.comp e.symm.measurable)
-  rw [Measure.map_map hm e.measurable]
-  have h2 : (fun x => x * g) ∘ e = e ∘ T := by
-    funext p
-    simp [hTe]
-  rw [h2, ← Measure.map_map e.measurable hT.measurable, hT.map_eq]
-
 theorem haar_of_shear {A C G : Type*} [AddCommGroup A] [TopologicalSpace A] [IsTopologicalAddGroup A]
     [MeasurableSpace A] [BorelSpace A] [SecondCountableTopology A] [LocallyCompactSpace A]
     [AddCommGroup C] [TopologicalSpace C] [IsTopologicalAddGroup C]
@@ -408,7 +382,7 @@ theorem haar_of_shear {A C G : Type*} [AddCommGroup A] [TopologicalSpace A] [IsT
     congr 1
     exact Prod.ext (add_left_comm _ _ _) (add_comm _ _)
   have hr : ((κ.prod β).map e).IsMulRightInvariant := by
-    refine isMulRightInvariant_map_of_exists_measurePreserving (κ.prod β) e.toMeasurableEquiv ?_
+    refine _root_.GlobalTheory.Unf.HaarCoord.isMulRightInvariant_map (κ.prod β) e.toMeasurableEquiv ?_
     rintro ⟨c, b⟩
     refine ⟨fun p => (p.1 + (c + f p.2 b), p.2 + b),
       measurePreserving_shear κ β ((hf.comp (continuous_id.prodMk continuous_const)).measurable.const_add c) b, ?_⟩

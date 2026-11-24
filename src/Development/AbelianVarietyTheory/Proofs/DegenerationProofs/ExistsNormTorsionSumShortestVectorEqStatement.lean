@@ -192,8 +192,6 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TestFibre
 
-theorem _root_.GlobalTheory.T.symmetricLift_normalisedPullback_theta_smul : LL → ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (A : PolAV (Spec (CommRingCat.of (FractionRing R)))) (F : Type) [Field F] [Algebra (FractionRing R) F] (ρ : LB.Gen (A.L.pull (eSec A.A))), ρ.IsGen → ∀ (m : ℕ), Odd m → ∀ (th th' : SecA A F 1) (c : F), (∀ j, th.f j = liftFun A.A _ (cF R c) * th'.f j) → ∀ (s₁ σ t : SecA A F (m ^ 2)) (x : TFK (R := R) F ⟶ A.A) (θ : ThetaGrp A.A A.L ((m ^ 2 : ℕ) : ℤ) (TFK (R := R) F)) (c' : F), x ^ (m ^ 2) = 1 → IsNormPull A ρ m (m ^ 2) th s₁ → SymLift A.A A.L ((m ^ 2 : ℕ) : ℤ) (m ^ 2) x θ → IsActOf A.A A.L ((m ^ 2 : ℕ) : ℤ) θ s₁ σ → ThC A ρ m th' x t c' → ∀ j, σ.f j = liftFun A.A _ (cF R c) * t.f j := by
-  first | exact @GlobalTheory.TestFibre.act_normPull_smul
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SymmetricLiftNormalisedPullbackThetaSmulStatement =====
@@ -247,11 +245,11 @@ theorem exists_span_translates_of_eq_sq (h : Laws) (h₂ : Laws2) {V : Type} [Co
   subst hN
   obtain ⟨hL, h1, h2, h3', h4⟩ := laws_all h h₂
   obtain ⟨n, a, z, t, c', r, H, hs⟩ :=
-    (GlobalTheory.T.valuation_nonneg_iff_span_multiplicationTranslates hL h1 h2 h3' h4 V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ rig hw th' ϑ hϑ hP m hm hu h3 Φ).1 hΦ
+    (_root_.GlobalTheory.UT.nuGe_zero_iff_span_translates hL h1 h2 h3' h4 V hc ϖ hϖ D Q hQ F v hv A G hG U w₀ rig hw th' ϑ hϑ hP m hm hu h3 Φ).1 hΦ
   refine ⟨n, a, z, t, r, fun i => ?_, hs⟩
   obtain ⟨ha, hz, hT, hE⟩ := H i
   exact ⟨ha, hz, hE, fun s₁ σ θ hs₁ hθ hσ =>
-    GlobalTheory.T.symmetricLift_normalisedPullback_theta_smul hL V A F rig hw.2.1 m hm th th' c hth s₁ σ (t i) (z i) θ (c' i) hz hs₁ hθ hσ hT⟩
+    _root_.GlobalTheory.TestFibre.act_normPull_smul hL V A F rig hw.2.1 m hm th th' c hth s₁ σ (t i) (z i) θ (c' i) hz hs₁ hθ hσ hT⟩
 
 theorem IsComb.of_eq_mul {R : Type} [CommRing R] [IsDomain R] {A : PolAV (Spec (CommRingCat.of (FractionRing R)))}
     {F : Type} [Field F] [Algebra (FractionRing R) F] {k : ℕ} {J : Type} [Fintype J] {s : J → SecA A F k} {b : J → F}
@@ -306,12 +304,12 @@ theorem exists_isComb_expands_of_nuGe_zero : Laws → Laws2 → UTorsSt → ∀ 
   have ht : ∀ i, IsComb u.A s (fun j => c⁻¹ * y₀ (algebraMap o S.R (S.ρ (g i) j ρ.i₀))) (t i) := by
     intro i
     obtain ⟨θ, hθ, hθa⟩ := hact (g i)
-    obtain ⟨σ, hσ, -⟩ := (GlobalTheory.T.fibreSection_linearComb_exists_unique_thetaAction u.V u.A (PadicAlgCl p) S.N S.J s (fun _ => 0)).2.2.2.1 θ (s ρ.i₀)
+    obtain ⟨σ, hσ, -⟩ := (_root_.GlobalTheory.secComb_thetaAct u.V u.A (PadicAlgCl p) S.N S.J s (fun _ => 0)).2.2.2.1 θ (s ρ.i₀)
     rw [hg] at hθ
     exact IsComb.of_eq_mul (hθa _ _ hσ) hc ((H i).2.2.2 _ σ θ hpull hθ hσ)
-  obtain ⟨σ, hσ⟩ := (GlobalTheory.T.fibreSection_linearComb_exists_unique_thetaAction u.V u.A (PadicAlgCl p) S.N (Fin n) t a).1
+  obtain ⟨σ, hσ⟩ := (_root_.GlobalTheory.secComb_thetaAct u.V u.A (PadicAlgCl p) S.N (Fin n) t a).1
   refine ⟨_, σ, fun j => ?_,
-    (GlobalTheory.T.fibreSection_linearComb_exists_unique_thetaAction u.V u.A (PadicAlgCl p) S.N S.J s (fun _ => 0)).2.2.2.2 (Fin n) _ t a σ ht hσ, ?_⟩
+    (_root_.GlobalTheory.secComb_thetaAct u.V u.A (PadicAlgCl p) S.N S.J s (fun _ => 0)).2.2.2.2 (Fin n) _ t a σ ht hσ, ?_⟩
   · rw [Finset.mul_sum]
     refine IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg zero_le_one fun i _ => ?_
     rw [← _root_.mul_assoc, mul_inv_cancel_left₀ hc, norm_mul]
@@ -341,8 +339,6 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TestFibre
 
-theorem _root_.GlobalTheory.T.exists_integral_basis_combination_of_integral_family : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → ∀ (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)) (rig : LB.Gen (u.A.L.pull (eSec u.A.A))) (e : ∀ a, FrameAt u.A (x a)) (th : SecA u.A (PadicAlgCl p) 1) (s : S.J → SecA u.A (PadicAlgCl p) S.N), PtsOver u x → SecsOver u x rig e th s → ∀ (ϖ : u.V) (Q : u.D.toPre.X → ℤ) (v : AddValuation (PadicAlgCl p) (WithTop ℚ)) (lam : ℝ), Irreducible ϖ → ValOver ϖ (PadicAlgCl p) v → NormIs u l ϖ Q v lam → ∀ (w₀ : W0 u.U.toUnifPre) (th' : SecA u.A (PadicAlgCl p) 1) (ϑ : Fam u.D.toPre (PadicAlgCl p) 1) (c : PadicAlgCl p), NormW u.U.toUnifPre w₀ rig → u.U.ExpandsF (PadicAlgCl p) 1 w₀ th' ϑ → Prim u.D Q v ϑ → (∀ j, th.f j = liftFun u.A.A _ (cF u.V c) * th'.f j) → c ≠ 0 → ∀ Φ : Fam u.D.toPre (PadicAlgCl p) S.N, NuGe u.D Q (PadicAlgCl p) v S.N Φ 0 → ∃ (b : S.J → PadicAlgCl p) (σ : SecA u.A (PadicAlgCl p) S.N), (∀ j, ‖c * b j‖ ≤ 1) ∧ IsComb u.A s b σ ∧ u.U.ExpandsF (PadicAlgCl p) S.N w₀ σ Φ := by
-  first | exact @GlobalTheory.TestFibre.exists_isComb_expands_of_nuGe_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralBasisCombinationOfIntegralFamilyStatement =====
@@ -441,8 +437,6 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TestFibre
 
-theorem _root_.GlobalTheory.T.exists_thetaSystem_test_sections_on_geometric_fibre : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)), PtsOver u x → ∃ rig e th s, SecsOver u x rig e th s := by
-  first | exact @GlobalTheory.TestFibre.exists_secsOver
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaSystemTestSectionsOnGeometricFibreStatement =====
@@ -545,8 +539,6 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TestFibre
 
-theorem _root_.GlobalTheory.T.norm_thetaConstant_le_primitiveGenerator_scale : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → ∀ (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)) (rig : LB.Gen (u.A.L.pull (eSec u.A.A))) (e : ∀ a, FrameAt u.A (x a)) (th : SecA u.A (PadicAlgCl p) 1) (s : S.J → SecA u.A (PadicAlgCl p) S.N), PtsOver u x → SecsOver u x rig e th s → ∀ (ϖ : u.V) (Q : u.D.toPre.X → ℤ) (v : AddValuation (PadicAlgCl p) (WithTop ℚ)) (lam : ℝ), Irreducible ϖ → ValOver ϖ (PadicAlgCl p) v → NormIs u l ϖ Q v lam → ∀ (w₀ : W0 u.U.toUnifPre) (th' : SecA u.A (PadicAlgCl p) 1) (ϑ : Fam u.D.toPre (PadicAlgCl p) 1) (c : PadicAlgCl p), NormW u.U.toUnifPre w₀ rig → u.U.ExpandsF (PadicAlgCl p) 1 w₀ th' ϑ → Prim u.D Q v ϑ → (∀ j, th.f j = liftFun u.A.A _ (cF u.V c) * th'.f j) → ∀ a, ‖y₀ ⟨S.th a, S.th_mem a⟩‖ ≤ ‖c‖ := by
-  first | exact @GlobalTheory.ThetaBound.norm_theta_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormThetaConstantLePrimitiveGeneratorScaleStatement =====
@@ -816,7 +808,7 @@ theorem torus_points_level_weights : Laws → Laws2 → UTorsSt → ∀ (o Ω : 
   intro h₁ h₂ hT o Ω _ _ _ _ S ρ p _ y₀ u l hy x hx t
   obtain ⟨hc, -, hA, -, -, -⟩ := GlobalTheory.T.uniformisedModel_valuation_data o Ω S ρ p y₀ u l hy
   obtain ⟨hadd, -⟩ := (GlobalTheory.T.uniformisedModel_torsionPoints_group_pairing h₁ o Ω S ρ p y₀ u).2 x hx
-  obtain ⟨τ, q, hq0, hqτ, hq, hval⟩ := GlobalTheory.T.thetaSystem_orthogonal_labels_are_torus_points h₁ h₂ hT o Ω S ρ p y₀ u l hy x hx t
+  obtain ⟨τ, q, hq0, hqτ, hq, hval⟩ := _root_.GlobalTheory.TestFibre.perp_torus_point h₁ h₂ hT o Ω S ρ p y₀ u l hy x hx t
   have hL : LL := (laws_all h₁ h₂).1
   letI := gtGroup u.D.toPre (PadicAlgCl p)
   have hB := u.D.tau_bimult
@@ -867,8 +859,6 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.TestFibre
 
-theorem _root_.GlobalTheory.T.torusPoints_level_weights_from_orthogonal_labels : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab), (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → ∀ (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)), PtsOver u x → ∀ t : S.perp l.yy.ker, ∃ (τ : Multiplicative u.D.toPre.X →* (PadicAlgCl p)ˣ) (q : QkPt u.D.toPre (PadicAlgCl p) S.N), q.y = 0 ∧ IsTor τ q.g ∧ QkToAkU u.U.toUnifPre (PadicAlgCl p) S.N q (x (S.r • (t : S.Gam))) ∧ ∀ β, (τ (Multiplicative.ofAdd β) : PadicAlgCl p) = y₀ (algebraMap o S.R S.ζN) ^ (l.wt β t).val := by
-  first | exact @GlobalTheory.TestFibre.torus_points_level_weights
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusPointsLevelWeightsFromOrthogonalLabelsStatement =====
@@ -897,9 +887,9 @@ theorem eigen_of_expansion_in_class : Laws → Laws2 → UTorsSt → ∀ (o Ω :
   have hN1 : 1 ≤ S.N := le_trans (by norm_num) S.N_ge
   obtain ⟨-, -, -, hval, -, hθ⟩ := hs
   obtain ⟨θ, hθs, hθa⟩ := hθ (t : S.Gam)
-  obtain ⟨τ, q, hqy, hqt, hqx, hτ⟩ := GlobalTheory.T.torusPoints_level_weights_from_orthogonal_labels h1 h2 hT o Ω S ρ p y₀ u l hy x hx t
+  obtain ⟨τ, q, hqy, hqt, hqx, hτ⟩ := _root_.GlobalTheory.TestFibre.torus_points_level_weights h1 h2 hT o Ω S ρ p y₀ u l hy x hx t
   obtain ⟨⟨w, hw⟩, -⟩ := GlobalTheory.UT.SymFrame.main hLL u.V _ hadm u.D (PadicAlgCl p) S.N hodd q
-  obtain ⟨-, -, c3, c4, c5⟩ := GlobalTheory.T.fibreSection_linearComb_exists_unique_thetaAction u.V u.A (PadicAlgCl p) S.N S.J s b
+  obtain ⟨-, -, c3, c4, c5⟩ := _root_.GlobalTheory.secComb_thetaAct u.V u.A (PadicAlgCl p) S.N S.J s b
   choose s' hs' using fun i => (c4 θ (s i)).exists
   obtain ⟨σ', hσ'⟩ := (c4 θ σ).exists
   have hσ'c : IsComb u.A s' b σ' := (c3 θ s' σ σ' hs' hσ).1 hσ'
@@ -907,7 +897,7 @@ theorem eigen_of_expansion_in_class : Laws → Laws2 → UTorsSt → ∀ (o Ω :
   obtain ⟨hbij, hlin⟩ := GlobalTheory.UT.expBijF_and_expandsF_lin hLL u.V _ hadm u.D u.A u.G u.semi u.U
   obtain ⟨hb1, hb2⟩ := hbij (PadicAlgCl p) S.N hN1 w₀ hw₀
   obtain ⟨Φ', hΦ'⟩ := (hb1 σ').exists
-  have hrel := GlobalTheory.T.symmetricLift_oddOrder_acts_as_expansionOperator hLL u.V _ hadm u.D u.A u.G u.semi u.U (PadicAlgCl p) S.N hodd q _ hqx θ hθs w₀ hw₀ w hw
+  have hrel := _root_.GlobalTheory.UT.symLift_acts_as_phi hLL u.V _ hadm u.D u.A u.G u.semi u.U (PadicAlgCl p) S.N hodd q _ hqx θ hθs w₀ hw₀ w hw
     σ σ' Φ Φ' hΦ hΦ' hσ'
   have hwt := ((GlobalTheory.UT.TorusWeight.torus_weight hLL u.V _ hadm u.D u.A u.G u.semi u.U (PadicAlgCl p) S.N hodd q τ hqy
     hqt w hw).2 Φ Φ').1 hrel
@@ -922,14 +912,14 @@ theorem eigen_of_expansion_in_class : Laws → Laws2 → UTorsSt → ∀ (o Ω :
       obtain ⟨z, rfl⟩ := hβ
       rw [hτ, hκ]
       simp
-  obtain ⟨⟨σ'', hσ''⟩, -⟩ := GlobalTheory.T.fibreSection_linearComb_exists_unique_thetaAction u.V u.A (PadicAlgCl p) S.N (Fin 2) (fun _ => σ) ![κ - 1, 1]
+  obtain ⟨⟨σ'', hσ''⟩, -⟩ := _root_.GlobalTheory.secComb_thetaAct u.V u.A (PadicAlgCl p) S.N (Fin 2) (fun _ => σ) ![κ - 1, 1]
   have hσ''e : u.U.ExpandsF (PadicAlgCl p) S.N w₀ σ'' ((κ - 1) • Φ + Φ) := by
     refine hlin (PadicAlgCl p) S.N w₀ σ σ σ'' Φ Φ (κ - 1) hΦ hΦ fun j => ?_
     rw [hσ'' j, Fin.sum_univ_two]
     simp [liftFun, cF]
   have heq : σ'' = σ' := (hb2 Φ').unique (hΦeq ▸ hσ''e) hΦ'
   subst heq
-  obtain ⟨v1, -, v3, -⟩ := GlobalTheory.T.isFibreSectionValueInFrame_linear_unique_exists h1 u.V u.A (PadicAlgCl p) S.N (x h) (e h)
+  obtain ⟨v1, -, v3, -⟩ := _root_.GlobalTheory.TestFibre.CombValue.valIs_linear h1 u.V u.A (PadicAlgCl p) S.N (x h) (e h)
   have a1 := v1 S.J s b _ σ hσ (fun i => hval i h)
   have a2 := v1 S.J s _ _ σ'' hσ'c2 (fun i => hval i h)
   have a3 := v1 (Fin 2) (fun _ => σ) _ _ σ'' hσ'' (fun _ => a1)
@@ -1060,7 +1050,7 @@ theorem exists_norm_FF_eq : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Co
   obtain ⟨hLL, hT, hVR, hTW, hUU⟩ := laws_all hL hL2
   obtain ⟨hch, -, hadm, hN', hζ, ϖ, Q, v, lam, hϖ, hv, hnorm⟩ := GlobalTheory.T.uniformisedModel_valuation_data o Ω S ρ p y₀ u l hint
   obtain ⟨⟨x, hx⟩, -⟩ := GlobalTheory.T.uniformisedModel_torsionPoints_group_pairing hL o Ω S ρ p y₀ u
-  obtain ⟨rig, e, th, s, hs⟩ := GlobalTheory.T.exists_thetaSystem_test_sections_on_geometric_fibre hL o Ω S ρ p y₀ u x hx
+  obtain ⟨rig, e, th, s, hs⟩ := _root_.GlobalTheory.TestFibre.exists_secsOver hL o Ω S ρ p y₀ u x hx
   have hle : S.perp l.yy.ker ≤ l.yy.ker :=
     l.isoFree.1.trans ((thetaSys_FF_mem_finite_perp_proj o Ω S).2.2.1 _).le
   refine GlobalTheory.T.thetaSystem_exists_rootOfUnity_sum_norm_attained o Ω S p y₀ hint _ (l.wt α) _
@@ -1073,7 +1063,7 @@ theorem exists_norm_FF_eq : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Co
     ⟨(Scheme.ΓSpecIso (CommRingCat.of (PadicAlgCl p))).hom.hom c₀,
       (Scheme.ΓSpecIso (CommRingCat.of (PadicAlgCl p))).hom_inv_id_apply c₀⟩
   have hδ : S.delta y₀ ≤ ‖c‖ := ciSup_le
-    (GlobalTheory.T.norm_thetaConstant_le_primitiveGenerator_scale hL hL2 hU o Ω S ρ p y₀ u l hint x rig e th s hx hs ϖ Q v lam hϖ hv hnorm w₀ th' ϑ c hw₀ hϑ hprim hc₀)
+    (_root_.GlobalTheory.ThetaBound.norm_theta_le hL hL2 hU o Ω S ρ p y₀ u l hint x rig e th s hx hs ϖ Q v lam hϖ hv hnorm w₀ th' ϑ c hw₀ hϑ hprim hc₀)
   by_cases hc : c = 0
   · rw [hc, norm_zero] at hδ
     exact ⟨0, ρ.i₀, (mul_nonpos_of_nonpos_of_nonneg hδ (Real.exp_pos _).le).trans (norm_nonneg _)⟩
@@ -1092,16 +1082,16 @@ theorem exists_norm_FF_eq : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Co
   obtain ⟨g, w₁, hg, hw₁, hgv, hwv⟩ := exists_origin hLL hT hVR hTW hUU u.complete hadm hϖ u.D hQ hv S.N
   obtain ⟨Φ, hΦ, hsupp, hval⟩ := CoefUnit.exists_fam_coef_val hLL hT hVR hTW hUU u.V u.complete ϖ hϖ u.D Q hQ
     (PadicAlgCl p) v hv S.N hN4 g w₁ _ 0 hw₁.1 hgv hwv α
-  obtain ⟨b, σ, hb, hσ, hσΦ⟩ := GlobalTheory.T.exists_integral_basis_combination_of_integral_family hL hL2 hU o Ω S ρ p y₀ u l hint x rig e th s hx hs ϖ Q v lam hϖ hv hnorm
+  obtain ⟨b, σ, hb, hσ, hσΦ⟩ := _root_.GlobalTheory.TestFibre.exists_isComb_expands_of_nuGe_zero hL hL2 hU o Ω S ρ p y₀ u l hint x rig e th s hx hs ϖ Q v lam hϖ hv hnorm
     w₀ th' ϑ c hw₀ hϑ hprim hc₀ hc Φ hΦ
-  choose τ q hqy hτ hqx hτv using GlobalTheory.T.thetaSystem_orthogonal_labels_are_torus_points hL hL2 hU o Ω S ρ p y₀ u l hint x hx
+  choose τ q hqy hτ hqx hτv using _root_.GlobalTheory.TestFibre.perp_torus_point hL hL2 hU o Ω S ρ p y₀ u l hint x hx
   have key : ∀ t : S.perp l.yy.ker, ∃ ζ : PadicAlgCl p, v ζ = 0 ∧
       SumV v (fun β => (τ t (Multiplicative.ofAdd β)).val * coef Φ g w₁ β)
         (ζ * ∑ j, b j * y₀ ⟨S.ev t j, S.ev_mem t j⟩) := fun t => by
     obtain ⟨ζ, hζ, H⟩ := WeightValue.value_at_formal_torsion hLL hT hVR hTW hUU u.V u.complete ϖ hϖ u.D Q hQ
       (PadicAlgCl p) v hv u.A u.G u.semi u.U w₀ rig hw₀ (S.r * S.N) S.N hrN hN0 (q t) (x t) (hqy t) (hqx t) (e t)
       (hs.2.1 t)
-    exact ⟨ζ, hζ, (H σ Φ _ hσΦ ((GlobalTheory.T.isFibreSectionValueInFrame_linear_unique_exists hL u.V u.A (PadicAlgCl p) S.N (x t) (e t)).1 S.J s b _ σ hσ
+    exact ⟨ζ, hζ, (H σ Φ _ hσΦ ((_root_.GlobalTheory.TestFibre.CombValue.valIs_linear hL u.V u.A (PadicAlgCl p) S.N (x t) (e t)).1 S.J s b _ σ hσ
       fun i => hs.2.2.2.1 i t)).2 _ (hτ t) g w₁ hg hw₁⟩
   choose ζ hζv hsum using key
   have v1 : ∀ z : PadicAlgCl p, ‖z‖ = 1 → v z = 0 := fun z hz => (heq z 0).2 (by simpa using hz)

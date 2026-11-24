@@ -277,9 +277,7 @@ theorem exists_sep (D : D7) (W : HSp D) (r : ℕ) :
 
 end GlobalTheory.RatPairSep
 
-theorem GlobalTheory.RatPairSep.main : ∀ (D : D7) (W : HSp D) (r : ℕ), ∃ (n : ℕ) (X : Fin n → Matrix (Fin W.rank) (Fin r) D.host.E),
-    (∀ j a b, IsIntegral ℤ (X j a b)) ∧ ∀ y y' : Matrix (Fin W.rank) (Fin r) D.host.E,
-    (∀ j, ratPair W y (X j) = ratPair W y' (X j)) → y = y' := GlobalTheory.RatPairSep.exists_sep
+alias GlobalTheory.RatPairSep.main := _root_.GlobalTheory.RatPairSep.exists_sep
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralMatricesSeparatingRationalPairing =====
@@ -345,7 +343,7 @@ theorem exists_den (D : D7) : ∃ d : ℕ, 0 < d ∧ ∀ x : D.host.E, IsIntegra
     ⟨fun k => ((Algebra.traceForm D.host.F D.host.E).toDual (traceForm_nondegenerate D.host.F D.host.E)).symm (b.coord k),
       fun x k => LinearMap.BilinForm.apply_toDual_symm_apply (hB := traceForm_nondegenerate D.host.F D.host.E) (b.coord k) x⟩
   obtain ⟨d, hd, h⟩ := GlobalTheory.HolDict.ShortVec.exists_common_denom (integralClosure ℤ D.host.E).toSubring b' fun k => by
-    obtain ⟨k, hk, r, hr⟩ := GlobalTheory.SmoothForms.denom_exists_int (b' k)
+    obtain ⟨k, hk, r, hr⟩ := _root_.GlobalTheory.NatMulMemRingOfIntegers.exists_nat_mul_mem_ringOfIntegers (b' k)
     exact ⟨k, hk, hr ▸ r.2⟩
   refine ⟨d, hd, fun x hx k => ?_⟩
   have e1 : GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.finCoord D ((1 : Af D.host.F) ⊗ₜ[D.host.F] x) k = algebraMap D.host.F (Af D.host.F) (b.repr x k) := by
@@ -617,8 +615,8 @@ theorem levelheight : ∀ (D : D7) (V W : HSp D) (r : ℕ) (P : Matrix (Fin r) (
   obtain ⟨CV, hCV, hcV⟩ := GlobalTheory.Grow.height_comparison V hθ
   obtain ⟨CW, hCW, hcW⟩ := GlobalTheory.Grow.height_comparison W hθ
   obtain ⟨M₀, hM₀, hsub⟩ := openSubY D V W U hU
-  obtain ⟨c, hc0, hc⟩ := exists_denom_mul D
-  obtain ⟨dx, hdx, hx⟩ := exists_denom_integral D
+  obtain ⟨c, hc0, hc⟩ := _root_.GlobalTheory.CoordDenom.finCoord_mul_denom D
+  obtain ⟨dx, hdx, hx⟩ := _root_.GlobalTheory.DenInt.exists_den D
   obtain ⟨dP, hdP, hP⟩ := GlobalTheory.HolDict.ShortVec.exists_common_denom (intRing D.host.F)
     (fun q : Fin r × Fin V.rank × Fin (Module.finrank D.host.F D.host.E) =>
       finCoord D ((1 : Af D.host.F) ⊗ₜ[D.host.F] P q.1 q.2.1) q.2.2)
@@ -1246,8 +1244,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition GlobalTheory.MixedTerm
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.tsum_le_of_lattice_coords_quadraticDecay : ∀ {Y : Type} (n N : ℕ), 0 < N → ∀ (a : Y → ENNReal) (T : Fin n → Y → ℝ), (∀ y y', a y ≠ 0 → a y' ≠ 0 → (∀ j, T j y = T j y') → y = y') → (∀ y, a y ≠ 0 → ∀ j, ∃ c : ℤ, (N : ℝ) * T j y = c) → ∀ S : ENNReal, (∀ y, a y * ∏ j, ENNReal.ofReal (1 + T j y ^ 2) ≤ S) → ∑' y, a y ≤ S * ENNReal.ofReal ((5 * (N : ℝ) ^ 2) ^ n) := by
-  first | exact @GlobalTheory.TwBoundFour.tsum_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.TsumLeOfLatticeCoordsQuadraticDecayStatement =====
@@ -1396,7 +1392,7 @@ theorem mixed_terms_bound : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C C' : Matr
   have hh1 := (GlobalTheory.Size.height_laws W).1 h
   have ht0 : (0 : ℝ) ≤ GlobalTheory.Grow.height V g * GlobalTheory.Grow.height W h :=
     mul_nonneg (by linarith) (by linarith)
-  have hbound := GlobalTheory.T.tsum_le_of_lattice_coords_quadraticDecay (Y := Matrix (Fin W.rank) (Fin r) D.host.E) n N hNpos
+  have hbound := _root_.GlobalTheory.TwBoundFour.tsum_le (Y := Matrix (Fin W.rank) (Fin r) D.host.E) n N hNpos
     (fun y => ‖term ψ V V' W C C' B μ 𝓨 F y‖ₑ) (fun j y => ratPair W y (X j))
     (fun y y' _ _ hyy => hXsep y y' hyy)
     (fun y hy j => hint F hF hfix y (enorm_ne_zero.mp hy) (X j) (hXint j))

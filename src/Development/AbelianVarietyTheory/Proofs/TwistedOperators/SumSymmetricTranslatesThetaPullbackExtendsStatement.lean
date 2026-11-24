@@ -368,11 +368,6 @@ theorem act_zero (t : SAB H S) : t.act.act 0 = 1 := by
   rw [add_zero] at h
   exact mul_eq_left.1 h.symm
 
-theorem act_natCast (t : SAB H S) (n : ℕ) : t.act.act n = mulA t.G n := by
-  induction n with
-  | zero => rw [Nat.cast_zero, act_zero]; exact (pow_zero _).symm
-  | succ n ih => rw [Nat.cast_succ, t.act.add, ih, t.act.one]; exact (pow_succ _ _).symm
-
 theorem act_eq_one_of_gen (t : SAB H S) (hK : KTriv t.G t.PP.L) (π : 𝓞 E) (a b : ℕ)
     (α₀ : LB.Gen (LB.LinComb t.PP.L (K := Fin 2) ![𝟙 t.G.left, (t.act.act π).left] ![(a : ℤ), -(b : ℤ)]))
     (hα : α₀.IsGen) : t.act.act ((a : 𝓞 E) - b * (π * H.bar π)) = 1 := by
@@ -461,7 +456,7 @@ theorem act_eq_one_of_gen (t : SAB H S) (hK : KTriv t.G t.PP.L) (π : 𝓞 E) (a
   have key : ∀ {T : Over S} (x y : T ⟶ t.G), B x (y ≫ t.act.act d) = 0 := fun x y => by
     have e : (y ≫ t.act.act d) * ((y ≫ t.act.act π) ≫ t.act.act (H.bar π)) ^ b = y ^ a := by
       have e₁ : ∀ {T : Over S} (z : T ⟶ t.G) (n : ℕ), z ^ n = z ≫ t.act.act n := fun z n => by
-        rw [act_natCast, MonObj.comp_pow, Category.comp_id]
+        rw [_root_.GlobalTheory.PlaceInt.TwoLifts.act_natCast_eq, MonObj.comp_pow, Category.comp_id]
       rw [e₁, e₁ y, Category.assoc, Category.assoc, ← t.act.mul, ← t.act.mul, ← MonObj.comp_mul, ← t.act.add]
       congr 2
       rw [hd]; ring
@@ -701,7 +696,7 @@ theorem norm_or_trivial [CharZero V] (w : LB.Iso tK.PP.L (t.PP.L.pull m.φ)) (hw
   obtain ⟨d', hd'⟩ := Ideal.mem_span_singleton.1 (Ideal.absNorm_mem (Ideal.span {d}))
   have := tK.act.hom d'
   have h₁ : mulA tK.G (Ideal.absNorm (Ideal.span {d})) = 1 := by
-    rw [← act_natCast, hd', tK.act.mul, h, MonObj.one_comp]
+    rw [← _root_.GlobalTheory.PlaceInt.TwoLifts.act_natCast_eq, hd', tK.act.mul, h, MonObj.one_comp]
   have h₂ : mulA P.A.A (Ideal.absNorm (Ideal.span {d})) = 1 := by
     rw [← cancel_epi e.hom, MonObj.comp_one, mulA, MonObj.comp_pow, Category.comp_id, ← Category.id_comp e.hom,
       ← MonObj.pow_comp]
@@ -840,7 +835,7 @@ theorem main : PullbackSections.EndNuSt ∧ PullbackSections.MulNuSt := by
     exact nuK_pull P hϖ hQ hv m w hw π k (n ^ 2) hk rfl (natCast_sq n) rfl rfl F₁ h₁ α₀ α h0 hα hn hc htw
   · intro E _ _ _ H V _ _ _ _ _ t P _ ϖ hϖ Q hQ vK hv tK m w hw N hN s α₀ α s₁ h0 hα hn hc htw
     exact nuK_pull P hϖ hQ hv m w hw (N : 𝓞 E) (N ^ 2) 1 (pow_pos hN 2) (natCast_sq N) Nat.cast_one.symm
-      (act_natCast tK N).symm (by rw [MonObj.comp_pow, Category.comp_id]) s s₁ α₀ α h0 hα
+      (_root_.GlobalTheory.PlaceInt.TwoLifts.act_natCast_eq tK N).symm (by rw [MonObj.comp_pow, Category.comp_id]) s s₁ α₀ α h0 hα
       ((GlobalTheory.PlaceInt.TwoLifts.normEnd_iff tK.G tK.PP N α₀).2 hn) hc htw
 
 end GlobalTheory.EndPullNu
@@ -1241,8 +1236,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.HkIntegral
 
-theorem _root_.GlobalTheory.T.sum_symmetricTranslates_thetaPullback_extends : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (I : IntData Xo c T io y.1) (M : ℕ) (t : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((M : ℤ) ^ 2) (Over.mk (xOf y)))), (∃ U : PELUnif (IsLocalRing.maximalIdeal T.V) I.G, U.TorsionIso) → IsUnit (M : T.V) → letI := io.toAlgebra; IsTranslSum M y.1.s t → Reg I M t := by
-  first | exact @GlobalTheory.HkIntegral.RegSum.reg_of_isTranslSum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumSymmetricTranslatesThetaPullbackExtendsStatement =====

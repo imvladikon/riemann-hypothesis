@@ -1593,28 +1593,12 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 namespace PositivityTheory.Xgn.LineFunctionModelRatio₂
 
-theorem exists_typeFn {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (p q : ℕ) :
-    ∃ (g : ℕ) (ty : Fin g → (E →+* ℂ)), IsTypeFn H p q ty := by
-  classical
-  let m : (E →+* ℂ) → ℕ := fun τ => if τ (H.rt : E) = H.rt0 then p else q
-  let e := Fintype.equivFin (Σ τ : E →+* ℂ, Fin (m τ))
-  refine ⟨_, fun i => (e.symm i).1, ?_⟩
-  have key : ∀ τ : E →+* ℂ, Nat.card {i // (e.symm i).1 = τ} = m τ := by
-    intro τ
-    have e1 : {i // (e.symm i).1 = τ} ≃ Fin (m τ) :=
-      (e.symm.subtypeEquiv (fun _ => Iff.rfl)).trans (Equiv.sigmaSubtype τ)
-    rw [Nat.card_congr e1, Nat.card_fin]
-  intro τ
-  refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [key]; simp [m, h]
-  · rw [key]; simp [m, h]
-
 end PositivityTheory.Xgn.LineFunctionModelRatio₂
 
 theorem PositivityTheory.Xgn.line_function_model_ratio : Geo.ResK.ResKStatement → GagaSections → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (O' : Type) [CommRing O'] (β' : O' →+* c.F) (Y' : Model Xo c β') (U : Set (Xo.XF c)) (Z : CptOver Y U) (Z' : CptOver Y' U) (τ : E →+* ℂ) (φ φ' : FrameFn Xo c), FracBase β → FracBase β' → 1 ≤ D.p + D.q → τ (H.rt : E) = H.rt0 → Z.IsGeom → Z'.IsGeom → FlatOnModel Z τ φ → FlatOnModel Z' τ φ' → ∃ x : c.F, x ≠ 0 ∧ ∀ (F : Type) [Field F] (βF : c.F →+* F) y v w, IsFramed U τ βF y v w → φ' F y v w = βF x * φ F y v w := by
   intro hR hG E _ _ _ H D l Xo c O _ β Y O' _ β' Y' U Z Z' τ φ φ' hO hO' hpq hτ hZ hZ' hφ hφ'
-  obtain ⟨g, ty, hty⟩ := PositivityTheory.Xgn.LineFunctionModelRatio₂.exists_typeFn H D.p D.q
-  obtain ⟨FU⟩ := GlobalTheory.CompanionTheory.Ar.Top.complex_uniformisation_holds E H D l Xo
+  obtain ⟨g, ty, hty⟩ := _root_.GlobalTheory.AllClasses.exists_isTypeFn H D.p D.q
+  obtain ⟨FU⟩ := _root_.GlobalTheory.closing_of_abelianSchemeLaws E H D l Xo
     ((algebraMap c.F ℂ).comp (IntermediateField.inclusion c.le).toRingHom) g ty hpq rfl hty
   obtain ⟨Φ, hΦ, -⟩ := GlobalTheory.CompanionTheory.Ar.Flat.anUnit E H D l Xo c τ τ (algebraMap c.F ℂ) g ty FU hty hτ (fun _ => rfl)
   obtain ⟨κ, hκ, h₁⟩ := GlobalTheory.CompanionTheory.Ar.Flat.flat_eq_const_mul_unitAn hR hG E H D l Xo c O β Y U Z τ
@@ -1824,7 +1808,7 @@ theorem period_in_pos (hr : 1 ≤ D.p + D.q) {U : Set (Xo.XF c)} (hU : IsClopen 
       IsTypeFn H D.p D.q ty ∧ ∀ P (y : Sp ℂ ⟶ Xo.XF c), IsPeriod (FU.Di i) ty P → under y = FU.u i P →
         y ≫ pullback.snd _ _ = spMap (algebraMap c.F ℂ) → Set.range y ⊆ U := by
   obtain ⟨g, ty, hty⟩ := GlobalTheory.AllClasses.exists_isTypeFn H D.p D.q
-  obtain ⟨FU⟩ := GlobalTheory.CompanionTheory.Ar.Top.complex_uniformisation_holds E H D l Xo (algebraMap (KA l) ℂ) g ty hr rfl hty
+  obtain ⟨FU⟩ := _root_.GlobalTheory.closing_of_abelianSchemeLaws E H D l Xo (algebraMap (KA l) ℂ) g ty hr rfl hty
   obtain ⟨i, hi⟩ := exists_period hU hne FU hty
   exact ⟨g, ty, FU, i, hty, hi⟩
 
@@ -1898,10 +1882,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.Ar.Br.CovEx
 
-theorem exists_padic_emb (K : Type) [Field K] [NumberField K] (p : Nat.Primes) : Nonempty (K →+* ℂ_[p]) := by
-  haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
-  exact ⟨(IsAlgClosed.lift (R := ℚ) (S := K) (M := ℂ_[p]) : K →ₐ[ℚ] ℂ_[p]).toRingHom⟩
-
 theorem goodOf_or {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H} (c : Coeff l)
     (σ : c.F →+* ℂ) : Formalism.L2.Pj.goodOf c σ = σ ∨ (starRingEnd ℂ).comp (Formalism.L2.Pj.goodOf c σ) = σ := by
   unfold Formalism.L2.Pj.goodOf
@@ -1917,7 +1897,7 @@ theorem exists_constSec : Geo.ResK.ResKStatement → GagaSections → ∀ (E : T
       s.deg = ((D.p : ℝ) - D.q) / 2 * (GlobalTheory.CM.logOm E χ).re := by
   intro hR hG E _ _ _ H D l Xo c r U x hL _ χ hχ Z τ
   have hpos := hL.pos
-  obtain ⟨κ⟩ := exists_padic_emb c.F (⟨2, Nat.prime_two⟩ : Nat.Primes)
+  obtain ⟨κ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.DSplit.exists_emb c.F (⟨2, Nat.prime_two⟩ : Nat.Primes)
   obtain ⟨O, _, _, _, β, Y, hβ, -, -, -⟩ :=
     _root_.GlobalTheory.CompanionTheory.Relay.good_reduction_dvr_model_exists E H D l Xo c ⟨2, Nat.prime_two⟩ κ hpos (hL.good 2 Nat.prime_two)
   obtain ⟨hclopen, hcpt, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Br.cptOver_any E H D l Xo c (Z : Set (Xo.XF c)) Z.2

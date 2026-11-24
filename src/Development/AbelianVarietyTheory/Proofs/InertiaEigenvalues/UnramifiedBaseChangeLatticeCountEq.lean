@@ -91,11 +91,7 @@ namespace GlobalTheory.UnitLemma.Unr.Dual
 
 open GlobalTheory.UnitLemma GlobalTheory.UnitLemma.Unr
 
-theorem val_mul (K : UQ) {x y : K.E} (hx : x ≠ 0) (hy : y ≠ 0) :
-    val K.O (x * y) = val K.O x + val K.O y := by
-  unfold val
-  rw [map_mul, WithZero.log_mul (by simpa using hx) (by simpa using hy)]
-  ring
+alias val_mul := _root_.GlobalTheory.UnitLemma.Unr.val_mul_ne
 
 theorem val_inv (K : UQ) (x : K.E) : val K.O x⁻¹ = - val K.O x := by
   unfold val

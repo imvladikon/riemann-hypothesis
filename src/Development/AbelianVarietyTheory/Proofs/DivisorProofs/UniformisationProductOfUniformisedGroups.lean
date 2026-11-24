@@ -1133,8 +1133,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.MumFam GlobalTheory.MumProd GlobalTheory.ProdUnif
 
-theorem _root_.GlobalTheory.T.thickeningProductIso_preserves_cubicalStructure : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D₁ : DegData R I) (A₁ : PolAV (Sp (FractionRing R))) (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁] (U₁ : UnifPre I D₁ A₁ G₁) (D₂ : DegData R I) (A₂ : PolAV (Sp (FractionRing R))) (G₂ : Over (Sp R)) [GrpObj G₂] [IsCommMonObj G₂] (U₂ : UnifPre I D₂ A₂ G₂) (D : DegData R I) (p₁ : D.toPre.P.A ⟶ D₁.toPre.P.A) (p₂ : D.toPre.P.A ⟶ D₂.toPre.P.A) (q₁ : D.toPre.X →+ D₁.toPre.X) (q₂ : D.toPre.X →+ D₂.toPre.X), IsSumDeg D.toPre D₁.toPre D₂.toPre p₁ p₂ q₁ q₂ → ∀ (wM : LB.Iso D.toPre.P.L (extLB D₁.toPre.P.L D₂.toPre.P.L p₁.left p₂.left)) (L : LB (G₁ ⊗ G₂).left) (c : CubGen (G₁ ⊗ G₂) L) (wL : LB.Iso L (extLB U₁.LG.L U₂.LG.L (fst G₁ G₂).left (snd G₁ G₂).left)), L.IsLB → IsBoxGen (φ := thφ D.toPre.P.A (x3 D.toPre.P.A)) (φ₁ := thφ D₁.toPre.P.A (x3 D₁.toPre.P.A)) (φ₂ := thφ D₂.toPre.P.A (x3 D₂.toPre.P.A)) (ε := thε) wM (p₁ ⊗ₘ p₁ ⊗ₘ p₁).left (p₂ ⊗ₘ p₂ ⊗ₘ p₂).left D.toPre.cub.t D₁.toPre.cub.t D₂.toPre.cub.t → IsBoxGen (φ₁ := thφ G₁ (x3 G₁)) (φ₂ := thφ G₂ (x3 G₂)) wL (fst G₁ G₂ ⊗ₘ fst G₁ G₂ ⊗ₘ fst G₁ G₂).left (snd G₁ G₂ ⊗ₘ snd G₁ G₂ ⊗ₘ snd G₁ G₂).left c U₁.cubG.t U₂.cubG.t → ∀ (e : ℕ) (g : GtCoord I D.toPre e (G₁ ⊗ G₂)), g.pG.left ≫ p₁.left = ((Over.pullback (thick R I e)).map (fst G₁ G₂)).left ≫ (U₁.gt e).pG.left → g.pG.left ≫ p₂.left = ((Over.pullback (thick R I e)).map (snd G₁ G₂)).left ≫ (U₂.gt e).pG.left → ∀ w : LB.Iso (L.pull (fstG I e (G₁ ⊗ G₂)).left) (D.toPre.P.L.pull g.pG.left), BoxSq (T := (thickObj R I e (G₁ ⊗ G₂)).left) (T₁ := (thickObj R I e G₁).left) (T₂ := (thickObj R I e G₂).left) wM wL w (U₁.w e) (U₂.w e) ((Over.pullback (thick R I e)).map (fst G₁ G₂)).left ((Over.pullback (thick R I e)).map (snd G₁ G₂)).left → CubAlong I D.toPre e (G₁ ⊗ G₂) L c g.pG w := by
-  first | exact @GlobalTheory.ProdUnif.cubAlong_prod
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThickeningProductIsoPreservesCubicalStructureStatement =====
@@ -1496,8 +1494,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.MumFam GlobalTheory.MumProd GlobalTheory.ProdUnif
 
-theorem _root_.GlobalTheory.T.expansionModIdealPow_boxProduct_eq_boxProduct : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D₁ : DegData R I) (A₁ : PolAV (Sp (FractionRing R))) (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁] (U₁ : UnifPre I D₁ A₁ G₁) (D₂ : DegData R I) (A₂ : PolAV (Sp (FractionRing R))) (G₂ : Over (Sp R)) [GrpObj G₂] [IsCommMonObj G₂] (U₂ : UnifPre I D₂ A₂ G₂) (D : DegData R I) (p₁ : D.toPre.P.A ⟶ D₁.toPre.P.A) (p₂ : D.toPre.P.A ⟶ D₂.toPre.P.A) (q₁ : D.toPre.X →+ D₁.toPre.X) (q₂ : D.toPre.X →+ D₂.toPre.X) (A : PolAV (Sp (FractionRing R))) (U : UnifPre I D A (G₁ ⊗ G₂)), Function.Bijective (q₁.prod q₂) → ∀ (wM : LB.Iso D.toPre.P.L (extLB D₁.toPre.P.L D₂.toPre.P.L p₁.left p₂.left)) (wL : LB.Iso U.LG.L (extLB U₁.LG.L U₂.LG.L (fst G₁ G₂).left (snd G₁ G₂).left)) (e k : ℕ), (U.gt e).pG.left ≫ p₁.left = ((Over.pullback (thick R I e)).map (fst G₁ G₂)).left ≫ (U₁.gt e).pG.left → (U.gt e).pG.left ≫ p₂.left = ((Over.pullback (thick R I e)).map (snd G₁ G₂)).left ≫ (U₂.gt e).pG.left → (∀ x, IsBoxGen (Y := (thickObj R I e (G₁ ⊗ G₂)).left) (Y₁ := (thickObj R I e G₁).left) (Y₂ := (thickObj R I e G₂).left) wM ((Over.pullback (thick R I e)).map (fst G₁ G₂)).left ((Over.pullback (thick R I e)).map (snd G₁ G₂)).left ((U.gt e).t x) ((U₁.gt e).t (q₁ x)) ((U₂.gt e).t (q₂ x))) → BoxSq (T := (thickObj R I e (G₁ ⊗ G₂)).left) (T₁ := (thickObj R I e G₁).left) (T₂ := (thickObj R I e G₂).left) wM wL (U.w e) (U₁.w e) (U₂.w e) ((Over.pullback (thick R I e)).map (fst G₁ G₂)).left ((Over.pullback (thick R I e)).map (snd G₁ G₂)).left → ∀ (σ : H0 U.LG.L k) (σ₁ : H0 U₁.LG.L k) (σ₂ : H0 U₂.LG.L k) (f : ∀ α : D.toPre.X, D.toPre.SecB k α) (f₁ : ∀ α : D₁.toPre.X, D₁.toPre.SecB k α) (f₂ : ∀ α : D₂.toPre.X, D₂.toPre.SecB k α), IsBoxSec wL (fst G₁ G₂).left (snd G₁ G₂).left σ σ₁ σ₂ → (∀ α, IsBoxSec wM p₁.left p₂.left (f α) (f₁ (q₁ α)) (f₂ (q₂ α))) → U₁.ExpandsAt e k σ₁ f₁ → U₂.ExpandsAt e k σ₂ f₂ → U.ExpandsAt e k σ f := by
-  first | exact @GlobalTheory.ProdUnif.expandsAt_boxProd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExpansionModIdealPowBoxProductEqBoxProductStatement =====
@@ -1870,7 +1866,7 @@ theorem exists_pre (hD : IsSumDeg D.toPre D₁.toPre D₂.toPre p₁ p₂ q₁ q
           (EvenPull.inv_fst _ (G₁ ⊗ G₂)) (EvenPull.inv_hom_fst _ _ (gt e).q) (EvenPull.inv_fst _ G₁)
           (EvenPull.inv_hom_fst _ _ (U₁.gt e).q) (EvenPull.inv_fst _ G₂) (EvenPull.inv_hom_fst _ _ (U₂.gt e).q) ls ms
           (U₁.w_even e) (U₂.w_even e)
-      w_cub := fun e => GlobalTheory.T.thickeningProductIso_preserves_cubicalStructure R I D₁ A₁ G₁ U₁ D₂ A₂ G₂ U₂ D p₁ p₂ q₁ q₂ hD wM L.L c.t wL L.isLB mc lc e (gt e) (hp₁ e)
+      w_cub := fun e => _root_.GlobalTheory.ProdUnif.cubAlong_prod R I D₁ A₁ G₁ U₁ D₂ A₂ G₂ U₂ D p₁ p₂ q₁ q₂ hD wM L.L c.t wL L.isLB mc lc e (gt e) (hp₁ e)
         (hp₂ e) (w e) (Q e)
       w_compat := fun e => GlobalTheory.ProdUnif.compat_box₂ (T := (thickObj R I e (G₁ ⊗ G₂)).left) (T₁ := (thickObj R I e G₁).left)
         (T₂ := (thickObj R I e G₂).left) wM wL (U₁.w e) (U₂.w e) D.toPre.P.isLB D₁.toPre.P.isLB D₂.toPre.P.isLB L.isLB
@@ -1928,7 +1924,7 @@ theorem expands_box (hD : IsSumDeg D.toPre D₁.toPre D₂.toPre p₁ p₂ q₁ 
     · exact congrArg (fun m => m.left) (comp_cP D.toPre (DegPre.prB D.toPre (FractionRing R)) α)
     · exact congrArg (fun m : DegPre.BF D.toPre (FractionRing R) ⟶ D.toPre.P.A => m.left)
         (MonObj.comp_one (M := D.toPre.P.A) (DegPre.prB D.toPre (FractionRing R)))
-  · exact GlobalTheory.T.expansionModIdealPow_boxProduct_eq_boxProduct R I D₁ A₁ G₁ U₁ D₂ A₂ G₂ U₂ D p₁ p₂ q₁ q₂ A U hD.xsum wM wL e k
+  · exact _root_.GlobalTheory.ProdUnif.expandsAt_boxProd R I D₁ A₁ G₁ U₁ D₂ A₂ G₂ U₂ D p₁ p₂ q₁ q₂ A U hD.xsum wM wL e k
       (congrArg (fun z => z.left) (pG_pr (hU.q_pr₁ e))) (congrArg (fun z => z.left) (pG_pr (hU.q_pr₂ e))) (ht e) (Q e)
       σ σ₁ σ₂ f f₁ f₂ hσ hf (c₁ e) (c₂ e)
 

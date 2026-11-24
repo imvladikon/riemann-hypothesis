@@ -249,35 +249,6 @@ end GlobalTheory.FinTransJet
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.finite_translate_jets_fock : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) →
-    ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
-    (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ)
-    (frS : GL (Fin S.rank) D.host.E) (frT : GL (Fin T.rank) D.host.E),
-    Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) frS.1 * S.gram * frS.1 = 1 →
-    Formalism.UG.cT (D.sp.cm.sig : D.host.E →+* D.host.E) frT.1 * T.gram * frT.1 = 1 →
-    (∀ τ, IsCartanInv (gramAt D S τ) (sS τ)) → (∀ τ, IsCartanInv (gramAt D T τ) (sT τ)) →
-    ∀ (δ t0 : ℂ), StandardLatticesGL3.Crv D D.host.ccK δ → δ ≠ 0 → GL3Theta.IsTwoTorsionPointUnkilled D (TaylorLogMetric.lamOf D D.host.ccK δ) t0 →
-    ∀ e0 : TaylorLogMetric.VC D S.rank T.rank → ℂ, StandardLatticesGL3.oddE0 D D.host.ccK δ t0 S.rank T.rank e0 →
-    ∀ f, IsVacO ψ θ S T sS sT (colLat frS : Set _) (colLat frT : Set _) f → ∀ c : ℂ,
-    (∀ k : FVar D T.rank S.rank →₀ ℕ, pureTensorO ψ θ S T sS sT (fun τ => frS.1.map (tauE D τ)) (fun τ => frT.1.map (tauE D τ)) f
-        (MvPolynomial.monomial k 1) 0 = c * ((k.prod fun v n => GlobalTheory.FunObj.period δ v.1 ^ n) * GL3Theta.applyAt0 D (MvPolynomial.monomial k 1) e0)) →
-    ∀ u : WO S T, u.map (infPart D) = 0 →
-    ∃ (m : ℕ) (a : Fin m → ℂ) (s : Fin m → TaylorLogMetric.VC D S.rank T.rank),
-      (∀ l, IsAlgebraic ℚ (a l)) ∧ (∀ l, StandardLatticesGL3.LaQ D (TaylorLogMetric.tor0 D D.host.ccK δ) (StandardLatticesGL3.stdL D S.rank) (StandardLatticesGL3.stdL D T.rank) (s l)) ∧
-      ∀ k : FVar D T.rank S.rank →₀ ℕ, pureTensorO ψ θ S T sS sT (fun τ => frS.1.map (tauE D τ)) (fun τ => frT.1.map (tauE D τ))
-        (heisO ψ S T u f) (MvPolynomial.monomial k 1) 0 =
-        c * ((k.prod fun v n => GlobalTheory.FunObj.period δ v.1 ^ n) * GL3Theta.applyAt0 D (MvPolynomial.monomial k 1)
-          (StandardLatticesGL3.comb D (TaylorLogMetric.tor0 D D.host.ccK δ) a s e0)) := by
-  first | exact @_root_.GlobalTheory.FinTransJet.fock_jets_heisenberg_orbit_finite
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.FockJetsHeisenbergOrbitFinite =====
@@ -296,7 +267,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.RowEx MeasureTheory
 noncomputable section
 namespace GlobalTheory.BotTransJet
-open GlobalTheory.Grid (neg)
 end GlobalTheory.BotTransJet
 namespace GlobalTheory.BotTransJet
 open GlobalTheory.Grid (neg)
@@ -347,7 +317,7 @@ theorem isAlgebraic_pureTensorO_div_period : ∀ {D : D7} {T : Type} [Finite T] 
     (map_ne_zero _).2 (mul_ne_zero c.ne_zero (Finsupp.prod_ne_zero_iff.2 fun τ _ =>
       pow_ne_zero _ (GlobalTheory.FunObj.period_ne_zero hδ τ)))
   refine ⟨_, hΩ, fun u hu k hk => ?_⟩
-  obtain ⟨m, a, s, ha, hs, hjet⟩ := _root_.GlobalTheory.T.finite_translate_jets_fock hP hI W.ψ W.θ A WW X.rA.s X.rW.s 1 1 hS hW hcA hcW δ t0 hC hδ ht0 e0 he0 f hf
+  obtain ⟨m, a, s, ha, hs, hjet⟩ := _root_.GlobalTheory.FinTransJet.fock_jets_heisenberg_orbit_finite hP hI W.ψ W.θ A WW X.rA.s X.rW.s 1 1 hS hW hcA hcW δ t0 hC hδ ht0 e0 he0 f hf
     c (fun k => hc k) u hu
   have hconj := jet_negSp_heis W.ψ W.θ hψ hθ A WW X.rA.s X.rW.s X.rA.B X.rW.B X.vac u k
   have hprod : (k.prod fun v n => GlobalTheory.FunObj.period δ v.1 ^ n) = dg.prod fun τ n => GlobalTheory.FunObj.period δ τ ^ n := by
@@ -371,23 +341,6 @@ end GlobalTheory.BotTransJet
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.DIV
-open IsDedekindDomain NumberField GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.RowClaim
-open Formalism.L2.Host (HChar)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.RowEx MeasureTheory
-
-theorem _root_.GlobalTheory.T.bottom_translate_jets_algebraic : ∀ {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ₀ : T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
-    {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → L.Is μ₀ →
-    IsBottomTri W i j X →
-    ∀ dg : D.what₂.Tau →₀ ℕ, ∃ Ω : ℂ, Ω ≠ 0 ∧ ∀ u : WO (GlobalTheory.Grid.neg A) WW, u.map (infPart D) = 0 →
-      ∀ k : FVar D WW.rank A.rank →₀ ℕ, Finsupp.mapDomain Prod.fst k = dg →
-        IsAlgebraic ℚ (pureTensorO W.ψ W.θ (GlobalTheory.Grid.neg A) WW (fun τ => -X.rA.s τ) X.rW.s X.rA.B X.rW.B
-          (heisO W.ψ (GlobalTheory.Grid.neg A) WW u X.vac) (MvPolynomial.monomial k 1) 0 / Ω) := by
-  first | exact @_root_.GlobalTheory.BotTransJet.isAlgebraic_pureTensorO_div_period
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.JetsDivPeriodIsAlgebraic =====

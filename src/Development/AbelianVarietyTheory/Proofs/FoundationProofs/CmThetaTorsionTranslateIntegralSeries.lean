@@ -8,6 +8,7 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormNatCa
 public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Basic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionary
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassCurvePointOfLatticeAddOfGeneric
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorSeriesInParameterRescaleOfAlgebraic
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Cval
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugate
@@ -18,7 +19,6 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicMode
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TranslateModifiedSigmaTwoMulAtZero
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplex
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SigmaStarSquareQuotientInModelParameter
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorSeriesInParameterRescaleOfAlgebraic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslatePowerSeriesPowBoundedCoeffsOfTorsi
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionPointPadicAbscissaNormLeOne
 import Mathlib.Algebra.Order.Floor.Extended
@@ -306,7 +306,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormTangentDenominatorEqOneOfUnitDiscrDouble =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicModelChordLawSumAndDifference =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicModelChordLawSumAndDifference", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormNatCastLe\npublic import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Formula\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionary\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness\npublic import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassCurvePointOfLatticeAddOfGeneric\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicModelChordLawSumAndDifference", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormNatCastLe\npublic import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Formula\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionary\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness\npublic import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassCurvePointOfLatticeAddOfGeneric\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorSeriesInParameterRescaleOfAlgebraic\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -334,10 +334,6 @@ theorem chord_change {K : Type*} [Field K] [CharZero K] (e r s t a b c d : K) (h
   ring
 
 variable {p : ℕ} [Fact p.Prime]
-
-theorem lamC_coe' (lam : Qbar →+* ℂ_[p]) (x : Qbar) : lamC lam (x : ℂ) = lam x := by
-  unfold lamC
-  rw [dite_eq_left x.2]
 
 theorem W_a₁ (g : GL3Theta.G1 p) : g.W.a₁ = ((g.C.u⁻¹ : ℂ_[p]ˣ) : ℂ_[p]) * (2 * g.C.s) := by
   simp [GL3Theta.G1.W, wModel, WeierstrassCurve.variableChange_a₁]
@@ -370,15 +366,15 @@ theorem xAt_add (g : GL3Theta.G1 p) (P Q : ℂ) (h : GlobalTheory.EvenTheta.IsLa
   set B : Qbar := ⟨_, a2⟩
   set C : Qbar := ⟨_, a3⟩
   set D : Qbar := ⟨_, a4⟩
-  have eA : lamC g.lam (wpF g.abelian₂ P) = g.lam A := lamC_coe' g.lam A
-  have eB : lamC g.lam (wpD g.abelian₂ P) = g.lam B := lamC_coe' g.lam B
-  have eC : lamC g.lam (wpF g.abelian₂ Q) = g.lam C := lamC_coe' g.lam C
-  have eD : lamC g.lam (wpD g.abelian₂ Q) = g.lam D := lamC_coe' g.lam D
+  have eA : lamC g.lam (wpF g.abelian₂ P) = g.lam A := _root_.GlobalTheory.SerTransport.lamC_coe g.lam A
+  have eB : lamC g.lam (wpD g.abelian₂ P) = g.lam B := _root_.GlobalTheory.SerTransport.lamC_coe g.lam B
+  have eC : lamC g.lam (wpF g.abelian₂ Q) = g.lam C := _root_.GlobalTheory.SerTransport.lamC_coe g.lam C
+  have eD : lamC g.lam (wpD g.abelian₂ Q) = g.lam D := _root_.GlobalTheory.SerTransport.lamC_coe g.lam D
   have eS : lamC g.lam (wpF g.abelian₂ (P + Q)) =
       ((g.lam B - g.lam D) / (g.lam A - g.lam C)) ^ 2 / 4 - g.lam A - g.lam C := by
     have : wpF g.abelian₂ (P + Q) = ((((B - D) / (A - C)) ^ 2 / 4 - A - C : Qbar) : ℂ) := by
       rw [hadd]; push_cast; rfl
-    rw [this, lamC_coe']
+    rw [this, _root_.GlobalTheory.SerTransport.lamC_coe]
     simp only [map_sub, map_div₀, map_pow, map_ofNat]
   have hAC : g.lam A - g.lam C ≠ 0 := fun e =>
     hne (congrArg Subtype.val (g.lam.injective (sub_eq_zero.1 e)))
@@ -407,8 +403,8 @@ theorem yAt_neg (g : GL3Theta.G1 p) (h : GlobalTheory.EvenTheta.IsLat g.abelian�
     (a4 : wpD g.abelian₂ Q ∈ Qbar) :
     yAt g (-Q) = g.W.toAffine.negY (GlobalTheory.EvenTheta.xAt g Q) (yAt g Q) := by
   have e : lamC g.lam (-wpD g.abelian₂ Q) = -lamC g.lam (wpD g.abelian₂ Q) := by
-    have e1 := lamC_coe' g.lam (-(⟨_, a4⟩ : Qbar))
-    have e2 := lamC_coe' g.lam (⟨_, a4⟩ : Qbar)
+    have e1 := _root_.GlobalTheory.SerTransport.lamC_coe g.lam (-(⟨_, a4⟩ : Qbar))
+    have e2 := _root_.GlobalTheory.SerTransport.lamC_coe g.lam (⟨_, a4⟩ : Qbar)
     rw [map_neg, ← e2] at e1
     exact e1
   have e1 : g.W.toAffine.a₁ = _ := W_a₁ g
@@ -568,11 +564,6 @@ open GlobalTheory.EvenTheta GlobalTheory.ThetaTransl
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem lamC_mul' (lam : Qbar →+* ℂ_[p]) {a b : ℂ} (ha : a ∈ Qbar) (hb : b ∈ Qbar) :
-    lamC lam (a * b) = lamC lam a * lamC lam b := by
-  unfold lamC
-  rw [dite_eq_left (mul_mem ha hb), dite_eq_left ha, dite_eq_left hb, ← map_mul]; rfl
-
 theorem lamC_sub' (lam : Qbar →+* ℂ_[p]) {a b : ℂ} (ha : a ∈ Qbar) (hb : b ∈ Qbar) :
     lamC lam (a - b) = lamC lam a - lamC lam b := by
   unfold lamC
@@ -694,8 +685,8 @@ theorem generic (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (g : GL3Theta.G
   have cP := hc _ (tors_laq hP.2)
   have cQ := hc _ (tors_laq hQ.2)
   have key' := congrArg (lamC g.lam) key
-  rw [lamC_mul' _ cS cD, lamC_mul' _ (mul_mem (sub_mem wQ wP) (pow_mem cP 2)) (pow_mem cQ 2),
-    lamC_mul' _ (sub_mem wQ wP) (pow_mem cP 2), lamC_sub' _ wQ wP, lamC_pow' _ cP, lamC_pow' _ cQ] at key'
+  rw [_root_.GlobalTheory.ThetaParam.lamC_mul _ cS cD, _root_.GlobalTheory.ThetaParam.lamC_mul _ (mul_mem (sub_mem wQ wP) (pow_mem cP 2)) (pow_mem cQ 2),
+    _root_.GlobalTheory.ThetaParam.lamC_mul _ (sub_mem wQ wP) (pow_mem cP 2), lamC_sub' _ wQ wP, lamC_pow' _ cP, lamC_pow' _ cQ] at key'
   have hn := congrArg norm key'
   simp only [norm_mul, norm_pow, hwone, one_mul] at hn
   change ‖cval g (P + Q)‖ * ‖cval g (P - Q)‖ = ‖cval g P‖ ^ 2 * ‖cval g Q‖ ^ 2 at hn
@@ -725,7 +716,7 @@ theorem doubling (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (g : GL3Theta.
   have cS := hc _ (tors_laq hS.2)
   have cP := hc _ (tors_laq hP.2)
   have key' := congrArg (lamC g.lam) key
-  rw [lamC_mul' _ (neg_mem dP) (pow_mem cP 4), lamC_neg' _ dP, lamC_pow' _ cP] at key'
+  rw [_root_.GlobalTheory.ThetaParam.lamC_mul _ (neg_mem dP) (pow_mem cP 4), lamC_neg' _ dP, lamC_pow' _ cP] at key'
   have hn := congrArg norm key'
   simp only [norm_mul, norm_neg, norm_pow, hone, one_mul] at hn
   change ‖cval g (2 * P)‖ = ‖cval g P‖ ^ 4 at hn
@@ -958,14 +949,8 @@ open GlobalTheory.EvenTheta GlobalTheory.ThetaTransl
 section
 variable {p : ℕ} [Fact p.Prime]
 
-theorem lamC_eq (lam : Qbar →+* ℂ_[p]) {x : ℂ} (hx : x ∈ Qbar) : lamC lam x = lam ⟨x, hx⟩ := dif_pos hx
-
-theorem lamC_mul' (lam : Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ Qbar) (hy : y ∈ Qbar) :
-    lamC lam (x * y) = lamC lam x * lamC lam y := by
-  rw [lamC_eq lam hx, lamC_eq lam hy, lamC_eq lam (mul_mem hx hy), ← map_mul]; rfl
-
 theorem lamC_ne_zero (lam : Qbar →+* ℂ_[p]) {x : ℂ} (hx : x ∈ Qbar) (h0 : x ≠ 0) : lamC lam x ≠ 0 := by
-  rw [lamC_eq lam hx]
+  rw [_root_.GlobalTheory.TranslLin.lamC_of lam hx]
   intro h
   apply h0
   have := (map_eq_zero_iff lam lam.injective).1 h
@@ -988,9 +973,6 @@ theorem tors_neg' {p : ℕ} {Λ : AddSubgroup ℂ} {t : ℂ} (h : GL3Theta.Tors1
 
 theorem laQ_of_tors {p : ℕ} {Λ : AddSubgroup ℂ} {t : ℂ} (h : GL3Theta.Tors1 p Λ t) : InRationalLattice Λ t :=
   let ⟨_, n, hn, _, h⟩ := h; ⟨n, hn, h⟩
-
-theorem thetaTranslateOperator_zero_eq_self (Λ : AddSubgroup ℂ) (F : ℂ → ℂ) : U1 Λ 0 F = F := by
-  funext z; simp [U1]
 
 theorem thetaTranslate_sigmaStar_at_zero_ne_zero_of_not_mem_lattice {Λ : AddSubgroup ℂ} (hlat : IsLat Λ) {t : ℂ} (ht : t ∉ Λ) :
     U1 Λ t (sgStar Λ) 0 ≠ 0 := by
@@ -1025,7 +1007,7 @@ theorem tau_eq_C_mul : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D
   obtain ⟨-, hw, -, hE, -⟩ := GlobalTheory.EvenTheta.DatumBasic.datum_basic p g hok hlat' h2 h3 hdisc
   have hsg : AlgEnt (sgStar g.abelian₂) := by
     have := halg 0 ⟨1, one_pos, by simp⟩
-    rwa [thetaTranslateOperator_zero_eq_self] at this
+    rwa [_root_.GlobalTheory.ThetaParam.thetaTranslation_zero] at this
   have hEi : (ePhi1 g.lam g.abelian₂ g.C g.wq)⁻¹ * ePhi1 g.lam g.abelian₂ g.C g.wq = 1 :=
     PowerSeries.inv_mul_cancel _ (by rw [hE]; exact one_ne_zero)
   have hcon : ∀ s, InRationalLattice g.abelian₂ s → PowerSeries.constantCoeff (tau g s) = cval g s ∧
@@ -1041,7 +1023,7 @@ theorem tau_eq_C_mul : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (cc : Ideal (𝓞 D
   have b3 := (hcon (-t) hq').2
   have e := (atU_smul' g (mul_mem a3 b3) c1).2
   rw [funext (hlat'.sqTh_mul ht.1), ((GlobalTheory.SerTransport.transport p g).1 _ _ (halg _ hq) (halg _ hq')).1.2,
-    c2, lamC_mul' _ a3 b3] at e
+    c2, _root_.GlobalTheory.ThetaParam.lamC_mul _ a3 b3] at e
   have hprod : tau g t * tau g (-t) = PowerSeries.C (cval g t * cval g (-t)) *
       lineSer g.wq⁻¹ (xAt g t) := by
     simp only [tau, cval]

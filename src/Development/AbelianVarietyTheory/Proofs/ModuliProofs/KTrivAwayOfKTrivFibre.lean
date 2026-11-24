@@ -79,6 +79,6 @@ theorem kTriv_away_of_kTriv_fibre : Out.GlobalFnsSt → ∀ (R : Type) [CommRing
   obtain ⟨f, hf, H⟩ := _root_.GlobalTheory.KTrivSpread.exists_kTriv_of_isUnit R A L K x ((Over.pullback (spMap x)).obj A)
     (pullback.fst A.hom (spMap x)) hA hL hR (isGrpPullback_pullback_obj A (spMap x)) hK
   exact ⟨f, hf, H (Localization.Away f) (algebraMap R (Localization.Away f)) _ _
-    (IsLocalization.Away.algebraMap_isUnit f) (isGrpPullback_pullback_obj A _)⟩
+    (IsLocalization.Away.algebraMap_isUnit f) (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_pullback A _)⟩
 
 end GlobalTheory

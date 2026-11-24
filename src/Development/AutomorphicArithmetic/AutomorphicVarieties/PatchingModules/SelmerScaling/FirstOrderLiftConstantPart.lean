@@ -290,11 +290,6 @@ private theorem eig_prod {R : Type} [CommRing R] {n : ℕ} (v : Fin n → R) :
     rw [List.ofFn_succ, List.prod_cons, ← Matrix.mulVec_mulVec, ih _ (fun k => c k.succ) (fun k => h _),
       Matrix.mulVec_smul, h, Fin.prod_univ_succ, smul_smul, mul_comm]
 
-private theorem eig_ex {k : Type} [Field k] {n : ℕ} (P : Matrix (Fin n) (Fin n) k) (a : Fin n → k)
-    (hP : P.charpoly = ∏ i, (Polynomial.X - Polynomial.C (a i))) (i : Fin n) :
-    ∃ v : Fin n → k, v ≠ 0 ∧ P *ᵥ v = a i • v :=
-  _root_.UpperTheory.Reformulated.B.Qi37.eig_ex P a hP i
-
 private theorem one_zero {R : Type} [CommRing R] {n : ℕ} (c : Fin n → R) (i : Fin n)
     (hu : ∀ j, j ≠ i → IsUnit (c j)) (h : ∏ j, c j = 0) : c i = 0 := by
   rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ i)] at h
@@ -374,7 +369,7 @@ private theorem u_lem {k R : Type} [Field k] [CommRing R] [Algebra k R] {n : ℕ
     ∀ y : R, (List.ofFn fun j => if j = i then 1 else P.map (algebraMap k R) -
       algebraMap R (Matrix (Fin n) (Fin n) R) (c j)).prod * (1 - 1 - algebraMap R (Matrix (Fin n) (Fin n) R) y) = 0 →
       y = 0 := by
-  obtain ⟨v, hv0, hv⟩ := eig_ex P _ hP i
+  obtain ⟨v, hv0, hv⟩ := _root_.UpperTheory.Reformulated.B.Qi37.eig_ex P _ hP i
   have hu : ∀ j, j ≠ i → IsUnit (algebraMap k R (e (c i)) - c j) := fun j hj => unit_of e hn _ (by
     rw [map_sub, AlgHom.commutes]
     exact sub_ne_zero.2 fun h => hj (hinj h).symm)
@@ -924,11 +919,6 @@ private theorem lower_entries_zero_of_commuting_triangular {K ι : Type} [Field 
     have h4 : (T g i i - T g j j) * Y i j = 0 := by linear_combination h3
     exact (mul_eq_zero.1 h4).resolve_left (sub_ne_zero.2 hg)
 
-private theorem upper_triangular_mul {K : Type} [Field K] {n : ℕ} (U T : Matrix (Fin n) (Fin n) K)
-    (hU : ∀ i j, j < i → U i j = 0) (hT : ∀ i j, j < i → T i j = 0) :
-    ∀ i j, j < i → (U * T) i j = 0 :=
-  _root_.UpperTheory.Reformulated.B.Qe38.upper_triangular_mul U T hU hT
-
 private theorem conjugate_commutator_identity {K : Type} [Field K] {n : ℕ} (w wi r r' Y : Matrix (Fin n) (Fin n) K)
     (h1 : w * wi = 1) (h2 : r' * r = 1) :
     (wi * (r * Y * r' - Y) * w) * (wi * r * w) =
@@ -956,7 +946,7 @@ theorem UpperTheory.V.Pa.localInvariants_eq_zero :
     have hinv : x.ρX x.Fr (G0.φ v g)⁻¹ * x.ρX x.Fr (G0.φ v g) = 1 := by
       rw [← h5, inv_mul_cancel, h6]
     have e := conjugate_commutator_identity (x.wX x.Fr v) (x.wiX x.Fr v) _ _ Y h1 hinv
-    have z := upper_triangular_mul _ _ (H g) (h4 g).1 a b hab
+    have z := _root_.UpperTheory.Reformulated.B.Qe38.upper_triangular_mul _ _ (H g) (h4 g).1 a b hab
     unfold dY at z
     rw [e, Matrix.sub_apply] at z
     exact sub_eq_zero.1 z

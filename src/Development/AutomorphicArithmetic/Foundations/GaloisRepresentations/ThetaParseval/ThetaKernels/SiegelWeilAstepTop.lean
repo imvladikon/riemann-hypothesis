@@ -228,7 +228,7 @@ theorem fcVal_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d'
   obtain ⟨U, p, Ê, t, hE⟩ := H.eisWk F E σ d' _ _ hsec (s0 d'.m d'.n)
   obtain ⟨hUo, hR, hs, hp, hd, hcont, hinv, hfar⟩ := hE
   obtain ⟨hadd, hbd⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.fcAll_k d' hc T g
-  obtain ⟨hDiff, hComm⟩ := lamDeriv (rat2 σ d'.Y) (fun f => fc d'.B.ψ d'.b nb lam 𝓖 f T g) hadd hbd U Ê hUo hd hcont hinv
+  obtain ⟨hDiff, hComm⟩ := _root_.GlobalTheory.CompanionTheory.HolFamily.functional_commutes_iteratedDeriv (rat2 σ d'.Y) (fun f => fc d'.B.ψ d'.b nb lam 𝓖 f T g) hadd hbd U Ê hUo hd hcont hinv
   have hpt : ∀ g', ∀ i ≤ p.rootMultiplicity (s0 d'.m d'.n), iteratedDeriv i (Ê · g') (s0 d'.m d'.n) =
       iteratedDeriv i (fun z => p.eval z) (s0 d'.m d'.n) * (2 * d'.I Ψ g') := fun g' =>
     ordVal U p (Ê · g') (fun z => d'.eis (d'.sec0 Ψ) (s0 d'.m d'.n) z g') t _ (2 * d'.I Ψ g') hUo hR hs hp (hd g')
@@ -558,7 +558,7 @@ theorem avgHol_pf_k {nb lam 𝓖} (hc : CoefData (σ := σ) (Y := d.Y) d.b nb la
     have hr : ν.real 𝓤 = 1 := by simp [Measure.real, hu.2.2.2]
     rw [hr, mul_one] at h1
     exact h1
-  obtain ⟨hDiff, hComm⟩ := lamDeriv (rat2 σ d.Y) (fun φ => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 φ T x) hadd hbd U Ê hUo hd hcont hinv
+  obtain ⟨hDiff, hComm⟩ := _root_.GlobalTheory.CompanionTheory.HolFamily.functional_commutes_iteratedDeriv (rat2 σ d.Y) (fun φ => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 φ T x) hadd hbd U Ê hUo hd hcont hinv
   exact ⟨hDiff, fun i => hComm _ hs i⟩
 end Deg
 end PositivityTheory.SiegelWeilFormula.AStep
@@ -617,7 +617,7 @@ theorem ndA_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
   obtain ⟨hadd, hbd⟩ := H.lamBd F E σ d L hL
   obtain ⟨nb, lam, 𝓖, T, x, hc, hT, rfl⟩ := hL
   obtain ⟨hUo, hR, hs, hp, hd, hcont, hinv, hfar⟩ := hE
-  obtain ⟨hDiff, hComm⟩ := lamDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
+  obtain ⟨hDiff, hComm⟩ := _root_.GlobalTheory.CompanionTheory.HolFamily.functional_commutes_iteratedDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
   show fc d.B.ψ d.b nb lam 𝓖 (fun g => iteratedDeriv j (Ê · g) (s0 d.m d.n)) T x = 0
   rw [← hComm _ hs j]
   obtain ⟨t', ht'⟩ := H.unfold F E σ d _ _ hsec hEis
@@ -643,7 +643,7 @@ theorem holA_pf_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {
   obtain ⟨-, -, hTG, hLC, hT2, hSC⟩ := H.auxEx F E σ d
   have hE' := hE
   obtain ⟨hUo, hR, hs, hp, hd, hcont, hinv, hfar⟩ := hE'
-  have hAc := famCont U Ê hUo hd hcont _ hs j
+  have hAc := _root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j
   have hAi : ∀ γ ∈ rat2 σ d.Y, ∀ g, iteratedDeriv j (Ê · (γ * g)) (s0 d.m d.n) = iteratedDeriv j (Ê · g) (s0 d.m d.n) :=
     fun γ hγ g => derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j
   obtain ⟨Ψ, hΨ, hTΨ⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.vac_tens_k R w _ hv
@@ -932,54 +932,8 @@ section -- clump:auto
 
 
 
-section
-noncomputable section
-open scoped TensorProduct NNReal Matrix Classical ComplexOrder
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl GlobalTheory.Cont PositivityTheory.Rg.Sw
 namespace PositivityTheory.SiegelWeilFormula.AStep
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-section Deg
-variable (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (L : _root_.PositivityTheory.SiegelWeilFormula.LD_k d) (R' : _root_.PositivityTheory.SiegelWeilFormula.RD_k L.sd) (hmn : d.m < d.n) (hIH : _root_.PositivityTheory.SiegelWeilFormula.MainV_k 2 R') {Φ : d.Fn}
-  (hΦ : Φ ∈ d.sch) (hv : d.T Φ ∈ R.vac) {U : Set ℂ} {p : Polynomial ℂ} {Ê : ℂ → d.G → ℂ} {t : ℝ}
-  (hE : _root_.PositivityTheory.SiegelWeilFormula.AStep.EData_k d (d.sec0 Φ) (s0 d.m d.n) (s0 d.m d.n) U p Ê t)
-include H hmn hΦ hv hE in
-theorem holA_k (w : InfinitePlace F) (j : ℕ) (hj : j ≤ p.rootMultiplicity (s0 d.m d.n)) (hlow : ∀ i < j, ∀ g, iteratedDeriv i (Ê · g) (s0 d.m d.n) = 0) :
-    ∃ (pp qq : ℕ) (e : ℤ), (pp = d.m ∧ qq = 0 ∨ pp = 0 ∧ qq = d.m) ∧
-      ∀ g, IsHolW pp qq e fun y => iteratedDeriv j (Ê · (g * R.ι w y)) (s0 d.m d.n) :=
-  _root_.PositivityTheory.SiegelWeilFormula.AStep.holA_pf_k H R hmn hΦ hv hE w j hj hlow
-include H in
-theorem holCoef_k (w : InfinitePlace F) {nb lam 𝓖} (hc : CoefData (σ := σ) (Y := d.Y) d.b nb lam 𝓖) {T : nF σ d.Y d.b}
-    {T' : nF σ L.Y L.b} (hT : L.IsSub T T') (A : d.G → ℂ) (hAc : Continuous A) (hAi : ∀ γ ∈ rat2 σ d.Y, ∀ g, A (γ * g) = A g)
-    (pp qq : ℕ) (e : ℤ) (hpq : pp = d.m ∧ qq = 0 ∨ pp = 0 ∧ qq = d.m) (hA : ∀ g, IsHolW pp qq e fun y => A (g * R.ι w y)) :
-    (∀ τ (y : GR d.n), IsDil (Pi.single L.i₀ 1) τ y → ∀ x,
-      fc d.B.ψ d.b nb lam 𝓖 A T (R.ι w y * x) = Complex.exp (τ * d.m) * fc d.B.ψ d.b nb lam 𝓖 A T x) ∧
-    ∀ uM ν 𝓤, L.UData uM ν 𝓤 → ∀ u x, fc d.B.ψ d.b nb lam 𝓖 A T (uM u * x) = fc d.B.ψ d.b nb lam 𝓖 A T x :=
-  _root_.PositivityTheory.SiegelWeilFormula.AStep.holCoef_pf_k H R L w hc hT A hAc hAi pp qq e hpq hA
-include H hE in
-theorem avgHol_k {nb lam 𝓖} (hc : CoefData (σ := σ) (Y := d.Y) d.b nb lam 𝓖) (T : nF σ d.Y d.b) {T' : nF σ L.Y L.b}
-    (hT : L.IsSub T T') {uM ν 𝓤}
-    (hu : L.UData uM ν 𝓤) (x : d.G) :
-    DifferentiableOn ℂ (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (Ê z) T x) U ∧ ∀ i : ℕ,
-      iteratedDeriv i (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (Ê z) T x) (s0 d.m d.n) =
-        _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (fun g => iteratedDeriv i (Ê · g) (s0 d.m d.n)) T x :=
-  _root_.PositivityTheory.SiegelWeilFormula.AStep.avgHol_pf_k H L hE hc T hT hu x
-include H hIH hΦ hv in
-theorem cOneVal_k {nb lam 𝓖} (hc : CoefData (σ := σ) (Y := d.Y) d.b nb lam 𝓖) {nb' lam' 𝓖'}
-    (hc' : CoefData (σ := σ) (Y := L.Y) L.b nb' lam' 𝓖') {T : nF σ d.Y d.b} {T' : nF σ L.Y L.b} (hT : L.IsSub T T') (x : d.G) :
-    HolValueAt (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) (s0 d.m d.n) z nb' lam' 𝓖' T' x) (s0 d.m d.n)
-      (2 * fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T x) :=
-  _root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_pf_k H R L R' hIH hΦ hv hc hc' hT x
-include H hΦ in
-theorem cOneLaw_k (w : InfinitePlace F) {nb' lam' 𝓖'} (hc' : CoefData (σ := σ) (Y := L.Y) L.b nb' lam' 𝓖') (T' : nF σ L.Y L.b)
-    (τ : ℝ) (y : GR d.n) (hy : IsDil (Pi.single L.i₀ 1) τ y) (z : ℂ) (x : d.G) :
-    _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) (s0 d.m d.n) z nb' lam' 𝓖' T' (R.ι w y * x) =
-      Complex.exp (τ * (2 * z + d.n)) * _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) (s0 d.m d.n) z nb' lam' 𝓖' T' x :=
-  _root_.PositivityTheory.SiegelWeilFormula.AStep.cOneLaw_pf_k H R L hΦ w hc' T' τ y hy z x
-end Deg
 end PositivityTheory.SiegelWeilFormula.AStep
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilAstepDegCut =====
@@ -1012,7 +966,7 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
   obtain ⟨-, hIc, hIi⟩ := hI Φ hΦ
   set s := s0 d.m d.n with hsdef
   set A : d.G → ℂ := fun g => iteratedDeriv j (Ê · g) s with hAdef
-  have hAc : Continuous A := famCont U Ê hUo hd hcont _ hs j
+  have hAc : Continuous A := _root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j
   have hAi : ∀ γ ∈ rat2 σ d.Y, ∀ g, A (γ * g) = A g :=
     fun γ hγ g => derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j
   have hB : _root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k d Φ p Ê j = (-(iteratedDeriv j (fun z => p.eval z) s * 2)) • d.I Φ + A := by
@@ -1022,9 +976,9 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
     intro x'
     rw [hB, (_root_.PositivityTheory.SiegelWeilFormula.AStep.fcAll_k d hc T x').1 _ _ _ hIc hAc hIi hAi]; ring
   let w : InfinitePlace F := Classical.arbitrary _
-  obtain ⟨y, hy⟩ := dilEx d.n (Pi.single L.i₀ 1) 1
-  obtain ⟨pp, qq, e, hpq, hhol⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.holA_k H R hmn hΦ hv hE w j hj hlow
-  obtain ⟨hlawA, huA⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.holCoef_k H R L w hc hT A hAc hAi pp qq e hpq hhol
+  obtain ⟨y, hy⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.dilEx_pf d.n (Pi.single L.i₀ 1) 1
+  obtain ⟨pp, qq, e, hpq, hhol⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.holA_pf_k H R hmn hΦ hv hE w j hj hlow
+  obtain ⟨hlawA, huA⟩ := _root_.PositivityTheory.SiegelWeilFormula.AStep.holCoef_pf_k H R L w hc hT A hAc hAi pp qq e hpq hhol
   obtain ⟨uM, ν, 𝓤, hu⟩ := (H.uEx F E σ d R L).1
   obtain ⟨nb', lam', 𝓖', hc'⟩ := H.coefEx F E σ L.sd
   obtain ⟨t', hct⟩ := H.cTSplit F E σ d R L _ _ hsec hEis
@@ -1046,7 +1000,7 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
     intro c φ x'
     simp only [_root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k, fc, mul_assoc]
     simp only [integral_const_mul]
-  have hhol1 := _root_.PositivityTheory.SiegelWeilFormula.AStep.avgHol_k H L hE hc T hT hu
+  have hhol1 := _root_.PositivityTheory.SiegelWeilFormula.AStep.avgHol_pf_k H L hE hc T hT hu
   have hsep := lawSep U p (max t t') s j (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (Ê z) T x)
     (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (Ê z) T (R.ι w y * x))
     (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) s z nb' lam' 𝓖' T' x) (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) s z nb' lam' 𝓖' T' (R.ι w y * x))
@@ -1068,7 +1022,7 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
       have h1 := (hfar z (lt_of_le_of_lt (le_max_left _ _) hz)).2
       have e1 : Ê z = fun g => p.eval z * d.eis (d.sec0 Φ) s z g := funext h1
       rw [e1, havg_smul, (hc2 z (lt_of_le_of_lt (le_max_right _ _) hz)).1 _])
-    (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_k H R L R' hIH hΦ hv hc hc' hT x) (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_k H R L R' hIH hΦ hv hc hc' hT _)
+    (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_pf_k H R L R' hIH hΦ hv hc hc' hT x) (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_pf_k H R L R' hIH hΦ hv hc hc' hT _)
     (fun z hz => by
       rw [(hc2 z (lt_of_le_of_lt (le_max_right _ _) hz)).2 x]
       congr 1; push_cast; ring_nf)
@@ -1082,8 +1036,8 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
   have hth : fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T (R.ι w y * x) = Complex.exp (d.m : ℂ) * fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T x := by
     have := valLaw (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) s z nb' lam' 𝓖' T' x)
       (fun z => _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) s z nb' lam' 𝓖' T' (R.ι w y * x)) 0 (d.n : ℂ) 2 s _ _
-      (fun z _ => by rw [_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneLaw_k H R L hΦ w hc' T' 1 y hy z x]; congr 1; push_cast; ring_nf)
-      (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_k H R L R' hIH hΦ hv hc hc' hT x) (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_k H R L R' hIH hΦ hv hc hc' hT _)
+      (fun z _ => by rw [_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneLaw_pf_k H R L hΦ w hc' T' 1 y hy z x]; congr 1; push_cast; ring_nf)
+      (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_pf_k H R L R' hIH hΦ hv hc hc' hT x) (_root_.PositivityTheory.SiegelWeilFormula.AStep.cOneVal_pf_k H R L R' hIH hΦ hv hc hc' hT _)
     have e2 : (d.n : ℂ) + 2 * s = d.m := by rw [hsdef, s0]; ring
     rw [e2] at this
     linear_combination this / 2
@@ -1134,10 +1088,10 @@ theorem ndZero_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d
   have hL : (fun f => fc d.B.ψ d.b nb lam 𝓖 f T x) ∈ d.lamSet := ⟨nb, lam, 𝓖, T, x, hc, hT, rfl⟩
   obtain ⟨hadd, hbd⟩ := H.lamBd F E σ d _ hL
   obtain ⟨hUo, hR, hs, hp, hd, hcont, hinv, hfar⟩ := hE
-  obtain ⟨hDiff, hComm⟩ := lamDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
+  obtain ⟨hDiff, hComm⟩ := _root_.GlobalTheory.CompanionTheory.HolFamily.functional_commutes_iteratedDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
   obtain ⟨-, -, hI⟩ := H.tAll.2.2.2.2 F E σ d
   obtain ⟨-, hIc, hIi⟩ := hI Φ hΦ
-  have hAc := famCont U Ê hUo hd hcont _ hs j
+  have hAc := _root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j
   have hAi : ∀ γ ∈ rat2 σ d.Y, ∀ g, iteratedDeriv j (Ê · (γ * g)) (s0 d.m d.n) = iteratedDeriv j (Ê · g) (s0 d.m d.n) :=
     fun γ hγ g => derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j
   have hLI : fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T x = 0 := by
@@ -1172,7 +1126,7 @@ theorem stepJ_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d 
   obtain ⟨-, -, hI⟩ := H.tAll.2.2.2.2 F E σ d
   obtain ⟨-, hIc, hIi⟩ := hI Φ hΦ
   have hBc : Continuous (_root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k d Φ p Ê j) :=
-    (famCont U Ê hUo hd hcont _ hs j).sub (continuous_const.mul (continuous_const.mul hIc))
+    (_root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j).sub (continuous_const.mul (continuous_const.mul hIc))
   have hBr : ∀ γ ∈ rat2 σ d.Y, ∀ g, _root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k d Φ p Ê j (γ * g) = _root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k d Φ p Ê j g := fun γ hγ g => by
     simp only [_root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k, derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j, hIi γ hγ g]
   have hz := H.fourierZero F E σ d nb lam 𝓖 hc (_root_.PositivityTheory.SiegelWeilFormula.AStep.Bj_k d Φ p Ê j) hBc (fun β hβ g => hBr _ (_root_.PositivityTheory.SiegelWeilFormula.AStep.nbRat_k d hc β hβ) g) ?_

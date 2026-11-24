@@ -575,15 +575,11 @@ namespace ReciprocityTheory.MultiplicativeHeights.Closed
 
 open ReciprocityTheory.MultiplicativeHeights
 
-theorem fieldOfS : FieldOfSStatement := genericImageFinite
-
 theorem dedekindRank : DedekindRankStatement := integralClosureRank_and_residueTrdegLe.1
 
 theorem residueTrdeg : ResidueTrdegStatement := residueTrdeg_holds residueTrdegLe
 
-theorem normLength : NormLengthStatement := gaugeSplitting_holds
-
-theorem normOrd : NormOrdStatement := normValuation_eq_factorization normLength
+theorem normOrd : NormOrdStatement := normValuation_eq_factorization _root_.ReciprocityTheory.MultiplicativeHeights.gaugeSplitting_holds
 
 end ReciprocityTheory.MultiplicativeHeights.Closed
 end -- clump:auto

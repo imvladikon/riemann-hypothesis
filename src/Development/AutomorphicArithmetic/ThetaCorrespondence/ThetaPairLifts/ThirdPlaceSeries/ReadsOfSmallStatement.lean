@@ -96,6 +96,7 @@ import Formalism.LocalToGlobal.Columns.CoefficientsModP.TauLatticeLatticeHolds
 import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLocGen
 import Mathlib.RingTheory.WittVector.IsPoly
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasBlockOfOccurs
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormEmbeddingIntegerLeOne
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Mathlib.RingTheory.PicardGroup
 import Formalism.PieriBlockIdeals.PieriColumnMinors.RealLocalDeltaNabla
@@ -323,17 +324,6 @@ noncomputable section
 
 namespace GlobalTheory.FrameRead.LiftEquiv
 
-theorem map_rowAct_eq {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {r n : ℕ}
-    (M : Matrix (Fin r) (Fin r) R) (f : MvPolynomial (Fin r × Fin n) R) :
-    MvPolynomial.map φ (rowAct R M f) = rowAct S (M.map φ) (MvPolynomial.map φ f) := by
-  induction f using MvPolynomial.induction_on with
-  | C a => simp [rowAct]
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-  | mul_X p v hp =>
-    rw [map_mul, map_mul, map_mul, hp, map_X]
-
-    simp [rowAct, map_sum, Matrix.map_apply]
-
 theorem rowAct_detPol_eq {R : Type} [CommRing R] {n : ℕ} (M : Matrix (Fin n) (Fin n) R) :
     rowAct R M (detPol R n) = MvPolynomial.C M.det * detPol R n := by
   unfold detPol
@@ -347,7 +337,7 @@ theorem rowAct_liftPol_eq {K C : Type} [CommRing K] [CommRing C] {n : ℕ} (e0 :
     rowAct C (M.map e0) (liftPol e0 k f) = (e0 M.det) ^ k • liftPol e0 k (rowAct K M f) := by
   unfold liftPol
   have hd : (M.map e0).det = e0 M.det := (RingHom.map_det e0 M).symm
-  rw [map_mul, map_pow, rowAct_detPol_eq, map_rowAct_eq, mul_pow, smul_eq_C_mul, map_pow, mul_assoc, hd]
+  rw [map_mul, map_pow, rowAct_detPol_eq, _root_.Formalism.UG.P.wlocal_map_rowAct, mul_pow, smul_eq_C_mul, map_pow, mul_assoc, hd]
 
 theorem grp_tprod_eq (C : Type) [CommRing C] {ι : Type} (n : ℕ) (lamW : ι → ℕ → ℕ) (g : ι → GL (Fin n) C)
     (y : ∀ τ, dualWeyl C n n (res n (lamW τ))) :
@@ -692,8 +682,6 @@ open GlobalTheory.FrameRead
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.exists_dualWeylTensor_lift_coefficientSpace : ∀ (K C : Type) [Field K] [Field C] (e0 : K →+* C) (ι : Type) [Fintype ι] [DecidableEq ι] (n : ℕ) (lam : ι → DomWeight n) (lamW : ι → ℕ → ℕ) (c : ι → ℤ), Shift lam lamW c → ∃ Φ : VV K lam →ₛₗ[e0] NablaT C n lamW, IsPhi e0 lam lamW Φ ∧ LinearIndependent C fun i => Φ (bVV K lam i) := by
-  first | exact @GlobalTheory.FrameRead.ExPhi.exists_phi
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualWeylTensorLiftCoefficientSpaceStatement =====
@@ -1222,7 +1210,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisDualBasisEmbeddedLatticeStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisIntegralRelativeAdelicPoint =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisIntegralRelativeAdelicPoint", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.Valuation.Integral\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.LamGApply\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalBasisIntegralRelativeAdelicPoint", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.Valuation.Integral\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.LamGApply\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormEmbeddingIntegerLeOne\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1244,15 +1232,6 @@ section General
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
   {l : ℕ} [Fact l.Prime]
 
-theorem norm_le_one_of_isIntegral' {K : Type} [NormedField K] [IsUltrametricDist K] {x : K} (hx : IsIntegral ℤ x) :
-    ‖x‖ ≤ 1 := by
-  have := (Valuation.integer.integers (NormedField.valuation (K := K))).mem_of_integral hx.tower_top
-  rw [Valuation.mem_integer_iff, NormedField.valuation_apply] at this
-  exact_mod_cast this
-
-theorem norm_inc_le_one (inc : E →+* PadicAlgCl l) (r : 𝓞 E) : ‖inc (r : E)‖ ≤ 1 :=
-  norm_le_one_of_isIntegral' ((RingOfIntegers.isIntegral_coe r).map inc.toIntAlgHom)
-
 theorem norm_natCast_eq_one' {m : ℕ} (hm : ¬ l ∣ m) : ‖(m : PadicAlgCl l)‖ = 1 := by
   have h : (m : PadicAlgCl l) = algebraMap ℚ_[l] (PadicAlgCl l) (m : ℚ_[l]) := (map_natCast _ m).symm
   rw [h, norm_algebraMap', Padic.norm_natCast_eq_one_iff]
@@ -1271,7 +1250,7 @@ theorem norm_ev_latHat_le_one (inc : E →+* PadicAlgCl l)
       rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
     show ‖ev (c ⊗ₜ[F] x a)‖ ≤ 1
     rw [e, map_mul, norm_mul, hev.1, ← hr]
-    exact mul_le_one₀ (hev.2.1 c hc) (norm_nonneg _) (norm_inc_le_one inc r)
+    exact mul_le_one₀ (hev.2.1 c hc) (norm_nonneg _) (_root_.GlobalTheory.LadicPlace.norm_embedding_integer_le_one inc r)
   | zero => simp
   | add y w _ _ hy hw =>
     show ‖ev (y a + w a)‖ ≤ 1
@@ -1345,7 +1324,7 @@ theorem norm_ev_hLat_le_one (V : Formalism.BasicNotions.TH.HSp D) (hL0 : V.L0 = 
       simp only [Pi.smul_apply, smul_eq_mul, Algebra.TensorProduct.tmul_mul_tmul, mul_one]
       congr 1
     rw [e, Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul, map_mul, norm_mul, hev.1]
-    exact mul_le_one₀ (norm_inc_le_one inc r) (norm_nonneg _) hx
+    exact mul_le_one₀ (_root_.GlobalTheory.LadicPlace.norm_embedding_integer_le_one inc r) (norm_nonneg _) hx
 
 end Space
 
@@ -1618,7 +1597,7 @@ theorem exists_reading_lat {E K : Type} [Field E] [NumberField E] [Field K] [Num
         ∀ g, rd f' g = ∑ s ∈ A, rd f (g * s)) ∧
       (∀ f : S.Forms, (∀ c, (f : S.Cl → S.V) c ∈ S.Nab c) → ∀ g, rd f g ∈ F.latN lamW) ∧
       ∀ f : S.Forms, (∀ g, rd f g ∈ F.latD lamW) → ∃ s : 𝓞 K, s ∉ w.asIdeal ∧ ∀ c, s • (f : S.Cl → S.V) c ∈ S.Del c := by
-  obtain ⟨Φ, hΦ, hli⟩ := GlobalTheory.T.exists_dualWeylTensor_lift_coefficientSpace _ _ e0 _ _ lam lamW cs hS
+  obtain ⟨Φ, hΦ, hli⟩ := _root_.GlobalTheory.FrameRead.ExPhi.exists_phi _ _ e0 _ _ lam lamW cs hS
   obtain ⟨θ, hs, hθ, hθi⟩ := exists_avatar io hio (bVV K lam) c0 hc1 hc2 Φ hli
   have heq := GlobalTheory.T.dualWeylTensorLift_equivariant _ _ e0 _ _ lam lamW cs Φ hS hΦ
   let Λ0 := lamG (PadicAlgCl l) n lamW cs
@@ -1944,13 +1923,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.L2.Pj GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpFrame GlobalTheory.ExpTie GlobalTheory.FrameOf
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.readsAt_of_smallAt : _root_.GlobalTheory.ExpTie.InRangeAlt fun _ _ _ _ p j P W w => SmallAt p j P w → ReadsAt p j P W w := by
-  first | exact @_root_.GlobalTheory.FrameRead.reads_of_small_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ReadsOfSmallStatement =====

@@ -69,6 +69,7 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PreimageTranslate
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LogDerivativePrincipalPolarisationIndependent
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueSpecializes
 import Mathlib.RingTheory.PiTensorProduct
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueLieBasisCoeffsOfDerivationAffineOpen
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLieBasisDualPointsOfTangentModuleBasis
@@ -781,10 +782,6 @@ theorem pbT_id_le {X : Scheme.{0}} {O₀ O : X.Opens} (h : O ≤ O₀) (s : Γ(X
   rw [pbT, rsT, dite_eq_left (show O ≤ (𝟙 X : X ⟶ X) ⁻¹ᵁ O₀ from h), dite_eq_left h]
   rfl
 
-theorem constFn_zero_fn {R : Type} [CommRing R] {X : Scheme.{0}} (q : X ⟶ Sp R) (O : X.Opens) :
-    constFn q O 0 = 0 := by
-  rw [constFn, map_zero, map_zero]
-
 theorem id_app_apply {X : Scheme.{0}} (O : X.Opens) (s : Γ(X, O)) : ((𝟙 X : X ⟶ X).app O).hom s = s := by
   simp only [Scheme.Hom.id_app]
   rfl
@@ -846,7 +843,7 @@ theorem main : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp K)) (
     rfl
   · intro k k' O hO f
     rw [id_app_apply]
-    simp only [Matrix.zero_apply, constFn_zero_fn, zero_mul, Finset.sum_const_zero, sub_self]
+    simp only [Matrix.zero_apply, _root_.GlobalTheory.KS.InvField.constFn_zero, zero_mul, Finset.sum_const_zero, sub_self]
     rfl
 
 end GlobalTheory.KSZeroDer
@@ -898,32 +895,12 @@ theorem valR_def' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U :
     valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := by
   unfold valR; rw [dite_eq_left h]
 
-theorem valR_mul' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens)
-    (h : ⊤ ≤ x ⁻¹ᵁ U) (f g : Γ(X, U)) :
-    valR x U (f * g) = valR x U f * valR x U g := by
-  simp only [valR_def' x U h, map_mul]
-
-theorem valR_map' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens} (e : V ≤ U)
-    (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) :
-    valR x V ((X.presheaf.map (homOfLE e).op).hom f) = valR x U f := by
-  have hU : ⊤ ≤ x ⁻¹ᵁ U := h.trans (x.preimage_mono e)
-  rw [valR_def' x V h, valR_def' x U hU]
-  have := Scheme.Hom.map_appLE x h (homOfLE e).op
-  change (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom
-    ((X.presheaf.map (homOfLE e).op ≫ x.appLE V ⊤ h).hom f) = _
-  rw [this]
-
 theorem valR_id_app {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens)
     (h : ⊤ ≤ x ⁻¹ᵁ ((𝟙 X) ⁻¹ᵁ U)) (f : Γ(X, U)) :
     valR x ((𝟙 X) ⁻¹ᵁ U) ((Scheme.Hom.app (𝟙 X) U).hom f) = valR x U f := by
   have hU : ⊤ ≤ x ⁻¹ᵁ U := h
   rw [valR_def' x _ h, valR_def' x U hU]
   congr 1
-
-theorem valR_pow' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens)
-    (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) (n : ℕ) :
-    valR x U (f ^ n) = valR x U f ^ n := by
-  simp only [valR_def' x U h, map_pow]
 
 theorem secM_valR_transition : ∀ (X : Scheme.{0}) (L : LB X) (k : ℕ) (σ : SecM (𝟙 X) L k) (F : Type) [Field F] (ξ : Sp F ⟶ X) (j j' : L.ι), ⊤ ≤ ξ ⁻¹ᵁ L.U j → ⊤ ≤ ξ ⁻¹ᵁ L.U j' → valR ξ _ (σ.f fun _ => j) = valR ξ (L.U j ⊓ L.U j') (L.g j j').val ^ k * valR ξ _ (σ.f fun _ => j') := by
   intro X L k σ F _ ξ j j' hj hj'
@@ -945,8 +922,8 @@ theorem secM_valR_transition : ∀ (X : Scheme.{0}) (L : LB X) (k : ℕ) (σ : S
     rfl
   have hc := σ.compat (fun _ => j) (fun _ => j')
   have := congrArg (valR ξ _) hc
-  rw [valR_map' _ _ h1, valR_mul' _ _ h1, valR_map' _ _ h1] at this
-  rw [this, hg, valR_pow' _ _ h1, valR_map' _ _ h1, valR_id_app _ _ h2]
+  rw [_root_.GlobalTheory.Points.valR_res _ _ h1, _root_.GlobalTheory.Points.valR_mul _ _ h1, _root_.GlobalTheory.Points.valR_res _ _ h1] at this
+  rw [this, hg, _root_.GlobalTheory.Points.valR_pow _ _ h1, _root_.GlobalTheory.Points.valR_res _ _ h1, valR_id_app _ _ h2]
 
 end GlobalTheory.SecValLC
 end -- clump:auto
@@ -975,7 +952,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionPowerValueChartChangeByTransitionPowStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransitionUnitPointValueCocycle =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransitionUnitPointValueCocycle", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\npublic import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior\nimport Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransitionUnitPointValueCocycle", "h": "module\n\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull\nimport Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap\nimport Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan\npublic import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior\nimport Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueSpecializes\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -993,36 +970,17 @@ set_option autoImplicit false
 noncomputable section
 namespace GlobalTheory.CocVal
 
-theorem valR_pos {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dif_pos h
-
-theorem valR_map_le {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens} (hVU : V ≤ U)
-    (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) :
-    valR x V ((X.presheaf.map (homOfLE hVU).op).hom f) = valR x U f := by
-  have hU : ⊤ ≤ x ⁻¹ᵁ U := h.trans (x.preimage_mono hVU)
-  rw [valR_pos x V h, valR_pos x U hU]
-  congr 1
-  rw [← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
-
-theorem valR_mul_pos {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f g : Γ(X, U)) : valR x U (f * g) = valR x U f * valR x U g := by
-  simp only [valR_pos x U h, map_mul]
-
-theorem top_le_inf {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens}
-    (hU : ⊤ ≤ x ⁻¹ᵁ U) (hV : ⊤ ≤ x ⁻¹ᵁ V) : ⊤ ≤ x ⁻¹ᵁ (U ⊓ V) :=
-  fun p _ => ⟨hU trivial, hV trivial⟩
-
 theorem valR_cocycle : ∀ (X : Scheme.{0}) (L : LB X), L.IsLB → ∀ (F : Type) [Field F] (ξ : Sp F ⟶ X)
     (j j' j'' : L.ι), ⊤ ≤ ξ ⁻¹ᵁ L.U j → ⊤ ≤ ξ ⁻¹ᵁ L.U j' → ⊤ ≤ ξ ⁻¹ᵁ L.U j'' →
     valR ξ (L.U j ⊓ L.U j') (L.g j j').val * valR ξ (L.U j' ⊓ L.U j'') (L.g j' j'').val =
       valR ξ (L.U j ⊓ L.U j'') (L.g j j'').val := by
   intro X L hL F _ ξ j j' j'' h1 h2 h3
-  have h123 : ⊤ ≤ ξ ⁻¹ᵁ (L.U j ⊓ L.U j' ⊓ L.U j'') := top_le_inf ξ (top_le_inf ξ h1 h2) h3
+  have h123 : ⊤ ≤ ξ ⁻¹ᵁ (L.U j ⊓ L.U j' ⊓ L.U j'') := _root_.GlobalTheory.Specialise.le_preimage_inf ξ (_root_.GlobalTheory.Specialise.le_preimage_inf ξ h1 h2) h3
   have e := congrArg (fun u : Γ(X, L.U j ⊓ L.U j' ⊓ L.U j'')ˣ => valR ξ _ u.val) (hL.cocycle j j' j'')
   simp only [Units.val_mul] at e
-  rw [valR_mul_pos ξ _ h123] at e
+  rw [_root_.GlobalTheory.Points.valR_mul ξ _ h123] at e
   simp only [res, Units.coe_map, MonoidHom.coe_coe] at e
-  rw [valR_map_le ξ _ h123, valR_map_le ξ _ h123, valR_map_le ξ _ h123] at e
+  rw [_root_.GlobalTheory.Points.valR_res ξ _ h123, _root_.GlobalTheory.Points.valR_res ξ _ h123, _root_.GlobalTheory.Points.valR_res ξ _ h123] at e
   exact e
 
 end GlobalTheory.CocVal
@@ -1072,31 +1030,6 @@ noncomputable section
 
 namespace GlobalTheory.LocVal
 
-theorem valR_eq {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dif_pos h
-
-theorem valR_mul {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f g : Γ(X, U)) : valR x U (f * g) = valR x U f * valR x U g := by
-  simp only [valR_eq x U h, map_mul]
-
-theorem valR_add {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f g : Γ(X, U)) : valR x U (f + g) = valR x U f + valR x U g := by
-  simp only [valR_eq x U h, map_add (f := _)]
-
-theorem valR_pow {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f : Γ(X, U)) (n : ℕ) : valR x U (f ^ n) = valR x U f ^ n := by
-  simp only [valR_eq x U h, map_pow]
-
-theorem valR_one {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
-    valR x U (1 : Γ(X, U)) = 1 := by
-  simp only [valR_eq x U h, map_one]
-
-theorem valR_res {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens} (e : V ≤ U)
-    (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) : valR x V (resG X e f) = valR x U f := by
-  rw [valR_eq x V h, valR_eq x U (h.trans (x.preimage_mono e))]
-  congr 1
-  rw [resG, ← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
-
 theorem valR_field_of_le : ∀ (Z : Scheme.{0}) (U : Z.Opens), IsAffineOpen U → ∀ (F : Type) [Field F] (ξ : Sp F ⟶ Z),
     ⊤ ≤ ξ ⁻¹ᵁ U → ∀ (d : Fld Z), IsField U d → ∀ (D : F → F), (∀ x y, D (x + y) = D x + D y) →
     (∀ x y, D (x * y) = x * D y + y * D x) → (∀ f : Γ(Z, U), valR ξ U (d U f) = D (valR ξ U f)) →
@@ -1121,24 +1054,24 @@ theorem valR_field_of_le : ∀ (Z : Scheme.{0}) (U : Z.Opens), IsAffineOpen U �
     obtain ⟨u, hu⟩ := hgu
     intro h0
     have e1 := congrArg (valR ξ B) u.mul_inv
-    rw [valR_mul ξ B hξB, valR_one ξ B hξB, hu, valR_res ξ hBU hξB, h0, zero_mul] at e1
+    rw [_root_.GlobalTheory.Points.valR_mul ξ B hξB, _root_.GlobalTheory.Points.valR_one ξ B hξB, hu, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB, h0, zero_mul] at e1
     exact zero_ne_one e1
 
   have hL := congrArg (d B) hf'
   rw [hd.2.1 B hBU, ← map_pow, hd.2.2 U B hBU le_rfl, hd.2.2 U B hBU le_rfl, hd.2.2 O B hgO hOU] at hL
   have hV := congrArg (valR ξ B) hL
-  rw [valR_add ξ B hξB, valR_mul ξ B hξB, valR_mul ξ B hξB, valR_res ξ hgO hξB, valR_res ξ hBU hξB,
-    valR_res ξ hBU hξB, valR_res ξ hBU hξB, hDU, hDU] at hV
+  rw [_root_.GlobalTheory.Points.valR_add ξ B hξB, _root_.GlobalTheory.Points.valR_mul ξ B hξB, _root_.GlobalTheory.Points.valR_mul ξ B hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hgO hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB,
+    _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB, hDU, hDU] at hV
   have hfv : valR ξ U f = valR ξ O h * valR ξ U g ^ m := by
     have := congrArg (valR ξ B) hf'
-    rw [valR_mul ξ B hξB, valR_res ξ hgO hξB, valR_res ξ hBU hξB, valR_pow ξ B hξB, valR_res ξ hBU hξB] at this
+    rw [_root_.GlobalTheory.Points.valR_mul ξ B hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hgO hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB, _root_.GlobalTheory.Points.valR_pow ξ B hξB, _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hBU hξB] at this
     exact this.symm
-  rw [hfv, hDm, valR_pow ξ U (hξB.trans (ξ.preimage_mono hBU))] at hV
+  rw [hfv, hDm, _root_.GlobalTheory.Points.valR_pow ξ U (hξB.trans (ξ.preimage_mono hBU))] at hV
   have key : valR ξ U g ^ m * (valR ξ B (resG Z hgO (d O h)) - D (valR ξ O h)) = 0 := by
     linear_combination hV
   rcases mul_eq_zero.1 key with h1 | h1
   · exact absurd (pow_eq_zero_iff'.1 h1).1 hg0
-  · rw [← valR_res ξ hgO hξB]
+  · rw [← _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ hgO hξB]
     exact sub_eq_zero.1 h1
 
 end GlobalTheory.LocVal
@@ -1187,22 +1120,10 @@ noncomputable section
 
 namespace GlobalTheory.Heat.ZeroKS
 
-theorem valR_res' {F : Type} [CommRing F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {U V : Z.Opens} (e : V ≤ U)
-    (h : ⊤ ≤ ξ ⁻¹ᵁ V) (a : Γ(Z, U)) : valR ξ V (resG Z e a) = valR ξ U a := by
-  rw [WtAlg.valR_eq' ξ V h, WtAlg.valR_eq' ξ U (h.trans (ξ.preimage_mono e))]
-  congr 1
-  rw [resG, ← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
-
 theorem valR_sum' {F : Type} [CommRing F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {O : Z.Opens} (h : ⊤ ≤ ξ ⁻¹ᵁ O)
     {β : Type} (s : Finset β) (f : β → Γ(Z, O)) : valR ξ O (∑ i ∈ s, f i) = ∑ i ∈ s, valR ξ O (f i) := by
   set_option synthInstance.maxHeartbeats 100000 in
     simp only [WtAlg.valR_eq' _ _ h, map_sum]
-
-theorem valR_inv' {F : Type} [Field F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {O : Z.Opens} (h : ⊤ ≤ ξ ⁻¹ᵁ O)
-    (u : Γ(Z, O)ˣ) : valR ξ O (↑u⁻¹ : Γ(Z, O)) = (valR ξ O (u : Γ(Z, O)))⁻¹ := by
-  have e : valR ξ O (u : Γ(Z, O)) * valR ξ O (↑u⁻¹ : Γ(Z, O)) = 1 := by
-    rw [← WtAlg.valR_mul'' _ _ h, Units.mul_inv, WtAlg.valR_eq' _ _ h, map_one, map_one]
-  exact eq_inv_of_mul_eq_one_right e
 
 theorem valR_unit_ne {F : Type} [Field F] {Z : Scheme.{0}} (ξ : Sp F ⟶ Z) {O : Z.Opens} (h : ⊤ ≤ ξ ⁻¹ᵁ O)
     (u : Γ(Z, O)ˣ) : valR ξ O (u : Γ(Z, O)) ≠ 0 := by
@@ -1351,7 +1272,7 @@ theorem ksRel_zero : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp
     intro p O hOW hO f
     have hW : ⊤ ≤ ξ ⁻¹ᵁ Wo p := fun q hq => hOW (hO hq)
     have hS : valR ξ (Wo p) (u p : Γ(P₀.A.left, Wo p)) = valR ξ _ ((s p.1).f fun _ => p.2) :=
-      valR_res' ξ _ hW _
+      _root_.GlobalTheory.ZH.CrdCalc.valR_res ξ _ hW _
     have hy : ∀ e, valR ξ (Wo p) (y p e) = (k : F)⁻¹ *
         ∑ a, ψ (lam a e) * δ a (valR ξ _ ((s p.1).f fun _ => p.2)) * (valR ξ _ ((s p.1).f fun _ => p.2))⁻¹ := by
       intro e
@@ -1360,7 +1281,7 @@ theorem ksRel_zero : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp
       congr 1
       refine Finset.sum_congr rfl fun a _ => ?_
       rw [WtAlg.valR_mul'' _ _ hW, WtAlg.valR_mul'' _ _ hW, Adjust.valR_const P₀.A.hom ψ ξ hξ _ hW, hδ a _ _ hW,
-        valR_inv' ξ hW, hS]
+        _root_.GlobalTheory.TuplePoint.valR_inv_unit ξ hW, hS]
     have hSne : valR ξ _ ((s p.1).f fun _ => p.2) ≠ 0 := hS ▸ valR_unit_ne ξ hW (u p)
     have hE : S0 p.1 = Gv p.2 ^ k * valR ξ _ ((s p.1).f fun _ => p.2) :=
       GlobalTheory.T.sectionPowerValue_chart_change_by_transition_pow P₀.A.left P₀.L k (s p.1) F ξ j₀ p.2 hj₀ (hUj p O hOW hO)
@@ -1406,7 +1327,7 @@ theorem ksRel_zero : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp
         refine Finset.sum_congr rfl (fun b _ => ?_)
         rw [WtAlg.valR_mul'' _ _ hξO, WtAlg.valR_mul'' _ _ hξO, Adjust.valR_const P₀.A.hom ψ ξ hξ _ hξO,
           hδ a O f hξO, dlg, WtAlg.valR_mul'' _ _ hξO, hδ b O _ hξO, GlobalTheory.LogKSBal.valR_pbT ξ _ hOg hξO,
-          GlobalTheory.LogKSBal.valR_pbT ξ _ hOg hξO, Category.comp_id, valR_inv' ξ hU12]
+          GlobalTheory.LogKSBal.valR_pbT ξ _ hOg hξO, Category.comp_id, _root_.GlobalTheory.TuplePoint.valR_inv_unit ξ hU12]
       rw [WtAlg.valR_sub' _ _ hξO, hval p O hO1 hξO f, hval p' O hO2 hξO f, hR]
       exact alg_diff δ (fun a e => ψ (lam a e)) hsym (Gv p.2) (Gv p'.2) _ (hGv _ hU1) (valR_unit_ne ξ hU12 _)
         (GlobalTheory.T.transitionUnit_pointValue_cocycle P₀.A.left P₀.L P₀.isLB F ξ j₀ p.2 p'.2 hj₀ hU1 hU2) _ _

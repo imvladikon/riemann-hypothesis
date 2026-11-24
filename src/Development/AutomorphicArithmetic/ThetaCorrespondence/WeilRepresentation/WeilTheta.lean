@@ -72,11 +72,6 @@ section -- clump:auto
 
 namespace UpperTheory.Lit
 
-theorem siegelSetUnitary_of_core : GlobalTheory.Published.SiegelSetUnitary := PositivityTheory.ThKR.siegel_of_core PositivityTheory.Prw.siegelCore_holds
-
-theorem weilThetaConvergence : GlobalTheory.Published.WeilThetaConvergence :=
-  GlobalTheory.WeilThetaConv.weilThetaConvergence_of_siegelSet siegelSetUnitary_of_core
-
 end UpperTheory.Lit
 end -- clump:auto
 end -- clump:auto

@@ -97,12 +97,6 @@ theorem groupHomology_δ_natural_changeGroup : ∀ (k G H : Type) [CommRing k] [
 
 end GlobalTheory.HomStab
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.groupHomology_longExact_maps_natural_of_res : ∀ (k G H : Type) [CommRing k] [Group G] [Group H] (φ : H →* G) (X : ShortComplex (Rep k H)) (Y : ShortComplex (Rep k G)) (hX : X.ShortExact) (hY : Y.ShortExact) (u₁ : X.X₁ ⟶ Rep.res φ Y.X₁) (u₂ : X.X₂ ⟶ Rep.res φ Y.X₂) (u₃ : X.X₃ ⟶ Rep.res φ Y.X₃), (∀ a, u₂.hom (X.f.hom a) = Y.f.hom (u₁.hom a)) → (∀ a, u₃.hom (X.g.hom a) = Y.g.hom (u₂.hom a)) → ∀ n : ℕ, groupHomology.δ hX (n + 1) n rfl ≫ groupHomology.map φ u₁ n = groupHomology.map φ u₃ (n + 1) ≫ groupHomology.δ hY (n + 1) n rfl ∧ hMap X.f n ≫ groupHomology.map φ u₂ n = groupHomology.map φ u₁ n ≫ hMap Y.f n ∧ hMap X.g n ≫ groupHomology.map φ u₃ n = groupHomology.map φ u₂ n ≫ hMap Y.g n := by
-  first
-  | exact @GlobalTheory.HomStab.groupHomology_δ_natural_changeGroup
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.GroupHomologyLongExactMapsNaturalOfRes =====
@@ -149,9 +143,9 @@ theorem conj_map_eq_id : ∀ (k G : Type) [CommRing k] [Group G] (g : G) (n : �
     intro A u hu
     obtain ⟨ι, K, i, e, h, hS⟩ := exists_free_shortExact k G A
     have hP : IsZero (groupHomology (Rep.free k G ι) (n + 1)) :=
-      GlobalTheory.T.projective_rep_groupHomology_pos_vanishes k G (Rep.free k G ι) inferInstance n
+      _root_.GlobalTheory.HomStab.isZero_groupHomology_succ_of_projective k G (Rep.free k G ι) inferInstance n
     have hmono := groupHomology.mono_δ_of_isZero hS n hP
-    have hnat := (GlobalTheory.T.groupHomology_longExact_maps_natural_of_res k G G (MulAut.conj g).toMonoidHom _ _ hS hS
+    have hnat := (_root_.GlobalTheory.HomStab.groupHomology_δ_natural_changeGroup k G G (MulAut.conj g).toMonoidHom _ _ hS hS
       (conjActHom g K) (conjActHom g (Rep.free k G ι)) u
       (fun a => by
         change (Rep.free k G ι).ρ g (i.hom a) = i.hom (K.ρ g a)
@@ -166,12 +160,6 @@ theorem conj_map_eq_id : ∀ (k G : Type) [CommRing k] [Group G] (g : G) (n : �
 
 end GlobalTheory.HomStab
 
-section
-open CategoryTheory CategoryTheory.Limits GlobalTheory.HomStab
-theorem _root_.GlobalTheory.T.innerAut_acts_trivially_groupHomology : ∀ (k G : Type) [CommRing k] [Group G] (g : G) (n : ℕ) (A : Rep k G) (u : A ⟶ Rep.res (MulAut.conj g).toMonoidHom A), (∀ a, u.hom a = A.ρ g a) → groupHomology.map (MulAut.conj g).toMonoidHom u n = 𝟙 _ := by
-  first
-  | exact @GlobalTheory.HomStab.conj_map_eq_id
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.InnerAutActsTriviallyGroupHomology =====
@@ -207,7 +195,7 @@ theorem GlobalTheory.HomStab.groupHomology_map_conj : ∀ (k G H : Type) [CommRi
     ext a
     simp [hu a]
     rfl
-  rw [e, groupHomology.map_comp, GlobalTheory.T.innerAut_acts_trivially_groupHomology k G g n B (actHom B g) (fun a => rfl),
+  rw [e, groupHomology.map_comp, _root_.GlobalTheory.HomStab.conj_map_eq_id k G g n B (actHom B g) (fun a => rfl),
     Category.comp_id]
 
 section

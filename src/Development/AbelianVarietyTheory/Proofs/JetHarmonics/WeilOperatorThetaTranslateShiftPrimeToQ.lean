@@ -92,19 +92,14 @@ theorem hat_pow (ι : ℂ ≃+* ℂ_[q]) (ℓ : ℂ_[q]⟦X⟧) (hℓ : constant
     simp only [pow_succ]
     rw [this, ih]
 
-theorem const_ell (ω : ℂ_[q]) : constantCoeff (C ω * logS : ℂ_[q]⟦X⟧) = 0 := by
-  have : constantCoeff (logS : ℂ_[q]⟦X⟧) = 0 := by
-    rw [← coeff_zero_eq_constantCoeff_apply]; simp [logS]
-  simp [this]
-
 theorem hat_funEq (ι : ℂ ≃+* ℂ_[q]) (ω : ℂ_[q]) (F G : ℂ → ℂ) (hF : AnalyticAt ℂ F 0)
     (hG : AnalyticAt ℂ G 0) (α : ℂ) (a : ℤ_[q]) (ha : ι α = zc a) (m : ℕ)
     (h : ∀ᶠ z in 𝓝[≠] (0 : ℂ), F (α * z) = F z ^ m * G z) :
     (hat ι (C ω * logS) F).subst (mulS a : ℂ_[q]⟦X⟧)
       = hat ι (C ω * logS) F ^ m * hat ι (C ω * logS) G := by
-  obtain ⟨h1, -⟩ := GlobalTheory.MomOne.TaylorRead.hat_laws q ι _ (const_ell ω)
+  obtain ⟨h1, -⟩ := GlobalTheory.MomOne.TaylorRead.hat_laws q ι _ (_root_.GlobalTheory.MomOne.hatmul_const_log ω)
   rw [← (GlobalTheory.MomOne.hat_multiplicative_chart q ι ω F hF).2.2.1 α a ha,
-    ← hat_pow ι _ (const_ell ω) F hF m]
+    ← hat_pow ι _ (_root_.GlobalTheory.MomOne.hatmul_const_log ω) F hF m]
   have hk : AnalyticAt ℂ (fun z => F z ^ m) 0 := hF.pow m
   rw [← (h1 _ G hk hG).2.1]
   have hα : AnalyticAt ℂ (fun z => F (α * z)) 0 := by
@@ -130,22 +125,7 @@ theorem shift_pow (ζ : ℂ_[q]) (hζ : ‖ζ - 1‖ < 1) (f : ℂ_[q]⟦X⟧) (
   | succ k ih =>
     rw [pow_succ, (h2 _ _ ⟨1, bd_pow f hf k⟩ ⟨1, hf⟩).2, ih, pow_succ]
 
-theorem not_half (d : ℕ) (hd : 0 < d) : ¬ InOK d (0 - 1 / 2) := by
-  rintro ⟨u, v, h⟩
-  have hs : 0 < Real.sqrt d := Real.sqrt_pos.mpr (by exact_mod_cast hd)
-  have him := congrArg Complex.im h
-  have hre := congrArg Complex.re h
-  simp [wK] at him hre
-  have hv : v = 0 := by
-    rcases him with h | h
-    · exact h
-    · exfalso; first | omega
-  subst hv
-  have : (2 * u : ℝ) = -1 := by simp at hre; linarith
-  have : 2 * u = -1 := by exact_mod_cast this
-  omega
-
-theorem zc_natCast (k : ℕ) : zc (k : ℤ_[q]) = (k : ℂ_[q]) := by simp [zc]
+alias zc_natCast := _root_.GlobalTheory.MomOne.ShiftComp.zc_natCast
 
 theorem zc_sub_one (a : ℤ_[q]) : zc (a - 1) = zc a - 1 := by simp [zc]
 
@@ -223,14 +203,14 @@ theorem theta_shift : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) 
   obtain ⟨⟨o1, -, oR⟩, oZ, oD, oE, -⟩ := GlobalTheory.MomOne.okArith d q M.ι hd hd7 hs
   obtain ⟨mu1, -, -, -, -, hn⟩ := GlobalTheory.MomOne.MulSeries.mulS_laws q
   obtain ⟨-, sh2, sh3, -⟩ := GlobalTheory.MomOne.Shift.shift_laws q ζ hζ
-  obtain ⟨-, -, -, ht0, -⟩ := GlobalTheory.MomOne.TaylorRead.hat_laws q M.ι _ (const_ell ω)
+  obtain ⟨-, -, -, ht0, -⟩ := GlobalTheory.MomOne.TaylorRead.hat_laws q M.ι _ (_root_.GlobalTheory.MomOne.hatmul_const_log ω)
   have hq1 : (1 : ℝ) < q := by exact_mod_cast (Fact.out : q.Prime).one_lt
   have hθy : θ y ≠ 0 := by
     intro h0
     have h1 := hθ.2.2.2.2 y h0
     have := (_root_.GlobalTheory.MomOne.smallTors d q M ω hd hd7 hs hL hM).2.2.2 y 1 0 o1 one_ne_zero
       ⟨1, one_pos, Nat.coprime_one_left q, ⟨0, 0, by simp⟩⟩ (by simpa using h1) hA.1
-    exact not_half d hd.pos this.2
+    exact _root_.GlobalTheory.MomOne.ThetaQuot.not_half d hd.pos this.2
   have hθan : AnalyticAt ℂ θ 0 := hθ.1.analyticAt 0
   have hWan : AnalyticAt ℂ (W1 d y θ) 0 :=
     ((_root_.GlobalTheory.MomOne.heisenbergOne d hd.pos).2.2.1 y θ hθ.1).2.analyticAt 0
@@ -375,9 +355,6 @@ theorem norm_natCast_eq_one {s : ℕ} (h : Nat.Coprime s q) : ‖(s : ℤ_[q])�
   rw [PadicInt.norm_natCast_eq_one_iff]
   exact h.symm
 
-theorem zc_natCast (s : ℕ) : zc (s : ℤ_[q]) = (s : ℂ_[q]) := by
-  simp [zc]
-
 theorem hasSubst_mulS (a : ℤ_[q]) : HasSubst (mulS a : ℂ_[q]⟦X⟧) :=
   HasSubst.of_constantCoeff_zero' ((MulSeries.mulS_laws q).1 a).2.1
 
@@ -388,7 +365,7 @@ theorem subst_mulS_cancel {a : ℤ_[q]} (ha : ‖a‖ = 1) {f g : ℂ_[q]⟦X⟧
       (show ℂ_[q]⟦X⟧ from f.subst (mulS (u : ℤ_[q]) : ℂ_[q]⟦X⟧)) = f := by
     intro f
     dsimp only
-    rw [subst_comp_subst_apply (hasSubst_mulS _) (hasSubst_mulS _), (MulSeries.mulS_laws q).2.1,
+    rw [subst_comp_subst_apply (_root_.GlobalTheory.MomOne.MulSeries.hasSubst_mulS _) (_root_.GlobalTheory.MomOne.MulSeries.hasSubst_mulS _), (MulSeries.mulS_laws q).2.1,
       Units.mul_inv, (MulSeries.mulS_laws q).2.2.1]
     rw [← map_algebraMap_eq_subst_X]
     simp
@@ -407,7 +384,7 @@ theorem main : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) (θ : �
     · exact h
   have hsC : (s : ℂ) ≠ 0 := by exact_mod_cast hs0.ne'
   have hsn : ‖(s : ℤ_[q])‖ = 1 := norm_natCast_eq_one hs
-  have hιs : M.ι (s : ℂ) = zc (s : ℤ_[q]) := by rw [zc_natCast, map_natCast]
+  have hιs : M.ι (s : ℂ) = zc (s : ℤ_[q]) := by rw [_root_.GlobalTheory.MomOne.ShiftComp.zc_natCast, map_natCast]
   set y' : ℂ := v / (q : ℂ) ^ n with hy'
   have hyy : y = (s : ℂ) * y' := by rw [hyv, hy']; ring
   have hg' : Good M.ι d n 1 y' := ⟨v, hv, hvn, by rw [hy']; simp⟩

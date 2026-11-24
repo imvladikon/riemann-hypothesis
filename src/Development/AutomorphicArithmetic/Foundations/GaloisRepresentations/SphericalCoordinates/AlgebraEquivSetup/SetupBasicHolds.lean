@@ -53,6 +53,7 @@ import Mathlib.Algebra.Order.Star.Rat
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.Coalgebra.CoassocSimps
 import Mathlib.LinearAlgebra.Matrix.CharP
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CmUnitPowFourIdempotentModEight
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PDomSt
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PFormPerfSt
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.POrient
@@ -1757,7 +1758,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTraceType =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PUnitMod =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PUnitMod", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.CodiffUnit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.CharP\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PUnitMod", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.CodiffUnit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Matrix.CharP\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CmUnitPowFourIdempotentModEight\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1767,19 +1768,11 @@ open NumberField
 
 namespace UpperTheory.Gal.W2.Seed
 
-private theorem norm_cast_eq_one {E : Type} [Field E] [NumberField E] (M : ℕ) (b : 𝓞 E) :
-    ((Algebra.norm ℤ (1 + (M : 𝓞 E) * b) : ℤ) : ZMod M) = 1 := by
-  classical
-  let bs := Module.Free.chooseBasis ℤ (𝓞 E)
-  rw [Algebra.norm_eq_matrix_det bs, ← eq_intCast (Int.castRingHom (ZMod M)), RingHom.map_det]
-  simp only [map_add (f := _), map_one, map_mul, map_natCast, zero_mul, add_zero,
-    Matrix.det_one, CharP.cast_eq_zero]
-
 theorem pUnitMod : UnitMod := by
   intro E _ _ M c b _ h
   refine ⟨(Algebra.norm ℤ c).natAbs, ?_, ?_⟩
   · rw [← ZMod.isUnit_iff_coprime]
-    have key := norm_cast_eq_one (E := E) M b
+    have key := _root_.GlobalTheory.AdaptedDet.norm_one_add (E := E) M b
     rw [← h] at key
     rcases Int.natAbs_eq (Algebra.norm ℤ c) with hn | hn
     · rw [hn, Int.cast_natCast] at key
@@ -1806,38 +1799,27 @@ section -- clump:auto
 
 namespace UpperTheory.Gal.W2.Seed
 
-theorem BarEx_holds : BarEx := pBarEx
-theorem CEx_holds : CEx := pCEx
+alias BarEx_holds := _root_.UpperTheory.Gal.W2.Seed.pBarEx
+alias CEx_holds := _root_.UpperTheory.Gal.W2.Seed.pCEx
 theorem CodiffGen_holds : CodiffGen := pCodiffGen
-theorem DeltaEx_holds : DeltaEx := pDeltaEx
-theorem DiagTrace_holds : DiagTrace := pDiagTrace
-theorem FormOKSt_holds : FormOKSt := pFormOKSt
-theorem FormPerfSt_holds : FormPerfSt := pFormPerfSt
-theorem HdSign_holds : HdSign := pHdSign
+alias DeltaEx_holds := _root_.UpperTheory.Gal.W2.Seed.pDeltaEx
 theorem IdemEx_holds : IdemEx := pIdemEx
-theorem LiftEx_holds : LiftEx := pLiftEx
-theorem OrbEx_holds : OrbEx := pOrbEx
 theorem PerfCof_holds : PerfCof := pPerfCof
 theorem PerfOf_holds : PerfOf := pPerfOf
 theorem QuadEx_holds : QuadEx := pQuadEx
-theorem RepAdj_holds : RepAdj := pRepAdj
-theorem RepEx_holds : RepEx := pRepEx
-theorem RepLaws_holds : RepLaws := pRepLaws
 theorem SetupBasic_holds : SetupBasic := pSetupBasic
-theorem TraceType_holds : TraceType := pTraceType
-theorem UEx_holds : UEx := pUEx
 theorem UnitMod_holds : UnitMod := pUnitMod
 theorem CodiffUnit_holds : CodiffUnit := pCodiffUnit UnitMod_holds
-theorem FormCoord_holds : FormCoord := pFormCoord TraceType_holds
-theorem KqEx_holds : KqEx := pKqEx TraceType_holds
-theorem Orient_holds : Orient := pOrient TraceType_holds HdSign_holds
-theorem RealIso_holds : RealIso := pRealIso TraceType_holds
-theorem SigSt_holds : SigSt := pSigSt HdSign_holds
-theorem AtPEx_holds : AtPEx := pAtPEx KqEx_holds UEx_holds OrbEx_holds LiftEx_holds
-theorem DomSt_holds : DomSt := pDomSt TraceType_holds RealIso_holds FormCoord_holds HdSign_holds DiagTrace_holds
+theorem FormCoord_holds : FormCoord := pFormCoord _root_.UpperTheory.Gal.W2.Seed.pTraceType
+theorem KqEx_holds : KqEx := pKqEx _root_.UpperTheory.Gal.W2.Seed.pTraceType
+theorem Orient_holds : Orient := pOrient _root_.UpperTheory.Gal.W2.Seed.pTraceType _root_.UpperTheory.Gal.W2.Seed.pHdSign
+theorem RealIso_holds : RealIso := pRealIso _root_.UpperTheory.Gal.W2.Seed.pTraceType
+theorem SigSt_holds : SigSt := pSigSt _root_.UpperTheory.Gal.W2.Seed.pHdSign
+theorem AtPEx_holds : AtPEx := pAtPEx KqEx_holds _root_.UpperTheory.Gal.W2.Seed.pUEx _root_.UpperTheory.Gal.W2.Seed.pOrbEx _root_.UpperTheory.Gal.W2.Seed.pLiftEx
+theorem DomSt_holds : DomSt := pDomSt _root_.UpperTheory.Gal.W2.Seed.pTraceType RealIso_holds FormCoord_holds _root_.UpperTheory.Gal.W2.Seed.pHdSign _root_.UpperTheory.Gal.W2.Seed.pDiagTrace
 theorem PosGen_holds : PosGen := pPosGen CodiffUnit_holds
 theorem RealGen_holds : RealGen := pRealGen CodiffGen_holds CodiffUnit_holds
-theorem SetupEx_holds : SetupEx := pSetupEx FormOKSt_holds FormPerfSt_holds SigSt_holds DomSt_holds AtPEx_holds RepEx_holds RepLaws_holds RepAdj_holds Orient_holds
+theorem SetupEx_holds : SetupEx := pSetupEx _root_.UpperTheory.Gal.W2.Seed.pFormOKSt _root_.UpperTheory.Gal.W2.Seed.pFormPerfSt SigSt_holds DomSt_holds AtPEx_holds _root_.UpperTheory.Gal.W2.Seed.pRepEx _root_.UpperTheory.Gal.W2.Seed.pRepLaws _root_.UpperTheory.Gal.W2.Seed.pRepAdj Orient_holds
 
 end UpperTheory.Gal.W2.Seed
 end -- clump:auto

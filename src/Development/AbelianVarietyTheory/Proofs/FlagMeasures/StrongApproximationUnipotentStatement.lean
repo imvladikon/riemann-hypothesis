@@ -1157,7 +1157,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmulIntegral =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSymplecticBasisLocalExtension =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSymplecticBasisLocalExtension", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemCoord\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmulIntegral\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtension\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSymplecticBasisLocalExtension", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemCoord\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmulIntegral\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtension\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerIsometry\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1225,18 +1225,6 @@ theorem hf_sm {N : ℕ} {a b c : K} {Hm : Matrix (Fin N) (Fin N) R} {x y : Fin N
     Sm L (a * b * c) (hf L Hm x y) :=
   sm_sum L _ _ fun i _ => sm_sum L _ _ fun j _ => sm_mul L (sm_mul L (hx i) (hH i j)) (sm_cj L (hy j))
 
-theorem hf_add_l {N : ℕ} (Hm : Matrix (Fin N) (Fin N) R) (a b y : Fin N → R) :
-    hf L Hm (a + b) y = hf L Hm a y + hf L Hm b y := by
-  simp [hf, add_mul, Finset.sum_add_distrib]
-
-theorem hf_add_r {N : ℕ} (Hm : Matrix (Fin N) (Fin N) R) (a b y : Fin N → R) :
-    hf L Hm y (a + b) = hf L Hm y a + hf L Hm y b := by
-  simp [hf, mul_add, Finset.sum_add_distrib]
-
-theorem hf_sub_l {N : ℕ} (Hm : Matrix (Fin N) (Fin N) R) (a b y : Fin N → R) :
-    hf L Hm (a - b) y = hf L Hm a y - hf L Hm b y := by
-  simp [hf, sub_mul, Finset.sum_sub_distrib]
-
 theorem exists_bound {ι : Type} [Fintype ι] (f : ι → R) : ∃ e ∈ 𝒪[K], e ≠ 0 ∧ ∀ i, Sm L e⁻¹ (f i) := by
   first
   | (apply _root_.GlobalTheory.SmulIntegralDenominator.main <;> assumption)
@@ -1258,7 +1246,7 @@ theorem local_choice {N r : ℕ} (Hm : Matrix (Fin N) (Fin N) R) (X Y : Fin r �
   have hv' : ∀ a ∈ T, hf L Hm v (Y a) = hf L Hm (v - up) (Y a) ∧
       hf L Hm v (X a) = hf L Hm (v - up) (X a) := by
     intro a ha
-    rw [hf_sub_l, hf_sub_l, (horth a ha).1, (horth a ha).2, sub_zero, sub_zero]
+    rw [_root_.GlobalTheory.HL.Eichler.hf_sub_l, _root_.GlobalTheory.HL.Eichler.hf_sub_l, (horth a ha).1, (horth a ha).2, sub_zero, sub_zero]
     exact ⟨rfl, rfl⟩
   have hmv : ∀ j, Sm L (2 * d' * e ^ 5) ((v - up) j) := fun j => by simpa using hv j
   have hm' : ∀ j, Sm L (2 * d' * e ^ 2) (piL L Hm X Y T v j - up j) := by
@@ -1278,7 +1266,7 @@ theorem local_choice {N r : ℕ} (Hm : Matrix (Fin N) (Fin N) R) (X Y : Fin r �
   set m' : Fin N → R := fun j => piL L Hm X Y T v j - up j with hm'def
   have hpv : piL L Hm X Y T v = up + m' := by funext j; simp [m']
   have hm'' : ∀ j, Sm L (2 * d' * e ^ 2) (m' j) := hm'
-  rw [hpv, hf_add_l, hf_add_r, hf_add_r]
+  rw [hpv, _root_.GlobalTheory.HL.Eichler.hf_add_l, _root_.GlobalTheory.HL.Eichler.hf_add_r, _root_.GlobalTheory.HL.Eichler.hf_add_r]
   have e2 : hf L Hm up up + hf L Hm up m' + (hf L Hm m' up + hf L Hm m' m') - hf L Hm up up =
       hf L Hm up m' + hf L Hm m' up + hf L Hm m' m' := by ring
   rw [e2]
@@ -1293,16 +1281,10 @@ end Local
 section Global
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E}
 
-theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
-  obtain ⟨p⟩ := exists_place F
-  haveI := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
-  apply (A.loc p).ιE.injective
-  rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
-
 theorem hq_swap (A : Places F E sig) {N : ℕ} (Hm : Matrix (Fin N) (Fin N) E)
     (hH : ∀ i j, sig (Hm j i) = Hm i j) (x y : Fin N → E) : sig (hq sig Hm x y) = hq sig Hm y x := by
 
-  simp only [hq, map_sum, map_mul, sig_sig A]
+  simp only [hq, map_sum, map_mul, _root_.GlobalTheory.HL.StrongApprox.sig_sig A]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   rw [hH]
@@ -1506,16 +1488,6 @@ open scoped Pointwise ENNReal Classical
 
 noncomputable section
 namespace GlobalTheory.HL.SAN
-
-private theorem hf_add_left_flag_measures' {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E]
-    [Algebra F E] [TopologicalSpace E] (L : LocE F E) {N : ℕ} (Hm : Matrix (Fin N) (Fin N) E)
-    (a b y : Fin N → E) : hf L Hm (a + b) y = hf L Hm a y + hf L Hm b y := by
-  simp only [hf, Pi.add_apply, add_mul, Finset.sum_add_distrib]
-
-private theorem hf_smul_left_flag_measures' {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E]
-    [Algebra F E] [TopologicalSpace E] (L : LocE F E) {N : ℕ} (Hm : Matrix (Fin N) (Fin N) E)
-    (c : E) (a y : Fin N → E) : hf L Hm (c • a) y = c * hf L Hm a y := by
-  simp only [hf, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc]
 
 private theorem hq_sub_left {F E : Type} [Field F] [Field E] [Algebra F E] (sig : E →ₐ[F] E) {N : ℕ}
     (Hm : Matrix (Fin N) (Fin N) E) (a b y : Fin N → E) :
@@ -1764,10 +1736,10 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     let M : (Fin (k + 2 * r + 1) → (A.loc p).Ep) →ₗ[(A.loc p).Ep] (Fin (k + 2 * r + 1) → (A.loc p).Ep) :=
       { toFun := fun w => eich (A.L p) (G.S p).Hm (A.bc p (X i)) (A.bc p (uQ i)) ((A.loc p).ιE (sQ i)) w
         map_add' := fun a b => by
-          simp only [eich, hf_add_left_flag_measures']
+          simp only [eich, _root_.GlobalTheory.HL.Eichler.hf_add_l]
           module
         map_smul' := fun t a => by
-          simp only [eich, hf_smul_left_flag_measures', RingHom.id_apply]
+          simp only [eich, _root_.GlobalTheory.HL.Eichler.hf_smul_l, RingHom.id_apply]
           module }
     have hlin := RatExt.lin_ext (A.loc p).ιE (e' : (Fin (k + 2 * r + 1) → (A.loc p).Ep) →ₗ[(A.loc p).Ep] _) M
       (fun x => by

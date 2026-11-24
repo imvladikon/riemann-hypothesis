@@ -74,6 +74,7 @@ import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
 import Mathlib.RingTheory.WittVector.IsPoly
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -117,7 +118,7 @@ theorem ordL_blk_det : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
   intro E _ _ _ n a b h w m X
   have h1 : IsUnit m.1.val.det := (Matrix.isUnit_iff_isUnit_det _).1 m.1.isUnit
   have h2 : IsUnit m.2.val.det := (Matrix.isUnit_iff_isUnit_det _).1 m.2.isUnit
-  rw [blk_val_det, GlobalTheory.CompanionTheory.SwapInt.ordL_mul_of_ne h1.ne_zero h2.ne_zero]
+  rw [blk_val_det, _root_.Formalism.UG.P.fSatake_ord_mul h1.ne_zero h2.ne_zero]
 
 end GlobalTheory.CompanionTheory.CtS
 end -- clump:auto
@@ -602,7 +603,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeVectorLinearCombinationStatement =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeIndexEqDiagonal =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeIndexEqDiagonal", "h": "module\n\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsIntZero\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.EigenvalueSeparation.LeftInv\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.AllLeaves\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.ReadSplit\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.IsTransl\nimport Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.IsSliceMap\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeIndexEqDiagonal", "h": "module\n\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsIntZero\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.EigenvalueSeparation.LeftInv\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.AllLeaves\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.ReadSplit\nimport Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.IsTransl\nimport Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.IsSliceMap\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -683,22 +684,11 @@ theorem mem_latD {ϖ : w.adicCompletion E} {a b i j : ℕ} {W : Matrix (Fin a) (
     W ∈ latD ϖ a b i j ↔
       ∀ (r : Fin a) (s : Fin b), (if (r : ℕ) < i ∧ j ≤ (s : ℕ) then ϖ * W r s else W r s) ∈ Ov E w := Iff.rfl
 
-theorem unif_mem {ϖ : w.adicCompletion E} (h : IsUnifV E w ϖ) : ϖ ∈ Ov E w := by
-  have : Valued.v ϖ ≤ 1 := by
-    rw [h]
-    exact_mod_cast (by decide : (Multiplicative.ofAdd (-1 : ℤ)) ≤ 1)
-  exact (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 this
-
-theorem unif_ne {ϖ : w.adicCompletion E} (h : IsUnifV E w ϖ) : ϖ ≠ 0 := by
-  intro h0
-  rw [IsUnifV, h0, map_zero] at h
-  exact WithZero.zero_ne_coe h
-
 theorem diag_iff_latD {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) {a b : ℕ} (i j : ℕ)
     (W : Matrix (Fin a) (Fin b) (w.adicCompletion E)) :
     (IsInt w (diagJ a ϖ i * W) ∧ IsInt w (ϖ • (W * diagJ b ϖ⁻¹ j))) ↔ W ∈ latD ϖ a b i j := by
-  have hm := unif_mem hϖ
-  have h0 := unif_ne hϖ
+  have hm := _root_.GlobalTheory.LFun.mem_Ov_of_isUnifV hϖ
+  have h0 := _root_.GlobalTheory.LFun.SatCompare.ne_zero_of_isUnifV hϖ
   have hc : ∀ x : w.adicCompletion E, ϖ * (x * ϖ⁻¹) = x := fun x => by field_simp
   rw [mem_latD]
   constructor
@@ -762,7 +752,7 @@ theorem mem_latM_iff {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) {a b i j :
   have hpp : p.val * (p⁻¹).val = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
   have hqq : q.val * (q⁻¹).val = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
   have hkk : k₂.val * (k₂⁻¹).val = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
-  have hD := diagJ_mul_inv (unif_ne hϖ) b j
+  have hD := diagJ_mul_inv (_root_.GlobalTheory.LFun.SatCompare.ne_zero_of_isUnifV hϖ) b j
   have f₁ : m.1.val * X = k₁.val * (diagJ a ϖ i * W) * q.val := by
     calc m.1.val * X = k₁.val * diagJ a ϖ i * (p.val * (p⁻¹).val) * W * q.val := by
           rw [e₁, hX]; simp only [Matrix.mul_assoc]
@@ -985,7 +975,7 @@ theorem ordL_pow_div_pow {L : Type} [Field L] [Valued L (WithZero (Multiplicativ
   have h : x ^ b / y ^ a =
       (((Units.mk0 x hx) ^ (b : ℤ) * (Units.mk0 y hy) ^ (-(a : ℤ)) : Lˣ) : L) := by
     simp [div_eq_mul_inv]
-  rw [h, Units.val_mul, GlobalTheory.CompanionTheory.SwapInt.ordL_mul_of_ne (Units.ne_zero _) (Units.ne_zero _),
+  rw [h, Units.val_mul, _root_.Formalism.UG.P.fSatake_ord_mul (Units.ne_zero _) (Units.ne_zero _),
     GlobalTheory.CompanionTheory.UnitaryContraction.ordL_zpow, GlobalTheory.CompanionTheory.UnitaryContraction.ordL_zpow]
   simp only [Units.val_mk0]
   ring
@@ -1190,11 +1180,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.CtS
 
-theorem IsInt.mul {E : Type} [Field E] [NumberField E] {w : HeightOneSpectrum (𝓞 E)} {r s t : Type} [Fintype s]
-    {M : Matrix r s (w.adicCompletion E)} {N : Matrix s t (w.adicCompletion E)} (hM : IsInt w M) (hN : IsInt w N) :
-    IsInt w (M * N) := fun i j => by
-  rw [Matrix.mul_apply]
-  exact (Ov E w).sum_mem fun l _ => (Ov E w).mul_mem (hM i l) (hN l j)
+alias IsInt.mul := _root_.GlobalTheory.CompanionTheory.CtS.Tr.isInt_mul
 
 theorem tj_blk (E : Type) [Field E] [NumberField E] [IsCMField E] (n a b : ℕ) (h : a + b = n) (w : Pl E) (ϖ : w.adicCompletion E)
     (hϖ : IsUnifV E w ϖ) (k : ℕ) (hk : k ≤ n) (m : GLw a w × GLw b w) (X : Matrix (Fin a) (Fin b) (w.adicCompletion E)) :

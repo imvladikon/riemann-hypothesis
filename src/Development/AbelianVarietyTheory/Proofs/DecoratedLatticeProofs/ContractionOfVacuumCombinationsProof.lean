@@ -604,18 +604,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.Corev.KappaLeft
 
-theorem latV_mem_idAt {D : D7} {S : HSp D} {L : Lat S} {P : Pl D → Prop} {y : Fin S.rank → AE D}
-    (hy : y ∈ latV S L P) : ∀ r, y r ∈ idAt D P := by
-  unfold GlobalTheory.FinPl.latV GlobalTheory.FinPl.latMul at hy
-  induction hy using AddSubgroup.closure_induction with
-  | mem w hw =>
-    obtain ⟨α, -, hα, a, -, s, -, rfl⟩ := hw
-    intro r
-    exact GlobalTheory.FinPl.LatMem.tmul_mem_idAt hα _
-  | zero => intro r; exact zero_mem _
-  | add x y _ _ hx hy => intro r; exact add_mem (hx r) (hy r)
-  | neg x _ hx => intro r; exact neg_mem (hx r)
-
 end GlobalTheory.Corev.KappaLeft
 
 
@@ -703,7 +691,7 @@ theorem GlobalTheory.Corev.kappa_mem_latO_iff : ∀ (D : D7) (k : Type) [Field k
     have hv : ∀ r, (B.o.pB *ᵥ m) r ∈ idAt D P := by
       intro r
       simp only [Matrix.mulVec, dotProduct]
-      exact Ideal.sum_mem _ fun j _ => Ideal.mul_mem_left _ _ (GlobalTheory.Corev.KappaLeft.latV_mem_idAt hm j)
+      exact Ideal.sum_mem _ fun j _ => Ideal.mul_mem_left _ _ (_root_.GlobalTheory.FinPlLoc.latV_idAt hm j)
     obtain ⟨c, hc, hcv⟩ := hline B.L B.ζ B.line _ hv
     have hjp := GlobalTheory.T.lineProjection_mem_splitCoreCompletion D k ι p I P hP n' B.V₀ B.A B.L B.o B.ζ B.line α α₀ M Λ hM hα m hm
     rw [hcv, hjB] at hjp
@@ -1320,12 +1308,6 @@ namespace GlobalTheory.FinPl.LineVanish
 
 variable {D : D7}
 
-theorem mxAt_mul_right' {P : Pl D → Prop} {m n r : ℕ} {u : Mx D m n} (hu : MxAt P u) (N : Mx D n r) :
-    MxAt P (u * N) := by
-  intro i j
-  simp only [Matrix.mul_apply]
-  exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (hu i k)
-
 theorem fin_of_mxAt' {P : Pl D → Prop} {m n : ℕ} {u : Mx D m n} (hu : MxAt P u) : u.map (infPart D) = 0 := by
   ext i j
   exact RingHom.mem_ker.1 (Ideal.mem_inf.1 (hu i j)).1
@@ -1400,7 +1382,7 @@ theorem vanish : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
 
   have hyM : MxAt P ((B.o.resS S).symm (0, y)) := by
     rw [OrthDec.resS_symm_apply, Matrix.zero_mul, zero_add]
-    exact mxAt_mul_right' hy _
+    exact _root_.GlobalTheory.LastOpPf.mxAt_mul_r hy _
   obtain ⟨u, hu, ⟨e, he, heu⟩, hψu⟩ := step3 D k ι p I P hP ψ hψ B.V₀ S M LS hM hLS _ hyM hout
   set h := (B.o.resS S u).2 with hh
   have hhN : (B.o.resS S).symm (0, h) ∈ latO B.V₀ S (M : Set _) (LS : Set _) P :=
@@ -1409,7 +1391,7 @@ theorem vanish : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
   have hhmx : MxAt P h := by
     have := ((_root_.GlobalTheory.FinPl.LatMem.mem_latO_iff D B.V₀ S M LS hM hLS P _).1 hhN).1
     have h2 : (B.o.resS S ((B.o.resS S).symm (0, h))).2 = h := by rw [AddEquiv.apply_symm_apply]
-    rw [← h2]; exact mxAt_mul_right' this _
+    rw [← h2]; exact _root_.GlobalTheory.LastOpPf.mxAt_mul_r this _
   have hpair : symplO B.V₀ S ((B.o.resS S).symm (0, h)) ((B.o.resS S).symm (0, y)) =
       symplO B.V₀ S u ((B.o.resS S).symm (0, y)) := by
     rw [B.o.symplO_resS, B.o.symplO_resS S u, AddEquiv.apply_symm_apply, AddEquiv.apply_symm_apply,
@@ -1427,7 +1409,7 @@ theorem vanish : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
   have hf₁ : heisO ψ B.V₀ S ((B.o.resS S).symm (0, l.κ S x')) f₁ = f₁ := by
     rw [hkx]
     exact h₁.2.2 e he _ hhN (by
-      rw [OrthDec.resS_symm_apply, Matrix.zero_mul, zero_add]; exact isHalf_mul_right hhalf _)
+      rw [OrthDec.resS_symm_apply, Matrix.zero_mul, zero_add]; exact _root_.GlobalTheory.LinkKapInv.isHalf_mul_r hhalf _)
   have hth : IsThetaFunO ψ B.V₀ S (heisO ψ B.V₀ S ((B.o.resS S).symm (0, y)) f₁) :=
     GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (fin_of_mxAt' hyM) h₁.1
   have hmove := GlobalTheory.T.besselLineContraction_heisenberg_invariant D ψ hψ ρ σ B B' l S vL _ f₂ hth h₂.1 x'
@@ -1477,11 +1459,7 @@ namespace GlobalTheory.FinPl.ContrOpProof
 
 variable {D : D7}
 
-theorem mxAt_mul_right {P : Pl D → Prop} {m n r : ℕ} {u : Mx D m n} (hu : MxAt P u) (N : Mx D n r) :
-    MxAt P (u * N) := by
-  intro i j
-  simp only [Matrix.mul_apply]
-  exact Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (hu i k)
+alias mxAt_mul_right := _root_.GlobalTheory.LastOpPf.mxAt_mul_r
 
 theorem mxAt_mul_left {P : Pl D → Prop} {m n r : ℕ} (N : Mx D r m) {u : Mx D m n} (hu : MxAt P u) :
     MxAt P (N * u) := by
@@ -1498,16 +1476,6 @@ theorem mxAt_neg {P : Pl D → Prop} {m n : ℕ} {u : Mx D m n} (hu : MxAt P u) 
 theorem fin_of_mxAt {P : Pl D → Prop} {m n : ℕ} {u : Mx D m n} (hu : MxAt P u) : u.map (infPart D) = 0 := by
   ext i j
   exact RingHom.mem_ker.1 (Ideal.mem_inf.1 (hu i j)).1
-
-theorem contr_smul_left {ρ σ : ℕ} {B : BesLev D ρ} {B' : BesLev D σ} (l : Link B B'.L B'.ζ) (S : HSp D)
-    (vL : VolM D B'.L.rank S.rank) (c : ℂ) (f₁ : WO B.V₀ S → ℂ) (f₂ : WO S B'.V₀ → ℂ) :
-    GlobalTheory.Unf.contr l S vL (c • f₁) f₂ = c • GlobalTheory.Unf.contr l S vL f₁ f₂ := by
-  funext u v
-  simp only [GlobalTheory.Unf.contr, Pi.smul_apply, smul_eq_mul]
-  rw [← integral_const_mul]
-  congr 1
-  funext w
-  ring
 
 theorem biComb_single (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (a : WO A S) (a' : WO S A') (r : ℂ)
     (C : WO A S → WO S A' → ℂ) (u : WO A S) (v : WO S A') :
@@ -1527,7 +1495,7 @@ theorem symplOH_self {S T : HSp D} (x : WO S T) : symplOH S T x (-x) = 0 := by
     exact add_neg_cancel _
   have h4 : symplOH S T x x = 0 := by rw [symplOH, h3, mul_zero]
   have h5 := GlobalTheory.SplitScalar.symplOH_add_right S T x x (-x)
-  rw [add_neg_cancel, GlobalTheory.ContrComb.symplOH_zero_right, h4, zero_add] at h5
+  rw [add_neg_cancel, _root_.GlobalTheory.MixModel.symplOH_zero_right, h4, zero_add] at h5
   exact h5.symm
 
 theorem heisO_neg_cancel (ψ : AddChar (AF D.host.F) ℂ) {S T : HSp D} (x : WO S T) (g : WO S T → ℂ) :
@@ -1550,7 +1518,7 @@ theorem line_step {ρ σ : ℕ} {B : BesLev D ρ} {B' : BesLev D σ} (ψ : AddCh
     GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 hk (GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 hy hf₁)
   have hmove := GlobalTheory.T.besselLineContraction_heisenberg_invariant D ψ hψ ρ σ B B' l S vL _ f₂ hth hf₂ w
   rw [heisO_neg_cancel] at hmove
-  rw [hmove, GlobalTheory.SplitScalar.heisO_heisO, contr_smul_left]
+  rw [hmove, GlobalTheory.SplitScalar.heisO_heisO, _root_.GlobalTheory.FinPl.LineVanish.contr_smul_left']
   have he : -(B.o.resS S).symm (0, l.κ S w) + (B.o.resS S).symm (0, y) = (B.o.resS S).symm (0, y - l.κ S w) := by
     rw [← map_neg, ← map_add (f := _), Prod.neg_mk, neg_zero, Prod.mk_add_mk, zero_add, neg_add_eq_sub]
   rw [he, hc, smul_smul]
@@ -1581,7 +1549,7 @@ theorem contrOp : ∀ D : D7, ContrOp D := by
         obtain ⟨c, hc⟩ := GlobalTheory.T.halfGenerated_point_acts_scalar_on_latticeVacua D ψ B.V₀ S _ _ (GlobalTheory.T.homLatticeCompletion_le_closure_isotropicHalves D k ι p I P hP B.V₀ S _ _ _ hin)
         exact ⟨c, fun f hf => hc f hf.2⟩
       have hcst : cstL ψ B S M LS P y = hex.choose := by simp only [cstL, if_pos hin, dif_pos hex]
-      rw [hcst, hex.choose_spec f₁ h₁, contr_smul_left]
+      rw [hcst, hex.choose_spec f₁ h₁, _root_.GlobalTheory.FinPl.LineVanish.contr_smul_left']
     · have hcst : cstL ψ B S M LS P y = 0 := by simp only [cstL, if_neg hin]
       rw [hcst, zero_smul, GlobalTheory.T.thetaLine_translate_off_lattice_kills_contraction D k ι p I P hP n' n'' ψ hψ ρ σ B B' l S vL α α₀ γ γ₀ M LS M' Λ Λ' hM hLS hM' hfr
         y hy hin f₁ f₂ h₁ h₂]
@@ -1600,9 +1568,9 @@ theorem contrOp : ∀ D : D7, ContrOp D := by
       exact mxAt_mul_left _ (he₂ _ hq.2)
   intro f₁ f₂ h₁ h₂
   have hth₁ : ∀ u, MxAt P u → IsThetaFunO ψ B.V₀ S (heisO ψ B.V₀ S u f₁) := fun u hu =>
-    GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (fin_of_mxAt hu) h₁.1
+    GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (_root_.GlobalTheory.FinPl.LineVanish.fin_of_mxAt' hu) h₁.1
   have hth₂ : ∀ u, MxAt P u → IsThetaFunO ψ S B'.V₀ (heisO ψ S B'.V₀ u f₂) := fun u hu =>
-    GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (fin_of_mxAt hu) h₂.1
+    GlobalTheory.FinTranslate.isTheta_heisO_fin hψ.1 (_root_.GlobalTheory.FinPl.LineVanish.fin_of_mxAt' hu) h₂.1
   have hint : ∀ g₁ g₂, IsThetaFunO ψ B.V₀ S g₁ → IsThetaFunO ψ S B'.V₀ g₂ → ∀ (u : WO B.A S) (v : WO S B'.A),
       IntegrableOn (fun x => g₂ ((B'.o.resT S).symm (v, x)) * g₁ ((B.o.resS S).symm (u, l.κ S x))) vL.𝓕 vL.μ := by
     intro g₁ g₂ hg₁ hg₂ u v
@@ -1642,7 +1610,7 @@ theorem contrOp : ∀ D : D7, ContrOp D := by
     have hw : MxAt P (B'.o.resT S u').2 := mxAt_mul_left _ hu'
     have hkw : MxAt P (l.κ S (B'.o.resT S u').2) := GlobalTheory.T.besselLink_kappa_preserves_supported_matrices D ρ B B'.L B'.ζ l S P _ hw
     have hline := line_step ψ hψ l S vL f₁ f₂ h₁.1 h₂.1 (B.o.resS S u).2 (B'.o.resT S u').2 (fin_of_mxAt (heL _ hy))
-      (fin_of_mxAt (mxAt_neg (heL _ hkw))) _ (key _ (mxAt_sub hy hkw) f₁ f₂ h₁ h₂)
+      (_root_.GlobalTheory.FinPl.LineVanish.fin_of_mxAt' (mxAt_neg (heL _ hkw))) _ (key _ (mxAt_sub hy hkw) f₁ f₂ h₁ h₂)
     have e1 : heisO ψ B.V₀ S u f₁ = heisO ψ B.V₀ S ((B.o.resS S).symm ((B.o.resS S u).1, 0))
         (heisO ψ B.V₀ S ((B.o.resS S).symm (0, (B.o.resS S u).2)) f₁) := by
       rw [← GlobalTheory.SplitScalar.heisO_add_of_orth ψ _ _ hoL, ← hsL]

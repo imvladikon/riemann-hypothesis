@@ -241,10 +241,6 @@ theorem unifPre_generic {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : 
     exact LBIso.chartPull (chartPullUnpull A.L _ hgi)
       (chartPullSame U.LG.L _ _ _ (𝟙 _) fun _ => (Category.id_comp _).symm) h1
 
-theorem spMap_comp_eq {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (a : B →+* C) (b : A →+* B) :
-    spMap (a.comp b) = spMap a ≫ spMap b := by
-  rw [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
 theorem weilIs_congr_base {S X : Scheme.{0}} (G : Over S) [GrpObj G] (L : LB G.left) (k : ℤ) {a b : X ⟶ S}
     (hab : a = b) (x y : Over.mk a ⟶ G) (x' y' : Over.mk b ⟶ G) (hx : x.left = x'.left) (hy : y.left = y'.left)
     (c : Γ(X, ⊤)ˣ) : WeilIs G L k x y c ↔ WeilIs G L k x' y' c := by
@@ -291,9 +287,9 @@ theorem exists_genericPoints_equiv_any : ∀ (R : Type) [CommRing R] [IsDomain R
         (algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R)) := RingHom.ext fun r => (hc r).symm
     calc jFK (R := V) F ≫ jK V ≫ spMap g
         = spMap ((algebraMap (FractionRing V) F).comp ((algebraMap V (FractionRing V)).comp g)) := by
-          rw [spMap_comp_eq (algebraMap (FractionRing V) F), spMap_comp_eq (algebraMap V (FractionRing V)) g]
+          rw [_root_.GlobalTheory.ZM.NearBuild.spMap_comp (algebraMap (FractionRing V) F), _root_.GlobalTheory.ZM.NearBuild.spMap_comp (algebraMap V (FractionRing V)) g]
       _ = spMap ((algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R))) := by rw [e1]
-      _ = jFK (R := R) F ≫ jK R := spMap_comp_eq _ _
+      _ = jFK (R := R) F ≫ jK R := _root_.GlobalTheory.ZM.NearBuild.spMap_comp _ _
   obtain ⟨eV, heV⟩ := GlobalTheory.LiePull.exists_pushEquiv gVG (TFK (R := V) F) (jFK (R := V) F ≫ jK V ≫ spMap g) rfl
   obtain ⟨eR, heR⟩ := GlobalTheory.LiePull.exists_pushEquiv gR (TFK (R := R) F) (jFK (R := V) F ≫ jK V ≫ spMap g) hcomp
   obtain ⟨eR₀, heR₀⟩ := GlobalTheory.LiePull.exists_pushEquiv gR (TFK (R := R) F) (jFK (R := R) F ≫ jK R) rfl
@@ -321,7 +317,7 @@ theorem exists_genericPoints_equiv_any : ∀ (R : Type) [CommRing R] [IsDomain R
     · simp only [MulEquiv.trans_apply, Category.assoc, hlast, hx]
     · rw [Over.w, Category.assoc, Over.w]
       show jFK (R := R) F = spMap σ.toRingHom ≫ jFK (R := R) F
-      rw [← spMap_comp_eq, hσ]
+      rw [← _root_.GlobalTheory.ZM.NearBuild.spMap_comp, hσ]
   · exact hlast x
 
 end GlobalTheory.GenRestrict
@@ -344,14 +340,6 @@ open MonObj
 open Classical
 
 
-theorem _root_.GlobalTheory.T.exists_genericPoints_uniformisations_weilPairing_galois : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → IsDiscreteValuationRing V → ∀ g : R →+* V, Function.Injective g → ∀ (G' : Over (Sp V)) [GrpObj G'] [IsCommMonObj G'] (β : G'.left ⟶ G.left), IsGrpPullback G' G (spMap g) β → IsSemiAbelian G' → ∀ (D' : DegData V (maximalIdeal V)) (A' : PolAV (Sp (FractionRing V))) (U' : Unif (maximalIdeal V) D' A' G'), LBIso U'.LG.L (U.LG.L.pull β) →
-    ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] [Algebra (FractionRing V) F],
-      (∀ r, algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r) = algebraMap (FractionRing V) F (algebraMap V (FractionRing V) (g r))) →
-      ∃ e : (TFK (R := V) F ⟶ A'.A) ≃* (TFK (R := R) F ⟶ A.A),
-        (∀ (k : ℕ) (x y : TFK (R := V) F ⟶ A'.A) (c : Fˣ), WeilIs A'.A A'.L (k : ℤ) x y (unitOn c) → WeilIs A.A A.L (k : ℤ) (e x) (e y) (unitOn c)) ∧
-        (∀ (σ : F →ₐ[FractionRing V] F) (x x' : TFK (R := V) F ⟶ A'.A), x'.left = spMap σ.toRingHom ≫ x.left → (e x').left = spMap σ.toRingHom ≫ (e x).left) ∧
-        ∀ x : TFK (R := V) F ⟶ A'.A, (e x).left ≫ U.gen.inv.left ≫ pullback.fst G.hom (jK R) = x.left ≫ U'.gen.inv.left ≫ pullback.fst G'.hom (jK V) ≫ β := by
-  first | exact @GlobalTheory.GenRestrict.exists_genericPoints_equiv_any
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericPointsUniformisationsWeilPairingGalStatement =====
@@ -394,7 +382,7 @@ theorem coordMap_of_torMatch : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   have hFr : ∀ r, algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r) =
       algebraMap (FractionRing V) F (algebraMap V (FractionRing V) (g r)) :=
     fun r => (hF _).trans (congrArg _ (hgK r))
-  obtain ⟨e, he1, he2, he3⟩ := GlobalTheory.T.exists_genericPoints_uniformisations_weilPairing_galois R hR G hG D A U V hVb hV g hg G' β hβ hG' D' A' U' hL F hFr
+  obtain ⟨e, he1, he2, he3⟩ := _root_.GlobalTheory.GenRestrict.exists_genericPoints_equiv_any R hR G hG D A U V hVb hV g hg G' β hβ hG' D' A' U' hL F hFr
   have hm : ∀ (k : ℕ), IsUnit (k : R) → ∀ (τ : Multiplicative D.toPre.X →* Fˣ) (τ' : Multiplicative D'.toPre.X →* Fˣ)
       (q : QkPt D.toPre F k) (q' : QkPt D'.toPre F k) (a : TFK (R := R) F ⟶ A.A) (a' : TFK (R := V) F ⟶ A'.A),
       τ' ^ k = 1 → (∀ χ, τ (Multiplicative.ofAdd χ) = τ' (Multiplicative.ofAdd (ρ χ))) → q.y = 0 → GlobalTheory.UT.IsTor τ q.g →

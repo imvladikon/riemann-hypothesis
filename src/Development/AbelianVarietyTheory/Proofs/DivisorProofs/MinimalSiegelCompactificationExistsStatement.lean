@@ -414,10 +414,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 noncomputable section
 namespace GlobalTheory.SiegTh.ThInt
 
-theorem spMap_comp_ring {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  rw [← Spec.map_comp]; rfl
-
 theorem grpPullback_self {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullback G G (𝟙 S) (𝟙 G.left) := by
   refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
   let ρ : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
@@ -425,28 +421,6 @@ theorem grpPullback_self {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullbac
   have ey : y₀ = ρ ≫ y := Over.OverMorphism.ext (hy.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
   rw [ex, ey, ← MonObj.comp_mul]
   exact (Category.id_comp _).trans (Category.comp_id _).symm
-
-theorem sec_eq {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  cases s; cases s'
-  simp only [LB.Sec.mk.injEq]
-  exact funext h
-
-theorem pullS_comp {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
-    (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
-    VVRank.pullS G a h' (VVRank.pullS G a h s) = VVRank.pullS G a (h' ≫ h) s := by
-  refine sec_eq (sec_ext_val hL (fun y J hJ => ?_))
-  refine (VVRank.sv_pullS G a h' _ (𝟙 _) y hJ).trans ((VVRank.sv_pullS G a h s _ y hJ).trans ?_)
-  refine Eq.trans ?_ (VVRank.sv_pullS G a (h' ≫ h) s (𝟙 _) y hJ).symm
-  rw [MonoidalCategory.comp_whiskerRight, Over.comp_left, Category.assoc]
-
-theorem thList_congr {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} {ρ : LB.Gen (L.pull (eSec G))}
-    {m : ℕ} {R : Type} [CommRing R] {x : Sp R ⟶ S} (θ : SecAt G L x) {K : Type} [Field K]
-    {y y' : Sp K ⟶ S} (e : y = y') (u : Over.mk y ⟶ Over.mk x) (u' : Over.mk y' ⟶ Over.mk x) (hu : u.left = u'.left)
-    {N : ℕ} {pt : Fin N → (Over.mk y ⟶ G)} {c : Fin N → K} (H : ThList G L ρ m y (VVRank.pullS G _ u θ) pt c) :
-    ∃ pt' : Fin N → (Over.mk y' ⟶ G), ThList G L ρ m y' (VVRank.pullS G _ u' θ) pt' c := by
-  subst e
-  obtain rfl : u = u' := Over.OverMorphism.ext hu
-  exact ⟨pt, H⟩
 
 theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (P : PolAV F.X) (rig : LB.Gen (P.L.pull (eSec P.A))) (m N : ℕ) (f : F.X ⟶ PSpace (cycAway n) N), ThAt F W P rig m f → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (β : cycAway n →+* o) (S : ThetaSys o Ω) (ρ : S.Real) (u : Sp S.R ⟶ F.X), SysAt F W β S ρ u → ∀ (M : RatModel o Ω) (h : M.Z ⟶ PSpace (cycAway n) N), Geo.Tor.IsNormalScheme M.Z → M.pt ≫ h = spMap S.R.val.toRingHom ≫ u ≫ f → M.HasDiv S.th := by
   intro g n hg hn hno F W hW P rig m N f hTh o Ω _ _ _ _ β S ρ u hSys M h hnorm hpt
@@ -501,7 +475,7 @@ theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : S
   have hS' : HypS P'.A P'.L :=
     GlobalTheory.T.lineBundleSymmetry_hypothesis_base_change _ _ ρ.P.A P'.A y φ ρ.P.L P'.L ρ.P.isLB P'.isLB gp hL' ρ.hypS
   have hPF0 : PolFib ρ.P.A ρ.P.L (8 * g) (𝟙 (Sp S.R)) :=
-    ⟨ρ.P, 𝟙 _, by rw [ρ.g_eq, hSg], grpPullback_self _, GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB⟩
+    ⟨ρ.P, 𝟙 _, by rw [ρ.g_eq, hSg], _root_.GlobalTheory.ObjComp.isGrpPullback_id _, GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB⟩
   have hPFK : PolFib ρ.P.A ρ.P.L (8 * g) (spMap iK ≫ 𝟙 (Sp S.R)) :=
     (GlobalTheory.T.principallyPolarisedFibre_iff_of_grpPullback (Sp S.R) (Sp S.R) ρ.P.A ρ.P.L ρ.P.A ρ.P.L (𝟙 _) (𝟙 _) ρ.P.isLB ρ.P.isLB (grpPullback_self _)
       (GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB) (8 * g) S.R (𝟙 _)).2 K iK hPF0
@@ -510,22 +484,22 @@ theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : S
     (spMap iK ≫ 𝟙 (Sp S.R)) θK hm hmK hNm hPFK
   obtain ⟨pt', c', hc'⟩ := GlobalTheory.T.exists_thetaConstantList_algClosed (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen (8 * g) (S.r * S.N)
     ((S.r * S.N) ^ (4 * (8 * g))) K (spMap iK ≫ 𝟙 (Sp S.R)) θK hrNodd hrNK rfl hPFK
-  have hgen := GlobalTheory.T.realisedThetaSystem_section_generates_field_fibres o Ω S ρ K iK
+  have hgen := _root_.GlobalTheory.UMin.isGenSec_real_pull o Ω S ρ K iK
   have hxy : spMap io ≫ y = spMap iK ≫ 𝟙 (Sp S.R) := by
-    rw [Category.comp_id]; exact spMap_comp_ring i₀ io
+    rw [Category.comp_id]; exact _root_.GlobalTheory.spMap_comp_ring i₀ io
   have h2 : HasTh₂ ρ.P.A ρ.P.L ρ.rig m (S.r * S.N) (spMap io ≫ y) c c' := by
     rw [hxy]; exact ⟨θK, pt, pt', hgen, hc, hc'⟩
-  obtain ⟨a, ha, hp1, hp2⟩ := GlobalTheory.T.thetaConstants_two_levels_primitive_at_trait (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen V hV y P' φ gp hL' hS' K io
+  obtain ⟨a, ha, hp1, hp2⟩ := _root_.GlobalTheory.SiegCmp.theta_two_levels_prim (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen V hV y P' φ gp hL' hS' K io
     m (S.r * S.N) (N + 1) _ c c' hm hm3 hmV hrNodd hrN3 hrNV h2
-  have hreal := GlobalTheory.T.thetaConstantList_realisedSystem_up_to_rootsOfUnity o Ω S ρ K iK _ pt' c' hc'
+  have hreal := _root_.GlobalTheory.UMin.thList_real o Ω S ρ K iK _ pt' c' hc'
   have hlist : ∃ pt'' : Fin (N + 1) → (Over.mk (spMap i' ≫ (spMap val ≫ 𝟙 (Sp S.R))) ⟶ ρ.P.A),
       ThList ρ.P.A ρ.P.L ρ.rig m (spMap i' ≫ (spMap val ≫ 𝟙 (Sp S.R)))
         (SecAt.pull ρ.P.A ρ.P.L (SecAt.pull ρ.P.A ρ.P.L (x := 𝟙 (Sp S.R)) ρ.th₁ val) i') pt'' c := by
     simp only [SecAt.pull]
-    rw [pullS_comp ρ.P.A ρ.P.isLB]
-    refine thList_congr ρ.th₁ ?_ (Over.homMk (spMap iK) rfl) _ ?_ hc
-    · rw [Category.comp_id, Category.comp_id]; exact (spMap_comp_ring val i').symm
-    · simp only [Over.comp_left, Over.homMk_left]; exact (spMap_comp_ring val i').symm
+    rw [_root_.GlobalTheory.UMin.SymRat.pullS_comp ρ.P.A ρ.P.isLB]
+    refine _root_.GlobalTheory.UMin.SymRat.thList_congr ρ.th₁ ?_ (Over.homMk (spMap iK) rfl) _ ?_ hc
+    · rw [Category.comp_id, Category.comp_id]; exact (_root_.GlobalTheory.spMap_comp_ring val i').symm
+    · simp only [Over.comp_left, Over.homMk_left]; exact (_root_.GlobalTheory.spMap_comp_ring val i').symm
   obtain ⟨pt'', hpt''⟩ := hlist
   have hsym : ∀ j, io (emb (e j)) = symTup c j := fun j => by unfold SymE SymAt at hSym; exact hSym.2.2 K i' pt'' c hpt'' j
   have hj₀' : emb (e j₀) ≠ 0 := (map_ne_zero emb).2 hj₀
@@ -914,15 +888,6 @@ theorem valR_id_resG_inv {K : Type} [Field K] {W : (Sp K).Opens} (hW : ⊤ ≤ (
   have := valR_specMap (C := K) (𝟙 (CommRingCat.of K)) a
   simpa using this
 
-theorem valR_resG' {C : Type} [CommRing C] {X : Scheme.{0}} (x : Sp C ⟶ X) {U V : X.Opens} (e : V ≤ U)
-    (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) : valR x V (resG X e f) = valR x U f :=
-  valR_res x e h f
-
-theorem valR_unit_ne_zero {K : Type} [Field K] {X : Scheme.{0}} (x : Sp K ⟶ X) {W : X.Opens} (hW : ⊤ ≤ x ⁻¹ᵁ W)
-    (u : Γ(X, W)ˣ) : valR x W (u : Γ(X, W)) ≠ 0 := by
-  rw [valR_eq x W hW]
-  exact (u.isUnit.map (valMap x W hW).hom).ne_zero
-
 end GlobalTheory.SiegTh.PullO1
 
 namespace GlobalTheory.SiegTh.PullO1
@@ -936,7 +901,7 @@ theorem secCoord_vals {X : Scheme.{0}} {L : LB X} {I : Type} {σ : I → L.Sec} 
   refine ⟨fun p => valR (𝟙 (Sp K)) ((L.pull x).U (fun _ => p)) (τ.s (fun _ => p) : Γ(Sp K, _)), ?_, ?_⟩
   · intro p hp
     have hW := top_le_wchart L x p hp
-    refine ⟨valR_unit_ne_zero _ hW _, fun i => ?_⟩
+    refine ⟨_root_.GlobalTheory.ZH.FrameNorm.val_unit_ne_zero _ hW _, fun i => ?_⟩
     have e := congrArg (valR (𝟙 (Sp K)) _) (hv i (fun _ => p) (LB.wchart_le L (fun _ => x) (fun _ => p) PUnit.unit))
     dsimp only at e
     have e2 := valR_appLE (𝟙 (Sp K)) x (LB.wchart_le L (fun _ => x) (fun _ => p) PUnit.unit) hW ((σ i).f p)
@@ -962,7 +927,7 @@ theorem secCoord_vals {X : Scheme.{0}} {L : LB X} {I : Type} {σ : I → L.Sec} 
     congr 1
     rw [ProjSpace.linComb_punit_g, zpow_one]
     change valF x _ _ = valR (𝟙 (Sp K)) _ (resG (Sp K) _ ((x.app (L.U p ⊓ L.U p')).hom (L.g p p' : Γ(X, _))))
-    refine Eq.symm ((valR_resG' (𝟙 (Sp K)) _ hWW _).trans ?_)
+    refine Eq.symm ((_root_.GlobalTheory.ZH.CrdCalc.valR_res (𝟙 (Sp K)) _ hWW _).trans ?_)
     refine (valR_comp (𝟙 (Sp K)) x _ _).symm.trans ?_
     rw [Category.id_comp]
     rfl
@@ -972,9 +937,6 @@ end GlobalTheory.SiegTh.PullO1
 namespace GlobalTheory.SiegTh.PullO1
 
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
-
-theorem coe_res {X : Scheme.{0}} {U V : X.Opens} (h : V ≤ U) (a : Γ(X, U)ˣ) :
-    ((res h a : Γ(X, V)ˣ) : Γ(X, V)) = resG X h (a : Γ(X, U)) := rfl
 
 theorem coe_res_mul {X : Scheme.{0}} {V P Q R : X.Opens} (a : Γ(X, P)ˣ) (b : Γ(X, Q)ˣ) (c : Γ(X, R)ˣ) (ha : V ≤ P)
     (hb : V ≤ Q) (hc : V ≤ R) :
@@ -1046,7 +1008,7 @@ theorem lbIso_of_vals (M : RatModel o Ω) {L A : LB M.Z} (cL : L.ι → Ω) (cA 
     have gL0 : valF M.pt _ (L.g pq.2 pq'.2 : Γ(M.Z, L.U pq.2 ⊓ L.U pq'.2)) ≠ 0 := valF_pt_ne_zero M hLL _
     dsimp only [LB.div]
     refine Units.ext (M.valF_injective hV ?_)
-    erw [coe_res_mul, coe_res]
+    erw [coe_res_mul, _root_.GlobalTheory.LB.val_res]
     rw [valF_pt_mul M hV, valF_pt_mul M hV, M.valF_resG _ hV, M.valF_resG _ hV]
     erw [M.valF_resG _ hV, M.valF_resG _ hV]
     rw [valF_pt_inv M hLL, hu _ h1, hu _ h2, ← eA, ← eL]
@@ -1076,7 +1038,7 @@ theorem valF_linComb_g (M : RatModel o Ω) {Y : Scheme.{0}} (L : LB Y) (φ : M.Z
   rw [ProjSpace.linComb_punit_g]
   erw [valF_pt_zpow M hV]
   congr 1
-  erw [coe_res, M.valF_resG _ hV]
+  erw [_root_.GlobalTheory.LB.val_res, M.valF_resG _ hV]
   exact (valR_comp M.pt φ (L.U (P PUnit.unit) ⊓ L.U (P' PUnit.unit)) (L.g (P PUnit.unit) (P' PUnit.unit) : Γ(Y, _))).symm
 
 end GlobalTheory.SiegTh.PullO1
@@ -1205,12 +1167,6 @@ theorem resG_injective_of_top {X : Scheme.{0}} {V : X.Opens} (h : ⊤ ≤ V) : F
   intro a b hab
   simpa [resG, e] using hab
 
-theorem resG_resG {X : Scheme.{0}} {U V W : X.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (a : Γ(X, U)) :
-    resG X h2 (resG X h1 a) = resG X (h2.trans h1) a := by
-  show (X.presheaf.map _ ≫ X.presheaf.map _).hom a = _
-  rw [← Functor.map_comp]
-  rfl
-
 theorem resG_appLE {X Y : Scheme.{0}} (f : Y ⟶ X) {U : X.Opens} {V W : Y.Opens} (h : V ≤ f ⁻¹ᵁ U) (h2 : W ≤ V)
     (a : Γ(X, U)) : resG Y h2 ((f.appLE U V h).hom a) = (f.appLE U W (h2.trans h)).hom a := by
   show (f.appLE U V h ≫ Y.presheaf.map _).hom a = _
@@ -1226,12 +1182,12 @@ theorem ev_injective (V : (Sp Ω).Opens) (hV : ⊤ ≤ V) : Function.Injective (
 
 theorem ev_resG {V W : (Sp Ω).Opens} (hV : ⊤ ≤ V) (hW : ⊤ ≤ W) (h : W ≤ V) (a : Γ(Sp Ω, V)) :
     ev W hW (resG (Sp Ω) h a) = ev V hV a := by
-  simp only [ev, RingHom.comp_apply, resG_resG]
+  simp only [ev, RingHom.comp_apply, _root_.GlobalTheory.Cartier.resG_resG]
 
 theorem ev_resG_top {V : (Sp Ω).Opens} (hV : ⊤ ≤ V) (x : Ω) :
     ev V hV (resG (Sp Ω) le_top ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom x)) = x := by
   have e : (homOfLE (hV.trans le_top) : (⊤ : (Sp Ω).Opens) ⟶ ⊤) = 𝟙 _ := Subsingleton.elim _ _
-  simp only [ev, RingHom.comp_apply, resG_resG]
+  simp only [ev, RingHom.comp_apply, _root_.GlobalTheory.Cartier.resG_resG]
   simp [resG]
 
 theorem ev_appLE {X : Scheme.{0}} (x : Sp Ω ⟶ X) {U : X.Opens} {V : (Sp Ω).Opens} (hV : ⊤ ≤ V) (h : V ≤ x ⁻¹ᵁ U)
@@ -1350,10 +1306,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 noncomputable section
 namespace GlobalTheory.SiegTh.ThIntAll
 
-theorem spMap_comp_ring {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  rw [← Spec.map_comp]; rfl
-
 theorem grpPullback_self {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullback G G (𝟙 S) (𝟙 G.left) := by
   refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
   let ρ : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
@@ -1361,28 +1313,6 @@ theorem grpPullback_self {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullbac
   have ey : y₀ = ρ ≫ y := Over.OverMorphism.ext (hy.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
   rw [ex, ey, ← MonObj.comp_mul]
   exact (Category.id_comp _).trans (Category.comp_id _).symm
-
-theorem sec_eq {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  cases s; cases s'
-  simp only [LB.Sec.mk.injEq]
-  exact funext h
-
-theorem pullS_comp {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
-    (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
-    VVRank.pullS G a h' (VVRank.pullS G a h s) = VVRank.pullS G a (h' ≫ h) s := by
-  refine sec_eq (sec_ext_val hL (fun y J hJ => ?_))
-  refine (VVRank.sv_pullS G a h' _ (𝟙 _) y hJ).trans ((VVRank.sv_pullS G a h s _ y hJ).trans ?_)
-  refine Eq.trans ?_ (VVRank.sv_pullS G a (h' ≫ h) s (𝟙 _) y hJ).symm
-  rw [MonoidalCategory.comp_whiskerRight, Over.comp_left, Category.assoc]
-
-theorem thList_congr {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} {ρ : LB.Gen (L.pull (eSec G))}
-    {m : ℕ} {R : Type} [CommRing R] {x : Sp R ⟶ S} (θ : SecAt G L x) {K : Type} [Field K]
-    {y y' : Sp K ⟶ S} (e : y = y') (u : Over.mk y ⟶ Over.mk x) (u' : Over.mk y' ⟶ Over.mk x) (hu : u.left = u'.left)
-    {N : ℕ} {pt : Fin N → (Over.mk y ⟶ G)} {c : Fin N → K} (H : ThList G L ρ m y (VVRank.pullS G _ u θ) pt c) :
-    ∃ pt' : Fin N → (Over.mk y' ⟶ G), ThList G L ρ m y' (VVRank.pullS G _ u' θ) pt' c := by
-  subst e
-  obtain rfl : u = u' := Over.OverMorphism.ext hu
-  exact ⟨pt, H⟩
 
 theorem relDim_eq_of_sharp {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (Fin 8) (Fin 8) ℤ} {P : PolAV F.X}
     (hPg : P.g = 8 * g) (hPs : GlobalTheory.Poinc.SharpOver F W P (𝟙 F.X)) {T : Scheme.{0}} [Nonempty T] (Q : PolAV T)
@@ -1490,7 +1420,7 @@ theorem thetaInt_all : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
   have hS' : HypS P'.A P'.L :=
     GlobalTheory.T.lineBundleSymmetry_hypothesis_base_change _ _ ρ.P.A P'.A y φ ρ.P.L P'.L ρ.P.isLB P'.isLB gp hL' ρ.hypS
   have hPF0 : PolFib ρ.P.A ρ.P.L (8 * g) (𝟙 (Sp S.R)) :=
-    ⟨ρ.P, 𝟙 _, by rw [ρ.g_eq, hSg], grpPullback_self _, GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB⟩
+    ⟨ρ.P, 𝟙 _, by rw [ρ.g_eq, hSg], _root_.GlobalTheory.ObjComp.isGrpPullback_id _, GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB⟩
   have hPFK : PolFib ρ.P.A ρ.P.L (8 * g) (spMap iK ≫ 𝟙 (Sp S.R)) :=
     (GlobalTheory.T.principallyPolarisedFibre_iff_of_grpPullback (Sp S.R) (Sp S.R) ρ.P.A ρ.P.L ρ.P.A ρ.P.L (𝟙 _) (𝟙 _) ρ.P.isLB ρ.P.isLB (grpPullback_self _)
       (GlobalTheory.ThetaAffineGlue.lbIso_pull_id ρ.P.isLB) (8 * g) S.R (𝟙 _)).2 K iK hPF0
@@ -1499,22 +1429,22 @@ theorem thetaInt_all : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
     (spMap iK ≫ 𝟙 (Sp S.R)) θK hm hmK hNm hPFK
   obtain ⟨pt', c', hc'⟩ := GlobalTheory.T.exists_thetaConstantList_algClosed (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen (8 * g) (S.r * S.N)
     ((S.r * S.N) ^ (4 * (8 * g))) K (spMap iK ≫ 𝟙 (Sp S.R)) θK hrNodd hrNK rfl hPFK
-  have hgen := GlobalTheory.T.realisedThetaSystem_section_generates_field_fibres o Ω S ρ K iK
+  have hgen := _root_.GlobalTheory.UMin.isGenSec_real_pull o Ω S ρ K iK
   have hxy : spMap io ≫ y = spMap iK ≫ 𝟙 (Sp S.R) := by
-    rw [Category.comp_id]; exact spMap_comp_ring i₀ io
+    rw [Category.comp_id]; exact _root_.GlobalTheory.spMap_comp_ring i₀ io
   have h2 : HasTh₂ ρ.P.A ρ.P.L ρ.rig m (S.r * S.N) (spMap io ≫ y) c c' := by
     rw [hxy]; exact ⟨θK, pt, pt', hgen, hc, hc'⟩
-  obtain ⟨a, ha, hp1, hp2⟩ := GlobalTheory.T.thetaConstants_two_levels_primitive_at_trait (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen V hV y P' φ gp hL' hS' K io
+  obtain ⟨a, ha, hp1, hp2⟩ := _root_.GlobalTheory.SiegCmp.theta_two_levels_prim (Sp S.R) ρ.P.A ρ.P.L ρ.rig ρ.P.isLB ρ.rig_gen V hV y P' φ gp hL' hS' K io
     m (S.r * S.N) (N + 1) _ c c' hm hm3 hmV hrNodd hrN3 hrNV h2
-  have hreal := GlobalTheory.T.thetaConstantList_realisedSystem_up_to_rootsOfUnity o Ω S ρ K iK _ pt' c' hc'
+  have hreal := _root_.GlobalTheory.UMin.thList_real o Ω S ρ K iK _ pt' c' hc'
   have hlist : ∃ pt'' : Fin (N + 1) → (Over.mk (spMap i' ≫ (spMap val ≫ 𝟙 (Sp S.R))) ⟶ ρ.P.A),
       ThList ρ.P.A ρ.P.L ρ.rig m (spMap i' ≫ (spMap val ≫ 𝟙 (Sp S.R)))
         (SecAt.pull ρ.P.A ρ.P.L (SecAt.pull ρ.P.A ρ.P.L (x := 𝟙 (Sp S.R)) ρ.th₁ val) i') pt'' c := by
     simp only [SecAt.pull]
-    rw [pullS_comp ρ.P.A ρ.P.isLB]
-    refine thList_congr ρ.th₁ ?_ (Over.homMk (spMap iK) rfl) _ ?_ hc
-    · rw [Category.comp_id, Category.comp_id]; exact (spMap_comp_ring val i').symm
-    · simp only [Over.comp_left, Over.homMk_left]; exact (spMap_comp_ring val i').symm
+    rw [_root_.GlobalTheory.UMin.SymRat.pullS_comp ρ.P.A ρ.P.isLB]
+    refine _root_.GlobalTheory.UMin.SymRat.thList_congr ρ.th₁ ?_ (Over.homMk (spMap iK) rfl) _ ?_ hc
+    · rw [Category.comp_id, Category.comp_id]; exact (_root_.GlobalTheory.spMap_comp_ring val i').symm
+    · simp only [Over.comp_left, Over.homMk_left]; exact (_root_.GlobalTheory.spMap_comp_ring val i').symm
   obtain ⟨pt'', hpt''⟩ := hlist
   have hsym : ∀ j, io (emb (e j)) = symTup c j := fun j => by unfold SymE SymAt at hSym; exact hSym.2.2 K i' pt'' c hpt'' j
   have hj₀' : emb (e j₀) ≠ 0 := (map_ne_zero emb).2 hj₀

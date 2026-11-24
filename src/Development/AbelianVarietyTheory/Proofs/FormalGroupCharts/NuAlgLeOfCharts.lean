@@ -84,8 +84,6 @@ open ReciprocityTheory.ChartRestriction.G.TB (dLin transF IsInvPair dAct)
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.ChartCmp
 
-theorem _root_.GlobalTheory.T.localChartDepth_eq_integralBiextDepth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), letI := io.toAlgebra; ∀ BT : FB T.V (chD C.ch) (𝓞 E), BT.FK T.Fr = C.ch.B.FK T.Fr → (∀ a, BT.actK T.Fr a = C.ch.B.actK T.Fr a) → ∀ (e k : ℕ) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), nuLocC C e k a n = nuAlg Dw T BT C.ch.h C.ch.uvec e k a n := by
-  first | exact @GlobalTheory.ChartCmp.nuLocC_eq_nuAlg
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.LocalChartDepthEqIntegralBiextDepthStatement =====
@@ -156,10 +154,10 @@ theorem nuLocC_le {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
   obtain ⟨BT', hF', hA', hP1', hP2', hSy', hAd', hK'⟩ := GlobalTheory.integralChart_formalBiext E H Dw l Xo c T io y C'
   obtain ⟨hFK, hActK, hG, hGc⟩ := hK T.Fr
   obtain ⟨hFK', hActK', hG', hGc'⟩ := hK' T.Fr
-  rw [GlobalTheory.T.localChartDepth_eq_integralBiextDepth E H Dw l Xo c T io y C BT hFK hActK e k a n,
-    GlobalTheory.T.localChartDepth_eq_integralBiextDepth E H Dw l Xo c T io y C' BT' hFK' hActK' e k a n]
-  obtain ⟨nm, hnm⟩ := GlobalTheory.T.exists_iso_integralModels_matching_lieBases E H Dw l Xo c T io _ C.I C'.I
-  have hsurj := GlobalTheory.T.surjective_appTop_integralModel_square E H Dw l Xo c T io _ C'.I
+  rw [_root_.GlobalTheory.ChartCmp.nuLocC_eq_nuAlg E H Dw l Xo c T io y C BT hFK hActK e k a n,
+    _root_.GlobalTheory.ChartCmp.nuLocC_eq_nuAlg E H Dw l Xo c T io y C' BT' hFK' hActK' e k a n]
+  obtain ⟨nm, hnm⟩ := _root_.GlobalTheory.ChartCmp.intData_models_iso E H Dw l Xo c T io _ C.I C'.I
+  have hsurj := _root_.GlobalTheory.ModelSquareFunctions.surjective_appTop_square E H Dw l Xo c T io _ C'.I
   have hU := GlobalTheory.PowGerm.univSt_holds E H Dw l Xo c T io y
   have e1 : MvPowerSeries.map (algebraMap T.Fr T.Fr) C.ch.h = C.ch.h := by
     ext

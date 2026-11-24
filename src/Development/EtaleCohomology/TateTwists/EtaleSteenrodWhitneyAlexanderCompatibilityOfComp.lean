@@ -649,8 +649,6 @@ theorem LateralTheory.EtaleFoundations.SteenPf.leaf_wa_of_aw (hAW : leaf_aw) : l
   rw [wa_eq, wa_eq, d_tau, hAW, tau_bd]
 
 
-open LateralTheory.EtaleFoundations.SteenPf in
-theorem LateralTheory.EtaleFoundations.SteenPf.leaf_wa_of (hAW : leaf_aw) : leaf_wa := leaf_wa_of_aw hAW
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.EtaleCohomology.TateTwists.LeafWaPf =====
@@ -661,15 +659,11 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.PrismAlexanderWhitneySwapChainHomotopy
-theorem etale_steenrod_acyclic_models_of_components : LateralTheory.EtaleFoundations.SteenPf.leaf_acyc := by
-  apply LateralTheory.EtaleFoundations.SteenPf.leaf_acyc_of
-theorem etale_steenrod_alexander_whitney_compatibility_of_components : LateralTheory.EtaleFoundations.SteenPf.leaf_aw := by
-  apply LateralTheory.EtaleFoundations.AwPf.leaf_aw_of
 theorem etale_steenrod_whitney_alexander_compatibility_of_components : LateralTheory.EtaleFoundations.SteenPf.leaf_wa := by
-  apply LateralTheory.EtaleFoundations.SteenPf.leaf_wa_of <;> first | exact etale_steenrod_alexander_whitney_compatibility_of_components
+  apply _root_.LateralTheory.EtaleFoundations.SteenPf.leaf_wa_of_aw <;> first | exact _root_.LateralTheory.EtaleFoundations.AwPf.leaf_aw_of
 theorem etale_steenrod_power_operation_properties_of_components : LateralTheory.EtaleFoundations.PrismAlexanderWhitneySwapChainHomotopy := by
-  apply LateralTheory.EtaleFoundations.etale_steenrod_prism_homotopy_of_acyclic_alexander_whitney <;> first | exact etale_steenrod_acyclic_models_of_components | exact etale_steenrod_alexander_whitney_compatibility_of_components | exact etale_steenrod_whitney_alexander_compatibility_of_components
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.PrismAlexanderWhitneySwapChainHomotopy := etale_steenrod_power_operation_properties_of_components
+  apply LateralTheory.EtaleFoundations.etale_steenrod_prism_homotopy_of_acyclic_alexander_whitney <;> first | exact _root_.LateralTheory.EtaleFoundations.SteenPf.leaf_acyc_of | exact _root_.LateralTheory.EtaleFoundations.AwPf.leaf_aw_of | exact etale_steenrod_whitney_alexander_compatibility_of_components
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.PrismAlexanderWhitneySwapChainHomotopy.etale_steenrod_power_operation_properties_of_components
 end LateralTheory.Fin.PrismAlexanderWhitneySwapChainHomotopy
 end -- clump:auto
 end -- clump:auto

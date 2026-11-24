@@ -128,7 +128,7 @@ theorem exists_fam_of_pull : ∀ (S : Scheme.{0}) (A U U' : Over S) [GrpObj A] [
   have keyM : ∀ (Y : Over S) (a : Y ⟶ A) (u : Y ⟶ U'), evc hM a (u ≫ p) = evc h.isLB a u := by
     intro Y a u
     rw [form, key, key, h.add.evc_one h.isLB, sub_zero]
-  refine ⟨M, ⟨hM, GlobalTheory.T.isAdditive_lineBundleFamily_of_geometricFibres S A U hA M hM ((triv_ev_iff hM _ _).2 (by rw [form, sub_self])) ?_⟩, ?_⟩
+  refine ⟨M, ⟨hM, _root_.GlobalTheory.AddFib.isAdditive_of_geomFibres S A U hA M hM ((triv_ev_iff hM _ _).2 (by rw [form, sub_self])) ?_⟩, ?_⟩
   · intro K _ _ s t
     haveI := hfin
     haveI := hsurj
@@ -1151,8 +1151,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.isStandardSmooth_localizationAway_jacobian_dvd : ∀ (R ν σ : Type) [CommRing R] [Finite ν] [Fintype σ] [DecidableEq σ] (m : σ → ν), Function.Injective m → ∀ (F : σ → MvPolynomial ν R) (h : MvPolynomial ν R), (Matrix.of fun s t : σ ↦ MvPolynomial.pderiv (m s) (F t)).det ∣ h → Algebra.IsStandardSmoothOfRelativeDimension (Nat.card ν - Nat.card σ) R (Localization.Away (Ideal.Quotient.mk (Ideal.span (Set.range F)) h)) := by
-  first | exact @GlobalTheory.Pinch.isStandardSmoothOfRelativeDimension_localizationAway_of_det_dvd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStandardSmoothLocalizationAwayJacobianDvdStatement =====
@@ -1266,8 +1264,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.mem_span_relations_conductor_of_eval_eq_zero : ∀ (R R' D E ν σ : Type) [CommRing R] [CommRing R'] [CommRing D] [CommRing E] (a : R →+* R') (c : Ideal R) [Algebra (R ⧸ c) D] (χ : R' →+* E) (ψ : D →+* E) (ζ : ν → D) (F : σ → MvPolynomial ν R), Function.Surjective (MvPolynomial.aeval ζ : MvPolynomial ν (R ⧸ c) →ₐ[R ⧸ c] D) → RingHom.ker (MvPolynomial.aeval ζ : MvPolynomial ν (R ⧸ c) →ₐ[R ⧸ c] D) = Ideal.span (Set.range fun s ↦ MvPolynomial.map (Ideal.Quotient.mk c) (F s)) → IsPushout (CommRingCat.ofHom ((algebraMap (R ⧸ c) D).comp (Ideal.Quotient.mk c))) (CommRingCat.ofHom a) (CommRingCat.ofHom ψ) (CommRingCat.ofHom χ) → ∀ G : MvPolynomial ν R', MvPolynomial.eval₂ χ (fun s ↦ ψ (ζ s)) G = 0 → G ∈ Ideal.span (Set.range fun s ↦ MvPolynomial.map a (F s)) ⊔ (c.map a).map (MvPolynomial.C : R' →+* MvPolynomial ν R') := by
-  first | exact @GlobalTheory.PinchKernel.mem_span_of_eval_eq_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanRelationsConductorOfEvalEqZeroStatement =====
@@ -1615,8 +1611,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.representsAdditiveLineBundleFamilies_compare : ∀ (S : Scheme.{0}) (A B' S' C Z : Over S) [GrpObj A] (b' : B' ⟶ S') (P' : LB (A ⊗ B').left) (e : C ⟶ Z) (Q : LB (A ⊗ C).left), GlobalTheory.DualCon.Rep A b' P' → GlobalTheory.DualCon.Rep A e Q → ∃ q : B' ⊗ Z ⟶ C, q ≫ e = snd B' Z ∧ IsPullback q.left (fst B' Z ≫ b').left C.hom S'.hom ∧ Same A P' Q (fst B' Z) q := by
-  first | exact @GlobalTheory.Pinch.rep_cmp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsAdditiveLineBundleFamiliesCompareStatement =====
@@ -1668,7 +1662,7 @@ theorem exists_standardSmooth : ∀ (R : Type) [CommRing R] [IsNoetherianRing R]
   obtain ⟨s', hs1, hs2⟩ := GlobalTheory.T.exists_sub_one_mem_mul_ker_nakayama_flat R' (MvPolynomial (κ ⊕ ν₀) R') C' (aeval ξ) hsurj
     (Ideal.span (Set.range fun s ↦ map (algebraMap R R') (F s))) (c.map (algebraMap R R'))
     (Ideal.span_le.2 (by rintro _ ⟨s, rfl⟩; exact hF0 s))
-    (fun G hG ↦ GlobalTheory.T.mem_span_relations_conductor_of_eval_eq_zero R R' D E _ _ (algebraMap R R') c (π.comp φ) ψ P.val F P.aeval_val_surjective hkP h2 G
+    (fun G hG ↦ _root_.GlobalTheory.PinchKernel.mem_span_of_eval_eq_zero R R' D E _ _ (algebraMap R R') c (π.comp φ) ψ P.val F P.aeval_val_surjective hkP h2 G
       (by rw [← key, show aeval ξ G = 0 from hG, map_zero]))
   obtain ⟨H, hH0, hH⟩ := GlobalTheory.T.exists_mvPolynomial_lift_conductor_coeffs R R' _ c hc _ hs1
   letI : Fintype (κ ⊕ σ₀) := Fintype.ofFinite _
@@ -1693,7 +1687,7 @@ theorem exists_standardSmooth : ∀ (R : Type) [CommRing R] [IsNoetherianRing R]
     exact hu.map ψ
   refine ⟨_, inferInstance, algebraMap R _, _, α, β, IsLocalization.Away.lift _ ht, ?_, hα, hβ,
     IsLocalization.Away.lift_comp _ ht, ?_⟩
-  · have := GlobalTheory.T.isStandardSmooth_localizationAway_jacobian_dvd R _ _ P.map P.map_inj F (Δ * (H + 1)) (dvd_mul_right _ _)
+  · have := _root_.GlobalTheory.Pinch.isStandardSmoothOfRelativeDimension_localizationAway_of_det_dvd R _ _ P.map P.map_inj F (Δ * (H + 1)) (dvd_mul_right _ _)
     have hd : Nat.card (κ ⊕ ν₀) - Nat.card (κ ⊕ σ₀) = g := by
       rw [← hP₀, Algebra.Presentation.dimension, Nat.card_sum, Nat.card_sum]
       omega
@@ -1803,19 +1797,6 @@ theorem exists_pic_patch : ∀ (X X' Z Z' : Scheme.{0}) (p : X' ⟶ X) (i : Z �
     L' N hL' hN w W a b hx ha hb hm
   exact ⟨cls L hL, (cls_eq_iff (pull_isLB hL p) hL').2 hiso⟩
 
-theorem isPullback_whisker {S : Scheme.{0}} (A : Over S) {T T' : Over S} (f : T' ⟶ T) :
-    IsPullback (A ◁ f).left (snd A T').left (snd A T).left f.left := by
-  have : IsPullback (A ◁ f) (snd A T') (snd A T) f := by
-    refine ⟨⟨by simp⟩, ⟨PullbackCone.IsLimit.mk _ (fun s ↦ lift (s.fst ≫ fst A T) s.snd) (fun s ↦ ?_)
-      (fun s ↦ by simp) (fun s m h₁ h₂ ↦ ?_)⟩⟩
-    · ext
-      · simp
-      · simp [s.condition]
-    · ext
-      · simp [← h₁]
-      · simp [← h₂]
-  exact this.map (Over.forget S)
-
 theorem hasRep_pinched : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (R' : Type) [CommRing R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → ∀ c : Ideal R, (∀ x ∈ c, ∀ r : R', ∃ y ∈ c, algebraMap R R' y = algebraMap R R' x * r) → HasRepAF A g (Over.mk (spMap (algebraMap R R'))) → HasRep A g (Over.mk (spMap (Ideal.Quotient.mk c))) → HasRep A g (𝟙_ _) := by
   intro R _ _ A _ g hA hg R' _ _ _ hinj c hc ⟨B', b', P', hP', hG', hF⟩ ⟨C, e, Q, hQ, hG⟩
   have hfin : IsFinite (spMap (algebraMap R R')) :=
@@ -1826,8 +1807,8 @@ theorem hasRep_pinched : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : O
     exact Algebra.IsIntegral.comap_surjective R R' x
   have hcl : IsClosedImmersion (spMap (Ideal.Quotient.mk c)) :=
     IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
-  refine GlobalTheory.T.representingScheme_of_finite_surjective_lift R A g hA hg B' _ b' P' hfin hsur hP' hG' fun x ↦ ?_
-  obtain ⟨q, hq, hpb, hS⟩ := GlobalTheory.T.representsAdditiveLineBundleFamilies_compare _ A B' _ C _ b' P' e Q hP' hQ
+  refine _root_.GlobalTheory.DualCon.hasRep_of_liftAt R A g hA hg B' _ b' P' hfin hsur hP' hG' fun x ↦ ?_
+  obtain ⟨q, hq, hpb, hS⟩ := _root_.GlobalTheory.Pinch.rep_cmp _ A B' _ C _ b' P' e Q hP' hQ
   have wb : b'.left ≫ spMap (algebraMap R R') = B'.hom := Over.w b'
   have we : e.left ≫ spMap (Ideal.Quotient.mk c) = C.hom := Over.w e
   have hq' : q.left ≫ e.left = pullback.snd B'.hom (spMap (Ideal.Quotient.mk c)) := congrArg (·.left) hq
@@ -1861,15 +1842,15 @@ theorem hasRep_pinched : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : O
   have hfl : Flat ((snd A Uo).left ≫ u) := by
     have : Flat (snd A Uo).left := inferInstanceAs (Flat (pullback.snd A.hom u))
     infer_instance
-  have hcond := GlobalTheory.T.conductorSquare_flat_baseChange_schemes R R' hinj c hc _ _ _ _ _ _ _ _ hfl ((isPullback_whisker A po).paste_vert h1)
-    ((isPullback_whisker A no).paste_vert h2)
+  have hcond := _root_.GlobalTheory.Pinch.FlatSq.cond_of_flat R R' hinj c hc _ _ _ _ _ _ _ _ hfl ((_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A po).paste_vert h1)
+    ((_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A no).paste_vert h2)
   have hsq : IsPullback (A ◁ ao).left (A ◁ bo).left (A ◁ po).left (A ◁ no).left := by
-    have big : IsPullback (A ◁ ao).left ((snd A Wo).left ≫ bo.left) ((snd A U'o).left ≫ po.left) no.left := (isPullback_whisker A ao).paste_vert
+    have big : IsPullback (A ◁ ao).left ((snd A Wo).left ≫ bo.left) ((snd A U'o).left ≫ po.left) no.left := (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A ao).paste_vert
       ((IsPullback.of_hasPullback p n) : IsPullback ao.left bo.left po.left no.left)
-    have e1 : (snd A Wo).left ≫ bo.left = (A ◁ bo).left ≫ (snd A Vo).left := (isPullback_whisker A bo).w.symm
-    have e2 : (snd A U'o).left ≫ po.left = (A ◁ po).left ≫ (snd A Uo).left := (isPullback_whisker A po).w.symm
+    have e1 : (snd A Wo).left ≫ bo.left = (A ◁ bo).left ≫ (snd A Vo).left := (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A bo).w.symm
+    have e2 : (snd A U'o).left ≫ po.left = (A ◁ po).left ≫ (snd A Uo).left := (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A po).w.symm
     rw [e1, e2] at big
-    refine IsPullback.of_bot big ?_ (isPullback_whisker A no)
+    refine IsPullback.of_bot big ?_ (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A no)
     rw [← Over.comp_left, ← Over.comp_left, ← MonoidalCategory.whiskerLeft_comp, ← MonoidalCategory.whiskerLeft_comp]
     exact congrArg (fun t ↦ (A ◁ t).left) (Over.OverMorphism.ext pullback.condition)
   have hN : Fam A (ev P' (fst A U'o) (snd A U'o ≫ jo)) := by
@@ -1878,8 +1859,8 @@ theorem hasRep_pinched : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : O
     simp only [evc_ev hP'.fam.isLB, lift_fst, lift_snd_assoc]
     exact (isAdditive_iff hP'.fam.isLB).1 hP'.fam.add _ _ _ _
   obtain ⟨c₀, hc₀⟩ := exists_pic_patch _ _ _ _ _ _ _ _ hsq
-    (MorphismProperty.of_isPullback (isPullback_whisker A po).flip hp)
-    (MorphismProperty.of_isPullback (isPullback_whisker A no).flip hn) hcond
+    (MorphismProperty.of_isPullback (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A po).flip hp)
+    (MorphismProperty.of_isPullback (_root_.GlobalTheory.DualOpen.isPullback_whiskerLeft_left A no).flip hn) hcond
     (evc hP'.fam.isLB (fst A U'o) (snd A U'o ≫ jo)) (evc hQ.fam.isLB (fst A Vo) (snd A Vo ≫ ko)) (by
       have := congrArg (GlobalTheory.CechPic.pull (A ◁ yo).left) ((same_iff hP'.fam.isLB hQ.fam.isLB _ _).1 hS)
       simp only [pull_evc, whiskerLeft_fst, whiskerLeft_snd_assoc, hy1', hy2'] at this ⊢

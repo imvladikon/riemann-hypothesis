@@ -100,8 +100,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.class_zero_of_geometric_points : ∀ (q : ℕ) [NeZero q] (R : Type) [CommRing R], IsUnit (q : R) → ∀ (j : ℤ) (a : Ht q (sp R) 0 j), (∀ (K : Type) [Field K] [IsAlgClosed K] (f : R →+* K), pull _ (spMap f) _ 0 a = 0) → a = 0 := by
-  first | (exact @GlobalTheory.EtC.GeomZero.eq_zero_of_geom)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassZeroOfGeometricPoints =====
@@ -117,8 +115,6 @@ open scoped TensorProduct
 noncomputable section
 
 namespace GlobalTheory.EtC.DescZero
-
-variable {R : Type} [CommRing R]
 
 end GlobalTheory.EtC.DescZero
 
@@ -146,14 +142,6 @@ private lemma spec_map_surjective_of_integral_ker_le_nilradical (A A' : Type) [C
   obtain ⟨Q, -, hQ, hQx⟩ := Ideal.exists_ideal_over_prime_of_isIntegral p.asIdeal (⊥ : Ideal A')
     (by rw [Ideal.under_def, ← RingHom.ker_eq_comap_bot]; exact hker.trans (nilradical_le_prime _))
   exact ⟨(⟨Q, hQ⟩ : PrimeSpectrum A'), PrimeSpectrum.ext hQx⟩
-
-open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex Simplicial in
-open scoped TensorProduct in
-private lemma sec_res_comp_divisor {R : Type} [CommRing R] {F : _root_.GlobalTheory.EtC.Shv R} {W V U : Scheme}
-    (h : W ⟶ V) (g : V ⟶ U) (s : _root_.GlobalTheory.EtC.Sec F U) :
-    _root_.GlobalTheory.EtC.Sec.res (h ≫ g) s =
-      _root_.GlobalTheory.EtC.Sec.res h (_root_.GlobalTheory.EtC.Sec.res g s) := by
-  simp [_root_.GlobalTheory.EtC.Sec.res]
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex Simplicial in
 open scoped TensorProduct in
@@ -242,7 +230,7 @@ private lemma res_eq_of_tensorSquare_res_eq_lemma_6 {R : Type} [CommRing R] {F :
     erw [pullbackSpecIso_hom_snd]
     exact pullback.lift_snd _ _ _
   clear_value u
-  rw [← hu₀, ← hu₁, sec_res_comp_divisor, sec_res_comp_divisor, hs]
+  rw [← hu₀, ← hu₁, _root_.GlobalTheory.TwSec.res_comp, _root_.GlobalTheory.TwSec.res_comp, hs]
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex Simplicial in
 open scoped TensorProduct in
@@ -294,7 +282,7 @@ theorem _root_.GlobalTheory.EtC.DescZero.desc_zero : ∀ (q : ℕ) [NeZero q] (A
     ((_root_.GlobalTheory.EtC.sch.obj (Spec (CommRingCat.of A'))) _⦋0⦌) F
   obtain ⟨t, ht⟩ := hfreeY.2.1
     (fun U x => _root_.GlobalTheory.EtC.Sec.res (show U ⟶ Spec (CommRingCat.of A') from x) s)
-    (fun V U g x => sec_res_comp_divisor g (show U ⟶ Spec (CommRingCat.of A') from x) s)
+    (fun V U g x => _root_.GlobalTheory.TwSec.res_comp g (show U ⟶ Spec (CommRingCat.of A') from x) s)
   have hrep := isCls_secClass_of_val_eq_res F _ s t ht
   obtain ⟨hex, -, -, -, hpull⟩ :=
     _root_.GlobalTheory.EtC.isCls_basic (ZMod q) F (_root_.GlobalTheory.EtC.cech f) 0
@@ -344,8 +332,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.descent_equalizer_degree_zero : ∀ (q : ℕ) [NeZero q] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'], Algebra.IsIntegral A A' → RingHom.ker (algebraMap A A') ≤ nilradical A → IsUnit (q : A) → ∀ (j : ℤ) (b : Ht q (sp A') 0 j), pull _ (spMap (Algebra.TensorProduct.includeLeft : A' →ₐ[A] A' ⊗[A] A').toRingHom) _ 0 b = pull _ (spMap (Algebra.TensorProduct.includeRight : A' →ₐ[A] A' ⊗[A] A').toRingHom) _ 0 b → ∃ a : Ht q (sp A) 0 j, pull _ (spMap (algebraMap A A')) _ 0 a = b := by
-  first | (exact @GlobalTheory.EtC.DescZero.desc_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescentEqualizerDegreeZero =====
@@ -365,8 +351,7 @@ theorem laurentMap_coeff {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) 
     (laurentMap f p).coeff n = f (p.coeff n) := by
   simp [laurentMap]
 
-theorem spMap_id (L : Type) [CommRing L] : spMap (RingHom.id L) = 𝟙 _ := by
-  simp [spMap]
+alias spMap_id := _root_.GlobalTheory.EtAlgCD.spMap_id
 
 theorem laurentProd_bijective (B C : Type) [CommRing B] [CommRing C] : Function.Bijective
     ((laurentMap (RingHom.fst B C)).prod (laurentMap (RingHom.snd B C))) := by
@@ -412,8 +397,8 @@ theorem surj_prod (q : ℕ) [NeZero q] (B C : Type) [CommRing B] [CommRing C] (h
   simp only [Prod.mk.injEq] at ha
   refine ⟨a, (sub_eq_zero.mp ?_).symm⟩
   apply eq_zero_of_pull_laurent_fst_snd q B C 1 i
-  · rw [map_sub, gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q _ hq, ha.1, hb, sub_self]
-  · rw [map_sub, gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q _ hq, ha.2, hc, sub_self]
+  · rw [map_sub, gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q _ hq, ha.1, hb, sub_self]
+  · rw [map_sub, gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q _ hq, ha.2, hc, sub_self]
 
 theorem exists_factor (q : ℕ) [NeZero q] (A : Type) [CommRing A] [HenselianLocalRing A] (hq : IsUnit (q : A)) (i : ℤ)
     (p : Ideal A) [p.IsPrime] :
@@ -430,7 +415,7 @@ theorem exists_factor (q : ℕ) [NeZero q] (A : Type) [CommRing A] [HenselianLoc
   have hloc : IsLocalRing T := GlobalTheory.IntClLocal.isLocalRing_of_isIntegral_of_henselian A T
   have hqT : IsUnit (q : T) := by simpa using hq.map (algebraMap A T)
   refine ⟨T, inferInstance, inferInstance, hint, fun a ha => ?_,
-    (GlobalTheory.T.units_cohomology_bijective q T (GlobalTheory.aic_integralClosure_algebraicClosure D) hqT i).2⟩
+    (_root_.GlobalTheory.EtC.GmAicDeg1.main q T (GlobalTheory.aic_integralClosure_algebraicClosure D) hqT i).2⟩
   have hinjΩ : Function.Injective (algebraMap D Ω) := by
     rw [IsScalarTower.algebraMap_eq D (FractionRing D) Ω]
     exact (algebraMap (FractionRing D) Ω).injective.comp (IsFractionRing.injective D (FractionRing D))
@@ -497,8 +482,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.laurent_class_from_integral : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ (i : ℤ) (x : Ht q (sp (LaurentPolynomial A)) 1 i), ∃ (A' : Type) (_ : CommRing A') (_ : Algebra A A'), Algebra.IsIntegral A A' ∧ RingHom.ker (algebraMap A A') ≤ nilradical A ∧ ∃ a' : Ht q (sp A') 0 (i - 1), pull _ (spMap (laurentMap (algebraMap A A'))) _ 1 x = gmPhi q A' i a' := by
-  first | (exact @GlobalTheory.EtC.LiftWitness.lift_witness)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentClassFromIntegralStatement =====
@@ -596,8 +579,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistCohomology_zero_laurent_surjective : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T], IsUnit (q : T) → ∀ (i : ℤ) (y : Ht q (sp (LaurentPolynomial T)) 0 i), ∃ z : Ht q (sp T) 0 i, pull _ (spMap (LaurentPolynomial.C : T →+* LaurentPolynomial T)) _ 0 z = y := by
-  first | (exact @GlobalTheory.EtC.MultiplicativeGroupGlobalSections.exists_ht_zero_pull_laurent_eq)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyZeroLaurentSurjectiveStatement =====
@@ -763,7 +744,7 @@ theorem laurent_univ (R : Type) [CommRing R] (g : Fin (1 + 1) → (LaurentPolyno
 
 theorem level_one : ∃ e : yoneda.obj (Spec (CommRingCat.of (LaurentPolynomial (A' ⊗[A] A')))) ≅ (cech (fT A A')).obj (op ⦋1⦌),
     e.hom ≫ (cP A A' ≫ cS A A').app (op ⦋1⦌) = yoneda.map (Spec.map (CommRingCat.ofHom (flat (A' ⊗[A] A')))) ≫ e.hom := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.spec_widePushout_iso_widePullback_yoneda (LaurentPolynomial A) (LaurentPolynomial A') (LaurentPolynomial (A' ⊗[A] A'))
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.SpecWidePullback.yoneda_spec_isoWidePullback (LaurentPolynomial A) (LaurentPolynomial A') (LaurentPolynomial (A' ⊗[A] A'))
     (laurentMap (algebraMap A A')) 1 (fun j => laurentMap (inc A A' j))
     (fun j => by rw [← GmPhiNat.laurentMap_comp, ← GmPhiNat.laurentMap_comp, inc_comp]) (laurent_univ A A')
   refine ⟨e, ?_⟩
@@ -797,7 +778,7 @@ theorem cobd_pull {R : Type} [CommRing R] {E E' : Spc} {F : Shv R} {n : ℕ} (φ
 theorem cobd_of_h1_zero {R : Type} [CommRing R] (F : Shv R) {Y X : Scheme.{0}} (f : Y ⟶ X) (hE : Eqv R (cechAug f) F)
     (hX : ∀ x : H R (sch.obj X) F 1, x = 0) (σ : (free R).obj ((cech f).obj (op ⦋1⦌)) ⟶ F) (hσ : cobd σ = 0) :
     ∃ τ, σ = cobd τ := by
-  obtain ⟨y, hy⟩ := (GlobalTheory.T.simplicialCochain_classes_basic_properties R F (cech f) 1).1 σ hσ
+  obtain ⟨y, hy⟩ := (_root_.GlobalTheory.EtC.isCls_basic R F (cech f) 1).1 σ hσ
   obtain ⟨x, rfl⟩ := (hE 1).2 y
   rw [hX x, map_zero] at hy
   exact GlobalTheory.T.simplicialCochain_coboundary_of_class_zero R F _ σ hy
@@ -831,18 +812,13 @@ theorem fixed_of_iso {R : Type} [CommRing R] {F : Shv R} {P : PSh} {X : Scheme.{
     rw [← Category.assoc, ← Functor.map_comp, he, Functor.map_comp, Category.assoc, key]
   exact (cancel_epi _).1 this
 
-theorem tateTwistCohomology_zero_laurent_from_base (q : ℕ) [NeZero q] (T : Type) [CommRing T] (hq : IsUnit (q : T)) (i : ℤ)
-    (y : Ht q (sp (LaurentPolynomial T)) 0 i) :
-    ∃ z : Ht q (sp T) 0 i, pull _ (spMap (LaurentPolynomial.C : T →+* LaurentPolynomial T)) _ 0 z = y :=
-  GlobalTheory.T.tateTwistCohomology_zero_laurent_surjective q T hq i y
-
 theorem sec_flat (q : ℕ) [NeZero q] (T : Type) [CommRing T] (hq : IsUnit (q : T)) (i : ℤ)
     (s : Sec (tw q i) (Spec (CommRingCat.of (LaurentPolynomial T)))) :
     Sec.res (Spec.map (CommRingCat.ofHom (flat T))) s = s := by
   obtain ⟨-, e, he, -⟩ := _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q i)
   apply (e _).injective
   rw [← he]
-  obtain ⟨y, hy⟩ := tateTwistCohomology_zero_laurent_from_base q T hq i (e _ s)
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.EtC.MultiplicativeGroupGlobalSections.exists_ht_zero_pull_laurent_eq q T hq i (e _ s)
   rw [← hy]
   change pull _ (spMap (flat T)) _ 0 (pull _ (spMap LaurentPolynomial.C) _ 0 y) = _
   rw [← GmPhiNat.pull_spMap_comp, flat_comp_C]
@@ -887,9 +863,9 @@ theorem GlobalTheory.EtC.kerLaurent : ∀ (q : ℕ) [NeZero q] (A A' : Type) [Co
   obtain ⟨hf1, hf2⟩ := GmStep.spec_integral_surj (laurentMap (algebraMap A A'))
     (hlm ▸ GmStep.laurentMap_isIntegral _ hi) (hlm ▸ GmStep.laurentMap_ker _ hker)
   have hE := GlobalTheory.EtC.b4 q (fT A A') (GmPhiNat.isUnit_gamma q A hq) i
-  obtain ⟨σ, hσ, hcls⟩ := GlobalTheory.T.etaleCohomology_one_cechCocycle_of_pullback_zero (ZMod q) (tw q i) _ _ (fT A A') x hx
+  obtain ⟨σ, hσ, hcls⟩ := _root_.GlobalTheory.EtC.LerayOne.cech_cocycle_of_pull_eq_zero (ZMod q) (tw q i) _ _ (fT A A') x hx
   obtain ⟨τ, rfl⟩ := cobd_laurent A A' q hint hker hq hA i σ hσ
-  have h0 := (GlobalTheory.T.simplicialCochain_classes_basic_properties (ZMod q) (tw q i) (cech (fT A A')) 0).2.2.2.1 τ _ hcls
+  have h0 := (_root_.GlobalTheory.EtC.isCls_basic (ZMod q) (tw q i) (cech (fT A A')) 0).2.2.2.1 τ _ hcls
   exact (hE 1).1 (by rw [map_zero]; exact h0)
 end -- clump:auto
 end -- clump:auto
@@ -904,8 +880,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.laurent_cohomology_injective : ∀ (q : ℕ) [NeZero q] (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'], Algebra.IsIntegral A A' → RingHom.ker (algebraMap A A') ≤ nilradical A → IsUnit (q : A) → (∀ j : ℤ, Subsingleton (Ht q (sp A) 1 j)) → ∀ (i : ℤ) (x : Ht q (sp (LaurentPolynomial A)) 1 i), pull _ (spMap (laurentMap (algebraMap A A'))) _ 1 x = 0 → x = 0 := by
-  first | (exact @GlobalTheory.EtC.kerLaurent)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCohomologyInjective =====
@@ -1481,12 +1455,12 @@ theorem GlobalTheory.EtC.gmPhi_surjective_of_noetherian : ∀ (q : ℕ) [NeZero 
     GlobalTheory.SHColim.strictlyHenselian_isColimit q A ⟨hH, hsep⟩ hq
   have hqL : IsUnit (q : LaurentPolynomial A) := by
     simpa using hq.map (LaurentPolynomial.C : A →+* LaurentPolynomial A)
-  obtain ⟨j, y, hy⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (D ⋙ laurentFunctor) _ (isColimit_laurent hc) 1 i).1 x hqL
+  obtain ⟨j, y, hy⟩ := (_root_.GlobalTheory.EtC.pairingProperties q (D ⋙ laurentFunctor) _ (isColimit_laurent hc) 1 i).1 x hqL
   obtain ⟨B, _, _, s, hs⟩ := hst j
   haveI := hl j
   haveI : IsNoetherianRing (D.obj j) := GlobalTheory.StalkNoeth.isNoetherianRing_of_isStalk B (D.obj j) s hs
   obtain ⟨b, hb⟩ := hN (D.obj j) hs.1 (hqj j) i y
-  have hn := gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q (A := D.obj j) (B := A) (ι.app j).hom (hqj j) i b
+  have hn := gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q (A := D.obj j) (B := A) (ι.app j).hom (hqj j) i b
   rw [hb] at hn
   exact ⟨_, hn.symm.trans hy⟩
 end -- clump:auto
@@ -1502,8 +1476,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.surjective_of_noetherian_case : ∀ (q : ℕ) [NeZero q], (∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ i : ℤ, Function.Surjective (gmPhi q A i)) → ∀ (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ i : ℤ, Function.Surjective (gmPhi q A i) := by
-  first | (exact @GlobalTheory.EtC.gmPhi_surjective_of_noetherian)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveOfNoetherianCase =====
@@ -1522,16 +1494,16 @@ namespace GlobalTheory.EtC.GmPhiBij
 theorem inj (q : ℕ) [NeZero q] (R : Type) [CommRing R] (hq : IsUnit (q : R)) (i : ℤ) : Function.Injective (gmPhi q R i) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
-  refine GlobalTheory.T.class_zero_of_geometric_points q R hq (i - 1) a fun K _ _ f => ?_
+  refine _root_.GlobalTheory.EtC.GeomZero.eq_zero_of_geom q R hq (i - 1) a fun K _ _ f => ?_
   have hqK : IsUnit (q : K) := by simpa using hq.map f
   have hK : AIC K := fun p _ hd => IsAlgClosed.exists_root p (Polynomial.natDegree_pos_iff_degree_pos.mp hd).ne'
-  apply (GlobalTheory.T.units_cohomology_bijective q K hK hqK i).1
-  rw [map_zero, ← gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q f hq, ha, map_zero]
+  apply (_root_.GlobalTheory.EtC.GmAicDeg1.main q K hK hqK i).1
+  rw [map_zero, ← gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q f hq, ha, map_zero]
 
 theorem surj_noeth (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRing A] (hA : SH A) (hq : IsUnit (q : A)) (i : ℤ) :
     Function.Surjective (gmPhi q A i) := by
   intro x
-  obtain ⟨A', _, _, hint, hker, a', ha'⟩ := GlobalTheory.T.laurent_class_from_integral q A hA hq i x
+  obtain ⟨A', _, _, hint, hker, a', ha'⟩ := _root_.GlobalTheory.EtC.LiftWitness.lift_witness q A hA hq i x
   have hq' : IsUnit (q : A') := by simpa using hq.map (algebraMap A A')
   set L := (Algebra.TensorProduct.includeLeft : A' →ₐ[A] A' ⊗[A] A').toRingHom with hLdef
   set R := (Algebra.TensorProduct.includeRight : A' →ₐ[A] A' ⊗[A] A').toRingHom with hRdef
@@ -1543,13 +1515,13 @@ theorem surj_noeth (q : ℕ) [NeZero q] (A : Type) [CommRing A] [IsNoetherianRin
   have hq2 : IsUnit (q : A' ⊗[A] A') := by simpa using hq'.map L
   have heq : pull _ (spMap L) _ 0 a' = pull _ (spMap R) _ 0 a' := by
     apply inj q _ hq2 i
-    rw [← gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q L hq', ← gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q R hq', ← ha', ← GmPhiNat.pull_spMap_comp,
+    rw [← gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q L hq', ← gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q R hq', ← ha', ← GmPhiNat.pull_spMap_comp,
       ← GmPhiNat.pull_spMap_comp, ← GmPhiNat.laurentMap_comp, ← GmPhiNat.laurentMap_comp, hLR]
-  obtain ⟨a, ha⟩ := GlobalTheory.T.descent_equalizer_degree_zero q A A' hint hker hq (i - 1) a' heq
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.EtC.DescZero.desc_zero q A A' hint hker hq (i - 1) a' heq
   refine ⟨a, ?_⟩
   have hsub : gmPhi q A i a - x = 0 := by
-    apply GlobalTheory.T.laurent_cohomology_injective q A A' hint hker hq (fun j => GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) A hA (tw q j) 1 one_pos) i
-    rw [map_sub, gmPhi_nat GlobalTheory.T.cup_chern_kummer_pullback_naturality q (algebraMap A A') hq, ha, ha', sub_self]
+    apply _root_.GlobalTheory.EtC.kerLaurent q A A' hint hker hq (fun j => _root_.GlobalTheory.EtC.b2 (ZMod q) A hA (tw q j) 1 one_pos) i
+    rw [map_sub, gmPhi_nat _root_.GlobalTheory.EtC.a6nat_holds q (algebraMap A A') hq, ha, ha', sub_self]
   exact sub_eq_zero.mp hsub
 
 end GmPhiBij
@@ -1557,7 +1529,7 @@ end GmPhiBij
 theorem gmPhi_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ i : ℤ,
     Function.Bijective (gmPhi q A i) := by
   intro q _ A _ hA hq i
-  exact ⟨GmPhiBij.inj q A hq i, GlobalTheory.T.surjective_of_noetherian_case q (fun B _ _ hB hqB j => GmPhiBij.surj_noeth q B hB hqB j) A hA hq i⟩
+  exact ⟨GmPhiBij.inj q A hq i, _root_.GlobalTheory.EtC.gmPhi_surjective_of_noetherian q (fun B _ _ hB hqB j => GmPhiBij.surj_noeth q B hB hqB j) A hA hq i⟩
 
 end GlobalTheory.EtC
 
@@ -1572,8 +1544,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.laurentKummerCupProduct_bijective_strictlyHenselian : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ i : ℤ, Function.Bijective (gmPhi q A i) := by
-  first | (exact @GlobalTheory.EtC.gmPhi_bijective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentKummerCupProductBijectiveStrictlyHenseliaStatement =====

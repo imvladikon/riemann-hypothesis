@@ -125,11 +125,7 @@ theorem exists_int_smul_mem {K : Type u_1} {V : Type u_2} [Field K] [NumberField
     rw [key]
     exact L.smul_mem r hmx
 
-theorem main : ∀ {K : Type u_1} {V : Type u_2} [inst : Field K] [NumberField K] [inst_2 : AddCommGroup V]
-    [inst_3 : Module K V] [inst_4 : Module (NumberField.RingOfIntegers K) V]
-    [IsScalarTower (NumberField.RingOfIntegers K) K V] (L : Submodule (NumberField.RingOfIntegers K) V),
-    Submodule.span K (↑L : Set V) = ⊤ → ∀ (y : V), ∃ (m : ℤ), m ≠ (0 : ℤ) ∧ m • y ∈ L :=
-  fun L hL y => exists_int_smul_mem L hL y
+alias main := _root_.GlobalTheory.IntegerScalarIntegral.exists_int_smul_mem
 
 end GlobalTheory.IntegerScalarIntegral
 end -- clump:auto
@@ -193,12 +189,7 @@ theorem exists_prime_mem {K : Type*} [Field K] [NumberField K] (P : Ideal (𝓞 
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
   exact ringChar.Nat.cast_ringChar
 
-theorem exists_int_smul_mem {K V : Type*} [Field K] [NumberField K] [AddCommGroup V] [Module K V]
-    [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (L : Submodule (𝓞 K) V)
-    (hL : Submodule.span K (L : Set V) = ⊤) (y : V) : ∃ m : ℤ, m ≠ 0 ∧ m • y ∈ L := by
-  first
-  | (apply _root_.GlobalTheory.IntegerScalarIntegral.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegerScalarIntegral.main ..)
+alias exists_int_smul_mem := _root_.GlobalTheory.IntegerScalarIntegral.exists_int_smul_mem
 
 theorem exists_nearer : ∀ (D : D7) (n : ℕ) (L₀ L : Lat D n), SD D L₀ → SD D L → L₀ ≠ L → ∃ (P : Ideal (𝓞 D.host.E)) (q : ℕ) (x : Fin n → D.host.E), P.IsMaximal ∧ q.Prime ∧ (q : 𝓞 D.host.E) ∈ P ∧ x ∈ L₀ ∧ NbD D P L x ∧ lenQ D L₀ (nbr D L x) + 1 = lenQ D L₀ L := by
   intro D n L₀ L h₀ h hne
@@ -1648,9 +1639,7 @@ theorem moves_unique {D : D7} {n : ℕ} {g : GL (Fin n) (AE D)} {L L' : Lat D n}
     L = L' := by
   ext x; rw [h x, h' x]
 
-theorem sd_of_moves {D : D7} {n : ℕ} {g : GA D n} {L : Lat D n} (h : Moves D (g : GL (Fin n) (AE D)) L) : SD D L := by
-  obtain ⟨Lt, h1, -⟩ := exists_lattice_of_adelic_point D n
-  rw [moves_unique h (h1 g).1]; exact (h1 g).2
+alias sd_of_moves := _root_.GlobalTheory.WeilInter.sd_of_moves
 
 theorem moves_one (D : D7) (n : ℕ) : Moves D ((1 : GA D n) : GL (Fin n) (AE D)) (stdL D n) := by
   obtain ⟨Lt, h1, h2, -⟩ := exists_lattice_of_adelic_point D n

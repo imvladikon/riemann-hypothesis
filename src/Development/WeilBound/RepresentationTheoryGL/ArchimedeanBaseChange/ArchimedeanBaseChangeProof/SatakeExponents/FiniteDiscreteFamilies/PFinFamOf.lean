@@ -199,7 +199,7 @@ section -- clump:auto
 
 namespace PositivityTheory.Rg.BcB.F.F5
 
-theorem finFamOf_holds : FinFamOf := GlobalTheory.CompanionTheory.FinFamAssembly.finFamOf
+alias finFamOf_holds := _root_.GlobalTheory.CompanionTheory.FinFamAssembly.finFamOf
 
 end PositivityTheory.Rg.BcB.F.F5
 end -- clump:auto

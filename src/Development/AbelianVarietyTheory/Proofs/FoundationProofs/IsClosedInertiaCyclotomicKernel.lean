@@ -73,10 +73,7 @@ theorem continuous_toZModPow (l : ℕ) [hl : Fact (Nat.Prime l)] (n : ℕ) :
     exact hy
   exact tendsto_nhds_of_eventually_eq hev
 
-theorem main : ∀ (l : ℕ) [hl : Fact (Nat.Prime l)] (n : ℕ),
-    Continuous (⇑(PadicInt.toZModPow n) : ℤ_[l] → ZMod (l ^ n)) := by
-  intro l _ n
-  exact continuous_toZModPow l n
+alias main := _root_.GlobalTheory.ContinuousZModPow.continuous_toZModPow
 
 end GlobalTheory.ContinuousZModPow
 end -- clump:auto
@@ -143,16 +140,10 @@ theorem isClosed_Ine [Algebra.IsAlgebraic ℚ Ω] (A : ValuationSubring Ω) :
     (isClosed_iInter fun x => isClosed_setOf_apply (Ω := Ω) x
       (fun y => A.valuation x ≤ 1 → A.valuation (y - x) < 1))
 
-theorem continuous_toZModPow' (l : ℕ) [hl : Fact l.Prime] (n : ℕ) :
-    Continuous (PadicInt.toZModPow (p := l) n) := by
-  first
-  | (apply _root_.GlobalTheory.ContinuousZModPow.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ContinuousZModPow.main ..)
-
 theorem isClosed_ker_cycMod (l : ℕ) [Fact l.Prime] (m : ℕ) :
     IsClosed (((cycMod ℚ Ω l m).ker : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) := by
   have hc : Continuous fun σ : G ℚ Ω => PadicInt.toZModPow m ((cycZ ℚ Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) :=
-    (continuous_toZModPow' l m).comp (Units.continuous_val.comp (continuous_cycZ ℚ Ω l))
+    (_root_.GlobalTheory.ContinuousZModPow.continuous_toZModPow l m).comp (Units.continuous_val.comp (continuous_cycZ ℚ Ω l))
   have e : (((cycMod ℚ Ω l m).ker : Subgroup (G ℚ Ω)) : Set (G ℚ Ω)) =
       (fun σ : G ℚ Ω => PadicInt.toZModPow m ((cycZ ℚ Ω l σ : ℤ_[l]ˣ) : ℤ_[l])) ⁻¹' {1} := by
     ext σ

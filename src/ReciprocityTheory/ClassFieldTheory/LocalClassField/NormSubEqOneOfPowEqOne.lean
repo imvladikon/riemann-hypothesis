@@ -16,9 +16,6 @@ noncomputable abbrev res : Obar p →+* kbar p := IsLocalRing.residue (Obar p)
 
 theorem norm_le_one (x : Obar p) : ‖(x : PadicAlgCl p)‖ ≤ 1 := mem_Obar_iff.1 x.2
 
-theorem norm_sub_le_max' (x y : PadicAlgCl p) : ‖x - y‖ ≤ max ‖x‖ ‖y‖ := by
-  simpa only [sub_eq_add_neg, norm_neg] using IsUltrametricDist.norm_add_le_max x (-y)
-
 theorem isUnit_iff (x : Obar p) : IsUnit x ↔ ‖(x : PadicAlgCl p)‖ = 1 := by
   constructor
   · rintro ⟨u, rfl⟩
@@ -83,6 +80,10 @@ scoped instance charP_kbar : CharP (kbar p) p := by
   have h3 : r = p := ((Nat.dvd_prime Fact.out).1 h2).resolve_left (CharP.char_ne_one (kbar p) r)
   exact h3 ▸ hr
 
+private theorem norm_sub_le_max' (a b : PadicAlgCl p) : ‖a - b‖ ≤ max ‖a‖ ‖b‖ := by
+  rw [sub_eq_add_neg, ← norm_neg b]
+  exact IsUltrametricDist.norm_add_le_max _ _
+
 theorem finite_resK (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : FiniteDimensional ℚ_[p] K) :
     Finite (resK p K) := by
   have : ProperSpace K := FiniteDimensional.proper ℚ_[p] K
@@ -135,39 +136,44 @@ theorem not_dvd_qK_pow_sub_one (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (h
     rwa [Nat.sub_sub_self h2] at this
   exact (Fact.out : p.Prime).one_lt.ne' (Nat.dvd_one.1 h3)
 
-theorem norm_eq_one_of_pow {m : ℕ} (hm : m ≠ 0) {ζ : PadicAlgCl p} (hζ : ζ ^ m = 1) : ‖ζ‖ = 1 := by
-  exact (isOfFinOrder_iff_pow_eq_one.mpr ⟨m, Nat.pos_of_ne_zero hm, hζ⟩).norm_eq_one
+theorem norm_eq_one_of_pow {m : ℕ} (hm : m ≠ 0) {ξ : PadicAlgCl p} (hξ : ξ ^ m = 1) :
+    ‖ξ‖ = 1 := by
+  have h := congrArg norm hξ
+  rw [norm_pow, norm_one] at h
+  exact (pow_eq_one_iff_of_nonneg (norm_nonneg ξ) hm).1 h
 
-theorem norm_sub_one_of_pow {m : ℕ} (hm : ¬ p ∣ m) {η : PadicAlgCl p} (hη : η ^ m = 1) (h : η ≠ 1) :
-    ‖η - 1‖ = 1 := by
-  have hm0 : m ≠ 0 := by
-    rintro rfl
-    exact hm (dvd_zero p)
-  have hn : ‖η‖ = 1 := norm_eq_one_of_pow hm0 hη
-  have hup : ‖η - 1‖ ≤ 1 := by
-    simpa only [hn, norm_one, max_self] using norm_sub_le_max' η 1
-  have hgeom : ∀ n : ℕ, ‖∑ j ∈ Finset.range n, η ^ j‖ ≤ 1 := fun n =>
-    IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg zero_le_one
-      (fun j _ => by rw [norm_pow, hn, one_pow])
-  have hpow : ∀ i : ℕ, ‖η ^ i - 1‖ ≤ ‖η - 1‖ := fun i => by
-    rw [← geom_sum_mul, norm_mul]
-    simpa only [one_mul] using
-      mul_le_mul_of_nonneg_right (hgeom i) (norm_nonneg (η - 1))
-  have hsum0 : ∑ i ∈ Finset.range m, η ^ i = 0 := by
-    have hgeom := geom_sum_mul η m
-    rw [hη, sub_self] at hgeom
-    exact (mul_eq_zero.mp hgeom).resolve_right (sub_ne_zero.mpr h)
-  have hmeq : (m : PadicAlgCl p) = -∑ i ∈ Finset.range m, (η ^ i - 1) := by
-    rw [Finset.sum_sub_distrib, hsum0, Finset.sum_const, Finset.card_range, nsmul_eq_mul,
-      mul_one, zero_sub, neg_neg]
-  have hmnorm : ‖(m : PadicAlgCl p)‖ = 1 := by
-    have hcast : ((m : ℚ_[p]) : PadicAlgCl p) = (m : PadicAlgCl p) := map_natCast _ m
-    rw [← hcast, PadicAlgCl.norm_extends, Padic.norm_natCast_eq_one_iff]
-    exact (Nat.Prime.coprime_iff_not_dvd Fact.out).mpr hm
-  refine le_antisymm hup ?_
-  rw [← hmnorm, hmeq, norm_neg]
-  exact IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (norm_nonneg _)
-    (fun i _ => hpow i)
+theorem norm_sub_one_eq_one_of_pow_eq_one {m : ℕ} (hm : ¬ p ∣ m) {x : PadicAlgCl p}
+    (hx : x ^ m = 1) (hx1 : x ≠ 1) : ‖x - 1‖ = 1 := by
+  have hm0 : m ≠ 0 := by rintro rfl; exact hm (dvd_zero p)
+  have hxn : ‖x‖ = 1 := norm_eq_one_of_pow hm0 hx
+  have hle : ‖x - 1‖ ≤ 1 :=
+    (norm_sub_le_max' _ _).trans (max_le hxn.le norm_one.le)
+  refine le_antisymm hle (not_lt.1 fun hlt => ?_)
+  -- ‖x ^ i - 1‖ ≤ ‖x - 1‖ for all i
+  have hpow : ∀ i : ℕ, ‖x ^ i - 1‖ ≤ ‖x - 1‖ := by
+    intro i
+    induction i with
+    | zero => simp
+    | succ i ih =>
+      have e : x ^ (i + 1) - 1 = x * (x ^ i - 1) + (x - 1) := by ring
+      rw [e]
+      refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ le_rfl)
+      rw [norm_mul, hxn, one_mul]; exact ih
+  have hsum : ∑ i ∈ Finset.range m, x ^ i = 0 := by
+    have h2 : (∑ i ∈ Finset.range m, x ^ i) * (x - 1) = 0 := by
+      rw [geom_sum_mul, hx, sub_self]
+    exact (mul_eq_zero.1 h2).resolve_right (sub_ne_zero.2 hx1)
+  have hm' : ((m : ℕ) : PadicAlgCl p) = -∑ i ∈ Finset.range m, (x ^ i - 1) := by
+    rw [Finset.sum_sub_distrib, hsum]; simp
+  have hb : ‖((m : ℕ) : PadicAlgCl p)‖ ≤ ‖x - 1‖ := by
+    rw [hm', norm_neg]
+    exact IsUltrametricDist.norm_sum_le_of_forall_le_of_nonneg (norm_nonneg _)
+      (fun i _ => hpow i)
+  have hm1 : ‖((m : ℕ) : PadicAlgCl p)‖ = 1 := by
+    have h : ((m : ℕ) : PadicAlgCl p) = algebraMap ℚ_[p] (PadicAlgCl p) (m : ℚ_[p]) := by simp
+    rw [h, PadicAlgCl.norm_extends, Padic.norm_natCast_eq_one_iff]
+    exact ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 hm)
+  linarith
 
 theorem norm_sub_eq_one_of_pow_eq_one {m : ℕ} (hm : ¬ p ∣ m) {ζ ξ : PadicAlgCl p} (hζ : ζ ^ m = 1)
     (hξ : ξ ^ m = 1) (h : ζ ≠ ξ) : ‖ζ - ξ‖ = 1 := by
@@ -176,7 +182,7 @@ theorem norm_sub_eq_one_of_pow_eq_one {m : ℕ} (hm : ¬ p ∣ m) {ζ ξ : Padic
     rintro rfl; rw [zero_pow hm0] at hξ; exact zero_ne_one hξ
   have h1 : ζ - ξ = ξ * (ζ / ξ - 1) := by field_simp
   rw [h1, norm_mul, norm_eq_one_of_pow hm0 hξ, one_mul]
-  apply norm_sub_one_of_pow hm
+  apply norm_sub_one_eq_one_of_pow_eq_one hm
   · rw [div_pow, hζ, hξ, div_one]
   · intro h2; exact h ((div_eq_one_iff_eq hξ0).1 h2)
 

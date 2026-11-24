@@ -620,7 +620,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem PositivityTheory.HtPt.Bc.CongruenceInertMatching.matchCongInert : type_of% @GlobalTheory.CongMatch.match_principal_congruence_inert := @GlobalTheory.CongMatch.match_principal_congruence_inert
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.CongruenceInertMatching =====
@@ -630,7 +629,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem PositivityTheory.HtPt.Bc.SplitMuMatching.matchCtMuSplit : type_of% @GlobalTheory.BCT.SplitCtMatch.match_ctMu_of_isSplitAt := @GlobalTheory.BCT.SplitCtMatch.match_ctMu_of_isSplitAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.SplitMuMatching =====
@@ -1299,7 +1297,7 @@ theorem frameEx0_plug (h2 : PositivityTheory.Rg.Bc.ArchbcB.B.M2) (h3 : Positivit
   frameEx0_of Rig.weightEx Rig.unrAE_holds (_root_.GlobalTheory.CompanionTheory.MuOpen.muEx_of_exists Fok.Mu3.muExists) _root_.GlobalTheory.CompanionTheory.SecThrough.secEx _root_.GlobalTheory.CompanionTheory.UnifFix.unifEx _root_.GlobalTheory.CompanionTheory.LevelU.levelEx
     _root_.GlobalTheory.CompanionTheory.SplitLevel.splitEx (badEx2_of h2 h3) _root_.GlobalTheory.CompanionTheory.KExLevel.kEx PositivityTheory.Rg.BcB.G8.translation_existence_holds F0.chainEx_holds F0.archEx_holds F0.wEx_holds
 
-theorem frameEx0 : FrameEx0 := frameEx0_plug PositivityTheory.HtPt.Bc.CongruenceInertMatching.matchCongInert PositivityTheory.HtPt.Bc.SplitMuMatching.matchCtMuSplit
+theorem frameEx0 : FrameEx0 := frameEx0_plug _root_.GlobalTheory.CongMatch.match_principal_congruence_inert _root_.GlobalTheory.BCT.SplitCtMatch.match_ctMu_of_isSplitAt
 
 end PositivityTheory.Rg.BcB.F.Ex0
 end -- clump:auto

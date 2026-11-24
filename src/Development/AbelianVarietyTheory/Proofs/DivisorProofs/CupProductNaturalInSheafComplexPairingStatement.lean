@@ -58,10 +58,10 @@ theorem cup_natural_in_pairing : ∀ (R : Type) [CommRing R] {I J K I' J' K' : C
   intro R _ I J K I' J' K' μ ν f g u hc E n m k hk a b
   obtain ⟨α, rfl⟩ := a.mk_surjective
   obtain ⟨β, rfl⟩ := b.mk_surjective
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ hk).1 α β
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R μ hk).2 α β γ hγ]
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ hk).1 α β
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ hk).2 α β γ hγ]
   simp only [cpush, cpost_mk]
-  refine ((GlobalTheory.T.cup_eq_class_of_isAW R ν hk).2 _ _ _ ?_).symm
+  refine ((_root_.GlobalTheory.EtC.Pair.cup_spec_full R ν hk).2 _ _ _ ?_).symm
   intro N w h U x
   have hm := fun {L L' : Cx R} (φ : L ⟶ L') {d : ℤ} (c : Cochain ((chains R).obj E) L d) p s hs U x =>
     (GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := L) (n := d)).2.2.2.2 φ c p s hs U x
@@ -85,8 +85,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing : ∀ (R : Type) [CommRing R] {I J K I' J' K' : Cx R} (μ : Pair I J K) (ν : Pair I' J' K') (f : I ⟶ I') (g : J ⟶ J') (u : K ⟶ K'), μ.Compat ν f g u → ∀ (E : Spc) {n m k : ℤ} (hk : n + m = k) a b, cpush _ u k (μ.cup E hk a b) = ν.cup E hk (cpush _ f n a) (cpush _ g m b) := by
-  first | (exact @GlobalTheory.cup_natural_in_pairing)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductNaturalInSheafComplexPairingStatement =====

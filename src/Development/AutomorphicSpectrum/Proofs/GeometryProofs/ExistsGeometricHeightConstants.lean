@@ -326,18 +326,6 @@ theorem pull_inj {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [Grp
     (e : v.left ≫ φ = v'.left ≫ φ) : v = v' :=
   Over.OverMorphism.ext (h.1.hom_ext e (by rw [Over.w, Over.w]))
 
-theorem isGrpPullback_iso {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] (e : A ≅ B) [IsMonHom e.hom] :
-    IsGrpPullback A B (𝟙 S) e.hom.left := by
-  refine ⟨?_, fun T x y x₀ y₀ hx hy => ?_⟩
-  · haveI : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
-    exact IsPullback.of_horiz_isIso ⟨by simp⟩
-  · have e₁ : (x * y) ≫ e.hom = (x ≫ e.hom) * (y ≫ e.hom) := by
-      first | exact MonObj.mul_comp _ _ _
-    have : (x * y).left ≫ e.hom.left = ((x ≫ e.hom) * (y ≫ e.hom)).left := by
-      rw [← e₁]; rfl
-    rw [this]
-    exact mul_left_congr (Category.comp_id _) _ _ _ _ hx hy
-
 variable {L : Type} [Field L] [NumberField L]
 
 theorem exists_generic {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] (z : Sp (𝓞 L) ⟶ X)
@@ -503,7 +491,7 @@ theorem exists_lin {Ψ : Type} {X : Scheme.{0}} (t : SAB H X) (z : Sp (𝓞 L) �
   have hκ : ∀ δ, MV.pt (κ δ) = MT.pt ((Int.castAddHom L).comp δ) ≫ P.τ.i := fun δ => hiL _
   let bs := Module.finBasis ℤ (P.τ.X →+ ℤ)
   have hφ' : IsGrpPullback P.τ.B t'.G (spMap (algebraMap (𝓞 L) L)) (P.e.hom.left ≫ m'.φ) := by
-    have := (isGrpPullback_iso P.e).comp m'.cart
+    have := (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso P.e).comp m'.cart
     simpa using this
   obtain ⟨ε, f, hε, hf, hli, hker, hsur⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TopPt.main X t.G t.semi L z P.tK.G P.m.φ P.τ t'.G _ t'.semi P.m.cart hφ'
     MT hMT V₀ B.carrier M₀ MB _ bs

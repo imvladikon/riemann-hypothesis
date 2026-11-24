@@ -303,18 +303,12 @@ namespace GlobalTheory.CompanionTheory.SegLayers
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-theorem term_injective (Δ : Segment k) : Function.Injective Δ.term := fun a b h =>
-  Fin.ext ((IrrGL.nu_natCast_inj (x := Δ.first) Δ.d_pos).1 h)
-
-theorem ms_nodup (Δ : Segment k) : Δ.ms.Nodup :=
-  Multiset.Nodup.map (term_injective Δ) Finset.univ.nodup
-
 theorem ncard_carrier (Δ : Segment k) : Δ.carrier.ncard = Δ.len := by
-  rw [Segment.carrier, ← Set.image_univ, Set.ncard_image_of_injective _ (term_injective Δ)]
+  rw [Segment.carrier, ← Set.image_univ, Set.ncard_image_of_injective _ (_root_.GlobalTheory.SmGL.Segment.term_injective Δ)]
   simp
 
 theorem ms_le {Δ : Segment k} {s : Multiset (IrrGL (k := k))} (h : ∀ x ∈ Δ.carrier, x ∈ s) : Δ.ms ≤ s :=
-  (Multiset.le_iff_subset (ms_nodup Δ)).2 fun _ hx => h _ (Segment.mem_ms.1 hx)
+  (Multiset.le_iff_subset (_root_.GlobalTheory.SmGL.Segment.nodup_ms Δ)).2 fun _ hx => h _ (Segment.mem_ms.1 hx)
 
 theorem exists_longest {s : Multiset (IrrGL (k := k))} {y : IrrGL (k := k)} (hy : y ∈ s) (hc : y.IsCusp) :
     ∃ Γ : Segment k, (∀ x ∈ Γ.carrier, x ∈ s) ∧
@@ -491,7 +485,7 @@ theorem cuspGeneric (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [
   intro N V _ _ π hN _ hirr hc
   obtain ⟨ψ, hψc, hψ1⟩ := exists_continuous_addChar_ne_one (k := k)
   obtain ⟨M, rfl⟩ : ∃ M, N = M + 1 := ⟨N - 1, by omega⟩
-  exact ⟨ψ, hψc, hψ1, GlobalTheory.BZSeg.Cusp.isGenericFor_of_isCuspidal_direct k ψ hψc hψ1 M V π hc (nontrivial_of_isIrreducible π hirr)⟩
+  exact ⟨ψ, hψc, hψ1, _root_.GlobalTheory.CompanionTheory.BZDeriv.isGenericFor_of_isCuspidal k ψ hψc hψ1 M V π hc (nontrivial_of_isIrreducible π hirr)⟩
 
 end GlobalTheory.BZSeg.Cusp
 
@@ -1150,11 +1144,6 @@ theorem isSubquotient_of_equiv {G V W U : Type} [Group G] [AddCommGroup V] [Modu
     (h : IsSubquotient σ ρ) (E : ρ.Equiv ρ') : IsSubquotient σ ρ' :=
   h.trans (IsSubquotient.of_surjective E.symm.toIntertwiningMap E.symm.surjective)
 
-theorem isSubquotient_of_equiv_left {G V W U : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
-    [Module ℂ W] [AddCommGroup U] [Module ℂ U] {σ : Representation ℂ G W} {τ : Representation ℂ G U}
-    {ρ : Representation ℂ G V} (E : σ.Equiv τ) (h : IsSubquotient σ ρ) : IsSubquotient τ ρ :=
-  (IsSubquotient.of_surjective E.toIntertwiningMap E.surjective).trans h
-
 theorem isGenericFor_prodIrr (hW : GlobalTheory.BZMir.Leib.WhitHeredity k) (hC : GlobalTheory.BZSeg.CuspGeneric k)
     {ψ : AddChar k Circle} (hψ : Continuous ψ) (h1 : ψ ≠ 1) {h N : ℕ} (x : Fin h → IrrGL (k := k))
     (hc : ∀ a, (x a).IsCusp) (hd : ∑ a, (x a).1 = N) : IsGenericFor ψ (prodIrr x hd) := by
@@ -1176,7 +1165,7 @@ theorem isSubquotient_of_generic_common {N : ℕ} {ψ : AddChar k Circle} (hψ :
   obtain ⟨A, B, -, hi', -, hg'⟩ := _root_.GlobalTheory.CompanionTheory.GenExists.exists_generic_subQuot k ψ hψ N T hTs hTf hTg
   have s₁ := GlobalTheory.ParIndExact.isSubquotient_subQuot A B
   obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.GenUniq.nonempty_equiv_of_generic_subquotients k ψ hψ N P σ (subQuot A B) hP hr hi hi' hsq (s₁.trans hT) hgσ hg'
-  exact isSubquotient_of_equiv_left e.symm (s₁.trans hT')
+  exact _root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_of_equiv_left e.symm (s₁.trans hT')
 
 theorem isSubquotient_of_common {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHeredity k) {ψ : AddChar k Circle}
     (hψ : Continuous ψ) (h1 : ψ ≠ 1) (d : Fin s → ℕ) (hN : ∑ a, d a = N) {X Y Z : Fin s → Type}
@@ -1198,8 +1187,8 @@ theorem isSubquotient_of_common {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHe
       (GlobalTheory.CompanionTheory.Leib.nontrivial_piTensorProduct_iff _).2 hg
     exact H.toEquiv.nontrivial
   exact isSubquotient_of_generic_common hψ _ P P'
-    (isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z X τ π hπ hq) E)
-    (isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z Y τ π' hπ' hq') E') hTg hP hfl hr σ hi hgσ hsq
+    (_root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z X τ π hπ hq) E)
+    (_root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z Y τ π' hπ' hq') E') hTg hP hfl hr σ hi hgσ hsq
 
 theorem isSubquotient_of_positions {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHeredity k) {ψ : AddChar k Circle}
     (hψ : Continuous ψ) (h1 : ψ ≠ 1) (d : Fin s → ℕ) (hN : ∑ a, d a = N) {X Y : Fin s → Type}
@@ -1227,13 +1216,6 @@ theorem fac_rev {h j : ℕ} (hj : j + 1 < h) (x : Fin h → IrrGL (k := k)) (i :
   rw [fac_one hj x, fac'_one hj x]
   fin_cases i <;> rfl
 
-theorem nonempty_equiv_of_eq {n M : ℕ} {u v : Fin n → IrrGL (k := k)} (e : u = v) (h₁ : ∑ a, (u a).1 = M)
-    (h₂ : ∑ a, (v a).1 = M) : Nonempty ((prodIrr u h₁).Equiv (prodIrr v h₂)) := by
-  subst e
-  exact ⟨Representation.Equiv.refl _⟩
-
-
-
 theorem position_swap (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hGK : Zc.Cos.GKLocal k) {h j : ℕ} (hj : j + 1 < h)
     (x : Fin h → IrrGL (k := k)) (d : Fin 3 → ℕ)
     (s₁ : ∀ a, ∑ b, (fac hj x a b).1 = d a) (s₂ : ∀ a, ∑ b, (fac' hj x a b).1 = d a) :
@@ -1242,16 +1224,16 @@ theorem position_swap (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hGK
       IsSubquotient g (prodIrr (fac' hj x a) (s₂ a)) := by
   refine fin_three_forall ?_ ?_ ?_
   · intro W _ _ g _ _ hq
-    obtain ⟨E⟩ := nonempty_equiv_of_eq (fac'_zero hj x).symm (s₁ 0) (s₂ 0)
-    exact isSubquotient_of_equiv hq E
+    obtain ⟨E⟩ := _root_.GlobalTheory.CompanionTheory.LSocle.prodIrr_congr (fac'_zero hj x).symm (s₁ 0) (s₂ 0)
+    exact _root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_of_equiv hq E
   · intro W _ _ g hgs hgi hq
     have hd2 : ∑ a, (fac hj x 1 (Fin.rev a)).1 = d 1 :=
       (Equiv.sum_comp Fin.revPerm fun b => (fac hj x 1 b).1).trans (s₁ 1)
     obtain ⟨E⟩ := prodIrr_congr rfl (fun a => fac hj x 1 (Fin.rev a)) (fac' hj x 1) (fun i => fac_rev hj x i) hd2 (s₂ 1)
     exact isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_prodIrr_rev hA hGK (fac hj x 1) (s₁ 1) hd2 g hgs hgi hq) E
   · intro W _ _ g _ _ hq
-    obtain ⟨E⟩ := nonempty_equiv_of_eq (fac'_two hj x).symm (s₁ 2) (s₂ 2)
-    exact isSubquotient_of_equiv hq E
+    obtain ⟨E⟩ := _root_.GlobalTheory.CompanionTheory.LSocle.prodIrr_congr (fac'_two hj x).symm (s₁ 2) (s₂ 2)
+    exact _root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_of_equiv hq E
 
 
 
@@ -1401,7 +1383,7 @@ namespace GlobalTheory.RgGu
 
 theorem genericUnique (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] :
     GenericUnique k :=
-  genericUnique_of PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top (PositivityTheory.rg.gu.hered2.whitHeredity_all k)
+  genericUnique_of PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top (_root_.GlobalTheory.CompanionTheory.Rodier.whitHeredity k)
     (PositivityTheory.rg.gu.whit.whitRankIrr k) (GlobalTheory.BZSeg.Cusp.cuspGeneric k)
 
 end GlobalTheory.RgGu

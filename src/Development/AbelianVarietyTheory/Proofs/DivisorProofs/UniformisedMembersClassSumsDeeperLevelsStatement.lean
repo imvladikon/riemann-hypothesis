@@ -336,8 +336,6 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.dividingLabel_stays_dividing_deeper_model : (∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (z : Z ⟶ Sp (cycAway n)) (i : F.X ⟶ Z) [IsOpenImmersion i], IsProjOver z → IsNormalScheme Z → i ≫ z = F.s → Dense (Set.range i) → ∀ W : Matrix (Fin 8) (Fin 8) ℤ, IsE8 W → ThetaInt F W i → ∀ (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), IsAct X₁ act → ∀ (𝔗 : Tower X₁ act) (z₂ : 𝔗.X₂.M.Z), 𝔗.p z₂ = z₁ → ∀ x₀ : X₁.S.Gam, X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (m : ℕ) (t : Fin m → V) (δ : Fin m → LinearMap.BilinForm ℤ X) (𝔪 : UMem X₁ z₁ act V ev X t δ), 𝔗.X₂.M.Div 𝔗.X₂.S.th (𝔗.lam x₀) z₂) := by
-  first | exact @GlobalTheory.Poinc.Sep.DeepDiv.div_lam
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividingLabelStaysDividingDeeperModelStatement =====
@@ -354,8 +352,6 @@ open GlobalTheory.ZH
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
-theorem _root_.GlobalTheory.T.exists_generic_frame_liesOver_of_y_eq_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I : Ideal R), AdmBase R I → ∀ (D : DegData R I) (A : PolAV (Spec (CommRingCat.of (FractionRing R)))) (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (U : Unif I D A G) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (w₀ : W0 U.toUnifPre), w₀.IsGen → ∀ (k : ℕ), 1 ≤ k → ∀ (p : QkPt D.toPre F k) (x : TFK (R := R) F ⟶ A.A), p.y = 0 → QkToAkU U.toUnifPre F k p x → ∃ (w : Frm D.toPre F 1 p.g.b) (fr : FrAt x), w.IsGen ∧ fr.IsGen ∧ GlobalTheory.Poinc.Tors.LiesOver U.toUnifPre w₀ p.g w x fr := by
-  first | exact @GlobalTheory.Poinc.Tors.ValPair.liesOver_of_qkToAkU
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionValueEqAdicSumAtImageOfZeroPairStatement =====
@@ -416,16 +412,16 @@ theorem yy_zero_of_terms : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
       hiota0 _ ((GlobalTheory.TorusExt.isZero_iff_eq _).2 hkgb)⟩
   let xb : TFK (R := V) (AlgebraicClosure (FractionRing V)) ⟶ 𝔪.A.A :=
     GlobalTheory.TorsionExt.fieldMap (FractionRing V) (AlgebraicClosure (FractionRing V)) ≫ x (lab c)
-  obtain ⟨wb, frb, hwb, hfrb, hlb⟩ := GlobalTheory.T.torusExtension_point_liesOver_after_field_extension V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀
+  obtain ⟨wb, frb, hwb, hfrb, hlb⟩ := _root_.GlobalTheory.Poinc.Tors.LiesOverExt.liesOver_ext V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀
     hw₀ (g' c) (w c) (x (lab c)) (fr (lab c)) hwc (hfr _).1 hov xb rfl
 
   obtain ⟨f', f₁, -⟩ := GlobalTheory.TorsionIso.torsion_eq hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U
     (AlgebraicClosure (FractionRing V)) (X₁.S.r * X₁.S.N) hk
   have hq := (f₁ p (f' p)).2 rfl
-  obtain ⟨w', fr', hw', hfr', hl'⟩ := GlobalTheory.T.exists_generic_frame_liesOver_of_y_eq_zero V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V))
+  obtain ⟨w', fr', hw', hfr', hl'⟩ := _root_.GlobalTheory.Poinc.Tors.ValPair.liesOver_of_qkToAkU V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V))
     w₀ hw₀ _ hk p (f' p) rfl hq
 
-  have e := GlobalTheory.T.eq_of_framedPoint_lies_over_torus_extension hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀ hw₀ p.g wb w' xb
+  have e := _root_.GlobalTheory.Poinc.Tors.OneOver.eq_of_liesOver hL V _ hA 𝔪.D 𝔪.A 𝔪.G 𝔪.semi 𝔪.U (AlgebraicClosure (FractionRing V)) w₀ hw₀ p.g wb w' xb
     (f' p) frb fr' hwb hw' hfrb hfr' hlb hl'
   refine ⟨p, xb, (map_zero 𝔪.e₈).symm, e ▸ hq, ?_⟩
   have e₁ : spMap (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))) ≫ spMap 𝔪.yK =
@@ -474,7 +470,7 @@ open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 
 theorem _root_.GlobalTheory.Poinc.Sep.div_lam_and_lam_mem_HH : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (Z : Scheme.{0}) (z : Z ⟶ Sp (cycAway n)) (i : F.X ⟶ Z) [IsOpenImmersion i], IsProjOver z → IsNormalScheme Z → i ≫ z = F.s → Dense (Set.range i) → ∀ W : Matrix (Fin 8) (Fin 8) ℤ, IsE8 W → ThetaInt F W i → ∀ (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), IsAct X₁ act → ∀ (𝔗 : Tower X₁ act) (z₂ : 𝔗.X₂.M.Z), 𝔗.p z₂ = z₁ → ∀ x₀ : X₁.S.Gam, X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (m : ℕ) (t : Fin m → V) (δ : Fin m → LinearMap.BilinForm ℤ X) (𝔪 : UMem X₁ z₁ act V ev X t δ), 𝔗.X₂.M.Div 𝔗.X₂.S.th (𝔗.lam x₀) z₂ ∧ ∀ a ∈ X₁.S.HH X₁.M z₁, 𝔗.lam a ∈ 𝔗.X₂.S.HH 𝔗.X₂.M z₂ := by
   intro g hg n hn hodd F Z z i _ hproj hnorm hiz hdense W hW hTI X₁ z₁ act hact 𝔗 z₂ hz₂ x₀ hx₀ V _ _ _ ev X _ m t δ 𝔪
-  refine ⟨GlobalTheory.T.dividingLabel_stays_dividing_deeper_model g hg n hn hodd F Z z i hproj hnorm hiz hdense W hW hTI X₁ z₁ act hact 𝔗 z₂ hz₂ x₀ hx₀ V ev X m t δ 𝔪, ?_⟩
+  refine ⟨_root_.GlobalTheory.Poinc.Sep.Tower.div_lam g hg n hn hodd F Z z i hproj hnorm hiz hdense W hW hTI X₁ z₁ act hact 𝔗 z₂ hz₂ x₀ hx₀ V ev X m t δ 𝔪, ?_⟩
   intro a ha
   obtain ⟨V', _, _, _, io, ev₂, hcn', hinj, hfin, -, -, hext⟩ := GlobalTheory.T.exists_centred_pure_finite_extension_deeper_model g hg n hn hodd F Z z i hproj hnorm hiz hdense W hW hTI
     X₁ z₁ act hact 𝔗 z₂ hz₂ V ev 𝔪.cn 𝔪.loc 𝔪.reg
@@ -561,11 +557,6 @@ theorem isAct_of_isDiagEnd {g n : ℕ} {F : SFam g n (zetaAway n)} {W : Matrix (
   obtain ⟨c, hc, pr, hpr, hu, hL, hact⟩ := h
   exact ⟨c, hc, pr, hpr, hu, hL, fun E a => by simpa [List.ofFn_eq_map] using hact E a⟩
 
-theorem lbIso_pull_comp' {X Y Z : Scheme.{0}} {L : LB X} {M : LB Y} {a : Y ⟶ X} (h : LBIso M (L.pull a)) (j : Z ⟶ Y)
-    {a' : Z ⟶ X} (e : a' = j ≫ a) : LBIso (M.pull j) (L.pull a') :=
-  LBIso.chartPull (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullPull M j j rfl)
-    (ReciprocityTheory.ChartRestriction.G.Geo.Tor.chartPullSame L _ (fun _ => a) _ j fun _ => e) h
-
 theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
     spMap g ≫ spMap f = spMap (g.comp f) :=
   (Spec.map_comp (CommRingCat.ofHom f) (CommRingCat.ofHom g)).symm
@@ -625,16 +616,16 @@ theorem exists_tower_ge : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd 
   set om : X₁.S.R →+* S₂.R := (Subalgebra.inclusion hR).toRingHom.comp h with hom
   have hval : ∀ a, ((om a : S₂.R) : Ω₂) = algebraMap X₁.Ω₁ Ω₂ a := fun a => hh a
   have hcart : IsGrpPullback ρ₂.P.A X₁.ρ.P.A (spMap om) (φ₂ ≫ ψ) := by
-    rw [hom, ← spMap_comp']
+    rw [hom, ← _root_.GlobalTheory.spMap_comp_ring]
     exact hpb₂.comp hpb
   have hlbc : LBIso ρ₂.P.L (X₁.ρ.P.L.pull (φ₂ ≫ ψ)) :=
-    LBIso.trans ρ₂.P.isLB (pull_isLB P.isLB _) (pull_isLB X₁.ρ.P.isLB _) hlb₂ (lbIso_pull_comp' hlb φ₂ rfl)
+    LBIso.trans ρ₂.P.isLB (pull_isLB P.isLB _) (pull_isLB X₁.ρ.P.isLB _) hlb₂ (_root_.GlobalTheory.Ex.GenericFibre.lbIso_pull hlb φ₂ rfl)
   obtain ⟨ε₂, hε₂, hεc⟩ := GlobalTheory.Poinc.isDiagEnd_pullback F W X₁.ρ.P ρ₂.P X₁.u (spMap om) (φ₂ ≫ ψ) act hε₁ hcart hlbc
   have hsharp : SharpOver F W ρ₂.P (spMap om ≫ X₁.u) := by
     obtain ⟨c, hc₁, pr, hpr, hun, hLc, -⟩ := hε₂
     exact ⟨c, hc₁, pr, hpr, hun, hLc⟩
   have key : spMap S₂.R.val.toRingHom ≫ spMap om = spMap (algebraMap X₁.Ω₁ Ω₂) ≫ spMap X₁.S.R.val.toRingHom := by
-    rw [spMap_comp', spMap_comp']
+    rw [_root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring]
     congr 1
     ext a
     exact hval a
@@ -650,7 +641,7 @@ theorem exists_tower_ge : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd 
       key, Category.assoc]
   have hbase : spMap S₂.R.val.toRingHom ≫ (spMap om ≫ X₁.u) ≫ F.s =
       spMap ((algebraMap o₂ Ω₂).comp (κ.comp X₁.κ)) := by
-    rw [← Category.assoc, ← Category.assoc, key, Category.assoc, Category.assoc, X₁.base, spMap_comp', ← RingHom.comp_assoc, ← hc]
+    rw [← Category.assoc, ← Category.assoc, key, Category.assoc, Category.assoc, X₁.base, _root_.GlobalTheory.spMap_comp_ring, ← RingHom.comp_assoc, ← hc]
   have hbig : S₂.Big := big j (by omega) o₂ Ω₂ S₂ (hg₂.trans hPg) hN₂ hr₂
   let X₂ : Setup F W i := Setup.mk o₂ Ω₂ S₂ ρ₂ hbig (spMap om ≫ X₁.u) hsharp hgen M₂ hMn (q ≫ X₁.π) inferInstance hcomp
     X₁.one_le X₁.three_le X₁.odd X₁.z X₁.proj X₁.normalZ X₁.imm X₁.thetaSetup_structureMap_comp X₁.dense X₁.e8 X₁.thetaInt (κ.comp X₁.κ) hbase
@@ -750,23 +741,6 @@ theorem sumI_zero : SumI I (fun _ : Ix => (0 : E)) 0 :=
   ⟨⊥, Submodule.fg_bot, Submodule.zero_mem _, fun _ => Submodule.zero_mem _,
     fun _ => ⟨∅, fun T _ => by simp⟩⟩
 
-theorem sumI_add {x y : Ix → E} {s t : E} (hx : SumI I x s) (hy : SumI I y t) :
-    SumI I (fun i => x i + y i) (s + t) := by
-  obtain ⟨N₁, f₁, hs₁, hx₁, h₁⟩ := hx
-  obtain ⟨N₂, f₂, hs₂, hx₂, h₂⟩ := hy
-  refine ⟨N₁ ⊔ N₂, f₁.sup f₂, Submodule.add_mem_sup hs₁ hs₂, fun i => Submodule.add_mem_sup (hx₁ i) (hx₂ i),
-    fun n => ?_⟩
-  obtain ⟨S₁, hS₁⟩ := h₁ n
-  obtain ⟨S₂, hS₂⟩ := h₂ n
-  classical
-  refine ⟨S₁ ∪ S₂, fun T hT => ?_⟩
-  have e : s + t - ∑ i ∈ T, (x i + y i) = (s - ∑ i ∈ T, x i) + (t - ∑ i ∈ T, y i) := by
-    rw [Finset.sum_add_distrib]; abel
-  rw [e]
-  exact Submodule.add_mem _
-    (Submodule.smul_mono le_rfl le_sup_left (hS₁ T (Finset.union_subset_left hT)))
-    (Submodule.smul_mono le_rfl le_sup_right (hS₂ T (Finset.union_subset_right hT)))
-
 theorem sumI_smul (c : R) {x : Ix → E} {s : E} (hx : SumI I x s) : SumI I (fun i => c • x i) (c • s) := by
   obtain ⟨N, f, hs, hxN, h⟩ := hx
   refine ⟨N, f, N.smul_mem c hs, fun i => N.smul_mem c (hxN i), fun n => ?_⟩
@@ -782,7 +756,7 @@ theorem sumI_sum {κ : Type} (F : Finset κ) (x : κ → Ix → E) (s : κ → E
   | empty => simpa using (sumI_zero (I := I) (E := E) (Ix := Ix))
   | insert a F ha ih =>
     simp only [Finset.sum_insert ha]
-    exact sumI_add (h a (Finset.mem_insert_self a F)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
+    exact _root_.GlobalTheory.AdicSum.sumI_add (h a (Finset.mem_insert_self a F)) (ih fun j hj => h j (Finset.mem_insert_of_mem hj))
 
 theorem sumI_comp {Ix' : Type} {e : Ix' → Ix} (he : Function.Injective e) {x : Ix → E} {s : E}
     (h0 : ∀ i, i ∉ Set.range e → x i = 0) (hx : SumI I x s) : SumI I (fun j => x (e j)) s := by
@@ -843,11 +817,6 @@ theorem eStd_sub_right (g m : ℕ) (x a b : Fin g ⊕ Fin g → ZMod m) :
   simp only [eStd, Pi.sub_apply, ← Finset.sum_sub_distrib]
   exact Finset.sum_congr rfl fun _ _ => by ring
 
-theorem eStd_add_left (g m : ℕ) (x y a : Fin g ⊕ Fin g → ZMod m) :
-    eStd g m (x + y) a = eStd g m x a + eStd g m y a := by
-  simp only [eStd, Pi.add_apply, ← Finset.sum_add_distrib]
-  exact Finset.sum_congr rfl fun _ _ => by ring
-
 end GlobalTheory.Poinc.Sep.ClassSumFun
 
 namespace GlobalTheory.Poinc.Sep.ClassSumFun
@@ -855,7 +824,7 @@ open Classical
 
 theorem exists_classSum_fun : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (z₁ : X₁.M.Z) (act : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∃ f : X₁.S.Gam → X₁.S.Gam → X₁.Ω₁, (∀ a b, ∀ w : X₁.M.Z, X₁.M.Div X₁.S.th x₀ w → f a b ∈ X₁.M.O w) ∧ (∀ a a' b, a - a' ∈ X₁.S.HH X₁.M z₁ → f a b = f a' b) ∧ ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (m : ℕ) (t : Fin m → V) (δ : Fin m → LinearMap.BilinForm ℤ X) (𝔪 : UMem X₁ z₁ act V ev X t δ) (C : Type) (lab : C → X₁.S.Gam), (∀ c, lab c ∈ X₁.S.HH X₁.M z₁) → ∀ T : (Fin 8 → X) → C → V, 𝔪.Terms x₀ lab T → ∀ (c : C) (a : X₁.S.Gam) (κ : Fin 8 → X), 𝔪.YY a κ → ∀ h : X₁.M.Z.presheaf.stalk z₁, X₁.M.stalkHom z₁ h = f a (lab c) → SumI (maximalIdeal V) (fun nu : Fin 8 → X => T (κ + (X₁.S.r * X₁.S.N) • nu) c) (ev h) := by
   intro g n F W Z i X₁ z₁ act x₀ hdiv
-  obtain ⟨sg, eps, hlink⟩ := GlobalTheory.T.theta_constants_torus_translates_twisted_sums g n F W Z i X₁ z₁ act x₀ hdiv
+  obtain ⟨sg, eps, hlink⟩ := _root_.GlobalTheory.Poinc.Sep.twistSum_translate g n F W Z i X₁ z₁ act x₀ hdiv
   have hm0 : 0 < X₁.S.r * X₁.S.N :=
     Nat.mul_pos (by have := X₁.S.r_pos; omega) (by have := X₁.S.N_ge; omega)
   haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨hm0.ne'⟩
@@ -983,7 +952,7 @@ theorem exists_classSum_fun : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : M
         have h₀' : eStd X₁.S.g _ τ₀ d ≠ 0 := by
           rw [Weights.eStd_swap]; exact neg_ne_zero.2 h₀
         refine sum_pow_val_eq_zero hq (fun τ : X₁.S.TT X₁.M z₁ => (sg : ℤ) • eStd X₁.S.g _ (τ : X₁.S.Gam) d)
-          (fun x y => by simp only [AddSubgroup.coe_add, eStd_add_left, smul_add]) ⟨τ₀, hτ₀⟩ ?_
+          (fun x y => by simp only [AddSubgroup.coe_add, _root_.GlobalTheory.ZH.TorusPerp.eStd_add_left, smul_add]) ⟨τ₀, hτ₀⟩ ?_
         rcases Int.units_eq_one_or sg with hs | hs <;> simpa [hs] using h₀'
     have hucard : ev (ι₀ u) * (Nat.card (X₁.S.TT X₁.M z₁) : V) = 1 := by
       rw [← map_natCast ev (Nat.card _), ← map_mul, ← map_natCast ι₀ (Nat.card _), ← map_mul, hu1, map_one, map_one]
@@ -1109,10 +1078,6 @@ noncomputable section
 
 namespace GlobalTheory.Poinc.Sep
 
-theorem spMap_comp_spMap {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R' →+* R'') (g : R →+* R') :
-    spMap f ≫ spMap g = spMap (f.comp g) := by
-  rw [← Spec.map_comp]; rfl
-
 theorem spMap_stalkHom_fromSpecStalk {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (z : M.Z) :
     spMap (M.stalkHom z) ≫ M.Z.fromSpecStalk z = M.pt := by
   have h1 := Scheme.Spec_stalkClosedPointTo_fromSpecStalk (R := CommRingCat.of Ω) M.pt
@@ -1139,7 +1104,7 @@ theorem exists_uMem_injective : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n �
   have hpt : jK V₀ ≫ spMap φ₀ ≫ X₁.M.Z.fromSpecStalk z₁ = spMap emb ≫ X₁.M.pt := by
     rw [← spMap_stalkHom_fromSpecStalk, ← Category.assoc, ← Category.assoc]
     congr 1
-    rw [show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, spMap_comp_spMap, spMap_comp_spMap]
+    rw [show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, _root_.Formalism.L2.Pj.spMap_comp_ring, _root_.Formalism.L2.Pj.spMap_comp_ring]
     congr 1
     ext r
     exact (hemb r).symm
@@ -1154,8 +1119,8 @@ theorem exists_uMem_injective : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n �
   have hev : Function.Injective ev := hf.comp hinj₀
   have hkey : jK T.V ≫ spMap ev = spMap fK ≫ jK V₀ ≫ spMap φ₀ := by
     rw [show jK T.V = spMap (algebraMap T.V (FractionRing T.V)) from rfl,
-      show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, spMap_comp_spMap, spMap_comp_spMap,
-      spMap_comp_spMap]
+      show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, _root_.Formalism.L2.Pj.spMap_comp_ring, _root_.Formalism.L2.Pj.spMap_comp_ring,
+      _root_.Formalism.L2.Pj.spMap_comp_ring]
     congr 1
     ext a
     simp only [RingHom.comp_apply]

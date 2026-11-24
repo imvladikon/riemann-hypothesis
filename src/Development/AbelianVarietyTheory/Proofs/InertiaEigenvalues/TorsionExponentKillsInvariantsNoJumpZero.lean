@@ -955,12 +955,6 @@ theorem exists_undo (K LL : FinExt l) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) :
   rw [AlgEquiv.symm_apply_eq]
   exact (τ.liftNormal_commutes (Om l) x).symm
 
-theorem Ks_mono (K : FinExt l) {s m : ℕ} (hm : s ≤ m) : Ks K s ≤ Ks K m := by
-  refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ fun x hx => ?_) _
-  obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le hm
-  change x ^ (l ^ (s + n)) = 1
-  rw [pow_add, pow_mul, show x ^ l ^ s = 1 from hx, one_pow]
-
 theorem rat_mem_subC (F : IntermediateField ℚ_[l] (Om l)) (c : ℚ_[l]) :
     algebraMap ℚ_[l] (PadicComplex l) c ∈ subC F :=
   ⟨algebraMap ℚ_[l] (Om l) c, F.algebraMap_mem c,
@@ -1112,7 +1106,7 @@ theorem exists_tau_frame : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   obtain ⟨Θ⟩ := GlobalTheory.ThetaTie.nonempty_thetaL D l
   obtain ⟨Dm, U, g, hD, hA⟩ := GlobalTheory.Cyc.Decomp.exists_decompletion D HW F l K s LL h T M0 h0 hW d M A hM
   have hKm : K.1 ≤ Ks K (mN l s (M0 + h0)) :=
-    h.2.2.1.trans (Ks_mono K (by unfold mN; omega))
+    h.2.2.1.trans (_root_.GlobalTheory.TateDecomp.Ks_mono K (by unfold mN; omega))
   exact frame_of_dec (D.loc l) (D.locA l) Θ K LL _ hKm (h7 l K) T τ
     (GlobalTheory.Cyc.CrysDeRham.isDR_of_isCrysOn D HW h7 l K s LL h T hW.1) M A hM Dm U g hD hA
 
@@ -1138,73 +1132,7 @@ variable {r : ℕ} {U : GQ l → Matrix (Fin r) (Fin r) (PadicComplex l)}
 
 open scoped Matrix in
 variable {l : ℕ} [Fact l.Prime] in
-private theorem continuous_algebraMap_padicComplex_lemma_7 :
-    Continuous (algebraMap ℚ_[l] ℂ_[l]) :=
-  continuous_algebraMap ℚ_[l] ℂ_[l]
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-private theorem exists_primitiveRoot_primePow_padicAlgCl_lemma_9 (n : ℕ) :
-    ∃ ζ : _root_.Formalism.BasicNotions.Loc.Om l, IsPrimitiveRoot ζ (l ^ n) := by
-  have hl : (l : PadicAlgCl l) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
-  haveI : NeZero ((l ^ n : ℕ) : PadicAlgCl l) := ⟨by push_cast; exact pow_ne_zero n hl⟩
-  have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (l ^ n) (PadicAlgCl l))
-    (Polynomial.degree_cyclotomic_pos _ _ hpos).ne'
-  exact ⟨ζ, (Polynomial.isRoot_cyclotomic_iff).1 hζ⟩
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-private theorem continuous_cyclotomicCharacter_lemma_8 {χ : _root_.Formalism.BasicNotions.Loc.GQ l →* ℚ_[l]ˣ}
-    (hχ : _root_.GlobalTheory.Cyc.IsCyc χ) : Continuous fun g => (χ g : ℚ_[l]) := by
-  rw [continuous_iff_continuousAt]
-  intro g₀
-  rw [ContinuousAt, Metric.tendsto_nhds]
-  intro ε hε
-  have hl1 : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
-  obtain ⟨m, hm⟩ := exists_pow_lt_of_lt_one (div_pos hε three_pos) (inv_lt_one_of_one_lt₀ hl1)
-  obtain ⟨ζ, hζ⟩ := exists_primitiveRoot_primePow_padicAlgCl_lemma_9 (l := l) m
-  filter_upwards [_root_.GlobalTheory.Cyc.eventually_apply_eq ζ g₀] with g hg
-  obtain ⟨a, ha, hga⟩ := hχ g m ζ hζ.pow_eq_one
-  obtain ⟨a₀, ha₀, hga₀⟩ := hχ g₀ m ζ hζ.pow_eq_one
-  have hpow : (l : ℝ) ^ (-(m : ℤ)) = (l : ℝ)⁻¹ ^ m := by
-    rw [zpow_neg, zpow_natCast, inv_pow]
-  have hζ0 : ζ ≠ 0 := hζ.ne_zero (pow_ne_zero m (Fact.out : l.Prime).ne_zero)
-  have heq : ζ ^ a = ζ ^ a₀ := by rw [← hga, ← hga₀, hg]
-  have hdvd : ((l ^ m : ℕ) : ℤ) ∣ (a₀ : ℤ) - a := by
-    rw [← hζ.zpow_eq_one_iff_dvd, zpow_sub₀ hζ0, zpow_natCast, zpow_natCast, heq, div_self]
-    exact pow_ne_zero _ hζ0
-  have hint : ‖(((a₀ : ℤ) - a : ℤ) : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
-    rw [Padic.norm_int_le_pow_iff_dvd]
-    exact_mod_cast hdvd
-  rw [dist_eq_norm]
-  have hsplit : (χ g : ℚ_[l]) - χ g₀ =
-      ((χ g : ℚ_[l]) - a) - ((χ g₀ : ℚ_[l]) - a₀) - ((((a₀ : ℤ) - a : ℤ) : ℚ_[l])) := by
-    push_cast
-    ring
-  rw [hsplit]
-  calc ‖((χ g : ℚ_[l]) - a) - ((χ g₀ : ℚ_[l]) - a₀) - ((((a₀ : ℤ) - a : ℤ) : ℚ_[l]))‖
-      ≤ ‖(χ g : ℚ_[l]) - a‖ + ‖(χ g₀ : ℚ_[l]) - a₀‖ + ‖(((a₀ : ℤ) - a : ℤ) : ℚ_[l])‖ :=
-        (norm_sub_le _ _).trans (by gcongr; exact norm_sub_le _ _)
-    _ ≤ (l : ℝ) ^ (-(m : ℤ)) + (l : ℝ) ^ (-(m : ℤ)) + (l : ℝ) ^ (-(m : ℤ)) := by
-        gcongr
-    _ < ε := by
-        rw [hpow]
-        linarith
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-private theorem continuous_cyclotomicCharPow_lemma_6 {χ : _root_.Formalism.BasicNotions.Loc.GQ l →* ℚ_[l]ˣ}
-    (hχ : _root_.GlobalTheory.Cyc.IsCyc χ) (i : ℤ) :
-    Continuous (_root_.GlobalTheory.Cyc.chiC χ i) := by
-  have h : _root_.GlobalTheory.Cyc.chiC χ i =
-      fun g => algebraMap ℚ_[l] ℂ_[l] ((χ g : ℚ_[l]) ^ i) := by
-    funext g
-    unfold _root_.GlobalTheory.Cyc.chiC
-    rw [Units.val_zpow_eq_zpow_val]
-  rw [h]
-  exact continuous_algebraMap_padicComplex_lemma_7.comp
-    ((continuous_cyclotomicCharacter_lemma_8 hχ).zpow₀ i fun g => Or.inl (Units.ne_zero _))
+private alias continuous_algebraMap_padicComplex_lemma_7 := _root_.GlobalTheory.Cyc.FrameTorsion.continuous_algMap
 
 open scoped Matrix in
 variable {l : ℕ} [Fact l.Prime] in
@@ -1218,27 +1146,10 @@ private theorem continuousOn_twistedAction_lemma (hact : _root_.GlobalTheory.Cyc
   unfold _root_.GlobalTheory.Cyc.twAct
   refine continuousOn_pi.2 fun a => ?_
   simp only [Pi.smul_apply, Matrix.mulVec, dotProduct, smul_eq_mul]
-  refine (continuous_cyclotomicCharPow_lemma_6 hχ i).continuousOn.mul ?_
+  refine (_root_.GlobalTheory.Cyc.Procyclic.continuous_chiC hχ i).continuousOn.mul ?_
   refine continuousOn_finsetSum _ fun b _ => ?_
   exact (hF.2.1 a b).mul
     (_root_.GlobalTheory.Cyc.IsActC.continuous_orbit l act hact (y b)).continuousOn
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-private theorem act_algebraMap_padic_lemma_10 {act : _root_.Formalism.BasicNotions.Loc.GQ l →* ℂ_[l] ≃+* ℂ_[l]}
-    (hact : _root_.GlobalTheory.Cyc.IsActC act) (σ : _root_.Formalism.BasicNotions.Loc.GQ l) (x : ℚ_[l]) :
-    act σ (algebraMap ℚ_[l] ℂ_[l] x) = algebraMap ℚ_[l] ℂ_[l] x := by
-  have h := hact.1 σ (algebraMap ℚ_[l] (PadicAlgCl l) x)
-  rw [AlgEquiv.commutes] at h
-  exact h
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-private theorem cyclotomicCharPow_mul_lemma_11 (χ : _root_.Formalism.BasicNotions.Loc.GQ l →* ℚ_[l]ˣ) (i : ℤ) (σ τ : _root_.Formalism.BasicNotions.Loc.GQ l) :
-    _root_.GlobalTheory.Cyc.chiC χ i (σ * τ) =
-      _root_.GlobalTheory.Cyc.chiC χ i σ * _root_.GlobalTheory.Cyc.chiC χ i τ := by
-  unfold _root_.GlobalTheory.Cyc.chiC
-  rw [map_mul, mul_zpow, Units.val_mul, map_mul]
 
 open scoped Matrix in
 variable {l : ℕ} [Fact l.Prime] in
@@ -1254,9 +1165,9 @@ private theorem twistedAction_mul_lemma_2 (hact : _root_.GlobalTheory.Cyc.IsActC
     _root_.GlobalTheory.Cyc.TateS.act_fix hact K hσ (hF.2.2.1 τ hτ a b).1
   have hc : act σ (_root_.GlobalTheory.Cyc.chiC χ i τ) = _root_.GlobalTheory.Cyc.chiC χ i τ := by
     unfold _root_.GlobalTheory.Cyc.chiC
-    exact act_algebraMap_padic_lemma_10 hact σ _
+    exact _root_.GlobalTheory.Cyc.FrameTorsion.act_algebraMap hact σ _
   unfold _root_.GlobalTheory.Cyc.twAct
-  rw [hF.2.2.2.1 σ hσ τ hτ, cyclotomicCharPow_mul_lemma_11, ← Matrix.mulVec_mulVec, mul_smul,
+  rw [hF.2.2.2.1 σ hσ τ hτ, _root_.GlobalTheory.Cyc.FrameTorsion.chiC_mul, ← Matrix.mulVec_mulVec, mul_smul,
     ← Matrix.mulVec_smul]
   congr 2
   funext a
@@ -1288,19 +1199,6 @@ private theorem twistedAction_sub_lemma_4 (σ : _root_.Formalism.BasicNotions.Lo
     funext a
     simp
   rw [h, Matrix.mulVec_sub, smul_sub]
-
-open scoped Matrix in
-variable {l : ℕ} [Fact l.Prime] in
-variable (act : _root_.Formalism.BasicNotions.Loc.GQ l →* ℂ_[l] ≃+* ℂ_[l]) (χ : _root_.Formalism.BasicNotions.Loc.GQ l →* ℚ_[l]ˣ) (i : ℤ) {r : ℕ}
-  (U : _root_.Formalism.BasicNotions.Loc.GQ l → Matrix (Fin r) (Fin r) ℂ_[l]) in
-private theorem twistedAction_add_lemma_12 (σ : _root_.Formalism.BasicNotions.Loc.GQ l) (v w : Fin r → ℂ_[l]) :
-    _root_.GlobalTheory.Cyc.twAct act χ i U σ (v + w) =
-      _root_.GlobalTheory.Cyc.twAct act χ i U σ v + _root_.GlobalTheory.Cyc.twAct act χ i U σ w := by
-  unfold _root_.GlobalTheory.Cyc.twAct
-  have h : (fun a => act σ ((v + w) a)) = (fun a => act σ (v a)) + fun a => act σ (w a) := by
-    funext a
-    simp
-  rw [h, Matrix.mulVec_add, smul_add]
 
 open scoped Matrix in
 variable {l : ℕ} [Fact l.Prime] in
@@ -1343,7 +1241,7 @@ private theorem eq_zero_of_twistedInvariant_offJumps_lemma_5 (hact : _root_.Glob
 
     rw [show _root_.GlobalTheory.Cyc.twAct act χ i U σ (∑ k, c k • B k) =
       (AddMonoidHom.mk' (_root_.GlobalTheory.Cyc.twAct act χ i U σ)
-        (twistedAction_add_lemma_12 act χ i U σ)) (∑ k, c k • B k) from rfl, map_sum]
+        (_root_.GlobalTheory.CycCoinv.twAct_add act χ i U σ)) (∑ k, c k • B k) from rfl, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [AddMonoidHom.mk'_apply, twistedAction_smul_lemma_3, hB,
       twistedAction_eq_charPow_smul_lemma_13 act χ i U (u k), he σ hσ k, smul_smul, mul_comm]
@@ -1573,13 +1471,6 @@ def imBall {r d : ℕ} (P : Matrix (Fin r) (Fin d) (PadicComplex l)) :
     rintro _ ⟨x, hx, rfl⟩
     exact ⟨-x, fun a => by simpa using hx a, Matrix.mulVec_neg _ _⟩
 
-theorem Ks_mono' (K : FinExt l) {i j : ℕ} (h : i ≤ j) : Ks K i ≤ Ks K j := by
-  refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ ?_) _
-  intro x hx
-  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
-  simp only [Set.mem_setOf_eq] at hx ⊢
-  rw [pow_add, pow_mul, hx, one_pow]
-
 theorem act_algebraMap' {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsActC act)
     (g : GQ l) (x : ℚ_[l]) :
     act g (algebraMap ℚ_[l] (PadicComplex l) x) = algebraMap ℚ_[l] (PadicComplex l) x := by
@@ -1601,7 +1492,7 @@ theorem invariants_killed : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc
   have hs1 := h.1
   have hLev : Lev l m := ⟨by omega, fun _ => by omega⟩
   have hG : Gj K m ≤ GK K :=
-    IntermediateField.fixingSubgroup_le (h.2.2.1.trans (Ks_mono' K (by omega)))
+    IntermediateField.fixingSubgroup_le (h.2.2.1.trans (_root_.GlobalTheory.TateDecomp.Ks_mono K (by omega)))
   have h0J : (0 : ℤ) ∉ J := fun hh => hj (hJ 0 hh)
   have hc0 : c0 S T τ M0 h0 = 2 + ∑ u ∈ hfin.toFinset, (m + padicValInt l u) := by
     rw [c0, hell, hs]

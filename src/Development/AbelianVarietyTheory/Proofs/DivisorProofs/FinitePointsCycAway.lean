@@ -74,9 +74,6 @@ noncomputable section
 
 namespace GlobalTheory.ThetaQuasiFinite
 
-theorem exists_spMap {R R' : Type} [CommRing R] [CommRing R'] (x : Sp R' ⟶ Sp R) : ∃ β : R →+* R', spMap β = x :=
-  ⟨(Spec.preimage x).hom, Spec.map_preimage x⟩
-
 theorem finite_points_cycAway {n : ℕ} (hn : n ≠ 0) (K : Type) [Field K] : Finite (Sp K ⟶ Sp (cycAway n)) := by
   have h₁ : Finite (cycAway n →+* K) := by
     have hf : Finite {z : K | z ^ n = 1} := by
@@ -103,7 +100,7 @@ theorem finite_points_cycAway {n : ℕ} (hn : n ≠ 0) (K : Type) [Field K] : Fi
     | neg x hx ih => exact (map_neg β ⟨x, hx⟩).trans ((congrArg (- ·) ih).trans (map_neg β' ⟨x, hx⟩).symm)
     | mul x y hx hy ihx ihy =>
       exact (map_mul β ⟨x, hx⟩ ⟨y, hy⟩).trans ((congrArg₂ (· * ·) ihx ihy).trans (map_mul β' ⟨x, hx⟩ ⟨y, hy⟩).symm)
-  exact Finite.of_surjective (fun β : cycAway n →+* K => spMap β) exists_spMap
+  exact Finite.of_surjective (fun β : cycAway n →+* K => spMap β) _root_.GlobalTheory.ZM.DenseFib.exists_spMap
 
 theorem finite_pow_eq {K : Type} [Field K] {m : ℕ} (hm : 1 ≤ m) (a : K) : Set.Finite {z : K | z ^ m = a} :=
   (Polynomial.nthRoots m a).finite_toSet.subset fun _ hz => (Polynomial.mem_nthRoots hm).2 hz
@@ -297,7 +294,7 @@ theorem tMap_of_hasTh (hL : Out.Laws) (hL2 : Out.Laws2) (J : Type) [Finite J]
   obtain ⟨j₀, H⟩ := _root_.GlobalTheory.ZM.exists_tObj_of_veryDense hL hL2 g J Mat κ n hn hodd
   refine ⟨j₀, fun j hj o _ b K _ _ s t t' v h1 h1' h2 h2' => ?_⟩
   have hid : spMap (RingHom.id K) = 𝟙 (Sp K) := Spec.map_id (CommRingCat.of K)
-  obtain ⟨em, hem⟩ := exists_spMap s
+  obtain ⟨em, hem⟩ := _root_.GlobalTheory.ZM.DenseFib.exists_spMap s
   obtain rfl : s = spMap (RingHom.id K) ≫ spMap em := by rw [hid, Category.id_comp, hem]
   have hvd : VeryDense (objPrimes b Mat κ em v) := by
     intro q f hq hf

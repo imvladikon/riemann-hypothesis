@@ -136,8 +136,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 open GlobalTheory GlobalTheory.FlagMod GlobalTheory.FlagPlucker
 
-theorem _root_.GlobalTheory.T.cechPicardClass_gradedTensorBundle_finset_sum : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {Z : Scheme.{0}} {π : Z ⟶ Y.X} (F : Frames Y π) {ι : Type} (s : Finset ι) (e : ι → Ix Dw → ℤ), GlobalTheory.CechPic.cls (F.LL (∑ i ∈ s, e i)) (F.isLB_LL _) = ∑ i ∈ s, GlobalTheory.CechPic.cls (F.LL (e i)) (F.isLB_LL _) := by
-  first | exact @GlobalTheory.FlagPlucker.cls_LL_sum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardClassGradedTensorBundleFinsetSumStatement =====
@@ -576,8 +574,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open ReciprocityTheory.ChartRestriction.G.Out (nonzeroLocus)
 open GlobalTheory GlobalTheory.FlagMod GlobalTheory.FlagPlucker
 
-theorem _root_.GlobalTheory.T.pluckerMinors_sections_inverseDetFlagBundle : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {Z : Scheme.{0}} {π : Z ⟶ Y.X} (F : Frames Y π) (Mc : MChart Y) {T : Scheme.{0}} (g : T ⟶ Z) (hg : ⊤ ≤ (g ≫ π) ⁻¹ᵁ Mc.U) (σ : E →+* ℂ) (m : Fin (Dw.mult σ)) (q : Fin (plkNum Mc m + 1)), ∃ s : ((F.LL (ind σ m)).pull g).Sec, s.f = plkLoc F Mc g hg σ m q := by
-  first | exact @GlobalTheory.FlagPlucker.plkLoc_sec
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.PluckerMinorsSectionsInverseDetFlagBundleStatement =====
@@ -605,8 +601,7 @@ theorem det_mul_expand {R : Type} [CommRing R] {i N : ℕ} (A : Matrix (Fin i) (
   rw [MultilinearMap.map_smul_univ, smul_eq_mul]
   rfl
 
-theorem main : ∀ {R : Type} [inst : CommRing R] {i N : ℕ} (A : Matrix (Fin i) (Fin N) R) (B : Matrix (Fin N) (Fin i) R), Matrix.det (A * B) = ∑ f : Fin i → Fin N, (∏ a : Fin i, A a (f a)) * Matrix.det (Matrix.submatrix B f id) :=
-  fun A B => det_mul_expand A B
+alias main := _root_.GlobalTheory.DeterminantProductExpansion.det_mul_expand
 
 end GlobalTheory.DeterminantProductExpansion
 end -- clump:auto
@@ -625,11 +620,6 @@ open GlobalTheory GlobalTheory.FlagMod GlobalTheory.FlagPlucker
 
 namespace GlobalTheory.FlagPlucker
 
-theorem det_mul_eq_sum_fun {R : Type} [CommRing R] {i N : ℕ} (A : Matrix (Fin i) (Fin N) R)
-    (B : Matrix (Fin N) (Fin i) R) :
-    (A * B).det = ∑ f : Fin i → Fin N, (∏ a, A a (f a)) * (B.submatrix f id).det :=
-  _root_.GlobalTheory.DeterminantProductExpansion.main A B
-
 theorem exists_sum_minors_eq_one {R : Type} [CommRing R] {n k d : ℕ} (hd : d ≤ k) (A : Matrix (Fin n) (Fin k) R)
     (B : Matrix (Fin k) (Fin n) R) (hBA : B * A = 1) :
     ∃ c : (Fin d → Fin n) → R, ∑ r, c r * (A.submatrix r (Fin.castLE hd)).det = 1 := by
@@ -638,7 +628,7 @@ theorem exists_sum_minors_eq_one {R : Type} [CommRing R] {n k d : ℕ} (hd : d �
       Matrix.submatrix_one _ (Fin.castLE_injective _)]
   refine ⟨fun r => ∏ a, B (Fin.castLE hd a) (r a), ?_⟩
   have := congrArg Matrix.det e
-  rw [det_mul_eq_sum_fun, Matrix.det_one] at this
+  rw [_root_.GlobalTheory.DeterminantProductExpansion.det_mul_expand, Matrix.det_one] at this
   exact this
 
 end GlobalTheory.FlagPlucker
@@ -785,7 +775,7 @@ theorem isAmpleLB_LL_flagModel : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
       exact this)
     have hf : IsProper ((X.π ∣_ V) ≫ hV.isoSpec.hom) := inferInstance
     choose t ht using fun (p : Σ σ : E →+* ℂ, Fin (Dw.mult σ)) (q : Fin (plkNum (X.F.M k0).toMChart p.2 + 1)) =>
-      GlobalTheory.T.pluckerMinors_sections_inverseDetFlagBundle X.F (X.F.M k0).toMChart (X.π ⁻¹ᵁ V).ι hg p.1 p.2 q
+      _root_.GlobalTheory.FlagPlucker.plkLoc_sec X.F (X.F.M k0).toMChart (X.π ⁻¹ᵁ V).ι hg p.1 p.2 q
     have hnz : ∀ p, ⨆ q, nonzeroLocus (t p q) = ⊤ := fun p =>
       _root_.GlobalTheory.FlagPlucker.iSup_nonzeroLocus_plk X.F (X.F.M k0).toMChart (X.π ⁻¹ᵁ V).ι hg p.1 p.2 (t p) (ht p)
     refine isAmpleLB_of_finite_fibres Γ(Y.X, V) _ ((X.π ∣_ V) ≫ hV.isoSpec.hom) hf (Σ σ : E →+* ℂ, Fin (Dw.mult σ))
@@ -827,7 +817,7 @@ theorem isAmpleLB_LL_flagModel : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
         fun p => one_smul _ _
 
       rw [CechPic.cls_pull (X.F.isLB_LL _), Finset.sum_congr rfl fun p _ => h2 p, ← map_sum,
-      ← GlobalTheory.T.cechPicardClass_gradedTensorBundle_finset_sum X.F Finset.univ (fun p : Σ σ : E →+* ℂ, Fin (Dw.mult σ) => ind p.1 p.2)]
+      ← _root_.GlobalTheory.FlagPlucker.cls_LL_sum X.F Finset.univ (fun p : Σ σ : E →+* ℂ, Fin (Dw.mult σ) => ind p.1 p.2)]
       congr 2
       exact congrArg _ he
   · have hcl : IsClosed (Set.range X.π.base) := X.π.isClosedMap.isClosed_range

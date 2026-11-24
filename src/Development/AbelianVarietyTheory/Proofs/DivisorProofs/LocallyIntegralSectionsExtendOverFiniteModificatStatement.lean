@@ -1284,8 +1284,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.exists_preimage_of_local_preimages_injective : ∀ {X Y : Scheme.{0}} (a : Y ⟶ X), (∀ U : X.Opens, Function.Injective (a.app U).hom) → ∀ (V : X.Opens) {B : Type} (W : B → X.Opens), V ≤ ⨆ b, W b → ∀ (x : Γ(Y, a ⁻¹ᵁ V)), (∀ b, ∃ y : Γ(X, V ⊓ W b), (a.app (V ⊓ W b)).hom y = (Y.presheaf.map (homOfLE (extLI_preimage_mono a (inf_le_left : V ⊓ W b ≤ V))).op).hom x) → ∃ y : Γ(X, V), (a.app V).hom y = x := by
-  first | exact @GlobalTheory.Mum.imgLoc_exists
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPreimageOfLocalPreimagesInjectiveStatement =====
@@ -1322,11 +1320,6 @@ theorem secLift_g {X Y : Scheme.{0}} (L : LB X) (φ : Y ⟶ X) (k : ℕ) (i j : 
         LB.wchart L (K := Fin 1) (fun _ => φ) i ⊓ LB.wchart L (K := Fin 1) (fun _ => φ) j ≤ φ ⁻¹ᵁ (L.U (i 0) ⊓ L.U (j 0)))).op).hom
         ((φ.app (L.U (i 0) ⊓ L.U (j 0))).hom (L.g (i 0) (j 0)))) ^ k := by
   simp only [LB.LinComb, Fin.prod_univ_one, zpow_natCast, Units.val_pow_eq_pow_val]
-  rfl
-theorem secLift_rr {Y : Scheme.{0}} {U V W : Y.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (x : Γ(Y, U)) :
-    (Y.presheaf.map (homOfLE h2).op).hom ((Y.presheaf.map (homOfLE h1).op).hom x) =
-      (Y.presheaf.map (homOfLE (h2.trans h1)).op).hom x := by
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 theorem secLift_res_comp {X Y Z : Scheme.{0}} (a : Z ⟶ Y) (f : Y ⟶ X) (U : X.Opens) {V : Z.Opens}
     (h : V ≤ (a ≫ f) ⁻¹ᵁ U) (h' : V ≤ a ⁻¹ᵁ (f ⁻¹ᵁ U)) (x : Γ(X, U)) :
@@ -1367,7 +1360,7 @@ theorem secK_lift_of_local_lift : ∀ {X X' Y : Scheme.{0}} (L : LB X) (f : X' �
   have step1 : ∀ j' : Fin 1 → L.ι, ∃ y : Γ(X', LB.wchart L (K := Fin 1) (fun _ => f) j'),
       (a.app _).hom y = (Y.presheaf.map (homOfLE (extLI_le_wchart L f a (a ≫ f) rfl j')).op).hom (s.f j') := by
     intro j'
-    refine GlobalTheory.T.exists_preimage_of_local_preimages_injective a hinj _ W (by rw [hWtop]; exact le_top) _ ?_
+    refine _root_.GlobalTheory.Mum.imgLoc_exists a hinj _ W (by rw [hWtop]; exact le_top) _ ?_
     intro b
     obtain ⟨y, hy⟩ := hloc b
     have h1 : LB.wchart L (K := Fin 1) (fun _ => f) j' ⊓ W b ≤ f ⁻¹ᵁ (L.U (j' 0) ⊓ L.U (j b)) :=
@@ -1379,9 +1372,9 @@ theorem secK_lift_of_local_lift : ∀ {X X' Y : Scheme.{0}} (L : LB X) (f : X' �
       fun x hx => ⟨extLI_le_wchart L f a (a ≫ f) rfl j' hx.1, extLI_le_chart L f a (a ≫ f) rfl (W b) (j b) (hW b) hx.2⟩)).op).hom
       (secLift_compat L (a ≫ f) k s j' (fun _ => j b))
     rw [map_mul, map_pow] at hc2
-    erw [secLift_rr, secLift_rr, secLift_rr] at hc2
+    erw [_root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at hc2
     rw [map_mul, map_pow, secLift_app_res, secLift_app_res, hy]
-    erw [secLift_rr, secLift_rr]
+    erw [_root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres]
     rw [hc2]
     exact congrArg (fun t => t ^ k * _) (secLift_res_comp a f _ _ _ _).symm
   choose σf hσ using step1
@@ -1396,13 +1389,13 @@ theorem secK_lift_of_local_lift : ∀ {X X' Y : Scheme.{0}} (L : LB X) (f : X' �
   rw [map_mul, map_pow, e1]
   erw [e2, e3]
   rw [hσ, hσ]
-  erw [secLift_rr, secLift_rr]
+  erw [_root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres]
   have hc := congrArg (Y.presheaf.map (homOfLE (show a ⁻¹ᵁ (LB.wchart L (K := Fin 1) (fun _ => f) i ⊓ LB.wchart L (K := Fin 1) (fun _ => f) i') ≤
       LB.wchart L (K := Fin 1) (fun _ => a ≫ f) i ⊓ LB.wchart L (K := Fin 1) (fun _ => a ≫ f) i' from
       fun x hx => ⟨extLI_le_wchart L f a (a ≫ f) rfl i hx.1, extLI_le_wchart L f a (a ≫ f) rfl i' hx.2⟩)).op).hom
       (secLift_compat L (a ≫ f) k s i i')
   rw [map_mul, map_pow] at hc
-  erw [secLift_rr, secLift_rr, secLift_rr] at hc
+  erw [_root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres, _root_.ReciprocityTheory.ChartRestriction.G.Semi.LBVal.rres] at hc
   rw [hc]
   exact congrArg (fun t => t ^ k * _) (secLift_res_comp a f (L.U (i 0) ⊓ L.U (i' 0)) _ _ _)
 end GlobalTheory.Mum

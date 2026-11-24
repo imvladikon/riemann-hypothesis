@@ -17,21 +17,8 @@ theorem cA_inclR (e : E) : cA σ (inclR (F := F) (AF F) e) = inclR (F := F) (AF 
   unfold cA inclR
   simp [Algebra.TensorProduct.includeRight_apply]
 
-theorem sigma_sigma' (hcm : IsCMExt F E σ) (a : E) : σ (σ a) = a := by
-  let τ : E →+* ℂ := (IsAlgClosed.lift (M := ℂ) (R := ℚ) (S := E)).toRingHom
-  apply τ.injective
-  rw [hcm.2.2.2 τ, hcm.2.2.2 τ, star_star]
-
-theorem cA_cA (hcm : IsCMExt F E σ) (z : AE F E) : cA σ (cA σ z) = z := by
-  have hσσ := sigma_sigma' hcm
-  unfold cA
-  induction z using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a b => simp [hσσ]
-  | add x y hx hy => simp only [map_add (f := _), hx, hy]
-
 theorem exists_delta (hcm : IsCMExt F E σ) : ∃ δ : E, δ ≠ 0 ∧ σ δ = -δ := by
-  have hσσ := sigma_sigma' hcm
+  have hσσ := _root_.GlobalTheory.AdelicU.cm_conj_conj hcm
   unfold IsCMExt at hcm
   obtain ⟨-, hE, -, h⟩ := hcm
   by_contra hne

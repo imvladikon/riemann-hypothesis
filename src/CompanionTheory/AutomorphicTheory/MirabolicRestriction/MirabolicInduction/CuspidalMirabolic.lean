@@ -374,19 +374,9 @@ namespace CompanionTheory.Mirab
 
 variable {k : Type} [Field k] [Fintype k] (n : ℕ)
 
-theorem mirabInduced_isIrreducible (ψ₀ : AddChar k ℂ) (hψ : ψ₀ ≠ 1) : (mirabInduced n ψ₀).IsIrreducible := by
-  exact CompanionTheory.Mirab.Irr.mirabInduced_isIrreducible n ψ₀ hψ
-
-theorem finrank_mirabInducedSpace_eq_index (ψ₀ : AddChar k ℂ) :
-    Module.finrank ℂ (MirabInducedSpace n ψ₀) = (uniSub k n).index := by
-  exact CompanionTheory.Mirab.Dim.finrank_mirabInducedSpace_eq_index n ψ₀
-
-theorem index_uniSub : (uniSub k n).index = ∏ i ∈ Finset.Ico 1 (n + 1), (Fintype.card k ^ i - 1) := by
-  exact CompanionTheory.Mirab.Dim.index_uniSub n
-
 theorem finrank_mirabInducedSpace (ψ₀ : AddChar k ℂ) :
     Module.finrank ℂ (MirabInducedSpace n ψ₀) = ∏ i ∈ Finset.Ico 1 (n + 1), (Fintype.card k ^ i - 1) := by
-  rw [finrank_mirabInducedSpace_eq_index, index_uniSub]
+  rw [_root_.CompanionTheory.Mirab.Dim.finrank_mirabInducedSpace_eq_index, _root_.CompanionTheory.Mirab.Dim.index_uniSub]
 
 end CompanionTheory.Mirab
 end -- clump:auto
@@ -640,7 +630,7 @@ theorem finrank_and_whit (ψ₀ : AddChar k ℂ) (hψ : ψ₀ ≠ 1) (ρ : Repre
     have hy0' : L y = 0 := hy0
     have hall : ∀ l' : Module.Dual ℂ V, l' y = 0 := by
       intro l'
-      obtain ⟨c, hc'⟩ := GlobalTheory.CompanionTheory.GG.gelfandGraevMultOne_holds k d ψ₀ hψ V ρ hi L (l' ∘ₗ whProj ρ ψ₀) hLw
+      obtain ⟨c, hc'⟩ := _root_.Formalism.L2.SG.Closed.GelfandGraevMultOne_holds k d ψ₀ hψ V ρ hi L (l' ∘ₗ whProj ρ ψ₀) hLw
         (isWhit_comp ρ ψ₀ l') hL0
       have h1 := LinearMap.congr_fun hc' y
       rw [LinearMap.comp_apply, whProj_eig ρ ψ₀ y hy, map_smul, LinearMap.smul_apply, hy0', smul_zero, smul_eq_mul] at h1
@@ -701,7 +691,7 @@ theorem cuspidalRestrictsToInduced : GlobalTheory.Published.CuspidalRestrictsToI
       show L (ρ (y : GL (Fin (n + 1)) k) (ρ (q : GL (Fin (n + 1)) k) x)) =
         L (ρ ((y * q : Formalism.L2.Indef.Tree.mirabSub k n) : GL (Fin (n + 1)) k) x)
       rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply]⟩
-  have hirr := CompanionTheory.Mirab.mirabInduced_isIrreducible n ψ₀ hψ
+  have hirr := _root_.CompanionTheory.Mirab.Irr.mirabInduced_isIrreducible n ψ₀ hψ
   have hsurj : Function.Surjective T := by
     rcases hirr.eq_bot_or_eq_top W with hW | hW
     · exfalso

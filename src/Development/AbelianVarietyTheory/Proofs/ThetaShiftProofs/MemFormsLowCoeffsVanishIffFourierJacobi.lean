@@ -174,27 +174,6 @@ theorem isIsotropicSub_span {G : Matrix (Fin r) (Fin r) E} {s : Set (Fin r → E
     rw [this, hx, hy, add_zero]
   | smul c x _ hx => rw [herm_smul_left', hx, mul_zero]
 
-theorem exists_smul_mem (X : Data E r) (v : Fin r → E) : ∃ n : ℤ, n ≠ 0 ∧ (n : E) • v ∈ X.Λ := by
-  first
-  | (apply _root_.GlobalTheory.SubmoduleScalarClosure.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SubmoduleScalarClosure.main ..)
-
-section Torus
-
-variable (X : Data E r)
-
-end Torus
-
-section Main
-
-variable (X : DataX E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (hP : X.IsSec la P)
-  (hχ : ∀ γ ∈ X.Γ, (∀ v ∈ X.Λ, ∃ y ∈ X.Λ,
-    Matrix.mulVec (γ : Matrix (Fin r) (Fin r) E) v - v = (X.g : E) • y) → X.χ la γ = 1)
-
-include hP hχ
-
-end Main
-
 end
 
 end GlobalTheory.MaxCusp
@@ -270,12 +249,6 @@ namespace GlobalTheory.HermExpo
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r ρ : ℕ}
 
-theorem sum_re_eq_trace (X : Data E r) (x : E) :
-    ∑ τ : X.Ψ, (τ.1 (x + cc x)).re = ((Algebra.trace ℚ E x : ℚ) : ℝ) := by
-  first
-  | (apply _root_.GlobalTheory.TraceRealPartConjugateSum.sum_re_add_conj <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TraceRealPartConjugateSum.sum_re_add_conj ..)
-
 theorem kappa_ne (X : Data E r) : X.κ0 ≠ 0 := by
   have := X.ξ0_ne
   rcases X.κ0_xi with h | h <;> rw [h] <;> simpa using this
@@ -340,7 +313,7 @@ theorem exists_herm_phase (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
       refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
       ring
     unfold phZ prE
-    rw [hx, sum_re_eq_trace, ← hc, hf]
+    rw [hx, _root_.GlobalTheory.TraceRealPartConjugateSum.sum_re_add_conj, ← hc, hf]
     simp
 
 end GlobalTheory.HermExpo
@@ -625,7 +598,7 @@ theorem posDef_of_coefFn_ne_zero (X : Data E r) (cu : CuspFD X ρ) (hbas : ∃ b
     have : (fun τ : X.Ψ => (τ.1 (hq χ η)).re) = 0 := by funext τ; simp [hz]
     rw [this]
     exact hP.2 _ hiso y hy
-  obtain ⟨n, hn0, hn⟩ := GlobalTheory.MaxCusp.exists_smul_mem X (∑ a, η a • cu.e a)
+  obtain ⟨n, hn0, hn⟩ := _root_.GlobalTheory.SubmoduleScalarClosure.main X (∑ a, η a • cu.e a)
   have hn' : (n : E) ≠ 0 := Int.cast_ne_zero.2 hn0
   have key2 : ∀ τ : X.Ψ, 0 < (τ.1 (hq χ η)).re := by
     intro τ

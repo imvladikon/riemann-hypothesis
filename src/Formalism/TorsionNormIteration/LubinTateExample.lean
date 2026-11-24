@@ -172,25 +172,9 @@ theorem FunEqHom_of' (h1 : SolveExists.{u, 0}) (h2 : InvIntegralOfClass.{u, 0})
     exact funEqType_unit (q_ne_zero hS) hgE)
   exact ⟨h, hh0, fun n => hI _, hh⟩
 
-section FG
-
-open Formalism.G.LogP
-
-variable {K : Type u} [NormedField K] [IsUltrametricDist K]
-
-end FG
-
 end Formalism.LT.Asm
 
 namespace Formalism.LT
-
-theorem FunEqGroup_of (h1 : Formalism.LT.SolveExists.{u, 0}) (h2 : Formalism.LT.InvIntegralOfClass.{u, 0})
-    (h3 : Formalism.LT.FunEqLowCoeff.{u, 0}) (hk : Formalism.G.FunEqSubst.{u, 0}) : Formalism.G.FunEqGroup.{u} :=
-  Formalism.LT.Asm.FunEqGroup_of' h1 h2 h3 hk
-
-theorem FunEqHom_of (h1 : Formalism.LT.SolveExists.{u, 0}) (h2 : Formalism.LT.InvIntegralOfClass.{u, 0})
-    (h3 : Formalism.LT.FunEqLowCoeff.{u, 0}) (hk : Formalism.G.FunEqSubst.{u, 0}) : Formalism.G.FunEqHom.{u} :=
-  Formalism.LT.Asm.FunEqHom_of' h1 h2 h3 hk
 
 end Formalism.LT
 end -- clump:auto
@@ -208,13 +192,13 @@ namespace Formalism.LT
 universe u v
 
 theorem funEqSubst : Formalism.G.FunEqSubst.{u, v} :=
-  FunEqSubst_of IntegralSubst_proof CoeffBound_valid PowCongr_valid FrobCongr_valid
+  FunEqSubst_of IntegralSubst_proof _root_.Formalism.LT.CoeffP.coeffBound PowCongr_valid FrobCongr_valid
 
 theorem funEqGroup : Formalism.G.FunEqGroup.{u} :=
-  FunEqGroup_of SolveExists_proof InvIntegralOfClass_proof FunEqLowCoeff_proof funEqSubst
+  _root_.Formalism.LT.Asm.FunEqGroup_of' SolveExists_proof InvIntegralOfClass_proof FunEqLowCoeff_proof funEqSubst
 
 theorem funEqHom : Formalism.G.FunEqHom.{u} :=
-  FunEqHom_of SolveExists_proof InvIntegralOfClass_proof FunEqLowCoeff_proof funEqSubst
+  _root_.Formalism.LT.Asm.FunEqHom_of' SolveExists_proof InvIntegralOfClass_proof FunEqLowCoeff_proof funEqSubst
 
 end Formalism.LT
 end -- clump:auto

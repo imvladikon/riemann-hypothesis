@@ -630,14 +630,6 @@ end GlobalTheory.KHwExist
 
 namespace GlobalTheory.KHwExist
 
-theorem exists_common_eigenvector {V ι : Type*} [AddCommGroup V] [Module ℂ V] [Fintype ι]
-    (H : ι → Module.End ℂ V) (hH : ∀ i j, H i * H j = H j * H i) (E : Submodule ℂ V) [FiniteDimensional ℂ E]
-    (hE : ∀ i, ∀ x ∈ E, H i x ∈ E) (hE0 : E ≠ ⊥) :
-    ∃ v ∈ E, v ≠ 0 ∧ ∀ i, ∃ c : ℂ, H i v = c • v := by
-  first
-  | (apply _root_.GlobalTheory.CommonEigenvector.common_eigenvector <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CommonEigenvector.common_eigenvector ..)
-
 theorem exists_hw_of_height {V ι ρ : Type*} [AddCommGroup V] [Module ℂ V] [Fintype ι]
     (H : ι → Module.End ℂ V) (hH : ∀ i j, H i * H j = H j * H i)
     (h : Module.End ℂ V) (hh : ∀ i, h * H i = H i * h)
@@ -686,7 +678,7 @@ theorem exists_hw_of_height {V ι ρ : Type*} [AddCommGroup V] [Module ℂ V] [F
     have := LinearMap.congr_fun (hh i) x
     simp only [Module.End.mul_apply] at this
     rw [this, hxz, map_smul]
-  obtain ⟨v, hvE, hv0, hv⟩ := exists_common_eigenvector H hH E hEH hE0
+  obtain ⟨v, hvE, hv0, hv⟩ := _root_.GlobalTheory.CommonEigenvector.common_eigenvector H hH E hEH hE0
   exact ⟨v, ((memE v).1 hvE).1, hv0, fun r => hkill r v hvE, hv⟩
 
 end GlobalTheory.KHwExist
@@ -1475,8 +1467,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DownLift
 
-theorem _root_.GlobalTheory.T.fockTargetMatrixUnit_compact_totalDegree_le : ∀ (D : D7) (n m : ℕ) (w : GlobalTheory.ExportSeries.Weight D n) (τ : D.what₂.Tau) (a b : Fin m), GlobalTheory.LowestKType.Cpt w τ a b → ∀ (d : ℕ) (P : PolF D m n), P.totalDegree ≤ d → (GlobalTheory.LowestKType.kop w τ a b P).totalDegree ≤ d := by
-  first | exact @GlobalTheory.LowestKType.kop_totalDegree_le
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockTargetMatrixUnitCompactTotalDegreeLeStatement =====
@@ -1560,8 +1550,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.DownLift
 
-theorem _root_.GlobalTheory.T.isIrreducible_of_anisotropic_form_highestWeight : ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (U : Submodule ℂ V), FiniteDimensional ℂ U → ∀ (J : Type) (E : J → Module.End ℂ V) (st : J → J) (B : V →ₗ⋆[ℂ] V →ₗ[ℂ] ℂ) (Hw : V → Prop), (∀ j, ∀ x ∈ U, E j x ∈ U) → (∀ x ∈ U, B x x = 0 → x = 0) → (∀ j x y, B (E j x) y = B x (E (st j) y)) → (∀ j, st (st j) = j) → (∀ T : Submodule ℂ V, T ≤ U → T ≠ ⊥ → (∀ j, ∀ x ∈ T, E j x ∈ T) → ∃ x ∈ T, x ≠ 0 ∧ Hw x) → (∀ x y, x ∈ U → y ∈ U → Hw x → Hw y → x ≠ 0 → ∃ c : ℂ, y = c • x) → ∀ S : Submodule ℂ V, S ≤ U → S ≠ ⊥ → (∀ j, ∀ x ∈ S, E j x ∈ S) → S = U := by
-  first | exact @GlobalTheory.DownLift.abstract_irreducible_of_highestWeight
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIrreducibleOfAnisotropicFormHighestWeightStatement =====
@@ -1694,13 +1682,13 @@ theorem lowestKType_irreducible : ∀ (D : D7) (n m : ℕ) (w : GlobalTheory.Exp
       exact (GlobalTheory.FockSubstComm.fockSubst_fockT D m n w.p _ τ _ _).symm
     · exact GlobalTheory.CompactHarm.fockT_compact_harm D n m w.p (ψ x) (h2 x) τ a b hab
     · exact (MvPolynomial.mem_restrictTotalDegree _ _ _).2
-        (GlobalTheory.T.fockTargetMatrixUnit_compact_totalDegree_le D n m w τ a b hab d _ ((MvPolynomial.mem_restrictTotalDegree _ _ _).1 (h3 x)))
+        (_root_.GlobalTheory.LowestKType.kop_totalDegree_le D n m w τ a b hab d _ ((MvPolynomial.mem_restrictTotalDegree _ _ _).1 (h3 x)))
   have hsU : s ∈ U := ⟨hseq, hSharm s hsS, hdeg s hds⟩
   have hφU : φ ∈ U := ⟨hφeq, hφharm, hdeg φ hdφ⟩
   have hKHw : ∀ x : W →ₗ[ℂ] PolF D m n, GlobalTheory.LowestKType.IsKHwMap w x → GlobalTheory.LowestKType.IsKHw w (x w0) :=
     fun x hxh => ⟨fun τ a b hab hlt => by simpa using LinearMap.congr_fun (hxh.1 τ a b hab hlt) w0,
       fun τ a => (hxh.2 τ a).imp fun c hc => by simpa using LinearMap.congr_fun hc w0⟩
-  have key := GlobalTheory.T.isIrreducible_of_anisotropic_form_highestWeight (W →ₗ[ℂ] PolF D m n) U hUfd J E st BM (GlobalTheory.LowestKType.IsKHwMap w) hUst
+  have key := _root_.GlobalTheory.DownLift.abstract_irreducible_of_highestWeight (W →ₗ[ℂ] PolF D m n) U hUfd J E st BM (GlobalTheory.LowestKType.IsKHwMap w) hUst
     (fun x _ => hBMani x) hBMadj (fun j => rfl)
     (fun T hTU hT0 hTst => by
       haveI : FiniteDimensional ℂ T := Submodule.finiteDimensional_of_le hTU

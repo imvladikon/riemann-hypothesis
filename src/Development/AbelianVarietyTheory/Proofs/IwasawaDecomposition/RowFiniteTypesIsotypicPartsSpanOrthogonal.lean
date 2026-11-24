@@ -222,8 +222,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
 
-theorem _root_.GlobalTheory.T.kernel_vector_sum_of_isotypic_pieces : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module ℂ A] (ρ : Formalism.AUTREP.GAf D.host.E n →* Module.End ℂ A) (C : Submodule ℂ A) (B : A → A → ℂ), (∀ x ∈ C, ∀ y ∈ C, ∀ z ∈ C, ∀ c : ℂ, B x (y + c • z) = B x y + c * B x z) → (∀ x ∈ C, ∀ y ∈ C, B x y = starRingEnd ℂ (B y x)) → (∀ x ∈ C, x ≠ 0 → 0 < (B x x).re) → (∀ π π' : Formalism.L2.NG.FinTyp D.host.E n, ¬ π.Iso π' → ∀ x ∈ principalLevelFrame.isotIn (D := D) ρ C π, ∀ y ∈ principalLevelFrame.isotIn (D := D) ρ C π', B x y = 0) → ∀ (ι : Type) (O : ι → A →ₗ[ℂ] A), (∀ i π, ∀ x ∈ principalLevelFrame.isotIn (D := D) ρ C π, O i x ∈ principalLevelFrame.isotIn (D := D) ρ C π) → ∀ x ∈ ⨆ π : Formalism.L2.NG.FinTyp D.host.E n, principalLevelFrame.isotIn (D := D) ρ C π, (∀ i, O i x = 0) → x ∈ ⨆ π : Formalism.L2.NG.FinTyp D.host.E n, (principalLevelFrame.isotIn (D := D) ρ C π ⊓ ⨅ i, LinearMap.ker (O i)) := by
-  first | exact @GlobalTheory.decomp_kernels_isotIn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelVectorSumOfIsotypicPiecesStatement =====
@@ -256,8 +254,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
 
-theorem _root_.GlobalTheory.T.smooth_admissible_unitary_mem_sup_isotypic_parts : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module ℂ A] (ρ : Formalism.AUTREP.GAf D.host.E n →* Module.End ℂ A) (C : Submodule ℂ A) (B : A → A → ℂ), (∀ x ∈ C, ∀ y ∈ C, ∀ z ∈ C, ∀ c : ℂ, B x (y + c • z) = B x y + c * B x z) → (∀ x ∈ C, ∀ y ∈ C, B x y = starRingEnd ℂ (B y x)) → (∀ x ∈ C, x ≠ 0 → 0 < (B x x).re) → (∀ h, ∀ x ∈ C, ρ h x ∈ C) → (∀ h, ∀ x ∈ C, ∀ y ∈ C, B (ρ h x) (ρ h y) = B x y) → (∀ N : ℕ, 0 < N → FiniteDimensional ℂ ↥(Submodule.span ℂ {x | x ∈ C ∧ ∀ κ, Formalism.L2.NG.Cong D.host.E n N κ → ρ κ x = x})) → (∀ x ∈ C, ∃ N : ℕ, 0 < N ∧ ∀ κ, Formalism.L2.NG.Cong D.host.E n N κ → ρ κ x = x) → ∀ x ∈ C, x ∈ ⨆ π : Formalism.L2.NG.FinTyp D.host.E n, principalLevelFrame.isotIn (D := D) ρ C π := by
-  first | exact @GlobalTheory.SpanIsot.span_isotIn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothAdmissibleUnitaryMemSupIsotypicPartsStatement =====
@@ -567,9 +563,9 @@ theorem isotL_span_orth : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) 
       intro v
       funext g
       exact principalLevelFrame.mult_lev hTm.1 v k.1 k.2 g
-  have hspan := GlobalTheory.T.smooth_admissible_unitary_mem_sup_isotypic_parts D D.R.r (MMap M) (principalLevelFrame.actM P M) (principalLevelFrame.Minf θ P M) (ipM M μ 𝓕) hsesq hherm hpos hstab hinv
+  have hspan := _root_.GlobalTheory.SpanIsot.span_isotIn D D.R.r (MMap M) (principalLevelFrame.actM P M) (principalLevelFrame.Minf θ P M) (ipM M μ 𝓕) hsesq hherm hpos hstab hinv
     hadm hsm T hTC
-  have hdec := GlobalTheory.T.kernel_vector_sum_of_isotypic_pieces D D.R.r (MMap M) (principalLevelFrame.actM P M) (principalLevelFrame.Minf θ P M) (ipM M μ 𝓕) hsesq hherm hpos horth
+  have hdec := _root_.GlobalTheory.decomp_kernels_isotIn D D.R.r (MMap M) (principalLevelFrame.actM P M) (principalLevelFrame.Minf θ P M) (ipM M μ 𝓕) hsesq hherm hpos horth
     (Option (levS V β L)) O hpres T hspan hTO
   have hle : (⨆ π : Formalism.L2.NG.FinTyp D.host.E D.R.r,
       (principalLevelFrame.isotIn (principalLevelFrame.actM P M) (principalLevelFrame.Minf θ P M) π ⊓ ⨅ i, LinearMap.ker (O i))) ≤

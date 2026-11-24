@@ -282,4 +282,3 @@ theorem ruleInv : RuleInv := by
 
 end Formalism.FourierDecayAlt.R.PInv
 
-theorem Formalism.FourierDecayAlt.P.inverseCommutators : Formalism.FourierDecayAlt.R.RuleInv := Formalism.FourierDecayAlt.R.PInv.ruleInv

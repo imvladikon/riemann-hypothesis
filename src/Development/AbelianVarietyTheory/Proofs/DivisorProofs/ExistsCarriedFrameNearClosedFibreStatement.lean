@@ -157,14 +157,6 @@ theorem ctriv_of_pmaps {K : Type} [Fintype K] {φ : K → (Y₀ ⟶ X)} {ε : K 
   refine congrArg₂ (· * ·) ?_ rfl
   simp only [Category.assoc]
 
-theorem gm_stalk {Z : Scheme.{0}} (κ : Z ⟶ Y) (z : Z) (r : Y ⟶ X) (U : X.Opens) (h : r (κ z) ∈ U)
-    (a : Γ(X, U)ˣ) : gm (κ ≫ r) z U a = Units.map (κ.stalkMap z).hom.toMonoidHom (gm r (κ z) U a) := by
-  apply Units.ext
-  rw [gm_val (κ ≫ r) z U h]
-  show _ = (κ.stalkMap z).hom (gm r (κ z) U a).val
-  rw [gm_val r (κ z) U h]
-  exact (Scheme.Hom.germ_stalkMap_apply κ (r ⁻¹ᵁ U) z h _).symm
-
 theorem gs_stalk {Z : Scheme.{0}} (κ : Z ⟶ Y) (z : Z) (r : Y ⟶ X) (U : X.Opens) (h : r (κ z) ∈ U)
     (a : Γ(X, U)) : gs (κ ≫ r) z U a = (κ.stalkMap z).hom (gs r (κ z) U a) := by
   rw [gs_eq (κ ≫ r) z U h, gs_eq r (κ z) U h]
@@ -175,7 +167,7 @@ theorem secCarried_along {θ : L.Sec} {f : X ⟶ X} {w : LB.Iso L (L.pull f)} (h
     gs (ψ ≫ f) z (L.U j) (θ.f j) = (gw w ψ z j k).val * gs ψ z (L.U k) (θ.f k) := by
   have e := congrArg (ψ.stalkMap z).hom (h (ψ z) j k hk hj)
   have e₁ := gs_stalk ψ z (𝟙 X) (L.U k) hk (θ.f k)
-  have e₂ := gm_stalk ψ z (𝟙 X) ((L.pull f).U (fun _ => j) ⊓ L.U k) ⟨mem_pull.2 hj, hk⟩ (w.s (fun _ => j, k))
+  have e₂ := _root_.GlobalTheory.BundleExt.gm_comp ψ z (𝟙 X) ((L.pull f).U (fun _ => j) ⊓ L.U k) ⟨mem_pull.2 hj, hk⟩ (w.s (fun _ => j, k))
   rw [Category.comp_id] at e₁ e₂
   rw [gs_stalk ψ z f _ hj, gs_eq f _ _ hj, e, map_mul, e₁, gs_eq (𝟙 X) (ψ z) _ hk, gw, gw, e₂]
   rfl
@@ -235,9 +227,9 @@ theorem exists_frame (hL : L.IsLB) (x : Y ⟶ X) (W : Y.Opens) (t : LB.Gen (L.pu
     have a := hτ _ (𝟙 _) y k hk
     have a' := hτ _ (𝟙 _) y k' hk'
     rw [Category.id_comp] at a a'
-    rw [map_mul, ← gm_stalk W.ι y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k) ⟨hz, hk⟩,
-      ← gm_stalk W.ι y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k') ⟨hz, hk'⟩,
-      ← gm_stalk W.ι y x (L.U k ⊓ L.U k') ⟨hk, hk'⟩, Category.comp_id, a, a']
+    rw [map_mul, ← _root_.GlobalTheory.BundleExt.gm_comp W.ι y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k) ⟨hz, hk⟩,
+      ← _root_.GlobalTheory.BundleExt.gm_comp W.ι y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k') ⟨hz, hk'⟩,
+      ← _root_.GlobalTheory.BundleExt.gm_comp W.ι y x (L.U k ⊓ L.U k') ⟨hk, hk'⟩, Category.comp_id, a, a']
     refine (gen_trans ht (𝟙 _) y (j := fun _ => k) (j' := fun _ => k') (Set.mem_iInter.2 fun _ => hk)
       (Set.mem_iInter.2 fun _ => hk')).trans (congrArg₂ (· * ·) ?_ rfl)
     refine (Fintype.prod_unique _).trans ((zpow_one _).trans ?_)
@@ -264,11 +256,11 @@ theorem exists_frame (hL : L.IsLB) (x : Y ⟶ X) (W : Y.Opens) (t : LB.Gen (L.pu
       rw [← eJ' u, ← Category.assoc, e']; simp only [Category.assoc, hx]), eJ ⟨⟩, eJ' ⟨⟩,
       ← hτ _ r y k hk, ← hτ _ r' y j hj', e'] at c
     apply stalk_units_injective (r ≫ W.ι) y
-    rw [map_mul, ← gm_stalk (r ≫ W.ι) y h (W ⊓ x ⁻¹ᵁ L.U j) ⟨hz', hj⟩,
-      ← gm_stalk (r ≫ W.ι) y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k) ⟨hz, hk⟩, Category.comp_id, c]
+    rw [map_mul, ← _root_.GlobalTheory.BundleExt.gm_comp (r ≫ W.ι) y h (W ⊓ x ⁻¹ᵁ L.U j) ⟨hz', hj⟩,
+      ← _root_.GlobalTheory.BundleExt.gm_comp (r ≫ W.ι) y (𝟙 Y) (W ⊓ x ⁻¹ᵁ L.U k) ⟨hz, hk⟩, Category.comp_id, c]
     refine congrArg₂ (· * ·) ?_ rfl
     rw [← Category.assoc]
-    exact gm_stalk (r ≫ W.ι) y x ((L.pull f).U (fun _ => j) ⊓ L.U k) ⟨mem_pull.2 hfx, hk⟩ _
+    exact _root_.GlobalTheory.BundleExt.gm_comp (r ≫ W.ι) y x ((L.pull f).U (fun _ => j) ⊓ L.U k) ⟨mem_pull.2 hfx, hk⟩ _
 
 end
 
@@ -398,8 +390,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.exists_carriedFrame_theoremOfCube : ∀ {S : Scheme.{0}} (G' : Over S) [GrpObj G'] [IsCommMonObj G'] (L : RigLB G') (c : CubicalStr G' L) (θ : L.L.Sec) (T : Over S) (x a b c' : T ⟶ G') (W : T.left.Opens), (∀ g ∈ cubeTen x a b c', W ≤ g.left ⁻¹ᵁ secNz θ) → ∃ τ : ∀ k : L.L.ι, Γ(T.left, W ⊓ x.left ⁻¹ᵁ L.L.U k)ˣ, FrameAlong L.L x.left W τ ∧ ∀ (f : G'.left ⟶ G'.left) (fS : S ⟶ S) (hc : IsGrpPullback G' G' fS f) (w : LB.Iso L.L (L.L.pull f)), w.IsGen → PMaps w (K := PUnit) (fun _ => eSec G') (fun _ => eSec G') (fun _ => 1) L.rig L.rig fS → PMaps w (thφ G' (x3 G')) (thφ G' (x3 G')) thε c.t c.t (cubeMapOf hc).F3 → SecCarried L.L θ f w → ∀ hT : T.left ⟶ T.left, hT ≫ T.hom = T.hom ≫ fS → x.left ≫ f = hT ≫ x.left → a.left ≫ f = hT ≫ a.left → b.left ≫ f = hT ≫ b.left → c'.left ≫ f = hT ≫ c'.left → FrameCarriedAlong L.L x.left W τ f w hT := by
-  first | exact @GlobalTheory.Mum.exists_carried_frame_of_cubeTen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCarriedFrameTheoremOfCubeStatement =====
@@ -526,8 +516,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
 
-theorem _root_.GlobalTheory.T.rigidifiedGaloisLinearisation_carries_rigidification_cube : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hB : Base R) (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R') (hF : FinExt ρ) (hG : IsGal ρ) (D : DegData R (maximalIdeal R)) (D' : DegData R' (maximalIdeal R')) (hD : IsPullDeg ρ D.toPre D'.toPre) (A' : PolAV (Sp (FractionRing R'))) (G' : Over (Sp R')) [GrpObj G'] [IsCommMonObj G'] (hS' : IsSemiAbelian G') (U' : Unif (maximalIdeal R') D' A' G') (a : GalAct ρ hD U') (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (β : G'.left ⟶ G.left) (hS : IsSemiAbelian G) (hβ : IsGrpPullback G' G (spMap ρ) β) (hact : ∀ σ, a.act σ ≫ β = β) (σ : Gal ρ) (h : IsPullDeg (Gal.hom σ) D'.toPre D'.toPre) (bc : G' ≅ (Over.pullback (specOf (Gal.hom σ))).obj G'), bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ)) = a.act σ → ∀ hP : IsPullUnif (Gal.hom σ) h bc U' U', PMaps (Classical.choose hP.lg) (K := PUnit) (fun _ => eSec G') (fun _ => eSec G') (fun _ => 1) U'.LG.rig U'.LG.rig (specOf (Gal.hom σ)) ∧ ∀ hc : IsGrpPullback G' G' (specOf (Gal.hom σ)) (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))), PMaps (Classical.choose hP.lg) (thφ G' (x3 G')) (thφ G' (x3 G')) thε U'.cubG.t U'.cubG.t (cubeMapOf hc).F3 := by
-  first | exact @GlobalTheory.Mum.rigidified_galois_lin_carries_rig_and_cube
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidifiedGaloisLinearisationCarriesRigidificatiStatement =====
@@ -645,12 +633,12 @@ theorem exists_carried_frame_upstairs : ∀ (R : Type) [CommRing R] [IsDomain R]
     have e' := congrArg (fun φ => φ z) e
     simp only [Scheme.Hom.comp_apply] at e'
     exact e'
-  obtain ⟨τ, hτ, hcar⟩ := GlobalTheory.T.exists_carriedFrame_theoremOfCube G' U'.LG U'.cubG θ T x a₁ b₁ c₁ (q ⁻¹ᵁ (β ⁻¹ᵁ V)) hten
+  obtain ⟨τ, hτ, hcar⟩ := _root_.GlobalTheory.Mum.exists_carried_frame_of_cubeTen G' U'.LG U'.cubG θ T x a₁ b₁ c₁ (q ⁻¹ᵁ (β ⁻¹ᵁ V)) hten
   refine ⟨R₁, inferInstance, inferInstance, inferInstance, ρ₁, hρ₁, het, V, hyV, τ, hτ, ?_⟩
   intro σ h bc hbc hP hPO f' hf'q hf's
   have hc : IsGrpPullback G' G' (specOf (Gal.hom σ)) (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))) :=
     hbc ▸ a.cart σ
-  have hrc := GlobalTheory.T.rigidifiedGaloisLinearisation_carries_rigidification_cube R hB R' ρ hF hG D D' hD A' G' hS' U' a G β hS hβ hact σ h bc hbc hP
+  have hrc := _root_.GlobalTheory.Mum.rigidified_galois_lin_carries_rig_and_cube R hB R' ρ hF hG D D' hD A' G' hS' U' a G β hS hβ hact σ h bc hbc hP
   have hTw : f' ≫ T.hom = T.hom ≫ spMap (Gal.hom σ) := by
     change f' ≫ q ≫ G'.hom = (q ≫ G'.hom) ≫ _
     rw [← Category.assoc, hf'q, Category.assoc, (a.cart σ).1.w, Category.assoc]
@@ -727,10 +715,6 @@ theorem eq_zero_of_germOf_max {B : CommRingCat.{0}} (a : B)
   have h1 : (1 : B) ∈ (Ideal.span {a}).annihilator := this ▸ Submodule.mem_top
   exact (one_smul B _).symm.trans ((Submodule.mem_annihilator_span_singleton _ _).1 h1)
 
-theorem gs_comp' {Z Y X : Scheme.{0}} (r : Z ⟶ Y) (F : Y ⟶ X) (z : Z) (U : X.Opens) (h : F (r z) ∈ U) (f : Γ(X, U)) :
-    gs (r ≫ F) z U f = (r.stalkMap z).hom (gs F (r z) U f) := by
-  rw [← gs_pull r F z U h, gs_stalkMap r z _ h, gs_pull (𝟙 _) F (r z) U h, Category.id_comp]
-
 theorem germ_eq_zero : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ₁ : R →+* R₁) (d : ℕ) (b : Fin d → R₁), (∀ r : R₁, ∃! c : Fin d → R, r = ∑ l, ρ₁ (c l) * b l) → ∀ (X : Scheme.{0}) (f : X ⟶ Sp R) (U : X.Opens) (a : Fin d → Γ(X, U)) (x : X), x ∈ U → (∀ z : (pullback f (spMap ρ₁) : Scheme.{0}), (pullback.fst f (spMap ρ₁)) z = x → ∑ l, gs (pullback.snd f (spMap ρ₁)) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of R₁)).inv.hom (b l)) * gs (pullback.fst f (spMap ρ₁)) z U (a l) = 0) → ∀ l, gs (𝟙 X) x U (a l) = 0 := by
   intro R R₁ _ _ ρ₁ d b hb X f U a x hx h
   let _ : Algebra R R₁ := ρ₁.toAlgebra
@@ -772,7 +756,7 @@ theorem germ_eq_zero : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] (ρ₁ :
 
     rw [← e, map_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
-    rw [map_mul, map_mul, ← gs_comp' r _ z ⊤ trivial, ← gs_comp' r _ z U (hzx ▸ hx), r1, r2,
+    rw [map_mul, map_mul, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_comp r _ z ⊤ trivial, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_comp r _ z U (hzx ▸ hx), r1, r2,
       gs_fromSpecStalk x hx, ← germOf_apply, ← germOf_map, ← germOf_map, Category.id_comp, Category.id_comp]
   have hli' := (Algebra.TensorProduct.basis A β).linearIndependent
   refine Fintype.linearIndependent_iff.1 hli' (fun l => gs (𝟙 X) x U (a l)) ?_
@@ -817,13 +801,6 @@ open GlobalTheory.Mum
 noncomputable section
 namespace GlobalTheory.Mum
 
-theorem gs_sub' {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) (a b : Γ(X, U)) :
-    gs f y U (a - b) = gs f y U a - gs f y U b := by simp only [gs_eq f y U h, map_sub]
-
-theorem gs_comp_map {X Y Z : Scheme.{0}} (g : Z ⟶ Y) (h : Y ⟶ X) (z : Z) (V : X.Opens) (hz : h (g z) ∈ V)
-    (a : Γ(X, V)) : gs (g ≫ h) z V a = (g.stalkMap z).hom (gs h (g z) V a) := by
-  rw [← gs_pull g h z V hz a, gs_eq_map_gs g z (h ⁻¹ᵁ V) hz, gs_pull (𝟙 Y) h (g z) V hz a, Category.id_comp]
-
 theorem secCarriedOver_of_lift {X Z P : Scheme.{0}} (q : Z ⟶ X) (p₁ : Z ⟶ P) (L : LB X) (W O : X.Opens) (hOW : O ≤ W)
     (τ : ∀ k : L.ι, Γ(Z, q ⁻¹ᵁ W ⊓ q ⁻¹ᵁ L.U k)ˣ) (d : ℕ) (B : Fin d → Γ(P, ⊤))
     (s : Fin d → ∀ k : L.ι, Γ(X, O ⊓ L.U k))
@@ -855,7 +832,7 @@ theorem secCarriedOver_of_lift {X Z P : Scheme.{0}} (q : Z ⟶ X) (p₁ : Z ⟶ 
       (gs_res g y h2 hy _).trans (gs_unit g y _ (h2 hy) _)
     have e3 : gs g y U' ((X.presheaf.map (homOfLE h3).op).hom (s l' k)) = gs g y (O ⊓ L.U k) (s l' k) :=
       gs_res g y h3 hy _
-    rw [gs_sub' g y U' hy, gs_mul g y U' hy, e1, e2, e3]
+    rw [_root_.GlobalTheory.LBGerm.gs_sub g y U' hy, gs_mul g y U' hy, e1, e2, e3]
   have hxU : x ∈ U' := ⟨⟨⟨hxO, hxk⟩, hφxO, hφxj⟩, mem_pull.2 hφxj, hxk⟩
   have key := huniq U' a x hxU (by
     intro z hz
@@ -873,12 +850,12 @@ theorem secCarriedOver_of_lift {X Z P : Scheme.{0}} (q : Z ⟶ X) (p₁ : Z ⟶ 
         (gm f' z (q ⁻¹ᵁ W ⊓ q ⁻¹ᵁ L.U j) (τ j)).val := by
       have e1 : ∀ l', gs p₁ z ⊤ (B l') = (f'.stalkMap z).hom (gs p₁ (f' z) ⊤ (B l')) := fun l' => by
         conv_lhs => rw [← hf'p]
-        exact gs_comp_map f' p₁ z ⊤ trivial _
+        exact _root_.GlobalTheory.OneBasis.ThMove.gs_comp f' p₁ z ⊤ trivial _
       have e2 : ∀ l', gs (q ≫ φ) z (O ⊓ L.U j) (s l' j) = (f'.stalkMap z).hom (gs q (f' z) (O ⊓ L.U j) (s l' j)) :=
-        fun l' => by rw [← hf'q]; exact gs_comp_map f' q z _ hmj _
+        fun l' => by rw [← hf'q]; exact _root_.GlobalTheory.OneBasis.ThMove.gs_comp f' q z _ hmj _
 
       simp only [e1, e2, ← map_mul, ← map_sum]
-      rw [← hdec (f' z) j hf'zO hf'zj, ← gs_eq_map_gs f' z _ hmWj, gs_unit f' z _ hmWj]
+      rw [← hdec (f' z) j hf'zO hf'zj, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap f' z _ hmWj, gs_unit f' z _ hmWj]
     have S3 := hdec z k hzO hzk
     rw [gs_unit (𝟙 Z) z _ hmWk] at S3
     have e4 : ∀ l', gs p₁ z ⊤ (B l') * gs q z U' (a l') =
@@ -954,7 +931,7 @@ theorem exists_isUnit_gs_of_frame_eq_sum : ∀ (R R₁ : Type) [CommRing R] [Com
   rw [hτ z k₀ hz hk₀] at hu
   obtain ⟨l, -, hl⟩ := IsLocalRing.exists_of_isUnit_sum hu
   have hl2 := isUnit_of_mul_isUnit_right hl
-  rw [gs_eq_map_gs _ z _ hm'] at hl2
+  rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap _ z _ hm'] at hl2
   have hl3 := (isUnit_map_iff _ _).1 hl2
   refine ⟨l, fun k hk => ?_⟩
   rw [hs l _ k k₀ hz hk hk₀]
@@ -1019,9 +996,6 @@ theorem exists_basis (ρ₁ : R →+* R₁) {d : ℕ} (b : Fin d → R₁)
   refine Submodule.sum_mem _ fun l _ => ?_
   rw [← hs]
   exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, rfl⟩)
-
-theorem gs_zero0 {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
-  unfold gs; split_ifs <;> simp
 
 variable {X Z : Scheme.{0}}
 
@@ -1103,7 +1077,7 @@ theorem inj_gen (ρ₁ : R →+* R₁) {d : ℕ} (b : Fin d → R₁)
   intro x hx
   obtain ⟨V, hV, hxV, hVU⟩ := exists_aff U x hx
   have h0 := (aff_coeff ρ₁ b hb H hV).2 (fun l => GlobalTheory.AbLaw.rs X hVU (a l)) (fn_ext fun z hz => by
-    rw [gs_comb_pt b p q V z hz, gs_zero0]
+    rw [gs_comb_pt b p q V z hz, _root_.GlobalTheory.UU.SchurComp.gs_zero]
     refine Eq.trans (Finset.sum_congr rfl fun l _ => ?_) (h z (hVU hz))
     rw [gs_res q z hVU hz])
   have e := congrFun h0 l
@@ -1111,7 +1085,7 @@ theorem inj_gen (ρ₁ : R →+* R₁) {d : ℕ} (b : Fin d → R₁)
   simp only [Pi.zero_apply] at e
   rw [← e2]
   erw [e]
-  rw [gs_zero0, gs_zero0]
+  rw [_root_.GlobalTheory.UU.SchurComp.gs_zero, _root_.GlobalTheory.UU.SchurComp.gs_zero]
 
 theorem surj_gen (ρ₁ : R →+* R₁) {d : ℕ} (b : Fin d → R₁)
     (hb : ∀ r : R₁, ∃! c : Fin d → R, r = ∑ l, ρ₁ (c l) * b l)
@@ -1178,7 +1152,7 @@ theorem main_gen (ρ₁ : R →+* R₁) {d : ℕ} (b : Fin d → R₁)
     (fun l => GlobalTheory.AbLaw.rs X inf_le_left (a k l) -
       GlobalTheory.AbLaw.rs X (inf_le_inf hV hW) (L.g k k').val * GlobalTheory.AbLaw.rs X inf_le_right (a k' l)) (fun z hz => ?_) l
   · have e := congrArg (gs (𝟙 X) x _) h0
-    rw [GlobalTheory.FlatSec.gs_diff hV hW (a k l) (a k' l) (𝟙 X) x ⟨⟨hx, hk⟩, ⟨hx, hk'⟩⟩, gs_zero0] at e
+    rw [GlobalTheory.FlatSec.gs_diff hV hW (a k l) (a k' l) (𝟙 X) x ⟨⟨hx, hk⟩, ⟨hx, hk'⟩⟩, _root_.GlobalTheory.UU.SchurComp.gs_zero] at e
     exact sub_eq_zero.1 e
   · have e1 : ∀ l, gs q z _ (GlobalTheory.AbLaw.rs X inf_le_left (a k l) -
         GlobalTheory.AbLaw.rs X (inf_le_inf hV hW) (L.g k k').val * GlobalTheory.AbLaw.rs X inf_le_right (a k' l)) =
@@ -1382,7 +1356,7 @@ theorem FrameCarried.descend_finiteEtale : ∀ (R : Type) [CommRing R] [IsDomain
       have e := hcar σ h bc hbc hP hPO l z₀ k k₀ hz₀O hzO hk₀ hk
       have hu : IsUnit (gs (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))) z₀ _ (s l k)) := by
         rw [e]; exact (Units.isUnit _).mul (hl' k₀ hk₀)
-      rw [gs_eq_map_gs (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))) z₀ (β ⁻¹ᵁ V₁ ⊓ U'.LG.L.U k) ⟨hzO, hk⟩] at hu
+      rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gs_stalkMap (bc.hom.left ≫ pullback.fst G'.hom (specOf (Gal.hom σ))) z₀ (β ⁻¹ᵁ V₁ ⊓ U'.LG.L.U k) ⟨hzO, hk⟩] at hu
       exact (isUnit_map_iff _ _).1 hu
     · push_neg at hne
       exact ⟨⟨0, hd⟩, fun z k hz _ => absurd hz (hne z)⟩

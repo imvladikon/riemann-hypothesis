@@ -730,8 +730,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.integral_eq_setIntegral_tsum_rationalTranslates : ∀ (D : D7) (m n : ℕ) (μ : Measure (Mx D m n)) (𝓕 : Set (Mx D m n)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratMx D m n) 𝓕 μ → ∀ c : Mx D m n → ℂ, Integrable c μ → (∀ᵐ y ∂(μ.restrict 𝓕), Summable fun a : Matrix (Fin m) (Fin n) D.host.E => ‖c (y + a.map (incA D))‖) ∧ ∫ y, c y ∂μ = ∫ y in 𝓕, ∑' a : Matrix (Fin m) (Fin n) D.host.E, c (y + a.map (incA D)) ∂μ := by
-  first | exact @GlobalTheory.Twist.Periodize.integral_eq_setIntegral_tsum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralEqSetIntegralTsumRationalTranslatesStatement =====
@@ -1290,11 +1288,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.CoefUnfold
 
-theorem isoPart_add' {D : D7} (V W : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E) (y z : Mx D W.rank r) :
-    isoPart V W C (y + z) = isoPart V W C y + isoPart V W C z := by
-  unfold isoPart
-  rw [Matrix.add_mul]
-
 private theorem symplOH_eq_zero_of_symplO_eq_zero {D : D7} (S T : HSp D) (a b : WO S T) (h : symplO S T a b = 0) :
     symplOH S T a b = 0 := by
   have h2 : (2 : AF D.host.F) * symplOH S T a b = 0 := by
@@ -1321,7 +1314,7 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
     inferInstanceAs (Countable (Fin W.rank → Fin r → D.host.E))
   have hsp := GlobalTheory.T.isotropicDualMiddleParts_symplectic_orthogonal D V V' W r C B hCB C' h1 h2 h3
   have hiso0 : isoPart V W C' (0 : Mx D W.rank r) = 0 := by
-    have e := isoPart_add' V W C' (0 : Mx D W.rank r) 0
+    have e := _root_.GlobalTheory.TwistEquiRat.isoPart_add V W C' (0 : Mx D W.rank r) 0
     rw [add_zero] at e
     have e' : isoPart V W C' (0 : Mx D W.rank r) + isoPart V W C' 0 = isoPart V W C' 0 + 0 := by
       rw [add_zero]; exact e.symm
@@ -1337,7 +1330,7 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
     show ψ (symplOH V W (isoPart V W C y' + midPart V V' W B x) (isoPart V W C y)) *
         F (isoPart V W C y' + midPart V V' W B x + isoPart V W C y) = _
     rw [(GlobalTheory.OrientedFormLaws.symplOH_laws D V W).1, z1, z2, add_zero, AddChar.map_zero_eq_one, one_mul,
-      isoPart_add']
+      _root_.GlobalTheory.TwistEquiRat.isoPart_add]
     congr 1
     abel
   have hP : IsThetaFunO ψ V W (heisO ψ V W (isoPart V W C y) F) :=
@@ -1369,16 +1362,6 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
   simp only [hiso0, zero_add]
   simp_rw [hpt]
 
-private theorem symplOH_eq_zero_of_symplO_eq_zero' {D : D7} (S T : HSp D) (a b : WO S T) (h : symplO S T a b = 0) :
-    symplOH S T a b = 0 := by
-  have h2 : (2 : AF D.host.F) * symplOH S T a b = 0 := by
-    rw [two_mul, (GlobalTheory.OrientedFormLaws.symplOH_laws D S T).2.2.2.1 a b, h]
-  have hu : IsUnit (2 : AF D.host.F) := by
-    have e : (algebraMap D.host.F (AF D.host.F)) 2 = 2 := map_ofNat _ 2
-    rw [← e]
-    exact (IsUnit.mk0 (2 : D.host.F) two_ne_zero).map _
-  exact hu.mul_right_eq_zero.1 h2
-
 theorem coef_unfold : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ (μV : Measure (WO V W)) (𝓕V : Set (WO V W)), μV.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V) 𝓕V μV → ∀ (μ' : Measure (WO V' W)) (𝓕' : Set (WO V' W)), μ'.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V') 𝓕' μ' → ∃ ν : Measure (Mx D W.rank r), ν.IsAddHaarMeasure ∧ ∀ F G, IsThetaFunO ψ V W F → IsThetaFunO ψ V W G → ∀ x : WO V' W, ∫ w in 𝓕', heisO ψ V' W x (res V V' W C B μ 𝓨 F) w * star (res V V' W C B μ 𝓨 G w) ∂μ' = ∫ y, (∫ w in 𝓕V, heisO ψ V W (isoPart V W C y + midPart V V' W B x) F w * star (G w) ∂μV) ∂ν := by
   intro D V V' W r C B hCB ψ hψ μ 𝓨 hY μV 𝓕V hμV hFV μ' 𝓕' hμ' hF'
   obtain ⟨C', h1, h2, h3⟩ := GlobalTheory.T.exists_isotropicDualFrame_of_splitEmbedding D V V' r C B hCB
@@ -1400,12 +1383,12 @@ theorem coef_unfold : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V
   have he : ∀ y : Mx D W.rank r, heisO ψ V W (isoPart V W C y) (heisO ψ V W (midPart V V' W B x) F) =
       heisO ψ V W (isoPart V W C y + midPart V V' W B x) F := by
     intro y
-    rw [(GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V W).2.1, symplOH_eq_zero_of_symplO_eq_zero' V W _ _ (hsp.2.1 y x),
+    rw [(GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V W).2.1, _root_.GlobalTheory.CoefUnfold.symplOH_eq_zero_of_symplO_eq_zero V W _ _ (hsp.2.1 y x),
       AddChar.map_zero_eq_one, one_smul]
   rw [← ((GlobalTheory.T.thetaRestrictIsotropicQuotient_wittTower_properties D V V' W r C B hCB ψ hψ μ 𝓨 hY).1 F hF).2.2.1 x,
     ← GlobalTheory.T.isotropicMean_thetaProduct_conj_eq_restrictionProduct D V V' W r C B hCB ψ hψ μ 𝓨 hY μ' 𝓕' hμ' hF' _ G hF₁ hG]
   simp_rw [← he]
-  obtain ⟨hsum, hint⟩ := GlobalTheory.T.integral_eq_setIntegral_tsum_rationalTranslates D W.rank r μ 𝓨 hμH hYF
+  obtain ⟨hsum, hint⟩ := _root_.GlobalTheory.Twist.Periodize.integral_eq_setIntegral_tsum D W.rank r μ 𝓨 hμH hYF
     (fun y => ∫ w in 𝓕V, heisO ψ V W (isoPart V W C y) (heisO ψ V W (midPart V V' W B x) F) w * star (G w) ∂μV)
     (GlobalTheory.T.integrable_matrixCoeff_adelicIsotropicPart D V V' W r C B hCB C' h1 h2 h3 ψ hψ μ hμH μV 𝓕V hμV hFV _ G hF₁ hG)
   rw [MeasureTheory.integral_smul_measure, ENNReal.toReal_ofReal (inv_pos.2 hκ0).le, hint,
@@ -1493,16 +1476,11 @@ theorem heisO_smul (S T : HSp D) (w₀ : WO S T) (c : ℂ) (f : WO S T → ℂ) 
 theorem mt_one' (S : HSp D) : Formalism.L2.Theta.mt S 1 = 1 := by
   simp [Formalism.L2.Theta.mt]
 
-theorem mt_mul' (S : HSp D) (h k : GA D S) :
-    Formalism.L2.Theta.mt S (h * k) = Formalism.L2.Theta.mt S h * Formalism.L2.Theta.mt S k := by
-  simp [Formalism.L2.Theta.mt]
+alias mt_mul' := _root_.GlobalTheory.BesselCompare.mt_mul
 
 theorem actO_one_mul (S T : HSp D) (h k : GA D T) (x : WO S T) :
     actO S T 1 h (actO S T 1 k x) = actO S T 1 (h * k) x := by
   simp [actO, mt_mul', Matrix.mul_assoc]
-
-theorem actO_one_one (S T : HSp D) (x : WO S T) : actO S T 1 1 x = x := by
-  simp [actO]
 
 theorem actO_iso_mid (V V' W : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E)
     (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E) (k : GA D W) (y : Mx D W.rank r) (x : WO V' W) :
@@ -1514,7 +1492,7 @@ theorem actO_iso_mid (V V' W : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin r)
 theorem move (S T : HSp D) {χS χT : (AE D)ˣ →* Circle} {ω : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)}
     (hω : IsWeilDatumO ψ S T χS χT ω) (h : GA D T) (w : WO S T) (P : WO S T → ℂ) (hP : IsThetaFunO ψ S T P) :
     heisO ψ S T w (ω (1, h) P) = ω (1, h) (heisO ψ S T (actO S T 1 h⁻¹ w) P) := by
-  rw [hω.om_heis 1 h _ P hP, actO_one_mul, mul_inv_cancel, actO_one_one]
+  rw [hω.om_heis 1 h _ P hP, actO_one_mul, mul_inv_cancel, _root_.GlobalTheory.LatNhds.actO_one]
 
 theorem inv_apply (S T : HSp D) (ω : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (h : GA D T)
     (z : WO S T → ℂ) : ω (1, h⁻¹) (ω (1, h) z) = z := by
@@ -1535,7 +1513,7 @@ theorem per_h {V V' W : HSp D} {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.host
   have thV' := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ V' W).1
   obtain ⟨μV, 𝓕V, hμV, h𝓕V⟩ := exists_fd (D := D) V W
   obtain ⟨μ', 𝓕', hμ', h𝓕'⟩ := exists_fd (D := D) V' W
-  obtain ⟨ν, hν, hMC⟩ := coef_unfold D V V' W r C B hs ψ hψ μ 𝓨 hμ μV 𝓕V hμV h𝓕V μ' 𝓕' hμ' h𝓕'
+  obtain ⟨ν, hν, hMC⟩ := _root_.GlobalTheory.CoefUnfold.coef_unfold D V V' W r C B hs ψ hψ μ 𝓨 hμ μV 𝓕V hμV h𝓕V μ' 𝓕' hμ' h𝓕'
   have hU : ∀ P Q, IsThetaFunO ψ V W P → IsThetaFunO ψ V W Q →
       ∫ w in 𝓕V, ω (1, h) P w * star (ω (1, h) Q w) ∂μV = ∫ w in 𝓕V, P w * star (Q w) ∂μV :=
     fun P Q hP hQ => GlobalTheory.Mem.LiftPolar.scalar_eq D ψ hψ V W μV 𝓕V hμV h𝓕V (ω (1, h)) (hω.om_pres _)

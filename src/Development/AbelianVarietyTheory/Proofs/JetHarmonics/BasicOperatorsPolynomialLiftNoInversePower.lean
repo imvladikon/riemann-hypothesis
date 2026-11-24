@@ -77,6 +77,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DensityLemma.PFibreBoundV
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.InvariantOperatorUnderJacquet
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SandwichRhoAction
@@ -99,7 +100,7 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondExpansionIden
 -- Members: Development.AbelianVarietyTheory.Proofs.JetHarmonics.CellMulExp, Development.AbelianVarietyTheory.Proofs.JetHarmonics.PolyLiftOfSmoothComm, Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPolyDiffOpRadialPartEqShiftedOperator, Development.AbelianVarietyTheory.Proofs.JetHarmonics.MirrorTodaRadialOperatorPolynomialCoefficientLif, Development.AbelianVarietyTheory.Proofs.JetHarmonics.BasicOperatorsPolynomialLiftNoInversePower
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.JetHarmonics.CellMulExp =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.CellMulExp", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeylCellRange.ReflectionMultiplicationOnBigCell\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RightSingleRule.PatEntryZero\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutHLTorus\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.HpkMulSingleEsI\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.LeftRuleLevelPoint\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.WCellMemOmPlus\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellConjTransposeMulApply\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Calculus.Deriv.Prod\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.Normed.Algebra.MatrixExponential\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.JetHarmonics.CellMulExp", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeylCellRange.ReflectionMultiplicationOnBigCell\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RightSingleRule.PatEntryZero\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutHLTorus\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.HpkMulSingleEsI\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.LeftRuleLevelPoint\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.WCellMemOmPlus\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellConjTransposeMulApply\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Calculus.Deriv.Prod\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.Normed.Algebra.MatrixExponential\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DensityLemma.PFibreBoundV\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -113,8 +114,6 @@ variable {k r : ℕ}
 
 theorem eI_val (a : Fin r) : (eI k r a).val = a.val := rfl
 
-theorem esI_val (a : Fin r) : (esI k r a).val = 2 * r + k - a.val := rfl
-
 theorem cell_apply (c : Fin r → ℂ) (g : Mx k r) (p q : Fin (2 * r + k + 1)) :
     (wCell k r (Fin.last r) c * g) p q = PI.QnWCellW.cf k r c p * g (PI.QnWCellW.swp k r p) q := by
   rw [PI.QnWCellW.wCell_last, PI.QnWCellW.Wm_mul_apply]
@@ -122,7 +121,7 @@ theorem cell_apply (c : Fin r → ℂ) (g : Mx k r) (p q : Fin (2 * r + k + 1)) 
 theorem swp_e (a : Fin r) : PI.QnWCellW.swp k r (eI k r a) = esI k r a := by
   have := a.isLt
   apply Fin.ext
-  rw [PI.QnWCellW.swp_val, if_neg (by rw [eI_val]; omega), eI_val, esI_val]
+  rw [PI.QnWCellW.swp_val, if_neg (by rw [eI_val]; omega), eI_val, _root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val]
 
 theorem swp_es (a : Fin r) : PI.QnWCellW.swp k r (esI k r a) = eI k r a := by
   rw [← swp_e, PI.QnWCellW.swp_swp]
@@ -133,7 +132,7 @@ theorem cf_e (c : Fin r → ℂ) (a : Fin r) : PI.QnWCellW.cf k r c (eI k r a) =
 theorem cf_es (c : Fin r → ℂ) (a : Fin r) : PI.QnWCellW.cf k r c (esI k r a) = c a := by
   have := a.isLt
   unfold PI.QnWCellW.cf
-  rw [if_neg (by rw [esI_val]; omega), if_neg (by rw [esI_val]; omega), esI_val, show 2 * r + k - (2 * r + k - a.val) = a.val by omega,
+  rw [if_neg (by rw [_root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val]; omega), if_neg (by rw [_root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val]; omega), _root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val, show 2 * r + k - (2 * r + k - a.val) = a.val by omega,
     PI.QnWCellW.cN_val]
 
 theorem swp_eq_iff (p q : Fin (2 * r + k + 1)) : PI.QnWCellW.swp k r p = q ↔ p = PI.QnWCellW.swp k r q := by
@@ -256,7 +255,7 @@ theorem pat_hX {a b : Fin r} (hab : b.val < a.val) (s : ℂ) : QRR.Pat k r b (hX
     left; rw [eI_val, eI_val]; omega
   by_cases h2 : esI k r a = i ∧ esI k r b = j
   · obtain ⟨rfl, rfl⟩ := h2
-    right; rw [esI_val, esI_val]; omega
+    right; rw [_root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val, _root_.PI.UnitaryGroupMassFormula.DLm.NBk.esI_val]; omega
   exfalso; apply hij
   simp [hX, h1, h2]
 

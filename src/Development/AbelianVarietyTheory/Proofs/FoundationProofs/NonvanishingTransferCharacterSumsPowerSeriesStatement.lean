@@ -529,10 +529,6 @@ theorem norm_eq_one_of_pow {x : Qbar l} {n : ℕ} (hn : n ≠ 0) (h : x ^ n = 1)
   have : ‖x‖ ^ n = 1 := by rw [← norm_pow, h, norm_one]
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn).1 this
 
-theorem norm_pow_sub_pow_lt_one {x y : Qbar l} (hx : ‖x‖ ≤ 1) (hy : ‖y‖ ≤ 1) (h : ‖x - y‖ < 1) (n : ℕ) :
-    ‖x ^ n - y ^ n‖ < 1 :=
-  _root_.GlobalTheory.PowerDifferenceNorm.norm_pow_sub_pow_lt_one hx hy h n
-
 theorem norm_natCast_sub_lt_one {a b : ℕ} (h : (a : ZMod l) = (b : ZMod l)) : ‖(a : Qbar l) - b‖ < 1 := by
   obtain ⟨m, hm⟩ := ((ZMod.natCast_eq_natCast_iff a b l).1 h).symm.dvd
   have h2 : (a : Qbar l) - b = (l : Qbar l) * (m : Qbar l) := by
@@ -581,7 +577,7 @@ theorem exists_teichmuller : ∃ ω : (ZMod l)ˣ →* (Qbar l)ˣ,
   refine ⟨monoidHomOfForallMemZpowers hg hdvd, fun x => ?_⟩
   obtain ⟨j, rfl⟩ := (mem_powers_iff_mem_zpowers.2 (hg x))
   rw [map_pow, monoidHomOfForallMemZpowers_apply_gen, Units.val_pow_eq_pow_val, hw']
-  refine norm_sub_lt_one_trans (norm_pow_sub_pow_lt_one (norm_eq_one_of_pow hl1 hw).le
+  refine norm_sub_lt_one_trans (_root_.GlobalTheory.PowerDifferenceNorm.norm_pow_sub_pow_lt_one (norm_eq_one_of_pow hl1 hw).le
     (IsUltrametricDist.norm_natCast_le_one _ _) hwg j) ?_
   have := norm_natCast_sub_lt_one (l := l) (a := (g : ZMod l).val ^ j) (b := ((g ^ j : (ZMod l)ˣ) : ZMod l).val) (by
     push_cast
@@ -718,7 +714,7 @@ theorem exists_primitive_inComp : ∀ (l : ℕ) [Fact l.Prime] (φ : DirichletCh
     have n2 : ‖(ω x : Qbar l)‖ = 1 := norm_eq_one_of_pow hl1 (by
       rw [← Units.val_pow_eq_pow_val, ← map_pow, hx1, map_one, Units.val_one])
     rw [n1, mul_one]
-    refine norm_pow_sub_pow_lt_one n2.le (IsUltrametricDist.norm_natCast_le_one _ _) ?_ e
+    refine _root_.GlobalTheory.PowerDifferenceNorm.norm_pow_sub_pow_lt_one n2.le (IsUltrametricDist.norm_natCast_le_one _ _) ?_ e
     refine norm_sub_lt_one_trans (hω x) (norm_natCast_sub_lt_one ?_)
     rw [hb', ZMod.natCast_zmod_val]
   · rw [inv_inv, hval]
@@ -735,8 +731,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.HV GlobalTheory.Ord2 GlobalTheory.KZ PowerSeries GlobalTheory.KZ.Cmp
 
-theorem _root_.GlobalTheory.T.exists_primitive_character_twist : ∀ (l : ℕ) [Fact l.Prime] (φ : DirichletCharacter (Qbar l) l) (e k : ℕ) (ζ : Qbar l), l ≠ 2 → 1 ≤ k → IsPrimitiveRoot ζ (l ^ k) → ∃ ψ : DirichletCharacter (Qbar l) (l ^ (k + 1)), ψ.IsPrimitive ∧ InComp φ e ψ ∧ ψ⁻¹ (1 + (l : ZMod (l ^ (k + 1)))) = ζ := by
-  first | (exact @GlobalTheory.KZ.Cmp.PrimChar.exists_primitive_inComp)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPrimitiveCharacterTwistStatement =====
@@ -1583,7 +1577,7 @@ theorem mellin_comp (l : ℕ) [Fact l.Prime] (c : Coef l) (F : PowerSeries (Qbar
         rw [norm_mul, norm_pow]
         exact mul_le_one₀ (pow_le_one₀ (norm_nonneg _) (IsUltrametricDist.norm_natCast_le_one _ d)) (norm_nonneg _)
           (norm_char_le_one l l φ _ hlp.pos)
-  · have hg : ‖gSum (k + 1) z ψ‖ ≤ 1 := (GlobalTheory.T.norm_gaussSumModPrimePower_le_half_power l (k + 1) z ψ hz.pow_eq_one).trans (by simpa using hmono (Nat.zero_le _))
+  · have hg : ‖gSum (k + 1) z ψ‖ ≤ 1 := (_root_.GlobalTheory.KZ.Cmp.norm_gSum_le l (k + 1) z ψ hz.pow_eq_one).trans (by simpa using hmono (Nat.zero_le _))
     unfold Cg
     rw [norm_sub_rev]
     refine hA _ _ _ (l ^ (3 * k)) (l ^ (3 * (k + 1)) + (k + 1)) _ (GlobalTheory.AmiceDist.norm_sub_one_le hζ1) ?_ fun N hN => ?_
@@ -1665,7 +1659,7 @@ theorem nonvanishing_transfer : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (Gs L 
   obtain ⟨-, hpin⟩ := _root_.GlobalTheory.KZ.autoPin_congr l c' _ _ (a' / a) (fun k => v' (k + 1) / v (k + 1) * (a' / a)) c₁ (m₀ + 2 * c₁) hAO hBO hB0 hu hw
     (fun k hk ζ hζ => by
       obtain ⟨z, hz, hzψ⟩ := hyp (k + 1) (by omega)
-      obtain ⟨ψ, hψ, hin, hψζ⟩ := GlobalTheory.T.exists_primitive_character_twist l φ e k ζ hl2 (by omega) hζ
+      obtain ⟨ψ, hψ, hin, hψζ⟩ := _root_.GlobalTheory.KZ.Cmp.PrimChar.exists_primitive_inComp l φ e k ζ hl2 (by omega) hζ
       have g1 := hGc k (by omega) z hz ψ hψ hin ζ hψζ hζ.pow_eq_one
       have g2 := hcomb _ _ _ _ _ (h1c k (by omega) z hz ψ hψ hin ζ hψζ hζ.pow_eq_one)
         (h2c k (by omega) z hz ψ hψ hin ζ hψζ hζ.pow_eq_one)
@@ -1696,8 +1690,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.HV GlobalTheory.Ord2 GlobalTheory.KZ PowerSeries
 
-theorem _root_.GlobalTheory.T.nonvanishing_transfer_characterSums_powerSeries : ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (Gs L : PowerSeries (Qbar l)) (a a' κ : Qbar l) (v v' : ℕ → Qbar l) (c₀ m₀ c₁ n₀ : ℕ) (φ : DirichletCharacter (Qbar l) l) (e : ℕ), l ≠ 2 → 1 ≤ e → 2 ≤ m₀ → (∀ n, Gs.coeff n ∈ c.O) → (∀ n, L.coeff n ∈ c.O) → ‖a‖ = 1 → ‖a'‖ = 1 → κ ≠ 0 → (∀ m, ‖v m‖ = 1 ∧ Cg m (v (m + 1)) (v m)) → (∀ m, ‖v' m‖ = 1 ∧ Cg m (v' (m + 1)) (v' m)) → 2 ≤ c₀ → ¬ l ∣ c₀ → (∀ m, m₀ ≤ m → ∃ z : Qbar l, IsPrimitiveRoot z (l ^ m) ∧ ∀ ψ : DirichletCharacter (Qbar l) (l ^ m), ψ.IsPrimitive → Cg (m - c₁) ((1 - (c₀ : Qbar l) * ψ⁻¹ (c₀ : ZMod (l ^ m))) * (v' m * κ * a' ^ m * ∑ b : (ZMod (l ^ m))ˣ, ψ b * tval L (l ^ (3 * m)) (z ^ (b : ZMod (l ^ m)).val))) (v m * a ^ m * ∑ b : (ZMod (l ^ m))ˣ, ψ b * tval Gs (l ^ (3 * m)) (z ^ (b : ZMod (l ^ m)).val))) → (∃ r₁ : ℕ, ∀ r, r₁ ≤ r → 1 ≤ r → ∀ ξ : Qbar l, IsPrimitiveRoot ξ (l ^ r) → ¬ Cg (n₀ + r) (∑ x ∈ (Finset.range (l ^ r)).filter (fun x => ¬ l ∣ x), φ (x : ZMod l) * ((x : Qbar l) ^ e) * mass L r ξ x) 0) → ∃ n₁ r₁ : ℕ, ∀ r, r₁ ≤ r → ∀ ξ : Qbar l, IsPrimitiveRoot ξ (l ^ r) → ¬ Cg (n₁ + r) (∑ x ∈ (Finset.range (l ^ r)).filter (fun x => ¬ l ∣ x), φ (x : ZMod l) * ((x : Qbar l) ^ e) * mass Gs r ξ x) 0 := by
-  first | (exact @GlobalTheory.KZ.Cmp.nonvanishing_transfer)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonvanishingTransferCharacterSumsPowerSeriesStatement =====

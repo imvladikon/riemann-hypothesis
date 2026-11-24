@@ -85,6 +85,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.Exi
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
+import Formalism.LocalToGlobal.ProjectiveLattices.AxHLAM
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -568,14 +569,12 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalT
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 
-theorem _root_.GlobalTheory.T.complete_dvr_padic_embedding : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : Level H) (c : Coeff l) (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ) (p : ℕ) [Fact p.Prime], OverLa la T.V io e₀ → T.FinRes → (p : 𝓞 c.F) ∈ la.asIdeal → ∃ ι : T.Fr →+* PadicAlgCl p, ∀ x, ‖ι x‖ = FinRd.absT p la T e₀ x := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Embed.exists_isometric_embedding
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompleteDvrPadicEmbeddingStatement =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginModelComponentBound =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginModelComponentBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProdZpowLe\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameLawsOfModuli\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginComponentSectionsStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameSectionBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt\nimport Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginModelComponentBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProdZpowLe\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe\npublic import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameLawsOfModuli\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginComponentSectionsStatement\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameSectionBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt\nimport Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP\nimport Formalism.LocalToGlobal.ProjectiveLattices.AxHLAM\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -625,52 +624,10 @@ theorem prod_exZ_zero {M : Type} [CommGroup M] (t : Ix Dw → M) : ∏ i, t i ^ 
   · simp [GlobalTheory.CompanionTheory.Ar.Rec.exZ]
   · simp [GlobalTheory.CompanionTheory.Ar.Rec.exZ]
 
-private theorem mul_mem_secZ' {a b : WZ E} {f g : Rul Xo c} (hf : f ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a)
-    (hg : g ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c b) : f * g ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c (a + b) := by
-  obtain ⟨hfn, hfb⟩ := hf
-  obtain ⟨hgn, hgb⟩ := hg
-  refine ⟨fun p q φ y z hyz => ?_, fun p t y y' hb => ?_⟩
-  · show f q z * g q z = φ (f p y * g p y)
-    rw [hfn p q φ y z hyz, hgn p q φ y z hyz, map_mul]
-  · show f p y' * g p y' = _ * (f p y * g p y)
-    rw [hfb p t y y' hb, hgb p t y y' hb]
-    have hex : ∀ i, GlobalTheory.CompanionTheory.Ar.Rec.exZ Dw (a + b) i =
-        GlobalTheory.CompanionTheory.Ar.Rec.exZ Dw a i + GlobalTheory.CompanionTheory.Ar.Rec.exZ Dw b i := by
-      intro i
-      rcases i with _ | x <;> simp [GlobalTheory.CompanionTheory.Ar.Rec.exZ]
-    simp only [hex, zpow_add, Units.val_mul, Finset.prod_mul_distrib]
-    ring
-
-private theorem one_mem_secZ_zero' : (1 : Rul Xo c) ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c (0 : WZ E) := by
-  refine ⟨fun p q φ y z _ => ?_, fun p t y y' _ => ?_⟩
-  · show (1 : q.R) = φ 1
-    exact (map_one φ).symm
-  · show (1 : p.R) = _ * 1
-    rw [mul_one, ← Units.coe_prod, prod_exZ_zero, Units.val_one]
-
 private theorem evC_mul_geometry (h : GenFrEx Xo c) (Z : Comp Xo c) (f g : Rul Xo c) :
     evC h Z (f * g) = evC h Z f * evC h Z g := by
   unfold Formalism.L2.Pj.evC Formalism.L2.Pj.evR
   exact Formalism.L2.Pj.evalAt_mul _ _ f g _
-
-private theorem evC_add' (h : GenFrEx Xo c) (Z : Comp Xo c) (f g : Rul Xo c) :
-    evC h Z (f + g) = evC h Z f + evC h Z g := by
-  unfold Formalism.L2.Pj.evC Formalism.L2.Pj.evR
-  exact Formalism.L2.Pj.evalAt_add _ _ f g _
-
-private theorem evC_zero' (h : GenFrEx Xo c) (Z : Comp Xo c) : evC h Z (0 : Rul Xo c) = 0 := by
-  unfold Formalism.L2.Pj.evC Formalism.L2.Pj.evR
-  exact Formalism.L2.Pj.evalAt_zero _ _ _
-
-private theorem evC_one_of_genFromTest {h : GenFrEx Xo c} (hT : GenFromTest Xo c h) (Z : Comp Xo c) :
-    evC h Z (1 : Rul Xo c) = 1 := by
-  unfold Formalism.L2.Pj.evC Formalism.L2.Pj.evR
-  exact Formalism.L2.Pj.evalAt_one _ _ _ (hT Z)
-
-private theorem evC_smul' (h : GenFrEx Xo c) (Z : Comp Xo c) (k : c.F) (f : Rul Xo c) :
-    evC h Z (k • f) = algebraMap c.F (Om Z) k * evC h Z f := by
-  unfold Formalism.L2.Pj.evC Formalism.L2.Pj.evR
-  exact Formalism.L2.Pj.evalAt_smul _ _ k f _
 
 theorem exists_ratio {h : GenFrEx Xo c} (hT : GenFromTest Xo c h) {Z : Comp Xo c} {a : WZ E} {N : ℕ}
     {g : Fin (N + 1) → Rul Xo c} (hg : ∀ j, g j ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a) (hB : BirOn h Z g) (x : Om Z) :
@@ -683,28 +640,28 @@ theorem exists_ratio {h : GenFrEx Xo c} (hT : GenFromTest Xo c h) {Z : Comp Xo c
     obtain ⟨j, rfl⟩ := hx
     exact ⟨a, g j, g 0, hg j, hg 0, hB.1, div_mul_cancel₀ _ hB.1⟩
   | algebraMap k =>
-    refine ⟨0, k • 1, 1, Submodule.smul_mem _ k one_mem_secZ_zero', one_mem_secZ_zero', ?_, ?_⟩
-    · rw [evC_one_of_genFromTest hT]; exact one_ne_zero
-    · rw [evC_smul', evC_one_of_genFromTest hT]
+    refine ⟨0, k • 1, 1, Submodule.smul_mem _ k _root_.GlobalTheory.CompanionTheory.Ar.Rec.one_mem_secZ_zero, _root_.GlobalTheory.CompanionTheory.Ar.Rec.one_mem_secZ_zero, ?_, ?_⟩
+    · rw [_root_.GlobalTheory.CompanionTheory.Ar.Rec.evC_one_of_test hT]; exact one_ne_zero
+    · rw [_root_.Formalism.L2.Pj.evC_smul, _root_.GlobalTheory.CompanionTheory.Ar.Rec.evC_one_of_test hT]
   | add x y _ _ ihx ihy =>
     obtain ⟨u1, f1, f1', hf1, hf1', h1, e1⟩ := ihx
     obtain ⟨u2, f2, f2', hf2, hf2', h2, e2⟩ := ihy
     refine ⟨u1 + u2, f1 * f2' + f2 * f1', f1' * f2',
-      add_mem (mul_mem_secZ' hf1 hf2') (by rw [add_comm u1 u2]; exact mul_mem_secZ' hf2 hf1'),
-      mul_mem_secZ' hf1' hf2', ?_, ?_⟩
+      add_mem (_root_.GlobalTheory.CompanionTheory.Ar.Rec.secZ_mul hf1 hf2') (by rw [add_comm u1 u2]; exact _root_.GlobalTheory.CompanionTheory.Ar.Rec.secZ_mul hf2 hf1'),
+      _root_.GlobalTheory.CompanionTheory.Ar.Rec.secZ_mul hf1' hf2', ?_, ?_⟩
     · rw [evC_mul_geometry]; exact mul_ne_zero h1 h2
-    · rw [evC_add', evC_mul_geometry, evC_mul_geometry, evC_mul_geometry, ← e1, ← e2]; ring
+    · rw [_root_.Formalism.L2.Pj.evC_add, evC_mul_geometry, evC_mul_geometry, evC_mul_geometry, ← e1, ← e2]; ring
   | inv x _ ihx =>
     obtain ⟨u, f, f', hf, hf', h0, e⟩ := ihx
     by_cases hx0 : x = 0
-    · exact ⟨u, 0, f', Submodule.zero_mem _, hf', h0, by rw [hx0, inv_zero, zero_mul, evC_zero']⟩
+    · exact ⟨u, 0, f', Submodule.zero_mem _, hf', h0, by rw [hx0, inv_zero, zero_mul, _root_.Formalism.L2.Pj.evC_zero]⟩
     · refine ⟨u, f', f, hf', hf, ?_, ?_⟩
       · rw [← e]; exact mul_ne_zero hx0 h0
       · rw [← e, ← mul_assoc, inv_mul_cancel₀ hx0, one_mul]
   | mul x y _ _ ihx ihy =>
     obtain ⟨u1, f1, f1', hf1, hf1', h1, e1⟩ := ihx
     obtain ⟨u2, f2, f2', hf2, hf2', h2, e2⟩ := ihy
-    refine ⟨u1 + u2, f1 * f2, f1' * f2', mul_mem_secZ' hf1 hf2, mul_mem_secZ' hf1' hf2', ?_, ?_⟩
+    refine ⟨u1 + u2, f1 * f2, f1' * f2', _root_.GlobalTheory.CompanionTheory.Ar.Rec.secZ_mul hf1 hf2, _root_.GlobalTheory.CompanionTheory.Ar.Rec.secZ_mul hf1' hf2', ?_, ?_⟩
     · rw [evC_mul_geometry]; exact mul_ne_zero h1 h2
     · rw [evC_mul_geometry, evC_mul_geometry, ← e1, ← e2]; ring
 
@@ -780,7 +737,7 @@ end Read
 
 theorem linked : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Y₀ : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)), Top.GoodOrigin Y₀ T → ∀ (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : Comp Xo c) (Rd : Reading Fr h Z), FinTr.Linked Rd := by
   intro hG E _ _ _ H Dw l Xo c r U h e hC Y₀ _ T hO O _ β Y SS RM Sys Fx Or Fr Z Rd
-  obtain ⟨a, N, g, hg, hB⟩ := GlobalTheory.T.good_origin_component_sections hG E H Dw l Xo c r U h e hC Y₀ T hO Z
+  obtain ⟨a, N, g, hg, hB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.BirEx.bir_exists hG E H Dw l Xo c r U h e hC Y₀ T hO Z
   exact linked_of_birOn hC Rd hg hB
 
 end GlobalTheory.CompanionTheory.Ar.Plug.FinLink
@@ -800,8 +757,6 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalT
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 
-theorem _root_.GlobalTheory.T.good_origin_model_component_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Y₀ : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)), Top.GoodOrigin Y₀ T → ∀ (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : Comp Xo c) (Rd : Reading Fr h Z), FinTr.Linked Rd := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.FinLink.linked
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginModelComponentBoundStatement =====
@@ -855,8 +810,6 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalT
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 
-theorem _root_.GlobalTheory.T.integral_frame_component_value : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Z : Comp Xo c) (ex : Ix Dw → ℤ) (f : Rul Xo c), f ∈ GlobalTheory.AllWt.secZ Xo c ex → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (A : Subring (Om Z)) (ev : A →+* T.Fr), FinTr.RegAt h Z io A ev y.1 → evI y f ≠ 0 → ∀ hb : evC h Z f ∈ A, ev ⟨_, hb⟩ ≠ 0 := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.FinTr.ev_genValue_ne_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralFrameComponentValueStatement =====
@@ -887,8 +840,6 @@ open scoped Matrix
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.root_origin_frame_section_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or), ∀ (A : Subring RM.Ω) (p : ℕ) [Fact p.Prime] (z : (Σ k, RM.ι k) → PadicAlgCl p) (ev : A →+* PadicAlgCl p), z ∈ Small.algPts p (mCoordIdeal RM.y) → (∀ x : A, Small.HasVal RM.y 0 (x : RM.Ω) z (ev x)) → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ) (y : IntFr Xo c T io) (evT : A →+* T.Fr) (zT : letI := io.toAlgebra; FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), FinRd.IsIntPt Fr A ev la T io e y evT zT t → ∀ x : (Ref.pjSys Xo c).Pt la, (∀ f, (Ref.pjSys Xo c).val x f = nval T.V e (evI y f)) → FinRd.ReadsZ Fr z x (FinRd.tOf p la T e t) := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Rec.FinRd.readsZ_of_isIntPt | exact GlobalTheory.CompanionTheory.Ar.Rec.FinRd.readsZ_of_isIntPt | (intros; apply GlobalTheory.CompanionTheory.Ar.Rec.FinRd.readsZ_of_isIntPt <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameSectionBoundStatement =====
@@ -1278,8 +1229,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound 
   let x : (Ref.pjSys Xo c).Pt la := (show Ref.PtU Xo c la from PtV.mk la ho₂ yy hyA τ hτ)
   have hval : ∀ f, (Ref.pjSys Xo c).val x f = nval T₂.V (r₂ * (r₀ * e₀)) (evI yy f) :=
     fun f => Ref.pjSys_val_mk Xo c la ho₂ yy hyA τ hτ f
-  have hS := GlobalTheory.T.root_origin_frame_section_bound E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A₂ p z ev₂ hzalg hev la T₂ _ _ yy evT zT t hI x hval
-  have hR := GlobalTheory.T.root_origin_frame_degree_bound hG E H Dw l Xo c O β Y SS RM Sys Fx Or Fr hOm hram A₂ p z ev₂ hzalg hev hGood hrat
+  have hS := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.readsZ_of_isIntPt E H Dw l Xo c O β Y SS RM Sys Fx Or Fr A₂ p z ev₂ hzalg hev la T₂ _ _ yy evT zT t hI x hval
+  have hR := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Roots.reads_roots hG E H Dw l Xo c O β Y SS RM Sys Fx Or Fr hOm hram A₂ p z ev₂ hzalg hev hGood hrat
     la T₂ _ _ yy evT zT t hI
   obtain ⟨rec, h1, h2⟩ := FinRd.read_of_reads hz x (FinRd.tOf_pos la T₂ _ t) hS hR
   refine ⟨z, hzalg, rec, fun b hb hb1 => hev ⟨b, hBA (by simp [hb1])⟩, fun r' => ⟨(h1 r').1, ?_⟩,
@@ -1310,8 +1261,6 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalT
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 
-theorem _root_.GlobalTheory.T.uniform_all_root_origin_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : Comp Xo c) (Rd : Reading Fr h Z), Or.𝔐.OmVB → (∀ p : ℕ, p.Prime → (p : ℤ) ∣ discr E → p ∈ SS) → FinTr.Linked Rd → ∀ B₁ : Finset RM.Ω, ∃ (B₂ : Finset RM.Ω) (B₃ : Finset (Om Z)), ∀ (A : Subring RM.Ω), (↑B₁ : Set RM.Ω) ⊆ A → (↑B₂ : Set RM.Ω) ⊆ A → ∀ (A' : Subring (Om Z)), (↑B₃ : Set (Om Z)) ⊆ A' → ∀ (p : ℕ) [Fact p.Prime] (ev₁ : A →+* PadicAlgCl p), (∀ x, IsAlgebraic ℤ (ev₁ x)) → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ) (y : IntFr Xo c T io) (ι : T.Fr →+* PadicAlgCl p) (ev : A' →+* T.Fr), (p : 𝓞 c.F) ∈ la.asIdeal → OverLa la T.V io e₀ → y.IsAlg → (∀ x, ‖ι x‖ = FinRd.absT p la T e₀ x) → FinTr.RegAt h Z io A' ev y.1 → (∀ a : A', ∃ ha : Rd.φ a ∈ A, ev₁ ⟨_, ha⟩ = ι (ev a)) → ∃ z ∈ Small.algPts p (mCoordIdeal RM.y), ∃ rec : RootIx Dw → ℝ, (∀ b (hb : b ∈ A), b ∈ B₁ → Small.HasVal RM.y 0 b z (ev₁ ⟨b, hb⟩)) ∧ (∀ r', 0 < rec r' ∧ |Real.log (Small.supMet (RM.xdeg r') z) - Real.log (rec r')| ≤ (if p ∈ SS then 1 / ((p : ℝ) - 1) + (if p = 2 then 1 else 0) + (padicValInt p (discr E) : ℝ) / Module.finrank ℚ E else 0) * Real.log p) ∧ ∀ (a : WZ E) (n' : Option (RootIx Dw) → ℤ), (∀ j, (n' j : ℝ) = RM.coef (towerWt Dw a) 0 j) → ∀ f ∈ Rec.secZ Xo c a, ∃ v, Small.HasVal RM.y (Top.combLine (RM.line 1) n').a (Fr.rd f * (∏ r', Or.e r' ^ (-n' (some r')))) z v ∧ ∀ s : ℝ, nval T.V e₀ (evI y f) = ((ramOverZ la * s : ℝ) : EReal) → ‖v‖ = (p : ℝ) ^ (-s) * ∏ r', rec r' ^ n' (some r') := by
-  first | exact @GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllRootOriginBoundStatement =====
@@ -1340,7 +1289,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     letI := io.toAlgebra
     by_contra hc
     exact hy0 (GlobalTheory.AllWt.mem_suppOn.1 hfZ T₀.Fr y.1 ((GlobalTheory.AllWt.liesOff_iff Z y.1).2 hc))
-  have hLk := GlobalTheory.T.good_origin_model_component_bound hG E H Dw l Xo c r U h e hL Y T o _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b) Fr Z Rd
+  have hLk := _root_.GlobalTheory.CompanionTheory.Ar.Plug.FinLink.linked hG E H Dw l Xo c r U h e hL Y T o _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b) Fr Z Rd
   have hram : ∀ p : ℕ, p.Prime → (p : ℤ) ∣ discr E → p ∈ o.toTowerOrigin.S B := fun p hp hd => by
     rw [o.toTowerOrigin.S_iff]
     refine ⟨hp, Or.inr ((o.toTowerOrigin.bad_iff p).2 ⟨hp, ?_⟩)⟩
@@ -1352,7 +1301,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   let sc : (∀ k, RM.ι k) → RM.Ω := fun c' => s * ∏ k, RM.y ⟨k, c' k⟩ ^ (-(((1 : ℕ) : ℤ) * degOf RM u k))
   let rt : (∀ k, RM.ι k) × (Σ k, RM.ι k) → RM.Ω := fun q => RM.y q.2 / RM.y ⟨q.2.1, q.1 q.2.1⟩
   let B₁ : Finset RM.Ω := {x, Rd.φ (evC h Z f)} ∪ Finset.univ.image sc ∪ Finset.univ.image rt
-  obtain ⟨B₂, B₃, hR⟩ := GlobalTheory.T.uniform_all_root_origin_bound hG E H Dw l Xo c r U h e hL hUn _ _ Y _ RM _ _ Ow Fr Z Rd (o.omVB B b) hram hLk B₁
+  obtain ⟨B₂, B₃, hR⟩ := _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound hG E H Dw l Xo c r U h e hL hUn _ _ Y _ RM _ _ Ow Fr Z Rd (o.omVB B b) hram hLk B₁
   have hfinr : 0 < (letI := Rd.φ.toAlgebra; Module.finrank (Om Z) RM.Ω) := by
     rw [Rd.deg]; exact Test.deg_pos Ow
   have hfin : (letI := Rd.φ.toAlgebra; FiniteDimensional (Om Z) RM.Ω) := by
@@ -1361,11 +1310,11 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
   obtain ⟨Btr, hTr⟩ := _root_.GlobalTheory.CompanionTheory.TraceSpec.trace_specialisation (Om Z) RM.Ω Rd.φ (B₁ ∪ B₂) x hfin
   obtain ⟨T', io', e', y', A', ev, ho', hy', hval, hB, -, halg, hreg⟩ :=
-    GlobalTheory.T.weight_section_component_value hG E H Dw l Xo c r U h e hL Y Z u f hf (Btr ∪ B₃) la T₀ io e₀ ho y hy hon hy0
+    _root_.GlobalTheory.CompanionTheory.Ar.Plug.FinTr.Approx.approx_main hG E H Dw l Xo c r U h e hL Y Z u f hf (Btr ∪ B₃) la T₀ io e₀ ho y hy hon hy0
 
   have hB3 : (↑B₃ : Set (Om Z)) ⊆ A' := fun b hb =>
     hB (Finset.mem_coe.2 (Finset.mem_union_right _ (Finset.mem_coe.1 hb)))
-  obtain ⟨ι, hι⟩ := GlobalTheory.T.complete_dvr_padic_embedding E H l c la T' io' e' p ho' hy' hla
+  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.Embed.exists_isometric_embedding E H l c la T' io' e' p ho' hy' hla
   obtain ⟨A, hA, hB0, hx, ht, hspec⟩ := hTr A' (fun b hb =>
     hB (Finset.mem_coe.2 (Finset.mem_union_left _ (Finset.mem_coe.1 hb))))
   have halgC : ∀ a, IsAlgebraic ℤ ((ι.comp ev) a) := fun a => by
@@ -1382,7 +1331,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hy'0 : evI y' f ≠ 0 := fun h0 => by
     rw [h0, nval_zero, nval_of_ne hy0] at hval
     exact EReal.coe_ne_top _ hval.symm
-  have hW0 := GlobalTheory.T.integral_frame_component_value E H Dw l Xo c r U h e hL Z _ f hf T' io' y' A' ev hreg hy'0 hcf
+  have hW0 := _root_.GlobalTheory.CompanionTheory.Ar.Plug.FinTr.ev_genValue_ne_zero E H Dw l Xo c r U h e hL Z _ f hf T' io' y' A' ev hreg hy'0 hcf
   obtain ⟨W, hWdef⟩ : ∃ W, W = ι (ev ⟨_, hcf⟩) := ⟨_, rfl⟩
   have hW : W ≠ 0 := by rw [hWdef]; exact (map_ne_zero ι).2 hW0
   have hWsum : W = ∑ j, ev' j ⟨x, hx⟩ := by
@@ -1394,7 +1343,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨s₀, hs₀⟩ : ∃ s₀ : ℝ, nval T'.V e' (evI y' f) = ((ramOverZ la * s₀ : ℝ) : EReal) :=
     ⟨((vV T'.V (evI y' f) : ℝ) / e') / ramOverZ la, by
       rw [nval_of_ne hy'0]; congr 1; field_simp⟩
-  obtain ⟨hw1, -, -, hw4, hw5, -⟩ := GlobalTheory.T.tower_weight_of_zero E H Dw l Xo c RM u
+  obtain ⟨hw1, -, -, hw4, hw5, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.integer_weights_vocab E H Dw l Xo c RM u
   have hn : ∀ j, (nOf u j : ℝ) = RM.coef (towerWt Dw (GlobalTheory.AllWt.wtOf Dw u 0).1) 0 j := by
     rw [hw1]; exact hw4
   have hL1 : ∑ r : RootIx Dw, |((-u r.1 r.2 : ℤ) : ℝ)| = GlobalTheory.CovHt.l1 u := by
@@ -1545,7 +1494,7 @@ theorem descent_small : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [
     have h2 := T.j_pos
     have h3 := T.j_lt
     omega
-  obtain ⟨f, hfS, hfZ, hev⟩ := GlobalTheory.T.comp_laws_tower_bound hG E H Dw l Xo c r U h e hL Y T o B b Fr Z Rd hGR u s hs.1
+  obtain ⟨f, hfS, hfZ, hev⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.exists_section_of_trace hG E H Dw l Xo c r U h e hL Y T o B b Fr Z Rd hGR u s hs.1
   have harch := GlobalTheory.T.uniform_norm_tower_bound hG E H Dw l Xo c r U h e hL x hx Y T o B b Fr Z Rd hGR u s R hR hs.2 f hfS hev
   refine ⟨f, GlobalTheory.CompanionTheory.Ar.Plug.bdd_mem_cuspOn E H Dw l Xo c r U h e hL hp.1 hp.2 x Z u hu f hfS hfZ
       (fun σ hσ => ⟨_, harch σ hσ⟩), hev, harch, ?_⟩
@@ -1566,8 +1515,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.uniform_norm_all_tower_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ x : ℝ, (∀ σ, GoodEmb c σ → ∀ k (τ : E →+* ℂ), ‖τ ((U σ).X k).ξ0‖ = x) → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (Dw.p + Dw.q)) (o : Top.GoodOrigin Y T) (B : ℕ) (b : T.Comp) (Fr : Small.GenFrame (o.toTowerOrigin.Or B b)) (Z : Comp Xo c) (Rd : Reading Fr h Z) (_ : GeoRead Rd) (u : GlobalTheory.AllWt.Weight Dw) (R : ℝ), (∀ τ, StrictAnti (u τ)) → 0 ≤ R → ∀ s ∈ modelSmall (o.toTowerOrigin.Or B b) u R, ∃ f ∈ GlobalTheory.AllWt.cuspOn U Z (GlobalTheory.AllWt.wtOf Dw u 0), evC h Z f = trOf Rd u s ∧ (∀ σ, GoodEmb c σ → ∀ z ∈ GlobalTheory.AllWt.framesOn (U σ) Z, GlobalTheory.AllWt.homN (U σ) x (GlobalTheory.AllWt.wtOf Dw u 0) f z ≤ (o.toTowerOrigin.Or B b).Fl.deg * R) ∧ ∀ (p : ℕ) (la : HeightOneSpectrum (𝓞 c.F)), p.Prime → ((p : ℕ) : 𝓞 c.F) ∈ la.asIdeal → ∀ v ∈ (GlobalTheory.CompHt.recVals Xo c).1 la, ((-((vLa la (p : c.F) : ℝ) * (if p ∈ o.toTowerOrigin.S B then exTwo E p else 0) * GlobalTheory.CovHt.l1 u) : ℝ) : EReal) ≤ v f := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.Plug.descent_small
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormAllTowerBoundStatement =====

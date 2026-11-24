@@ -160,13 +160,7 @@ open GlobalTheory.RowCopy GlobalTheory.NRows
 theorem used_loc (D : D7) (i : D.nd.Loc) : D.nd.mu i = D.what₂.mu0 ∨ ∃ w, D.nd.mu i = D.what₂.muAt w :=
   Or.inr ⟨D.nd.w i, (D.nd.mu_w i).trans ((D.what₂.muAt_or _).resolve_left (D.nd.w_tw i)).symm⟩
 
-theorem lamPos_of_used {D : D7} (h : LamUsed D) {μ} (hμ : μ = D.what₂.mu0 ∨ ∃ w, μ = D.what₂.muAt w) {j : ℕ}
-    (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) : LamPos D μ j := by
-  obtain ⟨k, rfl⟩ : ∃ k, j = k + 1 := ⟨j - 1, by omega⟩
-  exact h μ hμ ⟨k, by omega⟩
-
-theorem lamLoc {D : D7} (h : LamUsed D) (i : D.nd.Loc) : LamPos D (D.nd.mu i) (D.nd.j i) :=
-  lamPos_of_used h (used_loc D i) (D.nd.j_range i).1 (D.nd.j_range i).2
+alias lamLoc := _root_.GlobalTheory.NRows.LamUsed.loc
 
 theorem up_injective {D : D7} {μ} {j : ℕ} (h : LamPos D μ j) (hI : DirectSum.IsInternal (D.what₂.isot j)) :
     Function.Injective (D.what₂.thetaT μ j) := by
@@ -188,8 +182,8 @@ theorem rank_of {D : D7} (hI : SumRepresentations.adm8 D) (h : LamUsed D) (L : S
   intro j hj w hw
   obtain ⟨h1, h2⟩ := Finset.mem_Icc.1 hj
   have e : D.what₂.muTw w = D.what₂.muAt w := ((D.what₂.muAt_or w).resolve_left hw).symm
-  have a := up_injective (lamPos_of_used h (Or.inr ⟨w, e⟩) h1 h2) (hI j h1 h2)
-  have b := up_injective (lamPos_of_used h (Or.inl rfl) h1 h2) (hI j h1 h2)
+  have a := up_injective (_root_.GlobalTheory.NRows.LamUsed.at h (Or.inr ⟨w, e⟩) h1 h2) (hI j h1 h2)
+  have b := up_injective (_root_.GlobalTheory.NRows.LamUsed.at h (Or.inl rfl) h1 h2) (hI j h1 h2)
   unfold SizeData₂.zeroSpaceRankAtPlace SizeData₂.dZ0 Rows.Data.Zj
   rw [LinearMap.finrank_range_of_inj a, LinearMap.finrank_range_of_inj b]
 
@@ -863,7 +857,7 @@ theorem main : ∀ (D : D7) (M : Formalism.L2.MtFam D), Formalism.L2.HeckeTied D
     rw [h2] at h1
     exact (smul_left_injective _ hene h1).symm
   have hcls : Formalism.L2.NCov.cls ψ = NL.mx _ _ i := by
-    refine (cls_eq_of_residue _ ψ (NL.ptX _ _ i h x).1 ?_).trans (NL.ptX _ _ i h x).2.1
+    refine (_root_.GlobalTheory.ClassResidueGenerators.cls_eq_of_generators _ ψ (NL.ptX _ _ i h x).1 ?_).trans (NL.ptX _ _ i h x).2.1
     rintro _ ⟨v, k, hvk, rfl⟩
     rw [hψv v k hvk, ← NL.ptX_hT _ _ i h x v k hvk]
     obtain ⟨hv, hk1, hk2⟩ := (Formalism.L2.genAt_iff NL h v k).2 hvk
@@ -971,8 +965,6 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
 end GlobalTheory.PtLocalPin
 
 
-theorem _root_.GlobalTheory.T.ptLocal_theta_exhaustion : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ i, GlobalTheory.ThetaExh.PtLocal D.nd D.naut i := by
-  exact _root_.GlobalTheory.PtLocalPin.main_alt_alt
 end
 end -- clump:auto
 end -- clump:auto
@@ -1055,18 +1047,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.point_of_aux42_aux41
-    (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7)
-    (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D) :
-    Formalism.MainNotions.SumRepresentations.Conclusion42 D →
-      _root_.Formalism.MainNotions.SumRepresentations.provisionFortyOne D →
-      GlobalTheory.SplitRead.RowPoint D.nd D.naut :=
-  _root_.GlobalTheory.RowPointLoc.main_alt_alt hL D P
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsBisRestStatement =====
@@ -1570,12 +1550,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Polynomial NumberField IsDedekindDomain
-
-theorem _root_.GlobalTheory.T.rbar_wild_inertia_of_labTame_repAtGN : ∀ (D : D7), GlobalTheory.RowCopy.RbarTie D → _root_.UpperTheory.GalS.LabTameS D.nd D.naut → _root_.UpperTheory.GalS.RowRepAtGN D → ∀ (σ : D.what₂.FT) (k : Fin 2) (v : D.nd.PlG k) (i : D.nd.Loc), D.nd.l i ≠ D.host.g k → D.what₂.isot (D.nd.j i) σ ≠ ⊥ → D.nd.goodRow σ → ∀ s ∈ Ine (F := D.host.E) (D.nd.plOm.1 (D.naut.plGw k v)), s ∈ wildSet D.nd (D.nd.plOm.1 (D.naut.plGw k v)) → D.ntypes.rbar σ (D.nd.w i) s = 1 := by
-  first | exact @_root_.GlobalTheory.RowWildTame.main_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ReductionTrivialOnWildInertia =====
@@ -1604,7 +1578,7 @@ theorem tameGenerator_residual_alt_alt (D : D7) (h1 : GlobalTheory.RowCopy.RbarT
   refine ⟨_root_.GlobalTheory.ResidualTame.cpAt' D h1 h2 h3 h4 σ k v i hl hne hg, ?_⟩
   obtain ⟨φ, hI, hW⟩ := _root_.GlobalTheory.TameRel.main _ _ _ D.nd D.naut k v _ (D.ntypes.tg_mem k v)
   refine ⟨φ, ?_⟩
-  have h := _root_.GlobalTheory.T.rbar_wild_inertia_of_labTame_repAtGN D h1 h3 h4 σ k v i hl hne hg _ hI hW
+  have h := _root_.GlobalTheory.RowWildTame.main_alt D h1 h3 h4 σ k v i hl hne hg _ hI hW
   rw [map_mul, map_inv, map_pow, mul_inv_eq_one] at h
   exact h
 end GlobalTheory.RowTie
@@ -1639,7 +1613,7 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
     _root_.GlobalTheory.ParamRep.jointCond_33_rho_of_signature_adm5 D hA.tie0 hA.a2 hB.a4 hA.a5 p41 (GlobalTheory.GoodCuspPoint.main D tl)
       (_root_.GlobalTheory.XiOver.main_alt_alt_alt D P.cf P.C P.tp P.chr P.val hA.tie0 hA.a2 hA.a5)
   have rp : _root_.UpperTheory.GalS.RowRepAtGN D :=
-    _root_.GlobalTheory.RowRepOcc.repAtGN_of_point_split D hA.tie0 hA.a2 hA.a5 p42 rho hA.gsp (_root_.GlobalTheory.T.point_of_aux42_aux41 hL D P p42 p41)
+    _root_.GlobalTheory.RowRepOcc.repAtGN_of_point_split D hA.tie0 hA.a2 hA.a5 p42 rho hA.gsp (_root_.GlobalTheory.RowPointLoc.main_alt_alt hL D P p42 p41)
   exact
     { c4b := _root_.GlobalTheory.RowTie.tameGenerator_residual_alt_alt D rb io lt rp
       rho := rho
@@ -1647,9 +1621,9 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
       parUp := GlobalTheory.RowTie.parUpRec_of_ties D P.T hB.thetaOne (fun i => (hi i).1) bc (fun i => (hi i).2.1)
         (fun i => (hi i).2.2)
       downMem := GlobalTheory.RowTie.downMemRec_of_ties D P.T hB.thetaOne isot
-        (fun i => _root_.GlobalTheory.PartOrthPin.main_alt_alt hL D P i ⟨J.rowM i⟩) (fun i => _root_.GlobalTheory.T.type_orthogonality_of_form' hL D P i (J.form i))
+        (fun i => _root_.GlobalTheory.PartOrthPin.main_alt_alt hL D P i ⟨J.rowM i⟩) (fun i => _root_.GlobalTheory.ThetaExh.typeOrth_of_pin_alt hL D P i (J.form i))
         (fun i => (hi i).1) bc (fun i => (hi i).2.1)
-      goodPart := GlobalTheory.Proof.GoodComponentRecursion.goodPartRec_of_ties D P.T hB.thetaOne lift (fun i => _root_.GlobalTheory.T.ptLocal_theta_exhaustion hL D P i) bc
+      goodPart := GlobalTheory.Proof.GoodComponentRecursion.goodPartRec_of_ties D P.T hB.thetaOne lift (fun i => _root_.GlobalTheory.PtLocalPin.main_alt_alt hL D P i) bc
         (fun i => (hi i).2.1) }
 end GlobalTheory.RowsCClose
 end
@@ -1664,13 +1638,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.c_statement_of_pair_lift_splitBC_repOfLoc : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), _root_.GlobalTheory.NPin.CharacterChoiceJoin P → _root_.GlobalTheory.NRows.RowsAAlt D → GlobalTheory.NRows.RowsB D → Formalism.MainNotions.SumRepresentations.adm1 D → Formalism.MainNotions.SumRepresentations.adm8 D → _root_.Formalism.MainNotions.SumRepresentations.provisionFirst D → (∀ i, PairLift D.nd D.naut i ∧ SplitBC D.nd D.naut i ∧ RepOfLoc D.nd D.naut i) → GlobalTheory.NRows.RowsC D := by
-  first | exact @_root_.GlobalTheory.RowsCClose.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsBisLastStatement =====
@@ -1783,13 +1750,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.type_nonzero_recursion_of_eigen' : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ (X : GlobalTheory.NJoin.RealAt D P.cf P.C P.tp) (_ : GlobalTheory.NJoin.Agree X P.M P.rep), (∀ j t, GlobalTheory.DownLift.TypeNZ X.R j t) → ∀ i, GlobalTheory.NJoin.EigString X i → GlobalTheory.NJoin.EigGood X i → GlobalTheory.RowCopy.TypeNZRec D.nd D.naut i :=
-  _root_.GlobalTheory.TypeNZJoin.typeNZRec_of_join_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TypeNZRecOfJoinStatement =====
@@ -1813,19 +1773,12 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.NRows.ThetaLocalI
   obtain ⟨lamLoc, rank⟩ := GlobalTheory.T.thetaLiftSpaces_rank_const_and_localisation_scalars D I.isot I.lam
   obtain ⟨b, trip⟩ := _root_.GlobalTheory.T.b_conditions_pairLift_splitBC_repOfLoc_of_a hP hL D I.P J a I.adm1 lamLoc
   have Conclusion1 : _root_.Formalism.MainNotions.SumRepresentations.provisionFirst D := I.Conclusion1 (_root_.UpperTheory.GalS.Parts.main_alt_alt D) a b
-  have c : GlobalTheory.NRows.RowsC D := _root_.GlobalTheory.T.c_statement_of_pair_lift_splitBC_repOfLoc hL D I.P J a b I.adm1 I.isot Conclusion1 trip
+  have c : GlobalTheory.NRows.RowsC D := _root_.GlobalTheory.RowsCClose.main_alt_alt hL D I.P J a b I.adm1 I.isot Conclusion1 trip
   refine ⟨a, b, c, fun i => ?_, rank⟩
-  exact _root_.GlobalTheory.T.type_nonzero_recursion_of_eigen' hL D I.P I.X I.agree I.typeNZ i
-    (_root_.GlobalTheory.T.eigString_of_agree_aux41_adm7_tieLab hP.fin hL D I.P I.X I.agree Conclusion1.1 a.temp a.tieLab i)
-    (_root_.GlobalTheory.T.eigGood_of_archimedean_signature_adm5 hL D I.P I.X Conclusion1.1 a.tieLab I.mtPar I.adm1 a.tie0 b.a4 a.a5 I.e0loc I.e0read i)
+  exact _root_.GlobalTheory.TypeNZJoin.typeNZRec_of_join_alt hL D I.P I.X I.agree I.typeNZ i
+    (_root_.GlobalTheory.EigStr.eigString_all_of_aux41_adm7_tieLab hP.fin hL D I.P I.X I.agree Conclusion1.1 a.temp a.tieLab i)
+    (_root_.GlobalTheory.EigGoodTypes.main_alt_alt hL D I.P I.X Conclusion1.1 a.tieLab I.mtPar I.adm1 a.tie0 b.a4 a.a5 I.e0loc I.e0read i)
 end GlobalTheory.RowsAll
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.theta_conditions_of_inputs_of_jumpsCard : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7), _root_.GlobalTheory.NRows.LinkedInputs hL D → JumpsCard D.nd D.naut → _root_.GlobalTheory.NRows.PointConditions' D := by
-  first | exact @_root_.GlobalTheory.RowsAll.locComp_of_isRc_classMapD_cenLoc
 end
 end
 end -- clump:auto

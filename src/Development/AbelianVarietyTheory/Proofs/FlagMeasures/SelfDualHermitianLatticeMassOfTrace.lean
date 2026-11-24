@@ -407,24 +407,10 @@ theorem pow_mem (L : LocE F E) (ϖ : 𝒪[F]) (j : ℕ) : algebraMap F E ((ϖ : 
   (GlobalTheory.UnramOrder.algebraMap_mem_iff L _).2 (_root_.pow_mem ϖ.2 j)
 
 omit [CharZero F] in
-theorem exists_pow_mul_mem (L : LocE F E) {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) (x : E) :
-    ∃ e : ℕ, algebraMap F E ((ϖ : F) ^ e) * x ∈ L.O := by
-  have := L.free
-  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; omega)
-  have hx : IsAlgebraic 𝒪[F] x :=
-    (IsFractionRing.isAlgebraic_iff 𝒪[F] F E).2 (Algebra.IsAlgebraic.isAlgebraic x)
-  obtain ⟨d, hd0, hd⟩ := hx.exists_integral_multiple
-  obtain ⟨e, u, hu⟩ := IsDiscreteValuationRing.associated_pow_irreducible hd0 hϖ
-  refine ⟨e, (L.O_def _).2 ?_⟩
-  have h := hd.smul (u : 𝒪[F])
-  rw [smul_smul, mul_comm, hu, Algebra.smul_def] at h
-  exact h
-
-omit [CharZero F] in
 theorem exists_pow_smul_int (L : LocE F E) {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ)
     (A : Matrix (Fin m) (Fin m) E) :
     ∃ e : ℕ, IsIntM L (algebraMap F E ((ϖ : F) ^ e) • A) := by
-  choose e he using fun p : Fin m × Fin m => exists_pow_mul_mem L hϖ (A p.1 p.2)
+  choose e he using fun p : Fin m × Fin m => _root_.GlobalTheory.PowMulMem.exists_pow_mul_mem L hϖ (A p.1 p.2)
   refine ⟨∑ p, e p, fun i j => ?_⟩
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le' (Finset.single_le_sum (f := e) (fun _ _ => Nat.zero_le _)
     (Finset.mem_univ (i, j)))
@@ -726,11 +712,7 @@ section
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
-theorem cT_mul (L : LocE F E) {m : ℕ} (A B : Matrix (Fin m) (Fin m) E) :
-    cT L (A * B) = cT L B * cT L A := by
-  ext i j
-
-  simp [cT, Matrix.mul_apply, map_sum, mul_comm]
+alias cT_mul := _root_.GlobalTheory.CongTrans.cT_mul
 
 theorem rmul_rmul {n m : ℕ} (x : Fin m → Fin n → E) (A B : Matrix (Fin m) (Fin m) E) :
     rmul (rmul x A) B = rmul x (A * B) := by
@@ -739,9 +721,6 @@ theorem rmul_rmul {n m : ℕ} (x : Fin m → Fin n → E) (A B : Matrix (Fin m) 
   rw [Finset.sum_comm]
   simp [mul_comm]
 
-theorem gramT_rmul (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E) (x : Fin m → Fin n → E)
-    (A : Matrix (Fin m) (Fin m) E) : gramT L Hm (rmul x A) = cT L A * gramT L Hm x * A := by
-  apply GlobalTheory.HL.ThickSplit.gramT_rmul <;> assumption
 end
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (ϖ : 𝒪[F]), Irreducible ϖ → ∀ {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E), IsHermND L Hm → ∀ Λs, IsSD L Hm Λs → ∀ (m : ℕ) (Γ : Matrix (Fin m) (Fin m) E), IsHerm L Γ → IsUnit Γ.det → ∀ (Ω : Set (Fin m → Fin n → E)), (∀ y ∈ Ω, gramT L Hm y = Γ) → ∀ i i' : ℕ, 1 ≤ i → i ≤ i' → (∀ y ∈ Ω, ∀ A ∈ congK L ϖ m i, cT L A * Γ * A = Γ → rmul y A ∈ Ω) → IsCO (tupLat L Λs m) (thick L ϖ Ω i') → cont (tupLat L Λs m) (thick L ϖ Ω i) * cont (hermLat L m) (horb L ϖ Γ i') = cont (tupLat L Λs m) (thick L ϖ Ω i') * cont (hermLat L m) (horb L ϖ Γ i) := by
@@ -842,7 +821,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     rintro p hp _ ⟨_, ⟨y, hy, B, hB, rfl⟩, rfl⟩
     have : act (B * r p) Γ ∈ P (r p) := (memP _ _).2 ⟨B, hB, rfl⟩
     rw [(hr p hp).2] at this
-    simp only [rmul_rmul, gramT_rmul, hΩ y hy]
+    simp only [rmul_rmul, _root_.GlobalTheory.HL.ContModel.gramT_rmul, hΩ y hy]
     exact this
   have hU2 : (⋃ p ∈ hfin.toFinset, T p) = thick L ϖ Ω i := by
     apply Set.Subset.antisymm
@@ -1372,26 +1351,6 @@ section
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
-omit [TopologicalSpace E] in
-theorem rmul_comp {n m : ℕ} (x : Fin m → Fin n → E) (A B : Matrix (Fin m) (Fin m) E) :
-    rmul (rmul x A) B = rmul x (A * B) := by
-  funext j
-  simp only [rmul, Finset.smul_sum, smul_smul, Matrix.mul_apply, Finset.sum_smul]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun l _ => ?_
-  rw [mul_comm]
-
-theorem hf_sum_left (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
-    (x : Fin m → Fin n → E) (c : Fin m → E) (y : Fin n → E) :
-    hf L Hm (∑ i, c i • x i) y = ∑ i, c i * hf L Hm (x i) y := by
-  simp only [hf, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_mul, Finset.mul_sum]
-  symm
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun a _ => ?_
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun i _ => ?_
-  ring
-
 theorem hf_sum_right (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
     (x : Fin m → Fin n → E) (c : Fin m → E) (y : Fin n → E) :
     hf L Hm y (∑ i, c i • x i) = ∑ i, L.cj (c i) * hf L Hm y (x i) := by
@@ -1404,23 +1363,6 @@ theorem hf_sum_right (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun i _ => ?_
   ring
 
-theorem gram_rmul (L : LocE F E) {n m : ℕ} (Hm : Matrix (Fin n) (Fin n) E)
-    (x : Fin m → Fin n → E) (A : Matrix (Fin m) (Fin m) E) :
-    gramT L Hm (rmul x A) = cT L A * gramT L Hm x * A := by
-  ext a b
-  simp only [gramT, rmul, Matrix.of_apply, hf_sum_left, hf_sum_right, Matrix.mul_apply, cT,
-    Finset.sum_mul, Finset.mul_sum]
-  rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  ring
-
-theorem det_cT (L : LocE F E) {m : ℕ} (A : Matrix (Fin m) (Fin m) E) :
-    (cT L A).det = L.cj A.det := by
-  have h : cT L A = (L.cj.toRingEquiv.toRingHom.mapMatrix A).transpose := by
-    ext i j; rfl
-  rw [h, Matrix.det_transpose, ← RingHom.map_det]
-  rfl
-
 omit [TopologicalSpace E] in
 theorem span_rmul {n m : ℕ} (x : Fin m → Fin n → E) (B : Matrix (Fin m) (Fin m) E)
     (hB : IsUnit B.det) :
@@ -1428,7 +1370,7 @@ theorem span_rmul {n m : ℕ} (x : Fin m → Fin n → E) (B : Matrix (Fin m) (F
   rw [Submodule.span_le]
   rintro _ ⟨j, rfl⟩
   have h : rmul (rmul x B) B⁻¹ = x := by
-    rw [rmul_comp, Matrix.mul_nonsing_inv _ hB]
+    rw [_root_.GlobalTheory.HL.TracePart.rmul_mul, Matrix.mul_nonsing_inv _ hB]
     funext j
     simp [rmul, Matrix.one_apply]
   have h2 : x j = ∑ i, B⁻¹ i j • rmul x B i := (congrFun h j).symm
@@ -1447,7 +1389,7 @@ theorem mass_trace : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   have hBu : IsUnit B.det := IsUnit.of_mul_eq_one _ hB
   have hBc : IsUnit (L.cj B.det) := hBu.map L.cj
   have hyu : IsUnit (gramT L S.Hm y).det := by
-    rw [hy, gram_rmul, Matrix.det_mul, Matrix.det_mul, det_cT]
+    rw [hy, _root_.GlobalTheory.HL.ContModel.gramT_rmul, Matrix.det_mul, Matrix.det_mul, _root_.GlobalTheory.HL.HermJacobian.det_cT]
     exact (hBc.mul hx).mul hBu
   obtain ⟨-, A, hAi, hAu, hMh, hli, hA⟩ := GlobalTheory.HL.OverBasis.exists_basis_overlattice L S.Hm S.herm
     (2 * r + 2) y hyu Mh (hM ▸ hle)
@@ -1456,7 +1398,7 @@ theorem mass_trace : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   rw [hA, ← hM, ← hMh] at hidx
   have hinv : (A * B⁻¹)⁻¹ = B * A⁻¹ := by
     rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ hBu]
-  have hr : rmul x (A * B⁻¹)⁻¹ = rmul y A⁻¹ := by rw [hinv, hy, rmul_comp]
+  have hr : rmul x (A * B⁻¹)⁻¹ = rmul y A⁻¹ := by rw [hinv, hy, _root_.GlobalTheory.HL.TracePart.rmul_mul]
   have hBB : B⁻¹.det * B.det = 1 := Matrix.det_nonsing_inv_mul_det _ hBu
   have hdet : (A * B⁻¹).det * L.cj (A * B⁻¹).det = A.det * L.cj A.det := by
     have h1 : L.cj B⁻¹.det * L.cj B.det = 1 := by rw [← map_mul, hBB, map_one]

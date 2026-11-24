@@ -134,7 +134,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     congr
     exact funext hs
   subst hs'
-  exact nuGe_of_thFrame hϖ P.D Q hQ F v hv s (GlobalTheory.T.thetaFrame_expansion_framedPoint_generator E H Dw l Xo c T io y.1 I P ϖ hϖ F φ rfl z hz σ s htie hexp)
+  exact nuGe_of_thFrame hϖ P.D Q hQ F v hv s (_root_.GlobalTheory.GeneratorFrame.main E H Dw l Xo c T io y.1 I P ϖ hϖ F φ rfl z hz σ s htie hexp)
 
 end GlobalTheory.GeneratorNu
 end -- clump:auto
@@ -190,7 +190,7 @@ theorem nuGe_zero_of_pulls : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hLB : P.D.toPre.P.L.IsLB := P.D.toPre.P.isLB
   obtain ⟨s'', hs''⟩ := exists_pullAl P.D F hLB P.oD H.w0 uΨ huΨ a N ha' hN k s
     (pullSecs_fe' P.D F hL.globalFns hLB P.oD H.w0 P.w0 uΨ huΨ a N ha' hN k s)
-  have hE := GlobalTheory.T.normalisedPullback_section_expands_family E H Dw l Xo c T io y.1 I P F xF hσ.1 a N k (k * N) rfl ha' hN hk σ hh s σ' hh' s''
+  have hE := _root_.GlobalTheory.NormPullExp.main E H Dw l Xo c T io y.1 I P F xF hσ.1 a N k (k * N) rfl ha' hN hk σ hh s σ' hh' s''
     hσ hs hP ht' hs''
   obtain rfl : s' = s'' := ((hex (k * N) (Nat.mul_pos hk₁ hN) hh').2 σ' ht').unique hs' hE
   exact (GlobalTheory.twisting_statements_of_laws hL GlobalTheory.twistBaseChange).2.2 T.V ϖ hϖ P.D Q hQ F v hv (𝓞 E) P.oD H.w0 P.w0
@@ -567,7 +567,7 @@ theorem nuGe_zero_of_moves : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨Φ, hΦ⟩ := phiFun_of hL T.V (maximalIdeal T.V) P.D F k hk p w hw
   have h1 : PhiRel P.D.toPre F k p w s (Φ s) := (hΦ _ _).2 rfl
   have h2 : Fam.IsSmul P.D.toPre F ζ (Φ s) (ζ • Φ s) := (ReciprocityTheory.ChartRestriction.G.DVR.isSmul_iff _ _ _).2 rfl
-  obtain ⟨u, t', ⟨m, hm, hum⟩, hut, ht'⟩ := GlobalTheory.T.symmetric_lift_acts_root_of_unity_on_expansions E H Dw l Xo c T io y.1 I P F xF hx k hk σ σ' hh hh' s (Φ s) (ζ • Φ s)
+  obtain ⟨u, t', ⟨m, hm, hum⟩, hut, ht'⟩ := _root_.GlobalTheory.SymActExpansion.exists_expandsG_of_isSymAct E H Dw l Xo c T io y.1 I P F xF hx k hk σ σ' hh hh' s (Φ s) (ζ • Φ s)
     (e.symm b) b p w ζ hσ hσ' hs hmv ((he _ _).2 (e.apply_symm_apply b).symm) ((hf _ _).2 hp.symm) hw hfin h1 h2
   have h4 := (h3 T.V ϖ hϖ P.D Q hQ F v hv k hk p w hw ζ hζ hfin s _ _ h1 h2 0).1 (hν σ s hσ hs)
   have h5 := NuGe.smul Q (zero_le_val_of_pow_eq_one v hm hum) hut h4

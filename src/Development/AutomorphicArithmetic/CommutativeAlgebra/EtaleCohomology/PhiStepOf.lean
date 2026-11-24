@@ -614,7 +614,7 @@ namespace UpperTheory.Gal.crystallineComparison
 theorem admissible_sequence_exact : AdmExact := admissibleExact_of_dualInvariantExact dinvExact_of
 theorem joinAbs_holds : JoinAbs :=
   joinAbs_of nilEmb_of (nilSubq_of admissible_sequence_exact nilEmb_of) nilAnn_of annSub_of (annExt_of dinvExt_of) admissible_sequence_exact
-theorem boundSt_holds : BoundSt := boundSt_of
+alias boundSt_holds := _root_.UpperTheory.Gal.crystallineComparison.boundSt_of
 theorem stOfCr_holds : StOfCr := stOfCr_of annPer_of boundSt_of
 
 end UpperTheory.Gal.crystallineComparison
@@ -1403,7 +1403,7 @@ theorem UpperTheory.Gal.crystallineComparison.phiKNil_of :
   obtain ⟨T⟩ := hT
   haveI := LL.2
   have hSst : IsSst P (Bw.repE LL r') := GlobalTheory.CrysSst.isSst_of_isCrys P AI T _ hcr
-  have hV : IsPst P (Bw.repE LL r') := GlobalTheory.GalCut.IwaTwist.isPst_of_isSst P AI T _ hSst
+  have hV : IsPst P (Bw.repE LL r') := _root_.GlobalTheory.GalCut.IwaAll.isPst_of_isSst P AI T _ hSst
   haveI := hV.finite
   have hd : deg (frob h)⁻¹ = -1 := by rw [deg_inv, deg_frob]
   have h1 := hW l P E Ω A w h O Bw hj LL _ (Bw.repE LL r') hV hSst Q hN _ hd

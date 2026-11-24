@@ -291,15 +291,6 @@ namespace GlobalTheory.ZH
 
 namespace ModHilb
 
-theorem finrank_span_reduction_le {O K I A B : Type} [CommRing O] [IsDomain O] [ValuationRing O] [Field K]
-    [Algebra O K] [IsFractionRing O K] [Finite I] (f : I → A → K) (g : I → B → IsLocalRing.ResidueField O)
-    (h : ∀ b : B, ∃ (a : A) (w : I → O), ∀ i, f i a = algebraMap O K (w i) ∧ g i b = IsLocalRing.residue O (w i)) :
-    Module.finrank (IsLocalRing.ResidueField O) (Submodule.span (IsLocalRing.ResidueField O) (Set.range g)) ≤
-      Module.finrank K (Submodule.span K (Set.range f)) := by
-  first
-  | (apply _root_.GlobalTheory.ResidueSpanScale.finrank_span_residue_le <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ResidueSpanScale.finrank_span_residue_le ..)
-
 theorem hilb_eq_finrank_span {k J : Type} [Field k] [Finite J] (C : Set (J → k)) (d : ℕ) :
     hilb C d = Module.finrank k (Submodule.span k (Set.range
       fun (m : {m : J →₀ ℕ // m.degree = d}) (v : C) => m.1.prod fun j n => v.1 j ^ n)) := by
@@ -330,7 +321,7 @@ theorem hilb_reduction_le : (∀ (O K J : Type) [CommRing O] [IsDomain O] [Valua
   rw [hilb_eq_finrank_span, hilb_eq_finrank_span]
   haveI : Finite {m : J →₀ ℕ // m.degree = d} :=
     (Finsupp.finite_of_degree_eq d).to_subtype
-  apply finrank_span_reduction_le
+  apply _root_.GlobalTheory.ResidueSpanScale.finrank_span_residue_le
   rintro ⟨v', hv'⟩
   obtain ⟨w, hw, rfl⟩ := h v' hv'
   refine ⟨⟨_, hw⟩, fun m => m.1.prod fun j n => w j ^ n, fun m => ⟨?_, ?_⟩⟩
@@ -1404,13 +1395,7 @@ theorem ProjChart.closure_eq_top {N : RatModel o Ω'} {q : N.Z ⟶ M.Z} (hq : M.
   obtain ⟨a, b, -, rfl⟩ := exists_eq_div hU hne x
   exact div_mem (key a) (key b)
 
-theorem IsHom.genericPoint_mem {N : RatModel o Ω'} {q : N.Z ⟶ M.Z} (hq : M.IsHom N φ q) {W : M.Z.Opens}
-    (hW : (W : Set M.Z).Nonempty) : q (genericPoint N.Z) ∈ W := by
-  have h1 : ⊤ ≤ (N.pt ≫ q) ⁻¹ᵁ W := by
-    rw [hq]
-    exact le_preimage_comp _ _ (M.top_le_preimage_pt hW) (le_preimage_top _)
-  rw [← N.pt_apply (IsLocalRing.closedPoint Ω')]
-  exact h1 (x := IsLocalRing.closedPoint Ω') trivial
+alias IsHom.genericPoint_mem := _root_.GlobalTheory.ZH.RatModel.IsHom.apply_genericPoint_mem
 
 theorem IsHom.mulVec_div_mem {N : RatModel o Ω'} {q : N.Z ⟶ M.Z} (hq : M.IsHom N φ q) {J : Type} [Fintype J]
     {u : J → Ω'} {i : J} {z : N.Z} (h : N.Div u i z) {m : Matrix J J Ω} (hm : ∀ j k, m j k ∈ M.O (q z)) (j : J) :

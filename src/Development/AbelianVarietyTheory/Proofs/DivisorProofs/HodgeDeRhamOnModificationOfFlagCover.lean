@@ -228,15 +228,6 @@ def derivHom {k A : Type} [CommRing k] [CommRing A] [Algebra k A] (δ : Derivati
   map_zero' := by ext <;> simp
   map_add' a b := by ext <;> simp [add_left_comm, add_assoc]
 
-theorem snd_eq_sum_of_basis {k A : Type} [CommRing k] [CommRing A] [Algebra k A] {D : ℕ}
-    (f : Fin D → A) (B : Module.Basis (Fin D) A Ω[A⁄k]) (hB : ∀ i, B i = KaehlerDifferential.D k A (f i))
-    {K : Type} [Field K] (θ : A →+* DualNumber K) (h : ∀ a, (θ (algebraMap k A a)).snd = 0) (s : A) :
-    (θ s).snd = ∑ b, (θ (f b)).snd *
-      (θ (((B.coord b).compDer (KaehlerDifferential.D k A)) s)).fst := by
-  first
-  | (apply _root_.GlobalTheory.SecondComponentSum.snd_eq_sum <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SecondComponentSum.snd_eq_sum ..)
-
 theorem snd_eq_zero_of_isAlgebraic {F K : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic ℚ F] [Field K]
     (φ : F →+* DualNumber K) (a : F) : (φ a).snd = 0 := by
   letI : Algebra ℚ (DualNumber K) := (φ.comp (algebraMap ℚ F)).toAlgebra
@@ -280,7 +271,7 @@ theorem exists_derivFrame (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagT
   refine ⟨_, IsAffineOpen.basicOpen hV _, fun b => derivHom ((B.coord b).compDer (KaehlerDifferential.D c.F _)),
     hxt, (M.X.basicOpen_le _).trans (hVW.trans le_rfl), fun b s => by simp [derivHom], fun K _ θ =>
     ⟨fun b => (θ (f b)).snd, fun s => ?_⟩⟩
-  rw [snd_eq_sum_of_basis f B hB θ (fun a => snd_eq_zero_of_isAlgebraic (θ.comp (algebraMap c.F _)) a) s]
+  rw [_root_.GlobalTheory.SecondComponentSum.snd_eq_sum f B hB θ (fun a => snd_eq_zero_of_isAlgebraic (θ.comp (algebraMap c.F _)) a) s]
   simp [derivHom]
 
 end GlobalTheory.CompHS
@@ -300,12 +291,6 @@ open GlobalTheory.FlagTan (dimFlag psiSet TIx HIx VIx IsTanFrame IsDef IsVert KS
 open GlobalTheory.AllWt (exOf)
 open scoped Classical
 
-theorem _root_.GlobalTheory.T.exists_affine_cover_with_dual_number_derivations : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} {X : GlobalTheory.FlagMod.FlagCover Y} {Z : Comp Xo c} (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagTan.dimFlag Dw)) (W : M.X.Opens) (p : M.X) (hp : p ∈ W), ∃ (W' : M.X.Opens) (_ : IsAffineOpen W')
-      (d : Fin (dimFlag Dw) → (Γ(M.X, W') →+* DualNumber Γ(M.X, W'))), p ∈ W' ∧ W' ≤ W ∧
-      (∀ b s, (d b s).fst = s) ∧
-      ∀ (K : Type) [Field K] (θ : Γ(M.X, W') →+* DualNumber K), ∃ m : Fin (dimFlag Dw) → K, ∀ s,
-        (θ s).snd = ∑ b, m b * (TrivSqZeroExt.fstHom K K K).toRingHom (θ (d b s).snd) := by
-  first | exact @GlobalTheory.CompHS.exists_derivFrame
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineCoverWithDualNumberDerivationsStatement =====
@@ -616,8 +601,6 @@ open NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRes
 open AlgebraicGeometry CategoryTheory GlobalTheory.DeRham GlobalTheory.Cris
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_tangent_frame_of_framedPoint_commRing : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) {A : Over (Sp S)} [GrpObj A] {π : A.left ⟶ Xo.univ.t.G.left}, IsGrpPullback A Xo.univ.t.G y.x π → ∀ (a : OAct (𝓞 E) A), (∀ z, (a.act z).left ≫ π = π ≫ (Xo.univ.t.act.act z).left) → ∃ ub : ∀ σ : E →+* ℂ, Fin (Dw.mult σ) → (epsR S ⟶ A), (∀ σ k, (ub σ k).left ≫ π = y.u σ k) ∧ (∀ σ k, IsTangent (ub σ k)) ∧ (∀ σ k z, ub σ k ≫ a.act z = GlobalTheory.GrpTangent.epsScale (algebraMap c.F S (embK c σ z)) ≫ ub σ k) ∧ ∀ σ (w : epsR S ⟶ A), IsTangent w → (∀ z, w ≫ a.act z = GlobalTheory.GrpTangent.epsScale (algebraMap c.F S (embK c σ z)) ≫ w) → ∃ cf, IsLieComb cf (ub σ) w := by
-  first | exact @GlobalTheory.KSExist.exists_frame_of_isGrpPullback_ring
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTangentFrameOfFramedPointCommRingStatement =====
@@ -1025,7 +1008,7 @@ theorem ksFamily : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
     rw [← Category.assoc, ha z, Category.assoc, ha' z, Category.assoc]
   have hadj := GlobalTheory.T.polarizationForm_adjoint_cmAction_moduli_point hP Xo hA a haπ hpol
 
-  obtain ⟨ub, hub1, hubT, hubE, hubS⟩ := GlobalTheory.T.exists_tangent_frame_of_framedPoint_commRing y hA a haπ
+  obtain ⟨ub, hub1, hubT, hubE, hubS⟩ := _root_.GlobalTheory.KSExist.exists_frame_of_isGrpPullback_ring y hA a haπ
   have hex : ∀ k : (Σ σ : E →+* ℂ, Fin (Dw.mult σ)), ∃ h, IsLieImage h (ub k.1 k.2) := fun k =>
     (hP.2.1 S _ _ hab0 hsm0).1.2 _ (hubT k.1 k.2)
   choose hb hhb using hex
@@ -1123,7 +1106,7 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
           spMap ((dualMap ψ).comp (e b)) ≫ tau hW' ≫ toFlag M = X.ptY w := by
   intro E _ _ _ H Dw l Xo c Y X Z M hP hKS k W hW p hp
   haveI := c.fin
-  obtain ⟨W₁, hW₁, d, hpW₁, hW₁W, hd, hspan⟩ := GlobalTheory.T.exists_affine_cover_with_dual_number_derivations M W p hp
+  obtain ⟨W₁, hW₁, d, hpW₁, hW₁W, hd, hspan⟩ := _root_.GlobalTheory.CompHS.exists_derivFrame M W p hp
   have hoff : W₁ ≤ M.off := fun x hx => (hW (hW₁W hx)).1
   have hτ : ⊤ ≤ tau hW₁ ⁻¹ᵁ W₁ := tau_le hW₁ le_rfl
   have hk₁ : ⊤ ≤ (tau hW₁ ≫ toFlag M) ⁻¹ᵁ X.F.U k := fun s _ => (hW (hW₁W (hτ (Set.mem_univ s)))).2

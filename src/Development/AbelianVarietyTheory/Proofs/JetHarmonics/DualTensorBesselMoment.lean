@@ -87,7 +87,7 @@ theorem bessel_dsig (hK : PI.KFinSmooth) {k r : ℕ} {ε : Fin (2 * r + k + 1) �
     (hl : IsBes R z π l) {X : Mx k r} (hX : Formalism.FourierDecayAlt.P.QrD.InLieW k r z X) (hX' : PI.UpqRep.InLieHpk k r X)
     {v : R.H} (hv : v ∈ R.sm) :
     l (PI.UpqRep.dsig (k := k) (r := r) R.σ X v) = Formalism.FourierDecayAlt.Q.dRep π X (l v) := by
-  have hd := (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp l hl.1 hl.2.1 hl.2.2.2 v hv).2 X hX'
+  have hd := (_root_.GlobalTheory.cwCont_continuousOn_hasDerivAt hK k r ε mu R hR Wp l hl.1 hl.2.1 hl.2.2.2 v hv).2 X hX'
   have h1 : (1 : Mx k r) ∈ Formalism.QuantumDeterminants.Nset k r := by
     refine ⟨?_, ?_, ?_⟩
     · simp [Formalism.QuantumDeterminants.UH]
@@ -273,7 +273,7 @@ theorem on_real (hK : PI.KFinSmooth) {ε : Fin (2 * r + k + 1) → Bool} {mu : F
       (Formalism.QuantumDeterminants.ell k r z X - star (Formalism.QuantumDeterminants.ell k r z X)) • l v := by
   obtain ⟨hadd, hsmul, heq, hc⟩ := hl
   obtain ⟨hN, hd⟩ := _root_.GlobalTheory.UnipotentExp.exp_mem_and_deriv k r z X hz hX hP
-  have h1 := (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp l hadd hsmul hc v hv).2 X hX
+  have h1 := (_root_.GlobalTheory.cwCont_continuousOn_hasDerivAt hK k r ε mu R hR Wp l hadd hsmul hc v hv).2 X hX
   have h2 := hd.smul_const (l v)
   have hone : (1 : Mx k r) ∈ Formalism.QuantumDeterminants.UWset k r z := by
     refine ⟨?_, fun a => ⟨Matrix.one_mulVec _, Matrix.one_mulVec _⟩, Matrix.one_mulVec _⟩

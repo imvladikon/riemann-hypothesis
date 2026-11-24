@@ -990,17 +990,13 @@ theorem quotShape_of_equiv {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValua
   · rintro ⟨z, hz⟩; exact ⟨z, by rw [hz, LinearEquiv.apply_symm_apply]⟩
   · rintro ⟨z, hz⟩; exact ⟨z, by rw [← hz, LinearEquiv.symm_apply_apply]⟩
 
-theorem mem_integers_iff_norm_le_one {l : ℕ} [Fact l.Prime] (LL : Formalism.BasicNotions.Loc.FinExt l) (x : ↥LL.1) :
-    x ∈ Formalism.BasicNotions.Loc.OL LL ↔ ‖(x : Formalism.BasicNotions.Loc.Om l)‖ ≤ 1 :=
-  GlobalTheory.EmbInj.mem_OL_iff LL x
-
 theorem isOpen_integers {l : ℕ} [Fact l.Prime] (LL : Formalism.BasicNotions.Loc.FinExt l) :
     IsOpen (Set.range (algebraMap ↥(Formalism.BasicNotions.Loc.OL LL) ↥LL.1)) :=
   (GlobalTheory.LitGood.litGoodO l LL).2.2.2.2
 
 theorem elem : ReciprocityTheory.ChartRestriction.T2.Elem :=
   ⟨@padicInt_coeff, @mulSub_open, @contAction_quotient, @pr_eq_zero_of_coboundary,
-    @quotShape_of_equiv, @mem_integers_iff_norm_le_one, @isOpen_integers⟩
+    @quotShape_of_equiv, @_root_.GlobalTheory.EmbInj.mem_OL_iff, @isOpen_integers⟩
 
 end GlobalTheory.LocElem
 end -- clump:auto
@@ -1668,7 +1664,7 @@ theorem exists_powOn {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.
     rw [← map_pow]; congr 1; apply Subtype.ext
     show ζ ^ p ^ p ^ n = ζ
     rw [← Nat.sub_add_cancel (one_lt_pow_pow p n).le, pow_succ, hζm, one_mul]
-  obtain ⟨e, he⟩ := frob_orbit p (MulSemiringAction.toRingHom _ (IsLocalRing.ResidueField A) g)
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.FixedOfPower.ringHom_apply_eq_pow p (MulSemiringAction.toRingHom _ (IsLocalRing.ResidueField A) g)
     (p ^ n) (pow_pos hpp.pos n) _ hz
   have h2 : IsLocalRing.residue A (g • a - a ^ p ^ e) = 0 := by
     rw [map_sub, IsLocalRing.ResidueField.residue_smul, map_pow, sub_eq_zero]; exact he
@@ -1697,7 +1693,7 @@ theorem main {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuatio
     rw [map_natCast, ZMod.natCast_eq_natCast_iff]
     exact PowOn.modEq ((hE g n₂).mono h) (hE g n₁)
   choose χ' hχ' using fun g : A.decompositionSubgroup F =>
-    exists_padic_of_compat p (fun n => ((E g n : ℕ) : ZMod (p ^ n))) (compat g)
+    _root_.GlobalTheory.exists_padicInt_of_compatible_zmod_pow p (fun n => ((E g n : ℕ) : ZMod (p ^ n))) (compat g)
   have key : ∀ (g : A.decompositionSubgroup F) n e, PowOn p (g : Ω ≃ₐ[F] Ω) n e →
       PadicInt.toZModPow n (χ' g) = (e : ZMod (p ^ n)) := by
     intro g n e he
@@ -1732,7 +1728,7 @@ theorem main {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuatio
       rw [map_sub, key g k _ he, hχ' g₀ k, sub_self]
     rw [← RingHom.mem_ker, PadicInt.ker_toZModPow, ← PadicInt.norm_le_pow_iff_mem_span_pow] at h1
     rw [dist_eq_norm]; exact lt_of_le_of_lt h1 hk
-  obtain ⟨σ, hσA, q, hq1, hσ⟩ := exists_frob_ne_one (F := F) A hp
+  obtain ⟨σ, hσA, q, hq1, hσ⟩ := _root_.GlobalTheory.exists_frob_at_place_over_prime (F := F) A hp
   let σ' : A.decompositionSubgroup F := ⟨σ, hσA⟩
   have hne : χ' σ' ≠ 0 := by
     intro h0
@@ -1766,7 +1762,7 @@ theorem main {p : ℕ} [Fact p.Prime] (A : ValuationSubring Ω) (hp : A.valuatio
     unfold Nat.ModEq at this
     rw [Nat.mod_eq_of_lt (by omega), Nat.mod_eq_of_lt (by omega)] at this
     exact hq1 this.symm
-  obtain ⟨ψ, hψc, hψa, hψ0, hψ1⟩ := exists_normalized p χ' hcont hadd σ' hne
+  obtain ⟨ψ, hψc, hψa, hψ0, hψ1⟩ := _root_.GlobalTheory.padicInt_hom_normalize p χ' hcont hadd σ' hne
   exact ⟨ψ, hψc, hψa, fun g hg => hψ0 g (hine g hg), hψ1⟩
 
 end main
@@ -1815,8 +1811,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.local_duality_class_field_facts_of_artin_tate_euler : GlobalTheory.Published.GlobalArtinReciprocity → Formalism.GaloisCohomology.LocalTateDualityK → Formalism.GaloisCohomology.LocalEulerCharK → ReciprocityTheory.ChartRestriction.T2.Core := by
-  first | exact @GlobalTheory.langRecCore_of_artinReciprocity
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalDualityClassFieldFactsOfArtinTateEulerStatement =====
@@ -1839,7 +1833,7 @@ theorem finCore : Formalism.MainNotions.N.K.H0.FinCore :=
 
 theorem main : GlobalTheory.Published.GlobalArtinReciprocity → Formalism.GaloisCohomology.LocalTateDualityK → Formalism.GaloisCohomology.LocalEulerCharK → ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i) (dc : TruncatedSeriesCountingIdentities.Decl D i) (lenRow : HeightOneSpectrum (𝓞 D.host.E) → ℚ) (e' : HeightOneSpectrum (𝓞 D.host.E) → ℕ) (cB : ℕ), TruncatedSeriesCountingIdentities.admG1 i r → TruncatedSeriesCountingIdentities.admG2 i r ρ π → TruncatedSeriesCountingIdentities.admG3 i r ρ π → TruncatedSeriesCountingIdentities.admG4 i r → TruncatedSeriesCountingIdentities.admG5 i r → TruncatedSeriesCountingIdentities.TameGeneratorConditions i → TruncatedSeriesCountingIdentities.admG6 i r → TruncatedSeriesCountingIdentities.admBK i → LargeLevelLemmas.BlochKatoAnnihilators i → TruncatedSeriesCountingIdentities.FamilyContinuous i r → TruncatedSeriesCountingIdentities.SemisimpleDecomposition i r ρ π → TruncatedSeriesCountingIdentities.FontaineAtPlacesOverL i → LargeLevelLemmas.tateH1FinitenessAtPlacesOver i → TruncatedSeriesCountingIdentities.LocalCoefficientCompatibility i → LargeLevelLemmas.adm51 i r ρ π → EmbeddingTypes.UnramifiedTrivialH1f i dc → TruncatedSeriesCountingIdentities.LengthBoundAtPlaces i r ρ π dc lenRow → TruncatedSeriesCountingIdentities.LiftExponentAtPlaces i r dc e' → EmbeddingTypes.admTB i r π dc cB → TruncatedSeriesCountingIdentities.GlobalLatticeIndexTheorem i ρ π dc lenRow e' cB := by
   intro hA hT hE D i r ρ π dc lenRow e' cB g1 g2 g3 g4 g5 g5x g6 bk bka ct dcm font fin tie a51 unr hR hL hTB
-  have : Fact ReciprocityTheory.ChartRestriction.T2.Core := ⟨GlobalTheory.T.local_duality_class_field_facts_of_artin_tate_euler hA hT hE⟩
+  have : Fact ReciprocityTheory.ChartRestriction.T2.Core := ⟨_root_.GlobalTheory.langRecCore_of_artinReciprocity hA hT hE⟩
   have : Fact Formalism.MainNotions.N.K.H0.FinCore := ⟨finCore⟩
   exact Formalism.MainNotions.N.K.Closed.theorem_n5_from_inputs i r ρ π dc lenRow e' cB g1 g2 g3 g4 g5 g5x g6 bk bka ct dcm font fin
     tie a51 (Formalism.MainNotions.N.K.StD.unramified_input_of_admitted i dc unr) hR hL hTB

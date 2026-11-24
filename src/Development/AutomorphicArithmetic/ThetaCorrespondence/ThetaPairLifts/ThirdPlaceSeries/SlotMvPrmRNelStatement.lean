@@ -99,7 +99,7 @@ theorem movable_prmR_nel_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists)
   have hrows := _root_.GlobalTheory.T.rows_pass_to_moved_divisionLatticesHeights
     K B f T w Z x.Wt O x.what₂ N h O' hO'
   obtain ⟨t', hs, hgeo, hpk, hobj, hrx⟩ := hrows
-  obtain ⟨nch', xd', hkept, hnx, -, -, hmv⟩ := _root_.GlobalTheory.T.exists_kept_choice_upper_lattice_alt hL K B f T w Z x.Wt Z.S N h O.nch O.xd
+  obtain ⟨nch', xd', hkept, hnx, -, -, hmv⟩ := _root_.GlobalTheory.LayerMove.exists_kept_nChoice_thData_upL hL K B f T w Z x.Wt Z.S N h O.nch O.xd
   obtain ⟨hn1, hn2⟩ := hnx rfl
   subst hO'
   have e1 : nch' = (O.tr N h).nch := eq_of_heq hn1
@@ -125,14 +125,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Inhab Formalism.L2.Host GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl NumberField IsDedekindDomain
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.HeightCounting.Up GlobalTheory.Mem.SRe GlobalTheory.Mem.R3.Rw
-
-theorem _root_.GlobalTheory.T.slot_mv_extension_with_origin_geo_cl : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (cDep : ℝ) (Γ : GeoP), PositionMv (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension (_root_.GlobalTheory.HeightCounting.Up.extensionWithOrigin hL cDep) SExt.none (geoCl Γ)).s := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.movable_prmR_nel_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SlotMvPrmRNelStatement =====

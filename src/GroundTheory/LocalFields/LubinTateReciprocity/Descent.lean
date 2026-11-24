@@ -174,10 +174,6 @@ theorem eq_zero_of_forall_mem_maximalIdeal_pow {x : 𝔅} (h : ∀ n, x ∈ maxi
   IsHausdorff.haus' (I := maximalIdeal 𝔅) x fun n ↦ by
     simpa only [SModEq.zero, smul_eq_mul, Ideal.mul_top] using h n
 
-theorem exists_eq_unit_mul_pow_adicCompletion {ϖ : R} (hϖ : Irreducible ϖ) {x : 𝔅} (hx : x ≠ 0) :
-    ∃ (n : ℕ) (u : 𝔅ˣ), x = u * algebraMap R 𝔅 ϖ ^ n :=
-  _root_.GroundTheory.Variant₂.N1.exists_eq_unit_mul_pow_adicCompletion hϖ hx
-
 theorem algebraMap_pow_ne_zero {ϖ : R} (hϖ : Irreducible ϖ) (n : ℕ) :
     algebraMap R 𝔅 ϖ ^ n ≠ 0 := by
   rw [← map_pow, Ne, ← map_zero (algebraMap R 𝔅), (algebraMap_adicCompletion_injective R).eq_iff]
@@ -188,8 +184,8 @@ instance isDomain_adicCompletion : IsDomain 𝔅 := by
   have : NoZeroDivisors 𝔅 := ⟨fun {x y} hxy ↦ by
     by_contra h
     push Not at h
-    obtain ⟨m, u, rfl⟩ := exists_eq_unit_mul_pow_adicCompletion hϖ h.1
-    obtain ⟨n, v, rfl⟩ := exists_eq_unit_mul_pow_adicCompletion hϖ h.2
+    obtain ⟨m, u, rfl⟩ := _root_.GroundTheory.Variant₂.N1.exists_eq_unit_mul_pow_adicCompletion hϖ h.1
+    obtain ⟨n, v, rfl⟩ := _root_.GroundTheory.Variant₂.N1.exists_eq_unit_mul_pow_adicCompletion hϖ h.2
     apply algebraMap_pow_ne_zero hϖ (m + n)
     have : ((u * v : 𝔅ˣ) : 𝔅) * algebraMap R 𝔅 ϖ ^ (m + n) = 0 := by
       rw [← hxy, Units.val_mul, pow_add]
@@ -206,7 +202,7 @@ instance isDiscreteValuationRing_adicCompletion : IsDiscreteValuationRing 𝔅 :
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   exact IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
     ⟨_, irreducible_algebraMap_adicCompletion hϖ, fun hx ↦ by
-      obtain ⟨n, u, hu⟩ := exists_eq_unit_mul_pow_adicCompletion hϖ hx
+      obtain ⟨n, u, hu⟩ := _root_.GroundTheory.Variant₂.N1.exists_eq_unit_mul_pow_adicCompletion hϖ hx
       exact ⟨n, u, by rw [hu, mul_comm]⟩⟩
 
 theorem exists_sub_algebraMap_mem_pow (x : 𝔅) (n : ℕ) :
@@ -619,12 +615,6 @@ theorem completedFrobenius_integerToCompleted {L : IntermediateField K Ω}
 
 end FiniteFrobenius
 
-section Check
-
-variable (K : Type*) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
-
-end Check
-
 end GroundTheory.LocalField
 end -- clump:auto
 end -- clump:auto
@@ -768,12 +758,6 @@ theorem pow_apply_eq_psEval (σ : Ω ≃ₐ[K] Ω) (a : 𝒪[K]) {x : Ω} (hx : 
         (isLubinTateSeries_ltPoly π), Hom.toPowerSeries_comp, PowerSeries.subst_def,
       psEval_subst' (fun _ => Hom.constantCoeff_eq_zero' _) _ _ fun _ => hx]
 
-
-omit [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] [ValuativeRel Ω]
-  [TopologicalSpace Ω] [IsValuativeTopology Ω] [ValuativeExtension K Ω] [Algebra.IsAlgebraic K Ω] in
-theorem exists_pow_apply_eq_self (σ : Ω ≃ₐ[K] Ω) {p : Polynomial K} (hp : p ≠ 0) {x : Ω}
-    (hx : Polynomial.aeval x p = 0) : ∃ N : ℕ, 0 < N ∧ (σ ^ N) x = x :=
-  _root_.GroundTheory.Variant₂.N1.exists_pow_apply_eq_self_of_aeval_eq_zero σ hp hx
 
 end Iterate
 
@@ -974,7 +958,7 @@ theorem exists_fixed_root_ltEisenstein (σ : Ω ≃ₐ[K] Ω)
   have hσl' : σ l = Polynomial.aeval l (h.map (algebraMap 𝒪[K] K)) :=
     hσl.trans (psEval_eq_aeval_of_sub_mem hh hlv hl)
 
-  obtain ⟨N, hN0, hNl⟩ := exists_pow_apply_eq_self σ ((hPmon.map (algebraMap 𝒪[K] K)).ne_zero) hl
+  obtain ⟨N, hN0, hNl⟩ := _root_.GroundTheory.Variant₂.N1.exists_pow_apply_eq_self_of_aeval_eq_zero σ ((hPmon.map (algebraMap 𝒪[K] K)).ne_zero) hl
   obtain ⟨hN', hhN'⟩ := exists_sub_coe_mem_span_ltEisenstein hπ m
     (lubinTateHom hπ (isLubinTateSeries_ltPoly π) (isLubinTateSeries_ltPoly π) (((u⁻¹ : 𝒪[K]ˣ) : 𝒪[K]) ^ N)).toPowerSeries
   have haevalN : Polynomial.aeval l (hN'.map (algebraMap 𝒪[K] K)) = l := by

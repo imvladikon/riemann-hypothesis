@@ -507,12 +507,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Pj Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpTie
-
-theorem _root_.GlobalTheory.T.parOf_height_lt_genus_at_pts : _root_.GlobalTheory.BigOn.AtPtsAlt fun Fm x _ i _ => ∀ (j : Fin (Fm.D x i).R.m) a, (GlobalTheory.ExpTie.parOf (Fm.L x i) j).h < ((Fm.D x i).host.g a : ℝ) := by
-  first | exact @_root_.GlobalTheory.ExpTie.atPts_h_lt_g_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtPtsHLtGStatement =====
@@ -524,12 +518,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Pj Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpTie
-
-theorem _root_.GlobalTheory.T.parOf_hyp_at_pts : _root_.GlobalTheory.BigOn.AtPtsAlt fun Fm x _ i _ => ∀ j : Fin (Fm.D x i).R.m, (GlobalTheory.ExpTie.parOf (Fm.L x i) j).Hyp := by
-  first | exact @_root_.GlobalTheory.ExpTie.parOf_hyp_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ParOfHypStatement =====
@@ -1126,7 +1114,7 @@ theorem wts_ok_alt : _root_.GlobalTheory.BigOn.AtPtsAlt fun Fm x _ i _ => ∀ j 
       (W.lam τ a : ℤ) = (Formalism.IndefR.Bridge.lamLdef (D := Fm.D x i) (Formalism.IndefR.Links.Vc (Fm.D x i) j).rank ((j : ℕ) + 1) τ).w a + c) ∧
     (∀ τ a, a < (GlobalTheory.ExpTie.parOf (Fm.L x i) j).Nr → 0 ≤ W.U (GlobalTheory.ExpTie.parOf (Fm.L x i) j) τ a ∧ W.U (GlobalTheory.ExpTie.parOf (Fm.L x i) j) τ a ≤ (Formalism.CohomologicalDescent.ShortWeightBounds.h0 (GlobalTheory.ExpTie.parOf (Fm.L x i) j) : ℤ)) ∧
     W.T2.card ≤ (Fm.D x i).host.T2.card ∧ W.Sp = Formalism.MainNotions.JumpSetsAlt.excSet (Fm.D x i) := by
-  refine _root_.GlobalTheory.ExpTie.atPts_mono (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.T.isLamPrime_at_all_points _root_.GlobalTheory.T.parameter_large_at_all_points) ?_
+  refine _root_.GlobalTheory.ExpTie.atPts_mono (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.LiftWeightForced.atPts_alt _root_.GlobalTheory.ExpTie.parOf_large_at_pts) ?_
   intro eps Fm x hx i p hp j
   obtain ⟨hF, hLg⟩ := hp
   have hv : ∀ τ, ValsAt (Fm.L x i) j τ := fun τ => _root_.GlobalTheory.ExpTie.Lift.valsAt_of_isLamPrime (Fm.L x i) j τ (hF j τ)
@@ -1153,16 +1141,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Pj Formalism.IndefR Formalism.IndefR.Links GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpTie
-
-theorem _root_.GlobalTheory.T.weight_lambda_shift_nonneg' : _root_.GlobalTheory.BigOn.AtPtsAlt fun Fm x _ i _ => ∀ j : Fin (Fm.D x i).R.m, ∃ W : Formalism.CohomologicalDescent.ShortWeightBounds.Wts (Fm.D x i).what₂.Tau, W.Ok (GlobalTheory.ExpTie.parOf (Fm.L x i) j) ∧
-    (∀ τ, ∃ c : ℤ, ∀ a : Fin (Formalism.IndefR.Links.Vc (Fm.D x i) j).rank,
-      (W.lam τ a : ℤ) = (Formalism.IndefR.Bridge.lamLdef (D := Fm.D x i) (Formalism.IndefR.Links.Vc (Fm.D x i) j).rank ((j : ℕ) + 1) τ).w a + c) ∧
-    (∀ τ a, a < (GlobalTheory.ExpTie.parOf (Fm.L x i) j).Nr → 0 ≤ W.U (GlobalTheory.ExpTie.parOf (Fm.L x i) j) τ a ∧ W.U (GlobalTheory.ExpTie.parOf (Fm.L x i) j) τ a ≤ (Formalism.CohomologicalDescent.ShortWeightBounds.h0 (GlobalTheory.ExpTie.parOf (Fm.L x i) j) : ℤ)) ∧
-    W.T2.card ≤ (Fm.D x i).host.T2.card ∧ W.Sp = Formalism.MainNotions.JumpSetsAlt.excSet (Fm.D x i) := by
-  first | exact @_root_.GlobalTheory.ExpTie.Lift.wts_ok_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WtsOkStatement =====
@@ -1182,8 +1160,8 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.
 open Formalism.L2.Pj GlobalTheory.BigTop GlobalTheory.BigOn
 namespace GlobalTheory.ExpTie
 theorem numSt_alt : _root_.GlobalTheory.ExpTie.NumStAlt := by
-  have H := _root_.GlobalTheory.ExpTie.atPts_and_alt (_root_.GlobalTheory.ExpTie.atPts_and_alt (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.T.parOf_hyp_at_pts _root_.GlobalTheory.T.exists_large_parameter_estimates_at_pts) (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.T.parameter_large_at_all_points _root_.GlobalTheory.T.parOf_height_lt_genus_at_pts))
-    (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.T.isLamPrime_at_all_points _root_.GlobalTheory.T.weight_lambda_shift_nonneg')
+  have H := _root_.GlobalTheory.ExpTie.atPts_and_alt (_root_.GlobalTheory.ExpTie.atPts_and_alt (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.ExpTie.parOf_hyp_alt _root_.GlobalTheory.ExpTie.rows_big_alt) (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.ExpTie.parOf_large_at_pts _root_.GlobalTheory.ExpTie.atPts_h_lt_g_alt))
+    (_root_.GlobalTheory.ExpTie.atPts_and_alt _root_.GlobalTheory.LiftWeightForced.atPts_alt _root_.GlobalTheory.ExpTie.Lift.wts_ok_alt)
   refine _root_.GlobalTheory.ExpTie.atPts_mono H fun Fm x hx i p h j => ?_
   obtain ⟨⟨⟨hH, hR⟩, ⟨hL, hB⟩⟩, ⟨hF, hW⟩⟩ := h
   obtain ⟨W, hOk, hlam, hbox, hT, hSp⟩ := hW j
@@ -1208,10 +1186,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions Formalism.L2.DIV Formalism.L2.Pj GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.ExpTie GlobalTheory.ExpFrame Formalism.CohomologicalDescent.DepthNonnegative Formalism.CohomologicalDescent.LogSmallConstantBounds Formalism.CohomologicalDescent.ShortWeightBounds Formalism.CohomologicalDescent.LD Formalism.RankGapBounds.FormsTensorLocalization
 
 namespace GlobalTheory.ExpTie
-
-theorem not_dvd_discr_host (D : D7) {l : ℕ} (hl : l.Prime) (hS : l ∉ Formalism.MainNotions.JumpSetsAlt.excSet D) :
-    ¬ ((l : ℕ) : ℤ) ∣ NumberField.discr D.host.E :=
-  UpperTheory.ExcSet.not_dvd_discr D hl hS
 
 end GlobalTheory.ExpTie
 end -- clump:auto
@@ -1238,7 +1212,7 @@ theorem smallSt_alt : _root_.GlobalTheory.ExpTie.SmallnessCondition := by
   have hin := DefFam3.toSub2_inBlock hR.prim.block
   refine ⟨Formalism.EigenvalueLevelCeiling.plc_prime w, ?_, ?_, fun k => DefFam.stable_lifts hst j _ k, DefFam.inBlock_lifts hin j _⟩
   · exact (Formalism.CohomologicalDescent.LogSmallConstantBounds.paramsLargePrime_holds P hN.1 hN.2.1 _ hWR.1).2.2.2.2.2.1
-  · refine not_dvd_discr_host _ (Formalism.EigenvalueLevelCeiling.plc_prime w) ?_
+  · refine _root_.UpperTheory.ExcSet.not_dvd_discr _ (Formalism.EigenvalueLevelCeiling.plc_prime w) ?_
     rw [← hD.special]
     exact hWR.2.2.2
 end GlobalTheory.ExpTie
@@ -1472,13 +1446,8 @@ theorem exponent_bound_of_unitaryThetaStandardTheorems_alt :
   fun hCoh hHecke hCheb hGal hBC hBS hAbove hLL =>
     _root_.GlobalTheory.T.expSt_of_num_sumExp_model _root_.GlobalTheory.LeviCut.exCut _root_.GlobalTheory.ExpTie.numSt_alt _root_.GlobalTheory.T.sum_expansion'
       (_root_.GlobalTheory.T.model_statement_of_crystalline_chebotarev_frame_gal hBS hCheb _root_.GlobalTheory.T.small_estimate (_root_.GlobalTheory.T.frame_statement_of_small_statement _root_.GlobalTheory.T.small_estimate)
-        (_root_.GlobalTheory.T.galois_frame_compatibility_alt hCoh hHecke hCheb hGal hBC hBS hAbove hLL _root_.GlobalTheory.T.small_estimate))
+        (_root_.GlobalTheory.FrameGal.galois_steinberg_local_alt hCoh hHecke hCheb hGal hBC hBS hAbove hLL _root_.GlobalTheory.ExpTie.smallSt_alt))
 end GlobalTheory.BigOn
-end
-section
-
-theorem _root_.GlobalTheory.T.expSt_of_base_change_and_crystalline_lattices : GlobalTheory.Published.ClozelCohomological → GlobalTheory.Published.HeckeLAdicCharacter → GlobalTheory.Published.ChebotarevDegreeOne → _root_.UpperTheory.GalS.CuspUAlt → _root_.GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup → GlobalTheory.Published.BhattScholzeCrystallineLattices → GlobalTheory.Published.HeckeLAdicCharacterAbove → _root_.UpperTheory.Zero.LLC.RecTExists → _root_.GlobalTheory.BigOn.ExponentStatement := by
-  first | exact @_root_.GlobalTheory.BigOn.exponent_bound_of_unitaryThetaStandardTheorems_alt
 end
 end
 end -- clump:auto

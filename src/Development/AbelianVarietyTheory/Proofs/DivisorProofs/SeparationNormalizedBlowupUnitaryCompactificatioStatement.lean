@@ -967,10 +967,6 @@ def chartPullCompOf {X Y Y' : Scheme.{0}} (L : LB X) (g : Y ⟶ X) (h : Y' ⟶ Y
     refine Eq.trans ?_ (gm_pull_g L g h y J J' hj₁ hj₁').symm
     rw [Category.id_comp]
 
-theorem spMap_comp_ringHom {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap, ← Spec.map_comp]
-
 theorem descAt_of_isPullDeg : ∀ (V V₁ : Type) [CommRing V] [IsDomain V] [CommRing V₁] [IsDomain V₁] (ρ : V →+* V₁)
     (Q : DegPre V) (D : DegPre V₁), IsPullDeg ρ Q D → D.P.g = Q.P.g ∧ ∀ (K : Type) [Field K] (ev : V₁ →+* K)
     (k₀ : Subfield K), DescAt D ev k₀ → DescAt Q (ev.comp ρ) k₀ := by
@@ -988,11 +984,11 @@ theorem descAt_of_isPullDeg : ∀ (V V₁ : Type) [CommRing V] [IsDomain V] [Com
   obtain ⟨w', hw'⟩ := hL
   refine ⟨B₀, i₁, i₂, M₀, fun a => c₀ (p.xe.symm a), B', i₃, π₁ ≫ (p.e.hom.left ≫ pullback.fst Q.P.A.hom (specOf ρ)),
     π₀, w', fun a => c' (p.xe.symm a), hab, hM, ?_, h₀, hw', fun a => ⟨(hc _).1, ?_, (hc _).2.2⟩⟩
-  · exact (h₁.comp gp).congr (spMap_comp_ringHom ρ ev).symm rfl
+  · exact (h₁.comp gp).congr (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp ρ ev).symm rfl
   · have e₁ := (hc (p.xe.symm a)).2.1
     have e₂ := p.c_pr (p.xe.symm a)
     rw [AddEquiv.apply_symm_apply] at e₂
-    rw [← Category.assoc, e₁, Category.assoc, e₂, ← Category.assoc, spMap_comp_ringHom]
+    rw [← Category.assoc, e₁, Category.assoc, e₂, ← Category.assoc, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
 
 end GlobalTheory.USep
 end -- clump:auto
@@ -1096,13 +1092,6 @@ theorem exists_extend_smul {L : Type} [AddCommGroup L] [Module.Free ℤ L] [Modu
 end GlobalTheory.USep.Alg
 
 namespace GlobalTheory.USep.Alg
-
-theorem zpow_sum_units {G ι : Type} [CommGroup G] (a : G) (s : Finset ι) (f : ι → ℤ) :
-    a ^ (∑ i ∈ s, f i) = ∏ i ∈ s, a ^ f i := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert x s hx ih => rw [Finset.sum_insert hx, Finset.prod_insert hx, zpow_add, ih]
 
 end GlobalTheory.USep.Alg
 
@@ -1225,7 +1214,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
       congr 1
       rw [← Units.coe_prod, Finset.prod_comm]
       congr 1
-      exact Finset.prod_congr rfl fun k _ => (GlobalTheory.USep.Alg.zpow_sum_units _ _ _).symm
+      exact Finset.prod_congr rfl fun k _ => (_root_.GlobalTheory.SharpFamRel.zpow_finsetSum _ _ _).symm
     let F : balForms (H.bar : 𝓞 E → 𝓞 E) (Φ.X y) →ₗ[ℤ] ℤ :=
       (ε.coord (.inr i)).comp (pullBalEquiv (H.bar : 𝓞 E → 𝓞 E) e).symm.toLinearMap
     obtain ⟨n, hn, lam, hlam⟩ := GlobalTheory.USep.Alg.exists_extend_smul (balForms (H.bar : 𝓞 E → 𝓞 E) (Φ.X y)) F
@@ -1306,8 +1295,6 @@ open GlobalTheory.UPoinc
 open GlobalTheory
 open Classical
 
-theorem _root_.GlobalTheory.T.separation_normalizedBlowup_unitaryCompactification : (∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ φ : InvFun (𝓞 E), IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (d : ℕ) (J : C.Z.IdealSheafData), 1 ≤ d → (∀ x ∈ J.support, x ∉ Set.range C.i) → UValOn Xo c C.i φ J d → ∀ (S : Scheme.{0}) (π : S ⟶ pullback C.z (spMap C.b)) (j : Xo.XF c ⟶ S), GlobalTheory.Poinc.IsNormBl π (J.comap (pullback.fst C.z (spMap C.b))) → IsProper π → j ≫ π = C.iF → IsOpenImmersion j → π ⁻¹' Set.range C.iF = Set.range j → GlobalTheory.UChart.SepB Xo c φ j) := by
-  first | exact @GlobalTheory.USep.sepB_of_normBl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeparationNormalizedBlowupUnitaryCompactificatioStatement =====

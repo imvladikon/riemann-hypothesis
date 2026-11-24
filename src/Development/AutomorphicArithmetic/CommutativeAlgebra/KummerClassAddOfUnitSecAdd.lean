@@ -48,6 +48,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafShortComplexExactIffLocally
 
 @[expose] public section
 
@@ -59,14 +60,7 @@ private theorem prim_pow (q : ℕ) {A : Type} [CommRing A] (ζ : Prim q A) : ζ.
   rw [map_mul, ζ.2.2, zero_mul] at h
   simpa [sub_eq_zero] using h
 
-private theorem sec_map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U)
-    (x : Sec F U) : Sec.map φ (Sec.res g x) = Sec.res g (Sec.map φ x) := by
-  have h := φ.hom.naturality g.op
-  exact congrArg (fun f => f.hom x) h
-
-private theorem sec_res_add {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U)
-    (x y : Sec F U) : Sec.res g (x + y) = Sec.res g x + Sec.res g y :=
-  map_add (F.obj.map g.op).hom x y
+private alias sec_res_add := _root_.GlobalTheory.TwSec.res_add
 
 private theorem sec_map_zero {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} :
     Sec.map φ (0 : Sec F U) = 0 :=
@@ -105,14 +99,14 @@ theorem UpperTheory.kummer_class_add_of_unitSec_add :
   let b : Sec (UpperTheory.Deg2.T q) V := a
   let bW : Sec (UpperTheory.Deg2.T q) W := Sec.res g a
   have hb : Sec.res g (Sec.map (UpperTheory.Deg2.kap q) b) = Sec.map (UpperTheory.Deg2.kap q) bW :=
-    (sec_map_res (UpperTheory.Deg2.kap q) g b).symm
+    (_root_.GlobalTheory.EtC.exactIff_map_res (UpperTheory.Deg2.kap q) g b).symm
   have h' : unitSec (Units.map g.appTop.hom.toMonoidHom v') = unitSec (Units.map g.appTop.hom.toMonoidHom v) +
       Sec.map (UpperTheory.Deg2.kap q) bW := by
     have h0 : unitSec v' = unitSec v + Sec.map (UpperTheory.Deg2.kap q) b := h
     have h1 := congrArg (Sec.res g) h0
     rw [sec_res_add, UpperTheory.PicD.unitSec_res, UpperTheory.PicD.unitSec_res, hb] at h1
     exact h1
-  rw [sec_res_add, hK v hq, hK v' hq, ← sec_map_res]
+  rw [sec_res_add, hK v hq, hK v' hq, ← _root_.GlobalTheory.EtC.exactIff_map_res]
   rcases hP W g hg with h0 | ⟨ζ, c, hc⟩
   · have h2 : Sec.map (UpperTheory.Deg2.kap q) bW = 0 := by
       have : bW = 0 := h0

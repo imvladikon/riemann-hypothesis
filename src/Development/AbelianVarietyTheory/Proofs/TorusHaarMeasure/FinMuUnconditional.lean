@@ -135,8 +135,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.exists_bound_orthonormal_frame_mahler : (∀ (r : ℕ) (X : Data E r) (ε : ℝ), 0 < ε → ∃ R : ℝ, ∀ x, IsOrth X x → ε ≤ X.la1 x → ∃ γ : GL (Fin r) E, IsUStab X.Gm X.Λ γ ∧ ∀ τ a b, ‖lact γ x τ a b‖ ≤ R) := by
-  first | exact GlobalTheory.OrthFrameMahler.exists_bound_orthonormal_frame
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsBoundOrthonormalFrameMahlerStatement =====
@@ -180,7 +178,7 @@ theorem exists_unitaryStab_mul_compact_of_le_firstMinimum :
   intro r X H hH x0 hx0 ε hε
   obtain ⟨-, -, hfr⟩ := GlobalTheory.UnitaryFrames.unitary_group_frames.2 r X H hH
   obtain ⟨horth, ι, hιc, -, hιg⟩ := hfr x0 hx0
-  obtain ⟨R, hR⟩ := GlobalTheory.T.exists_bound_orthonormal_frame_mahler r X ε hε
+  obtain ⟨R, hR⟩ := _root_.GlobalTheory.OrthFrameMahler.exists_bound_orthonormal_frame r X ε hε
   obtain ⟨Γ, hΓ⟩ := exists_stabiliser_image_subgroup r X H hH
   refine ⟨ι '' {x : Frame X.Ψ r | IsOrth X x ∧ ∀ τ a b, ‖x τ a b‖ ≤ R},
     (GlobalTheory.FinCovol.isCompact_orth_bounded r X R).image_of_continuousOn
@@ -215,8 +213,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.compact_mod_latticeStabiliser_of_le_firstMinimum : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → ∀ x0, IsOrth X x0 → ∀ ε : ℝ, 0 < ε → ∃ K : Set H, IsCompact K ∧ ∀ g : H, ε ≤ X.la1 (X.lmulC (fun τ => (((g : H) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0) → ∃ u : H, (∃ γ : GL (Fin r) E, IsUStab X.Gm X.Λ γ ∧ ∀ τ : X.Ψ, ((((u : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) = (γ : Matrix (Fin r) (Fin r) E).map τ.1) ∧ ∃ k ∈ K, g = u * k) := by
-  first | exact GlobalTheory.FiniteCovolume.exists_unitaryStab_mul_compact_of_le_firstMinimum | (intros; apply GlobalTheory.FiniteCovolume.exists_unitaryStab_mul_compact_of_le_firstMinimum <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CompactModLatticeStabiliserOfLeFirstMinimumStatement =====
@@ -260,8 +256,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.compactSpace_realUnitaryGroup_of_definite : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → (X.p0 = 0 ∨ X.p0 = r) → CompactSpace H) := by
-  first | exact GlobalTheory.FinCovol.compactSpace_unitary_of_definite
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CompactSpaceRealUnitaryGroupOfDefiniteStatement =====
@@ -274,8 +268,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.exists_drift_function_realUnitaryGroup : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → ∀ [MeasurableSpace H] [BorelSpace H], 0 < X.p0 → X.p0 < r → ∀ x0, IsOrth X x0 → ∃ (σ : Type) (_ : Fintype σ) (_ : Nonempty σ) (h : σ → H) (f : H → ℝ) (c b : ℝ), (∀ s, ∃ k : H, k * h s = (h s)⁻¹ * k) ∧ Measurable f ∧ (∀ g, 0 ≤ f g) ∧ (∀ u : H, (∃ γ : GL (Fin r) E, IsUStab X.Gm X.Λ γ ∧ ∀ τ : X.Ψ, ((((u : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) = (γ : Matrix (Fin r) (Fin r) E).map τ.1) → ∀ g, f (u * g) = f g) ∧ 0 ≤ c ∧ c < 1 ∧ 0 ≤ b ∧ (∀ g, ∑ s, f (g * h s) ≤ Fintype.card σ * (c * f g + b)) ∧ ∀ M : ℝ, ∃ ε : ℝ, 0 < ε ∧ ∀ g : H, f g ≤ M → ε ≤ X.la1 (X.lmulC (fun τ => (((g : H) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0)) := by
-  first | exact GlobalTheory.DriftUnitary.exists_drift_function
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsDriftFunctionRealUnitaryGroupStatement =====
@@ -355,7 +347,7 @@ theorem exists_finite_measure_cover : (∀ (r : ℕ) (X : Data E r) (H : Subgrou
     rw [← hγu τ]
     simp
   by_cases hp : X.p0 = 0 ∨ X.p0 = r
-  · haveI : CompactSpace H := GlobalTheory.T.compactSpace_realUnitaryGroup_of_definite r X H hH hp
+  · haveI : CompactSpace H := _root_.GlobalTheory.FinCovol.compactSpace_unitary_of_definite r X H hH hp
     exact ⟨Set.univ, MeasurableSet.univ, isCompact_univ.measure_lt_top,
       fun g => ⟨1, Γ.one_mem, g, Set.mem_univ _, (one_mul g).symm⟩⟩
   · have hp0 : 0 < X.p0 := Nat.pos_of_ne_zero fun h => hp (Or.inl h)
@@ -363,13 +355,13 @@ theorem exists_finite_measure_cover : (∀ (r : ℕ) (X : Data E r) (H : Subgrou
     obtain ⟨hlc, hsc, -⟩ := (GlobalTheory.UnitaryFrames.unitary_group_frames (E := E)).2 r X H hH
     have hx0 : IsOrth X (x0F X) := fun τ => (X.signature τ).choose_spec.2
     obtain ⟨σ, _, _, h, f, c, b, hk, hf, hf0, hinv, hc0, hc1, hb, hdrift, hsub⟩ :=
-      GlobalTheory.T.exists_drift_function_realUnitaryGroup r X H hH hp0 hpr (x0F X) hx0
+      _root_.GlobalTheory.DriftUnitary.exists_drift_function r X H hH hp0 hpr (x0F X) hx0
     obtain ⟨U, hU, hU1⟩ := GlobalTheory.GamDisc.gamDisc r X H hH
     refine GlobalTheory.exists_finite_measure_cover_of_drift_function H ν Γ σ h f c b
       ⟨U, hU, fun γ hγ => hU1 γ ((hΓ γ).1 hγ)⟩ hk hf hf0
       (fun γ hγ => hinv γ ((hΓ γ).1 hγ)) hc0 hc1 hb hdrift fun M => ?_
     obtain ⟨ε, hε, hM⟩ := hsub M
-    obtain ⟨K, hK, hKc⟩ := GlobalTheory.T.compact_mod_latticeStabiliser_of_le_firstMinimum r X H hH (x0F X) hx0 ε hε
+    obtain ⟨K, hK, hKc⟩ := _root_.GlobalTheory.FiniteCovolume.exists_unitaryStab_mul_compact_of_le_firstMinimum r X H hH (x0F X) hx0 ε hε
     refine ⟨K, hK, fun g hg => ?_⟩
     obtain ⟨u, hu, k, hk, e⟩ := hKc g (hM g hg)
     exact ⟨u, (hΓ u).2 hu, k, hk, e⟩
@@ -387,8 +379,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.exists_finite_measure_cover_unitary_lattice : (∀ (r : ℕ) (X : Data E r) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → ∀ [MeasurableSpace H] [BorelSpace H] (ν : Measure H) [ν.IsHaarMeasure], ∃ Ω : Set H, MeasurableSet Ω ∧ ν Ω < ⊤ ∧ ∀ g : H, ∃ γ : GL (Fin r) E, IsUStab X.Gm X.Λ γ ∧ ∃ w ∈ Ω, ∀ τ : X.Ψ, (((g : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) = (γ : Matrix (Fin r) (Fin r) E).map τ.1 * (((w : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ)) := by
-  first | exact GlobalTheory.FiniteCovolume.exists_finite_measure_cover
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsFiniteMeasureCoverUnitaryLatticeStatement =====
@@ -433,7 +423,7 @@ namespace GlobalTheory.DriftCovolume
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem finMu_unconditional : ∀ (r : ℕ) (X : Data E r), FinMu X :=
-  GlobalTheory.ClosedFiniteMeasure.finMu_of_covolume GlobalTheory.T.exists_finite_measure_cover_unitary_lattice
+  GlobalTheory.ClosedFiniteMeasure.finMu_of_covolume _root_.GlobalTheory.FiniteCovolume.exists_finite_measure_cover
 
 end GlobalTheory.DriftCovolume
 end -- clump:auto

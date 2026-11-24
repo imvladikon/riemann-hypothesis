@@ -53,6 +53,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import GroundTheory.PAdicHodge.ACrisBdRInj
 import Mathlib.Tactic.Linter.Style
+import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NormNatCastPrime
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.Tactic.Linter.HaveILetI
 
@@ -283,7 +284,7 @@ end -- clump:auto
 -- ===== end clump member: GroundTheory.PAdicHodge.BCrisNewtonSlope =====
 
 -- ===== clump member: GroundTheory.PAdicHodge.BCrisNewtonKey =====
--- clump-header: {"m": "GroundTheory.PAdicHodge.BCrisNewtonKey", "h": "module\n\npublic import GroundTheory.PAdicHodge.ACrisBdR\npublic import GroundTheory.PAdicHodge.BdRAlgCl\npublic import GroundTheory.PAdicHodge.ACrisBdRGalois\nimport GroundTheory.PAdicHodge.ACrisBdRInj\npublic import GroundTheory.PAdicHodge.BCrisNewtonApprox\npublic import GroundTheory.PAdicHodge.BCrisNewtonDom\npublic import GroundTheory.PAdicHodge.BCrisNewtonSlope\npublic import GroundTheory.PAdicHodge.BCrisNewtonValue\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "GroundTheory.PAdicHodge.BCrisNewtonKey", "h": "module\n\npublic import GroundTheory.PAdicHodge.ACrisBdR\npublic import GroundTheory.PAdicHodge.BdRAlgCl\npublic import GroundTheory.PAdicHodge.ACrisBdRGalois\nimport GroundTheory.PAdicHodge.ACrisBdRInj\npublic import GroundTheory.PAdicHodge.BCrisNewtonApprox\npublic import GroundTheory.PAdicHodge.BCrisNewtonDom\npublic import GroundTheory.PAdicHodge.BCrisNewtonSlope\npublic import GroundTheory.PAdicHodge.BCrisNewtonValue\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.NormNatCastPrime\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -480,7 +481,7 @@ theorem exists_norm_eq_zpow_of_iota_eq {y : PadicAlgCl p} (hy : y ≠ 0) {a b : 
     have h9 := (mul_eq_zero.1 h8).resolve_left (sub_ne_zero.2 hσ1)
     exact Real.eq_one_of_pos_of_log_eq_zero hγ0 h9
   refine ⟨D, ?_⟩
-  rw [hy1, hγ1, one_mul, norm_p_algCl]
+  rw [hy1, hγ1, one_mul, _root_.UpperTheory.Reformulated.B.CapelliMiscellany.norm_natCast_prime]
 
 end ACris
 
@@ -578,8 +579,8 @@ theorem IsACrisFraction.norm_le {y : PadicAlgCl p} (hy : IsACrisFraction y) (h1 
   by_cases hy0 : y = 0
   · rw [hy0, norm_zero]; exact norm_nonneg _
   obtain ⟨D, hD⟩ := hy.exists_norm_eq_zpow hy0
-  have hp0 : 0 < ‖(p : PadicAlgCl p)‖ := by rw [norm_p_algCl]; exact inv_p_pos
-  have hp1 : ‖(p : PadicAlgCl p)‖ ≤ 1 := by rw [norm_p_algCl]; exact inv_p_lt_one.le
+  have hp0 : 0 < ‖(p : PadicAlgCl p)‖ := by rw [_root_.UpperTheory.Reformulated.B.CapelliMiscellany.norm_natCast_prime]; exact inv_p_pos
+  have hp1 : ‖(p : PadicAlgCl p)‖ ≤ 1 := by rw [_root_.UpperTheory.Reformulated.B.CapelliMiscellany.norm_natCast_prime]; exact inv_p_lt_one.le
   rw [hD]
   by_cases hD1 : 1 ≤ D
   · exact (zpow_le_zpow_right_of_le_one₀ hp0 hp1 hD1).trans_eq (zpow_one _)
@@ -617,9 +618,6 @@ theorem norm_sub_pow_sub_le {F : Type*} [NormedField F] [IsUltrametricDist F] (h
   rw [← h4, norm_mul]
   exact mul_le_of_le_one_left (norm_nonneg _) (mem_normInteger.1 c.2)
 
-theorem norm_p_algCl_lt_one : ‖(p : PadicAlgCl p)‖ < 1 := by
-  rw [norm_p_algCl]; exact inv_p_lt_one
-
 theorem exists_approx_of_isACrisFraction (m : ℕ) :
     ∀ y : PadicAlgCl p, IsACrisFraction y → ‖y‖ ≤ 1 →
       ∃ u ∈ unramifiedClosure p, ‖y - u‖ ≤ ‖(p : PadicAlgCl p)‖ ^ m := by
@@ -627,7 +625,7 @@ theorem exists_approx_of_isACrisFraction (m : ℕ) :
   | zero => intro y _ hy1; exact ⟨0, zero_mem _, by rw [sub_zero, pow_zero]; exact hy1⟩
   | succ m ih =>
     intro y hy hy1
-    have hp1 := norm_p_algCl_lt_one (p := p)
+    have hp1 := _root_.GroundTheory.PAdicHodge.norm_natCast_p_algCl_lt_one (p := p)
     obtain ⟨k₀, k₁, hk, hkk⟩ := exists_lt_norm_pow_sub_lt hy1 one_pos (fun k => p ^ k)
     set r := k₁ - k₀ with hr
     have hr1 : 1 ≤ r := by omega
@@ -680,7 +678,7 @@ theorem exists_approx_of_isACrisFraction (m : ℕ) :
 theorem IsACrisFraction.mem_unramifiedClosure {y : PadicAlgCl p} (hy : IsACrisFraction y) :
     y ∈ unramifiedClosure p := by
   have hpne : (p : PadicAlgCl p) ≠ 0 := Nat.cast_ne_zero.2 hp.out.ne_zero
-  have hp1 := norm_p_algCl_lt_one (p := p)
+  have hp1 := _root_.GroundTheory.PAdicHodge.norm_natCast_p_algCl_lt_one (p := p)
   have hnp0 : 0 < ‖(p : PadicAlgCl p)‖ := norm_pos_iff.2 hpne
   obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one (inv_pos.2 (zero_lt_one.trans_le (le_max_left 1 ‖y‖)))
     hp1

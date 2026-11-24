@@ -217,11 +217,6 @@ theorem KO_det {m : Type} [Fintype m] [DecidableEq m] {κ : GL m k} (hκ : κ �
   rw [h3] at this
   exact lt_irrefl _ this
 
-theorem card_filter_lt (N n : ℕ) (hn : n ≤ N) : (Finset.univ.filter fun i : Fin N => (i : ℕ) < n).card = n := by
-  first
-  | (apply _root_.GlobalTheory.CardValuationLt.card_val_lt <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CardValuationLt.card_val_lt ..)
-
 theorem indic_antitone (N n : ℕ) : Antitone (indic (Finset.univ.filter fun i : Fin N => (i : ℕ) < n)) := by
   intro a b hab
   simp only [indic, Finset.mem_filter, Finset.mem_univ, true_and]
@@ -231,7 +226,7 @@ theorem indic_antitone (N n : ℕ) : Antitone (indic (Finset.univ.filter fun i :
 theorem sum_indic (N n : ℕ) (hn : n ≤ N) :
     ∑ i : Fin N, indic (Finset.univ.filter fun i : Fin N => (i : ℕ) < n) i = n := by
   simp only [indic, Finset.sum_boole, Finset.filter_mem_eq_inter, Finset.univ_inter]
-  exact_mod_cast card_filter_lt N n hn
+  exact_mod_cast _root_.GlobalTheory.CardValuationLt.card_val_lt N n hn
 
 theorem val_torus_prod (ϖ : kˣ) {ι : Type*} [Fintype ι] (e : ι → ℤ) :
     valuation k (∏ x, (ϖ : k) ^ e x) = valuation k (ϖ : k) ^ ∑ x, e x := by
@@ -627,7 +622,7 @@ theorem vanish_dominant {N : ℕ} {ϖ : kˣ} {c : ℕ → ℂ} {h : GL (Fin N) k
   obtain ⟨i₀, hi₀⟩ := hzero
   have hi₀pos : 0 < e i₀ := lt_of_le_of_ne (he i₀) (Ne.symm hi₀)
   obtain ⟨n₀, hn₀⟩ : ∃ n₀, n₀ = (Finset.univ.filter fun j => 0 < e j).card := ⟨_, rfl⟩
-  have key : ∀ i, 0 < e i ↔ (i : ℕ) < n₀ := fun i => hn₀ ▸ pos_iff_lt ha i
+  have key : ∀ i, 0 < e i ↔ (i : ℕ) < n₀ := fun i => hn₀ ▸ _root_.GlobalTheory.PositiveIffLtCard.pos_iff_lt_card ha i
   have hn₀N : n₀ ≤ N := by rw [hn₀]; exact (Finset.card_le_univ _).trans (by simp)
   obtain ⟨s, hs⟩ : ∃ s : Finset (Fin N), s = Finset.univ.filter fun i : Fin N => (i : ℕ) < n₀ := ⟨_, rfl⟩
   have hind : ∀ i, indic s i = if 0 < e i then 1 else 0 := by

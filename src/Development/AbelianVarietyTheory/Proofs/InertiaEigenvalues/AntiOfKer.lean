@@ -1537,8 +1537,6 @@ section -- clump:auto
 
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.MainNotions.BlochKatoReduction Formalism.MainNotions.BlochKatoReduction.Gen GlobalTheory.TwSys GlobalTheory.SelFun GlobalTheory.Published GlobalTheory.ResSel GlobalTheory.StepTwo GlobalTheory.TwistDet GlobalTheory.NewPrime GlobalTheory.Published.PoitouTate
 
-theorem _root_.GlobalTheory.T.universal_cocycle_rows_relation_newPlace : TameLocal → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), 0 < nu X i → ∀ (M : ℕ) (L : Subgroup (GE N)) (z : GE N) (p : PlE D.host) (d : GE N →* Multiplicative (ZMod (X.l i ^ M))) (σ γ : GE N), nu X i + 2 ≤ M → Small2 i s M L z → NewPl i M L p d σ γ → ∀ (B : Type) [CommRing B] [Algebra (X.O0 i) B] (κ : GE N →* Bˣ) (x y : B), Kills i B → AntiHom X.cc κ → x * x = 0 → (∀ τ ∈ Ine (F := D.host.E) (N.plOm.1 p), ((κ τ : Bˣ) : B) * (1 + x) ^ (Multiplicative.toAdd (d τ)).val = 1) → ((κ σ : Bˣ) : B) * (1 + y) = 1 → ∀ (Q : Finset (PlE D.host)) (a : ℕ) (Φ : Matrix (Fin a) (Fin a) B) Z, Univ bkP i s κ Q Φ Z → ∀ j : Bool × Fin D.R.r, x • Z (two X σ j.1) j.2 - (y * (if j.1 then 1 else ((κ σ : Bˣ) : B))) • Z (two X γ j.1) j.2 ∈ what₂ Φ := by
-  first | exact @GlobalTheory.NewPrimeRel.rel
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniversalCocycleRowsRelationNewPlaceStatement =====
@@ -1673,7 +1671,7 @@ theorem det_ne_zero (hPT : PoitouTateTotallyComplex) (hT : TameLocal) (hl : 0 < 
   refine _root_.GlobalTheory.LowDet.det_ne_zero A B (π : B →+* A) x₁ x₂ (Bool × Fin D.R.r) a a' Φ' (fun j => Z' (two X σ j.1) j.2)
     (fun j => Z' (two X γ j.1) j.2) (fun j => if j.1 then 1 else ((κ' σ : Bˣ) : B)) Ψ E (fun j => Z (two X σ j.1) j.2)
     (fun j => if j.1 then - y.1 (cConj X σ) j.2 else y.1 σ j.2) l₀ hπ hker h1 h2 h11 (hcard ▸ h22) (hcard ▸ h12)
-    (fun j => ?_) (GlobalTheory.T.universal_cocycle_rows_relation_newPlace hT D N X bkP i s hl M L z p d σ γ h3 hL hp B κ' x₁ x₂ hK' ha' h11 hI hσ Q' a' Φ' Z' hZ')
+    (fun j => ?_) (_root_.GlobalTheory.NewPrimeRel.rel hT D N X bkP i s hl M L z p d σ γ h3 hL hp B κ' x₁ x₂ hK' ha' h11 hI hσ Q' a' Φ' Z' hZ')
     hE1 hE2 hE3 (hcog _ _ _ fun x hx => ?_) ?_
   · split_ifs
     · exact map_one _
@@ -1795,7 +1793,7 @@ theorem step : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal →
     have e1 := congrFun (congrFun (Matrix.mul_adjugate Ψ) u) b'
     rw [hdet, zero_smul] at e1
     exact e1
-  obtain ⟨h, hh, hB⟩ := GlobalTheory.T.exists_smallSubgroup_cocycleForm_ne_zero D N X bkP i s hl M L' z hMν hz hL' A κ Q ρ hSet hK hρ hAnti (hκz z hz) hκL a Ψ Z hZ _ b _ y
+  obtain ⟨h, hh, hB⟩ := _root_.GlobalTheory.NewPrime.FormNonzero.exists_bform_ne_zero D N X bkP i s hl M L' z hMν hz hL' A κ Q ρ hSet hK hρ hAnti (hκz z hz) hκL a Ψ Z hZ _ b _ y
     hx₀ hadj hyc
   obtain ⟨x, hx, -⟩ := (hZ A).1 _ hx₀
   rw [← hx] at hB

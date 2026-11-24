@@ -109,16 +109,6 @@ private theorem gm_res_eq_gm {S T : Scheme.{0}} (f : T ⟶ S) (t : T) {U V : S.O
   congr 1
   exact TopCat.Presheaf.germ_res_apply S.presheaf (homOfLE hVU) (f t) ht _
 
-private theorem units_eq_of_gm_eq {S : Scheme.{0}} {W : S.Opens} {a b : Γ(S, W)ˣ}
-    (h : ∀ x, x ∈ W → gm (𝟙 S) x W a = gm (𝟙 S) x W b) : a = b := by
-  apply Units.ext
-  apply TopCat.Presheaf.section_ext S.sheaf W
-  intro x hx
-  have := congrArg Units.val (h x hx)
-  unfold gm pullU at this
-  rw [dite_eq_left (show (𝟙 S) x ∈ W from hx)] at this
-  exact this
-
 private theorem gm_id_pullU' {S T : Scheme.{0}} (f : T ⟶ S) (t : T) (W : S.Opens) (c : Γ(S, W)ˣ) (ht : f t ∈ W) :
     gm (𝟙 T) t (f ⁻¹ᵁ W) (pullU f W c) = gm f t W c := by
   unfold gm
@@ -133,7 +123,7 @@ private theorem res_eq_mul_inv_mul_of_gm {S : Scheme.{0}} {W A B C D : S.Opens} 
     (hD : W ≤ D) (a : Γ(S, A)ˣ) (b : Γ(S, B)ˣ) (c : Γ(S, C)ˣ) (d : Γ(S, D)ˣ)
     (h : ∀ x, x ∈ W → gm (𝟙 S) x A a = gm (𝟙 S) x B b * (gm (𝟙 S) x C c)⁻¹ * gm (𝟙 S) x D d) :
     res hA a = res hB b * (res hC c)⁻¹ * res hD d := by
-  apply units_eq_of_gm_eq
+  apply _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.unit_ext
   intro x hx
   rw [map_mul, map_mul, gm_inv_moduli, gm_res_eq_gm (𝟙 S) x hA a hx, gm_res_eq_gm (𝟙 S) x hB b hx,
     gm_res_eq_gm (𝟙 S) x hC c hx, gm_res_eq_gm (𝟙 S) x hD d hx]
@@ -210,13 +200,13 @@ theorem exists_push : ∀ (X Y : Scheme.{0}) (ψ : Y ⟶ X) [IsOpenImmersion ψ]
     obtain ⟨i, hi⟩ := hcov y
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨fun _ => i, (hmem _ y).2 hi⟩
   · intro j
-    apply units_eq_of_gm_eq
+    apply _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.unit_ext
     intro y hy
     have h1 := (hmem j y).1 hy
     rw [gm_res_eq_gm (𝟙 Y) y, map_one, hN j j y h1 h1, Gself _ y h1]
     exact hy
   · intro j j' j''
-    apply units_eq_of_gm_eq
+    apply _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.unit_ext
     intro y hy
     have h1 := (hmem j y).1 hy.1.1
     have h2 := (hmem j' y).1 hy.1.2
@@ -269,18 +259,13 @@ open GlobalTheory.RigidTriv
 
 variable {X Y : Scheme.{0}}
 
-private theorem gm_res_eq_gm (f : Y ⟶ X) (y : Y) {U V : X.Opens} (h : V ≤ U) (hy : f y ∈ V) (u : Γ(X, U)ˣ) :
-    gm f y V (res h u) = gm f y U u := by
-  rw [← gm_id_pull f y V hy, pullU_res₂ f h u]
-  exact gm_rp₁ f y U (f ⁻¹ᵁ V) (f.preimage_mono h) hy u
-
 theorem gm_div {M M' : LB X} (f : Y ⟶ X) (y : Y) (a a' : M.ι) (b b' : M'.ι)
     (hm : f y ∈ M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b')) :
     gm f y (M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b')) ((LB.div M M').g (a, b) (a', b')) =
       gm f y _ (M.g a a') * (gm f y _ (M'.g b b'))⁻¹ := by
   simp only [LB.div]
   rw [map_mul, map_inv]
-  erw [gm_res_eq_gm f y _ hm, gm_res_eq_gm f y _ hm]
+  erw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res f y _ hm, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res f y _ hm]
 
 theorem gm_iso {M M' : LB X} {w : LB.Iso M' M} (hw : w.IsGen) (f : Y ⟶ X) (y : Y) (a a' : M.ι) (b b' : M'.ι)
     (hm : f y ∈ M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b')) :
@@ -288,10 +273,10 @@ theorem gm_iso {M M' : LB X} {w : LB.Iso M' M} (hw : w.IsGen) (f : Y ⟶ X) (y :
       gm f y _ (M.g a a') * (gm f y _ (M'.g b b'))⁻¹ * gm f y (M.U a' ⊓ M'.U b') (w.s (a', b')) := by
   have hl : M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b') ≤ M.U a ⊓ M'.U b := inf_le_left
   have hr : M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b') ≤ M.U a' ⊓ M'.U b' := inf_le_right
-  refine (gm_res_eq_gm f y hl hm (w.s (a, b))).symm.trans ?_
+  refine (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res f y hl hm (w.s (a, b))).symm.trans ?_
   refine (congrArg (gm f y (M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b'))) (hw (a, b) (a', b'))).trans ?_
   refine (map_mul (gm f y (M.U a ⊓ M'.U b ⊓ (M.U a' ⊓ M'.U b'))) _ _).trans ?_
-  exact congrArg₂ (· * ·) (gm_div f y a a' b b' hm) (gm_res_eq_gm f y hr hm (w.s (a', b')))
+  exact congrArg₂ (· * ·) (gm_div f y a a' b b' hm) (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res f y hr hm (w.s (a', b')))
 
 private theorem units_ext_of_gm_id_eq {Z : Scheme.{0}} {W : Z.Opens} (u v : Γ(Z, W)ˣ)
     (h : ∀ x ∈ W, gm (𝟙 Z) x W u = gm (𝟙 Z) x W v) : u = v := by
@@ -304,13 +289,6 @@ private theorem units_ext_of_gm_id_eq {Z : Scheme.{0}} {W : Z.Opens} (u v : Γ(Z
     exact e
   ext1
   exact (ConcreteCategory.bijective_of_isIso (Scheme.Hom.app (𝟙 Z) W)).1 key
-
-private theorem res_res_units' {X : Scheme.{0}} {U V W : X.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (u : Γ(X, U)ˣ) :
-    res h2 (res h1 u) = res (h2.trans h1) u := by
-  ext1
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
-  rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← Functor.map_comp]
-  rfl
 
 private theorem mem_pull_U_of_mem {X S : Scheme.{0}} (M : LB X) (e : S ⟶ X) (x : S) (a : M.ι) (h : e x ∈ M.U a) :
     x ∈ (M.pull e).U (fun _ => a) :=
@@ -342,8 +320,8 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
         (gm e x (M.U a ⊓ M'.U b) (w.s (a, b)))⁻¹ := by
     intro a b x hx
     simp only [c]
-    rw [map_mul, map_mul, map_inv, map_inv, gm_res_eq_gm (𝟙 S) x _ hx, gm_res_eq_gm (𝟙 S) x _ hx,
-      gm_res_eq_gm (𝟙 S) x _ hx]
+    rw [map_mul, map_mul, map_inv, map_inv, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx,
+      _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx]
     refine congrArg (HMul.hMul _) (congrArg Inv.inv ?_)
     exact gm_id_pull e x _ hx.2 _
 
@@ -353,7 +331,7 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
     intro x hx
     have hk := hx.1
     have hl := hx.2
-    rw [gm_res_eq_gm (𝟙 S) x _ hx, gm_res_eq_gm (𝟙 S) x _ hx, hc a b x hk, hc a' b' x hl,
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx, hc a b x hk, hc a' b' x hl,
       pull_gen hr x a a' hk.2.1 hl.2.1, pull_gen hr' x b b' hk.2.2 hl.2.2,
       gm_iso hw e x a a' b b' ⟨hk.2, hl.2⟩]
     exact comm_mul_mul_inv_mul_mul_inv_inv_eq _ _ _ _ _
@@ -403,7 +381,7 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
   refine ⟨⟨fun k => w.s k * res (hk k) (pullU p _ c0)⟩, ?_, ?_⟩
   · intro i j
     dsimp only
-    rw [map_mul, map_mul, hw i j, res_res_units', res_res_units', _root_.mul_assoc]
+    rw [map_mul, map_mul, hw i j, _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.ReciprocityTheory.ChartRestriction.G.DVR.res_res', _root_.mul_assoc]
   · intro x a b hxa hxb
     have hx : x ∈ O (a, b) := ⟨⟨mem_pull_U_of_mem M e x a hxa, mem_pull_U_of_mem M' e x b hxb⟩, ⟨hxa, hxb⟩⟩
     have hxab : e x ∈ M.U a ⊓ M'.U b := ⟨hxa, hxb⟩
@@ -414,13 +392,13 @@ theorem exists_iso_normalised : ∀ (X S : Scheme.{0}) (p : X ⟶ S) (e : S ⟶ 
       exact hx0
     have hP : gm e x (M.U a ⊓ M'.U b) (res (hk (a, b)) (pullU p _ c0)) = gm (𝟙 S) x (O (a, b)) (c (a, b)) := by
       calc gm e x (M.U a ⊓ M'.U b) (res (hk (a, b)) (pullU p _ c0))
-          = gm e x (p ⁻¹ᵁ (⨆ k, O k)) (pullU p _ c0) := gm_res_eq_gm e x (hk (a, b)) hxab _
+          = gm e x (p ⁻¹ᵁ (⨆ k, O k)) (pullU p _ c0) := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res e x (hk (a, b)) hxab _
         _ = gm (𝟙 S) x (e ⁻¹ᵁ (p ⁻¹ᵁ (⨆ k, O k))) (pullU e _ (pullU p _ c0)) := (gm_id_pull e x _ hz _).symm
         _ = gm (𝟙 S) x (e ⁻¹ᵁ (p ⁻¹ᵁ (⨆ k, O k))) (res le_rfl (pullU e _ (pullU p _ c0))) :=
-          (gm_res_eq_gm (𝟙 S) x le_rfl hz _).symm
+          (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x le_rfl hz _).symm
         _ = gm (e ≫ p) x (⨆ k, O k) c0 := gm_rp₂ e p x _ _ le_rfl hz c0
         _ = gm (𝟙 S) x (⨆ k, O k) c0 := by rw [he]
-        _ = gm (𝟙 S) x (O (a, b)) (res (le_iSup O (a, b)) c0) := (gm_res_eq_gm (𝟙 S) x _ hx c0).symm
+        _ = gm (𝟙 S) x (O (a, b)) (res (le_iSup O (a, b)) c0) := (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.gm_res (𝟙 S) x _ hx c0).symm
         _ = gm (𝟙 S) x (O (a, b)) (c (a, b)) := congrArg _ (hc0 (a, b))
     have hw' : gm e x (M.U a ⊓ M'.U b) (w.s (a, b) * res (hk (a, b)) (pullU p _ c0)) =
         gm e x (M.U a ⊓ M'.U b) (w.s (a, b)) * gm (𝟙 S) x (O (a, b)) (c (a, b)) :=

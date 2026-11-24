@@ -1118,12 +1118,6 @@ theorem le_DF_of_mult_pos {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     _ ≤ _ := Finset.single_le_sum (f := fun τ => ∑ i : Fin (Dw.mult τ), a (τ, i)) (fun _ _ => Nat.zero_le _)
         (Finset.mem_univ τ)
 
-theorem thl_nonneg' (k l : ℕ) : 0 ≤ thl k l := by
-  unfold thl
-  apply Real.sSup_nonneg
-  rintro t ⟨i, -, -, -, rfl⟩
-  positivity
-
 theorem one_le_log_of_five_le {k : ℕ} (hk : 5 ≤ k) : 1 ≤ Real.log k := by
   have h5 : (5 : ℝ) ≤ k := by exact_mod_cast hk
   rw [Real.le_log_iff_exp_le (by linarith)]
@@ -1198,7 +1192,7 @@ theorem nuGood : NuGoodSt := by
       exact HZ _ _ Pk
   have hSE : 0 ≤ N.Sc + N.eta := hOK.SE_nonneg
   have hlog : 1 ≤ Real.log N.R.k := one_le_log_of_five_le (by omega)
-  have hth := thl_nonneg' N.R.k l
+  have hth := _root_.GlobalTheory.GoodDepth.ConjPkg.thl_nonneg N.R.k l
   set A1 : ℝ := Real.log N.R.k * N.R.m * w / l with hA1
   set A2 : ℝ := N.R.f * N.R.k * (N.Sc + N.eta) / l with hA2
   set A3 : ℝ := N.R.k * thl N.R.k l * w with hA3
@@ -1580,12 +1574,6 @@ namespace GlobalTheory.GoodDepth
 open Formalism.L2.FormalSeriesBounds Formalism.IncomingBounds Formalism.UnitaryBoundIntegral Formalism.L2.DIV Formalism.L2.Pj Formalism.BasicNotions NumberField IsDedekindDomain ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.L2.Indef.Tree.DepthCond
 
-theorem thl_nonneg_leaf (k l : ℕ) : 0 ≤ thl k l := by
-  unfold thl
-  apply Real.sSup_nonneg
-  rintro t ⟨i, -, -, -, rfl⟩
-  positivity
-
 theorem err_mono_leaf (Cc C k m f w Se Se' th l T X : ℝ) (hCc : 0 < Cc) (hC : Cc ≤ C) (hk : 1 ≤ k) (hm : 1 ≤ m) (hf : 8 ≤ f)
     (hw : 0 ≤ w) (hS : Se' ≤ Se) (hS0 : 0 ≤ Se) (hth : 0 ≤ th) (hl : 0 ≤ l) :
     Cc * (Real.log k * m * w / l + f * k * Se' / l + k * th * w + if X < l then k * w / l ^ 2 else 0) ≤
@@ -1622,7 +1610,7 @@ theorem leafGood : LeafGoodSt := by
     have := hN.k_eq ▸ hk
     exact_mod_cast this
   refine ⟨fun l => ⟨?_, ?_⟩, fun Q hQ => ?_, fun Q _ => ?_, fun w _ hw j => ?_⟩
-  · rw [hN.th_eq]; exact thl_nonneg_leaf _ _
+  · rw [hN.th_eq]; exact _root_.GlobalTheory.GoodDepth.ConjPkg.thl_nonneg _ _
   · rw [hN.ad_eq]
   · simp only [hN.th_eq]
     refine (_root_.GlobalTheory.TailPrimeSum.main.2 N.R.k Q hkN hQ).trans ?_
@@ -1659,7 +1647,7 @@ theorem leafGood : LeafGoodSt := by
       constructor
       · have hm' := err_mono_leaf Cc O.C O.k O.m O.f (O.wt j) O.Se (N.Sc + N.eta) (O.th (Formalism.EigenvalueLevelCeiling.plc w))
           (Formalism.EigenvalueLevelCeiling.plc w) O.T O.X2 hCc hCcC hk hm hf (hb.le.trans (hN.wt_b j)) hN.Se_ge (add_nonneg hSc heta)
-          (by rw [hN.th_eq]; exact thl_nonneg_leaf _ _) (Nat.cast_nonneg _)
+          (by rw [hN.th_eq]; exact _root_.GlobalTheory.GoodDepth.ConjPkg.thl_nonneg _ _) (Nat.cast_nonneg _)
         rw [← hN.th_eq, ← hN.k_eq, ← hN.m_eq, ← hN.f_eq, ← hN.depthNumbers_threshold_eq] at b1
         unfold nuWAt at e1
         unfold OnObj.aE OnObj.A1 OnObj.Akw

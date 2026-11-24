@@ -1092,8 +1092,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.L2.Theta Formalism.IndefR Formalism.IndefR.Datum MeasureTheory Matrix ValuativeRel IsLocalRing GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Unf GlobalTheory.LatPair GlobalTheory.SplitWeil GlobalTheory.SeeSaw GlobalTheory.FinPl
 
-theorem _root_.GlobalTheory.T.seeSawLevelPrimeLaw_doubleStep : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type) (o : TDat c k ι), c.Is → v.Is → ShapeOff v o → ∀ j σ (h : j + 2 * (σ + 1) + 2 = D.R.m), ∃ (ε : ι → 𝓀[k]ˣ) (op : BiOp (c.X j) (c.X (j + 1)) (c.X (j + 1 + 1))) (r : ι → ℝ) (e : ι → ℤ), (∀ i, 0 < r i) ∧ OpAt (· ∈ v.tP) op ∧ ∀ t : Tup c, t.Is → WeilOK (t := t) v → t.UnrOn (· ∈ v.tP) → ∀ Ψ₁ Ψ₂, Vac c.ψ _ _ (v.N j) (v.N (j + 1)) (· ∈ v.tP) Ψ₁ → Vac c.ψ _ _ (v.N (j + 1)) (v.N (j + 1 + 1)) (· ∈ v.tP) Ψ₂ → BiVacAt c.ψ (c.x j).L (c.x (j + 1)).L (c.x (j + 1 + 1)).L (· ∈ v.tP) (op.app c.ψ (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) Ψ₁ Ψ₂)) ∧ ∀ d d', CombAt (· ∉ v.tP) d → CombAt (· ∉ v.tP) d' → ∀ φ ∈ o.Ram j, c.bl j (t.kom j) (t.kom (j + 1)) φ (biComb c.ψ _ _ _ d d' (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) Ψ₁ Ψ₂)) = o.mono r e (t.sBF j (σ + 1) h).χW • c.bl j (t.kom j) (t.kom (j + 1)) (o.S (fun _ => ε) j φ) (biComb c.ψ _ _ _ d d' (biComb c.ψ _ _ _ (v.dT j) (v.dT (j + 1)) (op.app c.ψ (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) Ψ₁ Ψ₂)))) := by
-  first | exact @GlobalTheory.LevPrimeMid.lawLevelPrime_double
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLevelPrimeLawDoubleStepStatement =====
@@ -1163,12 +1161,12 @@ theorem exists_choice (c : Comm D) (v : VCom c) (k : Type) [Field k] [ValuativeR
                 (op.app c.ψ (c.lst j h (v.τ j h) (t.sBF j 0 h) Ψ₁ Ψ₂)))) ((c.oT (j + 1 + 1) h).emb (h', 1)) ∂c.volT.μ := by
   by_cases h1 : ∃ σ, j + 2 * (σ + 1) + 2 = D.R.m
   · obtain ⟨σ, h⟩ := h1
-    obtain ⟨ε, op, r, e, hr, hop, H⟩ := GlobalTheory.T.seeSawLevelPrimeLaw_doubleStep D c v k ι o hc hv hS j σ h
+    obtain ⟨ε, op, r, e, hr, hop, H⟩ := _root_.GlobalTheory.LevPrimeMid.lawLevelPrime_double D c v k ι o hc hv hS j σ h
     refine ⟨ε, op, r, e, hr, hop, fun σ' h' => ?_, fun h' => absurd h' (by omega)⟩
     obtain rfl : σ = σ' := by omega
     exact H
   · by_cases h2 : j + 2 * 0 + 2 = D.R.m
-    · obtain ⟨ε, op, r, e, hr, hop, H⟩ := GlobalTheory.T.levelPrime_law_last_two_steps_all_tuples D c v k ι o hc hv hS j h2
+    · obtain ⟨ε, op, r, e, hr, hop, H⟩ := _root_.GlobalTheory.FinPl.TLastAll.main D c v k ι o hc hv hS j h2
       exact ⟨ε, op, r, e, hr, hop, fun σ h => absurd ⟨σ, h⟩ h1, fun _ => H⟩
     · exact ⟨fun _ => 1, ⟨0, Fin.elim0, Fin.elim0⟩, fun _ => 1, fun _ => 0, fun _ => one_pos, fun i => i.elim0,
         fun σ h => absurd ⟨σ, h⟩ h1, fun h => absurd h h2⟩

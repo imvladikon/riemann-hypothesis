@@ -1359,7 +1359,7 @@ theorem hyps_succ {r : ℕ} (Q : Fin (r + 1) → QStep S) (hinj : Function.Injec
   have hP : ∀ v, places (fun i : Fin r => Q i.succ) v → places Q v := fun v ⟨i, hi⟩ => ⟨i.succ, hi⟩
   refine ⟨fun i => ⟨away_pair (Q 0) (Q i.succ) (hne i) _ _ (hc i.succ).1 ((Q 0).ent₁ γ).1,
       away_pair (Q 0) (Q i.succ) (hne i) _ _ (hc i.succ).2 ((Q 0).ent₂ γ β).1⟩, t1, t2, fun i => hv i.succ, hφ,
-    contAut_trc _ hf, fun i => typed_trc (Q 0) (Q i.succ) (hne i) _ (ht i.succ),
+    _root_.GlobalTheory.SeeSawLastValue.contAut_trc _ hf, fun i => typed_trc (Q 0) (Q i.succ) (hne i) _ (ht i.succ),
     grpOff_anti D _ _ _ hP hg, grpOff_anti D _ _ _ hP hh₁, grpOff_anti D _ _ _ hP hh₂⟩
 
 theorem trc_conv_cons {V : HSp D} (E : GA D V →₀ ℂ) (l : List (GA D V →₀ ℂ))
@@ -1869,7 +1869,7 @@ theorem qLaw_of_pin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VT
       (biComb c.ψ _ _ _ (w.dQ j p.1 p.2) (w.dQ (j + 1) p.2 β) (c.ctr j σ h (t.sBF j (σ + 1) h) (t.sFB j σ h) Ψ₁ Ψ₂))) := fun p =>
     contAut_lift (S := dblOf H) hc.std (handIsLift H hW) (fin_dQ F hF j (by omega) p.1 p.2)
       (fin_dQ F hF (j + 1) (by omega) p.2 β) hΨ₁.1 hΨ₂.1 (hφ p.1).1
-  exact (per_sum hc.std (c.B (j + 1 + 1) σ (idx_step h)) (GlobalTheory.QValOuter.contAut_trc (w.ε (j + 1 + 1) β) hf') _ hX).symm
+  exact (per_sum hc.std (c.B (j + 1 + 1) σ (idx_step h)) (_root_.GlobalTheory.SeeSawLastValue.contAut_trc (w.ε (j + 1 + 1) β) hf') _ hX).symm
 
 end GlobalTheory.QLawPf
 end
@@ -1890,8 +1890,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.FramePositiveSum (IsCO)
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.seeSawIteratedIntegralLaw_at_twist_of_factorisation : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), c.Is → t.Is → v.Is → WeilOK (t := t) v → QPin v w → QLaw v w := by
-  first | exact @GlobalTheory.QLawPf.qLaw_of_pin
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawIteratedIntegralLawAtTwistOfFactorisationStatement =====

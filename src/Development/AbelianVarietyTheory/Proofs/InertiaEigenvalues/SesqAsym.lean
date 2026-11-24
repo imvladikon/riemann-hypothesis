@@ -62,8 +62,6 @@ section -- clump:auto
 
 open GlobalTheory.UnitLemma Polynomial
 
-theorem _root_.GlobalTheory.T.exists_unit_sigma_eq_mul_invAlg : ∀ (K : UQ) (B : InvAlg K) (u : B.A), u * B.σ u = 1 → ∃ β : B.Aˣ, B.σ (β : B.A) = β * u := by
-  first | exact @GlobalTheory.UnitLemma.HilbertNinety.exists_unit_sigma
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitSigmaEqMulHilbert90InvAlgStatement =====
@@ -91,7 +89,7 @@ theorem sesq_asym : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g = 1 → B.P.Sepa
     rw [hu_def, map_mul, hσε]
     calc ε * B.g * (ε * B.σ B.g) = (ε * ε) * (B.g * B.σ B.g) := by ring
       _ = 1 := by rw [hεε, hg, one_mul]
-  refine ⟨GlobalTheory.T.exists_unit_sigma_eq_mul_invAlg K B u hu, ?_⟩
+  refine ⟨_root_.GlobalTheory.UnitLemma.HilbertNinety.exists_unit_sigma K B u hu, ?_⟩
   intro s hadd hlin hnd hsym
   have hvu : B.σ u * u = 1 := by rw [mul_comm]; exact hu
 

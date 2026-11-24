@@ -554,12 +554,6 @@ section Val
 
 variable {C : Type} [Field C] {V : VF C}
 
-theorem mm_add {a b : C} (ha : V.MM a) (hb : V.MM b) : V.MM (a + b) :=
-  V.v.map_lt_add ha hb
-
-theorem mm_neg {a : C} (ha : V.MM a) : V.MM (-a) := by
-  unfold VF.MM; rw [V.v.map_neg]; exact ha
-
 theorem mm_mul {a b : C} (ha : V.MM a) (hb : V.Ge 0 b) : V.MM (a * b) := by
   unfold VF.MM; rw [V.v.map_mul]
   have hb' : (0 : WithTop ℝ) ≤ V.v b := by simpa [VF.Ge] using hb
@@ -575,9 +569,6 @@ theorem mm_or {a b : C} (h : V.MM (a * b)) : V.MM a ∨ V.MM b := by
 theorem not_mm_one : ¬ V.MM (1 : C) := by
   unfold VF.MM; rw [V.v.map_one]; exact lt_irrefl _
 
-theorem mm_l : V.MM (V.l : C) := by
-  unfold VF.MM; rw [V.v_l]; exact zero_lt_one
-
 theorem mm_pow_sub {a b : C} (h : V.MM (a - b)) (ha : V.Ge 0 a) (hb : V.Ge 0 b) (n : ℕ) :
     V.MM (a ^ n - b ^ n) := by
   induction n with
@@ -585,20 +576,7 @@ theorem mm_pow_sub {a b : C} (h : V.MM (a - b)) (ha : V.Ge 0 a) (hb : V.Ge 0 b) 
   | succ n ih =>
     have : a ^ (n + 1) - b ^ (n + 1) = (a ^ n - b ^ n) * a + (a - b) * b ^ n := by ring
     rw [this]
-    exact mm_add (mm_mul ih ha) (mm_mul h (hb.pow n))
-
-theorem eq_zero_of_ge_all {a : C} (h : ∀ N : ℕ, V.Ge N a) : a = 0 := by
-  rw [← V.v.top_iff]
-  unfold VF.Ge at h
-  induction hv : V.v a using WithTop.recTopCoe with
-  | top => rfl
-  | coe t =>
-    exfalso
-    obtain ⟨N, hN⟩ := exists_nat_gt t
-    have h1 := h N
-    rw [hv] at h1
-    have : (N : ℝ) ≤ t := by exact_mod_cast h1
-    linarith
+    exact _root_.GlobalTheory.CongruentCharacters.mm_add (mm_mul ih ha) (mm_mul h (hb.pow n))
 
 theorem exists_lower (a : C) : ∃ b : ℕ, V.Ge (-(b : ℝ)) a := by
   unfold VF.Ge
@@ -618,7 +596,7 @@ theorem ge_l_pow (n : ℕ) : V.Ge n ((V.l : C) ^ n) := by
 theorem ge_of_unit_mul {c a : C} {w : ℝ} (hc : V.MM c) (h : V.Ge w ((1 - c) * a)) : V.Ge w a := by
   have h1 : V.v (1 - c) ≤ 0 := by
     by_contra hh
-    have : V.MM (1 - c + c) := mm_add (not_le.mp hh) hc
+    have : V.MM (1 - c + c) := _root_.GlobalTheory.CongruentCharacters.mm_add (not_le.mp hh) hc
     rw [sub_add_cancel] at this
     exact not_mm_one this
   unfold VF.Ge at *
@@ -663,7 +641,7 @@ theorem frob_iter {C : Type} [Field C] {V : VF C} {O : Type} [CommRing O] {d : �
   | zero => simp [VF.MM]
   | succ n ih =>
     have h2 := mm_pow_sub ih (h0 _ _) ((h0 _ _).pow _) V.l
-    have h3 := mm_add (h1 (a + n) x) h2
+    have h3 := _root_.GlobalTheory.CongruentCharacters.mm_add (h1 (a + n) x) h2
     rw [← pow_mul, ← pow_succ, sub_add_sub_cancel] at h3
     push_cast
     rwa [← add_assoc]
@@ -675,7 +653,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
     intro x
     apply hP
     intro a
-    have := mm_neg (frob_iter em h0 h1 a x d)
+    have := _root_.GlobalTheory.CongruentCharacters.mm_neg (frob_iter em h0 h1 a x d)
     simpa using this
   have hzero : ∃ w : ZMod d → κ → C, (∀ a x, (L x).mulVec (w a) = em a x • w a) ∧
       (0 : κ → C) = ∑ a, w a := ⟨0, by simp, by simp⟩
@@ -717,7 +695,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
       intro x
       obtain ⟨k, hk⟩ := hgen x
       rw [← hψχ] at hk
-      refine ⟨k, funext fun i => eq_zero_of_ge_all (V := V) fun N => ?_⟩
+      refine ⟨k, funext fun i => _root_.GlobalTheory.CongruentCharacters.eq_zero_of_ge_all (V := V) fun N => ?_⟩
       obtain ⟨n, hn⟩ := hEu N
       have hint : ∀ i j, V.Ge 0 ((L x - ψ x • (1 : Matrix κ κ C)) i j) := by
         intro i j
@@ -761,7 +739,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
       intro hm
       apply hw0
       funext i
-      refine eq_zero_of_ge_all (V := V) fun N => ?_
+      refine _root_.GlobalTheory.CongruentCharacters.eq_zero_of_ge_all (V := V) fun N => ?_
       obtain ⟨n, hn⟩ := hfix N i
       have h2 := hn n le_rfl
       rw [heig, Pi.smul_apply, smul_eq_mul, ← one_sub_mul] at h2
@@ -773,7 +751,7 @@ theorem limit_idempotent_range : ∀ (C : Type) [Field C] [IsAlgClosed C] (V : V
       intro x y hxy
       have h2 : V.MM (ψ ε * ψ x) := by
         rw [← map_mul, hxy, map_mul, map_natCast]
-        exact mm_mul mm_l (hψ y)
+        exact mm_mul _root_.GlobalTheory.CongruentCharacters.mm_l (hψ y)
       exact (mm_or h2).resolve_left hnot
     have hone : V.MM (ψ ε - 1) := by
       obtain ⟨y, hy⟩ := hε
@@ -1238,32 +1216,9 @@ namespace GlobalTheory.ProjSelf
 
 variable {C : Type} [Field C] {V : VF C}
 
-theorem eq_zero_of_ge {x : C} (h : ∀ N : ℕ, V.Ge N x) : x = 0 := by
-  by_contra hx
-  have hne : V.v x ≠ ⊤ := fun e => hx ((AddValuation.top_iff _).1 e)
-  obtain ⟨t, ht⟩ := WithTop.ne_top_iff_exists.1 hne
-  obtain ⟨N, hN⟩ := exists_nat_gt t
-  have := h N
-  unfold VF.Ge at this
-  rw [← ht] at this
-  have h2 : (N : ℝ) ≤ t := by exact_mod_cast this
-  linarith
-
-theorem exists_lower {κ : Type} [Fintype κ] (v : κ → C) : ∃ m : ℕ, ∀ i, V.Ge (-(m : ℝ)) (v i) := by
-  apply GlobalTheory.IdemRange.exists_lower_vec <;> assumption
-
 theorem ge_mulVec {κ : Type} [Fintype κ] {A : Matrix κ κ C} (hA : ∀ i j, V.Ge 0 (A i j)) {m : ℝ} {v : κ → C}
     (hv : ∀ i, V.Ge m (v i)) (i : κ) : V.Ge m (A.mulVec v i) :=
   VF.Ge.sum fun j _ => (hA i j).mul_int (hv j)
-
-theorem ge_l_pow (n : ℕ) : V.Ge n ((V.l : C) ^ n) := by
-  induction n with
-  | zero => simpa using VF.Ge.one (V := V)
-  | succ n ih =>
-    rw [pow_succ]
-    have := ih.mul (VF.ge_l (V := V))
-    push_cast
-    exact this
 
 theorem ge_of_unit_mul {u x : C} {m : ℝ} (hu : V.v u = 0) (h : V.Ge m (u * x)) : V.Ge m x := by
   unfold VF.Ge at h ⊢
@@ -1285,7 +1240,7 @@ theorem IsLim.eig {M : Matrix κ κ C} {a : ℕ → O} (h : IsLim V L M a) (ψ :
     (hw : ∀ x, (L x).mulVec w = ψ x • w) : M.mulVec w = c • w := by
   funext i
   rw [← sub_eq_zero]
-  apply eq_zero_of_ge (V := V)
+  apply _root_.GlobalTheory.CongruentCharacters.eq_zero_of_ge_all (V := V)
   intro N
   obtain ⟨n0, h0⟩ := h N w i
   obtain ⟨n1, h1⟩ := hc N
@@ -1302,9 +1257,9 @@ theorem IsLim.absorb (hL : ∀ x i j, V.Ge 0 (L x i j)) {M E : Matrix κ κ C} {
     M.mulVec v = M.mulVec (E.mulVec v) := by
   funext i
   rw [← sub_eq_zero]
-  apply eq_zero_of_ge (V := V)
+  apply _root_.GlobalTheory.CongruentCharacters.eq_zero_of_ge_all (V := V)
   intro N
-  obtain ⟨m, hm⟩ := exists_lower (V := V) v
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.IdemRange.exists_lower_vec (V := V) v
   obtain ⟨n0, h0⟩ := h N v i
   obtain ⟨n1, h1⟩ := h N (E.mulVec v) i
   choose n2 h2 using hE N v
@@ -1317,7 +1272,7 @@ theorem IsLim.absorb (hL : ∀ x i j, V.Ge 0 (L x i j)) {M E : Matrix κ κ C} {
   have a3 := ge_mulVec (hL (a n)) a2 i
   obtain ⟨y, hy⟩ := hae n
   have a4 : V.Ge N ((V.l : C) ^ n * (L y).mulVec v i) := by
-    refine ((ge_l_pow n).mul (ge_mulVec (hL y) hm i)).mono ?_
+    refine ((_root_.GlobalTheory.IdemRange.ge_l_pow n).mul (ge_mulVec (hL y) hm i)).mono ?_
     have : N + m ≤ n := by omega
     have : (N : ℝ) + m ≤ n := by exact_mod_cast this
     linarith
@@ -1403,7 +1358,7 @@ theorem em_idem (ψ : O →+* C) (hint : ∀ x, V.Ge 0 (ψ x)) {ε : O} (h : ∃
   apply ge_of_unit_mul hu
   rw [map_sub, map_mul, map_mul, map_pow ψ (V.l : O), map_natCast] at h2
   rw [mul_sub, mul_one, h2]
-  simpa using (ge_l_pow n).mul (hint y)
+  simpa using (_root_.GlobalTheory.IdemRange.ge_l_pow n).mul (hint y)
 
 theorem exists_seq (hint : ∀ a x, V.Ge 0 (em a x)) {ε : O} (h : ∃ y, ε * ε - ε = (V.l : O) * y)
     (h1 : ∀ a, V.MM (em a ε - 1)) (hP : ∀ x : O, (∀ a, V.MM (em a x)) → ∃ y, ε * x = (V.l : O) * y)

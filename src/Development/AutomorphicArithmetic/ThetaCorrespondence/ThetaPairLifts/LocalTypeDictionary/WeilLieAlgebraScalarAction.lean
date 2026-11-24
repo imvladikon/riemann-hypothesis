@@ -127,7 +127,7 @@ theorem exists_archimedean_component : _root_.GlobalTheory.FunPr.ThetaLocalInput
   obtain ⟨ρ, η, hη1, hη2, hη3, hρi, hρu, hρc, hρd⟩ := realRep hP.realMetaplecticRepresentation s hsc ω hωc fun g w v => by
     obtain ⟨c, rfl⟩ := φ.surjective w
     rw [hsφ, hωi]
-  obtain ⟨kk, hkk⟩ := _root_.GlobalTheory.T.realLift_characterTrace_hasDerivAt hP F E σ β R S τ JB b C hCM hFr.2.2 η (fun g h _ _ => hη1 g h) hη2.continuousOn
+  obtain ⟨kk, hkk⟩ := _root_.GlobalTheory.RealLift.CharTrace.deriv_characterTrace_realLift hP F E σ β R S τ JB b C hCM hFr.2.2 η (fun g h _ _ => hη1 g h) hη2.continuousOn
     fun g _ => hη3 g
   let toE : SInf F κ →L[ℂ] Sch (Fin n) := SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (F := ℂ) θ.symm
   let toV : Sch (Fin n) →L[ℂ] SInf F κ := SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (F := ℂ) θ
@@ -348,28 +348,6 @@ end GlobalTheory.GenRep
 end
 end
 
-section
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open NumberField MeasureTheory Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.BasicNotions.TH GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.FockAlg GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.RealLift
-
-theorem _root_.GlobalTheory.T.isGeneric_localComponent : _root_.GlobalTheory.FunPr.ThetaLocalInputs → DerEx → VacLine →
-  ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (α β κ : Type) [Fintype α]
-    [DecidableEq α] [Fintype β] [DecidableEq β] [Fintype κ] (P Q R S : ℕ) (ψ : AddChar (AF F) ℂ)
-    (τ : ∀ w : InfinitePlace F, EmbOver E w) (JA : Matrix α α (AE F E)) (JB : Matrix β β (AE F E))
-    (d : Darboux (symp (R := AF F) (cA σ) (-1) JA JB) κ) (a b : ℂ) (A : InfinitePlace F → Matrix α (Ix P Q) ℂ)
-    (C : InfinitePlace F → Matrix β (Ix R S) ℂ) (Φ : Tens F P Q R S →ₗ[ℂ] SInf F κ), IsCMExt F E σ → IsStd ψ →
-    Framed τ JA JB a b A C → IsFockMap ψ τ d A C Φ →
-    ∃ (ω₀ : UG (cA σ) JB →* Module.End ℂ ((κ → AF F) → ℂ)) (c₀ : InfinitePlace F → ℂ),
-      (∀ g : UG (cA σ) JB, At (evI F) ((g.1 : Matrix β β (AE F E)) - 1) →
-        (∀ φ ∈ schA F κ, ω₀ g φ ∈ schA F κ) ∧
-        (∀ w, ∀ φ ∈ schA F κ, ω₀ g (d.rho ψ w φ) = d.rho ψ (actB (cA σ) g w) (ω₀ g φ)) ∧
-        ∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-          ∀ φ ∈ schA F κ, ∫⁻ x, ‖ω₀ g φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) ∧
-      (∀ l ∈ (adeleClass F).adm κ, ∀ φ ∈ schA F κ,
-        ContinuousOn (fun g => l (ω₀ g φ)) {g : UG (cA σ) JB | At (evI F) ((g.1 : Matrix β β (AE F E)) - 1)}) ∧
-      ActsBy τ C ω₀ Φ (fockAct2 P Q R S) c₀ := by
-  first | exact @_root_.GlobalTheory.GenRep.exists_generic_representation
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsGenericRepresentation =====
@@ -384,7 +362,6 @@ open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMode
 open NumberField MeasureTheory Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.BasicNotions.TH GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.FockAlg GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.RealLift
 noncomputable section
 namespace GlobalTheory.AdelicSchur
-variable {F : Type} [Field F] [NumberField F]
 end GlobalTheory.AdelicSchur
 namespace GlobalTheory.AdelicSchur
 theorem adelic_schur_lemma : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] (ψ : AddChar (AF F) ℂ), IsStd ψ →
@@ -517,18 +494,6 @@ end GlobalTheory.AdelicSchur
 end
 end
 
-section
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open NumberField MeasureTheory Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.BasicNotions.TH GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.FockAlg GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.RealLift
-
-theorem _root_.GlobalTheory.T.adelic_intertwiner_eq_scalar : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] (ψ : AddChar (AF F) ℂ), IsStd ψ →
-  ∀ M : Module.End ℂ ((κ → AF F) → ℂ), (∀ φ ∈ schA F κ, M φ ∈ schA F κ) →
-    (∀ w : (κ → AF F) × (κ → AF F), ∀ φ ∈ schA F κ, M (schr ψ w φ) = schr ψ w (M φ)) →
-    (∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-      ∀ φ ∈ schA F κ, ∫⁻ x, ‖M φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
-    ∃ z : ℂ, ∀ φ ∈ schA F κ, M φ = z • φ := by
-  first | exact @_root_.GlobalTheory.AdelicSchur.adelic_schur_lemma
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.AdelicIntertwinerEqScalar =====
@@ -573,7 +538,7 @@ theorem metaplectic_splittings_differ_by_character : _root_.GlobalTheory.FunPr.T
     · exact ⟨1, fun h => absurd h hg⟩
     have hgi := at_inv hg
     have hscalar : ∃ z : ℂ, ∀ φ ∈ schA F κ, (om g * ω₀ g⁻¹) φ = z • φ :=
-      _root_.GlobalTheory.T.adelic_intertwiner_eq_scalar hP F κ ψ hψ (om g * ω₀ g⁻¹)
+      _root_.GlobalTheory.AdelicSchur.adelic_schur_lemma hP F κ ψ hψ (om g * ω₀ g⁻¹)
       (fun φ hφ => hom.pres g _ ((hω _ hgi).1 φ hφ))
       (fun w φ hφ => by
         have e1 : schr ψ w φ = d.rho ψ (d.e.symm w) φ := by simp [Darboux.rho]
@@ -625,31 +590,6 @@ end GlobalTheory.SplitScalar
 end
 end
 
-section
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open NumberField MeasureTheory Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.BasicNotions.TH GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.FockAlg GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.RealLift
-
-theorem _root_.GlobalTheory.T.metaplectic_splitting_unique_up_to_character : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
-  ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (α β κ : Type) [Fintype α]
-    [DecidableEq α] [Fintype β] [DecidableEq β] [Fintype κ] (ψ : AddChar (AF F) ℂ) (JA : Matrix α α (AE F E))
-    (JB : Matrix β β (AE F E)) (d : Darboux (symp (R := AF F) (cA σ) (-1) JA JB) κ)
-    (om ω₀ : UG (cA σ) JB →* Module.End ℂ ((κ → AF F) → ℂ)), IsStd ψ →
-    IsUSplitting (adeleClass F) ψ d (actB (cA σ)) om →
-    (∀ g : UG (cA σ) JB, At (evI F) ((g.1 : Matrix β β (AE F E)) - 1) →
-        (∀ φ ∈ schA F κ, ω₀ g φ ∈ schA F κ) ∧
-        (∀ w, ∀ φ ∈ schA F κ, ω₀ g (d.rho ψ w φ) = d.rho ψ (actB (cA σ) g w) (ω₀ g φ)) ∧
-        ∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
-          ∀ φ ∈ schA F κ, ∫⁻ x, ‖ω₀ g φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
-    (∀ l ∈ (adeleClass F).adm κ, ∀ φ ∈ schA F κ,
-        ContinuousOn (fun g => l (ω₀ g φ)) {g : UG (cA σ) JB | At (evI F) ((g.1 : Matrix β β (AE F E)) - 1)}) →
-    ∃ ν : UG (cA σ) JB → ℂ,
-      (∀ g : UG (cA σ) JB, At (evI F) ((g.1 : Matrix β β (AE F E)) - 1) → ∀ φ ∈ schA F κ, om g φ = ν g • ω₀ g φ) ∧
-      (∀ g h : UG (cA σ) JB, At (evI F) ((g.1 : Matrix β β (AE F E)) - 1) → At (evI F) ((h.1 : Matrix β β (AE F E)) - 1) →
-        ν (g * h) = ν g * ν h) ∧
-      ContinuousOn ν {g : UG (cA σ) JB | At (evI F) ((g.1 : Matrix β β (AE F E)) - 1)} ∧
-      ∀ g : UG (cA σ) JB, At (evI F) ((g.1 : Matrix β β (AE F E)) - 1) → ν g ≠ 0 := by
-  first | exact @_root_.GlobalTheory.SplitScalar.metaplectic_splittings_differ_by_character
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MetaplecticSplittingUniqueUpToCharacter =====
@@ -667,9 +607,9 @@ namespace GlobalTheory.LieScal
 open scoped Classical in
 theorem lie_algebra_acts_by_scalar : _root_.GlobalTheory.FunPr.ThetaLocalInputs → DerEx → VacLine → LieScalar := by
   intro hP hD hV F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ om hCM hψ hFr hΦ hom
-  obtain ⟨ω₀, c₀, hH, hc, hact⟩ := _root_.GlobalTheory.T.isGeneric_localComponent hP hD hV F E σ α β κ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
-  obtain ⟨ν, hν, hmul, hνc, hν0⟩ := _root_.GlobalTheory.T.metaplectic_splitting_unique_up_to_character hP F E σ α β κ ψ JA JB d om ω₀ hψ hom hH hc
-  obtain ⟨k, hk⟩ := _root_.GlobalTheory.T.realLift_characterTrace_hasDerivAt hP F E σ β R S τ JB b C hCM hFr.2.2 ν hmul hνc hν0
+  obtain ⟨ω₀, c₀, hH, hc, hact⟩ := _root_.GlobalTheory.GenRep.exists_generic_representation hP hD hV F E σ α β κ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
+  obtain ⟨ν, hν, hmul, hνc, hν0⟩ := _root_.GlobalTheory.SplitScalar.metaplectic_splittings_differ_by_character hP F E σ α β κ ψ JA JB d om ω₀ hψ hom hH hc
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.RealLift.CharTrace.deriv_characterTrace_realLift hP F E σ β R S τ JB b C hCM hFr.2.2 ν hmul hνc hν0
   unfold cA at *
   refine ⟨fun w => c₀ w + k w, ?_⟩
   intro γ hγ Y hY T g hg l hl
@@ -694,7 +634,7 @@ theorem lie_algebra_acts_by_scalar : _root_.GlobalTheory.FunPr.ThetaLocalInputs 
       sumPl (fun w => fockAct2 P Q R S (Y w) + (c₀ w * (Y w).trace) • (1 : Module.End ℂ _)) +
         (∑ w, k w * (Y w).trace) • (1 : Module.End ℂ (Tens F P Q R S)) := by
     simp only [add_mul, add_smul, ← add_assoc]
-    exact sumPl_add_smul (fun w => fockAct2 P Q R S (Y w) + (c₀ w * (Y w).trace) • (1 : Module.End ℂ _)) _
+    exact _root_.GlobalTheory.ArchRep.sumPl_add_smul (fun w => fockAct2 P Q R S (Y w) + (c₀ w * (Y w).trace) • (1 : Module.End ℂ _)) _
   rw [e2, LinearMap.add_apply, LinearMap.smul_apply, Module.End.one_apply, map_add (f := _), map_smul]
   have key : ∀ (z : ℂ) (f f' : SInf F κ), pureA F ⇑(f' + z • f) g = z • pureA F ⇑f g + pureA F ⇑f' g := by
     intro z f f'; funext x; simp [pureA]; ring

@@ -119,7 +119,7 @@ theorem kapBound_proof : KapBound := by
         ((∑ i ∈ (JJ.erase 0).filter (fun i => i ∈ Finset.Ico (a t) (a t + 4 * (g : ℤ))),
             padicValInt ℓ i : ℕ) : ℝ) ≤ 4 * (g : ℝ) / ((ℓ : ℝ) - 1) + Real.logb ℓ (2 * (h : ℝ)) := by
       intro t
-      have hw := Formalism.WindowSums.arc_WindowSum ℓ (a t) (4 * g) (2 * h)
+      have hw := _root_.Formalism.WindowSums.sum_padicValInt_le ℓ (a t) (4 * g) (2 * h)
         ((JJ.erase 0).filter (fun i => i ∈ Finset.Ico (a t) (a t + 4 * (g : ℤ)))) ?_ ?_ ?_
       · push_cast at hw ⊢
         exact hw
@@ -994,7 +994,7 @@ end KillerBridge
 
 theorem killer_conditions_of_stable (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (h : AtCaseA fun l _ K LL h => Pi0Stable ((HW l).W K 1 LL h.2.2)) : adm11 D HW F :=
-  ⟨Formalism.WindowSums.arc_KillerVal, Formalism.WindowSums.arc_KillerKills,
+  ⟨Formalism.WindowSums.arc_KillerVal, _root_.Formalism.WindowSums.annihilatorPoly_kills,
     fun l _ K LL hc h5 => killerModule_of_stable _ (h l K LL hc h5)⟩
 
 end Formalism.MainNotions.WachCoordinates

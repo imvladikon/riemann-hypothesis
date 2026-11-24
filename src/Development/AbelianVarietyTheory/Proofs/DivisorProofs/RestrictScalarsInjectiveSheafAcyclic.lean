@@ -77,11 +77,6 @@ namespace GlobalTheory.EtC
 
 variable {R : Type} [CommRing R]
 
-theorem coindQ_map_res {F G : Shv R} (f : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.map f (Sec.res g x) = Sec.res g (Sec.map f x) := by
-  have := congrArg (fun h => h.hom x) (f.hom.naturality g.op)
-  simpa using this
-
 theorem coindQ_res_res (F : Shv R) {W V U : Scheme.{0}} (g : W ⟶ V) (x : V ⟶ U) (s : Sec F U) :
     Sec.res g (Sec.res x s) = Sec.res (g ≫ x) s := by
   simp [Sec.res]
@@ -97,7 +92,7 @@ namespace GlobalTheory.EtC
 variable {R : Type} [CommRing R]
 
 theorem coindQ_gen_bijective (J : Shv R) (U : Scheme.{0}) : Function.Bijective (coindQ_gen J U) := by
-  obtain ⟨hex, huniq, hres, -⟩ := GlobalTheory.T.free_sections_ext_res_map R (yoneda.obj U) J
+  obtain ⟨hex, huniq, hres, -⟩ := _root_.GlobalTheory.EtC.free_hom_sections R (yoneda.obj U) J
   have key : ∀ (V : Scheme.{0}) (x : V ⟶ U),
       freeGen R (yoneda.obj U) V x = Sec.res x (freeGen R (yoneda.obj U) U (𝟙 U)) := by
     intro V x
@@ -107,7 +102,7 @@ theorem coindQ_gen_bijective (J : Shv R) (U : Scheme.{0}) : Function.Bijective (
   · intro ψ ψ' h
     apply huniq
     intro V x
-    rw [key V x, coindQ_map_res, coindQ_map_res]
+    rw [key V x, _root_.GlobalTheory.EtC.exactIff_map_res, _root_.GlobalTheory.EtC.exactIff_map_res]
     exact congrArg (Sec.res x) h
   · intro s
     obtain ⟨ψ, hψ⟩ := hex (fun V x => Sec.res x s) (fun W V g x => by
@@ -133,7 +128,7 @@ theorem coindQ_exactAt_succ {S : Type} [CommRing S] (φ : R →+* S) (J : Shv R)
     (hJ : ∀ P : PSh, Module.Injective (ULift.{1} R) ((free R).obj P ⟶ J)) (n : ℕ) :
     (coindCx φ J).ExactAt (n + 1) := by
   rw [HomologicalComplex.exactAt_iff' _ n (n + 1) (n + 2) (by simp) (by simp)]
-  rw [GlobalTheory.T.etaleSheaf_shortComplex_exact_iff_locally]
+  rw [_root_.GlobalTheory.EtC.exactIff]
   intro U b hb
   have := coindQ_injSec J hJ U
   let b' : (scalarsRes φ).complex.X (n + 1) ⟶ J.obj.obj (op U) := b
@@ -152,7 +147,7 @@ theorem coindQ_exactAt_succ {S : Type} [CommRing S] (φ : R →+* S) (J : Shv R)
   have key : Sec.map ((coindCx φ J).d n (n + 1)) (a' : Sec ((coindCx φ J).X n) U) = b := by
     rw [h1]; exact ha'
   exact ⟨Sec.res g (a' : Sec ((coindCx φ J).X n) U),
-    (coindQ_map_res ((coindCx φ J).d n (n + 1)) g _).trans (congrArg (Sec.res g) key)⟩
+    (_root_.GlobalTheory.EtC.exactIff_map_res ((coindCx φ J).d n (n + 1)) g _).trans (congrArg (Sec.res g) key)⟩
 
 end GlobalTheory.EtC
 
@@ -198,7 +193,7 @@ theorem coindQ_sc_mono {S : Type} [CommRing S] (φ : R →+* S) (J : Shv R) : Mo
   exact NatTrans.mono_of_mono_app _
 
 theorem coindQ_sc_exact {S : Type} [CommRing S] (φ : R →+* S) (J : Shv R) : (coindQ_sc φ J).Exact := by
-  rw [GlobalTheory.T.etaleSheaf_shortComplex_exact_iff_locally]
+  rw [_root_.GlobalTheory.EtC.exactIff]
   intro U b hb
   let b' : (scalarsRes φ).complex.X 0 ⟶ J.obj.obj (op U) := b
   have hb' : (scalarsRes φ).complex.d 1 0 ≫ b' = 0 := hb
@@ -213,7 +208,7 @@ theorem coindQ_sc_exact {S : Type} [CommRing S] (φ : R →+* S) (J : Shv R) : (
     rw [coindQ_sc_f_sec]
     exact hc
   refine ⟨⊤, GrothendieckTopology.top_mem _ _, fun V g _ => ⟨Sec.res g a, ?_⟩⟩
-  exact (coindQ_map_res _ g _).trans (congrArg (Sec.res g) key)
+  exact (_root_.GlobalTheory.EtC.exactIff_map_res _ g _).trans (congrArg (Sec.res g) key)
 
 end GlobalTheory.EtC
 
@@ -252,8 +247,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etaleCoinductionComplexAugmentation_quasiIso : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R →+* S) (J : Shv R), (∀ P : PSh, Module.Injective (ULift.{1} R) ((free R).obj P ⟶ J)) → QuasiIso (coindAug φ J) := by
-  first | (exact @GlobalTheory.EtC.coindAug_quasiIso)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCoinductionComplexAugmentationQuasiIsoStatement =====
@@ -289,7 +282,7 @@ theorem lift_linear_of_injective {S : Type*} [Ring S] {N A B C : Type*} [AddComm
 
 theorem lift_homSh : ∀ (R : Type) [CommRing R] (J X : Shv R), Module.Injective (ULift.{1} R) (X ⟶ J) → ∀ (A B C : ModuleCat.{1} (ULift.{1} R)) (u : A ⟶ B) (v : B ⟶ C), (∀ b, v.hom b = 0 → ∃ a, u.hom a = b) → ∀ f : X ⟶ (homSh J).obj (op B), f ≫ (homSh J).map u.op = 0 → ∃ g : X ⟶ (homSh J).obj (op C), g ≫ (homSh J).map v.op = f := by
   intro R _ J X hinj A B C u v hex f hf
-  obtain ⟨e, hnat, -⟩ := GlobalTheory.T.exists_sheafHom_linearMapsSheaf_curry_equiv R J
+  obtain ⟨e, hnat, -⟩ := _root_.GlobalTheory.EtC.homSh_curry R J
   have he0 : ∀ M : ModuleCat.{1} (ULift.{1} R), e X M 0 = 0 := by
     intro M
     have := hnat X M M 0 0
@@ -311,8 +304,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_lift_etaleSheafOfLinearMaps_exact : ∀ (R : Type) [CommRing R] (J X : Shv R), Module.Injective (ULift.{1} R) (X ⟶ J) → ∀ (A B C : ModuleCat.{1} (ULift.{1} R)) (u : A ⟶ B) (v : B ⟶ C), (∀ b, v.hom b = 0 → ∃ a, u.hom a = b) → ∀ f : X ⟶ (homSh J).obj (op B), f ≫ (homSh J).map u.op = 0 → ∃ g : X ⟶ (homSh J).obj (op C), g ≫ (homSh J).map v.op = f := by
-  first | (exact @GlobalTheory.EtC.lift_homSh)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftEtaleSheafOfLinearMapsExactStatement =====
@@ -328,7 +319,7 @@ namespace GlobalTheory.EtC
 
 theorem homSh_injective (R : Type) [CommRing R] (J : Shv R) [Injective J] (M : ModuleCat.{1} (ULift.{1} R)) [Projective M] :
     Injective ((homSh J).obj (op M)) := by
-  obtain ⟨e, -, hX⟩ := GlobalTheory.T.exists_sheafHom_linearMapsSheaf_curry_equiv R J
+  obtain ⟨e, -, hX⟩ := _root_.GlobalTheory.EtC.homSh_curry R J
   haveI : Module.Projective (ULift.{1} R) M := (IsProjective.iff_projective (P := M)).2 ‹_›
   constructor
   intro X Y g i _
@@ -351,8 +342,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.injective_etaleSheafOfLinearMapsFromModule : ∀ (R : Type) [CommRing R] (J : Shv R) [Injective J] (M : ModuleCat.{1} (ULift.{1} R)) [Projective M], Injective ((homSh J).obj (op M)) := by
-  first | (exact @GlobalTheory.EtC.homSh_injective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveEtaleSheafOfLinearMapsFromModuleStatement =====
@@ -366,10 +355,10 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 theorem GlobalTheory.EtC.coindRes_exists : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R →+* S) (J : Shv R) [Injective J], (∀ P : PSh, Module.Injective (ULift.{1} R) ((free R).obj P ⟶ J)) → ∃ (C : Cx R) (ε : sgl ((restr φ).obj ((coind φ).obj J)) ⟶ C), C.IsStrictlyGE 0 ∧ (∀ t, Injective (C.X t)) ∧ QuasiIso ε ∧ ∀ (P : PSh) (n : ℤ), 0 < n → Subsingleton (CohomologyClass (sgl ((free R).obj P)) C n) := by
   intro R S _ _ φ J _ hJ
-  haveI := GlobalTheory.T.etaleCoinductionComplexAugmentation_quasiIso R S φ J hJ
+  haveI := _root_.GlobalTheory.EtC.coindAug_quasiIso R S φ J hJ
   let I : InjectiveResolution ((restr φ).obj ((coind φ).obj J)) :=
     { cocomplex := coindCx φ J
-      injective := fun n => GlobalTheory.T.injective_etaleSheafOfLinearMapsFromModule R J ((scalarsRes φ).complex.X n)
+      injective := fun n => _root_.GlobalTheory.EtC.homSh_injective R J ((scalarsRes φ).complex.X n)
       ι := coindAug φ J }
   refine ⟨I.cochainComplex, I.ι', inferInstance, inferInstance, inferInstance, ?_⟩
   intro P n hn
@@ -393,7 +382,7 @@ theorem GlobalTheory.EtC.coindRes_exists : ∀ (R S : Type) [CommRing R] [CommRi
       (homSh J).map ((scalarsRes φ).complex.d (k + 2) (k + 1)).op = 0 := by
     rw [← coindCx_d]
     exact h2
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_lift_etaleSheafOfLinearMaps_exact R J ((free R).obj P) (hJ P) _ _ _ _ _ hex _ hf'
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.EtC.lift_homSh R J ((free R).obj P) (hJ P) _ _ _ _ _ hex _ hf'
   refine ⟨g ≫ (I.cochainComplexXIso (k : ℤ) k rfl).inv, ?_⟩
   rw [I.cochainComplex_d (k : ℤ) ((k : ℤ) + 1) k (k + 1) rfl (by simp)]
   erw [Category.assoc, Iso.inv_hom_id_assoc]
@@ -644,8 +633,8 @@ theorem GlobalTheory.EtC.restr_injective_acyclic : ∀ (R S : Type) [CommRing R]
   have h2 : Subsingleton (HK R (sgl ((free R).obj P)) ((restr φ).obj I) n) :=
     _root_.GlobalTheory.EtC.RetractAcyc.subsingleton_of_retract R _ _ ((restr φ).map i) ((restr φ).map r)
       (by rw [← Functor.map_comp, hir]; exact (restr φ).map_id I) _ n h1
-  obtain ⟨e, -, -⟩ := GlobalTheory.T.exists_natural_homotopyEquiv_chains_constant_presheaf R
-  exact (GlobalTheory.T.quasiIso_hypercohomology_bijective R (e P).hom ((restr φ).obj I) n).1.subsingleton
+  obtain ⟨e, -, -⟩ := _root_.GlobalTheory.EtC.chains_disc_homotopyEquiv R
+  exact (_root_.GlobalTheory.EtC.quasiIso_hypercohomology_bijective' R (e P).hom ((restr φ).obj I) n).1.subsingleton
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclic =====

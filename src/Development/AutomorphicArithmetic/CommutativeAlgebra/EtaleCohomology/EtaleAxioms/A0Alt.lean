@@ -421,9 +421,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleChapterDThree
-theorem etale_cohomology_third_statement_holds_alt : LateralTheory.E.EtaleChapterDThree := by
-  apply LateralTheory.E.t_D3Cut.goal
-theorem intersectionNumber_baseChange : LateralTheory.E.EtaleChapterDThree := etale_cohomology_third_statement_holds_alt
+alias intersectionNumber_baseChange := _root_.LateralTheory.E.t_D3Cut.goal
 end LateralTheory.Fin.EtaleChapterDThree
 end -- clump:auto
 end -- clump:auto
@@ -436,9 +434,7 @@ section -- clump:auto
 
 namespace UpperTheory.Et.D3
 
-theorem a0 : LateralTheory.E.EtaleChapterDThree := LateralTheory.Fin.EtaleChapterDThree.intersectionNumber_baseChange
-
-theorem intersectionNumber_baseChange : LateralTheory.E.EtaleChapterDThree := a0
+alias intersectionNumber_baseChange := _root_.LateralTheory.E.t_D3Cut.goal
 
 end UpperTheory.Et.D3
 end -- clump:auto

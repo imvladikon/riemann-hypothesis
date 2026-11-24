@@ -63,6 +63,7 @@ import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant
 import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.NegativeIndexAdditive, Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth
@@ -83,24 +84,6 @@ open GlobalTheory.Grid GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle 
 
 namespace GlobalTheory.SumSig
 
-section Change
-variable {E : Type} [Field E] [NumberField E] [StarRing E]
-
-theorem gram_family (S : HSpace E) {ι : Type} [Fintype ι] (v : ι → S.V) :
-    (Matrix.of fun k l => S.hT (v k) (v l)) =
-      (Matrix.of fun i k => S.frame.repr (v k) i)ᴴ * S.gram * Matrix.of fun i k => S.frame.repr (v k) i := by
-  ext k l
-  have hk := S.frame.sum_repr (v k)
-  have hl := S.frame.sum_repr (v l)
-  simp only [Matrix.of_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, HSpace.gram]
-  conv_lhs => rw [← hk, ← hl]
-
-  simp only [map_sum, LinearMap.map_smulₛₗ, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply,
-  Finset.sum_mul, Finset.mul_sum, RingHom.id_apply]
-  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  ring
-end Change
-
 end GlobalTheory.SumSig
 end -- clump:auto
 end -- clump:auto
@@ -108,7 +91,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.NegativeIndexAdditive =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NotIsConjPlOfIdemSum\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridHeckeCharactersExist\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFromBlocks\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NegativeIndexAdditive\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemOrth\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder\nimport Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver\nimport Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegIdxOfOrth", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfUnit\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NotIsConjPlOfIdemSum\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridHeckeCharactersExist\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFromBlocks\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersUnramifiedOffLevelPlaces\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NegativeIndexAdditive\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemOrth\nimport Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder\nimport Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver\nimport Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -151,7 +134,7 @@ theorem negIdx_of_orth {D : D7} {V₁ V₂ WW : HSp D} {p q : ℕ} (hr : V₁.ra
     · simp only [v, Matrix.of_apply, Matrix.fromBlocks_apply₂₁, Sum.elim_inl, Sum.elim_inr, Matrix.zero_apply]
       exact ho (V₁.frame j) (V₂.frame i)
     · simp only [v, HSpace.gram, Matrix.of_apply, Matrix.fromBlocks_apply₂₂, Sum.elim_inr]; exact e₂ _ _
-  have key := (GlobalTheory.SumSig.gram_family WW v).symm.trans hv
+  have key := (_root_.Formalism.BasicNotions.gram_family WW v).symm.trans hv
   set C := Matrix.of fun i k => WW.frame.repr (v k) i
   have hst : Function.Semiconj (tauE D τ) star star := fun a => D.sp.cm.cmUnram.2.1 _ a
   have hmap : (C.map (tauE D τ))ᴴ * gramAt D WW τ * C.map (tauE D τ) =
@@ -268,8 +251,8 @@ theorem chars {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory.ChiGrid.Co
   have hη : IsHeckeChar D Lc.eta := hL.eta.1
   have hμ : IsHeckeChar D (Lc.mu t (j + 1)) := GlobalTheory.HeckeCharsOfSquare.isHeckeChar_mul (hL.mu0 j).1 (hL.xi t).1
   have hχ : IsHeckeChar D (G.ch.chi (D.R.m - i)) := (G.ch.chi_eq (D.R.m - i) (by omega) (by omega)).1
-  have hα := GlobalTheory.HeckeCharsOfSquare.isHeckeChar_mul hμ (GlobalTheory.HeckeCharsOfSquare.isHeckeChar_pow hη (rankV D i j % 2))
-  have hβ := GlobalTheory.HeckeCharsOfSquare.isHeckeChar_mul hχ (GlobalTheory.HeckeCharsOfSquare.isHeckeChar_pow hη (rankV D i j % 2))
+  have hα := GlobalTheory.HeckeCharsOfSquare.isHeckeChar_mul hμ (_root_.GlobalTheory.WeilProduct.isHeckeChar_pow hη (rankV D i j % 2))
+  have hβ := GlobalTheory.HeckeCharsOfSquare.isHeckeChar_mul hχ (_root_.GlobalTheory.WeilProduct.isHeckeChar_pow hη (rankV D i j % 2))
   have e : rankV D (i + 1) (j + 1) = rankV D i j + D.R.t + sLen D := by simp only [rankV]; ring
   obtain ⟨a, ha⟩ := ht
   obtain ⟨b, hb⟩ := hs

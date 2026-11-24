@@ -102,7 +102,7 @@ theorem lemmaVLiftC_of (hRC : Formalism.L2.SG.TermOp.Vanish.RCocompactC) {D : D7
     (Y : Formalism.L2.SG.Full.Full X) (u u' : D.what₂.Word) (κ : Formalism.L2.SG.TermDef.Term D u u' (X.Fu u) (Y.what₂ u) → ℕ) :
     Formalism.L2.SG.Pf.RowForm.LemmaVLiftC X Y u u' κ := by
   intro R ρ s hs
-  exact Formalism.L2.SG.TermOp.Vanish.ooVanish_of Formalism.L2.SG.Closed.AvgCore_holds Formalism.L2.SG.Pf.ginfUnimod_holds
+  exact Formalism.L2.SG.TermOp.Vanish.ooVanish_of _root_.Formalism.L2.SG.TermOp.Vanish.avgCore Formalism.L2.SG.Pf.ginfUnimod_holds
     Formalism.L2.SG.Pf.nLamNinf_holds Formalism.L2.SG.Pf.chiTrivialC_outright Formalism.L2.SG.Pf.psiInfChar_holds
     Formalism.L2.SG.Pf.rClosedC_holds Formalism.L2.SG.Pf.roDiscreteC_holds hRC Formalism.L2.SG.NonRelPf.nonRelCharC_holds Y s.1 hs
 
@@ -136,23 +136,9 @@ section Gen
 
 variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : ℕ}
 
-theorem gmap_mul (a b : S.V ≃ₗ[E] S.V) (L : Submodule (𝓞 E) S.V) :
-    Formalism.HermitianLatticesTheory.gmap (a * b) L = Formalism.HermitianLatticesTheory.gmap a (Formalism.HermitianLatticesTheory.gmap b L) := by
-  ext x
-  simp only [Formalism.HermitianLatticesTheory.gmap, Submodule.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨b y, ⟨y, hy, rfl⟩, rfl⟩
-  · rintro ⟨z, ⟨y, hy, rfl⟩, rfl⟩
-    exact ⟨y, hy, rfl⟩
-
-theorem gmap_one (L : Submodule (𝓞 E) S.V) : Formalism.HermitianLatticesTheory.gmap (1 : S.V ≃ₗ[E] S.V) L = L := by
-  ext x
-  simp [Formalism.HermitianLatticesTheory.gmap]
-
 theorem gmap_inv_of {a : S.V ≃ₗ[E] S.V} {L L' : Submodule (𝓞 E) S.V} (h : Formalism.HermitianLatticesTheory.gmap a L' = L) :
     Formalism.HermitianLatticesTheory.gmap a⁻¹ L = L' := by
-  rw [← h, ← gmap_mul, inv_mul_cancel, gmap_one]
+  rw [← h, ← _root_.PI.DCRelEquiv.UnitaryGroupMassFormula.gmap_mul', inv_mul_cancel, _root_.PI.DCRelEquiv.UnitaryGroupMassFormula.gmap_one']
 
 theorem xflag_mapLF {T : E} (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom S.hT) (F : LFlag S r T) (j : ℕ) :
     Xflag (mapLF γ F) j = (Xflag F j).map (γ : S.V →ₗ[E] S.V) := by
@@ -169,7 +155,7 @@ theorem isPair_quot {T T' : E} (Λ Λ' : Submodule (𝓞 E) S.V) (g : ℕ) (F : 
     (hι : IotaCompat Λ F (mapLF γ₁ F') (mapLF γ₂ F') (γ₂ * γ₁⁻¹) g) :
     IsPair Λ F (mapLF γ₁ F') (mapLF γ₂ F') (γ₂ * γ₁⁻¹) g := by
   refine ⟨⟨(Formalism.HermitianLatticesTheory.isom S.hT).mul_mem h₂ ((Formalism.HermitianLatticesTheory.isom S.hT).inv_mem h₁), ?_⟩, fun j => ?_, ?_, hι⟩
-  · rw [gmap_mul, gmap_inv_of hl₁, hl₂]
+  · rw [_root_.PI.DCRelEquiv.UnitaryGroupMassFormula.gmap_mul', gmap_inv_of hl₁, hl₂]
   · rw [xflag_mapLF γ₁ h₁, xflag_mapLF γ₂ h₂, ← Submodule.map_comp]
     congr 1
     ext x
@@ -210,8 +196,8 @@ theorem scalTC_of (hκ : Formalism.L2.SG.DataInst.RowLabel κ) (hι : LiftIotaC 
   have hP : IsPair l₁ (lf D (X.Fu u)) s₁.frame s₂.frame (s₂.lin * s₁.lin⁻¹) (gS D) :=
     isPair_quot l₁ l₁' (gS D) (lf D (X.Fu u)) (lf D (X.Fu u')) s₁.lin s₂.lin s₁.rep.2.2.1 s₂.rep.2.2.1
       s₁.rep.2.2.2.1 s₂.rep.2.2.2.1 hι'
-  have hEq := Formalism.L2.SG.Closed.TermEqIff_holds D u u' (X.Fu u) l₁ hRL
-  have hGF := (Formalism.L2.SG.Closed.TermFun_holds D u u' (X.Fu u) l₁ hRL).1
+  have hEq := _root_.term_eq_iff_relation D u u' (X.Fu u) l₁ hRL
+  have hGF := (_root_.term_function_const D u u' (X.Fu u) l₁ hRL).1
   let x₁ : Carrier (PD D l₁ (lf D (X.Fu u)) u') := ⟨s₁.frame, s₁.rep.2.2.2.2⟩
   let x₂ : Carrier (PD D l₁ (lf D (X.Fu u)) u') := ⟨s₂.frame, s₂.rep.2.2.2.2⟩
   have gv : ∀ x : Carrier (PD D l₁ (lf D (X.Fu u)) u'),

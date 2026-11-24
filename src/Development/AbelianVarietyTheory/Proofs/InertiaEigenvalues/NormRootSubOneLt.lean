@@ -172,19 +172,9 @@ theorem exists_reps {G : Type*} [Group G] (H U : Subgroup G) [U.FiniteIndex] :
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hs
     rw [(key q).1 hs']
 
-theorem sum_shift {G M : Type*} [Group G] [AddCommMonoid M] (H V : Subgroup G) (S : Finset G)
-    (hS : ∀ s ∈ S, s ∈ H) (hS' : ∀ h ∈ H, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ V) (f : G → M)
-    (hf : ∀ g, ∀ v ∈ H, v ∈ V → f (g * v) = f g) (h : G) (hh : h ∈ H) :
-    ∑ s ∈ S, f (h * s) = ∑ s ∈ S, f s := by
-  first
-  | (apply _root_.GlobalTheory.TranslateSum.sum_translate_eq <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TranslateSum.sum_translate_eq ..)
+alias sum_shift := _root_.GlobalTheory.TranslateSum.sum_translate_eq
 
-theorem norm_pow_sub_pow_le {C : Type*} [NormedField C] [IsUltrametricDist C] {x y : C}
-    (hx : ‖x‖ ≤ 1) (hy : ‖y‖ ≤ 1) (n : ℕ) : ‖x ^ n - y ^ n‖ ≤ ‖x - y‖ := by
-  first
-  | (apply _root_.GlobalTheory.PowerDifferenceNormInertiaEigenvalues.norm_pow_sub_pow_le <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PowerDifferenceNormInertiaEigenvalues.norm_pow_sub_pow_le ..)
+alias norm_pow_sub_pow_le := _root_.GlobalTheory.PowerDifferenceNormInertiaEigenvalues.norm_pow_sub_pow_le
 
 variable {l : ℕ} [Fact l.Prime]
 

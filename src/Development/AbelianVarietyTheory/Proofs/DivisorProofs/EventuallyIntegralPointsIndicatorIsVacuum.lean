@@ -216,23 +216,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 open GlobalTheory.AdelicU GlobalTheory.WeilM
 
 
-theorem _root_.GlobalTheory.T.coords_and_symplectic_integral_on_placeLattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) {n d : ℕ}
-    (JX : Matrix (Fin n) (Fin n) E) (JY : Matrix (Fin d) (Fin d) E) (ξ : E) (v : HeightOneSpectrum (𝓞 F))
-    (co : (Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) →ₗ[AF F] (Fin n × Fin d → AF F) × (Fin n × Fin d → AF F))
-    (T₀ : Set (Matrix (Fin n) (Fin d) E)) (yf zf : Matrix (Fin n) (Fin d) E → Fin n × Fin d → F),
-    (∀ x, co (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F x) = (fun k => algebraMap F (AF F) (yf x k), fun k => algebraMap F (AF F) (zf x k))) →
-    (∀ t ∈ T₀, ∀ k, algebraMap F (Fv F v) (yf t k) ∈ v.adicCompletionIntegers F ∧
-      algebraMap F (Fv F v) (zf t k) ∈ v.adicCompletionIntegers F) →
-    (∀ t ∈ T₀, ∀ t' ∈ T₀, algebraMap F (Fv F v) (GlobalTheory.WeilM.symp σ ξ JX JY t t') ∈ v.adicCompletionIntegers F) →
-    ∀ γ ∈ AddSubgroup.closure {z | ∃ a : AF F, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) a ∧ evFin F v a ∈ v.adicCompletionIntegers F ∧
-        ∃ t ∈ T₀, z = a • GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F t},
-      (∀ k, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) ((co γ).1 k) ∧ evFin F v ((co γ).1 k) ∈ v.adicCompletionIntegers F ∧
-        GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) ((co γ).2 k) ∧ evFin F v ((co γ).2 k) ∈ v.adicCompletionIntegers F) ∧
-      (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) (GlobalTheory.WeilM.symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (inclR (F := F) (AF F) ξ)
-                   (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F JX) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F JY) γ γ) ∧
-        evFin F v (GlobalTheory.WeilM.symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA σ) (inclR (F := F) (AF F) ξ) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F JX)
-          (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F JY) γ γ) ∈ v.adicCompletionIntegers F) := by
-  first | exact @GlobalTheory.LatticeAtPlace.coords_symp_integral
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordsAndSymplecticIntegralOnPlaceLatticeStatement =====
@@ -255,9 +238,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.Local
 open GlobalTheory.AdelicU GlobalTheory.WeilM
 
 
-theorem _root_.GlobalTheory.T.localAddCharComponent_trivial_integers_eventually : ∀ {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), Continuous ψ →
-    ∀ᶠ v in Filter.cofinite, ∀ x ∈ (v : HeightOneSpectrum (𝓞 F)).adicCompletionIntegers F, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.psiLoc ψ v x = 1 := by
-  first | exact @GlobalTheory.psiLoc_eventually_trivial_integers
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalAddCharComponentTrivialIntegersEventuallyStatement =====
@@ -417,7 +397,7 @@ theorem isVac_of_good {σ : E →ₐ[F] E} {n d : ℕ} {X : Spc F E n} {Y : Spc 
   refine ⟨indicator_mem_SB v, fun h => ?_, θ, hθ, fun γ hγ => ?_⟩
   · have := congrFun h 0
     simp [Set.indicator, zero_mem] at this
-  · obtain ⟨h1, h3⟩ := GlobalTheory.T.coords_and_symplectic_integral_on_placeLattice σ X.J Y.J (θ : E) v M.co.e.toLinearMap T₀ yf zf hyz hc hs γ (hgen hγ)
+  · obtain ⟨h1, h3⟩ := _root_.GlobalTheory.LatticeAtPlace.coords_symp_integral σ X.J Y.J (θ : E) v M.co.e.toLinearMap T₀ yf zf hyz hc hs γ (hgen hγ)
     exact acts_indicator ψ v hψ h2 (M.co.e γ) h1 _ h3
 
 end GlobalTheory.StdVacuum
@@ -474,7 +454,7 @@ theorem GlobalTheory.StdVacuum.eventually_isVac_indicator : ∀ {F E : Type} [Fi
     have hint : ∀ a : F, ∀ᶠ v in Filter.cofinite,
         algebraMap F (Fv F v) a ∈ (v : HeightOneSpectrum (𝓞 F)).adicCompletionIntegers F :=
       fun a => (algebraMap F (FiniteAdeleRing (𝓞 F) F) a).2
-    refine (GlobalTheory.T.localAddCharComponent_trivial_integers_eventually B.ψ hB.std.1).and ((hint _).and (((Filter.eventually_all_finite hT₀).2
+    refine (_root_.GlobalTheory.psiLoc_eventually_trivial_integers B.ψ hB.std.1).and ((hint _).and (((Filter.eventually_all_finite hT₀).2
       fun t _ => Filter.eventually_all.2 fun k => (hint _).and (hint _)).and ?_))
     exact (Filter.eventually_all_finite hT₀).2 fun t _ => (Filter.eventually_all_finite hT₀).2 fun t' _ => hint _
   filter_upwards [hV] with v hv

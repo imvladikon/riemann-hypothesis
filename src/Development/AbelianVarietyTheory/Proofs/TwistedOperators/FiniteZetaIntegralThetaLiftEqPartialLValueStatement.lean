@@ -1075,7 +1075,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
       exact this
     have hsum := GlobalTheory.T.unramified_zeta_sum_GL_cosets hG D.host.E w V.rank D.R.t hrt (star (val χ w)) _ hnz hk X
       (ρ.comp e.symm.toMonoidHom) x (B w) hsat hbd ℓ ⟨C, fun g => hC _⟩
-    rw [value_split D B (val χ) v w w' hne hall hN hN' hB' hs hm (norm_val χ w) ((quadSign_eq D v).1 w w' hne hall),
+    rw [_root_.GlobalTheory.LocZetaSplit.conj_LvTw_div_dLoc D B (val χ) v w w' hne hall hN hN' hB' hs hm (norm_val χ w) ((_root_.GlobalTheory.QuadSignLocal.quadSign_split_inert D v).1 w w' hne hall),
       ← hr]
     refine hasSum_quot_of_equiv e he.2 (f := fun g => starRingEnd ℂ (φ g) * ℓ (ρ g x)) ?_ hsum
     intro g k hk'
@@ -1114,7 +1114,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
       exact inv_le_of_inv_le₀ (norm_pos_iff.2 (α i).ne_zero) h3
     have hsum := GlobalTheory.T.hasSum_unramifiedZetaSum_unitary_inert _ ϖ c (qV D.host.F v) V.rank D.R.t hUI hrt (star (val χ w)) _ hnz hk X
       (ρ.comp e.symm.toMonoidHom) x α hsat htb ℓ ⟨C, fun g => hC _⟩
-    rw [value_inert D B (val χ) v w hall hNw hstarB (by rw [hval]; push_cast; rfl) ((quadSign_eq D v).2 w hall), hBw, ← hr]
+    rw [_root_.GlobalTheory.FinZeta.conj_LvTw_div_dLoc_inert D B (val χ) v w hall hNw hstarB (by rw [hval]; push_cast; rfl) ((_root_.GlobalTheory.QuadSignLocal.quadSign_split_inert D v).2 w hall), hBw, ← hr]
     refine hasSum_quot_of_equiv e he.2.2 (f := fun g => starRingEnd ℂ (φ g) * ℓ (ρ g x)) ?_ hsum
     intro g k hk'
     have e1 : φ (g * k) = φ g := by
@@ -1337,8 +1337,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 namespace GlobalTheory.FinZeta.MoveVac
 
-theorem mt_one' {D : D7} (V : HSp D) : Formalism.L2.Theta.mt V 1 = 1 := rfl
-
 theorem actO_one_eq {D : D7} {S T : HSp D} {v : HeightOneSpectrum (𝓞 D.host.F)} {g : GA D T}
     (hg : projV T v g = 1) {u : WO S T} (hu : u ∈ latO S T (frameLat S) (frameLat T) fun w => w = v) :
     actO S T 1 g u = u := by
@@ -1350,11 +1348,11 @@ theorem actO_one_eq {D : D7} {S T : HSp D} {v : HeightOneSpectrum (𝓞 D.host.F
   have hm : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.idem D (.inl v) • Formalism.L2.Theta.mt T g =
       GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.idem D (.inl v) • (1 : Matrix (Fin T.rank) (Fin T.rank) (AE D)) := by
     have h := GlobalTheory.PlaceComponent.mt_gAt T (.inl v) g
-    rw [hgA, mt_one'] at h
+    rw [hgA, _root_.GlobalTheory.BesselCompare.mt_one] at h
     rw [eq_sub_of_add_eq h.symm, sub_smul, one_smul, sub_sub_cancel]
   have hu' : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.idem D (.inl v) • u = u := GlobalTheory.InertVac.placeIdem_smul_eq hid hu
   unfold actO
-  rw [inv_one, mt_one', Matrix.mul_one, ← hu', Matrix.mul_smul, ← Matrix.smul_mul, hm,
+  rw [inv_one, _root_.GlobalTheory.BesselCompare.mt_one, Matrix.mul_one, ← hu', Matrix.mul_smul, ← Matrix.smul_mul, hm,
     Matrix.smul_mul, Matrix.one_mul]
 
 theorem vacFin_om_one : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ (v : HeightOneSpectrum (𝓞 D.host.F)) (g : GA D T), projV T v g = 1 → ∀ f, VacFin ψ S T v f → VacFin ψ S T v (om (1, g) f) := by

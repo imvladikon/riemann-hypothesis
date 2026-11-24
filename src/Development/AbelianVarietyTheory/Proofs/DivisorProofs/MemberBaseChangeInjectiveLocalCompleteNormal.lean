@@ -220,8 +220,6 @@ open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.ArcPull
 
 
-theorem _root_.GlobalTheory.T.torsionLabels_pullback_uniformisation_common_field : ∀ {V V' : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [CommRing V'] [IsDomain V'] [IsLocalRing V'], IsCN V → IsCN V' → ∀ (j : V →+* V') (hj : Function.Injective j), IsLocalHom j → ∀ {D : DegData V (maximalIdeal V)} {A : PolAV (Spec (CommRingCat.of (FractionRing V)))} {G : Over (Spec (CommRingCat.of V))} [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (U : Unif (maximalIdeal V) D A G) (D' : DegData V' (maximalIdeal V')) (hD : IsPullDeg j D.toPre D'.toPre) (A' : PolAV (Spec (CommRingCat.of (FractionRing V')))) (gA : A'.A.left ⟶ A.A.left) (U' : Unif (maximalIdeal V') D' A' ((Over.pullback (specOf j)).obj G)), IsPullUnif j hD (Iso.refl _) U U' → IsGrpPullback A'.A A.A (spMap (fracMap hj)) gA → gA ≫ U.gen.inv.left ≫ pullback.fst G.hom (jK V) = U'.gen.inv.left ≫ pullback.fst ((Over.pullback (specOf j)).obj G).hom (jK V') ≫ pullback.fst G.hom (specOf j) → ∀ (F' : Type) [Field F'] [Algebra (FractionRing V) F'] [Algebra (FractionRing V') F'], (∀ r : V, algebraMap (FractionRing V) F' (algebraMap V (FractionRing V) r) = algebraMap (FractionRing V') F' (algebraMap V' (FractionRing V') (j r))) → ∀ (k : ℕ), 1 ≤ k → ∀ (p₁ : QkPt D.toPre F' k) (x₁ : TFK (R := V) F' ⟶ A.A), QkToAkU U.toUnifPre F' k p₁ x₁ → ∃ (p' : QkPt D'.toPre F' k) (x' : TFK (R := V') F' ⟶ A'.A), p'.y = hD.xe.symm p₁.y ∧ QkToAkU U'.toUnifPre F' k p' x' ∧ x'.left ≫ gA = x₁.left := by
-  first | exact @GlobalTheory.Poinc.Sep.BaseChangeLabels.qkToAkU_pullback_common_field
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLabelsPullbackUniformisationCommonFieldStatement =====
@@ -399,25 +397,6 @@ theorem qk_field {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] (hV : IsCN
   exact (GlobalTheory.TorsionExt.qkToAkU_iff_of_qkExt GlobalTheory.firstFiveLaws V (maximalIdeal V) hAd D A G hG U
     (AlgebraicClosure (FractionRing V)) F' σ k hk p p₁ x x₁ hp₁ rfl).1 hx
 
-theorem qk_base {V V' : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [CommRing V'] [IsDomain V'] [IsLocalRing V']
-    (hV : IsCN V) (hV' : IsCN V') (j : V →+* V') (hj : Function.Injective j) (hl : IsLocalHom j)
-    {D : DegData V (maximalIdeal V)} {A : PolAV (Spec (CommRingCat.of (FractionRing V)))}
-    {G : Over (Spec (CommRingCat.of V))} [GrpObj G] [IsCommMonObj G] (hG : IsSemiAbelian G)
-    (U : Unif (maximalIdeal V) D A G) (D' : DegData V' (maximalIdeal V')) (hD : IsPullDeg j D.toPre D'.toPre)
-    (A' : PolAV (Spec (CommRingCat.of (FractionRing V')))) (gA : A'.A.left ⟶ A.A.left)
-    (U' : Unif (maximalIdeal V') D' A' ((Over.pullback (specOf j)).obj G)) (hPU : IsPullUnif j hD (Iso.refl _) U U')
-    (hgA : IsGrpPullback A'.A A.A (spMap (fracMap hj)) gA)
-    (hrel : gA ≫ U.gen.inv.left ≫ pullback.fst G.hom (jK V) =
-      U'.gen.inv.left ≫ pullback.fst ((Over.pullback (specOf j)).obj G).hom (jK V') ≫ pullback.fst G.hom (specOf j))
-    (F' : Type) [Field F'] [Algebra (FractionRing V) F'] [Algebra (FractionRing V') F']
-    (hF : ∀ r : V, algebraMap (FractionRing V) F' (algebraMap V (FractionRing V) r) =
-      algebraMap (FractionRing V') F' (algebraMap V' (FractionRing V') (j r)))
-    (k : ℕ) (hk : 1 ≤ k) (p₁ : QkPt D.toPre F' k) (x₁ : TFK (R := V) F' ⟶ A.A)
-    (hx : QkToAkU U.toUnifPre F' k p₁ x₁) :
-    ∃ (p' : QkPt D'.toPre F' k) (x' : TFK (R := V') F' ⟶ A'.A), p'.y = hD.xe.symm p₁.y ∧
-      QkToAkU U'.toUnifPre F' k p' x' ∧ x'.left ≫ gA = x₁.left :=
-  GlobalTheory.T.torsionLabels_pullback_uniformisation_common_field hV hV' j hj hl hG U D' hD A' gA U' hPU hgA hrel F' hF k hk p₁ x₁ hx
-
 theorem yy_pull' {V V' : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [CommRing V'] [IsDomain V'] [IsLocalRing V']
     (hV : IsCN V) (hV' : IsCN V') (j : V →+* V') (hj : Function.Injective j) (hl : IsLocalHom j)
     {D : DegData V (maximalIdeal V)} {A : PolAV (Spec (CommRingCat.of (FractionRing V)))}
@@ -442,7 +421,7 @@ theorem yy_pull' {V V' : Type} [CommRing V] [IsDomain V] [IsLocalRing V] [CommRi
   let σ : AlgebraicClosure (FractionRing V) →ₐ[FractionRing V] AlgebraicClosure (FractionRing V') :=
     IsAlgClosed.lift
   obtain ⟨p₁, x₁, hy, hx₁, hq⟩ := qk_field hV hG U k hk p x hx (AlgebraicClosure (FractionRing V')) σ
-  obtain ⟨p', x', hy', hq', hx'⟩ := qk_base hV hV' j hj hl hG U D' hD A' gA U' hPU hgA hrel
+  obtain ⟨p', x', hy', hq', hx'⟩ := _root_.GlobalTheory.Poinc.Sep.BaseChangeLabels.qkToAkU_pullback_common_field hV hV' j hj hl hG U D' hD A' gA U' hPU hgA hrel
     (AlgebraicClosure (FractionRing V')) (fun r => congrArg (algebraMap (FractionRing V') _) (fracMap_algebraMap hj r))
     k hk p₁ x₁ hq
   exact ⟨p', x', σ.toRingHom, σ.comp_algebraMap, hy'.trans (congrArg _ hy), hq', hx'.trans hx₁⟩

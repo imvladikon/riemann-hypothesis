@@ -205,7 +205,7 @@ theorem term_eq_iff_lRel : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
   intro D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv t t' n m n' m' e₁ e₂ e₃ e₄ hnm hnm'
   obtain ⟨hn, hm, ht⟩ := hnm
   obtain ⟨hn', hm', ht'⟩ := hnm'
-  have hI := GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv
+  have hI := _root_.GlobalTheory.HL.GrpCoord.grp_coords D X Y u u' hst hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hmv
   have hN := hI.1
   have hN' := hI.2.1
   constructor
@@ -553,8 +553,6 @@ open scoped Pointwise ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.localTermDefect_ne_iff_move_linearEquiv : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] {M : Formalism.MainNotions.S.Loc.Model F E} {V : Type} [AddCommGroup V] [Module E V] (H : Formalism.MainNotions.S.Loc.HermSp M V) {r : ℕ} (g : V ≃ₗ[E] V) (t : Formalism.MainNotions.S.Loc.Term V M r), LocNG.BBne (H := H) (move g t) ↔ LocNG.BBne (H := H) t := by
-  first | exact @GlobalTheory.LocOver.bbne_move
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermDefectNeIffMoveLinearEquivStatement =====
@@ -569,7 +567,7 @@ open scoped Pointwise ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.LocOver.isTerm_move_unitary : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] {M : Formalism.MainNotions.S.Loc.Model F E} {V : Type} [AddCommGroup V] [Module E V] (H : Formalism.MainNotions.S.Loc.HermSp M V) {r : ℕ} (g : V ≃ₗ[E] V) (hg : LocNG.IsUnitary H g) (t : Formalism.MainNotions.S.Loc.Term V M r), H.IsTerm t → H.IsTerm (move g t) :=
-  fun H _ g hg t ht => GlobalTheory.LocOver.isTerm_move_of_unitary H g t hg ht
+  fun H _ g hg t ht => _root_.GlobalTheory.LocOver.MoveTerm.isTerm_move H g t hg ht
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermMoveUnitaryIsTerm =====
@@ -623,8 +621,6 @@ open scoped Pointwise ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.signedLocalTerm_defect_iff_unsignedLocalTerm : ∀ {D : D7} (Z : LocDat D) (p : PlF D) (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (Tn T'n : ℕ), locBBne Z p Λ F F' Tn T'n ↔ LocNG.BBne (H := locH Z p) (locU Z p Λ F F' Tn T'n) := by
-  first | exact @GlobalTheory.SignDefect.locBBne_iff_locU
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.SignedLocalTermDefectIffUnsignedLocalTermStatement =====
@@ -655,7 +651,7 @@ theorem generic_iff_locU {D : D7} (X : HidaSetting D) (Y : Full X) (u u' : D.wha
   refine forall_congr' fun p => not_congr ?_
   have hL := hrows.1 t₀.lam t₀.mem
   refine ((termBBne_iff_loc Z hT hrows hBF (hMI (X.Fu u)) t₀.toTerm p).symm.trans ?_).trans
-    (GlobalTheory.T.signedLocalTerm_defect_iff_unsignedLocalTerm Z p t₀.lam (lf D (X.Fu u)) t₀.frame (Tu D u) (Tu D u'))
+    (_root_.GlobalTheory.SignDefect.locBBne_iff_locU Z p t₀.lam (lf D (X.Fu u)) t₀.frame (Tu D u) (Tu D u'))
   refine Iff.trans ?_ (hT u u' (X.Fu u) t₀.lam t₀.frame hL t₀.rep.2.2.2.2 (hMI _ _ _) p)
   constructor
   · rintro ⟨F', ⟨h, hm⟩, P, hP, hbb⟩
@@ -689,7 +685,7 @@ theorem generic_iff_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
     htIT hA3.symm hA4.symm hTA hTB
   have hW := ((_root_.GlobalTheory.HL.WCoordTerms.terms_orbits_heights_amps (Y.M p) hOK (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS D.R.k (FP p) (G.S p)
     (c.c p)).1 d _ hd)
-  have hlat := (GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hρ p g t₀.lam hgExt
+  have hlat := (_root_.GlobalTheory.HL.GrpCoord.grp_coords D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hρ p g t₀.lam hgExt
   haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).lf
   haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).char0
   have hlat' : (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat p (c.lat ρ t₀.lam) = (c.c p).lat
@@ -697,7 +693,7 @@ theorem generic_iff_gen : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
   have hdat := GlobalTheory.HL.DatumOf.datOf_term (G.S p) hW.1
   show _ ↔ (G.S p).BBzero ((G.S p).datOf ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat p (c.lat ρ t₀.lam)))
     ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat p (c.lat ρ t₀.lam))
-  rw [hlat', ← hdat, ← GlobalTheory.T.localTermDefect_ne_iff_move_linearEquiv (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) g, hW.2.2]
+  rw [hlat', ← hdat, ← _root_.GlobalTheory.LocOver.bbne_move (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) g, hW.2.2]
   exact not_not
 
 end GlobalTheory.HL.GenCoord
@@ -779,7 +775,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
       MovesTo F00 F'0 (lf D (X.Fu u)) t.frame (ρ * n) (U * A) (U' * A') := by
     intro t n m h
     obtain ⟨A, A', -, -, -, -, hM⟩ :=
-      (GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c t₀ ρ U U' hMv).2.2.2.2.2 t n m h
+      (_root_.GlobalTheory.HL.GrpCoord.grp_coords D X Y u u' hSt hk w F00 F'0 FP hZ hGv hAt G c t₀ ρ U U' hMv).2.2.2.2.2 t n m h
     exact ⟨A, A', hM⟩
   have hdat : ∀ (t : TauC Y u u') n m, (Y.tO u u').rowOf t = (Y.tO u u').rowOf t₀ →
       (n ∈ NRat (lf D (X.Fu u)) ∧ m ∈ NRat (lf D (X.Fu u')) ∧ t.lin = n⁻¹ * t₀.lin * m) →
@@ -861,7 +857,7 @@ theorem row_coset_sum_norm_sq : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     have hrel1 : G.LRel (c.lat (ρ * n) t.lam) o.out := by
       have e : Quot.mk G.LRel o.out = Quot.mk G.LRel (c.lat (ρ * n) t.lam) := by rw [Quot.out_eq o, ho]
       exact heqv.symm ((Equivalence.eqvGen_iff heqv).1 (Quot.eqvGen_exact e))
-    have hT : G.IsTerm d₀ o.out := term_of_lrel G hk hex hΓ hrel1
+    have hT : G.IsTerm d₀ o.out := _root_.GlobalTheory.HL.ProdStruct.term_of_LRel G hk hex hΓ hrel1
     obtain ⟨n', m', hr', h', he'⟩ := hτ o hT
     have heq : τ o = t := (hinj (τ o) t n' m' n m hr' hr h' h).2 (by rw [← he']; exact heqv.symm hrel1)
     refine ⟨o, (hmemC o).2 ⟨hT, ?_⟩, heq⟩

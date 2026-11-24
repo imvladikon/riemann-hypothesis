@@ -1422,7 +1422,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
   intro n ε ι _ m w Φ hw hc hi hhs μ hμ
   obtain ⟨h0, hinv, hlim⟩ := hμ
   have hcpt : ∀ i, CompactSpace (Formalism.REAL.UJ (allPos (m i))) := fun i => compactSpace_allPos _
-  choose c hcpos hcg _ using fun i => GlobalTheory.GaugeConst.gauge_exists_pos_unique (m i) (allPos (m i))
+  choose c hcpos hcg _ using fun i => _root_.GlobalTheory.GaugeConst.exists_unique_isGauge (m i) (allPos (m i))
   set νi : ∀ i, Measure (Formalism.REAL.UJ (allPos (m i))) :=
     fun i => ENNReal.ofReal (c i) • Formalism.REAL.muG (allPos (m i)) with hνi
   have hfin : ∀ i, IsFiniteMeasure (νi i) := fun i => ⟨by

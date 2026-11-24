@@ -55,8 +55,7 @@ namespace GlobalTheory.BSP.CoverBC
 
 variable {l : ℕ} {R : Type} [CommRing R]
 
-theorem hom_ext {P P' : Obj l R} {a b : Hom P P'} (h : a.f = b.f) : a = b := by
-  cases a; cases b; cases h; rfl
+alias hom_ext := _root_.GlobalTheory.Prism.Hom.ext'
 
 theorem comp_assoc {P₁ P₂ P₃ P₄ : Obj l R} (c : Hom P₃ P₄) (b : Hom P₂ P₃) (a : Hom P₁ P₂) :
     (c.comp b).comp a = c.comp (b.comp a) := hom_ext rfl

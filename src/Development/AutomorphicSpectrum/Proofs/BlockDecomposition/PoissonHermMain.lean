@@ -954,24 +954,17 @@ namespace GlobalTheory.CompanionTheory.WSum
 
 variable {D : D7} {r : ℕ}
 
-theorem halfTr_add (x y : AE D) : halfTr (x + y) = halfTr x + halfTr y := by
-  simp only [halfTr, trA, map_add (f := _), mul_add]
-
-theorem halfTr_zero : halfTr (0 : AE D) = 0 := by
-  simp only [halfTr, trA, map_zero, mul_zero]
-
-theorem continuous_halfTr : Continuous (halfTr : AE D → AF D.host.F) :=
-  continuous_const.mul (IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D)))
+alias continuous_halfTr := _root_.GlobalTheory.CompanionTheory.BigCellJ.continuous_halfTr
 
 def chi (ψ : AddChar (AF D.host.F) ℂ) (β : HermE D r) : AddChar (hermA D r) ℂ where
   toFun b := ψ (-halfTr (Matrix.trace (HMul.hMul (β.1.map (incA D)) b.1 : Mx D r r)))
   map_zero_eq_one' := by
     show ψ (-halfTr (Matrix.trace (HMul.hMul (β.1.map (incA D)) (0 : Mx D r r) : Mx D r r))) = 1
-    rw [Matrix.mul_zero, Matrix.trace_zero, halfTr_zero, neg_zero]
+    rw [Matrix.mul_zero, Matrix.trace_zero, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_zero', neg_zero]
     exact ψ.map_zero_eq_one
   map_add_eq_mul' x y := by
     show ψ (-halfTr (Matrix.trace (HMul.hMul (β.1.map (incA D)) (x.1 + y.1) : Mx D r r))) = _
-    rw [Matrix.mul_add, Matrix.trace_add, halfTr_add, neg_add, AddChar.map_add_eq_mul]
+    rw [Matrix.mul_add, Matrix.trace_add, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', neg_add, AddChar.map_add_eq_mul]
 
 theorem chi_apply (ψ : AddChar (AF D.host.F) ℂ) (β : HermE D r) (b : hermA D r) :
     chi ψ β b = ψ (-halfTr (Matrix.trace (HMul.hMul (β.1.map (incA D)) b.1 : Mx D r r))) := rfl
@@ -1016,7 +1009,7 @@ theorem Jt_add (ψ : AddChar (AF D.host.F) ℂ) (V : HSp D) (μ : Measure (Mx D 
   unfold Jt
   refine integral_congr_ae (Filter.Eventually.of_forall fun y => ?_)
   show φ y * ψ (halfTr (tq V (b.1 + c.1) y)) = _
-  rw [tq_add, halfTr_add, AddChar.map_add_eq_mul]
+  rw [tq_add, _root_.GlobalTheory.CompanionTheory.HermPoisson.halfTr_add', AddChar.map_add_eq_mul]
   exact (mul_assoc _ _ _).symm
 
 theorem hasDeriv_Jt {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (V : HSp D)

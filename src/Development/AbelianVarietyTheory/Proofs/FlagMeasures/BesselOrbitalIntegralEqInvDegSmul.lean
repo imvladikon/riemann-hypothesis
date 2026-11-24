@@ -530,21 +530,12 @@ theorem gram_det_unit : IsUnit (Hpk k r).det :=
 theorem mul_mem {g h : Mat k r} (hg : g ∈ GG k r) (hh : h ∈ GG k r) : g * h ∈ GG k r :=
   (unitary_group_holds _ _ gram_det_unit).2.1 g hg h hh
 
-theorem inv_mem {g : Mat k r} (hg : g ∈ GG k r) : g⁻¹ ∈ GG k r :=
-  ((unitary_group_holds _ _ gram_det_unit).2.2 g hg).2
-
 theorem det_unit {g : Mat k r} (hg : g ∈ GG k r) : IsUnit g.det :=
   ((unitary_group_holds _ _ gram_det_unit).2.2 g hg).1
 
 theorem mem_of_S {z : Fin (2 * r + k + 1) → ℂ} {s : Mat k r} (hs : s ∈ Sset k r z) : s ∈ GG k r := by
   obtain ⟨h, hh, m, hm, rfl⟩ := hs
   exact mul_mem hh.1 hm.1
-
-theorem inv_eq {g : Mat k r} (hg : g ∈ GG k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  have h : gᴴ * Hpk k r * g = Hpk k r := hg
-  rw [Matrix.mul_assoc (Hpk k r), Matrix.mul_assoc (Hpk k r), h]
-  exact (hermitian_pos_facts_hold k r).2.1
 
 theorem left_bound (z z' : Fin (2 * r + k + 1) → ℂ) (C : Set (Mat k r)) (hz : inWb k r z)
     (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z') (hC : IsCompact C)
@@ -559,7 +550,7 @@ theorem left_bound (z z' : Fin (2 * r + k + 1) → ℂ) (C : Set (Mat k r)) (hz 
   have hsG := mem_of_S hs
   have hs'G := mem_of_S hs'
   have hγG : γ ∈ GG k r := (hCr hγ).1
-  have hxG : s * γ * s'⁻¹ ∈ GG k r := mul_mem (mul_mem hsG hγG) (inv_mem hs'G)
+  have hxG : s * γ * s'⁻¹ ∈ GG k r := mul_mem (mul_mem hsG hγG) (_root_.GlobalTheory.SgInf.RegInv.inv_mem hs'G)
   have hx1 : 1 ≤ opn (s * γ * s'⁻¹) := (hN1 _ hxG).2
   have hxs : (s * γ * s'⁻¹) * s' = s * γ := by
     rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (det_unit hs'G), Matrix.mul_one]
@@ -593,7 +584,7 @@ theorem poly_proper : ∀ (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (C : 
     rintro _ ⟨γ, hγ, rfl⟩
     have hγG : γ ∈ GG k r := (hCr hγ).1
     show Hpk k r * γᴴ * Hpk k r ∈ _
-    rw [← inv_eq hγG]
+    rw [← _root_.GlobalTheory.SgInf.OpNormU.inv_eq hγG]
     exact (_root_.GlobalTheory.SgInf.RegInv.zhat_inv_and_reg k r z z' γ hγG).2.1 (hCr hγ)
   obtain ⟨C2, h2⟩ := left_bound z' z _ hz' hz hT' hT (hC.image hcont) hCr'
   obtain ⟨hN1, -⟩ := _root_.GlobalTheory.SgInf.opn_facts k r
@@ -601,12 +592,12 @@ theorem poly_proper : ∀ (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (C : 
   have hsG := mem_of_S hs
   have hs'G := mem_of_S hs'
   have hγG : γ ∈ GG k r := (hCr hγ).1
-  have hxG : s * γ * s'⁻¹ ∈ GG k r := mul_mem (mul_mem hsG hγG) (inv_mem hs'G)
+  have hxG : s * γ * s'⁻¹ ∈ GG k r := mul_mem (mul_mem hsG hγG) (_root_.GlobalTheory.SgInf.RegInv.inv_mem hs'G)
   have hinv : s' * γ⁻¹ * s⁻¹ = (s * γ * s'⁻¹)⁻¹ := by
     rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (det_unit hs'G),
       Matrix.mul_assoc]
   have ha := h1 γ hγ s hs s' hs'
-  have hb := h2 γ⁻¹ ⟨γ, hγ, (inv_eq hγG).symm⟩ s' hs' s hs
+  have hb := h2 γ⁻¹ ⟨γ, hγ, (_root_.GlobalTheory.SgInf.OpNormU.inv_eq hγG).symm⟩ s' hs' s hs
   rw [hinv, (hN1 _ hxG).1] at hb
   have hp : 0 ≤ opn (s * γ * s'⁻¹) ^ (2 * (r ^ 2 + r + 1)) := pow_nonneg (opn_nonneg _) _
   refine max_le (ha.trans ?_) (hb.trans ?_)
@@ -634,9 +625,6 @@ theorem continuous_opn {n : ℕ} : Continuous (opn : Matrix (Fin n) (Fin n) ℂ 
     LinearMap.continuous_of_finiteDimensional
       ((Matrix.toEuclideanCLM (𝕜 := ℂ) (n := Fin n)).toAlgEquiv.toLinearEquiv.toLinearMap)
   exact continuous_norm.comp h
-
-theorem opn_pos {k r : ℕ} {g : Mat k r} (hg : g ∈ GG k r) : 0 < opn g := by
-  apply GlobalTheory.Amp.LocalInputs.opn_pos <;> assumption
 
 theorem integrable_of_normInt {k r : ℕ} {μ : Measure (Mt k r)} {A : ℝ} (h : normInt μ A < ⊤) :
     Integrable (fun x : Mt k r => opn (Matrix.of x) ^ (-A)) μ := by
@@ -697,8 +685,8 @@ theorem orbNormInt_lt_top : ∀ (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ)
   have hbound : ∀ γ ∈ C, ∀ p : Mt k r × Mt k r, Matrix.of p.1 ∈ Sset k r z → Matrix.of p.2 ∈ Sset k r z' →
       opn (Matrix.of (act2 γ p)) ^ (-b) ≤ F p := by
     intro γ hγ p h1 h2
-    have hg1 := opn_pos (hSS.1 h1)
-    have hg2 := opn_pos (hSS'.1 h2)
+    have hg1 := _root_.GlobalTheory.SgInf.OpNormU.opn_pos (hSS.1 h1)
+    have hg2 := _root_.GlobalTheory.SgInf.OpNormU.opn_pos (hSS'.1 h2)
     have hmax := hbd γ hγ _ h1 _ h2
     rw [hbA]
     exact rpow_le hg1 hg2 (opn_nonneg _) (by linarith) hA0 hmax
@@ -750,16 +738,11 @@ theorem isUnit_det {g : Mat k r} (hg : g ∈ GG k r) : IsUnit g.det := by
   have h0 : opn (0 : Mat k r) = 0 := by simp [opn]
   linarith [h1.1, h1.2]
 
-theorem continuousOn_matInv : ContinuousOn (fun g : Mat k r => g⁻¹) (GG k r) := by
-  intro g hg
-  refine (continuousAt_matrix_inv g ?_).continuousWithinAt
-  rw [Ring.inverse_eq_inv']
-  exact continuousAt_inv₀ (isUnit_det hg).ne_zero
+alias continuousOn_matInv := _root_.GlobalTheory.SgInf.BeForm.continuousOn_inv
 
-theorem continuous_of : Continuous fun x : Mt k r => (Matrix.of x : Mat k r) := continuous_id
+alias continuous_of := _root_.GlobalTheory.SgInf.BeForm.continuous_of
 
-theorem haar_ae {S : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn S μ) :
-    ∀ᵐ x ∂μ, (Matrix.of x : Mat k r) ∈ S := ae_iff.2 h.2.2.1
+alias haar_ae := _root_.GlobalTheory.SgInf.BeForm.ae_mem
 
 theorem aesm_of_continuousOn {X E : Type*} [TopologicalSpace X] [MeasurableSpace X]
     [OpensMeasurableSpace X] [SecondCountableTopology X] [NormedAddCommGroup E] {μ : Measure X}

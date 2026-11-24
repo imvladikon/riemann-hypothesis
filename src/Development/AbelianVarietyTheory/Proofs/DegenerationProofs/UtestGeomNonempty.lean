@@ -63,8 +63,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_frames_on_uniformised_fibre_through_iso : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)), (∀ a, (x a).left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left) → ∀ w : LB.Iso u.A.L (ρ.P.L.pull u.φ), w.IsGen → ∃ (rig : LB.Gen (u.A.L.pull (eSec u.A.A))) (e : ∀ a, FrAt (x a)), rig.IsGen ∧ GlobalTheory.ThetaPtMove.GenThrough w (fun _ : PUnit => eSec u.A.A) (fun _ : PUnit => eSec ρ.P.A) (fun _ => 1) rig ρ.rig (spMap u.yK) ∧ ∀ a, IsTorsFrame u.A rig (S.r * S.N) (x a) (e a) ∧ GlobalTheory.ThetaPtMove.GenThrough w (fun _ : Fin 1 => (x a).left) (fun _ : Fin 1 => (ρ.pt a).left) (fun _ => 1) (e a) (ρ.fr a) (spMap y₀) := by
-  first | exact @GlobalTheory.exists_frames_on_fibre_through
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFramesOnUniformisedFibreThroughIsoStatement =====
@@ -80,8 +78,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open Classical
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.weilPairing_labelledTorsion_uniformTest : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)), (∀ a, (x a).left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left) → ∀ a b (c : (PadicAlgCl p)ˣ), (c : PadicAlgCl p) = y₀ (algebraMap o S.R (S.ζ ^ (S.r * S.N * (eStd S.g _ a b).val))) → WeilIs u.A.A u.A.L (S.r * S.N : ℕ) (x a) (x b) (unitOn c) := by
-  first | exact @GlobalTheory.ZH.weilIs_uTest
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeilPairingLabelledTorsionUniformTestStatement =====
@@ -205,7 +201,7 @@ theorem utest_geom_nonempty : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω]
   intro hL o Ω _ _ _ _ S ρ p _ y₀ u
   obtain ⟨x, hx, hadd, hinj, hsurj⟩ := utest_torsion_points o Ω S ρ p y₀ u
   obtain ⟨w, hw⟩ := u.lb
-  obtain ⟨rig, fr, hrig, vrig, hfr⟩ := GlobalTheory.T.exists_frames_on_uniformised_fibre_through_iso o Ω S ρ p y₀ u x hx w hw
+  obtain ⟨rig, fr, hrig, vrig, hfr⟩ := _root_.GlobalTheory.exists_frames_on_fibre_through o Ω S ρ p y₀ u x hx w hw
   have hp := u.cart
   have hL₀ := ρ.P.isLB
   have hL₁ := u.A.isLB
@@ -233,7 +229,7 @@ theorem utest_geom_nonempty : Laws → ∀ (o Ω : Type) [CommRing o] [Field Ω]
   choose U hU hU' using fun a => symLift_move hp τ hτ hw hL₀ hL₁ (hx (S.r • a)).symm (hN a) (ρ.U_sym a)
   obtain ⟨r₀, hr₀, -⟩ := thetaGrp_acts_linearly hL.globalFns _ ρ.P S.N (baseOver (Sp S.R))
   obtain ⟨r₁, hr₁, -⟩ := thetaGrp_acts_linearly hL.globalFns _ u.A S.N (TFK (R := u.V) (PadicAlgCl p))
-  refine ⟨⟨x, hx, hadd, fun z hz => ?_, GlobalTheory.T.weilPairing_labelledTorsion_uniformTest hL o Ω S ρ p y₀ u x hx, rig, hrig, fr, fun a => (hfr a).1, th,
+  refine ⟨⟨x, hx, hadd, fun z hz => ?_, _root_.GlobalTheory.ZH.weilIs_uTest hL o Ω S ρ p y₀ u x hx, rig, hrig, fr, fun a => (hfr a).1, th,
     fun a z J hJ => ?_, s, fun a i => valAt_of_isValueAt ?_, α, hα,
     norm_move hp τ hτ hL₀ hL₁ vrig vα ρ.α_norm,
     isTwistPull_move hp τ hτ hL₀ hL₁ (psi_pow hp τ hτ (ρ.n ^ ρ.k)) hα vα hth (hs ρ.i₀) ρ.s_zero,

@@ -59,13 +59,14 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbedding
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.WeilBound.CoreStatements.FlagImmersions.ExistsUnitMetric, Development.WeilBound.CoreStatements.FlagImmersions.UnitAtOfSpan
 
 -- ===== clump member: Development.WeilBound.CoreStatements.FlagImmersions.ExistsUnitMetric =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.FlagImmersions.ExistsUnitMetric", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemOfAevalEqZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\npublic import Mathlib.Analysis.InnerProductSpace.Calculus\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.CompletePartialOrder\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.FlagImmersions.ExistsUnitMetric", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemOfAevalEqZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Algebra.Ring.IsFormallyReal\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\npublic import Mathlib.Analysis.InnerProductSpace.Calculus\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.CompletePartialOrder\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbedding\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -79,9 +80,6 @@ namespace RootFieldNumerics.RF.Smooth
 
 variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)]
 
-theorem evC_eq (w : (Σ k, J k) → ℂ) (f : MRing J) : evC w f = aeval w f := by
-  rw [evC, MvPolynomial.eval_map, aeval_def, algebraMap_int_eq]
-
 theorem evC_mul (w : (Σ k, J k) → ℂ) (f g : MRing J) : evC w (f * g) = evC w f * evC w g := by
   simp only [evC, map_mul]
 
@@ -93,7 +91,7 @@ theorem evC_conj (w : (Σ k, J k) → ℂ) (f : MRing J) :
   simp [map_sum, map_prod, map_pow, map_mul]
 
 theorem contDiff_evC (f : MRing J) : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) fun w : (Σ k, J k) → ℂ => evC w f := by
-  simp only [evC_eq]
+  simp only [_root_.GlobalTheory.CompanionTheory.Ar.Flat.OverUnique.evC_eq_aeval]
   induction f using MvPolynomial.induction_on with
   | C a => simpa using contDiff_const
   | add p q hp hq => simpa using hp.add hq
@@ -358,13 +356,6 @@ theorem exists_unit_metric (y : (Σ k, J k) → Ω) (a : K → ℤ) (c₀ : Ω)
       (‖evC w g0‖ / ‖evC w h0‖) ^ 2 by field_simp [hpw.2.1.ne', hpw.2.2.2.ne'],
     Real.sqrt_sq (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_mul_cancel₀ _ hh0]
 
-private theorem homog_mul_lemma_3 {p q : MRing J} {d1 d2 : K → ℕ} (hp : IsMultiHomog p d1)
-    (hq : IsMultiHomog q d2) : IsMultiHomog (p * q) (d1 + d2) := by
-  classical
-  intro m hm k
-  obtain ⟨m1, hm1, m2, hm2, rfl⟩ := Finset.mem_add.1 (MvPolynomial.support_mul p q hm)
-  simp only [Finsupp.coe_add, Pi.add_apply, Finset.sum_add_distrib, hp m1 hm1 k, hq m2 hm2 k]
-
 theorem pres_off {y : (Σ k, J k) → Ω} (hP : IsMultiHomogIdeal (mCoordIdeal y)) (a : K → ℤ) (c₀ : Ω)
     {w : (Σ k, J k) → ℂ} (hw : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0) (hn : w ∉ mcPts (mCoordIdeal y)) :
     ∃ g h dg dh, Pres y a c₀ g h dg dh ∧ evC w g ≠ 0 ∧ evC w h ≠ 0 := by
@@ -415,7 +406,7 @@ theorem pres_off {y : (Σ k, J k) → Ω} (hP : IsMultiHomogIdeal (mCoordIdeal y
   clear_value mon
   refine ⟨s0 * mon (fun k => (a k).toNat), s0 * mon (fun k => (-a k).toNat),
     e + fun k => (a k).toNat, e + fun k => (-a k).toNat,
-    ⟨homog_mul_lemma_3 he (hmon _), homog_mul_lemma_3 he (hmon _), fun k => ?_, ?_⟩, ?_, ?_⟩
+    ⟨_root_.GlobalTheory.CompanionTheory.Ar.Flat.UnitChart.homog_mul he (hmon _), _root_.GlobalTheory.CompanionTheory.Ar.Flat.UnitChart.homog_mul he (hmon _), fun k => ?_, ?_⟩, ?_, ?_⟩
   · show ((e k + (a k).toNat : ℕ) : ℤ) - ((e k + (-a k).toNat : ℕ) : ℤ) = a k
     push_cast
     omega
@@ -491,7 +482,7 @@ theorem pres_on (hT : CoordTie ℤ ξ fun c' : (k : K) → J k => ∏ k, y ⟨k,
     ∃ g h dg dh, Pres y a c₀ g h dg dh ∧ evC w g ≠ 0 ∧ evC w h ≠ 0 := by
   classical
   obtain ⟨z, hz, hco⟩ := SheetDecomposition.ChartForm.exists_point hT w
-    (fun k => (hw.1 k).imp fun _ h => IsUnit.mk0 _ h) (fun g hg => by rw [← evC_eq]; exact hw.2 g hg)
+    (fun k => (hw.1 k).imp fun _ h => IsUnit.mk0 _ h) (fun g hg => by rw [← _root_.GlobalTheory.CompanionTheory.Ar.Flat.OverUnique.evC_eq_aeval]; exact hw.2 g hg)
   choose c hc using hco.1
   have hy : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => (hco.2 k _ (hc k)).1
   have hY : ∀ m : K → ℕ, (∏ k, y ⟨k, c k⟩ ^ m k) ≠ 0 := fun m =>
@@ -537,7 +528,7 @@ theorem pres_on (hT : CoordTie ℤ ξ fun c' : (k : K) → J k => ∏ k, y ⟨k,
   have nt : evC w Gt ≠ 0 := fun h => val_ne_zero htu ht3 (by rw [h, zero_div])
   have nf : evC w Gf ≠ 0 := fun h => val_ne_zero hfu' hf3 (by rw [h, zero_div])
   have hm : ∀ m : K → ℕ, evC w (cMon c m) ≠ 0 := fun m => by
-    rw [evC_eq, aeval_cMon]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Flat.OverUnique.evC_eq_aeval, aeval_cMon]
     exact hW m
   refine ⟨Gt * cMon c δf * cMon c fun k => (a k).toNat, Gf * cMon c δt * cMon c fun k => (-a k).toNat, _, _,
     ⟨homog_mul (homog_mul ht1 (homog_cMon _ _)) (homog_cMon _ _),

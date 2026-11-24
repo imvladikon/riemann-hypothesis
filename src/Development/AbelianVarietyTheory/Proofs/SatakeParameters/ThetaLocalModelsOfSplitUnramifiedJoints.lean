@@ -114,6 +114,7 @@ import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.CoeffProdRename
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Polynomial.Basic
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThIndep
 import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.DescentCore
 import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSp
 import Mathlib.Tactic.Basify
@@ -871,7 +872,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemLocSpOfNatCastSmulMem =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.StdHNatsmulRight =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.StdHNatsmulRight", "h": "module\n\npublic import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LocSpBot\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.MemMoveLevUloc\nimport Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap\nimport Formalism.LocalToGlobal.InertKernelTheory.SecondKernelEntrywiseLastLevel\nimport Formalism.LocalToGlobal.InertKernelTheory.StatementInt\nimport Formalism.LocalToGlobal.KernelLattices.TopLawQ\nimport Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.LtCNeZero\nimport Formalism.SharpRestriction.GrowthBounds.ChartComparison.NrmAMemAdForms\nimport Formalism.SharpRestriction.GrowthBounds.ChartedClasses.ToLEInvApply\nimport Formalism.SharpRestriction.GrowthBounds.MultisetValuation.CoeffProdRename\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.StdHNatsmulRight", "h": "module\n\npublic import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow\nimport Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LocSpBot\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.MemMoveLevUloc\nimport Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap\nimport Formalism.LocalToGlobal.InertKernelTheory.SecondKernelEntrywiseLastLevel\nimport Formalism.LocalToGlobal.InertKernelTheory.StatementInt\nimport Formalism.LocalToGlobal.KernelLattices.TopLawQ\nimport Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.LtCNeZero\nimport Formalism.SharpRestriction.GrowthBounds.ChartComparison.NrmAMemAdForms\nimport Formalism.SharpRestriction.GrowthBounds.ChartedClasses.ToLEInvApply\nimport Formalism.SharpRestriction.GrowthBounds.MultisetValuation.CoeffProdRename\nimport Formalism.LocalToGlobal.GlobalTheory.GL3.PLinkThIndep\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -882,18 +883,12 @@ noncomputable section
 
 namespace GlobalTheory.TwV
 
-theorem star_eq_hostConj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  apply D.host.φ₀.injective
-  exact (IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ x).trans
-    (D.host.conjE_apply D.host.φ₀ x).symm
-
 theorem stdH_adj (D : D7) {N N' : ℕ} (A : Matrix (Fin N') (Fin N) D.host.E) (x : Fin N → D.host.E)
     (y : Fin N' → D.host.E) :
     stdH D.host.E N x ((A.map D.host.conj)ᵀ *ᵥ y) = stdH D.host.E N' (A *ᵥ x) y := by
   unfold stdH
 
-  simp only [star_eq_hostConj, Matrix.mulVec, dotProduct, Matrix.transpose_apply, Matrix.map_apply, map_sum,
+  simp only [_root_.Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.CU.star_conj, Matrix.mulVec, dotProduct, Matrix.transpose_apply, Matrix.map_apply, map_sum,
   map_mul, Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
@@ -1147,8 +1142,8 @@ theorem scal_of_pos_pair : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
   have hfill := GlobalTheory.T.systemWeights_eq_shifted_character_exponents S hD hS j hj' La'.1
   have hm1 := S.law.mu_alg j hj' _ hU1
   have hm0 := S.law.mu_alg j hj' _ hU0
-  have hn1 := GlobalTheory.T.norm_lambdaCharacter_normOne_idele_eq_p_pow S hD hS hPos j hj' hfill _ hU1
-  have hn0 := GlobalTheory.T.norm_lambdaCharacter_normOne_idele_eq_p_pow S hD hS hPos j hj' hfill _ hU0
+  have hn1 := _root_.GlobalTheory.TwV.Xc.lambdaCharacter_norm_eq_p_pow_of_pos S hD hS hPos j hj' hfill _ hU1
+  have hn0 := _root_.GlobalTheory.TwV.Xc.lambdaCharacter_norm_eq_p_pow_of_pos S hD hS hPos j hj' hfill _ hU0
 
   have hcf : Base.chiFac t.χ _ _ ((J.fd std).kerN j L0) ((J.fd std).kerN (j + 1) La') ∈ TaylorLogMetric.Qbar := by
     unfold Base.chiFac

@@ -205,10 +205,6 @@ noncomputable section
 
 namespace GlobalTheory.Poinc.Sep.Cmp.Thru
 
-theorem spMap_spMap {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] (f : R' →+* R'') (g : R →+* R') :
-    spMap f ≫ spMap g = spMap (f.comp g) := by
-  rw [← Spec.map_comp]; rfl
-
 theorem spMap_stalkHom {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (z : M.Z) :
     spMap (M.stalkHom z) ≫ M.Z.fromSpecStalk z = M.pt := by
   have h1 := Scheme.Spec_stalkClosedPointTo_fromSpecStalk (R := CommRingCat.of Ω) M.pt
@@ -254,7 +250,7 @@ theorem exists_cdvr_thru {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [I
   refine ⟨V₀, inferInstance, inferInstance, hdvr, φ₀, emb, hcpl, hchar, hl, ?_⟩
   rw [← spMap_stalkHom, ← Category.assoc, ← Category.assoc]
   congr 1
-  rw [show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, spMap_spMap, spMap_spMap]
+  rw [show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, _root_.Formalism.L2.Pj.spMap_comp_ring, _root_.Formalism.L2.Pj.spMap_comp_ring]
   congr 1
   ext r
   exact (hemb r).symm
@@ -281,10 +277,10 @@ theorem exists_uMem_thru : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
   let ψ : Y.Z.presheaf.stalk y →+* T.V := f.comp φ₀
   let ev : X₁.M.Z.presheaf.stalk (πY y) →+* T.V := ψ.comp s
   have hξ : (spMap ψ ≫ Y.Z.fromSpecStalk y) ≫ πY = spMap ev ≫ X₁.M.Z.fromSpecStalk (πY y) := by
-    rw [Category.assoc, ← hs, ← Category.assoc, spMap_spMap]
+    rw [Category.assoc, ← hs, ← Category.assoc, _root_.Formalism.L2.Pj.spMap_comp_ring]
   have hkey : jK T.V ≫ spMap ψ = spMap fK ≫ jK V₀ ≫ spMap φ₀ := by
     rw [show jK T.V = spMap (algebraMap T.V (FractionRing T.V)) from rfl,
-      show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, spMap_spMap, spMap_spMap, spMap_spMap]
+      show jK V₀ = spMap (algebraMap V₀ (FractionRing V₀)) from rfl, _root_.Formalism.L2.Pj.spMap_comp_ring, _root_.Formalism.L2.Pj.spMap_comp_ring, _root_.Formalism.L2.Pj.spMap_comp_ring]
     congr 1
     ext a
     simp only [RingHom.comp_apply]
@@ -458,8 +454,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT ReciprocityTheory.ChartRestriction.G.DVR
 open GlobalTheory.Poinc.Eq8 GlobalTheory.Poinc.Sep.Spz Classical
 
-theorem _root_.GlobalTheory.T.exists_toric_torsion_point_of_lattice_character : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → ∀ (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A G) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (k : ℕ) (z : F), 1 ≤ k → z ^ k = 1 → ∀ c : D.toPre.X →+ ℤ, ∃ x : TFK (R := V) F ⟶ A.A, TorAt U F k z c x := by
-  first | exact @GlobalTheory.Poinc.Sep.Spz.exists_torAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsToricTorsionPointOfLatticeCharacterStatement =====
@@ -779,7 +773,7 @@ theorem GlobalTheory.Poinc.Sep.Spz.latTo_of_specializes : ∀ (g n : ℕ) (F : S
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ
   have eqv := GlobalTheory.T.torus_spread_lattice_map_commutes_endomorphisms Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ
-  have tor := GlobalTheory.T.toricTorsionSection_of_spread_through_latticeMap Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
+  have tor := _root_.GlobalTheory.Poinc.Sep.Spz.torAt_of_spread₂ Y.Z FinalForm.G FinalForm.semi V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U ξ₁ β₁ hβ₁ V₂ b₂ 𝔫₂.G 𝔫₂.semi 𝔫₂.D 𝔫₂.A
     𝔫₂.U ξ₂ β₂ hβ₂ ρ hρ X₁.o₁ Y.s o₁ o₂ ho₁ ho₂
   obtain ⟨tot₁, sur₁, cong₁, -⟩ := GlobalTheory.Poinc.Sep.Labels.yy_hom g n F W Z i X₁ z₁ act V₁ ev₁ X₀ m₁ t₁ δ₁ 𝔫₁
   obtain ⟨tot₂, sur₂, cong₂, -⟩ := GlobalTheory.Poinc.Sep.Labels.yy_hom g n F W Z i X₁ z₁ act V₂ ev₂ X m₂ t₂ δ₂ 𝔫₂
@@ -805,7 +799,7 @@ theorem GlobalTheory.Poinc.Sep.Spz.latTo_of_specializes : ∀ (g n : ℕ) (F : S
       ∃ w, 𝔫₁.e₈ mu₁ - ρ (𝔫₂.e₈ mu₂) = (X₁.S.r * X₁.S.N) • w := by
     intro a mu₁ mu₂ h₁ h₂
     refine exists_eq_nsmul_of_forall_dvd _ _ fun c => ?_
-    obtain ⟨x₁, hx₁⟩ := GlobalTheory.T.exists_toric_torsion_point_of_lattice_character V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U (AlgebraicClosure (FractionRing V₁))
+    obtain ⟨x₁, hx₁⟩ := _root_.GlobalTheory.Poinc.Sep.Spz.exists_torAt V₁ b₁ 𝔫₁.G 𝔫₁.semi 𝔫₁.D 𝔫₁.A 𝔫₁.U (AlgebraicClosure (FractionRing V₁))
       (X₁.S.r * X₁.S.N) (algebraMap (FractionRing V₁) _ (algebraMap V₁ _ (o₁ (X₁.S.ζ ^ (X₁.S.r * X₁.S.N))))) (by omega)
       (by rw [← map_pow, ← map_pow, ← map_pow, hζ, map_one, map_one, map_one]) c
     obtain ⟨τ', q, hτ', hq, hq', hQ⟩ := id hx₁

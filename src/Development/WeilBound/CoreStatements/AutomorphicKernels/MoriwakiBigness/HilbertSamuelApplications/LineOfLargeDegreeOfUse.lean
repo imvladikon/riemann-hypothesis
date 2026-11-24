@@ -376,7 +376,7 @@ theorem exc_base : DualStackedExcBase.Statement := by
   intro K _ _ i F F' T _ _ b b' a hi hlt hcov hab k _ ρ π y₀ m g α M hco
   refine sup_le ?_ ?_
   · intro f hf
-    obtain ⟨s, G, rfl, hG⟩ := graph_bihomog K i F F' T b b' a hab f hf
+    obtain ⟨s, G, rfl, hG⟩ := _root_.GroundTheory.Heights₂.Heights.DualStackedGraphBihomog.proof K i F F' T b b' a hab f hf
 
     rw [linPrime, RingHom.mem_ker, map_sum]
     exact Finset.sum_eq_zero fun p hp => lead_of_coords hco (hG p hp).1 (hG p hp).2
@@ -860,12 +860,6 @@ theorem common_den {R V : Type} [CommRing R] [AddCommGroup V] [Module R V] (S : 
     · rw [mul_smul]; exact M.smul_mem _ hua
     · rw [mul_comm, mul_smul]; exact M.smul_mem _ (hsY y hy)
 
-theorem den_of_span {K : Type} [Field K] [NumberField K] {i : ℕ} (P : Ideal (𝓞 K)) [P.IsPrime]
-    (M : Submodule (𝓞 K) (Fin i → K)) (x : Fin i → K)
-    (hx : x ∈ Submodule.span (Localization.subalgebra.ofField K P.primeCompl P.primeCompl_le_nonZeroDivisors)
-      (M : Set (Fin i → K))) : ∃ s ∈ P.primeCompl, s • x ∈ M :=
-  _root_.UpperTheory.Reformulated.B.SpanDenominator.den_of_span P M x hx
-
 theorem frame : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (P : Ideal (𝓞 K)), P.IsMaximal → P ≠ ⊥ →
     ∀ L : Submodule (𝓞 K) (Fin i → K), L.FG →
     ∃ (ι : Type) (_ : Fintype ι) (p : ι → Fin i → K) (s : 𝓞 K), s ∉ P ∧ (∀ j, p j ∈ L) ∧
@@ -889,7 +883,7 @@ theorem frame : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (P : Ideal (�
   obtain ⟨s₀, hs₀, hs₀q⟩ := common_den P.primeCompl L (Finset.univ.image fun j : ι => ((q j : N) : Fin i → K)) (by
     intro y hy
     obtain ⟨j, -, rfl⟩ := Finset.mem_image.1 hy
-    exact den_of_span P L _ (q j).2)
+    exact _root_.UpperTheory.Reformulated.B.SpanDenominator.den_of_span P L _ (q j).2)
   have hs₀0 : algebraMap (𝓞 K) K s₀ ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (P.primeCompl_le_nonZeroDivisors hs₀)
   let p : ι → Fin i → K := fun j => s₀ • ((q j : N) : Fin i → K)
@@ -923,7 +917,7 @@ theorem frame : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (P : Ideal (�
   obtain ⟨s₁, hs₁, hs₁G⟩ := common_den P.primeCompl Q G (by
     intro y hy
     have hyL : y ∈ L := hG ▸ Submodule.subset_span hy
-    exact den_of_span P Q y (hNQ y (Submodule.subset_span hyL)))
+    exact _root_.UpperTheory.Reformulated.B.SpanDenominator.den_of_span P Q y (hNQ y (Submodule.subset_span hyL)))
   refine ⟨ι, inferInstance, p, s₁, hs₁, hpL, hpK, fun v hv => ?_⟩
   rw [← hG] at hv
   induction hv using Submodule.span_induction with
@@ -1114,10 +1108,6 @@ theorem poly : ∀ (K : Type) [Field K] [NumberField K] (i : ℕ) (F F' : HermLa
   have hS' : (C (ρ S) : MvPolynomial (Option (Fin i)) k) ≠ 0 := by rwa [Ne, C_eq_zero]
   exact (mul_eq_zero.1 e8).resolve_left (mul_ne_zero (pow_ne_zero _ hS') (pow_ne_zero _ hS'))
 
-theorem unif {R : Type} [CommRing R] [IsDedekindDomain R] (P : Ideal R) (hP : P.IsMaximal) (h0 : P ≠ ⊥) :
-    ∃ π : R, π ≠ 0 ∧ π ∈ P ∧ ∃ s : R, s ∉ P ∧ ∀ y ∈ P, ∃ c, s * y = π * c :=
-  _root_.UpperTheory.Reformulated.B.Yde5.main P hP h0
-
 theorem semi_sum {K : Type} [Field K] [NumberField K] {i : ℕ} {k W : Type} [Field k] [AddCommGroup W] [Module k W]
     (ρ : 𝓞 K →+* k) (Λ : Submodule ℤ (Fin i → K))
     (hΛ : ∀ (μ : 𝓞 K) v, v ∈ Λ → algebraMap (𝓞 K) K μ • v ∈ Λ) (τ : Λ →+ W)
@@ -1181,7 +1171,7 @@ theorem dualStackedExcLeadForm : GroundTheory.Heights₂.Heights.DualStackedExcL
     have hinj : Function.Injective ρ := (RingHom.injective_iff_ker_eq_bot ρ).2 h
     have e : 𝓞 K ≃+* k := RingEquiv.ofBijective ρ ⟨hinj, hρs⟩
     exact RingOfIntegers.not_isField K (e.toMulEquiv.isField (Field.toIsField k))
-  obtain ⟨π, hπ0, hπP, s₁, hs₁, hs₁y⟩ := unif P hP h0P
+  obtain ⟨π, hπ0, hπP, s₁, hs₁, hs₁y⟩ := _root_.UpperTheory.Reformulated.B.Yde5.main P hP h0P
   obtain ⟨ι, _, p, s, hs, hpL, hpK, hsp⟩ := frame K i P hP h0P (dualO F') (dualO_fg F' b')
   have hρπ : ρ π = 0 := hπP
   have hρs₁ : ρ s₁ ≠ 0 := hs₁
@@ -1433,7 +1423,7 @@ theorem lineOfLargeDegree_of_use :
       (DualStackedExcGeoSecond.proof hLinear LinPrimeCut.proof LinPrimeBase.proof)
       DualStackedExcGeoFirst.proof
   have hStep : DualTopSimpleStacked.Statement :=
-    DualTopSimpleStacked.proof hAI3 hGr (DualStackedGraphImage.proof hGr GlobalTheory.CompanionTheory.Ar.Giv.fibreDim)
+    DualTopSimpleStacked.proof hAI3 hGr (DualStackedGraphImage.proof hGr _root_.GroundTheory.Heights₂.Heights.ForSecondHalf.FibreDim.proof)
       DualStackedGraphHorizontal.proof hFib GrassFibreDegree.proof
   have hStacked : DualTopStacked.Statement :=
     DualTopStacked.proof (DualTopSimpleSub.proof hBasis hStep hSDeg) hBasis hSDeg

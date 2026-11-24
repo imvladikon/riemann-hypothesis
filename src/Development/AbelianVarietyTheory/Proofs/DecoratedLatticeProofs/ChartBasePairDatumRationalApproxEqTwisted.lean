@@ -86,25 +86,11 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.L2.Col Formal
 
 variable {E : Type} [Field E] [NumberField E]
 
-theorem intAt_iff_val (P : HeightOneSpectrum (𝓞 E)) (a : E) : IntAt P a ↔ P.valuation E a ≤ 1 := by
-  constructor
-  · rintro ⟨r, s, hs, h⟩
-    have h1 : P.valuation E (algebraMap (𝓞 E) E s) = 1 := by
-      rw [HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_eq_one_iff]
-      exact hs
-    have h2 := congrArg (P.valuation E) h
-    rw [map_mul, h1, one_mul] at h2
-    rw [h2]
-    exact P.valuation_le_one r
-  · intro h
-    obtain ⟨n, d, hnd⟩ := P.exists_primeCompl_mul_eq_of_integer a h
-    exact ⟨n, d, d.2, by rw [mul_comm]; exact hnd⟩
-
 theorem intAt_inv_pow_mul {P : HeightOneSpectrum (𝓞 E)} {q B c : ℕ} (hq : (q : E) ≠ 0) {z : E}
     (hz : P.valuation E z ≤ P.valuation E (((q ^ B * c : ℕ) : ℕ) : E)) : IntAt P (((q : E) ^ B)⁻¹ * z) := by
-  rw [intAt_iff_val, map_mul, map_inv₀]
+  rw [_root_.GlobalTheory.Proof.IntegralPowerExpansion.intAt_iff_val, map_mul, map_inv₀]
   have hc : P.valuation E ((c : ℕ) : E) ≤ 1 :=
-    (intAt_iff_val P _).1 ⟨(c : 𝓞 E), 1, fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h), by simp⟩
+    (_root_.GlobalTheory.Proof.IntegralPowerExpansion.intAt_iff_val P _).1 ⟨(c : 𝓞 E), 1, fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h), by simp⟩
   have h1 : P.valuation E z ≤ P.valuation E ((q : E) ^ B) := by
     refine hz.trans ?_
     rw [Nat.cast_mul, Nat.cast_pow, map_mul]
@@ -422,10 +408,6 @@ theorem val_qOf_lt_one (P : HeightOneSpectrum (𝓞 E)) : P.valuation E ((qOf P 
   have h := (P.valuation_lt_one_iff_mem (K := E) ((qOf P : ℕ) : 𝓞 E)).2 (Ideal.absNorm_mem _)
   simpa using h
 
-omit [StarRing E] in
-theorem qOf_pos (P : HeightOneSpectrum (𝓞 E)) : 0 < qOf P :=
-  Nat.pos_of_ne_zero fun h0 => P.ne_bot (Ideal.absNorm_eq_zero_iff.1 h0)
-
 theorem mle_frame {g : GL (Fin a) (AfE F E)} {p : DecoF E a ST SG Q} (h : IsPtOf hc g p) (w : SG) :
     MLe Valued.v ((g⁻¹ : GL (Fin a) (AfE F E)).1.map (adAt F w.1) *
       (LinearMap.toMatrix' (p.deco.1.liftFr w).toLinearMap).map (algebraMap E (w.1.adicCompletion E)) - 1) (WithZero.exp (-((1 : ℕ) : ℤ))) := by
@@ -479,7 +461,7 @@ theorem exists_modulus {k y : GL (Fin a) (AfE F E)} {k' y' : GL (Fin b) (AfE F E
   have vd : w.1.valuation E d ≠ 0 := (Valuation.ne_zero_iff _).2 hd
   obtain ⟨n, hn⟩ := exists_pow_lt₀ (val_qOf_lt_one w.1)
     (Units.mk0 (m'⁻¹ * w.1.valuation E d * m⁻¹) (mul_ne_zero (mul_ne_zero (inv_ne_zero m0') vd) (inv_ne_zero m0)))
-  refine ⟨qOf w.1 ^ n, pow_pos (qOf_pos _) n, fun M₀ hM x x₀ hx => ⟨_, _, hAi.near_mul h1.le hC, hAi'.near_mul h1.le hC', ?_⟩⟩
+  refine ⟨qOf w.1 ^ n, pow_pos (_root_.Formalism.L2.Ker.qOf_pos _) n, fun M₀ hM x x₀ hx => ⟨_, _, hAi.near_mul h1.le hC, hAi'.near_mul h1.le hC', ?_⟩⟩
   have hM₀ : Valued.v ((M₀ : ℕ) : w.1.adicCompletion E) ≤ m'⁻¹ * w.1.valuation E d * m⁻¹ := by
     obtain ⟨c, rfl⟩ := hM
     rw [← map_natCast ι, valued_algebraMap, Nat.cast_mul, map_mul, Nat.cast_pow, map_pow]
@@ -606,7 +588,7 @@ theorem entry_transport_any : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (hI
   intro B X I hI l u a i hm al be P p q p' q' k y k' y' hp hpN hp' hpN' hq hq'
   have hX := (GlobalTheory.Mem.FieldsLaws.fields_satisfy_definite_laws B).1
   have hL := hI.idx_ok a
-  have hq0 : ((Formalism.L2.Col.qOf P.1 : ℕ) : B.fields.E) ≠ 0 := Nat.cast_ne_zero.2 (GlobalTheory.Transport.Entry.qOf_pos P.1).ne'
+  have hq0 : ((Formalism.L2.Col.qOf P.1 : ℕ) : B.fields.E) ≠ 0 := Nat.cast_ne_zero.2 (_root_.Formalism.L2.Ker.qOf_pos P.1).ne'
   by_cases hP : P.1 ∈ (B.primes X).vGs
   · obtain ⟨M, hM, H⟩ := exists_modulus hp hp' hq hq' ⟨P.1, hP⟩ (pow_ne_zero (I.cst a).B hq0)
     refine ⟨M, hM, fun M₀ hM₀ x x₀ hx => ?_⟩
@@ -622,7 +604,7 @@ theorem entry_transport_any : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (hI
     · rw [hL.depthG P hP, pow_one]
       exact hκ'
   · have hQ : P.1 ∈ I.Q a := (Finset.mem_union.1 P.2).resolve_left hP
-    refine ⟨Formalism.L2.Col.qOf P.1 ^ (I.cst a).B, pow_pos (GlobalTheory.Transport.Entry.qOf_pos P.1) _, fun M₀ hM₀ x x₀ hx => ?_⟩
+    refine ⟨Formalism.L2.Col.qOf P.1 ^ (I.cst a).B, pow_pos (_root_.Formalism.L2.Ker.qOf_pos P.1) _, fun M₀ hM₀ x x₀ hx => ?_⟩
     have hd := GlobalTheory.Transport.TwistRead.qread I u a i P hQ (GlobalTheory.Mem.Df.disjoint_vGs_Q I hI l a) p q p' q' k y k' y' hp hpN hp' hpN' hq hq' M₀ x x₀ hx
     set z₀ := Formalism.L2.Col.inFr (Formalism.L2.Col.frsF I.sel (I.tup a) p.1.1 P) (Formalism.L2.Col.frsF I.sel (I.tup a) p'.1.1 P) x₀ with hz₀
     set z₁ := Formalism.L2.Col.inFr (Formalism.L2.Col.frsF I.sel (I.tup a) q.1.1 P) (Formalism.L2.Col.frsF I.sel (I.tup a) q'.1.1 P) x with hz₁
@@ -837,21 +819,14 @@ theorem intAt_div_of_val {P : HeightOneSpectrum (𝓞 E)} (hq : ((qOf P : ℕ) :
   have := P.isPrime
   exact (mul_eq_zero.1 h1).resolve_left fun h0 => hs (Ideal.Quotient.eq_zero_iff_mem.1 h0)
 
-theorem single_std {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (j : Fin n) : (Pi.single j 1 : Sp E n) ∈ stdAt E n P :=
-  mem_stdAt.2 fun i => by
-    rw [Pi.single_apply]
-    split_ifs
-    · exact intAt_one
-    · exact intAt_zero
-
 variable {hc : Formalism.BasicNotions.CMData F E} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))}
 
 theorem frame_near {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : IsPtOf hc g p) (w : SG) :
     SmallM Valued.v (locM F w.1 g⁻¹ * ratM w.1 (p.deco.1.liftFr w).toLinearMap - 1) := by
   intro i j
   obtain ⟨h1, h2⟩ := liftFr_spec p.deco.2 w
-  have hz := (h1 _).2 (single_std w.1 j)
-  have hb := h2 _ (single_std w.1 j)
+  have hz := (h1 _).2 (_root_.GlobalTheory.CharValCompare.single_mem_stdAt w.1 j)
+  have hb := h2 _ (_root_.GlobalTheory.CharValCompare.single_mem_stdAt w.1 j)
   set z := p.deco.1.liftFr w (Pi.single j 1) with hzdef
   have hs := p.deco.2.be_smul w
   obtain ⟨s, hs0, hsz⟩ : ∃ s ∈ w.1.asIdeal.primeCompl, s • z ∈ p.deco.1.N := id hz
@@ -895,10 +870,10 @@ theorem locM_int {g : GL (Fin n) (AfE F E)} {p : DecoF E n ST SG Q} (h : IsPtOf 
     rwa [Deco.at, hN] at this
   set f := p.deco.1.liftFr w
   have hf : IntM Valued.v (ratM w.1 f.toLinearMap) :=
-    (intM_ratM _ _).2 fun j => mem_stdAt.1 ((h1 _).2 (single_std w.1 j))
+    (intM_ratM _ _).2 fun j => mem_stdAt.1 ((h1 _).2 (_root_.GlobalTheory.CharValCompare.single_mem_stdAt w.1 j))
   have hf' : IntM Valued.v (ratM w.1 f.symm.toLinearMap) :=
     (intM_ratM _ _).2 fun j => mem_stdAt.1 ((h1 _).1 (by
-      rw [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]; exact single_std w.1 j))
+      rw [LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]; exact _root_.GlobalTheory.CharValCompare.single_mem_stdAt w.1 j))
   constructor
   · refine intM_of_mul_right h0 ?_
     rwa [← Matrix.mul_assoc, ← locM_mul, mul_inv_cancel, locM_one, Matrix.one_mul]

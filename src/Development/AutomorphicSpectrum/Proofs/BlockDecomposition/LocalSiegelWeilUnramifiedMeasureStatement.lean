@@ -576,7 +576,7 @@ theorem exists_reps {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalR
     show x - x ∈ H
     simp
   obtain ⟨T, hTO, hcov⟩ := hOc.elim_nhds_subcover U fun x _ => (hUo x).mem_nhds (hUx x)
-  obtain ⟨Rep, hRT, hR2, hR3⟩ := exists_sep H T
+  obtain ⟨Rep, hRT, hR2, hR3⟩ := _root_.UpperTheory.Reformulated.B.P6.r08a.GlobalTheory.CompanionTheory.AvgFree.Cov.exists_sep H T
   have hRO : ∀ r ∈ Rep, r ∈ O := fun r hr => hTO r (hRT hr)
   have hOpos : μ (O : Set K) ≠ 0 := hOo.measure_ne_zero μ ⟨1, O.one_mem⟩
   have hOtop : μ (O : Set K) ≠ ⊤ := hOc.measure_lt_top.ne
@@ -1417,12 +1417,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.AvgFree.UnitScale
 
-theorem map_pi_scale {ι : Type} [Fintype ι] {α : ι → Type} [∀ i, MeasurableSpace (α i)]
-    (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (g : ∀ i, α i → α i) (hg : ∀ i, Measurable (g i))
-    (c : ι → ℝ≥0∞) (hc0 : ∀ i, c i ≠ 0) (hct : ∀ i, c i ≠ ⊤)
-    (h : ∀ i, (μ i).map (g i) = c i • μ i) :
-    (Measure.pi μ).map (fun x i => g i (x i)) = (∏ i, c i) • Measure.pi μ :=
-  _root_.UpperTheory.Reformulated.B.MapPiScale.map_pi_scale μ g hg c hc0 hct h
+alias map_pi_scale := _root_.UpperTheory.Reformulated.B.MapPiScale.map_pi_scale
 
 end GlobalTheory.CompanionTheory.AvgFree.UnitScale
 

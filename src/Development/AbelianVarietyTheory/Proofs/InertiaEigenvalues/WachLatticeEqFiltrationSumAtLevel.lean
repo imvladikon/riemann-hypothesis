@@ -216,13 +216,7 @@ section Core
 
 variable {LL M R K N : Type} [Field LL] [AddCommGroup M] [Module LL M] [CommRing R] [Ring K] [Module K R]
 
-theorem conv_one (f : ℤ → M) : conv (1 : PowerSeries LL) f = f := by
-  funext k
-  unfold conv
-  rw [finsum_eq_single _ 0]
-  · simp
-  · intro j hj
-    simp [PowerSeries.coeff_one, hj]
+alias conv_one := _root_.GlobalTheory.NL.Model.conv_one
 
 theorem single_mem_iff {Fil : ℤ → Submodule K R} {t : R} (anti : Antitone Fil) (exh : ∀ b, ∃ a, b ∈ Fil a)
     (sep : ∀ b, (∀ a, b ∈ Fil a) → b = 0)
@@ -374,9 +368,6 @@ def crd (lam : T.V →ₗ[LL] LL) : T.V ⊗[Qp] BdR →ₗ[Qp] BdR :=
 theorem crd_tmul (lam : T.V →ₗ[LL] LL) (x : T.V) (b : BdR) : crd T ι lam (x ⊗ₜ b) = ι (lam x) * b := by
   simp [crd]
 
-theorem mulVR_tmul (c : BdR) (x : T.V) (b : BdR) : mulVR T c (x ⊗ₜ[Qp] b) = x ⊗ₜ (c * b) := by
-  simp [mulVR]
-
 theorem crd_smul (lam : T.V →ₗ[LL] LL) (c : LL) (z : T.V ⊗[Qp] BdR) :
     crd T ι lam (c • z) = ι c * crd T ι lam z := by
   induction z using TensorProduct.induction_on with
@@ -388,7 +379,7 @@ theorem crd_mulVR (lam : T.V →ₗ[LL] LL) (c : BdR) (z : T.V ⊗[Qp] BdR) :
     crd T ι lam (mulVR T c z) = c * crd T ι lam z := by
   induction z using TensorProduct.induction_on with
   | zero => simp
-  | tmul x b => rw [mulVR_tmul, crd_tmul, crd_tmul]; ring
+  | tmul x b => rw [_root_.GlobalTheory.NL.PerS.mulVR_tmul, crd_tmul, crd_tmul]; ring
   | add x y hx hy => rw [map_add (f := _), map_add (f := _), map_add (f := _), hx, hy, mul_add]
 
 theorem crd_compKer (lam : T.V →ₗ[LL] LL) {z : T.V ⊗[Qp] BdR} (hz : z ∈ compKer T ι) : crd T ι lam z = 0 := by
@@ -442,7 +433,7 @@ theorem sub_sum_mem_compKer (z : T.V ⊗[Qp] BdR) :
     nth_rewrite 1 [this]
     rw [← Finset.sum_sub_distrib]
     refine sum_mem fun α _ => Submodule.subset_span ⟨bV.repr x α, bV α ⊗ₜ b, ?_⟩
-    rw [mulVR_tmul, crd_tmul]
+    rw [_root_.GlobalTheory.NL.PerS.mulVR_tmul, crd_tmul]
     rfl
   | add x y hx hy =>
     convert add_mem hx hy using 1

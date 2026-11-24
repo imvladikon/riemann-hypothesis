@@ -84,9 +84,9 @@ import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Lemma
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyZeroStrictlyHenselianEquivStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSurjectionCechDescentTateTwist
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictlyHenselianLocalRingAcyclicEverySheafStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyZeroStrictlyHenselianEquivStatement
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFactorStrictHenselisation, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNoetherianShFactor, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNoetherianShFactorStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCohomologyVanishingOfNoetherianHenselian, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCohomologyVanishingOfNoetherianHenselianStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteStrictlyHenselianTateTwistAcyclic, Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteStrictlyHenselianTateTwistAcyclicStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProIsometryOfLocalIsometries, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyVanishesPositive, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentKummerCupProductMapBijectiveFiniteStrictH, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentKummerCupProductMapBijectiveFiniteStrictHStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeEqOfCodimOneEq, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDegreeZeroBijective, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceCohomologyEqZeroOfSimplicialRowExact, Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceCohomologyEqZeroOfSimplicialRowExactStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechNerveDiagonalIsoZeroOverBase, Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechNerveDiagonalIsoZeroOverBaseStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentVanishingFiniteAlgebraStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNerveLevelCohomologySubsingleton, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNerveLevelCohomologySubsingletonStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselian, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselianStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNervePullbackBijectiveDegreeZero, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNervePullbackBijectiveDegreeZeroStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialSpectralRowExactZeroOfAcyclic, Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialSpectralRowExactZeroOfAcyclicStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentPolynomialTateTwistCohomologyVanishingInd, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentPolynomialTateTwistCohomologyVanishingIndStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCohomology, Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicativeGroupCohomologyStrictlyHenselianStatement, Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentPolynomialCohomologyVanishing
@@ -221,8 +221,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_noetherian_sh_factorization : ∀ (R A : Type) [CommRing R] [IsNoetherianRing R] [CommRing A], SH A → ∀ b : R →+* A, ∃ (C : Type) (_ : CommRing C), IsNoetherianRing C ∧ SH C ∧ ∃ (f : R →+* C) (g : C →+* A), g.comp f = b := by
-  first | (exact @GlobalTheory.NoethSHFactor.exists_noetherian_sh_factor)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNoetherianShFactorStatement =====
@@ -363,10 +361,10 @@ theorem GlobalTheory.EtC.laurent_vanishing_of_noetherian : ∀ (q : ℕ) [NeZero
   obtain ⟨hc⟩ := cocone_isColimit u
   have hqL : IsUnit (q : LaurentPolynomial A) := by
     have := hq.map (LaurentPolynomial.C : A →+* LaurentPolynomial A); simpa using this
-  obtain ⟨j, y, hy⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (diag u) (cocone u) hc n i).1 x hqL
+  obtain ⟨j, y, hy⟩ := (_root_.GlobalTheory.EtC.pairingProperties q (diag u) (cocone u) hc n i).1 x hqL
   haveI : Algebra.FiniteType ℤ (sub u j) := (Subalgebra.fg_iff_finiteType _).1 (sub_fg u j)
   haveI : IsNoetherianRing (sub u j) := Algebra.FiniteType.isNoetherianRing ℤ _
-  obtain ⟨C, _, hCn, hCsh, f, g, hfg⟩ := GlobalTheory.T.exists_noetherian_sh_factorization (sub u j) A hA (sub u j).val.toRingHom
+  obtain ⟨C, _, hCn, hCsh, f, g, hfg⟩ := _root_.GlobalTheory.NoethSHFactor.exists_noetherian_sh_factor (sub u j) A hA (sub u j).val.toRingHom
   haveI := hCn
   have hqS : IsUnit (q : sub u j) := by
     refine isUnit_iff_exists_inv.2 ⟨⟨u, mem_sub u j (Finset.mem_insert_self u j)⟩, ?_⟩
@@ -394,8 +392,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.laurentCohomology_vanishing_of_noetherian_henselian : ∀ (q : ℕ) [NeZero q], (∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ n i : ℤ, 2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial A)) n i)) → ∀ (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ n i : ℤ, 2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial A)) n i) := by
-  first | (exact @GlobalTheory.EtC.laurent_vanishing_of_noetherian)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCohomologyVanishingOfNoetherianHenselianStatement =====
@@ -430,9 +426,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.finite_strictlyHenselian_tateTwist_acyclic : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (T : Type) [CommRing T] [Algebra A T],
-  Module.Finite A T → ∀ s i : ℤ, 0 < s → Subsingleton (Ht q (sp T) s i) := by
-  first | (exact @GlobalTheory.EtC.GmStep.finite_sh_acyclic_twists)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteStrictlyHenselianTateTwistAcyclicStatement =====
@@ -449,9 +442,9 @@ namespace GlobalTheory.EtC.GmStep
 theorem cech_level_acyc : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (A' : Type) [CommRing A'] [Algebra A A'],
   Module.Finite A A' → ∀ (k : ℕ) (s i : ℤ), 0 < s → Subsingleton (Ht q (disc.obj ((cech (baseHom A A')).obj (op ⦋k⦌))) s i) := by
   intro q _ A _ hA hq A' _ _ hfin k s i hs
-  obtain ⟨e0, -, -, -⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
+  obtain ⟨e0, -, -, -⟩ := _root_.GlobalTheory.EtC.GmStep.LevelIso.level_iso A A' k
   haveI : Subsingleton (Ht q (sp (PiTensorProduct A (fun _ : Fin (k + 1) => A'))) s i) :=
-    GlobalTheory.T.finite_strictlyHenselian_tateTwist_acyclic q A hA hq _ inferInstance s i hs
+    _root_.GlobalTheory.EtC.GmStep.finite_sh_acyclic_twists q A hA hq _ inferInstance s i hs
   let f : sp (PiTensorProduct A (fun _ : Fin (k + 1) => A')) ⟶ disc.obj ((cech (baseHom A A')).obj (op ⦋k⦌)) :=
     disc.map e0.hom
   let g : disc.obj ((cech (baseHom A A')).obj (op ⦋k⦌)) ⟶ sp (PiTensorProduct A (fun _ : Fin (k + 1) => A')) :=
@@ -476,9 +469,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.cech_cohomology_vanishes_positive : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (A' : Type) [CommRing A'] [Algebra A A'],
-  Module.Finite A A' → ∀ (k : ℕ) (s i : ℤ), 0 < s → Subsingleton (Ht q (disc.obj ((cech (baseHom A A')).obj (op ⦋k⦌))) s i) := by
-  first | (exact @GlobalTheory.EtC.GmStep.cech_level_acyc)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCohomologyVanishesPositive =====
@@ -493,35 +483,12 @@ open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.Et
 noncomputable section
 namespace GlobalTheory.EtC.LaurentMapPullbackBijective
 
-theorem laurentMap_coeff {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (p : LaurentPolynomial A) (n : ℤ) :
-    (laurentMap f p).coeff n = f (p.coeff n) := by
-  unfold laurentMap
-  simp
-
-theorem laurentMap_id (A : Type) [CommRing A] : laurentMap (RingHom.id A) = RingHom.id _ :=
-  AddMonoidAlgebra.mapRingHom_id
-
-theorem spMap_id (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 (sp A) := by
-  simp [spMap]
-
 theorem pull_bijective_of_inverse (q : ℕ) {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (g : B →+* A)
     (hgf : g.comp f = RingHom.id A) (hfg : f.comp g = RingHom.id B) (n i : ℤ) :
     Function.Bijective (pull _ (spMap f) (tw q i) n) := by
   refine Function.bijective_iff_has_inverse.2 ⟨pull _ (spMap g) (tw q i) n, fun x => ?_, fun y => ?_⟩
-  · rw [← GmPhiNat.pull_spMap_comp, hgf, spMap_id, pull_id]
-  · rw [← GmPhiNat.pull_spMap_comp, hfg, spMap_id, pull_id]
-
-theorem ht_subsingleton (q : ℕ) (T : Type) [CommRing T] [Subsingleton T] (n i : ℤ) :
-    Subsingleton (Ht q (sp T) n i) := by
-  have hb := GlobalTheory.T.etaleCohomology_prod_ring_projections_bijective q T T n i
-  have hfs : RingHom.fst T T = RingHom.snd T T := RingHom.ext fun _ => Subsingleton.elim _ _
-  refine ⟨fun a b => ?_⟩
-  obtain ⟨x, hx⟩ := hb.2 (a, b)
-  have h1 := congrArg Prod.fst hx
-  have h2 := congrArg Prod.snd hx
-  simp only at h1 h2
-  rw [hfs] at h1
-  exact h1.symm.trans h2
+  · rw [← GmPhiNat.pull_spMap_comp, hgf, _root_.GlobalTheory.EtAlgCD.spMap_id, pull_id]
+  · rw [← GmPhiNat.pull_spMap_comp, hfg, _root_.GlobalTheory.EtAlgCD.spMap_id, pull_id]
 
 theorem laurent_subsingleton (T : Type) [CommRing T] [Subsingleton T] : Subsingleton (LaurentPolynomial T) := by
   refine subsingleton_of_zero_eq_one ?_
@@ -530,9 +497,9 @@ theorem laurent_subsingleton (T : Type) [CommRing T] [Subsingleton T] : Subsingl
 
 theorem gmPhi_bijective_of_subsingleton (q : ℕ) (T : Type) [CommRing T] [Subsingleton T] (i : ℤ) :
     Function.Bijective (gmPhi q T i) := by
-  haveI := ht_subsingleton q T 0 (i - 1)
+  haveI := _root_.GlobalTheory.EtC.ArtCoh.ht_subsingleton_of_subsingleton q T 0 (i - 1)
   haveI := laurent_subsingleton T
-  haveI := ht_subsingleton q (LaurentPolynomial T) 1 i
+  haveI := _root_.GlobalTheory.EtC.ArtCoh.ht_subsingleton_of_subsingleton q (LaurentPolynomial T) 1 i
   exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
 
 theorem gmPhi_bijective_of_equiv (h6 : DivisorNaturality) (q : ℕ) [NeZero q] {T T' : Type} [CommRing T] [CommRing T']
@@ -545,30 +512,10 @@ theorem gmPhi_bijective_of_equiv (h6 : DivisorNaturality) (q : ℕ) [NeZero q] {
   have hfg : (e : T →+* T').comp (e.symm : T' →+* T) = RingHom.id T' := by ext; simp
   have hpull := pull_bijective_of_inverse q (e : T →+* T') (e.symm : T' →+* T) hgf hfg 0 (i - 1)
   have hpullL := pull_bijective_of_inverse q (laurentMap (e : T →+* T')) (laurentMap (e.symm : T' →+* T))
-    (by rw [← GmPhiNat.laurentMap_comp, hgf, laurentMap_id])
-    (by rw [← GmPhiNat.laurentMap_comp, hfg, laurentMap_id]) 1 i
+    (by rw [← GmPhiNat.laurentMap_comp, hgf, _root_.GlobalTheory.EtC.GmPhiNoeth.laurentMap_id])
+    (by rw [← GmPhiNat.laurentMap_comp, hfg, _root_.GlobalTheory.EtC.GmPhiNoeth.laurentMap_id]) 1 i
   rw [← Function.Bijective.of_comp_iff _ hpull, hcomm]
   exact hpullL.comp h
-
-theorem laurentProd_bijective (T₁ T₂ : Type) [CommRing T₁] [CommRing T₂] :
-    Function.Bijective ((laurentMap (RingHom.fst T₁ T₂)).prod (laurentMap (RingHom.snd T₁ T₂))) := by
-  constructor
-  · intro p p' h
-    have h1 := congrArg Prod.fst h
-    have h2 := congrArg Prod.snd h
-    simp only [RingHom.prod_apply] at h1 h2
-    apply AddMonoidAlgebra.ext
-    refine Finsupp.ext fun n => ?_
-    have e1 := congrArg (fun r => r.coeff n) h1
-    have e2 := congrArg (fun r => r.coeff n) h2
-    simp only [laurentMap_coeff, RingHom.coe_fst, RingHom.coe_snd] at e1 e2
-    exact Prod.ext e1 e2
-  · rintro ⟨p₁, p₂⟩
-    refine ⟨AddMonoidAlgebra.ofCoeff (Finsupp.zipWith Prod.mk (by simp) p₁.coeff p₂.coeff), ?_⟩
-    simp only [RingHom.prod_apply]
-    refine Prod.ext (AddMonoidAlgebra.ext ?_) (AddMonoidAlgebra.ext ?_)
-    · ext n; simp [laurentMap_coeff]
-    · ext n; simp [laurentMap_coeff]
 
 theorem gmPhi_bijective_prod (h6 : DivisorNaturality) (q : ℕ) [NeZero q] (T₁ T₂ : Type) [CommRing T₁] [CommRing T₂]
     (hq : IsUnit (q : T₁ × T₂)) (i : ℤ) (h₁ : Function.Bijective (gmPhi q T₁ i))
@@ -576,9 +523,9 @@ theorem gmPhi_bijective_prod (h6 : DivisorNaturality) (q : ℕ) [NeZero q] (T₁
   set f₁ := RingHom.fst T₁ T₂
   set f₂ := RingHom.snd T₁ T₂
   set ψ := (laurentMap f₁).prod (laurentMap f₂)
-  have hα := GlobalTheory.T.etaleCohomology_prod_ring_projections_bijective q T₁ T₂ 0 (i - 1)
-  have hγ := GlobalTheory.T.etaleCohomology_prod_ring_projections_bijective q (LaurentPolynomial T₁) (LaurentPolynomial T₂) 1 i
-  have hψ : Function.Bijective ψ := laurentProd_bijective T₁ T₂
+  have hα := _root_.GlobalTheory.EtC.ProdCoh.ht_prod_bijective q T₁ T₂ 0 (i - 1)
+  have hγ := _root_.GlobalTheory.EtC.ProdCoh.ht_prod_bijective q (LaurentPolynomial T₁) (LaurentPolynomial T₂) 1 i
+  have hψ : Function.Bijective ψ := _root_.GlobalTheory.EtC.LiftWitness.laurentProd_bijective T₁ T₂
   let e := RingEquiv.ofBijective ψ hψ
   have hgf : e.symm.toRingHom.comp e.toRingHom = RingHom.id _ := RingHom.ext fun x => e.symm_apply_apply x
   have hfg : e.toRingHom.comp e.symm.toRingHom = RingHom.id _ := RingHom.ext fun x => e.apply_symm_apply x
@@ -616,14 +563,14 @@ open GlobalTheory.EtC.LaurentMapPullbackBijective in
 theorem GlobalTheory.EtC.GmStep.gmPhi_bijective_finite : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) →
     ∀ (T : Type) [CommRing T] [Algebra A T], Module.Finite A T → ∀ i : ℤ, Function.Bijective (gmPhi q T i) := by
   intro q _ A _ hA hq T _ _ hT
-  have h6 : DivisorNaturality := GlobalTheory.T.cup_chern_kummer_pullback_naturality
+  have h6 : DivisorNaturality := _root_.GlobalTheory.EtC.a6nat_holds
   have hunit : ∀ (S : Type) [CommRing S] [Algebra A S], IsUnit (q : S) := fun S _ _ => by
     simpa using hq.map (algebraMap A S)
-  exact GlobalTheory.T.finiteAlgebra_strictlyHenselian_induction A hA (fun S _ _ => ∀ i : ℤ, Function.Bijective (gmPhi q S i))
+  exact _root_.GlobalTheory.EtC.GmStep.FinSH.induction_principle A hA (fun S _ _ => ∀ i : ℤ, Function.Bijective (gmPhi q S i))
     (fun S S' _ _ _ _ e h i => gmPhi_bijective_of_equiv h6 q e.toRingEquiv (hunit S) i (h i))
     (fun S _ _ _ i => gmPhi_bijective_of_subsingleton q S i)
     (fun S₁ S₂ _ _ _ _ _ _ h₁ h₂ i => gmPhi_bijective_prod h6 q S₁ S₂ (hunit (S₁ × S₂)) i (h₁ i) (h₂ i))
-    (fun S _ _ _ hS i => GlobalTheory.T.laurentKummerCupProduct_bijective_strictlyHenselian q S hS (hunit S) i)
+    (fun S _ _ _ hS i => _root_.GlobalTheory.EtC.gmPhi_bijective q S hS (hunit S) i)
     T hT
 end -- clump:auto
 end -- clump:auto
@@ -637,9 +584,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.laurentKummerCupProductMap_bijective_finite_strictHenselian : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (T : Type) [CommRing T] [Algebra A T],
-  Module.Finite A T → ∀ i : ℤ, Function.Bijective (gmPhi q T i) := by
-  first | (exact @GlobalTheory.EtC.GmStep.gmPhi_bijective_finite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentKummerCupProductMapBijectiveFiniteStrictHStatement =====
@@ -683,10 +627,10 @@ theorem rowOne_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH 
     ∀ (A' : Type) [CommRing A'] [Algebra A A'], Module.Finite A A' → ∀ (k : ℕ) (i : ℤ),
     Function.Bijective (rowOne A A' q i k) := by
   intro q _ A _ hA hq A' _ _ hfin k i
-  obtain ⟨e0, e, h1, h2⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
+  obtain ⟨e0, e, h1, h2⟩ := _root_.GlobalTheory.EtC.GmStep.LevelIso.level_iso A A' k
   haveI := hfin
   have hT : Module.Finite A (PiTensorProduct A (fun _ : Fin (k + 1) => A')) := inferInstance
-  have hr1 := GlobalTheory.T.laurentKummerCupProductMap_bijective_finite_strictHenselian q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
+  have hr1 := _root_.GlobalTheory.EtC.GmStep.gmPhi_bijective_finite q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
   have hmap1 := congrArg (fun f => disc.map f) h1
   have hmap2 := congrArg (fun f => disc.map f) h2
   simp only [Functor.map_comp] at hmap1 hmap2
@@ -738,9 +682,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.cech_degree_zero_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (A' : Type) [CommRing A'] [Algebra A A'],
-  Module.Finite A A' → ∀ (k : ℕ) (i : ℤ), Function.Bijective (rowOne A A' q i k) := by
-  first | (exact @GlobalTheory.EtC.GmStep.LevelOne.rowOne_bijective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDegreeZeroBijective =====
@@ -1049,10 +990,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.etaleSpaceCohomology_eq_zero_of_simplicialRowExact : ∀ (R : Type) [CommRing R] (F : Shv R) (E : Spc) (P : PSh) (g : disc.obj P ⟶ E), IsIso (g.app (op ⦋0⦌)) →
-  ∀ (n : ℕ) (x : H R E F n), pull R g F n x = 0 →
-  (∀ p : ℕ, p + 1 ≤ n → RowExact R E F ((n : ℤ) - ((p + 1 : ℕ) : ℤ)) p) → x = 0 := by
-  first | (exact @GlobalTheory.EtC.vanish_of_rowExact)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSpaceCohomologyEqZeroOfSimplicialRowExactStatement =====
@@ -1116,8 +1053,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.exists_cechNerve_diagonal_iso_zero_over_base : ∀ {Y X : Scheme.{0}} (f : Y ⟶ X), ∃ Δ : sch.obj Y ⟶ cech f, IsIso (Δ.app (op ⦋0⦌)) ∧ Δ ≫ cechAug f = sch.map f := by
-  first | (exact @GlobalTheory.EtC.GmStep.cechDiag_spec)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechNerveDiagonalIsoZeroOverBaseStatement =====
@@ -1129,11 +1064,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.tateTwistCohomology_laurent_vanishing_finite_algebra : ∀ (q : ℕ) [NeZero q] (n : ℤ), (∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) →
-    ∀ m i : ℤ, 2 ≤ m → m < n → Subsingleton (Ht q (sp (LaurentPolynomial A)) m i)) →
-  ∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ (T : Type) [CommRing T] [Algebra A T],
-  Module.Finite A T → ∀ s i : ℤ, 2 ≤ s → s < n → Subsingleton (Ht q (sp (LaurentPolynomial T)) s i) := by
-  first | (exact @GlobalTheory.EtC.laurent_vanishing_finite)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentVanishingFiniteAlgebraStatement =====
@@ -1170,8 +1100,8 @@ theorem level_vanish : ∀ (q : ℕ) [NeZero q] (n : ℤ), (∀ (A : Type) [Comm
   Module.Finite A A' → ∀ (k : ℕ) (s i : ℤ), 2 ≤ s → s < n →
   Subsingleton (Ht q (disc.obj ((cech (laurentHom A A')).obj (op ⦋k⦌))) s i) := by
   intro q _ n hyp A _ _ hSH hq A' _ _ hfin k s i hs hsn
-  obtain ⟨_, e, -, -⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
-  have hT := GlobalTheory.T.tateTwistCohomology_laurent_vanishing_finite_algebra q n hyp A hSH hq (PiTensorProduct A fun _ : Fin (k + 1) => A')
+  obtain ⟨_, e, -, -⟩ := _root_.GlobalTheory.EtC.GmStep.LevelIso.level_iso A A' k
+  have hT := _root_.GlobalTheory.EtC.laurent_vanishing_finite q n hyp A hSH hq (PiTensorProduct A fun _ : Fin (k + 1) => A')
     (finite_piTensorProduct_const A A' (Fin (k + 1))) s i hs hsn
   haveI : Subsingleton (Ht q (disc.obj (yoneda.obj (Spec (CommRingCat.of
     (LaurentPolynomial (PiTensorProduct A fun _ : Fin (k + 1) => A')))))) s i) := hT
@@ -1193,18 +1123,12 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.laurentCechNerve_level_cohomology_subsingleton : ∀ (q : ℕ) [NeZero q] (n : ℤ), (∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) →
-  ∀ m i : ℤ, 2 ≤ m → m < n → Subsingleton (Ht q (sp (LaurentPolynomial A)) m i)) →
-  ∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ (A' : Type) [CommRing A'] [Algebra A A'],
-  Module.Finite A A' → ∀ (k : ℕ) (s i : ℤ), 2 ≤ s → s < n →
-  Subsingleton (Ht q (disc.obj ((cech (laurentHom A A')).obj (op ⦋k⦌))) s i) := by
-  first | (exact @GlobalTheory.EtC.GmStep.level_vanish)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNerveLevelCohomologySubsingletonStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselian =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselian", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyProdRingProjectionsBijective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvariantTwistsOfRingEquiv\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAlgebraStrictlyHenselianInduction\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HZeroPullbackTwistBijective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentMapIsIntegral\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentVanishingFiniteAlgebra\nimport Mathlib.Algebra.AffineMonoid.UniqueSums\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselian", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyProdRingProjectionsBijective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleHomotopyInvariantTwistsOfRingEquiv\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAlgebraStrictlyHenselianInduction\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HZeroPullbackTwistBijective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentMapIsIntegral\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentVanishingFiniteAlgebra\nimport Mathlib.Algebra.AffineMonoid.UniqueSums\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyZeroStrictlyHenselianEquivStatement\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1372,39 +1296,6 @@ private lemma laurentConstant_prod (q : ℕ) (T₁ T₂ : Type) [CommRing T₁] 
   exact (Function.Bijective.of_comp_iff' hΦbij _).mp (hcomp ▸ hD)
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Polynomial in
-private lemma exists_cyclotomic_root_of_strictlyHenselian (q : ℕ) [NeZero q] (A : Type)
-    [CommRing A] (hA : _root_.GlobalTheory.EtC.SH A) (hq : IsUnit (q : A)) :
-    ∃ ζ : A, Polynomial.aeval ζ (Polynomial.cyclotomic q ℤ) = 0 := by
-  obtain ⟨hH, hsep⟩ := hA
-  have hqk : ((q : ℕ) : IsLocalRing.ResidueField A) ≠ 0 := by
-    have := hq.map (IsLocalRing.residue A)
-    simpa using this.ne_zero
-  have hs : (cyclotomic q (IsLocalRing.ResidueField A)).Separable :=
-    (separable_X_pow_sub_C (1 : IsLocalRing.ResidueField A) hqk one_ne_zero).of_dvd
-      (by simpa using cyclotomic.dvd_X_pow_sub_one q (IsLocalRing.ResidueField A))
-  have hdeg : (cyclotomic q (IsLocalRing.ResidueField A)).degree ≠ 0 := by
-    rw [degree_cyclotomic]
-    exact_mod_cast (Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne q))).ne'
-  obtain ⟨x, hx⟩ := IsSepClosed.exists_root _ hdeg hs
-  obtain ⟨a, rfl⟩ := IsLocalRing.residue_surjective x
-  have key : ∀ p : A[X], IsLocalRing.residue A (p.eval a) =
-      (p.map (IsLocalRing.residue A)).eval (IsLocalRing.residue A a) := by
-    intro p
-    rw [Polynomial.eval_map, Polynomial.eval₂_hom]
-  obtain ⟨ζ, hζ, -⟩ := HenselianLocalRing.is_henselian (cyclotomic q A) (cyclotomic.monic q A) a
-    (by
-      rw [← IsLocalRing.residue_eq_zero_iff, key, map_cyclotomic]
-      exact hx)
-    (by
-      rw [← IsLocalRing.residue_ne_zero_iff_isUnit, key, ← derivative_map, map_cyclotomic]
-      have := hs.aeval_derivative_ne_zero (x := IsLocalRing.residue A a)
-        (by simpa [aeval_def] using hx)
-      simpa [aeval_def] using this)
-  refine ⟨ζ, ?_⟩
-  rw [aeval_def, eval₂_eq_eval_map, map_cyclotomic]
-  exact hζ
-
-open CategoryTheory Limits AlgebraicGeometry Opposite Polynomial in
 private lemma isIdempotentElem_eq_zero_or_one_of_isLocalRing {T : Type} [CommRing T]
     [IsLocalRing T] (e : T) (he : IsIdempotentElem e) : e = 0 ∨ e = 1 := by
   rcases IsLocalRing.isUnit_or_isUnit_one_sub_self e with h | h
@@ -1470,7 +1361,7 @@ theorem _root_.GlobalTheory.EtC.SpecMapPullbackFunctoriality.laurent_C_pull_bije
     have hqT : IsUnit (q : T) := by simpa using hq.map (algebraMap A T)
     obtain ⟨hH, -⟩ := id hTs
     exact _root_.GlobalTheory.EtC.h_zero_pull_bijective q T (LaurentPolynomial T)
-      LaurentPolynomial.C hqT (exists_cyclotomic_root_of_strictlyHenselian q T hTs hqT)
+      LaurentPolynomial.C hqT (_root_.GlobalTheory.EtC.CyclotomicGlobalSections.exists_cyclotomic_root q T hTs hqT)
       inferInstance (fun e he => isIdempotentElem_eq_zero_or_one_of_isLocalRing e he)
       (fun e he => laurent_isIdempotentElem_eq_zero_or_one_of_isLocalRing T e he) i
 
@@ -1487,9 +1378,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.laurentC_pullback_bijective_finite_strictlyHenselian : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (T : Type) [CommRing T] [Algebra A T],
-  Module.Finite A T → ∀ i : ℤ, Function.Bijective (pull _ (spMap (LaurentPolynomial.C : T →+* LaurentPolynomial T)) (tw q i) 0) := by
-  first | (exact @GlobalTheory.EtC.SpecMapPullbackFunctoriality.laurent_C_pull_bijective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCPullbackBijectiveFiniteStrictlyHenselianStatement =====
@@ -1515,10 +1403,10 @@ theorem cechC_pull_bijective : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A],
     ∀ (A' : Type) [CommRing A'] [Algebra A A'], Module.Finite A A' → ∀ (k : ℕ) (i : ℤ),
     Function.Bijective (pull _ (disc.map ((cechC A A').app (op ⦋k⦌))) (tw q i) 0) := by
   intro q _ A _ hA hq A' _ _ hfin k i
-  obtain ⟨e0, e, h1, -⟩ := GlobalTheory.T.laurentCechNerve_level_spec_tensorPower A A' k
+  obtain ⟨e0, e, h1, -⟩ := _root_.GlobalTheory.EtC.GmStep.LevelIso.level_iso A A' k
   haveI := hfin
   have hT : Module.Finite A (PiTensorProduct A (fun _ : Fin (k + 1) => A')) := inferInstance
-  have hr0 := GlobalTheory.T.laurentC_pullback_bijective_finite_strictlyHenselian q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
+  have hr0 := _root_.GlobalTheory.EtC.SpecMapPullbackFunctoriality.laurent_C_pull_bijective q A hA hq (PiTensorProduct A (fun _ : Fin (k + 1) => A')) hT i
   have hmap := congrArg (fun f => disc.map f) h1
   simp only [Functor.map_comp] at hmap
   have heq : ∀ x, pull _ (disc.map e.hom) (tw q i) 0 (pull _ (disc.map ((cechC A A').app (op ⦋k⦌))) (tw q i) 0 x) =
@@ -1551,9 +1439,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.laurentCechNerve_pullback_bijective_degree_zero : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ (A' : Type) [CommRing A'] [Algebra A A'],
-  Module.Finite A A' → ∀ (k : ℕ) (i : ℤ), Function.Bijective (pull _ (disc.map ((cechC A A').app (op ⦋k⦌))) (tw q i) 0) := by
-  first | (exact @GlobalTheory.EtC.GmStep.LevelZero.cechC_pull_bijective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentCechNervePullbackBijectiveDegreeZeroStatement =====
@@ -1667,10 +1552,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC GlobalTheory.EtC.GmStep
 
-theorem _root_.GlobalTheory.T.simplicialSpectralRowExact_zero_of_acyclic : ∀ (R : Type) [CommRing R] (F : Shv R) (E : Spc),
-  (∀ (p : ℕ) (s : ℤ), 0 < s → Subsingleton (H R (disc.obj (E.obj (op ⦋p⦌))) F s)) →
-  (∀ m : ℤ, 0 < m → Subsingleton (H R E F m)) → ∀ p : ℕ, RowExact R E F 0 p := by
-  first | (exact @GlobalTheory.EtC.GmStep.rowExact_zero_of_acyclic)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialSpectralRowExactZeroOfAcyclicStatement =====
@@ -1684,10 +1565,6 @@ noncomputable section
 open CategoryTheory Limits AlgebraicGeometry Opposite Simplicial GlobalTheory.EtC
 
 namespace GlobalTheory.EtC.GmStep
-
-theorem pull_cast {q : ℕ} {E E' : Spc} (f : E ⟶ E') {n i n' i' : ℤ} (hn : n = n') (hi : i = i') (x : Ht q E' n i) :
-    pull _ f _ _ (Ht.cast hn hi x) = Ht.cast hn hi (pull _ f _ _ x) := by
-  subst hn; subst hi; rfl
 
 theorem cechC_face (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] {R : Type} [CommRing R] (F : Shv R) (s : ℤ)
     (k : ℕ) (j : Fin (k + 2)) (y : H R (disc.obj ((cech (baseHom A A')).obj (op ⦋k⦌))) F s) :
@@ -1712,8 +1589,8 @@ theorem rowExact_base (q : ℕ) [NeZero q] (A : Type) [CommRing A] (hA : SH A) (
   have hint : (algebraMap A A').IsIntegral := fun x => Algebra.IsIntegral.isIntegral x
   obtain ⟨hI, hS⟩ := spec_integral_surj (algebraMap A A') hint hker
   have hB := @GlobalTheory.EtC.b4 q _ _ (baseHom A A') hI hS (isUnit_gamma q A hq) j
-  refine GlobalTheory.T.simplicialSpectralRowExact_zero_of_acyclic (ZMod q) (tw q j) _ (fun k s hs => GlobalTheory.T.cech_cohomology_vanishes_positive q A hA hq A' inferInstance k s j hs) (fun m hm => ?_) p
-  haveI : Subsingleton (H (ZMod q) (sch.obj (Spec (CommRingCat.of A))) (tw q j) m) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) A hA (tw q j) m hm
+  refine _root_.GlobalTheory.EtC.GmStep.rowExact_zero_of_acyclic (ZMod q) (tw q j) _ (fun k s hs => _root_.GlobalTheory.EtC.GmStep.cech_level_acyc q A hA hq A' inferInstance k s j hs) (fun m hm => ?_) p
+  haveI : Subsingleton (H (ZMod q) (sch.obj (Spec (CommRingCat.of A))) (tw q j) m) := _root_.GlobalTheory.EtC.b2 (ZMod q) A hA (tw q j) m hm
   exact ⟨fun a b => by
     obtain ⟨a', rfl⟩ := (hB m).2 a
     obtain ⟨b', rfl⟩ := (hB m).2 b
@@ -1726,7 +1603,7 @@ theorem gm_vanishing_step : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀
   intro q _ n hn IH A _ _ hA hq i
   suffices h : ∀ x : Ht q (sp (LaurentPolynomial A)) n i, x = 0 from ⟨fun x y => by rw [h x, h y]⟩
   intro x
-  obtain ⟨A', _, _, hfin, hker, hx⟩ := GlobalTheory.T.laurent_cohomology_finite_killing q A hA hq n i hn x
+  obtain ⟨A', _, _, hfin, hker, hx⟩ := _root_.GlobalTheory.EtC.GmKill.main q A hA hq n i hn x
   haveI := hfin
   have hint : (algebraMap A A').IsIntegral := fun x => Algebra.IsIntegral.isIntegral x
   obtain ⟨hI', hS'⟩ := spec_integral_surj _ (laurentMap_isIntegral _ hint) (laurentMap_ker _ hker)
@@ -1735,8 +1612,8 @@ theorem gm_vanishing_step : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀
   obtain ⟨N, rfl⟩ : ∃ N : ℕ, n = N := ⟨n.toNat, by omega⟩
   apply (hB N).1
   rw [map_zero]
-  obtain ⟨Δ, hΔ0, hΔ⟩ := GlobalTheory.T.exists_cechNerve_diagonal_iso_zero_over_base (laurentHom A A')
-  refine GlobalTheory.T.etaleSpaceCohomology_eq_zero_of_simplicialRowExact (ZMod q) (tw q i) (cech (laurentHom A A')) (yoneda.obj _) Δ hΔ0 N _ ?_ ?_
+  obtain ⟨Δ, hΔ0, hΔ⟩ := _root_.GlobalTheory.EtC.GmStep.cechDiag_spec (laurentHom A A')
+  refine _root_.GlobalTheory.EtC.vanish_of_rowExact (ZMod q) (tw q i) (cech (laurentHom A A')) (yoneda.obj _) Δ hΔ0 N _ ?_ ?_
   · exact (pull_comp (ZMod q) Δ (cechAug (laurentHom A A')) (tw q i) N x).symm.trans
       ((congrArg (fun g => pull (ZMod q) g (tw q i) N x) hΔ).trans hx)
   · intro p hp
@@ -1744,16 +1621,16 @@ theorem gm_vanishing_step : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀
         2 ≤ (N : ℤ) - ((p + 1 : ℕ) : ℤ)) with h0 | h1 | h2
     · rw [h0]
       exact rowExact_transfer (fun k => pull _ (disc.map ((cechC A A').app (op ⦋k⦌))) (tw q i) 0)
-        (fun k => GlobalTheory.T.laurentCechNerve_pullback_bijective_degree_zero q A hA hq A' hfin k i) (fun k j y => cechC_face A A' _ _ k j y) p
+        (fun k => _root_.GlobalTheory.EtC.GmStep.LevelZero.cechC_pull_bijective q A hA hq A' hfin k i) (fun k j y => cechC_face A A' _ _ k j y) p
         (rowExact_base q A hA hq A' hker i p)
     · rw [h1]
-      refine rowExact_transfer (fun k => rowOne A A' q i k) (fun k => GlobalTheory.T.cech_degree_zero_bijective q A hA hq A' hfin k i) (fun k j y => ?_) p
+      refine rowExact_transfer (fun k => rowOne A A' q i k) (fun k => _root_.GlobalTheory.EtC.GmStep.LevelOne.rowOne_bijective q A hA hq A' hfin k i) (fun k j y => ?_) p
         (rowExact_base q A hA hq A' hker (i - 1) p)
       simp only [rowOne, AddMonoidHom.coe_mk, ZeroHom.coe_mk]
-      rw [pull_cast, (GlobalTheory.T.cup_chern_kummer_pullback_naturality q).1, cechC_face,
+      rw [_root_.GlobalTheory.EtC.GmStep.LevelOne.pull_cast, (_root_.GlobalTheory.EtC.a6nat_holds q).1, cechC_face,
         ← pull_comp (ZMod q) (disc.map ((cech (laurentHom A A')).δ j)) (augK A A' k), aug_face]
     · intro y _
-      haveI := GlobalTheory.T.laurentCechNerve_level_cohomology_subsingleton q N IH A hA hq A' hfin (p + 1) _ i h2 (by omega)
+      haveI := _root_.GlobalTheory.EtC.GmStep.level_vanish q N IH A hA hq A' hfin (p + 1) _ i h2 (by omega)
       exact ⟨0, by rw [map_zero]; exact Subsingleton.elim _ _⟩
 
 end GlobalTheory.EtC.GmStep
@@ -1770,8 +1647,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.laurentPolynomial_tateTwistCohomology_vanishing_inductive : ∀ (q : ℕ) [NeZero q] (n : ℤ), 2 ≤ n → (∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ m i : ℤ, 2 ≤ m → m < n → Subsingleton (Ht q (sp (LaurentPolynomial A)) m i)) → ∀ (A : Type) [CommRing A] [IsNoetherianRing A], SH A → IsUnit (q : A) → ∀ i : ℤ, Subsingleton (Ht q (sp (LaurentPolynomial A)) n i) := by
-  first | (exact @GlobalTheory.EtC.GmStep.gm_vanishing_step)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentPolynomialTateTwistCohomologyVanishingIndStatement =====
@@ -1799,16 +1674,16 @@ theorem vanishing_below (q : ℕ) [NeZero q] (k : ℕ) :
     rcases lt_or_eq_of_le (show m ≤ 2 + (k : ℤ) by omega) with h | h
     · exact ih A hA hq m i h2 h
     · subst h
-      exact GlobalTheory.T.laurentPolynomial_tateTwistCohomology_vanishing_inductive q (2 + k) (by omega) ih A hA hq i
+      exact _root_.GlobalTheory.EtC.GmStep.gm_vanishing_step q (2 + k) (by omega) ih A hA hq i
 
 theorem laurent_cohomology (q : ℕ) [NeZero q] (A : Type) [CommRing A] (hA : SH A) (hq : IsUnit (q : A))
     (n i : ℤ) :
     (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial A)) n i)) ∧
       Nonempty (Ht q (sp (LaurentPolynomial A)) 1 i ≃+ ZMod q) := by
-  refine ⟨fun hn => GlobalTheory.T.laurentCohomology_vanishing_of_noetherian_henselian q (fun B _ _ hB hqB m j hm =>
+  refine ⟨fun hn => _root_.GlobalTheory.EtC.laurent_vanishing_of_noetherian q (fun B _ _ hB hqB m j hm =>
     vanishing_below q m.toNat B hB hqB m j hm (by omega)) A hA hq n i hn, ?_⟩
-  obtain ⟨e⟩ := GlobalTheory.T.nonempty_ht_zero_addEquiv_zmod_of_sh q A hA hq (i - 1)
-  exact ⟨(AddEquiv.ofBijective (gmPhi q A i) (GlobalTheory.T.laurentKummerCupProduct_bijective_strictlyHenselian q A hA hq i)).symm.trans e⟩
+  obtain ⟨e⟩ := _root_.GlobalTheory.EtC.tateTwistCohomology_zero_strictlyHenselian_equiv q A hA hq (i - 1)
+  exact ⟨(AddEquiv.ofBijective (gmPhi q A i) (_root_.GlobalTheory.EtC.gmPhi_bijective q A hA hq i)).symm.trans e⟩
 
 end GlobalTheory.LaurentCohomologyVanishing
 end -- clump:auto
@@ -1822,8 +1697,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.multiplicativeGroup_cohomology_strictlyHenselian : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A], SH A → IsUnit (q : A) → ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial A)) n i)) ∧ Nonempty (Ht q (sp (LaurentPolynomial A)) 1 i ≃+ ZMod q) := by
-  first | (exact @_root_.GlobalTheory.LaurentCohomologyVanishing.laurent_cohomology) | (exact _root_.GlobalTheory.LaurentCohomologyVanishing.laurent_cohomology) | (intros; apply _root_.GlobalTheory.LaurentCohomologyVanishing.laurent_cohomology  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicativeGroupCohomologyStrictlyHenselianStatement =====
@@ -1837,7 +1710,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
 namespace GlobalTheory.EtC
 
-theorem laurentPolynomial_cohomology_strictlyHenselian_vanishing : GlobalTheory.EtC.C5 := fun q _ A _ hA hq n i => GlobalTheory.T.multiplicativeGroup_cohomology_strictlyHenselian q A hA hq n i
+theorem laurentPolynomial_cohomology_strictlyHenselian_vanishing : GlobalTheory.EtC.C5 := fun q _ A _ hA hq n i => _root_.GlobalTheory.LaurentCohomologyVanishing.laurent_cohomology q A hA hq n i
 
 end GlobalTheory.EtC
 end -- clump:auto

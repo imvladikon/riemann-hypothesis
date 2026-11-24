@@ -166,7 +166,7 @@ theorem line_mem_schwartzBruhat {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwa
     have hAi : (A : Matrix ι ι 𝔸[k]) i i₀ = algebraMap k 𝔸[k] (ξ i) := by
       simp [hA, Matrix.GeneralLinearGroup.mkOfDetNeZero, hM, Matrix.updateCol_self]
     simp [Matrix.mulVec_single, hAi, ratV, mul_comm]
-  have h := single_mem_schwartzBruhat (GlobalTheory.T.linearChange_mem_schwartzBruhatPi hF A) i₀
+  have h := single_mem_schwartzBruhat (_root_.GlobalTheory.CompanionTheory.LinearChangeSchwartzBruhat.ltr_mem hF A) i₀
   simpa only [ltr, key] using h
 
 end SlopeTestRemainingChoices
@@ -668,7 +668,7 @@ theorem epstein_eq_mellin {k : Type} [Field k] [NumberField k] {ι : Type} [Fint
   · have hz1 : 1 < z.re := by
       have : (1 : ℝ) ≤ Fintype.card ι := by exact_mod_cast Fintype.card_pos
       linarith
-    have h := lines_eq_mellin w ω (GlobalTheory.T.linearChange_mem_schwartzBruhatPi hΨ m⁻¹) hz hz1
+    have h := lines_eq_mellin w ω (_root_.GlobalTheory.CompanionTheory.LinearChangeSchwartzBruhat.ltr_mem hΨ m⁻¹) hz hz1
     simp only [epstein, lineZeta_mulVec]
     exact h
 

@@ -179,8 +179,6 @@ section -- clump:auto
 open GlobalTheory.AlmostEt GlobalTheory.K5
 open scoped NNReal
 
-theorem _root_.GlobalTheory.T.laurentSeriesPadic_exists_pthPower_combination : ∀ (p : ℕ) [Fact p.Prime] (f : Lau p), ∃ (g : Fin p → Lau p) (h : Lau p), f = ∑ j : Fin p, HahnSeries.single ((j : ℕ) : ℤ) (1 : ℤ_[p]) * g j ^ p + (p : Lau p) * h := by
-  first | exact @GlobalTheory.K5.LauZ.exists_pow_comb
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentSeriesPadicExistsPthPowerCombinationStatement =====
@@ -221,7 +219,7 @@ theorem exists_lau_add_p_mul (p : ℕ) [Fact p.Prime] (x : O0 p) :
 theorem exists_eq_sum_qO_pow_mul_pow_add_mul (p : ℕ) [Fact p.Prime] (x : O0 p) :
     ∃ (g : Fin p → O0 p) (h : O0 p), x = ∑ j : Fin p, qO p ^ (j : ℕ) * g j ^ p + (p : O0 p) * h := by
   obtain ⟨f, z, rfl⟩ := exists_lau_add_p_mul p x
-  obtain ⟨g, h, hf⟩ := GlobalTheory.T.laurentSeriesPadic_exists_pthPower_combination p f
+  obtain ⟨g, h, hf⟩ := _root_.GlobalTheory.K5.LauZ.exists_pow_comb p f
   refine ⟨fun j => algebraMap (Lau p) (O0 p) (g j), algebraMap (Lau p) (O0 p) h + z, ?_⟩
 
   rw [hf, map_add (f := _), map_sum, map_mul, map_natCast]

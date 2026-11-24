@@ -526,9 +526,6 @@ open GlobalTheory.FlagTan (dimFlag psiSet TIx IsTanFrame)
 open GlobalTheory.AllWt (exOf)
 open scoped Classical
 
-theorem spectrumMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (a : A →+* B) (b : B →+* C) :
-    spMap b ≫ spMap a = spMap (b.comp a) := (Spec.map_comp _ _).symm
-
 theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
     {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} {X : FlagCover Y} {Z : Comp Xo c}
     (M : Modif (str₀ X Z) (U₀ X Z) (dimFlag Dw))
@@ -584,7 +581,7 @@ theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
         rfl
       funext b
       simpa [m'] using congrFun hm'0 (tanOrd Dw b)
-    · rw [← Category.assoc, spectrumMap_comp, ← hW'2]
+    · rw [← Category.assoc, _root_.GlobalTheory.TanMod.spMap_comp', ← hW'2]
       congr 2
       ext x <;> simp
     · have a1 : W' ≫ M.σ ≫ inc₀ X Z ≫ flagStr X = spMap (algebraMap c.F _) := by
@@ -594,7 +591,7 @@ theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
         rw [← Category.assoc M.σ, ← Category.assoc z]
         exact (congrArg (· ≫ flagStr X) hzQ).trans (ptY_str X Q)
       change (spMap _ ≫ W') ≫ M.σ ≫ inc₀ X Z ≫ flagStr X = spMap _ ≫ z ≫ M.σ ≫ inc₀ X Z ≫ flagStr X
-      rw [Category.assoc, a1, a2, spectrumMap_comp, spectrumMap_comp]
+      rw [Category.assoc, a1, a2, _root_.GlobalTheory.TanMod.spMap_comp', _root_.GlobalTheory.TanMod.spMap_comp']
       refine congrArg spMap (RingHom.ext fun x => ?_)
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.commutes]
       rfl

@@ -143,12 +143,7 @@ theorem map_actVB {ρ : Representation LL G V} {ρ' : Representation LL G V'}
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 include PD in
-theorem tmul_one_injective {v w : V} (h : v ⊗ₜ[Qp] (1 : B) = w ⊗ₜ[Qp] (1 : B)) : v = w := by
-  have h1 : (1 : B) ≠ 0 := fun h0 => PD.not_mem_filtration_two (by
-    rw [← mul_one PD.t, h0, mul_zero, map_zero]; exact Submodule.zero_mem _)
-  obtain ⟨φ, hφ⟩ := Module.Projective.exists_dual_eq_one Qp h1
-  have := congrArg (fun z => TensorProduct.rid Qp V (LinearMap.lTensor V φ z)) h
-  simpa [hφ] using this
+alias tmul_one_injective := _root_.GlobalTheory.FundDel.tmul_one_injective'
 
 end Generic
 

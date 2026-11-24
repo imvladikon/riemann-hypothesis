@@ -131,13 +131,6 @@ theorem archBump [IsTotallyReal F] {M n : ℕ} (C : Set (Fin n → Fin M → Ain
     Metric.closedBall_subset_closedBall (le_max_left ρ 1) (hρ ⟨Y, hY, rfl⟩)
   rw [β.one_of_mem_closedBall hm, Complex.ofReal_one]
 
-omit [NumberField F] [NumberField E] in
-theorem repr_natCast_mul' {d : ℕ} (b : Module.Basis (Fin d) F E) {R : Type} [CommRing R]
-    [Algebra F R] (N : ℕ) (y : R ⊗[F] E) (k : Fin d) :
-    (Algebra.TensorProduct.basis R b).repr ((N : R ⊗[F] E) * y) k =
-      (N : R) * (Algebra.TensorProduct.basis R b).repr y k := by
-  rw [← nsmul_eq_mul, map_nsmul, Finsupp.smul_apply, nsmul_eq_mul]
-
 theorem scaled_cpt_open {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (N : ℕ)
     (hN : 0 < N) (hL : IsCompact (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) ∧
       IsOpen (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E))) :
@@ -186,7 +179,7 @@ theorem scaled_eq_lat {d n M : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOn
       rwa [← mul_assoc, hwN, one_mul] at this
     · exact fun h => mul_mem (natCast_mem _ N) h
   ext Y
-  simp only [Set.mem_ofPred_eq, latV, repr_natCast_mul', key]
+  simp only [Set.mem_ofPred_eq, latV, _root_.GlobalTheory.CompanionTheory.SW.Cpt.repr_natCast_mul, key]
 
 theorem finCpt_of_integrable (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E)
     (hJ : IsHermND σ J) (n : ℕ) (h2n : 2 * n < M) (ν : Measure (Fin n → Fin M → AF F ⊗[F] E))
@@ -252,7 +245,7 @@ theorem thFin (V : HSp D) (hr : 2 * r < V.rank) (μH : Measure (GA D V)) (𝓕 :
     (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 μH) (T : Matrix (Fin r) (Fin r) D.host.E)
     (hT : ∀ a b, D.sp.cm.sig (T b a) = T a b) (hdet : T.det ≠ 0) :
     IsFiniteMeasureOnCompacts (thM V μH 𝓕 T) :=
-  PositivityTheory.Rg.Rsw.L.LatticeFibreBump.finCpt_of_integrable D.sp.cm.sig (GlobalTheory.DefiniteQuotient.cmExt D) V.rank V.gram
+  PositivityTheory.Rg.Rsw.L.LatticeFibreBump.finCpt_of_integrable D.sp.cm.sig (_root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D) V.rank V.gram
     (GlobalTheory.DefiniteQuotient.gram_hermND V) r hr _ fun Φ hΦ =>
       thInt V hr μH 𝓕 hμH h𝓕 T hT hdet Φ hΦ
 
@@ -783,7 +776,7 @@ variable {D : D7} {r : ℕ}
 open GlobalTheory.CompanionTheory.SiegelND in
 theorem _root_.PositivityTheory.Rg.Rsw.L.fibEx : FibEx := by
   intro D r V hr ψ hψ θ hθ μ hμ lam hlam b₀ hb₀
-  have hCM := GlobalTheory.DefiniteQuotient.cmExt D
+  have hCM := _root_.Formalism.MainNotions.UnusedSlot34.isCMExt_D D
   have hJ := GlobalTheory.DefiniteQuotient.gram_hermND V
   obtain ⟨μH, 𝓕, hμH, h𝓕, -⟩ := GlobalTheory.Published.SiegelOneVector.exists_normalised D.sp.cm.sig V.gram hCM hJ
   obtain ⟨dx, db, hdx, hdb, hW⟩ := GlobalTheory.T.exists_self_dual_siegel_weil_measures D r V ψ hψ μ hμ lam hlam
@@ -799,7 +792,7 @@ theorem _root_.PositivityTheory.Rg.Rsw.L.fibEx : FibEx := by
   have hfin := thFin V hr μH 𝓕 hμH h𝓕 b₀.1 hT hb₀
   refine ⟨(thM V μH 𝓕 b₀.1).map (tupE D V.rank r), finE _, suppE V b₀.1 _ hTI.2,
     fun h => invE V _ h (ac.comp (continuous_const.prodMk continuous_id)).measurable (hTI.1 h), fun φ hφ => ?_⟩
-  have hSB := GlobalTheory.T.schwartz_function_schwartz_bruhat D θ hθ V.rank r φ hφ
+  have hSB := _root_.GlobalTheory.CompanionTheory.SiegelND.isSchwartzBruhat_tupOf_of_mem_schwartzA D θ hθ V.rank r φ hφ
   have hI := thInt V hr μH 𝓕 hμH h𝓕 b₀.1 hT hb₀ _ hSB
   refine ⟨(tupE D V.rank r).measurableEmbedding.integrable_map_iff.2 hI, ?_⟩
   rw [hW φ b₀, (tupE D V.rank r).measurableEmbedding.integral_map]

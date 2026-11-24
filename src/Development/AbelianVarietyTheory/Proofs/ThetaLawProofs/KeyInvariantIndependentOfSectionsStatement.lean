@@ -671,31 +671,6 @@ theorem etZ_pull {R R' : Type} [CommRing R] [CommRing R'] [IsLocalRing R'] {x : 
     obtain ⟨q, -, hq⟩ := Scheme.exists_preimage_of_isPullback sq p y hp'
     exact ⟨a, q, hq⟩
 
-theorem kaForm_map' {R R' : Type} [CommRing R] [CommRing R'] (F : Rˣ →* R'ˣ) (g n l l' : ℕ) (t t' J : Rˣ)
-    (lam lam' : ℕ → Rˣ) : F (kaForm g n l l' t t' lam lam' J) =
-      kaForm g n l l' (F t) (F t') (fun j => F (lam j)) (fun j => F (lam' j)) (F J) := by
-  simp only [kaForm, tComb, map_mul, map_zpow, map_pow, map_prod]
-
-theorem via_mul' {X Y : Scheme.{0}} {L : LB X} {L' : LB Y} {φ : Y ⟶ X} {w : LB.Iso L' (L.pull φ)} {l l' k : ℕ}
-    (hk : l + l' = k) {a' b' : ∀ i, Γ(Y, L'.U i)} {a b : ∀ j, Γ(X, L.U j)} (ha : KeyVia.Via w l a' a)
-    (hb : KeyVia.Via w l' b' b) : KeyVia.Via w k (fun i => a' i * b' i) (fun j => a j * b j) := by
-  intro j i h
-  rw [map_mul, map_mul, ha j i h, hb j i h, ← hk, pow_add, _root_.mul_mul_mul_comm]
-
-theorem coords_mul' {R R' : Type} [CommRing R] [CommRing R'] {x : KeyIn R} {x' : KeyIn R'} {f : R →+* R'} {φ w}
-    (hx : KeyVia x' x f φ w) {n l k N : ℕ} (hk : n + l = k) {s : RR x n} {s' : RR x' n} {e : RR x l} {e' : RR x' l}
-    {b : Fin N → RR x k} {b' : Fin N → RR x' k} {c : Fin N → R} (hs : SecVia x' x φ w s' s)
-    (he : SecVia x' x φ w e' e) (hb : ∀ i, SecVia x' x φ w (b' i) (b i))
-    (hc : Coords x b c (fun i => (show Γ(x.P.A.left, x.P.L.U i) from s.f i) * (show Γ(x.P.A.left, x.P.L.U i) from e.f i))) :
-    Coords x' b' (fun i => f (c i))
-      (fun i => (show Γ(x'.P.A.left, x'.P.L.U i) from s'.f i) * (show Γ(x'.P.A.left, x'.P.L.U i) from e'.f i)) := by
-  obtain ⟨-, -, -, ⟨hP, -⟩, -⟩ := hx
-  have H := KeyVia.Via.comb (w := w) (l := k) (b' := fun i => (b' i).f) (b := fun i => (b i).f) f x.P.A.hom
-    x'.P.A.hom hP.w hb c
-  have H' := via_mul' (w := w) hk (a' := s'.f) (b' := e'.f) (a := s.f) (b := e.f) hs he
-  have H'' := (congrArg (KeyVia.Via w k _) (funext hc)).mp H'
-  exact fun i => congrFun (KeyVia.Via.unique x.P.isLB H'' H) i
-
 theorem torsSq_kosD_mul {R F : Type} [CommRing R] [Field F] (f : R →+* F) {g d : ℕ} {N : ℕ → ℕ}
     (m : Fin g → ∀ j j', Matrix (Fin (N j)) (Fin (N j')) R) (ev : ∀ j, Matrix (Fin d) (Fin (N j)) R)
     (ev' : ∀ j, Matrix (Fin d) (Fin (N j)) F) (Q : Matrix (Fin d) (Fin d) F) (t : R) (hQ : Q.det ≠ 0)
@@ -790,7 +765,7 @@ theorem exists_unit_kaVal (laws : Out.Laws) {O : Type} [CommRing O] [IsDomain O]
       · exact ⟨fun _ => ⟨fun _ => 0, fun _ _ => by simp⟩, 1, fun h => absurd h hj⟩
     choose b lam hb using hb
     obtain ⟨m, hm⟩ := (KoszulCx.koszul_isCx O x n k _ s b z ch hl fun j hj => (hb j hj).1).1
-    obtain ⟨ev, Pm, t, h₁, h₂, h₃, e, h₄⟩ := T.discriminant_eq_jacobian_complete_intersection_dvr laws O x n k _ s b m z ch (by have := hadm.1; omega) hl
+    obtain ⟨ev, Pm, t, h₁, h₂, h₃, e, h₄⟩ := _root_.GlobalTheory.DiscrJacGlobal.main laws O x n k _ s b m z ch (by have := hadm.1; omega) hl
       (fun j hj => (hb j hj).1) hm hfin hch hzero (fun a h => hne a (by rw [h, map_zero])) hinj hcov
     obtain ⟨t, rfl⟩ := (TorsionUnique.torsSq_unique _ _ _ _ t t h₂ h₃ h₃).2
     have hdl : f Pm.det ≠ 0 := fun h => J.ne_zero (by
@@ -805,7 +780,7 @@ theorem exists_unit_kaVal (laws : Out.Laws) {O : Type} [CommRing O] [IsDomain O]
       have h₆ : n + (k - (j + 1) * n) = k - j * n := by
         rw [Nat.add_mul, Nat.one_mul] at h₅ ⊢
         omega
-      exact coords_mul' hx h₆ (hs i) (hb' (j + 1) i') (hb' j) (hm i j hj i')
+      exact _root_.GlobalTheory.KaBaseChange.coords_mul hx h₆ (hs i) (hb' (j + 1) i') (hb' j) (hm i j hj i')
     · have hdet : (Matrix.diagonal (fun a => (((u a ^ (k - 0 * n))⁻¹ : Fˣ) : F)) * Pm.map f).det =
           (((∏ a, u a) ^ (-(k : ℤ)) : Fˣ) : F) * f Pm.det := by
         rw [Matrix.det_mul, Matrix.det_diagonal, ← Units.coe_prod, Finset.prod_inv_distrib, Finset.prod_pow,
@@ -839,7 +814,7 @@ theorem exists_unit_kaVal (laws : Out.Laws) {O : Type} [CommRing O] [IsDomain O]
       (Units.map f.toMonoidHom e) (∏ a, u a) 1 dl (fun j => Units.map f.toMonoidHom (lam j))
       (fun j => Units.map f.toMonoidHom (lam₂ j)) (fun _ => 1) (fun _ => 1) hadm.2.1 hadm.2.2.1
     simp only [one_zpow, one_pow, _root_.mul_one, Finset.prod_const_one] at H
-    refine (kaForm_map' _ _ _ _ _ _ _ _ _ _).trans (H.symm.trans ?_)
+    refine (_root_.GlobalTheory.KaBaseChange.kaForm_map _ _ _ _ _ _ _ _ _ _).trans (H.symm.trans ?_)
     congr 1
     rw [hdl, map_mul _ t₂]
     ac_rfl
@@ -1398,32 +1373,6 @@ open GlobalTheory.KeyKa
 noncomputable section
 namespace GlobalTheory.KeyGeneric
 
-section Sec
-
-variable {X X' : Scheme.{0}} {L : LB X} {L' : LB X'} {F : X' ⟶ X}
-
-theorem gs_pow' {Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) (U : X.Opens) (h : r z ∈ U) (a : Γ(X, U)) (n : ℕ) :
-    gs r z U (a ^ n) = gs r z U a ^ n := by simp only [gs_eq r z U h, map_pow]
-
-theorem via_iff_stalk (w : LB.Iso L' (L.pull F)) (l : ℕ) (a' : ∀ i, Γ(X', L'.U i)) (a : ∀ j, Γ(X, L.U j)) :
-    GlobalTheory.KeyVia.Via w l a' a ↔
-    ∀ (Z : Scheme.{0}) (r : Z ⟶ X') (z : Z) j k, F (r z) ∈ L.U j → r z ∈ L'.U k →
-      gs (r ≫ F) z _ (a j) = (gw w r z j k).val ^ l * gs r z _ (a' k) := by
-  constructor
-  · intro h Z r z j k hj hk
-    have hy : r z ∈ (L.pull F).U (fun _ => j) ⊓ L'.U k := ⟨mem_pull.2 hj, hk⟩
-    have hle : (L.pull F).U (fun _ => j) ⊓ L'.U k ≤ F ⁻¹ᵁ L.U j := fun y hy => mem_pull.1 hy.1
-    refine (gs_appLE F _ _ hle r z hy _).symm.trans ((congrArg (gs r z _) (h (fun _ => j) k hle)).trans ?_)
-    rw [gs_mul _ z _ hy, gs_res _ z _ hy, gs_pow' _ z _ hy]
-    exact congrArg (· ^ l * _) (gs_unit _ z _ hy _)
-  · intro h j i hle
-    refine fn_ext fun y hy => ?_
-    refine (gs_appLE F _ _ hle (𝟙 _) y hy _).trans ((h _ (𝟙 _) y _ i (mem_pull.1 hy.1) hy.2).trans ?_)
-    rw [gs_mul _ y _ hy, gs_res _ y _ hy, gs_pow' _ y _ hy]
-    exact congrArg (· ^ l * _) (gs_unit _ y _ hy _).symm
-
-end Sec
-
 theorem keyVia_cancel {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''] {x : KeyIn R} {x' : KeyIn R'}
     {x'' : KeyIn R''} {f : R →+* R'} {f' : R' →+* R''} {φ w φ'' w''} (h : KeyVia x' x f φ w)
     (h'' : KeyVia x'' x (f'.comp f) φ'' w'') :
@@ -1466,7 +1415,7 @@ theorem keyVia_cancel {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''
     (maps_iff w' _ (fun _ => eSec x'.P.A) _ x''.rig x'.rig (spMap f') _ (rigPull_le φ' (spMap f') he' x'.P.L)
       (fun _ => rfl)).2 (T.pmaps_cancel x.P.isLB (fun _ => he') r r''),
     (GlobalTheory.KeyCancel.appLE_eq_iff_stalk w' x'.th x''.th).2 fun Z q z i k hi hk => ?_, fun a => ?_, ?_, fun i => ?_⟩,
-    fun l s s' s'' hs' hs'' => (via_iff_stalk w' l s''.f s'.f).2 fun Z q z i k hi hk => ?_⟩
+    fun l s s' s'' hs' hs'' => (_root_.GlobalTheory.KeyLine.via_iff_stalk w' l s''.f s'.f).2 fun Z q z i k hi hk => ?_⟩
   · obtain ⟨j, hj⟩ := exists_chart x.P.isLB (φ (φ' (q z)))
     have a := (GlobalTheory.KeyCancel.appLE_eq_iff_stalk w x.th x'.th).1 hs Z (q ≫ φ') z j i hj hi
     have b := (GlobalTheory.KeyCancel.appLE_eq_iff_stalk w'' x.th x''.th).1 hs'' Z q z j k hj hk
@@ -1485,8 +1434,8 @@ theorem keyVia_cancel {R R' R'' : Type} [CommRing R] [CommRing R'] [CommRing R''
       congr 2
       ext a <;> simp [Chart.dualMapR, TrivSqZeroExt.algebraMap_eq_inl]
   · obtain ⟨j, hj⟩ := exists_chart x.P.isLB (φ (φ' (q z)))
-    have a := (via_iff_stalk w l s'.f s.f).1 hs' Z (q ≫ φ') z j i hj hi
-    have b := (via_iff_stalk w'' l s''.f s.f).1 hs'' Z q z j k hj hk
+    have a := (_root_.GlobalTheory.KeyLine.via_iff_stalk w l s'.f s.f).1 hs' Z (q ≫ φ') z j i hj hi
+    have b := (_root_.GlobalTheory.KeyLine.via_iff_stalk w'' l s''.f s.f).1 hs'' Z q z j k hj hk
     rw [T Z q z j i k hj hi hk, ← Category.assoc, a, Units.val_mul, mul_pow, _root_.mul_assoc] at b
     exact ((Units.isUnit _).pow l).mul_left_cancel b
 
@@ -1670,21 +1619,7 @@ open GlobalTheory.KeyKa
 noncomputable section
 namespace GlobalTheory.KaIndep
 
-theorem exists_coords {R : Type} [CommRing R] (x : KeyIn R) {l N : ℕ} (b : Fin N → RR x l) (c : Fin N → R) :
-    ∃ s : RR x l, Coords x b c s.f := by
-  refine ⟨⟨fun i => ∑ k, cst x.P.A.hom ((pw x.P.L (l : ℤ)).U i) (c k) * (b k).f i, ?_⟩, fun i => rfl⟩
-  intro i j
-  have e4 : ∀ (V W : x.P.A.left.Opens) (h : W ≤ V) (a : R),
-      (x.P.A.left.presheaf.map (homOfLE h).op).hom (cst x.P.A.hom V a) = cst x.P.A.hom W a := by
-    intro V W h a
-    simp only [AbLaw.cst, RingHom.comp_apply]
-    exact GlobalTheory.KeyVia.res_appLE (φ := x.P.A.hom) (U := ⊤) _ h _
-
-  simp only [map_sum, map_mul, Finset.mul_sum]
-  refine Finset.sum_congr rfl fun k _ => ?_
-  have e3 := (b k).compat i j
-  rw [e4, e4, e3]
-  ring
+alias exists_coords := _root_.GlobalTheory.KeyGeneric.exists_coords
 
 theorem eq_of_coords {R : Type} [CommRing R] {x : KeyIn R} {l N : ℕ} {b : Fin N → RR x l} {c : Fin N → R}
     {s t : RR x l} (hs : Coords x b c s.f) (ht : Coords x b c t.f) : s = t := by
@@ -1839,7 +1774,7 @@ theorem valAt_lift [CharZero K] (hL : Out.Laws) (hA : admitted x.P.g n l l' al) 
   obtain ⟨z, ch, _, _, _, _, _, _, _, hz, _⟩ := id hκ
   have hAO : admitted xO.P.g n l l' al := by rw [hO.g_eq]; exact hA
   have hu : IsUnit ((degProd xO.P.g n l l' : ℕ) : O) := by
-    have h0 : ((degProd xO.P.g n l l' : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.mpr (degProd_ne_zero hAO)
+    have h0 : ((degProd xO.P.g n l l' : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.mpr (_root_.GlobalTheory.KeyGeneric.degProd_ne_zero hAO)
     have := (IsUnit.mk0 _ h0).map (algebraMap K O)
     rwa [map_natCast] at this
   obtain ⟨O', i1, i2, i3, j, r', x', φ', w', hg', s', u, hj, -, hr', H', hs', hu'⟩ :=

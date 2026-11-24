@@ -186,8 +186,8 @@ open GlobalTheory.EtC
 
 theorem upTo {P : Prop} (h : A1 → A2 → A3 → A4 → A5 → A7 → A8 → A9 → A10 → A11 → B1 → B2 → B3 → B4 → B5 → B7 → C1 → C2 → C3 → C4 →
     C5 → D1 → P) : P :=
-  h GlobalTheory.T.quasiIso_hypercohomology_bijective _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology GlobalTheory.T.levelwiseEquivalence_isEquivalence GlobalTheory.T.mayerVietoris_equivalence_of_cover _root_.GlobalTheory.EtC.classes_die_on_etale_cover GlobalTheory.T.etaleCohomology_coefficient_longExactSequence _root_.GlobalTheory.EtC.a8 _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero
-    GlobalTheory.T.etaleCohomology_bijective_of_support_bijective RedCoef.a11 GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf GlobalTheory.T.etC_b3 _root_.GlobalTheory.EtC.b4 GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic GlobalTheory.T.etaleCohomology_field_eq_galoisCohomology
+  h _root_.GlobalTheory.EtC.quasiIso_hypercohomology_bijective' _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology _root_.GlobalTheory.EtC.levelwise_eqv _root_.GlobalTheory.MayerVietorisEqv.a4 _root_.GlobalTheory.EtC.classes_die_on_etale_cover _root_.GlobalTheory.EtC.coefSeq_exact _root_.GlobalTheory.EtC.a8 _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero
+    _root_.GlobalTheory.EtC.a10 RedCoef.a11 _root_.GlobalTheory.EtC.pairingProperties _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf _root_.GlobalTheory.EtC.tateTwist_local_to_global_strictlyHenselian _root_.GlobalTheory.EtC.b4 _root_.GlobalTheory.EtC.b5 _root_.GlobalTheory.EtC.FieldTw.field_tw_coh_eq_galois
     GlobalTheory.EtC.gaugeSplitting_holds GlobalTheory.EtC.etC_c2 UpperTheory.Cb.etale_cohomology_ind_etale_base_change HomotopyInv.homotopy_invariance_etale GlobalTheory.EtC.laurentPolynomial_cohomology_strictlyHenselian_vanishing projectiveBundleFormula_vectorBundle_any_space
 
 theorem duality_diagonalClass_of_affineProperBaseChange (e1 : E1) : E2 :=
@@ -525,7 +525,7 @@ namespace UpperTheory.Gal.KunnethLefschetz
 open GlobalTheory.EtC
 
 theorem trIn_holds : TrIn :=
-  ⟨TranscendenceTraces.wtNormal_holds, TranscendenceTraces.nmlLoc_holds, TranscendenceTraces.nwtDeg_holds, TranscendenceTraces.trDegQ_holds GlobalTheory.EtC.a8⟩
+  ⟨TranscendenceTraces.wtNormal_holds, TranscendenceTraces.nmlLoc_holds, TranscendenceTraces.nwtDeg_holds, TranscendenceTraces.trDegQ_holds _root_.GlobalTheory.EtC.a8⟩
 
 end UpperTheory.Gal.KunnethLefschetz
 end -- clump:auto
@@ -717,7 +717,7 @@ theorem cok (hA : A11) (E : Spc) (i : ℤ) (hB : ∀ b, BockData l b E i)
     rw [(@hA (l ^ (k + (a + 1))) (l ^ (k + a)) _ (pow_dvd_pow l (by omega)) E).2.2.2 (l ^ k)
       (pow_dvd_pow l (by omega)) n i w.1]
     exact w.2⟩
-  obtain ⟨s, hs⟩ := KerPf.seqSec S t
+  obtain ⟨s, hs⟩ := _root_.UpperTheory.Reformulated.B.DYra4.main S t
   let x : Hl l E n i := ⟨fun j => red (l ^ (k + j)) (l ^ j) E n i (s j).1, fun j => by
     have A := (@hA (l ^ (k + (j + 1))) (l ^ (j + 1)) _ (pow_dvd_pow l (by omega)) E).2.2.2 (l ^ j)
       (pow_dvd_pow l (by omega)) n i (s (j + 1)).1
@@ -758,15 +758,11 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.AdicDeg
-theorem etale_adic_cohomology_finiteness_holds : LateralTheory.KummerTheory.AdicFin := by
-  apply LateralTheory.EWeil.AdicFinPf.AdicFin_of
 theorem etale_adic_inverse_limit_comparison_holds : LateralTheory.KummerTheory.AdicLim := by
-  apply LateralTheory.KummerTheory.AdicLim_of_fin <;> first | exact etale_adic_cohomology_finiteness_holds
-theorem etale_adic_algebraic_comparison_holds : LateralTheory.KummerTheory.AdicAlg := by
-  apply LateralTheory.KummerTheory.AdicAlg_of
+  apply LateralTheory.KummerTheory.AdicLim_of_fin <;> first | exact _root_.LateralTheory.EWeil.AdicFinPf.AdicFin_of
 theorem etale_adic_degree_bound_of_adic_finiteness : LateralTheory.KummerTheory.AdicDeg := by
-  apply LateralTheory.KummerTheory.AdicDeg_of <;> first | exact etale_adic_inverse_limit_comparison_holds | exact etale_adic_algebraic_comparison_holds
-theorem intersectionNumber_baseChange : LateralTheory.KummerTheory.AdicDeg := etale_adic_degree_bound_of_adic_finiteness
+  apply LateralTheory.KummerTheory.AdicDeg_of <;> first | exact etale_adic_inverse_limit_comparison_holds | exact _root_.LateralTheory.KummerTheory.AdicAlg_of
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.AdicDeg.etale_adic_degree_bound_of_adic_finiteness
 end LateralTheory.Fin.AdicDeg
 end -- clump:auto
 end -- clump:auto
@@ -1247,15 +1243,9 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.Limit
-theorem etale_limit_extension_groups_henselian_in_inverse_limits_assembly : LateralTheory.KummerTheory.LimExtHl := by
-  apply LateralTheory.KummerTheory.LimExtHl_of
-theorem etale_limit_local_homotopy_compatible_in_inverse_limits_assembly : LateralTheory.KummerTheory.LimLH := by
-  apply LateralTheory.KummerTheory.LimLHPf.LimLH_of
-theorem etale_limit_cohomology_assembled_from_stages : LateralTheory.KummerTheory.LimAssemble := by
-  apply LateralTheory.KummerTheory.LimAssemble_of
 theorem etale_cohomology_commutes_with_inverse_limits : LateralTheory.KummerTheory.Limit := by
-  apply LateralTheory.KummerTheory.Limit_of <;> first | exact etale_limit_extension_groups_henselian_in_inverse_limits_assembly | exact etale_limit_local_homotopy_compatible_in_inverse_limits_assembly | exact etale_limit_cohomology_assembled_from_stages
-theorem intersectionNumber_baseChange : LateralTheory.KummerTheory.Limit := etale_cohomology_commutes_with_inverse_limits
+  apply LateralTheory.KummerTheory.Limit_of <;> first | exact _root_.LateralTheory.KummerTheory.LimExtHl_of | exact _root_.LateralTheory.KummerTheory.LimLHPf.LimLH_of | exact _root_.LateralTheory.KummerTheory.LimAssemble_of
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.Limit.etale_cohomology_commutes_with_inverse_limits
 end LateralTheory.Fin.Limit
 end -- clump:auto
 end -- clump:auto
@@ -1708,9 +1698,7 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.Stalk
-theorem etale_cohomology_stalk_compatibility_finite_coefficients_holds : LateralTheory.KummerTheory.Stalk := by
-  apply LateralTheory.Fix.Stalk.intersectionNumber_baseChange
-theorem intersectionNumber_baseChange : LateralTheory.KummerTheory.Stalk := etale_cohomology_stalk_compatibility_finite_coefficients_holds
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fix.Stalk.intersectionNumber_baseChange
 end LateralTheory.Fin.Stalk
 end -- clump:auto
 end -- clump:auto
@@ -1804,11 +1792,11 @@ theorem upTo {P : Prop} (h : A1 → A2 → A3 → A4 → A5 → A7 → A8 → A9
     GlobalTheory.T.etaleCohomology_bijective_of_support_bijective RedCoef.a11 GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf GlobalTheory.T.etC_b3 _root_.GlobalTheory.EtC.b4 GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic GlobalTheory.T.etaleCohomology_field_eq_galoisCohomology
     GlobalTheory.EtC.gaugeSplitting_holds H.c2 H.c3 H.c4 H.c5 H.d1
 
-theorem d2 : D2 := H.upTo (LateralTheory.E.D2.goal_of (LateralTheory.E.D2.LeafRing_of GlobalTheory.T.cup_chern_kummer_pullback_naturality GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold) LateralTheory.E.D2.LeafChern_of
-  (LateralTheory.E.D2.LeafNat_of GlobalTheory.T.cup_chern_kummer_pullback_naturality)
+theorem d2 : D2 := H.upTo (LateralTheory.E.D2.goal_of (LateralTheory.E.D2.LeafRing_of _root_.GlobalTheory.EtC.a6nat_holds _root_.GlobalTheory.EtC.a6ring_holds) LateralTheory.E.D2.LeafChern_of
+  (LateralTheory.E.D2.LeafNat_of _root_.GlobalTheory.EtC.a6nat_holds)
   (LateralTheory.E.D2.LeafWhitney_of (LateralTheory.E.LeafGeomPfLoc.LeafGeom_of LateralTheory.E.LeafHalf1Pf.LeafHalf1_of
-    (LateralTheory.E.HalfDegreeVanishing.LeafHalf2_of LateralTheory.E.LeafMapWPf.LeafMapW_of)) LateralTheory.E.LeafCover2Pf.LeafCover2_of GlobalTheory.T.cup_vanishes_on_two_member_cover GlobalTheory.T.cup_chern_kummer_pullback_naturality)
-  (LateralTheory.E.D2.LeafLine_of GlobalTheory.T.cup_chern_kummer_pullback_naturality) LateralTheory.E.LeafNewtonPf.LeafNewton_of)
+    (LateralTheory.E.HalfDegreeVanishing.LeafHalf2_of LateralTheory.E.LeafMapWPf.LeafMapW_of)) LateralTheory.E.LeafCover2Pf.LeafCover2_of _root_.GlobalTheory.EtC.a6supp _root_.GlobalTheory.EtC.a6nat_holds)
+  (LateralTheory.E.D2.LeafLine_of _root_.GlobalTheory.EtC.a6nat_holds) LateralTheory.E.LeafNewtonPf.LeafNewton_of)
 
 theorem d3 : D3 := H.upTo UpperTheory.Et.D3.intersectionNumber_baseChange H.d2
 
@@ -1832,9 +1820,9 @@ theorem qDiag : QDiag := qDiag_holds H.inputs trIn_holds
 theorem diagEt3 : CrystallineSemistableComparison.Onto.DiagEt3 := Di.diagEt3_of H.inputs H.qDiag
 
 theorem etSide_sm (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l)) [FiniteDimensional ℚ_[l] K] :
-    EtSide (Model.Sm (l := l) (K := K)) := KunnethLefschetz.etSide_sm H.inputs H.qDual inSum_holds CrystallineSemistableComparison.comp CrystallineSemistableComparison.geo l K
+    EtSide (Model.Sm (l := l) (K := K)) := KunnethLefschetz.etSide_sm H.inputs H.qDual inSum_holds CrystallineSemistableComparison.comp _root_.CrystallineSemistableComparison.geoMain l K
 
-theorem etFin : CrystallineSemistableComparison.Onto.EtFin := etFin_of H.inputs H.qDual inSum_holds CrystallineSemistableComparison.comp CrystallineSemistableComparison.geo
+theorem etFin : CrystallineSemistableComparison.Onto.EtFin := etFin_of H.inputs H.qDual inSum_holds CrystallineSemistableComparison.comp _root_.CrystallineSemistableComparison.geoMain
 
 end Core
 

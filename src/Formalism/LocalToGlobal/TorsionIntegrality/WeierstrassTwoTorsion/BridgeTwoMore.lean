@@ -162,7 +162,7 @@ open Q2
 
 theorem two_curves_relation : BridgeTwoMore := by
   intro K _ _ _ W xT yT hE h2
-  obtain ⟨hroot, -, hkap, -, -, -, heven, -⟩ := twoTorsionZ K W xT yT hE h2
+  obtain ⟨hroot, -, hkap, -, -, -, heven, -⟩ := _root_.Formalism.L2.Th1.A.two_torsion_integral K W xT yT hE h2
   refine ⟨hroot, fun n hn => coeff_odd_eq_zero heven hn, ?_⟩
   rintro ⟨h1, h2', h3, h4, h6⟩ hx
   have hy : ‖yT‖ ≤ 1 := by
@@ -262,7 +262,7 @@ universe u v
 
 namespace Formalism.L2.Th1.A
 
-theorem divSpec : DivSpec.{u, v} := division_spec
+alias divSpec := _root_.Formalism.L2.Th1.A.division_spec
 
 end Formalism.L2.Th1.A
 end -- clump:auto
@@ -487,13 +487,13 @@ theorem cube_mem' : CubeMem.{u} := by
     rw [MvPowerSeries.coeff_map]
     exact (MvPowerSeries.coeff d c).2
   refine ⟨?_, ?_, ?_, ?_⟩
-  · obtain ⟨c, hc, h⟩ := cubeTwoR S WS
+  · obtain ⟨c, hc, h⟩ := _root_.Formalism.L2.Th1.A.cube_two_relation S WS
     refine ⟨MvPowerSeries.map S.subtype c, mem c, ?_, ?_⟩
     · rw [MvPowerSeries.constantCoeff_map, hc, map_neg, map_one]
     · have := congrArg (MvPowerSeries.map S.subtype) (show lhs2 WS = c * fgl WS * diff2 WS from h)
       rw [map_mul, map_mul, map_quadratic_lhs, map_diff2, Fgl1.fgl_map, hW] at this
       exact this
-  · obtain ⟨e, he, h⟩ := cubeThreeR S WS
+  · obtain ⟨e, he, h⟩ := _root_.Formalism.L2.Th1.A.cube_three_relation S WS
     refine ⟨MvPowerSeries.map S.subtype e, mem e, ?_, ?_⟩
     · rw [MvPowerSeries.constantCoeff_map, he, map_neg, map_one]
     · have := congrArg (MvPowerSeries.map S.subtype)
@@ -557,7 +557,7 @@ theorem wpPrimeInZ : expSer W ^ 3 * (-2 + X ^ 3 * derivative (wpReg W))
     = X ^ 3 * (-2 * (xS W).subst (expSer W) + C W.a₁ * expSer W * (xS W).subst (expSer W)
         + C W.a₃ * expSer W ^ 3) := by
   have h1 := (wpODE K W).1
-  have h2 := (wpPrimeShape K W).1
+  have h2 := (_root_.Formalism.L2.Th1.A.weierstrass_p_prime_shape K W).1
   have hq := Two.exp_mul_inv W
   have hz : (toL X : LaurentSeries K) * uPow (-1) = 1 := Plus.toL_X_mul
   have hy : (yS W).subst (expSer W) = -(xS W).subst (expSer W) := by
@@ -618,8 +618,7 @@ universe u v
 
 namespace Formalism.L2.Th1.A
 
-theorem bridgeTwoMore : BridgeTwoMore := two_curves_relation
-theorem flowUniqueZ : FlowUniqueZ.{u} := flow_unique_integral
+alias flowUniqueZ := _root_.Formalism.L2.Th1.A.flow_unique_integral
 theorem bridgeCurve3 : BridgeCurve3 := three_curves_relation
 
 end Formalism.L2.Th1.A

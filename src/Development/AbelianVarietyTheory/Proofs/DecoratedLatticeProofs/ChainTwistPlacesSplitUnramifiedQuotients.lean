@@ -150,8 +150,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.heckeCharUnramifiedAt_quotient_same_residual : ∀ (D : D7) (c₁ c₂ : (AE D)ˣ →* Circle) (H₁ H₂ : Formalism.L2.Host.HChar D.host.E) (PP : Pl D.host.E) (ξ : (kP PP)ˣ →* ℂˣ), ChrEq c₁ H₁ → ChrEq c₂ H₂ → IsRes H₁ PP ξ → IsRes H₂ PP ξ → GlobalTheory.LFun.UnrAt (F := D.host.F) (c₁ * c₂⁻¹) PP := by
-  first | exact @GlobalTheory.ResUnr.unrAt_div_of_isRes
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharUnramifiedAtQuotientSameResidualStatement =====
@@ -232,8 +230,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection (Blocks parahoric
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.unramified_conjugate_place_inverse_uniformizer_value : ∀ (D : D7) (χ : (AE D)ˣ →* Circle), ResEta D χ 0 → ∀ w w' : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) = w'.under (𝓞 D.host.F) → w ≠ w' → GlobalTheory.LFun.UnrAt (F := D.host.F) χ w → GlobalTheory.LFun.UnrAt (F := D.host.F) χ w' ∧ GlobalTheory.LFun.val (F := D.host.F) χ w' = (GlobalTheory.LFun.val (F := D.host.F) χ w)⁻¹ := by
-  first | exact @GlobalTheory.SplitUnr.unrAt_and_val_inv
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedConjugatePlaceInverseUniformizerValueStatement =====
@@ -333,7 +329,7 @@ theorem GlobalTheory.ChainTw.twist_places : ∀ (D : D7) (c : Com D) (w : Twist 
     have ra := hra PP (hQ PP hPP)
     have rb := hrb PP (hQ PP hPP)
     rw [hw.chiQ _ PP hPP, inv_inv] at ra rb
-    exact GlobalTheory.T.heckeCharUnramifiedAt_quotient_same_residual D _ _ Ha Hb PP _ hca hcb ra rb
+    exact _root_.GlobalTheory.ResUnr.unrAt_div_of_isRes D _ _ Ha Hb PP _ hca hcb ra rb
   have hre : ∀ i ∈ Finset.Icc 1 D.R.m, ∀ j ∈ Finset.Icc 1 D.R.m, ResEta D (c.μ i * (c.μ j)⁻¹) 0 := by
     intro i hi j hj
     obtain ⟨-, ⟨η, hη⟩, hi'⟩ := hw.com.chars.2.2.2.2 i hi
@@ -348,11 +344,11 @@ theorem GlobalTheory.ChainTw.twist_places : ∀ (D : D7) (c : Com D) (w : Twist 
       Formalism.DivisionValues.conjPl PP, hne, fun P => ⟨fun h => ?_, ?_⟩, ParInv.absNorm_conjPl' PP, fun i hi j hj => ?_⟩
     · rcases GlobalTheory.GridPlaces.eq_or_eq_conjP h with h1 | h1
       · exact Or.inl h1
-      · exact Or.inr (h1.trans (ParInv.conjP_eq_conjPl' PP))
+      · exact Or.inr (h1.trans (_root_.GlobalTheory.ChainInv.conjP_eq_conjPl PP))
     · rintro (rfl | rfl)
       · rfl
       · exact hu
-    · exact (GlobalTheory.T.unramified_conjugate_place_inverse_uniformizer_value D _ (hre i hi j hj) PP _ hu.symm hne.symm (hres PP hPP i hi j hj)).2
+    · exact (_root_.GlobalTheory.SplitUnr.unrAt_and_val_inv D _ (hre i hi j hj) PP _ hu.symm hne.symm (hres PP hPP i hi j hj)).2
   · intro i hi j hj W hW
     by_cases hWS : W.under (𝓞 D.host.F) ∈ c.S
     · rcases (hS _).1 hWS with h | ⟨PP, hPP, hPPW⟩
@@ -360,8 +356,8 @@ theorem GlobalTheory.ChainTw.twist_places : ∀ (D : D7) (c : Com D) (w : Twist 
       · rcases GlobalTheory.GridPlaces.eq_or_eq_conjP hPPW.symm with h1 | h1
         · rw [h1]; exact hres PP hPP i hi j hj
         · have hne := hsplit PP (hQ PP hPP)
-          rw [h1, ParInv.conjP_eq_conjPl']
-          exact (GlobalTheory.T.unramified_conjugate_place_inverse_uniformizer_value D _ (hre i hi j hj) PP _ (ParInv.under_conjPl PP).symm hne.symm
+          rw [h1, _root_.GlobalTheory.ChainInv.conjP_eq_conjPl]
+          exact (_root_.GlobalTheory.SplitUnr.unrAt_and_val_inv D _ (hre i hi j hj) PP _ (ParInv.under_conjPl PP).symm hne.symm
             (hres PP hPP i hi j hj)).1
     · obtain ⟨a, rfl⟩ := exists_fin_of_mem hi
       obtain ⟨b, rfl⟩ := exists_fin_of_mem hj

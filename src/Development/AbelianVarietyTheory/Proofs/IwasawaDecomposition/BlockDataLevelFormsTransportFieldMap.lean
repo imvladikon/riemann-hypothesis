@@ -81,9 +81,7 @@ theorem main {K K' : Type} [Field K] [Field K'] (φ : K →+* K') {n d : ℕ}
   have := congrArg (Matrix.mulVec ((LinearMap.toMatrix' g).map φ)) hxy
   simpa [Matrix.mulVec_mulVec, hB'] using this
 
-theorem target : ∀ {K K' : Type} [inst : Field K] [inst_1 : Field K'] (φ : K →+* K') {n d : ℕ} (E : Matrix (Fin n) (Fin d) K), Function.Injective (Matrix.mulVec E) → Function.Injective (Matrix.mulVec (Matrix.map E (⇑φ : K → K'))) := by
-  intro K K' _ _ φ n d E h
-  exact main φ E h
+alias target := _root_.GlobalTheory.IsolatedTheoremFive.main
 
 end GlobalTheory.IsolatedTheoremFive
 end -- clump:auto
@@ -276,11 +274,7 @@ section Coord
 variable {K K' : Type} [Field K] [Field K'] [StarRing K] [StarRing K']
 
 omit [StarRing K] [StarRing K'] in
-theorem map_injective (φ : K →+* K') {n d : ℕ} (E : Matrix (Fin n) (Fin d) K) (hE : Function.Injective E.mulVec) :
-    Function.Injective (E.map φ).mulVec := by
-  first
-  | (apply _root_.GlobalTheory.IsolatedTheoremFive.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IsolatedTheoremFive.target ..)
+alias map_injective := _root_.GlobalTheory.IsolatedTheoremFive.main
 
 theorem subE_baseChange (φ : K →+* K') {n n' : ℕ} (C : Matrix (Fin n') (Fin n) K') (hC : Function.Injective C.mulVec)
     (W : Submodule K (Fin n → K)) (W' : Submodule K' (Fin n' → K'))

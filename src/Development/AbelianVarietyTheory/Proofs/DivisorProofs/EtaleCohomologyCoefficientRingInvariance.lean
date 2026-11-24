@@ -104,7 +104,7 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
   haveI := hgeS; haveI := hqS; haveI := hKR; haveI := hgeR
   haveI : ((rcx φ).obj (res S F)).IsStrictlyGE 0 := restrRes_strictlyGE φ (res S F)
   haveI : QuasiIso (rAug φ (resAug F)) := rAug_quasiIso φ (resAug F)
-  obtain ⟨u, hu⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective R ((restr φ).obj F) ((rcx φ).obj (res S F)) (res R ((restr φ).obj F))
+  obtain ⟨u, hu⟩ := (_root_.GlobalTheory.EtC.extHom_of_quasiIso R ((restr φ).obj F) ((rcx φ).obj (res S F)) (res R ((restr φ).obj F))
     (rAug φ (resAug F))).1 (resAug _)
   refine ⟨semiOfRestr φ (res S F) u, ?_, ?_⟩
   · intro U a
@@ -119,9 +119,9 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
     rw [h0, h1]
     rfl
   · intro E n
-    have hc := GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective S R (idSemi φ (res S F)) (semiOfRestr φ (res S F) u) u
+    have hc := _root_.GlobalTheory.EtC.OpComp.op_comp_bij S R (idSemi φ (res S F)) (semiOfRestr φ (res S F) u) u
       (fun U s a => semiOfRestr_app φ (res S F) u U s a)
-    have hid := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective S R (idSemi φ (res S F)) (idSemi φ (res S F)) (𝟙 _) (fun U s a => rfl)).2
+    have hid := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij S R (idSemi φ (res S F)) (idSemi φ (res S F)) (𝟙 _) (fun U s a => rfl)).2
       (fun U s => Function.bijective_id) E n
     have hpush := _root_.GlobalTheory.EtC.acycRes_computes R ((restr φ).obj F) ((rcx φ).obj (res S F)) (rAug φ (resAug F)) u hu
       (fun t P m hm => by
@@ -189,7 +189,7 @@ theorem cpush_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : Type)
   haveI := hqF; haveI := hqG; haveI := hgeG; haveI := hKI'; haveI := hGE'
   haveI : QuasiIso (rAug (Int.castRingHom S) (resAug F)) := rAug_quasiIso _ _
   haveI : QuasiIso (rAug (Int.castRingHom R) (resAug G)) := rAug_quasiIso _ _
-  obtain ⟨v, hv⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (res ℤ G')
+  obtain ⟨v, hv⟩ := (_root_.GlobalTheory.EtC.extHom_of_quasiIso ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (res ℤ G')
     (rAug (Int.castRingHom R) (resAug G))).1 (resAug G')
   have hacyc : ∀ (t : ℤ) (P : PSh) (m : ℤ), 0 < m →
       Subsingleton (H ℤ (disc.obj P) (((rcx (Int.castRingHom R)).obj (res R G)).X t) m) :=
@@ -197,11 +197,11 @@ theorem cpush_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : Type)
   have hbij := _root_.GlobalTheory.EtC.acycRes_computes ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (rAug (Int.castRingHom R) (resAug G)) v hv
     hacyc E n
   have hzero := rAug_comp_toZ_eq_zero_of_kill S F R G δ hδ
-  obtain ⟨hom⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective ℤ ((restr (Int.castRingHom S)).obj F) ((rcx (Int.castRingHom S)).obj (res S F)) (res ℤ G')
+  obtain ⟨hom⟩ := (_root_.GlobalTheory.EtC.extHom_of_quasiIso ℤ ((restr (Int.castRingHom S)).obj F) ((rcx (Int.castRingHom S)).obj (res S F)) (res ℤ G')
     (rAug (Int.castRingHom S) (resAug F))).2 (δ.toZ ≫ v) 0 (by rw [← Category.assoc, hzero]; simp)
-  have h1 := ((GlobalTheory.T.hypercohomologyPullbackPushforward_functorial ℤ).2.2.2.2 _ _ ⟨hom⟩ ((chains ℤ).obj E) n).2
+  have h1 := ((_root_.GlobalTheory.EtC.ZcFun.main ℤ).2.2.2.2 _ _ ⟨hom⟩ ((chains ℤ).obj E) n).2
   have h2 : cpush ((chains ℤ).obj E) v n (cpush ((chains ℤ).obj E) δ.toZ n y) = cpush ((chains ℤ).obj E) v n 0 := by
-    rw [← (GlobalTheory.T.hypercohomologyPullbackPushforward_functorial ℤ).2.2.1, h1, cpush_zero_hom, map_zero]
+    rw [← (_root_.GlobalTheory.EtC.ZcFun.main ℤ).2.2.1, h1, cpush_zero_hom, map_zero]
   exact hbij.1 h2
 
 theorem semiMap_op_eq_zero_of_kill : ∀ (S R : Type) [CommRing S] [CommRing R] (F : Shv S) (G : Shv R)
@@ -214,15 +214,15 @@ theorem semiMap_op_eq_zero_of_kill : ∀ (S R : Type) [CommRing S] [CommRing R] 
     { app := fun U s => δ.app U s
       nat := fun g s a => δ.nat g s a
       comm := fun U s t a => δ.comm U s t a }
-  have hA := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective S ℤ ιA ρ' δ.toZ (fun _ _ _ => rfl)).1 E n x
-  have hB := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective R ℤ ιB ιB (𝟙 _) (fun _ _ _ => rfl)).2
+  have hA := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij S ℤ ιA ρ' δ.toZ (fun _ _ _ => rfl)).1 E n x
+  have hB := (_root_.GlobalTheory.EtC.OpComp.op_comp_bij R ℤ ιB ιB (𝟙 _) (fun _ _ _ => rfl)).2
     (fun _ _ => ⟨fun _ _ h => h, fun b => ⟨b, rfl⟩⟩) E n
   have hcomp : ρ'.op.app E n x = ιB.op.app E n (δ.op.app E n x) := by
     obtain ⟨α, rfl⟩ := CohomologyClass.mk_surjective x
-    obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R δ).1 E n α
-    obtain ⟨γ, hγ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R ℤ ιB).1 E n β
-    rw [(GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R δ).2 E n α β hβ, (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap R ℤ ιB).2 E n β γ hγ,
-      (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S ℤ ρ').2 E n α γ ?_]
+    obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R δ).1 E n α
+    obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R ℤ ιB).1 E n β
+    rw [(_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R δ).2 E n α β hβ, (_root_.GlobalTheory.EtC.SemiMap.op_image_spec R ℤ ιB).2 E n β γ hγ,
+      (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S ℤ ρ').2 E n α γ ?_]
     intro p s h U y
     rw [hγ p s h U y, hβ p s h U y]
     rfl
@@ -250,22 +250,22 @@ theorem SemiMap.sub_op {S R : Type} [CommRing S] [CommRing R] {I : Cx S} {J : Cx
     (E : Spc) (n : ℤ) (x : CohomologyClass ((chains S).obj E) I n) :
     (ρ.sub ρ').op.app E n x = ρ.op.app E n x - ρ'.op.app E n x := by
   obtain ⟨α, rfl⟩ := x.mk_surjective
-  obtain ⟨β, hβ⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).1 E n α
-  obtain ⟨β', hβ'⟩ := (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ').1 E n α
+  obtain ⟨β, hβ⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).1 E n α
+  obtain ⟨β', hβ'⟩ := (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ').1 E n α
   have hsub : (ρ.sub ρ').IsImage α.1 (β - β').1 := by
     intro p s h U x
     rw [show (β - β').1 = β.1 - β'.1 from rfl, ((GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R).1 β.1 β'.1 p s h U x).2.1, hβ p s h U x,
       hβ' p s h U x]
     rfl
-  rw [(GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R _).2 E n α _ hsub, (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ).2 E n α β hβ,
-    (GlobalTheory.T.exists_image_cocycle_semilinearSheafComplexMap S R ρ').2 E n α β' hβ', CohomologyClass.mk_sub]
+  rw [(_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R _).2 E n α _ hsub, (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ).2 E n α β hβ,
+    (_root_.GlobalTheory.EtC.SemiMap.op_image_spec S R ρ').2 E n α β' hβ', CohomologyClass.mk_sub]
 
 theorem a8 : A8 := by
   intro R S _ _ φ E F n
   obtain ⟨ρ₀, h₀, hb⟩ := _root_.GlobalTheory.EtC.restrRes_comparison R S φ F
   have hz := _root_.GlobalTheory.EtC.semiMap_op_eq_zero_of_kill S R F ((restr φ).obj F) ((restrMap φ F).sub ρ₀) (fun U a => by
     change (restrMap φ F).app U 0 _ - ρ₀.app U 0 _ = 0
-    rw [GlobalTheory.T.restrictScalarsResolutionMap_augmentation_spec R S φ F U a, h₀ U a, sub_self])
+    rw [_root_.GlobalTheory.EtC.restrMap_spec' R S φ F U a, h₀ U a, sub_self])
   have he : restrH φ E F n = ρ₀.op.app E n := by
     ext x
     have := hz E n x

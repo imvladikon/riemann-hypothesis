@@ -96,10 +96,6 @@ theorem tameAnyFix_map_primeToPart {M K : Type} [Monoid M] [Field K] (l : ℕ) [
       rw [pow_eq_pow_mod _ h2, h3, ← pow_eq_pow_mod _ h2]
     rw [h4, pow_one]
 
-theorem tameAnyFix_isoLoc (D : D7) {a : ℕ} (π : D.naut.CG a) (w : PlE D.host) :
-    isoLoc D.nd D.naut [⟨a, π, 1⟩] w = D.naut.locG π w := by
-  simp [isoLoc, spehLoc, D.naut.lpSum_zero, D.naut.lpTw_zero]
-
 theorem tameAnyFix_not_over (D : D7) (i : D.nd.Loc) (k : Fin 2) (h : D.nd.l i ≠ D.host.g k) (v : D.nd.PlG k) :
     D.naut.plGw k v ∉ placesOver D.host.E (D.nd.l i) := by
   intro hl
@@ -140,7 +136,7 @@ theorem tameAnyAt_fixed_alt_alt : ∀ D : D7, _root_.UpperTheory.GalS.GalAwayN D
   obtain ⟨ι, hinj, hred⟩ := _root_.GlobalTheory.TypeLeaf.exists_redVia D i k hk
   have hpol := _root_.GlobalTheory.IneAway.ineAt' D hA hF i π ρ hc hr hfull hρ k v _ rfl (tameAnyFix_not_over D i k hk v) _ (D.ntypes.tg_mem k v)
   have hlab := D.ntypes.inertiaCharpoly_type k v _ (_root_.UpperTheory.GalS.fl0' hfull k v)
-  rw [← tameAnyFix_isoLoc D π, hlab] at hpol
+  rw [← _root_.GlobalTheory.IneAway.isoLoc_cusp D π, hlab] at hpol
   have h1 := hred _ _ hpol
   have hchar : Matrix.charpoly ((redF D i ρ (D.nd.gam0 i (D.naut.plGw k v)) : GL (Fin D.R.r) _) :
         Matrix (Fin D.R.r) (Fin D.R.r) (Formalism.CyclotomicNorms.Fbar (D.nd.l i))) =
@@ -183,12 +179,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.TypeLeaf Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.MainNotions.ArithmeticCylinders Formalism.ConjugateSelfDual ReciprocityTheory.Gal Polynomial NumberField IsDedekindDomain
-
-theorem _root_.GlobalTheory.T.tame_any_at_pl_gw : ∀ D : D7, _root_.UpperTheory.GalS.GalAwayN D → FrobDense D → ∀ (i : D.nd.Loc) (π : D.naut.CG D.R.r) (ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.r) (D.nd.O i)), D.naut.csd π → D.naut.ralg π → _root_.UpperTheory.GalS.FullLabS D [⟨D.R.r, π, 1⟩] → IsRepOfSig D.nd D.naut i [⟨D.R.r, π, 1⟩] ρ → ∀ k : Fin 2, D.nd.l i ≠ D.host.g k → ∀ v : D.nd.PlG k, TameAnyAt D i [⟨D.R.r, π, 1⟩] ρ k (D.naut.plGw k v) := by
-  first | exact @_root_.GlobalTheory.TypeLeaf.tameAnyAt_fixed_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TameAnyAtPlace =====

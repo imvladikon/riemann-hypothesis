@@ -170,9 +170,9 @@ theorem jordan_transitivity : JordanTransitive := by
     obtain ⟨g, hg⟩ := htr.exists_smul_eq x y
     exact ⟨⟨MulAction.toPermHom G Ω g, ⟨g, rfl⟩⟩, hg⟩
   have hprim : MulAction.IsPreprimitive K Ω :=
-    Formalism.GaloisIrreducibility.primitiveOfPCycle Ω K σ p hp hσK hcyc hsupp hlt htrK
+    _root_.Formalism.GaloisIrreducibility.primitive_of_p_cycle Ω K σ p hp hσK hcyc hsupp hlt htrK
   have halt : alternatingGroup Ω ≤ K :=
-    Formalism.GaloisIrreducibility.jordanPrime Ω K σ p hp hσK hcyc hsupp hle hprim
+    _root_.Formalism.GaloisIrreducibility.jordan_prime_cycle_theorem Ω K σ p hp hσK hcyc hsupp hle hprim
   refine ⟨halt, ?_⟩
   have hpc : p ∈ σ.cycleType := by
     rw [hcyc.cycleType, hsupp]
@@ -639,7 +639,7 @@ namespace Formalism.CyclotomicNorms
 
 theorem restriction : Restriction := restriction_of_blocks_and_jordan blocks_form_cycle jordan_transitivity
 
-theorem irreducibility_of_good_tuple : IrreducibilityCriterion := irreducibility_of_restriction restriction
+theorem irreducibility_of_good_tuple : IrreducibilityCriterion := _root_.Formalism.CyclotomicNorms.CycleTypeFiniteOrder.t1 restriction
 
 end Formalism.CyclotomicNorms
 end -- clump:auto

@@ -86,8 +86,7 @@ theorem exists_extension {H M F : Type} [CommGroup H] [CommGroup M] [Field F] [I
   have := DFunLike.congr_fun hh (Additive.ofMul x)
   exact this
 
-theorem target : ∀ {H M F : Type} [inst : CommGroup H] [inst_1 : CommGroup M] [inst_2 : Field F] [IsAlgClosed F] (Φ : H →* M), Function.Injective (⇑Φ : H → M) → ∀ (χ : H →* Fˣ), ∃ (κ : M →* Fˣ), ∀ (x : H), (κ : M → Fˣ) ((Φ : H → M) x) = (χ : H → Fˣ) x :=
-  fun Φ hΦ χ => exists_extension Φ hΦ χ
+alias target := _root_.GlobalTheory.DivisibleUnits.exists_extension
 
 end GlobalTheory.DivisibleUnits
 end -- clump:auto
@@ -107,11 +106,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.TorsionCharacter
 
-theorem exists_extend_character {H M F : Type} [CommGroup H] [CommGroup M] [Field F] [IsAlgClosed F]
-    (Φ : H →* M) (hΦ : Function.Injective Φ) (χ : H →* Fˣ) : ∃ κ : M →* Fˣ, ∀ x, κ (Φ x) = χ x := by
-  first
-  | (apply _root_.GlobalTheory.DivisibleUnits.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.DivisibleUnits.target ..)
+alias exists_extend_character := _root_.GlobalTheory.DivisibleUnits.exists_extension
 
 variable {O : Type} [CommRing O]
 

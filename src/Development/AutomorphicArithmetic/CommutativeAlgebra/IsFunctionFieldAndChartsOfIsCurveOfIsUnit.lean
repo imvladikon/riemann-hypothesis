@@ -160,7 +160,7 @@ private noncomputable def mvS {U V E : Spc} (f : U ⟶ E) (g : V ⟶ E) : ShortC
 
 private theorem mvS_exact {U V E : Spc} (f : U ⟶ E) (g : V ⟶ E) (h : Cover2 R f g) :
     (mvS (R := R) f g).ShortExact := by
-  obtain ⟨w, hw⟩ := GlobalTheory.T.etaleSpaceChains_mayerVietoris_shortExact R f g h
+  obtain ⟨w, hw⟩ := _root_.GlobalTheory.EtC.mv_shortExact R f g h
   exact hw
 
 private noncomputable def mvMap {U V E U' V' E' : Spc} (f : U ⟶ E) (g : V ⟶ E) (f' : U' ⟶ E') (g' : V' ⟶ E')
@@ -269,10 +269,6 @@ open scoped TensorProduct
 
 namespace UpperTheory.Cb.SeparatedH1Cohomology
 
-private theorem res_nsmul' {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}} (k : V ⟶ U) (n : ℕ)
-    (a : Sec F U) : Sec.res k (n • a) = n • Sec.res k a :=
-  map_nsmul (F.obj.map k.op).hom n a
-
 private theorem exists_h0_restriction_eq_of_le_open {q : ℕ} [NeZero q] {X E : Scheme.{0}} [IsIntegral X] (ζ : Prim q Γ(X, ⊤))
     (j : E ⟶ X) [IsOpenImmersion j] {O P : E.Opens} (h : P ≤ O) (c : Ht q (sch.obj P) 0 1) :
     ∃ a : Ht q (sch.obj O) 0 1, pl q 1 (E.homOfLE h) 0 a = c := by
@@ -285,7 +281,7 @@ private theorem exists_h0_restriction_eq_of_le_open {q : ℕ} [NeZero q] {X E : 
     have h1 : c = e P (k • twGen 1 (ζ.map (P.ι ≫ j).appTop.hom)) := by
       rw [← hk, AddEquiv.apply_symm_apply]
     have hk : E.homOfLE h ≫ O.ι ≫ j = P.ι ≫ j := by simp
-    rw [h1, he, res_nsmul', (GlobalTheory.T.tateTwist_sections_locally_generated q 1).2.2.2.1, ← hk]
+    rw [h1, he, _root_.GlobalTheory.TwSec.res_nsmul, (_root_.GlobalTheory.EtC.twist_sections q 1).2.2.2.1, ← hk]
     congr 1
   · have hb : P = ⊥ := le_bot_iff.1 fun p hp => (hP ⟨(⟨p, hp⟩ : P)⟩).elim
     subst hb
@@ -367,11 +363,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-private lemma sec_map_res {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}}
-    (g : V ⟶ U) (x : Sec F U) : Sec.res g (Sec.map φ x) = Sec.map φ (Sec.res g x) := by
-  change (φ.hom.app (op U) ≫ G.obj.map g.op).hom x = (F.obj.map g.op ≫ φ.hom.app (op V)).hom x
-  rw [φ.hom.naturality]
-
 private lemma sec_map_comp {R : Type} [CommRing R] {F G H : Shv R} (a : F ⟶ G) (b : G ⟶ H)
     {U : Scheme.{0}} (x : Sec F U) : Sec.map (a ≫ b) x = Sec.map b (Sec.map a x) := rfl
 
@@ -381,7 +372,7 @@ private lemma sec_map_zero {R : Type} [CommRing R] {F G : Shv R} {U : Scheme.{0}
 private lemma res_univ_eq_zero {R : Type} [CommRing R] {A W : Scheme.{0}} (i : A ⟶ W) {Z : Shv R}
     (h : (free R).obj (yoneda.obj W) ⟶ Z) (h0 : (free R).map (yoneda.map i) ≫ h = 0) :
     Sec.res i (Sec.map h (freeGen R (yoneda.obj W) W (𝟙 W))) = 0 := by
-  rw [sec_map_res, CupSpec.freeGen_res]
+  rw [_root_.GlobalTheory.EtC.CupSpec.map_res, CupSpec.freeGen_res]
   have e : (ConcreteCategory.hom ((yoneda.obj W).map i.op)) (𝟙 W) =
       (ConcreteCategory.hom ((yoneda.map i).app (op A))) (𝟙 A) := by simp
   rw [e, ← CupSpec.freeGen_map, ← sec_map_comp, h0, sec_map_zero]
@@ -439,15 +430,15 @@ theorem UpperTheory.etale_purity_free_cover :
   intro i
   have z : Sec.map g (freeGen R (yoneda.obj (U ⊔ V : X.Opens).toScheme) i.1.toScheme (X.homOfLE (hle i))) = 0 := by
     have := res_univ_eq_zero (X.homOfLE (hle i)) g (gz i)
-    rwa [sec_map_res, CupSpec.freeGen_res, show (ConcreteCategory.hom ((yoneda.obj (U ⊔ V : X.Opens).toScheme).map
+    rwa [_root_.GlobalTheory.EtC.CupSpec.map_res, CupSpec.freeGen_res, show (ConcreteCategory.hom ((yoneda.obj (U ⊔ V : X.Opens).toScheme).map
       (X.homOfLE (hle i)).op)) (𝟙 _) = X.homOfLE (hle i) by simp] at this
-  rw [sec_map_res, CupSpec.freeGen_res]
+  rw [_root_.GlobalTheory.EtC.CupSpec.map_res, CupSpec.freeGen_res]
   have e : (ConcreteCategory.hom ((yoneda.obj (U ⊔ V : X.Opens).toScheme).map
       (pullback.fst x (X.homOfLE (hle i))).op)) x =
       (ConcreteCategory.hom ((yoneda.obj (U ⊔ V : X.Opens).toScheme).map
       (pullback.snd x (X.homOfLE (hle i))).op)) (X.homOfLE (hle i)) := by
     simp [pullback.condition]
-  rw [e, ← CupSpec.freeGen_res, ← sec_map_res, z]
+  rw [e, ← CupSpec.freeGen_res, ← _root_.GlobalTheory.EtC.CupSpec.map_res, z]
   exact map_zero _
 end -- clump:auto
 end -- clump:auto
@@ -1137,17 +1128,15 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.AlgExt
-theorem etale_cohomology_place_restriction_good_reduction : LateralTheory.KummerTheory.PlaceResGood := by
-  apply LateralTheory.KummerTheory.PlaceResGood_of
 theorem etale_cohomology_place_localization_inductive_extension : LateralTheory.KummerTheory.PlaceStep := by
-  apply LateralTheory.KummerTheory.PlaceStep_of <;> first | exact etale_cohomology_place_restriction_good_reduction
+  apply LateralTheory.KummerTheory.PlaceStep_of <;> first | exact _root_.LateralTheory.KummerTheory.PlaceResGood_of
 theorem etale_cohomology_place_localization_exists : LateralTheory.KummerTheory.PlaceEx := by
   apply LateralTheory.KummerTheory.PlaceEx_of_step <;> first | exact etale_cohomology_place_localization_inductive_extension
 theorem etale_cohomology_place_localization_holds : LateralTheory.KummerTheory.Place := by
   apply LateralTheory.KummerTheory.Place_of_ex <;> first | exact etale_cohomology_place_localization_exists
 theorem etale_cohomology_algebraic_extension_invariance_of_places : LateralTheory.KummerTheory.AlgExt := by
   apply LateralTheory.KummerTheory.AlgExt_of <;> first | exact etale_cohomology_place_localization_holds
-theorem intersectionNumber_baseChange : LateralTheory.KummerTheory.AlgExt := etale_cohomology_algebraic_extension_invariance_of_places
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.AlgExt.etale_cohomology_algebraic_extension_invariance_of_places
 end LateralTheory.Fin.AlgExt
 end -- clump:auto
 end -- clump:auto

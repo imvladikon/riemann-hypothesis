@@ -670,7 +670,7 @@ theorem quotM : QuotMStatement := by
   have hbd : ∀ f ∈ G, ∃ C : ℝ, ∀ g ∈ UJset ε, ‖L f g‖ ≤ C * frob g ^ (1 - aExp ε h) := fun f hf => by
     obtain ⟨C, hC⟩ := (hspec f hf).2.2 []
     exact ⟨C, hC⟩
-  have hcont : ∀ f ∈ G, ContinuousOn (L f) (UJset ε) := fun f hf => QuotA.contOn_of_smooth (hsm f hf).1
+  have hcont : ∀ f ∈ G, ContinuousOn (L f) (UJset ε) := fun f hf => _root_.ReciprocityTheory.ChartRestriction.DS.Lap.CurveContinuity.smooth_contOn (hsm f hf).1
   set ψ := Formalism.MainNotions.S.psiGen k r z c with hψdef
   let Z : Submodule ℂ (Fin (2 * r + k + 1) → D) :=
     { carrier := {y | y ∈ X ∧ ∀ g ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r), per P μW μN ψ π (L y) ξ g = 0}
@@ -1143,7 +1143,7 @@ theorem stepDown : StepDownStatement := by
     have hcg : ∀ g ∈ UJset ε, coefX σ y₀ ((w : D) : H) ((v : D) : H) g =
         ⟪v₂, S7.PsiM T μ (y₀⁻¹ * g) v₁⟫_ℂ := by
       intro g hg
-      have hm : y₀⁻¹ * g ∈ UJset ε := CapelliClosureMembership.inUJ_mul (TDAux.inv_mem hy₀J) hg
+      have hm : y₀⁻¹ * g ∈ UJset ε := _root_.ReciprocityTheory.ChartRestriction.DS.smd_inUJ_mul (TDAux.inv_mem hy₀J) hg
       unfold coefX
       rw [hcoef _ hm v w, hv, hw, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
     rw [QuotA.per_congr hP hBd _ hcg ξ hx]
@@ -1166,7 +1166,7 @@ theorem stepDown : StepDownStatement := by
   have hvG : (v : D) ∈ genSub E V := LemK.le_generatedSubmodule_dual V v.2
   have hC : ∀ m ∈ genSub E V, Capelli.capelliC E (((-(LemK.thV lam s)) : ℝ) : ℂ) m = 0 := by
     intro m hm
-    rw [capVal (2 * r + k + 1) ε lam h H σ D E V T μ ι hσ hD hV hc hVK hμ hcoef hHC hGap hNeed hq0 _ m hm]
+    rw [_root_.ReciprocityTheory.ChartRestriction.DS.Lap.CapelliClosureMembership.capVal_main (2 * r + k + 1) ε lam h H σ D E V T μ ι hσ hD hV hc hVK hμ hcoef hHC hGap hNeed hq0 _ m hm]
     rw [Finset.prod_eq_zero (Finset.mem_univ s) (by push_cast; ring), zero_smul]
   have hxs : Capelli.nnMinus E β (((-(LemK.thV lam s)) : ℝ) : ℂ) (v : D) ∈
       LemK.Xs (LemK.eeVd E) (genSub E V) (LemK.thVd lam s) := by
@@ -1187,7 +1187,7 @@ theorem stepDown : StepDownStatement := by
   have hyG : ∀ c', y c' ∈ genSub E V := (LemK.mem_euler_eigenspace_iff.1 hy).1
   have hspec := tMapD_spec k r ε lam h H σ D E V T μ ι hσ hD hV hc hVK hμ hcoef hp hq hsg hHC hGap (xJ P z) y₀ w
     hy₀J y hyG
-  exact ⟨QuotA.contOn_of_smooth hspec.1.1, hspec.2.2 []⟩
+  exact ⟨_root_.ReciprocityTheory.ChartRestriction.DS.Lap.CurveContinuity.smooth_contOn hspec.1.1, hspec.2.2 []⟩
 
 end ReciprocityTheory.ChartRestriction.DS.Lap
 end -- clump:auto

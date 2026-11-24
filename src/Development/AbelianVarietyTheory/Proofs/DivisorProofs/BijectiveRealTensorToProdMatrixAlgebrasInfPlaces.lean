@@ -182,12 +182,6 @@ open scoped TensorProduct Classical
 
 namespace GlobalTheory.LKTrip.HTGroup
 
-theorem span_real_embedding_places (F : Type) [Field F] [NumberField F] [_root_.NumberField.IsTotallyComplex F] :
-    Submodule.span ℝ (Set.range fun (a : F) (v : InfinitePlace F) => v.embedding a) = ⊤ := by
-  first
-  | (apply _root_.GlobalTheory.EmbeddingRangeSpanTop.span_range_embedding_eq_top <;> assumption)
-  | (intros; exact _root_.GlobalTheory.EmbeddingRangeSpanTop.span_range_embedding_eq_top ..)
-
 variable {p : ℕ} [Fact p.Prime]
 
 theorem psiR_tmul (G : HTGroup p) (v : InfinitePlace G.F) (r : ℝ) (c : G.C) :
@@ -213,7 +207,7 @@ theorem psiR_pi_bijective (G : HTGroup p) :
         ext i j
         by_cases h : i = j <;> simp [h] }
   have hscS : ∀ c : InfinitePlace G.F → ℂ, sc c ∈ S := by
-    have htop := span_real_embedding_places G.F
+    have htop := _root_.GlobalTheory.EmbeddingRangeSpanTop.span_range_embedding_eq_top G.F
     have hle : Submodule.span ℝ (Set.range fun (a : G.F) (v : InfinitePlace G.F) => v.embedding a) ≤
         (Subalgebra.toSubmodule S).comap sc := by
       rw [Submodule.span_le]

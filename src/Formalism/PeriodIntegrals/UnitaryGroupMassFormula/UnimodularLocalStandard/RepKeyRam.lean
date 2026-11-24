@@ -804,9 +804,7 @@ section -- clump:auto
 
 namespace PI.UnitaryGroupMassFormula.UnimodLocStd
 
-theorem keyStart_of_keyStartRam (hR : KeyStartRam) : KeyStart := keyStart_of_ram hR
-
-theorem keyRep_of_ram (hR : KeyStartRam) : KeyRep := keyRep_of_start (keyStart_of_keyStartRam hR)
+theorem keyRep_of_ram (hR : KeyStartRam) : KeyRep := keyRep_of_start (_root_.PI.UnitaryGroupMassFormula.UnimodLocStd.keyStart_of_ram hR)
 
 end PI.UnitaryGroupMassFormula.UnimodLocStd
 end -- clump:auto

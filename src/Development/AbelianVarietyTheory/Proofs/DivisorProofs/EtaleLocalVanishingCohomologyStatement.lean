@@ -201,8 +201,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.approximation_quotients_agree : ∀ (q : ℕ) (B A₁ A₂ : Type) [CommRing B] [CommRing A₁] [CommRing A₂] [Algebra B A₁] [Algebra B A₂] (f : B) (I J : Ideal B) (n i : ℤ) (y : Ht q (sp B) n i), IsCoprime I J → (∀ a : A₁, ∃ b : B, a - algebraMap B A₁ b ∈ Ideal.span {algebraMap B A₁ f}) → (∀ b : B, algebraMap B A₁ b ∈ Ideal.span {algebraMap B A₁ f} ↔ b ∈ I) → (∀ a : A₂, ∃ b : B, a - algebraMap B A₂ b ∈ Ideal.span {algebraMap B A₂ f}) → (∀ b : B, algebraMap B A₂ b ∈ Ideal.span {algebraMap B A₂ f} ↔ b ∈ J) → pull _ (spMap (algebraMap B A₁)) _ _ y = 0 → pull _ (spMap (algebraMap B A₂)) _ _ y = 0 → (∀ a : A₁ × A₂, ∃ b : B, a - algebraMap B (A₁ × A₂) b ∈ Ideal.span {algebraMap B (A₁ × A₂) f}) ∧ (∀ b : B, algebraMap B (A₁ × A₂) b ∈ Ideal.span {algebraMap B (A₁ × A₂) f} ↔ b ∈ I ⊓ J) ∧ pull _ (spMap (algebraMap B (A₁ × A₂))) _ _ y = 0 := by
-  first | (exact @GlobalTheory.EtC.ProdStep.prodStep)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ApproximationQuotientsAgree =====
@@ -260,8 +258,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.etale_unique_prime_le_map_maximal : ∀ (B A : Type) [CommRing B] [CommRing A] [Algebra B A] [Algebra.Etale B A] (P : Ideal B), P.IsMaximal → ∀ (Q : Ideal A), (∀ Q' : Ideal A, Q'.IsPrime → P.map (algebraMap B A) ≤ Q' → Q' = Q) → Q ≤ P.map (algebraMap B A) := by
-  first | (exact @GlobalTheory.etale_prime_le_map_of_unique)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleUniquePrimeLeMapMaximalStatement =====
@@ -311,8 +307,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.flat_localization_membership : ∀ (B D : Type) [CommRing B] [CommRing D] [Algebra B D] [Module.Flat B D] (Q : Ideal D) [Q.IsPrime] (f b : B), algebraMap B (Localization.AtPrime Q) b ∈ Ideal.span {algebraMap B (Localization.AtPrime Q) f} → ∃ s : B, s ∉ Q.comap (algebraMap B D) ∧ s * b ∈ Ideal.span {f} := by
-  first | (exact @GlobalTheory.localFlat_dvd_descends)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatLocalizationMembership =====
@@ -404,11 +398,6 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
     rw [← Finset.prod_erase_mul _ _ hmem]
     exact Ideal.mul_mem_left _ _ (hxmem Q' ⟨hQ', hfQ'⟩ hne)
 
-theorem isolate_maximal_among_primes_containing : ∀ (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRing D] [Algebra B D]
-    [Algebra.Etale B D] (f : B), f ≠ 0 → ∀ (Q : Ideal D), Q.IsMaximal →
-    ∃ g : D, g ∉ Q ∧ ∀ Q' : Ideal D, Q'.IsPrime → algebraMap B D f ∈ Q' → g ∉ Q' → Q' = Q :=
-  fun B D _ _ _ _ _ f hf Q hQ => exists_isolating B D f hf Q hQ
-
 end GlobalTheory.EtaleIsolate
 end -- clump:auto
 end -- clump:auto
@@ -420,8 +409,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.isolate_maximal_among_primes_containing_etale : ∀ (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRing D] [Algebra B D] [Algebra.Etale B D] (f : B), f ≠ 0 → ∀ (Q : Ideal D), Q.IsMaximal → ∃ g : D, g ∉ Q ∧ ∀ Q' : Ideal D, Q'.IsPrime → algebraMap B D f ∈ Q' → g ∉ Q' → Q' = Q := by
-  first | (exact @GlobalTheory.EtaleIsolate.isolate_maximal_among_primes_containing)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsolateMaximalAmongPrimesContainingEtaleStatement =====
@@ -478,8 +465,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.localization_inverse_mod_f : ∀ (B D : Type) [CommRing B] [CommRing D] [Algebra B D] (f : B) (P : Ideal B) (Q : Ideal D) (g : D), Q.comap (algebraMap B D) = P → (∀ Q' : Ideal D, Q'.IsPrime → algebraMap B D f ∈ Q' → g ∉ Q' → Q' = Q) → ∀ s : B, s ∉ P → ∃ t : Localization.Away g, algebraMap B (Localization.Away g) s * t - 1 ∈ Ideal.span {algebraMap B (Localization.Away g) f} := by
-  first | (exact @GlobalTheory.unitsMod_away_of_unique_prime)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationInverseModF =====
@@ -537,8 +522,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.localization_residue_approximation : ∀ (B D : Type) [CommRing B] [CommRing D] [Algebra B D] (P : Ideal B), P.IsMaximal → ∀ (Q : Ideal D) (g : D), g ∉ Q → Q.comap (algebraMap B D) = P → (∀ d : D, ∃ b : B, d - algebraMap B D b ∈ Q) → ∀ a : Localization.Away g, ∃ b : B, a - algebraMap B (Localization.Away g) b ∈ Q.map (algebraMap D (Localization.Away g)) := by
-  first | (exact @GlobalTheory.residue_surj_localizationAway)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationResidueApproximation =====
@@ -629,8 +612,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.nilpotent_approximation_surjective : ∀ (B A : Type) [CommRing B] [CommRing A] [Algebra B A] (I : Ideal B) (K : Ideal A) (N : ℕ), (∀ a : A, ∃ b : B, a - algebraMap B A b ∈ I.map (algebraMap B A) ⊔ K) → (I ^ N).map (algebraMap B A) ≤ K → ∀ a : A, ∃ b : B, a - algebraMap B A b ∈ K := by
-  first | (exact @GlobalTheory.surj_mod_of_surj_mod_map_sup_of_pow_map_le)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.NilpotentApproximationSurjective =====
@@ -684,7 +665,7 @@ theorem etale_away_quotient_eq_localization :
       have : (1 : D) = algebraMap B D c * x - (algebraMap B D c * x - 1) := by ring
       rw [this]
       exact J.sub_mem h3 (hQJ h2)
-  obtain ⟨g, hgQ, hQ'⟩ := GlobalTheory.T.isolate_maximal_among_primes_containing_etale B D f hf Q hQmax
+  obtain ⟨g, hgQ, hQ'⟩ := _root_.GlobalTheory.EtaleIsolate.exists_isolating B D f hf Q hQmax
   refine ⟨g, ?_⟩
   haveI : Algebra.Etale D (Localization.Away g) := Algebra.Etale.of_isLocalizationAway g
   haveI : Algebra.Etale B (Localization.Away g) := Algebra.Etale.comp B D (Localization.Away g)
@@ -692,7 +673,7 @@ theorem etale_away_quotient_eq_localization :
       algebraMap D (Localization.Away g) (algebraMap B D b) := fun b =>
     IsScalarTower.algebraMap_apply B D (Localization.Away g) b
 
-  have hunit := GlobalTheory.T.localization_inverse_mod_f B D f P Q g hQP hQ'
+  have hunit := _root_.GlobalTheory.unitsMod_away_of_unique_prime B D f P Q g hQP hQ'
 
   have hker : ∀ b : B, (∃ s : B, s ∉ P ∧ s * b ∈ Ideal.span {f}) →
       algebraMap B (Localization.Away g) b ∈
@@ -711,7 +692,7 @@ theorem etale_away_quotient_eq_localization :
     exact Ideal.sub_mem _ (Ideal.mul_mem_right _ _ h1) (Ideal.mul_mem_right _ _ ht)
   refine ⟨?_, fun b => ⟨fun hb => ?_, hker b⟩⟩
   ·
-    obtain ⟨N, hN⟩ := GlobalTheory.T.dedekind_power_localization B f hf P hP
+    obtain ⟨N, hN⟩ := _root_.GlobalTheory.dedekind_pow_maximal_mul_mem_span B f hf P hP
     have hPN : (P ^ N).map (algebraMap B (Localization.Away g)) ≤
         Ideal.span {algebraMap B (Localization.Away g) f} := by
       rw [Ideal.map_le_iff_le_comap]
@@ -731,10 +712,10 @@ theorem etale_away_quotient_eq_localization :
             (IsLocalization.Away.algebraMap_isUnit g))
       rw [← hc]
       exact (IsLocalization.map_under (Submonoid.powers g) (Localization.Away g) Q').symm
-    have hle := GlobalTheory.T.etale_unique_prime_le_map_maximal B (Localization.Away g) P hP
+    have hle := _root_.GlobalTheory.etale_prime_le_map_of_unique B (Localization.Away g) P hP
       (Q.map (algebraMap D (Localization.Away g))) hfib
-    have hres' := GlobalTheory.T.localization_residue_approximation B D P hP Q g hgQ hQP hres
-    refine GlobalTheory.T.nilpotent_approximation_surjective B (Localization.Away g) P _ N (fun a => ?_) hPN
+    have hres' := _root_.GlobalTheory.residue_surj_localizationAway B D P hP Q g hgQ hQP hres
+    refine _root_.GlobalTheory.surj_mod_of_surj_mod_map_sup_of_pow_map_le B (Localization.Away g) P _ N (fun a => ?_) hPN
     obtain ⟨b, hb⟩ := hres' a
     exact ⟨b, Ideal.mem_sup_left (hle hb)⟩
   ·
@@ -753,7 +734,7 @@ theorem etale_away_quotient_eq_localization :
       rw [Ideal.mem_span_singleton] at hb ⊢
       obtain ⟨c, hc⟩ := hb
       exact ⟨ρ c, by rw [e, e, hc, map_mul]⟩
-    obtain ⟨s, hs, hsb⟩ := GlobalTheory.T.flat_localization_membership B D Q f b hloc
+    obtain ⟨s, hs, hsb⟩ := _root_.GlobalTheory.localFlat_dvd_descends B D Q f b hloc
     rw [hQP] at hs
     exact ⟨s, hs, hsb⟩
 
@@ -768,8 +749,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.away_quotient_span_eq_localization : ∀ (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRing D] [Algebra B D] [Algebra.Etale B D] (f : B), f ≠ 0 → ∀ (P : Ideal B), P.IsMaximal → f ∈ P → ∀ (Q : Ideal D), Q.IsPrime → Q.comap (algebraMap B D) = P → (∀ d : D, ∃ b : B, d - algebraMap B D b ∈ Q) → ∃ g : D, (∀ a : Localization.Away g, ∃ b : B, a - algebraMap B (Localization.Away g) b ∈ Ideal.span {algebraMap B (Localization.Away g) f}) ∧ ∀ b : B, algebraMap B (Localization.Away g) b ∈ Ideal.span {algebraMap B (Localization.Away g) f} ↔ ∃ s : B, s ∉ P ∧ s * b ∈ Ideal.span {f} := by
-  first | (exact @GlobalTheory.etale_away_quotient_eq_localization)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleAwayQuotientEqLocalizationStatement =====
@@ -859,8 +838,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.ind_etale_comp : ∀ (X Y Z : Type) [CommRing X] [CommRing Y] [CommRing Z] (f : X →+* Y) (g : Y →+* Z), GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale f → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale g → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (g.comp f) := by
-  first | (exact @GlobalTheory.IndEtaleComp.isIndEtale_comp)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IndEtaleComp =====
@@ -919,7 +896,7 @@ theorem GlobalTheory.HensMax.exists_strictHens_of_maximal : ∀ (B : Type) [Comm
       GlobalTheory.StrictHensUnion.indEtale_localization_of_etale B B P.primeCompl
     show GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap B S)
     rw [IsScalarTower.algebraMap_eq B (Localization.AtPrime P) S]
-    exact GlobalTheory.T.ind_etale_comp _ _ _ _ _ hBR hRS
+    exact _root_.GlobalTheory.IndEtaleComp.isIndEtale_comp _ _ _ _ _ hBR hRS
   · intro Q hQ
     obtain rfl : Q = maximalIdeal S := IsLocalRing.eq_maximalIdeal hQ
     refine ⟨?_, fun o => ?_⟩
@@ -949,8 +926,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_strictHenselization_at_maximal : ∀ (B : Type) [CommRing B] (P : Ideal B) [P.IsMaximal], IsSepClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) → ∃ (O : Type) (_ : CommRing O) (_ : Algebra B O), SH O ∧ IndEt B O ∧ ∀ Q : Ideal O, Q.IsMaximal → Q.comap (algebraMap B O) = P ∧ ∀ o : O, ∃ b : B, o - algebraMap B O b ∈ Q := by
-  first | (exact @GlobalTheory.HensMax.exists_strictHens_of_maximal)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStrictHenselizationAtMaximalStatement =====
@@ -966,7 +941,7 @@ namespace GlobalTheory.EtC
 
 theorem exists_etale_kill_of_indEt : ∀ (q : ℕ) (B O : Type) [CommRing B] [CommRing O] [Algebra B O], IsUnit (q : B) → IndEt B O → ∀ (n i : ℤ) (y : Ht q (sp B) n i), pull _ (spMap (algebraMap B O)) _ _ y = 0 → ∃ (D : Type) (_ : CommRing D) (_ : Algebra B D) (_ : Algebra.Etale B D) (_ : D →ₐ[B] O), pull _ (spMap (algebraMap B D)) _ _ y = 0 := by
   intro q B O _ _ _ hq hO n i y hy
-  obtain ⟨J, _, _, D, ι, ⟨hc⟩, het⟩ := GlobalTheory.T.exists_filtered_colimit_of_etale_of_indEt B O hO
+  obtain ⟨J, _, _, D, ι, ⟨hc⟩, het⟩ := _root_.GlobalTheory.EtC.exists_filtered_colimit_etale_of_indEt B O hO
   have hc' : IsColimit ((Under.forget (CommRingCat.of B)).mapCocone (Cocone.mk _ ι)) :=
     isColimitOfPreserves (Under.forget _) hc
   obtain ⟨j⟩ := IsFiltered.nonempty (C := J)
@@ -984,7 +959,7 @@ theorem exists_etale_kill_of_indEt : ∀ (q : ℕ) (B O : Type) [CommRing B] [Co
       simp only [spMap, ← Functor.map_comp, ← Spec.map_comp]
       congr 2
     erw [this]; exact hy
-  obtain ⟨k, f, hk⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (D ⋙ Under.forget _) _ hc' n i).2 j _ hqj hyj
+  obtain ⟨k, f, hk⟩ := (_root_.GlobalTheory.EtC.pairingProperties q (D ⋙ Under.forget _) _ hc' n i).2 j _ hqj hyj
   erw [← pull_comp] at hk
   have hwk : (D.obj j).hom ≫ (D.map f).right = (D.obj k).hom := by simpa using Under.w (D.map f)
   letI : Algebra B (D.obj k).right := (D.obj k).hom.hom.toAlgebra
@@ -1010,8 +985,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.vanishes_on_etale_neighbourhood : ∀ (q : ℕ) (B O : Type) [CommRing B] [CommRing O] [Algebra B O], IsUnit (q : B) → IndEt B O → ∀ (n i : ℤ) (y : Ht q (sp B) n i), pull _ (spMap (algebraMap B O)) _ _ y = 0 → ∃ (D : Type) (_ : CommRing D) (_ : Algebra B D) (_ : Algebra.Etale B D) (_ : D →ₐ[B] O), pull _ (spMap (algebraMap B D)) _ _ y = 0 := by
-  first | (exact @GlobalTheory.EtC.exists_etale_kill_of_indEt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanishesOnEtaleNeighbourhood =====
@@ -1031,10 +1004,10 @@ theorem dies_on_etale_with_point (q : ℕ) [NeZero q] (B : Type) [CommRing B] (h
     ∃ (D : Type) (_ : CommRing D) (_ : Algebra B D) (_ : Algebra.Etale B D) (Q : Ideal D),
       Q.IsPrime ∧ Q.comap (algebraMap B D) = P ∧ (∀ d : D, ∃ b : B, d - algebraMap B D b ∈ Q) ∧
       pull _ (spMap (algebraMap B D)) _ _ y = 0 := by
-  obtain ⟨O, _, _, hSH, hInd, hO⟩ := GlobalTheory.T.exists_strictHenselization_at_maximal B P hsep
+  obtain ⟨O, _, _, hSH, hInd, hO⟩ := _root_.GlobalTheory.HensMax.exists_strictHens_of_maximal B P hsep
   have hsub : Subsingleton (Ht q (sp O) m i) := GlobalTheory.EtC.b2 (ZMod q) O hSH (tw q i) m hm
   have h0 : pull _ (spMap (algebraMap B O)) _ _ y = 0 := Subsingleton.elim _ _
-  obtain ⟨D, _, _, _, φ, hD⟩ := GlobalTheory.T.vanishes_on_etale_neighbourhood q B O hq hInd m i y h0
+  obtain ⟨D, _, _, _, φ, hD⟩ := _root_.GlobalTheory.EtC.exists_etale_kill_of_indEt q B O hq hInd m i y h0
   obtain ⟨hH, -⟩ := hSH
   haveI : IsLocalRing O := hH.toIsLocalRing
   obtain ⟨hP, hres⟩ := hO (IsLocalRing.maximalIdeal O) inferInstance
@@ -1051,8 +1024,6 @@ theorem dies_on_etale_with_point (q : ℕ) [NeZero q] (B : Type) [CommRing B] (h
 
 end GlobalTheory.EtC.OneCoh
 
-theorem GlobalTheory.EtC.oneCoh_main : ∀ (q : ℕ) [NeZero q] (B : Type) [CommRing B], IsUnit (q : B) → ∀ (P : Ideal B) [P.IsMaximal], IsSepClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) → ∀ (m i : ℤ), 0 < m → ∀ y : Ht q (sp B) m i, ∃ (D : Type) (_ : CommRing D) (_ : Algebra B D) (_ : Algebra.Etale B D) (Q : Ideal D), Q.IsPrime ∧ Q.comap (algebraMap B D) = P ∧ (∀ d : D, ∃ b : B, d - algebraMap B D b ∈ Q) ∧ pull _ (spMap (algebraMap B D)) _ _ y = 0 :=
-  fun q _ B _ hq P _ hsep m i hm y => GlobalTheory.EtC.OneCoh.dies_on_etale_with_point q B hq P hsep m i hm y
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorIntegerRingAlmostAllPlaces =====
@@ -1064,8 +1035,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.etale_neighbourhood_kills_class : ∀ (q : ℕ) [NeZero q] (B : Type) [CommRing B], IsUnit (q : B) → ∀ (P : Ideal B) [P.IsMaximal], IsSepClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) → ∀ (m i : ℤ), 0 < m → ∀ y : Ht q (sp B) m i, ∃ (D : Type) (_ : CommRing D) (_ : Algebra B D) (_ : Algebra.Etale B D) (Q : Ideal D), Q.IsPrime ∧ Q.comap (algebraMap B D) = P ∧ (∀ d : D, ∃ b : B, d - algebraMap B D b ∈ Q) ∧ pull _ (spMap (algebraMap B D)) _ _ y = 0 := by
-  first | (exact @GlobalTheory.EtC.oneCoh_main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleNeighbourhoodKillsClass =====
@@ -1109,8 +1078,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.etale_prod_of_etale : ∀ (B A₁ A₂ : Type) [CommRing B] [CommRing A₁] [CommRing A₂] [Algebra B A₁] [Algebra B A₂], Algebra.Etale B A₁ → Algebra.Etale B A₂ → Algebra.Etale B (A₁ × A₂) := by
-  first | (exact @GlobalTheory.etale_prod)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleProdOfEtaleStatement =====
@@ -1137,10 +1104,6 @@ theorem finite_maximal_ideals_containing (B : Type) [CommRing B] [IsDedekindDoma
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hfP
 
-theorem finite_maximal_ideals_containing' : ∀ (B : Type) [CommRing B] [IsDedekindDomain B] (f : B),
-    f ≠ 0 → {P : Ideal B | P.IsMaximal ∧ f ∈ P}.Finite :=
-  fun B _ _ f hf => finite_maximal_ideals_containing B f hf
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -1152,8 +1115,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.finite_maximal_containing : ∀ (B : Type) [CommRing B] [IsDedekindDomain B] (f : B), f ≠ 0 → {P : Ideal B | P.IsMaximal ∧ f ∈ P}.Finite := by
-  first | (exact @GlobalTheory.finite_maximal_ideals_containing')
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMaximalContaining =====
@@ -1193,8 +1154,6 @@ section -- clump:auto
 @[expose] public section
 
 
-theorem _root_.GlobalTheory.T.residueField_atPrime_isSepClosed_of_finiteType : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [Algebra k B] [Algebra.FiniteType k B] (P : Ideal B) [P.IsMaximal], IsSepClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) := by
-  first | (exact @GlobalTheory.residueField_localization_atPrime_isSepClosed_of_finiteType)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueFieldAtPrimeIsSepClosedOfFiniteTypeStatement =====
@@ -1216,8 +1175,8 @@ def locKer {B : Type} [CommRing B] (f : B) (P : Ideal B) (hP : P.IsPrime) : Idea
 theorem locKer_coprime {B : Type} [CommRing B] [IsDedekindDomain B] (f : B) (hf : f ≠ 0) (P P' : Ideal B)
     (hP : P.IsMaximal) (hP' : P'.IsMaximal) (hne : P ≠ P') :
     IsCoprime (locKer f P hP.isPrime) (locKer f P' hP'.isPrime) := by
-  obtain ⟨N, hN⟩ := GlobalTheory.T.dedekind_power_localization B f hf P hP
-  obtain ⟨N', hN'⟩ := GlobalTheory.T.dedekind_power_localization B f hf P' hP'
+  obtain ⟨N, hN⟩ := _root_.GlobalTheory.dedekind_pow_maximal_mul_mem_span B f hf P hP
+  obtain ⟨N', hN'⟩ := _root_.GlobalTheory.dedekind_pow_maximal_mul_mem_span B f hf P' hP'
   have hc : IsCoprime P P' := Ideal.isCoprime_iff_sup_eq.2 (Ideal.IsMaximal.coprime_of_ne hP hP' hne)
   have hc' : IsCoprime (P ^ N) (P' ^ N') := hc.pow
   rw [Ideal.isCoprime_iff_sup_eq] at hc' ⊢
@@ -1238,9 +1197,7 @@ theorem mem_of_forall_locKer {B : Type} [CommRing B] (f b : B)
   have h1 : (1 : B) ∈ J := hJ ▸ Submodule.mem_top
   simpa [J] using h1
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap, Spec.map_comp]
+alias spMap_comp' := _root_.GlobalTheory.EtC.ProdStep.spMap_comp
 
 variable (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B]
   [Algebra.FiniteType k B]
@@ -1252,16 +1209,16 @@ theorem onePoint (hq : IsUnit (q : k)) (f : B) (hf : f ≠ 0) (m i : ℤ) (hm : 
       (∀ b : B, algebraMap B A b ∈ Ideal.span {algebraMap B A f} ↔ b ∈ locKer f P hP.isPrime) ∧
       pull _ (spMap (algebraMap B A)) _ _ y = 0 := by
   have hqB : IsUnit (q : B) := by simpa using hq.map (algebraMap k B)
-  have hsep := GlobalTheory.T.residueField_atPrime_isSepClosed_of_finiteType k B P
-  obtain ⟨D, _, _, _, Q, hQ, hQP, hres, hy⟩ := GlobalTheory.T.etale_neighbourhood_kills_class q B hqB P hsep m i (by omega) y
-  obtain ⟨g, hS, hK⟩ := GlobalTheory.T.away_quotient_span_eq_localization B D f hf P hP hfP Q hQ hQP hres
+  have hsep := _root_.GlobalTheory.residueField_localization_atPrime_isSepClosed_of_finiteType k B P
+  obtain ⟨D, _, _, _, Q, hQ, hQP, hres, hy⟩ := _root_.GlobalTheory.EtC.OneCoh.dies_on_etale_with_point q B hqB P hsep m i (by omega) y
+  obtain ⟨g, hS, hK⟩ := _root_.GlobalTheory.etale_away_quotient_eq_localization B D f hf P hP hfP Q hQ hQP hres
   refine ⟨Localization.Away g, inferInstance, inferInstance, inferInstance, hS, hK, ?_⟩
   rw [IsScalarTower.algebraMap_eq B D (Localization.Away g), spMap_comp', pull_comp, hy, map_zero]
 
 theorem exists_nbhd_pull_eq_zero : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ¬ IsUnit f → ∀ (m i : ℤ), 1 ≤ m → ∀ y : Ht q (sp B) m i, ∃ (A' : Type) (_ : CommRing A') (_ : Algebra B A') (_ : Algebra.Etale B A'), IsNbhd B A' f ∧ pull _ (spMap (algebraMap B A')) _ _ y = 0 := by
   intro q _ k B _ _ _ _ _ _ hq f hf hfu m i hm y
   let Pt := {P : Ideal B // P.IsMaximal ∧ f ∈ P}
-  haveI : Finite Pt := (GlobalTheory.T.finite_maximal_containing B f hf).to_subtype
+  haveI : Finite Pt := (_root_.GlobalTheory.finite_maximal_ideals_containing B f hf).to_subtype
   letI : Fintype Pt := Fintype.ofFinite Pt
   let K : Pt → Ideal B := fun x => locKer f x.1 x.2.1.isPrime
   have key : ∀ T : Finset Pt, T.Nonempty → ∃ (A : Type) (_ : CommRing A) (_ : Algebra B A) (_ : Algebra.Etale B A),
@@ -1281,8 +1238,8 @@ theorem exists_nbhd_pull_eq_zero : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field 
         refine locKer_coprime f hf x.1 j.1 x.2.1 j.2.1 fun h => hx ?_
         have : x = j := Subtype.ext h
         exact this ▸ hj
-      obtain ⟨hS, hK, hy⟩ := GlobalTheory.T.approximation_quotients_agree q B A₁ A₂ f _ _ m i y hcop hS₁ hK₁ hS₂ hK₂ hy₁ hy₂
-      refine ⟨A₁ × A₂, inferInstance, inferInstance, GlobalTheory.T.etale_prod_of_etale B A₁ A₂ inferInstance inferInstance, hS, fun b => ?_, hy⟩
+      obtain ⟨hS, hK, hy⟩ := _root_.GlobalTheory.EtC.ProdStep.prodStep q B A₁ A₂ f _ _ m i y hcop hS₁ hK₁ hS₂ hK₂ hy₁ hy₂
+      refine ⟨A₁ × A₂, inferInstance, inferInstance, _root_.GlobalTheory.etale_prod B A₁ A₂ inferInstance inferInstance, hS, fun b => ?_, hy⟩
       rw [hK b, Finset.cons_eq_insert, Finset.iInf_insert, inf_comm]
   have hne : (Finset.univ : Finset Pt).Nonempty := by
     have hspan : Ideal.span {f} ≠ ⊤ := fun h => hfu (Ideal.span_singleton_eq_top.1 h)
@@ -1309,8 +1266,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC GlobalTheory.AffineCurveNbhd
 
-theorem _root_.GlobalTheory.T.etale_local_vanishing_cohomology : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ¬ IsUnit f → ∀ (m i : ℤ), 1 ≤ m → ∀ y : Ht q (sp B) m i, ∃ (A' : Type) (_ : CommRing A') (_ : Algebra B A') (_ : Algebra.Etale B A'), IsNbhd B A' f ∧ pull _ (spMap (algebraMap B A')) _ _ y = 0 := by
-  first | (exact @GlobalTheory.CurveNbhdKill.exists_nbhd_pull_eq_zero)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalVanishingCohomologyStatement =====

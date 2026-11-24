@@ -46,12 +46,13 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdapt, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdaptStatement
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdapt =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdapt", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.StabilizerIndexVolumes.PtMatIsUnit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueIsometryFixingBothFramesOfFrameAdapt", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.StabilizerIndexVolumes.PtMatIsUnit\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.LatticeGluingRadicals\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -320,9 +321,6 @@ def Unip (F : FlagG S r T) (n : S.V ≃ₗ[E] S.V) : Prop :=
   n ∈ Formalism.HermitianLatticesTheory.isom S.hT ∧ (∀ j : ℕ, ∀ x ∈ F.Xa (j + 1), n x - x ∈ F.Xa j) ∧
     ∀ x ∈ orth S F.X, n x - x ∈ F.X
 
-lemma mem_orth (U : Submodule E S.V) (x : S.V) : x ∈ orth S U ↔ ∀ u ∈ U, S.hT u x = 0 := by
-  simp [orth, Submodule.mem_iInf]
-
 lemma Fix.onM {F : FlagG S r T} {F' : FlagG S r T'} {h : S.V ≃ₗ[E] S.V} (hh : Fix F F' h) :
     ∀ m ∈ Msp F F', h m = m := by
   rintro _ ⟨⟨c, c'⟩, rfl⟩
@@ -338,7 +336,7 @@ lemma unip_of {s h : S.V ≃ₗ[E] S.V} (hi : s ∈ Formalism.HermitianLatticesT
   refine ⟨mul_mem (inv_mem hh) hi, fun j x hx => ?_, fun x hx => ?_⟩
   · rw [LinearEquiv.mul_apply, hM' _ (hX (hs.map_X x (Xa_le_X F _ hx)))]
     exact hs.sub_Xa j x hx
-  · rw [mem_orth] at hx
+  · rw [_root_.Formalism.MainNotions.LatticeGluingRadicals.a_mem_orth] at hx
     have : x ∈ M ⊔ W := by rw [hc.sup_eq_top]; trivial
     obtain ⟨m, hm, w, hw, rfl⟩ := Submodule.mem_sup.mp this
     have hm2 : ∀ u ∈ F.X, S.hT u m = 0 := fun u hu => by
@@ -400,7 +398,7 @@ theorem inter_gen (F : FlagG S r T) (F' : FlagG S r T') (hD : (Zhat F F').det �
       rw [LinearEquiv.coe_inv, LinearEquiv.symm_apply_eq, hg.onM m hm]
     have h1 : g⁻¹ (s w) ∈ Wsp F F' :=
       mapsTo_twoFlagFramesOrthogonal_of_isometry (inv_mem hg.1) (fun m hm => by rw [hgM m hm]; exact hm) _ (hsW w hw)
-    have h2 : g⁻¹ (s w) - w ∈ F.X := hn.2.2 w ((mem_orth _ _).mpr fun u hu => hMW w hw u (hXM hu))
+    have h2 : g⁻¹ (s w) - w ∈ F.X := hn.2.2 w ((_root_.Formalism.MainNotions.LatticeGluingRadicals.a_mem_orth _ _).mpr fun u hu => hMW w hw u (hXM hu))
     have h3 : g⁻¹ (s w) - w = 0 := Submodule.disjoint_def.mp hc.disjoint _ (hXM h2) (sub_mem h1 hw)
     rw [sub_eq_zero, LinearEquiv.coe_inv, LinearEquiv.symm_apply_eq] at h3
     show g (m + w) = h0 (m + w)

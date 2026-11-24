@@ -133,8 +133,6 @@ section -- clump:auto
 
 open GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.isExcisionNbhd_away_of_inverse_mod : ∀ (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] (h : A), IsExcisionNbhd A A' h → ∀ a b : A', a * b - 1 ∈ Ideal.span {algebraMap A A' h} → IsExcisionNbhd A (Localization.Away a) h := by
-  first | (exact @GlobalTheory.EtC.isExcisionNbhd_away)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsExcisionNbhdAwayStatement =====

@@ -195,7 +195,6 @@ noncomputable section
 open MeasureTheory Complex
 open scoped Real RealInnerProductSpace ComplexConjugate FourierTransform SchwartzMap
 namespace GlobalTheory.RealWeil.SchurSchwartz
-variable {l : Type} [Fintype l]
 end GlobalTheory.RealWeil.SchurSchwartz
 namespace GlobalTheory.RealWeil.SchurSchwartz
 variable {l : Type} [Fintype l]
@@ -235,16 +234,6 @@ end GlobalTheory.RealWeil.SchurSchwartz
 end
 end
 
-section
-open scoped Matrix
-
-theorem _root_.GlobalTheory.T.real_weil_representation_schur_scalar : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (l : Type) [Fintype l] (U : GlobalTheory.RealWeil.Sch l →ₗ[ℂ] GlobalTheory.RealWeil.Sch l),
-    (∀ (w : l ⊕ l → ℝ) (h h₁ : GlobalTheory.RealWeil.Sch l), ⇑h₁ = GlobalTheory.RealWeil.rhoFun w ⇑h →
-      ⇑(U h₁) = GlobalTheory.RealWeil.rhoFun w ⇑(U h)) →
-    (∀ h : GlobalTheory.RealWeil.Sch l, ∫⁻ x, ‖U h x‖ₑ ^ 2 = ∫⁻ x, ‖h x‖ₑ ^ 2) →
-    ∃ a : ℂ, ‖a‖ = 1 ∧ ∀ h, U h = a • h := by
-  first | exact @_root_.GlobalTheory.RealWeil.SchurSchwartz.weil_schwartz_schur_lemma
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RealWeilRepresentationSchurScalar =====

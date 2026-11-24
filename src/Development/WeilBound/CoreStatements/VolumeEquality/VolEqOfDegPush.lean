@@ -141,7 +141,7 @@ section -- clump:auto
 
 namespace PositivityTheory.EqVol
 
-theorem indexEq : IndexEq := indexEq_of (coSA saOpen) divisible
+theorem indexEq : IndexEq := indexEq_of (coSA _root_.GroundTheory.Heights₂.Heights.StrongApprox.SAOpenHolds.full) divisible
 
 theorem levelIndexEq : LevelIndexEq :=
   levelIndexEq_of indexEq (levelCO hatCompactOpen) levelConj (levelRat hatRat)
@@ -764,15 +764,11 @@ namespace SheetDecomposition
 open NumberField Matrix MeasureTheory ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.FD GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Cusp GlobalTheory.CompanionTheory.Ar.Cusp.Dict
   GlobalTheory.CompanionTheory.Ar.Cusp.DictMeas GlobalTheory.CompanionTheory.Ar.Cmp PositivityTheory.EqVol
 
-theorem qconj_eq {E : Type} [Field E] [NumberField E] [IsCMField E] (x : E) :
-    GroundTheory.Automorphic.conj (maximalRealSubfield E) E x = IsCMField.complexConj E x :=
-  HermTrace.quadConj_eq_complexConj x
-
 theorem sesq_eq_herm {E : Type} [Field E] [NumberField E] [IsCMField E] {N : ℕ}
     (h : GroundTheory.Automorphic.HermitianForm (maximalRealSubfield E) E (Fin N → E)) (r : E) (x y : Fin N → E) :
     herm (r • (GroundTheory.Automorphic.gram h.toSesq (Pi.basisFun E (Fin N)))ᵀ) x y = r * h.toSesq y x := by
   rw [GroundTheory.Automorphic.sesq_eq_sum h.toSesq (Pi.basisFun E (Fin N)), herm, Finset.sum_comm]
-  simp only [Finset.mul_sum, qconj_eq, Pi.basisFun_repr, Matrix.smul_apply, Matrix.transpose_apply, smul_eq_mul, cc]
+  simp only [Finset.mul_sum, _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.HermTrace.quadConj_eq_complexConj, Pi.basisFun_repr, Matrix.smul_apply, Matrix.transpose_apply, smul_eq_mul, cc]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => ?_
   ring
 
@@ -832,7 +828,7 @@ theorem stdModel_of (h : StdZ) : StdModel := by
   refine ⟨r • g₀ᵀ, e, fun τ => (k : ℂ) • A τ, fun τ => (k : ℂ)⁻¹ • C.cinv (A τ) τ, Z, fun a b => ?_, ?_, C.e_inj, ⟨?_, ?_⟩,
     hform, fun τ => ⟨?_, ?_, ?_⟩, hbij, hmeas, fun γ hγ δ hδ t ht t' ht' => ?_⟩
   · have h1 : cc (g₀ b a) = g₀ a b := by
-      rw [cc, ← qconj_eq]
+      rw [cc, ← _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.HermTrace.quadConj_eq_complexConj]
       exact C.h.isSymm.eq _ _
     show cc (r * g₀ b a) = r * g₀ a b
     rw [← h1]
@@ -1242,19 +1238,6 @@ section
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {Ψ : Type} [Fintype Ψ] {j j' n g : ℕ} {Λ : Type}
   [AddCommGroup Λ] [Module (𝓞 E) Λ] {F : UnivFam E Ψ j j' n g Λ} (C : LatEmb F)
 
-theorem stdZ_perExt_vec (R : RiemLat E g Λ) (x : Λ) : C.perExt R (C.vec x) = R.P x := by
-  let v : Λ →+ (Ψ → Fin (j + j') → ℂ) := AddMonoidHom.mk' C.vec fun a b => by
-    funext τ i
-    simp [LatEmb.vec]
-  have h : ((C.perExt R).toAddMonoidHom.comp v).toIntLinearMap = R.P.toIntLinearMap := by
-    refine C.lam.ext fun k => ?_
-    have e : C.vec (C.lam k) = C.bas k := by
-      funext τ i
-      exact (C.bas_eq k τ i).symm
-    show C.perExt R (C.vec (C.lam k)) = R.P (C.lam k)
-    rw [e, LatEmb.perExt, Module.Basis.constr_basis]
-  exact LinearMap.congr_fun h x
-
 theorem stdZ_sgU (τ : Ψ) {A A' : Matrix (Fin (j + j')) (Sg j j') ℂ} (hA : Aᴴ * C.sgr τ * A = sgI j j')
     (hA' : A'ᴴ * C.sgr τ * A' = sgI j j') : IsSgU (C.cinv A τ * A') := by
   have h1 := (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.cinv_facts E Ψ j j' n g Λ F C τ A hA).2.1
@@ -1366,7 +1349,7 @@ theorem stdZ : StdZ := by
   obtain ⟨R', h1, -, h3, h4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Rotate.rotate_exists E Ψ j j' n g Λ F C (F.R t) a ai (F.form_eq t) hai hu
   have h5 := h4 A hA
   have hP : ∀ x, R'.P (δ x) = (F.R t).P x := fun x => by
-    rw [h3, ← stdZ_perExt_vec C (F.R t) x]
+    rw [h3, ← _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.AdaptedLen.perExt_vec C (F.R t) x]
     congr 1
     funext τ
     have hv : C.vec (δ x) τ = a τ *ᵥ C.vec x τ := by
@@ -1432,13 +1415,9 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 namespace One
 
-theorem spMap_comp' {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (f : R →+* S) (g : S →+* T) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  show Spec.map (CommRingCat.ofHom (g.comp f)) = _
-  rw [CommRingCat.ofHom_comp, Spec.map_comp]
+alias spMap_comp' := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp
 
-theorem spMap_inj {R S : Type} [CommRing R] [CommRing S] {f g : R →+* S} (h : spMap f = spMap g) : f = g :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
+alias spMap_inj := _root_.GlobalTheory.Reg.CellChart.spMap_inj
 
 theorem spec_map_factorisation {X : Scheme.{0}} {A A' B B' : CommRingCat.{0}} (u : A ⟶ B) [IsIso u] (r : A ⟶ A') (v : A' ⟶ B')
     (a : Spec A ⟶ X) (a' : Spec A' ⟶ X) (x : Spec B ⟶ X) (x' : Spec B' ⟶ X) (e : Spec.map u ≫ a = x)

@@ -109,13 +109,10 @@ theorem mem_iff_of_fix {n : ℕ} {A : Submodule E (Fin n → E)} {h : (Fin n →
 
 variable {L : LocE F E} {r k : ℕ} (S : Frames L r k)
 
-theorem spanTo_mono (g : Fin (r + 1) → S.V) {i j : ℕ} (hij : i ≤ j) : S.spanTo g i ≤ S.spanTo g j :=
-  Submodule.span_mono (Set.image_mono fun _ ha => lt_of_lt_of_le ha hij)
-
 theorem conj_Nof (g : Fin (r + 1) → S.V) {h s : S.GLV} (hi : h ∈ isomG L S.Hm)
     (hg : ∀ v ∈ S.spanTo g (r + 1), h v = v) (hs : s ∈ S.Nof g) : h * s * h⁻¹ ∈ S.Nof g := by
   have hfix : ∀ j ≤ r + 1, ∀ v, h v ∈ S.spanTo g j ↔ v ∈ S.spanTo g j := fun j hj =>
-    mem_iff_of_fix fun v hv => hg v (spanTo_mono S g hj hv)
+    mem_iff_of_fix fun v hv => hg v (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S g hj hv)
   obtain ⟨⟨s1, s2⟩, s3⟩ := hs
   refine ⟨⟨(isomG L S.Hm).mul_mem ((isomG L S.Hm).mul_mem hi s1) ((isomG L S.Hm).inv_mem hi), ?_⟩, ?_⟩
   · refine Subgroup.mem_iInf.2 fun j => ?_
@@ -123,7 +120,7 @@ theorem conj_Nof (g : Fin (r + 1) → S.V) {h s : S.GLV} (hi : h ∈ isomG L S.H
   · refine conj_unipOn (fun v => ?_) (hfix _ (by omega)) s3
     refine forall₂_congr fun y hy => ?_
     have := hi v y
-    rw [hg y (spanTo_mono S g (by omega) hy)] at this
+    rw [hg y (_root_.GlobalTheory.HL.FrameOnto.spanTo_mono S g (by omega) hy)] at this
     rw [this]
 
 theorem conj_St {h s : S.GLV} (hh : h ∈ S.H0) (hs : s ∈ S.St) : h * s * h⁻¹ ∈ S.St := by

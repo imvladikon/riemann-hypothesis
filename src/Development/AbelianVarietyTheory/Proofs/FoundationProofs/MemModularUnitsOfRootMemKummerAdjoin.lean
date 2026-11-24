@@ -85,13 +85,7 @@ theorem eq_one_of_pow_eq_one {F : Type} [Field F] (V : ValuationSubring F) {m : 
     (h1 : V.valuation (ζ - 1) < 1) : ζ = 1 := by
   apply GlobalTheory.eq_one_of_pow_eq_one_of_val_sub_lt <;> assumption
 
-theorem main : ∀ {F : Type} [inst : Field F] (V : ValuationSubring F) {m : ℕ},
-    (ValuationSubring.valuation V : F → ValuationSubring.ValueGroup V) (↑m : F) = (1 : ValuationSubring.ValueGroup V) →
-    ∀ {ζ : F}, ζ ^ m = (1 : F) →
-    (ValuationSubring.valuation V : F → ValuationSubring.ValueGroup V) (ζ - (1 : F)) < (1 : ValuationSubring.ValueGroup V) →
-    ζ = (1 : F) := by
-  intro F _ V m hm ζ hζ h1
-  exact eq_one_of_pow_eq_one V hm hζ h1
+alias main := _root_.GlobalTheory.RootOfUnityEqOne.eq_one_of_pow_eq_one
 
 end GlobalTheory.RootOfUnityEqOne
 end -- clump:auto
@@ -491,12 +485,6 @@ theorem val_eq_one_of_pow {L : Type} [Field L] (A : ValuationSubring L) {x : L} 
   · exact h1
   · exact absurd h (ne_of_gt (one_lt_pow₀ h1 hn))
 
-theorem root_eq_one {F : Type} [Field F] (V : ValuationSubring F) {m : ℕ} (hm : V.valuation (m : F) = 1) {ζ : F}
-    (hζ : ζ ^ m = 1) (hV : V.valuation (ζ - 1) < 1) : ζ = 1 := by
-  first
-  | (apply _root_.GlobalTheory.RootOfUnityEqOne.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.RootOfUnityEqOne.main ..)
-
 theorem fix_root {L : Type} [Field L] (B : ValuationSubring L) {m : ℕ} (hm0 : m ≠ 0) (hm : B.valuation (m : L) = 1)
     {y U g : L} (hy : y ^ m = U) (hg : g ≠ 0) (hu : B.valuation (U / g ^ m) = 1) (φ : L →+* L) (hU : φ U = U)
     (hφg : φ g = g) (hφ : ∀ x, B.valuation x ≤ 1 → B.valuation (φ x - x) < 1) : φ y = y := by
@@ -510,7 +498,7 @@ theorem fix_root {L : Type} [Field L] (B : ValuationSubring L) {m : ℕ} (hm0 : 
   have e : φ (y / g) - y / g = (φ y / y - 1) * (y / g) := by
     rw [map_div₀, hφg]; field_simp
   rw [e, map_mul, hz, mul_one] at h2
-  have := root_eq_one B hm h1 h2
+  have := _root_.GlobalTheory.RootOfUnityEqOne.eq_one_of_pow_eq_one B hm h1 h2
   exact (div_eq_one_iff_eq hy0).1 this
 
 theorem fix_adjoin {K L : Type} [Field K] [Field L] [Algebra K L] (Q : (L →+* L) → Prop) (S : Set L)

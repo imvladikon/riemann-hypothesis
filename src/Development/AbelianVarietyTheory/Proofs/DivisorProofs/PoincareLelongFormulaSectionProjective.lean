@@ -929,8 +929,7 @@ end MongeAmpereTransport
 section
 open CategoryTheory AlgebraicGeometry NumberField ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.AnForm ReciprocityTheory.AnForm.M
 open Formalism.BasicNotions GlobalTheory GlobalTheory.Cartier GlobalTheory.ProjVar GlobalTheory.TrueGeo GlobalTheory.ArInt GlobalTheory.Mean4 GlobalTheory.Mean4O GlobalTheory.CxPts GlobalTheory.Mean4O.CombForm
-theorem _root_.GlobalTheory.Adopt.mongeAmpereIntegral_invariant_homeomorph_transport : ∀ (e : ℕ) (X X' : Type) [TopologicalSpace X] [TopologicalSpace X'] [CompactSpace X] [T2Space X] [CompactSpace X'] [T2Space X'] (A : FinHolAtlas e X) (h : X ≃ₜ X') (Φ : Fin e → LocPot X') (g : X' → ℝ), (∀ i, IsPotential (tAtlas A h) (Φ i)) → Continuous g → mInt (tAtlas A h) Φ g = mInt A (fun i => (Φ i).pullback h h.continuous) (g ∘ h) := by
-  first | exact @MongeAmpereTransport.GlobalTheory.CompanionTheory.MaTransport.mInt_tAtlas
+alias _root_.GlobalTheory.Adopt.mongeAmpereIntegral_invariant_homeomorph_transport := _root_.MongeAmpereTransport.GlobalTheory.CompanionTheory.MaTransport.mInt_tAtlas
 
 end
 end -- clump:auto
@@ -1550,9 +1549,6 @@ theorem lSncAt_of_snc (X : Scheme.{0}) [IsNoetherian X] (B : Closeds X) (m : ℕ
   have e : (C a.1 : Set X) = C b.1 := (hD _ h1).trans (hD _ (hgb b)).symm
   exact Subtype.ext (hC.2.2 _ _ e.le)
 
-theorem lSncAt_of_snc' : ∀ (X : Scheme.{0}) [IsNoetherian X] (B : Closeds X) (m : ℕ) (C : Fin m → Closeds X), Snc (Scheme.IdealSheafData.vanishingIdeal B) → CompList (B : Set X) C → ∀ x : X, LSncAt X C x :=
-  fun X _ B m C hB hC x => lSncAt_of_snc X B m C hB hC x
-
 end GlobalTheory.SncLocal
 end -- clump:auto
 end -- clump:auto
@@ -1641,7 +1637,7 @@ theorem exists_genericPoints : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsInte
   haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   haveI : IsNoetherian X := {}
   obtain ⟨m, C, hC, -⟩ := GlobalTheory.SncComponents.exists_compList_effCartier F X p D T hT
-  have hL := GlobalTheory.SncLocal.lSncAt_of_snc' X T m C hT hC
+  have hL := _root_.GlobalTheory.SncLocal.lSncAt_of_snc X T m C hT hC
   have hz : ∀ a, ∃ z : X, closure {z} = (C a : Set X) := fun a =>
     QuasiSober.sober (hC.1 a) (C a).isClosed
   choose z hz using hz

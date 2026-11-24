@@ -258,11 +258,6 @@ end Alg
 
 variable {D : D7}
 
-theorem cA_incA (x : D.host.E) : cA D (incA D x) = incA D (star x) := rfl
-
-theorem mt_inj (V : HSp D) {a b : GA D V} (h : Formalism.L2.Theta.mt V a = Formalism.L2.Theta.mt V b) : a = b :=
-  Subtype.ext (Units.ext h)
-
 theorem exists_scalar (V : HSp D) (a : AE D) (ha : cA D a * a = 1) :
     ∃ z : GA D V, Formalism.L2.Theta.mt V z = Matrix.diagonal fun _ => a := by
   have h1 : (Matrix.diagonal fun _ : Fin V.rank => a) * (Matrix.diagonal fun _ => cA D a) = 1 := by
@@ -284,7 +279,7 @@ theorem scalar_central (V : HSp D) {a : AE D} {z : GA D V} (hz : Formalism.L2.Th
     z ∈ Subgroup.center (GA D V) := by
   rw [Subgroup.mem_center_iff]
   intro g
-  apply mt_inj V
+  apply _root_.GlobalTheory.IdemSupport.mt_inj V
   change Formalism.L2.Theta.mt V g * Formalism.L2.Theta.mt V z = Formalism.L2.Theta.mt V z * Formalism.L2.Theta.mt V g
   rw [hz]
   ext i j
@@ -337,7 +332,7 @@ theorem centralScalar : ∀ (D : D7) (V : HSp D) (Q : Finset (Pl D.host.E)) (es 
   have hca : cA D a = comp Q es (fun i => cA D (es i)) (fun PP => incA D (ϖ PP : D.host.E))
       (fun PP => incA D (star (ϖ PP : D.host.E)⁻¹)) := by
     rw [ha', map_comp (cA D) GlobalTheory.DualPairCheck.cA_cA]
-    simp only [cA_incA, star_star]
+    simp only [_root_.GlobalTheory.DualPairCheck.cA_incA, star_star]
   have hn : cA D a * a = 1 := by
     rw [hca, ha', comp_mul hp hq]
     refine comp_eq_one (fun i hi => ?_) (fun i hi => ?_)
@@ -381,10 +376,10 @@ theorem centralScalar : ∀ (D : D7) (V : HSp D) (Q : Finset (Pl D.host.E)) (es 
     exact Finset.sum_congr rfl fun i hi => hp _ _ i hi
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [mul_comm, map_sum, map_sum, Finset.sum_mul]
-    exact Finset.sum_congr rfl fun i hi => by rw [map_mul, cA_incA]; exact hq _ _ i hi
+    exact Finset.sum_congr rfl fun i hi => by rw [map_mul, _root_.GlobalTheory.DualPairCheck.cA_incA]; exact hq _ _ i hi
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [mul_comm, map_sum, map_sum, Finset.sum_mul, hca]
-    exact Finset.sum_congr rfl fun i hi => by rw [map_mul, cA_incA]; exact hq _ _ i hi
+    exact Finset.sum_congr rfl fun i hi => by rw [map_mul, _root_.GlobalTheory.DualPairCheck.cA_incA]; exact hq _ _ i hi
 
 end GlobalTheory.CentralScalar
 end -- clump:auto
@@ -579,10 +574,6 @@ theorem isHalf_smul {m n : ℕ} {e : AE D} (s : AE D) {w : Mx D m n} (hw : IsHal
   intro i j
   simp only [Matrix.smul_apply, smul_eq_mul]
   rw [mul_left_comm, hw i j]
-
-theorem isHalf_sub {m n : ℕ} {e : AE D} {w w' : Mx D m n} (hw : IsHalf e w) (hw' : IsHalf e w') : IsHalf e (w - w') := by
-  intro i j
-  simp only [Matrix.sub_apply, mul_sub, hw i j, hw' i j]
 
 theorem redM_sub (PP : Pl D.host.E) {b a : ℕ} {N M : Matrix (Fin b) (Fin a) (EAf D)} (hN : IsIntM N) (hM : IsIntM M) :
     redM PP (N - M) = redM PP N - redM PP M := by
@@ -785,7 +776,7 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
   have H2e : ∀ w ∈ Λ, ∀ w' ∈ Λ, IsHalf e w → IsHalf e w' → (w - w' ∈ Λe ↔ ∀ PP ∈ R.Q t,
       redM PP (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) w) = redM PP (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) w')) := by
     intro w hw w' hw' hh hh'
-    have hd := isHalf_sub hh hh'
+    have hd := _root_.GlobalTheory.SplitScalar.isHalf_sub hh hh'
     have hi := (H1e w hh).1 hw
     have hi' := (H1e w' hh').1 hw'
     have hN : IsIntM (frMapO (Vc D i) (Wc D i) (R.βV i) (R.βW i) (w - w')) := (H1e _ hd).1 (sub_mem hw hw')
@@ -804,7 +795,7 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
   have H2c : ∀ w ∈ Λ, ∀ w' ∈ Λ, IsHalf (cA D e) w → IsHalf (cA D e) w' → (w - w' ∈ Λc ↔ ∀ PP ∈ R.Q t,
       redM PP (frMapAdj (Vc D i) (Wc D i) (R.βV i) (R.βW i) w) = redM PP (frMapAdj (Vc D i) (Wc D i) (R.βV i) (R.βW i) w')) := by
     intro w hw w' hw' hh hh'
-    have hd := isHalf_sub hh hh'
+    have hd := _root_.GlobalTheory.SplitScalar.isHalf_sub hh hh'
     have hi := (H1c w hh).1 hw
     have hi' := (H1c w' hh').1 hw'
     have hN : IsIntM (frMapAdj (Vc D i) (Wc D i) (R.βV i) (R.βW i) (w - w')) := (H1c _ hd).1 (sub_mem hw hw')
@@ -889,7 +880,7 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
       have := hxd.2; rwa [actsub, zz] at this⟩, ?_⟩
     rintro v ⟨hv, hvw⟩
     obtain ⟨x', hx', rfl⟩ := Finset.mem_image.1 hv
-    rw [hxu x' ⟨hx', isHalf_sub (Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isHalf_actO _ _ _ hwh) (hXc1 x' hx').2, by
+    rw [hxu x' ⟨hx', _root_.GlobalTheory.SplitScalar.isHalf_sub (Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isHalf_actO _ _ _ hwh) (hXc1 x' hx').2, by
       rw [actsub, zz]; exact hvw⟩]
   have cl13c : ∀ w, actO (Vc D i) (Wc D i) z 1 w ∈ Λ → IsHalf (cA D (cA D e)) w →
       ∃! v, v ∈ Xe.image (actO (Vc D i) (Wc D i) z⁻¹ 1) ∧ w - v ∈ Λ := by
@@ -900,7 +891,7 @@ theorem GlobalTheory.ZRep.central_reps : ∀ (D : D7) (G : Type) [Group G] [Fint
       have := hxd.2; rwa [actsub, z'z] at this⟩, ?_⟩
     rintro v ⟨hv, hvw⟩
     obtain ⟨x', hx', rfl⟩ := Finset.mem_image.1 hv
-    rw [hxu x' ⟨hx', isHalf_sub (Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isHalf_actO _ _ _ hwh) (hXe1 x' hx').2, by
+    rw [hxu x' ⟨hx', _root_.GlobalTheory.SplitScalar.isHalf_sub (Formalism.IndefR.Fin.LevelGroupLemmas.Lat.isHalf_actO _ _ _ hwh) (hXe1 x' hx').2, by
       rw [actsub, z'z]; exact hvw⟩]
   have injz : Function.Injective (actO (Vc D i) (Wc D i) z 1) := fun x y h => by rw [← z'z x, h, z'z]
   have injz' : Function.Injective (actO (Vc D i) (Wc D i) z⁻¹ 1) := fun x y h => by rw [← zz x, h, zz]
@@ -1193,8 +1184,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.ConjTwist GlobalTheory.GalTw ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open Classical
 
-theorem _root_.GlobalTheory.T.fixesUntwistedLiftData_conjugatePrime_value_sqrtNorm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m} (T : CoreJ D) [Algebra T.Q.c.F D.what₂.LL] (R : RealDat D A T.Q.c.F) (i : Fin D.R.m) (τ : ℂ ≃+* ℂ) (PP : Pl D.host.E), FixBase T R i τ → ((D.host.g 0 * D.host.g 1 : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal → τ ((((R.C.mu0 i * R.C.eta⁻¹).val (Formalism.L2.DIV.conjPl PP) : ℂˣ) : ℂ) * ((Real.sqrt (Ideal.absNorm PP.asIdeal : ℝ) : ℝ) : ℂ)) = (((R.C.mu0 i * R.C.eta⁻¹).val (Formalism.L2.DIV.conjPl PP) : ℂˣ) : ℂ) * ((Real.sqrt (Ideal.absNorm PP.asIdeal : ℝ) : ℝ) : ℂ) := by
-  first | exact @GlobalTheory.ConjFix.fixBase_split_conj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixesUntwistedLiftDataConjugatePrimeValueSqrtNorStatement =====
@@ -1396,7 +1385,7 @@ theorem GlobalTheory.FlatConst.flat_const : ∀ (D : D7) (G : Type) [Group G] [F
     refine Finset.prod_congr rfl fun PP hP => ?_
     rw [map_pow, map_inv₀]
     congr 2
-    exact GlobalTheory.T.fixesUntwistedLiftData_conjugatePrime_value_sqrtNorm T R i τ PP hτ (hg PP hP)
+    exact _root_.GlobalTheory.ConjFix.fixBase_split_conj T R i τ PP hτ (hg PP hP)
   · intro t'
     have h1 := chrW_val R i t' x
     have h2 := chr_inv_val (R.xi t') x

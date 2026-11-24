@@ -194,7 +194,7 @@ variable [IsAlgClosed K]
 
 theorem fL_surjective (hq : IsUnit (q : LaurentPolynomial K)) : Function.Surjective (fL q K hq) := by
   intro x
-  obtain ⟨u', hu'⟩ := GlobalTheory.T.exists_unit_kummer_eq_of_picard_torsionFree q (LaurentPolynomial K) hq
+  obtain ⟨u', hu'⟩ := _root_.GlobalTheory.EtC.kum_surjective q (LaurentPolynomial K) hq
     (fun c _ => @Subsingleton.elim _ (pic_subsingleton K) _ _) x
   set u : (LaurentPolynomial K)ˣ := Units.map (gEq K).toRingHom.toMonoidHom u'
   have hu : Units.map (gEq K).symm.toRingHom.toMonoidHom u = u' := by ext; simp [u]
@@ -222,7 +222,7 @@ theorem fL_injective (hq : IsUnit (q : LaurentPolynomial K)) : Function.Injectiv
   have hz' : fL q K hq ((z.val : ℤ) : ZMod q) = 0 := by
     rw [Int.cast_natCast, ZMod.natCast_zmod_val]; exact hz
   rw [fL_intCast, zpow_natCast] at hz'
-  obtain ⟨v, hv⟩ := GlobalTheory.T.eq_pow_of_kummerClassOfUnit_eq_zero q (LaurentPolynomial K) hq _ hz'
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.EtC.eq_pow_of_kum_eq_zero q (LaurentPolynomial K) hq _ hz'
   have hv' : tau K ^ z.val = (Units.map (gEq K).toRingHom.toMonoidHom v) ^ q := by
     have := congrArg (Units.map (gEq K).toRingHom.toMonoidHom) hv
     rw [← map_pow, ← this]; ext; simp
@@ -256,9 +256,9 @@ theorem GlobalTheory.EtC.gm_algClosed_cohomology : ∀ (q : ℕ) [NeZero q] (K :
       Nonempty (Ht q (sp (LaurentPolynomial K)) 1 i ≃+ ZMod q) := by
   intro q _ K _ _ hq n i
   haveI := GlobalTheory.LaurentUnits.isDedekindDomain K
-  refine ⟨fun hn => GlobalTheory.T.smooth_affine_curve_etale_cohomologicalDimension_le_one q K (LaurentPolynomial K) hq n i hn, ?_⟩
+  refine ⟨fun hn => _root_.GlobalTheory.EtC.etC_c2 q K (LaurentPolynomial K) hq n i hn, ?_⟩
   have hqL := GlobalTheory.GmAlgClosed.isUnit_q_L q K hq
-  obtain ⟨e1⟩ := GlobalTheory.T.tateTwistCohomology_spec_twist_independent q (LaurentPolynomial K) hqL (GlobalTheory.GmAlgClosed.exists_root_L q K hq) 1 i 1
+  obtain ⟨e1⟩ := _root_.GlobalTheory.EtC.untwist q (LaurentPolynomial K) hqL (GlobalTheory.GmAlgClosed.exists_root_L q K hq) 1 i 1
   exact ⟨e1.trans (AddEquiv.ofBijective _
     ⟨GlobalTheory.GmAlgClosed.fL_injective q K hqL, GlobalTheory.GmAlgClosed.fL_surjective q K hqL⟩).symm⟩
 end -- clump:auto
@@ -272,8 +272,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed : ∀ (q : ℕ) [NeZero q] (K : Type) [Field K] [IsAlgClosed K], IsUnit (q : K) → ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial K)) n i)) ∧ Nonempty (Ht q (sp (LaurentPolynomial K)) 1 i ≃+ ZMod q) := by
-  first | (exact @GlobalTheory.EtC.gm_algClosed_cohomology)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentPolynomialOfIsAlgCloseStatement =====
@@ -328,8 +326,8 @@ theorem main : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [Is
   haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
   have hqK : IsUnit (q : FractionRing T) := by
     simpa using hq.map (algebraMap T (FractionRing T))
-  obtain ⟨h2, _⟩ := GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed q (FractionRing T) hqK n i
-  obtain ⟨_, ⟨e1⟩⟩ := GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed q (FractionRing T) hqK 1 i
+  obtain ⟨h2, _⟩ := _root_.GlobalTheory.EtC.gm_algClosed_cohomology q (FractionRing T) hqK n i
+  obtain ⟨_, ⟨e1⟩⟩ := _root_.GlobalTheory.EtC.gm_algClosed_cohomology q (FractionRing T) hqK 1 i
   refine ⟨fun hn => ?_, ⟨(laurentEquiv GlobalTheory.T.etale_cohomology_ind_etale_base_change q T hA hq 1 i).trans e1⟩⟩
   haveI := h2 hn
   exact (laurentEquiv GlobalTheory.T.etale_cohomology_ind_etale_base_change q T hA hq n i).injective.subsingleton
@@ -348,8 +346,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistCohomology_laurent_absIntClosedLocalDomain : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → IsUnit (q : T) → ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial T)) n i)) ∧ Nonempty (Ht q (sp (LaurentPolynomial T)) 1 i ≃+ ZMod q) := by
-  first | (exact @GlobalTheory.EtC.GmAic.main)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentAbsIntClosedLocalDomaiStatement =====

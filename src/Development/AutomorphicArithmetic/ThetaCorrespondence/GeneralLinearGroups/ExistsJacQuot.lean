@@ -326,7 +326,7 @@ theorem exists_emb (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalThe
   let π : GlobalTheory.SplitRead.Irr k x.1 := { V := x.2.rep.V, π := x.rep, smooth := x.2.rep.smooth, irr := x.2.rep.irr }
   obtain ⟨U, _, _, ν, f, hν, hf, hsub⟩ := exists_jac_quot hBZ x q hq i hi h
   have h1 := GlobalTheory.injective_of_jacquet_surjective π e hν f hf
-  have h2 := GlobalTheory.CuspSupportExist.L_tens hG k _ π s _ e U ν hν (.of_surjective f hf)
+  have h2 := _root_.GlobalTheory.JacTensor.exists_irr_tensor_of_isSubquotient_jac hG k _ π s _ e U ν hν (.of_surjective f hf)
   obtain ⟨φ, hφ⟩ := h1
   obtain ⟨σ, hσ⟩ := h2
   have hirr : (piTensor fun a => (σ a).π).IsIrreducible :=

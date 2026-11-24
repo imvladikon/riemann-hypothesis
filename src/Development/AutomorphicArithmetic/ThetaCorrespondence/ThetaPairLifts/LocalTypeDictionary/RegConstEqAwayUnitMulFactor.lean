@@ -1192,7 +1192,7 @@ theorem mixglobB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : Gr
       rcases not_and_or.1 hu with hl | hl
       · rw [if_neg fun h => hl h.2, zero_mul, mul_zero]
       · rw [if_neg fun h : _ ∧ IsHalf ε (mapB e u) => hl h.2, mul_zero, mul_zero]
-  have hR := GlobalTheory.T.heisenbergStableRelation_of_vacua Γ.M' W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
+  have hR := _root_.GlobalTheory.InductLagr.rel_of_vac Γ.M' W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => mixHalfS e (atPl w 1)) (fun w => mixHalfS e (cA D (atPl w 1))) (mixCoS B t e) I (halfPt t e ε) R (c • f)
     hI (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
     (fun w hw => (hh w hw).2.2.1) (fun w _ x _ u => (hco w).1 u x)
@@ -1416,11 +1416,11 @@ theorem thetaFlip_tensor_match (hH : GlobalTheory.Published.HoweDualityReal) (hP
   have sA := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D Bs.ψ θ hstd hθ true W X A B β (β / α) ωA hωA
   have sB := GlobalTheory.T.fockAlgebraicThetaVectors_stable_finiteAdeles_lie D Bs.ψ θ hstd hθ false W₁ X A₁ B α (α / β) ωB hωB
   obtain ⟨oA, oB⟩ := _root_.GlobalTheory.T.triple_algebra_map_surjective hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
-  obtain ⟨iA, iB⟩ := _root_.GlobalTheory.T.triple_assembly_inverse_finite hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
-  obtain ⟨lA, lB⟩ := _root_.GlobalTheory.T.theta_triple_lift_lie_invariant hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
-  obtain ⟨fA, fB⟩ := _root_.GlobalTheory.T.theta_triple_maps_equivariant hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
-  obtain ⟨dA, dB⟩ := _root_.GlobalTheory.T.theta_triple_lift_lie_equivariant hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
-  have ir := _root_.GlobalTheory.T.theta_triple_lift_irreducible hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
+  obtain ⟨iA, iB⟩ := _root_.GlobalTheory.TripleAssembly.triple_map_comp_inverse_finite hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
+  obtain ⟨lA, lB⟩ := _root_.GlobalTheory.TripleAssembly.LieInv.theta_triple_maps_lie_action_eq_zero hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
+  obtain ⟨fA, fB⟩ := _root_.GlobalTheory.TripleAssembly.EqFin.theta_triple_maps_equivariant_on_finite_vectors hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
+  obtain ⟨dA, dB⟩ := _root_.GlobalTheory.TripleAssembly.theta_triple_maps_lie_equivariant hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
+  have ir := _root_.GlobalTheory.TripleAssembly.Irred.theta_triple_piT_irreducible hH hP D Bs.ψ θ hstd hθ W W₁ X A A₁ B α β hT ωA ωB hωA hωB e Bs Γ Xc om om' hR tA tB R Rf hm
   obtain ⟨cA, hcA⟩ := GlobalTheory.Twist.exists_addEquiv_symplecticCoords_orientedModel.coords D W X e.symm (-1) (neg_ne_zero.2 one_ne_zero)
   obtain ⟨cB, hcB⟩ := GlobalTheory.Twist.exists_addEquiv_symplecticCoords_orientedModel.coords D W₁ X e.symm 1 one_ne_zero
   have gX := GlobalTheory.RouteCoords.gram_det_ne X
@@ -1533,8 +1533,8 @@ theorem thetaFlip_tuple_match (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) 
   have hT' := hm.triple
   have H := fun (w : Pl D.host.E) (hw : w ∈ locPl G t) => local_charts hL W B t i j M hst h hm hti hw
   choose! ιA ι ιB ι' l hl h1 h2 h3 h4 h5 h6 h7 using H
-  obtain ⟨f, -, f2, f3⟩ := GlobalTheory.T.exists_gaussianVacuum_product_unitVacua hL W ρ t i j M hst e Bs Γ X om om' h hT' hti.1
-  obtain ⟨f', -, g2, g3⟩ := GlobalTheory.T.unitVacua_product_eq_gaussianDatum_smallModel hL W ρ t i j M hst e Bs Γ X om om' h hT' hti
+  obtain ⟨f, -, f2, f3⟩ := _root_.GlobalTheory.FlipVac.exists_gauss_vac hL W ρ t i j M hst e Bs Γ X om om' h hT' hti.1
+  obtain ⟨f', -, g2, g3⟩ := _root_.GlobalTheory.SmallVac.vac_datumB hL W ρ t i j M hst e Bs Γ X om om' h hT' hti
   obtain ⟨hs, a⟩ := mixglobA hL W B ρ t i j M hst e Bs Γ X om om' h hT' hti.1 f f3 ι h3
   obtain ⟨hs', b⟩ := mixglobB hL W B ρ t i j M hst e Bs Γ X om om' h hT' hti f' g3 ι' h4
   have vA : ∏ w ∈ locPl G t, ιA w (Γ.M.vac _) 0 = ∏ w ∈ locPl G t, ι w (Γ.M.vac _) 0 := Finset.prod_congr rfl fun w hw => by
@@ -1656,7 +1656,7 @@ theorem _root_.GlobalTheory.T.thetaFlip_involutive_correspondence : _root_.Globa
         ((s : ℝ) : ℂ) • p (fockF W.ψ W.θ true A (frSum AV AV₁) (datumA W τ) P) =
           (κ t * ((s' : ℝ) : ℂ) * g) • p' (fockF W.ψ W.θ false A₁ (frSum AV AV₁) (datumB W τ') P') := by
   intro hP hK hM
-  obtain ⟨F1, H1⟩ := _root_.GlobalTheory.T.theta_parameter_dictionary_bijective hP
+  obtain ⟨F1, H1⟩ := _root_.GlobalTheory.TopDict.theta_parameter_dictionary hP
   obtain ⟨F2, H2⟩ := _root_.GlobalTheory.T.theta_stage_unique hP hK hM
   refine ⟨max F1 F2, fun ε CF hCF => ?_⟩
   obtain ⟨C1, x1, H1⟩ := H1 ε CF (le_of_max_le_left hCF)
@@ -1777,11 +1777,11 @@ theorem regulator_constant_eq : _root_.GlobalTheory.FunPr.ThetaLocalInputs → G
     ∃ κ : T → ℂ, (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
       ∀ (t : T) (c₀ : ℂ), RegConst W S.B ρ t i j c₀ → c₀ = κ t * lam t := by
   intro hP hK hM
-  have hLM := _root_.GlobalTheory.T.twisted_local_factors_match hP.howeDualityReal hP hK hM
-  have hTA := _root_.GlobalTheory.T.twisted_square_theta_integrals_eq hP hK hM
-  obtain ⟨F1, H1⟩ := _root_.GlobalTheory.T.theta_parameter_dictionary_bijective hP
+  have hLM := _root_.GlobalTheory.SquareLM.twisted_square_local_matching hP.howeDualityReal hP hK hM
+  have hTA := _root_.GlobalTheory.SquareAgree.twisted_theta_integrals_agree hP hK hM
+  obtain ⟨F1, H1⟩ := _root_.GlobalTheory.TopDict.theta_parameter_dictionary hP
   obtain ⟨F2, H2⟩ := _root_.GlobalTheory.T.thetaFlip_involutive_correspondence hP hK hM
-  obtain ⟨F3, H3⟩ := _root_.GlobalTheory.T.theta_finiteData_match_each_stage hP hK hM
+  obtain ⟨F3, H3⟩ := _root_.GlobalTheory.StageFinMatch.theta_bottom_finite_match hP hK hM
   refine ⟨max F1 (max F2 F3), fun ε CF hCF => ?_⟩
   obtain ⟨C1, x1, H1⟩ := H1 ε CF (le_of_max_le_left hCF)
   obtain ⟨C2, x2, H2⟩ := H2 ε CF (le_of_max_le_left (le_of_max_le_right hCF))
@@ -1937,20 +1937,6 @@ end GlobalTheory.ThetaRegularizationComparison
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta Formalism.L2.DIV IsDedekindDomain NumberField MeasureTheory
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest GlobalTheory.SqTop GlobalTheory.SqTower GlobalTheory.SplitFlip GlobalTheory.SplitWeil GlobalTheory.StdFrames GlobalTheory.ChainFr GlobalTheory.SquareDict GlobalTheory.SquareComm
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.ConstRatio (Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
-
-theorem _root_.GlobalTheory.T.regConst_eq_away_unit_mul_factor : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) → NumbersIn D.what₂.embLL S μ₀ → ∀ (ρ : RealMatch W), ρ.Tied → ∀ (i j : Fin D.R.m) (X : TriG G i j) (lam : T → ℂ),
-    TopGrid W i j X → IsStageC W i j (pp D j) (qq D j) X → Factor X W.ψ W.θ lam →
-    ∃ κ : T → ℂ, (∀ t, κ t ≠ 0 ∧ ∃ ζ : D.what₂.LL, GlobalTheory.Square.IsAwayUnit (Qn G t) ζ ∧ κ t = D.what₂.embLL ζ * κ μ₀) ∧
-      ∀ (t : T) (c₀ : ℂ), RegConst W S.B ρ t i j c₀ → c₀ = κ t * lam t := by
-  first | exact @_root_.GlobalTheory.ThetaRegularizationComparison.regulator_constant_eq
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RegConstEqAwayUnitMulFactor =====

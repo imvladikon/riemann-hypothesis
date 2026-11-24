@@ -333,7 +333,7 @@ theorem fock_locVec (W : G.Weil) {p : Pair T} {ε : AE D} {f₀ φ f : WO (G.pS 
   have hth := fun Q => GlobalTheory.Chain.InnerSteps.theta_pureTensorO W.ψ_std W.θ_is (G.cartS W.cart p) (G.onS W.onb p)
     (G.onT W.cart p) (G.onT W.onb p) hf Q
   exact ⟨hth P, fun u hu h1 h2 => GlobalTheory.Hk3.FiniteHeis.heisO_pureTensorO_of_finite W.ψ W.θ _ _ W.θ_is _ _ _ _ f hth u
-    (GlobalTheory.VacGood.infPart_latO hu) (GlobalTheory.Hk3.heisO_fix_thetaAt_off W.ψ _ _ ε _ 1 f₀ φ f h.2 u h1 h2) P⟩
+    (_root_.GlobalTheory.SplitScalar.latO_fin hu) (GlobalTheory.Hk3.heisO_fix_thetaAt_off W.ψ _ _ ε _ 1 f₀ φ f h.2 u h1 h2) P⟩
 
 abbrev latSmall (G : GridData L sc) (i j : ℕ) : Submodule (𝓞 D.host.E) (Fin (spW₁ G i j).rank → D.host.E) :=
   GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid i j))
@@ -725,25 +725,6 @@ open ValuativeRel
 open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 
 
-theorem _root_.GlobalTheory.T.heisenbergLatticeVacuum_unique_up_to_scalar : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig a a')
-    (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := D.host.F)) (L₁ : Submodule (𝓞 D.host.E) (Fin a' → D.host.E))
-    (L₂ : Submodule (𝓞 D.host.E) (Fin (a + a') → D.host.E)) (θ : 𝓞 D.host.E),
-    GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.PsiUnr Bs.ψ v → L₁.IsLattice D.host.E → L₂.IsLattice D.host.E →
-    (∀ z : Matrix (Fin a') (Fin (a + a')) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E)), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin D.host.F v) z →
-      (z ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} v ↔
-        ∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} v,
-          Bs.ψ (symp (R := AF D.host.F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (-1) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J)
-            (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J) z γ) = 1)) →
-    (θ : D.host.E) + D.sp.cm.sig θ = 1 →
-    ∀ φ₀ ψ₀ : (Fin a' × Fin (a + a') → Fv D.host.F v) → ℂ, φ₀ ∈ GlobalTheory.WeilM.SB _ → φ₀ ≠ 0 → (∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} v,
-          GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (evFin D.host.F v) (Γ.M'.co.rho Bs.ψ γ) φ₀
-            (Bs.ψ (⅟(2 : AF D.host.F) * symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (inclR (F := D.host.F) (AF D.host.F) (θ : D.host.E))
-              (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J) γ γ) • φ₀)) →
-      ψ₀ ∈ GlobalTheory.WeilM.SB _ → (∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} v,
-          GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (evFin D.host.F v) (Γ.M'.co.rho Bs.ψ γ) ψ₀
-            (Bs.ψ (⅟(2 : AF D.host.F) * symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (inclR (F := D.host.F) (AF D.host.F) (θ : D.host.E))
-              (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J) γ γ) • ψ₀)) → ∃ c : ℂ, ψ₀ = c • φ₀ := by
-  first | exact @GlobalTheory.LatVacUniq.vacuum_unique
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergLatticeVacuumUniqueUpToScalarStatement =====
@@ -818,7 +799,7 @@ theorem exists_datum_pure_vac : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Co
     GlobalTheory.T.exists_pureTensorSum_datum_routeThroughSmallVertex hL W B ρ t i j M hM Θ Θ' hΘ e Bs Γ X om om' h hTr hv
   have hψ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.PsiUnr Bs.ψ Bs.v₁ := h.ψ ▸ GlobalTheory.T.localAddCharUnramified_of_splitsCompletelyAbovePlace W Bs.v₁ hTr.chars.good.2
   exact ⟨ΦB, hD, m, f, φ, φ₀, hsum, hSB, hvac, hv1, h0SB, h0ne, L₁, L₂, θ, hθ, hfix,
-    fun ψ₀ hψ₀ hfix' => GlobalTheory.T.heisenbergLatticeVacuum_unique_up_to_scalar Bs Γ Bs.v₁ L₁ L₂ θ hψ hL1 hL2 hSD hθ φ₀ ψ₀ h0SB h0ne hfix hψ₀ hfix'⟩
+    fun ψ₀ hψ₀ hfix' => _root_.GlobalTheory.LatVacUniq.vacuum_unique Bs Γ Bs.v₁ L₁ L₂ θ hψ hL1 hL2 hSD hθ φ₀ ψ₀ h0SB h0ne hfix hψ₀ hfix'⟩
 
 end GlobalTheory.SmallDatumVac
 end -- clump:auto
@@ -842,30 +823,6 @@ open ValuativeRel
 open scoped GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
 
 
-theorem _root_.GlobalTheory.T.exists_gridDatum_pureTensor_vacuaAE : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G)
-    (ρ : RealMatch W) (t : T) (i j : Fin D.R.m) (M : Vol G) (hM : M.Is t) (Θ : TotT G (routeBig t i j))
-    (Θ' : TotT G (routeSmall t i j)) (hΘ : IsMatched B t ρ i j Θ Θ') (g₁ : GA D (G.V (.grid (i + 1) j)))
-    (e : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Num G i j) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.Geo G i j)
-    (X : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E) (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W)
-    (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W)
-    (h : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.IsTripleOf W M t i j e Bs Γ X) (hTr : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ X om om')
-    (hv : ∀ w ∈ locPl G t, w.under (𝓞 D.host.F) ≠ Bs.v₁),
-    ∃ ΦB, GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.IsDatumB W e Γ Θ' ΦB ∧
-      ∃ (m : ℕ) (f : Fin m → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf D.host.F (Fin (G.V (.grid i j)).rank × Fin ((G.V (.grid (i + 1) (j + 1))).rank + (G.V (.grid i j)).rank)))
-        (φ : Fin m → ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := D.host.F), (Fin (G.V (.grid i j)).rank × Fin ((G.V (.grid (i + 1) (j + 1))).rank + (G.V (.grid i j)).rank) → Fv D.host.F v) → ℂ)
-        (φ₀ : (Fin (G.V (.grid i j)).rank × Fin ((G.V (.grid (i + 1) (j + 1))).rank + (G.V (.grid i j)).rank) → Fv D.host.F Bs.v₁) → ℂ),
-        ΦB = ∑ k, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (f k) (φ k) ∧ (∀ k v, φ k v ∈ GlobalTheory.WeilM.SB _) ∧ (∀ k, ∀ᶠ v in Filter.cofinite, φ k v = Γ.M'.vac v) ∧
-        (∀ k, φ k Bs.v₁ = φ₀) ∧ φ₀ ∈ GlobalTheory.WeilM.SB _ ∧ φ₀ ≠ 0 ∧
-        ∃ (L₁ : Submodule (𝓞 D.host.E) (Fin (G.V (.grid i j)).rank → D.host.E)) (L₂ : Submodule (𝓞 D.host.E) (Fin ((G.V (.grid (i + 1) (j + 1))).rank + (G.V (.grid i j)).rank) → D.host.E))
-          (θ : 𝓞 D.host.E), (θ : D.host.E) + D.sp.cm.sig θ = 1 ∧ (∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} Bs.v₁,
-          GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (evFin D.host.F Bs.v₁) (Γ.M'.co.rho Bs.ψ γ) φ₀
-            (Bs.ψ (⅟(2 : AF D.host.F) * symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (inclR (F := D.host.F) (AF D.host.F) (θ : D.host.E))
-              (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J) γ γ) • φ₀)) ∧
-          ∀ ψ₀ ∈ GlobalTheory.WeilM.SB (Fin (G.V (.grid i j)).rank × Fin ((G.V (.grid (i + 1) (j + 1))).rank + (G.V (.grid i j)).rank) → Fv D.host.F Bs.v₁), (∀ γ ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV {Γ.V' with L := L₁} {Γ.W with L := L₂} Bs.v₁,
-          GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (evFin D.host.F Bs.v₁) (Γ.M'.co.rho Bs.ψ γ) ψ₀
-            (Bs.ψ (⅟(2 : AF D.host.F) * symp (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig) (inclR (F := D.host.F) (AF D.host.F) (θ : D.host.E))
-              (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.V'.J) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM D.host.F Γ.W.J) γ γ) • ψ₀)) → ∃ c : ℂ, ψ₀ = c • φ₀ := by
-  first | exact @GlobalTheory.SmallDatumVac.exists_datum_pure_vac
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGridDatumPureTensorVacuaAEStatement =====
@@ -910,8 +867,8 @@ theorem exists_datum_pure_linBar : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc :
           ∀ Y, ι φ₀ Y = c * (matLat (Fin (G.V (.grid i j)).rank) Λ : Set _).indicator 1 (P.val * Y) := by
   intro D T L sc G μ₀ hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
   obtain ⟨ΦB, hD, m, f, φ, φ₀, hΦ, hSB, hvac, hv₁, h0, hne, L₁, L₂, θ, hθ, hfix, huniq⟩ :=
-    GlobalTheory.T.exists_gridDatum_pureTensor_vacuaAE hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
-  obtain ⟨ι, P, Λ, c, hι, hY⟩ := GlobalTheory.T.latticeVacuum_eq_smul_indicator_splitPlace Bs Γ X om om' hTr L₁ L₂ θ hθ φ₀ h0 hne hfix huniq
+    _root_.GlobalTheory.SmallDatumVac.exists_datum_pure_vac hL W B ρ t i j M hM Θ Θ' hΘ g₁ e Bs Γ X om om' h hTr hv
+  obtain ⟨ι, P, Λ, c, hι, hY⟩ := _root_.GlobalTheory.VacShape.vacuum_eq_smul_indicator Bs Γ X om om' hTr L₁ L₂ θ hθ φ₀ h0 hne hfix huniq
   exact ⟨ΦB, hD, m, f, φ, φ₀, hΦ, hSB, hvac, hv₁, ι, P, Λ, c, hι, hY⟩
 
 end GlobalTheory.SmallDatum

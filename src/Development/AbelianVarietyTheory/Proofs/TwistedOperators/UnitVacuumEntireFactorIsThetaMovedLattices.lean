@@ -143,17 +143,11 @@ theorem star_mem_range (a : 𝓞 E) : star (a : E) ∈ (algebraMap (𝓞 E) E).r
     exact (RingOfIntegers.isIntegral_coe a).map (starRingEnd E).toIntAlgHom
   exact ⟨⟨star (a : E), h⟩, rfl⟩
 
-theorem exists_den {N : ℕ} (L : Submodule (𝓞 E) (Fin N → E)) (hfg : L.FG) :
-    ∃ b : 𝓞 E, b ≠ 0 ∧ ∀ x ∈ L, ∀ i, ∃ u : 𝓞 E, (u : E) = (b : E) * x i := by
-  first
-  | (apply _root_.GlobalTheory.CommonDenominatorLemma.exists_common_denominator <;> assumption)
-  | (intros; exact _root_.GlobalTheory.CommonDenominatorLemma.exists_common_denominator ..)
-
 theorem exists_extension {N : ℕ} (L : Submodule (𝓞 E) (Fin N → E)) (hL : IsSDLat E N L)
     (φ : L →ₗ[𝓞 E] 𝓞 E) : ∃ u ∈ L, ∀ x (hx : x ∈ L), stdH E N u x = (φ ⟨x, hx⟩ : E) := by
   classical
   obtain ⟨hfg, -, hdual⟩ := hL
-  obtain ⟨b, hb0, hb⟩ := exists_den L hfg
+  obtain ⟨b, hb0, hb⟩ := _root_.GlobalTheory.CommonDenominatorLemma.exists_common_denominator L hfg
   obtain ⟨c', hc'⟩ := star_mem_range b
   have hbE : (b : E) ≠ 0 := by
     intro h; apply hb0; exact RingOfIntegers.coe_injective (by simpa using h)
@@ -444,7 +438,7 @@ theorem sign_eq_alpha_sd : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : 
   have hs : symplOH S T (u.map fun z => incA D (b : D.host.E) * z) u = pairA D.host.F 0
       (algebraMap D.host.F (Af D.host.F) (1 / 2 * Algebra.trace D.host.F D.host.E (D.host.xi0 * ((b : D.host.E) * n)))) := by
     rw [hmap, hu', symplOH, GlobalTheory.LatVac.symplO_finTens, hRat_smul_left, hRat_neg_neg,
-      GlobalTheory.ThetaSignLat.hRat_frame S T frS frT hS hT v]
+      _root_.GlobalTheory.HRatFrame.hRat_frame S T frS frT hS hT v]
     refine Prod.ext (mul_zero _) ?_
     show algebraMap D.host.F (Af D.host.F) (1 / 2) * (1 * 1 * _) = _
     rw [one_mul, one_mul, ← RingHom.map_mul]
@@ -453,7 +447,7 @@ theorem sign_eq_alpha_sd : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S T : 
   have hq := trace_val n (b : D.host.E) hns hbv
   have hχu : χ u = Complex.exp (2 * Real.pi * Complex.I * ∑ τ, tauE D τ
       ((1 / 2 * Algebra.trace D.host.F D.host.E (D.host.xi0 * ((b : D.host.E) * n)) : D.host.F) : D.host.E)) := by
-    rw [hval u huL, hs, GlobalTheory.ThetaSignLat.psi_fin_rat ψ hψ]
+    rw [hval u huL, hs, _root_.GlobalTheory.PsiFinRat.psi_pairA_zero_algebraMap ψ hψ]
   obtain ⟨c, hc⟩ : ∃ c : ℂ, c = ∑ τ, tauE D τ n := ⟨_, rfl⟩
   have hsumq : ∑ τ, tauE D τ
       ((1 / 2 * Algebra.trace D.host.F D.host.E (D.host.xi0 * ((b : D.host.E) * n)) : D.host.F) : D.host.E) =

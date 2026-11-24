@@ -72,10 +72,6 @@ open GlobalTheory.FlatModel
 
 namespace GlobalTheory.FlatModel.LiftW
 
-theorem one_left_eq {T : Scheme.{0}} {X : Over T} {M : Over T} [GrpObj M] :
-    (1 : X ⟶ M).left = X.hom ≫ η[M].left := by
-  rw [Hom.one_def, Over.comp_left, Over.toUnit_left]
-
 theorem one_left_comp_of_isGrpPullback {S S' : Scheme.{0}} {G' : Over S'} [GrpObj G'] {G : Over S} [GrpObj G]
     {f : S' ⟶ S} {φ : G'.left ⟶ G.left} (h : IsGrpPullback G' G f φ) (T : Over S') :
     (1 : T ⟶ G').left ≫ φ = (1 : Over.mk (T.hom ≫ f) ⟶ G).left := by
@@ -130,8 +126,8 @@ theorem GlobalTheory.ActFin.qHyp_pull_of_isGrpPullback : ∀ (S S' : Scheme.{0})
   obtain ⟨hA, hL, ⟨t₁, ht₁⟩, ⟨t₂, ht₂⟩, hsym, hD⟩ := hQ
   haveI : IsCommMonObj A' := GlobalTheory.isCommMonObj_of_grpPullback S S' A A' f φ h
   have hone : (1 : A' ⟶ A').left ≫ φ = φ ≫ (1 : A ⟶ A).left := by
-    rw [GlobalTheory.FlatModel.LiftW.one_left_comp_of_isGrpPullback h A', GlobalTheory.FlatModel.LiftW.one_left_eq,
-      GlobalTheory.FlatModel.LiftW.one_left_eq, ← Category.assoc, h.1.w]
+    rw [GlobalTheory.FlatModel.LiftW.one_left_comp_of_isGrpPullback h A', _root_.ReciprocityTheory.ChartRestriction.G.Chart.one_left',
+      _root_.ReciprocityTheory.ChartRestriction.G.Chart.one_left', ← Category.assoc, h.1.w]
     rfl
   have fl : ∀ {T : Over S'} (a b : T ⟶ A'), (lift a b).left ≫ (fst A' A').left = a.left := fun a b => by
     rw [← Over.comp_left, lift_fst]

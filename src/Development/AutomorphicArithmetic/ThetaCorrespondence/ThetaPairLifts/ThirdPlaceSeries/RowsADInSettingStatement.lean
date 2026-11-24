@@ -871,12 +871,6 @@ theorem qp_isUnit (W : LocWach PD LL O v n) (hπu : IsUnit (algebraMap (LetA O n
   rw [e]
   exact u.isUnit.mul hj
 
-theorem letE_mul_self (i : ZMod n) : (letE i : LetA O n) * letE i = letE i := by
-  funext j
-  by_cases hj : j = i
-  · subst hj; simp [letE]
-  · simp [letE, hj]
-
 theorem letter_of_qp_pow_mem (W : LocWach PD LL O v n)
     (hqu : IsUnit (algebraMap (LetA O n) W.EE (qp W))) (T : LocLat G Qp LL O) (i : ZMod n) (Y : ℕ)
     (y : W.DD T) (hy : qp W ^ Y • y ∈ W.Nl T i) :
@@ -886,7 +880,7 @@ theorem letter_of_qp_pow_mem (W : LocWach PD LL O v n)
   have hqYu : IsUnit (algebraMap (LetA O n) W.EE (qp W ^ Y)) := by
     rw [map_pow]; exact hqu.pow _
   refine ⟨Formalism.MainNotions.UnusedSlot35.DssRec.smul_inj (E := W.EE) _ hqYu ?_, ?_⟩
-  · rw [smul_smul, mul_comm, ← smul_smul, ← hm'', smul_smul, letE_mul_self]
+  · rw [smul_smul, mul_comm, ← smul_smul, ← hm'', smul_smul, _root_.Formalism.MainNotions.LiftingTheory.letter_idempotent_sq]
   · rw [← hm'']; exact (W.N T).smul_mem _ hm
 
 theorem mem_Nl_of (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (i : ZMod n) (a : LetA O n)
@@ -1324,12 +1318,12 @@ namespace GlobalTheory.NLink.InertStep
 theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → 1 ≤ C₂ → WachCoordinates.Conclusion2 D C₂ → KillingConditions.JointParametersHubConditions L HW X (rowC C₂) → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.InertK D (D.nd.l i) → ∀ π ∈ D.nd.Zgood i, TruncatedSeriesCountingIdentities.admitted i (X.r i) (X.ρ i) π (X.dc i) (X.lenRow i) (X.e' i) (X.cB i) := by
   intro hP D L P nch HW F Cm X C₂ hS hC hconds2 hBCD i htw hg hR hin π hπ
   obtain ⟨hG1, hG2, hG3, hG4, hG5, hG5x, hG6, hBK, hCont, hSS, hDec, hEps, hTie, hShape, hFont, hH2, hCFT⟩ :=
-    _root_.GlobalTheory.T.set_pt_of_setup_not_twisted hP D L P nch HW F Cm X C₂ hS i hg π hπ
+    _root_.GlobalTheory.SetPtOff.main_alt_alt hP D L P nch HW F Cm X C₂ hS i hg π hπ
   have hcB : ∀ i', GlobalTheory.HubLoc.cBnum (D.nd.l i') ⌊2 * L.sc.b⌋₊ D.R.t (4 * D.R.n * D.R.nV) ≤ X.cB i' := by
     intro i'
     rw [hS.canon.cB]
     exact le_rfl
-  have hX := _root_.GlobalTheory.closingFamilyX_alt_alt hP.font hP.fin D HW F L X (_root_.GlobalTheory.JumpStatement.holds_all_alt D)
+  have hX := _root_.GlobalTheory.closingFamilyX_alt_alt hP.font hP.fin D HW F L X (_root_.GlobalTheory.JumpSets.stmtJ_holds_alt D)
     (hS.facts.admJ L hS.par) hS.par67 hS.facts.Conclusion1.1 hS.facts.large.2.1 hS.canon.fam hcB
   obtain ⟨M0, h0, hJ⟩ := hX.2.1 i hR π
   have hTB : TruncatedSeriesCountingIdentities.admTB i (X.r i) π (X.cB i) :=
@@ -1371,12 +1365,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.adm_at_inert_of_range : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → 1 ≤ C₂ → WachCoordinates.Conclusion2 D C₂ → KillingConditions.JointParametersHubConditions L HW X (rowC C₂) → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.InertK D (D.nd.l i) → ∀ π ∈ D.nd.Zgood i, TruncatedSeriesCountingIdentities.admitted i (X.r i) (X.ρ i) π (X.dc i) (X.lenRow i) (X.e' i) (X.cB i) := by
-  first | exact @_root_.GlobalTheory.NLink.InertStep.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsFurtherBisStatement =====
@@ -1396,7 +1384,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   have hb : ((0 : ℕ) : ℝ) ≤ L.sc.b := by
     simp only [Nat.cast_zero]
     exact (Real.exp_pos _).le
-  have hub := _root_.GlobalTheory.T.split_bound_of_params_alt hP.font hP.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 hS.canon P
+  have hub := _root_.GlobalTheory.HubX.Assembly.main_alt_alt hP.font hP.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 hS.canon P
     (le_trans (by norm_num) hS.big) le_rfl hb (hS.facts.admJ L hS.par) hS.par67 hS.facts.toCore.admA
     hS.facts.Conclusion1.1 hS.facts.Conclusion1.2.2 hS.facts.Conclusion2.1 hS.facts.Conclusion2.2.2 hS.facts.rhoBar hS.facts.large.2.1
     hS.facts.large.2.2 hS.facts.nct hS.facts.trip hS.facts.same hS.facts.block hS.facts.muUnr hS.facts.depthG
@@ -1460,7 +1448,7 @@ namespace GlobalTheory.NLink.AmbSub
 variable {D : D7}
 theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, D.nd.l i ∉ TwistedPlaces.gset D → ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.ambSub i (X.r i) π (X.dc i) ∧ EmbeddingTypes.ambCont i (X.r i) (X.ρ i) π ∧ EmbeddingTypes.ColumnH0Vanishing i (X.ρ i) π (X.dc i) := by
   intro hP D L P nch HW F Cm X C₂ hSet i hi π hπ
-  have hS := _root_.GlobalTheory.T.set_pt_of_setup_not_twisted hP D L P nch HW F Cm X C₂ hSet i hi π hπ
+  have hS := _root_.GlobalTheory.SetPtOff.main_alt_alt hP D L P nch HW F Cm X C₂ hSet i hi π hπ
   obtain ⟨_, hG2, _, _, _, _, _, _, hCont, _, _, _, _, _, hFont, _, _⟩ := hS
   have hρ : Continuous fun g => ((X.ρ i π g : GL (Fin D.R.r) (D.nd.O i)) :
       Matrix (Fin D.R.r) (Fin D.R.r) (D.nd.O i)) := hSet.canon.fam.cont i π
@@ -1505,12 +1493,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.ambSub_ambCont_h0_of_setup : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, D.nd.l i ∉ TwistedPlaces.gset D → ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.ambSub i (X.r i) π (X.dc i) ∧ EmbeddingTypes.ambCont i (X.r i) (X.ρ i) π ∧ EmbeddingTypes.ColumnH0Vanishing i (X.ρ i) π (X.dc i) := by
-  first | exact @_root_.GlobalTheory.NLink.AmbSub.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsFurtherExtraStatement =====
@@ -1548,7 +1530,7 @@ namespace GlobalTheory.NLink.PowerSmulVanishing
 
 theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.H0ColumnLengthBound i (X.ρ i) π (X.dc i) (X.c0 i) := by
   intro hP D L P nch HW F Cm X C₂ hS i hTw hg hRA hSp π hπ
-  have hJ : AdmissibleParameterJ.JumpConditions L := _root_.GlobalTheory.JumpStatement.holds_all_alt D L (hS.facts.admJ L hS.par)
+  have hJ : AdmissibleParameterJ.JumpConditions L := _root_.GlobalTheory.JumpSets.stmtJ_holds_alt D L (hS.facts.admJ L hS.par)
   obtain ⟨M0, h0, hl2, hJC⟩ := _root_.GlobalTheory.HubX.jointCondH0all_canon_alt hP.font D L HW (rowC C₂) X hS.canon hJ
     hS.facts.Conclusion1.1 (GlobalTheory.FontaineAdm.fontaineProperties_all_places D) i hTw hg hRA hSp π hπ
   have hlq : D.nd.l i ≠ D.host.q := fun h => hRA.2.1 (Or.inl h)
@@ -1584,12 +1566,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.h0_column_length_bound_of_setup : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.H0ColumnLengthBound i (X.ρ i) π (X.dc i) (X.c0 i) := by
-  first | exact @_root_.GlobalTheory.NLink.PowerSmulVanishing.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsFurtherFurtherStatement =====
@@ -1613,7 +1589,7 @@ namespace GlobalTheory.LiftExpSplit
 theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → EmbeddingTypes.LiftExponentColumn i (X.r i) (X.dc i) (X.eS i) ∧ EmbeddingTypes.LiftExponentDualPlaces i (X.r i) (X.dc i) (X.eS i) := by
   intro hP D L P nch HW F Cm X C₂ hS i hTw hg hR hsp
   have hAJ : _root_.Formalism.MainNotions.AdmissibleParameterJ.AdmJAlt L := hS.facts.admJ L hS.par
-  have hJ : AdmissibleParameterJ.JumpConditions L := _root_.GlobalTheory.JumpStatement.holds_all_alt D L hAJ
+  have hJ : AdmissibleParameterJ.JumpConditions L := _root_.GlobalTheory.JumpSets.stmtJ_holds_alt D L hAJ
   obtain ⟨⟨ep, hA⟩, -, -, -, he, -, -⟩ := hJ
   have hgood : ∀ i, GoodR D.nd i (X.r i) := hS.canon.fam.good
   have hAA : _root_.Formalism.MainNotions.SumRepresentations.AdmAAlt D := hS.facts.toCore.admA
@@ -1621,7 +1597,7 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
     hS.facts.g2.1 hS.facts.block hS.facts.muUnr i hTw hg hR hsp
   have hg0 : D.nd.l i ≠ D.host.g 0 := fun h => hg (by simp [TwistedPlaces.gset, h])
   have hg1 : D.nd.l i ≠ D.host.g 1 := fun h => hg (by simp [TwistedPlaces.gset, h])
-  have hG2 : EmbeddingTypes.admG2 i (X.r i) ep := _root_.GlobalTheory.T.admG2_of_setup_jumps hP D L P nch HW F Cm X C₂ hS ep hA i
+  have hG2 : EmbeddingTypes.admG2 i (X.r i) ep := _root_.GlobalTheory.JumpShapeAt.main_alt_alt hP D L P nch HW F Cm X C₂ hS ep hA i
   have h2 : D.nd.l i ≠ 2 := fun h => hR.1 (Or.inl (h ▸ D.host.two_mem_small))
   have heS : X.eS i = eA L 23 (D.nd.l i) := hS.canon.data.eS i hsp
   have h54 : LiftingTheory.LiftTheoremAllCases D HW F 23 32 32 :=
@@ -1681,12 +1657,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.liftExponentColumn_and_dualPlaces : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → EmbeddingTypes.LiftExponentColumn i (X.r i) (X.dc i) (X.eS i) ∧ EmbeddingTypes.LiftExponentDualPlaces i (X.r i) (X.dc i) (X.eS i) := by
-  first | exact @_root_.GlobalTheory.LiftExpSplit.main_alt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsFurtherMoreStatement =====
@@ -1704,24 +1674,24 @@ namespace GlobalTheory.NLink
 theorem splitPrime_hyps_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → ∃ ep, EmbeddingTypes.hypDecl i (X.dc i) ep ∧ (∀ v ∈ placesOver D.host.E (D.nd.l i), v.asIdeal.ramificationIdx ℤ = 1) ∧ ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.admitted i (X.r i) (X.ρ i) π (X.dc i) ep (X.eS i) (X.c0 i) (X.cB i) := by
   intro Pr D L P nch HW F Cm X C₂ S i hTw hg hR hSp
   have fa := S.facts
-  have hJ : AdmissibleParameterJ.ConclusionJa D := (_root_.GlobalTheory.JumpStatement.holds_all_alt D L (fa.admJ L S.par)).1
+  have hJ : AdmissibleParameterJ.ConclusionJa D := (_root_.GlobalTheory.JumpSets.stmtJ_holds_alt D L (fa.admJ L S.par)).1
   have hb : ((0 : ℕ) : ℝ) ≤ L.sc.b := by
     rw [Nat.cast_zero]; exact (Real.exp_pos _).le
   have hL : (1 : ℝ) ≤ L.sc.L := by have := S.big; linarith
-  have hub := _root_.GlobalTheory.T.split_bound_of_params_alt Pr.font Pr.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 S.canon P hL le_rfl hb
+  have hub := _root_.GlobalTheory.HubX.Assembly.main_alt_alt Pr.font Pr.fin GlobalTheory.Published.cheb_holds D L HW F (rowC C₂) nch X 120 0 S.canon P hL le_rfl hb
     (fa.admJ L S.par) S.par67 fa.toCore.admA fa.Conclusion1.1 fa.Conclusion1.2.2 fa.Conclusion2.1 fa.Conclusion2.2.2 fa.rhoBar fa.large.2.1
     fa.large.2.2 fa.nct fa.trip fa.same fa.block fa.muUnr fa.depthG
   obtain ⟨_, _, _, _, _, _, _, hRest, hTB, hRow, _⟩ := hub
   obtain ⟨hDecl, hRam, hType, hPt, _⟩ := hRow i hTw hg hR hSp
   refine ⟨hJ.choose, hDecl hJ, hRam, ?_⟩
   intro π hπ
-  have sp := _root_.GlobalTheory.T.set_pt_of_setup_not_twisted Pr D L P nch HW F Cm X C₂ S i hg π hπ
+  have sp := _root_.GlobalTheory.SetPtOff.main_alt_alt Pr D L P nch HW F Cm X C₂ S i hg π hπ
   obtain ⟨g1, _, g3, g4, _, g5x, g6, bk, cont, ss, dec, eps, tie, shape, font, h2, cft⟩ := sp
-  have hG2 := _root_.GlobalTheory.T.admG2_of_setup_jumps Pr D L P nch HW F Cm X C₂ S hJ.choose hJ.choose_spec i
-  have hG5 := _root_.GlobalTheory.T.admG5_of_setup Pr D L P nch HW F Cm X C₂ S i hg π hπ
-  obtain ⟨lc, lr⟩ := _root_.GlobalTheory.T.liftExponentColumn_and_dualPlaces Pr D L P nch HW F Cm X C₂ S i hTw hg hR hSp
-  have hH0 := _root_.GlobalTheory.T.h0_column_length_bound_of_setup Pr D L P nch HW F Cm X C₂ S i hTw hg hR hSp π hπ
-  obtain ⟨sub, acont, a56⟩ := _root_.GlobalTheory.T.ambSub_ambCont_h0_of_setup Pr D L P nch HW F Cm X C₂ S i hg π hπ
+  have hG2 := _root_.GlobalTheory.JumpShapeAt.main_alt_alt Pr D L P nch HW F Cm X C₂ S hJ.choose hJ.choose_spec i
+  have hG5 := _root_.GlobalTheory.NLinkTameShape.main_alt_alt Pr D L P nch HW F Cm X C₂ S i hg π hπ
+  obtain ⟨lc, lr⟩ := _root_.GlobalTheory.LiftExpSplit.main_alt_alt Pr D L P nch HW F Cm X C₂ S i hTw hg hR hSp
+  have hH0 := _root_.GlobalTheory.NLink.PowerSmulVanishing.main_alt_alt Pr D L P nch HW F Cm X C₂ S i hTw hg hR hSp π hπ
+  obtain ⟨sub, acont, a56⟩ := _root_.GlobalTheory.NLink.AmbSub.main_alt_alt Pr D L P nch HW F Cm X C₂ S i hg π hπ
   obtain ⟨l51, l52, _⟩ := GlobalTheory.charpoly_span_and_hom_relations_of_admissible D i (X.r i) (X.ρ i) π g1
   obtain ⟨unr, dual, t2, aw, fil, h1f, a51, _⟩ := hPt π hπ
   have blk := (hRest i hg π hπ).block
@@ -1747,12 +1717,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.unramified_places_declared' : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → ∀ i, TwistedPlaces.TwLoc D i → D.nd.l i ∉ TwistedPlaces.gset D → KillingConditions.RangeAD L X.exc (D.nd.l i) → TwistedPlaces.SplitK D (D.nd.l i) → ∃ ep, EmbeddingTypes.hypDecl i (X.dc i) ep ∧ (∀ v ∈ placesOver D.host.E (D.nd.l i), v.asIdeal.ramificationIdx ℤ = 1) ∧ ∀ π ∈ D.nd.Zgood i, EmbeddingTypes.admitted i (X.r i) (X.ρ i) π (X.dc i) ep (X.eS i) (X.c0 i) (X.cB i) := by
-  first | exact @_root_.GlobalTheory.NLink.splitPrime_hyps_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SplitPrimeHypsStatement =====
@@ -1773,8 +1737,8 @@ theorem rowsAD_in_setting_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ 
     KillingConditions.StarAD L X ∧ KillingConditions.BBLe L X 7200 := by
   intro hP D L P nch HW F Cm X C₂ hS hC hp2 hBCD
   have hstep : KillingConditions.StepAD L X :=
-    { a09 := _root_.GlobalTheory.T.adm_at_inert_of_range hP D L P nch HW F Cm X C₂ hS hC hp2 hBCD
-      a78 := _root_.GlobalTheory.T.unramified_places_declared' hP D L P nch HW F Cm X C₂ hS
+    { a09 := _root_.GlobalTheory.NLink.InertStep.main_alt_alt hP D L P nch HW F Cm X C₂ hS hC hp2 hBCD
+      a78 := _root_.GlobalTheory.NLink.splitPrime_hyps_alt hP D L P nch HW F Cm X C₂ hS
       goodR := hS.canon.fam.good }
   have hst1 : TruncatedSeriesCountingIdentities.IntegralityFromMetric D := GlobalTheory.T.integralityFromMetric_of_designConditionAll hP.artin hP.bk hP.tate hP.euler D hS.facts.duties.2.2.1
   have h78 := _root_.GlobalTheory.splitCase_bound_at_point_of_admitted_items hP.artin hP.tate hP.euler D
@@ -1798,12 +1762,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Formalism Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations GlobalTheory.NLink
-
-theorem _root_.GlobalTheory.T.star_ad_and_bb_le_of_joint_cond : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (nch : NChoice D) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (X : KillingConditions.HubData D) (C₂ : ℝ), _root_.GlobalTheory.NLink.SetupAlt L nch HW X C₂ → 1 ≤ C₂ → WachCoordinates.Conclusion2 D C₂ → KillingConditions.JointParametersHubConditions L HW X (rowC C₂) → KillingConditions.StarAD L X ∧ KillingConditions.BBLe L X 7200 := by
-  first | exact @_root_.GlobalTheory.NLink.rowsAD_in_setting_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowsADInSettingStatement =====

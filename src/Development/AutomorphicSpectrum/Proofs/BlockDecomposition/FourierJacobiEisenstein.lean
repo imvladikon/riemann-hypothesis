@@ -238,7 +238,7 @@ theorem zc_at {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D hn) (m : Mea
     have := GlobalTheory.T.shift_conj_heisenberg M (GlobalTheory.CompanionTheory.FJE.rt ξ) c x
     rwa [hc, neg_add_cancel] at this
   have h2 : M.nzx c x = M.nzx c 0 * M.nzx 0 x := by
-    rw [GlobalTheory.CompanionTheory.NzxAdd.nzx_add, add_zero, zero_add]
+    rw [_root_.GlobalTheory.CompanionTheory.PcB.nzx_mul, add_zero, zero_add]
   have h3 : M.nzx 0 x * (M.sh (GlobalTheory.CompanionTheory.FJE.rt ξ) * h) =
       M.sh (GlobalTheory.CompanionTheory.FJE.rt ξ) * (M.nzx c 0 * (M.nzx 0 x * h)) := by
     rw [← mul_assoc, ← h1, h2]
@@ -467,7 +467,7 @@ theorem norm_Wz_shift (M : Maps D hn) (m : Meas D ρ p) (ψ : AddChar (AF D.host
           simp only [mul_assoc]
   have e2 : M.sh (GlobalTheory.CompanionTheory.FJE.rt η + y') * M.emb e * g =
       M.sh (GlobalTheory.CompanionTheory.FJE.rt η) * (M.sh y' * M.emb e * g) := by
-    rw [← GlobalTheory.CompanionTheory.FJE.sh_add]
+    rw [← _root_.GlobalTheory.CompanionTheory.PcB.sh_mul]
     simp only [mul_assoc]
   have hv : ‖GlobalTheory.CompanionTheory.FJE.chv ψ b₀ (GlobalTheory.CompanionTheory.FJE.rt ζ₂) (GlobalTheory.CompanionTheory.FJE.rt η)‖ = 1 := hψ.2.1 _
   rw [e1, e2, GlobalTheory.T.coefficient_heisenberg_equivariance M m ψ hψ b₀ χ s f hf, norm_mul, norm_mul,
@@ -502,7 +502,7 @@ theorem domination : ∀ {D : D7} {n ρ p : ℕ} {hn : ρ + p = n} (M : Maps D h
     exact h1.mul (h2.mul continuous_const)
   obtain ⟨c, hc, hb⟩ := hdom _ ((hK.prod hK).image hΦ)
   refine ⟨fun q => ∑' η, c (q, η), hc.prod, fun q y => ?_⟩
-  obtain ⟨T, hT1, -, hT3⟩ := GlobalTheory.T.lattice_translation_preserved M ((q.out : GF D p) : G D p) (q.out : GF D p).2
+  obtain ⟨T, hT1, -, hT3⟩ := _root_.GlobalTheory.CompanionTheory.FJE.Transport.transport M ((q.out : GF D p) : G D p) (q.out : GF D p).2
   obtain ⟨a₁, ha₁, hy⟩ := hKc (T.symm (y, 0)).1
   obtain ⟨a₂, ha₂, hx⟩ := hKc (T.symm (y, 0)).2
   obtain ⟨ξ₁, rfl⟩ : ∃ ξ, GlobalTheory.CompanionTheory.FJE.rt ξ = a₁ := ha₁
@@ -1065,8 +1065,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC PositivityTheory.PfSWUS PositivityTheory.Rg.Rsw
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.heisenberg_character_integral_vanishes : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ b₀ : HermE D ρ, b₀.1.det ≠ 0 → ∀ ζ : Matrix (Fin ρ) (Fin p) D.host.E, ζ ≠ 0 → ∫ x in m.𝓕, GlobalTheory.CompanionTheory.FJE.chv ψ b₀ x (GlobalTheory.CompanionTheory.FJE.rt ζ) ∂m.μ = 0 := by
-  first | exact @GlobalTheory.CompanionTheory.FJE.integral_chv_rt_eq_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeisenbergCharacterIntegralVanishesStatement =====
@@ -1150,7 +1148,7 @@ theorem parseval {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.hos
           rw [← sub_eq_add_neg]; exact rat_sub η ξ
         rw [hr, hadd, hneg, mul_comm]
       simp only [e, if_neg h]
-      exact GlobalTheory.T.heisenberg_character_integral_vanishes m ψ hψ b₀ hb₀ (η - ξ) (sub_ne_zero.2 h)
+      exact _root_.GlobalTheory.CompanionTheory.FJE.integral_chv_rt_eq_zero m ψ hψ b₀ hb₀ (η - ξ) (sub_ne_zero.2 h)
   have hs : ∀ x : Mx D ρ p, Summable fun η => chv ψ b₀ x (rt η) * a η := fun x =>
     Summable.of_norm (by simpa only [norm_mul, hc1, one_mul] using ha)
   have hfm : StronglyMeasurable fun x : Mx D ρ p => ∑' η, chv ψ b₀ x (rt η) * a η :=
@@ -1198,8 +1196,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 open GlobalTheory.StdUnn PositivityTheory.GramSchwartzFunctions PositivityTheory.GramSchwartzFunctions.BC PositivityTheory.PfSWUS PositivityTheory.Rg.Rsw
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.heisenberg_character_orthogonality : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ b₀ : HermE D ρ, b₀.1.det ≠ 0 → ∀ a b : Matrix (Fin ρ) (Fin p) D.host.E → ℂ, Summable (fun η => ‖a η‖) → Summable (fun η => ‖b η‖) → ∫ x in m.𝓕, (∑' η : Matrix (Fin ρ) (Fin p) D.host.E, GlobalTheory.CompanionTheory.FJE.chv ψ b₀ x (GlobalTheory.CompanionTheory.FJE.rt η) * a η) * conj (∑' ξ : Matrix (Fin ρ) (Fin p) D.host.E, GlobalTheory.CompanionTheory.FJE.chv ψ b₀ x (GlobalTheory.CompanionTheory.FJE.rt ξ) * b ξ) ∂m.μ = ∑' η : Matrix (Fin ρ) (Fin p) D.host.E, a η * conj (b η) := by
-  first | exact @GlobalTheory.CompanionTheory.FJE.parseval
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeisenbergCharacterOrthogonalityStatement =====
@@ -1304,7 +1300,7 @@ theorem fold_parseval : ∀ {D : D7} {ρ p : ℕ} (m : Meas D ρ p) (ψ : AddCha
           exact ENNReal.ofReal_lt_top
   rw [← Measure.prod_restrict, integral_prod _ hint, integral_fold m _ hPint]
   refine integral_congr_ae (ae_of_all _ (fun y => ?_))
-  exact GlobalTheory.T.heisenberg_character_orthogonality m ψ hψ b₀ hb (fun η => Φ (rt η + y)) (fun η => φ (rt η + y)) (h1 y).1 (h2 y).1
+  exact _root_.GlobalTheory.CompanionTheory.FJE.parseval m ψ hψ b₀ hb (fun η => Φ (rt η + y)) (fun η => φ (rt η + y)) (h1 y).1 (h2 y).1
 
 end GlobalTheory.CompanionTheory.FJE
 end -- clump:auto

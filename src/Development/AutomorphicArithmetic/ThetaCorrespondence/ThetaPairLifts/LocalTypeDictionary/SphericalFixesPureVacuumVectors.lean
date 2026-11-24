@@ -275,14 +275,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.SquareComm GlobalTheory.SquareAgree
 open GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.AdelicU GlobalTheory.FinDecomp
 
-theorem _root_.GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n d : ℕ)
-    (X : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n) (W : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E d) (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F))
-    (q : Fin d → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), 0 < n → X.L.IsFullLattice E →
-    (∀ x ∈ X.L, Matrix.vecMulVec (fun i => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F) (x i)) q ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.latAtV X W v) →
-    q ∈ GlobalTheory.InertSph.latAt W v := by
-  intro F E _ _ _ _ _ n d X W v q hn hL h
-  letI := hL
-  exact GlobalTheory.LatExtract.main F E n d X W v q hn inferInstance h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemAdelicLatticeAtPlaceOfTensorWithLatticeStatement =====
@@ -386,11 +378,11 @@ theorem GlobalTheory.SphGlob.fixes_pure : ∀ (F E : Type) [Field F] [NumberFiel
   have hcut : ∀ v, v ∉ S → loc (idem F v) (idem_mul_self v) k ∈ GlobalTheory.InertSph.KAt σ W v := by
     intro v hv
     refine loc_mem_KAt F E σ d W v k fun z hz => ⟨?_, ?_⟩
-    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
+    · refine _root_.GlobalTheory.LatExtract.main F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
       have h0 := GlobalTheory.InertSphStab.vecMulVec_mem X W v hx hz
       rw [← GlobalTheory.InertSphStab.vecMulVec_mul_transpose]
       exact (hlat v hv _).2 h0
-    · refine GlobalTheory.T.mem_adelicLatticeAtPlace_of_tensor_with_lattice F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
+    · refine _root_.GlobalTheory.LatExtract.main F E n d X W v _ hn (by letI := hXL; infer_instance) fun x hx => ?_
       have h0 := GlobalTheory.InertSphStab.vecMulVec_mem X W v hx hz
       refine (hlat v hv _).1 ?_
       rw [GlobalTheory.InertSphStab.vecMulVec_mul_transpose, Matrix.mulVec_mulVec, mat_mul_inv, Matrix.one_mulVec]
@@ -1103,22 +1095,6 @@ end GlobalTheory.LocVacFix
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
-open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
-open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-open GlobalTheory.Grid GlobalTheory.Doubling GlobalTheory.ChainFr GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree
-
-theorem _root_.GlobalTheory.T.spherical_vector_fixed_at_almost_all_places : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (B : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (G : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a') (X : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E)
-    (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V G.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ G.V' G.W), GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple B G X om om' →
-    ∃ S₀ : Finset (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)), ∀ v, v ∉ S₀ → ∀ k ∈ GlobalTheory.InertSph.KAt σ G.W v,
-      GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (GlobalTheory.AdelicU.evFin F v) (om (1, k)) (G.M.vac v) (G.M.vac v) := by
-  first | exact @_root_.GlobalTheory.LocVacFix.vacuum_fixed_at_cofinitely_many_places
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SphericalVectorFixedAtAlmostAllPlaces =====
@@ -1154,8 +1130,8 @@ theorem spherical_fixes_pure_vacuum_vectors : _root_.GlobalTheory.FunPr.ThetaLoc
       om' (1, k) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) := by
   classical
   intro P F E _ _ _ _ _ σ B a a' G X om om' hT
-  obtain ⟨S₁, h₁⟩ := _root_.GlobalTheory.T.spherical_vector_fixed_at_almost_all_places P F E σ B a a' G X om om' hT
-  obtain ⟨S₂, h₂⟩ := _root_.GlobalTheory.T.restricted_tensor_spherical_uniqueness_off_finite P F E σ B a a' G X om om' hT
+  obtain ⟨S₁, h₁⟩ := _root_.GlobalTheory.LocVacFix.vacuum_fixed_at_cofinitely_many_places P F E σ B a a' G X om om' hT
+  obtain ⟨S₂, h₂⟩ := _root_.GlobalTheory.SphOffFinite.spherical_vacuum_fixed_off_finite_set P F E σ B a a' G X om om' hT
   refine ⟨S₁ ∪ S₂, fun S hS k hinf hSk hl hl' => ⟨fun f φ hφ hv => ?_, fun f φ hφ hv => ?_⟩⟩
   · exact GlobalTheory.T.latticeStabilizers_fix_vacua_fixes_pureTensor F E σ a (a + a') G.V G.W G.M B.ψ X.β (X.β / X.α) om S (Nat.zero_lt_of_lt hT.geo.lt)
       hT.geo.hV.lat hT.geo.hW.lat.toIsLattice hT.geo.hM hT.weil

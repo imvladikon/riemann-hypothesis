@@ -391,10 +391,7 @@ namespace GlobalTheory.MemLoc.PhiXiUnit
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem phiA_alg (x : Per.Ainf l) :
-    phiA l (algebraMap (Per.Ainf l) (Per.Acris l) x) =
-      algebraMap (Per.Ainf l) (Per.Acris l) (Per.φA l x) :=
-  (GlobalTheory.CrisMaps.phiA_extends l).alg x
+alias phiA_alg := _root_.GlobalTheory.MemLoc.PhiImage.phiA_alg
 
 theorem φA_tm (x : Per.Fl l) : Per.φA l (Per.tm x) = Per.tm x ^ l := by
   rw [← map_pow]
@@ -610,7 +607,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (C : GlobalTheory.MemLoc.Core l) (n 
   haveI : IsDomain (Per.BdR l) := (BdRField.bdR_isField l).2.2.1.isDomain
   refine abstract C.ι (ULaws.u_laws l C).2.2.2.1 (Per.φB l) (fun a y => y ∈ Per.FilD l a) h1 hmul
     (l : Per.Bcris l) (algebraMap (Per.Acris l) (Per.Bcris l) C.t) hlu htu ?_ ?_ ?_ ?_ n hn x hx hx0 hx1 hj0
-  · rw [fund_phiB_alg, TPhi.t_phi l C, map_mul, map_natCast]
+  · rw [_root_.GlobalTheory.CrisMaps.φB_phiA, TPhi.t_phi l C, map_mul, map_natCast]
   · intro h
     rw [C.ι_j] at h
     exact ht2 ((hP 2 _).1 h)
@@ -653,12 +650,7 @@ theorem iter_φB_alg (k : ℕ) (y : Per.Acris l) :
   induction k generalizing y with
   | zero => rfl
   | succ k ih =>
-    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, GlobalTheory.MemLoc.fund_phiB_alg, ih]
-
-theorem phiA_alg (a : Per.Ainf l) :
-    GlobalTheory.MemLoc.phiA l (algebraMap (Per.Ainf l) (Per.Acris l) a) =
-      algebraMap (Per.Ainf l) (Per.Acris l) (Per.φA l a) :=
-  (GlobalTheory.CrisMaps.phiA_extends l).alg a
+    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, _root_.GlobalTheory.CrisMaps.φB_phiA, ih]
 
 theorem iter_phiA_alg (k : ℕ) (a : Per.Ainf l) :
     (⇑(GlobalTheory.MemLoc.phiA l))^[k] (algebraMap (Per.Ainf l) (Per.Acris l) a) =
@@ -666,7 +658,7 @@ theorem iter_phiA_alg (k : ℕ) (a : Per.Ainf l) :
   induction k generalizing a with
   | zero => rfl
   | succ k ih =>
-    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, phiA_alg, ih]
+    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, _root_.GlobalTheory.MemLoc.PhiImage.phiA_alg, ih]
 
 theorem iter_mul {A : Type} [CommRing A] (f : A →+* A) (k : ℕ) (a b : A) :
     (⇑f)^[k] (a * b) = (⇑f)^[k] a * (⇑f)^[k] b := by

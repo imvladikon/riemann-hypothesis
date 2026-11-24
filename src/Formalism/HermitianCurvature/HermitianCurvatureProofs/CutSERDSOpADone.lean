@@ -455,7 +455,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSAGrp =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSALoc =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSALoc", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSOpA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSALoc", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSERDSOpA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJDHatJDACapTodaVGrp\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -469,18 +469,6 @@ section loc
 
 variable {r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-theorem rds_pbOp_locO (l : Fin r) {f₁ f₂ : (Fin r → ℂ) → E} (h : ∀ c ∈ OmX r, f₁ c = f₂ c) {c : Fin r → ℂ}
-    (hc : c ∈ OmX r) : pbOp l f₁ c = pbOp l f₂ c := by
-  have hopen : IsOpen (OmX r) := by
-    have e : OmX r = ⋂ l, {x : Fin r → ℂ | x l ≠ 0} := by
-      ext x
-      simp [OmX]
-    rw [e]
-    exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
-  have hev : f₁ =ᶠ[nhds c] f₂ := Filter.eventuallyEq_of_mem (hopen.mem_nhds hc) h
-  unfold pbOp wirtBar
-  rw [if_pos hc, if_pos hc, hev.fderiv_eq]
-
 theorem rds_vABm_loc (Y : ℂ) : ∀ (i : ℕ) (f₁ f₂ : (Fin r → ℂ) → E), (∀ c ∈ OmX r, f₁ c = f₂ c) →
     ∀ c ∈ OmX r, (CutMP.vABm r Y i).1 f₁ c = (CutMP.vABm r Y i).1 f₂ c ∧
       (CutMP.vABm r Y i).2 f₁ c = (CutMP.vABm r Y i).2 f₂ c
@@ -491,7 +479,7 @@ theorem rds_vABm_loc (Y : ℂ) : ∀ (i : ℕ) (f₁ f₂ : (Fin r → ℂ) → 
     · simp only [CutMP.vABm, dif_pos hi]
       refine ⟨?_, ?_⟩
       · simp only [Pi.sub_apply, Pi.smul_apply, cbOp]
-        rw [(ih c hc).1, (ih c hc).2, rds_pbOp_locO _ (fun c' hc' => (ih c' hc').1) hc]
+        rw [(ih c hc).1, (ih c hc).2, _root_.Formalism.FourierDecayAlt.P.CutMP.TVG.pbOp_locO _ (fun c' hc' => (ih c' hc').1) hc]
       · simp only [cbiOp]
         rw [(ih c hc).1]
     · simp only [CutMP.vABm, dif_neg hi]
@@ -649,7 +637,7 @@ theorem rds_vab_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
           -L.c ⟨i, h⟩ * rdsVp L Y i 1 0).1 Φ : RadSp k r z z' π π') =
           Y • ((rdsVp L Y i 0 0).1 Φ) + X.op ⟨i, h⟩ 0 ((rdsVp L Y i 0 0).1 Φ) -
             X.op ⟨i, h⟩ 1 ((rdsVp L Y i 1 0).1 Φ) := by
-        rw [rds_fst_add, rds_fst_mul, rds_fst_mul, rds_fst_add, rds_fst_alg, rdsR_fst_neg, hp, hc]
+        rw [rds_fst_add, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, rds_fst_add, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_algebraMap, rdsR_fst_neg, hp, hc]
         simp only [LinearMap.add_apply, Module.End.mul_apply, LinearMap.neg_apply, Module.algebraMap_end_apply,
           sub_eq_add_neg]
       rw [e, Submodule.coe_sub, Submodule.coe_add, Submodule.coe_smul, rds_op_coe, rds_op_coe, hA, hB]
@@ -658,7 +646,7 @@ theorem rds_vab_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
       rfl
     · have e : ((L.ci ⟨i, h⟩ * rdsVp L Y i 0 0).1 Φ : RadSp k r z z' π π') =
           X.op ⟨i, h⟩ 2 ((rdsVp L Y i 0 0).1 Φ) := by
-        rw [rds_fst_mul, hci]
+        rw [_root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, hci]
         rfl
       rw [e, rds_op_coe, hA]
       funext c g
@@ -696,7 +684,7 @@ theorem rds_vabm_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
           -L.cb ⟨i, h⟩ * rdsVvp L Y i 1 0).1 Φ : RadSp k r z z' π π') =
           Y • ((rdsVvp L Y i 0 0).1 Φ) - X.op ⟨i, h⟩ 3 ((rdsVvp L Y i 0 0).1 Φ) -
             X.op ⟨i, h⟩ 4 ((rdsVvp L Y i 1 0).1 Φ) := by
-        rw [rds_fst_add, rds_fst_mul, rds_fst_mul, rdsR_fst_sub, rds_fst_alg, rdsR_fst_neg, hp, hc]
+        rw [rds_fst_add, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, rdsR_fst_sub, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_algebraMap, rdsR_fst_neg, hp, hc]
         simp only [LinearMap.add_apply, Module.End.mul_apply, LinearMap.neg_apply,
           Module.algebraMap_end_apply, sub_eq_add_neg]
       rw [e, Submodule.coe_sub, Submodule.coe_sub, Submodule.coe_smul, rds_op_coe, rds_op_coe, hA, hB]
@@ -705,7 +693,7 @@ theorem rds_vabm_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
       rfl
     · have e : ((L.cbi ⟨i, h⟩ * rdsVvp L Y i 0 0).1 Φ : RadSp k r z z' π π') =
           X.op ⟨i, h⟩ 5 ((rdsVvp L Y i 0 0).1 Φ) := by
-        rw [rds_fst_mul, hci]
+        rw [_root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, hci]
         rfl
       rw [e, rds_op_coe, hA]
       funext c g
@@ -728,10 +716,10 @@ theorem rds_cprod (hL : IsActualLevel X L) : ∀ (ls : List (Fin r)) (Φ : RadSp
     have hc : (L.c a).1 = X.op a 1 := by rw [hL.2.2.1 a]; rfl
     have hcb : (L.cb a).1 = X.op a 4 := by rw [hL.2.2.2.2.1 a]; rfl
     refine ⟨?_, ?_⟩
-    · rw [List.map_cons, List.prod_cons, rds_fst_mul, hc, Module.End.mul_apply, rds_op_coe, h1]
+    · rw [List.map_cons, List.prod_cons, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, hc, Module.End.mul_apply, rds_op_coe, h1]
       funext c g
       simp only [crd, opL, cOp, List.map_cons, List.prod_cons, smul_smul]
-    · rw [List.map_cons, List.prod_cons, rds_fst_mul, hcb, Module.End.mul_apply, rds_op_coe, h2]
+    · rw [List.map_cons, List.prod_cons, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, hcb, Module.End.mul_apply, rds_op_coe, h2]
       funext c g
       simp only [crd, opL, cbOp, List.map_cons, List.prod_cons, smul_smul]
 
@@ -757,9 +745,9 @@ theorem spectral_radial_action : RDSARad := by
     rw [← List.ofFn_eq_map, List.prod_ofFn, map_prod]
     rfl
   refine ⟨?_, ?_⟩
-  · rw [R.LevelData.Ahat, rds_fst_mul, Module.End.mul_apply, hDr, R.LevelData.Ar, rds_tprod,
+  · rw [R.LevelData.Ahat, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, Module.End.mul_apply, hDr, R.LevelData.Ar, rds_tprod,
       (rds_vab_ind X L hL y P.r le_rfl Φ).1]
-  · rw [R.LevelData.Ahatv, rds_fst_mul, Module.End.mul_apply, hDrb, R.LevelData.Avr, rds_tvprod,
+  · rw [R.LevelData.Ahatv, _root_.Formalism.FourierDecayAlt.P5.HerD.pr_fst_mul, Module.End.mul_apply, hDrb, R.LevelData.Avr, rds_tvprod,
       (rds_vabm_ind X L hL y P.r le_rfl Φ).1]
 
 end Formalism.FourierDecayAlt.P.CutSE

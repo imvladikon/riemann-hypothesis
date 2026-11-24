@@ -348,7 +348,7 @@ theorem exists_of_bilin (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) (hu : 
     { c'.toEquiv with continuous_toFun := hcc, continuous_invFun := hcc' }
   haveI : LocallyCompactSpace V := eV.isClosedEmbedding.locallyCompactSpace
   haveI : SecondCountableTopology V := eV.secondCountableTopology
-  obtain ⟨n, hc⟩ := GlobalTheory.CharConductor.exists_exponent_of_valued ψ hψ hne
+  obtain ⟨n, hc⟩ := _root_.GlobalTheory.CharacterConductorBall.exists_conductor ψ hψ hne
   obtain ⟨c, hcv⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp n)
   have hc0 : c ≠ 0 := by
     rintro rfl
@@ -1491,7 +1491,7 @@ theorem whitGenLowOf : WhitGenLowOf := by
 
 end PositivityTheory.SiegelWeilFormula.Gen.WL
 
-theorem PositivityTheory.SiegelWeilFormula.Gen.whitGenLowOf : PositivityTheory.SiegelWeilFormula.Gen.WhitGenLowOf := PositivityTheory.SiegelWeilFormula.Gen.WL.whitGenLowOf
+alias PositivityTheory.SiegelWeilFormula.Gen.whitGenLowOf := _root_.PositivityTheory.SiegelWeilFormula.Gen.WL.whitGenLowOf
 
 end
 end -- clump:auto

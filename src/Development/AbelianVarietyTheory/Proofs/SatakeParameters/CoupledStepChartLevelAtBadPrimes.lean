@@ -297,13 +297,6 @@ theorem cong_of_nearAt {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     IntAt P ((((qOf P : ℕ) : E) ^ n)⁻¹ * (((g₁⁻¹ * g₂ : GL (Fin N) E) : Matrix (Fin N) (Fin N) E) - 1) a b) :=
   _root_.GlobalTheory.TwU.CongTwo.intAt_inv_mul_of_nearAt P n x g₁ g₂ hn h₁ h₂ a b
 
-theorem cong_seam {D : D7} {X : Fields} (s : Seam D X) {N : ℕ} (P : HeightOneSpectrum (𝓞 X.E)) (n : ℕ)
-    (g : Sp X.E N ≃ₗ[X.E] Sp X.E N)
-    (h : ∀ a b, IntAt (seamP s P) ((((qOf (seamP s P) : ℕ) : D.host.E) ^ n)⁻¹ *
-      (((seamGL s g : GL (Fin N) D.host.E) : Matrix (Fin N) (Fin N) D.host.E) - 1) a b)) :
-    ∀ s' l, IntAt P (((qOf P : X.E) ^ n)⁻¹ * (g (Pi.single s' (1 : X.E)) l - (Pi.single s' (1 : X.E) : Sp X.E N) l)) :=
-  _root_.GlobalTheory.SeamCong.cong_seam s P n g h
-
 section Cong1
 
 open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.HermitianLatticesTheory Formalism.L2.DIV Formalism.L2.Col
@@ -460,9 +453,9 @@ theorem levAt_cpl : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a =>
     have hgint : g P ∈ GLint t.X.E (D.R.N (t.m2 + 1)) P.1 := hL.int _ _ P ⟨r, hr, hrx⟩
     set κg : GLint t.X.E (D.R.N (t.m2 + 1)) P.1 := ⟨g P, hgint⟩ with hκg
     set k : GLint t.X.E (D.R.N (t.m2 + 1)) P.1 := κg⁻¹ * (κ'' P)⁻¹ with hk
-    have hcg := cong_of_nearAt (seamP t.seam P.1) ((t.cst μ).D P) _ _ _ (hL.cst_ok.D_pos P) (hg P).2 (hfr P)
+    have hcg := _root_.GlobalTheory.TwU.CongTwo.intAt_inv_mul_of_nearAt (seamP t.seam P.1) ((t.cst μ).D P) _ _ _ (hL.cst_ok.D_pos P) (hg P).2 (hfr P)
     rw [← map_inv, ← map_mul] at hcg
-    have hk1 := cong_seam t.seam P.1 ((t.cst μ).D P) k.1 hcg
+    have hk1 := _root_.GlobalTheory.SeamCong.cong_seam t.seam P.1 ((t.cst μ).D P) k.1 hcg
     obtain ⟨rk, hrk, hrkx, hchik⟩ := cong_mem_level_chr_one t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.glob t.m2 hPin.fields t.pr_ok hL
       (t.m2 + 1) le_rfl (A.ib (t.m2 + 1) (cpl_lt t μ) β') P k.1 hk1
     obtain ⟨c1, hl1, hc1⟩ := levAt_of_lift hL (A.ib (t.m2 + 1) (cpl_lt t μ) β') P κg r hr hrx

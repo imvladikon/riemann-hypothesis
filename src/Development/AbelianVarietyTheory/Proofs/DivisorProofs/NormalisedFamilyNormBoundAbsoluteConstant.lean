@@ -202,9 +202,6 @@ noncomputable section
 
 namespace GlobalTheory.LatticePeriodEtaObj
 
-theorem latticePeriodEta_obj : GlobalTheory.IndefiniteRowSideFullHecke.PeriodLatticeAgreement.LatticePeriodEta :=
-  GlobalTheory.LatticePeriodEtaProof.latticePeriodEta
-
 end GlobalTheory.LatticePeriodEtaObj
 end -- clump:auto
 end -- clump:auto
@@ -1169,7 +1166,7 @@ open Formalism.BasicNotions
 namespace GlobalTheory.Theta0MeanLeC
 
 theorem theta0MeanLeC : ∃ C : ℝ, 0 ≤ C ∧ ∀ D : Formalism.BasicNotions.D7, GlobalTheory.IndefiniteRowSideFullHecke.SignedLogMeans.MeanLeC C D :=
-  (_root_.GlobalTheory.Theta0MeanCore.theta0Mean GlobalTheory.LatticePeriodEtaObj.latticePeriodEta_obj GlobalTheory.ThetaWeberObj.thetaWeberStatement).1.2.2
+  (_root_.GlobalTheory.Theta0MeanCore.theta0Mean _root_.GlobalTheory.LatticePeriodEtaProof.latticePeriodEta GlobalTheory.ThetaWeberObj.thetaWeberStatement).1.2.2
 
 end GlobalTheory.Theta0MeanLeC
 end -- clump:auto

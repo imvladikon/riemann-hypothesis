@@ -449,7 +449,7 @@ section -- clump:auto
 @[expose] public section
 
 theorem self_dual_local : PI.SelfDualLoc :=
-  PI.SelfDualLoc.W.selfDualLoc_of_locBasis PI.SelfDualLoc.W.locBasis
+  PI.SelfDualLoc.W.selfDualLoc_of_locBasis _root_.Bl.PaddedFamilies.goal1
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SelfDualLoc =====

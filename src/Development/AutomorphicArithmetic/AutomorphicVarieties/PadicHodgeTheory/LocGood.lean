@@ -191,16 +191,9 @@ variable {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscre
   [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ))
 
 omit [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] [CharZero O] in
-theorem push_base (E : Type) [Field E] [Algebra O E] {x : U.R →ₐ[O] O} (hx : IsBase D.η D.Ψ U.r.hom x) :
-    push ((Algebra.ofId O E).comp x) U.r.hom = D.rz E := by
-  unfold Dat3.rz
-  rw [← show push x U.r.hom = r0 D.η D.Ψ from hx]
-  rfl
+alias push_base := _root_.GlobalTheory.OrdLoc.OrdinaryEmbeddings.push_base
 
-theorem cont_push (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra O B]
-    [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] O B] [IsScalarTower ℤ_[l] ℚ_[l] B] (f : U.R →ₐ[O] B) (a b : Fin 3) :
-    QCont l fun g => (push f U.r.hom g).mat a b :=
-  (ptCont (l := l) U.R B f).1 (GQ l) (fun g => (U.r.hom g).mat a b) (U.r.cont a b)
+alias cont_push := _root_.GlobalTheory.OrdLoc.OrdinaryEmbeddings.cont_push
 
 omit [IsDomain O] in
 theorem qcont_dual {X E : Type} [TopologicalSpace X] [Field E] [Algebra ℚ_[l] E]
@@ -258,9 +251,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Module UpperTheory.V.Loc UpperTheory.V.U3 UpperTheory.V.Alg IsLocalRing Polynomial
 
-theorem UpperTheory.V.Loc.rtTangent :
-    LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E], ∀ γ ∈ Z1 (adRep (D.rz E)), ∀ r' : GQ l →* GG (m := 3) (R := DualNumber E), DualDef (D.rz E) γ r' → (D.On U r' ↔ γ ∈ finiteCocycles (MonoidHom.id _) (adRep (D.rz E))) :=
-  fun hP => @GlobalTheory.OrdLoc.rtTangent hP
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.RtTangent =====
@@ -372,7 +362,7 @@ theorem UpperTheory.V.Loc.chartCount :
       have : (F ((U.r.hom g).mat a b)).snd = (γ g * (D.rz E g).mat) a b :=
         congrArg TrivSqZeroExt.snd ((hγ g).2 a b)
       rw [this, hd, Matrix.mul_diagonal, mul_assoc, hdd, mul_one]
-    refine ⟨γ, (rtTangent hP D U E γ ⟨?_, hc⟩ _ hγ).1 ⟨F, rfl, fun y hy => ?_⟩, he⟩
+    refine ⟨γ, (_root_.GlobalTheory.OrdLoc.rtTangent hP D U E γ ⟨?_, hc⟩ _ hγ).1 ⟨F, rfl, fun y hy => ?_⟩, he⟩
     · refine continuous_pi fun a => continuous_pi fun b => ?_
       simp only [he]
       refine Continuous.mul ?_ ((hdc b).comp continuous_inv)
@@ -840,7 +830,7 @@ theorem UpperTheory.V.Loc.torAut :
     · rw [hI]; trivial
     haveI : Nontrivial (U.R ⧸ D.It U) := Ideal.Quotient.nontrivial_iff.2 hI
     haveI : IsCO O (U.R ⧸ D.It U) := co_quot O U.R _ (Ideal.Quotient.mkₐ O _) (Ideal.Quotient.mkₐ_surjective O _)
-    obtain ⟨f, hf, hfI⟩ := rtConj hP D U (U.R ⧸ D.It U) (push (Ideal.Quotient.mkₐ O _) U.r.hom)
+    obtain ⟨f, hf, hfI⟩ := _root_.GlobalTheory.OrdLoc.rtConj hP D U (U.R ⧸ D.It U) (push (Ideal.Quotient.mkₐ O _) U.r.hom)
       (tor _ (Units.map (algebraMap O (U.R ⧸ D.It U) : O →* _) t)) (fun a b => by
         rw [← res_eq_zero_iff O, Matrix.sub_apply, tor_val]
         by_cases hab : a = b
@@ -898,7 +888,7 @@ private theorem count_weights_eq_local_dims (w : Fin 12 → ℤ) (h : ∀ j, Nat
 theorem UpperTheory.V.Loc.rtChart :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (x : U.R →ₐ[O] O), IsBase D.η D.Ψ U.r.hom x → ∃ (w : Fin 12 → ℤ) (φ : U.R →ₐ[O] MvPowerSeries (Fin 12) E), UpperTheory.V.Loc.IsCompl (D.It U) x φ ∧ (∀ j, Nat.card {i // w i = j} = locDims j) ∧ ∀ g a b, φ ((U.r.hom g).mat a b) ∈ wtPart E w (wt a b) := by
   intro hP l _ O _ _ _ _ _ _ _ D U E _ _ _ _ _ _ _ _ x hx
-  obtain ⟨-, φ₀, h₀⟩ := UpperTheory.V.Loc.rtCompl hP D U E x hx
+  obtain ⟨-, φ₀, h₀⟩ := _root_.GlobalTheory.OrdLoc.rtCompl hP D U E x hx
   obtain ⟨t, θ, ht, hθx, hθI, hθ⟩ := torAut hP D U x hx
   let e : GQ l × Fin 3 × Fin 3 → U.R := fun s =>
     (U.r.hom s.1).mat s.2.1 s.2.2 - algebraMap O U.R (x ((U.r.hom s.1).mat s.2.1 s.2.2))
@@ -1031,7 +1021,7 @@ theorem UpperTheory.V.Loc.locGood :
   intro hP l _ O _ _ _ _ _ _ _ D U
   refine ⟨?_, ?_⟩
   · rintro R _ _ _ r r' h hh e ⟨f, hf, hI⟩
-    obtain ⟨f', hf', hI'⟩ := rtConj hP D U R r.hom h hh ⟨f, congrArg GLift.hom hf, hI⟩
+    obtain ⟨f', hf', hI'⟩ := _root_.GlobalTheory.OrdLoc.rtConj hP D U R r.hom h hh ⟨f, congrArg GLift.hom hf, hI⟩
     exact ⟨f', GLift.ext (hf'.trans e.symm), hI'⟩
   · have hi := zl_inj l O
     haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi

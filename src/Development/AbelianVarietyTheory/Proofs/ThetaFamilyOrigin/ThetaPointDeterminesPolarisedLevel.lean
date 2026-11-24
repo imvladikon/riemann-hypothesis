@@ -15,6 +15,7 @@ public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.E
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.WeilIsGrpPullbackIff
+public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsVVGenOfIsThetaFamily
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsIndepSections
 public import Mathlib.Tactic.ENatToNat
@@ -24,7 +25,6 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.AppLESur
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.LbIsoPullOfHomPreservingCoordinates
-public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsVVGenOfIsThetaFamily
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNeZeroHalfStandardAltFormConstOfExponentOn
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.MemVanishingIdealOfFormVanishingTorsion
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
@@ -304,7 +304,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.ExistsIsoOfEqualCoordinateConesStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.ExistsLevelThetaPtOfPolarisedIso =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.ExistsLevelThetaPtOfPolarisedIso", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback\npublic import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.WeilIsGrpPullbackIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.ExistsLevelThetaPtOfPolarisedIso", "h": "module\n\npublic import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.EndDeterminedOnTorsion\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback\npublic import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback\npublic import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.WeilIsGrpPullbackIff\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB\nimport Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsVVGenOfIsThetaFamily\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -337,8 +337,6 @@ section Basis
 
 variable {S : Scheme.{0}} {P : PolAV S} {M : ℕ} {ze : Γ(S, ⊤)ˣ} (lev : Level P M ze) {g : ℕ} (hg : P.g = g)
 
-theorem basis_pow (i : Fin (2 * g)) : levelBasis lev hg i ^ M = 1 := lev.torsion _
-
 theorem basis_indep (K : Type) [Field K] [IsAlgClosed K] (s : Spec (CommRingCat.of K) ⟶ S)
     (c c' : Fin (2 * g) → Fin M)
     (h : linComb (fun i => (Over.homMk s (by simp) : Over.mk s ⟶ baseOver S) ≫ levelBasis lev hg i)
@@ -352,10 +350,6 @@ theorem basis_span (K : Type) [Field K] [IsAlgClosed K] (s : Spec (CommRingCat.o
       linComb (fun i => (Over.homMk s (by simp) : Over.mk s ⟶ baseOver S) ≫ levelBasis lev hg i)
         (fun i => (c i : ℕ)) = y := by
   subst hg; exact lev.span K s y hy
-
-theorem basis_pairing (i j : Fin (2 * g)) :
-    WeilIs P.A P.L M (levelBasis lev hg i) (levelBasis lev hg j) (ze ^ stdSymp g i j) := by
-  subst hg; exact lev.pairing i j
 
 end Basis
 
@@ -374,7 +368,7 @@ theorem exists_level (hL : Laws) {S : Scheme.{0}} [IsLocallyNoetherian S] {P P' 
   obtain ⟨x, hx⟩ : ∃ x : Fin (2 * P.g) → (baseOver S ⟶ P.A), ∀ i, x i ≫ φ.hom = levelBasis lev' hg' i :=
     ⟨fun i => levelBasis lev' hg' i ≫ φ.inv, fun i => by simp⟩
   have ht : ∀ i, x i ^ M = 1 := fun i => by
-    rw [← comp_pow_eq_one_iff φ, hx]; exact basis_pow lev' hg' i
+    rw [← comp_pow_eq_one_iff φ, hx]; exact _root_.GlobalTheory.ThetaCoord.levelBasis_pow lev' hg' i
   have hc : ∀ {T : Over S} (h : T ⟶ baseOver S) (a : Fin (2 * P.g) → ℕ),
       linComb (fun i => h ≫ x i) a ≫ φ.hom = linComb (fun i => h ≫ levelBasis lev' hg' i) a := fun h a => by
     rw [ThetaPtDet.linComb_comp]
@@ -384,7 +378,7 @@ theorem exists_level (hL : Laws) {S : Scheme.{0}} [IsLocallyNoetherian S] {P P' 
   · obtain ⟨c, e⟩ := basis_span lev' hg' K s (y ≫ φ.hom) ((comp_pow_eq_one_iff φ y M).2 hy)
     exact ⟨c, (cancel_mono φ.hom).1 ((hc _ _).trans e)⟩
   · rw [← weilIs_iso_iff hL.globalFns hL.cube P P' φ w hw M _ _ (ht i) (ht j), hx, hx]
-    exact basis_pairing lev' hg' i j
+    exact _root_.GlobalTheory.ThetaCoord.weilIs_levelBasis lev' hg' i j
 
 end GlobalTheory.LevelPullIso
 
@@ -494,8 +488,6 @@ open scoped CategoryTheory.Obj
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory GlobalTheory.ZH
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.homogeneousCoords_of_isValueAt_frame : ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (N : ℕ) (J : Type) (t : J → LB.Sec (Out.LPow P.A P.L N (Out.baseOver (Sp K)))) (ρ : P.A.left ⟶ ((Out.baseOver (Sp K)) ⊗ P.A).left) (e : ρ ≫ (snd (Out.baseOver (Sp K)) P.A).left = 𝟙 P.A.left) (x : (Out.baseOver (Sp K)) ⟶ P.A) (τ : LB.Gen (LB.LinComb P.L (Y := (Out.baseOver (Sp K)).left) (K := Fin 1) (fun _ => x.left) (fun _ => (N : ℤ)))) (w : J → Γ((Out.baseOver (Sp K)).left, ⊤)), (∀ a, Out.IsValueAt P.A P.L N (t a) x τ (w a)) → Crd (lbPow P.L N) (fun a => PowSec.down P.L (snd (Out.baseOver (Sp K)) P.A).left ρ e ((N : ℕ) : ℤ) (t a)) (x.left : Sp K ⟶ P.A.left) (fun a => (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom (w a)) := by
-  first | exact @GlobalTheory.ZH.CrdDown.crd_down_of_isValueAt
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.HomogeneousCoordsOfIsValueAtFrameStatement =====
@@ -1117,7 +1109,7 @@ theorem exists_embedding (h : Out.Laws) {g m r N N' : ℕ} (hN : N = m ^ 2) (hN'
     T.isClosedImmersion_of_span_linePowerSections h K P N _ t ρ e h4 hspan, ?_, hθ, hassoc⟩
   intro c
   obtain ⟨u, hu⟩ := hcoord c _ (DVR.exists_gen_of_local (V := K) P.L P.isLB _ _).choose_spec
-  have hc := T.homogeneousCoords_of_isValueAt_frame K P N _ t ρ e (levelPoint lev hg c ^ N') _ _ hu
+  have hc := _root_.GlobalTheory.ZH.CrdDown.crd_down_of_isValueAt K P N _ t ρ e (levelPoint lev hg c ^ N') _ _ hu
   set φ := CommRingCat.Hom.hom (Scheme.ΓSpecIso (CommRingCat.of K)).hom with hφ
   have hu1 : φ ((u⁻¹ : Γ((Out.baseOver (Sp K)).left, ⊤)ˣ) : Γ((Out.baseOver (Sp K)).left, ⊤)) * φ (u : Γ((Out.baseOver (Sp K)).left, ⊤)) = 1 := by
     rw [← map_mul, Units.inv_mul, map_one]

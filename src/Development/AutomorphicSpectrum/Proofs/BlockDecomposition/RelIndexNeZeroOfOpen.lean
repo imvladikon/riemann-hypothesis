@@ -188,9 +188,6 @@ open scoped Classical
 open GlobalTheory.CompanionTheory.FinActS
 
 
-theorem _root_.GlobalTheory.T.finite_test_function_product : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ} {S : Set (Pl E)} {φ₁ φ₂ : ∀ w : Pl E, LF a b w} (h₁ : IsTestP φ₁) (h₂ : IsTestP φ₂)
-    (y : Hf E a b), finFn S φ₁ φ₂ y = ∏ᶠ i : Slot S, sf φ₁ φ₂ i (i.cp a b y) := by
-  first | exact @GlobalTheory.CompanionTheory.FinActS.finFn_eq_finprod_factor
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTestFunctionProductStatement =====
@@ -987,13 +984,6 @@ open scoped Classical
 open GlobalTheory.CompanionTheory.FinActS
 
 
-theorem _root_.GlobalTheory.T.position_level_subgroups_exist : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ} {S : Set (Pl E)} {φ₁ φ₂ : ∀ w : Pl E, LF a b w} (h₁ : IsTestP φ₁) (h₂ : IsTestP φ₂),
-    ∃ L : ∀ i : Slot S, Subgroup (GLw a i.pl × GLw b i.pl),
-      (∀ i, IsOpen (L i : Set (GLw a i.pl × GLw b i.pl))) ∧ (∀ᶠ i in cofinite, L i = K2 a b i.pl) ∧
-      (∀ i, ∀ k ∈ L i, ∀ x, sf φ₁ φ₂ i (x * k) = sf φ₁ φ₂ i x) ∧
-      (∀ i : Slot S, HasCompactSupport (sf φ₁ φ₂ i)) ∧
-      ∀ᶠ i : Slot S in cofinite, sf φ₁ φ₂ i = (K2 a b i.pl : Set (GLw a i.pl × GLw b i.pl)).indicator 1 := by
-  first | exact @GlobalTheory.CompanionTheory.PositionTest.exists_factor_level₂
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SlotLevelSubgroupsExistStatement =====
@@ -1055,7 +1045,7 @@ theorem finActOf : FinActOf := by
   obtain ⟨U₀, hU₀, hlev⟩ := hG
   obtain ⟨-, hc⟩ := hConv E B S hS
   obtain ⟨hcs, ⟨U₁, hU₁, hinv⟩, -⟩ := hc φ₁ φ₂ h₁ h₂
-  obtain ⟨L, hLo, hLe, hLi, hLc, hLu⟩ := GlobalTheory.T.position_level_subgroups_exist (S := S) h₁ h₂
+  obtain ⟨L, hLo, hLe, hLi, hLc, hLu⟩ := _root_.GlobalTheory.CompanionTheory.PositionTest.exists_factor_level₂ (S := S) h₁ h₂
   let p : ∀ i : Slot S, Hf E B.a B.b →* GLw B.a i.pl × GLw B.b i.pl := fun i => MonoidHom.mk' (i.cp B.a B.b) (hmul i)
   let K : Subgroup (Hf E B.a B.b) := (Kf E B.a).prod (Kf E B.b)
   have hKo : IsOpen (K : Set (Hf E B.a B.b)) := by
@@ -1114,7 +1104,7 @@ theorem finActOf : FinActOf := by
       rw [e1, finH_mul, ← mul_assoc, hlev u hu.1])
     inferInstance
   have hF : (fun h => finFn S φ₁ φ₂ h * g h) = fun h => (∏ᶠ i : Slot S, sf φ₁ φ₂ i (p i h)) * g h :=
-    funext fun h => by rw [GlobalTheory.T.finite_test_function_product h₁ h₂]; rfl
+    funext fun h => by rw [_root_.GlobalTheory.CompanionTheory.FinActS.finFn_eq_finprod_factor h₁ h₂]; rfl
   have hfin := hfold l 1
   rw [finH_one, mul_one] at hfin
   rw [← hfin, ← hcore, ← hF]

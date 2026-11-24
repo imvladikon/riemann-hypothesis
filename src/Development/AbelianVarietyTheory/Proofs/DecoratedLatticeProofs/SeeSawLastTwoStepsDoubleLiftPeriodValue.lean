@@ -64,8 +64,6 @@ open GlobalTheory.MixModel GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Un
 open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.lastTwoSteps_doubleLiftPeriod_eq_integral : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c), c.Is → c.VolLast → t.Is → WeilOK (t := t) v → LastLaw D → SeeLast D → ∀ j (h : j + 2 * 0 + 2 = D.R.m) Φ₁ Φ₂ φ F, IsThetaFunO c.ψ _ _ Φ₁ → IsThetaFunO c.ψ _ _ Φ₂ → IsContAut (c.X j) φ → IsContAut c.T F → IsContAut (c.V j) (liftS (t.om j) (c.vol (j + 1)).μ (c.vol (j + 1)).𝓕 (liftS (t.omT j h) c.volT.μ c.volT.𝓕 F Φ₂) Φ₁) ∧ ∀ g b bT, (c.B j 0 h).per c.ψ φ (rTrans g (liftS (t.om j) (c.vol (j + 1)).μ (c.vol (j + 1)).𝓕 (liftS (t.omT j h) c.volT.μ c.volT.𝓕 F Φ₂) Φ₁)) = ∫ h' in c.volT.𝓕, rTrans bT F h' * c.bl j (t.kom j) (t.kom (j + 1)) φ (c.lst j h (v.τ j h) (t.sBF j 0 h) (t.om j (g, b) Φ₁) (t.omT j h (b, bT) Φ₂)) ((c.oT (j + 1 + 1) h).emb (h', 1)) ∂c.volT.μ := by
-  first | exact @GlobalTheory.LastRed.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastTwoStepsDoubleLiftPeriodEqIntegralStatement =====
@@ -280,7 +278,7 @@ theorem left_side (hc : c.Is) (hvol : c.VolLast) (hv : v.Is) (ht : t.Is) (hF : V
   unfold Tup.perF
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun α _ => ?_
-  obtain ⟨hcont, hred⟩ := GlobalTheory.T.lastTwoSteps_doubleLiftPeriod_eq_integral D c v t hc hvol ht hW hL hS j h (t.pt j P₁) (t.ptT j h P₂) (φ α) f (ht.pt j hj1 P₁)
+  obtain ⟨hcont, hred⟩ := _root_.GlobalTheory.LastRed.main D c v t hc hvol ht hW hL hS j h (t.pt j P₁) (t.ptT j h P₂) (φ α) f (ht.pt j hj1 P₁)
     (ht.ptT j h P₂) (hφ α) hf
   rw [(hF.e j α).1, trc_mapDomain]
   refine (((per_linear_trc D c.ψ hc.std 0 (c.B j 0 h) (φ α) (hφ α)).2 (w.ε j α) _
@@ -322,7 +320,7 @@ theorem right_side (hc : c.Is) (hv : v.Is) (ht : t.Is) (hF : VForm v w) (hW : We
   have hj : j < D.R.m := by omega
   have hj1 : j + 1 < D.R.m := by omega
   have top : ∀ (P : Pl D → Prop) p, P p → True := fun _ _ _ => trivial
-  obtain ⟨hX₀, hreal⟩ := (GlobalTheory.T.seeSaw_commonRealDatum_biTheta_vacuum_contraction D c v t w hc hv ht hV hT hFl).2 j h Ψ₁ Ψ₂ hW h₁ h₂
+  obtain ⟨hX₀, hreal⟩ := (_root_.GlobalTheory.VReal.v_real D c v t w hc hv ht hV hT hFl).2 j h Ψ₁ Ψ₂ hW h₁ h₂
   simp only [Comm.bl]
   rw [hG.2 j h Ψ₁ Ψ₂ (vac_mono (top _) h₁) (vac_mono (top _) h₂)]
   obtain ⟨hBV, hTL⟩ := hT.2 j h Ψ₁ Ψ₂ (vac_mono (top _) h₁) (vac_mono (top _) h₂)
@@ -389,7 +387,7 @@ theorem valLast : ∀ (D : D7) (c : Comm D) (v : VCom c) (𝒯 : Type) (t : 𝒯
   have h₁ := hv.Ψ j hj1 P₁ 1 (one_mem _) 1 (one_mem _)
   have h₂ := hv.ΨT j h P₂
   refine ⟨(v.op j).app c.ψ (c.lst j h (v.τ j h) ((t s₀).sBF j 0 h) (v.Ψ j P₁ 1 1) (v.ΨT j h P₂)),
-    ((GlobalTheory.T.seeSaw_commonRealDatum_biTheta_vacuum_contraction D c v (t s₀) (w s₀) hc hv (ht s₀) (hP s₀).vac (hP s₀).tl hFl).2 j h _ _ (hP s₀).weil h₁ h₂).2, ?_⟩
+    ((_root_.GlobalTheory.VReal.v_real D c v (t s₀) (w s₀) hc hv (ht s₀) (hP s₀).vac (hP s₀).tl hFl).2 j h _ _ (hP s₀).weil h₁ h₂).2, ?_⟩
   intro s ψ hψ y F x
   have hF := (hP s).form
   have eC : c.lst j h (v.τ j h) ((t s₀).sBF j 0 h) (v.Ψ j P₁ 1 1) (v.ΨT j h P₂) =

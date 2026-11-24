@@ -66,12 +66,6 @@ theorem fil_anti {a b : ℤ} (h : a ≤ b) : PD.Fil b ≤ PD.Fil a := by
   | base => exact le_rfl
   | succ n _ ih => exact (PD.Fil_anti n).trans ih
 
-theorem one_not_mem_fil_one : (1 : BdR) ∉ PD.Fil 1 := by
-  intro h
-  have := PD.Fil_mul 1 1 _ _ PD.mem_filtration_one h
-  rw [mul_one] at this
-  exact PD.not_mem_filtration_two this
-
 theorem ddR_of_trivial {V : Type} [AddCommGroup V] [Module Qp V] [Module LL V]
     [IsScalarTower Qp LL V] [FiniteDimensional Qp V] (ρ : Representation LL G V)
     (hρ : ∀ g x, ρ g x = x) (x : V ⊗[Qp] BdR) (hx : x ∈ DdR PD ρ) :
@@ -130,7 +124,7 @@ theorem ddR_of_trivial {V : Type} [AddCommGroup V] [Module Qp V] [Module LL V]
     by_cases h0 : k = 0
     · rw [← hk, h0]; simp
     · exfalso
-      apply one_not_mem_fil_one PD
+      apply _root_.GlobalTheory.DRFil.one_notMem_fil_one PD
       have h1 := Submodule.smul_mem _ k⁻¹ (fil_anti PD ha (hF' i x hF))
       rwa [← hk, Algebra.algebraMap_eq_smul_one, smul_smul, inv_mul_cancel₀ h0, one_smul] at h1
 

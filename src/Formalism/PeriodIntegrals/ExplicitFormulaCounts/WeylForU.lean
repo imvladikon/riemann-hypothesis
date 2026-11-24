@@ -168,7 +168,7 @@ theorem nablaDim_closed : PI.NablaDim := fun n nu h => Formalism.L2.G.Model.weyl
 
 theorem modelIso_closed : PI.ModelIso := modelIso_of _root_.PI.UnitaryGroupMassFormula.PolyCoef.polyCoef unitaryGroupDense_holds highest_weight_irreducible
 
-theorem weylForU_closed : PI.WeylForU := weylForU_of modelIso_closed nablaDim_closed
+theorem weylForU_closed : PI.WeylForU := _root_.PI.WeylForUWork.weylForU_of modelIso_closed nablaDim_closed
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.ExplicitFormulaCounts.WeylForU =====

@@ -885,20 +885,12 @@ open Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspR
 open UpperTheory.ConvolutionTheory.R2 UpperTheory.ConvolutionTheory.R2.H UpperTheory.ConvolutionTheory.R2.I
 open scoped Classical
 
-private theorem diagonal_mul_gl_conj {F : Type} [Field F] [NumberField F] (t : (A F)ˣ) (g : G1 F) :
-    dM t * gl g = gl (cD t g) * dM t := by
-  apply Units.ext
-  ext i j
-  have h1 : (t : A F) * ((t⁻¹ : (A F)ˣ) : A F) = 1 := Units.mul_inv t
-  fin_cases i <;> fin_cases j <;>
-    simp [dM, cD, gl, Matrix.mul_apply, Fin.sum_univ_two, Matrix.SpecialLinearGroup.toGL, mul_comm]
-
 private theorem Wf_tr {F : Type} [Field F] [NumberField F] (f : GL (Fin 2) (A F) → ℂ) (x g₀ : G1 F) (t : (A F)ˣ) :
     Wf (fun g => f (g * gl g₀)) (gl x * dM t) = Wf f (gl (x * cD t g₀) * dM t) := by
   have e : ∀ b, gl (nU b) * (gl x * dM t) * gl g₀ = gl (nU b) * (gl (x * cD t g₀) * dM t) := by
     intro b
     have hg : gl (x * cD t g₀) = gl x * gl (cD t g₀) := map_mul Matrix.SpecialLinearGroup.toGL _ _
-    rw [mul_assoc, mul_assoc, diagonal_mul_gl_conj, hg, mul_assoc]
+    rw [mul_assoc, mul_assoc, _root_.UpperTheory.ConvolutionTheory.R2.dM_mul_gl, hg, mul_assoc]
   simp only [Wf, e]
 
 private theorem Om_tr {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] {D : Dat F E} (W : Weil D) (φ : S4 F) (h : GL (Fin 2) (A E)) (x g₀ : G1 F) :
@@ -1038,13 +1030,10 @@ private theorem cp_rt' (c : F) : cp v (rt c) = algebraMap F (Kv v) c := rfl
 
 private theorem mk_add (u t u' t' : A F) : D.mkE u t + D.mkE u' t' = D.mkE (u + u') (t + t') :=
   (mkLaws F E D).2.1 u t u' t'
-private theorem mk_mul (u t u' t' : A F) :
-    D.mkE u t * D.mkE u' t' = D.mkE (u * u' + rt D.δ * (t * t')) (u * t' + t * u') :=
-  (mkLaws F E D).1 u t u' t'
 private theorem mk_zero : D.mkE (0 : A F) 0 = 0 := by
   have h := mk_add D (0 : A F) 0 0 0
   simpa using h
-private theorem mk_co (u t : A F) : D.co (D.mkE u t) = ![u, t] := (mkLaws F E D).2.2.2.1 u t
+private alias mk_co := _root_.UpperTheory.ConvolutionTheory.R2.Dat.co_mkE
 
 private noncomputable def sB (k : Kv v) : A E := D.mkE (sg v (k / 2)) (sg v (-(k / (2 * θ))))
 
@@ -1054,7 +1043,7 @@ private theorem mk_sE (hq : θ ^ 2 = algebraMap F (Kv v) D.δ) (h0 : θ ≠ 0) (
     D.mkE u t * sE D v θ k = sE D v θ ((cp v u + cp v t * θ) * k) := by
   have h2 := two_ne (F := F) v
   unfold sE
-  rw [mk_mul]
+  rw [_root_.UpperTheory.ConvolutionTheory.R2.Dat.mkE_mul]
   simp only [sg_mul', ← sg_add', cp_rt']
   rw [← hq]
   congr 2
@@ -1065,7 +1054,7 @@ private theorem mk_sB (hq : θ ^ 2 = algebraMap F (Kv v) D.δ) (h0 : θ ≠ 0) (
     D.mkE u t * sB D v θ k = sB D v θ ((cp v u - cp v t * θ) * k) := by
   have h2 := two_ne (F := F) v
   unfold sB
-  rw [mk_mul]
+  rw [_root_.UpperTheory.ConvolutionTheory.R2.Dat.mkE_mul]
   simp only [sg_mul', ← sg_add', cp_rt']
   rw [← hq]
   congr 2

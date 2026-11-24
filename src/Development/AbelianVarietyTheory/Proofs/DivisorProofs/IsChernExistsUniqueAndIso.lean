@@ -57,8 +57,6 @@ section -- clump:auto
 open CategoryTheory AlgebraicGeometry DividedPowers ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.DeRham
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.crystalline_H2_small_cover_bijective : ∀ (R : Type) [CommRing R] (I : Ideal R) (κ : DividedPowers I) (X : Scheme.{0}) (s : X ⟶ Sp R) (K : Type) (U : K → X.Opens), ⨆ i, U i = ⊤ → Function.Bijective (CoefMap.restrict (O κ s) (IsSmall κ s U).ι).pull2 := by
-  first | exact @GlobalTheory.Cris.small_descent_H2_bijective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineH2SmallCoverBijectiveStatement =====
@@ -257,7 +255,7 @@ theorem exists_isChern (L : LB X) (hL : L.IsLB) : ∃ z, IsChern γ s L z := by
         ((φ ≫ ψ).hom.le_preimage (hi T)))
       refine e.symm.trans ((mul_comm _ _).trans ?_)
       exact congrArg₂ (· * ·) (evalAt_spMap ψ.hom.φ₀ T'.obj.x T''.obj.x ψ.hom.pt _ _ _).symm rfl
-  obtain ⟨z, hz⟩ := (GlobalTheory.T.crystalline_H2_small_cover_bijective R I γ X s L.ι L.U hL.cover).2 (CatCoh.H2.mk _ ℓ)
+  obtain ⟨z, hz⟩ := (_root_.GlobalTheory.Cris.small_descent_H2_bijective R I γ X s L.ι L.U hL.cover).2 (CatCoh.H2.mk _ ℓ)
   exact ⟨z, i, hi, u, ℓ, h1, h2, hz⟩
 
 def coarsen {ι ι' : Type} (U : ι → X.Opens) (U' : ι' → X.Opens) (h : ∀ j, ∃ i, U' j ≤ U i) :
@@ -286,7 +284,7 @@ theorem eq_of_iso {L M : LB X} (hL : L.IsLB) (hM : M.IsLB) (h : LBIso L M) {z z'
     simp only [U, ← inf_iSup_eq, hL.cover, inf_top_eq, hM.cover]
   let n := coarsen (γ := γ) (s := s) L.U U fun p ↦ ⟨p.2, inf_le_right⟩
   let n' := coarsen (γ := γ) (s := s) M.U U fun p ↦ ⟨p.1, inf_le_left⟩
-  refine (GlobalTheory.T.crystalline_H2_small_cover_bijective R I γ X s _ U hU).1 ?_
+  refine (_root_.GlobalTheory.Cris.small_descent_H2_bijective R I γ X s _ U hU).1 ?_
   rw [← coarsen_pull2 L.U U (fun p ↦ ⟨p.2, inf_le_right⟩) z,
     ← coarsen_pull2 M.U U (fun p ↦ ⟨p.1, inf_le_left⟩) z', h3, h3', CoefMap.pullCohomologyTwo_class,
     CoefMap.pullCohomologyTwo_class]

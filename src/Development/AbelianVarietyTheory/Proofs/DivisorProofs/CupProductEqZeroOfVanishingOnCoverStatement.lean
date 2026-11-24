@@ -64,7 +64,7 @@ theorem cup_supp_chainsMap_mono (R : Type) [CommRing R] {U E : Spc} (f : U ⟶ E
   · obtain ⟨N, rfl⟩ : ∃ N : ℕ, p = -(N : ℤ) := ⟨(-p).toNat, by omega⟩
     have hnat := ((GlobalTheory.EtC.chains_basic R).2.1 f N)
     have hm : Mono ((free R).map (f.app (op (SimplexCategory.mk N)))) :=
-      ((GlobalTheory.T.freeEtaleModuleSheaf_map_mono_epi_iso R (f.app (op (SimplexCategory.mk N)))).1 inferInstance)
+      ((_root_.GlobalTheory.EtC.free_map_mono_epi_iso R (f.app (op (SimplexCategory.mk N)))).1 inferInstance)
     have : ((chains R).map f).f (-(N : ℤ)) =
         ((chains R).map f).f (-(N : ℤ)) ≫ (chainsXIso R E N).hom ≫ (chainsXIso R E N).inv := by simp
     rw [this, ← Category.assoc, hnat, Category.assoc]
@@ -146,8 +146,8 @@ theorem cup_supp (R : Type) [CommRing R] {I J K : Cx R} (μ : Pair I J K) (hI : 
   haveI := hc.2.1
   obtain ⟨α, rfl, hα⟩ := cup_supp_rep R hI f a ha
   obtain ⟨β, rfl, hβ⟩ := cup_supp_rep R hJ g b hb
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ hk).1 α β
-  rw [(GlobalTheory.T.cup_eq_class_of_isAW R μ hk).2 α β γ hγ, CohomologyClass.mk_eq_zero_iff]
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ hk).1 α β
+  rw [(_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ hk).2 α β γ hγ, CohomologyClass.mk_eq_zero_iff]
   have evK := GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := K) (n := k)
   have evI := GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := I) (n := n)
   have evJ := GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties R (E := E) (I := J) (n := m)
@@ -187,8 +187,7 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.cupProduct_eq_zero_of_vanishing_on_cover : ∀ (R : Type) [CommRing R] {I J K : Cx R} (μ : Pair I J K), (∀ s, Injective (I.X s)) → (∀ s, Injective (J.X s)) → ∀ {U V E : Spc} (f : U ⟶ E) (g : V ⟶ E), Cover2 R f g → ∀ {n m k : ℤ} (hk : n + m = k) a b, cpull ((chains R).map f) I n a = 0 → cpull ((chains R).map g) J m b = 0 → μ.cup E hk a b = 0 := by
-  first | (exact @GlobalTheory.EtC.cup_supp)
+alias _root_.GlobalTheory.T.cupProduct_eq_zero_of_vanishing_on_cover := _root_.GlobalTheory.EtC.cup_supp
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductEqZeroOfVanishingOnCoverStatement =====

@@ -807,10 +807,6 @@ open scoped ComplexOrder
 
 noncomputable section
 
-theorem exists_coercive_of_posDef {ι : Type*} [Fintype ι] {P : Matrix ι ι ℂ} (hP : P.PosDef) :
-    ∃ c : ℝ, 0 < c ∧ ∀ (z : ι → ℂ) (j : ι), c * ‖z j‖ ^ 2 ≤ (star z ⬝ᵥ (P *ᵥ z)).re :=
-  _root_.UpperTheory.Reformulated.B.CoerciveOfPositiveDefinite.exists_coercive_of_posDef hP
-
 section Spaces
 
 variable {F E : Type*} [Field F] [Field E] [NumberField F] [NumberField E] [Algebra F E]
@@ -822,7 +818,7 @@ omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] i
 theorem exists_coord_le_len {h : HermitianForm F E W} {v : Basis ι E W} (M : Majorant h v)
     (g : archUnitary h v) : ∃ K : ℝ, 0 ≤ K ∧ ∀ (y : InfinitePlace E → ι → ℂ) w i,
       ‖y w i‖ ≤ K * M.len (invApply g y) := by
-  choose c hc hcoer using fun w => exists_coercive_of_posDef (M.posDef w)
+  choose c hc hcoer using fun w => _root_.UpperTheory.Reformulated.B.CoerciveOfPositiveDefinite.exists_coercive_of_posDef (M.posDef w)
   set G : InfinitePlace E → Matrix ι ι ℂ := fun w =>
     (((g : archUnitary h v) : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) with hG
   refine ⟨∑ w, ∑ i, ∑ j, ‖G w i j‖ / Real.sqrt (c w), by positivity, fun y w i => ?_⟩
@@ -1437,7 +1433,7 @@ noncomputable section
 
 universe u
 
-theorem ReducedBasisBound.full : ReducedBasisBound.Statement := ReducedBasisBound.proof
+alias ReducedBasisBound.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.ReducedBasisBound.proof
 
 section Closed
 
@@ -1457,25 +1453,23 @@ theorem ArchCovolumeBound.full : ArchCovolumeBound.Statement h v :=
 
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
-theorem MajorantTransport.full : MajorantTransport.Statement h v := MajorantTransport.proof h v
+alias MajorantTransport.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.MajorantTransport.proof
 
 
 omit [NumberField F] [NumberField E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
-theorem ComplementExtension.full : ComplementExtension.Statement h := ComplementExtension.proof h
+alias ComplementExtension.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.ComplementExtension.proof
 
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
-theorem LineNormalForm.full : LineNormalForm.Statement h := LineNormalForm.proof h
+alias LineNormalForm.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.LineNormalForm.proof
 
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
-theorem ComplementLattice.full [FiniteDimensional E W] : ComplementLattice.Statement h :=
-  ComplementLattice.proof h
+alias ComplementLattice.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.ComplementLattice.proof
 
 
 omit [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] in
-theorem LatticePointsBelowFinite.full : LatticePointsBelowFinite.Statement h v :=
-  LatticePointsBelowFinite.proof h v
+alias LatticePointsBelowFinite.full := _root_.GroundTheory.Heights₂.Heights.FiniteCovolume.LatticePointsBelowFinite.proof
 
 theorem ArchimedeanUnitaryEquiv.full : ArchimedeanUnitaryEquiv.Statement h v :=
   ArchimedeanUnitaryEquiv.proof h v

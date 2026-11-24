@@ -157,12 +157,6 @@ open scoped TensorProduct
 
 variable {D : D7}
 
-theorem mul_finOne {z : Formalism.L2.Theta.AE D} (hz : infPart D z = 0) :
-    z * (pairA D.host.F 0 1 ⊗ₜ[D.host.F] (1 : D.host.E)) = z := by
-  have h : finPart D (pairA D.host.F 0 1 ⊗ₜ[D.host.F] (1 : D.host.E)) = 1 := rfl
-  conv_lhs => rw [eq_lift_of_infPart z hz]
-  rw [lift_mul, h, mul_one, ← eq_lift_of_infPart z hz]
-
 theorem one_mem_AA (h : D.host.ccK = ⊤) : (1 : D.host.E) ∈ D.host.AA := by
   have h1 : (1 : D.host.E) ∈ D.host.AA0 := by
     refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
@@ -191,7 +185,7 @@ theorem mem_latO_of_int (hc : D.host.ccK = ⊤) (hG : S.gram = 1) (hS : IsStdLat
     · have : (1 : D.host.E) * (Pi.single k 1 : Fin T.rank → D.host.E) k *
           ∑ m, star ((Pi.single l 1 : Fin S.rank → D.host.E) m) * (1 : Matrix (Fin S.rank) (Fin S.rank) D.host.E) m l = 1 := by
         simp [Matrix.one_apply]
-      rw [this, mul_finOne (h0 k l)]
+      rw [this, _root_.GlobalTheory.PlaceDatum.mul_pair_one (h0 k l)]
     · intro j _ hj
       have : (1 : D.host.E) * (Pi.single k 1 : Fin T.rank → D.host.E) k *
           ∑ m, star ((Pi.single j 1 : Fin S.rank → D.host.E) m) * (1 : Matrix (Fin S.rank) (Fin S.rank) D.host.E) m l = 0 := by
@@ -344,7 +338,7 @@ theorem reads_transl : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
   have hA : ∀ i j, (cA D e • finPt hS hT 1 (unitBlock D o a d)) i j = -unitPt S T (cA D e) o i j := fun i j => by
     rw [Matrix.smul_apply, smul_eq_mul, hent, unitPt]
     split_ifs
-    · rw [mul_neg, mul_finOne hinf]
+    · rw [mul_neg, _root_.GlobalTheory.PlaceDatum.mul_pair_one hinf]
     · rw [mul_zero, neg_zero]
   have hΦ : (fun t => cosetFn (cA D e) (D.host.conj • modul P c) (0 : WO S T) (t + cA D e • finPt hS hT 1 (unitBlock D o a d))) =
       cosetFn (cA D e) (D.host.conj • modul P c) (unitPt S T (cA D e) o) := by
@@ -380,20 +374,6 @@ open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 
 
-theorem _root_.GlobalTheory.T.conjIdealIndicator_unitBlockTranslate_reads_weilOperator : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D) {a d : ℕ} (hS : S.rank = a) (hT : T.rank = d) (δ : ℂ),
-    D.host.ccK = ⊤ → Setup ψ θ S T ⊤ δ 1 →
-    ∀ (LS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (LT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)),
-    IsStdLat LS → IsStdLat LT → IsSelfDualC S LS → IsSelfDualC T LT →
-    ∀ (e : Formalism.L2.Theta.AE D) (P : Finset (Formalism.L2.DIV.Pl D.host.E)) (c : Formalism.L2.DIV.Pl D.host.E → ℕ), GoodIdem e P →
-    IsSBHalf (cA D e) (latO S T LS LT fun _ => True) (cosetFn (cA D e) (D.host.conj • modul P c) (0 : WO S T)) →
-    ∀ (κ : ℂ) (e0 : VC D a d → ℂ) (vac : WO S T → ℂ), e0 ∈ Th D (tor0 D ⊤ δ) (stdL D a) (stdL D d) →
-    Reads ψ θ hS hT ⊤ δ 1 (κ • e0) vac → IsLatVac (heisO ψ S T) (latO S T LS LT fun _ => True) vac →
-    ∀ Tm : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ),
-    IsPlaceModel ψ (symplO S T) (heisO ψ S T) (cA D e) (latO S T LS LT fun _ => True) 1 vac Tm →
-    ∀ (G : VC D a d → ℂ) (o : ℕ), Reads ψ θ hS hT ⊤ δ 1 G (Tm (cosetFn (cA D e) (D.host.conj • modul P c) 0)) →
-    ∃ ζ : ℂ, IsRootOne ζ ∧ Reads ψ θ hS hT ⊤ δ 1 (ζ • Wd D (tor0 D ⊤ δ) (pt D (tor0 D ⊤ δ) δ (unitBlock D o a d)) G)
-      (Tm (cosetFn (cA D e) (D.host.conj • modul P c) (unitPt S T (cA D e) o))) := by
-  first | exact @GlobalTheory.BotSmallTransl.reads_transl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjIdealIndicatorUnitBlockTranslateReadsWeilOpeStatement =====
@@ -1130,13 +1110,7 @@ theorem dualCoord_eq {S T : HSp D} (hS : S.gram = 1) (hT : T.gram = 1) (β : GL 
     Matrix.mul_one, Units.val_one, Matrix.mul_one, Matrix.mul_apply, Finset.mul_sum]
   exact Finset.sum_congr rfl fun l _ => mul_left_comm _ _ _
 
-theorem cA_cA (z : Formalism.L2.Theta.AE D) : cA D (cA D z) = z := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
-  | tmul a x =>
-    change a ⊗ₜ[D.host.F] star (star x) = _
-    rw [star_star]
-  | add a b ha hb => simp only [RingHom.map_add (f := _), ha, hb]
+alias cA_cA := _root_.Formalism.L2.Theta.cA_cA
 
 theorem inId_of {I : Ideal (𝓞 D.host.E)} {z : Lev.EAf D} (h : GlobalTheory.FrameIdeal.InId (F := D.host.F) I z) : InId I z := by
   obtain ⟨s, hs, rfl⟩ := h
@@ -1589,13 +1563,6 @@ theorem reads_sum {a d : ℕ} {hS : S.rank = a} {hT : T.rank = d} {ι : Type} (R
     rw [Finset.sum_insert ha, Finset.sum_insert ha]
     exact (h a (Finset.mem_insert_self _ _)).add (ih fun r hr => h r (Finset.mem_insert_of_mem hr))
 
-theorem isFinPt_one (V : HSp D) {n : ℕ} (h : V.rank = n) : IsFinPt V 1 (1 : Formalism.MainNotions.StandardLatticesGL3.GA D n) := by
-  subst h
-  refine ⟨one_mem _, rfl, fun i j => ?_⟩
-  rw [map_one]
-  simp only [OneMemClass.coe_one, Units.val_one, Fin.cast_eq_self, Matrix.one_apply]
-  split_ifs <;> simp
-
 theorem om_vac {T₀ : Type} {A A' WW : HSp D} {X : Tri T₀ A A' WW}
     {α β : T₀ → ((Formalism.L2.Theta.AE D)ˣ →* Circle)} {νH : T₀ → Formalism.L2.Host.HChar D.host.E}
     {S : T₀ → Finset (Formalism.L2.DIV.Pl D.host.E)} (hX : X.Is ψ θ α β νH S) (s : T₀)
@@ -1697,7 +1664,7 @@ theorem reads_datum (hI : GlobalTheory.NormSum.Inp D) {large₂ : SizeData₂ D}
   have hf := hall Tm hTm
   obtain ⟨ζ₁, z1, r1⟩ := GlobalTheory.T.level_indicator_reads_norm_power_unit_vector W.ψ W.θ A' WW hS hT δ hc hset _ _ hLS hLT hSd hTd _ _ (X.c s) he sb0 κ P'.e0 X.vac' P'.vac.1 hv
     hX.is.isVac'.2.lat Tm hTm
-  obtain ⟨ζ₂, z2, r2⟩ := GlobalTheory.T.conjIdealIndicator_unitBlockTranslate_reads_weilOperator W.ψ W.θ A' WW hS hT δ hc hset _ _ hLS hLT hSd hTd _ _ (X.c s) he sb0 κ P'.e0 X.vac' P'.vac.1 hv
+  obtain ⟨ζ₂, z2, r2⟩ := _root_.GlobalTheory.BotSmallTransl.reads_transl W.ψ W.θ A' WW hS hT δ hc hset _ _ hLS hLT hSd hTd _ _ (X.c s) he sb0 κ P'.e0 X.vac' P'.vac.1 hv
     hX.is.isVac'.2.lat Tm hTm _ A.rank r1
   have r3 : Reads W.ψ W.θ hS hT ⊤ δ 1 ((ζ₂ * (κ * ζ₁)) • cosetVec P' (D.host.conj • modul (locPl G s) (X.c s)) A.rank)
       (Tm (cosetFn (cA D (X.e s)) (D.host.conj • modul (locPl G s) (X.c s)) (unitPt A' WW (cA D (X.e s)) A.rank))) := by
@@ -1718,7 +1685,7 @@ theorem reads_datum (hI : GlobalTheory.NormSum.Inp D) {large₂ : SizeData₂ D}
         cosetFn (cA D (X.e s)) (D.host.conj • modul (locPl G s) (X.c s)) (unitPt A' WW (cA D (X.e s)) A.rank)
           (actO A' WW (g r)⁻¹ 1⁻¹ y))) := fun r hr => by
     have hk := finE_mem_St hX.std'.1 hfr hS (hR1 r hr) (hg r)
-    have a1 := reads_om hI P' hS hT hset hW c1 c2 (hg r) (isFinPt_one WW hT) (GlobalTheory.FunObj.NormUniq.tt_smul hTT _) r3
+    have a1 := reads_om hI P' hS hT hset hW c1 c2 (hg r) (_root_.GlobalTheory.BotFormula.isFinPt_one WW hT) (GlobalTheory.FunObj.NormUniq.tt_smul hTT _) r3
     have a2 := om_vac hX.is s (fun v hv => GlobalTheory.BotFinLevel.unram_off G hL s i j _ hv) (hg r).1 hk
     rw [alpha_div_beta] at a2
     rw [P'.W.smul _ _ _ _ hTT, om_placeModel hW hSd hTd he.1 hX.is.isVac'.2.theta hTm
@@ -1787,14 +1754,8 @@ open GlobalTheory.BotSmallDict GlobalTheory.NormExact
 open scoped Pointwise
 noncomputable section
 namespace GlobalTheory.BotSmallDict
-open GlobalTheory.BotFormula (IsFinPt)
-variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {δ t0 : ℂ}
 end GlobalTheory.BotSmallDict
 namespace GlobalTheory.BotSmallDict
-open GlobalTheory.BotFormula (IsFinPt)
-open GlobalTheory.RowVacScalar (detIdl idemAt)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (stdSnd)
-variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} {δ t0 : ℂ}
 end GlobalTheory.BotSmallDict
 namespace GlobalTheory.BotSmallDict
 open GlobalTheory.BotFormula (IsFinPt)
@@ -1838,27 +1799,6 @@ end GlobalTheory.BotSmallDict
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset MeasureTheory
-open Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3 Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
-open Formalism.DivisionValues (vw)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.NormSum (Pair Tup)
-open Classical
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.smallStage_bottomKernel_eq_term : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-    (∀ D, GlobalTheory.NormSum.Inp D) → GlobalTheory.SqTop.BotSmall →
-    GlobalTheory.SqTop.GBig fun {D} T _ _ G _ _ _ _ => ∀ (W : G.Weil), IsStdChar D W.ψ (-1) → ∀ (i j : Fin D.R.m) (A A' WW : HSp D)
-      (X : Tri T A A' WW) (δ t0 : ℂ), IsBottomTri W i j X → X.rW.β = 1 →
-      ∃ Ω₂ : ℂ, Ω₂ ≠ 0 ∧ ∀ (s : T) (Q : ℕ) (P P' : Pair D ⊤ δ t0 Q), IsBottom G s i j (GlobalTheory.SqTop.modT G s) P P' →
-        ∃ u : ℂ, u ≠ 0 ∧ u ∈ Qbar ∧ (∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ GlobalTheory.SqTop.Qn G s → ∀ lam : Qbar →+* ℂ_[p], ‖lamC lam u‖ = 1) ∧
-          ∀ (ea : P'.a = A'.rank) (ed : P'.d = WW.rank) (h : GA D P'.d) (g : GA D WW), GlobalTheory.BotFormula.IsFinPt WW g h →
-            ∀ (x : GA D P'.a) (g' : GA D A'), GlobalTheory.BotFormula.IsFinPt A' g' x → ∀ T' : Tup D P'.a P'.d P'.n,
-              X.ker' W.ψ W.θ s (GlobalTheory.BotFormula.minorF ea ed T') g g' = Ω₂ * u * P'.term x h T' := by
-  first | exact @_root_.GlobalTheory.BotSmallDict.bottomKernel_eq_classSum_term
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SmallStageBottomKernelEqTerm =====

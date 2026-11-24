@@ -397,7 +397,7 @@ theorem UpperTheory.V.Weyl.qdetComm :
     simp only [map_sum, map_smul] at h1
     exact h1
   rw [GlobalTheory.CapAdInv.qdet_semiconj _ _ _ h u,
-    GlobalTheory.CapAdInv.qdet_ad _ (UpperTheory.V.Weyl.glRel n Ξ) y Q hQ u]
+    _root_.GlobalTheory.QuantumMinorAdjacentSwap.qdet_conj _ (UpperTheory.V.Weyl.glRel n Ξ) y Q hQ u]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.WeylAlgebraQuantumDet.QdetComm =====

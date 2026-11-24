@@ -209,8 +209,6 @@ noncomputable section
 
 namespace ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH
 
-theorem dimPIT : DimPITStatement := KrullDimensionPrincipalIdeal.dimPIT'
-
 end ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH
 end -- clump:auto
 end -- clump:auto

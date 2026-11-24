@@ -420,7 +420,7 @@ theorem bcol_size {N : ℕ} (jj : Fin N) (α : Fin (WeightFamilies.dimY D j) →
   rw [Finsupp.sum_fintype _ _ (fun _ => rfl), Fintype.sum_prod_type, Fin.sum_univ_succ]
   simp [bcol]
 
-theorem size_eq_degree {N : ℕ} (f : Idx D j N →₀ ℕ) : (f.sum fun _ n => n) = Finsupp.degree f := rfl
+alias size_eq_degree := _root_.PI.HJP.sum_eq_degree
 
 end THs
 

@@ -542,14 +542,6 @@ open GlobalTheory.OrbitSep
 
 namespace GlobalTheory.LogKSDiv.GenChange
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-
-theorem dualMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    dualMap (g.comp f) = (dualMap g).comp (dualMap f) := by
-  ext x <;> simp [dualMap]
-
 theorem chart_res {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) :
     spMap (X.presheaf.map (homOfLE h).op).hom ≫ GlobalTheory.LogKS.chart U = GlobalTheory.LogKS.chart W := by
   simpa [spMap, GlobalTheory.LogKS.chart] using U.2.map_fromSpec W.2 (homOfLE h).op
@@ -579,7 +571,7 @@ theorem rho_fac {X : Scheme.{0}} (U W : X.affineOpens) (h : W.1 ≤ U.1) {K : Ty
     (hρ : spMap ρ ≫ GlobalTheory.LogKS.chart U = spMap ρW ≫ GlobalTheory.LogKS.chart W) :
     ρ = ρW.comp (X.presheaf.map (homOfLE h).op).hom := by
   have : IsOpenImmersion (GlobalTheory.LogKS.chart U) := U.2.isOpenImmersion_fromSpec
-  rw [← chart_res U W h, ← Category.assoc, ← spMap_comp'] at hρ
+  rw [← _root_.GlobalTheory.LogKSLoc.spMap_res_chart U W h, ← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp] at hρ
   have h2 := Spec.map_inj.1 ((cancel_mono (GlobalTheory.LogKS.chart U)).1 hρ)
   simpa using congrArg CommRingCat.Hom.hom h2
 
@@ -678,7 +670,7 @@ theorem genKS_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rho_fac U' W hWU' ρ' ρW (hρ'.trans hρW.symm)
   obtain ⟨hinj, hfr⟩ := _root_.GlobalTheory.GenFrac.injective_and_frac TF.Y.X (barComp TF.Y Z) W (hWU.trans hU) ρW hρW
   have hcr := chart_res U W hWU
-  have hcr' := chart_res U' W hWU'
+  have hcr' := _root_.GlobalTheory.LogKSLoc.spMap_res_chart U' W hWU'
   obtain ⟨hfu, hfloc⟩ := basic_loc U W hWU f hWf
   obtain ⟨hfu', hfloc'⟩ := basic_loc U' W hWU' f' hWf'
   have hv'WB := GlobalTheory.T.tangentBasis_affineOpen_restrict_basicOpen E H TF.Y.X TF.Y.t U' W hWU' f' hWf' n' v' hvT' hvB'
@@ -712,10 +704,10 @@ theorem genKS_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have h1 := (_root_.GlobalTheory.TanBaseChange.tan_comb_baseChange E H TF.Y.X TF.Y.t _ _ ρW (GlobalTheory.LogKS.chart W) (spMap ρW ≫ GlobalTheory.LogKS.chart W) rfl).2 _ v'W
       (B (e ⟨τ, i⟩)) (vW (e ⟨τ, i⟩)) (hB (e ⟨τ, i⟩))
     have hvw : spMap (dualMap ρW) ≫ vW (e ⟨τ, i⟩) = w τ i := by
-      rw [hw, hfacU, dualMap_comp', spMap_comp', Category.assoc]
+      rw [hw, hfacU, _root_.GlobalTheory.FramedBaseChange.dual_comp, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc]
     have hv'w : (fun c => spMap (dualMap ρW) ≫ v'W c) = fun c => w' (e'.symm c).1 (e'.symm c).2 := by
       funext c
-      rw [hw', Sigma.eta, Equiv.apply_symm_apply, hfacU', dualMap_comp', spMap_comp', Category.assoc]
+      rw [hw', Sigma.eta, Equiv.apply_symm_apply, hfacU', _root_.GlobalTheory.FramedBaseChange.dual_comp, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc]
     rw [hvw, hv'w] at h1
     have h2 := _root_.GlobalTheory.LogKSDiv.isCombAtG_flatFrame E H Dw TF.Y.X TF.Y.t _ (spMap ρW ≫ GlobalTheory.LogKS.chart W) n n' e e' w' A τ i (w τ i) htan'
       (by rw [hρW]; exact hA τ i)

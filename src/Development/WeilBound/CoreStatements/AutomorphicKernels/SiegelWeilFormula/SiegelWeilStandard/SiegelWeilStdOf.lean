@@ -160,10 +160,10 @@ theorem ndZero (H : Hyps) {d : SD σ} (R : RD d) (hmn : d.m < d.n) {Φ : d.Fn} (
   have hL : (fun f => fc d.B.ψ d.b nb lam 𝓖 f T x) ∈ d.lamSet := ⟨nb, lam, 𝓖, T, x, hc, hT, rfl⟩
   obtain ⟨hadd, hbd⟩ := H.lamBd F E σ d _ hL
   obtain ⟨hUo, hR, hs, hp, hd, hcont, hinv, hfar⟩ := hE
-  obtain ⟨hDiff, hComm⟩ := lamDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
+  obtain ⟨hDiff, hComm⟩ := _root_.GlobalTheory.CompanionTheory.HolFamily.functional_commutes_iteratedDeriv (rat2 σ d.Y) _ hadd hbd U Ê hUo hd hcont hinv
   obtain ⟨-, -, hI⟩ := H.tAll.2.2.2.2 F E σ d
   obtain ⟨-, hIc, hIi⟩ := hI Φ hΦ
-  have hAc := famCont U Ê hUo hd hcont _ hs j
+  have hAc := _root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j
   have hAi : ∀ γ ∈ rat2 σ d.Y, ∀ g, iteratedDeriv j (Ê · (γ * g)) (s0 d.m d.n) = iteratedDeriv j (Ê · g) (s0 d.m d.n) :=
     fun γ hγ g => derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j
   have hLI : fc d.B.ψ d.b nb lam 𝓖 (d.I Φ) T x = 0 := by
@@ -199,7 +199,7 @@ theorem stepJ (H : Hyps) {d : SD σ} (R : RD d) (L : LD d) (R' : RD L.sd) (hmn :
   obtain ⟨-, -, hI⟩ := H.tAll.2.2.2.2 F E σ d
   obtain ⟨-, hIc, hIi⟩ := hI Φ hΦ
   have hBc : Continuous (Bj d Φ p Ê j) :=
-    (famCont U Ê hUo hd hcont _ hs j).sub (continuous_const.mul (continuous_const.mul hIc))
+    (_root_.GlobalTheory.CompanionTheory.HolFamily.continuous_iteratedDeriv_family U Ê hUo hd hcont _ hs j).sub (continuous_const.mul (continuous_const.mul hIc))
   have hBr : ∀ γ ∈ rat2 σ d.Y, ∀ g, Bj d Φ p Ê j (γ * g) = Bj d Φ p Ê j g := fun γ hγ g => by
     simp only [Bj, derivInv U Ê hUo _ hs γ g (fun z hz => hinv z hz γ hγ g) j, hIi γ hγ g]
   have hz := H.fourierZero F E σ d nb lam 𝓖 hc (Bj d Φ p Ê j) hBc (fun β hβ g => hBr _ (nbRat d hc β hβ) g) ?_
@@ -515,7 +515,7 @@ theorem comm (hT : TBij) (g : UA σ d.A.J) : ∀ Φ ∈ d.sch, ∀ x, d.om x (d.
     rw [one_mul]
     simpa only [mul_assoc] using e2.symm
   obtain ⟨ε, hε⟩ := signY d
-  have hc1 := GlobalTheory.T.doubledUnitary_character_trivial_of_siegel F E σ (cm d) d.n d.Y.J ε hε (detY d) c hcont hP
+  have hc1 := _root_.GlobalTheory.SiegelChar.eq_one_of_siegel F E σ (cm d) d.n d.Y.J ε hε (detY d) c hcont hP
   intro Φ hΦ x
   have e := hcf x _ ((hS d).pres g Φ hΦ)
   have hcf1 : cf x = 1 := by rw [← hcv, hc1]; rfl
@@ -963,7 +963,7 @@ theorem unfoldCore (B : Base F E) (hB : B.IsGood σ) (hb : IsFrame2 σ Y b) {nb 
         have e : (w * nb ν'.1) = (γ : rat2 σ Y).1 * (w * nb ν.1) := (congrArg Subtype.val hγ).symm
         rw [e, mul_inv_cancel_right]
         exact Subgroup.mem_subgroupOf.1 γ.2
-      exact (Subtype.ext (big_inj hb hw hnb hP)).symm
+      exact (Subtype.ext (_root_.PositivityTheory.SiegelWeilFormula.kunf.big_inj' hb hw hnb hP)).symm
     have hAq₀ : ∀ β, A q₀ β = φ (w * nb β * x) := fun β => by
       rw [hAmk, mul_assoc]
     have hI := @abs_integrable _ _ _ _ _ _ _ lam hHaar (nF σ Y b) _ 𝓖 h𝓖 _ _ act hact0 hact A hA hAact C hC hcov u hu hAu q₀ hinj
@@ -981,7 +981,7 @@ theorem unfoldCore (B : Base F E) (hB : B.IsGood σ) (hb : IsFrame2 σ Y b) {nb 
       simp only [χ₀, AddChar.map_neg_eq_inv, psi_rat hB.std T ν, inv_one]
     have hsmall : ∀ q, (∀ ν, act q₀ ν ≠ q) →
         ∃ β₀, χ₀ β₀ ≠ 1 ∧ ∀ ν β, A (act q ν) (β + β₀) = A (act q ν) β := fun q hq => by
-      rcases cells B hB hb hw hnb T hT (q.out : rat2 σ Y).1 (q.out : rat2 σ Y).2 with
+      rcases _root_.PositivityTheory.SiegelWeilFormula.kunf.cells' B hB hb hw hnb T hT (q.out : rat2 σ Y).1 (q.out : rat2 σ Y).2 with
         ⟨p, hpP, hpΓ, ν, hνF, hγ⟩ | ⟨β₀, hψ, t, hpar, hdet⟩
       · exfalso
         refine hq ⟨ν, hνF⟩ ?_
@@ -1052,7 +1052,7 @@ end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.UnfoldOf =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaTop =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaTop", "h": "module\n\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.LowerRankDatum\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IdentityOnLastEmbedding\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaEps\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaLine\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.ParabolicThetaScalar\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.SubMulRight\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.VacCut\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.ParabolicLowerBlockZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.EmEqInr\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaTop", "h": "module\n\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.LowerRankDatum\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IdentityOnLastEmbedding\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaEps\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.IwaLine\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.ParabolicThetaScalar\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.SubMulRight\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.VacCut\nimport Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.ParabolicLowerBlockZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.VacuumIwasawa.EmEqInr\nimport Development.WeilBound.ThetaLifts.LatticeBasics.ContinuousFlat\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1075,7 +1075,7 @@ theorem iwaQ_of' (hT : TAll) : IwaQ := by
   obtain ⟨g, hq⟩ := q_split' L ε hd hL p lam hp
   set q := p * (L.j g)⁻¹ with hqdef
   obtain ⟨c, hc⟩ := parabolic_theta_scalar hT L.i₀ hq
-  refine ⟨q, g, k, (absE F E lam : ℝ), c, hk, by simp [hqdef, mul_assoc], absE_pos lam, fun g' => ?_, fun Φ hΦ g' X hX => ?_⟩
+  refine ⟨q, g, k, (absE F E lam : ℝ), c, hk, by simp [hqdef, mul_assoc], _root_.GlobalTheory.ThK.Dbl.absE_pos lam, fun g' => ?_, fun Φ hΦ g' X hX => ?_⟩
   · have e : L.j g' * (p * k) = (L.j g' * q * (L.j g')⁻¹) * L.j (g' * g) * k := by
       simp only [hqdef, map_mul, mul_assoc, inv_mul_cancel_left]
     rw [e, KWhit.a_mul_K d _ k hk, q_ht' L (q_conj' L hq g') (g' * g)]
@@ -1858,7 +1858,7 @@ theorem whitGenEqOf : WhitGenEqOf := by
 
 end PositivityTheory.SiegelWeilFormula.Gen.WQ
 
-theorem PositivityTheory.SiegelWeilFormula.Gen.whitGenEqOf : PositivityTheory.SiegelWeilFormula.Gen.WhitGenEqOf := PositivityTheory.SiegelWeilFormula.Gen.WQ.whitGenEqOf
+alias PositivityTheory.SiegelWeilFormula.Gen.whitGenEqOf := _root_.PositivityTheory.SiegelWeilFormula.Gen.WQ.whitGenEqOf
 
 end
 end -- clump:auto

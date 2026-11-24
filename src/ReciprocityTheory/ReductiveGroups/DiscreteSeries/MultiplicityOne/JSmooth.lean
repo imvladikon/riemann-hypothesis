@@ -280,12 +280,7 @@ section intg
 
 variable {μ : Measure (Mt k r)} {h : Mt k r → ℝ} {Mh : ℝ} {K : Set (Mt k r)}
 
-theorem pint_integrable (hμK : ∀ S : Set (Mt k r), IsCompact S → μ S < ∞) (hG : μ (GV k r)ᶜ = 0)
-    (hh : AEStronglyMeasurable h μ) (hMh : ∀ᵐ y ∂μ, |h y| ≤ Mh) (hK : IsCompact K)
-    {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] {Θ : Mt k r → E} (hΘ : Continuous Θ)
-    (hz : ∀ y : Mt k r, (Matrix.of y : Mat k r) ∈ GV k r → y ∉ K → Θ y = 0) :
-    Integrable (fun y => h y • Θ y) μ := by
-  exact intg_lemma hμK hG hh hMh hK hΘ hz
+alias pint_integrable := _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.SmoothA.intg_lemma
 
 end intg
 
@@ -471,10 +466,7 @@ theorem V_hasDerivAt {Φ : Mat k r → ℂ} (hΦ : ContDiff ℝ ninf Φ) (hs : H
       (curveDer Y (Matrix.of x) t)
     exact h1.smul_const (X.σ (Matrix.of x) X.w)
 
-theorem V_intH {Ψ : Mat k r → ℂ} (hc : Continuous Ψ) (hs : HasCompactSupport Ψ) {h : Mat k r}
-    (hh : h ∈ GV k r) :
-    Integrable (fun x : Mt k r => Ψ (Matrix.of x) • X.σ (h * Matrix.of x) X.w) D.μG := by
-  exact vint_lemma hc hs hh
+alias V_intH := _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.SmoothA.vint_lemma
 
 end vec
 
@@ -651,24 +643,10 @@ theorem LdV_cf {Φ Φ' : Mat k r → ℂ} (hΦ' : TG Φ') {Y : Mat k r} (hY : in
   simp only [inner_zero_right, zero_add, cf, mc, Matrix.neg_mul]
   rfl
 
-private theorem hs_lemma_0 {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸] [FiniteDimensional ℂ 𝔸]
-    {H A B : 𝔸} (h : H * A = B * H) : H * NormedSpace.exp A = NormedSpace.exp B * H := by
-  haveI : CompleteSpace 𝔸 := FiniteDimensional.complete ℂ 𝔸
-  have hA := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A
-  have hB := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) B
-  refine (hA.mul_left H).unique ?_
-  convert hB.mul_right H using 1
-  funext n
-  have hp : H * A ^ n = B ^ n * H := by
-    induction n with
-    | zero => simp
-    | succ n ih => rw [pow_succ, pow_succ, ← mul_assoc, ih, mul_assoc, h, ← mul_assoc]
-  rw [mul_smul_comm, smul_mul_assoc, hp]
-
 private theorem H_exp_lemma {n : Type*} [Fintype n] [DecidableEq n] {H A B : Matrix n n ℂ}
     (h : H * A = B * H) :
     H * NormedSpace.exp A = NormedSpace.exp B * H := by
-  exact @hs_lemma_0 (Matrix n n ℂ) Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra _ H A B h
+  exact @_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.SmoothA.semiExp_lemma_7 (Matrix n n ℂ) Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra _ H A B h
 
 private theorem exp_UH_lemma_2 {H Y : Mat k r} (hY : Yᴴ * H + H * Y = 0) (s : ℝ) :
     (NormedSpace.exp ((s : ℂ) • Y))ᴴ * H * NormedSpace.exp ((s : ℂ) • Y) = H := by

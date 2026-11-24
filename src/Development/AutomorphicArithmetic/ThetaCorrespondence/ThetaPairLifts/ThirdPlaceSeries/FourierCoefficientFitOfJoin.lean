@@ -17,6 +17,7 @@ public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.N
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SettingAtPoint
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TieTest
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GBigAtTiedStatement
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RamifiedSumsFifthBoundStatement
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulVecEqOfBasis
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.AuxiliaryPrimeNeTypePrime
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -55,7 +56,6 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IpbOfLamLowStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MmTieStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OneMapOfRowsStatement
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RamifiedSumsFifthBoundStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SizeAtStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ThmAUpperStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeTateFunctionalEquationCM
@@ -131,16 +131,11 @@ namespace GlobalTheory.RowClaim.JoinF
 theorem joined_local_sum_estimates :
     _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.RowClaim.SumOKK ∧ GlobalTheory.RowClaim.ConstK ∧ GlobalTheory.RowClaim.LinK ∧ GlobalTheory.RowClaim.Formula2K ∧ GlobalTheory.RowClaim.SumRatK :=
   fun hP hK hM =>
-    _root_.GlobalTheory.T.thetaLift_row_properties hP hK hM (_root_.GlobalTheory.T.twisted_theta_integral_converges hP.siegelSetUnitary hP)
-      (_root_.GlobalTheory.T.twisted_local_factors_match hP.howeDualityReal hP hK hM) (_root_.GlobalTheory.T.twisted_square_theta_integrals_eq hP hK hM)
+    _root_.GlobalTheory.RowClaim.Join.thetaLift_row_properties_conj hP hK hM (_root_.GlobalTheory.WeilConv.twisted_weil_representation_convergence hP.siegelSetUnitary hP)
+      (_root_.GlobalTheory.SquareLM.twisted_square_local_matching hP.howeDualityReal hP hK hM) (_root_.GlobalTheory.SquareAgree.twisted_theta_integrals_agree hP hK hM)
 end GlobalTheory.RowClaim.JoinF
 end
 
-section
-
-theorem _root_.GlobalTheory.T.local_sum_estimates_joined : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → GlobalTheory.RowClaim.SumOKK ∧ GlobalTheory.RowClaim.ConstK ∧ GlobalTheory.RowClaim.LinK ∧ GlobalTheory.RowClaim.Formula2K ∧ GlobalTheory.RowClaim.SumRatK := by
-  first | exact @_root_.GlobalTheory.RowClaim.JoinF.joined_local_sum_estimates
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.JoinedLocalSumEstimates =====
@@ -227,7 +222,7 @@ namespace GlobalTheory.BigTop.Fun
 theorem den_tie_alt : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) →
     DenSum → _root_.GlobalTheory.BigTop.Fun.LeafDensity @Comparison₂ := by
   intro hS hL hD
-  refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono (_root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hL hD) fun {D _ _ _ _ _ _ _ _ _} p CF d C CH _ hd => ⟨hd, fun hq => ?_⟩
+  refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono (_root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hL hD) fun {D _ _ _ _ _ _ _ _ _} p CF d C CH _ hd => ⟨hd, fun hq => ?_⟩
   obtain ⟨-, a, ha⟩ := hd
   have hsq := ha.sq
   refine ⟨fun l hl => ((hsq.den l).1 hl).1, fun ij s h1 h2 => ?_⟩
@@ -251,12 +246,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.leafDensity_of_logDeriv_bound_and_denSum : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → DenSum → _root_.GlobalTheory.BigTop.Fun.LeafDensity @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.den_tie_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DenTieStatement =====
@@ -272,60 +261,6 @@ noncomputable section
 
 namespace GlobalTheory.BigTop.Fun.Close
 
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem cloudIcc {D : D7} (L : SizeData₂ D) (τ i : ℕ) :
-    0 ≤ cloud D τ i ∧ (cloud D τ i : ℝ) ≤ L.Sc := by
-  unfold cloud
-  split_ifs with h
-  · dsimp only [GlobalTheory.SignedHC.GridData.ofHCParam]
-    unfold GlobalTheory.SignedHC.GridData.extend
-    split_ifs with h2
-    · obtain ⟨h0, h1⟩ := L.cloud_v ((Fintype.equivFin D.what₂.Tau).symm ⟨τ, h⟩) ⟨i - 2, h2⟩
-      refine ⟨Int.floor_nonneg.mpr (by exact_mod_cast h0), ?_⟩
-      have hf := Int.floor_le ((D.hc ((Fintype.equivFin D.what₂.Tau).symm ⟨τ, h⟩)).v ⟨i - 2, h2⟩)
-      have hf' : (((⌊(D.hc ((Fintype.equivFin D.what₂.Tau).symm ⟨τ, h⟩)).v ⟨i - 2, h2⟩⌋ : ℤ) : ℚ) : ℝ) ≤
-          (((D.hc ((Fintype.equivFin D.what₂.Tau).symm ⟨τ, h⟩)).v ⟨i - 2, h2⟩ : ℚ) : ℝ) := by exact_mod_cast hf
-      push_cast at hf' ⊢
-      linarith
-    · exact ⟨le_rfl, by simpa using L.Sc_pos.le⟩
-  · exact ⟨le_rfl, by simpa using L.Sc_pos.le⟩
-
-theorem lcLeOfCloud {K : Type} [Field K] [NumberField K] [StarRing K] {Bs : DefBase K} {Df : DefSide Bs}
-    (O : FunData K Df) (S : ℝ) (h0 : 0 ≤ S) (hcl : ∀ τ i, 0 ≤ O.cl τ i ∧ (O.cl τ i : ℝ) ≤ S) :
-    (O.Lc : ℝ) ≤ S := by
-  have hL : O.Lc ≤ ⌊S⌋₊ := by
-    unfold FunData.Lc
-    refine Finset.sup_le fun τ _ => ?_
-    rw [Nat.le_floor_iff h0]
-    obtain ⟨a0, a1⟩ := hcl τ 2
-    obtain ⟨b0, -⟩ := hcl τ O.k
-    have h : ((O.cl τ 2 - O.cl τ O.k).toNat : ℤ) ≤ O.cl τ 2 := by omega
-    have h' : (((O.cl τ 2 - O.cl τ O.k).toNat : ℤ) : ℝ) ≤ ((O.cl τ 2 : ℤ) : ℝ) := by exact_mod_cast h
-    push_cast at h'
-    linarith
-  calc (O.Lc : ℝ) ≤ (⌊S⌋₊ : ℝ) := by exact_mod_cast hL
-    _ ≤ S := Nat.floor_le h0
-
-theorem scLeB {D : D7} {L : SizeData₂ D} (P : ParameterChoice' D L) : L.Sc ≤ L.sc.b := by
-  have hk := P.kS_le
-  have hk1 : (1 : ℝ) ≤ D.R.k := by
-    have := D.R.m_add_three_le_k
-    exact_mod_cast (by omega : 1 ≤ D.R.k)
-  have hn : (1 : ℝ) ≤ D.R.n := by
-    unfold Ranks.n
-    exact_mod_cast (show 1 ≤ D.R.ord from D.R.ord_pos)
-  have hx : 0 < L.sc.x := by linarith [L.sc.one_lt_alt]
-  have hb : 0 < L.sc.b := Real.exp_pos _
-  have hX : 1 ≤ L.sc.X' := Real.one_le_exp (Real.rpow_nonneg hx.le _)
-  have hw : L.sc.w'' D.R.n ≤ L.sc.b := by
-    unfold Scale.w'' Scale.b' Scale.a
-    rw [div_le_iff₀ (by positivity)]
-    calc L.sc.x * L.sc.b / L.sc.X' ≤ L.sc.x * L.sc.b := div_le_self (by positivity) hX
-      _ ≤ L.sc.b * (L.sc.x * D.R.n) := by nlinarith [mul_nonneg (mul_pos hx hb).le (sub_nonneg.2 hn)]
-  have hS := L.Sc_pos
-  nlinarith
-
 end GlobalTheory.BigTop.Fun.Close
 end -- clump:auto
 end -- clump:auto
@@ -333,7 +268,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaDenominatorsFitFunction =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DesHLeaf =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DesHLeaf", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LeafInfinitePlaceBound\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaDenominatorsFitFunction\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DesHLeaf", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LeafInfinitePlaceBound\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaDenominatorsFitFunction\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RamifiedSumsFifthBoundStatement\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -385,8 +320,8 @@ theorem desHLeaf_alt : _root_.GlobalTheory.BigTop.Fun.DescentHeightCondition := 
   refine ⟨⟨(Fm.D x i).R.two_le_m, (Fm.D x i).R.m_add_three_le_k, by exact_mod_cast hm4,
     (Fm.D x i).R.f_le_k⟩, ?_⟩
   show (FunData.Lc d.O : ℝ) ≤ (Fm.L x i).sc.b
-  exact (lcLeOfCloud d.O (Fm.L x i).Sc (Fm.L x i).Sc_pos.le
-    (fun τ j => cloudIcc (Fm.L x i) τ j)).trans (scLeB (Fm.params x hx i))
+  exact (_root_.GlobalTheory.BigTop.Fun.Lc_le_of_cloud_le d.O (Fm.L x i).Sc (Fm.L x i).Sc_pos.le
+    (fun τ j => _root_.GlobalTheory.BigTop.Fun.cloud_mem_Icc_Sc (Fm.L x i) τ j)).trans (_root_.GlobalTheory.BigTop.Fun.Sc_le_scale_b (Fm.params x hx i))
 end GlobalTheory.BigTop.Fun.Close
 end
 end
@@ -481,12 +416,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.existsFunctionIn_of_sqRatio_range : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → GlobalTheory.RowClaim.SumOKK → GlobalTheory.RowClaim.SumRatK → GlobalTheory.RowClaim.ConstK → (_root_.GlobalTheory.BigTop.Fun.CharacterAtPoint fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ i j t, GlobalTheory.RowTest.sqRatio ch i j t ∈ Set.range D.what₂.embLL) → GlobalTheory.NormSum.IntSt → FieldDat → TorEx → DenEx → BotEx → BotSmall → _root_.GlobalTheory.BigTop.Fun.ExistsFunctionIn @Fld @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.ex_of_claims_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExOfClaimsStatement =====
@@ -557,11 +486,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.scaling_function_bound' : _root_.GlobalTheory.BigTop.Fun.ScaleCondition := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.existsIntegralMultiple_holds_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsIntegralMultipleHoldsStatement =====
@@ -625,7 +549,7 @@ open GlobalTheory.BigTop.Fun.IntTie in
 theorem GlobalTheory.BigTop.Fun.int_tie_alt (hS : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint)
     (hd : Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps)
     (hB : BotSmall) (hN : BotNe) : _root_.GlobalTheory.BigTop.Fun.LeafIntegrality @Comparison₂ := by
-  have hQ := _root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hd (gBig_dep (gBig_and hB hN))
+  have hQ := _root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hd (gBig_dep (gBig_and hB hN))
   refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono hQ ?_
   intro D L hT Gi Gl Kc Y cX ex Csz p CF d C CH _ hd
   refine ⟨hd, fun hq => ?_⟩
@@ -695,12 +619,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.leafIntegrality_of_logDeriv_bound : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → BotSmall → BotNe → _root_.GlobalTheory.BigTop.Fun.LeafIntegrality @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.int_tie_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IntTieStatement =====
@@ -883,12 +801,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SumSize
-
-theorem _root_.GlobalTheory.T.leafHeightMapBound_of_infK : _root_.GlobalTheory.BigTop.Fun.BundleCondition → _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → InfK → _root_.GlobalTheory.BigTop.Fun.LeafHeightMapBound @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.QuotientNormCoisometry.leafHeightMapBound_tie_of_infK
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.IpaTieStatement =====
@@ -922,11 +834,11 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
     refine (map_ne_zero _).2 fun z => ?_
     rw [z, zero_pow hn.ne'] at e
     exact zero_ne_one e
-  have hinj := (_root_.GlobalTheory.T.iC_iota_mulVec_eq_iC p hp).1
+  have hinj := (_root_.GlobalTheory.BigTop.Fun.iC_base_factor_of_rows_alt p hp).1
   have key : ∀ y, p.R.Th p.P.A3.fam3.base3.μ0 (p.R.jX p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y)) = 0 ↔
       ((Df p).Pq p.P.A3.fam3.base3.μ0).mulVec y = 0 := by
     intro y
-    have e := _root_.GlobalTheory.T.theta_j_ev0_eq_ic_pq p hp p.P.A3.fam3.base3.μ0 y
+    have e := _root_.GlobalTheory.BigTop.Fun.theta_eV0_eq_iC_Pq_alt p hp p.P.A3.fam3.base3.μ0 y
     change p.R.Th p.P.A3.fam3.base3.μ0 (p.R.jX p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y)) = _ at e
     rw [e]
     constructor
@@ -951,7 +863,7 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
       by_contra hall
       push_neg at hall
       exact hne (hI _ hall)
-    exact FormulaAt.ne_zero ⟨hz, hf⟩ hc (_root_.GlobalTheory.T.eV0_mem_goodF' p hp _ y) hi
+    exact FormulaAt.ne_zero ⟨hz, hf⟩ hc (_root_.GlobalTheory.BigTop.Fun.eV0_mem_goodF_alt p hp _ y) hi
   ext y
   simp only [LinearMap.mem_ker, Matrix.mulVecLin_apply, DefSide.U]
   rw [← key y]
@@ -959,7 +871,7 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
   · intro h0
     apply hI
     intro i
-    have e := hf p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y) (_root_.GlobalTheory.T.eV0_mem_goodF' p hp _ y) i
+    have e := hf p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y) (_root_.GlobalTheory.BigTop.Fun.eV0_mem_goodF_alt p hp _ y) i
     have hs := h.sums p.P.A3.fam3.base3.μ0 (Or.inl rfl) y i
     have hv : vK a.ch p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y) i = 0 :=
       hs.symm.trans (by rw [h0]; exact map_zero _)
@@ -967,7 +879,7 @@ theorem ker_mulVecLin_eq_U_of_formulaAt {p : PtAt ex Csz} (hp : p.PointCondition
     exact ((mul_eq_zero.1 e2).resolve_left (mul_ne_zero hze hc))
   · intro h0
     funext i
-    have e := hf p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y) (_root_.GlobalTheory.T.eV0_mem_goodF' p hp _ y) i
+    have e := hf p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y) (_root_.GlobalTheory.BigTop.Fun.eV0_mem_goodF_alt p hp _ y) i
     have hs := h.sums p.P.A3.fam3.base3.μ0 (Or.inl rfl) y i
     have hz0 : psiK a.ch i (p.R.Th p.P.A3.fam3.base3.μ0
         (p.R.jX p.P.A3.fam3.base3.μ0 (eV0 p p.P.A3.fam3.base3.μ0 y))) = 0 := by
@@ -1004,11 +916,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.leafKernel_tie_of_claim_inputs : _root_.GlobalTheory.BigTop.Fun.BundleCondition → _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → GlobalTheory.RowClaim.LinK → GlobalTheory.RowClaim.InjK → GlobalTheory.RowClaim.ConstK → GlobalTheory.RowClaim.Formula2K → _root_.GlobalTheory.BigTop.Fun.LeafKernel @GlobalTheory.BigTop.Fun.Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.leafKernel_of_linK_injK_constK_formula2K
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.KerEqOfFormulaStatement =====
@@ -1064,8 +971,7 @@ end
 end LeafFixedPointPairing
 section
 open GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SumSize
-theorem _root_.GlobalTheory.Adopt.leafFixedPoint_of_finK_awayK : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → FinK → AwayK → _root_.GlobalTheory.BigTop.Fun.LeafFixedPoint @Comparison₂ := by
-  first | exact @_root_.LeafFixedPointPairing.GlobalTheory.CompanionTheory.LeafFixedPointPlaceNorm.fp_tie_alt
+alias _root_.GlobalTheory.Adopt.leafFixedPoint_of_finK_awayK := _root_.LeafFixedPointPairing.GlobalTheory.CompanionTheory.LeafFixedPointPlaceNorm.fp_tie_alt
 end
 end
 end -- clump:auto
@@ -1079,12 +985,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SumSize
-
-theorem _root_.GlobalTheory.T.leafFixedPoint_of_finK_awayK : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → FinK → AwayK → _root_.GlobalTheory.BigTop.Fun.LeafFixedPoint @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.Adopt.leafFixedPoint_of_finK_awayK
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LeafFixedPointOfFinKAwayKStatement =====
@@ -1142,7 +1042,7 @@ open GlobalTheory.BigTop.Fun.OneSqTie in
 theorem GlobalTheory.BigTop.Fun.oneSq_of_log_derivative_bound_thA (hS : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint)
     (hdl : Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps)
     (hA : _root_.GlobalTheory.BigTop.Fun.LeafConditions (Fitted @Comparison₂) fun p _ d _ _ => ThA d.G p.P.A3.A.μ0 p.R.mu) (hO : OneSqSt) : _root_.GlobalTheory.BigTop.Fun.LeafUniqueSquareRoot @Comparison₂ := by
-  have hQ := _root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hdl hO
+  have hQ := _root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hdl hO
   refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono (_root_.GlobalTheory.BigTop.Fun.LeafConditions.and hQ (_root_.GlobalTheory.BigTop.Fun.LeafConditions.and hA (_root_.GlobalTheory.BigTop.Fun.OneSqTie.lf_std_alt hS))) ?_
   intro D L hT Gi Gl Kc Y cX ex Csz p CF d C CH _ hd
   refine ⟨hd, fun ⟨hq, hth, hstd⟩ => ?_⟩
@@ -1209,12 +1109,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.oneSq_of_log_derivative_bound_and_oneSqSt : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → (_root_.GlobalTheory.BigTop.Fun.LeafConditions (Fitted @Comparison₂) fun p _ d _ _ => ThA d.G p.P.A3.A.μ0 p.R.mu) → OneSqSt → _root_.GlobalTheory.BigTop.Fun.LeafUniqueSquareRoot @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.oneSq_of_log_derivative_bound_thA
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OneSqTieStatement =====
@@ -1409,12 +1303,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions NumberField Formalism.L2.Indef Formalism.L2.Indef.Tree GlobalTheory.BigTop GlobalTheory.BigTop.Fun
-
-theorem _root_.GlobalTheory.T.ramified_sum_bound' : _root_.GlobalTheory.BigTop.Fun.RamifiedSumBound' := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.ramified_sums_seventh_bound_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RamifiedSumsSeventhBoundStatement =====
@@ -1516,11 +1404,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.set_at_of_size_at' : _root_.GlobalTheory.BigTop.Fun.SizeAtAlt → _root_.GlobalTheory.BigTop.Fun.SettingAtPoint := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.setAt_of_sizeAt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SettingOfSizeStatement =====
@@ -1634,7 +1517,7 @@ namespace GlobalTheory.BigTop.Fun
 
 theorem square_ratio_at_point_of_leading_term_alt : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → GlobalTheory.RowClaim.ConstK → LNe → TriEx → Tower → (_root_.GlobalTheory.BigTop.Fun.CharacterAtPoint fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ i j t, GlobalTheory.RowTest.sqRatio ch i j t ∈ Set.range D.what₂.embLL) := by
   intro hP hAg hMa hSet hdl hC hLN hTX hTW
-  have hBF := _root_.GlobalTheory.T.bottom_triple_integral_eq_const_mul_local hP hAg hMa hLN
+  have hBF := _root_.GlobalTheory.ConstRatio.bottom_triple_integral_factorization hP hAg hMa hLN
   obtain ⟨c3, h3⟩ := hSet.atPt hC
   obtain ⟨c5, h5⟩ := Model.gBig_and (Model.gBig_and hLN hTX) (Model.gBig_and hTW hBF)
   refine ⟨max c3 c5, fun CF hCF => ?_⟩
@@ -1661,12 +1544,6 @@ theorem square_ratio_at_point_of_leading_term_alt : _root_.GlobalTheory.FunPr.Th
     (fun i j => (hLN' i j).1) (hTX' W hstd) (hTW' W a.S.toGridChoice a.rm hstd ha.field) (hBF' W hstd) i' j' t
 end GlobalTheory.BigTop.Fun
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.sq_ratio_mem_range_emb_ll : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching → _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → GlobalTheory.RowClaim.ConstK → LNe → TriEx → Tower → (_root_.GlobalTheory.BigTop.Fun.CharacterAtPoint fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ i j t, GlobalTheory.RowTest.sqRatio ch i j t ∈ Set.range D.what₂.embLL) := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.square_ratio_at_point_of_leading_term_alt
 end
 end
 end -- clump:auto
@@ -1728,7 +1605,7 @@ open GlobalTheory.BigTop.Fun.ThbTie in
 theorem GlobalTheory.BigTop.Fun.thb_tie_alt (hS : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint)
     (hd : Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps)
     (hT : ThbSt) : _root_.GlobalTheory.BigTop.Fun.LeafThetaBound @Comparison₂ := by
-  have hQ := _root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hd hT
+  have hQ := _root_.GlobalTheory.BigTop.Fun.gBig_atTied_alt _ hS hd hT
   refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono hQ ?_
   intro D L hT' Gi Gl Kc Y cX ex Csz p CF d C CH _ htie
   refine ⟨htie, fun hq => ?_⟩
@@ -1783,12 +1660,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.BigTop GlobalTheory.BigTop.Fun GlobalTheory.SqTop
-
-theorem _root_.GlobalTheory.T.leaf_theta_bound_of_set_at : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint → (Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps) → ThbSt → _root_.GlobalTheory.BigTop.Fun.LeafThetaBound @Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.thb_tie_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ThbTieStatement =====
@@ -1847,11 +1718,6 @@ section -- clump:auto
 
 
 
-section
-
-theorem _root_.GlobalTheory.T.weight_of_size_bound' : _root_.GlobalTheory.BigTop.Fun.SizeAtAlt → _root_.GlobalTheory.BigTop.Fun.LeafWeightBound @GlobalTheory.BigTop.Fun.Comparison₂ := by
-  first | exact @_root_.GlobalTheory.BigTop.Fun.wt_tie_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WtTieStatement =====
@@ -1875,26 +1741,26 @@ theorem fittedFunction_at_zero_close_alt : _root_.GlobalTheory.FunPr.ThetaLocalI
     _root_.GlobalTheory.BigTop.LambdaLowerBound₂ → _root_.GlobalTheory.BigTop.Fun.ConstantFunctionFits @GlobalTheory.BigTop.Fun.Fld := by
   intro hP hH hTD hTr hTw hZ hR hAg hMa hFS hL
   obtain ⟨hDenSum, hThbSt, hOneSqSt, hBotSmall, hBotNe, hFieldDat, hTorEx, hDenEx, hBotEx, hLNe, hTriEx, hTower⟩ :=
-    _root_.GlobalTheory.T.square_leading_term_bound hP.howeDualityReal hP hH hTD hTr hZ hR hAg hMa
-  obtain ⟨hFin, hAway, hInf⟩ := _root_.GlobalTheory.T.sum_size_bound_all_places hP
-  obtain ⟨hSumOK, hConst, hLin, hF2, hSumRat⟩ := _root_.GlobalTheory.T.local_sum_estimates_joined hP hAg hMa
-  have hInj := GlobalTheory.RowTest.injK_of_separates hFS (_root_.GlobalTheory.RowTest.twisted_convergence_with_real_places hP (_root_.GlobalTheory.T.twisted_thetaLift_cuspidal hP))
-  have hSize := _root_.GlobalTheory.T.size_at'
-  have hSet := _root_.GlobalTheory.T.set_at_of_size_at' hSize
+    _root_.GlobalTheory.SqTop.square_top_term_joined_estimates hP.howeDualityReal hP hH hTD hTr hZ hR hAg hMa
+  obtain ⟨hFin, hAway, hInf⟩ := _root_.GlobalTheory.SumSize.Join.sum_size_finite_away_archimedean_combined hP
+  obtain ⟨hSumOK, hConst, hLin, hF2, hSumRat⟩ := _root_.GlobalTheory.RowClaim.JoinF.joined_local_sum_estimates hP hAg hMa
+  have hInj := GlobalTheory.RowTest.injK_of_separates hFS (_root_.GlobalTheory.RowTest.twisted_convergence_with_real_places hP (_root_.GlobalTheory.PairLift.thetaPairLift_cuspidal_of_hypotheses hP))
+  have hSize := _root_.GlobalTheory.BigTop.Fun.SizeProof.sizeAt_alt
+  have hSet := _root_.GlobalTheory.BigTop.Fun.setAt_of_sizeAt_alt hSize
   have hDl := _root_.GlobalTheory.T.abs_logDerivativeAtOne_le_x_rpow_eps hP
   have hInp := _root_.GlobalTheory.NormSum.inp_all
   have hIntSt := GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses hInp
   have hArchSt := GlobalTheory.ArchTop.archSt_of_inp hInp
-  have hThA := _root_.GlobalTheory.T.toric_ratio_family_estimate' (GlobalTheory.ToricTransport.toricRatioConjugates_of_transport hTw) hSet hDl hFieldDat hTorEx
-  have hSq := _root_.GlobalTheory.T.sq_ratio_mem_range_emb_ll hP hAg hMa hSet hDl hConst hLNe hTriEx hTower
+  have hThA := _root_.GlobalTheory.ThmAUpper.thmA_upper_alt (GlobalTheory.ToricTransport.toricRatioConjugates_of_transport hTw) hSet hDl hFieldDat hTorEx
+  have hSq := _root_.GlobalTheory.BigTop.Fun.square_ratio_at_point_of_leading_term_alt hP hAg hMa hSet hDl hConst hLNe hTriEx hTower
   have hB : _root_.GlobalTheory.BigTop.Fun.BundleCondition := @_root_.GlobalTheory.BigTop.Fun.bundle_of_rows_alt
-  exact _root_.GlobalTheory.BigTop.Fun.fun0Fit_of_leaves_alt _ _ hB _root_.GlobalTheory.T.scaling_function_bound'
-    (_root_.GlobalTheory.T.existsFunctionIn_of_sqRatio_range hSet hDl hSumOK hSumRat hConst hSq hIntSt hFieldDat hTorEx hDenEx hBotEx hBotSmall)
-    (_root_.GlobalTheory.T.leafMinimalMass_of_setAt hSet) (_root_.GlobalTheory.T.oneMap_of_bundle_setAt_lin_inj_const_formula hB hSet hLin hInj hConst hF2) (_root_.GlobalTheory.T.leafKernel_tie_of_claim_inputs hB hSet hLin hInj hConst hF2)
-    (_root_.GlobalTheory.T.leafFixedPoint_of_finK_awayK hSet hFin hAway) (_root_.GlobalTheory.T.leafHeightMapBound_of_infK hB hSet hInf) (_root_.GlobalTheory.T.leafInfinitePlaceBound_of_lamLow hL)
-    (_root_.GlobalTheory.T.oneSq_of_log_derivative_bound_and_oneSqSt hSet hDl hThA hOneSqSt) (_root_.GlobalTheory.T.leafDensity_of_logDeriv_bound_and_denSum hSet hDl hDenSum) (_root_.GlobalTheory.T.leafIntegrality_of_logDeriv_bound hSet hDl hBotSmall hBotNe)
-    (_root_.GlobalTheory.T.arch_tie_of_setAt_logDeriv hSet hDl hArchSt hBotSmall) (_root_.GlobalTheory.T.leaf_theta_bound_of_set_at hSet hDl hThbSt) (_root_.GlobalTheory.T.weight_of_size_bound' hSize)
-    _root_.GlobalTheory.BigTop.Fun.Close.desHLeaf_alt _root_.GlobalTheory.T.rank_gap_bound _root_.GlobalTheory.T.ramified_sum_bound' _root_.GlobalTheory.T.polynomial_descent_estimate'
+  exact _root_.GlobalTheory.BigTop.Fun.fun0Fit_of_leaves_alt _ _ hB _root_.GlobalTheory.BigTop.Fun.existsIntegralMultiple_holds_alt
+    (_root_.GlobalTheory.BigTop.Fun.ex_of_claims_alt hSet hDl hSumOK hSumRat hConst hSq hIntSt hFieldDat hTorEx hDenEx hBotEx hBotSmall)
+    (_root_.GlobalTheory.BigTop.Fun.LeafMMTie.mm_tie_alt hSet) (_root_.GlobalTheory.BigTop.Fun.oneMap_of_bundle_setAt_kernel_conditions hB hSet hLin hInj hConst hF2) (_root_.GlobalTheory.BigTop.Fun.leafKernel_of_linK_injK_constK_formula2K hB hSet hLin hInj hConst hF2)
+    (_root_.LeafFixedPointPairing.GlobalTheory.CompanionTheory.LeafFixedPointPlaceNorm.fp_tie_alt hSet hFin hAway) (_root_.GlobalTheory.QuotientNormCoisometry.leafHeightMapBound_tie_of_infK hB hSet hInf) (_root_.GlobalTheory.BigTop.Fun.ipb_of_lamLow_alt hL)
+    (_root_.GlobalTheory.BigTop.Fun.oneSq_of_log_derivative_bound_thA hSet hDl hThA hOneSqSt) (_root_.GlobalTheory.BigTop.Fun.den_tie_alt hSet hDl hDenSum) (_root_.GlobalTheory.BigTop.Fun.int_tie_alt hSet hDl hBotSmall hBotNe)
+    (_root_.GlobalTheory.BigTop.Fun.arch_tie_of_logDeriv_bound hSet hDl hArchSt hBotSmall) (_root_.GlobalTheory.BigTop.Fun.thb_tie_alt hSet hDl hThbSt) (_root_.GlobalTheory.BigTop.Fun.wt_tie_alt hSize)
+    _root_.GlobalTheory.BigTop.Fun.Close.desHLeaf_alt _root_.GlobalTheory.BigTop.Fun.rankGapBound_alt _root_.GlobalTheory.BigTop.Fun.ramified_sums_seventh_bound_alt _root_.GlobalTheory.BigTop.Fun.desPol_alt
 end GlobalTheory.BigTop.Fun.Close
 end
 end

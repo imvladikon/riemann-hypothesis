@@ -52,6 +52,8 @@ import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PerCApply
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertTrivialOfNowhereVanishing
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqZeroOfSumEmbeddingMul
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.HermitianForm, Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PJStruct
@@ -137,7 +139,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.HermitianForm =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PJStruct =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PJStruct", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.LineBasis\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.HermitianForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PerCApply\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PJStruct", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.LineBasis\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.HermitianForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PerCApply\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertTrivialOfNowhereVanishing\nimport Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqZeroOfSumEmbeddingMul\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -162,16 +164,8 @@ private theorem hf_add_r (H : Matrix (Fin g) (Fin g) ℂ) (a b c : Fin g → ℂ
     hermForm H a (b + c) = hermForm H a b + hermForm H a c := by
   simp [hermForm, star_add, Matrix.mulVec_add, dotProduct_add]
 
-private theorem hf_smul_l (H : Matrix (Fin g) (Fin g) ℂ) (t : ℂ) (a b : Fin g → ℂ) :
-    hermForm H (t • a) b = t * hermForm H a b := by
-  simp [hermForm, smul_dotProduct]
-
 private theorem star_smulC {m : ℕ} (t : ℂ) (b : Fin m → ℂ) : star (t • b) = (starRingEnd ℂ) t • star b := by
   ext i; simp
-
-private theorem hf_smul_r (H : Matrix (Fin g) (Fin g) ℂ) (t : ℂ) (a b : Fin g → ℂ) :
-    hermForm H a (t • b) = (starRingEnd ℂ) t * hermForm H a b := by
-  simp only [hermForm, star_smulC, Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul]
 
 private theorem hv_add_l (M : Matrix (Fin n) (Fin n) ℂ) (a b c : Fin n → ℂ) :
     hv M (a + b) c = hv M a c + hv M b c := by
@@ -194,10 +188,10 @@ private noncomputable def hBil {X : Type} [AddCommGroup X] [Module ℝ X] (R : X
   LinearMap.mk₂ ℝ (fun x y => (hermForm Hm (R x) (R y)).im)
     (fun a b c => by simp only [map_add (f := _), hf_add_l, Complex.add_im])
     (fun c a b => by
-      simp only [map_smul, smulR, hf_smul_l, Complex.im_ofReal_mul, smul_eq_mul])
+      simp only [map_smul, smulR, _root_.GlobalTheory.AppellHumbertTrivial.hermForm_smul_left, Complex.im_ofReal_mul, smul_eq_mul])
     (fun a b c => by simp only [map_add (f := _), hf_add_r, Complex.add_im])
     (fun c a b => by
-      simp only [map_smul, smulR, hf_smul_r, Complex.conj_ofReal, Complex.im_ofReal_mul, smul_eq_mul])
+      simp only [map_smul, smulR, _root_.GlobalTheory.EigenNorm.hermForm_smul_right, Complex.conj_ofReal, Complex.im_ofReal_mul, smul_eq_mul])
 
 private theorem bil_eq (R : (P → Fin n → ℂ) ≃ₗ[ℝ] (Fin g → ℂ)) (Hm : Matrix (Fin g) (Fin g) ℂ)
     (M : P → Matrix (Fin n) (Fin n) ℂ) (s : P → ℂ) (r : P → ℝ) (S : Set (P → Fin n → ℂ))
@@ -301,7 +295,7 @@ private theorem core (R : (P → Fin n → ℂ) ≃ₗ[ℝ] (Fin g → ℂ)) (Hm
       (-(s v) * Complex.I * hv (M v) a b).re := by
     intro a b
     have h1 := hEv (J v *ᵥ a) (J v *ᵥ b)
-    rw [hsv, hsv, hf_smul_l, hf_smul_r,
+    rw [hsv, hsv, _root_.GlobalTheory.AppellHumbertTrivial.hermForm_smul_left, _root_.GlobalTheory.EigenNorm.hermForm_smul_right,
       show Complex.I * ((starRingEnd ℂ) Complex.I * hermForm Hm (R (Pi.single v a)) (R (Pi.single v b))) =
         hermForm Hm (R (Pi.single v a)) (R (Pi.single v b)) by
         rw [Complex.conj_I, ← _root_.mul_assoc, mul_neg, Complex.I_mul_I]; simp, hEv] at h1
@@ -332,7 +326,7 @@ private theorem core (R : (P → Fin n → ℂ) ≃ₗ[ℝ] (Fin g → ℂ)) (Hm
       have h1 : (Pi.single v x : P → Fin n → ℂ) = 0 := by simpa using h0
       exact hx (by simpa using h1)
     have h1 := hEv (J v *ᵥ x) x
-    rw [hsv, hf_smul_l] at h1
+    rw [hsv, _root_.GlobalTheory.AppellHumbertTrivial.hermForm_smul_left] at h1
     have h2 := hpos _ hz
     have h3 : 0 < r v * (-(s v) * Complex.I * hv (M v) (J v *ᵥ x) x).re := by
       rw [← h1]; simpa [Complex.mul_im] using h2

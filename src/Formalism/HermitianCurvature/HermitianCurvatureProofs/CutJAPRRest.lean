@@ -286,7 +286,7 @@ theorem polynomial_radial_base_holds : PolynomialRadialAtSectionOfPhaseInvarianc
     simp
   have hKπ : (d.κ (Pi.single π 1)).1 Φ = Φ := by
     apply Subtype.ext
-    refine Formalism.FourierDecayAlt.P.radical_reduction_injective Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _
+    refine _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedInj Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _
       ((d.κ (Pi.single π 1)).1 Φ).2 _ Φ.2 (funext fun q => ?_)
     by_cases hq : q ∈ NF.QR P.k P.r Bs.z Bs.z'
     · simp only [NF.radR, Set.indicator_of_mem hq]
@@ -1349,7 +1349,7 @@ theorem herm_cW (θ : ℝ) {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (
 theorem GGl_cW (θ : ℝ) {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (z' : Fin (2 * r + k + 1) → ℂ) (g : Q.Mx k r) :
     Q.GGl k r z z' (cW k r θ * g) = Q.GGl k r z z' g := by
   unfold Q.GGl Q.zetaL
-  rw [fvec_last, fvec_last, ← Matrix.mulVec_mulVec, herm_cW θ hz, map_mul, Complex.normSq_eq_norm_sq,
+  rw [_root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_lastI, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_lastI, ← Matrix.mulVec_mulVec, herm_cW θ hz, map_mul, Complex.normSq_eq_norm_sq,
     Complex.norm_exp_ofReal_mul_I]
   norm_num
 

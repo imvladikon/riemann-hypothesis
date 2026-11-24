@@ -440,14 +440,10 @@ private theorem tail {R K : Type} [CommRing R] [NormedField K] [CompleteSpace K]
   refine IsUltrametricDist.norm_tsum_le_of_forall_le_of_nonneg (by positivity) fun i => ?_
   exact (term_le f hf t h _).trans (pow_le_pow_of_le_one (norm_nonneg _) ht.le (by omega))
 
-private theorem rootb {K : Type} [NormedField K] [IsUltrametricDist K] (l m : ℕ) (hl : l.Prime) (h2 : l ≠ 2)
-    (z : K) (hz : z ^ l ^ m = 1) : ‖z - 1‖ ^ l ^ m ≤ ‖(l : K)‖ :=
-  _root_.UpperTheory.Reformulated.B.Qh18.rootb l m hl h2 z hz
-
 theorem UpperTheory.Kd.C7.pEvHom :
     UpperTheory.Kd.C7.SEvHom := by
   intro l hl h2 Ω _ _ _ A _ j Φ m hm z hz
-  have hb := rootb l m hl.out h2 z hz.pow_eq_one
+  have hb := _root_.UpperTheory.Reformulated.B.Qh18.rootb l m hl.out h2 z hz.pow_eq_one
   have hl1 : ‖(l : ℂ_[l])‖ < 1 := by
     have : (l : ℂ_[l]) = algebraMap ℚ_[l] ℂ_[l] (l : ℚ_[l]) := by simp
     rw [this, norm_algebraMap']
@@ -1290,11 +1286,7 @@ private theorem norm_pow_anti (n' n : ℕ) (h : n' ≤ n) : ‖((l : ℕ) : Qbar
 private theorem cg_mono {n' n : ℕ} (h : n' ≤ n) {x y : Qbar l} (hc : Cg n x y) : Cg n' x y :=
   le_trans hc (norm_pow_anti n' n h)
 
-private theorem cg_trans {n : ℕ} {x y z : Qbar l} (h1 : Cg n x y) (h2 : Cg n y z) : Cg n x z := by
-  have e : x - z = (x - y) + (y - z) := by ring
-  unfold Cg at *
-  rw [e]
-  exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h1 h2)
+private alias cg_trans := _root_.GlobalTheory.Ord2.cg_trans
 
 private theorem cg_sub {n : ℕ} {x y x' y' : Qbar l} (h1 : Cg n x y) (h2 : Cg n x' y') : Cg n (x - x') (y - y') := by
   have e : x - x' - (y - y') = (x - y) + -(x' - y') := by ring

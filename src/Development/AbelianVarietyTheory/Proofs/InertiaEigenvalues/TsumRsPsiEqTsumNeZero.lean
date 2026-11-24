@@ -75,8 +75,7 @@ variable (E a) in
 def lowSet : Set (GA E a) := {g | (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1}
 
 omit [_root_.NumberField.IsTotallyComplex E] in
-theorem continuous_absDet : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-  continuous_subtype_val.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
+alias continuous_absDet := _root_.GlobalTheory.RSTheta.continuous_absDet
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem absDet_invT (g : GA E a) : (ideleModule E (GeneralLinearGroup.det (invT a (Ad E) g)) : ℝ) =

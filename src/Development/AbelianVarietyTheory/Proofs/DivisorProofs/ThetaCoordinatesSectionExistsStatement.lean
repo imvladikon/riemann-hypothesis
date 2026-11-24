@@ -109,12 +109,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.UMin.ThBdl
 
-theorem resG_resG_glue {X : Scheme.{0}} {A B C : X.Opens} (h : B ≤ A) (h' : C ≤ B) (f : Γ(X, A)) :
-    resG X h' (resG X h f) = resG X (h'.trans h) f := by
-  simp only [resG]
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem locSec_glue : ∀ (S : Scheme.{0}) (G : Over S) (L : LB G.left) (V : S.Opens) (κ : Type) (N : κ → S.Opens)
     (s : ∀ k, LocSec G L (N k)) (hN : ∀ k, N k ≤ V), (⨆ k, N k) = V → (∀ k, IsLocSec (s k)) →
     (∀ k k' i, resG _ (fun _ hx => ⟨hx.1, hx.2.1⟩ : L.U i ⊓ G.hom ⁻¹ᵁ (N k ⊓ N k') ≤ L.U i ⊓ G.hom ⁻¹ᵁ N k) (s k i) =
@@ -139,7 +133,7 @@ theorem locSec_glue : ∀ (S : Scheme.{0}) (G : Over S) (L : LB G.left) (V : S.O
     have hle : (L.U i ⊓ G.hom ⁻¹ᵁ N k) ⊓ (L.U i ⊓ G.hom ⁻¹ᵁ N k') ≤ L.U i ⊓ G.hom ⁻¹ᵁ (N k ⊓ N k') :=
       fun _ hx => ⟨hx.1.1, hx.1.2, hx.2.2⟩
     have e := congrArg (resG _ hle) (hc k k' i)
-    exact (resG_resG_glue _ _ _).symm.trans (e.trans (resG_resG_glue _ _ _))
+    exact (_root_.GlobalTheory.Cartier.resG_resG _ _ _).symm.trans (e.trans (_root_.GlobalTheory.Cartier.resG_resG _ _ _))
   choose s' hs' _ using hglue
   refine ⟨s', ?_, fun k i => hs' i k⟩
   intro i j
@@ -153,16 +147,16 @@ theorem locSec_glue : ∀ (S : Scheme.{0}) (G : Over S) (L : LB G.left) (V : S.O
     have hi1 : L.U i ⊓ L.U j ⊓ G.hom ⁻¹ᵁ N k ≤ L.U i ⊓ G.hom ⁻¹ᵁ N k := fun _ hx => ⟨hx.1.1, hx.2⟩
     have hj1 : L.U i ⊓ L.U j ⊓ G.hom ⁻¹ᵁ N k ≤ L.U j ⊓ G.hom ⁻¹ᵁ N k := fun _ hx => ⟨hx.1.2, hx.2⟩
     have e1 : resG _ (hi1.trans (hWV i k)) (s' i) = resG _ hi1 (s k i) := by
-      rw [← hs' i k, resG_resG_glue]
+      rw [← hs' i k, _root_.GlobalTheory.Cartier.resG_resG]
     have e2 : resG _ (hj1.trans (hWV j k)) (s' j) = resG _ hj1 (s k j) := by
-      rw [← hs' j k, resG_resG_glue]
+      rw [← hs' j k, _root_.GlobalTheory.Cartier.resG_resG]
     change resG _ (hTV k) (resG _ _ (s' i)) =
       resG _ (hTV k) (resG _ _ (L.g i j : Γ(G.left, L.U i ⊓ L.U j)) * resG _ _ (s' j))
     rw [map_mul]
-    refine ((resG_resG_glue _ _ _).trans e1).trans ((hs k i j).trans ?_)
+    refine ((_root_.GlobalTheory.Cartier.resG_resG _ _ _).trans e1).trans ((hs k i j).trans ?_)
     congr 1
-    · exact (resG_resG_glue _ _ _).symm
-    · exact ((resG_resG_glue _ _ _).trans e2).symm
+    · exact (_root_.GlobalTheory.Cartier.resG_resG _ _ _).symm
+    · exact ((_root_.GlobalTheory.Cartier.resG_resG _ _ _).trans e2).symm
 
 end GlobalTheory.UMin.ThBdl
 end -- clump:auto
@@ -306,20 +300,6 @@ theorem valF_ne_zero_of_le {F : Type} [Field F] {X : Scheme.{0}} {x : Sp F ⟶ X
   rw [e3, h0, map_zero, Scheme.basicOpen_zero] at hle
   exact hle (show (IsLocalRing.closedPoint F : Sp F) ∈ (⊤ : (Sp F).Opens) from trivial)
 
-theorem exists_point {X Y : Scheme.{0}} {K : Type} [Field K] [IsAlgClosed K] (π : X ⟶ Y) [LocallyOfFiniteType π]
-    (x : Sp K ⟶ Y) (O : X.Opens) (p : X) (hp : p ∈ O) (hx : π p = x (IsLocalRing.closedPoint K)) :
-    ∃ g : Sp K ⟶ X, g ≫ π = x ∧ ⊤ ≤ g ⁻¹ᵁ O := by
-  obtain ⟨z, hz, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := π) (g := x) p (IsLocalRing.closedPoint K) hx
-  have := LocallyOfFiniteType.jacobsonSpace (pullback.snd π x)
-  obtain ⟨c, hcO, hc'⟩ := nonempty_inter_closedPoints (Z := (pullback.fst π x ⁻¹ᵁ O : Set _))
-    ⟨z, show pullback.fst π x z ∈ O from hz ▸ hp⟩ (pullback.fst π x ⁻¹ᵁ O).isOpen.isLocallyClosed
-  have hc : IsClosed {c} := hc'
-  refine ⟨pointOfClosedPoint (pullback.snd π x) c hc ≫ pullback.fst π x, ?_, fun a _ => ?_⟩
-  · rw [Category.assoc, pullback.condition, pointOfClosedPoint_comp_assoc]
-  · show pullback.fst π x (pointOfClosedPoint (pullback.snd π x) c hc a) ∈ O
-    rw [pointOfClosedPoint_apply]
-    exact hcO
-
 theorem exists_locSec : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (L : LB G.left) (R : Type) [CommRing R] (χ : Sp R ⟶ S) [IsOpenImmersion χ] (σ : SecAt G L χ), LocallyOfFiniteType G.hom → (∀ s : Sp R, ∃ z : (Over.mk χ ⊗ G).left, (fst (Over.mk χ) G).left z = s ∧ z ∈ nonzeroLocus σ) → ∃ s : LocSec G L χ.opensRange, IsLocSec s ∧ (∀ (K : Type) [Field K] (i : R →+* K), GenIs (spMap i ≫ χ) s (SecM.ofSec G (SecAt.pull G L σ i))) ∧ FibNz s χ.opensRange := by
   intro S G _ L R _ χ _ σ hft hnz
   let q : (Over.mk χ ⊗ G).left ⟶ G.left := (snd (Over.mk χ) G).left
@@ -367,7 +347,7 @@ theorem exists_locSec : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (L : LB G.l
     obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.1 hz'
     rw [← hs' j] at hj
     have hb := ((Scheme.basicOpen_appLE q _ _ (hle j) (s (j 0))).le hj).2
-    obtain ⟨y, hy, hy'⟩ := exists_point G.hom x (G.left.basicOpen (s (j 0))) (q z) hb (by
+    obtain ⟨y, hy, hy'⟩ := _root_.GlobalTheory.ZH.LocThetaConv.exists_point G.hom x (G.left.basicOpen (s (j 0))) (q z) hb (by
       rw [← Scheme.Hom.comp_apply, ew, Scheme.Hom.comp_apply, hz]
       exact hs₀)
     refine ⟨y, j 0, hy, ?_, valF_ne_zero_of_le _ hy'⟩
@@ -447,8 +427,6 @@ open GlobalTheory.ProjSpace GlobalTheory.UMin.ThBdl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_openImmersion_spec_ringOn_affine : ∀ (k Ω : Type) [CommRing k] [Field Ω] [Algebra k Ω] (M : RatModel k Ω) (W : M.Z.Opens), IsAffineOpen W → (W : Set M.Z).Nonempty → ∃ (χ : Sp (M.ringOn W) ⟶ M.Z) (_ : IsOpenImmersion χ), χ.opensRange = W ∧ spMap (algebraMap (M.ringOn W) Ω) ≫ χ = M.pt := by
-  first | exact @GlobalTheory.Div.AffChart.exists_openImm_spec_ringOn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenImmersionSpecRingOnAffineStatement =====
@@ -690,12 +668,6 @@ theorem exists_cDvr_flat (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
   · rw [← Ideal.comap_comap, IsLocalRing.maximalIdeal_comap]
     exact Localization.AtPrime.under_maximalIdeal
 
-theorem exists_map_fractionRing {R V : Type} [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (φ : R →+* V)
-    (hφ : Function.Injective φ) : ∃ φK : FractionRing R →+* FractionRing V,
-      φK.comp (algebraMap R (FractionRing R)) = (algebraMap V (FractionRing V)).comp φ :=
-  ⟨IsLocalization.map (M := nonZeroDivisors R) (T := nonZeroDivisors V) (FractionRing V) φ
-    (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective φ hφ), IsLocalization.map_comp _⟩
-
 theorem extAt_of_coheight_le_one : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G], IsSemiAbelian G → ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] [CharZero R] (χ : Sp R ⟶ S) (W : (Over.mk χ ⊗ G).left.Opens) (f : Γ((Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ) ⊗ G).left, ((Over.homMk (spMap (algebraMap R (FractionRing R))) rfl : Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ) ⟶ Over.mk χ) ▷ G).left ⁻¹ᵁ W)), (∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ (φ : R →+* V) (φK : FractionRing R →+* FractionRing V) (h : spMap φK ≫ spMap (algebraMap R (FractionRing R)) ≫ χ = spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ), φK.comp (algebraMap R (FractionRing R)) = (algebraMap V (FractionRing V)).comp φ → ∃ s : Γ((Over.mk (spMap φ ≫ χ) ⊗ G).left, ((Over.homMk (spMap φ) rfl : Over.mk (spMap φ ≫ χ) ⟶ Over.mk χ) ▷ G).left ⁻¹ᵁ W), ∀ (O : (Over.mk (spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ) ⊗ G).left.Opens) (h₁ : O ≤ ((Over.homMk (spMap (algebraMap V (FractionRing V))) rfl : Over.mk (spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ) ⟶ Over.mk (spMap φ ≫ χ)) ▷ G).left ⁻¹ᵁ (((Over.homMk (spMap φ) rfl : Over.mk (spMap φ ≫ χ) ⟶ Over.mk χ) ▷ G).left ⁻¹ᵁ W)) (h₂ : O ≤ ((Over.homMk (spMap φK) h : Over.mk (spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ) ⟶ Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ)) ▷ G).left ⁻¹ᵁ (((Over.homMk (spMap (algebraMap R (FractionRing R))) rfl : Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ) ⟶ Over.mk χ) ▷ G).left ⁻¹ᵁ W)), (((Over.homMk (spMap (algebraMap V (FractionRing V))) rfl : Over.mk (spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ) ⟶ Over.mk (spMap φ ≫ χ)) ▷ G).left.appLE _ O h₁).hom s = (((Over.homMk (spMap φK) h : Over.mk (spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ) ⟶ Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ)) ▷ G).left.appLE _ O h₂).hom f) → ∀ y ∈ W, Order.coheight y ≤ 1 → y ∉ Set.range ((Over.homMk (spMap (algebraMap R (FractionRing R))) rfl : Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ) ⟶ Over.mk χ) ▷ G).left → GlobalTheory.GenericExtend.ExtAt ((Over.homMk (spMap (algebraMap R (FractionRing R))) rfl : Over.mk (spMap (algebraMap R (FractionRing R)) ≫ χ) ⟶ Over.mk χ) ▷ G).left W f y := by
   intro S G _ hG R _ _ _ _ _ χ W f hf y hy h1 hr
   have := hG.smooth
@@ -716,7 +688,7 @@ theorem extAt_of_coheight_le_one : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G],
     refine le_antisymm ?_ (ENat.one_le_iff_ne_zero.2 fun h0 ↦ hx0 (Ideal.height_eq_zero_iff_eq_bot.1 h0))
     exact (idealHeight_eq_coheight (CommRingCat.of R) x).trans_le hx1
   obtain ⟨V, _, _, _, hV, φ, hφ, hfl, hc⟩ := exists_cDvr_flat R x.asIdeal hx
-  obtain ⟨φK, hK⟩ := exists_map_fractionRing φ hφ
+  obtain ⟨φK, hK⟩ := _root_.GlobalTheory.Ex.OneGenBasis.exists_fractionMap φ hφ
   have hK' : spMap φK ≫ spMap (algebraMap R (FractionRing R)) =
       spMap (algebraMap V (FractionRing V)) ≫ spMap φ := by
     rw [← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp, hK]
@@ -970,16 +942,6 @@ theorem thList_cast {S : Scheme.{0}} (G : Over S) [GrpObj G] (L : LB G.left) (ρ
     (c : Fin N → K) (H : ThList G L ρ m x θ pt c) : ∃ pt' : Fin N → (Over.mk y ⟶ G), ThList G L ρ m y (e ▸ θ) pt' c := by
   subst e; exact ⟨pt, H⟩
 
-theorem inj_comp {R V : Type} [CommRing R] [CommRing V] [IsDomain V] (φ : R →+* V) (hφ : Function.Injective φ) :
-    Function.Injective ((algebraMap V (FractionRing V)).comp φ) := by
-  rw [RingHom.coe_comp]; exact (IsFractionRing.injective V (FractionRing V)).comp hφ
-
-theorem exists_fracMap {R V : Type} [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (φ : R →+* V)
-    (hφ : Function.Injective φ) : ∃ φK : FractionRing R →+* FractionRing V,
-      φK.comp (algebraMap R (FractionRing R)) = (algebraMap V (FractionRing V)).comp φ :=
-  ⟨IsFractionRing.lift (inj_comp φ hφ), RingHom.ext fun r => by
-    rw [RingHom.comp_apply, IsFractionRing.lift_algebraMap]⟩
-
 theorem secAt_ext {S : Scheme.{0}} (G : Over S) [GrpObj G] (L : LB G.left) {R : Type} [CommRing R] {x : Sp R ⟶ S}
     {τ₁ τ₂ : SecAt G L x} (h : SecM.ofSec G τ₁ = SecM.ofSec G τ₂) : τ₁ = τ₂ :=
   ThetaRuleCompare.sec_ext fun j => congrFun (congrArg Subtype.val h) j
@@ -1086,7 +1048,7 @@ theorem om_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Hos
   obtain ⟨φ, hφdef⟩ : ∃ φ : R →+* V, φ = φ₀.comp (algebraMap R (Localization.AtPrime p.asIdeal)) := ⟨_, rfl⟩
   have hφ : Function.Injective φ := by
     rw [hφdef, RingHom.coe_comp]; exact hinj.comp hinjp
-  obtain ⟨φK, hc⟩ := exists_fracMap φ hφ
+  obtain ⟨φK, hc⟩ := _root_.GlobalTheory.Ex.OneGenBasis.exists_fractionMap φ hφ
   have h : spMap φK ≫ spMap (algebraMap R (FractionRing R)) ≫ χ =
       spMap (algebraMap V (FractionRing V)) ≫ spMap φ ≫ χ := by
     rw [← Category.assoc, ← Category.assoc, ← spMap_comp, ← spMap_comp, hc]
@@ -1310,7 +1272,7 @@ theorem exists_locSec_theta_chart : ∀ (E : Type) [Field E] [NumberField E] [Is
   obtain ⟨hca, hdiv⟩ := GlobalTheory.T.projective_chart_coordinate_ratio_mem_model_ring k Ω M n c h a z hcrd hz
   obtain ⟨W, hWa, hzW, hWV, hnoeth, hic⟩ := GlobalTheory.T.exists_affine_nbhd_noetherian_integrallyClosed k Ω M hN (h ⁻¹ᵁ chart k n a) z hz
   have hne : (W : Set M.Z).Nonempty := ⟨z, hzW⟩
-  obtain ⟨χ, hoi, hrange, hgenpt⟩ := GlobalTheory.T.exists_openImmersion_spec_ringOn_affine k Ω M W hWa hne
+  obtain ⟨χ, hoi, hrange, hgenpt⟩ := _root_.GlobalTheory.Div.AffChart.exists_openImm_spec_ringOn k Ω M W hWa hne
   haveI := M.isFractionRing_ringOn hWa hne
   let c'' : Fin (n + 1) → M.ringOn W := fun b =>
     ⟨c b / c a, RatModel.mem_ringOn.2 fun z' hz' => hdiv z' (hWV hz') b⟩
@@ -1566,12 +1528,6 @@ theorem cross_resG_appLE {X Y : Scheme.{0}} (f : X ⟶ Y) {U : Y.Opens} {V W : X
   rw [← Scheme.Hom.appLE_map f e (homOfLE h).op]
   rfl
 
-theorem cross_resG_resG {X : Scheme.{0}} {U V W : X.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (s : Γ(X, U)) :
-    resG X h2 (resG X h1 s) = resG X (h2.trans h1) s := by
-  change (X.presheaf.map _ ≫ X.presheaf.map _).hom _ = _
-  rw [← Functor.map_comp]
-  rfl
-
 theorem cross_resG_self {X : Scheme.{0}} {U : X.Opens} (h : U ≤ U) (s : Γ(X, U)) : resG X h s = s := by
   change (X.presheaf.map (𝟙 _)).hom s = s
   rw [CategoryTheory.Functor.map_id]
@@ -1602,7 +1558,7 @@ theorem cross_ratio_val {k Ω : Type} [CommRing k] [Field Ω] {n : ℕ} {x : Sp 
     have e2 : ratioOn U a ha b = resG _ ha (ratio k n a b) := rfl
     rw [e2, cross_appLE_resG]
     refine e.trans (congrArg (· * t) ?_)
-    exact (cross_resG_resG _ _ _).trans (cross_resG_self _ _)
+    exact (_root_.GlobalTheory.Cartier.resG_resG _ _ _).trans (cross_resG_self _ _)
   have ka := key a
   rw [ratioOn_self, map_one] at ka
   have hne : c a ≠ 0 := by
@@ -1700,7 +1656,7 @@ theorem cross_ratio_sections : ∀ (k Ω : Type) [CommRing k] [Field Ω] [Algebr
     L.U i ⊓ G.hom ⁻¹ᵁ (h ⁻¹ᵁ (chart k n a ⊓ chart k n b)) ≤
       L.U i ⊓ G.hom ⁻¹ᵁ (h ⁻¹ᵁ chart k n a ⊓ h ⁻¹ᵁ (chart k n a ⊓ chart k n b))))
     (huniq _ _ sa s₂ _ ⟨ha1, ha2⟩ g₂ i)
-  exact (cross_resG_resG _ _ _).symm.trans (e.trans ((cross_resG_resG _ _ _).trans (cross_resG_self _ _)))
+  exact (_root_.GlobalTheory.Cartier.resG_resG _ _ _).symm.trans (e.trans ((_root_.GlobalTheory.Cartier.resG_resG _ _ _).trans (cross_resG_self _ _)))
 
 end GlobalTheory.UMin.ThBdl
 end -- clump:auto
@@ -1760,11 +1716,6 @@ noncomputable section
 namespace GlobalTheory.UMin.ThBdl
 open ProjSpace
 
-theorem resG_resG' {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) (h₂ : W ≤ V) (f : Γ(X, U)) :
-    resG X h₂ (resG X h₁ f) = resG X (h₂.trans h₁) f := by
-  simp only [resG, ← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
-
 theorem chart_sec (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (k Ω : Type) [CommRing k]
     [IsNoetherianRing k] [Field Ω] [CharZero Ω] [Algebra k Ω] (M : RatModel k Ω) (t : SAB H M.Z) (g m n : ℕ)
     (c : Fin (n + 1) → Ω) (h : M.Z ⟶ PSpace k n) (θ : SecAt t.G t.PP.L M.pt) (pt : Fin (n + 1) → (Over.mk M.pt ⟶ t.G))
@@ -1813,9 +1764,6 @@ end GlobalTheory.UMin.ThBdl
 
 namespace GlobalTheory.UMin.ThBdl
 
-theorem val_res' {X : Scheme.{0}} {U V : X.Opens} (e : V ≤ U) (u : Γ(X, U)ˣ) :
-    ((res e u : Γ(X, V)ˣ) : Γ(X, V)) = resG X e (u : Γ(X, U)) := rfl
-
 theorem val_pullU' {X Y : Scheme.{0}} (f : Y ⟶ X) (U : X.Opens) (u : Γ(X, U)ˣ) :
     ((pullU f U u : Γ(Y, f ⁻¹ᵁ U)ˣ) : Γ(Y, f ⁻¹ᵁ U)) = (f.app U).hom (u : Γ(X, U)) := rfl
 end GlobalTheory.UMin.ThBdl
@@ -1851,9 +1799,9 @@ theorem pull_theta_bundle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       rw [zpow_one] at e1 e2
       erw [e1]
       erw [e2]
-      erw [val_res', val_pullU', val_res', val_pullU']
+      erw [_root_.GlobalTheory.LB.val_res, val_pullU', _root_.GlobalTheory.LB.val_res, val_pullU']
       rw [O1_g_eq_ratioUnit_chart_inf, val_ratioUnit]
-      erw [app_resG, resG_resG']
+      erw [app_resG, _root_.GlobalTheory.Cartier.resG_resG]
       rfl
     have hW1 : (CechPic.tens t.PP.L (((ProjSpace.O1 k n).pull h).pull t.G.hom)).U (i, pj) ⊓
         (CechPic.tens t.PP.L (((ProjSpace.O1 k n).pull h).pull t.G.hom)).U (i', qj) ≤
@@ -1866,12 +1814,12 @@ theorem pull_theta_bundle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have e1 := congrArg (resG t.G.left hW1) (hcross _ _ (s _) (s _) (hgs _) (hgs _) i)
     have e2 := congrArg (resG t.G.left hW2) (hs (qj PUnit.unit PUnit.unit) i i')
     rw [map_mul] at e1 e2
-    erw [resG_resG', resG_resG', resG_resG'] at e1
-    erw [resG_resG', resG_resG', resG_resG'] at e2
+    erw [_root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG] at e1
+    erw [_root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG] at e2
     show resG _ _ (resG _ (hle (i, pj)) (s (pj PUnit.unit PUnit.unit) i)) = _ *
       resG _ _ (resG _ (hle (i', qj)) (s (qj PUnit.unit PUnit.unit) i'))
-    rw [resG_resG', resG_resG']
-    erw [Units.val_mul, val_res', val_res', eB, resG_resG']
+    rw [_root_.GlobalTheory.Cartier.resG_resG, _root_.GlobalTheory.Cartier.resG_resG]
+    erw [Units.val_mul, _root_.GlobalTheory.LB.val_res, _root_.GlobalTheory.LB.val_res, eB, _root_.GlobalTheory.Cartier.resG_resG]
     rw [e1, e2, mul_left_comm, ← _root_.mul_assoc]
     rfl
   · obtain ⟨a, ha⟩ := exists_mem_chart k n (h (x (IsLocalRing.closedPoint K)))

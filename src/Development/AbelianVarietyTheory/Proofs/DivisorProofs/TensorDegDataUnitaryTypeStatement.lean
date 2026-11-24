@@ -583,21 +583,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor GlobalTheory.Ex
 
 variable {A U : Type} [CommGroup A] [CommGroup U] {θ : A → A → A → U}
 
-theorem cubN_mul_iter (h : IsCub θ) (n m : ℕ) (b x : A) :
-    cubN θ (n * m) 1 b x = cubN θ n 1 (b ^ m) x * cubN θ m 1 b x ^ n := by
-  induction n with
-  | zero => simp [cubN]
-  | succ n ih =>
-    have e : cubN θ ((n + 1) * m) 1 b x = cubN θ (n * m) 1 b x * cubN θ m (b ^ (n * m)) b x := by
-      rw [Nat.succ_mul]
-      simp only [cubN, Finset.prod_range_add]
-      refine congrArg _ (Finset.prod_congr rfl fun i _ => ?_)
-      rw [_root_.one_mul, pow_add]
-    have s1 : cubN θ (n + 1) 1 (b ^ m) x = cubN θ n 1 (b ^ m) x * θ ((b ^ m) ^ n) (b ^ m) x := by
-      simp only [cubN, Finset.prod_range_succ, _root_.one_mul]
-    rw [e, ih, h.N_split m (b ^ (n * m)) b x, s1, ← pow_mul' b n m, pow_succ (cubN θ m 1 b x) n]
-    ac_rfl
-
 theorem cubN_pow_right (h : IsCub θ) (k m : ℕ) (b x : A) :
     cubN θ k 1 b (x ^ m) * cubN θ m 1 x b ^ k = cubN θ k 1 b x ^ m * cubN θ m 1 x (b ^ k) := by
   induction m with
@@ -630,8 +615,8 @@ theorem wp_pushRep (n m : ℕ) (hn : 0 < n) (p q : N.QT (n * m)) :
   have ps2 := NumD.Gt.pow_s q.1.2 m p.1.1.toAdd
   rw [← N.QT_pow_b q] at ps1
   rw [← N.QT_pow_b p] at ps2
-  have i1 := cubN_mul_iter N.cub n m q.1.2.b p.1.2.b
-  have i2 := cubN_mul_iter N.cub n m p.1.2.b q.1.2.b
+  have i1 := _root_.GlobalTheory.CubeBalance.cubN_mul N.cub n m q.1.2.b p.1.2.b
+  have i2 := _root_.GlobalTheory.CubeBalance.cubN_mul N.cub n m p.1.2.b q.1.2.b
   have a := cubN_pow_right N.cub n m (p.1.2.b ^ m) q.1.2.b
   have b := cubN_pow_right N.cub n m (q.1.2.b ^ m) p.1.2.b
   have c := cubN_pow_right N.cub m m q.1.2.b p.1.2.b
@@ -1098,8 +1083,6 @@ section -- clump:auto
 open NumberField
 open scoped TensorProduct
 
-theorem _root_.GlobalTheory.T.unitaryStandardLattice_form_complexStructure_baseChange_pos : ∀ {E : Type} [Field E] [NumberField E] {r : ℕ} (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ) (g : ℕ) (S : Matrix (Fin r) (Fin r) ℤ), (S.map (Int.cast : ℤ → ℝ)).PosDef → ∀ x : ℝ ⊗[ℤ] GlobalTheory.UnitaryStd.Lat ρ g, x ≠ 0 → 0 < (GlobalTheory.UnitaryStd.form ρ g S).baseChange ℝ ((GlobalTheory.UnitaryStd.cx ρ g).baseChange ℝ x) x := by
-  first | exact @GlobalTheory.UnitaryStd.form_cx_baseChange_pos
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStandardLatticeFormComplexStructureBaseChStatement =====
@@ -1210,10 +1193,6 @@ theorem form_smul_left (S : Matrix (Fin r) (Fin r) ℤ) (b : 𝓞 E → 𝓞 E) 
 theorem form_bijective (S : Matrix (Fin r) (Fin r) ℤ) (hS : IsUnit S.det) : Function.Bijective (form ρ g S) :=
   _root_.GlobalTheory.UnitaryStd.form_bijective_of_unimodular ρ g S hS
 
-theorem form_cx_pos (S : Matrix (Fin r) (Fin r) ℤ) (hS : (S.map (Int.cast : ℤ → ℝ)).PosDef) (x : ℝ ⊗[ℤ] Lat ρ g)
-    (hx : x ≠ 0) : 0 < (form ρ g S).baseChange ℝ ((cx ρ g).baseChange ℝ x) x :=
-  GlobalTheory.T.unitaryStandardLattice_form_complexStructure_baseChange_pos ρ g S hS x hx
-
 theorem trace_act (a : 𝓞 E) : LinearMap.trace ℤ (Lat ρ g) (act ρ g a) = 2 * g * (ρ a).trace := by
   rw [LinearMap.trace_eq_matrix_trace ℤ (basis ρ g)]
   simp only [Matrix.trace, Matrix.diag, LinearMap.toMatrix_apply, basis_repr, act_apply, smul_apply]
@@ -1228,10 +1207,6 @@ theorem trace_cx_act (a : 𝓞 E) : LinearMap.trace ℤ (Lat ρ g) (cx ρ g ∘�
     cx_apply, smul_apply]
   simp [Fintype.sum_prod_type, Fintype.sum_sum_type, basis_apply, Prod.fst_sum, Prod.snd_sum, Finset.sum_apply,
     Pi.single_apply]
-
-theorem trace_rep (s : ℕ) (hr : r = s * Module.finrank ℚ E) (a : 𝓞 E) :
-    (ρ a).trace = s * Algebra.trace ℤ (𝓞 E) a :=
-  _root_.GlobalTheory.repTrace_eq_mul_trace ρ s hr a
 
 end Lemmas
 
@@ -1249,7 +1224,7 @@ theorem dom_exists (hpos : (S.map (Int.cast : ℤ → ℝ)).PosDef)
         (((s * g : ℕ) : ℂ) * τ (a : E) + ((s * g : ℕ) : ℂ) * starRingEnd ℂ (τ (a : E))) →
       J ∘ₗ A = A ∘ₗ J ∧ LinearMap.trace ℝ _ A = 2 * t.re ∧ LinearMap.trace ℝ _ (J ∘ₗ A) = -2 * t.im := by
   have hcc : cx ρ g ∘ₗ cx ρ g = -LinearMap.id := LinearMap.ext fun x => cx_cx ρ g x
-  refine ⟨(cx ρ g).baseChange ℝ, fun x => ?_, fun x y => ?_, form_cx_pos ρ g S hpos, fun a A t hA ht => ?_⟩
+  refine ⟨(cx ρ g).baseChange ℝ, fun x => ?_, fun x y => ?_, _root_.GlobalTheory.UnitaryStd.form_cx_baseChange_pos ρ g S hpos, fun a A t hA ht => ?_⟩
   · rw [← LinearMap.comp_apply, ← LinearMap.baseChange_comp, hcc, LinearMap.baseChange_neg,
       LinearMap.baseChange_id]
     rfl
@@ -1279,7 +1254,7 @@ theorem dom_exists (hpos : (S.map (Int.cast : ℤ → ℝ)).PosDef)
       LinearMap.ext fun x => cx_smul ρ g a x
     refine ⟨?_, ?_, ?_⟩
     · rw [hAe, ← LinearMap.baseChange_comp, hcomm, LinearMap.baseChange_comp]
-    · rw [hAe, LinearMap.trace_baseChange, trace_act, trace_rep ρ s hr, ht']
+    · rw [hAe, LinearMap.trace_baseChange, trace_act, _root_.GlobalTheory.repTrace_eq_mul_trace ρ s hr, ht']
       simp only [Complex.mul_re, Complex.natCast_re, Complex.intCast_re, Complex.natCast_im, Complex.intCast_im]
       push_cast
       norm_num
@@ -1294,7 +1269,7 @@ def stdDatum (hSt : S.transpose = S) (hdet : IsUnit S.det) (hpos : (S.map (Int.c
   proj := inferInstance
   EF := form ρ g S
   alt := form_self ρ g S hSt
-  unimod := form_bijective ρ g S hdet
+  unimod := _root_.GlobalTheory.UnitaryStd.form_bijective_of_unimodular ρ g S hdet
   adj a x y := form_smul_left ρ g S (fun a => H.bar a) hρ a x y
   p := s * g
   q := s * g
@@ -1485,7 +1460,7 @@ theorem finrank_lat_int : Module.finrank ℤ (Lat ρ) = r := by
   rw [← LinearEquiv.finrank_eq (intEquiv ρ), Module.finrank_fin_fun]
 
 instance : Module.Projective (𝓞 E) (Lat ρ) := by
-  haveI : Module.IsTorsionFree (𝓞 E) (Lat ρ) := isTorsionFree_of_int E (Lat ρ)
+  haveI : Module.IsTorsionFree (𝓞 E) (Lat ρ) := _root_.GlobalTheory.isTorsionFree_ringOfIntegers_of_isTorsionFree_int E (Lat ρ)
   haveI : Module.FinitePresentation (𝓞 E) (Lat ρ) := Module.finitePresentation_of_finite _ _
   exact Module.Flat.projective_of_finitePresentation
 
@@ -1602,8 +1577,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.Mum
 
-theorem _root_.GlobalTheory.T.lieMultiplicity_and_rank_tensorData_lattice : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) , ∀ (D D' : DegData R (maximalIdeal R)) {r : ℕ} (W : Matrix (Fin r) (Fin r) ℤ), ((W + W.transpose).map (Int.cast : ℤ → ℝ)).PosDef → IsUnit (W + W.transpose).det → ∀ T : Tens D.toPre D'.toPre W, ∀ (ρ : 𝓞 E →+* Matrix (Fin r) (Fin r) ℤ) [Module (𝓞 E) D'.toPre.X] (o : letI := H.starRing; D'.toPre.OAct (𝓞 E)), (letI := H.starRing; T.IsAct o ρ) → ∀ s : ℕ, r = s * Module.finrank ℚ E → Module.finrank (𝓞 E) D'.toPre.X = s * Module.finrank ℤ D.toPre.X ∧ ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (τ : 𝓞 E →+* F), LieMult (letI := H.starRing; ofRingAct o.onB.toRingAct) (spMap ((algebraMap (FractionRing R) F).comp (algebraMap R _))) τ (s * D.toPre.P.g) := by
-  first | exact @GlobalTheory.Mum.lieMult_tens
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieMultiplicityAndRankTensorDataLatticeStatement =====
@@ -1626,7 +1599,7 @@ theorem GlobalTheory.Mum.tens_pelOK : ∀ (R : Type) [CommRing R] [IsDomain R] [
   obtain ⟨s, hs⟩ := hA E ρ
   obtain ⟨Dm, e, hp, hq, he, hEF⟩ := GlobalTheory.T.exists_unitary_datum_standardLattice_tensor_unimodular E H W hpos hdet ρ hadj hw0
     (D.toPre.P.g + Module.finrank ℤ D.toPre.X) s hs
-  obtain ⟨hrk, hlie⟩ := GlobalTheory.T.lieMultiplicity_and_rank_tensorData_lattice R hR E H D D' W hpos hdet T ρ o hact s hs
+  obtain ⟨hrk, hlie⟩ := _root_.GlobalTheory.Mum.lieMult_tens R hR E H D D' W hpos hdet T ρ o hact s hs
   have hs0 : s ≠ 0 := by rintro rfl; omega
   have hX0 : 0 < Module.finrank ℤ D.toPre.X := Module.finrank_pos
   refine ⟨Dm, hp.trans hq.symm, ?_, hpsi, fun F _ _ _ => ⟨fun τ => ⟨s * D.toPre.P.g, hlie F τ, ?_⟩, fun ζ hζ hζ' => ?_⟩⟩

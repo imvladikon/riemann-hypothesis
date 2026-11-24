@@ -269,11 +269,6 @@ theorem scale_pow_eq_of_isScale {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl
   refine ⟨k, hk, ?_⟩
   rw [hc, mul_pow, ← map_pow, hak, map_one, one_mul]
 
-theorem coefFn_map_eq {D : D7} {n : ℕ} {K : Type} [Field K] (σ : K →+* ℂ) (lam : D.what₂.Tau → DomWeight n)
-    (F : Formalism.L2.DIV.Pol K D.what₂.Tau n) : coefFn (RingHom.id ℂ) lam (MvPolynomial.map σ F) = coefFn σ lam F := by
-  funext x
-  simp only [coefFn, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_map, RingHom.id_comp]
-
 theorem exists_fixed_of_mem_span {D : D7} (j : Fin D.R.m) {W M : Type} [AddCommGroup W] [Module ℂ W] [AddCommGroup M] [Module ℂ M]
     (Φ : W →ₗ[ℂ] M) (c : VsV D j ℂ →ₗ[ℂ] W) (a₀ : ℂ) (S : Set (VV (↥D.LL0) (lamV D j))) {P : M}
     (hP : P ∈ Submodule.span (smallInt D)
@@ -361,7 +356,7 @@ theorem coefAt_of_twAdm_alt : _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.
     rw [hv', MvPolynomial.map_map, hfield]
   have hκs : IsScale p.R p.v₀ (baseW (Fm.ex x hx i) w j ρ) κ := ⟨gramR, c0R, c0L, hft, u, hu, fun F =>
     (congrArg (fun z => harmFn _ _ _ (p.R.ioP j (PiTensorProduct.tprod ℂ u) z)) (hcL F)).symm.trans
-      ((hκ _).trans (congrArg (κ • ·) (coefFn_map_eq _ _ _)))⟩
+      ((hκ _).trans (congrArg (κ • ·) (_root_.GlobalTheory.SeriesTie.Scale.coefFn_map _ _ _)))⟩
   obtain ⟨k, hk, hkk⟩ := scale_pow_eq_of_isScale p.R p.v₀ _ hsc hκs
   have hφc : phs p j * c₀ ≠ 0 := fun h0 => hν0 ((pow_eq_zero_iff hn).1 (hνn.trans (by rw [h0, zero_pow hn])))
   have hφ : phs p j ≠ 0 := left_ne_zero_of_mul hφc
@@ -389,12 +384,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.twisted_conj_coef_at' : _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwConj.CoefficientCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CoefAtOfTwAdmStatement =====
@@ -512,26 +501,6 @@ section -- clump:auto
 
 
 
-section
-set_option autoImplicit false
-noncomputable section
-open NumberField IsDedekindDomain
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.DIV.Cons Formalism.L2.Pj Formalism.L2.DIV Formalism.L2.Indef Formalism.L2.Indef.Tree Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Cx
-open Formalism.IndefR.FWT GlobalTheory.BigTop GlobalTheory.OntoChain GlobalTheory.RealIndexBound GlobalTheory.OnTies GlobalTheory.SeriesTie
-open GlobalTheory.BigOn GlobalTheory.BigOn.Exp Formalism.L2.Theta GlobalTheory.ExportSeries
-open scoped TensorProduct
-
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.conjTwist_function_eq_sum_evaluations_alt : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.SeriesRat → _root_.GlobalTheory.BigOn.Exp.TwistConditions fun Fm x hx i p w j => ∀ τ : ℂ ≃+* ℂ,
-  (∀ y, τ (Formalism.L2.Host.embLL0 (Fm.D x i) y) = Formalism.L2.Host.embLL0 (Fm.D x i) y) →
-  ∀ Φ Φ' : GA (Fm.D x i) (Wc (Fm.D x i) j) → ℂ, GlobalTheory.ConjTwist.ConjFun (p.O j) (p.κ j) τ 1 Φ Φ' →
-    ∃ (n : ℕ) (b : Fin n → ℂ) (g : Fin n → NX.FmK p.Sx ((j : ℕ) + 1)),
-      Φ = ∑ k, b k • evW p.nexp p.v₀ j (g k).val ∧ ∑ k, τ (b k) • evW p.nexp p.v₀ j (g k).val = Φ' := by
-  first | exact @_root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ConjExpansionRationalStatement =====
@@ -640,12 +609,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.twisted_conj_fix_at' : GlobalTheory.Published.RayClassFieldSt → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwConj.FixedPointCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FixAtHoldsStatement =====
@@ -1245,12 +1208,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.twisted_conj_tuple_at' : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter → _root_.GlobalTheory.BigOn.Exp.TwConj.TupleCondition := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TupAtStatement =====
@@ -1276,7 +1233,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.BigOn.Exp.TwConj
 open GlobalTheory.ConjTwist
 theorem normAt_alt : _root_.GlobalTheory.BigOn.Exp.TwConj.NormCondition := _root_.GlobalTheory.BigOn.Exp.TwistConditions.of_forall fun _ _ _ _ p _ _ _ _ _ B ν ν' ⟨_, c, hc, n, hn, hνn⟩ ⟨_, c', hc', m, hm, hνm⟩ => by
-  obtain ⟨k, hk, hkk⟩ := scale_pow_eq p.R p.v₀ B hc hc'
+  obtain ⟨k, hk, hkk⟩ := _root_.GlobalTheory.BigOn.Exp.TwConj.scale_pow_eq_of_isScale p.R p.v₀ B hc hc'
   refine ⟨n * m * k, Nat.mul_ne_zero (Nat.mul_ne_zero hn hm) hk, ?_⟩
   have e1 : ν' ^ (n * m * k) = (ν' ^ m) ^ (n * k) := by rw [← pow_mul]; ring_nf
   have e2 : ν ^ (n * m * k) = (ν ^ n) ^ (m * k) := by rw [← pow_mul]; ring_nf
@@ -1311,8 +1268,8 @@ theorem twOne_of_steps_alt (hA : _root_.GlobalTheory.BigOn.Exp.TwAdmAlt) (hT : _
 theorem conj_tw_of_prints : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt →
     GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.SerStd.SeriesRatS →
     _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter → _root_.GlobalTheory.BigOn.Exp.ConjugateTwist := fun h1 h2 h3 hD hW h4 hA hC =>
-  _root_.GlobalTheory.BigOn.Exp.TwConj.conjTw_of_twAdm_latSmallGen_normAt_twOne hA _root_.GlobalTheory.T.latSmallGen' _root_.GlobalTheory.BigOn.Exp.TwConj.normAt_alt (_root_.GlobalTheory.BigOn.Exp.TwConj.twOne_of_steps_alt hA (_root_.GlobalTheory.T.twisted_conj_tuple_at' h1 h2 h3 hD hW hA hC) (_root_.GlobalTheory.T.twisted_conj_fix_at' h3 hA) (_root_.GlobalTheory.T.twisted_conj_coef_at' hA)
-    (_root_.GlobalTheory.T.conjTwist_function_eq_sum_evaluations_alt h1 h2 h3 h4))
+  _root_.GlobalTheory.BigOn.Exp.TwConj.conjTw_of_twAdm_latSmallGen_normAt_twOne hA _root_.GlobalTheory.BigOn.Exp.latSmallGen_alt _root_.GlobalTheory.BigOn.Exp.TwConj.normAt_alt (_root_.GlobalTheory.BigOn.Exp.TwConj.twOne_of_steps_alt hA (_root_.GlobalTheory.BigOn.Exp.TwConj.tupAt_alt h1 h2 h3 hD hW hA hC) (_root_.GlobalTheory.BigOn.Exp.TwConj.fixAt_holds_alt h3 hA) (_root_.GlobalTheory.BigOn.Exp.TwConj.coefAt_of_twAdm_alt hA)
+    (_root_.GlobalTheory.ConjExpandRational.exists_evW_expansion_of_conjFun h1 h2 h3 h4))
 end GlobalTheory.BigOn.Exp.TwConj
 end
 end
@@ -1327,12 +1284,6 @@ section -- clump:auto
 
 
 
-section
-open GlobalTheory.BigTop GlobalTheory.BigOn GlobalTheory.BigOn.Exp
-
-theorem _root_.GlobalTheory.T.conjTw_of_discrete_series_and_casselman_wallach : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.RayClassFieldSt → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.SerStd.SeriesRatS → _root_.GlobalTheory.BigOn.Exp.TwAdmAlt → _root_.GlobalTheory.BigOn.Exp.TwistCharacter → _root_.GlobalTheory.BigOn.Exp.ConjugateTwist := by
-  first | exact @_root_.GlobalTheory.BigOn.Exp.TwConj.conj_tw_of_prints
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TwOneOfStepsStatement =====

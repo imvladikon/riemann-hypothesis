@@ -74,7 +74,7 @@ namespace Formalism.FourierDecayAlt.P.PBQ
 open Formalism.FourierDecayAlt Formalism.REAL Formalism.QuantumDeterminants
 
 theorem leviElement_mem_GV {k p ρ : ℕ} (q : Matrix (Fin p) (Fin p) ℂ) (hq : IsUnit q.det) : U.muP k p ρ q ∈ B.GV k (p + ρ) :=
-  (Formalism.FourierDecayAlt.P.slice_membership k p ρ).2.1 q (isUnit_iff_ne_zero.mp hq)
+  (_root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem k p ρ).2.1 q (isUnit_iff_ne_zero.mp hq)
 
 def MuPToOm : Prop := ∀ (k p ρ : ℕ) (z z' : Fin (2 * (p + ρ) + k + 1) → ℂ), inWb k (p + ρ) z → inWb k (p + ρ) z' →
   ∀ y ∈ domP k (p + ρ) p z z', y ∈ B.GV k (p + ρ) →
@@ -103,17 +103,6 @@ theorem corner_matrix_levi_block_three (z z' : Fin (2 * (p + ρ) + k + 1) → �
   congr 2 <;> simp only [Matrix.zero_mul, Matrix.one_mul, zero_add, add_zero]
   · rw [← Matrix.mul_assoc, hw, Matrix.mul_assoc]
   · rw [← Matrix.mul_assoc (G.wMat p), hw]; simp only [Matrix.mul_assoc]
-
-theorem zhat_eq_blk (z z' : Fin (2 * (p + ρ) + k + 1) → ℂ) (hz : inWb k (p + ρ) z) (hz' : inWb k (p + ρ) z')
-    (product_first_partition : Matrix (Fin p) (Fin p) ℂ) (sizeConstantAtParamsWeight : Matrix (Fin p) (Fin (2 * ρ + k + 1)) ℂ) (flipOneThree : Matrix (Fin p) (Fin p) ℂ)
-    (placeRankTwoOne : Matrix (Fin (2 * ρ + k + 1)) (Fin p) ℂ) (TaylorLogMetric : B.Mat k ρ) (flipTwoThree : Matrix (Fin (2 * ρ + k + 1)) (Fin p) ℂ)
-    (BlochKatoReduction : Matrix (Fin p) (Fin p) ℂ) (SumRepresentations : Matrix (Fin p) (Fin (2 * ρ + k + 1)) ℂ) (ArithmeticCylinders : Matrix (Fin p) (Fin p) ℂ) :
-    Zhat k (p + ρ) z z' (U.blk3 product_first_partition sizeConstantAtParamsWeight flipOneThree placeRankTwoOne TaylorLogMetric flipTwoThree BlochKatoReduction SumRepresentations ArithmeticCylinders) =
-      Matrix.reindex (Ux3.eC p ρ) (Ux3.eC p ρ) (Matrix.fromBlocks (G.wMat p * BlochKatoReduction)
-        (G.wMat p * SumRepresentations * Formalism.QuantumDeterminants.Fm k ρ (U.lowV k p ρ z'))
-        ((Formalism.QuantumDeterminants.Fm k ρ (U.lowV k p ρ z))ᴴ * (Hpk k ρ * placeRankTwoOne))
-        ((Formalism.QuantumDeterminants.Fm k ρ (U.lowV k p ρ z))ᴴ * (Hpk k ρ * TaylorLogMetric) * Formalism.QuantumDeterminants.Fm k ρ (U.lowV k p ρ z'))) :=
-  Ux3.z_hat_of_block3 z z' hz hz' _ _ _ _ _ _ _ _ _
 
 theorem minor_gen {m : ℕ} (A : Matrix (Fin p) (Fin p) ℂ) (Bm : Matrix (Fin p) (Fin (ρ + 1)) ℂ)
     (Cm : Matrix (Fin (ρ + 1)) (Fin p) ℂ) (Dm : Matrix (Fin (ρ + 1)) (Fin (ρ + 1)) ℂ)
@@ -150,7 +139,7 @@ theorem minor_leviElement_mul_high (z z' : Fin (2 * (p + ρ) + k + 1) → ℂ) (
       ((qᴴ)⁻¹).det * Dmin k (p + ρ) z z' g ⟨p + m, by omega⟩ := by
   have hg := Ux3.block3_eta g
   unfold Dmin
-  rw [hg, corner_matrix_levi_block_three z z' hz hz', zhat_eq_blk z z' hz hz']
+  rw [hg, corner_matrix_levi_block_three z z' hz hz', _root_.Formalism.FourierDecayAlt.P.Ux3.z_hat_of_block3 z z' hz hz']
   show ((Matrix.reindex _ _ _).submatrix (Fin.castLE (show p + m ≤ p + ρ + 1 by omega))
     (Fin.castLE (show p + m ≤ p + ρ + 1 by omega))).det = _ * ((Matrix.reindex _ _ _).submatrix
       (Fin.castLE (show p + m ≤ p + ρ + 1 by omega)) (Fin.castLE (show p + m ≤ p + ρ + 1 by omega))).det
@@ -311,12 +300,6 @@ section gN
 
 variable {k r : ℕ}
 
-theorem gN_conjTranspose (a : B.Mat k r) : B.gN aᴴ = B.gN a := by
-  unfold B.gN
-  congr 1
-  rw [Finset.sum_comm]
-  simp [Matrix.conjTranspose_apply, Complex.normSq_conj]
-
 theorem gv_eq_hinv {u : B.Mat k r} (hu : u ∈ B.GV k r) : u = Hpk k r * (u⁻¹)ᴴ * Hpk k r := by
   have h1 := Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_inv hu)
   rw [Matrix.nonsing_inv_nonsing_inv _ (Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hu)] at h1
@@ -327,7 +310,7 @@ theorem gN_le_inv {u : B.Mat k r} (hu : u ∈ B.GV k r) : B.gN u ≤ B.gN (Hpk k
   calc B.gN (Hpk k r * (u⁻¹)ᴴ * Hpk k r) ≤ B.gN (Hpk k r * (u⁻¹)ᴴ) * B.gN (Hpk k r) := Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _
     _ ≤ B.gN (Hpk k r) * B.gN ((u⁻¹)ᴴ) * B.gN (Hpk k r) :=
         mul_le_mul_of_nonneg_right (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _) (Formalism.FourierDecayAlt.P.B6.gN_nonneg _)
-    _ = _ := by rw [gN_conjTranspose]; ring
+    _ = _ := by rw [_root_.PI.PolynomialProperness.GN.gN_conjTranspose]; ring
 
 end gN
 
@@ -439,7 +422,7 @@ theorem properA (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + �
   obtain ⟨a0, b0, c0, hRn⟩ := rn_uni (k := k) (p := p) (ρ := ρ) (-x.2)
   set R' := U.muP k p ρ q * U.Rn k p ρ (-x.2) * U.muP k p ρ q⁻¹ with hR'def
   have hR'G : R' ∈ B.GV k (p + ρ) :=
-    Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (hmuP q hq) (LeftFubiniLemmas.rn_nset _).1) (hmuP q⁻¹ hqi)
+    Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (hmuP q hq) (_root_.Formalism.FourierDecayAlt.P.Ux3.rn_nset _).1) (hmuP q⁻¹ hqi)
   set U1 := U.embG k p ρ h * R' * U.embG k p ρ h⁻¹ with hU1def
   have hU1G : U1 ∈ B.GV k (p + ρ) :=
     Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_mul (hembG h hhG) hR'G) (hembG _ (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_inv hhG))
@@ -468,7 +451,7 @@ theorem properA (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + �
     rw [hcomm ν⁻¹ X, hcomm h⁻¹, ← Matrix.mul_assoc, hq1, Matrix.one_mul]
   have key : n1inv * (U.muP k p ρ q * g) * n' =
       U.embG k p ρ h * U.muP k p ρ q * (sP Bj x * g * n' * h') * h'⁻¹ := by
-    rw [hsP, LeftFubiniLemmas.embG_mul, hn1invdef, hU1def, hR'def]
+    rw [hsP, _root_.Formalism.FourierDecayAlt.P.Dx2.Split.embG_mul, hn1invdef, hU1def, hR'def]
     simp only [Matrix.mul_assoc]
     rw [hmid, hh'u, Matrix.mul_one]
   have hKc : n1inv * (U.muP k p ρ q * g) * n' ∈ Kc := by

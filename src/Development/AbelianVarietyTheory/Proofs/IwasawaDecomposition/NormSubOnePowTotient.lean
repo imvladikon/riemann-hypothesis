@@ -77,9 +77,7 @@ theorem norm_pow_sub_one_le {K : Type u_1} [NormedField K] [IsUltrametricDist K]
     rw [norm_mul, hζ, one_mul]
     exact ih
 
-theorem main : ∀ {K : Type u_1} [inst : NormedField K] [IsUltrametricDist K] {ζ : K},
-    ‖ζ‖ = (1 : ℝ) → ∀ (a : ℕ), ‖ζ ^ a - (1 : K)‖ ≤ ‖ζ - (1 : K)‖ :=
-  fun hζ a => norm_pow_sub_one_le hζ a
+alias main := _root_.GlobalTheory.NormPowSubOne.norm_pow_sub_one_le
 
 end GlobalTheory.NormPowSubOne
 end -- clump:auto
@@ -103,18 +101,12 @@ theorem norm_root_eq_one {K : Type*} [NormedField K] {n : ℕ} (hn : n ≠ 0) {�
   rw [norm_pow, norm_one] at this
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg _) hn).1 this
 
-theorem norm_pow_sub_one_le {K : Type*} [NormedField K] [IsUltrametricDist K]
-    {ζ : K} (hz : ‖ζ‖ = 1) (a : ℕ) : ‖ζ ^ a - 1‖ ≤ ‖ζ - 1‖ := by
-  first
-  | (apply _root_.GlobalTheory.NormPowSubOne.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NormPowSubOne.main ..)
-
 theorem norm_sub_one_le {K : Type*} [NormedField K] [IsUltrametricDist K]
     {n : ℕ} (hn : n ≠ 0) {ζ μ : K} (hζ : IsPrimitiveRoot ζ n) (hμ : μ ^ n = 1) :
     ‖μ - 1‖ ≤ ‖ζ - 1‖ := by
   haveI : NeZero n := ⟨hn⟩
   obtain ⟨a, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hμ
-  exact norm_pow_sub_one_le (norm_root_eq_one hn hζ.pow_eq_one) a
+  exact _root_.GlobalTheory.NormPowSubOne.norm_pow_sub_one_le (norm_root_eq_one hn hζ.pow_eq_one) a
 
 theorem norm_sub_one_pow_totient {K : Type*} [NormedField K] [IsUltrametricDist K]
     (l : ℕ) [hl : Fact l.Prime] (k : ℕ) (ζ : K) (hζ : IsPrimitiveRoot ζ (l ^ (k + 1))) :

@@ -61,6 +61,7 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMu
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Mathlib.CategoryTheory.Monoidal.Opposite.Mon
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -116,7 +117,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsRestMore =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenFrameTransportCartesianAutomorphism =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenFrameTransportCartesianAutomorphism", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrvEqSelf\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsBlockMetricDiagForm\npublic import Formalism.LocalToGlobal.ProjectiveLattices.IsChartIff\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTransportEquivariantCartesianPreservesCom\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul\nimport Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion\nimport Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenFrameTransportCartesianAutomorphism", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrvEqSelf\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsBlockMetricDiagForm\npublic import Formalism.LocalToGlobal.ProjectiveLattices.IsChartIff\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTransportEquivariantCartesianPreservesCom\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul\nimport Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso\nimport Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion\nimport Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -146,17 +147,6 @@ section
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
   {X Y : Scheme.{0}} {t : SAB H Y} {p : X ⟶ Y} {G' : Over X} [GrpObj G'] {ψ : G'.left ⟶ t.G.left}
 
-theorem spMap_eps_alg {R : Type} [CommRing R] (a : R) :
-    spMap (epsMul a) ≫ spMap (algebraMap R (DualNumber R)) = spMap (algebraMap R (DualNumber R)) := by
-  rw [← Spec.map_comp]
-  congr 1
-  ext r <;> simp [epsMul]
-
-theorem spMap_fst_alg {R : Type} [CommRing R] :
-    spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ spMap (algebraMap R (DualNumber R)) = 𝟙 (Sp R) := by
-  rw [← Spec.map_comp, ← Spec.map_id]
-  exact congrArg Spec.map (CommRingCat.hom_ext (RingHom.ext fun x => by simp [TrivSqZeroExt.algebraMap_eq_inl]))
-
 theorem cancel_g_ψ (hψ : IsPullback ψ G'.hom t.G.hom p) {b : X ⟶ X} {g : G'.left ⟶ G'.left}
     (hg : IsPullback g G'.hom G'.hom b) {T : Scheme.{0}} {u₁ u₂ : T ⟶ G'.left}
     (h₁ : u₁ ≫ G'.hom = u₂ ≫ G'.hom) (h₂ : u₁ ≫ g ≫ ψ = u₂ ≫ g ≫ ψ) : u₁ = u₂ :=
@@ -179,7 +169,7 @@ theorem isTan_trv (hG : IsGrpPullback G' t.G p ψ) {b : X ⟶ X} {g : G'.left �
   rw [trv_eq hG.1 g q w hw hw']
   have e : spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ w = (1 : Over.mk q ⟶ G').left :=
     hG.1.hom_ext (by rw [Category.assoc, hw, hv.2]; exact grpPull_one hG (Over.mk q))
-      (by rw [Category.assoc, hw', ← Category.assoc, spMap_fst_alg, Category.id_comp]
+      (by rw [Category.assoc, hw', ← Category.assoc, _root_.GlobalTheory.Diag.fstHom_base, Category.id_comp]
           exact (Over.w (1 : Over.mk q ⟶ G')).symm)
   rw [← Category.assoc, e, one_g_ψ hG hgb q]
 
@@ -192,7 +182,7 @@ theorem trv_eig (hψ : IsPullback ψ G'.hom t.G.hom p) {act' : OAct (𝓞 E) G'}
   obtain ⟨w, hw, hw'⟩ := exists_lift hψ q hv
   have hwa : w ≫ (act'.act a).left = spMap (epsMul c) ≫ w :=
     hψ.hom_ext (by rw [Category.assoc, hact, ← Category.assoc, hw, he, Category.assoc, hw])
-      (by rw [Category.assoc, Over.w, hw', Category.assoc, hw', ← Category.assoc, spMap_eps_alg])
+      (by rw [Category.assoc, Over.w, hw', Category.assoc, hw', ← Category.assoc, _root_.GlobalTheory.FrameLift.eps_alg])
   rw [trv_eq hψ g q w hw hw']
   simp only [Category.assoc]
   rw [← hact a, ← reassoc_of% (hgc a), reassoc_of% hwa]
@@ -242,7 +232,7 @@ theorem trv_eigFrame : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
   have htr : GlobalTheory.EqvTrans.trv hG.1 g q (w₀ ≫ ψ) = w' := (GlobalTheory.EqvTrans.trv_eq hG.1 g q w₀ rfl hw₀).trans hw₀g
   have hone : spMap (TrivSqZeroExt.fstHom R R R).toRingHom ≫ w₀ = (1 : Over.mk q ⟶ G').left :=
     GlobalTheory.EqvTrans.cancel_g_ψ hG.1 hgb.1
-      (by rw [Category.assoc, hw₀, ← Category.assoc, GlobalTheory.EqvTrans.spMap_fst_alg, Category.id_comp]
+      (by rw [Category.assoc, hw₀, ← Category.assoc, _root_.GlobalTheory.Diag.fstHom_base, Category.id_comp]
           exact (Over.w (1 : Over.mk q ⟶ G')).symm)
       (by rw [Category.assoc, hw₀g, hw'.2, GlobalTheory.EqvTrans.one_g_ψ hG hgb q])
   have hwt : IsTanAtG Y.t (q ≫ p) (w₀ ≫ ψ) :=
@@ -252,7 +242,7 @@ theorem trv_eigFrame : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
       spMap (epsMul (φR (embK c τ a))) ≫ (w₀ ≫ ψ) := fun a => by
     have h0 : w₀ ≫ (act'.act a).left = spMap (epsMul (φR (embK c τ a))) ≫ w₀ :=
       GlobalTheory.EqvTrans.cancel_g_ψ hG.1 hgb.1
-        (by rw [Category.assoc, Over.w, hw₀, Category.assoc, hw₀, ← Category.assoc, GlobalTheory.EqvTrans.spMap_eps_alg])
+        (by rw [Category.assoc, Over.w, hw₀, Category.assoc, hw₀, ← Category.assoc, _root_.GlobalTheory.FrameLift.eps_alg])
         (by rw [Category.assoc, reassoc_of% (hgc a), hact a, ← Category.assoc w₀, ← Category.assoc (w₀ ≫ g),
               Category.assoc w₀, hw₀g, heig a, Category.assoc, hw₀g])
     rw [Category.assoc, ← hact a, ← Category.assoc, h0, Category.assoc]
@@ -375,16 +365,9 @@ section Frames
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Zm : Model Xo c β}
 
-theorem spMap_inj {R S : Type} [CommRing R] [CommRing S] {f g : R →+* S} (h : spMap f = spMap g) : f = g :=
-  congrArg CommRingCat.Hom.hom (Spec.map_injective h)
-
-theorem spMap_comp' {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (f : R →+* S) (g : S →+* T) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [← Spec.map_comp]; rfl
-
 theorem spMap_dualMap_comp {R S T : Type} [CommRing R] [CommRing S] [CommRing T] (f : R →+* S) (g : S →+* T) :
     spMap (dualMap g) ≫ spMap (dualMap f) = spMap (dualMap (g.comp f)) := by
-  rw [← spMap_comp']
+  rw [← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   congr 1
   exact RingHom.ext fun z => by ext <;> simp [dualMap]
 
@@ -434,17 +417,17 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   obtain ⟨f₀', hf₀'⟩ := f₀.exists_isMap (functionFieldMap φ) rfl hη
 
   have hch : spMap ((functionFieldMap φ).comp φ₀) = genericFieldPoint X' ≫ φ ≫ s₀ TF.Y Z := by
-    rw [spMap_comp', ← hφ₀, ← Category.assoc, ← Category.assoc]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, ← hφ₀, ← Category.assoc, ← Category.assoc]
     rw [show spMap (functionFieldMap φ) ≫ (show Sp (X₀ TF.Y Z).functionField ⟶ X₀ TF.Y Z from
         (X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z))) = genericFieldPoint X' ≫ φ from
       specMap_functionFieldMap φ]
     simp only [Category.assoc]
   have hσ : ∀ γ, (functionFieldMap φ).comp φ₀ = (functionFieldMap (ρ' γ).asIso.hom).comp ((functionFieldMap φ).comp φ₀) := by
     intro γ
-    refine spMap_inj ?_
+    refine _root_.GlobalTheory.ZM.DenseFib.spMap_inj ?_
     have e1 : spMap (functionFieldMap (ρ' γ).asIso.hom) ≫ genericFieldPoint X' = genericFieldPoint X' ≫ (ρ' γ).asIso.hom :=
       specMap_functionFieldMap _
-    rw [spMap_comp' _ (functionFieldMap (ρ' γ).asIso.hom), hch, ← Category.assoc (spMap _) (genericFieldPoint X'), e1,
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ (functionFieldMap (ρ' γ).asIso.hom), hch, ← Category.assoc (spMap _) (genericFieldPoint X'), e1,
       Category.assoc, hρ]
 
   choose T hT using fun γ => _root_.GlobalTheory.EqvTrans.trv_eigFrame TF.Y (φ ≫ (barComp TF.Y Z).ι) G' ψ act' (ρ' γ).asIso (m γ) hG hact (hm γ)
@@ -465,12 +448,12 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   choose F hF using fun x : X' => (fy x).exists_isMap (φ.stalkMap x).hom rfl (hxF x)
   have hχ : ∀ x : X', spMap ((φ.stalkMap x).hom.comp (φy x)) =
       (show Sp (X'.presheaf.stalk x) ⟶ X' from X'.fromSpecStalk x) ≫ φ ≫ s₀ TF.Y Z := fun x => by
-    rw [spMap_comp', ← (hDx x).1, ← Category.assoc, ← Category.assoc]
+    rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, ← (hDx x).1, ← Category.assoc, ← Category.assoc]
     exact congrArg (· ≫ s₀ TF.Y Z) (Scheme.SpecMap_stalkMap_fromSpecStalk φ)
   have hφK : ∀ x : X', (functionFieldMap φ).comp φ₀ =
       (algebraMap (X'.presheaf.stalk x) X'.functionField).comp ((φ.stalkMap x).hom.comp (φy x)) := fun x => by
-    refine spMap_inj ?_
-    rw [hch, spMap_comp' _ (algebraMap (X'.presheaf.stalk x) X'.functionField), hχ x, ← Category.assoc]
+    refine _root_.GlobalTheory.ZM.DenseFib.spMap_inj ?_
+    rw [hch, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp _ (algebraMap (X'.presheaf.stalk x) X'.functionField), hχ x, ← Category.assoc]
     exact congrArg (· ≫ φ ≫ s₀ TF.Y Z) (specAlgebraMap_fromSpecStalk x).symm
   have hxK : ∀ x : X', genericFieldPoint X' ≫ φ ≫ (barComp TF.Y Z).ι =
       spMap (algebraMap (X'.presheaf.stalk x) X'.functionField) ≫
@@ -482,8 +465,8 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hdet : ∀ (x : X') τ, ((FK x).co f₀' τ).det = functionFieldMap φ (d x τ) := by
     intro x τ
     have hφy : φ₀ = (algebraMap ((X₀ TF.Y Z).presheaf.stalk (φ x)) (X₀ TF.Y Z).functionField).comp (φy x) := by
-      refine spMap_inj ?_
-      rw [← hφ₀, spMap_comp', ← (hDx x).1, ← Category.assoc]
+      refine _root_.GlobalTheory.ZM.DenseFib.spMap_inj ?_
+      rw [← hφ₀, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, ← (hDx x).1, ← Category.assoc]
       exact congrArg (· ≫ s₀ TF.Y Z) (specAlgebraMap_fromSpecStalk (φ x)).symm
     have hxy : (show Sp (X₀ TF.Y Z).functionField ⟶ X₀ TF.Y Z from
         (X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z))) ≫ (barComp TF.Y Z).ι =
@@ -522,7 +505,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
               (∏ τ, (Fs.isUnit_det_co Ft τ).unit ^ (-a τ)) := by
     intro γ x y st hst hstK
     have hχst : (φ.stalkMap x).hom.comp (φy x) = st.comp ((φ.stalkMap y).hom.comp (φy y)) := by
-      refine spMap_inj ?_
+      refine _root_.GlobalTheory.ZM.DenseFib.spMap_inj ?_
       calc spMap ((φ.stalkMap x).hom.comp (φy x))
           = (show Sp (X'.presheaf.stalk x) ⟶ X' from X'.fromSpecStalk x) ≫ φ ≫ s₀ TF.Y Z := hχ x
         _ = ((show Sp (X'.presheaf.stalk x) ⟶ X' from X'.fromSpecStalk x) ≫ (ρ' γ).asIso.hom) ≫ φ ≫ s₀ TF.Y Z := by
@@ -530,7 +513,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
         _ = (spMap st ≫ X'.fromSpecStalk y) ≫ φ ≫ s₀ TF.Y Z := by rw [hst]
         _ = spMap st ≫ ((show Sp (X'.presheaf.stalk y) ⟶ X' from X'.fromSpecStalk y) ≫ φ ≫ s₀ TF.Y Z) :=
           Category.assoc _ _ _
-        _ = spMap (st.comp ((φ.stalkMap y).hom.comp (φy y))) := by rw [spMap_comp', hχ y]
+        _ = spMap (st.comp ((φ.stalkMap y).hom.comp (φy y))) := by rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hχ y]
     have hxs : ((show Sp (X'.presheaf.stalk x) ⟶ X' from X'.fromSpecStalk x) ≫ (ρ' γ).asIso.hom) ≫ φ ≫
         (barComp TF.Y Z).ι = spMap st ≫ ((show Sp (X'.presheaf.stalk y) ⟶ X' from X'.fromSpecStalk y) ≫ φ ≫
           (barComp TF.Y Z).ι) := by
@@ -752,7 +735,7 @@ theorem hodgeLineBundle_rationally_linear : _root_.GlobalTheory.CovTop.Published
       rintro _ _ _ _ rfl; rfl
     exact key _ _ _ _ (congrArg (LL₀ TF.X Z) (GlobalTheory.HodgeLin.exOf_hodgeWt Dw)).symm
   · intro I g hI' hMb Γ _ _ ι ρ hU hAct X' _ φ ℓ ρ' hN hP' hO hj heq
-    obtain ⟨G', _, ψ, act', m, hE⟩ := _root_.GlobalTheory.T.equivariant_linearization_pullback_compat hP E H Dw l Xo c TF Z hpq hA hF I g hI' hMb Γ ι ρ hU hAct X' φ ℓ ρ' hN hP' hO hj heq
+    obtain ⟨G', _, ψ, act', m, hE⟩ := _root_.GlobalTheory.EqvAct.equivariant_linearization_pullback hP E H Dw l Xo c TF Z hpq hA hF I g hI' hMb Γ ι ρ hU hAct X' φ ℓ ρ' hN hP' hO hj heq
     obtain ⟨v, hv⟩ := GlobalTheory.GenInterior.exists_j₀_eq_genericPoint E H Dw l Xo c TF Z
     have hd : IsDominant φ := ⟨by
       refine dense_iff_closure_eq.2 (Set.eq_univ_of_univ_subset ?_)

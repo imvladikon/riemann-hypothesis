@@ -76,6 +76,7 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.TypeStar
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.UwClosedSubgroup
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.EmbeddedGroupMeasurePreserving
@@ -172,7 +173,7 @@ theorem kr_eq_integral_krI_psiR {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGrou
       have := congrArg (fun M => (Matrix.of s.1.2 : B.Mat k ρ)⁻¹ * M) hνc
       simpa only [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hνu, Matrix.one_mul] using this
     have hR : LeftFubiniLemmas.rcAct (Matrix.of s.1.1) s.2.1 = LeftFubiniLemmas.rcAct (Matrix.of s'.1.1) s'.2.1 :=
-      (Formalism.FourierDecayAlt.P.radical_parametrisation k p ρ).1 (by rw [hRn, hRn', ha, hb, hc])
+      (_root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam k p ρ).1 (by rw [hRn, hRn', ha, hb, hc])
     rw [← h11] at hR
     have hhu : IsUnit (Matrix.of s.1.1 : B.Mat k ρ).det := Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hs.1.1
     have h21 : s.2.1 = s'.2.1 := by
@@ -382,19 +383,6 @@ open Formalism.FourierDecayAlt
 
 variable {n : ℕ}
 
-theorem upper_utc {M : Matrix (Fin n) (Fin n) ℂ} (hM : M ∈ C2.UTset n) : G.upper (StabilizerDisintegration.utc M) = M := by
-  ext i j
-  simp only [G.upper, G.strictUpper, StabilizerDisintegration.utc, Matrix.add_apply, Matrix.one_apply, Matrix.of_apply]
-  rcases lt_trichotomy i j with h | rfl | h
-  · rw [dite_eq_left h, if_neg (ne_of_lt h), zero_add]
-  · rw [dite_eq_right (lt_irrefl _), if_pos rfl, hM.2, add_zero]
-  · rw [dite_eq_right (not_lt.2 h.le), if_neg (ne_of_gt h), hM.1 i j h, add_zero]
-
-theorem upper_ut (v : G.UT n → ℂ) : G.upper v ∈ C2.UTset n := by
-  refine ⟨fun i j h => ?_, fun i => ?_⟩
-  · simp [G.upper, G.strictUpper, not_lt.2 h.le, ne_of_gt h]
-  · simp [G.upper, G.strictUpper]
-
 section gam
 
 variable {r : ℕ} {X : Type}
@@ -405,12 +393,12 @@ def Gam (p : ((Fin r → Fin r → ℂ) × X) × (G.UT r → ℂ)) : (Fin r → 
 theorem Gam_det (p : ((Fin r → Fin r → ℂ) × X) × (G.UT r → ℂ)) :
     (Matrix.of (Gam p).1).det = (Matrix.of p.1.1).det := by
   simp only [Gam, Equiv.apply_symm_apply]
-  rw [Matrix.det_mul, Matrix.det_mul, C2x2.ut_det (Wm_ut _), C2x2.ut_det (upper_ut p.2), mul_one, mul_one]
+  rw [Matrix.det_mul, Matrix.det_mul, C2x2.ut_det (Wm_ut _), C2x2.ut_det (_root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_mem p.2), mul_one, mul_one]
 
 theorem Gam_eq (q : (Fin r → Fin r → ℂ) × X) (u : Matrix (Fin r) (Fin r) ℂ) (hdet : (Matrix.of q.1).det ≠ 0)
     (hu : u ∈ C2.UTset r) : Gam ((Matrix.of.symm (Matrix.of q.1 * u), q.2), StabilizerDisintegration.utc (Sm (Matrix.of q.1))) = q := by
   simp only [Gam, Equiv.apply_symm_apply]
-  rw [Wm_mul hdet hu, upper_utc (Sm_ut _), Matrix.mul_assoc (Matrix.of q.1) u,
+  rw [Wm_mul hdet hu, _root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_utc (Sm_ut _), Matrix.mul_assoc (Matrix.of q.1) u,
     Matrix.mul_nonsing_inv_cancel_left _ _ (C2x2.ut_unit hu), Matrix.mul_assoc, Wm_mul_Sm, Matrix.mul_one]
   rfl
 
@@ -450,7 +438,7 @@ theorem top_truncation_construction : MkTopCut := by
         fun v => β₀ (StabilizerDisintegration.utc (Sm (Matrix.of Z) * G.upper v)) := by
       funext v
       simp only [Equiv.apply_symm_apply]
-      rw [Sm_mul hZ (upper_ut v)]
+      rw [Sm_mul hZ (_root_.Formalism.FourierDecayAlt.P.StabilizerDisintegration.HC.upper_mem v)]
     show Integrable (fun v : G.UT r → ℂ => β₀ (StabilizerDisintegration.utc (Sm (Matrix.of (Matrix.of.symm (Matrix.of Z * G.upper v)))))) ∧
       ∫ v : G.UT r → ℂ, β₀ (StabilizerDisintegration.utc (Sm (Matrix.of (Matrix.of.symm (Matrix.of Z * G.upper v))))) = 1
     rw [hfun]
@@ -577,7 +565,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMkTopBump =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMKTop =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMKTop", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMK2\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CornerBlockActionInvariant\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMTC\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMkCpt\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMkTopBump\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMKTop", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMK2\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.CornerBlockActionInvariant\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMTC\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMkCpt\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXMkTopBump\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.UwClosedSubgroup\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -586,11 +574,6 @@ noncomputable section
 open Matrix MeasureTheory Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt
 
 namespace Formalism.FourierDecayAlt.P.CutMK
-
-theorem psi_cast {k a b : ℕ} (e : a = b) (v : Fin (2 * a + k + 1) → ℂ) (c : ℂ) (g : B.Mat k a) :
-    psi k b (D.castV e v) c (D.castM e g) = psi k a v c g := by
-  subst e
-  rw [Formalism.FourierDecayAlt.P.Dx2.Tower.castV_rfl, Formalism.FourierDecayAlt.P.Dx2.MN.castM_rfl]
 
 theorem top_construction : TopMk := by
   intro hC Wp Wq _ _ _ _ _ _ P p
@@ -618,7 +601,7 @@ theorem top_construction : TopMk := by
       intro u
       unfold CutEX.psiU
       rw [hz]
-      exact psi_cast e0 _ _ _
+      exact _root_.Formalism.FourierDecayAlt.P.PBH.psi_castM e0 _ _ _
     have key := hC P.k P.r (P.r - P.r) P.r Wp Wq e0 hρ (p.T.bs P.r) p.T.base (p.T.z'_lev P.r hr)
       (p.T.π'_lev P.r hr) (hT P.r hr).1 (hT P.r hr).2.1 (Formalism.FourierDecayAlt.P.PBM.tower_haarW' p.T hT P.r hr e0)
       (hT P.r hr).2.2 (hT 0 (Nat.zero_le _)).2.2 b b β Φ hbs.continuous hbc hbs.continuous hbc Z hZ
@@ -681,16 +664,6 @@ end alg
 end Formalism.FourierDecayAlt.P.CutEX.MkTopPf
 
 namespace Formalism.FourierDecayAlt.P.CutEX.MkTopPf
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
-
-theorem star_mul_self_psi {k n : ℕ} (z : Fin (2 * n + k + 1) → ℂ) (c : ℂ) (g : B.Mat k n) :
-    star (psi k n z c g) * psi k n z c g = 1 := by
-  have h1 := Formalism.FourierDecayAlt.P.LeftFubiniLemmas.norm_psi z c g
-  have h2 : star (psi k n z c g) * psi k n z c g = ((Complex.normSq (psi k n z c g) : ℝ) : ℂ) := by
-    rw [Complex.normSq_eq_conj_mul_self]; rfl
-  rw [h2, Complex.normSq_eq_norm_sq, h1]
-  simp
 
 end Formalism.FourierDecayAlt.P.CutEX.MkTopPf
 
@@ -764,7 +737,7 @@ theorem krI_pt (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + ρ
   simp only [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_assoc, e7, ContinuousLinearMap.comp_id,
     smul_smul]
   congr 1
-  have hB := star_mul_self_psi (liftVec k p ρ Bj.z') cStd (U.muP k p ρ (G.upper s.2.2))
+  have hB := _root_.Formalism.FourierDecayAlt.P.PBG.star_psi_mul (liftVec k p ρ Bj.z') cStd (U.muP k p ρ (G.upper s.2.2))
   rw [star_mul']
   push_cast
   linear_combination ((b a : ℂ) * (b' s.2.1 : ℂ) * (β (Matrix.of.symm (Matrix.of Z * G.upper s.2.2)) : ℂ) *

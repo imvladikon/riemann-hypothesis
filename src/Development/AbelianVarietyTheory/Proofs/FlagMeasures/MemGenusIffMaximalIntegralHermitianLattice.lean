@@ -189,9 +189,6 @@ section Local
 variable {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
   [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V]
 
-theorem hstar (r : 𝓞 K) : star (algebraMap (𝓞 K) K r) ∈ Set.range (algebraMap (𝓞 K) K) :=
-  LocWitt.star_int r
-
 theorem mem_loc {W : Type} [AddCommGroup W] [Module (𝓞 K) W] {p : HeightOneSpectrum (𝓞 K)}
     (hc : conjIdeal (K := K) p.asIdeal = p.asIdeal) (L : Submodule (𝓞 K) W) (v : W) :
     v ∈ loc (K := K) p.asIdeal L ↔ ∃ s, s ∉ p.asIdeal ∧ s • v ∈ L :=
@@ -222,8 +219,8 @@ theorem star_notMem {p : HeightOneSpectrum (𝓞 K)} (hc : conjIdeal (K := K) p.
 theorem star_le {p : HeightOneSpectrum (𝓞 K)} (hc : conjIdeal (K := K) p.asIdeal = p.asIdeal)
     (a : K) (ha : p.valuation K a ≤ 1) : p.valuation K (star a) ≤ 1 := by
   obtain ⟨n, d, e⟩ := p.exists_primeCompl_mul_eq_of_integer a ha
-  obtain ⟨n', en⟩ := hstar n
-  obtain ⟨d', ed⟩ := hstar (d : 𝓞 K)
+  obtain ⟨n', en⟩ := _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range n
+  obtain ⟨d', ed⟩ := _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range (d : 𝓞 K)
   have : p.valuation K (algebraMap (𝓞 K) K n') ≤ 1 := p.valuation_le_one n'
   rwa [en, ← e, star_mul', ← ed, map_mul, val_one (star_notMem hc ed d.2), mul_one] at this
 
@@ -261,10 +258,10 @@ theorem exists_norm (hK : IsCMUnram K) {p : HeightOneSpectrum (𝓞 K)}
     (hc : conjIdeal (K := K) p.asIdeal = p.asIdeal) {u : K} (hu : p.valuation K u ≤ 1)
     (us : star u = u) : ∃ c : K, p.valuation K c ≤ 1 ∧ p.valuation K (star c * c - u) < 1 := by
   have inj : Function.Injective (algebraMap (𝓞 K) K) := RingOfIntegers.coe_injective
-  let σ := locBasic_sigma inj hstar
-  have hσ : ∀ r, algebraMap (𝓞 K) K (σ r) = star (algebraMap (𝓞 K) K r) := locBasic_sigma_spec inj hstar
+  let σ := locBasic_sigma inj _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range
+  have hσ : ∀ r, algebraMap (𝓞 K) K (σ r) = star (algebraMap (𝓞 K) K r) := locBasic_sigma_spec inj _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range
   have hle : p.asIdeal ≤ p.asIdeal.comap σ := by
-    rw [← locBasic_conj_eq inj hstar, hc]
+    rw [← locBasic_conj_eq inj _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range, hc]
   have := p.isMaximal
   letI : Field (𝓞 K ⧸ p.asIdeal) := Ideal.Quotient.field _
   haveI : Finite (𝓞 K ⧸ p.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ p.ne_bot
@@ -300,8 +297,8 @@ theorem loc_int {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) {M : Submodul
     {P : Ideal (𝓞 K)} (hP : P.IsPrime) :
     dualAt h P (loc (K := K) P M) = loc (K := K) P (dual h M) ∧
       loc (K := K) P M ≤ loc (K := K) P (dual h M) := by
-  have a := ((locDual (𝓞 K) K V h hs hstar M hM.1.fg).1 P hP)
-  exact ⟨a.2.trans a.1.symm, locBasic_locS_mono _ (((dualBasic (𝓞 K) K V h hs hstar).2.2.2.1 M).1 hM.2)⟩
+  have a := ((locDual (𝓞 K) K V h hs _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range M hM.1.fg).1 P hP)
+  exact ⟨a.2.trans a.1.symm, locBasic_locS_mono _ (((dualBasic (𝓞 K) K V h hs _root_.Formalism.HermitianLatticesTheory.star_algebraMap_ringOfIntegers_mem_range).2.2.2.1 M).1 hM.2)⟩
 
 theorem exists_ext [FiniteDimensional K V] {h : V →ₗ⋆[K] V →ₗ[K] K} (hK : IsCMUnram K) (hs : h.IsSymm)
     (hn : h.Nondegenerate) {M : Submodule (𝓞 K) V} (hM : IsMaxLat h M) {p : HeightOneSpectrum (𝓞 K)}

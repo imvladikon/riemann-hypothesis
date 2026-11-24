@@ -100,9 +100,7 @@ theorem exists_orthogonal_projection_finite {W : Type} [AddCommGroup W] [Module 
   simp [T] at this
   simp [map_sub, this]
 
-theorem exists_orth_proj : ∀ {W : Type} [inst : AddCommGroup W] [inst_1 : Module ℂ W] (B : W →ₗ⋆[ℂ] W →ₗ[ℂ] ℂ), (∀ (v : W), ((B : W → W →ₗ[ℂ] ℂ) v : W → ℂ) v = (0 : ℂ) → v = (0 : W)) → ∀ (M : Submodule ℂ W) [FiniteDimensional ℂ ↥M] (v : W), ∃ m ∈ M, ∀ z ∈ M, ((B : W → W →ₗ[ℂ] ℂ) z : W → ℂ) (v - m) = (0 : ℂ) := by
-  intro W _ _ B hB M _ v
-  exact exists_orthogonal_projection_finite B hB M v
+alias exists_orth_proj := _root_.GlobalTheory.OrthogonalProjection.exists_orthogonal_projection_finite
 
 end GlobalTheory.OrthogonalProjection
 end -- clump:auto
@@ -118,12 +116,7 @@ namespace GlobalTheory.UnitarySemisimple
 
 variable {H W : Type} [Group H] [AddCommGroup W] [Module ℂ W]
 
-theorem exists_orth_proj (B : W →ₗ⋆[ℂ] W →ₗ[ℂ] ℂ) (hdef : ∀ v, B v v = 0 → v = 0)
-    (M : Submodule ℂ W) [FiniteDimensional ℂ M] (v : W) :
-    ∃ m ∈ M, ∀ z ∈ M, B z (v - m) = 0 := by
-  first
-  | (apply _root_.GlobalTheory.OrthogonalProjection.exists_orth_proj <;> assumption)
-  | (intros; exact _root_.GlobalTheory.OrthogonalProjection.exists_orth_proj ..)
+alias exists_orth_proj := _root_.GlobalTheory.OrthogonalProjection.exists_orthogonal_projection_finite
 
 theorem rho_inv_rho (ρ : Representation ℂ H W) (g : H) (u : W) : ρ g⁻¹ (ρ g u) = u := by
   rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]

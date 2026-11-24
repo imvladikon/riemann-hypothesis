@@ -83,6 +83,10 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Algebra.Order.Star.Rat
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ValueAtNormalForm
+import Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsUniquePartner
+import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemRangeCompIffOfIsClosedImmersion
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyIsLimitBaseChange
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.CanonGenIsGen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB
@@ -812,7 +816,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationTaylorPowerSeriesInjectiveLocalRing =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationOfVectorFieldLiftNearUnit =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationOfVectorFieldLiftNearUnit", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationOfVectorFieldLiftNearUnit", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply\nimport Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ValueAtNormalForm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -829,10 +833,6 @@ namespace GlobalTheory.Heat
 theorem scheme_constantSection_add {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (U : X.Opens) (a b : R) :
     constFn p U (a + b) = constFn p U a + constFn p U b := by
   simp [constFn, map_add (f := _)]
-
-theorem constFn_mul_on_open {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (U : X.Opens) (a b : R) :
-    constFn p U (a * b) = constFn p U a * constFn p U b := by
-  simp [constFn, map_mul]
 
 theorem gammaSpecIso_appLE_of_eq_id_apply {R : Type} [CommRing R] (f : Sp R ⟶ Sp R) (hf : f = 𝟙 _) (e : (⊤ : (Sp R).Opens) ≤ f ⁻¹ᵁ ⊤) (r : R) :
     (Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom ((f.appLE ⊤ ⊤ e).hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom r)) = r := by
@@ -871,7 +871,7 @@ theorem liftDer_isDerivation : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [Gr
   have hmul : ∀ a b, D (a * b) = a * D b + b * D a := by
     intro a b
     have := congrArg ev (hc (a * b))
-    rw [constFn_mul_on_open, hL.1.2.1 W le_rfl, hc, hc, map_add (f := _), map_mul, map_mul, hev, hev, hev, hev, hev] at this
+    rw [_root_.GlobalTheory.KeyPow.constFn_mul, hL.1.2.1 W le_rfl, hc, hc, map_add (f := _), map_mul, map_mul, hev, hev, hev, hev, hev] at this
     exact this.symm
   let L : R →ₗ[ℤ] R := (AddMonoidHom.mk' D hadd).toIntLinearMap
   exact ⟨Derivation.mk' L (fun a b => by simpa [L, smul_eq_mul] using hmul a b), fun r => rfl⟩
@@ -1061,7 +1061,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldApplyConstantEqZeroStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsCommuteOfCommGroupScheme =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsCommuteOfCommGroupScheme", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsCommuteOfCommGroupScheme", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply\nimport Development.AbelianVarietyTheory.Definitions.Degenerations.ExistsUniquePartner\nimport Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemRangeCompIffOfIsClosedImmersion\nimport Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyIsLimitBaseChange\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1129,8 +1129,6 @@ theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (ψ' : 
     spMap ψ ≫ spMap ψ' = spMap (ψ.comp ψ') := by
   simp only [spMap, ← Spec.map_comp]; rfl
 
-theorem spMap_id {A : Type} [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := Spec.map_id _
-
 theorem dual_pt {S : Type} [CommRing S] (x : Sp (DualNumber S)) :
     (spMap (fstH S)) ((spMap (algebraMap S (DualNumber S))) x) = x := by
   apply PrimeSpectrum.ext
@@ -1162,17 +1160,6 @@ theorem valR_eq_evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) 
 
 theorem top_le_spMap {A' : Type} [CommRing A'] (ψ : A →+* A') (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
     ⊤ ≤ (spMap ψ ≫ x) ⁻¹ᵁ U := fun y _ => h (Set.mem_univ ((spMap ψ) y))
-
-theorem valR_spMap_comp {A' : Type} [CommRing A'] (ψ : A →+* A') (x : Sp A ⟶ X) (U : X.Opens)
-    (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) : valR (spMap ψ ≫ x) U f = ψ (valR x U f) := by
-  have h' := top_le_spMap ψ x U h
-  rw [valR_eq_evHom _ U h', valR_eq_evHom x U h]
-  have e : (spMap ψ ≫ x).appLE U ⊤ h' = x.appLE U ⊤ h ≫ (spMap ψ).appTop :=
-    (Scheme.Hom.appLE_comp_appLE (spMap ψ) x U ⊤ ⊤ h le_rfl).symm
-  have n := Scheme.ΓSpecIso_naturality (CommRingCat.ofHom ψ)
-  change ((spMap ψ ≫ x).appLE U ⊤ h' ≫ (Scheme.ΓSpecIso (CommRingCat.of A')).hom).hom f =
-    (x.appLE U ⊤ h ≫ (Scheme.ΓSpecIso (CommRingCat.of A)).hom ≫ CommRingCat.ofHom ψ).hom f
-  rw [e, Category.assoc, n]
 
 theorem top_le_fromSpecStalk {x : X} {U : X.Opens} (hU : x ∈ U) : ⊤ ≤ X.fromSpecStalk x ⁻¹ᵁ U := fun w _ => by
   have : X.fromSpecStalk x w ∈ Set.range (X.fromSpecStalk x) := ⟨w, rfl⟩
@@ -1217,8 +1204,8 @@ theorem fst_tv (v : TanM (𝟙 (Sp R)) G) : spMap (fstH R) ≫ (tv v).left = η[
     simpa using hh
   have e2 := gen _ (fun x => by ext <;> simp [tm, TrivSqZeroExt.algebraMap_eq_inl]) h
   have h2 := congrArg (fun k => spMap (fstH R) ≫ k) e2
-  simp only [← spMap_comp, ← Category.assoc] at h2
-  simp only [spMap_comp, fst_comp_inc, spMap_id] at h2
+  simp only [← _root_.GlobalTheory.spMap_comp_ring, ← Category.assoc] at h2
+  simp only [_root_.GlobalTheory.spMap_comp_ring, fst_comp_inc, _root_.GlobalTheory.LN.Cmp.spMap_ringHom_id] at h2
   simpa using h2
 
 variable {S : Type} [CommRing S]
@@ -1242,22 +1229,22 @@ theorem isTr_trP (φ : R →+* S) (g : Sp S ⟶ G.left) (hg : g ≫ G.hom = spMa
 theorem translateTangent_comp_hom (φ : R →+* S) (g : Sp S ⟶ G.left) (hg : g ≫ G.hom = spMap φ) (v : TanM (𝟙 (Sp R)) G) :
     trP G φ g hg v ≫ G.hom = spMap ((inc S).comp φ) := by
   rw [trP, Over.w]
-  simp only [tEpsG, Over.mk_hom, hg, spMap_comp]
+  simp only [tEpsG, Over.mk_hom, hg, _root_.GlobalTheory.spMap_comp_ring]
 
 theorem fst_trP (φ : R →+* S) (g : Sp S ⟶ G.left) (hg : g ≫ G.hom = spMap φ) (v : TanM (𝟙 (Sp R)) G) :
     spMap (fstH S) ≫ trP G φ g hg v = g := by
   let E : Over.mk (g ≫ G.hom) ⟶ tEpsG (g ≫ G.hom) :=
     Over.homMk (spMap (fstH S)) (by
       show spMap (fstH S) ≫ spMap (inc S) ≫ g ≫ G.hom = g ≫ G.hom
-      rw [← Category.assoc, spMap_comp, fst_comp_inc, spMap_id]; exact Category.id_comp _)
+      rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, fst_comp_inc, _root_.GlobalTheory.LN.Cmp.spMap_ringHom_id]; exact Category.id_comp _)
   have e1 : E ≫ gW G g = Over.homMk g rfl := by
     ext
     show spMap (fstH S) ≫ spMap (inc S) ≫ g = g
-    rw [← Category.assoc, spMap_comp, fst_comp_inc, spMap_id]; exact Category.id_comp _
+    rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, fst_comp_inc, _root_.GlobalTheory.LN.Cmp.spMap_ringHom_id]; exact Category.id_comp _
   have e2 : E ≫ vW G φ g hg v = 1 := by
     ext
     simp only [E, vW, Over.comp_left, Over.homMk_left, one_left', Over.mk_hom]
-    rw [← Category.assoc, spMap_comp, fst_comp_dualMap, ← spMap_comp, Category.assoc, fst_tv, hg]
+    rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, fst_comp_dualMap, ← _root_.GlobalTheory.spMap_comp_ring, Category.assoc, fst_tv, hg]
   have := congrArg (fun k => k.left) (MonObj.comp_mul E (gW G g) (vW G φ g hg v))
   simpa only [e1, e2, _root_.mul_one, Over.comp_left, Over.homMk_left, E, trP] using this
 
@@ -1297,26 +1284,26 @@ theorem swap_trP (φ : R →+* S) (g : Sp S ⟶ G.left) (hg : g ≫ G.hom = spMa
     Over.homMk (spMap (swap S)) (by
       show spMap (swap S) ≫ spMap (inc (DualNumber S)) ≫ trP G φ g hg v' ≫ G.hom =
         spMap (inc (DualNumber S)) ≫ trP G φ g hg v ≫ G.hom
-      rw [hw, hu, spMap_comp, spMap_comp, swap_inc_inc_comp])
+      rw [hw, hu, _root_.GlobalTheory.spMap_comp_ring, _root_.GlobalTheory.spMap_comp_ring, swap_inc_inc_comp])
   have e1 : gW G (trP G φ g hg v') = P ≫ (gW G g * vW G φ g hg v') := Over.OverMorphism.ext rfl
   have e2 : gW G (trP G φ g hg v) = P' ≫ (gW G g * vW G φ g hg v) := Over.OverMorphism.ext rfl
   have hx : Q ≫ P ≫ gW G g = P' ≫ gW G g := by
     ext
     show spMap (swap S) ≫ spMap (inc (DualNumber S)) ≫ spMap (inc S) ≫ g =
       spMap (inc (DualNumber S)) ≫ spMap (inc S) ≫ g
-    simp only [← Category.assoc, spMap_comp]
+    simp only [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     rw [swap_inc_inc]
   have hb : Q ≫ P ≫ vW G φ g hg v' = vW G ((inc S).comp φ) (trP G φ g hg v) hu v' := by
     ext
     show spMap (swap S) ≫ spMap (inc (DualNumber S)) ≫ spMap (dualMap φ) ≫ (tv v').left =
       spMap (dualMap ((inc S).comp φ)) ≫ (tv v').left
-    simp only [← Category.assoc, spMap_comp]
+    simp only [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     rw [swap_inc_dualMap]
   have hc : Q ≫ vW G ((inc S).comp φ) (trP G φ g hg v') hw v = P' ≫ vW G φ g hg v := by
     ext
     show spMap (swap S) ≫ spMap (dualMap ((inc S).comp φ)) ≫ (tv v).left =
       spMap (inc (DualNumber S)) ≫ spMap (dualMap φ) ≫ (tv v).left
-    simp only [← Category.assoc, spMap_comp]
+    simp only [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     rw [swap_dualMap_inc]
   have key : gW G (trP G φ g hg v) * vW G ((inc S).comp φ) (trP G φ g hg v) hu v' =
       Q ≫ (gW G (trP G φ g hg v') * vW G ((inc S).comp φ) (trP G φ g hg v') hw v) := by
@@ -1340,7 +1327,7 @@ theorem GlobalTheory.InvFieldComm.invField_comm : ∀ (R : Type) [CommRing R] (G
     have A2 := hv.2 (DualNumber S) _ _ _ O f (translateTangent_comp_hom G φ g hg v') hw1 (isTr_trP G _ _ (translateTangent_comp_hom G φ g hg v') v)
     have B1 := hv.2 S φ g _ O (dd' O f) hg hO (isTr_trP G φ g hg v)
     have B2 := hv'.2 (DualNumber S) _ _ _ O f (translateTangent_comp_hom G φ g hg v) hu1 (isTr_trP G _ _ (translateTangent_comp_hom G φ g hg v) v')
-    rw [← B1, ← B2, swap_trP, valR_spMap_comp _ _ _ hw2, swap_snd_snd, A2, A1]
+    rw [← B1, ← B2, swap_trP, _root_.GlobalTheory.Points.valR_spMap_comp _ _ _ hw2, swap_snd_snd, A2, A1]
   have hsub : ∀ (S : Type) [CommRing S] (φ : R →+* S) (g : Sp S ⟶ G.left), g ≫ G.hom = spMap φ →
       ⊤ ≤ g ⁻¹ᵁ O → valR g O (dd O (dd' O f) - dd' O (dd O f)) = 0 := by
     intro S _ φ g hg hO

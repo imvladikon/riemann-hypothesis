@@ -450,7 +450,7 @@ theorem hasSum_evR_arc_natural : Out.Laws → Out.Laws2 → ∀ (E : Type) [Fiel
     (by rw [hy₁.1, ← hch.2.1, ← Category.assoc, hφ, hpt2])
   obtain ⟨T₁, h₁⟩ := _root_.GlobalTheory.ArcPoint.chart_coordinates_hasSum E H Dw l Xo c σ O β Y a χ W g ty Fu Ha p j φ hK hχ hβ hch.1 hch.2.2
     (by rw [← Category.assoc, hφ, hpt1])
-  obtain ⟨T₂, h₂⟩ := GlobalTheory.T.frame_matrix_hasSum_alt hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th z p j y₀ φ y₁ G s
+  obtain ⟨T₂, h₂⟩ := _root_.GlobalTheory.ArcLie.frame_matrix_hasSum hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th z p j y₀ φ y₁ G s
     hK hχ hβ hy hz hch hy₁ hGs
   obtain ⟨T₃, h₃⟩ := _root_.GlobalTheory.ArcQ.hasSum_generator_ratio hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th Θ p j y₀ φ y₁ G s
     hK hχ hβ hP hth hy hch hy₁ hGs

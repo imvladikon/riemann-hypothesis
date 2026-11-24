@@ -129,7 +129,7 @@ namespace GlobalTheory.TwLat
 theorem nrmL_dlt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A), ∀ u β : B.A, IsUnit (GlobalTheory.TwLat.gram e b β) → B.σ β = β * ((-1) ^ (m - 1) * u) → (nrmL m w (GlobalTheory.TwLat.dlt e b β)).val = GlobalTheory.TwLat.mulMat e b u := by
   intro E _ _ _ _ w hw K e hec _ _ B m b u β hG hβ
   let B' : GlobalTheory.UnitLemma.InvAlg K := { B with g := u }
-  have hGc0 := GlobalTheory.GramTwistNorm.gram_map_conj B' (w.adicCompletion E) e (cj w) hec m β hβ b
+  have hGc0 := _root_.GlobalTheory.ScalarSigmaBasis.main B' (w.adicCompletion E) e (cj w) hec m β hβ b
   set G := gram e b β with hGdef
   set P := mulMat e b u with hP
   set Φ := GlobalTheory.Tw.Phi m (w.adicCompletion E) with hΦ
@@ -579,12 +579,6 @@ theorem isReduced_of_adjoin {F A : Type} [Field F] [CommRing A] [Algebra F A] [M
   change aeval u (minpoly F u * g) = 0
   rw [map_mul, minpoly.aeval, zero_mul]
 
-theorem eq_zero_of_trace_mul {F A : Type} [Field F] [CharZero F] [CommRing A] [Algebra F A] [Module.Finite F A]
-    [IsReduced A] (x : A) (h : ∀ z, Algebra.trace F A (x * z) = 0) : x = 0 := by
-  first
-  | (rename_i h_2 h_3 h_4 h_5 h_6 h_7; revert F A h_2 h_3 h_4 h_5 h_6 h_7 x h; exact @_root_.GlobalTheory.TraceMulVanishing.trace_mul_eq_zero_imp)
-  | (intros; exact _root_.GlobalTheory.TraceMulVanishing.trace_mul_eq_zero_imp ..)
-
 theorem det_gram_ne_zero {K : GlobalTheory.UnitLemma.UQ} (B : GlobalTheory.UnitLemma.InvAlg K) [IsReduced B.A] {m : ℕ}
     (b : Module.Basis (Fin m) K.E B.A) (β : B.A) (hβ : IsUnit β) :
     (Matrix.of fun i j => B.herm β (b i) (b j)).det ≠ 0 := by
@@ -619,7 +613,7 @@ theorem det_gram_ne_zero {K : GlobalTheory.UnitLemma.UQ} (B : GlobalTheory.UnitL
     have := hj j
     simp only [GlobalTheory.UnitLemma.InvAlg.herm] at this
     rw [this, mul_zero]
-  have hβy : β * y = 0 := eq_zero_of_trace_mul (β * y) hall
+  have hβy : β * y = 0 := _root_.GlobalTheory.TraceMulVanishing.trace_mul_eq_zero_imp (β * y) hall
   have hy0 : y = 0 := by
     obtain ⟨u, rfl⟩ := hβ
     have := congrArg (fun t => ((u⁻¹ : B.Aˣ) : B.A) * t) hβy

@@ -497,9 +497,7 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.SW.IsoMain
 
-theorem actW_smul {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E)
-    {M n : ℕ} (J : Matrix (Fin M) (Fin M) E) (h : HA R σ J) (a : R ⊗[F] E) (X : Fin n → Fin M → R ⊗[F] E) :
-    actW R σ J h (a • X) = a • actW R σ J h X := funext fun i => Matrix.mulVec_smul _ a (X i)
+alias actW_smul := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.actW_smul
 
 
 
@@ -586,7 +584,7 @@ theorem integral_isotropic_lines_le_flow_sum : ∀ (F E : Type) [Field F] [Numbe
     let Q := Quotient (QuotientGroup.rightRel ((Γ ⊓ P).subgroupOf Γ))
     have hout : ∀ x : Γ, (x : HA (AF F) σ (hypJ J)) * (((Quotient.mk _ x : Q).out : Γ) : HA (AF F) σ (hypJ J))⁻¹ ∈ Γ ⊓ P :=
       fun x => (QuotientGroup.rightRel_apply (s := (Γ ⊓ P).subgroupOf Γ)).1 (Quotient.mk_out x)
-    obtain ⟨𝓕', h𝓕', hunf⟩ := GlobalTheory.CompanionTheory.Adelic.unfold_coset_sum_fundamentalDomain _ μ Γ (Γ ⊓ P) inf_le_left 𝓕 h𝓕 Q (fun q => (q.out : Γ)) (fun q => q.out.2)
+    obtain ⟨𝓕', h𝓕', hunf⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.unf _ μ Γ (Γ ⊓ P) inf_le_left 𝓕 h𝓕 Q (fun q => (q.out : Γ)) (fun q => q.out.2)
       fun x hx => ⟨Quotient.mk _ ⟨x, hx⟩, hout ⟨x, hx⟩, fun q hq =>
         (Quotient.out_eq q).symm.trans (Quotient.sound (QuotientGroup.rightRel_apply.2 hq))⟩
     set f : HA (AF F) σ (hypJ J) → ℝ≥0∞ := fun h => Φ (actW (AF F) σ _ h⁻¹ e₀) with hf
@@ -653,12 +651,6 @@ noncomputable section
 
 namespace GlobalTheory.CompanionTheory.SW.IsoCount
 
-theorem actW_smul {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] [Algebra F R] (σ : E →ₐ[F] E)
-    {M n : ℕ} (J : Matrix (Fin M) (Fin M) E) (h : HA R σ J) (a : R ⊗[F] E) (X : Fin n → Fin M → R ⊗[F] E) :
-    actW R σ J h (a • X) = a • actW R σ J h X := funext fun i => Matrix.mulVec_smul _ a (X i)
-
-
-
 theorem mean_isotropic_count_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 1 ≤ M → FinVol F E σ M J → ∀ τ : Multiplicative ℝ →* (AF F ⊗[F] E)ˣ, IsFlow τ → ∀ (μ : Measure (HA (AF F) σ (hypJ J))) (𝓕 : Set (HA (AF F) σ (hypJ J))), IsHaarH F E σ (M + 2) (hypJ J) μ → IsFDH F E σ (M + 2) (hypJ J) μ 𝓕 → ∀ Ω : Set (Fin 1 → Fin (M + 2) → AF F ⊗[F] E), IsCompact Ω → ∃ C : ℝ, ∀ r : ℝ, 0 < r → cntI σ _ μ 𝓕 {X : Fin 1 → Fin (M + 2) → E | X ≠ 0 ∧ gramE σ (hypJ J) X = 0} (fun Y => (Set.indicator Ω (fun _ => (1 : ℝ≥0∞))) (((τ (Multiplicative.ofAdd (-Real.log r)) : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) • Y)) ≤ ENNReal.ofReal (C * r ^ (2 * Module.finrank ℚ F * (M + 1))) := by
   intro F E _ _ _ _ _ σ hcm M J hJ hM hfin τ hτ μ 𝓕 hμ h𝓕 Ω hΩ
   obtain ⟨⟨_, _, _⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
@@ -707,7 +699,7 @@ theorem mean_isotropic_count_le : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     have hpi : Function.Injective p := fun X X' e => Subtype.ext (by rw [← hp X, e, hp X'])
     simp only [hΦ, ← ENNReal.tsum_prod]
     refine le_trans (le_of_eq (tsum_congr fun X => ?_)) (ENNReal.tsum_comp_le_tsum_of_injective hpi _)
-    rw [← actW_smul _ _ _ _ (inclR _ _), ← hsm, hp]
+    rw [← _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.actW_smul _ _ _ _ (inclR _ _), ← hsm, hp]
   have hm : Measurable Φ := Measurable.tsum fun l =>
     (measurable_const.indicator hΩ.measurableSet).comp ((continuous_const_smul _).const_smul t).measurable
   refine h1.trans ((hmain Φ hm (fun l y hl => ?_) (fun j => if (j : ℝ) + Real.log r < x₀ then 0 else

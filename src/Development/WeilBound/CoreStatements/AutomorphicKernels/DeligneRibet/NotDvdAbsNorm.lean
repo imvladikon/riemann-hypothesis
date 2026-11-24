@@ -62,6 +62,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentatives
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -77,7 +78,6 @@ import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SummationOperatorsPre
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Topology.UniformSpace.Uniformizable
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentatives
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.TypeStar
 
@@ -129,7 +129,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsNormModEqOfRayRelPowMod =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLargePrimeInRayClass =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLargePrimeInRayClass", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SmulCommClassGalIntegers\npublic import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormPrimeIffInertiaDegEqOneAndFiniteRamified\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.Imports\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.RayPrincipalIdeals\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedCoefficientFieldInComplex\nimport Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialSum\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLargePrimeInRayClass", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SmulCommClassGalIntegers\npublic import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormPrimeIffInertiaDegEqOneAndFiniteRamified\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.Imports\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.RayPrincipalIdeals\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedCoefficientFieldInComplex\nimport Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialSum\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentatives\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -139,11 +139,6 @@ open scoped nonZeroDivisors
 namespace GlobalTheory.CompanionTheory.DegOneRay
 
 variable {F : Type} [Field F] [NumberField F]
-
-theorem finite_realEmb : Finite (F →+* ℝ) :=
-  Finite.of_injective (fun σ : F →+* ℝ => (Complex.ofRealHom.comp σ : F →+* ℂ)) fun σ τ h => by
-    ext x
-    exact Complex.ofReal_injective (congrArg (fun f : F →+* ℂ => f x) h)
 
 theorem exists_totPos_inv {𝔣 : Ideal (𝓞 F)} (hf : 𝔣 ≠ ⊥) {u : 𝓞 F} (hu : IsCoprime (Ideal.span {u}) 𝔣) :
     ∃ d : 𝓞 F, d ≠ 0 ∧ d * u - 1 ∈ 𝔣 ∧ ∀ σ : F →+* ℝ, 0 < σ (d : F) := by
@@ -155,7 +150,7 @@ theorem exists_totPos_inv {𝔣 : Ideal (𝓞 F)} (hf : 𝔣 ≠ ⊥) {u : 𝓞 
   set N : ℕ := Ideal.absNorm 𝔣 with hN
   have hN0 : 0 < N := Nat.pos_of_ne_zero (by simpa [hN, Ideal.absNorm_eq_zero_iff] using hf)
   have hNm : ((N : ℕ) : 𝓞 F) ∈ 𝔣 := Ideal.absNorm_mem 𝔣
-  have : Finite (F →+* ℝ) := finite_realEmb
+  have : Finite (F →+* ℝ) := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.finite_realEmbeddings
   obtain ⟨b, hb⟩ := (Set.finite_range fun σ : F →+* ℝ => -σ (c : F)).bddAbove
   obtain ⟨M, hM⟩ := exists_nat_gt b
   have key : ∀ m : ℕ, M ≤ m → ((c + (m : 𝓞 F) * (N : 𝓞 F)) * u - 1 ∈ 𝔣 ∧
@@ -586,12 +581,12 @@ theorem abel_oneVar_uW (r l N : ℕ) (i : Fin r) (v : (Fin r → ℕ) → ℚ) (
     · exact Or.inl (by have := c.isLt; omega)
   · unfold OneVar.uW
     split_ifs with h
-    · exact OneVar.goodAt_smul _ ((@GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.OtherVar.otherVar_main r l i k _ hk).1 (OneVar.iterate_good_other hk hgk c)).2
+    · exact OneVar.goodAt_smul _ ((@_root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.OtherVar.good_support_other r l i k _ hk).1 (OneVar.iterate_good_other hk hgk c)).2
     · exact OneVar.goodAt_smul _ (OneVar.iterate_good_other hk hgk N)
   · intro m hm
     unfold OneVar.uW
     split_ifs with h
-    · simp [((@GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.OtherVar.otherVar_main r l i k _ hk).2 (OneVar.iterate_supp_other hk hsk c)).2 m hm]
+    · simp [((@_root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.OtherVar.good_support_other r l i k _ hk).2 (OneVar.iterate_supp_other hk hsk c)).2 m hm]
     · simp [OneVar.iterate_supp_other hk hsk N m hm]
   · rw [OneVar.tsum_iterate hl hg hb hs N, Fin.sum_univ_castSucc, Finset.sum_range]
     congr 1
@@ -959,7 +954,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayRelAntitoneModulusAndPowMod =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.WeightedSummability.WeightedSummable =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.WeightedSummability.WeightedSummable", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialSum\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.WeightedSummability.WeightedSummable", "h": "module\n\npublic import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet\npublic import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialSum\nimport Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassConeParametrization\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -979,14 +974,6 @@ private theorem rayRel_of_mul_left' {F : Type} [Field F] [NumberField F] {𝔣 �
   calc 𝔠 * (Ideal.span {a} * I) = Ideal.span {a} * (𝔠 * I) := by ring
     _ = Ideal.span {b} * (𝔠 * J) := heq
     _ = 𝔠 * (Ideal.span {b} * J) := by ring
-
-private theorem ne_zero_of_totPos' {F : Type} [Field F] [NumberField F] [IsTotallyReal F] {x : F}
-    (hx : TotPos F x) : x ≠ 0 := by
-  obtain ⟨w⟩ := (inferInstance : Nonempty (InfinitePlace F))
-  have h := hx (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w))
-  intro h0
-  rw [h0, map_zero] at h
-  exact lt_irrefl _ h
 
 theorem smoothed_of
     (hcv : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (𝔣 𝔞 𝔟 𝔠 : Ideal (𝓞 F)) (J : Type) [Fintype J]
@@ -1015,7 +1002,7 @@ theorem smoothed_of
   have hdat := fun c : S => hcp F 𝔣 h𝔣 c.1 (hSc c.1 c.2)
   choose 𝔟 J hJ r y v hP hb using hdat
   have vne : ∀ c j i, v c j i ≠ 0 := fun c j i h =>
-    ne_zero_of_totPos' ((hP c).2.2.1 j i).2 (by simp [h])
+    _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.TotPos.ne_zero ((hP c).2.2.1 j i).2 (by simp [h])
   let W : Finset (𝓞 F) := Finset.univ.biUnion
     (fun c : S => (Finset.univ : Finset (Σ j : J c, Fin (r c j))).image (fun p => v c p.1 p.2))
   have memW : ∀ c j i, v c j i ∈ W := fun c j i =>
@@ -1180,7 +1167,7 @@ theorem smoothed : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (�
         (∀ x ∈ W, x ∉ 𝔠) → ∃ τ : Equiv.Perm S, (∀ c, RayRel F 𝔣 (𝔠 * (τ c).1) c.1) ∧
           ∀ k : ℕ, 1 ≤ k → ∀ c, ∃ q : ℚ,
             ((Ideal.absNorm 𝔠 : ℕ) : ℂ) ^ k * Z (τ c) (1 - (k : ℂ)) - Z c (1 - (k : ℂ)) = (q : ℂ) ∧
-            ∀ l : ℕ, l.Prime → l ≠ Ideal.absNorm 𝔠 → 𝔣 ≤ Ideal.span {(l : 𝓞 F)} → 0 ≤ padicValRat l q := PositivityTheory.PfDR.h_smooth.smoothed_of classValueZ classParamCop not_dvd_absNorm
+            ∀ l : ℕ, l.Prime → l ≠ Ideal.absNorm 𝔠 → 𝔣 ≤ Ideal.span {(l : 𝓞 F)} → 0 ≤ padicValRat l q := PositivityTheory.PfDR.h_smooth.smoothed_of _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Integrality.classTwist_value_int _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.exists_classParam_sup_eq_top not_dvd_absNorm
 
 theorem val_add_nonneg {l : ℕ} [Fact l.Prime] {x y : ℚ} (hx : 0 ≤ padicValRat l x)
     (hy : 0 ≤ padicValRat l y) : 0 ≤ padicValRat l (x + y) := by
@@ -1268,7 +1255,7 @@ theorem deligneRibet : GlobalTheory.Published.DeligneRibet := by
   have h𝔣' : powMod F l m ≠ ⊥ := powMod_ne_bot hl.ne_zero m
   obtain ⟨W, hW0, hW⟩ := smoothed F (powMod F l n) h𝔣 S hS hd hc Z hZ1
   have h𝔠m : CoprimeTo F (powMod F l m) 𝔠 := (coprimeTo_powMod_iff hm1).2 ((coprimeTo_powMod_iff hn).1 h𝔠)
-  obtain ⟨𝔠', hpr, hNp, hB, h𝔠'm, hrel, hav⟩ := deg1Ray F (powMod F l m) 𝔠 h𝔣' h𝔠m W l hW0
+  obtain ⟨𝔠', hpr, hNp, hB, h𝔠'm, hrel, hav⟩ := _root_.GlobalTheory.CompanionTheory.DegOneRay.exists_degOne_prime_in_rayClass F (powMod F l m) 𝔠 h𝔣' h𝔠m W l hW0
   have h𝔠'n : CoprimeTo F (powMod F l n) 𝔠' := (coprimeTo_powMod_iff hn).2 ((coprimeTo_powMod_iff hm1).1 h𝔠'm)
   obtain ⟨τ, hτ, hq⟩ := hW 𝔠' hpr hNp h𝔠'n.2 hav
   have hlN : l ≠ Ideal.absNorm 𝔠' := hB.ne

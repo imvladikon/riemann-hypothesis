@@ -100,39 +100,17 @@ section Level0
 
 variable {X : Scheme.{0}} {H : LB X}
 
-theorem exists_chart_of_mem_nonzeroLocus (s : LB.Sec H) {x : X} (hx : x ∈ nonzeroLocus s) :
-    ∃ k, x ∈ H.U k := by
-  obtain ⟨l, hl⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-  exact ⟨l, X.basicOpen_le _ hl⟩
-
-theorem mem_nonzeroLocus_iff_basicOpen (s : LB.Sec H) (k : H.ι) {x : X} (hk : x ∈ H.U k) :
-    x ∈ nonzeroLocus s ↔ x ∈ X.basicOpen (s.f k) := by
-  refine ⟨fun hx => ?_, fun hx => TopologicalSpace.Opens.mem_iSup.2 ⟨k, hx⟩⟩
-  obtain ⟨l, hl⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
-  have e := congrArg X.basicOpen (s.compat k l)
-  rw [Scheme.basicOpen_mul, X.basicOpen_of_isUnit (H.g k l).isUnit] at e
-  erw [Scheme.basicOpen_res, Scheme.basicOpen_res] at e
-  have hx' : x ∈ H.U k ⊓ H.U l := ⟨hk, X.basicOpen_le _ hl⟩
-  exact (e.ge ⟨hx', hx', hl⟩).2
-
-theorem isUnit_rs (s : LB.Sec H) (k : H.ι) {O : X.Opens} (hk : O ≤ H.U k)
-    (h : O ≤ nonzeroLocus s) : IsUnit (rs X hk (s.f k)) := by
-  have hb : O ≤ X.basicOpen (s.f k) := fun x hx => (mem_nonzeroLocus_iff_basicOpen s k (hk hx)).1 (h hx)
-  have hu : IsUnit (rs X (X.basicOpen_le (s.f k)) (s.f k)) :=
-    X.toRingedSpace.isUnit_res_basicOpen (s.f k)
-  simpa only [rs_rs] using hu.map (rs X hb)
-
 theorem ratio_self (s : LB.Sec H) {V : X.Opens} (h : V ≤ nonzeroLocus s) (r : Γ(X, V))
     (hr : ∀ k, rs X (inf_le_right : V ⊓ H.U k ≤ H.U k) (s.f k) =
       rs X (inf_le_left : V ⊓ H.U k ≤ V) r * rs X (inf_le_right : V ⊓ H.U k ≤ H.U k) (s.f k)) :
     r = 1 := by
   refine X.sheaf.eq_of_locally_eq' (fun k : H.ι => V ⊓ H.U k) V (fun k => homOfLE inf_le_left)
     (fun x hx => ?_) _ _ fun k => ?_
-  · obtain ⟨l, hl⟩ := exists_chart_of_mem_nonzeroLocus s (h hx)
+  · obtain ⟨l, hl⟩ := _root_.GlobalTheory.AmpleSpan.exists_chart_of_mem s (h hx)
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨l, hx, hl⟩
   · change rs X inf_le_left r = rs X inf_le_left 1
     rw [map_one]
-    exact (isUnit_rs s k inf_le_right (inf_le_left.trans h)).mul_right_cancel
+    exact (_root_.GlobalTheory.AbLaw.SecOn.isUnit_rs_of_le_nonzeroLocus s k inf_le_right (inf_le_left.trans h)).mul_right_cancel
       ((hr k).symm.trans (_root_.one_mul _).symm)
 
 variable {n : ℕ} (s : Fin (n + 1) → LB.Sec H) (r : ∀ i, Fin (n + 1) → Γ(X, nonzeroLocus (s i)))
@@ -148,21 +126,21 @@ theorem basicOpen_ratio (i j : Fin (n + 1)) :
       (nonzeroLocus (s i) ⊓ H.U k) ⊓ X.basicOpen (r i j) := by
     intro k
     have e := congrArg X.basicOpen (hr i j k)
-    rw [Scheme.basicOpen_mul, X.basicOpen_of_isUnit (isUnit_rs (s i) k inf_le_right inf_le_left)] at e
+    rw [Scheme.basicOpen_mul, X.basicOpen_of_isUnit (_root_.GlobalTheory.AbLaw.SecOn.isUnit_rs_of_le_nonzeroLocus (s i) k inf_le_right inf_le_left)] at e
     erw [Scheme.basicOpen_res, Scheme.basicOpen_res] at e
     rw [e, inf_assoc, inf_comm (X.basicOpen (r i j)), ← inf_assoc, inf_idem]
   ext x
   constructor
   · intro hx
     have hxi : x ∈ nonzeroLocus (s i) := X.basicOpen_le _ hx
-    obtain ⟨k, hk⟩ := exists_chart_of_mem_nonzeroLocus (s i) hxi
+    obtain ⟨k, hk⟩ := _root_.GlobalTheory.AmpleSpan.exists_chart_of_mem (s i) hxi
     have hm : x ∈ (nonzeroLocus (s i) ⊓ H.U k) ⊓ X.basicOpen (r i j) := ⟨⟨hxi, hk⟩, hx⟩
     rw [← key k] at hm
     exact ⟨hxi, TopologicalSpace.Opens.mem_iSup.2 ⟨k, hm.2⟩⟩
   · rintro ⟨hxi, hxj⟩
-    obtain ⟨k, hk⟩ := exists_chart_of_mem_nonzeroLocus (s i) hxi
+    obtain ⟨k, hk⟩ := _root_.GlobalTheory.AmpleSpan.exists_chart_of_mem (s i) hxi
     have hm : x ∈ (nonzeroLocus (s i) ⊓ H.U k) ⊓ X.basicOpen ((s j).f k) :=
-      ⟨⟨hxi, hk⟩, (mem_nonzeroLocus_iff_basicOpen (s j) k hk).1 hxj⟩
+      ⟨⟨hxi, hk⟩, (_root_.GlobalTheory.Cartier.mem_nonzeroLocus_iff (s j) k hk).1 hxj⟩
     rw [key k] at hm
     exact hm.2
 
@@ -175,7 +153,7 @@ theorem ratio_cocycle (i j l : Fin (n + 1)) :
   refine X.sheaf.eq_of_locally_eq' (fun k : H.ι => (nonzeroLocus (s i) ⊓ nonzeroLocus (s j)) ⊓ H.U k)
     (nonzeroLocus (s i) ⊓ nonzeroLocus (s j)) (fun k => homOfLE inf_le_left) (fun x hx => ?_) _ _
     fun k => ?_
-  · obtain ⟨l', hl⟩ := exists_chart_of_mem_nonzeroLocus (s i) hx.1
+  · obtain ⟨l', hl⟩ := _root_.GlobalTheory.AmpleSpan.exists_chart_of_mem (s i) hx.1
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨l', hx, hl⟩
   · change rs X inf_le_left _ = rs X inf_le_left _
     have hi : (nonzeroLocus (s i) ⊓ nonzeroLocus (s j)) ⊓ H.U k ≤ nonzeroLocus (s i) ⊓ H.U k :=
@@ -186,7 +164,7 @@ theorem ratio_cocycle (i j l : Fin (n + 1)) :
     have e2 := congrArg (rs X hi) (hr i j k)
     have e3 := congrArg (rs X hj) (hr j l k)
     simp only [map_mul, rs_rs] at e1 e2 e3 ⊢
-    have hu := isUnit_rs (s i) k (inf_le_right : (nonzeroLocus (s i) ⊓ nonzeroLocus (s j)) ⊓ H.U k ≤ H.U k)
+    have hu := _root_.GlobalTheory.AbLaw.SecOn.isUnit_rs_of_le_nonzeroLocus (s i) k (inf_le_right : (nonzeroLocus (s i) ⊓ nonzeroLocus (s j)) ⊓ H.U k ≤ H.U k)
       (inf_le_left.trans inf_le_left)
     refine hu.mul_right_cancel ?_
     rw [← e1, e3, e2]
@@ -339,14 +317,6 @@ namespace GlobalTheory.FormalAlg.JFrac
 
 open MvPolynomial
 
-theorem exists_rs_eq_pow_mul {X : Scheme} {U V : X.Opens} (hU : IsAffineOpen U) (f : Γ(X, U))
-    (hV : X.basicOpen f = V) (h : V ≤ U) (b : Γ(X, V)) :
-    ∃ (M : ℕ) (a : Γ(X, U)), rs X h a = rs X h f ^ M * b := by
-  subst hV
-  obtain ⟨M, a, ha⟩ :=
-    exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated X U hU.isCompact hU.isQuasiSeparated f b
-  exact ⟨M, a, ha⟩
-
 theorem exists_form : ∀ (R : Type) [CommRing R] (I : Ideal R), ∀ (Y : ∀ e : ℕ, Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1))))) (β : ∀ e, (Y e).left ⟶ (Y (e + 1)).left), (∀ e, IsPullback (β e) (Y e).hom (Y (e + 1)).hom (thickTrans R I e)) → ∀ (n : ℕ) (C : Charts I Y β n), ∀ (e : ℕ) (i j : Fin (n + 1)) (c : Γ((Y e).left, C.D e i ⊓ C.D e j)), c ∈ towerIdeal Y e (I ^ e) _ → ∃ N₀ : ℕ, ∀ N, N₀ ≤ N → ∀ k : ℕ, ∃ F : MvPolynomial (Fin (n + 1)) R, F.IsHomogeneous (k + 2 * N) ∧ (∀ m, AddMonoidAlgebra.coeff F m ∈ I ^ e) ∧ rs (Y e).left (inf_le_left : C.D e i ⊓ C.D e j ≤ C.D e i) (C.ev e i F) = rs (Y e).left (inf_le_left : C.D e i ⊓ C.D e j ≤ C.D e i) (C.ρ e i j) ^ N * c := by
   intro R _ I Y β hP n C e i j c hc
   obtain ⟨hbasic, -, -⟩ := _root_.GlobalTheory.FormalAlg.LiftRatios.lifted_ratios_mod R I Y β hP n C
@@ -366,7 +336,7 @@ theorem exists_form : ∀ (R : Type) [CommRing R] (I : Ideal R), ∀ (Y : ∀ e 
       zero_mem' := ⟨0, 0, J.zero_mem, by simp⟩
       smul_mem' := by
         rintro b a ⟨N₁, G, hG, h1⟩
-        obtain ⟨M, a', ha'⟩ := exists_rs_eq_pow_mul (C.aff e i) (C.ρ e i j) (hbasic e i j) hVU b
+        obtain ⟨M, a', ha'⟩ := _root_.GlobalTheory.AbLaw.TwExtend.fun_extend (C.aff e i) (C.ρ e i j) (hbasic e i j) hVU b
         obtain ⟨H, rfl⟩ := hsurj e i a'
         refine ⟨M + N₁, H * G, J.mul_mem_left _ hG, ?_⟩
         simp only [map_mul, ha', h1, smul_eq_mul]
@@ -431,11 +401,7 @@ set_option autoImplicit false
 
 namespace GlobalTheory.FormalAlg.TripleKill
 
-theorem rs_rs {X : Scheme} {U V W : X.Opens} (h1 : V ≤ U) (h2 : W ≤ V) (x : Γ(X, U)) :
-    rs X h2 (rs X h1 x) = rs X (h2.trans h1) x := by
-  simp only [rs]
-  rw [← CommRingCat.comp_apply, ← Functor.map_comp]
-  rfl
+alias rs_rs := _root_.GlobalTheory.AbLaw.rs_rs
 
 theorem ev_triple_kill : ∀ (R : Type) [CommRing R] (I : Ideal R), ∀ (Y : ∀ e : ℕ, Over (Spec (CommRingCat.of (R ⧸ I ^ (e + 1))))) (β : ∀ e, (Y e).left ⟶ (Y (e + 1)).left), (∀ e, IsPullback (β e) (Y e).hom (Y (e + 1)).hom (thickTrans R I e)) → ∀ (n : ℕ) (C : Charts I Y β n), ∀ (e d : ℕ) (F : MvPolynomial (Fin (n + 1)) R), F.IsHomogeneous d → (∀ m, AddMonoidAlgebra.coeff F m ∈ I ^ e) → ∀ i j l, rs (Y e).left (inf_le_left.trans inf_le_left : C.D e i ⊓ C.D e j ⊓ C.D e l ≤ C.D e i) (C.ev e i F) = 0 → ∃ L : ℕ, ∀ m, C.ev e m ((MvPolynomial.X i * MvPolynomial.X j * MvPolynomial.X l) ^ L * F) = 0 := by
   intro R _ I Y β hpb n C e d F hF hI i j l h0
@@ -1464,7 +1430,7 @@ theorem GlobalTheory.FormalAlg.exists_chart_cocycle_of_pull : ∀ (R : Type) [Co
     | zero => rw [hγ0]; infer_instance
     | succ e ih =>
       rw [← hγs e]
-      have := MorphismProperty.of_isPullback (P := @Surjective) (hβ e).flip (GlobalTheory.GenSystem.surjective_thickTrans R I e)
+      have := MorphismProperty.of_isPullback (P := @Surjective) (hβ e).flip (_root_.GlobalTheory.LBAlg.surjective_thickTrans R I e)
       infer_instance
   have hpre := fun i => _root_.GlobalTheory.FormalAlg.Charts.tower_preimage_germ R I Y β n C γ hγ0 hγs e i
   have hu := fun i => _root_.GlobalTheory.Div.FramePull.frame_pull _ _ (γ e) H₀ (s₀ i) k L hL hH₀ w hw (C.D e i) ((hpre i).1.trans (hD i))
@@ -1552,9 +1518,7 @@ theorem map_cst_rs {X : Scheme.{0}} (f : X ⟶ Spec (CommRingCat.of R)) (J : Ide
   have e : (rs X h).comp (cst f U) = cst f V := RingHom.ext fun r => rs_cst f h r
   rwa [e] at h'
 
-theorem gs_sub' {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) (a b : Γ(X, U)) :
-    gs f y U (a - b) = gs f y U a - gs f y U b := by
-  simp only [gs_eq f y U h, map_sub]
+alias gs_sub' := _root_.GlobalTheory.LBGerm.gs_sub
 
 theorem gs_zero' {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
   unfold gs

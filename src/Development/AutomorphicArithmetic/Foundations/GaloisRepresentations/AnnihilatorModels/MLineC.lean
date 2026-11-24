@@ -60,8 +60,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped NumberField CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_finiteFlat_torsion_harrisTaylor_abelian : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp R) (o : GlobalTheory.UPel.HT.Obj b N s) (w : Ideal (𝓞 D.F)), w ≠ ⊥ → ∃ (K : Over S) (_ : GrpObj K) (i : K ⟶ o.A), IsMonHom i ∧ Mono i ∧ GlobalTheory.IwLevel.IsIsogDeg (toUnit K) ((Ideal.absNorm w ^ D.m) ^ D.n) ∧ ∀ (T : Over S) (x : T ⟶ o.A), GlobalTheory.IwLevel.InSub i x ↔ GlobalTheory.IwLevel.KilledBy (GlobalTheory.IwLevel.htAct o) (w.map (algebraMap (𝓞 D.F) D.O)) x := by
-  first | (exact @GlobalTheory.HTTors.htTorsion)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteFlatTorsionHarrisTaylorAbelianStatement =====
@@ -207,7 +205,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.lineC_of :
       KilledBy M.univ w g → KilledBy M.univ w (e ≫ g) := by
     intro T T' e g hg a ha
     rw [Category.assoc, hg a ha, MonObj.comp_one]
-  obtain ⟨K, _, i, _, _, hisog, hsub⟩ := GlobalTheory.T.exists_finiteFlat_torsion_harrisTaylor_abelian p D O b N M.X M.s M.univ w hw
+  obtain ⟨K, _, i, _, _, hisog, hsub⟩ := _root_.GlobalTheory.HTTors.htTorsion p D O b N M.X M.s M.univ w hw
   have hP : ∀ g, KilledBy M.univ w g ↔ ∃ h, red h = g := by
     intro g
     constructor

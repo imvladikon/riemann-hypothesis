@@ -170,8 +170,8 @@ private theorem mv_core {I J K : Cx R} (μ : Pair I J K) {U V E : Spc} (f : U �
       μ.IsAW rfl γ.1 (pbz (pullback.fst f g ≫ f) η).1 γ'.1 ∧ μ.IsAW hk ζ.1 η.1 ζ'.1 ∧
       pb (pullback.fst f g) α' - pb (pullback.snd f g) β' = γ'.1 ∧
       δ (n + m) (n + m + 1) α' = pb f ζ'.1 ∧ δ (n + m) (n + m + 1) β' = pb g ζ'.1 := by
-  obtain ⟨γ', hγ'⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ rfl).1 γ (pbz (pullback.fst f g ≫ f) η)
-  obtain ⟨ζ', hζ'⟩ := (GlobalTheory.T.cup_eq_class_of_isAW R μ hk).1 ζ η
+  obtain ⟨γ', hγ'⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ rfl).1 γ (pbz (pullback.fst f g ≫ f) η)
+  obtain ⟨ζ', hζ'⟩ := (_root_.GlobalTheory.EtC.Pair.cup_spec_full R μ hk).1 ζ η
   obtain ⟨α', hα', -⟩ := (_root_.GlobalTheory.EtC.isAW_existsUnique_biadditive R μ rfl).1 α (pbz f η).1
   obtain ⟨β', hβ', -⟩ := (_root_.GlobalTheory.EtC.isAW_existsUnique_biadditive R μ rfl).1 β (pbz g η).1
   refine ⟨γ', ζ', α', β', hγ', hζ', ?_, aw_delta μ f hk hα hα' hζ', aw_delta μ g hk hβ hβ' hζ'⟩
@@ -185,7 +185,7 @@ private theorem mv_core {I J K : Cx R} (μ : Pair I J K) {U V E : Spc} (f : U �
   have a3 := (_root_.GlobalTheory.EtC.isAW_existsUnique_biadditive R μ rfl).2.1 _ _ _ _ _ hγ' a2
   have e3 : γ.1 + pb (pullback.snd f g) β = pb (pullback.fst f g) α := by rw [← hγ, sub_add_cancel]
   rw [e3] at a3
-  have e4 := aw_unique μ rfl a1 a3
+  have e4 := _root_.GlobalTheory.EtC.CupSpec.isAW_unique μ rfl a1 a3
   rw [e4, add_sub_cancel_right]
 
 private theorem cast_cup (q : ℕ) {E : Spc} {n m k i j : ℤ} (hk : n + m = k) (a : Ht q E n i) (b : Ht q E m j) :
@@ -206,9 +206,9 @@ theorem UpperTheory.mayerVietorisConnecting_cup_pullback :
   have hk : n + 1 + m = n + m + 1 := by ring
   obtain ⟨γ', ζ', α', β', h1, h2, h3, h4, h5⟩ := mv_core (twPair q i j) f g γ ζ α β η hγ hα hβ hk
   refine ⟨γ', ζ', α', β', ?_, ?_, h3, h4, h5⟩
-  · exact ((GlobalTheory.T.cup_eq_class_of_isAW _ (twPair q i j) rfl).2 γ _ γ' h1).symm
+  · exact ((_root_.GlobalTheory.EtC.Pair.cup_spec_full _ (twPair q i j) rfl).2 γ _ γ' h1).symm
   · rw [cast_cup q hk]
-    exact ((GlobalTheory.T.cup_eq_class_of_isAW _ (twPair q i j) hk).2 ζ η ζ' h2).symm
+    exact ((_root_.GlobalTheory.EtC.Pair.cup_spec_full _ (twPair q i j) hk).2 ζ η ζ' h2).symm
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.CommutativeAlgebra.MayerVietorisConnectingCupPullback =====

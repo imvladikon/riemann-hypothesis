@@ -74,8 +74,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.invariantVectorField_constFn_eq_zero : ∀ {R : Type} [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (v : TanM (𝟙 (Sp R)) G) (dd : Fld G.left), IsInv G v dd → ∀ (O : G.left.Opens) (r : R), dd O (constFn G.hom O r) = 0 := by
-  first | exact @GlobalTheory.Heat.IsInv.apply_constFn
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldConstFnEqZeroStatement =====
@@ -500,9 +498,7 @@ namespace GlobalTheory.HeatGlue
 
 open GlobalTheory.KS
 
-theorem resG_constFn {R : Type} [CommRing R] {Z : Scheme.{0}} (p : Z ⟶ Sp R) {W W' : Z.Opens} (h : W' ≤ W) (r : R) :
-    resG Z h (constFn p W r) = constFn p W' r := by
-  rw [← rsT_of_le h, rsT_constFn p h]
+alias resG_constFn := _root_.GlobalTheory.LocDerExt.res_const
 
 theorem exists_basic_heat : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (Dd : DegData R (maximalIdeal R)) (O : Type) [CommRing O] [StarRing O] [Module O Dd.toPre.X] (oa : Dd.toPre.OAct O) (Y : Ray oa) (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (v a) (dd a)) → ∀ (D : Derivation ℤ R R) (Θ : Matrix (Fin n) (Fin n) R) (J : Type)
     (V : J → Dd.toPre.P.A.left.Opens) (j : J → Dd.toPre.P.L.ι) (d : J → Fld Y.H.left),
@@ -645,7 +641,7 @@ theorem exists_basic_heat : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
       resG_constFn]
   have hd'C : ∀ i (W : Y.H.left.Opens), W ≤ Y.q.left ⁻¹ᵁ V i → ∀ r, d' i W (constFn Y.H.hom W r) = constFn Y.H.hom W (D r) := by
     intro i W hW r
-    simp only [hd', (hlift i).2 W hW r, GlobalTheory.T.invariantVectorField_constFn_eq_zero Y.H (v _) (dd _) (hinv _) W r, mul_zero, Finset.sum_const_zero,
+    simp only [hd', (hlift i).2 W hW r, _root_.GlobalTheory.Heat.IsInv.apply_constFn Y.H (v _) (dd _) (hinv _) W r, mul_zero, Finset.sum_const_zero,
       sub_zero]
   have hd'K : ∀ i i' (W : Y.H.left.Opens), W ≤ Y.q.left ⁻¹ᵁ V i ⊓ Y.q.left ⁻¹ᵁ V i' → ∀ f, d' i W f - d' i' W f =
       ∑ a, ∑ b, constFn Y.H.hom W (Θ a b) * dlg Y.H Y.q.left Dd.toPre.P.L (dd b) (j i) (j i') W * dd a W f := by

@@ -116,6 +116,7 @@ import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Heckecomm
 import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.NumberTheory.Padics.ProperSpace
@@ -472,9 +473,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem UpperTheory.Gal.Spc.phiEx :
-    UpperTheory.Gal.Spc.PhiEx :=
-  UpperTheory.Gal.W2.Seed.phiEx_holds
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.PhiEx =====
@@ -929,7 +927,7 @@ private theorem th_mem {E : Type} [Field E] [NumberField E] [IsCMField E] {n p :
 theorem eigEx : EigEx := by
   intro E _ _ _ A n p _ S F x U w₀ Up V hn hSc hGen hOff hq r W hAux N hr hStab L hw Ty hTy
   refine ⟨(GlobalTheory.CuspRep.invT n E).prodMap invMonoidHom, fun y => ⟨rfl, rfl⟩, fun J g θ hg => ?_⟩
-  obtain ⟨φ, hφ0, hφT, hφj, hφe⟩ := phiEx E A n p S F x U w₀ Up V hn hSc hGen hOff hq r W hAux N hr hStab L hw Ty hTy
+  obtain ⟨φ, hφ0, hφT, hφj, hφe⟩ := _root_.UpperTheory.Gal.W2.Seed.phiEx_holds E A n p S F x U w₀ Up V hn hSc hGen hOff hq r W hAux N hr hStab L hw Ty hTy
   have hkey : ∀ h, V.Φ (th (F.tr.sec h)) = φ h := fun h => by
     have := hφj (F.tr.sec h) fun w hw => by rw [F.tr.sec_p h w hw]; exact one_mem _
     rw [frame_th, F.j_tr, F.tr.j_sec] at this
@@ -938,7 +936,7 @@ theorem eigEx : EigEx := by
   have hCen : Ty.Cen 1 := ⟨fun g => by simp, map_one _⟩
   refine pHasEigOf (pStdForm pMuStar) pPInt (pPPart pJEq) pExtP E A n p S F.tr _ ((CertificateRingHomMap.xi V.W V.jz).comp _) (fun g => V.Φ (th g))
     (fun γ g => ?_) (fun k h1 h2 g => ?_) ?_ Ty.K₀ Ty.cms (fun k hk h => ?_) J (fun j => (g j).fn) θ (Ty.tf 1)
-    (fun j => (memFn E A n p S F x U w₀ Up V hn hSc hGen hOff hq r W hAux N hr hStab L hw Ty hTy (g j) (θ j) (hg j)).1)
+    (fun j => (_root_.UpperTheory.Gal.W2.Seed.memFn_holds E A n p S F x U w₀ Up V hn hSc hGen hOff hq r W hAux N hr hStab L hw Ty hTy (g j) (θ j) (hg j)).1)
     (pTfAdm _ _ Ty 1 (map_one _)).1.1 ?_ (fun j => ?_)
   · show V.Φ (th (rat γ * g)) = _
     rw [map_mul, th_rat, V.form.left]
@@ -1165,7 +1163,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulCen =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.MemComm =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.MemComm", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.ExistsIdempotentHeckeOperatorWithRegularSupportAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CLocEqOneOfNotOverPair\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOrEqOfUnderMaximalRealSubfieldEqCMField\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPoints\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.MemFn\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.TyFact\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PAvgK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PConvRing\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PDosetCosets\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PDosetIff\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PSphComm\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfAct\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfAdm\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfCen\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfComm\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfIdem\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfLoc\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulCen\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulL\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulR\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.MemComm", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.ExistsIdempotentHeckeOperatorWithRegularSupportAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CLocEqOneOfNotOverPair\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOrEqOfUnderMaximalRealSubfieldEqCMField\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPoints\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.MemFn\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ScalarCommutation.TyFact\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PAvgK\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PConvRing\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PDosetCosets\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PDosetIff\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PSphComm\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfAct\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfAdm\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfCen\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfComm\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfIdem\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfLoc\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulCen\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulL\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PTfMulR\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1214,13 +1212,6 @@ private theorem tf_of_mem {X M : Type} [Group X] [Group M] (T : TyLev X M) {h : 
   funext g
   simp only [TyLev.tf, dosetInd, e]
 
-private theorem nat_not_mem {R : Type} [CommRing R] {I : Ideal R} (hI : I ≠ ⊤) {a b : ℕ} (hab : a.Coprime b)
-    (ha : (a : R) ∈ I) : (b : R) ∉ I := by
-  intro hb
-  obtain ⟨u, v, huv⟩ := Nat.isCoprime_iff_coprime.2 hab
-  have h : (u : R) * a + v * b = 1 := by exact_mod_cast congrArg (Int.cast : ℤ → R) huv
-  exact hI ((Ideal.eq_top_iff_one I).2 (h ▸ I.add_mem (I.mul_mem_left _ ha) (I.mul_mem_left _ hb)))
-
 private theorem gl_comm_of_scalar {k : Type} [Field k] {n : ℕ} (A B : GL (Fin n) k) (c : k)
     (h : A.val = c • (1 : Matrix (Fin n) (Fin n) k)) : A * B = B * A := by
   apply Units.ext
@@ -1267,7 +1258,7 @@ private theorem apart_of_primes {w u : Plc E} {a b : ℕ} (hab : a.Coprime b) (h
     simpa using hb
   rw [← h] at h1
   have h2 : algebraMap _ (𝓞 E) (b : 𝓞 (maximalRealSubfield E)) ∈ w.asIdeal := h1
-  exact nat_not_mem w.isPrime.ne_top hab ha (by simpa using h2)
+  exact _root_.GlobalTheory.CoverHalf.not_mem_of_coprime w.isPrime.ne_top hab ha (by simpa using h2)
 
 private theorem comp_cj_ofU (w : Plc E) (a b : finU (E := E) (n := n))
     (h : comp w (CertificateRingHomMap.ofU a) = comp w (CertificateRingHomMap.ofU b)) : comp (cj w) (CertificateRingHomMap.ofU a) = comp (cj w) (CertificateRingHomMap.ofU b) := by
@@ -1319,8 +1310,8 @@ private theorem sh_comm (F : Frame S) {w₀ : Plc E} {x : E} {L : ∀ w : Spl E 
 theorem memComm : UpperTheory.Gal.Spc.MemComm := by
   intro E _ _ _ A n p _ S F x U w₀ Up V hodd hsc hgen hoff hq r W hAux N hN hStab L hw Ty hTy g g' θ θ' hs hs'
   obtain ⟨hAdm, hIdem, -⟩ := tf_facts
-  have hMF := UpperTheory.Gal.Spc.memFn E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W hAux N hN hStab L hw Ty hTy
-  have hTF := UpperTheory.Gal.Spc.tyFact E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W hAux N hN hStab L hw Ty hTy
+  have hMF := _root_.UpperTheory.Gal.W2.Seed.memFn_holds E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W hAux N hN hStab L hw Ty hTy
+  have hTF := _root_.UpperTheory.Gal.W2.Seed.tyFact_holds E A n p S F x U w₀ Up V hodd hsc hgen hoff hq r W hAux N hN hStab L hw Ty hTy
   have hOff : ∀ (g : Mem S.L N) (θ : ℂ), Seen F V r g θ → conv Ty.K₀ g.fn (Ty.tf 1) ∈ Off2 W L Ty := by
     intro g θ hs
     obtain ⟨-, -, hb⟩ := hMF g θ hs
@@ -1344,7 +1335,7 @@ theorem memComm : UpperTheory.Gal.Spc.MemComm := by
         obtain ⟨hw', t, z, -, hcen, hh⟩ := hIsH
         have hqw : (σ.q : 𝓞 E) ∈ w.asIdeal := σ.atp.le (Ideal.subset_span (Or.inl rfl))
         have hp : (p : 𝓞 E) ∉ w.asIdeal :=
-          nat_not_mem w.isPrime.ne_top ((Nat.coprime_primes σ.atp.prime Fact.out).2 σ.atp.ne) hqw
+          _root_.GlobalTheory.CoverHalf.not_mem_of_coprime w.isPrime.ne_top ((Nat.coprime_primes σ.atp.prime Fact.out).2 σ.atp.ne) hqw
         obtain ⟨wS, hwS⟩ : ∃ wS : Spl E p, wS = ⟨w, hw', hp⟩ := ⟨_, rfl⟩
         have hap : ∀ u ∈ W, GlobalTheory.Cong.Apart wS.1 u.1 := fun u hu => by
           rw [hwS]
@@ -1777,7 +1768,7 @@ theorem UpperTheory.Gal.Spc.specData :
     UpperTheory.Gal.Spc.tyTop E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy
   obtain ⟨u, hu, u', hu', heu, hue, hinv, hcomm, hX⟩ :=
     UpperTheory.Gal.Spc.auxFn E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy
-  have hmem := UpperTheory.Gal.Spc.memFn E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy
+  have hmem := _root_.UpperTheory.Gal.W2.Seed.memFn_holds E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy
   have hmc := UpperTheory.Gal.Spc.memComm E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy
   obtain ⟨thQ, hthQ, hEig⟩ :=
     UpperTheory.Gal.Spc.eigEx E A n p S F x U w₀ Up V hodd hSc hGen hOff hq r W hAux N hrN hStab L hw Ty hTy

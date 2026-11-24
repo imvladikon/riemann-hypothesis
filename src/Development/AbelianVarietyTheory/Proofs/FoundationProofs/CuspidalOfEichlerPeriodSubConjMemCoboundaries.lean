@@ -96,17 +96,11 @@ lemma lam_lin_pow (a b x y : ℂ) (i : ℕ) : lam i x y ((C a * X + C b) ^ i) = 
     simp [lam_apply, Finset.sum_range_succ, coeff_X, coeff_C]
     ring
 
-lemma polySlash_sum (w : ℕ) (g : Matrix (Fin 2) (Fin 2) ℤ) (p : ℂ[X]) :
-    slP w g p = ∑ i ∈ Finset.range (w + 1), p.coeff i •
-      ((C ((g 0 0 : ℤ) : ℂ) * X + C ((g 0 1 : ℤ) : ℂ)) ^ i *
-        (C ((g 1 0 : ℤ) : ℂ) * X + C ((g 1 1 : ℤ) : ℂ)) ^ (w - i)) := by
-  simp only [slP, LinearMap.sum_apply, LinearMap.comp_apply, LinearMap.toSpanSingleton_apply, lcoeff_apply]
-
 lemma lam_slP (w : ℕ) (g : Matrix (Fin 2) (Fin 2) ℤ) (x y : ℂ) (p : ℂ[X]) :
     lam w x y (slP w g p) =
       lam w ((g 0 0 : ℤ) * x + (g 0 1 : ℤ) * y) ((g 1 0 : ℤ) * x + (g 1 1 : ℤ) * y) p := by
 
-  rw [polySlash_sum, map_sum, lam_apply w _ _ p]
+  rw [_root_.GlobalTheory.EichlerChange.polySlash_apply, map_sum, lam_apply w _ _ p]
   refine Finset.sum_congr rfl fun i hi => ?_
   have hi' : i ≤ w := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
   rw [map_smul, smul_eq_mul]

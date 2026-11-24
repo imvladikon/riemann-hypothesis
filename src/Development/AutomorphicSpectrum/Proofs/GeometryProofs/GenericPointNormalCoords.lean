@@ -70,14 +70,6 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 namespace GlobalTheory.CompanionTheory.Ar.M0
 
-theorem genericPoints_subset_range_j :
-    ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H)
-      (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O]
-      (β : O →+* c.F) (Y : Model Xo c β),
-      IsDomain O → (letI := β.toAlgebra; IsFractionRing O c.F) →
-        genericPoints Y.X ⊆ Set.range Y.j := by
-  apply PositivityTheory.HtPt.Ml.generic_points_range <;> assumption
-
 end GlobalTheory.CompanionTheory.Ar.M0
 end -- clump:auto
 end -- clump:auto
@@ -167,8 +159,6 @@ theorem generic_points_range_local : ∀ (E : Type) [Field E] [NumberField E] [I
 end GenericFibreProof
 
 
-theorem _root_.GlobalTheory.T.generic_points_in_generic_fibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β), IsDomain O → (letI := β.toAlgebra; IsFractionRing O c.F) → genericPoints Y.X ⊆ Set.range Y.j := by
-  exact @GenericFibreProof.generic_points_range_local
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointsInGenericFibreStatement =====
@@ -257,7 +247,7 @@ theorem exists_cpt_of_genericPoint : ∀ (E : Type) [Field E] [NumberField E] [I
   have hgen : IsCptGen (Ω := Y.X.residueField e) (Y.X.fromSpecResidueField e) :=
     isCptGen_of_maximal Y.X (fun x => (Y.normal x).1) e hmax
   have hj : e ∈ Set.range Y.j :=
-    GlobalTheory.T.generic_points_in_generic_fibre E H D l Xo c (𝓞 c.F) _ Y inferInstance hfrac he
+    _root_.PositivityTheory.HtPt.Ml.generic_points_range E H D l Xo c (𝓞 c.F) _ Y inferInstance hfrac he
   have hr : Set.range (Y.X.fromSpecResidueField e) ⊆ Set.range Y.j := by
     rw [Scheme.range_fromSpecResidueField]
     exact Set.singleton_subset_iff.2 hj

@@ -75,6 +75,7 @@ import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLattice
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.Tactic.Linter.HaveILetI
+import Formalism.LocalRingCardinality.HostCls
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardShortVectorsLe, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorIntegralHermitianLatticeRankOne, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsRest, Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatInIsLattice, Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanCountPrimitiveSublatticesOverGenus
@@ -124,7 +125,7 @@ theorem finrank_le_trace_of_integral {K : Type} [Field K] [NumberField K] (z : �
     have h3 : (0 : ℤ) < Algebra.norm ℤ z := by exact_mod_cast hP
     have h4 : (1 : ℤ) ≤ Algebra.norm ℤ z := h3
     exact_mod_cast h4
-  have hL := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.traceLower (K →ₐ[ℚ] ℂ) (fun τ => (τ (z : K)).re)
+  have hL := _root_.Formalism.HermitianLatticeCounting.P.traceLowerBound (K →ₐ[ℚ] ℂ) (fun τ => (τ (z : K)).re)
     (fun τ => (hpos τ).le) hN1
   simpa only [AlgHom.card] using hL
 
@@ -258,7 +259,7 @@ theorem encard_shortVectors_le : ∀ (K V : Type) [Field K] [NumberField K] [Sta
     rw [e]
     calc Real.sqrt D ≤ Real.sqrt (‖ι x‖ ^ 2) := Real.sqrt_le_sqrt (hlong x hx hx0)
       _ = ‖ι x‖ := Real.sqrt_sq (norm_nonneg _)
-  obtain ⟨hfin, hcount⟩ := Formalism.HermitianLatticeCounting.Final.LatticeSumBounds.packing Es Λ (Real.sqrt D) (Real.sqrt (D * B))
+  obtain ⟨hfin, hcount⟩ := _root_.Formalism.HermitianLatticeCounting.P.packing_bound Es Λ (Real.sqrt D) (Real.sqrt (D * B))
     hl0 (Real.sqrt_nonneg _) hmin
   have hratio : 2 * Real.sqrt (D * B) / Real.sqrt D = 2 * Real.sqrt B := by
     rw [Real.sqrt_mul hD0.le, mul_div_assoc, mul_div_cancel_left₀ _ hl0.ne']
@@ -667,7 +668,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatInIsLattice =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanCountPrimitiveSublatticesOverGenus =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanCountPrimitiveSublatticesOverGenus", "h": "module\n\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenus\npublic import Formalism.HermitianLattices.StatementMass\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLatticeOfUnimodularLandherr\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatInIsLattice\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.CntPartners\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrime\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound\nimport Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeMassRatio\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditive\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticesMoveWithIsometries\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLatticeAndMassProperties\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanCountPrimitiveSublatticesOverGenus", "h": "module\n\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenus\npublic import Formalism.HermitianLattices.StatementMass\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLatticeOfUnimodularLandherr\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatInIsLattice\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.CntPartners\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrime\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound\nimport Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeMassRatio\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditive\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticesMoveWithIsometries\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLatticeAndMassProperties\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.HostCls\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -768,25 +769,9 @@ theorem disc_of_equiv (h : V →ₗ⋆[K] V →ₗ[K] K) (N : Submodule (𝓞 K)
 
 end General
 
-theorem finrank_E {R : Ranks} (H : Host R) : Module.finrank ℚ H.E = 2 * R.f := by
-  rw [H.finrank_cmField]
-  simp only [Ranks.f, Ranks.n]
-  ring
-
-theorem fDeg_E (D : D7) : fDeg D.host.E = D.R.f := by
-  let _ := D.host.cmStar
-  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
-  have h1 := NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces (K := D.host.E)
-  have h2 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank D.host.E
-  have h3 : NumberField.InfinitePlace.nrRealPlaces D.host.E = 0 := by
-    rw [NumberField.nrRealPlaces_eq_zero_iff]; infer_instance
-  have h4 := finrank_E D.host
-  unfold fDeg
-  omega
-
 theorem vInv_E (D : D7) : 2 * vInv D.host.E = D.host.rdE := by
   unfold vInv Host.rdE
-  rw [fDeg_E, finrank_E]
+  rw [_root_.Formalism.MainNotions.StandardLattice.fDeg_host, _root_.Formalism.BasicNotions.Host.finrank_E']
   push_cast
   ring
 
@@ -820,7 +805,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
         dual h L = L ⊔ Submodule.span (𝓞 D.host.E) (t : Set (D.sp.X 0).V)) := fun L hL => by
     obtain ⟨a, ⟨e⟩⟩ := (hgen L₀ L hint hcyc).1 hL
     obtain ⟨b, c⟩ := disc_of_equiv h L _ e
-    exact ⟨a, by rw [b, finrank_E], ((GlobalTheory.Mass.DetAgree.main _ _ h hK hs hPD L a).2.2.2.1 1).1 c⟩
+    exact ⟨a, by rw [b, _root_.Formalism.BasicNotions.Host.finrank_E'], ((GlobalTheory.Mass.DetAgree.main _ _ h hK hs hPD L a).2.2.2.1 1).1 c⟩
   have hlhs : (∑ L' ∈ reps, ENNReal.ofReal ((Nat.card (Formalism.ThetaLiftIndependence.autL h L') : ℝ))⁻¹ *
       (Cnt.cntPrim h L' (D.R.k - s) de : ℝ≥0∞)) =
       orbSum (isom h) (genus h L₀) (fun L => (((primSp h L (D.R.k - s) (de ^ 2)).encard : ℕ∞) : ℝ≥0∞)) := by
@@ -849,7 +834,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
     rw [e1] at H2
     have e2 : ((Lat.Tu D u ^ (2 * D.R.f) : ℕ) : ℝ) = Cnt.NT D u ^ 2 := by
       rw [Cnt.NT, ← pow_mul, mul_comm D.R.f]; push_cast; rfl
-    rw [e2, finrank_E, Cnt.XiS, Cnt.Xi, if_pos ⟨hs2, hmid⟩]
+    rw [e2, _root_.Formalism.BasicNotions.Host.finrank_E', Cnt.XiS, Cnt.Xi, if_pos ⟨hs2, hmid⟩]
     push_cast
     exact H2
   · have hk : 1 ≤ D.R.k := by omega
@@ -863,7 +848,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
       rcases (by omega : D.R.k - s = 1 ∨ D.R.k - s = 0) with e | e
       · rw [e]
         refine p1.trans (le_of_eq ?_)
-        rw [vInv_E, fDeg_E, hrk]
+        rw [vInv_E, _root_.Formalism.MainNotions.StandardLattice.fDeg_host, hrk]
         congr 2
         push_cast
         rw [← Real.rpow_natCast (de : ℝ) 2, ← Real.rpow_mul (by linarith), ← Real.rpow_natCast (de : ℝ) D.R.k]

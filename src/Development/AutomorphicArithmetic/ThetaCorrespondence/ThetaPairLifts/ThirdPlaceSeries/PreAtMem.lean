@@ -562,7 +562,7 @@ theorem exists_sig_of_row (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low : Fi
       P ∉ D.ntw.S0 i → eig j (Bs.rowS i s) k P = eig j σ k P := by
   classical
   obtain ⟨x, hxg, hx0, hxe⟩ := hOcc j h1 h2 σ hiso hgood
-  obtain ⟨Φ, hΦ0, hΦs, hΦT⟩ := GlobalTheory.T.exists_descent_map_nonzero_of_small_field_form D S _ (hKs _ h1 h2) i b x hx0
+  obtain ⟨Φ, hΦ0, hΦs, hΦT⟩ := _root_.GlobalTheory.exists_desc_of_isKsForm D S _ (hKs _ h1 h2) i b x hx0
   set e := Bs.eF i j b h1 h2 with he
   have hfix : MonoidAlgebra.lift (FractionRing (D.ntw.O i)) (Module.End (FractionRing (D.ntw.O i)) (D.nexp.Fm i j b))
       (G0g D.nd) (LinearEquiv.automorphismGroup.toLinearMapMonoidHom.comp (D.nexp.actG i j b)) (D.nexp.eAlg i b)
@@ -772,7 +772,7 @@ namespace GlobalTheory.RowTriple.Lay.EigCopy
 
 theorem eigenvalues_at_member_tripleLayer_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ _ _ c => ∀ (S : RatDat (w.D Z).ntw) (hL' : ∀ j, ℕ → PlE (w.D Z).host → Module.End (w.D Z).what₂.LL (S.WL j)) (eig : ℕ → (w.D Z).what₂.FT → ℕ → PlE (w.D Z).host → ↥(w.D Z).LL0) (θ : ∀ kk : Fin 2, Multiplicative (ZMod ((w.D Z).host.g kk)) →* (↥(w.D Z).LL0)ˣ), HEq S (ratL c.a.nt.L c.a.nt.S) → HEq hL' c.a.nt.hL → HEq eig c.a.nt.eig → HEq θ c.a.nt.θ → ∃ Sb : Finset (PlE (w.D Z).host), (∀ i, Sb ⊆ (w.D Z).ntw.S0 i) ∧ ∀ Rw : RowSide (w.D Z), HEq Rw.locR c.a.nt.A.row.locR → GlobalTheory.TwInputs.EigTrue (w.D Z) (TC.cf w.I w.l Z) Rw Sb eig ∧ GlobalTheory.TwInputs.EigOcc (w.D Z) S θ hL' Sb eig := by
   intro hN hS hL
-  refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.T.exists_superset_low_heckeRd_of_subset_S0 hN hS hL) (_root_.GlobalTheory.T.exists_theta_heq_lvlPsi_at_members hN hS hL)) ?_
+  refine _root_.GlobalTheory.GalLoc.atMem_mono (_root_.GlobalTheory.GalLoc.atMem_and' (_root_.GlobalTheory.HeckeSbLayer.exists_hecke_stable_sublayer_alt hN hS hL) (_root_.GlobalTheory.GalLoc.PsiLvl.localGalois_psi_level_at_place_alt hN hS hL)) ?_
   intro K B f T w Z Wt p0 t nch n xd c hE H S hL' eig θ hS' hhL heig hθ
   obtain ⟨H2, H3⟩ := H
   obtain ⟨e⟩ := hE
@@ -904,10 +904,8 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 noncomputable section
 namespace GlobalTheory.RowTriple.Lay
-open GlobalTheory.TwInputs Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.HeightCounting.FitRho
 end GlobalTheory.RowTriple.Lay
 namespace GlobalTheory.RowTriple.Lay
-open GlobalTheory.TwInputs Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.HeightCounting.FitRho
 end GlobalTheory.RowTriple.Lay
 namespace GlobalTheory.RowTriple.Lay
 open GlobalTheory.TwInputs Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.HeightCounting.FitRho
@@ -937,13 +935,6 @@ theorem tripleLayer_inputs_at_member_alt : _root_.GlobalTheory.HeightCounting.Up
 end GlobalTheory.RowTriple.Lay
 end
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.compatibleSystem_tripleLayer_inputs_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∃ (cf : CharFrame (w.D Z)) (Rw : RowSide (w.D Z)) (low : Finset ℕ) (Pq : HeightOneSpectrum (𝓞 (maximalRealSubfield (w.D Z).host.E)) → PlE (w.D Z).host) (S : RatDat (w.D Z).ntw) (hL' : ∀ j, ℕ → PlE (w.D Z).host → Module.End (w.D Z).what₂.LL (S.WL j)) (eig : ℕ → (w.D Z).what₂.FT → ℕ → PlE (w.D Z).host → ↥(w.D Z).LL0) (θ : ∀ kk : Fin 2, Multiplicative (ZMod ((w.D Z).host.g kk)) →* (↥(w.D Z).LL0)ˣ) (_ : SideB (w.D Z) cf Rw low Pq S hL' eig θ) (Sb : Finset (PlE (w.D Z).host)), (∀ i, Sb ⊆ (w.D Z).ntw.S0 i) ∧ (∀ j, 1 ≤ j → j ≤ (w.D Z).R.m → (S.A j).IsKsForm) ∧ GlobalTheory.TwInputs.EigTrue (w.D Z) cf Rw Sb eig ∧ GlobalTheory.TwInputs.EigOcc (w.D Z) S θ hL' Sb eig ∧ GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.GoodRowCuspParam (w.D Z) Rw ∧ (w.D Z).nexp.sig_all ∧ (∀ a σ v, IsSplitPl (w.D Z).host v → (w.D Z).naut.locW a σ v = Rw.locR σ v) ∧ ∀ a, GlobalTheory.RowTriple.ReadTw (w.D Z) a := by
-  first | exact @_root_.GlobalTheory.RowTriple.Lay.tripleLayer_inputs_at_member_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -962,25 +953,17 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 noncomputable section
 namespace GlobalTheory.RowTriple
-open GlobalTheory.TwInputs Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 end GlobalTheory.RowTriple
 namespace GlobalTheory.RowTriple
 open GlobalTheory.TwInputs Formalism.ConjugateSelfDual ReciprocityTheory.Gal
 theorem forall_triple_condition_of_member_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.AllTriples (w.D Z) := by
   intro hP hS hL
-  refine _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.at_member_imp (_root_.GlobalTheory.T.compatibleSystem_tripleLayer_inputs_alt hP hS hL) fun K B f T w Z Wt p0 t nch n c h => ?_
+  refine _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.at_member_imp (_root_.GlobalTheory.RowTriple.Lay.tripleLayer_inputs_at_member_alt hP hS hL) fun K B f T w Z Wt p0 t nch n c h => ?_
   obtain ⟨cf, Rw, low, Pq, S, hL', eig, θ, Bs, Sb, hSb, hKs, hT, hOcc, hcp, hall, hloc, hR⟩ := h
   exact GlobalTheory.TwistedSelmerCompare.allTriples_of_tripAll _
     (tripAll_of_sideB _ cf Rw low Pq S hL' eig θ Bs Sb hSb hKs hT hOcc hcp hall hloc hR)
 end GlobalTheory.RowTriple
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.allTriples_at_members_of_third_layer : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GlobalTheory.IndefiniteRowSideFullHecke.LatticeConditions.AllTriples (w.D Z) := by
-  first | exact @_root_.GlobalTheory.RowTriple.forall_triple_condition_of_member_alt
 end
 end
 end -- clump:auto
@@ -1009,13 +992,6 @@ theorem twist_mem_weightOne_subspace_alt : _root_.GlobalTheory.HeightCounting.Up
 end GlobalTheory.HeightCounting.InW1TwistAtMember
 end
 end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.nonzero_index_place_tw_of : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∀ a : (w.D Z).nd.Loc, (w.D Z).ntw.NonzeroIndexPlace ((w.D Z).ntw.twOf a) := by
-  first | exact @_root_.GlobalTheory.HeightCounting.InW1TwistAtMember.twist_mem_weightOne_subspace_alt
-end
 end
 end -- clump:auto
 end -- clump:auto
@@ -1036,7 +1012,7 @@ namespace GlobalTheory.HeightCounting.Up.TripFin
 theorem finiteTriples_satisfy_condition_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists,
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GlobalTheory.PtCore.TriplesGood (w.D Z) := by
   intro hP hS hL
-  have h := _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.T.exists_galSide_cf_eq_cgTrue_at_members hP hS hL) (_root_.GlobalTheory.T.nonzero_index_place_tw_of hP hS hL)) (_root_.GlobalTheory.T.allTriples_at_members_of_third_layer hP hS hL)
+  have h := _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.GalLoc.galois_side_at_place_alt hP hS hL) (_root_.GlobalTheory.HeightCounting.InW1TwistAtMember.twist_mem_weightOne_subspace_alt hP hS hL)) (_root_.GlobalTheory.RowTriple.forall_triple_condition_of_member_alt hP hS hL)
   refine _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.at_member_imp h ?_
   rintro K B f T w Z Wt p0 t nch n c ⟨⟨⟨G, -, -, -⟩, hW⟩, hA⟩ a σ Sg h1 h2
   obtain ⟨s, hs⟩ := hA a σ Sg h1 h2
@@ -1068,10 +1044,6 @@ theorem eq_of_over_two {E : Type} [Field E] [NumberField E] {p q : ℕ} (hp : p.
   rw [Ideal.eq_top_iff_one, ← h]
   exact add_mem (Ideal.mul_mem_left _ _ h1) (Ideal.mul_mem_left _ _ h2)
 
-theorem unrAt_inv {E : Type} [Field E] [NumberField E] {χ : HChar E} {w : HeightOneSpectrum (𝓞 E)}
-    (h : χ.UnrAt w) : (χ⁻¹).UnrAt w := by
-  exact HChar.UnrAt.inv h
-
 end GlobalTheory.MuUnrTie
 end -- clump:auto
 end -- clump:auto
@@ -1096,16 +1068,16 @@ theorem main_alt_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (
   have hjj : j.1 + 1 = D.nd.j i := Nat.sub_add_cancel hj.1
   have hlp : (D.nd.l i).Prime := (D.nd.lPrime i).out
   rw [P.chr.unr_iff, P.chr.tw, P.chr.muC i j hjj, P.chr.etaTinv]
-  refine GlobalTheory.MuTameQS.unrAt_mul ?_ (unrAt_inv (P.cf.isEta.unr w))
+  refine _root_.Formalism.L2.Host.HChar.UnrAt.mul ?_ (_root_.Formalism.L2.Host.HChar.UnrAt.inv (P.cf.isEta.unr w))
   unfold TupTied.tup
-  refine GlobalTheory.MuTameQS.unrAt_mul ?_ ?_
+  refine _root_.Formalism.L2.Host.HChar.UnrAt.mul ?_ ?_
   · refine (P.cf.isMu0 j).unr w fun k hk => ?_
     have e := eq_of_over_two hlp (D.host.g_prime k) w hw hk
     apply hl
     rw [e]
     fin_cases k <;> simp [TwistedPlaces.gset]
   · rw [D.nd.mu_w i, P.tp.xi_tw, D.nd.w_l i]
-    refine GlobalTheory.MuTameQS.unrAt_mul ?_ ?_
+    refine _root_.Formalism.L2.Host.HChar.UnrAt.mul ?_ ?_
     · unfold CharFrame.delAt
       split_ifs with h
       · refine P.cf.isDel'.unr w fun ho => D.host.pde_ne ?_
@@ -1138,10 +1110,10 @@ open scoped Pointwise
 namespace GlobalTheory.DepthZeroType
 theorem depthZero_tame_alt : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → GlobalTheory.Published.DepthZeroSupport → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), (∀ i : D.nd.Loc, Nonempty (RowMod D P.rep (D.nd.j i))) → GlobalTheory.HubX.DepthZeroG D := by
   intro hp h2 hL D P hR i w hwS hk Q σ hσ
-  obtain ⟨S, hS, -, -⟩ := _root_.GlobalTheory.T.exists_true_reading_with_laws_suppLaws hp.fin hL D P hR
+  obtain ⟨S, hS, -, -⟩ := _root_.GlobalTheory.TrueReading.exists_true_reading_alt hp.fin hL D P hR
   have hw : IsSplitPl D.host w := hk.elim fun k h => isSplitPl_of_over D k w h
   have ht := (_root_.GlobalTheory.MuTameQS.main_alt_alt hL D P S hS i w hw (Or.inl hwS)).1
-  obtain ⟨v, hv0, hv⟩ := (_root_.GlobalTheory.T.type_block_of_tame_at_split_place hL D P S hS i w hw hk ht).2 Q
+  obtain ⟨v, hv0, hv⟩ := (_root_.GlobalTheory.TypeBlockPf.main_alt_alt hL D P S hS i w hw hk ht).2 Q
   have hfix : v ∈ GlobalTheory.PRep.fixed ((S i w hw).rep Q).π
       (GlobalTheory.SplitWeil.KOne (w.adicCompletion D.host.E) (Fin (D.R.r + D.R.t))) := by
     intro h
@@ -1166,22 +1138,8 @@ section -- clump:auto
 
 
 
-section
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-open scoped Pointwise
 namespace GlobalTheory.DepthZeroType
 end GlobalTheory.DepthZeroType
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.depthZeroG_of_rowMod : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → GlobalTheory.Published.DepthZeroSupport → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), (∀ i : D.nd.Loc, Nonempty (RowMod D P.rep (D.nd.j i))) → GlobalTheory.HubX.DepthZeroG D := by
-  first | exact @_root_.GlobalTheory.DepthZeroType.depthZero_tame_alt
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NonGaloisDepthZeroType =====
@@ -1202,8 +1160,8 @@ namespace GlobalTheory.GoodMem
 theorem goodFTAll_at_members_of_depthZero : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists,
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GoodFTAll (w.D Z) := by
   intro hP hL
-  have hA := _root_.GlobalTheory.T.coefficient_duty_pin_at_each_member hL
-  have hO := _root_.GlobalTheory.T.nonGalois_typeVec_fixed_by_e0 hP
+  have hA := _root_.GlobalTheory.HeightCounting.Up.oPin_at_mem hL
+  have hO := _root_.GlobalTheory.TypeVec.exists_typeVec_nonGalois_ne_zero hP
   refine EvG.imp (EvG.inter hA hO) fun K _ _ _ _ h => ?_
   refine large₂.imp (large₂.inter h.1 h.2) fun B f T _ g => ?_
   intro hK w Z Wt p0 t nch n xd c _ _ hpin
@@ -1226,13 +1184,6 @@ theorem goodFTAll_at_members_of_depthZero : _root_.GlobalTheory.HeightCounting.U
     exact h ⟨I.i, I.cont⟩ cp hc σ
   exact key _ c.a.nt.eq _ c.row.rep_eq hrow
 end GlobalTheory.GoodMem
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.goodFTAll_at_mem_of_inputs : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => GoodFTAll (w.D Z) := by
-  first | exact @_root_.GlobalTheory.GoodMem.goodFTAll_at_members_of_depthZero
 end
 end
 end -- clump:auto
@@ -1322,7 +1273,7 @@ theorem main : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTh
   have hpre : ∀ y ∈ D.what₂.isot ((i : ℕ) + 1) σ, ∃ x ∈ (LinearMap.ker θ)ᗮ, θ x = y ∧
       ∀ x', ⟪θ x, θ x'⟫_ℂ = (c : ℂ) * ⟪x, x'⟫_ℂ := by
     intro y hy
-    obtain ⟨x, rfl⟩ := GlobalTheory.T.liftThetaMap_surjective_onto_cuspForms_usedTuple h1 h2 h3 h4 D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hD i t hU y
+    obtain ⟨x, rfl⟩ := _root_.GlobalTheory.Mem.LiftOnto.thetaMap_surjective h1 h2 h3 h4 D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hD i t hU y
     set K := (LinearMap.ker θ)ᗮ
     have hx0 : x - K.starProjection x ∈ LinearMap.ker θ := by
       have := K.sub_starProjection_mem_orthogonal x
@@ -1332,7 +1283,7 @@ theorem main : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTh
     have hW : Y.mj.eW i (θ (K.starProjection x)) ∈ R.Wp3 i p := by
       rw [he]; exact hL.1 i ⟨θ x, hy, rfl⟩
     exact ⟨K.starProjection x, K.starProjection_apply_mem x, he,
-      GlobalTheory.T.liftThetaMap_inner_eq_lambda_labelPart_baseLevel h1 h2 h3 h4 D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hD i t p hU (K.starProjection x)
+      _root_.GlobalTheory.Mem.R3.LamMetric.inner_theta_eq_lam h1 h2 h3 h4 D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hD i t p hU (K.starProjection x)
         (K.starProjection_apply_mem x) hW⟩
 
   have heig : ∀ y ∈ D.what₂.isot ((i : ℕ) + 1) σ,
@@ -1375,8 +1326,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
-theorem _root_.GlobalTheory.T.downLift_upLift_positiveScalar_usedTuples : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y), Pins R F cG → Holds R F → HostHyp D → GlobalTheory.NRows.LamUsed D := by
-  first | exact @GlobalTheory.NRows.LamUsedProof.main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.DownLiftUpLiftPositiveScalarUsedTuplesStatement =====
@@ -1505,7 +1454,7 @@ namespace GlobalTheory.IsotSum
 
 theorem isotInternal_of_read : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y), Pins R F cG → Holds R F → HostHyp D → Formalism.BasicNotions.Rows.IsotRank D.what₂ → Formalism.MainNotions.SumRepresentations.adm8 D := by
   intro hW hDS hHC hCR D G _ _ Pl0 I0 T A3 Ks _ _ _ R F cG X0 Y Z hP hH hHost hRk
-  obtain ⟨cOf, h1, -, -⟩ := GlobalTheory.T.finiteTypes_via_full_heckeAlgebra_eigensystems hW hDS hHC hCR D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hHost hRk
+  obtain ⟨cOf, h1, -, -⟩ := _root_.GlobalTheory.Mem.R3.finiteTypes_of_full_heckeAlgebra_eigensystems hW hDS hHC hCR D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH hHost hRk
   show Rows.IsotInternal D.what₂
   intro j hj1 hjm
   obtain ⟨i, rfl⟩ : ∃ i : Fin D.R.m, j = (i : ℕ) + 1 := ⟨⟨j - 1, by omega⟩, by simp; omega⟩
@@ -1531,8 +1480,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3
 
-theorem _root_.GlobalTheory.T.thetaLift_forms_internal_direct_sum_isotypic : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y), Pins R F cG → Holds R F → HostHyp D → Formalism.BasicNotions.Rows.IsotRank D.what₂ → Formalism.MainNotions.SumRepresentations.adm8 D := by
-  first | exact @GlobalTheory.IsotSum.isotInternal_of_read
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaLiftFormsInternalDirectSumIsotypicStatement =====
@@ -1566,14 +1513,14 @@ theorem lambdaAdic_components_over_base_alt : _root_.GlobalTheory.HeightCounting
   have hT : TypesTrue (w.st Z).toD7.ntypes z.R.C.P z.R.C.W := by
     rw [z.lev.C, w.C_eq]
     exact hGrp
-  have hME := _root_.GlobalTheory.T.twisted_multiplicity_one hPX.ana hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hPX.flath hN.zel
+  have hME := _root_.GlobalTheory.MultEqFinal.twisted_multiplicity_eq hPX.ana hPX.dsc hN.decay hN.hc hPX.trc hPX.dm hPX.flath hN.zel
     hN.what₂.geo hN.greenC z.R z.F hHo.ok z.pins.char hEx hH hp B.ccK_top z.pins.keep.guard
     (GlobalTheory.LiftRows.Inh.goodTypes_of_typesTrue z.pins.char.base.lev hT)
   have hIR : Formalism.BasicNotions.Rows.IsotRank (w.st Z).toD7.what₂ :=
     GlobalTheory.Mem.R3.isotRank_of_multEq hPX.weil hPX.ds hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG _ Y z.pins hHo hH hGS
       (GlobalTheory.CuspDec.cuspDecomp hN.hc hN.decay _) hME
-  exact ⟨GlobalTheory.T.thetaLift_forms_internal_direct_sum_isotypic hPX.weil hPX.ds hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG p0 Y hRd z.pins hHo hH hIR,
-    GlobalTheory.T.downLift_upLift_positiveScalar_usedTuples hPX.weil hPX.ds hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG p0 Y hRd z.pins hHo hH⟩
+  exact ⟨_root_.GlobalTheory.IsotSum.isotInternal_of_read hPX.weil hPX.ds hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG p0 Y hRd z.pins hHo hH hIR,
+    _root_.GlobalTheory.NRows.LamUsedProof.main hPX.weil hPX.ds hN.hc hN.decay _ _ _ _ _ _ _ z.R z.F z.cG p0 Y hRd z.pins hHo hH⟩
 end GlobalTheory.NRows.OverX
 end
 section
@@ -1616,7 +1563,7 @@ theorem exists_inputs_pinAt_jumpsCard_at_mem : _root_.GlobalTheory.HeightCountin
                lam := hr.2
                isot := hr.1
                ser := ser
-               typeNZ := _root_.GlobalTheory.T.galoisRep_descends_at_real_places prn.decay prn.howe prx _ _ _ _ X.X }⟩, hpin, jumps⟩
+               typeNZ := _root_.GlobalTheory.DownLift.AtReal.lift_splits_locally prn.decay prn.howe prx _ _ _ _ X.X }⟩, hpin, jumps⟩
 end GlobalTheory.NRows.AtLayer
 end
 end
@@ -1835,12 +1782,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host NumberField IsDedekindDomain ReciprocityTheory.Gal GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up GlobalTheory.NPin GlobalTheory.NFacts
-
-theorem _root_.GlobalTheory.T.weight_param_of_character_choice : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.WeightParam D := by
-  first | exact @_root_.GlobalTheory.weightParam_of_pin_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WeightParamOfPinStatement =====
@@ -1873,7 +1814,7 @@ structure Core0Alt (D : D7) : Prop where
 theorem core0_of_local_duality_inputs : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.DepthZeroSupport → LocalFiniteness → LocalTateDuality → LocalEulerChar →
     ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7), _root_.GlobalTheory.NRows.LinkedInputs hL D → JumpsCard D.nd D.naut → _root_.UpperTheory.GalS.Core0Alt D := by
   intro hP hc hd hs hF hT hE hL D I hJ
-  have R : _root_.GlobalTheory.NRows.PointConditions' D := _root_.GlobalTheory.T.theta_conditions_of_inputs_of_jumpsCard hP hc hd hL D I hJ
+  have R : _root_.GlobalTheory.NRows.PointConditions' D := _root_.GlobalTheory.RowsAll.locComp_of_isRc_classMapD_cenLoc hP hc hd hL D I hJ
   have at' : _root_.Formalism.MainNotions.SumRepresentations.AdmAtAlt D := I.admAt R.a R.b
   have p1 : _root_.Formalism.MainNotions.SumRepresentations.provisionFirst D := I.Conclusion1 (_root_.UpperTheory.GalS.Parts.main_alt_alt D) R.a R.b
   have g3 : _root_.UpperTheory.GalS.AdmissibleResidualTameEigenvalues D :=
@@ -1881,8 +1822,8 @@ theorem core0_of_local_duality_inputs : _root_.GlobalTheory.NRows.ThetaLocalInpu
   have rb : ResidualIrreducibleRankR D :=
     _root_.Formalism.MainNotions.AdmissibleThreePrime.residual_irreducible_of_theorem_three_prime_alt D ⟨R.a.tieLab, g3⟩ R.a.a5 (GlobalTheory.BrauerNesbittIrr.litBNIrr _) R.c.rho R.c.dz
   have adm : _root_.Formalism.MainNotions.SumRepresentations.AdmissibleDatum D := ⟨at', (residualIrreducibility_forms_equivalent D).2 rb, I.isot⟩
-  have z : SumRepresentations.ConclusionZ D := (SumRepresentations.multiplicity_statement_iff_reduced D I.isot p1.2.2).2 (_root_.GlobalTheory.T.reducedMultiplicity_of_inputs hL D I R)
-  have wt : GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.WeightParam D := _root_.GlobalTheory.T.weight_param_of_character_choice hL D I.P
+  have z : SumRepresentations.ConclusionZ D := (SumRepresentations.multiplicity_statement_iff_reduced D I.isot p1.2.2).2 (_root_.GlobalTheory.PtSt.reducedMultiplicity_of_rows' hL D I R)
+  have wt : GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.WeightParam D := _root_.GlobalTheory.weightParam_of_pin_alt hL D I.P
   have bl : GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.BlockCharParam D := GlobalTheory.BlockCharInf.main D I.P.cf I.P.C I.P.tp I.P.chr
   have rm : ∀ i : D.nd.Loc, Nonempty (RowMod D I.P.rep (D.nd.j i)) := fun i => by
     have hj := D.nd.j_range i
@@ -1899,7 +1840,7 @@ theorem core0_of_local_duality_inputs : _root_.GlobalTheory.NRows.ThetaLocalInpu
       weight := wt
       block := bl
       muUnr := _root_.GlobalTheory.MuUnrTie.main_alt_alt hP.fin hL D I.P
-      depthG := _root_.GlobalTheory.T.depthZeroG_of_rowMod hP hs hL D I.P rm
+      depthG := _root_.GlobalTheory.DepthZeroType.depthZero_tame_alt hP hs hL D I.P rm
       bc := I.bc
       lam := I.lam }
 theorem galois_preconditions_at_mem : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → _root_.GlobalTheory.NRows.GeometricGaloisRepCompatibility → SerN → GlobalTheory.Published.DepthZeroSupport → LocalFiniteness →
@@ -1907,7 +1848,7 @@ theorem galois_preconditions_at_mem : _root_.GlobalTheory.HeightCounting.Up.Publ
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ nch _ _ => _root_.UpperTheory.GalC.GaloisPreconditions (w.D Z) nch := by
   intro prn prx ser dzs lf ltd lec hL
   have hA := _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.NRows.AtLayer.exists_inputs_pinAt_jumpsCard_at_mem prn prx hL)
-    (_root_.GlobalTheory.HeightCounting.Up.TripFin.finiteTriples_satisfy_condition_alt prn ser hL)) (_root_.GlobalTheory.T.goodFTAll_at_mem_of_inputs prn hL)
+    (_root_.GlobalTheory.HeightCounting.Up.TripFin.finiteTriples_satisfy_condition_alt prn ser hL)) (_root_.GlobalTheory.GoodMem.goodFTAll_at_members_of_depthZero prn hL)
   refine EvG.imp hA fun _ _ _ _ _ hK => large₂.imp hK fun B f T _ H kp w Z Wt p0 t nch n xd c hne hrx cp => ?_
   obtain ⟨⟨⟨I, -, jumps⟩, trip⟩, good⟩ := H kp w Z Wt p0 t nch n xd c hne hrx cp
   obtain ⟨ne⟩ := hne

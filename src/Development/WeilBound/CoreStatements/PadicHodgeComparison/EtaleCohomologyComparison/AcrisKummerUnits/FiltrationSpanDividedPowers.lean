@@ -140,17 +140,9 @@ section Adic
 
 variable {R : Type*} [CommRing R]
 
-theorem smodEq_span_pow_iff (π x y : R) (n : ℕ) :
-    x ≡ y [SMOD (Ideal.span {π} ^ n • (⊤ : Submodule R R))] ↔ π ^ n ∣ x - y := by
-  rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-
 theorem eq_zero_of_forall_pow_dvd {π x : R} (h : IsHausdorff (Ideal.span {π}) R)
     (hx : ∀ n : ℕ, π ^ n ∣ x) : x = 0 :=
-  h.haus x fun n => (smodEq_span_pow_iff π x 0 n).2 (by simpa using hx n)
-
-theorem exists_limit_of_pow_dvd {π : R} (h : IsPrecomplete (Ideal.span {π}) R) (f : ℕ → R)
-    (hf : ∀ n : ℕ, π ^ n ∣ f (n + 1) - f n) : ∃ L, ∀ n : ℕ, π ^ n ∣ f n - L :=
-  _root_.UpperTheory.Reformulated.B.Yra6.main h f hf
+  h.haus x fun n => (_root_.GroundTheory.PAdicHodge.smodEq_span_singleton_pow_iff π x 0 n).2 (by simpa using hx n)
 
 theorem pow_pow_of_compatible {M : Type*} [Monoid M] {l : ℕ} {v : ℕ → M}
     (hv : ∀ i, v (i + 1) ^ l = v i) (i j : ℕ) : v (i + j) ^ l ^ j = v i := by
@@ -173,7 +165,7 @@ theorem sub_pow_pow (x y : A.A) (j : ℕ) : (x - y) ^ l ^ j = x ^ l ^ j - y ^ l 
 theorem exists_limit_pow (b : ℕ → A.A) (hb : ∀ j, A.pi ∣ b (j + 1) ^ l - b j) (i : ℕ) :
     ∃ L, ∀ n : ℕ, A.pi ^ n ∣ b (i + n) ^ l ^ n - L := by
   have hl : 1 < l := (Fact.out : l.Prime).one_lt
-  refine exists_limit_of_pow_dvd (π := A.pi) A.compl.toIsPrecomplete
+  refine _root_.UpperTheory.Reformulated.B.Yra6.main (π := A.pi) A.compl.toIsPrecomplete
     (fun n => b (i + n) ^ l ^ n) fun n => ?_
   have e : b (i + (n + 1)) ^ l ^ (n + 1) - b (i + n) ^ l ^ n
       = (b (i + n + 1) ^ l - b (i + n)) ^ l ^ n := by
@@ -1164,10 +1156,6 @@ theorem hK (A : PAlg l) (s : Finset ℕ) (w : ℕ → A.W)
   obtain ⟨t, ht⟩ := Ideal.mem_span_singleton'.1 ((A.mem_span_l_iff _).2 hz)
   exact Ideal.mem_span_pair.2 ⟨WittVector.teichmuller l b, t, by rw [ht]; ring⟩
 
-theorem natCast_acr (A : PAlg l) : (l : A.Acr 1) = 0 := by
-  have := A.pow_l_acr 1
-  rwa [pow_one] at this
-
 theorem main : ∀ {l : ℕ} [Fact l.Prime] (A : PAlg l) (z : TensorProduct (Ainf l) (Acris l) A.W),
     Algebra.TensorProduct.lift (IsScalarTower.toAlgHom (Ainf l) (Acris l) (A.Acr 1))
       (IsScalarTower.toAlgHom (Ainf l) A.W (A.Acr 1)) (fun _ _ => Commute.all _ _) z = 0 →
@@ -1175,7 +1163,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] (A : PAlg l) (z : TensorProduct (Ain
   intro l _ A z hz
   exact generic (R := Ainf l) (S := Acris l) (W := A.W) (C := A.Acr 1) l (fun k => d (l * k)) r0
     (IsScalarTower.toAlgHom (Ainf l) (Acris l) (A.Acr 1)) (IsScalarTower.toAlgHom (Ainf l) A.W (A.Acr 1))
-    hsurj (fun k => hv _) (fun s w h k hk => hK A s w h k hk) (natCast_acr A) z hz
+    hsurj (fun k => hv _) (fun s w h k hk => hK A s w h k hk) (_root_.GlobalTheory.CompanionTheory.PerfFil.Expand.natCast_l_acr A) z hz
 
 end Specific
 

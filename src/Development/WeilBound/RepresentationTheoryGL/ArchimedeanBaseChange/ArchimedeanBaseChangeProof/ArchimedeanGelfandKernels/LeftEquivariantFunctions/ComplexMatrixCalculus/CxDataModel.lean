@@ -1071,8 +1071,6 @@ end PositivityTheory.RgBcC.Cxd2.Der
 
 namespace PositivityTheory.RgBcC.Cxd2
 
-theorem atDer : AtDer := Der.atDer'
-
 end PositivityTheory.RgBcC.Cxd2
 end -- clump:auto
 end -- clump:auto
@@ -1608,10 +1606,6 @@ section -- clump:auto
 
 namespace PositivityTheory.RgBcC.Cxd2
 
-theorem atTrace : AtTrace := Alg.atTrace'
-
-theorem atTraceT : AtTraceT := Alg.atTraceT'
-
 end PositivityTheory.RgBcC.Cxd2
 end -- clump:auto
 end -- clump:auto
@@ -1624,9 +1618,9 @@ section -- clump:auto
 
 namespace PositivityTheory.RgBcC
 
-theorem rmHol : RmHol := Cxd2.rmHol_of Cxd2.atTrace Cxd2.atDer
+theorem rmHol : RmHol := Cxd2.rmHol_of _root_.PositivityTheory.RgBcC.Cxd2.Alg.atTrace' _root_.PositivityTheory.RgBcC.Cxd2.Der.atDer'
 
-theorem rmAnti : RmAnti := Cxd2.rmAnti_of Cxd2.atTraceT Cxd2.atDer
+theorem rmAnti : RmAnti := Cxd2.rmAnti_of _root_.PositivityTheory.RgBcC.Cxd2.Alg.atTraceT' _root_.PositivityTheory.RgBcC.Cxd2.Der.atDer'
 
 end PositivityTheory.RgBcC
 end -- clump:auto
@@ -1918,11 +1912,11 @@ namespace PositivityTheory.RgBcC
 
 theorem cxData_model {n : ℕ} (lam : Fin n → ℤ) (hlam : Antitone lam) :
     CxData lam (lefE n lam) (lefFr n lam) (lefε n lam) (lefι n lam) (lefS n lam) (lefΓ n lam) (lefT n lam) := by
-  have hsw : SwapLaws := swapLaws_of rmLaws
-  have hfd : MatrixFrechetDerivativeAtZero := fr0Der_of gamDer gamMul mtLaws rmLaws
-  exact cxData_of cfPair mtLaws gamMul car gamCre gamScal number rmLaws rmChar avg fr0Laws hsw
+  have hsw : SwapLaws := _root_.PositivityTheory.RgBcC.Cxe.swapLaws_of _root_.PositivityTheory.RgBcC.Cxc.rmLaws'
+  have hfd : MatrixFrechetDerivativeAtZero := fr0Der_of gamDer gamMul mtLaws _root_.PositivityTheory.RgBcC.Cxc.rmLaws'
+  exact cxData_of cfPair mtLaws gamMul car gamCre gamScal number _root_.PositivityTheory.RgBcC.Cxc.rmLaws' _root_.PositivityTheory.RgBcC.Cxc.rmChar' avg fr0Laws hsw
     (tdOf avg hbOrtho hsw hfd (wedgeDer_of gamDer))
-    (eigOf avg gamMul rmLaws rmHol rmAnti eigProd eigLocal) lam hlam
+    (eigOf avg gamMul _root_.PositivityTheory.RgBcC.Cxc.rmLaws' rmHol rmAnti eigProd eigLocal) lam hlam
 
 theorem cxEx_model : CxEx := fun n lam hlam =>
   ⟨lefE n lam, lefFr n lam, lefε n lam, lefι n lam, lefS n lam, lefΓ n lam, lefT n lam, cxData_model lam hlam⟩

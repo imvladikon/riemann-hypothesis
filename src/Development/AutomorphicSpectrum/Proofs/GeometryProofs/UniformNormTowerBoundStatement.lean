@@ -85,6 +85,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.F
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 import Mathlib.Algebra.Azumaya.Basic
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnfFamily
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
@@ -102,7 +103,7 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.B
 -- Members: Development.AutomorphicSpectrum.Proofs.GeometryProofs.AevalMemWeightZeroSections, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodEmbeddingComponentSections, Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodEmbeddingComponentSectionsStatement, Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormTowerBound, Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormTowerBoundStatement
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.AevalMemWeightZeroSections =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.AevalMemWeightZeroSections", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGood\npublic import Formalism.LocalToGlobal.ProjectiveLattices.CompHt\npublic import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.DeltaDatumCombinedCoefficient\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CountableFractionRingMvPolynomial\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvCEqZeroIffRdUEqZero\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsGenericComponentPointsOffMeagre\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.KapFgTrdeg\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LinearDisjointAlgebraicClosure\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.MemRangeOfIsAlgebraicRatFun\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValues\nimport Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivComp\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsRingHomComplexCompEqOfCountable\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoefficientFieldAlgClosedInFunctionFieldsOfPerio\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricLiftsOfFrames\nimport Formalism.LocalToGlobal.ProjectiveLattices.CompFin\nimport Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Algebraic.Cardinality\nimport Mathlib.RingTheory.PicardGroup\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Baire.LocallyCompactRegular\nimport Mathlib.Topology.UniformSpace.Uniformizable\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GGConn\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt\npublic import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite\nimport Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP\nimport Mathlib.Algebra.Azumaya.Basic\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.GeometryProofs.AevalMemWeightZeroSections", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGood\npublic import Formalism.LocalToGlobal.ProjectiveLattices.CompHt\npublic import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.DeltaDatumCombinedCoefficient\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CountableFractionRingMvPolynomial\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvCEqZeroIffRdUEqZero\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsGenericComponentPointsOffMeagre\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.KapFgTrdeg\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LinearDisjointAlgebraicClosure\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.MemRangeOfIsAlgebraicRatFun\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValues\nimport Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivComp\nimport Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsRingHomComplexCompEqOfCountable\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoefficientFieldAlgClosedInFunctionFieldsOfPerio\npublic import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricLiftsOfFrames\nimport Formalism.LocalToGlobal.ProjectiveLattices.CompFin\nimport Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Algebraic.Cardinality\nimport Mathlib.RingTheory.PicardGroup\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Baire.LocallyCompactRegular\nimport Mathlib.Topology.UniformSpace.Uniformizable\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GGConn\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart\npublic import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt\npublic import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite\nimport Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP\nimport Mathlib.Algebra.Azumaya.Basic\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnfFamily\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -121,24 +122,6 @@ open scoped IntermediateField
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {r : ℕ}
-
-theorem frames_nonempty' {r : ℕ} (X : Data E r) : X.dom.Nonempty := by
-  classical
-  choose P hP hG using X.signature
-  refine ⟨fun τ => P τ, fun τ => ⟨hP τ, fun i => ?_⟩⟩
-  have h : dmin X.Gm (fun τ => P τ) τ i = ((psgn X.p0 i : ℝ) : ℂ) := by
-    have hm : mat (Ψ := X.Ψ) (fun τ => P τ) τ = P τ := rfl
-    unfold dmin lminor
-    rw [hm, hG τ, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-    unfold psgn
-    rw [Complex.ofReal_prod, ← Fin.prod_univ_eq_prod_range (fun a => ((sgn X.p0 a : ℝ) : ℂ))]
-    rfl
-  rw [h, Complex.ofReal_re]
-  refine mul_self_pos.2 ?_
-  unfold psgn
-  refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
-  unfold sgn
-  split_ifs <;> norm_num
 
 theorem rdU_eq_of_reads' {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (h : GenFrEx Xo c) (k : U.Comp)
     (Z : Comp Xo c) (x : (U.X k).dom) (φ : Om Z →ₐ[c.F] CAt σ) (y' : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ)
@@ -398,7 +381,7 @@ theorem over_unique {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {h : GenFrEx Xo 
     obtain ⟨Z', S, hS, hg⟩ := GlobalTheory.GenericFrames.exists_comp_generic_off_meagre E H Dw l Xo c σ r (U σ) hσ hU h k₁
     have hd : Dense (⋂ n, (S n)ᶜ) :=
       dense_iInter_of_isOpen (fun n => (hS n).1.isOpen_compl) fun n => interior_eq_empty_iff_dense_compl.1 (hS n).2
-    obtain ⟨x, hx, hxS⟩ := hd.inter_open_nonempty _ (FourierCoefficientDomain.isOpen_dom _) (frames_nonempty' _)
+    obtain ⟨x, hx, hxS⟩ := hd.inter_open_nonempty _ (FourierCoefficientDomain.isOpen_dom _) (_root_.GlobalTheory.UnifFamily.dom_nonempty _)
     obtain ⟨φ, y₁, t, hm, hb⟩ := hg ⟨x, hx⟩ fun n hn => Set.mem_iInter.1 hxS n hn
     obtain rfl : Z' = Z := by
       by_contra hne
@@ -621,8 +604,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.T.good_embedding_component_sections : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (σ : c.F →+* ℂ), GoodEmb c σ → ∀ (Z : Comp Xo c) (k : (U σ).Comp), Over (U σ) (e Z) k → ∀ (a : WZ E) (N : ℕ) (g : Fin (N + 1) → Rul Xo c), (∀ j, g j ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a) → BirOn h Z g → ∀ (φ : Om Z →ₐ[c.F] CAt σ) (x₀ y : ((U σ).X k).dom) (y₁ : FrPt Xo c (CAt σ)) (t : Ix Dw → (CAt σ)ˣ), FrMap φ (genFr h Z) y₁ → FrBor t ((U σ).un k x₀) y₁ → ∀ w : ℂ, w ≠ 0 → (∀ j, rdU (U σ) (g j) k y.1 = w * toC (φ (evC h Z (g j)))) → ∃ t' : Ix Dw → (CAt σ)ˣ, FrBor t' ((U σ).un k x₀) ((U σ).un k y) := by
-  first | exact @GlobalTheory.CompanionTheory.Ar.SameFlag.frBor_of_proportional_readings
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodEmbeddingComponentSectionsStatement =====
@@ -912,7 +893,7 @@ theorem exists_frame_of_hom [DecidableEq (CMType H)] (hG : Top.Given) (hL : Comp
     rw [Rd.rd_eq a g hg] at e1
     rw [div_mul_eq_mul_div, eq_div_iff hθ0, mul_comm (rdU (U σ) g k' y'), e1, map_mul, map_mul, map_mul]
     ring
-  · obtain ⟨h1, -, -, h4, -⟩ := GlobalTheory.T.tower_weight_of_zero E H Dw l Xo c RM u
+  · obtain ⟨h1, -, -, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.integer_weights_vocab E H Dw l Xo c RM u
     obtain ⟨θ, hθ, hθf⟩ := hall (GlobalTheory.AllWt.wtOf Dw u 0).1 (nOf u) (fun j => by rw [h1]; exact h4 j)
     have hf' : f ∈ Rec.secZ Xo c (GlobalTheory.AllWt.wtOf Dw u 0).1 := GlobalTheory.CompanionTheory.Ar.Plug.Test.secZ_eq u ▸ hf
     have e1 := eq_of_hasVal ((hθf f hf').1 hσ)
@@ -1045,10 +1026,10 @@ theorem vs_arch : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       have h1 := hw (e Z) (hL.e_sec Z)
       rw [hk y hy, (hL.e_val Z).2 Z' hne, map_zero, mul_one] at h1
       exact hw0 h1
-    obtain ⟨a, N, g, hgs, hgb⟩ := GlobalTheory.T.good_origin_component_sections hG E H Dw l Xo c r U h e hL Y T o Z'
+    obtain ⟨a, N, g, hgs, hgb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Plug.BirEx.bir_exists hG E H Dw l Xo c r U h e hL Y T o Z'
     exact bound_at_frame hG hL x hx hpq Fr Z' Rd u s R hR hH hf hev hσ hk ⟨y, hy⟩ φ fun y' hy' => by
       obtain ⟨w, hw, hwg⟩ := hy' a
-      exact GlobalTheory.T.good_embedding_component_sections E H Dw l Xo c r U h e hL σ hσ Z' k hk a N g hgs hgb φ ⟨y, hy⟩ y' y₁ t hm hb w hw fun j => hwg _ (hgs j)
+      exact _root_.GlobalTheory.CompanionTheory.Ar.SameFlag.frBor_of_proportional_readings E H Dw l Xo c r U h e hL σ hσ Z' k hk a N g hgs hgb φ ⟨y, hy⟩ y' y₁ t hm hb w hw fun j => hwg _ (hgs j)
   have hcl : y₀ ∈ closure (((U σ).X k).dom ∩ ⋂ n, (S n)ᶜ) := hd.open_subset_closure_inter ho hy₀
   have hct : ContinuousAt (fun y => GlobalTheory.AllWt.homN (U σ) x (GlobalTheory.AllWt.wtOf Dw u 0) f ⟨k, y⟩) y₀ :=
     (continuousOn_homN (U σ) hU hpq x u hf k).continuousAt (ho.mem_nhds hy₀)

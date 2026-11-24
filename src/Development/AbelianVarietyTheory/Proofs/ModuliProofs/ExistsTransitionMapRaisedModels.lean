@@ -338,9 +338,7 @@ theorem isDedFrac_of_isInc (l : Level H) (S A : ℕ) (hS : 0 < S) (hA : l.A = A)
   subst hA
   exact (GlobalTheory.BaseRing.isDedFrac_RZ E H l S 0 hS (by rw [h1, pow_zero])).2.2 β hβ
 
-theorem j_over {U : Scheme.{0}} {F O : Type} [Field F] [CommRing O] {c : U ⟶ Sp F} {t : SAB H U} {β : O →+* F}
-    (C : Cpt c t β) : C.j ≫ C.s = c ≫ spMap β := by
-  rw [Cpt.j, Category.assoc, pullback.condition, ← Category.assoc, C.jQ_over]
+alias j_over := _root_.GlobalTheory.Models.Cpt.openImmersion_comp_structure_eq_generic
 
 theorem div_mul_div {a b c : ℕ} (h : a ∣ b) (h' : b ∣ c) : c / b * (b / a) = c / a := by
   exact Nat.div_mul_div h' h

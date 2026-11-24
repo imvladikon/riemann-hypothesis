@@ -193,11 +193,11 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
     rw [← map_natCast Polynomial.C, hA.char, map_zero]
   have hpL : ((p : A[T;T⁻¹])) = 0 := by
     rw [← map_natCast LaurentPolynomial.C, hA.char, map_zero]
-  obtain ⟨T₁, _, i₁, hP1⟩ := Leaf.pq_ex p (Polynomial A)
+  obtain ⟨T₁, _, i₁, hP1⟩ := _root_.GlobalTheory.CompanionTheory.PerfClos.exists_PQ p (Polynomial A)
     (Ideal.span {Polynomial.C f - Polynomial.X * Polynomial.C g}) hpA
-  obtain ⟨T₂, _, i₂, hP2⟩ := Leaf.pq_ex p (Polynomial A)
+  obtain ⟨T₂, _, i₂, hP2⟩ := _root_.GlobalTheory.CompanionTheory.PerfClos.exists_PQ p (Polynomial A)
     (Ideal.span {Polynomial.C g - Polynomial.X * Polynomial.C f}) hpA
-  obtain ⟨T₃, _, i₃, hP3⟩ := Leaf.pq_ex p A[T;T⁻¹]
+  obtain ⟨T₃, _, i₃, hP3⟩ := _root_.GlobalTheory.CompanionTheory.PerfClos.exists_PQ p A[T;T⁻¹]
     (Ideal.span {LaurentPolynomial.C f - LaurentPolynomial.T 1 * LaurentPolynomial.C g}) hpL
   have k1 : i₁ (Polynomial.C f - Polynomial.X * Polynomial.C g) = 0 :=
     (hP1.ker _).2 ⟨0, by rw [pow_zero, pow_one]; exact Ideal.subset_span (Set.mem_singleton _)⟩
@@ -236,8 +236,8 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
       show i₃ (LaurentPolynomial.invert (Polynomial.toLaurent _)) = 0
       rw [e2, map_mul, k3, mul_zero]
     rw [map_mul, this, mul_zero]
-  obtain ⟨ψ₁, hψ₁, -⟩ := Leaf.pq_lift p (Polynomial A) T₁ T₃ i₁ _ φ₁ hP1 hP3.pf hs1
-  obtain ⟨ψ₂, hψ₂, -⟩ := Leaf.pq_lift p (Polynomial A) T₂ T₃ i₂ _ φ₂ hP2 hP3.pf hs2
+  obtain ⟨ψ₁, hψ₁, -⟩ := _root_.GlobalTheory.CompanionTheory.PerfectRing.pq_lift p (Polynomial A) T₁ T₃ i₁ _ φ₁ hP1 hP3.pf hs1
+  obtain ⟨ψ₂, hψ₂, -⟩ := _root_.GlobalTheory.CompanionTheory.PerfectRing.pq_lift p (Polynomial A) T₂ T₃ i₂ _ φ₂ hP2 hP3.pf hs2
   have hρ1 : ∀ α, ψ₁ (i₁ α) = i₃ (Polynomial.toLaurent α) := fun α => RingHom.congr_fun hψ₁ α
   have hρ2 : ∀ β, ψ₂ (i₂ β) = i₃ (LaurentPolynomial.invert (Polynomial.toLaurent β)) :=
     fun β => RingHom.congr_fun hψ₂ β
@@ -263,14 +263,14 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
   let ρ₂ : T₂ →ₐ[A] T₃ := { ψ₂ with commutes' := d2' }
   refine ⟨T₁ × T₂, inferInstance, inferInstance, perfectoid_prod p T₁ T₂ hP1.pf hP2.pf, ?_,
     (1, 0), (i₁ Polynomial.X, 0), (0, i₂ Polynomial.X), ?_, ?_, ?_⟩
-  · refine Leaf.mv_prod p A T₁ T₂ T₃ r ρ₁ ρ₂ hr hP3.pf
-      (Leaf.b_surj p A T₁ T₂ T₃ f g i₁ i₂ i₃ ψ₁ ψ₂ hA hP1 hP2 hP3 hρ1 hρ2) ?_
+  · refine _root_.GlobalTheory.CompanionTheory.SnakeCov.mv_prod p A T₁ T₂ T₃ r ρ₁ ρ₂ hr hP3.pf
+      (_root_.GlobalTheory.CompanionTheory.PerfectRing.b_surj p A T₁ T₂ T₃ f g i₁ i₂ i₃ ψ₁ ψ₂ hA hP1 hP2 hP3 hρ1 hρ2) ?_
     intro K _ _ hK
-    obtain ⟨j₁, hj1, hj1C, hj1X⟩ := Leaf.bc_poly p A T₁ K i₁'
+    obtain ⟨j₁, hj1, hj1C, hj1X⟩ := _root_.GlobalTheory.CompanionTheory.Perfection.pq_baseChange_polynomial p A T₁ K i₁'
       (Polynomial.C f - Polynomial.X * Polynomial.C g) hA hK hP1
-    obtain ⟨j₂, hj2, hj2C, hj2X⟩ := Leaf.bc_poly p A T₂ K i₂'
+    obtain ⟨j₂, hj2, hj2C, hj2X⟩ := _root_.GlobalTheory.CompanionTheory.Perfection.pq_baseChange_polynomial p A T₂ K i₂'
       (Polynomial.C g - Polynomial.X * Polynomial.C f) hA hK hP2
-    obtain ⟨j₃, hj3, hj3C, hj3T⟩ := Leaf.bc_laur p A T₃ K i₃' f g hA hK hP3
+    obtain ⟨j₃, hj3, hj3C, hj3T⟩ := _root_.GlobalTheory.CompanionTheory.PerfBC.bc_laur p A T₃ K i₃' f g hA hK hP3
     rw [Polynomial.map_sub, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_C, Polynomial.map_X] at hj1 hj2
     refine ⟨fun a h1 h2 k => ?_, fun w₁ w₂ hw => ?_⟩
     · have hr' : IsRt p (fun k => algebraMap A K (r k)) := fun k => by
@@ -280,7 +280,7 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
         have := Ideal.mem_map_of_mem (algebraMap A K) hN
         rwa [Ideal.map_span, Set.image_pair, map_pow] at this
       rw [Algebra.smul_def]
-      exact Leaf.b_inj p K _ _ _ _ j₁ j₂ (fun k => algebraMap A K (r k)) N hK hr' hN' hj1 hj2 a
+      exact _root_.GlobalTheory.CompanionTheory.PerfectRing.b_inj p K _ _ _ _ j₁ j₂ (fun k => algebraMap A K (r k)) N hK hr' hN' hj1 hj2 a
         (by rw [hj1C]; exact h1) (by rw [hj2C]; exact h2) k
     · let σ₁ : T₁ ⊗[A] K →+* T₃ ⊗[A] K := (Algebra.TensorProduct.map ρ₁ (AlgHom.id A K)).toRingHom
       let σ₂ : T₂ ⊗[A] K →+* T₃ ⊗[A] K := (Algebra.TensorProduct.map ρ₂ (AlgHom.id A K)).toRingHom
@@ -311,7 +311,7 @@ theorem cov_blow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
             congr 1
             exact (hρ2 _).trans (by rw [Polynomial.toLaurent_X, LaurentPolynomial.invert_T]; rfl)
         exact fun β => RingHom.congr_fun this β
-      obtain ⟨a, ha1, ha2⟩ := Leaf.b_mid p K _ _ _ _ _ j₁ j₂ j₃ σ₁ σ₂ hK hj1 hj2 hj3 c1 c2 w₁ w₂ hw
+      obtain ⟨a, ha1, ha2⟩ := _root_.GlobalTheory.CompanionTheory.BMid.exists_const_of_rho_eq p K _ _ _ _ _ j₁ j₂ j₃ σ₁ σ₂ hK hj1 hj2 hj3 c1 c2 w₁ w₂ hw
       exact ⟨a, by rw [← ha1, hj1C], by rw [← ha2, hj2C]⟩
   · ext <;> simp
   · refine Prod.ext ?_ ?_
@@ -397,11 +397,11 @@ theorem cov_step : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
   intro p _ A _ r hA hr
   let 𝓔 : Set (Set (MvPolynomial (Fin 3) A)) := {E | (∃ P : Polynomial A, P.Monic ∧ 0 < P.natDegree ∧ E = eqA P) ∨
     ∃ f g : A, (∃ N : ℕ, r 0 ^ N ∈ Ideal.span {f, g}) ∧ E = eqB f g}
-  obtain ⟨B, _, _, hB, hc, hE, hs⟩ := Leaf.big_step p A r 𝓔 hA (fin_step p A r 𝓔 hA hr (by
+  obtain ⟨B, _, _, hB, hc, hE, hs⟩ := _root_.GlobalTheory.CompanionTheory.BigStep.big_step p A r 𝓔 hA (fin_step p A r 𝓔 hA hr (by
     rintro E (⟨P, hP, hd, rfl⟩ | ⟨f, g, ⟨N, hN⟩, rfl⟩) B _ _ hB
     · rcases subsingleton_or_nontrivial B with _ | _
-      · exact ⟨B, inferInstance, inferInstance, hB, (Leaf.cov_mono p B _).1, (pt_eqA _ _).2 ⟨0, Subsingleton.elim _ _⟩⟩
-      · obtain ⟨B₁, _, _, h1, h2, x, hx⟩ := Leaf.cov_root p B (fun k => algebraMap A B (r k)) (P.map (algebraMap A B)) hB
+      · exact ⟨B, inferInstance, inferInstance, hB, (_root_.GlobalTheory.CompanionTheory.CovMono.cov_mono p B _).1, (pt_eqA _ _).2 ⟨0, Subsingleton.elim _ _⟩⟩
+      · obtain ⟨B₁, _, _, h1, h2, x, hx⟩ := _root_.GlobalTheory.CompanionTheory.CovRoot.cov_root p B (fun k => algebraMap A B (r k)) (P.map (algebraMap A B)) hB
           (hP.map _) (by rwa [hP.natDegree_map])
         refine ⟨B₁, inferInstance, inferInstance, h1, h2, (pt_eqA _ _).2 ⟨x, ?_⟩⟩
         rw [← Polynomial.map_map, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def]
@@ -449,22 +449,22 @@ theorem St.next (p : ℕ) [Fact p.Prime] {A : Type} [CommRing A] {r : ℕ → A}
     (fun k => by rw [← map_pow, hr k])
   letI : Algebra A B := ((algebraMap s.G B).comp (algebraMap A s.G)).toAlgebra
   haveI : IsScalarTower A s.G B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  exact ⟨⟨B, hB, Leaf.cov_comp p A s.G B r hA s.pf hr s.cov hc⟩, IsScalarTower.toAlgHom A s.G B, h1, h2, h3⟩
+  exact ⟨⟨B, hB, _root_.GlobalTheory.CompanionTheory.CovComp.cov_comp p A s.G B r hA s.pf hr s.cov hc⟩, IsScalarTower.toAlgHom A s.G B, h1, h2, h3⟩
 
 theorem tower_seq : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ → A), Pf p A → IsRt p r → ∃ (G : ℕ → Type) (_ : ∀ n, CommRing (G n)) (_ : ∀ n, Algebra A (G n)) (f : ∀ n, G n →ₐ[A] G (n + 1)), (∀ n, Pf p (G n) ∧ Cov p r (G n) ∧ AICm (f n : G n →+* G (n + 1)) ∧ VALm (algebraMap A (G n) (r 0)) (f n : G n →+* G (n + 1)) ∧ Splits p (algebraMap A (G n) (r 0)) (f n : G n →+* G (n + 1))) ∧ Function.Bijective (algebraMap A (G 0)) := by
   intro p _ A _ r hA hr
   choose nx f h using St.next p hA hr
-  let s : ℕ → St p r := fun n => Nat.rec ⟨A, hA, (Leaf.cov_mono p A r).1⟩ (fun _ t => nx t) n
+  let s : ℕ → St p r := fun n => Nat.rec ⟨A, hA, (_root_.GlobalTheory.CompanionTheory.CovMono.cov_mono p A r).1⟩ (fun _ t => nx t) n
   exact ⟨fun n => (s n).G, fun n => (s n).ring, fun n => (s n).alg, fun n => f (s n),
     fun n => ⟨(s n).pf, (s n).cov, h (s n)⟩, Function.bijective_id⟩
 
 theorem cov_tower : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ → A), Pf p A → IsRt p r → ∃ (B : Type) (_ : CommRing B) (_ : Algebra A B), Pf p B ∧ Cov p r B ∧ AIC B ∧ VAL (algebraMap A B (r 0)) ∧ Splits p (r 0) (algebraMap A B) := by
   intro p _ A _ r hA hr
   obtain ⟨G, _, _, f, h, h0⟩ := tower_seq p A r hA hr
-  obtain ⟨L, _, _, ι, hι⟩ := Leaf.colim_ex A G f
-  have hp := Leaf.colim_pf p A G f L ι hι
-  have ht := Leaf.colim_test A (r 0) G f L ι hι (fun n => (h n).2.2.1) (fun n => (h n).2.2.2.1)
-  refine ⟨L, inferInstance, inferInstance, hp.1 fun n => (h n).1, Leaf.cov_cmp p A L r fun m n a c hs => ?_, ht.1, ht.2, ?_⟩
+  obtain ⟨L, _, _, ι, hι⟩ := _root_.GlobalTheory.CompanionTheory.ColimEx.exists_isColim A G f
+  have hp := _root_.GlobalTheory.CompanionTheory.colim_pf p A G f L ι hι
+  have ht := _root_.GlobalTheory.CompanionTheory.Colim.aic_val_of_isColim A (r 0) G f L ι hι (fun n => (h n).2.2.1) (fun n => (h n).2.2.2.1)
+  refine ⟨L, inferInstance, inferInstance, hp.1 fun n => (h n).1, _root_.GlobalTheory.CompanionTheory.CovCmp.cov_of_solv p A L r fun m n a c hs => ?_, ht.1, ht.2, ?_⟩
   · obtain ⟨N, hN⟩ := hp.2 m n a c hs
     exact ⟨G N, inferInstance, inferInstance, (h N).2.1, hN⟩
   · intro T _ x hT h1 h2
@@ -496,12 +496,6 @@ section -- clump:auto
 open TensorProduct CrystallineSemistableComparison.D
 open scoped LaurentPolynomial
 namespace CrystallineSemistableComparison.D.Leaf
-
-theorem cov_tower : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ → A), Pf p A → IsRt p r → ∃ (B : Type) (_ : CommRing B) (_ : Algebra A B), Pf p B ∧ Cov p r B ∧ AIC B ∧ VAL (algebraMap A B (r 0)) ∧ Splits p (r 0) (algebraMap A B) := CrystallineSemistableComparison.D.cov_tower
-
-theorem test_of_pre : ∀ (p : ℕ) [Fact p.Prime] (B : Type) [CommRing B] (r : ℕ → B), Pf p B → IsRt p r → AIC B → VAL (r 0) → ∃ (T : Type) (_ : CommRing T) (g : B →+* T), Pf p T ∧ AIC T ∧ VAL (g (r 0)) ∧ IsAdicComplete (Ideal.span {g (r 0)}) T ∧ g (r 0) ∈ nonZeroDivisors T ∧ (∀ (M : ℕ) (y : T), ∃ x, y - g x ∈ Ideal.span {g (r 0) ^ M}) ∧ (∀ (M : ℕ) (x : B), g x ∈ Ideal.span {g (r 0) ^ M} → ∀ k, r k * x ∈ Ideal.span {r 0 ^ M}) ∧ ∀ (T₁ : Type) [CommRing T₁] (x : B →+* T₁), IsAdicComplete (Ideal.span {x (r 0)}) T₁ → x (r 0) ∈ nonZeroDivisors T₁ → ∃! ψ : T →+* T₁, ψ.comp g = x := CrystallineSemistableComparison.D.test_of_pre
-
-theorem cech_tens : ∀ (p : ℕ) [Fact p.Prime] (R : Type) [CommRing R] [IsDomain R] [ValuationRing R] (r : ℕ → R) (N : Type) [AddCommGroup N] [Module R N] (A : Type) [CommRing A] [Algebra R A](B : Type) [CommRing B] [Algebra A B] (K : ℕ → Type) [∀ n, CommRing (K n)] [∀ n, Algebra A (K n)] [∀ n, Algebra R (K n)] [∀ n, IsScalarTower R A (K n)] (ι : ∀ n, Fin n → (B →ₐ[A] K n)) (δ : ∀ n, Fin (n + 1) → (K n →ₐ[A] K (n + 1))), IsRt p r → (∀ a : R, a ≠ 0 → ∃ M : ℕ, a ∣ r 0 ^ M) → Pf p A → Pf p B → Cov p (fun k => algebraMap R A (r k)) B → (∀ n, IsWP (ι n)) → (∀ n k i, (δ n k).comp (ι n i) = ι (n + 1) (k.succAbove i)) → (∀ w : N ⊗[R] K 0, ((alt (δ 0)).restrictScalars R).lTensor N w = 0 → ∀ k, r k • w = 0) ∧ ∀ (n : ℕ) (w : N ⊗[R] K (n + 1)), ((alt (δ (n + 1))).restrictScalars R).lTensor N w = 0 → ∀ k, r k • w ∈ LinearMap.range (((alt (δ n)).restrictScalars R).lTensor N) := CrystallineSemistableComparison.D.cech_tens
 
 end CrystallineSemistableComparison.D.Leaf
 end -- clump:auto

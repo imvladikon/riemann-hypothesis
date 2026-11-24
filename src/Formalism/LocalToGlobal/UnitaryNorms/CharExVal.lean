@@ -84,11 +84,8 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem algebraic_values_finite (L : Type) [Field L] [NumberField L] : PI.AlgValsFin.AlgValsFin L :=
-  PI.AlgValsFin.W.algValsFin_main L
-
 theorem algValsFin (L : Type) [Field L] [NumberField L] : PI.AlgValsFin.AlgValsFin L :=
-  algebraic_values_finite L
+  _root_.PI.AlgValsFin.W.algValsFin_main L
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AlgValsFin =====
@@ -102,7 +99,7 @@ namespace Formalism.L2.Host
 
 namespace CharEx
 
-theorem algValsFin (L : Type) [Field L] [NumberField L] : AlgValsFin L := algebraic_values_finite L
+theorem algValsFin (L : Type) [Field L] [NumberField L] : AlgValsFin L := _root_.PI.AlgValsFin.W.algValsFin_main L
 
 end CharEx
 

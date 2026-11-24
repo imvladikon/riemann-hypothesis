@@ -83,7 +83,7 @@ theorem exists_sFam_primePow_sq :
       ∃ j : ℕ, 1 ≤ j ∧ Nonempty (SFam g ((l ^ j) ^ 2) (zetaAway ((l ^ j) ^ 2))) := by
   intro g l hg hl _hodd
   obtain ⟨hLaws, hLaws2⟩ := GlobalTheory.abelianSchemeLaws_all
-  obtain ⟨j₀, hj₀⟩ := GlobalTheory.ZM.SiegelArithFamily.nonempty_sFam hLaws hLaws2 GlobalTheory.Moduli.cube_of_isLB
+  obtain ⟨j₀, hj₀⟩ := GlobalTheory.ZM.SiegelArithFamily.nonempty_sFam hLaws hLaws2 _root_.GlobalTheory.AbLaw.CubeAssembly.cube_gen
     GlobalTheory.thetaUnifAV_closed g l hg hl _hodd
 
   refine ⟨max j₀ 1, le_max_right _ _, ?_⟩
@@ -198,8 +198,8 @@ theorem sFam_of_dvd : ∀ (h n N : ℕ) (o : Type) [CommRing o] [IsNoetherianRin
     obtain ⟨cl, hcl1, hcl2⟩ := _root_.GlobalTheory.SiegLower.exists_lower h n N o o ζ (b.ζ : o) (RingHom.id o) T s' c hN0 b.unit hnN rfl
     have pl : cl.Principal := sRel_principal hcl2 hp
     obtain ⟨f, hf, hfp⟩ := F.rep T (s' ≫ spMap (RingHom.id o)) cl hred
-      (by rw [spMap_id_eq, Category.comp_id]; exact hdense) pl
-    rw [spMap_id_eq, Category.comp_id] at hf
+      (by rw [_root_.GlobalTheory.LevelFibre.spMap_id', Category.comp_id]; exact hdense) pl
+    rw [_root_.GlobalTheory.LevelFibre.spMap_id', Category.comp_id] at hf
     subst hf
     have r1 : SRel c F.univ (N / n) 1 (𝟙 _ ≫ f) := sRel_trans ((sRel_one_one_iff _ _ _).2 hfp) hcl1
     have r2 : SRel c c₀ (N / n) 1 ((𝟙 _ ≫ f) ≫ 𝟙 _) := sRel_trans r₀₁ r1

@@ -77,7 +77,7 @@ theorem JJ_preimage_box_eq_JJ_box : ∀ {k : Type} [Field k] [ValuativeRel k] [T
     exacts [⟨a, le_rfl, h⟩, ⟨a', h, le_rfl⟩]
   obtain ⟨r₁, hr₁, h₁⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.ShearLat.main g
   obtain ⟨r₂, -, h₂⟩ := GlobalTheory.T.smooth_vector_fixed_small_shear T hT v
-  obtain ⟨r₃, -, h₃⟩ := GlobalTheory.T.smooth_vector_fixed_small_shear T' hT' v'
+  obtain ⟨r₃, -, h₃⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.shear_fix_vector T' hT' v'
   obtain ⟨r₄, h₄₁, h₄₂⟩ := hmin r₁ r₂
   obtain ⟨r, hr₄, hr₃⟩ := hmin r₄ r₃
   refine ⟨r, fun t ht t' hgt => ?_⟩

@@ -512,19 +512,7 @@ end UpperTheory.V.Z.Keep.PotentialOfUnlocked
 
 
 open UpperTheory.V.Z.Keep.PotentialOfUnlocked in
-theorem UpperTheory.V.Z.Keep.crDescend (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ]
-    [IsTopologicalGroup Γ] [CompactSpace Γ] [T2Space Γ] (φ : Γ →* GQ l) (hφ : IsOpenEmbedding φ)
-    (H : Subgroup Γ) [H.Normal] (hH : IsOpen (H : Set Γ)) {n : ℕ} (r₀ : Γ →* GL (Fin n) (Om l))
-    (hr : Continuous fun g => (r₀ g : Matrix (Fin n) (Fin n) (Om l))) (P : GL (Fin n) (Om l))
-    (κ : Fin n → Γ →* (Om l)ˣ) (w : Fin n → ℤ)
-    (hfl : ∀ s, (∀ i j, j < i → (P * r₀ s * P⁻¹ : GL (Fin n) (Om l)) i j = 0) ∧
-      ∀ i, (P * r₀ s * P⁻¹ : GL (Fin n) (Om l)) i i = (κ i s : Om l))
-    (hw : StrictAnti w) (hI : ∀ i, ∀ g ∈ H, φ g ∈ Iq l → κ i g = cycA l l (Om l) (φ g) ^ w i)
-    (hne : ∀ i j, κ i ≠ κ j * (cycA l l (Om l)).comp φ) :
-    ∃ (E' : FinExt l) (r' : H →* GL (Fin n) ↥E'.1),
-      (∀ h a b, (((r' h : Matrix (Fin n) (Fin n) ↥E'.1) a b : ↥E'.1) : Om l) =
-        (r₀ h : Matrix (Fin n) (Fin n) (Om l)) a b) ∧ IsCr (φ.comp H.subtype) (colRep r') :=
-  cr_descend hP φ hφ H hH r₀ hr P κ w hfl hw hI hne
+alias UpperTheory.V.Z.Keep.crDescend := _root_.UpperTheory.V.Z.Keep.PotentialOfUnlocked.cr_descend
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.UpperTriangularPlaces.CrOnTri =====
@@ -728,12 +716,6 @@ private theorem anti3 (e : ℕ) (he : 1 ≤ e) : StrictAnti ![(e : ℤ), 0, -(e 
   intro a b hab
   fin_cases a <;> fin_cases b <;> first | (exfalso; revert hab; decide) | (simp; omega)
 
-private theorem cont_units {Γ M : Type} [Group Γ] [TopologicalSpace Γ] [ContinuousInv Γ] [Monoid M] [TopologicalSpace M]
-    (f : Γ →* Mˣ) (h : Continuous fun g => (f g : M)) : Continuous f := by
-  refine Units.continuous_iff.2 ⟨h, ?_⟩
-  simp only [← map_inv]
-  exact h.comp continuous_inv
-
 end UpperTheory.V.Z.Keep.KatoThreePlus
 
 namespace UpperTheory.V.Z.Keep.KatoThreePlus
@@ -919,7 +901,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
   have hK : ∀ s, (UnitaryThreeInertia.push A.val r (galEmb ℚ K Ω s)).right = 1 := fun s => (hright _).trans (hmem s)
   have hLη : galOf ℚ L Ω ≤ η.ker := Db.galL_le k
   have hρc : Continuous ρ := by
-    refine KatoThreePlus.cont_units ρ (continuous_matrix fun a b => ?_)
+    refine _root_.UpperTheory.Reformulated.B.ContinuousHomomorphism.cont_hom ρ (continuous_matrix fun a b => ?_)
     have h1 : Alg.AdicCont (maximalIdeal A) fun g : G ℚ Ω => (r g).mat a b := fun n =>
       (hr.cont n).comp fun m => m a b
     refine ((hcont (G ℚ Ω) _ h1).comp (galEmbTop ℚ K Ω).1.continuous).congr fun s => ?_

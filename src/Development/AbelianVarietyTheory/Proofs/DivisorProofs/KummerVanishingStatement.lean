@@ -68,10 +68,6 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC GlobalThe
 noncomputable section
 namespace GlobalTheory.EtC.MuTw
 
-theorem appTop_comp_apply' {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (a : Γ(U, ⊤)) :
-    (k ≫ g).appTop.hom a = k.appTop.hom (g.appTop.hom a) := by
-  rw [Scheme.Hom.comp_appTop]; rfl
-
 theorem isUnit_natCast_of_hom {V U : Scheme.{0}} (g : V ⟶ U) (q : ℕ) (hq : IsUnit (q : Γ(U, ⊤))) :
     IsUnit (q : Γ(V, ⊤)) := by
   have := hq.map g.appTop.hom
@@ -109,7 +105,7 @@ theorem etaS_surjective : ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}), IsUnit (q :
       ((GlobalTheory.T.etaleLocal_primitiveRoot_and_roots_of_unity q V).2.2.1 ζ (muVal q (Sec.res g y)) (muVal_pow q _)) ?_
     rintro W k ⟨a, ha⟩
     refine ⟨_, etaS_lift_pow q W (Prim.map k.appTop.hom ζ) (Sec.res (k ≫ g) y) a ?_⟩
-    rw [muVal_res, appTop_comp_apply', ← muVal_res, ha]
+    rw [muVal_res, _root_.GlobalTheory.EtC.MuTw.Inj.comp_appTop_apply', ← muVal_res, ha]
     rfl
   obtain ⟨S, hS, hSy⟩ := hloc
   choose s hs using hSy
@@ -120,12 +116,12 @@ theorem etaS_surjective : ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}), IsUnit (q :
     fun V g hg => s V g hg
   have hfam : fam.Compatible := by
     intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ e
-    apply GlobalTheory.T.tateTwistOneToRootsOfUnity_sections_injective q Z (isUnit_natCast_of_hom (g₁ ≫ f₁) q hq)
+    apply _root_.GlobalTheory.EtC.MuTw.Inj.etaS_injective q Z (isUnit_natCast_of_hom (g₁ ≫ f₁) q hq)
     change Sec.map (etaS q) (Sec.res g₁ (s _ f₁ h₁)) = Sec.map (etaS q) (Sec.res g₂ (s _ f₂ h₂))
     rw [etaS_res, etaS_res, hs, hs]
     apply muVal_injective q Z
     simp only [muVal_res]
-    rw [← appTop_comp_apply', ← appTop_comp_apply', e]
+    rw [← _root_.GlobalTheory.EtC.MuTw.Inj.comp_appTop_apply', ← _root_.GlobalTheory.EtC.MuTw.Inj.comp_appTop_apply', e]
   obtain ⟨x, hx, -⟩ := hsh S hS fam hfam
   refine ⟨x, ?_⟩
   have hsep := (muS q).property
@@ -151,8 +147,6 @@ section -- clump:auto
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC GlobalTheory.EtC.MuTw
 
 
-theorem _root_.GlobalTheory.T.tateTwistOneToRootsOfUnity_sections_surjective : ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → Function.Surjective ((etaS q).hom.app (op U)).hom := by
-  first | (exact @GlobalTheory.EtC.MuTw.etaS_surjective)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistOneToRootsOfUnitySectionsSurjectiveStatement =====
@@ -175,7 +169,7 @@ theorem GlobalTheory.EtC.tw_one_mu : ∀ (q : ℕ) [NeZero q], ∃ e : ∀ (C : 
   let e : ∀ (C : Type) [CommRing C], IsUnit (q : C) → (onRings (tw q 1)).obj (CommRingCat.of C) ≃+ Additive (rootsOfUnity q C) :=
     fun C _ hC =>
       ((AddEquiv.ofBijective ((etaS q).hom.app (op (Spec (CommRingCat.of C)))).hom.toAddMonoidHom
-        ⟨GlobalTheory.T.tateTwistOneToRootsOfUnity_sections_injective q _ (hunit C hC), GlobalTheory.T.tateTwistOneToRootsOfUnity_sections_surjective q _ (hunit C hC)⟩).trans AddEquiv.ulift).trans
+        ⟨_root_.GlobalTheory.EtC.MuTw.Inj.etaS_injective q _ (hunit C hC), _root_.GlobalTheory.EtC.MuTw.etaS_surjective q _ (hunit C hC)⟩).trans AddEquiv.ulift).trans
         (MulEquiv.restrictRootsOfUnity (Scheme.ΓSpecIso (CommRingCat.of C)).commRingCatIsoToRingEquiv.toMulEquiv q).toAdditive
   refine ⟨e, ?_⟩
   intro C D _ _ φ hC hD x
@@ -196,8 +190,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.tateTwistOne_sections_eq_rootsOfUnity : ∀ (q : ℕ) [NeZero q], ∃ e : ∀ (C : Type) [CommRing C], IsUnit (q : C) → (onRings (tw q 1)).obj (CommRingCat.of C) ≃+ Additive (rootsOfUnity q C), ∀ (C D : Type) [CommRing C] [CommRing D] (φ : C →+* D) (hC : IsUnit (q : C)) (hD : IsUnit (q : D)) (x : (onRings (tw q 1)).obj (CommRingCat.of C)), ((Additive.toMul (e D hD (((onRings (tw q 1)).map (CommRingCat.ofHom φ)).hom x)) : rootsOfUnity q D) : Dˣ) = Units.map φ.toMonoidHom ((Additive.toMul (e C hC x) : rootsOfUnity q C) : Cˣ) := by
-  first | (exact @GlobalTheory.EtC.tw_one_mu)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistOneSectionsEqRootsOfUnityStatement =====
@@ -217,17 +209,11 @@ theorem uCoc_one (A B : Type) [CommRing A] [CommRing B] [Algebra A B] : UCoc A B
   unfold UCoc
   simp [Algebra.TensorProduct.one_def]
 
-theorem uCoc_mul {A B : Type} [CommRing A] [CommRing B] [Algebra A B] {u v : (B ⊗[A] B)ˣ}
-    (hu : UCoc A B u) (hv : UCoc A B v) : UCoc A B (u * v) := by
-  unfold UCoc at *
-  simp only [Units.val_mul, map_mul, hu, hv]
-  ring
-
 theorem uCoc_pow {A B : Type} [CommRing A] [CommRing B] [Algebra A B] {u : (B ⊗[A] B)ˣ}
     (hu : UCoc A B u) (n : ℕ) : UCoc A B (u ^ n) := by
   induction n with
   | zero => simpa using uCoc_one A B
-  | succ n ih => rw [pow_succ]; exact uCoc_mul ih hu
+  | succ n ih => rw [pow_succ]; exact _root_.GlobalTheory.PicCech.uCoc_mul ih hu
 
 theorem kummer_vanishing : B6h1 := by
   intro q _ A _ hq hu hp
@@ -242,12 +228,12 @@ theorem kummer_vanishing : B6h1 := by
     have : spMap (algebraMap A B) = sch.map h ≫ sch.map f := by
       rw [← sch.map_comp, hhf]; rfl
     rw [this, pull_comp, hx, map_zero]
-  obtain ⟨γ, hγ⟩ := GlobalTheory.T.etale_cocycle_coboundary_iff (ZMod q) (tw q 1) A
+  obtain ⟨γ, hγ⟩ := _root_.GlobalTheory.CechOne.cech1 (ZMod q) (tw q 1) A
   obtain ⟨hγ0, hγs, -, -⟩ := hγ B
   obtain ⟨u, rfl⟩ := hγs x hxB
   rw [hγ0]
 
-  obtain ⟨e, he⟩ := GlobalTheory.T.tateTwistOne_sections_eq_rootsOfUnity q
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.EtC.tw_one_mu q
   have hqB : IsUnit (q : (B : Type)) := by simpa using hq.map (algebraMap A B)
   have hqBB : IsUnit (q : B ⊗[A] B) := by simpa using hq.map (algebraMap A (B ⊗[A] B))
   have hqBBB : IsUnit (q : B ⊗[A] (B ⊗[A] B)) := by simpa using hq.map (algebraMap A (B ⊗[A] (B ⊗[A] B)))
@@ -264,7 +250,7 @@ theorem kummer_vanishing : B6h1 := by
     exact h4
 
   set U := ((Additive.toMul (e _ hqBB u.1) : rootsOfUnity q (B ⊗[A] B)) : (B ⊗[A] B)ˣ) with hUdef
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.pic_faithfullyFlat_descent_unitCocycles A
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.pic_cech_descent A
   obtain ⟨hmul, hone, -, -, -⟩ := hδ B
   have hδ1 : δ B 1 = 1 := by
     have := hmul 1 1 (uCoc_one A B) (uCoc_one A B)
@@ -285,8 +271,8 @@ theorem kummer_vanishing : B6h1 := by
     rw [map_pow, map_pow, ← hwU, mul_pow, hUq, one_mul]
   have hWq' : Units.map iL.toRingHom.toMonoidHom (w ^ q)⁻¹ = Units.map iR.toRingHom.toMonoidHom (w ^ q)⁻¹ := by
     rw [map_inv, map_inv, hWq]
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_algebraMap_eq_of_faithfullyFlat_includeLeft_eq_includeRight A B ((w ^ q : (B : Type)ˣ) : (B : Type)) (by simpa [iL, iR] using congrArg Units.val hWq)
-  obtain ⟨a', ha'⟩ := GlobalTheory.T.exists_algebraMap_eq_of_faithfullyFlat_includeLeft_eq_includeRight A B (((w ^ q)⁻¹ : (B : Type)ˣ) : (B : Type)) (by simpa [iL, iR] using congrArg Units.val hWq')
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.EtC.exists_algebraMap_eq_of_includeLeft_eq_includeRight A B ((w ^ q : (B : Type)ˣ) : (B : Type)) (by simpa [iL, iR] using congrArg Units.val hWq)
+  obtain ⟨a', ha'⟩ := _root_.GlobalTheory.EtC.exists_algebraMap_eq_of_includeLeft_eq_includeRight A B (((w ^ q)⁻¹ : (B : Type)ˣ) : (B : Type)) (by simpa [iL, iR] using congrArg Units.val hWq')
   have haa : a * a' = 1 :=
     FaithfulSMul.algebraMap_injective A B (by rw [map_mul, ha, ha', Units.mul_inv, map_one])
   obtain ⟨v, hv⟩ := hu ⟨a, a', haa, by rw [mul_comm, haa]⟩
@@ -321,8 +307,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex TensorProduct GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.kummer_etale_vanishing : GlobalTheory.EtC.B6h1 := by
-  first | (exact @GlobalTheory.EtC.kummer_vanishing)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerVanishingStatement =====

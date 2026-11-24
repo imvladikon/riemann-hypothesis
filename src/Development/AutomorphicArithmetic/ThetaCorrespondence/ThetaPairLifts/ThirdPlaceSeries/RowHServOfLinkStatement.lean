@@ -582,31 +582,23 @@ theorem integral_ps' {K : Type} [NormedField K] {f : PowerSeries K}
   rw [e]
   exact h (n ())
 
-theorem ips' {f : PowerSeries K} (hf : Integral (f : MvPowerSeries Unit K)) (k : ℕ) :
-    ‖PowerSeries.coeff k f‖ ≤ 1 := hf _
-
 theorem ips_add' {f g : PowerSeries K} (hf : Integral (f : MvPowerSeries Unit K))
     (hg : Integral (g : MvPowerSeries Unit K)) : Integral ((f + g : PowerSeries K) : MvPowerSeries Unit K) := by
   apply integral_ps'; intro k
   rw [map_add (f := _)]
-  exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (ips' hf k) (ips' hg k))
+  exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (_root_.GlobalTheory.CurveDictionary.ips hf k) (_root_.GlobalTheory.CurveDictionary.ips hg k))
 
 theorem ips_sub' {f g : PowerSeries K} (hf : Integral (f : MvPowerSeries Unit K))
     (hg : Integral (g : MvPowerSeries Unit K)) : Integral ((f - g : PowerSeries K) : MvPowerSeries Unit K) := by
   apply integral_ps'; intro k
   rw [map_sub, sub_eq_add_neg]
-  exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (ips' hf k) (by rw [norm_neg]; exact ips' hg k))
+  exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (_root_.GlobalTheory.CurveDictionary.ips hf k) (by rw [norm_neg]; exact _root_.GlobalTheory.CurveDictionary.ips hg k))
 
 theorem ips_Cmul' {c : K} (hc : ‖c‖ ≤ 1) {f : PowerSeries K} (hf : Integral (f : MvPowerSeries Unit K)) :
     Integral ((PowerSeries.C c * f : PowerSeries K) : MvPowerSeries Unit K) := by
   apply integral_ps'; intro k
   rw [PowerSeries.coeff_C_mul, norm_mul]
-  exact mul_le_one₀ hc (norm_nonneg _) (ips' hf k)
-
-theorem ips_X' : Integral ((PowerSeries.X : PowerSeries K) : MvPowerSeries Unit K) := by
-  apply integral_ps'; intro k
-  rw [PowerSeries.coeff_X]
-  split_ifs <;> simp
+  exact mul_le_one₀ hc (norm_nonneg _) (_root_.GlobalTheory.CurveDictionary.ips hf k)
 
 theorem ips_mul' {f g : PowerSeries K} (hf : Integral (f : MvPowerSeries Unit K))
     (hg : Integral (g : MvPowerSeries Unit K)) : Integral ((f * g : PowerSeries K) : MvPowerSeries Unit K) :=
@@ -688,17 +680,17 @@ theorem shortIso_holds : ShortIso := by
   have ha12 : ‖W.a₁ / 2‖ ≤ 1 := by rw [norm_div, h2, div_one]; exact hi1
   have ha32 : ‖W.a₃ / 2‖ ≤ 1 := by rw [norm_div, h2, div_one]; exact hi3
   have hX2 : Integral (((PowerSeries.X : PowerSeries K) ^ 2 : PowerSeries K) : MvPowerSeries Unit K) := by
-    rw [pow_two]; exact ips_mul' ips_X' ips_X'
+    rw [pow_two]; exact ips_mul' _root_.Formalism.L2.Th1.D.FormalExponential.integral_X _root_.Formalism.L2.Th1.D.FormalExponential.integral_X
   have hX3 : Integral (((PowerSeries.X : PowerSeries K) ^ 3 : PowerSeries K) : MvPowerSeries Unit K) := by
-    rw [pow_succ]; exact ips_mul' hX2 ips_X'
+    rw [pow_succ]; exact ips_mul' hX2 _root_.Formalism.L2.Th1.D.FormalExponential.integral_X
   have hNI : Integral ((N : PowerSeries K) : MvPowerSeries Unit K) := by
     rw [hN]; exact ips_add' hxI (ips_Cmul' hb2 hX2)
   have hDI : Integral ((D : PowerSeries K) : MvPowerSeries Unit K) := by
     rw [hD]
-    exact ips_sub' (ips_sub' hxI (ips_mul' (ips_Cmul' ha12 ips_X') hxI)) (ips_Cmul' ha32 hX3)
+    exact ips_sub' (ips_sub' hxI (ips_mul' (ips_Cmul' ha12 _root_.Formalism.L2.Th1.D.FormalExponential.integral_X) hxI)) (ips_Cmul' ha32 hX3)
   have hDiI : Integral ((D⁻¹ : PowerSeries K) : MvPowerSeries Unit K) :=
     Formalism.InvariantFactorPaths.G7.LogarithmEquivalence.integral_of_mul_eq_one hDI hD1 hDinv
-  exact ips_mul' (ips_mul' ips_X' hNI) hDiI
+  exact ips_mul' (ips_mul' _root_.Formalism.L2.Th1.D.FormalExponential.integral_X hNI) hDiI
 
 theorem exists_witt_series_inverse_formalGroup_iso_short {l : ℕ} [Fact l.Prime] {g : G1 l} (hOk : g.Ok) (hLT : LTIso g) :
     ∃ w : PowerSeries (WW l), PowerSeries.map (wToC l) w = vLT hLT := by
@@ -1128,12 +1120,6 @@ open Formalism.MainNotions.GL3Theta
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem inWf_of_kur {x : ℂ_[p]} (hx : x ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) : InWf x := by
-  first
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
-  | (intros; exact _root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur ..)
-
 theorem coefWf_phW_of_kur (W : WeierstrassCurve ℂ_[p]) (h1 : W.a₁ ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p)
     (h2 : W.a₂ ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) (h3 : W.a₃ ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) (h4 : W.a₄ ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p)
     (h6 : W.a₆ ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) {s2 : ℂ_[p]} (hs : s2 ∈ Formalism.L2.Th1.CM.MaximalUnramifiedExtension p) :
@@ -1175,9 +1161,9 @@ namespace GlobalTheory.CurveThetaInert
 
 theorem torsionTaylorAlgebraic_latticeExists_of_cm (h2 : Formalism.L2.Th1.CM.CM2) :
     Formalism.L2.KerInert.AlgTAll ∧ Formalism.L2.KerInert.GenusOneModelExistsLattice ∧ Formalism.L2.KerInert.Rep.CurveDict :=
-  ⟨GlobalTheory.ThLoc.algTAll,
-    GlobalTheory.InertGenusOne.datum_exists_lattice h2 ReciprocityTheory.ChartRestriction.L1.cmIntegralityThree ReciprocityTheory.ChartRestriction.L1.cm4,
-    GlobalTheory.CurveDictionary.curveDict_of_cm h2 ReciprocityTheory.ChartRestriction.L1.cmIntegralityThree ReciprocityTheory.ChartRestriction.L1.cm4⟩
+  ⟨_root_.GlobalTheory.ThLoc.Alg.algTAll,
+    GlobalTheory.InertGenusOne.datum_exists_lattice h2 _root_.ReciprocityTheory.ChartRestriction.L1.cm3 ReciprocityTheory.ChartRestriction.L1.cm4,
+    GlobalTheory.CurveDictionary.curveDict_of_cm h2 _root_.ReciprocityTheory.ChartRestriction.L1.cm3 ReciprocityTheory.ChartRestriction.L1.cm4⟩
 
 end GlobalTheory.CurveThetaInert
 end -- clump:auto
@@ -1267,12 +1253,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc GlobalTheory.Svd
-
-theorem _root_.GlobalTheory.T.reciprocity_kernel_of_artin : GlobalTheory.Published.GlobalArtinReciprocity → ∀ {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), Row (Bd := _root_.GlobalTheory.Mem.Top.Bl.BoundaryReciprocity) (IsGoodE p.s) (_root_.GlobalTheory.Mem.Top.Bl.ReciprocityLinkage p) (ServH (Bd := _root_.GlobalTheory.Mem.Top.Bl.BoundaryReciprocity) fun _ _ _ R => R.T.ker) := by
-  first | exact @_root_.GlobalTheory.Svd.servH_row_linkR_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ServHRowLinkRStatement =====
@@ -1292,7 +1272,7 @@ theorem row_hServ_of_link_alt : GlobalTheory.Published.GlobalArtinReciprocity �
     _root_.GlobalTheory.Fc.R1.SlotServiceCondition (IsGoodE p.s) Lk := by
   intro hA hL p Lk hLk
   have h1 := Row.map (Bd := _root_.GlobalTheory.Fc.BundleCondition) (Q := IsGoodE p.s) (Lk := Lk) (Bd' := _root_.GlobalTheory.Mem.Top.Bl.BoundaryReciprocity) (Q' := IsGoodE p.s) (Lk' := _root_.GlobalTheory.Mem.Top.Bl.ReciprocityLinkage p)
-    (fun _ _ _ b => b.R) (fun _ _ _ _ _ h => h) (fun K β c b _ h => hLk K β c b h) (_root_.GlobalTheory.T.reciprocity_kernel_of_artin hA p)
+    (fun _ _ _ b => b.R) (fun _ _ _ _ _ h => h) (fun K β c b _ h => hLk K β c b h) (_root_.GlobalTheory.Svd.servH_row_linkR_alt hA p)
   exact _root_.GlobalTheory.Fc.R1.row_hServ_of_kerServ_alt _ Lk h1
 end GlobalTheory
 end
@@ -1307,12 +1287,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.hServ_of_linkR : GlobalTheory.Published.GlobalArtinReciprocity → ∀ {hL : _root_.UpperTheory.Zero.LLC.RecTExists} (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL) (Lk : LkT _root_.GlobalTheory.Fc.BundleCondition), (∀ (K : Ctx) (β : BPt K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition β.D β.O c), Lk K β c b → _root_.GlobalTheory.Mem.Top.Bl.ReciprocityLinkage p K β c b.R) → _root_.GlobalTheory.Fc.R1.SlotServiceCondition (IsGoodE p.s) Lk := by
-  first | exact @_root_.GlobalTheory.row_hServ_of_link_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowHServOfLinkStatement =====

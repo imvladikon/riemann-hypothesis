@@ -106,9 +106,6 @@ section -- clump:auto
 
 namespace GlobalTheory
 
-theorem capelliDiscreteSeriesInfChar : PI.DSInfCharCap.DSInfCharCap :=
-  CompanionTheory.D.DSIC.discrete_series_infinitesimal_character
-
 end GlobalTheory
 end -- clump:auto
 end -- clump:auto
@@ -135,7 +132,7 @@ theorem eigDec_of_isKFinCoefT_gap : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (
   obtain ⟨s, hs⟩ := (GlobalTheory.isCoef_of_translate_smul_exists hsm k r ε mu R Wp Wq (fun _ => 0) (fun _ => 0) hDS).1 f hf
   obtain ⟨h1, h2⟩ := _root_.Gp91.GlobalTheory.isCoef_ckOn_inCC hH.1 k r ε mu h R Wp Wq (fun _ => 0) (fun _ => 0) f s hDG hgap hok hs
   refine ⟨h1, h2, fun y g hg => ?_⟩
-  have hE := GlobalTheory.CapelliEigenvalue.capEig hsm GlobalTheory.capelliDiscreteSeriesInfChar k r ε mu R.H R.σ Wp Wq hDS.1 hDS.2 f hf (y : ℂ) g hg
+  have hE := GlobalTheory.CapelliEigenvalue.capEig hsm _root_.CompanionTheory.D.DSIC.discrete_series_infinitesimal_character k r ε mu R.H R.σ Wp Wq hDS.1 hDS.2 f hf (y : ℂ) g hg
   rw [(GlobalTheory.ThA.centredCapelli_forms_agree k r _ (y : ℂ) f).1, hE]
   simp only [Formalism.QuantumDeterminants.capP, Complex.ofReal_prod, Complex.ofReal_add]
 
@@ -743,7 +740,7 @@ theorem plExists : PlExists := by
   refine ⟨Cb, ?_⟩
   intro Wp Wq _ _ _ _ _ _ P Bs ν' m₀ l0 hl1 hl2 hk hW hW' hN hF hP
 
-  obtain ⟨T, hz, hz', hπ, hπ', hTn⟩ := Formalism.FourierDecayAlt.P.exists_normalized_tower P.k P.r Wp Wq Bs
+  obtain ⟨T, hz, hz', hπ, hπ', hTn⟩ := _root_.Formalism.FourierDecayAlt.P.HaarMassHermitianCurvature.towerAt P.k P.r Wp Wq Bs
   have ez : (T.bs 0).z = Bs.z := hz
   have ez' : (T.bs 0).z' = Bs.z' := hz'
   have eπ : (T.bs 0).π = Bs.π := hπ

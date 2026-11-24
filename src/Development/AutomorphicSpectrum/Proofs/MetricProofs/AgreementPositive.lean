@@ -77,6 +77,7 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Linter.HaveILetI
 import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA
 import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
+import ReciprocityTheory.AnalyticForms.PotentialTheory.StokesA
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionDifferenceTelescopingIntegral, Development.AutomorphicSpectrum.Proofs.MetricProofs.LimRateMulLogSqLe, Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereRegularizationLogLogBound, Development.AutomorphicSpectrum.Proofs.MetricProofs.TendstoLimUnderOfCauchyRate, Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositive
@@ -395,7 +396,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.LimRateMulLogSqLe =====
 
 -- ===== clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereRegularizationLogLogBound =====
--- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereRegularizationLogLogBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.FixedMemberBase\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.LoglogQuotNonneg\npublic import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization\npublic import ReciprocityTheory.AnalyticForms.LeviForms.Energy\npublic import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasure\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements\n\n"}
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereRegularizationLogLogBound", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.FixedMemberBase\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.LoglogQuotNonneg\npublic import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization\npublic import ReciprocityTheory.AnalyticForms.LeviForms.Energy\npublic import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential\npublic import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasure\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.StokesA\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -428,20 +429,6 @@ theorem rsmul_one (Θ : LocPot X) : Θ.rsmul 1 = Θ := by
   funext x y
   show (1 : ℝ) * Θ.φ x y = Θ.φ x y
   simp
-
-theorem continuous_of_smooth (A : FinHolAtlas e X) {f : X → ℝ} (h : A.Smooth f) : Continuous f := by
-  rw [continuous_iff_continuousAt]
-  intro x
-  obtain ⟨j, hj⟩ := A.cover x
-  have h1 : ContinuousOn (f ∘ (A.chart j).symm) (A.chart j).target := by
-    have := (h j).continuousOn
-    simpa using this
-  have h2 : ContinuousAt ((f ∘ (A.chart j).symm) ∘ (A.chart j)) x :=
-    ContinuousAt.comp (h1.continuousAt ((A.chart j).open_target.mem_nhds ((A.chart j).map_source hj)))
-      ((A.chart j).continuousAt hj)
-  refine h2.congr ?_
-  filter_upwards [(A.chart j).open_source.mem_nhds hj] with y hy
-  simp [(A.chart j).left_inv hy]
 
 theorem smooth_zero (A : FinHolAtlas e X) : A.Smooth (0 : X → ℝ) := fun j => contDiffOn_const
 
@@ -632,7 +619,7 @@ theorem signed_rate : ConvergenceRateStatement → ∀ (e : ℕ) (σ : Type) [Fi
     have h1' := (hpsh _ _ _ (S.sing a).1 (hreg a) t ht htt₁).1 j
     have h2' := (hpsh _ _ _ (S.sing a).1 (hreg a) t' ht' (htt'.trans htt₁)).1 j
     exact h1'.sub h2'
-  have hg : Continuous (fun x => S.phT a t x - S.phT a t' x) := Rate.continuous_of_smooth S.A hgs
+  have hg : Continuous (fun x => S.phT a t x - S.phT a t' x) := _root_.ReciprocityTheory.AnForm.M.st_smooth_continuous S.A hgs
   have hPpot : ∀ i, IsPotential S.A (S.potT (w i) (if c i then t else t')) := fun i =>
     isPotentialAdd S.A _ _ (S.sing (w i)).1 (isPotential_ofFun S.A _
       (hpsh _ _ _ (S.sing (w i)).1 (hreg (w i)) _ (hτ i).1 (hτ i).2).1)

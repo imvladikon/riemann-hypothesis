@@ -55,15 +55,13 @@ section -- clump:auto
 @[expose] public section
 
 namespace LateralTheory.Fin.EtaleCochainSemilinearMapOnClasses
-theorem etale_evaluation_map_basic_of_components : LateralTheory.EtaleFoundations.pp_ev_basic := by
-  apply LateralTheory.EtaleFoundations.pp_ev_basic_of
-theorem etale_cohomology_evaluation_mk : LateralTheory.EtaleFoundations.pp_ev_mk := by
-  apply LateralTheory.EtaleFoundations.pp_ev_mk_of
-theorem etale_cohomology_evaluation_connecting_hom : LateralTheory.EtaleFoundations.pp_ev_delta := by
-  apply _root_.LateralTheory.EtaleFoundations.etale_chain_cochain_eval_differential_formula_holds
+alias etale_evaluation_map_basic_of_components := _root_.LateralTheory.EtaleFoundations.pp_ev_basic_of
+alias etale_cohomology_evaluation_mk := _root_.LateralTheory.EtaleFoundations.pp_ev_mk_of
+theorem etale_cohomology_evaluation_connecting_hom : LateralTheory.EtaleFoundations.pp_ev_delta :=
+  LateralTheory.EtaleFoundations.etale_chain_cochain_eval_differential_formula_holds
 theorem etale_torsion_cohomology_operation_spec : LateralTheory.EtaleFoundations.EtaleCochainSemilinearMapOnClasses := by
   apply LateralTheory.EtaleFoundations.etale_semilinear_cohomology_operation_exists_of_evaluation <;> first | exact etale_evaluation_map_basic_of_components | exact etale_cohomology_evaluation_mk | exact etale_cohomology_evaluation_connecting_hom
-theorem intersectionNumber_baseChange : LateralTheory.EtaleFoundations.EtaleCochainSemilinearMapOnClasses := etale_torsion_cohomology_operation_spec
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fin.EtaleCochainSemilinearMapOnClasses.etale_torsion_cohomology_operation_spec
 end LateralTheory.Fin.EtaleCochainSemilinearMapOnClasses
 end -- clump:auto
 end -- clump:auto

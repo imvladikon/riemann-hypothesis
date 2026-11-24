@@ -62,6 +62,7 @@ import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Linter.Style
+import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -274,7 +275,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEltPrescribedValuationsBalancedArchimedean =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightAbsEntrySumNonneg =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightAbsEntrySumNonneg", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEltPrescribedValuationsBalancedArchimedean\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest\nimport Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Development.AbelianVarietyTheory.Definitions.Divisors.FirstChernLeviEqConstant\nimport Development.AbelianVarietyTheory.Definitions.Divisors.SlopeTestRemainingChoices\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightAbsEntrySumNonneg", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEltPrescribedValuationsBalancedArchimedean\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal\nimport Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest\nimport Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Development.AbelianVarietyTheory.Definitions.Divisors.FirstChernLeviEqConstant\nimport Development.AbelianVarietyTheory.Definitions.Divisors.SlopeTestRemainingChoices\nimport Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -290,13 +291,6 @@ section Scalars
 
 variable {K : Type} [Field K] [NumberField K]
 
-theorem vLa_mul_of_ne (la : HeightOneSpectrum (𝓞 K)) {x y : K} (hx : x ≠ 0) (hy : y ≠ 0) :
-    vLa la (x * y) = vLa la x + vLa la y := by
-  have h1 : la.valuation K x ≠ 0 := (Valuation.ne_zero_iff _).2 hx
-  have h2 : la.valuation K y ≠ 0 := (Valuation.ne_zero_iff _).2 hy
-  simp only [vLa, map_mul, WithZero.log_mul h1 h2]
-  ring
-
 theorem vLa_natCast_nonneg (la : HeightOneSpectrum (𝓞 K)) {n : ℕ} (hn : n ≠ 0) : 0 ≤ vLa la (n : K) := by
   have := vAdd_int_nonneg la (a := (n : 𝓞 K)) (by simpa using hn)
   simpa [vLa, Formalism.BasicNotions.vAdd] using this
@@ -307,7 +301,7 @@ theorem le_vLa_of_pow_dvd (la : HeightOneSpectrum (𝓞 K)) {p n N : ℕ} (hN : 
   have h1 := mul_ne_zero_iff.1 hN
   have h2 : vLa la (((p ^ n : ℕ)) : K) = n * vLa la (p : K) := by
     simp [vLa, WithZero.log_pow]
-  rw [Nat.cast_mul, vLa_mul_of_ne la (Nat.cast_ne_zero.2 h1.1) (Nat.cast_ne_zero.2 h1.2), h2]
+  rw [Nat.cast_mul, _root_.Formalism.L2.Pj.Crude.crv_vLa_mul la (Nat.cast_ne_zero.2 h1.1) (Nat.cast_ne_zero.2 h1.2), h2]
   linarith [vLa_natCast_nonneg la h1.2]
 
 theorem exists_scalar (e : HeightOneSpectrum (𝓞 K) →₀ ℝ) (t : (K →+* ℂ) → ℝ)
@@ -323,13 +317,13 @@ theorem exists_scalar (e : HeightOneSpectrum (𝓞 K) →₀ ℝ) (t : (K →+* 
   have hNK : (N : K) ≠ 0 := Nat.cast_ne_zero.2 hN0
   refine ⟨N * α, mul_ne_zero hNK h0, fun la => ?_, fun la p hp => ?_, fun σ => ?_⟩
   · have h3 : (0 : ℝ) ≤ vLa la (N : K) := by exact_mod_cast vLa_natCast_nonneg la hN0
-    rw [vLa_mul_of_ne la hNK h0, Int.cast_add]
+    rw [_root_.Formalism.L2.Pj.Crude.crv_vLa_mul la hNK h0, Int.cast_add]
     linarith [h1 la]
   · have h3 : (⌈τ * a p⌉₊ : ℝ) * vLa la (p : K) ≤ vLa la (N : K) := by
       exact_mod_cast le_vLa_of_pow_dvd la hN0 (Finset.dvd_prod_of_mem (fun p => p ^ ⌈τ * a p⌉₊) hp)
     have h4 : (0 : ℝ) ≤ vLa la (p : K) := by exact_mod_cast vLa_natCast_nonneg la (hS p hp).ne_zero
     have h5 := mul_le_mul_of_nonneg_right (Nat.le_ceil (τ * a p)) h4
-    rw [vLa_mul_of_ne la hNK h0, Int.cast_add]
+    rw [_root_.Formalism.L2.Pj.Crude.crv_vLa_mul la hNK h0, Int.cast_add]
     nlinarith [h1 la]
   · have h3 : Real.log N ≤ τ * ∑ p ∈ S, a p * Real.log p + ∑ p ∈ S, Real.log p := by
       rw [hN, Nat.cast_prod, Real.log_prod (fun p hp => by exact_mod_cast pow_ne_zero _ (hS p hp).ne_zero),

@@ -52,6 +52,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.IsAdmissibleSplittingCharPairMulTwist
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
@@ -66,7 +67,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 -- Members: Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleOfRange, Formalism.HermitianCurvature.HermitianCurvatureProofs.ArelStar, Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameTransportToLastLevel, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEXAsm
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleOfRange =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleOfRange", "h": "module\n\npublic import Formalism.HermitianCurvature.RealInputsClosedAdmissibleSettings\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleRecOfAdmissibleWord\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.Interlace\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.ParametersUPrimeForULower\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleOfRange", "h": "module\n\npublic import Formalism.HermitianCurvature.RealInputsClosedAdmissibleSettings\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleRecOfAdmissibleWord\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.Interlace\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.ParametersUPrimeForULower\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.IsAdmissibleSplittingCharPairMulTwist\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -86,10 +87,6 @@ theorem interlaces_rho {P : M.Par} (h : P.OK) (ρ : M.Ty P) : I.Interlaces P.k P
   · linarith [min_le_right (P.u i) (P.u' i)]
   · linarith [le_max_left (P.u (i + 1)) (P.u' (i + 1))]
   · linarith [le_max_right (P.u (i + 1)) (P.u' (i + 1))]
-
-theorem xC_ofReal (P : M.Par) (ρ : M.Ty P) (y : ℝ) :
-    M.xC P ρ (y : ℂ) = ((I.xpoly P.k (M.rho P ρ) y : ℝ) : ℂ) := by
-  simp [M.xC, I.xpoly]
 
 theorem qC_ofReal (P : M.Par) (y : ℝ) : M.qC P (y : ℂ) = ((I.qpoly P.k P.T P.T' P.u P.u' y : ℝ) : ℂ) := by
   simp [M.qC, I.qpoly]
@@ -125,28 +122,28 @@ theorem admissible_of_range : PBI.AdmOfCutRange := by
     have hca : I.OnCut P.u P.u' l0 y := hcut.1 a
     have hx : ∀ ρ : M.Ty P, ∀ e ∈ ({-1, 0, 1} : Finset ℝ), I.xpoly P.k (M.rho P ρ) (y + e) ≠ 0 := by
       intro ρ e he h0
-      have := Formalism.FourierDecayAlt.P.interlacing_sign P.k P.u P.u' (M.rho P ρ) l0 y hl1 hl2 (PBI.interlaces_rho hOK ρ) hca e he
+      have := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P ρ) l0 y hl1 hl2 (PBI.interlaces_rho hOK ρ) hca e he
       rw [h0, mul_zero] at this
       exact lt_irrefl _ this
     rw [hinv, hq]
     simp only [Set.mem_setOf_eq]
     refine ⟨fun ρ => ?_, fun ρ => ?_, fun ρ => ?_, ?_, ?_⟩
-    · rw [PBI.xC_ofReal]
+    · rw [_root_.Formalism.FourierDecayAlt.P.MAx3.R.xC_real]
       have := hx ρ 0 (by simp)
       rw [add_zero] at this
       exact_mod_cast this
     · have e : ((y : ℝ) : ℂ) + 1 = ((y + 1 : ℝ) : ℂ) := by push_cast; ring
-      rw [e, PBI.xC_ofReal]
+      rw [e, _root_.Formalism.FourierDecayAlt.P.MAx3.R.xC_real]
       exact_mod_cast hx ρ 1 (by simp)
     · have e : ((y : ℝ) : ℂ) - 1 = ((y + -1 : ℝ) : ℂ) := by push_cast; ring
-      rw [e, PBI.xC_ofReal]
+      rw [e, _root_.Formalism.FourierDecayAlt.P.MAx3.R.xC_real]
       exact_mod_cast hx ρ (-1) (by simp)
     · rw [PBI.qC_ofReal]
-      have := Formalism.FourierDecayAlt.P.q_positive_interlacing P.k P.u P.u' (M.rho P ρ0) l0 y P.T P.T' hl1 hl2 hint0 hca hOK.T_pos hOK.T'_pos
+      have := _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive P.k P.u P.u' (M.rho P ρ0) l0 y P.T P.T' hl1 hl2 hint0 hca hOK.T_pos hOK.T'_pos
       exact_mod_cast this.ne'
     · have e : ((y : ℝ) : ℂ) - 1 = ((y - 1 : ℝ) : ℂ) := by push_cast; ring
       rw [e, PBI.qC_ofReal]
-      have := Formalism.FourierDecayAlt.P.q_positive_shift P.k P.u P.u' (M.rho P ρ0) l0 y P.T P.T' hl1 hl2 hint0 hca
+      have := _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift P.k P.u P.u' (M.rho P ρ0) l0 y P.T P.T' hl1 hl2 hint0 hca
         hOK.T_pos hOK.T'_pos
       exact_mod_cast this.ne'
   · simp only [D.positionted]
@@ -350,8 +347,8 @@ theorem act_frame (G : Gen T L₀ L) (hQ : ∀ Y, MRel T (st₀.QQ Y) (st.QQ Y))
     (hs : IsLevelStart L st) (w : List (Letter ℂ S)) (h₀ : admitted st₀ w) (h : admitted st w) (Ψ : Ix S → V) (e : Ix S) :
     T (∑ b, ((ofWord L₀ st₀ w).F e b).1 (Ψ b)) = ∑ b, ((ofWord L st w).F e b).1 (T (Ψ b)) :=
   act_tr (corr_word G hQ hq hinv hL₀ hL hs₀ hs w
-    (Formalism.FourierDecayAlt.P.admissible_rec_of_admissible (Pr V) S r₀ L₀ st₀ w h₀)
-    (Formalism.FourierDecayAlt.P.admissible_rec_of_admissible (Pr V') S r₁ L st w h)).1 Ψ e
+    (_root_.Formalism.FourierDecayAlt.P.Fr2.admissible_rec_of_admissible_word (Pr V) S r₀ L₀ st₀ w h₀)
+    (_root_.Formalism.FourierDecayAlt.P.Fr2.admissible_rec_of_admissible_word (Pr V') S r₁ L st w h)).1 Ψ e
 
 end core
 

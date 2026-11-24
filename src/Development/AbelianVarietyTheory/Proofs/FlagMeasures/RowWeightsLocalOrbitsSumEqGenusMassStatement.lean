@@ -138,8 +138,8 @@ theorem tg_of_base_point : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
   rw [hw] at hcell
   have hΛ := (Y.rowsOK u).1 t.lam t.mem
   have hmk' : Formalism.L2.SG.TermDef.mk _ _ _ ⟨F'', hP⟩ = Formalism.L2.SG.TermDef.mk _ _ _ ⟨t.frame, t.rep.2.2.2.2⟩ := hmk
-  have hrel := (Formalism.L2.SG.Closed.TermEqIff_holds D u u' (X.Fu u) t.lam hΛ _ _).1 hmk'
-  have hcell' : IsInCell (ZhatOM (ZhatL (lf D (X.Fu u)) t.frame)) w := ((Formalism.L2.SG.Closed.TermFun_holds D u u' (X.Fu u) t.lam hΛ).2.1 _ _ hrel w).1 hcell
+  have hrel := (_root_.term_eq_iff_relation D u u' (X.Fu u) t.lam hΛ _ _).1 hmk'
+  have hcell' : IsInCell (ZhatOM (ZhatL (lf D (X.Fu u)) t.frame)) w := ((_root_.term_function_const D u u' (X.Fu u) t.lam hΛ).2.1 _ _ hrel w).1 hcell
   have hGt : Gval (lf D (X.Fu u)) t.frame ≠ 0 := by
     intro h0
     apply hG
@@ -184,10 +184,6 @@ namespace GlobalTheory.LocOver.Check
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-section Mat
-
-end Mat
-
 section Loc
 
 open Formalism.MainNotions.S.Loc Formalism.MainNotions.S.LocNG GlobalTheory.NonGenericLocalCheck
@@ -196,17 +192,11 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
   {M : Model F E} {V : Type} [AddCommGroup V] [Module E V] {r : ℕ}
 
-theorem img_mul' (g h : V ≃ₗ[E] V) (Λ : Submodule M.L.O V) : img (g * h) Λ = img g (img h Λ) := by
-  unfold img; rw [← Submodule.map_comp]; rfl
-
-theorem img_one' (Λ : Submodule M.L.O V) : img (1 : V ≃ₗ[E] V) Λ = Λ := by
-  ext x; simp [img]
-
 theorem move_one (t : Term V M r) : move 1 t = t := by
-  cases t; simp [move, img_one']
+  cases t; simp [move, _root_.Formalism.MainNotions.KappaEndpoints.ng_img_one]
 
 theorem move_mul (g h : V ≃ₗ[E] V) (t : Term V M r) : move (g * h) t = move g (move h t) := by
-  simp [move, img_mul']
+  simp [move, _root_.Formalism.MainNotions.KappaEndpoints.ng_img_mul]
 
 theorem over_of_isTermOver {H : HermSp M V} (P : FPair H r) (d : Datum P) (t : Term V M r)
     (h : IsTermOver P d t) : Over P d t := by
@@ -226,16 +216,6 @@ theorem over_move_iff {H : HermSp M V} (P : FPair H r) (d : Datum P) (t : Term V
     · rwa [← move_mul, mul_assoc, inv_mul_cancel, mul_one]
 
 end Loc
-
-section Glob
-
-open Formalism.L2.SG.HidaSetting Formalism.L2.SG.TermOp Formalism.L2.SG.Full Formalism.L2.SG.RowsConc Formalism.L2.SG.NGLocModel Formalism.L2.SG.FamDefs
-
-variable {D : D7}
-
-variable {X : HidaSetting D} {Y : Full X} {u u' : D.what₂.Word}
-
-end Glob
 
 end GlobalTheory.LocOver.Check
 end -- clump:auto
@@ -286,10 +266,7 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
 variable {M : Model F E} {V : Type} [AddCommGroup V] [Module E V] {H : HermSp M V} {r k : ℕ}
 
-theorem grp_e {P : FPair H r} {S : Frames M.L r k} (c : Coord P S) (g : V ≃ₗ[E] V) (x : V) :
-    c.grp g (c.e x) = c.e (g x) := by
-  show c.e (g (c.e.symm (c.e x))) = _
-  simp
+alias grp_e := _root_.GlobalTheory.HL.CoordUnip.grp_apply
 
 theorem grp_iso {P : FPair H r} {S : Frames M.L r k} (c : Coord P S) (g : V ≃ₗ[E] V) (hg : IsUnitary H g)
     (x y : S.V) : hf M.L S.Hm (c.grp g x) (c.grp g y) = hf M.L S.Hm x y := by
@@ -468,32 +445,6 @@ theorem tri_adapt_loc (Z : LocDat D) (p : PlF D) (g : GV D) {T : D.host.E} (F₁
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [mul_assoc (frFac Z.δ p b * _), Ring.inverse_mul_cancel _ (hu a), mul_one]
 
-theorem isLattice_gmap (g : GV D) (A : LV D) (hA : Submodule.IsLattice D.host.E A) :
-    Submodule.IsLattice D.host.E (Formalism.HermitianLatticesTheory.gmap g A) := by
-  refine ⟨hA.fg.map _, ?_⟩
-  have : (Formalism.HermitianLatticesTheory.gmap g A : Set (VS D).V) = (g : (VS D).V →ₗ[D.host.E] (VS D).V) '' (A : Set (VS D).V) := rfl
-  rw [this]
-  intro s hs hli
-  let t := g.symm '' s
-  have ht : t ⊆ (A : Set (VS D).V) := by
-    rintro x ⟨y, hy, rfl⟩
-    obtain ⟨z, hz, hzy⟩ := hs hy
-    simpa [← hzy] using hz
-  have heq : (g : (VS D).V →ₗ[D.host.E] (VS D).V) '' t = s := by
-    ext x
-    simp [t]
-  change (g : (VS D).V → (VS D).V) '' t = s at heq
-  have hli' : LinearIndepOn (𝓞 D.host.E) id t := by
-    apply (linearIndepOn_id_imageₛ_iff (f := g.toLinearMap.restrictScalars (𝓞 D.host.E))
-      g.injective.injOn).1
-    change LinearIndepOn (𝓞 D.host.E) id ((g : (VS D).V → (VS D).V) '' t)
-    rw [heq]
-    exact hli
-  have hE := hA.linearIndepOn t ht hli'
-  have := (linearIndepOn_id_imageₛ_iff (f := g.toLinearMap) g.injective.injOn).2 hE
-  change LinearIndepOn D.host.E id ((g : (VS D).V → (VS D).V) '' t) at this
-  rwa [heq] at this
-
 theorem finrank_Vp_eq (p : PlF D) : Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := by
   rw [finrank_Vp]
   have h1 := D.R.m_even
@@ -525,11 +476,11 @@ theorem local_data_of_term : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
         (tri_map (gp p).toLinearMap (hτ p).2)
   choose y hy using hex
   refine ⟨y, ⟨?_, fun p => ⟨_, hy p, ?_⟩⟩, fun p d => ?_⟩
-  · rw [hΛ]; exact isLattice_gmap g _ hrow.1.1.toIsLattice
+  · rw [hΛ]; exact _root_.GlobalTheory.RatLocMove.isLattice_gmap' g _ hrow.1.1.toIsLattice
   · show LocNG.img (gp p) (lattice₂ D Z.M p t.lam) = _
     rw [hΛ, hlat g p (gp p) t.lam (hgp p)]
   · have hDC : Formalism.L2.SG.TermDef.DCRel t.lam (lf D (X.Fu u)) t.frame (Quot.out t.toTerm.cls).1 :=
-      (Formalism.L2.SG.Closed.TermEqIff_holds D u u' (X.Fu u) t.lam hrow ⟨t.frame, hPD⟩ (Quot.out t.toTerm.cls)).1
+      (_root_.term_eq_iff_relation D u u' (X.Fu u) t.lam hrow ⟨t.frame, hPD⟩ (Quot.out t.toTerm.cls)).1
         (Quot.out_eq t.toTerm.cls).symm
     refine (GlobalTheory.T.localData_globalTerm_independent_of_representative D Z u u' (X.Fu u) t.lam hrow t.frame (Quot.out t.toTerm.cls).1 hPD
       (Quot.out t.toTerm.cls).2 hGv hDC p (FP p) (hRel p) d).symm.trans ?_
@@ -962,11 +913,6 @@ variable {D : D7}
 theorem inv_app (a : GV D) (x : (VS D).V) : a⁻¹ (a x) = x := by
   show (a⁻¹ * a) x = x; rw [inv_mul_cancel]; rfl
 
-theorem xsp_eq {T : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) : Xsp P = Xflag P D.R.rS := by
-  show Submodule.span _ _ = Submodule.span _ _
-  congr 1
-  ext v; simp [Fin.is_lt]
-
 theorem xflag_mono {T : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) {i j : ℕ} (hij : i ≤ j) : Xflag P i ≤ Xflag P j := by
   show Submodule.span _ _ ≤ Submodule.span _ _
   apply Submodule.span_mono
@@ -1027,7 +973,7 @@ theorem xsp_map_of_tri {T T' : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) (Q : LF
     (Xsp P).map (φ : (VS D).V →ₗ[D.host.E] (VS D).V) = Xsp Q ∧
       ∀ j, (Xflag P j).map (φ : (VS D).V →ₗ[D.host.E] (VS D).V) ≤ Xflag Q j := by
   refine ⟨?_, tri_fwd P Q φ h⟩
-  rw [xsp_eq, xsp_eq]
+  rw [_root_.Formalism.L2.SG.NGCut.NormalVectorPairings.X_eq_Xflag, _root_.Formalism.L2.SG.NGCut.NormalVectorPairings.X_eq_Xflag]
   exact le_antisymm (tri_fwd P Q φ h _) (tri_rev P Q φ h _)
 
 theorem tri_inv {T T' : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) (Q : LFlag (D.sp.Y 0) D.R.rS T') (φ : GV D)
@@ -1057,7 +1003,7 @@ theorem nrat_tri {T : D.host.E} (P : LFlag (D.sp.Y 0) D.R.rS T) (n : GV D) (hn :
         simp [P.fl.z_orth j]
       simpa using this hx
     have := hn.2.2 _ hz
-    rw [xsp_eq] at this
+    rw [_root_.Formalism.L2.SG.NGCut.NormalVectorPairings.X_eq_Xflag] at this
     simpa using this
   · rw [frame_cs]
     exact hn.2.1 i.1 _ (e_mem_xflag P i (Nat.lt_succ_self _))
@@ -1432,7 +1378,7 @@ theorem weights_add_up_to_mass_of
     ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.Word), ∀ (F : LFlag (D.sp.Y 0) D.R.rS (((D.mem u).A.T : ℕ) : D.host.E)) (F' : LFlag (D.sp.Y 0) D.R.rS (((D.mem u').A.T : ℕ) : D.host.E)) (w : Point D.host.E (D.R.rS + 1)), ZhatOM (ZhatL F F') = ptMat w → Gval F F' ≠ 0 → ∀ (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS), Based Z FP (Tu D u) (Tu D u') F F' → (∀ p, (FP p).RelG (LocNG.theta (Z.M p))) → ∀ TS : Set (TauC Y u u'), LocClosed F F' Z FP TS → ∀ (t₀ : TauC Y u u') (Λ₀ : LV D) (y₀ d : Dat Z FP), t₀ ∈ TS → TG F F' t₀ Λ₀ → LocOver Λ₀ y₀ → InGen d y₀ → ∀ K, K = {κ | ∃ t ∈ TS, ∃ (Λ : LV D) (y : Dat Z FP), TG F F' t Λ ∧ LocOver Λ y ∧ InGen d y ∧ key t = κ} → ∀ ω : K → ℝ, (∀ κ : K, ∀ t : TauC Y u u', key t = κ.1 → ω κ = wt t ^ 2) → ∑' κ : K, ENNReal.ofReal (ω κ) = massA F F' d := by
   intro D X Y u u' F F' w hw hG Z FP hB hR TS hTS t₀ Λ₀ y₀ d ht₀ hTG₀ hLO₀ hIG₀ K hK ω hω
   subst hK
-  obtain ⟨hEq, -, hRel⟩ := GlobalTheory.T.rationalClass_lattices_iff_rationalClass_localFramePairs D X Y u u' F F' w hw hG Z FP hB hR
+  obtain ⟨hEq, -, hRel⟩ := _root_.GlobalTheory.Unfold.ratCls_agree D X Y u u' F F' w hw hG Z FP hB hR
   have hQ : ∀ y y' : Dat Z FP, (Quot.mk (GRel (Z := Z) (FP := FP) F F') y) = Quot.mk _ y' ↔ GRel F F' y y' :=
     fun y y' => ⟨fun h => hEq.eqvGen_iff.1 (Quot.eqvGen_exact h), Quot.sound⟩
   have hout : ∀ o : Quot (GRel (Z := Z) (FP := FP) F F'), ∀ y, Quot.mk _ y = o → GRel F F' o.out y := by

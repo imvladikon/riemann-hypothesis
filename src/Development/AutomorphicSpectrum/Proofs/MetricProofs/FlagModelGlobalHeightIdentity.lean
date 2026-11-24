@@ -75,6 +75,7 @@ import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothContinuous
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.Etale.Weakly
@@ -228,7 +229,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsIsFramePeriodsNoGlobal =====
 
 -- ===== clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.AnalyticRecentre =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.PluriharmonicCharts.AnalyticRecentre", "h": "module\n\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncChartLocalNormalForm\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUncentre\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.PluriharmonicCharts.AnalyticRecentre", "h": "module\n\nimport Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncChartLocalNormalForm\npublic import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUncentre\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothContinuous\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -238,11 +239,6 @@ open GroundTheory.Heights₂.Heights.LowerBoundFree
 namespace PositivityTheory.Xgp.c_bm_exists_local
 
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
-
-theorem not_top (z : (Σ k, ι k) → ℂ) : z ∉ mcPts (⊤ : Ideal (MRing ι)) := by
-  intro h
-  have := h.2 1 trivial
-  simp at this
 
 private theorem fderiv_pi_apply {E Q : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [Fintype Q]
     {G : E → Q → ℂ} {y : E} (hG : DifferentiableAt ℂ G y) (q : Q) (w : E) :
@@ -261,7 +257,7 @@ theorem imm_chart {P : Ideal (MRing ι)} {D : ℕ} (R : AnLogRes P ⊤ D) (x : R
   have hyx' : R.A.chart j ((R.A.chart j).symm y) = y := (R.A.chart j).right_inv hyt
   have hmem := R.mem ((R.A.chart j).symm y) ((R.A.chart j).symm y) (R.mem_U _)
   choose p hp using hmem.1
-  have himm := R.immersion ((R.A.chart j).symm y) (not_top _) p hp j hx'src
+  have himm := R.immersion ((R.A.chart j).symm y) (_root_.GlobalTheory.CompanionTheory.Ar.PB.Cj.ResTop.not_mem_mcPts_top _) p hp j hx'src
   rw [hyx'] at himm
   have hdiffq : ∀ q, DifferentiableAt ℂ (fun z => R.lift x ((R.A.chart j).symm z) q) y := fun q =>
     (R.holo x q j y ⟨hyt, hxU⟩).differentiableAt
@@ -509,7 +505,7 @@ theorem exists_sncChart {P : Ideal (MRing ι)} {n : ℕ} (R : AnLogRes P ⊤ n) 
             R.lift ((B.chart k).symm (recentre w₀ ρ π t')) ((B.chart k).symm (recentre w₀ ρ π t')) p := by
             rw [hep]
             ring
-    have hzz := R.inj _ _ (not_top _) horb
+    have hzz := R.inj _ _ (_root_.GlobalTheory.CompanionTheory.Ar.PB.Cj.ResTop.not_mem_mcPts_top _) horb
     have hrr : recentre w₀ ρ π t = recentre w₀ ρ π t' := by
       have h := congrArg (B.chart k) hzz
       rwa [(B.chart k).right_inv hrt, (B.chart k).right_inv hrt'] at h

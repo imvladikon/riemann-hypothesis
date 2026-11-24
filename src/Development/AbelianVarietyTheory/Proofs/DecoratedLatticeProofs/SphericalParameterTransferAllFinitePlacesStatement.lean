@@ -462,8 +462,6 @@ open Formalism.MainNotions.SchurIrreducible (IsSplit)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Hk3 (opOf hyp)
 
-theorem _root_.GlobalTheory.T.split_prime_label_operators_eq_chart_hecke_operators : ∀ (D : D7) (V : HSp D) (v : HeightOneSpectrum (𝓞 D.host.F)) (w : HeightOneSpectrum (𝓞 D.host.E)) (h : w.under (𝓞 D.host.F) = v), IsSplit (E := D.host.E) v → ∀ e, IsSplitChart D.sp.cm.sig V.gram (frameLat V) h e → ∀ (M : Type) [AddCommGroup M] [Module ℂ M] (π : GA D V →* Module.End ℂ M) (u : M), (∀ k ∈ Kv V v, π (embV V v k) u = u) → ∀ ϖ, IsUnifV D.host.E w ϖ → ∀ k ≤ V.rank, opOf π w (Finsupp.single (splitLab V.rank k) 1) u = heckeVec ((π.comp (embV V v)).comp e.symm.toMonoidHom) (KGL w (n := V.rank)) (fun g => Tj ℂ V.rank (Ov D.host.E w) ϖ k g⁻¹) u ∧ opOf π w (Finsupp.single (dualLab (splitLab V.rank k)) 1) u = heckeVec ((π.comp (embV V v)).comp e.symm.toMonoidHom) (KGL w (n := V.rank)) (Tj ℂ V.rank (Ov D.host.E w) ϖ k) u := by
-  first | exact @GlobalTheory.ChainOnto.LabChart.split_label_ops
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPrimeLabelOperatorsEqChartHeckeOperatorsStatement =====
@@ -500,7 +498,7 @@ lemma opOf_dualC_splitC {D : D7} {V : HSp D} {M : Type} [AddCommGroup M] [Module
 
 theorem hecke_vac_split_chart : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ t : ℕ, T.rank = S.rank + t → ∀ (v : HeightOneSpectrum (𝓞 D.host.F)) (w : HeightOneSpectrum (𝓞 D.host.E)) (h : w.under (𝓞 D.host.F) = v), IsSplit (E := D.host.E) v → (∀ w' : HeightOneSpectrum (𝓞 D.host.E), w'.under (𝓞 D.host.F) = v → UnrAt χS w' ∧ UnrAt χT w') → ∀ eS eT, IsSplitChart D.sp.cm.sig S.gram (frameLat S) h eS → IsSplitChart D.sp.cm.sig T.gram (frameLat T) h eT → ∀ f, VacFin ψ S T v f → (∀ k ∈ Kv S v, ∀ k' ∈ Kv T v, om (embV S v k, embV T v k') f = f) ∧ ∀ ϖ, IsUnifV D.host.E w ϖ → ∀ k ≤ T.rank, heckeVec (((om.comp (MonoidHom.inr _ _)).comp (embV T v)).comp eT.symm.toMonoidHom) (KGL w (n := T.rank)) (fun g => Tj ℂ T.rank (Ov D.host.E w) ϖ k g⁻¹) f = ∑ j ∈ Finset.range (S.rank + 1), (if j ≤ k then (qV D.host.E w : ℂ) ^ ((S.rank - j) * (k - j)) * (Formalism.L2.Col.gaussBin (qV D.host.E w) t (k - j) : ℂ) * (((val (F := D.host.F) χS w : ℂˣ) : ℂ) * (Real.sqrt (qV D.host.E w) : ℂ) ^ S.rank)⁻¹ ^ k * (((val (F := D.host.F) χT w : ℂˣ) : ℂ) * (Real.sqrt (qV D.host.E w) : ℂ) ^ T.rank) ^ j else 0) • heckeVec (((om.comp (MonoidHom.inl _ _)).comp (embV S v)).comp eS.symm.toMonoidHom) (KGL w (n := S.rank)) (Tj ℂ S.rank (Ov D.host.E w) ϖ j) f := by
   intro D ψ S T χS χT om hW t ht v w h hsp hunr eS eT hcS hcT f hf
-  obtain ⟨hA, hB, hC, hD, hE⟩ := GlobalTheory.T.splitPlace_idempotent_vacuum_hyperspecial_dictionary D v w h
+  obtain ⟨hA, hB, hC, hD, hE⟩ := _root_.GlobalTheory.PlaceDict.dictionary D v w h
   have hconj : Formalism.DivisionValues.conjPl w ≠ w := hA.1 hsp
   have huS : GlobalTheory.Hk3.UnrPl w χS := hB χS (fun w' hw' => (hunr w' hw').1)
   have huT : GlobalTheory.Hk3.UnrPl w χT := hB χT (fun w' hw' => (hunr w' hw').2)
@@ -519,10 +517,10 @@ theorem hecke_vac_split_chart : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S
     intro k hk; simpa using hK 1 (one_mem _) k hk
   have hSfix : ∀ k ∈ Kv S v, (om.comp (MonoidHom.inl _ _)) (embV S v k) f = f := by
     intro k hk; simpa using hK k hk 1 (one_mem _)
-  rw [← (GlobalTheory.T.split_prime_label_operators_eq_chart_hecke_operators D T v w h hsp eT hcT _ (om.comp (MonoidHom.inr _ _)) f hTfix ϖ hϖ k hk).1, ← hM,
+  rw [← (_root_.GlobalTheory.ChainOnto.LabChart.split_label_ops D T v w h hsp eT hcT _ (om.comp (MonoidHom.inr _ _)) f hTfix ϖ hϖ k hk).1, ← hM,
     opOf_dualC_splitC, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun j hj => ?_
-  rw [LinearMap.smul_apply, (GlobalTheory.T.split_prime_label_operators_eq_chart_hecke_operators D S v w h hsp eS hcS _ (om.comp (MonoidHom.inl _ _)) f hSfix ϖ hϖ j
+  rw [LinearMap.smul_apply, (_root_.GlobalTheory.ChainOnto.LabChart.split_label_ops D S v w h hsp eS hcS _ (om.comp (MonoidHom.inl _ _)) f hSfix ϖ hϖ j
     (Nat.lt_succ_iff.mp (Finset.mem_range.mp hj))).2, hχS, hχT]
   rfl
 
@@ -644,8 +642,8 @@ theorem seg_map_inv {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum 
 
 theorem transferOn_isSplit : ∀ D : D7, TransferOn D fun v => IsSplit (E := D.host.E) v := by
   intro D ψ S T χS χT om hW t ht v hv hunr w h U hU f hf X _ _ ρ x B hx X' _ _ ρ' b hb hne
-  obtain ⟨eS, heS⟩ := (GlobalTheory.T.exists_unitaryCharts_allFinitePlaces_frameLattice D S v w h).1 hv
-  obtain ⟨eT, heT⟩ := (GlobalTheory.T.exists_unitaryCharts_allFinitePlaces_frameLattice D T v w h).1 hv
+  obtain ⟨eS, heS⟩ := (_root_.GlobalTheory.ChartsAll.exists_charts D S v w h).1 hv
+  obtain ⟨eT, heT⟩ := (_root_.GlobalTheory.ChartsAll.exists_charts D T v w h).1 hv
   have hxS := hx.isSatVecGL hv heS
   obtain ⟨hfix, hH⟩ := GlobalTheory.T.latticeVacuum_heckeIdentity_splitPlace_charts D ψ S T χS χT om hW t ht v w h hv hunr eS eT heS heT (f : WO S T → ℂ) hf
   obtain ⟨hcS, hsS⟩ := GlobalTheory.T.integral_GL_commensurated_doubleCosetCardInvSymm D.host.E w S.rank
@@ -772,8 +770,6 @@ open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated T
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.sphericalParameterTransfer_splitPlace : ∀ D : D7, TransferOn D fun v => IsSplit (E := D.host.E) v := by
-  first | exact @GlobalTheory.ChainOnto.SplitTransfer.transferOn_isSplit
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SphericalParameterTransferSplitPlaceStatement =====
@@ -804,14 +800,14 @@ theorem transferOn_inert : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn
   obtain ⟨hS, hT⟩ := hunr w h
   rcases hx with ⟨hs, -⟩ | ⟨hin, c, ϖ, eS, α, hUI, heS, hxS, rfl⟩
   · exact absurd hs hv
-  obtain ⟨-, hodd, hch⟩ := (GlobalTheory.T.exists_unitaryCharts_allFinitePlaces_frameLattice D T v w h).2 hv
+  obtain ⟨-, hodd, hch⟩ := (_root_.GlobalTheory.ChartsAll.exists_charts D T v w h).2 hv
   obtain ⟨eT, heT⟩ := hch c heS.1
   have hf0 : (f : WO S T → ℂ) ≠ 0 := fun h0 => hbne (by rw [show f = 0 from Subtype.ext h0]; simp)
   obtain ⟨δ, ψ', M, ρ0, ω, s, hstd, hsf, hωom, hcT, hcS⟩ :=
     GlobalTheory.T.weilDatum_inertPlace_standard_cayley_pair D ψ S T χS χT om hW v w h hin hS hT c ϖ eS eT hUI heS heT f hf hf0
   have hq0 : (qV D.host.F v : ℂ) ≠ 0 := by exact_mod_cast hodd.pos.ne'
-  obtain ⟨hvS, hsegS⟩ := GlobalTheory.T.heckeChar_value_inert_place_and_segment D χS S.rank hW.hecS hW.resS v w h hin hS
-  obtain ⟨hvT, -⟩ := GlobalTheory.T.heckeChar_value_inert_place_and_segment D χT T.rank hW.hecT hW.resT v w h hin hT
+  obtain ⟨hvS, hsegS⟩ := _root_.GlobalTheory.ChainOnto.val_seg_of_isInertAt D χS S.rank hW.hecS hW.resS v w h hin hS
+  obtain ⟨hvT, -⟩ := _root_.GlobalTheory.ChainOnto.val_seg_of_isInertAt D χT T.rank hW.hecT hW.resT v w h hin hT
   refine Or.inr ⟨hin, c, ϖ, eT, liftPar (Units.mk0 _ hq0) S.rank T.rank α, hUI, heT, ?_, ?_⟩
   · set α' := liftPar (Units.mk0 _ hq0) S.rank T.rank α
     have e1S : embV S v (eS.symm 1) = 1 := by rw [map_one, map_one]
@@ -911,8 +907,6 @@ open Formalism.UG (IsUnifV qV IsUnramInv GU KU IsInertAt Hecke IsCommensurated T
 open Formalism.MainNotions.SchurIrreducible (IsSplit)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.sphericalTransfer_weilPairing_inertPlaces : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn D fun v => ¬ IsSplit (E := D.host.E) v := by
-  first | exact @GlobalTheory.ChainOnto.transferOn_inert
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SphericalTransferWeilPairingInertPlacesStatement =====
@@ -939,8 +933,8 @@ namespace GlobalTheory.ChainOnto
 theorem transferOn_all : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn D fun _ => True := by
   intro hH D ψ S T χS χT om hW t ht v _
   by_cases hv : IsSplit (E := D.host.E) v
-  · exact GlobalTheory.T.sphericalParameterTransfer_splitPlace D ψ S T χS χT om hW t ht v hv
-  · exact GlobalTheory.T.sphericalTransfer_weilPairing_inertPlaces hH D ψ S T χS χT om hW t ht v hv
+  · exact _root_.GlobalTheory.ChainOnto.SplitTransfer.transferOn_isSplit D ψ S T χS χT om hW t ht v hv
+  · exact _root_.GlobalTheory.ChainOnto.transferOn_inert hH D ψ S T χS χT om hW t ht v hv
 
 end GlobalTheory.ChainOnto
 

@@ -88,6 +88,7 @@ import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow
 import Formalism.ConjugateSelfDual.Statement
 import ReciprocityTheory.GaloisValuations.GlobalA
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepJacquetWordMultiplicity
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
@@ -177,7 +178,7 @@ theorem exists_unlinked_isL : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
       IsL ((List.ofFn Δ : List (Segment k)) : Multiset (Segment k)) x.rep := by
   intro k _ _ _ _ _ x hg
   obtain ⟨c, Δ, y, hd, hun, hL, ⟨e⟩⟩ :=
-    GlobalTheory.genericUnlinkedGL_outright k x.1 _ x.rep x.2.rep.smooth x.2.rep.irr hg
+    _root_.GlobalTheory.RgGu.Holds.genericUnlinkedGL_holds k x.1 _ x.rep x.2.rep.smooth x.2.rep.irr hg
   refine ⟨c, Δ, hun, c, y, hd, ⟨Δ, ⟨?_, ?_⟩, hL⟩, (isCosocle_self x.2.rep.irr).of_equiv (.refl _) e⟩
   · exact Fin.univ_val_map Δ
   · intro i j hij hP
@@ -199,11 +200,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.exists_unlinked_langlandsDatum_generic : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [CharZero k]
-    (x : IrrGL (k := k)), IsGeneric x.rep →
-    ∃ (c : ℕ) (Δ : Fin c → Segment k), (∀ i j, i ≠ j → ¬ (Δ i).Linked (Δ j)) ∧
-      IsL ((List.ofFn Δ : List (Segment k)) : Multiset (Segment k)) x.rep := by
-  first | (exact @GlobalTheory.GenericLDatum.exists_unlinked_isL)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsUnlinkedLanglandsDatumGenericStatement =====
@@ -265,10 +261,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.isTame_of_mem_weilDeligneListSum : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-    {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
-    (l : List (WD h)), IsTameWD (sumList l) → ∀ y ∈ l, IsTameWD y := by
-  first | (exact @GlobalTheory.TameSum.isTameWD_of_mem_sumList)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsTameOfMemWeilDeligneListSumStatement =====
@@ -324,18 +316,12 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.segmentSum_no_monodromy_length_one : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-    {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
-    (rc : IrrGL (k := w.adicCompletion E) → WD h), UpperTheory.Zero.LLC.IsRecT h rc →
-    ∀ (l : List (Segment (w.adicCompletion E))), (segSum rc l).mono0 →
-      (∀ Δ ∈ l, Δ.len = 1) ∧ segSum rc l = sumList (l.map fun Δ => rc Δ.first) := by
-  first | (exact @GlobalTheory.SegSumOne.segSum_of_mono0)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SegmentSumNoMonodromyLengthOneStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportOfLengthOneLanglandsDatum =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportOfLengthOneLanglandsDatum", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow\nimport Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff\nimport Formalism.ConjugateSelfDual.Statement\nimport ReciprocityTheory.GaloisValuations.GlobalA\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportOfLengthOneLanglandsDatum", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow\nimport Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff\nimport Formalism.ConjugateSelfDual.Statement\nimport ReciprocityTheory.GaloisValuations.GlobalA\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepJacquetWordMultiplicity\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -364,15 +350,6 @@ theorem eq_of_isCosocle_prodIrr_one (ρ x : IrrGL (k := k)) (y : Fin 1 → IrrGL
   have e1 := (IrrGL.of_eq_of (hs := c.rep.smooth) (hi := c.rep.irr) (hs' := r.rep.smooth) (hi' := r.rep.irr)).2 ⟨φ⟩
   exact (IrrGL.of_rep (⟨m, c⟩ : IrrGL (k := k))).symm.trans (e1.trans (IrrGL.of_rep (⟨m, r⟩ : IrrGL (k := k))))
 
-theorem eq_first_of_isLSeg {Δ : Segment k} (hl : Δ.len = 1) {x : IrrGL (k := k)} (h : IsLSeg Δ x.rep) : x = Δ.first := by
-  have e : Δ = Segment.single Δ.first Δ.isCusp_first := Segment.ext_first rfl hl
-  rw [e] at h
-  obtain ⟨hd, hc⟩ := h
-  refine eq_of_isCosocle_prodIrr_one Δ.first x _ (fun a => ?_) hd hc
-  rw [Fin.fin_one_eq_zero a]
-  simp [Segment.term, Segment.single, Segment.ofFirst]
-  rfl
-
 theorem hasSupport_first_of_isL_len_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (c : ℕ) (Δ : Fin c → Segment k) (x : IrrGL (k := k)), (∀ i, (Δ i).len = 1) →
     IsL ((List.ofFn Δ : List (Segment k)) : Multiset (Segment k)) x.rep →
@@ -384,7 +361,7 @@ theorem hasSupport_first_of_isL_len_one : ∀ (k : Type) [Field k] [ValuativeRel
       hmap ▸ Multiset.mem_map_of_mem _ (Finset.mem_univ_val i)
     obtain ⟨j, hj⟩ := List.mem_ofFn.1 (Multiset.mem_coe.1 hm)
     rw [← hj]; exact hl j
-  have hyf : y = fun i => (Δ' i).first := funext fun i => eq_first_of_isLSeg (hl' i) (hy i)
+  have hyf : y = fun i => (Δ' i).first := funext fun i => _root_.GlobalTheory.CompanionTheory.FineL.eq_first_of_len_one (hl' i) (hy i)
   subst hyf
   have hs := hasSupport_of_isSubquotient hcos.1 (fun i => (Δ' i).isCusp_first) hcos.isSubquotient
   have e : (Finset.univ.val.map fun i => (Δ' i).first) = Finset.univ.val.map fun i => (Δ i).first := by
@@ -414,11 +391,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.supercuspidalSupport_of_lengthOne_langlandsDatum : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (c : ℕ) (Δ : Fin c → Segment k) (x : IrrGL (k := k)), (∀ i, (Δ i).len = 1) →
-    IsL ((List.ofFn Δ : List (Segment k)) : Multiset (Segment k)) x.rep →
-    HasSupport x.rep (Finset.univ.val.map fun i => (Δ i).first) := by
-  first | (exact @GlobalTheory.LocGL.LenOneSupport.hasSupport_first_of_isL_len_one) | (exact GlobalTheory.LocGL.LenOneSupport.hasSupport_first_of_isL_len_one) | (intros; apply GlobalTheory.LocGL.LenOneSupport.hasSupport_first_of_isL_len_one  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportOfLengthOneLanglandsDatumStatement =====
@@ -434,13 +406,6 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.SplitWeil GlobalTheory.Loc
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 
-theorem _root_.GlobalTheory.T.unlinkedLengthOneSegments_firstTerms_not_nuTwist : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω]
-    {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
-    (rc : IrrGL (k := w.adicCompletion E) → WD h), UpperTheory.Zero.LLC.IsRecT h rc →
-    ∀ (c : ℕ) (Δ : Fin c → Segment (w.adicCompletion E)), (∀ i, (Δ i).len = 1) →
-      (∀ i j, i ≠ j → ¬ (Δ i).Linked (Δ j)) →
-      GlobalTheory.RoadU.Unlinked (Finset.univ.val.map fun i => (Δ i).first) := by
-  first | (exact @GlobalTheory.UnlinkedFirst.unlinked_first_of_len_one) | (exact GlobalTheory.UnlinkedFirst.unlinked_first_of_len_one) | (intros; apply GlobalTheory.UnlinkedFirst.unlinked_first_of_len_one  <;> assumption)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnlinkedLengthOneSegmentsFirstTermsNotNuTwistStatement =====
@@ -1372,14 +1337,14 @@ theorem split (hrc : IsRecT h rc) {x : IrrGL (k := w.adicCompletion E)} (hx : Is
     ∃ l : List (IrrGL (k := w.adicCompletion E)), HasSupport x.rep (l : Multiset _) ∧ GlobalTheory.RoadU.Unlinked (l : Multiset (IrrGL (k := w.adicCompletion E))) ∧
       rc x = sumList (l.map rc) := by
   have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  obtain ⟨c, Δ, hun, hL⟩ := GlobalTheory.T.exists_unlinked_langlandsDatum_generic _ x hx
+  obtain ⟨c, Δ, hun, hL⟩ := _root_.GlobalTheory.GenericLDatum.exists_unlinked_isL _ x hx
   obtain ⟨a, ha, L⟩ := id hrc
   have e : rc x = segSum rc (List.ofFn Δ) := L.langlands _ x hL
-  obtain ⟨hlen, hsum⟩ := GlobalTheory.T.segmentSum_no_monodromy_length_one rc hrc (List.ofFn Δ) (e ▸ hm)
+  obtain ⟨hlen, hsum⟩ := _root_.GlobalTheory.SegSumOne.segSum_of_mono0 rc hrc (List.ofFn Δ) (e ▸ hm)
   have h1 : ∀ i, (Δ i).len = 1 := fun i => hlen _ (List.mem_ofFn.2 ⟨i, rfl⟩)
   refine ⟨List.ofFn fun i => (Δ i).first, ?_, ?_, ?_⟩
-  · rw [← Fin.univ_val_map]; exact GlobalTheory.T.supercuspidalSupport_of_lengthOne_langlandsDatum _ c Δ x h1 hL
-  · rw [← Fin.univ_val_map]; exact GlobalTheory.T.unlinkedLengthOneSegments_firstTerms_not_nuTwist rc hrc c Δ h1 hun
+  · rw [← Fin.univ_val_map]; exact _root_.GlobalTheory.LocGL.LenOneSupport.hasSupport_first_of_isL_len_one _ c Δ x h1 hL
+  · rw [← Fin.univ_val_map]; exact _root_.GlobalTheory.UnlinkedFirst.unlinked_first_of_len_one rc hrc c Δ h1 hun
   · rw [e, hsum, List.map_ofFn, List.map_ofFn]; rfl
 
 theorem plainTor_of_tor (hrc : IsRecT h rc) {x : IrrGL (k := w.adicCompletion E)} (hx : IsGeneric x.rep) (ht : Tor (rc x))
@@ -1442,7 +1407,7 @@ theorem mixed_of_tame (hq : IsQp w) (hrc : IsRecT h rc) {x : IrrGL (k := w.adicC
   have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨l, hl, hu, e⟩ := split hrc hx hm
   have tame : ∀ y ∈ l, IsTameWD (rc y) := fun y hy =>
-    GlobalTheory.T.isTame_of_mem_weilDeligneListSum _ (e ▸ isTameWD_of_tmW ht) _ (List.mem_map_of_mem hy)
+    _root_.GlobalTheory.TameSum.isTameWD_of_mem_sumList _ (e ▸ isTameWD_of_tmW ht) _ (List.mem_map_of_mem hy)
   have dz : ∀ y ∈ l, DZ y := fun y hy => dz_of_cusp hq hrc (hl.isCusp hy) (tame y hy)
   obtain ⟨hGL, hZ⟩ := GlobalTheory.geometricLemma_and_zelevinskyPolynomialRing
   refine ⟨GlobalTheory.DepthZeroPass.depthZeroInduction hGL GlobalTheory.bernsteinZelevinskyFiniteness_holds hZ _ x _ hl dz, fun s hs' => ?_⟩
@@ -1552,7 +1517,7 @@ theorem guard_tame (ha : 1 ≤ a) (hσ : π.IsLocComp w σ) (hrc : IsRecT h rc) 
     (dz_of_nu (x := IrrGL.of σ.ρ σ.smooth σ.irred) ha _ h1), fun s k => (h2 s k).2⟩
 
 theorem exists_hasSat (hσ : π.IsLocComp w σ) (hs : SmGL.IsSpherical σ.ρ) : ∃ B, (CG.mk π).HasSat w B := by
-  obtain ⟨k1, k2⟩ := GlobalTheory.T.cuspRep_satake_iff_localComponent_satake E a π w σ hσ
+  obtain ⟨k1, k2⟩ := _root_.GlobalTheory.Cong.satake_locComp E a π w σ hσ
   obtain ⟨B, hB⟩ := GlobalTheory.SatInd.exists_hasSatGL_of_isIrreducible σ.smooth σ.irred (k2.1 hs)
   exact ⟨B, (k1 B).2 hB⟩
 

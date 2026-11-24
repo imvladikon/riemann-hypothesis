@@ -1502,16 +1502,12 @@ end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.L3
 
 namespace UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein
 
-theorem sPoint_proof_of_slice (hsl : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
-    (c : HeightOneSpectrum (𝓞 F) → ℕ), {w | c w ≠ 0}.Finite → ∀ A : Ad F, slice c A ∈ schwartzBruhat F) :
-    SPois → SFin → SKern → SPoint := L3.main_of hsl
-
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein
 
 namespace UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein
 
 theorem pointwise_theta_expansion : SPois → SFin → SKern → SPoint :=
-  sPoint_proof_of_slice (by intro F _ _ _ c hc A; exact slice_mem_sb hc A)
+  _root_.UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.L3.main_of (by intro F _ _ _ c hc A; exact slice_mem_sb hc A)
 
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein
 end -- clump:auto
@@ -1581,14 +1577,6 @@ theorem infId_val (y : (UpperTheory.V.TR.Rinf F)ˣ) :
   · change (1 : Af F) - 0 + 0 = 1
     rw [sub_zero, add_zero]
 
-theorem finId_val (yf : (Af F)ˣ) : ((finId F yf : (Ad F)ˣ) : Ad F) = (1, (yf : Af F)) := by
-  change 1 - sFin F 1 + sFin F yf.val = _
-  refine Prod.ext ?_ ?_
-  · change (1 : InfiniteAdeleRing F) - 0 + 0 = 1
-    rw [sub_zero, add_zero]
-  · change (1 : Af F) - 1 + (yf : Af F) = _
-    rw [sub_self, zero_add]
-
 theorem absD_gPt (x : UpperTheory.V.TR.Rinf F) (y : (UpperTheory.V.TR.Rinf F)ˣ) (hy : ∀ v, 0 < y.val v) (yf : (Af F)ˣ) :
     absD (gPt x y yf) = (∏ v, y.val v) * absF yf := by
   have hdet1 : Matrix.GeneralLinearGroup.det (aff y x) = y := by
@@ -1601,7 +1589,7 @@ theorem absD_gPt (x : UpperTheory.V.TR.Rinf F) (y : (UpperTheory.V.TR.Rinf F)ˣ)
   rw [map_mul, UpperTheory.V.TR.det_infGL, UpperTheory.V.TR.det_finGL, hdet1, hdet2, map_mul]
   change (IdeleGroup.ideleModule F _ : ℝ) * (IdeleGroup.ideleModule F _ : ℝ) = _
   rw [ideleModule_eq, ideleModule_eq]
-  simp only [infId_val, finId_val]
+  simp only [infId_val, _root_.UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.VanishingLemma.finId_val']
   have h1 : ∏ w : InfinitePlace F, ‖UpperTheory.V.TR.infEq F y.val w‖ ^ w.mult = ∏ v, y.val v := by
     refine Finset.prod_congr rfl fun w _ => ?_
     rw [(IsTotallyReal.isReal w).mult_eq_one, pow_one, norm_infEq, abs_of_pos (hy w)]

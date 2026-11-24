@@ -338,9 +338,6 @@ noncomputable section
 open scoped TensorProduct Matrix Classical
 open NumberField Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.BasicNotions.TH GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.FockAlg GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.RealLift
 namespace GlobalTheory.RealLift.FockFirst
-section SlopeTestRemainingChoices
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-end SlopeTestRemainingChoices
 theorem exists_fockMap_first_order_of_real_lift (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (a a' : ℕ) (G : Geo σ a a') (X : Chars F E) (om : Rep σ G.V G.W)
     (om' : Rep σ G.V' G.W) (h : IsTriple B G X om om') :
@@ -377,22 +374,6 @@ end GlobalTheory.RealLift.FockFirst
 end
 end
 
-section
-
-theorem _root_.GlobalTheory.T.real_lift_exists_fock_map : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (σ : E →ₐ[F] E) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a')
-    (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E) (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V Γ.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V' Γ.W),
-    GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' →
-    ∃ (A : NumberField.InfinitePlace F → Matrix (Fin a) (Formalism.BasicNotions.TH.Ix (a - Γ.p) Γ.p) ℂ)
-      (Φ : GlobalTheory.RealLift.Tens F (a - Γ.p) Γ.p (a + a' - (Γ.p + Γ.q)) (Γ.p + Γ.q) →ₗ[ℂ] GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F (Fin a × Fin (a + a')))
-      (c : NumberField.InfinitePlace F → ℂ),
-      (∀ w, GlobalTheory.RealLift.IsFrame ((1 : ℂ) • (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.incM F Γ.V.J).map (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf (Bs.emb w))) (A w)) ∧
-      (∀ w, Γ.V.θ w * A w = A w * Formalism.BasicNotions.TH.Jm (a - Γ.p) Γ.p) ∧
-      LinearMap.range Φ = Γ.M.Pol Bs.ψ Bs.emb ∧
-      GlobalTheory.RealLift.ActsBy Bs.emb A (om.comp (MonoidHom.inl _ _)) Φ
-        (Formalism.BasicNotions.TH.fockAct1 (a - Γ.p) Γ.p (a + a' - (Γ.p + Γ.q)) (Γ.p + Γ.q)) c := by
-  first | exact @_root_.GlobalTheory.RealLift.FockFirst.exists_fockMap_first_order_of_real_lift | exact _root_.GlobalTheory.RealLift.FockFirst.exists_fockMap_first_order_of_real_lift | (intros; apply _root_.GlobalTheory.RealLift.FockFirst.exists_fockMap_first_order_of_real_lift <;> assumption)
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ExistsFockMapFirstOrderOfRealLift =====
@@ -485,7 +466,7 @@ theorem derivation_algebra_kFinite : _root_.GlobalTheory.FunPr.ThetaLocalInputs 
   induction hΦ using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨f, φ, hf, hSB, hcof, rfl⟩ := hx
-    obtain ⟨P, hPfin, hPle, hfP, hPst⟩ := _root_.GlobalTheory.SquareAgree.KFinAlg.polynomial_vector_kFinite _root_.GlobalTheory.T.real_lift_exists_fock_map hPr F E σ Bs a a' Γ Xc om om' hT f hf
+    obtain ⟨P, hPfin, hPle, hfP, hPst⟩ := _root_.GlobalTheory.SquareAgree.KFinAlg.polynomial_vector_kFinite _root_.GlobalTheory.RealLift.FockFirst.exists_fockMap_first_order_of_real_lift hPr F E σ Bs a a' Γ Xc om om' hT f hf
     have hstd : ∀ᶠ v in Filter.cofinite,
         φ v = Set.indicator {x : Fin a × Fin (a + a') → Fv F v |
           ∀ j, x j ∈ v.adicCompletionIntegers F} 1 := by
@@ -516,24 +497,6 @@ end GlobalTheory.SquareAgree.KFinAlg
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
-open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
-open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-open GlobalTheory.Grid GlobalTheory.Doubling GlobalTheory.ChainFr GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree
-
-theorem _root_.GlobalTheory.T.kFinite_algebra_closed_under_derivation : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    (σ : E →ₐ[F] E) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E) (a a' : ℕ) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo σ a a')
-    (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars F E) (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V Γ.W) (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep σ Γ.V' Γ.W),
-    GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' → ∀ ΦD ∈ GlobalTheory.SquareAgree.algD Γ.M Bs.ψ Bs.emb,
-    ∃ U : Submodule ℂ ((Fin a × Fin (a + a') → AF F) → ℂ), FiniteDimensional ℂ U ∧
-      U ≤ GlobalTheory.SquareAgree.algD Γ.M Bs.ψ Bs.emb ∧ ΦD ∈ U ∧
-      ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf σ Γ.V Bs.emb, ∀ x ∈ U, om (k, 1) x ∈ U := by
-  first | exact @_root_.GlobalTheory.SquareAgree.KFinAlg.derivation_algebra_kFinite
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.KFiniteAlgebraClosedUnderDerivation =====
@@ -719,17 +682,13 @@ theorem piInf_eq_infProj {w : InfinitePlace D.host.F} (e : GlobalTheory.AdelicU.
   | add a b ha hb => rw [RingHom.map_add (f := _), RingHom.map_add (f := _), RingHom.map_add (f := _), ha, hb]
   | tmul a x => rfl
 
-theorem isInfFam_thetaC (D : D7) : IsInfFam (Eqv.thetaC D) := by
-  obtain ⟨θ, hθ⟩ := GlobalTheory.AdelicU.exists_isInfFam D
-  exact Eqv.eq_thetaC D hθ ▸ hθ
-
 theorem psiT_cA (t : D.what₂.Tau) (y : AE D) :
     Eqv.psiT D t (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig y) = conj (Eqv.psiT D t y) := Eqv.psiT_sigR D t y
 
 theorem piInf_cA_of_eq (t : D.what₂.Tau) (e : GlobalTheory.AdelicU.EmbOver D.host.E (GlobalTheory.AdelicU.placeOf D t))
     (h : e.1 = tauE D t) (y : AE D) :
     GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf e (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig y) = conj (Eqv.psiT D t y) := by
-  rw [piInf_eq_infProj, ← GlobalTheory.AdelicU.eq_infProj (isInfFam_thetaC D) e h, ← psiT_cA]
+  rw [piInf_eq_infProj, ← GlobalTheory.AdelicU.eq_infProj (_root_.Formalism.IndefR.Eqv.isInfFam_thetaC D) e h, ← psiT_cA]
   rfl
 
 theorem piInf_cA_of_eq_conj (t : D.what₂.Tau) (e : GlobalTheory.AdelicU.EmbOver D.host.E (GlobalTheory.AdelicU.placeOf D t))
@@ -738,7 +697,7 @@ theorem piInf_cA_of_eq_conj (t : D.what₂.Tau) (e : GlobalTheory.AdelicU.EmbOve
   obtain ⟨σ, hσ⟩ := e
   simp only at h
   subst h
-  rw [GlobalTheory.ConjInfExp.piInf_eq _ (isInfFam_thetaC D)]
+  rw [GlobalTheory.ConjInfExp.piInf_eq _ (_root_.Formalism.IndefR.Eqv.isInfFam_thetaC D)]
   show conj (Eqv.psiT D t (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.cA D.sp.cm.sig y)) = _
   rw [psiT_cA, Complex.conj_conj]
 
@@ -966,7 +925,7 @@ theorem line_mem (hJ : V.J = (1 : D.host.E) • W.gram) (Bs : GlobalTheory.Indef
           (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piInf (Bs.emb (GlobalTheory.AdelicU.placeOf D t)))) (V.θ (GlobalTheory.AdelicU.placeOf D t)))
     {t : D.what₂.Tau} {Z : Matrix (Fin W.rank) (Fin W.rank) ℂ} (hZ : Z ∈ lieAt W t) (hZC : Commute Z (C t)) (s' : ℝ) :
     GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ (oneP (Eqv.thetaC D) W t Z s') ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig V Bs.emb := by
-  have hat := GlobalTheory.Mem.Lift.isAtTau_oneP (isInfFam_thetaC D) hZ s'
+  have hat := GlobalTheory.Mem.Lift.isAtTau_oneP (_root_.Formalism.IndefR.Eqv.isInfFam_thetaC D) hZ s'
   refine ⟨mem_UAt hJ hat.1, fun w => ?_⟩
   obtain ⟨t', rfl⟩ := (GlobalTheory.AdelicU.placeOf_bijective D).2 w
   by_cases e : t' = t
@@ -982,7 +941,7 @@ theorem prod_eq (hJ : V.J = (1 : D.host.E) • W.gram) {k : GlobalTheory.Indefin
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ (oneP (Eqv.thetaC D) W q.1 q.2 1)).prod := by
   classical
   have hat : ∀ t (s' : ℝ), IsAtTau (Eqv.thetaC D) W t (NormedSpace.exp (s' • Z t)) (oneP (Eqv.thetaC D) W t (Z t) s') :=
-    fun t s' => GlobalTheory.Mem.Lift.isAtTau_oneP (isInfFam_thetaC D) (hZ t).1 s'
+    fun t s' => GlobalTheory.Mem.Lift.isAtTau_oneP (_root_.Formalism.IndefR.Eqv.isInfFam_thetaC D) (hZ t).1 s'
   have e1 : ((Finset.univ.toList.map fun t => (t, Z t)).map fun q : D.what₂.Tau × Matrix (Fin W.rank) (Fin W.rank) ℂ =>
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ (oneP (Eqv.thetaC D) W q.1 q.2 1)) =
       (Finset.univ.toList.map fun t => oneP (Eqv.thetaC D) W t (Z t) 1).map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ) := by
@@ -1035,13 +994,10 @@ open GlobalTheory.SquareComm GlobalTheory.SquareAgree
 open scoped ComplexConjugate
 noncomputable section
 namespace GlobalTheory.KInfLines
-variable {D : D7}
 end GlobalTheory.KInfLines
 namespace GlobalTheory.KInfLines
-variable {D : D7}
 end GlobalTheory.KInfLines
 namespace GlobalTheory.KInfLines
-variable {D : D7} {W : HSp D} {V : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank}
 end GlobalTheory.KInfLines
 namespace GlobalTheory.KInfLines
 variable {D : D7} {W : HSp D} {V : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank}
@@ -1056,7 +1012,7 @@ theorem kInfinity_prod_lines : _root_.GlobalTheory.FunPr.ThetaLocalInputs → �
   intro _ D θ W Bs V r s hJ hθ _ hV k hk
   obtain rfl := Eqv.eq_thetaC D hθ
   choose C hC using cartan_data hJ Bs hV hk
-  choose Z hZ using fun t => exists_log_of_cartan (GlobalTheory.SmoothForms.RealPts.gramAt_herm W t) (hC t).1
+  choose Z hZ using fun t => _root_.GlobalTheory.ExpCartan.exists_exp_eq_of_commute_cartan (GlobalTheory.SmoothForms.RealPts.gramAt_herm W t) (hC t).1
     (unitFam_gsOf hJ k t) (hC t).2.1
   refine ⟨Finset.univ.toList.map fun t => (t, Z t), ?_, prod_eq hJ hk.1 Z fun t => ⟨(hZ t).1, (hZ t).2.2⟩⟩
   intro q hq
@@ -1066,25 +1022,6 @@ end GlobalTheory.KInfLines
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
-open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
-open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-open GlobalTheory.Grid GlobalTheory.Doubling GlobalTheory.ChainFr GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree
-
-theorem _root_.GlobalTheory.T.kInfinity_action_prod_lines : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (D : D7) (θ : InfFam D) (W : HSp D) (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E)
-    (V : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc D.host.F D.host.E W.rank) (r s : ℕ) (hJ : V.J = (1 : D.host.E) • W.gram),
-    IsInfFam θ → Bs.IsGood D.sp.cm.sig → V.IsHerm D.sp.cm.sig Bs r s →
-    ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig V Bs.emb,
-    ∃ l : List (D.what₂.Tau × Matrix (Fin W.rank) (Fin W.rank) ℂ),
-      (∀ q ∈ l, q.2 ∈ lieAt W q.1 ∧ ∀ t : ℝ,
-        GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ (oneP θ W q.1 q.2 t) ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig V Bs.emb) ∧
-      k = (l.map fun q => GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 hJ (oneP θ W q.1 q.2 1)).prod := by
-  first | exact @_root_.GlobalTheory.KInfLines.kInfinity_prod_lines
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.KInfinityActionProdLines =====
@@ -1130,8 +1067,8 @@ theorem projection_kInfty_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs
   intro hP D ψ θ W W₁ X A A₁ B α β ν 𝓕 ν₁ 𝓕₁ ωA ωB e Bs Γ Xc om om' cA cB hθ _ hO hT Pi rf rl p p' hm k hk ΦD hΦD Φ Φ₁
     h0 h1
   have hψ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsStd ψ := hO.psi ▸ hT.base.std
-  obtain ⟨U, hUf, hUle, hΦU, hUst⟩ := _root_.GlobalTheory.T.kFinite_algebra_closed_under_derivation hP _ _ _ Bs _ _ Γ Xc om om' hT ΦD hΦD
-  obtain ⟨l, hl, rfl⟩ := _root_.GlobalTheory.T.kInfinity_action_prod_lines hP D θ W Bs Γ.V _ _ hO.JW hθ hT.base hT.geo.hV k hk
+  obtain ⟨U, hUf, hUle, hΦU, hUst⟩ := _root_.GlobalTheory.SquareAgree.KFinAlg.derivation_algebra_kFinite hP _ _ _ Bs _ _ Γ Xc om om' hT ΦD hΦD
+  obtain ⟨l, hl, rfl⟩ := _root_.GlobalTheory.KInfLines.kInfinity_prod_lines hP D θ W Bs Γ.V _ _ hO.JW hθ hT.base hT.geo.hV k hk
   haveI := hUf
   have key : ∀ l : List (D.what₂.Tau × Matrix (Fin W.rank) (Fin W.rank) ℂ),
       (∀ q ∈ l, q.2 ∈ lieAt W q.1 ∧ ∀ t : ℝ,
@@ -1163,29 +1100,6 @@ end GlobalTheory.KInvData
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
-open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef Formalism.DivisionValues
-open Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Mult Formalism.IndefR.Datum
-open GlobalTheory.Grid GlobalTheory.Doubling GlobalTheory.ChainFr GlobalTheory.IndefiniteRowSideFullHecke.MatchingAdjoints
-open scoped TensorProduct GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open GlobalTheory.SquareComm GlobalTheory.SquareAgree
-
-theorem _root_.GlobalTheory.T.weil_projection_kInfty_invariant : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (W W₁ X : HSp D) (A : Fr W) (A₁ : Fr W₁)
-    (B : Fr X) (α β : (AE D)ˣ →* Circle) (ν : Measure (GA D W)) (𝓕 : Set (GA D W)) (ν₁ : Measure (GA D W₁))
-    (𝓕₁ : Set (GA D W₁)) (ωA : WRep W X) (ωB : WRep W₁ X) (e : Fin X.rank ≃ Fin (W.rank + W₁.rank))
-    (Bs : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base D.host.F D.host.E) (Γ : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Geo D.sp.cm.sig W.rank W₁.rank)
-    (Xc : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Chars D.host.F D.host.E) (om : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V Γ.W)
-    (om' : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Rep D.sp.cm.sig Γ.V' Γ.W) (cA : Matrix (Fin W.rank) (Fin (W.rank + W₁.rank)) (AE D) ≃+ WO W X)
-    (cB : Matrix (Fin W₁.rank) (Fin (W.rank + W₁.rank)) (AE D) ≃+ WO W₁ X),
-    IsInfFam θ → IsTriple W W₁ X α β → ∀ (hO : IsOver ψ θ A A₁ B α β ν 𝓕 ν₁ 𝓕₁ ωA ωB e Bs Γ Xc om om' cA cB),
-    GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.IsTriple Bs Γ Xc om om' →
-    ∀ Pi rf rl p p', IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
-    ∀ k ∈ GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.KInf D.sp.cm.sig Γ.V Bs.emb, ∀ ΦD ∈ algD Γ.M Bs.ψ Bs.emb, ∀ Φ Φ₁,
-    IsDatum Γ.M ψ cA ΦD Φ → IsDatum Γ.M ψ cA (om (k, 1) ΦD) Φ₁ → p Φ₁ = p Φ := by
-  first | exact @_root_.GlobalTheory.KInvData.projection_kInfty_invariant
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.WeilProjectionKInftyInvariant =====

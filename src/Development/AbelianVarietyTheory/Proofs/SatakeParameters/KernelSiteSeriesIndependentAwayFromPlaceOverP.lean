@@ -129,19 +129,6 @@ namespace GlobalTheory.TwV.Xc
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
-theorem exists_nat_mul_isIntegral (e : E) : ∃ n : ℕ, 0 < n ∧ IsIntegral ℤ ((n : E) * e) := by
-  obtain ⟨y, hy0, hy⟩ := exists_integral_multiples ℤ ℚ (L := E) {e}
-  have h := hy e (Finset.mem_singleton_self e)
-  have hpos : 0 < y.natAbs := Int.natAbs_pos.2 hy0
-  refine ⟨y.natAbs * y.natAbs, Nat.mul_pos hpos hpos, ?_⟩
-  have e1 : ((y.natAbs * y.natAbs : ℕ) : E) * e = (y : E) * ((y : E) * e) := by
-    have h2 := Int.natAbs_mul_self' y
-    rw [← mul_assoc, ← Int.cast_natCast, Nat.cast_mul, h2, Int.cast_mul]
-  rw [e1]
-  rw [zsmul_eq_mul] at h
-  refine IsIntegral.mul ?_ h
-  simpa using (isIntegral_algebraMap (R := ℤ) (A := E) (x := y))
-
 theorem exists_common_nat {M : Type} [AddCommMonoid M] {ι : Type} [Fintype ι] (S : AddSubmonoid M) (x : ι → M)
     (h : ∀ i, ∃ n : ℕ, 0 < n ∧ n • x i ∈ S) : ∃ n : ℕ, 0 < n ∧ ∀ i, n • x i ∈ S := by
   classical
@@ -155,7 +142,7 @@ theorem exists_nat_mul_mem_intAf (z : E ⊗[F] 𝔸ᶠ[F]) :
   induction z using TensorProduct.induction_on with
   | zero => exact ⟨1, one_pos, by rw [mul_zero]; exact zero_mem _⟩
   | tmul e a =>
-    obtain ⟨n, hn, he⟩ := exists_nat_mul_isIntegral e
+    obtain ⟨n, hn, he⟩ := _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nat_mul_isIntegral e
     obtain ⟨d, hd, ha⟩ := GlobalTheory.HolDict.ShortVec.exists_denom_adele (F := F) a
     refine ⟨n * d, Nat.mul_pos hn hd, ?_⟩
     have e1 : ((n * d : ℕ) : E ⊗[F] 𝔸ᶠ[F]) * (e ⊗ₜ[F] a) =
@@ -176,13 +163,6 @@ theorem exists_nat_mul_mem_intAf (z : E ⊗[F] 𝔸ᶠ[F]) :
     rw [e1]
     exact add_mem (mul_mem (natCast_mem _ _) hx) (mul_mem (natCast_mem _ _) hy)
 
-theorem exists_nsmul_mem_of_mem_span {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N → E)) {v : Fin N → E}
-    (hv : v ∈ Submodule.span E (Lb : Set (Fin N → E))) : ∃ n : ℕ, 0 < n ∧ n • v ∈ Lb := by
-  first
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
-  | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
-  | (intros; exact _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem ..)
-
 end GlobalTheory.TwV.Xc
 
 namespace GlobalTheory.TwV.Xc
@@ -196,7 +176,7 @@ theorem exists_nsmul_mem_hatL {N : ℕ} (Lb : Submodule (𝓞 E) (Fin N → E))
     ∃ n : ℕ, 0 < n ∧ n • z ∈ Formalism.L2.Herm.hatL (F := F) Lb := by
   classical
   obtain ⟨d₁, hd₁, h₁⟩ := exists_common_nat Lb.toAddSubmonoid (fun i : Fin N => (Pi.single i (1 : E) : Fin N → E))
-    fun i => exists_nsmul_mem_of_mem_span Lb (by rw [hspan]; exact Submodule.mem_top)
+    fun i => _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem Lb (by rw [hspan]; exact Submodule.mem_top)
   obtain ⟨d₂, hd₂, h₂⟩ := exists_common_nat (Formalism.L2.Herm.intAf F E).toAddSubgroup.toAddSubmonoid z
     fun i => by
       obtain ⟨n, hn, h⟩ := exists_nat_mul_mem_intAf (F := F) (E := E) (z i)
@@ -620,8 +600,6 @@ section -- clump:auto
 open Formalism.BasicNotions NumberField IsDedekindDomain Formalism.MainNotions Formalism.MainNotions.G Formalism.MainNotions.FormalGroupSystem Formalism.MainNotions.G.KAat Formalism.MainNotions.G.CmpJ Formalism.L2.G Formalism.L2.G.Cmp Formalism.L2.Forms Formalism.L2.DIV Formalism.UG Formalism.L2.Ker Formalism.L2.G.Pend Formalism.L2.PairingIndexBounds.F Formalism.L2.KerInert GlobalTheory.TwV GlobalTheory.TwV.Xc TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.eqOffPrime_kernelLattices_of_agreeAway : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => ∀ v (P : HeightOneSpectrum (𝓞 D.host.E)), PrimeOf (D.what₂.places.resChar w) ((sysS H X std).G.P.W v) (J.rho std v) P → ∀ j (hj : j ≤ D.R.m) (La Lb : (sysS H X std).Lt j), SameAway (hT := hT) (H := H) (X := X) std v j La Lb → GL3Theta.EqOff D P ((J.fd std).kerN j La) ((J.fd std).kerN j Lb)) := by
-  first | exact @GlobalTheory.TwV.Xc.eqOff_kerN_of_sameAway
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqOffPrimeKernelLatticesOfAgreeAwayStatement =====
@@ -937,8 +915,6 @@ section -- clump:auto
 open Formalism.BasicNotions NumberField IsDedekindDomain Formalism.MainNotions Formalism.MainNotions.G Formalism.MainNotions.FormalGroupSystem Formalism.MainNotions.G.KAat Formalism.MainNotions.G.CmpJ Formalism.L2.G Formalism.L2.G.Cmp Formalism.L2.Forms Formalism.L2.DIV Formalism.UG Formalism.L2.Ker Formalism.L2.G.Pend Formalism.L2.PairingIndexBounds.F Formalism.L2.KerInert GlobalTheory.TwV GlobalTheory.TwV.Xc TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.movedDatum_eq_of_latticeTuples_agreeAway : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => ∀ v j (hj : j < D.R.m) (La Lb : (sysS H X std).Lt j) (La' Lb' : (sysS H X std).Lt (j + 1)), SameAway (hT := hT) (H := H) (X := X) std v j La Lb → SameAway (hT := hT) (H := H) (X := X) std v (j + 1) La' Lb' → GlobalTheory.TwU.xiM (sysS H X std) (J.fd std) (J.xi0 std S.Xi) j La La' = GlobalTheory.TwU.xiM (sysS H X std) (J.fd std) (J.xi0 std S.Xi) j Lb Lb') := by
-  first | exact @GlobalTheory.TwV.Xc.xiM_eq_of_sameAway
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SatakeParameters.MovedDatumEqOfLatticeTuplesAgreeAwayStatement =====
@@ -1239,8 +1215,8 @@ theorem away_of_pos_pair : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
       congrArg (fun z : (sysS H X std).Lt j × (sysS H X std).Lt (j + 1) => z.2.2) haw
     have hA : SameAway (hT := hT) (H := H) (X := X) std v j La Lb := ⟨h1, h3, e1, e2⟩
     have hA' : SameAway (hT := hT) (H := H) (X := X) std v (j + 1) La' Lb' := ⟨h2, h4, e3, e4⟩
-    refine ⟨GlobalTheory.T.eqOffPrime_kernelLattices_of_agreeAway S hDict hSpl v P hPof j hj.le La Lb hA, GlobalTheory.T.eqOffPrime_kernelLattices_of_agreeAway S hDict hSpl v P hPof (j + 1) hj La' Lb' hA', ?_, ?_,
-      GlobalTheory.T.movedDatum_eq_of_latticeTuples_agreeAway S hDict hSpl v j hj La Lb La' Lb' hA hA', GlobalTheory.T.kernelSite_scalars_agree_awayFromPlace S hDict hSpl hPair v π hU j hj x y hx hy La Lb La' Lb' hA hA'⟩
+    refine ⟨_root_.GlobalTheory.TwV.Xc.eqOff_kerN_of_sameAway S hDict hSpl v P hPof j hj.le La Lb hA, _root_.GlobalTheory.TwV.Xc.eqOff_kerN_of_sameAway S hDict hSpl v P hPof (j + 1) hj La' Lb' hA', ?_, ?_,
+      _root_.GlobalTheory.TwV.Xc.xiM_eq_of_sameAway S hDict hSpl v j hj La Lb La' Lb' hA hA', _root_.GlobalTheory.TwV.Xc.AwayId.scal_away S hDict hSpl hPair v π hU j hj x y hx hy La Lb La' Lb' hA hA'⟩
     · have hLb : Lb = (La.1, Lb.2) := Prod.ext e1.symm rfl
       rw [hLb]
       exact GlobalTheory.T.latticeTuple_frameMatrices_eq_of_same_component S hDict hSpl j La.1 La.2 Lb.2

@@ -128,8 +128,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_divisionPoint_pair_over_algClosed : ∀ (V : Type) [CommRing V] [IsDomain V] (D : DegPre V), D.TauBimult → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing V) F] (k : ℕ), 1 ≤ k → ∀ (y : D.X) (x : TF (R := V) F ⟶ D.P.A), x ^ k = DegPre.cF D F y → ∃ p : QkPt D F k, p.y = y ∧ p.g.b = x := by
-  first | exact @GlobalTheory.UCanon.exists_qk_over_cF
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDivisionPointPairOverAlgClosedStatement =====
@@ -149,7 +147,7 @@ namespace GlobalTheory.TInj
 
 theorem divPt_match_of_pairs : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (D₀ : DegPre R) (D₁ D₂ : DegPre V), D₀.TauBimult → D₂.TauBimult → ∀ (f₁ f₂ : R →+* V) (hD₁ : IsPullDeg f₁ D₀ D₁) (hD₂ : IsPullDeg f₂ D₀ D₂) (F₀ : Type) [Field F₀] [IsAlgClosed F₀] [Algebra (FractionRing R) F₀] (F : Type) [Field F] [Algebra (FractionRing V) F] (j₁ j₂ : F₀ →+* F) (b : D₁.P.A ⟶ D₂.P.A) (φ' : D₁.X ≃+ D₂.X) (k : ℕ), 1 ≤ k → (∀ p₀ : QkPt D₀ F₀ k, ∃ (p₁ : QkPt D₁ F k) (p₂ : QkPt D₂ F k), p₁.y = hD₁.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₁ hD₁ j₁ p₀.g p₁.g ∧ p₂.y = hD₂.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₂ hD₂ j₂ p₀.g p₂.g ∧ GlobalTheory.TInj.QImg b φ' p₁ p₂) → (∀ y : D₀.X, hD₂.xe (φ' (hD₁.xe.symm y)) = y) → ∀ (y : D₀.X) (x : TF (R := R) F₀ ⟶ D₀.P.A), x ^ k = DegPre.cF D₀ F₀ y → ∃ z : TF (R := V) F ⟶ D₁.P.A, z.left ≫ hD₁.e.hom.left ≫ pullback.fst D₀.P.A.hom (specOf f₁) = spMap j₁ ≫ x.left ∧ z.left ≫ b.left ≫ hD₂.e.hom.left ≫ pullback.fst D₀.P.A.hom (specOf f₂) = spMap j₂ ≫ x.left := by
   intro R V _ _ _ _ D₀ D₁ D₂ hB₀ hB₂ f₁ f₂ hD₁ hD₂ F₀ _ _ _ F _ _ j₁ j₂ b φ' k hk hpair hφ y x hx
-  obtain ⟨p₀, hp₀y, hp₀b⟩ := GlobalTheory.T.exists_divisionPoint_pair_over_algClosed R D₀ hB₀ F₀ k hk y x hx
+  obtain ⟨p₀, hp₀y, hp₀b⟩ := _root_.GlobalTheory.UCanon.exists_qk_over_cF R D₀ hB₀ F₀ k hk y x hx
   obtain ⟨p₁, p₂, h₁y, hT₁, h₂y, hT₂, p', hp'y, hAct, hEq⟩ := hpair p₀
   have hy' : p'.y = p₂.y := by
     rw [hp'y, h₂y, h₁y, hp₀y]
@@ -179,8 +177,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.divisionPoints_correspond_matched_pullbacks : ∀ (R V : Type) [CommRing R] [IsDomain R] [CommRing V] [IsDomain V] (D₀ : DegPre R) (D₁ D₂ : DegPre V), D₀.TauBimult → D₂.TauBimult → ∀ (f₁ f₂ : R →+* V) (hD₁ : IsPullDeg f₁ D₀ D₁) (hD₂ : IsPullDeg f₂ D₀ D₂) (F₀ : Type) [Field F₀] [IsAlgClosed F₀] [Algebra (FractionRing R) F₀] (F : Type) [Field F] [Algebra (FractionRing V) F] (j₁ j₂ : F₀ →+* F) (b : D₁.P.A ⟶ D₂.P.A) (φ' : D₁.X ≃+ D₂.X) (k : ℕ), 1 ≤ k → (∀ p₀ : QkPt D₀ F₀ k, ∃ (p₁ : QkPt D₁ F k) (p₂ : QkPt D₂ F k), p₁.y = hD₁.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₁ hD₁ j₁ p₀.g p₁.g ∧ p₂.y = hD₂.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₂ hD₂ j₂ p₀.g p₂.g ∧ GlobalTheory.TInj.QImg b φ' p₁ p₂) → (∀ y : D₀.X, hD₂.xe (φ' (hD₁.xe.symm y)) = y) → ∀ (y : D₀.X) (x : TF (R := R) F₀ ⟶ D₀.P.A), x ^ k = DegPre.cF D₀ F₀ y → ∃ z : TF (R := V) F ⟶ D₁.P.A, z.left ≫ hD₁.e.hom.left ≫ pullback.fst D₀.P.A.hom (specOf f₁) = spMap j₁ ≫ x.left ∧ z.left ≫ b.left ≫ hD₂.e.hom.left ≫ pullback.fst D₀.P.A.hom (specOf f₂) = spMap j₂ ≫ x.left := by
-  first | exact @GlobalTheory.TInj.divPt_match_of_pairs
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisionPointsCorrespondMatchedPullbacksStatement =====
@@ -284,8 +280,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.lineBundleIso_of_action_compatible_match : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ f₁ f₂ : R →+* V, Function.Injective f₁ → Function.Injective f₂ → IsLocalHom f₁ → IsLocalHom f₂ → ∀ (D₁ D₂ : DegData V (maximalIdeal V)) (hD₁ : IsPullDeg f₁ C.P.D.toPre D₁.toPre) (hD₂ : IsPullDeg f₂ C.P.D.toPre D₂.toPre) (j₁ j₂ : (AlgebraicClosure (FractionRing R)) →+* (AlgebraicClosure (FractionRing V))) (b : D₁.toPre.P.A ⟶ D₂.toPre.P.A) (φ' : D₁.toPre.X ≃+ D₂.toPre.X), GlobalTheory.TInj.Ext f₁ j₁ → GlobalTheory.TInj.Ext f₂ j₂ → GlobalTheory.TInj.Match D₁.toPre D₂.toPre b φ' (AlgebraicClosure (FractionRing V)) → (letI := H.starRing; ∀ x : 𝓞 E, ∃ (a₁ : D₁.toPre.P.A ⟶ D₁.toPre.P.A) (a₂ : D₂.toPre.P.A ⟶ D₂.toPre.P.A), a₁ ≫ hD₁.e.hom = hD₁.e.hom ≫ (Over.pullback (specOf f₁)).map (C.P.oD.onB.act x) ∧ a₂ ≫ hD₂.e.hom = hD₂.e.hom ≫ (Over.pullback (specOf f₂)).map (C.P.oD.onB.act x) ∧ a₁ ≫ b = b ≫ a₂) → LBIso D₁.toPre.P.L (D₂.toPre.P.L.pull b.left) := by
-  first | exact @GlobalTheory.UCanon.MatchBundle.lbIso_of_match
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIsoOfActionCompatibleMatchStatement =====
@@ -345,10 +339,6 @@ noncomputable section
 namespace GlobalTheory.UCanon
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
-
-theorem toUnit_left_eq' {X : Scheme.{0}} (T : Over X) : (toUnit T).left = T.hom := by
-  have := Over.w (toUnit T)
-  simpa using this
 
 theorem grpPullback_pow_succ {S S' : Scheme.{0}} {G' : Over S'} [GrpObj G'] {G : Over S} [GrpObj G] {f : S' ⟶ S}
     {φ : G'.left ⟶ G.left} (hφ : IsGrpPullback G' G f φ) {T : Over S'} (x : T ⟶ G')
@@ -427,12 +417,12 @@ theorem sabMap_keeps_eta : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
     rw [hn] at p p'
     have key := grpPullback_pow_succ m.cart (T := Over.mk (spMap κ)) (toUnit _ ≫ o'.etaA a')
       (toUnit (Over.mk (spMap κ ≫ spMap f)) ≫ o.etaA a') (by
-        rw [Over.comp_left, Over.comp_left, toUnit_left_eq', toUnit_left_eq']
+        rw [Over.comp_left, Over.comp_left, _root_.GlobalTheory.ObjPull.toUnit_left', _root_.GlobalTheory.ObjPull.toUnit_left']
         simp only [Over.mk_hom, Category.assoc]
         rw [hA a']) n
     have q' := congrArg Over.Hom.left p'
     have q := congrArg Over.Hom.left p
-    rw [Over.comp_left, toUnit_left_eq'] at q q'
+    rw [Over.comp_left, _root_.GlobalTheory.ObjPull.toUnit_left'] at q q'
     simp only [Over.mk_hom] at q q'
     rw [← Category.assoc, q', ← key, ← q, Category.assoc]
 
@@ -554,7 +544,7 @@ theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
   obtain ⟨m₂, hm₂⟩ : ∃ m₂ : ObjMap o' L.o (spMap f₂), m₂.φ = ψ := ⟨⟨n, heta, hetaA⟩, hn⟩
 
   have hcy : ∀ y, ∃ cy : Sp L.W ⟶ L.o.t.G.left, cy ≫ L.φB = (L.D.c y).left ∧ cy ≫ L.o.t.G.hom = 𝟙 _ := fun y =>
-    ⟨L.ab.1.1.lift (L.D.c y).left (𝟙 _) (by rw [sec_hom, Category.comp_id]),
+    ⟨L.ab.1.1.lift (L.D.c y).left (𝟙 _) (by rw [_root_.GlobalTheory.LevelFibre.sec_w, Category.comp_id]),
       IsPullback.lift_fst _ _ _ _, IsPullback.lift_snd _ _ _ _⟩
   choose cy hcy₁ hcy₂ using hcy
   have hx : ∀ y, ∃ x : Sp A ⟶ o'.t.G.left, x ≫ m₁.φ = spMap f₁ ≫ cy y ∧ x ≫ o'.t.G.hom = 𝟙 _ := fun y =>
@@ -595,9 +585,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 noncomputable section
 
-theorem GlobalTheory.UCanon.PairBase.spMap_comp {A B C' : Type} [CommRing A] [CommRing B] [CommRing C'] (f : B →+* C') (g : A →+* B) :
-    spMap (f.comp g) = spMap f ≫ spMap g := by
-  simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
+alias GlobalTheory.UCanon.PairBase.spMap_comp := _root_.GlobalTheory.ZM.NearBuild.spMap_comp
 
 namespace GlobalTheory.UCanon.PairBase
 
@@ -669,7 +657,7 @@ theorem GlobalTheory.UCanon.PairBase.base_eq_of_match : ∀ {E : Type} [Field E]
   have hoa' : letI := H.starRing; ∀ x, (C.P.oD.onB.act x).left ≫ β = β ≫ (Cn.L.oa.onB.act x).left :=
     fun x => (hoa x).trans (Category.assoc _ _ _).symm
 
-  have hLB0 := GlobalTheory.T.lineBundleIso_of_action_compatible_match Xo c φ R hR C Cn V hV f₁ f₂ hi₁ hi₂ hl₁ hl₂ D₁ D₂ hD₁ hD₂ j₁ j₂ b φ' hE₁ hE₂ hM hact
+  have hLB0 := _root_.GlobalTheory.UCanon.MatchBundle.lbIso_of_match Xo c φ R hR C Cn V hV f₁ f₂ hi₁ hi₂ hl₁ hl₂ D₁ D₂ hD₁ hD₂ j₁ j₂ b φ' hE₁ hE₂ hM hact
   have hβL : LBIso C.P.D.toPre.P.L (Cn.L.D.P.L.pull β) := ⟨hD.w, hD.w_gen⟩
   have hC := C.P.D.toPre.P.isLB
   have hLD := Cn.L.D.P.isLB
@@ -722,7 +710,7 @@ theorem GlobalTheory.UCanon.PairBase.base_eq_of_match : ∀ {E : Type} [Field E]
       ∃ z : Sp F ⟶ D₁.toPre.P.A.left, z ≫ D₁.toPre.P.A.hom = spMap j ∧ z ≫ π₁ = spMap j ≫ spMap f₁ ≫ u ∧
         z ≫ π₂ = spMap j ≫ spMap f₂ ≫ u := by
     intro y' x u hx hxu
-    obtain ⟨z, hz₁, hz₂⟩ := GlobalTheory.T.divisionPoints_correspond_matched_pullbacks R V C.P.D.toPre D₁.toPre D₂.toPre C.P.D.tau_bimult D₂.tau_bimult f₁ f₂ hD₁ hD₂
+    obtain ⟨z, hz₁, hz₂⟩ := _root_.GlobalTheory.TInj.divPt_match_of_pairs R V C.P.D.toPre D₁.toPre D₂.toPre C.P.D.tau_bimult D₂.tau_bimult f₁ f₂ hD₁ hD₂
       F₀ F j₁ j₂ b φ' l.M' hM1 hpts hφ y' x hx
     have hz₁' : z.left ≫ prj hD₁ = spMap j₁ ≫ x.left := hz₁
     have hz₂' : z.left ≫ b.left ≫ prj hD₂ = spMap j₂ ≫ x.left := hz₂
@@ -825,8 +813,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.canonicalFamily_base_eq_of_matching_pullbacks : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ f₁ f₂ : R →+* V, Function.Injective f₁ → Function.Injective f₂ → IsLocalHom f₁ → IsLocalHom f₂ → ∀ (D₁ D₂ : DegData V (maximalIdeal V)) (hD₁ : IsPullDeg f₁ C.P.D.toPre D₁.toPre) (hD₂ : IsPullDeg f₂ C.P.D.toPre D₂.toPre) (j₁ j₂ : (AlgebraicClosure (FractionRing R)) →+* (AlgebraicClosure (FractionRing V))) (b : D₁.toPre.P.A ⟶ D₂.toPre.P.A) (φ' : D₁.toPre.X ≃+ D₂.toPre.X), GlobalTheory.TInj.Ext f₁ j₁ → GlobalTheory.TInj.Ext f₂ j₂ → GlobalTheory.TInj.Match D₁.toPre D₂.toPre b φ' (AlgebraicClosure (FractionRing V)) → (∀ p₀ : QkPt C.P.D.toPre (AlgebraicClosure (FractionRing R)) l.M', ∃ (p₁ : QkPt D₁.toPre (AlgebraicClosure (FractionRing V)) l.M') (p₂ : QkPt D₂.toPre (AlgebraicClosure (FractionRing V)) l.M'), p₁.y = hD₁.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₁ hD₁ j₁ p₀.g p₁.g ∧ p₂.y = hD₂.xe.symm p₀.y ∧ GlobalTheory.TInj.Tr f₂ hD₂ j₂ p₀.g p₂.g ∧ GlobalTheory.TInj.QImg b φ' p₁ p₂) → (letI := H.starRing; ∀ x : 𝓞 E, ∃ (a₁ : D₁.toPre.P.A ⟶ D₁.toPre.P.A) (a₂ : D₂.toPre.P.A ⟶ D₂.toPre.P.A), a₁ ≫ hD₁.e.hom = hD₁.e.hom ≫ (Over.pullback (specOf f₁)).map (C.P.oD.onB.act x) ∧ a₂ ≫ hD₂.e.hom = hD₂.e.hom ≫ (Over.pullback (specOf f₂)).map (C.P.oD.onB.act x) ∧ a₁ ≫ b = b ≫ a₂) → (∀ y : C.P.D.toPre.X, hD₂.xe (φ' (hD₁.xe.symm y)) = y) → f₁.comp C.b = f₂.comp C.b → f₁.comp (Cn.ψ.comp MvPolynomial.C) = f₂.comp (Cn.ψ.comp MvPolynomial.C) := by
-  first | exact @GlobalTheory.UCanon.PairBase.base_eq_of_match
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalFamilyBaseEqOfMatchingPullbacksStatement =====
@@ -1106,7 +1092,7 @@ theorem GlobalTheory.UCanon.LowPull.exists_lowObj_cdvr : ∀ {E : Type} [Field E
     GlobalTheory.UInj.pair_match Xo c φ R hR C.toFam V hc θ₁ θ₂ hθ₁ hθ₂ hl₁ hl₂ κ₁ κ₂ hκ₁ hκ₂ hy
   have hlat := GlobalTheory.T.canonicalFamily_latticeIdentification_eq_id Xo c φ hpq hφ hns R hR C Cn V hc θ₁ θ₂ hθ₁ hθ₂ hl₁ hl₂ D₁ D₂ hD₁ hD₂ j₁ j₂ b φ' he₁ he₂ hM
     hlin hQ
-  exact LowPull.exists_pull₂ Cn.L V _ _ (GlobalTheory.T.canonicalFamily_base_eq_of_matching_pullbacks Xo c φ R hR C Cn V hc θ₁ θ₂ hθ₁ hθ₂ hl₁ hl₂ D₁ D₂ hD₁ hD₂ j₁ j₂ b φ'
+  exact LowPull.exists_pull₂ Cn.L V _ _ (_root_.GlobalTheory.UCanon.PairBase.base_eq_of_match Xo c φ R hR C Cn V hc θ₁ θ₂ hθ₁ hθ₂ hl₁ hl₂ D₁ D₂ hD₁ hD₂ j₁ j₂ b φ'
     he₁ he₂ hM hQ hbl hlat hb)
 end -- clump:auto
 end -- clump:auto
@@ -1142,24 +1128,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 namespace GlobalTheory.UCanon
 
-theorem comp_b_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H}
-    {Xo : Moduli Dw l} {c : Coeff l} {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (F : Fam Xo c R)
-    {V : Type} [CommRing V] [IsDomain V] (θ₁ θ₂ : R →+* V) (κ₁ κ₂ : Sp (FractionRing V) ⟶ Sp (FractionRing R))
-    (h₁ : κ₁ ≫ jK R = jK V ≫ spMap θ₁) (h₂ : κ₂ ≫ jK R = jK V ≫ spMap θ₂) (hy : κ₁ ≫ F.y = κ₂ ≫ F.y) :
-    θ₁.comp F.b = θ₂.comp F.b := by
-  have key : ∀ (θ : R →+* V) (κ : Sp (FractionRing V) ⟶ Sp (FractionRing R)), κ ≫ jK R = jK V ≫ spMap θ →
-      jK V ≫ spMap (θ.comp F.b) = κ ≫ F.y ≫ pullback.snd _ _ := by
-    intro θ κ h
-    rw [F.y_over, ← Category.assoc, h, Category.assoc, spMap_comp]
-  have e : jK V ≫ spMap (θ₁.comp F.b) = jK V ≫ spMap (θ₂.comp F.b) := by
-    rw [key θ₁ κ₁ h₁, key θ₂ κ₂ h₂, ← Category.assoc, hy, Category.assoc]
-  simp only [jK, spMap, ← Spec.map_comp] at e
-  have e2 := congrArg CommRingCat.Hom.hom (Spec.map_injective e)
-  ext r
-  have := congrArg (fun f => f r) e2
-  simp only [CommRingCat.hom_comp, CommRingCat.hom_ofHom, RingHom.comp_apply] at this
-  exact IsFractionRing.injective V (FractionRing V) this
-
 theorem injBase_cdvr : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.LN.CDvr V → ∀ θ₁ θ₂ : R →+* V, Function.Injective θ₁ → Function.Injective θ₂ → IsLocalHom θ₁ → IsLocalHom θ₂ → ∀ κ₁ κ₂ : Sp (FractionRing V) ⟶ Sp (FractionRing R), κ₁ ≫ jK R = jK V ≫ spMap θ₁ → κ₂ ≫ jK R = jK V ≫ spMap θ₂ → κ₁ ≫ C.y = κ₂ ≫ C.y → θ₁.comp (Cn.ψ.comp MvPolynomial.C) = θ₂.comp (Cn.ψ.comp MvPolynomial.C) := by
   intro E _ _ _ H Dw l Xo c φ hpq hφ hns R _ _ _ hR C Cn V _ _ _ hV θ₁ θ₂ hθ₁ hθ₂ hl₁ hl₂ κ₁ κ₂ hκ₁ hκ₂ hy
   obtain ⟨o', m₁, m₂, x, h₁, h₂, h₃⟩ :=
@@ -1168,7 +1136,7 @@ theorem injBase_cdvr : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     have k : ∀ θ : R →+* V, (θ.comp (Cn.ψ.comp MvPolynomial.C)).comp Cn.L.b = θ.comp C.b := fun θ => by
       rw [← Cn.base]; rfl
     rw [k, k]
-    exact comp_b_eq C.toFam θ₁ θ₂ κ₁ κ₂ hκ₁ hκ₂ hy
+    exact _root_.GlobalTheory.UCanon.LowPull.comp_b_eq C.toFam θ₁ θ₂ κ₁ κ₂ hκ₁ hκ₂ hy
   exact Cn.L.fineRed V _ _ hb o' m₁ m₂ x h₁ h₂ h₃
 
 theorem injBase : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (C : MonoFam Xo c φ R) (Cn : Canon C), ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'], GlobalTheory.Mum.Base R' → ∀ θ₁ θ₂ : R →+* R', Function.Injective θ₁ → Function.Injective θ₂ → IsLocalHom θ₁ → IsLocalHom θ₂ → ∀ κ₁ κ₂ : Sp (FractionRing R') ⟶ Sp (FractionRing R), κ₁ ≫ jK R = jK R' ≫ spMap θ₁ → κ₂ ≫ jK R = jK R' ≫ spMap θ₂ → κ₁ ≫ C.y = κ₂ ≫ C.y → θ₁.comp (Cn.ψ.comp MvPolynomial.C) = θ₂.comp (Cn.ψ.comp MvPolynomial.C) := by

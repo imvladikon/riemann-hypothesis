@@ -246,12 +246,12 @@ theorem thList_conj : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj
   classical
   have hfix : ∀ τ : K ≃ₐ[Ω] K, spMap (τ : K →+* K) ≫ (Over.mk (spMap (algebraMap Ω K) ≫ x)).hom = (Over.mk (spMap (algebraMap Ω K) ≫ x)).hom := fun τ => by
     show spMap (τ : K →+* K) ≫ spMap (algebraMap Ω K) ≫ x = spMap (algebraMap Ω K) ≫ x
-    rw [← Category.assoc, ← GalTh.sp_comp, comp_alg]
+    rw [← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, comp_alg]
   let u : (K ≃ₐ[Ω] K) → (Over.mk (spMap (algebraMap Ω K) ≫ x) ⟶ Over.mk (spMap (algebraMap Ω K) ≫ x)) := fun τ => Over.homMk (spMap (τ : K →+* K)) (hfix τ)
   have hul : ∀ τ, (u τ).left = spMap (τ : K →+* K) := fun τ => Over.homMk_left _ _
-  have hu1 : u 1 = 𝟙 _ := Over.OverMorphism.ext (by rw [hul, coe_one, GalTh.sp_id]; rfl)
+  have hu1 : u 1 = 𝟙 _ := Over.OverMorphism.ext (by rw [hul, coe_one, _root_.GlobalTheory.LevelFibre.spMap_id']; rfl)
   have humul : ∀ τ₁ τ₂, u (τ₁ * τ₂) = u τ₁ ≫ u τ₂ := fun τ₁ τ₂ =>
-    Over.OverMorphism.ext (by rw [Over.comp_left, hul, hul, hul, coe_mul, GalTh.sp_comp])
+    Over.OverMorphism.ext (by rw [Over.comp_left, hul, hul, hul, coe_mul, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp])
   have htor : ∀ τ a, (u τ ≫ pt a) ^ (m ^ 2) = 1 := fun τ a => by
     rw [← MonObj.comp_pow, (hK.2.1 a).1, MonObj.comp_one]
   choose f hf using fun τ a => thList_exh hK (u τ ≫ pt a) (htor τ a)
@@ -332,12 +332,12 @@ theorem thList_galois : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
   let j : Ω →+* Ω' := algebraMap Ω Ω'
   have hincj : inc.comp j = ι₀ := (IsScalarTower.algebraMap_eq Ω Ω' K).symm
   have hqo : ∀ a, q a ≫ G.hom = spMap j ≫ x := fun a => sp_cancel inc _ _ (by
-    rw [← Category.assoc, hq a, Over.w (ptK a), ← Category.assoc, ← sp_comp, hincj]; rfl)
+    rw [← Category.assoc, hq a, Over.w (ptK a), ← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hincj]; rfl)
   let pt' : Fin N → (Over.mk (spMap j ≫ x) ⟶ G) := fun a => Over.homMk (q a) (hqo a)
   let u : Over.mk (spMap ι₀ ≫ x) ⟶ Over.mk (spMap j ≫ x) :=
     Over.homMk (spMap inc) (by
       show spMap inc ≫ spMap j ≫ x = spMap ι₀ ≫ x
-      rw [← Category.assoc, ← sp_comp, hincj])
+      rw [← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hincj])
   have hu : ∀ a, u ≫ pt' a = ptK a := fun a => Over.OverMorphism.ext (by simp [u, pt', hq a])
   have hinj' : Function.Injective pt' := fun a b h => hK.1 (by rw [← hu a, ← hu b, h])
   have htor : ∀ a, pt' a ^ (m ^ 2) = 1 := fun a => by

@@ -243,18 +243,11 @@ theorem q_pow (T : Tower p Ω) : ∀ m, T.qq m ^ (p ^ m) = T.qq 0
   | 0 => by simp
   | m + 1 => by rw [pow_succ', pow_mul, T.qpow, q_pow T m]
 
-theorem qO_unit : IsUnit (qO p) := by
-  have : IsUnit (HahnSeries.single (1 : ℤ) (1 : ℤ_[p]) : Lau p) := by
-    refine ⟨⟨HahnSeries.single (1 : ℤ) (1 : ℤ_[p]), HahnSeries.single (-1 : ℤ) (1 : ℤ_[p]), ?_, ?_⟩, rfl⟩
-    · rw [HahnSeries.single_mul_single]; simp
-    · rw [HahnSeries.single_mul_single]; simp
-  exact this.map _
-
 theorem qq_ne_zero (T : Tower p Ω) (m : ℕ) : T.qq m ≠ 0 := by
   intro h
   have h0 := q_pow T m
   rw [h, zero_pow (pp_ne m), T.q0] at h0
-  exact ((qO_unit (p := p)).map (algebraMap (O0 p) Ω)).ne_zero h0.symm
+  exact ((_root_.GlobalTheory.KumDlog.isUnit_qO (p := p)).map (algebraMap (O0 p) Ω)).ne_zero h0.symm
 
 theorem zeta_mem (T : Tower p Ω) (m : ℕ) : T.ζ m ∈ integralClosure (O0 p) Ω := by
   refine IsIntegral.of_pow (Nat.pos_of_ne_zero (pp_ne (p := p) m)) ?_
@@ -478,19 +471,6 @@ theorem mem_adjoin (L : ℕ) (x : On p L) : x ∈ Algebra.adjoin (O0 p) {xn p L,
     exact S.add_mem hf hg
   | monomial k a _ => rw [map_mul, map_pow]; exact S.mul_mem (hC a) (S.pow_mem hy _)
 
-theorem zeta_pow_sub (T : GlobalTheory.K5.Tower p Ω) (m k : ℕ) : T.ζ (m + k) ^ p ^ k = T.ζ m := by
-  induction k with
-  | zero => simp
-  | succ k ih => rw [pow_succ', pow_mul, ← add_assoc, T.ζpow, ih]
-
-theorem qq_pow_sub (T : GlobalTheory.K5.Tower p Ω) (m k : ℕ) : T.qq (m + k) ^ p ^ k = T.qq m := by
-  induction k with
-  | zero => simp
-  | succ k ih => rw [pow_succ', pow_mul, ← add_assoc, T.qpow, ih]
-
-theorem isInt_nat (m : ℕ) : IsInt (p := p) (m : Ω) := by
-  rw [IsInt, ← map_natCast (algebraMap (O0 p) Ω)]; exact isIntegral_algebraMap
-
 theorem isInt_emb (T : GlobalTheory.K5.Tower p Ω) (L : ℕ) (ι : On p L →ₐ[O0 p] Ω) (hι : IsEmb T L ι)
     (x : On p L) : IsInt (p := p) (ι x) := by
   have h : Algebra.adjoin (O0 p) {xn p L, yn p L} ≤ (integralClosure (O0 p) Ω).comap ι := by
@@ -521,7 +501,7 @@ theorem fix_emb (T : GlobalTheory.K5.Tower p Ω) (L : ℕ) (ι : On p L →ₐ[O
 theorem cong_mono {k m : ℕ} (h : k ≤ m) {x y : Ω}
     (hc : Cong (p := p) m x y) : Cong (p := p) k x y := by
   obtain ⟨z, hz, e⟩ := hc
-  refine ⟨(p : Ω) ^ (m - k) * z, IsIntegral.mul (IsIntegral.pow (isInt_nat p) _) hz, ?_⟩
+  refine ⟨(p : Ω) ^ (m - k) * z, IsIntegral.mul (IsIntegral.pow (_root_.GlobalTheory.KumDlog.int_nat p) _) hz, ?_⟩
   rw [e, ← mul_assoc, ← pow_add, Nat.add_sub_cancel' h]
 
 theorem locallyConstantModPrimePow_of_le {k m : ℕ} (h : k ≤ m) {w : Gal p Ω → Ω} (hw : LocallyConstantOneCochain m w) : LocallyConstantOneCochain k w :=
@@ -542,7 +522,7 @@ theorem kum_down (T : GlobalTheory.K5.Tower p Ω) {n L : ℕ} (hnL : n ≤ L) {H
   have e1 := ha g hg
   rw [map_pow, haL g hg, mul_pow, ← pow_mul, mul_comm ((aL g).val), pow_mul] at e1
   have hz : T.ζ L ^ p ^ (L - n) = T.ζ n := by
-    have := zeta_pow_sub T n (L - n); rwa [Nat.add_sub_cancel' hnL] at this
+    have := _root_.GlobalTheory.KumDlog.zeta_pow T n (L - n); rwa [Nat.add_sub_cancel' hnL] at this
   rw [hz] at e1
   have e2 := mul_right_cancel₀ (pow_ne_zero _ hR) e1
   exact ((zeta_pow_eq_iff T n _ _).1 e2).symm
@@ -589,9 +569,9 @@ theorem GlobalTheory.K5.LevelDown.cup_kummer_dlog_mod : ∀ (p : ℕ) [Fact p.Pr
     rw [hSL, zpow_zero, one_mul]; exact hfix g hg _)
   have hZ0 : T.ζ (2 * L) ≠ 0 := (T.prim _).ne_zero (pow_ne_zero _ hpr.ne_zero)
   have hZL : T.ζ (2 * L) ^ p ^ L = T.ζ L := by
-    rw [two_mul]; exact LevelDown.zeta_pow_sub T L L
+    rw [two_mul]; exact _root_.GlobalTheory.KumDlog.zeta_pow T L L
   have hQL : T.qq (2 * L) ^ p ^ L = T.qq L := by
-    rw [two_mul]; exact LevelDown.qq_pow_sub T L L
+    rw [two_mul]; exact _root_.GlobalTheory.KumDlog.qq_pow T L L
   obtain ⟨zL, hzL⟩ := Basic.exists_isKum T L (Gn T L) hZ0 (fun g hg => by
     rw [hZL]; exact (hgn g hg).1)
   obtain ⟨qL, hqL⟩ := Basic.exists_isKum T L (Gn T L) (Basic.qq_ne_zero T _) (fun g hg => by
@@ -600,9 +580,9 @@ theorem GlobalTheory.K5.LevelDown.cup_kummer_dlog_mod : ∀ (p : ℕ) [Fact p.Pr
     haL hbL hzL hqL
   have e2 : L + n + (L - n) = 2 * L := by omega
   have hZn : T.ζ (2 * L) ^ p ^ (L - n) = T.ζ (L + n) := by
-    rw [← e2]; exact LevelDown.zeta_pow_sub T (L + n) (L - n)
+    rw [← e2]; exact _root_.GlobalTheory.KumDlog.zeta_pow T (L + n) (L - n)
   have hQn : T.qq (2 * L) ^ p ^ (L - n) = T.qq (L + n) := by
-    rw [← e2]; exact LevelDown.qq_pow_sub T (L + n) (L - n)
+    rw [← e2]; exact _root_.GlobalTheory.KumDlog.qq_pow T (L + n) (L - n)
   have hX : ι (fPi p L 0 0 α β α' β') / (T.ζ L - 1) = ι (α * β' - β * α') := by
     have hne : T.ζ L - 1 ≠ 0 :=
       sub_ne_zero.2 ((T.prim L).ne_one (Nat.one_lt_pow (by omega) hpr.one_lt))
@@ -622,7 +602,7 @@ theorem GlobalTheory.K5.LevelDown.cup_kummer_dlog_mod : ∀ (p : ℕ) [Fact p.Pr
     (LevelDown.kum_down T hnL hZ0 hzL (by rw [hZn]; exact hlz) hg)
   have hD : Cong (p := p) n ((lq h).val : Ω) ((qL h).val : Ω) := Basic.cong_natCast
     (LevelDown.kum_down T hnL (Basic.qq_ne_zero T _) hqL (by rw [hQn]; exact hlq) hh)
-  have iN := fun m : ℕ => (LevelDown.isInt_nat (p := p) (Ω := Ω) m)
+  have iN := fun m : ℕ => (_root_.GlobalTheory.KumDlog.int_nat (p := p) (Ω := Ω) m)
   have iP : IsInt (p := p) ((p : Ω) ^ c) := IsIntegral.pow (iN p) c
   have iX : IsInt (p := p) (ι (α * β' - β * α')) := LevelDown.isInt_emb T L ι hι _
   refine Basic.cong_add ?_ ?_

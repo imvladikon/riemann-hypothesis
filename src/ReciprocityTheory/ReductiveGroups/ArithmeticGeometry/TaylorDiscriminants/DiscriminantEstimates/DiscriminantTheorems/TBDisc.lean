@@ -187,11 +187,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem discriminant_of_product_lower : ReciprocityTheory.ChartRestriction.G.TB.DiscOfProdLowerSt :=
-  PI.UnitaryGroupMassFormula.TBDisc.discOfProdLower
-
-theorem formalGroup_of_discriminant : ReciprocityTheory.ChartRestriction.G.TB.FGOfDiscSt :=
-  PI.UnitaryGroupMassFormula.TBDisc.fGOfDisc
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.DiscriminantEstimates.DiscriminantTheorems.TBDisc =====

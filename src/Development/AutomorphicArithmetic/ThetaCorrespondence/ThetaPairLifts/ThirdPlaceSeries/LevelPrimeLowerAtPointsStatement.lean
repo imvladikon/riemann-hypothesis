@@ -311,9 +311,6 @@ lemma b_le (c : Sz.Cfg) (hc : c.Ok) : ∀ i j, 1 ≤ i → i ≤ j → j ≤ c.m
     have := hc.hgap j (by omega) (by omega)
     linarith [ih (by omega)]
 
-lemma one_le_b (c : Sz.Cfg) (hc : c.Ok) (j : ℕ) (h1 : 1 ≤ j) (h2 : j ≤ c.m) : 1 ≤ c.b j :=
-  le_trans hc.hb1 (b_le c hc 1 j le_rfl h1 h2)
-
 lemma v_bounds (c : Sz.Cfg) (hc : c.Ok) (i : ℕ) (h1 : 1 ≤ i) (h2 : i + 1 ≤ c.k) :
     0 ≤ c.v i ∧ c.v i ≤ c.v 1 := by
   have hi : (i : ℝ) + 1 ≤ c.k := by exact_mod_cast h2
@@ -438,7 +435,7 @@ lemma vand_lam_le_cfg (c : Sz.Cfg) (hc : c.Ok) (hs : c.vth ≤ 1 / 10) (hmk : c.
     have h3 : 2 * ((c.k : ℝ) * c.Del) ≤ c.m * (c.k * c.Del) := mul_le_mul_of_nonneg_right hmR hkD
     linarith
   obtain ⟨hV, hRel, hRlo, -, hVk⟩ := Formalism.FourierDecayAlt.P.vandermondeTop c de hc hw
-  obtain ⟨hLam, -⟩ := Formalism.FourierDecayAlt.P.vandermonde_lambda_lower_bound c hc
+  obtain ⟨hLam, -⟩ := _root_.Formalism.FourierDecayAlt.P.Sz5.vandLamLower c hc
   have hR : 0 < Sz.Rde (c.k - 2) de := lt_of_lt_of_le (Real.exp_pos _) hRlo
   have hU0 : 0 ≤ Sz.Vand (c.k - 2) (fun i => c.u de (i + 1)) := by
     rw [hRel]; exact (mul_pos hR hV).le
@@ -478,7 +475,7 @@ lemma vand_lam_le_cfg (c : Sz.Cfg) (hc : c.Ok) (hs : c.vth ≤ 1 / 10) (hmk : c.
     intro i hi j hj
     rw [mem_Icc] at hi hj
     have h1 := v_bounds c hc i hi.1 (by omega)
-    have h2 := one_le_b c hc j hj.1 hj.2
+    have h2 := _root_.Formalism.FourierDecayAlt.P.Sz5.b_ge_one c hc j hj.1 hj.2
     have h3 := hbj j hj.1 hj.2
     have h5 := hc.hv1
     constructor <;> linarith [h1.1, h1.2]
@@ -495,7 +492,7 @@ lemma vand_lam_le_cfg (c : Sz.Cfg) (hc : c.Ok) (hs : c.vth ≤ 1 / 10) (hmk : c.
     rw [mem_Icc] at hi
     rw [mem_Ioc] at hj
     have h1 := b_le c hc i j hi.1 hj.1.le hj.2
-    have h2 := one_le_b c hc i hi.1 hi.2
+    have h2 := _root_.Formalism.FourierDecayAlt.P.Sz5.b_ge_one c hc i hi.1 hi.2
     have h3 := hbj j (by omega) hj.2
     constructor <;> linarith
   have A40 : ∀ i ∈ Icc 1 c.m, 0 ≤ ∏ j ∈ Ioc i c.m, (-c.b i - -c.b j) :=
@@ -1085,8 +1082,8 @@ theorem admissibleRanks_of_mass_formula (D : D7) (Lv : LevelData D) (C : Formali
   have h4 := Formalism.MainNotions.StandardLattice.HarishChandraReduction.rankFormula_of_classNumber D Lv (GlobalTheory.ColClassNumber.classNumber_all D Lv)
   intro V _ _ _ _ h L _
   refine ⟨fun hL u => ?_, fun hL => ?_⟩
-  · have e := h4 (GlobalTheory.first_type_prime_large_of_record D) (Formalism.MainNotions.Ext.Lw.splitsF_g_all D) u
-      (Formalism.MainNotions.Ext.Lw.splitsF_T_all D u) (Formalism.MainNotions.Ext.Lw.mu0Tie_of_sym C u)
+  · have e := h4 (GlobalTheory.first_type_prime_large_of_record D) (_root_.Formalism.MainNotions.J.splitsF_g D) u
+      (_root_.Formalism.MainNotions.J.level_prime_splits_totally_real D u) (Formalism.MainNotions.Ext.Lw.mu0Tie_of_sym C u)
     have em : Formalism.HermitianLatticesTheory.mass h L = StandardLattice.massI D D.R.k := Formalism.MainNotions.J.mass_ortho_eq hL (Formalism.MainNotions.J.std_ortho D.host.E D.R.k)
     rw [em, ← Formalism.MainNotions.J.idxColTie_holds D]
     exact e
@@ -1191,13 +1188,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Fc GlobalTheory.MiS GlobalTheory.Fam
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.trace_lower_bound_all_members' : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL), GlobalTheory.Fc.RowE (Bl.IsGoodE p.s) (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage p) (fun _ D O _ _ => ∀ u : D.what₂.Word, O.L.sc.b ^ ((1 / 2 : ℝ) * (D.R.m : ℝ)) ≤ Formalism.MainNotions.S.Tr D u) := by
-  first | exact @_root_.GlobalTheory.Core.LevLow.levelPrime_lower_at_points_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LevelPrimeLowerAtPointsStatement =====

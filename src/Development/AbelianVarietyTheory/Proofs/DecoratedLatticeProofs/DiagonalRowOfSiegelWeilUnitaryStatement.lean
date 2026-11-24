@@ -105,6 +105,7 @@ import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCou
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGAnalytic
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGLocModel
 import Formalism.SharpRestriction.CuspSpanNormBounds.ThresholdCubicInequalitySignPattern
+import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilyPacketOfEquivalentStatement
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
@@ -167,7 +168,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormalCountLineIntegralitySeparationStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneOnSingletonOfRows =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneOnSingletonOfRows", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CorankOneIsEquivalenceOnRow\npublic import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.StepAnalyticConstantsP\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.GammaRangeOfSizeHypotheses\nimport Formalism.SharpRestriction.CuspSpanNormBounds.ThresholdCubicInequalitySignPattern\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OneOnSingletonOfRows", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CorankOneIsEquivalenceOnRow\npublic import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.StepAnalyticConstantsP\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.GammaRangeOfSizeHypotheses\nimport Formalism.SharpRestriction.CuspSpanNormBounds.ThresholdCubicInequalitySignPattern\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilyPacketOfEquivalentStatement\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -188,13 +189,9 @@ theorem mR_eq_m (D : D7) : Formalism.L2.SG.RowsConc.mR D = (D.R.m : ℝ) := by
   unfold Formalism.L2.SG.RowsConc.mR
   rw [h]
 
-theorem log_b_eq (D : D7) (large₂ : SizeData₂ D) : Real.log large₂.sc.b = large₂.sc.L := by
-  unfold Formalism.BasicNotions.Scale.b
-  exact Real.log_exp _
-
 theorem gamB_eq_gamL (D : D7) (large₂ : SizeData₂ D) (C : ℝ) : gamB D large₂ C = gamL D large₂.sc.L C := by
   unfold gamB gamL
-  rw [mR_eq_m, log_b_eq]
+  rw [mR_eq_m, _root_.Formalism.MainNotions.BridgeLemma.d_log_b]
 
 theorem epsNG_le_gamL (D : D7) (large₂ : SizeData₂ D) (C : ℝ) : epsNG D large₂ C ≤ gamL D large₂.sc.L C := by
   unfold epsNG
@@ -202,7 +199,7 @@ theorem epsNG_le_gamL (D : D7) (large₂ : SizeData₂ D) (C : ℝ) : epsNG D la
     inv_le_one_of_one_le₀ (one_le_pow₀ (by norm_num))
   have h2 : Real.exp (C * Formalism.L2.SG.RowsConc.mR D ^ 5 * D.R.f * Real.log large₂.sc.b) = gamL D large₂.sc.L C := by
     unfold gamL
-    rw [mR_eq_m, log_b_eq]
+    rw [mR_eq_m, _root_.Formalism.MainNotions.BridgeLemma.d_log_b]
   rw [h2]
   exact mul_le_of_le_one_left (Real.exp_pos _).le h1
 
@@ -1059,7 +1056,7 @@ theorem rowGen1P_of_siegelWeil_of_points : PI.VolStabS.MassDataS.SWXS → Formal
     GlobalTheory.Core.One.stepNormals1_of hEq hLine hInt hSep Formalism.L2.SG.NGCut.NormalCount.NormCount_holds hN1
   have hVan : StepTermVanishG :=
     Formalism.L2.SG.Pf.MainEqVanish.stepTermVanishG_of_form (Formalism.L2.SG.Pf.formGC_of_rel Formalism.L2.SG.Pf.formRelC_holds)
-  exact rowGen1P_of_steps Formalism.FourierDecayAlt.P.norm_chain (stepClass1_of hEq) hNml hPts hN1 hTie hCh hPin hVan hLoc hThm
+  exact rowGen1P_of_steps _root_.Formalism.FourierDecayAlt.P.NormChainLemmas.nGChain (stepClass1_of hEq) hNml hPts hN1 hTie hCh hPin hVan hLoc hThm
 
 end GlobalTheory.Core.One
 end -- clump:auto
@@ -1143,13 +1140,13 @@ namespace GlobalTheory
 theorem diag_abstract_collisions_once :
     ∀ (τ Rw I H H₁ : Type) [Fintype I] [NormedAddCommGroup H] [InnerProductSpace ℂ H] [NormedAddCommGroup H₁] [InnerProductSpace ℂ H₁] [CompleteSpace H₁] (X : Formalism.FourierDecayAlt.PB.Terms τ Rw I H H₁) (one : H) (Pg B A₁ A₂ : ℝ), 0 ≤ Pg → X.AbsConv → X.NormExpansionOn X.genSet → X.NormExpansionOn X.ngSet → X.GGBound Pg → X.RowOrth → X.CorankPos → Formalism.L2.SG.RowsOther.IdOne X one → X.pairAbs (X.big X.nzSet) ≤ B → X.pairSum (X.one X.genSet) ≤ A₁ → X.pairSum (X.one X.ngSet) ≤ A₂ → ‖X.K0 - one‖ ^ 2 ≤ 2 * Pg * (B + A₁ + A₂) := by
   intro τ Rw I H H₁ _ _ _ _ _ _ X one Pg B A₁ A₂ hPg hA hNg hNn hG hO hC hI hB h1 h2
-  have hE := Formalism.FourierDecayAlt.P.equal_index
-  have hF := Formalism.FourierDecayAlt.P.subfamilyAlt τ Rw I H H₁ X hA
-  obtain ⟨_, _, hng⟩ := Formalism.FourierDecayAlt.P.pair_split_alt τ Rw I H H₁ X hA hO hC
+  have hE := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_EqualIota
+  have hF := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_SubFamily τ Rw I H H₁ X hA
+  obtain ⟨_, _, hng⟩ := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_PairSplit τ Rw I H H₁ X hA hO hC
 
   have hgen : X.PhiEq X.genSet = X.pairSum (X.big X.genSet) + X.pairSum (X.one X.genSet) := by
     let Y : Formalism.FourierDecayAlt.PB.Terms τ Rw I H H₁ := { X with scal := fun _ _ => True }
-    obtain ⟨_, hg, _⟩ := Formalism.FourierDecayAlt.P.pair_split_alt τ Rw I H H₁ Y hA hO hC
+    obtain ⟨_, hg, _⟩ := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_PairSplit τ Rw I H H₁ Y hA hO hC
     have e1 : Y.nsc Y.genSet = ∅ := by
       ext p; simp [Y, Formalism.FourierDecayAlt.PB.Terms.nsc]
     have e2 : Y.sc Y.genSet = X.one X.genSet := by
@@ -1185,11 +1182,11 @@ theorem diag_abstract_collisions_once :
   have bn : X.pairSum (X.big X.ngSet) ≤ X.pairAbs (X.big X.ngSet) :=
     (le_abs_self _).trans (hF _ _ le_rfl).2
   have g1 : ‖X.part X.genSet‖ ^ 2 ≤ Pg * (X.pairAbs (X.big X.genSet) + A₁) := by
-    have := Formalism.FourierDecayAlt.P.price_of_index hE τ Rw I H H₁ X Pg X.genSet hNg hG
+    have := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_PriceOfIota hE τ Rw I H H₁ X Pg X.genSet hNg hG
     refine this.trans (mul_le_mul_of_nonneg_left ?_ hPg)
     rw [hgen]; linarith
   have g2 : ‖X.part X.ngSet‖ ^ 2 ≤ Pg * (X.pairAbs (X.big X.ngSet) + A₂) := by
-    have := Formalism.FourierDecayAlt.P.price_of_index hE τ Rw I H H₁ X Pg X.ngSet hNn hG
+    have := _root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.t_PriceOfIota hE τ Rw I H H₁ X Pg X.ngSet hNn hG
     refine this.trans (mul_le_mul_of_nonneg_left ?_ hPg)
     rw [hng]; linarith
   have hK : X.K0 - one = X.part X.genSet + X.part X.ngSet := by
@@ -1565,11 +1562,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S GlobalTheory.Core.Deg
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
-theorem _root_.GlobalTheory.T.diagonalRow_of_siegelWeil_unitary :
-    HeckeCharacterZeroLocus.SiegelWeilU.SiegelWeilUnitaryConvergent →
-      GlobalTheory.Core.Rk.RowDiag (fun D L C' =>
-        GlobalTheory.Core.Rk.IsScaleWithBoundedGamma D L C' ∧ ∀ u, GlobalTheory.Core.Rk.RankMu D u) :=
-  GlobalTheory.Core.Rk.rowDiag_of_siegelWeilUnitary
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiagonalRowOfSiegelWeilUnitaryStatement =====

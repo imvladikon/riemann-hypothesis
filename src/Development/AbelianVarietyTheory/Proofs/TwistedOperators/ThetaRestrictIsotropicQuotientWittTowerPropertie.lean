@@ -142,14 +142,6 @@ theorem hO_eq_trace (S T : HSp D) (x y : WO S T) :
   simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, ad, Formalism.UG.cT, Matrix.transpose_apply,
     Matrix.map_apply, Finset.mul_sum, mul_assoc]
 
-theorem hO_add_left (S T : HSp D) (x x' y : WO S T) : hO S T (x + x') y = hO S T x y + hO S T x' y := by
-  unfold hO
-  simp only [Matrix.add_apply, mul_add, Finset.sum_add_distrib]
-
-theorem hO_add_right (S T : HSp D) (x y y' : WO S T) : hO S T x (y + y') = hO S T x y + hO S T x y' := by
-  unfold hO
-  simp only [Matrix.add_apply, map_add (f := _), mul_add, add_mul, Finset.sum_add_distrib]
-
 theorem hO_mul_mul (V W : HSp D) {m n : ℕ} (y₁ : Mx D W.rank m) (y₂ : Mx D W.rank n)
     (P₁ : Matrix (Fin m) (Fin V.rank) D.host.E) (P₂ : Matrix (Fin n) (Fin V.rank) D.host.E) :
     hO V W (HMul.hMul y₁ (P₁.map (incA D))) (HMul.hMul y₂ (P₂.map (incA D))) =
@@ -204,7 +196,7 @@ theorem trace_swap {m n : ℕ} (Z : Mx D m m) (A : Mx D m n) (Y : Mx D n n) (X :
 
 theorem hO_isoPart_add_midPart (hs : IsIsoSplit V V' C B) (y y' : Mx D W.rank r) (x x' : WO V' W) :
     hO V W (isoPart V W C y + midPart V V' W B x) (isoPart V W C y' + midPart V V' W B x') = hO V' W x x' := by
-  rw [hO_add_left, hO_add_right, hO_add_right]
+  rw [_root_.GlobalTheory.LatVac.hO_add_left, _root_.GlobalTheory.LatVac.hO_add_right, _root_.GlobalTheory.LatVac.hO_add_right]
   unfold isoPart midPart
   rw [hO_mul_mul, hO_mul_mul, hO_mul_mul, hO_mul_mul, coef_iso_iso hs, coef_iso_mid hs, coef_mid_iso hs,
     coef_mid_mid hs]
@@ -507,8 +499,7 @@ variable {D : D7}
 section Maps
 variable {V V' W : HSp D} {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E)
 
-theorem isoPart_add (y y' : Mx D W.rank r) : isoPart V W C (y + y') = isoPart V W C y + isoPart V W C y' :=
-  Matrix.add_mul _ _ _
+alias isoPart_add := _root_.GlobalTheory.TowerResNonzero.isoPart_add'
 
 theorem isoPart_zero : isoPart V W C (0 : Mx D W.rank r) = 0 := Matrix.zero_mul _
 
@@ -540,7 +531,7 @@ theorem midPart_infPart {u : WO V' W} (hu : u.map (infPart D) = 0) : (midPart V 
 
 def midHom : WO V' W →+ WO V W where
   toFun := midPart V V' W B
-  map_zero' := midPart_zero B
+  map_zero' := _root_.GlobalTheory.TowerResNonzero.midPart_zero' B
   map_add' := midPart_add B
 
 end Maps
@@ -548,10 +539,7 @@ end Maps
 section Shift
 variable {m n : ℕ}
 
-theorem lattice_Mx (D : D7) (m n : ℕ) : IsTopologicalAddGroup (Mx D m n) ∧ LocallyCompactSpace (Mx D m n) ∧
-    SecondCountableTopology (Mx D m n) ∧ T2Space (Mx D m n) ∧ DiscreteTopology (ratMx D m n) ∧
-    ∃ K : Set (Mx D m n), IsCompact K ∧ ∀ x : Mx D m n, ∃ γ ∈ ratMx D m n, γ + x ∈ K :=
-  GlobalTheory.AdelicMatrixLattice.lattice D (Examples₂.posSpace Examples₂.star_isIntegral m) (Examples₂.posSpace Examples₂.star_isIntegral n)
+alias lattice_Mx := _root_.GlobalTheory.TowerResNonzero.lattice_ratMx
 
 theorem setIntegral_add_right {μ : Measure (Mx D m n)} {𝓨 : Set (Mx D m n)} (h : IsCovolOne (ratMx D m n) μ 𝓨)
     (φ : Mx D m n → ℂ) (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) (b : Mx D m n) :
@@ -627,7 +615,7 @@ theorem integrable_res (hψ : IsStdChar D ψ (-1)) {μ : Measure (Mx D W.rank r)
     (h : IsCovolOne (ratMx D W.rank r) μ 𝓨) {f : WO V W → ℂ} (hf : IsThetaFunO ψ V W f) (x : WO V' W) :
     IntegrableOn (fun y => f (isoPart V W C y + midPart V V' W B x)) 𝓨 μ := by
   have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  obtain ⟨c, hc⟩ := ((GlobalTheory.ThetaSquare.thetaFunctions_squareIntegrable_heisenbergUnitary D V W).2 ψ hψ).1 f hf |>.2.1
+  obtain ⟨c, hc⟩ := ((_root_.GlobalTheory.ThetaSquare.theta_square_integrable D V W).2 ψ hψ).1 f hf |>.2.1
   refine Measure.integrableOn_of_bounded (M := c) (by rw [h.2.2]; exact ENNReal.one_ne_top) ?_
     (Filter.Eventually.of_forall fun y => hc _)
   exact (hf.cont.comp ((continuous_isoPart C).add continuous_const)).aestronglyMeasurable
@@ -637,7 +625,7 @@ theorem continuous_res (hψ : IsStdChar D ψ (-1)) {μ : Measure (Mx D W.rank r)
     Continuous (res V V' W C B μ 𝓨 f) := by
   have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
   have : IsFiniteMeasure (μ.restrict 𝓨) := isFiniteMeasure_restrict.2 (by rw [h.2.2]; exact ENNReal.one_ne_top)
-  obtain ⟨c, hc⟩ := ((GlobalTheory.ThetaSquare.thetaFunctions_squareIntegrable_heisenbergUnitary D V W).2 ψ hψ).1 f hf |>.2.1
+  obtain ⟨c, hc⟩ := ((_root_.GlobalTheory.ThetaSquare.theta_square_integrable D V W).2 ψ hψ).1 f hf |>.2.1
   obtain ⟨-, -, i3, -⟩ := lattice_Mx D W.rank V'.rank
   have : FirstCountableTopology (WO V' W) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
   exact continuous_of_dominated (bound := fun _ => c)

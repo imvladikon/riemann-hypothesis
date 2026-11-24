@@ -1352,8 +1352,7 @@ open MeasureTheory Matrix GlobalTheory.Chain GlobalTheory.ChainFr GlobalTheory.G
 open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.PairLift
-theorem _root_.GlobalTheory.Adopt.realThetaIntertwiner_adjoint_isRealThetaIntertwiner : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (M : DSModel V S) (M' : DSModel W S') (Z P : Type) [AddCommGroup P] [Module ℂ P] (θ : InfFam D) (ω : GA D V × GA D W →* Module.End ℂ (Z → ℂ)) (ω' : GA D W × GA D V →* Module.End ℂ (Z → ℂ)) (pt : P → Z → ℂ) (It : P →ₗ[ℂ] SmT M →ₗ[ℂ] SmT M') (Tp : P → SmT M' →ₗ[ℂ] SmT M), (∀ g h, ω' (h, g) = ω (g, h)) → GlobalTheory.Grid.IsIntw θ M' M ω' pt It → (∀ (p : P) (v : M.Vec) (w : M'.Vec), ellT M' (fun τ => w τ) (inclT M' (It p (PiTensorProduct.tprod ℂ v))) = starRingEnd ℂ (ellT M (fun τ => v τ) (inclT M (Tp p (PiTensorProduct.tprod ℂ w))))) → IsIntwF θ M M' ω pt Tp := by
-  first | exact @GlobalTheory.CompanionTheory.Ipf.Aut.Adj.isIntwF_adjoint
+alias _root_.GlobalTheory.Adopt.realThetaIntertwiner_adjoint_isRealThetaIntertwiner := _root_.GlobalTheory.CompanionTheory.Ipf.Aut.Adj.isIntwF_adjoint
 
 end
 end -- clump:auto
@@ -1419,11 +1418,11 @@ theorem rulePar_of_pairPar {X : ProvA} (h3 : Formalism.MainNotions.SchurIrreduci
   · exact ⟨_, _, _, _, _, _, _, _, by simp, by simp, by simp, by simp [hb]; omega,
       ⟨by omega, by omega, p1, p3, (h3.2 t al be ga de hd).2.1, (h3.2 t al be ga de hd).2.2,
         h5.2 t al be ga de hd (Or.inl (far hF))⟩, e, e'⟩
-  · have sw := GlobalTheory.T.realThetaRule_exchange_pair_members X _ _ _ _ (lamA al be ga de) (lamA' t al be ga de)
+  · have sw := _root_.GlobalTheory.SwapRule.swap_rule X _ _ _ _ (lamA al be ga de) (lamA' t al be ga de)
     exact ⟨_, _, _, _, _, _, _, _, by simp [hb]; omega, by simp, by simp, by simp,
       ⟨by omega, by omega, p2, p1, sw.1 (h3.1 t al be ga de hd).1, sw.2.1 (h3.1 t al be ga de hd).2.2,
         sw.2.2 (h4.1 t al be ga de hd)⟩, e, e'⟩
-  · have sw := GlobalTheory.T.realThetaRule_exchange_pair_members X _ _ _ _ (lamA al be ga de) (lamM' t al be ga de)
+  · have sw := _root_.GlobalTheory.SwapRule.swap_rule X _ _ _ _ (lamA al be ga de) (lamM' t al be ga de)
     exact ⟨_, _, _, _, _, _, _, _, by simp, by simp [hb]; omega, by simp, by simp,
       ⟨by omega, by omega, p3, p1, sw.1 (h3.2 t al be ga de hd).1, sw.2.1 (h3.2 t al be ga de hd).2.2,
         sw.2.2 (h4.2 t al be ga de hd)⟩, e, e'⟩

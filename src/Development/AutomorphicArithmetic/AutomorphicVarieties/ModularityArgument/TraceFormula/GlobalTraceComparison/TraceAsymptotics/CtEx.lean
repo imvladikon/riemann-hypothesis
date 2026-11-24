@@ -56,6 +56,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 import Mathlib.Tactic.Linter.Style
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SatakeParametersOfTwist
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.HintSph
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.PadicLogSeries
@@ -655,33 +656,13 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.IsHeckeConstMul =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.SatSum =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.SatSum", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.FinprodSplitAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumSatEqOfIsCT\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.SatSum", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.TraceAsymptotics.FinprodSplitAlt\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumSatEqOfIsCT\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Development.AbelianVarietyTheory.Proofs.DivisorProofs.SatakeParametersOfTwist\n\n"}
 section -- clump:auto
 @[expose] public section
 
 noncomputable section
 
 namespace UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm
-
-open GlobalTheory.LFun
-
-private theorem esymm_scale (A : Multiset ℂ) (c : ℂ) (i : ℕ) :
-    (A.map (· * c)).esymm i = c ^ i * A.esymm i := by
-  unfold Multiset.esymm
-  rw [Multiset.powersetCard_map, Multiset.map_map, ← Multiset.sum_map_mul_left]
-  refine congrArg Multiset.sum (Multiset.map_congr rfl fun t ht => ?_)
-  have h := (Multiset.mem_powersetCard.1 ht).2
-  simp only [Function.comp_apply]
-  rw [Multiset.prod_map_mul, Multiset.map_id', Multiset.map_const', Multiset.prod_replicate, h, mul_comm]
-
-private theorem satEig_scale (q n : ℕ) (B : Multiset ℂˣ) (c : ℂˣ) (i : ℕ) :
-    satEig q n (B.map (· * c)) i = (c : ℂ) ^ i * satEig q n B i := by
-  have e : ((B.map (· * c)).map fun b : ℂˣ => (b : ℂ)) =
-      (B.map fun b : ℂˣ => (b : ℂ)).map (· * (c : ℂ)) := by
-    simp [Multiset.map_map]
-  simp only [satEig]
-  rw [e, esymm_scale]
-  ring
 
 end UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm
 
@@ -698,7 +679,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.satSum :
     intro i hi
     have hs : i.1 + i.2 = j := (Finset.mem_filter.1 hi).2
     have hsc : (j : ℂ) = (i.1 : ℂ) + i.2 := by exact_mod_cast hs.symm
-    rw [if_pos hs, satEig_scale, satEig_scale]
+    rw [if_pos hs, _root_.GlobalTheory.SphGal.satEig_map_mul, _root_.GlobalTheory.SphGal.satEig_map_mul]
     have e : ((j : ℂ) * (((a + b : ℕ) : ℂ) - j) - i.1 * (a - i.1) - i.2 * (b - i.2)) / 2 =
         (((i.1 : ℂ)) * ((b : ℂ) - i.2) + ((i.2 : ℂ)) * ((a : ℂ) - i.1)) / 2 := by
       rw [hsc]; push_cast; ring

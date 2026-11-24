@@ -68,6 +68,7 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Tactic.Basify
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPrincipalObjectDescendsLargeSubfield
 import Mathlib.CategoryTheory.ExtremalEpi
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsIntegralAndIsNormalSchemeOfSmoothDvr
 import Mathlib.Tactic.TypeStar
 import Mathlib.RingTheory.Etale.Weakly
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtPlace
@@ -667,7 +668,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.ExistsIsoOfCart =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.IsDominantGenericFibre =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.IsDominantGenericFibre", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.SecInjG\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsOpenImmersionOfSurj\npublic import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.CategoryTheory.ExtremalEpi\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.IsEtIdealOfPlace\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.IsDominantGenericFibre", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.SecInjG\npublic import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsOpenImmersionOfSurj\npublic import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.CategoryTheory.ExtremalEpi\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.FiniteEtaleModels.IsEtIdealOfPlace\nimport Mathlib.CategoryTheory.Monoidal.Opposite.Mon\nimport Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsIntegralAndIsNormalSchemeOfSmoothDvr\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -686,21 +687,6 @@ private theorem exists_geomPoint (P : Scheme.{0}) (p : P) :
   change (P.fromSpecResidueField p) ((Spec.map (CommRingCat.ofHom (algebraMap (P.residueField p)
     (AlgebraicClosure (P.residueField p))))) (IsLocalRing.closedPoint _)) = p
   exact Scheme.fromSpecResidueField_apply p _
-
-private theorem isDominant_genericFibre (O E : Type) [CommRing O] [IsDomain O] [Field E] [Algebra O E]
-    [IsFractionRing O E] {X : Scheme.{0}} (s : X ⟶ Sp O) [Flat s] :
-    IsDominant (pullback.fst s (spMap (algebraMap O E))) := by
-  refine ⟨fun x => ?_⟩
-  let gp : Sp E := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum E)
-  have hgp : spMap (algebraMap O E) gp ⤳ s x := by
-    refine (PrimeSpectrum.le_iff_specializes (R := O) _ _).1 ?_
-    show Ideal.comap (algebraMap O E) ⊥ ≤ _
-    rw [Ideal.comap_bot_of_injective _ (IsFractionRing.injective O E)]
-    exact bot_le
-  obtain ⟨x', hx', e⟩ := Flat.generalizingMap s hgp
-  refine hx'.mem_closed isClosed_closure (subset_closure ?_)
-  rw [Scheme.Pullback.range_fst]
-  exact ⟨gp, e.symm⟩
 
 private theorem eq_of_geomPoints {P Y B : Scheme.{0}} [IsReduced P] (a b : P ⟶ Y) (g : Y ⟶ B) [IsSeparated g]
     (hab : a ≫ g = b ≫ g)
@@ -741,7 +727,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.descExt_of :
   let j' : V ⟶ pullback s e := pullback.lift j σ ov
   have hj' : j' ≫ u = j := pullback.lift_fst _ _ _
   have hjσ : j' ≫ pullback.snd s e = σ := pullback.lift_snd _ _ _
-  have hdom : IsDominant u := isDominant_genericFibre O E s
+  have hdom : IsDominant u := _root_.GlobalTheory.isDominant_genericFibre_of_flat O E s
   have hsurj : Surjective j' := ⟨fun w => by
     obtain ⟨Ω, _, _, t, q, rfl⟩ := exists_geomPoint _ w
     obtain ⟨v, hv₁, hv₂⟩ := hgeo Ω (t ≫ u) (t ≫ pullback.snd s e) (by

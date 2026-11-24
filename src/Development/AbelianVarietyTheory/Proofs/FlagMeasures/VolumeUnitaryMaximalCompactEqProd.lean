@@ -58,6 +58,7 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Topology.Algebra.Group.Units
+import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoOfSqueeze, Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeUnitaryMaximalCompactEqProd
@@ -274,7 +275,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoOfSqueeze =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeUnitaryMaximalCompactEqProd =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeUnitaryMaximalCompactEqProd", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoOfSqueeze\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAlgebrasMaxCompactAndLeviInter\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeVolumeUnitaryGroupEq\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeWholeGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Algebra.Group.Units\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeUnitaryMaximalCompactEqProd", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoOfSqueeze\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAlgebrasMaxCompactAndLeviInter\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeVolumeUnitaryGroupEq\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeWholeGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Algebra.Group.Units\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactExponentialSurjective\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -332,9 +333,6 @@ theorem hs_blk (e : Fin p ⊕ Fin q ≃ Fin n) (g : Matrix (Fin p) (Fin p) ℂ) 
   rw [key]
   simp [hs, Fintype.sum_sum_type]
 
-theorem Jm_allPos (N : ℕ) : Jm (allPos N) = 1 := by
-  simp [Jm, allPos]
-
 theorem Jm_eq {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (h1 : ∀ i, ε (e (Sum.inl i)) = true)
     (h2 : ∀ i, ε (e (Sum.inr i)) = false) : Jm ε = blk e 1 (-1) := by
   ext i j
@@ -347,7 +345,7 @@ theorem Jm_eq {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (h1 : ∀ i,
 theorem unit_allPos {N : ℕ} (g : UJ (allPos N)) : (uMat g)ᴴ * uMat g = 1 := by
   have h : inUJ (allPos N) (uMat g) := g.2
   unfold inUJ at h
-  rwa [Jm_allPos, Matrix.mul_one] at h
+  rwa [_root_.GlobalTheory.UnitaryVolume.Jm_allPos, Matrix.mul_one] at h
 
 def emb {ε : Fin n → Bool} (e : Fin p ⊕ Fin q ≃ Fin n) (hJ : Jm ε = blk e 1 (-1))
     (x : UJ (allPos p) × UJ (allPos q)) : UJ ε :=
@@ -392,7 +390,7 @@ theorem exists_allPos {N : ℕ} (g : Matrix (Fin N) (Fin N) ℂ) (hg : gᴴ * g 
   refine ⟨⟨⟨g, gᴴ, hg', hg⟩, ?_⟩, rfl⟩
   show inUJ (allPos N) g
   unfold inUJ
-  rw [Jm_allPos, Matrix.mul_one, hg]
+  rw [_root_.GlobalTheory.UnitaryVolume.Jm_allPos, Matrix.mul_one, hg]
 
 private theorem eq_of_submatrix_equiv_symm_eq (e : Fin p ⊕ Fin q ≃ Fin n) {X Y : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ}
     (h : X.submatrix e.symm e.symm = Y.submatrix e.symm e.symm) : X = Y := by
@@ -472,14 +470,6 @@ theorem continuous_hs {ε : Fin n → Bool} : Continuous fun g : UJ ε => hs (uM
   refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
   exact (((continuous_uMat.sub continuous_const).matrix_elem i j).norm).pow 2
 
-theorem hs_nonneg (g : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ hs g := by
-  unfold hs
-  exact Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => by positivity
-
-theorem volU_pos (N : ℕ) : 0 < volU N := by
-  unfold volU sphV
-  positivity
-
 theorem exists_gauge_allPos (N : ℕ) : ∃ ν : Measure (UJ (allPos N)), IsFiniteMeasure ν ∧ ν.IsMulLeftInvariant ∧
     Asym ν (fun g => hs (uMat g - 1)) (N ^ 2) ∧ ν Set.univ = ENNReal.ofReal (volU N) := by
   obtain ⟨c, hc0, hc, -⟩ := GlobalTheory.GaugeConst.gauge_exists_pos_unique N (allPos N)
@@ -488,7 +478,7 @@ theorem exists_gauge_allPos (N : ℕ) : ∃ ν : Measure (UJ (allPos N)), IsFini
   have hfin : Formalism.REAL.muG (allPos N) Set.univ ≠ ⊤ := by
     intro htop
     rw [htop, ENNReal.toReal_top, mul_zero] at hvol
-    exact (volU_pos N).ne hvol
+    exact (_root_.GlobalTheory.UnitaryVolume.volU_pos N).ne hvol
   refine ⟨ENNReal.ofReal c • Formalism.REAL.muG (allPos N), ⟨?_⟩, ⟨fun g => hsub.2.1 g trivial⟩, hsub.2.2, ?_⟩
   · rw [Measure.smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hfin.lt_top
@@ -531,7 +521,7 @@ theorem volume_maxK : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (univ.fil
       rw [hcomp, ← Measure.map_map hmeasEmb hl2, map_mul_left_eq_self]
     · have hm1 : Measurable fun g : Formalism.REAL.UJ (allPos p) => hs (uMat g - 1) := continuous_hs.measurable
       have hm2 : Measurable fun g : Formalism.REAL.UJ (allPos q) => hs (uMat g - 1) := continuous_hs.measurable
-      have hP := Asym.prod ha₁ ha₂ hm1 hm2 (fun _ => hs_nonneg _) (fun _ => hs_nonneg _)
+      have hP := Asym.prod ha₁ ha₂ hm1 hm2 (fun _ => _root_.Formalism.REAL.frobenius_nonneg_matrix _) (fun _ => _root_.Formalism.REAL.frobenius_nonneg_matrix _)
       unfold Asym at hP
       refine hP.congr fun r => ?_
       congr 1
@@ -544,7 +534,7 @@ theorem volume_maxK : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (univ.fil
   rw [hK] at hμ hμ'
   have huniq := (_root_.GlobalTheory.GaugeSubLoc.gauge_local_asymptotics n ε A _ E hA hE hAE μ hμ).2.2.1 _ hμ'
   rw [← huniq, Measure.map_apply hmeasEmb MeasurableSet.univ, Set.preimage_univ, ← Set.univ_prod_univ,
-    Measure.prod_prod, hv₁, hv₂, ← ENNReal.ofReal_mul (volU_pos p).le]
+    Measure.prod_prod, hv₁, hv₂, ← ENNReal.ofReal_mul (_root_.GlobalTheory.UnitaryVolume.volU_pos p).le]
 
 end GlobalTheory.VolMaxK
 end -- clump:auto

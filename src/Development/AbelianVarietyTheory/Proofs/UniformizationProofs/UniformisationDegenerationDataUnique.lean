@@ -220,8 +220,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.uniformisation_polarised_abelianSchemes_iso : GlobalFnsSt → SecBaseChangeSt → AmpleSt → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (I : Ideal R), AdmBase R I → ∀ (D D' : DegData R I) (A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))) (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (U : UnifPre I D A G) (U' : UnifPre I D' A' G) (wL : LB.Iso U'.LG.L (U.LG.L.pull (𝟙 G.left))) (he : eSec G ≫ 𝟙 G.left = 𝟙 _ ≫ eSec G), wL.IsGen → LB.Gen.Maps (LB.linCombIso wL (K := PUnit) (fun _ => eSec G) (fun _ => 1)) U'.LG.rig (rigPullOf (𝟙 G.left) (𝟙 _) he U.LG.L U.LG.rig) → ∃ (Φ : D'.toPre.P.A ≅ D.toPre.P.A) (w : LB.Iso D'.toPre.P.L (D.toPre.P.L.pull Φ.hom.left)), (w.IsGen ∧ ∀ e : ℕ, (U'.gt e).pG.left ≫ Φ.hom.left = (U.gt e).pG.left ∧ (∀ (Z : Scheme.{0}) (r : Z ⟶ (thickObj R I e G).left) (z : Z) (jM : D.toPre.P.L.ι) (jM' : D'.toPre.P.L.ι) (jL : U.LG.L.ι) (jL' : U'.LG.L.ι), (U.gt e).pG.left (r z) ∈ D.toPre.P.L.U jM → (U'.gt e).pG.left (r z) ∈ D'.toPre.P.L.U jM' → (fstG I e G).left (r z) ∈ U.LG.L.U jL → (fstG I e G).left (r z) ∈ U'.LG.L.U jL' → Geo.Tor.gw w (r ≫ (U'.gt e).pG.left) z jM jM' * Geo.Tor.gw (U'.w e) r z jM' (fun _ => jL') = Geo.Tor.gw (U.w e) r z jM (fun _ => jL) * Geo.Tor.gw wL (r ≫ (fstG I e G).left) z jL jL')) := by
-  first | exact @GlobalTheory.unifPre_polarised_iso
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationPolarisedAbelianSchemesIsoStatement =====
@@ -235,8 +233,6 @@ open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCate
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
-theorem _root_.GlobalTheory.T.uniformisation_trivialisations_correspond : GlobalFnsSt → SecBaseChangeSt → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (I : Ideal R), AdmBase R I → ∀ (D D' : DegData R I) (A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))) (G : Over (Spec (CommRingCat.of R))) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (U : UnifPre I D A G) (U' : UnifPre I D' A' G) (wL : LB.Iso U'.LG.L (U.LG.L.pull (𝟙 G.left))) (he : eSec G ≫ 𝟙 G.left = 𝟙 _ ≫ eSec G), wL.IsGen → LB.Gen.Maps (LB.linCombIso wL (K := PUnit) (fun _ => eSec G) (fun _ => 1)) U'.LG.rig (rigPullOf (𝟙 G.left) (𝟙 _) he U.LG.L U.LG.rig) → U.ExpBij 1 → U'.ExpBij 1 → ∀ (Φ : D'.toPre.P.A ≅ D.toPre.P.A) (w : LB.Iso D'.toPre.P.L (D.toPre.P.L.pull Φ.hom.left)), (w.IsGen ∧ ∀ e : ℕ, (U'.gt e).pG.left ≫ Φ.hom.left = (U.gt e).pG.left ∧ (∀ (Z : Scheme.{0}) (r : Z ⟶ (thickObj R I e G).left) (z : Z) (jM : D.toPre.P.L.ι) (jM' : D'.toPre.P.L.ι) (jL : U.LG.L.ι) (jL' : U'.LG.L.ι), (U.gt e).pG.left (r z) ∈ D.toPre.P.L.U jM → (U'.gt e).pG.left (r z) ∈ D'.toPre.P.L.U jM' → (fstG I e G).left (r z) ∈ U.LG.L.U jL → (fstG I e G).left (r z) ∈ U'.LG.L.U jL' → Geo.Tor.gw w (r ≫ (U'.gt e).pG.left) z jM jM' * Geo.Tor.gw (U'.w e) r z jM' (fun _ => jL') = Geo.Tor.gw (U.w e) r z jM (fun _ => jL) * Geo.Tor.gw wL (r ≫ (fstG I e G).left) z jL jL')) → (IsMonHom Φ.hom ∧ Geo.Tor.PMaps w (K := PUnit) (fun _ => eSec D'.toPre.P.A) (fun _ => eSec D.toPre.P.A) (fun _ => 1) D'.toPre.rig D.toPre.rig (𝟙 _)) → ∀ xe : D'.toPre.X ≃+ D.toPre.X, ((∀ x, D'.toPre.c x ≫ Φ.hom = D.toPre.c (xe x)) ∧ ∀ e : ℕ, ((U'.gt e).pG.left ≫ Φ.hom.left = (𝟙 _) ≫ (U.gt e).pG.left ∧ ∀ x : D'.toPre.X, (∀ κ : Fin 4, D'.toPre.Oφ (U'.gt e).pG x κ ≫ Φ.hom.left = (𝟙 _) ≫ D.toPre.Oφ (U.gt e).pG (xe x) κ) ∧ Geo.Tor.PMaps w (D'.toPre.Oφ (U'.gt e).pG x) (D.toPre.Oφ (U.gt e).pG (xe x)) Oinvε ((U'.gt e).t x) ((U.gt e).t (xe x)) (𝟙 _))) → ∀ x, Geo.Tor.PMaps w (K := PUnit) (fun _ => D'.toPre.xK x) (fun _ => D.toPre.xK (xe x)) (fun _ => -1) (D'.toPre.psi x) (D.toPre.psi (xe x)) (𝟙 _) := by
-  first | exact @GlobalTheory.unifPre_psi_correspond
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTrivialisationsCorrespondStatement =====
@@ -385,13 +381,13 @@ theorem unifUniq : GlobalFnsSt → SecBaseChangeSt → AmpleSt → UnifUniqSt :=
     rw [gw_isoPullId wL rfl f y j k hj hk, gw_isoPullId wL rfl f y j' k' hj' hk', Category.comp_id]
     exact gm_isGen hwg f y j j' k k' hj hj' hk hk')
   have m₁ := isoPullId_maps hwm (rfl : 𝟙 G.left = 𝟙 _) rfl he₀
-  obtain ⟨Φ, w, hΦ⟩ := GlobalTheory.T.uniformisation_polarised_abelianSchemes_iso hG hS hA R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre _ he₀ g₁ m₁
+  obtain ⟨Φ, w, hΦ⟩ := _root_.GlobalTheory.unifPre_polarised_iso hG hS hA R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre _ he₀ g₁ m₁
   have hhom := abelianPartIso_isMonHom_and_rigidified R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre _ he₀ g₁ m₁
     Φ w hΦ
   obtain ⟨xe, hxe⟩ := unifPre_characterGroup_iso R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre
   have hc := GlobalTheory.T.unifPre_c_and_coord_correspond_alt hG R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre Φ w hΦ.1 hhom.1
     (fun e => (hΦ.2 e).1) xe hxe
-  have hψ := GlobalTheory.T.uniformisation_trivialisations_correspond hG hS R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre _ he₀ g₁ m₁ (U.expand 1 le_rfl)
+  have hψ := _root_.GlobalTheory.unifPre_psi_correspond hG hS R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre _ he₀ g₁ m₁ (U.expand 1 le_rfl)
     (U'.expand 1 le_rfl) Φ w hΦ hhom xe hc
   have hlin := UnifLinear.identification_linear R I hR D D' A A' G hsa U.toUnifPre U'.toUnifPre Φ
     (fun e => (hΦ.2 e).1) xe hxe

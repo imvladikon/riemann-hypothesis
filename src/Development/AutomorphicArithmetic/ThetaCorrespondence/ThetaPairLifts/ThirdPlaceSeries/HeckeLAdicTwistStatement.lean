@@ -116,13 +116,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host NumberField IsDedekindDomain GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.cusp_rep_one_eq_of_character_choice : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D) (π : D.naut.CG 1), haveI := GlobalTheory.CuspRep.host_isCMField D.host; ((P.cg.e 1 π).1 : GlobalTheory.CuspRep.CG D.host.E 1) = GlobalTheory.CuspRep.CG.ofChar (P.chr.e1 π).1 := by
-  first | exact @_root_.GlobalTheory.RankOneChar.cg_eq_ofChar_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CgEqOfCharStatement =====
@@ -162,13 +155,6 @@ section -- clump:auto
 
 
 
-section
-open NumberField IsDedekindDomain Neutral.B1 Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.L2.Host GlobalTheory.HeckeGal GlobalTheory.TripleGal GlobalTheory.CuspRep
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.weil_deligne_rank_one_local_param' : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (E Ω : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (art : Ideles E →* Gab E Ω), IsGlobalArtin art → ∀ (χ : HChar E) (n : (E →+* ℂ) → ℤ) (μ : G E Ω →* (Qbar l)ˣ), Continuous μ → IsLAdicOf art ι χ n μ → ∀ (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (hl : ((l : ℕ) : 𝓞 E) ∉ w.asIdeal), GlobalTheory.WeilDeligne.wdOf h hl ι (rk1 μ) = _root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar χ) h := by
-  first | exact @_root_.GlobalTheory.AwayLGC.weil_deligne_rank_one_eq_local_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WeilDeligneRankOneEqLocalStatement =====
@@ -192,7 +178,7 @@ theorem heckeLAdicTwist_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
   set ν := GlobalTheory.HeckeGal.Model.absPow D.host.E s
   have hν := GlobalTheory.HeckeGal.Model.absPow_isAbsPow D.host.E s
   have hinf : ∀ τ, D.naut.infG χ τ = {expo ψ τ} := fun τ => by
-    rw [P.cg.inf, CGu.infChar, _root_.GlobalTheory.T.cusp_rep_one_eq_of_character_choice hF hL D P χ, CG.infChar_ofChar]
+    rw [P.cg.inf, CGu.infChar, _root_.GlobalTheory.RankOneChar.cg_eq_ofChar_alt hF hL D P χ, CG.infChar_ofChar]
   have hexpo : ∀ τ, expo (ψ * ν) τ = expo ψ τ + s := fun τ => by
     have h := (CG.hasInfChar_ofChar ψ τ).twist ν
     rw [CG.twist_ofChar, Multiset.map_singleton] at h
@@ -209,7 +195,7 @@ theorem heckeLAdicTwist_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
   obtain ⟨μ, hμc, hμ⟩ := ha.exists_isLAdicOf (D.naut.iotaQC i) hAlg
   have hpar : ∀ (w : PlE D.host) (u : ℝ), P.T.e w (D.naut.lpTw (D.naut.locG χ w) u) =
       (_root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar ψ) (D.nd.plOm.2 w)).lpTw u := fun w u => by
-    rw [P.T.tw, P.cg.loc, ← _root_.GlobalTheory.T.cusp_rep_one_eq_of_character_choice hF hL D P χ]
+    rw [P.T.tw, P.cg.loc, ← _root_.GlobalTheory.RankOneChar.cg_eq_ofChar_alt hF hL D P χ]
     rfl
   have htw : ∀ w : PlE D.host, _root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar (ψ * ν)) (D.nd.plOm.2 w) =
       (_root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar ψ) (D.nd.plOm.2 w)).lpTw s := fun w => by
@@ -221,7 +207,7 @@ theorem heckeLAdicTwist_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
   · have hl : (((D.nd.l i : ℕ)) : 𝓞 D.host.E) ∉ w.asIdeal := hw
     rw [(P.wdOf i 1 (rk1 μ) w).1]
     refine (P.T.e w).injective ?_
-    rw [P.wd.away _ _ (rk1 μ) w hl, _root_.GlobalTheory.T.weil_deligne_rank_one_local_param' hL D.host.E D.nd.Om _ _ art ha _ n μ hμc hμ _ w (D.nd.plOm.2 w) hl, htw, hpar]
+    rw [P.wd.away _ _ (rk1 μ) w hl, _root_.GlobalTheory.AwayLGC.weil_deligne_rank_one_eq_local_alt hL D.host.E D.nd.Om _ _ art ha _ n μ hμc hμ _ w (D.nd.plOm.2 w) hl, htw, hpar]
   · have hab := fun (O : Type) [CommRing O] [Algebra ℤ_[D.nd.l i] O] [TopologicalSpace O]
         (Bw : LocBridge (D.nd.l i) D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) O) (hj : Induces Bw) =>
       (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 hCh) D.host.E D.nd.Om (D.nd.l i) (D.loc _) (D.locA _) ⟨D.locT _⟩
@@ -253,13 +239,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.ConjugateSelfDual ReciprocityTheory.Gal ReciprocityTheory.Aut Formalism.AUTREP Formalism.L2 Formalism.L2.Host Formalism.L2.NT NumberField IsDedekindDomain Polynomial GlobalTheory.HeightCounting GlobalTheory.RowTie GlobalTheory.SplitRead GlobalTheory.NPin
-attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
-
-theorem _root_.GlobalTheory.T.exists_galois_character_of_algebraic_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → GlobalTheory.Published.GlobalArtinReciprocity → GlobalTheory.Published.HeckeLAdicCharacterAbove → _root_.GlobalTheory.Published.HeckeLAdicParameterAboveAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ (i : D.nd.Loc) (χ : D.naut.CG 1) (s : ℝ), (∀ τ : D.host.E →+* ℂ, ∀ z ∈ D.naut.infG χ τ, ∃ k : ℤ, z + (s : ℂ) = (k : ℂ)) → ∃ ρ : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin 1) (Qbar (D.nd.l i)), Formalism.MainNotions.SumRepresentations.At.ContQ D.nd i ρ ∧ (∀ w, w ∉ placesOver D.host.E (D.nd.l i) → D.naut.wdOf i ρ w = D.naut.lpTw (D.naut.locG χ w) s) ∧ ∀ w ∈ placesOver D.host.E (D.nd.l i), D.naut.IsdRW i ρ w ∧ D.naut.wdOf i ρ w = D.naut.lpTw (D.naut.locG χ w) s ∧ ∀ τ, InducesW D.nd i τ w → (D.naut.jumpsW i ρ τ).map (fun n : ℤ => (n : ℂ)) = (D.naut.infG χ ((D.naut.iotaQC i).toRingHom.comp τ)).map (fun z => -(z + (s : ℂ))) := by
-  first | exact @_root_.GlobalTheory.GalPin.heckeLAdicTwist_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeLAdicTwistStatement =====

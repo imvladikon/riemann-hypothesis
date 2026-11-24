@@ -117,11 +117,7 @@ namespace GlobalTheory.Idele
 variable {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R K]
   [IsFractionRing R K]
 
-theorem valuation_eq_exp_neg_count (v : HeightOneSpectrum R) {x : K} (hx : x ≠ 0) :
-    v.valuation K x = exp (-FractionalIdeal.count K v (FractionalIdeal.spanSingleton R⁰ x)) := by
-  first
-  | (apply _root_.GlobalTheory.AdicValuationCountFactors.valuation_eq_exp_neg_count <;> assumption)
-  | (intros; exact _root_.GlobalTheory.AdicValuationCountFactors.valuation_eq_exp_neg_count ..)
+alias valuation_eq_exp_neg_count := _root_.GlobalTheory.AdicValuationCountFactors.valuation_eq_exp_neg_count
 
 theorem le_of_count_le {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0) (hJ : J ≠ 0)
     (h : ∀ v : HeightOneSpectrum R, FractionalIdeal.count K v J ≤ FractionalIdeal.count K v I) :

@@ -209,7 +209,7 @@ theorem thetaMap_surjective : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
     ⟨hH.ok.ok2.conj, hH.ok.ok2.irr, hH.ok.ok2.lifts i t⟩
   have hp : Formalism.DivisionValues.IsOrthProj (lH D A3.A F.P0 F.ψ0 i t) (lZ0 D A3.A F.P0 F.ψ0 (A3.fam3.toSub2 (zsOf R F)) i t)
       (lPrj D A3.A F.P0 F.ψ0 (A3.fam3.toSub2 (zsOf R F)) i t) := BlockDat.lf_l_proj hB
-  obtain ⟨hTh, hθ⟩ := GlobalTheory.T.liftCuspFormSpace_thetaMap_eq_data D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH
+  obtain ⟨hTh, hθ⟩ := _root_.GlobalTheory.Mem.ThRead.thDef3_thTheta D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH
   rw [← LinearMap.range_eq_top, eq_top_iff, ← hTh.span i, Submodule.span_le]
   rintro _ ⟨k, rfl⟩
   obtain ⟨z, hz⟩ := hb.2 (Pi.single k 1)
@@ -227,9 +227,9 @@ theorem thetaMap_surjective : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
 theorem inner_theta_eq_lam : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Type) (A3 : FamIn3 D.what₂.LL G Pl0 I0 (List ℕ) T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat3 D A3 Ks) (F : Face3 D A3) (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (X0 : BaseLevelRowSide D) (Y : Read (A3 := A3) R.toRealDat F.lv2 X0) (Z : ReadL R F X0 Y), Pins R F cG → Holds R F → HostHyp D → ∀ (i : Fin D.R.m) (t : T) (p : A3.fam3.base3.Ix), Used0 D (Y.tup t) → ∀ x ∈ (LinearMap.ker (D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1)))ᗮ, Y.mj.eW i (D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) x) ∈ R.Wp3 i p → ∀ x', ⟪D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) x, D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) x'⟫_ℂ = ((R.lam3 i t p A3.A.v0 : ℝ) : ℂ) * ⟪x, x'⟫_ℂ := by
   intro D G _ _ Pl0 I0 T A3 Ks _ _ _ R F cG X0 Y Z hP hH _ i t p _ x hx hW x'
   set θ := D.what₂.thetaP (Y.tup t) ((i : ℕ) + 1) with hθ
-  have hK := GlobalTheory.T.liftThetaMap_orthogonalKernel_eq_rationalSpan D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t
+  have hK := _root_.GlobalTheory.Mem.KerSpan.orth_ker_thetaP D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t
   set K := (LinearMap.ker θ)ᗮ with hKdef
-  have hS := GlobalTheory.T.liftThetaMap_labelPartPreimage_rationalSpan D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t p x (hK ▸ hx) hW
+  have hS := _root_.GlobalTheory.Mem.R3.PartSpan.mem_span_part D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t p x (hK ▸ hx) hW
 
   have hkerK : ∀ z, z - K.starProjection z ∈ LinearMap.ker θ := by
     intro z
@@ -244,7 +244,7 @@ theorem inner_theta_eq_lam : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     induction hq using Submodule.span_induction with
     | mem y hy =>
       obtain ⟨b, rfl⟩ := hy
-      exact GlobalTheory.T.liftThetaMap_inner_eq_lambda_mul_rationalVectors D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t p a b ha
+      exact _root_.GlobalTheory.Mem.R3.LamMetric.inner_theta_rat_eq_lam D G Pl0 I0 T A3 Ks R F cG X0 Y Z hP hH i t p a b ha
     | zero => simp
     | add y z _ _ h1 h2 => rw [map_add (f := _), inner_add_right, inner_add_right, h1, h2, mul_add]
     | smul c y _ h => rw [map_smul, inner_smul_right, inner_smul_right, h]; ring
@@ -336,13 +336,6 @@ theorem lambda_pos_of_twisted_mu_alt : _root_.GlobalTheory.HeightCounting.Up.Pub
   rw [hmu, key]
   exact t.r.intersectionNumber_baseChange.prim.posScal.2 _ _ _ _
 end GlobalTheory.Mem.LamPosTw
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
-
-theorem _root_.GlobalTheory.T.lamP_muTw_pos_at_members : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ t nch n c => ∀ v, TwistedAt (w.D Z) v → ∀ j, 1 ≤ j → j ≤ (w.D Z).R.m → ∀ σ, (w.D Z).what₂.isot j σ ≠ ⊥ → 0 < (w.D Z).what₂.lamP ((w.D Z).what₂.muTw v) j σ := by
-  first | exact @_root_.GlobalTheory.Mem.LamPosTw.lambda_pos_of_twisted_mu_alt
 end
 end
 end -- clump:auto

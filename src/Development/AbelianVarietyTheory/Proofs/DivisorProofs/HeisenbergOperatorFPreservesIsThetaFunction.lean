@@ -120,8 +120,8 @@ theorem ker_fin_mem_nhds {F : Type} [Field F] [NumberField F] {ψ : AddChar (AF 
     show ‖ψ (pairA F 0 0) - 1‖ < 1 / 2
     rw [show pairA F 0 (0 : Af F) = 0 from rfl, ψ.map_zero_eq_one]
     norm_num
-  obtain ⟨N, hN, hNV⟩ := GlobalTheory.AdLat.OpenLat.exists_nsmul_adele F _ hV
-  refine Filter.mem_of_superset (GlobalTheory.AdLat.OpenLat.nsmul_integral_mem_nhds F N hN) ?_
+  obtain ⟨N, hN, hNV⟩ := _root_.GlobalTheory.LocalNormBound.main F _ hV
+  refine Filter.mem_of_superset (_root_.GlobalTheory.IntegralNeighbourhoodZero.nsmul_integral_mem_nhds_zero F N hN) ?_
   rintro _ ⟨a, ha, rfl⟩
   refine GroundTheory.Global.eq_one_of_sq_mem
     (s := {z | ∃ b : Af F, (∀ v, b v ∈ v.adicCompletionIntegers F) ∧ z = ψ (pairA F 0 (N • b))}) ?_ ?_ ⟨a, ha, rfl⟩

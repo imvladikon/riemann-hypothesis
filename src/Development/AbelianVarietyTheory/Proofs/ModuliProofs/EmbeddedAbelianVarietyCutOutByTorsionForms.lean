@@ -75,17 +75,17 @@ theorem symB_of_iso {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] {L : LB A.
     SymB (A := A) (M.pull e.inv) := by
   have h1 : LBIso (M.pull e.inv) (lbPow L N) :=
     LBIso.chartPull (Geo.Tor.chartPullPull M e.inv e.inv rfl) (Geo.Tor.chartPullSec _ e.hom e.inv e.inv_hom_id) h
-  have hN := powIsLB hL N
+  have hN := _root_.GlobalTheory.isLB_lbPow hL N
   have hM' := LB.isLB_pull hM e.inv
   obtain ⟨-, a, -, -, c, -⟩ := _root_.GlobalTheory.SecDim.lbPow_mul_and_pull_and_sectionsFiniteDim_iso_invariant K A.left A.hom L hL
   exact LBIso.trans hM' hN (LB.isLB_pull hM' _) h1 (LBIso.trans hN (LB.isLB_pull hN _) (LB.isLB_pull hM' _)
-    (LBIso.trans hN (powIsLB (LB.isLB_pull hL _) N) (LB.isLB_pull hN _) ((a _ (LB.isLB_pull hL _) hs).2 N) (c _ _ N))
+    (LBIso.trans hN (_root_.GlobalTheory.isLB_lbPow (LB.isLB_pull hL _) N) (LB.isLB_pull hN _) ((a _ (LB.isLB_pull hL _) hs).2 N) (c _ _ N))
     (isoPullAlong h1.symm _))
 
 theorem sectionsHaveFiniteDimension_of_iso_pulled_pow {K : Type} [Field K] {X Y : Scheme.{0}} (p : X ⟶ Sp K) {L : LB X} (hL : L.IsLB)
     (e : Y ≅ X) {M : LB Y} (hM : M.IsLB) (N : ℕ) (h : LBIso M ((lbPow L N).pull e.hom)) (n r : ℕ)
     (hr : SectionsHaveFiniteDimension p (lbPow L (N * n)) r) : SectionsHaveFiniteDimension (e.hom ≫ p) (lbPow M n) r := by
-  have hN := powIsLB hL N
+  have hN := _root_.GlobalTheory.isLB_lbPow hL N
   have h1 : SectionsHaveFiniteDimension p (lbPow (lbPow L N) n) r :=
     ((_root_.GlobalTheory.SecDim.lbPow_mul_and_pull_and_sectionsFiniteDim_iso_invariant K X p _ (powIsLB hL (N * n))).2.1 _ (powIsLB hN n)
       ((_root_.GlobalTheory.SecDim.lbPow_mul_and_pull_and_sectionsFiniteDim_iso_invariant K X p L hL).2.2.1 N n).symm).1 r hr

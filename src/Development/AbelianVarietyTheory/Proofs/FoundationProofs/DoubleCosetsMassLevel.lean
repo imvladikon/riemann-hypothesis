@@ -240,11 +240,6 @@ section -- clump:auto
 
 namespace GlobalTheory.DefiniteDecompObj
 
-open Formalism.BasicNotions Formalism.MainNotions.StandardLattice Formalism.L2.GlobalTheoryTheory.GenusMassVolumes
-
-theorem doubleCosets_mass : ∀ D : D7, DefClassDecomp D :=
-  GlobalTheory.DefiniteDecomp.defClassDecomp
-
 end GlobalTheory.DefiniteDecompObj
 end -- clump:auto
 end -- clump:auto

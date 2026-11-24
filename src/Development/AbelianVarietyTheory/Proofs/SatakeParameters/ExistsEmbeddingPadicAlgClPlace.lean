@@ -74,10 +74,7 @@ theorem norm_sum_lt {K : Type u_1} [NormedField K] [IsUltrametricDist K] (s : Fi
     have h2 : ‖∑ i ∈ s, f i‖ < r := ih (fun i hi => h i (Finset.mem_insert_of_mem hi))
     exact lt_of_le_of_lt (IsUltrametricDist.norm_add_le_max _ _) (max_lt h1 h2)
 
-theorem main : ∀ {K : Type u_1} [inst : NormedField K] [IsUltrametricDist K] (s : Finset ℕ) (f : ℕ → K) {r : ℝ}, (0 : ℝ) < r → (∀ i ∈ s, ‖f i‖ < r) → ‖∑ i ∈ s, f i‖ < r :=
-  by
-  intro K _ _ s f r hr h
-  exact norm_sum_lt s f hr h
+alias main := _root_.GlobalTheory.NormSumLt.norm_sum_lt
 
 end GlobalTheory.NormSumLt
 end -- clump:auto
@@ -93,13 +90,6 @@ open NumberField IsDedekindDomain
 
 namespace GlobalTheory
 
-theorem norm_finset_sum_lt_of_forall_lt {K : Type*} [NormedField K] [IsUltrametricDist K]
-    (s : Finset ℕ) (f : ℕ → K) {r : ℝ} (hr : 0 < r) (h : ∀ i ∈ s, ‖f i‖ < r) :
-    ‖∑ i ∈ s, f i‖ < r := by
-  first
-  | (apply _root_.GlobalTheory.NormSumLt.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.NormSumLt.main ..)
-
 theorem norm_le_one_of_isIntegral_int {K : Type*} [NormedField K] [IsUltrametricDist K]
     {z : K} (hz : IsIntegral ℤ z) : ‖z‖ ≤ 1 := by
   obtain ⟨p, hm, hp⟩ := hz
@@ -110,7 +100,7 @@ theorem norm_le_one_of_isIntegral_int {K : Type*} [NormedField K] [IsUltrametric
     hm.leadingCoeff, map_one, one_mul] at hp
   set S := ∑ i ∈ Finset.range n, (algebraMap ℤ K) (p.coeff i) * z ^ i
   have hS : ‖S‖ < ‖z‖ ^ n := by
-    refine norm_finset_sum_lt_of_forall_lt _ _ (pow_pos (by linarith) n) ?_
+    refine _root_.GlobalTheory.NormSumLt.norm_sum_lt _ _ (pow_pos (by linarith) n) ?_
     intro i hi
     rw [norm_mul, norm_pow]
     have h1 : ‖(algebraMap ℤ K) (p.coeff i)‖ ≤ 1 := by

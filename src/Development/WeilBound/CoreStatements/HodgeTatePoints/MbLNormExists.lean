@@ -94,19 +94,6 @@ theorem isLocalRing_regAt {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (Co
   show IsLocalRing (genMap ξ p).range
   exact IsLocalRing.of_surjective' (genMap ξ p).rangeRestrict (genMap ξ p).rangeRestrict_surjective
 
-theorem isUnit_regAt_iff {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (p : Cpt ξ)
-    (a : regAt ξ p) : IsUnit a ↔ unitAt ξ p (a : Ω) := by
-  constructor
-  · intro h
-    obtain ⟨b, hb⟩ := h.exists_right_inv
-    have e : (a : Ω) * (b : Ω) = 1 := congrArg Subtype.val hb
-    have ha : (a : Ω) ≠ 0 := fun h0 => by simp [h0] at e
-    refine ⟨ha, a.2, ?_⟩
-    rw [inv_eq_of_mul_eq_one_right e]
-    exact b.2
-  · rintro ⟨h0, -, h2⟩
-    exact isUnit_iff_exists_inv.2 ⟨⟨_, h2⟩, Subtype.ext (mul_inv_cancel₀ h0)⟩
-
 theorem unitAt_iff_of_dominated {X X' : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω']
     {ξ : Spec (CommRingCat.of Ω) ⟶ X} {ξ' : Spec (CommRingCat.of Ω') ⟶ X'} {i : Ω →+* Ω'} {p' : Cpt ξ'} {q : Cpt ξ}
     (h : (∀ a ∈ regAt ξ q, i a ∈ regAt ξ' p') ∧ ∀ a ∈ regAt ξ q, unitAt ξ' p' (i a) → unitAt ξ q a)
@@ -137,9 +124,6 @@ theorem eq_of_dominated : ∀ {o : Type} [CommRing o] {Ω : Type} [Field Ω] [Al
 end PositivityTheory.HtPt.Mb.LCentreUnique.Centre.Sep
 
 
-open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar NumberField in
-theorem PositivityTheory.HtPt.Mb.centre_unique : ∀ {o : Type} [CommRing o] {Ω : Type} [Field Ω] [Algebra o Ω] {κ : Type} [Finite κ] {x : κ → Ω} (M : PModel o x) {X' : Scheme.{0}} {Ω' : Type} [Field Ω'] (ξ' : Spec (CommRingCat.of Ω') ⟶ X') (i : Ω →+* Ω') (p' : Cpt ξ') (q₁ q₂ : Cpt M.ξ), ((∀ a ∈ regAt M.ξ q₁, i a ∈ regAt ξ' p') ∧ ∀ a ∈ regAt M.ξ q₁, unitAt ξ' p' (i a) → unitAt M.ξ q₁ a) → ((∀ a ∈ regAt M.ξ q₂, i a ∈ regAt ξ' p') ∧ ∀ a ∈ regAt M.ξ q₂, unitAt ξ' p' (i a) → unitAt M.ξ q₂ a) → q₁ = q₂ :=
-  @PositivityTheory.HtPt.Mb.LCentreUnique.Centre.Sep.eq_of_dominated
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -359,9 +343,6 @@ theorem exists_integral_div : ∀ {o : Type} [CommRing o] {Ω : Type} [Field Ω]
 end PositivityTheory.HtPt.Mb.LFracExt.FracExt
 
 
-open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar NumberField in
-theorem PositivityTheory.HtPt.Mb.frac_ext : ∀ {o : Type} [CommRing o] {Ω : Type} [Field Ω] [Algebra o Ω] {κ : Type} [Finite κ] {x : κ → Ω} (M : PModel o x) (Ω' : Type) [Field Ω'] [Algebra Ω Ω'] [FiniteDimensional Ω Ω'] [Algebra o Ω'] [IsScalarTower o Ω Ω'] (c : κ), x c ≠ 0 → ∀ a : Ω', ∃ b v : Ω', IsIntegral (chRing o (fun k => algebraMap Ω Ω' (x k)) c) b ∧ v ∈ chRing o (fun k => algebraMap Ω Ω' (x k)) c ∧ v ≠ 0 ∧ a = b / v :=
-  @PositivityTheory.HtPt.Mb.LFracExt.FracExt.exists_integral_div
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -517,9 +498,6 @@ theorem join_chart_normalisation : ∀ (o : Type) [CommRing o] (Ω : Type) [Fiel
 end PositivityTheory.HtPt.Mb.LNormChart.ChNorm
 
 
-open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar NumberField in
-theorem PositivityTheory.HtPt.Mb.norm_chart : ∀ (o : Type) [CommRing o] (Ω : Type) [Field Ω] [Algebra o Ω] (κ : Type) [Finite κ] (x : κ → Ω) (d n : ℕ) (z : κ ⊕ Fin n → Ω) (M' : PModel o (joinCo (RingHom.id Ω) x z)), (∀ c, z (Sum.inl c) = x c ^ d) → (∀ c, x c ≠ 0 → ∀ a : Ω, IsIntegral (chRing o x c) a ↔ a ∈ Submodule.span (chRing o x c) (Set.range fun k => z k / x c ^ d)) → ∀ c, x c ≠ 0 → (∀ a : Ω, a ∈ chRing o (joinCo (RingHom.id Ω) x z) (c, Sum.inl c) ↔ IsIntegral (chRing o x c) a) ∧ ∀ p' : Cpt M'.ξ, (∀ j, x j / x c ∈ regAt M'.ξ p') → InChart M'.ξ (joinCo (RingHom.id Ω) x z) (c, Sum.inl c) p' :=
-  @PositivityTheory.HtPt.Mb.LNormChart.ChNorm.join_chart_normalisation
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.CoreStatements.HodgeTatePoints.MbLNormChart =====
@@ -707,7 +685,7 @@ theorem fibre_iff (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
         have h4 := Flat.ZUnit.mul ((hu u h1).2 h3) (Flat.ZUnit.inv hv)
         rwa [← div_eq_mul_inv] at h4
     obtain ⟨h', hl'⟩ := PositivityTheory.HtPt.Mb.dom_local M.X Ω M.ξ M'.X Ω' M'.ξ (algebraMap Ω Ω') f hD p'
-    exact congrArg Subtype.val (PositivityTheory.HtPt.Mb.centre_unique M M'.ξ (algebraMap Ω Ω') p' ⟨f p'.1, h'⟩ p hl' hl)
+    exact congrArg Subtype.val (_root_.PositivityTheory.HtPt.Mb.LCentreUnique.Centre.Sep.eq_of_dominated M M'.ξ (algebraMap Ω Ω') p' ⟨f p'.1, h'⟩ p hl' hl)
 
 theorem chart_over (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
     (hB : ∀ c, x c ≠ 0 → ∀ a : Ω', IsIntegral (chRing o (fun k => algebraMap Ω Ω' (x k)) c) a → a ∈ chRing o y (e c))
@@ -723,7 +701,7 @@ theorem chart_over (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
         chRing o (fun k => algebraMap Ω Ω' (x k)) c))))
     obtain ⟨p₀, hl, -, hch⟩ := PositivityTheory.HtPt.Mb.centre o Ω κ x M M'.X Ω' M'.ξ (algebraMap Ω Ω') p' ⟨c, hc, hA⟩
     obtain ⟨h', hl'⟩ := PositivityTheory.HtPt.Mb.dom_local M.X Ω M.ξ M'.X Ω' M'.ξ (algebraMap Ω Ω') f hD p'
-    exact ⟨p₀, congrArg Subtype.val (PositivityTheory.HtPt.Mb.centre_unique M M'.ξ (algebraMap Ω Ω') p' p₀ ⟨f p'.1, h'⟩ hl hl'),
+    exact ⟨p₀, congrArg Subtype.val (_root_.PositivityTheory.HtPt.Mb.LCentreUnique.Centre.Sep.eq_of_dominated M M'.ξ (algebraMap Ω Ω') p' p₀ ⟨f p'.1, h'⟩ hl hl'),
       hch c hc fun j => hA _ (Algebra.subset_adjoin ⟨j, rfl⟩)⟩
   · rintro ⟨p, hpf, hp⟩
     have hl := dom_of_eq hD hpf.symm
@@ -853,9 +831,9 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
     join_chart (o := o) x' d n z hz1 hz2 c (hinj c hc) a ha
   obtain ⟨M'⟩ : Nonempty (PModel o y) := _root_.GlobalTheory.CompanionTheory.Ar.nonempty_pModel_of_chart o Ω' (κ × (κ ⊕ Fin n)) y
     ⟨(c₀, Sum.inl c₀), hyne c₀ hc₀, fun a => by
-      obtain ⟨b, v, hb, hv, hv0, rfl⟩ := PositivityTheory.HtPt.Mb.frac_ext M Ω' c₀ hc₀ a
+      obtain ⟨b, v, hb, hv, hv0, rfl⟩ := _root_.PositivityTheory.HtPt.Mb.LFracExt.FracExt.exists_integral_div M Ω' c₀ hc₀ a
       exact ⟨b, hJ c₀ hc₀ b hb, v, hJ c₀ hc₀ v (isIntegral_algebraMap (x := (⟨v, hv⟩ : chRing o x' c₀))), rfl⟩⟩
-  have hT := PositivityTheory.HtPt.Mb.norm_chart o Ω' κ x' d n z M' hz1 hz2
+  have hT := _root_.PositivityTheory.HtPt.Mb.LNormChart.ChNorm.join_chart_normalisation o Ω' κ x' d n z M' hz1 hz2
   have hB : ∀ c, x c ≠ 0 → ∀ a : Ω', a ∈ chRing o y (c, Sum.inl c) ↔ IsIntegral (chRing o x' c) a :=
     fun c hc => (hT c (hinj c hc)).1
   have hC : ∀ c, x c ≠ 0 → ∀ p' : Cpt M'.ξ, (∀ j, x' j / x' c ∈ regAt M'.ξ p') → InChart M'.ξ y (c, Sum.inl c) p' :=
@@ -874,7 +852,7 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
     have hc : x c ≠ 0 := hinj' c (left_ne_zero_of_mul hp.1)
     exact (PositivityTheory.HtPt.Ma.regat_loc o Ω' _ y M' _ p' hp).1 _ ((hB c hc _).2
       (isIntegral_algebraMap (x := (⟨_, map_chRing x Ω' c a ha⟩ : chRing o x' c))))
-  obtain ⟨f, hf, -⟩ := PositivityTheory.HtPt.Mb.morph o Ω κ x M o Ω' _ y M' (algebraMap Ω Ω') fun p' => by
+  obtain ⟨f, hf, -⟩ := _root_.PositivityTheory.HtPt.Mb.LMorph.ChMorph.existsUnique_dominates o Ω κ x M o Ω' _ y M' (algebraMap Ω Ω') fun p' => by
     obtain ⟨c, hc, hp⟩ := hcov p'
     exact ⟨c, hc, hreg c p' hp⟩
   have hN : Flat.NormalCpt M'.ξ := by
@@ -896,9 +874,6 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
 end PositivityTheory.HtPt.Mb.LNormExists.NormEx
 
 
-open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar NumberField in
-theorem PositivityTheory.HtPt.Mb.norm_exists : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteType ℤ o] (Ω : Type) [Field Ω] [Algebra o Ω] (κ : Type) [Finite κ] (x : κ → Ω) (M : PModel o x) (Ω' : Type) [Field Ω'] [Algebra Ω Ω'] [FiniteDimensional Ω Ω'] [Algebra o Ω'] [IsScalarTower o Ω Ω'], ∃ (κ' : Type) (_ : Finite κ') (y : κ' → Ω') (M' : PModel o y) (f : M'.X ⟶ M.X), Dominates M'.ξ M.ξ f (algebraMap Ω Ω') ∧ Flat.NormalCpt M'.ξ ∧ IsFinite f ∧ ∀ p : Cpt M.ξ, NormAt M'.ξ f (algebraMap Ω Ω') p :=
-  @PositivityTheory.HtPt.Mb.LNormExists.NormEx.exists_normalisation
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto

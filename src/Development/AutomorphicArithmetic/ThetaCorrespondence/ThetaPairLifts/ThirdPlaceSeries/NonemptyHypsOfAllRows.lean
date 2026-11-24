@@ -535,8 +535,8 @@ theorem recExP_of_recAtG : StandardLattice.SiegelMassRatioCM → ∀ (Q' : V4.Sl
   obtain ⟨K0, h⟩ := h eps C8 C5 c6 Cb he (he0.trans (min_le_left _ _)) he52 hC8
   obtain ⟨K1, hq⟩ := hq eps C8 C5 c6 Cb he (he0.trans (min_le_right _ _)) he52 hC8
   refine ⟨K0.sup K1, fun C hstd hC hL => ?_⟩
-  obtain ⟨c1, h⟩ := h C hstd hC (large_of_sup hL).1
-  obtain ⟨c1', hq⟩ := hq C hstd hC (large_of_sup hL).2
+  obtain ⟨c1, h⟩ := h C hstd hC (_root_.GlobalTheory.EX.fc_large_of_sup hL).1
+  obtain ⟨c1', hq⟩ := hq C hstd hC (_root_.GlobalTheory.EX.fc_large_of_sup hL).2
   refine ⟨max (max c1 c1') 0, fun cD hcD => ?_⟩
   obtain ⟨c2, h⟩ := h cD (le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hcD)
   obtain ⟨c2q, hq⟩ := hq cD (le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hcD)
@@ -1292,12 +1292,6 @@ section -- clump:auto
 
 
 
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.Pk Formalism.MainNotions.Lnk Formalism.MainNotions.GlobalTheoryTheory Formalism.L2.GlobalTheoryTheory Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.hTu_cTmin_of_genusMass : (∀ D, MassRatioUnderVolume D) → (∀ D, Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.GenusMassAt D 2) → ∀ (Q : V4.Slot) (Lk : LkT _root_.GlobalTheory.Fc.BundleCondition), Row Q Lk fun 𝒜 _ => R1.H_hTu (fun _ y => Formalism.MainNotions.StandardLattice.HarishChandraReduction.cTmin y) 𝒜 := by
-  first | exact @_root_.GlobalTheory.Fc.row_hTu_cTmin_alt
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowHTuCTminStatement =====
@@ -1315,7 +1309,7 @@ namespace GlobalTheory.Fc
 theorem nonempty_hyps_of_allRows_alt : StandardLattice.SiegelMassRatioCM → LitThin → Formalism.L2.SG.Pf.WuDecayOfGap → Formalism.L2.SG.RowsDef.RowsFinDim → Formalism.L2.SG.RowsPos.TypeP → Formalism.L2.SG.RowsPos.RowNGP → Formalism.L2.SG.RowsPos.RowMainEqP → (∀ D, MassRatioUnderVolume D) → (∀ D, Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.GenusMassAt D 2) → ∀ (KP : ∀ B : GlobalTheory.Mem.Base, Fr B.toPre → Prop) (Q Q' : V4.Slot) (Lk : LkT _root_.GlobalTheory.Fc.BundleCondition) (N : FamClass → Prop) (DR : _root_.GlobalTheory.Fc.R1.DefiniteSideType), (DC.MinkDiv → GroupRetwisting.BaseCond KP ∧ GroupRetwisting.FirstG KP Q ∧ GroupRetwisting.ExportF KP Q ∧ GroupRetwisting.SecondG KP Q Q') → ExBL KP Q Q' Lk → _root_.GlobalTheory.Fc.AllRowsAlt KP Q Q' Lk N DR → Nonempty (_root_.GlobalTheory.Fc.HypsAlt N DR) := by
   intro hP hLit hWu hRF hTy hNG hM hU hG KP Q Q' Lk N DR hc hx hA
   obtain ⟨R30, hR30, c30, cIc, hb30, hpos, r30⟩ := hA.c30
-  have rTu := Row.rowL (KP := KP) (Q := Q) largeBaseProperty_true (_root_.GlobalTheory.T.hTu_cTmin_of_genusMass hU hG Q' Lk)
+  have rTu := Row.rowL (KP := KP) (Q := Q) largeBaseProperty_true (_root_.GlobalTheory.Fc.row_hTu_cTmin_alt hU hG Q' Lk)
   have hall := RowL.and (hA.hn4 : RowL KP Q Q' Lk fun 𝒜 _ => R0.ClassCountBoundAllPoints 𝒜) <|
     RowL.and (hA.jOn : RowL KP Q Q' Lk fun 𝒜 _ => R0.H_jOn 𝒜) <|
     RowL.and (hA.hInstR : RowL KP Q Q' Lk fun 𝒜 _ => ClassTwoEntries.H_hInstR 𝒜) <|

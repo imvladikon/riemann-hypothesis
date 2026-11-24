@@ -1039,9 +1039,9 @@ theorem GlobalTheory.HeatTrans.exists_heat_translate : ∀ (R : Type) [CommRing 
     have hOO : O₁ ≤ T ⁻¹ᵁ (S ⁻¹ᵁ O₁) := (hpre' O₁).ge
     rw [op_conjF Y.H dd hTS hST hT hdd h.Θ h.u (h.d i) (h.p i) (h.p' i) k hOi,
       op_conjF Y.H dd hTS hST hT hdd h.Θ h.u (h.d i') (h.p i') (h.p' i') k hOi',
-      GlobalTheory.KS.pbT_mul, pbT_pow S le_rfl _ _, pbT_pbT S (T ≫ Y.q.left) hg' le_rfl]
+      GlobalTheory.KS.pbT_mul, pbT_pow S le_rfl _ _, _root_.GlobalTheory.KS.InvField.pbT_pbT S (T ≫ Y.q.left) hg' le_rfl]
     have hSTq : S ≫ T ≫ Y.q.left = Y.q.left := by rw [← Category.assoc, hST, Category.id_comp]
-    rw [hSTq, h.glue k i i' _ hSO, GlobalTheory.KS.pbT_mul, pbT_pow T hOO, pbT_pbT T Y.q.left hg hOO]
+    rw [hSTq, h.glue k i i' _ hSO, GlobalTheory.KS.pbT_mul, pbT_pow T hOO, _root_.GlobalTheory.KS.InvField.pbT_pbT T Y.q.left hg hOO]
   · intro i
     obtain ⟨⟨V, hV⟩, hp, hp', hd⟩ := hB i
     refine ⟨?_, GlobalTheory.T.isRaynaudTorusWeight_pullback_pointTranslation R Q O oa Y x 0 _ _ le_rfl _ hp, GlobalTheory.T.isRaynaudTorusWeight_pullback_pointTranslation R Q O oa Y x 0 _ _ le_rfl _ hp', ?_⟩
@@ -1062,7 +1062,7 @@ theorem GlobalTheory.HeatTrans.exists_heat_translate : ∀ (R : Type) [CommRing 
       (pbT T (h.p' i) (T ⁻¹ᵁ h.W i)) k (T ⁻¹ᵁ h.W i) (rsT (σ.f fun _ => h.j i) (T ⁻¹ᵁ h.W i))
     rw [GlobalTheory.T.chartFunction_rel_of_translate_section_values R Q O oa Y x k σ' τ' hσ' (h.j i) (h.W i) (h.le i), GlobalTheory.T.chartFunction_rel_of_translate_section_values R Q O oa Y x k σ τ hσ (h.j i) (h.W i) (h.le i),
       op_conjF Y.H dd hTS hST hT hdd h.Θ h.u (h.d i) (h.p i) (h.p' i) k (le_rfl : T ⁻¹ᵁ h.W i ≤ T ⁻¹ᵁ h.W i),
-      pbT_pbT S T le_rfl le_rfl, hST, pbT_id hW,
+      _root_.GlobalTheory.KS.InvField.pbT_pbT S T le_rfl le_rfl, hST, pbT_id hW,
       op_rsT Y.H dd (fun a => (hinv a).1) h.Θ h.u (h.d i) (h.lift i).1 (h.p i) (h.p' i) k hW le_rfl,
       GlobalTheory.KS.pbT_rsT T hW (hpre' _).ge, hA i]
 end -- clump:auto
@@ -1109,15 +1109,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.Heat.ConjGauge
 open ReciprocityTheory.ChartRestriction.G.Semi
 
-theorem oneGen_isGen {X Y : Scheme.{0}} (L : LB X) : (LB.oneGen L (Y := Y)).IsGen := by
-  intro i j
-  have e : (LB.LinComb L (Y := Y) (K := PEmpty.{1}) PEmpty.elim PEmpty.elim).g i j = 1 := by
-    dsimp only [LB.LinComb]
-    erw [Fintype.prod_empty]
-    rfl
-  show res _ (1 : Γ(Y, _)ˣ) = _ * res _ (1 : Γ(Y, _)ˣ)
-  rw [map_one, map_one, e, _root_.one_mul]
-
 theorem exists_pullSec {X Y : Scheme.{0}} (L : LB X) (hL : L.IsLB) (m : Y ⟶ X) (T : Y ⟶ Y) (k : ℕ)
     (τ : SecM m L k) : ∃ σ : SecM (T ≫ m) L k, ∀ (Z : Scheme.{0}) (r : Z ⟶ Y) (z : Z) (J : (Z ⟶ X) → L.ι),
       Good L z J → sval σ r z J = sval τ (r ≫ T) z J := by
@@ -1125,7 +1116,7 @@ theorem exists_pullSec {X Y : Scheme.{0}} (L : LB X) (hL : L.IsLB) (m : Y ⟶ X)
       (Sum.elim (fun _ : Fin 1 => (k : ℤ)) PEmpty.elim) (K' := Fin 1) (fun _ => T ≫ m) (fun _ => (k : ℤ)) := by
     intro U _ h
     simp [Fintype.prod_sum_type]
-  obtain ⟨σ, hσ⟩ := exists_sec hL hF (pullMulSec τ T (LB.oneGen L (Y := Y)) (oneGen_isGen L))
+  obtain ⟨σ, hσ⟩ := exists_sec hL hF (pullMulSec τ T (LB.oneGen L (Y := Y)) (_root_.GlobalTheory.SelfUnif.oneGen_isGen L))
   refine ⟨σ, fun Z r z J hJ => ?_⟩
   rw [hσ Z r z J hJ, sval_pullMulSec τ T _ _ r z hJ, val_one, Units.val_one, _root_.mul_one]
 
@@ -1159,8 +1150,6 @@ open GlobalTheory.RayEv (Ray)
 open GlobalTheory.Toroidal GlobalTheory.LogKS GlobalTheory.LogKSChart GlobalTheory.Heat
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.heatOperator_conj_translation_gauge : ∀ (R : Type) [CommRing R] [IsDomain R] [Algebra ℚ R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (n : ℕ) (v : Fin n → TanM (𝟙 (Sp R)) Y.H) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (v a) (dd a)) → ∀ (D : Derivation ℤ R R) (h : Heat Y.H Y.q.left Q.P.L dd ⇑D), IsBasic Y h → ∀ (x : 𝟙_ (Over (Sp R)) ⟶ Y.H) (e : LB.Gen (LB.LinComb Q.P.L (K := Fin 2) ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] ![1, -1])) (β : Q.X), e.IsGen → (∀ (j : Fin 2 → Q.P.L.ι) (V : Q.P.A.left.Opens), Y.q.left ⁻¹ᵁ V ≤ LB.wchart Q.P.L ![Y.q.left, (𝟙 Y.H * (toUnit Y.H ≫ x)).left ≫ Y.q.left] j → IsWt Y β (Y.q.left ⁻¹ᵁ V) (rsT (e.s j).val (Y.q.left ⁻¹ᵁ V))) → ∃ h' : Heat Y.H Y.q.left Q.P.L dd ⇑D, IsBasic Y h' ∧ h'.Θ = h.Θ ∧ h'.u = h.u ∧ ∀ (k : ℕ) (τ τ' ρ ρ' : SecM Y.q.left Q.P.L k), (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → sval ρ r z J = sval τ (r ≫ (𝟙 Y.H * (toUnit Y.H ≫ x)).left) z J * ((val e r z J) ^ k).val) → (∀ (Z : Scheme.{0}) (r : Z ⟶ Y.H.left) (z : Z) (J : (Z ⟶ Q.P.A.left) → Q.P.L.ι), Good Q.P.L z J → sval ρ' r z J = sval τ' (r ≫ (𝟙 Y.H * (toUnit Y.H ≫ x)).left) z J * ((val e r z J) ^ k).val) → h.Acts k τ τ' → h'.Acts k ρ ρ' := by
-  first | exact @GlobalTheory.Heat.ConjGauge.conj_gauge
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeatOperatorConjTranslationGaugeStatement =====
@@ -1331,9 +1320,9 @@ theorem exists_gauge_translate : ∀ {R : Type} [CommRing R] [IsDomain R] {Q : D
 
 theorem exists_conj_shift : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] [Algebra ℚ R] (Dd : DegData R (maximalIdeal R)) (O : Type) [CommRing O] [StarRing O] [Module O Dd.toPre.X] (oa : Dd.toPre.OAct O) (Y : Ray oa) (n : ℕ) (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.H)) (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (v a) (dd a)) → ∀ (m : ℕ) (t : Fin m → R) (gam : Fin m → LinearMap.BilinForm ℤ Dd.toPre.X), IsMonomial Dd.toPre t gam → (∀ i, t i ≠ 0) → ∀ D : Derivation ℤ R R, (∀ i, D (t i) ∈ Ideal.span {t i}) → ∀ h : Heat Y.H Y.q.left Dd.toPre.P.L dd ⇑D, IsBasic Y h → ∀ mu : Dd.toPre.X, ∃ (h' : Heat Y.H Y.q.left Dd.toPre.P.L dd ⇑D) (w : Dd.toPre.X →+ R) (π π' : R), IsBasic Y h' ∧ h'.Θ = h.Θ ∧ h'.u = h.u ∧ ∀ (k : ℕ) (α : Dd.toPre.X) (σ : Dd.toPre.SecB k α) (σ₁ σ₁' : Dd.toPre.SecB k (α + k • mu)), 1 ≤ k → ShiftEq Dd.toPre k mu α σ σ₁ 0 σ₁ → TActs Y h k (α + k • mu) σ₁ σ₁' → ∃ σ'' : Dd.toPre.SecB k α, TActs Y h' k α σ σ'' ∧ ShiftEq Dd.toPre k mu α σ'' σ₁' (2 * (k : R) * w α + 2 * (k : R) ^ 2 * π + 2 * (k : R) * π') σ₁ := by
   intro R _ _ _ _ _ _ Dd O _ _ _ oa Y n v dd hv m t gam hm ht D hD h hb mu
-  obtain ⟨x, e, β, w, π, π', he, hwe, hTR⟩ := GlobalTheory.T.thetaShift_fourierTerm_translation_gauge R Dd O oa Y m t gam hm ht D hD mu
+  obtain ⟨x, e, β, w, π, π', he, hwe, hTR⟩ := _root_.GlobalTheory.HeatShift.shift_term R Dd O oa Y m t gam hm ht D hD mu
   obtain ⟨h', hb', hΘ, hu, hint⟩ :=
-    GlobalTheory.T.heatOperator_conj_translation_gauge R Dd.toPre O oa Y n (fun a => v a) dd hv D h hb x e β he hwe
+    _root_.GlobalTheory.Heat.ConjGauge.conj_gauge R Dd.toPre O oa Y n (fun a => v a) dd hv D h hb x e β he hwe
   refine ⟨h', w, π, π', hb', hΘ, hu, ?_⟩
   intro k α σ σ₁ σ₁' hk hs hA
   obtain ⟨τ₁, τ₁', hτ₁, hτ₁', hA₁⟩ := hA

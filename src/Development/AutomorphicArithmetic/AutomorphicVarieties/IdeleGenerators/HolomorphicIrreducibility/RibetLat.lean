@@ -51,6 +51,7 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.NonsingularNorm
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrreducibleInvariant, Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.RibetLat
@@ -129,7 +130,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrreducibleInvariant =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.RibetLat =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.RibetLat", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ShapeFacts\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrreducibleInvariant\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.HolomorphicIrreducibility.RibetLat", "h": "module\n\npublic import Development.AutomorphicArithmetic.AutomorphicVarieties.IdeleGenerators.ShapeFacts\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrreducibleInvariant\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.NonsingularNorm\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -192,14 +193,8 @@ private theorem exists_ne {Γ k : Type} [Group Γ] [Field k] (ρ : Γ →* GL (F
 section
 variable {k : Type} [NormedField k] [IsUltrametricDist k]
 
-private theorem nadd {x y : k} (hx : ‖x‖ < 1) (hy : ‖y‖ < 1) : ‖x + y‖ < 1 :=
-  (IsUltrametricDist.norm_add_le_max x y).trans_lt (max_lt hx hy)
-
 private theorem nsub {x y : k} (hx : ‖x‖ < 1) (hy : ‖y‖ < 1) : ‖x - y‖ < 1 := by
-  rw [sub_eq_add_neg]; exact nadd hx (by rwa [norm_neg])
-
-private theorem nmul {x y : k} (hx : ‖x‖ ≤ 1) (hy : ‖y‖ < 1) : ‖x * y‖ < 1 := by
-  rw [norm_mul]; exact mul_lt_one_of_nonneg_of_lt_one_right hx (norm_nonneg _) hy
+  rw [sub_eq_add_neg]; exact _root_.Formalism.L2.Th1.E.unitAtAlt.s_add hx (by rwa [norm_neg])
 
 private theorem nle {x y : k} (hy : ‖y‖ = 1) (h : ‖x - y‖ < 1) : ‖x‖ ≤ 1 := by
   have := IsUltrametricDist.norm_add_le_max (x - y) y
@@ -215,7 +210,7 @@ private theorem roots [IsAlgClosed k] (t d a b : k) (ha : ‖a‖ = 1) (ht : ‖
     simp at hx; linear_combination hx
   have h1 : ‖(x - a) * (t - x - a)‖ < 1 := by
     have : (x - a) * (t - x - a) = (d - a * b) - a * (t - (a + b)) := by rw [hx']; ring
-    rw [this]; exact nsub hd (nmul ha.le ht)
+    rw [this]; exact nsub hd (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' ha.le ht)
   have h2 : ‖x - a‖ < 1 ∨ ‖t - x - a‖ < 1 := by
     by_contra hc
     push Not at hc
@@ -244,7 +239,7 @@ private theorem core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [CompactSpace 
     by_contra h
     apply hg
     have : (a g₀ : k) - b g₀ = (σ g₀ 0 0 - σ g₀ 1 1) - (σ g₀ 0 0 - a g₀) + (σ g₀ 1 1 - b g₀) := by ring
-    rw [this]; exact nadd (nsub (not_le.1 h) h00) h11
+    rw [this]; exact _root_.Formalism.L2.Th1.E.unitAtAlt.s_add (nsub (not_le.1 h) h00) h11
   have hA : ∀ s, ‖σ s 0 0 - a s‖ < 1 := by
     intro s
     have h1 := htr (g₀ * s)
@@ -254,7 +249,7 @@ private theorem core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [CompactSpace 
         - σ g₀ 1 1 * (σ s 0 0 + σ s 1 1 - (a s + b s)) - a s * (σ g₀ 0 0 - a g₀) - b s * (σ g₀ 1 1 - b g₀) := by ring
     have h3 : ‖(σ g₀ 0 0 - σ g₀ 1 1) * (σ s 0 0 - a s)‖ < 1 := by
       rw [h2]
-      exact nsub (nsub (nsub h1 (nmul hβ (htr s))) (nmul (hab s).1.le h00)) (nmul (hab s).2.le h11)
+      exact nsub (nsub (nsub h1 (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' hβ (htr s))) (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' (hab s).1.le h00)) (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' (hab s).2.le h11)
     rw [norm_mul] at h3
     exact (le_mul_of_one_le_left (norm_nonneg _) hαβ).trans_lt h3
   have hD : ∀ s, ‖σ s 1 1 - b s‖ < 1 := by
@@ -268,7 +263,7 @@ private theorem core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [CompactSpace 
     have : σ s 0 1 * σ t 1 0 = (σ s 0 0 * σ t 0 0 + σ s 0 1 * σ t 1 0 - a s * a t) - σ s 0 0 * (σ t 0 0 - a t)
       - a t * (σ s 0 0 - a s) := by ring
     rw [this]
-    exact nsub (nsub h1 (nmul (nle (hab s).1 (hA s)) (hA t))) (nmul (hab t).1.le (hA s))
+    exact nsub (nsub h1 (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' (nle (hab s).1 (hA s)) (hA t))) (_root_.Formalism.L2.Th1.E.unitAtAlt.s_mul' (hab t).1.le (hA s))
   have hcB : Continuous fun s => ‖σ s 0 1‖ :=
     ((Units.continuous_val.comp hc).matrix_elem 0 1).norm
   obtain ⟨s₀, -, hs₀⟩ := isCompact_univ.exists_isMaxOn (Set.univ_nonempty) hcB.continuousOn

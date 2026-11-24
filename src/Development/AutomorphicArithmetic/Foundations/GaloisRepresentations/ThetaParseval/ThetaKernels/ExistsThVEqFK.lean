@@ -121,21 +121,6 @@ section -- clump:auto
 
 
 
-section
-open scoped TensorProduct Matrix
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
-open scoped ContDiff
-
-theorem _root_.GlobalTheory.T.theta_integral_additive_family : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E),
-    _root_.UpperTheory.TP.W.GoodK σ B → ∀ (nS nT : ℕ) (JS : Matrix (Fin nS) (Fin nS) E) (JT : Matrix (Fin nT) (Fin nT) E),
-      IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → σ ξ₀ = -ξ₀ →
-      Formalism.IndefR.DatumF.IsStdCharF (fun w : InfinitePlace F => (B.emb w).1) B.ψ (-1) →
-      ∀ L : ℝ →+ Formalism.IndefR.DatumF.WOF F E nS nT, Continuous L → (∀ t, (L t).map (Formalism.IndefR.DatumF.finPartF F E) = 0) →
-      ∀ (f : Formalism.IndefR.DatumF.WOF F E nS nT → ℂ) (w : Formalism.IndefR.DatumF.WOF F E nS nT) (s t : ℝ),
-      Formalism.IndefR.DatumF.heisOF σ JS JT ξ₀ B.ψ (L (s + t)) f w = B.ψ (Formalism.IndefR.DatumF.symplOHF σ JS JT ξ₀ w (L s)) * Formalism.IndefR.DatumF.heisOF σ JS JT ξ₀ B.ψ (L t) f (w + L s) := by
-  first | exact @_root_.GlobalTheory.heisOF_line_add_k
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ThetaIntegralAdditiveFamily =====
@@ -207,11 +192,11 @@ theorem exists_thV_eqF_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
         ∀ u ∈ U, u.map (infPartF F E) = 0 → heisOF σ JS JT ξ₀ B.ψ u g' = g' := by
       obtain ⟨U, hUo, hU⟩ := hg.level
       exact ⟨U, hUo, fun u hu h0 =>
-        _root_.GlobalTheory.T.theta_function_rapid_decay F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g L hL hL0 u h0 (hU u hu h0)⟩
-    have hsm' := _root_.GlobalTheory.T.theta_function_integrable F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0
+        _root_.GlobalTheory.HeisDerivCM.heisOF_deriv_fix_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g L hL hL0 u h0 (hU u hu h0)⟩
+    have hsm' := _root_.GlobalTheory.ThetaLineSmoothF.contDiff_deriv_heisOF_line_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0
     have hg' : IsThetaFunOF σ JS JT ξ₀ B.ψ g' :=
-      ⟨_root_.GlobalTheory.T.theta_function_moderate_growth F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0, hlev',
-        _root_.GlobalTheory.T.theta_integral_unfolding F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g' hlev' hsm', hsm'⟩
+      ⟨_root_.GlobalTheory.ThetaDerivQuasi.deriv_heis_quasi_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0, hlev',
+        _root_.GlobalTheory.WeilContF.continuous_of_level_real_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g' hlev' hsm', hsm'⟩
     have hds : ∀ w s, HasDerivAt (fun t : ℝ => heisOF σ JS JT ξ₀ B.ψ (L t) g w)
         (heisOF σ JS JT ξ₀ B.ψ (L s) g' w) s := by
       intro w s
@@ -219,9 +204,9 @@ theorem exists_thV_eqF_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
           (heisOF σ JS JT ξ₀ B.ψ (L s) g' w) 0 := by
         have e2 : (fun t : ℝ => heisOF σ JS JT ξ₀ B.ψ (L (s + t)) g w) = fun t =>
             B.ψ (symplOHF σ JS JT ξ₀ w (L s)) * heisOF σ JS JT ξ₀ B.ψ (L t) g (w + L s) :=
-          funext fun t => _root_.GlobalTheory.T.theta_integral_additive_family F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd L hL hL0 g w s t
+          funext fun t => _root_.GlobalTheory.heisOF_line_add_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd L hL hL0 g w s t
         rw [e2]
-        exact ((_root_.GlobalTheory.T.theta_function_smooth_vectors F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0 (w + L s)).hasDerivAt).const_mul _
+        exact ((_root_.GlobalTheory.HeisLineDiffF.differentiableAt_heisOF_line_k F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ hstd g hg L hL hL0 (w + L s)).hasDerivAt).const_mul _
       have h2 := HasDerivAt.comp_sub_const s s (by rwa [sub_self])
         (f := fun t : ℝ => heisOF σ JS JT ξ₀ B.ψ (L (s + t)) g w)
       have e3 : (fun t : ℝ => heisOF σ JS JT ξ₀ B.ψ (L t) g w) =

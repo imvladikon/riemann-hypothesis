@@ -432,8 +432,6 @@ section -- clump:auto
 
 open Formalism.WeaklyAdmissibleFiltrations Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Formalism.MainNotions.LocalSituation GlobalTheory.Cyc TensorProduct
 
-theorem _root_.GlobalTheory.T.finite_setOf_inf_filtration_ne_succ : ∀ (E W : Type) [Field E] [AddCommGroup W] [Module E W] (D : Submodule E W) (F : ℤ → Submodule E W), Module.Finite E ↥D → (∀ a, F (a + 1) ≤ F a) → {a : ℤ | D ⊓ F (a + 1) ≠ D ⊓ F a}.Finite := by
-  first | exact @GlobalTheory.finite_jumps_inf_filtration
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteJumpsInfFiltrationStatement =====
@@ -587,7 +585,7 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
     obtain ⟨Φ, h1, -⟩ := _root_.GlobalTheory.exists_coord_tensor_dR (P.PD K) T'.ρ bV
     intro a z hz
     exact (h1 a z).2 fun i => (P.PD K).Fil_anti a ((h1 _ z).1 hz i)
-  refine ⟨GlobalTheory.T.finite_setOf_inf_filtration_ne_succ _ _ (DdR (P.PD K) T'.ρ) (fun a => FilV (P.PD K) a) hK.2.1.1 hanti, ?_⟩
+  refine ⟨_root_.GlobalTheory.finite_jumps_inf_filtration _ _ (DdR (P.PD K) T'.ρ) (fun a => FilV (P.PD K) a) hK.2.1.1 hanti, ?_⟩
   classical
   let M0 : GQ l → Matrix (Fin d) (Fin d) ℚ_[l] := fun g =>
     if hg : g ∈ GK K then Matrix.of fun i j => bV.repr (T'.ρ ⟨g, hg⟩ (bV j)) i else 0
@@ -730,12 +728,7 @@ namespace GlobalTheory.Cyc.Graded
 
 variable {l : ℕ} [Fact l.Prime]
 
-theorem mem_OC_iff (y : PadicComplex l) : y ∈ PadicComplexInt l ↔ ‖y‖ ≤ 1 := by
-  rw [PadicComplexInt, Valuation.mem_valuationSubring_iff]
-  rw [PadicComplex.norm_eq_norm]
-  exact (Valued.toNormedField.norm_le_one_iff (L := PadicComplex l) (Γ₀ := NNReal)).symm
-
-theorem norm_OC (y : OC l) : ‖(y : PadicComplex l)‖ ≤ 1 := (mem_OC_iff _).1 y.2
+theorem norm_OC (y : OC l) : ‖(y : PadicComplex l)‖ ≤ 1 := (_root_.GlobalTheory.RingBasics.mem_OC _).1 y.2
 
 theorem norm_alg (x : ℚ_[l]) : ‖algebraMap ℚ_[l] (PadicComplex l) x‖ = ‖x‖ := by
   exact norm_algebraMap' _ x
@@ -973,7 +966,7 @@ theorem graded_of_theta (θ : Ainf l →+* OC l) (hθ : IsTheta AI θ) (i : ℤ)
       rw [Set.mem_setOf_eq, hΦ]
       exact norm_OC _
     · intro hy
-      obtain ⟨a, ha⟩ := hθ.2.1 ⟨y, (mem_OC_iff y).2 hy⟩
+      obtain ⟨a, ha⟩ := hθ.2.1 ⟨y, (_root_.GlobalTheory.RingBasics.mem_OC y).2 hy⟩
       exact ⟨_, by rw [hΦ a, hθ', ha]⟩
   · intro z x
     obtain ⟨a, rfl⟩ := hsurj x
@@ -1025,10 +1018,6 @@ variable {l : ℕ} [Fact l.Prime]
 theorem algebraMap_eq (q : ℚ_[l]) :
     algebraMap ℚ_[l] (PadicComplex l) q = ((algebraMap ℚ_[l] (Om l) q : Om l) : PadicComplex l) :=
   IsScalarTower.algebraMap_apply ℚ_[l] (Om l) (PadicComplex l) q
-
-theorem act_zC {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsActC act)
-    (g : GQ l) (z : ℤ_[l]) : act g (zC z) = zC z := by
-  rw [zC, algebraMap_eq, ha.1, AlgEquiv.commutes]
 
 theorem norm_l_lt : ‖(l : PadicComplex l)‖ < 1 := by
   have h : (l : PadicComplex l) = algebraMap ℚ_[l] (PadicComplex l) (l : ℚ_[l]) := (map_natCast _ _).symm
@@ -1224,7 +1213,7 @@ theorem coord_equivariant {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)
       conv_lhs => rw [← b.sum_repr t, map_sum, map_sum, Finsupp.finsetSum_apply]
       simp only [map_smul, Finsupp.smul_apply, smul_eq_mul, mul_comm]
     simp only [TensorProduct.map_tmul, hΨ, twAct, Pi.smul_apply, smul_eq_mul, Matrix.mulVec,
-      dotProduct, map_mul, act_zC ha, hM, hs, h1, zC_sum, zC_mul, Finset.sum_mul, Finset.mul_sum]
+      dotProduct, map_mul, _root_.GlobalTheory.Cyc.Decomp.act_zC ha, hM, hs, h1, zC_sum, zC_mul, Finset.sum_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => by ring
 
 theorem rI_eq (l m : ℕ) (J : Finset ℤ) (i : ℤ) :

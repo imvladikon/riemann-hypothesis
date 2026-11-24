@@ -381,19 +381,7 @@ theorem hRes_pd (h : V →ₗ⋆[K] V →ₗ[K] K) (hp : PD h) (U : Submodule K 
     PD (hRes h U) := fun τ x hx => hp τ (x : V) (fun e => hx (Subtype.ext e))
 
 omit [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
-theorem pd_nondeg (h : V →ₗ⋆[K] V →ₗ[K] K) (hp : PD h) : h.Nondegenerate := by
-  obtain ⟨τ⟩ : Nonempty (K →+* ℂ) := inferInstance
-  constructor
-  · intro x hx
-    by_contra h0
-    have := hp τ x h0
-    rw [hx x] at this
-    simp at this
-  · intro x hx
-    by_contra h0
-    have := hp τ x h0
-    rw [hx x] at this
-    simp at this
+alias pd_nondeg := _root_.GlobalTheory.Mass.PrimDisc.nondeg
 
 omit [NumberField K] in
 theorem star_int (r : 𝓞 K) : star (algebraMap (𝓞 K) K r) ∈ Set.range (algebraMap (𝓞 K) K) := by

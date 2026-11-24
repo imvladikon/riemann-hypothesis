@@ -62,6 +62,7 @@ import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.OmegaOfTraceDuality
 import Mathlib.RingTheory.WittVector.IsPoly
+import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.TraceDualExists
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.FrobeniusPartialCoboundaryBound, Formalism.ThetaLogCoordinates.UniformThetaSubstitution.KernelFromKOne, Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NonVac, Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.SecondLevelOfNorm
@@ -100,11 +101,6 @@ private theorem exists_pow_of_coeff_AA_ne_zero {p : ℕ} {x y : Fin 2} {n : Fin 
   · exact ⟨i, j, hc.2.1, hc.2.2⟩
   · exact absurd rfl hj
 
-private theorem pow_sq_pow_modEq_one_sq_sub_one {p : ℕ} (hp : 2 ≤ p) (i : ℕ) :
-    (p ^ 2) ^ i ≡ 1 [MOD p ^ 2 - 1] := by
-  have key : p ^ 2 ≡ 1 [MOD p ^ 2 - 1] := Nat.modEq_sub (Nat.one_le_pow _ _ (by omega))
-  simpa using key.pow i
-
 theorem support_ok_a_zero_one {p : ℕ} (hp : 2 ≤ p) : SuppOK p (AA K p 0 1) := by
   intro n hn
   obtain ⟨i, j, hi, hj⟩ := exists_pow_of_coeff_AA_ne_zero hn
@@ -113,7 +109,7 @@ theorem support_ok_a_zero_one {p : ℕ} (hp : 2 ≤ p) : SuppOK p (AA K p 0 1) :
   refine ⟨pow_pos (pow_pos hp0 2) i, Nat.mul_pos hp0 (pow_pos (pow_pos hp0 2) j), ?_⟩
   have h2 : p * (p * (p ^ 2) ^ j) = (p ^ 2) ^ (j + 1) := by ring
   rw [h2]
-  exact (pow_sq_pow_modEq_one_sq_sub_one hp i).trans (pow_sq_pow_modEq_one_sq_sub_one hp (j + 1)).symm
+  exact (_root_.Formalism.InvariantFactorPaths.G7.CoboundarySeries.powq_modEq_one hp i).trans (_root_.Formalism.InvariantFactorPaths.G7.CoboundarySeries.powq_modEq_one hp (j + 1)).symm
 
 theorem support_ok_a_one_zero {p : ℕ} (hp : 2 ≤ p) : SuppOK p (AA K p 1 0) := by
   intro n hn
@@ -121,7 +117,7 @@ theorem support_ok_a_one_zero {p : ℕ} (hp : 2 ≤ p) : SuppOK p (AA K p 1 0) :
   have hp0 : 0 < p := by omega
   rw [hi, hj]
   refine ⟨Nat.mul_pos hp0 (pow_pos (pow_pos hp0 2) j), pow_pos (pow_pos hp0 2) i, ?_⟩
-  exact ((pow_sq_pow_modEq_one_sq_sub_one hp j).mul_left p).trans ((pow_sq_pow_modEq_one_sq_sub_one hp i).mul_left p).symm
+  exact ((_root_.Formalism.InvariantFactorPaths.G7.CoboundarySeries.powq_modEq_one hp j).mul_left p).trans ((_root_.Formalism.InvariantFactorPaths.G7.CoboundarySeries.powq_modEq_one hp i).mul_left p).symm
 
 private theorem suppOK_C_mul_sub_C_mul {p : ℕ} {G H : MvPowerSeries (Fin 2) K} (hG : SuppOK p G)
     (hH : SuppOK p H) (a b : K) :
@@ -229,7 +225,7 @@ theorem DeS_Gser {p : ℕ} (hp : 2 ≤ p) (hpK : (p : K) ≠ 0) (σ : K →+* K)
       MvPowerSeries.C (σ c) * (at1 0 (g0F K p) * at1 1 (lgF K p)) -
         MvPowerSeries.C c * (at1 0 (lgF K p) * at1 1 (g0F K p)) := by
   unfold DeS
-  rw [Formalism.InvariantFactorPaths.G7.CoboundarySeries.map_Gser σ p c (σ c), hσσ, Formalism.InvariantFactorPaths.G7.Top.frobExprG K p c (σ c) hp hpK,
+  rw [Formalism.InvariantFactorPaths.G7.CoboundarySeries.map_Gser σ p c (σ c), hσσ, _root_.Formalism.InvariantFactorPaths.G7.frobenius_expression_g K p c (σ c) hp hpK,
     ← mul_assoc, ← map_mul, inv_mul_cancel₀ hpK, map_one, one_mul]
 
 theorem partial_coboundary_de_s_g_series {p : ℕ} (hp : 2 ≤ p) (hpK : (p : K) ≠ 0) (σ : K →+* K) {c : K}
@@ -253,7 +249,7 @@ end Supp
 theorem derivIs_Gser {K : Type} [NormedField K] [IsUltrametricDist K] [CharZero K] {p : ℕ}
     (hp : p.Prime) (hnp : ‖(p : K)‖ = (p : ℝ)⁻¹) {c c' : K} (hc : ‖c‖ ≤ 1) (hc' : ‖c'‖ ≤ 1) :
     DerivIs p (Gser p c c') c := by
-  obtain ⟨h1, h2⟩ := Formalism.InvariantFactorPaths.G7.Top.derivA K p hp hnp
+  obtain ⟨h1, h2⟩ := _root_.Formalism.InvariantFactorPaths.G7.derivative_a K p hp hnp
   have e : MvPowerSeries.pderiv (R := K) 0 (Gser p c c') -
       MvPowerSeries.C c * (at1 0 (PowerSeries.derivative (R := K) (lgF K p)) * at1 1 (g0F K p)) =
       c • (MvPowerSeries.pderiv (R := K) 0 (Aser K p) -
@@ -280,7 +276,7 @@ theorem frobenius_partial_coboundary_bound {K : Type} [NormedField K] [IsUltrame
       MvPowerSeries.C (σ c) * (in3 (cob F (g0F K p)) * at1 2 (lgF K p))) :
     Bd (p : ℝ)⁻¹ (frobVar p (MvPowerSeries.map σ (d1 F G)) -
       MvPowerSeries.C (p : K) * d1 F G) := by
-  have herror := frobenius_coboundary_error_bound Top.divDeriv Top.deIntegral Top.lawSymm hU hF hc hDer
+  have herror := frobenius_coboundary_error_bound _root_.Formalism.InvariantFactorPaths.G7.divided_derivative Top.deIntegral _root_.Formalism.InvariantFactorPaths.G7.formal_law_symmetric hU hF hc hDer
   rw [hΔ, sub_self, mul_zero, zero_sub] at herror
   simpa only [neg_neg] using bd_neg herror
 
@@ -308,7 +304,7 @@ theorem partial_coboundary_g_series_equiv {K : Type} [NormedField K] [IsUltramet
   have hDer := derivIs_Gser (K := K) hU.1 hU.2.2.1 hc hσc
   have hΔ := partial_coboundary_de_s_g_series hp2 hpK σ hσσ hF.1 hF.2.2
   have hB := frobenius_partial_coboundary_bound hU hF hc hDer hΔ
-  exact (Formalism.InvariantFactorPaths.G7.Top.dworkMv K (Fin 3) p σ hU.1 hU.2.2.1 hU.2.2.2.2 _ hd0).mpr hB
+  exact (_root_.Formalism.InvariantFactorPaths.G7.dwork_multivariable K (Fin 3) p σ hU.1 hU.2.2.1 hU.2.2.2.2 _ hd0).mpr hB
 
 end CoefficientSupportCongruences
 
@@ -349,18 +345,13 @@ section -- clump:auto
 
 namespace Formalism.InvariantFactorPaths.G7.Top
 
-open Formalism.InvariantFactorPaths.G7
-
-theorem gcIsBeta : GcIsBeta := g_c_is_beta
-theorem gcUnique : GcUnique := g_c_unique
-
 end Formalism.InvariantFactorPaths.G7.Top
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.ThetaLogCoordinates.UniformThetaSubstitution.KernelFromKOne =====
 
 -- ===== clump member: Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NonVac =====
--- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NonVac", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementN\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementC\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementK\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KurComplete\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS\npublic import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.KernelFromKOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.NonVac", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementN\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementC\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementK\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KurComplete\npublic import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel\nimport Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FinalS\npublic import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.KernelFromKOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KurComplete\nimport Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.TraceDualExists\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -401,16 +392,16 @@ theorem fieldWitness (hF : KurFrob) (hR : KurRoots) (hC : KurComplete) (hT : TrD
   obtain ⟨ζd, hζd⟩ := hR l (l ^ (2 * ν) - 1) (hnd _ (by omega)).1 (hnd _ (by omega)).2
   have hdual := hT (MaximalUnramifiedExtension l) l (2 * ν) σ hσ (even_two_mul ν) ζd hζd
   rw [Nat.mul_div_cancel_left ν two_pos] at hdual
-  obtain ⟨F, hFl⟩ := (Formalism.InvariantFactorPaths.G7.Top.lawExists (MaximalUnramifiedExtension l) l hσ.1 hσ.2.2.1).1
+  obtain ⟨F, hFl⟩ := (_root_.Formalism.InvariantFactorPaths.G7.formal_law_exists (MaximalUnramifiedExtension l) l hσ.1 hσ.2.2.1).1
   have h1 : σ (σ (1 : MaximalUnramifiedExtension l)) = 1 := by simp
-  have hbeta := Formalism.InvariantFactorPaths.G7.Top.gcIsBeta (MaximalUnramifiedExtension l) l σ hσ F hFl 1 (by simp) h1
+  have hbeta := _root_.Formalism.InvariantFactorPaths.G7.g_c_is_beta (MaximalUnramifiedExtension l) l σ hσ F hFl 1 (by simp) h1
   have hFF := hB (MaximalUnramifiedExtension l) l σ hσ ⟨ζ2, hζ2⟩ F hFl _ hbeta
   refine ⟨σ, hσ, hC l, fun _ => rfl, ⟨ζ2, hζ2⟩, ⟨ζd, hζd⟩, by omega, even_two_mul ν, ?_, hdual,
     F, hFl, _, hFF.1, hFF.2, ?_⟩
   · exact IsAlgClosed.exists_pow_nat_eq _ (hnd 2 (by norm_num)).1
   · intro h0
     have hz : (Gser l (0 : MaximalUnramifiedExtension l) (σ 0)) = 0 := by simp [Gser]
-    have := Formalism.InvariantFactorPaths.G7.Top.gcUnique (MaximalUnramifiedExtension l) l σ hσ 1 0 h1 (by simp) (by rw [hz]; exact h0)
+    have := _root_.Formalism.InvariantFactorPaths.G7.g_c_unique (MaximalUnramifiedExtension l) l σ hσ 1 0 h1 (by simp) (by rw [hz]; exact h0)
     exact one_ne_zero this
 
 theorem fullWitness (hF : KurFrob) (hR : KurRoots) (hC : KurComplete) (hT : TrDualExists)
@@ -465,7 +456,7 @@ end Formalism.L2.Th1.D.ChainWitness
 namespace Formalism.L2.Th1.D
 
 theorem chain_nonvacuous : ChainNonVacuous := fun l _ hl ν r0 r1 _ =>
-  ChainWitness.fullWitness kurFrob kurRoots kurComplete trDualExists fOfBetaHyp l hl ν r0 r1
+  ChainWitness.fullWitness kurFrob kurRoots kurComplete _root_.Formalism.L2.Th1.D.trace_dual_exists _root_.Formalism.L2.Th1.D.f_of_beta_hypotheses l hl ν r0 r1
 
 end Formalism.L2.Th1.D
 end -- clump:auto
@@ -480,8 +471,8 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.D
 
-theorem chainNonVacuous : ChainNonVacuous := chain_nonvacuous
-theorem normUnits : NormUnits := norm_units_alt
+alias chainNonVacuous := _root_.Formalism.L2.Th1.D.chain_nonvacuous
+alias normUnits := _root_.Formalism.L2.Th1.D.norm_units_alt
 
 end Formalism.L2.Th1.D
 end -- clump:auto

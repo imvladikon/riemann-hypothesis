@@ -964,11 +964,6 @@ theorem rt_mul (a b : GAf L n) (f : GAf L n → ℂ) :
   show f (g * (a * b)) = f (g * a * b)
   rw [mul_assoc]
 
-theorem rt_one (f : GAf L n → ℂ) : Formalism.L2.NG.rt L n 1 f = f := by
-  funext g
-  show f (g * 1) = f g
-  rw [mul_one]
-
 theorem exists_lifts (n : ℕ) (s : SplitPlace L) (g : ℕ) (hg : g.Prime) :
     ∃ ℓ : GL (Fin n) (ZMod g) → GAf L n, ∀ γ, IsLift s (ℓ γ) γ := by
   classical
@@ -1064,7 +1059,7 @@ theorem sum_serCoef_rt : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism
   set φ' := Formalism.L2.NG.rt D.host.E D.R.r c⁻¹ φ with hφ'
   have hφ'S : φ' ∈ π.S := π.stable _ _ hφ
   have back : Formalism.L2.NG.rt D.host.E D.R.r c φ' = φ := by
-    rw [hφ', ← rt_mul, mul_inv_cancel, rt_one]
+    rw [hφ', ← rt_mul, mul_inv_cancel, _root_.Formalism.IndefR.principalLevelFrame.rt_one]
   have fix1 : ∀ (kv : (Σ k : Fin 2, D.nd.PlG k)) (s : SplitPlace D.host.E), s.w = D.naut.plGw kv.1 kv.2 →
       ∀ x, IsLift s x (1 : GL (Fin D.R.r) (ZMod (D.host.g kv.1))) → Formalism.L2.NG.rt D.host.E D.R.r x φ' = φ' := by
     intro kv s hs x hx
@@ -1479,12 +1474,6 @@ theorem row_lab_of_layer_alt_alt : GlobalTheory.GLq.Green → GlobalTheory.Publi
     _root_.GlobalTheory.Fc.LabLinked.row_lab_of_good_alt_alt hG hZ hL N S Γ fun K B f T w Z Wt p0 t nch n xd c m =>
       (hN K B f T w Z Wt p0 t nch n xd c m).elim fun e => e.1.zeta
 end GlobalTheory.Fc.LabLinked
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.RT GlobalTheory.EX GlobalTheory.EX.OB GlobalTheory.Mem GlobalTheory.Mem.Top GlobalTheory.Mem.Top.Bl GlobalTheory.Fc
-
-theorem _root_.GlobalTheory.T.good_ft_entries_alt_alt : GlobalTheory.GLq.Green → GlobalTheory.Published.ZelevinskyPolynomialRing → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt) (Γ : GeoP), (∀ K B f T w Z Wt p0 t nch n xd c, N K B f T w Z Wt p0 t nch n xd c → Nonempty (_root_.GlobalTheory.HeightCounting.Up.extensionWithLaw hL K B f T w Z Wt p0 t nch n xd c)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) (fun Q L => Row Q L (AtAll fun D _ _ (_ : _root_.GlobalTheory.Fc.BundleCondition _ _ _) => Formalism.BasicNotions.GoodFTAll D)) → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S Γ) _root_.GlobalTheory.Fc.RL.RowLabelCondition := by
-  first | exact @_root_.GlobalTheory.Fc.LabLinked.row_lab_of_layer_alt_alt
 end
 end
 end -- clump:auto

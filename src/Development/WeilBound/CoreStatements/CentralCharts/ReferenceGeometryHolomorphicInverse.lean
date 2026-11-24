@@ -204,14 +204,14 @@ theorem label_data (hG : Top.Given) (hGl : Top.IsGlobal Xo l c Y) (𝔐 : HodgeC
   refine ⟨b, M, hflag, hb0, fun t => by simp [M, leadMinor_size_zero], fun m hm => ?_, ?_⟩
   · rw [hM m hm]
     have hli' : LinearIndependent ℂ fun j : Fin m => U (Fin.castLE hm j) 0 := hli.comp _ (Fin.castLE_injective hm)
-    refine ⟨tame_logdet L _ π ρ hρ hρ1 (fun j => hU _) hli' fun i hi => (ha i hi).1, fun h0 => ?_⟩
+    refine ⟨_root_.AnalyticReference.An.H.tame_logdet L _ π ρ hρ hρ1 (fun j => hU _) hli' fun i hi => (ha i hi).1, fun h0 => ?_⟩
     have : a₀ = 0 := by
       by_contra hne
       have hle := L.a_le
       have := (ha ⟨0, by omega⟩ (Nat.pos_of_ne_zero hne)).1
       omega
     subst this
-    exact pshAt0_logdet L _ π ρ hρ (fun j => hU _) hli'
+    exact _root_.AnalyticReference.An.H.pshAt0_logdet L _ π ρ hρ (fun j => hU _) hli'
   · filter_upwards [Metric.ball_mem_nhds (0 : Fin n → ℂ) hρ] with t ht hoff z hz
     have hu := HodgeMetric.uncentre_mem_ball (t₀ := 0) (t := t) hρ π (by simpa using ht)
     obtain ⟨h1, h2, h3, h4⟩ := hP _ hu
@@ -442,7 +442,7 @@ theorem central (h0 : FlatLineGenerator) (h1 : FlatLineGeneratorComponent) (hS :
   refine ⟨d₁ / d₂, A.a, t, fun z w hz cc hcc => ⟨?_, fun hint s hs u hu => ?_⟩⟩
   · have hc := 𝔐.all (centre z)
     have hp : (⟨centre z, hc⟩ : Cpt 𝔐.ξ) ∈ genFibre ℤ 𝔐.ξ := fun o ho => by
-      have v1 := valAt_int (ξ := 𝔐.ξ) hc o
+      have v1 := _root_.GlobalTheory.CompanionTheory.Ar.TieValue.val_int (ξ := 𝔐.ξ) hc o
       have v2 := CxVal.inv v1 (by exact_mod_cast ho)
       obtain ⟨_, s1, e1, -⟩ := v1
       obtain ⟨_, s2, e2, -⟩ := v2
@@ -1091,7 +1091,7 @@ theorem local_bounds (hG : Top.Given) (h0 : Flat.FlatLineGenerator) (h1 : Flat.F
   · have hr : ∀ r, Tame χ.a fun t => Real.log ((hx r).h (χ.γ t)) := fun r => by
       have t1 := (hM _ _ (HodgeCpt.rootIdx D r).2.2).1
       have t2 := (hM _ _ (HodgeCpt.rootIdx D r).2.2.le).1
-      refine ((tame_log_norm χ.a (hF r).1 (hF r).2).add ((t1.add (t2.const_mul (-1))).const_mul
+      refine ((_root_.AnalyticReference.An.H.tame_log_norm χ.a (hF r).1 (hF r).2).add ((t1.add (t2.const_mul (-1))).const_mul
         (-((HodgeCpt.rootSgn D r : ℝ) / 2)))).congr ?_
       filter_upwards [hev r] with t ht hoff
       rw [ht hoff]
@@ -1104,7 +1104,7 @@ theorem local_bounds (hG : Top.Given) (h0 : Flat.FlatLineGenerator) (h1 : Flat.F
     obtain ⟨Fc, d, hFc, hFc0, hc⟩ := central_chart h0 h1 hS hpq 𝔐 Fl hBd χ ha xdeg e hx hroot hhod hdg τ
     refine ⟨?_, fun hi => ?_⟩
     · by_cases hip : (i : ℕ) < D.p
-      · refine ((PshAt0.sum (Finset.Iic i) fun k _ => pshAt0_log_norm (-1) 0 (hF (τ, k)).1 (hF (τ, k)).2).add
+      · refine ((PshAt0.sum (Finset.Iic i) fun k _ => _root_.AnalyticReference.An.H.plog_norm (-1) 0 (hF (τ, k)).1 (hF (τ, k)).2).add
           (((hM (.inl τ) ((i : ℕ) + 1) hip).2 ha).const_mul (c := 1 / 2) (by norm_num))).congr ?_
         filter_upwards [hall] with t ht
         have e1 : ∀ k ∈ Finset.Iic i, Real.log ((hx (τ, k)).h (χ.γ t)) = Real.log ‖F (τ, k) t‖ -
@@ -1119,9 +1119,9 @@ theorem local_bounds (hG : Top.Given) (h0 : Flat.FlatLineGenerator) (h1 : Flat.F
           sum_Iic_tele (fun m => M (.inl τ) m t), hM0]
         simp only [neg_mul, _root_.one_mul, add_zero, Finset.sum_neg_distrib]
         ring
-      · refine (((PshAt0.sum (Finset.Ioi i) fun k _ => pshAt0_log_norm 1 0 (hF (τ, k)).1 (hF (τ, k)).2).add
+      · refine (((PshAt0.sum (Finset.Ioi i) fun k _ => _root_.AnalyticReference.An.H.plog_norm 1 0 (hF (τ, k)).1 (hF (τ, k)).2).add
           (((hM (.inr τ) (D.p + D.q - ((i : ℕ) + 1)) (by show _ ≤ D.q; omega)).2 ha).const_mul (c := 1 / 2)
-            (by norm_num))).add (pshAt0_log_norm (-1) (-d) hFc hFc0)).congr ?_
+            (by norm_num))).add (_root_.AnalyticReference.An.H.plog_norm (-1) (-d) hFc hFc0)).congr ?_
         filter_upwards [hall, hc] with t ht hct
         have e1 : ∀ k ∈ Finset.Ioi i, Real.log ((hx (τ, k)).h (χ.γ t)) = Real.log ‖F (τ, k) t‖ -
             1 / 2 * (M (.inr τ) (D.p + D.q - ((k : ℕ) + 1)) t - M (.inr τ) (D.p + D.q - k) t) := fun k hk => by
@@ -1144,7 +1144,7 @@ theorem local_bounds (hG : Top.Given) (h0 : Flat.FlatLineGenerator) (h1 : Flat.F
           ← Finset.mul_sum, sum_Ioi_tele (fun m => M (.inr τ) (D.p + D.q - m) t), Nat.sub_self, hM0, hct] at e4
         simp only [_root_.one_mul, add_zero]
         linarith
-    · refine (pshAt0_log_norm 1 d hFc hFc0).congr ?_
+    · refine (_root_.AnalyticReference.An.H.plog_norm 1 d hFc hFc0).congr ?_
       filter_upwards [hc] with t hct
       rw [show Finset.Iic i = Finset.univ by
         ext k

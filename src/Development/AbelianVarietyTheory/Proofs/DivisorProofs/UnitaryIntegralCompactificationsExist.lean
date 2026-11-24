@@ -489,19 +489,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 noncomputable section
 namespace GlobalTheory.UMin.CmpTrait
 
-theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  rw [← Spec.map_comp]; rfl
-
-theorem spMap_id' (A : Type) [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
-  rw [← Spec.map_id]; rfl
-
-theorem comp_pow'' {S : Scheme.{0}} {A T T₀ : Over S} [GrpObj A] (ρ : T₀ ⟶ T) (x : T ⟶ A) (n : ℕ) :
-    ρ ≫ x ^ n = (ρ ≫ x) ^ n := by
-  induction n with
-  | zero => rw [pow_zero, pow_zero, MonObj.comp_one]
-  | succ n ih => rw [pow_succ, pow_succ, MonObj.comp_mul, ih]
-
 theorem card_le_of_thList {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} {ρ : LB.Gen (L.pull (eSec G))}
     {m : ℕ} {K : Type} [Field K] [IsAlgClosed K] {x : Sp K ⟶ S} {θ θ' : SecAt G L x} {N N' : ℕ}
     {pt : Fin N → (Over.mk x ⟶ G)} {pt' : Fin N' → (Over.mk x ⟶ G)} {c : Fin N → K} {c' : Fin N' → K}
@@ -509,11 +496,11 @@ theorem card_le_of_thList {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.lef
   let e : Over.mk (spMap (RingHom.id K) ≫ x) ⟶ Over.mk x := Over.homMk (spMap (RingHom.id K)) rfl
   have key : ∀ a, ∃ b, pt a = pt' b := fun a => by
     have hp : (e ≫ pt a) ^ (m ^ 2) = 1 := by
-      rw [← comp_pow'', (h.2.1 a).1, MonObj.comp_one]
+      rw [← _root_.GlobalTheory.SemiAbTorsion.comp_pow_points, (h.2.1 a).1, MonObj.comp_one]
     obtain ⟨b, hb⟩ := h'.2.2 K (RingHom.id K) (e ≫ pt a) hp
     refine ⟨b, Over.OverMorphism.ext ?_⟩
     have hb' : spMap (RingHom.id K) ≫ (pt a).left = spMap (RingHom.id K) ≫ (pt' b).left := hb
-    rwa [spMap_id', Category.id_comp, Category.id_comp] at hb'
+    rwa [_root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp, Category.id_comp] at hb'
   choose s hs using key
   have hs' : Function.Injective s := fun a a' he => h.1 ((hs a).trans ((congrArg pt' he).trans (hs a').symm))
   simpa using Fintype.card_le_of_injective s hs'
@@ -529,7 +516,7 @@ theorem isGenSec_of_nz {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} 
   obtain ⟨P, α, -, hp, hw⟩ := hP
   obtain ⟨e, he⟩ := exists_univBasis_of_fibre abelianSchemeLaws_all.2 S (Sp K) G L hL P x α hp hw K (𝟙 _) x
     (Category.id_comp x)
-  have h0 : spMap (RingHom.id K) ≫ x = x := by rw [spMap_id', Category.id_comp]
+  have h0 : spMap (RingHom.id K) ≫ x = x := by rw [_root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp]
   obtain ⟨a, ha⟩ := he.ex (RingHom.id K) h0 (SecM.ofSec G θ)
   have ha0 : a ≠ 0 := by
     rintro rfl
@@ -604,10 +591,10 @@ theorem cmp_trait : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     Xo.univ.ktriv (jK T.V) (𝟙 _) (by rw [Category.comp_id, Category.id_comp])
   obtain ⟨σ, hσ⟩ := exists_nz_of_polAt abelianSchemeLaws_all.1 abelianSchemeLaws_all.2 E H (Sp T.V) T.t T.V (𝟙 _) T.t m0
     hpol
-  have h0 : spMap (RingHom.id T.V) ≫ 𝟙 (Sp T.V) = 𝟙 _ := by rw [Category.comp_id, spMap_id']
+  have h0 : spMap (RingHom.id T.V) ≫ 𝟙 (Sp T.V) = 𝟙 _ := by rw [Category.comp_id, _root_.GlobalTheory.LevelFibre.spMap_id']
   have hσσ : VVRank.pullS T.t.G _ (Over.homMk (spMap (RingHom.id T.V)) h0 : Over.mk (𝟙 (Sp T.V)) ⟶ Over.mk (𝟙 _)) σ = σ := by
     have e : (Over.homMk (spMap (RingHom.id T.V)) h0 : Over.mk (𝟙 (Sp T.V)) ⟶ Over.mk (𝟙 _)) = 𝟙 _ :=
-      Over.OverMorphism.ext (spMap_id' T.V)
+      Over.OverMorphism.ext (_root_.GlobalTheory.LevelFibre.spMap_id' T.V)
     rw [e]
     have := VVRank.pullM_id T.t.G T.t.PP.isLB ((1 : ℕ) : ℤ) (SecM.ofSec T.t.G σ)
     rw [VVRank.pullM_ofSec] at this
@@ -619,9 +606,9 @@ theorem cmp_trait : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hmK : ∀ {k : ℕ}, IsUnit (k : V) → (k : K) ≠ 0 := fun h => by
     have := h.map (io.comp (algebraMap V (FractionRing V))); simpa using this.ne_zero
   set x₁ : Sp K ⟶ Sp T.V := spMap i ≫ 𝟙 (Sp T.V) with hx₁
-  have ex₁ : spMap io' ≫ jK T.V = x₁ := by rw [hx₁, Category.comp_id, hi, spMap_comp']
+  have ex₁ : spMap io' ≫ jK T.V = x₁ := by rw [hx₁, Category.comp_id, hi, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
   set x : Sp K ⟶ Xo.X := spMap io ≫ y ≫ pullback.fst _ _ with hx
-  have ex : spMap io' ≫ T.y ≫ pullback.fst _ _ = x := by rw [hx, hTy, ← hio', spMap_comp']; simp only [Category.assoc]
+  have ex : spMap io' ≫ T.y ≫ pullback.fst _ _ = x := by rw [hx, hTy, ← hio', _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]; simp only [Category.assoc]
   set g := Module.finrank ℚ E / 2 * (Dw.p + Dw.q) with hg
   have hPx : PolFib Xo.univ.t.G Xo.univ.t.PP.L g x := GlobalTheory.T.universalTriple_fibre_principallyPolarised_dimension E H Dw l Xo c K x
   obtain ⟨wK, hwK, -⟩ := mK.lin
@@ -711,39 +698,9 @@ noncomputable section
 
 namespace GlobalTheory.UMin.ThInt
 
-theorem spMap_comp_ring' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  rw [← Spec.map_comp]; rfl
+alias spMap_comp_ring' := _root_.GlobalTheory.spMap_comp_ring
 
-theorem grpPullback_self' {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullback G G (𝟙 S) (𝟙 G.left) := by
-  refine ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy => ?_⟩
-  let ρ : Over.mk (T.hom ≫ 𝟙 S) ⟶ T := Over.homMk (𝟙 T.left) (by simp)
-  have ex : x₀ = ρ ≫ x := Over.OverMorphism.ext (hx.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  have ey : y₀ = ρ ≫ y := Over.OverMorphism.ext (hy.trans ((Category.comp_id _).trans (Category.id_comp _).symm))
-  rw [ex, ey, ← MonObj.comp_mul]
-  exact (Category.id_comp _).trans (Category.comp_id _).symm
-
-theorem sec_eq' {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  cases s; cases s'
-  simp only [LB.Sec.mk.injEq]
-  exact funext h
-
-theorem pullS_comp' {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
-    (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
-    VVRank.pullS G a h' (VVRank.pullS G a h s) = VVRank.pullS G a (h' ≫ h) s := by
-  refine sec_eq' (sec_ext_val hL (fun y J hJ => ?_))
-  refine (VVRank.sv_pullS G a h' _ (𝟙 _) y hJ).trans ((VVRank.sv_pullS G a h s _ y hJ).trans ?_)
-  refine Eq.trans ?_ (VVRank.sv_pullS G a (h' ≫ h) s (𝟙 _) y hJ).symm
-  rw [MonoidalCategory.comp_whiskerRight, Over.comp_left, Category.assoc]
-
-theorem thList_congr' {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} {ρ : LB.Gen (L.pull (eSec G))}
-    {m : ℕ} {R : Type} [CommRing R] {x : Sp R ⟶ S} (θ : SecAt G L x) {K : Type} [Field K]
-    {y y' : Sp K ⟶ S} (e : y = y') (u : Over.mk y ⟶ Over.mk x) (u' : Over.mk y' ⟶ Over.mk x) (hu : u.left = u'.left)
-    {N : ℕ} {pt : Fin N → (Over.mk y ⟶ G)} {c : Fin N → K} (H : ThList G L ρ m y (VVRank.pullS G _ u θ) pt c) :
-    ∃ pt' : Fin N → (Over.mk y' ⟶ G), ThList G L ρ m y' (VVRank.pullS G _ u' θ) pt' c := by
-  subst e
-  obtain rfl : u = u' := Over.OverMorphism.ext hu
-  exact ⟨pt, H⟩
+alias grpPullback_self' := _root_.GlobalTheory.ObjComp.isGrpPullback_id
 
 theorem thList_pull_pull {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left} (hL : L.IsLB)
     {ρ : LB.Gen (L.pull (eSec G))} {m : ℕ} {R R' : Type} [CommRing R] [CommRing R'] {K : Type} [Field K]
@@ -753,8 +710,8 @@ theorem thList_pull_pull {S : Scheme.{0}} {G : Over S} [GrpObj G] {L : LB G.left
     ∃ pt' : Fin N → (Over.mk (spMap (j.comp i) ≫ x) ⟶ G), ThList G L ρ m (spMap (j.comp i) ≫ x)
       (SecAt.pull G L θ (j.comp i)) pt' c := by
   simp only [SecAt.pull] at H ⊢
-  rw [pullS_comp' G hL] at H
-  refine thList_congr' θ (by rw [← Category.assoc, spMap_comp_ring']) _ _ ?_ H
+  rw [_root_.GlobalTheory.UMin.SymRat.pullS_comp G hL] at H
+  refine _root_.GlobalTheory.UMin.SymRat.thList_congr θ (by rw [← Category.assoc, spMap_comp_ring']) _ _ ?_ H
   simp only [Over.comp_left, Over.homMk_left]
   rw [spMap_comp_ring']
 
@@ -776,7 +733,7 @@ theorem thetaInt_hasDiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hv : vH.comp (toRat S.R) = v := RingHom.ext fun _ => rfl
   let x₀ : Sp Ω ⟶ Sp S.R := spMap v ≫ 𝟙 (Sp S.R)
   let θ : SecAt ρ.P.A ρ.P.L x₀ := SecAt.pull ρ.P.A ρ.P.L (x := 𝟙 (Sp S.R)) ρ.th₁ v
-  have hθ : IsGenSec ρ.P.A ρ.P.L _ θ := GlobalTheory.T.realisedThetaSystem_section_generates_field_fibres o' Ω S ρ Ω v
+  have hθ : IsGenSec ρ.P.A ρ.P.L _ θ := _root_.GlobalTheory.UMin.isGenSec_real_pull o' Ω S ρ Ω v
   obtain ⟨G, _, α, β, hα, hβ, hL⟩ := hu
   haveI : IsAbelianScheme G := PolPull.isAbelianScheme_of_isGrpPullback ρ.P.isAb hα
   haveI : IsCommMonObj G := IsAbelianScheme.comm
@@ -848,7 +805,7 @@ theorem thetaInt_hasDiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     ((S.r * S.N) ^ (4 * gd)) K (spMap i ≫ x₀) (SecAt.pull ρ.P.A ρ.P.L θ i) hkodd (hcast _ (NeZero.ne _)) rfl hPK
   have hsym : ∀ j, io (emb (e j)) = symTup d j := he K i pt d hd
   obtain ⟨pt'', hd''⟩ := thList_pull_pull ρ.P.isLB (𝟙 (Sp S.R)) ρ.th₁ v i hd'
-  have hT := GlobalTheory.T.thetaConstantList_realisedSystem_up_to_rootsOfUnity o' Ω S ρ K (i.comp v) _ pt'' d' hd''
+  have hT := _root_.GlobalTheory.UMin.thList_real o' Ω S ρ K (i.comp v) _ pt'' d' hd''
 
   have h₁ : HasTh₂ ρ.P.A ρ.P.L ρ.rig m (S.r * S.N) (spMap i ≫ x₀) d d' := ⟨_, pt, pt', hθK, hd, hd'⟩
   obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl hLG
@@ -1376,26 +1333,7 @@ namespace GlobalTheory.UMin.IntTheta
 section Pull
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left} {a : ℤ}
 
-theorem sec_ext' {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  obtain ⟨f₁, p₁⟩ := s
-  obtain ⟨f₂, p₂⟩ := s'
-  obtain rfl : f₁ = f₂ := funext h
-  rfl
-
-theorem gs_pullS' {T T' : Over S} (h : T' ⟶ T) (s : LB.Sec (LPow A L a T)) {Z : Scheme.{0}}
-    (r : Z ⟶ (T' ⊗ A).left) (z : Z) (j : Fin 1 → L.ι) (hz : r z ∈ (LPow A L a T').U j) :
-    gs r z ((LPow A L a T').U j) ((VVRank.pullS A a h s).f j) =
-      gs (r ≫ (h ▷ A).left) z ((LPow A L a T).U j) (s.f j) :=
-  (gs_res r z (chart_le_res A L (h ▷ A) (whiskerRight_snd _ _) a j) hz _).trans
-    (gs_pull r (h ▷ A).left z _ (chart_le_res A L (h ▷ A) (whiskerRight_snd _ _) a j hz) _)
-
-theorem pullS_comp' {T T' T'' : Over S} (h' : T'' ⟶ T') (h : T' ⟶ T) (s : LB.Sec (LPow A L a T)) :
-    VVRank.pullS A a h' (VVRank.pullS A a h s) = VVRank.pullS A a (h' ≫ h) s :=
-  sec_ext' fun j => fn_ext fun y hy => by
-    refine (gs_pullS' h' _ _ y j hy).trans ((gs_pullS' h _ _ y j
-      (chart_le_res A L (h' ▷ A) (whiskerRight_snd _ _) a j hy)).trans (Eq.trans ?_ (gs_pullS' _ _ _ y j hy).symm))
-    rw [comp_whiskerRight, Over.comp_left]
-    rfl
+alias sec_ext' := _root_.ReciprocityTheory.ChartRestriction.G.DVR.SecOps.sec_ext
 
 theorem pullS_heq {T : Over S} {Y : Scheme.{0}} {y₁ y₂ : Y ⟶ S} (e : y₁ = y₂) (h₁ : Over.mk y₁ ⟶ T)
     (h₂ : Over.mk y₂ ⟶ T) (he : h₁.left = h₂.left) (s : LB.Sec (LPow A L a T)) :
@@ -1413,7 +1351,7 @@ theorem pull_pull {R K K' : Type} [CommRing R] [CommRing K] [CommRing K'] {x : S
     (i : R →+* K) (i' : K →+* K') :
     HEq (SecAt.pull G L (SecAt.pull G L θ i) i') (SecAt.pull G L θ (i'.comp i)) := by
   unfold SecAt.pull
-  rw [pullS_comp']
+  rw [_root_.GlobalTheory.ThetaRuleCompare.pullS_comp]
   refine pullS_heq ?_ _ _ ?_ θ
   · rw [spMap_comp, Category.assoc]
   · simp only [Over.comp_left, Over.homMk_left]

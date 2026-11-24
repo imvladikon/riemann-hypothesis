@@ -101,6 +101,7 @@ import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Topology.Compactness.Paracompact
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.Algebra.Order.Star.Int
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 
@@ -1048,10 +1049,6 @@ private theorem not_both (hE : Module.finrank ℚ E = 2) {w w' u : H.P E} {v : H
   rw [key] at hr
   nlinarith
 
-private theorem pair_cases {a b c d : ℂˣ} (h : ({a, b} : Multiset ℂˣ) = {c, d}) :
-    (a = c ∧ b = d) ∨ (a = d ∧ b = c) :=
-  _root_.UpperTheory.Reformulated.B.PairCases.pair_cases h
-
 private noncomputable def Qs (a b a' b' c : ℂˣ) : PowerSeries ℂ :=
   (1 - PowerSeries.C ((a * a' * c : ℂˣ) : ℂ) * PowerSeries.X) *
     (1 - PowerSeries.C ((a * b' * c : ℂˣ) : ℂ) * PowerSeries.X) *
@@ -1078,11 +1075,11 @@ private theorem den_unique (hE : Module.finrank ℚ E = 2) {P : CuspSub E 2} {χ
       have c₂ := GlobalTheory.HenQ.Regroup.fiber_split E hE w₁ w₁' w₂' (hu'.trans hu.symm) (hv'.trans hu.symm) hn.symm
       rcases c₁ with rfl | rfl <;> rcases c₂ with rfl | rfl
       · exact absurd rfl hm
-      · rcases pair_cases (CG.HasSat.unique hs ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
-          rcases pair_cases (CG.HasSat.unique hs' ht') with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
+      · rcases _root_.UpperTheory.Reformulated.B.PairCases.pair_cases (CG.HasSat.unique hs ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
+          rcases _root_.UpperTheory.Reformulated.B.PairCases.pair_cases (CG.HasSat.unique hs' ht') with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
           simp only [Qs, Units.val_mul, map_mul] <;> ring
-      · rcases pair_cases (CG.HasSat.unique hs ht') with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
-          rcases pair_cases (CG.HasSat.unique hs' ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
+      · rcases _root_.UpperTheory.Reformulated.B.PairCases.pair_cases (CG.HasSat.unique hs ht') with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
+          rcases _root_.UpperTheory.Reformulated.B.PairCases.pair_cases (CG.HasSat.unique hs' ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
           simp only [Qs, Units.val_mul, map_mul] <;> ring
       · exact absurd rfl hm
     · exact (not_both hE hn hu hu' hv hr).elim
@@ -1091,7 +1088,7 @@ private theorem den_unique (hE : Module.finrank ℚ E = 2) {P : CuspSub E 2} {χ
     · have hN : Ideal.absNorm w₁.asIdeal = Ideal.absNorm (w₁.under (𝓞 ℚ)).asIdeal ^ 2 := by
         rw [← nv, ← nv, hu, hq]
       obtain rfl := GlobalTheory.HenQ.Regroup.fiber_inert E hE w₁ w₂ hN (hv.trans hu.symm)
-      rcases pair_cases (CG.HasSat.unique hs ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
+      rcases _root_.UpperTheory.Reformulated.B.PairCases.pair_cases (CG.HasSat.unique hs ht) with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ <;>
         simp only [Qi, Units.val_mul, map_mul] <;> ring
 
 private theorem den_inv (hE : Module.finrank ℚ E = 2) {P : CuspSub E 2} {χ : HChar ℚ} {v : H.P ℚ}
@@ -1400,7 +1397,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.WhittakerHecke.ConjLieElementEmbedRotationEqTrigMatrix =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.WhittakerHecke.ExistsSmoothLieActionMemCuspidalTranslates =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.WhittakerHecke.ExistsSmoothLieActionMemCuspidalTranslates", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.ConjInv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.ExistsRowSec\nimport Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.CharacterNorms.ThInf\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.WhittakerHecke.ExistsSmoothLieActionMemCuspidalTranslates", "h": "module\n\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.ConjInv\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\npublic import Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.GaussianProducts.ExistsRowSec\nimport Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.CharacterNorms.ThInf\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1409,23 +1406,6 @@ open Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspR
 open UpperTheory.ConvolutionTheory.R2 UpperTheory.ConvolutionTheory.RankTwoDescent UpperTheory.ConvolutionTheory.RankTwoDescent.TA
 open UpperTheory.ConvolutionTheory.R2.G (FS2 nE)
 open scoped Classical
-
-private theorem rt_infGL_lie {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
-    (y : GL (Fin a) (Cinf E)) (X : Matrix (Fin a) (Fin a) (Cinf E)) :
-    rt E a (infGL E a y) * lie E a (toL X) =
-      lie E a (toL (y.val * X * (y⁻¹).val)) * rt E a (infGL E a y) := by
-  refine LinearMap.ext fun φ => Subtype.ext <| funext fun g => ?_
-  change fderiv ℝ (chart φ.1 (g * infGL E a y)) (oneL E a) (toL X) =
-    fderiv ℝ (chart (fun x => φ.1 (x * infGL E a y)) g) (oneL E a) (toL (y.val * X * (y⁻¹).val))
-  have hd : DifferentiableAt ℝ (chart φ.1 g) (toL y.val) :=
-    (contDiffAt_chart φ.2 g (val_mem_invSet y)).differentiableAt (by simp)
-  have e1 : lmul (toL y.val) (oneL E a) = toL y.val := mul_one y.val
-  have e2 : rmul (toL y.val) (oneL E a) = toL y.val := one_mul y.val
-  rw [chart_mul, chart_rt_inf, fderiv_comp _ (by rw [e1]; exact hd) (lmul (toL y.val)).differentiableAt,
-    fderiv_comp _ (by rw [e2]; exact hd) (rmul (toL y.val)).differentiableAt, e1, e2,
-    ContinuousLinearMap.fderiv, ContinuousLinearMap.fderiv]
-  exact congrArg (fun Z => fderiv ℝ (chart φ.1 g) (toL y.val) (toL Z))
-    (Units.inv_mul_cancel_right (y.val * X) y).symm
 
 private theorem lie_rt_eq {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
     (X : Matrix (Fin a) (Fin a) (Cinf E)) (h : GL (Fin a) (A E)) :
@@ -1436,7 +1416,7 @@ private theorem lie_rt_eq {E : Type} [Field E] [NumberField E] [_root_.NumberFie
   refine ⟨toL ((y⁻¹).val * X * y.val), ?_⟩
   have e : y.val * ((y⁻¹).val * X * y.val) * (y⁻¹).val = X := by
     simp [Matrix.mul_assoc]
-  have key := rt_infGL_lie y ((y⁻¹).val * X * y.val)
+  have key := _root_.GlobalTheory.CapAdInv.rt_lie y ((y⁻¹).val * X * y.val)
   rw [e] at key
   conv_lhs => rw [hh, map_mul, ← mul_assoc, ← key, mul_assoc, lie_rt_fin, ← mul_assoc]
   rw [← map_mul, ← hh]

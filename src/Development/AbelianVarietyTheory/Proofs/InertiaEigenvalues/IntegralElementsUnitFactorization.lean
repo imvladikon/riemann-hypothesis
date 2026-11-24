@@ -156,14 +156,7 @@ namespace GlobalTheory.OEDvr
 
 variable {l : ℕ} [hl : Fact l.Prime]
 
-theorem perfectRing_Cb : PerfectRing (Cb l) l := by
-  refine PerfectRing.ofSurjective _ _ fun x => ?_
-  obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := OCb l) x
-  refine ⟨algebraMap _ _ ((frobeniusEquiv (OCb l) l).symm a) /
-    algebraMap _ _ ((frobeniusEquiv (OCb l) l).symm b), ?_⟩
-  rw [frobenius_def, div_pow, ← map_pow (algebraMap (OCb l) (Cb l)),
-    ← map_pow (algebraMap (OCb l) (Cb l)), frobeniusEquiv_symm_pow_p,
-    frobeniusEquiv_symm_pow_p]
+alias perfectRing_Cb := _root_.GlobalTheory.OEStable.perfect_Cb
 
 variable {K : FinExt l} (bk : BK K)
 

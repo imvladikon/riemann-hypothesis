@@ -84,8 +84,6 @@ open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 
-theorem _root_.GlobalTheory.T.abelianSections_proportional_of_coordinates : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Spec (CommRingCat.of (FractionRing R)))) (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing R) F] (k : ℕ) (I J : Type) [Fintype J] (t : I → SecA A F k) (s : J → SecA A F k) (b : Matrix I J F), (∀ x : TFK (R := R) F ⟶ A.A, ∃ v : J → F, b.mulVec v ≠ 0 ∧ Crd (LPow A.A A.L (k : ℤ) (TFK (R := R) F)) s (show Sp F ⟶ _ from (ptSecT A.A x).left) v ∧ Crd (LPow A.A A.L (k : ℤ) (TFK (R := R) F)) t (show Sp F ⟶ _ from (ptSecT A.A x).left) (b.mulVec v)) → ∃ c : F, ∀ i, ∑ j, kf R F (b i j) • SecM.ofSec A.A (s j) = kf R F c • SecM.ofSec A.A (t i) := by
-  first | exact @GlobalTheory.ZH.SecProp.proportional_of_crd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianSectionsProportionalOfCoordinatesStatement =====
@@ -207,8 +205,6 @@ open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 
-theorem _root_.GlobalTheory.T.exists_generic_sections_from_integral_model : LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (k : ℕ) (J : Type) (σ : J → (u.H k).Sec) (f : J → ∀ α, u.D.toPre.SecB k α), (∀ i e, u.U.toUnifPre.ExpandsAt e k (σ i) (f i)) → (∀ i, ∃ s : Fam u.D.toPre (FractionRing u.V) k, FamOf u.D.toPre _ (f i) s) → ∀ w₀ : W0 u.U.toUnifPre, w₀.IsGen → ∃ (t : J → SecA u.A (PadicAlgCl p) k) (s : J → Fam u.D.toPre (PadicAlgCl p) k), (∀ i, u.U.toUnifPre.ExpandsF (PadicAlgCl p) k w₀ (t i) (s i)) ∧ (∀ i α, (∀ j, (f i α).f j = 0) → ∀ j, ((s i).s α).f j = 0) ∧ ∀ (a : u.PtC) (v : J → PadicAlgCl p), Crd (u.H k) σ (u.toG a) v → Crd (LPow u.A.A u.A.L (k : ℤ) (TFK (R := u.V) (PadicAlgCl p))) t (show Sp (PadicAlgCl p) ⟶ _ from (ptSecT u.A.A (a ≫ u.U.gen.hom)).left) v := by
-  first | exact @GlobalTheory.ZH.IntegralCarry.exists_carry
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGenericSectionsFromIntegralModelStatement =====
@@ -226,8 +222,6 @@ open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 
-theorem _root_.GlobalTheory.T.exists_symmetricLift_action_geometricFibre : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (w : LB.Iso u.A.L (ρ.P.L.pull u.φ)), w.IsGen → ∀ t : S.J → SecA u.A (PadicAlgCl p) S.N, (∀ i, Moved u w (t i) (ρ.s i)) → ∀ (a : S.Gam) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt (S.r • a)).left → x ^ S.N = 1 → ∃ θ : ThetaGrp u.A.A u.A.L (S.N : ℤ) (TFK (R := u.V) (PadicAlgCl p)), SymLift u.A.A u.A.L S.N S.N x θ ∧ ∀ i t', IsActOf u.A.A u.A.L S.N θ (t i) t' → SecM.ofSec u.A.A t' = ∑ l, kf u.V (PadicAlgCl p) (y₀ (algebraMap o S.R (S.ρ a l i))) • SecM.ofSec u.A.A (t l) := by
-  first | exact @GlobalTheory.ZH.ClassWeight.exists_symLift_act
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSymmetricLiftActionGeometricFibreStatement =====
@@ -245,8 +239,6 @@ open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 
-theorem _root_.GlobalTheory.T.exists_torus_torsionPoint_standardAlternatingForm : LL → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (x : S.Gam → (TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A)), (∀ a, (x a).left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left) → (∀ a b, x (a + b) = x a * x b) → (∀ z : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A, z ^ (S.r * S.N) = 1 → ∃ a, z = x a) → ∀ t ∈ S.perp l.yy.ker, ∃ (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (τ : Multiplicative u.D.toPre.X →* (PadicAlgCl p)ˣ), pk.y = 0 ∧ IsTor τ pk.g ∧ QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk (x t) ∧ ∀ (a : S.Gam) (α : u.D.toPre.X), l.yy a = QuotientAddGroup.mk α → (τ (Multiplicative.ofAdd α)).val = y₀ (algebraMap o S.R (S.ζ ^ (S.r * S.N * (eStd S.g _ t a).val))) := by
-  first | exact @GlobalTheory.ZH.PerpCharacter.exists_torus_point_eStd
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusTorsionPointStandardAlternatingFormStatement =====
@@ -452,8 +444,6 @@ open ReciprocityTheory.ChartRestriction.G.Out GlobalTheory.ZH Classical
 attribute [local instance] SplitExt.free SplitExt.finite MvPolynomial.gradedAlgebra
 open GlobalTheory.UT GlobalTheory.ZH.ClassWeight
 
-theorem _root_.GlobalTheory.T.linearIndependent_thetaBasis_geometric_fibre : LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (w : LB.Iso u.A.L (ρ.P.L.pull u.φ)), w.IsGen → ∀ t : S.J → SecA u.A (PadicAlgCl p) S.N, (∀ i, Moved u w (t i) (ρ.s i)) → LinearIndependent Γ((TFK (R := u.V) (PadicAlgCl p)).left, ⊤) (fun i => SecM.ofSec u.A.A (t i)) := by
-  first | exact @GlobalTheory.ZH.FibreIndep.linearIndependent_moved
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LinearIndependentThetaBasisGeometricFibreStatement =====
@@ -570,7 +560,7 @@ theorem act_of_class (hL : LL) (hA : AdmBase R I) (hG : IsSemiAbelian G) (U : Un
     SecM.ofSec A.A t' = kf R F (τ (Multiplicative.ofAdd c)).val • SecM.ofSec A.A t := by
   obtain ⟨w, hw⟩ := (GlobalTheory.UT.SymFrame.main hL R I hA D F N hN q).1
   obtain ⟨e, he⟩ := GlobalTheory.exists_linearEquiv_expandsF hL.1.globalFns U F hN.pos w₀ hw₀
-  have hΦ := GlobalTheory.T.symmetricLift_oddOrder_acts_as_expansionOperator hL R I hA D A G hG U F N hN q x hx θ hθ w₀ hw₀ w hw t t' s (e t') hs ((he _ _).2 rfl) ha
+  have hΦ := _root_.GlobalTheory.UT.symLift_acts_as_phi hL R I hA D A G hG U F N hN q x hx θ hθ w₀ hw₀ w hw t t' s (e t') hs ((he _ _).2 rfl) ha
   have h₁ := ((TorusWeight.torus_weight hL R I hA D A G hG U F N hN q τ hy hτ w hw).2 _ _).1 hΦ
   have h₂ : e t' = (τ (Multiplicative.ofAdd c)).val • s := fam_ext fun α j => by
     refine (h₁ α j).trans ?_
@@ -599,9 +589,9 @@ theorem exists_torus_point (hL : LL) (hT : UTorsSt) {o Ω : Type} [CommRing o] [
   have hN₂ := S.N_ge
   have : NeZero S.N := ⟨by omega⟩
   have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by omega) (by omega)⟩
-  obtain ⟨x, hx, hadd, -, honto⟩ := GlobalTheory.T.uniformised_model_labelled_torsion_points o Ω S ρ p y₀ u
+  obtain ⟨x, hx, hadd, -, honto⟩ := _root_.GlobalTheory.ZH.utest_torsion_points o Ω S ρ p y₀ u
   let y : o →+* PadicAlgCl p := y₀.comp (algebraMap o S.R)
-  obtain ⟨pk, τ, hy, hτ, hq, hval⟩ := GlobalTheory.T.exists_torus_torsionPoint_standardAlternatingForm hL hT o Ω S ρ p y₀ u l x hx hadd honto a.1 a.2
+  obtain ⟨pk, τ, hy, hτ, hq, hval⟩ := _root_.GlobalTheory.ZH.PerpCharacter.exists_torus_point_eStd hL hT o Ω S ρ p y₀ u l x hx hadd honto a.1 a.2
   have hζ : y S.ζN ^ S.N = 1 := by
     have h : IsPrimitiveRoot S.ζN S.N := S.prim.pow (pow_pos (NeZero.pos _) 2) (by ring)
     rw [← map_pow, h.pow_eq_one, map_one]
@@ -644,8 +634,8 @@ theorem row_weight : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type) [CommR
   obtain ⟨w, hw⟩ := u.lb
   obtain ⟨w₀, hw₀⟩ := u.U.toUnifPre.ext
   choose s hs using fun j => exists_moved u hw (ρ.s j)
-  obtain ⟨t, e, ht, he, hcrd⟩ := GlobalTheory.T.exists_generic_sections_from_integral_model hL o Ω S ρ p y₀ u S.N S.J σ f hB.2.2.2.1 hB.2.2.2.2.1 w₀ hw₀
-  obtain ⟨c, hc⟩ := GlobalTheory.T.abelianSections_proportional_of_coordinates hL.1.globalFns u.V u.A (PadicAlgCl p) S.N S.J S.J t s
+  obtain ⟨t, e, ht, he, hcrd⟩ := _root_.GlobalTheory.ZH.IntegralCarry.exists_carry hL o Ω S ρ p y₀ u S.N S.J σ f hB.2.2.2.1 hB.2.2.2.2.1 w₀ hw₀
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.ZH.SecProp.proportional_of_crd hL.1.globalFns u.V u.A (PadicAlgCl p) S.N S.J S.J t s
     (b.map (algebraMap _ (PadicAlgCl p))) fun z => by
       obtain ⟨a, rfl⟩ : ∃ a : u.PtC, z = a ≫ u.U.gen.hom := ⟨z ≫ u.U.gen.inv, by simp⟩
       obtain ⟨v, hv⟩ := ((CrdCalc.crd_calculus _ (LPow u.A.A u.A.L (S.N : ℤ) (TFK (R := u.V) (PadicAlgCl p))) _ s
@@ -655,7 +645,7 @@ theorem row_weight : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type) [CommR
   let y : o →+* PadicAlgCl p := y₀.comp (algebraMap o S.R)
   refine proj_mulVec S l.isoFree _ y _ fun a => ?_
   obtain ⟨q, x, τ, hq₀, hτ, hτN, hq, hx, hwt⟩ := exists_torus_point hL hT l a
-  obtain ⟨θ, hθ, hact⟩ := GlobalTheory.T.exists_symmetricLift_action_geometricFibre o Ω S ρ p y₀ u w hw s hs a.1 _ hx (hq w₀ hw₀).1
+  obtain ⟨θ, hθ, hact⟩ := _root_.GlobalTheory.ZH.ClassWeight.exists_symLift_act o Ω S ρ p y₀ u w hw s hs a.1 _ hx (hq w₀ hw₀).1
   obtain ⟨E, hE, -⟩ := GlobalTheory.thetaGrp_acts_linearly hL.1.globalFns _ u.A (S.N : ℤ) (TFK (R := u.V) (PadicAlgCl p))
   have h₁ : ∀ j, E θ (SecM.ofSec u.A.A (s j)) =
       ∑ m, kf u.V (PadicAlgCl p) (y (S.ρ a m j)) • SecM.ofSec u.A.A (s m) := fun j =>
@@ -667,7 +657,7 @@ theorem row_weight : GlobalTheory.UT.LL → UTorsSt → ∀ (o Ω : Type) [CommR
       ((hE _ _ _).2 rfl)
     exact h₃.trans (congrArg (fun z => kf u.V (PadicAlgCl p) z • SecM.ofSec u.A.A (t i)) (hwt (cls i)))
   exact mulVec_eq_of_eigen (kf u.V (PadicAlgCl p)) (kf_bijective _ _).1 (E θ).toLinearMap
-    (GlobalTheory.T.linearIndependent_thetaBasis_geometric_fibre hL o Ω S ρ p y₀ u w hw s hs) ((S.ρ a).map y) h₁ h₂ (hc i)
+    (_root_.GlobalTheory.ZH.FibreIndep.linearIndependent_moved hL o Ω S ρ p y₀ u w hw s hs) ((S.ρ a).map y) h₁ h₂ (hc i)
 
 end GlobalTheory.ZH.ClassWeight
 end

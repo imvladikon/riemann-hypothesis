@@ -379,12 +379,6 @@ open GlobalTheory.UPoinc
 attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.UTraitExtLab
 
-theorem spMap_comp_ringHom {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  show Spec.map _ = Spec.map _ ≫ Spec.map _
-  rw [← Spec.map_comp]
-  rfl
-
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (cf : Coeff l) (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (u' : Sp (ratHull S.R) ⟶ Xo.XF cf) (p : ℕ) [Fact p.Prime] (y₁ : ratHull S.R →+* PadicAlgCl p) (T : UTrait Xo cf) (ι : FractionRing T.V →+* PadicAlgCl p), (∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T.V (FractionRing T.V))) → spMap y₁ ≫ u' = spMap ι ≫ T.y → ∃ (T' : UTrait Xo cf) (ι' : FractionRing T'.V →+* PadicAlgCl p) (yK : ratHull S.R →+* FractionRing T'.V) (e : T'.P.D.toPre.X ≃ₗ[𝓞 E] T.P.D.toPre.X) (k : ℕ), (∀ x, ‖ι' x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T'.V (FractionRing T'.V))) ∧ ι'.comp yK = y₁ ∧ spMap yK ≫ u' = T'.y ∧ ‖ι (algebraMap T.V _ T.ϖ)‖ = ‖ι' (algebraMap T'.V _ T'.ϖ)‖ ^ k ∧ ∀ a b, T'.be a b = (k : ℤ) * T.be (e a) (e b) := by
   intro E _ _ _ H Dw l Xo cf o Ω _ _ _ _ S u' p _ y₁ T ι hι hy
   haveI : Algebra.FiniteType ℤ o := ArithBase.ft (o := o) (Ω := Ω)
@@ -458,13 +452,13 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     (RingHom.id _) hbase' inferInstance (hf.comp hfV) Function.injective_id inferInstance inferInstance
     (fun a => by simp only [RingHom.comp_apply, hfK, hgK]) (fun a => rfl)
     (by
-      rw [hTy, spMap_comp_ringHom, Category.assoc]
+      rw [hTy, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc]
       rw [show spMap (RingHom.id (FractionRing T'.V)) = 𝟙 _ from Spec.map_id _, Category.id_comp])
     T'.ϖ m 1 T'.irr hm (by rw [pow_one, RingHom.id_apply])
   refine ⟨T', ι', yK, e₀.symm, m, hint, hyK, ?_, ?_, ?_⟩
   · haveI : Epi (spMap ι') := Flat.epi_of_flat_of_surjective _
-    rw [← cancel_epi (spMap ι'), ← Category.assoc, ← spMap_comp_ringHom, hyK, hy, hTy, ← hιc, spMap_comp_ringHom,
-      spMap_comp_ringHom, Category.assoc, Category.assoc]
+    rw [← cancel_epi (spMap ι'), ← Category.assoc, ← _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, hyK, hy, hTy, ← hιc, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp,
+      _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc, Category.assoc]
   · obtain ⟨u, hu⟩ := hm
     have hunit : ∀ w : T'.Vˣ, ‖ι' (algebraMap T'.V _ (w : T'.V))‖ = 1 := fun w => by
       have h1 := (hint _).2 ⟨(w : T'.V), rfl⟩
@@ -731,8 +725,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.UPoinc
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.torsionLattice_moves_by_ringAction_completeDVR : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], CDvr V → ∀ (t : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) t) (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing V) K] (m : ℕ) (a : 𝓞 E) (pk pk' : QkPt P.D.toPre K m) (x x' : TFK (R := V) K ⟶ P.A.A), 1 ≤ m → QkToAkU P.U.toUnifPre K m pk x → QkToAkU P.U.toUnifPre K m pk' x' → x' = x ≫ P.oA.act a → CongMod m pk'.y (a • pk.y) := by
-  first | exact @GlobalTheory.UPoinc.qk_lattice_oAct
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLatticeMovesByRingActionCompleteDVRStatement =====
@@ -813,7 +805,7 @@ theorem uTraitLabels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     ring
   · intro m a pk pk' x x' w w' hm h1 h2 hw hw' hww
     have hx : x' = x ≫ T'.P.oA.act a := hact _ x x' w w' a hw hw' hww
-    obtain ⟨z, hz⟩ := GlobalTheory.T.torsionLattice_moves_by_ringAction_completeDVR E H T'.V T'.cdvr T'.t T'.P (PadicAlgCl p) m a pk pk' x x' hm h1 h2 hx
+    obtain ⟨z, hz⟩ := _root_.GlobalTheory.UPoinc.qk_lattice_oAct E H T'.V T'.cdvr T'.t T'.P (PadicAlgCl p) m a pk pk' x x' hm h1 h2 hx
     exact ⟨e z, by simp [hz, map_add (f := _), map_nsmul]⟩
 
 end GlobalTheory.UPoinc
@@ -833,8 +825,6 @@ open scoped CategoryTheory.Obj
 open GlobalTheory.UPoinc
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_uniformisedModel_labels_unitaryTrait : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (cf : Coeff l) (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (u' : Sp (ratHull S.R) ⟶ Xo.XF cf) (G : Over (Sp (ratHull S.R))) (_ : GrpObj G) (α : G.left ⟶ ρ.P.A.left) (β : G.left ⟶ Xo.univ.t.G.left), IsGrpPullback G ρ.P.A (spMap (toRat S.R)) α → IsGrpPullback G Xo.univ.t.G (u' ≫ pullback.fst _ _) β → LBIso (ρ.P.L.pull α) (Xo.univ.t.PP.L.pull β) → ∀ (p : ℕ) [Fact p.Prime] (y₁ : ratHull S.R →+* PadicAlgCl p) (T : UTrait Xo cf) (ι : FractionRing T.V →+* PadicAlgCl p), (∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap T.V (FractionRing T.V))) → spMap y₁ ≫ u' = spMap ι ≫ T.y → (∀ a : o, ‖y₁ (toRat S.R (algebraMap o S.R a))‖ ≤ 1) → ∃ (u : ρ.UTest p (y₁.comp (toRat S.R))) (lb : u.Lab) (j : u.D.toPre.X ≃+ T.P.D.toPre.X), (∀ χ, lb.q χ = -Real.log ‖ι (algebraMap T.V (FractionRing T.V) T.ϖ)‖ * (T.be (j χ) (j χ) : ℝ) / 2) ∧ ∀ (m : ℕ) (a : 𝓞 E) (pk pk' : QkPt u.D.toPre (PadicAlgCl p) m) (x x' : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A) (w w' : Sp (PadicAlgCl p) ⟶ G.left), 1 ≤ m → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk x → QkToAkU u.U.toUnifPre (PadicAlgCl p) m pk' x' → w ≫ α = x.left ≫ u.φ → w' ≫ α = x'.left ≫ u.φ → w' ≫ β = w ≫ β ≫ (Xo.univ.t.act.act a).left → CongMod m (j pk'.y) (a • j pk.y) := by
-  first | exact @GlobalTheory.UPoinc.uTraitLabels
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisedModelLabelsUnitaryTraitStatement =====
@@ -968,7 +958,7 @@ theorem exists_uIsLabW : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     GlobalTheory.T.exists_recharting_thetaSystem_affineOpen E H Dw hpq l Xo cf C X wi _ hw
   obtain ⟨hle, y₁, hy₁, hpt₁, hint⟩ := GlobalTheory.T.rechart_at_unitaryClassicalTrait E H Dw hpq l Xo cf C X p z ct U u' hU hwU hpt
   obtain ⟨u, lb, j, hq, hcong⟩ :=
-    GlobalTheory.T.exists_uniformisedModel_labels_unitaryTrait E H Dw hpq l Xo cf X.o₁ X.Ω₁ _ ρ' u' G hG α β hα hβ hL p y₁ ct.T ct.ι ct.int hpt₁ hint
+    _root_.GlobalTheory.UPoinc.uTraitLabels E H Dw hpq l Xo cf X.o₁ X.Ω₁ _ ρ' u' G hG α β hα hβ hL p y₁ ct.T ct.ι ct.int hpt₁ hint
   let jm : ModN (X.S.r * X.S.N) u.D.toPre.X →+ ModN (X.S.r * X.S.N) ct.T.P.D.toPre.X :=
     QuotientAddGroup.map _ _ j.toAddMonoidHom (by
       rintro _ ⟨x, rfl⟩

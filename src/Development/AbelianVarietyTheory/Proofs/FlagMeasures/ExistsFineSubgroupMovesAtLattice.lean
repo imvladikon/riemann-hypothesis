@@ -323,9 +323,6 @@ theorem disj (hli : LinearIndependent E (Sum.elim S.f S.f')) (x x' : S.V) (hx : 
   have h4 : x = 0 := Submodule.disjoint_def.1 hd x h1 (h3 ▸ Submodule.neg_mem _ h2)
   exact ⟨h4, by simpa [h4] using e⟩
 
-theorem spanTo_mono (g : Fin (r + 1) → S.V) {i j : ℕ} (h : i ≤ j) : S.spanTo g i ≤ S.spanTo g j :=
-  Submodule.span_mono (Set.image_mono fun _ ha => lt_of_lt_of_le ha h)
-
 end
 
 theorem relIndex_inf_scl {E W : Type} [CommRing E] [AddCommGroup W] [Module E W] (P Z : AddSubgroup W)
@@ -402,8 +399,8 @@ theorem bound (d : S.Datum) (Λ : Submodule L.O S.V) (hT : S.IsTerm d Λ) (J : �
     algebraMap F E ((S.ϖ : F) ^ S.a) • x ∈ Λ ∧ algebraMap F E ((S.ϖ : F) ^ S.a) • x' ∈ Λ := by
   obtain ⟨-, -, -, hf, hf', -⟩ := _root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   obtain ⟨y, hy, e⟩ := hb
-  replace hx := spanTo_mono S _ hJ hx
-  replace hx' := spanTo_mono S _ hJ hx'
+  replace hx := _root_.GlobalTheory.HL.FrameOnto.spanTo_mono S _ hJ hx
+  replace hx' := _root_.GlobalTheory.HL.FrameOnto.spanTo_mono S _ hJ hx'
   have hyM : y ∈ S.sat Λ := by
     refine ⟨hy, ?_⟩
     have : y = algebraMap F E S.th⁻¹ • (x + x') := by

@@ -246,11 +246,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.exists_etaleLocal_root_of_unit_of_kummer : ∀ (q : ℕ) [NeZero q],
-    (∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ b : Sec Gm U, Loc U fun V g => ∃ c : Sec Gm V, Sec.map ((q : ℤ) • 𝟙 Gm) c = Sec.res g b) →
-    ∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ u : (Γ(U, ⊤))ˣ,
-      Loc U fun V g => ∃ v : (Γ(V, ⊤))ˣ, v ^ q = Units.map g.appTop.hom.toMonoidHom u := by
-  first | (exact @GlobalTheory.EtC.KumRoots.roots)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleLocalRootOfUnitOfKummerStatement =====
@@ -290,9 +285,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.rootOfUnity_etaleLocally_pow_primitiveRoot : ∀ (q : ℕ) [NeZero q] (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ ω : (Γ(U, ⊤))ˣ, ω ^ q = 1 →
-    Loc U fun V g => ∃ (ζ : Prim q Γ(V, ⊤)) (a : ℕ), (Units.map g.appTop.hom.toMonoidHom ω : Γ(V, ⊤)) = ζ.1 ^ a := by
-  first | (exact @GlobalTheory.EtC.RootLoc.root_loc_pow_prim)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.RootOfUnityEtaleLocallyPowPrimitiveRootStatement =====
@@ -318,17 +310,6 @@ theorem unitSec_res_kd {V U : Scheme.{0}} (g : V ⟶ U) (u : (Γ(U, ⊤))ˣ) :
     ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ unitsF)).naturality g.op)
   exact this.symm
 
-theorem Sec.res_map_kd {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {V U : Scheme.{0}} (g : V ⟶ U) (x : Sec F U) :
-    Sec.res g (Sec.map φ x) = Sec.map φ (Sec.res g x) := by
-  have := congrArg (fun f => f.hom x) (φ.hom.naturality g.op)
-  exact this.symm
-
-theorem Sec.map_add_kd {R : Type} [CommRing R] {F G : Shv R} (φ : F ⟶ G) {U : Scheme.{0}} (x y : Sec F U) :
-    Sec.map φ (x + y) = Sec.map φ x + Sec.map φ y := map_add _ x y
-
-theorem Sec.res_sub_kd {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}} (g : V ⟶ U) (x y : Sec F U) :
-    Sec.res g (x - y) = Sec.res g x - Sec.res g y := map_sub _ x y
-
 theorem Prim.pow_eq_one_kd {q : ℕ} {A : Type} [CommRing A] (ζ : Prim q A) : ζ.1 ^ q = 1 := by
   obtain ⟨g, hg⟩ := Polynomial.cyclotomic.dvd_X_pow_sub_one q ℤ
   have h := congrArg (Polynomial.aeval ζ.1) hg
@@ -343,7 +324,7 @@ theorem kumDiff_res (q : ℕ) (φ : Gm ⟶ (res ℤ ((restr (Int.castRingHom (ZM
     {V U : Scheme.{0}} (g : V ⟶ U) (hq : IsUnit (q : Γ(U, ⊤))) (v : (Γ(U, ⊤))ˣ) :
     Sec.res g (kumDiff q φ U v) = kumDiff q φ V (Units.map g.appTop.hom.toMonoidHom v) := by
   unfold kumDiff
-  rw [Sec.res_sub_kd, Sec.res_map_kd, unitSec_res_kd, (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).nat g 0,
+  rw [_root_.GlobalTheory.EtC.KummerSplit.res_sub, _root_.GlobalTheory.EtC.CupSpec.map_res, unitSec_res_kd, (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).nat g 0,
     (kumT_spec q).1 V U g v hq]
 
 theorem kumDiff_mul_root (q : ℕ) (κ : (restr (Int.castRingHom (ZMod q))).obj (tw q 1) ⟶ Gm)
@@ -360,7 +341,7 @@ theorem kumDiff_mul_root (q : ℕ) (κ : (restr (Int.castRingHom (ZMod q))).obj 
     rw [← hκ V ζ z hz, ← hφ]; rfl
   have h2 := (kumT_spec q).2 V ζ w (z * w) (by rw [Units.val_mul, hz])
   have h3 := restrMap_spec (Int.castRingHom (ZMod q)) (tw q 1) V (twGen 1 ζ)
-  rw [unitSec_mul_kd, Sec.map_add_kd, h2, map_add (f := _), h1]
+  rw [unitSec_mul_kd, _root_.GlobalTheory.EtC.TensQis.sm_madd, h2, map_add (f := _), h1]
   unfold resGen
   rw [h3]
   abel
@@ -390,7 +371,7 @@ theorem kumDiff_mul_rootOfUnity : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.cas
         Sec.map φ (unitSec v) - (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).app U 0 (kumT q U v) := by
   intro q _ κ hκ φ hφ U hq v ω hω
   change kumDiff q φ U (ω * v) = kumDiff q φ U v
-  obtain ⟨S, hS, hP⟩ := GlobalTheory.T.rootOfUnity_etaleLocally_pow_primitiveRoot q U hq ω hω
+  obtain ⟨S, hS, hP⟩ := _root_.GlobalTheory.EtC.RootLoc.root_loc_pow_prim q U hq ω hω
   refine Sheaf.isSeparated _ U S hS _ _ ?_
   intro V g hg
   obtain ⟨ζ, a, ha⟩ := hP V g hg
@@ -416,15 +397,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.kummerSplittingDifference_mul_rootOfUnity : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZMod q))).obj (tw q 1) ⟶ Gm),
-    (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)) (u : (Γ(U, ⊤))ˣ), (u : Γ(U, ⊤)) = ζ.1 →
-      Sec.map κ (show Sec ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) U from twGen 1 ζ) = unitSec u) →
-    ∀ φ : Gm ⟶ (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))).X 0,
-      κ ≫ φ = resι ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) →
-    ∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ (v ω : (Γ(U, ⊤))ˣ), ω ^ q = 1 →
-      Sec.map φ (unitSec (ω * v)) - (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).app U 0 (kumT q U (ω * v)) =
-        Sec.map φ (unitSec v) - (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).app U 0 (kumT q U v) := by
-  first | (exact @GlobalTheory.EtC.kumDiff_mul_rootOfUnity)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerSplittingDifferenceMulRootOfUnityStatement =====
@@ -440,11 +412,6 @@ noncomputable section
 namespace GlobalTheory.EtC.KumUnit
 open GlobalTheory.EtC.CupSpec
 variable {R : Type} [CommRing R]
-
-theorem sec_eq_zero_of_isZero {F : Shv R} (h : IsZero F) {U : Scheme.{0}} (x : Sec F U) : x = 0 := by
-  have e : (𝟙 F) = 0 := h.eq_of_src _ _
-  have h1 : Sec.map (𝟙 F) x = Sec.map (0 : F ⟶ F) x := by rw [e]
-  exact h1.trans rfl
 
 theorem face_sch {X U : Scheme.{0}} {p : ℕ} (x : Sx (sch.obj X) (p + 1) U) (i : Fin (p + 2)) : x.face i = x := rfl
 
@@ -511,51 +478,24 @@ theorem etaleCochainEval_delta_succ_of_vanishing {X : Scheme.{0}} {I : Cx R} {n 
 instance res_injective (F : Shv R) (n : ℤ) : Injective ((res R F).X n) :=
   inferInstanceAs (Injective ((injectiveResolution F).cochainComplex.X n))
 
-theorem res_comp {F : Shv R} {W V U : Scheme.{0}} (h : W ⟶ V) (g : V ⟶ U) (y : Sec F U) :
-    Sec.res h (Sec.res g y) = Sec.res (h ≫ g) y := by
-  simp [Sec.res]
+alias res_comp := _root_.GlobalTheory.EtC.ClsSpec.res_comp
 
-theorem res_id {F : Shv R} {U : Scheme.{0}} (y : Sec F U) : Sec.res (𝟙 U) y = y := by
-  simp [Sec.res]
-
-theorem res_sub {F : Shv R} {V U : Scheme.{0}} (h : V ⟶ U) (a b : Sec F U) : Sec.res h (a - b) = Sec.res h a - Sec.res h b :=
-  map_sub _ a b
-
-theorem map_sub' {F G : Shv R} (f : F ⟶ G) {U : Scheme.{0}} (a b : Sec F U) : Sec.map f (a - b) = Sec.map f a - Sec.map f b :=
-  map_sub _ a b
+alias res_id := _root_.GlobalTheory.EtC.ClsSpec.res_id
 
 theorem ev_zero_comp0 {E : Spc} {I J : Cx R} {n : ℤ} (α : Cochain ((chains R).obj E) I 0) (w : Cochain I J n)
     (U : Scheme.{0}) (x : Sx E 0 U) :
     ev (α.comp w (zero_add n)) 0 n (by simp) U x = Sec.map (w.v 0 n (zero_add n)) (ev α 0 0 (by simp) U x) :=
   ev_zero_comp α w 0 n _ U x
 
-theorem loc_mono {U : Scheme.{0}} {P Q : ∀ V : Scheme.{0}, (V ⟶ U) → Prop} (h : Loc U P) (hPQ : ∀ V g, P V g → Q V g) :
-    Loc U Q := by
-  obtain ⟨S, hS, hP⟩ := h
-  exact ⟨S, hS, fun V g hg => hPQ V g (hP V g hg)⟩
-
 theorem sec_eq_of_loc {F : Shv R} {U : Scheme.{0}} (s t : Sec F U) (h : Loc U fun V g => Sec.res g s = Sec.res g t) :
     s = t := by
   obtain ⟨S, hS, hP⟩ := h
   exact Sheaf.isSeparated F U S hS s t (fun V g hg => hP V g hg)
 
-theorem unitSec_res {V U : Scheme.{0}} (g : V ⟶ U) (u : (Γ(U, ⊤))ˣ) :
-    Sec.res g (unitSec u) = unitSec (Units.map g.appTop.hom.toMonoidHom u) := by
-  have h := ConcreteCategory.congr_hom ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ unitsF)).naturality g.op)
-    (ULift.up (Additive.ofMul u))
-  exact h.symm.trans rfl
-
 theorem unitSec_pow {U : Scheme.{0}} (v : (Γ(U, ⊤))ˣ) (n : ℕ) : unitSec (v ^ n) = n • unitSec v :=
   map_nsmul ((toSheafify Scheme.etaleTopology (Scheme.Γ ⋙ unitsF)).app (op U)).hom n (ULift.up (Additive.ofMul v))
 
 theorem map_zsmul_id {F : Shv ℤ} {U : Scheme.{0}} (n : ℤ) (b : Sec F U) : Sec.map (n • 𝟙 F) b = n • b := rfl
-
-theorem units_map_comp {W V U : Scheme.{0}} (h : W ⟶ V) (g : V ⟶ U) (u : (Γ(U, ⊤))ˣ) :
-    Units.map (h ≫ g).appTop.hom.toMonoidHom u =
-      Units.map h.appTop.hom.toMonoidHom (Units.map g.appTop.hom.toMonoidHom u) := by
-  ext
-  simp
-  rfl
 
 theorem isUnit_q_res {V U : Scheme.{0}} (g : V ⟶ U) {q : ℕ} (hq : IsUnit (q : Γ(U, ⊤))) : IsUnit (q : Γ(V, ⊤)) := by
   simpa using hq.map g.appTop.hom
@@ -572,7 +512,7 @@ theorem pi_unitSec {q : ℕ} (κ : Tz q ⟶ Gm) (h0 : κ ≫ ((q : ℤ) • 𝟙
   apply (h5 V (isUnit_q_res y hq)).1
   have e1 : Sec.map (cokernel.desc κ ((q : ℤ) • 𝟙 Gm) h0) (Sec.map (cokernel.π κ) (unitSec v)) =
       Sec.map (cokernel.π κ ≫ cokernel.desc κ ((q : ℤ) • 𝟙 Gm) h0) (unitSec v) := rfl
-  rw [e1, cokernel.π_desc, map_zsmul_id, ← map_res, hc, unitSec_res, ← hv, unitSec_pow, natCast_zsmul]
+  rw [e1, cokernel.π_desc, map_zsmul_id, ← map_res, hc, _root_.GlobalTheory.EtC.KumRoots.res_unitSec, ← hv, unitSec_pow, natCast_zsmul]
 
 theorem glue_sections : ∀ {R : Type} [CommRing R] (F : Shv R) (X : Scheme.{0}) (A : ∀ U : Scheme.{0}, (U ⟶ X) → Sec F U → Prop),
     (∀ (V U : Scheme.{0}) (g : V ⟶ U) (x : U ⟶ X) (s : Sec F U), A U x s → A V (g ≫ x) (Sec.res g s)) →
@@ -581,19 +521,6 @@ theorem glue_sections : ∀ {R : Type} [CommRing R] (F : Shv R) (X : Scheme.{0})
     ∃ e : ∀ U : Scheme.{0}, (U ⟶ X) → Sec F U, (∀ (V U : Scheme.{0}) (g : V ⟶ U) (x : U ⟶ X), Sec.res g (e U x) = e V (g ≫ x)) ∧
       ∀ (U : Scheme.{0}) (x : U ⟶ X) (s : Sec F U), A U x s → e U x = s := _root_.GlobalTheory.EtC.secGlue_of_loc
 
-theorem roots_loc : ∀ (q : ℕ) [NeZero q],
-    (∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ b : Sec Gm U, Loc U fun V g => ∃ c : Sec Gm V, Sec.map ((q : ℤ) • 𝟙 Gm) c = Sec.res g b) →
-    ∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ u : (Γ(U, ⊤))ˣ,
-      Loc U fun V g => ∃ v : (Γ(V, ⊤))ˣ, v ^ q = Units.map g.appTop.hom.toMonoidHom u := GlobalTheory.T.exists_etaleLocal_root_of_unit_of_kummer
-
-theorem D_inv : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZMod q))).obj (tw q 1) ⟶ Gm),
-    (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)) (u : (Γ(U, ⊤))ˣ), (u : Γ(U, ⊤)) = ζ.1 →
-      Sec.map κ (show Sec ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) U from twGen 1 ζ) = unitSec u) →
-    ∀ φ : Gm ⟶ (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))).X 0,
-      κ ≫ φ = resι ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) →
-    ∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ (v ω : (Γ(U, ⊤))ˣ), ω ^ q = 1 →
-      Sec.map φ (unitSec (ω * v)) - (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).app U 0 (kumT q U (ω * v)) =
-        Sec.map φ (unitSec v) - (restrMap (Int.castRingHom (ZMod q)) (tw q 1)).app U 0 (kumT q U v) := GlobalTheory.T.kummerSplittingDifference_mul_rootOfUnity
 theorem glue_family : ∀ (q : ℕ) [NeZero q] (κ : Tz q ⟶ Gm) (h0 : κ ≫ ((q : ℤ) • 𝟙 Gm) = 0),
     (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)) (u : (Γ(U, ⊤))ˣ), (u : Γ(U, ⊤)) = ζ.1 →
       Sec.map κ (show Sec (Tz q) U from twGen 1 ζ) = unitSec u) →
@@ -618,34 +545,34 @@ theorem glue_family : ∀ (q : ℕ) [NeZero q] (κ : Tz q ⟶ Gm) (h0 : κ ≫ (
       Sec.res h (D U v) = D V (Units.map h.appTop.hom.toMonoidHom v) := by
     intro V U h v hU
     simp only [D]
-    rw [res_sub, map_res, unitSec_res, (ρz q).nat, (kumT_spec q).1 V U h v hU]
+    rw [_root_.GlobalTheory.EtC.KummerSplit.res_sub, map_res, _root_.GlobalTheory.EtC.KumRoots.res_unitSec, (ρz q).nat, (kumT_spec q).1 V U h v hU]
   let A : ∀ U : Scheme.{0}, (U ⟶ X) → Sec ((res ℤ (Tz q)).X 0) U → Prop :=
     fun U x s => ∃ v : (Γ(U, ⊤))ˣ, v ^ q = Units.map x.appTop.hom.toMonoidHom u ∧ s = D U v
   have hA : ∀ (V U : Scheme.{0}) (h : V ⟶ U) (x : U ⟶ X) (s : Sec ((res ℤ (Tz q)).X 0) U), A U x s → A V (h ≫ x) (Sec.res h s) := by
     rintro V U h x s ⟨v, hv, rfl⟩
-    exact ⟨Units.map h.appTop.hom.toMonoidHom v, by rw [← map_pow, hv, units_map_comp], hDres V U h v (isUnit_q_res x hq)⟩
+    exact ⟨Units.map h.appTop.hom.toMonoidHom v, by rw [← map_pow, hv, _root_.GlobalTheory.EtC.KumRoots.units_map_comp], hDres V U h v (isUnit_q_res x hq)⟩
   have hu : ∀ (U : Scheme.{0}) (x : U ⟶ X) (s t : Sec ((res ℤ (Tz q)).X 0) U), A U x s → A U x t → s = t := by
     rintro U x s t ⟨v, hv, rfl⟩ ⟨v', hv', rfl⟩
-    have h := D_inv q κ h2 φ hφ U (isUnit_q_res x hq) v (v' * v⁻¹) (by rw [mul_pow, hv', inv_pow, hv, mul_inv_cancel])
+    have h := _root_.GlobalTheory.EtC.kumDiff_mul_rootOfUnity q κ h2 φ hφ U (isUnit_q_res x hq) v (v' * v⁻¹) (by rw [mul_pow, hv', inv_pow, hv, mul_inv_cancel])
     rw [show v' * v⁻¹ * v = v' by group] at h
     exact h.symm
   have hl : ∀ (U : Scheme.{0}) (x : U ⟶ X), Loc U fun V g => ∃ s, A V (g ≫ x) s := by
     intro U x
-    exact loc_mono (roots_loc q h4 U (isUnit_q_res x hq) (Units.map x.appTop.hom.toMonoidHom u))
-      (fun V g ⟨v, hv⟩ => ⟨D V v, v, by rw [hv, units_map_comp], rfl⟩)
-  obtain ⟨e, hen, heA⟩ := glue_sections ((res ℤ (Tz q)).X 0) X A hA hu hl
+    exact _root_.GlobalTheory.TwSec.loc_mono (_root_.GlobalTheory.EtC.KumRoots.roots q h4 U (isUnit_q_res x hq) (Units.map x.appTop.hom.toMonoidHom u))
+      (fun V g ⟨v, hv⟩ => ⟨D V v, v, by rw [hv, _root_.GlobalTheory.EtC.KumRoots.units_map_comp], rfl⟩)
+  obtain ⟨e, hen, heA⟩ := _root_.GlobalTheory.EtC.secGlue_of_loc ((res ℤ (Tz q)).X 0) X A hA hu hl
   refine ⟨e, hen, fun U x => ?_⟩
   apply sec_eq_of_loc
-  refine loc_mono (roots_loc q h4 U (isUnit_q_res x hq) (Units.map x.appTop.hom.toMonoidHom u)) (fun V h ⟨v, hv⟩ => ?_)
-  have hv' : v ^ q = Units.map (h ≫ x).appTop.hom.toMonoidHom u := by rw [hv, units_map_comp]
+  refine _root_.GlobalTheory.TwSec.loc_mono (_root_.GlobalTheory.EtC.KumRoots.roots q h4 U (isUnit_q_res x hq) (Units.map x.appTop.hom.toMonoidHom u)) (fun V h ⟨v, hv⟩ => ?_)
+  have hv' : v ^ q = Units.map (h ≫ x).appTop.hom.toMonoidHom u := by rw [hv, _root_.GlobalTheory.EtC.KumRoots.units_map_comp]
   have k1 : Sec.map ((res ℤ (Tz q)).d 0 1) (Sec.map φ (unitSec v)) = Sec.res (h ≫ x) (Sec.map ψ c) := by
     change Sec.map (φ ≫ (res ℤ (Tz q)).d 0 1) (unitSec v) = _
     rw [← hψ, map_res]
     change Sec.map ψ (Sec.map (cokernel.π κ) (unitSec v)) = _
     rw [pi_unitSec κ h0 h5 u c hq hc (h ≫ x) v hv']
-  rw [map_res, hen, heA V (h ≫ x) (D V v) ⟨v, hv', rfl⟩, res_sub, res_comp, hgn, hgk V (h ≫ x) v hv']
+  rw [map_res, hen, heA V (h ≫ x) (D V v) ⟨v, hv', rfl⟩, _root_.GlobalTheory.EtC.KummerSplit.res_sub, res_comp, hgn, hgk V (h ≫ x) v hv']
   simp only [D]
-  rw [map_sub', k1]
+  rw [_root_.GlobalTheory.EtC.KummerSplit.smap_sub, k1]
 
 theorem kum_connect : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZMod q))).obj (tw q 1) ⟶ Gm) (h0 : κ ≫ ((q : ℤ) • 𝟙 Gm) = 0), Mono κ →
   (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)) (u : (Γ(U, ⊤))ˣ), (u : Γ(U, ⊤)) = ζ.1 → Sec.map κ (show Sec ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) U from twGen 1 ζ) = unitSec u) →
@@ -722,8 +649,8 @@ theorem kum_connect : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZM
       rw [← h1, map_res]
       rfl
     | succ p =>
-      exact (sec_eq_zero_of_isZero (isZero_res_neg _ _ (by omega)) _).trans
-        (sec_eq_zero_of_isZero (isZero_res_neg _ _ (by omega)) _).symm
+      exact (_root_.GlobalTheory.EtC.Sec.eq_zero_of_isZero (isZero_res_neg _ _ (by omega)) _).trans
+        (_root_.GlobalTheory.EtC.Sec.eq_zero_of_isZero (isZero_res_neg _ _ (by omega)) _).symm
   have hL : HK.ext ℤ _ z 0 (0 + 1) rfl (secClass (cokernel κ) c) = s • CohomologyClass.mk (zcomp acyc w (zero_add 1)) := by
     have hα1' : CohomologyClass.mk α = secClass (cokernel κ) c := hα1
     rw [← hα1', hαa]
@@ -776,7 +703,7 @@ theorem kum_connect : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZM
       rw [hγ1 U x]
       simp
     | succ p =>
-      rw [sec_eq_zero_of_isZero (isZero_res_neg _ t (by omega)) (ev γ.1 _ t _ U x)]
+      rw [_root_.GlobalTheory.EtC.Sec.eq_zero_of_isZero (isZero_res_neg _ t (by omega)) (ev γ.1 _ t _ U x)]
       simp
 
 end GlobalTheory.EtC.KumUnit
@@ -792,20 +719,6 @@ section -- clump:auto
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex GlobalTheory.EtC
 
-theorem _root_.GlobalTheory.T.kummerConnecting_unitClass_eq_kummerClass : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.castRingHom (ZMod q))).obj (tw q 1) ⟶ Gm) (h0 : κ ≫ ((q : ℤ) • 𝟙 Gm) = 0), Mono κ →
-  (∀ (U : Scheme.{0}) (ζ : Prim q Γ(U, ⊤)) (u : (Γ(U, ⊤))ˣ), (u : Γ(U, ⊤)) = ζ.1 → Sec.map κ (show Sec ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) U from twGen 1 ζ) = unitSec u) →
-  (∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ b : Sec Gm U, Sec.map ((q : ℤ) • 𝟙 Gm) b = 0 → ∃ a, Sec.map κ a = b) →
-  (∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → ∀ b : Sec Gm U, Loc U fun V g => ∃ c : Sec Gm V, Sec.map ((q : ℤ) • 𝟙 Gm) c = Sec.res g b) →
-  (∀ (U : Scheme.{0}), IsUnit (q : Γ(U, ⊤)) → Function.Bijective (Sec.map (cokernel.desc κ ((q : ℤ) • 𝟙 Gm) h0) (U := U))) →
-  ∀ (z : Cocycle (res ℤ (cokernel κ)) (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))) 1) (s : ℤˣ),
-  (∀ (φ : Gm ⟶ (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))).X 0) (ψ : cokernel κ ⟶ (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))).X 1),
-      κ ≫ φ = resι ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1)) → cokernel.π κ ≫ ψ = φ ≫ (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))).d 0 1 →
-      ∀ w : Cocycle (sgl (cokernel κ)) (res ℤ ((restr (Int.castRingHom (ZMod q))).obj (tw q 1))) 1, sglι (cokernel κ) ≫ w.1.v 0 1 (zero_add 1) = ψ →
-        CohomologyClass.mk (zcomp (Cocycle.ofHom (resAug (cokernel κ))) z (zero_add 1)) = s • CohomologyClass.mk w) →
-  ∀ (X : Scheme.{0}) (u : (Γ(X, ⊤))ˣ) (c : Sec (cokernel κ) X), IsUnit (q : Γ(X, ⊤)) →
-    Sec.map (cokernel.desc κ ((q : ℤ) • 𝟙 Gm) h0) c = unitSec u →
-    HK.ext ℤ _ z 0 (0 + 1) rfl (secClass (cokernel κ) c) = s • restrH (Int.castRingHom (ZMod q)) (sch.obj X) (tw q 1) (0 + 1) (kum q u) := by
-  first | (exact @GlobalTheory.EtC.KumUnit.kum_connect)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerConnectingUnitClassEqKummerClassStatement =====

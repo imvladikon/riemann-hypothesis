@@ -546,10 +546,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc NumberField
 
-private theorem isCM_of_conj (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K]
-    (h : ∀ x : K, ∃ y : K, ∀ φ : K →+* ℂ, φ y = starRingEnd ℂ (φ x)) : IsCMField K :=
-  _root_.UpperTheory.Reformulated.B.Qh8.isCM_of_conj K h
-
 open Polynomial in
 private theorem exists_sqrt (l : ℕ) [hl : Fact l.Prime] :
     ∃ d : ℚ_[l], d ^ 2 = 1 - 4 * (l : ℚ_[l]) := by
@@ -644,7 +640,7 @@ theorem UpperTheory.exists_totally_imaginary_generator_of_isCMField :
     rw [hδc] at h1
     exact hδ0 w.embedding (by linear_combination (-1 / 2 : ℂ) * h1)⟩
   have hCM : IsCMField M := by
-    refine isCM_of_conj _ ?_
+    refine _root_.UpperTheory.Reformulated.B.Qh8.isCM_of_conj _ ?_
     rintro ⟨x, hx⟩
     induction hx using IntermediateField.adjoin_induction with
     | mem x hx =>
@@ -1052,14 +1048,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.BasicNotions Formalism.BasicNotions.Loc GlobalTheory.WeilDeligne GlobalTheory.GalOfCusp GlobalTheory.HeckeGal GlobalTheory.LocLanglands GlobalTheory.Published UpperTheory.V.W
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
-private theorem ex_lift {M Ω C : Type} [Field M] [NumberField M] [Field Ω] [CharZero Ω] [IsAlgClosed Ω] [Field C] [CharZero C]
-    (j : Ω →+* C) (f : M →+* C) : ∃ g : M →+* Ω, ∀ x, j (g x) = f x :=
-  _root_.UpperTheory.Reformulated.B.Qj6.ex_lift j f
-
-private theorem ex_comp {F M Ω : Type} [Field F] [NumberField F] [Field M] [NumberField M] [Field Ω] [Algebra F Ω]
-    [Algebra.IsAlgebraic F Ω] (g : M →+* Ω) : FiniteDimensional F (IntermediateField.adjoin F (Set.range g)) :=
-  _root_.UpperTheory.Reformulated.B.Qh44.ex_comp g
-
 theorem UpperTheory.V.Loc.ltAll :
     GlobalArtinReciprocity → HeckeLAdicCharacter → HeckeLAdicCharacterDeRham → AlgebraicCharacterWD → DeRhamPotSemistable → ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {w : Plc F} (h : IsPlaceOver A w) {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l F Ω (Dec (F := F) A) O) (hj : GlobalTheory.Pst.Induces Bw) (ι : Qbar l ≃+* ℂ) (wt : Emb l w → ℤ) (a : Weil h →* (w.adicCompletion F)ˣ), IsLocalArtin h a → UpperTheory.V.Loc.HasLT h Bw hj ι wt a := by
   intro hG hH hD hW hP F Ω _ _ _ _ _ l _ A w h O _ _ _ Bw hj ι wt a ha
@@ -1067,9 +1055,9 @@ theorem UpperTheory.V.Loc.ltAll :
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   obtain ⟨M, _, _, _, f, hf, δ, d, hδ, hd, hc⟩ := UpperTheory.exists_totally_imaginary_generator_of_isCMField l Bw.Kw
-  obtain ⟨g, hg⟩ := ex_lift Bw.j f
+  obtain ⟨g, hg⟩ := _root_.UpperTheory.Reformulated.B.Qj6.ex_lift Bw.j f
   let K := IntermediateField.adjoin F (Set.range g)
-  haveI : FiniteDimensional F K := ex_comp g
+  haveI : FiniteDimensional F K := _root_.UpperTheory.Reformulated.B.Qh44.ex_comp g
   haveI : NumberField K := NumberField.of_module_finite F K
   haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   letI : Algebra M Ω := g.toAlgebra
@@ -1175,7 +1163,7 @@ theorem UpperTheory.V.Loc.laWD :
   · rw [MonoidHom.mul_apply, Units.val_mul, eξ, hκψ, mul_right_comm, map_mul ι (_ * _)]
     rfl
   · rw [htw] at pκ ⊢
-    rw [GlobalTheory.T.fontaineParameter_twist_potentiallySemistable l _ _ ⟨T⟩ ι F Ω A w h O Bw hj 1 _ _ (continuous_rank_one_rep μ hμ) (continuous_rank_one_rep ψ hψ) pμ pψ pκ,
+    rw [_root_.GlobalTheory.TwistParamAbove.wdAt_twist l _ _ ⟨T⟩ ι F Ω A w h O Bw hj 1 _ _ (continuous_rank_one_rep μ hμ) (continuous_rank_one_rep ψ hψ) pμ pψ pκ,
       ParamAboveModel.eq_lpOfChar h _ (GlobalTheory.Pst.Test.lpDim_wdAt _ ι Bw h hj (GlobalTheory.TripleGal.rk1 ψ)) η sη wψ,
       GlobalTheory.RowTie.EigTwist.eig_lpChar _ _ σ (by simp [WD.lpOfChar]) _ (eig_lpOfChar η sη σ)]
     exact Multiset.mem_map_of_mem _ (wξ σ)

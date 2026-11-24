@@ -165,10 +165,7 @@ noncomputable section
 
 namespace PI.OddDualWeyl.Uniq
 
-theorem aeval_smul_hom {K S : Type*} [CommRing K] [CommRing S] [Algebra K S] {ι : Type*} [Fintype ι]
-    {G : MvPolynomial ι K} {d : ℕ} (hG : IsHomogeneous G d) (c : S) (f : ι → S) :
-    aeval (fun v => c * f v) G = c ^ d * aeval f G := by
-  first | (apply Bl.general_b_fact_right_alt.goal1 <;> assumption)
+alias aeval_smul_hom := _root_.Bl.general_b_fact_right_alt.goal1
 
 def P (Rg : Type*) [CommRing Rg] (k : ℕ) : Matrix (Fin k) (Fin k) Rg :=
   Matrix.of fun i j => if i = Fin.rev j then 1 else 0
@@ -268,9 +265,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem oddDualWeyl {K : Type} [Field K] (O : Type) [CommRing O] [Algebra O K] (m : ℕ) (lam : Fin (m + 1) → ℤ) :
-    PI.OddDualWeyl.OddFact (K := K) O m lam :=
-  PI.OddDualWeyl.odd_dual_weyl_factorization O m lam
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OddDualWeyl =====
@@ -285,7 +279,7 @@ namespace Formalism.L2.G.RelativeIndexFlags
 open Formalism.L2.G.Cmp
 
 theorem oddFact_pf {K : Type} [Field K] (O : Type) [CommRing O] [Algebra O K] (m : ℕ) (lam : Fin (m + 1) → ℤ) :
-    OddFact (K := K) O m lam := oddDualWeyl O m lam
+    OddFact (K := K) O m lam := _root_.PI.OddDualWeyl.odd_dual_weyl_factorization O m lam
 
 theorem weylLatticeDescent_holds : WeylLatticeDescent := weylLatticeDescent_of_integral_models fun m lam _ => oddFact_pf ℤ m lam
 

@@ -281,12 +281,6 @@ theorem exactAt_linkIn_of_map : ∀ (R M : Type) [CommRing R] [AddCommGroup M] [
 
 end GlobalTheory.SeqCxLinkEquiv
 
-section
-open GlobalTheory.SeqCx Matrix
-theorem _root_.GlobalTheory.T.exactAt_linkIn_uniM_of_exactAt_map_linearEquiv : ∀ (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] (ψ : M ≃ₗ[R] M) (X : Set M), (∀ x, ψ x ∈ X ↔ x ∈ X) → ∀ (τ : List M) (p : ℕ), ExactAt (linkIn (uniM R M) X (τ.map ψ)) p → ExactAt (linkIn (uniM R M) X τ) p := by
-  first
-  | exact @GlobalTheory.SeqCxLinkEquiv.exactAt_linkIn_of_map
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtLinkInUniMOfExactAtMapLinearEquiv =====
@@ -320,7 +314,7 @@ theorem linkIn_exactAt_of_coord_one : ∀ (R : Type) [CommRing R] (s n : ℕ), L
     p + s + τ.length ≤ n + 2 →
     ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R (n + 1) ∪ aff R (n + 1) j) τ) p := by
   intro R _ s n h j hj τ hτ v hv hvn p hp
-  have hsub : SubClosed (uniM R (ℕ →₀ R)) := (T.subClosed_and_perm_and_linearEquiv_invariant_uniM R (ℕ →₀ R)).1
+  have hsub : SubClosed (uniM R (ℕ →₀ R)) := (_root_.GlobalTheory.UniSeqBasic.main R (ℕ →₀ R)).1
   have hlenpos := List.length_pos_of_mem hv
   apply exactAt_of_links (ℕ →₀ R) _ (low R n ∪ aff R n j)
   · intro l hl l' hl'
@@ -343,7 +337,7 @@ theorem linkIn_exactAt_of_coord_one : ∀ (R : Type) [CommRing R] (s n : ℕ), L
         · rw [← List.append_assoc]
           exact h2
     rw [heq]
-    obtain ⟨τ', hτ', hl', heq'⟩ := T.linkIn_uniM_eq_shorter_of_form_eq_one R (ℕ →₀ R) (Finsupp.lapply n) (low R n ∪ aff R n j)
+    obtain ⟨τ', hτ', hl', heq'⟩ := _root_.GlobalTheory.SeqCx.linkIn_uniM_eq_of_form R (ℕ →₀ R) (Finsupp.lapply n) (low R n ∪ aff R n j)
       (coord_vanish_low_aff R n j hj) (τ ++ τ1) hτ1.2 v (List.mem_append_left _ hv)
       (by rw [Finsupp.lapply_apply]; exact hvn)
     rw [heq']
@@ -352,12 +346,6 @@ theorem linkIn_exactAt_of_coord_one : ∀ (R : Type) [CommRing R] (s n : ℕ), L
 
 end GlobalTheory.SeqCx
 
-section
-open GlobalTheory.SeqCx Matrix
-theorem _root_.GlobalTheory.T.exactAt_link_succ_union_translate_of_coord_one : ∀ (R : Type) [CommRing R] (s n : ℕ), LinkExactAff R s n → ∀ j : ℕ, n + 1 ≤ j → ∀ τ ∈ uniM R (ℕ →₀ R), ∀ v ∈ τ, v n = 1 → ∀ p : ℕ, p + s + τ.length ≤ n + 2 → ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R (n + 1) ∪ aff R (n + 1) j) τ) p := by
-  first
-  | exact @GlobalTheory.SeqCx.linkIn_exactAt_of_coord_one
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtLinkSuccUnionTranslateOfCoordOne =====
@@ -418,12 +406,6 @@ theorem main : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[
 
 end GlobalTheory.ShearLow
 
-section
-open GlobalTheory.SeqCx Matrix
-theorem _root_.GlobalTheory.T.exists_transvection_preserving_low_and_aff : ∀ (R : Type) [CommRing R] (n : ℕ) (h : (ℕ →₀ R) →ₗ[R] R) (t : ℕ →₀ R), t ∈ low R n → h t = 0 → ∃ ψ : (ℕ →₀ R) ≃ₗ[R] (ℕ →₀ R), (∀ x, ψ x = x + h x • t) ∧ (∀ x, ψ x ∈ low R n ↔ x ∈ low R n) ∧ ∀ j x, ψ x ∈ aff R n j ↔ x ∈ aff R n j := by
-  first
-  | exact @GlobalTheory.ShearLow.main
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsTransvectionPreservingLowAndAff =====
@@ -485,7 +467,7 @@ theorem unimodular_to_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableR
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [htapp, dite_eq_left j.2, mul_comm]
     rw [h1, h2, sub_self]
-  obtain ⟨ψ1, hψ1, hψ1l, hψ1a⟩ := GlobalTheory.T.exists_transvection_preserving_low_and_aff R (n + 1) h t htlow' hht
+  obtain ⟨ψ1, hψ1, hψ1l, hψ1a⟩ := _root_.GlobalTheory.ShearLow.main R (n + 1) h t htlow' hht
   have hv' : ∀ i : Fin n, ψ1 v i = v i + t' i * h v := by
     intro i
     rw [hψ1, Finsupp.add_apply, Finsupp.smul_apply, htapp, dite_eq_left i.2, smul_eq_mul, mul_comm]
@@ -504,7 +486,7 @@ theorem unimodular_to_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableR
     refine Finset.sum_eq_zero fun i _ => ?_
     have := i.2
     rw [Finsupp.single_apply, if_neg (by omega), mul_zero]
-  obtain ⟨ψ2, hψ2, hψ2l, hψ2a⟩ := GlobalTheory.T.exists_transvection_preserving_low_and_aff R (n + 1) h2 _ ht2low hht2
+  obtain ⟨ψ2, hψ2, hψ2l, hψ2a⟩ := _root_.GlobalTheory.ShearLow.main R (n + 1) h2 _ ht2low hht2
   refine ⟨ψ1.trans ψ2, fun x => ?_, fun j x => ?_, ?_⟩
   · rw [LinearEquiv.trans_apply, hψ2l, hψ1l]
   · rw [LinearEquiv.trans_apply, hψ2a, hψ1a]
@@ -516,12 +498,6 @@ theorem unimodular_to_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableR
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exists_automorphism_preserving_translates_coord_one : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ (n : ℕ), s ≤ n → ∀ v : ℕ →₀ R, [v] ∈ uniM R (ℕ →₀ R) → ∃ ψ : (ℕ →₀ R) ≃ₗ[R] (ℕ →₀ R), (∀ x, ψ x ∈ low R (n + 1) ↔ x ∈ low R (n + 1)) ∧ (∀ j x, ψ x ∈ aff R (n + 1) j ↔ x ∈ aff R (n + 1) j) ∧ ψ v n = 1 := by
-  first
-  | exact @GlobalTheory.unimodular_to_coord_one
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsAutomorphismPreservingTranslatesCoordOne =====
@@ -537,7 +513,7 @@ namespace GlobalTheory
 
 theorem uniM_map_equiv {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (ψ : M ≃ₗ[R] M)
     {τ : List M} (hτ : τ ∈ uniM R M) : τ.map ψ ∈ uniM R M := by
-  exact ((T.subClosed_and_perm_and_linearEquiv_invariant_uniM R M).2.2 ψ τ).mpr hτ
+  exact ((_root_.GlobalTheory.UniSeqBasic.main R M).2.2 ψ τ).mpr hτ
 
 theorem linkExact_low_union_aff_of_ne_nil : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ n : ℕ, s ≤ n →
     LinkExactAff R s n → ∀ j : ℕ, n + 1 ≤ j → ∀ τ ∈ uniM R (ℕ →₀ R), τ ≠ [] → ∀ p : ℕ,
@@ -545,22 +521,16 @@ theorem linkExact_low_union_aff_of_ne_nil : ∀ (R : Type) [CommRing R] (s : ℕ
     ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R (n + 1) ∪ aff R (n + 1) j) τ) p := by
   intro R _ s hs n hn hL j hj τ hτ hne p hp
   obtain ⟨v, rest, rfl⟩ := List.exists_cons_of_ne_nil hne
-  have hv : [v] ∈ uniM R (ℕ →₀ R) := (T.subClosed_and_perm_and_linearEquiv_invariant_uniM R (ℕ →₀ R)).1 _ hτ [v] (by simp)
-  obtain ⟨ψ, hlow, haff, hψv⟩ := T.exists_automorphism_preserving_translates_coord_one R s hs n hn v hv
-  refine T.exactAt_linkIn_uniM_of_exactAt_map_linearEquiv R (ℕ →₀ R) ψ (low R (n + 1) ∪ aff R (n + 1) j) ?_ _ p ?_
+  have hv : [v] ∈ uniM R (ℕ →₀ R) := (_root_.GlobalTheory.UniSeqBasic.main R (ℕ →₀ R)).1 _ hτ [v] (by simp)
+  obtain ⟨ψ, hlow, haff, hψv⟩ := _root_.GlobalTheory.unimodular_to_coord_one R s hs n hn v hv
+  refine _root_.GlobalTheory.SeqCxLinkEquiv.exactAt_linkIn_of_map R (ℕ →₀ R) ψ (low R (n + 1) ∪ aff R (n + 1) j) ?_ _ p ?_
   · intro x
     simp only [Set.mem_union, hlow, haff]
-  · refine T.exactAt_link_succ_union_translate_of_coord_one R s n hL j hj _ (uniM_map_equiv ψ hτ) (ψ v) (by simp) hψv p ?_
+  · refine _root_.GlobalTheory.SeqCx.linkIn_exactAt_of_coord_one R s n hL j hj _ (uniM_map_equiv ψ hτ) (ψ v) (by simp) hψv p ?_
     simpa using hp
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exactAt_linkIn_succ_union_translate_of_ne_nil : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ n : ℕ, s ≤ n → LinkExactAff R s n → ∀ j : ℕ, n + 1 ≤ j → ∀ τ ∈ uniM R (ℕ →₀ R), τ ≠ [] → ∀ p : ℕ, p + s + τ.length ≤ n + 2 → ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R (n + 1) ∪ aff R (n + 1) j) τ) p := by
-  first
-  | exact @GlobalTheory.linkExact_low_union_aff_of_ne_nil
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtLinkInSuccUnionTranslateOfNeNil =====
@@ -579,8 +549,8 @@ theorem exactAt_of_links_cone : ∀ (V : Type) (F : Set (List V)) (S : Set V) (y
     (∀ τ ∈ F, ∀ x, τ.getLast? = some x → x ∉ S → τ.length ≤ p →
       ExactAt (linkIn F S τ) (p - τ.length)) → ExactAt F p := by
   intro V F S y hF hy p hlink c hc hbd
-  obtain ⟨b, hb, hc', hbd'⟩ := GlobalTheory.T.exists_homologous_cycle_with_entries_in_of_exactAt_links V F S hF p hlink c hc hbd
-  obtain ⟨b', hb', hbb'⟩ := GlobalTheory.T.seqChain_cycle_bounded_by_cone V F (linkIn F S []) y hy p (c - bd V b) hc' hbd'
+  obtain ⟨b, hb, hc', hbd'⟩ := _root_.GlobalTheory.SeqCx.exists_sub_bd_mem_chains_linkIn_nil V F S hF p hlink c hc hbd
+  obtain ⟨b', hb', hbb'⟩ := _root_.GlobalTheory.cone_cycle_isBoundary V F (linkIn F S []) y hy p (c - bd V b) hc' hbd'
   refine ⟨b + b', Submodule.add_mem _ hb hb', ?_⟩
   rw [map_add (f := _), hbb']
   abel
@@ -607,7 +577,7 @@ theorem exactAt_uniM_low_union_aff : ∀ (R : Type) [CommRing R] (s n : ℕ), Li
     ∀ j : ℕ, n ≤ j → ∀ p : ℕ, p + s ≤ n + 1 →
       ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R n ∪ aff R n j) []) p := by
   intro R _ s n h j hj p hp
-  have hsub := (T.subClosed_and_perm_and_linearEquiv_invariant_uniM R (ℕ →₀ R)).1
+  have hsub := (_root_.GlobalTheory.UniSeqBasic.main R (ℕ →₀ R)).1
   have hlow : ∀ x ∈ low R n, x j = 0 := by
     intro x hx
     have h' : ∀ i, n ≤ i → x i = 0 := hx
@@ -636,7 +606,7 @@ theorem exactAt_uniM_low_union_aff : ∀ (R : Type) [CommRing R] (s n : ℕ), Li
         exact fun i _ => Finsupp.zero_apply
       · exact hl2 x hx
     · show Finsupp.single j (1 : R) :: l ∈ uniM R (ℕ →₀ R)
-      rw [T.cons_mem_uniM_iff_map_sub_smul R (ℕ →₀ R) (Finsupp.lapply j : (ℕ →₀ R) →ₗ[R] R) _ (by rw [hφ]; simp)]
+      rw [_root_.GlobalTheory.UniModVec.cons_mem_uniM_iff_map_proj R (ℕ →₀ R) (Finsupp.lapply j : (ℕ →₀ R) →ₗ[R] R) _ (by rw [hφ]; simp)]
       convert hl3' using 2
       conv_rhs => rw [← List.map_id l]
       apply List.map_congr_left
@@ -649,7 +619,7 @@ theorem exactAt_uniM_low_union_aff : ∀ (R : Type) [CommRing R] (s n : ℕ), Li
     have hxτ : x ∈ τ := List.mem_of_getLast? hlast
     have hxaff : x ∈ aff R n j := (hτS x hxτ).resolve_left hx
     have hx1 : (Finsupp.lapply j : (ℕ →₀ R) →ₗ[R] R) x = 1 := by rw [hφ]; exact haff x hxaff
-    obtain ⟨τ', hτ'U, hlen', heq⟩ := T.linkIn_uniM_eq_shorter_of_form_eq_one R (ℕ →₀ R) (Finsupp.lapply j : (ℕ →₀ R) →ₗ[R] R) (low R n)
+    obtain ⟨τ', hτ'U, hlen', heq⟩ := _root_.GlobalTheory.SeqCx.linkIn_uniM_eq_of_form R (ℕ →₀ R) (Finsupp.lapply j : (ℕ →₀ R) →ₗ[R] R) (low R n)
       (fun y hy => by rw [hφ]; exact hlow y hy) τ hτU' x hxτ hx1
     have hL : linkIn (linkIn (uniM R (ℕ →₀ R)) (low R n ∪ aff R n j) []) (low R n) τ
         = linkIn (uniM R (ℕ →₀ R)) (low R n) τ := by
@@ -669,12 +639,6 @@ theorem exactAt_uniM_low_union_aff : ∀ (R : Type) [CommRing R] (s n : ℕ), Li
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix
-theorem _root_.GlobalTheory.T.exactAt_link_nil_coordSubspace_union_translate : ∀ (R : Type) [CommRing R] (s n : ℕ), LinkExactLow R s n → ∀ j : ℕ, n ≤ j → ∀ p : ℕ, p + s ≤ n + 1 → ExactAt (linkIn (uniM R (ℕ →₀ R)) (low R n ∪ aff R n j) []) p := by
-  first
-  | exact @GlobalTheory.exactAt_uniM_low_union_aff
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtLinkNilCoordSubspaceUnionTranslate =====
@@ -832,12 +796,6 @@ theorem unimodular_partner_aff : ∀ (R : Type) [CommRing R] (s : ℕ), StableRa
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exists_mem_translate_unimodular_pair_of_stableRangeLe : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ (n j : ℕ), s ≤ n → n ≤ j → ∀ v : ℕ →₀ R, [v] ∈ uniM R (ℕ →₀ R) → ∃ x ∈ aff R n j, [v, x] ∈ uniM R (ℕ →₀ R) := by
-  first
-  | exact @GlobalTheory.unimodular_partner_aff
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExistsMemTranslateUnimodularPairOfStableRangeLe =====
@@ -864,7 +822,7 @@ theorem low_union_aff_subset_low_succ (R : Type) [CommRing R] (n : ℕ) :
 theorem linkExactLow_succ_of_linkExactAff : ∀ (R : Type) [CommRing R] (s n : ℕ),
     LinkExactAff R s n → LinkExactLow R s (n + 1) := by
   intro R _ s n h τ hτ p hp
-  have hsub : SubClosed (uniM R (ℕ →₀ R)) := (T.subClosed_and_perm_and_linearEquiv_invariant_uniM R (ℕ →₀ R)).1
+  have hsub : SubClosed (uniM R (ℕ →₀ R)) := (_root_.GlobalTheory.UniSeqBasic.main R (ℕ →₀ R)).1
   apply exactAt_of_links (ℕ →₀ R) _ (low R n ∪ aff R n n)
   · intro l hl l' hl'
     refine ⟨fun x hx => hl.1 x (hl'.subset hx), hsub _ hl.2 _ ?_⟩
@@ -890,12 +848,6 @@ theorem linkExactLow_succ_of_linkExactAff : ∀ (R : Type) [CommRing R] (s n : �
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix
-theorem _root_.GlobalTheory.T.linkExactLow_add_one_of_linkExactAff : ∀ (R : Type) [CommRing R] (s n : ℕ), LinkExactAff R s n → LinkExactLow R s (n + 1) := by
-  first
-  | exact @GlobalTheory.linkExactLow_succ_of_linkExactAff
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.LinkExactLowAddOneOfLinkExactAff =====
@@ -942,27 +894,27 @@ theorem GlobalTheory.SeqCx.linkExact_of_stableRangeLe : ∀ (R : Type) [CommRing
     · intro j hj τ hτ p hp
       cases τ with
       | nil =>
-        exact GlobalTheory.T.exactAt_link_nil_coordSubspace_union_translate R s 0 (fun τ _ p hp => by omega) j hj p (by simpa using hp)
+        exact _root_.GlobalTheory.exactAt_uniM_low_union_aff R s 0 (fun τ _ p hp => by omega) j hj p (by simpa using hp)
       | cons v τ =>
         simp at hp
         omega
   | succ n ih =>
     obtain ⟨_, hA⟩ := ih
-    have hL' : LinkExactLow R s (n + 1) := GlobalTheory.T.linkExactLow_add_one_of_linkExactAff R s n hA
+    have hL' : LinkExactLow R s (n + 1) := _root_.GlobalTheory.linkExactLow_succ_of_linkExactAff R s n hA
     refine ⟨hL', ?_⟩
     intro j hj τ hτ p hp
     cases τ with
     | nil =>
-      exact GlobalTheory.T.exactAt_link_nil_coordSubspace_union_translate R s (n + 1) hL' j hj p (by simpa using hp)
+      exact _root_.GlobalTheory.exactAt_uniM_low_union_aff R s (n + 1) hL' j hj p (by simpa using hp)
     | cons v τ =>
       by_cases hsn : s ≤ n
-      · exact GlobalTheory.T.exactAt_linkIn_succ_union_translate_of_ne_nil R s h n hsn hA j hj (v :: τ) hτ (List.cons_ne_nil _ _) p hp
+      · exact _root_.GlobalTheory.linkExact_low_union_aff_of_ne_nil R s h n hsn hA j hj (v :: τ) hτ (List.cons_ne_nil _ _) p hp
       · simp only [List.length_cons] at hp
         have hp0 : p = 0 := by omega
         have hτ0 : τ = [] := List.length_eq_zero_iff.mp (by omega)
         subst hp0
         subst hτ0
-        obtain ⟨x, hx, hvx⟩ := GlobalTheory.T.exists_mem_translate_unimodular_pair_of_stableRangeLe R s h (n + 1) j (by omega) hj v hτ
+        obtain ⟨x, hx, hvx⟩ := _root_.GlobalTheory.unimodular_partner_aff R s h (n + 1) j (by omega) hj v hτ
         exact exactAt_zero_of_singleton_mem' _ x ⟨fun y hy => by
           simp only [List.mem_singleton] at hy
           subst hy
@@ -1002,18 +954,12 @@ theorem uniSeq_exactAt_of_stableRangeLe : ∀ (R : Type) [CommRing R] (s : ℕ),
   · haveI := subsingleton_of_stableRangeLe_zero R h
     have hall : ∀ l : List (Fin m → R), l ∈ uniSeq R m :=
       fun l => ⟨fun _ => 0, fun _ _ => Subsingleton.elim _ _⟩
-    exact GlobalTheory.T.seqChain_cycle_bounded_by_cone (Fin m → R) (uniSeq R m) (uniSeq R m) 0 (fun l _ => hall _) q
+    exact _root_.GlobalTheory.cone_cycle_isBoundary (Fin m → R) (uniSeq R m) (uniSeq R m) 0 (fun l _ => hall _) q
   · have hL := (GlobalTheory.SeqCx.linkExact_of_stableRangeLe R s h hs m).1
     exact GlobalTheory.T.exactAt_unimodularSeqs_of_link_nil_coordSubspace R m q (hL [] ⟨fun _ => 0, fun i _ => i.elim0⟩ q (by simpa using hq))
 
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.exactAt_unimodularSeqs_of_add_stableRank_le : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ m q : ℕ, q + s ≤ m → ExactAt (uniSeq R m) q := by
-  first
-  | exact @GlobalTheory.uniSeq_exactAt_of_stableRangeLe
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.ExactAtUnimodularSeqsOfAddStableRankLe =====
@@ -1027,18 +973,8 @@ open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
 
 namespace GlobalTheory
 
-theorem uniSeq_exactAt_stableRange : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s →
-    ∀ m q : ℕ, q + s ≤ m → ExactAt (uniSeq R m) q :=
-  GlobalTheory.T.exactAt_unimodularSeqs_of_add_stableRank_le
-
 end GlobalTheory
 
-section
-open GlobalTheory.SeqCx Matrix UpperTheory.V.KL
-theorem _root_.GlobalTheory.T.unimodularSeqComplex_exactAt_of_add_stableRank_le : ∀ (R : Type) [CommRing R] (s : ℕ), StableRangeLe R s → ∀ m q : ℕ, q + s ≤ m → ExactAt (uniSeq R m) q := by
-  first
-  | exact @GlobalTheory.uniSeq_exactAt_stableRange
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.KTheoryStability.HomologicalStability.LinkExactnessStability.UnimodularSeqComplexExactAtOfAddStableRankLe =====

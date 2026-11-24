@@ -185,17 +185,6 @@ noncomputable section
 
 namespace GlobalTheory.StageSmallNz
 
-theorem tmul_ne_zero {Pr Pf : Type} [AddCommGroup Pr] [Module ℂ Pr] [AddCommGroup Pf] [Module ℂ Pf] {x : Pr} {y : Pf}
-    (hx : x ≠ 0) (hy : y ≠ 0) : x ⊗ₜ[ℂ] y ≠ 0 := by
-  obtain ⟨φ, hφ⟩ : ∃ φ : Module.Dual ℂ Pf, φ y ≠ 0 := by
-    by_contra hc
-    push_neg at hc
-    exact hy ((Module.forall_dual_apply_eq_zero_iff ℂ y).1 hc)
-  intro h0
-  have := congrArg ((TensorProduct.rid ℂ Pr).toLinearMap ∘ₗ LinearMap.lTensor Pr φ) h0
-  simp only [LinearMap.comp_apply, LinearMap.lTensor_tmul, LinearEquiv.coe_coe, TensorProduct.rid_tmul, map_zero] at this
-  exact hx ((smul_eq_zero.1 this).resolve_left hφ)
-
 theorem nontrivial_left {Pr Pf Pi : Type} [AddCommGroup Pr] [Module ℂ Pr] [AddCommGroup Pf] [Module ℂ Pf]
     [AddCommGroup Pi] [Module ℂ Pi] [Nontrivial Pi] (e : Pr ⊗[ℂ] Pf ≃ₗ[ℂ] Pi) : Nontrivial Pr := by
   by_contra hP0
@@ -292,7 +281,7 @@ theorem theta_vanish_all_of_irreducible : _root_.GlobalTheory.FunPr.ThetaLocalIn
   ∀ Φ' ∈ GlobalTheory.SquareComm.algF ψ θ false A₁ B, p' Φ' ≠ 0 → GlobalTheory.SquareComm.thetaInt ωB ν₁ 𝓕₁ Φ' = 0 →
   ∀ Φ'' ∈ GlobalTheory.SquareComm.algF ψ θ false A₁ B, GlobalTheory.SquareComm.thetaInt ωB ν₁ 𝓕₁ Φ'' = 0 := by
   intro hP hTK hLM D ψ θ hψ hθ W W₁ X A A₁ B α β hT hs₁ ν 𝓕 ν₁ 𝓕₁ hν hν₁ ωA ωB Pm rf rl p p' hm Φ₁ hΦ₁ hp₁ hz₁ Φ₂ hΦ₂
-  have hTA : GlobalTheory.SquareSt.ThetaIntegralsAgree := _root_.GlobalTheory.T.twisted_square_theta_integrals_eq hP hTK hLM
+  have hTA : GlobalTheory.SquareSt.ThetaIntegralsAgree := _root_.GlobalTheory.SquareAgree.twisted_theta_integrals_agree hP hTK hLM
   set S := GlobalTheory.SquareComm.algF ψ θ false A₁ B with hSdef
   have hint := GlobalTheory.DefIrred.integrable_algF hψ hθ A₁ B hm.weilB hs₁ hν₁
   have tr : ∀ (Φ : WO W₁ X → ℂ) (g : GA D W₁) (h k : GA D X), thetaKO ωB g h (ωB (1, k) Φ) = thetaKO ωB g (h * k) Φ := by
@@ -340,7 +329,7 @@ theorem theta_vanish_all_of_irreducible : _root_.GlobalTheory.FunPr.ThetaLocalIn
         by rw [tsmul, ha.2, smul_zero]⟩ }
   let K : Submodule ℂ (WO W₁ X → ℂ) := S ⊓ Kint
   obtain ⟨c, hc0, hc⟩ := hTA D ψ θ hθ W W₁ X A A₁ B α β hT ν 𝓕 ν₁ 𝓕₁ hν hν₁ ωA ωB Pm rf rl p p' hm
-  have hrel := _root_.GlobalTheory.T.theta_integral_vanishes_on_finite_relations hP D ψ θ hψ hθ W₁ X A₁ B α (α / β) ωB hm.weilB hs₁ ν₁ 𝓕₁ hν₁
+  have hrel := _root_.GlobalTheory.ThetaFinRelDef.theta_integral_finite_relation_eq_zero hP D ψ θ hψ hθ W₁ X A₁ B α (α / β) ωB hm.weilB hs₁ ν₁ 𝓕₁ hν₁
   have kerp' : GlobalTheory.SquareComm.finRel ωB S ≤ LinearMap.ker p' := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨u, hu, Ψ, hΨ, rfl⟩
@@ -390,30 +379,6 @@ end GlobalTheory.DefiniteSmallIrred
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-open MeasureTheory
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.vanishing_of_definite_small_irreducible : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D), IsStdChar D ψ (-1) → IsInfFam θ →
-  ∀ (W W₁ X : HSp D) (A : GlobalTheory.ChainFr.Fr W) (A₁ : GlobalTheory.ChainFr.Fr W₁) (B : GlobalTheory.ChainFr.Fr X) (α β : (AE D)ˣ →* Circle),
-  GlobalTheory.SquareComm.IsTriple W W₁ X α β → (∀ τ, Formalism.UG.HasSignature (gramAt D W₁ τ) W₁.rank 0) →
-  ∀ (ν : Measure (GA D W)) (𝓕 : Set (GA D W)) (ν₁ : Measure (GA D W₁)) (𝓕₁ : Set (GA D W₁)),
-  GlobalTheory.SquareComm.IsHaarFD W ν 𝓕 → GlobalTheory.SquareComm.IsHaarFD W₁ ν₁ 𝓕₁ →
-  ∀ ωA ωB Pi rf rl p p', GlobalTheory.SquareComm.IsMatch ψ θ A A₁ B α β ωA ωB Pi rf rl p p' →
-  ∀ Φ' ∈ GlobalTheory.SquareComm.algF ψ θ false A₁ B, p' Φ' ≠ 0 → GlobalTheory.SquareComm.thetaInt ωB ν₁ 𝓕₁ Φ' = 0 →
-  ∀ Φ'' ∈ GlobalTheory.SquareComm.algF ψ θ false A₁ B, GlobalTheory.SquareComm.thetaInt ωB ν₁ 𝓕₁ Φ'' = 0 := by
-  first | exact @_root_.GlobalTheory.DefiniteSmallIrred.theta_vanish_all_of_irreducible
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DefiniteSmallIrreducibleLieDerivative =====
@@ -444,8 +409,8 @@ theorem smallStage_thetaIntegral_of_ne_zero : _root_.GlobalTheory.FunPr.ThetaLoc
       ∃ P' : PolF D WW.rank A'.rank, ∀ t, X.I' W.ψ W.θ t P' ≠ 0 := by
   intro hP hK hL
   have hH := hP.howeDualityReal
-  have hLM := _root_.GlobalTheory.T.twisted_local_factors_match hH hP hK hL
-  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and GlobalTheory.T.towerStage_seesawDictionary_framesSignatures (_root_.GlobalTheory.T.theta_stage_nonzero_at_finite_places hP hK hL)
+  have hLM := _root_.GlobalTheory.SquareLM.twisted_square_local_matching hH hP hK hL
+  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and GlobalTheory.T.towerStage_seesawDictionary_framesSignatures (_root_.GlobalTheory.StageFinNonzero.theta_stage_finite_part_ne_zero hP hK hL)
   refine ⟨c, fun ε CF hCF => ?_⟩
   obtain ⟨C0, x0, h⟩ := hc ε CF hCF
   refine ⟨C0, x0, fun C hC D large₂ a b r T Lc μ hLc G W S hW hN i j p A A' WW X hX hint => ?_⟩
@@ -462,14 +427,14 @@ theorem smallStage_thetaIntegral_of_ne_zero : _root_.GlobalTheory.FunPr.ThetaLoc
     intro t
     obtain ⟨hTr, hInf, hf, hf', -, -⟩ := hD t
     obtain ⟨hex, hfac⟩ := hLMt _ _ hTr hInf
-    obtain ⟨Pm, rf, rl, pm, pm', hm⟩ := _root_.GlobalTheory.T.triple_weil_transfer_matching hH hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hex
+    obtain ⟨Pm, rf, rl, pm, pm', hm⟩ := _root_.GlobalTheory.TripleWeilTransfer.triple_exists_matching hH hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hex
       (X.ω t) (X.ω' t) (hIs.weil t) (hIs.weil' t)
     obtain ⟨Pf, rr, rr', e, -, -, hr, hr'⟩ := hfac _ _ _ _ _ _ _ hm
     have hy := h3 W i j p 0 A A' WW X hX FA FA' FW t hf hf' Pm rf rl pm pm' hm Pr Pf q q' rr rr' e hq hq' hr hr'
     haveI : Nontrivial Pm := hm.irred.1
     refine ⟨Pm, rf, rl, pm, pm', hm, nontrivial_left e, fun P' hP' => ?_⟩
     rw [hr' _ hf']
-    exact e.map_ne_zero_iff.2 (tmul_ne_zero hP' hy)
+    exact e.map_ne_zero_iff.2 (_root_.GlobalTheory.PolKer.tmul_ne_zero_of_ne hP' hy)
   by_cases hT : Nonempty T
   · obtain ⟨t0⟩ := hT
     haveI : Nontrivial Pr := (key t0).choose_spec.choose_spec.choose_spec.choose_spec.choose_spec.2.1
@@ -483,33 +448,15 @@ theorem smallStage_thetaIntegral_of_ne_zero : _root_.GlobalTheory.FunPr.ThetaLoc
     have eI' : GlobalTheory.SquareComm.thetaInt (X.ω' t) X.m' X.fd' (GlobalTheory.SquareComm.fockF W.ψ W.θ false FA' FW (X.f' t) P0) =
         X.I' W.ψ W.θ t P0 := by
       funext h; simp only [GlobalTheory.SquareComm.thetaInt, Tri.I', hk']
-    obtain ⟨Φ, hΦ, hΦ0⟩ := _root_.GlobalTheory.T.definite_theta_lift_ne_zero hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hdef X.m' X.fd' hIs.meas'
+    obtain ⟨Φ, hΦ, hΦ0⟩ := _root_.GlobalTheory.DefThetaNZ.exists_algebraic_function_definite_theta_ne_zero hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hdef X.m' X.fd' hIs.meas'
       _ _ _ _ _ _ _ hm
-    exact hΦ0 (_root_.GlobalTheory.T.vanishing_of_definite_small_irreducible hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hdef X.m X.fd X.m' X.fd' hIs.meas hIs.meas'
+    exact hΦ0 (_root_.GlobalTheory.DefiniteSmallIrred.theta_vanish_all_of_irreducible hP hK hL D W.ψ W.θ W.ψ_std W.θ_is A A' WW FA FA' FW _ _ hTr hdef X.m X.fd X.m' X.fd' hIs.meas hIs.meas'
       _ _ _ _ _ _ _ hm _ (memF P0) (hne P0 hx) (by rw [eI']; exact h0) Φ hΦ)
   · exact ⟨0, fun t => (hT ⟨t⟩).elim⟩
 end GlobalTheory.StageSmallNz
 end
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR Formalism.IndefR.Datum Formalism.IndefR.Links Formalism.L2.Theta IsDedekindDomain NumberField Finset
-open Formalism.DivisionValues (vw)
-open Formalism.L2.Host (HChar)
-open GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.FunObj.SqNum GlobalTheory.RowTest
-open GlobalTheory.CMVal (IsHeckeL)
-open GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle (Tri)
-open GlobalTheory.SqTop
-open GlobalTheory.ConstRatio (NegIdx Factor)
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.smallStage_thetaIntegral_nonzero_case : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.ThetaIntegralsAgree → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.LocalMatching →
-  GBig fun {D} T _ _ G μ₀ _ _ _ => ∀ (W : G.Weil) (S : GridChoice W Set.univ), IsStdChar D W.ψ (-1) →
-    NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p 0 X →
-      (∀ t P' h, MeasureTheory.IntegrableOn (X.ker' W.ψ W.θ t P' h) X.fd' X.m') →
-      ∃ P' : PolF D WW.rank A'.rank, ∀ t, X.I' W.ψ W.θ t P' ≠ 0 := by
-  first | exact @_root_.GlobalTheory.StageSmallNz.smallStage_thetaIntegral_of_ne_zero
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SmallStageThetaIntegralNonzeroCase =====
@@ -536,7 +483,7 @@ theorem theta_stage_of_small_rank : _root_.GlobalTheory.FunPr.ThetaLocalInputs �
     NumbersIn D.what₂.embLL S μ₀ → ∀ (i j : Fin D.R.m) (p q : ℕ) (A A' WW : HSp D) (X : Tri T A A' WW), GlobalTheory.SqTower.IsStageC W i j p q X →
       ∃ P' : PolF D WW.rank A'.rank, (∀ t h, MeasureTheory.IntegrableOn (X.ker' W.ψ W.θ t P' h) X.fd' X.m') ∧ ∀ t, X.I' W.ψ W.θ t P' ≠ 0 := by
   intro hP hK hL
-  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.T.smallStage_thetaIntegral_nonzero_case hP hK hL) (_root_.GlobalTheory.T.smallStage_thetaIntegral_large_rank_case hP hK hL)
+  obtain ⟨c, hc⟩ := GlobalTheory.SqTop.Model.gBig_and (_root_.GlobalTheory.StageSmallNz.smallStage_thetaIntegral_of_ne_zero hP hK hL) (_root_.GlobalTheory.StageSmallBig.smallStage_thetaIntegral_of_large_rank hP hK hL)
   refine ⟨c, fun ε CF hCF => ?_⟩
   obtain ⟨C0, x0, h⟩ := hc ε CF hCF
   refine ⟨C0, x0, fun C hC D large₂ a b r T Lc μ hL G W S hW hN i j p q A A' WW X hX => ?_⟩

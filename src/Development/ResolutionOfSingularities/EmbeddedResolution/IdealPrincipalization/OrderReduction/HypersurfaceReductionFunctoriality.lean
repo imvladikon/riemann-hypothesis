@@ -280,7 +280,7 @@ theorem isPullbackBlowupSequence_derivedTriple
   have hSmoothLast : AlgebraicGeometry.Smooth Dt.lastMap := Dt.smooth_lastMap
   have hsm : AlgebraicGeometry.Smooth (s.proj s.length ≫ S.structMap) := by
     have hsmU := hVU.smooth
-    rwa [LowerDimReductionPullback.structureMorphism_derivedTriple] at hsmU
+    rwa [_root_.FunctorialResolution.EmbeddedResolution.MaxContactCoverData.derivedTriple_structureMorphism] at hsmU
   have hpb0 := NontrivialBoundary.pullbackAlong_derivedTriple_eq S q s s' Dt hstar hV hV' hftS hftT hsm [] 0 0
   have hOU := LowerDimReductionPullback.isOrderBoundedByMult_derivedTriple hstar S hV hm hO s hftS [] 0 hVU
   have hDU := LowerDimReductionPullback.isBalanced_derivedTriple hstar S hV hm hO s hftS [] 0 hVU
@@ -922,7 +922,7 @@ theorem isPullbackBlowupSequence_appendLowerDimReduction
       (List.map (fun Z : (s.obj s.length).IdealSheafData => Z.comap Dt.lastMap)
         (List.drop S.boundary.length (s.boundary s.length)))
       (List.drop (NontrivialBoundary.pullbackWithNontrivialBoundary S q).boundary.length (s'.boundary s'.length)) :=
-    NontrivialBoundary.sameNontrivialBoundary_symm
+    _root_.FunctorialResolution.EmbeddedResolution.MarkedIdealWithBoundary.SameNontrivialBoundary.symm
       (NontrivialBoundary.sameNontrivialBoundary_lastBoundary_drop S q s s' Dt hstar hV hV')
   have e1 : ((MaxContactCoverData.derivedTriple S s hftS [MaxContactReduction.strictTransformAtLength s H]
         S.boundary.length).pullbackAlong (s'.obj s'.length)

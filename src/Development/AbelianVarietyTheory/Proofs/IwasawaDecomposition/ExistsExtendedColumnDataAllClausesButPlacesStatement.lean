@@ -394,7 +394,7 @@ theorem seed_at_enl : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheor
     obtain ⟨x₁, hx₁, hx₁'⟩ := (mem_FO_assembled_iff (w'.st Z') _).1 hmem
     obtain ⟨y, hy⟩ := hCK x₁ hx₁
     exact ⟨y, by rw [hy]; exact hx₁'.symm⟩
-  exact GlobalTheory.T.exists_analyticData_kept_clauses_columnChoices (w'.st Z') w'.px w'.I hX' T' Wt' core'.Q.c.F h6 hfin hconj hok hrange' hsel hgrp hVals hHH hStd hStdX hPos hCK hCE hmu
+  exact _root_.GlobalTheory.Mem.R3.FrameCaseLifts.exists_realDat_keep (w'.st Z') w'.px w'.I hX' T' Wt' core'.Q.c.F h6 hfin hconj hok hrange' hsel hgrp hVals hHH hStd hStdX hPos hCK hCE hmu
 
 end GlobalTheory.Mem.R3.Rw
 
@@ -414,27 +414,6 @@ open scoped TensorProduct InnerProductSpace ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
-theorem _root_.GlobalTheory.T.exists_firstAnalyticData_enlargedColumnChoices : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → (StepW Pinned fun K B' f' T' w' => ∀ (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW B f T), Enl0 B B' →
-  HEq f' f → Pinned K B f T w → HEq w'.px w.px → ∀ (Z : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl)
-    (z : Dat (w.st Z) w.I hX T Wt), GrpTrue Z.N f → GrpAt (w.st Z) w.I → Fine z → HoldsL z.R z.F →
-    ∀ (Z' : w'.Lt) (hX' : B'.fields.Ok), GrpTrue Z'.N f' → GrpAt (w'.st Z') w'.I → VolTieG (w'.D Z') →
-    ∀ (core' : Formalism.L2.Pj.CoreJ (w'.st Z').toD7) (alg' : Algebra core'.Q.c.F (w'.st Z').toD7.what₂.LL),
-      (∀ y : core'.Q.c.F, B'.embLL (@algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y) = (y : ℂ)) →
-      (∀ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y ∈ B'.LL0) →
-      (∀ x ∈ B'.Ks, ∃ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y = x) →
-      (HEq core'.Q.H z.core.Q.H ∧ HEq core'.Q.l z.core.Q.l ∧ HEq core'.Q.c z.core.Q.c ∧ HEq core'.Q.Dw z.core.Q.Dw ∧
-      HEq core'.Q.Xo z.core.Q.Xo ∧ HEq core'.U z.core.U ∧ HEq core'.V z.core.V ∧ HEq core'.dict z.core.dict ∧
-      HEq core'.mu z.core.mu ∧ HEq core'.Kf z.core.Kf ∧ HEq core'.cE z.core.cE ∧ HEq core'.chiW z.core.chiW ∧
-      HEq core'.x₀ z.core.x₀ ∧ HEq core'.iota z.core.iota) →
-      Formalism.L2.Pj.LawsCore core'.toCore → core'.Q.Canon → (∀ j, 1 ≤ (core'.Q.Dw j).p + (core'.Q.Dw j).q) → core'.pb = f'.P.pb →
-      letI := alg'; ∃ (Xg : Finset (Gc B' w'.px → B'.LL)) (tr₀ : TrI B' w'.px)
-        (R₀ : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀) core'.Q.c.F)
-        (cG : G0 R₀.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd),
-        LevOf (w'.st Z') w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) R₀.toLevCh ∧ IsPlacewiseIdentity (w'.st Z') (px := w'.px) R₀.eG ∧
-        GoodSet (w'.st Z') (px := w'.px) (R₀.eG.trans cG) Xg ∧ MuOf (w'.st Z') w'.I T' {v | B'.places.resChar v ∈ T'.pl} R₀.mu R₀.twPl ∧
-        IdemClass (D := (w'.st Z').toD7) (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).A ∧ R₀.toRealDat.Pre0 (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 ∧ R₀.IsInert ∧ R₀.IsTup ∧
-        R₀.AllPlaces ∧ Keep R₀.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₀.toRealDat) := by
-  first | exact @GlobalTheory.Mem.R3.Rw.seed_at_enl
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFirstAnalyticDataEnlargedColumnChoicesStatement =====
@@ -601,7 +580,7 @@ theorem stage {B' : Base} {f' : Fr B'.toPre} {T' : TwDat B'} {w' : ColW B' f' T'
     ⟨⟨h4.mu0, h4.eta, h4.xi, h4.xi_inj, h4.xi_base, h4.xi_fin, h4.xi_triv, h4.xi_tame, h4.Pg, h4.Q_pl,
       h4.Q_off, h4.Q_de, h4.Q_ram, h4.chi, h4.xiR, hY, h4.βX, hV', hW⟩, hLev.C, hLev.xiH, hLev.Pg, hLev.Q, hLev.beta⟩
   have h0 := hK.2.2.2.2.2.1
-  refine (GlobalTheory.T.exists_adelicReading_definiteForms_given_coefficients (w'.st Z') w'.px w'.I hX' (usedOf w'.I T' Wt') Xg tr (newL R.toLevCh ΛY ΛV ΛW βY βW) R.eG w'.ok hval hL1 hK.2.1
+  refine (_root_.GlobalTheory.Mem.R3.BrgAt.exists_brgL_at (w'.st Z') w'.px w'.I hX' (usedOf w'.I T' Wt') Xg tr (newL R.toLevCh ΛY ΛV ΛW βY βW) R.eG w'.ok hval hL1 hK.2.1
     hLev.beta.2 hLev.beta.1 hXl hV R.θ h0.inf R.MX cV c0L h1 h2 h3).elim fun cX h => h.elim fun pl h => h.elim fun Sb h =>
       h.elim fun Bd h => h.elim fun plI h => h.elim fun SF h => h.elim fun prX h => ?_
   have hc := newR_clauses R (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) cG ΛY ΛV ΛW βY βW cX cV pl Sb Bd plI SF prX hL1.is h0
@@ -609,7 +588,7 @@ theorem stage {B' : Base} {f' : Fr B'.toPre} {T' : TwDat B'} {w' : ColW B' f' T'
   refine ⟨cX, pl, Sb, Bd, plI, SF, prX, ⟨hL1, hK.2.1, hK.2.2.1, hK.2.2.2.1, hK.2.2.2.2.1, hc.1, hc.2.1, hc.2.2.1, hc.2.2.2.1, hc.2.2.2.2,
     h.2.2.2.2.1, h.2.2.2.2.2.1⟩, h.2.2.2.1.sb, fun i t ok φ g => ?_⟩
   refine (vv_cast_map (LiftBrg.rkEq (w'.st Z') i) (B'.wts.lamV ((i : ℕ) + 1))
-      (fun τ => Bridge.lamLdef (D := (w'.st Z').toD7) (Vc (w'.st Z').toD7 i).rank ((i : ℕ) + 1) τ) (GlobalTheory.T.baseWeight_eq_forcedLiftWeight (w'.st Z') i) B'.embLL
+      (fun τ => Bridge.lamLdef (D := (w'.st Z').toD7) (Vc (w'.st Z').toD7 i).rank ((i : ℕ) + 1) τ) (_root_.GlobalTheory.Mem.LiftWt.lamV_eq_lamLdef (w'.st Z') i) B'.embLL
       (φ.1 (LiftBrg.ptL (w'.st Z') w'.I (usedOf w'.I T' Wt') i t 1 1 g))).elim fun v' hv => ?_
   exact ⟨v', h.2.2.2.2.2.2 i t φ g v' hv.1, hv.2⟩
 
@@ -710,7 +689,7 @@ theorem reset_side : ∀ {B B' : Base} {f : Fr B.toPre} {f' : Fr B'.toPre} {T : 
     ∀ {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks (w'.st Z').toD7.what₂.LL] {Xg : Finset (Gc B' w'.px → B'.LL)} {tr : TrI B' w'.px} (R : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks) (cG : G0 R.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd), Kept T' w' Z' hX' Wt' R cG →
     ∃ (R₁ : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' Wt') Xg tr) Ks) (cG₁ : G0 R₁.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd), Kept T' w' Z' hX' Wt' R₁ cG₁ ∧ RSideA z Wt' R₁ := by
   intro B B' f f' T T' w w' Z Z' hX hX' Wt Wt' z hE hf hp hS hV hXl hval Ks _ _ _ Xg tr R cG hK
-  refine (GlobalTheory.T.enlargedBase_coefficientSpaces_isometric_maps (w' := w') (Z' := Z') (hX' := hX') (Wt' := Wt') z hE hf hp hS).elim fun cV h => h.elim fun c0L hc => ?_
+  refine (_root_.GlobalTheory.Mem.RsCoef.rs_coef (w' := w') (Z' := Z') (hX' := hX') (Wt' := Wt') z hE hf hp hS).elim fun cV h => h.elim fun c0L hc => ?_
   refine (frames_enl w' Z' z hE.1 hf hp).elim fun ΛY h => h.elim fun ΛV h => h.elim fun ΛW h => h.elim fun βY h => h.elim fun βW hF => ?_
   have hPg := hF.2.2.2.2.1 R.Pg hK.1.Pg
   refine (stage hV hXl hval R cG hK ΛY ΛV ΛW βY βW hF.2.1 (fun i => (hK.1.beta.1 i).symm ▸ hF.2.2.1 i) hF.2.2.2.1 hPg.1 cV c0L
@@ -1150,34 +1129,6 @@ open scoped TensorProduct InnerProductSpace ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
-theorem _root_.GlobalTheory.T.reset_tuple_free_fields_keeps_clauses_comparison : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → (StepW Pinned fun K B' f' T' w' => ∀ (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW B f T), Enl0 B B' →
-  HEq f' f → Pinned K B f T w → HEq w'.px w.px → ∀ (Z : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl)
-    (z : Dat (w.st Z) w.I hX T Wt), GrpTrue Z.N f → GrpAt (w.st Z) w.I → Fine z → HoldsL z.R z.F →
-    ∀ (Z' : w'.Lt) (hX' : B'.fields.Ok), GrpTrue Z'.N f' → GrpAt (w'.st Z') w'.I → VolTieG (w'.D Z') →
-    ∀ (core' : Formalism.L2.Pj.CoreJ (w'.st Z').toD7) (alg' : Algebra core'.Q.c.F (w'.st Z').toD7.what₂.LL),
-      (∀ y : core'.Q.c.F, B'.embLL (@algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y) = (y : ℂ)) →
-      (∀ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y ∈ B'.LL0) →
-      (∀ x ∈ B'.Ks, ∃ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y = x) →
-      (HEq core'.Q.H z.core.Q.H ∧ HEq core'.Q.l z.core.Q.l ∧ HEq core'.Q.c z.core.Q.c ∧ HEq core'.Q.Dw z.core.Q.Dw ∧
-      HEq core'.Q.Xo z.core.Q.Xo ∧ HEq core'.U z.core.U ∧ HEq core'.V z.core.V ∧ HEq core'.dict z.core.dict ∧
-      HEq core'.mu z.core.mu ∧ HEq core'.Kf z.core.Kf ∧ HEq core'.cE z.core.cE ∧ HEq core'.chiW z.core.chiW ∧
-      HEq core'.x₀ z.core.x₀ ∧ HEq core'.iota z.core.iota) →
-      Formalism.L2.Pj.LawsCore core'.toCore → core'.Q.Canon → (∀ j, 1 ≤ (core'.Q.Dw j).p + (core'.Q.Dw j).q) → core'.pb = f'.P.pb →
-      letI := alg'; ∀ (Xg : Finset (Gc B' w'.px → B'.LL)) (tr₀ : TrI B' w'.px)
-        (R₀ : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀) core'.Q.c.F)
-        (cG : G0 R₀.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd),
-        (LevOf (w'.st Z') w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) R₀.toLevCh ∧ IsPlacewiseIdentity (w'.st Z') (px := w'.px) R₀.eG ∧
-        GoodSet (w'.st Z') (px := w'.px) (R₀.eG.trans cG) Xg ∧ MuOf (w'.st Z') w'.I T' {v | B'.places.resChar v ∈ T'.pl} R₀.mu R₀.twPl ∧
-        IdemClass (D := (w'.st Z').toD7) (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).A ∧ R₀.toRealDat.Pre0 (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 ∧ R₀.IsInert ∧ R₀.IsTup ∧
-        R₀.AllPlaces ∧ Keep R₀.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₀.toRealDat) →
-        ∃ (R₁ : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀) core'.Q.c.F)
-        (cG₁ : G0 R₁.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd),
-        LevOf (w'.st Z') w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) R₁.toLevCh ∧ IsPlacewiseIdentity (w'.st Z') (px := w'.px) R₁.eG ∧
-        GoodSet (w'.st Z') (px := w'.px) (R₁.eG.trans cG₁) Xg ∧ MuOf (w'.st Z') w'.I T' {v | B'.places.resChar v ∈ T'.pl} R₁.mu R₁.twPl ∧
-        IdemClass (D := (w'.st Z').toD7) (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).A ∧ R₁.toRealDat.Pre0 (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 ∧ R₁.IsInert ∧ R₁.IsTup ∧
-        R₁.AllPlaces ∧ Keep R₁.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG₁ ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₁.toRealDat ∧
-        RSideW z {v | B'.places.resChar v ∈ T'.pl} R₁) := by
-  first | exact @GlobalTheory.Mem.R3.Rw.reset_stepW
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResetTupleFreeFieldsKeepsClausesComparisonStatement =====
@@ -1218,7 +1169,7 @@ theorem exists_realDat_keep_rsideW : GlobalTheory.Published.DiscreteSeriesCover 
         R₀.AllPlaces ∧ Keep R₀.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₀.toRealDat ∧
         RSideW z {v | B'.places.resChar v ∈ T'.pl} R₀) := by
   intro p1 p2 p3 p4 p5 p6 p7
-  refine StepW.trans (StepW.and (GlobalTheory.T.exists_firstAnalyticData_enlargedColumnChoices p1 p2 p3 p4 p5 p6 p7) (GlobalTheory.T.reset_tuple_free_fields_keeps_clauses_comparison p1 p2 p3 p4 p5 p6 p7)) (StepW.of_all fun K B' f' T' w' _ _ H => ?_)
+  refine StepW.trans (StepW.and (_root_.GlobalTheory.Mem.R3.Rw.seed_at_enl p1 p2 p3 p4 p5 p6 p7) (_root_.GlobalTheory.Mem.R3.Rw.reset_stepW p1 p2 p3 p4 p5 p6 p7)) (StepW.of_all fun K B' f' T' w' _ _ H => ?_)
   intro B f T w e hf hp hpx Z hX Wt z g1 g2 fz hl Z' hX' g3 g4 vt core' alg' a1 a2 a3 hq lc cn dw pb
   obtain ⟨Xg, tr₀, R₀, cG, hc⟩ := H.1 B f T w e hf hp hpx Z hX Wt z g1 g2 fz hl Z' hX' g3 g4 vt core' alg' a1 a2 a3 hq lc cn dw pb
   obtain ⟨R₁, cG₁, hc1⟩ := H.2 B f T w e hf hp hpx Z hX Wt z g1 g2 fz hl Z' hX' g3 g4 vt core' alg' a1 a2 a3 hq lc cn dw pb Xg tr₀ R₀ cG hc
@@ -1242,28 +1193,6 @@ open scoped TensorProduct InnerProductSpace ComplexOrder
 attribute [local instance] Formalism.BasicNotions.Host.cmStar Formalism.IndefR.principalLevelFrame.instCMHostI
 open GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.Mem.R3.Tr
 
-theorem _root_.GlobalTheory.T.exists_analyticData_enlargedBase_tupleFree : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.HarishChandraFinite → (StepW Pinned fun K B' f' T' w' => ∀ (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW B f T), Enl0 B B' →
-  HEq f' f → Pinned K B f T w → HEq w'.px w.px → ∀ (Z : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl)
-    (z : Dat (w.st Z) w.I hX T Wt), GrpTrue Z.N f → GrpAt (w.st Z) w.I → Fine z → HoldsL z.R z.F →
-    ∀ (Z' : w'.Lt) (hX' : B'.fields.Ok), GrpTrue Z'.N f' → GrpAt (w'.st Z') w'.I → VolTieG (w'.D Z') →
-    ∀ (core' : Formalism.L2.Pj.CoreJ (w'.st Z').toD7) (alg' : Algebra core'.Q.c.F (w'.st Z').toD7.what₂.LL),
-      (∀ y : core'.Q.c.F, B'.embLL (@algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y) = (y : ℂ)) →
-      (∀ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y ∈ B'.LL0) →
-      (∀ x ∈ B'.Ks, ∃ y : core'.Q.c.F, @algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y = x) →
-      (HEq core'.Q.H z.core.Q.H ∧ HEq core'.Q.l z.core.Q.l ∧ HEq core'.Q.c z.core.Q.c ∧ HEq core'.Q.Dw z.core.Q.Dw ∧
-      HEq core'.Q.Xo z.core.Q.Xo ∧ HEq core'.U z.core.U ∧ HEq core'.V z.core.V ∧ HEq core'.dict z.core.dict ∧
-      HEq core'.mu z.core.mu ∧ HEq core'.Kf z.core.Kf ∧ HEq core'.cE z.core.cE ∧ HEq core'.chiW z.core.chiW ∧
-      HEq core'.x₀ z.core.x₀ ∧ HEq core'.iota z.core.iota) →
-      Formalism.L2.Pj.LawsCore core'.toCore → core'.Q.Canon → (∀ j, 1 ≤ (core'.Q.Dw j).p + (core'.Q.Dw j).q) → core'.pb = f'.P.pb →
-      letI := alg'; ∃ (Xg : Finset (Gc B' w'.px → B'.LL)) (tr₀ : TrI B' w'.px)
-        (R₀ : RealDat3 (w'.st Z').toD7 (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀) core'.Q.c.F)
-        (cG : G0 R₀.Pg (w'.st Z').toD7.R.r ≃* G0g (w'.st Z').toD7.nd),
-        LevOf (w'.st Z') w'.I (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) R₀.toLevCh ∧ IsPlacewiseIdentity (w'.st Z') (px := w'.px) R₀.eG ∧
-        GoodSet (w'.st Z') (px := w'.px) (R₀.eG.trans cG) Xg ∧ MuOf (w'.st Z') w'.I T' {v | B'.places.resChar v ∈ T'.pl} R₀.mu R₀.twPl ∧
-        IdemClass (D := (w'.st Z').toD7) (famR (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).A ∧ R₀.toRealDat.Pre0 (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 ∧ R₀.IsInert ∧ R₀.IsTup ∧
-        R₀.AllPlaces ∧ Keep R₀.toRealDat (face0 (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀).lv2 cG ∧ BrgStd (w'.st Z') w'.I hX' (usedOf w'.I T' {v | B'.places.resChar v ∈ T'.pl}) Xg tr₀ R₀.toRealDat ∧
-        RSideW z {v | B'.places.resChar v ∈ T'.pl} R₀) := by
-  exact GlobalTheory.Mem.R3.Rw.exists_realDat_keep_rsideW
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAnalyticDataEnlargedBaseTupleFreeStatement =====
@@ -1320,7 +1249,7 @@ theorem GlobalTheory.Mem.R3.Rw.datExt_rest : GlobalTheory.Published.DiscreteSeri
       Formalism.L2.Pj.LawsCore core'.toCore → core'.Q.Canon → (∀ j, 1 ≤ (core'.Q.Dw j).p + (core'.Q.Dw j).q) → core'.pb = f'.P.pb →
       ∃ z' : Dat (w'.st Z') w'.I hX' T' {v | B'.places.resChar v ∈ T'.pl}, z'.core = core' ∧
         z'.R.toRealDat.ExAt ∧ GlobalTheory.RealGeo.InGeo z'.geo ∧ z'.Std ∧ ExtN z z') := by
-  refine GlobalTheory.Mem.R3.Rw.datExt_rest_of_parts GlobalTheory.T.exists_analyticData_enlargedBase_tupleFree GlobalTheory.T.exists_characterisedData_weil_enlargedBase fun h1 h2 h3 h4 h5 h6 h7 => by
+  refine GlobalTheory.Mem.R3.Rw.datExt_rest_of_parts _root_.GlobalTheory.Mem.R3.Rw.exists_realDat_keep_rsideW _root_.GlobalTheory.Mem.R3.Rw.WeilExt.exists_pins_rSide fun h1 h2 h3 h4 h5 h6 h7 => by
     refine (GlobalTheory.T.geometricHalf_to_analyticData_enlargedBase h1 h2 h3 h4 h5 h6 h7).trans (Step.of_all fun K B' f' T' _ _ _ _ w' hd => ?_)
     intro B f T w hE hf hP hpx Z hX Wt z hG hGA hF hH Z' hX' hG' hGA' hV core' alg' ha1 ha2 ha3 hc hL hC hD hpb Xg tr R' cG' s1
     exact hd B f T w hE hf hP hpx Z hX Wt z hG hGA hF hH Z' hX' hG' hGA' hV core' alg' ha1 ha2 ha3 hc hL hC hD hpb Xg tr R' cG' s1

@@ -71,37 +71,9 @@ open CategoryTheory CategoryTheory.Limits MonoidalCategory CartesianMonoidalCate
 open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction.G.Geo.Tor
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
-noncomputable section
 namespace GlobalTheory.UU.RelTests
 
-section Ext
-variable {V W : Type} [CommRing V] [IsLocalRing V] [CommRing W] [IsLocalRing W] [Algebra V W]
-
-end Ext
-
-section Tors
-variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : DegPre R}
-  {A : PolAV (Spec (CommRingCat.of (FractionRing R)))} {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
-  {F : Type} [Field F] [Algebra (FractionRing R) F]
-
-theorem isNsmul_b {k : ℕ} {g h : GtPtF D F} (H : GtPtF.IsNsmul k g h) : h.b = g.b ^ k := by
-  obtain ⟨gs, h0, hs, hl⟩ := H
-  have key : ∀ (n : ℕ) (hn : n < k + 1), (gs ⟨n, hn⟩).b = g.b ^ n := by
-    intro n
-    induction n with
-    | zero => intro hn; rw [pow_zero]; exact h0.1
-    | succ n ih =>
-      intro hn
-      have e := (hs ⟨n, by omega⟩).1
-      rw [pow_succ, ← ih (by omega)]
-      exact e
-  rw [← hl]
-  exact key k (Nat.lt_succ_self k)
-
-end Tors
-
 end GlobalTheory.UU.RelTests
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.FinExtHomInjective =====
@@ -171,8 +143,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT GlobalTheory.ZH
 
-theorem _root_.GlobalTheory.T.exists_lineBundlePower_section_nonzero_at_origin : LL → ∀ (R : Type) [CommRing R] [IsDomain R] (A : PolAV (Spec (CommRingCat.of (FractionRing R)))) (F : Type) [Field F] [Algebra (FractionRing R) F] (ρ : LB.Gen (A.L.pull (eSec A.A))), ρ.IsGen → ∀ k : ℕ, 4 ≤ k → ∃ (t : SecA A F k) (c : F), c ≠ 0 ∧ ∀ z J, Good A.L z J → sA t (ptSecT A.A 1).left z J = @id ((TFK (R := R) F).left.presheaf.stalk z) (cst (R := R) F z c) * (val (rigT A.A A.L ρ (TFK (R := R) F) (k : ℤ)) (𝟙 _) z J).val := by
-  first | exact @GlobalTheory.Poinc.Origin.exists_sec_value_ne_zero
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLineBundlePowerSectionNonzeroAtOriginStatement =====
@@ -206,7 +176,7 @@ theorem exists_lam {N : ℕ} {g o : GtPtF D F} (hg : GtPtF.IsNsmul N g o) (ho : 
     (w : Frm D F 1 g.b) (hw : w.IsGen) (κ : LB.Gen (kapLB D (𝟙 D.P.A ^ N) (N ^ 2) 1)) (hκ : Normd κ) :
     ∃ c : F, ∀ z J, Good D.P.L z J → (val w (𝟙 _) z J ^ (N ^ 2) * val κ g.b.left z J).val = cst F z c := by
   have hb : o.b = 1 := ((isZero_iff o).1 ho).1
-  have hgN : g.b ^ N = 1 := (GlobalTheory.UU.RelTests.isNsmul_b hg).symm.trans hb
+  have hgN : g.b ^ N = 1 := (_root_.GlobalTheory.UT.TxVal.nsmul_b hg).symm.trans hb
   have e1 : g.b.left ≫ (𝟙 D.P.A ^ N).left = (1 : TF (R := R) F ⟶ D.P.A).left := by
     rw [← Over.comp_left, MonObj.comp_pow, Category.comp_id, hgN]
   have e2 : g.b.left ≫ (1 : D.P.A ⟶ D.P.A).left = (1 : TF (R := R) F ⟶ D.P.A).left := by
@@ -237,7 +207,7 @@ theorem frame_tors : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (F : T
   intro hL R _ _ _ I hI D A G _ _ hG U F _ _ w₀ ρ hN N hN1 g o hgo ho w x fr hw hlies htors κ hκ
   obtain ⟨lam, hlam⟩ := exists_lam hgo ho w hw κ hκ
   have hb : o.b = 1 := ((isZero_iff o).1 ho).1
-  have hgN : g.b ^ N = 1 := (GlobalTheory.UU.RelTests.isNsmul_b hgo).symm.trans hb
+  have hgN : g.b ^ N = 1 := (_root_.GlobalTheory.UT.TxVal.nsmul_b hgo).symm.trans hb
   have e1 : g.b.left ≫ (𝟙 D.toPre.P.A ^ N).left = (1 : TF (R := R) F ⟶ D.toPre.P.A).left := by
     rw [← Over.comp_left, MonObj.comp_pow, Category.comp_id, hgN]
   have e2 : g.b.left ≫ (1 : D.toPre.P.A ⟶ D.toPre.P.A).left = (1 : TF (R := R) F ⟶ D.toPre.P.A).left := by
@@ -247,7 +217,7 @@ theorem frame_tors : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (F : T
     intro k hk
     have hk1 : 1 ≤ k := by omega
     have hk'1 : 1 ≤ k * N ^ 2 := Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by omega) (pow_ne_zero 2 (by omega)))
-    obtain ⟨t, c, hc0, htc⟩ := GlobalTheory.T.exists_lineBundlePower_section_nonzero_at_origin hL R A F ρ hN.2.1 k hk
+    obtain ⟨t, c, hc0, htc⟩ := _root_.GlobalTheory.Poinc.Origin.exists_sec_value_ne_zero hL R A F ρ hN.2.1 k hk
     obtain ⟨E, hEG, hEA, hEB, hEh, hEact⟩ := (IntEnd.exists_nsmul_and_neg hL R I hI D A G hG U).1 N
     have hsm : Function.Injective fun χ : D.toPre.X => N • χ := fun a b h => by
       have h' : (N : ℤ) • a = (N : ℤ) • b := by simpa only [natCast_zsmul] using h
@@ -360,8 +330,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.UT GlobalTheory.ZH
 open GlobalTheory.Poinc.Tors
 
-theorem _root_.GlobalTheory.T.torsion_frame_abelian_part_torsion_frame : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (F : Type) [Field F] [Algebra (FractionRing R) F] (w₀ : W0 U.toUnifPre) (ρ : LB.Gen (A.L.pull (eSec A.A))), NormW U.toUnifPre w₀ ρ → ∀ N : ℕ, 1 ≤ N → ∀ (g o : GtPtF D.toPre F), GtPtF.IsNsmul N g o → o.IsZero → ∀ (w : Frm D.toPre F 1 g.b) (x : TFK (R := R) F ⟶ A.A) (fr : FrAt x), w.IsGen → LiesOver U.toUnifPre w₀ g w x fr → IsTorsFrame A ρ N x fr → ∀ κ : LB.Gen (kapLB D.toPre (𝟙 D.toPre.P.A ^ N) (N ^ 2) 1), Normd κ → ∀ z J, Good D.toPre.P.L z J → val w (𝟙 _) z J ^ (N ^ 2) * val κ g.b.left z J = 1 := by
-  first | exact @GlobalTheory.Poinc.Tors.FrameTors.frame_tors
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionFrameAbelianPartTorsionFrameStatement =====

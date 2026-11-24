@@ -88,6 +88,7 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.ThmPActualCptOfStep
 import Mathlib.Tactic.Polynomial.Basic
 import Std.Tactic.BVDecide.Normalize.Bool
 import Std.Tactic.BVDecide.Normalize.Prop
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.TendstoIntUv
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEJSRadLocFamCC, Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelOneSquareIntegrableOfTransport, Formalism.HermitianCurvature.HermitianCurvatureProofs.LevTransportU, Formalism.HermitianCurvature.HermitianCurvatureProofs.PTieUL, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEJSRadLoc, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEOneLetterDens, Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSE_TopSpec
@@ -467,7 +468,7 @@ theorem lev_indU {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ W
 
 theorem levTransportU : Formalism.FourierDecayAlt.P.PTie.LevTransportU := by
   intro Wp Wq _ _ _ _ _ _ P z z' π π' X μ L st l0 Bs hD hz hz' hπ hπ' i
-  obtain ⟨T, h1, h2, h3, h4, hN⟩ := Formalism.FourierDecayAlt.P.exists_normalized_tower P.k P.r Wp Wq Bs
+  obtain ⟨T, h1, h2, h3, h4, hN⟩ := _root_.Formalism.FourierDecayAlt.P.HaarMassHermitianCurvature.towerAt P.k P.r Wp Wq Bs
   have e1 : T.base.z = z := h1.trans hz
   have e2 : T.base.z' = z' := h2.trans hz'
   have e3 : T.base.π = π := h3.trans hπ
@@ -491,8 +492,6 @@ theorem levTransportU : Formalism.FourierDecayAlt.P.PTie.LevTransportU := by
 end Formalism.FourierDecayAlt.P.PTieUL
 
 namespace Formalism.FourierDecayAlt.P
-
-theorem level_transport_unitary : Formalism.FourierDecayAlt.P.PTie.LevTransportU := PTieUL.levTransportU
 
 end Formalism.FourierDecayAlt.P
 end -- clump:auto
@@ -520,14 +519,14 @@ theorem jSRadLoc_of (hU : FamCCUnif) : JSRadLoc := by
   have hr0 : 0 < P.r := by have := l.isLt; omega
   obtain rfl : l = ⟨0, hr0⟩ := Fin.ext hl
   obtain ⟨Tw, hNw, e1, e2, e3, e4, Di, Xi, μi, Li, sti, κ, hDiEq, hκ, hDi, hall⟩ :=
-    Formalism.FourierDecayAlt.P.level_transport_unitary Wp Wq P z z' π π' X μ L st l0 D hD hz hz' hπ hπ' ⟨1, by omega⟩
+    _root_.Formalism.FourierDecayAlt.P.PTieUL.levTransportU Wp Wq P z z' π π' X μ L st l0 D hD hz hz' hπ hπ' ⟨1, by omega⟩
   subst e1 e2 e3 e4
   subst hDiEq
   have hj : 0 + 1 ≤ P.r := by omega
   have hP : IsPlace P Tw.base.z Tw.base.z' Tw.base.π Tw.base.π' := hD.1
   have hPj := Formalism.FourierDecayAlt.P.JCTx5.isPlace_lev P Tw ⟨0, by omega⟩ hP
   have hPs := Formalism.FourierDecayAlt.P.JCTx5.isPlace_lev P Tw ⟨0 + 1, by omega⟩ hP
-  obtain ⟨κ0, hκ0⟩ := Formalism.FourierDecayAlt.P.jacquet_scaling P.k P.r Wp Wq D Tw.base hz hz' hπ hπ'
+  obtain ⟨κ0, hκ0⟩ := _root_.Formalism.FourierDecayAlt.P.PTieJ.jfScale P.k P.r Wp Wq D Tw.base hz hz' hπ hπ'
 
   set G0 : B.Mat P.k (P.r - 0) → (Wq →L[ℂ] Wp) := fun g => κ0 • G g with hG0
   have hG0ok : JFOKCpt (JC.parLev P 0) (Tw.bs 0).z (Tw.bs 0).z' G0 := by
@@ -553,7 +552,7 @@ theorem jSRadLoc_of (hU : FamCCUnif) : JSRadLoc := by
       rw [hκ0 G, e]
     exact (hΦ x hx).trans h2
   have hC0 : CutSH.InC Tw 0 hj Φ :=
-    CutSH.inC_seed Formalism.FourierDecayAlt.P.cell_compatibility_identity Formalism.FourierDecayAlt.P.slice_family_good
+    CutSH.inC_seed _root_.Formalism.FourierDecayAlt.P.CutSH.cell_compatibility Formalism.FourierDecayAlt.P.slice_family_good
       CutSH.slice_family_orbital hP hNw hPj hPs G0 hG0ok Φ hΦ0
   have hW : ∀ js : List (Fin 6), CutSH.InC Tw 0 hj (wOp X ⟨0, hr0⟩ js Φ) := by
     intro js
@@ -660,7 +659,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEJSRadLoc =====
 
 -- ===== clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEOneLetterDens =====
--- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEOneLetterDens", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSE2\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.FsvMulFsvNeg\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftMemMatrixAlgebra\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.PositionInsertionDiagonalCompat\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SfiniteOfIsHaarOn\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.ThmPActualCptOfStepForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Bool\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSEOneLetterDens", "h": "module\n\npublic import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutSE2\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.FsvMulFsvNeg\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftMemMatrixAlgebra\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.PositionInsertionDiagonalCompat\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.SfiniteOfIsHaarOn\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.ThmPActualCptOfStepForm\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Bool\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Formalism.HermitianCurvature.HermitianCurvatureProofs.TendstoIntUv\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -684,33 +683,17 @@ section HS
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq]
 
-theorem hs_add_l (A A' C : Wq →L[ℂ] Wp) : B.hsInner (A + A') C = B.hsInner A C + B.hsInner A' C := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.add_apply, inner_add_right,
-    Finset.sum_add_distrib]
-
-theorem hs_add_r (A C C' : Wq →L[ℂ] Wp) : B.hsInner A (C + C') = B.hsInner A C + B.hsInner A C' := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.add_apply, inner_add_left,
-    Finset.sum_add_distrib]
-
-theorem hs_smul_l (a : ℂ) (A C : Wq →L[ℂ] Wp) : B.hsInner (a • A) C = a * B.hsInner A C := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, inner_smul_right,
-    Finset.mul_sum]
-
-theorem hs_smul_r (a : ℂ) (A C : Wq →L[ℂ] Wp) : B.hsInner A (a • C) = conj a * B.hsInner A C := by
-  simp only [B.hsInner, B.hsVec, PiLp.inner_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, inner_smul_left,
-    Finset.mul_sum]
-
 theorem hs_neg_l (A C : Wq →L[ℂ] Wp) : B.hsInner (-A) C = -B.hsInner A C := by
-  rw [← neg_one_smul ℂ A, hs_smul_l]; ring
+  rw [← neg_one_smul ℂ A, _root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left]; ring
 
 theorem hs_neg_r (A C : Wq →L[ℂ] Wp) : B.hsInner A (-C) = -B.hsInner A C := by
-  rw [← neg_one_smul ℂ C, hs_smul_r]; simp
+  rw [← neg_one_smul ℂ C, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_smul_right]; simp
 
 theorem hs_zero_l (C : Wq →L[ℂ] Wp) : B.hsInner 0 C = 0 := by
-  rw [← zero_smul ℂ (0 : Wq →L[ℂ] Wp), hs_smul_l]; ring
+  rw [← zero_smul ℂ (0 : Wq →L[ℂ] Wp), _root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left]; ring
 
 theorem hs_zero_r (A : Wq →L[ℂ] Wp) : B.hsInner A 0 = 0 := by
-  rw [← zero_smul ℂ (0 : Wq →L[ℂ] Wp), hs_smul_r]; simp
+  rw [← zero_smul ℂ (0 : Wq →L[ℂ] Wp), _root_.Formalism.FourierDecayAlt.P5.HerB.hs_smul_right]; simp
 
 end HS
 
@@ -987,7 +970,7 @@ theorem sumPt_plus (X : ActualOps k r z z' π π') (L : R.LevelData (Pr (RadSp k
   have hct : conj (p l) ≠ 0 := (map_ne_zero _).mpr ht
   simp only [vl, map_zero, ZeroMemClass.coe_zero, Pi.zero_apply, Submodule.coe_add, Submodule.coe_sub,
     Submodule.coe_neg, Submodule.coe_smul, Pi.add_apply, Pi.sub_apply, Pi.neg_apply, Pi.smul_apply, opv1, opv2, opv4,
-    opv5, sub_eq_add_neg, hs_add_l, hs_add_r, hs_smul_l, hs_smul_r, hs_neg_l, hs_neg_r, hs_zero_l, hs_zero_r, map_inv₀,
+    opv5, sub_eq_add_neg, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_add_left, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_add_right, _root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_smul_right, hs_neg_l, hs_neg_r, hs_zero_l, hs_zero_r, map_inv₀,
     hY, Complex.conj_conj]
   field_simp
   ring
@@ -1009,7 +992,7 @@ theorem sumPt_minus (X : ActualOps k r z z' π π') (L : R.LevelData (Pr (RadSp 
   have hct : conj (p l) ≠ 0 := (map_ne_zero _).mpr ht
   simp only [vl, map_zero, ZeroMemClass.coe_zero, Pi.zero_apply, Submodule.coe_add, Submodule.coe_sub,
     Submodule.coe_neg, Submodule.coe_smul, Pi.add_apply, Pi.sub_apply, Pi.neg_apply, Pi.smul_apply, opv1, opv2, opv4,
-    opv5, sub_eq_add_neg, hs_add_l, hs_add_r, hs_smul_l, hs_smul_r, hs_neg_l, hs_neg_r, hs_zero_l, hs_zero_r, map_inv₀,
+    opv5, sub_eq_add_neg, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_add_left, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_add_right, _root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, _root_.Formalism.FourierDecayAlt.P5.HerB.hs_smul_right, hs_neg_l, hs_neg_r, hs_zero_l, hs_zero_r, map_inv₀,
     hY, Complex.conj_conj, map_neg]
   field_simp
   ring

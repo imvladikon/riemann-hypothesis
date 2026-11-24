@@ -1424,10 +1424,10 @@ theorem step_iso (ψ : AddChar k Circle) {r' t' a c ℓ n : ℕ} (hac : a + c = 
       ((((derivB ψ a B₁).tw ((c : ℝ) / 2)).prod ((derivB ψ c B₂).tw ((a : ℝ) / 2))).cast hs) := by
   refine giso_trans (tw_cast hs _ _) (giso_cast hs ?_)
   refine giso_trans (tw_prod _ _ _) (giso_prod ?_ ?_)
-  · refine giso_symm (giso_trans (giso_tw _ (derivB_iso ψ a B₁)) (giso_trans (tw_tw _ _ _) ?_))
+  · refine giso_symm (giso_trans (giso_tw _ (derivB_iso ψ a B₁)) (giso_trans (_root_.GlobalTheory.CompanionTheory.LeibOrd.DerivTw.tw_tw _ _ _) ?_))
     have : (a : ℝ) / 2 + (c : ℝ) / 2 = (ℓ : ℝ) / 2 := by subst hac; push_cast; ring
     rw [this]; exact giso_refl _
-  · refine giso_symm (giso_trans (giso_tw _ (derivB_iso ψ c B₂)) (giso_trans (tw_tw _ _ _) ?_))
+  · refine giso_symm (giso_trans (giso_tw _ (derivB_iso ψ c B₂)) (giso_trans (_root_.GlobalTheory.CompanionTheory.LeibOrd.DerivTw.tw_tw _ _ _) ?_))
     have : (c : ℝ) / 2 + (a : ℝ) / 2 = (ℓ : ℝ) / 2 := by subst hac; push_cast; ring
     rw [this]; exact giso_refl _
 

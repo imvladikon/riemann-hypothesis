@@ -228,24 +228,18 @@ private theorem listPin_thetaTwist {K : Ctx} {B : Base} {f : Fr B.toPre}
 open GlobalTheory.Mem.R3.Tr in
 theorem points_step_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, ∀ cDep : ℝ, _root_.GlobalTheory.HeightCounting.Up.ModuliPointsExistList' hL cDep := by
   intro hPr hSer hL cDep
-  refine StepW.trans (_root_.GlobalTheory.T.geoLaws_iC_at_levelB1_of_serN hPr hSer hL) (StepW.of_all ?_)
+  refine StepW.trans (_root_.GlobalTheory.HeightCounting.Up.geoLaws_at_levelB1_states hPr hSer hL) (StepW.of_all ?_)
   intro K B f T w _ _ hq P x l
   have hlaw := hq P x l
   let th := GlobalTheory.GeoTie.geoNTh hlaw
   obtain ⟨x', hl', ho, hLc⟩ :=
-    _root_.GlobalTheory.T.exists_levelB2_twist_of_thetaTie hL x l th (GlobalTheory.GeoTie.geoTie hlaw)
+    _root_.GlobalTheory.HeightCounting.Up.exists_levelB2_twisted_state_of_thetaTie hL x l th (GlobalTheory.GeoTie.geoTie hlaw)
   refine ⟨x', hl', fun hLs => ?_⟩
   exact listPin_of_stage_eq (a := x'.o.Z) (b := (oTw x (thTw (Dof x) th)).Z)
     (congrArg (fun o : P.q.Over => o.Z) ho) hLc
     (listPin_thetaTwist x th x.m.z.R.toRealDat.toLevCh (c := cDep) (bound := K.s.b) hLs)
 end GlobalTheory.HeightCounting.Up
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-
-theorem _root_.GlobalTheory.T.moduliPointsExistList_of_inputs_serN : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, ∀ cDep : ℝ, _root_.GlobalTheory.HeightCounting.Up.ModuliPointsExistList' hL cDep := by
-  exact _root_.GlobalTheory.HeightCounting.Up.points_step_alt_alt
 end
 end
 end -- clump:auto
@@ -269,9 +263,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem sa_of_prN_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → PhtCmp → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.SameGaloisLevelExists hL := by
   intro hP hC hL
-  have hE := _root_.GlobalTheory.T.isRayPrime_g_and_integral_range hP
-  have hR := _root_.GlobalTheory.T.depth_of_repOf_of_inputs hP
-  have hA := _root_.GlobalTheory.T.types_true_of_ray_class_alt hL hP.what₂.fin hP.what₂.berger hP.greenC hP.what₂.art hP.ray hP.what₂.cheb
+  have hE := _root_.GlobalTheory.ElemAtStates.elem_all_alt_alt hP
+  have hR := _root_.GlobalTheory.RowDepthTrue.rowDepth_allSt_alt_alt hP
+  have hA := _root_.GlobalTheory.HeightCounting.TopA.exists_sideA_alt hL hP.what₂.fin hP.what₂.berger hP.greenC hP.what₂.art hP.ray hP.what₂.cheb
   unfold _root_.GlobalTheory.HeightCounting.Up.SameGaloisLevelExists AllSt
   refine StepW.trans (StepW.and hE hR) (StepW.of_all ?_)
   intro K B f T w _ _ hq P x hLoc
@@ -311,12 +305,6 @@ theorem sa_of_prN_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInput
   exact hrow
 end GlobalTheory.HeightCounting.Up
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-
-theorem _root_.GlobalTheory.T.stageASameGalois_of_inputs_phtCmp : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → PhtCmp → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.SameGaloisLevelExists hL := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.sa_of_prN_alt_alt
 end
 end
 end -- clump:auto
@@ -926,10 +914,10 @@ theorem pre_at_of_side_b_tau_true_lam_ok (hA : GlobalTheory.Published.GlobalArti
     (hB : ∃ Bs : SideB (Dof x) (cfOf x) l.a.A.row (lowAll (Dof x)) l.Pq l.rat.S l.rat.In.hL l.rat.In.eig l.rat.In.θ, TauTrue Bs.exp)
     (hSb : ∀ i, l.rat.In.Sb ⊆ (Dof x).ntw.S0 i) (hZ : ∃ Z : GlobalTheory.LamTie.LamDat (Dof x), Z.Ok) :
     PreAt (P := P) x.m.z l.a.A.row l.Pq l.rat.In.hL l.rat.In.eig l.rat.In.θ := by
-  obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.T.isChoice_of_start_of_over hL hK hS x l.toLA
+  obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.HeightCounting.FirstFacts.facts_alt hL hK hS x l.toLA
   obtain ⟨Bs, hτ⟩ := sideB_tau_congr h4.symm rfl rfl HEq.rfl hB
   exact ⟨h4, l.rat.kKs, l.rat.hk, l.rat.In.hL, HEq.rfl, Bs, x.r.Y.hF, hτ,
-    GlobalTheory.T.exists_newThetaData_series_classSums_lattices hA (Dof x) _ _ _ _ _ _ x.m.z.R x.m.z.F x.m.z.cG l.rat.kKs l.rat.hk _ _ _ _ _ Bs l.rat.In.Sb x.m.z.geo.v₀ x.r.Y.hF
+    _root_.GlobalTheory.HeightCounting.SerCopy.exists_preTie hA (Dof x) _ _ _ _ _ _ x.m.z.R x.m.z.F x.m.z.cG l.rat.kKs l.rat.hk _ _ _ _ _ Bs l.rat.In.Sb x.m.z.geo.v₀ x.r.Y.hF
       x.m.z.pins x.m.intersectionNumber_baseChange (fun j => x.m.z.geo.fw.hv₀ j _) x.m.z.geo.fw.ks l.rat.rat.hecke hSb hτ (h4 ▸ l.a.A.chr) (h4 ▸ l.a.val)
       l.a.elem.split l.Pq_over h1 h2 hZ h3⟩
 
@@ -974,7 +962,7 @@ theorem pre_at_twisted_copy_of_side_b_tau_true (hA : GlobalTheory.Published.Glob
       (cast (congrArg RowSide (dof_oTw x N).symm) (N.row l.a.A.row))
       (by with_unfolding_all exact l.Pq) l.rat.In.hL
       (by with_unfolding_all exact l.rat.In.eig) (by with_unfolding_all exact l.rat.In.θ) := by
-  obtain ⟨x', l', ho, -, hrow, hPq, hS', hSb', hhL, heig, hθ, hR, hcG, hgeo⟩ := _root_.GlobalTheory.T.twisted_state_transport_heq_levels' hL x l N
+  obtain ⟨x', l', ho, -, hrow, hPq, hS', hSb', hhL, heig, hθ, hR, hcG, hgeo⟩ := _root_.GlobalTheory.HeightCounting.Up.restage_copy_real_alt hL x l N
   obtain ⟨o', fits', G_eq', etaF', bk', m', copy', coh', s', r', pin'⟩ := x'
   dsimp only at ho
   subst ho
@@ -1049,7 +1037,7 @@ namespace GlobalTheory.HeightCounting.SerCopy
 open GlobalTheory.Mem.Top.GroupRetwisting in
 theorem series_copy_embedding_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T}, K.Over B.toPre → Forced K B T → Start K B f T w → ∀ {P : Pre2 K w} (x : St P) (l : _root_.GlobalTheory.HeightCounting.Up.FirstIntermediateLevel hL x), ∃ N : TwNew (Dof x), (∀ Z : GlobalTheory.LamTie.LamDat (Dof x), GlobalTheory.LamTie.IsLamTieFull (Dof x).ntw Z → GlobalTheory.LamTie.IsLamTieFull N.tw Z) ∧ ∀ (x' : St P) (l' : _root_.GlobalTheory.HeightCounting.Up.IntermediateLevel hL x'), x'.o = oTw x N → HEq l'.a.A.row (N.row l.a.A.row) → HEq l'.Pq l.Pq → HEq l'.rat.S (N.rat l.rat.S) → HEq l'.rat.In.Sb l.rat.In.Sb → HEq l'.rat.In.hL l.rat.In.hL → HEq l'.rat.In.eig l.rat.In.eig → HEq l'.rat.In.θ l.rat.In.θ → HEq x'.m.z.R (GlobalTheory.Mem.R3.Tr.real3 (a := x.o.Z) (oTw x N).Z (iK := x.m.z.alg) x.m.z.R) → HEq x'.m.z.cG x.m.z.cG → HEq x'.m.z.geo (GlobalTheory.Mem.R3.Tr.geoHalf (a := x.o.Z) (oTw x N).Z (iK := x.m.z.alg) x.m.z.geo) → ∀ m : InMt x'.r.Y (cfOf x') w.I.xi (QOf P), (∀ i, GlobalTheory.MtRead.IdFrame x'.r.Y.hF (m.ad.PV i)) → Nonempty (_root_.GlobalTheory.HeightCounting.SeriesData x'.m.z.geo l'.a l'.rat m.ad.PV l'.Pq) := by
   intro hPr _ hL K B f T w hK _ hS P x l
-  obtain ⟨-, -, -, -, hr⟩ := _root_.GlobalTheory.T.isChoice_of_start_of_over hL hK hS x l.toLA
+  obtain ⟨-, -, -, -, hr⟩ := _root_.GlobalTheory.HeightCounting.FirstFacts.facts_alt hL hK hS x l.toLA
   obtain ⟨N, h1, h2, h3, h4, hB⟩ := exists_prepared hPr.what₂.art l.b.Bs l.a.val hr
   obtain ⟨Z, z1, z2, z3, z4, z5⟩ := l.b.lam
   have hSb : ∀ i, l.rat.In.Sb ⊆ N.tw.S0 i := fun i => by
@@ -1072,13 +1060,6 @@ theorem series_copy_embedding_alt : _root_.GlobalTheory.HeightCounting.Up.Publis
     (by rewrite [e4]; exact (by with_unfolding_all exact (hSb :))) ((by with_unfolding_all exact (hS0 :)))
 end GlobalTheory.HeightCounting.SerCopy
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-attribute [local instance] Formalism.BasicNotions.Host.cmStar
-
-theorem _root_.GlobalTheory.T.series_copy_embedding_of_cmDatum_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} {w : ColW B f T}, K.Over B.toPre → Forced K B T → Start K B f T w → ∀ {P : Pre2 K w} (x : St P) (l : _root_.GlobalTheory.HeightCounting.Up.FirstIntermediateLevel hL x), ∃ N : TwNew (Dof x), (∀ Z : GlobalTheory.LamTie.LamDat (Dof x), GlobalTheory.LamTie.IsLamTieFull (Dof x).ntw Z → GlobalTheory.LamTie.IsLamTieFull N.tw Z) ∧ ∀ (x' : St P) (l' : _root_.GlobalTheory.HeightCounting.Up.IntermediateLevel hL x'), x'.o = oTw x N → HEq l'.a.A.row (N.row l.a.A.row) → HEq l'.Pq l.Pq → HEq l'.rat.S (N.rat l.rat.S) → HEq l'.rat.In.Sb l.rat.In.Sb → HEq l'.rat.In.hL l.rat.In.hL → HEq l'.rat.In.eig l.rat.In.eig → HEq l'.rat.In.θ l.rat.In.θ → HEq x'.m.z.R (GlobalTheory.Mem.R3.Tr.real3 (a := x.o.Z) (oTw x N).Z (iK := x.m.z.alg) x.m.z.R) → HEq x'.m.z.cG x.m.z.cG → HEq x'.m.z.geo (GlobalTheory.Mem.R3.Tr.geoHalf (a := x.o.Z) (oTw x N).Z (iK := x.m.z.alg) x.m.z.geo) → ∀ m : InMt x'.r.Y (cfOf x') w.I.xi (QOf P), (∀ i, GlobalTheory.MtRead.IdFrame x'.r.Y.hF (m.ad.PV i)) → Nonempty (_root_.GlobalTheory.HeightCounting.SeriesData x'.m.z.geo l'.a l'.rat m.ad.PV l'.Pq) := by
-  first | exact @_root_.GlobalTheory.HeightCounting.SerCopy.series_copy_embedding_alt
 end
 end
 end -- clump:auto
@@ -1108,19 +1089,13 @@ theorem sb1l_alt_alt : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThir
     (StepW.of_all (q := fun K B f T w => ∀ (P : Pre2 K w) (x : St P),
       FirstIntermediateLevel hL x → ∃ x' : St P, Nonempty (SecondIntermediateLevel hL x') ∧
         (ListSt cDep x → ListSt cDep x')) fun K B f T w hK hF H P x l => ?_)
-  obtain ⟨N, hN, hser⟩ := _root_.GlobalTheory.T.series_copy_embedding_of_cmDatum_alt hPr hSer hL hK hF H.2 x l
-  obtain ⟨x', l', ho, hLc, hrow, hPq, hS, hSb, hhL, heig, hθ, hR, hcG, hgeo⟩ := _root_.GlobalTheory.T.twisted_state_transport_heq_levels' hL x l.toLI N
+  obtain ⟨N, hN, hser⟩ := _root_.GlobalTheory.HeightCounting.SerCopy.series_copy_embedding_alt hPr hSer hL hK hF H.2 x l
+  obtain ⟨x', l', ho, hLc, hrow, hPq, hS, hSb, hhL, heig, hθ, hR, hcG, hgeo⟩ := _root_.GlobalTheory.HeightCounting.Up.restage_copy_real_alt hL x l.toLI N
   obtain ⟨m, hm⟩ := H.1 P x'
   obtain ⟨b⟩ := hser x' l' ho hrow hPq hS hSb hhL heig hθ hR hcG hgeo m hm
   exact ⟨x', ⟨{ toLI := { l' with mt := m }, b := b }⟩, listSt_oTw cDep x N hN x' ho hLc⟩
 end GlobalTheory.HeightCounting.Up.SeriesStep
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-
-theorem _root_.GlobalTheory.T.seriesExistList_of_inputs_serN : (_root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, ∀ cDep : ℝ, _root_.GlobalTheory.HeightCounting.Up.SeriesExistList' hL cDep) := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.SeriesStep.sb1l_alt_alt
 end
 end
 end -- clump:auto
@@ -1204,15 +1179,9 @@ noncomputable section
 namespace GlobalTheory.HeightCounting.Up.ChoiceEx
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up GlobalTheory.TwistChoice
 theorem stage_c_nonempty_of_published_inputs : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraModules → _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.StrictHenselianAcyclicLevelNonempty hL :=
-  fun hCo hCW hHM a b hL => _root_.GlobalTheory.HeightCounting.Up.ChoiceEx.sc_of_sck_alt (_root_.GlobalTheory.T.stageCExists_of_casselmanWallach hCo hCW hHM a b hL)
+  fun hCo hCW hHM a b hL => _root_.GlobalTheory.HeightCounting.Up.ChoiceEx.sc_of_sck_alt (_root_.GlobalTheory.LevCmp.stageCExists_of_harishChandra_serN hCo hCW hHM a b hL)
 end GlobalTheory.HeightCounting.Up.ChoiceEx
 end
-end
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
-
-theorem _root_.GlobalTheory.T.stage_c_nonempty_of_prints_third_layer : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraModules → _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → SerN → ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root_.GlobalTheory.HeightCounting.Up.StrictHenselianAcyclicLevelNonempty hL := by
-  first | exact @_root_.GlobalTheory.HeightCounting.Up.ChoiceEx.stage_c_nonempty_of_published_inputs
 end
 end
 end -- clump:auto
@@ -1285,15 +1254,15 @@ theorem all_stages_of_specializations_alt : GlobalTheory.Published.CasselmanWall
     _root_.GlobalTheory.HeightCounting.Up.SameGaloisLevelExists hL ∧ SMt ∧ _root_.GlobalTheory.HeightCounting.Up.RationalityStatementThirdPlaceSeries hL ∧ _root_.GlobalTheory.HeightCounting.Up.CuspStatement' hL ∧ _root_.GlobalTheory.HeightCounting.Up.FirstIntermediateLevelExists hL ∧ _root_.GlobalTheory.HeightCounting.Up.SecondIntermediateLevelExists hL ∧ _root_.GlobalTheory.HeightCounting.Up.ThirdIntermediateLevelExists hL ∧ _root_.GlobalTheory.HeightCounting.Up.StrictHenselianAcyclicLevelNonempty hL ∧ _root_.GlobalTheory.HeightCounting.Up.FinitenessStatement hL ∧
       ∀ cDep : ℝ, _root_.GlobalTheory.HeightCounting.Up.SettingsFormsExistList' hL cDep ∧ _root_.GlobalTheory.HeightCounting.Up.SeriesExistList' hL cDep ∧ _root_.GlobalTheory.HeightCounting.Up.ModuliPointsExistList' hL cDep ∧ _root_.GlobalTheory.HeightCounting.Up.FinitenessListStatement hL cDep := by
   intro hCW hHM hW hD hU hH hP hS hL hA hPt
-  have hMt : SMt := _root_.GlobalTheory.T.sMt_of_published_inputs' hP
+  have hMt : SMt := _root_.GlobalTheory.MtInMain.prN_sMt_alt_alt hP
   have hRat : _root_.GlobalTheory.HeightCounting.Up.RationalityStatementThirdPlaceSeries hL := _root_.GlobalTheory.HeightCounting.RatSide.sRat_of_isotInternal_inputs hU hP hS (_root_.GlobalTheory.HeightCounting.Up.IsotAtStates.isotInternal_at_states hW hD hH hP) hL
-  have hPar : _root_.GlobalTheory.HeightCounting.Up.ParameterStatement hL := _root_.GlobalTheory.T.parSt_of_third_layer_sMt hP hMt hL
+  have hPar : _root_.GlobalTheory.HeightCounting.Up.ParameterStatement hL := _root_.GlobalTheory.HeightCounting.Up.conjDualParam_stable_of_prime_not_dividing_level_alt hP hMt hL
   have hEta : _root_.GlobalTheory.HeightCounting.Up.EtaStatement' hL := _root_.GlobalTheory.StEta.sEta_alt_alt_alt hP hL hPt
-  have hFin := _root_.GlobalTheory.T.sFin_and_sFinl_of_archCmp_sEta_thetaData hW hD hP hL hA hEta (_root_.GlobalTheory.HeightCounting.Up.sXd_all_alt hL)
+  have hFin := _root_.GlobalTheory.HeightCounting.Fin3.sFin_and_sFinl_of_theta_data_exists hW hD hP hL hA hEta (_root_.GlobalTheory.HeightCounting.Up.sXd_all_alt hL)
   have hG := _root_.GlobalTheory.HeightCounting.UpPin.steps_pin_alt hL 0
-  refine ⟨_root_.GlobalTheory.T.stageASameGalois_of_inputs_phtCmp hP hA.pht hL, hMt, hRat, _root_.GlobalTheory.SCuspRows.sCusp_of_parSt_alt_alt hP hL hPar hRat, hG.1 (_root_.GlobalTheory.T.settingsFormsExistList_of_inputs_serN hP hS hL 0),
-    hG.2.1 (_root_.GlobalTheory.T.seriesExistList_of_inputs_serN hP hS hL 0), hG.2.2.1 (_root_.GlobalTheory.T.moduliPointsExistList_of_inputs_serN hP hS hL 0), _root_.GlobalTheory.T.stage_c_nonempty_of_prints_third_layer hH.cover hCW hHM hP hS hL, hFin.1, fun c => ?_⟩
-  exact ⟨_root_.GlobalTheory.T.settingsFormsExistList_of_inputs_serN hP hS hL c, _root_.GlobalTheory.T.seriesExistList_of_inputs_serN hP hS hL c, _root_.GlobalTheory.T.moduliPointsExistList_of_inputs_serN hP hS hL c, hFin.2 c⟩
+  refine ⟨_root_.GlobalTheory.HeightCounting.Up.sa_of_prN_alt_alt hP hA.pht hL, hMt, hRat, _root_.GlobalTheory.SCuspRows.sCusp_of_parSt_alt_alt hP hL hPar hRat, hG.1 (_root_.GlobalTheory.HeightCounting.Up.PointwiseSettings.settings_forms_exist_list_of_published_inputs hP hS hL 0),
+    hG.2.1 (_root_.GlobalTheory.HeightCounting.Up.SeriesStep.sb1l_alt_alt hP hS hL 0), hG.2.2.1 (_root_.GlobalTheory.HeightCounting.Up.points_step_alt_alt hP hS hL 0), _root_.GlobalTheory.HeightCounting.Up.ChoiceEx.stage_c_nonempty_of_published_inputs hH.cover hCW hHM hP hS hL, hFin.1, fun c => ?_⟩
+  exact ⟨_root_.GlobalTheory.HeightCounting.Up.PointwiseSettings.settings_forms_exist_list_of_published_inputs hP hS hL c, _root_.GlobalTheory.HeightCounting.Up.SeriesStep.sb1l_alt_alt hP hS hL c, _root_.GlobalTheory.HeightCounting.Up.points_step_alt_alt hP hS hL c, hFin.2 c⟩
 end GlobalTheory.HeightCounting.Up
 end
 

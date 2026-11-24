@@ -485,8 +485,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open GlobalTheory.HTLat GlobalTheory.Published GlobalTheory.Published.AbVarRed IsLocalRing
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_fixedField_point_of_fixed_by_subgroup : ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] (H : Subgroup (Ω ≃ₐ[K] Ω)) (A : Over (Sp K)), LocallyOfFiniteType A.hom → ∀ x : ptOver K Ω ⟶ A, (∀ σ ∈ H, specAut σ ≫ x = x) → ∃ y : Sp (IntermediateField.fixedField H) ⟶ A.left, spMap (algebraMap (IntermediateField.fixedField H) Ω) ≫ y = x.left := by
-  first | exact @GlobalTheory.Published.AbVarRed.exists_fixedField_point
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFixedFieldPointOfFixedBySubgroupStatement =====
@@ -1306,7 +1304,7 @@ theorem card_torsion_fixedField {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω
   · intro y y' h
     exact Subtype.ext (fixedPtHom_injective H A (congrArg Subtype.val h))
   · rintro ⟨z, hz⟩
-    obtain ⟨y, hy⟩ := GlobalTheory.T.exists_fixedField_point_of_fixed_by_subgroup K Ω H A hA z (fun σ hσ => hfix σ hσ z hz)
+    obtain ⟨y, hy⟩ := _root_.GlobalTheory.Published.AbVarRed.exists_fixedField_point K Ω H A hA z (fun σ hσ => hfix σ hσ z hz)
     have hep := epi_ptOverMap (IntermediateField.val (IntermediateField.fixedField H))
     have hj : (ptOverMap (IntermediateField.val (IntermediateField.fixedField H))).left =
         spMap (algebraMap (IntermediateField.fixedField H) Ω) := rfl
@@ -1409,16 +1407,14 @@ section -- clump:auto
 
 namespace UpperTheory.Lit
 
-theorem neronOggShafarevich : GlobalTheory.Published.NeronOggShafarevichSt := UpperTheory.Lit.Nos.Nos.neronOggShafarevich
-
 theorem potentialGoodReduction : GlobalTheory.Published.PotentialGoodReductionSt :=
-  GlobalTheory.potentialGoodReduction_of_neronOggShafarevich neronOggShafarevich
+  GlobalTheory.potentialGoodReduction_of_neronOggShafarevich _root_.UpperTheory.Lit.Nos.Nos.neronOggShafarevich
 
 theorem cmPotentialGoodReduction : GlobalTheory.Published.CMPotentialGoodReductionSt :=
-  cmPotentialGoodReduction_of_nos neronOggShafarevich
+  cmPotentialGoodReduction_of_nos _root_.UpperTheory.Lit.Nos.Nos.neronOggShafarevich
 
 theorem serreTateGoodReduction : GlobalTheory.Published.SerreTateGoodReductionSt :=
-  ⟨neronOggShafarevich, potentialGoodReduction, cmPotentialGoodReduction⟩
+  ⟨_root_.UpperTheory.Lit.Nos.Nos.neronOggShafarevich, potentialGoodReduction, cmPotentialGoodReduction⟩
 
 end UpperTheory.Lit
 end -- clump:auto

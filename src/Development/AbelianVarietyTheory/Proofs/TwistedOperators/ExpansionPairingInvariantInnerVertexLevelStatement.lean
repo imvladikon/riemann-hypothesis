@@ -164,12 +164,7 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 open Matrix
 
-theorem _root_.GlobalTheory.T.idempotentCut_mem_latticeStabilizer_of_productLevel : ∀ {D : D7} {n : ℕ} (β : GL (Fin n) (Lev.EAf D)) (P : Finset (Pl D.host.E))
-    {n' : P → ℕ} (h : ∀ w, n' w = n) (K : ∀ w : P, Subgroup (GL (Fin (n' w)) (Kw w.1))) (x : GL (Fin n) (Lev.EAf D)),
-    x ∈ prodLev β P h K → ∀ (b : Lev.EAf D) (hb : b * b = b),
-    (∀ w : Pl D.host.E, (∃ PP ∈ P, w.under (𝓞 D.host.F) = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) → GlobalTheory.StdFrames.cpt (D := D) w b = 0) →
-    GlobalTheory.UnitaryIdemCut.cutGL b hb x ∈ St β := by
-  first | exact @GlobalTheory.CutProdLev.cutGL_mem_St_of_mem_prodLev
+alias _root_.GlobalTheory.T.idempotentCut_mem_latticeStabilizer_of_productLevel := _root_.GlobalTheory.CutProdLev.cutGL_mem_St_of_mem_prodLev
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentCutMemLatticeStabilizerOfProductLevelStatement =====
@@ -235,10 +230,6 @@ open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheor
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 open Matrix
 
-theorem _root_.GlobalTheory.T.idempotentSum_add_conj_component_indicator : ∀ {D : D7} {e : AE D} {P : Finset (Pl D.host.E)}, IsIdemSum e P → ∀ w : Pl D.host.E,
-    ((w ∈ P ∨ GlobalTheory.IdemSupport.cP w ∈ P) → GlobalTheory.StdFrames.cpt (D := D) w (toEAf D (e + cA D e)) = 1) ∧
-    (w ∉ P → GlobalTheory.IdemSupport.cP w ∉ P → GlobalTheory.StdFrames.cpt (D := D) w (toEAf D (e + cA D e)) = 0) := by
-  first | exact @GlobalTheory.IdemPairCpt.cpt_add_cA_idemSum
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSumAddConjComponentIndicatorStatement =====
@@ -295,7 +286,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
   set b : Lev.EAf D := toEAf D (1 - a) with hbdef
   have hcb : ∀ w, GlobalTheory.StdFrames.cpt (D := D) w b = 1 - GlobalTheory.StdFrames.cpt (D := D) w (toEAf D a) := fun w => by
     rw [hbdef, RingHom.map_sub, RingHom.map_one, RingHom.map_sub, RingHom.map_one]
-  have hca := GlobalTheory.T.idempotentSum_add_conj_component_indicator he
+  have hca := _root_.GlobalTheory.IdemPairCpt.cpt_add_cA_idemSum he
   have hb : b * b = b := GlobalTheory.StdFrames.cpt_ext fun w => by
     rw [RingHom.map_mul, hcb]
     by_cases h1 : w ∈ locPl G t ∨ GlobalTheory.IdemSupport.cP w ∈ locPl G t
@@ -326,7 +317,7 @@ theorem keep_stdLatO : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G 
     · exact h2 t ht w h3 hw.symm
   have hub : b * toEAf D (eu + cA D eu) = toEAf D (eu + cA D eu) := GlobalTheory.StdFrames.cpt_ext fun w => by
     rw [RingHom.map_mul, hcb]
-    have hu := GlobalTheory.T.idempotentSum_add_conj_component_indicator heu w
+    have hu := _root_.GlobalTheory.IdemPairCpt.cpt_add_cA_idemSum heu w
     by_cases h1 : w ∈ Pu ∨ GlobalTheory.IdemSupport.cP w ∈ Pu
     · rw [hu.1 h1]
       have hw1 : w ∉ locPl G t := by

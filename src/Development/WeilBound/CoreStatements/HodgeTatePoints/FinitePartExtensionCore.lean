@@ -196,7 +196,7 @@ theorem exists_qfGroup_kernel : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoet
   have := hB.separated
   have := hB.quasiCompact
   have := hB.comm
-  have := GlobalTheory.CompanionTheory.Ar.BT.flat_mul_semiAbelian (Spec (CommRingCat.of R)) B hB N hN
+  have := _root_.PositivityTheory.HtPt.Twhopf.mul_flat (Spec (CommRingCat.of R)) B hB N hN
   have := GlobalTheory.CompanionTheory.Ar.BT.locallyQuasiFinite_pow_semiAbelian (Spec (CommRingCat.of R)) B hB N hN
   have hm := mono_of_pullback hp
   obtain ⟨h1, h2, h3, h4, h5⟩ := kernel_props hp
@@ -1673,14 +1673,9 @@ theorem comp_left_of_map {S' S : Scheme.{0}} (x : S' ⟶ S) {P G B : Over S} (v 
       rw [h, Over.comp_left, Category.assoc, ← Category.assoc, ← Category.assoc, ← Category.assoc, hw2,
         Category.assoc]
 
-theorem mulN_eq_pow {S : Scheme.{0}} (P : Over S) [GrpObj P] (n : ℕ) : mulN P n = (𝟙 P) ^ n := by
-  induction n with
-  | zero => simp [mulN, Hom.one_def]
-  | succ n ih => rw [pow_succ, ← ih, mulN, Hom.mul_def]
-
 theorem finiteMulTorus : ∀ (S : Scheme.{0}) (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (N : ℕ), 1 ≤ N → IsFinite ((𝟙 (splitTorus S X)) ^ N).left := by
   intro S X _ _ _ N hN
-  rw [← mulN_eq_pow]
+  rw [← _root_.GlobalTheory.GrpTangent.mulN_eq_pow]
   exact GlobalTheory.Diag.isFinite_mulN S X (by omega)
 
 theorem kernelOf : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : Over S) [GrpObj P], IsSemiAbelian P → ∀ N : ℕ, 1 ≤ N → IsFinite ((𝟙 P) ^ N).left → ∃ (A : Over S) (_ : GrpObj A) (_ : IsCommMonObj A) (j : A ⟶ P), IsMonHom j ∧ IsPullback j (toUnit A) ((𝟙 P) ^ N) η[P] ∧ IsFinite A.hom ∧ Flat A.hom := by

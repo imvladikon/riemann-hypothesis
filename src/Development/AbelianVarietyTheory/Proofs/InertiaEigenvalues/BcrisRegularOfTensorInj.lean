@@ -361,12 +361,6 @@ open scoped Formalism.Per
 
 namespace GlobalTheory.Per
 
-theorem exists_pow_eq_one_of_algClosure_zmod (l : ℕ) [hl : Fact l.Prime] (a : AlgebraicClosure (ZMod l))
-    (ha : a ≠ 0) : ∃ m : ℕ, 0 < m ∧ ¬ l ∣ m ∧ a ^ m = 1 := by
-  first
-  | (apply _root_.GlobalTheory.ProofStatement.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.ProofStatement.main ..)
-
 theorem exists_isPrimitiveRoot_tilt (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (hm : 0 < m) (hlm : ¬ l ∣ m) :
     ∃ e : Per.Fl l, IsPrimitiveRoot e m := by
   haveI : NeZero m := ⟨hm.ne'⟩
@@ -402,7 +396,7 @@ theorem nonempty_algClosure_zmod_to_tilt :
     intro a
     by_cases ha : a = 0
     · rw [ha, map_zero]; exact zero_mem _
-    obtain ⟨m, hm, hlm, ham⟩ := exists_pow_eq_one_of_algClosure_zmod l a ha
+    obtain ⟨m, hm, hlm, ham⟩ := _root_.GlobalTheory.ProofStatement.main l a ha
     obtain ⟨e, he⟩ := exists_isPrimitiveRoot_tilt l m hm hlm
     haveI : NeZero m := ⟨hm.ne'⟩
     obtain ⟨i, -, hi⟩ := (he.map_of_injective hj).eq_pow_of_pow_eq_one
@@ -495,10 +489,6 @@ open scoped Formalism.Per
 
 namespace GlobalTheory.MemLoc
 
-theorem exists_pow_eq_one_algClosure_coprime (l : ℕ) [Fact l.Prime] (a : AlgebraicClosure (ZMod l))
-    (ha : a ≠ 0) : ∃ m : ℕ, 0 < m ∧ ¬ l ∣ m ∧ a ^ m = 1 := by
-  apply GlobalTheory.Per.exists_pow_eq_one_of_algClosure_zmod <;> assumption
-
 theorem exists_unit_frobenius_eq_mul (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [CharP k l] [IsAlgClosed k]
     (u : WittVector l k) (hu : IsUnit u) :
     ∃ w : WittVector l k, IsUnit w ∧ WittVector.frobenius w = u * w := by
@@ -541,7 +531,7 @@ theorem exists_unramified_period : ∀ (l : ℕ) [Fact l.Prime] (F : GQ l), (∀
     intro g n hn hg a
     by_cases ha : a = 0
     · rw [ha, map_zero, map_zero, zero_pow hn]
-    · obtain ⟨m, hm, hl, ham⟩ := exists_pow_eq_one_algClosure_coprime l a ha
+    · obtain ⟨m, hm, hl, ham⟩ := _root_.GlobalTheory.ProofStatement.main l a ha
       exact _root_.GlobalTheory.MemLoc.σF_root_of_unity l (f a) m n g hm hl (by rw [← map_pow, ham, map_one])
         fun x hx => hg x m hm hl hx
   have hφA : Per.φA l (WittVector.map f w₀) = Per.zA l u * WittVector.map f w₀ := by
@@ -1473,11 +1463,6 @@ theorem exists_frob (C : Core l) :
 
 theorem qB_coe (z : ℤ_[l]) : C.qB (z : ℚ_[l]) = Per.zB l z := (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.1 z
 
-theorem ι_aB (a : Per.Ainf l) :
-    C.ι (Per.aB l a) = algebraMap (Per.BdRp l) (Per.BdR l) (aDp l a) := by
-  rw [GlobalTheory.RingIface.aB_eq_alg, C.ι_j, GlobalTheory.RingIface.tower, C.j_cris.on0, Subalgebra.coe_algebraMap]
-  simp only [aDp, RingHom.comp_apply]
-
 theorem theta_eig {b : Per.Bcris l} {y : Per.BdRp l}
     (h : C.ι b = algebraMap (Per.BdRp l) (Per.BdR l) y) {g : GQ l} {x : ℚ_[l]}
     (hx : Per.σB g b = C.qB x * b) :
@@ -1501,7 +1486,7 @@ theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
   obtain ⟨F, hF⟩ := exists_frob C
   obtain ⟨w, hw, hwI, hwF, hwφ⟩ := _root_.GlobalTheory.MemLoc.exists_unramified_period l F hF (η F ^ N)⁻¹
   have h2 : C.ι (b ^ N * Per.aB l w) = algebraMap (Per.BdRp l) (Per.BdR l) (y ^ N * aDp l w) := by
-    rw [map_mul, map_pow, h, ι_aB, map_mul, map_pow]
+    rw [map_mul, map_pow, h, _root_.GlobalTheory.MemLoc.ULaws.iota_aB, map_mul, map_pow]
   have hθ : Per.θD l (y ^ N * aDp l w) ≠ 0 := by
     rw [map_mul, map_pow]
     exact mul_ne_zero (pow_ne_zero _ hy) ((hw.map _).map _).ne_zero

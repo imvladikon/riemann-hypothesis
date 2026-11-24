@@ -414,8 +414,6 @@ open scoped TensorProduct
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.coefficientSpace_definiteForm_irreducibleAlgebraicWeight : ∀ (D : D7) (V : HSp D) (P : principalLevelFrame.RowPsi V V.rank) (e : ReciprocityTheory.Aut.GQ D.host.E V.rank ≃* Formalism.L2.Theta.GQ V), RatIso P e → ∀ (c : CoefA V) (lam : D.what₂.Tau → DomWeight V.rank) (c0 : VV D.what₂.LL lam →ₛₗ[D.what₂.embLL] c.W), Bridge.CoefMapTie V c.coef c0 (rhoVr (labLL D) lam) → ∃ (alg : Formalism.AUTREP.IsAlgWeight D.host.E V.rank (wtRep c e)) (irr : (wtRep c e).IsIrreducible), ∀ (a : NG.AlgWt D.host.E V.rank) (τ : D.what₂.Tau) (lam0 : Fin V.rank → ℤ), NG.AlgWt.IsDual { W := c.W, ρ := wtRep c e, alg := alg, irr := irr } a → a.HWAt (Formalism.L2.embT D τ) lam0 → lam0 = (lam τ).w := by
-  first | exact @GlobalTheory.MtIn.wt_main
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoefficientSpaceDefiniteFormIrreducibleAlgebraicStatement =====
@@ -753,14 +751,6 @@ namespace GlobalTheory.MtIn.UniMem
 
 open ReciprocityTheory.Aut
 
-theorem mem_GLint_of_entries {K : Type} [Field K] {n : ℕ} (O : Subring K) (g : GL (Fin n) K)
-    (h1 : ∀ i j, (g : Matrix (Fin n) (Fin n) K) i j ∈ O)
-    (h2 : ∀ i j, ((g⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) i j ∈ O) :
-    g ∈ Formalism.UG.GLint (Fin n) O := by
-  first
-  | (apply _root_.GlobalTheory.MemGlintOfEntries.mem_glint_of_entries <;> assumption)
-  | (intros; exact _root_.GlobalTheory.MemGlintOfEntries.mem_glint_of_entries ..)
-
 theorem blkOf_lt_iff {n r t : ℕ} (hn : n = r + t) (i j : Fin n) :
     blkOf r t j < blkOf r t i ↔ j.val < r ∧ r ≤ i.val := by
   have hi := i.2
@@ -819,7 +809,7 @@ theorem mem_iff : ∀ (D : D7) (hr : D.R.r ≤ D.R.nV) (Pg Q : Finset (Pl D.host
     have hb2 : redFn (1 : GL (Fin D.R.nV) (EAf D)) s.w (km D D.R.nV κ) ∈ blockTri (blk2 D.R.r) :=
       blockTri_blkOf_le _ _ hgw
     refine ⟨⟨?_, ?_⟩, ?_⟩
-    · refine mem_GLint_of_entries _ _ (fun a b => hint κ hU a b) (fun a b => ?_)
+    · refine _root_.GlobalTheory.MemGlintOfEntries.mem_glint_of_entries _ _ (fun a b => hint κ hU a b) (fun a b => ?_)
       rw [← map_inv]
       exact hint κ⁻¹ (inv_mem hU) a b
     · intro a b ha hb
@@ -1188,7 +1178,7 @@ theorem levelUni_typePlace : ∀ (D : D7) (T : Type) (L : LevCh D T) (μ0 : T), 
       have : (u : kP s.w) = 0 := by rw [hu]; exact Ideal.Quotient.eq_zero_iff_mem.2 hm
       exact u.ne_zero this
     have hunit : IsUnitAt s.w (atFin s.w k) := by
-      have e := GlobalTheory.ChainOnto.TameRes.val_alg s.w (k : D.host.E)
+      have e := _root_.Formalism.UG.P.levelaf_valued_algebraMap s.w (k : D.host.E)
       show Valued.v (algebraMap D.host.E (s.w.adicCompletion D.host.E) (k : D.host.E)) = 1
       rw [e, hk]
       exact GlobalTheory.ChainOnto.TameRes.valuation_eq_one_of_not_mem s.w a ha
@@ -1576,7 +1566,7 @@ theorem side_read {V : HSp D} {n : ℕ} (hn : V.rank = n) {β : GL (Fin V.rank) 
   subst hβ
   subst hLv
   obtain ⟨hbij, e, he⟩ := GlobalTheory.MtInRat.toGf_bij_ratIso D V P hg hP
-  obtain ⟨alg, irr, hw⟩ := GlobalTheory.T.coefficientSpace_definiteForm_irreducibleAlgebraicWeight D V P e he c _ u.c0 u.map
+  obtain ⟨alg, irr, hw⟩ := _root_.GlobalTheory.MtIn.wt_main D V P e he c _ u.c0 u.map
   have hcut := @GlobalTheory.MtIn.lvlForm_adelic_basis (Bridge.Gf V) (Formalism.L2.Theta.GQ V) c.coef.W D.what₂.LL _ _ _ _ _ _ _ (Bridge.ratF V) u.S D.what₂.embLL
     c.coef.ρ _ _ u.pres _ _ u.G₀ _ _ u.act u.tie u.P₀ u.ψ₀⁻¹
   have hli := hcut.1
@@ -1862,13 +1852,13 @@ theorem all_read (hX : X.B.fields.Ok) (hI : I.Ok) (hV : ValsIn I) (hg : GrpAt X 
     (lat : OLatTie X.toD7.what₂.embLL (X.toD7.what₂.MtLat μ ((i : ℕ) + 1)) ((X.toD7.what₂.jMt μ ((i : ℕ) + 1)).comp e.toLinearMap)
       (lNab X.toD7 (famR X I hX Set.univ Xg tr).A (lev0 I) (chr0 I) i (Top.Bl.tAll I a))) :
     ∃ m : MtReal X.toD7 μ ((i : ℕ) + 1), Good i m ((Top.Fr.at X I.C).mu0 i * (show HChar X.toD7.host.E from I.xi a)) := by
-  obtain ⟨eG, cG, Xg', hid, -, -, -, -, hrest⟩ := GlobalTheory.T.exists_finite_group_goodSet_levels_characters X px I hX Set.univ L hI hg hL
+  obtain ⟨eG, cG, Xg', hid, -, -, -, -, hrest⟩ := _root_.GlobalTheory.Mem.R3.Grp.grp_levels_exist X px I hX Set.univ L hI hg hL
   obtain ⟨ψ, hψ, hlev, -⟩ := (hrest tr).2.1
   have hVP : ∀ i, (Vc X.toD7 i).IsPosDef := fun i => X.B.V_posDef _ (by omega) i.2
   choose cV c0 hcV hmap hin using fun i => GlobalTheory.CoefModel.exists_coef_lift X.toD7 i (hVP i)
   have hgr := GlobalTheory.Mem.R3.StdModel.gram_V X I hI i
   have hst : Seed.FrmC.StdLat (Vc X.toD7 i) := ((GlobalTheory.Mem.HostFrames.stdLat_diag (D := X.toD7) hI.spaces).1 _).2.1
-  obtain ⟨s, hs, -⟩ := GlobalTheory.T.exists_liftForms_adelic_decoratedLattices X px I hX Set.univ Xg tr L eG hI hV hL hid cV i (c0 i) (hcV i) (hmap i) (hin i) (hL.beta.1 i)
+  obtain ⟨s, hs, -⟩ := _root_.GlobalTheory.Mem.R3.LiftBrg.exists_liftSide X px I hX Set.univ Xg tr L eG hI hV hL hid cV i (c0 i) (hcV i) (hmap i) (hin i) (hL.beta.1 i)
     hgr hst
   obtain ⟨m, -, h1, -⟩ := fam_read (famR X I hX Set.univ Xg tr).A hL.is (pg_iff X I hL hg) (hL.beta.1 i) (Top.Bl.tAll I a) hψ hgr hst hP
     eG (lev0 I) (chr0 I) hlev (s _).pres (s _).act_tie (hs _).1 (c0 i) _ _ (hmap i) (hs _).2.1

@@ -237,8 +237,6 @@ open GlobalTheory GlobalTheory.Toroidal GlobalTheory.LocM GlobalTheory.PolFan Gl
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_torusExtension_torsion_lift_zero : ∀ {R : Type} [CommRing R] [IsDomain R] (D : DegPre R), D.TauBimult → ∀ (n : ℕ), 1 ≤ n → ∀ (c' : D.X → (𝟙_ (Over (Sp R)) ⟶ D.P.A)), (∀ χ, c' χ ^ n = D.c χ) → ∀ (F : Type) [Field F] [Algebra (FractionRing R) F] (b : TF (R := R) F ⟶ D.P.A), b ^ n = 1 → ∃ p : QkPt D F n, p.y = 0 ∧ p.g.b = b := by
-  first | exact @GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorusExtensionTorsionLiftZeroStatement =====
@@ -449,7 +447,7 @@ theorem exists_levPt : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     rw [← hn]
     exact L.o.etaA_ker a
   obtain ⟨b, hb, hbl⟩ := exists_lift_torsion_of_pull iw (mulDeg L.D l.M') _ hD L.o.t.G L.φB L.ab.1 (L.o.etaA a) l.M' hη
-  obtain ⟨p, hp0, hpb⟩ := GlobalTheory.T.exists_torusExtension_torsion_lift_zero Q hB l.M' hM c' hc' (FractionRing V) b hb
+  obtain ⟨p, hp0, hpb⟩ := _root_.GlobalTheory.TorsLiftRoot.exists_qk_zero_of_pow_eq Q hB l.M' hM c' hc' (FractionRing V) b hb
   exact ⟨p, hp0, by rw [hpb]; exact hbl⟩
 
 end GlobalTheory.UCanon

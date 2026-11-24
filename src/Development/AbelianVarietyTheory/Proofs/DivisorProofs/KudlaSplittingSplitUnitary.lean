@@ -332,7 +332,7 @@ theorem sc_eventually_eq_one : ∀ (F : Type) [Field F] [CharZero F] [ValuativeR
   have hv : valuation F (Algebra.norm F z) = 1 := by
     simpa using (valuation F).map_one_add_of_lt hzN
   have hχz : χ (Units.mk0 z hz0) = 1 := by
-    refine Circle.coe_eq_one.mp (GlobalTheory.WeilM.eq_one_of_forall_pow_near fun n => ?_)
+    refine Circle.coe_eq_one.mp (_root_.GlobalTheory.PowerTwoNormLowerBound.main fun n => ?_)
     have : (Units.mk0 z hz0) ^ n ∈ Units.val ⁻¹' U := by simpa using hVU (hVpow z hz n)
     simpa using hUV this
   have hn : nabs F (Units.map (Algebra.norm F : E →* F) (Units.mk0 z hz0)) = 1 :=
@@ -505,8 +505,6 @@ open MeasureTheory Matrix GlobalTheory.KSp GlobalTheory.SplitUnitary
 open GlobalTheory.WeilM (UG IsQuad IsHerm ResEtaPow)
 open GlobalTheory.SplitWeil (SB nabs)
 
-theorem _root_.GlobalTheory.T.schwartzBruhat_fixed_near_one_siegelParabolic : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ) (α : Type) [Fintype α] [DecidableEq α] (ν : Type) [Fintype ν] [DecidableEq ν] (Q : Matrix α α E) (_ : IsHerm c Q) (ψ : AddChar F ℂ) (hψ : Continuous ψ) (_ : ∀ t, ‖ψ t‖ = 1) (_ : ψ ≠ 1) (χ : Eˣ →* Circle) (_ : Continuous χ) (_ : ResEtaPow (R := F) ⊥ χ (Fintype.card α)), ∀ φ ∈ SB (Matrix α ν E), ∀ᶠ g in nhds (1 : UG c (stdJ ν E)), g ∈ sieg c ν → parFun c ψ χ Q (mat c g) φ = φ := by
-  first | exact @GlobalTheory.KSp.parFun_fixed_near_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFixedNearOneSiegelParabolicStatement =====
@@ -539,7 +537,7 @@ theorem isKW_isSmoothRep : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have key : ∀ u : SB (Matrix α ν E), ∀ᶠ g in nhds (1 : UG c (stdJ ν E)), g ∈ sieg c ν → ω g u = u := by
     intro u
-    filter_upwards [GlobalTheory.T.schwartzBruhat_fixed_near_one_siegelParabolic F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hη (u : Matrix α ν E → ℂ) u.2] with g hg hs
+    filter_upwards [_root_.GlobalTheory.KSp.parFun_fixed_near_one F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hη (u : Matrix α ν E → ℂ) u.2] with g hg hs
     apply Subtype.ext
     rw [hKW.par g hs u]
     exact hg hs

@@ -322,8 +322,7 @@ theorem main {R F : Type} [CommRing R] [Field F] [Algebra R F] {n : Type} [Finty
   rw [he] at ht
   exact (isIntegral_algHom_iff f f.toRingHom.injective).mp ht
 
-theorem target : ∀ {R F : Type} [inst : CommRing R] [inst_1 : Field F] [inst_2 : Algebra R F] {n : Type} [inst_3 : Fintype n] [inst_4 : DecidableEq n] (M : Matrix n n F), IsIntegral R M → IsIntegral R (Matrix.trace M) :=
-  fun M h => main M h
+alias target := _root_.GlobalTheory.TargetStatementAlt.main
 
 end GlobalTheory.TargetStatementAlt
 end -- clump:auto
@@ -343,19 +342,13 @@ namespace GlobalTheory.UnitLemma.IntegralFinite
 
 open Matrix
 
-theorem isIntegral_matrix_trace {R F : Type} [CommRing R] [Field F] [Algebra R F] {n : Type}
-    [Fintype n] [DecidableEq n] (M : Matrix n n F) (hM : IsIntegral R M) : IsIntegral R M.trace := by
-  first
-  | (apply _root_.GlobalTheory.TargetStatementAlt.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TargetStatementAlt.target ..)
-
 variable {K : UQ} (B : InvAlg K)
 
 theorem isIntegral_trace {x : B.A} (hx : IsIntegral K.O x) :
     IsIntegral K.O (Algebra.trace K.E B.A x) := by
   let bs := Module.finBasis K.E B.A
   rw [Algebra.trace_eq_matrix_trace bs]
-  exact isIntegral_matrix_trace _ (hx.map ((Algebra.leftMulMatrix bs).restrictScalars K.O))
+  exact _root_.GlobalTheory.TargetStatementAlt.main _ (hx.map ((Algebra.leftMulMatrix bs).restrictScalars K.O))
 
 theorem trace_mem_range {x : B.A} (hx : IsIntegral K.O x) :
     ∃ c : K.O, algebraMap K.O K.E c = Algebra.trace K.E B.A x :=

@@ -163,12 +163,6 @@ private theorem isKFin_zero {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAd
   rw [hx, map_zero]
   exact Submodule.zero_mem _
 
-private theorem mem_UJset_of_mem_Kset_iwasawa_decomposition {n : ℕ} {ε : Fin n → Bool} {k : Mx n} (hk : k ∈ Kset ε) : k ∈ UJset ε := by
-  obtain ⟨hu, hc⟩ := hk
-  have hu' : star k * k = 1 := Matrix.mem_unitaryGroup_iff'.1 hu
-  show kᴴ * Jm ε * k = Jm ε
-  rw [Matrix.mul_assoc, ← hc, ← Matrix.mul_assoc, show kᴴ * k = 1 from hu', Matrix.one_mul]
-
 private theorem dw_apply_sigma_eq_sigma_dw_conj {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H] {σ : Mx n → (H →L[ℂ] H)} (h : Std ε σ) {g : Mx n}
     (hg : g ∈ UJset ε) (l : List (Mx n)) (hl : ∀ X ∈ l, X ∈ lieSet ε) {w : H} (hw : Sm ε σ w) :
@@ -233,7 +227,7 @@ theorem casselmanWallach_banach : GlobalTheory.Published.CasselmanWallach → �
   have hGK : IsGKMap ε σ π dπ T₁ := by
     refine ⟨?_, ?_⟩
     · intro k hk v hv
-      have hk' : k ∈ UJset ε := mem_UJset_of_mem_Kset_iwasawa_decomposition hk
+      have hk' : k ∈ UJset ε := _root_.GlobalTheory.TypeSum.K_le_UJ hk
       have hkv : IsKFin ε σ (σ k v) := by
         obtain ⟨S, hS, hvS, hSK⟩ := hv
         exact ⟨S, hS, hSK k hk v hvS, hSK⟩

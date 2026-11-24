@@ -418,7 +418,7 @@ theorem exists_improves_of_ne_conj : ∀ {E : Type} [Field E] [NumberField E] [I
     obtain ⟨_, ⟨z, hz, rfl⟩, hz'⟩ := SetLike.not_le_iff_exists.1 hZ
     obtain ⟨ℓ, hℓ⟩ := GlobalTheory.LowFilt.exists_linear_theta_factor D Z' θ s (fun h0 => hs (h0 ▸ zero_mem _)) hgen z
     have h0 : ζ ℓ - H.bar s • z = 0 := h.symm.eq_zero (sub_mem (hζZ ℓ) (Z.smul_mem _ hz)) fun x hx => by
-      rw [ef_swap, map_sub, hζ ℓ ⟨x, hx⟩, hℓ ⟨x, hx⟩]; simp
+      rw [_root_.GlobalTheory.SimLift.form_skew, map_sub, hζ ℓ ⟨x, hx⟩, hℓ ⟨x, hx⟩]; simp
     refine ⟨ℓ, fun hh => hz' ?_⟩
     rw [sub_eq_zero.1 h0, map_smul] at hh
     exact mem_of_smul_mem_of_not_mem h𝔭 _ hs' hh
@@ -998,8 +998,8 @@ theorem img_bar_ne_top : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨w2, hw2⟩ := GlobalTheory.ModuliGenus.exists_eq_nsmul_of_dvd D hp0 m fun c => by
     obtain ⟨zc, hzc, mc, hmc, bc, hbc, rfl⟩ := h.exists_decomp c
     have h1 := ha mc (hL (Submodule.mem_map_of_mem hmc))
-    have e1 : D.EF z mc = 0 := by rw [ef_swap, hmc.1 z hz, neg_zero]
-    have e2 : D.EF b' mc = 0 := by rw [ef_swap, hmc.2 b' hb', neg_zero]
+    have e1 : D.EF z mc = 0 := by rw [_root_.GlobalTheory.SimLift.form_skew, hmc.1 z hz, neg_zero]
+    have e2 : D.EF b' mc = 0 := by rw [_root_.GlobalTheory.SimLift.form_skew, hmc.2 b' hb', neg_zero]
     rw [map_add (f := _), map_add (f := _), LinearMap.add_apply, LinearMap.add_apply, e1, e2, zero_add, add_zero] at h1
     rwa [map_add, map_add, hm.1 zc hzc, hm.2 bc hbc, zero_add, add_zero]
   have hzm : z + m = p • (w1 + w2) := by rw [hw1, hw2, smul_add]
@@ -1188,27 +1188,27 @@ theorem improve {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} 
     (y : D.La →ₗ[𝓞 E] X) (n : ℕ) (hn : 0 < n) (hc : Cois D y n) (Z Z' : Submodule (𝓞 E) D.La) (h : IsOpp D Z Z')
     (hr : Module.finrank (𝓞 E) Z = Module.finrank (𝓞 E) X) (𝔭 : Ideal (𝓞 E)) (h𝔭 : 𝔭.IsMaximal)
     (hn𝔭 : (n : 𝓞 E) ∈ 𝔭) (hi : img D y Z' 𝔭 ≠ ⊤) : ∃ Z'', Improves D y n 𝔭 Z Z' Z'' := by
-  obtain ⟨e, he1, he⟩ := exists_sep (E := E) n hn 𝔭 h𝔭
-  obtain ⟨v, hv, ℓ₀, hℓ₀⟩ := exists_ker_vec D y Z Z' h hr 𝔭 h𝔭 hi
-  obtain ⟨θ, hθ, s, hs, hs', hgen⟩ := exists_real_theta H 𝔭 h𝔭
+  obtain ⟨e, he1, he⟩ := _root_.GlobalTheory.sep_one_mod_maximal_mem_others (E := E) n hn 𝔭 h𝔭
+  obtain ⟨v, hv, ℓ₀, hℓ₀⟩ := _root_.GlobalTheory.LowFilt.IsOpp.exists_ker_vec D y Z Z' h hr 𝔭 h𝔭 hi
+  obtain ⟨θ, hθ, s, hs, hs', hgen⟩ := _root_.GlobalTheory.RealTheta.exists_bar_inv_trace_gen H 𝔭 h𝔭
   by_cases hA : ∃ m ∈ perp D Z ⊓ perp D Z', y m ∉ img D y Z' 𝔭 ∧
       (𝔭.map (H.bar : 𝓞 E →+* 𝓞 E) ≠ 𝔭 ∨ Z.map y ≤ img D y Z' 𝔭)
   · obtain ⟨m, hm, hym, hA⟩ := hA
-    exact improves_A D y n Z Z' h 𝔭 h𝔭 hn𝔭 e he1 he v hv ℓ₀ hℓ₀ m hm hym hA
+    exact _root_.GlobalTheory.LowFilt.exists_improves_of_perp D y n Z Z' h 𝔭 h𝔭 hn𝔭 e he1 he v hv ℓ₀ hℓ₀ m hm hym hA
   have hZ : ¬ Z.map y ≤ img D y Z' 𝔭 := fun hZ =>
     hi (img_top_of D y n hc Z Z' h 𝔭 hn𝔭 hZ fun m hm => by_contra fun h' => hA ⟨m, hm, h', Or.inr hZ⟩)
   by_cases hb : 𝔭.map (H.bar : 𝓞 E →+* 𝓞 E) = 𝔭
-  · exact rankOneChange_improves_real_prime_first D y n Z Z' h 𝔭 h𝔭 hb e he1 he v hv ℓ₀ hℓ₀ θ hθ s hs hs' hgen hZ
+  · exact _root_.GlobalTheory.LowFilt.exists_improves_of_real D y n Z Z' h 𝔭 h𝔭 hb e he1 he v hv ℓ₀ hℓ₀ θ hθ s hs hs' hgen hZ
   have hL : (perp D Z ⊓ perp D Z').map y ≤ img D y Z' 𝔭 := by
     rintro _ ⟨m, hm, rfl⟩
     exact by_contra fun h' => hA ⟨m, hm, h', Or.inl hb⟩
-  have hi' := img_bar_ne_top D y n hn hc Z Z' h hr 𝔭 h𝔭 hn𝔭 hi hL
+  have hi' := _root_.GlobalTheory.LowFilt.CoisBar.img_bar_ne_top D y n hn hc Z Z' h hr 𝔭 h𝔭 hn𝔭 hi hL
   have h𝔭' : (𝔭.map (H.bar : 𝓞 E →+* 𝓞 E)).IsMaximal := Ideal.map_isMaximal_of_equiv H.bar
   have hn𝔭' : (n : 𝓞 E) ∈ 𝔭.map (H.bar : 𝓞 E →+* 𝓞 E) := by
     simpa using Ideal.mem_map_of_mem (H.bar : 𝓞 E →+* 𝓞 E) hn𝔭
-  obtain ⟨e', he1', he'⟩ := exists_sep (E := E) n hn _ h𝔭'
-  obtain ⟨v₂, hv₂, ℓ₁, hℓ₁⟩ := exists_ker_vec D y Z Z' h hr _ h𝔭' hi'
-  exact rankOneChange_improves_nonreal_prime D y n Z Z' h 𝔭 h𝔭 hn𝔭 hb e he1 he e' he1' he' v hv ℓ₀ hℓ₀ v₂ hv₂ ℓ₁ hℓ₁ θ hθ s hs hs' hgen hZ
+  obtain ⟨e', he1', he'⟩ := _root_.GlobalTheory.sep_one_mod_maximal_mem_others (E := E) n hn _ h𝔭'
+  obtain ⟨v₂, hv₂, ℓ₁, hℓ₁⟩ := _root_.GlobalTheory.LowFilt.IsOpp.exists_ker_vec D y Z Z' h hr _ h𝔭' hi'
+  exact _root_.GlobalTheory.LowFilt.exists_improves_of_ne_conj D y n Z Z' h 𝔭 h𝔭 hn𝔭 hb e he1 he e' he1' he' v hv ℓ₀ hℓ₀ v₂ hv₂ ℓ₁ hℓ₁ θ hθ s hs hs' hgen hZ
 
 end GlobalTheory.LowFilt.Transv
 

@@ -379,41 +379,17 @@ open MvPowerSeries IsLocalRing Formalism.BasicNotions.V1
 
 namespace GlobalTheory.PsCNL
 
-section Division
-
-variable {σ : Type} {O : Type} [CommRing O]
-
-end Division
-
-section
-
-variable {O : Type} [CommRing O] [IsLocalRing O] {a : ℕ}
-
-theorem mem_max_iff (f : MvPowerSeries (Fin a) O) :
-    f ∈ maximalIdeal (MvPowerSeries (Fin a) O) ↔ constantCoeff f ∈ maximalIdeal O :=
-  _root_.GlobalTheory.MaximalIdealMembership.mem_maximalIdeal_iff f
-
-theorem ps_isPrecomplete [IsPrecomplete (maximalIdeal O) O] (a : ℕ) :
-    IsPrecomplete (maximalIdeal (MvPowerSeries (Fin a) O)) (MvPowerSeries (Fin a) O) :=
-  _root_.GlobalTheory.PowerSeriesIdealPowers.main a
-
-end
-
-theorem haus_of_noeth (B : Type) [CommRing B] [IsLocalRing B] [IsNoetherianRing B] :
-    IsHausdorff (maximalIdeal B) B :=
-  _root_.GlobalTheory.NoetherianLocalHausdorff.noeth_local_hausdorff B
-
 theorem psCNL : ∀ (O : Type) [CommRing O] [IsLocalRing O] (C : TR O) (n : ℕ),
     ∃ (_ : IsLocalRing (MvPowerSeries (Fin n) C.C)), IsCNL O (MvPowerSeries (Fin n) C.C) ∧
       ∀ x : MvPowerSeries (Fin n) C.C, x ∈ maximalIdeal (MvPowerSeries (Fin n) C.C) ↔
         MvPowerSeries.constantCoeff x ∈ maximalIdeal C.C := by
   intro O _ _ A n
-  refine ⟨inferInstance, ?_, fun x => mem_max_iff x⟩
+  refine ⟨inferInstance, ?_, fun x => _root_.GlobalTheory.MaximalIdealMembership.mem_maximalIdeal_iff x⟩
   exact
     { noeth := inferInstance
       complete :=
-        { toIsHausdorff := haus_of_noeth _
-          toIsPrecomplete := ps_isPrecomplete n }
+        { toIsHausdorff := _root_.GlobalTheory.NoetherianLocalHausdorff.noeth_local_hausdorff _
+          toIsPrecomplete := _root_.GlobalTheory.PowerSeriesIdealPowers.main n }
       localHom := ⟨fun a ha => by
         rw [MvPowerSeries.algebraMap_apply, isUnit_iff_constantCoeff, constantCoeff_C] at ha
         exact isUnit_of_map_unit _ _ ha⟩
@@ -450,8 +426,8 @@ instance isAdicComplete_maximalIdeal (D : ℕ) :
     IsAdicComplete (maximalIdeal (MvPowerSeries (Fin D) ℂ)) (MvPowerSeries (Fin D) ℂ) := by
   have : IsPrecomplete (maximalIdeal ℂ) ℂ := by
     rw [IsLocalRing.maximalIdeal_eq_bot]; infer_instance
-  exact { toIsHausdorff := GlobalTheory.PsCNL.haus_of_noeth _
-          toIsPrecomplete := GlobalTheory.PsCNL.ps_isPrecomplete D }
+  exact { toIsHausdorff := _root_.GlobalTheory.NoetherianLocalHausdorff.noeth_local_hausdorff _
+          toIsPrecomplete := _root_.GlobalTheory.PowerSeriesIdealPowers.main D }
 
 theorem constantCoeff_eval (D : ℕ) (P : Polynomial (MvPowerSeries (Fin D) ℂ)) (x : MvPowerSeries (Fin D) ℂ) :
     MvPowerSeries.constantCoeff (P.eval x) =
@@ -473,7 +449,7 @@ theorem exists_lifts_of_separable : ∀ (D : ℕ) (P : Polynomial (MvPowerSeries
     have hQ0 : Q ≠ 0 := (hP.map φ).ne_zero
     have hroot : Q.eval c = 0 := (mem_roots hQ0).1 hc
     have h1 : P.eval (MvPowerSeries.C c) ∈ maximalIdeal (MvPowerSeries (Fin D) ℂ) := by
-      rw [GlobalTheory.PsCNL.mem_max_iff, constantCoeff_eval, MvPowerSeries.constantCoeff_C, ← hQ, hroot]
+      rw [_root_.GlobalTheory.MaximalIdealMembership.mem_maximalIdeal_iff, constantCoeff_eval, MvPowerSeries.constantCoeff_C, ← hQ, hroot]
       exact zero_mem _
     have hder : Q.derivative.eval c ≠ 0 := by
       have := hsep.eval₂_derivative_ne_zero (RingHom.id ℂ) (x := c) (by simpa [eval₂_id] using hroot)
@@ -485,7 +461,7 @@ theorem exists_lifts_of_separable : ∀ (D : ℕ) (P : Polynomial (MvPowerSeries
     obtain ⟨a, ha, hac⟩ := HenselianRing.is_henselian (I := maximalIdeal (MvPowerSeries (Fin D) ℂ)) P hP
       (MvPowerSeries.C c) h1 (h2.map _)
     refine ⟨a, ha, ?_⟩
-    rw [GlobalTheory.PsCNL.mem_max_iff, map_sub, MvPowerSeries.constantCoeff_C, IsLocalRing.maximalIdeal_eq_bot,
+    rw [_root_.GlobalTheory.MaximalIdealMembership.mem_maximalIdeal_iff, map_sub, MvPowerSeries.constantCoeff_C, IsLocalRing.maximalIdeal_eq_bot,
       Ideal.mem_bot, sub_eq_zero] at hac
     exact hac
   choose! θ hθ using lift
@@ -619,8 +595,7 @@ theorem main {R F K : Type} [CommRing R] [IsDomain R] [Field F] [Algebra R F] [I
     rw [AddMonoidAlgebra.coeff_smul_apply, coeff_C_mul, Algebra.smul_def]
   rw [← aeval_map_algebraMap F, hmap, map_mul, aeval_C, ← IsScalarTower.algebraMap_apply]
 
-theorem target : ∀ {R F K : Type} [inst : CommRing R] [IsDomain R] [inst_2 : Field F] [inst_3 : Algebra R F] [IsFractionRing R F] [inst_5 : Field K] [inst_6 : Algebra R K] [inst_7 : Algebra F K] [IsScalarTower R F K] (θ z : K), Membership.mem (Algebra.adjoin F (Singleton.singleton θ)) z → Exists fun (d : R) ↦ And (Ne d (0 : R)) (Membership.mem (Algebra.adjoin R (Singleton.singleton θ)) (HMul.hMul ((Algebra.algebraMap R K) d) z)) :=
-  fun θ z hz => main θ z hz
+alias target := _root_.GlobalTheory.TargetInequalityLemmas.main
 
 end GlobalTheory.TargetInequalityLemmas
 end -- clump:auto
@@ -670,14 +645,6 @@ theorem exists_separable_specialization {D : ℕ} (P : (MvPolynomial (Fin D) ℚ
   refine ⟨C (MvPolynomial.eval c (da * db))⁻¹ * (C (MvPolynomial.eval c db) * A.map (MvPolynomial.eval c)),
     C (MvPolynomial.eval c (da * db))⁻¹ * (C (MvPolynomial.eval c da) * B.map (MvPolynomial.eval c)), ?_⟩
   linear_combination C (MvPolynomial.eval c (da * db))⁻¹ * key' + hinv
-
-theorem exists_mul_mem_adjoin {R F K : Type} [CommRing R] [IsDomain R] [Field F] [Algebra R F]
-    [IsFractionRing R F] [Field K] [Algebra R K] [Algebra F K] [IsScalarTower R F K] (θ z : K)
-    (hz : z ∈ Algebra.adjoin F {θ}) :
-    ∃ d : R, d ≠ 0 ∧ algebraMap R K d * z ∈ Algebra.adjoin R {θ} := by
-  first
-  | (rename_i h_3 h_4 h_5 h_6 h_7 h_8 h_9 h_10 h_11; revert R F K h_3 h_4 h_5 h_6 h_7 h_8 h_9 h_10 h_11 θ z hz; exact @_root_.GlobalTheory.TargetInequalityLemmas.target)
-  | (intros; exact _root_.GlobalTheory.TargetInequalityLemmas.target ..)
 
 theorem exists_primitive_monic_separable_specialization :
     ∀ (K : Type) [Field K] [CharZero K] (D : ℕ) (x : Fin D → K), IsTranscendenceBasis ℚ x →
@@ -729,7 +696,7 @@ theorem exists_primitive_monic_separable_specialization :
     rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hθF.isAlgebraic]
     have h1 : E ≤ F⟮θ⟯ := hαE ▸ IntermediateField.adjoin_simple_le_iff.2 hαθ
     exact h1 (IntermediateField.subset_adjoin F _ ⟨j, rfl⟩)
-  choose d hd0 hdm using fun j => exists_mul_mem_adjoin (R := R) (F := F) θ (e j) (heθ j)
+  choose d hd0 hdm using fun j => _root_.GlobalTheory.TargetInequalityLemmas.main (R := R) (F := F) θ (e j) (heθ j)
 
   let P := minpoly R θ
   let ψ₀ : AdjoinRoot P →ₐ[R] K := AdjoinRoot.liftAlgHom P (Algebra.ofId R K) θ (minpoly.aeval R θ)

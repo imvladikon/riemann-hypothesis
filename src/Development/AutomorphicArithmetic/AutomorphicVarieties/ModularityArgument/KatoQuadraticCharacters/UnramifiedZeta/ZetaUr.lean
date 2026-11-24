@@ -122,20 +122,6 @@ namespace GlobalTheory
 
 namespace PowerSeriesEvalAlgCl
 
-theorem isIntegral_iff_norm_le_one {l : ℕ} [Fact l.Prime] (y : PadicAlgCl l) :
-    IsIntegral ℤ_[l] y ↔ ‖y‖ ≤ 1 := by
-  have hm : (minpoly ℚ_[l] y).Monic := minpoly.monic (Algebra.IsIntegral.isIntegral y)
-  have key : ‖y‖ ≤ 1 ↔ ∀ n, ‖(minpoly ℚ_[l] y).coeff n‖ ≤ 1 := spectralValue_le_one_iff hm
-  rw [key]
-  refine ⟨fun h n => ?_, fun h => ?_⟩
-  · rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ_[l] h, coeff_map]
-    exact PadicInt.norm_le_one _
-  · obtain ⟨q, hq, -, hq'⟩ := lifts_and_degree_eq_and_monic
-      ((lifts_iff_coeff_lifts (f := algebraMap ℤ_[l] ℚ_[l]) _).2 fun n => ⟨⟨_, h n⟩, rfl⟩) hm
-    refine ⟨q, hq', ?_⟩
-    rw [← aeval_def, ← aeval_map_algebraMap ℚ_[l], hq]
-    exact minpoly.aeval ℚ_[l] y
-
 theorem exists_coef_ge_finset {l : ℕ} [Fact l.Prime] (c : Coef l) (s : Finset (PadicAlgCl l))
     (hs : ∀ y ∈ s, IsIntegral ℤ_[l] y) : ∃ c' : Coef l, c.O ≤ c'.O ∧ ∀ y ∈ s, y ∈ c'.O := by
   classical
@@ -276,7 +262,7 @@ theorem exists_admissible_hecke_projection_nonvanishing_alt : ∀ {Ω : Type} [F
       ((l : ℕ) : Qbar l) ^ a * pr0 (bs p.1) p.2)
     (fun y hy => by
       obtain ⟨p, -, rfl⟩ := Finset.mem_image.1 hy
-      exact (GlobalTheory.PowerSeriesEvalAlgCl.isIntegral_iff_norm_le_one _).2 (hsmall p))
+      exact (_root_.GlobalTheory.isIntegral_padicInt_iff_norm_le_one _).2 (hsmall p))
 
   obtain ⟨pr, hpr⟩ : ∃ pr : X.Fn l → Fin 2 → Qbar l, ∀ b, pr b = ((l : ℕ) : Qbar l) ^ a • pr0 b := ⟨_, fun _ => rfl⟩
   have hadd : ∀ b b', pr (b + b') = pr b + pr b' := by
@@ -351,43 +337,6 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped TensorProduct MatrixGroups Matrix
 open GlobalTheory.LambdaValuationPowers
 
-theorem _root_.GlobalTheory.T.exists_admissible_hecke_projection_nonvanishing : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (A : ValuationSubring Ω) (N l : ℕ)
-  [Fact l.Prime] (e : ℕ) (S : Finset Pl) (W : R2 Ω l) (ψ : ZMod l → Qbar l) (ι : Qbar l ≃+* ℂ) (gN : Newform (2 * e + 1))
-  (j : Ω →+* Qbar l),
-  Nf e S A W → 1 ≤ e →
-  (∃ φ : ℂ → ℂ, X.an X.jK = (φ : Mero) ∧ DifferentiableOn ℂ φ Hs) → (l : Ω) ∈ A.nonunits → l ≠ 2 → ¬ l ∣ N → 5 ≤ N →
-  (∀ x ∈ A, ‖j x‖ ≤ 1) →
-  ∀ (ev : Letter → Qbar l) (ρ : (Ω ≃ₐ[ℚ] Ω) →* GL (Fin 2) (Qbar l)) (F : Finset Ω),
-  (∀ s, (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) = rhoK W e ψ s) →
-  (∀ s ∈ Dec (F := ℚ) A, (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 0 = 0) →
-  (∀ s ∈ Ine (F := ℚ) A, (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 1 = 1) →
-  (∀ s ∈ Ine (F := ℚ) A, (∀ y ∈ F, s y = y) →
-    (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 0 0 = ((cycZ ℚ Ω l s : ℤ_[l]) : Qbar l) ^ (2 * e - 1 + 1)) →
-  (∀ q : ℕ, q.Prime → ¬ q ∣ l * N → ev (Letter.T q) = ι.symm (gN.a q)) →
-  ∀ (χ : ℕ → ℤ_[l]), (∀ d : ℕ, Nat.Coprime d N → ev (Letter.D d) = ((χ d : ℤ_[l]) : Qbar l)) →
-  ∀ (m : ℕ) (π : Fin m → (Qbar l ⊗[ℤ_[l]] X.Fn l) →ₗ[Qbar l] (Fin 2 → Qbar l))
-    (σ : Fin m → (Fin 2 → Qbar l) →ₗ[Qbar l] (Qbar l ⊗[ℤ_[l]] X.Fn l)) (P : FreeAlgebra (Qbar l) Letter),
-  P ∈ admissibleLettersSubalgebra (Qbar l) N l → FreeAlgebra.lift (Qbar l) ev P = 1 → (∀ i v, σ i v ∈ X.VB N l (2 * e - 1) (Qbar l)) →
-  (∀ i s, ∀ x ∈ X.VB N l (2 * e - 1) (Qbar l), π i (X.galV l (Qbar l) s x) = (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) *ᵥ π i x) →
-  (∀ i s v, X.galV l (Qbar l) s (σ i v) = σ i ((ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) *ᵥ v)) →
-  (∀ i (T : Letter) v, GlobalTheory.KZ.admitted N l T → X.opV N l (Qbar l) T (σ i v) = ev T • σ i v) →
-  (∀ i (T : Letter), GlobalTheory.KZ.admitted N l T → ∀ x ∈ X.VB N l (2 * e - 1) (Qbar l), π i (X.opV N l (Qbar l) T x) = ev T • π i x) →
-  (∀ i i' v, π i (σ i' v) = if i = i' then v else 0) →
-  (∀ x ∈ X.VB N l (2 * e - 1) (Qbar l), FreeAlgebra.lift (Qbar l) (X.opV N l (Qbar l)) P x = ∑ i, σ i (π i x)) →
-  ∀ (c : Coef l) (lam : (ℕ → Qbar l) →ₗ[Qbar l] Qbar l), FinSupp lam → (∀ i : ℕ, FixIc c (lam (Pi.single i 1))) →
-  (∃ c₂ : ℕ, ∀ (n : ℕ), c₂ ≤ n → ∀ (T : Letter) (b : X.Fn l), GlobalTheory.KZ.admitted N l T → InChi X N (2 * e - 1) χ b →
-    Cg (n - c₂) (lam (seqN 1 j (thN X A N l n 1 (X.op N l T b)))) (ev T * lam (seqN 1 j (thN X A N l n 1 b)))) →
-  ∃ (pr : X.Fn l → Fin 2 → Qbar l) (a : ℕ) (cf : Coef l),
-    c.O ≤ cf.O ∧ (∀ s i k, mat W s i k ∈ cf.O) ∧
-    (∀ b b', pr (b + b') = pr b + pr b') ∧
-    (∀ (z : ℤ_[l]) b, pr (z • b) = algebraMap ℚ_[l] (Qbar l) (z : ℚ_[l]) • pr b) ∧
-    (∀ b ∈ X.B N l (2 * e - 1), ∀ i, pr b i ∈ cf.O) ∧
-    (∀ (s : Ω ≃ₐ[ℚ] Ω) b, b ∈ X.B N l (2 * e - 1) → pr (X.galB l s b) = rhoK W e ψ s *ᵥ pr b) ∧
-    (∀ q : ℕ, q.Prime → ¬ q ∣ l * N → ∀ b, b ∈ X.B N l (2 * e - 1) → pr (X.heckeT N l q b) = ι.symm (gN.a q) • pr b) ∧
-    (∀ d : ℕ, Nat.Coprime d N → ∀ b, b ∈ X.B N l (2 * e - 1) → pr (X.diam N l d b) = ((χ d : ℤ_[l]) : Qbar l) • pr b) ∧
-    (∀ b ∈ X.B N l (2 * e - 1), pr (X.heckeU l b) = ev Letter.U • pr b) ∧
-    IsLamFR2 X A N (2 * e - 1) χ j pr cf ((((l : ℕ) : Qbar l) ^ a) • lam) := by
-  first | (exact @GlobalTheory.AdmProj.exists_admissible_hecke_projection_nonvanishing_alt)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAdmissibleHeckeProjectionNonvanishingStatement =====
@@ -1638,26 +1587,11 @@ namespace UpperTheory.Kd.C7.LocalUnitsRoots
 
 variable {l : ℕ} [Fact l.Prime]
 
-private theorem cg_symm {n : ℕ} {x y : Qbar l} (h : Cg n x y) : Cg n y x := by
-  unfold Cg at *; rwa [norm_sub_rev]
-
-private theorem cg_trans {n : ℕ} {x y w : Qbar l} (h₁ : Cg n x y) (h₂ : Cg n y w) : Cg n x w := by
-  unfold Cg at *
-  calc ‖x - w‖ = ‖(x - y) + (y - w)‖ := by ring_nf
-    _ ≤ max ‖x - y‖ ‖y - w‖ := IsUltrametricDist.norm_add_le_max _ _
-    _ ≤ _ := max_le h₁ h₂
-
 private theorem cg_mono {n n' : ℕ} (hn : n ≤ n') {x y : Qbar l} (h : Cg n' x y) : Cg n x y := by
   unfold Cg at *
   refine h.trans ?_
   rw [norm_pow, norm_pow]
   exact pow_le_pow_of_le_one (norm_nonneg _) (IsUltrametricDist.norm_natCast_le_one _ l) hn
-
-private theorem cg_mul {n : ℕ} {t x y : Qbar l} (ht : ‖t‖ ≤ 1) (h : Cg n x y) : Cg n (t * x) (t * y) := by
-  unfold Cg at *
-  rw [← mul_sub, norm_mul]
-  calc ‖t‖ * ‖x - y‖ ≤ 1 * ‖x - y‖ := mul_le_mul_of_nonneg_right ht (norm_nonneg _)
-    _ ≤ _ := by rw [one_mul]; exact h
 
 private theorem norm_char_le_one {N : ℕ} [NeZero N] (ψ : DirichletCharacter (Qbar l) N) (x : ZMod N) : ‖ψ x‖ ≤ 1 := by
   by_cases hx : IsUnit x
@@ -1751,7 +1685,7 @@ private theorem main
       funext x
       rw [hχ r hr1 x, mul_comm]
     rw [heq, hy s hs hc] at h1
-    exact cg_symm h1
+    exact _root_.GlobalTheory.Ord2.cg_symm h1
   have hI : IwI c A Z := by
     refine ⟨fun r s _ x => (hIw.2.1 r).1 s x, fun r s hs t ht x => ?_, fun r s _ x => hIw.2.2 r s x⟩
     rw [(hIw.2.1 r).2 s (Ine_le_Dec A hs) t (Ine_le_Dec A ht) x, hInu s hs, Units.val_one, one_mul]
@@ -1776,12 +1710,12 @@ private theorem main
       obtain ⟨κι, hfin, P, o, hP, hlaw⟩ := hHT m hm0
       refine ⟨j (ζ m), hprim m, fun ψ hψ => ?_⟩
       have ht := norm_factor_le_one ψ⁻¹ 2
-      have e1 := cg_mul ht (cg_symm (hRhs m hm0 ψ hψ _ (hprim m)))
-      have e2 := cg_mul ht (cg_symm (hlaw ψ hψ))
+      have e1 := _root_.GlobalTheory.KZ.AutoPin.cg_mul ht (_root_.GlobalTheory.Ord2.cg_symm (hRhs m hm0 ψ hψ _ (hprim m)))
+      have e2 := _root_.GlobalTheory.KZ.AutoPin.cg_mul ht (_root_.GlobalTheory.Ord2.cg_symm (hlaw ψ hψ))
       have e3 := hrel m (by omega) κι hfin P o hP.2.1 hP.2.2.1 (by
         rw [← roots_pow hR c₀ m (by omega)]
         exact hP.2.2.2.2) ψ
-      exact cg_trans (cg_mono (by omega) (cg_trans e1 e2)) (cg_mono (by omega) e3)) hNZ
+      exact _root_.GlobalTheory.Ord2.cg_trans (cg_mono (by omega) (_root_.GlobalTheory.Ord2.cg_trans e1 e2)) (cg_mono (by omega) e3)) hNZ
   obtain ⟨r₃, hr₃⟩ := hint φ e he hSZ n₁
   exact hG (max r₂ r₃) (le_max_left _ _) _ (hprim _) (hr₃ _ (le_max_right _ _) _ (hprim _))
 
@@ -1789,7 +1723,7 @@ end UpperTheory.Kd.C7.LocalUnitsRoots
 
 theorem UpperTheory.Kd.C7.pLocu :
     GlobalTheory.KZ.ZetaEulerSystemNonvanishing GlobalTheory.KZ.Pin7 :=
-  UpperTheory.Kd.C7.LocalUnitsRoots.main GlobalTheory.T.nonvanishing_transfer_characterSums_powerSeries _root_.GlobalTheory.quot_eq_one_of_cycBar_eq_one
+  UpperTheory.Kd.C7.LocalUnitsRoots.main _root_.GlobalTheory.KZ.Cmp.nonvanishing_transfer _root_.GlobalTheory.quot_eq_one_of_cycBar_eq_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.NormFactorLeOne =====
@@ -1803,7 +1737,7 @@ namespace UpperTheory.V.Z.Kato.Final
 
 theorem zetaUr : GlobalTheory.Ord2.ZetaUr := GlobalTheory.KZ.zetaUr_of_halves2 _
   (UpperTheory.V.Z.Kato.Joint.kato_global_unit_law_of_smoothed_classes UpperTheory.Kd.K4.kato_eulerSystem_integrality UpperTheory.V.Z.Kato.K5.smoothedZetaClass_hodgeTateLaw
-    (fun {Ω} _ _ _ => GlobalTheory.T.exists_admissible_hecke_projection_nonvanishing))
+    (fun {Ω} _ _ _ => _root_.GlobalTheory.AdmProj.exists_admissible_hecke_projection_nonvanishing_alt))
   UpperTheory.Kd.C7.pLocu
 
 end UpperTheory.V.Z.Kato.Final

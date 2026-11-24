@@ -477,27 +477,6 @@ def lev (G : PDivGroup p O) (n : ℕ) : G.omega →ₗ[O] Cot O (G.A n) :=
 
 theorem lev_apply (G : PDivGroup p O) (n : ℕ) (w : G.omega) : lev G n w = w.1 n := rfl
 
-private theorem prime_pow_smul_cot_eq_zero (G : PDivGroup p O) (n : ℕ) (y : Cot O (G.A n)) :
-    (p : O) ^ n • y = 0 := by
-  obtain ⟨b, rfl⟩ := AugCot.d_surjective _ y
-  obtain ⟨a, rfl⟩ := G.res_surjective n b
-  set r := counitAlgHom O (G.A (n + 1)) a
-  have hmem : mulBy O (G.A (n + 1)) (p ^ n) (a - algebraMap O _ r) ∈ RingHom.ker (G.res n) := by
-    rw [G.ker_res n]
-    apply Ideal.mem_map_of_mem
-    show a - algebraMap O _ r ∈ RingHom.ker (counitAlgHom O (G.A (n + 1)))
-    rw [RingHom.mem_ker, map_sub, AlgHom.commutes]
-    simp [r]
-  have h2 : G.res n (mulBy O _ (p ^ n) a) = algebraMap O _ r := by
-    rw [RingHom.mem_ker] at hmem
-    have := hmem
-    simp only [map_sub, AlgHomClass.commutes, sub_eq_zero] at this
-    exact this
-  rw [← Nat.cast_pow]
-  change ((p ^ n : ℕ) : O) • dUnit (R := O) (G.res n a) = 0
-  rw [← dUnit_mulBy, ← map_mulBy, h2]
-  exact AugCot.d_algebraMap _ _
-
 theorem smul_mem_of_levels [IsAdicComplete (Ideal.span {(p : O)}) O] (G : PDivGroup p O)
     (L : Submodule O G.omega) (hL : L.FG) (κ : O)
     (hκ : ∀ n (y : Cot O (G.A n)), κ • y ∈ L.map (lev G n))
@@ -580,7 +559,7 @@ theorem smul_mem_of_levels [IsAdicComplete (Ideal.span {(p : O)}) O] (G : PDivGr
     obtain ⟨t, ht⟩ := close (n + 1)
     have h1 : Φ (n + 1) (seq (n + 1)).1 = κ • W (n + 1) := by
       rw [← compatΦ, (seq (n + 1)).2, hWc]
-    rw [ht, map_add (f := _), h1, map_smul, prime_pow_smul_cot_eq_zero, add_zero]
+    rw [ht, map_add (f := _), h1, map_smul, _root_.GlobalTheory.PDivGroup.pow_smul_cot, add_zero]
   have good' : ∀ n, Φ n l = κ • W n := by
     intro n
     cases n with
@@ -733,8 +712,7 @@ section -- clump:auto
 
 namespace GlobalTheory.CompanionTheory.Ar.HT
 
-theorem hodge_tate_cokernel_sharp : GlobalTheory.CompanionTheory.Ar.HT.HodgeTateCokerSharp :=
-  PositivityTheory.HtPt.Farsharp.hodgeTateCokerSharp
+alias hodge_tate_cokernel_sharp := _root_.PositivityTheory.HtPt.Farsharp.hodgeTateCokerSharp
 
 end GlobalTheory.CompanionTheory.Ar.HT
 end -- clump:auto
@@ -776,8 +754,6 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_tate_of_fargues_exact : HT.FarguesExact → HT.FarguesHodgeTate := by
-  first | exact @PositivityTheory.Xgn.farguesHodgeTate_of_farguesExact
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeTateOfFarguesExact =====
@@ -974,56 +950,6 @@ open ReciprocityTheory.ChartRestriction.G.Chart (sp spMap)
 open scoped CategoryTheory.Obj CategoryTheory.MonObj
 attribute [local instance] Over.cartesianMonoidalCategory
 open GlobalTheory.CompanionTheory.Ar.GR
-open GlobalTheory.CompanionTheory.Ar.GR.SubGrp (exists_eq_spMap exists_sp_iso exists_grpObj_of_mono) in
-
-theorem _root_.GlobalTheory.T.finite_flat_subgroup_scheme :
-    ∀ (R : Type) [CommRing R] (A : Over (Spec (CommRingCat.of R))) [GrpObj A]
-      (B : Type) [CommRing B] [Algebra R B] (h : sp (R₀ := R) B ⟶ A),
-      IsFinFlatSub A B h → ∃ _ : GrpObj (sp (R₀ := R) B), IsMonHom h ∧ Mono h := by
-  intro R _ A _ B _ _ h H
-  have hmono : Mono h := by
-    constructor
-    intro T a b hab
-    apply Over.OverMorphism.ext
-    refine T.left.affineCover.hom_ext _ _ fun k => ?_
-    let T' : Over (Spec (CommRingCat.of R)) := Over.mk (T.left.affineCover.f k ≫ T.hom)
-    let j : T' ⟶ T := Over.homMk (T.left.affineCover.f k) rfl
-    have : IsAffine T'.left := inferInstanceAs (IsAffine (T.left.affineCover.X k))
-    obtain ⟨S, _, _, i, _⟩ := exists_sp_iso T'
-    obtain ⟨φ, hφ⟩ := exists_eq_spMap (i ≫ j ≫ a)
-    obtain ⟨ψ, hψ⟩ := exists_eq_spMap (i ≫ j ≫ b)
-    have hφψ := H.mono S φ ψ (by simp only [← hφ, ← hψ, Category.assoc, hab])
-    have hj : j ≫ a = j ≫ b := by rw [← cancel_epi i, hφ, hψ, hφψ]
-    exact congrArg (·.left) hj
-  have hmul : ∃ m : sp (R₀ := R) B ⊗ sp (R₀ := R) B ⟶ sp (R₀ := R) B,
-      m ≫ h = (fst _ _ ≫ h) * (snd _ _ ≫ h) := by
-    have : IsAffine (sp (R₀ := R) B).left := inferInstanceAs (IsAffine (Spec _))
-    have : IsAffine (sp (R₀ := R) B ⊗ sp (R₀ := R) B).left :=
-      Scheme.Pullback.isAffine_of_isAffine_isAffine_isAffine
-        (sp (R₀ := R) B).hom (sp (R₀ := R) B).hom
-    obtain ⟨S, _, _, j, _⟩ := exists_sp_iso (sp (R₀ := R) B ⊗ sp (R₀ := R) B)
-    obtain ⟨φ, hφ⟩ := exists_eq_spMap (j ≫ fst _ _)
-    obtain ⟨ψ, hψ⟩ := exists_eq_spMap (j ≫ snd _ _)
-    obtain ⟨χ, hχ⟩ := H.mul S φ ψ
-    refine ⟨inv j ≫ spMap χ, ?_⟩
-    rw [Category.assoc, hχ, ← hφ, ← hψ, MonObj.comp_mul, Category.assoc, Category.assoc,
-      IsIso.inv_hom_id_assoc, IsIso.inv_hom_id_assoc]
-  have hone : ∃ e : 𝟙_ (Over (Spec (CommRingCat.of R))) ⟶ sp (R₀ := R) B, e ≫ h = 1 := by
-    have : IsAffine (𝟙_ (Over (Spec (CommRingCat.of R)))).left :=
-      inferInstanceAs (IsAffine (Spec _))
-    obtain ⟨S, _, _, j, _⟩ := exists_sp_iso (𝟙_ (Over (Spec (CommRingCat.of R))))
-    obtain ⟨χ, hχ⟩ := H.one S
-    exact ⟨inv j ≫ spMap χ, by rw [Category.assoc, hχ, MonObj.comp_one]⟩
-  obtain ⟨i, hi⟩ := H.inv B (AlgHom.id R B)
-  have hid : spMap (AlgHom.id R B) = 𝟙 (sp (R₀ := R) B) := by
-    apply Over.OverMorphism.ext
-    rw [ReciprocityTheory.ChartRestriction.G.Chart.spMap_left, Over.id_left]
-    exact Spec.map_id _
-  rw [hid, Category.id_comp] at hi
-  obtain ⟨m, hm⟩ := hmul
-  obtain ⟨e, he⟩ := hone
-  obtain ⟨G, hG⟩ := exists_grpObj_of_mono h m e (spMap i) hm he hi
-  exact ⟨G, hG, hmono⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FiniteFlatSubgroupSchemeStatement =====
@@ -1355,36 +1281,28 @@ theorem exists_finFree_app_of_finitePresentation {x : X} {U : X.Opens} (hx : x �
     ∃ V : X.Opens, IsAffineOpen V ∧ x ∈ V ∧ V ≤ U ∧ FinFree (π.app V).hom := by
   apply GlobalTheory.FiniteAmpleFP.exists_finFree_app_fp <;> assumption
 
-abbrev FreeOpen (V : X.Opens) : Type := {W : X.Opens // IsAffineOpen W ∧ W ≤ V ∧ FinFree (π.app W).hom}
-
-theorem le_iSup_freeOpen (V : X.Opens) : V ≤ ⨆ W : FreeOpen π V, W.1 := by
+theorem le_iSup_freeOpen (V : X.Opens) : V ≤ ⨆ W : _root_.GlobalTheory.FlatNorm.FreeOpen π V, W.1 := by
   intro x hx
   obtain ⟨W, hW, hxW, hWV, hF⟩ := exists_finFree_app_of_finitePresentation π hx
   exact Opens.mem_iSup.mpr ⟨⟨W, hW, hWV, hF⟩, hxW⟩
 
 theorem ext_freeOpen {V : X.Opens} {a b : Γ(X, V)}
-    (h : ∀ W : FreeOpen π V, resG X W.2.2.1 a = resG X W.2.2.1 b) : a = b := by
+    (h : ∀ W : _root_.GlobalTheory.FlatNorm.FreeOpen π V, resG X W.2.2.1 a = resG X W.2.2.1 b) : a = b := by
   refine TopCat.Presheaf.section_ext X.sheaf V a b fun x hx => ?_
   obtain ⟨W, hxW⟩ := Opens.mem_iSup.mp (le_iSup_freeOpen π V hx)
   have e := congrArg (X.presheaf.germ W.1 x hxW).hom (h W)
   simp [resG] at e
   exact e
 
-omit [Flat π] [LocallyOfFinitePresentation π] in
-theorem resG_nm {V W : X.Opens} (hV : IsAffineOpen V) (hW : IsAffineOpen W) (h : W ≤ V)
-    (hF : FinFree (π.app V).hom) (b : Γ(Y, π ⁻¹ᵁ V)) :
-    resG X h (nm (π.app V).hom b) = nm (π.app W).hom (resG Y (π.preimage_mono h) b) := by
-  exact (nm_of_isPushout (isPushout_app π hV hW h) hF b).symm
-
-private theorem resG_nm_app_eq_nm_app_of_le_freeOpen {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) (k : FreeOpen π V) {W' : X.Opens}
+private theorem resG_nm_app_eq_nm_app_of_le_freeOpen {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) (k : _root_.GlobalTheory.FlatNorm.FreeOpen π V) {W' : X.Opens}
     (hW' : IsAffineOpen W') (h : W' ≤ k.1) :
     resG X h (nm (π.app k.1).hom (resG Y (π.preimage_mono k.2.2.1) b)) =
       nm (π.app W').hom (resG Y (π.preimage_mono (h.trans k.2.2.1)) b) := by
-  rw [resG_nm π k.2.1 hW' h k.2.2.2, resG_resG]
+  rw [_root_.GlobalTheory.FlatNorm.resG_nm π k.2.1 hW' h k.2.2.2, resG_resG]
 
-theorem exists_normFun (V : X.Opens) (b : Γ(Y, π ⁻¹ᵁ V)) : ∃ a : Γ(X, V), ∀ W : FreeOpen π V,
+theorem exists_normFun (V : X.Opens) (b : Γ(Y, π ⁻¹ᵁ V)) : ∃ a : Γ(X, V), ∀ W : _root_.GlobalTheory.FlatNorm.FreeOpen π V,
     resG X W.2.2.1 a = nm (π.app W.1).hom (resG Y (π.preimage_mono W.2.2.1) b) := by
-  refine exists_fun_of_cover (fun k : FreeOpen π V => k.1) (fun k => k.2.2.1) (le_iSup_freeOpen π V)
+  refine exists_fun_of_cover (fun k : _root_.GlobalTheory.FlatNorm.FreeOpen π V => k.1) (fun k => k.2.2.1) (le_iSup_freeOpen π V)
     (fun k => nm (π.app k.1).hom (resG Y (π.preimage_mono k.2.2.1) b)) fun k l => ?_
   refine ext_freeOpen π fun W' => ?_
   rw [resG_resG, resG_resG, resG_nm_app_eq_nm_app_of_le_freeOpen π b k W'.2.1, resG_nm_app_eq_nm_app_of_le_freeOpen π b l W'.2.1]
@@ -1397,7 +1315,7 @@ def normFun (V : X.Opens) : Γ(Y, π ⁻¹ᵁ V) →* Γ(X, V) where
     rw [(exists_normFun π V _).choose_spec W, map_mul, map_mul, map_mul,
       (exists_normFun π V a).choose_spec W, (exists_normFun π V b).choose_spec W]
 
-theorem resG_normFun_free {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) (W : FreeOpen π V) :
+theorem resG_normFun_free {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) (W : _root_.GlobalTheory.FlatNorm.FreeOpen π V) :
     resG X W.2.2.1 (normFun π V b) = nm (π.app W.1).hom (resG Y (π.preimage_mono W.2.2.1) b) := by
   exact (exists_normFun π V b).choose_spec W
 
@@ -1430,7 +1348,7 @@ theorem mem_basicOpen_normFun {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) {x : X} (
     obtain ⟨W'', hW'', hxW'', hle, hF''⟩ := exists_finFree_app_of_finitePresentation π hx'
     have hW''W : W'' ≤ W := hle.trans (X.basicOpen_le _)
     have hu := isUnit_resG_of_le_basicOpen' hW''W _ hle
-    rw [resG_nm π hW hW'' hW''W hF, resG_resG] at hu
+    rw [_root_.GlobalTheory.FlatNorm.resG_nm π hW hW'' hW''W hF, resG_resG] at hu
     have hu' := isUnit_of_nm hF'' hu
     have hy'' : y ∈ Y.basicOpen (resG Y (π.preimage_mono (hW''W.trans hWV)) b) := by
       rw [Y.basicOpen_of_isUnit hu']
@@ -1454,7 +1372,7 @@ theorem mem_basicOpen_normFun {V : X.Opens} (b : Γ(Y, π ⁻¹ᵁ V)) {x : X} (
     have hu := isUnit_resG_of_le_basicOpen' (π.preimage_mono hW''W) (resG Y (π.preimage_mono hWV) b)
       ((π.preimage_mono (hle.trans inf_le_right)).trans hV')
     have hu2 := hu.map (nm (π.app W'').hom)
-    rw [← resG_nm π hW hW'' hW''W hF] at hu2
+    rw [← _root_.GlobalTheory.FlatNorm.resG_nm π hW hW'' hW''W hF] at hu2
     have h3 : x ∈ X.basicOpen (resG X hW''W (nm (π.app W).hom (resG Y (π.preimage_mono hWV) b))) := by
       rw [X.basicOpen_of_isUnit hu2]
       exact hxW''
@@ -1586,7 +1504,7 @@ theorem quotientByFiniteFlat_of_freeQuotient (hF : GlobalTheory.CompanionTheory.
   have := hA.smooth
   have := hA.proper
   have := hA.geomConnected
-  obtain ⟨_, hmon, hmono⟩ := GlobalTheory.T.finite_flat_subgroup_scheme R A B h hsub
+  obtain ⟨_, hmon, hmono⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GR.SubGrp.grpObj_of_isFinFlatSub R A B h hsub
   letI := act h
   have hgam : (γ[sp (R₀ := R) B, A] : sp (R₀ := R) B ⊗ A ⟶ A) = (fst _ A ≫ h) * snd _ A := act_smul h
   have hsmul : ∀ {T : Over (Spec (CommRingCat.of R))} (g : T ⟶ sp (R₀ := R) B) (x : T ⟶ A),
@@ -1700,9 +1618,7 @@ namespace PositivityTheory.HtPt.Ah
 
 open GlobalTheory.CompanionTheory.Ar
 
-theorem resK (h₁ : GlobalTheory.CompanionTheory.Hypotheses₂.ResolutionCharZero) (h₂ : GlobalTheory.CompanionTheory.Hypotheses₂.PrincipalisationCharZero) :
-    ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement :=
-  GlobalTheory.CompanionTheory.Hypotheses₂.ResKSide.resK_of_resolution_principalisation h₁ h₂
+alias resK := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.ResKSide.resK_of_resolution_principalisation
 
 theorem ais (h₁ : GlobalTheory.CompanionTheory.Hypotheses₂.ResolutionCharZero) (h₂ : GlobalTheory.CompanionTheory.Hypotheses₂.PrincipalisationCharZero)
     (hPL : GlobalTheory.CompanionTheory.Hypotheses₂.PoincareLelongInv) : ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement :=
@@ -1730,7 +1646,7 @@ theorem deep_slim_use (h₁ : GlobalTheory.CompanionTheory.Hypotheses₂.Resolut
     (hBig : ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.MoriwakiBigStatement) (hF : HT.FarguesExact) (hZ : GR.ZarhinStatement)
     (hN : Pub.NefRR) : Plug.DeepStR :=
   Plug.deepStR_of_use (ais h₁ h₂ hPL) hU hBig (resK h₁ h₂) GlobalTheory.CompanionTheory.SAH.semiAbelianHomExtension
-    (GlobalTheory.CompanionTheory.Relay.hodge_tate_of_fargues_exact hF) GlobalTheory.CompanionTheory.Gaga.gagaSections quot hZ hN
+    (_root_.PositivityTheory.Xgn.farguesHodgeTate_of_farguesExact hF) GlobalTheory.CompanionTheory.Gaga.gagaSections quot hZ hN
 
 end PositivityTheory.HtPt.Ah
 end -- clump:auto

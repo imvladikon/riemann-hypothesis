@@ -729,10 +729,6 @@ namespace GlobalTheory.Ord2.Upgrade
 
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime]
 
-theorem mat_mul (W : R2 Ω l) (s t : G ℚ Ω) : mat W (s * t) = mat W s * mat W t := by simp [mat]
-
-theorem mat_one (W : R2 Ω l) : mat W 1 = 1 := by simp [mat]
-
 theorem det_upper (W : R2 Ω l) {s : G ℚ Ω} (h : mat W s 1 0 = 0) : (mat W s).det = mat W s 0 0 * mat W s 1 1 := by
   rw [Matrix.det_fin_two, h]; ring
 
@@ -753,14 +749,12 @@ theorem continuous_galoisRepRankTwoTateDual (W : R2 Ω l) (h : dt W ^ 2 = 1) (hc
     simp_rw [e]
     exact hf.comp continuous_inv
 
-theorem dt_sq_apply (W : R2 Ω l) (h : dt W ^ 2 = 1) (s : G ℚ Ω) : (mat W s).det ^ 2 = 1 := CupCob.det_sq W h s
-
 theorem nontriv (e : ℕ) (S : Finset Pl) (A : ValuationSubring Ω) [IsAlgClosure ℚ Ω] (W : R2 Ω l) (hW : Nf e S A W) :
     (∃ s ∈ Dec (F := ℚ) A, mat W s 1 1 ≠ 1) ∧ (∃ s ∈ Dec (F := ℚ) A, mat (dual1 W) s 0 0 ≠ 1) := by
   set D := Dec (F := ℚ) A with hDdef
   have hup : ∀ s ∈ D, mat W s 1 0 = 0 := hW.upper
   have h00 : ∀ s t, t ∈ D → mat W (s * t) 0 0 = mat W s 0 0 * mat W t 0 0 := by
-    intro s t ht; rw [mat_mul, Matrix.mul_apply, Fin.sum_univ_two, hup t ht]; ring
+    intro s t ht; rw [_root_.GlobalTheory.Ord2.mat_mul', Matrix.mul_apply, Fin.sum_univ_two, hup t ht]; ring
   have hv : A.valuation (l : Ω) < 1 := by
     obtain ⟨v, hA, hlv⟩ := hW.atL
     simpa using (hA _).2 hlv
@@ -773,7 +767,7 @@ theorem nontriv (e : ℕ) (S : Finset Pl) (A : ValuationSubring Ω) [IsAlgClosur
   have hpow00 : ∀ s ∈ D, ∀ n : ℕ, mat W (s ^ n) 0 0 = mat W s 0 0 ^ n := by
     intro s hs n
     induction n with
-    | zero => simp [mat_one]
+    | zero => simp [_root_.GlobalTheory.Ord2.mat_one']
     | succ n ih => rw [pow_succ, h00 _ _ hs, ih, pow_succ]
   set T := t ^ (2 * m) with hTdef
   have hTD : T ∈ D := D.pow_mem htD _
@@ -853,7 +847,7 @@ theorem commAlgFunctorCoboundaryZero_mem_cocyclesOne (V : R2 Ω l) (hc : Continu
     rw [e]
     exact ((Units.continuous_val.comp hc).matrix_mulVec continuous_const).sub continuous_const
   · change d0 (Loc.colRep V) v (g * h) = d0 (Loc.colRep V) v g + mat V g *ᵥ d0 (Loc.colRep V) v h
-    rw [amitsur_d0_apply, amitsur_d0_apply, amitsur_d0_apply, mat_mul, ← Matrix.mulVec_mulVec, Matrix.mulVec_sub]
+    rw [amitsur_d0_apply, amitsur_d0_apply, amitsur_d0_apply, _root_.GlobalTheory.Ord2.mat_mul', ← Matrix.mulVec_mulVec, Matrix.mulVec_sub]
     abel
 
 theorem galoisRepRankTwoTateDual_unramified_outside [IsAlgClosure ℚ Ω] (S : Finset Pl) (W : R2 Ω l) (h : dt W ^ 2 = 1) (hS : ContainsAbove S l)
@@ -952,11 +946,11 @@ theorem upgrade : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
     ((continuous_apply 0).comp hz1Z.1).continuousOn ((continuous_apply 1).comp hy1Z.1).neg.continuousOn
     (fun s hs => ⟨hWc2 s 1 1, hW'c2 s 0 0, hz1int s 0, neg_mem (hy1int s 1), by
       rw [galoisRepRankTwoTateDual_matrix_apply W hdet2, det_upper W (hup s hs)]
-      have h := dt_sq_apply W hdet2 s
+      have h := _root_.GlobalTheory.Ord2.CupCob.det_sq W hdet2 s
       rw [det_upper W (hup s hs)] at h
       linear_combination (eps l s) * h⟩)
-    (fun s hs t ht => ⟨by rw [mat_mul, Matrix.mul_apply, Fin.sum_univ_two, hup s hs]; ring,
-      by rw [mat_mul, Matrix.mul_apply, Fin.sum_univ_two, hup' t ht]; ring,
+    (fun s hs t ht => ⟨by rw [_root_.GlobalTheory.Ord2.mat_mul', Matrix.mul_apply, Fin.sum_univ_two, hup s hs]; ring,
+      by rw [_root_.GlobalTheory.Ord2.mat_mul', Matrix.mul_apply, Fin.sum_univ_two, hup' t ht]; ring,
       by
         rw [coc_eq W hy1Z s t]
         simp [hup s hs]; ring,

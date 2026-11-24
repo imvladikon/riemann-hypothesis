@@ -376,13 +376,6 @@ section Gen
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L]
 
-theorem le_exp_neg_one_of_lt_one' {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
-  rcases eq_or_ne x 0 with rfl | hx0
-  · exact zero_le'
-  · rw [← WithZero.exp_log hx0] at h ⊢
-    rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
-    rw [WithZero.exp_le_exp]; omega
-
 theorem exists_int_locK_ne (χ : HChar L) (t : SplitPlace L) (ht : χ.TameAt t.w) (hr : ¬ χ.UnrAt t.w) :
     ∃ b : 𝓞 (maximalRealSubfield L), b ∉ t.v.asIdeal ∧ ∃ k : Lˣ,
       (k : L) = ((algebraMap (𝓞 (maximalRealSubfield L)) (𝓞 L) b : 𝓞 L) : L) ∧ χ.locK t.w k ≠ 1 := by
@@ -446,7 +439,7 @@ theorem exists_int_locK_ne (χ : HChar L) (t : SplitPlace L) (ht : χ.TameAt t.w
       field_simp
       ring
     rw [e, map_mul, Valuation.map_neg, map_inv₀, hx', inv_one, mul_one]
-    exact le_exp_neg_one_of_lt_one' hxc
+    exact _root_.GlobalTheory.Mem.KerDet.le_exp_neg_one hxc
   have h2 := ht (y * x⁻¹) hu hsub
   rw [map_mul, map_inv, mul_inv_eq_one] at h2
   rw [← h2]
@@ -1149,7 +1142,7 @@ theorem cellWt_of_sideRead_of_admTw : _root_.GlobalTheory.HeightCounting.Up.Publ
     have h1 := hSR (NX.embEL0 (Dof x) (((Dof x).host.sigmaOf ((Dof x).eTau t : (Dof x).R.GG)) y))
     refine Eq.trans ?_ (h1.trans (NX.embLL_embEL0 (Dof x) t y))
     rfl
-  obtain ⟨lamC, T', hT'⟩ := GlobalTheory.T.algebraic_weight_dominant_iso_exists (Dof x).host.E (Dof x).R.nV (Dof x).what₂.Tau (Formalism.L2.embT (Dof x)) hinj hcm hcov
+  obtain ⟨lamC, T', hT'⟩ := _root_.GlobalTheory.WtClass.exists_equiv_VV (Dof x).host.E (Dof x).R.nV (Dof x).what₂.Tau (Formalism.L2.embT (Dof x)) hinj hcm hcov
     (mtAt l.mt.M v j).wt
   have hT'r : ∀ γ y, T' ((mtAt l.mt.M v j).wt.ρ γ y) =
       rhoVr (Formalism.L2.embT (Dof x)) lamC (Formalism.L2.Col.mtwRat.toFun γ) (T' y) :=
@@ -1385,11 +1378,6 @@ theorem comap_conjPlE (P : PlE D.host) :
   ext a
   rw [Ideal.mem_comap, Ideal.mem_comap, GlobalTheory.SplitConjPlace.mem_conjPlE (D := D), GlobalTheory.SplitConjPlace.cO_algebraMap (D := D)]
 
-theorem finrank_E (D : D7) : Module.finrank ℚ D.host.E = 2 * D.R.f := by
-  have h1 : Module.finrank ℚ D.host.E = 4 * D.R.ord := D.host.finrank_cmField
-  have h5 : D.R.f = 2 * D.R.ord := rfl
-  rw [h1, h5]; ring
-
 theorem cover (k : Fin 2) (w : PlE D.host) (hw : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ w.asIdeal) :
     ∃ v, w = D.naut.plGw k v ∨ w = GlobalTheory.SplitConjPlace.conjPlE (D := D) (D.naut.plGw k v) := by
   let T : Set (PlE D.host) := {u | ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ u.asIdeal}
@@ -1409,7 +1397,7 @@ theorem cover (k : Fin 2) (w : PlE D.host) (hw : ((D.host.g k : ℕ) : 𝓞 D.ho
       simp only [f, Sum.elim_inr, conjPlE_conjPlE] at this
       exact congrArg Sum.inr (D.naut.plGw_inj k this)
   have hT : T.ncard = 2 * D.R.f := by
-    rw [← finrank_E D]; exact D.nd.g_split k
+    rw [← _root_.Formalism.MainNotions.StandardLattice.finrank_host D]; exact D.nd.g_split k
   have hc : Nat.card T = Nat.card (D.nd.PlG k ⊕ D.nd.PlG k) := by
     rw [Nat.card_coe_set_eq, hT, Nat.card_sum, Nat.card_eq_fintype_card, D.nd.card_PlG k, two_mul]
   haveI : Finite T := by
@@ -1569,13 +1557,13 @@ theorem exists_level_comparison_choice_alt (hP : _root_.GlobalTheory.HeightCount
   obtain ⟨tp, t1, t2⟩ := htp C rfl
   refine ⟨C, tp, t1, t2, rfl, rfl, ⟨⟨fun a => hE.elim a, fun a => hE.elim a, fun a => hE.elim a,
     ⟨ψ₀, c4, hp, fun a => hE.elim a⟩, fun v x y z _ hx => (ρ v).emb_side x y z hx⟩,
-    ⟨c1, fun v _ => (GlobalTheory.T.twistReading_induces_sideEmbedding_fixedField D _ _ _ _ (ρ v)).1, fun v _ x => (GlobalTheory.T.twistReading_induces_sideEmbedding_fixedField D _ _ _ _ (ρ v)).2.2 _ x, fun v _ => hb v,
+    ⟨c1, fun v _ => (_root_.GlobalTheory.LevCmp.reading_sidePl_emb D _ _ _ _ (ρ v)).1, fun v _ x => (_root_.GlobalTheory.LevCmp.reading_sidePl_emb D _ _ _ _ (ρ v)).2.2 _ x, fun v _ => hb v,
       fun v v' _ _ e => ?_, fun v _ => hc v⟩, h4, fun v _ => GlobalTheory.MtRead.admissible_twist_of_twisting_character (hok v), ?_, ?_⟩, hok, rfl⟩
   · have e' : s v' = s v := e
     have key : k v' = k v ∧ χ v' = χ v := by
-      have a1 := (GlobalTheory.T.twistReading_induces_sideEmbedding_fixedField D _ _ _ _ (ρ v)).1
-      have a2 := (GlobalTheory.T.twistReading_induces_sideEmbedding_fixedField D _ _ _ _ (ρ v')).1
-      have a3 := (GlobalTheory.T.twistReading_induces_sideEmbedding_fixedField D _ _ _ _ ((ρ v').conj hG)).1
+      have a1 := (_root_.GlobalTheory.LevCmp.reading_sidePl_emb D _ _ _ _ (ρ v)).1
+      have a2 := (_root_.GlobalTheory.LevCmp.reading_sidePl_emb D _ _ _ _ (ρ v')).1
+      have a3 := (_root_.GlobalTheory.LevCmp.reading_sidePl_emb D _ _ _ _ ((ρ v').conj hG)).1
       rw [e'] at a2 a3
       by_cases hbb : b v' = b v
       · rw [hbb] at a2

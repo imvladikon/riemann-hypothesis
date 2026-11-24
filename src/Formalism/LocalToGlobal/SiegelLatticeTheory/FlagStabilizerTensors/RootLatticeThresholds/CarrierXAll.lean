@@ -83,6 +83,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeCountingBound.ArchPlace
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
@@ -103,7 +104,7 @@ import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.Amp
 -- Members: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtLZero, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtPtSome, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtRZero, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierDataBuiltOfCompactTest, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierPropGram, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierTParNums, Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierXAll
 
 -- ===== clump member: Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtLZero =====
--- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtLZero", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVt\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf\npublic import Formalism.FormalDegreeBessel.FinalG\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BridgeNC\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BridgeOf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierSizes\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierTFr\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CfgTopFalseIff\nimport Formalism.SharpRestriction.CuspSpanNormBounds.LocalModelPeriodLattices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.StepPtRepPf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BaseOf\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVtLZero", "h": "module\n\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarPinVt\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf\npublic import Formalism.FormalDegreeBessel.FinalG\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BridgeNC\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BridgeOf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierSizes\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierTFr\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CfgTopFalseIff\nimport Formalism.SharpRestriction.CuspSpanNormBounds.LocalModelPeriodLattices\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.StepPtRepPf\npublic import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.BaseOf\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeCountingBound.ArchPlace\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -160,7 +161,7 @@ theorem gX_nonneg {θ : ℝ} (C : Formalism.L2.SG.LocWSOf.Choice X θ) (u u' : D
   have hrd := Formalism.MainNotions.LocalModelPeriodLattices.rdE_pos D
   have hz := Formalism.L2.SG.Pf.BaseOf.zc_spec X C u v
   have hz' := Formalism.L2.SG.Pf.BaseOf.zc_spec X C u' v
-  have hgv := Bridge.delta_GV hTr (Formalism.L2.SG.Pf.Carrier.uMat_unitary (γ v))
+  have hgv := Bridge.delta_GV hTr (_root_.PI.UnitaryGroupMassFormula.LCG.ap_inUJ (γ v))
   have hG := Formalism.QuantumDeterminants.gNonneg D.R.k D.R.rS _ _ hz.1 hz'.1 (Formalism.L2.SG.Pf.BaseOf.zc_pos X C u v)
     (Formalism.L2.SG.Pf.BaseOf.zc_pos X C u' v) _ hgv
   have h1 := Bridge.zhat_cs hTr hTr' (sc := D.host.rdE) hrd.ne' (Formalism.MainNotions.S.uMat (γ v))
@@ -304,7 +305,7 @@ theorem exists_nonneg_ptG_lptOf_eq_mul (v : InfinitePlace X.B.I.F) (κ : ℂ) (h
     ring
   have hdet1 : (Formalism.FourierDecayAlt.D.ptMatN (Bridge.lptOf σ κ D.R.rS 0 w.1) (D.R.rS + 1)).det =
       RealObj.Dl (Formalism.FourierDecayAlt.D.ptMatN (Bridge.lptOf σ κ D.R.rS 0 w.1) (D.R.rS + 1)) (D.R.rS + 1) :=
-    (Bridge.dl_top' _).symm
+    (_root_.Formalism.L2.SG.RealObj.InfCut.PtRepPf.dl_top _).symm
   have hdet2 : (Formalism.FourierDecayAlt.D.ptMatN (Bridge.lptOf σ κ D.R.rS 0 w.1) D.R.rS).det =
       RealObj.Dl (Formalism.FourierDecayAlt.D.ptMatN (Bridge.lptOf σ κ D.R.rS 0 w.1) (D.R.rS + 1)) D.R.rS := by
     unfold RealObj.Dl; rw [dite_eq_left (Nat.le_succ _)]; rfl
@@ -653,10 +654,10 @@ theorem propGram_of_vtTensor {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (hg1 : 0 < S.G.g1) (hg2 : 0 < S.G.g2) (hB : Formalism.FourierDecayAlt.D.IsBuilt S T f χ ν' m₀ top A₀)
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (Vt : Formalism.FourierDecayAlt.TB.Pt E → H)
     (hVt : Formalism.FourierDecayAlt.JCT.VtTensor S T f ν' m₀ Vt) : Formalism.FourierDecayAlt.C.PropGram S Vt := by
-  exact Formalism.FourierDecayAlt.Final.jc_propGramOfPlaces E Wp Wq S
+  exact _root_.Formalism.FourierDecayAlt.P.gram_proposition_of_places E Wp Wq S
     _ (fun v => Formalism.FourierDecayAlt.JC.vecPlace S T f ν' m₀ v) H Vt hVt
-    (Formalism.FourierDecayAlt.Final.jc_gramPlaceBuilt Formalism.FourierDecayAlt.Final.d_ptPermSpec Formalism.FourierDecayAlt.Final.d_ptGSpec
-      Formalism.FourierDecayAlt.Final.d_ptRelevant Formalism.FourierDecayAlt.Final.d_muRHaar Formalism.FourierDecayAlt.Final.jc_orbJCutScalar
+    (_root_.Formalism.FourierDecayAlt.P.gram_at_built_place _root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _root_.Formalism.FourierDecayAlt.P.Dx1.ptGSpec
+      _root_.Formalism.FourierDecayAlt.P.Dx1.Rel.ptRelevant _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar _root_.Formalism.FourierDecayAlt.P.orbital_integral_cutoff_scalar
       E Wp Wq S T f χ ν' m₀ top A₀ hg1 hg2 hB)
 
 end Formalism.L2.SG.Pf.Carrier
@@ -818,19 +819,14 @@ namespace Formalism.L2.SG.Pf.CarrierXAll
 open Formalism.FourierDecayAlt Formalism.QuantumDeterminants
 open scoped Matrix
 
-theorem herm_mulVec {n : ℕ} {H g : Matrix (Fin n) (Fin n) ℂ} (hg : gᴴ * H * g = H) (v w : Fin n → ℂ) :
-    herm H (g *ᵥ v) (g *ᵥ w) = herm H v w := by
-  unfold herm
-  rw [Matrix.star_mulVec, Matrix.mulVec_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, ← Matrix.mul_assoc, hg]
-
 theorem frameVec_facts {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
     [InnerProductSpace ℂ Wq] (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r)
     (hF : D.IsBaseFrame Bs ν' m₀) (hT : 0 < Tz k r Bs.z) (hT' : 0 < Tz k r Bs.z') :
     inWb k r (m₀ *ᵥ ν') ∧ herm (Hpk k r) (m₀ *ᵥ ν') Bs.z = 0 ∧ herm (Hpk k r) (m₀ *ᵥ ν') (m₀ *ᵥ ν') = 1 := by
   obtain ⟨hw, hz, hn, hm, hmz⟩ := hF
   have hU : m₀ᴴ * Hpk k r * m₀ = Hpk k r := hm.1
-  refine ⟨Formalism.FourierDecayAlt.P.Qx8.inWb_mulVec hm hw, ?_, by rw [herm_mulVec hU]; exact hn⟩
-  have h0 : herm (Hpk k r) (m₀ *ᵥ ν') (m₀ *ᵥ Bs.z') = 0 := by rw [herm_mulVec hU]; exact hz
+  refine ⟨Formalism.FourierDecayAlt.P.Qx8.inWb_mulVec hm hw, ?_, by rw [_root_.PI.StabSplit.UnipW.herm_inv hU]; exact hn⟩
+  have h0 : herm (Hpk k r) (m₀ *ᵥ ν') (m₀ *ᵥ Bs.z') = 0 := by rw [_root_.PI.StabSplit.UnipW.herm_inv hU]; exact hz
   rw [hmz] at h0
   set c : ℂ := ((√(Tz k r Bs.z' / Tz k r Bs.z) : ℝ) : ℂ) with hc
   have hc0 : c ≠ 0 := by
@@ -1048,8 +1044,8 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) {θ : ℝ} (C 
 
 def Ce : ℝ := (Formalism.FourierDecayAlt.P.energy_of_built_setting Formalism.FourierDecayAlt.P.beta_cutoff_limit).choose
 
-def fourierDecayLevelZeroConst : ℝ := (Formalism.FourierDecayAlt.P.lemma_E_of_model Formalism.FourierDecayAlt.P.lemma_E_of_residue Formalism.FourierDecayAlt.P.level_zero_holds
-  Formalism.FourierDecayAlt.P.good_of_admissible Formalism.FourierDecayAlt.P.lemma_model).choose
+def fourierDecayLevelZeroConst : ℝ := (Formalism.FourierDecayAlt.P.lemma_E_of_model _root_.Formalism.FourierDecayAlt.P.Dx1.d_lemmaEOfRR0 Formalism.FourierDecayAlt.P.level_zero_holds
+  _root_.Formalism.FourierDecayAlt.P.Dx1.d_goodOfAdm Formalism.FourierDecayAlt.P.lemma_model).choose
 
 theorem carrierDataBuilt_of_towers (Cb Cc C₆ : ℝ) (u u' : D.what₂.Word) (e : InfinitePlace D.host.E ≃ D.what₂.Tau) (he : PlaceTie X e)
     (hv : D.host.v = Formalism.FourierDecayAlt.S6.rd D.host.E / 2) (CA : ℝ) (de de' : ℕ → ℝ) (l : ℕ)
@@ -1153,8 +1149,8 @@ theorem carrierDataBuilt_of_towers (Cb Cc C₆ : ℝ) (u u' : D.what₂.Word) (e
       (∀ v, Formalism.FourierDecayAlt.JC.IsModelPlace (sOf (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀)) (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).T (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).fc (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).χ v (L v) (j v) (lam v) cutStd (Cm v) (σ v)) →
       (∏ v, Formalism.FourierDecayAlt.JCT.jvModel (sOf (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀)) j Cm v) = jn := by
     intro L j lam Cm σ hM
-    have hLE := (Formalism.FourierDecayAlt.P.lemma_E_of_model Formalism.FourierDecayAlt.P.lemma_E_of_residue Formalism.FourierDecayAlt.P.level_zero_holds
-      Formalism.FourierDecayAlt.P.good_of_admissible Formalism.FourierDecayAlt.P.lemma_model).choose_spec.2 D.host.E _ _ (sOf (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀)) (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).T (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).fc
+    have hLE := (Formalism.FourierDecayAlt.P.lemma_E_of_model _root_.Formalism.FourierDecayAlt.P.Dx1.d_lemmaEOfRR0 Formalism.FourierDecayAlt.P.level_zero_holds
+      _root_.Formalism.FourierDecayAlt.P.Dx1.d_goodOfAdm Formalism.FourierDecayAlt.P.lemma_model).choose_spec.2 D.host.E _ _ (sOf (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀)) (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).T (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).fc
       (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).χ (nuE X C u' e i0') (m0E X C u u' e) (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).top A₀ L j lam cutStd Cm σ hIBP.2.2.2.1 hcutsm hC6e' hM
     have hjv := (Formalism.FourierDecayAlt.P.energy_of_built_setting Formalism.FourierDecayAlt.P.beta_cutoff_limit).choose_spec D.host.E _ _ (sOf (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀))
       (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).T (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).fc (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).χ (nuE X C u' e i0') (m0E X C u u' e) (ITc X C u u' e he hv CA de de' l (gridT e l) (grid1T e l) (fcT X C e u u' a b ξ ξ' cc) cutStd i0' Θ TP A₀).top A₀ _ hIBP hLE
@@ -1210,7 +1206,7 @@ theorem fcT_smooth {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) {θ 
     (LinearMap.toContinuousLinearMap Lφ).contDiff
   intro g₀ hg₀
   have hmem : ∀ g ∈ Formalism.FourierDecayAlt.B.GV D.R.k D.R.rS, t * g * t' ∈ Formalism.FourierDecayAlt.B.GV D.R.k D.R.rS := fun g hg =>
-    Formalism.L2.SG.RealObj.EnergyIntTor.UH_mul (Formalism.L2.SG.RealObj.EnergyIntTor.UH_mul
+    _root_.Formalism.MainNotions.S.Pv.Frames.UH_mul (_root_.Formalism.MainNotions.S.Pv.Frames.UH_mul
       (Formalism.L2.SG.RealObj.EnergyIntTor.tor_mem_UH hμ) hg) (Formalism.L2.SG.RealObj.EnergyIntTor.tor_mem_UH (inv_ne_zero hμ))
   obtain ⟨U, F, hU, h0, hF, hE⟩ := hcf _ (hmem g₀ hg₀)
   refine ⟨(fun g => t * g * t') ⁻¹' U, fun g => cc j • F (t * g * t'), hU.preimage hφ.continuous, h0, ?_, ?_⟩
@@ -1483,12 +1479,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S
 open scoped Matrix
 
 namespace Formalism.L2.SG.Pf.CarrierXAll
-
-open Formalism.L2.SG.Pf.Carrier Formalism.L2.SG.Pf.BaseOf Formalism.L2.SG.Pf.Built Formalism.L2.SG.LocWSOf Formalism.L2.SG.Pf.CarrierT Formalism.L2.SG.RealObj
-open Formalism.FourierDecayAlt Formalism.L2.SG.HidaSetting Formalism.L2.SG.Full Formalism.L2.SG.PackageTie2 Formalism.MainNotions.S.Lat Formalism.MainNotions.S.LocalSplitGroups
-open Formalism.L2.SG.AdBridge Formalism.L2.SG.DataInst Formalism.L2.SG.SpectralTiesReal
-
-attribute [local instance] Formalism.BasicNotions.Host.cmStar instCM
 
 end Formalism.L2.SG.Pf.CarrierXAll
 

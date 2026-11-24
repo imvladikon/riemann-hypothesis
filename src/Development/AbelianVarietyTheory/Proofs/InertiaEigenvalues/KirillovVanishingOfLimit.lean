@@ -297,17 +297,10 @@ open Polynomial
 
 namespace GlobalTheory.JR.Et.Idem
 
-theorem isIntegral_of_forall {O : Type} [CommRing O] {ι : Type} [Finite ι] {R : ι → Type}
-    [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)] (x : ∀ i, R i) (hx : ∀ i, IsIntegral O (x i)) :
-    IsIntegral O x := by
-  first
-  | (apply _root_.GlobalTheory.IntegralPi.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.IntegralPi.main ..)
-
 theorem isIntegral_single {O : Type} [CommRing O] {ι : Type} [Finite ι] [DecidableEq ι] {R : ι → Type}
     [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)] (i : ι) (z : R i) (hz : IsIntegral O z) :
     IsIntegral O (Pi.single i z : ∀ j, R j) := by
-  refine isIntegral_of_forall _ fun j => ?_
+  refine _root_.GlobalTheory.IntegralPi.isIntegral_pi _ fun j => ?_
   by_cases h : j = i
   · subst h; simpa using hz
   · rw [Pi.single_eq_of_ne h]; exact isIntegral_zero
@@ -952,9 +945,6 @@ theorem u_locallyConstant (A : Et F E) (Ψ : SpecialLinearGroup (Fin 2) A.K → 
   intro i j
   fin_cases i <;> fin_cases j <;> simp [nS, h0, hy]
 
-theorem absK_nonneg (A : Et F E) (t : A.K) : 0 ≤ A.absK t := by
-  unfold Et.absK; split_ifs <;> simp
-
 theorem weyl_unipotent_l2_finite [Unram F E] (hB1 : type_of% _root_.GlobalTheory.JR.LamBound.main) (hB2 : type_of% _root_.GlobalTheory.JR.HeightSquareIntegrable.height_sq_lintegral_lt_top) (A : Et F E) (μ : Measure A.K) (hμ : μ.IsAddHaarMeasure)
     (Ψ : SpecialLinearGroup (Fin 2) A.K → ℂ) (h : A.InI Ψ) :
     ∫⁻ z, ‖Ψ (wS A.K * nS z)‖ₑ ^ 2 ∂μ < ⊤ := by
@@ -972,7 +962,7 @@ theorem weyl_unipotent_l2_finite [Unram F E] (hB1 : type_of% _root_.GlobalTheory
     have hb := hC z s α β hα hβ hs1 hs2 he
     calc ‖Ψ (wS A.K * nS z)‖ₑ = ENNReal.ofReal ‖Ψ (wS A.K * nS z)‖ := (ofReal_norm_eq_enorm _).symm
       _ ≤ ENNReal.ofReal (C * A.absK s) := ENNReal.ofReal_le_ofReal hb
-      _ = ENNReal.ofReal C * ENNReal.ofReal (A.absK s) := ENNReal.ofReal_mul' (absK_nonneg A _)
+      _ = ENNReal.ofReal C * ENNReal.ofReal (A.absK s) := ENNReal.ofReal_mul' (_root_.GlobalTheory.JR.LamBound.absK_nonneg A _)
       _ ≤ _ := by gcongr; exact le_self_add
   calc ∫⁻ z, ‖Ψ (wS A.K * nS z)‖ₑ ^ 2 ∂μ
       ≤ ∫⁻ z, ((ENNReal.ofReal C + 1) * ⨅ (s : A.Kˣ) (_ : (s : A.K) ∈ A.OK ∧ (s : A.K) * z ∈ A.OK ∧

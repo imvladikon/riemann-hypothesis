@@ -65,8 +65,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_point_primitiveBundle_eq_translate_ppav : Laws → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (O : LB P.A.left), O.IsLB → (∃ u : LB.Gen (abelian₂ P.A O), u.IsGen) → ∃ x : 𝟙_ _ ⟶ P.A, LBIso O (LB.LinComb P.L (K := Fin 2) ![((toUnit P.A ≫ x) * 𝟙 P.A).left, 𝟙 P.A.left] ![1, -1]) := by
-  first | exact @GlobalTheory.PrimitiveOverField.exists_point_translate
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPointPrimitiveBundleEqTranslatePpavStatement =====
@@ -161,7 +159,7 @@ theorem exists_geometric_point (hL : Laws) {S : Scheme.{0}} (P : PolAV S) {O : L
     rw [pull_lam, lift_fst, lift_snd, map_zero, lam, ← hm, ← one] at e
     rw [cls_pull hO, lam, ← pull_comp, ← pull_comp, ← pull_comp, ← pull_comp]
     exact e
-  obtain ⟨x', hx'⟩ := GlobalTheory.T.exists_point_primitiveBundle_eq_translate_ppav hL K P' (O.pull g) hO'
+  obtain ⟨x', hx'⟩ := _root_.GlobalTheory.PrimitiveOverField.exists_point_translate hL K P' (O.pull g) hO'
     ((cls_eq_zero_iff (LB.isLB_linComb hO' _ _)).1 ((cls_cube_two hO' _ _ (LB.isLB_linComb hO' _ _)).trans lamO'))
   have e := ((cls_eq_iff hO' (LB.isLB_linComb P'.isLB _ _)).2 hx').trans (cls_pair P'.isLB _ _ _)
   let T : Over S := Over.mk f

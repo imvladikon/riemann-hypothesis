@@ -109,7 +109,7 @@ theorem isPullCubical_constPt : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheo
   refine GlobalTheory.TripleModel.isPullCubical_of_lbIso GlobalTheory.SemiRigid.globalFns hA hF o.t.cub Xo.univ.t.cub ?_
   obtain ⟨w, -, hw, -⟩ := rigIso_congr rfl m.cm m.lin rfl rfl
   have K2 : LBIso (Xo.univ.t.PP.L.pull π') (Xo.univ.t.PP.L.pull (q ≫ π)) :=
-    GlobalTheory.T.lineBundle_iso_tangent_pull_constant_deformation E H Dw l Xo c K y.x x' A A' π π' i q hi hπ hπ' hiπ hiq hq
+    _root_.GlobalTheory.TangentConstLB.lbIso_tangent_const E H Dw l Xo c K y.x x' A A' π π' i q hi hπ hπ' hiπ hiq hq
   have hM := Xo.univ.t.PP.isLB
   have h1 : LBIso o.t.PP.L (Xo.univ.t.PP.L.pull (g ≫ π')) := hg1 ▸ ⟨w, hw⟩
   have h2 : LBIso ((Xo.univ.t.PP.L.pull π').pull g) (Xo.univ.t.PP.L.pull (g ≫ q ≫ π)) :=
@@ -256,7 +256,7 @@ theorem objMap_const : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Publis
     intro σ τ n hn hσ hστ
     let u := pushHom hgq (𝟙_ (Over (Sp (DualNumber K)))) σ
     have hu : u ^ n = 1 := by rw [← map_pow, hσ, map_one]
-    have e := GlobalTheory.T.torsion_dualNumber_point_eq_constant_charZero K A _ (by simp) (hcomm _) u n hn hu
+    have e := _root_.GlobalTheory.TorsConst.torsion_eq_const K A _ (by simp) (hcomm _) u n hn hu
     have hul : u.left = σ.left ≫ g ≫ q := by
       show σ.left ≫ (g ≫ q) = _; rfl
     rw [hul] at e
@@ -366,10 +366,6 @@ open AlgebraicGeometry CategoryTheory
 
 namespace GlobalTheory.FlagTan.KSUniv
 
-theorem spMap_comp_spMap' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
 noncomputable def reparam {K : Type} [Field K] (F : Type) [Field F] [Algebra F K] {ι : Type} [Fintype ι]
     (P : Matrix ι ι K) : TrivSqZeroExt K (ι → K) →ₐ[F] TrivSqZeroExt K (ι → K) :=
   (TrivSqZeroExt.map (Matrix.mulVecLin P.transpose)).restrictScalars F
@@ -380,12 +376,12 @@ theorem isTanX_dir {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
     (h2 : spMap (TrivSqZeroExt.fstHom c.F K (ι → K)).toRingHom ≫ X = y.x) (M : ι → K) :
     GlobalTheory.FlagTan.IsTanX y (spMap (GlobalTheory.FlagTan.dir c M).toRingHom ≫ X) := by
   refine ⟨?_, ?_⟩
-  · rw [Category.assoc, h1, sOf, sOf, spMap_comp_spMap']
+  · rw [Category.assoc, h1, sOf, sOf, _root_.GlobalTheory.spMap_comp_ring]
     congr 1
     rw [← RingHom.comp_assoc]
     congr 1
     exact (GlobalTheory.FlagTan.dir c M).comp_algebraMap
-  · rw [← Category.assoc, spMap_comp_spMap', ← h2]
+  · rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, ← h2]
     congr 2
     ext z
     simp
@@ -415,7 +411,7 @@ theorem ksUniv : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Published.Gr
   have hLa : ∀ M, L M = ∑ k, M k • N k := fun M => Fintype.linearCombination_apply _ _ _
   have h0 : spMap (dir c (0 : HIx Dw (psiSet H) → K)).toRingHom ≫ X₀ =
       spMap (algebraMap K (DualNumber K)) ≫ y.x := by
-    rw [← h2, ← Category.assoc, spMap_comp_spMap']
+    rw [← h2, ← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
     congr 2
     ext z <;> simp [TrivSqZeroExt.algebraMap_eq_inl]
   have Linj : Function.Injective L := (injective_iff_map_eq_zero L).2 fun M hM =>
@@ -425,16 +421,16 @@ theorem ksUniv : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Published.Gr
   let P := LinearMap.toMatrix' (e.symm : (HIx Dw (psiSet H) → K) →ₗ[K] (HIx Dw (psiSet H) → K))
   have hP' : ∀ M, P.mulVec M = e.symm M := fun M => LinearMap.toMatrix'_mulVec _ M
   refine ⟨spMap (reparam c.F P).toRingHom ≫ X₀, ?_, ?_, fun M => ?_⟩
-  · rw [Category.assoc, h1, sOf, spMap_comp_spMap']
+  · rw [Category.assoc, h1, sOf, _root_.GlobalTheory.spMap_comp_ring]
     congr 1
     rw [← RingHom.comp_assoc]
     congr 1
     exact (reparam c.F P).comp_algebraMap
-  · rw [← Category.assoc, spMap_comp_spMap', ← h2]
+  · rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, ← h2]
     congr 2
     ext z
     simp [reparam]
-  · rw [← Category.assoc, spMap_comp_spMap', dir_comp_reparam, hP']
+  · rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring, dir_comp_reparam, hP']
     have := hL (e.symm M)
     rwa [← hLa, show L (e.symm M) = M from e.apply_symm_apply M] at this
 

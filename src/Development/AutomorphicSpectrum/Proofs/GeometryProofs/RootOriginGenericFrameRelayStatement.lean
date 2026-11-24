@@ -582,11 +582,6 @@ theorem emb_injective {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
     congrArg (fun x : c.F => (x : ℂ)) (h1 a)
   exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 E)) (RingHom.ext fun a => h2 a)
 
-theorem dual_comp' {S T U : Type} [CommRing S] [CommRing T] [CommRing U] (f : S →+* T) (g : T →+* U) :
-    Formalism.L2.Pj.dualMap (g.comp f) = (Formalism.L2.Pj.dualMap g).comp (Formalism.L2.Pj.dualMap f) := by
-  refine RingHom.ext fun a => ?_
-  ext <;> simp [Formalism.L2.Pj.dualMap]
-
 theorem zpow_unit_mem {Ω : Type} [Field Ω] (A : Subring Ω) {a a' : Ω} (ha : a ∈ A) (ha' : a' ∈ A) (h : a * a' = 1)
     {n : ℤ} (hn : n = 1 ∨ n = -1) : a ^ n ∈ A ∧ (a ^ n)⁻¹ ∈ A := by
   have e : a⁻¹ = a' := (eq_inv_of_mul_eq_one_right h).symm
@@ -699,7 +694,7 @@ theorem diag_root_line : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [hmap.2.1, hy1.2.1, ← Category.assoc]
     congr 1
     simp only [spMap]
-    rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, ← dual_comp']
+    rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, ← _root_.GlobalTheory.FramedBaseChange.dual_comp]
     rfl
   have hptz : Small.ptY Y z = Small.ptY Y Fr.y₀ := by
     rw [Small.ptY, Small.ptY]
@@ -805,10 +800,6 @@ theorem diag_root_line : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
 
 end GlobalTheory.CompanionTheory.Ar.Plug.KeyRootZ
 
-attribute [local instance 1100] Subalgebra.algebra in
-attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
-theorem ModelDimension.generic_frame_root_origin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y S RM Fx) (Fr : Small.GenFrame Or) (h : GenFrEx Xo c) (C : GlobalTheory.Reg.FChart h) (V : ValuationSubring RM.Ω), letI := Small.cstAlg Or; ∀ (ψ : C.R →ₐ[c.F] RM.Ω) (z : FrPt Xo c RM.Ω) (d : Ix Dw → (RM.Ω)ˣ), FrMap ψ C.y z → FrBor d Fr.y₀ z → (∀ x, ψ x ∈ V) → ∀ cc : (k : RM.K) → RM.ι k, (∀ k, RM.y ⟨k, cc k⟩ ≠ 0) → (∀ k i, RM.y ⟨k, i⟩ / RM.y ⟨k, cc k⟩ ∈ V) → ∀ r : RootIx Dw, ∃ v : Vˣ, ((d (Small.rootFrameIx Dw r) ^ HodgeCpt.rootSgn Dw r : (RM.Ω)ˣ) : RM.Ω) = ((v : V) : RM.Ω) * ((∏ k, RM.y ⟨k, cc k⟩ ^ RM.xdeg r k) * Or.e r) :=
-  GlobalTheory.CompanionTheory.Ar.Plug.KeyRootZ.diag_root_line
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -826,8 +817,7 @@ attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
 attribute [local instance 1100] Subalgebra.algebra in
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
-theorem _root_.GlobalTheory.CompanionTheory.Relay.root_origin_generic_frame_relay : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y S RM Fx) (Fr : Small.GenFrame Or) (h : GenFrEx Xo c) (C : GlobalTheory.Reg.FChart h) (V : ValuationSubring RM.Ω), letI := Small.cstAlg Or; ∀ (ψ : C.R →ₐ[c.F] RM.Ω) (z : FrPt Xo c RM.Ω) (d : Ix Dw → (RM.Ω)ˣ), FrMap ψ C.y z → FrBor d Fr.y₀ z → (∀ x, ψ x ∈ V) → ∀ cc : (k : RM.K) → RM.ι k, (∀ k, RM.y ⟨k, cc k⟩ ≠ 0) → (∀ k i, RM.y ⟨k, i⟩ / RM.y ⟨k, cc k⟩ ∈ V) → ∀ r : RootIx Dw, ∃ v : Vˣ, ((d (Small.rootFrameIx Dw r) ^ HodgeCpt.rootSgn Dw r : (RM.Ω)ˣ) : RM.Ω) = ((v : V) : RM.Ω) * ((∏ k, RM.y ⟨k, cc k⟩ ^ RM.xdeg r k) * Or.e r) := by
-  first | exact @ModelDimension.generic_frame_root_origin
+alias _root_.GlobalTheory.CompanionTheory.Relay.root_origin_generic_frame_relay := _root_.GlobalTheory.CompanionTheory.Ar.Plug.KeyRootZ.diag_root_line
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrameRelay =====
@@ -842,10 +832,6 @@ open Formalism.L2.Pj ReciprocityTheory.ChartRestriction.G ReciprocityTheory.Char
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Rec GlobalTheory.CompanionTheory.Ar.Plug
 attribute [-instance] GlobalTheory.CompHt.fintypePsi
 
-attribute [local instance 1100] Subalgebra.algebra in
-attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
-theorem _root_.GlobalTheory.T.root_origin_generic_frame_relay : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y S RM Fx) (Fr : Small.GenFrame Or) (h : GenFrEx Xo c) (C : GlobalTheory.Reg.FChart h) (V : ValuationSubring RM.Ω), letI := Small.cstAlg Or; ∀ (ψ : C.R →ₐ[c.F] RM.Ω) (z : FrPt Xo c RM.Ω) (d : Ix Dw → (RM.Ω)ˣ), FrMap ψ C.y z → FrBor d Fr.y₀ z → (∀ x, ψ x ∈ V) → ∀ cc : (k : RM.K) → RM.ι k, (∀ k, RM.y ⟨k, cc k⟩ ≠ 0) → (∀ k i, RM.y ⟨k, i⟩ / RM.y ⟨k, cc k⟩ ∈ V) → ∀ r : RootIx Dw, ∃ v : Vˣ, ((d (Small.rootFrameIx Dw r) ^ HodgeCpt.rootSgn Dw r : (RM.Ω)ˣ) : RM.Ω) = ((v : V) : RM.Ω) * ((∏ k, RM.y ⟨k, cc k⟩ ^ RM.xdeg r k) * Or.e r) := by
-  first | exact @GlobalTheory.CompanionTheory.Relay.root_origin_generic_frame_relay
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrameRelayStatement =====

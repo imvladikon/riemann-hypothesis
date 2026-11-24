@@ -84,12 +84,7 @@ end MatThm
 
 section Inv
 
-theorem mem_divs_of {A : Type} [CommRing A] [IsDedekindDomain A] {a : A} {P : HeightOneSpectrum A} (h : P ∈ divs a) :
-    a ∈ P.asIdeal := by
-  unfold divs at h
-  split_ifs at h with hf
-  · exact hf.mem_toFinset.mp h
-  · simp at h
+alias mem_divs_of := _root_.Formalism.L2.Col.decoFin_mem_of_mem_divs
 
 variable {X : Fields} {Pr : Primes X} {R : Ranks} (W : Wts X Pr.Word R) (Ch : Chars X Pr R.m)
   (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
@@ -173,7 +168,7 @@ open Classical in
 theorem inFr_intA {i j : ℕ} (p : ChPt (R := R) sel mu u i) (p' : ChPt (R := R) sel mu u j) (P : rowSG Pr sel mu)
     (w : HomE X.E (R.N i) (R.N j)) (hw : w ∈ homAt (Sall sel mu u) p.deco.1.N p'.deco.1.N) (s : Fin (R.N i)) (l : Fin (R.N j)) :
     IntAt P.1 ((inFr (frsF sel mu p P) (frsF sel mu p' P) w) (Pi.single s 1) l) := by
-  have h1 : frsF sel mu p P (Pi.single s 1) ∈ localization₂ P.1.asIdeal p.deco.1.N := (frsF_isFr sel mu p P _).2 (xqSingle_mem (P := P.1) s)
+  have h1 : frsF sel mu p P (Pi.single s 1) ∈ localization₂ P.1.asIdeal p.deco.1.N := (frsF_isFr sel mu p P _).2 (_root_.Formalism.L2.Col.ciSingle_mem (P := P.1) s)
   have h2 := hw P.1 (Finset.mem_union_right _ P.2) _ h1
   have h3 : (frsF sel mu p' P).symm (w (frsF sel mu p P (Pi.single s 1))) ∈ stdAt X.E (R.N j) P.1 :=
     (frsF_isFr sel mu p' P _).1 (by rw [LinearEquiv.apply_symm_apply]; exact h2)

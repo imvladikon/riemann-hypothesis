@@ -160,10 +160,10 @@ theorem point_exp_eq_of_isometry_levels (hK : Known) {E : Type} [Field E] [Numbe
   have hu : Fu.u i P = Fu.u i' P' :=
     (GlobalTheory.UnifPoint.point_eq_iff_isometry_closed hK.theta hK.laws E H D l Xo σ g ty hpq hσ hty (Fu.Di i) (Fu.Di i')
       (Fu.t i) (Fu.t i') P P' (Fu.u i P) (Fu.u i' P') (Fu.ex i P) (Fu.ex i' P')
-      ⟨Fu.over_σ i P hP, hP, ⟨Fu.ex_add i P hP, Fu.ex_onto i P hP, GlobalTheory.ArcCM.isHolTo_exp_of_isPeriod Fu i P hP,
+      ⟨Fu.over_σ i P hP, hP, ⟨Fu.ex_add i P hP, Fu.ex_onto i P hP, _root_.GlobalTheory.ExpUniqFamily.isHolTo_ex Fu i P hP,
         (Fu.ex_diff i P hP).1, (Fu.ex_diff i P hP).2⟩, Fu.ex_ker i P hP, Fu.ex_lin i P hP, Fu.ex_weil i P hP,
         Fu.ex_eta i P hP, Fu.ex_etaA i P hP⟩
-      ⟨Fu.over_σ i' P' hP', hP', ⟨Fu.ex_add i' P' hP', Fu.ex_onto i' P' hP', GlobalTheory.ArcCM.isHolTo_exp_of_isPeriod Fu i' P' hP',
+      ⟨Fu.over_σ i' P' hP', hP', ⟨Fu.ex_add i' P' hP', Fu.ex_onto i' P' hP', _root_.GlobalTheory.ExpUniqFamily.isHolTo_ex Fu i' P' hP',
         (Fu.ex_diff i' P' hP').1, (Fu.ex_diff i' P' hP').2⟩, Fu.ex_ker i' P' hP', Fu.ex_lin i' P' hP',
         Fu.ex_weil i' P' hP', Fu.ex_eta i' P' hP', Fu.ex_etaA i' P' hP'⟩).2 ⟨gm, L, hiso, hM, hA', hL⟩
   obtain rfl : i = i' := Fu.disj i i' P P' hP hP' hu
@@ -633,11 +633,6 @@ theorem min_le_sum {ι : Type} [Fintype ι] [Nonempty ι] (a : ι → ℝ) (ha :
     _ = (∑ j, a j) ^ Fintype.card ι := by simp
     _ ≤ ∑ j, a j := pow_le_of_le_one h0 h1 Fintype.card_ne_zero
 
-theorem c_pos (τ : X.Ψ) : 0 < X.c τ := by
-  have : τ.1 X.ξ0 ≠ 0 := (map_ne_zero τ.1).mpr X.ξ0_ne
-  unfold Data.c
-  positivity
-
 omit [NumberField E] [IsCMField E] in
 theorem emb_ne_zero (τ : E →+* ℂ) {v : Fin r → E} (hv : v ≠ 0) : Data.emb τ v ≠ 0 := by
   intro h
@@ -733,7 +728,7 @@ theorem prod_lower_of_smul {y : Frame X.Ψ r} (hy : y ∈ X.dom) {ξ η : Fin r 
   rw [HermitianTraceFormVanishing.herm_smul_left] at h0
   have h1 := QuadraticCoefficientForms.one_le_prod_norm X _ h0 (mul_ne_zero (den_ne_zero X) (mul_ne_zero he h))
   have h2 : 0 ≤ ∏ τ, X.c τ * X.maj y τ (Data.emb τ.1 ξ) := Finset.prod_nonneg fun τ _ =>
-    mul_nonneg (c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hy τ _)
+    mul_nonneg (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hy τ _)
   refine (le_mul_of_one_le_right h2 h1).trans (le_of_eq ?_)
   rw [← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun τ _ => ?_
@@ -785,12 +780,12 @@ theorem dist_line_lower {x : Frame X.Ψ r} (hx : x ∈ X.dom) {ξ : Fin r → E}
     rw [← h0, neg_smul, one_smul]
     abel
   obtain ⟨μ, hμ, hμF⟩ := (hFf.image (m τ0)).isCompact.exists_forall_le' continuousOn_id hpos
-  have hc0 := c_pos X τ0
+  have hc0 := _root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ0
   refine ⟨min 1 (X.c τ0 * μ), lt_min one_pos (mul_pos hc0 hμ), fun v hv hve a => ?_⟩
   have hterm : ∀ τ, X.c τ * m τ v ≤ ∑ τ, X.c τ * X.maj x τ (Data.emb τ.1 v - a τ • Data.emb τ.1 ξ) :=
-    fun τ => (mul_le_mul_of_nonneg_left (hm τ v (a τ)) (c_pos X τ).le).trans
+    fun τ => (mul_le_mul_of_nonneg_left (hm τ v (a τ)) (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le).trans
       (Finset.single_le_sum (f := fun τ => X.c τ * X.maj x τ (Data.emb τ.1 v - a τ • Data.emb τ.1 ξ))
-        (fun τ _ => mul_nonneg (c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hx τ _)) (Finset.mem_univ τ))
+        (fun τ _ => mul_nonneg (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hx τ _)) (Finset.mem_univ τ))
   rcases le_total 1 (∑ τ, X.c τ * X.maj x τ (Data.emb τ.1 v - a τ • Data.emb τ.1 ξ)) with h1 | h1
   · exact (min_le_left _ _).trans h1
   refine (min_le_right _ _).trans (le_trans ?_ (hterm τ0))
@@ -799,7 +794,7 @@ theorem dist_line_lower {x : Frame X.Ψ r} (hx : x ∈ X.dom) {ξ : Fin r → E}
     refine ⟨⟨X.Λ.sub_mem hv (X.Λ.smul_mem α hξ), fun τ => ?_⟩, fun e he => hve (e + α) ?_⟩
     · rw [emb_sub, emb_smul, hP]
       have h2 : m τ v ≤ 1 / X.c τ := by
-        rw [le_div_iff₀ (c_pos X τ), mul_comm]
+        rw [le_div_iff₀ (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ), mul_comm]
         exact (hterm τ).trans h1
       have h3 : ‖A τ v - τ.1 (α : E)‖ ^ 2 ≤ ρ ^ 2 := by
         rw [norm_sub_rev]
@@ -824,10 +819,10 @@ theorem orbitThick_of_flowMaj : FlowMajSt → OrbitThickSt := by
   obtain ⟨δ3, hδ3, h3⟩ := dist_line_lower X hx hξ.1 hξ.2.2
   set P : ℝ := ∏ τ, X.c τ * X.maj x τ (Data.emb τ.1 ξ) with hP
   have hPp : 0 < P := Finset.prod_pos fun τ _ =>
-    mul_pos (c_pos X τ) (X.maj_pos hx τ (emb_ne_zero τ.1 hξ.2.2))
+    mul_pos (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ) (X.maj_pos hx τ (emb_ne_zero τ.1 hξ.2.2))
   have hD := prod_norm_pos X (den_ne_zero X)
   have hK := prod_norm_pos X (mul_ne_zero (den_ne_zero X) hξη)
-  have hC : 0 < ∏ τ, X.c τ ^ 2 := Finset.prod_pos fun τ _ => pow_pos (c_pos X τ) 2
+  have hC : 0 < ∏ τ, X.c τ ^ 2 := Finset.prod_pos fun τ _ => pow_pos (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ) 2
   set δ1 : ℝ := (∏ τ, X.c τ ^ 2) / ((∏ τ : X.Ψ, ‖τ.1 (X.den : E)‖ ^ 2) * P) with hδ1
   set δ2 : ℝ := P / ∏ τ : X.Ψ, ‖τ.1 ((X.den : E) * herm X.Gm ξ η)‖ ^ 2 with hδ2
   have hδ1p : 0 < δ1 := div_pos hC (mul_pos hD hPp)
@@ -840,7 +835,7 @@ theorem orbitThick_of_flowMaj : FlowMajSt → OrbitThickSt := by
   refine Real.sqrt_le_sqrt (le_csInf ⟨_, ξ, hξ.1, hξ.2.2, rfl⟩ ?_)
   rintro _ ⟨v, hv, hv0, rfl⟩
   have hnn : ∀ τ, 0 ≤ X.c τ * X.maj (X.flow ξ s x) τ (Data.emb τ.1 v) := fun τ =>
-    mul_nonneg (c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hy τ _)
+    mul_nonneg (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le (MajorantConjugateTransfer.maj_nonneg X hy τ _)
   by_cases h : herm X.Gm v ξ = 0
   · by_cases he : ∃ e : E, v = e • ξ
     · obtain ⟨e, rfl⟩ := he
@@ -853,7 +848,7 @@ theorem orbitThick_of_flowMaj : FlowMajSt → OrbitThickSt := by
     · push Not at he
       refine (min_le_right _ _).trans ((h3 v hv he fun τ => X.Hf x τ (Data.emb τ.1 v) (Data.emb τ.1 ξ) /
         X.Hf x τ (Data.emb τ.1 ξ) (Data.emb τ.1 ξ)).trans (Finset.sum_le_sum fun τ _ => ?_))
-      refine mul_le_mul_of_nonneg_left ?_ (c_pos X τ).le
+      refine mul_le_mul_of_nonneg_left ?_ (_root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantFamilyNorms.c_pos X τ).le
       have h4 := hF1 ξ hξ x hx s hy τ (Data.emb τ.1 v) (by rw [← emb_herm, h, map_zero])
       have h5 := maj_sub_smul X hx τ (Data.emb τ.1 v) (emb_ne_zero τ.1 hξ.2.2) 0
       rw [zero_smul, sub_zero, sub_zero] at h5
@@ -894,11 +889,6 @@ lemma maj_zero {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) : X.maj x τ 0 
   rw [X.Hf_eq_jp, hermC_zero_right] at h
   exact_mod_cast h.symm
 
-lemma maj_nonneg {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v : Fin r → ℂ) : 0 ≤ X.maj x τ v := by
-  by_cases hv : v = 0
-  · rw [hv, maj_zero X hx]
-  · exact (X.maj_pos hx τ hv).le
-
 lemma maj_split {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (a : ℂ) (e u : Fin r → ℂ)
     (h : X.Hf x τ u e = 0) : X.maj x τ (u + a • e) = X.maj x τ u + ‖a‖ ^ 2 * X.maj x τ e := by
   have h' : X.Hf x τ e u = 0 := by rw [majForm_conj X hx, h, map_zero]
@@ -922,21 +912,6 @@ lemma majForm_perp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v : Fin r 
     exact_mod_cast (X.maj_pos hx τ he).ne'
   rw [majForm_sub_smul, div_mul_cancel₀ _ h0, sub_self]
 
-lemma majForm_cs {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v w : Fin r → ℂ) :
-    ‖X.Hf x τ v w‖ ^ 2 ≤ X.maj x τ v * X.maj x τ w := by
-  by_cases hw : w = 0
-  · rw [hw, maj_zero X hx, X.Hf_eq_jp, hermC_zero_right]
-    simp
-  have hp := X.maj_pos hx τ hw
-  have h1 := maj_split X hx τ (X.Hf x τ v w / X.Hf x τ w w) w _ (majForm_perp X hx τ v hw)
-  rw [sub_add_cancel] at h1
-  have h2 := maj_nonneg X hx τ (v - (X.Hf x τ v w / X.Hf x τ w w) • w)
-  have h3 : ‖X.Hf x τ v w / X.Hf x τ w w‖ ^ 2 * X.maj x τ w * X.maj x τ w = ‖X.Hf x τ v w‖ ^ 2 := by
-    rw [norm_div, X.Hf_self hx τ w, Complex.norm_real, Real.norm_of_nonneg hp.le]
-    field_simp
-  rw [← h3]
-  exact mul_le_mul_of_nonneg_right (by linarith) hp.le
-
 lemma maj_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v : Fin r → ℂ) :
     X.maj x τ (X.jp x τ v) = X.maj x τ v := by
   have h1 := X.Hf_self hx τ (X.jp x τ v)
@@ -946,7 +921,7 @@ lemma maj_jp {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v : Fin r → �
 
 lemma herm_cs {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (v w : Fin r → ℂ) :
     ‖hermC τ.1 X.Gm v w‖ ^ 2 ≤ X.maj x τ v * X.maj x τ w := by
-  have h := majForm_cs X hx τ (X.jp x τ v) w
+  have h := _root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantConjugateTransfer.cs X hx τ (X.jp x τ v) w
   rwa [X.Hf_eq_jp, X.jp_jp hx, maj_jp X hx] at h
 
 lemma maj_flow {ξ : Fin r → E} (hξ : X.IsIso ξ) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (s : X.Ψ → ℂ)
@@ -985,7 +960,7 @@ namespace GlobalTheory.CuspFrom
 
 theorem flowMajSt_holds : FlowMajSt := fun _ _ _ _ _ X =>
   ⟨fun _ hξ _ hx s hxs τ v hv => FlowMaj.maj_flow X hξ hx s hxs τ v hv,
-    fun _ hx τ v w => ⟨FlowMaj.herm_cs X hx τ v w, FlowMaj.majForm_cs X hx τ v w⟩⟩
+    fun _ hx τ v w => ⟨FlowMaj.herm_cs X hx τ v w, _root_.ReciprocityTheory.ChartRestriction.G.FD.MajorantConjugateTransfer.cs X hx τ v w⟩⟩
 
 end GlobalTheory.CuspFrom
 end -- clump:auto

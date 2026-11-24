@@ -372,8 +372,6 @@ open Formalism.IndefR.Datum (IsSelfDualC)
 open GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents GlobalTheory.AdIsom
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.gluedHermitianLattice_unique : ∀ (D : D7) (u : D.what₂.Word) (π : 𝓞 D.host.E), IsPi u π → ∀ (Y X : HSp D) (ι : X.V →ₗ[D.host.E] Y.V) (z : Y.V) (L₀ : Lat X) (f₀ : Pl D.host.E → Fin X.rank → EAf D) (L L' : Submodule (𝓞 D.host.E) Y.V), IsGlued Y X ι z u π L₀ f₀ L → IsGlued Y X ι z u π L₀ f₀ L' → L = L' := by
-  first | exact @GlobalTheory.GlueUnique.glued_unique
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluedHermitianLatticeUniqueStatement =====
@@ -1489,13 +1487,7 @@ theorem main {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] [M
     ∃ c : RingOfIntegers E, c ≠ 0 ∧ c • y ∈ L := by
   apply Formalism.IndefR.LatticeTransfer.Lat.exists_smul_mem <;> assumption
 
-theorem target : ∀ {E : Type} [inst : Field E] [NumberField E] {V : Type} [inst_2 : AddCommGroup V]
-    [inst_3 : Module E V] [inst_4 : Module (NumberField.RingOfIntegers E) V]
-    [IsScalarTower (NumberField.RingOfIntegers E) E V]
-    (L : Submodule (NumberField.RingOfIntegers E) V) {y : V},
-    y ∈ Submodule.span E (↑L : Set V) →
-      ∃ (c : NumberField.RingOfIntegers E), c ≠ (0 : NumberField.RingOfIntegers E) ∧ c • y ∈ L :=
-  fun L _ hy => main L hy
+alias target := _root_.GlobalTheory.TargetStatementSixOneSixtyEight.main
 
 end GlobalTheory.TargetStatementSixOneSixtyEight
 end -- clump:auto
@@ -1537,13 +1529,6 @@ theorem star_mem {E : Type} [Field E] [NumberField E] [StarRing E] {a : E}
     (h : a ∈ (algebraMap (𝓞 E) E).range) : star a ∈ (algebraMap (𝓞 E) E).range := by
   obtain ⟨b, rfl⟩ := h
   exact ⟨RingOfIntegers.mapRingEquiv starRingAut b, rfl⟩
-
-theorem exists_smul_mem {E : Type} [Field E] [NumberField E] {V : Type} [AddCommGroup V] [Module E V]
-    [Module (𝓞 E) V] [IsScalarTower (𝓞 E) E V] (L : Submodule (𝓞 E) V) {y : V}
-    (hy : y ∈ Submodule.span E (L : Set V)) : ∃ c : 𝓞 E, c ≠ 0 ∧ c • y ∈ L := by
-  first
-  | (apply _root_.GlobalTheory.TargetStatementSixOneSixtyEight.target <;> assumption)
-  | (intros; exact _root_.GlobalTheory.TargetStatementSixOneSixtyEight.target ..)
 
 theorem isLattice_capX_and_exists_glue (D : D7) (u : D.what₂.Word) (Y X : HSp D) (ι : X.V →ₗ[D.host.E] Y.V) (z : Y.V)
     (hl : IsLine Y X ι z u) (L : Submodule (𝓞 D.host.E) Y.V) (hL : IsSDIn Y (flatSp Y X ι z) L) (hp : IsPrim Y z L) :
@@ -1587,7 +1572,7 @@ theorem isLattice_capX_and_exists_glue (D : D7) (u : D.what₂.Word) (Y X : HSp 
     have hx : ι x ∈ Submodule.span D.host.E (L : Set Y.V) := by
       rw [hsp]
       exact Submodule.mem_sup_left (LinearMap.mem_range_self ι x)
-    obtain ⟨c, hc, hcx⟩ := exists_smul_mem L hx
+    obtain ⟨c, hc, hcx⟩ := _root_.GlobalTheory.TargetStatementSixOneSixtyEight.main L hx
     have hcy : c • y ∈ capX Y X ι L := by
       change c • y ∈ Formalism.L2.Herm.crdLat X (L.comap (ι.restrictScalars (𝓞 D.host.E)))
       refine ⟨c • x, ?_, ?_⟩
@@ -1670,29 +1655,6 @@ open Formalism.IndefR.Datum (IsSelfDualC)
 open GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents GlobalTheory.AdIsom
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.primitive_lattice_glued_from_intersection : ∀ (D : D7) (u : D.what₂.Word) (Y X : HSp D) (ι : X.V →ₗ[D.host.E] Y.V) (z : Y.V), IsLine Y X ι z u → ∀ L, IsSDIn Y (flatSp Y X ι z) L → IsPrim Y z L → Submodule.IsFullLattice D.host.E (capX Y X ι L) ∧ ∃ x₀ : X.V, L = glueLat Y X ι z u (capX Y X ι L) x₀ := by
-  intro D u Y X ι z hl L hL hp
-  obtain ⟨hlat, hglue⟩ := GlobalTheory.AdIsom.Unglue.isLattice_capX_and_exists_glue D u Y X ι z hl L hL hp
-  refine ⟨{ toIsLattice := by first | exact hlat.toIsLattice, span_eq_top := ?_ }, hglue⟩
-  apply Submodule.eq_top_iff'.2
-  intro y
-  let x := (Formalism.L2.Herm.crd X).symm y
-  have hx : ι x ∈ Submodule.span D.host.E (L : Set Y.V) := by
-    rw [hL.2.1]
-    exact Submodule.mem_sup_left (LinearMap.mem_range_self ι x)
-  obtain ⟨c, hc, hcx⟩ := GlobalTheory.AdIsom.Unglue.exists_smul_mem L hx
-  have hcy : c • y ∈ capX Y X ι L := by
-    change c • y ∈ Formalism.L2.Herm.crdLat X (L.comap (ι.restrictScalars (𝓞 D.host.E)))
-    refine ⟨c • x, ?_, ?_⟩
-    · change ι (c • x) ∈ L
-      simpa using hcx
-    · simp [x]
-  have hcy' : c • y ∈ Submodule.span D.host.E (capX Y X ι L : Set (Fin X.rank → D.host.E)) :=
-    Submodule.subset_span hcy
-  rw [← algebraMap_smul D.host.E c] at hcy'
-  have h := (Submodule.span D.host.E (capX Y X ι L : Set (Fin X.rank → D.host.E))).smul_mem
-    (c : D.host.E)⁻¹ hcy'
-  simpa only [smul_smul, inv_mul_cancel₀ (RingOfIntegers.coe_ne_zero_iff.2 hc), one_smul] using h
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.PrimitiveLatticeGluedFromIntersectionStatement =====
@@ -1774,7 +1736,7 @@ private theorem fullLattice_of_glueVec {X : HSp D} {u : D.what₂.Word} {L₀ : 
 
 theorem gluedSt (D : D7) : GluedSt D := by
   intro u π hπ Y X ι z hz L₀ f₀ hb
-  obtain ⟨f, hf, hff⟩ := GlobalTheory.T.exists_isAdelicGlueVector_of_glueBaseData D u π hπ X L₀ f₀ hb
+  obtain ⟨f, hf, hff⟩ := _root_.GlobalTheory.AdIsom.BaseVec.exists_isGlueVec D u π hπ X L₀ f₀ hb
   have hL₀ := fullLattice_of_glueVec hb.1.fg hf
   obtain ⟨x, hx⟩ := exists_sub_inc_mem_hat (D := D) (Λ := L₀) hL₀.span_eq_top f
   obtain ⟨x₀, hx₀⟩ := vA_surj X x
@@ -1786,14 +1748,14 @@ theorem gluedSt (D : D7) : GluedSt D := by
     · rw [← hff w hw, ← smul_sub]
       exact smul_mem_hat (idem_mem w) hx
   have huniq : ∀ L, IsGlued Y X ι z u π L₀ f₀ L → L = glueLat Y X ι z u L₀ x₀ :=
-    fun L hL => GlobalTheory.T.gluedHermitianLattice_unique D u π hπ Y X ι z L₀ f₀ L _ hL hgl
+    fun L hL => _root_.GlobalTheory.GlueUnique.glued_unique D u π hπ Y X ι z L₀ f₀ L _ hL hgl
   refine ⟨⟨_, hgl, huniq⟩, fun L hL => ?_⟩
   rw [huniq L hL]
   exact GlobalTheory.T.gluedLattice_selfDual_primitive_meet D u Y X ι z hz L₀ x₀ hL₀ hg
 
 theorem ungluedSt (D : D7) : UngluedSt D := by
   intro u π hπ Y X ι z hz L hSD hP
-  obtain ⟨hlat, x₀, hL⟩ := GlobalTheory.T.primitive_lattice_glued_from_intersection D u Y X ι z hz L hSD hP
+  obtain ⟨hlat, x₀, hL⟩ := _root_.GlobalTheory.AdIsom.Unglue.isLattice_capX_and_exists_glue D u Y X ι z hz L hSD hP
 
   have hg : IsGlueVec X u (capX Y X ι L) (vA X x₀) := by
     have key := GlobalTheory.T.isAdelicGlueVector_of_selfDual_primitive D u Y X ι z hz (capX Y X ι L) x₀ hlat

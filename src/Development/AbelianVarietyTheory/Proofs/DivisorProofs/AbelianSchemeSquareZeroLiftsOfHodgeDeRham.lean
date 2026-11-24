@@ -1334,18 +1334,10 @@ theorem isBaseChange_of_dual {R B M N : Type} [CommRing R] [CommRing B] [Algebra
     exact hdd.comp (Module.bijective_dual_eval B _)
   exact IsBaseChange.of_equiv (LinearEquiv.ofBijective F hb) hF
 
-theorem smooth_sec {R : Type} [CommRing R] {X : Scheme.{0}} (s : X ⟶ Sp R) (hs : Smooth s)
-    (U : X.affineOpens) : Algebra.Smooth R (Sec s U.1) := by
-  have h1 : RingHom.Smooth (s.appLE ⊤ U.1 le_top).hom :=
-    HasRingHomProperty.appLE @Smooth s hs ⟨⊤, isAffineOpen_top _⟩ U le_top
-  have h2 : RingHom.Smooth (secMap s U.1).hom :=
-    RingHom.Smooth.respectsIso.2 _ (Scheme.ΓSpecIso (CommRingCat.of R)).symm.commRingCatIsoToRingEquiv h1
-  exact h2
-
 theorem par : CrystallineSmoothLift → AbelianHodgeDeRham → ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → Par A.hom := by
   intro H H' R _ A _ g hA hg U
   have hs : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
-  have := smooth_sec A.hom hs U.unop
+  have := _root_.GlobalTheory.PtVanish.sec_smooth A.hom hs U.unop
   obtain ⟨-, -, ⟨h1, h2, -⟩, -⟩ := H' R A g hA hg
   exact isBaseChange_of_dual _ (GlobalTheory.T.exists_unique_vectorField_of_globalOneForm_values H H' R A g hA hg U)
 
@@ -1573,8 +1565,6 @@ section -- clump:auto
 open CategoryTheory AlgebraicGeometry KaehlerDifferential DividedPowers ReciprocityTheory.ChartRestriction.G.Geo.Tor ReciprocityTheory.ChartRestriction.G.Semi GlobalTheory.CatCoh GlobalTheory.Cris GlobalTheory.CechDR GlobalTheory.DeRham GlobalTheory.SqLift GlobalTheory.LiftSys GlobalTheory.Published
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.primitiveCrystalHodgeLiftClasses_eq_comap_sys : CrystallineSmoothLift → ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal R) (hI : I ^ 2 = 0) (π : R →+* R₀) (hπ : Function.Surjective π) (hk : RingHom.ker π = I) (A₀ : Over (Sp R₀)) [GrpObj A₀], IsProper A₀.hom → GeometricallyConnected A₀.hom → ∀ (X : Over (Sp R)) (i : A₀.left ⟶ X.left) (h : IsPullback i A₀.hom X.hom (spMap π)), Smooth X.hom → ∀ S : Sys I π A₀.hom, S.Presents X.hom i → primitiveCrystalHodgeLiftClasses (divided₂ hI) A₀ X i h.w = (S.K hI).comap (prim (divided₂ hI) (spMap π) A₀).subtype := by
-  first | exact @GlobalTheory.LiftSys.hodgeFiltration_lift_eq_comap_systemFiltration
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeFiltrationLiftEqComapSystemFiltrationStatement =====
@@ -1658,7 +1648,7 @@ theorem abelianSchemeLifts_of_hodgeDeRham (hC : CrystallineSmoothLift) (hH : Abe
       ∀ S : Sys I π A₀.hom, S.Presents X.hom i → schemeFil (divided₂ hI) A₀ X i h.w =
         ((S.K hI).comap (prim (divided₂ hI) (spMap π) A₀).subtype).dualAnnihilator := fun X i h hX S P ↦
     congrArg Submodule.dualAnnihilator
-      (GlobalTheory.T.primitiveCrystalHodgeLiftClasses_eq_comap_sys hC R R₀ I hI π hπ hk A₀ hA₀.proper hA₀.geomConnected X i h hX S P)
+      (_root_.GlobalTheory.LiftSys.hodgeFiltration_lift_eq_comap_systemFiltration hC R R₀ I hI π hπ hk A₀ hA₀.proper hA₀.geomConnected X i h hX S P)
   refine ⟨⟨fun X i h hX ↦ ?_, fun F hF ↦ ?_⟩, fun X Y i j h k hX hY e ↦ ?_⟩
   · obtain ⟨S, ⟨P⟩⟩ := GlobalTheory.T.exists_squareZeroSmoothLiftSystem_presents R R₀ I hI π hπ hk A₀.left A₀.hom X.left X.hom i h hX
     obtain ⟨hc, hs⟩ := core1 S

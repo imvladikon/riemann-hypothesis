@@ -307,8 +307,6 @@ open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.Mem GlobalTh
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.liveCharts_kernel_eq_classSum_jets : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {F : FamIn (I.rec7 l Z).what₂.LL G Pl0 T (I.rec7 l Z).R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks (I.rec7 l Z).what₂.LL] (R : RealDat (I.rec7 l Z) F Ks) (g : GlobalTheory.Fam.Geo (I.rec7 l Z)) (c₀ s : ℕ → ℂ) J, PinX I l Z R.ψ R.θ g.x g.vac c₀ → JetS I l Z R.ψ R.θ s → (∀ j, j ≤ B.R.m → (g.x j).Is) → ∀ (P : LevelP R.Pg (I.rec7 l Z).R.r ℂ) (t : T) (r : RowCh R P u g t) (a : I.ι) (k : ColCh (D := (I.rec7 l Z)) u ((I.rec7 l Z).chTw u a)) (tl : ColT I l u a B.R.m → CXP R P t → ℂ) (Ch₀ : ℕ → Type) (A : TwDat I l Z u a Ch₀) (ι : ∀ j, k.Ch j → Ch₀ j) w, PinChL R g k c₀ A ι w → (clsKL R g P r k tl s J A ι).Kval := by
-  first | exact @GlobalTheory.AdForm.ClsKLive.kval
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiveChartsKernelEqClassSumJetsStatement =====
@@ -452,7 +450,7 @@ theorem GlobalTheory.KJRealLive.clsKL_real : ∀ {B : GlobalTheory.Mem.Base} {X 
   intro j hj α γ k₁ hk₁ k₂ hk₂ P₁ P₂ hP₁₂
   have hjle : j ≤ B.R.m := Nat.le_of_succ_le hj
   have hjlt : j < B.R.m := hj
-  obtain ⟨e, he, hee⟩ := GlobalTheory.T.exists_charExponent_infinity_kernel_shift I hOk hPins l Z u a Ch₀ A hP.is j hj
+  obtain ⟨e, he, hee⟩ := _root_.GlobalTheory.AdForm.TwDat.chr_exp_shifts I hOk hPins l Z u a Ch₀ A hP.is j hj
   have hvac := hX.vc j hjlt
   have hxj := hX.xs j hjle
   have hxj1 := hX.xs (j + 1) hj
@@ -500,8 +498,6 @@ open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.Mem GlobalTh
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.livechart_kernelVectors_realPoints_detPowers : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {F : FamIn (I.rec7 l Z).what₂.LL G Pl0 T (I.rec7 l Z).R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks (I.rec7 l Z).what₂.LL] (R : RealDat (I.rec7 l Z) F Ks) (g : GlobalTheory.Fam.Geo (I.rec7 l Z)) (c₀ s : ℕ → ℂ) J, PinX I l Z R.ψ R.θ g.x g.vac c₀ → JetS I l Z R.ψ R.θ s → (∀ j, j ≤ B.R.m → (g.x j).Is) → ∀ (P : LevelP R.Pg (I.rec7 l Z).R.r ℂ) (t : T) (r : RowCh R P u g t) (a : I.ι) (k : ColCh (D := (I.rec7 l Z)) u ((I.rec7 l Z).chTw u a)) (tl : ColT I l u a B.R.m → CXP R P t → ℂ) (Ch₀ : ℕ → Type) (A : TwDat I l Z u a Ch₀) (ι : ∀ j, k.Ch j → Ch₀ j) w, PinChL R g k c₀ A ι w → (clsKL R g P r k tl s J A ι).Real := by
-  first | exact @GlobalTheory.KJRealLive.clsKL_real
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LivechartKernelVectorsRealPointsDetPowersStatement =====
@@ -540,7 +536,7 @@ theorem chr_root_mul_base {B : Base} {X : PreX B.toPre} {I : TC B X} (hI : I.Ok)
         Matrix (Fin (B.R.N k)) (Fin (B.R.N k)) (Formalism.L2.DIV.AfE B.host.F B.host.E)) := by
     rw [GlobalTheory.RepLattice.finM_mul', hhm, hkAm, Units.val_mul]
     rfl
-  have hroot := GlobalTheory.TwistFinPart.isDetRoot_mul' _ _ _ _ _ hx hxr
+  have hroot := _root_.GlobalTheory.Member.isDetRoot_mul _ _ _ _ _ hx hxr
   have htw := (GlobalTheory.Mem.ReadTwist.isTwist_of_reads B.R B.host _ B.embLL I.S (I.tup a) (I.xi a) (hI.xi_reads a)).1
   have key := GlobalTheory.DetRootRead.chr_at_detRoot (I.rec7 l Z) (A.chr ((j : ℕ) + 1)) (I.C.mu0 j * I.xi a) (hA.chr j)
     (Formalism.L2.Host.HChar.TrivOn.mul (I.C.isMu0 j).triv htw.2.1) _ _ _ _ hg hfin _ hroot a' ha'
@@ -1054,18 +1050,18 @@ theorem clsKL_is : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B 
     · exact (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hOk hPins l Z u a Ch₀ A hP.is j hj (ι j β)).1
     · exact (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hOk hPins l Z u a Ch₀ A hP.is j hj (ι j β)).2.1
     · have hR := ((hP.ram j hj φ).1 hφ).1.1
-      exact (GlobalTheory.T.scalarForms_on_charts_of_trueColumnTuple I hOk hPins l Z u a Ch₀ A hP.is R.θ hX.inf j hj φ hR).1 c.1
+      exact (_root_.GlobalTheory.AdForm.rd_charts I hOk hPins l Z u a Ch₀ A hP.is R.θ hX.inf j hj φ hR).1 c.1
     · have hR := ((hP.ram j hj φ).1 hφ).1.1
       have hx1 := hX.xs j hj
-      have h2 := (GlobalTheory.T.scalarForms_on_charts_of_trueColumnTuple I hOk hPins l Z u a Ch₀ A hP.is R.θ hX.inf j hj φ hR).2 (ι j β) y γ hγ c k₁ hk κ
+      have h2 := (_root_.GlobalTheory.AdForm.rd_charts I hOk hPins l Z u a Ch₀ A hP.is R.θ hX.inf j hj φ hR).2 (ι j β) y γ hγ c k₁ hk κ
         ⟨y'.1, y'.2⟩ (fun τ => by
           show y'.1 τ = _
           rw [htr τ]
           simp only [RealD.r, inN, inB, infM, realOf, commOf, hx1.2.1, inv_one, one_mul, mul_one]
           rfl)
       exact (congrFun (hP.rdq j hj β φ y) _).trans h2
-  case real => exact GlobalTheory.T.livechart_kernelVectors_realPoints_detPowers I hOk hPins l Z u R g c₀ s J hX hS hx P t r a k tl Ch₀ A ι w hP
-  case kval => exact GlobalTheory.T.liveCharts_kernel_eq_classSum_jets I hOk hPins l Z u R g c₀ s J hX hS hx P t r a k tl Ch₀ A ι w hP
+  case real => exact _root_.GlobalTheory.KJRealLive.clsKL_real I hOk hPins l Z u R g c₀ s J hX hS hx P t r a k tl Ch₀ A ι w hP
+  case kval => exact _root_.GlobalTheory.AdForm.ClsKLive.kval I hOk hPins l Z u R g c₀ s J hX hS hx P t r a k tl Ch₀ A ι w hP
 
 end GlobalTheory.KerLaws
 end -- clump:auto
@@ -1083,8 +1079,6 @@ open NumberField IsDedekindDomain Matrix MeasureTheory GlobalTheory.Mem GlobalTh
 open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.kernelPart_laws_of_columnPins : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {F : FamIn (I.rec7 l Z).what₂.LL G Pl0 T (I.rec7 l Z).R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks (I.rec7 l Z).what₂.LL] (R : RealDat (I.rec7 l Z) F Ks) (g : GlobalTheory.Fam.Geo (I.rec7 l Z)) (c₀ s : ℕ → ℂ) J, PinX I l Z R.ψ R.θ g.x g.vac c₀ → JetS I l Z R.ψ R.θ s → (∀ j, j ≤ B.R.m → (g.x j).Is) → ∀ (P : LevelP R.Pg (I.rec7 l Z).R.r ℂ) (t : T) (r : RowCh R P u g t) (a : I.ι) (k : ColCh (D := (I.rec7 l Z)) u ((I.rec7 l Z).chTw u a)) (tl : ColT I l u a B.R.m → CXP R P t → ℂ) (Ch₀ : ℕ → Type) (A : TwDat I l Z u a Ch₀) (ι : ∀ j, k.Ch j → Ch₀ j) w, PinChL R g k c₀ A ι w → (clsKL R g P r k tl s J A ι).Is := by
-  first | exact @GlobalTheory.KerLaws.clsKL_is
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelPartLawsOfColumnPinsStatement =====

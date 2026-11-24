@@ -371,12 +371,6 @@ open GlobalTheory.PhiGam GlobalTheory.AdmLoc GlobalTheory.Models
 open scoped LaurentSeries PowerSeries
 namespace GlobalTheory.GenKernelFit
 
-theorem aeval_mem {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Module.End k U) (Q : Submodule k U)
-    (hQ : ∀ y ∈ Q, T y ∈ Q) (p : Polynomial k) : ∀ y ∈ Q, Polynomial.aeval T p y ∈ Q := by
-  first
-  | (apply _root_.GlobalTheory.PowerMembershipInertiaEigenvalues.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.PowerMembershipInertiaEigenvalues.main ..)
-
 theorem apply_mem {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Module.End k U) (Q : Submodule k U)
     (hQ : ∀ y ∈ Q, T y ∈ Q) (f : Polynomial k) (hf : f.eval 0 ≠ 0) (x : U)
     (h1 : T (Polynomial.aeval T f x) ∈ Q) (j : ℕ) (h2 : (T ^ j) x ∈ Q) : T x ∈ Q := by
@@ -393,7 +387,7 @@ theorem apply_mem {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Modu
     simpa only [map_add (f := _), map_mul, map_pow, Polynomial.aeval_X, LinearMap.add_apply, Module.End.mul_apply]
       using this
   rw [e2]
-  exact Q.add_mem (aeval_mem T Q hQ a _ h1) (aeval_mem T Q hQ b _ (hQ _ h2))
+  exact Q.add_mem (_root_.GlobalTheory.PowerMembershipInertiaEigenvalues.main T Q hQ a _ h1) (_root_.GlobalTheory.PowerMembershipInertiaEigenvalues.main T Q hQ b _ (hQ _ h2))
 
 theorem nab_mem_of_ePoly : ∀ {k : Type} [Field k] {l n m : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (D : ModPG R n (Vc k m)) (i : ZMod n) (N : Submodule k⟦X⟧ (Vc k m)) (s : ℤ), CondC (D.γ i) N → EPoly (D.γ i) N s → ∀ x ∈ N, (∃ j : ℕ, ((nab (D.γ i)) ^ j) x ∈ sh s N) → nab (D.γ i) x ∈ sh s N := by
   intro k _ l n m _ _ _ R D i N s hC hE x hx hj
@@ -494,19 +488,12 @@ variable {k : Type} [Field k] {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [M
 theorem vv_ne : vv k ≠ 0 := by
   unfold vv; exact HahnSeries.single_ne_zero one_ne_zero
 
-theorem vv_eq : vv k = ((PowerSeries.X : k⟦X⟧) : k⸨X⸩) := by
-  unfold vv; simp
-
-theorem coe_smul (b : k⟦X⟧) (x : V) : (b : k⸨X⸩) • x = b • x :=
-  algebraMap_smul k⸨X⸩ b x
-
-theorem mem_sh {a : ℤ} {N : Submodule k⟦X⟧ V} {x : V} : x ∈ sh a N ↔ ∃ y ∈ N, vv k ^ a • y = x := by
-  unfold sh; rw [Submodule.mem_map]; rfl
+alias mem_sh := _root_.GlobalTheory.PhiGam.Window.mem_sh_iff
 
 theorem smul_mem_sh {a : ℤ} (b : ℤ) {N : Submodule k⟦X⟧ V} {x : V} (h : x ∈ sh a N) :
     vv k ^ b • x ∈ sh (a + b) N := by
   obtain ⟨y, hy, rfl⟩ := mem_sh.1 h
-  exact mem_sh.2 ⟨y, hy, by rw [smul_smul, ← zpow_add₀ vv_ne, add_comm]⟩
+  exact mem_sh.2 ⟨y, hy, by rw [smul_smul, ← zpow_add₀ _root_.GlobalTheory.PhiGam.Window.vv_ne_zero, add_comm]⟩
 
 theorem sh_zero (N : Submodule k⟦X⟧ V) : sh 0 N = N := by
   ext x; simp [mem_sh]
@@ -520,7 +507,7 @@ theorem sh_sh (a b : ℤ) (N : Submodule k⟦X⟧ V) : sh b (sh a N) = sh (a + b
   · intro h
     refine mem_sh.2 ⟨vv k ^ (-b) • x, ?_, ?_⟩
     · simpa using smul_mem_sh (-b) h
-    · rw [smul_smul, ← zpow_add₀ vv_ne]; simp
+    · rw [smul_smul, ← zpow_add₀ _root_.GlobalTheory.PhiGam.Window.vv_ne_zero]; simp
 
 theorem sh_mono (a : ℤ) {N P : Submodule k⟦X⟧ V} (h : N ≤ P) : sh a N ≤ sh a P :=
   Submodule.map_mono h
@@ -530,7 +517,7 @@ theorem sh_anti {a b : ℤ} (h : a ≤ b) (N : Submodule k⟦X⟧ V) : sh b N �
   obtain ⟨y, hy, rfl⟩ := mem_sh.1 hx
   obtain ⟨m, rfl⟩ := Int.le.dest h
   refine mem_sh.2 ⟨(PowerSeries.X ^ m : k⟦X⟧) • y, N.smul_mem _ hy, ?_⟩
-  rw [← coe_smul, smul_smul, zpow_add₀ vv_ne, zpow_natCast, vv_eq, map_pow]
+  rw [← _root_.GlobalTheory.PhiGam.Window.coe_smul_eq, smul_smul, zpow_add₀ _root_.GlobalTheory.PhiGam.Window.vv_ne_zero, zpow_natCast, _root_.GlobalTheory.PhiGam.Window.vv_coe, map_pow]
 
 theorem nab_apply (g : V →ₗ[k] V) (x : V) : nab g x = vv k ^ (-1 : ℤ) • (g x - x) := by
   rw [zpow_neg_one]; rfl
@@ -548,7 +535,7 @@ theorem span_le {ι : Type} (e : ι → V) (P : Submodule k⟦X⟧ V) (hP : Subm
   rw [hd, add_smul, algebraMap_smul]
   refine Submodule.add_mem_sup (Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)) ?_
   refine mem_sh.2 ⟨d • e i, P.smul_mem _ he, ?_⟩
-  rw [zpow_one, vv_eq, coe_smul, mul_smul]
+  rw [zpow_one, _root_.GlobalTheory.PhiGam.Window.vv_coe, _root_.GlobalTheory.PhiGam.Window.coe_smul_eq, mul_smul]
 
 theorem fin_quot (N : Submodule k⟦X⟧ V) (hN : N.FG) (a : ℤ) (m : ℕ) :
     ∃ S : Submodule k V, FiniteDimensional k S ∧
@@ -586,7 +573,7 @@ theorem phi_sh {l : ℕ} (R : RingPG k l) (f : V →ₗ[k] V) (hf : Semi R.φ f)
   obtain ⟨z, hz, rfl⟩ := mem_sh.1 hy
   obtain ⟨u, hu⟩ := R.φ_v
   refine mem_sh.2 ⟨((u : k⟦X⟧) ^ t) • f z, Submodule.smul_mem _ _ (Submodule.subset_span ⟨z, hz, rfl⟩), ?_⟩
-  rw [hf, zpow_natCast, zpow_natCast, map_pow, hu, ← coe_smul, smul_smul, map_pow, mul_pow, ← pow_mul, mul_comm]
+  rw [hf, zpow_natCast, zpow_natCast, map_pow, hu, ← _root_.GlobalTheory.PhiGam.Window.coe_smul_eq, smul_smul, map_pow, mul_pow, ← pow_mul, mul_comm]
 
 theorem psi_mem (f ψ : V →ₗ[k] V) (ψ0 : k⸨X⸩ →ₗ[k] k⸨X⸩) (h : ∀ (a : k⸨X⸩) x, ψ (a • f x) = ψ0 a • x) (a : ℤ)
     (h0 : ∀ b : k⟦X⟧, ∃ c : k⟦X⟧, (c : k⸨X⸩) = ψ0 (vv k ^ a * (b : k⸨X⸩))) (N : Submodule k⟦X⟧ V)
@@ -599,7 +586,7 @@ theorem psi_mem (f ψ : V →ₗ[k] V) (ψ0 : k⸨X⸩ →ₗ[k] k⸨X⸩) (h : 
     obtain ⟨x, hx, rfl⟩ := hx
     intro b
     obtain ⟨c, hc⟩ := h0 b
-    rw [← coe_smul, smul_smul, h, ← hc, coe_smul]
+    rw [← _root_.GlobalTheory.PhiGam.Window.coe_smul_eq, smul_smul, h, ← hc, _root_.GlobalTheory.PhiGam.Window.coe_smul_eq]
     exact N.smul_mem _ hx
   | zero => intro b; simp
   | add x y _ _ hx hy => intro b; rw [smul_add, smul_add, map_add (f := _)]; exact N.add_mem (hx b) (hy b)
@@ -1117,15 +1104,6 @@ open scoped LaurentSeries PowerSeries
 section lin
 variable {k U : Type} [Field k] [AddCommGroup U] [Module k U]
 
-theorem mem_iSup_comap_pow (S : Module.End k U) (Q : Submodule k U) (hQ : ∀ q ∈ Q, S q ∈ Q) (p : U) :
-    p ∈ ⨆ m : ℕ, Q.comap (S ^ m) ↔ ∃ m : ℕ, (S ^ m) p ∈ Q := by
-  have hmono : Monotone fun m : ℕ => Q.comap (S ^ m) := by
-    refine monotone_nat_of_le_succ fun m y hy => ?_
-    rw [Submodule.mem_comap, pow_succ', Module.End.mul_apply]
-    exact hQ _ hy
-  rw [Submodule.mem_iSup_of_directed _ hmono.directed_le]
-  rfl
-
 theorem gmult_transport (T T' : Module.End k U) (e : U ≃ₗ[k] U) (P Q P' Q' : Submodule k U)
     (hP' : ∀ p, e p ∈ P' ↔ p ∈ P) (hQ' : ∀ p, e p ∈ Q' ↔ p ∈ Q)
     (hTP : ∀ p ∈ P, T p ∈ P) (hTQ : ∀ p ∈ Q, T p ∈ Q) (hTQ' : ∀ p ∈ Q', T' p ∈ Q') (x y : k)
@@ -1153,7 +1131,7 @@ theorem gmult_transport (T T' : Module.End k U) (e : U ≃ₗ[k] U) (P Q P' Q' :
       rwa [map_sub, sub_add_sub_cancel] at h3
   have hmem : ∀ p, e p ∈ (P' ⊓ ⨆ m : ℕ, Q'.comap (S' ^ m)) ↔ p ∈ (P ⊓ ⨆ m : ℕ, Q.comap (S ^ m)) := by
     intro p
-    rw [Submodule.mem_inf, Submodule.mem_inf, mem_iSup_comap_pow S Q hSQ, mem_iSup_comap_pow S' Q' hSQ', hP']
+    rw [Submodule.mem_inf, Submodule.mem_inf, _root_.GlobalTheory.PhiGam.GmultAdd.mem_gen S Q hSQ, _root_.GlobalTheory.PhiGam.GmultAdd.mem_gen S' Q' hSQ', hP']
     refine and_congr_right fun hp => exists_congr fun m => ?_
     rw [← hQ']
     have := (key p hp m).2
@@ -1513,14 +1491,6 @@ theorem sum_resCount {k : Type} [Field k] (U : Multiset ℤ) (w a : ℤ) (L : �
       have hj' := Finset.mem_range.mp hj
       exact hp (hu.2 (a + j) (by omega) (by omega) ((tr j).mp hc)).2
 
-theorem exists_of_resCount_ne {k : Type} [Field k] {U : Multiset ℤ} {w : ℤ} {x : k} (h : resCount U w x ≠ 0) :
-    ∃ u ∈ U, ((u - w : ℤ) : k) = x := by
-  classical
-  unfold resCount at h
-  obtain ⟨u, hu⟩ := Multiset.card_pos_iff_exists_mem.mp (Nat.pos_of_ne_zero h)
-  rw [Multiset.mem_filter] at hu
-  exact ⟨u, hu.1, hu.2⟩
-
 theorem count : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : ModTh F Dt), Dt.T1 l → Dt.T2 l → Dt.T3 l → ∀ N : Lats k n M.T.m, M.Model M.T N → (∀ i, M.Nstd i ≤ N i) → ∀ i, (∀ a : ℕ, a ≤ Dt.sg l i + 1 → sen ((F.D M.T).γ i) (N i) (a : k) = 0) ∧ (Dt.ty i = LType.G → ∑ j ∈ Finset.range (Dt.w i).toNat, sen ((F.D M.T).γ i) (N i) ((-Dt.w i + j : ℤ) : k) = Dt.d i) ∧ (Dt.ty i = LType.Bd → Dt.d i + ∑ a ∈ Finset.range ((Dt.wst i).toNat + 1), sen ((F.D M.T).γ i) (N i) (a : k) = r) := by
   intro k G _ _ l n _ _ _ R F r Dt M h1 h2 h3 N hN hle i
   have hNabc := (_root_.GlobalTheory.Models.model_obj_and_abc F M M.T N hN).2
@@ -1543,7 +1513,7 @@ theorem count : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] 
     intro y hy
     obtain ⟨j, hj1, hj2, hj⟩ := (tel y).2 hy
     rw [M.std_sen] at hj
-    obtain ⟨u, hu, hux⟩ := exists_of_resCount_ne hj
+    obtain ⟨u, hu, hux⟩ := _root_.GlobalTheory.Models.exists_of_resCount_ne_zero_sq hj
     refine ⟨j, hj1, hj2, u, hu, ?_⟩
     push_cast at hux ⊢
     linear_combination hux

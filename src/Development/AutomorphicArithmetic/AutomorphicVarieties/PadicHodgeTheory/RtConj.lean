@@ -419,16 +419,7 @@ private theorem exists_conjLift {O : Type} [CommRing O] [IsLocalRing O] {Γ : Ty
       split_ifs <;> simp
     rw [map_conj, e, map_one, one_mul, inv_one, mul_one, r.red]
 
-private theorem eta_lc {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
-    (D : Dat3 l O) : IsLocallyConstant D.η := by
-  haveI := D.Kv.2
-  have ho : IsOpen (GK D.Kv : Set (GQ l)) := IntermediateField.fixingSubgroup_isOpen D.Kv.1
-  rw [IsLocallyConstant.iff_exists_open]
-  intro x
-  refine ⟨(fun y => x⁻¹ * y) ⁻¹' (GK D.Kv : Set (GQ l)), ho.preimage (by fun_prop), by simp, fun y hy => ?_⟩
-  have h1 := (D.η_ker _).2 hy
-  rw [map_mul, map_inv, inv_mul_eq_one] at h1
-  exact h1.symm
+private alias eta_lc := _root_.UpperTheory.V.Loc.OrdinaryDeformation.eta_lc
 
 private theorem exists_univMat (R : Type) [CommRing R] :
     ∃ h : GL (Fin 3) (MvPowerSeries (Fin 3 × Fin 3) R), ∀ a b,
@@ -535,9 +526,6 @@ section -- clump:auto
 
 open Formalism.BasicNotions Formalism.BasicNotions.Loc ReciprocityTheory.Gal Module UpperTheory.V.Loc UpperTheory.V.U3 UpperTheory.V.Alg IsLocalRing Polynomial
 
-theorem UpperTheory.V.Loc.rtConj :
-    LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (r : GQ l →* GG (m := 3) (R := C)) (h : GL (Fin 3) C), UpperTheory.V.UnitaryThreeInertia.InHat h → D.On U r → D.On U (conjBy h r) :=
-  fun hP => @GlobalTheory.OrdLoc.rtConj hP
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.RtConj =====

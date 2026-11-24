@@ -138,18 +138,10 @@ theorem conj_exp {m : ℕ} (n X : Matrix (Fin m) (Fin m) ℂ) (hn : n * n⁻¹ =
     n⁻¹ * NormedSpace.exp X * n = NormedSpace.exp (n⁻¹ * X * n) :=
   (Matrix.exp_conj' n X ((Matrix.isUnit_iff_isUnit_det n).2 (Matrix.isUnit_det_of_right_inverse hn))).symm
 
-private lemma Rn_mul_inv' (x : RC k j ρ) : Rn k j ρ x * (Rn k j ρ x)⁻¹ = 1 := by
-  apply Matrix.mul_nonsing_inv
-  have h0 : (Matrix.fromCols (0 : Matrix (Fin j) (Fin j) ℂ) (0 : Matrix (Fin j) (Fin (2 * ρ + k + 1)) ℂ)) = 0 := by
-    ext a b; rcases b with b | b <;> rfl
-  simp only [Rn, blk3, Matrix.det_reindex_self]
-  rw [h0, Matrix.det_fromBlocks_zero₂₁, Matrix.det_fromBlocks_zero₂₁]
-  simp
-
 theorem conj_letter (x : RC k j ρ) (Y : B.Mat k ρ) (c : ℂ) :
     (Rn k j ρ x)⁻¹ * embG k j ρ (NormedSpace.exp (c • Y)) * Rn k j ρ x =
       NormedSpace.exp (c • cj k j ρ x Y) := by
-  rw [embG_exp, blockDiag3_smul_middle, conj_exp _ _ (Rn_mul_inv' x), Matrix.mul_smul, Matrix.smul_mul]
+  rw [embG_exp, blockDiag3_smul_middle, conj_exp _ _ (_root_.Formalism.FourierDecayAlt.P.Ux4.Rn_mul_inv x), Matrix.mul_smul, Matrix.smul_mul]
   rfl
 
 end words
@@ -1202,9 +1194,6 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.U
 
 namespace PI.UnitaryGroupMassFormula.UsCost
 
-theorem zCost_of (hS : ZSmooth) (hD : ZDeriv) (hDS : DirSize) : ZCost :=
-  zeta_cost_of_smooth_deriv hS hD hDS
-
 end PI.UnitaryGroupMassFormula.UsCost
 end -- clump:auto
 end -- clump:auto
@@ -1255,8 +1244,7 @@ lemma block_matrix_two_zero_smul {p s : ℕ} (c : ℝ) (e : Matrix (Fin s) (Fin 
   generalize finSumFinEquiv.symm j = v
   rcases u with a | a <;> rcases v with b | b <;> simp
 
-lemma symmetricScalarBlockMatrix_one_zero {p s : ℕ} : blk2 (1 : Matrix (Fin p) (Fin p) ℂ) 0 0 (1 : Matrix (Fin s) (Fin s) ℂ) = 1 := by
-  simp [blk2, Matrix.fromBlocks_one]
+alias symmetricScalarBlockMatrix_one_zero := _root_.Formalism.FourierDecayAlt.P.Ux5.block2_one
 
 lemma block_matrix_two_line {p s : ℕ} (t : ℝ) (A : Matrix (Fin s) (Fin s) ℂ) :
     blk2 (1 : Matrix (Fin p) (Fin p) ℂ) 0 0 (1 + t • A) = 1 + t • blk2 (0 : Matrix (Fin p) (Fin p) ℂ) 0 0 A := by
@@ -1458,7 +1446,7 @@ section -- clump:auto
 theorem operator_word_cost : Formalism.FourierDecayAlt.U.DerivativeCostFromComponents :=
   PI.UnitaryGroupMassFormula.UsCost.unitarySum_cost_of_parts PI.UnitaryGroupMassFormula.UsCost.wordsId PI.UnitaryGroupMassFormula.UsCost.letterSize PI.UnitaryGroupMassFormula.UsCost.starScale
     PI.UnitaryGroupMassFormula.UsCost.commLR PI.UnitaryGroupMassFormula.UsCost.offK PI.UnitaryGroupMassFormula.UsCost.zSmooth
-    (PI.UnitaryGroupMassFormula.UsCost.zCost_of PI.UnitaryGroupMassFormula.UsCost.zSmooth PI.UnitaryGroupMassFormula.UsCost.zDeriv PI.UnitaryGroupMassFormula.UsCost.dirSize)
+    (_root_.PI.UnitaryGroupMassFormula.UsCost.zeta_cost_of_smooth_deriv PI.UnitaryGroupMassFormula.UsCost.zSmooth PI.UnitaryGroupMassFormula.UsCost.zDeriv PI.UnitaryGroupMassFormula.UsCost.dirSize)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.UsCost =====
@@ -1469,11 +1457,11 @@ section -- clump:auto
 @[expose] public section
 
 theorem Formalism.FourierDecayAlt.P.derivative_cost_bound : Formalism.FourierDecayAlt.U.DerivativeCost := by
-  have hS : Formalism.FourierDecayAlt.U.SliceMem := Formalism.FourierDecayAlt.P.slice_membership
+  have hS : Formalism.FourierDecayAlt.U.SliceMem := _root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem
   have h21 : Formalism.FourierDecayAlt.U.SliceCoordinateSizes :=
     Formalism.FourierDecayAlt.P.Ux6.coordinate_sizes_of_hypotheses hS Formalism.FourierDecayAlt.P.block3_apply_embedding Formalism.FourierDecayAlt.P.aux_statement_17
-      Formalism.FourierDecayAlt.P.hat_z_on_slice
-  exact operator_word_cost hS Formalism.FourierDecayAlt.P.radical_parametrisation Formalism.FourierDecayAlt.P.slice_right_coordinates
+      _root_.Formalism.FourierDecayAlt.P.Ux3.zhSlice
+  exact operator_word_cost hS _root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam Formalism.FourierDecayAlt.P.slice_right_coordinates
     Formalism.FourierDecayAlt.P.slice_left_coordinates Formalism.FourierDecayAlt.P.slice_z_coordinates Formalism.FourierDecayAlt.P.directions_in_parabolic h21
 end -- clump:auto
 end -- clump:auto

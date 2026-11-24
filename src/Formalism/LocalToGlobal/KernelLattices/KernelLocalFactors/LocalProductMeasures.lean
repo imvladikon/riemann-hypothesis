@@ -755,10 +755,6 @@ theorem hk_val_one {P : HeightOneSpectrum (𝓞 E)} {a : E} (h : OneAt P a) : P.
   have h1 : P.valuation E (a - 1) < P.valuation E (1 : E) := by rw [map_one]; exact h
   rw [Valuation.map_add_eq_of_lt_left _ h1, map_one]
 
-theorem hk_valued (P : HeightOneSpectrum (𝓞 E)) (a : Eˣ) :
-    Valued.v ((atFin P a : (P.adicCompletion E)ˣ) : P.adicCompletion E) = P.valuation E (a : E) :=
-  HeightOneSpectrum.valuedAdicCompletion_eq_valuation' P (a : E)
-
 theorem hk_valued_sub (P : HeightOneSpectrum (𝓞 E)) (a : Eˣ) :
     Valued.v (((atFin P a : (P.adicCompletion E)ˣ) : P.adicCompletion E) - 1) = P.valuation E ((a : E) - 1) := by
   have e : ((atFin P a : (P.adicCompletion E)ˣ) : P.adicCompletion E) - 1 = (((a : E) - 1 : E) : P.adicCompletion E) := by
@@ -770,20 +766,20 @@ theorem hk_valued_sub (P : HeightOneSpectrum (𝓞 E)) (a : Eˣ) :
 theorem hk_tame (χ : HChar E) {P : HeightOneSpectrum (𝓞 E)} (h : χ.TameAt P) (a : Eˣ) (ha : OneAt P (a : E)) : χ.locK P a = 1 := by
   refine h (atFin P a) ?_ ?_
   · show Valued.v _ = 1
-    rw [hk_valued, hk_val_one ha]
+    rw [_root_.PI.HeckeProdW.valued_atFin, hk_val_one ha]
   · rw [hk_valued_sub]
     exact hk_le_exp ha
 
 theorem hk_unr (χ : HChar E) {P : HeightOneSpectrum (𝓞 E)} (h : χ.UnrAt P) (a : Eˣ) (ha : P.valuation E (a : E) = 1) : χ.locK P a = 1 := by
   refine h (atFin P a) ?_
   show Valued.v _ = 1
-  rw [hk_valued, ha]
+  rw [_root_.PI.HeckeProdW.valued_atFin, ha]
 
 theorem hk_unif (χ : HChar E) {P : HeightOneSpectrum (𝓞 E)} (h : χ.UnrAt P) (a : Eˣ) (ha : P.valuation E (a : E) = WithZero.exp (-1 : ℤ)) :
     χ.locK P a = χ.val P := by
   refine χ.val_eq h (atFin P a) ?_
   show Valued.v _ = _
-  rw [hk_valued, ha]
+  rw [_root_.PI.HeckeProdW.valued_atFin, ha]
 
 theorem hecke_character_local_behaviour : HLoc := fun _ _ _ χ _ =>
   ⟨fun h a ha => hk_tame χ h a ha, fun h a ha => hk_unr χ h a ha, fun h a ha => hk_unif χ h a ha⟩
@@ -1427,11 +1423,6 @@ theorem OneAt.zpow {P : HeightOneSpectrum (𝓞 E)} {a : E} (h : OneAt P a) (n :
   | ofNat k => rw [Int.ofNat_eq_natCast, zpow_natCast]; exact h.pow k
   | negSucc k => rw [zpow_negSucc]; exact (h.pow _).inv
 
-theorem OneAt.of_mem {P : HeightOneSpectrum (𝓞 E)} {b : 𝓞 E} (h : b - 1 ∈ P.asIdeal) : OneAt P (b : E) := by
-  unfold OneAt
-  have := (mh_val_mem (P := P) (b := b - 1)).2 h
-  simpa using this
-
 end Sys
 
 section Key
@@ -1622,7 +1613,7 @@ theorem md_fac_off (hX : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (
       · exact absurd h3 h1
       · exact h3
     set w : X.Eˣ := Units.mk0 (b : X.E) (md_coe_ne hb0) with hw
-    have hw1 : OneAt (conjPrime₂ (sel v)) (w : X.E) := OneAt.of_mem hb2
+    have hw1 : OneAt (conjPrime₂ (sel v)) (w : X.E) := _root_.Formalism.L2.Ker.ab_one_of_mem hb2
     have hw2 : (sel v).valuation X.E (w : X.E) = WithZero.exp (-1 : ℤ) := mh_val_unif hbP hbP2
     rw [md_off hX.ok hsys hv (hsel v) hc x w hw1 hw2]
     have hunr : (m0 ⟨i, hi⟩).UnrAt (sel v) := (hT.mu0 ⟨i, hi⟩).unr _ (md_no_g hX.ok hPr hv (hsel v))
@@ -1712,8 +1703,8 @@ theorem md_bad (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) {σ₀ : X.K →+*
   have hcP : P.valuation X.E (c : X.E) = 1 := by
     have := hcu.val_eq_one
     rwa [map_div₀, hvu, div_one] at this
-  have hw1 : OneAt (conjPrime₂ P) (w : X.E) := OneAt.of_mem hb2
-  have hc1' : OneAt (conjPrime₂ P) (c : X.E) := OneAt.of_mem hc2
+  have hw1 : OneAt (conjPrime₂ P) (w : X.E) := _root_.Formalism.L2.Ker.ab_one_of_mem hb2
+  have hc1' : OneAt (conjPrime₂ P) (c : X.E) := _root_.Formalism.L2.Ker.ab_one_of_mem hc2
   have hk := md_key hX hsys hv hne x w c n hw1 hc1' (by
     have e : (w : X.E) ^ n * (c : X.E) / z = ((w : X.E) / (q : X.E)) ^ n * ((c : X.E) / (z / (q : X.E) ^ n)) := by
       rw [div_zpow]
@@ -1772,7 +1763,7 @@ theorem md_fac_bad (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (hg : XiOffG P
     have h2 : lamX (mu : Chr X.F X.E X.K) v c = 1 := (twist_components_compatible_system X.F X.E X.K S mu).unr v (hg P.1 hP v hv) c (fun P' hP' => by
       by_cases h : P' = P.1
       · rw [h]; exact hcP
-      · rw [hoth P' h hP', hcc]; exact (OneAt.of_mem hc2).val_eq_one)
+      · rw [hoth P' h hP', hcc]; exact (_root_.Formalism.L2.Ker.ab_one_of_mem hc2).val_eq_one)
     have h3 := hχ.atg ⟨P.1, hP⟩ c c₀ hu.unit hcc (by rw [IsUnit.unit_spec]; exact hmk.symm)
     have h4 : chiP Ch P.1 i = Ch.chi ⟨i, hi⟩ ⟨P.1, hP⟩ := by
       unfold chiP chiAt extChi

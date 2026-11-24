@@ -123,7 +123,7 @@ theorem gcl_isRadDiff {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace 
   have hmem : ∀ Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π',
       ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
         (NF.radR P.k P.r Bs.z Bs.z' Bs.μsec (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp))) (NF.QR P.k P.r Bs.z Bs.z') :=
-    fun Φ => (Formalism.FourierDecayAlt.P.radical_reduction_mem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB Φ Φ.2).1
+    fun Φ => (_root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB Φ Φ.2).1
   have hopen : IsOpen (NF.QR P.k P.r Bs.z Bs.z') := by
     have h1 : IsOpen (Formalism.QuantumDeterminants.OmX P.r) := by
       have h2 : Formalism.QuantumDeterminants.OmX P.r = ⋂ l, {x : Fin P.r → ℂ | x l ≠ 0} := by
@@ -328,8 +328,8 @@ theorem gcl_core (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     intro x
     show (x.1 ∈ OmX P.r ∧ Tz P.k P.r Bs.z * Tz P.k P.r Bs.z' < Complex.normSq x.2) ↔ _
     rw [hTz]; rfl
-  have hQRo : IsOpen (NF.QR P.k P.r Bs.z Bs.z') := Formalism.FourierDecayAlt.P.NFRO.isOpen_QR
-  have hMem := Formalism.FourierDecayAlt.P.radical_reduction_mem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB
+  have hQRo : IsOpen (NF.QR P.k P.r Bs.z Bs.z') := _root_.Formalism.FourierDecayAlt.P.NFRadRedA.qr_open
+  have hMem := _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedMem Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB
 
   have hφ : ∀ σ, ((NF.QR P.k P.r Bs.z Bs.z').indicator fun x => e σ x.2) ∈
       NF.RadSec P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' := by
@@ -388,7 +388,7 @@ theorem gcl_core (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
   have hΨfix : ∀ σ, (d.κ (fun ρ => if ρ = σ then (1 : ℂ) else 0)).1 (Ψ σ) = Ψ σ := by
     intro σ
     apply Subtype.ext
-    apply Formalism.FourierDecayAlt.P.radical_reduction_injective Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _ (Subtype.property _) _
+    apply _root_.Formalism.FourierDecayAlt.P.NFRadRedA.radRedInj Wp Wq P.k P.r Bs.z Bs.z' Bs.μsec Bs.π Bs.π' hRB _ (Subtype.property _) _
       (Ψ σ).2
     funext x
     by_cases hx : x ∈ NF.QR P.k P.r Bs.z Bs.z'
@@ -970,25 +970,23 @@ theorem radR_kap [FiniteDimensional ℂ Wp] (P : M.Par) (Bs : B.RealPlaceData P.
   refine Finset.sum_congr rfl fun ρ _ => ?_
   rw [hcoef ρ, mul_smul]
 
-def dl {P : M.Par} (ρ : M.Ty P) : M.Ty P → ℂ := fun ρ' => if ρ' = ρ then 1 else 0
-
 theorem radR_kap_dl [FiniteDimensional ℂ Wp] (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     (X : Q.ActualOps P.k P.r Bs.z Bs.z' Bs.π Bs.π') (d : Q.NFData P (Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')))
     (hH : GTHyp P Bs X d) (e : M.Ty P → ℂ → (Wq →L[ℂ] Wp)) (he : IsFrameB P Bs e) (hk : KapF P Bs d e)
     (ρ : M.Ty P) (Φ : Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') (q : (Fin P.r → ℂ) × ℂ)
     (hq : q ∈ NF.QR P.k P.r Bs.z Bs.z') :
-    NF.radR P.k P.r Bs.z Bs.z' Bs.μsec ((d.κ (dl ρ)).1 Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q =
+    NF.radR P.k P.r Bs.z Bs.z' Bs.μsec ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q =
       Lp e ρ q.2 (NF.radR P.k P.r Bs.z Bs.z' Bs.μsec (Φ : Q.Fn P.k P.r (Wq →L[ℂ] Wp)) q) := by
   rw [radR_kap P Bs X d hH e he hk _ Φ q hq, Finset.sum_eq_single ρ]
-  · simp [dl, Lp_apply]
-  · intro b _ hb; simp [dl, hb]
+  · simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, Lp_apply]
+  · intro b _ hb; simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, hb]
   · intro h; exact absurd (Finset.mem_univ ρ) h
 
 theorem radDZ_kap_left [FiniteDimensional ℂ Wp] (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     (X : Q.ActualOps P.k P.r Bs.z Bs.z' Bs.π Bs.π') (d : Q.NFData P (Q.Pr (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')))
     (hH : GTHyp P Bs X d) (e : M.Ty P → ℂ → (Wq →L[ℂ] Wp)) (he : IsFrameB P Bs e) (hk : KapF P Bs d e)
     (ρ : M.Ty P) {T : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π')} (hT : RadDZ P Bs T) :
-    RadDZ P Bs ((d.κ (dl ρ)).1 * T) :=
+    RadDZ P Bs ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 * T) :=
   radDZ_comp_left hT (Lp e ρ) (Lp_smooth P Bs hH.1 he ρ) fun Φ q hq => by
     rw [Module.End.mul_apply, radR_kap_dl P Bs X d hH e he hk ρ _ q hq]
 
@@ -1072,35 +1070,30 @@ variable {P : M.Par} {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
 
 def fl (P : M.Par) (l : ℕ) (ρ : M.Ty P) : M.Ty P → ℂ := fun ρ0 => if M.Up P l ρ0 ρ then 1 else 0
 
-theorem up_func {l : ℕ} {ρ0 ρ ρ' : M.Ty P} (h1 : M.Up P l ρ0 ρ) (h2 : M.Up P l ρ0 ρ') : ρ = ρ' := by
-  funext i
-  apply Fin.ext
-  rw [h1 i, h2 i]
-
-theorem kap_decomp (d : Q.NFData P A) (g : M.Ty P → ℂ) : d.κ g = ∑ ρ0, g ρ0 • d.κ (dl ρ0) := by
-  have h : g = ∑ ρ0, g ρ0 • dl ρ0 := by
+theorem kap_decomp (d : Q.NFData P A) (g : M.Ty P → ℂ) : d.κ g = ∑ ρ0, g ρ0 • d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ0) := by
+  have h : g = ∑ ρ0, g ρ0 • _root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ0 := by
     funext ρ
-    simp [dl, Finset.sum_apply]
+    simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, Finset.sum_apply]
   conv_lhs => rw [h]
 
   rw [map_sum]
   simp only [map_smul]
 
-theorem sum_dl (d : Q.NFData P A) : ∑ ρ, d.κ (dl ρ) = 1 := by
-  have h : ∑ ρ, (dl ρ : M.Ty P → ℂ) = 1 := by
+theorem sum_dl (d : Q.NFData P A) : ∑ ρ, d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) = 1 := by
+  have h : ∑ ρ, (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ : M.Ty P → ℂ) = 1 := by
     funext x
-    simp [dl, Finset.sum_apply]
+    simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, Finset.sum_apply]
 
   rw [← map_sum, h, map_one]
 
 theorem dl_mul_kap (d : Q.NFData P A) (ρ : M.Ty P) (g : M.Ty P → ℂ) :
-    d.κ (dl ρ) * d.κ g = g ρ • d.κ (dl ρ) := by
-  have h : dl ρ * g = g ρ • dl ρ := by
+    d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.κ g = g ρ • d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) := by
+  have h : _root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ * g = g ρ • _root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ := by
     funext x
     by_cases hx : x = ρ
     · subst hx
-      simp [dl]
-    · simp [dl, hx]
+      simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl]
+    · simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, hx]
   rw [← map_mul, h, map_smul]
 
 theorem kap_comm (d : Q.NFData P A) (hR : d.Rel) (f : M.Ty P → ℂ) {g : A}
@@ -1121,28 +1114,28 @@ theorem comb {k : ℕ} {lam : Fin (k + 1) → ℂ}
   rw [← Finset.sum_smul, hlam p hp]
 
 theorem e10 (d : Q.NFData P A) (hR : d.Rel) (ρ : M.Ty P) (Y : ℂ) :
-    d.κ (dl ρ) * d.QQ Y 1 0 =
-      (xpol P ρ).eval Y • (-(d.L.GG * d.κ (dl ρ) * d.L.nab)) +
-      ((xpol P ρ) * (X + C (1 / 2 : ℂ))).eval Y • (-(d.κ (dl ρ) * d.L.ζb)) +
-      ∑ l ∈ Finset.Icc 1 (P.k - 1), ∑ ρ0, (C (fl P l ρ ρ0) * xepol P l ρ0).eval Y • (d.SS l * d.κ (dl ρ0)) := by
-  have hG : d.κ (dl ρ) * d.L.GG = d.L.GG * d.κ (dl ρ) := kap_comm d hR _ (by simp)
+    d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ Y 1 0 =
+      (xpol P ρ).eval Y • (-(d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nab)) +
+      ((xpol P ρ) * (X + C (1 / 2 : ℂ))).eval Y • (-(d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb)) +
+      ∑ l ∈ Finset.Icc 1 (P.k - 1), ∑ ρ0, (C (fl P l ρ ρ0) * xepol P l ρ0).eval Y • (d.SS l * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ0)) := by
+  have hG : d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.GG = d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) := kap_comm d hR _ (by simp)
   have hGGi : d.L.GG * d.L.GGi = 1 := d.L.GG_GGi
   have hζbG : d.L.GG * d.L.ζb = d.L.ζb * d.L.GG := fns_comm' d (by simp) (by simp)
-  have hx : d.κ (dl ρ) * d.x Y = (xpol P ρ).eval Y • d.κ (dl ρ) := by
+  have hx : d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.x Y = (xpol P ρ).eval Y • d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) := by
     rw [Q.NFData.x, dl_mul_kap]
     simp only [xpol_eval]
-  have key : d.L.GG * d.κ (dl ρ) * (d.L.ζb * d.L.GGi) = d.κ (dl ρ) * d.L.ζb := by
-    calc d.L.GG * d.κ (dl ρ) * (d.L.ζb * d.L.GGi) = d.κ (dl ρ) * (d.L.GG * d.L.ζb * d.L.GGi) := by
+  have key : d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζb * d.L.GGi) = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb := by
+    calc d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζb * d.L.GGi) = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.L.ζb * d.L.GGi) := by
           rw [← hG]; simp only [mul_assoc]
-      _ = d.κ (dl ρ) * (d.L.ζb * (d.L.GG * d.L.GGi)) := by rw [hζbG]; simp only [mul_assoc]
-      _ = d.κ (dl ρ) * d.L.ζb := by rw [hGGi, mul_one]
-  show d.κ (dl ρ) * (d.L.GG * d.x Y * d.L.l0 Y + d.weightedSumBis Y) = _
+      _ = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζb * (d.L.GG * d.L.GGi)) := by rw [hζbG]; simp only [mul_assoc]
+      _ = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb := by rw [hGGi, mul_one]
+  show d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.x Y * d.L.l0 Y + d.weightedSumBis Y) = _
   rw [mul_add]
   congr 1
-  · calc d.κ (dl ρ) * (d.L.GG * d.x Y * d.L.l0 Y)
-          = d.L.GG * (d.κ (dl ρ) * d.x Y) * d.L.l0 Y := by
+  · calc d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.x Y * d.L.l0 Y)
+          = d.L.GG * (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.x Y) * d.L.l0 Y := by
             rw [← mul_assoc, ← mul_assoc, hG]; simp only [mul_assoc]
-      _ = (xpol P ρ).eval Y • (d.L.GG * d.κ (dl ρ) * d.L.l0 Y) := by
+      _ = (xpol P ρ).eval Y • (d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.l0 Y) := by
             rw [hx, mul_smul_comm, smul_mul_assoc]
       _ = _ := by
             rw [R.LevelData.l0, mul_sub, mul_neg, ← Algebra.smul_def, mul_smul_comm, key]
@@ -1150,14 +1143,14 @@ theorem e10 (d : Q.NFData P A) (hR : d.Rel) (ρ : M.Ty P) (Y : ℂ) :
             module
   · rw [Q.NFData.weightedSumBis, Finset.mul_sum]
     refine Finset.sum_congr rfl (fun l _ => ?_)
-    have hc : d.κ (dl ρ) * d.SS l = d.SS l * d.κ (fl P l ρ) := by
+    have hc : d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.SS l = d.SS l * d.κ (fl P l ρ) := by
       apply hR.2.2.2.1 l
       intro ρ0 ρ' hup
       by_cases h : ρ' = ρ
       · subst h
-        simp [dl, fl, hup]
-      · have hn : ¬ M.Up P l ρ0 ρ := fun h2 => h (up_func hup h2)
-        simp [dl, fl, h, hn]
+        simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, fl, hup]
+      · have hn : ¬ M.Up P l ρ0 ρ := fun h2 => h (_root_.Formalism.FourierDecayAlt.P.NFx4.NO.up_unique hup h2)
+        simp [_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl, fl, h, hn]
     rw [← mul_assoc, hc, mul_assoc, ← map_mul, kap_decomp, Finset.mul_sum]
     refine Finset.sum_congr rfl (fun ρ0 _ => ?_)
     rw [mul_smul_comm]
@@ -1165,28 +1158,28 @@ theorem e10 (d : Q.NFData P A) (hR : d.Rel) (ρ : M.Ty P) (Y : ℂ) :
     simp [Polynomial.eval_mul, Polynomial.eval_C, xepol_eval]
 
 theorem e01 (d : Q.NFData P A) (hR : d.Rel) (ρ : M.Ty P) (Y : ℂ) :
-    d.κ (dl ρ) * d.QQ Y 0 1 =
-      (xpol P ρ).eval Y • (-(d.L.GG * d.κ (dl ρ) * d.L.nabs)) +
-      ((xpol P ρ) * (X - C (1 / 2 : ℂ))).eval Y • (-(d.κ (dl ρ) * d.L.ζ)) +
-      ∑ l ∈ Finset.Icc 1 (P.k - 1), (xepol P l ρ).eval Y • (d.κ (dl ρ) * star (d.SS l)) := by
-  have hG : d.κ (dl ρ) * d.L.GG = d.L.GG * d.κ (dl ρ) := kap_comm d hR _ (by simp)
+    d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ Y 0 1 =
+      (xpol P ρ).eval Y • (-(d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nabs)) +
+      ((xpol P ρ) * (X - C (1 / 2 : ℂ))).eval Y • (-(d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ)) +
+      ∑ l ∈ Finset.Icc 1 (P.k - 1), (xepol P l ρ).eval Y • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * star (d.SS l)) := by
+  have hG : d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.GG = d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) := kap_comm d hR _ (by simp)
   have hGGi : d.L.GG * d.L.GGi = 1 := d.L.GG_GGi
   have hζG : d.L.GG * d.L.ζ = d.L.ζ * d.L.GG := fns_comm' d (by simp) (by simp)
-  have hx : d.κ (dl ρ) * d.x Y = (xpol P ρ).eval Y • d.κ (dl ρ) := by
+  have hx : d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.x Y = (xpol P ρ).eval Y • d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) := by
     rw [Q.NFData.x, dl_mul_kap]
     simp only [xpol_eval]
-  have key : d.L.GG * d.κ (dl ρ) * (d.L.ζ * d.L.GGi) = d.κ (dl ρ) * d.L.ζ := by
-    calc d.L.GG * d.κ (dl ρ) * (d.L.ζ * d.L.GGi) = d.κ (dl ρ) * (d.L.GG * d.L.ζ * d.L.GGi) := by
+  have key : d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζ * d.L.GGi) = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ := by
+    calc d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζ * d.L.GGi) = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.L.ζ * d.L.GGi) := by
           rw [← hG]; simp only [mul_assoc]
-      _ = d.κ (dl ρ) * (d.L.ζ * (d.L.GG * d.L.GGi)) := by rw [hζG]; simp only [mul_assoc]
-      _ = d.κ (dl ρ) * d.L.ζ := by rw [hGGi, mul_one]
-  show d.κ (dl ρ) * (d.L.GG * d.x Y * d.L.m0 Y + d.S12 Y) = _
+      _ = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.ζ * (d.L.GG * d.L.GGi)) := by rw [hζG]; simp only [mul_assoc]
+      _ = d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ := by rw [hGGi, mul_one]
+  show d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.x Y * d.L.m0 Y + d.S12 Y) = _
   rw [mul_add]
   congr 1
-  · calc d.κ (dl ρ) * (d.L.GG * d.x Y * d.L.m0 Y)
-          = d.L.GG * (d.κ (dl ρ) * d.x Y) * d.L.m0 Y := by
+  · calc d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * (d.L.GG * d.x Y * d.L.m0 Y)
+          = d.L.GG * (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.x Y) * d.L.m0 Y := by
             rw [← mul_assoc, ← mul_assoc, hG]; simp only [mul_assoc]
-      _ = (xpol P ρ).eval Y • (d.L.GG * d.κ (dl ρ) * d.L.m0 Y) := by
+      _ = (xpol P ρ).eval Y • (d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.m0 Y) := by
             rw [hx, mul_smul_comm, smul_mul_assoc]
       _ = _ := by
             rw [R.LevelData.m0, mul_sub, mul_neg, ← Algebra.smul_def, mul_smul_comm, key]
@@ -1276,60 +1269,60 @@ theorem xepol_coeff (P : M.Par) (hk : 2 ≤ P.k) {l : ℕ} (hl : l ∈ Finset.Ic
 
 theorem nab_eq (d : Q.NFData P A) (hR : d.Rel) (hk : 2 ≤ P.k) :
     ∃ (lam : Fin (P.k + 1) → ℂ) (e : M.Ty P → ℂ),
-      d.L.nab = ∑ ρ, d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0)) -
-        e ρ • (d.κ (dl ρ) * d.L.ζb)) := by
+      d.L.nab = ∑ ρ, d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0)) -
+        e ρ • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb)) := by
   classical
   obtain ⟨lam, hlam⟩ := lag_weights P.k
   refine ⟨lam, fun ρ => ((xpol P ρ) * (X + C (1 / 2 : ℂ))).coeff (P.k - 1), ?_⟩
-  have key : ∀ ρ, ∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0) =
-      -(d.L.GG * d.κ (dl ρ) * d.L.nab) +
-        ((xpol P ρ) * (X + C (1 / 2 : ℂ))).coeff (P.k - 1) • (-(d.κ (dl ρ) * d.L.ζb)) := by
+  have key : ∀ ρ, ∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0) =
+      -(d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nab) +
+        ((xpol P ρ) * (X + C (1 / 2 : ℂ))).coeff (P.k - 1) • (-(d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb)) := by
     intro ρ
     simp_rw [e10 d hR ρ, smul_add, Finset.sum_add_distrib, Finset.smul_sum]
     rw [comb hlam _ (xpol_deg P ρ), comb hlam _ (xpol_half_deg P (by omega) ρ _), xpol_coeff, one_smul]
     have h3 : ∑ j : Fin (P.k + 1), ∑ l ∈ Finset.Icc 1 (P.k - 1), ∑ ρ0,
-        lam j • ((C (fl P l ρ ρ0) * xepol P l ρ0).eval ((j : ℕ) : ℂ) • (d.SS l * d.κ (dl ρ0))) = 0 := by
+        lam j • ((C (fl P l ρ ρ0) * xepol P l ρ0).eval ((j : ℕ) : ℂ) • (d.SS l * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ0))) = 0 := by
       rw [Finset.sum_comm]
       refine Finset.sum_eq_zero fun l hl => ?_
       rw [Finset.sum_comm]
       refine Finset.sum_eq_zero fun ρ0 _ => ?_
       rw [comb hlam _ (xepol_deg P hl ρ0 _), xepol_coeff P hk hl, zero_smul]
     rw [h3, add_zero]
-  have hρ : ∀ ρ, d.κ (dl ρ) * d.L.nab = d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) *
-      d.QQ ((j : ℕ) : ℂ) 1 0)) - ((xpol P ρ) * (X + C (1 / 2 : ℂ))).coeff (P.k - 1) • (d.κ (dl ρ) * d.L.ζb)) := by
+  have hρ : ∀ ρ, d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nab = d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) *
+      d.QQ ((j : ℕ) : ℂ) 1 0)) - ((xpol P ρ) * (X + C (1 / 2 : ℂ))).coeff (P.k - 1) • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζb)) := by
     intro ρ
     rw [key ρ, smul_neg, neg_add, neg_neg, neg_neg, add_sub_cancel_right, ← mul_assoc, ← mul_assoc,
       d.L.GGi_GG, one_mul]
-  calc d.L.nab = (∑ ρ, d.κ (dl ρ)) * d.L.nab := by rw [sum_dl, one_mul]
+  calc d.L.nab = (∑ ρ, d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)) * d.L.nab := by rw [sum_dl, one_mul]
     _ = _ := by rw [Finset.sum_mul]; exact Finset.sum_congr rfl fun ρ _ => hρ ρ
 
 theorem nabs_eq (d : Q.NFData P A) (hR : d.Rel) (hk : 2 ≤ P.k) :
     ∃ (lam : Fin (P.k + 1) → ℂ) (e : M.Ty P → ℂ),
-      d.L.nabs = ∑ ρ, d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1)) -
-        e ρ • (d.κ (dl ρ) * d.L.ζ)) := by
+      d.L.nabs = ∑ ρ, d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1)) -
+        e ρ • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ)) := by
   classical
   obtain ⟨lam, hlam⟩ := lag_weights P.k
   refine ⟨lam, fun ρ => ((xpol P ρ) * (X - C (1 / 2 : ℂ))).coeff (P.k - 1), ?_⟩
-  have key : ∀ ρ, ∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1) =
-      -(d.L.GG * d.κ (dl ρ) * d.L.nabs) +
-        ((xpol P ρ) * (X - C (1 / 2 : ℂ))).coeff (P.k - 1) • (-(d.κ (dl ρ) * d.L.ζ)) := by
+  have key : ∀ ρ, ∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1) =
+      -(d.L.GG * d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nabs) +
+        ((xpol P ρ) * (X - C (1 / 2 : ℂ))).coeff (P.k - 1) • (-(d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ)) := by
     intro ρ
     simp_rw [e01 d hR ρ, smul_add, Finset.sum_add_distrib, Finset.smul_sum]
     rw [comb hlam _ (xpol_deg P ρ), comb hlam _ (xpol_halfm_deg P (by omega) ρ _), xpol_coeff, one_smul]
     have h3 : ∑ j : Fin (P.k + 1), ∑ l ∈ Finset.Icc 1 (P.k - 1),
-        lam j • ((xepol P l ρ).eval ((j : ℕ) : ℂ) • (d.κ (dl ρ) * star (d.SS l))) = 0 := by
+        lam j • ((xepol P l ρ).eval ((j : ℕ) : ℂ) • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * star (d.SS l))) = 0 := by
       rw [Finset.sum_comm]
       refine Finset.sum_eq_zero fun l hl => ?_
       have hd : (xepol P l ρ).natDegree ≤ P.k := by rw [xepol_natDegree P hl]; omega
       rw [comb hlam _ hd, Polynomial.coeff_eq_zero_of_natDegree_lt (by rw [xepol_natDegree P hl]; omega),
         zero_smul]
     rw [h3, add_zero]
-  have hρ : ∀ ρ, d.κ (dl ρ) * d.L.nabs = d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (dl ρ) *
-      d.QQ ((j : ℕ) : ℂ) 0 1)) - ((xpol P ρ) * (X - C (1 / 2 : ℂ))).coeff (P.k - 1) • (d.κ (dl ρ) * d.L.ζ)) := by
+  have hρ : ∀ ρ, d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.nabs = d.L.GGi * (-(∑ j : Fin (P.k + 1), lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) *
+      d.QQ ((j : ℕ) : ℂ) 0 1)) - ((xpol P ρ) * (X - C (1 / 2 : ℂ))).coeff (P.k - 1) • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.L.ζ)) := by
     intro ρ
     rw [key ρ, smul_neg, neg_add, neg_neg, neg_neg, add_sub_cancel_right, ← mul_assoc, ← mul_assoc,
       d.L.GGi_GG, one_mul]
-  calc d.L.nabs = (∑ ρ, d.κ (dl ρ)) * d.L.nabs := by rw [sum_dl, one_mul]
+  calc d.L.nabs = (∑ ρ, d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)) * d.L.nabs := by rw [sum_dl, one_mul]
     _ = _ := by rw [Finset.sum_mul]; exact Finset.sum_congr rfl fun ρ _ => hρ ρ
 
 end ring
@@ -1360,8 +1353,8 @@ theorem radDZ_expr (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq)
     (hH : GTHyp P Bs X d) (hT : ∀ (Y : ℂ) (a b : Fin 2), RadDZ P Bs (X.t Y a b))
     (e : M.Ty P → ℂ → (Wq →L[ℂ] Wp)) (he : IsFrameB P Bs e) (hk : KapF P Bs d e)
     (lam : Fin (P.k + 1) → ℂ) (c : ℂ) (j0 : Fin 6) (hj0 : j0 = 0 ∨ j0 = 2) (a b : Fin 2) (ρ : M.Ty P) :
-    RadDZ P Bs (X.fn 5 * (-(∑ j : Fin (P.k + 1), lam j • ((d.κ (dl ρ)).1 * X.t ((j : ℕ) : ℂ) a b)) -
-      c • ((d.κ (dl ρ)).1 * X.fn j0))) := by
+    RadDZ P Bs (X.fn 5 * (-(∑ j : Fin (P.k + 1), lam j • ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 * X.t ((j : ℕ) : ℂ) a b)) -
+      c • ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 * X.fn j0))) := by
   have hpl := hH.1
   refine radDZ_fn_left P Bs hpl X 5 (Or.inr (Or.inr rfl)) ?_
   rw [sub_eq_add_neg]
@@ -1389,16 +1382,16 @@ theorem local_nabla_holds : GTCLNab := by
   · rw [hn, fst_sum']
     refine radDZ_sum _ _ fun ρ _ => ?_
     rw [fst_mul', fst_sub', fst_neg', fst_sum', fst_smul', fst_mul', hGGi, hζb]
-    have hs : ∀ j : Fin (P.k + 1), (lam j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0)).1 =
-        lam j • ((d.κ (dl ρ)).1 * X.t ((j : ℕ) : ℂ) 1 0) := by
+    have hs : ∀ j : Fin (P.k + 1), (lam j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 1 0)).1 =
+        lam j • ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 * X.t ((j : ℕ) : ℂ) 1 0) := by
       intro j; rw [fst_smul', fst_mul', hQt]
     simp_rw [hs]
     exact radDZ_expr P Bs X d hH hT e he hk lam (c ρ) 2 (Or.inr rfl) 1 0 ρ
   · rw [hns, fst_sum']
     refine radDZ_sum _ _ fun ρ _ => ?_
     rw [fst_mul', fst_sub', fst_neg', fst_sum', fst_smul', fst_mul', hGGi, hζ]
-    have hs : ∀ j : Fin (P.k + 1), (lam' j • (d.κ (dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1)).1 =
-        lam' j • ((d.κ (dl ρ)).1 * X.t ((j : ℕ) : ℂ) 0 1) := by
+    have hs : ∀ j : Fin (P.k + 1), (lam' j • (d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ) * d.QQ ((j : ℕ) : ℂ) 0 1)).1 =
+        lam' j • ((d.κ (_root_.Formalism.FourierDecayAlt.P.NFx4.SX.dl ρ)).1 * X.t ((j : ℕ) : ℂ) 0 1) := by
       intro j; rw [fst_smul', fst_mul', hQt]
     simp_rw [hs]
     exact radDZ_expr P Bs X d hH hT e he hk lam' (c' ρ) 0 (Or.inl rfl) 0 1 ρ
@@ -1411,7 +1404,7 @@ end Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.LNab
 
 namespace Formalism.FourierDecayAlt.P.CutMP.Gauge.GC
 
-theorem local_nabla_holds : GTCLNab := LNab.local_nabla_holds
+alias local_nabla_holds := _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.LNab.local_nabla_holds
 
 end Formalism.FourierDecayAlt.P.CutMP.Gauge.GC
 end -- clump:auto

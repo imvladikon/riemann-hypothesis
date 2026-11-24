@@ -65,6 +65,7 @@ import Mathlib.Tactic.TypeStar
 import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.PsiTrCoreApprox
 import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Tactic.Linter.HaveILetI
+import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceSum
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.GlobalDualOfBasis, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.GlobalDual, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FiniteIdempotentMulEq, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatOAnnIffOf, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.ExistsNatIntFMat, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualBIv, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualASt, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceLatDualIiiOf, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDual, Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatSelf
@@ -923,7 +924,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualASt =====
 
 -- ===== clump member: Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceLatDualIiiOf =====
--- clump-header: {"m": "Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceLatDualIiiOf", "h": "module\n\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualASt\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.TwoSplitIdem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.CharLem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemUniq\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.InfPartSplitIdem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatMod\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.SplitInt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceLatDualIiiOf", "h": "module\n\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceDualASt\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.TwoSplitIdem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.CharLem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemUniq\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.InfPartSplitIdem\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LatMod\npublic import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.SplitInt\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.PlaceSum\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -957,17 +958,13 @@ theorem splitIdem_mul_fI {e' : AE D} (h : IsSplitIdem D e') : e' * fI D = e' := 
         rw [map_mul, mul_assoc]
     _ = e' := by rw [pairA_mul_one, ← he]
 
-theorem splitIdem_cA {e : AE D} (h : IsSplitIdem D e) : IsSplitIdem D (cA D e) := by
-  obtain ⟨h1, h2, v, ε, hv, h3⟩ := h
-  exact ⟨by rw [← map_mul, h1], by rw [cA_cA, mul_comm, h2], v, ε, hv, by rw [cA_cA, add_comm, h3]⟩
-
 theorem idemSum_mul_fI {e : AE D} {P : Finset (Formalism.L2.DIV.Pl D.host.E)} (he : IsIdemSum e P) :
     e * fI D = e ∧ cA D e * fI D = cA D e := by
   obtain ⟨⟨es, hes, rfl⟩, -⟩ := he
 
   rw [Finset.sum_mul, map_sum, Finset.sum_mul]
   exact ⟨Finset.sum_congr rfl fun PP hPP => splitIdem_mul_fI (hes PP hPP).1,
-    Finset.sum_congr rfl fun PP hPP => splitIdem_mul_fI (splitIdem_cA (hes PP hPP).1)⟩
+    Finset.sum_congr rfl fun PP hPP => splitIdem_mul_fI (_root_.Formalism.IndefR.Fin.isSplitIdem_cA (hes PP hPP).1)⟩
 
 theorem idemSum_int {P : Finset (Formalism.L2.DIV.Pl D.host.E)} {e : AE D} (he : IsIdemSum e P) :
     finPart D e ∈ intAE D ∧ finPart D (cA D e) ∈ intAE D := by
@@ -978,7 +975,7 @@ theorem idemSum_int {P : Finset (Formalism.L2.DIV.Pl D.host.E)} {e : AE D} (he :
     exact AddSubgroup.sum_mem _ fun PP hPP => splitIdem_int (hes PP hPP).1
 
   · rw [map_sum, map_sum]
-    exact AddSubgroup.sum_mem _ fun PP hPP => splitIdem_int (splitIdem_cA (hes PP hPP).1)
+    exact AddSubgroup.sum_mem _ fun PP hPP => splitIdem_int (_root_.Formalism.IndefR.Fin.isSplitIdem_cA (hes PP hPP).1)
 
 theorem infPart_fI : infPart D (fI D) = 0 := by
   show infPart D (algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 1)) = 0

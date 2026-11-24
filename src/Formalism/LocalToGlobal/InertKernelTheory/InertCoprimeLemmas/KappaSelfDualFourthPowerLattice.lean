@@ -57,6 +57,7 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
+import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OneLetterGaussTranslateOfCmCase
 
 -- This file was produced by scripts/clump.py from the modules listed below.
 -- Members: Formalism.LocalToGlobal.InertKernelTheory.StatementKap, Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice
@@ -105,7 +106,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.LocalToGlobal.InertKernelTheory.StatementKap =====
 
 -- ===== clump member: Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice =====
--- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.StatementKap\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.GlobalLUnit\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ChoiceOfModulusAndDiscriminant\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PFamily\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.FinitelyGeneratedModPow\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.MatrixFormFourfoldBlock\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.StdDataCmProof\npublic import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.DetMemOfEntries\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.NormLeOneOfRoot\nimport Formalism.SharpRestriction.GlobalSchurBounds.StandardIntegralLatticeExists\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.KappaSelfDualFourthPowerLattice", "h": "module\n\npublic import Formalism.LocalToGlobal.InertKernelTheory.StatementKap\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.GlobalLUnit\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ChoiceOfModulusAndDiscriminant\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PFamily\npublic import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK\npublic import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.FinitelyGeneratedModPow\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.MatrixFormFourfoldBlock\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.StdDataCmProof\npublic import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated\nimport Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.DetMemOfEntries\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitDeterminantRoot.NormLeOneOfRoot\nimport Formalism.SharpRestriction.GlobalSchurBounds.StandardIntegralLatticeExists\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Int\nimport Mathlib.Algebra.Order.Star.Rat\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OneLetterGaussTranslateOfCmCase\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -183,7 +184,7 @@ theorem kap_norm_ratCast (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (q : 
 
 theorem kap_le_one (l : ℕ) [Fact l.Prime] (ι : ℂ ≃+* ℂ_[l]) (z : ℂ) (hz : IsIntegral ℤ z) : ‖ι z‖ ≤ 1 := by
   obtain ⟨p, hp, hpz⟩ := hz
-  apply PI.UnitaryGroupMassFormula.UnitDetRoot.norm_le_one_of_root p hp
+  apply _root_.Bl.general_b_fact_left_ter.goal1 p hp
   have h : (ι.toRingHom) (p.eval₂ (algebraMap ℤ ℂ) z) = 0 := by rw [hpz, map_zero]
   rw [Polynomial.hom_eval₂, RingHom.ext_int (ι.toRingHom.comp (algebraMap ℤ ℂ)) (Int.castRingHom _)] at h
   exact h
@@ -329,18 +330,6 @@ theorem kap_stable_of_one {V : Type*} [AddCommGroup V] [Module ℂ V] (Λ : AddS
   rw [Int.cast_smul_eq_zsmul]
   exact Λ.zsmul_mem hx k
 
-theorem kap_odd {a : ℕ} {b c : ℤ} {d : ℕ} (h : CmOK a b c d) : Odd b := by
-  by_contra hb
-  obtain ⟨k, rfl⟩ := Int.not_odd_iff_even.1 hb
-  have h1 := h.1
-  have h8 := h.2.2.1
-  have h2 : (d : ℤ) = 4 * ((a : ℤ) * c - k * k) := by
-    have : (k + k) ^ 2 = 4 * (k * k) := by ring
-    rw [this] at h1
-    linarith
-  generalize (a : ℤ) * c - k * k = t at h2
-  omega
-
 theorem selfDual_of_fourth_power_block {n : Type} [Fintype n] (h : Matrix n n ℂ) (Λ : AddSubgroup (n → ℂ))
     (hsd : IsSelfDual (matH (blk4 h)) (pow4 Λ)) : IsSelfDual (matH h) Λ := by
   have key : ∀ (x : n → ℂ) (y : Fin 4 × n → ℂ), altE (matH (blk4 h)) (CmData.embA 0 x) y = altE (matH h) x (slice 0 y) := by
@@ -410,7 +399,7 @@ theorem kappa_at_inert_prime : KapInert := by
   have hsd : IsSelfDual (stdH B.L (Fin 4 × D.what₂.Tau)) B.latA := hS.selfDual
   have i1 : relIdx (stdLat B.L (Fin 4 × D.what₂.Tau)) B.latA ≠ 0 := hS.idx₁
   have i2 : relIdx B.latA (stdLat B.L (Fin 4 × D.what₂.Tau)) ≠ 0 := hS.idx₂
-  have hsta := kap_stable_latA B b₀ (kap_odd hcm)
+  have hsta := kap_stable_latA B b₀ (_root_.Formalism.L2.Th1.Top.HAux.odd_b hcm)
   rw [hL] at hiso j1 j2 hsd i1 i2
   obtain ⟨hmem, hone⟩ := PI.UnitaryGroupMassFormula.UnitDetRoot.detInK a₀ b₀ c₀ D.host.d ha hd lam hlam (Fin 4 × D.what₂.Tau) B.latA
     ⟨hcm, hsd, hsta, i1, i2⟩ u ⟨hiso, j1, j2⟩
@@ -423,7 +412,7 @@ theorem kappa_K1_hypothesis : KappaFirstKernelHypothesis := by
   have hS : StdData B.L B.ω₀ (hOne B.L D.what₂.Tau) B.lamM (alphaQ B.cq (matH (hOne B.L D.what₂.Tau)))
     (alphaQ B.cq (stdH B.L (Fin 4 × D.what₂.Tau))) B.gC := B.stdOK hcc hδ
   have hsd := kap_selfDual_lamM B hcc hδ
-  have hst := kap_stable_lamM B b₀ (kap_odd hcm)
+  have hst := kap_stable_lamM B b₀ (_root_.Formalism.L2.Th1.Top.HAux.odd_b hcm)
   have hspec := B.thMM_spec (B.stdOK hcc hδ)
   have hmem : B.thMM ∈ Th (matH (hOne B.L D.what₂.Tau)) (alphaQ B.cq (matH (hOne B.L D.what₂.Tau))) B.lamM := hspec.1
   have h2 : tens4 B.thMM = B.kappa • kernel4 B.L B.ω₀ B.lamM

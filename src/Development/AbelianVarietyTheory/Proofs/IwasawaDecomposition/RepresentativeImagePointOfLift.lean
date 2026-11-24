@@ -237,8 +237,6 @@ open NumberField IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions F
 open scoped TensorProduct
 attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.supported_unitary_adelic_integral_with_inverse : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E] (hc : CMData F E) {n : ℕ} (u : GL (Fin n) (AfE F E)), u ∈ Formalism.L2.Herm.UstdAf hc n → ∀ (v : HeightOneSpectrum (𝓞 F)) (P : HeightOneSpectrum (𝓞 E)), Formalism.L2.Col.IsOver v P → (∀ v', v' ≠ v → bc (prV (E := E) v') u = 1) → ∀ g ∈ Formalism.L2.Col.GLint E n P, (∀ r s, adAt F P ((u : Matrix (Fin n) (Fin n) (AfE F E)) r s) = algebraMap E (P.adicCompletion E) (LinearMap.toMatrix' g.toLinearMap r s)) → ∀ i j, (u : Matrix (Fin n) (Fin n) (AfE F E)) i j ∈ RInt F E ∧ ((u⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) i j ∈ RInt F E := by
-  first | exact @GlobalTheory.Mem.Col2.AdT.IntSplit.int_of_supported
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SupportedUnitaryAdelicIntegralWithInverseStatement =====
@@ -273,9 +271,6 @@ theorem isPtOf_mul_fr {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
   refine ⟨H.uni, H.lat, H.f, H.be, fun P i j => ?_⟩
   rw [hfr P i j]
   rfl
-
-theorem int_of_split : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [StarRing E] (hc : CMData F E) {n : ℕ} (u : GL (Fin n) (AfE F E)), u ∈ Formalism.L2.Herm.UstdAf hc n → ∀ (v : HeightOneSpectrum (𝓞 F)) (P : HeightOneSpectrum (𝓞 E)), Formalism.L2.Col.IsOver v P → (∀ v', v' ≠ v → bc (prV (E := E) v') u = 1) → ∀ g ∈ Formalism.L2.Col.GLint E n P, (∀ r s, adAt F P ((u : Matrix (Fin n) (Fin n) (AfE F E)) r s) = algebraMap E (P.adicCompletion E) (LinearMap.toMatrix' g.toLinearMap r s)) → ∀ i j, (u : Matrix (Fin n) (Fin n) (AfE F E)) i j ∈ RInt F E ∧ ((u⁻¹ : GL (Fin n) (AfE F E)) : Matrix (Fin n) (Fin n) (AfE F E)) i j ∈ RInt F E :=
-  GlobalTheory.T.supported_unitary_adelic_integral_with_inverse
 
 theorem vT_notOver : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ (a : I.ι) (P : SBof I a) (v : HeightOneSpectrum (𝓞 B.host.F)), Formalism.L2.Col.IsOver v P.1 → ∀ (u : B.Word), ∀ P' ∈ (B.primes X).vT u, ¬ Formalism.L2.Col.IsOver v P' :=
   GlobalTheory.T.levelPrime_primes_not_over_bad_prime_place
@@ -327,7 +322,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     rw [hm, map_mul, map_mul, map_inv, hxoff v' hv', mul_one, inv_mul_cancel]
   have hmioff : ∀ v', v' ≠ v → bc (prV (E := E) v') m⁻¹ = 1 := fun v' hv' => by
     rw [map_inv, hmoff v' hv', inv_one]
-  have hInt := int_of_split hc m hmU v P hv hmoff g' hg' hpt
+  have hInt := _root_.GlobalTheory.Mem.Col2.AdT.IntSplit.int_of_supported hc m hmU v P hv hmoff g' hg' hpt
   have e : g0 * m = g0 * m⁻¹⁻¹ := by rw [inv_inv]
   rw [e]
   refine isPtOf_mul_fr hp (inv_mem hmU) (fun r s => (hInt r s).2) (fun r s => by rw [inv_inv]; exact (hInt r s).1) ?_ ?_ c ?_

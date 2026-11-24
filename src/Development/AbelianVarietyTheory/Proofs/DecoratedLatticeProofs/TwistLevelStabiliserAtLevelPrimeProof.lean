@@ -199,8 +199,6 @@ open scoped TensorProduct Pointwise
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.chartLevel_column_sub_one_mem_baseLattice : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : GlobalTheory.AdForm.TwDat I l Z u a Ch), A.Is → ∀ j (hj : j ≤ B.R.m) b, ∀ κ ∈ A.U j b, ∀ v : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F), ((B.T u : ℕ) : 𝓞 (I.rec7 l Z).host.F) ∈ v.asIdeal → ∀ s : Fin ((I.rec7 l Z).R.N j), (fun r => Formalism.UG.prV (E := (I.rec7 l Z).host.E) v (GlobalTheory.AdForm.finM _ (rankN (I.rec7 l Z) j hj) κ r s) - (1 : Matrix (Fin ((I.rec7 l Z).R.N j)) (Fin ((I.rec7 l Z).R.N j)) ((I.rec7 l Z).host.E ⊗[(I.rec7 l Z).host.F] v.adicCompletion (I.rec7 l Z).host.F)) r s) ∈ Formalism.UG.latS (F := (I.rec7 l Z).host.F) (v.adicCompletion (I.rec7 l Z).host.F) (intV (I.rec7 l Z).host.E v) (A.K j hj b).lev.Lb := by
-  first | exact @GlobalTheory.AdForm.level_col_sub_one_mem
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChartLevelColumnSubOneMemBaseLatticeStatement =====
@@ -450,7 +448,7 @@ theorem GlobalTheory.AdForm.comp_fixes_stdPair : ∀ {B : Base} {X : PreX B.toPr
         valuation k (((mt _ κ₀).map (p i).pr) r s - (1 : Matrix (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) k) r s) < 1) := by
     intro κ₀ hκ₀ r s
     have hn := rankN (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G) j hj
-    have h3 := GlobalTheory.T.chartLevel_column_sub_one_mem_baseLattice I hOk hPins l Z u a Ch A hA j hj b κ₀ hκ₀ (p i).v hT (Fin.cast hn s)
+    have h3 := _root_.GlobalTheory.AdForm.level_col_sub_one_mem I hOk hPins l Z u a Ch A hA j hj b κ₀ hκ₀ (p i).v hT (Fin.cast hn s)
     let y : Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).R.N j) → AE (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G) := fun r' =>
       mt _ κ₀ (Fin.cast hn.symm r') s - (1 : Matrix (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (AE (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G))) (Fin.cast hn.symm r') s
     have hy : (fun r' => Formalism.UG.prV (E := (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).host.E) (p i).v (toEAf (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G) (y r'))) =
@@ -469,7 +467,7 @@ theorem GlobalTheory.AdForm.comp_fixes_stdPair : ∀ {B : Base} {X : PreX B.toPr
     have hLb : ∀ x, x ∈ (A.K j hj b).lev.Lb ↔ ∀ j' : Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).R.N j), ∃ r : 𝓞 (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).host.E, x j' = (r : (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).host.E) ∧ (j'.1 + 1 = (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).R.N j → X.piT u ∣ r) :=
       fun x => (hA.reads j hj).lb b x
     rw [← hy] at h3
-    have h4 := GlobalTheory.T.splitPoint_baseLattice_coords_integral_last_in_prime (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G) k (p i) (e i).1 (he i) ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).R.N j) (X.piT u) hpi (A.K j hj b).lev.Lb hLb y h3 (Fin.cast hn r)
+    have h4 := _root_.GlobalTheory.LocMod.SplitCoord.coord_int_last (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G) k (p i) (e i).1 (he i) ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).R.N j) (X.piT u) hpi (A.K j hj b).lev.Lb hLb y h3 (Fin.cast hn r)
     have hyr : y (Fin.cast hn r) = mt _ κ₀ r s - (1 : Matrix (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (AE (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G))) r s := rfl
     rw [hyr] at h4
     have h1 : (p i).pr ((1 : Matrix (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (Fin ((_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G).sp.X j).rank) (AE (_root_.GlobalTheory.Mem.assemble B (I.cols l) Z.W Z.V Z.S Z.N Z.G))) r s) =
@@ -1272,25 +1270,6 @@ open GlobalTheory.AdForm
 open GlobalTheory.AdForm
 
 
-theorem _root_.GlobalTheory.T.unitary_keeps_baseLattice_of_split_components : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
-    (v : HeightOneSpectrum (𝓞 F)) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (φ : E ⊗[F] v.adicCompletion F →+* k),
-    (∀ z, z ∈ Formalism.UG.tensInt (F := F) (v.adicCompletion F) (Formalism.UG.intOE E) (v.adicCompletionIntegers F).toSubring ↔
-      φ z ∈ 𝒪[k] ∧ φ (Formalism.UG.sigR σ (v.adicCompletion F) z) ∈ 𝒪[k]) →
-    ∀ (m : ℕ) (t : 𝓞 E) (Λ : Submodule (𝓞 E) (Fin m → E)),
-    (∀ x, x ∈ Λ ↔ ∀ j : Fin m, ∃ r : 𝓞 E, x j = (r : E) ∧ (j.1 + 1 = m → t ∣ r)) →
-    ∀ q : Unif k, valuation k (φ (Formalism.UG.inclE (F := F) (v.adicCompletion F) (t : E))) = valuation k ((q.1 : 𝒪[k]) : k) →
-    valuation k (φ (Formalism.UG.sigR σ (v.adicCompletion F) (Formalism.UG.inclE (F := F) (v.adicCompletion F) (t : E)))) = 1 →
-    ∀ M : GL (Fin m) (E ⊗[F] v.adicCompletion F), M ∈ Formalism.UG.UJ (Formalism.UG.sigR σ (v.adicCompletion F)) 1 →
-    ∀ h h' : Matrix (Fin m) (Fin m) k, M.val.map φ = h → h * h' = 1 →
-    (∀ u : Fin m → k, ((∀ r, u r ∈ 𝒪[k]) ∧ ∀ r0 : Fin m, r0.1 + 1 = m →
-        ∃ s ∈ 𝒪[k], u r0 = φ (Formalism.UG.inclE (F := F) (v.adicCompletion F) (t : E)) * s) ↔
-      ((∀ r, (h *ᵥ u) r ∈ 𝒪[k]) ∧ ∀ r0 : Fin m, r0.1 + 1 = m →
-        ∃ s ∈ 𝒪[k], (h *ᵥ u) r0 = φ (Formalism.UG.inclE (F := F) (v.adicCompletion F) (t : E)) * s)) →
-    (∀ u : Fin m → k, (∀ r, u r ∈ 𝒪[k]) ↔ ∀ r, (h'ᵀ *ᵥ u) r ∈ 𝒪[k]) →
-    M ∈ Formalism.UG.stabGL (Formalism.UG.latS (F := F) (v.adicCompletion F)
-          (Formalism.UG.tensInt (F := F) (v.adicCompletion F) (Formalism.UG.intOE E) (v.adicCompletionIntegers F).toSubring) Λ) := by
-  first | exact @GlobalTheory.SplitStab.stab_of_split_components
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryKeepsBaseLatticeOfSplitComponentsStatement =====
@@ -1365,7 +1344,7 @@ theorem GlobalTheory.AdForm.std_comp_mem_levelVL : ∀ {B : Base} {X : PreX B.to
     rw [hx]
     simp only [finM, Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.map_apply]
     rw [hφ1]
-  exact GlobalTheory.T.unitary_keeps_baseLattice_of_split_components _ _ (sigD (I.rec7 l Z)) (p i).v k φ hφ4 _ (X.piT u) (A.K j hj b).lev.Lb (fun y => (hA.reads j hj).lb b y) q ((congrArg (valuation k) (hφ2 _)).trans hq)
+  exact _root_.GlobalTheory.SplitStab.stab_of_split_components _ _ (sigD (I.rec7 l Z)) (p i).v k φ hφ4 _ (X.piT u) (A.K j hj b).lev.Lb (fun y => (hA.reads j hj).lb b y) q ((congrArg (valuation k) (hφ2 _)).trans hq)
     ((congrArg (valuation k) (hφ3 _)).trans hc) _ hU1 _ _ hM hhh hkeep hkeep'
 end -- clump:auto
 end -- clump:auto
@@ -1384,14 +1363,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.AdForm
 
 
-theorem _root_.GlobalTheory.T.splitPlace_component_mem_baseLattice_level_of_fixes_pair : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : GlobalTheory.AdForm.TwDat I l Z u a Ch), A.Is → ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : Type)
-    (p : ι → SplitPt (I.rec7 l Z) k) (β : ∀ j i, Frame (p i) ((I.rec7 l Z).sp.X j) (Fin ((I.rec7 l Z).sp.X j).rank))
-    (Q : ∀ j, ι → Pair k (Fin ((I.rec7 l Z).sp.X j).rank)) (L : ∀ j, Lat ((I.rec7 l Z).sp.X j)),
-    GlobalTheory.AdForm.StdT I l Z u p β Q L → ∀ j (hj : j ≤ B.R.m) b i (g : GL (Fin ((I.rec7 l Z).sp.X j).rank) k), g • Q j i = Q j i →
-    ∀ x : Formalism.UG.UPts (sigD (I.rec7 l Z)) (gramN (I.rec7 l Z) j hj) (FiniteAdeleRing (𝓞 (I.rec7 l Z).host.F) (I.rec7 l Z).host.F),
-    x.1.1 = finM _ (rankN (I.rec7 l Z) j hj) ((β j i).gl g) →
-    Formalism.UG.bc (Formalism.UG.prV (E := (I.rec7 l Z).host.E) (p i).v) x.1 ∈ Formalism.UG.levelVL (sigD (I.rec7 l Z)) (gramN (I.rec7 l Z) j hj) (p i).v (A.K j hj b).lev.Lb := by
-  first | exact @GlobalTheory.AdForm.std_comp_mem_levelVL
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceComponentMemBaseLatticeLevelOfFixesPaiStatement =====
@@ -1504,8 +1475,8 @@ theorem stab_mem_level : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok �
     · subst hv
       have hT := GlobalTheory.T.standardDatum_splitPlaces_over_levelPrime I hOk hPins l Z u k ι p β Q L hStd i
       exact GlobalTheory.T.splitPlace_component_keeps_level_functional I hOk hPins l Z u a Ch A hA k ι p β Q L hStd j hj b i g hg x hx hT
-        (GlobalTheory.T.splitPlace_component_mem_baseLattice_level_of_fixes_pair I hOk hPins l Z u a Ch A hA k ι p β Q L hStd j hj b i g hg x hx)
-    · rw [GlobalTheory.T.splitFrameGL_finiteMatrix_offPlace_eq_one _ _ _ _ _ _ g _ (rankN (I.rec7 l Z) j hj) x.1 hx v hv]
+        (_root_.GlobalTheory.AdForm.std_comp_mem_levelVL I hOk hPins l Z u a Ch A hA k ι p β Q L hStd j hj b i g hg x hx)
+    · rw [_root_.GlobalTheory.StabOff.bc_prV_finM_eq_one _ _ _ _ _ _ g _ (rankN (I.rec7 l Z) j hj) x.1 hx v hv]
       exact Subgroup.one_mem _
   exact ⟨⟨x.1, hmem⟩, hx⟩
 

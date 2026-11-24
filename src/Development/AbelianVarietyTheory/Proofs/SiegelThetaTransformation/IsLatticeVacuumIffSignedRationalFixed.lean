@@ -66,8 +66,6 @@ open ReciprocityTheory.ChartRestriction.G.I2 (polyDeriv)
 open scoped TensorProduct ComplexConjugate Real Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.exists_splitIdempotents_of_relTraceOneModTwo : ∀ (D : D7) (w : D.host.E), IsIntegral ℤ w → w + cc w = 1 → IdemTwo w → ∃ s : Finset (Formalism.L2.Theta.AE D), (∀ e ∈ s, IsSplitIdem D e ∧ ∀ e' ∈ s, e ≠ e' → e * e' = 0 ∧ e * cA D e' = 0) ∧ (∃ a ∈ AddSubgroup.closure {z : Formalism.L2.Theta.AE D | ∃ α ∈ intAf D.host.F, ∃ o : 𝓞 D.host.E, z = pairA D.host.F 0 α ⊗ₜ[D.host.F] (o : D.host.E)}, pairA D.host.F 0 1 ⊗ₜ[D.host.F] w - ∑ e ∈ s, e = 2 * a) ∧ (∃ a ∈ AddSubgroup.closure {z : Formalism.L2.Theta.AE D | ∃ α ∈ intAf D.host.F, ∃ o : 𝓞 D.host.E, z = pairA D.host.F 0 α ⊗ₜ[D.host.F] (o : D.host.E)}, pairA D.host.F 0 1 ⊗ₜ[D.host.F] (1 : D.host.E) - ∑ e ∈ s, (e + cA D e) = 2 * a) ∧ ∀ e, IsSplitIdem D e → e ∈ AddSubgroup.closure {z : Formalism.L2.Theta.AE D | ∃ α ∈ intAf D.host.F, ∃ o : 𝓞 D.host.E, z = pairA D.host.F 0 α ⊗ₜ[D.host.F] (o : D.host.E)} ∧ (e ∈ s ∨ cA D e ∈ s ∨ ∃ a ∈ AddSubgroup.closure {z : Formalism.L2.Theta.AE D | ∃ α ∈ intAf D.host.F, ∃ o : 𝓞 D.host.E, z = pairA D.host.F 0 α ⊗ₜ[D.host.F] (o : D.host.E)}, e = 2 * a) := by
-  first | exact @GlobalTheory.IdemModTwo.exists_split_idempotents
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsSplitIdempotentsOfRelTraceOneModTwoStatement =====
@@ -183,13 +181,7 @@ variable {ψ ω} {H : AddSubgroup (WO S T)}
 theorem symplOH_skew (x y : WO S T) : symplOH S T y x = -symplOH S T x y := by
   rw [symplOH, symplOH, symplO_skew, mul_neg]
 
-theorem symplOH_self (x : WO S T) : symplOH S T x x = 0 := by
-  have h2 := symplO_skew S T x x
-  rw [symplOH]
-  have h3 : symplO S T x x + symplO S T x x = 0 := by rw [← eq_neg_iff_add_eq_zero]; exact h2
-  have h4 := symplOH_add_self S T x x
-  rw [symplOH, ← mul_add, h3, mul_zero] at h4
-  rw [← h4, mul_zero]
+alias symplOH_self := _root_.GlobalTheory.OrientedHeis.symplOH_self
 
 theorem sg_add (hH : ∀ u ∈ H, ∀ u' ∈ H, ψ (symplO S T u u') = 1) (hω : ∀ u ∈ H, ω • u ∈ H)
     (hω' : ∀ u ∈ H, ω • u + cA D ω • u = u) {u u' : WO S T} (hu : u ∈ H) (hu' : u' ∈ H) :
@@ -265,7 +257,7 @@ theorem isLatVac_iff : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ w : D.host.
     have h2 := (TensLat.epsW_semichar hΛ hL hw hw1 hy).1
     rw [sg, h1, hfin, Complex.exp_neg]
     exact (eq_inv_of_mul_eq_one_left ((sq _).symm.trans h2)).symm
-  obtain ⟨s, hs, ⟨a, ha, hwa⟩, ⟨b, hb, h1b⟩, hall⟩ := GlobalTheory.T.exists_splitIdempotents_of_relTraceOneModTwo D w hw hw1 hw2
+  obtain ⟨s, hs, ⟨a, ha, hwa⟩, ⟨b, hb, h1b⟩, hall⟩ := _root_.GlobalTheory.IdemModTwo.exists_split_idempotents D w hw hw1 hw2
   have hhalf : ∀ e, IsSplitIdem D e → ∀ u ∈ hatA S T (tens Λ L), IsHalf e u → sg C.ψ ω u = 1 := by
     intro e he u hu hh
     have heu := (isHalf_iff _ _).1 hh

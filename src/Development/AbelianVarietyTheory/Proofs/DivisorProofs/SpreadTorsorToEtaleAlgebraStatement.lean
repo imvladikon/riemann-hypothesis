@@ -333,7 +333,7 @@ theorem spread_torsor_to_etale : ∀ (T O : Type) [CommRing T] [CommRing O] [Alg
   intro T O _ _ _ _ _ P _ φ hφ hind q hq D _ _ act hD
   classical
 
-  obtain ⟨j, Dj, _, _, actj, hDj, ⟨e⟩⟩ := GlobalTheory.T.exists_zmodTorsor_model_of_filtered_colimit _ _ _ (GlobalTheory.FiniteTypeColimit.isColimit
+  obtain ⟨j, Dj, _, _, actj, hDj, ⟨e⟩⟩ := _root_.GlobalTheory.TorsorColim.exists_torsor_model_of_isColimit _ _ _ (GlobalTheory.FiniteTypeColimit.isColimit
     (CommRingCat.of (GenFib T O))) q hq D act hD
   let U := (GlobalTheory.FiniteTypeColimit.diagram (CommRingCat.of (GenFib T O))).obj j
   let u : U →+* GenFib T O := ((GlobalTheory.FiniteTypeColimit.inclusions (CommRingCat.of (GenFib T O))).app j).hom
@@ -378,25 +378,6 @@ section -- clump:auto
 
 open IsLocalRing Polynomial
 
-theorem _root_.GlobalTheory.T.spread_torsor_to_etale_algebra : ∀ (T O : Type) [CommRing T] [CommRing O] [Algebra T O]
-    [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O]
-    (P : Ideal (Polynomial T)) [P.IsPrime] (φ : Localization.AtPrime P →+* O),
-    φ.comp (algebraMap (Polynomial T) _) = algebraMap (Polynomial T) O →
-    GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale φ →
-    ∀ (q : ℕ), 0 < q → ∀ (D : Type) [CommRing D] [Algebra (GlobalTheory.LocAcyc.GenFib T O) D]
-      (act : Multiplicative (ZMod q) →* (D ≃ₐ[GlobalTheory.LocAcyc.GenFib T O] D)),
-      GlobalTheory.LocAcyc.IsZModTorsor (GlobalTheory.LocAcyc.GenFib T O) D q act →
-    ∃ (E : Type) (_ : CommRing E) (_ : Algebra (Polynomial T) E) (_ : Algebra T E)
-      (_ : IsScalarTower T (Polynomial T) E) (_ : Algebra.Etale (Polynomial T) E)
-      (ψ : E →ₐ[Polynomial T] O) (DE : Type) (_ : CommRing DE)
-      (_ : Algebra (GlobalTheory.LocAcyc.GenFib T E) DE)
-      (actE : Multiplicative (ZMod q) →* (DE ≃ₐ[GlobalTheory.LocAcyc.GenFib T E] DE)),
-      GlobalTheory.LocAcyc.IsZModTorsor (GlobalTheory.LocAcyc.GenFib T E) DE q actE ∧
-      ∀ s : DE →+* GlobalTheory.LocAcyc.GenFib T O,
-        (∀ e : E, s (algebraMap (GlobalTheory.LocAcyc.GenFib T E) DE (algebraMap E _ e)) =
-          algebraMap O (GlobalTheory.LocAcyc.GenFib T O) (ψ e)) →
-        Nonempty (D →ₐ[GlobalTheory.LocAcyc.GenFib T O] GlobalTheory.LocAcyc.GenFib T O) := by
-  first | (exact @GlobalTheory.LocAcyc.spread_torsor_to_etale)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpreadTorsorToEtaleAlgebraStatement =====

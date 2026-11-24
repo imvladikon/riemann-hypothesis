@@ -69,6 +69,7 @@ import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacRowScalar
 
@@ -155,7 +156,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ColShiftVacEqSmul =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExpansionSumProdLastVertexMovedEq =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExpansionSumProdLastVertexMovedEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowShiftEq\npublic import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnramifiedCharacter\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LatNotSelfDual\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDataLines\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsThetaAtOfVac\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderMemAndPlaceAboveEqOfMem\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsThetaChrTied\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActOChiRight\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActOMemLatOOfHat\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ColPtInvMemStdLatIff\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlippedLocalTotalTensorFixedByInnerVertexLevel\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GivenLevelInner\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridStandardVacuumScalarEqProdLocalPlaces\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatHatStabOfHatL\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionSchrodingerModelFiniteIdempotent\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLatticeVacuumEqProdSplitPlaceFactorsStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExpansionSumProdLastVertexMovedEq", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowShiftEq\npublic import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnramifiedCharacter\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetIdlVal\npublic import Development.AbelianVarietyTheory.Definitions.LatticeFrames.LatNotSelfDual\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDataLines\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsThetaAtOfVac\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderMemAndPlaceAboveEqOfMem\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem\npublic import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsThetaChrTied\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActOChiRight\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.ActOMemLatOOfHat\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ColPtInvMemStdLatIff\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlippedLocalTotalTensorFixedByInnerVertexLevel\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GivenLevelInner\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridStandardVacuumScalarEqProdLocalPlaces\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatHatStabOfHatL\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionSchrodingerModelFiniteIdempotent\nimport Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLatticeVacuumEqProdSplitPlaceFactorsStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Etale.Weakly\nimport Mathlib.RingTheory.Finiteness.ModuleFinitePresentation\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAnti\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -435,7 +436,7 @@ theorem map_conj (S : GridChoice W U) {t : T} (ht : t ∈ U) {w : Pl D.host.E} (
   obtain ⟨P, e, he, hsupp, hoff⟩ := S.N.u_supp _ hX
   have hn := GlobalTheory.RowMoveAt.notOff S ht hw
   have hu := GlobalTheory.RowMoveAt.map_mt_eq_one hn he hoff hsupp
-  have hu' := GlobalTheory.RowMoveAt.map_mt_eq_one hn he hoff (GlobalTheory.StdHalfLat.suppAt_inv' hsupp)
+  have hu' := GlobalTheory.RowMoveAt.map_mt_eq_one hn he hoff (_root_.GlobalTheory.SplitPlace.suppAt_inv hsupp)
   rw [show Formalism.L2.Theta.mt _ ((S.N.u X)⁻¹ * g * S.N.u X).1 =
       Formalism.L2.Theta.mt _ (S.N.u X).1⁻¹ * Formalism.L2.Theta.mt _ g.1 * Formalism.L2.Theta.mt _ (S.N.u X).1 from rfl,
     Matrix.map_mul, Matrix.map_mul, hu, hu', Matrix.one_mul, Matrix.mul_one]
@@ -667,7 +668,7 @@ theorem col_scalar (S : GridChoice W U) {t μ₀ : T} (hL : L.Is μ₀) (ht : t 
   have e : G.Λ (.top D.R.m) = G.sp.topDec.lat (G.Λ (.grid D.R.m D.R.m)) (fun _ => 1) := G.sp.topLat
   have h2 : Lev.finE (G.V (.top D.R.m)) (finEmb G.sp.topDec k).1 ∈
       Formalism.UG.stabGL (Formalism.L2.Herm.hatL (F := D.host.F) (G.Λ (.top D.R.m))) := by
-    rw [e]; exact GlobalTheory.LastColLat.finEmb_stab G.sp.topDec _ k h1
+    rw [e]; exact _root_.GlobalTheory.FinEmbLat.finEmb_mem_stabGL G.sp.topDec _ k h1
   have h4 := GlobalTheory.LastColLat.topLast_stab S.N _ (GlobalTheory.LastColLat.conj_stab S.N (X := .top D.R.m) le_rfl _ h2)
   have key := GlobalTheory.T.weilLatticeVacuum_eq_prod_splitPlace_factors hW (S.N.selfDual hn.1) (S.N.selfDual hn.2) (locPl G t) (fun w hw => isIdemAt_idemAt hL G t hw)
     (Good.under_injOn hL G t) (fun v hv' => by rw [hS, hT]; exact ⟨mu_charUnramAt hL G t _ hv', mu_charUnramAt hL G t _ hv'⟩)
@@ -860,34 +861,6 @@ open GlobalTheory.LastVertexMove
 
 variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil} {U : Set T}
 
-theorem lat_col (S : GridChoice W U) {t : T} (ht : t ∈ U) (k : FinPt G (.grid D.R.m D.R.m))
-    (hk : finG (G.V (.grid D.R.m D.R.m)) k ∈ S.levRow t D.R.m le_rfl)
-    (x : WO (G.pS (.top t (lastIx D))) (G.pT (.top t (lastIx D)))) :
-    actO _ _ (colPt S t (finEmb G.sp.topDec k)).1⁻¹ (colPt S t (finEmb G.sp.topDec k)).2⁻¹ x ∈ stdLat S (.top t (lastIx D)) ↔
-      x ∈ stdLat S (.top t (lastIx D)) :=
-  GlobalTheory.LastColLat.colPt_inv_mem_stdLat_iff S ht k hk x
-
-theorem lat_row (S : GridChoice W U) {t : T} (ht : t ∈ U) (k : FinPt G (.grid D.R.m D.R.m))
-    (hk : finG (G.V (.grid D.R.m D.R.m)) k ∈ S.levRow t D.R.m le_rfl)
-    (x : WO (G.pS (.chi (lastIx D) D.R.m : Pair T)) (G.pT (.chi (lastIx D) D.R.m : Pair T))) :
-    actO _ _ (rowPt S k).1⁻¹ (rowPt S k).2⁻¹ x ∈ stdLat S (.chi (lastIx D) D.R.m) ↔ x ∈ stdLat S (.chi (lastIx D) D.R.m) :=
-  GlobalTheory.LastRowLat.rowPt_mem_stdLat S ht k hk x
-
-theorem vac_col (S : GridChoice W U) (t : T) (g : FinPt G (.top D.R.m))
-    (hlat : ∀ x, actO _ _ (colPt S t g).1⁻¹ (colPt S t g).2⁻¹ x ∈ stdLat S (.top t (lastIx D)) ↔ x ∈ stdLat S (.top t (lastIx D))) :
-    ∃ c : ℂ, colShift S t g (S.Z.vac (.top t (lastIx D))) = c • S.Z.vac (.top t (lastIx D)) :=
-  GlobalTheory.LastVertexVac.colShift_vac_eq_smul S t g hlat
-
-theorem vac_row (S : GridChoice W U) (k : FinPt G (.grid D.R.m D.R.m))
-    (hlat : ∀ x, actO _ _ (rowPt S k).1⁻¹ (rowPt S k).2⁻¹ x ∈ stdLat S (.chi (lastIx D) D.R.m) ↔
-      x ∈ stdLat S (.chi (lastIx D) D.R.m)) :
-    ∃ c : ℂ, rowShift S k (S.Z.vac (.chi (lastIx D) D.R.m)) = c • S.Z.vac (.chi (lastIx D) D.R.m) :=
-  GlobalTheory.LastRowVac.vac_row_scalar S k hlat
-
-theorem sb_std (S : GridChoice W U) {t : T} (ht : t ∈ U) {p : Pair T} (hp : DefPair D.R.m p) (d : FinDatum G t p)
-    (hP : d.P = locPl G t) : IsSBHalf d.e (stdLat S p) d.fn :=
-  GlobalTheory.LastVertexMove.isSBHalf_stdLat S ht hp d hP
-
 theorem loc (S : GridChoice W U) {t : T} {Φ : G.Datum} {β : CosFam G t} {τ : PureDat G t →₀ ℂ} {μ₀ : T}
     (hL : L.Is μ₀) (hde : Nat.Coprime D.host.pde (D.host.QS * D.host.q) ∧ Nat.Coprime D.host.pde' (D.host.QS * D.host.q))
     (hc : ∀ P ∈ L.Q t, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal)
@@ -988,8 +961,8 @@ theorem productFn_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
     τ.sum fun d a => a * (∏ j, S.Z.vec (d.1 j) (w j)) * ∏ i, S.Z.vec (d.2 i) (v i) := by
   intro D T L sc G W U S t Φ β τ μ₀ hL hde hc ht hβ hexp hvec k hk w v
   obtain ⟨e, he, hdat, -⟩ := id hexp
-  obtain ⟨cc, hcc⟩ := vac_col S t (finEmb G.sp.topDec k) (lat_col S ht k hk)
-  obtain ⟨cr, hcr⟩ := vac_row S k (lat_row S ht k hk)
+  obtain ⟨cc, hcc⟩ := _root_.GlobalTheory.LastVertexVac.colShift_vac_eq_smul S t (finEmb G.sp.topDec k) (_root_.GlobalTheory.LastColLat.colPt_inv_mem_stdLat_iff S ht k hk)
+  obtain ⟨cr, hcr⟩ := _root_.GlobalTheory.LastRowVac.vac_row_scalar S k (_root_.GlobalTheory.LastRowLat.rowPt_mem_stdLat S ht k hk)
   have hloc := loc S hL hde hc ht hβ hexp hvec k hk cc cr hcc hcr
   rcases τ.support.eq_empty_or_nonempty with h0 | ⟨d₀, hd₀⟩
   · simp [Finsupp.sum, h0]
@@ -1016,19 +989,19 @@ theorem productFn_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
   have hsc : ∀ d ∈ τ.support, colShift S t (finEmb G.sp.topDec k) (S.Z.vec (d.1 (lastIx D))) =
       Tc (lastIx D) (cc • moveFn (colPt S t (finEmb G.sp.topDec k)) (d.1 (lastIx D)).fn) := by
     intro d hd
-    have hsb := sb_std S ht (defPair_top t (lastIx D)) (d.1 (lastIx D)) ((hdat d hd).1 (lastIx D)).1
+    have hsb := _root_.GlobalTheory.LastVertexMove.isSBHalf_stdLat S ht (defPair_top t (lastIx D)) (d.1 (lastIx D)) ((hdat d hd).1 (lastIx D)).1
     rw [((hdat d hd).1 (lastIx D)).2.1] at hsb
     rw [hvc d hd, map_smul, colShift_eq]
     exact om_model S (defPair_top t (lastIx D)) (inRange_top t (lastIx D)) he (Tc (lastIx D)) (hTc (lastIx D)) _ cc
-      (lat_col S ht k hk) hcc _ hsb
+      (_root_.GlobalTheory.LastColLat.colPt_inv_mem_stdLat_iff S ht k hk) hcc _ hsb
   have hsr : ∀ d ∈ τ.support, rowShift S k (S.Z.vec (d.2 (lastIx D))) =
       Tr (lastIx D) (cr • moveFn (rowPt S k) (d.2 (lastIx D)).fn) := by
     intro d hd
-    have hsb := sb_std S ht (defPair_chi (lastIx D)) (d.2 (lastIx D)) ((hdat d hd).2 (lastIx D)).1
+    have hsb := _root_.GlobalTheory.LastVertexMove.isSBHalf_stdLat S ht (defPair_chi (lastIx D)) (d.2 (lastIx D)) ((hdat d hd).2 (lastIx D)).1
     rw [((hdat d hd).2 (lastIx D)).2.1] at hsb
     rw [hvr d hd, map_smul, rowShift_eq]
     exact om_model S (defPair_chi (lastIx D)) (inRange_chi (lastIx D)) he (Tr (lastIx D)) (hTr (lastIx D)) _ cr
-      (lat_row S ht k hk) hcr _ hsb
+      (_root_.GlobalTheory.LastRowLat.rowPt_mem_stdLat S ht k hk) hcr _ hsb
   have key := GlobalTheory.funProd_multilinear_sum_eq (prodForm Tc Tr w v) τ
     (fun d j => ⟨Function.update (fun j => (d.1 j).fn) (lastIx D)
       (cc • moveFn (colPt S t (finEmb G.sp.topDec k)) (d.1 (lastIx D)).fn) j, Submodule.mem_top⟩)

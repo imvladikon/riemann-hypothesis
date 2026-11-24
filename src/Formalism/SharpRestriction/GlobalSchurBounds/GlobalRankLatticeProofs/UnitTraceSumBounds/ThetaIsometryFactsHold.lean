@@ -196,8 +196,7 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem wwInjective_of (h : PI.WwCauchyBinet.WwCauchyBinet) : PI.WwInjective.WwInjective :=
-  PI.WwInjectiveWork.wwInjective_of h
+alias wwInjective_of := _root_.PI.WwInjectiveWork.wwInjective_of
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WwInjective =====

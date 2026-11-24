@@ -151,7 +151,7 @@ theorem exists_pres_heq : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn
   intro X px I hX U Xg tr L eG0 hI hV hL hG cV i c0L hcV hmap hin hβ hgram
   obtain ⟨e0, he0, he_rho, he_pair, he_nab, he_del, he_rat, he_li⟩ :=
     vv_cast_heq X.B.fields.emb (LiftBrg.rkEq X i) (X.B.wts.lamV ((i : ℕ) + 1))
-      (fun τ => Bridge.lamLdef (D := X.toD7) (Vc X.toD7 i).rank ((i : ℕ) + 1) τ) (GlobalTheory.T.baseWeight_eq_forcedLiftWeight X i)
+      (fun τ => Bridge.lamLdef (D := X.toD7) (Vc X.toD7 i).rank ((i : ℕ) + 1) τ) (_root_.GlobalTheory.Mem.LiftWt.lamV_eq_lamLdef X i)
   let c : VV X.B.fields.K (X.B.wts.lamV ((i : ℕ) + 1)) →ₛₗ[X.B.embLL] (cV i).W :=
     { toFun := fun v => c0L (e0 v)
       map_add' := fun v w => by show c0L (e0 (v + w)) = c0L (e0 v) + c0L (e0 w); rw [map_add (f := _)]; exact c0L.map_add _ _
@@ -274,12 +274,12 @@ theorem exists_liftSide_at : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.Co
   intro X px I hX U Xg tr L eG hI hV hL hG cV i c0L hcV hmap hin hβ hg _
   obtain ⟨c, hce, hc, hP⟩ := exists_pres_heq X px I hX U Xg tr L eG hI hV hL hG cV i c0L hcV hmap hin hβ hg
   choose P hR hco hC using hP
-  have hF : ∀ t, LiftBrg.FrameOK X I U i t 1 1 := fun t => GlobalTheory.T.identity_integralUnitaryFrameCoordinates_of_unitGram X px I U i t hg
-  choose a ha using fun t => GlobalTheory.T.exists_finiteGroupAction_liftForms_rightTranslation X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
-  have hk := fun t => GlobalTheory.T.splitHecke_operators_lifts_doubleCoset X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
-  have hki := fun t => GlobalTheory.T.exists_inertHecke_doubleCosetOperators_lifts X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
+  have hF : ∀ t, LiftBrg.FrameOK X I U i t 1 1 := fun t => _root_.GlobalTheory.Mem.R3.LiftBrg.frameOK_one_of_gram_eq_one X px I U i t hg
+  choose a ha using fun t => _root_.GlobalTheory.Mem.R3.LiftBrg.ActQ.exists_actTie X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
+  have hk := fun t => _root_.GlobalTheory.Mem.R3.LiftBrg.SplitTie.split_tie X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
+  have hki := fun t => _root_.GlobalTheory.Mem.R3.LiftBrg.InertTie.exists_inertTie X px I hX U Xg tr L eG hI hV hL hG cV i t 1 1 (hF t) (P t) (hR t)
   refine ⟨fun t => Bridge.SideRealG.mk (P t) (a t) (Classical.choice (hk t)), fun t => ⟨ha t, hC t, hki t⟩,
-    GlobalTheory.T.standardLiftReading_of_decoratedLatticePresentations X px I hX U Xg tr L eG hI hV hL hG cV i hβ hg c hc P hR hco, fun t φ h v' hv => ?_⟩
+    _root_.GlobalTheory.Mem.R3.LiftBrg.brgStdV_of_readsStd_one X px I hX U Xg tr L eG hI hV hL hG cV i hβ hg c hc P hR hco, fun t φ h v' hv => ?_⟩
   refine ((hR t _ h).trans (hco t _)).trans (hce _ _ ?_)
   rw [LinearEquiv.symm_apply_apply]
   exact hv
@@ -289,7 +289,7 @@ theorem exists_brgL_at : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn 
   have hVP : Seed.VPos X.toD7 := fun i => X.B.V_posDef _ (by omega) i.2
   obtain ⟨cX, -, prX, gramR, c0R, -, hcX, -, hdual, hiso, hgram, hmapR, -, hinR, -⟩ :=
     exists_coefData X.toD7 hVP θ hθ MX
-  have hR := GlobalTheory.T.exists_rowForms_adelic_decoratedLattices X px I hX U Xg tr L eG hI hV hL hG cX gramR c0R hcX hgram hmapR hinR hβX hsX
+  have hR := _root_.GlobalTheory.Mem.R3.RowsRead.exists_rowSide X px I hX U Xg tr L eG hI hV hL hG cX gramR c0R hcX hgram hmapR hinR hβX hsX
   have hLf := fun i => exists_liftSide_at X px I hX U Xg tr L eG hI hV hL hG cV i (c0L i) (hcV i) (hmapL i) (hinL i) (hβV i)
     (gram_V X hI.spaces i) (hsV i)
   obtain ⟨sR, hsR, hstR⟩ := hR
@@ -354,8 +354,6 @@ open scoped TensorProduct InnerProductSpace
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.IndefR.RecTie Formalism.IndefR.Lev Formalism.L2.Rows GlobalTheory.Mem GlobalTheory.Mem.R3 GlobalTheory.Mem.Col2
 
-theorem _root_.GlobalTheory.T.exists_adelicReading_definiteForms_given_coefficients : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B px) (hX : X.B.fields.Ok) (U : Set I.ι) (Xg : Finset (Gc X.B px → X.B.LL)) (tr : TrI X.B px) (L : Formalism.IndefR.Links.LevCh X.toD7 (TupU I U)) (eG : Gc X.B px ≃* G0 L.Pg X.toD7.R.r), I.Ok → ValsIn I → LevOf X I U L → IsPlacewiseIdentity X (px := px) eG → L.βX = 1 → (∀ i, L.βV i = 1) → Seed.FrmC.StdLat X.toD7.sp.X' → (∀ i, Seed.FrmC.StdLat (Vc X.toD7 i)) → ∀ θ : InfFam X.toD7, IsInfFam θ → ∀ MX : DSModel X.toD7.sp.X' (parB (Ptw X.toD7) X.toD7.R.m), ∀ (cV : ∀ i, CoefA (Vc X.toD7 i)) (c0L : ∀ i : Fin X.toD7.R.m, VV X.toD7.what₂.LL (fun τ => Bridge.lamLdef (Vc X.toD7 i).rank ((i : ℕ) + 1) τ) →ₛₗ[X.toD7.what₂.embLL] (cV i).W), (∀ i, (cV i).Is) → (∀ i, Bridge.CoefMapTie (Vc X.toD7 i) (cV i).coef (c0L i) (rhoVr (labLL X.toD7) _)) → (∀ i x y, inner ℂ (c0L i x) (c0L i y) = X.toD7.what₂.embLL (pairVr (labLL X.toD7) _ (if X.toD7.sp.Vneg ((i : ℕ) + 1) then -(Vc X.toD7 i).gram else (Vc X.toD7 i).gram) x y)) → ∃ (cX : CoefA X.toD7.sp.X') (pl : PlS X.B px → Pl X.toD7.host.E) (Sb : Finset (Pl X.toD7.host.E)) (Bd : Seed.BType (famR X I hX U Xg tr) L cX cV pl) (plI : PlI X.B px → Pl X.toD7.host.E) (SF : Finset (HeightOneSpectrum (𝓞 X.toD7.host.F))) (prX : cX.W →ₗ[ℂ] SmT MX →ₗ[ℂ] ℂ), cX.Is ∧ IsDualPair θ MX cX prX ∧ Seed.PrIso MX cX prX ∧ Seed.BrgL (famR X I hX U Xg tr) L eG cX cV pl Sb Bd plI SF ∧ BrgStdR X I hX U Xg tr L cX (fun t φ => Bd.jR t φ) ∧ (∀ i, BrgStdV X I hX U Xg tr L i (cV i) fun t φ => Bd.jL i t φ) ∧ ∀ i : Fin X.toD7.R.m, ∀ (t : TupU I U) (φ : (Formalism.L2.Col.mtKGSD (Pr := X.B.primes px) X.B.wts I.Ch I.sel t.1 ((i : ℕ) + 1)).EqFun) (h : Bridge.Gf (Vc X.toD7 i)) v', HEq v' (φ.1 (LiftBrg.ptL X I U i t 1 1 h)) → Bd.jL i t ((by with_unfolding_all exact ((Formalism.L2.Col.mtKGSD (Pr := X.B.primes px) X.B.wts I.Ch I.sel t.1 ((i : ℕ) + 1)).res (Formalism.L2.Col.mtKOk X.B.wts I.Ch I.sel t.1 hX ((i : ℕ) + 1)) φ :))) h = c0L i v' := by
-  first | exact @GlobalTheory.Mem.R3.BrgAt.exists_brgL_at
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicReadingDefiniteFormsGivenCoefficientStatement =====

@@ -98,7 +98,7 @@ theorem pairFiveS_surj (bd : LeafBd) (q : ℕ) {J : Type} [SmallCategory J] [IsF
   rw [← ha, ← hnat q _ _ (c l) hP (hm l)] at hu
   obtain ⟨M, g1, g2, -⟩ := IsFilteredOrEmpty.cocone_objs k l
   refine ⟨M, Hs.pull q (F.map g1.op) _ _ s + Hs.pull q (F.map g2.op) _ _ (δ q _ m i a), ?_⟩
-  rw [map_add (f := _), ← Hs.pullComp, ← Hs.pullComp, hc, hc, hu, add_sub_cancel]
+  rw [map_add (f := _), ← _root_.LateralTheory.CohomologicalPurity.Hs.pull_comp', ← _root_.LateralTheory.CohomologicalPurity.Hs.pull_comp', hc, hc, hu, add_sub_cancel]
 
 theorem pairFiveS_inj (bd : LeafBd) (q : ℕ) {J : Type} [SmallCategory J] [IsFiltered J] (F : Jᵒᵖ ⥤ Arrow Spc)
     (P : Arrow Spc) (c : ∀ j, P ⟶ F.obj (op j)) (hc : ∀ j k (f : j ⟶ k), c k ≫ F.map f.op = c j)
@@ -113,7 +113,7 @@ theorem pairFiveS_inj (bd : LeafBd) (q : ℕ) {J : Type} [SmallCategory J] [IsFi
   rw [← Hs.fgt_pull] at hk
   obtain ⟨a, ha⟩ := ((hex q _ (hm k) m i).2.2 _).mp hk
   have hz : δ q P m i (pull _ (c k).left (tw q i) m a) = 0 := by
-    rw [← hnat q _ _ (c k) hP (hm k), ha, ← Hs.pullComp, hc, hy]
+    rw [← hnat q _ _ (c k) hP (hm k), ha, ← _root_.LateralTheory.CohomologicalPurity.Hs.pull_comp', hc, hy]
   obtain ⟨b, hb⟩ := ((hex q P hP m i).2.1 _).mp hz
   obtain ⟨l, e, he⟩ := (hR m).1 b
   obtain ⟨M, g1, g2, -⟩ := IsFilteredOrEmpty.cocone_objs k l
@@ -127,7 +127,7 @@ theorem pairFiveS_inj (bd : LeafBd) (q : ℕ) {J : Type} [SmallCategory J] [IsFi
     ← GlobalTheory.EtC.pull_comp, Arrow.w (F.map h.op), GlobalTheory.EtC.pull_comp] at hp
   refine ⟨p, f ≫ g1 ≫ h, ?_⟩
   have e1 : F.map (f ≫ g1 ≫ h).op = F.map (g1 ≫ h).op ≫ F.map f.op := by rw [op_comp, F.map_comp]
-  rw [e1, Hs.pullComp, ← ha, hnat q _ _ _ (hm p) (hm k), hp]
+  rw [e1, _root_.LateralTheory.CohomologicalPurity.Hs.pull_comp', ← ha, hnat q _ _ _ (hm p) (hm k), hp]
   exact ((hex q _ (hm p) m i).2.1 _).mpr ⟨_, rfl⟩
 
 theorem pairFiveS : PairFiveS := by
@@ -1099,9 +1099,7 @@ theorem etale_excision_sheaf_level_of_excision : LateralTheory.CohomologicalPuri
   apply LateralTheory.CohomologicalPurity.LeafExcSheaf_of <;> first | exact etale_excision_cokernel_free_of_excision | exact etale_excision_surjective_geometric_points_of_excision | exact etale_excision_injective_geometric_points_of_excision
 theorem etale_excision_isomorphism_of_excision : LateralTheory.CohomologicalPurity.LeafExc := by
   apply LateralTheory.CohomologicalPurity.LeafExc_of <;> first | exact etale_excision_formal_reduction_of_excision | exact etale_excision_sheaf_level_of_excision
-theorem etale_excision_inductive_of_reduction : LateralTheory.CohomologicalPurity.LeafIndExc := by
-  apply LateralTheory.Fix.LeafIndExc.intersectionNumber_baseChange
-theorem intersectionNumber_baseChange : LateralTheory.CohomologicalPurity.LeafIndExc := etale_excision_inductive_of_reduction
+alias intersectionNumber_baseChange := _root_.LateralTheory.Fix.LeafIndExc.intersectionNumber_baseChange
 end LateralTheory.Fin.LeafIndExc
 end -- clump:auto
 end -- clump:auto

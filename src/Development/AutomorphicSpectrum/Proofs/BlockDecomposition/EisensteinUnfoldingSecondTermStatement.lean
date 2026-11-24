@@ -83,15 +83,6 @@ open GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz (schwartzA)
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
-theorem _root_.GlobalTheory.T.block_weil_action_theta_unfolding : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsCharAF D.host.F ψ → ∀ (V : HSp D) (r s : ℕ)
-    (b : Matrix (Fin r) (Fin r) D.host.E), (b.map (D.sp.cm.sig : D.host.E → D.host.E)).transpose = b →
-    ∀ (a : Matrix (Fin (r + s)) (Fin (r + s)) D.host.E), IsUnit a.det →
-    ∀ (Φ : Mx D V.rank (r + s) → ℂ) (y₁ : Mx D V.rank r) (y₂ : Mx D V.rank s) (v : Mx D V.rank ((r + s) + (r + s))),
-    xPart v = -HMul.hMul (colJoin y₁ (0 : Mx D V.rank s)) (rat a) →
-    yPart v = HMul.hMul (colJoin (-HMul.hMul y₁ (rat b)) y₂) (rat (cT (D.sp.cm.sig : D.host.E →+* D.host.E) a)⁻¹) →
-    ∀ (p : Matrix (Fin V.rank) (Fin r) D.host.E) (q : Matrix (Fin V.rank) (Fin s) D.host.E),
-      Heisenberg₂ ψ V v Φ (rat (colJoin p q * a)) = cellTerm ψ V b a Φ p q y₁ y₂ := by
-  first | exact @GlobalTheory.CompanionTheory.EisUnfold.Summand.summand
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -633,10 +624,7 @@ namespace GlobalTheory.CompanionTheory.EisUnfold.Period
 
 variable {D : D7}
 
-theorem rat_sub' {m n : ℕ} (p p₀ : Matrix (Fin m) (Fin n) D.host.E) :
-    (rat (p - p₀) : Mx D m n) = rat p - rat p₀ := by
-  ext i j
-  simp [rat]
+alias rat_sub' := _root_.GlobalTheory.MixModel.rat_sub
 
 theorem psi_inner_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (V : HSp D) {s : ℕ}
     (q q₀ : Matrix (Fin V.rank) (Fin s) D.host.E) :
@@ -1037,7 +1025,7 @@ theorem unfold2 : Unfold2 := by
     rw [hT]
     dsimp only
     rw [← e.tsum_eq]
-    exact tsum_congr fun pq => GlobalTheory.T.block_weil_action_theta_unfolding D ψ hψ V r s b.1 b.2 a ha Φ y₁ y₂ _ hx hy pq.1 pq.2
+    exact tsum_congr fun pq => _root_.GlobalTheory.CompanionTheory.EisUnfold.Summand.summand D ψ hψ V r s b.1 b.2 a ha Φ y₁ y₂ _ hx hy pq.1 pq.2
   have hper : ∀ γ ∈ ratMx D V.rank (r + s), ∀ y, T (γ + y) = T y := by
     intro γ hγ y
     obtain ⟨g, rfl⟩ := mem_ratMx.1 hγ

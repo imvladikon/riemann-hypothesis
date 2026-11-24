@@ -316,8 +316,6 @@ end GlobalTheory.UMin.ThNe
 
 namespace GlobalTheory.UMin.ThNe
 
-theorem spMap_id_self (R : Type) [CommRing R] : spMap (RingHom.id R) = 𝟙 (Sp R) := Spec.map_id _
-
 theorem th_ne_zero : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (L : LB G.left)
     (ρ : LB.Gen (L.pull (eSec G))), L.IsLB → ρ.IsGen → ∀ (g m N : ℕ) (K : Type) [Field K] (x : Sp K ⟶ S)
     (c : Fin N → K), Odd m → 3 ≤ m → (m : K) ≠ 0 → PolFib G L g x → HasTh G L ρ m x c → ∃ a, c a ≠ 0 := by
@@ -352,7 +350,7 @@ theorem th_ne_zero : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj 
     apply Over.OverMorphism.ext
     have := ha
     simp only [π, Over.comp_left, Over.homMk_left] at this
-    rwa [spMap_id_self, Category.id_comp, Category.id_comp] at this
+    rwa [_root_.GlobalTheory.LevelFibre.spMap_id', Category.id_comp, Category.id_comp] at this
   refine ⟨a, fun h0 => ?_⟩
   have hth := hl'.2.1 a
   rw [← hya] at hth
@@ -610,19 +608,10 @@ theorem grpPullback_id {S : Scheme.{0}} (G : Over S) [GrpObj G] : IsGrpPullback 
   rw [ex, ey, ← MonObj.comp_mul]
   exact (Category.id_comp _).trans (Category.comp_id _).symm
 
-theorem spMap_comp_ringHom {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  rw [← Spec.map_comp]; rfl
-
-theorem sec_eq_of_f {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  cases s; cases s'
-  simp only [LB.Sec.mk.injEq]
-  exact funext h
-
 theorem pullS_pullS {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
     (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
     VVRank.pullS G a h' (VVRank.pullS G a h s) = VVRank.pullS G a (h' ≫ h) s := by
-  refine sec_eq_of_f (sec_ext_val hL (fun y J hJ => ?_))
+  refine _root_.ReciprocityTheory.ChartRestriction.G.DVR.SecOps.sec_ext (sec_ext_val hL (fun y J hJ => ?_))
   refine (VVRank.sv_pullS G a h' _ (𝟙 _) y hJ).trans ((VVRank.sv_pullS G a h s _ y hJ).trans ?_)
   refine Eq.trans ?_ (VVRank.sv_pullS G a (h' ≫ h) s (𝟙 _) y hJ).symm
   rw [MonoidalCategory.comp_whiskerRight, Over.comp_left, Category.assoc]
@@ -634,7 +623,7 @@ theorem thList_ext_perm : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMo
   simp only [SecAt.pull] at h₁
   rw [pullS_pullS G hL] at h₁
   have ey : spMap φ ≫ spMap i ≫ x = spMap (φ.comp i) ≫ x := by
-    rw [← Category.assoc, spMap_comp_ringHom]
+    rw [← Category.assoc, _root_.GlobalTheory.spMap_comp_ring]
   have key : ∀ {y y' : Sp F ⟶ S} (e : y = y') (u : Over.mk y ⟶ Over.mk x) (u' : Over.mk y' ⟶ Over.mk x),
       u.left = u'.left → ∀ {p : Fin N → (Over.mk y ⟶ G)} {d : Fin N → F},
       ThList G L ρ m y (VVRank.pullS G _ u θ) p d →
@@ -644,7 +633,7 @@ theorem thList_ext_perm : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMo
     obtain rfl : u = u' := Over.OverMorphism.ext hu
     exact ⟨p, h⟩
   obtain ⟨q₁, H₁⟩ := key ey _ (Over.homMk (spMap (φ.comp i)) rfl : Over.mk (spMap (φ.comp i) ≫ x) ⟶ Over.mk x)
-    (by simp only [Over.comp_left, Over.homMk_left]; rw [spMap_comp_ringHom]) h₁
+    (by simp only [Over.comp_left, Over.homMk_left]; rw [_root_.GlobalTheory.spMap_comp_ring]) h₁
   have hPy : PolFib G L g (spMap (φ.comp i) ≫ x) :=
     (GlobalTheory.T.principallyPolarisedFibre_iff_of_grpPullback S S G L G L (𝟙 S) (𝟙 G.left) hL hL (grpPullback_id G)
       (GlobalTheory.ThetaAffineGlue.lbIso_pull_id hL) g R x).2 F (φ.comp i) hP
@@ -695,21 +684,10 @@ theorem pow_exp (n k : ℕ) (c : Multiplicative (Fin k → ZMod n)) : c ^ n = 1 
   funext i
   simp
 
-theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap (g.comp f) = spMap g ≫ spMap f := by
-  simp [spMap]
-
-theorem pushHom_bij {S S' : Scheme.{0}} {A : Over S} {A' : Over S'} [GrpObj A] [GrpObj A'] {f : S' ⟶ S}
-    {φ : A'.left ⟶ A.left} (h : IsGrpPullback A' A f φ) (T : Over S') : Function.Bijective (pushHom h T) := by
-  refine ⟨fun x y e => Over.OverMorphism.ext (h.1.hom_ext (congrArg (fun q => q.left) e) ?_), fun y => ?_⟩
-  · exact (Over.w x).trans (Over.w y).symm
-  · exact ⟨Over.homMk (h.1.lift y.left T.hom (Over.w y)) (h.1.lift_snd _ _ _),
-      Over.OverMorphism.ext (h.1.lift_fst _ _ _)⟩
-
 theorem spMap_comp_assoc {A B C D : Type} [CommRing A] [CommRing B] [CommRing C] [CommRing D] {X : Scheme.{0}}
     (f : A →+* B) (g : B →+* C) (h : C →+* D) (y : Sp A ⟶ X) :
     spMap (h.comp g) ≫ spMap f ≫ y = spMap h ≫ spMap (g.comp f) ≫ y := by
-  simp only [spMap_comp, Category.assoc]
+  simp only [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc]
 
 abbrev lft {S X : Scheme.{0}} {G : Over S} {a : X ⟶ S} (p : Over.mk a ⟶ G) : X ⟶ G.left := p.left
 
@@ -734,9 +712,6 @@ theorem lft_pushHom {S S' : Scheme.{0}} {A : Over S} {A' : Over S'} [GrpObj A] [
 
 theorem toUnit_mk_left {X Y : Scheme.{0}} (f : Y ⟶ X) : (toUnit (Over.mk f)).left = f :=
   (Category.comp_id _).symm.trans (Over.w (toUnit (Over.mk f)))
-
-theorem toUnit_left {X : Scheme.{0}} (T : Over X) : (toUnit T).left = T.hom :=
-  (Category.comp_id _).symm.trans (Over.w (toUnit T))
 
 theorem exists_cover_torsion_list : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (L : LB G.left) (g m N : ℕ) (R : Type) [CommRing R] [IsNoetherianRing R] (x : Sp R ⟶ S), Odd m → IsUnit (m : R) → N = m ^ (4 * g) → PolFib G L g x → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra R R₁) (q : Fin N → (Over.mk (spMap (algebraMap R R₁) ≫ x) ⟶ G)), Module.Finite R R₁ ∧ Module.FaithfullyFlat R R₁ ∧ (∀ a, q a ^ (m ^ 2) = 1) ∧ ∀ (K : Type) [Field K] (i₁ : R₁ →+* K) (pt : Fin N → (Over.mk (spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G)), (∀ a, (pt a).left = spMap i₁ ≫ (q a).left) → Function.Injective pt ∧ ∀ (K' : Type) [Field K'] [IsAlgClosed K'] (i' : K →+* K') (p : Over.mk (spMap i' ≫ spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G), p ^ (m ^ 2) = 1 → ∃ a, p.left = spMap i' ≫ (pt a).left := by
   intro S G _ _ L g m N R _ _ x hm hmu hN hP
@@ -775,7 +750,7 @@ theorem exists_cover_torsion_list : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G]
     apply hinj
     apply Over.OverMorphism.ext
     show (toUnit (Over.mk t) ≫ ψ c).left = (toUnit (Over.mk t) ≫ ψ d).left
-    rw [Over.comp_left, Over.comp_left, toUnit_left]
+    rw [Over.comp_left, Over.comp_left, _root_.GlobalTheory.ObjPull.toUnit_left']
     apply hc.1.hom_ext
     · rw [hQ, hQ] at h
       simpa [Category.assoc] using h
@@ -788,15 +763,15 @@ theorem exists_cover_torsion_list : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G]
     simp only [hpt] at h'
     let k := AlgebraicClosure K
     have := key k (spMap ((algebraMap K k).comp i₁)) (e a) (e a') (by
-      rw [spMap_comp, Category.assoc, Category.assoc]; exact congrArg (spMap (algebraMap K k) ≫ ·) h')
+      rw [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp, Category.assoc, Category.assoc]; exact congrArg (spMap (algebraMap K k) ≫ ·) h')
     exact e.injective this
   · intro K' _ _ i' p hp2
     have ht : spMap i' ≫ spMap (i₁.comp (algebraMap R R₁)) ≫ x = spMap (i'.comp i₁) ≫ b ≫ x :=
       (spMap_comp_assoc (algebraMap R R₁) i₁ i' x).symm
     obtain ⟨p', hp'⟩ := transport ht.symm p
-    obtain ⟨p₁, hp₁⟩ := (pushHom_bij hc (Over.mk (spMap (i'.comp i₁)))).2 p'
+    obtain ⟨p₁, hp₁⟩ := (_root_.GlobalTheory.Ex.Specialise.pushHom_bijective hc (Over.mk (spMap (i'.comp i₁)))).2 p'
     have hk : p₁ ^ (m ^ 2) = 1 := by
-      apply (pushHom_bij hc _).1
+      apply (_root_.GlobalTheory.Ex.Specialise.pushHom_bijective hc _).1
       rw [map_pow, hp₁, map_one]
       apply Over.OverMorphism.ext
       change lft _ = lft _
@@ -808,7 +783,7 @@ theorem exists_cover_torsion_list : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G]
     simp only [Equiv.apply_symm_apply]
     change lft p = _
     have h2 := congrArg lft hp₁
-    rw [← hp', ← h2, lft_pushHom, hQ, Over.comp_left, toUnit_mk_left, spMap_comp]
+    rw [← hp', ← h2, lft_pushHom, hQ, Over.comp_left, toUnit_mk_left, _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
     simp only [Category.assoc]
 
 end GlobalTheory.UMin.TorsionList
@@ -849,15 +824,10 @@ noncomputable section
 namespace GlobalTheory.UMin.ThLocal
 open GlobalTheory.ThetaPtMove GlobalTheory.ThetaPtExist
 
-theorem sec_eq {X : Scheme.{0}} {M : LB X} {s s' : LB.Sec M} (h : ∀ j, s.f j = s'.f j) : s = s' := by
-  cases s; cases s'
-  simp only [LB.Sec.mk.injEq]
-  exact funext h
-
 theorem pullS_comp {S : Scheme.{0}} (G : Over S) [GrpObj G] {L : LB G.left} (hL : L.IsLB) (a : ℤ) {T T' T'' : Over S}
     (h : T' ⟶ T) (h' : T'' ⟶ T') (s : LB.Sec (LPow G L a T)) :
     VVRank.pullS G a h' (VVRank.pullS G a h s) = VVRank.pullS G a (h' ≫ h) s := by
-  refine sec_eq (sec_ext_val hL (fun y J hJ => ?_))
+  refine _root_.ReciprocityTheory.ChartRestriction.G.DVR.SecOps.sec_ext (sec_ext_val hL (fun y J hJ => ?_))
   refine (VVRank.sv_pullS G a h' _ (𝟙 _) y hJ).trans ((VVRank.sv_pullS G a h s _ y hJ).trans ?_)
   refine Eq.trans ?_ (VVRank.sv_pullS G a (h' ≫ h) s (𝟙 _) y hJ).symm
   rw [MonoidalCategory.comp_whiskerRight, Over.comp_left, Category.assoc]
@@ -1126,8 +1096,6 @@ open GlobalTheory GlobalTheory.ZM GlobalTheory.ZH GlobalTheory.UMin GlobalTheory
 open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 
-theorem _root_.GlobalTheory.T.exists_ring_element_of_local_field_point_values : ∀ (R : Type) [CommRing R] (P : (K : Type) → [Field K] → (R →+* K) → K → Prop), (∀ (K : Type) [Field K] (i : R →+* K) (u v : K), P K i u → P K i v → u = v) → (∀ p : Ideal R, p.IsPrime → ∃ f ∉ p, ∃ c : Localization.Away f, ∀ (K : Type) [Field K] (j : Localization.Away f →+* K), P K (j.comp (algebraMap R (Localization.Away f))) (j c)) → ∃ c : R, ∀ (K : Type) [Field K] (i : R →+* K), P K i (i c) := by
-  first | exact @GlobalTheory.glue_field_points
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingElementOfLocalFieldPointValuesStatement =====
@@ -1224,7 +1192,7 @@ theorem thList_cover : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
       (pt : Over.mk (spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G), pt.left = spMap i₁ ≫ (q a).left →
         ThG G L ρ m (SecAt.pull G L θ (i₁.comp (algebraMap R R₁))) pt (fn (i₁ c)) := by
     intro a
-    refine GlobalTheory.T.exists_ring_element_of_local_field_point_values R₁ (fun K _ i₁ v => ∀ (pt : Over.mk (spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G),
+    refine _root_.GlobalTheory.glue_field_points R₁ (fun K _ i₁ v => ∀ (pt : Over.mk (spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G),
         pt.left = spMap i₁ ≫ (q a).left →
         ThG G L ρ m (SecAt.pull G L θ (i₁.comp (algebraMap R R₁))) pt (fn v)) ?_ ?_
     · intro K _ i₁ u v hu' hv'
@@ -1392,7 +1360,7 @@ theorem theta_map_aff : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
   have hf : PCrd (GlobalTheory.ProjSpace.pt β e hspan) e := (GlobalTheory.UMin.CrdUniq.pCrd_iff _ β hstr e).2 ⟨hspan, rfl⟩
   refine ⟨GlobalTheory.ProjSpace.pt β e hspan, hstr, ?_⟩
   intro K _ x' c ⟨θ', pt, hθ', hl⟩
-  obtain ⟨i, rfl⟩ := GlobalTheory.UMin.CrdUniq.exists_spMap' x'
+  obtain ⟨i, rfl⟩ := _root_.GlobalTheory.ZM.DenseFib.exists_spMap x'
   obtain ⟨r, hr⟩ := hθ' (SecAt.pull G L θ i)
   have hsm : SecM.ofSec G (SecAt.pull G L θ i) = r • SecM.ofSec G θ' := Subtype.ext (funext hr)
   set a : K := (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom r with ha

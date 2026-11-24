@@ -94,12 +94,6 @@ theorem flagStep_map (J : V →ₗ[Ω] V') {r : ℕ} (b : Fin r → V) (i : ℕ)
   unfold flagStep
   rw [Submodule.map_span, Set.image_image]
 
-theorem flagStep_last {r : ℕ} (b : Fin r → V) : flagStep Ω b r = Submodule.span Ω (Set.range b) := by
-  unfold flagStep
-  congr 1
-  ext x
-  simp
-
 theorem pull_span {f : X' ⟶ X} (hd : GlobalTheory.CompanionTheory.Ar.Dominates ξ' ξ f (RingHom.id Ω)) (J : V →ₗ[Ω] V') {L : Lat ξ V}
     (q : Cpt ξ') {I : Type} {b : I → V}
     (hb : L ⟨f q.1, LatModel.dominates_spec hd q⟩ = Submodule.span _ (Set.range b)) :
@@ -297,7 +291,7 @@ theorem quot_free (𝔐 : HodgeCpt Y S y) (b : ∀ s, Fin (labelRk D s) → 𝔐
   choose U hU b' hb' hfr using fun s => hf s q rfl
   replace hfr := fun s => hfr s q rfl (hU s)
   have hsp : ∀ t, Submodule.span Ω (Set.range (b' t)) = 𝔐.Vgen t := fun t => by
-    rw [← flagStep_last, hb', flagStep_last, hb]
+    rw [← _root_.GlobalTheory.CompanionTheory.Ar.FlagGr.step_top, hb', _root_.GlobalTheory.CompanionTheory.Ar.FlagGr.step_top, hb]
   refine ⟨frame_quot (hfr s).1 (hfr s).2 {k | (k : ℕ) < n} (hb' s n).symm, ?_⟩
   obtain ⟨-, -, -, -, -, -, hind, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c _ _ Y S Ω K J y 𝔐 hβ
   obtain ⟨h1, -, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c _ _ Y S Ω K J y 𝔐 hβ q fun r hr h => h (hq r hr.pos)

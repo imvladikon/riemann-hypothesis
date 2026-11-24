@@ -56,6 +56,8 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
+import Development.WeilBound.CoreStatements.PluriharmonicCharts.ExistsFlagFrame
+import Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorColsBEqZero
 import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsBlockMapInitialVertex
 import Mathlib.Tactic.Linter.Style
 
@@ -63,7 +65,7 @@ import Mathlib.Tactic.Linter.Style
 -- Members: Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorEmpty, Development.WeilBound.CoreStatements.PluriharmonicCharts.MapAevalInt
 
 -- ===== clump member: Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorEmpty =====
--- clump-header: {"m": "Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorEmpty", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+-- clump-header: {"m": "Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorEmpty", "h": "module\n\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag\npublic import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing\npublic import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.WeilBound.CoreStatements.PluriharmonicCharts.ExistsFlagFrame\nimport Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorColsBEqZero\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -122,10 +124,6 @@ theorem prod_prev (D D' : Fin N → L) (c : L) (h : ∀ a' : Fin N, (a' : ℕ) +
     have hh : ∀ i : Fin N, (i : ℕ) + 1 = a ↔ i = a' := fun i => by rw [Fin.ext_iff]; omega
     simp only [hh, Finset.prod_ite_eq', Finset.mem_univ, if_true]
     exact h a' ha'
-
-theorem minor_empty' {R : Type} [CommRing R] (h : Matrix (Fin N) (Fin N) R) : minorIJ h ∅ ∅ = 1 := by
-  rw [MinorCalc.minorIJ_eq_det h ∅ ∅ 0 rfl rfl]
-  exact det_isEmpty
 
 theorem scal_main {Ψ : Type} [DecidableEq Ψ] (τ : Ψ) (hj : j ≤ N) (hb : (b : ℕ) = a + 1)
     (hab : (b : ℕ) < j ∨ j ≤ (a : ℕ)) (hca : (ca : ℕ) = lastCol N j a) (hcb : (cb : ℕ) = ca + 1)
@@ -210,7 +208,7 @@ theorem scal_main {Ψ : Type} [DecidableEq Ψ] (τ : Ψ) (hj : j ≤ N) (hb : (b
                 ext c
                 simp only [omIdx, Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
                 omega
-              rw [this, minor_empty', mul_one]
+              rw [this, _root_.PositivityTheory.Xgp.W.minor_empty', mul_one]
             · rw [mul_one]
           rw [d2] at hdb
           rw [hS] at hn
@@ -282,7 +280,7 @@ theorem scal_main {Ψ : Type} [DecidableEq Ψ] (τ : Ψ) (hj : j ≤ N) (hb : (b
           have := c.2
           simp only [wIdx, Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty, iff_false]
           omega
-        rw [this, minor_empty']
+        rw [this, _root_.PositivityTheory.Xgp.W.minor_empty']
       · rfl
     rw [d, hum, hE, Finset.prod_empty, mul_one, _root_.inv_one]
 
@@ -312,12 +310,6 @@ theorem prod_dy (e : K → L) (p : Ψ × Fin N) :
     | none => simp
     | some k₁ => simp
 
-theorem zpow_sum' {σ : Type} (S : Finset σ) {x : L} (hx : x ≠ 0) (n : σ → ℤ) :
-    x ^ (∑ p ∈ S, n p) = ∏ p ∈ S, x ^ n p := by
-  induction S using Finset.induction_on with
-  | empty => simp
-  | insert a S ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, zpow_add₀ hx, ih]
-
 theorem prod_deg {τ : Ψ} {a : Fin N} {k₀ : K} (hk : M.blk (τ, a) = some k₀) (e : Option K → L) (he : ∀ o, e o ≠ 0)
     {dg dh : Option K → ℕ} (hd : ∀ o : Option K, (dg o : ℤ) - dh o = o.elim 1 fun k =>
       -(fun k => ∑ p, xiCoef τ a p * M.dy p k) k - (if M.blk (τ, a) = some k then 1 else 0)) :
@@ -332,7 +324,7 @@ theorem prod_deg {τ : Ψ} {a : Fin N} {k₀ : K} (hk : M.blk (τ, a) = some k�
       ∏ p, (e (some k) ^ M.dy p k) ^ xiCoef τ a p := fun k => by
     have := hd (some k)
     simp only [Option.elim, hk, Option.some.injEq] at this
-    simp only [← _root_.zpow_mul, mul_comm (M.dy _ k), ← zpow_sum' _ (he _)]
+    simp only [← _root_.zpow_mul, mul_comm (M.dy _ k), ← _root_.PositivityTheory.Xgp.W.zpow_sum' _ (he _)]
     rw [← zpow_natCast, ← zpow_natCast]
     split_ifs with h
     · subst h

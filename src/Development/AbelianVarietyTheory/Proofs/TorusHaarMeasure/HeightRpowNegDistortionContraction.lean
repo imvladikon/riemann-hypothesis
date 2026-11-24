@@ -165,8 +165,6 @@ section -- clump:auto
 open NumberField ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheory.ChartRestriction.G.AR.Inst ReciprocityTheory.ChartRestriction.G.AR.Up MeasureTheory Topology
 open scoped ComplexOrder ENNReal Matrix
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
-theorem _root_.GlobalTheory.T.latticeHeight_update_frameComponent : (∀ (r : ℕ) (X : Data E r) (d : Frame X.Ψ r → Submodule E (Fin r → E) → ℝ), (∀ x : Frame X.Ψ r, (∀ τ : X.Ψ, (mat x τ).det ≠ 0) → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (w : ι → Fin r → E), LinearIndependent E w → (∀ a, w a ∈ X.Λ) → d x (Submodule.span E (Set.range w)) = ((∏ τ : X.Ψ, ((((mat x τ)⁻¹ * (Matrix.of fun k a => τ.1 (w a k)))ᴴ * ((mat x τ)⁻¹ * (Matrix.of fun k a => τ.1 (w a k)))).det.re)) / (((Submodule.span (𝓞 E) (Set.range w)).toAddSubgroup.relIndex (X.Λ.toAddSubgroup ⊓ (Submodule.span E (Set.range w)).toAddSubgroup)) : ℝ))) → ∀ x : Frame X.Ψ r, (∀ τ : X.Ψ, (mat x τ).det ≠ 0) → ∀ (τ0 : X.Ψ) (W : Submodule E (Fin r → E)), ∃ M : Matrix (Fin r) (Fin (Module.finrank E W)) ℂ, 0 < (((M)ᴴ * (M)).det.re) ∧ ∀ a : Matrix (Fin r) (Fin r) ℂ, a.det ≠ 0 → d (@Function.update X.Ψ (fun _ => Fin r → Fin r → ℂ) (Classical.decEq _) x τ0 (mat x τ0 * a⁻¹ : Matrix (Fin r) (Fin r) ℂ)) W = d x W * ((((a * M)ᴴ * (a * M)).det.re) / (((M)ᴴ * (M)).det.re))) := by
-  first | exact GlobalTheory.HeightStep.height_update
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.LatticeHeightUpdateFrameComponentStatement =====
@@ -198,9 +196,9 @@ theorem height_rpow_neg_distortion_contraction : (∀ (r : ℕ) (X : Data E r) (
   obtain ⟨δ, c, ω, hδ, hc0, hc1, hω, H⟩ := _root_.GlobalTheory.gramDet_closed_forms.2.2.1 r S hS hirr
   refine ⟨δ, c, ω ^ δ, hδ, hc0, hc1, Real.one_le_rpow hω hδ.le, ?_⟩
   intro x hx W
-  obtain ⟨m, hm, hmd⟩ := GlobalTheory.T.exists_pos_le_latticeHeight_at_frame r X d hd x hx
+  obtain ⟨m, hm, hmd⟩ := _root_.GlobalTheory.HeightLower.exists_pos_le_height r X d hd x hx
   have hD : 0 < d x W := lt_of_lt_of_le hm (hmd W)
-  obtain ⟨M, hM, hstep⟩ := GlobalTheory.T.latticeHeight_update_frameComponent r X d hd x hx τ0 W
+  obtain ⟨M, hM, hstep⟩ := _root_.GlobalTheory.HeightStep.height_update r X d hd x hx τ0 W
   obtain ⟨H1, H2⟩ := H _ M hM
   have hω0 : 0 < ω := by linarith
   have hpos : ∀ a ∈ S, 0 < ((a * M)ᴴ * (a * M)).det.re := by

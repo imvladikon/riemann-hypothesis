@@ -517,8 +517,6 @@ open MeasureTheory NumberField Formalism.BasicNotions Formalism.MainNotions.S Fo
 open scoped Pointwise ENNReal Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
-theorem _root_.GlobalTheory.T.isTerm_unitary_move_localTerm : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Formalism.MainNotions.S.Loc.Model F E) {V : Type} [AddCommGroup V] [Module E V] (H : Formalism.MainNotions.S.Loc.HermSp M V) (r : ℕ) (g : V ≃ₗ[E] V) (t : Formalism.MainNotions.S.Loc.Term V M r), Formalism.MainNotions.S.LocNG.IsUnitary H g → H.IsTerm t → H.IsTerm (GlobalTheory.LocOver.move g t) := by
-  first | exact @GlobalTheory.LocOver.isTerm_unitary_move
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTermUnitaryMoveLocalTermStatement =====
@@ -680,7 +678,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.W
   obtain ⟨hT0, -⟩ := GlobalTheory.T.unsignedLocalTerm_row_lattice_isTerm D (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) u u' (X.Fu u) t₀.lam hR t₀.frame hPD hGt p
   set ξ0 := admXi D t₀.lam (lf D (X.Fu u)) t₀.frame with hξ0
   set t0 := locU (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p t₀.lam (lf D (X.Fu u)) t₀.frame (Tu D u) (Tu D u') with ht0
-  have hTg := GlobalTheory.T.isTerm_unitary_move_localTerm (Y.M p) (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS g t0 hgU hT0
+  have hTg := _root_.GlobalTheory.LocOver.isTerm_unitary_move (Y.M p) (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS g t0 hgU hT0
 
   have hUu : Uni U := ⟨fun a b h => (hMv.2.1 a b).1 h, fun a => (hMv.2.1 a a).2 rfl⟩
   have hU'u : Uni U' := ⟨fun a b h => (hMv.2.2.1 a b).1 h, fun a => (hMv.2.2.1 a a).2 rfl⟩
@@ -793,7 +791,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.W
   have hT := _root_.GlobalTheory.LocOver.WitChange.witness_change (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS D.R.k (FP p) hfin (hAt p).2 d (move g t0) hd
     1 A' (move g t0).f tf' (⟨fun a b h => Matrix.one_apply_ne (ne_of_lt h).symm, fun a => Matrix.one_apply_eq a⟩)
     hA'u hint hChg1 hChg2
-  have hlat := (GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hMv.1 p g
+  have hlat := (_root_.GlobalTheory.HL.GrpCoord.grp_coords D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hMv.1 p g
     t₀.lam hgE
   have hfc := GlobalTheory.T.scaled_unitriangular_change_eq_local_image D (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G c p N m hm U
   have hfc' := GlobalTheory.T.scaled_unitriangular_change_eq_local_image D (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G c p N' m' hm' B1

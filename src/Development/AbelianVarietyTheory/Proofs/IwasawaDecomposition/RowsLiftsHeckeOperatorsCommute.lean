@@ -438,11 +438,6 @@ private theorem infinite_places (E : Type) [Field E] [NumberField E] :
   exact ⟨⟨Q, hQ.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q⟩,
     HeightOneSpectrum.ext hl.over.symm⟩
 
-theorem exists_smul_mem_lattice {E : Type} [Field E] [NumberField E] {n : ℕ}
-    (B : Submodule (𝓞 E) (Sp E n)) (hB : Submodule.IsFullLattice E B) (x : Sp E n) :
-    ∃ r ∈ nonZeroDivisors (𝓞 E), r • x ∈ B :=
-  _root_.GlobalTheory.SmulMemOfIsLattice.exists_smul_mem_of_isLattice B hB x
-
 theorem exists_pow_smul_le_of_localization_eq {E : Type} [Field E] [NumberField E] {n : ℕ}
     (P : HeightOneSpectrum (𝓞 E)) (A B : Submodule (𝓞 E) (Sp E n)) (hA : A.FG)
     (hB : Submodule.IsLattice E B)
@@ -575,8 +570,6 @@ section -- clump:auto
 open NumberField IsDedekindDomain Formalism.HermitianLatticesTheory Formalism.L2.Col GlobalTheory.InertExchange
 open Classical
 
-theorem _root_.GlobalTheory.T.localization_hermitianDual_eq : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] {n : ℕ} (Q : HeightOneSpectrum (𝓞 E)) (A B : Submodule (𝓞 E) (Sp E n)), Submodule.IsLattice E A → Submodule.IsLattice E B → localization₂ (conjPrime₂ Q).asIdeal A = localization₂ (conjPrime₂ Q).asIdeal B → localization₂ Q.asIdeal (dual (hStd E n) A) = localization₂ Q.asIdeal (dual (hStd E n) B) := by
-  first | exact @GlobalTheory.DualLoc.use₅
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalizationHermitianDualEqStatement =====
@@ -790,15 +783,15 @@ theorem exchange : ∀ {E : Type} [Field E] [NumberField E] [StarRing E] {n : �
     by_cases hQ : Q = P
     · rw [hQ]
       have h1 : localization₂ (conjPrime₂ P).asIdeal A = localization₂ (conjPrime₂ P).asIdeal B := by rw [hP]; exact hAP
-      rw [GlobalTheory.T.localization_hermitianDual_eq P A B hA hB h1, hBu', hAP]
+      rw [_root_.GlobalTheory.DualLoc.use₅ P A B hA hB h1, hBu', hAP]
     · have hQ' : conjPrime₂ Q ≠ P := fun h => hQ (by rw [← hcc Q, h, hP])
-      rw [GlobalTheory.T.localization_hermitianDual_eq Q A C hA hC (hAQ _ hQ'), hCu', hAQ Q hQ]
+      rw [_root_.GlobalTheory.DualLoc.use₅ Q A C hA hC (hAQ _ hQ'), hCu', hAQ Q hQ]
   have patch_lat_loc : ∀ (h : Sp E n ≃ₗ[E] Sp E n), h ∈ UF E n →
       ∀ Y : Submodule (𝓞 E) (Sp E n), Submodule.IsLattice E Y → IsUnimodular (hStd E n) Y →
       Submodule.IsLattice E (patchAt P (gmap h Y) Y) ∧ ∀ Q : HeightOneSpectrum (𝓞 E),
         localization₂ Q.asIdeal (patchAt P (gmap h Y) Y) = localization₂ Q.asIdeal (if Q = P then gmap h Y else Y) := by
     intro h hh Y hY hu
-    exact GlobalTheory.T.submodulePatchAtPrime_isLattice_locP P (gmap h Y) Y
+    exact _root_.GlobalTheory.InertExchange.patchAt_isLattice_locP P (gmap h Y) Y
       (isFullLattice_of_unimodular (gmap_lattice h Y hY) (unimodG h hh Y hu))
       (isFullLattice_of_unimodular hY hu)
   have locσ := fun Y hY hu => (patch_lat_loc g hg Y hY hu).2

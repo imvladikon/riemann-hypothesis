@@ -892,8 +892,8 @@ theorem hess_lin {D : ℕ} {f₀ f₁ h₀ h₁ : (Fin D → ℂ) → ℝ} {z : 
     (hf₀ : ContDiffAt ℝ 2 f₀ z) (hf₁ : ContDiffAt ℝ 2 f₁ z) (hh₀ : ContDiffAt ℝ 2 h₀ z) (hh₁ : ContDiffAt ℝ 2 h₁ z)
     (e₀ : hessC f₀ z = hessC h₀ z) (e₁ : hessC f₁ z = hessC h₁ z) :
     hessC (fun w => c₀ * f₀ w + c₁ * f₁ w) z = hessC (fun w => c₀ * h₀ w + c₁ * h₁ w) z := by
-  rw [ReciprocityTheory.AnForm.A.hessC_add _ _ z (contDiffAt_const.mul hf₀) (contDiffAt_const.mul hf₁),
-    ReciprocityTheory.AnForm.A.hessC_add _ _ z (contDiffAt_const.mul hh₀) (contDiffAt_const.mul hh₁),
+  rw [_root_.ReciprocityTheory.AnForm.A.TraceConjugationCover.complexHessian_add_of_contDiffAt _ _ z (contDiffAt_const.mul hf₀) (contDiffAt_const.mul hf₁),
+    _root_.ReciprocityTheory.AnForm.A.TraceConjugationCover.complexHessian_add_of_contDiffAt _ _ z (contDiffAt_const.mul hh₀) (contDiffAt_const.mul hh₁),
     ReciprocityTheory.AnForm.M.hessC_const_mul', ReciprocityTheory.AnForm.M.hessC_const_mul',
     ReciprocityTheory.AnForm.M.hessC_const_mul', ReciprocityTheory.AnForm.M.hessC_const_mul', e₀, e₁]
 

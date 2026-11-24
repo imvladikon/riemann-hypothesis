@@ -759,13 +759,13 @@ theorem chiH_sym {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (a b : Fin N → 
   have h : ∀ a b : Fin N → E,
       (x * vecMulVec a (fun i => cc (b i)) * ccT x).trace = herm 1 (x *ᵥ a) (x *ᵥ b) := by
     intro a b
-    rw [Matrix.mul_vecMulVec, Matrix.vecMulVec_mul, Matrix.trace_vecMulVec, Nbr.herm_one]
+    rw [Matrix.mul_vecMulVec, Matrix.vecMulVec_mul, Matrix.trace_vecMulVec, _root_.GlobalTheory.SW.Base.herm_one]
     refine Finset.sum_congr rfl fun k _ => ?_
     simp [ccT, cc, Matrix.vecMul, Matrix.mulVec, dotProduct, mul_comm]
   rw [chiH, eT, ← sum_add_cc hΨ, herm_symm, sym, Matrix.mul_add, Matrix.add_mul, Matrix.trace_add, h, h]
 
 theorem herm_ar (x y y' : Fin n → E) : herm 1 x (y + y') = herm 1 x y + herm 1 x y' := by
-  simp [Nbr.herm_one, cc, mul_add, Finset.sum_add_distrib]
+  simp [_root_.GlobalTheory.SW.Base.herm_one, cc, mul_add, Finset.sum_add_distrib]
 
 theorem inf_mem_hyp {M q : ℕ} {P : Ideal (𝓞 E)} (hP : GoodPrime M q P) {Λ Λ' : Lt E n}
     (h' : Λ' ∈ Nb M P Λ) : Λ'.comap Λ.subtype ∈ Hyp P Λ :=
@@ -1374,14 +1374,7 @@ theorem abs_norm_eq (h : IsType Ψ) (t : E) :
   · intro a _; exact star_star a
   · intro a _; simp only [ComplexEmbedding.conjugate_coe_eq, Complex.norm_conj]
 
-theorem isSB_of_adm {M R : ℕ} {φ : Fam E n N} (h : admitted M R φ) {Λ : Lt E n}
-    (hΛ : Λ ∈ Vset E n M) : IsSB (φ Λ) := by
-  obtain ⟨s, hs, -, h1, h2⟩ := hΛ.2.2
-  refine ⟨s * R, Nat.mul_pos hs h.pos.2, fun x hx k a => ?_, fun x y hy => ?_⟩
-  · rw [Nat.cast_mul, mul_smul]
-    exact (Base.mem_stdL _).1 (h1 _ (h.supp Λ hΛ x hx a)) k
-  · rw [Nat.cast_mul, mul_comm, mul_smul]
-    exact h.per Λ hΛ x _ fun a => h2 _ ((Base.mem_stdL _).2 fun k => hy k a)
+alias isSB_of_adm := _root_.GlobalTheory.SW.SwdHeat.isSB_member
 
 theorem bounded_of_adm {M R : ℕ} {φ : Fam E n N} (h : admitted M R φ) :
     ∃ B : ℝ, 0 ≤ B ∧ ∀ Λ ∈ Vset E n M, ∀ x, ‖φ Λ x‖ ≤ B := by

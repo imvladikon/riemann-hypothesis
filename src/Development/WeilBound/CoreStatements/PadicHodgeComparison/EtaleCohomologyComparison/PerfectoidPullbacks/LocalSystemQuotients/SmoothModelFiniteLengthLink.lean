@@ -405,9 +405,6 @@ section -- clump:auto
 set_option backward.isDefEq.respectTransparency false
 open CategoryTheory AlgebraicGeometry GlobalTheory.LogCris DividedPowers CrystallineSemistableComparison CrystallineSemistableComparison.Pb
 
-theorem _root_.GlobalTheory.T.square_pull_bijective_of_acyclic : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {A : C ⥤ CommAlgCat.{0} R} (a b : IdF A) (ha : ∀ T, a.S T = ⊤),
-    (∀ j, Subsingleton (CH.H (sq b (IdF.bot A)) j)) → ∀ j, Function.Bijective ((toSq a b ha).pull j) := by
-  first | exact @GlobalTheory.CompanionTheory.LengthOneCochainExactness.pull_toSq_bijective
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SquarePullBijectiveOfAcyclicStatement =====
@@ -1030,10 +1027,7 @@ open CategoryTheory AlgebraicGeometry TensorProduct
 
 namespace CrystallineSemistableComparison.Pb
 
-theorem vb_fin : ∀ {O : Type} [CommRing O] [IsNoetherianRing O] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [IsProper q]
-    {ι : Type} [Fintype ι] (U : ι → X.Opens) (hU : (⨆ α, U α) = ⊤) (ha : ∀ n (i : Fin (n + 1) → ι), IsAffineOpen (capO U i))
-    (K : Cos.{1} O) (V : VB (fun W => ((Scheme.ΓSpecIso (CommRingCat.of O)).inv ≫ q.appLE ⊤ W le_top).hom) U K) (p : ℕ),
-    Module.Finite O (K.cx.H p) := @GlobalTheory.CompanionTheory.VBGlue.finite_H_cx
+alias vb_fin := _root_.GlobalTheory.CompanionTheory.VBGlue.finite_H_cx
 
 theorem serre_fg : ∀ (R : Type) [CommRing R] [IsNoetherianRing R], ∃ 𝒮 : Serre.{1} R,
     ∀ (M : Type 1) [AddCommGroup M] [Module R M], 𝒮.P M ↔ Module.Finite R M := @_root_.GlobalTheory.CompanionTheory.SerreFin.exists_serre_finite
@@ -1233,8 +1227,8 @@ private lemma isHecke_div_and_resEtaPow_div {b : Base} {L : b.Fun} (Q : ObjectPr
     Module.Finite b.R (HO Q j) := by
   have hfin := _root_.GlobalTheory.CompanionTheory.LenDev.finite_H_sq (sFil Q) (fun r r' h T => (isFil Q).anti h T) (d + 1) (fun r _ j' => hgr r j') j
   rw [Nat.cast_add, Nat.cast_one] at hfin
-  have ha : ∀ T, (sFil Q 0).S T = ⊤ := fun T => (isFil Q).top 0 le_rfl T
-  have hb := GlobalTheory.T.square_pull_bijective_of_acyclic (sFil Q 0) (sFil Q (↑d + 1)) ha ?hv j
+  have ha : ∀ T, (sFil Q 0).S T = ⊤ := fun T => (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil Q).top 0 le_rfl T
+  have hb := _root_.GlobalTheory.CompanionTheory.LengthOneCochainExactness.pull_toSq_bijective (sFil Q 0) (sFil Q (↑d + 1)) ha ?hv j
   · exact Module.Finite.of_surjective (hM := hfin) (LinearEquiv.ofBijective _ hb).symm.toLinearMap
       (LinearEquiv.ofBijective _ hb).symm.surjective
   · exact hvan

@@ -855,7 +855,7 @@ end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RigidificationAtOriginIffPullbackStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RigidifiedIsoMapsCubicalGenerator =====
--- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RigidifiedIsoMapsCubicalGenerator", "h": "module\n\npublic import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot\npublic import Mathlib.Tactic.ENatToNat\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ChartFrameTrA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd\n\n"}
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RigidifiedIsoMapsCubicalGenerator", "h": "module\n\npublic import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot\npublic import Mathlib.Tactic.ENatToNat\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed\npublic import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ChartFrameTrA\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.AlgebraicGeometry.Modules.Sheaf\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBLocal\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.CocycleRightZeroThd\nimport ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullCub\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -872,14 +872,10 @@ noncomputable section
 
 namespace GlobalTheory.RigCub
 
-theorem cover_of_isLB {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) (x : X) : ∃ i, x ∈ L.U i := by
-  have h : x ∈ (⨆ i, L.U i) := by rw [hL.cover]; trivial
-  exact TopologicalSpace.Opens.mem_iSup.1 h
-
 theorem div_cover {X : Scheme.{0}} {M L : LB X} (hM : M.IsLB) (hL : L.IsLB) (x : X) :
     ∃ p, x ∈ (LB.div M L).U p := by
-  obtain ⟨i, hi⟩ := cover_of_isLB hM x
-  obtain ⟨j, hj⟩ := cover_of_isLB hL x
+  obtain ⟨i, hi⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_chart hM x
+  obtain ⟨j, hj⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_chart hL x
   exact ⟨(i, j), hi, hj⟩
 
 theorem unit_eq_one_of_local {X : Scheme.{0}} {κ : Type} (V : κ → X.Opens) (hcov : ∀ x : X, ∃ i, x ∈ V i)
@@ -934,8 +930,8 @@ theorem rigIso_eq (hGF : GlobalFnsSt) {S S' : Scheme.{0}} {t' : SAB H S'} {t : S
     rw [ReciprocityTheory.ChartRestriction.G.DVR.pullU_res] at e5
     exact (ReciprocityTheory.ChartRestriction.G.DVR.res_res' _ _ _).symm.trans e5
   have hv1 := unit_eq_one_of_local _ (fun y => by
-      obtain ⟨p1, hp1⟩ := cover_of_isLB hB y
-      obtain ⟨p2, hp2⟩ := cover_of_isLB hA y
+      obtain ⟨p1, hp1⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_chart hB y
+      obtain ⟨p2, hp2⟩ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.exists_chart hA y
       exact ⟨(p1, p2), hp1, hp2⟩) (pullU (eSec t'.G) ⊤ u : Γ((𝟙_ (Over S')).left, ⊤)ˣ) hloc
   exact congrArg Units.val hv1
 

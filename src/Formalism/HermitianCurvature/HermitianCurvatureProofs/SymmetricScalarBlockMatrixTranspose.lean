@@ -405,14 +405,9 @@ lemma lower_iff (l : Matrix (Fin p) (Fin p) ℂ) : G.IsLowerUni l ↔ uniK (kL p
 lemma upper_iff (u : Matrix (Fin p) (Fin p) ℂ) : G.IsUpperUni u ↔ uniK (kU p) u := by
   simp [G.IsUpperUni, uniK, kU_lt]
 
-lemma diag_mul_of {κ : Fin p → ℤ} (hκ : Function.Injective κ) {M N : Matrix (Fin p) (Fin p) ℂ}
-    (hM : ∀ a b, κ a < κ b → M a b = 0) (hN : ∀ a b, κ a < κ b → N a b = 0) (i : Fin p) :
-    (M * N) i i = M i i * N i i := by
-  first | (apply GlobalTheory.TriangularDiagonal.mul_diag_of_triangular <;> assumption) | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ M N hM hN i | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ M N hM hN | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ M N hM | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ M N | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ M | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ hκ | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p κ | exact @GlobalTheory.TriangularDiagonal.mul_diag_of_triangular p
-
 lemma uniK_mul {κ : Fin p → ℤ} (hκ : Function.Injective κ) {M N : Matrix (Fin p) (Fin p) ℂ}
     (hM : uniK κ M) (hN : uniK κ N) : uniK κ (M * N) := by
-  refine ⟨fun i => by rw [diag_mul_of hκ hM.2 hN.2, hM.1, hN.1, one_mul], fun a b hab => ?_⟩
+  refine ⟨fun i => by rw [_root_.GlobalTheory.TriangularDiagonal.mul_diag_of_triangular hκ hM.2 hN.2, hM.1, hN.1, one_mul], fun a b hab => ?_⟩
   rw [Matrix.mul_apply]
   refine Finset.sum_eq_zero fun c _ => ?_
   by_cases h : κ a < κ c

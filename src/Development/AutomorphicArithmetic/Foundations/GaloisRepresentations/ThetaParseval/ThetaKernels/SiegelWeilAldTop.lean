@@ -409,20 +409,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-noncomputable section
-
-open scoped TensorProduct NNReal Matrix Classical
-open NumberField IsDedekindDomain Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl GlobalTheory.Cont PositivityTheory.Rg.Sw
-
-variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
-
-theorem UpperTheory.TP.K.exists_locUnit {B : Base F E} (hB : UpperTheory.TP.W.GoodK σ B) {ξ : E} (hξ : ξ ≠ 0) (hσξ : σ ξ = -ξ) (v : Pl (F := F)) :
-    ∃ u : (Fv F v ⊗[F] E)ˣ, (u : Fv F v ⊗[F] E) ∈ intLoc F E v ∧ ((u⁻¹ : (Fv F v ⊗[F] E)ˣ) : Fv F v ⊗[F] E) ∈ intLoc F E v ∧
-      sigR (Fv F v) σ (u : Fv F v ⊗[F] E) = -(u : Fv F v ⊗[F] E) :=
-  _root_.UpperTheory.Reformulated.B.Gs6.exists_locUnit hB hξ hσξ v
-
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.LocUnit =====
@@ -449,7 +435,7 @@ theorem exists_skewUnit_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ 
   have hc := hB.cm
   obtain ⟨ξ, hξ, hσξ⟩ := UnitA.exists_xi hc
   obtain ⟨S, hS⟩ := UnitA.exists_S (F := F) ξ
-  choose u hu1 hu2 hu3 using _root_.UpperTheory.TP.K.exists_locUnit hB hξ hσξ
+  choose u hu1 hu2 hu3 using _root_.UpperTheory.Reformulated.B.Gs6.exists_locUnit hB hξ hσξ
   let xv : ∀ v : Pl F, (Fv F v ⊗[F] E)ˣ := fun v =>
     ⟨inclR (F := F) (Fv F v) ξ, inclR (F := F) (Fv F v) ξ⁻¹, by rw [← map_mul, mul_inv_cancel₀ hξ, map_one],
       by rw [← map_mul, inv_mul_cancel₀ hξ, map_one]⟩
@@ -621,7 +607,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem hgtPull_k : _root_.PositivityTheory.SiegelWeilFormula.Ald.HgtPull_k := by
   intro F E _ _ _ _ _ σ d n h Y b j hn hs hb hJ
   have hB := d.ok.good
-  have hσ : ∀ z, σ (σ z) = z := UnitA.sig_sig hB.cm
+  have hσ : ∀ z, σ (σ z) = z := _root_.GlobalTheory.AdelicU.cm_conj_conj hB.cm
   refine ⟨fun x => ?_, _root_.PositivityTheory.SiegelWeilFormula.Ldexb.val_pull_k h hJ hb⟩
   obtain ⟨Y₀, b₀, K₀, a₀, hb₀, he₀, hK₀, ha₀⟩ := _root_.PositivityTheory.SiegelWeilFormula.Ldexb.exists_standard_hermitian_space hB hn
   obtain ⟨ε, he⟩ := hb.1
@@ -654,16 +640,8 @@ section -- clump:auto
 
 
 
-section
-noncomputable section
-open scoped TensorProduct NNReal Matrix Classical
-open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
-open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl GlobalTheory.Cont PositivityTheory.Rg.Sw
 namespace PositivityTheory.SiegelWeilFormula.Ald
-theorem hgtPull_k : _root_.PositivityTheory.SiegelWeilFormula.Ald.HgtPull_k := _root_.PositivityTheory.SiegelWeilFormula.Ldexb.hgtPull_k
 end PositivityTheory.SiegelWeilFormula.Ald
-end
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilAldHgt =====
@@ -1408,7 +1386,7 @@ theorem yFrame_k : _root_.PositivityTheory.SiegelWeilFormula.Ald.YFrame_k := by
   obtain ⟨ε, hε⟩ := d.ok.frame.1
   have hεσ : σ (((ε : ℤ) : E)) = ((ε : ℤ) : E) := map_intCast σ _
   rcases d.ok.sign with ⟨hA, hY⟩ | ⟨hA, hY⟩
-  · obtain ⟨ξ, hξ, hσξ⟩ := _root_.GlobalTheory.T.exists_trace_zero_element F E σ d.B d.ok.good
+  · obtain ⟨ξ, hξ, hσξ⟩ := _root_.GlobalTheory.CMTraceZero.exists_ne_zero_conj_neg_k F E σ d.B d.ok.good
     have hξ' : -ξ ≠ 0 := neg_ne_zero.2 hξ
     let J : Matrix (Fin n) (Fin n) E := ξ • 1
     have hJ : ∀ i j, σ (J j i) = (-1) * J i j := fun i j => by
@@ -1466,7 +1444,7 @@ open scoped TensorProduct NNReal Matrix Classical
 open NumberField IsDedekindDomain MeasureTheory Filter Topology Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes
 open GlobalTheory.WeilM GlobalTheory.AdelicU GlobalTheory.LFun GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels GlobalTheory.ThK.Dbl GlobalTheory.Cont PositivityTheory.Rg.Sw
 namespace PositivityTheory.SiegelWeilFormula.Ald
-theorem ldEx_of_k : _root_.PositivityTheory.SiegelWeilFormula.TAll_k → _root_.PositivityTheory.SiegelWeilFormula.SiegelWeilDatumProperties → _root_.PositivityTheory.SiegelWeilFormula.LDEx_k := _root_.PositivityTheory.SiegelWeilFormula.Ald.ldEx_of_leaves_k _root_.PositivityTheory.SiegelWeilFormula.Ald.yFrame_k _root_.PositivityTheory.SiegelWeilFormula.Ald.jEx_k _root_.PositivityTheory.SiegelWeilFormula.Ald.kStd_k _root_.PositivityTheory.SiegelWeilFormula.Ald.hgtPull_k _root_.PositivityTheory.SiegelWeilFormula.Ald.modelEx_k
+theorem ldEx_of_k : _root_.PositivityTheory.SiegelWeilFormula.TAll_k → _root_.PositivityTheory.SiegelWeilFormula.SiegelWeilDatumProperties → _root_.PositivityTheory.SiegelWeilFormula.LDEx_k := _root_.PositivityTheory.SiegelWeilFormula.Ald.ldEx_of_leaves_k _root_.PositivityTheory.SiegelWeilFormula.Ald.yFrame_k _root_.PositivityTheory.SiegelWeilFormula.Ald.jEx_k _root_.PositivityTheory.SiegelWeilFormula.Ald.kStd_k _root_.PositivityTheory.SiegelWeilFormula.Ldexb.hgtPull_k _root_.PositivityTheory.SiegelWeilFormula.Ald.modelEx_k
 end PositivityTheory.SiegelWeilFormula.Ald
 end
 end

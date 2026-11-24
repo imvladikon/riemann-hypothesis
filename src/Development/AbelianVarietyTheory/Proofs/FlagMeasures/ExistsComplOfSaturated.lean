@@ -115,11 +115,7 @@ theorem saturated_has_complement {R : Type u_1} {V : Type u_2} [CommRing R] [IsD
       rw [hx']
       exact Submodule.add_mem_sup ⟨g (N'.mkQ m), ⟨_, rfl⟩, rfl⟩ (by simpa [N'] using hd)
 
-theorem main : ∀ {R : Type u_1} {V : Type u_2} [inst : CommRing R] [IsDedekindDomain R]
-    [inst_2 : AddCommGroup V] [inst_3 : Module R V] (N M : Submodule R V), N ≤ M →
-    Submodule.FG M → (∀ (r : R) (y : V), r ≠ (0 : R) → y ∈ M → r • y ∈ N → y ∈ N) →
-    ∃ (A : Submodule R V), A ⊓ N = ⊥ ∧ A ⊔ N = M :=
-  fun N M h1 h2 h3 => saturated_has_complement N M h1 h2 h3
+alias main := _root_.GlobalTheory.SaturatedSublatticeComplement.saturated_has_complement
 
 end GlobalTheory.SaturatedSublatticeComplement
 end -- clump:auto
@@ -135,21 +131,13 @@ open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheor
 
 namespace GlobalTheory
 
-theorem exists_compl_of_saturated {R V : Type*} [CommRing R] [IsDedekindDomain R]
-    [AddCommGroup V] [Module R V] (N M : Submodule R V) (hNM : N ≤ M) (hM : M.FG)
-    (hsat : ∀ (r : R) (y : V), r ≠ 0 → y ∈ M → r • y ∈ N → y ∈ N) :
-    ∃ A : Submodule R V, A ⊓ N = ⊥ ∧ A ⊔ N = M := by
-  first
-  | (apply _root_.GlobalTheory.SaturatedSublatticeComplement.main <;> assumption)
-  | (intros; exact _root_.GlobalTheory.SaturatedSublatticeComplement.main ..)
-
 theorem saturatedFlag_splits : ∀ (E : Type) [Field E] [NumberField E] (n a : ℕ) (S : Fin (a + 1) → Submodule (𝓞 E) (Fin n → E)), S 0 = ⊥ → Monotone S → (S (Fin.last a)).FG → (∀ i, ∀ y ∈ S (Fin.last a), y ∈ Submodule.span E (S i : Set (Fin n → E)) → y ∈ S i) → ∃ A : Fin a → Submodule (𝓞 E) (Fin n → E), ∀ i, A i ⊓ S i.castSucc = ⊥ ∧ A i ⊔ S i.castSucc = S i.succ := by
   intro E _ _ n a S _ hmono hfg hsat
   have key : ∀ i : Fin a, ∃ A : Submodule (𝓞 E) (Fin n → E),
       A ⊓ S i.castSucc = ⊥ ∧ A ⊔ S i.castSucc = S i.succ := by
     intro i
     have hle : S i.succ ≤ S (Fin.last a) := hmono (Fin.le_last _)
-    refine exists_compl_of_saturated _ _ (hmono (Fin.castSucc_lt_succ).le)
+    refine _root_.GlobalTheory.SaturatedSublatticeComplement.saturated_has_complement _ _ (hmono (Fin.castSucc_lt_succ).le)
       (Submodule.FG.of_le hfg hle) ?_
     intro r y hr hy hry
     apply hsat _ y (hle hy)

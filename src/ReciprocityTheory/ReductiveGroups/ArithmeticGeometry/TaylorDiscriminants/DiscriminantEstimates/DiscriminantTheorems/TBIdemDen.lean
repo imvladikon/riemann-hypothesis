@@ -173,8 +173,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem idempotent_evaluation : ReciprocityTheory.ChartRestriction.G.TB.IdemEvalSt := PI.UnitaryGroupMassFormula.TBIdemDen.idemEval
-theorem dual_difference : ReciprocityTheory.ChartRestriction.G.TB.DualDiffSt := PI.UnitaryGroupMassFormula.TBIdemDen.dualDiff
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.DiscriminantEstimates.DiscriminantTheorems.TBIdemDen =====

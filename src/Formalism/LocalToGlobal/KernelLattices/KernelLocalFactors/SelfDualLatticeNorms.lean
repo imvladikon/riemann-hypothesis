@@ -71,6 +71,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.RedStatus
 import Formalism.LocalToGlobal.Columns.AlgebraMapMemMaximalIdealPowIff
 import Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.ScalarConst
 import Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.TensZEt
@@ -94,7 +95,7 @@ import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLattice
 -- Members: Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.NormTwelveCubedEqOneOfFiveLePrime, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.IntCurveOfScale, Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.CardTwoSidedQuotient, Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.KerHalf, Formalism.LocalToGlobal.AlgebraicTheory.AlgebraicTheoryProofs.KernelIndexForm, Formalism.LocalToGlobal.AlgebraicTheory.LocNormScale, Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms
 
 -- ===== clump member: Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.NormTwelveCubedEqOneOfFiveLePrime =====
--- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.NormTwelveCubedEqOneOfFiveLePrime", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.GoodModelAll\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EllipticOnePole\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.CmIntegralityOfTorsionPoints\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModJInt\n\n"}
+-- clump-header: {"m": "Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.NormTwelveCubedEqOneOfFiveLePrime", "h": "module\n\npublic import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.GoodModelAll\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EllipticOnePole\npublic import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral\npublic import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.CmIntegralityOfTorsionPoints\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModJInt\nimport ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.RedStatus\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -115,14 +116,6 @@ theorem norm_divisor_twelve_power_eq_one (h5 : 5 ≤ p) {N k : ℕ} (hN : N ∣ 
   have h12 : p ∣ 12 := hp.dvd_of_dvd_pow (h.trans hN)
   have hle : p ≤ 12 := Nat.le_of_dvd (by norm_num) h12
   interval_cases p <;> first | omega | exact absurd hp (by norm_num)
-
-theorem norm_twelve_cubed_eq_one_of_five_le_prime (h5 : 5 ≤ p) : ‖(1728 : ℂ_[p])‖ = 1 := by
-  have := norm_divisor_twelve_power_eq_one p h5 (N := 1728) (k := 3) (by norm_num)
-  simpa using this
-
-theorem norm_27 (h5 : 5 ≤ p) : ‖(27 : ℂ_[p])‖ = 1 := by
-  have := norm_divisor_twelve_power_eq_one p h5 (N := 27) (k := 3) (by norm_num)
-  simpa using this
 
 end GM
 
@@ -156,7 +149,7 @@ theorem good_model_exists_all_primes : GoodModelAll := by
   have ha3 : ‖ι a‖ ^ 3 ≤ 1 := by
     have h := congrArg ι hj
     rw [map_mul, map_pow, map_ofNat] at h
-    rw [← h, norm_mul, GM.norm_twelve_cubed_eq_one_of_five_le_prime p h5, one_mul, norm_pow] at hJ
+    rw [← h, norm_mul, _root_.ReciprocityTheory.ChartRestriction.L1.norm_1728_eq_one p h5, one_mul, norm_pow] at hJ
     exact hJ
   have ha1 : ‖ι a‖ ≤ 1 := (pow_le_one_iff_of_nonneg (norm_nonneg _) (by norm_num)).1 ha3
   have hb2 : ‖ι b‖ ^ 2 ≤ 1 := by
@@ -165,7 +158,7 @@ theorem good_model_exists_all_primes : GoodModelAll := by
       rw [map_sub, map_mul, map_pow, map_pow, map_ofNat, map_one] at h
       linear_combination -h
     have h' := congrArg norm h
-    rw [norm_mul, GM.norm_27 p h5, one_mul, norm_pow] at h'
+    rw [norm_mul, _root_.ReciprocityTheory.ChartRestriction.L1.norm_twentySeven_padicComplex_eq_one p h5, one_mul, norm_pow] at h'
     rw [h', sub_eq_add_neg]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ (by simp))
     rw [norm_pow]; exact ha3
@@ -698,7 +691,7 @@ theorem jetAtSplit_of (hC : SelfDualLatticeThetaPadicIntegrality) (f1 : KerIndFo
     intro y _
     simp only [hΨdef]
     split_ifs
-    · rw [map_inv₀, map_natCast, norm_inv, LocalJetRescaling.norm_natCast p hS1p, inv_one]
+    · rw [map_inv₀, map_natCast, norm_inv, _root_.ReciprocityTheory.ChartRestriction.L1.norm_natCast_Cl_of_not_dvd p hS1p, inv_one]
     · simp
   set s := embH (X.embC A.σ₀) A.δ (A.liftW S N N' (p * c') x) with hsdef
   have hsΛ : (c' : ℂ) • s ∈ Λ := f4 X A a b S N N' (p * c') c' x hN hN' hLa hcpos hc' (Dvd.intro_left p rfl) hx
@@ -717,7 +710,7 @@ theorem jetAtSplit_of (hC : SelfDualLatticeThetaPadicIntegrality) (f1 : KerIndFo
     intro k
     simp only [hrdef, map_mul, norm_mul, hα1 s hsΛ, hα1 k.1 (hyΛ k), one_mul]
     have hs' : (c' : ℂ) • (-s) ∈ Λ := by rw [smul_neg]; exact Λ.neg_mem hsΛ
-    obtain ⟨q, hq⟩ := XiTorsion.altE_int hSDV hs' (hyΛ k)
+    obtain ⟨q, hq⟩ := _root_.Formalism.L2.Th1.H.CharacterSumTripleLemmas.int_of_selfDual hSDV hs' (hyΛ k)
     rw [XiTorsion.altE_smul_left, XiTorsion.altE_smul_right] at hq
     rw [XiConnection.norm_phase ι _ (c' * c') (Nat.mul_pos hc' hc') q (by push_cast; linarith)]
   have ht : ∀ k, (c' : ℂ) • t k ∈ lamF A N N' := by
@@ -751,7 +744,7 @@ theorem jetAtSplit_of (hC : SelfDualLatticeThetaPadicIntegrality) (f1 : KerIndFo
         rw [LinearMap.map_smul, LinearMap.smul_apply, LinearMap.map_smulₛₗ, LinearMap.map_smul, LinearMap.smul_apply]
         simp only [smul_eq_mul, map_div₀, Complex.conj_conj]
         field_simp
-      rw [e]; exact XiTorsion.altE_int hSD (hΛq π hπ l hl) hμ
+      rw [e]; exact _root_.Formalism.L2.Th1.H.CharacterSumTripleLemmas.int_of_selfDual hSD (hΛq π hπ l hl) hμ
     obtain ⟨q, hq⟩ := hint
     simp only [hΨdef, if_pos hb0, hq]
     have hex : Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * ((q : ℝ) : ℂ)) = 1 := by
@@ -787,7 +780,7 @@ theorem jetAtSplit_of (hC : SelfDualLatticeThetaPadicIntegrality) (f1 : KerIndFo
     rw [hx', ← Finset.sum_coe_sort S₁, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     simp only [hrdef, htdef]
-    rw [XiTorsion.opU_cmul, ← KerB.opU_flat,
+    rw [_root_.Formalism.L2.Th1.H.Inv.opU_const_mul, ← KerB.opU_flat,
       Formalism.L2.Th1.H.opUMul _ (HV A.sc) (Formalism.L2.Ker.herm_HV A.sc) (-s) k.1]
     ring
 

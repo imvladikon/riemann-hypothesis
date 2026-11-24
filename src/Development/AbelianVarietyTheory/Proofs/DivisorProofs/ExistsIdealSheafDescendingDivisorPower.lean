@@ -723,28 +723,9 @@ namespace GlobalTheory.UPoinc.PerBound
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {C : UCompact Xo c} {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z}
 
-theorem sc_pos (t : UCTrait X₁ p z₁) : 0 < t.sc := by
-  have hϖ0 : algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 t.T.irr.ne_zero
-  have h0 : t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)‖ < 1 := by
-    by_contra hge
-    push_neg at hge
-    have hinv : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ hge
-    obtain ⟨w, hw⟩ := (t.int _).1 hinv
-    apply t.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective t.T.V (FractionRing t.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold UCTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
+alias sc_pos := _root_.GlobalTheory.UPoinc.ShortBound.sc_pos
 
-theorem be_pos (T : UTrait Xo c) (x : T.P.D.toPre.X) (hx : x ≠ 0) : 0 < T.be x x := by
-  obtain ⟨j, hj⟩ := IsMonomial.exists_pos (IsLocalRing.maximalIdeal.isMaximal T.V).ne_top T.mono hx
-  fin_cases j
-  simpa using hj
+alias be_pos := _root_.GlobalTheory.UPoinc.ShortBound.be_pos
 
 theorem eq_zero_of_sum_eq_zero (hpq : ¬ 1 ≤ Dw.p + Dw.q) (T : UTrait Xo c) (x : T.P.D.toPre.X) : x = 0 := by
   have hr := UTrait.finrank_le_min E H Dw l Xo c T
@@ -867,28 +848,7 @@ theorem norm_evC_lt (t : UCTrait X₁ p z₁) (a : X₁.M.Z.presheaf.stalk z₁)
   have h1 : ¬ IsUnit (X₁.M.stalkEquiv z₁ a) := fun hu => ha ((isUnit_map_iff (X₁.M.stalkEquiv z₁) a).1 hu)
   exact (RatModel.norm_val_lt_one_iff t.cen (X₁.M.stalkEquiv z₁ a).2).2 h1
 
-theorem sc_pos (t : UCTrait X₁ p z₁) : 0 < t.sc := by
-  have hϖ0 : algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ ≠ 0 :=
-    (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 t.T.irr.ne_zero
-  have h0 : t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ) ≠ 0 := (map_ne_zero _).2 hϖ0
-  have hlt : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)‖ < 1 := by
-    by_contra hge
-    push_neg at hge
-    have hinv : ‖t.ι (algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ)⁻¹‖ ≤ 1 := by
-      rw [map_inv₀, norm_inv]
-      exact inv_le_one_of_one_le₀ hge
-    obtain ⟨w, hw⟩ := (t.int _).1 hinv
-    apply t.T.irr.not_isUnit
-    refine isUnit_iff_exists_inv.2 ⟨w, IsFractionRing.injective t.T.V (FractionRing t.T.V) ?_⟩
-    rw [map_mul, hw, map_one, mul_inv_cancel₀ hϖ0]
-  unfold UCTrait.sc
-  have := Real.log_neg (norm_pos_iff.2 h0) hlt
-  linarith
-
-theorem be_pos (T : UTrait Xo c) (x : T.P.D.toPre.X) (hx : x ≠ 0) : 0 < T.be x x := by
-  obtain ⟨j, hj⟩ := IsMonomial.exists_pos (IsLocalRing.maximalIdeal.isMaximal T.V).ne_top T.mono hx
-  fin_cases j
-  simpa using hj
+alias sc_pos := _root_.GlobalTheory.UPoinc.ShortBound.sc_pos
 
 theorem be_bal (T : UTrait Xo c) : T.be ∈ balForms (H.bar : 𝓞 E → 𝓞 E) T.P.D.toPre.X := by
   rw [balForms_eq_levelForms]; exact T.lev
@@ -965,7 +925,7 @@ noncomputable def sys : FPre (H.bar : 𝓞 E → 𝓞 E) (min Dw.p Dw.q) p (X₁
   rank_le y := rank_le _
   β y := (pick y).T.be
   bal y := be_bal _
-  pos y x hx := be_pos _ x hx
+  pos y x hx := _root_.GlobalTheory.UPoinc.ShortBound.be_pos _ x hx
   sc y := (pick y).sc
   sc_pos y := sc_pos _
 
@@ -1014,20 +974,9 @@ namespace GlobalTheory.UPoinc.ClassCore
 
 theorem cm_refl {X : Type} [AddCommGroup X] (N : ℕ) (x : X) : CongMod N x x := ⟨0, by simp⟩
 
-theorem cm_symm {X : Type} [AddCommGroup X] {N : ℕ} {x y : X} (h : CongMod N x y) : CongMod N y x := by
-  obtain ⟨w, rfl⟩ := h; exact ⟨-w, by simp⟩
-
-theorem cm_trans {X : Type} [AddCommGroup X] {N : ℕ} {x y z : X} (h : CongMod N x y) (h' : CongMod N y z) :
-    CongMod N x z := by
-  obtain ⟨w, rfl⟩ := h; obtain ⟨w', rfl⟩ := h'; exact ⟨w' + w, by rw [smul_add, add_assoc]⟩
-
 theorem cm_map {X Y : Type} [AddCommGroup X] [AddCommGroup Y] {N : ℕ} (g : X →+ Y) {x y : X} (h : CongMod N x y) :
     CongMod N (g x) (g y) := by
   obtain ⟨w, rfl⟩ := h; exact ⟨g w, by simp [map_nsmul]⟩
-
-theorem qW_one {X : Type} [AddCommGroup X] (β : LinearMap.BilinForm ℤ X) (μ : Fin 1 → X) :
-    qW !![(1 : ℤ)] β μ = β (μ 0) (μ 0) := by
-  simp [qW]
 
 theorem exists_min {X : Type} [AddCommGroup X] (β : LinearMap.BilinForm ℤ X) (hpos : ∀ x, x ≠ 0 → 0 < β x x)
     (N : ℕ) (μ : Fin 1 → X) : ∃ μ' : Fin 1 → X, (∀ u, CongMod N (μ' u) (μ u)) ∧
@@ -1042,7 +991,7 @@ theorem exists_min {X : Type} [AddCommGroup X] (β : LinearMap.BilinForm ℤ X) 
   refine ⟨μ', hμ', fun μ'' h => ?_⟩
   have := hmin _ ⟨μ'', h, rfl⟩
   have key := not_lt.1 this
-  simp only [qW_one] at key ⊢
+  simp only [_root_.GlobalTheory.UPoinc.UCore.qW_one] at key ⊢
   have h1 := hnn (μ' 0); have h2 := hnn (μ'' 0)
   have e1 := Int.toNat_of_nonneg h1; have e2 := Int.toNat_of_nonneg h2
   omega
@@ -1142,9 +1091,9 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     apply propext
     constructor
     · rintro ⟨h₁, h₂⟩
-      exact ⟨fun u => cm_trans (h₁ u) (h u), fun μ'' h'' => h₂ μ'' fun u => cm_trans (h'' u) (cm_symm (h u))⟩
+      exact ⟨fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (h₁ u) (h u), fun μ'' h'' => h₂ μ'' fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (h'' u) (_root_.GlobalTheory.Poinc.GalTrans.cm_symm (h u))⟩
     · rintro ⟨h₁, h₂⟩
-      exact ⟨fun u => cm_trans (h₁ u) (cm_symm (h u)), fun μ'' h'' => h₂ μ'' fun u => cm_trans (h'' u) (h u)⟩
+      exact ⟨fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (h₁ u) (_root_.GlobalTheory.Poinc.GalTrans.cm_symm (h u)), fun μ'' h'' => h₂ μ'' fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (h'' u) (h u)⟩
   let NS : ∀ y, (Fin 1 → Φ.X y) → Prop := fun y μ => ∃ μ', Cg y μ' μ ∧ μ' ≠ μ ∧ qv y μ' ≤ qv y μ
   let wit : ∀ y, (Fin 1 → Φ.X y) → (Fin 1 → Φ.X y) := fun y μ => if h : NS y μ then h.choose else μ
   have hwit : ∀ y μ, NS y μ → Cg y (wit y μ) μ ∧ wit y μ ≠ μ ∧ qv y (wit y μ) ≤ qv y μ := by
@@ -1157,7 +1106,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     obtain ⟨e, he⟩ := exists_norm_eq t (e' (μ 0))
     refine ⟨e, ?_⟩
     rw [he, ← he']
-    simp only [qv, qW_one]
+    simp only [qv, _root_.GlobalTheory.UPoinc.UCore.qW_one]
   choose el hel using hel
   let g : ∀ y, (Fin 1 → Φ.X y) → (Fin 1 → Φ.X y) → PadicAlgCl p := fun y μ ν =>
     if NS y μ then (if ν = μ then el y μ else if ν = wit y μ then -el y μ else 0) else 0
@@ -1264,7 +1213,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
             simp only [g, if_pos hns]
             by_cases hc : Cg y μ (fun u => k y (cc u))
             · have hμS : μ ∈ S := hS₀ μ (by simp) (fun u => by simpa using hc u)
-              have hwS : wit y μ ∈ S := hS₀ _ (by simp) (fun u => by simpa using cm_trans (hw1 u) (hc u))
+              have hwS : wit y μ ∈ S := hS₀ _ (by simp) (fun u => by simpa using _root_.GlobalTheory.Poinc.GalTrans.cm_trans (hw1 u) (hc u))
               have e : ∀ ν : Fin 1 → Φ.X y, (if ν = μ then el y μ else if ν = wit y μ then -el y μ else 0) =
                   (if ν = μ then el y μ else 0) + (if ν = wit y μ then -el y μ else 0) := by
                 intro ν
@@ -1275,7 +1224,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
                 Finset.sum_ite_eq' S (wit y μ), if_pos hμS, if_pos hwS, add_neg_cancel]
             · refine Finset.sum_eq_zero (fun ν hν => ?_)
               have h1 : ν ≠ μ := fun h => hc (h ▸ hS' ν hν)
-              have h2 : ν ≠ wit y μ := fun h => hc (fun u => cm_trans (cm_symm (hw1 u)) (h ▸ hS' ν hν u))
+              have h2 : ν ≠ wit y μ := fun h => hc (fun u => _root_.GlobalTheory.Poinc.GalTrans.cm_trans (_root_.GlobalTheory.Poinc.GalTrans.cm_symm (hw1 u)) (h ▸ hS' ν hν u))
               simp [h1, h2]
           · simp [g, hns]
         rw [hsum]
@@ -1428,26 +1377,6 @@ namespace GlobalTheory.UPoinc.GApprox
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Geo.Tor.Level H}
   {Xo : Moduli D l} {c : Coeff l} {C : UCompact Xo c}
 
-theorem sc_pos {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z} (t : UCTrait X₁ p z₁) : 0 < t.sc := by
-  set u := algebraMap t.T.V (FractionRing t.T.V) t.T.ϖ with hu
-  have h0 : t.T.ϖ ≠ 0 := t.T.irr.ne_zero
-  have hu0 : u ≠ 0 := by
-    rw [hu]; exact (IsFractionRing.injective t.T.V (FractionRing t.T.V)).ne_iff' (map_zero _) |>.2 h0
-  have hι0 : t.ι u ≠ 0 := (map_ne_zero t.ι).2 hu0
-  have hle : ‖t.ι u‖ ≤ 1 := (t.int u).2 ⟨_, rfl⟩
-  have hlt : ‖t.ι u‖ < 1 := by
-    refine lt_of_le_of_ne hle fun h1 => ?_
-    have : ‖t.ι u⁻¹‖ ≤ 1 := by rw [map_inv₀, norm_inv, h1, inv_one]
-    obtain ⟨v, hv⟩ := (t.int _).1 this
-    apply t.T.irr.not_isUnit
-    refine IsUnit.of_mul_eq_one v ?_
-    apply IsFractionRing.injective t.T.V (FractionRing t.T.V)
-    rw [map_mul, hv, ← hu, mul_inv_cancel₀ hu0, map_one]
-  have hpos : 0 < ‖t.ι u‖ := norm_pos_iff.2 hι0
-  unfold UCTrait.sc
-  rw [← hu]
-  linarith [Real.log_neg hpos hlt]
-
 theorem sc_evalZ_eq_of_equiv {O : Type} [CommRing O] [IsDedekindDomain O] [CharZero O] [Module.Finite ℤ O] {bar : O → O}
     {φ : InvFun O} {X Y : Type} [AddCommGroup X] [Module O X] [Module.Finite O X] [AddCommGroup Y] [Module O Y]
     [Module.Finite O Y] (hP : IsPolFanOn bar φ X) {β : LinearMap.BilinForm ℤ X} (hβ : β ∈ balForms bar X)
@@ -1464,13 +1393,7 @@ theorem sc_evalZ_eq_of_equiv {O : Type} [CommRing O] [IsDedekindDomain O] [CharZ
   rw [← h1, ← evalR_toReal φ (pull _ _), hform, hP.homog _ hmem _ (div_nonneg hs0 hs'.le), evalR_toReal]
   field_simp
 
-theorem posW_one : PosW (!![(1 : ℤ)] : Matrix (Fin 1) (Fin 1) ℤ) := by
-  unfold PosW
-  have : ((!![(1 : ℤ)] + (!![(1 : ℤ)] : Matrix (Fin 1) (Fin 1) ℤ).transpose).map (Int.cast : ℤ → ℝ)) =
-      Matrix.diagonal fun _ => (2 : ℝ) := by
-    ext i j; fin_cases i; fin_cases j; norm_num [Matrix.vecHead, Function.swap]
-  rw [this]
-  exact Matrix.PosDef.diagonal (fun _ => by norm_num)
+alias posW_one := _root_.GlobalTheory.UPoinc.posW_one_one
 
 end GlobalTheory.UPoinc.GApprox
 
@@ -1487,7 +1410,7 @@ theorem sc_evalZ_eq {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z₁ : X₁.M.Z}
   sc_evalZ_eq_of_equiv (hpol _ (Φ.rank_le y)) (Φ.bal y) (fun x => by
       by_cases hx : x = 0
       · simp [hx]
-      · exact (Φ.pos y x hx).le) (Φ.sc_pos y).le (sc_pos t) e he
+      · exact (Φ.pos y x hx).le) (Φ.sc_pos y).le (_root_.GlobalTheory.UPoinc.ShortBound.sc_pos t) e he
 
 theorem exists_hasSupports_cm (q : ℕ) (φ : InvFun (𝓞 E)) (hpol : IsPolFan H.bar q φ) :
     ∃ d, 1 ≤ d ∧ HasSupports (H.bar : 𝓞 E → 𝓞 E) q φ d :=

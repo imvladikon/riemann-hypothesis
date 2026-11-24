@@ -152,8 +152,6 @@ end UpperTheory.Lit.Bur.BlockEmb
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.blockEmbed_conj_isUnitaryEmbedding : ∀ {m r : ℕ} {J Q Qi : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + m + 1)) ℂ} {F : Matrix (Fin (2 * r + m + 1)) (Fin m) ℂ} {A Ai s : Matrix (Fin m) (Fin m) ℂ} (h1 : Q * Qi = 1) (h2 : Qi * Q = 1) (hg : Qᴴ * J * Q = Formalism.QuantumDeterminants.Hpk m r) (hF : Q * colW m r = F * A) (hA : A * Ai = 1), IsEmb J F (Q * PI.UpqRep.blockW m r s * Qi) (A * s * Ai) := by
-  first | exact @UpperTheory.Lit.Bur.BlockEmb.isEmb_conj_blockW
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -227,8 +225,6 @@ end UpperTheory.Lit.Bur.CWCombo
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.casselmanWallachCont_finite_sum_sobolev_forms : ∀ {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {σ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → (H →L[ℂ] H)} (hs : ∀ v, v ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ → SmoothVec (lieG (Formalism.QuantumDeterminants.Hpk k r)) σ v) {Wp : Type} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp] {ι : Type} [Fintype ι] (l : ι → H →ₗ[ℂ] ℂ) (b : ι → Wp) (hl : ∀ i, Sobolev₂ (lieG (Formalism.QuantumDeterminants.Hpk k r)) σ (l i)) {B : H → Wp} (hB : ∀ v ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ, B v = ∑ i, l i v • b i), PI.BesselMapUniq.IsCWCont (k := k) (r := r) σ B := by
-  first | exact @UpperTheory.Lit.Bur.CWCombo.isCWCont_of_sobCont
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.CasselmanWallachContFiniteSumSobolevForms =====
@@ -372,8 +368,6 @@ end UpperTheory.Lit.Bur.Unitarize
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.contIrred_compactUnitaryGroup_rep_isUnitarizable : ∀ {k : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] {π : Matrix (Fin k) (Fin k) ℂ → Module.End ℂ W} (hπ : IsContIrred (Formalism.QuantumDeterminants.UH 1) π), ∃ (Wp : Type) (_ : NormedAddCommGroup Wp) (_ : InnerProductSpace ℂ Wp) (_ : FiniteDimensional ℂ Wp) (ρ : Matrix (Fin k) (Fin k) ℂ → (Wp →L[ℂ] Wp)) (T : W ≃ₗ[ℂ] Wp), PI.UpqRep.IsURepOn (PI.UpqRep.UJset (PI.UpqRep.allPos k)) ρ ∧ (∀ h ∈ Formalism.QuantumDeterminants.UH (1 : Matrix (Fin k) (Fin k) ℂ), ∀ w, T (π h w) = ρ h (T w)) ∧ ∀ S : Submodule ℂ Wp, (∀ g ∈ PI.UpqRep.UJset (PI.UpqRep.allPos k), ∀ v ∈ S, ρ g v ∈ S) → S = ⊥ ∨ S = ⊤ := by
-  first | exact @UpperTheory.Lit.Bur.Unitarize.unitarize
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -456,8 +450,6 @@ end UpperTheory.Lit.Bur.BesselContra
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.contragredient_conj_definiteUnitary_isContIrred : ∀ {m : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] {J₀ A Ai : Matrix (Fin m) (Fin m) ℂ} (h1 : A * Ai = 1) (h2 : Ai * A = 1) (hA : Aᴴ * J₀ * A = 1) {π₀ : Matrix (Fin m) (Fin m) ℂ → Module.End ℂ W} (hπ : IsContIrred (Formalism.QuantumDeterminants.UH J₀) π₀), IsContIrred (Formalism.QuantumDeterminants.UH (1 : Matrix (Fin m) (Fin m) ℂ)) (fun h => ((π₀ (A * hᴴ * Ai)).dualMap : Module.End ℂ (Module.Dual ℂ W))) := by
-  first | exact @UpperTheory.Lit.Bur.BesselContra.isContIrred_contra_conj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.ContragredientConjDefiniteUnitaryIsContIrred =====
@@ -548,8 +540,6 @@ end UpperTheory.Lit.Bur.HermCongr
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.hermitian_form_pos_congruent_identity : ∀ {m : ℕ} {J₀ : Matrix (Fin m) (Fin m) ℂ} (hH : J₀ᴴ = J₀) (hp : ∀ x : Fin m → ℂ, x ≠ 0 → 0 < (Formalism.QuantumDeterminants.herm J₀ x x).re), ∃ A Ai : Matrix (Fin m) (Fin m) ℂ, A * Ai = 1 ∧ Ai * A = 1 ∧ Aᴴ * J₀ * A = 1 := by
-  first | exact @UpperTheory.Lit.Bur.HermCongr.exists_congr_one
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.HermitianFormPosCongruentIdentity =====
@@ -811,8 +801,6 @@ end UpperTheory.Lit.Bur.BesselFrame
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.hyperbolic_frame_congruent_splitHermGram : ∀ {m r : ℕ} {J : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + m + 1)) ℂ} (hH : Jᴴ = J) {Fa : Matrix (Fin (2 * r + m + 1)) (Fin m) ℂ} {e f : Matrix (Fin (2 * r + m + 1)) (Fin r) ℂ} {y : Fin (2 * r + m + 1) → ℂ} (h1 : Faᴴ * J * Fa = 1) (h2 : eᴴ * J * e = 0) (h3 : fᴴ * J * f = 0) (h4 : eᴴ * J * f = 1) (h5 : Faᴴ * J * e = 0) (h6 : Faᴴ * J * f = 0) (h7 : (Faᴴ * J) *ᵥ y = 0) (h8 : (eᴴ * J) *ᵥ y = 0) (h9 : (fᴴ * J) *ᵥ y = 0) (h10 : Formalism.QuantumDeterminants.herm J y y = -1), ∃ Q Qi : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + m + 1)) ℂ, Q * Qi = 1 ∧ Qi * Q = 1 ∧ Qᴴ * J * Q = Formalism.QuantumDeterminants.Hpk m r ∧ Q * colE m r = e ∧ Q * colW m r = Fa ∧ Q *ᵥ Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.wI m r (Fin.last m)) = y := by
-  first | exact @UpperTheory.Lit.Bur.BesselFrame.exists_frame_matrix
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -927,8 +915,6 @@ end UpperTheory.Lit.Bur.DualCols
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.isFrame_exists_isotropic_dual_columns : ∀ {n m r : ℕ} {J : Matrix (Fin n) (Fin n) ℂ} {J₀ : Matrix (Fin m) (Fin m) ℂ} {F : Matrix (Fin n) (Fin m) ℂ} {e : Matrix (Fin n) (Fin r) ℂ} {z : Fin n → ℂ} (hf : IsFrame J J₀ F e z), ∃ f : Matrix (Fin n) (Fin r) ℂ, eᴴ * J * f = 1 ∧ fᴴ * J * f = 0 ∧ Fᴴ * J * f = 0 ∧ (fᴴ * J) *ᵥ z = 0 := by
-  first | exact @UpperTheory.Lit.Bur.DualCols.exists_dual_cols
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.IsFrameExistsIsotropicDualColumns =====
@@ -982,8 +968,6 @@ end UpperTheory.Lit.Bur.UnipRadConj
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.isometry_conj_maps_unipotentRadical : ∀ {n r : ℕ} {J G Q Qi : Matrix (Fin n) (Fin n) ℂ} {e e' : Matrix (Fin n) (Fin r) ℂ} (h1 : Q * Qi = 1) (h2 : Qi * Q = 1) (hg : Qᴴ * J * Q = G) (he : Q * e' = e) {u : Matrix (Fin n) (Fin n) ℂ} (hu : u ∈ unipRad G e'), Q * u * Qi ∈ unipRad J e := by
-  first | exact @UpperTheory.Lit.Bur.UnipRadConj.conj_mem_unipRad
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.IsometryConjMapsUnipotentRadical =====
@@ -1085,8 +1069,6 @@ end UpperTheory.Lit.Bur.BesselRadical
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.mem_besselUnipotentRadical_of_mem_coordGroup : ∀ {k r : ℕ} {u : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hu : u ∈ Formalism.QuantumDeterminants.Nset k r), u ∈ unipRad (Formalism.QuantumDeterminants.Hpk k r) (colE k r) := by
-  first | exact @UpperTheory.Lit.Bur.BesselRadical.mem_unipRad_of_mem_Nset
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.MemBesselUnipotentRadicalOfMemCoordGroup =====
@@ -1188,8 +1170,6 @@ end UpperTheory.Lit.Bur.SmoothConj
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.smoothVec_conjugate_unitaryGroup_iff : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) {J G Q Qi : Matrix (Fin n) (Fin n) ℂ} (h1 : Q * Qi = 1) (h2 : Qi * Q = 1) (hg : Qᴴ * J * Q = G) (v : H), SmoothVec (lieG G) (fun g => σ (Q * g * Qi)) v ↔ SmoothVec (lieG J) σ v := by
-  first | exact @UpperTheory.Lit.Bur.SmoothConj.smoothVec_conj_iff
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1221,15 +1201,6 @@ theorem conj_mem_lieG {n : ℕ} {J g X : Matrix (Fin n) (Fin n) ℂ} (hu : IsUni
         simp only [conjTranspose_mul, Matrix.mul_assoc, Matrix.mul_add, Matrix.add_mul]
     _ = 0 := by rw [hBA, hBA', Matrix.mul_one, Matrix.mul_one, hX', Matrix.mul_zero, Matrix.zero_mul]
 
-theorem mul_prod_conj {n : ℕ} {g : Matrix (Fin n) (Fin n) ℂ} (hu : IsUnit g)
-    (l : List (Matrix (Fin n) (Fin n) ℂ)) : g * (l.map fun x => g⁻¹ * x * g).prod = l.prod * g := by
-  have hd := (Matrix.isUnit_iff_isUnit_det g).1 hu
-  induction l with
-  | nil => simp
-  | cons x l ih =>
-    rw [List.map_cons, List.prod_cons, List.prod_cons, Matrix.mul_assoc x, ← ih]
-    simp only [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hd, Matrix.one_mul]
-
 theorem smoothVec_translate : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {J : Matrix (Fin n) (Fin n) ℂ} (hJ : IsUnit J) {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)}
     (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.QuantumDeterminants.UH J) σ) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.QuantumDeterminants.UH J) {v : H}
@@ -1249,7 +1220,7 @@ theorem smoothVec_translate : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [I
   have e2 := hσ.1.2 _ hg _ hQ
   have e3 : g * (List.ofFn fun i => NormedSpace.exp (t i • (g⁻¹ * Xs i * g))).prod
       = (List.ofFn fun i => NormedSpace.exp (t i • Xs i)).prod * g := by
-    rw [← mul_prod_conj hu, List.map_ofFn]
+    rw [← _root_.GlobalTheory.SmVec.prod_conj hu, List.map_ofFn]
     simp only [hc, Function.comp_def]
   have e4 := e1.symm.trans ((congrArg σ e3).symm.trans e2)
   exact congrArg (fun T : H →L[ℂ] H => T v) e4
@@ -1258,8 +1229,6 @@ end UpperTheory.Lit.Bur.SmoothTranslate
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.smoothVec_stable_under_unitaryGroup : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {J : Matrix (Fin n) (Fin n) ℂ} (hJ : IsUnit J) {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.QuantumDeterminants.UH J) σ) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.QuantumDeterminants.UH J) {v : H} (hv : SmoothVec (lieG J) σ v), SmoothVec (lieG J) σ (σ g v) := by
-  first | exact @UpperTheory.Lit.Bur.SmoothTranslate.smoothVec_translate
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1300,8 +1269,6 @@ end UpperTheory.Lit.Bur.SobConj
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.sobolevCont_of_conj_gram_form : ∀ {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) {J G Q Qi : Matrix (Fin n) (Fin n) ℂ} (h1 : Q * Qi = 1) (h2 : Qi * Q = 1) (hg : Qᴴ * J * Q = G) {l : H →ₗ[ℂ] ℂ} (hl : Sobolev₂ (lieG J) σ l), Sobolev₂ (lieG G) (fun g => σ (Q * g * Qi)) l := by
-  first | exact @UpperTheory.Lit.Bur.SobConj.sobCont_conj
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.SobolevContOfConjGramForm =====
@@ -1328,8 +1295,6 @@ end UpperTheory.Lit.Bur.Inertia
 
 open Matrix GlobalTheory.RealBessel GlobalTheory.BesselMapOne Formalism.L2.Theta GlobalTheory.SmVec
 
-theorem _root_.UpperTheory.Lit.Bur.sylvester_inertia_signForm_congr_splitHermitian : ∀ {m r : ℕ} (ε : Fin (2 * r + m + 1) → Bool) {Q Qi : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + m + 1)) ℂ} (h1 : Q * Qi = 1) (h2 : Qi * Q = 1) (hg : Qᴴ * Formalism.REAL.Jm ε * Q = Formalism.QuantumDeterminants.Hpk m r), (Finset.univ.filter fun i => ε i = true).card = m + r := by
-  first | exact @UpperTheory.Lit.Bur.Inertia.card_plus_of_congr_Hpk
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.BesselModels.SylvesterInertiaSignFormCongrSplitHermitian =====
@@ -1378,7 +1343,7 @@ theorem isDSHpk_tr {m r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSp
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc fr⁻¹, nonsing_inv_mul _ hd, Matrix.one_mul, h2]
   have gg : (fr * Q)ᴴ * Formalism.REAL.Jm ε * (fr * Q) = Formalism.QuantumDeterminants.Hpk m r := by
     rw [← hg, ← hJ]; simp only [conjTranspose_mul, Matrix.mul_assoc]
-  have hc := UpperTheory.Lit.Bur.sylvester_inertia_signForm_congr_splitHermitian ε g1 g2 gg
+  have hc := _root_.UpperTheory.Lit.Bur.Inertia.card_plus_of_congr_Hpk ε g1 g2 gg
   obtain ⟨P, hP⟩ := (GlobalTheory.UnitaryCayley.exists_isCayleyU_iff m r ε).2 hc
   refine ⟨P, hP, ?_⟩
   have := Formalism.L2.SG.Pf.Choice.dsHpk_tr rfl ε ε (fun _ => rfl) lam lam (fun _ => rfl) _ hds (fr * Q) (Qi * fr⁻¹) g1 gg P hP
@@ -1401,8 +1366,8 @@ theorem frame_normal {m r : ℕ} {J : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r +
       Q *ᵥ ((t : ℂ) • Formalism.QuantumDeterminants.bvec (Formalism.QuantumDeterminants.wI m r (Fin.last m))) = z := by
   have h0 : J₀ᴴ = J₀ := by
     rw [← hf.gram]; simp only [conjTranspose_mul, conjTranspose_conjTranspose, hf.herm, Matrix.mul_assoc]
-  obtain ⟨A, Ai, a1, a2, a3⟩ := UpperTheory.Lit.Bur.hermitian_form_pos_congruent_identity h0 hp
-  obtain ⟨f, f1, f2, f3, f4⟩ := UpperTheory.Lit.Bur.isFrame_exists_isotropic_dual_columns hf
+  obtain ⟨A, Ai, a1, a2, a3⟩ := _root_.UpperTheory.Lit.Bur.HermCongr.exists_congr_one h0 hp
+  obtain ⟨f, f1, f2, f3, f4⟩ := _root_.UpperTheory.Lit.Bur.DualCols.exists_dual_cols hf
   have hreal : Formalism.QuantumDeterminants.herm J z z = (((Formalism.QuantumDeterminants.herm J z z).re : ℝ) : ℂ) := by
     have hc : star (Formalism.QuantumDeterminants.herm J z z) = Formalism.QuantumDeterminants.herm J z z := by
       unfold Formalism.QuantumDeterminants.herm
@@ -1414,7 +1379,7 @@ theorem frame_normal {m r : ℕ} {J : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r +
   have htp : 0 < t := Real.sqrt_pos.2 hTp
   have htc : (t : ℂ) ≠ 0 := by exact_mod_cast htp.ne'
   have hsq : t * t = T := Real.mul_self_sqrt hTp.le
-  obtain ⟨Q, Qi, q1, q2, qg, qe, qw, qy⟩ := UpperTheory.Lit.Bur.hyperbolic_frame_congruent_splitHermGram (Fa := F * A) (e := e) (f := f) (y := (t⁻¹ : ℂ) • z) hf.herm
+  obtain ⟨Q, Qi, q1, q2, qg, qe, qw, qy⟩ := _root_.UpperTheory.Lit.Bur.BesselFrame.exists_frame_matrix (Fa := F * A) (e := e) (f := f) (y := (t⁻¹ : ℂ) • z) hf.herm
     (by rw [conjTranspose_mul]; calc _ = Aᴴ * (Fᴴ * J * F) * A := by simp only [Matrix.mul_assoc]
                                      _ = 1 := by rw [hf.gram, a3])
     hf.e_iso f2 f1
@@ -1481,7 +1446,7 @@ theorem chi_eq {m r : ℕ} {J Q Qi : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + 
     {u : Matrix (Fin (2 * r + m + 1)) (Fin (2 * r + m + 1)) ℂ} (hu : u ∈ unipRad (Formalism.QuantumDeterminants.Hpk m r) (colE m r)) :
     χ (Q * u * Qi) = PI.BesselMapUniq.psiGen m r z' c u := by
   obtain ⟨a, ha⟩ := hf'.exists_coords hu
-  rw [isCharWith hz' c u hu a ha, hχ _ (UpperTheory.Lit.Bur.isometry_conj_maps_unipotentRadical q1 q2 qg qe hu) a fun j => ?_]
+  rw [isCharWith hz' c u hu a ha, hχ _ (_root_.UpperTheory.Lit.Bur.UnipRadConj.conj_mem_unipRad q1 q2 qg qe hu) a fun j => ?_]
   have hfl : flagVec e z j.succ = Q *ᵥ flagVec (colE m r) z' j.succ := by
     refine Fin.lastCases ?_ (fun i => ?_) j.succ
     · simp [flagVec, qz]
@@ -1515,12 +1480,12 @@ theorem burGapPos_of_bmu : CompanionTheory.Bmu.BesselMapUniqGap → UpperTheory.
   have hDSH : PI.UpqRep.IsDSHpk m r ε lam σ' := isDSHpk_tr q1 q2 qg hfrU hfrJ hDS
   obtain ⟨-, hU', -⟩ := rep_of_isDSHpk hDSH
   have hsm : ∀ v, v ∈ PI.UpqRep.smoothVecs (k := m) (r := r) σ' ↔ v ∈ smSub J σ := fun v =>
-    (smoothOnH_iff_mem PI.HwUniqW.Hpk_conjTranspose PI.HwUniqW.Hpk_mul_self hU' v).trans (UpperTheory.Lit.Bur.smoothVec_conjugate_unitaryGroup_iff σ q1 q2 qg v)
-  have hπ' := UpperTheory.Lit.Bur.contragredient_conj_definiteUnitary_isContIrred a1 a2 a3 hπ
-  obtain ⟨Wp, _, _, _, ρ, T1, hρ, hT1, hirr⟩ := UpperTheory.Lit.Bur.contIrred_compactUnitaryGroup_rep_isUnitarizable hπ'
+    (smoothOnH_iff_mem PI.HwUniqW.Hpk_conjTranspose PI.HwUniqW.Hpk_mul_self hU' v).trans (_root_.UpperTheory.Lit.Bur.SmoothConj.smoothVec_conj_iff σ q1 q2 qg v)
+  have hπ' := _root_.UpperTheory.Lit.Bur.BesselContra.isContIrred_contra_conj a1 a2 a3 hπ
+  obtain ⟨Wp, _, _, _, ρ, T1, hρ, hT1, hirr⟩ := _root_.UpperTheory.Lit.Bur.Unitarize.unitarize hπ'
   have hD : Nontrivial (Module.Dual ℂ W) := (Module.nontrivial_dual_iff ℂ).2 hW
   have : Nontrivial Wp := T1.symm.toEquiv.nontrivial
-  obtain ⟨u, Wq, _, _, ρ', T2, hty, hT2⟩ := UpperTheory.Lit.Bur.irreducible_unitary_rep_iso_harishChandraType hρ hirr
+  obtain ⟨u, Wq, _, _, ρ', T2, hty, hT2⟩ := _root_.UpperTheory.Lit.Bur.HWSpanType.exists_hcType_of_irred hρ hirr
   set T : Module.Dual ℂ W ≃ₗ[ℂ] Wq := T1.trans T2 with hTdef
   have hone : ∀ s ∈ Formalism.QuantumDeterminants.UH (1 : Matrix (Fin m) (Fin m) ℂ), s ∈ PI.UpqRep.UJset (PI.UpqRep.allPos m) := fun s hs =>
     PI.HwUniqW.mem_UJset_allPos.2 (mem_UH_one.1 hs)
@@ -1584,7 +1549,7 @@ theorem burGapPos_of_bmu : CompanionTheory.Bmu.BesselMapUniqGap → UpperTheory.
         have e0 := hπ.1.2 _ hh0 _ hh1
         rw [h01, hπ.1.1] at e0
         exact (LinearMap.congr_fun e0 w).symm
-      have hgu := UpperTheory.Lit.Bur.isometry_conj_maps_unipotentRadical q1 q2 qg qe (UpperTheory.Lit.Bur.mem_besselUnipotentRadical_of_mem_coordGroup hu')
+      have hgu := _root_.UpperTheory.Lit.Bur.UnipRadConj.conj_mem_unipRad q1 q2 qg qe (_root_.UpperTheory.Lit.Bur.BesselRadical.mem_unipRad_of_mem_Nset hu')
       have hQi : Qiᴴ * Formalism.QuantumDeterminants.Hpk m r * Qi = J := by
         rw [← qg]
         calc Qiᴴ * (Qᴴ * J * Q) * Qi = (Q * Qi)ᴴ * J * (Q * Qi) := by simp only [conjTranspose_mul, Matrix.mul_assoc]
@@ -1596,7 +1561,7 @@ theorem burGapPos_of_bmu : CompanionTheory.Bmu.BesselMapUniqGap → UpperTheory.
               simp only [conjTranspose_mul, Matrix.mul_assoc]
           _ = J := by rw [qg, hh2, hQi]
       have hE : IsEmb J F (Q * h' * Qi) (A * s * Ai) := by
-        have := UpperTheory.Lit.Bur.blockEmbed_conj_isUnitaryEmbedding (s := s) q1 q2 qg qw a1
+        have := _root_.UpperTheory.Lit.Bur.BlockEmb.isEmb_conj_blockW (s := s) q1 q2 qg qw a1
         rwa [← hbl] at this
       have e1 : σ' (h' * u') v = σ (Q * h' * Qi) (σ (Q * u' * Qi) v) := by
         have e0 : Q * (h' * u') * Qi = (Q * h' * Qi) * (Q * u' * Qi) := by
@@ -1607,8 +1572,8 @@ theorem burGapPos_of_bmu : CompanionTheory.Bmu.BesselMapUniqGap → UpperTheory.
         rw [e0, hU.1.2 _ hgh _ hgu.1]
         rfl
       let x : smSub J σ := ⟨v, hv'⟩
-      let y1 : smSub J σ := ⟨σ (Q * u' * Qi) v, UpperTheory.Lit.Bur.smoothVec_stable_under_unitaryGroup hf.unit hU hgu.1 hv'⟩
-      let y2 : smSub J σ := ⟨σ (Q * h' * Qi) y1, UpperTheory.Lit.Bur.smoothVec_stable_under_unitaryGroup hf.unit hU hgh y1.2⟩
+      let y1 : smSub J σ := ⟨σ (Q * u' * Qi) v, _root_.UpperTheory.Lit.Bur.SmoothTranslate.smoothVec_translate hf.unit hU hgu.1 hv'⟩
+      let y2 : smSub J σ := ⟨σ (Q * h' * Qi) y1, _root_.UpperTheory.Lit.Bur.SmoothTranslate.smoothVec_translate hf.unit hU hgh y1.2⟩
       have hflip : β.flip y2 = χ (Q * u' * Qi) • (π₀ (A * sᴴ * Ai)).dualMap (β.flip x) := by
         ext w
         have i1 := hβ.inv _ hh0 _ hgh hE (π₀ (A * sᴴ * Ai) w) y1 y2 rfl
@@ -1616,14 +1581,14 @@ theorem burGapPos_of_bmu : CompanionTheory.Bmu.BesselMapUniqGap → UpperTheory.
         rw [hinv] at i1
         simp only [LinearMap.flip_apply, LinearMap.smul_apply, LinearMap.dualMap_apply, smul_eq_mul]
         rw [i1, i2]
-      have hχe := chi_eq q1 q2 qg qe qz hzW hf' hχc (UpperTheory.Lit.Bur.mem_besselUnipotentRadical_of_mem_coordGroup hu')
+      have hχe := chi_eq q1 q2 qg qe qz hzW hf' hχc (_root_.UpperTheory.Lit.Bur.BesselRadical.mem_unipRad_of_mem_Nset hu')
       rw [e1]
       show B (y2 : H) = _
       rw [hBx y2, hflip, map_smul, hT s hsU, hχe, ← hBx x]
     · let b := Module.finBasis ℂ W
       choose l hl1 hl2 using fun i => hβ.cont (b i)
-      refine UpperTheory.Lit.Bur.casselmanWallachCont_finite_sum_sobolev_forms (fun v hv => (UpperTheory.Lit.Bur.smoothVec_conjugate_unitaryGroup_iff σ q1 q2 qg v).2 ((hsm v).1 hv)) l (fun i => T (b.coord i))
-        (fun i => UpperTheory.Lit.Bur.sobolevCont_of_conj_gram_form σ q1 q2 qg (hl1 i)) (fun v hv => ?_)
+      refine _root_.UpperTheory.Lit.Bur.CWCombo.isCWCont_of_sobCont (fun v hv => (_root_.UpperTheory.Lit.Bur.SmoothConj.smoothVec_conj_iff σ q1 q2 qg v).2 ((hsm v).1 hv)) l (fun i => T (b.coord i))
+        (fun i => _root_.UpperTheory.Lit.Bur.SobConj.sobCont_conj σ q1 q2 qg (hl1 i)) (fun v hv => ?_)
       have hv' := (hsm v).1 hv
       have e0 := hBx ⟨v, hv'⟩
 

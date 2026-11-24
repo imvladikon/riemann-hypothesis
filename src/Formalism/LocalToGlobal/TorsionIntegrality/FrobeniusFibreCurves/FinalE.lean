@@ -134,7 +134,7 @@ theorem log_sigma_pullback_cocycle_jets_of_parallelogram_and_cube (hP : ParThree
   have hp3 := hP K g2 g3 s2 c0 a1 a3 P l i ep F hW hF hi hc hc3
   have hd := hC K F l i (phO s2 P l) hF hi hpar hp3
   have hf0 := constantCoeff_eq_zero_of_parallelogram hF hi hpar
-  obtain ⟨hdiv, hsw⟩ := cobRules K F l (phO s2 P l) hF hf0
+  obtain ⟨hdiv, hsw⟩ := _root_.Formalism.L2.Th1.B.coboundary_rules_hold K F l (phO s2 P l) hF hf0
   refine ⟨hdiv, hsw, hd, ?_, fun n hn => jetsThree K F l _ hF hd n hn⟩
   rw [hsw]
   exact hd
@@ -172,13 +172,11 @@ theorem psubst_fExp {ι : Type} {u : MvPowerSeries ι K} (hu : MvPowerSeries.con
     PowerSeries.subst u (fExp f) = fExp (PowerSeries.subst u f) :=
   Formalism.L2.Th1.B.subst_fExp (ι := Unit) (φ := fun _ => u) (fun _ => hu) hf
 
-theorem sigS_cc (P : PowerSeries K) : PowerSeries.constantCoeff (sigS P) = 0 := Add0.sigS_cc P
-
 theorem subst_sigma {ι : Type} (P : PowerSeries K) {u : MvPowerSeries ι K}
     (hu : MvPowerSeries.constantCoeff u = 0) :
     PowerSeries.subst u (sigma P) = u * fExp (PowerSeries.subst u (sigS P)) := by
   have hs := PowerSeries.HasSubst.of_constantCoeff_zero hu
-  rw [sigma, PowerSeries.subst_mul hs, PowerSeries.subst_X hs, psubst_fExp hu (sigS_cc P)]
+  rw [sigma, PowerSeries.subst_mul hs, PowerSeries.subst_X hs, psubst_fExp hu (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)]
 
 theorem subst_sgStar {ι : Type} (s2 : K) (P : PowerSeries K)
     {u : MvPowerSeries ι K} (hu : MvPowerSeries.constantCoeff u = 0) :
@@ -271,7 +269,7 @@ theorem wp3_apply_eq_sq_mul_sub_sq_mul {g2 g3 : K} {P : PowerSeries K} (hP : IsW
     simp
   have c0 : MvPowerSeries.constantCoeff (par0 (sigS P)) = 0 := by
     rw [addSigmaLog K g2 g3 P hP]; exact constantCoeff_fLog hN1
-  rw [← emb_wpDiff, Add0.wpDiff_eq dqRule hP.2.1, ← fExp_fLog hN1, ← addSigmaLog K g2 g3 P hP,
+  rw [← emb_wpDiff, Add0.wpDiff_eq _root_.Formalism.L2.Th1.B.difference_quotient_rule_holds hP.2.1, ← fExp_fLog hN1, ← addSigmaLog K g2 g3 P hP,
     map_mul, emb_fExp j k c0, map_sub, map_pow, map_pow, embed_pair_X_zero, embed_pair_X_one]
 
 theorem hasSubst_eval_last_zero :
@@ -397,7 +395,7 @@ theorem emb_cc (j k : Fin 3) {h : MvPowerSeries (Fin 2) K}
 theorem weierstrass_pair_ne_zero {g2 g3 : K} {P : PowerSeries K} (hP : IsWp g2 g3 P) {j k : Fin 3}
     (hjk : j ≠ k) : wp3 P j k ≠ 0 := by
   rw [wp3_apply_eq_sq_mul_sub_sq_mul hP]
-  exact mul_ne_zero (sq_sub_ne_zero hjk) (fExp_ne_zero (emb_cc j k (constantCoeff_parallelogram_defect (sigS_cc P))))
+  exact mul_ne_zero (sq_sub_ne_zero hjk) (fExp_ne_zero (emb_cc j k (constantCoeff_parallelogram_defect (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P))))
 
 theorem pdX (i j : Fin 3) :
     MvPowerSeries.pderiv (R := K) i (MvPowerSeries.X j : A3) = if j = i then 1 else 0 := by
@@ -465,7 +463,7 @@ end
 
 theorem FrobStickLog_of (hS : ShearLemma) (hT : TauRule) (hD : DetRule) : FrobStickLog := by
   intro K _ _ g2 g3 P hP
-  have cE : MvPowerSeries.constantCoeff (fsE (sigS P)) = 0 := fsE_cc (sigS_cc P)
+  have cE : MvPowerSeries.constantCoeff (fsE (sigS P)) = 0 := fsE_cc (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)
   have two_ne : (2 : MvPowerSeries (Fin 3) K) ≠ 0 := by
     intro h
     have := congrArg MvPowerSeries.constantCoeff h
@@ -473,7 +471,7 @@ theorem FrobStickLog_of (hS : ShearLemma) (hT : TauRule) (hD : DetRule) : FrobSt
     exact two_ne_zero this
   have hb : ev3H (-2 * vand3 K * fExp (fsE (sigS P))) =
       -2 * (MvPowerSeries.X 0 * MvPowerSeries.X 1) * wp3 P 0 1 := by
-    rw [map_mul, map_mul, map_neg, map_ofNat, eval_last_zero_vandermonde_three, eval_last_zero_formal_exp cE, eval_last_zero_exp_parallelogram (sigS_cc P),
+    rw [map_mul, map_mul, map_neg, map_ofNat, eval_last_zero_vandermonde_three, eval_last_zero_formal_exp cE, eval_last_zero_exp_parallelogram (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P),
       wp3_apply_eq_sq_mul_sub_sq_mul hP]
     ring
   refine hS K _ _ ?_ ?_ ?_
@@ -516,13 +514,13 @@ theorem FrobStick_of (hL : FrobStickLog) : FrobStick := by
   intro K _ _ g2 g3 P hP
   have h := hL K g2 g3 P hP
   have c0 : ∀ x : Fin 3, MvPowerSeries.constantCoeff
-      (at1 x (sigS P) : MvPowerSeries (Fin 3) K) = 0 := fun x => cc_psubst (by simp) (sigS_cc P)
+      (at1 x (sigS P) : MvPowerSeries (Fin 3) K) = 0 := fun x => cc_psubst (by simp) (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)
   have c3 : ∀ x : Fin 3, MvPowerSeries.constantCoeff
       (3 * at1 x (sigS P) : MvPowerSeries (Fin 3) K) = 0 := fun x => by rw [map_mul, c0, mul_zero]
-  have cS : MvPowerSeries.constantCoeff (evalSumThree (sigS P)) = 0 := cc_psubst (by simp) (sigS_cc P)
+  have cS : MvPowerSeries.constantCoeff (evalSumThree (sigS P)) = 0 := cc_psubst (by simp) (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)
   have cD : ∀ j k : Fin 3, MvPowerSeries.constantCoeff (evalDiffThree j k (sigS P)) = 0 :=
-    fun j k => cc_psubst (by simp) (sigS_cc P)
-  have cE : MvPowerSeries.constantCoeff (fsE (sigS P)) = 0 := fsE_cc (sigS_cc P)
+    fun j k => cc_psubst (by simp) (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)
+  have cE : MvPowerSeries.constantCoeff (fsE (sigS P)) = 0 := fsE_cc (_root_.Formalism.L2.Th1.B.Add0.sigS_cc P)
   have key : fExp (at1 0 (sigS P)) ^ 3 * fExp (at1 1 (sigS P)) ^ 3 * fExp (at1 2 (sigS P)) ^ 3 *
         fExp (fsE (sigS P)) =
       fExp (evalSumThree (sigS P)) * fExp (evalDiffThree 0 1 (sigS P)) * fExp (evalDiffThree 0 2 (sigS P)) *
@@ -615,7 +613,7 @@ theorem tau_derivative_rule_holds : TauRule := by
   set U : MvPowerSeries (Fin 2) K := 1 - MvPowerSeries.X 0 ^ 2 * MvPowerSeries.X 1 ^ 2 * dq P with hU
   have hU1 : MvPowerSeries.constantCoeff U = 1 := by simp [hU]
   have hW : wpDiff P = (MvPowerSeries.X 0 ^ 2 - MvPowerSeries.X 1 ^ 2) * U :=
-    Formalism.L2.Th1.B.Add0.wpDiff_eq dqRule hP.2.1
+    Formalism.L2.Th1.B.Add0.wpDiff_eq _root_.Formalism.L2.Th1.B.difference_quotient_rule_holds hP.2.1
   have hL : par0 (sigS P) = fLog U := addSigmaLog K g2 g3 P hP
   have e0 := mul_pd_fLog (0 : Fin 2) hU1
   have e1 := mul_pd_fLog (1 : Fin 2) hU1
@@ -757,7 +755,7 @@ theorem curve_eq {g2 g3 : K} {P : PowerSeries K} (hP : IsWp g2 g3 P) (j : Fin 3)
 theorem X_mul_dYt {g2 g3 : K} {P : PowerSeries K} (hP : IsWp g2 g3 P) (j : Fin 3) :
     MvPowerSeries.X j * dYt P j =
       6 * Xt P j ^ 2 - MvPowerSeries.C (g2 / 2) * MvPowerSeries.X j ^ 4 + 3 * Yt P j := by
-  have h' := congrArg (PowerSeries.substAlgHom (R := K) (PowerSeries.HasSubst.X (S := K) (τ := Fin 3) j)) (wpReduced K g2 g3 P hP).2
+  have h' := congrArg (PowerSeries.substAlgHom (R := K) (PowerSeries.HasSubst.X (S := K) (τ := Fin 3) j)) (_root_.Formalism.L2.Th1.B.weierstrassReducedEquations K g2 g3 P hP).2
   simp only [map_add (f := _), map_sub, map_mul, map_pow, map_ofNat, PowerSeries.coe_substAlgHom,
     PowerSeries.subst_X (R := K) (PowerSeries.HasSubst.X (S := K) j), PowerSeries.subst_C] at h'
   simp only [dYt, Xt, Yt, Formalism.InvariantFactorPaths.G7.at1]
@@ -1103,16 +1101,11 @@ namespace Formalism.L2.Th1.B
 
 open Formalism.L2.Th1.A (bridgeWp bridgeLaw bridgeCurve bridgeCurve3)
 
-theorem shearLemma : ShearLemma := Wr.shearedWronskianUniqueness
-theorem tauRule : TauRule := Det.tau_derivative_rule_holds
-theorem detRule : DetRule := Det.determinant_derivative_rule_holds
-theorem frobStickLog : FrobStickLog := Fs.FrobStickLog_of shearLemma tauRule detRule
+theorem frobStickLog : FrobStickLog := Fs.FrobStickLog_of _root_.Formalism.L2.Th1.B.Wr.shearedWronskianUniqueness _root_.Formalism.L2.Th1.B.Det.tau_derivative_rule_holds _root_.Formalism.L2.Th1.B.Det.determinant_derivative_rule_holds
 theorem frobStick : FrobStick := Fs.FrobStick_of frobStickLog
 theorem frobStickStar : FrobStickStar := Fs.FrobStickStar_of frobStick
-theorem fIUnit : FIUnit := E2.formal_inverse_unit_holds
-theorem parThree : ParThree := E2.ParThree_of frobStickStar fIUnit
-theorem cubeFromPars : CubeFromPars := E3.cube_relation_from_parallelograms
-theorem first_level_all_formal_groups : LogSigmaPullbackCocycleJets := E3.log_sigma_pullback_cocycle_jets_of_parallelogram_and_cube parThree cubeFromPars
+theorem parThree : ParThree := E2.ParThree_of frobStickStar _root_.Formalism.L2.Th1.B.E2.formal_inverse_unit_holds
+theorem first_level_all_formal_groups : LogSigmaPullbackCocycleJets := E3.log_sigma_pullback_cocycle_jets_of_parallelogram_and_cube parThree _root_.Formalism.L2.Th1.B.E3.cube_relation_from_parallelograms
 
 end Formalism.L2.Th1.B
 end -- clump:auto
@@ -1208,7 +1201,7 @@ theorem BeESim_of (hG : GCob) (hL : LDiv) : BeESim := by
   have hg : ep + PowerSeries.C (c0 - (xT + c0)) * PowerSeries.X ^ 2 = gT ep xT := by
     rw [hce, map_neg, gT]; ring
   have hD := (diffPh K g2 g3 s2 c0 (xT + c0) P l i ep F hP hcub hF hC).1
-  obtain ⟨hw, hwI⟩ := wIntegral K c0 (xT + c0) P l i ep F hF hC hn
+  obtain ⟨hw, hwI⟩ := _root_.Formalism.L2.Th1.B.ParE.weierstrass_series_integral K c0 (xT + c0) P l i ep F hF hC hn
   rw [hg] at hD hw
   have hg0 : PowerSeries.constantCoeff (gT ep xT) = 1 := by
     rw [gT, map_sub, hC.2.1]; simp
@@ -1253,8 +1246,8 @@ theorem BeESim_of (hG : GCob) (hL : LDiv) : BeESim := by
   have e : cob F ph' - cob F ph = fLog nu - fLog d := by
     refine mul_left_cancel₀ (two_ne (K := K)) ?_
     linear_combination h3 - hlog
-  have s := (simeqInt K (Fin 2) _ _ _ _ (simeqLog K (Fin 2) nu hnu0 hnuI).1
-    (simeqLog K (Fin 2) d hd0 hdI).1).1
+  have s := (_root_.Formalism.L2.Th1.B.Sim.simeq_integral_series K (Fin 2) _ _ _ _ (_root_.Formalism.L2.Th1.B.Sim.simeq_formal_log K (Fin 2) nu hnu0 hnuI).1
+    (_root_.Formalism.L2.Th1.B.Sim.simeq_formal_log K (Fin 2) d hd0 hdI).1).1
   unfold Simeq at s ⊢
   rw [e]
   simpa using s
@@ -1290,8 +1283,8 @@ theorem CubeE_of (hB : BeESim) (hD : CocycleDiffExpEquiv) : CubeE := by
   intro ph'
   have hl0 : PowerSeries.constantCoeff l = 0 := hLaw.2.2.1
   have hcc : PowerSeries.constantCoeff ph' = 0 :=
-    (phEDef K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl0).1
-  obtain ⟨hdiv, hsw⟩ := cobRules K F l ph' hLaw hcc
+    (_root_.Formalism.L2.Th1.B.Ph.logSigmaOnePullbackSpec K s2 (xT + c0) (3 * (xT + c0) ^ 2 - g2 / 4) (wOf (xT + c0) P) l hl0).1
+  obtain ⟨hdiv, hsw⟩ := _root_.Formalism.L2.Th1.B.coboundary_rules_hold K F l ph' hLaw hcc
   have hO := (first_level_all_formal_groups K g2 g3 s2 c0 a1 a3 P l i ep F hW hLaw hI hC hC3).2.2.1
   have hBE := hB K g2 g3 s2 c0 a1 a3 xT yT P l i ep F hW hLaw hI hC hC3 hT
   have hDD := hD K F _ _ hLaw.1 hLaw.2.1 hBE
@@ -1370,7 +1363,7 @@ end One
 
 theorem sigma_rules_hold : SRules := by
   intro K _ _ A kap w hw
-  obtain ⟨hw1, -⟩ := wSecond K A kap w hw
+  obtain ⟨hw1, -⟩ := _root_.Formalism.L2.Th1.B.invertedSecondDeriv K A kap w hw
   obtain ⟨hw0, hw2, hwE⟩ := hw
   have hsq := sW_sq hw0 hw1 hw2
   have hd : 2 * sW w * dz (sW w) = dz w := by
@@ -1752,13 +1745,10 @@ section -- clump:auto
 
 namespace Formalism.L2.Th1.B
 
-theorem wAdd : WAdd := SAdd.weierstrass_addition_holds
-theorem wPrimeU : WPrimeU := GCob.weierstrass_derivative_unit_holds
-theorem gCob : GCob := GCob.GCob_of wAdd wPrimeU
+theorem gCob : GCob := GCob.GCob_of _root_.Formalism.L2.Th1.B.SAdd.weierstrass_addition_holds _root_.Formalism.L2.Th1.B.GCob.weierstrass_derivative_unit_holds
 theorem lDiv : LDiv := LDiv.LDiv_of gCob
 theorem beESim : BeESim := BeE.BeESim_of gCob lDiv
-theorem first_cocycle_simeq_zero : CocycleDiffExpEquiv := BeE.cocycle_diff_exp_equiv
-theorem cubeE : CubeE := BeE.CubeE_of beESim first_cocycle_simeq_zero
+theorem cubeE : CubeE := BeE.CubeE_of beESim _root_.Formalism.L2.Th1.B.BeE.cocycle_diff_exp_equiv
 
 end Formalism.L2.Th1.B
 end -- clump:auto

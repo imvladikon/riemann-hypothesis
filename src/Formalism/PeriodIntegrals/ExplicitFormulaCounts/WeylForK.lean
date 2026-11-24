@@ -77,23 +77,6 @@ namespace PI.WeylForKWork
 
 open PI PI.UpqRep Matrix PI.WeylForKInhab
 
-private theorem diagonal_exp_mem_Kset {N : ℕ} (ε : Fin N → Bool) (θ : Fin N → ℝ) :
-    diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) ∈ Kset ε := by
-  refine ⟨?_, ?_⟩
-  · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, Matrix.diagonal_conjTranspose,
-      Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
-    congr 1
-    funext i
-    change Complex.exp ((θ i : ℂ) * Complex.I) * star (Complex.exp ((θ i : ℂ) * Complex.I)) = 1
-    rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, Complex.norm_exp_ofReal_mul_I]
-    norm_num
-  · show diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) * Jm ε = Jm ε * diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I))
-    unfold Jm
-    rw [Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
-    congr 1
-    funext a
-    exact mul_comm _ _
-
 private theorem isWtOn_sPl (hD : BlockDiag) {N : ℕ} (ε : Fin N → Bool) {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (σ : Matrix (Fin N) (Fin N) ℂ → (H →L[ℂ] H)) (ν : Fin N → ℝ) (u : H)
@@ -101,7 +84,7 @@ private theorem isWtOn_sPl (hD : BlockDiag) {N : ℕ} (ε : Fin N → Bool) {H :
   intro θ _
   obtain ⟨θ', h1, h2, h3⟩ := (hD N ε).2.1 θ
   show σ (iPl ε (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)))) u = _
-  rw [h3, hu θ' (diagonal_exp_mem_Kset ε θ'),
+  rw [h3, hu θ' (_root_.PI.WeylForKInhab.diag_mem ε θ'),
     show (∑ a, ν a * θ' a) = ∑ i, ν (ePl ε i) * θ' (ePl ε i) + ∑ j, ν (eMi ε j) * θ' (eMi ε j) from
       (hD N ε).1 (fun a => ν a * θ' a)]
   simp only [h1, h2, mul_zero, Finset.sum_const_zero, add_zero]
@@ -113,7 +96,7 @@ private theorem isWtOn_sMi (hD : BlockDiag) {N : ℕ} (ε : Fin N → Bool) {H :
   intro θ _
   obtain ⟨θ', h1, h2, h3⟩ := (hD N ε).2.2 θ
   show σ (iMi ε (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)))) u = _
-  rw [h3, hu θ' (diagonal_exp_mem_Kset ε θ'),
+  rw [h3, hu θ' (_root_.PI.WeylForKInhab.diag_mem ε θ'),
     show (∑ a, ν a * θ' a) = ∑ i, ν (ePl ε i) * θ' (ePl ε i) + ∑ j, ν (eMi ε j) * θ' (eMi ε j) from
       (hD N ε).1 (fun a => ν a * θ' a)]
   simp only [h1, h2, mul_zero, Finset.sum_const_zero, zero_add]
@@ -144,15 +127,15 @@ theorem typePl_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   have hWst : ∀ θ : Fin N → ℝ, ∀ u ∈ Wμ, σ (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I))) u ∈ Wμ := by
     intro θ u hu
     rw [hmem] at hu ⊢
-    refine ⟨hS.2.1 _ (diagonal_exp_mem_Kset ε θ) u hu.1, fun φ hφ => ?_⟩
+    refine ⟨hS.2.1 _ (_root_.PI.WeylForKInhab.diag_mem ε θ) u hu.1, fun φ hφ => ?_⟩
     obtain ⟨φ', -, -, hφ'⟩ := (hD N ε).2.1 φ
     have hcomm : iPl ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I))) * diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) = diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) * iPl ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I))) := by
       rw [hφ', Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
       congr 1
       funext a
       exact mul_comm _ _
-    have hm1 := hσ.1.2 _ (hB1 _ hφ) _ (diagonal_exp_mem_Kset ε θ)
-    have hm2 := hσ.1.2 _ (diagonal_exp_mem_Kset ε θ) _ (hB1 _ hφ)
+    have hm1 := hσ.1.2 _ (hB1 _ hφ) _ (_root_.PI.WeylForKInhab.diag_mem ε θ)
+    have hm2 := hσ.1.2 _ (_root_.PI.WeylForKInhab.diag_mem ε θ) _ (hB1 _ hφ)
     have hu2 : σ (iPl ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I)))) u = Complex.exp (((∑ a, μ a * φ a : ℝ) : ℂ) * Complex.I) • u :=
       hu.2 φ hφ
     show σ (iPl ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I)))) (σ (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I))) u) =
@@ -199,15 +182,15 @@ theorem typeMi_of (hB : Blocks) (hD : BlockDiag) (hT : TorusWt) (hW : WtUniq) (h
   have hWst : ∀ θ : Fin N → ℝ, ∀ u ∈ Wμ, σ (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I))) u ∈ Wμ := by
     intro θ u hu
     rw [hmem] at hu ⊢
-    refine ⟨hS.2.1 _ (diagonal_exp_mem_Kset ε θ) u hu.1, fun φ hφ => ?_⟩
+    refine ⟨hS.2.1 _ (_root_.PI.WeylForKInhab.diag_mem ε θ) u hu.1, fun φ hφ => ?_⟩
     obtain ⟨φ', -, -, hφ'⟩ := (hD N ε).2.2 φ
     have hcomm : iMi ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I))) * diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) = diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I)) * iMi ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I))) := by
       rw [hφ', Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
       congr 1
       funext a
       exact mul_comm _ _
-    have hm1 := hσ.1.2 _ (hB2 _ hφ) _ (diagonal_exp_mem_Kset ε θ)
-    have hm2 := hσ.1.2 _ (diagonal_exp_mem_Kset ε θ) _ (hB2 _ hφ)
+    have hm1 := hσ.1.2 _ (hB2 _ hφ) _ (_root_.PI.WeylForKInhab.diag_mem ε θ)
+    have hm2 := hσ.1.2 _ (_root_.PI.WeylForKInhab.diag_mem ε θ) _ (hB2 _ hφ)
     have hu2 : σ (iMi ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I)))) u = Complex.exp (((∑ a, μ a * φ a : ℝ) : ℂ) * Complex.I) • u :=
       hu.2 φ hφ
     show σ (iMi ε (diagonal (fun a => Complex.exp ((φ a : ℂ) * Complex.I)))) (σ (diagonal (fun a => Complex.exp ((θ a : ℂ) * Complex.I))) u) =
@@ -1089,11 +1072,6 @@ open scoped InnerProductSpace
 def wtTorus {N : ℕ} (θ : Fin N → ℝ) : Matrix (Fin N) (Fin N) ℂ :=
   diagonal fun a => Complex.exp ((θ a : ℂ) * Complex.I)
 
-theorem wt_char_real (f : ℝ → ℂ) (hc : Continuous f) (hm : ∀ s t, f (s + t) = f s * f t)
-    (h0 : f 0 = 1) (hn : ∀ t, ‖f t‖ = 1) :
-    ∃ m : ℝ, ∀ t, f t = Complex.exp (((m * t : ℝ) : ℂ) * Complex.I) := by
-  first | (apply Bl.general_b_fact_left_variant.goal1 <;> assumption)
-
 theorem wt_common_eigvec {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {ι : Type}
     (A : ι → (H →L[ℂ] H)) (W : Submodule ℂ H) [FiniteDimensional ℂ W] (hW : W ≠ ⊥)
     (hst : ∀ i, ∀ v ∈ W, A i v ∈ W) (hcomm : ∀ i j, ∀ v, A i (A j v) = A j (A i v)) :
@@ -1237,7 +1215,7 @@ theorem torus_weight_exists : TorusWt := by
   have hcoord : ∀ a : Fin N, ∃ m : ℝ, ∀ t,
       χ (Pi.single a t) = Complex.exp (((m * t : ℝ) : ℂ) * Complex.I) := by
     intro a
-    apply wt_char_real (fun t => χ (Pi.single a t))
+    apply _root_.Bl.general_b_fact_left_variant.goal1 (fun t => χ (Pi.single a t))
     · exact hχc.comp ((LinearMap.single ℝ (fun _ : Fin N => ℝ) a).continuous_of_finiteDimensional)
     · intro s t; simp only [Pi.single_add]; exact hχadd _ _
     · simpa using hχ0

@@ -325,15 +325,6 @@ open ReciprocityTheory.AnForm.R GlobalTheory.ZH GlobalTheory.Poinc GlobalTheory.
 attribute [local instance] Over.cartesianMonoidalCategory
 
 
-theorem _root_.GlobalTheory.T.e8_act_prod_eq_one : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (gQ : ℕ) (K : Type) [Field K] (P' : PolAV (Sp K))
-  (B : Over (Sp K)) [GrpObj B] [IsCommMonObj B] (M : RigLB B) (pr : Fin 8 → (P'.A ⟶ B)),
-  E8Fibration.IsPPFib B gQ M → E8Fibration.IsProd pr → E8Fibration.IsE8WeightedBundle W pr P'.L M.L →
-  ∀ act : Fin 2 → (P'.A ⟶ P'.A), (∀ i, IsMonHom (act i)) → (∀ i, E8Fibration.ActsBy pr (act i) (E8Fibration.actMat W i)) →
-  letI := P'.isAb.comm
-  act 0 * act 1 = 𝟙 P'.A ∧
-  LBIso (cubeLB P'.A ![fst P'.A P'.A ≫ act 0, snd P'.A P'.A] P'.L) (cubeLB P'.A ![fst P'.A P'.A, snd P'.A P'.A ≫ act 1] P'.L) ∧
-  LBIso P'.L (cubeLB P'.A ![𝟙 P'.A, act 0] P'.L) := by
-  first | exact @GlobalTheory.Poinc.Sep.E8Fibration.PrimPic.e8_act_endomorphism_prod_eq_id
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.E8ActionProductEqOneStatement =====
@@ -558,16 +549,9 @@ def preHom {S : Scheme.{0}} {T A : Over S} (x : T ⟶ A) (B : Over S) [GrpObj B]
   map_one' := by simp
   map_mul' y z := by simp [MonObj.comp_mul]
 
-theorem zpow_finset_sum {G J : Type} [CommGroup G] (g : G) (s : Finset J) (e : J → ℤ) :
-    g ^ (∑ i ∈ s, e i) = ∏ i ∈ s, g ^ e i := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simp
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, zpow_add, ih]
-
 theorem prod_prod_zpow {G C J : Type} [CommGroup G] [Fintype C] [Fintype J] (b : C → G) (x : J → C → ℤ) (k : J → ℤ) :
     ∏ i, (∏ c, b c ^ x i c) ^ k i = ∏ c, b c ^ (∑ i, k i * x i c) := by
-  simp only [← Finset.prod_zpow, ← zpow_mul, zpow_finset_sum]
+  simp only [← Finset.prod_zpow, ← zpow_mul, _root_.GlobalTheory.SharpFamRel.zpow_finsetSum]
   rw [Finset.prod_comm]
   simp only [mul_comm]
 
@@ -1610,7 +1594,7 @@ theorem eighthPowerFibre_thetaObj : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W
       bij := hbij, pairing := hpair, act := act, hom := hact1 }
   refine ⟨bT, t, ψ, ?_, ?_, hψ, hL, ?_⟩
   · exact fun a => ⟨hsh a, hκ gQ K P' B M pr hB hpr hE act hact1 hact2 a⟩
-  · exact GlobalTheory.T.e8_act_prod_eq_one W hW gQ K P' B M pr hB hpr hE act hact1 hact2
+  · exact _root_.GlobalTheory.Poinc.Sep.E8Fibration.PrimPic.e8_act_endomorphism_prod_eq_id W hW gQ K P' B M pr hB hpr hE act hact1 hact2
   · intro y hy q hq1 hq2
     obtain ⟨y', hy'1, hy'2⟩ := hpt _ y hy q hq1 hq2
     obtain ⟨c, hc, -⟩ := hbij K (𝟙 _) y' hy'2

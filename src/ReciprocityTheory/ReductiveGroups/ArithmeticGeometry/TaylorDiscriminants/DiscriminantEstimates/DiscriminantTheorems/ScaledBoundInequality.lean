@@ -155,8 +155,6 @@ end -- clump:auto
 section -- clump:auto
 @[expose] public section
 
-theorem schwarz_ball_bound : ReciprocityTheory.ChartRestriction.G.TB.SchwarzBallSt := PI.UnitaryGroupMassFormula.TBNum.schwarzBall
-theorem euclidean_basis_exists : ReciprocityTheory.ChartRestriction.G.TB.EBasisSt := PI.UnitaryGroupMassFormula.TBNum.eBasis
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.DiscriminantEstimates.DiscriminantTheorems.ScaledBoundInequality =====

@@ -390,7 +390,7 @@ end PI.StabSplit.FixW
 
 namespace PI.StabSplit
 
-theorem fixed_point_subgroup : FixSub := FixW.fixed_point_subgroup
+alias fixed_point_subgroup := _root_.PI.StabSplit.FixW.fixed_point_subgroup
 
 end PI.StabSplit
 end -- clump:auto

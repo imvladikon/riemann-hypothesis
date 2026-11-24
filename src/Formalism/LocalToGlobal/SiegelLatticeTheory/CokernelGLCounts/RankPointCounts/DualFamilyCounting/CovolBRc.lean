@@ -432,7 +432,7 @@ theorem rowRank_holds : RowRank := by
     rw [eq_top_iff]
     intro x _
     have hx : x ∈ Submodule.span D.host.E (A : Set (Fin (D.R.k + 1) → D.host.E)) := by rw [hAspan]; trivial
-    obtain ⟨n, hn, hnx⟩ := Formalism.MainNotions.LatticeGluingRadicals.j_exists_nat_smul_mem A hx
+    obtain ⟨n, hn, hnx⟩ := _root_.Formalism.MainNotions.LatticeGluingRadicals.j_exists_nat_smul_memL A hx
     have hn' : (n : ℚ) ≠ 0 := by exact_mod_cast hn.ne'
     have : x = (n : ℚ)⁻¹ • (n • x) := by
       rw [← Nat.cast_smul_eq_nsmul ℚ, smul_smul, inv_mul_cancel₀ hn', one_smul]
@@ -713,9 +713,9 @@ theorem eq_zero_of_trB {x : (VS D).V} (hx : x ∈ X.Lb)
     rwa [← algebraMap_smul D.host.E o y, LinearMap.map_smul, smul_eq_mul, mul_comm] at h2
   have hxW := (mem_Wb X).1 (Lb_le_alt X hx)
   have he : ∀ c, (VS D).hT x (X.eX c) = 0 := fun c => by
-    rw [herm_swap (X.eX c) x, (hxW c).1, star_zero]
+    rw [_root_.Formalism.L2.SG.Pf.NcReal.JX.NOf.Ex.h_symm (X.eX c) x, (hxW c).1, star_zero]
   have hf : ∀ c, (VS D).hT x (X.fY c) = 0 := fun c => by
-    rw [herm_swap (X.fY c) x, (hxW c).2, star_zero]
+    rw [_root_.Formalism.L2.SG.Pf.NcReal.JX.NOf.Ex.h_symm (X.fY c) x, (hxW c).2, star_zero]
   have h2 : ∀ y ∈ (VS D).L0, (VS D).hT x y = 0 := by
     intro y hy
     obtain ⟨α, β, l, hl, rfl⟩ := decomp X hy

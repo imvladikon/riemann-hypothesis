@@ -147,7 +147,7 @@ theorem fourier_Phi (k : ℕ) (hk : 2 ≤ k) (he : Even k) (z : (F →+* ℝ) �
         lhsTerm k z (-a) := by
   rw [show Phi k z = fun ξ : RSp F => ∏ τ, phi1 k (z τ) (ξ τ) from rfl, fourier_prod_coord]
   simp only [remb_apply]
-  have h := fun τ : F →+* ℝ => fourier_lipschitzOneVariableKernel k hk he (z τ) (hz τ) (τ a)
+  have h := fun τ : F →+* ℝ => _root_.GlobalTheory.LipschitzTR.fourier_phi1_eq_factorial_mul_zpow k hk he (z τ) (hz τ) (τ a)
   simp only [h]
   rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, lhsTerm, Finset.prod_zpow]
   simp [map_neg, sub_eq_add_neg]

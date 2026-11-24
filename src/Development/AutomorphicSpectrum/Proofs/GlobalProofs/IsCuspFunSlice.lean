@@ -427,10 +427,6 @@ theorem hE_eq_hT (V : HSp D) (a b : Fin V.rank → D.host.E) :
   rw [hT_frame]
   rfl
 
-theorem frameMat_isom (hι : HSpace.IsIsomEmb V' V ι) :
-    cT (D.sp.cm.sig : D.host.E →+* D.host.E) (frameMat V V' ι) * V.gram * frameMat V V' ι = V'.gram := by
-  rw [cT_frameMat_mul_gram, Matrix.mul_assoc, prM_mul_frameMat hι, Matrix.mul_one]
-
 theorem pairing_submatrix (hι : HSpace.IsIsomEmb V' V ι) {m m' : ℕ} {e : Fin m' → Fin m}
     {A B : Matrix (Fin V.rank) (Fin m) D.host.E} {A' B' : Matrix (Fin V'.rank) (Fin m') D.host.E}
     (hA : frameMat V V' ι * A' = A.submatrix id e) (hB : frameMat V V' ι * B' = B.submatrix id e) :
@@ -441,7 +437,7 @@ theorem pairing_submatrix (hι : HSpace.IsIsomEmb V' V ι) {m m' : ℕ} {e : Fin
     simp only [Formalism.UG.cT, Matrix.map_mul, Matrix.transpose_mul]
   have h1 : cT (D.sp.cm.sig : D.host.E →+* D.host.E) A' * V'.gram * B' =
       cT (D.sp.cm.sig : D.host.E →+* D.host.E) (frameMat V V' ι * A') * V.gram * (frameMat V V' ι * B') := by
-    rw [← frameMat_isom hι, hc]
+    rw [← _root_.Formalism.L2.Fam.ThC.frame_rel hι, hc]
     simp only [Matrix.mul_assoc]
   rw [h1, hA, hB]
   ext i j
@@ -1345,7 +1341,7 @@ theorem unip_split : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Matrix (Fin V.ran
     exact ⟨1, one_mem _, p, by simp, by simp⟩
   obtain ⟨a, ha, ha'⟩ : ∃ a ∈ S, ∀ k ∈ S, k ≤ a := ⟨S.max' (Finset.nonempty_iff_ne_empty.2 hS),
     S.max'_mem _, fun k hk => S.le_max' k hk⟩
-  have hP := GlobalTheory.ConstTrans.unip_le_parFlag _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW T S a hST ha ha' hpT
+  have hP := _root_.GlobalTheory.StdParFlag.unip_le_parFlag _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW T S a hST ha ha' hpT
   have hdec := (GlobalTheory.LeviFlag.levi_decomposition _ _ D.sp.cm.sig hcm _ V.gram hJ (a.val + 1) (initCols X a) (initCols Y a)
     (fun i => (S.filter fun k => k.val < i.val).card)
     (by rw [initCols, GlobalTheory.TieStd.cT_submatrix_mul, hW.xx]; ext; simp)

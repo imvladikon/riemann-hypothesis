@@ -819,7 +819,7 @@ theorem exists_psi {m n : ℕ} (w : Weight D n) (B : GLR D n) (hw : w.Good) (hm 
     refine (injective_iff_map_eq_zero _).2 fun P hP => Subtype.ext ?_
     exact GlobalTheory.T.harmonic_polynomial_eq_zero_of_function D m n w B hw hm P P.2 hP
   have hr : LinearMap.range hf = LinearMap.range (cfn w.lam) := by
-    rw [LinearMap.range_comp, Submodule.range_subtype, GlobalTheory.T.fockHarmonicValueSpace_map_eq_dualWeylModuleFunctions D m n w B hw hm]
+    rw [LinearMap.range_comp, Submodule.range_subtype, _root_.GlobalTheory.ExportSeries.Onto.map_harm_eq D m n w B hw hm]
     have : {φ | ∃ F : VV ℂ w.lam, φ = coefFn (RingHom.id ℂ) w.lam (F : Pol ℂ D.what₂.Tau n)} =
         (LinearMap.range (cfn w.lam) : Set (GLR D n → ℂ)) := by
       ext φ
@@ -1188,8 +1188,6 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 
 
-theorem _root_.GlobalTheory.T.residue_character_artin_tame_galois_eq_tame_value : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (rc : Recip D D.nd.Om), rc.Good → ∀ (R : Type) [CommRing R] (f : R →+* ℂ) (φ : G D.host.E D.nd.Om →* Rˣ), IsOpen (φ.ker : Set (G D.host.E D.nd.Om)) → ∀ (PP : Pl D.host.E) (m : ℕ), ((m : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal → (∀ A : ValuationSubring D.nd.Om, IsPlaceOver A PP → ∀ σ ∈ Ine (F := D.host.E) A, ∃ N : ℕ, φ σ ^ (m ^ N) = 1) → Formalism.L2.NTheta.IsIdemAt (idemAt PP) PP → ∀ c : (kP PP)ˣ →* Circle, IsResAt (GlobalTheory.SeriesTie.charOf rc f φ) PP c → ∀ (e : ℤ) (u : 𝓞 D.host.E), u ∉ PP.asIdeal → ∀ z : (kP PP)ˣ, (z : kP PP) = Ideal.Quotient.mk PP.asIdeal u → ((c z : Circle) : ℂ) ^ e = f (NX.tameVal φ PP e u).1 := by
-  first | exact @GlobalTheory.TameResRead.res_zpow_eq_tameVal
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidueCharacterArtinTameGaloisEqTameValueStatement =====
@@ -1381,7 +1379,7 @@ theorem levMatch (hA : GlobalTheory.Published.GlobalArtinReciprocity) : ∀ (D :
   · intro PP hPP u hu z hz
     rw [← hQ] at hPP
     have hl : ((D.ntw.l i : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal := (hAd.1 PP (mem_half.1 hPP).1).2
-    have := GlobalTheory.T.residue_character_artin_tame_galois_eq_tame_value hA D ρ.rc hρ.rc _ (ρ.eOk i b k) ψ hT.2.2.1 PP _ hl (fun _ _ σ _ => hAd.2.2.2.2.1 σ) (hg.split.isIdemAt hPP) _
+    have := _root_.GlobalTheory.TameResRead.res_zpow_eq_tameVal hA D ρ.rc hρ.rc _ (ρ.eOk i b k) ψ hT.2.2.1 PP _ hl (fun _ _ σ _ => hAd.2.2.2.2.1 σ) (hg.split.isIdemAt hPP) _
       (hg.res PP hPP) 1 u hu z hz
     rw [zpow_one] at this
     rw [Bs.exp.sgnT_one]
@@ -1406,7 +1404,7 @@ theorem levMatch (hA : GlobalTheory.Published.GlobalArtinReciprocity) : ∀ (D :
         convert D.ntw.delta_open i using 1
         ext g
         simp [MonoidHom.mem_ker]
-      have := GlobalTheory.T.residue_character_artin_tame_galois_eq_tame_value hA D ρ.rc hρ.rc _ _ (D.ntw.delta i)⁻¹ hk PP 15 h15
+      have := _root_.GlobalTheory.TameResRead.res_zpow_eq_tameVal hA D ρ.rc hρ.rc _ _ (D.ntw.delta i)⁻¹ hk PP 15 h15
         (fun A hA σ hσ => ⟨1, by rw [pow_one, MonoidHom.inv_apply, inv_pow, hord A hA σ hσ, inv_one]⟩) hid _ hres (-1) u hu z hz
       have e1 : NX.tameVal (D.ntw.delta i)⁻¹ PP (-1) u = (NX.tameVal (D.ntw.delta i) PP (-1) u)⁻¹ := by
         unfold NX.tameVal
@@ -1415,7 +1413,7 @@ theorem levMatch (hA : GlobalTheory.Published.GlobalArtinReciprocity) : ∀ (D :
         · exact inv_one.symm
       rw [e1, zpow_neg_one, map_units_inv, inv_inj] at this
       exact this
-    · have := GlobalTheory.T.residue_character_artin_tame_galois_eq_tame_value hA D ρ.rc hρ.rc _ _ (D.ntw.delta i) (D.ntw.delta_open i) PP 15 h15
+    · have := _root_.GlobalTheory.TameResRead.res_zpow_eq_tameVal hA D ρ.rc hρ.rc _ _ (D.ntw.delta i) (D.ntw.delta_open i) PP 15 h15
         (fun A hA σ hσ => ⟨1, by rw [pow_one, hord A hA σ hσ]⟩) hid _ hres 1 u hu z hz
       rw [zpow_one] at this
       exact this

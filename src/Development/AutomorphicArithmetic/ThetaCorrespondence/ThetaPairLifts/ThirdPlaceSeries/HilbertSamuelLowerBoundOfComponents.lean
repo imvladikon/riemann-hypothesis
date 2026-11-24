@@ -454,7 +454,7 @@ theorem degree_twist_ge : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorem
   obtain ⟨hpq, -, -, -, -, g, ee, F, -⟩ := hY.unf Y.d.c₂.F.val.toRingHom rfl
   have hK := GlobalTheory.KeyCover.nonempty_keySec_of_family _ _ _ _ _ _ Y.d.c₂.F.val.toRingHom rfl ee F (by omega) hY.geo
   obtain ⟨t, ht, -, hd⟩ := (GlobalTheory.FlatTwisting.twSec_of_flat _ _ _ _ _ _ _ Y.U (xiR D) (badPrimes T.Q.H Y.d.l₂) hK hY.unf (by omega)
-    (_root_.GlobalTheory.T.unramified_points_of_deep_cover hP D T j Y e o hT hj hY)).2 ⟨c₁, hc⟩ Z w (hc Z τ₀).1.some.hasPts
+    (_root_.GlobalTheory.UnramCover.unramified_points_at_deep_level hP D T j Y e o hT hj hY)).2 ⟨c₁, hc⟩ Z w (hc Z τ₀).1.some.hasPts
   have key := GlobalTheory.FlatTw.degOn_add_rank_mul_degLo_le _ _ _ _ _ _ _ Y.U (xiR D) D (fun _ => D.sp.W j) Y.dict Z _ t _ (badPrimes T.Q.H Y.d.l₂) hY.unf
     (AllWt.even_wtOf la 0) badPrimes_prime ht hG
   rw [← wtOf_add'] at key
@@ -488,20 +488,6 @@ theorem degree_twist_ge : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorem
 end GlobalTheory.TwistDeg
 end
 
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.twisted_bundle_degree_lower_bound : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j : ℕ, 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → 2 < Module.finrank ℚ D.host.E / 2 → InR D j → ∀ (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ Lb : ℝ, 1 ≤ Lb → Real.log Y.d.l₂.M ≤ 30 * Lb → fieldSz D.host.E ≤ 3 * Lb → Real.log (D.R.f * D.R.r) ≤ Lb → o ≤ 391 * (D.R.f * D.R.r * Lb) ^ 2 → ∀ c₁ : ℝ, GlobalTheory.FlatLine.FlatExistsAt Y.U (xiR D) c₁ → |c₁| ≤ 9 * D.R.r * Lb → ∀ (la : AllWt.Weight (T.Q.Dw j)) (w : Psi T.Q.H → ℤ) Z, (∀ τ, |w τ| ≤ 3 * (D.R.r : ℤ)) → GoodOn Y.U (xiR D) (fun _ => D.sp.W j) Y.dict Z (wtOf (T.Q.Dw j) la 0) → Y.degC la Z - Y.rkC la Z * (C * ((D.R.f : ℝ) * D.R.r * Lb) ^ 2) ≤ Y.degC (la + GlobalTheory.FlatLine.parWt (T.Q.Dw j) w) Z := by
-  first | exact @_root_.GlobalTheory.TwistDeg.degree_twist_ge
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.TwistedBundleDegreeLowerBound =====
@@ -532,10 +518,10 @@ theorem hilbertSamuel_of_component_estimates_alt : GlobalTheory.CovTop.Hypothese
     GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree →
     _root_.GlobalTheory.CovTop.ShareCondition → _root_.GlobalTheory.CovTop.CoverHeightSum := by
   intro hX h2 hGD hQd hSi hTo hSA hDG hS hF hDe hSh
-  obtain ⟨Cp, hCp, htw⟩ := _root_.GlobalTheory.T.twisted_bundle_degree_lower_bound h2
-  have hrk := _root_.GlobalTheory.T.twisted_flat_bundle_ranks h2
-  have hgood := _root_.GlobalTheory.T.covering_domain_lattice_regularity h2
-  refine Closed.imp (((((((_root_.GlobalTheory.T.exists_degree_parameters_bound_alt_alt hX h2 hGD hQd hSi hTo hSA hDG hS hF).and (_root_.GlobalTheory.T.size_bounds_for_family_alt hS)).and (_root_.GlobalTheory.T.weight_parameter_strict_antitone_alt hS)).and hS).and hF).and
+  obtain ⟨Cp, hCp, htw⟩ := _root_.GlobalTheory.TwistDeg.degree_twist_ge h2
+  have hrk := _root_.GlobalTheory.TwistRank.flat_twist_rank_eq h2
+  have hgood := _root_.GlobalTheory.CovTop.GoodDom.covering_regular_at_domain h2
+  refine Closed.imp (((((((_root_.GlobalTheory.HSShortRun.hsClaim_short_alt_alt hX h2 hGD hQd hSi hTo hSA hDG hS hF).and (_root_.GlobalTheory.CovTop.CovSz.size_rows_alt hS)).and (_root_.GlobalTheory.QuoWt.weights_at_point_alt hS)).and hS).and hF).and
     hDe).and hSh) ?_
   intro eps Fm CH _ H
   obtain ⟨⟨⟨⟨⟨⟨⟨_, _, hR⟩, _, _, hZ⟩, _, _, hQu⟩, CS, _, hSz⟩, _, _, hFl⟩, _, _, hDg⟩, _, _, hSr⟩ := H
@@ -619,20 +605,6 @@ theorem hilbertSamuel_of_component_estimates_alt : GlobalTheory.CovTop.Hypothese
     hkap hn hΛ hβ hΛD hΛT hdg hd hln hlβ hlδ hlΛ hlΛD hlΛT hJ hsh.2 hcl (by positivity) (by rw [zBase]; exact htwz)
 end GlobalTheory.CovTop.ShortRoad
 end
-end
-section
-open CategoryTheory AlgebraicGeometry NumberField
-open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Theta
-open GlobalTheory GlobalTheory.CompHS GlobalTheory.CovTop GlobalTheory.BigTop GlobalTheory.HSApp GlobalTheory.DegVal GlobalTheory.DegCmp
-open GlobalTheory.AllWt (Psi wtOf cuspOn cuspW latOn latW normOn petOn GoodOn GoodW rankOn degOn rankW)
-open GlobalTheory.CompHt (hodgeWt)
-open GlobalTheory.LevDesc (TypeFrame grpHR grpGHR latN levDet secRing transl pull KeepsCusp)
-open GlobalTheory.IndefiniteRowSideFullHecke.LevelStructureAutomorphisms (LevelAut)
-open GlobalTheory.BadCount
-open scoped TensorProduct
-
-theorem _root_.GlobalTheory.T.coverHeightSum_of_flatDeg_coverDegree_share : GlobalTheory.CovTop.HypothesesX → _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → GlobalTheory.Published.GrothendieckDeformation → GlobalTheory.HSCore.Quoted → GlobalTheory.Published.SiegelToroidalIntegral → GlobalTheory.Published.ToroidalForFanKS → GlobalTheory.Published.SemiAbelianLieSeminegative → _root_.GlobalTheory.CovTop.DeepGoodness → _root_.GlobalTheory.CovTop.SizeCondition → _root_.GlobalTheory.CovTop.FlatDegreeCondition → _root_.GlobalTheory.CovTop.CoverDegree → _root_.GlobalTheory.CovTop.ShareCondition → _root_.GlobalTheory.CovTop.CoverHeightSum := by
-  first | exact @_root_.GlobalTheory.CovTop.ShortRoad.hilbertSamuel_of_component_estimates_alt
 end
 end
 end -- clump:auto

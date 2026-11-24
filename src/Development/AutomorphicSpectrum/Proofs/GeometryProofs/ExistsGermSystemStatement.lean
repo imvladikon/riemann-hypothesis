@@ -356,10 +356,6 @@ open scoped CategoryTheory.Obj
 attribute [local instance] Over.cartesianMonoidalCategory
 open Formalism.MainNotions.ModuliIntegralCharts.H1.GermD Formalism.MainNotions.ModuliIntegralCharts.H1.JetTr
 
-theorem spMap_cp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
-    spMap g ≫ spMap f = spMap (g.comp f) := by
-  simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
 theorem comp_listProd {X0 : Scheme.{0}} {G T T' : Over X0} [GrpObj G] (ρ : T' ⟶ T) (l : List (T ⟶ G)) :
     ρ ≫ l.prod = (l.map (ρ ≫ ·)).prod := by
   induction l with
@@ -395,7 +391,7 @@ theorem comb_iff {V : Type} [AddCommGroup V] [Module S V] (M : GlobalTheory.Comp
 def epsBC : tEpsG (spMap f ≫ x) ⟶ tEpsG x :=
   Over.homMk (spMap (GlobalTheory.CompanionTheory.Ar.dualMap f)) (by
     change spMap _ ≫ spMap _ ≫ x = spMap _ ≫ spMap f ≫ x
-    rw [← Category.assoc, ← Category.assoc, spMap_cp, spMap_cp]
+    rw [← Category.assoc, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp']
     congr 2
     ext s <;> simp [GlobalTheory.CompanionTheory.Ar.dualMap, TrivSqZeroExt.algebraMap_eq_inl])
 
@@ -406,7 +402,7 @@ theorem comb_bc {n : ℕ} {v : Fin n → (Sp (DualNumber S) ⟶ t.G.left)} {a : 
   obtain ⟨u, hu, rfl⟩ := h
   refine ⟨fun i => epsBC f x ≫ u i, fun i => ?_, ?_⟩
   · change spMap _ ≫ (u i).left = _
-    rw [hu, ← Category.assoc, ← Category.assoc, spMap_cp, spMap_cp]
+    rw [hu, ← Category.assoc, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp']
     congr 2
     refine RingHom.ext fun s => ?_
     ext <;> simp [GlobalTheory.CompanionTheory.Ar.dualMap, epsMul, mul_comm]
@@ -421,7 +417,7 @@ theorem tan_bc {v : Sp (DualNumber S) ⟶ t.G.left} (h : IsTanAtG t x v) :
     exact Over.w (epsBC f x)
   · have e : spMap (TrivSqZeroExt.fstHom S₂ S₂ S₂).toRingHom ≫ spMap (GlobalTheory.CompanionTheory.Ar.dualMap f) =
         spMap f ≫ spMap (TrivSqZeroExt.fstHom S S S).toRingHom := by
-      rw [spMap_cp, spMap_cp]
+      rw [_root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp']
       congr 1
       refine RingHom.ext fun s => ?_
       simp [GlobalTheory.CompanionTheory.Ar.dualMap]
@@ -471,7 +467,7 @@ theorem basis_bc {n : ℕ} {tg : Fin n → (Sp (DualNumber S) ⟶ t.G.left)} (ht
 def cO (κ : Type) (m : ℕ) : overAt (spMap f ≫ x) (Jet S₂ κ m) ⟶ overAt x (Jet S κ m) :=
   Over.homMk (spMap (jetCoef f κ m)) (by
     change spMap _ ≫ spMap _ ≫ x = spMap _ ≫ spMap f ≫ x
-    rw [← Category.assoc, ← Category.assoc, spMap_cp, spMap_cp, jetCoef_alg])
+    rw [← Category.assoc, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', jetCoef_alg])
 
 theorem sq_of {κ κ' : Type} {m m' : ℕ} (α : Jet S κ m →ₐ[S] Jet S κ' m') (β : Jet S₂ κ m →ₐ[S₂] Jet S₂ κ' m')
     (h : (jetCoef f κ' m').comp (α : Jet S κ m →+* Jet S κ' m') =
@@ -479,7 +475,7 @@ theorem sq_of {κ κ' : Type} {m m' : ℕ} (α : Jet S κ m →ₐ[S] Jet S κ' 
     homAt (spMap f ≫ x) β ≫ cO f x κ m = cO f x κ' m' ≫ homAt x α := by
   apply Over.OverMorphism.ext
   change spMap _ ≫ spMap _ = spMap _ ≫ spMap _
-  rw [spMap_cp, spMap_cp, h]
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', h]
 
 theorem sq_subst {κ κ' : Type} (m : ℕ) (φ : κ → MvPolynomial κ' S) (φ' : κ → MvPolynomial κ' S₂)
     (h : ∀ i, φ' i = MvPolynomial.map f (φ i)) :
@@ -518,7 +514,7 @@ theorem chart_bc {F : Fin d → MvPowerSeries (Fin 2 × Fin d) S} {act : 𝓞 E 
         ρ ≫ homAt x (jetAug : Jet S (Fin 1 × Fin d) m →ₐ[S] S) := by
       apply Over.OverMorphism.ext
       change spMap _ ≫ spMap _ = spMap _ ≫ spMap _
-      rw [spMap_cp, spMap_cp, jetCoef_aug]
+      rw [_root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', jetCoef_aug]
     rw [yBC, ← Category.assoc, e, Category.assoc, h.zero, MonObj.comp_one]
   case trunc =>
     intro m
@@ -536,7 +532,7 @@ theorem chart_bc {F : Fin d → MvPowerSeries (Fin 2 × Fin d) S} {act : 𝓞 E 
     have := comb_bc t f x (h.tan l)
     convert this using 2 with j j
     · change spMap _ ≫ spMap _ ≫ (y 1).left = spMap _ ≫ spMap _ ≫ (y 1).left
-      rw [← Category.assoc, ← Category.assoc, spMap_cp, spMap_cp]
+      rw [← Category.assoc, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp']
       congr 2
       apply Ideal.Quotient.ringHom_ext
       apply MvPolynomial.ringHom_ext
@@ -849,21 +845,21 @@ theorem IsBC.cancel {f : S →+* S₂} {k : S₂ →+* S₃} {g : GermAt t x d} 
     (h : IsBC f g g₂) (h' : IsBC (k.comp f) g g₃) : IsBC k g₂ g₃ := by
   refine ⟨isMapOf_cancel h.map h'.map, ?_, ?_, ?_⟩
   · intro l
-    rw [h'.tg, h.tg, ← Category.assoc, Bc.spMap_cp, dualMap_comp]
+    rw [h'.tg, h.tg, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', dualMap_comp]
   · intro m
-    rw [h'.jet, h.jet, ← jetCoef_comp, ← Bc.spMap_cp, Category.assoc]
+    rw [h'.jet, h.jet, ← jetCoef_comp, ← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', Category.assoc]
   · intro m Z r z J hJ
-    rw [h'.fr m Z r z J hJ, h.fr m Z _ z J hJ, Category.assoc, Bc.spMap_cp, jetCoef_comp]
+    rw [h'.fr m Z r z J hJ, h.fr m Z _ z J hJ, Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', jetCoef_comp]
 
 theorem IsBC.trans {f : S →+* S₂} {k : S₂ →+* S₃} {g : GermAt t x d} {g₂ : GermAt t x₂ d} {g₃ : GermAt t x₃ d}
     (h : IsBC f g g₂) (h' : IsBC k g₂ g₃) : IsBC (k.comp f) g g₃ := by
   refine ⟨h.map.trans h'.map, ?_, ?_, ?_⟩
   · intro l
-    rw [h'.tg, h.tg, ← Category.assoc, Bc.spMap_cp, dualMap_comp]
+    rw [h'.tg, h.tg, ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', dualMap_comp]
   · intro m
-    rw [h'.jet, h.jet, ← jetCoef_comp, ← Bc.spMap_cp, Category.assoc]
+    rw [h'.jet, h.jet, ← jetCoef_comp, ← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', Category.assoc]
   · intro m Z r z J hJ
-    rw [h'.fr m Z r z J hJ, h.fr m Z _ z J hJ, Category.assoc, Bc.spMap_cp, jetCoef_comp]
+    rw [h'.fr m Z r z J hJ, h.fr m Z _ z J hJ, Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', jetCoef_comp]
 
 structure Cmp (g g₂ : GermAt t x d) (φ ψ : Q S d 1) (lam : PS S 2 d) : Prop where
   hφ : ∀ m, g₂.x m = PP m g.x φ
@@ -906,7 +902,7 @@ theorem coef_jQ (f : S →+* S₂) {k n : ℕ} (m : ℕ) (b : Fin k → Q S d n)
     (homAt x₂ (jQ m b')).left ≫ spMap (jetCoef f (Fin k × Fin d) m) =
       spMap (jetCoef f (Fin n × Fin d) m) ≫ (homAt x (jQ m b)).left := by
   obtain rfl : b' = fun j => mQ f (b j) := funext h
-  exact (Bc.spMap_cp _ _).trans ((congrArg spMap (coef_jQ' f m b)).trans (Bc.spMap_cp _ _).symm)
+  exact (_root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp' _ _).trans ((congrArg spMap (coef_jQ' f m b)).trans (_root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp' _ _).symm)
 
 theorem PP_bc {f : S →+* S₂} {g g₂ : GermAt t x d} {g' g₂' : GermAt t x₂ d} (h : IsBC f g g') (h₂ : IsBC f g₂ g₂')
     {φ : Q S d 1} (hφ : ∀ m, g₂.x m = PP m g.x φ) (m : ℕ) : g₂'.x m = PP m g'.x (mQ f φ) := by
@@ -996,7 +992,7 @@ theorem genMap_comp (p q : Cpt ξ) (h : q.1 ⤳ p.1) :
     (genMap ξ q).comp (X0.presheaf.stalkSpecializes h).hom = genMap ξ p := by
   have e : spMap ((genMap ξ q).comp (X0.presheaf.stalkSpecializes h).hom) = spMap (genMap ξ p) := by
     haveI : Mono (stPt X0 p.1) := inferInstanceAs (Mono (X0.fromSpecStalk p.1))
-    rw [← cancel_mono (stPt X0 p.1), ← Bc.spMap_cp, Category.assoc, ← st_spec h, ← genMap_from p, ← genMap_from q]
+    rw [← cancel_mono (stPt X0 p.1), ← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', Category.assoc, ← st_spec h, ← genMap_from p, ← genMap_from q]
   exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
 
 theorem eq_mul_inverse_pow {A : Type} [CommRing A] {j : Sp A ⟶ X0} [Mono j] {gA : GermAt t j d} {k : S →+* S₃} {k' : S₂ →+* S₃}
@@ -1005,7 +1001,7 @@ theorem eq_mul_inverse_pow {A : Type} [CommRing A] {j : Sp A ⟶ X0} [Mono j] {g
     ∃ g' : GermAt t x₂ d, IsBC k' g' gK := by
   obtain ⟨g', hb'⟩ := exists_bc a' ha' gA
   have e : spMap (k'.comp a') = spMap (k.comp a) := by
-    rw [← cancel_mono j, ← Bc.spMap_cp, ← Bc.spMap_cp, Category.assoc, Category.assoc, ← ha, ← ha', ← hk, ← hk']
+    rw [← cancel_mono j, ← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', ← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', Category.assoc, Category.assoc, ← ha, ← ha', ← hk, ← hk']
   have e' : k'.comp a' = k.comp a := congrArg CommRingCat.Hom.hom (Spec.map_injective e)
   rw [← e'] at hK
   exact ⟨g', hb'.cancel hK⟩
@@ -1013,7 +1009,7 @@ theorem eq_mul_inverse_pow {A : Type} [CommRing A] {j : Sp A ⟶ X0} [Mono j] {g
 theorem loc_aux₀ (hs : ∀ a : 𝓞 E, star a = H.bar a) [IsLocalRing S₃] {A : Type} [CommRing A] {j : Sp A ⟶ X0} {d' : ℕ}
     (gA : GermAt t j d') {k : S →+* S₃} {a : A →+* S} (ha : x = spMap a ≫ j) (hk : x₃ = spMap k ≫ x)
     (g₀ : GermAt t x₃ d) : d = d' ∧ ∃ gK : GermAt t x₃ d', IsBC (k.comp a) gA gK := by
-  obtain ⟨gK, hK⟩ := exists_bc (x₂ := x₃) (k.comp a) (by rw [← Bc.spMap_cp, Category.assoc, ← ha, ← hk]) gA
+  obtain ⟨gK, hK⟩ := exists_bc (x₂ := x₃) (k.comp a) (by rw [← _root_.GlobalTheory.CompanionTheory.Ar.LieFin.spMap_comp', Category.assoc, ← ha, ← hk]) gA
   exact ⟨(germ_univ E H hs X0 t S₃ x₃ d g₀).1 d' gK, gK, hK⟩
 
 theorem st_factor {A : Type} [CommRing A] (j : Sp A ⟶ X0) [IsOpenImmersion j] (q : X0) (hq : q ∈ Set.range j) :

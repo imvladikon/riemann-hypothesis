@@ -474,8 +474,6 @@ section -- clump:auto
 
 open TensorProduct Coalgebra Bialgebra CategoryTheory WithConv GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup
 
-theorem _root_.GlobalTheory.T.mem_symmetricCocycles_of_pullback_mulP : ∀ {p : ℕ} {R : Type} [CommRing R] (G : PDivGroup p R) (n : ℕ) (c : G.A n ⊗[R] G.A n), pullbackTwo (G.mulP n) c ∈ symCocycles R (G.A (n + 1)) → c ∈ symCocycles R (G.A n) := by
-  first | exact @GlobalTheory.PDivGroup.mem_symCocycles_of_pullTwo_mulP
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSymmetricCocyclesOfPullbackMulPStatement =====
@@ -715,7 +713,7 @@ theorem exists_of_cobOne_eq_zero {b : G.A 1} (hb : cobOne R _ b = 0) :
   choose c hc using fun n => _root_.GlobalTheory.PDivGroup.exists_tensorSquare_mulP_eq G n _ (_root_.GlobalTheory.PDivGroup.cobOne_transl_invariant G n _ b (hB' n)).1 (_root_.GlobalTheory.PDivGroup.cobOne_transl_invariant G n _ b (hB' n)).2
   have h1 : ∀ n, pullbackTwo (G.res n) (c (n + 1)) = c n := fun n => G.pullbackTwo_mulP_injective n (by
     rw [← pullTwo_comp, mulP_comp_res, ← res_comp_mulP, pullTwo_comp, hc, hc, pullTwo_cobOne, B.2])
-  let c' : G.cocycles := ⟨c, fun n => ⟨T.mem_symmetricCocycles_of_pullback_mulP G n _ (hc n ▸ cobOne_mem _), h1 n⟩⟩
+  let c' : G.cocycles := ⟨c, fun n => ⟨_root_.GlobalTheory.PDivGroup.mem_symCocycles_of_pullTwo_mulP G n _ (hc n ▸ cobOne_mem _), h1 n⟩⟩
   have h2 : ∀ n, (G.cob B).1 (n + 1) = (cocyclesMap ((p : ℤ_[p]) • 𝟙 G) c').1 (n + 1) := fun n => by
     rw [cocyclesMap_natCast_val, ← mulP_comp_res, pullTwo_comp]
     exact (hc n).symm.trans (congrArg _ (h1 n).symm)

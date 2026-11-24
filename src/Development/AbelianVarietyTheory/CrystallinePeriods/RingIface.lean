@@ -50,8 +50,6 @@ open Formalism Reformulated.AutPerF
 open scoped Formalism.Per
 
 namespace X
-variable {l : ℕ} [Fact l.Prime]
-
 end X
 
 variable (l : ℕ) [Fact l.Prime]
@@ -154,20 +152,12 @@ theorem zD_eq_alg : ∀ (l : ℕ) [Fact l.Prime] (z : ℤ_[l]), Formalism.Per.zD
 theorem aB_eq_alg : ∀ (l : ℕ) [Fact l.Prime] (a : Formalism.Per.Ainf l), Formalism.Per.aB l a = algebraMap (Formalism.Per.Acris l) (Formalism.Per.Bcris l) (algebraMap (Formalism.Per.Ainf l) (Formalism.Per.Acris l) a) := by
   first | exact @PeriodMapApply.Bridge.aB_apply
 
-theorem aB_zl : ∀ (l : ℕ) [Fact l.Prime] (z : ℤ_[l]), Formalism.Per.aB l (algebraMap ℤ_[l] (Formalism.BasicNotions.Loc.Ainf l) z) = Formalism.Per.zB l z := by
-  first | exact @GeneratorRelation.Bridge.zB_eq_aB_zA
-
-theorem zD_alg : ∀ (l : ℕ) [Fact l.Prime] (z : ℤ_[l]), Formalism.Per.zD l z = algebraMap (Formalism.Per.BdRp l) (Formalism.Per.BdR l) (algebraMap (Formalism.Per.AinfP l) (Formalism.Per.BdRp l) (algebraMap (Formalism.Per.Ainf l) (Formalism.Per.AinfP l) (Formalism.Per.zA l z))) := by
-  first | exact @DeRhamGeneratorAlgebra.Bridge.zD_eq_alg
-
 theorem mem_Acris0_of_factorial_mul : ∀ (l : ℕ) [Fact l.Prime] (x : Formalism.Per.Ainf l), Formalism.Per.θ l x = 0 → ∀ (n : ℕ) (y : Formalism.Per.AinfP l), ((n.factorial : ℕ) : Formalism.Per.AinfP l) * y = algebraMap (Formalism.Per.Ainf l) (Formalism.Per.AinfP l) x ^ n → y ∈ Formalism.Per.Acris0 l := by
   first | exact @CrisZeroFactorialMul.Bridge.mem_Acris0_of_factorial_mul
 
-theorem aB_apply : ∀ (l : ℕ) [Fact l.Prime] (a : Formalism.Per.Ainf l), Formalism.Per.aB l a = algebraMap (Formalism.Per.Acris l) (Formalism.Per.Bcris l) (algebraMap (Formalism.Per.Ainf l) (Formalism.Per.Acris l) a) := by
-  first | exact @PeriodMapApply.Bridge.aB_apply
+alias aB_apply := _root_.GlobalTheory.RingIface.aB_eq_alg
 
-theorem aB_alg : ∀ (l : ℕ) [Fact l.Prime] (w : Formalism.Per.Ainf l), Formalism.Per.aB l w = algebraMap (Formalism.Per.Acris l) (Formalism.Per.Bcris l) (algebraMap (Formalism.Per.Ainf l) (Formalism.Per.Acris l) w) := by
-  first | exact @PeriodMapApply.Bridge.aB_apply
+alias aB_alg := _root_.GlobalTheory.RingIface.aB_eq_alg
 
 theorem pD_eq_alg : ∀ (l : ℕ) [Fact l.Prime] (a : Formalism.Per.AinfP l), Formalism.Per.pD l a = algebraMap (Formalism.Per.BdRp l) (Formalism.Per.BdR l) (algebraMap (Formalism.Per.AinfP l) (Formalism.Per.BdRp l) a) := by
   first | exact @DividedPowerApply.Bridge.pD_apply

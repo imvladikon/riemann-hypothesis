@@ -314,11 +314,6 @@ open Matrix
 
 variable {R : Type} [CommRing R] {n : ℕ}
 
-private theorem blk4_mul_blk4 (A B C E A' B' C' E' : Matrix (Fin n) (Fin n) R) :
-    blk4 A B C E * blk4 A' B' C' E' =
-      blk4 (A * A' + B * C') (A * B' + B * E') (C * A' + E * C') (C * B' + E * E') := by
-  simp only [blk4, Matrix.submatrix_mul_equiv, Matrix.fromBlocks_multiply]
-
 private theorem cj_one' (s : R →+* R) : cj s (1 : Matrix (Fin n) (Fin n) R) = 1 := by
   unfold cj
   rw [Matrix.map_one _ (map_zero s) (map_one s), Matrix.transpose_one]
@@ -342,13 +337,13 @@ theorem fact_alg (s : R →+* R) (a β c u ui : Matrix (Fin n) (Fin n) R) (hu1 :
   · rw [cj_mul, hc, mul_assoc, hcu', mul_one]
   · have e1 : β * ui * u = β := by rw [mul_assoc, hu2, mul_one]
     have e2 : u * (ui * c) = c := by rw [← mul_assoc, hu1, one_mul]
-    rw [blk4_mul_blk4, blk4_mul_blk4]
+    rw [_root_.PositivityTheory.Rg.Rsw.L.LGenK.submatrix_fromBlocks_mul, _root_.PositivityTheory.Rg.Rsw.L.LGenK.submatrix_fromBlocks_mul]
     simp only [mul_zero, zero_mul, add_zero, zero_add, one_mul, mul_one]
     rw [e1, e2, mul_assoc β ui c, sub_add_cancel]
 
 theorem block_matrix_mul_upper_unipotent (a b c d X : Matrix (Fin n) (Fin n) R) :
     blk4 a b c d * blk4 1 X 0 1 = blk4 a (a * X + b) c (d + c * X) := by
-  rw [blk4_mul_blk4]
+  rw [_root_.PositivityTheory.Rg.Rsw.L.LGenK.submatrix_fromBlocks_mul]
   simp only [mul_one, mul_zero, add_zero]
   rw [add_comm (a * X) b, add_comm (c * X) d]
 
@@ -390,12 +385,6 @@ open Matrix
 
 variable {D : D7} {n : ℕ}
 
-theorem cA_invol (x : AE D) : cA D (cA D x) = x := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | tmul a e => change a ⊗ₜ[D.host.F] D.sp.cm.sig (D.sp.cm.sig e) = _; rw [sig_invol]
-  | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-
 theorem map_neg' {T : Type} [CommRing T] (f : AE D →+* T) (Y : Mx D n n) : (-Y).map f = -(Y.map f) := by
   exact Matrix.map_neg f (map_neg f) Y
 
@@ -421,12 +410,12 @@ theorem isM_of (g : G D n) (A u : Mx D n n) (h : mat g = blk4 A 0 0 u) : IsM g :
     rw [Matrix.map_one _ (map_zero _) (map_one _), Matrix.transpose_one]
   have hA : A * cj (cA D) u = 1 := by
     have h3 := congrArg (cj (cA D)) hu1
-    rwa [hcjmul, cj_cj (cA D) cA_invol, hcj1] at h3
+    rwa [hcjmul, cj_cj (cA D) _root_.Formalism.L2.Theta.cA_cA, hcj1] at h3
   have hA' : cj (cA D) u * A = 1 := (Matrix.mul_eq_one_comm_of_equiv (Equiv.refl _)).1 hA
   refine ⟨⟨A, cj (cA D) u, hA, hA'⟩, ?_⟩
   rw [h]
   congr 1
-  exact (cj_cj (cA D) cA_invol u).symm
+  exact (cj_cj (cA D) _root_.Formalism.L2.Theta.cA_cA u).symm
 
 theorem blocks_at {T : Type} [CommRing T] (f : AE D →+* T) {k : G D n} (h : (mat k).map f = 1) :
     (bA (mat k)).map f = 1 ∧ (bB (mat k)).map f = 0 ∧ (bC (mat k)).map f = 0 ∧ (bD (mat k)).map f = 1 := by

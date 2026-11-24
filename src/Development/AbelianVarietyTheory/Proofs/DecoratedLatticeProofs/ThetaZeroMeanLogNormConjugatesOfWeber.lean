@@ -504,10 +504,7 @@ namespace GlobalTheory.Theta0MeanProof
 open NumberField Formalism.BasicNotions Formalism.MainNotions.TaylorLogMetric GlobalTheory.Glob.IntegralWittCoefficients GlobalTheory.IndefiniteRowSideFullHecke
 open scoped nonZeroDivisors
 
-theorem lemA : ∀ (D : D7) (c : Ideal (𝓞 D.host.K)), c ≠ ⊥ → ∀ x : ℂ, x ≠ 0 →
-    (∀ z ∈ lamOf D c x, ((1 + Complex.I * (Real.sqrt D.host.d : ℂ)) / 2) * z ∈ lamOf D c x) ∧
-    ∃ ω₁ τ : ℂ, ω₁ ≠ 0 ∧ 0 < τ.im ∧ JacobiThetaHalfCharacteristic.IsPeriodLattice (lamOf D c x) ω₁ τ ∧
-      1 / 2 ≤ τ.im ∧ 2 * τ.im ≤ Real.sqrt D.host.d := GlobalTheory.IdealLattice.main
+alias lemA := _root_.GlobalTheory.IdealLattice.main
 
 theorem lemB : EquidistributedConjugates.ConjugatesEquidistributed → PeriodLatticeAgreement.LatticePeriodEta →
     ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (M : IntermediateField ℚ ℂ) [FiniteDimensional ℚ M]
@@ -523,8 +520,7 @@ theorem lemC : EquidistributedConjugates.ConjugatesEquidistributed → PeriodLat
         JacobiThetaHalfCharacteristic.thetaChar a b (t ρ / ω₁) τ = 0 →
         ‖ρ X‖ = (‖JacobiThetaHalfCharacteristic.thetaChar a b 0 τ‖ / ‖ModularForm.eta τ‖) ^ 12 := _root_.GlobalTheory.IntegralX.exists_integral_theta_ratio
 
-theorem lemD : ∃ C₀ : ℝ, 0 < C₀ ∧ ∀ (a b : Fin 2) (τ : ℂ), 1 / 2 ≤ τ.im →
-    ‖JacobiThetaHalfCharacteristic.thetaChar a b 0 τ‖ ≤ C₀ := GlobalTheory.Glob.EvenThetaBound.evenThetaConst_bounded
+alias lemD := _root_.GlobalTheory.Glob.EvenThetaBound.evenThetaConst_bounded
 
 theorem containsData {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {M : IntermediateField ℚ ℂ}
     (h : DataIn D (tor0 D cc δ) M) : EquidistributedConjugates.ContainsData D M (lamOf D cc δ) := by
@@ -1069,8 +1065,6 @@ noncomputable section
 
 namespace GlobalTheory.Proof.ThetaZeroNormGlobalInterpolation
 
-theorem normTheta0 : GlobalTheory.IndefiniteRowSideFullHecke.JacobiThetaHalfCharacteristic.NormTheta0 := GlobalTheory.ThetaNullNormSquares.normTheta0
-
 end GlobalTheory.Proof.ThetaZeroNormGlobalInterpolation
 end -- clump:auto
 end -- clump:auto
@@ -1114,7 +1108,7 @@ theorem core (hP : PeriodLatticeAgreement.LatticePeriodEta) (hW : ThetaConstantW
     apply (hT0 ρ).2.1
     rw [hΛeq ρ] at ht ⊢
     exact hstab ρ _ ht
-  have hNρ := fun ρ => GlobalTheory.Proof.ThetaZeroNormGlobalInterpolation.normTheta0 _ (ω ρ) (τ ρ) (t ρ) (hω ρ) (hτ ρ) (hLat' ρ) (hT0 ρ).1 (htn ρ)
+  have hNρ := fun ρ => _root_.GlobalTheory.ThetaNullNormSquares.normTheta0 _ (ω ρ) (τ ρ) (t ρ) (hω ρ) (hτ ρ) (hLat' ρ) (hT0 ρ).1 (htn ρ)
   have hex : ∀ ρ, ∃ ab : Fin 2 × Fin 2, JacobiThetaHalfCharacteristic.IsEvenChar ab.1 ab.2 ∧
       JacobiThetaHalfCharacteristic.thetaChar ab.1 ab.2 (t ρ / ω ρ) (τ ρ) = 0 := fun ρ => (hNρ ρ).1.exists
   choose ab hab0 hab1 using hex

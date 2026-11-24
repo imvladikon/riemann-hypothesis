@@ -89,7 +89,7 @@ theorem exists_blowup_graph {R : Type} [CommRing R] [IsNoetherianRing R] {X : Sc
     apply pullback.hom_ext
     · rw [pullback.lift_fst]; rfl
     · rw [pullback.lift_snd]; rfl
-  refine ⟨_, b, c, hc, ⟨GlobalTheory.T.effCartier_of_proportional_sections R X _ U _ L m σ b c j (_root_.GlobalTheory.ProjBlowup.generatesAlong_comap_of_generates X _ J L m σ b hσ) hbc inferInstance
+  refine ⟨_, b, c, hc, ⟨_root_.GlobalTheory.ProjBlowup.effCartier_of_proportional R X _ U _ L m σ b c j (_root_.GlobalTheory.ProjBlowup.generatesAlong_comap_of_generates X _ J L m σ b hσ) hbc inferInstance
     inferInstance fun t => ?_, fun W g hg => ?_⟩, hbc, ?_⟩
   · rw [mem_support_comap, ← Scheme.Hom.comp_apply, hjb]; exact hU t
   · obtain ⟨ψ, hψ, hψσ⟩ := _root_.GlobalTheory.ProjBlowup.exists_proportional R X W _ L m σ g (g ≫ s) (_root_.GlobalTheory.ProjBlowup.generatesAlong_comap_of_generates X _ J L m σ g hσ) hg

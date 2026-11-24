@@ -1401,7 +1401,7 @@ theorem as_le_liftable (hfd : FiniteDimensional (Kp (xplus X E hM) la G.N) (OsK 
   haveI hfin : Module.Finite (Op (xplus X E hM) la G.N) ↥(As (Op (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)) :=
     (integralClosure_dvr' (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w)).1
   haveI : Finite (PtsG G la) :=
-    (_root_.ramificationDegreeSum (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM) la G.N) hU.irreducible hfin).1
+    (_root_.PI.UnitaryGroupMassFormula.EfRankSum.efRankSum_main (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM) la G.N) hU.irreducible hfin).1
   refine core hU (liftable hs hU) (liftable_le hs hU) Zc (fun ζ => valV (hs ζ).T.V) (fun ζ => phiPt (hs ζ)) jz
     (fun ζ x => ord_cases (ord_phiPt (hs ζ) x)) (fun a ha => ?_) (fun ζ => ?_) (fun ζ ζ' hne hZ => ?_) (fun ζ => ?_)
   · obtain ⟨k, F, F', hF⟩ := _root_.GlobalTheory.exists_ratio_forms_at_points D B P j (xplus X E hM) la G.N wL G.w (PtsG G la) (fun ζ => (hs ζ).T.Fr)
