@@ -146,78 +146,6 @@ theorem notInert_of' (p : ℕ) (hp : p.Prime) (h3 : p ∣ D.host.condN) : ¬ (Is
   · exact not_dvd_conductor_of_inert hp h h3
   · exact not_dvd_of_signal hp h h3
 
-theorem first_clause_cases
-    (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hC : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp)
-    (hD : LossAtDiscriminant D L K Dx T lev Xe ce sp)
-    (hElse : DGamDef D → RestElse D Dx T sp) :
-    ColumnValuationAwayFromTypePrimes D L K Dx T lev Xe ce sp := by
-  intro hF hE u w hw hg μ hUs hμ x hx
-  have hp := D.what₂.places.resChar_prime w
-  have h0 : D.what₂.places.resChar w ≠ D.host.g 0 := fun h => hg (by simp [h])
-  have h1 : D.what₂.places.resChar w ≠ D.host.g 1 := fun h => hg (by simp [h])
-  by_cases h2 : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD
-  · have h := hD hF hE u w hw h2 μ hUs hμ x hx
-    have e : lowS L Xe K ce sp u w =
-        (∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w := by
-      unfold lowS ES Eval vDG
-      congr 1
-      refine Finset.sum_congr rfl fun j _ => ?_
-      simp only [if_neg hw, if_neg h0, if_neg h1, if_pos h2]
-      ring
-    rw [e]; exact h
-  by_cases h3 : (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧
-      (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n
-  · have hExc : ¬ Exc D (D.what₂.places.resChar w) := by
-      intro hE'
-      unfold Exc at hE'
-      rcases (Nat.Prime.dvd_mul hp).1 hE' with h | h
-      · rcases (Nat.Prime.dvd_mul hp).1 h with h | h
-        · exact notInert_of' _ hp h h3.1
-        · exact h0 ((Nat.prime_dvd_prime_iff_eq hp (D.host.g_prime 0)).1 h)
-      · exact h1 ((Nat.prime_dvd_prime_iff_eq hp (D.host.g_prime 1)).1 h)
-    by_cases h4 : IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) = 0
-    · have h := hC hF hE u w hw h4.1 h4.2 hExc h3.2 μ hUs hμ x hx
-      have e : lowS L Xe K ce sp u w =
-          (∑ j ∈ SizeData₂.lifts D, (L.F j w - EatC L ce j (D.what₂.places.resChar w) - vDG D u w)) + sp * vDG D u w := by
-        unfold lowS ES Eval vDG
-        congr 1
-        refine Finset.sum_congr rfl fun j _ => ?_
-        simp only [if_neg hw, if_neg h0, if_neg h1, if_neg h2, if_pos h3, if_pos h4]
-        ring
-      rw [e]; exact h
-    · have hcl : (IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) ≠ 0) ∨
-          IsSg D (D.what₂.places.resChar w) := by
-        rcases h3.1 with h | h
-        · exact Or.inl ⟨h, fun h' => h4 ⟨h, h'⟩⟩
-        · exact Or.inr h
-      have h := hNo hF hE u w hw hcl hExc h3.2 μ hUs hμ x hx
-      refine ColGe_mono ?_ h
-      have : 0 ≤ ∑ j ∈ SizeData₂.lifts D, g0S X K (D.what₂.places.resChar w) j :=
-        Finset.sum_nonneg fun _ _ => by
-          unfold g0S
-          split_ifs
-          · exact le_rfl
-          · exact Finset.sum_nonneg fun _ _ => le_max_right _ _
-      linarith
-  · have hd : D.what₂.places.resChar w ≠ D.host.d := by
-      intro hd
-      apply h2
-      rw [hd]
-      exact primeClass_d D.host.toHostRaw
-    have h := hElse hE.dgam u w hw hd hg μ hUs hμ x hx
-    have e : lowS L Xe K ce sp u w = -(((SizeData₂.lifts D).card : ℝ) - sp) * vDG D u w := by
-      unfold lowS ES Eval vDG
-      have : ∀ j ∈ SizeData₂.lifts D, L.F j w = 0 := by
-        intro j hj
-        rw [hF j hj w]
-        unfold Fval FvalP SizeData₂.gTypes
-        rw [if_neg hg, if_neg h2, if_neg h3]
-      rw [Finset.sum_congr rfl fun j hj => by rw [this j hj]]
-      simp only [if_neg hw, if_neg h0, if_neg h1, if_neg h2, if_neg h3]
-      simp [Finset.sum_const]
-      ring
-    rw [e]; exact h
-
 theorem not_exc_of_inert {p : ℕ} (hp : p.Prime) (hin : IsResidueClassZero D p ∨ IsSg D p) (h0 : p ≠ D.host.g 0) (h1 : p ≠ D.host.g 1) :
     ¬ Exc D p := by
   intro hE'
@@ -281,37 +209,72 @@ theorem totS_eq (u : D.what₂.Word) (w : D.what₂.places.Pl) :
   simp only [sub_eq_add_neg, Finset.sum_add_distrib]
   ring
 
+private theorem totS_eq_lowS_of_gain_zero {u : D.what₂.Word} {w : D.what₂.places.Pl}
+    (h : GainZero D L (D.what₂.places.resChar w)) : totS X K Xe ce sp u w = lowS L Xe K ce sp u w := by
+  rw [totS_eq, Finset.sum_eq_zero, zero_add]
+  intro j _
+  rcases h with h | h | h | h | h <;> simp [gainS, gainP, h]
+
+theorem column_valuation_without_operator
+    (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hC : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp)
+    (hD : LossAtDiscriminant D L K Dx T lev Xe ce sp) (hElse : DGamDef D → RestElse D Dx T sp)
+    (hF : L.FDef) (hE : ErrDefs D L Xe lev K ce) (u : D.what₂.Word) (w : D.what₂.places.Pl)
+    (hw : D.what₂.places.resChar w ≠ (D.mem u).A.T)
+    (hg : D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ))
+    (μ : D.what₂.Tup) (hUs : DV.Used D μ) (hμ : D.what₂.places.resChar w ∉ Dx.Qp μ)
+    (x : ((D.fm u).lat 0).V) (hVV : VV X K (aL L) (bL L) (D.what₂.places.resChar w) = ∅)
+    (hx : x ∈ LT.Sram D u w) : ColGe T u μ w x (totS X K Xe ce sp u w) := by
+  have hp := D.what₂.places.resChar_prime w
+  have hg0 : D.what₂.places.resChar w ≠ D.host.g 0 := fun h => hg (by simp [h])
+  have hg1 : D.what₂.places.resChar w ≠ D.host.g 1 := fun h => hg (by simp [h])
+  by_cases hram : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD
+  · have hdvd := (D.host.dvd_condN_iff_cls hp).2 (Or.inr (Or.inr hram))
+    have hExc : Exc D (D.what₂.places.resChar w) := dvd_mul_of_dvd_left (dvd_mul_of_dvd_left hdvd _) _
+    rw [totS_eq_lowS_of_gain_zero (Or.inl hExc)]
+    simpa only [lowS, ES, Eval, ite_eq_right hw, ite_eq_right hg0, ite_eq_right hg1, ite_eq_left hram, vDG, sub_sub, add_comm]
+      using hD hF hE u w hw hram μ hUs hμ x hx
+  by_cases hInRange : (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧
+      (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n
+  · have hExc := not_exc_of_inert hp hInRange.1 hg0 hg1
+    by_cases hOrder : IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) = 0
+    · rw [totS_eq_lowS_of_gain_zero (Or.inr (Or.inr (Or.inl hOrder)))]
+      simpa only [lowS, ES, Eval, ite_eq_right hw, ite_eq_right hg0, ite_eq_right hg1, ite_eq_right hram,
+        ite_eq_left hInRange, ite_eq_left hOrder, vDG, sub_sub, add_comm]
+        using hC hF hE u w hw hOrder.1 hOrder.2 hExc hInRange.2 μ hUs hμ x hx
+    · have hClass : (IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) ≠ 0) ∨
+          IsSg D (D.what₂.places.resChar w) :=
+        hInRange.1.imp (fun h => ⟨h, fun hp0 => hOrder ⟨h, hp0⟩⟩) id
+      have hGain (j : ℕ) (_ : j ∈ SizeData₂.lifts D) :
+          gainS X K (D.what₂.places.resChar w) j = g0S X K (D.what₂.places.resChar w) j := by
+        classical
+        simp [gainS, g0S, gainP, hInRange.1, hExc, hOrder, not_lt.mpr hInRange.2, hVV]
+      rw [totS_eq, Finset.sum_congr rfl hGain]
+      exact hNo hF hE u w hw hClass hExc hInRange.2 μ hUs hμ x hx
+  · have hZero : GainZero D L (D.what₂.places.resChar w) := (not_and_or.mp hInRange).elim
+      (fun h => Or.inr (Or.inl h)) (fun h => Or.inr (Or.inr (Or.inr (Or.inl (not_le.mp h)))))
+    have hd : D.what₂.places.resChar w ≠ D.host.d := fun h => hram (h ▸ primeClass_d D.host.toHostRaw)
+    have hFZero : ∀ j ∈ SizeData₂.lifts D, L.F j w = 0 := by
+      intro j hj
+      rw [hF j hj w]
+      unfold Fval FvalP SizeData₂.gTypes
+      rw [ite_eq_right hg, ite_eq_right hram, ite_eq_right hInRange]
+    have hLow : lowS L Xe K ce sp u w = -(((SizeData₂.lifts D).card : ℝ) - sp) * vDG D u w := by
+      unfold lowS ES Eval vDG
+      rw [Finset.sum_congr rfl fun j hj => by rw [hFZero j hj]]
+      simp only [ite_eq_right hw, ite_eq_right hg0, ite_eq_right hg1, ite_eq_right hram, ite_eq_right hInRange]
+      simp [Finset.sum_const]
+      ring
+    rw [totS_eq_lowS_of_gain_zero hZero, hLow]
+    exact hElse hE.dgam u w hw hd hg μ hUs hμ x hx
+
 theorem baseChange_preserves_unitary_of (W : TwLoc D Y) (hV : CmpV c Dx T W) (hG : TupleLatticeValuation D L X Y K Dx W lev Xe ce sp)
-    (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hc : ColumnValuationAwayFromTypePrimes D L K Dx T lev Xe ce sp) :
+    (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hC : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp)
+    (hD : LossAtDiscriminant D L K Dx T lev Xe ce sp) (hElse : DGamDef D → RestElse D Dx T sp) :
     Conclusion1 D L X Y K c Dx T lev Xe ce sp := by
-  classical
   intro ht hE u w hw hg' μ hUs hμ x hin
   rcases hin with ⟨hg, hx⟩ | ⟨hVV, hx⟩
   · exact kernel_valuation_served W hV hG ht hE u w hg (not_exc_of_gIdx hg) μ hUs hμ x hx
-  · have hlow := hc ht.fdef hE u w hw hg' μ hUs hμ x hx
-    rw [totS_eq]
-    by_cases h1 : (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧ ¬ Exc D (D.what₂.places.resChar w)
-    swap
-    · have : ∑ j ∈ SizeData₂.lifts D, gainS X K (D.what₂.places.resChar w) j = 0 :=
-        Finset.sum_eq_zero fun j _ => by rw [gainS, if_neg h1]
-      rw [this, zero_add]; exact hlow
-    by_cases h2 : (IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) = 0) ∨
-        L.sc.X'' D.R.n < (D.what₂.places.resChar w : ℝ)
-    · have : ∑ j ∈ SizeData₂.lifts D, gainS X K (D.what₂.places.resChar w) j = 0 :=
-        Finset.sum_eq_zero fun j _ => by rw [gainS, if_pos h1, gainP, if_pos h2, ite_self]
-      rw [this, zero_add]; exact hlow
-    · have hcl : (IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) ≠ 0) ∨
-          IsSg D (D.what₂.places.resChar w) := by
-        rcases h1.1 with h | h
-        · exact Or.inl ⟨h, fun h' => h2 (Or.inl ⟨h, h'⟩)⟩
-        · exact Or.inr h
-      have hX : (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n := not_lt.1 fun h => h2 (Or.inr h)
-      have h := hNo ht.fdef hE u w hw hcl h1.2 hX μ hUs hμ x hx
-      have e : ∑ j ∈ SizeData₂.lifts D, gainS X K (D.what₂.places.resChar w) j =
-          ∑ j ∈ SizeData₂.lifts D, g0S X K (D.what₂.places.resChar w) j :=
-        Finset.sum_congr rfl fun j _ => by
-          rw [gainS, if_pos h1, g0S, gainP, if_neg h2, hVV, Finset.sum_empty, zero_add, Finset.sdiff_empty]
-      rw [e]; exact h
+  · exact column_valuation_without_operator hNo hC hD hElse ht.fdef hE u w hw hg' μ hUs hμ x hVV hx
 
 end Formalism.MainNotions.WeilJacquetShalikaLaw.Proof
 
@@ -930,9 +893,8 @@ theorem sum_over_primes_service (𝒞 : FamClass) (h : SumOverPrimesHypotheses �
     ⟨hK, o, gd, b0, b0c, h01, a', ei, sd, sh, hCL⟩
   obtain ⟨n, c, d, it⟩ := J.four_orbit_conditions_of_proof (lev := (Fm.ex x h1 i).lev) (Xe := (Fm.ex x h1 i).errX)
     (OrbitPlaces.lift_bounds_of_essential hA (DIV.Lemmas.OrbitEntryBounds.orbit_entry_bounds_hold _ _ _ _ _ _ _ 11 1 h01 sd sh hCL))
-  have hCol := first_clause_cases n c d (remaining_primes_of_admitted it)
   have hTuple := first_in_local_models (reW (Fm.Gy x i) LC) hU
-  exact conclusion1_re LC (baseChange_preserves_unitary_of (reW (Fm.Gy x i) LC) hV hTuple n hCol)
+  exact conclusion1_re LC (baseChange_preserves_unitary_of (reW (Fm.Gy x i) LC) hV hTuple n c d (remaining_primes_of_admitted it))
 
 end Formalism.MainNotions.Pk
 
