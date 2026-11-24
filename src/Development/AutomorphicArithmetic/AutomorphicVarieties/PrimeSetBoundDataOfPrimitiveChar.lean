@@ -61,7 +61,7 @@ structure BConst where
 def BConst.R (K : BConst) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : ℕ := K.R0 M + ∑ l ∈ B', K.Rl l (L l)
 
 def BConst.J (K : BConst) (Ct eps : ℝ) (M : AbF) (B' : Finset ℕ) (L : ℕ → AbF) : ℝ :=
-  2 ^ (K.R M B' L + 2) * (2 * K.CK * Ct / eps) ^ K.R M B' L
+  2 * (2 * (2 * K.CK * Ct / eps)) ^ K.R M B' L
 
 def admitted (A1 Ct : ℝ) (e t : ℝ → ℕ) : Prop :=
   ∀ x ≥ (2 : ℝ), 2 ≤ e x ∧ (2 : ℝ) ^ e x ≤ x ^ A1 ∧ 2 ≤ t x ∧ (t x : ℝ) ≤ x ^ Ct

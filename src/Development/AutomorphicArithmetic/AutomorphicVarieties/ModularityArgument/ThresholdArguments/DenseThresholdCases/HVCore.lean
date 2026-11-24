@@ -59,6 +59,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
+import Mathlib.Data.Fintype.Card
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -658,65 +659,54 @@ end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.PartB =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.Window1 =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.Window1", "h": "module\n\npublic import Mathlib.Basic.Real.Basic\npublic import Mathlib.Data.Finset.Card\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.GaloisCohomologyLength.LevelInertiaLeLevelDec\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.SecondBound\nimport Development.AutomorphicArithmetic.CharacterBoxes.ExistsPageN\nimport Formalism.GaloisCohomology.Statement\n\n"}
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.Window1", "h": "module\n\npublic import Mathlib.Basic.Real.Basic\npublic import Mathlib.Data.Finset.Card\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Algebra.Order.Star.Real\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.Fintype.Card\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.GaloisCohomologyLength.LevelInertiaLeLevelDec\nimport Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.SecondBound\nimport Development.AutomorphicArithmetic.CharacterBoxes.ExistsPageN\nimport Formalism.GaloisCohomology.Statement\n\n"}
 section -- clump:auto
 @[expose] public section
 
 open NumberField Formalism.GaloisCohomology UpperTheory.Top UpperTheory.V UpperTheory.V.LDataCardLeFinrank UpperTheory.V.Win
 
-theorem UpperTheory.V.Win.window1 :
-    ∀ (R : ℕ) (B U : ℝ) (T : Finset ℝ), 1 ≤ B → 0 < U → T.card ≤ R →
-      ∃ y : ℝ, U / (2 ^ (R + 2) * B ^ R) ≤ y ∧ 2 * y ≤ U ∧ ∀ a ∈ T, ∀ u : ℝ, y ≤ u → u ≤ 2 * y → a ≤ u → B * a ≤ u := by
-  intro R
-  induction R with
-  | zero =>
-    intro B U T hB hU hT
-    have hT0 : T = ∅ := Finset.card_eq_zero.mp (by omega)
-    subst hT0
-    refine ⟨U / 2, ?_, by linarith, ?_⟩
-    · apply div_le_div_of_nonneg_left hU.le (by norm_num)
-      norm_num
-    · intro a ha
-      simp at ha
-  | succ n ih =>
-    intro B U T hB hU hT
-    have hB0 : 0 < B := by linarith
-    by_cases h : ∃ a ∈ T, U / (2 * B) < a ∧ a ≤ U
-    · obtain ⟨a0, ha0, h1, h2⟩ := h
-      obtain ⟨y, hy1, hy2, hy3⟩ := ih B (U / (2 * B)) (T.erase a0) hB (by positivity)
-        (by rw [Finset.card_erase_of_mem ha0]; omega)
-      refine ⟨y, ?_, ?_, ?_⟩
-      · calc U / (2 ^ (n + 1 + 2) * B ^ (n + 1))
-            = U / (2 * B) / (2 ^ (n + 2) * B ^ n) := by
-              rw [div_div]
-              congr 1
-              ring
-          _ ≤ y := hy1
-      · have : U / (2 * B) ≤ U := div_le_self hU.le (by linarith)
-        linarith
-      · intro a ha u hu1 hu2 hau
-        by_cases hae : a = a0
-        · subst hae
-          exfalso
-          have : U / (2 * B) < u := lt_of_lt_of_le h1 hau
-          linarith
-        · exact hy3 a (Finset.mem_erase.mpr ⟨hae, ha⟩) u hu1 hu2 hau
-    · push_neg at h
-      refine ⟨U / 2, ?_, by linarith, ?_⟩
-      · apply div_le_div_of_nonneg_left hU.le (by norm_num)
-        have h2 : (1 : ℝ) ≤ 2 ^ n := one_le_pow₀ (by norm_num)
-        have h3 : (1 : ℝ) ≤ B ^ (n + 1) := one_le_pow₀ hB
-        have h4 : (2 : ℝ) ^ (n + 1 + 2) = 8 * 2 ^ n := by ring
-        rw [h4]
-        nlinarith
-      · intro a ha u hu1 hu2 hau
-        by_contra hc
-        push_neg at hc
-        have ha1 : U / (2 * B) < a := by
-          rw [div_lt_iff₀ (by positivity)]
-          nlinarith
-        have := h a ha ha1
-        linarith
+/-- Each exceptional point can obstruct at most one of the spaced candidate windows. -/
+theorem UpperTheory.V.Win.window1 (R : ℕ) (B U : ℝ) (T : Finset ℝ)
+    (hB : 1 ≤ B) (hU : 0 < U) (hT : T.card ≤ R) :
+    ∃ y : ℝ, U / (2 * (2 * B) ^ R) ≤ y ∧ 2 * y ≤ U ∧
+      ∀ a ∈ T, ∀ u : ℝ, y ≤ u → u ≤ 2 * y → a ≤ u → B * a ≤ u := by
+  have hB0 : 0 < B := by linarith
+  let y (i : ℕ) := U / (2 * (2 * B) ^ i)
+  have hy : Antitone y := by
+    intro i j hij
+    exact div_le_div_of_nonneg_left hU.le (by positivity)
+      (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ (by linarith : 1 ≤ 2 * B) hij) (by norm_num))
+  have hstep {i j : ℕ} (hij : i < j) : 2 * y j ≤ y i / B := by
+    calc
+      2 * y j ≤ 2 * y (i + 1) := mul_le_mul_of_nonneg_left (hy hij) (by norm_num)
+      _ = y i / B := by
+        dsimp only [y]
+        rw [pow_succ]
+        field_simp
+  have hgood : ∃ i : Fin (R + 1), ¬ ∃ a ∈ T, y i / B < a ∧ a ≤ 2 * y i := by
+    by_contra hnone
+    have hall (i : Fin (R + 1)) : ∃ a ∈ T, y i / B < a ∧ a ≤ 2 * y i :=
+      Classical.byContradiction fun hi => hnone ⟨i, hi⟩
+    choose a hmem hlo hhi using hall
+    have hinj : Function.Injective (fun i : Fin (R + 1) => (⟨a i, hmem i⟩ : T)) := by
+      intro i j heq
+      have ha : a i = a j := congrArg Subtype.val heq
+      rcases lt_trichotomy i j with hij | hij | hij
+      · exact (not_lt_of_ge ((hhi j).trans (hstep hij)) (ha ▸ hlo i)).elim
+      · exact hij
+      · exact (not_lt_of_ge ((hhi i).trans (hstep hij)) (ha.symm ▸ hlo j)).elim
+    have hc := Fintype.card_le_of_injective _ hinj
+    simp only [Fintype.card_fin, Fintype.card_coe] at hc
+    omega
+  obtain ⟨i, hi⟩ := hgood
+  refine ⟨y i, hy (Nat.le_of_lt_succ i.isLt), ?_, ?_⟩
+  · calc
+      2 * y i ≤ 2 * y 0 := mul_le_mul_of_nonneg_left (hy (Nat.zero_le _)) (by norm_num)
+      _ = U := by simp only [y, pow_zero, mul_one]; ring
+  · intro a ha u hu₁ hu₂ hau
+    by_contra hlu
+    have hya : y i / B < a := (div_lt_iff₀ hB0).2 (by linarith)
+    exact hi ⟨a, ha, hya, hau.trans hu₂⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LayeredIsomorphisms.Window1 =====
@@ -730,7 +720,7 @@ open NumberField Formalism.GaloisCohomology UpperTheory.Top UpperTheory.V UpperT
 
 theorem UpperTheory.V.Win.window :
     ∀ (R : ℕ) (eta Ct X : ℝ) (Exc : Finset ℕ), 0 < eta → eta ≤ Ct → 1 < X → Exc.card ≤ R →
-      ∃ Y : ℝ, InRange (2 ^ (R + 2) * (Ct / eta) ^ R) X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) → Good eta Ct Exc x := by
+      ∃ Y : ℝ, InRange (2 * (2 * (Ct / eta)) ^ R) X Y ∧ ∀ x : ℝ, Y ≤ x → x ≤ Y ^ (2 : ℝ) → Good eta Ct Exc x := by
   intro R eta Ct X Exc heta hle hX hcard
   classical
   have hCt : 0 < Ct := lt_of_lt_of_le heta hle
@@ -794,7 +784,7 @@ theorem UpperTheory.V.Win.thmBab_of :
   have hCt0 : 0 < Ct := lt_of_lt_of_le one_pos hCt
   set CK : ℝ := max CK0 1 with hCKdef
   set R : ℕ := R0 M + ∑ l ∈ B', Rl l (L l) with hRdef
-  set J : ℝ := 2 ^ (R + 2) * (2 * CK * Ct / eps) ^ R with hJdef
+  set J : ℝ := 2 * (2 * (2 * CK * Ct / eps)) ^ R with hJdef
   have hJpos : 0 < J := by
     have : 0 < 2 * CK * Ct / eps := by positivity
     positivity
@@ -855,7 +845,7 @@ theorem UpperTheory.V.Win.thmBab_of :
     linarith
   obtain ⟨Y, hY, hgood⟩ := window R (eps / (2 * CK)) Ct X (ExcA ∪ B'.biUnion g) heta hetaCt
     (by linarith) hcard
-  have hJeq : (2 : ℝ) ^ (R + 2) * (Ct / (eps / (2 * CK))) ^ R = J := by
+  have hJeq : 2 * (2 * (Ct / (eps / (2 * CK)))) ^ R = J := by
     rw [hJdef, show Ct / (eps / (2 * CK)) = 2 * CK * Ct / eps by rw [div_div_eq_mul_div]; ring]
   rw [hJeq] at hY
   refine ⟨Y, hY, fun x hYx hxY => ?_⟩
