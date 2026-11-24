@@ -244,8 +244,12 @@ theorem F_le (hFD : L.FDef) (hS : SizesAt L) (j : ℕ) (hj : j ∈ SizeData₂.l
     linarith
   · exact hg0
 
-theorem fo_le_pol (hFD : L.FDef) (hS : SizesAt L) (hM : Formalism.MainNotions.CornerGLContinuity.MertensBound D) :
-    L.Fo ≤ 256 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 9 * L.sc.b := by
+theorem sum_lifts_le_pol (hS : SizesAt L) (hM : Formalism.MainNotions.CornerGLContinuity.MertensBound D)
+    (y : ℕ → D.what₂.places.Pl → ℝ)
+    (hy : ∀ j ∈ SizeData₂.lifts D, ∀ w, y j w ≤
+      gC L (16 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 7 * L.sc.b) (D.what₂.places.resChar w)) :
+    (∑ j ∈ SizeData₂.lifts D, ∑ w ∈ L.supp, SizeData₂.sz w (y j w)) ≤
+      256 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 9 * L.sc.b := by
   have hx1 := L.sc.one_lt_alt
   have hx0 : 0 < L.sc.x := lt_trans zero_lt_one hx1
   have hb : 0 < L.sc.b := by
@@ -266,12 +270,12 @@ theorem fo_le_pol (hFD : L.FDef) (hS : SizesAt L) (hM : Formalism.MainNotions.Co
   have hQ0 : 0 ≤ Formalism.MainNotions.DIV.Proofs.szPol L := by linarith
   have hC0 : 0 ≤ 16 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 7 * L.sc.b :=
     mul_nonneg (mul_nonneg (by norm_num) (pow_nonneg hQ0 7)) hb.le
-  have hj : ∀ j ∈ SizeData₂.lifts D, ∑ w ∈ L.supp, SizeData₂.sz w (L.F j w) ≤
+  have hj : ∀ j ∈ SizeData₂.lifts D, ∑ w ∈ L.supp, SizeData₂.sz w (y j w) ≤
       4 * (16 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 7 * L.sc.b) * Real.log (L.sc.X'' D.R.n + 1) :=
-    fun j hj => sumSz_le _ hC0 (fun w => L.F j w) (fun w => F_le hFD hS j hj w) hM
-  have hsum : L.Fo ≤ ∑ j ∈ SizeData₂.lifts D,
+    fun j hj => sumSz_le _ hC0 (y j) (hy j hj) hM
+  have hsum :
+      (∑ j ∈ SizeData₂.lifts D, ∑ w ∈ L.supp, SizeData₂.sz w (y j w)) ≤ ∑ j ∈ SizeData₂.lifts D,
       4 * (16 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 7 * L.sc.b) * Real.log (L.sc.X'' D.R.n + 1) := by
-    unfold SizeData₂.Fo
     exact Finset.sum_le_sum hj
   rw [Finset.sum_const, nsmul_eq_mul, Formalism.MainNotions.DIV.HookProducts.Row4.card_lifts_eq] at hsum
   have hlog := Formalism.MainNotions.DIV.HookProducts.Row4.logX_le hS.1 hS.2.2.1
@@ -288,18 +292,27 @@ theorem fo_le_pol (hFD : L.FDef) (hS : SizesAt L) (hM : Formalism.MainNotions.Co
     mul_le_mul_of_nonneg_right hmP (mul_nonneg hC4 (by linarith))
   linarith [hsum, s1, s2]
 
-theorem fo_pow {eps : ℝ} (Fm : FamP eps) :
-    ∃ x0 : ℝ, ∀ x ≥ x0, Fm.x1 < x → ∀ i : Fm.Ix x,
-      (Fm.L x i).Fo ≤ x ^ (9 * (max Fm.Ct 5 + 3) + 1) * (Fm.L x i).sc.b := by
-  refine ⟨256, fun x hx hx1 i => ?_⟩
-  have h := fo_le_pol (Fm.ex x hx1 i).fdef (Fm.sizes x hx1 i) (Formalism.MainNotions.G.Joints.Lit.mertens_bound _)
+theorem fo_le_pol (hFD : L.FDef) (hS : SizesAt L) (hM : Formalism.MainNotions.CornerGLContinuity.MertensBound D) :
+    L.Fo ≤ 256 * Formalism.MainNotions.DIV.Proofs.szPol L ^ 9 * L.sc.b :=
+  sum_lifts_le_pol hS hM L.F (fun j hj w => F_le hFD hS j hj w)
+
+theorem ninth_polynomial_to_power {eps : ℝ} (Fm : FamP eps) {x : ℝ}
+    (hx : 256 ≤ x) (hx1 : Fm.x1 < x) (i : Fm.Ix x) :
+    256 * Formalism.MainNotions.DIV.Proofs.szPol (Fm.L x i) ^ 9 * (Fm.L x i).sc.b ≤
+      x ^ (9 * (max Fm.Ct 5 + 3) + 1) * (Fm.L x i).sc.b := by
   have hX : (Fm.L x i).sc.x = x := Fm.L_x x i hx1
   have hCt : (Fm.L x i).Ct = Fm.Ct := Fm.Ct_eq x i
   have hb := Formalism.MainNotions.DIV.Proofs.bPol_le (Fm.sizes x hx1 i) 256 9 (by rw [hX]; norm_num; linarith)
   rw [hX, hCt] at hb
   have e : ((9 : ℕ) : ℝ) * (max Fm.Ct 5 + 3) + 1 = 9 * (max Fm.Ct 5 + 3) + 1 := by norm_num
-  rw [e] at hb
-  exact h.trans hb
+  simpa only [e] using hb
+
+theorem fo_pow {eps : ℝ} (Fm : FamP eps) :
+    ∃ x0 : ℝ, ∀ x ≥ x0, Fm.x1 < x → ∀ i : Fm.Ix x,
+      (Fm.L x i).Fo ≤ x ^ (9 * (max Fm.Ct 5 + 3) + 1) * (Fm.L x i).sc.b := by
+  refine ⟨256, fun x hx hx1 i => ?_⟩
+  exact (fo_le_pol (Fm.ex x hx1 i).fdef (Fm.sizes x hx1 i)
+    (Formalism.MainNotions.G.Joints.Lit.mertens_bound _)).trans (ninth_polynomial_to_power Fm hx hx1 i)
 
 end Formalism.MainNotions.DIV.HookProducts.HookProductWeightBounds
 

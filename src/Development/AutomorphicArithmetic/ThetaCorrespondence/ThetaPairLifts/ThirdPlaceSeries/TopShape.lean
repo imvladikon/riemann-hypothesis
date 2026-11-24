@@ -809,14 +809,14 @@ theorem bRest_all_alt (𝒜 : FamClass) (Cabs : ℝ)
   have hf := _root_.Formalism.L2.DIV.FunSharpTop.closed_funSharp_thr_alt 𝒜 sel selS selP selDH selC selB hRB hPA hDivG rRows
     Formalism.L2.DIV.SlopeMaxB.EbMu Formalism.MainNotions.DIV.HookProducts.Row4C.EcHH
   have hh : Closed (D3 3 𝒜) fun Fm CH => ∀ _ : D3 3 𝒜 Fm, Formalism.MainNotions.TuSize Fm → Formalism.MainNotions.DGamSize Fm →
-      LocalQuadraticParts.ComplementTwoFamily Fm → DIVinN Fm → LocalQuadraticParts.FrameNumberBoundFamily Fm Fm.Csz CH :=
-    (tie.and ((_root_.Formalism.L2.DIV.LinkGCl.closed_linkG_of_tuSize_dGamSize 𝒜 sel).and hf)).imp fun Fm CH _ h hc hTu hDG c2 hN => by
+      DIVinN Fm → LocalQuadraticParts.FrameNumberBoundFamily Fm Fm.Csz CH :=
+    (tie.and ((_root_.Formalism.L2.DIV.LinkGCl.closed_linkG_of_tuSize_dGamSize 𝒜 sel).and hf)).imp fun Fm CH _ h hc hTu hDG hN => by
       obtain ⟨CF0, hL, he⟩ := h.2.2 hc hTu hDG
       have hE := Formalism.L2.DIV.LvlWire.lvlF_of_ties Fm h.1 hTu
       have hrk := Formalism.L2.DIV.LvlWire.muRank_of_lvl Fm (by norm_num : (0 : ℝ) < 3)
         (Formalism.L2.DIV.LvlWire.proviso_of_working_class Fm hc) hE hTu
       have lMu := Formalism.SlopeId.linkMu_of_full Fm hTu hDG (Formalism.L2.DIV.LvlWire.nuFullF_of_lvl Fm hE) hrk
-      exact Formalism.L2.DIV.LvlWire.hh_of_lvl Fm CH Formalism.L2.DIV.SlopeMaxB.EbMu CF0 hL hE hTu hrk (h.2.1 hc hTu hDG) lMu c2
+      exact Formalism.L2.DIV.LvlWire.hh_of_lvl Fm CH Formalism.L2.DIV.SlopeMaxB.EbMu CF0 hL hE hTu hrk (h.2.1 hc hTu hDG) lMu
         (_root_.Formalism.L2.DIV.SlopeMaxB.eventually_muMax_le_pow_ebMu_mul_of_tuSize (sel Fm (d3_a hc)) hTu) (he hN)
   have br := _root_.Formalism.L2.DIV.RatFullFam.buRat_rrFull_closed_alt 𝒜 sel selS selP selDH selC selB hPA hDivG hDcPtG rRows
   exact (hh.and br).imp fun Fm _ _ h hc hT hD =>

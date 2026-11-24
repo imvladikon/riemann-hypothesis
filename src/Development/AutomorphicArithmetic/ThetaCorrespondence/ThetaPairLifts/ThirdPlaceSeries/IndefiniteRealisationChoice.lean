@@ -191,7 +191,7 @@ theorem RemainingDivisionBounds.toRows_alt {eps : ℝ} {Fm : FamP eps} {Rt : Σ'
     adm2 := ?_
     cut := cut
     c3 := Formalism.MainNotions.DIV.HookProducts.RBCompl3.rbCompl3 Fm
-    hh := r.hh c2
+    hh := r.hh
     c2 := c2
     c5 := c5
     bu := r.bu
