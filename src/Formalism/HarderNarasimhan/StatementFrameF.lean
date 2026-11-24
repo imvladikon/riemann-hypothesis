@@ -105,7 +105,8 @@ def TheoremF : Prop :=
     s - Real.log (Fintype.card I : ℝ) -
         (1 - δ)⁻¹ * (4 * u * Real.log (1 + HH / u) + (η + 4 * Real.sqrt e) * HH) ≤ muDef b' X' cc
 
-def TheoremFSharp : Prop :=
+/-- The frame transfer with a prescribed loss from the source slope distribution. -/
+def FrameTransfer (sourceLoss : ℝ → ℝ → ℝ) : Prop :=
   ∀ (K W κ κ₁ I : Type) [Field K] [NumberField K] [StarRing K] [_root_.NumberField.IsTotallyComplex K]
     [AddCommGroup W] [Module K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W]
     [Fintype κ] [DecidableEq κ] [Fintype κ₁] [DecidableEq κ₁] [Fintype I] [Nonempty I]
@@ -140,6 +141,13 @@ def TheoremFSharp : Prop :=
         (frQ γ (fun i => Matrix.toEuclideanLin (Ball i)))).re ^ 2 /
         (Fintype.card (κ ⊕ κ₁) : ℝ) →
     0 ≤ η →
-    s - (1 - δ)⁻¹ * (4 * u * Real.log (1 + HH / u) + (η + 4 * Real.sqrt e) * HH) ≤ muDef b' X' cc
+    s - (1 - δ)⁻¹ * (sourceLoss u HH + (η + 4 * Real.sqrt e) * HH) ≤ muDef b' X' cc
+
+def TheoremFSharp : Prop :=
+  FrameTransfer fun u HH => 4 * u * Real.log (1 + HH / u)
+
+/-- The same transfer using the integrated source slope distribution. -/
+def TheoremFClipped : Prop :=
+  FrameTransfer fun u HH => 4 * (u * HH / (u + HH))
 
 end Formalism.HN
