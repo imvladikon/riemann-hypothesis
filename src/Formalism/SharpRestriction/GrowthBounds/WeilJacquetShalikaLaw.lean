@@ -242,11 +242,47 @@ def MediumInertPrimeLengthBound (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : 
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
       ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatC L ce j (D.what₂.places.resChar w) - vDG D u w)) + sp * vDG D u w)
 
-def LossAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC) (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
+def ramifiedJetLoss (D : D7) (u : D.what₂.Word) (j : ℕ) : ℝ :=
+  (∑ t : HH D, ctD D u j t) / 2
+
+def discriminantColumnBound (D : D7) (sp : ℝ) (u : D.what₂.Word) (w : D.what₂.places.Pl) : ℝ :=
+  -(∑ j ∈ SizeData₂.lifts D, ramifiedJetLoss D u j) -
+    ((SizeData₂.lifts D).card - sp) * vDG D u w
+
+theorem sum_discriminant_losses (D : D7) (sp : ℝ) (u : D.what₂.Word) (w : D.what₂.places.Pl) :
+    (∑ j ∈ SizeData₂.lifts D, (-ramifiedJetLoss D u j - vDG D u w)) + sp * vDG D u w =
+      discriminantColumnBound D sp u w := by
+  unfold discriminantColumnBound
+  rw [Finset.sum_sub_distrib, Finset.sum_neg_distrib, Finset.sum_const, nsmul_eq_mul]
+  ring
+
+/-- The forced ramification term in the error cancels the forced valuation. -/
+theorem lowS_eq_discriminantColumnBound {K : Consts} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
+    (hF : L.FDef) (u : D.what₂.Word) (w : D.what₂.places.Pl)
+    (hw : D.what₂.places.resChar w ≠ (D.mem u).A.T)
+    (hg : D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ))
+    (hd : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD) :
+    lowS L Xe K ce sp u w = discriminantColumnBound D sp u w := by
+  have hg0 : D.what₂.places.resChar w ≠ D.host.g 0 := fun h => hg (by simp [h])
+  have hg1 : D.what₂.places.resChar w ≠ D.host.g 1 := fun h => hg (by simp [h])
+  unfold lowS
+  rw [← sum_discriminant_losses]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [hF j hj w]
+  unfold Fval FvalP SizeData₂.gTypes
+  rw [ite_eq_right hg, ite_eq_left hd]
+  simp only [ES, Eval, ite_eq_right hw, ite_eq_right hg0, ite_eq_right hg1, ite_eq_left hd]
+  unfold EatD ramifiedJetLoss vDG
+  ring
+
+def LossAtDiscriminant (D : D7) (Dx : DivX D) (T : TwForms D) (sp : ℝ) : Prop :=
+  ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
+    D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) →
     D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w)
+      ColGe T u μ w x (discriminantColumnBound D sp u w)
 
 def ServF {eps : ℝ} (Fm : Formalism.MainNotions.FamP eps) : Prop :=
   ∃ x0 : ℝ, ∀ x ≥ x0, ∀ (hx : Fm.x1 < x) (i : Fm.Ix x),

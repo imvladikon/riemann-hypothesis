@@ -14,11 +14,6 @@ public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBo
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.LossLe
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.SumWcLe
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.SummableTruncatedGeometric
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.OrbEmb
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.ConstantCoeffZeroOfVanishing
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.KillSubst
-public import Formalism.PeriodIntegrals.OrbRestr
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.Lemmas
 public import Formalism.LocalRingCardinality.DataForced
 public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Development.AutomorphicArithmetic.OrbitLabellings.FInertSubEatILeOrbitAverageSubErrors
@@ -68,11 +63,9 @@ import Mathlib.Tactic.ENatToNat
 import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.RingTheory.PiTensorProduct
 import Std.Tactic.BVDecide.Normalize.BitVec
-import Mathlib.Tactic.Linter.HaveILetI
-import Formalism.LocalRingCardinality.DataDIV
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.LogInv, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ConstantCoeffZeroOfBoundTwo, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ProdRenameExpJetSeries, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ApplyAt0EqZeroOfOrder, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.OrbitsAddAtConjugate, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.UnivEqBiUnion, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.ConstantCoeffZeroOfBoundGeneral, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.RestrictedJetEquation, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction, Formalism.PeriodIntegrals.OrbRestrOne, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.RestrictedSingleJetEquation, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.TauPlBijective, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.SizeGe, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC, Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds
+-- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.LogInv, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ConstantCoeffZeroOfBoundTwo, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ProdRenameExpJetSeries, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.ApplyAt0EqZeroOfOrder, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.OrbitsAddAtConjugate, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.UnivEqBiUnion, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.ConstantCoeffZeroOfBoundGeneral, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.TauPlBijective, Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.SizeGe, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC, Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds
 
 -- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.LogInv =====
 -- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.LogInv", "h": "module\n\npublic import Formalism.PeriodIntegrals.OrbJetBase\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.ExpSum\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
@@ -1147,311 +1140,6 @@ end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds =====
 
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.RestrictedJetEquation =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.RestrictedJetEquation", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.OrbEmb\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.ConstantCoeffZeroOfVanishing\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.KillSubst\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open Classical
-
-namespace PI.OrbJet.OrbW
-
-open Formalism.BasicNotions Formalism.MainNotions.G MvPowerSeries Finsupp PI.OrbJet PI.OrbShared
-
-theorem hasSubst_Clog (D : D7) (p : ℕ) [Fact p.Prime] {N0 N1 : ℕ} (ep : ℂ_[p]) :
-    HasSubst (fun v : Pl D × Fin N0 × Fin N1 => C ep * logPl D p v) := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun v => by rw [map_mul, cc_logPl, mul_zero])
-
-theorem hasSubst_log (D : D7) (p : ℕ) [Fact p.Prime] {N0 N1 : ℕ} :
-    HasSubst (logPl D p (β := Fin N0 × Fin N1)) := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun v => cc_logPl D p v)
-
-theorem hasSubst_Cjet (l d : ℕ) [Fact l.Prime] [NeZero d] {N0 N1 : ℕ} (ep : ℂ_[l]) :
-    HasSubst (fun v : ZMod d × Fin N0 × Fin N1 => C ep * jetLogG l d v) := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun v => by rw [map_mul, cc_jetLogG, mul_zero])
-
-theorem hasSubst_jet (l d : ℕ) [Fact l.Prime] [NeZero d] {N0 N1 : ℕ} :
-    HasSubst (jetLogG l d (β := Fin N0 × Fin N1)) := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun v => cc_jetLogG l d v)
-
-theorem restricted_jet_equation (D : D7) (p : ℕ) [Fact p.Prime] {N0 N1 : ℕ} (R : Finset (Pl D)) (hR : IsReps D p R)
-    (ep : ℂ_[p]) (sg : Pl D → ℂ_[p]) (be : Pl D → MvPowerSeries (ZMod (nP D p)) ℂ_[p])
-    (hcc : ∀ r ∈ R, constantCoeff (be r) = 0)
-    (Th U : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-    (hEq : subst (fun v : Pl D × Fin N0 × Fin N1 => C ep * logPl D p v) Th =
-      U * subst (logPl D p (β := Fin N0 × Fin N1)) (OJ.expS ℂ_[p] (beAll D p R sg be)))
-    {r : Pl D} (hr : r ∈ R) :
-    subst (fun v : ZMod (nP D p) × Fin N0 × Fin N1 => C ep * jetLogG p (nP D p) v) (restr D p r Th) =
-      killCompl (orbEmb D p r (Fin N0 × Fin N1)) U *
-        subst (jetLogG p (nP D p) (β := Fin N0 × Fin N1)) (OJ.expS ℂ_[p] (sg r • ∑ a : Fin N0, ∑ b : Fin N1,
-          subst (fun s : ZMod (nP D p) =>
-            (X (s, a, b) : MvPowerSeries (ZMod (nP D p) × Fin N0 × Fin N1) ℂ_[p])) (be r))) := by
-  set e := orbEmb D p r (Fin N0 × Fin N1) with he
-  have hk := congrArg (killCompl e) hEq
-  have hA : killCompl e (subst (fun v : Pl D × Fin N0 × Fin N1 => C ep * logPl D p v) Th) =
-      subst (fun v : ZMod (nP D p) × Fin N0 × Fin N1 => C ep * jetLogG p (nP D p) v) (killCompl e Th) := by
-    refine killCompl_subst_of e _ _ (hasSubst_Clog D p ep) (hasSubst_Cjet p (nP D p) ep) ?_ ?_ Th
-    · intro w
-      rw [map_mul, killCompl_C, he, killCompl_logPl_emb]
-    · intro t ht
-      rw [map_mul, killCompl_logPl_off D p r t ht, mul_zero]
-  have hL : ∀ F : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p],
-      killCompl e (subst (logPl D p (β := Fin N0 × Fin N1)) F) =
-        subst (jetLogG p (nP D p) (β := Fin N0 × Fin N1)) (killCompl e F) := by
-    intro F
-    refine killCompl_subst_of e _ _ (hasSubst_log D p) (hasSubst_jet p (nP D p)) ?_ ?_ F
-    · intro w; rw [he, killCompl_logPl_emb]
-    · intro t ht; exact killCompl_logPl_off D p r t ht
-  have hccAll : constantCoeff (beAll D p (N0 := N0) (N1 := N1) R sg be) = 0 := by
-    unfold beAll
-
-    rw [map_sum]
-    have hsm : ∀ (c : ℂ_[p]) (f : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p]),
-        constantCoeff f = 0 → constantCoeff (c • f) = 0 := by
-      intro c f h
-      rw [← coeff_zero_eq_constantCoeff_apply] at h ⊢
-      simp [h]
-    refine Finset.sum_eq_zero fun r' hr' => hsm _ _ ?_
-
-    rw [map_sum]
-    refine Finset.sum_eq_zero fun a _ => ?_
-
-    rw [map_sum]
-    refine Finset.sum_eq_zero fun b _ => ?_
-    exact constantCoeff_subst_eq_zero (hasSubst_orbX D p r' a b) (fun s => by simp) (hcc r' hr')
-  have hE : killCompl e (OJ.expS ℂ_[p] (beAll D p (N0 := N0) (N1 := N1) R sg be)) =
-      OJ.expS ℂ_[p] (killCompl e (beAll D p (N0 := N0) (N1 := N1) R sg be)) := by
-    unfold OJ.expS PowerSeries.subst
-    exact killCompl_subst e (hasSubst_of_constantCoeff_zero fun _ => hccAll) _
-  rw [map_mul, hA, hL, hE, killCompl_beAll D p R hR sg be hcc hr] at hk
-  rw [restr_eq_killCompl, ← he]
-  exact hk
-
-end PI.OrbJet.OrbW
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.RestrictedJetEquation =====
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction", "h": "module\n\npublic import Formalism.PeriodIntegrals.OrbRestr\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.ConstantCoeffZeroOfVanishing\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.RestrictedJetEquation\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open Classical
-
-namespace PI.OrbJet.OrbW
-
-open Formalism.BasicNotions Formalism.MainNotions.G MvPowerSeries Finsupp PI.OrbJet PI.OrbShared
-
-theorem orbitRestriction : ∀ (D : Formalism.BasicNotions.D7) (E : PI.OrbJet.Ent D), PI.OrbJet.OrbitRestriction E := by
-  intro D E
-  unfold PI.OrbJet.OrbitRestriction
-  intro p _ h u i R hR ep sg be hbe Th hB r hr
-  obtain ⟨U, hU, hEq⟩ := hB
-  obtain ⟨-, -, hb⟩ := hbe
-  haveI : NeZero (nP D p) := ⟨by have := h.two; omega⟩
-
-  have hcc : ∀ r ∈ R, MvPowerSeries.constantCoeff (be r) = 0 := fun r hr =>
-    constant_coeff_zero_of_vanishing_alt p (nP D p) (be r) (hb r hr).2.2.1
-  have key := restricted_jet_equation D p R hR ep sg be hcc Th U hEq hr
-  unfold PI.OrbJet.OrbitThetaExpansion
-  refine ⟨_, ?_, key⟩
-  intro m
-  change (ZMod (nP D p) × Fin (D.R.N i) × Fin (D.R.N (i + 1)) →₀ ℕ) at m
-  change ‖MvPowerSeries.coeff m (killCompl (orbEmb D p r (Fin (D.R.N i) × Fin (D.R.N (i + 1)))) U)‖ ≤ 1
-  rw [MvPowerSeries.coeff_killCompl]
-  exact hU _
-
-end PI.OrbJet.OrbW
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction =====
-
--- ===== clump member: Formalism.PeriodIntegrals.OrbRestrOne =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.OrbRestrOne", "h": "module\n\npublic import Formalism.PeriodIntegrals.OrbJetBase\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.DataDIV\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open scoped BigOperators
-open Classical
-
-namespace PI.OrbJet
-
-open NumberField IsDedekindDomain Formalism.FrobeniusOrbits Formalism.BasicNotions Formalism.BasicNotions.DV Formalism.MainNotions.G
-
-variable {D : D7}
-
-def OrbitRestrictionAtConjugate (E : Ent D) : Prop :=
-  ∀ (p : ℕ) [Fact p.Prime] (h5 : 5 ≤ p), nP D p = 1 → ∀ (u : D.what₂.Word) (i : ℕ),
-    ∀ Th, ThetaExpansionRealPlaces D p Th → ∀ z, (oneLoc E p h5 u i z (restr1 D p z Th)).AdmB
-
-end PI.OrbJet
-
-end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.OrbRestrOne =====
-
--- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.RestrictedSingleJetEquation =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.RestrictedSingleJetEquation", "h": "module\n\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.Lemmas\nimport Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitPowerSeriesCoefficients.KillSubst\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.LocalRingCardinality.DataDIV\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-open scoped BigOperators
-open Classical
-
-namespace PI.OrbJet
-
-open NumberField IsDedekindDomain Formalism.FrobeniusOrbits Formalism.BasicNotions Formalism.BasicNotions.DV Formalism.MainNotions.G
-open MvPowerSeries PI.OrbShared
-
-variable {D : D7}
-
-theorem restricted_single_jet_equation (p : ℕ) [Fact p.Prime] (hn : nP D p = 1) {N0 N1 : ℕ} (z : Pl D)
-    (Th U : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p]) (ep0 : ℂ_[p])
-    (be : Pl D → MvPowerSeries (ZMod 2) ℂ_[p]) (hbe : ∀ z, constantCoeff (be z) = 0)
-    (ep sg : Pl D → ℂ_[p])
-    (hEq : subst (fun v : Pl D × Fin N0 × Fin N1 => C ep0 * logPl D p v) Th =
-        U * subst (logPl D p (β := Fin N0 × Fin N1))
-          (OJ.expS ℂ_[p] (∑ z : Pl D, (sg z / 2) • ∑ a : Fin N0, ∑ b : Fin N1,
-            subst (fun s : ZMod 2 => if s = 0 then
-                (X (z, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-              else C (ep z) * X (z, a, b)) (be z)))) :
-    subst (fun v : ZMod 1 × Fin N0 × Fin N1 => C ep0 * jetLogG p 1 v) (restr1 D p z Th) =
-      killCompl (embOne z N0 N1) U * subst (jetLogG p 1 (β := Fin N0 × Fin N1))
-        (OJ.expS ℂ_[p] ((sg z / 2) • ∑ a : Fin N0, ∑ b : Fin N1,
-          subst (fun s : ZMod 2 => if s = 0 then
-              (X ((0 : ZMod 1), a, b) : MvPowerSeries (ZMod 1 × Fin N0 × Fin N1) ℂ_[p])
-            else C (ep z) * X ((0 : ZMod 1), a, b)) (be z))) := by
-  set e := embOne z N0 N1 with he
-  have hA : HasSubst (fun v : Pl D × Fin N0 × Fin N1 => (C ep0 * logPl D p v : MvPowerSeries _ ℂ_[p])) :=
-    hasSubst_of_constantCoeff_zero (fun v => by simp [constantCoeff_logPl])
-  have hL : HasSubst (logPl D p (β := Fin N0 × Fin N1)) :=
-    hasSubst_of_constantCoeff_zero (fun v => constantCoeff_logPl p v)
-  have hJ : HasSubst (jetLogG p 1 (β := Fin N0 × Fin N1)) :=
-    hasSubst_of_constantCoeff_zero (fun v => constantCoeff_jetLogG p 1 v)
-  have hB : HasSubst (fun v : ZMod 1 × Fin N0 × Fin N1 => (C ep0 * jetLogG p 1 v : MvPowerSeries _ ℂ_[p])) :=
-    hasSubst_of_constantCoeff_zero (fun v => by simp [constantCoeff_jetLogG])
-  have hρ : HasSubst (fun v : Pl D × Fin N0 × Fin N1 => killCompl e (X v : MvPowerSeries _ ℂ_[p])) :=
-    hasSubst_killCompl e HasSubst.X
-  have hσ0 : ∀ (y : Pl D) (a : Fin N0) (b : Fin N1) (s : ZMod 2),
-      constantCoeff (if s = 0 then (X (y, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-        else C (ep y) * X (y, a, b)) = 0 := by
-    intro y a b s; split_ifs <;> simp
-  have hσ : ∀ (y : Pl D) (a : Fin N0) (b : Fin N1), HasSubst (fun s : ZMod 2 =>
-      if s = 0 then (X (y, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-        else C (ep y) * X (y, a, b)) :=
-    fun y a b => hasSubst_of_constantCoeff_zero (hσ0 y a b)
-  set S : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p] := ∑ z : Pl D, (sg z / 2) • ∑ a : Fin N0, ∑ b : Fin N1,
-      subst (fun s : ZMod 2 => if s = 0 then
-          (X (z, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-        else C (ep z) * X (z, a, b)) (be z) with hSdef
-  have hS : constantCoeff S = 0 := by
-
-    rw [hSdef, map_sum]
-    apply Finset.sum_eq_zero
-    intro y _
-
-    rw [← coeff_zero_eq_constantCoeff_apply, map_smul, map_sum]
-    rw [Finset.sum_eq_zero, smul_zero]
-    intro a _
-
-    rw [map_sum]
-    apply Finset.sum_eq_zero
-    intro b _
-    rw [coeff_zero_eq_constantCoeff_apply]
-    exact constantCoeff_subst_eq_zero (hσ y a b) (hσ0 y a b) (hbe y)
-  have hκS : killCompl e S = (sg z / 2) • ∑ a : Fin N0, ∑ b : Fin N1,
-      subst (fun s : ZMod 2 => if s = 0 then
-          (X ((0 : ZMod 1), a, b) : MvPowerSeries (ZMod 1 × Fin N0 × Fin N1) ℂ_[p])
-        else C (ep z) * X ((0 : ZMod 1), a, b)) (be z) := by
-
-    rw [hSdef, map_sum, Finset.sum_eq_single z]
-    · set_option synthInstance.maxHeartbeats 100000 in
-        rw [map_smul, map_sum]
-      congr 1
-      refine Finset.sum_congr rfl (fun a _ => ?_)
-
-      rw [map_sum]
-      refine Finset.sum_congr rfl (fun b _ => ?_)
-      rw [killCompl_subst e (hσ z a b)]
-      congr 1
-      funext s
-      split_ifs
-      · rw [he, killCompl_X_one, if_pos rfl]
-      · rw [map_mul, killCompl_C, he, killCompl_X_one, if_pos rfl]
-    · intro y _ hy
-
-      rw [map_smul, map_sum]
-      rw [Finset.sum_eq_zero, smul_zero]
-      intro a _
-
-      rw [map_sum]
-      apply Finset.sum_eq_zero
-      intro b _
-      rw [killCompl_subst e (hσ y a b)]
-      have h0 : (fun s : ZMod 2 => killCompl e (if s = 0 then
-          (X (y, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])
-            else C (ep y) * X (y, a, b))) = 0 := by
-        funext s
-        have hx : killCompl e (X (y, a, b) : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p]) = 0 := by
-          rw [he, killCompl_X_one, if_neg hy]
-        split_ifs
-        · rw [hx]; rfl
-        · rw [map_mul, hx, mul_zero]; rfl
-      rw [h0, subst_zero_of_constantCoeff_zero (hbe y)]
-    · intro h; exact absurd (Finset.mem_univ z) h
-  have h1 := congrArg (killCompl e) hEq
-  rw [killCompl_subst e hA, map_mul, killCompl_subst e hL] at h1
-  rw [restr1_eq_killCompl, ← he, killCompl_eq_subst e Th, subst_comp_subst_apply hρ hB]
-  have eA : (fun v : Pl D × Fin N0 × Fin N1 => subst (fun v : ZMod 1 × Fin N0 × Fin N1 =>
-      (C ep0 * jetLogG p 1 v : MvPowerSeries _ ℂ_[p])) (killCompl e (X v : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p]))) =
-      fun v => killCompl e (C ep0 * logPl D p v) := by
-    funext v
-    rw [he, subst_killCompl_X_one p z hB, map_mul, killCompl_C, killCompl_logPl p hn]
-    split_ifs <;> simp
-  rw [eA, h1]
-  congr 1
-  have eL : (fun v : Pl D × Fin N0 × Fin N1 => killCompl e (logPl D p v)) =
-      fun v => subst (jetLogG p 1 (β := Fin N0 × Fin N1)) (killCompl e (X v : MvPowerSeries (Pl D × Fin N0 × Fin N1) ℂ_[p])) := by
-    funext v
-    rw [he, subst_killCompl_X_one p z hJ, killCompl_logPl p hn]
-  rw [eL, ← subst_comp_subst_apply hρ hJ, ← killCompl_eq_subst e, killCompl_expS e S hS, hκS]
-
-end PI.OrbJet
-
-end
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.RestrictedSingleJetEquation =====
-
--- ===== clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne =====
--- clump-header: {"m": "Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne", "h": "module\n\npublic import Formalism.PeriodIntegrals.OrbRestrOne\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.RestrictedSingleJetEquation\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitRestrictionDegreeOne.Lemmas\n\n"}
-section -- clump:auto
-@[expose] public section
-
-theorem PI.OrbRestrOne : ∀ (D : Formalism.BasicNotions.D7) (E : PI.OrbJet.Ent D), PI.OrbJet.OrbitRestrictionAtConjugate E := by
-  intro D E p _ h5 hn u i Th hTh z
-  obtain ⟨ep0, hep0, be, hbe, ep, hep, sg, hsg, U, hU, hEq⟩ := hTh
-  have hc : ∀ w, MvPowerSeries.constantCoeff (be w) = 0 := fun w =>
-    PI.OrbJet.constantCoeff_zero_of_jet_bound p 2 (be w) (hbe w).2.2.1
-  have key := PI.OrbJet.restricted_single_jet_equation (D := D) p hn z Th U ep0 be hc ep sg hEq
-  dsimp only [PI.OrbJet.oneLoc, PI.OrbJet.OJ.Loc1.AdmB, PI.OrbJet.OJ.Loc1.B0, PI.OrbJet.OJ.Loc1.Tht]
-  refine ⟨ep0, hep0, be z, ⟨ep z, hep z, sg z, hsg z, _, ?_, key⟩,
-    (hbe z).1, (hbe z).2.1, (hbe z).2.2.1, (hbe z).2.2.2⟩
-  intro m
-  rw [MvPowerSeries.coeff_killCompl]
-  exact hU _
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne =====
-
 -- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.TauPlBijective =====
 -- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitSumCount.TauPlBijective", "h": "module\n\npublic import Formalism.LocalRingCardinality.DataForced\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
 section -- clump:auto
@@ -1591,7 +1279,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC =====
 
 -- ===== clump member: Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds =====
--- clump-header: {"m": "Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds", "h": "module\n\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.PeriodIntegrals.OrbJetBase\npublic import Development.AutomorphicArithmetic.OrbitLabellings.FInertSubEatILeOrbitAverageSubErrors\npublic import Development.AutomorphicArithmetic.OrbitLabellings.KvalGeThetaOfShape\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.EntAtD\npublic import Formalism.PeriodIntegrals.OrbAddOne\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.OrbitsAddAtConjugate\npublic import Formalism.PeriodIntegrals.OrbAddUp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.ConstantCoeffZeroOfBoundGeneral\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds\npublic import Formalism.PeriodIntegrals.OrbRestr\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds", "h": "module\n\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.PeriodIntegrals.OrbJetBase\npublic import Development.AutomorphicArithmetic.OrbitLabellings.FInertSubEatILeOrbitAverageSubErrors\npublic import Development.AutomorphicArithmetic.OrbitLabellings.KvalGeThetaOfShape\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.EntAtD\npublic import Formalism.PeriodIntegrals.OrbAddOne\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.OrbitsAddAtConjugate\npublic import Formalism.PeriodIntegrals.OrbAddUp\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.ConstantCoeffZeroOfBoundGeneral\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds\npublic import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -1609,13 +1297,6 @@ theorem addition_bound_holds (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.Orbi
 theorem orbitsAddAtConjugate_ent (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitsAddAtConjugate E :=
   _root_.PI.OrbJet.AO.orbitsAddAtConjugate D (toEnt E)
 
-theorem restriction_bound_holds (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitRestriction E := by
-  intro p _ h u i R hR ep sg be hbe Th hTh r hr
-  exact _root_.PI.OrbJet.OrbW.orbitRestriction D (toEnt E) p ⟨h.five, h.even, h.two⟩ u i R hR ep sg be hbe Th hTh r hr
-
-theorem orbit_restriction_at_conjugate (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitRestrictionAtConjugate E :=
-  PI.OrbRestrOne D (toEnt E)
-
 theorem entry_divisor_bound_holds (D : D7) (E : OrbitPlaces.Ent D) (Dx : DivX D) (hs : OrbitPlaces.ThetaKernelShapeAtD E Dx) : OrbitPlaces.EntriesAtDiscriminant E Dx := by
   intro u μ w hL hc i hi L L'
   exact _root_.jet_bound_ramified_prime D Dx E.nu E.nu_row E.nu_rows E.Th hs u μ w hL hc i hi L L'
@@ -1629,7 +1310,7 @@ private theorem entry_number_bound_holds (D : D7) (L : SizeData₂ D) (X : Inst 
 theorem orbit_entry_bounds_of_family (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (E : OrbitPlaces.Ent D) (ce : ErrC) (C6 C : ℝ)
     (hF : OrbitPlaces.OrbitValuationBound E X K ce) (hs : OrbitPlaces.ThetaKernelShapeAtD E Dx) (hS : OrbitPlaces.Shape D L X E) (hC : OrbitPlaces.CLarge C6 C K ce) :
     OrbitPlaces.Core D L X K Dx E ce C :=
-  ⟨addition_bound_holds D E, orbitsAddAtConjugate_ent D E, restriction_bound_holds D E, orbit_restriction_at_conjugate D E, hF, entry_divisor_bound_holds D E Dx hs,
+  ⟨addition_bound_holds D E, orbitsAddAtConjugate_ent D E, hF, entry_divisor_bound_holds D E Dx hs,
     PI.SumOrbC D L X K ce E C6 C hS hC, entry_number_bound_holds D L X K E ce C6 C hS hC⟩
 
 theorem orbit_entry_bounds_hold (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (E : OrbitPlaces.Ent D) (ce : ErrC) (C6 C : ℝ)

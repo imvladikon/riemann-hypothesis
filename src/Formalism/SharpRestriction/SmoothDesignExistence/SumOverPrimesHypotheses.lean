@@ -1,6 +1,5 @@
 module
 
-public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Formalism.SharpRestriction.GrowthBounds.WeilJacquetShalikaLaw
 public import Formalism.LocalRingCardinality.HostCls
@@ -11,6 +10,7 @@ public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.NdBNonneg
 public import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PriceLinearCombinationLe
 public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
+public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Formalism.SharpRestriction.ParamsHeightRankConstant
 public import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm
 public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily
@@ -25,6 +25,7 @@ import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -56,7 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Formalism.SharpRestriction.CuspSpanNormBounds.SBridge
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ReduceModChar
@@ -65,33 +65,7 @@ import Aesop.Frontend.Tactic
 import Mathlib.Tactic.Linter.Style
 
 -- This file was produced by scripts/clump.py from the modules listed below.
--- Members: Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab, Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted, Formalism.SharpRestriction.GrowthBounds.JointsTw, Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx, Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses
-
--- ===== clump member: Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab =====
--- clump-header: {"m": "Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab", "h": "module\n\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-noncomputable section
-
-namespace Formalism.MainNotions.J
-
-open Formalism.BasicNotions Formalism.MainNotions.G
-
-variable {D : D7} {L : SizeData₂ D}
-
-theorem four_orbit_conditions_of_proof {X : Inst D L} {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Formalism.MainNotions.OrbitPlaces.Ent D}
-    {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp C : ℝ} (h : Formalism.MainNotions.OrbitPlaces.Conclusion₂ D L X K Dx T E lev Xe ce sp C) :
-    Formalism.MainNotions.WeilJacquetShalikaLaw.OrbitsWithoutOperator D L X K Dx T lev Xe ce sp ∧ Formalism.MainNotions.WeilJacquetShalikaLaw.MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp ∧
-      Formalism.MainNotions.WeilJacquetShalikaLaw.LossAtDiscriminant D L K Dx T lev Xe ce sp ∧ Formalism.MainNotions.WeilJacquetShalikaLaw.IsotypicPartsInternalDirectSum D Dx T sp := by
-  obtain ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h1, h2, h3, h4⟩ := h
-  exact ⟨h1, h2, h3, h4⟩
-
-end Formalism.MainNotions.J
-end -- clump:auto
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab =====
+-- Members: Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound, Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted, Formalism.SharpRestriction.GrowthBounds.JointsTw, Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx, Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses
 
 -- ===== clump member: Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0 =====
 -- clump-header: {"m": "Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0", "h": "module\n\npublic import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Formalism.SharpRestriction.CuspSpanNormBounds.SBridge\n\n"}
@@ -217,7 +191,7 @@ private theorem totS_eq_lowS_of_gain_zero {u : D.what₂.Word} {w : D.what₂.pl
 
 theorem column_valuation_without_operator
     (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hC : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp)
-    (hD : LossAtDiscriminant D L K Dx T lev Xe ce sp) (hElse : DGamDef D → RestElse D Dx T sp)
+    (hD : L.FDef → ErrDefs D L Xe lev K ce → LossAtDiscriminant D Dx T sp) (hElse : DGamDef D → RestElse D Dx T sp)
     (hF : L.FDef) (hE : ErrDefs D L Xe lev K ce) (u : D.what₂.Word) (w : D.what₂.places.Pl)
     (hw : D.what₂.places.resChar w ≠ (D.mem u).A.T)
     (hg : D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ))
@@ -230,9 +204,8 @@ theorem column_valuation_without_operator
   by_cases hram : D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD
   · have hdvd := (D.host.dvd_condN_iff_cls hp).2 (Or.inr (Or.inr hram))
     have hExc : Exc D (D.what₂.places.resChar w) := dvd_mul_of_dvd_left (dvd_mul_of_dvd_left hdvd _) _
-    rw [totS_eq_lowS_of_gain_zero (Or.inl hExc)]
-    simpa only [lowS, ES, Eval, ite_eq_right hw, ite_eq_right hg0, ite_eq_right hg1, ite_eq_left hram, vDG, sub_sub, add_comm]
-      using hD hF hE u w hw hram μ hUs hμ x hx
+    rw [totS_eq_lowS_of_gain_zero (Or.inl hExc), lowS_eq_discriminantColumnBound hF u w hw hg hram]
+    exact hD hF hE u w hw hg hram μ hUs hμ x hx
   by_cases hInRange : (IsResidueClassZero D (D.what₂.places.resChar w) ∨ IsSg D (D.what₂.places.resChar w)) ∧
       (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n
   · have hExc := not_exc_of_inert hp hInRange.1 hg0 hg1
@@ -269,7 +242,7 @@ theorem column_valuation_without_operator
 
 theorem baseChange_preserves_unitary_of (W : TwLoc D Y) (hV : CmpV c Dx T W) (hG : TupleLatticeValuation D L X Y K Dx W lev Xe ce sp)
     (hNo : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp) (hC : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp)
-    (hD : LossAtDiscriminant D L K Dx T lev Xe ce sp) (hElse : DGamDef D → RestElse D Dx T sp) :
+    (hD : L.FDef → ErrDefs D L Xe lev K ce → LossAtDiscriminant D Dx T sp) (hElse : DGamDef D → RestElse D Dx T sp) :
     Conclusion1 D L X Y K c Dx T lev Xe ce sp := by
   intro ht hE u w hw hg' μ hUs hμ x hin
   rcases hin with ⟨hg, hx⟩ | ⟨hVV, hx⟩
@@ -773,7 +746,7 @@ end -- clump:auto
 -- ===== end clump member: Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx =====
 
 -- ===== clump member: Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses =====
--- clump-header: {"m": "Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses", "h": "module\n\npublic import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.SharpRestriction.ParamsHeightRankConstant\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSab\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.GenericFramesLetters\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds\npublic import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.LocalBoundElevenComparison\npublic import Formalism.SharpRestriction.Divisibility.LocalNonemptiness.OrbitAdmissibleOfSplitBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound\npublic import Formalism.SharpRestriction.GrowthBounds.JointsTw\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PrvAndKernelCommutationUpToUnitsOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx\npublic import Formalism.SharpRestriction.GrowthBounds.PlaneCountTheoremWithConstants\nimport Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+-- clump-header: {"m": "Formalism.SharpRestriction.SmoothDesignExistence.SumOverPrimesHypotheses", "h": "module\n\npublic import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem\npublic import Formalism.SharpRestriction.Divisibility.OrbitPlaces\npublic import Formalism.SharpRestriction.ParamsHeightRankConstant\npublic import Formalism.SharpRestriction.AdmissibleParameterJoins.DIVfromGLm\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.SixteenLeMulOfStdOfHypOfHyp0\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.GenericFramesLetters\npublic import Formalism.SharpRestriction.Divisibility.ChainOperators.OrbitEntryBounds\npublic import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.LocalBoundElevenComparison\npublic import Formalism.SharpRestriction.Divisibility.LocalNonemptiness.OrbitAdmissibleOfSplitBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.StatementsOfRemainingBound\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.RemainingPrimesOfAdmitted\npublic import Formalism.SharpRestriction.GrowthBounds.AdmissibleIntegers.FirstTermSizeBound\npublic import Formalism.SharpRestriction.GrowthBounds.JointsTw\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.PrvAndKernelCommutationUpToUnitsOfRests\npublic import Formalism.SharpRestriction.GrowthBounds.MultisetValuation.StmtNumFEx\npublic import Formalism.SharpRestriction.GrowthBounds.PlaneCountTheoremWithConstants\nimport Formalism.SharpRestriction.GrowthBounds.TopChoiceBounds\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
 section -- clump:auto
 @[expose] public section
 
@@ -847,13 +820,6 @@ structure SumOverPrimesHypotheses (𝒞 : FamClass) : Prop where
         OrbitPlaces.ThetaKernelShapeAtD (OrbitPlaces.ofKer (nuRowOK (Fm.D x i)) E ep be sg) (Fm.X x i) ∧
         OrbitPlaces.Shape (Fm.D x i) (Fm.L x i) (Fm.Gx x i) (OrbitPlaces.ofKer (nuRowOK (Fm.D x i)) E ep be sg)
 
-theorem typeG_ne_d {D : D7} {L : SizeData₂ D} (P : ParameterChoice' D L) (k : Fin 2) : D.host.g k ≠ D.host.d := by
-  have hs := P.level_split _ (D.host.g_level k)
-  intro h
-  rw [h] at hs
-  simp only [Host.cls, primeClass] at hs
-  split_ifs at hs
-
 theorem three_le_split {eps : ℝ} (Fm : FamP eps) (h0 : 0 < eps) {x : ℝ} (hx : (3 : ℝ) ^ (5 / Fm.ez) ≤ x) (h1 : Fm.x1 < x)
     (i : Fm.Ix x) : 3 ≤ (Fm.D x i).host.splitBound := by
   have hez : 0 < Fm.ez := by rw [← Fm.L_ez x i]; exact (Fm.L x i).sc.ez_pos
@@ -882,19 +848,20 @@ theorem sum_over_primes_service (𝒞 : FamClass) (h : SumOverPrimesHypotheses �
     (num_re LC (hnum x en i))
     (G.TopChoiceBounds.hLarge_proved _ _ Fm.GK_nonneg hpr1 (Fm.params x h1 i))
   obtain ⟨E, ⟨hUn, hR, hKF, hS0⟩, ep, be, sg, b0, b0c, a', ei, sd, sh⟩ := hc x ec h1 i
-  have gd : OrbitPlaces.TypePrimeNotDiscriminant (Fm.D x i) := fun k => typeG_ne_d (Fm.params x h1 i) k
   have o := DIV.Inh.orbit_admissible_of_split_bound (Fm.D x i) (three_le_split Fm hpos ef h1 i)
   have hW : OrbitPlaces.SB E := fun _ _ _ _ _ _ B hB => (DIV.Lemmas.theta_isometry_facts_hold (Fm.D x i) _ _ _ _ _ B).1 hB
   have hK : OrbitPlaces.KForm (OrbitPlaces.ofKer (nuRowOK (Fm.D x i)) E ep be sg) (Fm.X x i) (Fm.ex x h1 i).tw 1 :=
     OrbitPlaces.kform_of_ker E _ (fun _ _ => rfl) rfl hW hUn hR hKF
       (Or.inr ⟨rfl, hS0⟩)
   have hA : OrbitPlaces.admitted (Fm.D x i) (Fm.L x i) (Fm.Gx x i) Fm.GK (Fm.X x i) (Fm.ex x h1 i).tw
-      (OrbitPlaces.ofKer (nuRowOK (Fm.D x i)) E ep be sg) Fm.cX.err 1 11 1 :=
-    ⟨hK, o, gd, b0, b0c, h01, a', ei, sd, sh, hCL⟩
-  obtain ⟨n, c, d, it⟩ := J.four_orbit_conditions_of_proof (lev := (Fm.ex x h1 i).lev) (Xe := (Fm.ex x h1 i).errX)
-    (OrbitPlaces.lift_bounds_of_essential hA (DIV.Lemmas.OrbitEntryBounds.orbit_entry_bounds_hold _ _ _ _ _ _ _ 11 1 h01 sd sh hCL))
+      (OrbitPlaces.ofKer (nuRowOK (Fm.D x i)) E ep be sg) 1 11 1 :=
+    ⟨hK, o, b0, b0c, h01, a', ei, sh⟩
+  obtain ⟨n, c, d, it⟩ := OrbitPlaces.lift_bounds_of_essential
+    (lev := (Fm.ex x h1 i).lev) (Xe := (Fm.ex x h1 i).errX) hA
+    (DIV.Lemmas.OrbitEntryBounds.orbit_entry_bounds_hold _ _ _ _ _ _ Fm.cX.err 11 1 h01 sd sh hCL)
   have hTuple := first_in_local_models (reW (Fm.Gy x i) LC) hU
-  exact conclusion1_re LC (baseChange_preserves_unitary_of (reW (Fm.Gy x i) LC) hV hTuple n c d (remaining_primes_of_admitted it))
+  exact conclusion1_re LC (baseChange_preserves_unitary_of (reW (Fm.Gy x i) LC) hV hTuple n c
+    (fun _ hE => d hE.dgam) (remaining_primes_of_admitted it))
 
 end Formalism.MainNotions.Pk
 

@@ -236,15 +236,6 @@ def OrbitsAddAtConjugate (E : Ent D) : Prop :=
     ∀ β : Pl D → ℝ, (∀ z, OneGe E p h5 u i z (β z)) →
     ∀ Th, ThetaExpansionRealPlaces D p Th → product_zeroth_first_parts.KvalGe (D.R.N i) (D.R.N (i + 1)) p (E.nu u i) Th (∑ z, β z)
 
-def OrbitRestriction (E : Ent D) : Prop :=
-  ∀ (p : ℕ) [Fact p.Prime] (h : OrbOK D p) (u : D.what₂.Word) (i : ℕ) (R : Finset (Pl D)), IsReps D p R →
-    ∀ (ep : ℂ_[p]) (sg : Pl D → ℂ_[p]) (be : Pl D → MvPowerSeries (ZMod (nP D p)) ℂ_[p]), BeOK D p R ep sg be →
-    ∀ Th, ThetaExpansionAllPlaces D p R ep sg be Th → ∀ r ∈ R, OrbitThetaExpansion (orbLoc E p h u i r (restr D p r Th)) ep (sg r) (be r)
-
-def OrbitRestrictionAtConjugate (E : Ent D) : Prop :=
-  ∀ (p : ℕ) [Fact p.Prime] (h5 : 5 ≤ p), nP D p = 1 → ∀ (u : D.what₂.Word) (i : ℕ),
-    ∀ Th, ThetaExpansionRealPlaces D p Th → ∀ z, (oneLoc E p h5 u i z (restr1 D p z Th)).AdmB
-
 variable {L : SizeData₂ D}
 
 def repsPl (X : Inst D L) (p : ℕ) : Finset (Pl D) :=
@@ -318,8 +309,6 @@ theorem nEven (D : D7) (i : ℕ) : Even (D.R.N i * D.R.N (i + 1)) := by
 def OrbitParityCond (D : D7) : Prop :=
   (∀ p : ℕ, p.Prime → ((IsResidueClassZero D p ∧ HEv D p) ∨ IsSg D p) → OrbOK D p) ∧
     ∀ p : ℕ, p.Prime → IsResidueClassZero D p → 5 ≤ p
-
-def TypePrimeNotDiscriminant (D : D7) : Prop := ∀ i, D.host.g i ≠ D.host.d
 
 def EvenConditionsInert (E : Ent D) (Dx : DivX D) : Prop :=
   ∀ u μ (w : D.what₂.places.Pl), LevelFree Dx u μ w →
@@ -400,7 +389,7 @@ def ScaledGeneratorsInSup (E : Ent D) (L : SizeData₂ D) (K : Consts) (ce : Err
 
 def EntriesAtDiscriminant (E : Ent D) (Dx : DivX D) : Prop :=
   ∀ u μ (w : D.what₂.places.Pl), LevelFree Dx u μ w → D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
-    ∀ i < D.R.m, EntGe E u μ w i (-((∑ t : HH D, ctD D u (i + 1) t) / 2))
+    ∀ i < D.R.m, EntGe E u μ w i (-ramifiedJetLoss D u (i + 1))
 
 def OrbitSumBound (X : Inst D L) (K : Consts) (ce : ErrC) : Prop :=
   ∀ p : ℕ, p.Prime → ((IsResidueClassZero D p ∧ HEv D p) ∨ IsSg D p) → ∀ j ∈ SizeData₂.lifts D,
@@ -430,58 +419,9 @@ def OneLiftAtC (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwFo
       KGe T u μ w i ((L.F (i + 1) w - EatC L ce (i + 1) (D.what₂.places.resChar w) - vDG D u w) +
         (if i = 0 then sp else 0) * vDG D u w)
 
-def OneLiftAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC)
-    (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
-    D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
-    ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ i < D.R.m,
-      KGe T u μ w i ((L.F (i + 1) w - EatD D u (i + 1) - vDG D u w) + (if i = 0 then sp else 0) * vDG D u w)
-
-def NoOperatorOrbitBound (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D)
-    (ce : ErrC) (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
-    ((IsResidueClassZero D (D.what₂.places.resChar w) ∧ hP D (D.what₂.places.resChar w) ≠ 0) ∨ IsSg D (D.what₂.places.resChar w)) →
-    ¬ Exc D (D.what₂.places.resChar w) → (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n →
-    ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, WeilJacquetShalikaLaw.g0S X K (D.what₂.places.resChar w) j) + lowS L Xe K ce sp u w)
-
-def JetConsequence (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC)
-    (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
-    IsResidueClassZero D (D.what₂.places.resChar w) → hP D (D.what₂.places.resChar w) = 0 → ¬ Exc D (D.what₂.places.resChar w) →
-    (D.what₂.places.resChar w : ℝ) ≤ L.sc.X'' D.R.n →
-    ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatC L ce j (D.what₂.places.resChar w) - vDG D u w)) + sp * vDG D u w)
-
-def ValuationAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (T : TwForms D) (lev : LevelData D) (Xe : ErrX D) (ce : ErrC)
-    (sp : ℝ) : Prop :=
-  L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
-    D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
-    ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w)
-
-def LiftIntegrality (D : D7) (Dx : DivX D) (T : TwForms D) (sp : ℝ) : Prop :=
-  DGamDef D → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ D.host.d →
-    D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) →
-    D.what₂.places.resChar w ≠ (D.mem u).A.T → ∀ i < D.R.m,
-    KGe0 D u w i (-((if i = 0 then 1 - sp else 1) * vDG D u w)) ∧
-    ∀ μ, DV.Used D μ → μ ≠ D.what₂.mu0 → D.what₂.places.resChar w ∉ Dx.Qp μ →
-      KGeTw T u μ w i (-((if i = 0 then 1 - sp else 1) * vDG D u w))
-
-def AdmK (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (E : Ent D) (ce : ErrC) (C6 Cd : ℝ) : Prop :=
-  OrbitParityCond D ∧ TypePrimeNotDiscriminant D ∧ EvenConditionsInert E Dx ∧ EvenConditionsAtC E Dx ∧ OrbitLetterBoundsAll C6 Cd ∧ OrbitBoundWithoutOperator E X K ∧ JetIntegralityBis E Dx ∧ ThetaKernelShapeAtD E Dx ∧
-    Shape D L X E ∧ CLarge C6 Cd K ce
-
-def admitted (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (E : Ent D) (ce : ErrC) (sp C6 Cd : ℝ) :
-    Prop :=
-  KForm E Dx T sp ∧ AdmK D L X K Dx E ce C6 Cd
-
-def Conclusion₂ (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (E : Ent D) (lev : LevelData D)
-    (Xe : ErrX D) (ce : ErrC) (sp C : ℝ) : Prop :=
-  ValuationComposition D T ∧ OrbitsAddLowerBound E ∧ OrbitsAddAtConjugate E ∧ OrbitRestriction E ∧ OrbitRestrictionAtConjugate E ∧ OrbitValuationBound E X K ce ∧ EntriesAtInert E Dx X K ce ∧ EntriesAtC E Dx L C ∧
-    EntriesAtDiscriminant E Dx ∧ OrbitSumBound X K ce ∧ ValuationSumBound E L ce C ∧ OneLiftInertBound D L X K Dx T lev Xe ce sp ∧ OneLiftAtC D L K Dx T lev Xe ce sp ∧
-    OneLiftAtDiscriminant D L K Dx T lev Xe ce sp ∧ NoOperatorOrbitBound D L X K Dx T lev Xe ce sp ∧ JetConsequence D L K Dx T lev Xe ce sp ∧
-    ValuationAtDiscriminant D L K Dx T lev Xe ce sp ∧ LiftIntegrality D Dx T sp
+def admitted (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (T : TwForms D) (E : Ent D) (sp C6 Cd : ℝ) : Prop :=
+  KForm E Dx T sp ∧ OrbitParityCond D ∧ EvenConditionsInert E Dx ∧ EvenConditionsAtC E Dx ∧
+    OrbitLetterBoundsAll C6 Cd ∧ OrbitBoundWithoutOperator E X K ∧ JetIntegralityBis E Dx ∧ Shape D L X E
 
 theorem val_nat_nonneg (w : D.what₂.places.Pl) (n : ℕ) : (0 : WithTop ℤ) ≤ D.what₂.places.val w (n : D.what₂.LL) := by
   induction n with
@@ -784,7 +724,7 @@ theorem sum_ite_one (D : D7) (c : ℝ) : ∑ j ∈ SizeData₂.lifts D, (if j = 
   rw [Finset.sum_ite_eq' (SizeData₂.lifts D) 1 (fun _ => c)]; simp [one_mem_lifts D]
 
 theorem noOp_of {X : Inst D L} {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
-    (hc : ValuationComposition D T) (hl : OneLiftInertBound D L X K Dx T lev Xe ce sp) : NoOperatorOrbitBound D L X K Dx T lev Xe ce sp := by
+    (hc : ValuationComposition D T) (hl : OneLiftInertBound D L X K Dx T lev Xe ce sp) : OrbitsWithoutOperator D L X K Dx T lev Xe ce sp := by
   intro hF hE u w hT hI hX hX2 μ hUs hQ x hx
   have h := hc u μ w (fun j => WeilJacquetShalikaLaw.g0S X K (D.what₂.places.resChar w) j + (L.F j w - ES L Xe K ce u j w) +
         (if j = 1 then sp else 0) * vDG D u w) (fun i hi => by
@@ -799,16 +739,18 @@ theorem noOp_of {X : Inst D L} {K : Consts} {Dx : DivX D} {T : TwForms D} {lev :
   exact h
 
 theorem int_of {E : Ent D} {Dx : DivX D} {T : TwForms D} {sp : ℝ} (hk : KForm E Dx T sp) (hi : JetIntegralityBis E Dx) :
-    LiftIntegrality D Dx T sp := by
+    IsotypicPartsInternalDirectSum D Dx T sp := by
   intro hG u w hd hg hT i him
   refine ⟨?_, ?_⟩
   · have hL : LevelFree Dx u D.what₂.mu0 w := ⟨hT, hg, by rw [Dx.degreeZero_partial_set_empty]; simp⟩
     have := (hk hG u D.what₂.mu0 w (Or.inl rfl) hL i him 0 (hi u D.what₂.mu0 w hL hd i him (nEven D i))).1 rfl
-    simpa using this
+    change KGe0 D u w i _
+    simpa only [zero_sub] using this
   · intro μ hUs hμ hQ
     have hL : LevelFree Dx u μ w := ⟨hT, hg, hQ⟩
     have := (hk hG u μ w hUs hL i him 0 (hi u μ w hL hd i him (nEven D i))).2 hμ
-    simpa using this
+    change KGeTw T u μ w i _
+    simpa only [zero_sub] using this
 
 theorem VGe.mono {w : D.what₂.places.Pl} {V : Type} [AddCommGroup V] [Module D.what₂.LL V] [Module (𝓞 D.what₂.LL) V]
     {Λ : Submodule (𝓞 D.what₂.LL) V} {y : V} {s s' : ℝ} (h : VGe D w Λ y s) (hs : s' ≤ s) : VGe D w Λ y s' := by
@@ -901,34 +843,12 @@ theorem liftC_of {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Ent D} {lev : L
   · simp only [if_pos h0]; linarith
   · simp only [if_neg h0]; linarith
 
-theorem liftD_of {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Ent D} {lev : LevelData D} {Xe : ErrX D}
-    {ce : ErrC} {sp : ℝ} (hk : KForm E Dx T sp) (hgd : TypePrimeNotDiscriminant D) (he : EntriesAtDiscriminant E Dx) :
-    OneLiftAtDiscriminant D L K Dx T lev Xe ce sp := by
-  intro hF hE u w hT hd μ hUs hQ i hi
-  have hpd := cls_ramD hd
-  have hg : D.what₂.places.resChar w ∉ ({D.host.g 0, D.host.g 1} : Finset ℕ) := by
-    rw [Finset.mem_insert, Finset.mem_singleton]
-    rintro (h | h)
-    · exact hgd 0 (h.symm.trans hpd)
-    · exact hgd 1 (h.symm.trans hpd)
-  have hL : LevelFree Dx u μ w := ⟨hT, hg, hQ⟩
-  refine (hk hE.dgam u μ w hUs hL i hi _ (he u μ w hL hd i hi)).mono ?_
-  have eF : L.F (i + 1) w = FRamD D (i + 1) := by
-    rw [hF (i + 1) (succ_mem_lifts hi) w]
-    unfold Fval FvalP SizeData₂.gTypes
-    rw [if_neg hg, if_pos hd]
-  rw [eF]
-  unfold EatD
-  by_cases h0 : i = 0
-  · simp only [if_pos h0]; linarith
-  · simp only [if_neg h0]; linarith
-
 theorem sum_shape (D : D7) (f : ℕ → ℝ) (c : ℝ) :
     ∑ j ∈ SizeData₂.lifts D, (f j + (if j = 1 then c else 0)) = (∑ j ∈ SizeData₂.lifts D, f j) + c := by
   rw [Finset.sum_add_distrib, sum_ite_one]
 
 theorem c_of {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
-    (hc : ValuationComposition D T) (hl : OneLiftAtC D L K Dx T lev Xe ce sp) : JetConsequence D L K Dx T lev Xe ce sp := by
+    (hc : ValuationComposition D T) (hl : OneLiftAtC D L K Dx T lev Xe ce sp) : MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp := by
   intro hF hE u w hT hc0 hh hX hX2 μ hUs hQ x hx
   have h := hc u μ w (fun j => (L.F j w - EatC L ce j (D.what₂.places.resChar w) - vDG D u w) +
         (if j = 1 then sp * vDG D u w else 0)) (fun i hi => by
@@ -939,16 +859,19 @@ theorem c_of {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe 
   rw [sum_shape] at h
   exact h
 
-theorem atD_of {K : Consts} {Dx : DivX D} {T : TwForms D} {lev : LevelData D} {Xe : ErrX D} {ce : ErrC} {sp : ℝ}
-    (hc : ValuationComposition D T) (hl : OneLiftAtDiscriminant D L K Dx T lev Xe ce sp) : ValuationAtDiscriminant D L K Dx T lev Xe ce sp := by
-  intro hF hE u w hT hd μ hUs hQ x hx
-  have h := hc u μ w (fun j => (L.F j w - EatD D u j - vDG D u w) +
-        (if j = 1 then sp * vDG D u w else 0)) (fun i hi => by
-          have := hl hF hE u w hT hd μ hUs hQ i hi
-          by_cases h0 : i = 0
-          · simpa [h0] using this
-          · simpa [h0] using this) x hx.1
-  rw [sum_shape] at h
+theorem atD_of {Dx : DivX D} {T : TwForms D} {E : Ent D} {sp : ℝ}
+    (hc : ValuationComposition D T) (hk : KForm E Dx T sp) (he : EntriesAtDiscriminant E Dx) :
+    DGamDef D → LossAtDiscriminant D Dx T sp := by
+  intro hG u w hT hg hd μ hUs hQ x hx
+  have hL : LevelFree Dx u μ w := ⟨hT, hg, hQ⟩
+  have h := hc u μ w (fun j => -ramifiedJetLoss D u j - vDG D u w +
+      (if j = 1 then sp * vDG D u w else 0)) (fun i hi => by
+    refine (hk hG u μ w hUs hL i hi _ (he u μ w hL hd i hi)).mono ?_
+    by_cases h0 : i = 0
+    · simp [h0] <;> linarith
+    · have h1 : i + 1 ≠ 1 := by omega
+      simp [h0, h1]) x hx.1
+  rw [sum_shape, sum_discriminant_losses] at h
   exact h
 
 theorem entI_of {X : Inst D L} {K : Consts} {Dx : DivX D} {E : Ent D} {ce : ErrC}
@@ -1185,26 +1108,20 @@ theorem sumI (X : Inst D L) (K : Consts) (ce : ErrC) : OrbitSumBound X K ce := b
   linarith
 
 def Core (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (E : Ent D) (ce : ErrC) (C : ℝ) : Prop :=
-  OrbitsAddLowerBound E ∧ OrbitsAddAtConjugate E ∧ OrbitRestriction E ∧ OrbitRestrictionAtConjugate E ∧ OrbitValuationBound E X K ce ∧ EntriesAtDiscriminant E Dx ∧ ValuationSumBound E L ce C ∧ ScaledGeneratorsInSup E L K ce
-
-theorem lift_bounds_of_kernelForm {X : Inst D L} {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Ent D} {lev : LevelData D} {Xe : ErrX D}
-    {ce : ErrC} {sp C6 C : ℝ} (hk : KForm E Dx T sp) (hA : AdmK D L X K Dx E ce C6 C) (hC : Core D L X K Dx E ce C) :
-    Conclusion₂ D L X K Dx T E lev Xe ce sp C := by
-  obtain ⟨ho, hgd, hb, hbc, hall, ha', hint, _, hS, _⟩ := hA
-  obtain ⟨c2, c3, c4, c5, c6, c7, c9, c10⟩ := hC
-  have c1 := compose D T
-  have c8 := sumI X K ce
-  have eI := entI_of (isReps_repsPl X) ho hb c2 c6 ha'
-  have eC := entC_of ho hbc c3 hall hS
-  have lI : OneLiftInertBound D L X K Dx T lev Xe ce sp := liftI_of hk eI c8 ho hbc c10
-  have lC : OneLiftAtC D L K Dx T lev Xe ce sp := liftC_of hk ho eC c9
-  have lD : OneLiftAtDiscriminant D L K Dx T lev Xe ce sp := liftD_of hk hgd c7
-  exact ⟨c1, c2, c3, c4, c5, c6, eI, eC, c7, c8, c9, lI, lC, lD, noOp_of c1 lI, c_of c1 lC, atD_of c1 lD, int_of hk hint⟩
+  OrbitsAddLowerBound E ∧ OrbitsAddAtConjugate E ∧ OrbitValuationBound E X K ce ∧
+    EntriesAtDiscriminant E Dx ∧ ValuationSumBound E L ce C ∧ ScaledGeneratorsInSup E L K ce
 
 theorem lift_bounds_of_essential {X : Inst D L} {K : Consts} {Dx : DivX D} {T : TwForms D} {E : Ent D} {lev : LevelData D}
-    {Xe : ErrX D} {ce : ErrC} {sp C6 C : ℝ} (hA : admitted D L X K Dx T E ce sp C6 C) (hC : Core D L X K Dx E ce C) :
-    Conclusion₂ D L X K Dx T E lev Xe ce sp C :=
-  lift_bounds_of_kernelForm hA.1 hA.2 hC
+    {Xe : ErrX D} {ce : ErrC} {sp C6 C : ℝ} (hA : admitted D L X K Dx T E sp C6 C) (hC : Core D L X K Dx E ce C) :
+    OrbitsWithoutOperator D L X K Dx T lev Xe ce sp ∧ MediumInertPrimeLengthBound D L K Dx T lev Xe ce sp ∧
+      (DGamDef D → LossAtDiscriminant D Dx T sp) ∧ IsotypicPartsInternalDirectSum D Dx T sp := by
+  obtain ⟨hk, ho, hb, hbc, hall, ha, hint, hS⟩ := hA
+  obtain ⟨hAdd, hAddC, hVal, hD, hSum, hScale⟩ := hC
+  have hCompose := compose D T
+  have hInert := entI_of (isReps_repsPl X) ho hb hAdd hVal ha
+  have hConjugate := entC_of ho hbc hAddC hall hS
+  exact ⟨noOp_of hCompose (liftI_of hk hInert (sumI X K ce) ho hbc hScale),
+    c_of hCompose (liftC_of hk ho hConjugate hSum), atD_of hCompose hk hD, int_of hk hint⟩
 
 section Ker
 
