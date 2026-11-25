@@ -1342,6 +1342,12 @@ theorem linkGLOBAL7_items (Fm : FamP eps) (Cabs CH C0 : ℝ) (hCabs : 0 ≤ Cabs
   exact linkCore Fm Cabs CH 0 C5' c6 hCabs hCH.le le_rfl hc6 hCount hSM hSN hLat (nodesF Fm) hFr
     (lossF_of_7 Fm (Formalism.L2.GlobalTheoryTheory.Loss7.stLoss7 eps Fm cTT cBad lG) cW) (charF Fm) (size_windows_of_thick_density Fm cT2) cTT cQD cTh lI lD
 
+theorem Wire.family_theorems_two_and_five {eps : ℝ} (Fm : FamP eps) (hW : FamU Fm fun D u => Nonempty (product_first_zeroth_parts.FreeT D u))
+    (hμ : FamU Fm product_first_zeroth_parts.SlopeLine) (hI : FamU Fm LocalLatticeBases.HeckeIntegralLevelZero) (hR : FamU Fm LocalLatticeBases.HeckeRamifiedLevelZero) (hB : FamU Fm LocalLatticeBases.SecondBranchInclusionLength) :
+    FamU Fm product_first_zeroth_parts.family_property_and ∧ FamU Fm LocalLatticeBases.CongruenceLatticeLengthBound :=
+  ⟨(hW.and hμ).mono fun _ _ hS h => by obtain ⟨⟨W⟩, hm⟩ := h; exact product_first_zeroth_parts.division_side_conditions_at_sizeData hS W hm,
+   (hB.and (hI.and hR)).mono fun _ _ hS h => LocalLatticeBases.congruence_no_kernel_minimal hS h.1 h.2.1 h.2.2⟩
+
 theorem linkGLOBAL7_min (Fm : FamP eps) (Cabs CH C0 C5 : ℝ) (hCabs : 0 ≤ Cabs) (hCH : 0 < CH) (hC0 : 3 ≤ C0)
 
     (h2b : flipTwoThree.fam0 Fm StandardLattice.MassRatio₂) (h2v : flipTwoThree.fam0 Fm StandardLattice.BaseVolumeEqualsMass) (h3 : flipTwoThree.fam0 Fm StandardLattice.SigmaDegreeTwoSidedBoundOfGap)
@@ -1352,11 +1358,11 @@ theorem linkGLOBAL7_min (Fm : FamP eps) (Cabs CH C0 C5 : ℝ) (hCabs : 0 ≤ Cab
     (hW : FamU Fm fun D u => Nonempty (product_first_zeroth_parts.FreeT D u)) (hμ : FamU Fm product_first_zeroth_parts.SlopeLine)
 
     (hI : FamU Fm LocalLatticeBases.HeckeIntegralLevelZero) (hR : FamU Fm LocalLatticeBases.HeckeRamifiedLevelZero) (hB : FamU Fm LocalLatticeBases.SecondBranchInclusionLength) :
-    TuSize Fm → LinkGLOBAL7 Fm Cabs CH C0 Cabs 0 :=
-  linkGLOBAL7_items Fm Cabs CH C0 hCabs hCH hC0 (family_part_five_of_explicit_constants Fm (StandardLattice.division_level_prime_family Fm h2b h2v h3))
-    (flipTwoThree.familySlopeLower_of_open Fm hZa) (flipTwoThree.familySlopeMax_of_open Fm C5 hZb) tCV
-    ((hW.and hμ).mono fun _ _ hS h => by obtain ⟨⟨W⟩, hm⟩ := h; exact product_first_zeroth_parts.division_side_conditions_at_sizeData hS W hm)
-    ((hB.and (hI.and hR)).mono fun _ _ hS h => LocalLatticeBases.congruence_no_kernel_minimal hS h.1 h.2.1 h.2.2)
+    TuSize Fm → LinkGLOBAL7 Fm Cabs CH C0 Cabs 0 := by
+  obtain ⟨hT2, hT5⟩ := Wire.family_theorems_two_and_five Fm hW hμ hI hR hB
+  exact linkGLOBAL7_items Fm Cabs CH C0 hCabs hCH hC0
+    (family_part_five_of_explicit_constants Fm (StandardLattice.division_level_prime_family Fm h2b h2v h3))
+    (flipTwoThree.familySlopeLower_of_open Fm hZa) (flipTwoThree.familySlopeMax_of_open Fm C5 hZb) tCV hT2 hT5
 
 theorem muRank_items (Fm : FamP eps) (C0 : ℝ) (hC0 : 0 < C0) (hT2 : FamU Fm product_first_zeroth_parts.family_property_and) (hT5 : FamU Fm LocalLatticeBases.CongruenceLatticeLengthBound) :
     TuSize Fm → ChosenProviso Fm C0 → NuFullF Fm ∧ J.MuRank Fm := by
