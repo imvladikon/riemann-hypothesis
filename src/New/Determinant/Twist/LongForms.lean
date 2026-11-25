@@ -205,16 +205,14 @@ lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (h
 
 /-! ### The lower bound -/
 
-/-- **Theorem C: integral forms are long.** Let `y_1, …, y_n` be independent target forms with
-`n ≥ (1 - 4 / b²) d`. Suppose that `y` has index at most `δ`: there are `δ_l ≥ 0` with
-`∑ δ_l log l ≤ δ` such that for each `ι` an `ι`-integral matrix, with determinant of valuation at
-most `δ_l`, takes `y` to forms integral at `ι`. Suppose that `y` has covolume at most `c`: the Gram
-determinant of every conjugate of the untwisted lift `D.Θ 1 y` is at most `exp c` in absolute value.
-Then `c + 2 δ ≥ d (D.mainAmount - 3 f a log⁴ b)`. -/
-theorem integral_forms_long {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
-    (hy : LinearIndependent ℂ y) (hn : (1 - 4 / D.b ^ 2) * D.targetDim ≤ n)
+/-- The covolume bound with the cost of each of the `d - n` auxiliary forms made explicit.
+Here `d = D.targetDim`, and every independent family with index at most `δ` and covolume at most
+`c` can be completed using forms of cost at most `2 x₁² b² + b` each. -/
+theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y)
     (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
-    D.targetDim * (D.mainAmount - 3 * (D.f * D.a * D.logB ^ 4)) ≤ c + 2 * δ := by
+    D.targetDim * (D.mainAmount - D.f * D.a * D.logB ^ 4 - D.b) ≤
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
   -- Complete `y` to a basis by auxiliary forms `z` and take a twist for each prime.
   obtain ⟨θ, hθ, h_single⟩ := D.exists_hasSmallRatios_heightLe_liftDeterminant_div
   obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_span⟩ := D.exists_span_isAuxiliaryForm_eq_top
@@ -240,8 +238,26 @@ theorem integral_forms_long {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
       D.targetDim * (D.b + D.f * D.a * D.logB ^ 4 - D.mainAmount) :=
     TwistedLattice.covolume_add_index_nonneg injective_lift_targetLattice h_indep h_card hθ.coprime
       hc hδ hγ_ne hz_int hz_short h_scalar h_volume
-  have h_completion : n' * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) ≤ D.targetDim * D.b :=
-    mul_completion_cost_le hn h_card
+  have h_dim : (D.targetDim : ℝ) = n + n' := mod_cast h_card
+  have h_missing : (n' : ℝ) = D.targetDim - n := by linarith
+  rw [h_missing] at h_nonneg
+  linarith
+
+/-- **Theorem C: integral forms are long.** Let `y_1, …, y_n` be independent target forms with
+`n ≥ (1 - 4 / b²) d`. Suppose that `y` has index at most `δ`: there are `δ_l ≥ 0` with
+`∑ δ_l log l ≤ δ` such that for each `ι` an `ι`-integral matrix, with determinant of valuation at
+most `δ_l`, takes `y` to forms integral at `ι`. Suppose that `y` has covolume at most `c`: the Gram
+determinant of every conjugate of the untwisted lift `D.Θ 1 y` is at most `exp c` in absolute value.
+Then `c + 2 δ ≥ d (D.mainAmount - 3 f a log⁴ b)`. -/
+theorem integral_forms_long {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y) (hn : (1 - 4 / D.b ^ 2) * D.targetDim ≤ n)
+    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
+    D.targetDim * (D.mainAmount - 3 * (D.f * D.a * D.logB ^ 4)) ≤ c + 2 * δ := by
+  have h_long := integral_forms_long_with_completion_cost hy hδ hc
+  have h_rank : n ≤ D.targetDim := by simpa using hy.fintype_card_le_finrank
+  have h_card : D.targetDim = n + (D.targetDim - n) := by omega
+  have h_completion := mul_completion_cost_le hn h_card
+  rw [Nat.cast_sub h_rank] at h_completion
   -- The two terms `d b` are absorbed in the error.
   have h_b_le_error : D.targetDim * D.b ≤ D.targetDim * (D.f * D.a * D.logB ^ 4) :=
     mul_le_mul_of_nonneg_left D.le_of_hasLogBound D.targetDim.cast_nonneg
