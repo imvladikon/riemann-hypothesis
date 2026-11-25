@@ -462,67 +462,39 @@ lemma T2 {x Y m nT aE b k : ℝ} (hx0 : 0 < x) (hY1 : 1 ≤ Y) (hnT0 : 0 ≤ nT)
   have h3 : 2 * (nT * m * b) ≤ 2 * Y * (nT * m * b) := by nlinarith
   linarith
 
-lemma T3 {x ε Y m n nT b : ℝ} (hx0 : 0 < x) (hm0 : 0 ≤ m) (hb : 0 ≤ b)
-    (hY : Y = x ^ ((1 : ℝ) / 2 + 13 * ε / 8)) (hm2 : m ≤ x ^ ((1 : ℝ) / 2 + ε / 2))
-    (hnT : x ^ (-(ε / 8)) * n / 2 ≤ nT) (hn : 0 ≤ n) :
-    m * ((2 * n) * m * b * x ^ ε) ≤ 4 * Y * (nT * m * b) := by
-  have pe := Real.rpow_pos_of_pos hx0 ε
-  have p8 := Real.rpow_pos_of_pos hx0 (ε / 8)
-  have hY' : x ^ ((1 : ℝ) / 2 + ε / 2) * x ^ ε * x ^ (ε / 8) = Y := by
-    rw [← Real.rpow_add hx0, ← Real.rpow_add hx0, hY]; ring_nf
-  have hmY : m * x ^ ε * x ^ (ε / 8) ≤ Y := by
-    rw [← hY']; gcongr
-  have hnT' := nT_bound hx0 hnT
-  have key : 2 * n * m * x ^ ε ≤ 4 * Y * nT := by
-    have hme : 0 ≤ m * x ^ ε := by positivity
-    have hnT0 : 0 ≤ nT := by nlinarith
-    calc 2 * n * m * x ^ ε = 2 * n * (m * x ^ ε) := by ring
-      _ ≤ 2 * (2 * nT * x ^ (ε / 8)) * (m * x ^ ε) := by gcongr
-      _ = 4 * nT * (m * x ^ ε * x ^ (ε / 8)) := by ring
-      _ ≤ 4 * nT * Y := by gcongr
-      _ = 4 * Y * nT := by ring
-  have hmb : 0 ≤ m * b := by positivity
-  calc m * ((2 * n) * m * b * x ^ ε) = (2 * n * m * x ^ ε) * (m * b) := by ring
-    _ ≤ (4 * Y * nT) * (m * b) := mul_le_mul_of_nonneg_right key hmb
-    _ = 4 * Y * (nT * m * b) := by ring
-
-lemma T4 {x ε Y m n nT nT2 b k : ℝ} (hx0 : 0 < x) (hx1 : 1 ≤ x) (hm0 : 0 ≤ m) (hb : 0 ≤ b) (hε : 0 < ε)
-    (hY : Y = x ^ ((1 : ℝ) / 2 + 13 * ε / 8)) (hnT : x ^ (-(ε / 8)) * n / 2 ≤ nT) (hn : 0 < n)
-    (hnT2 : nT2 ≤ n) (hk0 : 0 ≤ k) (hk2 : k ≤ n ^ 2 * x ^ ((1 : ℝ) / 2 - ε)) :
-    m * (nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε)))) ≤ 2 * Y * (nT * m * b) := by
-  have pe := Real.rpow_pos_of_pos hx0 ε
-  have pne := Real.rpow_pos_of_pos hx0 (-ε)
-  have p8 := Real.rpow_pos_of_pos hx0 (ε / 8)
-  have hneg : x ^ (-ε) * x ^ ε = 1 := by rw [← Real.rpow_add hx0]; simp
-  have he : m * (nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))))
-      = (m * b) * (nT2 * k * (x ^ ε * x ^ ε) / n ^ 2) := by
-    have h2 : x ^ ε = 1 / x ^ (-ε) := by rw [eq_div_iff pne.ne', mul_comm, hneg]
-    rw [h2]; field_simp
-  rw [he]
-  have hA : nT2 * k * (x ^ ε * x ^ ε) / n ^ 2 ≤ n * x ^ ((1 : ℝ) / 2 + ε) := by
-    rw [div_le_iff₀ (by positivity)]
-    have hxe : 0 ≤ x ^ ε * x ^ ε := by positivity
-    have e2 : n * x ^ ((1 : ℝ) / 2 + ε) * n ^ 2 = n * (n ^ 2 * x ^ ((1 : ℝ) / 2 - ε)) * (x ^ ε * x ^ ε) := by
-      rw [show (1 : ℝ) / 2 + ε = ((1 : ℝ) / 2 - ε) + ε + ε by ring, Real.rpow_add hx0, Real.rpow_add hx0]; ring
-    rw [e2]
-    have := mul_le_mul hnT2 hk2 hk0 hn.le
-    exact mul_le_mul_of_nonneg_right this hxe
-  have hnT' := nT_bound hx0 hnT
-  have hXe : x ^ ((1 : ℝ) / 2 + ε) * x ^ (ε / 8) ≤ Y := by
-    rw [← Real.rpow_add hx0, hY]; exact Real.rpow_le_rpow_of_exponent_le hx1 (by linarith)
-  have hB : n * x ^ ((1 : ℝ) / 2 + ε) ≤ 2 * Y * nT := by
-    have hp := Real.rpow_pos_of_pos hx0 ((1 : ℝ) / 2 + ε)
-    have hnT0 : 0 ≤ nT := by nlinarith
-    calc n * x ^ ((1 : ℝ) / 2 + ε) ≤ (2 * nT * x ^ (ε / 8)) * x ^ ((1 : ℝ) / 2 + ε) :=
-          mul_le_mul_of_nonneg_right hnT' hp.le
-      _ = 2 * nT * (x ^ ((1 : ℝ) / 2 + ε) * x ^ (ε / 8)) := by ring
-      _ ≤ 2 * nT * Y := by gcongr
-      _ = 2 * Y * nT := by ring
-  have hmb : 0 ≤ m * b := by positivity
-  calc (m * b) * (nT2 * k * (x ^ ε * x ^ ε) / n ^ 2) ≤ (m * b) * (n * x ^ ((1 : ℝ) / 2 + ε)) :=
-        mul_le_mul_of_nonneg_left hA hmb
-    _ ≤ (m * b) * (2 * Y * nT) := mul_le_mul_of_nonneg_left hB hmb
-    _ = 2 * Y * (nT * m * b) := by ring
+/-- A common upper length bounds the main and complement divisibility terms. -/
+lemma divisibility_term_le {x ε m n nT nT2 b k : ℝ} (hx0 : 0 < x) (hx1 : 1 ≤ x)
+    (hm0 : 0 ≤ m) (hb : 0 ≤ b) (hε : 0 ≤ ε) (hn : 0 < n)
+    (hm : m ≤ x ^ ((1 : ℝ) / 2 + ε / 2)) (hnT : x ^ (-(ε / 8)) * n / 2 ≤ nT)
+    (hnT2 : nT2 ≤ n) (hk0 : 0 ≤ k) (hk : k ≤ n ^ 2 * x ^ ((1 : ℝ) / 2 - ε)) :
+    m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε)))) ≤
+      6 * x ^ ((1 : ℝ) / 2 + 13 * ε / 8) * (nT * m * b) := by
+  let M := x ^ ((1 : ℝ) / 2 + ε / 2)
+  have hRank : k ≤ n ^ 2 * (M * x ^ (-ε)) := by
+    refine hk.trans (mul_le_mul_of_nonneg_left ?_ (sq_nonneg n))
+    dsimp [M]
+    rw [← Real.rpow_add hx0]
+    exact Real.rpow_le_rpow_of_exponent_le hx1 (by linarith only [hε])
+  have hNc : nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))) ≤ n * M * b * x ^ ε := by
+    apply (div_le_iff₀ (by positivity)).2
+    calc
+      _ ≤ n * (n ^ 2 * (M * x ^ (-ε))) * b * x ^ ε :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (mul_le_mul hnT2 hRank hk0 hn.le) hb)
+          (by positivity)
+      _ = _ := by ring
+  have hB : (2 * n) * m * b * x ^ ε ≤ (2 * n) * M * b * x ^ ε := by gcongr
+  have hSum : (2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))) ≤
+      3 * (n * M * b * x ^ ε) := by linarith only [hB, hNc]
+  have hTop := nT_bound hx0 hnT
+  have hY : x ^ (ε / 8) * M * x ^ ε = x ^ ((1 : ℝ) / 2 + 13 * ε / 8) := by
+    dsimp [M]
+    rw [← Real.rpow_add hx0, ← Real.rpow_add hx0]
+    congr 1
+    ring
+  calc
+    _ ≤ m * (3 * (n * M * b * x ^ ε)) := by gcongr
+    _ ≤ m * (3 * ((2 * nT * x ^ (ε / 8)) * M * b * x ^ ε)) := by gcongr
+    _ = _ := by rw [← hY]; ring
 
 end SZ
 
@@ -624,18 +596,15 @@ theorem proposition_size_bound : GrowthSizeBound := by
       _ ≤ x ^ ((1 : ℝ) / 2 + ε) * m := mul_le_mul_of_nonneg_left hm1 (pos _).le
   have h1 := SZ.T1 hxX hXY hnT0.le hm0.le hb.le haE
   have h2 := SZ.T2 hx0 hY1 hnT0.le hm0.le hb.le hk0 hk1 haE
-  have h3 := SZ.T3 (ε := ε) (n := (n : ℝ)) hx0 hm0.le hb.le rfl hm2 hnT hnR.le
-  have h4 := SZ.T4 (nT2 := (nT2 : ℝ)) hx0 hx1 hm0.le hb.le hε rfl hnT hnR (by exact_mod_cast hnT2) hk0.le hk2
+  have hDiv := SZ.divisibility_term_le (n := (n : ℝ)) (nT2 := (nT2 : ℝ))
+    hx0 hx1 hm0.le hb.le hε.le hnR hm2 hnT (by exact_mod_cast hnT2) hk0.le hk2
   have hErr' : Err ≤ 10 * x ^ (C * ε) * x ^ ((1 : ℝ) / 2 + 13 * ε / 8) * ((nT : ℝ) * m * b) := by
     refine le_trans hErr ?_
     have hsum : (nT : ℝ) * aE * (1 + (m : ℝ) ^ 2 / k)
         + m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))))
         ≤ 10 * x ^ ((1 : ℝ) / 2 + 13 * ε / 8) * ((nT : ℝ) * m * b) := by
-      have e : (nT : ℝ) * aE * (1 + (m : ℝ) ^ 2 / k)
-          + m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε))))
-          = (nT : ℝ) * aE + (nT : ℝ) * aE * ((m : ℝ) ^ 2 / k) + (m : ℝ) * ((2 * n) * m * b * x ^ ε)
-            + (m : ℝ) * ((nT2 : ℝ) * k * b * x ^ ε / (n * (n * x ^ (-ε)))) := by ring
-      rw [e]; linarith
+      rw [mul_add, mul_one]
+      linarith only [h1, h2, hDiv]
     have hP0 : 0 ≤ x ^ (C * ε) := (pos _).le
     calc x ^ (C * ε) * ((nT : ℝ) * aE * (1 + (m : ℝ) ^ 2 / k)
         + m * ((2 * n) * m * b * x ^ ε + nT2 * k * b * x ^ ε / (n * (n * x ^ (-ε)))))
