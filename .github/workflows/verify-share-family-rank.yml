@@ -1,0 +1,86 @@
+name: Verify shared family rank proof
+on:
+  push:
+    branches: [verify/share-family-rank-91b2735308]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      RH_BASE: 91b273530883b723ef4422436e0dc3557749325a
+      RH_HEAD: 3facb2109d9a306396f407b3af8fb9fcc865ac52
+      RH_LINK: Formalism.SharpRestriction.GlobalSchurBounds.LinkMin
+      RH_FAMILY: Formalism.SharpRestriction.GlobalSchurBounds.LogXLowerFamilyOfTheorems
+      RH_IMPORTER: Formalism.SharpRestriction.GlobalSchurBounds.IntegralityOfRationalityLocal
+      RH_ZERO_FREE: Development.AutomorphicArithmetic.CharacterBoxes.ZeroFreeAllOfTopG
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 3
+          persist-credentials: false
+      - name: Check candidate and install the pinned Lean toolchain
+        run: |
+          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
+          git diff --exit-code "$RH_HEAD" HEAD -- src lakefile.toml lake-manifest.json lean-toolchain
+          git diff --check "$RH_BASE" "$RH_HEAD"
+          uname -n
+          free -h
+          df -h "$GITHUB_WORKSPACE"
+          sudo sysctl -w vm.max_map_count=1048576
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check the family proofs, original public import, and axiom dependencies
+        run: |
+          rh_verify="$GITHUB_WORKSPACE/.github/workflows/family-rank-verification"
+          export RH_SLICE_PROJECT="$GITHUB_WORKSPACE"
+          export RH_SLICE_BASE_CACHE="$rh_verify/lean/.lake/rh-cache-${RH_BASE:0:12}"
+          export RH_SLICE_BUILD="$rh_verify/lean/.lake/checked"
+          export RH_SLICE_MODULE_TIMEOUT_SECONDS=420
+          roots=("$RH_LINK" "$RH_FAMILY" "$RH_IMPORTER" "$RH_ZERO_FREE")
+          (cd "$rh_verify/lean" && MATHLIB_CACHE_GET_URL=https://cache.mathlib.org/mathlib4 lake exe mathlib/cache get)
+          python3 -u "$rh_verify/restore_lean_slice_cache.py" "$RH_BASE" "${roots[@]}"
+          python3 -u "$rh_verify/check_lean_slice.py" "${roots[@]}"
+          cd "$rh_verify/lean"
+          export LEAN_PATH="$RH_SLICE_BUILD"
+          lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false \
+            -DmaxSynthPendingDepth=3 -DmaxHeartbeats=4000000 -R "$rh_verify" \
+            -o "$LEAN_PATH/ShareFamilyRankAudit.olean" "$rh_verify/ShareFamilyRankAudit.lean"
+          lake env lean -j2 --tstack=400000 "$rh_verify/ShareFamilyRankPublicImport.lean"
+          for module in "$RH_LINK" "$RH_FAMILY" "$RH_IMPORTER" ShareFamilyRankAudit; do
+            lake env leanchecker -v "$module"
+          done
+      - name: Restore the complete baseline cache
+        run: |
+          rh_verify="$GITHUB_WORKSPACE/.github/workflows/family-rank-verification"
+          if command -v mkfs.btrfs >/dev/null && sudo modprobe btrfs; then
+            rh_volume="$RUNNER_TEMP/rh-build.btrfs"
+            truncate -s 120G "$rh_volume"
+            mkfs.btrfs --quiet --nodiscard "$rh_volume"
+            mkdir -p .lake
+            sudo mount -o loop,compress-force=zstd:3 "$rh_volume" .lake
+            sudo chown "$(id -u):$(id -g)" .lake
+          else
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc
+            mkdir -p .lake
+          fi
+          df -h "$GITHUB_WORKSPACE" .lake
+          mv "$rh_verify/lean/.lake/packages" .lake/packages
+          git -c advice.detachedHead=false checkout --detach "$RH_BASE"
+          lake --version
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 70m python3 scripts/ci-cache-get.py --jobs 4
+      - name: Build all default targets at the PR head
+        run: |
+          git -c advice.detachedHead=false checkout --detach "$RH_HEAD"
+          test "$(git rev-parse HEAD)" = "$RH_HEAD"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 35m lake build
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
