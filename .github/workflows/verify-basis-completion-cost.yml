@@ -1,0 +1,101 @@
+name: Verify the basis-completion cost
+on:
+  push:
+    branches: [verify/basis-completion-cost-d1a8978624]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 125
+    defaults:
+      run:
+        shell: bash
+    env:
+      RH_BASE: d1a89786248472c61263785a6fe60d9fec66afc2
+      RH_CACHE_BASE: d1a89786248472c61263785a6fe60d9fec66afc2
+      RH_HEAD: b006c160832d8d4b08cf208727d94aa3687e61d0
+      RH_BASE_SOURCE: a72640f6adbe76edcb64d61759a387b39ad3abfb
+      RH_LANDAU: f2201365d2d57b1deb4fd330aa0da37213457074
+      RH_COMBINED_TREE: e1ed1e6ac3e7f9746ae398e200e1357694973f42
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 7
+          persist-credentials: false
+      - name: Verify the pinned proposal and install Lean
+        run: |
+          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
+          git merge-base --is-ancestor "$RH_CACHE_BASE" "$RH_BASE"
+          test "$(git rev-parse "$RH_BASE:src")" = "$RH_BASE_SOURCE"
+          git diff --exit-code "$RH_HEAD" HEAD -- src lakefile.toml lake-manifest.json lean-toolchain
+          git diff --check "$RH_BASE" "$RH_HEAD"
+          git diff --exit-code "$RH_BASE" "$RH_HEAD" -- Challenge.lean comparator.json src/Main.lean src/New/Main.lean src/Statements.lean lakefile.toml lake-manifest.json lean-toolchain
+          mkdir -p "$RUNNER_TEMP/rh-completion"
+          cp .github/workflows/completion-verification/CompletionCostAudit.lean "$RUNNER_TEMP/rh-completion/"
+          uname -n
+          free -h
+          df -h "$GITHUB_WORKSPACE"
+          sudo sysctl -w vm.max_map_count=1048576
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate and restore the exact cache for batch m1
+        run: |
+          mkdir -p .lake
+          if command -v mkfs.btrfs >/dev/null && sudo modprobe btrfs; then
+            rh_volume="$RUNNER_TEMP/rh-build.btrfs"
+            truncate -s 120G "$rh_volume"
+            mkfs.btrfs --quiet --nodiscard "$rh_volume"
+            sudo mount -o loop,compress-force=zstd:3 "$rh_volume" .lake
+            sudo chown "$(id -u):$(id -g)" .lake
+          else
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          fi
+          git -c advice.detachedHead=false checkout --detach "$RH_CACHE_BASE"
+          lake --version
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 18m lake exe mathlib/cache get
+          timeout 38m python3 scripts/ci-cache-get.py --jobs 6
+      - name: Build all default targets at the proposal
+        run: |
+          git -c advice.detachedHead=false checkout --detach "$RH_HEAD"
+          test "$(git rev-parse HEAD)" = "$RH_HEAD"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          rh_log="$RUNNER_TEMP/rh-completion/lake-build.log"
+          timeout 36m lake build 2>&1 | tee "$rh_log"
+          if rg -F "declaration uses 'sorry'" "$rh_log"; then
+            exit 1
+          fi
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
+      - name: Verify full rank, the original theorem type, the proof chain and axioms
+        run: |
+          rh_audit="$RUNNER_TEMP/rh-completion"
+          export LEAN_PATH="$rh_audit"
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxHeartbeats=4000000 -R "$rh_audit" -o "$rh_audit/CompletionCostAudit.olean" "$rh_audit/CompletionCostAudit.lean"
+          timeout 7m lake env leanchecker -v CompletionCostAudit
+      - name: Replay the covolume proof and its production route
+        run: |
+          for module in New.Determinant.Twist.LongForms New.Reduction.MainInequality New.Reduction.OneSidedBound New.Main Main; do
+            timeout 8m lake env leanchecker -v "$module"
+          done
+      - name: Build and audit the exact combined tree with PR 5627
+        run: |
+          git fetch --no-tags --depth=2 origin "$RH_LANDAU"
+          test "$(git rev-parse FETCH_HEAD)" = "$RH_LANDAU"
+          test "$(git merge-tree --write-tree "$RH_HEAD" "$RH_LANDAU")" = "$RH_COMBINED_TREE"
+          git read-tree --reset -u "$RH_COMBINED_TREE"
+          test "$(git write-tree)" = "$RH_COMBINED_TREE"
+          rh_audit="$RUNNER_TEMP/rh-completion"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 20m lake build
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
+          sed 's/eventually_primeRemainder_le_rpow/eventually_primeRemainder_le_mul_rpow/g' \
+            "$rh_audit/CompletionCostAudit.lean" > "$rh_audit/CompletionCostWithLandauAudit.lean"
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxHeartbeats=4000000 -R "$rh_audit" "$rh_audit/CompletionCostWithLandauAudit.lean"
