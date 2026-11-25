@@ -1,0 +1,84 @@
+name: Verify the Landau prefactor
+on:
+  push:
+    branches: [verify/landau-prefactor-9211277d09]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 125
+    defaults:
+      run:
+        shell: bash
+    env:
+      RH_BASE: 9211277d096b7abc3f9c30184bdb2e32d98dcffb
+      RH_HEAD: f2201365d2d57b1deb4fd330aa0da37213457074
+      RH_BASE_SOURCE: 55fe9c6cb2e5be421c5871e772b6d736ecb5d164
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 3
+          persist-credentials: false
+      - name: Check the pinned proposal and install Lean
+        run: |
+          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
+          test "$(git rev-parse "$RH_BASE:src")" = "$RH_BASE_SOURCE"
+          git diff --exit-code "$RH_HEAD" HEAD -- src lakefile.toml lake-manifest.json lean-toolchain
+          git diff --check "$RH_BASE" "$RH_HEAD"
+          git diff --exit-code "$RH_BASE" "$RH_HEAD" -- src/Main.lean src/New/Main.lean src/Statements.lean Challenge.lean comparator.json lakefile.toml lake-manifest.json lean-toolchain
+          mkdir -p "$RUNNER_TEMP/rh-landau"
+          cp .github/workflows/landau-verification/LandauPrefactorAudit.lean "$RUNNER_TEMP/rh-landau/"
+          uname -n
+          free -h
+          df -h "$GITHUB_WORKSPACE"
+          sudo sysctl -w vm.max_map_count=1048576
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate and restore the exact upstream cache
+        run: |
+          mkdir -p .lake
+          if command -v mkfs.btrfs >/dev/null && sudo modprobe btrfs; then
+            rh_volume="$RUNNER_TEMP/rh-build.btrfs"
+            truncate -s 120G "$rh_volume"
+            mkfs.btrfs --quiet --nodiscard "$rh_volume"
+            sudo mount -o loop,compress-force=zstd:3 "$rh_volume" .lake
+            sudo chown "$(id -u):$(id -g)" .lake
+          else
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          fi
+          df -h "$GITHUB_WORKSPACE" .lake
+          git -c advice.detachedHead=false checkout --detach "$RH_BASE"
+          lake --version
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 18m lake exe mathlib/cache get
+          timeout 38m python3 scripts/ci-cache-get.py --jobs 6
+      - name: Rebuild all default targets on the proposed commit
+        run: |
+          git -c advice.detachedHead=false checkout --detach "$RH_HEAD"
+          test "$(git rev-parse HEAD)" = "$RH_HEAD"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 42m lake build 2>&1 | tee "$RUNNER_TEMP/rh-landau/lake-build.log"
+          if rg -F "declaration uses 'sorry'" "$RUNNER_TEMP/rh-landau/lake-build.log"; then
+            exit 1
+          fi
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
+      - name: Prove the original bounds and check the final axioms and proof dependencies
+        run: |
+          rh_audit="$RUNNER_TEMP/rh-landau"
+          export LEAN_PATH="$rh_audit"
+          timeout 10m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxHeartbeats=4000000 -R "$rh_audit" -o "$rh_audit/LandauPrefactorAudit.olean" "$rh_audit/LandauPrefactorAudit.lean"
+          timeout 7m lake env leanchecker -v LandauPrefactorAudit
+      - name: Replay the analytical proof, its consumers and Main
+        run: |
+          for module in Lib.Analytic.Landau New.Reduction.Zeros.Criterion New.Reduction.OneSidedBound Main; do
+            printf 'Checking %s with leanchecker\n' "$module"
+            timeout 10m lake env leanchecker -v "$module"
+          done
