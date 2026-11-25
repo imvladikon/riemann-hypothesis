@@ -75,3 +75,27 @@ name = "riemann-hypothesis"
 kind = "s3"
 artifactEndpoint = "https://rh-cache.taucetiproject.org/artifacts"
 revisionEndpoint = "https://rh-cache.taucetiproject.org/revisions"
+
+[[lean_lib]]
+name = "RamifiedIntersectionMassAudit"
+srcDir = "RamifiedAudit"
+roots = [
+  "RamifiedDiagonalCutoffAudit",
+  "RamifiedDiagonalizationAudit",
+  "RamifiedFixedLatticeAudit",
+  "RamifiedFlagMinorsAudit",
+  "RamifiedFlagPullbackAudit",
+  "RamifiedIntersectionColumnAudit",
+  "RamifiedIntersectionCutoffAudit",
+  "RamifiedIntersectionMassAudit",
+  "RamifiedIntersectionPeriodAudit",
+  "RamifiedLinearSubstitutionAudit",
+  "RamifiedMatrixPairingAudit",
+  "RamifiedPairSubstitutionAudit",
+  "RamifiedPeriodThresholdAudit",
+  "RamifiedRowCutoffAudit",
+  "RamifiedShiftTransportAudit",
+  "RamifiedSymmetricCutoffAudit",
+  "RamifiedSymmetricPeriodAudit",
+  "RamifiedTopThinAudit",
+]
