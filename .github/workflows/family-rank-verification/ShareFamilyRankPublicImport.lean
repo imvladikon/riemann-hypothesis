@@ -1,0 +1,5 @@
+module
+
+import Formalism.SharpRestriction.GlobalSchurBounds.LogXLowerFamilyOfTheorems
+
+#check Formalism.MainNotions.Wire.family_theorems_two_and_five
