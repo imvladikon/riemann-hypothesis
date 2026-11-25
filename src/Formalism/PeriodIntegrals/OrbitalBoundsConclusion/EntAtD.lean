@@ -493,65 +493,51 @@ theorem rowContractionBound_le_cPr (α β : YoungDiagram) :
     ← Finset.add_sum_erase rows (fun r => min (α.rowLen r) (β.rowLen 0)) h0]
   omega
 
-theorem cPr_le_ctD (D : D7) (u : D.what₂.Word) (i : ℕ) (nu : Pl D → YoungDiagram)
+theorem rowContractionBound_eq_ctD (D : D7) (u : D.what₂.Word) (i : ℕ) (nu : Pl D → YoungDiagram)
     (hrow : ∀ z r, (((nu z).rowLen r : ℕ) : ℝ) =
       if r < D.R.N i then DV.nuRow D u (i + 1) (tauPl D z) r else 0)
-    (hN : 2 ≤ D.R.N i) (t : HH D) :
-    (cPr (nu (false, t)) (nu (true, t)) : ℝ) ≤ ctD D u (i + 1) t := by
-  have hN0 : 0 < D.R.N i := by omega
-  have hN1 : 1 < D.R.N i := by omega
-
-  have hr : ∀ z r, r < D.R.N i → DV.nuRow D u (i + 1) (tauPl D z) r = ((nu z).rowLen r : ℝ) := by
-    intro z r hr'
-    rw [hrow z r, if_pos hr']
-  have hz : ∀ z r, D.R.N i ≤ r → (nu z).rowLen r = 0 := by
-    intro z r hr'
-    have hz0 := hrow z r
-    rw [if_neg (by omega)] at hz0
-    exact_mod_cast hz0
-  have hsum := card_cells_eq_sum_rowLen (nu (false, t)) (D.R.N i) (hz _)
-  have habs : nuAbs D u (i + 1) (tauPl D (false, t)) = ((nu (false, t)).cells.card : ℝ) := by
-    rw [hsum]
-    unfold nuAbs
-    rw [Nat.add_sub_cancel]
-    push_cast
-    refine Finset.sum_congr rfl fun r hr' => ?_
-    exact hr _ r (Finset.mem_range.mp hr')
-  have h0le : (nu (false, t)).rowLen 0 ≤ (nu (false, t)).cells.card := by
-    rw [hsum]
-    exact Finset.single_le_sum (f := fun r => (nu (false, t)).rowLen r)
-      (fun _ _ => Nat.zero_le _) (Finset.mem_range.mpr hN0)
-  unfold cPr ctD
-  rw [habs, hr (false, t) 0 hN0, hr (false, t) 1 hN1, hr (true, t) 0 hN0]
-  push_cast [Nat.cast_sub h0le]
-  have hm1 := min_le_left ((nu (false, t)).rowLen 0 : ℝ) ((nu (true, t)).rowLen 0 : ℝ)
-  have hm2 := min_le_right ((nu (false, t)).rowLen 0 : ℝ) ((nu (true, t)).rowLen 0 : ℝ)
-  have ha1 : (0 : ℝ) ≤ ((nu (false, t)).rowLen 1 : ℝ) := Nat.cast_nonneg _
-  split_ifs <;> linarith
+    (hN : 0 < D.R.N i) (t : HH D) :
+    (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ) = ctD D u (i + 1) t := by
+  let α := nu (false, t)
+  let β := nu (true, t)
+  let rows := insert 0 (α.cells.image Prod.fst)
+  have hsub : rows ⊆ Finset.range (D.R.N i) := by
+    intro r hr
+    rcases Finset.mem_insert.mp hr with rfl | hr
+    · exact Finset.mem_range.mpr hN
+    · obtain ⟨⟨r, c⟩, hc, rfl⟩ := Finset.mem_image.mp hr
+      apply Finset.mem_range.mpr
+      by_contra hr
+      have hz : α.rowLen r = 0 := by
+        simpa [α, ite_eq_right hr] using hrow (false, t) r
+      have hcell := YoungDiagram.mem_iff_lt_rowLen.mp (show (r, c) ∈ α from hc)
+      lia
+  have hzero (r : ℕ) (_ : r ∈ Finset.range (D.R.N i)) (hr : r ∉ rows) :
+      min (α.rowLen r) (β.rowLen 0) = 0 := by
+    have hz : α.rowLen r = 0 := by
+      by_contra h
+      have hc : (r, 0) ∈ α := YoungDiagram.mem_iff_lt_rowLen.mpr (Nat.pos_of_ne_zero h)
+      exact hr (Finset.mem_insert_of_mem (Finset.mem_image_of_mem Prod.fst hc))
+    simp [hz]
+  change ((∑ r ∈ rows, min (α.rowLen r) (β.rowLen 0) : ℕ) : ℝ) = ctD D u (i + 1) t
+  rw [Finset.sum_subset hsub hzero, Nat.cast_sum]
+  simp only [ctD, Nat.add_sub_cancel]
+  refine Finset.sum_congr rfl fun r hr => ?_
+  simp only [α, β, Nat.cast_min, hrow (false, t) r, ite_eq_left (Finset.mem_range.mp hr),
+    hrow (true, t) 0, ite_eq_left hN]
 
 theorem entAtD_of_core (h : CoreBound) : PI.EntAtD.EntAtD := by
-  unfold PI.EntAtD.EntAtD
-  intro D Dx nu hrow hcol Th hTh u μ w hLF hram i hi L L'
-  have hS := hTh u μ w hLF hram i hi L L'
+  intro D Dx nu hrow _ Th hTh u μ w hLF hram i hi L L'
   have hc := h (HH D) (D.R.N i) (D.R.N (i + 1)) (D.what₂.places.resChar w) (nu u i)
-    (Th u μ w i L L') hS
-  have hN : 2 ≤ D.R.N i := by
-    show 2 ≤ D.R.k + i * (D.R.t + 1)
-    have h2 := D.R.two_le_m
-    have h3 := D.R.m_add_three_le_k
-    exact le_trans (by omega : 2 ≤ D.R.k) (Nat.le_add_right _ _)
-
-  have hle : ∑ t : HH D, (cPr (nu u i (false, t)) (nu u i (true, t)) : ℝ) ≤
+    (Th u μ w i L L') (hTh u μ w hLF hram i hi L L')
+  have hN : 0 < D.R.N i := by
+    have hk := D.R.m_add_three_le_k
+    unfold Ranks.N
+    lia
+  have hsum : ∑ t : HH D, (rowContractionBound (nu u i (false, t)) (nu u i (true, t)) : ℝ) =
       ∑ t : HH D, ctD D u (i + 1) t :=
-    Finset.sum_le_sum fun t _ => cPr_le_ctD D u i (nu u i) (hrow u i hi) hN t
-  have hp : (1 : ℝ) ≤ (D.what₂.places.resChar w : ℝ) := by
-    have hpr : (D.what₂.places.resChar w).Prime := Fact.out
-    exact_mod_cast hpr.one_lt.le
-  unfold KvalGe at hc ⊢
-  intro I m
-  refine (hc I m).trans ?_
-  apply Real.rpow_le_rpow_of_exponent_le hp
-  linarith
+    Finset.sum_congr rfl fun t _ => rowContractionBound_eq_ctD D u i (nu u i) (hrow u i hi) hN t
+  simpa only [hsum] using hc
 
 end PI.EntAtD.W
 end -- clump:auto
@@ -1912,13 +1898,9 @@ private theorem core_of_cutoff (hE : PExpand)
     exact coreTerm_le p S ut hS hut _ (hsg κ2) _ n (fun t => cutoff (nu (false, t)) (nu (true, t))) hn
 
 /-- The discriminant-place kernel bound using all rows of the diagrams. -/
-theorem core_of_rowContractionBound (hE : PExpand) (hB : PBridge) (hC : PLapComm)
-    (H : Type) [Fintype H] [DecidableEq H] (N0 N1 p : ℕ) [Fact p.Prime]
-    (nu : Bool × H → YoungDiagram) (Th : MvPowerSeries (ZV H N0 N1) ℂ_[p])
-    (hTh : ShapeH H p Th) :
-    KvalGe N0 N1 p nu Th
-      (-((∑ t : H, (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ)) / 2)) :=
-  core_of_cutoff hE rowContractionBound (acon_eq_zero_of_rowContractionBound hB hC) H N0 N1 p nu Th hTh
+theorem core_of_rowContractionBound (hE : PExpand) (hB : PBridge) (hC : PLapComm) : CoreBound := by
+  intro H _ _ N0 N1 p _ nu Th hTh
+  exact core_of_cutoff hE rowContractionBound (acon_eq_zero_of_rowContractionBound hB hC) H N0 N1 p nu Th hTh
 
 end PI.EntAtD.W
 end -- clump:auto
@@ -1940,18 +1922,8 @@ namespace PI.EntAtD.W
 
 open PI.EntAtD
 
-theorem entAtD_of_all_rows (hX : PExpCoeff) (hB : PBridge) (hC : PLapComm) : PI.EntAtD.EntAtD := by
-  apply entAtD_of_core
-  intro H _ _ N0 N1 p _ nu Th hTh
-  have h := core_of_rowContractionBound (expand_of hX) hB hC H N0 N1 p nu Th hTh
-  have hsum : (∑ t : H, (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ)) ≤
-      ∑ t : H, (cPr (nu (false, t)) (nu (true, t)) : ℝ) :=
-    Finset.sum_le_sum fun t _ => by exact_mod_cast rowContractionBound_le_cPr (nu (false, t)) (nu (true, t))
-  have hp : (1 : ℝ) ≤ p := by exact_mod_cast (Fact.out : p.Prime).one_lt.le
-  intro I m
-  refine (h I m).trans ?_
-  apply Real.rpow_le_rpow_of_exponent_le hp
-  linarith
+theorem entAtD_of_all_rows (hX : PExpCoeff) (hB : PBridge) (hC : PLapComm) : PI.EntAtD.EntAtD :=
+  entAtD_of_core (core_of_rowContractionBound (expand_of hX) hB hC)
 
 end PI.EntAtD.W
 end -- clump:auto

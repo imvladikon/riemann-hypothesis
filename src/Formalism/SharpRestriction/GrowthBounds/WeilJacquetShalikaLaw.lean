@@ -225,7 +225,7 @@ def LossAtDiscriminant (D : D7) (L : SizeData₂ D) (K : Consts) (Dx : DivX D) (
   L.FDef → ErrDefs D L Xe lev K ce → ∀ u (w : D.what₂.places.Pl), D.what₂.places.resChar w ≠ (D.mem u).A.T →
     D.host.cls (D.what₂.places.resChar w) = PrimeClass.ramD →
     ∀ μ, DV.Used D μ → D.what₂.places.resChar w ∉ Dx.Qp μ → ∀ x ∈ LT.Sram D u w,
-      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D j - vDG D u w)) + sp * vDG D u w)
+      ColGe T u μ w x ((∑ j ∈ SizeData₂.lifts D, (L.F j w - EatD D u j - vDG D u w)) + sp * vDG D u w)
 
 def TypePrimeSizeConds (D : D7) (L : SizeData₂ D) (K : Consts) (ce : ErrC) (C : ℝ) : Prop :=
   (∀ j ∈ SizeData₂.lifts D, ∀ u : D.what₂.Word, ∑ t : HH D, ctD D u j t ≤

@@ -37,7 +37,8 @@ def rowContractionBound (α β : YoungDiagram) : ℕ :=
 def CoreBound : Prop :=
   ∀ (H : Type) [Fintype H] [DecidableEq H] (N0 N1 p : ℕ) [Fact p.Prime] (nu : Bool × H → YoungDiagram)
     (Th : MvPowerSeries (ZV H N0 N1) ℂ_[p]),
-    ShapeH H p Th → KvalGe N0 N1 p nu Th (-((∑ t : H, (cPr (nu (false, t)) (nu (true, t)) : ℝ)) / 2))
+    ShapeH H p Th →
+      KvalGe N0 N1 p nu Th (-((∑ t : H, (rowContractionBound (nu (false, t)) (nu (true, t)) : ℝ)) / 2))
 
 abbrev xpart {H : Type} {N0 N1 : ℕ} (μ : XZ (Bool × H) N0 N1 →₀ ℕ) : XV H N0 →₀ ℕ :=
   (Finsupp.sumFinsuppEquivProdFinsupp μ).1
