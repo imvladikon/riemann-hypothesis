@@ -1,0 +1,84 @@
+name: Verify the family window zero-free criterion
+on:
+  push:
+    branches: [verify/family-window-zero-free-756a70250d]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 140
+    defaults:
+      run:
+        shell: bash
+    env:
+      RH_BASE: 756a70250dcba9162b99d4ea35c186558434c17e
+      RH_HEAD: a0b2c8361af5b2f2f038227e8c48dc0b05eb8cd7
+      RH_SOURCE_TREE: 9ef527296d055511d5d94d79c517405ddc44c880
+      RH_CRITERION: Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.TopWin
+      RH_APPLICATION: Development.AutomorphicArithmetic.CharacterBoxes.ZeroFreeAllOfTopG
+      RH_BRIDGE: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 3
+          persist-credentials: false
+      - name: Verify the proposal and install Lean
+        run: |
+          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
+          test "$(git rev-parse "$RH_BASE:src")" = "$RH_SOURCE_TREE"
+          git diff --exit-code "$RH_HEAD" HEAD -- src lakefile.toml lake-manifest.json lean-toolchain
+          git diff --check "$RH_BASE" "$RH_HEAD"
+          git diff --exit-code "$RH_BASE" "$RH_HEAD" -- src/Challenge.lean src/Main.lean src/Statements.lean comparator.json comparator/ export-targets.txt lakefile.toml lake-manifest.json lean-toolchain
+          mkdir -p "$RUNNER_TEMP/rh-family-window"
+          cp .github/workflows/family-window-verification/*.lean "$RUNNER_TEMP/rh-family-window/"
+          uname -n
+          free -h
+          df -h "$GITHUB_WORKSPACE"
+          sudo sysctl -w vm.max_map_count=1048576
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore the complete upstream cache
+        run: |
+          mkdir -p .lake
+          if command -v mkfs.btrfs >/dev/null && sudo modprobe btrfs; then
+            rh_volume="$RUNNER_TEMP/rh-build.btrfs"
+            truncate -s 120G "$rh_volume"
+            mkfs.btrfs --quiet --nodiscard "$rh_volume"
+            sudo mount -o loop,compress-force=zstd:3 "$rh_volume" .lake
+            sudo chown "$(id -u):$(id -g)" .lake
+          else
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          fi
+          df -h "$GITHUB_WORKSPACE" .lake
+          git -c advice.detachedHead=false checkout --detach "$RH_BASE"
+          lake --version
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 18m lake exe mathlib/cache get
+          timeout 55m python3 scripts/ci-cache-get.py --jobs 4
+      - name: Build all default targets at the PR head
+        run: |
+          git -c advice.detachedHead=false checkout --detach "$RH_HEAD"
+          test "$(git rev-parse HEAD)" = "$RH_HEAD"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 48m lake build
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
+      - name: Replay the changed modules, downstream bridge, and Main
+        run: |
+          for module in "$RH_CRITERION" "$RH_APPLICATION" "$RH_BRIDGE" Main; do
+            timeout 8m lake env leanchecker -v "$module"
+          done
+      - name: Audit the theorem types, proof dependencies, and axioms
+        run: |
+          rh_audit="$RUNNER_TEMP/rh-family-window"
+          export LEAN_PATH="$rh_audit"
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxSynthPendingDepth=3 -DmaxHeartbeats=1000000 -R "$rh_audit" -o "$rh_audit/FamilyWindowZeroFreeAudit.olean" "$rh_audit/FamilyWindowZeroFreeAudit.lean"
+          timeout 8m lake env leanchecker -v FamilyWindowZeroFreeAudit
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -R "$rh_audit" "$rh_audit/MainAxiomAudit.lean"
