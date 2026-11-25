@@ -13,6 +13,19 @@ namespace Formalism.HC
 
 theorem windows_iff {eps : ℝ} (Fm : FamCore eps) (la : ℝ) : Fm.Windows la ↔ HasWindows Fm.Win la := Iff.rfl
 
+/-- Arbitrarily late windows with bounds for every exponent above one half exclude zeros
+to the right of one half. -/
+theorem level_of_small_window_bounds {Λ : Level} {la : ℝ} (hB : Λ.FormBAt la)
+    (h : ∀ δ : ℝ, 0 < δ → HasWindows {x | Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + δ)} la) :
+    Λ.ZeroFreeLevel := by
+  intro ψ hψ s hs
+  let δ := min (s.re - 1 / 2) (1 / 2) / 2
+  have hδ : 0 < δ := half_pos (lt_min (by linarith) (by norm_num))
+  have hm₁ := min_le_left (s.re - 1 / 2) (1 / 2)
+  have hm₂ := min_le_right (s.re - 1 / 2) (1 / 2)
+  exact hB (1 / 2 + δ) (by linarith) (by dsimp [δ]; linarith) (h δ hδ) ψ hψ s
+    (by dsimp [δ]; linarith)
+
 section
 
 variable {Fam : ℝ → Type 1} (core : ∀ {eps : ℝ}, Fam eps → FamCore eps)
@@ -42,20 +55,23 @@ theorem exists_small_eps (C : ℝ) {δ ε₁ : ℝ} (hδ : 0 < δ) (h1 : 0 < ε�
   rw [le_div_iff₀ hp] at a2
   nlinarith
 
+/-- A family of window bounds with exponents tending to one half gives a zero-free level. -/
+theorem level_of_family_window_bounds {Λ : Level} {la C ε₁ : ℝ} (hB : Λ.FormBAt la)
+    (hε₁ : 0 < ε₁) (h : ∀ eps : ℝ, 0 < eps → eps < ε₁ → ∃ W : Set ℝ, HasWindows W la ∧
+      ∃ x₀ : ℝ, ∀ x ≥ x₀, x ∈ W → Λ.Gm x ≤ x ^ ((1 : ℝ) / 2 + C * eps)) : Λ.ZeroFreeLevel := by
+  refine level_of_small_window_bounds hB fun δ hδ => ?_
+  obtain ⟨eps, heps, hsmall, hexp⟩ := exists_small_eps C hδ hε₁
+  obtain ⟨W, hW, x₀, hx₀⟩ := h eps heps hsmall
+  exact hW.mono (x0 := max x₀ 1) fun x hx hw =>
+    (hx₀ x (le_of_max_le_left hx) hw).trans
+      (Real.rpow_le_rpow_of_exponent_le (le_of_max_le_right hx) (by linarith))
+
 theorem level_of_tiedWin {Λ : Level} {la : ℝ} (h112 : ChebyshevInequalityOnWindows @core @Tied Λ) (hB : Λ.FormBAt la)
     (h : ChebyshevInequalityAtWindowScale @core @Tied la Λ) : Λ.ZeroFreeLevel := by
-  obtain ⟨eD, eL, ε₁, h1, h⟩ := h
-  intro ψ hψ s hs
-  have hm1 : min (s.re - 1 / 2) (1 / 2) ≤ s.re - 1 / 2 := min_le_left _ _
-  have hm2 : min (s.re - 1 / 2) (1 / 2) ≤ 1 / 2 := min_le_right _ _
-  have hm0 : 0 < min (s.re - 1 / 2) (1 / 2) := lt_min (by linarith) (by norm_num)
-  obtain ⟨ε, hε0, hεlt, hCe⟩ := exists_small_eps (eD + eL + 7) (half_pos hm0) h1
-  obtain ⟨Fm, hE, hW, hT⟩ := h ε hε0 hεlt
-  obtain ⟨x1, hx⟩ := h112 eD eL ε hε0 Fm hE hT
-  refine hB (1 / 2 + min (s.re - 1 / 2) (1 / 2) / 2) (by linarith) (by linarith)
-    (((windows_iff _ la).1 hW).mono (x0 := max x1 1) fun y hy hw => ?_) ψ hψ s (by linarith)
-  exact (hx y (le_of_max_le_left hy) hw).trans
-    (Real.rpow_le_rpow_of_exponent_le (le_of_max_le_right hy) (by linarith))
+  obtain ⟨eD, eL, ε₁, hε₁, h⟩ := h
+  refine level_of_family_window_bounds hB hε₁ (C := eD + eL + 7) fun eps heps hsmall => ?_
+  obtain ⟨Fm, hE, hW, hT⟩ := h eps heps hsmall
+  exact ⟨_, (windows_iff _ la).1 hW, h112 eD eL eps heps Fm hE hT⟩
 
 theorem zeroFreeOn_of_tiedWin {Q : PChar → Prop}
     (h : ∀ ψ, Q ψ → ∃ (Λ : Level) (la : ℝ), ψ ∈ Λ.KEPT ∧ 1 < la ∧ ChebyshevInequalityOnWindows @core @Tied Λ ∧ Λ.FormB ∧

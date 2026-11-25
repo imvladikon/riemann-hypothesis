@@ -1257,14 +1257,14 @@ theorem eFamC_of_cls (ψ : PChar) (la : ℝ) {eps : ℝ} (Fm : FamP eps) (h : (G
   exact h1
 
 theorem zeroFreeAll_of_topG {la : ℝ} (hla : 1 < la) (h : TopG) (hS : ∀ ψ : PChar, HostExW la (GChi ψ).req) : ZeroFreeAll := by
-  have key : ZeroFreeOn fun _ => True :=
-    zeroFreeOn_of_tiedWin_cyc (Fam := FamP) (core := fun Fm => Fm.toFamCore) (Tied := fun Fm => ChainTied Fm) hla
-      (fun ψ _ => UpperTheory.Comparison₂.level_gm_le_on_family_scales _) (fun ψ _ => UpperTheory.Comparison₂.formB _) fun ψ _ => by
-        obtain ⟨eD, eL, ε₁, h1, h2⟩ := h la (GChi ψ) hla (hS ψ) (hypV_of_cls ψ la)
-        refine ⟨eD, eL, ε₁, h1, fun eps a b => ?_⟩
-        obtain ⟨Fm, c, d⟩ := h2 eps a b
-        exact ⟨Fm, eFamC_of_cls ψ la Fm c, c.1, d⟩
-  exact key
+  refine zeroFreeOn_of_levels fun ψ _ => ⟨Level.cyc ψ, Level.mem_cyc ψ, ?_⟩
+  obtain ⟨eD, eL, ε₁, hε₁, hFamily⟩ := h la (GChi ψ) hla (hS ψ) (hypV_of_cls ψ la)
+  refine level_of_family_window_bounds (UpperTheory.Comparison₂.formB _ la hla) hε₁
+    (C := eD + eL + 7) fun eps heps hsmall => ?_
+  obtain ⟨Fm, hClass, hTied⟩ := hFamily eps heps hsmall
+  exact ⟨Fm.Win, (windows_iff Fm.toFamCore la).1 hClass.1,
+    UpperTheory.Comparison₂.level_gm_le_on_family_scales _ eD eL eps heps Fm
+      (eFamC_of_cls ψ la Fm hClass) hTied⟩
 
 end UpperTheory.Top
 
