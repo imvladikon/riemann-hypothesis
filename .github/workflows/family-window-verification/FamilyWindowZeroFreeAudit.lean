@@ -54,4 +54,13 @@ run_cmd do
       throwError "{decl} does not use {required}"
     logInfo m!"{decl} uses {required}"
 
+  let bridge := ``UpperTheory.Top.zero_free_all_of_green_v_win
+  let env := (← getEnv).setExporting false
+  let some (.thmInfo original) := env.find? bridge
+    | throwError "no theorem term available for {bridge}"
+  let replay := Declaration.thmDecl {original with name := `FamilyWindowZeroFreeAudit.replayedBridge}
+  match env.toKernelEnv.addDeclCore 0 0 replay (cancelTk? := none) with
+  | .error ex => throwError (ex.toMessageData {})
+  | .ok _ => logInfo m!"kernel rechecked {bridge}"
+
 end FamilyWindowZeroFreeAudit

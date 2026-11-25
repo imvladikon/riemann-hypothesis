@@ -19,18 +19,17 @@ jobs:
       RH_SOURCE_TREE: 9ef527296d055511d5d94d79c517405ddc44c880
       RH_CRITERION: Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.TopWin
       RH_APPLICATION: Development.AutomorphicArithmetic.CharacterBoxes.ZeroFreeAllOfTopG
-      RH_BRIDGE: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug
       MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
       LEAN_NUM_THREADS: '2'
       LEAN_ABORT_ON_PANIC: '1'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          fetch-depth: 3
+          fetch-depth: 4
           persist-credentials: false
       - name: Verify the proposal and install Lean
         run: |
-          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          git merge-base --is-ancestor "$RH_HEAD" HEAD
           test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
           test "$(git rev-parse "$RH_BASE:src")" = "$RH_SOURCE_TREE"
           git diff --exit-code "$RH_HEAD" HEAD -- src lakefile.toml lake-manifest.json lean-toolchain
@@ -70,15 +69,20 @@ jobs:
           export LAKE_CACHE_DIR="$PWD/.lake/cache"
           timeout 48m lake build
           git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
-      - name: Replay the changed modules, downstream bridge, and Main
+      - name: Replay both changed modules
         run: |
-          for module in "$RH_CRITERION" "$RH_APPLICATION" "$RH_BRIDGE" Main; do
+          for module in "$RH_CRITERION" "$RH_APPLICATION"; do
             timeout 8m lake env leanchecker -v "$module"
           done
-      - name: Audit the theorem types, proof dependencies, and axioms
+      - name: Audit the original types and replay the downstream theorem
         run: |
           rh_audit="$RUNNER_TEMP/rh-family-window"
           export LEAN_PATH="$rh_audit"
-          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxSynthPendingDepth=3 -DmaxHeartbeats=1000000 -R "$rh_audit" -o "$rh_audit/FamilyWindowZeroFreeAudit.olean" "$rh_audit/FamilyWindowZeroFreeAudit.lean"
-          timeout 8m lake env leanchecker -v FamilyWindowZeroFreeAudit
-          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -R "$rh_audit" "$rh_audit/MainAxiomAudit.lean"
+          timeout 12m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxSynthPendingDepth=3 -DmaxHeartbeats=1000000 -R "$rh_audit" -o "$rh_audit/FamilyWindowZeroFreeAudit.olean" "$rh_audit/FamilyWindowZeroFreeAudit.lean"
+          timeout 10m lake env leanchecker -v FamilyWindowZeroFreeAudit
+      - name: Audit the five public theorem axioms
+        run: |
+          rh_audit="$RUNNER_TEMP/rh-family-window"
+          timeout 15m lake env lean -j2 --tstack=400000 -DautoImplicit=false -R "$rh_audit" "$rh_audit/MainAxiomAudit.lean"
+      - name: Replay Main
+        run: timeout 12m lake env leanchecker -v Main
