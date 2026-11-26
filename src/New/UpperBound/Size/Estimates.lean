@@ -3,6 +3,8 @@ module
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Data.Rat.Cast.OfScientific
 import Mathlib.NumberTheory.Harmonic.Bounds
+import TauCeti.NumberTheory.Chebyshev.Mertens
+import Lib.Analytic.PrimeProgressionWeights
 public import New.UpperBound.Size.ShortColumns
 import New.UpperBound.Size.ClassCount
 
@@ -386,6 +388,153 @@ lemma sum_allowedLoss_mul_log_le_sharp (U : Finset ℕ) :
 lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
     ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.errorUnit :=
   (D.sum_allowedLoss_mul_log_le_sharp U).trans D.allowedLossSumBound_le_errorUnit
+
+private lemma weighted_exceptional_prime_sum_le (U : Finset ℕ)
+    (hU : ∀ p ∈ U, p ∈ D.smallNonsplitPrimes ∧ D.IsPlusMinusOneModLifts p)
+    (h_logX₁ : 1 ≤ D.logX₁) :
+    (D.m : ℝ) * ∑ p ∈ U, Real.log p / p ≤
+      3456 * D.logX₁ + 16 * Real.log D.m ^ 2 := by
+  classical
+  let w (p : ℕ) := Real.log (p : ℝ) / p
+  let small := U.filter (fun p ↦ p ≤ D.m ^ 2)
+  let large := U.filter (fun p ↦ ¬ p ≤ D.m ^ 2)
+  let X := ⌊D.x₁⌋₊
+  let plus := (Ioc (D.m ^ 2) X).filter (fun p ↦ p ≡ 1 [MOD D.m] ∧ p.Prime)
+  let minus := (Ioc (D.m ^ 2) X).filter (fun p ↦ p ≡ D.m - 1 [MOD D.m] ∧ p.Prime)
+  have hm : 2 ≤ D.m := le_trans (by norm_num) D.ten_thousand_le_m
+  have hm_pos : (0 : ℝ) < D.m := by exact_mod_cast (show 0 < D.m by omega)
+  have h_logm_one : 1 ≤ Real.log (D.m : ℝ) := by
+    apply (Real.le_log_iff_exp_le hm_pos).2
+    exact Real.exp_one_lt_three.le.trans (by exact_mod_cast
+      (show 3 ≤ D.m from le_trans (by norm_num) D.ten_thousand_le_m))
+  have hw (p : ℕ) : 0 ≤ w p := div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p)
+  have h_small := PrimeProgressionWeights.mul_sum_log_div_le_below_square hm small (by
+    intro p hp
+    obtain ⟨hpU, hp_le⟩ := mem_filter.mp hp
+    obtain ⟨hp_prime, _⟩ := (mem_filter.mp (hU p hpU).1).2
+    obtain ⟨c, hc, _, _, hcases⟩ :=
+      D.exists_mul_sub_one_eq_or_mul_add_one_eq hp_prime.two_le (hU p hpU).2
+    exact ⟨hp_prime.two_le, hp_le, c, hc, hcases⟩)
+  have h_logm_square := mul_nonneg (sub_nonneg.mpr h_logm_one) (Real.log_natCast_nonneg D.m)
+  have h_small_bound : (D.m : ℝ) * ∑ p ∈ small, w p ≤ 16 * Real.log D.m ^ 2 :=
+    h_small.trans (by nlinarith only [h_logm_square])
+  have h_classes : large ⊆ plus ∪ minus := by
+    intro p hp
+    obtain ⟨hpU, hp_lower⟩ := mem_filter.mp hp
+    obtain ⟨hp_x₁, hp_prime, -⟩ : p < D.x₁ ∧ p.Prime ∧ chiK P.d p ≠ 1 := by
+      simpa [lt_ceil] using (hU p hpU).1
+    have hmem : p ∈ Ioc (D.m ^ 2) X :=
+      mem_Ioc.mpr ⟨lt_of_not_ge hp_lower, Nat.le_floor hp_x₁.le⟩
+    rcases (hU p hpU).2 with hdvd | hdvd
+    · exact mem_union_left _ (mem_filter.mpr ⟨hmem,
+        ((Nat.modEq_iff_dvd' hp_prime.one_le).2 hdvd).symm, hp_prime⟩)
+    · have h_add : p + 1 ≡ (D.m - 1) + 1 [MOD D.m] := by
+        rw [Nat.sub_add_cancel (by omega)]
+        exact (Nat.modEq_zero_iff_dvd.2 hdvd).trans
+          (Nat.modEq_zero_iff_dvd.2 (dvd_refl D.m)).symm
+      exact mem_union_right _ (mem_filter.mpr ⟨hmem, Nat.ModEq.add_right_cancel' 1 h_add, hp_prime⟩)
+  have h_totient : (D.m.totient : ℝ) = D.m / 2 := by
+    obtain ⟨e, he, -⟩ := D.exists_m_eq_two_pow
+    rw [he, Nat.totient_prime_pow_succ Nat.prime_two]
+    push_cast
+    norm_num [pow_succ]
+  have h_square : D.m ^ 2 ≤ X := Nat.le_floor (by exact_mod_cast
+    (show (D.m : ℝ) ^ 2 ≤ D.x₁ from D.le_of_hasLogBound))
+  have h_X_pos : (0 : ℝ) < X := by
+    exact_mod_cast ((pow_pos (show 0 < D.m by omega) 2).trans_le h_square)
+  have h_logX : Real.log X ≤ D.logX₁ := by
+    simpa [Data.x₁, Real.log_exp] using Real.log_le_log h_X_pos
+      (Nat.floor_le (show 0 ≤ D.x₁ by positivity))
+  have h_large_sum : ∑ p ∈ large, w p ≤ (∑ p ∈ plus, w p) + ∑ p ∈ minus, w p := by
+    refine (sum_le_sum_of_subset_of_nonneg h_classes (fun p _ _ ↦ hw p)).trans ?_
+    rw [← sum_union_inter]
+    exact le_add_of_nonneg_right (sum_nonneg fun p _ ↦ hw p)
+  have h_plus := PrimeProgressionWeights.mul_sum_log_div_modEq_le_above_square X D.m 1 hm
+    h_square h_totient
+  have h_minus := PrimeProgressionWeights.mul_sum_log_div_modEq_le_above_square X D.m (D.m - 1) hm
+    h_square h_totient
+  have h_large_bound : (D.m : ℝ) * ∑ p ∈ large, w p ≤ 3456 * D.logX₁ := calc
+    _ ≤ (D.m : ℝ) * ((∑ p ∈ plus, w p) + ∑ p ∈ minus, w p) :=
+      mul_le_mul_of_nonneg_left h_large_sum hm_pos.le
+    _ ≤ 1728 * (1 + Real.log X) := by rw [mul_add]; linarith only [h_plus, h_minus]
+    _ ≤ _ := by linarith only [h_logX, h_logX₁]
+  change (D.m : ℝ) * ∑ p ∈ U, w p ≤ _
+  rw [← sum_filter_add_sum_filter_not U (fun p ↦ p ≤ D.m ^ 2) w, mul_add]
+  exact (add_le_add h_small_bound h_large_bound).trans_eq (add_comm _ _)
+
+/-- A common upper bound for `log x₁` and `(log m)²` gives a linear local loss bound. -/
+lemma sum_allowedLoss_mul_log_le_of_log_bounds (U : Finset ℕ) {V : ℝ}
+    (h_cutoff : D.logX₁ ≤ V) (h_lifts : Real.log D.m ^ 2 ≤ V) :
+    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ 7000 * (D.f * D.a * D.logB ^ 2 * V) := by
+  classical
+  let w (p : ℕ) := Real.log (p : ℝ) / p
+  let B := (2 : ℝ) * D.f * D.a * D.logB ^ 2
+  let T := B * (2 * D.logX₁)
+  let S := U.filter (· ∈ D.smallNonsplitPrimes)
+  let E := S.filter D.IsPlusMinusOneModLifts
+  have h_logX₁ : 1 ≤ D.logX₁ := by
+    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
+      (le_constantBound (P := P)).1]
+  have hV : 0 ≤ V := zero_le_one.trans (h_logX₁.trans h_cutoff)
+  have hB : 0 ≤ B := by dsimp [B]; positivity
+  have hT : 0 ≤ T := by dsimp [T]; positivity
+  have hw (p : ℕ) : 0 ≤ w p := div_nonneg (Real.log_natCast_nonneg p) (Nat.cast_nonneg p)
+  have h_N : (2 * D.m * D.f * D.b : ℝ) * Real.log D.N ≤ T := by
+    have h : (2 * D.m * D.f * D.b : ℝ) * Real.log D.N ≤
+        2 * D.f * D.a * D.logB ^ 2 * D.logX₁ * 2 :=
+      D.le_of_hasLogBound (by grind [log_nonneg, scale_inequalities])
+    exact h.trans_eq (by dsimp [T, B]; ring)
+  have h_term (p : ℕ) : D.allowedLoss p * Real.log p ≤
+      B * (if p ∈ D.smallNonsplitPrimes then w p else 0) +
+      B * (if p ∈ D.smallNonsplitPrimes ∧ D.IsPlusMinusOneModLifts p
+        then (D.m : ℝ) * w p else 0) + (if p = D.N then T else 0) := by
+    by_cases hp : p ∈ D.smallNonsplitPrimes
+    · have h_last : 0 ≤ (if p = D.N then T else 0) := by split <;> positivity
+      by_cases h_mod : D.IsPlusMinusOneModLifts p
+      · simp only [allowedLoss, ite_eq_left hp, h_mod, and_true]
+        have h_eq : 2 * D.loss p * Real.log p = B * ((D.m : ℝ) * w p) := by
+          simp only [loss, h_mod, ite_true, B, w]
+          ring
+        linarith only [h_eq, h_last, mul_nonneg hB (hw p)]
+      · simp only [allowedLoss, ite_eq_left hp, h_mod, and_false, ite_false, mul_zero, add_zero]
+        have h_eq : 2 * D.loss p * Real.log p = B * w p := by
+          simp only [loss, h_mod, ite_false, B, w]
+          ring
+        linarith only [h_eq, h_last]
+    · by_cases hN : p = D.N
+      · subst p
+        simpa only [allowedLoss, hp, ite_false, false_and, mul_zero, zero_add, ite_true] using h_N
+      · simp [allowedLoss, hp, hN]
+  have h_ordinary : ∑ p ∈ S, w p ≤ 7 * D.logX₁ := by
+    have hS : S ⊆ primesLE ⌊D.x₁⌋₊ := by
+      intro p hp
+      obtain ⟨hp_x₁, hp_prime, -⟩ : p < D.x₁ ∧ p.Prime ∧ chiK P.d p ≠ 1 := by
+        simpa [lt_ceil] using (mem_filter.mp hp).2
+      exact mem_primesLE.mpr ⟨Nat.le_floor hp_x₁.le, hp_prime⟩
+    have h := Chebyshev.sum_primesLE_log_div_le (show 1 ≤ D.x₁ from D.le_of_hasLogBound)
+    have h_bound : ∑ p ∈ primesLE ⌊D.x₁⌋₊, w p ≤ 7 * D.logX₁ := by
+      dsimp [w]
+      rw [show Real.log D.x₁ = D.logX₁ by simp [Data.x₁], Real.log_four_eq] at h
+      linarith [Real.log_two_lt_d9]
+    exact (sum_le_sum_of_subset_of_nonneg hS fun p _ _ ↦ hw p).trans h_bound
+  have h_exceptional := D.weighted_exceptional_prime_sum_le E
+    (fun p hp ↦ ⟨(mem_filter.mp (mem_filter.mp hp).1).2, (mem_filter.mp hp).2⟩) h_logX₁
+  have h_level : ∑ p ∈ U, (if p = D.N then T else 0) ≤ T := by
+    rw [sum_ite_eq']
+    split <;> first | exact le_rfl | exact hT
+  calc
+    _ ≤ ∑ p ∈ U, (B * (if p ∈ D.smallNonsplitPrimes then w p else 0) +
+        B * (if p ∈ D.smallNonsplitPrimes ∧ D.IsPlusMinusOneModLifts p
+          then (D.m : ℝ) * w p else 0) + (if p = D.N then T else 0)) :=
+      sum_le_sum fun p _ ↦ h_term p
+    _ = B * (∑ p ∈ S, w p) + B * ((D.m : ℝ) * ∑ p ∈ E, w p) +
+        ∑ p ∈ U, (if p = D.N then T else 0) := by
+      simp only [sum_add_distrib, ← mul_sum, ← sum_filter, S, E, filter_filter]
+    _ ≤ B * (7 * D.logX₁) + B * (3456 * D.logX₁ + 16 * Real.log D.m ^ 2) + T := by
+      gcongr
+    _ = B * (3465 * D.logX₁ + 16 * Real.log D.m ^ 2) := by dsimp [T]; ring
+    _ ≤ B * (3500 * V) := mul_le_mul_of_nonneg_left (by linarith) hB
+    _ = _ := by dsimp [B]; ring
 
 end New.Data
 
