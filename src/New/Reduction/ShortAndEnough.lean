@@ -52,12 +52,19 @@ variable {P : Parameters} (D : Data P)
 
 /-! ### The map from source forms to target forms -/
 
-/-- The integer `g_l = ⌊gain_l - err_l⌋`. For a prime `l` it vanishes unless `l` is non-split and
-below `x₁` or `l = N`. -/
+/-- The integer `g_l = ⌊gain_l - err_l⌋` for a specified valuation loss `err_l`. -/
+def gainExponentWithLoss (loss : ℕ → ℝ) (l : ℕ) : ℤ := ⌊D.gain l - loss l⌋
+
+/-- The gain exponent for `allowedLoss`. For a prime it is zero outside the primes in the
+normalization product. -/
 def gainExponent (l : ℕ) : ℤ := ⌊D.gain l - D.allowedLoss l⌋
 
 /-- The positive rational number `c_B = ∏ l ^ (-g_l)`, the product taken over the non-split primes
 below `x₁` and the level `N`. -/
+def invGainFactorWithLoss (loss : ℕ → ℝ) : ℚ :=
+  ∏ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (l : ℚ) ^ (-D.gainExponentWithLoss loss l)
+
+/-- The normalization factor for `allowedLoss`. -/
 def invGainFactor : ℚ := ∏ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (l : ℚ) ^ (-D.gainExponent l)
 
 /-- Every `l` in `D.smallNonsplitPrimes ∪ {D.N}`, the set of primes indexing the product
@@ -71,8 +78,10 @@ lemma prime_of_mem_smallNonsplitPrimes_union {l : ℕ} (hl : l ∈ D.smallNonspl
   · rw [mem_singleton.1 hN]
     exact D.N_prime
 
-lemma invGainFactor_pos : 0 < D.invGainFactor :=
+private lemma invGainFactorWithLoss_pos (loss : ℕ → ℝ) : 0 < D.invGainFactorWithLoss loss :=
   prod_pos fun _ hl ↦ zpow_pos (mod_cast (D.prime_of_mem_smallNonsplitPrimes_union hl).pos) _
+
+lemma invGainFactor_pos : 0 < D.invGainFactor := D.invGainFactorWithLoss_pos D.allowedLoss
 
 /-- The sum of `log l` over the non-split primes `l` below `x₁` and `l = N` is at most the
 weight `b = D.b`, which is `exp D.logB`. It bounds the loss from rounding the exponents `g_l` down
@@ -90,12 +99,12 @@ lemma sum_log_smallNonsplitPrimes_union_le : ∑ l ∈ D.smallNonsplitPrimes ∪
     _ ≤ ⌈D.x₁⌉₊ * D.x₁ + log D.N := by grw [sum_le_card_nsmul _ _ _ h_term, nsmul_eq_mul, h_card]
     _ ≤ D.b := D.le_of_hasLogBound
 
-/-- The number `c_B = D.invGainFactor` satisfies the bound with the weighted valuation loss, the
-sum taken over the non-split primes `l` below the cut-off `x₁ = D.x₁`. -/
-lemma log_invGainFactor_le_with_loss :
-    log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l +
-      D.allowedLossSumBound + D.b := by
-  have h_ne : ∀ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (l : ℝ) ^ (-D.gainExponent l) ≠ 0 := fun l hl ↦
+private lemma log_invGainFactorWithLoss_le (loss : ℕ → ℝ) {budget : ℝ}
+    (h_budget : ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, loss l * log l ≤ budget) :
+    log (D.invGainFactorWithLoss loss) ≤
+      -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + budget + D.b := by
+  have h_ne (l : ℕ) (hl : l ∈ D.smallNonsplitPrimes ∪ {D.N}) :
+      (l : ℝ) ^ (-D.gainExponentWithLoss loss l) ≠ 0 :=
     zpow_ne_zero _ (mod_cast (D.prime_of_mem_smallNonsplitPrimes_union hl).ne_zero)
   -- The level `N` is at least `x₁`, so it has no gain.
   have h_gain : ∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l =
@@ -103,40 +112,59 @@ lemma log_invGainFactor_le_with_loss :
     refine sum_subset subset_union_left fun l hl hl_notMem ↦ ?_
     rw [mem_singleton.1 ((mem_union.1 hl).resolve_left hl_notMem),
       D.gain_eq_zero (.inr D.le_of_hasLogBound), zero_mul]
-  calc log D.invGainFactor = ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, -D.gainExponent l * log l := by
-        push_cast [invGainFactor, log_prod h_ne, log_zpow]
+  calc log (D.invGainFactorWithLoss loss)
+    _ = ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, -D.gainExponentWithLoss loss l * log l := by
+        push_cast [invGainFactorWithLoss, log_prod h_ne, log_zpow]
         rfl
-    _ ≤ ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (-D.gain l + D.allowedLoss l + 1) * log l := by
+    _ ≤ ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (-D.gain l + loss l + 1) * log l := by
         gcongr with l
-        grw [gainExponent, ← Int.sub_one_lt_floor]
+        grw [gainExponentWithLoss, ← Int.sub_one_lt_floor]
         linarith
     _ = -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l +
-          ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, D.allowedLoss l * log l +
+          ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, loss l * log l +
           ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, log l := by
         simp only [h_gain, add_mul, neg_mul, one_mul, sum_add_distrib, sum_neg_distrib]
-    _ ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.allowedLossSumBound + D.b := by
-        grw [sum_allowedLoss_mul_log_le_sharp, sum_log_smallNonsplitPrimes_union_le]
+    _ ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + budget + D.b := by
+        grw [h_budget, sum_log_smallNonsplitPrimes_union_le]
+
+/-- The number `c_B = D.invGainFactor` satisfies the bound with the weighted valuation loss, the
+sum taken over the non-split primes `l` below the cut-off `x₁ = D.x₁`. -/
+lemma log_invGainFactor_le_with_loss :
+    log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l +
+      D.allowedLossSumBound + D.b :=
+  D.log_invGainFactorWithLoss_le D.allowedLoss (D.sum_allowedLoss_mul_log_le_sharp _)
 
 /-- The normalization bound with the valuation loss estimated in cubic units. -/
 lemma log_invGainFactor_le :
     log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.errorUnit + D.b :=
   (D.log_invGainFactor_le_with_loss).trans (by grw [D.allowedLossSumBound_le_errorUnit])
 
-/-- For a prime `l`, the absolute value in `ℂ_l` of `c_B = D.invGainFactor` is that of
-`l ^ (-g_l)`. -/
-lemma norm_invGainFactor (l : ℕ) [hl : Fact l.Prime] :
-    ‖(D.invGainFactor : ℂ_[l])‖ = ‖(l : ℂ_[l])‖ ^ (-D.gainExponent l) := by
-  push_cast [invGainFactor]
+private lemma allowedLoss_eq_zero_of_notMem {l : ℕ}
+    (hl : l ∉ D.smallNonsplitPrimes ∪ {D.N}) : D.allowedLoss l = 0 := by
+  obtain ⟨h_small, h_N⟩ := notMem_union.1 hl
+  simp [allowedLoss, h_small, notMem_singleton.1 h_N]
+
+private lemma norm_invGainFactorWithLoss (loss : ℕ → ℝ) (l : ℕ) [hl : Fact l.Prime]
+    (h_loss : l ∉ D.smallNonsplitPrimes ∪ {D.N} → loss l = 0) :
+    ‖(D.invGainFactorWithLoss loss : ℂ_[l])‖ =
+      ‖(l : ℂ_[l])‖ ^ (-D.gainExponentWithLoss loss l) := by
+  push_cast [invGainFactorWithLoss]
   rw [norm_prod, prod_eq_single l, norm_zpow]
   · intro p hp hpl
     have h_coprime : l.Coprime p :=
       (Nat.coprime_primes hl.out (D.prime_of_mem_smallNonsplitPrimes_union hp)).2 hpl.symm
     rw [norm_zpow, h_coprime.norm_natCast_eq_one, one_zpow]
   · -- If `l` is not in the product, then `g_l = 0`.
-    rw [notMem_union, notMem_singleton]
-    rintro ⟨h_notMem, hN⟩
-    obtain ⟨h_gain, h_loss⟩ := gain_allowedLoss_eq_zero h_notMem hN
-    simp [gainExponent, h_gain, h_loss]
+    intro hl_out
+    obtain ⟨h_small, h_N⟩ := notMem_union.1 hl_out
+    have h_gain := (gain_allowedLoss_eq_zero h_small (notMem_singleton.1 h_N)).1
+    simp [gainExponentWithLoss, h_gain, h_loss hl_out]
+
+/-- For a prime `l`, the absolute value in `ℂ_l` of `c_B = D.invGainFactor` is that of
+`l ^ (-g_l)`. -/
+lemma norm_invGainFactor (l : ℕ) [hl : Fact l.Prime] :
+    ‖(D.invGainFactor : ℂ_[l])‖ = ‖(l : ℂ_[l])‖ ^ (-D.gainExponent l) :=
+  D.norm_invGainFactorWithLoss D.allowedLoss l D.allowedLoss_eq_zero_of_notMem
 
 /-- A non-zero constant `c_ss` for which the seesaw identity `New.Data.seesaw_identity` holds with
 the linear form `D.besselForm` and the archimedean point `D.besselPoint`. -/
@@ -157,6 +185,11 @@ abbrev projectedPoincare (s : D.chosenGL) : D.ramifiedSourceForms →ₗ[ℂ] D.
 `𝔭 = c_B c_ss⁻¹ #Ḡ · e₀ 𝒫` (`coe_normalizedPoincare`). -/
 def normalizedPoincare (s : D.chosenGL) : D.ramifiedSourceForms →ₗ[ℂ] D.targetForms :=
   (D.invGainFactor : ℂ) • D.projectedPoincare s
+
+/-- The projected Poincaré map scaled by the rational normalization for the valuation loss. -/
+def normalizedPoincareWithLoss (loss : ℕ → ℝ) (s : D.chosenGL) :
+    D.ramifiedSourceForms →ₗ[ℂ] D.targetForms :=
+  (D.invGainFactorWithLoss loss : ℂ) • D.projectedPoincare s
 
 /-- The ramified source forms that are integral at every `ι`, where `ι` runs over the pairs of a
 prime `l` and an `l`-adic place of `ℂ` (`PrimePadicIso`). -/
@@ -179,38 +212,33 @@ lemma exists_lowerChain_poincare_eq (ϑ : D.Twist) :
     (D.seesaw_identity D.besselForm D.besselPoint).choose_spec ϑ
   exact ⟨Ψ, hΨ, fun φ ↦ by simp [scaledInclusion, h_eq]⟩
 
-/-- The map `D.normalizedPoincare s` is `c_B = D.invGainFactor` times `D.projectedPoincare s`, the
-map `#Ḡ · e₀ s c_ss⁻¹ 𝒫` from ramified source forms to target forms. The positive rational factor
-`c_B` multiplies the squared norm `‖Θ₁ ·‖_σ²` by `exp (2 log c_B)`, for every automorphism `σ` of
-`ℂ`. -/
+/-- The rational normalization multiplies the squared norm by `exp (2 log c_B)` at each complex
+automorphism. -/
+private lemma normSqAt_normalizedPoincareWithLoss (loss : ℕ → ℝ) (s : D.chosenGL)
+    (φ : D.ramifiedSourceForms) (σ : ℂ ≃+* ℂ) :
+    (D.Θ 1 (D.normalizedPoincareWithLoss loss s φ)).normSqAt σ =
+      exp (2 * log (D.invGainFactorWithLoss loss)) *
+        (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ := by
+  have h_norm : ‖σ (D.invGainFactorWithLoss loss)‖ ^ 2 =
+      exp (2 * log (D.invGainFactorWithLoss loss)) := by
+    rw [two_mul, exp_add, exp_log (mod_cast D.invGainFactorWithLoss_pos loss), ← sq]
+    simp
+  rw [normalizedPoincareWithLoss, LinearMap.smul_apply, map_smul, normSqAt_smul, h_norm]
+
+/-- The squared norm after normalizing with `allowedLoss`. -/
 lemma normSqAt_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) (σ : ℂ ≃+* ℂ) :
     (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ =
-      exp (2 * log D.invGainFactor) * (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ := by
-  have h_norm : ‖σ D.invGainFactor‖ ^ 2 = exp (2 * log D.invGainFactor) := by
-    rw [two_mul, exp_add, exp_log (mod_cast D.invGainFactor_pos), ← sq]
-    simp
-  rw [normalizedPoincare, LinearMap.smul_apply, map_smul, normSqAt_smul, h_norm]
+      exp (2 * log D.invGainFactor) * (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ :=
+  D.normSqAt_normalizedPoincareWithLoss D.allowedLoss s φ σ
 
 /-! ### Theorem A -/
 
-/-- **Theorem A (a).** The source is spanned by the forms `φ` that are integral at every prime `l`
-and `l`-adic place of `ℂ` and satisfy the size bound with error
-`3 f a (log b)² + 2 allowedLossSumBound` for all `s`
-in the finite group `D.chosenGL` and all automorphisms `σ` of `ℂ`. Here
-`s 𝔭 = D.normalizedPoincare s` maps the source to the target, `Θ₁ = D.Θ 1` is the chain of `m = D.m`
-lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conjugate form. In the bound:
-* `main = D.mainAmount` is `m k ∑_τ (s_∞(κ(τ)) - s_fin(κ(τ), τ))`, summed over all infinite places
-  `τ`, where `k = D.k` is the rank of the source, `κ` the weight, `s_∞ = D.jetSize` the size of a
-  derivative of given order and `s_fin = D.primeSum` the prime sum for its divisibility;
-* `rem = D.totalRemainder` is `∑ (s_fin(a, τ) - s_main)`, summed over the `a`-places `τ`, with the
-  main part `s_main = D.mainPrimeSum`;
-* `f = D.f` is the number of infinite places, `a = D.a` is the long order `x b`, and
-  `log b = D.logB` is the logarithm of the weight `b`. -/
-theorem span_short_integralRamified_eq_top_with_losses :
+private theorem span_short_integralRamified_eq_top_of_loss (loss : ℕ → ℝ) {budget : ℝ}
+    (h_budget : ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, loss l * log l ≤ budget) :
     span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
-      (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
+      (D.Θ 1 (D.normalizedPoincareWithLoss loss s φ)).normSqAt σ ≤
         exp (D.mainAmount - D.m * D.totalRemainder +
-          (3 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound))} = ⊤ := by
+          (3 * D.quadraticErrorUnit + 2 * budget))} = ⊤ := by
   -- The short forms span the source, so it suffices to bound the lifts for a short form `φ`.
   refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_quadratic
   rintro φ ⟨h_integral, h_size⟩
@@ -239,8 +267,36 @@ theorem span_short_integralRamified_eq_top_with_losses :
   have h_rounding_cost : D.x ^ 99 + 2 * D.b ≤ D.quadraticErrorUnit := D.le_of_hasLogBound
   -- The rational normalization adds `2 log c_B` to the log squared norm, cancelling the
   -- finite-place gains.
-  grw [D.normSqAt_normalizedPoincare, h_projected_size, ← exp_add, exp_le_exp, chainLogBound_def]
-  linarith [D.log_invGainFactor_le_with_loss, h_rounding_cost]
+  grw [D.normSqAt_normalizedPoincareWithLoss, h_projected_size, ← exp_add, exp_le_exp, chainLogBound_def]
+  linarith [D.log_invGainFactorWithLoss_le loss h_budget, h_rounding_cost]
+
+/-- **Theorem A (a).** The source is spanned by the forms `φ` that are integral at every prime `l`
+and `l`-adic place of `ℂ` and satisfy the size bound with error
+`3 f a (log b)² + 2 allowedLossSumBound` for all `s`
+in the finite group `D.chosenGL` and all automorphisms `σ` of `ℂ`. Here
+`s 𝔭 = D.normalizedPoincare s` maps the source to the target, `Θ₁ = D.Θ 1` is the chain of `m = D.m`
+lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conjugate form. In the bound:
+* `main = D.mainAmount` is `m k ∑_τ (s_∞(κ(τ)) - s_fin(κ(τ), τ))`, summed over all infinite places
+  `τ`, where `k = D.k` is the rank of the source, `κ` the weight, `s_∞ = D.jetSize` the size of a
+  derivative of given order and `s_fin = D.primeSum` the prime sum for its divisibility;
+* `rem = D.totalRemainder` is `∑ (s_fin(a, τ) - s_main)`, summed over the `a`-places `τ`, with the
+  main part `s_main = D.mainPrimeSum`;
+* `f = D.f` is the number of infinite places, `a = D.a` is the long order `x b`, and
+  `log b = D.logB` is the logarithm of the weight `b`. -/
+theorem span_short_integralRamified_eq_top_with_losses :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder +
+          (3 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound))} = ⊤ :=
+  D.span_short_integralRamified_eq_top_of_loss D.allowedLoss (D.sum_allowedLoss_mul_log_le_sharp _)
+
+/-- Theorem A (a) with the valuation loss bounded by `f a (log b)²`. -/
+theorem span_short_integralRamified_eq_top_with_valuationLoss :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincareWithLoss D.valuationLoss s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder + 5 * D.quadraticErrorUnit)} = ⊤ := by
+  simpa only [← add_mul, show (3 : ℝ) + 2 = 5 by norm_num] using
+    D.span_short_integralRamified_eq_top_of_loss D.valuationLoss (D.sum_valuationLoss_mul_log_le _)
 
 /-- The short spanning family with the cubic error. -/
 theorem span_short_integralRamified_eq_top_cubic :
@@ -272,6 +328,43 @@ lemma finrank_sourceForm_le_two_mul :
   rify
   linarith
 
+private lemma normalizedPoincareWithLoss_mem_integralVectors {ι : PrimePadicIso}
+    (loss : ℕ → ℝ) (h_loss : (ι.prime : ℕ) ∉ D.smallNonsplitPrimes ∪ {D.N} → loss ι.prime = 0)
+    (s : D.chosenGL)
+    {φ : D.ramifiedSourceForms}
+    (hφ : ∀ (ϑ : D.Twist) (Ψ : D.Translations →₀ ℂ), IsChainDatum ϑ Ψ →
+      Nat.Coprime ι.prime ϑ.normQ → letI := ι.place
+      GaugeLe 1 (((ι.1 : ℕ) : ℝ) ^ (loss ι.1 - D.gain ι.1)) (compositeLift ϑ Ψ φ)) :
+    D.normalizedPoincareWithLoss loss s φ ∈ D.targetLattice.integralVectors ι := by
+  let : PadicPlace ι.prime := ι.place
+  refine mem_integralVectors_targetLattice.2 fun ϑ hϑ ↦ ?_
+  obtain ⟨Ψ, hΨ, h_seesaw⟩ : ∃ Ψ : D.Translations →₀ ℂ, IsChainDatum ϑ.toTwist Ψ ∧
+      ∀ φ : D.ramifiedSourceForms, D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ)) =
+        compositeLift ϑ.toTameChar Ψ φ :=
+    D.exists_lowerChain_poincare_eq ϑ
+  -- As `g_l ≤ gain_l - err_l`, the form `B_ϑ φ` is `l ^ g_l` times an integral form.
+  have h_gauge : GaugeLe 1 1
+      (((ι.prime : ℕ) : ℂ) ^ (-D.gainExponentWithLoss loss ι.prime) • compositeLift ϑ.toTameChar Ψ φ) :=
+    (hφ ϑ Ψ hΨ hϑ).zpow_neg_smul ((Int.floor_le _).trans_eq (neg_sub _ _).symm)
+  have h_norm : ‖ιₚ (D.invGainFactorWithLoss loss : ℂ)‖ =
+      ‖ιₚ (((ι.1 : ℕ) : ℂ) ^ (-D.gainExponentWithLoss loss ι.1))‖ := by
+    simp [D.norm_invGainFactorWithLoss loss ι.prime h_loss]
+  -- With `z = c_ss⁻¹ 𝒫 φ`, the form `c_B ι_ϑ z = c_B B_ϑ φ` is integral at `ι`, as
+  -- `v_ι(c_B) = -g_l`.
+  have h_lift_mem :
+      (D.invGainFactorWithLoss loss : ℂ) • D.lowerChainAtLevel ϑ (D.poincare (D.scaledInclusion φ)) ∈
+        integralForms ι.place := fun g ↦ by
+    change weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactorWithLoss loss : ℂ) •
+      (D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ))).val g) ≤ 1
+    rw [h_seesaw φ, weylGauge_smul, h_norm, ← weylGauge_smul]
+    simpa using h_gauge g
+  -- So is `Θ_ϑ s 𝔭 φ`, which is `c_B Θ_ϑ` of `#Ḡ` times the good part of a translate of `z`.
+  have h_smul : D.Θ ϑ (D.normalizedPoincareWithLoss loss s φ) =
+      (D.invGainFactorWithLoss loss : ℂ) • D.Θ ϑ (D.projectedPoincare s φ) :=
+    (D.Θ ϑ).map_smul _ _
+  rw [h_smul]
+  exact goodProjTranslate_mem_integralForms ι.place h_lift_mem s
+
 /-- Let `l = ι.1` be the prime below `ι`, let `gain_l = D.gain l` be the divisibility asked of the
 chain of lifts at `l` and `err_l = D.allowedLoss l` the error allowed in it. Suppose that
 `B_ϑ φ = compositeLift ϑ Ψ φ` has valuation at least `gain_l - err_l` at `ι`, for every twist `ϑ`
@@ -283,38 +376,13 @@ lemma normalizedPoincare_mem_integralVectors {ι : PrimePadicIso} (s : D.chosenG
     (hφ : ∀ (ϑ : D.Twist) (Ψ : D.Translations →₀ ℂ), IsChainDatum ϑ Ψ →
       Nat.Coprime ι.prime ϑ.normQ → letI := ι.place
       GaugeLe 1 (((ι.1 : ℕ) : ℝ) ^ (D.allowedLoss ι.1 - D.gain ι.1)) (compositeLift ϑ Ψ φ)) :
-    D.normalizedPoincare s φ ∈ D.targetLattice.integralVectors ι := by
-  let : PadicPlace ι.prime := ι.place
-  refine mem_integralVectors_targetLattice.2 fun ϑ hϑ ↦ ?_
-  obtain ⟨Ψ, hΨ, h_seesaw⟩ : ∃ Ψ : D.Translations →₀ ℂ, IsChainDatum ϑ.toTwist Ψ ∧
-      ∀ φ : D.ramifiedSourceForms, D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ)) =
-        compositeLift ϑ.toTameChar Ψ φ :=
-    D.exists_lowerChain_poincare_eq ϑ
-  -- As `g_l ≤ gain_l - err_l`, the form `B_ϑ φ` is `l ^ g_l` times an integral form.
-  have h_gauge : GaugeLe 1 1
-      (((ι.prime : ℕ) : ℂ) ^ (-D.gainExponent ι.prime) • compositeLift ϑ.toTameChar Ψ φ) :=
-    (hφ ϑ Ψ hΨ hϑ).zpow_neg_smul ((Int.floor_le _).trans_eq (neg_sub _ _).symm)
-  have h_norm : ‖ιₚ (D.invGainFactor : ℂ)‖ = ‖ιₚ (((ι.1 : ℕ) : ℂ) ^ (-D.gainExponent ι.1))‖ := by
-    simp [norm_invGainFactor]
-  -- With `z = c_ss⁻¹ 𝒫 φ`, the form `c_B ι_ϑ z = c_B B_ϑ φ` is integral at `ι`, as
-  -- `v_ι(c_B) = -g_l`.
-  have h_lift_mem :
-      (D.invGainFactor : ℂ) • D.lowerChainAtLevel ϑ (D.poincare (D.scaledInclusion φ)) ∈
-        integralForms ι.place := fun g ↦ by
-    change weylGauge D.columnsY (D.lastEntry D.m) g ((D.invGainFactor : ℂ) •
-      (D.lowerChain ϑ.toTameChar (D.poincare (D.scaledInclusion φ))).val g) ≤ 1
-    rw [h_seesaw φ, weylGauge_smul, h_norm, ← weylGauge_smul]
-    simpa using h_gauge g
-  -- So is `Θ_ϑ s 𝔭 φ`, which is `c_B Θ_ϑ` of `#Ḡ` times the good part of a translate of `z`.
-  have h_smul : D.Θ ϑ (D.normalizedPoincare s φ) =
-      (D.invGainFactor : ℂ) • D.Θ ϑ (D.projectedPoincare s φ) :=
-    (D.Θ ϑ).map_smul _ _
-  rw [h_smul]
-  exact goodProjTranslate_mem_integralForms ι.place h_lift_mem s
+    D.normalizedPoincare s φ ∈ D.targetLattice.integralVectors ι :=
+  D.normalizedPoincareWithLoss_mem_integralVectors D.allowedLoss D.allowedLoss_eq_zero_of_notMem s hφ
 
-private lemma indexLe_of_mem_image_normalizedPoincare_colength
-    (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
-    (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
+private lemma indexLe_of_mem_image_normalizedPoincareWithLoss
+    (loss : ℕ → ℝ) (h_loss : ∀ l ∉ D.smallNonsplitPrimes ∪ {D.N}, loss l = 0)
+    (h_valuation : ∀ l, D.valuationLoss l ≤ loss l) (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincareWithLoss loss s '' D.integralRamified) :
     D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound)) := by
   -- At each place the map takes the submodule supplied by the local divisibility theorem into
   -- integral target forms. The colength bound uses all source forms, whose dimension is at most
@@ -331,17 +399,25 @@ private lemma indexLe_of_mem_image_normalizedPoincare_colength
   let : PadicPlace ι.prime := ι.place
   -- On `S` the chain has valuation at least `gain_l - err_l`, for all twists prime to `l`.
   obtain ⟨j, S, hj, h_index, h_gauge⟩ :=
-    exists_colengthDvd_gaugeLe_compositeLift_sharp (D := D) (p := ι.prime)
+    exists_colengthDvd_gaugeLe_compositeLift_with_valuationLoss (D := D) (p := ι.prime)
   let A : D.ramifiedSourceForms →ₗ[ι.integers] D.targetForms :=
-    (D.normalizedPoincare s).restrictScalars _
+    (D.normalizedPoincareWithLoss loss s).restrictScalars _
   let M : Submodule ι.integers D.ramifiedSourceForms :=
     D.integralSourceForms.comap (D.ramifiedSourceForms.subtype.restrictScalars _)
   have h_source : ColengthDvd M ((D.targetLattice.integralVectors ι).comap A) (ι.prime ^ j) :=
     h_index.comap _ (fun _ hφ ↦ hφ) fun φ _ hφ ↦
-      D.normalizedPoincare_mem_integralVectors s fun ϑ Ψ hΨ hϑ ↦ h_gauge ϑ Ψ hΨ hϑ φ hφ φ.prop
+      D.normalizedPoincareWithLoss_mem_integralVectors loss (h_loss ι.prime) s fun ϑ Ψ hΨ hϑ ↦
+        (h_gauge ϑ Ψ hΨ hϑ φ hφ φ.prop).rpow_mono (sub_le_sub_right (h_valuation ι.prime) _)
   have h_subset : D.integralRamified ⊆ M := fun φ hφ ↦ hφ ι
   exact ⟨j, M.map A, hj.trans_eq (mul_comm _ _), fun i ↦ Set.image_mono h_subset (hy i),
     h_source.map A le_sup_left (map_comap_le A _)⟩
+
+private lemma indexLe_of_mem_image_normalizedPoincare_colength
+    (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
+    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound)) :=
+  D.indexLe_of_mem_image_normalizedPoincareWithLoss D.allowedLoss
+    (fun _ ↦ D.allowedLoss_eq_zero_of_notMem) D.valuationLoss_le_allowedLoss s hy
 
 private lemma colengthLossSumBound_le_allowedLossSumBound :
     D.colengthLossSumBound ≤ D.allowedLossSumBound := by
@@ -373,6 +449,21 @@ theorem indexLe_normalizedPoincare_colength (t : Finset D.chosenGL) {n : ℕ}
   exact TwistedLattice.indexLe_card_mul t
     (fun s _ _ _ hs ↦ D.indexLe_of_mem_image_normalizedPoincare_colength s hs) hy
 
+/-- Theorem A (b) with the normalization from `valuationLoss` and the same local colengths. -/
+theorem indexLe_normalizedPoincare_with_valuationLoss (t : Finset D.chosenGL) {n : ℕ}
+    {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, ∃ s ∈ t,
+      y i ∈ D.normalizedPoincareWithLoss D.valuationLoss s '' D.integralRamified) :
+    D.targetLattice.IndexLe y
+      (#t * finrank ℂ D.ramifiedSourceForms * (2 * (31 * (D.f * D.a * D.logX₁ ^ 2)))) := by
+  have h_loss (l : ℕ) (hl : l ∉ D.smallNonsplitPrimes ∪ {D.N}) : D.valuationLoss l = 0 := by
+    obtain ⟨h_small, h_N⟩ := notMem_union.1 hl
+    simp [valuationLoss, h_small, notMem_singleton.1 h_N]
+  rw [mul_assoc]
+  exact TwistedLattice.indexLe_card_mul t (fun s _ _ _ hs ↦
+    D.indexLe_of_mem_image_normalizedPoincareWithLoss D.valuationLoss h_loss
+      (fun _ ↦ le_rfl) s hs) hy
+
 /-- The index bound in units of the weighted valuation loss bound. -/
 theorem indexLe_normalizedPoincare_sharp (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, ∃ s ∈ t, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
@@ -389,13 +480,17 @@ theorem indexLe_normalizedPoincare (t : Finset D.chosenGL) {n : ℕ} {y : Fin n 
 
 /-! ### Theorem B -/
 
+private lemma range_normalizedPoincareWithLoss (loss : ℕ → ℝ) (s : D.chosenGL) :
+    (D.normalizedPoincareWithLoss loss s).range = D.ramifiedSourceForms.map (D.goodPoincare s) := by
+  simp [normalizedPoincareWithLoss, scaledInclusion, LinearMap.range_smul, LinearMap.range_comp,
+    (D.invGainFactorWithLoss_pos loss).ne']
+
 /-- The range of `D.normalizedPoincare s` (the map `s 𝔭`) is the image of the ramified source forms
 `D.ramifiedSourceForms` under `D.goodPoincare s = #Ḡ · e₀ s 𝒫`, as the scalars `c_B` and `c_ss⁻¹` in
 `𝔭` do not vanish. -/
 lemma range_normalizedPoincare (s : D.chosenGL) :
-    (D.normalizedPoincare s).range = D.ramifiedSourceForms.map (D.goodPoincare s) := by
-  simp [normalizedPoincare, scaledInclusion, LinearMap.range_smul, LinearMap.range_comp,
-    D.invGainFactor_pos.ne']
+    (D.normalizedPoincare s).range = D.ramifiedSourceForms.map (D.goodPoincare s) :=
+  D.range_normalizedPoincareWithLoss D.allowedLoss s
 
 /-- The factor `(5/2) (1 + log (1 / (16 ε)))` in the number of translates is at most
 `5 log (1 + 2 b²)` for `ε = b⁻² / 8`. -/
@@ -413,10 +508,11 @@ lemma targetDim_pos : 0 < D.targetDim := D.finrank_targetForms_ne_zero.pos
 
 /-- Restrict the source before making the greedy choice. The dimension lost on restriction is
 absorbed in the spreading error, and the choice stops at the requested missing share `q`. -/
-theorem exists_few_normalizedPoincare {q : ℝ} (hq : 4 / D.b ^ 2 ≤ q) (hq_lt : q < 1) :
+theorem exists_few_normalizedPoincareWithLoss (loss : ℕ → ℝ) {q : ℝ} (hq : 4 / D.b ^ 2 ≤ q)
+    (hq_lt : q < 1) :
     ∃ t : Finset D.chosenGL,
       #t * finrank ℂ D.ramifiedSourceForms ≤ 5 / 2 * (1 + log q⁻¹) * D.targetDim ∧
-      (1 - q) * D.targetDim ≤ finrank ℂ ↥(⨆ s ∈ t, (D.normalizedPoincare s).range) := by
+      (1 - q) * D.targetDim ≤ finrank ℂ ↥(⨆ s ∈ t, (D.normalizedPoincareWithLoss loss s).range) := by
   have : Nontrivial D.SourceForm := D.sourceFormCoords.nontrivial
   have h_source_pos : 0 < finrank ℂ D.SourceForm := finrank_pos
   have h_ramified_pos : 0 < finrank ℂ D.ramifiedSourceForms := by
@@ -472,13 +568,20 @@ theorem exists_few_normalizedPoincare {q : ℝ} (hq : 4 / D.b ^ 2 ≤ q) (hq_lt 
       _ = ((1 + α) / 2 + 3 / 2 * ε) * finrank ℂ D.ramifiedSourceForms := by ring
   have h_range (s : D.chosenGL) :
       LinearMap.range ((D.goodPoincare s).domRestrict D.ramifiedSourceForms) =
-        (D.normalizedPoincare s).range := by
-    rw [LinearMap.range_domRestrict, D.range_normalizedPoincare]
+        (D.normalizedPoincareWithLoss loss s).range := by
+    rw [LinearMap.range_domRestrict, D.range_normalizedPoincareWithLoss]
   have h_stop : 16 * ε = q := by dsimp [ε]; ring
   obtain ⟨t, ht, h_span⟩ := h_spread.exists_few_le_finrank_iSup_range
     D.targetDim_pos (by dsimp [ε]; positivity) (by dsimp [ε]; linarith)
   rw [iSup_congr fun s ↦ iSup_congr fun _ ↦ h_range s] at h_span
   exact ⟨t, by simpa only [h_stop] using ht, by simpa only [h_stop] using h_span⟩
+
+/-- Theorem B for the normalization from `allowedLoss`. -/
+theorem exists_few_normalizedPoincare {q : ℝ} (hq : 4 / D.b ^ 2 ≤ q) (hq_lt : q < 1) :
+    ∃ t : Finset D.chosenGL,
+      #t * finrank ℂ D.ramifiedSourceForms ≤ 5 / 2 * (1 + log q⁻¹) * D.targetDim ∧
+      (1 - q) * D.targetDim ≤ finrank ℂ ↥(⨆ s ∈ t, (D.normalizedPoincare s).range) :=
+  D.exists_few_normalizedPoincareWithLoss D.allowedLoss hq hq_lt
 
 /-- There is a set `t` of elements of the finite group `D.chosenGL = ∏ GL_r(𝔽_w)` (product over the
 chosen places `w` above the two level primes) with `#t · dim src ≤ 5 d_T log (1 + 2 b²)` such that

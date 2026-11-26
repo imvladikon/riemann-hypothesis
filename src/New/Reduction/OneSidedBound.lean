@@ -13,7 +13,7 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality gives a remainder term
-`20 φ(q₀) log⁴ b / m`. The exponent `-1/2 + 4 ε` follows from `log b ≤ 2 x^ε` and `m ≥ √x`.
+`27 φ(q₀) log³ b / m`. The exponent `-1/2 + 3 ε` follows from `log b ≤ 2 x^ε` and `m ≥ √x`.
 The prime number theorem bounds both remainders at the auxiliary cutoff `x₁` by `x^(-2)`.
 The passage to reals and the choice of a smaller `ε` give the one-sided criterion for
 non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
@@ -67,6 +67,17 @@ private lemma Data.primeRemainder_le_of_loss {P : Parameters} (D : Data P) {loss
         rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
         field
     _ ≤ _ := by grw [h_ratio]
+
+/-- The one-sided prime remainder bound from the quadratic main inequality. -/
+lemma Data.primeRemainder_le_quadratic {P : Parameters} (D : Data P) :
+    primeRemainder P.d P.q₀ D.x ≤ 27 * P.q₀.totient * D.logB ^ 3 / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (27 * D.logB ^ 2) := by
+    calc
+      _ ≤ 27 * (D.f * D.a * D.logB ^ 2) := star_inequality_quadratic D
+      _ = _ := by ring
+  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  ring
 
 /-- The one-sided prime remainder bound using the weighted valuation loss. -/
 lemma Data.primeRemainder_le_weighted_loss {P : Parameters} (D : Data P) :
@@ -156,13 +167,13 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
 the parameters `P`, and let `0 < ε < 1/100`. Let
 `R(y) = primeRemainder d q₀ y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q₀) - c`, where
 `λ(n) = Λ(n) (1 - (n/d))` for `n ≡ 1` modulo `q₀` and `0` otherwise, `(·/d)` is the Legendre symbol,
-and `c` is the constant with `R(y) → 0`. The weighted loss gives exponent `-1/2 + (10/3) ε`
+and `c` is the constant with `R(y) → 0`. The quadratic main inequality gives exponent `-1/2 + 3 ε`
 for all large integers `x`. -/
-lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
+lemma eventually_primeRemainder_natCast_le_quadratic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
-        (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+        (216 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
   filter_upwards [eventually_exists_data_scales P hε hε_lt,
     eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
     with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
@@ -171,72 +182,60 @@ lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : 
   obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
       |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
   have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_logX₁_pos : 0 < D.logX₁ := Data.HasLogBound.pos D
-  have h_cutoff_sq : D.logX₁ ^ 2 ≤ D.logB ^ (1 / 3 : ℝ) := by
-    rw [← log_le_log_iff (by positivity) (rpow_pos_of_pos h_logB_pos _), log_pow,
-      log_rpow h_logB_pos]
-    norm_num
-    linarith only [D.log_logX₁_le_log_logB]
-  have h_weight : D.logB ^ 3 * D.logX₁ ^ 2 ≤ 16 * (x : ℝ) ^ ((10 / 3 : ℝ) * ε) := calc
-    _ ≤ D.logB ^ 3 * D.logB ^ (1 / 3 : ℝ) :=
-      mul_le_mul_of_nonneg_left h_cutoff_sq (by positivity)
-    _ = D.logB ^ (10 / 3 : ℝ) := by
-      rw [← rpow_natCast _ 3, ← rpow_add h_logB_pos]
-      norm_num
-    _ ≤ (2 * (x : ℝ) ^ ε) ^ (10 / 3 : ℝ) :=
-      rpow_le_rpow h_logB_pos.le h_logB (by norm_num)
-    _ = (2 : ℝ) ^ (10 / 3 : ℝ) * (x : ℝ) ^ ((10 / 3 : ℝ) * ε) := by
-      rw [mul_rpow (by norm_num) (rpow_nonneg hx_pos.le _), ← rpow_mul hx_pos.le, mul_comm ε]
-    _ ≤ _ := by
-      apply mul_le_mul_of_nonneg_right _ (by positivity)
-      calc (2 : ℝ) ^ (10 / 3 : ℝ) ≤ (2 : ℝ) ^ (4 : ℝ) :=
-            rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
-        _ = 16 := by
-          simpa only [Nat.cast_ofNat] using
-            (rpow_natCast (2 : ℝ) 4).trans (by norm_num : (2 : ℝ) ^ (4 : ℕ) = 16)
-  have h_remainder_decay : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) :=
+  have h_weight : D.logB ^ 3 ≤ 8 * (x : ℝ) ^ (3 * ε) := calc
+    _ ≤ (2 * (x : ℝ) ^ ε) ^ 3 := by gcongr
+    _ = _ := by
+      rw [mul_pow, ← rpow_natCast ((x : ℝ) ^ ε) 3, ← rpow_mul hx_pos.le]
+      norm_num [mul_comm ε]
+  have h_remainder_decay : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 3 * ε) :=
     rpow_le_rpow_of_exponent_le hx_ge (by linarith)
   have h_weighted_remainder_decay :
-      (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+      (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
     rw [← rpow_add hx_pos]
     exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
   have h_main_exponent :
-      (x : ℝ) ^ ((10 / 3 : ℝ) * ε) / (x : ℝ) ^ (1 / 2 : ℝ) =
-        (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+      (x : ℝ) ^ (3 * ε) / (x : ℝ) ^ (1 / 2 : ℝ) =
+        (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
     rw [← rpow_sub hx_pos]
     ring_nf
   calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ 90 * P.q₀.totient * (D.logB ^ 3 * D.logX₁ ^ 2) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁| := D.primeRemainder_le_weighted_loss
-    _ ≤ 90 * P.q₀.totient * (16 * (x : ℝ) ^ ((10 / 3 : ℝ) * ε)) / (x : ℝ) ^ (1 / 2 : ℝ) +
+    _ ≤ 27 * P.q₀.totient * D.logB ^ 3 / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+        D.logB * |primeRemainder P.d 1 D.x₁| := D.primeRemainder_le_quadratic
+    _ ≤ 27 * P.q₀.totient * (8 * (x : ℝ) ^ (3 * ε)) / (x : ℝ) ^ (1 / 2 : ℝ) +
         (x : ℝ) ^ (-2 : ℝ) + 2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
       grw [h_rem_q₀, h_rem_one, h_weight, h_logB, ← hm]
-    _ ≤ (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+    _ ≤ (216 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
       rw [mul_div_assoc, mul_div_assoc, h_main_exponent]
       linarith
+
+/-- The integer remainder bound with exponent `-1/2 + (10/3) ε`. -/
+lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤
+        (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+  filter_upwards [eventually_primeRemainder_natCast_le_quadratic P hε hε_lt, eventually_ge_atTop 1]
+    with x hx_bound hx_one
+  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
+  refine hx_bound.trans (mul_le_mul ?_ (rpow_le_rpow_of_exponent_le hx_ge ?_) ?_ ?_)
+  · linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
+  · linarith
+  · positivity
+  · positivity
 
 /-- The integer remainder bound with exponent `-1/2 + 4 ε`. -/
 lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-  have h_growth : ∀ᶠ x : ℕ in atTop, (5 : ℝ) ≤ (x : ℝ) ^ ((2 / 3 : ℝ) * ε) :=
-    ((tendsto_rpow_atTop (show 0 < (2 / 3 : ℝ) * ε by positivity)).comp
-      tendsto_natCast_atTop_atTop).eventually_ge_atTop 5
-  filter_upwards [eventually_primeRemainder_natCast_le_weighted_loss P hε hε_lt,
-    h_growth, eventually_ge_atTop 1] with x hx_bound hx_growth hx_one
-  have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
-  have h_coeff : (1440 : ℝ) * P.q₀.totient + 3 ≤ (320 * P.q₀.totient + 3) * 5 := by
-    linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
-  calc primeRemainder P.d P.q₀ x
-    _ ≤ (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := hx_bound
-    _ ≤ ((320 * P.q₀.totient + 3) * 5) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) :=
-      mul_le_mul_of_nonneg_right h_coeff (rpow_nonneg hx_pos.le _)
-    _ ≤ ((320 * P.q₀.totient + 3) * (x : ℝ) ^ ((2 / 3 : ℝ) * ε)) *
-        (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by gcongr
-    _ = _ := by
-      rw [mul_assoc, ← rpow_add hx_pos]
-      ring_nf
+  filter_upwards [eventually_primeRemainder_natCast_le_quadratic P hε hε_lt, eventually_ge_atTop 1]
+    with x hx_bound hx_one
+  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
+  refine hx_bound.trans (mul_le_mul ?_ (rpow_le_rpow_of_exponent_le hx_ge ?_) ?_ ?_)
+  · linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
+  · linarith
+  · positivity
+  · positivity
 
 /-- The integer bound with coefficient `64 φ(q₀) + 3` follows by using the extra `2 ε`. -/
 lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 < ε)

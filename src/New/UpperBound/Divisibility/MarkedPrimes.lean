@@ -478,13 +478,12 @@ from its conjugate, its primes are induced by a-places, and `p < x₁` is except
 number of low columns, those of height below the rank `n_{j+1}` and other than `1`, in the diagrams
 `D.columnCount` at the places that induce a prime of `Λ`. Let `r = ceilLogLifts p` be least with
 `m ≤ p ^ r`, and `ν_p = transferExponent p = r f (n_m + r)`, where `f` is the number of infinite
-places and `n_i = D.n i`. Then `#Λ ν_p + r L` is at most `loss p / m`, plus `a / x₁` for each
-a-place inducing a prime of `Λ`. Here `a = x b` is the product of two scales of the data, and
-`loss p` is `f a (log b)² / p`, times `m` if `p ≡ ±1` modulo `m`. -/
-lemma IsMarked.card_mul_transferExponent_add_sum_lowColumns_le (hj : j < D.m) [PadicPlace p]
+places and `n_i = D.n i`. Then `#Λ ν_p + r L` is at most `2 f a / (p m)`, plus `a / x₁` for each
+a-place inducing a prime of `Λ`. Here `a = x b` is the product of two scales of the data. -/
+lemma IsMarked.card_mul_transferExponent_add_sum_lowColumns_le_sharp (hj : j < D.m) [PadicPlace p]
     {Λ : Finset (FinPlace D.E)} (hΛ : D.IsMarked Λ) :
     #Λ * D.transferExponent p + D.ceilLogLifts p * ∑ σ ∈ placesInducing Λ, D.lowColumns j σ ≤
-      D.loss p / D.m + #(D.aPlaces ∩ placesInducing Λ) * (D.a / D.x₁) := by
+      2 * D.f * (D.a / p / D.m) + #(D.aPlaces ∩ placesInducing Λ) * (D.a / D.x₁) := by
   -- The size of `p < x₁`, as an instance for `D.le_of_hasLogBound`.
   have hp_size : D.HasLogUpper p D.logX₁ :=
     D.hasLogUpper_of_le_of_nonneg hΛ.isSmallNonsplit.1.le p.cast_nonneg
@@ -507,11 +506,27 @@ lemma IsMarked.card_mul_transferExponent_add_sum_lowColumns_le (hj : j < D.m) [P
           orderOf_eq_one_iff]
       grw [h_one, ite_eq_left h_aPlace, add_comm]
       simpa using D.le_of_hasLogBound
-  grw [cast_sum, mul_sum, sum_le_sum h_place, ← le_loss, hΛ.card_le, transferExponent]
-  -- What remains once the sums over the a-places cancel holds by orders of magnitude.
+  grw [cast_sum, mul_sum, sum_le_sum h_place, hΛ.card_le, transferExponent]
   suffices (D.f ^ 2 * D.ceilLogLifts p * (D.n D.m + D.ceilLogLifts p) * p +
-      #(placesInducing Λ) * D.a / D.m : ℝ) ≤ D.f * D.a * D.logB ^ 2 / D.m by
+      #(placesInducing Λ) * D.a / D.m : ℝ) ≤ 2 * D.f * D.a / D.m by
     simpa [inter_comm, ← add_assoc, sum_add_distrib, field]
+  have h_transfer :
+      (D.f ^ 2 * D.ceilLogLifts p * (D.n D.m + D.ceilLogLifts p) * p : ℝ) ≤ D.f * D.a / D.m :=
+    D.le_of_hasLogBound
+  have h_places : (#(placesInducing Λ) : ℝ) ≤ D.f := by
+    exact_mod_cast (card_le_univ (placesInducing Λ))
+  have h_columns : (#(placesInducing Λ) * D.a / D.m : ℝ) ≤ D.f * D.a / D.m := by gcongr
+  exact (add_le_add h_transfer h_columns).trans_eq (by ring)
+
+/-- The transfer and low-column costs with the error budget `loss p / m`. -/
+lemma IsMarked.card_mul_transferExponent_add_sum_lowColumns_le (hj : j < D.m) [PadicPlace p]
+    {Λ : Finset (FinPlace D.E)} (hΛ : D.IsMarked Λ) :
+    #Λ * D.transferExponent p + D.ceilLogLifts p * ∑ σ ∈ placesInducing Λ, D.lowColumns j σ ≤
+      D.loss p / D.m + #(D.aPlaces ∩ placesInducing Λ) * (D.a / D.x₁) := by
+  refine (hΛ.card_mul_transferExponent_add_sum_lowColumns_le_sharp hj).trans ?_
+  grw [← D.le_loss p]
+  rw [mul_comm (2 : ℝ), mul_div_assoc]
+  gcongr
   exact D.le_of_hasLogBound
 
 end LowColumns

@@ -26,16 +26,16 @@ Notions from other files:
   scales `x`, `x₁`, `b` in prescribed ranges (`D.logB = log b`), the number `D.m` of lifts, a set
   of places of the CM field `D.E`, the `b`-places, which carry the weight `b`, and primes for the
   levels. `D.a = x b`, and `D.f` is the number of infinite places of `D.E`.
-* `D.normalizedPoincare g`: the translate `g 𝔭` by `g : D.chosenGL` of a fixed linear map `𝔭` from
-  the source `D.ramifiedSourceForms` to the target `D.targetForms`.
+* `D.normalizedPoincareWithLoss D.valuationLoss g`: the translate `g 𝔭` of a fixed linear map `𝔭`
+  from the source `D.ramifiedSourceForms` to the target `D.targetForms`.
 * `D.integralRamified`: the source forms that are integral at every `ι : PrimePadicIso`.
 * `D.errorUnit`: the unit of loss `f a log³ b`.
 
 ## The inputs
 
-* Theorem A: (a) `span_short_integralRamified_eq_top_with_losses` (size) and
-  (b) `indexLe_normalizedPoincare_colength` (index), both in `New.Reduction.ShortAndEnough`.
-* Theorem B: `exists_few_normalizedPoincare` in `New.Reduction.ShortAndEnough`.
+* Theorem A: (a) `span_short_integralRamified_eq_top_with_valuationLoss` (size) and
+  (b) `indexLe_normalizedPoincare_with_valuationLoss` (index), both in `New.Reduction.ShortAndEnough`.
+* Theorem B: `exists_few_normalizedPoincareWithLoss` in `New.Reduction.ShortAndEnough`.
 * Theorem C: `integral_forms_long_with_quadratic_error` in `New.Determinant.Twist.LongForms`,
   from a twist for each prime
   (`TwistedLattice.covolume_add_index_nonneg`) and the height of `Z(1) / Z(ξ_ι)`
@@ -45,7 +45,7 @@ Notions from other files:
 
 ## What cancels, and where
 
-* The main amount cancels in `star_inequality_with_weighted_loss`.
+* The main amount cancels in `star_inequality_quadratic`.
 * The gains `∑ gain_l log l` in the size of the chain, against `log c_B`:
   `span_short_integralRamified_eq_top`.
 * The constant `c₁ = (logDerivMean d 1 1).re`, between the period and the expected value
@@ -115,13 +115,13 @@ private lemma translateColengthLoss_le_cutoffCube {P : Parameters} (D : Data P) 
     _ ≤ D.logX₁ * (D.f * D.a * D.logX₁ ^ 2) := mul_le_mul_of_nonneg_right h_scale (by positivity)
     _ = _ := by ring
 
-/-- The main inequality with quadratic errors and the weighted valuation loss.
+/-- The main inequality with quadratic errors at every step.
 
 The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 1 mod q₀`. The scales are
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
 `log log b ≥ 10¹² P.constantBound`. -/
-theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
-    D.m * D.totalRemainder ≤ 90 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2) := by
+theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 27 * (D.f * D.a * D.logB ^ 2) := by
   let denominator := completionFactor D
   let share : ℝ := denominator⁻¹
   have hden_pos : 0 < denominator := by
@@ -142,21 +142,21 @@ theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
     rw [← one_div]
     exact (div_le_div_iff₀ hden_pos (by norm_num)).2 (by simpa using hden_large)
   have hshare_lt : share < 1 := hshare_small.trans_lt (by norm_num)
-  obtain ⟨t, ht_card, h_fill⟩ := D.exists_few_normalizedPoincare hshare_ge hshare_lt
+  obtain ⟨t, ht_card, h_fill⟩ := D.exists_few_normalizedPoincareWithLoss D.valuationLoss hshare_ge hshare_lt
   rw [show share⁻¹ = denominator by simp [share]] at ht_card
-  let sizeLoss : ℝ := 3 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound
+  let normalized := D.normalizedPoincareWithLoss D.valuationLoss
+  let sizeLoss : ℝ := 5 * D.quadraticErrorUnit
   let logNormBound : ℝ := D.mainAmount - D.m * D.totalRemainder + sizeLoss
   let short : Set D.ramifiedSourceForms :=
     {φ ∈ D.integralRamified | ∀ (g : D.chosenGL) (σ : ℂ ≃+* ℂ),
-      (D.Θ 1 (D.normalizedPoincare g φ)).normSqAt σ ≤ exp logNormBound}
-  have h_short_span : span ℂ short = ⊤ := D.span_short_integralRamified_eq_top_with_losses
-  -- The family: among the forms `D.normalizedPoincare g φ` with `g ∈ t` and `φ` short, a basis of
-  -- their span.
+      (D.Θ 1 (normalized g φ)).normSqAt σ ≤ exp logNormBound}
+  have h_short_span : span ℂ short = ⊤ := D.span_short_integralRamified_eq_top_with_valuationLoss
+  -- Take a basis from the forms `normalized g φ` with `g ∈ t` and `φ` short.
   obtain ⟨n, y, h_indep, h_near_full_rank, h_image_short⟩ : ∃ (n : ℕ) (y : Fin n → D.targetForms),
       LinearIndependent ℂ y ∧ (1 - share) * D.targetDim ≤ n ∧
-      ∀ i : Fin n, ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' short := by
-    let images : Set D.targetForms := ⋃ g ∈ t, D.normalizedPoincare g '' short
-    have span_eq : span ℂ images = ⨆ g ∈ t, (D.normalizedPoincare g).range := by
+      ∀ i : Fin n, ∃ g ∈ t, y i ∈ normalized g '' short := by
+    let images : Set D.targetForms := ⋃ g ∈ t, normalized g '' short
+    have span_eq : span ℂ images = ⨆ g ∈ t, (normalized g).range := by
       simp only [images, span_iUnion₂, span_image, h_short_span, Submodule.map_top]
     obtain ⟨y, hy_mem, -, h_indep⟩ := exists_fun_fin_finrank_span_eq ℂ images
     refine ⟨finrank ℂ (span ℂ images), y, h_indep, by rwa [span_eq], fun i ↦ ?_⟩
@@ -172,10 +172,10 @@ theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
   let indexBudgetPerDim : ℝ := D.f * D.a * D.logX₁ ^ 3
   have h_loss : 0 ≤ D.colengthLossSumBound := by simpa using D.sum_colengthLoss_mul_log_le ∅
   have h_index_upper : D.targetLattice.IndexLe y (D.targetDim * indexBudgetPerDim) := by
-    have hy_int (i : Fin n) : ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' D.integralRamified := by
+    have hy_int (i : Fin n) : ∃ g ∈ t, y i ∈ normalized g '' D.integralRamified := by
       obtain ⟨g, hg, φ, ⟨hφ_int, -⟩, hφ_eq⟩ := h_image_short i
       exact ⟨g, hg, φ, hφ_int, hφ_eq⟩
-    refine (D.indexLe_normalizedPoincare_colength t hy_int).mono ?_
+    refine (D.indexLe_normalizedPoincare_with_valuationLoss t hy_int).mono ?_
     calc #t * finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound)
         ≤ (5 / 2 * (1 + log denominator) * D.targetDim) * (2 * D.colengthLossSumBound) :=
           mul_le_mul_of_nonneg_right ht_card (by positivity)
@@ -192,7 +192,7 @@ theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
   have h_volume_index_lower :=
     integral_forms_long_with_quadratic_error h_indep h_index_upper h_covolume_upper
   have h_size_nonneg : 0 ≤ sizeLoss := by
-    dsimp [sizeLoss, quadraticErrorUnit, allowedLossSumBound]
+    dsimp [sizeLoss, quadraticErrorUnit]
     positivity
   have h_main_comparison : n * (D.mainAmount + sizeLoss) ≤
       D.targetDim * (D.mainAmount + sizeLoss) :=
@@ -208,23 +208,13 @@ theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
       (show (0 : ℝ) ≤ D.targetDim * D.f * D.a by positivity)
     linarith only [h_cost]
   have h_main_cancelled : n * (D.m * D.totalRemainder) ≤
-      D.targetDim * (24 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound) := by
+      D.targetDim * (26 * D.quadraticErrorUnit) := by
     change D.targetDim * (D.mainAmount - 17 * D.quadraticErrorUnit - D.b) ≤
       n * (D.mainAmount - D.m * D.totalRemainder + sizeLoss) +
         2 * (D.targetDim * indexBudgetPerDim) + ((D.targetDim : ℝ) - n) * (denominator * D.b)
       at h_volume_index_lower
     dsimp only [sizeLoss] at h_volume_index_lower h_main_comparison
     linarith only [h_volume_index_lower, h_completion, h_main_comparison, h_b, h_index_cost]
-  have h_logX₁ : 1 ≤ D.logX₁ := by
-    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
-      (le_constantBound (P := P)).1]
-  have h_weighted_budget : 24 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound ≤
-      88 * (D.quadraticErrorUnit * D.logX₁ ^ 2) := calc
-    _ ≤ 24 * (D.quadraticErrorUnit * D.logX₁ ^ 2) + 2 * D.allowedLossSumBound := by
-      have h : D.quadraticErrorUnit ≤ D.quadraticErrorUnit * D.logX₁ ^ 2 :=
-        le_mul_of_one_le_right (by unfold quadraticErrorUnit; positivity) (by nlinarith)
-      exact add_le_add (mul_le_mul_of_nonneg_left h (show (0 : ℝ) ≤ 24 by norm_num)) le_rfl
-    _ = _ := by unfold quadraticErrorUnit allowedLossSumBound; ring
   have h_rank : (49 / 50 : ℝ) * D.targetDim ≤ n := by
     grw [show (49 / 50 : ℝ) ≤ 1 - share by linarith, h_near_full_rank]
   have hn_pos : (0 : ℝ) < n :=
@@ -232,13 +222,24 @@ theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
   refine le_of_mul_le_mul_left ?_ hn_pos
   have h_dim_nonneg : (0 : ℝ) ≤ D.targetDim := Nat.cast_nonneg _
   calc n * (D.m * D.totalRemainder)
-    _ ≤ D.targetDim * (24 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound) := h_main_cancelled
-    _ ≤ D.targetDim * (88 * (D.quadraticErrorUnit * D.logX₁ ^ 2)) :=
-      mul_le_mul_of_nonneg_left h_weighted_budget h_dim_nonneg
-    _ = (88 * D.targetDim) * (D.quadraticErrorUnit * D.logX₁ ^ 2) := by ring
-    _ ≤ (90 * n) * (D.quadraticErrorUnit * D.logX₁ ^ 2) :=
+    _ ≤ D.targetDim * (26 * D.quadraticErrorUnit) := h_main_cancelled
+    _ = (26 * D.targetDim) * D.quadraticErrorUnit := by ring
+    _ ≤ (27 * n) * D.quadraticErrorUnit :=
       mul_le_mul_of_nonneg_right (by linarith only [h_rank, h_dim_nonneg])
         (by unfold quadraticErrorUnit; positivity)
+    _ = _ := by ring
+
+/-- The main inequality expressed with the earlier weighted valuation budget. -/
+theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 90 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2) := by
+  have h_logX₁ : 1 ≤ D.logX₁ := by
+    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
+      (le_constantBound (P := P)).1]
+  have h_coeff : 27 ≤ 90 * D.logX₁ ^ 2 := by nlinarith
+  calc
+    _ ≤ 27 * D.quadraticErrorUnit := star_inequality_quadratic D
+    _ ≤ (90 * D.logX₁ ^ 2) * D.quadraticErrorUnit :=
+      mul_le_mul_of_nonneg_right h_coeff (by unfold quadraticErrorUnit; positivity)
     _ = _ := by unfold quadraticErrorUnit; ring
 
 /-- The main inequality with the colength budget expressed in cubic units. -/

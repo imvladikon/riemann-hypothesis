@@ -171,14 +171,12 @@ lemma collisionSum_le {S : Finset D.Φ} {o : ℕ}
   grw [collisionSum, h_place]
   simp [field]
 
-/-- Let the prime `p` be below the cut-off `x₁`, non-split in `K = ℚ(√-d)` and not exceptional. Then
-`m * collisionSum p ∅ ≤ loss p`, where `loss p` is `m f a (log b)² / p` if `p ≡ ±1` modulo `m` and
-`f a (log b)² / p` otherwise. Here `m` is the number of lifts, `f` the number of infinite places of
-`E`, and `a = x b` is the product of the scales `x` and `b` of the data. -/
-lemma mul_collisionSum_le_loss (hp : D.IsSmallNonsplit p)
+open scoped Classical in
+/-- For a small non-split prime that is not exceptional, the collision loss over all lifts is at
+most `2 f a / p`, times `m` when `p ≡ ±1` modulo `m`. -/
+lemma mul_collisionSum_le_loss_sharp (hp : D.IsSmallNonsplit p)
     (h_not_exceptional : ¬D.IsExceptional p) :
-    D.m * D.collisionSum p ∅ ≤ D.loss p := by
-  grw [loss, ← (D.le_of_hasLogBound : 2 ≤ D.logB ^ 2)]
+    D.m * D.collisionSum p ∅ ≤ 2 * D.f * (D.a / p * (if D.IsPlusMinusOneModLifts p then D.m else 1)) := by
   split
   · -- If `p ≡ ±1` modulo `m`, the loss has the factor `m`, and it is enough that exponents are
     -- positive.
@@ -192,6 +190,19 @@ lemma mul_collisionSum_le_loss (hp : D.IsSmallNonsplit p)
     grw [collisionSum_le h_far, le_pow_clog q.out.one_lt D.m, ← ceilLogLifts]
     have hp_ne : p ≠ 0 := q.out.ne_zero
     simp [pow_succ, field]
+
+/-- Let the prime `p` be below the cut-off `x₁`, non-split in `K = ℚ(√-d)` and not exceptional. Then
+`m * collisionSum p ∅ ≤ loss p`, where `loss p` is `m f a (log b)² / p` if `p ≡ ±1` modulo `m` and
+`f a (log b)² / p` otherwise. Here `m` is the number of lifts, `f` the number of infinite places of
+`E`, and `a = x b` is the product of the scales `x` and `b` of the data. -/
+lemma mul_collisionSum_le_loss (hp : D.IsSmallNonsplit p)
+    (h_not_exceptional : ¬D.IsExceptional p) :
+    D.m * D.collisionSum p ∅ ≤ D.loss p := by
+  refine (mul_collisionSum_le_loss_sharp hp h_not_exceptional).trans ?_
+  unfold loss
+  rw [mul_comm (2 : ℝ)]
+  gcongr
+  exact D.le_of_hasLogBound
 
 /-- The least height `k` of a low column is below `n_{j+1}`. -/
 lemma k_mem_range_n_succ (j : ℕ) : D.k ∈ range (D.n (j + 1)) := by simp [n]
@@ -502,13 +513,13 @@ The bound `divisibilityBound p j S` is the predicted divisibility at `p` of the 
 `gain p / m = ∑_τ s_p(a, τ) + k ∑_σ s_p(w(σ), σ)` (with `τ` an a-place, that is, of class `1` modulo
 `q₀`, `σ` any place, `s_p = localPrimeSum p` and `w = D.weight`), less `collisionSum p S`, the sum
 of `a / p ^ e` over the pairs `(τ, e)` with `e ∈ I_p` and both `τ` and `(-p ^ e) τ` a-places outside
-`S`, plus `v(π_p) a / x₁` for each a-place in `S`, less `f a (log b)² / (m p)`. Here
-`v(π_p) = piPrimeValuation P.d p`, `a = x b` is the length of a long row, `log b = D.logB`, and `f`
+`S`, plus `v(π_p) a / x₁` for each a-place in `S`, less `5 f a / (m p)`. Here
+`v(π_p) = piPrimeValuation P.d p`, `a = x b` is the length of a long row, and `f`
 is the number of infinite places of `E`. -/
-lemma le_divisibilityBound (hj : j < D.m) (hp : D.IsSmallNonsplit p) (S : Finset D.Φ) :
+lemma le_divisibilityBound_sharp (hj : j < D.m) (hp : D.IsSmallNonsplit p) (S : Finset D.Φ) :
     D.gain p / D.m - D.collisionSum p S +
         piPrimeValuation P.d p * #(D.aPlaces ∩ S) * (D.a / D.x₁) -
-        D.f * D.logB ^ 2 * (D.a / p) / D.m ≤
+        D.f * (5 * (D.a / p / D.m)) ≤
       D.divisibilityBound p j S := by
   classical
   -- Put `u = a / (p m)`. Apart from collisions the losses at one place add up to at most `5 u`.
@@ -546,8 +557,6 @@ lemma le_divisibilityBound (hj : j < D.m) (hp : D.IsSmallNonsplit p) (S : Finset
     u := by
     grw [one_add_logb_boxes_le hj]
     exact D.le_of_hasLogBound
-  have h_losses : D.f * (5 * u) ≤ D.f * D.logB ^ 2 * (D.a / p) / D.m := by
-    grw [mul_div_assoc, mul_assoc, ← hu, (D.le_of_hasLogBound : 5 ≤ D.logB ^ 2)]
   rw [divisibilityBound, boxes_sub_boxes_eraseHeightOne, gain,
     mul_div_cancel_left₀ _ (HasLogBound.pos D).ne', mul_assoc (D.f : ℝ) (_ ^ 3)]
   have h_predicted : v * ∑ τ, ∑' e, partnerTerm p j S τ e - D.f * (2 * u) ≤
@@ -555,6 +564,17 @@ lemma le_divisibilityBound (hj : j < D.m) (hp : D.IsSmallNonsplit p) (S : Finset
         (D.n (j + 1)) :=
     sub_le_predictedDivisibility (p := p) hj S
   linarith [mul_le_mul_of_nonneg_left h_count (D.f.cast_nonneg (α := ℝ))]
+
+/-- The divisibility estimate with the error budget `f a (log b)² / (m p)`. -/
+lemma le_divisibilityBound (hj : j < D.m) (hp : D.IsSmallNonsplit p) (S : Finset D.Φ) :
+    D.gain p / D.m - D.collisionSum p S +
+        piPrimeValuation P.d p * #(D.aPlaces ∩ S) * (D.a / D.x₁) -
+        D.f * D.logB ^ 2 * (D.a / p) / D.m ≤
+      D.divisibilityBound p j S := by
+  refine le_trans ?_ (le_divisibilityBound_sharp hj hp S)
+  grw [mul_div_assoc, mul_assoc, ← (D.le_of_hasLogBound : 5 ≤ D.logB ^ 2)]
+  ring_nf
+  rfl
 
 end DivisibilityBound
 
