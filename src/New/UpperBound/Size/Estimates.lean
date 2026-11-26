@@ -318,76 +318,10 @@ lemma exists_mul_sub_one_eq_or_mul_add_one_eq {p : ℕ} (hp : 2 ≤ p)
     (le_trans (by norm_num) D.ten_thousand_le_m)
   exact ⟨c, hc_pos, by omega, (Nat.le_div_iff_mul_le hc_pos).2 (by omega), by omega⟩
 
-/-- The weighted loss bound `32 f a (log b)² (log x₁)²` from the harmonic sum over the local primes. -/
+/-- The weighted loss bound `32 f a (log b)² (log x₁)²` at quadratic cutoff. -/
 noncomputable abbrev allowedLossSumBound : ℝ := 32 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2)
 
 lemma allowedLossSumBound_le_errorUnit : D.allowedLossSumBound ≤ D.errorUnit := D.le_of_hasLogBound
-
-/-- On each finite set of natural numbers the local losses weighted by `log p` are bounded by
-`32 f a (log b)² (log x₁)²`. -/
-lemma sum_allowedLoss_mul_log_le_sharp (U : Finset ℕ) :
-    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.allowedLossSumBound := by
-  classical
-  -- Each term is at most `T / c` for some `1 ≤ c ≤ x₁`, and each `c` serves at most the four
-  -- numbers `N`, `m c - 1`, `c`, `m c + 1`. So the sum is at most `4 T` times a harmonic sum.
-  -- The last factor `2` of `T` comes from `m ≤ 2 p / c` for `p = m c ± 1`.
-  let T : ℝ := 2 * D.f * D.a * D.logB ^ 2 * D.logX₁ * 2
-  let J : Finset (ℕ × ℕ) := Icc 1 ⌊D.x₁⌋₊ ×ˢ range 4
-  -- `served (c, r)` is the `r`-th of the four numbers served by `c`.
-  let served : ℕ × ℕ → ℕ := fun (c, r) ↦ [D.N, D.m * c - 1, c, D.m * c + 1][r]!
-  have h_logX₁_nonneg : 0 ≤ D.logX₁ := (HasLogBound.pos D).le
-  have h_single {p c r : ℕ} (hc_pos : 1 ≤ c) (hc_le : c ≤ ⌊D.x₁⌋₊) (hr : r < 4)
-      (h_served : served (c, r) = p) : T / c ≤ ∑ u ∈ J with served u = p, T / u.1 :=
-    single_le_sum (f := fun u : ℕ × ℕ ↦ T / u.1) (a := (c, r)) (fun u _ ↦ by positivity)
-      (by simp [J, hc_pos, hc_le, hr, h_served])
-  have h_term (p : ℕ) : D.allowedLoss p * .log p ≤ ∑ u ∈ J with served u = p, T / u.1 := by
-    rw [allowedLoss]
-    split_ifs with hp hN
-    · -- A non-split prime `p < x₁`: take `c = p`, or `c` with `p = m c ± 1` if `p ≡ ±1` mod `m`.
-      obtain ⟨hp_lt, hp_prime, -⟩ : p < D.x₁ ∧ p.Prime ∧ chiK P.d p ≠ 1 := by
-        simpa [lt_ceil] using hp
-      obtain ⟨c, r, hc_pos, hc_le, hr, h_served, h_factor⟩ : ∃ c r : ℕ, 1 ≤ c ∧ c ≤ p ∧ r < 4 ∧
-          served (c, r) = p ∧ (if D.IsPlusMinusOneModLifts p then D.m else 1) ≤ 2 * p / c := by
-        split_ifs with hp_mod
-        · obtain ⟨c, hc_pos, hc_le, h_factor, h_eq | h_eq⟩ :=
-            D.exists_mul_sub_one_eq_or_mul_add_one_eq hp_prime.two_le hp_mod
-          exacts [⟨c, 1, hc_pos, hc_le, by norm_num, h_eq, h_factor⟩,
-            ⟨c, 3, hc_pos, hc_le, by norm_num, h_eq, h_factor⟩]
-        · exact ⟨p, 2, hp_prime.pos, le_rfl, by norm_num, rfl, by simp [hp_prime.pos]⟩
-      have hp_pos : (0 : ℝ) < p := cast_pos.2 hp_prime.pos
-      have h_log_p : Real.log p ≤ D.logX₁ := by grw [hp_lt, log_exp]
-      calc 2 * D.loss p * Real.log p
-        _ ≤ 2 * (D.f * D.logB ^ 2 * (D.a / p * (↑(2 * p) / c))) * D.logX₁ := by
-          grw [loss, h_factor, h_log_p, cast_div_le]
-        _ = T / c := by simp [field]
-        _ ≤ _ := h_single hc_pos (hc_le.trans (le_floor hp_lt.le)) hr h_served
-    · -- The level `N` takes `c = 1`.
-      calc 2 * D.m * D.f * D.b * Real.log p
-        _ ≤ T / (1 : ℕ) := by
-          rw [hN]
-          exact D.le_of_hasLogBound (by grind [log_nonneg, scale_inequalities])
-        _ ≤ _ := h_single (r := 0) le_rfl (le_floor (by simpa)) (by norm_num) hN.symm
-    · exact (zero_mul _).trans_le (by positivity)
-  have h_harmonic : ∑ c ∈ Icc 1 ⌊D.x₁⌋₊, (c : ℝ)⁻¹ ≤ 1 + D.logX₁ := by
-    simpa [harmonic_eq_sum_Icc] using harmonic_floor_le_one_add_log D.x₁ D.le_of_hasLogBound
-  calc ∑ p ∈ U, D.allowedLoss p * .log p
-    _ ≤ ∑ u ∈ J, T / u.1 := by grw [sum_le_sum fun p _ ↦ h_term p,
-      sum_fiberwise_eq_sum_filter, filter_subset]
-    _ = T * (4 * ∑ c ∈ Icc 1 ⌊D.x₁⌋₊, (c : ℝ)⁻¹) := by
-      simp [J, sum_product, division_def, ← mul_sum]
-    _ ≤ T * (4 * (1 + D.logX₁)) := by gcongr
-    _ ≤ T * (4 * (2 * D.logX₁)) := by
-      have h_one : 1 ≤ D.logX₁ := by
-        linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
-          (le_constantBound (P := P)).1]
-      have h_add : 1 + D.logX₁ ≤ 2 * D.logX₁ := by linarith
-      gcongr
-    _ = D.allowedLossSumBound := by dsimp [T, allowedLossSumBound]; ring
-
-/-- The weighted local losses are bounded by `errorUnit = f a (log b)³`. -/
-lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
-    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.errorUnit :=
-  (D.sum_allowedLoss_mul_log_le_sharp U).trans D.allowedLossSumBound_le_errorUnit
 
 private lemma weighted_exceptional_prime_sum_le (U : Finset ℕ)
     (hU : ∀ p ∈ U, p ∈ D.smallNonsplitPrimes ∧ D.IsPlusMinusOneModLifts p)
@@ -535,6 +469,38 @@ lemma sum_allowedLoss_mul_log_le_of_log_bounds (U : Finset ℕ) {V : ℝ}
     _ = B * (3465 * D.logX₁ + 16 * Real.log D.m ^ 2) := by dsimp [T]; ring
     _ ≤ B * (3500 * V) := mul_le_mul_of_nonneg_left (by linarith) hB
     _ = _ := by dsimp [B]; ring
+
+/-- On each finite set of natural numbers the local losses weighted by `log p` have quadratic cutoff bound
+`32 f a (log b)² (log x₁)²`. -/
+lemma sum_allowedLoss_mul_log_le_sharp (U : Finset ℕ) :
+    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.allowedLossSumBound := by
+  have h_cutoff : 256 ≤ D.logX₁ := by
+    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
+      (le_constantBound (P := P)).1]
+  have h_posm : (0 : ℝ) < D.m := by
+    exact_mod_cast (show 0 < D.m from (by decide : 0 < 10000).trans_le D.ten_thousand_le_m)
+  have h_mx : (D.m : ℝ) ≤ D.x := D.le_of_hasLogBound
+  have h_logmx : Real.log D.m ≤ D.logX := by
+    simpa only [Data.x, Real.log_exp] using Real.log_le_log h_posm h_mx
+  have h_logm := Real.log_natCast_nonneg D.m
+  have h_scaled : Real.log D.m ≤ D.logX₁ / 16 := by
+    linarith only [h_logmx, h_logm, D.logX_le_logX₁]
+  have h_m_sq : Real.log D.m ^ 2 ≤ D.logX₁ ^ 2 / 256 := calc
+    _ ≤ (D.logX₁ / 16) ^ 2 := by gcongr
+    _ = _ := by ring
+  have h_x₁_sq : D.logX₁ ≤ D.logX₁ ^ 2 / 256 := by
+    have h := mul_nonneg (sub_nonneg.mpr h_cutoff) (show 0 ≤ D.logX₁ by linarith)
+    nlinarith only [h]
+  refine (D.sum_allowedLoss_mul_log_le_of_log_bounds U h_x₁_sq h_m_sq).trans ?_
+  unfold allowedLossSumBound
+  calc
+    _ = (7000 / 256 : ℝ) * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2) := by ring
+    _ ≤ _ := mul_le_mul_of_nonneg_right (by norm_num) (by positivity)
+
+/-- The weighted local losses are bounded by `errorUnit = f a (log b)³`. -/
+lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
+    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.errorUnit :=
+  (D.sum_allowedLoss_mul_log_le_sharp U).trans D.allowedLossSumBound_le_errorUnit
 
 end New.Data
 
