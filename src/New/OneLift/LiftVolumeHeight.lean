@@ -9,6 +9,7 @@ import Lib.GLn.SchurModule.SchurNorm
 import Lib.General.LinearAlgebra.MatrixNormBounds
 import New.Congruences.GaloisRepresentations.SelmerHypotheses
 import New.OneLift.HeckeValues.TwistedValueHeights
+import New.UpperBound.Size.Estimates
 
 /-!
 # The cost of one lift: a height bound for Z_j(1)/Z_j(ξ^j)
@@ -436,17 +437,17 @@ lemma comparisonOp_mem_integralForms {j : D.LiftIndex} {ϑ : D.Twist} {l : ℕ} 
 
 /-- A tuple of forms on the definite space `V°` has one value for each pair of an index in
 `ChoiceIndex j` and a class in `D.SecondFactorClasses`. The number of these pairs, times the square
-of `#(TightFrameIndex j) n_Aut hk²`, is at most `exp (2 f m b log² b)`. Here `TightFrameIndex j` is
+of `#(TightFrameIndex j) n_Aut hk²`, is at most `exp (20000 f m b log b)`. Here `TightFrameIndex j` is
 the set of such pairs together with a filling with increasing columns of the Young diagrams `μ⁻`
 that give the weight of the forms on `V°`, `hk = hookNumberMinus j` is the hook number of `μ⁻` and
 `n_Aut = D.chosenGroupOrder` is a multiple of the orders of all stabilisers; `f = D.f` is the number
 of infinite places, `m = D.m` the number of lifts in the chain and `b = D.b`, with `log b = D.logB`,
 the weight at the infinite places in `D.bPlaces`. -/
-lemma card_prod_mul_card_tightFrameIndex_mul_sq_le (j : D.LiftIndex) :
+lemma card_prod_mul_card_tightFrameIndex_mul_sq_le_linear (j : D.LiftIndex) :
     Fintype.card (ChoiceIndex j × D.SecondFactorClasses) *
         (Fintype.card (TightFrameIndex j) * (D.chosenGroupOrder * hookNumberMinus j ^ 2) : ℝ) ^ 2 ≤
-      exp (2 * (D.f * D.m * D.b * D.logB ^ 2)) := by
-  set A : ℝ := D.f * D.m * D.b * D.logB ^ 2 with hA
+      exp (2 * (D.comparisonSizeBudget)) := by
+  set A : ℝ := D.comparisonSizeBudget with hA
   set N : ℝ := Nat.cast (Fintype.card (ChoiceIndex j × D.SecondFactorClasses))
   have h_aut : (1 : ℝ) ≤ D.chosenGroupOrder := mod_cast NeZero.one_le
   have h_hook : (0 : ℝ) < hookNumberMinus j := Int.cast_pos.2 hookNumber_pos
@@ -460,7 +461,7 @@ lemma card_prod_mul_card_tightFrameIndex_mul_sq_le (j : D.LiftIndex) :
         (1 * (N * (1 * D.chosenGroupOrder)) ^ 2) := by simp
       _ ≤ (D.M ^ (splittingV j 1).denominatorExponent) ^ 2 *
           (exp D.b * (N * (exp D.b * D.chosenGroupOrder)) ^ 2) := by gcongr
-      _ ≤ exp A := M_pow_denominatorExponent_sq_mul_le_exp j
+      _ ≤ exp A := M_pow_denominatorExponent_sq_mul_le_exp_linear j
   have h_root : N * D.chosenGroupOrder ≤ exp (A / 2) := by
     refine le_of_sq_le_sq ?_ (exp_pos _).le
     rwa [← exp_natCast_mul, Nat.cast_two, mul_div_cancel₀ _ two_ne_zero]
@@ -478,19 +479,27 @@ lemma card_prod_mul_card_tightFrameIndex_mul_sq_le (j : D.LiftIndex) :
       ring_nf
     _ ≤ exp (2 * A) := exp_le_exp.2 (by linarith)
 
+/-- The frame and class counts with a quadratic exponent. -/
+lemma card_prod_mul_card_tightFrameIndex_mul_sq_le (j : D.LiftIndex) :
+    Fintype.card (ChoiceIndex j × D.SecondFactorClasses) *
+        (Fintype.card (TightFrameIndex j) * (D.chosenGroupOrder * hookNumberMinus j ^ 2) : ℝ) ^ 2 ≤
+      exp (2 * (D.f * D.m * D.b * D.logB ^ 2)) :=
+  (card_prod_mul_card_tightFrameIndex_mul_sq_le_linear j).trans
+    (exp_le_exp.mpr (mul_le_mul_of_nonneg_left D.comparisonSizeBudget_le_quadratic (by norm_num)))
+
 /-- Let `φ` be a form on `V_j`, the target of the `j`-th lift at the trivial twist `1`, and
 `φ.normSqAt σ` the weighted sum over classes of the squared norms of its values after applying an
 automorphism `σ` of `ℂ`. The operator `U_1 = comparisonOp j 1`, a multiple of the gluing map
-`glue j 1` after its adjoint, multiplies this number by at most `exp (6 f m b log² b)`. Here
+`glue j 1` after its adjoint, multiplies this number by at most `exp (60000 f m b log b)`. Here
 `f = D.f` is the number of infinite places, `m = D.m` the number of lifts and `b = D.b` the weight
 parameter, with `log b = D.logB`. -/
-lemma normSqAt_comparisonOp_le (j : D.LiftIndex) (φ : (D.descentPair (1 : D.Twist) j).FormV)
+lemma normSqAt_comparisonOp_le_linear (j : D.LiftIndex) (φ : (D.descentPair (1 : D.Twist) j).FormV)
     (σ : ℂ ≃+* ℂ) :
     (comparisonOp j 1 φ).normSqAt σ ≤
-      exp (3 * (D.f * D.m * D.b * D.logB ^ 2)) ^ 2 * φ.normSqAt σ := by
+      exp (3 * D.comparisonSizeBudget) ^ 2 * φ.normSqAt σ := by
   -- `U_1 φ` is glued from the tuple `∑ c a • f a` with `c a = n_Aut ⟨glue (f a), φ⟩`.
   -- Cauchy–Schwarz bounds `σ (c a)`, and there are few terms.
-  set A : ℝ := D.f * D.m * D.b * D.logB ^ 2
+  set A : ℝ := D.comparisonSizeBudget
   obtain ⟨f, h_frame, h_norm⟩ : ∃ f : TightFrameIndex j → FormTuples j,
       (∀ ζ : FormTuples j,
         ∑ a : TightFrameIndex j, inner ℂ (f a) ζ • f a = (hookNumberMinus j : ℂ) ^ 2 • ζ) ∧
@@ -508,7 +517,7 @@ lemma normSqAt_comparisonOp_le (j : D.LiftIndex) (φ : (D.descentPair (1 : D.Twi
       _ = D.chosenGroupOrder * ‖σ (inner ℂ (glue j 1 (f a)) φ)‖ := by
         rw [map_nsmul, nsmul_eq_mul, norm_mul, Complex.norm_natCast]
       _ ≤ D.chosenGroupOrder * (√(φ.normSqAt σ) * √(exp (2 * A) * hk ^ 2)) := by
-        grw [norm_map_inner_le, normSqAt_glue_le, h_norm]
+        grw [norm_map_inner_le, normSqAt_glue_le_linear, h_norm]
       _ = _ := by
         rw [sqrt_mul (exp_pos _).le, sqrt_mul (exp_pos _).le, sqrt_sq h_hook.le]
         ring
@@ -538,10 +547,18 @@ lemma normSqAt_comparisonOp_le (j : D.LiftIndex) (φ : (D.descentPair (1 : D.Twi
     _ = (glue j 1 (∑ a : TightFrameIndex j, c a • f a)).normSqAt σ := by
       simp only [comparisonOp_eq_sum h_frame, map_sum, map_smul, c]
     _ ≤ exp (2 * A) * (exp (2 * A) * S) := by
-      grw [normSqAt_glue_le, h_tupleNormSq, card_prod_mul_card_tightFrameIndex_mul_sq_le]
+      grw [normSqAt_glue_le_linear, h_tupleNormSq, card_prod_mul_card_tightFrameIndex_mul_sq_le_linear]
     _ = _ := by
       simp only [S, ← exp_natCast_mul, ← mul_assoc, ← exp_add]
       ring_nf
+
+/-- The comparison operator norm bound with a quadratic exponent. -/
+lemma normSqAt_comparisonOp_le (j : D.LiftIndex) (φ : (D.descentPair (1 : D.Twist) j).FormV)
+    (σ : ℂ ≃+* ℂ) :
+    (comparisonOp j 1 φ).normSqAt σ ≤
+      exp (3 * (D.f * D.m * D.b * D.logB ^ 2)) ^ 2 * φ.normSqAt σ := by
+  have hφ := φ.normSqAt_nonneg σ
+  exact (normSqAt_comparisonOp_le_linear j φ σ).trans (by grw [D.comparisonSizeBudget_le_quadratic])
 
 /-- The operators `U_ϑ = comparisonOp j ϑ = n_Aut hk² glue_ϑ glue_ϑ*` on the forms on `V_j`, one for
 each twist `ϑ`, satisfy `IsComparisonOperator`. Here `glue_ϑ = glue j ϑ` builds a form on `V_j` from
@@ -688,17 +705,14 @@ lemma IsComparisonOperator.norm_padic_det_liftCompression_le {j : D.LiftIndex}
     (mul_le_mul_of_nonneg_right h_det (norm_nonneg _)).trans h_one
   rwa [Real.exp_neg, inv_mul_le_iff₀ (exp_pos _), mul_one] at h_mul
 
-/-- Let `U` be a comparison operator on the forms on `V_j`, the target of the `j`-th lift, and
-`pr U_1 = liftCompression U 1` its compression to the range of the untwisted lift. The image of
-`det (pr U_1)` under every ring automorphism `σ` of `ℂ` has modulus at most
-`exp (3 d f m b log² b)`. Here `d` is the dimension of the good forms on `W_j = D.spaceW j`,
-`f = D.f` the number of infinite places, `m = D.m` the number of lifts in the chain and `b = D.b`,
-with `log b = D.logB`, the weight at the infinite places in `D.bPlaces`. -/
-lemma IsComparisonOperator.norm_map_det_liftCompression_le {j : D.LiftIndex}
+private lemma IsComparisonOperator.norm_map_det_liftCompression_le_of_norm {j : D.LiftIndex}
     {U : ∀ ϑ : D.Twist, End ℂ (D.descentPair ϑ j).FormV} (hU : IsComparisonOperator j U)
+    {archLoss : ℝ}
+    (h_norm : ∀ (φ : (D.descentPair (1 : D.Twist) j).FormV) (σ : ℂ ≃+* ℂ),
+      (U 1 φ).normSqAt σ ≤ exp archLoss ^ 2 * φ.normSqAt σ)
     (σ : ℂ ≃+* ℂ) :
     ‖σ (liftCompression U 1).det‖ ≤
-      exp (finrank ℂ (D.goodForms (D.spaceW j)) * (3 * (D.f * D.m * D.b * D.logB ^ 2))) := by
+      exp (finrank ℂ (D.goodForms (D.spaceW j)) * archLoss) := by
   rw [exp_natCast_mul, ← finrank_range_goodLift j 1]
   refine norm_map_det_le_pow σ.toRingHom _ fun α z hz ↦ ?_
   have hz_pos : 0 < normSqAt z.val σ := normSqAt_pos (Subtype.coe_ne_coe.2 hz.2) σ
@@ -709,9 +723,22 @@ lemma IsComparisonOperator.norm_map_det_liftCompression_le {j : D.LiftIndex}
   have h_eigen : (D.goodLift (1 : D.Twist) j).range.starProjection (U 1 z) = α • z.val :=
     congrArg Subtype.val hz.apply_eq_smul
   rw [h_eigen, normSqAt_smul] at h_proj
-  have h_sq : ‖σ α‖ ^ 2 ≤ exp (3 * (D.f * D.m * D.b * D.logB ^ 2)) ^ 2 :=
-    le_of_mul_le_mul_right (h_proj.trans (hU.normSqAt_le z σ)) hz_pos
+  have h_sq : ‖σ α‖ ^ 2 ≤ exp archLoss ^ 2 :=
+    le_of_mul_le_mul_right (h_proj.trans (h_norm z σ)) hz_pos
   exact le_of_sq_le_sq h_sq (exp_pos _).le
+
+/-- Let `U` be a comparison operator on the forms on `V_j`, the target of the `j`-th lift, and
+`pr U_1 = liftCompression U 1` its compression to the range of the untwisted lift. The image of
+`det (pr U_1)` under every ring automorphism `σ` of `ℂ` has modulus at most
+`exp (3 d f m b log² b)`. Here `d` is the dimension of the good forms on `W_j = D.spaceW j`,
+`f = D.f` the number of infinite places, `m = D.m` the number of lifts in the chain and `b = D.b`,
+with `log b = D.logB`, the weight at the infinite places in `D.bPlaces`. -/
+lemma IsComparisonOperator.norm_map_det_liftCompression_le {j : D.LiftIndex}
+    {U : ∀ ϑ : D.Twist, End ℂ (D.descentPair ϑ j).FormV} (hU : IsComparisonOperator j U)
+    (σ : ℂ ≃+* ℂ) :
+    ‖σ (liftCompression U 1).det‖ ≤
+      exp (finrank ℂ (D.goodForms (D.spaceW j)) * (3 * (D.f * D.m * D.b * D.logB ^ 2))) :=
+  hU.norm_map_det_liftCompression_le_of_norm hU.normSqAt_le σ
 
 end Comparison
 
@@ -721,44 +748,47 @@ lemma mFoldTwist_one_pow (j : ℕ) : (1 : D.MFoldTwist).pow j = (TameChar.one : 
   rw [TameChar.pow]
   congr 1 <;> exact one_pow j
 
+private lemma lift_base_cost_le_linear (D : Data P) :
+    D.m * (3 * D.comparisonSizeBudget) + D.m * (10 * D.m * D.x₁) ≤
+      120001 * (D.f * D.a * D.logB) := by
+  have hB : 0 < D.logB := HasLogBound.pos D
+  have h_arch : D.m * (3 * D.comparisonSizeBudget) ≤ 120000 * (D.f * D.a * D.logB) := calc
+    _ = (30000 * D.f * D.b * D.logB) * (D.m : ℝ) ^ 2 := by unfold comparisonSizeBudget; ring
+    _ ≤ (30000 * D.f * D.b * D.logB) * (4 * D.x) :=
+      mul_le_mul_of_nonneg_left D.m_sq_le_four_mul_x (by positivity)
+    _ = _ := by rw [D.cast_a]; ring
+  have h_aux : D.m * (10 * D.m * D.x₁) ≤ D.f * D.a * D.logB := calc
+    _ = (10 * D.x₁) * (D.m : ℝ) ^ 2 := by ring
+    _ ≤ (10 * D.x₁) * (4 * D.x) := mul_le_mul_of_nonneg_left D.m_sq_le_four_mul_x (by positivity)
+    _ = 40 * D.x * D.x₁ := by ring
+    _ ≤ _ := D.le_of_hasLogBound
+  linarith only [h_arch, h_aux]
+
+private lemma lift_base_cost_le_quadratic (D : Data P) :
+    D.m * (3 * D.comparisonSizeBudget) + D.m * (10 * D.m * D.x₁) ≤ D.f * D.a * D.logB ^ 2 :=
+  (lift_base_cost_le_linear D).trans
+    (D.mul_linearErrorUnit_le_quadraticErrorUnit (D.le_of_hasLogBound : (120001 : ℝ) ≤ D.logB))
+
 private lemma lift_height_cost_le (D : Data P) {budget ratioLoss loss : ℝ} (h_budget : 0 ≤ budget)
-    (h_loss : 12 * (D.f * D.a * D.logB ^ 2) + 2 * (D.m * D.k * budget) +
-      D.f * D.a * D.logB ^ 2 + D.m * D.k * ratioLoss ≤ loss) :
-    3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * budget +
+    (h_loss : D.m * (3 * D.comparisonSizeBudget) + D.m * (10 * D.m * D.x₁) +
+      2 * (D.m * D.k * budget) + D.m * D.k * ratioLoss ≤ loss) :
+    3 * D.comparisonSizeBudget + D.r * budget +
       (10 * D.m * D.x₁ + D.k * ratioLoss) ≤ loss / D.m := by
   have hm : (0 : ℝ) < D.m := HasLogBound.pos D
-  have h_m_sq : (D.m : ℝ) ^ 2 ≤ 4 * D.x := by
-    have h_exp_sq : exp (D.logX / 2) ^ 2 = D.x := by rw [sq, ← exp_add, add_halves, x]
-    obtain ⟨-, h_upper⟩ : exp (D.logX / 2) ≤ D.m ∧ D.m ≤ 2 * exp (D.logX / 2) := D.m_mem
-    calc (D.m : ℝ) ^ 2 ≤ (2 * exp (D.logX / 2)) ^ 2 := by gcongr
-      _ = 4 * D.x := by norm_num [mul_pow, h_exp_sq]
-  have h_arch : D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2)) ≤ 12 * (D.f * D.a * D.logB ^ 2) := by
-    calc D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2))
-        = (3 * D.f * D.b * D.logB ^ 2) * (D.m : ℝ) ^ 2 := by ring
-      _ ≤ (3 * D.f * D.b * D.logB ^ 2) * (4 * D.x) :=
-        mul_le_mul_of_nonneg_left h_m_sq (by positivity)
-      _ = 12 * (D.f * D.a * D.logB ^ 2) := by
-        rw [x, b, a, Nat.cast_mul, D.exp_logX, D.exp_logB]
-        ring
   have h_r : (D.r : ℝ) ≤ 2 * D.k := by
     exact_mod_cast (show D.r ≤ 2 * D.k by linarith [D.r_add_one, D.hundred_mul_m_le_k])
   have h_padic : D.m * (D.r * budget) ≤ 2 * (D.m * D.k * budget) := calc
     _ ≤ D.m * ((2 * D.k) * budget) := by gcongr
     _ = _ := by ring
-  have h_ratios : D.m * (10 * D.m * D.x₁) ≤ D.f * D.a * D.logB ^ 2 := by
-    calc D.m * (10 * D.m * D.x₁) = 10 * D.x₁ * (D.m : ℝ) ^ 2 := by ring
-      _ ≤ 10 * D.x₁ * (4 * D.x) := mul_le_mul_of_nonneg_left h_m_sq (by positivity)
-      _ = 40 * D.x * D.x₁ := by ring
-      _ ≤ _ := D.le_of_hasLogBound
   apply (le_div_iff₀' hm).2
-  linarith only [h_arch, h_padic, h_ratios, h_loss]
+  linarith only [h_padic, h_loss]
 
 private lemma heightLe_liftDeterminant_ratio_of_bounds {θ : PrimePadicIso → D.MFoldTwist}
     (hθ : D.HasSmallRatios θ) (j : D.LiftIndex) {budget ratioLoss loss : ℝ}
     (h_denominators : D.HasDenominatorsWithin θ j budget)
     (h_hecke : HeightLe (10 * D.m * D.x₁ + D.k * (ratioLoss - D.directionAmount))
       fun ι : PrimePadicIso ↦ (heckeValueProd j ((θ ι).powTwist j) / heckeValueProd j 1)⁻¹)
-    (h_cost : 3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * budget +
+    (h_cost : 3 * D.comparisonSizeBudget + D.r * budget +
       (10 * D.m * D.x₁ + D.k * ratioLoss) ≤ loss) :
     HeightLe (D.targetDim * (loss - D.k * D.directionAmount))
       fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
@@ -772,12 +802,13 @@ private lemma heightLe_liftDeterminant_ratio_of_bounds {θ : PrimePadicIso → D
       (D.goodLift ϑ j).normDet ^ 2 * (liftCompression (comparisonOp j) ϑ).det =
         C * (heckeValueProd j ϑ / heckeValueProd j 1) ^ d :=
     hU.exists_normDet_sq_mul_det_eq
-  set A : ℝ := D.f * D.m * D.b * D.logB ^ 2
+  set A : ℝ := D.comparisonSizeBudget
   let Δ (ϑ : D.Twist) : ℂ := (liftCompression (comparisonOp j) ϑ).det
   have h_ratio : ∀ ϑ : D.Twist, heckeValueProd j ϑ / heckeValueProd j 1 ≠ 0 := hU.ratio_ne_zero
   have hΔ_ne (ϑ : D.Twist) : Δ ϑ ≠ 0 :=
     right_ne_zero_of_mul ((h_cancel ϑ).trans_ne (mul_ne_zero hC (pow_ne_zero d (h_ratio ϑ))))
-  have h_arch (σ : ℂ ≃+* ℂ) : ‖σ (Δ 1)‖ ≤ exp (d * (3 * A)) := hU.norm_map_det_liftCompression_le σ
+  have h_arch (σ : ℂ ≃+* ℂ) : ‖σ (Δ 1)‖ ≤ exp (d * (3 * A)) :=
+    hU.norm_map_det_liftCompression_le_of_norm (normSqAt_comparisonOp_le_linear j) σ
   have h_padic (ι : PrimePadicIso) :
       ‖ι.iso (Δ ((θ ι).powTwist j))‖ ≤ exp (d * (D.r * β ι.prime)) :=
     hU.norm_padic_det_liftCompression_le ((θ ι).powTwist j) ι (hθ.coprime ι)
@@ -806,6 +837,24 @@ private lemma heightLe_liftDeterminant_ratio_of_bounds {θ : PrimePadicIso → D
       field [hΔ_ne, pow_ne_zero d hρ]
     rw [h_eq, Pi.mul_apply, Pi.pow_apply]
 
+/-- The determinant ratio with the linear archimedean cost and the actual denominator budget. -/
+lemma heightLe_liftDeterminant_ratio_linear {θ : PrimePadicIso → D.MFoldTwist}
+    (hθ : D.HasSmallRatios θ) (j : D.LiftIndex) {budget : ℝ} (h_budget : 0 ≤ budget)
+    (hβ : ∃ γ : ℕ → ℝ, (∀ T : Finset ℕ, (∀ l ∈ T, l.Prime) → ∑ l ∈ T, γ l ≤ budget) ∧
+      ∀ ι : PrimePadicIso, D.HasDenominatorsLe ι.iso ((θ ι).powTwist j) j (γ ι.prime)) :
+    HeightLe (D.targetDim *
+      ((3 * (D.m * D.k * budget) + 120002 * (D.f * D.a * D.logB)) / D.m -
+        D.k * D.directionAmount))
+      fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
+  have h_denom : D.HasDenominatorsWithin θ j budget := hβ
+  refine heightLe_liftDeterminant_ratio_of_bounds hθ j h_denom
+    (heightLe_inv_heckeValueProd_div_with_denominators hθ j h_denom) ?_
+  apply lift_height_cost_le D h_budget
+  have h_extra : D.m * D.k * D.mainPairRatioError ≤ D.f * D.a * D.logB := by
+    unfold mainPairRatioError
+    exact D.le_of_hasLogBound
+  linarith only [lift_base_cost_le_linear D, h_extra]
+
 /-- The single-lift determinant ratio when the sum of the local denominators is at most
 `f a (log b)² / (m k)`. -/
 lemma heightLe_liftDeterminant_ratio_quadratic {θ : PrimePadicIso → D.MFoldTwist}
@@ -832,7 +881,7 @@ lemma heightLe_liftDeterminant_ratio_quadratic {θ : PrimePadicIso → D.MFoldTw
   have h_hecke : D.m * D.k * (budget + D.mainPairRatioError) ≤ 2 * Q := calc
     _ ≤ D.m * D.k * (budget + budget) := by gcongr
     _ = 2 * Q := by rw [← h_budget]; ring
-  linarith only [h_budget, h_hecke]
+  linarith only [h_budget, h_hecke, lift_base_cost_le_quadratic D, show 0 ≤ Q by positivity]
 
 /-- The single-lift determinant ratio for a regular family with the cubic denominator budget. -/
 lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegularFamily θ)
@@ -847,10 +896,9 @@ lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist}
   have h_budget : D.m * D.k * D.denominatorBudget = D.errorUnit := by
     rw [denominatorBudget]
     field_simp [hm.ne', hk.ne']
-  have h_arch : 12 * (D.f * D.a * D.logB ^ 2) ≤ D.errorUnit := D.le_of_hasLogBound
-  have h_ratios : D.f * D.a * D.logB ^ 2 ≤ D.errorUnit := by
-    linarith only [h_arch, (show 0 ≤ D.f * D.a * D.logB ^ 2 by positivity)]
-  linarith only [h_budget, h_arch, h_ratios]
+  have h_base := (lift_base_cost_le_quadratic D).trans D.quadraticErrorUnit_le_errorUnit
+  have h_error : 0 ≤ D.errorUnit := (HasLogBound.pos D).le
+  linarith only [h_budget, h_base, h_error]
 
 /-- The single-lift estimate expressed with the logarithmic denominator budget. -/
 lemma heightLe_liftDeterminant_ratio {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegularFamily θ)

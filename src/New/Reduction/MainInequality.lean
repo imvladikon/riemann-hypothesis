@@ -33,10 +33,10 @@ Notions from other files:
 
 ## The inputs
 
-* Theorem A: (a) `span_short_integralRamified_eq_top_with_valuationLoss` (size) and
+* Theorem A: (a) `span_short_integralRamified_eq_top_linear` (size) and
   (b) `indexLe_normalizedPoincare_with_valuationLoss` (index), both in `New.Reduction.ShortAndEnough`.
 * Theorem B: `exists_few_normalizedPoincareWithLoss` in `New.Reduction.ShortAndEnough`.
-* Theorem C: `integral_forms_long_with_quadratic_error` in `New.Determinant.Twist.LongForms`,
+* Theorem C: `integral_forms_long_with_linear_error` in `New.Determinant.Twist.LongForms`,
   from a twist for each prime
   (`TwistedLattice.covolume_add_index_nonneg`) and the height of `Z(1) / Z(ξ_ι)`
   (`heightLe_chainDeterminant_one_div_of_bound`).
@@ -45,7 +45,7 @@ Notions from other files:
 
 ## What cancels, and where
 
-* The main amount cancels in `star_inequality_quadratic`.
+* The main amount cancels in `star_inequality_linear`.
 * The gains `∑ gain_l log l` in the size of the chain, against `log c_B`:
   `span_short_integralRamified_eq_top`.
 * The constant `c₁ = (logDerivMean d 1 1).re`, between the period and the expected value
@@ -115,13 +115,13 @@ private lemma translateColengthLoss_le_cutoffCube {P : Parameters} (D : Data P) 
     _ ≤ D.logX₁ * (D.f * D.a * D.logX₁ ^ 2) := mul_le_mul_of_nonneg_right h_scale (by positivity)
     _ = _ := by ring
 
-/-- The main inequality with quadratic errors at every step.
+/-- The main inequality with linear errors at every step.
 
 The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 1 mod q₀`. The scales are
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
 `log log b ≥ 10¹² P.constantBound`. -/
-theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
-    D.m * D.totalRemainder ≤ 27 * (D.f * D.a * D.logB ^ 2) := by
+theorem star_inequality_linear {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ (1350 * 10 ^ 6) * (D.f * D.a * D.logB) := by
   let denominator := completionFactor D
   let share : ℝ := denominator⁻¹
   have hden_pos : 0 < denominator := by
@@ -145,12 +145,12 @@ theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
   obtain ⟨t, ht_card, h_fill⟩ := D.exists_few_normalizedPoincareWithLoss D.valuationLoss hshare_ge hshare_lt
   rw [show share⁻¹ = denominator by simp [share]] at ht_card
   let normalized := D.normalizedPoincareWithLoss D.valuationLoss
-  let sizeLoss : ℝ := 5 * D.quadraticErrorUnit
+  let sizeLoss : ℝ := 684 * D.linearErrorUnit
   let logNormBound : ℝ := D.mainAmount - D.m * D.totalRemainder + sizeLoss
   let short : Set D.ramifiedSourceForms :=
     {φ ∈ D.integralRamified | ∀ (g : D.chosenGL) (σ : ℂ ≃+* ℂ),
       (D.Θ 1 (normalized g φ)).normSqAt σ ≤ exp logNormBound}
-  have h_short_span : span ℂ short = ⊤ := D.span_short_integralRamified_eq_top_with_valuationLoss
+  have h_short_span : span ℂ short = ⊤ := D.span_short_integralRamified_eq_top_linear
   -- Take a basis from the forms `normalized g φ` with `g ∈ t` and `φ` short.
   obtain ⟨n, y, h_indep, h_near_full_rank, h_image_short⟩ : ∃ (n : ℕ) (y : Fin n → D.targetForms),
       LinearIndependent ℂ y ∧ (1 - share) * D.targetDim ≤ n ∧
@@ -190,26 +190,26 @@ theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
       _ = D.targetDim * D.b := by rw [inv_mul_cancel₀ hden_pos.ne', one_mul]
   -- Apply C to the same family. The index contributes to both Gram variables.
   have h_volume_index_lower :=
-    integral_forms_long_with_quadratic_error h_indep h_index_upper h_covolume_upper
+    integral_forms_long_with_linear_error h_indep h_index_upper h_covolume_upper
+  have hB : 0 < D.logB := HasLogBound.pos D
   have h_size_nonneg : 0 ≤ sizeLoss := by
-    dsimp [sizeLoss, quadraticErrorUnit]
+    dsimp [sizeLoss, linearErrorUnit]
     positivity
   have h_main_comparison : n * (D.mainAmount + sizeLoss) ≤
       D.targetDim * (D.mainAmount + sizeLoss) :=
     mul_le_mul_of_nonneg_right hn_le (add_nonneg D.mainAmount_nonneg h_size_nonneg)
-  have h_b : (D.targetDim : ℝ) * D.b ≤ D.targetDim * D.quadraticErrorUnit :=
+  have h_b : (D.targetDim : ℝ) * D.b ≤ D.targetDim * D.linearErrorUnit :=
     mul_le_mul_of_nonneg_left D.le_of_hasLogBound D.targetDim.cast_nonneg
   have h_index_cost : 2 * (D.targetDim * indexBudgetPerDim) ≤
-      D.targetDim * (2 * D.quadraticErrorUnit) := by
+      D.targetDim * (2 * D.linearErrorUnit) := by
     have h_cutoff : D.logX₁ ^ 3 ≤ D.logB := D.le_of_hasLogBound
-    have h_scale : D.logB ≤ D.logB ^ 2 := D.le_of_hasLogBound
-    dsimp [indexBudgetPerDim, quadraticErrorUnit]
-    have h_cost := mul_le_mul_of_nonneg_left (h_cutoff.trans h_scale)
+    dsimp [indexBudgetPerDim, linearErrorUnit]
+    have h_cost := mul_le_mul_of_nonneg_left h_cutoff
       (show (0 : ℝ) ≤ D.targetDim * D.f * D.a by positivity)
     linarith only [h_cost]
   have h_main_cancelled : n * (D.m * D.totalRemainder) ≤
-      D.targetDim * (26 * D.quadraticErrorUnit) := by
-    change D.targetDim * (D.mainAmount - 17 * D.quadraticErrorUnit - D.b) ≤
+      D.targetDim * ((1300 * 10 ^ 6 + 688) * D.linearErrorUnit) := by
+    change D.targetDim * (D.mainAmount - (1300 * 10 ^ 6) * D.linearErrorUnit - D.b) ≤
       n * (D.mainAmount - D.m * D.totalRemainder + sizeLoss) +
         2 * (D.targetDim * indexBudgetPerDim) + ((D.targetDim : ℝ) - n) * (denominator * D.b)
       at h_volume_index_lower
@@ -220,14 +220,28 @@ theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
   have hn_pos : (0 : ℝ) < n :=
     (mul_pos (by norm_num) (Nat.cast_pos.2 D.targetDim_pos)).trans_le h_rank
   refine le_of_mul_le_mul_left ?_ hn_pos
-  have h_dim_nonneg : (0 : ℝ) ≤ D.targetDim := Nat.cast_nonneg _
+  have h_coeff : 1300 * 10 ^ 6 + 688 ≤
+      (49 / 50 : ℝ) * (1350 * 10 ^ 6) := by
+    norm_num
+  have h_rank_cost : (D.targetDim : ℝ) * (1300 * 10 ^ 6 + 688) ≤ n * (1350 * 10 ^ 6) := calc
+    _ ≤ D.targetDim * ((49 / 50 : ℝ) * (1350 * 10 ^ 6)) :=
+      mul_le_mul_of_nonneg_left h_coeff D.targetDim.cast_nonneg
+    _ = ((49 / 50 : ℝ) * D.targetDim) * (1350 * 10 ^ 6) := by ring
+    _ ≤ _ := mul_le_mul_of_nonneg_right h_rank (by positivity)
   calc n * (D.m * D.totalRemainder)
-    _ ≤ D.targetDim * (26 * D.quadraticErrorUnit) := h_main_cancelled
-    _ = (26 * D.targetDim) * D.quadraticErrorUnit := by ring
-    _ ≤ (27 * n) * D.quadraticErrorUnit :=
-      mul_le_mul_of_nonneg_right (by linarith only [h_rank, h_dim_nonneg])
-        (by unfold quadraticErrorUnit; positivity)
-    _ = _ := by ring
+    _ ≤ D.targetDim * ((1300 * 10 ^ 6 + 688) * D.linearErrorUnit) := h_main_cancelled
+    _ = (D.targetDim * (1300 * 10 ^ 6 + 688)) * D.linearErrorUnit := by ring
+    _ ≤ (n * (1350 * 10 ^ 6)) * D.linearErrorUnit :=
+      mul_le_mul_of_nonneg_right h_rank_cost (by unfold linearErrorUnit; positivity)
+    _ = _ := by unfold linearErrorUnit; ring
+
+/-- The main inequality expressed in quadratic units. -/
+theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 27 * (D.f * D.a * D.logB ^ 2) := by
+  refine (star_inequality_linear D).trans ?_
+  have h_loss := D.mul_linearErrorUnit_le_quadraticErrorUnit
+    (D.le_of_hasLogBound : (1350 * 10 ^ 6 : ℝ) ≤ D.logB)
+  linarith only [h_loss, show 0 ≤ (D.f * D.a * D.logB ^ 2 : ℝ) by positivity]
 
 /-- The main inequality expressed with the earlier weighted valuation budget. -/
 theorem star_inequality_with_weighted_loss {P : Parameters} (D : Data P) :

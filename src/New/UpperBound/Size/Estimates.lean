@@ -345,21 +345,29 @@ lemma exists_mul_sub_one_eq_or_mul_add_one_eq {p : ℕ} (hp : 2 ≤ p)
     (le_trans (by norm_num) D.ten_thousand_le_m)
   exact ⟨c, hc_pos, by omega, (Nat.le_div_iff_mul_le hc_pos).2 (by omega), by omega⟩
 
+/-- The number of lifts satisfies `m² ≤ 4x`. -/
+lemma m_sq_le_four_mul_x : (D.m : ℝ) ^ 2 ≤ 4 * D.x := by
+  have h_exp_sq : exp (D.logX / 2) ^ 2 = D.x := by rw [sq, ← exp_add, add_halves, x]
+  obtain ⟨-, h_upper⟩ : exp (D.logX / 2) ≤ D.m ∧ D.m ≤ 2 * exp (D.logX / 2) := D.m_mem
+  calc (D.m : ℝ) ^ 2 ≤ (2 * exp (D.logX / 2)) ^ 2 := by gcongr
+    _ = _ := by norm_num [mul_pow, h_exp_sq]
+
+/-- The principal level satisfies `log M ≤ 22 log b`. -/
+lemma log_M_le_twenty_two_mul_logB : log (D.M : ℝ) ≤ 22 * D.logB := by
+  calc log (D.M : ℝ) ≤ log (D.b ^ 22) :=
+      log_le_log (Nat.cast_pos.2 (NeZero.pos _)) D.M_mem_Icc.2
+    _ = _ := by rw [Real.log_pow, Data.b, log_exp]; norm_num
+
 /-- The contribution of the level to the weighted valuation loss. -/
 private lemma level_valuation_loss_mul_log_le :
     (2 * D.m * D.f * D.b : ℝ) * Real.log D.N ≤ 240 * (D.f * D.a * D.logB) := by
   have h_logB_pos : 0 < D.logB := HasLogBound.pos D
-  have h_exp_sq : exp (D.logX / 2) ^ 2 = D.x := by rw [sq, ← exp_add, add_halves, x]
-  obtain ⟨-, h_upper⟩ : exp (D.logX / 2) ≤ D.m ∧ D.m ≤ 2 * exp (D.logX / 2) := D.m_mem
-  have h_m_sq : (D.m : ℝ) ^ 2 ≤ 4 * D.x := calc
-    _ ≤ (2 * exp (D.logX / 2)) ^ 2 := by gcongr
-    _ = _ := by norm_num [mul_pow, h_exp_sq]
   calc
     _ ≤ (2 * D.m * D.f * D.b : ℝ) * (30 * D.m * D.logB) :=
       mul_le_mul_of_nonneg_left D.log_N_mem_Icc.2 (by positivity)
     _ = 60 * D.f * D.b * D.logB * (D.m : ℝ) ^ 2 := by ring
     _ ≤ 60 * D.f * D.b * D.logB * (4 * D.x) :=
-      mul_le_mul_of_nonneg_left h_m_sq (by positivity)
+      mul_le_mul_of_nonneg_left D.m_sq_le_four_mul_x (by positivity)
     _ = 240 * (D.f * D.a * D.logB) := by rw [D.cast_a]; ring
 
 open scoped Classical in
