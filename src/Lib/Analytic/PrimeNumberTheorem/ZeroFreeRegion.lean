@@ -1,6 +1,13 @@
 module
 
 public import Lib.Analytic.PrimeNumberTheorem.LFunctionGrowth
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
+import TauCeti.Analysis.Complex.BorelCaratheodory
+import TauCeti.NumberTheory.DirichletCharacter.LFunction.Basic
+import TauCeti.NumberTheory.LFunctions.Zeros.ZeroFreeRegion.Dirichlet
+import TauCeti.NumberTheory.LSeries.DirichletEulerLog
+import TauCeti.NumberTheory.LSeries.RiemannZeta.Bounds
 
 /-!
 # A zero-free region for Dirichlet L-functions
@@ -13,6 +20,8 @@ is principal, the points near `1` are treated by `𝖿_χ(1) ≠ 0` and continui
 be depends on `χ`.
 
 With a fixed neighborhood of `1`, the linear growth estimate gives a region of width `c / l ^ 9`.
+The classical region and Borel–Carathéodory also give a strip of width `a / l` with logarithmic
+derivative bounded by `B l²`, provided the exceptional real zero is excluded near `1`.
 
 Notions from other files:
 * `entireL χ`: the entire function `L(s, χ)`, or `(s - 1) L(s, χ)` if `χ` is principal;
@@ -43,6 +52,194 @@ lemma eventually_le_norm_regularL (χ : DirichletCharacter ℂ N) :
     (differentiableAt_regularL χ one_pos).continuousAt.norm.eventually_const_le (half_lt_self h_pos)
   filter_upwards [eventually_le_nhds (half_pos h_pos), eventually_closedBall_subset h_near]
     with r hr h_ball s hs using hr.trans (h_ball (mem_closedBall_iff_norm.2 hs))
+
+/-- At a fixed level, one neighborhood of `1` works for all regularized L-functions. -/
+lemma exists_pos_neighborhood_regularL_ne_zero :
+    ∃ a : ℝ, 0 < a ∧ ∀ (χ : DirichletCharacter ℂ N) (s : ℂ),
+      ‖s - 1‖ ≤ a → regularL χ s ≠ 0 := by
+  have h_inv : Tendsto (fun l : ℝ ↦ 1 / l) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop tendsto_id
+  obtain ⟨l, hl, h_near⟩ := ((eventually_ge_atTop (1 : ℝ)).and
+    (h_inv.eventually (eventually_all.2 fun χ : DirichletCharacter ℂ N ↦
+      eventually_le_norm_regularL χ))).exists
+  have ha : 0 < 1 / l := one_div_pos.2 (one_pos.trans_le hl)
+  exact ⟨1 / l, ha, fun χ s hs ↦ norm_pos_iff.1 (ha.trans_le (h_near χ s hs))⟩
+
+/-- The classical region on the scale `q ≤ exp l` and `‖s‖ ≤ 2 exp l`. An exceptional
+zero would come from a real character and lie within distance `a` of `1`. -/
+lemma exists_entireL_ne_zero_of_classical_log_width :
+    ∃ c : ℝ, 0 < c ∧ c ≤ 1 ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+      {a l : ℝ} {s : ℂ}, 0 < a → a ≤ c → 4 ≤ l → (q : ℝ) ≤ rexp l →
+      1 - a / l ≤ s.re → ‖s‖ ≤ 2 * rexp l →
+      (χ ^ 2 = 1 → ‖s - 1‖ ≤ a → entireL χ s ≠ 0) → entireL χ s ≠ 0 := by
+  obtain ⟨c, hc, -, h_region⟩ := TauCeti.LFunctions.dirichletLFunction_zeroFreeRegion
+  refine ⟨min 1 (c / 3), lt_min one_pos (by positivity), min_le_left _ _, ?_⟩
+  intro q _ χ a l s ha ha_c hl hq hs hn h_near
+  by_cases hs_one : 1 ≤ s.re
+  · exact entireL_ne_zero χ hs_one
+  have hs_lt : s.re < 1 := lt_of_not_ge hs_one
+  have hs_ne : s ≠ 1 := fun h ↦ hs_one (by simp [h])
+  have hl_pos : 0 < l := by linarith
+  have h_exp : 3 ≤ rexp l := by linarith [add_one_le_exp l]
+  have h_im : |s.im| + 3 ≤ rexp (l + l) := by
+    rw [Real.exp_add]
+    calc
+      _ ≤ 3 * rexp l := by linarith [abs_im_le_norm s]
+      _ ≤ _ := mul_le_mul_of_nonneg_right h_exp (exp_pos l).le
+  have h_arg : 1 < (q : ℝ) * (|s.im| + 3) := calc
+    _ < (1 : ℝ) * 3 := by norm_num
+    _ ≤ _ := mul_le_mul (Nat.one_le_cast.mpr NeZero.one_le) (by linarith [abs_nonneg s.im])
+      (by norm_num) (by positivity)
+  have h_log : Real.log ((q : ℝ) * (|s.im| + 3)) ≤ 3 * l := by
+    apply (Real.log_le_iff_le_exp (zero_lt_one.trans h_arg)).2
+    rw [show 3 * l = l + (l + l) by ring, Real.exp_add l]
+    exact mul_le_mul hq h_im (by positivity) (exp_pos l).le
+  have h_width : a / l ≤ c / Real.log ((q : ℝ) * (|s.im| + 3)) := calc
+    _ ≤ (c / 3) / l := div_le_div_of_nonneg_right (ha_c.trans (min_le_right _ _)) hl_pos.le
+    _ = c / (3 * l) := by ring
+    _ ≤ _ := div_le_div_of_nonneg_left hc.le (Real.log_pos h_arg) h_log
+  intro h_zero
+  have hL : χ.LFunction s = 0 := by
+    by_contra h
+    exact (entireL_ne_zero_iff χ hs_ne).2 h h_zero
+  obtain ⟨him, hsq, _⟩ := (h_region q χ).1 s (by linarith)
+    (χ.meromorphicOrderAt_LFunction_pos_iff.2 ⟨hL, .inl hs_ne⟩)
+  have h_real : s - 1 = ((s.re - 1 : ℝ) : ℂ) := by
+    apply Complex.ext <;> simp [him]
+  have h_dist : ‖s - 1‖ ≤ a := by
+    rw [h_real, norm_real, Real.norm_eq_abs, abs_of_nonpos (sub_nonpos.2 hs_lt.le)]
+    linarith only [hs, div_le_self ha.le (show 1 ≤ l by linarith)]
+  exact h_near hsq h_dist h_zero
+
+/-- Classical width for all characters of a fixed positive modulus. -/
+lemma exists_eventually_entireL_ne_zero_log_strip :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ l : ℝ in atTop, ∀ (χ : DirichletCharacter ℂ N) (s : ℂ),
+      1 - a / l ≤ s.re → ‖s‖ ≤ 2 * rexp l → entireL χ s ≠ 0 := by
+  obtain ⟨c, hc, hc_one, h_region⟩ := exists_entireL_ne_zero_of_classical_log_width
+  obtain ⟨b, hb, h_near⟩ := exists_pos_neighborhood_regularL_ne_zero (N := N)
+  refine ⟨min c b, lt_min hc hb, (min_le_left _ _).trans hc_one, ?_⟩
+  filter_upwards [eventually_ge_atTop (4 : ℝ), tendsto_exp_atTop.eventually_ge_atTop (N : ℝ)]
+    with l hl hN χ s hs hn
+  exact h_region N χ (lt_min hc hb) (min_le_left _ _) hl hN hs hn fun _ hdist hzero ↦
+    h_near χ s (hdist.trans (min_le_right _ _)) (by simp [regularL, hzero])
+
+private lemma norm_entireL_le_sq (χ : DirichletCharacter ℂ N) {s : ℂ} (hs : 1 / 2 ≤ s.re) :
+    ‖entireL χ s‖ ≤ 16 * N * ‖s‖ ^ 2 := by
+  have h_factor : ‖(if χ = 1 then s else 1 : ℂ)‖ ≤ 2 * ‖s‖ := by
+    split_ifs
+    · linarith [norm_nonneg s]
+    · simp only [norm_one]
+      linarith [re_le_norm s]
+  have h_ne : (if χ = 1 then s else 1 : ℂ) ≠ 0 := by
+    split_ifs
+    · exact ne_zero_of_re_pos (by linarith)
+    · exact one_ne_zero
+  calc
+    _ = ‖regularL χ s‖ * ‖(if χ = 1 then s else 1 : ℂ)‖ := by
+      rw [← norm_mul, regularL, div_mul_cancel₀ _ h_ne]
+    _ ≤ (8 * N * ‖s‖) * (2 * ‖s‖) :=
+      mul_le_mul (norm_regularL_le_linear χ hs) h_factor (norm_nonneg _) (by positivity)
+    _ = _ := by ring
+
+private lemma mul_exp_neg_re_riemannZeta_le_norm_entireL (χ : DirichletCharacter ℂ N)
+    {s : ℂ} {η : ℝ} (hη : 0 < η) (hη_one : η ≤ 1) (hs : 1 + η ≤ s.re) :
+    η * rexp (-(riemannZeta s.re).re) ≤ ‖entireL χ s‖ := by
+  have hs_gt : 1 < s.re := by linarith
+  have h_lower := χ.exp_neg_re_riemannZeta_le_norm_LFunction hs_gt
+  by_cases hχ : χ = 1
+  · have hs_ne : s ≠ 1 := ne_of_apply_ne re hs_gt.ne'
+    have h_factor : η ≤ ‖s - 1‖ := by
+      have h_re := re_le_norm (s - 1)
+      simp only [sub_re, one_re] at h_re
+      linarith
+    rw [entireL, ite_eq_left hχ, DirichletCharacter.LFunctionTrivChar₁_apply_of_ne_one N hs_ne, norm_mul]
+    exact mul_le_mul h_factor (by simpa only [hχ, DirichletCharacter.LFunctionTrivChar] using h_lower)
+      (exp_pos _).le (norm_nonneg _)
+  rw [entireL, ite_eq_right hχ]
+  exact (mul_le_of_le_one_left (exp_pos _).le hη_one).trans h_lower
+
+/-- A zero-free strip of width `a / l` gives a bound `B l²` on a narrower strip by
+Borel–Carathéodory, with the disk centered to the right of the point being estimated. -/
+lemma eventually_norm_logDeriv_entireL_le_of_log_strip {a : ℝ} (ha : 0 < a) (ha_one : a ≤ 1) :
+    ∃ B : ℝ, 0 < B ∧ ∀ᶠ l : ℝ in atTop, ∀ (q : ℕ) [NeZero q]
+      (χ : DirichletCharacter ℂ q) (s : ℂ), (q : ℝ) ≤ rexp l →
+      1 - a / (8 * l) ≤ s.re → ‖s‖ ≤ rexp l →
+      (∀ w : ℂ, 1 - a / l ≤ w.re → ‖w‖ ≤ 2 * rexp l → entireL χ w ≠ 0) →
+      entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ B * l ^ 2 := by
+  let D : ℝ := 1 + 8 / a
+  refine ⟨48 * (D + 4) / a, by dsimp [D]; positivity, ?_⟩
+  have h_poly : ∀ᶠ l : ℝ in atTop, (512 / a) * l ≤ rexp l := by
+    filter_upwards [((isLittleO_pow_exp_pos_mul_atTop 1 one_pos).const_mul_left
+      (512 / a)).eventuallyLE] with l h
+    exact (le_norm_self _).trans (by
+      simpa only [one_mul, pow_one, Real.norm_eq_abs, abs_of_pos (exp_pos l)] using h)
+  filter_upwards [eventually_ge_atTop (4 : ℝ), h_poly] with l hl hl_poly q _ χ s hq hs hn h_free
+  have hl_pos : 0 < l := by linarith
+  let r := a / (4 * l)
+  let b : ℂ := s + (r : ℂ)
+  have hr : 0 < r := by dsimp [r]; positivity
+  have h_radius : a / l = 4 * r := by dsimp [r]; ring
+  have h_small : a / (8 * l) = r / 2 := by dsimp [r]; ring
+  have hr_le : r ≤ 1 / 4 := (div_le_iff₀ (by positivity : 0 < 4 * l)).2
+    (by linarith only [ha_one, hl])
+  have hb_re : b.re = s.re + r := by simp [b]
+  have hb_norm : ‖b‖ ≤ ‖s‖ + r := (norm_add_le _ _).trans_eq (by simp [abs_of_pos hr])
+  have h_exp : 1 ≤ rexp l := by linarith [add_one_le_exp l]
+  have h_dist : ‖s - b‖ = r := by
+    rw [show s - b = -(r : ℂ) by dsimp [b]; ring, norm_neg, norm_real, Real.norm_eq_abs,
+      abs_of_pos hr]
+  have h_outer (w : ℂ) (hw : w ∈ Metric.ball b (2 * r)) :
+      1 - a / l ≤ w.re ∧ 1 / 2 ≤ w.re ∧ ‖w‖ ≤ 2 * rexp l := by
+    have h_ball : ‖w - b‖ < 2 * r := by simpa only [mem_ball, dist_eq_norm] using hw
+    have h_re := (abs_le.1 ((abs_re_le_norm (w - b)).trans h_ball.le)).1
+    simp only [sub_re] at h_re
+    have h_norm := norm_le_norm_sub_add w b
+    rw [h_small] at hs
+    exact ⟨by linarith, by linarith, by linarith⟩
+  have hgap : 1 + r / 2 ≤ b.re := by linarith only [hb_re, hs, h_small]
+  have hrcp : 1 / (r / 2) = (8 / a) * l := by dsimp [r]; field
+  have h_zeta : (riemannZeta b.re).re ≤ D * l := by
+    have h_bound := (TauCeti.riemannZeta_re_lt_one_add_one_div_sub_one
+      (σ := b.re) (by linarith) (by linarith)).le
+    have h_inv := one_div_le_one_div_of_le (half_pos hr) (show r / 2 ≤ b.re - 1 by linarith)
+    rw [hrcp] at h_inv
+    dsimp [D]
+    rw [add_mul, one_mul]
+    linarith only [hl, h_bound, h_inv]
+  have h_lower : (r / 2) * rexp (-D * l) ≤ ‖entireL χ b‖ :=
+    (mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 (by linarith only [h_zeta])) (half_pos hr).le).trans
+      (mul_exp_neg_re_riemannZeta_le_norm_entireL χ (s := b) (half_pos hr) (by linarith) hgap)
+  have h_absorb : 64 ≤ (r / 2) * rexp l := by
+    have h := (div_le_iff₀ (half_pos hr)).1 (show 64 / (r / 2) ≤ rexp l by
+      calc
+        _ = 64 * (1 / (r / 2)) := by ring
+        _ = (512 / a) * l := by rw [hrcp]; ring
+        _ ≤ _ := hl_poly)
+    simpa only [mul_comm] using h
+  have h_relative (w : ℂ) (hw : w ∈ Metric.ball b (2 * r)) :
+      ‖entireL χ w‖ ≤ rexp ((D + 4) * l) * ‖entireL χ b‖ := calc
+    _ ≤ 16 * q * ‖w‖ ^ 2 := norm_entireL_le_sq χ (h_outer w hw).2.1
+    _ ≤ 16 * rexp l * (2 * rexp l) ^ 2 := by gcongr; exact (h_outer w hw).2.2
+    _ = 64 * (rexp l) ^ 3 := by ring
+    _ ≤ ((r / 2) * rexp l) * (rexp l) ^ 3 := mul_le_mul_of_nonneg_right h_absorb (by positivity)
+    _ = rexp ((D + 4) * l) * ((r / 2) * rexp (-D * l)) := by
+      rw [mul_left_comm (rexp ((D + 4) * l)), ← Real.exp_add,
+        show (D + 4) * l + -D * l = (4 : ℕ) * l by push_cast; ring,
+        Real.exp_natCast_mul]
+      ring
+    _ ≤ _ := mul_le_mul_of_nonneg_left h_lower (exp_pos _).le
+  have h_nonzero (w : ℂ) (hw : w ∈ Metric.ball b (2 * r)) : entireL χ w ≠ 0 :=
+    h_free w (h_outer w hw).1 (h_outer w hw).2.2
+  have hs_ball : s ∈ Metric.ball b (2 * r) := by
+    rw [mem_ball, dist_eq_norm, h_dist]
+    linarith
+  have h_borel := Complex.norm_logDeriv_le_of_forall_mem_ball_norm_le_mul
+    (fun w _ ↦ (analyticAt_entireL χ w).differentiableAt.differentiableWithinAt)
+    h_nonzero h_relative (by simpa only [mem_ball, dist_eq_norm] using hs_ball)
+  rw [Real.log_exp, h_dist] at h_borel
+  refine ⟨h_nonzero s hs_ball, h_borel.trans_eq ?_⟩
+  dsimp [r]
+  field
 
 private lemma pow_three_le_mul_norm_regularL_pow_of_fixed_neighborhood
     (χ : DirichletCharacter ℂ N) {s : ℂ} {l L : ℝ}

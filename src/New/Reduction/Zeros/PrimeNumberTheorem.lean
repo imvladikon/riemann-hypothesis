@@ -181,49 +181,53 @@ private lemma differentiableAt_and_norm_logDerivMean_div_le {s : ℂ} {C : ℝ} 
           grw [norm_div, norm_logDerivMean_le h_char_le h_twist_le, ← re_le_norm s, ← h_half]
       _ = _ := by ring
 
-/-- Choose one neighborhood of `1` for all the characters and their twists at the fixed moduli. -/
+/-- The classical strips for the two fixed moduli give a common strip for the transform. -/
+lemma exists_eventually_norm_logDerivMean_div_le_on_log_strip :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ l : ℝ in atTop, ∀ s : ℂ,
+      1 - a / l ≤ s.re → ‖s‖ ≤ rexp l →
+        DifferentiableAt ℂ (fun z : ℂ ↦ logDerivMean d q z / z) s ∧
+          ‖logDerivMean d q s / s‖ ≤ l ^ 3 := by
+  obtain ⟨a₀, ha₀, ha₀_one, h₀⟩ := exists_eventually_entireL_ne_zero_log_strip (N := q)
+  obtain ⟨a₁, ha₁, _, h₁⟩ := exists_eventually_entireL_ne_zero_log_strip (N := q * d)
+  let a := min a₀ a₁
+  have ha : 0 < a := lt_min ha₀ ha₁
+  have ha_one : a ≤ 1 := (min_le_left _ _).trans ha₀_one
+  obtain ⟨B, hB, h_bound⟩ := eventually_norm_logDeriv_entireL_le_of_log_strip ha ha_one
+  refine ⟨a / 8, by positivity, by linarith, ?_⟩
+  filter_upwards [h₀, h₁, h_bound, eventually_ge_atTop (2 : ℝ),
+    tendsto_exp_atTop.eventually_ge_atTop (q : ℝ),
+    tendsto_exp_atTop.eventually_ge_atTop ((q * d : ℕ) : ℝ),
+    eventually_ge_atTop (4 * B + 2)] with l h_q h_twist h_deriv hl hq hd hB_l s hs hn
+  have hl_pos : 0 < l := by linarith
+  have h_small : a / 8 / l ≤ 1 / 2 := (div_le_iff₀ hl_pos).2 (by linarith)
+  have hs_half : 1 / 2 ≤ s.re := by linarith
+  rw [div_div] at hs
+  have h_width {c : ℝ} (hc : a ≤ c) {w : ℂ} (hw : 1 - a / l ≤ w.re) : 1 - c / l ≤ w.re := by
+    linarith only [hw, div_le_div_of_nonneg_right hc hl_pos.le]
+  obtain ⟨h_diff, h_norm⟩ := differentiableAt_and_norm_logDerivMean_div_le (d := d) hs_half
+    (fun χ ↦ h_deriv q χ s hq hs hn fun w hw ↦ h_q χ w (h_width (min_le_left _ _) hw))
+    (fun χ ↦ h_deriv (q * d) (quadTwist χ d) s hd hs hn fun w hw ↦
+      h_twist (quadTwist χ d) w (h_width (min_le_right _ _) hw))
+  refine ⟨h_diff, h_norm.trans ?_⟩
+  calc
+    _ ≤ (4 * B + 2) * l ^ 2 := by nlinarith [one_le_pow₀ (n := 2) (show 1 ≤ l by linarith)]
+    _ ≤ l * l ^ 2 := mul_le_mul_of_nonneg_right hB_l (sq_nonneg l)
+    _ = _ := by ring
+
+/-- A narrower strip and weaker growth bound follow from the classical estimate. -/
 lemma exists_eventually_norm_logDerivMean_div_le_of_fixed_neighborhood :
     ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ l : ℝ in atTop, ∀ s : ℂ,
       1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
         DifferentiableAt ℂ (fun z : ℂ ↦ logDerivMean d q z / z) s ∧
           ‖logDerivMean d q s / s‖ ≤ l ^ 10 := by
-  have h_inverse : Tendsto (fun L : ℝ ↦ 1 / L) atTop (𝓝 0) :=
-    tendsto_const_nhds.div_atTop tendsto_id
-  have h_near : ∀ᶠ L : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (z : ℂ),
-      ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL ψ z‖ :=
-    eventually_all.2 fun ψ ↦ h_inverse.eventually (eventually_le_norm_regularL ψ)
-  have h_near_twist : ∀ᶠ L : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (z : ℂ),
-      ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL (quadTwist ψ d) z‖ :=
-    eventually_all.2 fun ψ ↦ h_inverse.eventually (eventually_le_norm_regularL (quadTwist ψ d))
-  obtain ⟨L, hL, h_near, h_near_twist⟩ := ((eventually_ge_atTop 1).and (h_near.and h_near_twist)).exists
-  let a := fixedZeroFreeWidth L
-  have ha : 0 < a := fixedZeroFreeWidth_pos L
-  have ha_one : a ≤ 1 := fixedZeroFreeWidth_le_one L
-  have h_char : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
-      1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
-        entireL ψ s ≠ 0 ∧ ‖logDeriv (entireL ψ) s‖ ≤ l ^ 9 / a :=
-    eventually_all.2 fun ψ ↦ eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood ψ hL
-      (fun _ ↦ h_near ψ)
-  have h_twist : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
-      1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
-        entireL (quadTwist ψ d) s ≠ 0 ∧ ‖logDeriv (entireL (quadTwist ψ d)) s‖ ≤ l ^ 9 / a :=
-    eventually_all.2 fun ψ ↦ eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (quadTwist ψ d) hL
-      (fun _ ↦ h_near_twist ψ)
+  obtain ⟨a, ha, ha_one, h_strip⟩ :=
+    exists_eventually_norm_logDerivMean_div_le_on_log_strip (d := d) (q := q)
   refine ⟨a, ha, ha_one, ?_⟩
-  filter_upwards [h_char, h_twist, eventually_ge_atTop (2 : ℝ), eventually_ge_atTop (6 / a)]
-    with l hl_char hl_twist hl_two hl s h_re h_norm
-  have hl_one : 1 ≤ l := one_le_two.trans hl_two
-  have h_pow : 2 ≤ l ^ 9 := hl_two.trans (le_self_pow₀ hl_one (by decide))
-  have h_width : a / l ^ 9 ≤ 1 / 2 :=
-    (div_le_div_of_nonneg_right ha_one (by positivity)).trans (one_div_le_one_div_of_le two_pos h_pow)
-  have h_half : 1 / 2 ≤ s.re := by linarith
-  have h_low : 1 ≤ l ^ 9 / a := (le_div_iff₀ ha).2 (by linarith)
-  obtain ⟨h_diff, h_bound⟩ := differentiableAt_and_norm_logDerivMean_div_le h_half
-    (fun ψ ↦ hl_char ψ s h_re h_norm) (fun ψ ↦ hl_twist ψ s h_re h_norm)
-  refine ⟨h_diff, h_bound.trans ?_⟩
-  calc 4 * (l ^ 9 / a) + 2 ≤ 6 * (l ^ 9 / a) := by linarith
-    _ = (6 / a) * l ^ 9 := by ring
-    _ ≤ l ^ 10 := by rw [pow_succ' l 9]; exact mul_le_mul_of_nonneg_right hl (by positivity)
+  filter_upwards [h_strip, eventually_ge_atTop (1 : ℝ)] with l h hl s hs hn
+  have h_width : a / l ^ 9 ≤ a / l :=
+    div_le_div_of_nonneg_left ha.le (zero_lt_one.trans_le hl) (le_self_pow₀ hl (by decide))
+  exact (h s (by linarith) hn).imp_right
+    (·.trans (pow_le_pow_right₀ hl (by decide : (3 : ℕ) ≤ 10)))
 
 /-- The logarithmic derivative mean on the strip with width `l⁻²⁶`. -/
 lemma eventually_norm_logDerivMean_div_le : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ,
@@ -247,6 +251,18 @@ private lemma logDerivMean_div_transform (hd : d ≠ 2) (h_cop : q.Coprime d) (s
     (logDerivMean d q s / s - logDerivMean d q 1 / 1) / (s - 1) =
       ∫ v : ℝ in Set.Ioi 0, (primeRemainder d q (rexp v) : ℂ) * cexp ((1 - s) * v) := by
   simp [integral_primeRemainder hd h_cop hs, ofReal_re_logDerivMean_one hd h_cop]
+
+/-- A classical strip gives square-root exponential decay in logarithmic coordinates. -/
+theorem exists_eventually_abs_primeRemainder_exp_le_sqrt (hd : d ≠ 2) (h_cop : q.Coprime d) :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ v : ℝ in atTop,
+      |primeRemainder d q (rexp v)| ≤ rexp (-((a * v) ^ (1 / 2 : ℝ) / 32)) := by
+  obtain ⟨a, ha, ha_one, hF⟩ := exists_eventually_norm_logDerivMean_div_le_on_log_strip (d := d) (q := q)
+  refine ⟨a, ha, ha_one, ?_⟩
+  have h_bound := eventually_abs_le_exp_rpow_of_transform_of_width
+    (by fun_prop [primeRemainder, lambdaKSum]) (fun u v ↦ abs_primeRemainder_exp_sub_le)
+    (logDerivMean_div_transform hd h_cop) ha ha_one (A := 1) (B := 3)
+    (by simpa only [pow_one] using hF)
+  simpa only [Nat.cast_one, one_add_one_eq_two] using h_bound
 
 /-- At fixed moduli the weighted prime remainder decays with stretched exponential exponent
 `1 / 10` in logarithmic coordinates. -/
