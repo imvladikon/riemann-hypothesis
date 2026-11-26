@@ -243,13 +243,13 @@ lemma fixedZeroFreeWidth_pos (L : ℝ) : 0 < fixedZeroFreeWidth L :=
 lemma fixedZeroFreeWidth_le_one (L : ℝ) : fixedZeroFreeWidth L ≤ 1 :=
   (div_le_one (zero_lt_one.trans_le (le_max_left (1 : ℝ) _))).2 (le_max_left _ _)
 
-/-- A fixed neighborhood of `1` gives a zero-free region of width `c / l ^ 9`. The constant `c`
-depends on its radius, so the same `c` serves all characters with a common neighborhood bound. -/
-theorem eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (χ : DirichletCharacter ℂ N) {L : ℝ}
-    (hL : 1 ≤ L)
-    (h_near : χ ^ 2 = 1 → ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ z‖) :
-    ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - fixedZeroFreeWidth L / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
-      entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ l ^ 9 / fixedZeroFreeWidth L := by
+/-- A fixed neighborhood of `1` gives a zero-free region of width `c / l ^ 9`, uniformly for all
+moduli at most `exp l` and all characters with the stated neighborhood bound. -/
+theorem eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood_uniform {L : ℝ} (hL : 1 ≤ L) :
+    ∀ᶠ l : ℝ in atTop, ∀ {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q), (q : ℝ) ≤ rexp l →
+      (χ ^ 2 = 1 → ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ z‖) →
+      ∀ s : ℂ, 1 - fixedZeroFreeWidth L / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
+        entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ l ^ 9 / fixedZeroFreeWidth L := by
   let C := 8 * (2 * L) ^ 5 * K * (12 * K) ^ 4
   let c := fixedZeroFreeWidth L
   have hc : 0 < c := fixedZeroFreeWidth_pos L
@@ -258,11 +258,11 @@ theorem eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (χ : Dirichle
     change C * (1 / max 1 C) ≤ 1
     rw [mul_one_div]
     exact (div_le_one (zero_lt_one.trans_le (le_max_left _ _))).2 (le_max_right _ _)
-  filter_upwards [eventually_ge_atTop (10 ^ 10), eventually_ge_atTop (N : ℝ),
-    eventually_ge_atTop (12 * K * L)] with l hl hN h_near_scale s h_re h_norm
+  filter_upwards [eventually_ge_atTop (10 ^ 10), eventually_ge_atTop (12 * K * L)]
+    with l hl h_near_scale
+  intro q _ χ hN_exp h_near s h_re h_norm
   have hl_one : 1 ≤ l := by linarith
   have hl_pos : 0 < l := one_pos.trans_le hl_one
-  have hN_exp : N ≤ rexp l := hN.trans (by linarith [add_one_le_exp l])
   let η := c / l ^ 9
   have hη_pos : 0 < η := by positivity
   have inv_le : 1 / l ≤ 1 / 6 := one_div_le_one_div_of_le (by norm_num) (by linarith)
@@ -306,5 +306,15 @@ theorem eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (χ : Dirichle
         rw [show (1 / (4 * η) + 2) * η = 1 / 4 + 2 * η by field]
         linarith
     _ = l ^ 9 / c := by dsimp only [η]; field
+
+/-- The fixed-neighborhood estimate for a character of fixed modulus. -/
+theorem eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (χ : DirichletCharacter ℂ N) {L : ℝ}
+    (hL : 1 ≤ L)
+    (h_near : χ ^ 2 = 1 → ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ z‖) :
+    ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - fixedZeroFreeWidth L / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
+      entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ l ^ 9 / fixedZeroFreeWidth L := by
+  filter_upwards [eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood_uniform hL,
+    eventually_ge_atTop (N : ℝ)] with l h hN
+  exact h χ (hN.trans (by linarith [add_one_le_exp l])) h_near
 
 end New

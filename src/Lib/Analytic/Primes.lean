@@ -134,6 +134,59 @@ lemma New.exists_regularL_eq_of_sq_eq_one {M k : ℕ} [NeZero M] (hM : 4 ∣ M) 
     · simp [entireL, hχ₀_one, mt h_one.1 hχ₀_one, h_LFunction (.inl hχ₀_one)]
   exact ⟨χ₀, funext fun z ↦ by by_cases h : χ₀ = 1 <;> simp [regularL, ← h_entire, h_one, h]⟩
 
+/-- A disc of radius `1 / X` with `C * l ^ 9 ≤ X` works for all powers of a fixed modulus
+bounded by `exp l`. The neighborhood used for the real characters comes from modulus `M ^ 2`. -/
+lemma New.exists_eventually_norm_logDeriv_entireL_le_near_one {M : ℕ} [NeZero M] (hM : 4 ∣ M) :
+    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (k : ℕ), 1 < k →
+      ∀ (χ : DirichletCharacter ℂ (M ^ k)) (s : ℂ) (X : ℝ),
+        (M : ℝ) ^ k ≤ rexp l → C * l ^ 9 ≤ X → ‖s - 1‖ ≤ X⁻¹ →
+          entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ X := by
+  have h_inv : Tendsto (fun l : ℝ ↦ 1 / l) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop tendsto_id
+  have h_neighborhood : ∀ᶠ L : ℝ in atTop, 1 ≤ L ∧ ∀ χ₀ : DirichletCharacter ℂ (M ^ 2),
+      ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ₀ z‖ :=
+    (eventually_ge_atTop 1).and <| h_inv.eventually <|
+      eventually_all.2 fun χ₀ ↦ eventually_le_norm_regularL χ₀
+  obtain ⟨L, hL, h_near⟩ := h_neighborhood.exists
+  let a := fixedZeroFreeWidth L
+  let C := max (16 : ℝ) (1 / a)
+  have ha : 0 < a := fixedZeroFreeWidth_pos L
+  have hC : 16 ≤ C := le_max_left _ _
+  refine ⟨C, hC, ?_⟩
+  filter_upwards [eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood_uniform hL,
+    eventually_ge_atTop 1] with l h_region hl k hk χ s X hq hX hs
+  have h_bound : l ^ 9 / a ≤ X := calc
+    _ = (1 / a) * l ^ 9 := by ring
+    _ ≤ C * l ^ 9 := mul_le_mul_of_nonneg_right (le_max_right _ _) (by positivity)
+    _ ≤ X := hX
+  have hX_one : 1 ≤ X := calc
+    _ ≤ C := by linarith only [hC]
+    _ ≤ C * l ^ 9 := le_mul_of_one_le_right (by linarith only [hC]) (one_le_pow₀ hl)
+    _ ≤ X := hX
+  have h_inv_le : X⁻¹ ≤ a / l ^ 9 := by
+    simpa only [inv_div] using inv_anti₀ (by positivity : 0 < l ^ (9 : ℕ) / a) h_bound
+  have h_re : 1 - a / l ^ 9 ≤ s.re := by
+    have h_dist : |s.re - 1| ≤ X⁻¹ := by simpa using (abs_re_le_norm (s - 1)).trans hs
+    linarith [(abs_le.1 h_dist).1]
+  have h_norm : ‖s‖ ≤ 2 := by
+    linarith [norm_le_norm_sub_add s 1, norm_one (α := ℂ),
+      inv_le_one_of_one_le₀ hX_one]
+  have hq' : ((M ^ k : ℕ) : ℝ) ≤ rexp l := by simpa only [Nat.cast_pow] using hq
+  have h_fixed : χ ^ 2 = 1 → ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ z‖ := fun hχ ↦ by
+    obtain ⟨χ₀, h_eq⟩ := exists_regularL_eq_of_sq_eq_one hM hk hχ
+    simpa only [h_eq] using h_near χ₀
+  exact (h_region χ hq' h_fixed s h_re (h_norm.trans (by linarith [add_one_le_exp l]))).imp_right
+    (·.trans h_bound)
+
+private lemma eventually_mul_pow_nine_le_two_mul_pow (C : ℝ) :
+    ∀ᶠ l : ℝ in atTop, C * l ^ 9 ≤ 2 * l ^ 25 := by
+  filter_upwards [eventually_ge_atTop 1, eventually_ge_atTop C] with l hl hC
+  calc
+    _ ≤ l * l ^ 9 := mul_le_mul_of_nonneg_right hC (by positivity)
+    _ = l ^ 10 := by ring
+    _ ≤ l ^ 25 := pow_le_pow_right₀ hl (by decide)
+    _ ≤ _ := by linarith only [pow_nonneg (zero_le_one.trans hl) 25]
+
 /-- For powers of a fixed modulus, parameterize the disc about `1` by an upper bound on the
 logarithm of the modulus. -/
 lemma New.eventually_norm_logDeriv_entireL_le_near_one_of_exp {M : ℕ} [NeZero M] (hM : 4 ∣ M) :
@@ -141,28 +194,9 @@ lemma New.eventually_norm_logDeriv_entireL_le_near_one_of_exp {M : ℕ} [NeZero 
       ∀ (χ : DirichletCharacter ℂ (M ^ k)) (s : ℂ) (X : ℝ),
         (M : ℝ) ^ k ≤ rexp l → 2 * l ^ 25 ≤ X → ‖s - 1‖ ≤ X⁻¹ →
         entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ X := by
-  have h_inv : Tendsto (fun l : ℝ ↦ 1 / l) atTop (𝓝 0) :=
-    tendsto_const_nhds.div_atTop tendsto_id
-  filter_upwards [eventually_ge_atTop (10 ^ 10),
-    h_inv.eventually (eventually_all.2 fun χ₀ : DirichletCharacter ℂ (M ^ 2) ↦
-      eventually_le_norm_regularL χ₀)] with l hl h_near k hk χ s X hq hX hs
-  have hl_one : 1 ≤ l := by linarith
-  have hl_pow : l ≤ l ^ 25 := le_self_pow₀ hl_one (by decide)
-  have hX_pos : 0 < X := by linarith
-  have h_inv_le : X⁻¹ ≤ 1 / l ^ 25 := by
-    simpa using inv_anti₀ (pow_pos (by linarith) 25 : 0 < l ^ 25) (show l ^ 25 ≤ X by linarith)
-  have h_re : 1 - 1 / l ^ 25 ≤ s.re := by
-    have h_dist : |s.re - 1| ≤ X⁻¹ := by simpa using (abs_re_le_norm (s - 1)).trans hs
-    linarith [(abs_le.1 h_dist).1]
-  have h_norm : ‖s‖ ≤ 2 := by
-    linarith [norm_le_norm_sub_add s 1, norm_one (α := ℂ),
-      inv_le_one_of_one_le₀ (show 1 ≤ X by linarith)]
-  have hq' : ((M ^ k : ℕ) : ℝ) ≤ rexp l := by simpa only [Nat.cast_pow] using hq
-  have h_fixed : χ ^ 2 = 1 → ∀ z : ℂ, ‖z - 1‖ ≤ 1 / l → 1 / l ≤ ‖regularL χ z‖ := fun hχ ↦ by
-    obtain ⟨χ₀, h_eq⟩ := exists_regularL_eq_of_sq_eq_one hM hk hχ
-    simpa only [h_eq] using h_near χ₀
-  exact (norm_logDeriv_entireL_le χ hl hq' h_fixed h_re
-    (h_norm.trans (by linarith [add_one_le_exp l]))).imp_right (·.trans hX)
+  obtain ⟨C, -, h_disc⟩ := exists_eventually_norm_logDeriv_entireL_le_near_one hM
+  filter_upwards [h_disc, eventually_mul_pow_nine_le_two_mul_pow C] with l h h_le k hk χ s X hq hX hs
+  exact h k hk χ s X hq (h_le.trans hX) hs
 
 private lemma eventually_two_mul_log_pow_le (c : ℝ) :
     ∀ᶠ X : ℝ in atTop, 2 * (c * Real.log X) ^ (25 : ℕ) ≤ X := by
@@ -401,17 +435,21 @@ lemma New.analyticOnNhd_sub_mul_sum_term (q : ℕ) [NeZero q] (N : ℕ) {r : ℝ
     Differentiable.analyticAt (fun s ↦ (hasDerivAt_term _ i s).differentiableAt) _
   fun_prop (disch := simp_all) [logDeriv]
 
-/-- Use explicit bounds on the modulus and the left endpoint in the prime window argument. -/
-theorem New.eventually_exists_prime_modEq_one_log_mem_of_exp (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
-    ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → 2 * l ^ 25 ≤ X →
+open New in
+private theorem exists_eventually_prime_modEq_one_log_mem_of_contour (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
+    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
       (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) →
         ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
+  obtain ⟨C, hC, h_disc⟩ := exists_eventually_norm_logDeriv_entireL_le_near_one hM
+  refine ⟨C, hC, ?_⟩
   let b (n : ℕ) : ℂ := ↑(if n.Prime then 0 else vonMangoldt n : ℝ)
-  obtain ⟨C, hC⟩ : Summable fun n ↦ ‖term b (1 + -4⁻¹) n‖ := summable_vonMangoldt_not_prime
-  filter_upwards [eventually_norm_logDeriv_entireL_le_near_one_of_exp hM, eventually_ge_atTop 200,
-    eventually_ge_atTop C] with l h_free hl hC_le X U k hk hX_le hq hU h_exp
-  have hl_le_X : l ≤ X := (le_self_pow₀ (by linarith) (by decide : (25 : ℕ) ≠ 0)).trans
-    (by linarith [pow_nonneg (show 0 ≤ l by linarith) 25])
+  obtain ⟨B, hB⟩ : Summable fun n ↦ ‖term b (1 + -4⁻¹) n‖ := summable_vonMangoldt_not_prime
+  filter_upwards [h_disc, eventually_ge_atTop 200, eventually_ge_atTop B]
+    with l h_free hl hB_le X U k hk hX_le hq hU h_exp
+  have hl_le_X : l ≤ X := calc
+    _ ≤ l ^ 9 := le_self_pow₀ (by linarith only [hl]) (by decide)
+    _ ≤ C * l ^ 9 := le_mul_of_one_le_left (by positivity) (by linarith only [hC])
+    _ ≤ X := hX_le
   have hX : 0 < X := by linarith
   have hU_pos : 0 < U := (pow_pos hX 2).trans_le hU
   set q : ℕ := M ^ k
@@ -444,7 +482,7 @@ theorem New.eventually_exists_prime_modEq_one_log_mem_of_exp (M : ℕ) [NeZero M
     linarith
   intro z hz
   rw [norm_div, norm_exp, div_le_iff₀' (by bound)]
-  refine norm_sub_mul_sum_term_le (residueClass_nonneg _) h_series hF hC (hC_le.trans hl_le_X)
+  refine norm_sub_mul_sum_term_le (residueClass_nonneg _) h_series hF hB (hB_le.trans hl_le_X)
     (hl.trans hl_le_X) hU (fun n hn ↦ ?_) hz
   by_cases h_prime : n.Prime
   · have h_class : (n : ZMod q) ≠ 1 := fun h ↦
@@ -452,6 +490,38 @@ theorem New.eventually_exists_prime_modEq_one_log_mem_of_exp (M : ℕ) [NeZero M
         (by simpa only [Nat.cast_one] using h), hn⟩
     simp [residueClass, h_class]
   · simpa [b, h_prime, abs_of_nonneg, residueClass_nonneg] using residueClass_le (1 : ZMod q) n
+
+/-- If both the modulus and the left endpoint are at most `exp l`, the contour bound follows
+from `C * l ^ 9 ≤ X` and the logarithmic window has length `X ^ 2`. -/
+theorem New.exists_eventually_prime_modEq_one_log_mem_of_shared_exp_bound
+    (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
+    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
+      (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → U ≤ rexp l →
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
+  obtain ⟨C, hC, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  refine ⟨C, hC, ?_⟩
+  filter_upwards [h_window, eventually_ge_atTop 8] with l h hl X U k hk hX hq hU hU_exp
+  have h_lX : 16 * l ≤ X := calc
+    _ ≤ 16 * l ^ 9 := mul_le_mul_of_nonneg_left
+      (le_self_pow₀ (by linarith only [hl]) (by decide)) (by norm_num)
+    _ ≤ C * l ^ 9 := mul_le_mul_of_nonneg_right hC (by positivity)
+    _ ≤ X := hX
+  apply h X U k hk hX hq hU
+  calc
+    3 * U * rexp l * rexp 2 ≤ 3 * rexp l * rexp l * rexp 2 := by grw [hU_exp]
+    _ = rexp (Real.log 3 + l + l + 2) := by
+      simp only [Real.exp_add, exp_log (by norm_num : (0 : ℝ) < 3)]
+    _ ≤ rexp (3 * l) := exp_le_exp.2 (by linarith only [hl, log_le_self (by norm_num : (0 : ℝ) ≤ 3)])
+    _ < rexp (4⁻¹ * X) := exp_lt_exp.2 (by linarith only [hl, h_lX])
+
+/-- Use explicit bounds on the modulus and the left endpoint in the prime window argument. -/
+theorem New.eventually_exists_prime_modEq_one_log_mem_of_exp (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
+    ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → 2 * l ^ 25 ≤ X →
+      (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) →
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
+  obtain ⟨C, -, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  filter_upwards [h_window, eventually_mul_pow_nine_le_two_mul_pow C] with l h h_le X U k hk hX
+  exact h X U k hk (h_le.trans hX)
 
 /-- Let `4 ∣ M` and let `A` be fixed. For all large `W` there is a prime `p ≡ 1` mod `M ^ k` with
 `U ≤ log p ≤ U + W`, whenever `1 < k`, `M ^ k ≤ W ^ A` and `W ≤ U ≤ W ^ A`. This is a consequence
