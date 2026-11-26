@@ -113,14 +113,16 @@ variable {I S : Type} [Fintype I] {G : Matrix I I ℂ}
 noncomputable def formGram (G : Matrix I I ℂ) (v : S → I → ℂ) : Matrix S S ℂ :=
   of fun i k ↦ star (v i) ⬝ᵥ G *ᵥ v k
 
+private lemma formGram_eq_conjTranspose_mul (G : Matrix I I ℂ) (v : S → I → ℂ) :
+    formGram G v = (of v)ᵀᴴ * G * (of v)ᵀ := by
+  rw [Matrix.mul_assoc]
+  ext i j
+  simp [formGram, Matrix.mul_apply, dotProduct, mulVec]
+
 /-- The matrix `formGram G v` of a positive semidefinite form is positive semidefinite. -/
 lemma posSemidef_formGram (hG : G.PosSemidef) (v : S → I → ℂ) :
     (formGram G v).PosSemidef := by
-  have h_eq : formGram G v = (of v)ᵀᴴ * G * (of v)ᵀ := by
-    rw [Matrix.mul_assoc]
-    ext i k
-    simp [formGram, Matrix.mul_apply, dotProduct, mulVec]
-  rw [h_eq]
+  rw [formGram_eq_conjTranspose_mul]
   exact hG.conjTranspose_mul_mul_same _
 
 /-- For a positive semidefinite form `G`, if each diagonal product `star (v i) ⬝ᵥ G *ᵥ v i` of a
@@ -146,6 +148,45 @@ lemma norm_det_pairing_sq_le [Fintype S] [DecidableEq S] (hG : G.PosSemidef) (v 
   have h_pos : (formGram G (Sum.elim v w)).PosSemidef := posSemidef_formGram hG _
   rw [← fromBlocks_toBlocks (formGram G (Sum.elim v w))] at h_pos
   exact norm_det_sq_le_of_posSemidef h_pos
+
+section Completion
+
+variable {T : Type} [Fintype S] [Fintype T] [DecidableEq S] [DecidableEq T]
+
+/-- Subtracting combinations of the first family from the second preserves the Gram determinant. -/
+theorem det_formGram_sumElim_sub (G : Matrix I I ℂ) (y : S → I → ℂ) (z : T → I → ℂ)
+    (a : Matrix S T ℂ) :
+    (formGram G (Sum.elim y fun j ↦ z j - ∑ i, a i j • y i)).det =
+      (formGram G (Sum.elim y z)).det := by
+  classical
+  let r : T → I → ℂ := fun j ↦ z j - ∑ i, a i j • y i
+  let U : Matrix (S ⊕ T) (S ⊕ T) ℂ := fromBlocks 1 (-a) 0 1
+  have hdet : U.det = 1 := by simp [U]
+  have hcols : (of (Sum.elim y r))ᵀ = (of (Sum.elim y z))ᵀ * U := by
+    ext i j
+    cases j with
+    | inl j => simp [U, Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply, Function.swap]
+    | inr j =>
+      simp [U, r, Matrix.mul_apply, Fintype.sum_sum_type, Matrix.one_apply, sub_eq_neg_add,
+        Function.swap, mul_comm]
+  change (formGram G (Sum.elim y r)).det = _
+  let V : Matrix I (S ⊕ T) ℂ := (of (Sum.elim y z))ᵀ
+  have h_assoc : Uᴴ * Vᴴ * G * (V * U) = Uᴴ * (Vᴴ * G * V) * U := by
+    simp only [Matrix.mul_assoc]
+  rw [formGram_eq_conjTranspose_mul, formGram_eq_conjTranspose_mul, hcols, conjTranspose_mul]
+  change (Uᴴ * Vᴴ * G * (V * U)).det = (Vᴴ * G * V).det
+  rw [h_assoc]
+  simp only [det_mul, det_conjTranspose, hdet, star_one, one_mul, mul_one]
+
+/-- Fischer's inequality after subtracting the first family from the second. -/
+theorem norm_det_formGram_sumElim_le_of_sub {G : Matrix I I ℂ} (hG : G.PosSemidef)
+    (y : S → I → ℂ) (z : T → I → ℂ) (a : Matrix S T ℂ) :
+    ‖(formGram G (Sum.elim y z)).det‖ ≤
+      ‖(formGram G y).det‖ * ‖(formGram G (fun j ↦ z j - ∑ i, a i j • y i)).det‖ := by
+  rw [← det_formGram_sumElim_sub G y z a]
+  exact fischer_det_inequality (posSemidef_formGram hG _)
+
+end Completion
 
 end FormGram
 

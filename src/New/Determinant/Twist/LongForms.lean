@@ -15,7 +15,7 @@ import New.UpperBound.Size.ArchimedeanSize
 
 The main result `New.Data.integral_forms_long` bounds from below the covolume plus twice the index
 of a family of target forms that spans almost all of the target. The target forms are a twisted
-lattice, and the bound follows from `New.TwistedLattice.covolume_add_index_nonneg` with four inputs:
+lattice, and the bound follows from `New.TwistedLattice.covolume_add_index_nonneg_of_completed` with four inputs:
 auxiliary forms that complete a family to a basis, a family of twists `ξ_ι`, the injectivity of the
 lifts `Θ_ξ`, and the height of `Z(1) / Z(ξ_ι)`.
 
@@ -234,27 +234,20 @@ lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (h
 
 /-! ### The lower bound -/
 
-/-- The covolume bound with cubic lift error `10 · errorUnit` and the explicit completion cost
-`2 x₁² b² + b` per missing dimension. -/
-theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
-    (hy : LinearIndependent ℂ y)
-    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
-    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
-      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
-  -- Choose local twists and complete `y` to a basis with auxiliary forms `z`. The number of
-  -- added vectors is the codimension, which is the multiplier of the completion cost.
+/-- Theorem C with the cubic lift error and an upper bound for the covolume of the completed family. The added forms
+have integral lifts after clearing by the scalars `γ`. -/
+theorem integral_forms_long_with_cubic_error_of_completed {n n' : ℕ}
+    {y : Fin n → D.targetForms} {z : Fin n' → D.targetForms} {δ a : ℝ}
+    (h_indep : LinearIndependent ℂ (Sum.elim y z)) (h_card : D.targetDim = n + n')
+    (hδ : D.targetLattice.IndexLe y δ) (ha : D.targetLattice.CovolumeLe (Sum.elim y z) a)
+    {e : ℤ} {γ : D.MFoldTwist → ℂ} (hγ_ne : ∀ ϑ, γ ϑ ≠ 0)
+    (hγ_norm : ∀ ϑ : D.MFoldTwist, ‖γ ϑ‖ = (ϑ.normQ : ℝ) ^ (e / 2 : ℝ) *
+      ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j ϑ)
+    (hz_int : ∀ (i : Fin n') (ι : PrimePadicIso) (ϑ : D.MFoldTwist),
+      Nat.Coprime ι.prime ϑ.normQ → γ ϑ • D.Θ ϑ (z i) ∈ integralForms ι.place) :
+    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤ a + 2 * δ + n' * D.b := by
   obtain ⟨θ, h_small_ratios, h_single_lift_heights⟩ :=
     D.exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic
-  obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_auxiliary_span⟩ := D.exists_span_isAuxiliaryForm_eq_top
-  obtain ⟨n', z, hz, h_completed_indep, h_completed_card⟩ :=
-    exists_extend_basis_of_span_eq_top hy h_auxiliary_span
-  have hz_aux (i : Fin n') : D.IsAuxiliaryForm γ (z i) := hz i
-  have hz_int (i : Fin n') (ι : PrimePadicIso) (ϑ : D.MFoldTwist)
-      (hϑ : Nat.Coprime ι.prime ϑ.normQ) : γ ϑ • D.Θ ϑ (z i) ∈ integralForms ι.place :=
-    (hz_aux i).smul_lift_mem_integralForms ι ϑ hϑ
-  have hz_short (i : Fin n') (σ : ℂ ≃+* ℂ) :
-      D.targetLattice.normSqAt (z i) σ ≤ exp (2 * D.x₁ ^ 2 * D.b ^ 2) :=
-    (normSqAt_targetLattice (z i) σ).trans_le ((hz_aux i).normSqAt_lift_le σ)
   -- `|γ| ^ (-2)` is a power of `Nm Q` times `2 m² t` inverse ratios of Hecke values.
   have h_auxiliary_scalar_height :
       HeightLe D.b fun ι : PrimePadicIso ↦ ((‖γ (θ ι)‖ : ℂ) ^ 2)⁻¹ := by
@@ -265,21 +258,53 @@ theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetFo
   have h_chain_ratio_height : HeightLe (D.targetDim * (D.b + 10 * D.errorUnit - D.mainAmount))
       fun ι : PrimePadicIso ↦ D.targetLattice.volume 1 / D.targetLattice.volume (θ ι) :=
     heightLe_chainDeterminant_one_div_of_bound h_small_ratios h_single_lift_heights
-  -- Compare the Gram determinants for the local twists with the untwisted determinant.
-  -- The product formula gives one inequality, including the cost of the completion.
-  have h_product_formula : 0 ≤ c + 2 * δ + n' * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) +
-      D.targetDim * (D.b + 10 * D.errorUnit - D.mainAmount) :=
-    TwistedLattice.covolume_add_index_nonneg (injective_lift_targetLattice 1) h_completed_indep
-      h_completed_card h_small_ratios.coprime
-      (fun ι ↦ TwistedLattice.volume_ne_zero (injective_lift_targetLattice (θ ι)))
-      hc hδ (γ := fun ι ↦ γ (θ ι)) (fun ι ↦ hγ_ne (θ ι))
-      (fun ι i ↦ hz_int i ι (θ ι) (h_small_ratios.coprime ι))
-      (fun ι i ↦ hz_int i ι.conj (θ ι) (h_small_ratios.coprime ι))
-      hz_short h_auxiliary_scalar_height h_chain_ratio_height
+  have h_product := TwistedLattice.covolume_add_index_nonneg_of_completed
+    (injective_lift_targetLattice 1) h_indep h_card h_small_ratios.coprime
+    (fun ι ↦ TwistedLattice.volume_ne_zero (injective_lift_targetLattice (θ ι)))
+    ha hδ (γ := fun ι ↦ γ (θ ι)) (fun ι ↦ hγ_ne (θ ι))
+    (fun ι i ↦ hz_int i ι (θ ι) (h_small_ratios.coprime ι))
+    (fun ι i ↦ hz_int i ι.conj (θ ι) (h_small_ratios.coprime ι))
+    h_auxiliary_scalar_height h_chain_ratio_height
+  linarith only [h_product]
+
+/-- The completed-family estimate with the fourth-power error. -/
+theorem integral_forms_long_of_completed {n n' : ℕ}
+    {y : Fin n → D.targetForms} {z : Fin n' → D.targetForms} {δ a : ℝ}
+    (h_indep : LinearIndependent ℂ (Sum.elim y z)) (h_card : D.targetDim = n + n')
+    (hδ : D.targetLattice.IndexLe y δ) (ha : D.targetLattice.CovolumeLe (Sum.elim y z) a)
+    {e : ℤ} {γ : D.MFoldTwist → ℂ} (hγ_ne : ∀ ϑ, γ ϑ ≠ 0)
+    (hγ_norm : ∀ ϑ : D.MFoldTwist, ‖γ ϑ‖ = (ϑ.normQ : ℝ) ^ (e / 2 : ℝ) *
+      ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j ϑ)
+    (hz_int : ∀ (i : Fin n') (ι : PrimePadicIso) (ϑ : D.MFoldTwist),
+      Nat.Coprime ι.prime ϑ.normQ → γ ϑ • D.Θ ϑ (z i) ∈ integralForms ι.place) :
+    D.targetDim * (D.mainAmount - D.f * D.a * D.logB ^ 4 - D.b) ≤ a + 2 * δ + n' * D.b := by
+  refine le_trans ?_ (integral_forms_long_with_cubic_error_of_completed h_indep h_card hδ ha
+    hγ_ne hγ_norm hz_int)
+  exact mul_le_mul_of_nonneg_left
+    (sub_le_sub_right (sub_le_sub_left (cubic_loss_le_fourth_power D) _) _) (Nat.cast_nonneg _)
+
+/-- The covolume bound with cubic lift error `10 · errorUnit` and the explicit completion cost
+`2 x₁² b² + b` per missing dimension. -/
+theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y)
+    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
+    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
+  obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_auxiliary_span⟩ := D.exists_span_isAuxiliaryForm_eq_top
+  obtain ⟨n', z, hz, h_completed_indep, h_completed_card⟩ :=
+    exists_extend_basis_of_span_eq_top hy h_auxiliary_span
+  have hz_aux (i : Fin n') : D.IsAuxiliaryForm γ (z i) := hz i
+  have hz_short (i : Fin n') (σ : ℂ ≃+* ℂ) :
+      D.targetLattice.normSqAt (z i) σ ≤ exp (2 * D.x₁ ^ 2 * D.b ^ 2) :=
+    (normSqAt_targetLattice (z i) σ).trans_le ((hz_aux i).normSqAt_lift_le σ)
+  have h_long := integral_forms_long_with_cubic_error_of_completed
+    h_completed_indep h_completed_card hδ
+    (hc.sumElim (TwistedLattice.covolumeLe_of_normSqAt_le hz_short))
+    hγ_ne hγ_norm (fun i ι ϑ hϑ ↦ (hz_aux i).smul_lift_mem_integralForms ι ϑ hϑ)
   have h_dim : (D.targetDim : ℝ) = n + n' := mod_cast h_completed_card
   have h_missing_dimension : (n' : ℝ) = D.targetDim - n := by linarith
-  rw [h_missing_dimension] at h_product_formula
-  linarith
+  rw [← h_missing_dimension]
+  linarith only [h_long]
 
 /-- The covolume bound expressed with the fourth-power error and the explicit completion cost. -/
 theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
