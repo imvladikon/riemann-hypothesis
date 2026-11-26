@@ -1,10 +1,9 @@
 module
 
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.Complex.ExponentialBounds
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import Mathlib.Data.Nat.ModEq
 public import Mathlib.Data.Nat.Totient
-import Mathlib.NumberTheory.AbelSummation
 import Mathlib.NumberTheory.Harmonic.Bounds
 public import Mathlib.NumberTheory.PrimeCounting
 import Lib.Analytic.PrimeProgressionSieve
@@ -12,160 +11,120 @@ import Lib.Analytic.PrimeProgressionSieve
 /-!
 # Logarithmically weighted primes in progressions
 
-Partial summation converts the sieve count above `m ^ 2` to a bound for
+Dyadic intervals convert the sieve count above `m ^ 2` to a bound for
 `m ∑ log p / p` in a class modulo `m`. The small numbers `m c ± 1` give a harmonic
 bound with `c ≤ m`.
 -/
 
 noncomputable section
 
-open Finset MeasureTheory Nat Real
+open Finset Real
 
 namespace PrimeProgressionWeights
 
-private def coefficient (m a p : ℕ) : ℝ :=
-  if p ≡ a [MOD m] ∧ p.Prime then m else 0
-
-private def weightedCount (m a : ℕ) (t : ℝ) : ℝ :=
-  ∑ p ∈ Icc 0 ⌊t⌋₊, coefficient m a p
-
-private lemma weightedCount_nonneg (m a : ℕ) (t : ℝ) : 0 ≤ weightedCount m a t := by
-  apply sum_nonneg
-  intro p _
-  unfold coefficient
-  positivity
-
-private lemma weightedCount_le (m a : ℕ) (hm : 2 ≤ m) (hφ : (m.totient : ℝ) = (m : ℝ) / 2)
-    {t : ℝ} (ht : (m : ℝ) ^ 2 ≤ t) : weightedCount m a t ≤ 864 * t / Real.log t := by
-  let n := ⌊t⌋₊ + 1
-  have hm' : (2 : ℝ) ≤ m := by exact_mod_cast hm
-  have hm_pos : (0 : ℝ) < m := by linarith
-  have ht₁ : 1 < t := by nlinarith
-  have ht_pos := zero_lt_one.trans ht₁
-  have htn : t ≤ (n : ℝ) := by
-    simpa only [n, Nat.cast_add, Nat.cast_one] using (lt_floor_add_one t).le
-  have hn_le : (n : ℝ) ≤ 2 * t := by
-    dsimp [n]
-    rw [Nat.cast_add, Nat.cast_one]
-    linarith [Nat.floor_le ht_pos.le]
-  have hn_pos : (0 : ℝ) < n := ht_pos.trans_le htn
-  have hu : 1 < (n : ℝ) / m := by
-    rw [lt_div_iff₀ hm_pos, one_mul]
-    exact (show (m : ℝ) < (m : ℝ) ^ 2 by nlinarith).trans_le (ht.trans htn)
-  have h_log : Real.log t / 2 ≤ Real.log ((n : ℝ) / m) := by
-    rw [Real.log_div hn_pos.ne' hm_pos.ne']
-    have hnm := Real.log_le_log (sq_pos_of_pos hm_pos) (ht.trans htn)
-    rw [Real.log_pow, Nat.cast_ofNat] at hnm
-    linarith [Real.log_le_log ht_pos htn]
-  have hcount := PrimeProgressionSieve.card_primes_progression_le_div_log_of_totient_eq_half
-    n m a (by omega) hu hφ
-  have h_log_half_pos : 0 < Real.log t / 2 := div_pos (Real.log_pos ht₁) (by norm_num)
+/-- A count bound on each dyadic upper endpoint bounds the weighted sum over that shell. -/
+private theorem sum_log_div_le_of_dyadic_count (U : Finset ℕ) (x lower : ℕ) (hx : 0 < x)
+    {scale bound : ℝ} (hs : 0 ≤ scale) (hb : 0 ≤ bound)
+    (hU : ∀ p ∈ U, 0 < p ∧ lower ≤ p ∧ p ≤ x)
+    (h_count : ∀ n : ℕ, lower < n →
+      scale * (#{p ∈ U | p < n} : ℝ) * log n ≤ bound * n) :
+    scale * ∑ p ∈ U, log p / p ≤ 3 * bound * (1 + log x) := by
+  classical
+  let w (p : ℕ) : ℝ := log p / p
+  let bins := range (x.log2 + 1)
+  have h_bin (p : ℕ) (hp : p ∈ U) : p.log2 ∈ bins := by
+    obtain ⟨hp₀, _, hpx⟩ := hU p hp
+    exact mem_range.mpr (Nat.lt_succ_of_le ((Nat.le_log2 hx.ne').2
+      (((Nat.le_log2 hp₀.ne').1 le_rfl).trans hpx)))
+  have h_shell (k : ℕ) : scale * ∑ p ∈ U with p.log2 = k, w p ≤ 2 * bound := by
+    let shell := U.filter (fun p ↦ p.log2 = k)
+    let lo : ℕ := 2 ^ k
+    let hi : ℕ := 2 ^ (k + 1)
+    change scale * ∑ p ∈ shell, w p ≤ 2 * bound
+    by_cases hn : shell.Nonempty
+    · have h_limits (p : ℕ) (hp : p ∈ shell) : lo ≤ p ∧ p < hi :=
+        (Nat.log2_eq_iff (hU p (mem_filter.mp hp).1).1.ne').1 (mem_filter.mp hp).2
+      obtain ⟨p, hp⟩ := hn
+      have hhi : lower < hi := (hU p (mem_filter.mp hp).1).2.1.trans_lt (h_limits p hp).2
+      have hlo : (0 : ℝ) < lo := by dsimp [lo]; positivity
+      have hhi_pos : (0 : ℝ) < hi := by dsimp [hi]; positivity
+      have h_weights : ∑ p ∈ shell, w p ≤ (#shell : ℝ) * (log hi / lo) := by
+        rw [← nsmul_eq_mul, ← sum_const]
+        apply sum_le_sum
+        intro p hp
+        have hp0 : (0 : ℝ) < p := by exact_mod_cast (hU p (mem_filter.mp hp).1).1
+        have hp_lo : (lo : ℝ) ≤ p := by exact_mod_cast (h_limits p hp).1
+        have hp_hi : (p : ℝ) ≤ hi := by exact_mod_cast (h_limits p hp).2.le
+        apply div_le_div_of_nonneg_left (Real.log_natCast_nonneg p) hlo hp_lo |>.trans
+        exact div_le_div_of_nonneg_right (Real.log_le_log hp0 hp_hi) hlo.le
+      have h_card : (#shell : ℝ) ≤ (#{p ∈ U | p < hi} : ℝ) := by
+        exact_mod_cast card_le_card (fun p hp ↦ mem_filter.mpr ⟨(mem_filter.mp hp).1, (h_limits p hp).2⟩)
+      calc
+        _ ≤ scale * ((#shell : ℝ) * (log hi / lo)) := mul_le_mul_of_nonneg_left h_weights hs
+        _ = (scale * (#shell : ℝ) * log hi) / lo := by ring
+        _ ≤ (bound * hi) / lo := by
+          apply div_le_div_of_nonneg_right _ hlo.le
+          exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h_card hs)
+            (Real.log_natCast_nonneg hi)).trans (h_count hi hhi)
+        _ = _ := by dsimp [hi, lo]; push_cast [pow_succ]; field_simp
+    · rw [not_nonempty_iff_eq_empty.mp hn, sum_empty, mul_zero]
+      positivity
+  have h_log2 : (x.log2 : ℝ) * log 2 ≤ log x := by
+    have hx_pow : (2 : ℝ) ^ x.log2 ≤ x := by
+      exact_mod_cast (Nat.le_log2 hx.ne').1 (le_refl x.log2)
+    simpa only [Real.log_pow] using Real.log_le_log (by positivity) hx_pow
+  have h_bins : (x.log2 : ℝ) ≤ (3 / 2 : ℝ) * log x := by
+    have hlog : (2 / 3 : ℝ) ≤ log 2 := by linarith [Real.log_two_gt_d9]
+    linarith [mul_le_mul_of_nonneg_left hlog (Nat.cast_nonneg x.log2)]
+  change scale * ∑ p ∈ U, w p ≤ _
+  rw [← sum_fiberwise_of_maps_to h_bin w, mul_sum]
   calc
-    weightedCount m a t = (#{p ∈ range n | p ≡ a [MOD m] ∧ p.Prime} : ℝ) * m := by
-      simp only [n, weightedCount, coefficient, Nat.range_succ_eq_Icc_zero, ← sum_filter,
-        sum_const, nsmul_eq_mul]
-    _ ≤ (216 * ((n : ℝ) / m) / Real.log ((n : ℝ) / m)) * m :=
-      mul_le_mul_of_nonneg_right hcount hm_pos.le
-    _ = 216 * (n : ℝ) / Real.log ((n : ℝ) / m) := by
-      field_simp [hm_pos.ne', (Real.log_pos hu).ne']
-    _ ≤ 216 * (2 * t) / (Real.log t / 2) := by gcongr
-    _ = _ := by ring
-
-private lemma hasDerivAt_log_div {t : ℝ} (ht : 0 < t) :
-    HasDerivAt (fun x : ℝ ↦ Real.log x / x) ((1 - Real.log t) / t ^ 2) t := by
-  convert (Real.hasDerivAt_log ht.ne').div (hasDerivAt_id t) ht.ne' using 1
-  · rfl
-  · simp [inv_mul_cancel₀ ht.ne']
+    _ ≤ ∑ _k ∈ bins, 2 * bound := sum_le_sum fun k _ ↦ h_shell k
+    _ = (2 * bound) * ((x.log2 : ℝ) + 1) := by simp [bins, mul_comm]
+    _ ≤ _ := by
+      have h := mul_le_mul_of_nonneg_left h_bins hb
+      nlinarith only [h, hb]
 
 /-- The weighted sum over one residue class above `m ^ 2` is logarithmic after
 multiplication by `m`, for moduli with `φ(m) = m / 2`. -/
 public theorem mul_sum_log_div_modEq_le_above_square (x m a : ℕ) (hm : 2 ≤ m)
     (hx : m ^ 2 ≤ x) (hφ : (m.totient : ℝ) = (m : ℝ) / 2) :
-    (m : ℝ) * ∑ p ∈ (Ioc (m ^ 2) x).filter (fun p ↦ p ≡ a [MOD m] ∧ p.Prime),
-      Real.log p / p ≤ 864 * (1 + Real.log x) := by
-  let lo := ((m ^ 2 : ℕ) : ℝ)
-  let hi := (x : ℝ)
-  let f (t : ℝ) := Real.log t / t
-  let A (t : ℝ) := weightedCount m a t
+    (m : ℝ) * ∑ p ∈ (Ioc (m ^ 2) x).filter (fun p ↦ p ≡ a [MOD m] ∧ p.Prime), log p / p ≤
+      864 * (1 + log x) := by
+  classical
+  let U := (Ioc (m ^ 2) x).filter (fun p ↦ p ≡ a [MOD m] ∧ p.Prime)
   have hm' : (2 : ℝ) ≤ m := by exact_mod_cast hm
-  have hlo_eq : lo = (m : ℝ) ^ 2 := by norm_cast
-  have hlo₁ : 1 < lo := by rw [hlo_eq]; nlinarith
-  have hlo := zero_lt_one.trans hlo₁
-  have hle : lo ≤ hi := by
-    unfold lo hi
-    exact_mod_cast hx
-  have hhi₁ := hlo₁.trans_le hle
-  have hhi := hlo.trans_le hle
-  have h_diff (t : ℝ) (ht : 0 < t) : DifferentiableAt ℝ f t :=
-    (hasDerivAt_log_div ht).differentiableAt
-  have h_deriv (t : ℝ) (ht : 0 < t) : deriv f t = (1 - Real.log t) / t ^ 2 :=
-    (hasDerivAt_log_div ht).deriv
-  have h_deriv_int : IntegrableOn (deriv f) (Set.Icc lo hi) := by
-    apply ContinuousOn.integrableOn_Icc
-    refine (show ContinuousOn (fun t : ℝ ↦ (1 - Real.log t) / t ^ 2) (Set.Icc lo hi) from ?_).congr ?_
-    · intro t ht
-      have ht_pos := hlo.trans_le ht.1
-      apply ContinuousAt.continuousWithinAt
-      fun_prop (disch := positivity)
-    · intro t ht
-      exact h_deriv t (hlo.trans_le ht.1)
-  have h_abel := sum_mul_eq_sub_sub_integral_mul' (coefficient m a) hx
-    (fun t ht ↦ h_diff t (hlo.trans_le ht.1)) h_deriv_int
-  have h_weight :
-      ∑ p ∈ Ioc (m ^ 2) x, f p * coefficient m a p =
-        (m : ℝ) * ∑ p ∈ (Ioc (m ^ 2) x).filter (fun p ↦ p ≡ a [MOD m] ∧ p.Prime), f p := by
-    simp only [coefficient, mul_ite, mul_zero, ← sum_filter]
-    rw [mul_sum]
-    exact sum_congr rfl fun p _ ↦ mul_comm _ _
-  have h_A_nat (n : ℕ) : A n = ∑ p ∈ Icc 0 n, coefficient m a p := by
-    simp only [A, weightedCount, Nat.floor_natCast]
-  rw [h_weight, ← h_A_nat x, ← h_A_nat (m ^ 2)] at h_abel
-  change _ = f hi * A hi - f lo * A lo -
-    (∫ t in Set.Ioc lo hi, deriv f t * A t) at h_abel
-  have h_nonneg_lo : 0 ≤ f lo * A lo :=
-    mul_nonneg (div_nonneg (Real.log_nonneg hlo₁.le) hlo.le) (weightedCount_nonneg m a lo)
-  have h_hi : f hi * A hi ≤ 864 := calc
-    _ ≤ f hi * (864 * hi / Real.log hi) :=
-      mul_le_mul_of_nonneg_left (weightedCount_le m a hm hφ (hlo_eq ▸ hle))
-        (div_nonneg (Real.log_nonneg hhi₁.le) hhi.le)
-    _ = _ := by dsimp [f]; field_simp [hhi.ne', (Real.log_pos hhi₁).ne']
-  have h_product_int : IntegrableOn (fun t ↦ deriv f t * A t) (Set.Ioc lo hi) :=
-    (integrableOn_mul_sum_Icc (coefficient m a) hlo.le h_deriv_int).mono_set Set.Ioc_subset_Icc_self
-  have h_inverse_int : IntegrableOn (fun t : ℝ ↦ (864 : ℝ) / t) (Set.Ioc lo hi) := by
-    apply IntegrableOn.mono_set _ Set.Ioc_subset_Icc_self
-    apply ContinuousOn.integrableOn_Icc
-    intro t ht
-    have ht_pos := hlo.trans_le ht.1
-    apply ContinuousAt.continuousWithinAt
-    fun_prop (disch := exact ht_pos.ne')
-  have h_neg_int : -(∫ t in Set.Ioc lo hi, deriv f t * A t) ≤
-      ∫ t in Set.Ioc lo hi, (864 : ℝ) / t := by
-    rw [← integral_neg]
-    refine setIntegral_mono_on h_product_int.neg h_inverse_int measurableSet_Ioc fun t ht ↦ ?_
-    have ht₁ := hlo₁.trans ht.1
-    have ht_pos := zero_lt_one.trans ht₁
-    have h_A := weightedCount_le m a hm hφ (hlo_eq ▸ ht.1.le)
-    have h_d : -(deriv f t) ≤ Real.log t / t ^ 2 := by
-      rw [h_deriv t ht_pos, ← neg_div]
-      gcongr
+  have hm₀ : (0 : ℝ) < m := by linarith
+  have hx₀ : 0 < x := (pow_pos (by omega : 0 < m) 2).trans_le hx
+  have hU (p : ℕ) (hp : p ∈ U) : 0 < p ∧ m ^ 2 ≤ p ∧ p ≤ x := by
+    obtain ⟨hp₁, hp₂⟩ := mem_Ioc.mp (mem_filter.mp hp).1
+    exact ⟨Nat.zero_le (m ^ 2) |>.trans_lt hp₁, hp₁.le, hp₂⟩
+  have h_count (n : ℕ) (hn : m ^ 2 < n) :
+      (m : ℝ) * (#{p ∈ U | p < n} : ℝ) * log n ≤ 288 * n := by
+    have hn' : (m : ℝ) ^ 2 < n := by exact_mod_cast hn
+    have hn₀ : (0 : ℝ) < n := (sq_nonneg (m : ℝ)).trans_lt hn'
+    have hu : 1 < (n : ℝ) / m := by
+      rw [lt_div_iff₀ hm₀, one_mul]
+      exact (show (m : ℝ) ≤ (m : ℝ) ^ 2 by nlinarith).trans_lt hn'
+    have h_log : log n ≤ 2 * log ((n : ℝ) / m) := by
+      rw [Real.log_div hn₀.ne' hm₀.ne']
+      have h := Real.log_le_log (sq_pos_of_pos hm₀) hn'.le
+      rw [Real.log_pow, Nat.cast_ofNat] at h
       linarith
+    have h_subset : U.filter (fun p ↦ p < n) ⊆ (range n).filter (fun p ↦ p ≡ a [MOD m] ∧ p.Prime) := by
+      intro p hp
+      exact mem_filter.mpr ⟨mem_range.mpr (mem_filter.mp hp).2, (mem_filter.mp (mem_filter.mp hp).1).2⟩
+    have h_card := (show (#{p ∈ U | p < n} : ℝ) ≤
+        (#{p ∈ range n | p ≡ a [MOD m] ∧ p.Prime} : ℝ) by exact_mod_cast card_le_card h_subset).trans
+      (PrimeProgressionSieve.card_primes_progression_le_div_log_of_totient_eq_half
+        n m a (by omega) hu hφ)
+    have hl_pos := Real.log_pos hu
     calc
-      _ = -(deriv f t) * A t := (neg_mul _ _).symm
-      _ ≤ (Real.log t / t ^ 2) * A t :=
-        mul_le_mul_of_nonneg_right h_d (weightedCount_nonneg m a t)
-      _ ≤ (Real.log t / t ^ 2) * (864 * t / Real.log t) :=
-        mul_le_mul_of_nonneg_left h_A (by positivity [Real.log_pos ht₁])
-      _ = _ := by field_simp [ht_pos.ne', (Real.log_pos ht₁).ne']
-  have h_inv_bound : (∫ t in Set.Ioc lo hi, (864 : ℝ) / t) ≤ 864 * Real.log hi := by
-    calc
-      _ = 864 * Real.log (hi / lo) := by
-        rw [← intervalIntegral.integral_of_le hle]
-        simp_rw [show ∀ t : ℝ, 864 / t = 864 * (1 / t) from fun t ↦ by simp [div_eq_mul_inv]]
-        rw [intervalIntegral.integral_const_mul, integral_one_div_of_pos hlo hhi]
-      _ ≤ _ := mul_le_mul_of_nonneg_left
-        (Real.log_le_log (div_pos hhi hlo) (div_le_self hhi.le hlo₁.le)) (by norm_num)
-  change _ ≤ 864 * (1 + Real.log hi)
-  linarith only [h_abel, h_nonneg_lo, h_hi, h_neg_int, h_inv_bound]
+      _ ≤ (m : ℝ) * (144 * ((n : ℝ) / m) / log ((n : ℝ) / m)) * (2 * log ((n : ℝ) / m)) := by
+        gcongr
+      _ = _ := by field_simp [hm₀.ne', hl_pos.ne']; ring
+  simpa only [U, show (3 : ℝ) * 288 = 864 by norm_num] using
+    sum_log_div_le_of_dyadic_count U x (m ^ 2) hx₀ hm₀.le (by norm_num) hU h_count
 
 /-- The small terms in the two progressions are bounded by a harmonic sum up to `m`. -/
 public theorem mul_sum_log_div_le_below_square {m : ℕ} (hm : 2 ≤ m) (U : Finset ℕ)

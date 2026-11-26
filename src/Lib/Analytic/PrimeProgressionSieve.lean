@@ -186,7 +186,7 @@ public theorem card_primes_progression_le_sieve (n m a : ℕ) (hm : 0 < m) {z : 
 public theorem card_primes_progression_le_div_log_of_totient_eq_half (n m a : ℕ)
     (hm : 0 < m) (hu : 1 < (n : ℝ) / m) (hφ : (m.totient : ℝ) = (m : ℝ) / 2) :
     (#{p ∈ range n | p ≡ a [MOD m] ∧ p.Prime} : ℝ) ≤
-      216 * ((n : ℝ) / m) / Real.log ((n : ℝ) / m) := by
+      144 * ((n : ℝ) / m) / Real.log ((n : ℝ) / m) := by
   let u : ℝ := (n : ℝ) / m
   let w := u ^ (1 / 8 : ℝ)
   let z := w ^ (2 : ℕ)
@@ -201,14 +201,15 @@ public theorem card_primes_progression_le_div_log_of_totient_eq_half (n m a : �
     rw [show z = w ^ (2 : ℕ) from rfl, Real.log_pow, Nat.cast_ofNat]
   have h_log_pos := Real.log_pos hw
   have h_log_le := Real.log_le_self (zero_le_one.trans hw.le)
-  have h_sum_le : 1 + 2 * (2 * Real.log w) ≤ 5 * w := by linarith
+  have h_sum_le : 1 + 2 * (2 * Real.log w) ≤ 4 * w := by
+    linarith only [Real.log_le_sub_one_of_pos (zero_lt_one.trans hw)]
   have h_rem_mul :
-      (z ^ 2 * (1 + 2 * Real.log z) ^ 2 + z) * Real.log u ≤ 208 * u := by
+      (z ^ 2 * (1 + 2 * Real.log z) ^ 2 + z) * Real.log u ≤ 136 * u := by
     rw [h_log_z, h_log_u, ← h_pow]
     calc
-      _ ≤ (z ^ 2 * (5 * w) ^ 2 + z) * (8 * w) := by gcongr
-      _ = 200 * w ^ 7 + 8 * w ^ 3 := by dsimp [z]; ring
-      _ ≤ 208 * w ^ 8 := by
+      _ ≤ (z ^ 2 * (4 * w) ^ 2 + z) * (8 * w) := by gcongr
+      _ = 128 * w ^ 7 + 8 * w ^ 3 := by dsimp [z]; ring
+      _ ≤ 136 * w ^ 8 := by
         have h₃ := pow_le_pow_right₀ hw.le (show (3 : ℕ) ≤ 8 by decide)
         have h₇ := pow_le_pow_right₀ hw.le (show (7 : ℕ) ≤ 8 by decide)
         linarith
@@ -222,7 +223,7 @@ public theorem card_primes_progression_le_div_log_of_totient_eq_half (n m a : �
     _ ≤ (n : ℝ) / (m.totient * Real.log z) +
         (z ^ 2 * (1 + 2 * Real.log z) ^ 2 + z) := by
       simpa only [add_assoc] using card_primes_progression_le_sieve n m a hm hz
-    _ ≤ 8 * u / Real.log u + 208 * u / Real.log u := by rw [h_main]; exact add_le_add le_rfl h_rem
-    _ = 216 * u / Real.log u := by ring
+    _ ≤ 8 * u / Real.log u + 136 * u / Real.log u := by rw [h_main]; exact add_le_add le_rfl h_rem
+    _ = 144 * u / Real.log u := by ring
 
 end PrimeProgressionSieve
