@@ -782,7 +782,8 @@ private lemma exists_eigenvector_of_isTransferLevel [hμ : IsStep (E := E) E' μ
       let u' : X' := above (U w) (U_mem w)
       exact ⟨k, hk, _, D_stable w d hd (X_split w) (X'_split u') j,
         hR.spherical_mul hq w j (fun g hg ↦ h_level.supportedOn_placesAbove_le
-          (baseChangeGf_mem_supportedOn (supportedOn_mono (singleton_subset_iff.mpr w.property) hg))),
+          (baseChangeGf_mem_supportedOn
+              (supportedOn_mono (singleton_subset_iff.mpr w.property) hg))),
         hR'.spherical_mul hq' u' j
           ((supportedOn_mono (by simp [u', above, placesAbove, U_mem w])).trans
             h_level.supportedOn_placesAbove_le)⟩

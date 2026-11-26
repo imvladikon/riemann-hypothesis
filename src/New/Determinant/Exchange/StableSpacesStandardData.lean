@@ -406,7 +406,7 @@ end New.Exchange
 ## Vanishing of an equivariant lift on the data with a matched function
 
 `New.Exchange.IsEquivariantLift` says that `𝒟` maps local data at the places `𝔠.ramifiedPlaces`
-equivariantly to automorphic functions. `New.Space.Splitting.centreCoeff` is the Fourier coefficient
+equivariantly to automorphic functions. `New.Space.Splitting.centerCoeff` is the Fourier coefficient
 along the centre of the unipotent radical of the parabolic subgroup attached to a splitting
 `New.Space.Splitting`. The standard datum of the frame of a splitting `D` is `New.stdColDatum` of
 the dual block `dualL` of `adaptedFrame 𝔠.readsAt D`.
@@ -426,7 +426,7 @@ orthonormal at infinity and integral at the finite places; `adaptedFrame 𝔠.re
 read in the completions at `S`). Let `O` be the product of the rings of integers at `S`, and let
 `Ψ₀ ∈ M` be the standard datum of the dual block `dualL` of that frame, the function
 `y ↦ χ⁻¹(det (dualL y))` at integral `y` where this determinant is a unit, 0 elsewhere, with
-`χ = 𝔠.semilocalChar`. Suppose that the Fourier coefficient `D.centreCoeff T` of `𝒟 Ψ₀` along the
+`χ = 𝔠.semilocalChar`. Suppose that the Fourier coefficient `D.centerCoeff T` of `𝒟 Ψ₀` along the
 centre of the unipotent radical of the parabolic of `D`, at a skew-hermitian index `T`, vanishes at
 every point `(1, g)`, with `g` trivial at `S`, whenever `(invDifferentIdele E)⁻¹ • T` lies in
 `GL_b(O)` at `S`. Then `𝒟` kills every locally constant datum `Ψ` that has a matched function
@@ -446,7 +446,7 @@ lemma New.Exchange.IsEquivariantLift.apply_eq_zero_of_centreCoeff_eq_zero
     (h_coeff : ∀ T : Matrix b b E, Tᴴ = -T →
       IsPrimitiveMatrix O (((invDifferentIdele E)⁻¹.val • T.map toAdele).map (componentsAt 𝔠)) →
       ∀ g ∈ Gf.trivialOn m 𝔠.ramifiedPlaces,
-        D.centreCoeff T (𝒟 (stdColDatum 𝔠.semilocalChar (adaptedFrame 𝔠.readsAt D).dualL)) (1, g) =
+        D.centerCoeff T (𝒟 (stdColDatum 𝔠.semilocalChar (adaptedFrame 𝔠.readsAt D).dualL)) (1, g) =
           0) :
     𝒟 Ψ = 0 := by
   -- Apply `IntegralFrame.match_mem_of_isPrimitiveMatrix_vanishing` to `M ⊓ ker 𝒟`. Its functionals
@@ -459,7 +459,7 @@ lemma New.Exchange.IsEquivariantLift.apply_eq_zero_of_centreCoeff_eq_zero
     ((invDifferentIdele E)⁻¹.val • T.map toAdele).map (componentsAt 𝔠)
   have hΛ_eq (T : Matrix b b E) (x : G E r) {f : Matrix m b (LocProd 𝔠.ramifiedPlaces) → ℂ}
     (hf : f ∈ M) :
-      Λ T x f = D.centreCoeff T (𝒟 f) x := (hΛ T x f hf).1
+      Λ T x f = D.centerCoeff T (𝒟 f) x := (hΛ T x f hf).1
   have hΛ_shear (T : Matrix b b E) (x : G E r) (w : Matrix b b (LocProd 𝔠.ramifiedPlaces)) :
       let Ψ' (y : Matrix m b (LocProd 𝔠.ramifiedPlaces)) : ℂ :=
         Ψ₀ (y + (x⁻¹.adeleMatrix * D.kAdelic).map
@@ -476,15 +476,15 @@ lemma New.Exchange.IsEquivariantLift.apply_eq_zero_of_centreCoeff_eq_zero
   obtain ⟨h_cont, h_left⟩ := h_lift.isAutFunction hf
   refine funext ((X.weak_approximation 𝔠.ramifiedPlaces.finite_toSet).eq (fun ⟨γ, g, hg⟩ ↦ ?_)
     h_cont)
-  suffices h_centre : 𝒟 f (D.radicalCentre 0 * (1, g)) = 0 by simpa [h_left] using h_centre
+  suffices h_centre : 𝒟 f (D.radicalCenter 0 * (1, g)) = 0 by simpa [h_left] using h_centre
   refine IsDualFamily.eq_zero_of_quotMean_mul_eq_zero
     (D.isContPeriodic_radicalCentre ⟨h_cont, h_left⟩ (1, g))
     (fun T h_per ↦ ?_) 0
-  -- Hermitian matrices are periods of `D.radicalCentre`, so only skew-hermitian `T` are to be
+  -- Hermitian matrices are periods of `D.radicalCenter`, so only skew-hermitian `T` are to be
   -- tested.
   have hT : Tᴴ + T = 0 := by
     refine isDualFamily_ratMatrices.eq_zero_of_forall_eq_one _ fun Z ↦ ?_
-    have h_period (x : Matrix b b (𝔸 E)) : D.radicalCentre (x + (Zᴴ + Z)) = D.radicalCentre x :=
+    have h_period (x : Matrix b b (𝔸 E)) : D.radicalCenter (x + (Zᴴ + Z)) = D.radicalCenter x :=
       ext_adeleMatrix (by simp [add_sub_add_comm])
     have h_one : (stdAddChar E (T.map toAdele * (Zᴴ + Z)).trace : ℂ) = 1 :=
       h_per (Zᴴ + Z) 1 (by simp [h_period])
@@ -554,12 +554,12 @@ def New.Space.Splitting.VanishesAtSelfDual
     (D : X.Splitting W₁ b) {t' : b → ℤˣ} (V' : Space E b t') (f : G E r → ℂ) : Prop :=
   ∀ (T : Matrix b b E) (c : Matrix n b (𝔸 E)) (z : Matrix b b (𝔸 E)) (q : GL b (𝔸 E))
       (g : G E s),
-    IsSelfDualTestPair V' T q → D.centreCoeff (H.j • T) f (D.radicalElement c z * D.levi (q, g)) = 0
+    IsSelfDualTestPair V' T q → D.centerCoeff (H.j • T) f (D.radicalElement c z * D.levi (q, g)) = 0
 
 /-- Let `D` be a splitting of `X` over `W₁` along `b` lines, let `j` be the fixed skew element of
 `WeilData E` and `scaleIdele E` its idele that makes `Ô` self-dual. Let `f` be an automorphic
 function that vanishes at self-dual lattices, tested on the pairs of a hermitian space `V'` with
-Gram matrix `V'.J`, adelic frame `V'.x` and signs `t'`: its Fourier coefficient `D.centreCoeff`
+Gram matrix `V'.J`, adelic frame `V'.x` and signs `t'`: its Fourier coefficient `D.centerCoeff`
 along the centre of the unipotent radical, at the index `j • T`, vanishes at the points
 `D.radicalElement c z * D.levi (q, g)` if (a) `T = V'.J` and `q = scaleIdele E • V'.x * Y`, where
 the finite part of `Y` times some `k ∈ GL_b(Ô)` is unitary, or (b) `T` is invertible and at some
@@ -575,7 +575,7 @@ lemma New.Space.Splitting.centreCoeff_eq_zero_of_orthonormal
     {k : GL b (𝔸f E)} (k_int : k ∈ intGL b (Ô E))
     (h_orth : k.valᴴ * ((q.valᴴ * (β.map toAdele * q.val)).map Prod.snd * k.val) = 1)
     (l : Matrix n b (𝔸 E)) (z : Matrix b b (𝔸 E)) (g : G E s) :
-    D.centreCoeff (H.j • β) f (D.radicalElement l z * D.levi (scaleIdele E • q, g)) = 0 := by
+    D.centerCoeff (H.j • β) f (D.radicalElement l z * D.levi (scaleIdele E • q, g)) = 0 := by
   have hβ : IsUnit β := by simpa [isUnit_iff_isUnit_det] using hdet
   obtain h_real | h_real := em' (RepresentedBy t' (β.map toAdele))
   · -- case (b) of a test pair
@@ -639,7 +639,7 @@ lemma New.Exchange.IsEquivariantLift.partialMean_shear
     h_lift.apply_shear hΨ hν hc x
   have h_assoc (y y' : G E r) : 𝒟 Ψ' (y * (y' * x)) = 𝒟 Ψ (y * (y' * (ν⁻¹ * x))) := by
     simpa only [mul_assoc] using h_shift (y * y')
-  exact ⟨h_mem, by simp only [partialMean, centreCoeff, h_assoc]⟩
+  exact ⟨h_mem, by simp only [partialMean, centerCoeff, h_assoc]⟩
 
 /-- Let `𝒟` be an equivariant lift on `M`. Let `A` split one isotropic line off `X`, `B` split `b`
 planes off what remains and `D` split `X` over `W₁`, and let the adelic isotropic frame `kAdelic` of
@@ -664,7 +664,7 @@ lemma New.Exchange.IsEquivariantLift.exists_linear_partialMean
     { toFun Ψ := A.partialMean B D T (𝒟 Ψ) x
       map_add' Ψ Φ := by
         simpa using partialMean_add hD (h_lift.isAutFunction Ψ.2) (h_lift.isAutFunction Φ.2) x
-      map_smul' := by simp [partialMean, centreCoeff, mul_left_comm] }
+      map_smul' := by simp [partialMean, centerCoeff, mul_left_comm] }
   obtain ⟨L, hL₀ : L ∘ₗ M.subtype = L₀⟩ := L₀.exists_extend
   have hL (Ψ : Matrix m b (LocProd 𝔠.ramifiedPlaces) → ℂ) (hΨ : Ψ ∈ M) :
       L Ψ = A.partialMean B D T (𝒟 Ψ) x := LinearMap.congr_fun hL₀ ⟨Ψ, hΨ⟩

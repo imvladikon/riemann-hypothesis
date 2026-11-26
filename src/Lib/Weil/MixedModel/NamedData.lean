@@ -127,16 +127,6 @@ lemma schrodingerOp_projOn (f : 𝒮 V) :
 lemma smul_schrodingerOp (c : ℂ) (f : 𝒮 V) :
   c • V.schrodingerOp S Ψ f = V.schrodingerOp S (c • Ψ) f := by simp
 
-omit [Fintype n] [DecidableEq n] in
-/-- The translation vector `finVec (idem U.conjClosure • y)` vanishes at every place of `T` and of
-its conjugate when `U ∪ Ū` is disjoint from `T`: there the idempotent of `U ∪ Ū` is `0`. -/
-private lemma finVec_idem_smul_snd_eq_zero_of_disjoint {U T : Set (FinPlace E)}
-    (hUT : Disjoint U.conjClosure T) (y : n → 𝔸f E) :
-    ∀ i : n, ∀ w ∈ T.conjClosure, (finVec (idem U.conjClosure • y) i).2 w = 0 := by
-  intro i w hw
-  have hw_not : w ∉ U.conjClosure := by grind [star_star]
-  simp [finVec, idem_of_notMem hw_not]
-
 /-- If the set T of finite places is disjoint from S ∪ S̄, then Ψ ⊗ vac, named at S, with
 vac = `V.vacElem` the vacuum vector of 𝒮(V), is fixed by the projection P^T. -/
 lemma projOn_schrodingerOp_vacElem {T : Set (FinPlace E)} (hT : Disjoint S.conjClosure T) :
@@ -146,7 +136,9 @@ lemma projOn_schrodingerOp_vacElem {T : Set (FinPlace E)} (hT : Disjoint S.conjC
   have h_comm (y : n → 𝔸f E) (f : 𝒮 V) :
       V.projOn T (V.ϱ (finVec (idem S.conjClosure • y)) f) =
         V.ϱ (finVec (idem S.conjClosure • y)) (V.projOn T f) :=
-    V.projOn_rho (finVec_idem_smul_snd_eq_zero_of_disjoint hT y) f
+    V.projOn_rho (fun i w hw ↦ by
+      have hw_not : w ∉ S.conjClosure := by grind [star_star]
+      simp [finVec, idem_of_notMem hw_not]) f
   simp [schrodingerOp, h_comm, heisenbergCombination, Finsupp.sum]
 
 /-- For g ∈ GL_n(𝔸_f), take `localInner S` (∫ conj(Ψ) Ψ′ over the finite adelic vectors integral off

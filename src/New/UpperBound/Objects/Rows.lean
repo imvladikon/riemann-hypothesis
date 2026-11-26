@@ -708,7 +708,7 @@ def descentCentres (τ : D.Φ) (j : D.LiftIndex) : CentreSystem (ℕ ⊕ ℕ) :=
 /-- The value of the centre `.inr (j - 1)` of `D.descentCentres τ j` is `-D.liftWeight j τ`, minus
 the weight at `τ` of the character of the `j`-th lift. -/
 lemma descentCentres_centre (τ : D.Φ) (j : D.LiftIndex) :
-    (D.descentCentres τ j).centre (.inr (j - 1)) = -D.liftWeight j τ := by
+    (D.descentCentres τ j).center (.inr (j - 1)) = -D.liftWeight j τ := by
   simp [descentCentres, gridCentres, Nat.sub_add_cancel j.prop.1]
 
 /-- When the block of the only centre of `New.Data.descentCentres` is present, every entry has the
@@ -791,7 +791,7 @@ lemma isParam_paramV (ϑ : D.TameChar) (τ : D.Φ) (j : D.LiftIndex) :
     refine h_image.trans (Finset.ext fun y ↦ ?_)
     -- Unfold both sides to entries of the shifted parameter, of the stem and of the block.
     simp only [CentreSystem.entries, biUnion_empty, union_empty, descentCentres, gridCentres,
-      mem_union, mem_image, Finset.mem_range, mem_centredBlock, Function.comp_apply, Sum.elim_inr,
+      mem_union, mem_image, Finset.mem_range, mem_centeredBlock, Function.comp_apply, Sum.elim_inr,
       Bool.toNat_false, Nat.sub_zero, Nat.cast_zero, add_zero, shift]
     constructor
     · rintro ⟨p, hp, rfl⟩

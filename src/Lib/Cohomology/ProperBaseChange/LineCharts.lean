@@ -343,7 +343,7 @@ lemma exists_pow_eq_mul_of_local (hts : (t * s : D) = 1)
         have h_mem : 1 ^ m * c * (κ G + m • c) ∈ T N ^ m * T N * T N :=
           mul_mem_mul (mul_mem_mul (pow_mem_pow _ h_one m) hc) (add_mem hG (nsmul_mem hc m))
         rwa [one_pow, one_mul, ← pow_succ, ← pow_succ] at h_mem
-      · simp [pow_succ', mul_assoc, ih]
+      · simp only [pow_succ', mul_assoc, ih]
         algebra
   obtain ⟨Φ, hΦ, h_expand⟩ := h_binom ℓ
   -- `Φ` and `L a * L b` lie in the spans of `N ^ (ℓ + 1)` and `P * Q`, hence in the span of `e`.

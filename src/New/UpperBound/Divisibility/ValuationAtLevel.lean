@@ -72,7 +72,7 @@ form `Σ_N = D.nonInducedPlaces`. Let `χ` be the base change to `E` of the char
 conjugate induced prime lies in `S`. -/
 lemma norm_detCharAt_diagN_le {i : ℕ} (hi : i ≤ 2 * D.m) (k j : ℕ) (S : Finset (FinPlace D.E)) :
     ‖ιₚ (detCharAt (D.chainChar ϑ i).baseChange k
-      (diagN (P := D.nonInducedPlaces) (D.InitIndex j) S))‖ ≤
+      (diagN (P := D.nonInducedPlaces) (N := D.N) (D.InitIndex j) S))‖ ≤
       ∏ τ : D.Φ, if star (D.inducedPlace τ) ∈ S then (D.N : ℝ) ^ (2 * D.b) else 1 := by
   -- For `k = 0` the norm is a product over the infinite places `τ` of
   -- `‖(det g)_τ‖ ^ D.liftWeight i τ`, where `g = diagPoint j S`, `(det g)_τ` is `N⁻¹` or `1`, and
@@ -85,7 +85,7 @@ lemma norm_detCharAt_diagN_le {i : ℕ} (hi : i ≤ 2 * D.m) (k j : ℕ) (S : Fi
         ((diagGL fun l : D.X j ↦ if l.isLeft then 1
           else if star (D.inducedPlace τ) ∈ S then .mk0 ↑D.N NeZero.out else 1)⁻¹).val.det := by
       -- `g` is unitary, so `det g` at `τ` is `det g⁻¹` at the conjugate embedding. The rewriting is
-      -- up to the definitions of `G` and of the unitary group, hence `erw`.
+      -- using the determinant formula for the unitary group.
       rw [G.det_snd, ← star_star (det _), adeleExtension_star, ← det_conjTranspose,
         ← U.inv_val_eq_conjTranspose, RingHom.map_det]
       exact congrArg (fun g : GL (D.X j) ℂ_[D.N] ↦ g⁻¹.1.det) (D.map_adeleExtension_diagPoint j S τ)
@@ -96,12 +96,21 @@ lemma norm_detCharAt_diagN_le {i : ℕ} (hi : i ≤ 2 * D.m) (k j : ℕ) (S : Fi
   -- It suffices to take `k = 0`, where the character is `χ` at the determinant of the finite point.
   -- As `χ` has weight `D.liftWeight i`, its norm there is the product of the factors bounded in
   -- `h_place`.
-  grw [norm_detCharAt_diagN_anti (n' := D.InitIndex j) bot_le, ← atPlaces_embedGL (diagN ..)]
+  grw [norm_detCharAt_diagN_anti (n' := D.InitIndex j) bot_le, ← atPlaces_embedGL (diagN (N := D.N) ..)]
   suffices ‖ιₚ ((D.chainChar ϑ i).baseChange.1 (detOn D.nonInducedPlaces (D.diagPoint j S).1))‖ ≤
       ∏ τ : D.Φ, if star (D.inducedPlace τ) ∈ S then (D.N : ℝ) ^ (2 * D.b) else 1 by
     simpa [detCharAt, -atPlaces_embedGL, -prod_ite_mem] using this
-  erw [D.hasWeight_liftChar.norm_padic_eq_prod ιₚ _ (unitary _).one_mem.2,
-    ← G.detFin_of_mem_supportedOn (s := 1) isConjDisjoint (embedGL_mem_supportedOn _)]
+  have h_detFin :
+      G.det (s := (1 : D.X j → ℤˣ)) (1, D.diagPoint j S) =
+        divStar (detOn D.nonInducedPlaces (D.diagPoint j S).1) :=
+    G.detFin_of_mem_supportedOn isConjDisjoint (embedGL_mem_supportedOn _)
+  change ‖ιₚ ((D.chainChar ϑ i).val
+    (divStar (detOn D.nonInducedPlaces (D.diagPoint j S).1)))‖ ≤ _
+  rw [← h_detFin]
+  have h_arch : (G.det (s := (1 : D.X j → ℤˣ)) (1, D.diagPoint j S) : 𝔸 D.E).fst = 1 := by
+    ext w
+    simp [det_fst]
+  refine (D.hasWeight_liftChar.norm_padic_eq_prod ιₚ _ h_arch).le.trans ?_
   exact prod_le_prod₀ (by simp) fun τ _ ↦ by simpa using h_place τ
 
 /-- Let `K = ℚ(√(-d))` with `d = P.d`, let `E ⊇ K` be the CM field and `N` the level prime of the
@@ -314,8 +323,8 @@ lemma liftAtN_apply (j : ℕ) (v : (D.homX j).finitePart)
 /-- The factor by which `Up` moves through the direct lift from `X_j` to `X_{j+1}`: the ratio of the
 values of `liftCharAtN` at `diag (1, …, 1, N)` on `X_j` and on `X_{j+1}`. -/
 noncomputable def upCommutationFactor (j : ℕ) : ℂˣ :=
-  D.liftCharAtN ϑ (j + 1) (D.n (j + 1)) (diagN (D.InitIndex j) D.nonInducedPlaces) /
-    D.liftCharAtN ϑ (j + 1) (D.n j) (diagN (D.InitIndex (j + 1)) D.nonInducedPlaces)
+  D.liftCharAtN ϑ (j + 1) (D.n (j + 1)) (diagN (N := D.N) (D.InitIndex j) D.nonInducedPlaces) /
+    D.liftCharAtN ϑ (j + 1) (D.n j) (diagN (N := D.N) (D.InitIndex (j + 1)) D.nonInducedPlaces)
 
 /-- Let `v` be in the finite part of the Weil representation of `Hom (X_j, X_{j+1})`, and let
 `L Ψ = D.liftAtN ϑ j v Ψ` be the theta lift, for the tame character `ϑ`, from forms on `X_j` to
@@ -359,8 +368,8 @@ and `L_{2i+2}^∨`: the product of the values of `liftCharAtN` at `diag (1, …,
 `X_{2i+2}` at the places of `Σ_N` prime to `π` and on `X_{2i}` at those dividing `π`. -/
 noncomputable def gluedFactor (i : ℕ) : ℂˣ :=
   D.liftCharAtN ϑ (2 * i + 2) (D.n (2 * i + 1))
-      (diagN (D.InitIndex (2 * i + 2)) (D.nonInducedPlaces \ D.piNPlaces)) *
-    D.liftCharAtN ϑ (2 * i + 1) (D.n (2 * i + 1)) (diagN (D.InitIndex (2 * i)) D.piNPlaces)
+      (diagN (N := D.N) (D.InitIndex (2 * i + 2)) (D.nonInducedPlaces \ D.piNPlaces)) *
+    D.liftCharAtN ϑ (2 * i + 1) (D.n (2 * i + 1)) (diagN (N := D.N) (D.InitIndex (2 * i)) D.piNPlaces)
 
 /-- For `i ≤ ϱ`, where `m = 2 (ϱ + 1)`, each place of `Σ_N` contributes one character value to
 `gluedFactor`, so this factor loses at most `2 f b` powers of `N`. -/
@@ -395,7 +404,7 @@ modulo `N`, followed by the lift by `charDatum y`, the character `ψ_N` of the l
 lemma liftInPairs_gluedDoubleLiftDatum (v : ∀ j : ℕ, (D.homX j).finitePart) (i : ℕ) :
     TensorChain.liftInPairs (fun j : ℕ ↦ (D.liftKernel ϑ j).lift) i
         (D.gluedDoubleLiftDatum (fun j : ℕ ↦ (D.homX j).vacuumProjFinPart D.piNPlaces (v j)) i) =
-      (D.gluedFactor ϑ i : ℂ) • (D.formRepAtN (2 * i + 1 + 1)).ρ diagNInv ∘ₗ
+      (D.gluedFactor ϑ i : ℂ) • (D.formRepAtN (2 * i + 1 + 1)).ρ (diagNInv (N := D.N)) ∘ₗ
         ∑ y : D.X (2 * i + 1) → D.nonInducedPlaces → ZMod D.N,
           D.liftAtN ϑ (2 * i + 1) (v (2 * i + 1)) (charDatum y) ∘ₗ
           D.liftAtN ϑ (2 * i) (v (2 * i)) (lastColDatum y) := by
@@ -406,23 +415,23 @@ lemma liftInPairs_gluedDoubleLiftDatum (v : ∀ j : ℕ, (D.homX j).finitePart) 
   have h_first (f : Matrix (D.X (2 * i + 1)) (D.X (2 * i)) (D.nonInducedPlaces → ZMod D.N) → ℂ)
       (φ : D.FormX (2 * i)) :
       (D.liftKernel ϑ (2 * i)).lift (schrodingerOpAt (P := D.nonInducedPlaces) (fun T ↦ liftFn f
-          (T * (diagN (P := D.nonInducedPlaces) (D.InitIndex (2 * i)) D.piNPlaces).val)) (v _)) φ =
-        D.liftCharAtN ϑ (2 * i + 1) (D.n (2 * i + 1)) (diagN (D.InitIndex (2 * i)) D.piNPlaces) •
+          (T * (diagN (P := D.nonInducedPlaces) (N := D.N) (D.InitIndex (2 * i)) D.piNPlaces).val)) (v _)) φ =
+        D.liftCharAtN ϑ (2 * i + 1) (D.n (2 * i + 1)) (diagN (N := D.N) (D.InitIndex (2 * i)) D.piNPlaces) •
           ρ (D.diagPointN (2 * i + 1))⁻¹ (D.liftAtN ϑ (2 * i) (v (2 * i)) (liftFn f) φ) := by
-    simpa [ρ, liftAtN_apply] using D.lift_schrodingerOpAt_comp ϑ _ _ f (diagN _ D.piNPlaces) 1 φ
+    simpa [ρ, liftAtN_apply] using D.lift_schrodingerOpAt_comp ϑ _ _ f (diagN (N := D.N) _ D.piNPlaces) 1 φ
   let k₂ : GL (D.X (2 * i + 1 + 1)) (LocProd D.nonInducedPlaces) :=
-    diagN (D.InitIndex (2 * i + 1 + 1)) (D.nonInducedPlaces \ D.piNPlaces)
+    diagN (N := D.N) (D.InitIndex (2 * i + 1 + 1)) (D.nonInducedPlaces \ D.piNPlaces)
   have h_second
       (f : Matrix (D.X (2 * i + 1 + 1)) (D.X (2 * i + 1)) (D.nonInducedPlaces → ZMod D.N) → ℂ)
       (ψ : D.FormX (2 * i + 1)) :
       (D.liftKernel ϑ (2 * i + 1)).lift (schrodingerOpAt (P := D.nonInducedPlaces)
           (fun R ↦ liftFn f (k₂.val * R)) (v (2 * i + 1))) ψ =
         D.liftCharAtN ϑ (2 * i + 2) (D.n (2 * i + 1)) k₂ •
-          (D.formRepAtN (2 * i + 1 + 1)).ρ diagNInv (D.liftAtN ϑ (2 * i + 1) (v (2 * i + 1))
+          (D.formRepAtN (2 * i + 1 + 1)).ρ (diagNInv (N := D.N)) (D.liftAtN ϑ (2 * i + 1) (v (2 * i + 1))
             (liftFn f) (ρ (D.diagPointN (2 * i + 1)) ψ)) := by
     -- The matrix `diagN` for all of `Σ_N` is the one moved here times the one of `δ_{2i+2}`.
     simpa only [ρ, conjEmbedGL, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_comp,
-      MonoidHom.coe_ofClass, Function.comp_apply, map_inv, diagN_eq_sdiff_mul D.piNPlaces, map_mul,
+      MonoidHom.coe_ofClass, Function.comp_apply, map_inv, diagN_eq_sdiff_mul (N := D.N) (P := D.nonInducedPlaces) D.piNPlaces, map_mul,
       mul_inv_rev, MulAut.conj_apply, mul_inv_cancel_left, liftAtN_apply,
       Representation.inv_self_apply, mul_apply_eq_comp, inv_inv, Units.val_one, Matrix.mul_one,
       map_one, div_inv_eq_mul, one_mul, inv_one, one_apply_eq_self, k₂]

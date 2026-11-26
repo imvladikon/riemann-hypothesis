@@ -136,9 +136,13 @@ lemma ThetaTori.PeriodMap.multiplier_eq_of_pullback {A : Over (Spec (CommRingCat
     hY.hasFieldCoords z
   have h_pull {M : LineBundle A.left D.dualTorsion} {χ : W → ℂ} {θ : W → D.dualTorsion → ℂ}
       (hM : HasThetaCoords (ι := D.dualTorsion) u.lattice (atGeneric u.expMap) M B' χ θ) :
-      HasThetaCoords Y.periodLattice (fun z : V ↦ (e z).left) M (B'.pullForm F) (χ ∘ F) (θ ∘ F) :=
-    hM.pull F (f := 𝟙 _) (fun z ↦ congrArg CommaMorphism.left (hF z))
+      HasThetaCoords Y.periodLattice (fun z : V ↦ (e z).left) M (B'.pullForm F) (χ ∘ F)
+        (θ ∘ F) := by
+    -- `atGeneric_eq`, `comp_id` and `pull_id` are rewritten: the kernel is slow to unfold them.
+    have h := hM.pull F (f := 𝟙 _) (e' := fun z ↦ (e z).left) (fun z ↦ by
+      rw [Category.comp_id, atGeneric_eq]; exact congrArg Over.Hom.left (hF z))
       fun l hl ↦ by rw [u.eq_zero_iff, hF, h_kill l hl]
+    rwa [LineBundle.pull_id] at h
   -- Evaluation along `e` sends sections of `N` to functions on `V`, and the coordinates to
   -- `Y.thetaCoord`.
   obtain ⟨ev, h_ev, h_ev_coord, -⟩ := exists_theta_evaluation hY
@@ -237,8 +241,12 @@ lemma ThetaTori.PeriodMap.exists_uniformisation_of_isSeparatingFamily
   -- (`h_riem`), and so do their multipliers on `Y.periodLattice` (`hχ'`).
   have hF_mem : ∀ l ∈ Y.periodLattice, F l ∈ u.lattice := fun l hl ↦ by
     rw [u.eq_zero_iff, hF, h_kill l hl]
-  have h_pull : HasThetaCoords Y.periodLattice (atGeneric e) N (B'.pullForm F) (χ' ∘ F) (θ' ∘ F) :=
-    hu.pull F (f := 𝟙 _) (fun z ↦ congrArg CommaMorphism.left (hF z)) hF_mem
+  have h_pull :
+      HasThetaCoords Y.periodLattice (atGeneric e) N (B'.pullForm F) (χ' ∘ F) (θ' ∘ F) := by
+    -- `atGeneric_eq`, `comp_id` and `pull_id` are rewritten: the kernel is slow to unfold them.
+    have h := hu.pull F (f := 𝟙 _) (e' := atGeneric e) (fun z ↦ by
+      rw [Category.comp_id, atGeneric_eq, atGeneric_eq]; exact congrArg Over.Hom.left (hF z)) hF_mem
+    rwa [LineBundle.pull_id] at h
   -- `N ⊗ N⁻¹` has a frame, as the class of `N` is equal to itself.
   obtain ⟨w, h_frame⟩ := picClass_eq_iff.mp (rfl : N.picClass = N.picClass)
   obtain ⟨h_riem, hχ', -⟩ := h_pull.riemannForm_eq_of_isFrame hY h_frame (hY.holomorphicAt hN)
@@ -840,9 +848,10 @@ lemma exists_isIsogenyOfMatrix (z : GL D.Index E) (hz : ratConj z ℓ = ℓ')
   -- Pull the theta coordinates of `x'` back along `F`.
   have h_pull :
       HasThetaCoords m.uniformisation.lattice (fun v : V ↦ atGeneric m'.uniformisation.expMap (F v))
-        (x'.lineBundle.pull (𝟙 x'.groupScheme.left)) (Y'.automorphyForm.pullForm F) (m'.χ ∘ F)
-          (m'.θ ∘ F) :=
-    m'.hasThetaCoords.pull F (fun _ ↦ .symm (comp_id _)) h_lat
+        x'.lineBundle (Y'.automorphyForm.pullForm F) (m'.χ ∘ F) (m'.θ ∘ F) := by
+    -- `pull_id` is rewritten: the kernel is slow to unfold `x'.lineBundle.pull (𝟙 _)`.
+    have h := m'.hasThetaCoords.pull F (fun _ ↦ .symm (comp_id _)) h_lat
+    rwa [LineBundle.pull_id] at h
   -- Corrected by an exponential factor, they are theta coordinates of `x'.lineBundle` of type
   -- `(μ • Y.automorphyForm, m.χ ^ μ)`.
   obtain ⟨θ₀, h_coords⟩ : ∃ θ₀ : V → D.dualTorsion → ℂ, HasThetaCoords m.uniformisation.lattice

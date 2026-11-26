@@ -1,6 +1,7 @@
 module
 
 import TauCeti.RingTheory.WittVector.ArtinSchreier
+import TauCeti.RingTheory.WittVector.Complete
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
 public import Mathlib.RingTheory.WittVector.Compare
 public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
@@ -433,8 +434,8 @@ end Ainf
 /-!
 ## The kernel of θ on A_inf and divisibility by ξ, μ and τ
 
-Witt-vector surjectivity follows from Tau Ceti. Divisibility is proved by successive approximation:
-a claim is checked modulo `p`, on the constant coefficient in `O^♭`, and then lifted.
+Witt-vector surjectivity and the lifting of divisibility from the constant coefficient follow from
+Tau Ceti: a claim is checked modulo `p`, on the constant coefficient in `O^♭`, and then lifted.
 -/
 
 section ThetaKernel
@@ -502,21 +503,9 @@ lemma Witt.dvd_of_mem_of_constantCoeff_dvd {I : Ideal (WittVector p k)} (hc : c 
     (h_sat : ∀ x : WittVector p k, (p : WittVector p k) * x ∈ I → x ∈ I)
     (h_mod_p : ∀ a ∈ I, constantCoeff c ∣ constantCoeff a) :
     ∀ a ∈ I, c ∣ a := by
-  -- Successive approximation: each `x ∈ I` is `c * b + p * y` with `y` again in `I`.
-  have step (x : I) :
-      ∃ (b : WittVector p k) (y : I), (x : WittVector p k) = c * b + p * (y : WittVector p k) := by
-    obtain ⟨x, hx⟩ := x
-    -- modulo `p` the element `c` divides `x`
-    obtain ⟨y, b, hx_eq⟩ : ∃ y b : WittVector p k, y * p + b * c = x :=
-      mem_span_pair.mp (mem_span_pair_iff.mpr (h_mod_p x hx))
-    -- `p * y = x - b * c` lies in `I`, so `y` does
-    have h_py : (p : WittVector p k) * y = x - b * c := by linear_combination hx_eq
-    have hy : y ∈ I := h_sat y (by simpa [h_py] using I.sub_mem hx (I.mul_mem_left b hc))
-    exact ⟨b, ⟨y, hy⟩, by linear_combination -hx_eq⟩
   intro a ha
-  obtain ⟨b, hb⟩ := mem_range_of_approx (AddMonoidHom.mulLeft c)
-    (mul_smul_comm (p : WittVector p k) c) I.subtype step ⟨a, ha⟩
-  exact ⟨b, hb.symm⟩
+  exact mem_span_singleton.mp
+    (WittVector.eq_span_singleton_of_coeff_zero_dvd c hc h_sat h_mod_p ▸ ha)
 
 variable (g : Gp p) (m : FrobGal) (t : OFlat) (a : Ainf)
 

@@ -252,18 +252,18 @@ private lemma mem_ker_sqrtChar_iff (hb : b ^ 2 = algebraMap E Ω x) (hb_ne : b �
 
 private lemma symmetrise_sqrtChar_eq_zero_iff [IsCMField E] (hb : b ^ 2 = algebraMap E Ω x)
     (hb_ne : b ≠ 0) (g : Gal(Ω/E)) :
-    (symmetrise (sqrtChar hb hb_ne)).val g = 0 ↔
+    (symmetrize (sqrtChar hb hb_ne)).val g = 0 ↔
       sqrtSign hb hb_ne g * sqrtSign hb hb_ne (conjGal g) = 1 := by
   rw [← ofAdd_eq_one]
   change Multiplicative.ofAdd (Multiplicative.toAdd (signToQZ (sqrtSign hb hb_ne g)) +
     Multiplicative.toAdd (signToQZ (sqrtSign hb hb_ne (conjGal g)))) = 1 ↔ _
   rw [ofAdd_add, ofAdd_toAdd, ofAdd_toAdd, ← map_mul, signToQZ_eq_one_iff]
 
-/-- `symmetrise (sqrtChar hb hb_ne)` vanishes at `g` iff `g` fixes `c * b * cmConj b`. -/
+/-- `symmetrize (sqrtChar hb hb_ne)` vanishes at `g` iff `g` fixes `c * b * cmConj b`. -/
 private lemma symmetrise_sqrtChar_apply_eq_zero_iff [IsCMField E] (hb : b ^ 2 = algebraMap E Ω x)
     (hb_conj : cmConj b ^ 2 = algebraMap E Ω (star x)) (hb_ne : b ≠ 0) {a : E} (ha : a ≠ 0)
     (g : Gal(Ω/E)) :
-    (symmetrise (sqrtChar hb hb_ne)).val g = 0 ↔
+    (symmetrize (sqrtChar hb hb_ne)).val g = 0 ↔
       g (algebraMap E Ω a * b * cmConj b) = algebraMap E Ω a * b * cmConj b := by
   rw [symmetrise_sqrtChar_eq_zero_iff, sqrtSign_conjGal hb hb_conj hb_ne]
   have h_act : g (algebraMap E Ω a * b * cmConj b) =
@@ -281,9 +281,9 @@ private lemma exists_mul_mem_ker_symmetrise_inf_ker [IsCMField E] (hb : b ^ 2 = 
     (hb_ne : b ≠ 0) {n : ℕ} {P : FinPlace E} (hnP : ↑n ∉ P.asIdeal)
     {σ : decompGroup Gal(Ω/E) (placeOver P)}
     (hσ_inertia : σ ∈ inertiaGroup (decompGroup Gal(Ω/E) (placeOver P)) (placeOver P))
-    (hσ_sym : (symmetrise (sqrtChar hb hb_ne)).val σ ≠ 0) {H : Subgroup Gal(Ω/E)}
+    (hσ_sym : (symmetrize (sqrtChar hb hb_ne)).val σ ≠ 0) {H : Subgroup Gal(Ω/E)}
     (hH : inertiaAbove {v : FinPlace E | ↑n ∉ v.asIdeal ∧ v.q ≤ P.q} ⊆ H) (g : Gal(Ω/E)) :
-    ∃ h ∈ H, g * h ∈ ker (symmetrise (sqrtChar hb hb_ne)) ⊓ ker (sqrtChar hb hb_ne) := by
+    ∃ h ∈ H, g * h ∈ ker (symmetrize (sqrtChar hb hb_ne)) ⊓ ker (sqrtChar hb hb_ne) := by
   let s := sqrtSign hb hb_ne
   let Ψ : Gal(Ω/E) →* ℤˣ × ℤˣ := s.prod (s.comp conjGal)
   have hσH : (σ : Gal(Ω/E)) ∈ H := hH ⟨P, ⟨hnP, le_rfl⟩, _, P.isPlaceOver_placeOver, hσ_inertia⟩
@@ -398,7 +398,7 @@ lemma IsSplitPrimeToDisc.of_mem {D : ℕ} [Fact (D % 4 = 3)] {v : FinPlace (Quad
   · exact ⟨1, by simpa using neg_mem hc, -1, -1, by simp⟩
 
 /-- A `ℚ/ℤ`-valued character `χ` of `Gal(Ω/E)` and a natural number `D` form a quadratic step over
-`E` for the integer `n`. Here `symmetrise χ` is `g ↦ χ g + χ gᶜ`, with `gᶜ` the conjugate of `g` by
+`E` for the integer `n`. Here `symmetrize χ` is `g ↦ χ g + χ gᶜ`, with `gᶜ` the conjugate of `g` by
 complex conjugation, and `stepField χ`, the fixed field of its kernel, contains `ℚ(√-D)`. -/
 structure IsQuadraticStep (E : Type) [Field E] [EmbeddedNumberField E] [IsCMField E]
     [HasPrimitiveRoot5040 E] (n : ℕ) (χ : QZChar Gal(Ω/E)) (D : ℕ)
@@ -406,22 +406,22 @@ structure IsQuadraticStep (E : Type) [Field E] [EmbeddedNumberField E] [IsCMFiel
   /-- `stepField χ`, with the idele character of `χ`, is a step over `E`. -/
   isStep : IsStep (stepField χ) (ideleChar χ)
   /-- For some `m`, every subgroup that contains the inertia groups at the places prime to `n` of
-  norm at most `m` generates `Gal(Ω/E)` together with `ker (symmetrise χ) ⊓ ker χ`. -/
+  norm at most `m` generates `Gal(Ω/E)` together with `ker (symmetrize χ) ⊓ ker χ`. -/
   exists_mul_mem_of_inertiaAbove_subset : ∃ m : ℕ, ∀ H : Subgroup Gal(Ω/E),
     inertiaAbove {x : FinPlace E | ↑n ∉ x.asIdeal ∧ x.q ≤ m} ⊆ H →
-    ∀ g : Gal(Ω/E), ∃ h ∈ H, g * h ∈ ker (symmetrise χ) ⊓ ker χ
+    ∀ g : Gal(Ω/E), ∃ h ∈ H, g * h ∈ ker (symmetrize χ) ⊓ ker χ
   /-- The places of `stepField χ` over `n` lie over split places of `QuadField D` prime to `D`. -/
   isSplitPrimeToDisc_below : ∀ u : FinPlace (stepField χ), ↑n ∈ u.asIdeal →
     IsSplitPrimeToDisc (u.below (QuadField D))
   /-- At a place over `n`, the decomposition group fixes `stepField χ`. -/
   decompGroup_le_ker_symmetrise : ∀ {A : ClosurePlace} {w : FinPlace E}, IsPlaceOver A w →
-    ↑n ∈ w.asIdeal → decompGroup Gal(Ω/E) A ≤ ker (symmetrise χ)
+    ↑n ∈ w.asIdeal → decompGroup Gal(Ω/E) A ≤ ker (symmetrize χ)
   /-- At a place over `n`, the inertia group fixes `stepField χ`, and `χ` vanishes on it. -/
   inertiaGroup_le_ker_inf : ∀ {A : ClosurePlace} {w : FinPlace E}, IsPlaceOver A w →
-    ↑n ∈ w.asIdeal → inertiaGroup Gal(Ω/E) A ≤ ker (symmetrise χ) ⊓ ker χ
+    ↑n ∈ w.asIdeal → inertiaGroup Gal(Ω/E) A ≤ ker (symmetrize χ) ⊓ ker χ
   /-- At a split place over `n`, the same holds for the whole decomposition group. -/
   decompGroup_le_ker_inf_of_isSplit : ∀ {A : ClosurePlace} {w : FinPlace E}, IsPlaceOver A w →
-    ↑n ∈ w.asIdeal → w.IsSplit → decompGroup Gal(Ω/E) A ≤ ker (symmetrise χ) ⊓ ker χ
+    ↑n ∈ w.asIdeal → w.IsSplit → decompGroup Gal(Ω/E) A ≤ ker (symmetrize χ) ⊓ ker χ
 
 /-- For `E` a CM field containing a primitive 5040th root of unity (`HasPrimitiveRoot5040 E`) and
 `n ≠ 0`, there are a `ℚ/ℤ`-valued character `χ` of `Gal(Ω/E)` and `D ≡ 3 (mod 4)` forming a
@@ -458,21 +458,21 @@ lemma exists_isQuadraticStep (E : Type) [Field E] [EmbeddedNumberField E] [IsCMF
     simpa using hy.trans_ne (show algebraMap E Ω (-D : 𝓞 E) ≠ 0 by simp [NeZero.ne])
   have hb_ne : b ≠ 0 := right_ne_zero_of_mul (left_ne_zero_of_mul hy_ne)
   let χ : QZChar Gal(Ω/E) := sqrtChar hb hb_ne
-  have h_sym (g : Gal(Ω/E)) : (symmetrise χ).val g = 0 ↔ g y = y :=
+  have h_sym (g : Gal(Ω/E)) : (symmetrize χ).val g = 0 ↔ g y = y :=
     symmetrise_sqrtChar_apply_eq_zero_iff hb hb_conj hb_ne (by simp [hi, ht]) g
   have h_dec {A : ClosurePlace} {w : FinPlace E} (hA : IsPlaceOver A w)
-      (hw : 2 ∈ w.asIdeal ∨ ↑n ∈ w.asIdeal) : decompGroup Gal(Ω/E) A ≤ ker (symmetrise χ) :=
+      (hw : 2 ∈ w.asIdeal ∨ ↑n ∈ w.asIdeal) : decompGroup Gal(Ω/E) A ≤ ker (symmetrize χ) :=
     fun g hg ↦ (h_sym g).mpr <|
       apply_sqrt_eq_self_of_mem_pow hA (hk w) hg hy (u := 1) (by simpa [add_comm] using hD w hw)
   obtain ⟨h_local, -, h_unif⟩ :=
-    P.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformiser Gal(Ω/E)
+    P.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformizer Gal(Ω/E)
   obtain ⟨σ, hσ_inertia, hσ⟩ := h_local.exists_inertia_smul_eq_of_pow_eq
     (h_unif (π := .mk0 ((-D : 𝓞 E) : E) (by simp [NeZero.ne]))
-      (P.isPlaceOver_placeOver.isUniformiser_iff.mpr hP))
+      (P.isPlaceOver_placeOver.isUniformizer_iff.mpr hP))
     two_pos hy (neg_sq y)
-  have hσ_sym : (symmetrise χ).val σ ≠ 0 :=
+  have hσ_sym : (symmetrize χ).val σ ≠ 0 :=
     mt (h_sym σ).mp (hσ.trans_ne (by simpa [neg_eq_self] using hy_ne))
-  have h_sym_ne : symmetrise χ ≠ 0 := fun h_zero ↦ hσ_sym (by simp [h_zero])
+  have h_sym_ne : symmetrize χ ≠ 0 := fun h_zero ↦ hσ_sym (by simp [h_zero])
   obtain ⟨h_step, -⟩ := isStep_stepField χ prime_two (two_nsmul_sqrtChar hb hb_ne) h_sym_ne
     fun hA hw g hg ↦ h_dec hA (.inl hw) hg.1
   let y' : stepField χ := ⟨y, fun g ↦ (h_sym _).mp g.prop⟩

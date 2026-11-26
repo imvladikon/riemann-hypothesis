@@ -226,16 +226,16 @@ def cechFunctor (m : ℕ) : Arrow (C ⥤ Type 1) ⥤ C ⥤ Type 1 :=
   toArrowFunctor ⋙ (whiskeringRight C (Arrow (Type 1)) (Type 1)) (cech Arrow.leftToRight m)
 
 /-- For u: W → Y and p: E → Y, the fibre product of W and E over Y. -/
-def fibreProd : C ⥤ Type 1 :=
+def fiberProd : C ⥤ Type 1 :=
   CategoryTheory.Functor.mk (fun A ↦ {x : W A × E A // u A x.1 = p A x.2}) fun f ↦
     ↾fun x ↦ ⟨(W.map f x.val.1, E.map f x.val.2), by aesop⟩
 
 /-- The first projection from the fibre product of W and E over Y to W. -/
-def fibreProd.fst : fibreProd u p ⟶ W where
+def fiberProd.fst : fiberProd u p ⟶ W where
   app _ := ↾fun x ↦ x.val.1
 
 /-- The second projection from the fibre product of W and E over Y to E. -/
-def fibreProd.snd : fibreProd u p ⟶ E where
+def fiberProd.snd : fiberProd u p ⟶ E where
   app _ := ↾fun x ↦ x.val.2
 
 /-- The map h_A → Y corresponding to a point y of Y(A) by the Yoneda lemma. -/
@@ -479,7 +479,7 @@ def unitPoints : Subfunctor X :=
   Subfunctor.mk (fun _ ↦ {x | ∀ a ∈ I, IsUnit (baseRingMap s x a)}) (by simp_all [IsUnit.map])
 
 /-- For s: X → h_R and a ring map φ: R → B, the base change X_B = X ×_{h_R} h_B. -/
-abbrev baseChangeOf : CommRingCat ⥤ Type 1 := fibreProd s (reprMap φ)
+abbrev baseChangeOf : CommRingCat ⥤ Type 1 := fiberProd s (reprMap φ)
 
 end New.Variety
 

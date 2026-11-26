@@ -194,16 +194,10 @@ of `p` is `u = z - 1 - ε c v`. It is high: `|ε u + w_j v| ≤ t`. -/
 lemma abs_mainPair_weight_add_liftWeight_le {p : D.CriticalPair} {j : ℕ} (hp : p.IsMainPair j)
     (σ : D.E →+* ℂ) {u : ℤ} (hu : u = p.z - 1 - (cmSign σ : ℤ) * p.negWeight (InfinitePlace.mk σ)) :
     |cmSign σ * u + D.liftWeight j (InfinitePlace.mk σ)| ≤ D.t := by
-  obtain ⟨hz_gt : D.m < p.z, hz_le : p.z ≤ D.r⟩ := hp.z_mem
-  set v : D.Φ := InfinitePlace.mk σ
-  have hc_le : p.negWeight v ≤ D.liftWeight j v := hp.negWeight_le v
-  have hc_ge : D.liftWeight j v + D.r ≤ p.negWeight v + D.t := hp.le_negWeight v
-  have ht : D.t = 5 * D.r := rfl
+  have := And.intro hp.z_mem.1 (And.intro hp.z_mem.2 (rfl : D.t = 5 * D.r))
+  have := And.intro (hp.negWeight_le (InfinitePlace.mk σ)) (hp.le_negWeight (InfinitePlace.mk σ))
   rw [abs_le]
-  obtain hσ | hσ : (cmSign σ : ℤ) = 1 ∨ (cmSign σ : ℤ) = -1 := Int.isUnit_iff.1 (cmSign σ).isUnit
-  all_goals
-    rw [hσ] at hu ⊢
-    omega
+  rcases Int.isUnit_iff.1 (cmSign σ).isUnit with hσ | hσ <;> grind
 
 /-- Let `p` be a main pair for `j` (`IsMainPair`): an integer `z = p.z` and a character of `U(1)` of
 weight `-c`, `c = p.negWeight`, with in particular `m < z ≤ r` and `w_j + r - t ≤ c ≤ w_j`, where

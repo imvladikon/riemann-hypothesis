@@ -376,7 +376,7 @@ lemma exists_hasFewCocycles_torsion (hκ : Continuous κ)
   have hV : (M.torsion ℓ).FiniteKilledFixedInj ℓ O 1 0 :=
     ⟨inferInstance, fun a ↦ Subtype.ext a.2, trivialOn_ker_torsionAction, by simp [Injective]⟩
   -- Higman's criterion holds because the index of `O` is prime to `ℓ`.
-  obtain ⟨h_few, -⟩ := s'.card_trivialised_of_isHigmanProjective hV
+  obtain ⟨h_few, -⟩ := s'.card_trivialized_of_isHigmanProjective hV
     (hV.isHigmanProjective_of_coprime (coprime_index_ker_torsionAction h_card))
     fun y hy h_frob g ↦ by
       simp only [map_one, one_apply_eq_self, zero_smul, sub_zero]

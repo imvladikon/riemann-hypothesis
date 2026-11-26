@@ -382,15 +382,6 @@ lemma one_add_enorm_mulVec_le {p : Type*} [Fintype p] (A : Matrix ι p ℂ) (y :
   grw [eNorm_eq_nnNorm, linfty_opNNNorm_mulVec, mul_one_add, ENNReal.coe_mul]
   bound
 
-/-- The Weil operator of `u` as an integral: `realWeil u v` is `realMultiplier u` times
-`∫ v(y) realHeisenbergOp (u y) vacVector dy`. This is the definition of the Weil representation. -/
-private lemma realWeil_eq_integral (u : USign ε) (v : fockSpace ε) :
-    realWeil u v = realMultiplier u • ∫ y : ι → ℂ,
-      v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε)
-        ∂normalizedVolume ι := by
-  rw [realWeil, weilRep]
-  rfl
-
 /-- The Weil representation of `u` multiplies the `N`-th moment `fockMoment N v` = ∫ (1 + ‖y‖)ᴺ
 |v(y)| dy in [0, ∞] (sup norm ‖y‖, Lebesgue measure divided by π^|ι|) by at most
 `‖realMultiplier u‖` (the scalar factor of the Weil operator) times `(1 + ‖u‖)ᴺ` times the moment of
@@ -414,7 +405,9 @@ lemma fockMoment_realWeil_le (u : USign ε) :
   calc
     fockMoment N (realWeil u v) = ‖realMultiplier u‖ₑ * fockMoment N
         (∫ y, v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε)
-          ∂normalizedVolume ι) := by rw [realWeil_eq_integral, fockMoment_smul]
+          ∂normalizedVolume ι) := by
+      rw [realWeil, weilRep]
+      exact fockMoment_smul ..
     _ ≤ ‖realMultiplier u‖ₑ * ∫⁻ y, fockMoment N
         (v y • realHeisenbergOp ((u : Matrix ι ι ℂ) *ᵥ y) (vacVector : fockSpace ε))
           ∂normalizedVolume ι := by

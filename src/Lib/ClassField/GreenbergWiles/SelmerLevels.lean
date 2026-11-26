@@ -74,7 +74,7 @@ def IsTameGeneratorFor (A : ClosurePlace) (γ : G) : Prop :=
   ∃ (π : Kˣ) (y : DiscreteUnits Ω),
     -- `π` is a uniformiser, `y ^ m = π`, and `γ y / y` is the fixed primitive `m`-th root of
     -- unity, written additively
-    IsUniformiser A π.val ∧
+    IsUniformizer A π.val ∧
     m • y = ↑(DiscreteUnits.ofBase G Ω (Additive.ofMul π)) ∧
     unitsRep γ y - y = (rootPowHom Ω m).val 1
 
@@ -86,7 +86,7 @@ uniformiser `π` of `K` for `B` and some `m`-th root `y` of `π`, the quotient `
 primitive `m`-th root of unity `rootPowHom Ω m 1`. -/
 lemma exists_isTameGeneratorFor (h : IsPlaceOver B v) : ∃ γ : G, IsTameGeneratorFor m B γ := by
   -- Take a uniformiser `π` of `K` that stays one in the decomposition field, and `y ^ m = π`.
-  obtain ⟨π, hπ, hπ_local⟩ := h.exists_uniformiser G
+  obtain ⟨π, hπ, hπ_local⟩ := h.exists_uniformizer G
   obtain ⟨y, hy⟩ := (DiscreteUnits.ofBase G Ω (.ofMul π)).val.exists_nsmul (n := m) out
   let ζ : DiscreteUnits Ω := (rootPowHom Ω m).val 1
   have hy_pow : (y.toMul : Ω) ^ m = algebraMap K Ω π := congrArg (·.toMul.val) hy
@@ -94,11 +94,11 @@ lemma exists_isTameGeneratorFor (h : IsPlaceOver B v) : ∃ γ : G, IsTameGenera
   -- is transitive on these roots.
   have same_pow : ((ζ + y).toMul : Ω) ^ m = (y.toMul : Ω) ^ m :=
     mod_cast by simp [ζ, mul_pow, (isPrimitiveRoot_rootPowHom_one ..).pow_eq_one]
-  obtain ⟨h_galois, -, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformiser G
+  obtain ⟨h_galois, -, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformizer G
   -- so some `γ` in inertia carries `y` to `ζ * y`
   obtain ⟨γ, hγ, hγy⟩ := h_galois.exists_inertia_smul_eq_of_pow_eq hπ_local (pos m) hy_pow same_pow
   have h_act : unitsRep (γ : G) y = ζ + y := Additive.toMul.injective (Units.ext hγy)
-  exact ⟨γ, hγ, π, y, h.isUniformiser_iff.2 hπ, hy, by rw [h_act, add_sub_cancel_right]⟩
+  exact ⟨γ, hγ, π, y, h.isUniformizer_iff.2 hπ, hy, by rw [h_act, add_sub_cancel_right]⟩
 
 /-- The places of Ω above N and infinity: valuation subrings in which N has valuation below 1,
 together with the infinite places. -/
@@ -193,7 +193,7 @@ theorem finite_cocycles_unramified_outside (V : DiscreteModule R G) [Finite V]
   -- The decomposition group at each `w ∈ T` has finitely many continuous cocycles.
   have h_local (w : T) :
       Finite (Z1 ((V.restrictTo U).restrictTo (decompGroup U (placeOver w.val))).ρ) :=
-    (w.val.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformiser U).1.finite_Z1 _
+    (w.val.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformizer U).1.finite_Z1 _
   -- `res` maps the unramified cocycles into a finite set, and is injective on them.
   refine (finite_univ.prod (.pi' h_local)).of_injOn (f := res) ?_ ?_
   · exact fun z ⟨⟨hz_cont, hz_mul⟩, _⟩ ↦

@@ -156,10 +156,10 @@ omit [Fintype ι] in
 If `a = b`, or `a` has the sign of `b` and lies further out than `b` in the direction `s`, then the
 polarisation `∑ X (a, c) * ∂P/∂X (b, c)`, over the columns `c` where the variable `(b, c)` has sign
 `s`, is `P` times the number of `(t, i)` with `ρ t i = a = b` and `T.varSign (b, κ t i) = s`. -/
-theorem IsLayering.polarisation_prod_det (H : IsLayering T l ν ρ κ) {P : MvPolynomial ι ℂ}
+theorem IsLayering.polarization_prod_det (H : IsLayering T l ν ρ κ) {P : MvPolynomial ι ℂ}
     (hP : P = ∏ t : L, det (of fun i j : I t ↦ X (T.varEquiv (ρ t i, κ t j)))ᵀ)
     (a b : R) (s : ℤˣ) (hε : ε a = ε b) (hab : a = b ∨ s * l b < s * l a) :
-    T.polarisation P a b s =
+    T.polarization P a b s =
       (∑ t : L, ∑ i : I t,
         if ρ t i = b ∧ ρ t i = a ∧ T.varSign (b, κ t i) = s then 1 else 0) * P := by
   classical
@@ -181,7 +181,7 @@ theorem IsLayering.polarisation_prod_det (H : IsLayering T l ν ρ κ) {P : MvPo
           ha (H.closed t i a (by rw [hb, hε]) (by simpa [hb, hs, pairSign, mul_sub] using h_out))
       simp +contextual [D, pairSign, Pi.single_apply, ite_and, not_exists.1 ha, h_col_sign,
         h_wrong_sign]
-  simpa [D, hP, FockDualPair.polarisation, -sum_boole] using
+  simpa [D, hP, FockDualPair.polarization, -sum_boole] using
     derivation_prod_det D _ (fun t : L ↦ (of fun i j : I t ↦ X (T.varEquiv (ρ t i, κ t j)))ᵀ) hD
 
 variable [Fintype R]
@@ -199,9 +199,9 @@ theorem IsLayering.isKHighest_and_isTermwiseHarmonic (H : IsLayering T l ν ρ �
     (hP : P = ∏ t : L, det (of fun i j : I t ↦ X (T.varEquiv (ρ t i, κ t j)))ᵀ) :
     l.IsKHighest T.oscRows ν P ∧ T.swap.IsTermwiseHarmonic P := by
   classical
-  -- By `oscRows_E_eq_polarisation_sub` the compact matrix unit `E a b` is the polarisation for
+  -- By `oscRows_E_eq_polarization_sub` the compact matrix unit `E a b` is the polarisation for
   -- `a, b, 1` minus the one for `b, a, -1`, plus the weight of the vacuum if `a = b`. Both
-  -- polarisations act on `P` by scalars (`IsLayering.polarisation_prod_det`).
+  -- polarisations act on `P` by scalars (`IsLayering.polarization_prod_det`).
   refine ⟨⟨fun a ↦ ?_, fun a b hε hl ↦ ?_⟩, fun a b c hε ↦ ?_⟩
   · -- weight: the two counts differ by the sum of signs in `H.weight_eq`
     have h_sign (t : L) (i : I t) :
@@ -211,15 +211,15 @@ theorem IsLayering.isKHighest_and_isTermwiseHarmonic (H : IsLayering T l ν ρ �
           MvPolynomial.C (if ρ t i = a then ((T.varSign (a, κ t i)).val : ℂ) else 0) := by
       split_ifs <;> simp_all [Int.units_ne_iff_eq_neg]
     -- so the difference of the two counts is the sum of the signs
-    rw [oscRows_E_eq_polarisation_sub rfl, H.polarisation_prod_det hP a a 1 rfl (.inl rfl),
-      H.polarisation_prod_det hP a a (-1) rfl (.inl rfl), ← sub_mul]
+    rw [oscRows_E_eq_polarization_sub rfl, H.polarization_prod_det hP a a 1 rfl (.inl rfl),
+      H.polarization_prod_det hP a a (-1) rfl (.inl rfl), ← sub_mul]
     simp [← sum_sub_distrib, sum_filter, h_sign, ite_and, -sum_boole, H.weight_eq, ← C_mul',
       ← add_mul, add_comm]
   · -- raising operators: `a ≠ b`, so both counts vanish
     have hne : a ≠ b := fun h ↦ hl.ne (by rw [h])
-    simp +contextual [oscRows_E_eq_polarisation_sub hε, hne, hne.symm, ite_and,
-      H.polarisation_prod_det hP a b 1 hε (.inr (by simpa using hl)),
-      H.polarisation_prod_det hP b a (-1) hε.symm (.inr (by simpa using hl))]
+    simp +contextual [oscRows_E_eq_polarization_sub hε, hne, hne.symm, ite_and,
+      H.polarization_prod_det hP a b 1 hε (.inr (by simpa using hl)),
+      H.polarization_prod_det hP b a (-1) hε.symm (.inr (by simpa using hl))]
   · have h_absent (x : R × C) (hx : ∀ (t : L) (i j : I t), (ρ t i, κ t j) ≠ x) :
         pderiv (T.varEquiv x) P = 0 := by
       simp [hP, hx, derivation_prod_det _ 0]
@@ -478,9 +478,9 @@ theorem New.Fischer.fockLaplacian_eq_zero_of_pderiv_eq_zero {Q : MvPolynomial ι
 /-- For matched parameters (each row is matched with a column or has a small centred parameter) and
 `l b ≤ l a`, the centred parameter `l b - 2γ + card C` of row `b` is below `card R - card C` or that
 of row `a` is above `card C - card R`. -/
-theorem New.IsMatch.centredParam_lt_or_lt (hm : IsMatch T l l') {a b : R} (h_le : l b ≤ l a) :
-    (Fintype.card C - Fintype.card R : ℤ) < -T.centredParam l b ∨
-      (Fintype.card C - Fintype.card R : ℤ) < T.centredParam l a := by
+theorem New.IsMatch.centeredParam_lt_or_lt (hm : IsMatch T l l') {a b : R} (h_le : l b ≤ l a) :
+    (Fintype.card C - Fintype.card R : ℤ) < -T.centeredParam l b ∨
+      (Fintype.card C - Fintype.card R : ℤ) < T.centeredParam l a := by
   have h_abs := neg_le_abs (Fintype.card R - Fintype.card C : ℤ)
   obtain ⟨c, -, h_large⟩ | h_free := hm.left a
   · -- Row `a` is matched: its centred parameter, times the sign of the variable, is large.
@@ -506,13 +506,13 @@ omit [Fintype ι] in
 columns (each `T.swap.fockLaplacian c d` with `ε' c ≠ ε' d` kills `Q`). If `s` times the centred
 parameter `l r - 2γ + card C` of row `r` exceeds `card C - card R`, then `Q` has no variable of sign
 `-s` in that row. -/
-theorem New.IsMatch.pderiv_eq_zero_of_lt_centredParam [DecidableEq C] [DecidableEq R]
+theorem New.IsMatch.pderiv_eq_zero_of_lt_centeredParam [DecidableEq C] [DecidableEq R]
     (hm : IsMatch T l l') {Q : MvPolynomial ι ℂ}
     (h_highest : l.IsKHighest T.oscRows l.lowestKType Q) (h_harm : T.swap.IsLaplaceHarmonic Q)
-    (r : R) (s : ℤˣ) (hr : Fintype.card C - Fintype.card R < (s : ℤ) * T.centredParam l r)
+    (r : R) (s : ℤˣ) (hr : Fintype.card C - Fintype.card R < (s : ℤ) * T.centeredParam l r)
     (c : C) (hc : T.varSign (r, c) = -s) : pderiv (T.varEquiv (r, c)) Q = 0 := by
   obtain ⟨h_weight, h_row⟩ := h_highest
-  exact (polarisation_self_eq_smul_of_isCompactPrimitive hm.hasGap_row.injective h_row h_harm
+  exact (polarization_self_eq_smul_of_isCompactPrimitive hm.hasGap_row.injective h_row h_harm
     (h_weight r) (hm.sign_mul_relWeight_nonneg r s hr)).2 c hc
 
 /-- Howe's argument: a column-stable subspace that contains a joint harmonic and the images (a)–(c)
@@ -576,8 +576,8 @@ theorem New.IsJointHarmonic.howe_argument [DecidableEq C] [DecidableEq R] {Φ : 
       -- one sign only.
       have h_le : l b ≤ l a := by simpa [add_assoc] using h_cone (-l) (by simp)
       refine fockLaplacian_eq_zero_of_pderiv_eq_zero hab ?_
-      have h_pure := hΦ.pderiv_eq_zero_of_lt_centredParam h_highest h_harm_col
-      rcases hΦ.centredParam_lt_or_lt h_le with h_small | h_large
+      have h_pure := hΦ.pderiv_eq_zero_of_lt_centeredParam h_highest h_harm_col
+      rcases hΦ.centeredParam_lt_or_lt h_le with h_small | h_large
       · exact .inl fun c hc ↦ h_pure b (-1) (by simpa using h_small) c (by simpa using hc)
       · exact .inr (h_pure a 1 (by simpa using h_large))
     · -- Off the cone `h_off_cone` lets Fischer's decomposition apply again.
@@ -680,19 +680,19 @@ theorem integratedRep_integratedRep_eq_self (hp : OscillatorPair T π π') [None
     (integratedRep π l.dsKernel).toLinearMap ∘ₗ polyVector η
   have h_casimir : proj (T.oscRows.casimirK 1 Φ) = (l.casimirValue : ℂ) • proj Φ :=
     integratedRep_dsKernel_casimir (hΦ.hasLargeGap le_rfl) hp.unitary_rep hp.derives
-  have h_first : proj (T.oscRows.centredCasimir T.centre Φ) =
-      (∑ r, (l r / 2 - T.centre) ^ 2 - card R * (card R ^ 2 - 1) / 12 : ℂ) • proj Φ := by
-    rw [centredCasimir_apply _ _ h_weight, map_add, map_sub, map_smul, map_smul, h_casimir,
-      ← hΦ.hasGap_row.casimirValue_sub_centre, add_smul, sub_smul]
-  have h_second : proj (T.swap.oscRows.centredCasimir T.swap.centre Φ) =
-      (∑ c, (l' c / 2 - T.swap.centre) ^ 2 - card C * (card C ^ 2 - 1) / 12 : ℂ) • proj Φ := by
-    rw [T.centredCasimir_swap_oscRows_eq_add, LinearMap.add_apply, map_add, h_first,
+  have h_first : proj (T.oscRows.centeredCasimir T.center Φ) =
+      (∑ r, (l r / 2 - T.center) ^ 2 - card R * (card R ^ 2 - 1) / 12 : ℂ) • proj Φ := by
+    rw [centeredCasimir_apply _ _ h_weight, map_add, map_sub, map_smul, map_smul, h_casimir,
+      ← hΦ.hasGap_row.casimirValue_sub_center, add_smul, sub_smul]
+  have h_second : proj (T.swap.oscRows.centeredCasimir T.swap.center Φ) =
+      (∑ c, (l' c / 2 - T.swap.center) ^ 2 - card C * (card C ^ 2 - 1) / 12 : ℂ) • proj Φ := by
+    rw [T.centeredCasimir_swap_oscRows_eq_add, LinearMap.add_apply, map_add, h_first,
       LinearMap.smul_apply, one_apply_eq_self, map_smul, ← add_smul,
-      hΦ.centred_casimirValue_eq]
+      hΦ.centered_casimirValue_eq]
   -- Restore the centre of the second group.
   have h_casimir' : proj (T.swap.oscRows.casimirK 1 Φ) = (l'.casimirValue : ℂ) • proj Φ := by
-    rw [centredCasimir_apply _ _ highest'.1, map_add, map_sub, map_smul, map_smul,
-      ← hΦ.hasGap_column.casimirValue_sub_centre, add_smul, sub_smul] at h_second
+    rw [centeredCasimir_apply _ _ highest'.1, map_add, map_sub, map_smul, map_smul,
+      ← hΦ.hasGap_column.casimirValue_sub_center, add_smul, sub_smul] at h_second
     exact sub_left_injective (add_right_cancel h_second)
   exact integratedRep_fix_of_isKHighest (ι := proj) (hΦ.swap.hasLargeGap le_rfl)
     hp.column_rep.unitary_rep (hp.isDerivedAction_integratedRep hΦ) hf highest' h_casimir' le_rfl

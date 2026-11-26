@@ -262,9 +262,11 @@ theorem hodgeTateMap_galois_twist
   calc
     _ = TotalH.comp α
         (TotalH.comp (TotalH.map (restrictAlong (galTwist g)) (restrictToPairs ξ)) β) := by
-      -- `erw`: after unfolding `restrictToPairs`, the classes live over `(restrictAlong F).obj G`
-      -- on one side and `F ⋙ G` on the other, which agree only up to unfolding
-      erw [map_of, of_comp_homClass, pullbackAlong_of]
+      -- The classes live over `(restrictAlong F).obj G` on one side and `F ⋙ G` on the other,
+      -- which agree only up to unfolding, so `M` is given and the lemmas are applied by unification
+      refine .trans ?_ ((pullbackAlong_of _).symm.trans (congrArg _
+        ((of_comp_homClass (M := (restrictAlong (galTwist g)).obj _) _).symm.trans
+          (congrArg (TotalH.comp · β) (map_of ..).symm))))
       simp [restrictToPairs, Comparison.pull, H.map, H.push, mapExactFunctor_mapExactFunctor,
         mapExtAddHom, Abelian.Ext.mapExactFunctor_comp, Abelian.Ext.mapExactFunctor_mk₀]
       congr 3 with : 2

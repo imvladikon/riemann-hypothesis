@@ -433,7 +433,8 @@ lemma mul_defectWeight_eq_indexWeight_mul (ha : (a : ℕ) + 1 = (a' : ℕ)) (i :
   -- Both sides vanish outside the rows `a`, `a'`. One of the variables `(a, s)`, `(a', s)` is deep
   -- and the other is not, which gives the two exponents in `defectWeight`.
   obtain rfl | rfl | ⟨hb, hb'⟩ : b = a ∨ b = a' ∨ (b ≠ a ∧ b ≠ a') := by tauto
-  all_goals by_cases h_even : T.isEven s <;> simp [rootVar, rootVector, deepIndicator, hlt.ne, hlt.ne', hlt.not_ge, *]
+  all_goals by_cases h_even : T.isEven s <;>
+    simp [rootVar, rootVector, deepIndicator, hlt.ne, hlt.ne', hlt.not_ge, *]
 
 /-- A polynomial has level `t` in the Gauss filtration over the `w`-adic filtration if and only if
 its coefficient at each monomial `μ` is divisible by `w ^ ⌈t - weight ω μ⌉₊`. -/

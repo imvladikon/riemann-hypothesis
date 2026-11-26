@@ -203,7 +203,7 @@ lemma exists_isTensorClass [HasFlatValues N] [HasFlatValues K] (ξ : H N K 2) :
   · intro D instD φ S instS
     -- exact functors respect Yoneda products, extension classes and `mk₀`; then both sides are the
     -- same class, written with `abTensor.flip` or `abTensor`
-    let Φ := restrictAlong φ ⋙ abTensor.obj S
+    let Φ : AbFunctor C ⥤ AbFunctor D := restrictAlong φ ⋙ abTensor.obj S
     simp only [TotalH.map_map]
     let α : H N N₁ 1 := h_exact.extClass
     let β : H N₁ (kerComplex g₁).X₁ 1 := h_exact₁.extClass
@@ -275,7 +275,11 @@ lemma surjective_restrict_of_quotient_sieve {A : C'} {R : Subfunctor (reprBy A)}
   have hv_equiv : IsCohomEquiv (φ ⋙ F) (freeAb.map v) := by
     -- `v` sends `g : b ⟶ φ.obj d` to `f` exactly when `q ≫ g = φ.map f`
     exact .of_bijective fun d ↦ (bijective_iff_existsUnique _).mpr fun f ↦
-      (Equiv.ulift.existsUnique_congr fun g ↦ by aesop).mpr (h_factor _ f.property)
+      (Equiv.ulift.existsUnique_congr fun g ↦ by
+        refine ⟨fun h ↦ ?_, fun h ↦ Subtype.ext (congrArg ULift.up ?_)⟩
+        · subst h
+          exact (φ.map_preimage _).symm
+        · exact (congrArg φ.preimage h).trans (φ.preimage_map _)).mpr (h_factor _ f.property)
   -- it suffices to be onto after pulling back along `v`
   refine (Surjective.of_comp_iff' (hv_equiv n) _).mp ?_
   cases n with
@@ -467,8 +471,9 @@ lemma bijective_totalH_iff_isBijective {α : N' ⟶ c.functor ⋙ N} :
     calc
       TotalH.comp (.homClass α)
         (TotalH.comp (TotalH.map (restrictAlong c.functor) (.of _ n x)) (.homClass c.coeffHom))
-      _ = TotalH.comp (.homClass α)
-          (.of _ n (H.push _ c.coeffHom n (x.mapExactFunctor (restrictAlong c.functor)))) := by
+      _ = TotalH.comp (.homClass α) (.of _ n (H.push _ c.coeffHom n
+            (x.mapExactFunctor (C := AbFunctor C) (D := AbFunctor C')
+              (restrictAlong c.functor)))) := by
         rw [TotalH.map_of, of_comp_homClass]
         rfl
       _ = .of _ n (c.pull α n x) := pullbackAlong_of ..
@@ -609,13 +614,19 @@ def IdealFamily.whisker (φ : C' ⥤ C) : IdealFamily (φ ⋙ ι) where
 non-empty exactly at the objects c with I_c = 0. -/
 def IdealFamily.botLocus : Subfunctor (onePointFunctor C) where
   obj c := {_x : (onePointFunctor C).obj c | I.ideal c = ⊥}
-  map f := by simp_all [← I.map_eq f]
+  map f := by
+    intro x hx
+    change I.ideal _ = ⊥ at hx ⊢
+    rw [← I.map_eq f, hx, Ideal.map_bot]
 
 /-- For a compatible family of ideals I, the subfunctor of the one-point functor that is
 non-empty exactly at the objects c where I_c is the unit ideal. -/
 def IdealFamily.topLocus : Subfunctor (onePointFunctor C) where
   obj c := {_x : (onePointFunctor C).obj c | I.ideal c = ⊤}
-  map f := by grind [I.map_eq f, Ideal.map_top]
+  map f := by
+    intro x hx
+    change I.ideal _ = ⊤ at hx ⊢
+    rw [← I.map_eq f, hx, Ideal.map_top]
 
 /-- Let `I` be a compatible family of ideals of the rings `ι c`, for `ι` a functor on the category
 `C`. Off the closed locus of `I c` the family becomes the unit ideal: if `m` does not contain
@@ -693,8 +704,8 @@ lemma TestOver.exists_quotient (B : TestOver A) (I : Ideal ((ringOf (𝟭 (TestO
   let D : TestOver A :=
     ⟨CommAlgCat.of A (B.obj ⧸ radical J), B.property.quotient J.radical_isRadical⟩
   let π : B ⟶ D := ⟨ofHom (Quotient.mkₐ ..)⟩
-  refine ⟨D, π, mk_ker (I := J.radical), Ideal.Quotient.mk_surjective (I := J.radical), fun E f hf ↦ ?_,
-    map_mk_eq_bot_of_le (I := J) (J := J.radical) le_radical⟩
+  refine ⟨D, π, mk_ker (I := J.radical), Ideal.Quotient.mk_surjective (I := J.radical),
+    fun E f hf ↦ ?_, map_mk_eq_bot_of_le (I := J) (J := J.radical) le_radical⟩
   -- a map to a reduced ring that kills `I` kills its radical, so it factors through `π`
   have h_kill : I.map ((ringOf (𝟭 (TestOver A))).map f).hom = ⊥ := hf
   have h_reduced : (⊥ : Ideal ((ringOf (𝟭 (TestOver A))).obj E)).IsRadical :=
@@ -753,8 +764,8 @@ def Theory.locallyConstant : Theory (𝟭 (TestOver A)) where
     -- The maps that kill `I` are those through the quotient `π` by the radical of `I`, and locally
     -- constant functions lift along `π`.
     obtain ⟨D, π, -, h_surj, h_univ, h_kill⟩ := B.exists_quotient I
-    refine surjective_restrict_of_quotient_sieve (F := locConstAlong (𝟭 _)) (𝟭 _) π @h_univ ?_
-      (IsCohomEquiv.of_isIso _).bij ?_
+    refine surjective_restrict_of_quotient_sieve (F := TestOver.toTest A ⋙ locConstCoeff ⟨ZMod ℓ⟩)
+      (𝟭 _) π @h_univ ?_ (IsCohomEquiv.of_isIso _).bij ?_
     · rintro E _ k (rfl : π ≫ k = _)
       exact (killingMaps ..).map k h_kill
     · exact ULift.map_surjective.2 (comapAddMonoidHom_surjective_of_isComparableRing _
@@ -808,7 +819,7 @@ protected def TorsionCoeff.onElements : TorsionCoeff (elementsProj X ⋙ g) wher
 C, along the projection to C. -/
 def Theory.onElements : Theory (elementsProj X ⋙ g) :=
   ⟨TorsionCoeff.onElements Θ.toTorsionCoeff,
-    fun a I n ↦
+    fun a I n ↦ show Surjective (H.map (elementsProj X ⋙ Θ.functor) _ n) from
       (((hasUniversalPoints_reprBy_elements a).isBijective_subfunctor
           (killingMaps (ringOf g) I) n).2.comp
         (Θ.restrict_surjective ((Variety.elementsProj X).obj a) I n)).forall.mpr
@@ -860,7 +871,9 @@ lemma Theory.isCohomDense_botLocus : IsCohomDense (I.zerosCoeff Θ.functor) I.bo
           (homReprEquiv c (I.zerosCoeff Θ.functor)).symm z = u :=
         (homReprEquiv c (I.zerosCoeff Θ.functor)).symm.surjective u
       obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective z
-      simp only [H.map, bilinearComp_apply_apply, mk₀_comp_mk₀, mk₀_eq_zero_iff] at hx ⊢
+      have h_zero {M' Z : AbFunctor C} (v : M' ⟶ Z) : (mk₀ v : H M' Z 0) = 0 ↔ v = 0 :=
+        mk₀_eq_zero_iff v
+      simp only [H.map, bilinearComp_apply_apply, mk₀_comp_mk₀, h_zero] at hx ⊢
       -- `x` dies in `I.zerosCoeff Θ.functor` where `I` is zero, and there `I.zerosCoeff Θ.functor`
       -- is `Θ.functor`
       apply (homReprEquiv c (I.zerosCoeff Θ.functor)).injective
@@ -1063,7 +1076,8 @@ lemma TorsionCoeff.pullbackAlong_oneLocConst_surjective :
   let q := relFreeAb.π (I.whisker g).topLocus
   let r := abCoker.π (ℓ • 𝟙 (relFreeAb (I.whisker g).topLocus))
   let s := g.whiskerLeft I.constToZeros
-  refine (pullbackAlong_pullbackAlong (f := oneLocConst) (g.whiskerLeft (I.toZerosCoeff _)) y).trans ?_
+  refine (pullbackAlong_pullbackAlong (f := oneLocConst)
+      (g.whiskerLeft (I.toZerosCoeff _)) y).trans ?_
   exact ((pullbackAlong_pullbackAlong (f := q) r (pullbackAlong s y)).trans
     (pullbackAlong_pullbackAlong (f := q ≫ r) s y)).symm
 

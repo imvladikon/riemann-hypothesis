@@ -148,7 +148,7 @@ of unity with `ζ ≡ 1` at `placeOver v`, and `η` a unit there with `((ζ - 1)
 of `x` is `ξ g` exactly when `k` is the cyclotomic character modulo `q` of `g`. -/
 lemma abelianLift_artinAt_eq_toHom_iff_of_tame {ξ : QZChar Gal(Ω/ℚ)} {v : FinPlace ℚ}
     [Fact v.q.Prime] (hξ : ker ξ = cycloGalGroup v.q) (hq : 2 < v.q)
-    (h_unif : IsUniformiser (placeOver v) (v.q : ℚ)) {ζ η : Ω} (hζ : IsPrimitiveRoot ζ v.q)
+    (h_unif : IsUniformizer (placeOver v) (v.q : ℚ)) {ζ η : Ω} (hζ : IsPrimitiveRoot ζ v.q)
     (hζ_cong : (placeOver v).valuation (ζ - 1) < 1) (hη_unit : (placeOver v).valuation η = 1)
     (h_root : ((ζ - 1) * η) ^ (v.q - 1) = algebraMap ℚ Ω v.q) (k : ℤ) (g : Gal(Ω/ℚ)) (x : ℚˣ)
     (hu : v.valuation ℚ x = 1) (hx : x.val = k) :
@@ -221,7 +221,7 @@ lemma artin_reciprocity_cyclotomic {q : ℕ} [P : Fact q.Prime] (hq : Fact (2 < 
   -- From here on `q` is `v.q`. At a place `A` over `v` one has `(ζ - 1) ^ (q - 1) * ε = q` with a
   -- unit `ε`. For a `(q - 1)`-th root `η` of `ε`, `(ζ - 1) * η` is a `(q - 1)`-th root of `q`.
   let A : ClosurePlace := placeOver v
-  have h_unif : IsUniformiser A (v.q : ℚ) := (h_over v).isUniformiser_iff.mpr hq_val
+  have h_unif : IsUniformizer A (v.q : ℚ) := (h_over v).isUniformizer_iff.mpr hq_val
   have h_pos : 0 < v.q - 1 := tsub_pos_of_lt P.out.one_lt
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ v.q := HasEnoughRootsOfUnity.prim
   obtain ⟨ε, hε⟩ : ∃ ε : Aˣ, (ζ - 1) ^ (v.q - 1) * ε = v.q := by
@@ -406,7 +406,7 @@ lemma resH2_ker_cyclicClass_eq_zero {ξ χ : QZChar Γ} {x : Kˣ} (U : OpenSubgr
   have h_cls :
       (unitsModule (decompGroup Γ A)).resH2 V
         (classOfInvariant _ (fixedFieldOf (K := K) (decompGroup Γ A)) A (s v).toAdd) = 0 :=
-    (hv.isLocalGalois_and_residueCard_eq_and_isUniformiser Γ).left.resH2_classOfInvariant_eq_zero V
+    (hv.isLocalGalois_and_residueCard_eq_and_isUniformizer Γ).left.resH2_classOfInvariant_eq_zero V
       hr
   -- The restricted class lives in `restrictTo` of the module, which is
   -- `unitsModule (decompGroup Γ A)` only after unfolding, so `map_neg` is used as an equation.
@@ -433,7 +433,7 @@ lemma abelianLift_artinAt_eq_of_cyclicClass_eq {ξ χ : QZChar Γ} {x y : Kˣ}
           (cyclicClass (unitsModule Γ).ρ ψ (DiscreteUnits.ofBase Γ Ω (.ofMul z))) :=
     v.isPlaceOver_placeOver.abelianLift_artinAt_principal (Γ := Γ) ψ z
   apply Multiplicative.toAdd.injective
-  apply (v.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformiser
+  apply (v.isPlaceOver_placeOver.isLocalGalois_and_residueCard_eq_and_isUniformizer
     Γ).left.isClassOfInvariant_classOfInvariant.left
   rw [h_inv, h_inv, h_eq]
 

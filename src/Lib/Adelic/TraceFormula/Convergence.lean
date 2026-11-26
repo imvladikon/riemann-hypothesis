@@ -394,7 +394,7 @@ theorem exists_norm_partialKernel_spanStabilizer_le {B : ℕ} {k : GInf E s → 
     (hB : 13 * card n ^ 3 ≤ B) (φ : TestFunction (Gf E n)) (he : IsCuspKernel B k)
     {J : Subgroup (Gf E n)} [hJ : IsLevel J]
     (h_level : ∀ u ∈ J, ∀ y : Gf E n, (φ : Gf E n → ℂ) (u⁻¹ * y) = (φ : Gf E n → ℂ) y) :
-    ∃ C : ℝ, ∀ (x : G E s), ∀ δ ≥ (0 : ℝ), ∀ A : (V.move x).CuspFrame δ,
+    ∃ C : ℝ, ∀ (x : G E s) (δ : ℝ) (A : (V.move x).CuspFrame δ),
       (V.move x).RadicalCovered A.isotropicCols δ J → ∀ S : Set E[X],
       ‖V.partialKernel k φ {γ : U V.J | γ ∈ spanStabilizer V.J A.isotropicCols ∧
           ((γ : GL n E) : Matrix n n E).charpoly ∈ S} x x‖ ≤
@@ -405,7 +405,7 @@ theorem exists_norm_partialKernel_spanStabilizer_le {B : ℕ} {k : GInf E s → 
   -- In a cusp of size `δ`, a bounded continuous function of level `J` that is fixed by `k` and
   -- invariant under the rational radical is at most `(δ / δ₀) ^ (card n * d)` times its bound.
   obtain ⟨δ₀, hδ₀, h_decay⟩ := exists_norm_le_of_radicalCovered (s := s) he (card n * d)
-  refine ⟨C / δ₀ ^ (card n * d), fun x δ hδ A h_cover S ↦ ?_⟩
+  refine ⟨C / δ₀ ^ (card n * d), fun x δ A h_cover S ↦ ?_⟩
   set Z : Set (U V.J) :=
     {γ | γ ∈ spanStabilizer V.J A.isotropicCols ∧ ((γ : GL n E) : Matrix n n E).charpoly ∈ S}
   have hk : Measurable k := he.continuous.measurable
@@ -431,7 +431,7 @@ theorem exists_norm_partialKernel_spanStabilizer_le {B : ℕ} {k : GInf E s → 
     exact continuous_realConv ⟨J, hJ.isOpen⟩ ⟨hF_meas.stronglyMeasurable, _, hF_bound⟩ hF_level
       he.integrable
   calc ‖F x‖ ≤ (δ / δ₀) ^ (card n * d) * (C * V.height x ^ d) :=
-        h_decay J V x δ A.isotropicCols hδ A.ne_zero A.isotropic h_cover F _ hF_cont hF_bound hF_fix
+        h_decay J V x δ A.isotropicCols A.ne_zero A.isotropic h_cover F _ hF_cont hF_bound hF_fix
           hF_level
           fun ν hν g ↦ V.partialKernel_ratEmbed_mul φ (h_keeps ν hν) g x
     _ = C / δ₀ ^ (card n * d) * (δ ^ card n * V.height x) ^ d := by ring
@@ -472,7 +472,7 @@ theorem exists_norm_tsum_polyTerm_le {B : ℕ} {k : GInf E s → ℂ} (hB : 13 *
     simp only [partialKernel, ← (V.summable_kernelTerm hB φ he.decay _ x x).tsum_add
       (V.summable_kernelTerm hB φ he.decay _ x x)]
     exact tsum_congr fun γ ↦ by by_cases hγ : γ ∈ stab <;> simp [kernelTerm, Set.indicator, hγ]]
-  exact le_max_of_le_right <| norm_add_le_of_le (h_keeps x δ hδ.le A h_cover S)
+  exact le_max_of_le_right <| norm_add_le_of_le (h_keeps x δ A h_cover S)
     (norm_tsum_le_of_tsum_enorm_le (by positivity) (h_moves x δ hδ.le A _ fun _ hγ ↦ hγ.2))
 
 end Space

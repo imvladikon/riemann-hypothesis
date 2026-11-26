@@ -168,28 +168,28 @@ noncomputable def toGenericPoints [Algebra R OC]
 /-- Let `Ω` be a field in which `ℓ` is invertible and `D` a compared theory on tests over `Ω`
 (`New.Variety.ComparedTheory`). Then `D.IsFiniteLerayHirsch` (the classes `D.comparison` form a
 Leray–Hirsch basis and the total cohomology is finite) holds for `ℤ[X] = freeAb X` iff it holds for
-`ℤ[X] / ℤ[U]` (`relFreeAb`), where `U = offClosedFibre X` is the part of `X` away from the special
+`ℤ[X] / ℤ[U]` (`relFreeAb`), where `U = offClosedFiber X` is the part of `X` away from the special
 fibre. Over a field `U` does not count: the maximal ideal of `Ω` is zero, so `U` has points only
 over the zero ring. -/
 lemma ComparedTheory.isFiniteLerayHirsch_freeAb_iff_relFreeAb {ℓ : ℕ} {Ω : Type} {C : Type 1}
     [Field Ω] [InvertsPrime Ω ℓ]
     [Category.{0, 1} C] {g : C ⥤ TestOver Ω} (D : ComparedTheory g) {X : TestOver Ω ⥤ Type 1} :
-    D.IsFiniteLerayHirsch (freeAb X) ↔ D.IsFiniteLerayHirsch (relFreeAb (offClosedFibre X)) := by
+    D.IsFiniteLerayHirsch (freeAb X) ↔ D.IsFiniteLerayHirsch (relFreeAb (offClosedFiber X)) := by
   -- `D.IsFiniteLerayHirsch` is a closed class: it holds at zero objects, and along a short exact
   -- sequence it passes between the middle and the quotient when it holds for the subobject
   obtain ⟨h_zero, h_ses⟩ := D.isClosedClass_isFiniteLerayHirsch
-  -- The maximal ideal of `Ω` is zero, so `offClosedFibre X` has points only over the zero ring and
+  -- The maximal ideal of `Ω` is zero, so `offClosedFiber X` has points only over the zero ring and
   -- does not count.
-  have h_sub : D.IsFiniteLerayHirsch (freeAb (offClosedFibre X).toFunctor) := by
+  have h_sub : D.IsFiniteLerayHirsch (freeAb (offClosedFiber X).toFunctor) := by
     -- The empty subfunctor is locally everything: a ring with a point `y` has no maximal ideal.
     refine (D.isFiniteLerayHirsch_iff_of_isCohomEquiv (freeAb.map (Subfunctor.ι ⊥))
       fun _ zar ↦ ?_).mp (h_zero _ (freeAb.hom_ext nofun))
-    refine (zar (U := .whisker (Y := (offClosedFibre X).toFunctor) ⊥ _)
+    refine (zar (U := .whisker (Y := (offClosedFiber X).toFunctor) ⊥ _)
       fun _ y _ hm ↦ ?_).isCohomEquiv
     refine (hm.ne_top (eq_top_mono ?_ y.prop)).elim
     simp only [IdealFamily.ofMaximalIdeal, IsLocalRing.maximalIdeal_eq_bot]
     exact Ideal.map_le_iff_le_comap.2 bot_le
-  obtain ⟨w, h_exact⟩ := relFreeAb.shortExact (offClosedFibre X)
+  obtain ⟨w, h_exact⟩ := relFreeAb.shortExact (offClosedFiber X)
   exact h_ses ⟨_, _, w⟩ h_exact h_sub
 
 omit [ThePrime p] [Algebra Ω ℂ_[p]] in

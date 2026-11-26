@@ -450,7 +450,7 @@ lemma TameChart.linearFrob_eq_one (d : TameChart Γ) (h_bij : Bijective Γ.overG
   have β_pow (g : inertiaGroup (Gp p) (intQpBar p)) : β g ^ d.e = 1 := by
     simpa [β, sub_eq_zero] using (h_killed _ (weil g)).2
   have stabilizer_le : MulAction.stabilizer (inertiaGroup (Gp p) (intQpBar p)) d.ϖ ≤ β.ker :=
-    (isLocalGalois_padic.tame_inertia isUniformiser_ell (valuation_natCast_eq_one d.tame)
+    (isLocalGalois_padic.tame_inertia isUniformizer_ell (valuation_natCast_eq_one d.tame)
       d.varpi_pow_eq β ker_open β_pow).left
   simpa [β] using (stabilizer_le (d.apply_varpi s) : β ⟨J s, isWeilPair_zero_iff.1 hs⟩ = 1)
 

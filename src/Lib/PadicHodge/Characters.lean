@@ -520,7 +520,9 @@ noncomputable instance : MulSemiringAction FrobGal (Ainf ⊗[ℤ_[p]] T) :=
 /-- The operator `φ - 1` of `A_inf`, tensored with `T`, is `φ - 1` on `A_inf ⊗ T`. -/
 private lemma rTensor_frobenius_sub_id_apply (z : Ainf ⊗[ℤ_[p]] T) :
     (DistribSMul.toLinearMap ℤ_[p] Ainf ((ofAdd 1, 1) : FrobGal) - .id).rTensor T z =
-      ((ofAdd 1, 1) : FrobGal) • z - z := by aesop
+      ((ofAdd 1, 1) : FrobGal) • z - z := by
+  rw [rTensor_sub, LinearMap.sub_apply, rTensor_id_apply]
+  rfl
 
 /-- The map `φ - 1` is onto on `A_inf ⊗ T`, with `φ` the Frobenius of `A_inf`. -/
 private lemma exists_frobenius_smul_sub_eq (v : Ainf ⊗[ℤ_[p]] T) :
@@ -539,9 +541,11 @@ private lemma exists_one_tmul_eq_of_frobenius_smul_eq [Flat ℤ_[p] T] {z : Ainf
   let d : Ainf →ₗ[ℤ_[p]] Ainf := DistribSMul.toLinearMap ℤ_[p] Ainf ((ofAdd 1, 1) : FrobGal) - .id
   have hz_ker : d.rTensor T z = 0 := by rw [rTensor_frobenius_sub_id_apply, hz, sub_self]
   have h_exact : Exact (Algebra.linearMap ℤ_[p] Ainf) d := fun c : Ainf ↦ by
-    refine ⟨fun hc ↦ exists_algebraMap_eq_of_frobenius_eq c ?_, by aesop⟩
-    have hc_fixed : frobEnd c = c := sub_eq_zero.1 hc
-    simpa [frobEnd_eq_frobenius] using hc_fixed
+    refine ⟨fun hc ↦ exists_algebraMap_eq_of_frobenius_eq c ?_, ?_⟩
+    · have hc_fixed : frobEnd c = c := sub_eq_zero.1 hc
+      simpa [frobEnd_eq_frobenius] using hc_fixed
+    · rintro ⟨a, rfl⟩
+      exact sub_eq_zero.mpr (smul_algebraMap _ a)
   simpa [(TensorProduct.lid ℤ_[p] T).symm.surjective.exists, hz_ker] using
     Flat.rTensor_exact T h_exact z
 

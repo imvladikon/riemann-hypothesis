@@ -180,7 +180,7 @@ lemma New.Variety.injective_aeval_of_isNoetherNormalization {k A F ι : Type} [F
 constant term. If an open `V` contains `η`, then for some `q`, every field point `x` of `Y` lies in
 `V` when its `L`-coordinates `v` lie on the cone of `κ ∘ w` (homogeneous polynomials vanishing at
 `κ ∘ w` vanish at `v`) and satisfy `Λ v = [1 : q]`. -/
-lemma New.Variety.exists_fibre_mem_of_isOpenSubfunctor {k : Type} [Field k] [CharZero k]
+lemma New.Variety.exists_fiber_mem_of_isOpenSubfunctor {k : Type} [Field k] [CharZero k]
     {R : CommRingCat} [Algebra R.carrier k] {Y : Over (AlgebraicGeometry.Spec R)} {ι : Type}
     [Finite ι] {L : LineBundle Y.left ι} [Fact (L.IsProjEmbedding Y.hom)] {A : CommAlg k} {F : Type}
     [Field F] [Algebra k F] {κ : A ⟶ of k F} (hκ : Function.Injective κ) {w : ι → A} {n : ℕ}
@@ -336,7 +336,7 @@ lemma New.Variety.exists_etale_projection {k : Type} [Field k] [CharZero k] {R :
     (h_alg.isAlgebraic r).exists_coeff_ne_zero_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hr)
   have h_memU : PointsIn.map κ c.point ∈ U.locus.obj (of k F) := ⟨⟨χ⟩, hχ⟩
   obtain ⟨q, h_fibre⟩ :=
-    exists_fibre_mem_of_isOpenSubfunctor hκ hw₁ h_root (hw.comp κ) U.isOpenSubfunctor h_memU
+    exists_fiber_mem_of_isOpenSubfunctor hκ hw₁ h_root (hw.comp κ) U.isOpenSubfunctor h_memU
   -- As `κ` is injective, `w` satisfies the equations of `κ ∘ w`.
   have hw_hom : IsHomogeneousSolution k (κ ∘ w) w :=
     .of_ker κ.hom' 1 (fun r hr ↦ (map_eq_zero_iff κ.hom' hκ).mp hr) .refl

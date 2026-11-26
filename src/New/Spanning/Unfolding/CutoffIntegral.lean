@@ -656,7 +656,7 @@ entries of each row e_a and the imaginary parts of the entries at (e_a, e*_a), a
 places. There are measurable sets `F a` and `F' a` such that each coset `u Γ` has exactly one point
 with coordinates in the box over them. The product of the volumes of all `F a` and `F' a` is the
 explicit number `S.unipotentCovolume`, which does not depend on `c`. -/
-lemma exists_box_existsUnique_rowCoords_mem [HasPrimitiveRoot5040 E] [S.IsAdmissible]
+lemma exists_box_existsUnique_rowCoords_mem [HasPrimitiveRoot5040 E]
     (c : S.Classes) :
     ∃ (F : ∀ a : Fin 𝔰.ϱ, Set ({j : 𝔰.BesselIndex // IsFreeEntry (a, j)} → InfinitePlace E → ℂ))
       (F' : Fin 𝔰.ϱ → Set (InfinitePlace E → ℝ)),

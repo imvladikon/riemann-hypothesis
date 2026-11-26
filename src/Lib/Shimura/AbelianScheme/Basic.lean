@@ -560,24 +560,19 @@ lemma New.Variety.hasConstFunctions_of_isPullback {k : Type} [Field k]
   let _ : Field Γ(A.left, ⊤) := (isField_of_universallyClosed _ A.hom).toField
   have h_inj : Function.Injective ζ[A].left.appTop :=
     RingHom.injective (S := Γ(Spec (.of k), ⊤)) ζ[A].left.appTop.hom
-  have h_surj : Function.Surjective A.hom.appTop := fun a ↦ by
-    refine ⟨ζ[A].left.appTop a, h_inj ?_⟩
-    -- `ζ[A]` is a section of `A.hom`, so `ζ[A].left.appTop` undoes `A.hom.appTop`
-    show ζ[A].left.appTop (A.hom.appTop (ζ[A].left.appTop a)) = ζ[A].left.appTop a
-    have h_sec : ζ[A].left ≫ A.hom = 𝟙 _ := Over.w ζ[A]
-    rw [← CommRingCat.comp_apply, ← Scheme.Hom.comp_appTop, h_sec, Scheme.Hom.id_appTop]
+  have h_sec : Function.LeftInverse ζ[A].left.appTop A.hom.appTop := fun a ↦ by
+    rw [← CommRingCat.comp_apply, ← Scheme.Hom.comp_appTop, show ζ[A].left ≫ A.hom = 𝟙 _ from Over.w ζ[A],
+      Scheme.Hom.id_appTop]
     rfl
-  have h_appLE : A.hom.appLE ⊤ ⊤ le_top = A.hom.appTop := appLE_eq_app A.hom
-  have h_epi : Epi (s.appLE ⊤ ⊤ le_top) :=
-    h_pushout.epi_inr_of_epi (ConcreteCategory.epi_of_surjective _ (by rwa [h_appLE]))
+  have h_epi : Epi (s.appLE ⊤ ⊤ le_top) := h_pushout.epi_inr_of_epi <| by
+    rw [show A.hom.appLE ⊤ ⊤ le_top = A.hom.appTop from appLE_eq_app A.hom]
+    exact ConcreteCategory.epi_of_surjective _ (h_sec.rightInverse_of_injective h_inj).surjective
   -- Both evaluations agree on the sections that come from `Spec C`, since `x ≫ s = y ≫ s` (`hxy`).
   have h_agree : s.appLE ⊤ ⊤ le_top ≫ evalSection x landsIn_top =
       s.appLE ⊤ ⊤ le_top ≫ evalSection y landsIn_top := by
-    have hs_appLE : s.appLE ⊤ ⊤ le_top = s.appTop := appLE_eq_app s
-    ext a
-    rw [hs_appLE, CommRingCat.comp_apply, CommRingCat.comp_apply,
-      ← ofSection_eq landsIn_top, ← ofSection_eq landsIn_top,
-      ofSection_appTop, ofSection_appTop, hxy]
+    dsimp only [evalSection]
+    rw [appLE_comp_appLE_assoc x s ⊤ ⊤ ⊤ le_top landsIn_top,
+      appLE_comp_appLE_assoc y s ⊤ ⊤ ⊤ le_top landsIn_top, hxy]
   rw [ofSection_eq landsIn_top, ofSection_eq landsIn_top, h_epi.left_cancellation _ _ h_agree]
 
 end ConstantFunctions

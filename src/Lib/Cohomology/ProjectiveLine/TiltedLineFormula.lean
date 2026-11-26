@@ -985,17 +985,20 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       · let x := y.down.hom (single 1 1)
         change F d (0, 0) - F d (0, ρ d (tiltMap j.toRingHom x)) =
           ((cocycle _).extension.X₂.map j).hom (F c (0, 0) - F c (0, ρ c x))
-        erw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (0, ρ c x)]
+        rw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (0, ρ c x)]
         simp [ρ_nat]
       · let x := y.down.hom (single 1 1)
         let xc : R c := ρ c x
         let xd : R d := ρ d (tiltMap j.toRingHom x)
         change F d (0, 0) - F d (xd - 1, 1) =
           ((cocycle _).extension.X₂.map j).hom (F c (0, 0) - F c (xc - 1, 1))
-        erw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (xc - 1, 1)]
+        rw [_root_.map_sub, F_nat c d j (0, 0), F_nat c d j (xc - 1, 1)]
         simp [xc, xd]
-        erw [map_sub, map_one, ρ_nat]
-        rfl)
+        have h_coordinate :
+            R.map j (xc - 1) = xd - 1 :=
+          (map_sub (R.map j).hom _ _).trans
+            (congrArg₂ (· - ·) (ρ_nat c d j x) (map_one (R.map j).hom))
+        exact congrArg (fun a : R d ↦ F d (a, 1)) h_coordinate.symm)
 
   -- `α` sends a point `t` of the torus to `pow c t`, the untilts of the powers of the coordinate.
   let pow (c : PadicTest) (t : (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
@@ -1019,7 +1022,8 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
     let r : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, q⟩
     change FreeAddCommGroup.lift (pow c)
       (((projFirst (B := pointOrTorus)).app c).hom (FreeAddCommGroup.of r)) = _
-    erw [projFirst_true (B := pointOrTorus) c q, FreeAddCommGroup.lift_apply_of]
+    exact (congrArg (FreeAddCommGroup.lift (pow c))
+      (projFirst_true (B := pointOrTorus) c q)).trans (FreeAddCommGroup.lift_apply_of ..)
   have h_torus : (α ≫ (kummerSeq (genericTestOver A)).g) ≫
       (cocycle (genericTestOver A)).extension.f = gluing ≫ f := by
     -- On the torus the frames `(X, 1)` and `(1, X⁻¹)` differ by the unit `X`.
@@ -1032,13 +1036,15 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_a : (α.app c).hom (FreeAddCommGroup.of y₀) = 0 := by
         change FreeAddCommGroup.lift (pow c)
           (((projFirst (B := pointOrTorus)).app c).hom (FreeAddCommGroup.of y₀)) = 0
-        erw [projFirst_false (B := pointOrTorus) c y, map_zero]
+        exact (congrArg (FreeAddCommGroup.lift (pow c))
+          (projFirst_false (B := pointOrTorus) c y)).trans (map_zero _)
       change ((cocycle _).extension.f.app c).hom
           (((kummerSeq (genericTestOver A)).g.app c).hom ((α.app c).hom (FreeAddCommGroup.of y₀))) =
         (f.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₀))
-      erw [h_a, h_glue, h_f_app]
+      rw [h_a, h_glue, h_f_app]
       simp [z, evalZero]
-      erw [map_zero, sub_self]
+      exact (map_zero ((cocycle (genericTestOver A)).extension.f.app c).hom).trans
+        (sub_self _).symm
     · let X : R c := ρ c (y.down.hom (single 1 1))
       let X' : R c := ρ c (y.down.hom (single (-1) 1))
       let v : (cocycle (genericTestOver A)).extension.X₂ c :=
@@ -1075,11 +1081,12 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
     -- `charTwist χ` fixes `X`, as the roots of unity are trivial at `1` and `-1`.
     refine freeAb.hom_ext fun c y ↦ ?_
     let y' : twoDiscs.obj c := ⟨y.fst, ⟨discTwist χ y.fst ≫ y.snd.down⟩⟩
-    erw [NatTrans.comp_app, AddCommGrpCat.comp_apply]
-    change (f.app c).hom (FreeAddCommGroup.lift _ (FreeAddCommGroup.of y)) = _
-    rw [FreeAddCommGroup.lift_apply_of]
-    change (f.app c).hom (FreeAddCommGroup.of y - FreeAddCommGroup.of y') = 0
-    erw [_root_.map_sub, h_f_app, h_f_app]
+    change (f.app c).hom (((oneSub (discTwist χ)).app c).hom (.of y)) = 0
+    have h_sub : ((oneSub (discTwist χ)).app c).hom (.of y) = .of y - .of y' :=
+      freeAb.desc_of ..
+    refine (congrArg (f.app c).hom h_sub).trans ?_
+    refine (_root_.map_sub (f.app c).hom _ _).trans ?_
+    refine (congrArg₂ (· - ·) (h_f_app c y) (h_f_app c y')).trans ?_
     rcases y with ⟨⟨_ | _⟩, y⟩ <;>
       simp [y', discTwist, charTwist, ρ_const, hχ, h_root, -coe_algebraMap, -Functor.comp_obj]
   have h_kummer : oneSub (pointOrTorusTwist χ) ≫ α =

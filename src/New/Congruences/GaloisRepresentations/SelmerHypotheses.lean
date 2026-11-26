@@ -217,7 +217,7 @@ fixed splitting character. Then inertia at `A` acts on `μ` through the label of
 of the residue field that names this character (`New.charName`) through
 `T = faithfulChar (ResField w)`: an element with tame exponent `i` of level `f` at `A` over `w` is
 killed by `X - ι (T^i label)`. -/
-lemma isLabelledAt_avatar {a : AutChar D.E} {e : NumberField.InfinitePlace D.E → ℤ}
+lemma isLabeledAt_avatar {a : AutChar D.E} {e : NumberField.InfinitePlace D.E → ℤ}
     {ψ : (w : FinPlace D.E) → MulChar (ResField w) ℂ} (ha : a.HasWeight e ψ) (k j : ℤ)
     {w : FinPlace D.E} {A : ClosurePlace} {f : ℕ} (hψ_star : ψ (star w) = 1) (hw : w.IsSplit) :
     let T : MulChar (AlgebraicClosure (ResField w)) ℂ := faithfulChar (ResField w)
@@ -493,7 +493,7 @@ end RowColumnDefs
 Conventions: a label is a polynomial over the residue field at a place of `O.chosenPlace`.
 
 * `New.Selmer.normalizingAvatar`, `New.Selmer.normalizingAvatar_eq_of_isFrob_inv`,
-  `New.Selmer.normalisedRep`: the normalising character, its Frobenius values, and the twist of a
+  `New.Selmer.normalizedRep`: the normalising character, its Frobenius values, and the twist of a
   representation by it.
 -/
 
@@ -541,7 +541,7 @@ variable (O : DescentPair D.E r n) (k : ℕ) (J : (D.E →+* ℂ) → Multiset �
   (R : GalRep ℓ D.E m)
 
 /-- The normalised representation: R twisted by the character `New.Selmer.normalizingAvatar`. -/
-abbrev normalisedRep (R : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ)) : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ) :=
+abbrev normalizedRep (R : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ)) : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ) :=
   twistByChar (m := n) (normalizingAvatar O) R
 
 /-! ### Scaled type polynomials -/
@@ -604,7 +604,7 @@ def IsMainSummand (z : FinPlace D.E → ℕ → ℂ) (R : GalRep ℓ D.E r) : Pr
   ∀ {ϑ : D.TameChar} {V : DescentPair D.E r n} {y : V.FormV} {H : FinPlace D.E → ℂ[X]}
     {S : GalRep ℓ D.E n},
     V.u1Char = O.u1Char * ϑ.toAutChar → V.HasLiftHeckePolynomial y z → IsEigenform y H →
-      Attached H S → HasLiftTrace ϑ.invAvatar R V.rankDiff (normalisedRep V S)
+      Attached H S → HasLiftTrace ϑ.invAvatar R V.rankDiff (normalizedRep V S)
 
 /-- A representation of a type: `R` is conjugate self-dual of twist `1 - k`, jumps `J` and level `S`
 (`New.Selmer.IsConjSelfDualOfLevel`), and inertia at the place `O.chosenPlace i` acts through the
@@ -612,7 +612,7 @@ roots of the label `c i`, a polynomial over the residue field. -/
 structure IsRepOfType extends IsConjSelfDualOfLevel (n := m) D k J S R where
   /-- At each place `A`, an element of inertia over `O.chosenPlace i` is killed by the polynomial
   that `IsLabelledAt` makes from the label `c i` and the tame exponent at level `(card r)!`. -/
-  labelled ⦃i : O.ChosenIndex⦄ ⦃A : ClosurePlace⦄ :
+  labeled ⦃i : O.ChosenIndex⦄ ⦃A : ClosurePlace⦄ :
       IsLabelledAt A (faithfulChar (ResField (O.chosenPlace i))) (card r).factorial
         (PolyKillsAt R A) (c i)
 

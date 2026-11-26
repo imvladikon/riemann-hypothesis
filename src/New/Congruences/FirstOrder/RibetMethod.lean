@@ -386,23 +386,6 @@ private lemma exists_family_algHom_charpoly_mem_aux {A : Type*} [CommRing A] [Al
       (ρ (.single g 1)).charpoly.coeff k x
     rw [h_eval, charpoly_map, Polynomial.coeff_map, Pi.evalRingHom_apply]
 
-/-- Let `u x` (`x : Y`) be representations of `O[G]` such that the coefficients of the
-characteristic polynomials of the group elements, as functions `Y → L` of `x`, lie in the subalgebra
-`S`, and let `κ : O → S` send an element of `O` to the constant function. Then the family lifts to
-an `S`-algebra map `ρ` from `S[G]` to matrices over `Y → L` which (a) is `u x` at the point `x` on
-elements coming from `O[G]`, and (b) has all its characteristic polynomials with coefficients in
-`S` (Amitsur's formula passes from the group elements to their span). -/
-lemma exists_family_algHom_charpoly_mem (u : Y → O[G] →ₐ[O] Matrix σ σ O)
-    (κ : O →+* S) (hκ : (algebraMap S (Y → L)).comp κ = algebraMap O (Y → L))
-    (h_coeff : ∀ (g : G) (k : ℕ),
-      (fun x : Y ↦ ((u x (.single g 1)).map (algebraMap O L)).charpoly.coeff k) ∈ S) :
-    ∃ ρ : S[G] →ₐ[S] Matrix σ σ (Y → L),
-      -- (a)
-      (∀ (x : Y) (r : O[G]) (i j : σ), ρ (mapRingHom G κ r) i j x = algebraMap O L (u x r i j)) ∧
-      -- (b)
-      ∀ (a : S[G]) (k : ℕ), (ρ a).charpoly.coeff k ∈ (algebraMap S (Y → L)).range :=
-  exists_family_algHom_charpoly_mem_aux (L := L) (A := S) u κ hκ
-    (fun g k ↦ ⟨⟨_, h_coeff g k⟩, rfl⟩)
 
 /-- Suppose that every matrix `χ c` is, after reindexing along `blockEquiv`, the block `ψ c` plus
 the diagonal matrix of the `η e c`. Then the determinant of a matrix `M` over `A`, read through `χ`

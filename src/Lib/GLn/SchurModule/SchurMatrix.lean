@@ -89,7 +89,7 @@ lemma prod_tableauPoly_mem_nabla
     {M : Φ → ℕ} {T : ∀ τ : Φ, Tableau (n' τ) (M τ) (κ τ)} :
     ∏ τ : Φ, tableauPoly R (Sigma.mk τ) (T τ) ∈ nabla R Sigma.fst (diagramWeight M κ) := by
   -- The product is the product `minorProduct` of the minors over all columns of all colours.
-  let I : ColouredTableau (J := Σ τ : Φ, Σ h : Fin (M τ), Fin (κ τ h)) fst (fun j ↦ j.fst)
+  let I : ColoredTableau (J := Σ τ : Φ, Σ h : Fin (M τ), Fin (κ τ h)) fst (fun j ↦ j.fst)
       (fun j ↦ j.snd.fst) :=
     fun j s ↦ ⟨⟨j.fst, T j.fst j.snd.fst j.snd.snd s⟩, rfl⟩
   have h_prod : minorProduct R I = ∏ τ : Φ, tableauPoly R (Sigma.mk τ) (T τ) := by
@@ -124,7 +124,7 @@ lemma exists_isTableauBasis {ι : Type} [Fintype ι] {M : ℕ} {k : ℕ → ℕ}
     .of_linearIndepOn_of_mem_span_of_character (fun R _ ↦ ?_) (fun R _ T ↦ ?_) ?_⟩
   · simpa using (linearIndepOn_univ_iff.mpr (h_indep R)).image_of_comp
   · -- The minor product of any filling `T` lies in `nabla` for this weight, so in the span.
-    let cols_T : ColouredTableau (J := J) 0 fst (fun j ↦ j.snd.fst) :=
+    let cols_T : ColoredTableau (J := J) 0 fst (fun j ↦ j.snd.fst) :=
       fun j s ↦ ⟨T j.snd.fst j.snd.snd s, rfl⟩
     have h_tableau : tableauPoly R id T = minorProduct R cols_T := by
       simp [tableauPoly, minorProduct, cols_T, J, Fintype.prod_sigma]
@@ -293,7 +293,7 @@ lemma nabla_le_span_nablaBasis_mul_detPow (e : Φ → ℕ) :
     simp_rw [← Fin.sum_const, ← Fintype.sum_sigma', diagramWeight_eq_columnWeight]
     exact sum_sum_type _
   obtain ⟨ι, h_fintype, I, hI⟩ : ∃ (ι : Type) (_ : Fintype ι)
-      (I : ι → ColouredTableau (fst : (Σ τ : Φ, n τ) → Φ) colour height), IsStdMinorFamily I :=
+      (I : ι → ColoredTableau (fst : (Σ τ : Φ, n τ) → Φ) colour height), IsStdMinorFamily I :=
     exists_isStdMinorFamily (m := Σ τ : Φ, n τ) fst colour height
   rw [← h_weight]
   refine (hI.nabla_le_span R).trans ?_

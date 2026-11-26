@@ -104,16 +104,16 @@ namespace IsCohomDense
 /-- If the subfunctor U of Y is dense for F, then the inclusion U → Y is an equivalence: it
 induces bijections H^n(Y,F) → H^n(U,F) for all n. -/
 lemma isCohomEquiv (h : IsCohomDense F U) : IsCohomEquiv F (freeAb.map U.ι) := by
-  -- It suffices to test on the fibres over the points `y` (`isBijective_of_fibres`); such a fibre
+  -- It suffices to test on the fibres over the points `y` (`isBijective_of_fibers`); such a fibre
   -- injects into the representable h_A with image the preimage of `U`.
-  refine (isBijective_of_fibres (𝟙 _) .of_id_snd fun A y ↦ IsCohomEquiv.bij ?_).eqv
-  -- written in the form of the goal that `isBijective_of_fibres` leaves, so that `exact` matches it
-  have h_range : range (fibreProd.snd U.ι
+  refine (isBijective_of_fibers (𝟙 _) .of_id_snd fun A y ↦ IsCohomEquiv.bij ?_).eqv
+  -- written in the form of the goal that `isBijective_of_fibers` leaves, so that `exact` matches it
+  have h_range : range (fiberProd.snd U.ι
         ((Comparison.id F).functor.whiskerLeft (pointMap (NatTrans.app (𝟙 Y) A y)))) =
       U.preimage (pointMap y) := by
-    aesop (add simp [toFunctor, fibreProd, fibreProd.snd])
+    aesop (add simp [toFunctor, fiberProd, fiberProd.snd])
   -- the projection is a monomorphism as a pullback of `U.ι`
-  exact (isCohomEquiv_iff_range (hg := isPullback_fibreProd.mono_fst_of_mono) h_range).mpr (h A y)
+  exact (isCohomEquiv_iff_range (hg := isPullback_fiberProd.mono_fst_of_mono) h_range).mpr (h A y)
 
 /-- The preimage of a dense subfunctor `U` of `Y` under `p : E ⟶ Y` is dense in `E`. -/
 lemma preimage (h : IsCohomDense F U) (p : E ⟶ Y) : IsCohomDense (Y := E) F (U.preimage p) := by

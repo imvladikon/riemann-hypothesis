@@ -347,11 +347,11 @@ lemma associated_pow_neg_of_irreducible (V : OpenSubgroup (Gp p)) {e : ℕ}
   have h_dvr := L.isDiscreteValuationRing
   -- `π` has order `1` over `K`, so `1 / e` over `ℚ_[p]`: `π ^ e` and `p` have the same valuation
   have h_one :=
-    (isUniformiser_iff_irreducible.mpr ⟨_, hπ⟩).ordRat_eq_one L (π := .mk0 π (mod_cast hπ.ne_zero))
+    (isUniformizer_iff_irreducible.mpr ⟨_, hπ⟩).ordRat_eq_one L (π := .mk0 π (mod_cast hπ.ne_zero))
   -- `using!`: `h_one` is about `DiscreteUnits.ofBase` of `π`, equal to `π` only up to unfolding
   simpa [← dvd_dvd_iff_associated, ← ge_antisymm_iff, dvd_iff_valuationVia_le,
     valuationVia] using!
-    (isUniformiser_ell.valuation_pow_eq_zpow_iff_mul_ordRat_eq isLocalGalois_padic _ 1).mpr
+    (isUniformizer_ell.valuation_pow_eq_zpow_iff_mul_ordRat_eq isLocalGalois_padic _ 1).mpr
       (by simpa [h_ord] using h_one)
 
 /-- A Kummer chart `k` for `Γ`, seen in `G_p` through `j = 𝒥.toGp`, fits the field fixed by
@@ -461,7 +461,7 @@ lemma exists_kummerChart (Γ : Type) [Group Γ] [𝒥 : OverGp Γ p] :
       (hx : x ^ n = ((π : localFieldOf Γ) : PadicAlgCl p)) (hy : y ^ n = x ^ n) :
       ∃ g ∈ 𝒥.toGp.range, g • x = y := by
     obtain ⟨g, -, hg_smul⟩ := L.exists_inertia_smul_eq_of_pow_eq
-      (π := .mk0 π.val (mod_cast hπ.ne_zero)) (isUniformiser_iff_irreducible.mpr ⟨_, hπ⟩) hn hx hy
+      (π := .mk0 π.val (mod_cast hπ.ne_zero)) (isUniformizer_iff_irreducible.mpr ⟨_, hπ⟩) hn hx hy
     exact ⟨g, g.prop, hg_smul⟩
   have h_kummer (l : ℕ) : ∃ g : Γ, 𝒥.toGp g • (c.z : Ainf) = teichmuller p epsTilt ^ l * c.z :=
     c.exists_smul_z_eq_of_transitive Γ h_roots (by simp [hu, κ, coe_eq]) l

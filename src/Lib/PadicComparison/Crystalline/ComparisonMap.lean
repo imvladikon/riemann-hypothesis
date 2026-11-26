@@ -255,10 +255,22 @@ lemma testToPdReduction_theta (c : PadicTest) (x : WittVector p (PreTilt c.ProdR
   -- `θ x` is the image of `1 ⊗ₜ x` under `thetaIso`, which cancels against its inverse in
   -- `testToPdReduction`; the remaining map sends `s ⊗ₜ x` to `s` times the class of `1 ⊗ₜ x`.
   refine .trans ?_ (one_smul OC _)
-  -- `erw`: the rewrites need the irreducible `testToPdReduction` and the coercions of `thetaIso`
-  -- unfolded.
-  erw [← thetaIso_hom_one_tmul, testToPdReduction, ← NatTrans.comp_app_apply, Iso.hom_inv_id_assoc]
-  rfl
+  have h_cancel : thetaIso.inv c (fontaineTheta c.ProdRing p x) = 1 ⊗ₜ x :=
+    (congrArg (thetaIso.inv c) (thetaIso_hom_one_tmul c x).symm).trans
+      ((thetaIso.app c).hom_inv_id_apply _)
+  let toAm :=
+    baseChangeTranspose wittFunctor (periodAlg Amax)
+      (wittFunctor.whiskerLeft ((algBaseChange Amax).whiskerLeft (algCompletion.of Amax p)))
+  let β : tilt ⋙ wittFunctor ⋙ algBaseChange OC ⟶
+      crysThickening ⋙ pdReduction integersToPdQuotient :=
+    (baseChangeTranspose ..).invFun
+      (tilt.whiskerLeft toAm ≫ by exact crysThickening.whiskerLeft toPdReduction)
+  have h_comp : testToPdReduction = thetaIso.inv ≫ β := by
+    unfold testToPdReduction
+    rfl
+  rw [h_comp]
+  change β c (thetaIso.inv c (fontaineTheta c.ProdRing p x)) = _
+  exact (congrArg (β c) h_cancel).trans rfl
 
 /-- For a functor P from O_C-algebras to types, `HasCrysComparison P` says that restriction along
 `New.Variety.crysThickening` and `New.Variety.testToPdReduction` is bijective in every degree. It
@@ -394,13 +406,16 @@ private lemma exists_isCompletionBijective_witt_tensor (G : Type) [AddCommMonoid
         RingHom.ker (constantCoeff : WittVector p b →+* b) = span {(p : WittVector p b)} ∧ _ :=
     isReductionMod_constantCoeff_and_isCompleteTorsionFree OFlat b
   -- `W(b)` is a `W`-algebra, the elements of `G` going to Teichmüller representatives.
-  let wittAlgebra : Algebra (WittVector p OFlat)[G] (WittVector p b) :=
-    (liftNCRingHom (map (algebraMap OFlat b)) ((teichmuller p).comp
-      (includeLeftRingHom.toMonoidHom.comp (of OFlat G))) fun _ _ ↦ .all ..).toAlgebra
+  let wittCoeff : WittVector p OFlat →+* WittVector p b := map (algebraMap OFlat b)
+  let wittTeich : Multiplicative G →* WittVector p b :=
+    (teichmuller p).comp (includeLeftRingHom.toMonoidHom.comp (of OFlat G))
+  let wittMap : W →+* WittVector p b :=
+    liftNCRingHom wittCoeff wittTeich fun _ _ ↦ .all ..
+  let wittAlgebra : Algebra W (WittVector p b) := wittMap.toAlgebra
   have h_constantCoeff_comp :
       constantCoeff.comp (algebraMap W (WittVector p b)) = algebraMap W b := by
     -- on `Ainf`, and on the elements of `G`, sent to Teichmüller representatives
-    ext <;> simp [b, W, algebraMap_toAlgebra, ← AddMonoidAlgebra.one_def,
+    ext <;> simp [b, W, wittMap, wittCoeff, wittTeich, algebraMap_toAlgebra, ← AddMonoidAlgebra.one_def,
       ← Algebra.TensorProduct.one_def]
   let coeff₀ : WittVector p b →ₐ[W] b :=
     ⟨constantCoeff, fun a ↦ RingHom.congr_fun h_constantCoeff_comp a⟩
@@ -418,8 +433,11 @@ private lemma exists_isCompletionBijective_witt_tensor (G : Type) [AddCommMonoid
   have hκ_algebraMap (a : Ainf) :
       κ (algebraMap Ainf T a) = WittVector.map (algebraMap OFlat b) a := by
     rw [IsScalarTower.algebraMap_apply Ainf W T, κ.commutes]
-    -- `erw`: the `W`-algebra structure on `W(b)` is `wittAlgebra`, which `rw` does not unfold.
-    erw [liftNC_single, map_one, mul_one, Algebra.algebraMap_self_apply]
+    have h_single : algebraMap Ainf W a = single (0 : G) a := rfl
+    have h_eval : wittMap (single (0 : G) a) = wittCoeff a * wittTeich 1 :=
+      liftNCRingHom_single ..
+    exact (congrArg wittMap h_single).trans (h_eval.trans
+      ((congrArg (wittCoeff a * ·) (map_one wittTeich)).trans (mul_one _)))
   let k : .of Ainf T ⟶ wittFunctor.obj b := CommAlg.homOfRingHom κ.toRingHom hκ_algebraMap
   refine ⟨k, ?_⟩
   -- `T → b` is onto with kernel `p T`, being a base change of `Ainf → OFlat`. Hence `κ` is
@@ -592,61 +610,73 @@ private lemma bijective_pointMap_lineEnvelope_point [CrysPeriodAlgebra]
     {A : CrysTest Amax} (t : A.obj) (B : CrysTest Amax) :
     Bijective (pointMap (lineEnvelope.point t) B) := by
   let z : A[ℚ≥0] := lineGen t
-  let E : CrysTest Amax := lineEnvelope t
-  let i : A ⟶ E := lineEnvelope.incl t
-  let v : Multiplicative ℚ≥0 →* E := lineEnvelope.var t
-  refine (bijective_iff_existsUnique _).2 ?_
-  rintro ⟨⟨⟨w⟩, ⟨f⟩⟩, hw⟩
+  let i : A ⟶ lineEnvelope t := lineEnvelope.incl t
+  let v : Multiplicative ℚ≥0 →* lineEnvelope t := lineEnvelope.var t
+  refine (bijective_iff_existsUnique _).2 fun ⟨⟨⟨w⟩, ⟨f⟩⟩, hw⟩ ↦ ?_
   -- a root system in `B / 𝔡` lifts uniquely to `χ` in `B`; `(f, χ)` factors uniquely through `E`
   obtain ⟨χ, rfl⟩ := B.property.monoidHom_lift_bijective.surjective w
-  have h_diff_mem : f.hom.hom t - χ (.ofAdd 1) ∈ pdIdeal B :=
-    SModEq.sub_mem.mp (ULift.ext_iff.mp hw).symm
   have h_lift_mem : ∀ y ∈ ({z} : Set A[ℚ≥0]),
       liftNCAlgHom f.hom.hom χ (fun _ _ ↦ Commute.all _ _) y ∈ pdIdeal B := by
-    simpa [z, lineGen] using h_diff_mem
+    simpa [z, lineGen] using! SModEq.sub_mem.mp (ULift.ext_iff.mp hw).symm
   obtain ⟨g, hg, g_unique⟩ :=
     existsUnique_lift _ {z} (liftNCAlgHom f.hom.hom χ fun _ _ ↦ Commute.all _ _) h_lift_mem
-  have hg_v : MonoidHom.comp g.hom.hom v = χ := by
-    ext a
-    exact (DFunLike.congr_fun hg _).trans (by simp)
+  have hg_v : MonoidHom.comp g.hom.hom v = χ :=
+    MonoidHom.ext fun a ↦ (DFunLike.congr_fun hg _).trans (by simp)
   have hg_i : i ≫ g = f := by
     ext c
     exact (DFunLike.congr_fun hg _).trans (by simp)
   subst hg_v hg_i
-  refine ⟨⟨g⟩, rfl, ?_⟩
-  rintro ⟨g'⟩ hg'
+  refine ⟨⟨g⟩, rfl, fun ⟨g'⟩ hg' ↦ ?_⟩
   -- `g'` agrees with `g` on `v`, because lifts of root systems are unique, and on `A`
   obtain ⟨h_roots, h_maps⟩ := Prod.ext_iff.mp (Subtype.ext_iff.mp hg')
   have h_roots_mod : (pdQuotientMk B).toMonoidHom.comp (MonoidHom.comp g'.hom.hom v) =
       (pdQuotientMk B).toMonoidHom.comp (MonoidHom.comp g.hom.hom v) :=
     congrArg ULift.down h_roots
-  have hv : MonoidHom.comp g'.hom.hom v = MonoidHom.comp g.hom.hom v :=
-    B.property.monoidHom_lift_bijective.injective h_roots_mod
-  have hi : i ≫ g' = i ≫ g := congrArg ULift.down h_maps
   refine congrArg ULift.up (g_unique g' ?_)
   rw [← hg]
-  exact algHom_ext' hv (congrArg (·.hom.hom) hi)
+  exact algHom_ext' (B.property.monoidHom_lift_bijective.injective h_roots_mod)
+    (congrArg (·.hom.hom) (congrArg ULift.down h_maps))
 
-/-- Let t ∈ A be a unit modulo 𝔡(A), E = `lineEnvelope t` with the map i from A and the variable
-v, and γ an endomorphism of E that fixes A (`hγ_fix`) and multiplies v^a by [ε^a] for every
-a ∈ ℚ≥0 (`hγ_v`). Then B_max ⊗ − (`crysPeriodCoeff`) turns i and γ into a Koszul-exact pair. -/
-private lemma koszulExact_lineEnvelope {p : ℕ} [ThePrime p] [h : CrysPeriodAlgebra]
-    {A : CrysTest Amax} {t : A.obj} (ht : IsUnit (pdQuotientMk A.obj t))
-    (γ : lineEnvelope t ⟶ lineEnvelope t)
-    (hγ_fix : (lineEnvelope.incl t ≫ γ).hom.hom = (lineEnvelope.incl t).hom.hom)
-    (hγ_v : MonoidHom.comp γ.hom.hom (lineEnvelope.var t) =
-      (algebraMap Amax (lineEnvelope t).obj).toMonoidHom.comp
-        ((algebraMap Ainf Amax).toMonoidHom.comp ((teichmuller p).comp epsPowNNRat)) *
-        lineEnvelope.var t) :
-    KoszulExact (crysPeriodCoeff.map (lineEnvelope.incl t)) (crysPeriodCoeff.map γ) := by
+/-- Let A be a p-torsion-free p-complete A_max-algebra (with the standing structure
+`CrysPeriodAlgebra`) and y a unit of A/𝔡(A), where 𝔡 is the ideal `New.Variety.pdIdeal` and
+`pdReduction` sends D to D/𝔡(D), an O_C-algebra through `integersToPdQuotient`. On such algebras D,
+let Y(D) be the pairs of a map f : A → D and a character s : ℚ≥0 → D/𝔡(D) with s(1) = f(y), with the
+twist multiplying s by the image of a ↦ (ε^a)^♯. Then forgetting s induces a bijection, in every
+degree, from the cohomology of Hom(A, −) to that of Y on the product with Bℕ (the homotopy quotient
+by the twist), with coefficients D ↦ B_max ⊗_{A_max} D (`crysPeriodCoeff`). -/
+lemma compatibleRootsAreLines_crysTest {p : ℕ} [ThePrime p] [h : CrysPeriodAlgebra] :
+    CompatibleRootsAreLines crysPeriodCoeff (pdReduction integersToPdQuotient) := by
+  -- Write `𝔡` for the divided power ideal `pdIdeal`. The root systems of `t` modulo `𝔡` are
+  -- represented by the divided power envelope `E` of `A[v ^ ℚ≥0]` along `z = t - v`. It has the
+  -- topological basis `v ^ a * z ^ n / n !`, `0 ≤ a < 1`, and the twist `γ` multiplies `v ^ a` by
+  -- `[ε ^ a]`; `koszulExact_pd_line` gives the exactness that `IsLine.of_acyclic` asks for.
+  rintro A ⟨⟨t⟩⟩ ht
   let z : A[ℚ≥0] := lineGen t
   let E : CrysTest Amax := lineEnvelope t
   -- the algebra structures on `E` are fixed once, so that later steps do not search for them
   let algebra_A_E : Algebra A E := inferInstance
   let algebra_preEnvelope_E : Algebra (preEnvelope {z}) E := inferInstance
+  let i : A ⟶ E := lineEnvelope.incl t
   let v : Multiplicative ℚ≥0 →* E := lineEnvelope.var t
+  let x : (TimesBNat.incl _ ⋙ compatibleRootsAt (pdReduction integersToPdQuotient) ⟨⟦t⟧⟩) E :=
+    lineEnvelope.point t
+  have x_univ : ∀ B : CrysTest Amax, Bijective (pointMap x B) :=
+    bijective_pointMap_lineEnvelope_point t
+  -- the twist of the universal point is induced by an endomorphism `γ` of `E`
+  obtain ⟨⟨γ⟩, hγ⟩ := (x_univ E).surjective ((TimesBNat.shiftEnd _ 1).asHom.app E x)
+  obtain ⟨hγ_roots, hγ_maps⟩ := Prod.ext_iff.mp (Subtype.ext_iff.mp hγ)
+  refine .of_acyclic (ψ := 𝟭 _) (F' := crysPeriodCoeff) (isoOfAppBijective _ x_univ)
+    (IsCohomEquiv.of_isIso _).bij i γ (fun D f ↦ rfl) ⟨uliftCoyonedaEquiv.injective hγ⟩ ?_
+  -- `γ (v ^ a) = [ε ^ a] * v ^ a`: this holds modulo `𝔡`, and lifts of root systems are unique
   let e : Multiplicative ℚ≥0 →* Amax :=
     (algebraMap Ainf Amax).toMonoidHom.comp ((teichmuller p).comp epsPowNNRat)
+  have hγ_v : MonoidHom.comp γ.hom.hom v = (algebraMap Amax E).toMonoidHom.comp e * v := by
+    refine E.property.monoidHom_lift_bijective.injective (MonoidHom.ext fun a ↦ ?_)
+    refine (DFunLike.congr_fun (congrArg ULift.down hγ_roots) a).trans ?_
+    exact congrArg (pdQuotientMap _ · * _) (integersToPdQuotient_untilt _)
+  -- `γ` fixes the image of `A`
+  have hγ_i : i ≫ γ = i := congrArg ULift.down hγ_maps
+  have hγ_fix : (i ≫ γ).hom.hom = i.hom.hom := by rw [hγ_i]
   let γ' : E →ₐ[A] E := ⟨γ.hom.hom, fun c ↦ DFunLike.congr_fun hγ_fix c⟩
   -- the basis `v ^ a * y n` of the uncompleted envelope, with `z ^ n = n ! * y n`
   obtain ⟨y, b, hb, hz⟩ : ∃ (y : ℕ → preEnvelope {z})
@@ -686,43 +716,6 @@ private lemma koszulExact_lineEnvelope {p : ℕ} [ThePrime p] [h : CrysPeriodAlg
       refine Nat.lt_of_le_of_ne (a : ℚ≥0).den_pos fun h_den_eq ↦ ha ?_
       simpa [← h_den_eq, lt_def, num] using h_lt_one
     exact h.p_mul_teichmuller_sub_one_dvd h_den
-
-/-- Let A be a p-torsion-free p-complete A_max-algebra (with the standing structure
-`CrysPeriodAlgebra`) and y a unit of A/𝔡(A), where 𝔡 is the ideal `New.Variety.pdIdeal` and
-`pdReduction` sends D to D/𝔡(D), an O_C-algebra through `integersToPdQuotient`. On such algebras D,
-let Y(D) be the pairs of a map f : A → D and a character s : ℚ≥0 → D/𝔡(D) with s(1) = f(y), with the
-twist multiplying s by the image of a ↦ (ε^a)^♯. Then forgetting s induces a bijection, in every
-degree, from the cohomology of Hom(A, −) to that of Y on the product with Bℕ (the homotopy quotient
-by the twist), with coefficients D ↦ B_max ⊗_{A_max} D (`crysPeriodCoeff`). -/
-lemma compatibleRootsAreLines_crysTest {p : ℕ} [ThePrime p] [h : CrysPeriodAlgebra] :
-    CompatibleRootsAreLines crysPeriodCoeff (pdReduction integersToPdQuotient) := by
-  -- Write `𝔡` for the divided power ideal `pdIdeal`. The root systems of `t` modulo `𝔡` are
-  -- represented by the divided power envelope `E` of `A[v ^ ℚ≥0]` along `z = t - v`. It has the
-  -- topological basis `v ^ a * z ^ n / n !`, `0 ≤ a < 1`, and the twist `γ` multiplies `v ^ a` by
-  -- `[ε ^ a]`; `koszulExact_lineEnvelope` gives the exactness that `IsLine.of_acyclic` asks for.
-  rintro A ⟨⟨t⟩⟩ ht
-  let E : CrysTest Amax := lineEnvelope t
-  let i : A ⟶ E := lineEnvelope.incl t
-  let v : Multiplicative ℚ≥0 →* E := lineEnvelope.var t
-  let x : (TimesBNat.incl _ ⋙ compatibleRootsAt (pdReduction integersToPdQuotient) ⟨⟦t⟧⟩) E :=
-    lineEnvelope.point t
-  have x_univ : ∀ B : CrysTest Amax, Bijective (pointMap x B) :=
-    bijective_pointMap_lineEnvelope_point t
-  -- the twist of the universal point is induced by an endomorphism `γ` of `E`
-  obtain ⟨⟨γ⟩, hγ⟩ := (x_univ E).surjective ((TimesBNat.shiftEnd _ 1).asHom.app E x)
-  obtain ⟨hγ_roots, hγ_maps⟩ := Prod.ext_iff.mp (Subtype.ext_iff.mp hγ)
-  refine .of_acyclic (ψ := 𝟭 _) (F' := crysPeriodCoeff) (isoOfAppBijective _ x_univ)
-    (IsCohomEquiv.of_isIso _).bij i γ (fun D f ↦ rfl) ⟨uliftCoyonedaEquiv.injective hγ⟩ ?_
-  -- `γ (v ^ a) = [ε ^ a] * v ^ a`: this holds modulo `𝔡`, and lifts of root systems are unique
-  let e : Multiplicative ℚ≥0 →* Amax :=
-    (algebraMap Ainf Amax).toMonoidHom.comp ((teichmuller p).comp epsPowNNRat)
-  have hγ_v : MonoidHom.comp γ.hom.hom v = (algebraMap Amax E).toMonoidHom.comp e * v := by
-    refine E.property.monoidHom_lift_bijective.injective (MonoidHom.ext fun a ↦ ?_)
-    refine (DFunLike.congr_fun (congrArg ULift.down hγ_roots) a).trans ?_
-    exact congrArg (pdQuotientMap _ · * _) (integersToPdQuotient_untilt _)
-  -- `γ` fixes the image of `A`
-  have hγ_i : i ≫ γ = i := congrArg ULift.down hγ_maps
-  exact koszulExact_lineEnvelope ht γ (by rw [hγ_i]) hγ_v
 
 end CrystallineLines
 
@@ -789,12 +782,12 @@ lemma Comparison.IsBijective.isBijectiveOn_of_compatibleRoots {n : ℕ} {U : Com
   | succ n ih =>
     -- `Y` is the functor of points of `U` with a root system of `t 0`, with its action of `ℕ`. It
     -- is a line over `U` on both sides, because its fibres over points are.
-    let Y : TimesBNat (CommAlg OC) ⥤ Type 1 := fibreProd compatibleRoots.atOne (whiskerLeft _ (t 0))
-    let a : Y ⟶ TimesBNat.fst _ ⋙ U := fibreProd.snd ..
+    let Y : TimesBNat (CommAlg OC) ⥤ Type 1 := fiberProd compatibleRoots.atOne (whiskerLeft _ (t 0))
+    let a : Y ⟶ TimesBNat.fst _ ⋙ U := fiberProd.snd ..
     have h_line {D : Type 1} [Category D] {G : AbFunctor D} {χ : D ⥤ CommAlg OC}
         (h : CompatibleRootsAreLines G χ) : IsLine G ((χ.prod _).whiskerLeft a) :=
-      isBijective_of_fibres (χ.whiskerLeft (t 0))
-        (isPullback_fibreProd.map (Variety.restrictAlong _)) fun B y ↦ h _ _ (h_unit 0 _ _)
+      isBijective_of_fibers (χ.whiskerLeft (t 0))
+        (isPullback_fiberProd.map (Variety.restrictAlong _)) fun B y ↦ h _ _ (h_unit 0 _ _)
     -- With the action forgotten, `Y` carries the `n` other units and is covered by `ih`.
     have hY : c.IsBijectiveOn η (incl _ ⋙ Y) := by
       refine ih ((incl _).whiskerLeft a ≫ t ·.succ) ⟨(_, _), h_root 0⟩ _

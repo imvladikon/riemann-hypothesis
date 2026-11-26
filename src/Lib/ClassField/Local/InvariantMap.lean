@@ -159,7 +159,7 @@ lemma exists_isClassOfInvariant :
   -- The class of `r` is the cyclic class `(c r, π)`, where `π` is a uniformiser and `c r` is the
   -- unramified character with value `r` at the Frobenius element.
   obtain ⟨π, hπ⟩ : ∃ π : (unitsModule Γ).H0, ordRat k A π.val = 1 :=
-    ⟨_, L.exists_isUniformiser.choose_spec.ordRat_eq_one L⟩
+    ⟨_, L.exists_isUniformizer.choose_spec.ordRat_eq_one L⟩
   obtain ⟨φ₀, hφ₀⟩ : ∃ φ : Γ, IsFrob A (residueCard k A) φ := L.frobenius_spec.left
   choose c hc c_unique using existsUnique_unramified_char hφ₀
   -- If `(χ, w) = 0` then `w` is a norm from the fixed field of `χ`. For unramified `χ`, the order
@@ -307,7 +307,7 @@ lemma _root_.New.Cohomology.resH2_classOfInvariant {r : QZ} :
   -- The degree `[Γ : V]` is `e * f`, so this is `pairMapH2_classOfInvariant_of_ordRat_eq` for the
   -- inclusion of `V`, with a uniformiser `π` of `k` as the invariant of order `1`.
   obtain ⟨e, f, h_ram, -⟩ := (of_finite V).exists_isRamificationData
-  obtain ⟨π, hπ_unif⟩ : ∃ π : kˣ, IsUniformiser A π.val := L.exists_isUniformiser
+  obtain ⟨π, hπ_unif⟩ : ∃ π : kˣ, IsUniformizer A π.val := L.exists_isUniformizer
   have hπ : ordRat k A (ofBase Γ Ω (Additive.ofMul π)) = 1 := hπ_unif.ordRat_eq_one L
   have hπ_V : ordRat (fixedFieldOf (V : Subgroup Γ)) A
       ((Units.map (RingHom.id Ω)).toAdditive (ofBase Γ Ω (Additive.ofMul π)).val) = e := by

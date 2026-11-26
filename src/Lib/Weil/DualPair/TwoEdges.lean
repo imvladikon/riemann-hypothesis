@@ -100,15 +100,6 @@ normalised by the characters `rankTwist a` for the ranks of V and V'. -/
 abbrev liftWeilFin : Gf E ι × Gf E ι' →* Module.End ℂ ↥(V.hom V').finitePart :=
   pairWeilFinite V V' (rankTwist a ι) (rankTwist a ι')
 
-/-- `New.Seesaw.arrowProduct` applied: the product of the flip of f with f'. -/
-private lemma arrowProduct_apply :
-    arrowProduct f f' =
-      (V'.hom (flipSum V V'')).boxProd (homSigns_sum_target signs_comp_refl) (V₂ := V'.hom V'')
-        ((flipCoords star_normNegOne_mul_self rfl).map (V₁ := V.hom V') (V := V'.hom (flipSpace V))
-          f)
-        f' :=
-  rfl
-
 /-- The entries of a block matrix `fromRows A B` over the first block of rows are those of A. -/
 private lemma matrixToVec_fromRows_comp_inl {R m₁ m₂ k : Type*} (A : Matrix m₁ k R)
     (B : Matrix m₂ k R) :
@@ -146,7 +137,7 @@ lemma theta_arrowProduct :
           ((flipCoords star_normNegOne_mul_self rfl).map (V := V'.hom (flipSpace V)) f) =
         z * (V.hom V').θ f := by
     simpa [pairTheta, mk_one_one] using h_flip 1 f 1 1 1 (by simp)
-  rw [arrowProduct_apply, theta_boxProd_target rfl _ rfl, h_one, mul_assoc]
+  rw [arrowProduct, ContinuousLinearMap.comp_apply, theta_boxProd_target rfl _ rfl, h_one, mul_assoc]
 
 /-- Translating the joined datum by the block matrix with rows `w*` (the adjoint of `w`) and `w'`
 is the same as translating `f` by `w` and `f'` by `w'` before joining. -/

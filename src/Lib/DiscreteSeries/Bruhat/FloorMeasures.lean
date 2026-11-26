@@ -614,7 +614,7 @@ lemma measurable_floorWeyl [H : IsHermitianUnit T.splitGram] :
     Measurable (floorWeyl l : A → T.G) := by
   classical
   have h_isUnit : Measurable fun c : A ↦ IsUnit c :=
-    measurableEmbedding_units_val.measurableSet_range.mem
+    Units.measurableEmbedding_val.measurableSet_range.mem
   refine measurable_unitary_of_coe
     (measurable_pi_iff.2 fun i ↦ measurable_pi_iff.2 fun j ↦ ?_)
   simp only [floorWeyl, weylOn, eq_ite_iff, not_and, Pi.star_apply, isUnit_star, star_star,

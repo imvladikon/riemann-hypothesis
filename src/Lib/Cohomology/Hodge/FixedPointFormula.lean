@@ -348,7 +348,7 @@ lemma IsTangentPoly.hasJacobianRatio_eval_div {X : CommAlg E ⥤ Type 1}
       simp only [N, LinearMap.comp_apply, LinearEquiv.coe_coe, map_neg,
         LinearEquiv.symm_apply_apply, LinearMap.sub_apply, LinearMap.smul_apply,
         one_apply_eq_self]
-      module
+      exact neg_sub φ (t • (φ - S φ))
     calc
       t • ξ α - ξ γ = D (t • (φ - S φ) - φ) := by
         rw [hα_coord, hγ_coord, map_sub D (t • (φ - S φ)) φ, map_smul]

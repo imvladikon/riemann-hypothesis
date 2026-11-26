@@ -928,7 +928,8 @@ lemma exists_isBaseChangeLevel {H : Subgroup (Gf E n)} (hH : H.IsOpen) :
     · exact fun hS₀ ↦ h_notMem (.inr (by simpa using hS₀))
   -- Both congruence conditions hold at `x = N * C` for a suitable `N ≠ 0`.
   obtain ⟨N, hN, h_small⟩ := mem_nhds_zero_finAdele_iff.1
-    ((eventually_mem_kerCompNorm_of_apply_localNorm_eq_one fun u hu ↦ (hA_unram u hu).apply_localNorm_eq_one).and
+    ((eventually_mem_kerCompNorm_of_apply_localNorm_eq_one
+        fun u hu ↦ (hA_unram u hu).apply_localNorm_eq_one).and
       (eventually_mem_of_baseChangeGf_congr hH hS₀_le hA_off))
   obtain ⟨h_idele, h_group⟩ := h_small C (by simp)
   let m : Ô E' := N * C + ⟨idem A, idem_mem_Ô A⟩ * (1 - N * C)

@@ -389,12 +389,12 @@ def compatibleRoots.atOne : compatibleRoots ⟶ TimesBNat.fst (CommAlg OC) ⋙ u
 variable {C : Type 1} [Category C] (F : AbFunctor C) (ψ : C ⥤ CommAlg OC)
 
 /-- Let ψ be a functor from C to O_C-algebras and y a point of ψ(A). This is the functor on C × Bℕ,
-the fibre product (`fibreProd`) of `compatibleRoots.atOne` along ψ with the point `pointMap y`,
+the fibre product (`fiberProd`) of `compatibleRoots.atOne` along ψ with the point `pointMap y`,
 sending B to the pairs of a character w : ℚ≥0 → ψ(B) and a map f : A → B with w(1) = ψ(f)(y). Such a
 w is a system of roots of the image of y. -/
 abbrev compatibleRootsAt {A : C} (y : (ψ ⋙ underlyingSet).obj A) :
     C × SingleObj (Multiplicative ℕ) ⥤ Type 1 :=
-  fibreProd ((ψ.prod (𝟭 (SingleObj (Multiplicative ℕ)))).whiskerLeft compatibleRoots.atOne)
+  fiberProd ((ψ.prod (𝟭 (SingleObj (Multiplicative ℕ)))).whiskerLeft compatibleRoots.atOne)
     ((TimesBNat.fst C).whiskerLeft (pointMap (Y := ψ ⋙ underlyingSet) (A := A) y))
 
 /-- For every object A and unit y of ψ(A), the root systems of y (`New.Variety.compatibleRootsAt`)
@@ -402,7 +402,7 @@ form a line over Hom(A, −). That is, the projection to Hom(A, −) is bijectiv
 coefficients F. -/
 abbrev CompatibleRootsAreLines : Prop :=
   ∀ (A : C) (y : (ψ ⋙ underlyingSet) A), IsUnit y.down →
-    IsLine F (Y := compatibleRootsAt ψ y) (fibreProd.snd ..)
+    IsLine F (Y := compatibleRootsAt ψ y) (fiberProd.snd ..)
 
 end RootSystems
 
@@ -767,7 +767,7 @@ lemma PadicTest.isLine_compatibleRoots
     HasFlatBaseChange (freeAb (TimesBNat.incl PadicTest ⋙ compatibleRootsAt algFunctor v)) ∧
     -- (b) they form a line
     IsLine (tilt ⋙ moduleCoeff (tensorCoeff M)) (Y := compatibleRootsAt algFunctor v)
-      (fibreProd.snd ..) := by
+      (fiberProd.snd ..) := by
   -- The functor of root systems of `v` is `Hom(periodicSeq c.TiltRing, (-)^♭)`: choose one system
   -- `r`; the periodic sequences `x n` lifting `k ↦ (ζ ^ k * r) n` along the untilt give the
   -- universal system. As `periodicSeq c.TiltRing` is perfect, both claims follow, `shift` acting as

@@ -86,7 +86,7 @@ namespace IsSplitLevel
 open scoped Classical in
 variable (n S) in
 /-- The matrix `diag (1, …, 1, N)` at the places of `P` that lie in `S`, and `1` at the others. -/
-def diagN [_Λ : IsSplitLevel P N] : GL (n ⊕ Unit) (LocProd P) :=
+def diagN : GL (n ⊕ Unit) (LocProd P) :=
   diagGL fun i : n ⊕ Unit ↦ if i.isLeft then 1 else
     MulEquiv.piUnits.symm fun w : P ↦ if ↑w ∈ S then .mk0 N NeZero.out else 1
 
@@ -147,7 +147,7 @@ lemma reductionGL_liftGL (k : GL n (P → ZMod N)) : reductionGL (Λ.liftGL k) =
 end
 
 /-- The matrix `diag (1, …, 1, N⁻¹)` at all places of `P`. -/
-abbrev diagNInv : GL (n ⊕ Unit) (LocProd P) := (Λ.diagN n P)⁻¹
+abbrev diagNInv : GL (n ⊕ Unit) (LocProd P) := (diagN (N := N) n P)⁻¹
 
 /-- The character `ψ_N (y) = ψ (-y / N)` of the residues at `P`, where `ψ` is the additive character
 `stdLattice.selfDualAddChar E` of the finite adeles and `y / N` is the adele `residueOverN y`. -/
@@ -205,7 +205,7 @@ open scoped Classical in
 runs over the vectors modulo `N` whose last entry `y_last` is a unit. The matrix `D` replaces the
 standard lattice by the lattice enlarged by the last basis vector divided by `N`. -/
 def upOperator : Module.End ℂ π :=
-  π.ρ diagNInv * ∑ y : n ⊕ Unit → P → ZMod N with IsUnit (y (.inr ())),
+  π.ρ (diagNInv (P := P) (N := N)) * ∑ y : n ⊕ Unit → P → ZMod N with IsUnit (y (.inr ())),
     psiN (y (.inr ())) • π.ρ (inclGL (lastRowColGL y))
 
 /-- The integral invertible matrices whose last column is the last basis vector modulo `N`: the
@@ -312,7 +312,7 @@ structure LiftLaw (L : (Matrix (n' ⊕ Unit) (n ⊕ Unit) (LocProd P) → ℂ) �
   /-- Passing in the direct datum from bases of the enlarged lattices (`lastRowDatum`) to bases of
   the original lattices (`directDatum`) costs the factor `γ`. -/
   diagNInv_lastRowDatum (φ : π) :
-    π'.ρ diagNInv (L lastRowDatum φ) = γ • L directDatum (π.ρ diagNInv φ)
+    π'.ρ (diagNInv (P := P) (N := N)) (L lastRowDatum φ) = γ • L directDatum (π.ρ (diagNInv (P := P) (N := N)) φ)
 
 variable {π π'} {φ : π}
   {L : (Matrix (n' ⊕ Unit) (n ⊕ Unit) (LocProd P) → ℂ) →ₗ[ℂ] π →ₗ[ℂ] π'} {γ : ℂ}
@@ -388,11 +388,11 @@ omit [WeilData E] in
 `D⁻¹ T D` is integral with last row the last basis vector modulo `N` (`lastRowDatum`) exactly if
 `T` is integral with last column the last basis vector modulo `N` (`directDatum`). -/
 lemma lastRowDatum_conj_diagNInv (T : Matrix (n' ⊕ Unit) (n ⊕ Unit) (LocProd P)) :
-    lastRowDatum ((Λ.diagNInv (n := n'))⁻¹.val * T * (Λ.diagNInv (n := n)).val) =
+    lastRowDatum ((diagNInv (P := P) (N := N) (n := n'))⁻¹.val * T * (diagNInv (P := P) (N := N) (n := n)).val) =
       directDatum T := by
   -- Conjugation multiplies the last row of `T` by `N` and the last column by `N⁻¹`, off the corner.
   set C : Matrix (n' ⊕ Unit) (n ⊕ Unit) (LocProd P) :=
-    (Λ.diagNInv (n := n'))⁻¹.val * T * (Λ.diagNInv (n := n)).val with hC
+    (diagNInv (P := P) (N := N) (n := n'))⁻¹.val * T * (diagNInv (P := P) (N := N) (n := n)).val with hC
   have h_block (i : n') (j : n) : C (.inl i) (.inl j) = T (.inl i) (.inl j) := by
     simp only [hC, diagNInv, diagN, ← map_inv, inv_inv, coe_diagGL, Pi.inv_apply,
       Units.val_inv_eq_inv_val, mul_diagonal, diagonal_mul, Sum.isLeft_inl, Units.val_one, one_mul,
@@ -461,13 +461,13 @@ integral invertible matrix whose last row is the last basis vector modulo `N`. -
 lemma exists_inclGL_eq_conj_diagNInv {g : GL (n ⊕ Unit) (LocProd P)} (hg : g ∈ Λ.mirabolic) :
     ∃ k : GL (n ⊕ Unit) (O (F := LocProd P)),
       (Λ.reductionGL k).val (.inr ()) = lastBasisVector ∧
-      inclGL k = Λ.diagNInv⁻¹ * g * Λ.diagNInv := by
+      inclGL k = (diagNInv (P := P) (N := N))⁻¹ * g * (diagNInv (P := P) (N := N)) := by
   classical
   have h_conj {a : GL (n ⊕ Unit) (LocProd P)} (ha : a ∈ mirabolic) :
-      lastRowDatum (Λ.diagNInv⁻¹ * a * Λ.diagNInv).val ≠ 0 := by
+      lastRowDatum ((diagNInv (P := P) (N := N))⁻¹ * a * (diagNInv (P := P) (N := N))).val ≠ 0 := by
     rw [Units.val_mul, Units.val_mul, lastRowDatum_conj_diagNInv]
     exact directDatum_ne_zero_of_mem_mirabolic ha
-  have h_conj_inv : lastRowDatum (Λ.diagNInv⁻¹ * g * Λ.diagNInv)⁻¹.val ≠ 0 := by
+  have h_conj_inv : lastRowDatum ((diagNInv (P := P) (N := N))⁻¹ * g * (diagNInv (P := P) (N := N)))⁻¹.val ≠ 0 := by
     rw [_root_.mul_inv_rev, _root_.mul_inv_rev, inv_inv, ← mul_assoc]
     exact h_conj (inv_mem hg)
   obtain ⟨k, hk_row, hk⟩ := exists_inclGL_eq
@@ -520,8 +520,8 @@ lemma mirabolic_fix_upOperator
   -- Both `k * lastRowColGL y` and `lastRowColGL (k y)` have last column `k y` modulo `N`, so they
   -- differ by an element of `mirabolic`.
   have h_mem (y : n ⊕ Unit → P → ZMod N) (hy : IsUnit (y (.inr ()))) :
-      (diagNInv * inclGL (lastRowColGL (reductionGL k • y)))⁻¹ * g *
-        (diagNInv * inclGL (lastRowColGL y)) ∈ Λ.mirabolic := by
+      (diagNInv (P := P) (N := N) * inclGL (lastRowColGL (reductionGL k • y)))⁻¹ * g *
+        (diagNInv (P := P) (N := N) * inclGL (lastRowColGL y)) ∈ Λ.mirabolic := by
     refine mem_mirabolic.2 ⟨(lastRowColGL (reductionGL k • y))⁻¹ * k * lastRowColGL y, ?_, ?_⟩
     · rw [map_mul, map_mul, map_inv, mul_smul, mul_smul, inv_smul_eq_iff,
         lastRowColGL_smul_lastBasisVector hy,
@@ -720,7 +720,7 @@ datum and the two representations. Let `φ` be ramified: at each place `w` of `P
 an integral unit scalar `x` that is `1` modulo `N` away from `w`. Then the mirror lift of `φ`, moved
 by `D = diagNInv = diag (1, …, 1, N⁻¹)`, is `Up` of the direct lift of `φ`. -/
 lemma mirror_eq_upOperator_direct (H : LiftLaw π π' L γ) (hφ : φ ∈ ramified π) :
-    π'.ρ Λ.diagNInv (L mirrorDatum φ) = upOperator π' (L directDatum φ) := by
+    π'.ρ (diagNInv (P := P) (N := N)) (L mirrorDatum φ) = upOperator π' (L directDatum φ) := by
   classical
   -- Sort by the last column `y`; its term is the translate of the direct lift by `lastRowColGL y`.
   have h_term (y : n' ⊕ Unit → P → ZMod N) (hy : IsUnit (y (.inr ()))) :
@@ -743,7 +743,7 @@ each place `w` of `P` it is `ψ - x ψ` for an integral unit scalar `x` that is 
 from `w`. Then the lift of `φ` by `mirrorDatum`, moved by `D`, is `γ` times the direct lift
 `L directDatum` of `Up φ`. -/
 lemma mirror_eq_direct_upOperator (H : LiftLaw π π' L γ) (hφ : φ ∈ ramified π) :
-    π'.ρ Λ.diagNInv (L mirrorDatum φ) = γ • L directDatum (upOperator π φ) := by
+    π'.ρ (diagNInv (P := P) (N := N)) (L mirrorDatum φ) = γ • L directDatum (upOperator π φ) := by
   classical
   -- Sort by the last row `y`; its term is the lift by `lastRowDatum` after `lastRowColGL y`.
   have h_term (y : n ⊕ Unit → P → ZMod N) (hy : IsUnit (y (.inr ()))) :
@@ -817,15 +817,15 @@ lemma glued_eq_direct_direct_upOperator (H : LiftLaw π π' L γ) [DecidableEq n
     {π'' : Rep ℂ (GL (n'' ⊕ Unit) (LocProd P))}
     {L' : (Matrix (n'' ⊕ Unit) (n' ⊕ Unit) (LocProd P) → ℂ) →ₗ[ℂ] π' →ₗ[ℂ] π''} {γ' : ℂ}
     (H' : LiftLaw π' π'' L' γ') (hφ : φ ∈ ramified π) :
-    π''.ρ Λ.diagNInv (∑ y : n' ⊕ Unit → P → ZMod N, L' (charDatum y) (L (lastColDatum y) φ)) =
+    π''.ρ (diagNInv (P := P) (N := N)) (∑ y : n' ⊕ Unit → P → ZMod N, L' (charDatum y) (L (lastColDatum y) φ)) =
       (#(primitiveVectors (P := P) (N := N) (n' ⊕ Unit)) • (γ' * γ)) •
         L' directDatum (L directDatum (upOperator π φ)) := by
   -- Separate into a mirror lift after a direct lift, replace the mirror lift by a direct lift after
   -- `Up`, and move `Up` through the first lift.
   let c : ℕ := #(primitiveVectors (P := P) (N := N) (n' ⊕ Unit))
   have h_ramified : L directDatum φ ∈ ramified π' := H.mem_ramified _ hφ
-  calc π''.ρ Λ.diagNInv (∑ y : n' ⊕ Unit → P → ZMod N, L' (charDatum y) (L (lastColDatum y) φ))
-      = c • π''.ρ Λ.diagNInv (L' mirrorDatum (L directDatum φ)) := by
+  calc π''.ρ (diagNInv (P := P) (N := N)) (∑ y : n' ⊕ Unit → P → ZMod N, L' (charDatum y) (L (lastColDatum y) φ))
+      = c • π''.ρ (diagNInv (P := P) (N := N)) (L' mirrorDatum (L directDatum φ)) := by
         rw [H.sum_charDatum_lastColDatum H' hφ, map_nsmul]
     _ = c • γ' • L' directDatum (γ • L directDatum (upOperator π φ)) := by
         rw [H'.mirror_eq_direct_upOperator h_ramified, H.upOperator_direct hφ]
@@ -885,7 +885,7 @@ abbrev gluedLift
       (Matrix (X (j + 1) ⊕ Unit) (X j ⊕ Unit) (LocProd P) → ℂ) →ₗ[ℂ] π j →ₗ[ℂ] π (j + 1))
     (d : ℕ → ℂ) (i : ℕ) : π (2 * i) →ₗ[ℂ] π (2 * (i + 1)) :=
   open scoped Classical in
-  d i • (π (2 * i + 1 + 1)).ρ diagNInv ∘ₗ
+  d i • (π (2 * i + 1 + 1)).ρ (diagNInv (P := P) (N := N)) ∘ₗ
     ∑ y : X (2 * i + 1) ⊕ Unit → P → ZMod N,
       L (2 * i + 1) (charDatum y) ∘ₗ L (2 * i) (lastColDatum y)
 

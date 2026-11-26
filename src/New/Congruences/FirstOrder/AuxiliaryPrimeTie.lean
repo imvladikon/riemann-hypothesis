@@ -132,7 +132,8 @@ translates at `w j`, such that for all `g` in the Galois group, `Nm_j tr[(γ - 1
 `∂ tr[(γ - 1) g] ≡ Nm_j tr[(φ - 1) H(φ) g]`, where `Nm_j` is the sum over `GL_n(𝔽_w)` at `w = w j`,
 and such that each `g ∈ GL_n(𝔽_w)` has an integral operator `Z` with `c ∂ (g - 1) ≡ Nm_j Z` and
 `δ Nm Z = 0`. -/
-theorem exists_mul_traceElement_tameGenerator_eq_frob (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
+theorem exists_mul_traceElement_tameGenerator_eq_frob
+    (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (j : J) {H : EllAdicIntegers[X]} {t : ℕ} (ht : t ≠ 0) (δ : D.heckeAlgebra Q.place)
     (h_chain : ∀ x : D.Eigensystem Q.place, x.val ∈ D.Eigensystem ![] → δ.val x ≠ 0 →
@@ -545,7 +546,8 @@ lemma C_prod_sub_prod_mul_mem {R : Type*} [CommRing R] {ι K : Type*} [Fintype K
     {I : Ideal (MvPolynomial J R)} {f : MvPolynomial J R} {β : ι → R}
     (g : K → ι) (hI : ∀ k : K, .C (β (g k)) * f ∈ I) (value : K → R) :
     .C (∏ k, (value k - β (g k)) - ∏ k, value k) * f ∈ I := by
-  -- The elements that `f` multiplies into `I` form an ideal modulo which each selected factor is zero.
+  -- The elements that `f` multiplies into `I` form an ideal modulo which each selected factor is
+  -- zero.
   suffices h_mem : ∏ k, (value k - β (g k)) - ∏ k, value k ∈ (I.colon {f}).comap MvPolynomial.C by
     simpa [Submodule.mem_colon_singleton] using h_mem
   have h_zero_mod (k : K) : Ideal.Quotient.mk ((I.colon {f}).comap MvPolynomial.C) (β (g k)) = 0 :=
@@ -692,7 +694,8 @@ lemma exists_diagOp_mem_ellIntegralForms (hQ : ∀ j : J, D.IsOffLevel (ℓ := �
   -- `δ₀ - n₀` lies in the ideal spanned by the `β i`, which `f` multiplies into the tied ideal.
   have h_mul_mem : .C (δ₀ - algebraMap _ _ n₀) * f ∈ tiedIdeal Q hN H := by
     simpa [δ₀, n₀, map_prod] using
-      C_prod_sub_prod_mul_mem sel (fun k ↦ hI (sel k)) fun k ↦ algebraMap EllAdicIntegers _ (liftValue k)
+      C_prod_sub_prod_mul_mem sel (fun k ↦ hI (sel k))
+          fun k ↦ algebraMap EllAdicIntegers _ (liftValue k)
   refine ⟨(A ^ (Fintype.card J + 1) * f.coeff (∑ j, .single j 1) :),
     (ellVal_le_ellVal ?_).trans h_top, fun l hl d hd y hy y_supp y_eq ↦ ?_⟩
   · simp [A_one π fun g i ↦ by simp]

@@ -535,7 +535,7 @@ other and the prime `ℓ` is invertible; let `s : Y → h_A` and let `z` be a va
 `ξ ∈ Y(P)`. Then the inclusion into `killingPlaces z q` of those of its places that lie over the
 closed fibre of `Y` (the points whose structure map kills the maximal ideal of `A`) induces
 isomorphisms on cohomology with coefficients `ZMod ℓ` on test rings. -/
-lemma New.Variety.ResiduePlace.isTestCohomEquiv_closedFibre_killingPlaces {ℓ : ℕ} [ThePrime ℓ]
+lemma New.Variety.ResiduePlace.isTestCohomEquiv_closedFiber_killingPlaces {ℓ : ℕ} [ThePrime ℓ]
     {A : Type} [CommRing A]
     [IsAbsIntegrallyClosedLocal A] [PreValuationRing A] {Y : PointFunctor} {P : CommRingCat}
     {s : Y ⟶ reprBy ⟨A⟩}
@@ -598,7 +598,7 @@ other and the prime `ℓ` is a unit; let `s : Y → h_A` and let `z` be a valuat
 Then the inclusion of the preimage of the closed fibre of `Y` (the points where the maximal ideal of
 `A` maps to `0`) into the space of places induces isomorphisms on cohomology with coefficients
 `ZMod ℓ` on test rings. -/
-lemma New.Variety.ResiduePlace.isTestCohomEquiv_closedFibre {ℓ : ℕ} [ThePrime ℓ] {A : Type}
+lemma New.Variety.ResiduePlace.isTestCohomEquiv_closedFiber {ℓ : ℕ} [ThePrime ℓ] {A : Type}
     [CommRing A]
     [IsAbsIntegrallyClosedLocal A] [PreValuationRing A] {Y : PointFunctor} {P : CommRingCat}
     {s : Y ⟶ reprBy ⟨A⟩} {ξ : Y.obj P} (z : ValuativeLift s ξ) (hℓ : IsUnit (ℓ : A)) :
@@ -632,7 +632,7 @@ lemma New.Variety.ResiduePlace.isTestCohomEquiv_closedFibre {ℓ : ℕ} [ThePrim
       have h_idem : IsIdempotentElem (y * t) := by grind [IsIdempotentElem]
       have h_compl : 1 - y * t ∈ q := (hq (y * t) h_idem).resolve_left h_notMem
       simpa using J.add_mem (hqJ h_compl) (J.mul_mem_left y htJ)
-    exact isTestCohomEquiv_closedFibre_killingPlaces z hℓ q
+    exact isTestCohomEquiv_closedFiber_killingPlaces z hℓ q
 
 /-- Proper base change. Let `A` be an absolutely integrally closed local domain that is a valuation
 ring (`PreValuationRing`: of any two elements one divides the other) and in which the prime `ℓ` is
@@ -663,7 +663,7 @@ lemma New.Variety.IsProperOver.proper_base_change {ℓ : ℕ} [ThePrime ℓ] {Y 
     · -- The cover stays dense on the closed fibre.
       rintro _ ⟨_, hy⟩ ⟨x, ⟨⟩⟩
       exact ⟨⟨x, hy⟩, rfl⟩
-    · exact (isTestCohomEquiv_closedFibre z hℓ).bij
+    · exact (isTestCohomEquiv_closedFiber z hℓ).bij
     -- The fibre powers of the cover are proper, so the induction hypothesis applies to them.
     -- `s'` is the structure map to `h_A` of the `m`-th fibre power of the cover.
     let s' := cech.proj (placeSpaceMap z) m 0 ≫ placeSpaceMap z ≫ s
@@ -739,7 +739,7 @@ lemma IsProperOver.injective_map_residue {ℓ n : ℕ} {W : CommRingCat ⥤ Type
         n) := by
   -- By proper base change, restriction to the closed fibre `X₀` of `W_A` (the points that kill the
   -- maximal ideal) is injective, and the inclusion of `X₀` factors through `res : W_κ ⟶ W_A`.
-  let pr : baseChangeOf s a ⟶ reprBy (of A) := fibreProd.snd s (reprMap a)
+  let pr : baseChangeOf s a ⟶ reprBy (of A) := fiberProd.snd s (reprMap a)
   let X₀ : Subfunctor (baseChangeOf s a) := zeroPoints pr (maximalIdeal A)
   let res : baseChangeOf s (a ≫ ofHom (residue A)) ⟶ baseChangeOf s a :=
     baseChangeTransition s (ofHom (residue A)) rfl
@@ -753,7 +753,7 @@ lemma IsProperOver.injective_map_residue {ℓ n : ℕ} {W : CommRingCat ⥤ Type
   -- `w` keeps the point of `W` and replaces the ring map `A → B` by `fromResidue y`.
   let w : X₀.toFunctor ⟶ baseChangeOf s (a ≫ ofHom (residue A)) :=
     { app B := ↾fun y ↦
-        ⟨((fibreProd.fst s (reprMap a)).app B y.val, ⟨fromResidue y⟩), y.val.property⟩
+        ⟨((fiberProd.fst s (reprMap a)).app B y.val, ⟨fromResidue y⟩), y.val.property⟩
       naturality B B' f := by
         -- Both sides have the same point of `W`, and their ring maps agree on each residue class.
         ext y
@@ -883,13 +883,13 @@ vanishes on the points of `W_T` at which `b` becomes a unit and on those at whic
 unit, then it vanishes on the points at which `b + c` becomes a unit. -/
 private lemma map_unitPoints_ι_add_eq_zero {T : TestRing} {a : R ⟶ of T.obj}
     {x : H (freeAb.obj (testIncl ⋙ baseChangeOf s a)) (locConstCoeff ⟨ZMod ℓ⟩) n} {b c : T.obj}
-    (hb : map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {b}).ι n x = 0)
-    (hc : map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {c}).ι n x = 0) :
-    map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {b + c}).ι n x = 0 := by
+    (hb : map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {b}).ι n x = 0)
+    (hc : map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {c}).ι n x = 0) :
+    map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {b + c}).ι n x = 0 := by
   -- An idempotent `e` with `b ∣ e * c` and `c ∣ (1 - e) * b` cuts the points where `b + c` is a
   -- unit into two disjoint pieces, on one of which `c` is a unit and on the other `b`. By
   -- Mayer–Vietoris a class there is determined by its restrictions to the two pieces.
-  let U : Set T.obj → Subfunctor (baseChangeOf s a) := unitPoints (fibreProd.snd s (reprMap a))
+  let U : Set T.obj → Subfunctor (baseChangeOf s a) := unitPoints (fiberProd.snd s (reprMap a))
   obtain ⟨e, he, h_bc, h_cb⟩ : ∃ e : T.obj, IsIdempotentElem e ∧ b ∣ e * c ∧ c ∣ (1 - e) * b :=
     T.property.isComparableRing b c
   -- `P d` is the set of points at which `(1 - d) * (b + c)` is a unit.
@@ -907,15 +907,15 @@ private lemma map_unitPoints_ι_add_eq_zero {T : TestRing} {a : R ⟶ of T.obj}
   -- A point of `U {b + c}` that kills `d` lies in `P d`, and the points that kill `e` or `1 - e`
   -- are dense.
   have h_mem_piece {B : CommRingCat} (y : (baseChangeOf s a).obj B) (d : T.obj)
-      (hy : IsUnit (baseRingMap (fibreProd.snd s (reprMap a)) y (b + c)))
-      (hd : baseRingMap (fibreProd.snd s (reprMap a)) y d = 0) : y ∈ (P d).obj B := by
+      (hy : IsUnit (baseRingMap (fiberProd.snd s (reprMap a)) y (b + c)))
+      (hd : baseRingMap (fiberProd.snd s (reprMap a)) y d = 0) : y ∈ (P d).obj B := by
     rintro _ rfl
     rwa [map_mul, map_sub, map_one, hd, sub_zero, one_mul]
   have h_dense : IsCohomDense (locConstCoeff ⟨ZMod ℓ⟩)
       (((P e ⊔ P (1 - e)).preimage (U {b + c}).ι).whisker testIncl) := by
     -- the structure map `T → B` of a point, as a morphism of test rings
     let toT : testIncl ⋙ (U {b + c}).toFunctor ⟶ reprBy T :=
-      .mk fun _ ↦ ↾fun y ↦ ⟨⟨baseRingMap (fibreProd.snd s (reprMap a)) y.val⟩⟩
+      .mk fun _ ↦ ↾fun y ↦ ⟨⟨baseRingMap (fiberProd.snd s (reprMap a)) y.val⟩⟩
     refine .of_preimage_le (hasPartitions_locConstCoeff.isCohomDense_partition (A := T) _ he)
       toT fun _ y k ↦ ?_
     exact k.imp (h_mem_piece y.val e (y.property _ rfl))
@@ -940,7 +940,7 @@ private lemma map_unitPoints_ι_add_eq_zero {T : TestRing} {a : R ⟶ of T.obj}
 private def unitVanishingIdeal (T : TestRing) (a : R ⟶ of T.obj)
     (x : H (freeAb.obj (testIncl ⋙ baseChangeOf s a)) (locConstCoeff ⟨ZMod ℓ⟩) n) :
     Ideal T.obj where
-  carrier := {b : T.obj | map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {b}).ι n x = 0}
+  carrier := {b : T.obj | map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {b}).ι n x = 0}
   add_mem' hb hc := map_unitPoints_ι_add_eq_zero hb hc
   -- no point makes `0` a unit except over the zero ring
   zero_mem' := hasPartitions_locConstCoeff.eq_zero_of_zero_ring (by simp [unitPoints]) ..
@@ -957,11 +957,11 @@ private lemma exists_notMem_map_unitPoints_ι_eq_zero_of_map_residue_eq_zero (hs
     (hP : map ⟨ZMod ℓ⟩
       (baseChangeTransition s (ofHom (algebraMap T.obj P.asIdeal.ResidueField)) (a := a) rfl) n
       x = 0) :
-    ∃ b ∉ P.asIdeal, map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {b}).ι n x = 0 := by
+    ∃ b ∉ P.asIdeal, map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {b}).ι n x = 0 := by
   -- The class vanishes over the local ring at `P` by `injective_map_residue`, so on `U M` for the
   -- complement `M` of `P`; by continuity it vanishes on `U t` for a finite `t ⊆ M`; take
   -- `b = ∏ t`.
-  let U : Set T.obj → Subfunctor (baseChangeOf s a) := unitPoints (fibreProd.snd s (reprMap a))
+  let U : Set T.obj → Subfunctor (baseChangeOf s a) := unitPoints (fiberProd.snd s (reprMap a))
   let M : Submonoid T.obj := P.asIdeal.primeCompl
   obtain ⟨h_aic_local, h_valuation, -⟩ := T.property.exists_valuationSubring_atPrime P.asIdeal
   let loc : baseChangeOf s (a ≫ ofHom (algebraMap T.obj (Localization M))) ⟶ baseChangeOf s a :=
@@ -970,16 +970,16 @@ private lemma exists_notMem_map_unitPoints_ι_eq_zero_of_map_residue_eq_zero (hs
   have h_loc : map ⟨ZMod ℓ⟩ loc n x = 0 := hs.injective_map_residue hℓ (by simpa [← map_comp])
   -- `loc` is the pull-back of the localisation map, whose image holds the points inverting `M`.
   obtain ⟨w, h_fac⟩ : ∃ w, w ≫ loc = (U M).ι := by
-    let pr : baseChangeOf s a ⟶ reprBy (of T.obj) := fibreProd.snd s (reprMap a)
-    have h_pb : IsPullback (fibreProd.snd ..) loc (reprMap (ofHom (algebraMap ..))) pr :=
-      isPullback_fibreProd.of_bot rfl isPullback_fibreProd
+    let pr : baseChangeOf s a ⟶ reprBy (of T.obj) := fiberProd.snd s (reprMap a)
+    have h_pb : IsPullback (fiberProd.snd ..) loc (reprMap (ofHom (algebraMap ..))) pr :=
+      isPullback_fiberProd.of_bot rfl isPullback_fiberProd
     let toImage := fromPreimage _ pr ≫ homOfLe (unitPoints_le_range_reprMap (Localization M) M)
     exact ⟨_, h_pb.lift_snd _ (U M).ι
       ((Category.assoc ..).trans
         (toImage ≫= IsIso.inv_hom_id_assoc (toRange (uliftCoyoneda.map _)) (ι _)))⟩
   have h_rep (I : Set T.obj) : IsRelAffine (U I).ι :=
     isRelAffine_ι_of_forall_map_mem_iff fun y ↦
-      ⟨∅, baseRingMap (fibreProd.snd s (reprMap a)) y '' I, by simp [U, unitPoints]⟩
+      ⟨∅, baseRingMap (fiberProd.snd s (reprMap a)) y '' I, by simp [U, unitPoints]⟩
   have h_anti_U : Antitone U := fun _I _I' h_le _C _y hy c hc ↦ hy c (h_le hc)
   -- `U M` is the intersection of the `U t`, so its cohomology is the filtered colimit of theirs
   have h_cont := ((hs.baseChange a).isCohomContinuous
@@ -1032,7 +1032,7 @@ lemma IsProperOver.isOpen_zero_set_and_eq_zero (hs : IsProperOver s) (hℓ : IsU
   -- If `x` vanishes at every prime, the zero locus of `J` is empty, so `1 ∈ J`; and `1` is a
   -- unit at every point.
   have h_empty : zeroLocus (J : Set T.obj) = ∅ := compl_univ_iff.mp (hz.symm.trans h_univ)
-  have h_one : map ⟨ZMod ℓ⟩ (unitPoints (fibreProd.snd s (reprMap a)) {1}).ι n x = 0 :=
+  have h_one : map ⟨ZMod ℓ⟩ (unitPoints (fiberProd.snd s (reprMap a)) {1}).ι n x = 0 :=
     (eq_top_iff_one J).mp (zeroLocus_empty_iff_eq_top.mp h_empty)
   rw [← TestCohomology.map_id_apply x]
   exact map_eq_zero_of_factors (lift_ι (𝟙 _) fun _ _ ↦ by simp [unitPoints]) h_one
@@ -1130,7 +1130,7 @@ ideals `I` is zero is proper over `A`: a universal point `a` of `X_A`, taken mod
 private lemma isProperOver_botLocusBaseChange {p : X ⟶ reprBy (CommRingCat.of ℤ)}
     (hX : IsProperOver p) :
     IsProperOver ((botLocusBaseChange I p).ι ≫
-      fibreProd.snd p (reprMap (zIsInitial.to (of A)))) := by
+      fiberProd.snd p (reprMap (zIsInitial.to (of A)))) := by
   let XA : CommRingCat ⥤ Type 1 := baseChangeOf p (zIsInitial.to (of A))
   let W : Subfunctor XA := botLocusBaseChange I p
   obtain ⟨h_sep, T, a, ha⟩ := hX.baseChange (zIsInitial.to (of A))
@@ -1174,7 +1174,7 @@ lemma IdealFamily.isDetectedAtPoints_of_proper [InvertsPrime A ℓ]
   -- claims then come from `IsProperOver.isOpen_zero_set_and_eq_zero` and
   -- `IsProperOver.isTestCohomEquiv_field_extension`.
   let W : Subfunctor (baseChangeOf p (zIsInitial.to (of A))) := botLocusBaseChange I p
-  let s : W.toFunctor ⟶ reprBy (of A) := W.ι ≫ fibreProd.snd p (reprMap (zIsInitial.to (of A)))
+  let s : W.toFunctor ⟶ reprBy (of A) := W.ι ≫ fiberProd.snd p (reprMap (zIsInitial.to (of A)))
   have hs : IsProperOver s := isProperOver_botLocusBaseChange I hX
   -- `κ` compares `ℤ/ℓ` on all tests with `F` through `β`; `Wc c = W_c`, and `U c` is the part of
   -- `h_c` where `I = 0`.

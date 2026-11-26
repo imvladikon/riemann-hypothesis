@@ -430,7 +430,7 @@ integral of `Ψ` over the sphere `y* y = β` at `T`. The sphere carries the fibe
 
 This is an upper bound form of the factorization into local densities in Siegel–Weil theory: the
 factor at `T` is kept, and the remaining factor is only bounded, by `(1 + S.b⁻⁶) volÔ E ^ k`. -/
-lemma IsFillingData.enorm_normDensity_le_mul_lintegral_normFiberMeasure [WeilData E]
+lemma IsFillingData.enorm_normDensity_le_mul_lintegral_normFiberMeasure
     (hF : S.IsFillingData T F)
     {Ψ : (𝔰.κ → LocProd T) → ℝ≥0} (hΨ : Continuous Ψ) (h_supp : HasCompactSupport Ψ) {β : 𝔸f E}
     (hβ : star β = β) {δβ : skewAdjoint (LocProd T)}

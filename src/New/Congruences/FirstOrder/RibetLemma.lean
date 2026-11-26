@@ -215,7 +215,7 @@ the ties (see below) times `g` (`IsTraceIdeal`). Representations act on `O[X j][
 `polyAction` and characters through `polyChar`. Let `k` be `1` on the characters and `0` on the
 blocks, and let `q₀` be `μ₀` on `ξ 0` and `0` on the other characters. Let `B₀` and the `M i`
 (`i : κ`) be matrices of tied rows for `ρ₀ = n + (1 - n) (a - 1)` with `n = c₁ (γ - 1)`
-(`tiedNormaliser`), and `wt i` weights. Then one `f : S` multiplies the determinants of all
+(`tiedNormalizer`), and `wt i` weights. Then one `f : S` multiplies the determinants of all
 combinations `∑ ω g (u x g - 1)` into `𝒥`, and its value at `x ∈ 𝓧` is
 `∑ wt i μ₀ det (B₀ on the block) ∏ det (M i on ξ e)`. A row `r` over `O[X j][G]` is tied
 (`tiedRows`) if `∑ r i (gen i - 1)` lies in `tieIdeal`, the left ideal of `O[X j][G]` spanned by the
@@ -235,9 +235,9 @@ lemma exists_traceIdeal_multiplier_eq_sum_det {r : Type} [Fintype r] [DecidableE
     (hkρ : ∀ x : 𝓧, polyAction J (ρ x) k = 0) {μ₀ : MvPolynomial J O}
     (hq₀ : ∀ e : Fin t, polyChar J (ξ e) q₀ = if e = 0 then μ₀ else 0)
     (B₀ : Matrix ι ι (MvPolynomial J O)[G])
-    (hB₀ : ∀ i : ι, B₀ i ∈ tiedRows u gen p τ φ ε (tiedNormaliser J γ a c₁))
+    (hB₀ : ∀ i : ι, B₀ i ∈ tiedRows u gen p τ φ ε (tiedNormalizer J γ a c₁))
     {κ : Type} [Fintype κ] (wt : κ → MvPolynomial J O) (M : κ → Matrix ι ι (MvPolynomial J O)[G])
-    (hM : ∀ (i : κ) (j : ι), M i j ∈ tiedRows u gen p τ φ ε (tiedNormaliser J γ a c₁)) :
+    (hM : ∀ (i : κ) (j : ι), M i j ∈ tiedRows u gen p τ φ ε (tiedNormalizer J γ a c₁)) :
     ∃ f : S,
       (∀ ω : G →₀ O, (f : Y → MvPolynomial J L) * (fun x : Y ↦ MvPolynomial.C
         (algebraMap O L (linearCombination O (fun g : G ↦ u x g - 1) ω).det)) ∈ 𝒥) ∧
@@ -249,7 +249,7 @@ lemma exists_traceIdeal_multiplier_eq_sum_det {r : Type} [Fintype r] [DecidableE
   let χ (x : Y) : Λ[G] →ₐ[Λ] Matrix σ σ Λ := polyAction J (u x)
   let ψ (x : 𝓧) : Λ[G] →ₐ[Λ] Matrix r r Λ := polyAction J (ρ x)
   let η (e : Fin t) : Λ[G] →ₐ[Λ] Λ := polyChar J (ξ e)
-  let N : Submodule Λ[G] (ι → Λ[G]) := tiedRows u gen p τ φ ε (tiedNormaliser J γ a c₁)
+  let N : Submodule Λ[G] (ι → Λ[G]) := tiedRows u gen p τ φ ε (tiedNormalizer J γ a c₁)
   let gen_sub_one : ι → Λ[G] := MonoidAlgebra.of Λ G ∘ gen - 1
   -- Ribet's element for `(1 - k) • B₀ + k • M i`, with `ρ₁ = k q₀`; `κS` lifts `Λ` to `S`.
   obtain ⟨κS, hκS⟩ : ∃ κS : Λ →+* S, (algebraMap S (Y → MvPolynomial J L)).comp κS =
@@ -259,8 +259,8 @@ lemma exists_traceIdeal_multiplier_eq_sum_det {r : Type} [Fintype r] [DecidableE
       (fun x ↦ ((χ x (.single g 1)).map (algebraMap Λ (MvPolynomial J L))).charpoly.coeff n) ∈
         S := by
     simpa only [χ, Λ, coeff_charpoly_map_polyAction_single] using h𝒥.charpoly_coeff_mem g n
-  have hη₀ : η 0 (tiedNormaliser J γ a c₁) = 0 := by
-    simp [η, Λ, tiedNormaliser, polyChar_single, hξ₀, AlgHom.map_smul_of_tower]
+  have hη₀ : η 0 (tiedNormalizer J γ a c₁) = 0 := by
+    simp [η, Λ, tiedNormalizer, polyChar_single, hξ₀, AlgHom.map_smul_of_tower]
   have hψ₁ (x : 𝓧) : ψ x (k * q₀) = 0 := by simp [ψ, hkρ]
   have hη₁ (e : Fin t) : η e (k * q₀) = if e = 0 then μ₀ else 0 := by simp [η, hkξ, hq₀]
   have h_tied (i : κ) (j : ι) : ((1 - k) • B₀ + k • M i) j ∈ N :=
@@ -272,7 +272,7 @@ lemma exists_traceIdeal_multiplier_eq_sum_det {r : Type} [Fintype r] [DecidableE
         (Matrix.comp ι ι r r Λ (((1 - k) • B₀ + k • M i).map (ψ x))).det *
         ∏ e, (((1 - k) • B₀ + k • M i).map (η e)).det) :=
     Selmer.exists_ribet_element_of_tied_rows blockEquiv χ κS hκS hχ_coeff 𝒥 gen_sub_one
-      (tiedNormaliser J γ a c₁) (k * q₀) ((1 - k) • B₀ + k • M i)
+      (tiedNormalizer J γ a c₁) (k * q₀) ((1 - k) • B₀ + k • M i)
       (exists_mulVec_eq_add_mul_of_mem_tiedRows u 𝒥 hz h𝒥 (h_tied i))
       ψ η (fun x ↦ polyAction_eq_reindex u blockEquiv (hu_block x)) hψ₁ hη₁ hη₀
   choose f hf_mem hf_eq using exists_f
@@ -609,11 +609,11 @@ lemma exists_isCommonRibetElement_addVal_le (u : Y → G →* Matrix σ σ O)
   -- Generators: the `δ v`, a finite `s₀` whose `u · g - 1` span all the others, and `s`.
   obtain ⟨s₀, z, hz⟩ : ∃ (s₀ : Finset G) (z : G → W ⊕ s₀ ⊕ s → O),
       AreCoordinates u (ribetGenerators δ s₀ s) z := exists_areCoordinates_ribetGenerators u δ s
-  -- With `c₁ = 1 / (y π - 1)`, the element `c₁ (γ π - 1)` of `tiedNormaliser` is `1` on `ρ π`.
+  -- With `c₁ = 1 / (y π - 1)`, the element `c₁ (γ π - 1)` of `tiedNormalizer` is `1` on `ρ π`.
   obtain ⟨c₁, hc₁⟩ : ∃ c : O, c * (y π - 1) = 1 := (hy_unit π).exists_left_inv
   -- The block: tied rows `B₀` whose determinant on `ρ π`, at `X j = 0`, has valuation at most `b₀`.
   obtain ⟨B₀, hB₀, hB₀_val⟩ : ∃ B₀ : Matrix (W ⊕ s₀ ⊕ s) (W ⊕ s₀ ⊕ s) (MvPolynomial J O)[G],
-      (∀ i, B₀ i ∈ tiedRows u (ribetGenerators δ s₀ s) p τ φ ε (tiedNormaliser J (γ π) a c₁)) ∧
+      (∀ i, B₀ i ∈ tiedRows u (ribetGenerators δ s₀ s) p τ φ ε (tiedNormalizer J (γ π) a c₁)) ∧
       addVal O (Matrix.comp _ _ r r O (B₀.map (polyActionAtZero J (ρ π)))).det ≤ b₀ :=
     exists_tiedRows_addVal_det_le u (ρ π) hρ_span (hργ π) hc₁ a hz hb₀
   -- The characters: matrices `R.tiedMatrix i` of tied rows for all characters.

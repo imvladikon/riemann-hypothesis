@@ -134,7 +134,7 @@ additive group isomorphic to `Lˣ` (by `y`). Then some surjective `f : Y → ℤ
 `|y a| = |π| ^ n` exactly when `f a = n`. -/
 lemma New.IsLocalGalois.exists_surjective_ord {Γ L Ω : Type} [Group Γ] [TopologicalSpace Γ]
     [Field L] [Field Ω] [Algebra L Ω] [MulSemiringAction Γ Ω] {A : ValuationSubring Ω}
-    (hLocal : IsLocalGalois Γ L A) {π : Lˣ} (hπ : IsUniformiser A π.val) {Y : Type} [AddCommGroup Y]
+    (hLocal : IsLocalGalois Γ L A) {π : Lˣ} (hπ : IsUniformizer A π.val) {Y : Type} [AddCommGroup Y]
     (y : Y ≃+ Additive Lˣ) :
     ∃ f : Y →+ ℤ, Function.Surjective f ∧ ∀ (a : Y) (n : ℤ),
       A.valuation.comap (algebraMap L Ω) (y a).toMul = A.valuation.comap (algebraMap L Ω) π ^ n ↔
@@ -173,7 +173,7 @@ lemma New.cokerKerIndex_local_units {Γ L Ω : Type} [Group Γ] [TopologicalSpac
   -- The index is multiplicative in `1 → Oˣ → Lˣ → ℤ → 0`, it is `l` on `ℤ`, and `Oˣ` may be
   -- replaced by the subgroup `V = 1 + l π O` of finite index. On `V` the `l`-th power map is
   -- injective, and `a ↦ (a - 1) / (l π)` identifies its cokernel with `O / l`.
-  obtain ⟨π, hπ⟩ := hLocal.exists_isUniformiser
+  obtain ⟨π, hπ⟩ := hLocal.exists_isUniformizer
   -- The fields of `hLocal` (discrete valuation ring, finite residue field, …) as local instances.
   have h_fields := hLocal
   obtain ⟨⟩ := h_fields

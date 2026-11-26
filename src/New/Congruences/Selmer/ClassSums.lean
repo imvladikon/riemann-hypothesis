@@ -446,41 +446,29 @@ modulus `I` in `D.TameChar`, the weight-zero tamely ramified characters of U(1)(
 lemma exists_tameChar_invAvatar_eq {I : Finset (FinPlace D.E)} (hI : IsAuxiliary (badPlaces D ℓ) I)
     {ψ : Gal(Ω/D.E) →* PadicAlgCl ℓ} (hψ : IsFromU1 (placesDividing D.E ℓ) I ψ) :
     ∃ τ : D.TameChar, τ.Q = I ∧ ψ = τ.invAvatar := by
-  -- `ψ (Art x) = η (x / star x)` for a character `η` of the finite ideles that kills the
-  -- principal ones. Restricted to U(1), `η` factors through the class group of tame level `I`, so
-  -- it comes from a tame character `μ`; then `ψ` is `TameChar.invAvatar` of `μ⁻¹`.
-  obtain ⟨η, η_rat, η_int, η_art⟩ : ∃ η : (𝔸f D.E)ˣ →* PadicAlgCl ℓ,
-      (∀ y : D.Eˣ, η (principalIdele y) = 1) ∧
-      (∀ a ∈ idelesUnitOff (placesDividing D.E ℓ).conjClosure,
-        (∀ w ∈ ↑I \ (placesDividing D.E ℓ).conjClosure,
-          Valued.v ((ideleAt w a : LocField w) - 1) < 1) → η a = 1) ∧
-      ∀ (x : (𝔸f D.E)ˣ) (g : Gal(Ω/D.E)), artinMap Gal(Ω/D.E) x = g → ψ g = η (x / star x) :=
-    hψ.exists_ideleChar
+  -- Factor `ψ ∘ Art` through `η`, restrict to `U(1)`, and lift to `tameChars I`.
+  obtain ⟨η, η_rat, η_int, η_art⟩ := hψ.exists_ideleChar
   let toFinIdele : unitary (𝔸 D.E) →* (𝔸f D.E)ˣ :=
-    (Units.map (MonoidHom.snd (NumberField.InfinitePlace D.E → ℂ) (𝔸f D.E))).comp Unitary.toUnits
+    (Units.map (MonoidHom.snd _ (𝔸f D.E))).comp Unitary.toUnits
   let η' : unitary (𝔸 D.E) →* PadicAlgCl ℓ := η.comp toFinIdele
-  -- `η'` is trivial on rational points and on integral points that are `1` modulo `I`.
-  have rat_le : rationalU1 ≤ η'.ker := by
-    intro u hu
+  have rat_le : rationalU1 ≤ η'.ker := fun u hu ↦ by
     obtain ⟨y, hy⟩ := exists_unitary_of_mem_rationalU1 hu
-    have h_principal : toFinIdele u = principalIdele (Unitary.toUnits y) :=
+    have h : toFinIdele u = principalIdele (Unitary.toUnits y) :=
       Units.ext (by simp [toFinIdele, ← hy])
-    simp [η', h_principal, η_rat]
+    simp [η', h, η_rat]
   have int_le : integralU1 I ≤ η'.ker := fun u ⟨hu, hu_red⟩ ↦
     η_int _ (idelesUnitOff_mono bot_le (idelesUnitOff_empty.ge ⟨hu, star_mem_Ô hu⟩))
       fun w hw ↦ residue_eq_iff_valuation_sub_lt_one.1 (hu_red w hw.1)
-  let χ : unitary (𝔸 D.E) ⧸ (rationalU1 ⊔ integralU1 I) →* ℂ :=
-    MonoidHom.comp ιℓ.symm (QuotientGroup.lift _ η' (sup_le rat_le int_le))
-  -- The character `χ` is that of a member `μ` of `tameChars I`.
-  obtain ⟨μ, hμ⟩ := AutChar.exists_mem_tameChars χ
+  obtain ⟨μ, hμ⟩ := AutChar.exists_mem_tameChars
+    (MonoidHom.comp ιℓ.symm (QuotientGroup.lift _ η' (sup_le rat_le int_le)))
   refine ⟨tameCharOfAuxiliary I hI μ⁻¹, rfl, MonoidHom.ext fun g ↦ ?_⟩
   obtain ⟨x, hx⟩ := artinMap_surjective (AbsGal D) g
   let u : unitary (𝔸 D.E) := divStar (finIdeleIncl x)
-  have h_baseChange : (μ.val.1.baseChange.finPart x : ℂ) = μ.val.1.val u := rfl
   calc ψ g = η (x / star x) := η_art x g hx
     _ = η' u := congrArg η (Units.ext rfl)
     _ = ιℓ (μ.val.1.val u) := ιℓ.symm_apply_eq.1 (hμ u).symm
     _ = (tameCharOfAuxiliary I hI μ⁻¹).invAvatar g := by
-      simp [invAvatar_eq_of_artinMap_eq hx, h_baseChange, -map_inv₀]
+      have h_bc : (μ.val.1.baseChange.finPart x : ℂ) = μ.val.1.val u := rfl
+      simp [invAvatar_eq_of_artinMap_eq hx, h_bc, -map_inv₀]
 
 end New.Selmer

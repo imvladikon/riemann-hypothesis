@@ -731,9 +731,9 @@ lemma _root_.New.Variety.isProperOver_id_reprBy {R : CommRingCat.{0}} :
   exact ULift.up_inj.trans h_iff
 
 /-- The base change of a proper functor along a ring map `φ : D ⟶ T` is proper over `T`. -/
-lemma baseChange (h : IsProperOver s) (φ : D ⟶ T) : IsProperOver (fibreProd.snd s (reprMap φ)) := by
+lemma baseChange (h : IsProperOver s) (φ : D ⟶ T) : IsProperOver (fiberProd.snd s (reprMap φ)) := by
   -- `reprBy T` is proper over itself; apply `of_isPullback` to the fibre product.
-  exact isProperOver_id_reprBy.of_isPullback isProperOver_id_reprBy isPullback_fibreProd h φ rfl
+  exact isProperOver_id_reprBy.of_isPullback isProperOver_id_reprBy isPullback_fiberProd h φ rfl
 
 /-- Let `c : Y ⟶ Z` be a map over `D`, with `Y` and `Z` proper over `D`, that is onto on points in
 every algebraically closed field. Then `c` has dense image, for locally constant `Λ`-valued
@@ -917,7 +917,7 @@ lemma New.Variety.IsGaloisCovering.hasCohomDenseImage_geomPoints {R : CommRingCa
     ((isProperOver_pointsToBase _).baseChange _) fun k _ _ ⟨⟨⟨y_pt⟩, ω⟩, hy⟩ ↦ ?_
   -- lift the scheme point `y_pt` of `Y` to a point `x` of `W`, and keep the map `ω` out of `Ω`
   obtain ⟨x, hx⟩ : ∃ x : Spec (CommRingCat.of k) ⟶ W.left, x ≫ c.left = y_pt :=
-    exists_point_over _ (h.surjective.surj _)
+    (Scheme.Hom.exists_comp_eq_iff_mem_range _ _).2 (h.surjective.surj _)
   have h_over : x ≫ W.hom = y_pt ≫ Y.hom := by simp [← hx]
   have h_base : (pointsToBase W.hom).app (CommRingCat.of k) ⟨x⟩ =
       (pointsToBase Y.hom).app (CommRingCat.of k) ⟨y_pt⟩ :=

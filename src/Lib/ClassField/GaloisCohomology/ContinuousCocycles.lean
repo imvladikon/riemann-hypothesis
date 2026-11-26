@@ -312,7 +312,7 @@ variable {Γ K Ω : Type*} [Group Γ] [Field K] [Field Ω] [Algebra K Ω] [MulSe
 /-- `π` is a uniformiser of `K` for `A`: an element `x` of `K` lies in the maximal ideal of `A`
 exactly when its valuation is at most that of `π`. Here `valuationVia K A x` is the valuation of
 `A` at the image of `x` in `Ω`. -/
-def IsUniformiser (π : K) : Prop :=
+def IsUniformizer (π : K) : Prop :=
   ∀ x : K, valuationVia K A x < 1 ↔ valuationVia K A x ≤ valuationVia K A π
 
 /-- For a subgroup `H` of `Γ`, the intermediate field of `Ω / K` of the elements fixed by `H`. -/
@@ -379,22 +379,22 @@ infinite). -/
 abbrev residueCard : ℕ := Nat.card (IsLocalRing.ResidueField (valRingBelow K A))
 
 /-- The order normalised on `K`: a chosen additive `f : Ωˣ → ℚ` with `n * f x = a` exactly when
-`x ^ n` and `π ^ a` have equal valuation, for every uniformiser `π` of `K` (`New.IsUniformiser`: an
+`x ^ n` and `π ^ a` have equal valuation, for every uniformiser `π` of `K` (`New.IsUniformizer`: an
 `x : K` lies in the maximal ideal of `A` exactly when its valuation is at most that of `π`);
 valuations are those of `A`, taken in `Ω`. It is unspecified if no such map exists; see
 `New.valuation_pow_eq_iff_mul_ordRat_eq_of_exists`. -/
 def ordRat : DiscreteUnits Ω →+ ℚ :=
   Classical.epsilon fun f : DiscreteUnits Ω →+ ℚ ↦
-    ∀ π : Kˣ, IsUniformiser A (π : K) → ∀ (x : DiscreteUnits Ω) (n : ℕ) (a : ℤ),
+    ∀ π : Kˣ, IsUniformizer A (π : K) → ∀ (x : DiscreteUnits Ω) (n : ℕ) (a : ℤ),
       A.valuation x.toMul ^ n = valuationVia K A π ^ a ↔ n * f x = a
 
 /-- The defining property of `New.ordRat` (`x ^ n` and `π ^ a` have equal valuation in `A` exactly
 when `n * ordRat K A x = a`, for each uniformiser `π`) holds as soon as some additive map has it. -/
 lemma valuation_pow_eq_iff_mul_ordRat_eq_of_exists
-    (h_exists : ∃ f : DiscreteUnits Ω →+ ℚ, ∀ π : Kˣ, IsUniformiser A (π : K) →
+    (h_exists : ∃ f : DiscreteUnits Ω →+ ℚ, ∀ π : Kˣ, IsUniformizer A (π : K) →
       ∀ (x : DiscreteUnits Ω) (n : ℕ) (a : ℤ),
         A.valuation x.toMul ^ n = valuationVia K A π ^ a ↔ n * f x = a)
-    (π : Kˣ) (hπ : IsUniformiser A (π : K)) (x : DiscreteUnits Ω) (n : ℕ) (a : ℤ) :
+    (π : Kˣ) (hπ : IsUniformizer A (π : K)) (x : DiscreteUnits Ω) (n : ℕ) (a : ℤ) :
     A.valuation x.toMul ^ n = valuationVia K A π ^ a ↔ n * ordRat K A x = a :=
   Classical.epsilon_spec h_exists π hπ x n a
 

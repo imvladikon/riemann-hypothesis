@@ -384,7 +384,9 @@ lemma exists_pow_mul_mem_amaxImage (hU : c.IsPeriodMatrix U h v) :
   -- `amaxImage`
   have hWU : W *ᵥ U *ᵥ y = (c.E * tau) ^ h • y := hU.mulVec_injective (by rw [hW, mulVec_smul])
   -- the entries of `U y = E ^ h x` lie in `amaxImage`
-  have hUy_int : ∀ j : d, (U *ᵥ y) j ∈ amaxImage := by aesop
+  have hUy_int (j : d) : (U *ᵥ y) j ∈ amaxImage := by
+    rw [hy, Pi.smul_apply]
+    exact amaxImage.smul_mem (amaxImage.algebraMap_mem (x j)) _
   have h_eq : U *ᵥ (p ^ n • c.extendToBPlus f ∘ y) = c.E.val ^ h • p ^ n • w := by
     rw [smul_comm, ← hw, ← mulVec_smul]
   have h_hat_int (j : d) : (p ^ n • c.extendToBPlus f ∘ y) j ∈ amaxImage := by

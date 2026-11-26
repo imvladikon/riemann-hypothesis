@@ -47,7 +47,7 @@ multiplicative character of an algebraically closed extension `K` of `k_w`.
 Notions from other files:
 * `New.IsPlaceOver A w`: the valuation subring `A` of `Ω` lies over `w`, that is, an integer of `E`
   is in the maximal ideal of `A` exactly when it lies in `w`.
-* `New.Cohomology.centrePrime Ω A`: the integers of `Ω` that lie in the maximal ideal of `A`.
+* `New.Cohomology.centerPrime Ω A`: the integers of `Ω` that lie in the maximal ideal of `A`.
 * `New.charName T χ`: the unit of `k_w` that names the character `χ` of `k_wˣ`; the map `χ ↦ x_χ` is
   an isomorphism from the character group of `k_wˣ` to `k_wˣ` that depends on `T`.
 * `New.GaloisRep.PolyKillsAt r A s Q`: the polynomial `Q` kills `r s` if `ℓ` is a unit at `A`, and
@@ -85,10 +85,10 @@ lemma exists_resField_hom {R : Type*} [Field R] (g : 𝓞 E →+* R) (h_le_ker :
 
 /-- Witness data for `New.GaloisRep.IsTameExponent`. -/
 structure IsTameWitness (φ : 𝓞 Ω →+* K) (π : E) (z : Ω) (t : 𝓞 Ω) : Prop where
-  centrePrime_le_ker : centrePrime Ω A ≤ ker φ
+  centrePrime_le_ker : centerPrime Ω A ≤ ker φ
   commutes (x : 𝓞 E) : φ (algebraMap (𝓞 E) (𝓞 Ω) x) =
     algebraMap (ResField w) K (algebraMap (𝓞 E) (ResField w) x)
-  isUniformiser : IsUniformiser A π
+  isUniformiser : IsUniformizer A π
   pow_eq : z ^ (w.q ^ f - 1) = algebraMap E Ω π
   coe_eq : (t : Ω) = s z / z
   map_eq : T (φ t) = Complex.exp (2 * Real.pi * Complex.I / (w.q ^ f - 1 : ℕ)) ^ a
@@ -130,7 +130,7 @@ lemma IsTameExponent.pow_apply_charName [IsFaithfulMulChar K T]
       (h_exp.isPlaceOver.valuation_sub_lt_one_iff_of_localArtin_eq hw.isUniformiser hu h_artin
         (by rw [← pow_mul', ← hk, hw.pow_eq])).1 (residue_eq_iff_valuation_sub_lt_one.1 hx.symm)
     rw [map_pow, ← div_pow, ← hw.coe_eq] at h_sym
-    have h_cong : t ^ k - algebraMap (𝓞 E) (𝓞 Ω) x ∈ centrePrime Ω A := mem_centrePrime.2 h_sym
+    have h_cong : t ^ k - algebraMap (𝓞 E) (𝓞 Ω) x ∈ centerPrime Ω A := mem_centerPrime.2 h_sym
     simpa [← hx, hw.commutes, sub_eq_zero] using hw.centrePrime_le_ker h_cong
   rw [← thetaChar_charName T χ, ← h_res]
   exact (thetaChar_apply_pow T Finite.one_lt_card (algebraMap_pow_card_pred_eq_one _)
@@ -153,15 +153,15 @@ lemma _root_.New.IsLabel.root_pow_eq_one {c : (ResField w)[X]} {r : ℕ} (h_labe
   exact ⟨h_pow r.factorial_ne_zero (dvd_factorial hP.natDegree_pos hd_le),
     P.natDegree, ⟨hP.natDegree_pos, hd_le⟩, h_pow hP.natDegree_pos.ne' dvd_rfl⟩
 
-/-- Extend `ResField w →+* K` to `𝓞 Ω →+* K` killing `centrePrime Ω A` when `K` is alg. closed. -/
+/-- Extend `ResField w →+* K` to `𝓞 Ω →+* K` killing `centerPrime Ω A` when `K` is alg. closed. -/
 private lemma exists_ringHom_centrePrime_le_ker [IsAlgClosed K] (hA : IsPlaceOver A w) :
-    ∃ ρ : 𝓞 Ω →+* K, centrePrime Ω A ≤ ker ρ ∧ ∀ x : 𝓞 E,
+    ∃ ρ : 𝓞 Ω →+* K, centerPrime Ω A ≤ ker ρ ∧ ∀ x : 𝓞 E,
       ρ (algebraMap (𝓞 E) (𝓞 Ω) x) =
         algebraMap (ResField w) K (algebraMap (𝓞 E) (ResField w) x) := by
-  have := hA.centrePrime_liesOver; let := Quotient.field w.asIdeal
+  have := hA.centerPrime_liesOver; let := Quotient.field w.asIdeal
   algebraize [(algebraMap (ResField w) K).comp
     (Ideal.Quotient.lift w.asIdeal (algebraMap (𝓞 E) (ResField w)) (by simp))]
-  let j : (𝓞 Ω ⧸ centrePrime Ω A) →ₐ[𝓞 E ⧸ w.asIdeal] K := IsAlgClosed.lift
+  let j : (𝓞 Ω ⧸ centerPrime Ω A) →ₐ[𝓞 E ⧸ w.asIdeal] K := IsAlgClosed.lift
   exact ⟨j.toRingHom.comp (Ideal.Quotient.mk _), fun _ ht ↦ by simp [eq_zero_iff_mem.2 ht],
     fun x ↦ j.commutes (Ideal.Quotient.mk w.asIdeal x)⟩
 
@@ -215,14 +215,14 @@ private lemma IsTameExponent.of_unramified {L : Type} [Field L] [EmbeddedNumberF
   obtain ⟨ρ, hρ⟩ := h_exp.exists_witness
   obtain ⟨π, z, t, hw⟩ := hρ
   obtain ⟨i, hi⟩ := exists_resField_hom u (ρ.comp (algebraMap (𝓞 L) (𝓞 Ω))) <| by
-    rw [hAu.centrePrime_liesOver.over]; exact fun _ hx ↦ hw.centrePrime_le_ker hx
+    rw [hAu.centerPrime_liesOver.over]; exact fun _ hx ↦ hw.centrePrime_le_ker hx
   algebraize [i]
   refine ⟨i.toAlgebra, .of_algebraMap_eq fun y ↦ ?_,
     ⟨hAu, right_ne_zero_of_mul h_exp.level_ne_zero, h_exp.mem_inertiaGroup,
       ρ, ⟨algebraMap E L π, z, t,
         { centrePrime_le_ker := hw.centrePrime_le_ker, commutes := fun x ↦ (hi x).symm,
-          isUniformiser := by rw [hAu.isUniformiser_iff, ← (u.below E).valuation_liesOver L,
-            h_exp.isPlaceOver.isUniformiser_iff.1 hw.isUniformiser, h_ram, pow_one],
+          isUniformiser := by rw [hAu.isUniformizer_iff, ← (u.below E).valuation_liesOver L,
+            h_exp.isPlaceOver.isUniformizer_iff.1 hw.isUniformiser, h_ram, pow_one],
           pow_eq := by rw [← hq, ← pow_mul, hw.pow_eq, IsScalarTower.algebraMap_apply E L Ω],
           coe_eq := hw.coe_eq, map_eq := by rw [← hq, ← pow_mul, hw.map_eq] }⟩⟩⟩
   obtain ⟨x, rfl⟩ := algebraMap_ResField_surjective _ y
@@ -253,7 +253,7 @@ private lemma exists_inertStep {E : Type} [Field E] [EmbeddedNumberField E] [CMT
     (hp : p.Prime) :
     ∃ (μ : QZChar Gal(Ω/E)) (u : FinPlace (stepField μ)),
       (∃ η : (LocField w)ˣ →* Multiplicative QZ, GaloisRep.IsStepOfLocalChar A η p μ u) ∧
-      inertiaGroup Gal(Ω/E) A ≤ ker (symmetrise μ) ∧
+      inertiaGroup Gal(Ω/E) A ≤ ker (symmetrize μ) ∧
       u.asIdeal.ramificationIdx (𝓞 E) = 1 ∧ w.q ^ p = u.q := by
   have : Fact p.Prime := ⟨hp⟩
   let η : (LocField w)ˣ →* Multiplicative QZ :=
@@ -263,11 +263,11 @@ private lemma exists_inertStep {E : Type} [Field E] [EmbeddedNumberField E] [CMT
     (DFunLike.ne_iff.2 ⟨uniformizer w, by simp [η, map_eq_zero_iff]⟩)
     (fun x ↦ by simp [η, ← ofAdd_nsmul, ← map_nsmul, ZMod.natCast_self])
     (fun x hx ↦ by rw [map_pow, hη_unit x hx, one_pow])
-  have h_unram : inertiaGroup Gal(Ω/E) A ≤ ker (symmetrise μ) :=
-    (hA.artinAt_units_trivial_iff_inertiaGroup_le (symmetrise μ)).1
-      fun x hx ↦ (h_step.abelianLift_symmetrise_artinAt x).trans (hη_unit x hx)
+  have h_unram : inertiaGroup Gal(Ω/E) A ≤ ker (symmetrize μ) :=
+    (hA.artinAt_units_trivial_iff_inertiaGroup_le (symmetrize μ)).1
+      fun x hx ↦ (h_step.abelianLift_symmetrize_artinAt x).trans (hη_unit x hx)
   have h_ram : u.asIdeal.ramificationIdx (𝓞 E) = 1 :=
-    (hA.ramification_in_tower (ker (symmetrise μ)) h_step.isPlaceOver).2.1 h_unram
+    (hA.ramification_in_tower (ker (symmetrize μ)) h_step.isPlaceOver).2.1 h_unram
   refine ⟨μ, u, ⟨η, h_step⟩, ⟨h_unram, h_ram, ?_⟩⟩
   have h_below : u.below E = w := (h_step.below_eq_iff u).2 rfl
   have h_in : u.asIdeal.inertiaDeg (𝓞 E) = p := by
@@ -300,12 +300,9 @@ private lemma New.GaloisRep.Attached.isLabelledAt_one (hf : f ∈ (stdSpace E n)
   have h_act (g : GL n (LocField w)) : (ρ (reindexGL (Fintype.equivFin n) g) ⟨f, hf⟩).val =
       rightRegular ℂ (Gf E n) (WeylIndex n κ.1 → ℂ) (ofSplitPlace hw g) f := by
     simp [ρ, Patching.localFormRep, Patching.embedAtSplit]
-  let red := intGL.map (n := n) (IsLocalRing.residue (Valued.integer (LocField w)))
-  have h_red (k : intGL n (Valued.integer (LocField w))) : red k = reduceGL k := rfl
-  have h_fix : ∀ k, red k = 1 → ρ (reindexGL (Fintype.equivFin n) k.val) ⟨f, hf⟩ = ⟨f, hf⟩ :=
-    fun k hk ↦ Subtype.ext ((h_act k.val).trans (h_has.1 k (h_red k ▸ hk)))
-  have h_lift : ∀ g : GL n (ResField w), red (surjInv reduceGL_surjective g) = g :=
-    fun g ↦ (h_red _).trans (surjInv_eq reduceGL_surjective g)
+  have h_fix : ∀ k, reduceGL (w := w) k = 1 →
+      ρ (reindexGL (Fintype.equivFin n) k.val) ⟨f, hf⟩ = ⟨f, hf⟩ :=
+    fun k hk ↦ Subtype.ext ((h_act k.val).trans (h_has.1 k hk))
   have h_sum : ∑ᶠ g : GL n (ResField w),
       star ((∏ b, (detChar (append ψ χ b)).rankPart (append 1 t b)).evalGL g) •
         ρ (reindexGL (Fintype.equivFin n) (surjInv reduceGL_surjective g).val) ⟨f, hf⟩ ≠ 0 := by
@@ -315,7 +312,8 @@ private lemma New.GaloisRep.Attached.isLabelledAt_one (hf : f ∈ (stdSpace E n)
     exact h_has.2 (by simpa [h_act, prod_univ_add, labelChar_X_sub_C] using h1)
   obtain ⟨z, hz, ξ, h_z⟩ := exists_sorted_of_detChar (ρ := ρ) (x := ⟨f, hf⟩) (v_uniformizer w)
     isUnitary_localFormRep (Fintype.equivFin n) h_inj (m := append 1 t)
-    (by simpa [sum_univ_add] using h_deg) h_fix h_lift h_sum
+    (by simpa [sum_univ_add] using h_deg) h_fix (s := surjInv (reduceGL_surjective (w := w)))
+    (surjInv_eq (reduceGL_surjective (w := w))) h_sum
   obtain ⟨lab, h_eig, h_sorted, h_lab⟩ := h_z
   have hez : IsEigenform z.val P := he.of_mem_cyclicSpan hz h_eig.ne_zero
   obtain ⟨h_fin, h_jump, -⟩ := hr.local_global_of_eigencharacter h_eig hez h_sorted hA 1 1 0

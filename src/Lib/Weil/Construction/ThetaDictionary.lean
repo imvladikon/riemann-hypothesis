@@ -18,8 +18,9 @@ form, the translations `T_γ` of functions on `ℂ^(Φ × n)` and the theta func
 * `New.Space.range_apply_finVec_eq_range_ratShift_entireTheta`: for a standard space and `φ` in the
   finite part, the values of `φ` at the finite adelic vectors are the values
   `T_γ (entireTheta φ) 0`.
-* `New.Space.exists_smul_entireTheta_of_isThetaFunction`: for a standard space, the theta functions for `𝔞₀ⁿ` are the
-  multiples of the theta function of the vacuum, because the Riemann form on `𝔞₀ⁿ` is unimodular.
+* `New.Space.exists_smul_entireTheta_of_isThetaFunction`: for a standard space, the theta functions
+  for `𝔞₀ⁿ` are the multiples of the theta function of the vacuum, because the Riemann form on `𝔞₀ⁿ`
+  is unimodular.
 
 Here `ℂ^(Φ × n)` stands for `InfinitePlace E × n → ℂ`, and `Φ w` is the embedding of `E` in `ℂ` that
 the CM type chooses at the infinite place `w`.
@@ -540,7 +541,8 @@ lemma finrank_thetaSpace_realLattice
 A function `F` on `ℂ^(Φ × n)` is a theta function for the lattice `𝔞₀ⁿ` of `Eⁿ`, that is, entire
 and fixed by its signed translations, exactly when it is a multiple of the theta function of the
 vacuum vector of `V`. -/
-theorem Space.exists_smul_entireTheta_of_isThetaFunction (hF : IsThetaFunction (idealLattice E n) F) :
+theorem Space.exists_smul_entireTheta_of_isThetaFunction
+    (hF : IsThetaFunction (idealLattice E n) F) :
     ∃ c : ℂ, c • entireTheta V.vacElem = F := by
   -- The theta functions are those of the Hermitian form `B` on `ℂ^(Φ × n)` for the image of
   -- `𝔞₀ⁿ`. As this lattice is unimodular, their space is spanned by that of the vacuum.

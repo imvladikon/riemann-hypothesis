@@ -237,8 +237,8 @@ lemma exists_isOperatorOfCost_mem_deepElements_raiseOrder (a : ℕ) (u : ℤ) :
   obtain ⟨rfl, rfl, rfl⟩ : l = a ∧ v = u ∧ n = c l v := by
     simp only [raiseOrder] at hn_lt
     split_ifs at hn_lt with h
-    · rcases h with ⟨rfl, rfl⟩; exact ⟨rfl, rfl, by omega⟩
-    · omega
+    · exact ⟨h.1, h.2, (Int.le_of_lt_add_one hn_lt).antisymm hn_ge⟩
+    · exact (not_lt_of_ge hn_ge (by simpa only [add_zero] using hn_lt)).elim
   exact mem_singleton_self _
 
 /-- A primitive relation for one step. Let `S` be a side on an unramified chart `k` and `i` a
@@ -931,7 +931,8 @@ lemma relLength_iInf_comap_deepConstants_le {k : KummerChart Γ} {O : k.Coeffs}
     simp [Equiv.sum_comp]
   grw [relLength_iInf_le]
   simp_rw [relLength_comap, Submodule.map_top]
-  grw [sum_le_sum fun i _ ↦ relLength_constantAt_deepConstants_le hk hp hb_le hb_gt hb_gap h_window hn hr i]
+  grw [sum_le_sum fun i _ ↦
+      relLength_constantAt_deepConstants_le hk hp hb_le hb_gt hb_gap h_window hn hr i]
   norm_cast
   simp only [sum_add_distrib, ← mul_sum, ← sum_mul, h_perm]
   exact le_of_eq (by ring)

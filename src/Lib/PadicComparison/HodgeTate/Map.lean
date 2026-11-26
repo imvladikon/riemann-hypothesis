@@ -479,14 +479,22 @@ lemma hodgeTateMap_scale {q h : ℕ} (t : k) (x : HodgeH N q) :
     hodgeTateMap h (HodgeH.scale t x) = t ^ h • hodgeTateMap h x := by
   -- By `scaleModule_comp_contractionPow` the right side is the class of `x` pushed along the
   -- scaling by `t` of the coefficients, followed by `contractionPow h`.
-  erw [← comp_smul, ← scaleModule_comp_contractionPow]
+  change _ = t ^ h • comp ((Comparison.restrict toHodgeTest hodgeCoeff).pull
+    (Functor.whiskerRight toSqZero N) q x).toTotalH (contractionPow h)
+  rw [← comp_smul, ← scaleModule_comp_contractionPow]
   -- Naturality for the scaling of the site: pulling `x` back along the scaling of the space is the
   -- same as pushing it along the scaling of the coefficients.
-  erw [← (x.mapExactFunctor_restrictAlong_id ▸
-    mapExactFunctor_naturality ((Functor.whiskeringLeft ..).map _) x :)]
+  change hodgeTateMap h (H.map hodgeCoeff
+    (HodgeTest.scaleModule t (HodgeTest.sqZeroExt ⋙ N)) q x) = _
+  have h_nat :
+      H.push (HodgeTest.sqZeroExt ⋙ N) (HodgeTest.scaleModule t hodgeCoeff) q x =
+        H.map hodgeCoeff (HodgeTest.scaleModule t (HodgeTest.sqZeroExt ⋙ N)) q x :=
+    x.mapExactFunctor_restrictAlong_id ▸
+      mapExactFunctor_naturality
+        ((Functor.whiskeringLeft ..).map (HodgeTest.scaleModule t (𝟭 (HodgeTest k)))) x
+  rw [← h_nat]
   simp [hodgeTateMap, comp_assoc_of_eq, of_comp_homClass, Comparison.pull, H.map, H.push,
     Functor.mapExtAddHom, Ext.mapExactFunctor_comp, Ext.mapExactFunctor_mk₀]
-  rfl
 
 /-- For functors `M`, `L` on pairs (`M` with flat values) and `y` in the total cohomology of `L`
 with coefficients `scalarCoeff` (`(S, M) ↦ T`), the `k`-linear map `x ↦ x × y` to the total
@@ -503,8 +511,8 @@ def HodgeTatePair.cross {M L : AbFunctor HodgeTatePair} [HasFlatValues M]
   map_smul' t x := by
     -- the multiplication is linear in its first factor: `(t • a) * b = t • (a * b)`
     simp [smul_eq_comp, cup_comp_homClass_left, comp_assoc]
-    repeat erw [← homClass_comp]
-    refine congrArg (comp (x.cup y)) (congrArg TotalH.homClass ?_)
+    refine congrArg (comp (x.cup y)) ?_
+    refine (homClass_comp ..).symm.trans ((congrArg TotalH.homClass ?_).trans (homClass_comp ..))
     exact abTensor_hom_ext fun _ _ _ ↦ congrArg _ (smul_mul_assoc ..)
 
 
@@ -634,8 +642,9 @@ lemma HodgeTatePair.contractionPow_cup {a : ℕ} {M L : AbFunctor HodgeTatePair}
     -- agree because the degree-zero component `algebraMapInv` is multiplicative.
     simp [cross, cup_comp_homClass_right, ← homClass_comp, contractionPow, comp_assoc,
       cup_comp_homClass_left]
-    erw [← homClass_comp, ← homClass_comp]
-    refine congrArg (comp (x.toTotalH.cup y)) (congrArg TotalH.homClass ?_)
+    refine congrArg (comp (x.toTotalH.cup y)) ?_
+    refine Eq.trans ?_ ((homClass_comp ..).trans (congrArg (comp _) (homClass_comp ..)))
+    apply congrArg TotalH.homClass
     exact abTensor_hom_ext fun X _ _ ↦ congrArg _ ((algebraMapInv (R := X.GenericRing)).map_mul ..)
   | succ l ih =>
     -- By the Leibniz rule the class of `contractionCocycle` after the wedge product splits into the

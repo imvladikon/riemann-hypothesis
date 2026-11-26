@@ -224,14 +224,18 @@ instance [h : IsPosRiemann B] [NeZero n] : IsPosRiemann (n • B) := h.nsmul NeZ
 variable {B B' : ThetaTori.LatticeForm L} {χ} {χ' : V → ℂ} {l : V} {m : ℕ}
   {a : V} [hB : IsAppellHumbert B χ]
 
+omit hB in
+variable (B χ) in
 /-- The term exp(B(x, y − x + l) − B(l,y) − B(l,l)/2)/χ(l) of the Poincaré series at (x, y), for
-l in L. The unnamed argument is the Appell–Humbert data (B, χ), for dot notation. -/
-def IsAppellHumbert.poincareTerm (_ : IsAppellHumbert B χ) (x y : V) (l : L) : ℂ :=
+l in L. -/
+def ThetaTori.LatticeForm.poincareTerm (x y : V) (l : L) : ℂ :=
   Complex.exp (B x (y - x + l) - B l y - B l l / 2) / χ l
 
+omit hB in
+variable (B χ) in
 /-- The Poincaré series K(x, y) = ∑_{l ∈ L} exp(B(x, y − x + l) − B(l,y) − B(l,l)/2)/χ(l) of
 Appell–Humbert data (B, χ). -/
-def IsAppellHumbert.poincareSeries (x y : V) : ℂ := tsum (hB.poincareTerm x y)
+def ThetaTori.LatticeForm.poincareSeries (x y : V) : ℂ := tsum (B.poincareTerm χ x y)
 
 omit hB in
 lemma differentiable_of_mem_thetaSpace (hf : f ∈ B.thetaSpace χ) : Differentiable ℂ f := hf.1

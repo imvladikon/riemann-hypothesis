@@ -425,13 +425,7 @@ lemma lintegral_besselGraph_mul_eq {x : 𝔰.G₁} (φ : 𝔰.G₁ → ℝ≥0�
     (y : 𝔰.G₁) :
     ∫⁻ s : 𝔰.besselGraph, φ (x⁻¹ * (s.val.fst * (t * y))) ∂𝔰.besselGraphMeasure =
       ∫⁻ s : 𝔰.besselGraph, φ (x⁻¹ * (s.val.fst * y)) ∂𝔰.besselGraphMeasure := by
-  have : ContinuousMul 𝔰.G₁ := continuousMul_G₁
-  have : ContinuousMul ↥𝔰.besselGraph :=
-    ⟨(((continuous_fst.comp (continuous_subtypeVal.comp continuous_fst)).mul
-        (continuous_fst.comp (continuous_subtypeVal.comp continuous_snd))).prodMk
-      ((continuous_snd.comp (continuous_subtypeVal.comp continuous_fst)).mul
-        (continuous_snd.comp (continuous_subtypeVal.comp continuous_snd)))).subtype_mk _⟩
-  have : MeasurableMul ↥𝔰.besselGraph := ContinuousMul.measurableMul
+  have : MeasurableMul ↥𝔰.besselGraph := inferInstance
   obtain ⟨u, hu, k, rfl⟩ := exists_besselU_mul_toBesselH ht isUnit_one
   have h_mem : (u * toBesselH 𝔰 1 k, k) ∈ 𝔰.besselGraph := by
     rw [Shape.mem_besselGraph_iff_mul_inv_mem]

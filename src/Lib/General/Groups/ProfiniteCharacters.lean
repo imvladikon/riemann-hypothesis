@@ -213,8 +213,8 @@ attribute [instance] isClosed_topologicalClosure
 namespace QZChar
 
 /-- The additive map sending a continuous 1-cocycle of `G` with values in `ℤ/n` (trivial action)
-to the character `G → ℚ/ℤ` obtained by composing with the embedding `ofZMod n`. -/
-noncomputable abbrev ofZModCocycle (n : ℕ) [NeZero n] :
+to the character `G → ℚ/ℤ` obtained by composing with the map `ofZMod n`, which is zero when `n = 0`. -/
+noncomputable abbrev ofZModCocycle (n : ℕ) :
     Z1 (Representation.trivial ℤ G (ZMod n)) →+ QZChar G :=
   pairMapZ1 (ContinuousMonoidHom.id G) (ofZMod n).toIntLinearMap
 

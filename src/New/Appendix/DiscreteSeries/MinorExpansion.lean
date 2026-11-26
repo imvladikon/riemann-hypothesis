@@ -414,7 +414,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
     (le_refl ‖X‖) (by simp) (by simp [A, mul_sub, sub_mul, mul_nonneg]) (norm_neg A).le (by simp)
   -- The complementary minor of `y l`, which is that of `g`.
   have h_near_compl : ‖⁅1 - P, y l - 1⁆ - (B + C - A)‖ ≤ 4 * ‖X‖ * (4 * ‖A‖) := by
-    rw [show ⁅1 - P, y l - 1⁆ - (B + C - A) = H by simp +zetaDelta; noncomm_ring]
+    rw [show ⁅1 - P, y l - 1⁆ - (B + C - A) = H by simp +zetaDelta only [lie_def]; noncomm_ring]
     linarith [mul_nonneg hX_nonneg hA_nonneg]
   have ⟨z, hz_eq, hz⟩ := exists_det_compress_eq_exp_logOneAdd (Y := B + C - A) hP_compl hP_compl
     hX_four (hy_near l) (by simp) h_near_compl
@@ -428,7 +428,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
     ring_nf
   have h_near : ‖⁅Q, y l - 1⁆ - (A - B - C)‖ ≤ 4 * ‖X‖ * (4 * (‖A‖ + ‖⁅P, k⁆‖)) := by
     rw [show ⁅Q, y l - 1⁆ - (A - B - C) = (y l - 1) * (P - Q) - (P - Q) * (y l - 1) - H by
-      simp +zetaDelta; noncomm_ring]
+      simp +zetaDelta only [lie_def]; noncomm_ring]
     have := norm_sub_le_of_le (norm_sub_le_of_le (norm_mul_le_of_le (hy_near l) hPQ)
       (norm_mul_le_of_le hPQ (hy_near l))) hH
     linarith [mul_nonneg hX_nonneg hA_nonneg, mul_nonneg hX_nonneg hPk_nonneg]
@@ -438,7 +438,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
     (by linarith)
   rw [h_det_compl, h_minor _ (by tauto), ← h_det_compl, hx_eq] at hz_eq
   have h_conj : principalMinor (kᴴ * y l * k) p = (1 + Q * (y l - 1)).det := by
-    simp [det_one_add_mul_comm k, Q, P]
+    simp only [mul_assoc, principalMinor_eq_det, coordProj, det_one_add_mul_comm k, Q, P]
     noncomm_ring [hk]
   have h_det_y : (1 + (y l - 1)).det = (1 + X).det := by
     simpa [principalMinor_of_forall, X] using h_minor ⊤

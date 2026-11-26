@@ -56,13 +56,13 @@ lemma isTameGeneratorFor_conjGal_inv {E : Type} [Field E]
     (hδ : IsTameGeneratorFor (K := E) m B δ) :
     IsTameGeneratorFor (K := E) m (conjPlace B) (conjGal δ)⁻¹ := by
   obtain ⟨hδ_inertia, ϖ, r, hϖ, hr, hδr⟩ : δ ∈ inertiaGroup Gal(Ω/E) B ∧
-      ∃ (ϖ : Eˣ) (r : DiscreteUnits Ω), IsUniformiser B (ϖ : E) ∧
+      ∃ (ϖ : Eˣ) (r : DiscreteUnits Ω), IsUniformizer B (ϖ : E) ∧
         m • r = DiscreteUnits.ofBase Gal(Ω/E) Ω (Additive.ofMul ϖ) ∧
         unitsRep δ r - r = (rootPowHom Ω m).val 1 := hδ
   -- Conjugate the uniformiser `ϖ` and the root `δ r`, which `δ⁻¹` moves back to `r`; conjugation
   -- inverts the root of unity.
   refine ⟨by simpa using hδ_inertia, star ϖ, unitsRep cmConj (unitsRep δ r), ?_, ?_, ?_⟩
-  · simpa [hB.conjPlace_star.isUniformiser_iff, hB.isUniformiser_iff] using hϖ
+  · simpa [hB.conjPlace_star.isUniformizer_iff, hB.isUniformizer_iff] using hϖ
   · simp [← map_nsmul, hr, DiscreteUnits.ext_iff]
   · have h_back : unitsRep (conjGal δ)⁻¹ (unitsRep cmConj (unitsRep δ r)) = unitsRep cmConj r := by
       rw [← map_inv conjGal]

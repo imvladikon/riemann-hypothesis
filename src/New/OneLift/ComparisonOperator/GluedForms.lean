@@ -466,7 +466,7 @@ lemma normalizedDescent_productForm [DecidableEq m] [Fintype a] [WeilData E]
     -- with the same support conditions as on the right; compare the values on the support.
     ext x
     simp [← ite_and, ← submatrix_map, columnDatum, reduceAt_liftMod_congruenceGroup,
-      hL.indicator_eq_sum, IsBlockNormalised,
+      hL.indicator_eq_sum, IsBlockNormalized,
       O.hasWeight.hasWeight_rankTwist.apply_det_eq_prod O.apart.injective O.tame_eq_one,
       Pi.single_apply, -elim_inl, -elim_inr]
     refine sum_congr rfl fun Y _ ↦ ite_congr rfl (fun h_supp ↦ ?_) fun _ ↦ rfl

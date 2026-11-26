@@ -311,8 +311,11 @@ def zeroOrder (z : Fin k × ZMod N) : ℕ :=
 def crossSign (z : Fin k × ZMod N) : R :=
   if z.2 = D.letter then 0 else D.sign z + D.sign (D.swapVar z)
 
+private lemma one_lt_cast_card [NeZero N] : (1 : ℝ) < D.card := by
+  simpa only [card, cast_pow] using T.one_lt_q
+
 lemma cast_card_pos [NeZero N] : (0 : ℝ) < D.card :=
-  by simpa only [card, cast_pow] using one_pos.trans T.one_lt_q
+  one_pos.trans D.one_lt_cast_card
 
 @[simp] lemma varX_snd : (D.varX s).2 = s := rfl
 
@@ -1210,12 +1213,12 @@ theorem FrobeniusCycle.defect_nonpos_of_extreme_term (T : FrobeniusCycle N W R) 
   -- Stepanov's count gives `ν q ≤ q ν'`, and the defect is `(ν - ν') / (q - 1)`.
   have h_count : weight D.zeroOrder α * D.card ≤ weight D.poleOrder α :=
     RootAt.HasBoundedIncrements.weight_zeroOrder_mul_card_le (D := D) hc h_least h_not_dvd
-  have h_card : (1 : ℝ) < D.card := by simpa only [RootAt.card, cast_pow] using T.one_lt_q
   have h_defect : weight (T.defectWeight D.letter D.fst D.snd) α =
       (weight D.zeroOrder α - weight D.poleOrder α / D.card) / (D.card - 1) := by
     simp only [weight_eq_sum, D.defectWeight_eq, nsmul_eq_mul, mul_div, mul_sub,
       ← Finset.sum_div, Finset.sum_sub_distrib, smul_eq_mul, cast_sum, cast_mul]
-  refine h_defect.trans_le (div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 ?_) (by linarith))
+  refine h_defect.trans_le (div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 ?_)
+    (sub_nonneg.mpr D.one_lt_cast_card.le))
   exact (le_div_iff₀ D.cast_card_pos).2 (mod_cast h_count)
 
 /-! ### Consequences -/

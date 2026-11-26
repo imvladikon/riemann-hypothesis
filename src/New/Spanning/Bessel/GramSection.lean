@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.Matrix.L2OpNorm
 public import Mathlib.Analysis.RCLike.Sqrt
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.FDeriv.Star
@@ -384,7 +385,7 @@ lemma IsBoundedInCell.mul_oneSubNormSqInvCorner_le {Z : 𝔰.FrameMatrix} {T : �
   obtain ⟨-, -, h_diff⟩ := hZ.isUnit_det_and_norm_inv_le hT hY
   have h_corner : ‖invCorner Y‖ ≤ ‖invCorner Z‖ + 2 * T⁻¹ ^ 4 := by
     grw [norm_le_insert' (invCorner Y) (invCorner Z), ← h_diff]
-    exact add_le_add_right (norm_apply_le_l2_opNorm (A := Y⁻¹ - Z⁻¹) 𝔰.top 𝔰.top) _
+    exact add_le_add_right (norm_apply_le_l2_opNorm (Y⁻¹ - Z⁻¹) 𝔰.top 𝔰.top) _
   have h_sq : ‖invCorner Y‖ ^ 2 ≤ ‖invCorner Z‖ ^ 2 + 8 * T⁻¹ ^ 4 := by
     have h_pow_le : T⁻¹ ^ 4 ≤ 1 := pow_le_one₀ (by positivity) (inv_le_one_of_one_le₀ (by linarith))
     grw [h_corner]

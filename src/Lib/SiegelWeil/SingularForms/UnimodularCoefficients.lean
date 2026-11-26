@@ -263,14 +263,14 @@ lemma closurePart_radicalElement (c : Matrix n₁ p (𝔸 E)) (z : Matrix p p (�
     Matrix.mul_smul, Matrix.add_mul, smul_mul]
   module
 
-/-- The part `closurePart S` on S ∪ S̄ of an element `D.radicalCentre M` (matrix
+/-- The part `closurePart S` on S ∪ S̄ of an element `D.radicalCenter M` (matrix
 `1 + D.kAdelic * (M - Mᴴ) * D.lCoord`, so only `M - Mᴴ` matters) of the centre of the unipotent
 radical is the element whose parameter is multiplied by the adele that is 1 on S ∪ S̄ and 0
 elsewhere. -/
 lemma closurePart_radicalCentre (M : Matrix p p (𝔸 E)) :
-    closurePart S (D.radicalCentre M) = D.radicalCentre (idemAdele S.conjClosure • M) := by
+    closurePart S (D.radicalCenter M) = D.radicalCenter (idemAdele S.conjClosure • M) := by
   apply ext_adeleMatrix
-  simp only [adeleMatrix_closurePart, adeleMatrix_radicalCentre, conjTranspose_smul,
+  simp only [adeleMatrix_closurePart, adeleMatrix_radicalCenter, conjTranspose_smul,
     star_idemAdele_conjClosure,
     Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc, smul_add, Matrix.mul_smul, smul_mul]
   module
@@ -286,7 +286,7 @@ lemma stdAddChar_idemAdele_mul (x : 𝔸 E) :
   simp [stdAddChar]
 
 /-- Let `f` be an automorphic function, let `X` agree on `S ∪ S̄` with a point `g` that acts on the
-isotropic frame of `D` by `c`, and let `D.radicalCentre M`, whose matrix is
+isotropic frame of `D` by `c`, and let `D.radicalCenter M`, whose matrix is
 `1 + D.kAdelic * (M - Mᴴ) * D.lCoord`, be an element of the centre of the unipotent radical. Right
 translation of `X` by the part on `S ∪ S̄` of this element divides the Fourier coefficient at `T` by
 the value of the character `selfDualAddChar E : z ↦ ψ_f(ȷαᾱz)` of the finite adeles at the part on
@@ -295,18 +295,18 @@ lemma centreCoeff_mul_radicalCentre (hf : IsAutFunction W f) {T : Matrix p p E} 
     {c : Matrix p p (𝔸 E)} (hX : closurePart S X = closurePart S g) (hg : D.ActsOnFrame g c)
     (M : Matrix p p (𝔸 E)) :
     selfDualAddChar E (idemAdele S.conjClosure * (M * siegelBracket T c).trace).2 *
-        D.centreCoeff T f (X * closurePart S (D.radicalCentre M)) =
-      D.centreCoeff T f X := by
-  -- `X` agrees with `g` on `S ∪ S̄`, so the `S ∪ S̄`-part of `D.radicalCentre M` moves across `X`.
-  have h_part : closurePart S X * closurePart S (D.radicalCentre M) =
-      closurePart S (D.radicalCentre (c * M * cᴴ)) * closurePart S X := by
-    rw [hX, ← map_mul, D.mul_radicalCentre hg M, map_mul]
+        D.centerCoeff T f (X * closurePart S (D.radicalCenter M)) =
+      D.centerCoeff T f X := by
+  -- `X` agrees with `g` on `S ∪ S̄`, so the `S ∪ S̄`-part of `D.radicalCenter M` moves across `X`.
+  have h_part : closurePart S X * closurePart S (D.radicalCenter M) =
+      closurePart S (D.radicalCenter (c * M * cᴴ)) * closurePart S X := by
+    rw [hX, ← map_mul, D.mul_radicalCenter hg M, map_mul]
   -- Off `S ∪ S̄` both sides below are `X`; on `S ∪ S̄` they are the two sides of `h_part`.
-  have h_comm : X * closurePart S (D.radicalCentre M) =
-      closurePart S (D.radicalCentre (c * M * cᴴ)) * X := ext_adeleMatrix <| by
+  have h_comm : X * closurePart S (D.radicalCenter M) =
+      closurePart S (D.radicalCenter (c * M * cᴴ)) * X := ext_adeleMatrix <| by
     have h_mat := congrArg adeleMatrix h_part
     simp only [adeleMatrix_mul, closurePart_radicalCentre, adeleMatrix_closurePart,
-      adeleMatrix_radicalCentre, conjTranspose_smul, star_idemAdele_conjClosure, Matrix.mul_sub,
+      adeleMatrix_radicalCenter, conjTranspose_smul, star_idemAdele_conjClosure, Matrix.mul_sub,
       Matrix.sub_mul, Matrix.mul_assoc, Matrix.mul_add, Matrix.add_mul, smul_add, smul_sub,
       sub_smul, smul_smul, Matrix.mul_smul, smul_mul, Matrix.mul_one, Matrix.one_mul, one_smul,
       idemAdele_conjClosure_mul_self, sub_self, add_zero] at h_mat ⊢
@@ -464,8 +464,8 @@ integral at the finite places. Right translation by the part of `k` on `S ∪ S�
 Fourier coefficients of `f` along `D`. -/
 lemma centreCoeff_mul_closurePart (hK : HasLevel f (stdLevel E n ⊓ supportedOn n S)) (X : G E s)
     {k : G E s} (hk : k.2 ∈ stdLevel E n) :
-    D.centreCoeff T f (X * closurePart S k) = D.centreCoeff T f X := by
-  simp [centreCoeff, ← mul_assoc, closurePart, Prod.map, hK, componentOn_mem_stdLevel, hk,
+    D.centerCoeff T f (X * closurePart S k) = D.centerCoeff T f X := by
+  simp [centerCoeff, ← mul_assoc, closurePart, Prod.map, hK, componentOn_mem_stdLevel, hk,
     componentOn_mem_supportedOn]
 
 /-- Let `f` be automorphic and right invariant under the integral points supported on `S ∪ S̄`. Let
@@ -482,7 +482,7 @@ lemma isIntMatrix_siegelBracket {T : Matrix p p E} {s₂ : n₂ → ℤˣ}
     [IsBaseAdapted A] [IsBaseAdapted B] (hD : D.kAdelic = A.iAdelic * B.kAdelic)
     {X u : G E s} {γ : Matrix p p (𝔸 E)}
     (hX : closurePart S X = closurePart S u) (hu : D.ActsOnFrame u γ)
-    (h_ne : D.centreCoeff T f X ≠ 0) :
+    (h_ne : D.centerCoeff T f X ≠ 0) :
     IsIntMatrix (closureIntegers S) (siegelBracket T γ) := by
   -- Integral central elements fix the coefficient and multiply it by a character, which must
   -- therefore be trivial; `Ô E` is self-dual under `selfDualAddChar`.
@@ -495,7 +495,7 @@ lemma isIntMatrix_siegelBracket {T : Matrix p p E} {s₂ : n₂ → ℤˣ}
   let M : Matrix p p (𝔸 E) := .single j i (0, a)
   have hM : IsIntMatrix O (M - Mᴴ) := by
     refine .sub ?_ ?_ <;> simp [O, M, IsIntMatrix, single_apply, apply_ite, ha, star_mem_Ô]
-  have h_mat : IsIntMatrix O (D.radicalCentre M).adeleMatrix := by
+  have h_mat : IsIntMatrix O (D.radicalCenter M).adeleMatrix := by
     -- the frame of `D` is the second block of the integral frame of `A.comp B`
     obtain ⟨hk, hl⟩ := isIntMatrix_kAdelic_and_lCoord (A.comp B)
     have hk_D : IsIntMatrix O D.kAdelic := fun i j ↦ by
@@ -503,10 +503,10 @@ lemma isIntMatrix_siegelBracket {T : Matrix p p E} {s₂ : n₂ → ℤˣ}
     have hl_D : IsIntMatrix O D.lCoord := fun i j ↦ by
       simpa only [lCoord, comp_kAdelic, ← hD, Matrix.mul_apply, conjTranspose_apply,
         fromCols_apply_inr] using hl (.inr i) j
-    simpa only [adeleMatrix_radicalCentre] using IsIntMatrix.one.add ((hk_D.mul hM).mul hl_D)
-  have h_centre : (D.radicalCentre M).2 ∈ stdLevel E n := mem_stdLevel.2 h_mat
+    simpa only [adeleMatrix_radicalCenter] using IsIntMatrix.one.add ((hk_D.mul hM).mul hl_D)
+  have h_centre : (D.radicalCenter M).2 ∈ stdLevel E n := mem_stdLevel.2 h_mat
   have h_char : selfDualAddChar E (idemAdele S.conjClosure * (M * siegelBracket T γ).trace).2 *
-      D.centreCoeff T f (X * closurePart S (D.radicalCentre M)) = D.centreCoeff T f X :=
+      D.centerCoeff T f (X * closurePart S (D.radicalCenter M)) = D.centerCoeff T f X :=
     centreCoeff_mul_radicalCentre hf hX hu M
   rw [centreCoeff_mul_closurePart hK X h_centre, mul_eq_right₀ h_ne] at h_char
   have h_trace : (M * siegelBracket T γ).trace = siegelBracket T γ i j * (0, a) := by
@@ -668,7 +668,7 @@ at `T` is not zero at some point that agrees on `S ∪ S̄` with one acting on t
 and fixes this frame elsewhere. -/
 lemma exists_centreCoeff_ne_zero (hD : D.kAdelic = A.iAdelic * B.kAdelic)
     (h_ne : A.shiftedMean B D T f P.point ≠ 0) :
-    ∃ Y v : G E s, AgreesOnClosure S D Y v ∧ D.ActsOnFrame v P.γ ∧ D.centreCoeff T f Y ≠ 0 := by
+    ∃ Y v : G E s, AgreesOnClosure S D Y v ∧ D.ActsOnFrame v P.γ ∧ D.centerCoeff T f Y ≠ 0 := by
   obtain ⟨a, ha⟩ : ∃ a : Matrix Unit p (𝔸 E),
       A.partialMean B D T f (A.lineShift B a * P.point) ≠ 0 := Function.ne_iff.1 h_ne
   obtain ⟨b, hb⟩ := Splitting.exists_centreCoeff_ne_zero ha
@@ -883,9 +883,9 @@ theorem centreCoeff_eq_zero_of_unimodular (hK : HasLevel f (stdLevel E n ⊓ sup
       A.symm.ShearInvariant B D T f (idemAdele U) g)
     (h_unimodular : ∀ (X : G E s) (γ : Matrix p p (𝔸 E)),
       D.ActsOnFrame X (idemAdele S.conjClosure • γ + (1 - idemAdele S.conjClosure) • 1) →
-      IsPrimitiveMatrix (closureIntegers S) (siegelBracket T γ) → D.centreCoeff T f X = 0)
+      IsPrimitiveMatrix (closureIntegers S) (siegelBracket T γ) → D.centerCoeff T f X = 0)
     {g : G E s} (hg : g ∈ D.frameStabilizer (1 - idemAdele S.conjClosure)) :
-    D.centreCoeff T f g = 0 := by
+    D.centerCoeff T f g = 0 := by
   -- Otherwise some straight point has φ⁺ ≠ 0. For one with the least index, φ⁺ and φ⁻ are supported
   -- on its lattice up to the scales `P.lineScalar`, `P.dualScalar`. The lattice is then self-dual,
   -- and `h_unimodular` makes φ⁺ zero.

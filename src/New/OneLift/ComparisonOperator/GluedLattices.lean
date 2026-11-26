@@ -490,7 +490,7 @@ lemma reduceAt_liftMod_congruenceGroup (V : DividedSplitting N m a O z) (Y : V.c
 its block on `V″` lies in `(1; 0) + ϖ L″_s`, where `L″_s` consists of the `u` with `s u ≡ 0` modulo
 `ϖ`. Here the `1` of `(1; 0)` stands in the rows `z` of `V°` and in the rows `V.fixedEmb` of `V″`,
 which are the rows `O.incl` of `V`. -/
-def IsBlockNormalised (V : DividedSplitting N m a O z)
+def IsBlockNormalized (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) : Prop :=
   x.submatrix (V.ε ∘ inr) id = inclMatrix O.chosenModulusSq.ResidueRing z ∧
@@ -499,7 +499,7 @@ def IsBlockNormalised (V : DividedSplitting N m a O z)
 
 /-- `L` is glued for `s`. With `γ = L.point`, the congruence `γ⁻¹ x ≡ (1; 0)` modulo `ϖ`, written as
 `(ϖ γ⁻¹) x ≡ ϖ (1; 0)` modulo `ϖ²`, holds exactly when `x Y` satisfies the conditions on the two
-blocks (`IsBlockNormalised`) for some `Y` in the congruence group, and this `Y` is then unique.
+blocks (`IsBlockNormalized`) for some `Y` in the congruence group, and this `Y` is then unique.
 Moreover `γ⁻¹` is integral at the chosen places on all vectors of a suitable basis of `V″`, apart
 from those indexed by `V.dividedEmb`, the chosen copy of the index set `a` of the rows of `s` in the
 index set `N` of `V″`. -/
@@ -509,11 +509,11 @@ structure IsGlued (V : DividedSplitting N m a O z)
   `x Y` satisfies the conditions on the two blocks. -/
   existsUnique (x : Matrix n r O.chosenModulusSq.ResidueRing)
     (hx : L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl) :
-    ∃! Y : V.congruenceGroup, V.IsBlockNormalised s
+    ∃! Y : V.congruenceGroup, V.IsBlockNormalized s
       (x * ((Y : GL r O.chosenModulusSq.ResidueRing) : Matrix r r O.chosenModulusSq.ResidueRing))
   /-- Conversely, a matrix with such a translate satisfies the congruence. -/
-  mul_eq_of_isBlockNormalised (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup)
-    (hY : V.IsBlockNormalised s
+  mul_eq_of_isBlockNormalized (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup)
+    (hY : V.IsBlockNormalized s
       (x * ((Y : GL r O.chosenModulusSq.ResidueRing) : Matrix r r O.chosenModulusSq.ResidueRing))) :
     L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl
   /-- After a column operation, the columns of `ϖ γ⁻¹` in `V″` vanish modulo `ϖ` outside
@@ -533,7 +533,7 @@ lemma IsGlued.indicator_eq_sum {V : DividedSplitting N m a O z}
     (if L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl then c
       else 0) =
       ∑ Y : V.congruenceGroup,
-        if V.IsBlockNormalised s (x * ((Y : GL r O.chosenModulusSq.ResidueRing) :
+        if V.IsBlockNormalized s (x * ((Y : GL r O.chosenModulusSq.ResidueRing) :
           Matrix r r O.chosenModulusSq.ResidueRing))
         then c else 0 := by
   split_ifs with hx
@@ -541,7 +541,7 @@ lemma IsGlued.indicator_eq_sum {V : DividedSplitting N m a O z}
     obtain ⟨Y, hY, h_unique⟩ := hL.existsUnique x hx
     rw [Fintype.sum_eq_single Y fun Y' h_ne ↦ ite_eq_right (mt (h_unique Y') h_ne), ite_eq_left hY]
   · -- No `Y` contributes to the sum.
-    rw [sum_eq_zero fun Y _ ↦ ite_eq_right (mt (hL.mul_eq_of_isBlockNormalised x Y) hx)]
+    rw [sum_eq_zero fun Y _ ↦ ite_eq_right (mt (hL.mul_eq_of_isBlockNormalized x Y) hx)]
 
 /-! ### Product forms and the construction of glued lattices -/
 
@@ -597,13 +597,13 @@ Write `ι_e` for the inclusion matrix of `e`, whose `j`-th column is the basis v
 as `w` modulo `ϖ²`, and let `glueMatrix` have the blocks `D`, `-D ι_e ι_zᵀ`, `0` and the diagonal
 matrix that is `ϖ` on the range of `z` and `1` elsewhere. Then `x` is block normalised if and only
 if its rows `z` in `m` form the identity matrix and `glueMatrix` takes `x` to `ϖ ι_{inr ∘ z}`. -/
-lemma isBlockNormalised_iff (V : DividedSplitting N m a O z)
+lemma isBlockNormalized_iff (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) {D : Matrix N N (Ô E)}
     (h_rows : ∀ X Y : Matrix N r O.chosenModulusSq.ResidueRing,
       V.stackOverGenScalar s * X = V.stackOverGenScalar s * Y ↔
         D.map O.chosenModulusSq.reduction * X = D.map O.chosenModulusSq.reduction * Y)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) :
-    V.IsBlockNormalised s x ↔ x.submatrix (V.ε ∘ inr ∘ z) id = 1 ∧
+    V.IsBlockNormalized s x ↔ x.submatrix (V.ε ∘ inr ∘ z) id = 1 ∧
       (glueMatrix O z V.fixedEmb D).map O.chosenModulusSq.reduction * x.submatrix V.ε id =
         V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing (inr ∘ z) := by
   -- Read the last equation by blocks: the rows of `V″` give the condition with `D`, and the rows
@@ -628,7 +628,7 @@ lemma isBlockNormalised_iff (V : DividedSplitting N m a O z)
       id_eq, Function.comp_apply, _root_.smul_eq_mul, mul_ite, mul_one, mul_zero,
       Matrix.one_apply] at h_top ⊢
     grind
-  rw [IsBlockNormalised, h_rows, mul_inclMatrix, h_split]
+  rw [IsBlockNormalized, h_rows, mul_inclMatrix, h_split]
   constructor
   · rintro ⟨h_m : X' = inclMatrix O.chosenModulusSq.ResidueRing z, h_N⟩
     have h_top : X'.submatrix z id = 1 := by
@@ -685,7 +685,7 @@ which is `s` stacked above `ϖ • 1`. Write `ι_e` for the inclusion matrix of 
 rows ordered by an `ε'` taking `z` to `O.incl`. Let `Y` be invertible and `1` modulo `ϖ`. Then `x Y`
 is block normalised if and only if the rows `z` of `x` in `m` form `Y⁻¹` and
 `(ϖ γ⁻¹) x ≡ ϖ ι_{O.incl}` modulo `ϖ²`. -/
-lemma isBlockNormalised_mul_iff (V : DividedSplitting N m a O z)
+lemma isBlockNormalized_mul_iff (V : DividedSplitting N m a O z)
     (s : Matrix a N O.chosenModulusSq.ResidueRing) {L : DividedLattice O} {D : Matrix N N (Ô E)}
     {ε' : N ⊕ m ≃ n} (hε' : ∀ i : r, ε' (inr (z i)) = O.incl i)
     (hL : L.reducedInverse =
@@ -694,14 +694,14 @@ lemma isBlockNormalised_mul_iff (V : DividedSplitting N m a O z)
       V.stackOverGenScalar s * X = V.stackOverGenScalar s * Y ↔
         D.map O.chosenModulusSq.reduction * X = D.map O.chosenModulusSq.reduction * Y)
     (x : Matrix n r O.chosenModulusSq.ResidueRing) (Y : V.congruenceGroup) :
-    V.IsBlockNormalised s (x * Y.val.val) ↔
+    V.IsBlockNormalized s (x * Y.val.val) ↔
       x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ∧
         L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl := by
   -- The rows `z` of `x` form `Y⁻¹` exactly when those of `x Y` form `1`, and right multiplication
   -- by `Y` does not change the congruence.
   have h_top : x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ↔
       (x * Y.val.val).submatrix (V.ε ∘ inr ∘ z) id = 1 := Y.val.mul_eq_one_iff_eq_inv.symm
-  rw [h_top, V.isBlockNormalised_iff s h_rows, ← V.reducedInverse_mul_eq_iff hε' hL,
+  rw [h_top, V.isBlockNormalized_iff s h_rows, ← V.reducedInverse_mul_eq_iff hε' hL,
     ← Matrix.mul_assoc, V.mul_congruenceGroup_eq_smul_iff]
 
 omit [DecidableEq n] [DecidableEq m] in
@@ -816,13 +816,13 @@ lemma exists_isGlued (V : DividedSplitting N m a O z)
     DividedLattice.exists_reducedInverse_eq (reindex V.ε ε' C) _ (by simp [hCG, submatrix_smul])
   have h_blockNormalised_iff (x : Matrix n r O.chosenModulusSq.ResidueRing)
       (Y : V.congruenceGroup) :
-      V.IsBlockNormalised s (x * Y.val.val) ↔
+      V.IsBlockNormalized s (x * Y.val.val) ↔
         x.submatrix (V.ε ∘ inr ∘ z) id = Y⁻¹.val.val ∧
           L.reducedInverse * x = V.genResidue • inclMatrix O.chosenModulusSq.ResidueRing O.incl :=
-    V.isBlockNormalised_mul_iff s hε' hL h_rows x Y
+    V.isBlockNormalized_mul_iff s hε' hL h_rows x Y
   refine ⟨L,
     { existsUnique := fun x hx ↦ ?_
-      mul_eq_of_isBlockNormalised := fun x Y hY ↦ ((h_blockNormalised_iff x Y).1 hY).2
+      mul_eq_of_isBlockNormalized := fun x Y hY ↦ ((h_blockNormalised_iff x Y).1 hY).2
       exists_cols_eq_zero := ?_ }⟩
   · -- The rows `z` show that the top block of `x` on `V°` is `1` modulo `ϖ`; `Y` is its inverse,
     -- and this determines it.

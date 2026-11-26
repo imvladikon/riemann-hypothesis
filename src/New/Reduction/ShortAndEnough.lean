@@ -183,8 +183,7 @@ lemma normSqAt_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) 
   have h_norm : ‖σ D.invGainFactor‖ ^ 2 = exp (2 * log D.invGainFactor) := by
     rw [two_mul, exp_add, exp_log (mod_cast D.invGainFactor_pos), ← sq]
     simp
-  simp only [normalizedPoincare, LinearMap.smul_apply, map_smul, normSqAt, mul_classSum, ← h_norm]
-  exact congrArg _ (funext fun g ↦ weylNormSq_comp_smul _ σ _)
+  rw [normalizedPoincare, LinearMap.smul_apply, map_smul, normSqAt_smul, h_norm]
 
 /-! ### Theorem A -/
 

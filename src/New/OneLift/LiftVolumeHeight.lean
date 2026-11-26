@@ -94,15 +94,6 @@ lemma norm_map_det_le_pow {K L : Type} [NormedField K] [AddCommGroup L] [Module 
     (Polynomial.isRoot_of_mem_roots hα)).exists_hasEigenvector
   exact h_eigen α z hz
 
-/-- Multiplying a form on the space `V` of a descent pair `O` by `c` multiplies its squared norm
-`normSqAt` at an automorphism `σ` of `ℂ` by `‖σ c‖ ^ 2`. -/
-lemma _root_.New.LevelPlaces.LevelForm.normSqAt_smul {E r n : Type} [Field E] [CMType E]
-    [Fintype r] [DecidableEq r] [Fintype n] [DecidableEq n] {O : DescentPair E r n}
-    (c : ℂ) (φ : O.FormV) (σ : ℂ ≃+* ℂ) :
-    (c • φ).normSqAt σ = ‖σ c‖ ^ 2 * φ.normSqAt σ := by
-  rw [normSqAt, normSqAt, mul_classSum]
-  exact congrArg _ (funext fun g ↦ weylNormSq_comp_smul (φ g) σ c)
-
 /-- The squared norm `φ.normSqAt σ` of a form (the weighted sum over classes of the squared norms
 of the values after applying `σ`) is not negative. -/
 lemma _root_.New.LevelPlaces.LevelForm.normSqAt_nonneg {E r n : Type} [Field E] [CMType E]

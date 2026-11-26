@@ -12,7 +12,7 @@ import Lib.ClassField.GaloisCohomology.TateIndexFormula
 /-!
 # Counts of trivialised Galois cocycles for projective modules and central scalars
 
-We count trivialised cocycles (`New.DiscreteModule.trivialisedCocycles`) of the absolute Galois
+We count trivialised cocycles (`New.DiscreteModule.trivializedCocycles`) of the absolute Galois
 group `G` of a number field `K` (`IsProGalois G K Ω`: `G` acts on `Ω` as its Galois group over `K`)
 in a finite module `V`. A trivialised cocycle vanishes on `I` and carries a trivialisation at each
 place of `Ω` (the algebraic closure of `ℚ`) above `N` and infinity. Here
@@ -22,7 +22,7 @@ other places not dividing `N`.
 
 ## Main definitions and results
 
-* `New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective`: for `V` killed by `l`,
+* `New.IsLargeLevel.SplitPlaces.card_trivialized_of_isHigmanProjective`: for `V` killed by `l`,
   fixed by `U` and projective over `G ⧸ U` in Higman's sense, given `z`, `n` with `ρ(z) − n`
   injective on `V` and with `z • r − n • r` fixed by `U` for every unit `r` fixed by all `s.φ i`
   with `l • r` a `U`-fixed `N`-unit, at most `#V ^ (#ι + 1)` trivialised cocycles, with equality
@@ -59,7 +59,7 @@ A. Wiles, Ann. of Math. 141 (1995), Prop. 1.6; J. S. Milne, Arithmetic Duality T
 /-!
 ## The count for a projective module
 
-`New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective` bounds the order of the group
+`New.IsLargeLevel.SplitPlaces.card_trivialized_of_isHigmanProjective` bounds the order of the group
 of trivialised cocycles by `#V ^ (#ι + 1)`, with a case of equality, under further hypotheses on `V`
 and `z` (`hV_fin`, `h_fix`).
 
@@ -279,7 +279,7 @@ private lemma torsion_le_ker_of_map_act_eq {G K R : Type} [Group G] [Topological
 symbol relations gives, for each `a : V`, a trivialised cocycle with value `∑ δ, δ (f (i, δ) • a)`
 at each `γ i`. If `(a, c)` lies in the kernel, then `c = 0` and some trivialised cocycle takes the
 value `a i` at each `γ i`. -/
-private lemma exists_mem_trivialisedCocycles_of_mem_ker {G K R : Type} [Group G]
+private lemma exists_mem_trivializedCocycles_of_mem_ker {G K R : Type} [Group G]
     [TopologicalSpace G] [Field K] [EmbeddedNumberField K] [MulSemiringAction G Ω]
     [IsProGalois G K Ω] [CommRing R] {l N : ℕ} [Fact l.Prime] {V : DiscreteModule R G}
     {U : OpenNormalSubgroup G} [Module (ZMod l) V] [Finite V] {ι : Type}
@@ -290,11 +290,11 @@ private lemma exists_mem_trivialisedCocycles_of_mem_ker {G K R : Type} [Group G]
     (h_conv : ∀ f : ι × G ⧸ U.toOpenSubgroup.toSubgroup → ZMod l,
       (∀ y : fixedSUnits N U, ∑ θ : ι × G ⧸ (U.toOpenSubgroup : Subgroup G),
         b (fixedSUnitsRep N U θ.2 y) θ.1 * f θ = 0) →
-      ∀ a : V, ∃ P ∈ V.trivialisedCocycles (PlaceAboveLevel N) I,
+      ∀ a : V, ∃ P ∈ V.trivializedCocycles (PlaceAboveLevel N) I,
         ∀ i : ι, P.2 (γ i) = ∑ δ : G ⧸ U.toOpenSubgroup.toSubgroup, V.ρ δ.out (f (i, δ) • a))
     {a : ι → V} {c : (coboundaryMap V.ρ).toAddMonoidHom.ker}
     (h_ker : (a, c) ∈ (symbolIntertwiningMap W hW b).ker) :
-    c = 0 ∧ ∃ P ∈ V.trivialisedCocycles (PlaceAboveLevel N) I, ∀ i : ι, P.2 (γ i) = a i := by
+    c = 0 ∧ ∃ P ∈ V.trivializedCocycles (PlaceAboveLevel N) I, ∀ i : ι, P.2 (γ i) = a i := by
   have h_zero : symbolIntertwiningMap W hW b (a, c) = 0 := AddMonoidHom.mem_ker.mp h_ker
   have hc : c = 0 := by simpa [symbolIntertwiningMap] using DFunLike.congr_fun h_zero (0, 1)
   refine ⟨hc, ?_⟩
@@ -306,7 +306,7 @@ private lemma exists_mem_trivialisedCocycles_of_mem_ker {G K R : Type} [Group G]
         b (fixedSUnitsRep N U θ.2 y) θ.1 * basis.repr (τ (W θ.2⁻¹ (a θ.1))) k = 0 := by
     simpa [symbolIntertwiningMap, ZMod.map_smul] using
       congr_arg (fun v ↦ basis.repr (τ v) k) (DFunLike.congr_fun h_zero (y, 0))
-  have h_cocycles (k : Fin _) : ∃ P ∈ V.trivialisedCocycles (PlaceAboveLevel N) I, ∀ i : ι,
+  have h_cocycles (k : Fin _) : ∃ P ∈ V.trivializedCocycles (PlaceAboveLevel N) I, ∀ i : ι,
       P.2 (γ i) = ∑ δ : G ⧸ U.toOpenSubgroup.toSubgroup,
         V.ρ δ.out (basis.repr (τ (W δ⁻¹ (a i))) k • basis k) :=
     h_conv _ (h_coord k) (basis k)
@@ -340,7 +340,7 @@ roots of unity to the power `n` and `K` is totally complex. Trivialised cocycles
 the places of Ω over `N` and ∞ and a continuous `c : G → V` zero on `I`, with
 `g f(x) = f(gx) + c(g)`. `I` is inertia above the primes prime to `N` other than the split `v i`,
 and `s.φ i ∈ U` are Frobenii at them. -/
-lemma New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective {G K R ι : Type} [Group G]
+lemma New.IsLargeLevel.SplitPlaces.card_trivialized_of_isHigmanProjective {G K R ι : Type} [Group G]
     [TopologicalSpace G] [Field K] [EmbeddedNumberField K] [MulSemiringAction G Ω]
     [IsProGalois G K Ω] [CommRing R] {l N : ℕ} [Fact l.Prime] [NeZero N] {V : DiscreteModule R G}
     {I : Set G} {U : OpenNormalSubgroup G} (s : SplitPlaces l N I U ι) [Fintype ι] {z : G} {n : ℕ}
@@ -352,12 +352,12 @@ lemma New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective {G K R
     V.HasFewCocycles (PlaceAboveLevel N) I (Fintype.card ι + 1) ∧
     -- (b) exactly that many if `z` acts on `l`-th roots of unity by `n` and `K` is totally complex
     ((cyclotomicCharMod Ω l z).val = n → IsTotallyComplex K →
-      Nat.card (V.trivialisedCocycles (PlaceAboveLevel N) I) =
+      Nat.card (V.trivializedCocycles (PlaceAboveLevel N) I) =
         Nat.card V ^ (Fintype.card ι + 1)) := by
   classical
   -- Write `Δ = G ⧸ U` and `H` for the `Δ`-maps from (`N`-units) `× ℤ` to `V`. We count both sides
   -- along the maps `r`, `p`, `j`, `d` below: with `H₀ ≤ H` the maps that kill torsion,
-  -- `#trivialisedCocycles = #H₀ * #range d * #range r`,
+  -- `#trivializedCocycles = #H₀ * #range d * #range r`,
   -- `#V ^ (#ι + 1) = #H * #range d * #ker j`,
   -- and `range r ≤ ker j`. Under the two extra hypotheses both inclusions are equalities.
   --
@@ -385,7 +385,7 @@ lemma New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective {G K R
   -- `j (a, c)`, for `c` fixed by `G`, sends `(y, k)` to `∑ β₀ (δ y) i • δ⁻¹ (a i) + k • c`.
   let j : (ι → V) × d.ker →+ ρ.IntertwiningMap W := symbolIntertwiningMap W hW β₀
   -- `r` evaluates a trivialised cocycle at the `γ i`; by reciprocity the values lie in `ker j`.
-  let r : V.trivialisedCocycles (PlaceAboveLevel N) I →+ j.ker :=
+  let r : V.trivializedCocycles (PlaceAboveLevel N) I →+ j.ker :=
     mk' (fun P ↦ ⟨(P.val.2 ∘ γ, 0), by
         have h_symbols (y : fixedSUnits N U) :
             ∑ θ : ι × G ⧸ U.toOpenSubgroup.toSubgroup,
@@ -431,7 +431,7 @@ lemma New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective {G K R
       ⟨⟨⟨(fun _ ↦ a, (V.ρ · a - a)), by fun_prop, ?_⟩, ?_⟩, Subtype.ext ha⟩
     · simp +contextual [h_triv _ (s.mem_and_conj_mem ..).1]
     · simp [Subtype.ext_iff, funext_iff, r, h_triv, s.decompGroup_le (s.isPlaceOver _) (hγ _).1.1]
-  have h_left : Nat.card (V.trivialisedCocycles (PlaceAboveLevel N) I) =
+  have h_left : Nat.card (V.trivializedCocycles (PlaceAboveLevel N) I) =
       Nat.card H₀ * Nat.card d.range * Nat.card r.range := by
     rw [h_ker_p, ← r.ker.card_mul_index, ← p.ker.card_mul_index, index_ker, index_ker, h_range_p, card_top]
   have h_right : Nat.card V ^ (card ι + 1) =
@@ -450,15 +450,15 @@ lemma New.IsLargeLevel.SplitPlaces.card_trivialised_of_isHigmanProjective {G K R
   -- Second part: `r` is onto, by the converse of reciprocity.
   have h_range_r : r.range = ⊤ := by
     refine r.range_eq_top.mpr fun ⟨⟨a, c⟩, h_ker⟩ ↦ ?_
-    obtain ⟨rfl, P, hP, hPγ⟩ := exists_mem_trivialisedCocycles_of_mem_ker W hW τ hτ β₀ γ
+    obtain ⟨rfl, P, hP, hPγ⟩ := exists_mem_trivializedCocycles_of_mem_ker W hW τ hτ β₀ γ
       (h_conv (isTotallyComplex_of_algebra K _)) h_ker
     exact ⟨⟨P, hP⟩, Subtype.ext (Prod.ext (funext hPγ) rfl)⟩
   rw [h_range_r, card_top, Nat.card_congr (.subtypeUnivEquiv h_torsion)]
 
-/-- Under the hypotheses of `card_trivialised_of_isHigmanProjective`, if `K` is totally complex and
+/-- Under the hypotheses of `card_trivialized_of_isHigmanProjective`, if `K` is totally complex and
 `z` raises the `l`-th roots of unity to the power `n`, there are exactly `#V ^ (#ι + 1)`
 trivialised cocycles. -/
-lemma New.IsLargeLevel.SplitPlaces.card_trivialisedCocycles_eq_of_isHigmanProjective
+lemma New.IsLargeLevel.SplitPlaces.card_trivializedCocycles_eq_of_isHigmanProjective
     {G K R ι : Type} [Group G] [TopologicalSpace G] [Field K] [EmbeddedNumberField K]
     [MulSemiringAction G Ω] [IsProGalois G K Ω] [CommRing R] {l N : ℕ} [Fact l.Prime] [NeZero N]
     {V : DiscreteModule R G} {I : Set G} {U : OpenNormalSubgroup G} (s : SplitPlaces l N I U ι)
@@ -468,8 +468,8 @@ lemma New.IsLargeLevel.SplitPlaces.card_trivialisedCocycles_eq_of_isHigmanProjec
       (∀ i : ι, unitsRep (s.φ i) r = r) →
       unitsRep z r - n • r ∈ (unitsModule U.toOpenSubgroup.toSubgroup).H0)
     [IsTotallyComplex K] (hz : (cyclotomicCharMod Ω l z).val = n) :
-    Nat.card (V.trivialisedCocycles (PlaceAboveLevel N) I) = Nat.card V ^ (Fintype.card ι + 1) :=
-  (s.card_trivialised_of_isHigmanProjective hV_fin hV_proj h_fix).right hz inferInstance
+    Nat.card (V.trivializedCocycles (PlaceAboveLevel N) I) = Nat.card V ^ (Fintype.card ι + 1) :=
+  (s.card_trivialized_of_isHigmanProjective hV_fin hV_proj h_fix).right hz inferInstance
 
 end ProjectiveCount
 
@@ -477,7 +477,7 @@ end ProjectiveCount
 
 section GreenbergWilesBound
 
-open NumberField Function Set Nat New.DiscreteModule trivialisedCocycles Quotient Subgroup
+open NumberField Function Set Nat New.DiscreteModule trivializedCocycles Quotient Subgroup
   commutatorElement
 
 attribute [local instance low] Fintype.ofFinite
@@ -515,7 +515,7 @@ by `U`, every `g` fixing `l • x` fixes `z x - x`. Let `U ≤ Q` in `B`, with `
 roots of unity, and let `W` be a `B`-module that is finite, killed by `l`, fixed by `Q`, with
 `z - 1` injective, and projective over `B/Q` in Higman's sense. Then `W` has exactly
 `#W ^ (#(ι × G/B) + 1)` trivialised cocycles. -/
-private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_restrict_of_isHigmanProjective
+private lemma New.IsLargeLevel.SplitPlaces.card_trivialized_restrict_of_isHigmanProjective
     {K R ι : Type} [Field K] [EmbeddedNumberField K] [CommRing R] {l N : ℕ} [Fact l.Prime]
     [NeZero N] {I : Set Gal(Ω/K)} [Fintype ι] [IsTotallyComplex K]
     {U : OpenNormalSubgroup Gal(Ω/K)} (S : SplitPlaces l N I U ι) {z : Gal(Ω/K)}
@@ -529,12 +529,12 @@ private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_restrict_of_isHigman
     (hW : W.FiniteKilledFixedInj l Q ⟨z, hzB⟩ 1)
     (hhig : W.IsHigmanProjective Q.toOpenSubgroup.toSubgroup) :
     W.HasFewCocycles (PlaceAboveLevel N) ((↑) ⁻¹' I) (Fintype.card (ι × Gal(Ω/K) ⧸ B.1) + 1) ∧
-      Nat.card (W.trivialisedCocycles (PlaceAboveLevel N) ((↑) ⁻¹' I)) =
+      Nat.card (W.trivializedCocycles (PlaceAboveLevel N) ((↑) ⁻¹' I)) =
         Nat.card W ^ (Fintype.card (ι × Gal(Ω/K) ⧸ B.toSubgroup) + 1) := by
   classical
   -- With `1` among the coset representatives, the `S.φ i` are among the Frobenii over `B`.
   let S' := S.liftToSubgroup B Q hUB hUQ hQ (update out ⟦1⟧ 1) (by clear * -; grind [out_eq'])
-  refine (S'.card_trivialised_of_isHigmanProjective hW hhig fun x hx hφ g ↦ ?_).imp_right
+  refine (S'.card_trivialized_of_isHigmanProjective hW hhig fun x hx hφ g ↦ ?_).imp_right
     fun heq ↦ heq hz (isTotallyComplex_of_algebra K _)
   -- `using!`: the Frobenius of `S'` at `(i, ⟦1⟧)` is `S.φ i` only after unfolding `liftToSubgroup`.
   have hφ_S (i : ι) : unitsRep (S.φ i) x = x := by simpa [S', liftToSubgroup] using! hφ ⟨i, ⟦1⟧⟩
@@ -543,13 +543,13 @@ private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_restrict_of_isHigman
   exact hfix x hx_U hφ_S g (hx.2 g)
 
 /-- The exact count for modules killed by `l`. Let `S`, `z` and `hfix` be as in
-`card_trivialised_restrict_of_isHigmanProjective`, with `z` central modulo `U` and fixing the `l`-th
+`card_trivialized_restrict_of_isHigmanProjective`, with `z` central modulo `U` and fixing the `l`-th
 roots of unity, and let `K` be totally complex. Suppose that for every short exact sequence
 `W₁ → W → W₂` of `G`-modules, with `W` finite, killed by `l`, fixed by `U` and with `z - 1`
 injective, the induced map on trivialised cocycles of `W` and `W₂` is onto. Then every such `W` has
 exactly `#W ^ (#ι + 1)` trivialised cocycles: the ratio of the two counts is multiplicative, and `1`
 on projective modules. -/
-private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_eq_of_map_range_eq_top
+private lemma New.IsLargeLevel.SplitPlaces.card_trivialized_eq_of_map_range_eq_top
     {K R ι : Type} [Field K] [EmbeddedNumberField K] [CommRing R] {l N : ℕ} [Fact l.Prime]
     [NeZero N] {I : Set Gal(Ω/K)} [Fintype ι] [IsTotallyComplex K]
     {U : OpenNormalSubgroup Gal(Ω/K)} (S : SplitPlaces l N I U ι) {z : Gal(Ω/K)}
@@ -561,9 +561,9 @@ private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_eq_of_map_range_eq_t
     (hlift : ∀ {W₁ W W₂ : DiscreteModule R Gal(Ω/K)} {j : W₁.Hom W} {π : W.Hom W₂},
       IsShortExact j π → W.FiniteKilledFixedInj l U z 1 → (map (PlaceAboveLevel N) I π).range = ⊤)
     (W : DiscreteModule R Gal(Ω/K)) (hW : W.FiniteKilledFixedInj l U z 1) :
-    Nat.card (W.trivialisedCocycles (PlaceAboveLevel N) I) = Nat.card W ^ (Fintype.card ι + 1) := by
+    Nat.card (W.trivializedCocycles (PlaceAboveLevel N) I) = Nat.card W ^ (Fintype.card ι + 1) := by
   let ratio (X : DiscreteModule R Gal(Ω/K)) (_ : X.FiniteKilledFixedInj l U z 1) : ℚ≥0 :=
-    Nat.card (X.trivialisedCocycles (PlaceAboveLevel N) I) / (Nat.card X ^ (Fintype.card ι + 1) : ℕ)
+    Nat.card (X.trivializedCocycles (PlaceAboveLevel N) I) / (Nat.card X ^ (Fintype.card ι + 1) : ℕ)
   have hone : ratio W hW = 1 := by
     refine IsMultiplicative.eq_one_of_eq_one_on_isHigmanProjective R l U ratio hcentral
       (fun hses hX ↦ ?_)
@@ -573,7 +573,7 @@ private lemma New.IsLargeLevel.SplitPlaces.card_trivialised_eq_of_map_range_eq_t
         hlift hses hX]
     · -- The count for a projective module is exact.
       have hX_finite : Finite _ := hX.finite
-      simp [ratio, S.card_trivialisedCocycles_eq_of_isHigmanProjective hX hhig
+      simp [ratio, S.card_trivializedCocycles_eq_of_isHigmanProjective hX hhig
         (fun x hx hφ g ↦ hfix x hx hφ g (hx.2 g)) hz]
   exact cast_injective (eq_of_div_eq_one hone)
 
@@ -583,14 +583,14 @@ by `l`, fixed by `U` and on which `ρ z - 1` is injective. Suppose each has betw
 trivialised cocycles, and those projective over `G ⧸ U` in Higman's sense have at least `#F ^ k`.
 Then along a short exact sequence `W₁ → W → W₂` with `W` such a module, every trivialised cocycle
 of `W₂` lifts to `W`. -/
-private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_hasFewCocycles
+private lemma New.DiscreteModule.trivializedCocycles.map_range_eq_top_of_hasFewCocycles
     {R G X : Type} [CommRing R] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [CompactSpace G] [MulAction G X] {I : Set G} {l k : ℕ} [Fact l.Prime]
     {U : OpenNormalSubgroup G} {z : G} (hcentral : ∀ g : G, ⁅z, g⁆ ∈ U)
     (h_upper : ∀ F : DiscreteModule R G,
       F.FiniteKilledFixedInj l U z 1 → F.HasFewCocycles X I k)
     (h_proj : ∀ F : DiscreteModule R G, F.FiniteKilledFixedInj l U z 1 → F.IsHigmanProjective U →
-      Nat.card F ^ k ≤ Nat.card (F.trivialisedCocycles X I))
+      Nat.card F ^ k ≤ Nat.card (F.trivializedCocycles X I))
     {W₁ W W₂ : DiscreteModule R G} {j : W₁.Hom W} {π : W.Hom W₂} (hses : IsShortExact j π)
     (hW : W.FiniteKilledFixedInj l U z 1) :
     (map X I π).range = ⊤ := by
@@ -598,8 +598,8 @@ private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_hasFewC
   -- If the count is maximal for `B`, cocycles lift and the count is maximal for the submodule `A`.
   have h_squeeze {A B C : DiscreteModule R G} {u : A.Hom B} {v : B.Hom C}
       (h_exact : IsShortExact u v) (hB : B.FiniteKilledFixedInj l U z 1)
-      (h_max : Nat.card B ^ k ≤ Nat.card (B.trivialisedCocycles X I)) :
-      (map X I v).range = ⊤ ∧ Nat.card A ^ k ≤ Nat.card (A.trivialisedCocycles X I) :=
+      (h_max : Nat.card B ^ k ≤ Nat.card (B.trivializedCocycles X I)) :
+      (map X I v).range = ⊤ ∧ Nat.card A ^ k ≤ Nat.card (A.trivializedCocycles X I) :=
     (hasFewCocycles_of_isShortExact h_exact (h_upper A (hB.left_of_isShortExact h_exact))
       (h_upper C (hB.right_of_isShortExact h_exact))).right h_max
   -- Embed `W` by constants in the module `F` of functions on a quotient of `G ⧸ U` that
@@ -613,7 +613,7 @@ private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_hasFewC
     (hperm hW Y).right (Pi.single 1 1) fun y ↦ by simp [inv_mul_eq_one, Pi.single_apply]
   let const : W.Hom F := ⟨LinearMap.const, fun _ ↦ rfl⟩
   obtain ⟨-, -, h_mkQ_surj⟩ := isShortExact_submodule _ _ const.range.apply_mem_toSubmodule
-  have hW_max : Nat.card W ^ k ≤ Nat.card (W.trivialisedCocycles X I) :=
+  have hW_max : Nat.card W ^ k ≤ Nat.card (W.trivializedCocycles X I) :=
     (h_squeeze (u := const) ⟨const_injective, const.toLinearMap.exact_map_mkQ_range, h_mkQ_surj⟩ hF
       (h_proj F hF hF_proj)).right
   exact (h_squeeze hses hW hW_max).left
@@ -622,7 +622,7 @@ private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_hasFewC
 the conjugation-stable set `I`. Let `π : W → W₂` be onto, with `I` fixing `W` and `l` killing `W₂`,
 and let `πB` be `π` as a map of `B`-modules. If every trivialised cocycle of `W₂` for `B` lifts to
 `W`, then so does every trivialised cocycle of `W₂` for `G`. -/
-private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_restrictTo
+private lemma New.DiscreteModule.trivializedCocycles.map_range_eq_top_of_restrictTo
     {R G X : Type} [CommRing R] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [MulAction G X] [Nonempty X] {I : Set G} {B : OpenSubgroup G} [Fintype (G ⧸ B.toSubgroup)]
     (hI : ∀ g ∈ I, g ∈ B ∧ ∀ t : G, t⁻¹ * g * t ∈ I) {l : ℕ} (hcop : l.Coprime B.toSubgroup.index)
@@ -633,7 +633,7 @@ private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_restric
     (map X I π).range = ⊤ := by
   refine (map X I π).range_eq_top.mpr fun ⟨⟨f, x⟩, hx_cont, hfx, hxI⟩ ↦ ?_
   -- Lift the restriction of `(f, x)` to a trivialised cocycle `(q, c)` of `W` for `B`.
-  have h_res : (f, x ∘ (↑)) ∈ (W₂.restrictTo B).trivialisedCocycles X ((↑) ⁻¹' I) :=
+  have h_res : (f, x ∘ (↑)) ∈ (W₂.restrictTo B).trivializedCocycles X ((↑) ⁻¹' I) :=
     ⟨by fun_prop, fun g ↦ hfx g, fun g ↦ hxI g⟩
   obtain ⟨⟨⟨q, c⟩, hq⟩, hπq⟩ := (map X ((↑) ⁻¹' I) πB).range_eq_top.mp h_lift ⟨_, h_res⟩
   have hπq_apply (y : X) : π (q y) = f y :=
@@ -641,19 +641,19 @@ private lemma New.DiscreteModule.trivialisedCocycles.map_range_eq_top_of_restric
   -- The corestriction of `(q, c)` maps to `i • f + ∑ x δ`, with `i` the index of `B`; remove the
   -- constant `∑ x δ = π m` and invert `i` modulo `l`.
   obtain ⟨m, hm⟩ : ∃ m : W, π m = ∑ δ : G ⧸ B.toSubgroup, x δ.out := hπ_surj _
-  have h_const : (fun _ : X ↦ m, fun g : G ↦ W.ρ g m - m) ∈ W.trivialisedCocycles X I :=
+  have h_const : (fun _ : X ↦ m, fun g : G ↦ W.ρ g m - m) ∈ W.trivializedCocycles X I :=
     ⟨by fun_prop, by simp, fun g hg ↦ sub_eq_zero.mpr (h_fix g hg m)⟩
   obtain ⟨a, b, hab⟩ : IsCoprime (l : ℤ) B.toSubgroup.index := hcop.isCoprime
   have h_invert (y : X) : b • B.toSubgroup.index • f y = f y := by
     simpa [add_smul, mul_smul, h_kill] using congrArg (· • f y) hab
   -- The trivialisation determines the cocycle, so only first components need be compared.
-  have h_inj : Injective fun p : W₂.trivialisedCocycles X I ↦ p.val.fst := by
+  have h_inj : Injective fun p : W₂.trivializedCocycles X I ↦ p.val.fst := by
     rintro ⟨⟨f, c⟩, -, h_triv, -⟩ ⟨⟨f', c'⟩, -, h_triv', -⟩ (rfl : f = f')
     obtain ⟨y⟩ : Nonempty X := inferInstance
     exact Subtype.ext (Prod.ext rfl (funext fun g ↦
       add_left_cancel ((h_triv g y).symm.trans (h_triv' g y))))
   refine ⟨⟨_, zsmul_mem (sub_mem (corestrict_mem B hI hq) h_const) b⟩, h_inj ?_⟩
-  simpa [trivialisedCocycles.map, π.isIntertwining, hπq_apply, hfx, hm, index, funext_iff,
+  simpa [trivializedCocycles.map, π.isIntertwining, hπq_apply, hfx, hm, index, funext_iff,
     Finset.sum_add_distrib] using h_invert
 
 /-- Let `P` be an open subgroup of index prime to `l` that contains all commutators `⁅z, g⁆`. Then
@@ -738,7 +738,7 @@ theorem New.IsLargeLevel.SplitPlaces.hasFewCocycles_of_central {K R ι : Type} [
       fun hses _ h₁ h₂ ↦ (hasFewCocycles_of_isShortExact hses h₁ h₂).1
     have h_finite_index : Finite (B.toSubgroup ⧸ P.toSubgroup.subgroupOf B) :=
       (P.toSubgroup.subgroupOf B).quotient_finite_of_isOpen P.isOpen'.preimage_val
-    refine (S.card_trivialised_restrict_of_isHigmanProjective hz hfix hUB hzB
+    refine (S.card_trivialized_restrict_of_isHigmanProjective hz hfix hUB hzB
       ⟨⟨_, P.isOpen'.preimage_val⟩, hnormal⟩ (fun g hg ↦ hUP hg) (fun g hg ↦ ?_) hW
       (hW.isHigmanProjective_of_coprime hcopP)).1
     -- A power `g ^ l ^ i` lies in `U`, and `t ^ l ^ i = t` in `ZMod l`.
@@ -748,9 +748,9 @@ theorem New.IsLargeLevel.SplitPlaces.hasFewCocycles_of_central {K R ι : Type} [
   -- Modules that are projective over `B/U` attain the bound.
   have hproj (F : DiscreteModule R B.toSubgroup) (hF : F.FiniteKilledFixedInj l U' z' 1)
       (hhig : F.IsHigmanProjective U') :
-      Nat.card F ^ k ≤ Nat.card (F.trivialisedCocycles (PlaceAboveLevel N) I') := by
-    have h_card : Nat.card (F.trivialisedCocycles (PlaceAboveLevel N) I') = Nat.card F ^ k :=
-      (S.card_trivialised_restrict_of_isHigmanProjective hz hfix hUB hzB U' le_rfl
+      Nat.card F ^ k ≤ Nat.card (F.trivializedCocycles (PlaceAboveLevel N) I') := by
+    have h_card : Nat.card (F.trivializedCocycles (PlaceAboveLevel N) I') = Nat.card F ^ k :=
+      (S.card_trivialized_restrict_of_isHigmanProjective hz hfix hUB hzB U' le_rfl
         (fun g ↦ S.cyclotomicCharMod_eq_one g) hF hhig).right
     exact h_card.ge
   -- So cocycles lift over `B`, hence by corestriction over the whole group.
@@ -775,9 +775,9 @@ theorem New.IsLargeLevel.SplitPlaces.hasFewCocycles_of_central {K R ι : Type} [
   -- Filter `V` by modules killed by `l`; for those the count is exact.
   refine devissage_induction rfl U U (fun g hg ↦ ⟨0, by simpa⟩) (fun W hW hW' ↦ ?_)
     (fun hses _ h₁ h₂ ↦ (hasFewCocycles_of_isShortExact hses h₁ h₂).1) V hV
-  have h_count : Nat.card (W.trivialisedCocycles (PlaceAboveLevel N) I) =
+  have h_count : Nat.card (W.trivializedCocycles (PlaceAboveLevel N) I) =
       Nat.card W ^ (Fintype.card ι + 1) :=
-    S.card_trivialised_eq_of_map_range_eq_top hz hcentral hfix hlift W hW'
+    S.card_trivialized_eq_of_map_range_eq_top hz hcentral hfix hlift W hW'
   exact mem_of_eq_of_mem h_count ⟨by simp [hW.finite], le_rfl⟩
 
 end GreenbergWilesBound

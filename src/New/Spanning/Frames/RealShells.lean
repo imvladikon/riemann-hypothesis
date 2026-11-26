@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.Matrix.L2OpNorm
 import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.RingTheory.PiTensorProduct
@@ -106,7 +107,7 @@ def dyadicShell (𝔰 : Shape) (i : ℕ) : Set 𝔰.G₁ :=
 lemma exists_mem_dyadicShell (x : 𝔰.G₁) : ∃ i : ℕ, x ∈ dyadicShell 𝔰 i := by
   let X : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ := x - 1
   obtain ⟨B, hB⟩ : ∃ B : ℝ, ∀ a c : 𝔰.BesselIndex, ‖X a c‖ ≤ B :=
-    ⟨_, fun a c ↦ norm_apply_le_l2_opNorm ..⟩
+    ⟨_, fun a c ↦ Matrix.norm_apply_le_l2_opNorm ..⟩
   obtain ⟨l, hl⟩ : ∃ l : ℕ, B < 2 ^ l := pow_unbounded_of_one_lt B _root_.one_lt_two
   have h_bound : ∃ l : ℕ, ∀ a c : 𝔰.BesselIndex, ‖X a c‖ ≤ 2 ^ l :=
     ⟨l, fun a c ↦ (hB a c).trans hl.le⟩

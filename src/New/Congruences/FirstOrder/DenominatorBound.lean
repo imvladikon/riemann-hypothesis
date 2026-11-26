@@ -56,7 +56,7 @@ Notions from other files:
 * `New.Patching.Isotypic`: a system, that is the space of forms with given Hecke eigenvalues at
   almost all places. `B.Eigensystem L` is the set of systems that contain a nonzero form of level
   `L` over the base data `B`; the base level is `L = ![]`.
-* `New.Selmer.normalisedRep`: the twist of a Galois representation by the character
+* `New.Selmer.normalizedRep`: the twist of a Galois representation by the character
   `normalizingAvatar O`.
 * `New.Selmer.IsAuxTwist`: the character is anticyclotomic, its modulus avoids the given places and
   its ramification has bounded valuation.
@@ -170,7 +170,7 @@ Galois element the characteristic polynomial of its normalised representation ha
 def IsWeakLift {P : Parameters} {D : Data P} {ℓ : ℕ} [ThePrime ℓ] [PadicIso ℓ] {r n : Type}
     [Fintype r] [DecidableEq r] [Fintype n] [DecidableEq n] (O : DescentPair D.E r n)
     (x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)) : Prop :=
-  ∀ g : AbsGal D, (normalisedRep O x.galRep g).val.charpoly.IsRoot 1
+  ∀ g : AbsGal D, (normalizedRep O x.galRep g).val.charpoly.IsRoot 1
 
 /-- The form `v` of the descent pair `O` is a nonzero form of the isotypic space `x`. -/
 structure IsNonzeroIn {P : Parameters} {D : Data P} {r n : Type} [Fintype r] [DecidableEq r]
@@ -191,7 +191,7 @@ abbrev IsLiftWithTwistedLattice {P : Parameters} {D : Data P} {ℓ : ℕ} [ThePr
     (x₀ x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)) : Prop :=
   ∃ (wt : (D.E →+* ℂ) → Multiset ℤ) (R : GalRep ℓ D.E r),
     IsMainSummandLike (n := r) D O.rankDiff wt R ∧
-    HasLiftTrace ϑ.invAvatar R O.rankDiff (normalisedRep O x.galRep) ∧
+    HasLiftTrace ϑ.invAvatar R O.rankDiff (normalizedRep O x.galRep) ∧
     ∃ γ : Gal(Ω/D.E), HasTwistedLattice ϑ.invAvatar R γ ∧
       (x = x₀ → HasDivisibleSelmerLengthLe ϑ.invAvatar R ϑ.Q γ sel)
 
@@ -245,7 +245,7 @@ lemma exists_eventually_hasRootChain_mostFrobeniiAt {P : Parameters} {D : Data P
     (hϑ : IsAuxTwist (badPlaces D ℓ) ϑ.Q ϑ.invAvatar ram)
     (B : BaseLevel (stdSpace D.E n) (O.columnCount, O.detExp) D.chosenGroupOrder)
     (h_int : ∀ (x : B.Eigensystem ![]) (g : Gal(Ω/D.E)) (i : ℕ),
-      ‖(normalisedRep O x.val.galRep g).val.charpoly.coeff i‖ ≤ 1)
+      ‖(normalizedRep O x.val.galRep g).val.charpoly.coeff i‖ ≤ 1)
     {wt : (D.E →+* ℂ) → Multiset ℤ} {R : GalRep ℓ D.E r} (hR : IsMainSummandLike D O.rankDiff wt R)
     (ν : ℕ) (g : AbsGal D) :
     ∃ δ : Gal(Ω/D.E), cyclotomicChar Ω ℓ δ = 1 ∧
@@ -256,7 +256,7 @@ lemma exists_eventually_hasRootChain_mostFrobeniiAt {P : Parameters} {D : Data P
         -- (b)
         (∀ x : B.Eigensystem ![], IsWeakLift O x.val →
           ∀ S : (PadicAlgCl ℓ)[X], 1 ≤ ‖S.eval 1‖ →
-          (∀ k : ℕ, ‖(normalisedRep O x.val.galRep y.frob).val.charpoly.coeff k -
+          (∀ k : ℕ, ‖(normalizedRep O x.val.galRep y.frob).val.charpoly.coeff k -
             (S * ∏ i ∈ Finset.range O.rankDiff,
               (X - C (cyclotomicInv ℓ D.E (PadicAlgCl ℓ) y.frob ^ i))).coeff k‖ < 1) →
           ∃ e : EllAdicIntegers[X],
@@ -325,10 +325,10 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
     {ram : ENNReal} (hϑ : IsAuxTwist (badPlaces D ℓ) ϑ.Q ϑ.invAvatar ram)
     (B : BaseLevel (stdSpace D.E n) (O.columnCount, O.detExp) D.chosenGroupOrder)
     (h_int : ∀ (x : B.Eigensystem ![]) (g : Gal(Ω/D.E)) (i : ℕ),
-      ‖(normalisedRep O x.val.galRep g).val.charpoly.coeff i‖ ≤ 1)
+      ‖(normalizedRep O x.val.galRep g).val.charpoly.coeff i‖ ≤ 1)
     {x₀ : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)} {wt : (D.E →+* ℂ) → Multiset ℤ}
     {R : GalRep ℓ D.E r} (hR : IsMainSummandLike D O.rankDiff wt R)
-    (h_trace : HasLiftTrace ϑ.invAvatar R O.rankDiff (normalisedRep O x₀.galRep))
+    (h_trace : HasLiftTrace ϑ.invAvatar R O.rankDiff (normalizedRep O x₀.galRep))
     {h : ℕ} {g₁ : AbsGal D} (hℓ : ℓ ≤ D.halfGap ^ 2 ∨ h = 0)
     (hg₁_gen : (cyclotomicChar Ω ℓ).IsGeneratorModKer g₁)
     (hg₁ : ∀ a ∈ Set.Ioo 0 D.t, (cyclotomicChar Ω ℓ g₁ ^ a).val - 1 ∣ ℓ ^ h) :
@@ -345,8 +345,8 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
       -- (c)
       ∃ e : J → EllAdicIntegers[X], (∀ j : J, (e j).eval 1 = 1) ∧
         ∀ (j : J) (x : B.Eigensystem ![]),
-        (∀ (g : Gal(Ω/D.E)) (k : ℕ), ‖(normalisedRep O x.val.galRep g).val.charpoly.coeff k -
-          (normalisedRep O x₀.galRep g).val.charpoly.coeff k‖ < 1) →
+        (∀ (g : Gal(Ω/D.E)) (k : ℕ), ‖(normalizedRep O x.val.galRep g).val.charpoly.coeff k -
+          (normalizedRep O x₀.galRep g).val.charpoly.coeff k‖ < 1) →
         IsWeakLift O x.val →
         HasRootChain (x.val.heckePolyAt (Q.place j)) ((e j).map (algebraMap EllAdicIntegers ℂ))
           (Q.place j).q (ιℓ.symm (normalizingAvatar O (Q.frobData j).frob).val)⁻¹ O.rankDiff := by
@@ -355,7 +355,7 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
   -- polynomials that `W` gives for the finitely many `x`.
   let χ (x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)) (g : Gal(Ω/D.E)) :
     (PadicAlgCl ℓ)[X] :=
-    (normalisedRep O x.galRep g).val.charpoly
+    (normalizedRep O x.galRep g).val.charpoly
   let chain (g : Gal(Ω/D.E)) : (PadicAlgCl ℓ)[X] :=
     ∏ i ∈ Finset.range O.rankDiff, (X - C (cyclotomicInv ℓ D.E (PadicAlgCl ℓ) g ^ i))
   let twisted (g : Gal(Ω/D.E)) : (PadicAlgCl ℓ)[X] := (ϑ.invAvatar g • (R g).val).charpoly
@@ -513,20 +513,20 @@ lemma exists_isCommonRibetElement_ellVal_le {P : Parameters} {D : Data P} {ℓ :
     {wt : (D.E →+* ℂ) → Multiset ℤ}
     (h_isRepOfType : ∀ x : Y, IsRepOfType O O.rankDiff wt
       (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff)
-      (Set.conjClosure ϑ.Q ∪ (Set.range w).conjClosure) (normalisedRep O (sys x).galRep))
+      (Set.conjClosure ϑ.Q ∪ (Set.range w).conjClosure) (normalizedRep O (sys x).galRep))
     (h_quad : ∀ x : Y, ∀ g ∈ inertiaAbove (Set.conjClosure ϑ.Q),
-      ((normalisedRep O (sys x).galRep g).val - ϑ.invAvatar g • 1) *
-        ((normalisedRep O (sys x).galRep g).val - 1) = 0)
+      ((normalizedRep O (sys x).galRep g).val - ϑ.invAvatar g • 1) *
+        ((normalizedRep O (sys x).galRep g).val - 1) = 0)
     {𝓧 : Set (Isotypic (stdSpace D.E n) (O.columnCount, O.detExp))} (x₀ : sys ⁻¹' 𝓧) {sel : ENNReal}
     (h_lift : ∀ x ∈ 𝓧, IsLiftWithTwistedLattice O ϑ sel (sys x₀) x)
     (h_sel_ne_top : sel ≠ ⊤) {S : Subalgebra EllAdicIntegers (Y → MvPolynomial J (PadicAlgCl ℓ))}
     {𝒥 : Submodule S (Y → MvPolynomial J (PadicAlgCl ℓ))} {e : J → EllAdicIntegers[X]}
-    (h𝒥 : IsTraceIdeal 𝒥 (fun (x : Y) (g : AbsGal D) ↦ (normalisedRep O (sys x).galRep g).val)
+    (h𝒥 : IsTraceIdeal 𝒥 (fun (x : Y) (g : AbsGal D) ↦ (normalizedRep O (sys x).galRep g).val)
       (ℓ ^ ν : EllAdicIntegers) tame φ (fun j : J ↦ j) e)
     (he : ∀ j : J, (e j).eval 1 = 1) :
     ∃ d : PadicAlgCl ℓ,
       IsCommonRibetElement 𝒥
-        (fun (g : AbsGal D) (x : Y) ↦ (1 - (normalisedRep O (sys x).galRep g).val).det) x₀ d ∧
+        (fun (g : AbsGal D) (x : Y) ↦ (1 - (normalizedRep O (sys x).galRep g).val).det) x₀ d ∧
       ellVal (ℓ := ℓ) (D.chosenGroupOrder ^ 2 * d) ≤ liftValuationBound ℓ O ram sel := by
   choose jumps R hR h_trace γ h_lattice h_selmer using
     fun x : sys ⁻¹' 𝓧 ↦ h_lift (sys x) x.prop
@@ -569,11 +569,11 @@ lemma exists_ellVal_le_and_diagOp_mem_ellIntegralForms {P : Parameters} {D : Dat
       (∀ k : K, u k ∉ badPlaces D ℓ) →
       ∀ x ∈ B.Eigensystem u, IsRepOfType O O.rankDiff wt
         (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff)
-        (Set.conjClosure ϑ.Q ∪ (Set.range u).conjClosure) (normalisedRep O x.galRep))
+        (Set.conjClosure ϑ.Q ∪ (Set.range u).conjClosure) (normalizedRep O x.galRep))
     (h_quad : ∀ (K : Type) [Finite K] (u : K → FinPlace D.E), (∀ k : K, u k ∉ badPlaces D ℓ) →
       ∀ x ∈ B.Eigensystem u, ∀ g ∈ inertiaAbove (Set.conjClosure ϑ.Q),
-        ((normalisedRep O x.galRep g).val - ϑ.invAvatar g • 1) *
-          ((normalisedRep O x.galRep g).val - 1) = 0)
+        ((normalizedRep O x.galRep g).val - ϑ.invAvatar g • 1) *
+          ((normalizedRep O x.galRep g).val - 1) = 0)
     (hx₀ : x₀ ∈ 𝓧) (hx₀B : x₀ ∈ B.Eigensystem ![]) :
     ∃ J : Type, ∃ (_ : Finite J) (L : J → FinPlace D.E) (s : B.Eigensystem L → PadicAlgCl ℓ),
       -- (a)
@@ -592,7 +592,7 @@ lemma exists_ellVal_le_and_diagOp_mem_ellIntegralForms {P : Parameters} {D : Dat
   -- product `δ₀ = ∏ k, (value k - δ (elt k))`, which vanishes at the base systems that are not weak
   -- lifts.
   let N (x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)) : GalRep ℓ D.E n :=
-    normalisedRep O x.galRep
+    normalizedRep O x.galRep
   have h_int {K : Type} [Finite K] {u : K → FinPlace D.E} (hu : ∀ k : K, u k ∉ badPlaces D ℓ)
       (x : B.Eigensystem u) (g : Gal(Ω/D.E)) (i : ℕ) : ‖(N x g).val.charpoly.coeff i‖ ≤ 1 :=
     norm_charpoly_coeff_le_one_of_continuous (h_isRepOfType K u hu x x.prop).continuous g i
@@ -642,22 +642,14 @@ lemma exists_ellVal_le_and_diagOp_mem_ellIntegralForms {P : Parameters} {D : Dat
         (Q.place j).q (algebraMap EllAdicIntegers ℂ (a (Q.frobData j).frob))⁻¹ O.rankDiff :=
     h_string j ⟨x, hx⟩ h_cong (not_not.1 (mt (h_factor ⟨x, hx⟩) h_ne))
   have h_rankDiff : O.rankDiff ≠ 0 := by simpa [Nat.sub_eq_zero_iff_le] using O.rank_lt
-  have h_ribet
-      (S : Subalgebra EllAdicIntegers (B.Eigensystem Q.place → MvPolynomial J (PadicAlgCl ℓ)))
-      (𝒥 : Submodule S (B.Eigensystem Q.place → MvPolynomial J (PadicAlgCl ℓ)))
-      (h𝒥 : IsTraceIdeal 𝒥 (fun x g ↦ (N x.val g).val) (ℓ ^ (ν + 1) : EllAdicIntegers)
-        (fun j ↦ (Q.frobData j).isPlaceOver.tameGenerator) (fun j ↦ (Q.frobData j).frob)
-        (fun j ↦ j) e) :
-      ∃ d : PadicAlgCl ℓ, IsCommonRibetElement 𝒥
-          (fun (g : Gal(Ω/D.E)) (x : B.Eigensystem Q.place) ↦ (1 - (N x.val g).val).det) x₁ d ∧
-        ellVal (ℓ := ℓ) (D.chosenGroupOrder ^ 2 * d) ≤ liftValuationBound ℓ O ram sel :=
-    exists_isCommonRibetElement_ellVal_le hc hϑ h_le h_tri (𝓧 := 𝓧)
-      (sys := fun x : B.Eigensystem Q.place ↦ x.val)
-      (fun x ↦ h_isRepOfType J Q.place h_good x x.prop) (fun x ↦ h_quad J Q.place h_good x x.prop)
-      x₁ h_lift h_sel_ne_top h𝒥 he
-  refine (B.exists_diagOp_mem_ellIntegralForms Q h_offLevel h_twist h_tame
+  obtain ⟨s, h_val, h_op⟩ := B.exists_diagOp_mem_ellIntegralForms Q h_offLevel h_twist h_tame
     (fun (g : Gal(Ω/D.E)) (x : B.Eigensystem Q.place) ↦ (1 - (N x.val g).val).det) elt value 𝓨 x₁ e
-    h_rankDiff (h_int h_good) h_string' h_dvd h_ribet).elim fun s ⟨h_val, h_op⟩ ↦ ?_
+    h_rankDiff (h_int h_good) h_string' h_dvd
+    (m := D.chosenGroupOrder ^ 2) (bound := liftValuationBound ℓ O ram sel) fun _ _ h𝒥 ↦
+      exists_isCommonRibetElement_ellVal_le hc hϑ h_le h_tri (𝓧 := 𝓧)
+        (sys := fun x : B.Eigensystem Q.place ↦ x.val)
+        (fun x ↦ h_isRepOfType J Q.place h_good x x.prop)
+        (fun x ↦ h_quad J Q.place h_good x x.prop) x₁ h_lift h_sel_ne_top h𝒥 he
   refine ⟨J, inferInstance, Q.place, s, fun x hx ↦ ?_, fun l hl hl_int y hy h_supp h_agree ↦ ?_⟩
   · obtain rfl : x = x₁ := Subtype.ext hx
     exact h_val
@@ -864,10 +856,10 @@ lemma IsLiftGenerator.exists_isMainSummandLike {P : Parameters} {D : Data P} {�
     {x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)} (hvx : IsNonzeroIn v x) :
     ∃ (wt : (D.E →+* ℂ) → Multiset ℤ) (R : GalRep ℓ D.E r),
       IsMainSummandLike (n := r) D O.rankDiff wt R ∧
-      HasLiftTrace ϑ.invAvatar R O.rankDiff (normalisedRep O x.galRep) ∧
+      HasLiftTrace ϑ.invAvatar R O.rankDiff (normalizedRep O x.galRep) ∧
       ∃ γ : AbsGal D, HasDivisibleSelmerLengthLe ϑ.invAvatar R ϑ.Q γ sel := by
   obtain ⟨z, hz, R, V, ⟨⟨τ, hR⟩, h_trace⟩, hμ, γ, h_sel⟩ := hv.exists_hasLiftHeckePolynomial
-  have h_lift : HasLiftTrace ϑ.invAvatar R O.rankDiff (normalisedRep O x.galRep) :=
+  have h_lift : HasLiftTrace ϑ.invAvatar R O.rankDiff (normalizedRep O x.galRep) :=
     h_trace hμ hz (isEigenform hvx.mem hvx.ne_zero) (attached_galRep hvx.mem hvx.ne_zero)
   -- `V.rankDiff` and `O.rankDiff` are both `card n - card r` by definition.
   have hR_O : IsMainSummandLike D O.rankDiff τ R := hR
@@ -990,7 +982,7 @@ lemma IsLiftGenerator.exists_isMainSummandLike_hasTwistedLattice {P : Parameters
     (hv : IsLiftGenerator ϑ O E Z ⊤ v) (hx : IsNonzeroIn v x) :
     ∃ (wt : (D.E →+* ℂ) → Multiset ℤ) (R : GalRep ℓ D.E r),
       IsMainSummandLike (n := r) D O.rankDiff wt R ∧
-      HasLiftTrace ϑ.invAvatar R O.rankDiff (normalisedRep O x.galRep) ∧
+      HasLiftTrace ϑ.invAvatar R O.rankDiff (normalizedRep O x.galRep) ∧
       ∃ γ : AbsGal D, HasTwistedLattice ϑ.invAvatar R γ ∧
         (x = x₀ → HasDivisibleSelmerLengthLe ϑ.invAvatar R ϑ.Q γ sel) := by
   by_cases h_eq : x = x₀

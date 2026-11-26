@@ -70,7 +70,7 @@ instance isSplitLevel_nonInducedPlaces : IsSplitLevel D.nonInducedPlaces D.N whe
 /-- The point supported above `N` that is `diag (1, …, 1, N)` at the places of `Σ_N` in `S`, and `1`
 at the other places of `Σ_N`. -/
 abbrev diagPoint (j : ℕ) (S : Finset (FinPlace D.E)) : Gf D.E (D.X j) :=
-  embedGL (diagN (P := D.nonInducedPlaces) (D.InitIndex j) S)
+  embedGL (diagN (P := D.nonInducedPlaces) (N := D.N) (D.InitIndex j) S)
 
 /-- The point `δ_j`, which is `diag (1, …, 1, N)` at the places of `Σ_N` that divide `π` and `1` at
 the others. It takes the standard lattice at `Σ_N` to `L_j`, the lattice of integral vectors whose

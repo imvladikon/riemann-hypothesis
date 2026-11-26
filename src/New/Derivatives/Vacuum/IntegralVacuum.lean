@@ -230,15 +230,11 @@ lemma exists_isThetaProduct [DecidableEq n] (V : Space (P.E s) n ε) [V.IsStd] {
   -- With these two identities the values and series of `hF` are those of a theta product; the
   -- repeated frame vectors give the powers.
   refine ⟨F, hF.mem_finitePart, fun γ ↦ ?_, fun γ c ↦ ?_, h_int, by rwa [hδ_E] at h_periods⟩
-  · rw [hF.theta_translate γ, Fintype.prod_prod_type, Fintype.prod_sigma]
-    refine Finset.prod_congr rfl fun k _ ↦ ?_
-    rw [Finset.prod_comm]
-    refine Finset.prod_congr rfl fun j _ ↦
-      (Finset.prod_congr rfl fun m _ ↦ ?_).trans
-        (by rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin])
-    rw [Pi.one_apply, h_mon, resolutionShift, h_scale, h_coord]
-    rfl
-  · rw [hF.jetSeries_translate γ c, Fintype.prod_prod_type, Fintype.prod_sigma]
+  all_goals
+    first
+    | rw [hF.theta_translate γ]
+    | rw [hF.jetSeries_translate γ c]
+    rw [Fintype.prod_prod_type, Fintype.prod_sigma]
     refine Finset.prod_congr rfl fun k _ ↦ ?_
     rw [Finset.prod_comm]
     refine Finset.prod_congr rfl fun j _ ↦

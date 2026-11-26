@@ -1,5 +1,6 @@
 module
 
+public import TauCeti.RepresentationTheory.AsAlgebraHom
 import TauCeti.RepresentationTheory.Simple.Basic
 import TauCeti.RepresentationTheory.CharacterTable.Values
 public import Aesop.BuiltinRules
@@ -307,11 +308,6 @@ lemma IsClassFunction.commute (he : IsClassFunction e.coeff) (x : ℂ[H]) : Comm
   ext g
   simp only [coeff_mul_apply_left x e, coeff_mul_apply_right e x, h_swap, mul_comm]
 
-/-- An element `e` of the group algebra of a finite group `H` acts in the representation `σ` as
-the sum of the operators `σ s` weighted by the coefficients of `e`. -/
-lemma asAlgebraHom_eq_sum [Fintype H] : σ.asAlgebraHom e = ∑ s : H, e.coeff s • σ s := by
-  simp [asAlgebraHom_def, MonoidAlgebra.lift_apply, sum_fintype]
-
 /-- `e` is a central idempotent of the complex group algebra `ℂ[H]` of a group `H`: it is
 idempotent and its coefficients form a class function. -/
 def IsCentralProj (e : ℂ[H]) : Prop := IsIdempotentElem e ∧ IsClassFunction e.coeff
@@ -407,7 +403,7 @@ open MonoidAlgebra Finset LinearMap ComplexConjugate Matrix Algebra Representati
 attribute [local instance low] Fintype.ofFinite
 
 variable {G H V : Type*} [Group G] [Finite G] [Group H] {χ f : G → ℂ}
-  [AddCommGroup V] [Module ℂ V] [Module.Finite ℂ V] {ρ : Representation ℂ G V}
+  [AddCommGroup V] [Module ℂ V] {ρ : Representation ℂ G V}
   (Z : Type*) [CommSemiring Z] [Algebra Z ℂ]
 
 omit [Group G] in
@@ -601,6 +597,15 @@ lemma IsClassFunction.exists_eq_mul_groupAlgElem_mul (hf : IsClassFunction f) (a
     simp [ha_zero]
   · simp [hc, hi, algebraMap_eq_smul_one]
 
+/-- The trace of the group algebra element with coefficients `conj (χ g)`, divided by the order
+of the group, is the inner product of `χ` with the character of the representation. -/
+lemma trace_asAlgebraHom_groupAlgElem_conj (χ : G → ℂ) :
+    trace ℂ V (ρ.asAlgebraHom (groupAlgElem (conj ∘ χ))) / Nat.card G =
+      classInner χ ρ.character := by
+  simp [asAlgebraHom_eq_sum, classInner, finMean, finsum_eq_sum_of_fintype, character]
+
+variable [Module.Finite ℂ V]
+
 /-- Let `i : G →* H` be a group homomorphism with `G` finite, `χ` a character of `H` and `s ∈ H`.
 If the product of `χ ∘ i` with the character of a finite-dimensional representation `ρ` of `G` has
 average zero, then `∑ g, χ (i g * s) • g` acts as zero in `ρ`. -/
@@ -612,13 +617,13 @@ lemma IsChar.asAlgebraHom_groupAlgElem_eq_zero {χ : H → ℂ} (hχ : IsChar χ
   obtain ⟨τ, rfl⟩ := hχ
   have h_trace : trace ℂ (TensorProduct ℂ τ V) (tprod (τ.ρ.comp i) ρ).averageMap = 0 := by
     simpa [GroupAlgebra.average, trace_tensorProduct', FDRep.character, character, finMean,
-      finsum_eq_sum_of_fintype] using h_mean
+      finsum_eq_sum_of_fintype, -asAlgebraHom_sum_single_one] using h_mean
   have h_avg : (tprod (τ.ρ.comp i) ρ).averageMap = 0 :=
     (isProj_averageMap _).isIdempotentElem.eq_zero_of_trace_eq_zero h_trace
   -- Read this in `End τ ⊗ End V`, then apply `T : A ⊗ B ↦ trace (A * τ s) • B`.
   have h_tensor : ∑ u : G, τ.ρ (i u) ⊗ₜ[ℂ] ρ u = 0 := by
     apply (homTensorHomEquiv ℂ τ V τ V).injective
-    simpa [GroupAlgebra.average] using h_avg
+    simpa [GroupAlgebra.average, -asAlgebraHom_sum_single_one] using h_avg
   let T : TensorProduct ℂ (τ →ₗ[ℂ] τ) (V →ₗ[ℂ] V) →ₗ[ℂ] V →ₗ[ℂ] V :=
     TensorProduct.lift (lsmul ℂ (V →ₗ[ℂ] V) ∘ₗ trace ℂ τ ∘ₗ mulRight ℂ (τ.ρ s))
   calc ρ.asAlgebraHom (groupAlgElem fun x : G ↦ τ.character (i x * s))
@@ -630,8 +635,7 @@ in `ρ` iff `χ` is orthogonal to the character of `ρ` for the inner product `N
 lemma IsChar.asAlgebraHom_groupAlgElem_eq_zero_iff (h : IsChar χ) :
     ρ.asAlgebraHom (groupAlgElem (conj ∘ χ)) = 0 ↔ classInner χ ρ.character = 0 := by
   refine ⟨fun h_zero ↦ ?_, fun h_zero ↦ ?_⟩
-  · simpa [classInner, finMean, finsum_eq_sum_of_fintype, character, asAlgebraHom_eq_sum]
-      using congrArg (trace ℂ V) h_zero
+  · rw [← trace_asAlgebraHom_groupAlgElem_conj χ, h_zero, map_zero, zero_div]
   · -- `IsChar.asAlgebraHom_groupAlgElem_eq_zero` for the character `conj χ`, with `i` the identity
     -- and `s = 1`
     simpa [asAlgebraHom_eq_sum] using h.star.asAlgebraHom_groupAlgElem_eq_zero (i := .id G) (s := 1)
@@ -728,7 +732,7 @@ lemma self_adjoint {V : Type*} [AddCommGroup V] [Module ℂ V] (ρ : Representat
   have h_adj (s : G) : B (ρ s x) y = B x (ρ s⁻¹ y) := by simp [← hB s x]
   have h_term (s : G) : B ((e.coeff s • ρ s) x) y = B x ((e.coeff s⁻¹ • ρ s⁻¹) y) := by
     simp [h_adj, ← h_coeff]
-  simp only [asAlgebraHom_eq_sum, LinearMap.sum_apply, map_sum]
+  simp only [Representation.asAlgebraHom_eq_sum, LinearMap.sum_apply, map_sum]
   exact Fintype.sum_equiv (.inv G) _ _ h_term
 
 /-- Convolution with a central idempotent e of ℂ[G], along a homomorphism φ : G → H of finite
@@ -758,7 +762,8 @@ lemma sum_norm_sq_conv_le {V : Type*} [NormedAddCommGroup V] [InnerProductSpace 
   have h_norm : ‖ρ.asAlgebraHom e (.toLp 2 f)‖ ≤ ‖WithLp.toLp 2 f‖ := by
     simpa [hK] using K.norm_starProjection_apply_le _
   -- write both norms in coordinates and square
-  simpa (disch := positivity) [ρ, L, PiLp.norm_eq_of_L2, asAlgebraHom_eq_sum] using h_norm
+  simpa (disch := positivity) [ρ, L, PiLp.norm_eq_of_L2, Representation.asAlgebraHom_eq_sum]
+    using h_norm
 
 end New.IsCentralProj
 

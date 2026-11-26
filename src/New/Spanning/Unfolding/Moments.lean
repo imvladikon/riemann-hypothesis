@@ -1147,7 +1147,7 @@ lemma HasAmplitudeBlocks.hilbertSchmidtNorm_asAlgebraHom_comp_sq_le [WeilData E]
     have h_sum : P.adjoint ∘ₗ e ∘ₗ P =
         ∑ t, x.coeff t • (P.adjoint ∘ₗ ρ (Pi.mulSingle i t) ∘ₗ P) := by
       ext1 v
-      simp [he_def, asAlgebraHom_eq_sum]
+      simp [he_def, Representation.asAlgebraHom_eq_sum]
     rw [← ofReal_re (_ ^ 2), hilbertSchmidtNorm_sq_eq_trace, h_proj, h_sum, ← add_re, hP']
     simp [mul_sub]
   have h_bessel :

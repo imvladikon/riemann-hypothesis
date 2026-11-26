@@ -343,7 +343,8 @@ lemma length_add_length_tiedSelmer_le (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x
     refine Submodule.eq_top_iff'.2 fun y ↦ ?_
     obtain ⟨b, rfl⟩ := T.bijective_γ_smul_sub.surjective y
     exact Submodule.mem_map_of_mem (f := ev) <| T.mem_cocycles_tiedSetting hp hV hN ha A
-      (T.coboundary_mem_selmerModule hp (fun g ↦ (hV g).mp) ha b) .rfl fun _ hv ↦ .inl (mem_union_left _ hv)
+      (T.coboundary_mem_selmerModule hp (fun g ↦ (hV g).mp) ha b) .rfl
+      fun _ hv ↦ .inl (mem_union_left _ hv)
   -- A tied class is unramified at the first prime and its conjugate.
   have h_ker : T.tiedSelmer J J x i a ≤ Z ⊓ LinearMap.ker ev := fun c hc ↦
     ⟨T.mem_cocycles_tiedSetting hp hV hN ha A (T.mem_selmerModule_erase hp ha hc)

@@ -27,7 +27,7 @@ Notions from other files:
   infinite place.
 * `New.Patching.Isotypic`: spaces of forms with given Hecke eigenvalues at almost all places; such a
   space `x` has Hecke polynomials `x.heckePolyAt w` and a Galois representation `x.galRep`.
-* `New.Selmer.normalisedRep`: the twist of a Galois representation by the ℓ-adic character
+* `New.Selmer.normalizedRep`: the twist of a Galois representation by the ℓ-adic character
   χ = `New.Selmer.normalizingAvatar`, the avatar of an algebraic Hecke character made from W.
 * `Ω`: a fixed algebraic closure of ℚ, so that Gal(Ω/E) is the absolute Galois group of E.
 * `New.mostFrobenii`: a filter on the triples of a place, a place of `Ω` over it and a geometric
@@ -316,14 +316,14 @@ variable {P : Parameters} {D : Data P} {r n : Type} [Fintype n] [DecidableEq n] 
 column numbers and a power of the determinant at each infinite place. Let `f` lie in the isotypic
 space `x`, a space of forms with given Hecke eigenvalues at almost all places. Let
 χ = `normalizingAvatar O` be the ℓ-adic character attached, via ιℓ, to the Hecke character of W.
-Assume every g in Gal(Ω/E) has eigenvalue 1 on `normalisedRep O x.galRep`, the twist of `x.galRep`
+Assume every g in Gal(Ω/E) has eigenvalue 1 on `normalizedRep O x.galRep`, the twist of `x.galRep`
 by χ. Let w ∤ ℓ be a split place of norm q where `f` has Hecke polynomial S. Then each X₀q^i with
 i < n − r is a root of S. Here X₀ = `O.charW.frobValue r w` is the inverse of χ at a geometric
 Frobenius, read in ℂ. -/
 lemma isRoot_hecke_chain {O : DescentPair D.E r n}
     {x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)}
     {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} (hf : f ∈ x.val) (hf_ne : f ≠ 0)
-    (h_one : ∀ g : Gal(Ω/D.E), (normalisedRep O x.galRep g).val.charpoly.IsRoot 1)
+    (h_one : ∀ g : Gal(Ω/D.E), (normalizedRep O x.galRep g).val.charpoly.IsRoot 1)
     {w : FinPlace D.E} {hw : star w ≠ w} {S : ℂ[X]} {i : ℕ} (hℓ : ↑ℓ ∉ w.asIdeal)
     (hS : HasHeckePolyAt f.val w hw S) (hi : i < O.rankDiff) :
     S.IsRoot (O.charW.frobValue r w * w.q ^ i) := by
@@ -339,7 +339,7 @@ lemma isRoot_hecke_chain {O : DescentPair D.E r n}
       (x.attached_galRep hf hf_ne) hS.1 hA
   have h_kill : aeval (x.galRep s⁻¹).val (S.map ιℓ.toRingHom) = 0 :=
     (h_compat.polyKillsAt hS (s := s⁻¹) hs_inv).1 (hA.valuation_natCast_eq_one_iff.2 hℓ)
-  have h_kill_twist : aeval (normalisedRep O x.galRep s⁻¹).val
+  have h_kill_twist : aeval (normalizedRep O x.galRep s⁻¹).val
       ((S.map ιℓ.toRingHom).comp ((normalizingAvatar O s⁻¹).val⁻¹ • X)) = 0 := by
     rw [aeval_comp, map_smul, aeval_X]
     change aeval ((normalizingAvatar O s⁻¹).val⁻¹ •
@@ -368,7 +368,7 @@ w ∤ ℓ, of norm q, where `f` has Hecke polynomial H, and ι = `ιℓ` the fix
 lemma prod_X_sub_C_dvd_comp_of_hasHeckePolyAt {O : DescentPair D.E r n}
     {x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)}
     {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} (hf : f ∈ x.val) (hf_ne : f ≠ 0)
-    (h_one : ∀ g : Gal(Ω/D.E), (normalisedRep O x.galRep g).val.charpoly.IsRoot 1)
+    (h_one : ∀ g : Gal(Ω/D.E), (normalizedRep O x.galRep g).val.charpoly.IsRoot 1)
     (y : FrobeniusDatum D.E) {hw : star y.place ≠ y.place} {H : ℂ[X]} (hℓ : ↑ℓ ∉ y.place.asIdeal)
     (hH : HasHeckePolyAt f.val y.place hw H) :
     ∏ i ∈ Finset.range O.rankDiff, (X - C (y.place.q ^ i : ℂ)) ∣
@@ -397,13 +397,13 @@ polynomial e with e(1) = 1 (`HasRootChain`). -/
 lemma eventually_exists_hasRootChain {O : DescentPair D.E r n}
     {x : Isotypic (stdSpace D.E n) (O.columnCount, O.detExp)}
     {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} (hf : f ∈ x.val) (hf_ne : f ≠ 0)
-    (h_one : ∀ g : Gal(Ω/D.E), (normalisedRep O x.galRep g).val.charpoly.IsRoot 1)
+    (h_one : ∀ g : Gal(Ω/D.E), (normalizedRep O x.galRep g).val.charpoly.IsRoot 1)
     (h_charpoly_int : ∀ (g : Gal(Ω/D.E)) (i : ℕ),
-      ‖(normalisedRep O x.galRep g).val.charpoly.coeff i‖ ≤ 1) :
+      ‖(normalizedRep O x.galRep g).val.charpoly.coeff i‖ ≤ 1) :
     ∀ᶠ y : FrobeniusDatum D.E in mostFrobenii D.E, ∀ S : (PadicAlgCl ℓ)[X], 1 ≤ ‖eval 1 S‖ →
       -- the characteristic polynomial at Frobenius is congruent to `S` times the chain
       (∀ i : ℕ,
-        ‖(normalisedRep O x.galRep y.frob).val.charpoly.coeff i -
+        ‖(normalizedRep O x.galRep y.frob).val.charpoly.coeff i -
           (S * ∏ j ∈ Finset.range O.rankDiff,
             (X - C (cyclotomicInv ℓ D.E (PadicAlgCl ℓ) y.frob ^ j))).coeff i‖ < 1) →
       ∃ e : EllAdicIntegers[X],
@@ -435,11 +435,11 @@ lemma eventually_exists_hasRootChain {O : DescentPair D.E r n}
       RingHom.coe_coe, RingEquiv.apply_symm_apply]
   have hχ : ‖χ‖ = 1 := ContinuousMonoidHom.norm_apply_eq_one_of_compactSpace
     ⟨_, AlgHeckeChar.continuous_avatar _⟩ _
-  have h_twist : (normalisedRep O x.galRep y.frob).val = χ • (x.galRep y.frob).val := by
+  have h_twist : (normalizedRep O x.galRep y.frob).val = χ • (x.galRep y.frob).val := by
     change (normalizingAvatar O y.frob) • (x.galRep y.frob).val = χ • (x.galRep y.frob).val
     rw [Units.smul_def]
   have h_near (i : ℕ) : ‖(C (χ ^ card n) * T.map ιℓ.toRingHom * B -
-      (normalisedRep O x.galRep y.frob).val.charpoly).coeff i‖ < 1 := by
+      (normalizedRep O x.galRep y.frob).val.charpoly).coeff i‖ < 1 := by
     have h_half : ‖((x.galRep y.frob).val.charpoly - H).coeff i‖ ≤ 1 / 2 := h_att y.frob rfl i
     rw [mul_assoc, hT_map, h_twist]
     exact norm_coeff_comp_sub_charpoly_smul_lt_one hχ (h_half.trans_lt one_half_lt_one)

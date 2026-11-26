@@ -475,17 +475,6 @@ lemma dataInner_omega_left (g : G E s) (f f' : 𝒮 V) :
 
 /-! ### Values of the projection, and the Weil operators on its image -/
 
-omit [DecidableEq n] in
-/-- The indicator of the vectors y that are integral at every place of T is the integral of the
-character x ↦ ψ₀(y_T* x) over the standard lattice, where y_T = `idem T • y` is the part of y
-above T. -/
-private lemma boxIndicator_eq_integral_selfDualAddChar (T : Set (FinPlace E)) (y : n → 𝔸f E) :
-    boxIndicator n T y = ∫ x : n → 𝔸f E in stdLattice E n,
-      selfDualAddChar E (star (idem T • y) ⬝ᵥ x) ∂latticeMeasure E n := by
-  rw [integral_selfDualAddChar_stdLattice, boxIndicator]
-  -- `y ∈ integralBox n T` is `idem T • y ∈ stdLattice E n` by definition.
-  rfl
-
 /-- Let P^S = `New.Space.projOn` S be the projection on vacua above the finite places S ∪ S̄, and
 let ϱ_f(y) = `New.Space.finHeisenbergOp` y. If P^S f = f, then P^S ϱ_f(y)f is ϱ_f(y)f when y is
 integral at every place of S ∪ S̄ (`New.boxIndicator` is its indicator), and 0 otherwise. -/
@@ -494,7 +483,9 @@ lemma projOn_finHeisenbergOp {f : 𝒮 V} (hf_fix : V.projOn S f = f) (y : n →
       boxIndicator n S.conjClosure y • V.finHeisenbergOp y f := by
   -- Moving `finHeisenbergOp y` past the operators that `projOn S` averages leaves the mean of a
   -- character of the lattice, which is `1` or `0` (`integral_selfDualAddChar_stdLattice`).
-  rw [boxIndicator_eq_integral_selfDualAddChar, ← integral_smul_const, ← hf_fix]
+  classical
+  change _ = (if idem S.conjClosure • y ∈ stdLattice E n then (1 : ℂ) else 0) • _
+  rw [← integral_selfDualAddChar_stdLattice, ← integral_smul_const, ← hf_fix]
   refine V.map_projOn 1 fun x hx ↦ ?_
   simp [finHeisenbergOp_comm, V.finHeisenbergOp_projOn hx]
 

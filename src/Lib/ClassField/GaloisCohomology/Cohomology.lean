@@ -304,7 +304,5 @@ def H2EquivH : A.H2 ≃ₗ[R] A.H 2 :=
   (Submodule.quotEquivOfEq _ _ A.ker_π₂.symm).trans
     (A.π₂.quotKerEquivOfSurjective A.π₂_surjective)
 
-@[simp]
-lemma H2EquivH_mk (z : Z2 A.ρ) : A.H2EquivH (Submodule.Quotient.mk z) = A.π₂ z := rfl
 
 end New.DiscreteModule

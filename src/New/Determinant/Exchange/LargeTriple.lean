@@ -238,7 +238,7 @@ Schwartz–Bruhat with support in a set `Ω`. Suppose that the signs `t'` repres
 places, the Gram matrix of every `x` with non-zero real slice of `v`, but do not represent `T`. Then
 the Fourier coefficient at `j • T` of the theta integral of `v ⊗ Φ` vanishes at
 `D.radicalElement c z * D.levi (q, g)`. Here `j` is the purely imaginary element of the Weil data,
-and `centreCoeff T F p` is the mean of ψ(tr TM) F(z(M) p) over adelic matrices M modulo rational
+and `centerCoeff T F p` is the mean of ψ(tr TM) F(z(M) p) over adelic matrices M modulo rational
 ones, with z(M) in the centre of the unipotent radical. -/
 lemma centreCoeff_thetaIntegral_localDatum_eq_zero (hπ : ReadsAt A π) (β γ : AutChar E)
     (hΦ : Φ ∈ schwartzBruhat Ω)
@@ -247,14 +247,14 @@ lemma centreCoeff_thetaIntegral_localDatum_eq_zero (hπ : ReadsAt A π) (β γ :
     (hv : IsSchwartzVector v) (c : Matrix n b (𝔸 E)) (z : Matrix b b (𝔸 E)) (q : GL b (𝔸 E))
     (g : G E s) {t' : b → ℤˣ} {T : Matrix b b E} (hT : ¬RepresentedBy t' (T.map toAdele))
     (h_slice : SlicesVanishOutside D V t' v) :
-    D.centreCoeff ((j : E) • T) (thetaIntegral X V β γ (localDatum X V v Φ hπ))
+    D.centerCoeff ((j : E) • T) (thetaIntegral X V β γ (localDatum X V v Φ hπ))
       (D.radicalElement c z * D.levi (q, g)) = 0 := by
   -- The coefficient is a sum over the `x` with Gram matrix `T`, and each term is zero.
   set f : 𝒮 (X.hom V) := localDatum X V v Φ hπ with hf
   set p : G E r := D.radicalElement c z * D.levi (q, g) with hp
   have h_int : D.HasIntegrableTerms V β γ f p :=
     hasIntegrableTerms_localDatum_of_eq_stdDatum W₁ D V hπ β γ hΦ hΦ_std hv c z q g
-  have h_sum : D.centreCoeff ((j : E) • T) (thetaIntegral X V β γ f) p =
+  have h_sum : D.centerCoeff ((j : E) • T) (thetaIntegral X V β γ f) p =
       ∑' x : {x : Matrix a b E | xᴴ * V.J * x = T},
         ∫ k : G E t, D.thetaTerm V β γ f p x.val k ∂V.quotMeasure := by
     unfold thetaIntegral
@@ -329,7 +329,7 @@ lemma thetaTerm_eq_and_centreCoeff_eq_zero {P : Finset (FinPlace E)} {A : Set (F
     -- (c)
     ∀ (t' : b → ℤˣ) (T : Matrix b b E), ¬RepresentedBy t' (T.map toAdele) →
       SlicesVanishOutside D V t' v →
-      D.centreCoeff ((j : E) • T) (thetaIntegral X V β' γ f) p = 0 := by
+      D.centerCoeff ((j : E) • T) (thetaIntegral X V β' γ f) p = 0 := by
   exact ⟨⟨hasIntegrableTerms_localDatum_of_eq_stdDatum W₁ D V hπ β' γ hΦ hΦ_std hv c z q g,
       fun x x' Y hx hY ↦ thetaTerm_localDatum_of_eq_stdDatum W₁ D V hπ γ hΦ hΦ_std hβ' c z g hx hY⟩,
     fun t' T ↦ centreCoeff_thetaIntegral_localDatum_eq_zero W₁ D V hπ β' γ hΦ hΦ_std hv c z q g⟩
@@ -973,7 +973,7 @@ lemma hasIntegrableTerms_and_centreCoeff_thetaLarge_eq_zero (σ' : b ⊕ b ⊕ n
         (localDatum X (V'.sum W₁) v Φ 𝔠.readsAt) p ∧
       ∀ T : Matrix b b E, ¬RepresentedBy t' (T.map toAdele) →
         SlicesVanishOutside D (V'.sum W₁) t' v →
-        D.centreCoeff ((j : E) • T) (thetaLarge X (V'.sum W₁) 𝔠 v Φ) p = 0 := by
+        D.centerCoeff ((j : E) • T) (thetaLarge X (V'.sum W₁) 𝔠 v Φ) p = 0 := by
   obtain ⟨ε, -, h_std⟩ := (adaptedFrame 𝔠.readsAt D).exists_stdRowDatum_eq_stdDatum
     (χ := 𝔠.semilocalChar) σ'
   obtain ⟨⟨h_int, -⟩, h_zero⟩ := thetaTerm_eq_and_centreCoeff_eq_zero W₁ D (V'.sum W₁) 𝔠.readsAt
@@ -999,7 +999,7 @@ lemma hasIntegrableTerms_and_centreCoeff_thetaSmall_eq_zero {v' : PairFock E r t
         (localDatum X V' v' (fun y : Matrix b m (LocProd 𝔠.ramifiedPlaces) ↦ Ψ yᵀ) 𝔠.readsAt.star) p
           ∧
       ∀ T : Matrix b b E, ¬RepresentedBy t' (T.map toAdele) →
-        D.centreCoeff ((j : E) • T) (thetaSmall X V' 𝔠 v' Ψ) p = 0 := by
+        D.centerCoeff ((j : E) • T) (thetaSmall X V' 𝔠 v' Ψ) p = 0 := by
   obtain ⟨⟨h_int, -⟩, h_zero⟩ := thetaTerm_eq_and_centreCoeff_eq_zero W₁ D V' 𝔠.readsAt.star
     (upsilonU1 ^ card b) 𝔠.semilocalChar 1 (fromRows 1 0)
       (stdColDatum_mem_schwartzBruhat 𝔠.semilocalChar
@@ -1034,11 +1034,11 @@ lemma exists_centreCoeff_eq_mul_of_isPeriodIdentity {σ' : b ⊕ b ⊕ n ≃ m}
       ∃ C : ℂ, ‖C‖ = K * ‖I₀‖ ∧
       ∀ (T : Matrix b b E) (c : Matrix n b (𝔸 E)) (z : Matrix b b (𝔸 E)) (q : GL b (𝔸 E))
           (g : G E s), IsSelfDualTestPair V' T q →
-        D.centreCoeff ((j : E) • T)
+        D.centerCoeff ((j : E) • T)
             (thetaLarge X (V'.sum W₁) 𝔠 v
               (stdRowDatum σ' 𝔠.semilocalChar (adaptedFrame 𝔠.readsAt D).dualL))
             (D.radicalElement c z * D.levi (q, g)) =
-          C * D.centreCoeff ((j : E) • T)
+          C * D.centerCoeff ((j : E) • T)
             (thetaSmall X V' 𝔠 v' (stdColDatum 𝔠.semilocalChar (adaptedFrame 𝔠.readsAt D).dualL))
             (D.radicalElement c z * D.levi (q, g)) := by
   -- In case (a) each coefficient is the integral of one term of the theta kernel. The integral for
@@ -1155,8 +1155,8 @@ lemma exists_thetaLarge_eq_smul_of_isPeriodIdentity [IsBaseAdapted D₁] {σ' : 
   have hF' : IsAutFunction X F' := (𝔠.readsAt.star.isTargetBounded hv'
     (stdColDatum_mem_schwartzBruhat 𝔠.semilocalChar hz₀).transpose_mem_schwartzBruhat
     ).isAutFunction_thetaIntegral
-  calc D.centreCoeff ((j : E) • T) (𝒟 (stdColDatum 𝔠.semilocalChar z₀)) p
-      = D.centreCoeff ((j : E) • T) F p - C * D.centreCoeff ((j : E) • T) F' p := by
+  calc D.centerCoeff ((j : E) • T) (𝒟 (stdColDatum 𝔠.semilocalChar z₀)) p
+      = D.centerCoeff ((j : E) • T) F p - C * D.centerCoeff ((j : E) • T) F' p := by
         simpa only [h_diff₀, mul_one] using
           D.centreCoeff_mul_right_sub_smul hF hF' C 1 ((j : E) • T) p
     _ = 0 := sub_eq_zero.2 (coeff_eq T c y q g hT)

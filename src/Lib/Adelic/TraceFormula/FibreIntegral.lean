@@ -362,7 +362,7 @@ variable {G Γ : Type} [Group G] [TopologicalSpace G]
 
 /-- The integral of `Ψ` over the orbit `{(g h, h⁻¹ y h) | h ∈ H}` of `(g, y)`, for a measure `ν` on
 `H`; here `h` acts on `y` through `j`. -/
-noncomputable def fibreIntegral (j : Γ →ₜ* G) {H : Subgroup Γ} (ν : Measure H)
+noncomputable def fiberIntegral (j : Γ →ₜ* G) {H : Subgroup Γ} (ν : Measure H)
     (Ψ : TestFunction (Γ × G)) (g : Γ) (y : G) : ℂ :=
   ∫ h : H, Ψ.val (g * h, (j h)⁻¹ * y * j h) ∂ν
 
@@ -370,16 +370,16 @@ noncomputable def fibreIntegral (j : Γ →ₜ* G) {H : Subgroup Γ} (ν : Measu
 over the `H`-orbit of `(g, y)`. -/
 def IsImage (j : Γ →ₜ* G) {H : Subgroup Γ} (ν : Measure H) (X : Set G) (Ψ : TestFunction (Γ × G))
     (f : TestFunction G) : Prop :=
-  ∀ g : Γ, ∀ y ∈ X, f.val (j g * y * (j g)⁻¹) = fibreIntegral j ν Ψ g y
+  ∀ g : Γ, ∀ y ∈ X, f.val (j g * y * (j g)⁻¹) = fiberIntegral j ν Ψ g y
 
 variable {j : Γ →ₜ* G} {H : Subgroup Γ} {ν : Measure H} {C X : Set G}
   {Ψ Ψ' : TestFunction (Γ × G)} {f f' : TestFunction G} {I : TestFunction G →ₗ[ℂ] ℂ}
 
-/-- The integral `fibreIntegral j ν Ψ g y` of a test function `Ψ` over the orbit
+/-- The integral `fiberIntegral j ν Ψ g y` of a test function `Ψ` over the orbit
 `{(g h, h⁻¹ y h) | h ∈ H}` is locally constant in `(g, y)`. -/
-lemma isLocallyConstant_fibreIntegral [IsTopologicalGroup G] [IsTopologicalGroup Γ]
+lemma isLocallyConstant_fiberIntegral [IsTopologicalGroup G] [IsTopologicalGroup Γ]
     (Ψ : TestFunction (Γ × G)) :
-    IsLocallyConstant fun p : Γ × G ↦ fibreIntegral j ν Ψ p.1 p.2 := by
+    IsLocallyConstant fun p : Γ × G ↦ fiberIntegral j ν Ψ p.1 p.2 := by
   -- The integrand, as a function of `h`, is itself locally constant in `(g, y)`.
   let orbit : Γ × G → Γ → Γ × G := fun p h ↦ (p.1 * h, (j h)⁻¹ * p.2 * j h)
   have h_const : IsLocallyConstant fun (p : Γ × G) (h : Γ) ↦ Ψ.val (orbit p h) :=
@@ -389,16 +389,16 @@ lemma isLocallyConstant_fibreIntegral [IsTopologicalGroup G] [IsTopologicalGroup
 
 /-- If the integral of `Ψ` over the orbit `{(g h, h⁻¹ y h) | h ∈ H}` is not zero, then `g y g⁻¹` is
 `g' y' g'⁻¹` for a point `(g', y')` in the support of `Ψ`. -/
-lemma mem_image_tsupport_of_fibreIntegral_ne_zero {g : Γ} {y : G}
-    (h_ne : fibreIntegral j ν Ψ g y ≠ 0) :
+lemma mem_image_tsupport_of_fiberIntegral_ne_zero {g : Γ} {y : G}
+    (h_ne : fiberIntegral j ν Ψ g y ≠ 0) :
     j g * y * (j g)⁻¹ ∈ (fun p : Γ × G ↦ j p.1 * p.2 * (j p.1)⁻¹) '' tsupport Ψ.val := by
   obtain ⟨h, hΨ⟩ : ∃ h : H, Ψ.val (g * h, (j h)⁻¹ * y * j h) ≠ 0 := by
     by_contra! h_all
-    exact h_ne (by simp only [fibreIntegral, h_all, integral_zero])
+    exact h_ne (by simp only [fiberIntegral, h_all, integral_zero])
   exact ⟨(g * h, (j h)⁻¹ * y * j h), subset_tsupport _ hΨ, by simp [mul_assoc]⟩
 
 lemma IsImage.smul (hf : IsImage j ν X Ψ f) (c : ℂ) : IsImage j ν X (c • Ψ) (c • f) :=
-  fun g y hy ↦ by simp [hf g y hy, fibreIntegral, integral_const_mul]
+  fun g y hy ↦ by simp [hf g y hy, fiberIntegral, integral_const_mul]
 
 /-- Let `f` be an image of `Ψ` (its value at `g y g⁻¹`, for `y ∈ X`, is the integral of `Ψ` over the
 `H`-orbit of `(g, y)`), and let `Ψ'` be the left translate of `Ψ` by `a` in the first variable. Then
@@ -411,15 +411,15 @@ lemma IsImage.conjugate [IsTopologicalGroup G] [T2Space G] (hf : IsImage j ν X 
     simp [mul_assoc]
   calc (TestFunction.conjugate j a f).val (j g * y * (j g)⁻¹)
       = f.val (j (a⁻¹ * g) * y * (j (a⁻¹ * g))⁻¹) := by rw [conjugate_apply, h_conj]
-    _ = fibreIntegral j ν Ψ (a⁻¹ * g) y := hf (a⁻¹ * g) y hy
-    _ = fibreIntegral j ν Ψ' g y := by simp only [fibreIntegral, h_left, mul_assoc]
+    _ = fiberIntegral j ν Ψ (a⁻¹ * g) y := hf (a⁻¹ * g) y hy
+    _ = fiberIntegral j ν Ψ' g y := by simp only [fiberIntegral, h_left, mul_assoc]
 
 /-- Let `X` be a slice, so that `H` conjugates `X` into itself. If `Ψ` vanishes on `Γ × X`, then its
 integrals over the `H`-orbits in `Γ × X` vanish, that is, `0` is an image of `Ψ`. -/
 lemma IsSlice.isImage_zero (hX : IsSlice j H C X) (h_zero : ∀ g : Γ, ∀ y ∈ X, Ψ.val (g, y) = 0) :
     IsImage j ν X Ψ 0 := by
   intro g y hy
-  simp [fibreIntegral, fun h : H ↦ h_zero (g * h) _ ((hX.conj_mem_iff y hy h).2 h.property)]
+  simp [fiberIntegral, fun h : H ↦ h_zero (g * h) _ ((hX.conj_mem_iff y hy h).2 h.property)]
 
 /-- Let `X` be a slice of `C`, so that `C` consists of the conjugates of the elements of `X`. Two
 images `f` and `f'` of `Ψ` agree on `C`, since both are given there by the integrals of `Ψ` over
@@ -439,9 +439,9 @@ variable [IsTopologicalGroup Γ] [BorelSpace Γ] [ν.IsHaarMeasure]
 /-- For a left Haar measure `ν` on `H`, the integral of `Ψ` over the orbit
 `{(g h, h⁻¹ y h) | h ∈ H}` does not change when `(g, y)` is replaced by another point
 `(g a, a⁻¹ y a)` of the orbit. -/
-lemma fibreIntegral_mul_conj (Ψ : TestFunction (Γ × G)) (g : Γ) (y : G) (a : H) :
-    fibreIntegral j ν Ψ (g * a) ((j a)⁻¹ * y * j a) = fibreIntegral j ν Ψ g y := by
-  simpa [fibreIntegral, mul_assoc] using
+lemma fiberIntegral_mul_conj (Ψ : TestFunction (Γ × G)) (g : Γ) (y : G) (a : H) :
+    fiberIntegral j ν Ψ (g * a) ((j a)⁻¹ * y * j a) = fiberIntegral j ν Ψ g y := by
+  simpa [fiberIntegral, mul_assoc] using
     integral_mul_left_eq_self (μ := ν) (fun h : H ↦ Ψ.val (g * h, (j h)⁻¹ * y * j h)) a
 
 /-- For a closed subgroup `H` and a Haar measure `ν` on it, a test function on `Γ × G` is integrable
@@ -463,34 +463,34 @@ lemma IsImage.add [IsTopologicalGroup G] [T2Space G]
     [T2Space Γ] (hH : IsClosed (H : Set Γ)) (hf : IsImage j ν X Ψ f)
     (hf' : IsImage j ν X Ψ' f') : IsImage j ν X (Ψ + Ψ') (f + f') := by
   intro g y hy
-  simp only [Submodule.coe_add, Pi.add_apply, hf g y hy, hf' g y hy, fibreIntegral]
+  simp only [Submodule.coe_add, Pi.add_apply, hf g y hy, hf' g y hy, fiberIntegral]
   exact (integral_add (integrable_mul_conj hH Ψ g y) (integrable_mul_conj hH Ψ' g y)).symm
 
 /-- Let `X` be a slice. The integral of `Ψ` over the `H`-orbit of `(g, g⁻¹ x g)` is the same for all
 `g` that conjugate `x` into `X`, since two such `g` differ by an element of `H`. -/
-lemma IsSlice.fibreIntegral_conj_eq (hX : IsSlice j H C X) (Ψ : TestFunction (Γ × G)) {x : G}
+lemma IsSlice.fiberIntegral_conj_eq (hX : IsSlice j H C X) (Ψ : TestFunction (Γ × G)) {x : G}
     {g g' : Γ} (hg : (j g)⁻¹ * x * j g ∈ X) (hg' : (j g')⁻¹ * x * j g' ∈ X) :
-    fibreIntegral j ν Ψ g' ((j g')⁻¹ * x * j g') = fibreIntegral j ν Ψ g ((j g)⁻¹ * x * j g) := by
+    fiberIntegral j ν Ψ g' ((j g')⁻¹ * x * j g') = fiberIntegral j ν Ψ g ((j g)⁻¹ * x * j g) := by
   have h_conj : (j (g⁻¹ * g'))⁻¹ * ((j g)⁻¹ * x * j g) * j (g⁻¹ * g') = (j g')⁻¹ * x * j g' := by
     simp [mul_assoc]
   have h_mem : g⁻¹ * g' ∈ H := (hX.conj_mem_iff _ hg (g⁻¹ * g')).1 (by rwa [h_conj])
-  rw [← fibreIntegral_mul_conj Ψ g ((j g)⁻¹ * x * j g) ⟨g⁻¹ * g', h_mem⟩, h_conj,
+  rw [← fiberIntegral_mul_conj Ψ g ((j g)⁻¹ * x * j g) ⟨g⁻¹ * g', h_mem⟩, h_conj,
     mul_inv_cancel_left]
 
 /-- Let `X` be a slice of `C` (the conjugates of `X` make up `C`, and nearby points of `C` are
 conjugated into `X` by elements near `1`), and for each `x ∈ C` let `g x` conjugate `x` into `X` (no
 continuity of `g` is assumed). The integral of `Ψ` over the `H`-orbit of `(g x, (g x)⁻¹ x (g x))` is
 a locally constant function of `x`. -/
-lemma IsSlice.isLocallyConstant_fibreIntegral_conj [IsTopologicalGroup G] (hX : IsSlice j H C X)
+lemma IsSlice.isLocallyConstant_fiberIntegral_conj [IsTopologicalGroup G] (hX : IsSlice j H C X)
     (Ψ : TestFunction (Γ × G)) {g : C → Γ} (hg : ∀ x : C, (j (g x))⁻¹ * x * j (g x) ∈ X) :
-    IsLocallyConstant fun x : C ↦ fibreIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x)) := by
+    IsLocallyConstant fun x : C ↦ fiberIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x)) := by
   -- A point `x` near `x₀` is conjugated into `X` by some `g x₀ * o` with `o` near `1`, and the
   -- integral over the orbit is locally constant in `(o, x)`.
   refine (IsLocallyConstant.iff_eventually_eq _).2 fun x₀ ↦ ?_
   let Φ : Γ × C → ℂ := fun p ↦
-    fibreIntegral j ν Ψ (g x₀ * p.1) ((j (g x₀ * p.1))⁻¹ * p.2 * j (g x₀ * p.1))
+    fiberIntegral j ν Ψ (g x₀ * p.1) ((j (g x₀ * p.1))⁻¹ * p.2 * j (g x₀ * p.1))
   have hΦ : IsLocallyConstant Φ :=
-    (isLocallyConstant_fibreIntegral Ψ).comp_continuous
+    (isLocallyConstant_fiberIntegral Ψ).comp_continuous
       (f := fun p : Γ × C ↦ (g x₀ * p.1, (j (g x₀ * p.1))⁻¹ * p.2 * j (g x₀ * p.1))) (by fun_prop)
   obtain ⟨O, hO, V, hV, hΦ_near⟩ :
       ∃ O ∈ 𝓝 (1 : Γ), ∃ V ∈ 𝓝 x₀, O ×ˢ V ⊆ {p : Γ × C | Φ p = Φ (1, x₀)} :=
@@ -503,8 +503,8 @@ lemma IsSlice.isLocallyConstant_fibreIntegral_conj [IsTopologicalGroup G] (hX : 
     h_tendsto.eventually (hX.eventually_exists_conj_mem O hO _ (hg x₀))
   filter_upwards [hV, h_section] with x hx ⟨o, ho, hox⟩
   have h_mem : (j (g x₀ * o))⁻¹ * x * j (g x₀ * o) ∈ X := by simpa [mul_assoc] using hox
-  calc fibreIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x))
-      = Φ (o, x) := hX.fibreIntegral_conj_eq Ψ h_mem (hg x)
+  calc fiberIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x))
+      = Φ (o, x) := hX.fiberIntegral_conj_eq Ψ h_mem (hg x)
     _ = Φ (1, x₀) := hΦ_near (mk_mem_prod ho hx)
     _ = _ := by simp only [Φ, mul_one]
 
@@ -524,24 +524,24 @@ theorem IsSlice.exists_isImage (hX : IsSlice j H C X) (ν : Measure H) [ν.IsHaa
   -- Choose `g x` conjugating `x ∈ C` into `X`, and integrate over the orbit of
   -- `(g x, (g x)⁻¹ x (g x))`.
   choose g hg using fun x : C ↦ (hX.mem_iff x).1 x.property
-  let F : C → ℂ := fun x ↦ fibreIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x))
+  let F : C → ℂ := fun x ↦ fiberIntegral j ν Ψ (g x) ((j (g x))⁻¹ * x * j (g x))
   have hF_compact : HasCompactSupport F := by
     let S : Set G := (fun p : Γ × G ↦ j p.1 * p.2 * (j p.1)⁻¹) '' tsupport Ψ.val
     have hS_compact : IsCompact S := (hasCompactSupport Ψ).isCompact.image (by fun_prop)
     have h_support (x : C) (h_ne : F x ≠ 0) : (x : G) ∈ S := by
-      simpa [S, mul_assoc] using mem_image_tsupport_of_fibreIntegral_ne_zero h_ne
+      simpa [S, mul_assoc] using mem_image_tsupport_of_fiberIntegral_ne_zero h_ne
     exact HasCompactSupport.of_support_subset_isCompact
       (hX.isClosed.isClosedEmbedding_subtypeVal.isCompact_preimage hS_compact) h_support
   let F' : TestFunction C :=
-    ⟨F, hX.isLocallyConstant_fibreIntegral_conj Ψ hg, hF_compact, subset_univ _⟩
+    ⟨F, hX.isLocallyConstant_fiberIntegral_conj Ψ hg, hF_compact, subset_univ _⟩
   obtain ⟨f, hf⟩ : ∃ f : TestFunction G, ∀ x : C, f.val x = F x := exists_extension hX.isClosed F'
   refine ⟨f, fun a y hy ↦ ?_⟩
   have h_conj : (j a)⁻¹ * (j a * y * (j a)⁻¹) * j a = y := by group
   have h_mem : (j a)⁻¹ * (j a * y * (j a)⁻¹) * j a ∈ X := by rwa [h_conj]
   let x : C := ⟨j a * y * (j a)⁻¹, (hX.mem_iff _).2 ⟨a, h_mem⟩⟩
   calc f.val x = F x := hf x
-    _ = fibreIntegral j ν Ψ a ((j a)⁻¹ * x * j a) := hX.fibreIntegral_conj_eq Ψ h_mem (hg x)
-    _ = fibreIntegral j ν Ψ a y := by rw [h_conj]
+    _ = fiberIntegral j ν Ψ a ((j a)⁻¹ * x * j a) := hX.fiberIntegral_conj_eq Ψ h_mem (hg x)
+    _ = fiberIntegral j ν Ψ a y := by rw [h_conj]
 
 /-! ### Step 2: invariant distributions on images -/
 

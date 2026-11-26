@@ -208,14 +208,14 @@ lemma IsNearPairOverAgreeingBlock.termSize_mul_le {E : Type} [Field E] [CMType E
     _ ≤ (S.tailScale ^ 4 * D / S.pairCountScale) ^ 2 / ((d * η) ^ 2) ^ 𝔰.k := by gcongr
     _ = _ := by ring
 
-/-- Let `S` be data of the filling theorem that satisfy the standing hypotheses `S.IsAdmissible`.
+/-- Let `S` be data of the filling theorem.
 Let `(γ, γ')` be a near pair over the classes `c`, `c'`, whose common lattice `S.pairLattice` has
 corank `l = k - finrank E (commonLink γ γ')` and discriminant `d = S.pairDiscriminant c c' γ γ'`.
 Let `η > 0`. Suppose that `(d η)²` is at most the product of the two gauges, `D` bounds the
 constants `S.cellRankSecondMoment` of both cell ranks, and `τ ^ (l + 6) D η ^ (-k) ≤ B`. Then the
 product of the sizes `S.termSize` is at most `B d ^ (-k) / (τ ^ (l + 2) n_p)`. -/
 lemma IsNearPairOverAgreeingBlock.ofReal_termSize_mul_le {E : Type} [Field E] [CMType E]
-    {𝔰 : Shape} {S : Filling E 𝔰} [HasPrimitiveRoot5040 E] [S.IsAdmissible] {c c' : S.Classes}
+    {𝔰 : Shape} {S : Filling E 𝔰} [HasPrimitiveRoot5040 E] {c c' : S.Classes}
     {γ γ' : S.G E} (hq : S.IsNearPairOverAgreeingBlock c c' (γ, γ')) {η D B : ℝ} (hη : 0 < η)
     (h_gain : (S.pairDiscriminant c c' γ γ' * η) ^ 2 ≤
       S.levelGauge (S.cellRank γ) c c' γ * S.levelGauge (S.cellRank γ') c c' γ')
@@ -578,6 +578,21 @@ lemma enorm_amplitudeSum_mul_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {
     ofReal_mul h_size]
   ring
 
+/-- Sum block estimates over pairs in `T` when each pair determines its block. -/
+private lemma tsum_le_of_pair_blocks {ι α : Type*} {A B : ι → Set α} {T : Set (α × α)}
+    {g : ι → ℝ≥0∞} {k : ℝ≥0∞} (w : α × α → ℝ≥0∞)
+    (mem : ∀ i (a : A i) (b : B i), (a.val, b.val) ∈ T)
+    (unique : ∀ i j (a b : α), a ∈ A i → b ∈ B i → a ∈ A j → b ∈ B j → i = j)
+    (bound : ∀ i, g i ≤ ∑' q : A i × B i, k * w (q.1, q.2)) :
+    ∑' i, g i ≤ k * ∑' q : T, w q := by
+  let pair (x : Σ i, A i × B i) : T := ⟨(x.2.1, x.2.2), mem x.1 x.2.1 x.2.2⟩
+  have inj : pair.Injective := by
+    rintro ⟨i, ⟨a, ha⟩, b, hb⟩ ⟨j, ⟨_, ha'⟩, _, hb'⟩ ⟨⟩
+    cases unique i j a b ha hb ha' hb'
+    rfl
+  exact (tsum_le_tsum bound).trans <| (tsum_sigma' fun x ↦ k * w (pair x)).symm.trans_le <|
+    (tsum_comp_le_tsum_of_injective inj fun q : T ↦ k * w q).trans_eq ENNReal.tsum_mul_left
+
 /-- Let `E` be a CM field with a primitive root of unity of order 5040, and let `S` be data of the
 filling theorem over `E` that satisfy the standing hypotheses `S.IsAdmissible`. Let
 `T ⊆ Γ* = S.remainingTerms` be stable (invariant on both sides under the rational points of the
@@ -620,7 +635,7 @@ lemma enorm_amplitudeSum_sq_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {S
       ∑' Λ, ‖S.amplitudeSum .cut (T ∩ {γ | S.termDisc γ ≠ 0} ∩ link ⁻¹' {Λ}) c s c'‖ₑ ^ 2 := by
     refine (tsum_range product fun Λ Λ' h ↦ by simpa using h).trans (tsum_congr fun Λ ↦ ?_)
     have h_set : T ∩ S.piece ⁻¹' {some Λ} = T ∩ {γ | S.termDisc γ ≠ 0} ∩ link ⁻¹' {Λ} :=
-      Set.ext fun γ ↦ by by_cases h_disc : S.termDisc γ = 0 <;> simp [piece, h_disc, and_assoc]
+      Set.ext fun γ ↦ by by_cases h_disc : S.termDisc γ = 0 <;> simp [piece, h_disc]
     simp only [product, part, h_set, sq]
   let nearRepsOfPiece (κ : Piece E 𝔰) : Set (S.G E) :=
     S.nearRepresentativesOver (T ∩ S.piece ⁻¹' {κ}) c s c'
@@ -641,26 +656,12 @@ lemma enorm_amplitudeSum_sq_le {E : Type} [Field E] [CMType E] {𝔰 : Shape} {S
   have h_others : ∑' p : ↥diagonalᶜ, product p ≤
       .ofReal (S.unipotentCovolume ^ 2) * ∑' q : apart, .ofReal
         (S.termSize c c' (q : S.G E × S.G E).1 * S.termSize c c' (q : S.G E × S.G E).2) := by
-    -- One sum over a pair of pieces and a near representative of each; the terms determine the
-    -- pieces.
-    let pair (x : Σ p : ↥diagonalᶜ, nearRepsOfPiece p.val.1 × nearRepsOfPiece p.val.2) : apart :=
-      ⟨(x.2.1, x.2.2), h_mem x.1 x.2.1 x.2.2⟩
-    have h_injective : pair.Injective := by
-      rintro ⟨⟨⟨κ₁, κ₁'⟩, _⟩, ⟨q, hq₁⟩, q', hq₁'⟩ ⟨⟨⟨κ₂, κ₂'⟩, _⟩, ⟨_, hq₂⟩, _, hq₂'⟩ ⟨⟩
-      obtain rfl : κ₁ = κ₂ := (h_piece hq₁).symm.trans (h_piece hq₂)
-      obtain rfl : κ₁' = κ₂' := (h_piece hq₁').symm.trans (h_piece hq₂')
-      rfl
-    let size (q : S.G E × S.G E) : ℝ≥0∞ :=
-      .ofReal (S.unipotentCovolume ^ 2) * .ofReal (S.termSize c c' q.1 * S.termSize c c' q.2)
-    calc
-      _ ≤ ∑' (p : ↥diagonalᶜ) (q : nearRepsOfPiece p.val.1 × nearRepsOfPiece p.val.2),
-          size (q.1, q.2) :=
-        tsum_le_tsum fun p ↦
-          enorm_amplitudeSum_mul_le (hT.inter_piece p.val.1) (hT.inter_piece p.val.2)
-            (Set.inter_subset_left.trans h_sub) (Set.inter_subset_left.trans h_sub)
-      _ = ∑' x, size (pair x) := (tsum_sigma' fun x ↦ size (pair x)).symm
-      _ ≤ ∑' q : apart, size q := tsum_comp_le_tsum_of_injective h_injective fun q ↦ size q
-      _ = _ := ENNReal.tsum_mul_left
+    apply tsum_le_of_pair_blocks (fun q ↦ .ofReal (S.termSize c c' q.1 * S.termSize c c' q.2)) h_mem
+    · intro i j a b ha hb ha' hb'
+      exact Subtype.ext (Prod.ext ((h_piece ha).symm.trans (h_piece ha'))
+        ((h_piece hb).symm.trans (h_piece hb')))
+    · exact fun p ↦ enorm_amplitudeSum_mul_le (hT.inter_piece p.val.1) (hT.inter_piece p.val.2)
+        (Set.inter_subset_left.trans h_sub) (Set.inter_subset_left.trans h_sub)
   calc
     _ ≤ (∑' κ, part κ) ^ 2 := by grw [enorm_amplitudeSum_le_tsum_fibre S.piece]
     _ = ∑' p : Piece E 𝔰 × Piece E 𝔰, product p := by
@@ -790,32 +791,16 @@ theorem linkSecondMoment_le_of_le_meetNorm {E : Type} [Field E] [CMType E]
   have h_blocks (c c' : S.Classes) :
       ∑' (s : Ω) (Λ : Link), ‖S.amplitudeSum .cut (terms Λ) c s c'‖ₑ ^ 2 ≤
         .ofReal (S.unipotentCovolume ^ 2) * ∑' q : sameLinkPairs c c', size c c' q := by
-    -- A pair of terms determines its `s` and its link.
-    let pair (x : Σ p : Ω × Link, nearRepsInLink c c' p × nearRepsInLink c c' p) :
-        sameLinkPairs c c' :=
-      ⟨(x.2.1, x.2.2), h_mem x.1 x.2.1 x.2.2⟩
-    have h_injective : pair.Injective := by
-      rintro ⟨⟨⟨s, _⟩, Λ⟩, ⟨q, hq⟩, q', _⟩ ⟨⟨⟨s', _⟩, Λ'⟩, ⟨_, hq'⟩, _, _⟩ ⟨⟩
-      obtain rfl : s = s' := eq_of_mem_termsOver (mem_termsOver_of_mem_nearRepresentativesOver hq)
-        (mem_termsOver_of_mem_nearRepresentativesOver hq')
-      obtain ⟨-, h_link : link q = Λ⟩ := mem_of_mem_nearRepresentativesOver hq
-      obtain ⟨-, h_link' : link q = Λ'⟩ := mem_of_mem_nearRepresentativesOver hq'
-      obtain rfl : Λ = Λ' := h_link.symm.trans h_link'
-      rfl
-    calc
-      _ = ∑' p : Ω × Link, ‖S.amplitudeSum .cut (terms p.2) c p.1 c'‖ₑ ^ 2 :=
-        tsum_prod.symm
-      _ ≤ ∑' (p : Ω × Link) (q : nearRepsInLink c c' p × nearRepsInLink c c' p),
-          .ofReal (S.unipotentCovolume ^ 2) * size c c' (q.1, q.2) :=
-        tsum_le_tsum fun p ↦ by
-          rw [sq]
-          exact enorm_amplitudeSum_mul_le (h_stable p.2) (h_stable p.2) (h_sub p.2) (h_sub p.2)
-      _ = ∑' x, .ofReal (S.unipotentCovolume ^ 2) * size c c' (pair x) :=
-        by rw [tsum_sigma']
-      _ ≤ ∑' q : sameLinkPairs c c', .ofReal (S.unipotentCovolume ^ 2) * size c c' q :=
-        tsum_comp_le_tsum_of_injective h_injective fun q ↦
-          .ofReal (S.unipotentCovolume ^ 2) * size c c' q
-      _ = _ := ENNReal.tsum_mul_left
+    rw [← tsum_prod]
+    apply tsum_le_of_pair_blocks (size c c') (h_mem (c := c) (c' := c'))
+    · rintro ⟨s, Λ⟩ ⟨s', Λ'⟩ q _ hq _ hq' _
+      refine Prod.ext (Subtype.ext (eq_of_mem_termsOver (mem_termsOver_of_mem_nearRepresentativesOver hq)
+        (mem_termsOver_of_mem_nearRepresentativesOver hq'))) ?_
+      exact ((mem_of_mem_nearRepresentativesOver hq).2 : link q = Λ).symm.trans
+        (mem_of_mem_nearRepresentativesOver hq').2
+    · intro p
+      rw [sq]
+      exact enorm_amplitudeSum_mul_le (h_stable p.2) (h_stable p.2) (h_sub p.2) (h_sub p.2)
   calc
     _ = ∑ c : S.Classes, ∑ c' : S.Classes,
         ∑' (s : Ω) (Λ : Link), ‖S.amplitudeSum .cut (terms Λ) c s c'‖ₑ ^ 2 := by

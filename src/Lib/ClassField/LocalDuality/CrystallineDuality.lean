@@ -678,7 +678,7 @@ lemma Period.card_quotient_span_localFieldOf :
         Ideal.span {(ℓ : valRingBelow (localFieldOf Γ) (intQpBar ℓ))}) =
       ℓ ^ 𝒥.toGp.range.index := by
   simp [(of_finite ⟨𝒥.toGp.range, 𝒥.isOpen_range.out⟩).card_quotient,
-    isUniformiser_ell.card_quotient_span_eq_pow isLocalGalois_padic 1, residueCard_padic]
+    isUniformizer_ell.card_quotient_span_eq_pow isLocalGalois_padic 1, residueCard_padic]
 
 /-- For an additive map `f` and a subgroup `H` of its source, the size of the range of `f` divides
 the size of the image of `H` times the index of `H`. -/

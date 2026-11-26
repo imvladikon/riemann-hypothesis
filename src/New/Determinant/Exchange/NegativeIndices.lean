@@ -458,7 +458,7 @@ place, not of the form `-cᴴ c` (`RepresentedBy` fails). (d) The sum over the r
 absolute values of the terms of the unfolded theta integral is integrable (`HasIntegrableTerms`).
 The theta integral `thetaIntegral X Y δ δ f` integrates the kernel of `f` over `[U(Y)]`, in the Weil
 representation of `(X, Y)` in which `δ` is the character of `U(1)` for both spaces: the first fixes
-the action of `U(Y)`, the second that of `U(X)`. Then `centreCoeff` at `H.j • T` of this function on
+the action of `U(Y)`, the second that of `U(X)`. Then `centerCoeff` at `H.j • T` of this function on
 `U(X)`, its Fourier coefficient along the centre of the unipotent radical of `D`, vanishes at `g`.
 -/
 lemma New.Exchange.centreCoeff_eq_zero_of_not_representedBy {r : m → ℤˣ} {ν : AutChar E}
@@ -469,7 +469,7 @@ lemma New.Exchange.centreCoeff_eq_zero_of_not_representedBy {r : m → ℤˣ} {�
     (h_negCount : Fintype.card b + negCount t = negCount s)
     (hδ : δ = ν * H.upsilonU1 ^ Fintype.card b) (hT_unit : IsUnit T)
     (hT_not_neg : ¬RepresentedBy (-1) (T.map toAdele)) (h_int : D.HasIntegrableTerms Y δ δ f g) :
-    D.centreCoeff (H.j • T) (thetaIntegral X Y δ δ f) g = 0 := by
+    D.centerCoeff (H.j • T) (thetaIntegral X Y δ δ f) g = 0 := by
   -- If no rational frame has Gram matrix `T` the coefficient is an empty sum. Otherwise it is the
   -- integral of the term of one frame `x` modulo the rational stabiliser of `x`. The mean of the
   -- term over a compact subgroup `C` of the adelic stabiliser `S` gives an invariant functional
@@ -513,7 +513,7 @@ lemma New.Exchange.centreCoeff_eq_zero_of_not_representedBy {r : m → ℤˣ} {�
   have h_scale (k : C) : (haar : Measure S).map (· * (k : S)) = (1 : NNReal) • haar := by
     simp [haar_map_mul_right_of_isCompact hC]
   -- unfolding: the coefficient is the integral of the term modulo the rational stabiliser
-  have h_unfold : D.centreCoeff (H.j • (xᴴ * Y.J * x))
+  have h_unfold : D.centerCoeff (H.j • (xᴴ * Y.J * x))
         (fun k ↦ ∫ h, pairTheta X Y δ δ f (k, h) * 1 ∂Y.quotMeasure) g =
       ∫ h, D.thetaTerm Y δ δ f g x h * 1 ∂(Y.ratStabilizer x).quotMeasure :=
     (D.centreCoeff_eq_integral_ratStabilizer h_int continuous_const h_fixesLeft_one hT_unit).right

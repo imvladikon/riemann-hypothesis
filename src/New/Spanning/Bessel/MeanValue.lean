@@ -20,7 +20,7 @@ the matrix `Z` of the products of `e` with `γ e`, over the open set `Ω = New.S
 invertible `Z` whose inverse has last diagonal entry of absolute value less than `1`.
 
 On the frames `y = γ e` the fibre measure of the Gram map is compared with Haar measure in
-`New.LeGramFibre.mconv_fixerHaar_le`. This file bounds the same fibre measure from below, by `dZ`
+`New.LeGramFiber.mconv_fixerHaar_le`. This file bounds the same fibre measure from below, by `dZ`
 times a measure on the frames whose products with `e` form the matrix `Z`. Such a frame is `y' Z`
 with `y'` dual to `e`. The first `ϱ` vectors of `y'` are moved by `𝖴⁰`, and the part of the last one
 in `X₀ = ℂ ^ κ` runs over a sphere.
@@ -509,11 +509,11 @@ matrix of the hermitian form that defines `G₁`. The measure `gramSectionMeasur
 `ϱ`. The image `l` of this measure under `g ↦ g e` is at most the fibre measure `dY / dT` of the
 Gram map `Y ↦ T = Yᴴ J₁ Y` over the Gram matrix `T₀` of `e`. Here `dY` is Lebesgue measure on the
 matrices `Y` of the size of `e`, and `dT` is Lebesgue measure in the real coordinates of `T`
-(`hermOfReal`). By the definition of `LeGramFibre` this means: if `K ≥ 0` is lower semicontinuous
+(`hermOfReal`). By the definition of `LeGramFiber` this means: if `K ≥ 0` is lower semicontinuous
 and `∫_{T(Y) ∈ S} K dY ≤ C vol(S)` for all open `S` inside some neighbourhood of `T₀`, then
 `∫ K dl ≤ C`. -/
 theorem leGramFibre_gramSectionMeasure :
-    LeGramFibre 𝔰.J₁ 𝔰.frameCols (gramSectionMeasure 𝔰) := by
+    LeGramFiber 𝔰.J₁ 𝔰.frameCols (gramSectionMeasure 𝔰) := by
   -- The tuples with `Z` in the open cell have the coordinates `tuple t (Z, s)`, with the density
   -- `density t (Z, s)` for `dt` and `μ = dZ ds`. At the coordinates `t₀` of the Gram matrix of `e`
   -- the point is `s γ_Z e` and the sphere has the squared radius `oneSubNormSqInvCorner Z`.
@@ -568,7 +568,7 @@ theorem leGramFibre_gramSectionMeasure :
     rw [gramSectionMeasure, Measure.map_map (by fun_prop) (by fun_prop),
       ← withDensity_congr_ae h_density]
     exact Measure.map_congr (withDensity_absolutelyContinuous μ (density t₀) h_point)
-  rw [LeGramFibre, h_law]
+  rw [LeGramFiber, h_law]
   exact .of_coordinates (ψ := tuple) (w := density) (by fun_prop) (by fun_prop) (by fun_prop)
     Filter.univ_mem (fun t _ ↦ h_fibre t) h_cont h_le
 

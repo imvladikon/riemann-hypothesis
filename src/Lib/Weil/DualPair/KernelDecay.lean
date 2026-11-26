@@ -209,17 +209,12 @@ lemma isotropic_span_rankOneMaps (h_iso : dᴴ * T.J * d = 0 ∨ cᴴ * S.J * c 
     ∀ γ ∈ Submodule.span E (Set.range (S.rankOneMaps d c).col),
     ∀ η ∈ Submodule.span E (Set.range (S.rankOneMaps d c).col),
       star γ ⬝ᵥ (S.hom T).J *ᵥ η = 0 := by
-  have h_source : (cᴴ * S.J)ᵀᴴ * S.J⁻¹ᵀ * (cᴴ * S.J)ᵀ = (cᴴ * S.J * c)ᴴᵀ := by
-    rw [conjTranspose_transpose_eq_transpose_conjTranspose, ← transpose_mul, ← transpose_mul,
-      ← Matrix.mul_assoc, conjTranspose_mul (cᴴ * S.J),
-      mul_nonsing_inv_cancel_right _ _ ((isUnit_iff_isUnit_det _).1 S.isUnit_J)]
-  have h_gram : (S.rankOneMaps d c)ᴴ * (S.hom T).J * S.rankOneMaps d c = 0 := by
-    rw [hom_J, conjTranspose_kronecker, ← mul_kronecker_mul, ← mul_kronecker_mul, h_source]
-    rcases h_iso with h_zero | h_zero <;> simp [h_zero]
-  rw [← range_mulVecLin]
-  rintro _ ⟨γ, rfl⟩ _ ⟨η, rfl⟩
-  simp only [mulVecLin_apply, star_mulVec_dotProduct, mulVec_mulVec, ← Matrix.mul_assoc, h_gram,
-    zero_mulVec, dotProduct_zero]
+  simp only [← range_mulVecLin, LinearMap.mem_range, forall_exists_index,
+    forall_apply_eq_imp_iff, mulVecLin_apply, star_mulVec_dotProduct, mulVec_mulVec,
+    ← Matrix.mul_assoc, hom_J, conjTranspose_kronecker, ← mul_kronecker_mul, ← transpose_mul,
+    ← conjTranspose_mul, conjTranspose_transpose_eq_transpose_conjTranspose,
+    mul_nonsing_inv_cancel_right _ _ ((isUnit_iff_isUnit_det _).1 S.isUnit_J)]
+  rcases h_iso with h | h <;> simp [h]
 
 omit [WeilData E] in
 /-- If `d` is invertible, the maps `dᵢ ⟨cⱼ, ·⟩` span the space of all maps `z cᴴ S.J`. -/

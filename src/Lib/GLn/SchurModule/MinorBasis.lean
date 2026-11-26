@@ -19,7 +19,7 @@ and a leading-term analysis describes the leading term of a semi-invariant.
 
 * `New.GL.HasLeadingTerm F γ G`: `F` is `G` times the monomial of exponent `γ` plus smaller terms;
   `New.GL.rowExpansion x` expands in row `x`.
-* `New.GL.columnWeight`, `New.GL.ColouredTableau`, `New.GL.minorProduct`: the weight of a family of
+* `New.GL.columnWeight`, `New.GL.ColoredTableau`, `New.GL.minorProduct`: the weight of a family of
   coloured columns, its fillings by rows, and the product of the minors of a filling.
 * `New.GL.interlacing l`: the exponents `γ` with `γ i ≤ l i - l (i + 1)` (truncated subtraction).
   For antitone `l`, these are the `γ ≤ l` such that `l - γ` interlaces `l`.
@@ -172,10 +172,10 @@ def columnWeight (τ : J → Φ) (h : J → ℕ) : Φ × ℕ →₀ ℕ :=
   ∑ j : J, ∑ i ∈ range (h j), Finsupp.single ((τ j : Φ), i) 1
 
 /-- The type of assignments giving each column j an h_j-tuple of rows, all of colour τ_j. -/
-abbrev ColouredTableau (c : m → Φ) (τ : J → Φ) (h : J → ℕ) : Type :=
+abbrev ColoredTableau (c : m → Φ) (τ : J → Φ) (h : J → ℕ) : Type :=
   ∀ j : J, Fin (h j) → {a // c a = τ j}
 
-variable (S : Type) [CommRing S] (I : ColouredTableau c τ h)
+variable (S : Type) [CommRing S] (I : ColoredTableau c τ h)
 
 /-- For a coloured column filling I, the polynomial over S that is the product over columns j of
 the minor with rows I_j on the first h_j columns. -/
@@ -248,7 +248,7 @@ lemma exists_bordering (h : J → ℕ) (hγ : γ ∈ interlacing ((columnWeight 
       -- (a)
       columnWeight τ h = γ.mapDomain (fun i : ℕ ↦ (c x, i)) + columnWeight τ k ∧
       -- every filling `I` of heights `k` that avoids `x` has a lift `K` of heights `h` such that
-      ∀ I : ColouredTableau (c ∘ ((↑) : {a : m // a ≠ x} → m)) τ k, ∃ K : ColouredTableau c τ h,
+      ∀ I : ColoredTableau (c ∘ ((↑) : {a : m // a ≠ x} → m)) τ k, ∃ K : ColoredTableau c τ h,
         -- (b)
         (∀ (R : Type) [CommRing R],
           HasLeadingTerm (rowExpansion x (minorProduct R K)) γ (minorProduct R I)) ∧
@@ -651,11 +651,11 @@ open MvPolynomial Finset MonomialOrder Submodule Finsupp Nat
 namespace New.GL
 
 /-- A standard family of fillings `I` for rows coloured by `c` and columns `j` of colour `τ j` and
-height `h j`: each `I i` (a `ColouredTableau`) gives column `j` an `h j`-tuple of rows of colour
+height `h j`: each `I i` (a `ColoredTableau`) gives column `j` an `h j`-tuple of rows of colour
 `τ j`; `minorProduct R (I i)` is the product of the minors on these rows and the first `h j`
 columns. -/
 structure IsStdMinorFamily {Φ J m ι : Type} [Fintype m] [Fintype J] [Fintype ι]
-    {c : m → Φ} {τ : J → Φ} {h : J → ℕ} (I : ι → ColouredTableau c τ h) : Prop where
+    {c : m → Φ} {τ : J → Φ} {h : J → ℕ} (I : ι → ColoredTableau c τ h) : Prop where
   /-- Over every commutative ring the products of minors are linearly independent. -/
   linearIndependent (R : Type) [CommRing R] :
     LinearIndependent R fun i : ι ↦ minorProduct R (I i)
@@ -792,12 +792,12 @@ lemma antitone_columnWeight_curry {Φ J : Type} [Fintype J] (τ : J → Φ) (h :
   gcongr
 
 /-- Rows `m` are coloured by `c`; column `j : J` has colour `τ j` and height `h j`, and a
-`ColouredTableau c τ h` gives it an `h j`-tuple of rows of colour `τ j`. With no rows there is a
+`ColoredTableau c τ h` gives it an `h j`-tuple of rows of colour `τ j`. With no rows there is a
 standard family (`IsStdMinorFamily`) of these: the one empty filling if all heights are zero, and
 the empty family otherwise. -/
 lemma exists_isStdMinorFamily_of_isEmpty {Φ J m : Type} [Fintype m] [IsEmpty m] [Fintype J]
     (c : m → Φ) (τ : J → Φ) (h : J → ℕ) :
-    ∃ (ι : Type) (_ : Fintype ι) (I : ι → ColouredTableau c τ h), IsStdMinorFamily I := by
+    ∃ (ι : Type) (_ : Fintype ι) (I : ι → ColoredTableau c τ h), IsStdMinorFamily I := by
   -- Polynomials are constants, and an enumeration `Fin N ≃ m` forces `N = 0`.
   rcases eq_or_ne h 0 with rfl | h_ne
   · refine ⟨Unit, inferInstance, nofun, ⟨?indep, ?span, ?character⟩⟩
@@ -838,7 +838,7 @@ stated for products of minors with coloured rows; the index type is not identifi
 semistandard tableaux. -/
 lemma exists_isStdMinorFamily {Φ J m : Type} [Fintype m] [Fintype J] (c : m → Φ)
     (τ : J → Φ) (h : J → ℕ) :
-    ∃ (ι : Type) (_ : Fintype ι) (I : ι → ColouredTableau c τ h), IsStdMinorFamily I := by
+    ∃ (ι : Type) (_ : Fintype ι) (I : ι → ColoredTableau c τ h), IsStdMinorFamily I := by
   classical
   -- Induction on the number of rows. Fix a row `y` and expand polynomials in its variables. For
   -- each exponent `γ` interlacing the weight, take the family for the other rows and the weight
@@ -857,7 +857,7 @@ lemma exists_isStdMinorFamily {Φ J m : Type} [Fintype m] [Fintype J] (c : m →
     h_card.subst (Finite.card_subtype_lt (x := y) (not_not_intro rfl))
   have h_family : ∀ γ : interlacing ((columnWeight τ h).curry (c y)),
       ∃ (ι : Type) (_ : Fintype ι)
-        (I : ι → ColouredTableau (c ∘ (↑) : {a : m // a ≠ y} → Φ) τ (k γ)), IsStdMinorFamily I :=
+        (I : ι → ColoredTableau (c ∘ (↑) : {a : m // a ≠ y} → Φ) τ (k γ)), IsStdMinorFamily I :=
     fun γ ↦ ih _ h_fewer (c ∘ (↑) : {a : m // a ≠ y} → Φ) (k γ) rfl
   choose ι hι_fintype I hI using h_family
   refine ⟨Sigma ι, inferInstance, fun i ↦ lift i.fst (I i.fst i.snd), fun R _ ↦ ?_,

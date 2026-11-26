@@ -526,16 +526,26 @@ lemma Modulus.exists_modKernel_flip (c : (Ô E)ˣ) (hc : star (c : 𝔸f E) * c 
       _ = z * pairTheta V S a b
             (integrated _ (Fock.polyVector _ P) (𝔪.vacTranslate (V.hom S) (matrixToVec v)))
             (G.neg g * (1, u), h) := by
-        -- `erw`, `rfl`: `modKernel` and `modDatum` unfold, and `pairTheta` is linear in the datum,
-        -- only up to definitional unfolding.
-        erw [modKernel, modDatum, Pi.single_comp_equiv (.curry ..), mul_assoc, ← smul_eq_mul C,
-          ← map_smul, ← map_smul, ← map_smul, ← hC, ← pairWeil_integrated_fin, ← pairTheta,
-          ← pairTheta_mul, Prod.mk_mul_mk, mul_one h]
-        rfl
+        -- Identify the matrix indicator in vector coordinates before applying linearity.
+        let v₀ : Matrix n m 𝔪.ResidueRing := Matrix.of fun i j ↦ 𝔪.reduction (v i j)
+        have h_indicator : Pi.single v₀ (1 : ℂ) ∘ vecToMatrix =
+            Pi.single (𝔪.reduction ∘ matrixToVec v) 1 :=
+          Pi.single_comp_equiv (.curry ..) v₀ 1
+        let theta (f : (n × m → 𝔪.ResidueRing) → ℂ) :=
+          pairTheta V S a b
+            (integrated _ (Fock.polyVector _ P)
+              ((V.hom S).schrodingerOp 𝔪.places (𝔪.liftFn f) (V.hom S).vacElem))
+            (G.neg g, h)
+        change z * C * theta (Pi.single v₀ 1 ∘ vecToMatrix) = _
+        rw [h_indicator]
+        dsimp only [theta]
+        rw [mul_assoc, ← smul_eq_mul C]
+        nth_rw 1 [pairTheta]
+        rw [← map_smul, ← map_smul, ← map_smul, ← hC, ← pairWeil_integrated_fin, ← pairTheta,
+          ← pairTheta_mul, Prod.mk_mul_mk, show h * (1, 1) = h from mul_one h]
       _ = _ := by
-        -- `erw`, `rfl`: the flipped datum matches `pairTheta` and `modKernel` only after unfolding.
-        erw [← h_flip _ _ _ _ _ h_mat, map_integrated, realMap_flipCoords_polyVector,
-          𝔪.flipCoords_map_vacTranslate S T hc_neg V v]
+        refine (h_flip a _ (G.neg g * (1, u)) h (g * (1, 𝔪.flipScalar m)) h_mat).symm.trans ?_
+        rw [map_integrated, realMap_flipCoords_polyVector, 𝔪.flipCoords_map_vacTranslate S T hc_neg V v]
         rfl
   -- Expand `D` in indicators of classes; both kernels are linear in their datum.
   have h_ft : matrixFourier ψ D = ∑ v, D v • fun ρ ↦ ψ (ρ * v).trace := (Finset.sum_fn ..).symm

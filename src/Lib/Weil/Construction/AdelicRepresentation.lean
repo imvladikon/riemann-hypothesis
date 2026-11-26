@@ -308,8 +308,7 @@ omit [Fintype n] [DecidableEq n] in
 /-- An adelic vector `y` is the real vector of its archimedean coordinates plus its finite part. -/
 lemma realVec_realCoord_add : realVec (realCoord y) + (fun i : n ↦ (0, (y i).2)) = y := by
   -- The real part is `κ * (y / κ)` with `κ = scaleIdele E`, and `κ ≠ 0` at every infinite place.
-  have h_ne (w : InfinitePlace E) : (scaleIdele E).val.1 w ≠ 0 := by
-    grind [conj_scaleIdele_mul]
+  have h_ne (w : InfinitePlace E) : (scaleIdele E).val.1 w ≠ 0 := Units.ne_zero _
   ext <;> simp [realVec, realCoord, mul_div_cancel₀ _ (h_ne _)]
 
 /-- Along `adelicSum`, real coordinates `y` with zero finite part give the adelic vector

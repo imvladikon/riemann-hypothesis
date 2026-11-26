@@ -57,14 +57,6 @@ Known; see `Lib.LocalGL.Green.TauFunctions` for sources.
 
 @[expose] public section
 
-/-- For `v ≠ 0`, the map `u ↦ u vᵀ` from vectors to matrices is injective. -/
-private lemma Matrix.vecMulVec_left_injective_of_ne_zero {m p R : Type*} [Field R] {v : p → R}
-    (hv : v ≠ 0) : Function.Injective fun u : m → R ↦ Matrix.vecMulVec u v := by
-  intro u u' h_eq
-  obtain ⟨j, hj⟩ : ∃ j : p, v j ≠ 0 := Function.ne_iff.mp hv
-  funext i
-  simpa [Matrix.vecMulVec_apply, hj] using congrFun (congrFun h_eq i) j
-
 namespace New
 
 /-!
@@ -412,8 +404,10 @@ lemma hyperplaneSum_mul_labelIdem {c : Polynomial k} {χ : MulChar k ℂ}
       have h_vecMulVec_eq :
           vecMulVec (E.symm (g.val - 1, x)) l = vecMulVec (E.symm (g'.val - 1, x')) l := by
         simpa [param, Units.ext_iff] using h_param_eq
+      have h_zero : vecMulVec (E.symm (g.val - 1, x) - E.symm (g'.val - 1, x')) l = 0 := by
+        rw [sub_vecMulVec, h_vecMulVec_eq, sub_self]
       simpa [Units.ext_iff] using E.symm.injective
-        (vecMulVec_left_injective_of_ne_zero hl h_vecMulVec_eq)
+        (sub_eq_zero.mp ((vecMulVec_eq_zero.mp h_zero).resolve_right hl))
     · simp_all [param, E, Units.smul_def, Units.ext_iff]
   -- `ρ` is the one-dimensional representation `χ⁻¹ ∘ det` of `N`.
   let ρ : Representation ℂ N ℂ :=

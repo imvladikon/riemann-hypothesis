@@ -177,10 +177,10 @@ open QuotientGroup
 /-- Let `F` be a local Artin map of the local field `k` (`New.IsLocalArtin`) and `π` a uniformiser
 of `k`. Then `F π` is the class of `φ⁻¹` for some arithmetic Frobenius `φ` (`New.IsFrob` for
 the order of the residue field of `k`). -/
-lemma New.IsLocalArtin.exists_frob_of_isUniformiser {Γ k Ω : Type} [Group Γ] [TopologicalSpace Γ]
+lemma New.IsLocalArtin.exists_frob_of_isUniformizer {Γ k Ω : Type} [Group Γ] [TopologicalSpace Γ]
     [Field k] [Field Ω] [Algebra k Ω] [MulSemiringAction Γ Ω] {A : ValuationSubring Ω}
     [L : IsLocalGalois Γ k A] {π : kˣ} {F : kˣ →* TopologicalAbelianization Γ}
-    (hF : IsLocalArtin Γ k A F) (h : IsUniformiser A π.val) :
+    (hF : IsLocalArtin Γ k A F) (h : IsUniformizer A π.val) :
     ∃ φ : Γ, IsFrob A (residueCard k A) φ ∧ F π = φ⁻¹ := by
   obtain ⟨⟨φ, hφ⟩, -, -⟩ := L.frobenius_spec
   obtain ⟨h_inj, h_unram⟩ := L.isClassOfInvariant_classOfInvariant
@@ -282,15 +282,15 @@ lemma isLocalArtin_comp_unitsMap {p : ℕ} [Fact p.Prime] [Algebra (LocField w) 
     (hf : IsLocalArtin (decompGroup Γ A) (LocField w) (intQpBar p) f) :
     IsLocalArtin (decompGroup Γ A) (fixedFieldOf (decompGroup Γ A)) A
       (f.comp (Units.map (algebraMap K (LocField w)).toMonoidHom)) := by
-  obtain ⟨L, q_eq, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformiser Γ
-  obtain ⟨π, hπ, π_unif⟩ := h.exists_uniformiser Γ
+  obtain ⟨L, q_eq, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformizer Γ
+  obtain ⟨π, hπ, π_unif⟩ := h.exists_uniformizer Γ
   let D := decompGroup Γ A
   intro χ x
   obtain ⟨r, hr⟩ :=
     L.classOfInvariant_bijective.surjective (-cyclicClass _ χ (DiscreteUnits.ofBase D Ω (.ofMul x)))
   -- `π` stays a uniformiser in `K_w`, so its image under `j` has order one.
-  have π_unif_w : IsUniformiser (intQpBar p) (algebraMap K (LocField w) π) :=
-    emb.isUniformiser_iff.mpr (by rw [v_algebraMap_eq_valuation, hπ])
+  have π_unif_w : IsUniformizer (intQpBar p) (algebraMap K (LocField w) π) :=
+    emb.isUniformizer_iff.mpr (by rw [v_algebraMap_eq_valuation, hπ])
   have π_ord : ordRat (LocField w) (intQpBar p)
       ((Units.map j).toAdditive (DiscreteUnits.ofBase D Ω (.ofMul π)).val) = 1 :=
     (congrArg _ (ext (emb.map_algebraMap π))).trans (π_unif_w.ordRat_eq_one emb.toIsLocalGalois
@@ -329,7 +329,7 @@ lemma isLocalArtin_localArtin {p : ℕ} [Fact p.Prime] [Algebra (LocField w) (Pa
     -- (b)
     IsLocalArtin (decompGroup Γ A) (fixedFieldOf (decompGroup Γ A)) A
       (f.comp (Units.map (algebraMap K (LocField w)).toMonoidHom)) := by
-  obtain ⟨L, -, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformiser Γ
+  obtain ⟨L, -, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformizer Γ
   obtain ⟨h_inj, -⟩ := L.isClassOfInvariant_classOfInvariant
   let D := decompGroup Γ A
   -- Pontryagin duality gives `f` on `K_wˣ` with `χ (f x) = -inv (χ, x)`, the invariant of `K_w`.
@@ -507,7 +507,7 @@ lemma localArtin_localNorm_eq_of_isCompletionEmb {p : ℕ} [Fact p.Prime]
   obtain ⟨e, f, h_data, -⟩ := (emb_u.of_finite U W).exists_isRamificationData
   have unif_ord : ordRat (LocField (w.below k)) (intQpBar p)
       (DiscreteUnits.ofBase D' (PadicAlgCl p) (.ofMul (uniformizer (w.below k)))) = 1 :=
-    (emb_u.isUniformiser_iff.mpr (v_uniformizer (w.below k))).ordRat_eq_one emb_u.toIsLocalGalois
+    (emb_u.isUniformizer_iff.mpr (v_uniformizer (w.below k))).ordRat_eq_one emb_u.toIsLocalGalois
   have res : cyclicClass _ (comap Φ χ) (DiscreteUnits.ofBase _ _ (.ofMul y)) =
       classOfInvariant D W (intQpBar p) (U.toSubgroup.index • r) := by
     rw [← h_data.mul_eq, ← emb_u.pairMapH2_classOfInvariant Φ (.id _) rfl hφ
@@ -638,8 +638,8 @@ number fields. -/
 lemma exists_isFrob_localArtin_eq_inv {x : (LocField w)ˣ} (hx : v x.val = exp (-1)) :
     ∃ s : decompGroup Γ A, IsFrob A w.q s.val ∧ localArtin Γ A w x = s⁻¹ := by
   obtain ⟨p, p_prime, algebra_w, j, ⟨emb⟩⟩ := h.exists_isCompletionEmb Γ
-  obtain ⟨s, hs, s_art⟩ := (h.isLocalArtin_localArtin emb).left.exists_frob_of_isUniformiser
-    (emb.isUniformiser_iff.mpr hx)
+  obtain ⟨s, hs, s_art⟩ := (h.isLocalArtin_localArtin emb).left.exists_frob_of_isUniformizer
+    (emb.isUniformizer_iff.mpr hx)
   -- A Frobenius for `intQpBar p` in `ℚ̄_p` is one for `A = (intQpBar p).comap j`, for the same `q`.
   have frob : IsFrob ((intQpBar p).comap j) (residueCard (LocField w) (intQpBar p)) s.val :=
     hs.map emb.equivariant
@@ -665,7 +665,7 @@ Weil group of non-negative degree. -/
 lemma exists_localArtin_eq_of_isFrob_pow {g : Γ} {n : ℕ} (hg : IsFrob A (w.q ^ n) g⁻¹) :
     ∃ x : (LocField w)ˣ, v x.val = exp (-(n : ℤ)) ∧
       localArtin Γ A w x = (⟨g, inv_mem_iff.mp hg.left⟩ : decompGroup Γ A) := by
-  obtain ⟨local_galois, q_eq, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformiser Γ
+  obtain ⟨local_galois, q_eq, -⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformizer Γ
   obtain ⟨φ, hφ : IsFrob A w.q φ.val, φ_art : localArtin Γ A w (uniformizer w) = φ⁻¹⟩ :=
     h.exists_isFrob_localArtin_eq_inv (Γ := Γ) (v_uniformizer w)
   -- `s = g φ ^ n` lies in inertia. If it is the symbol of a unit `u`, take
@@ -828,7 +828,7 @@ lemma valuation_smul_div_sub_lt_one {G k E : Type} [Group G] [TopologicalSpace G
     [Field E] [Algebra k E]
     [MulSemiringAction G E] {B : ValuationSubring E} [L : IsLocalGalois G k B]
     {F : kˣ →* TopologicalAbelianization G} (hF : IsLocalArtin G k B F) {π u : kˣ}
-    (hπ : IsUniformiser B π.val) (hu : B.valuation (algebraMap k E u) = 1) {g : G} (hg : F u = g)
+    (hπ : IsUniformizer B π.val) (hu : B.valuation (algebraMap k E u) = 1) {g : G} (hg : F u = g)
     {y : E} (hy : y ^ (residueCard k B - 1) = algebraMap k E π) :
     B.valuation (g • y / y - algebraMap k E u) < 1 := by
   -- Write the residue order as `n + 1`; then `n` is a unit of `B`.
@@ -839,7 +839,7 @@ lemma valuation_smul_div_sub_lt_one {G k E : Type} [Group G] [TopologicalSpace G
   rw [hq, Nat.add_sub_cancel] at hy
   obtain ⟨hy_ne, hn⟩ := ne_zero_of_tame_root hn_unit hy
   obtain ⟨φ, hφ, hFπ⟩ : ∃ φ : G, IsFrob B (residueCard k B) φ ∧ F π = φ⁻¹ :=
-    hF.exists_frob_of_isUniformiser hπ
+    hF.exists_frob_of_isUniformizer hπ
   -- `k` contains the `n`-th roots of unity: `cyclotomicCharMod` is trivial on inertia and at `φ`,
   -- and the products `φ ^ m * i` with `i` in inertia are dense.
   have h_cyc : ∀ g : G, cyclotomicCharMod E n g = 1 := by
@@ -908,14 +908,14 @@ of `A`.
 
 A variant of the tame symbol congruence of local reciprocity. Residue classes are compared only
 through elements of `K`. -/
-lemma valuation_sub_lt_one_iff_of_localArtin_eq {π : K} (hπ : IsUniformiser A π)
+lemma valuation_sub_lt_one_iff_of_localArtin_eq {π : K} (hπ : IsUniformizer A π)
     {s : decompGroup Γ A}
     {u : (IsDedekindDomain.HeightOneSpectrum.adicCompletion K w)ˣ} (hu : v u.val = 1)
     (hs : localArtin Γ A w u = s) {y : Ω} (hy : y ^ (w.q - 1) = algebraMap K Ω π) {x : K} :
     v (u.val - algebraMap K (IsDedekindDomain.HeightOneSpectrum.adicCompletion K w) x) < 1 ↔
       A.valuation (s.val • y / y - algebraMap K Ω x) < 1 := by
   have π_val : v (algebraMap K (LocField w) π) = exp (-1) := by
-    rw [v_algebraMap_eq_valuation, h.isUniformiser_iff.mp hπ]
+    rw [v_algebraMap_eq_valuation, h.isUniformizer_iff.mp hπ]
   obtain ⟨p, hp_prime, alg, j, ⟨emb⟩⟩ := h.exists_isCompletionEmb Γ
   obtain rfl : (intQpBar p).comap j = A := emb.comap_eq
   let ι : LocField w →+* PadicAlgCl p := algebraMap (LocField w) (PadicAlgCl p)
@@ -930,7 +930,7 @@ lemma valuation_sub_lt_one_iff_of_localArtin_eq {π : K} (hπ : IsUniformiser A 
   have tame : (intQpBar p).valuation (s • j y / j y - ι u) < 1 :=
     valuation_smul_div_sub_lt_one (L := emb.toIsLocalGalois) (h.isLocalArtin_localArtin emb).left
       (π := mk0 _ π_ne)
-      (emb.isUniformiser_iff.mpr π_val) (equiv.eq_one_iff_eq_one.mpr hu) hs hy_j
+      (emb.isUniformizer_iff.mpr π_val) (equiv.eq_one_iff_eq_one.mpr hu) hs hy_j
   -- So `u ≡ x` if and only if `s • j y / j y ≡ x`, which `j` carries back to `Ω`.
   calc _ ↔ (intQpBar p).valuation (ι (u - algebraMap K _ x)) < 1 := equiv.lt_one_iff_lt_one.symm
     _ ↔ (intQpBar p).valuation (s • j y / j y - ι u + ι (u - algebraMap K _ x)) < 1 :=
@@ -947,7 +947,7 @@ end
 `K` by a primitive `n`-th root of unity. -/
 def IsTameGenerator [Algebra K Ω] {A : ClosurePlace} (γ : inertiaGroup Gal(Ω/K) A) : Prop :=
   ∀ n : ℕ, A.valuation n = 1 → ∃ (π : Kˣ) (y : Ω),
-    IsUniformiser A π.val ∧ y ^ n = algebraMap K Ω π ∧ IsPrimitiveRoot (γ • y / y) n
+    IsUniformizer A π.val ∧ y ^ n = algebraMap K Ω π ∧ IsPrimitiveRoot (γ • y / y) n
 
 namespace IsPlaceOver
 
@@ -969,11 +969,11 @@ at a place of a number field; the uniformiser may depend on `n` and the primitiv
 not prescribed. -/
 lemma exists_tameGenerator :
     ∃ γ : inertiaGroup Gal(Ω/K) A, ∀ n : ℕ, A.valuation n = 1 → ∃ π : Kˣ, ∃ y : Ω,
-      IsUniformiser A π.val ∧ y ^ n = algebraMap K Ω π ∧ IsPrimitiveRoot (γ • y / y) n := by
+      IsUniformizer A π.val ∧ y ^ n = algebraMap K Ω π ∧ IsPrimitiveRoot (γ • y / y) n := by
   -- Fix a uniformiser `π` and, for each `n` prime to `w`, a root `y n ^ n = π`. The condition that
   -- `g • y n / y n` be a primitive `n`-th root of unity is closed and inertia is compact, so it
   -- is enough to meet finitely many conditions; one element for the product of the `n` does this.
-  obtain ⟨π, hπ_val, hπ_unif⟩ := h.exists_uniformiser Gal(Ω/K)
+  obtain ⟨π, hπ_val, hπ_unif⟩ := h.exists_uniformizer Gal(Ω/K)
   -- The exponents `n` that are units at `A`.
   let I : Type := {n : ℕ // A.valuation n = 1}
   have h_pos (n : I) : 0 < n.val := Nat.pos_of_ne_zero fun hn ↦ by simpa [hn] using n.property
@@ -1002,7 +1002,7 @@ lemma exists_tameGenerator :
     simpa only [h_ratio] using hζ.pow (h_pos N) hk
   obtain ⟨g, hg, hgood⟩ :=
     isClosed_inertiaGroup.isCompact.inter_iInter_nonempty good h_closed h_finite
-  exact ⟨⟨g, hg⟩, fun n hn ↦ ⟨π, y ⟨n, hn⟩, h.isUniformiser_iff.mpr hπ_val, hy ⟨n, hn⟩,
+  exact ⟨⟨g, hg⟩, fun n hn ↦ ⟨π, y ⟨n, hn⟩, h.isUniformizer_iff.mpr hπ_val, hy ⟨n, hn⟩,
     Set.mem_iInter.mp hgood ⟨n, hn⟩⟩⟩
 
 /-- A chosen generator of tame inertia at the place `A` above `w`, as an element of the inertia
@@ -1012,7 +1012,7 @@ noncomputable def tameGenerator : inertiaGroup Gal(Ω/K) A := h.exists_tameGener
 /-- For every `n` that is a unit at `A`, the tame generator multiplies some `n`-th root `y` of a
 uniformiser `π` of `K` at `A` by a primitive `n`-th root of unity. -/
 lemma exists_isPrimitiveRoot_tameGenerator_smul_div {n : ℕ} (hn : A.valuation n = 1) :
-    ∃ (π : Kˣ) (y : Ω), IsUniformiser A π.val ∧ y ^ n = algebraMap K Ω π ∧
+    ∃ (π : Kˣ) (y : Ω), IsUniformizer A π.val ∧ y ^ n = algebraMap K Ω π ∧
       IsPrimitiveRoot (h.tameGenerator • y / y) n :=
   h.exists_tameGenerator.choose_spec n hn
 
@@ -1041,7 +1041,7 @@ lemma exists_eq_pow_and_apply_conj_eq_pow {γ : inertiaGroup Gal(Ω/K) A} (hγ :
   let incl (g : inertiaGroup Gal(Ω/K) A) : inertiaGroup D A := ⟨⟨g, g.property.left⟩, g.property⟩
   have h_open : IsOpen (SetLike.coe f'.ker) := isOpen_of_mem_nhds _ <|
     mem_of_superset (continuous_subtypeVal.subtypeVal.tendsto 1 hf) fun g hg ↦ hg g.property
-  obtain ⟨h_galois, -, h_unif⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformiser Gal(Ω/K)
+  obtain ⟨h_galois, -, h_unif⟩ := h.isLocalGalois_and_residueCard_eq_and_isUniformizer Gal(Ω/K)
   have h_local : ∀ s : inertiaGroup D A,
       (IsPrimitiveRoot (s • y / y) n → ∀ g : inertiaGroup D A, ∃ i : ℕ, f' g = f' s ^ i) ∧
       ∀ (q : ℕ) (φ : D), IsFrob A q φ →

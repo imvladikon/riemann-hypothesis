@@ -411,14 +411,6 @@ private lemma exists_isTranslationLift_top_of_dualLattice :
         (⊤ : Submodule O (N.H0 O)) ≤ (⊤ : Submodule O (N.H0 O)).comap Φ :=
   fun a ha ↦ (h_tors_lift a ha).right.imp fun _ hΦ ↦ ⟨hΦ, le_top⟩
 
-omit h hn h_tors_lift hM [IsProper A'.hom] in
-/-- If `n • z₀` lies in the lattice `u.lattice`, which `s'` kills, then the translation of `A'` by
-`s' z₀` followed by `ν`, multiplication by `n`, is `ν`. -/
-private lemma translation_comp_eq_of_nsmul_mem {ν : A'.left ⟶ A'.left}
-    (hν_def : (n • 𝟙 A').left = ν) {z₀ : V} (h_mem : n • z₀ ∈ u.lattice) :
-    (translation (s' z₀)).left ≫ ν = ν := by
-  simp [← hν_def, ← comp_nsmul _, ← map_nsmul, hs' _ h_mem, ← comp_left, comp_nsmul]
-
 /-- Assume the standing hypotheses from the section head (`h`, `IsPosRiemann B`, unit `n` with
 `h_tors_lift`, `s'` killing `u.lattice`, `A'` proper, `hM`). Let `π : A' ⟶ A` be a homomorphism that
 sends `s' z` to `u.expMap z`. Let the theta coordinates `f` of `M` along `s'` have the same type
@@ -486,7 +478,8 @@ lemma exists_section_of_hasThetaCoords (π : A' ⟶ A) [IsAdditive π] {f : V �
     -- `T` is the translation by `s' z₀`; `T ≫ ν = ν` because `n • z₀` lies in the lattice.
     obtain ⟨h_tors, -⟩ := h_tors_lift z₀ hz₀
     let T : A'.left ⟶ A'.left := (translation (s' z₀)).left
-    have hTν : T ≫ ν = ν := translation_comp_eq_of_nsmul_mem u hs' hν_def h_tors
+    have hTν : T ≫ ν = ν := by
+      simp [T, ← hν_def, ← comp_nsmul _, ← map_nsmul, hs' _ h_tors, ← comp_left, comp_nsmul]
     have hT (x : V) : atGeneric s' x ≫ T = atGeneric s' (x + z₀) := by
       simp [T, atGeneric, ← comp_left, comp_add]
     have hTπ : π.left ≫ (translation (u.expMap z₀)).left = T ≫ π.left := by

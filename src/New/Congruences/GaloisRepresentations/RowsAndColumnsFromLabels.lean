@@ -27,7 +27,7 @@ on representations attached to its eigenforms.
 * `New.Selmer.isFiniteTypeAt_and_polyKillsAt_of_mem_conjClosure`: a representation attached to an
   eigenform of parahoric type at the auxiliary places (`New.Selmer.HasTwistParahoricType`) has no
   monodromy above `ϑ.Q` and its conjugates, and a quadratic polynomial kills inertia there.
-* `New.Selmer.normalisedRep_quadratic_on_inertia`: its normalised representation satisfies the same
+* `New.Selmer.normalizedRep_quadratic_on_inertia`: its normalised representation satisfies the same
   quadratic relation on inertia above `ϑ.Q` and its conjugates.
 
 Notions from other files:
@@ -237,7 +237,7 @@ lemma exists_isInertiaSpectrum_chosenPlace (m : Type) [Fintype m] [DecidableEq m
   have h_kill {R : GalRep ℓ D.E m} {k : ℕ} {J : (D.E →+* ℂ) → Multiset ℤ} {S : Set (FinPlace D.E)}
       (hR : IsRepOfType (m := m) O k J (fun i ↦ scaledTypePoly O c i * (X - 1) ^ t) S R) :
       PolyKillsAt R A s (μ.map (X - C ·)).prod := by
-    simpa only [μ, Multiset.map_map, Function.comp_apply] using hR.labelled h_tame
+    simpa only [μ, Multiset.map_map, Function.comp_apply] using hR.labeled h_tame
   refine ⟨μ,
     { card_eq := ?_
       pow_factorial_eq_one := forall_mem_map_iff.2 fun x hx ↦ h_image x _ (h_order x hx).1
@@ -529,7 +529,7 @@ lemma IsRepOfType.exists_inertia_isRoot_charpoly (hc : IsLiftSetting O c ϑ) {R 
   obtain ⟨⟨s, hs⟩, -⟩ := GaloisRep.exists_isTameExponent T hA (card r)
   have h_poly : PolyKillsAt R A s (Z.map fun ξ ↦ X - C (τ ξ)).prod := by
     simpa only [τ, RingHom.toMonoidHom_eq_coe, RingEquiv.toRingHom_eq_coe, MonoidHom.coe_comp,
-      MonoidHom.coe_ofClass, RingHom.coe_coe, Function.comp_apply, pow_one] using hR.labelled hs
+      MonoidHom.coe_ofClass, RingHom.coe_coe, Function.comp_apply, pow_one] using hR.labeled hs
   have h_root (x : PadicAlgCl ℓ) (hx : (Z.map fun ξ ↦ X - C (τ ξ)).prod.IsRoot x) :
       ∃ ξ ∈ Z, x = τ ξ := by
     simpa only [IsRoot.def, eval_multiset_prod, Multiset.map_map, Function.comp_apply, eval_sub,
@@ -687,7 +687,7 @@ lemma invAvatar_eq_of_isTameExponent {w : FinPlace D.E} (hw : w ∈ ϑ.Q) (h_spl
       ((((X - C (charName (faithfulChar (ResField w)) (ϑ.tamePart⁻¹ w)).val).aroots
         (AlgebraicClosure (ResField w))).map fun x ↦
           X - C (ιℓ ((faithfulChar (ResField w) ^ a) x))).prod : (PadicAlgCl ℓ)[X]) = 0 :=
-    (isLabelledAt_avatar (ℓ := ℓ) ϑ.hasWeight.inv 0 0 h_star h_split ha).1 h_val
+    (isLabeledAt_avatar (ℓ := ℓ) ϑ.hasWeight.inv 0 0 h_star h_split ha).1 h_val
   -- on `1 × 1` scalar matrices this says that the avatar takes the value `ιℓ ((T ^ a) x⁻¹)`
   simpa only [Data.TameChar.invAvatar, neg_zero, MonoidHom.coe_comp, Function.comp_apply,
     Units.coeHom_apply, GeneralLinearGroup.coe_scalar, scalar_apply, Pi.inv_apply, map_inv,
@@ -783,7 +783,8 @@ lemma isFiniteTypeAt_and_polyKillsAt_of_mem_conjClosure [DecidableEq n] [Nonempt
         Fintype.card_eq_zero, AddMonoidAlgebra.coeff_one_zero, ne_eq, one_ne_zero,
         not_false_eq_true, and_self, ↓reduceIte, Hall.evalGL, Units.val_one, toLin'_one, map_one,
         Hall.one_apply, dim_simClassOf, Module.finrank_fintype_fun_eq_card,
-        Nat.card_eq_fintype_card, card_unique, Nat.cast_one, div_self, mul_one, asAlgebraHom_eq_sum,
+        Nat.card_eq_fintype_card, card_unique, Nat.cast_one, div_self, mul_one,
+        Representation.asAlgebraHom_eq_sum,
         Finset.univ_unique, coeff_groupAlgElem, Finsupp.equivFunOnFinite_symm_apply_apply,
         MonoidHom.one_apply, one_smul, Finset.sum_const, Finset.card_singleton, one_apply_eq_self,
         he.1]
@@ -821,16 +822,16 @@ bad. Let `f ≠ 0` have Hecke polynomial `H w` at almost all places `w` of prime
 and the parahoric type of `O` at each `O.twistPlace i`: block triangular integral matrices act
 through `O.tamePart⁻¹` of the determinant of the block indexed by `r`. Let `R` be attached to `H`:
 for each `η > 0` and most Frobenius elements, the coefficients of the characteristic polynomial are
-within `η` of those of `ιℓ (H w)`. Let `u = normalisedRep O R` be the twist of `R` by
+within `η` of those of `ιℓ (H w)`. Let `u = normalizedRep O R` be the twist of `R` by
 `normalizingAvatar O`, the avatar of a Hecke character made from the inverse of the character
 `O.charW` of the hermitian space of `O`. Then `(u g - a g) (u g - 1) = 0` for `g` in inertia above
 `ϑ.Q` and its conjugates, where `a = ϑ.invAvatar` is the `ℓ`-adic avatar of `ϑ⁻¹`. -/
-lemma normalisedRep_quadratic_on_inertia [DecidableEq n] [Nonempty n] (hc : IsLiftSetting O c ϑ)
+lemma normalizedRep_quadratic_on_inertia [DecidableEq n] [Nonempty n] (hc : IsLiftSetting O c ϑ)
     (hQ : IsAuxiliary (badPlaces D ℓ) ϑ.Q) {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)}
     {H : FinPlace D.E → ℂ[X]} {R : Gal(Ω/D.E) →* GL n (PadicAlgCl ℓ)} (he : IsEigenform f.val H)
     (hR : Attached H R) (h_type : ∀ i : O.TwistIndex, HasTwistParahoricType O f.val i) :
     ∀ g ∈ inertiaAbove (Set.conjClosure ϑ.Q),
-      ((normalisedRep O R g).val - ϑ.invAvatar g • 1) * ((normalisedRep O R g).val - 1) = 0 := by
+      ((normalizedRep O R g).val - ϑ.invAvatar g • 1) * ((normalizedRep O R g).val - 1) = 0 := by
   -- On inertia away from `ℓ` the normalising character is trivial, so it is enough that
   -- `(X - ϑ.invAvatar s) * (X - 1)` kills `s` on `R`.
   rintro s ⟨w, hwQ, A, hA, hs⟩

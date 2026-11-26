@@ -15,7 +15,7 @@ with chosen places, twist places, weights and a character. Let `c` be a tuple of
 (`New.Selmer.IsLiftSetting`); `typeProjection O c` is the idempotent on forms that cuts out the
 labels `c`.
 
-* `New.Selmer.IsFormOfType`, `New.Selmer.IsFormOfType.isRepOfType_normalisedRep`: the eigenforms
+* `New.Selmer.IsFormOfType`, `New.Selmer.IsFormOfType.isRepOfType_normalizedRep`: the eigenforms
   of type `c` with the level and character of `O` off a set of places, and their normalised
   representations as representations of a type.
 * `New.Selmer.exists_baseLevel`: base data (`New.Patching.BaseLevel`) whose forms contain the image
@@ -45,7 +45,7 @@ Notions from other files:
 * `New.HasProductLabel`: a label of a form at a place, made from a polynomial and characters of
   blocks of given sizes; `New.faithfulChar`: the faithful character by which it is formed.
 * `New.Selmer.IsRepOfType`: a conjugate self-dual representation of given jumps and level on which
-  inertia at the chosen places acts through the roots of the labels; `New.Selmer.normalisedRep`: the
+  inertia at the chosen places acts through the roots of the labels; `New.Selmer.normalizedRep`: the
   twist of a representation by `normalizingAvatar O`; `ϑ.invAvatar`: the `ℓ`-adic avatar of `ϑ⁻¹`
   over `D.E`.
 -/
@@ -304,10 +304,10 @@ lemma notMem_and_star_notMem_range_union_places {ϑ : D.Twist}
   simp only [h_places, h_range, mem_union, mem_preimage, not_or] at h_off h_chosen ⊢
   exact ⟨⟨h_off.2.1, h_chosen.1, h_off.1.1⟩, h_off.2.2, h_chosen.2, h_off.1.2⟩
 
-/-- The jumps of a normalised representation (`normalisedRep`) attached to a form of weight
+/-- The jumps of a normalised representation (`normalizedRep`) attached to a form of weight
 `(O.columnCount, O.detExp)`: the jumps of the weight minus the infinity type of the algebraic Hecke
 character whose `ℓ`-adic avatar is `normalizingAvatar O`. -/
-noncomputable def normalisedJumps (O : DescentPair D.E r n) (σ : D.E →+* ℂ) : Multiset ℤ :=
+noncomputable def normalizedJumps (O : DescentPair D.E r n) (σ : D.E →+* ℂ) : Multiset ℤ :=
   (jumps (O.columnCount, O.detExp) (Fintype.card n) σ).map fun u : ℤ ↦
     u + -((AutChar.HasWeight.inv (μ := O.charW)).toAlgebraic (-Fintype.card r) 0).val.2.toAdd σ
 
@@ -317,11 +317,11 @@ noncomputable def normalisedJumps (O : DescentPair D.E r n) (σ : D.E →+* ℂ)
 (`HasProductLabel`). Suppose also that `f` is spherical at the places that are off `S`, above `ℓ` or
 in `placesAboveM D` (above `p₀` or `p₁`), except the chosen places and their conjugates.
 
-Then `normalisedRep O R`, the twist of `R` by `normalizingAvatar O`, satisfies `IsRepOfType`: it has
-the jumps `normalisedJumps O` and the properties of a conjugate self-dual representation of level
+Then `normalizedRep O R`, the twist of `R` by `normalizingAvatar O`, satisfies `IsRepOfType`: it has
+the jumps `normalizedJumps O` and the properties of a conjugate self-dual representation of level
 `S`, and inertia at the chosen places acts through the roots of
 `scaledTypePoly O c i * (X - 1) ^ t'`, with `t' = O.rankDiff = card n - card r`. -/
-lemma isRepOfType_normalisedRep [Nonempty n] {ϑ : D.Twist}
+lemma isRepOfType_normalizedRep [Nonempty n] {ϑ : D.Twist}
     {c : (i : O.ChosenIndex) → (ResField (O.chosenPlace i))[X]} (h_lift : IsLiftSetting O c ϑ)
     {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} {H : FinPlace D.E → ℂ[X]}
       {R : GalRep ℓ D.E n}
@@ -332,9 +332,9 @@ lemma isRepOfType_normalisedRep [Nonempty n] {ϑ : D.Twist}
     {s : ℕ} {t : Fin s → ℕ} (h_lab : ∀ i : O.ChosenIndex,
       HasProductLabel f.val (O.isConjApart_chosenPlace.star_ne i i)
         (faithfulChar (ResField (O.chosenPlace i))) (Fintype.card r) (scaledTypePoly O c i) 1 t) :
-    IsRepOfType O O.rankDiff (normalisedJumps O)
+    IsRepOfType O O.rankDiff (normalizedJumps O)
       (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff) S
-      (normalisedRep O R) := by
+      (normalizedRep O R) := by
   have h_type_R : IsRepOfType O (Fintype.card n) (jumps (O.columnCount, O.detExp) (Fintype.card n))
       (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff) S R :=
     isRepOfType_of_hasProductLabel h_lift f.property h_eig h_att h_sph h_lab
@@ -345,7 +345,7 @@ lemma isRepOfType_normalisedRep [Nonempty n] {ϑ : D.Twist}
     dsimp only [DescentPair.rankDiff]
     omega
   -- The tame part of the twist is trivial, so the roots of the labels are not scaled.
-  unfold normalisedJumps normalisedRep normalizingAvatar
+  unfold normalizedJumps normalizedRep normalizingAvatar
   simpa only [inv_one, Pi.one_apply, map_one, Units.val_one, scaleRoots_one] using
     h_type_R.twist_avatar (.inv (μ := O.charW)) (-Fintype.card r) 0 h_rank h_lift (by simp)
 
@@ -539,19 +539,19 @@ structure IsFormOfType (c : (i : O.ChosenIndex) → (ResField (O.chosenPlace i))
 /-- Let the labels `c` form a lift setting for `O` and the twist `ϑ` (`IsLiftSetting`), let the
 modulus `ϑ.Q` be auxiliary (`IsAuxiliary`), and let `S` be a set of places outside `badPlaces D ℓ`,
 the places dividing `ℓ p₀ p₁ N`. Let `f` be a `(c, S)`-form (`IsFormOfType`) and `R` attached to
-its Hecke polynomials. Then the normalised representation `normalisedRep O R` is a representation
-of a type (`IsRepOfType`): it is conjugate self-dual with jumps `normalisedJumps O` and level `ϑ.Q`,
+its Hecke polynomials. Then the normalised representation `normalizedRep O R` is a representation
+of a type (`IsRepOfType`): it is conjugate self-dual with jumps `normalizedJumps O` and level `ϑ.Q`,
 `S` and their conjugates, and inertia at the chosen places acts through the roots of
 `scaledTypePoly O c i * (X - 1) ^ O.rankDiff`. -/
-theorem IsFormOfType.isRepOfType_normalisedRep [Nonempty n] {ϑ : D.Twist}
+theorem IsFormOfType.isRepOfType_normalizedRep [Nonempty n] {ϑ : D.Twist}
     {c : (i : O.ChosenIndex) → (ResField (O.chosenPlace i))[X]} {S : Set (FinPlace D.E)}
     {f : (stdSpace D.E n).forms (O.columnCount, O.detExp)} {H : FinPlace D.E → ℂ[X]}
     (hf : IsFormOfType O c S f H) (h_lift : IsLiftSetting O c ϑ)
     (hQ : IsAuxiliary (badPlaces D ℓ) ϑ.Q) (hS : ∀ v ∈ S, v ∉ badPlaces D ℓ)
     {R : GalRep ℓ D.E n} (h_att : GaloisRep.Attached H R) :
-    IsRepOfType O O.rankDiff (normalisedJumps O)
+    IsRepOfType O O.rankDiff (normalizedJumps O)
       (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff)
-      (Set.conjClosure ϑ.Q ∪ S.conjClosure) (normalisedRep O R) := by
+      (Set.conjClosure ϑ.Q ∪ S.conjClosure) (normalizedRep O R) := by
   classical
   have h_transl (k : Gf D.E n) (hk : k ∈ supportedOn n O.places) : translationAtPlaces O k =
       (stdSpace D.E n).formTranslation (O.columnCount, O.detExp) k :=
@@ -561,7 +561,7 @@ theorem IsFormOfType.isRepOfType_normalisedRep [Nonempty n] {ϑ : D.Twist}
       ⟨f, hf.mem_levelSpace⟩ ≠ 0 := by
     simpa only [hf.tupleIdem_apply, ne_eq, Submodule.mk_eq_zero,
       ZeroMemClass.coe_eq_zero] using hf.isEigenform.left
-  refine Selmer.isRepOfType_normalisedRep h_lift hf.isEigenform h_att
+  refine Selmer.isRepOfType_normalizedRep h_lift hf.isEigenform h_att
     (fun v h_exc h_chosen ↦ ?_) (hasProductLabel_of_tupleIdem_apply_ne_zero h_lift h_transl h_ne)
   -- A place neither chosen nor exceptional avoids `S` and `O.places`, as does its conjugate.
   obtain ⟨hv, hv_star⟩ : v ∉ S ∪ O.places ∧ star v ∉ S ∪ O.places := by
@@ -583,7 +583,7 @@ Then there are jumps `J` and base data `B` of that weight with three properties.
   are forms of `B` with no extra level.
 * (b) If `y` is integral above `ℓ`, so is `D.chosenGroupOrder • typeProjection O c y`.
 * (c) Let `u` be a finite family of places outside `badPlaces D ℓ`, let `x` be an eigensystem of `B`
-  of level `u`, and `R = normalisedRep O x.galRep` its representation twisted by
+  of level `u`, and `R = normalizedRep O x.galRep` its representation twisted by
   `normalizingAvatar O`, the avatar of the inverse of the character of `O` with weight `-card r`.
   Then `R` satisfies `IsRepOfType` with jumps `J`, the level being `ϑ.Q`, `range u` and their
   conjugates: it is conjugate self-dual up to twist, has the local properties of
@@ -605,7 +605,7 @@ lemma exists_baseLevel [Nonempty n] {ϑ : D.Twist}
       -- (c)
       ∀ (K : Type) [Finite K] (u : K → FinPlace D.E), (∀ k : K, u k ∉ badPlaces D ℓ) →
         ∀ x ∈ B.Eigensystem u,
-        let R : GalRep ℓ D.E n := normalisedRep O x.galRep
+        let R : GalRep ℓ D.E n := normalizedRep O x.galRep
         -- `R` is a representation of a type for the scaled type polynomials of `c`,
         IsRepOfType O O.rankDiff J
           (fun i : O.ChosenIndex ↦ scaledTypePoly O c i * (X - 1) ^ O.rankDiff)
@@ -641,7 +641,7 @@ lemma exists_baseLevel [Nonempty n] {ϑ : D.Twist}
       exists_level := ⟨levelOf O.placeAt (descentResidueLevel O.toLevelPlaces O.incl), O.levelChar,
         isOpen_levelOf, V.map_subtype_le (ρ.eqLocus 1)⟩
       card_aut_dvd := D.card_classAut_dvd_chosenGroupOrder h_lift.card_le le_rfl }
-  refine ⟨normalisedJumps O, B, fun y hy ↦ ?_,
+  refine ⟨normalizedJumps O, B, fun y hy ↦ ?_,
     chosenGroupOrder_nsmul_typeProjection_mem_ellIntegralForms h_lift, ?_⟩
   · -- On the form of `y`, the idempotent `ρ` acts as `typeProjection O c`, which fixes `y`.
     let u : V := ⟨y.toSmoothForm, toSmoothForm_mem_levelSpace_componentOn y⟩
@@ -664,8 +664,8 @@ lemma exists_baseLevel [Nonempty n] {ϑ : D.Twist}
         simpa [B] using hw
       exact congrArg Subtype.val (levelSpace_le_sphericalAt (h_off v hv) (h_off (star v) hv_star)
         (BaseLevel.formsOfLevel_le_levelSpace hf) g)
-    exact ⟨h_form.isRepOfType_normalisedRep h_lift hQ (forall_mem_range.2 hU) h_att,
-      normalisedRep_quadratic_on_inertia h_lift hQ h_eig h_att
+    exact ⟨h_form.isRepOfType_normalizedRep h_lift hQ (forall_mem_range.2 hU) h_att,
+      normalizedRep_quadratic_on_inertia h_lift hQ h_eig h_att
         (hasTwistParahoricType_levelSpace hπ u)⟩
 
 end New.Selmer
