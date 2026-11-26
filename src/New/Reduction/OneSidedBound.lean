@@ -14,7 +14,7 @@ larger cut-off `x₁` give the bound `R_{q₀}(x) ≤ (800 φ(q₀) + 30) x ^ (-
 The one-sided criterion gives non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
 
 At integer scales the construction bounds the remainder by a multiple of `x^(-1/2) W^24 V^2`,
-where `W` is subexponential and `V` is the degree-ten cutoff parameter. Both remainders at the
+where `W` is subexponential and `V` is the quadratic cutoff parameter. Both remainders at the
 auxiliary cutoff are bounded by `x^(-2)`. Absorb the scale factors into `x^ε` before passing from
 integers to reals.
 
@@ -90,19 +90,16 @@ private lemma eventually_mul_scaled_log_pow_le_rpow (C : ℝ) (n : ℕ) {s : ℝ
   simpa only [mul_pow, ← mul_assoc] using
     (le_abs_self ((C * (64 : ℝ) ^ n) * log (x : ℝ) ^ n)).trans hx
 
-private lemma polylog_cutoff_bounds_of_log {x C : ℝ} (hx_log : 1 ≤ log x) (hC : 1 ≤ C)
-    {n : ℕ} (hn : 4 ≤ n) :
+private lemma polylog_cutoff_bounds_of_log {x C : ℝ} (hx_log : 250 ≤ log x) (hC : 1 ≤ C)
+    {n : ℕ} (hn : 2 ≤ n) :
     2e6 * log x ≤ 2 * (C * (64 * log x) ^ n) ∧
       C * (64 * log x) ^ n ≤ 2 * (C * (64 * log x) ^ n) - 1 := by
-  have h_pow : log x ≤ log x ^ (4 : ℕ) := le_self_pow₀ hx_log (by decide)
   have h_base : 1 ≤ 64 * log x := by linarith
   have h_one : 1 ≤ C * (64 * log x) ^ n := one_le_mul_of_one_le_of_one_le hC (one_le_pow₀ h_base)
   refine ⟨?_, by linarith⟩
-  calc 2e6 * log x ≤ (2 * (64 : ℝ) ^ (4 : ℕ)) * log x :=
-        mul_le_mul_of_nonneg_right (by norm_num) (by linarith)
-    _ ≤ (2 * (64 : ℝ) ^ (4 : ℕ)) * log x ^ (4 : ℕ) :=
-      mul_le_mul_of_nonneg_left h_pow (by positivity)
-    _ = 2 * (64 * log x) ^ (4 : ℕ) := by rw [mul_pow, mul_assoc]
+  calc
+    2e6 * log x ≤ 2 * (64 * log x) ^ (2 : ℕ) := by
+      nlinarith [mul_nonneg (show 0 ≤ log x by linarith) (sub_nonneg.2 hx_log)]
     _ ≤ 2 * (64 * log x) ^ n := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ h_base hn) (by norm_num)
     _ ≤ 2 * (C * (64 * log x) ^ n) :=
       mul_le_mul_of_nonneg_left (le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h_base) _) hC)
@@ -115,10 +112,10 @@ private lemma eventually_polylog_cutoff_bounds {ε : ℝ} (hε : 0 < ε) :
       2 * (64 * log x) ^ (27 : ℕ) ≤ (x : ℝ) ^ (ε / 6) ∧
       (64 * log x) ^ (27 : ℕ) ≤ 2 * (64 * log x) ^ (27 : ℕ) - 1 := by
   filter_upwards [eventually_mul_scaled_log_pow_le_rpow 2 27 (show 0 < ε / 6 by positivity),
-    tendsto_natCast_atTop_atTop.eventually (tendsto_log_atTop.eventually_ge_atTop 1)]
+    tendsto_natCast_atTop_atTop.eventually (tendsto_log_atTop.eventually_ge_atTop 250)]
     with x hx hx_log
   obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx_log
-    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (4 : ℕ) ≤ 27)
+    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (2 : ℕ) ≤ 27)
   simp only [one_mul] at h_lower h_tail
   exact ⟨h_lower, hx, h_tail⟩
 
@@ -168,22 +165,24 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff (P : Parame
     with x h_q₀ h_one l hl
   exact ⟨h_q₀ l hl, h_one l hl⟩
 
-private lemma exists_eventually_abs_primeRemainder_exp_le_of_tenth_cutoff (P : Parameters) :
-    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop, ∀ l : ℝ, C * (64 * log x) ^ (10 : ℕ) ≤ l →
+private lemma exists_eventually_abs_primeRemainder_exp_le_of_common_cutoff (P : Parameters) {n : ℕ}
+    (hn : n ≠ 0) (hR : ∀ (q : ℕ) [NeZero q], q.Coprime P.d →
+      ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ v : ℝ in atTop,
+        |primeRemainder P.d q (exp v)| ≤ exp (-((a * v) ^ (1 / (n : ℝ)) / 32))) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop, ∀ l : ℝ, C * (64 * log x) ^ n ≤ l →
       |primeRemainder P.d P.q₀ (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
       |primeRemainder P.d 1 (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ) := by
-  have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
-  obtain ⟨a₀, ha₀, ha₀_one, h₀⟩ := exists_eventually_abs_primeRemainder_exp_le_tenth hd h_cop
-  obtain ⟨a₁, ha₁, _, h₁⟩ := exists_eventually_abs_primeRemainder_exp_le_tenth hd P.d.coprime_one_left
+  obtain ⟨a₀, ha₀, ha₀_one, h₀⟩ := hR P.q₀ h_cop
+  obtain ⟨a₁, ha₁, _, h₁⟩ := hR 1 P.d.coprime_one_left
   let C := max (1 / a₀) (1 / a₁)
   refine ⟨C, (one_le_one_div ha₀ ha₀_one).trans (le_max_left _ _), ?_⟩
   filter_upwards [tendsto_natCast_atTop_atTop.eventually
-    (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff (n := 10) ha₀ (by decide) h₀),
+    (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff ha₀ hn h₀),
     tendsto_natCast_atTop_atTop.eventually
-      (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff (n := 10) ha₁ (by decide) h₁)]
+      (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff ha₁ hn h₁)]
     with x h_q₀ h_one l hl
-  let T := (64 * log (x : ℝ)) ^ (10 : ℕ)
+  let T := (64 * log (x : ℝ)) ^ n
   have hT : 0 ≤ T := by dsimp only [T]; positivity
   have h_q₀_le : T / a₀ ≤ l := calc
     _ = (1 / a₀) * T := by ring
@@ -358,12 +357,35 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_windows (P : Pa
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   refine eventually_primeRemainder_natCast_le_with_subexponential_cutoff P
     (fun x ↦ (64 * log (x : ℝ)) ^ (27 : ℕ)) ?_ (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff P)
-  filter_upwards [h_log.eventually P.eventually_polylog_cutoff_le_window, h_log.eventually_ge_atTop 1]
+  filter_upwards [h_log.eventually P.eventually_polylog_cutoff_le_window, h_log.eventually_ge_atTop 250]
     with x hVW hx_log
   obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx_log
-    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (4 : ℕ) ≤ 27)
+    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (2 : ℕ) ≤ 27)
   simp only [one_mul] at h_lower h_tail
   exact ⟨h_lower, h_tail, hVW⟩
+
+private lemma exists_eventually_primeRemainder_natCast_le_of_stretched_cutoff (P : Parameters) {n : ℕ}
+    (hn : 2 ≤ n) (hR : ∀ (q : ℕ) [NeZero q], q.Coprime P.d →
+      ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ v : ℝ in atTop,
+        |primeRemainder P.d q (exp v)| ≤ exp (-((a * v) ^ (1 / (n : ℝ)) / 32))) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop,
+      2 * (C * (64 * log x) ^ n) ≤ P.subexponentialWindowWidth (log x) ∧
+      primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
+        (2 * (C * (64 * log x) ^ n)) ^ 2 := by
+  obtain ⟨C, hC, h_tails⟩ := exists_eventually_abs_primeRemainder_exp_le_of_common_cutoff P (by lia) hR
+  let T (x : ℕ) := C * (64 * log (x : ℝ)) ^ n
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  have h_fits : ∀ᶠ x : ℕ in atTop, 2 * T x ≤ P.subexponentialWindowWidth (log x) := by
+    simpa only [T, mul_pow, ← mul_assoc] using
+      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth (2 * C * 64 ^ n) n)
+  have h_cutoff : ∀ᶠ x : ℕ in atTop, 2e6 * log x ≤ 2 * T x ∧ T x ≤ 2 * T x - 1 ∧
+      2 * T x ≤ P.subexponentialWindowWidth (log x) := by
+    filter_upwards [h_log.eventually_ge_atTop 250, h_fits] with x hx h_fit
+    obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx hC hn
+    exact ⟨h_lower, h_tail, h_fit⟩
+  exact ⟨C, hC, h_fits.and (eventually_primeRemainder_natCast_le_with_subexponential_cutoff P T h_cutoff h_tails)⟩
 
 /-- The cutoff supplied by the fixed-modulus zero-free region contributes a logarithmic factor
 of degree `20` to the subexponential window bound. -/
@@ -373,54 +395,54 @@ theorem exists_eventually_primeRemainder_natCast_le_with_tenth_cutoff (P : Param
       primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
         (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
         (2 * (C * (64 * log x) ^ (10 : ℕ))) ^ 2 := by
-  obtain ⟨C, hC, h_tails⟩ := exists_eventually_abs_primeRemainder_exp_le_of_tenth_cutoff P
-  let T (x : ℕ) := C * (64 * log (x : ℝ)) ^ (10 : ℕ)
-  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
-    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have h_fits : ∀ᶠ x : ℕ in atTop, 2 * T x ≤ P.subexponentialWindowWidth (log x) := by
-    simpa only [T, mul_pow, ← mul_assoc] using
-      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth (2 * C * 64 ^ 10) 10)
-  have h_cutoff : ∀ᶠ x : ℕ in atTop, 2e6 * log x ≤ 2 * T x ∧ T x ≤ 2 * T x - 1 ∧
-      2 * T x ≤ P.subexponentialWindowWidth (log x) := by
-    filter_upwards [h_log.eventually_ge_atTop 1, h_fits] with x hx h_fit
-    obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx hC (by decide : (4 : ℕ) ≤ 10)
-    exact ⟨h_lower, h_tail, h_fit⟩
-  exact ⟨C, hC, h_fits.and (eventually_primeRemainder_natCast_le_with_subexponential_cutoff P T h_cutoff h_tails)⟩
+  have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
+  exact exists_eventually_primeRemainder_natCast_le_of_stretched_cutoff P (by decide)
+    (fun _ _ h_cop ↦ exists_eventually_abs_primeRemainder_exp_le_tenth hd h_cop)
+
+/-- At fixed moduli the auxiliary cutoff contributes a logarithmic factor of degree four. -/
+theorem exists_eventually_primeRemainder_natCast_le_with_quadratic_cutoff (P : Parameters) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop,
+      2 * (C * (64 * log x) ^ (2 : ℕ)) ≤ P.subexponentialWindowWidth (log x) ∧
+      primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
+        (2 * (C * (64 * log x) ^ (2 : ℕ))) ^ 2 := by
+  have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
+  exact exists_eventually_primeRemainder_natCast_le_of_stretched_cutoff P (by decide)
+    (fun _ _ h_cop ↦ exists_eventually_abs_primeRemainder_exp_le_sqrt hd h_cop)
 
 private lemma eventually_primeRemainder_natCast_le_of_subexponential_windows
     (P : Parameters) {s : ℝ} (hs : 0 < s) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + s) := by
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have h_const : ∀ᶠ x : ℕ in atTop, (14 : ℝ) ≤ (x : ℝ) ^ (s / 2) :=
-    ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 14
-  obtain ⟨C, hC, h_tenth⟩ := exists_eventually_primeRemainder_natCast_le_with_tenth_cutoff P
-  have hC_pos : 0 < C := zero_lt_one.trans_le hC
-  filter_upwards [h_tenth,
-    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 52 by positivity)),
-    h_const, eventually_ge_atTop 1] with x ⟨hVW, h_bound⟩ h_logW hx_const hx_one
-  let V := 2 * (C * (64 * log (x : ℝ)) ^ (10 : ℕ))
+  obtain ⟨C, hC, h_quadratic⟩ := exists_eventually_primeRemainder_natCast_le_with_quadratic_cutoff P
+  have h_half : 0 < s / 2 := by positivity
+  filter_upwards [h_quadratic,
+    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 48 by positivity)),
+    eventually_mul_scaled_log_pow_le_rpow (14 * (4 * C ^ 2)) 4 h_half,
+    eventually_ge_atTop 1] with x ⟨_, h_bound⟩ h_logW h_poly hx_one
+  let V := 2 * (C * (64 * log (x : ℝ)) ^ (2 : ℕ))
   let W := P.subexponentialWindowWidth (log x)
-  change V ≤ W at hVW
-  change log W ≤ s / 52 * log (x : ℝ) at h_logW
+  change log W ≤ s / 48 * log (x : ℝ) at h_logW
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
-  have h_log_nonneg := log_nonneg hx_ge
-  have hV : 0 ≤ V := by dsimp [V]; positivity
   have hW : 0 < W := exp_pos _
-  have h_power : W ^ 26 ≤ (x : ℝ) ^ (s / 2) := calc
-    _ = exp ((26 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
+  have h_power : W ^ 24 ≤ (x : ℝ) ^ (s / 2) := calc
+    _ = exp ((24 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
     _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logW])
     _ = _ := by rw [rpow_def_of_pos hx_pos]; congr 1; ring
+  have hV_power : V ^ 2 = (4 * C ^ 2) * (64 * log (x : ℝ)) ^ (4 : ℕ) := by dsimp [V]; ring
+  have hV_bound : 14 * V ^ 2 ≤ (x : ℝ) ^ (s / 2) := by
+    simpa only [hV_power, ← mul_assoc] using h_poly
   have h_coeff : (5600 : ℝ) * P.q₀.totient + 2 ≤ (400 * P.q₀.totient + 2) * 14 := by linarith
-  have h_scaled : 14 * W ^ 26 ≤ (x : ℝ) ^ s := calc
+  have h_scaled : W ^ 24 * (14 * V ^ 2) ≤ (x : ℝ) ^ s := calc
     _ ≤ (x : ℝ) ^ (s / 2) * (x : ℝ) ^ (s / 2) := by gcongr
     _ = _ := by rw [← rpow_add hx_pos, add_halves]
   calc primeRemainder P.d P.q₀ x
       ≤ (5600 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 24 * V ^ 2 := h_bound
-    _ ≤ ((400 * P.q₀.totient + 2) * 14) * (x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 24 * W ^ 2 := by
+    _ ≤ ((400 * P.q₀.totient + 2) * 14) * (x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 24 * V ^ 2 := by
       gcongr
-    _ = (400 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (14 * W ^ 26)) := by ring
+    _ = (400 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (W ^ 24 * (14 * V ^ 2))) := by ring
     _ ≤ (400 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (x : ℝ) ^ s) := by gcongr
     _ = _ := by rw [← rpow_add hx_pos]
 
