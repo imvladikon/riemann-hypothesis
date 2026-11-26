@@ -3,12 +3,12 @@ module
 public import Lib.Analytic.EntireLFunction
 
 /-!
-# A Tauberian theorem with a power of the logarithm
+# A Tauberian theorem with a stretched exponential remainder
 
 Let `R` be measurable and Lipschitz on `v ≥ 0`, and let its transform `∫₀^∞ R(v) e^{(1 - s) v} dv`
 be `(F s - F 1) / (s - 1)` in `re s > 2`. Suppose that for all large `l` the function `F` is
-holomorphic and at most `l ^ A` on `re s ≥ 1 - l ^ (-A)`, `|s| ≤ e ^ l`. Then `R(v) = O(v ^ (-B))`
-for every `B`. The theorem is meant for the remainder in the prime number theorem for a sum over
+holomorphic and at most `l ^ A` on `re s ≥ 1 - l ^ (-A)`, `|s| ≤ e ^ l`. Then `|R(v)| ≤ exp (-(v ^ (1 / (A + 1)) / 32))`
+for all large `v`, and in particular `R(v) = O(v ^ (-B))` for every `B`. The theorem is meant for the remainder in the prime number theorem for a sum over
 prime powers with weights that vanish at the cutoff `x`: at `x = e ^ v` it is Lipschitz in `v`.
 
 The proof reads one Taylor coefficient of the transform at a far point `1 + H` in two ways. It is a
@@ -266,20 +266,6 @@ lemma norm_taylorCoeff_transform_sub_le_of_lipschitz (hR : Measurable R)
   rw [H_eq]
   field
 
-/-- For large `u` an even power of `c log u` is at most `u`, and a power of `u` is at most
-`exp (√u / 2)`. -/
-lemma eventually_log_pow_le_and_pow_le_exp_sqrt (c : ℝ) (A j : ℕ) : ∀ᶠ u : ℝ in atTop,
-    (c * u.log) ^ (2 * A) ≤ u ∧ u ^ j ≤ rexp (√u / 2) := by
-  have h_log : (fun u : ℝ ↦ (c * u.log) ^ (2 * A)) =o[atTop] id := by
-    simpa [mul_pow] using
-      (Real.isLittleO_pow_log_id_atTop (n := 2 * A)).const_mul_left (c ^ (2 * A))
-  have h_exp : ∀ᶠ t : ℝ in atTop, ‖t ^ (2 * j)‖ ≤ ‖rexp (2⁻¹ * t)‖ :=
-    (isLittleO_pow_exp_pos_mul_atTop _ (by norm_num)).eventuallyLE
-  filter_upwards [h_log.eventuallyLE, Real.tendsto_sqrt_atTop.eventually h_exp,
-    eventually_ge_atTop 0] with u h_log_le h_exp_le hu
-  refine ⟨(le_abs_self _).trans (h_log_le.trans_eq (abs_of_nonneg hu)), ?_⟩
-  simpa [pow_mul, Real.sq_sqrt hu, abs_of_nonneg hu, div_eq_inv_mul] using h_exp_le
-
 /-- Every point `s` of the disc of radius `H + η` about `1 + H` has `re s ≥ 1 - η` and
 `|s| ≤ 2 H + η + 1`, for `H ≥ 0`. -/
 lemma one_sub_le_re_and_norm_le_of_mem_closedBall {H η : ℝ} (hH : 0 ≤ H) {s : ℂ}
@@ -289,37 +275,133 @@ lemma one_sub_le_re_and_norm_le_of_mem_closedBall {H η : ℝ} (hH : 0 ≤ H) {s
   have h_centre : ‖(1 + H : ℂ)‖ = 1 + H := mod_cast Real.norm_of_nonneg (by linarith)
   exact ⟨by linarith [abs_le.1 h_re], by linarith [norm_le_norm_sub_add s (1 + H)]⟩
 
-/-- Let `l ≥ 1`, let `H = (k + 1) / u > 1` with `4 H ≤ u ^ (2 B + 5)`, and let `F` be holomorphic
-and at most `l ^ A` on the disc of radius `H + l ^ (-A)` about `1 + H`. If `l ^ (2 A) ≤ u` and
-`u ^ (3 B + 7) ≤ exp (√u / 2)`, the normalised Taylor coefficient of `dslope F 1` at `1 + H` is at
-most `u ^ (-(B + 1))`: the gain is `exp (-u / (2 l ^ A)) ≤ exp (-√u / 2)`. -/
-lemma norm_taylorCoeff_dslope_le_inv_pow {u l H : ℝ} {A B k : ℕ} (hu : 0 < u) (hl : 1 ≤ l)
-    (H_eq : H = (k + 1) / u) (hH : 1 < H) (hH_le : 4 * H ≤ u * u ^ (2 * B + 4))
-    (h_pow : l ^ (2 * A) ≤ u) (h_exp : u ^ (3 * B + 7) ≤ rexp (√u / 2))
-    (hF : ∀ s ∈ closedBall (1 + H : ℂ) (H + 1 / l ^ A), DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
-    ‖(-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)‖ ≤ 1 / u ^ (B + 1) := by
-  have hη_le : 1 / l ^ A ≤ H := by grw [← one_le_pow₀ hl, ← hH, div_one]
-  have h_sqrt : l ^ A ≤ √u := Real.le_sqrt_of_sq_le (by rwa [← pow_mul, mul_comm])
-  have h_gain : √u / 2 ≤ (k + 1) * (1 / l ^ A / (2 * H)) :=
-    calc √u / 2 = u / √u / 2 := by rw [Real.div_sqrt]
-      _ ≤ u / l ^ A / 2 := by gcongr
-      _ = (k + 1) * (1 / l ^ A / (2 * H)) := by
-        rw [H_eq]
-        field
-  calc ‖(-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)‖
-      ≤ 4 * l ^ A * H / (1 / l ^ A) * rexp (-((k + 1) * (1 / l ^ A / (2 * H)))) :=
-        norm_taylorCoeff_dslope_le (by positivity) hη_le hF k
-    _ = l ^ (2 * A) * (4 * H) / rexp ((k + 1) * (1 / l ^ A / (2 * H))) := by
-        rw [Real.exp_neg]
-        field
-    _ ≤ u * (u * u ^ (2 * B + 4)) / u ^ (3 * B + 7) := by
-        grw [h_pow, hH_le, ← h_gain, ← h_exp]
-    _ = 1 / u ^ (B + 1) := by field
+private lemma eventually_const_mul_pow_le_exp (C : ℝ) (n : ℕ) :
+    ∀ᶠ l : ℝ in atTop, C * l ^ n ≤ rexp (l / 8) := by
+  have h0 := isLittleO_pow_exp_pos_mul_atTop n (show (0 : ℝ) < 1 / 8 by norm_num)
+  have h := (h0.const_mul_left C).eventuallyLE
+  filter_upwards [h] with l hl
+  exact (le_abs_self _).trans (by
+    simpa [Real.norm_eq_abs, div_eq_mul_inv, mul_comm] using hl)
 
-/-- **Tauberian theorem.** Let `R` be measurable and Lipschitz on `v ≥ 0` (it suffices to test steps
-of length at most `1`), with transform `∫₀^∞ R(v) e^{(1 - s) v} dv = (F s - F 1) / (s - 1)` in
-`re s > 2`. Suppose that for all large `l` the function `F` is holomorphic and at most `l ^ A` on
-`re s ≥ 1 - l ^ (-A)`, `|s| ≤ e ^ l`. Then `|R(u)| ≤ u ^ (-B)` for every `B` and all large `u`. -/
+/-- Choose the degree of the Gamma kernel exponentially in the parameter of the zero-free
+region. On the scale `u = l ^ (A + 1)`, both errors then decay exponentially in `l`. -/
+private lemma eventually_abs_apply_pow_le_exp_of_transform {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
+    (hR : Measurable R)
+    (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
+    (h_transform : ∀ s : ℂ, 2 < s.re →
+      (F s - F 1) / (s - 1) = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v)) {A : ℕ}
+    (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - 1 / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
+    ∀ᶠ l : ℝ in atTop, |R (l ^ (A + 1))| ≤ rexp (-(l / 32)) := by
+  have hL : 0 ≤ L := by simpa using (abs_nonneg _).trans (h_lip 0 1 le_rfl zero_le_one (by simp))
+  have Φ_eq (s : ℂ) (hs : 2 < s.re) :
+      dslope F 1 s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v) := by
+    have hs_ne : s ≠ 1 := fun h ↦ by norm_num [h] at hs
+    rw [← h_transform s hs, dslope_of_ne _ hs_ne, slope_def_field]
+  filter_upwards [hF, eventually_const_mul_pow_le_exp 8 (2 * A),
+    eventually_const_mul_pow_le_exp 1 ((A + 1) * 2), eventually_ge_atTop (max 16 (64 * L))]
+    with l h_region h_poly h_u_sq hl
+  have hl_sixteen : 16 ≤ l := (le_max_left _ _).trans hl
+  have hl_pos : 0 < l := by linarith
+  let u := l ^ (A + 1)
+  have hu_one : 1 ≤ u := one_le_pow₀ (by linarith)
+  have hu_pos : 0 < u := one_pos.trans_le hu_one
+  have hu_sq : u ^ 2 ≤ rexp (l / 8) := by simpa [u, pow_mul] using h_u_sq
+  let k : ℕ := ⌊rexp (l / 4)⌋₊
+  have hk_ge : rexp (l / 4) ≤ k + 1 := (Nat.lt_floor_add_one _).le
+  have hk_le : (k : ℝ) ≤ rexp (l / 4) := Nat.floor_le (by positivity)
+  let H : ℝ := (k + 1) / u
+  have hH : 1 < H := (one_lt_div hu_pos).2 (calc
+    u ≤ u ^ 2 := by nlinarith [mul_nonneg hu_pos.le (sub_nonneg.2 hu_one)]
+    _ ≤ rexp (l / 8) := hu_sq
+    _ < rexp (l / 4) := Real.exp_lt_exp.2 (by linarith)
+    _ ≤ k + 1 := hk_ge)
+  have h_e_one : 1 ≤ rexp (l / 4) := Real.one_le_exp (by positivity)
+  have hH_le : H ≤ 2 * rexp (l / 4) :=
+    (div_le_self (by positivity) hu_one).trans (by linarith)
+  let η : ℝ := 1 / l ^ A
+  have hη : 0 < η := by positivity
+  have hη_le : η ≤ 1 := (div_le_one (by positivity)).2 (one_le_pow₀ (by linarith))
+  have h_disc (s : ℂ) (hs : s ∈ closedBall (1 + H : ℂ) (H + η)) :
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A := by
+    obtain ⟨h_re, h_norm⟩ := one_sub_le_re_and_norm_le_of_mem_closedBall (by positivity) hs
+    refine h_region s h_re (h_norm.trans ?_)
+    calc 2 * H + η + 1 ≤ 6 * rexp (l / 4) := by linarith
+      _ ≤ rexp (3 * l / 4) * rexp (l / 4) := by
+        gcongr
+        linarith [Real.add_one_le_exp (3 * l / 4)]
+      _ = rexp l := by rw [← Real.exp_add]; congr 1; ring
+  have h_gain : (k + 1 : ℝ) * (η / (2 * H)) = l / 2 := calc
+    _ = u * η / 2 := by dsimp [H]; field
+    _ = l / 2 := by dsimp [u, η]; rw [pow_succ']; field
+  let coeff : ℂ := (-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)
+  let d := rexp (-(l / 16))
+  have h_small : ‖coeff‖ ≤ d := calc
+    _ ≤ 4 * l ^ A * H / η * rexp (-(l / 2)) := by
+      simpa only [coeff, h_gain] using norm_taylorCoeff_dslope_le hη (hη_le.trans hH.le) h_disc k
+    _ ≤ 4 * l ^ A * (2 * rexp (l / 4)) / η * rexp (-(l / 2)) := by gcongr
+    _ = 8 * l ^ (2 * A) * rexp (-(l / 4)) := by
+      have he : rexp (l / 4) * rexp (-(l / 2)) = rexp (-(l / 4)) := by
+        rw [← Real.exp_add]
+        congr 1
+        ring
+      rw [← he, mul_comm 2 A, pow_mul]
+      dsimp [η]
+      field
+    _ ≤ rexp (l / 8) * rexp (-(l / 4)) := by gcongr
+    _ ≤ d := by
+      rw [← Real.exp_add]
+      exact Real.exp_le_exp.2 (by linarith)
+  have h_var : u ^ 2 / (k + 1) / d ≤ d := calc
+    _ ≤ rexp (l / 8) / rexp (l / 4) / rexp (-(l / 16)) := by dsimp [d]; gcongr
+    _ = d := by dsimp [d]; rw [← Real.exp_sub, ← Real.exp_sub]; congr 1; ring
+  have h_close : ‖coeff - R u‖ ≤ 2 * L * d := calc
+    _ ≤ L * (d + u ^ 2 / (k + 1) / d) :=
+      norm_taylorCoeff_transform_sub_le_of_lipschitz hR
+        (fun x hx y hy ↦ abs_sub_le_of_unit_steps h_lip hx hy) Φ_eq hu_pos (by positivity) rfl hH
+    _ ≤ L * (d + d) := by gcongr
+    _ = 2 * L * d := by ring
+  calc |R u| = ‖coeff - (coeff - R u)‖ := by simp
+    _ ≤ d + 2 * L * d := norm_sub_le_of_le h_small h_close
+    _ = (1 + 2 * L) * d := by ring
+    _ ≤ rexp (l / 32) * d := by
+      gcongr
+      linarith [(le_max_right 16 (64 * L)).trans hl, Real.add_one_le_exp (l / 32)]
+    _ = rexp (-(l / 32)) := by dsimp [d]; rw [← Real.exp_add]; congr 1; ring
+
+/-- **Tauberian theorem.** If the transform has a holomorphic continuation with
+`‖F s‖ ≤ l ^ A` in the given region, then the remainder is eventually bounded by
+`exp (-(u ^ (1 / (A + 1)) / 32))`. -/
+theorem eventually_abs_le_exp_rpow_of_transform {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
+    (hR : Measurable R)
+    (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
+    (h_transform : ∀ s : ℂ, 2 < s.re →
+      (F s - F 1) / (s - 1) = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v)) {A : ℕ}
+    (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - 1 / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
+    ∀ᶠ u : ℝ in atTop, |R u| ≤ rexp (-(u ^ (1 / ((A : ℝ) + 1)) / 32)) := by
+  have h_root := tendsto_rpow_atTop (show 0 < 1 / ((A : ℝ) + 1) by positivity)
+  filter_upwards [h_root.eventually (eventually_abs_apply_pow_le_exp_of_transform hR h_lip h_transform hF),
+    eventually_ge_atTop 0] with u hu hu_nonneg
+  have h_restore : (u ^ (1 / ((A : ℝ) + 1))) ^ (A + 1) = u := by
+    rw [← Real.rpow_mul_natCast hu_nonneg]
+    push_cast
+    rw [one_div, inv_mul_cancel₀ (by positivity : (A : ℝ) + 1 ≠ 0), Real.rpow_one]
+  simpa only [h_restore] using hu
+
+/-- A stretched exponential is eventually at most any fixed inverse power. -/
+lemma eventually_exp_neg_rpow_div_le_inv_pow {p : ℝ} (hp : 0 < p) (B : ℕ) :
+    ∀ᶠ u : ℝ in atTop, rexp (-(u ^ p / 32)) ≤ 1 / u ^ B := by
+  have hlog := ((isLittleO_log_rpow_atTop hp).const_mul_left (32 * (B : ℝ))).eventuallyLE
+  filter_upwards [hlog, eventually_gt_atTop 0] with u h_growth hu
+  have h_log_le : 32 * (B : ℝ) * Real.log u ≤ u ^ p := by
+    simp only [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg hu.le _)] at h_growth
+    exact (le_abs_self (32 * (B : ℝ) * Real.log u)).trans h_growth
+  calc rexp (-(u ^ p / 32)) ≤ rexp (-((B : ℝ) * Real.log u)) :=
+      Real.exp_le_exp.2 (by linarith)
+    _ = 1 / u ^ B := by rw [Real.exp_neg, Real.exp_natCast_mul, Real.exp_log hu, one_div]
+
+/-- The inverse-power estimate obtained from the stretched exponential bound. -/
 theorem eventually_abs_le_inv_pow_of_transform (hR : Measurable R)
     (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
     (h_transform : ∀ s : ℂ, 2 < s.re →
@@ -327,56 +409,9 @@ theorem eventually_abs_le_inv_pow_of_transform (hR : Measurable R)
     (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - 1 / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
       DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) (B : ℕ) :
     ∀ᶠ u : ℝ in atTop, |R u| ≤ 1 / u ^ B := by
-  have hL : 0 ≤ L := by simpa using (abs_nonneg _).trans (h_lip 0 1 le_rfl zero_le_one (by simp))
-  have Φ_eq (s : ℂ) (hs : 2 < s.re) :
-      dslope F 1 s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v) := by
-    have hs_ne : s ≠ 1 := fun h ↦ by norm_num [h] at hs
-    rw [← h_transform s hs, dslope_of_ne _ hs_ne, slope_def_field]
-  have h_log : Tendsto (fun u : ℝ ↦ (2 * B + 5 : ℕ) * u.log) atTop atTop :=
-    Real.tendsto_log_atTop.const_mul_atTop (by positivity)
-  -- Compare `R u` with one normalised Taylor coefficient of `dslope F 1` at a point `1 + H`: the
-  -- two differ by `O(u ^ (-(B + 1)))`, and Cauchy's estimate makes the coefficient as small.
-  filter_upwards [h_log.eventually hF, h_log.eventually_ge_atTop 1, eventually_ge_atTop (2 * L + 8),
-    eventually_log_pow_le_and_pow_le_exp_sqrt (2 * B + 5 : ℕ) A (3 * B + 7)]
-    with u hF_region hl_one hu_large ⟨h_log_pow_le, h_pow_le_exp⟩
-  -- Take `k + 1 ≈ u ^ (2 B + 4)` and `H = (k + 1) / u`, so that the Gamma density has mean `u` and
-  -- standard deviation `u / √(k + 1) ≤ u ^ (-(B + 1))`. With `l = (2 B + 5) log u` and
-  -- `η = l ^ (-A)` the disc of radius `H + η` about `1 + H` lies in the region of `hF_region`.
-  set l : ℝ := (2 * B + 5 : ℕ) * u.log with l_def
-  have hu_one : 1 ≤ u := by linarith
-  have hu_pos : 0 < u := one_pos.trans_le hu_one
-  let k : ℕ := ⌊u ^ (2 * B + 4)⌋₊
-  have hk_ge : u ^ (2 * B + 4) ≤ k + 1 := (Nat.lt_floor_add_one _).le
-  have hk_le : (k : ℝ) ≤ u ^ (2 * B + 4) := Nat.floor_le (by positivity)
-  let H : ℝ := (k + 1) / u
-  have hH_gt : 1 < H :=
-    (one_lt_div hu_pos).2 ((lt_self_pow₀ (by linarith) (by omega)).trans_le hk_ge)
-  have hH_le : H ≤ 2 * u ^ (2 * B + 4) :=
-    (div_le_self (by positivity) hu_one).trans (by linarith [one_le_pow₀ hu_one (n := 2 * B + 4)])
-  let η : ℝ := 1 / l ^ A
-  have hη_le : η ≤ 1 := (div_le_one (by positivity)).2 (one_le_pow₀ hl_one)
-  let coeff : ℂ := (-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)
-  -- As `u ≥ 8`, the factor `u` absorbs the numerical constants below.
-  have h_const_mul_le : 8 * u ^ (2 * B + 4) ≤ u * u ^ (2 * B + 4) := by nlinarith
-  have h_close : ‖coeff - R u‖ ≤ 2 * L / u ^ (B + 1) :=
-    calc ‖coeff - R u‖ ≤ L * (1 / u ^ (B + 1) + u ^ 2 / (k + 1) / (1 / u ^ (B + 1))) :=
-          norm_taylorCoeff_transform_sub_le_of_lipschitz hR
-            (fun x hx y hy ↦ abs_sub_le_of_unit_steps h_lip hx hy) Φ_eq hu_pos (by positivity)
-            rfl hH_gt
-      _ ≤ L * (1 / u ^ (B + 1) + u ^ 2 / u ^ (2 * B + 4) / (1 / u ^ (B + 1))) := by gcongr
-      _ = 2 * L / u ^ (B + 1) := by field
-  have h_disc (s : ℂ) (hs : s ∈ closedBall (1 + H : ℂ) (H + η)) :
-      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A := by
-    obtain ⟨h_re, h_norm⟩ := one_sub_le_re_and_norm_le_of_mem_closedBall (by positivity) hs
-    refine hF_region s h_re (h_norm.trans ?_)
-    rw [l_def, Real.exp_natCast_mul, Real.exp_log hu_pos, pow_succ']
-    linarith
-  have h_small : ‖coeff‖ ≤ 1 / u ^ (B + 1) :=
-    norm_taylorCoeff_dslope_le_inv_pow hu_pos hl_one rfl hH_gt (by linarith) h_log_pow_le
-      h_pow_le_exp h_disc
-  calc |R u| = ‖coeff - (coeff - R u)‖ := by simp
-    _ ≤ 1 / u ^ (B + 1) + 2 * L / u ^ (B + 1) := norm_sub_le_of_le h_small h_close
-    _ = (1 + 2 * L) / u / u ^ B := by field
-    _ ≤ 1 / u ^ B := by grw [(div_le_one hu_pos).2 (by linarith : 1 + 2 * L ≤ u)]
+  filter_upwards [eventually_abs_le_exp_rpow_of_transform hR h_lip h_transform hF,
+    eventually_exp_neg_rpow_div_le_inv_pow (show 0 < 1 / ((A : ℝ) + 1) by positivity) B]
+    with u hu h_exp
+  exact hu.trans h_exp
 
 end New
