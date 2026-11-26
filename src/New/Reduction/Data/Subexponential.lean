@@ -167,6 +167,13 @@ private lemma eventually_mul_pow_le_exp_sqrt (C : ℝ) (n : ℕ) :
   filter_upwards [tendsto_sqrt_atTop.eventually h_exp, eventually_ge_atTop (0 : ℝ)] with y hy hy₀
   simpa only [pow_mul, sq_sqrt hy₀] using hy
 
+/-- Every fixed polynomial cutoff fits the subexponential window width. -/
+theorem Parameters.eventually_mul_pow_le_subexponentialWindowWidth (P : Parameters) (C : ℝ) (n : ℕ) :
+    ∀ᶠ y : ℝ in atTop, C * y ^ n ≤ P.subexponentialWindowWidth y := by
+  filter_upwards [P.eventually_isLargeScale_subexponential, eventually_mul_pow_le_exp_sqrt C n]
+    with y ⟨_, _, _, hW⟩ hy
+  exact hy.trans ((exp_le_exp.2 (by linarith [sqrt_nonneg y])).trans hW)
+
 /-- The subexponential width supplies every prime window required by admissible data. -/
 theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
     ∀ᶠ y : ℝ in atTop, ∃ n : ℕ, P.IsLargeScale n y (P.subexponentialWindowWidth y) ∧
@@ -179,35 +186,20 @@ theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
   have hD : 0 < D := by dsimp [D]; positivity
   have hD_top : Tendsto (fun y : ℝ ↦ D * y) atTop atTop := tendsto_id.const_mul_atTop hD
   have h_four : 4 ∣ P.q₀ * P.d := Dvd.dvd.mul_right (.trans (by norm_num) P.dvd_q₀) P.d
-  obtain ⟨C, -, h_prime⟩ := exists_eventually_prime_modEq_one_log_mem_of_shared_exp_bound _ h_four
-  have h_pow : ∀ᶠ y : ℝ in atTop, C * (D * y) ^ (9 : ℕ) ≤ exp (sqrt y) := by
-    simpa only [mul_pow, ← mul_assoc] using eventually_mul_pow_le_exp_sqrt (C * D ^ 9) 9
+  obtain ⟨C, -, h_prime⟩ := exists_eventually_prime_modEq_one_log_mem_of_width _ h_four
+  have h_width : ∀ᶠ y : ℝ in atTop, C * (D * y) ^ (10 : ℕ) ≤ P.subexponentialWindowWidth y := by
+    simpa only [mul_pow, ← mul_assoc] using P.eventually_mul_pow_le_subexponentialWindowWidth (C * D ^ 10) 10
   filter_upwards [P.eventually_isLargeScale_subexponential,
-    hD_top.eventually h_prime, h_pow] with y ⟨n, h_scale, h_top, h_lower⟩ h_window h_sq
+    hD_top.eventually h_prime, h_width] with y ⟨n, h_scale, h_top, _⟩ h_window hW_le
   let W := P.subexponentialWindowWidth y
   let l := D * y
-  let X := sqrt W
   have hW : 0 < W := one_pos.trans_le h_scale.one_le
-  have hX_sq : X ^ 2 = W := sq_sqrt hW.le
-  have h_exp_sqrt : exp (sqrt y) ≤ X := (le_sqrt (exp_pos _).le hW.le).2 <| calc
-    exp (sqrt y) ^ 2 = exp (sqrt y + sqrt y) := by rw [exp_add, pow_two]
-    _ ≤ exp (3 * sqrt y) := exp_le_exp.2 (by linarith [sqrt_nonneg y])
-    _ ≤ W := h_lower
   have h_exp_upper : W ^ (n + 7) ≤ exp l := calc
     _ = exp (((n + 7 : ℕ) : ℝ) * log W) := by rw [exp_natCast_mul, exp_log hW]
     _ ≤ _ := exp_le_exp.2 (by push_cast; exact h_top)
   refine ⟨n, h_scale, ?_⟩
   intro k hk hq U hU
-  simpa only [hX_sq] using
-    h_window X U k hk (h_sq.trans h_exp_sqrt) (hq.trans h_exp_upper) (hX_sq.le.trans hU.1)
-      (hU.2.trans h_exp_upper)
-
-/-- Every fixed polynomial cutoff fits the subexponential window width. -/
-theorem Parameters.eventually_mul_pow_le_subexponentialWindowWidth (P : Parameters) (C : ℝ) (n : ℕ) :
-    ∀ᶠ y : ℝ in atTop, C * y ^ n ≤ P.subexponentialWindowWidth y := by
-  filter_upwards [P.eventually_isLargeScale_subexponential, eventually_mul_pow_le_exp_sqrt C n]
-    with y ⟨_, _, _, hW⟩ hy
-  exact hy.trans ((exp_le_exp.2 (by linarith [sqrt_nonneg y])).trans hW)
+  exact h_window W U k hk hW_le (hq.trans h_exp_upper) hU.1 (hU.2.trans h_exp_upper)
 
 /-- The polylogarithmic cutoff of degree `27` fits the window. -/
 theorem Parameters.eventually_polylog_cutoff_le_window (P : Parameters) :
