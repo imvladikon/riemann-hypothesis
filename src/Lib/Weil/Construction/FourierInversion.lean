@@ -362,7 +362,7 @@ lemma Space.exists_smul_entireTheta_vacElem_eq {ε : n → ℤˣ} (V : Space E n
       c • entireTheta V.vacElem = ∑ j : Γ, signedShift (-γ j) (ratShift (y i) F) := by
     have h_phase : ∀ x ∈ star δ • idealLattice E n, ratPhase x (y i) = 1 :=
       fun x hx ↦ (mem_star_smul_idealLattice_iff hδ_ne).1 hx _ (hy.mem i)
-    exact V.isThetaFunction_iff.1 ((hF.ratShift h_phase).sum_signedShift hγ)
+    exact V.exists_smul_entireTheta_of_isThetaFunction ((hF.ratShift h_phase).sum_signedShift hγ)
   choose c hc using h_multiple
   refine ⟨c, hc, ?_⟩
   calc _ = ∑ i : Y, ratShift (-y i) (∑ j : Γ, signedShift (-γ j) (ratShift (y i) F)) := by

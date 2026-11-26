@@ -348,25 +348,17 @@ power at A induced by z is bijective. -/
 lemma exists_repr_cech (m : ℕ) :
     ∃ (D : PerfectAlg S) (z : cech (reprMap φ) m D),
       AllBijective fun A : PerfectAlg S ↦ pointMap z A := by
-  -- The representing object is the wide pushout `d ⊗_b ⋯ ⊗_b d` of `m + 1` copies of `φ`, which
-  -- exists among perfect algebras; the universal point is the family of its coprojections.
-  have h_closed (J : Type) :
-      IsClosedUnderColimitsOfShape (fun A : CommAlg S ↦ PerfectRing A p) (WidePushoutShape J) :=
-    PerfectAlg.isClosedUnderColimitsOfShape_widePushoutShape (S := S)
-      natCast_eq_zero_of_algebra_oFlat J
-  have : HasColimitsOfShape (WidePushoutShape (Fin (m + 1))) (PerfectAlg S) := inferInstance
+  -- The representing object is the wide pushout of `m + 1` copies of `φ` among perfect algebras.
+  have := PerfectAlg.isClosedUnderColimitsOfShape_widePushoutShape (S := S)
+    natCast_eq_zero_of_algebra_oFlat (Fin (m + 1))
   refine ⟨widePushout b (fun _ : Fin (m + 1) ↦ d) fun _ ↦ φ, ⟨fun i ↦ ⟨ι (fun _ ↦ φ) i⟩, ?_⟩,
-    fun A ↦ bijective_iff_has_inverse.mpr ?_⟩
+    fun A ↦ bijective_iff_has_inverse.mpr ⟨fun e ↦ ⟨desc (φ ≫ (e.val 0).down)
+      (fun i ↦ (e.val i).down) fun i ↦ congrArg ULift.down (e.property i 0)⟩, fun g ↦ ?_,
+      fun e ↦ Subtype.ext (funext fun i ↦ ULift.down_injective (ι_desc (fun _ ↦ φ) ..))⟩⟩
   · simp [reprMap, reprFunctor, DFunLike.coe, arrow_ι fun _ ↦ φ]
-  -- The inverse glues `m + 1` maps `d ⟶ A` that agree on `b` to one map out of the pushout.
-  refine ⟨fun e ↦ ⟨desc (φ ≫ (e.val 0).down) (fun i ↦ (e.val i).down)
-      fun i ↦ congrArg ULift.down (e.property i 0)⟩, fun g ↦ ?_, fun e ↦ ?_⟩
-  · -- A map out of the pushout is determined by its composites with the coprojections.
-    refine ULift.down_injective (.symm ?_)
+  · refine ULift.down_injective (.symm ?_)
     apply eq_desc_of_comp_eq
     exacts [fun _ ↦ rfl, (arrow_ι_assoc _ 0 g.down).symm]
-  · -- The glued map, composed with the `i`-th coprojection, is the `i`-th map.
-    exact Subtype.ext (funext fun i ↦ ULift.down_injective (ι_desc (fun _ ↦ φ) ..))
 
 /-- For a map φ: b → d of perfect S-algebras, the functor D ↦ ℤ[Hom(b,D)]/ℤ[maps that factor
 through φ] from perfect S-algebras to abelian groups. -/

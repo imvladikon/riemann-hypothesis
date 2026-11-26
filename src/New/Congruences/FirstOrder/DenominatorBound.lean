@@ -238,7 +238,7 @@ lemma exists_eventually_hasRootChain_mostFrobeniiAt {P : Parameters} {D : Data P
       ∀ᶠ y : FrobeniusDatum D.E in mostFrobeniiAt D.E (δ ^ ℓ ^ ν * g),
         -- (a)
         y.place ∉ badPlaces D ℓ ∧
-        B.IsOffLevel ![] y.place ∧
+        B.IsOffLevel (ℓ := ℓ) ![] y.place ∧
         -- (b)
         (∀ x : B.Eigensystem ![], IsWeakLift O x.val →
           ∀ S : (PadicAlgCl ℓ)[X], 1 ≤ ‖S.eval 1‖ →
@@ -276,7 +276,7 @@ lemma exists_eventually_hasRootChain_mostFrobeniiAt {P : Parameters} {D : Data P
   have hF : F ≤ mostFrobenii D.E := inf_le_left
   have h_good : ∀ᶠ z : FrobeniusDatum D.E in F, z.place ∉ badPlaces D ℓ :=
     hF (eventually_mostFrobenii (badPlaces D ℓ).eventually_cofinite_notMem fun _ hz ↦ hz)
-  have h_offLevel : ∀ᶠ z : FrobeniusDatum D.E in F, B.IsOffLevel ![] z.place :=
+  have h_offLevel : ∀ᶠ z : FrobeniusDatum D.E in F, B.IsOffLevel (ℓ := ℓ) ![] z.place :=
     hF (eventually_mostFrobenii B.eventually_isOffLevel fun _ hz ↦ hz)
   have h_away : ∀ᶠ z : FrobeniusDatum D.E in F, 1 ≤ ‖(T z.frob).charpoly.eval 1‖ :=
     mem_inf_of_right (preimage_mem_comap hi)
@@ -327,7 +327,7 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
         (D.halfGap ^ 22 * h) ∧
       -- (b)
       (∀ j : J, Q.place j ∉ badPlaces D ℓ) ∧
-      (∀ j : J, B.IsOffLevel ![] (Q.place j)) ∧
+      (∀ j : J, B.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) ∧
       -- (c)
       ∃ e : J → EllAdicIntegers[X], (∀ j : J, (e j).eval 1 = 1) ∧
         ∀ (j : J) (x : B.Eigensystem ![]),
@@ -350,7 +350,7 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
   let HasShape (x : B.Eigensystem ![]) (y : FrobeniusDatum D.E) (e : EllAdicIntegers[X]) : Prop :=
     HasRootChain (x.val.heckePolyAt y.place) (e.map (algebraMap EllAdicIntegers ℂ)) y.place.q
       (ιℓ.symm (normalizingAvatar O y.frob).val)⁻¹ O.rankDiff
-  let W : Set (FrobeniusDatum D.E) := {y | y.place ∉ badPlaces D ℓ ∧ B.IsOffLevel ![] y.place ∧
+  let W : Set (FrobeniusDatum D.E) := {y | y.place ∉ badPlaces D ℓ ∧ B.IsOffLevel (ℓ := ℓ) ![] y.place ∧
     (∀ x : B.Eigensystem ![], IsWeakLift O x.val → ∀ S : (PadicAlgCl ℓ)[X], 1 ≤ ‖S.eval 1‖ →
       (∀ k : ℕ, ‖(χ x y.frob).coeff k - (S * chain y.frob).coeff k‖ < 1) →
       ∃ e : EllAdicIntegers[X], HasShape x y e ∧ e.eval 1 = 1) ∧
@@ -378,7 +378,7 @@ lemma exists_taylorWilesPlaces_hasRootChain {P : Parameters} {D : Data P} {ℓ :
   have h_good (j : J) : Q.place j ∉ badPlaces D ℓ := by
     obtain ⟨h_notMem, -⟩ := hQ j
     exact h_notMem
-  have h_offLevel (j : J) : B.IsOffLevel ![] (Q.place j) := by
+  have h_offLevel (j : J) : B.IsOffLevel (ℓ := ℓ) ![] (Q.place j) := by
     obtain ⟨-, h_off, -⟩ := hQ j
     exact h_off
   -- So the condition in `W` applies with `S` the polynomial of the twist.
@@ -667,7 +667,7 @@ lemma exists_heckePolyOnForms_eq_zero {P : Parameters} {D : Data P} {ℓ : ℕ} 
       IsWeakLift O x →
       O.heckePolyOnForms hw hS (O.liftHeckeRoot w) v = 0 := by
   obtain ⟨w, ⟨-, -, hℓ, h_eigen⟩, hw, hS⟩ :
-      ∃ w : FinPlace D.E, B.IsOffLevel ![] w ∧ w.IsSplit ∧ w ∉ O.places.conjClosure :=
+      ∃ w : FinPlace D.E, B.IsOffLevel (ℓ := ℓ) ![] w ∧ w.IsSplit ∧ w ∉ O.places.conjClosure :=
     ((B.eventually_isOffLevel (L := ![])).and_frequently
       (frequently_isSplit_notMem_places O)).exists
   refine ⟨w, hw, hS, fun x v hv hv₀ h_weak ↦ ?_⟩

@@ -562,20 +562,9 @@ lemma schur_mul_left (h_fits : FitsRanks n n' κ) (z : ∀ τ : Φ, Matrix (n' �
   -- Substitute `g`, then `z` (`rowSubst_rowSubst`), and expand both times by
   -- `sum_schur_smul_nablaBasis`.
   refine schur_eq_of_expansion fun i ↦ ?_
-  -- `g` is square, so its expansion has no determinant factor.
-  have h_expand_g : rowSubst g (nablaBasis R n' κ i) =
-      ∑ k : WeylIndexFamily n' κ, schur κ g i k • nablaBasis R n' κ k := by
-    rw [← sum_schur_smul_nablaBasis FitsRanks.refl g i]
-    simp only [schurDetExp_self, detPow_zero, mul_one]
-  calc ∑ j : WeylIndexFamily n κ, (schur κ g * schur κ z) i j •
-          (nablaBasis R n κ j * detPow R n (schurDetExp n n' κ))
-      = ∑ k : WeylIndexFamily n' κ, schur κ g i k • ∑ j : WeylIndexFamily n κ, schur κ z k j •
-          (nablaBasis R n κ j * detPow R n (schurDetExp n n' κ)) := by
-        simpa only [Matrix.mul_apply, sum_smul, smul_sum, mul_smul] using sum_comm
-    _ = ∑ k : WeylIndexFamily n' κ, schur κ g i k • rowSubst z (nablaBasis R n' κ k) := by
-        simp only [sum_schur_smul_nablaBasis h_fits z]
-    _ = rowSubst z (rowSubst g (nablaBasis R n' κ i)) := by simp [h_expand_g]
-    _ = rowSubst (fun τ : Φ ↦ g τ * z τ) (nablaBasis R n' κ i) := rowSubst_rowSubst ..
+  rw [← rowSubst_rowSubst, ← sum_schur_smul_nablaBasis FitsRanks.refl g i]
+  simpa [schurDetExp_self, detPow_zero, ← sum_schur_smul_nablaBasis h_fits z,
+    Matrix.mul_apply, sum_smul, smul_sum, mul_smul] using sum_comm
 
 /-- Assume `FitsRanks n n' κ`: at every place τ, |n_τ| ≤ |n'_τ| and κ_τ(h) = 0 for
 |n_τ| < h < |n'_τ|. Let S_κ(z) = `schur κ z` be the matrix whose row i holds the coordinates of
@@ -907,17 +896,15 @@ lemma exists_equiv_schur_one_row_eq_symPowMatrix {a : ℕ} {m σ : Type} [Fintyp
   -- first column of variables, and all such monomials occur. In this basis `schur` is the matrix
   -- of a linear substitution on forms of degree `a`.
   have h_size : ∑ h ∈ range (card m), h * k h = a := by grind [sum_eq_ite 1]
-  have h_monomial (i : WeylIndexFamily (fun _ : Unit ↦ m) fun () ↦ k) :
-      ∃ d : Monomials σ a,
-        nablaBasis ℂ (fun _ ↦ m) (fun () ↦ k) i =
-          aeval (R := ℂ) (fun b ↦ X (⟨(), q b⟩, 0)) (monomial d 1) := by
-    -- The exponent of `b` is the number of entries of the filling equal to `q b`.
-    refine ⟨⟨∑ h, ∑ j, ∑ s, Finsupp.single (q.symm ((i ()).val h j s)) 1, ?_⟩, ?_⟩
-    · -- its degree is the number of boxes, `a`
-      simp [sum_comm (γ := σ), ← h_size, sum_range, mul_comm]
+  -- The exponent at `b` counts entries equal to `q b`. The total degree is the number of boxes.
+  let φ (i : WeylIndexFamily (fun _ : Unit ↦ m) fun () ↦ k) : Monomials σ a :=
+    ⟨∑ h, ∑ j, ∑ s, Finsupp.single (q.symm ((i ()).val h j s)) 1, by
+      simp [sum_comm (γ := σ), ← h_size, sum_range, mul_comm]⟩
+  have hφ (i) : nablaBasis ℂ (fun _ ↦ m) (fun () ↦ k) i =
+      aeval (R := ℂ) (fun b ↦ X (⟨(), q b⟩, 0)) (monomial (φ i) 1) := by
     -- Unfolded, the left side is the product of the minors of the columns, the right side the
     -- product of the variables `X (entry, 0)` over all entries.
-    simp [nablaBasis, monomial_sum_one, ← X.eq_1, tableauPoly, minor]
+    simp [φ, nablaBasis, monomial_sum_one, ← X.eq_1, tableauPoly, minor]
     -- Compare column by column, by the height of the column: minors of size `0` and `1` are the
     -- products of their variables, and there are no columns of height at least `2`.
     congr! with ⟨_ | _ | _⟩
@@ -927,7 +914,6 @@ lemma exists_equiv_schur_one_row_eq_symPowMatrix {a : ℕ} {m σ : Type} [Fintyp
       simp
     · -- height at least `2`: `k h = 0` by `h_k_eq`
       grind [cases Fin]
-  choose φ hφ using h_monomial
   -- Distinct basis vectors are distinct monomials.
   have h_inj : Function.Injective φ := fun i j h_eq ↦
     (linearIndependent_nablaBasis (R := ℂ)).injective (by rw [hφ, hφ, h_eq])
@@ -947,18 +933,10 @@ lemma exists_equiv_schur_one_row_eq_symPowMatrix {a : ℕ} {m σ : Type} [Fintyp
         · simp [h_k_eq h h_pos (mem_range.mp h_mem_range), h_ne_one]
     -- so it is a combination `Σ_i c_i b_i` of the basis vectors, which are the monomials `φ i`.
     by_contra h_miss
-    obtain ⟨c, h_sum⟩ : ∃ c : (WeylIndexFamily (fun _ : Unit ↦ m) fun () ↦ k) → ℂ,
-        ∑ i, c i • nablaBasis ℂ (fun _ ↦ m) (fun () ↦ k) i =
-          aeval (R := ℂ) (fun b ↦ X (⟨(), q b⟩, 0)) (monomial d 1) :=
-      ⟨_, sum_coords_nablaBasis h_mem⟩
-    -- Rename the variable `(q b, 0)` back to `b` and take the coefficient of `d`: it is `0` on the
-    -- left, where no `φ i` is `d`, and `1` on the right.
-    have h_coeff :
-        (rename (fun x : ((_ : Unit) × m) × ℕ ↦ q.symm x.1.snd)
-          (∑ i, c i • nablaBasis ℂ (fun _ ↦ m) (fun () ↦ k) i)).coeff d =
-        (rename (fun x : ((_ : Unit) × m) × ℕ ↦ q.symm x.1.snd)
-          (aeval (R := ℂ) (fun b ↦ X (⟨(), q b⟩, 0)) (monomial d 1))).coeff d := by
-      rw [h_sum]
+    -- Rename the first-column variables back to σ and take the coefficient of the missing monomial.
+    have h_coeff := congrArg
+      (fun g ↦ (rename (fun x : ((_ : Unit) × m) × ℕ ↦ q.symm x.1.snd) g).coeff d)
+      (sum_coords_nablaBasis h_mem)
     have h_ne : ∀ i, (φ i : σ →₀ ℕ) ≠ d := fun i h_eq ↦ h_miss ⟨i, Subtype.ext h_eq⟩
     -- With the coefficients computed, `h_coeff` reads `0 = 1`.
     simp [hφ, rename_aeval, aeval_X_left_apply, h_ne] at h_coeff
@@ -975,9 +953,8 @@ lemma exists_equiv_schur_one_row_eq_symPowMatrix {a : ℕ} {m σ : Type} [Fintyp
   have h_expand : ∑ β : Monomials σ a, f.coeff β • monomial β 1 = f :=
     sum_monomials_eq_of_isHomogeneous ((φ i).isHomogeneous_linSubst _)
   -- Substitute the first column of variables into this expansion of `f`.
-  have h_subst : aeval (R := ℂ) (fun b ↦ X (R := ℂ) ((⟨(), q b⟩ : Σ _ : Unit, m), 0))
-        (∑ β : Monomials σ a, f.coeff β • monomial β 1) =
-      aeval (R := ℂ) (fun b ↦ X (R := ℂ) ((⟨(), q b⟩ : Σ _ : Unit, m), 0)) f := by rw [h_expand]
+  have h_subst := congrArg
+    (aeval (R := ℂ) (fun b ↦ X (R := ℂ) ((⟨(), q b⟩ : Σ _ : Unit, m), 0))) h_expand
   -- Reindex the sum over monomials by the bijection `φ`.
   rw [← h_bij.sum_comp (fun β : Monomials σ a ↦ f.coeff β • monomial (β : σ →₀ ℕ) 1)] at h_subst
   simpa [f, hφ, comp_aeval_apply, monomial_eq, reindex_equiv q, symPowMatrix,

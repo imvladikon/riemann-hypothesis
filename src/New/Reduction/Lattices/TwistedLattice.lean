@@ -21,6 +21,8 @@ from the definition of the number `Z(ξ)` on.
 * `New.TwistedLattice.CovolumeLe.norm_map_det_gram_le`, `New.TwistedLattice.CovolumeLe.sumElim`,
   `New.TwistedLattice.norm_det_mul_det_gram_le_one`: conjugates of Gram determinants, adjoining
   vectors, and valuations of Gram determinants.
+* `New.TwistedLattice.heightLe_volume_div`: height of the forward ratio `Z(ξ_ι) / Z(1)` from the
+  covolume of a completed basis and its denominator bounds.
 * `New.TwistedLattice.covolume_add_index_nonneg`: given an allowed twist `ξ_ι` for each `ι`, a
   lower bound for the covolume of a family in terms of its index, the height of `Z(1) / Z(ξ_ι)`,
   and the sizes and denominators of vectors that complete the family to a basis.
@@ -443,6 +445,35 @@ lemma heightLe_pow_mul_det_gram {n n' : ℕ} {y : Fin n → V} {z : Fin n' → V
 
 end
 
+/-- Height of the forward volume ratio for a completed basis. Suppose the completed family
+`y, z` has log squared covolume at most `a` at every complex conjugate. An index bound `δ`
+for `y` and a common clearing scalar for the `n'` added vectors give the finite-place cost
+`2 δ + n' b_denom`. The selected twisted lifts need not be injective. -/
+lemma heightLe_volume_div {n n' : ℕ} {y : Fin n → V} {z : Fin n' → V}
+    (h_inj : Function.Injective (L.lift 1))
+    (h_indep : LinearIndependent ℂ (Sum.elim y z)) (h_card : finrank ℂ V = n + n')
+    {θ : PrimePadicIso → T} (hθ : ∀ ι : PrimePadicIso, L.IsAllowed ι.prime (θ ι))
+    {a δ b_denom : ℝ} (ha : L.CovolumeLe (Sum.elim y z) a) (hδ : L.IndexLe y δ)
+    {γ : PrimePadicIso → ℂ} (hγ_ne : ∀ ι, γ ι ≠ 0)
+    (hz_int : ∀ ι i, γ ι • L.lift (θ ι) (z i) ∈ L.lattice (θ ι) ι)
+    (hz_conj : ∀ ι i, γ ι • L.lift (θ ι) (z i) ∈ L.lattice (θ ι) ι.conj)
+    (hγ : HeightLe b_denom fun ι : PrimePadicIso ↦ ((‖γ ι‖ : ℂ) ^ 2)⁻¹) :
+    HeightLe (a + (2 * δ + n' * b_denom)) fun ι ↦ L.volume (θ ι) / L.volume 1 := by
+  let G (ξ : T) := (gram ℂ (L.lift ξ ∘ Sum.elim y z)).det
+  have hG (ξ : T) : G ξ = L.volume ξ * (gram ℂ (Sum.elim y z)).det :=
+    det_gram_comp (L.lift ξ) _ (by simpa using h_card)
+  have h_one : G 1 ≠ 0 :=
+    det_gram_ne_zero_iff_linearIndependent.2 (h_indep.map_injOn _ h_inj.injOn)
+  have h_inv := HeightLe.inv_const h_one ha.norm_map_det_gram_le
+  have h_fin : HeightLe (2 * δ) fun ι ↦ ((‖γ ι‖ : ℂ) ^ 2) ^ n' * G (θ ι) :=
+    heightLe_pow_mul_det_gram hδ hθ hz_int hz_conj
+  -- The common basis determinant and the powers of the clearing scalar cancel in the ratio.
+  convert h_inv.mul (h_fin.mul (hγ.pow n')) using 1
+  funext ι
+  have h_norm : (‖γ ι‖ : ℂ) ≠ 0 := by simpa using hγ_ne ι
+  simp [hG, field]
+  exact (mul_div_mul_right _ _ (det_gram_ne_zero_iff_linearIndependent.2 h_indep)).symm
+
 /-- **A twist for each prime.** Let `L` be a twisted lattice on `V` with maps `Θ_ξ = L.lift ξ`.
 Let `y_1, …, y_n, z_1, …, z_n'` be a basis of `V`, and let `ξ_ι = θ ι` be allowed at the prime of `ι`.
 Only the untwisted map must be injective, and only the selected volumes `Z(ξ_ι)` must be nonzero.
@@ -468,31 +499,14 @@ theorem covolume_add_index_nonneg {n n' : ℕ} {y : Fin n → V} {z : Fin n' →
     (hγ : HeightLe b_denom fun ι : PrimePadicIso ↦ ((‖γ ι‖ : ℂ) ^ 2)⁻¹)
     (hZ : HeightLe b_volume fun ι : PrimePadicIso ↦ L.volume 1 / L.volume (θ ι)) :
     0 ≤ c + 2 * δ + n' * (b_short + b_denom) + b_volume := by
-  -- Write `Gram(1)` as a product of three factors, add their heights, and compare with the
-  -- conjugates of `Gram(1)` by the product formula.
-  let Gram (ξ : T) : ℂ := (gram ℂ (L.lift ξ ∘ Sum.elim y z)).det
-  -- The common basis determinant cancels in the ratio of the two Gram determinants.
-  have h_basis_factorization (ξ : T) : Gram ξ = L.volume ξ * (gram ℂ (Sum.elim y z)).det :=
-    det_gram_comp (L.lift ξ) _ (by simpa using h_card)
-  have h_twist_factorization (ι : PrimePadicIso) :
-      Gram 1 = ((‖γ ι‖ : ℂ) ^ 2) ^ n' * Gram (θ ι) *
-      ((‖γ ι‖ : ℂ) ^ 2)⁻¹ ^ n' * (L.volume 1 / L.volume (θ ι)) := by
-    have hγ_norm : (‖γ ι‖ : ℂ) ≠ 0 := by simpa using hγ_ne ι
-    have hZ_ne : L.volume (θ ι) ≠ 0 := h_volume_ne ι
-    simp [h_basis_factorization, field]
-  -- The local index loss is counted twice, once at each conjugate place.
-  have h_local_height : HeightLe (2 * δ) fun ι ↦ ((‖γ ι‖ : ℂ) ^ 2) ^ n' * Gram (θ ι) :=
-    heightLe_pow_mul_det_gram hδ hθ hz_int hz_conj
-  have h_total_height : HeightLe (2 * δ + n' * b_denom + b_volume) fun _ ↦ Gram 1 := by
-    simpa only [← h_twist_factorization, Pi.mul_def, Pi.pow_def] using
-      (h_local_height.mul (hγ.pow n')).mul hZ
-  have h_gram_ne : Gram 1 ≠ 0 :=
-    det_gram_ne_zero_iff_linearIndependent.2 (h_indep.map_injOn _ h_inj.injOn)
-  -- At infinity, adjoining the short vectors costs `n' * b_short` by Fischer and Hadamard.
-  have h_archimedean (σ : ℂ ≃+* ℂ) : ‖σ (Gram 1)‖ ≤ exp (c + n' * b_short) :=
-    (hc.sumElim (covolumeLe_of_normSqAt_le hz_short)).norm_map_det_gram_le σ
-  -- The product formula compares the two bounds for the same nonzero determinant.
-  linarith [h_total_height.neg_le_of_norm_map_le h_gram_ne h_archimedean]
+  have h_forward := heightLe_volume_div h_inj h_indep h_card hθ
+    (hc.sumElim (covolumeLe_of_normSqAt_le hz_short)) hδ hγ_ne hz_int hz_conj hγ
+  -- The forward and inverse ratios use the same twist at each place, so their product is one.
+  have h_one : HeightLe ((c + n' * b_short) + (2 * δ + n' * b_denom) + b_volume) 1 := by
+    convert h_forward.mul hZ using 1
+    funext ι
+    simp [field, volume_ne_zero h_inj, h_volume_ne ι]
+  linarith [h_one.nonneg_of_one]
 
 end Twist
 

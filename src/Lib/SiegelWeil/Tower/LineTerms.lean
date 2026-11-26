@@ -320,7 +320,8 @@ variable (W V) in
 /-- The block-diagonal change of basis, built from `star W.x` and `adaptedHomBasis Unit V`, in which
 the frame of `lineTermSplitting` is adapted (`isAdapted_lineTermSplitting`). -/
 noncomputable def lineTermBasis : GL (LineIndex n r) (𝔸 E) :=
-  blockGL (blockGL (kroneckerGL 1 (transposeGL (blockGL (star W.x, 1))), adaptedHomBasis Unit V), 1)
+  blockGL (blockGL (Matrix.GeneralLinearGroup.kronecker 1 (transposeGL (blockGL (star W.x, 1))),
+    adaptedHomBasis Unit V), 1)
 
 /-- Each line term is the mixed term `slice` (translation by `l`, then the zero term) of
 `lineTermSplitting`, the composite of `planeSplitting` and the model `β`, at the vector with last
@@ -362,7 +363,8 @@ lemma frameAt_lineTermSplitting (β : Bool) :
     Bool.false_eq_true, ↓reduceIte, fromCols_mul_fromRows, Matrix.mul_one, Matrix.mul_zero,
     add_zero, zero_add, fromCols_map, mul_fromCols, hom_point_inv_mul_kronecker, fromRows_map,
     Matrix.map_mul, map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis,
-    kroneckerGL, Units.val_one, transposeGL, star, val_blockGL_apply, ← map_inv, Prod.inv_mk,
+    Matrix.GeneralLinearGroup.kronecker, Units.val_one, transposeGL, star, val_blockGL_apply,
+    ← map_inv, Prod.inv_mk,
     Units.inv_mk, inv_one, adaptedHomBasis, inv_inv, fromBlocks_conjTranspose,
     conjTranspose_kronecker, conjTranspose_one, conjTranspose_transpose_eq_transpose_conjTranspose,
     conjTranspose_conjTranspose, conjTranspose_zero, fromCols_mul_fromBlocks, ← mul_kronecker_mul,
@@ -376,7 +378,8 @@ lemma frameAt_lineTermSplitting (β : Bool) :
     mul_inv_cancel_left_of_invertible, planeModel, removePlanes, Splitting.symm, cond_eq_ite,
     ↓reduceIte, fromCols_mul_fromRows, Matrix.mul_zero, Matrix.mul_one, zero_add, add_zero,
     fromCols_map, mul_fromCols, hom_point_inv_mul_kronecker, fromRows_map, Matrix.map_mul,
-    map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis, kroneckerGL,
+    map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis,
+    Matrix.GeneralLinearGroup.kronecker,
     Units.val_one, transposeGL, star, val_blockGL_apply, ← map_inv, Prod.inv_mk, Units.inv_mk,
     inv_one, adaptedHomBasis, inv_inv, fromBlocks_conjTranspose, conjTranspose_kronecker,
     conjTranspose_one, conjTranspose_transpose_eq_transpose_conjTranspose,

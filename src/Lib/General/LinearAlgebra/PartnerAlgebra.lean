@@ -210,17 +210,14 @@ lemma exists_firstCols_eq_mul (O : Subring R) (g : GL b R) (hg : g ∈ intGL b O
 omit [Fintype b] [DecidableEq b] in
 /-- The set of the matrices `invLastRows e k` (rows `a` of `k⁻¹`) with `k ∈ GL n O` is stable under
 left multiplication by `GL a O`. -/
-lemma exists_mul_eq_invLastRows_iff [Finite b] {f : GL a R} (hf : f ∈ intGL a O)
-    {x : Matrix a n R} :
-    (∃ k ∈ intGL n O, f.val * x = invLastRows e k) ↔ ∃ k ∈ intGL n O, x = invLastRows e k := by
+lemma exists_eq_invLastRows_of_mul_eq [Finite b] {f : GL a R} (hf : f ∈ intGL a O)
+    {x : Matrix a n R} (h : ∃ k ∈ intGL n O, f.val * x = invLastRows e k) :
+    ∃ k ∈ intGL n O, x = invLastRows e k := by
   classical
   have := Fintype.ofFinite b
-  refine ⟨fun ⟨k, hk, hx⟩ ↦ ?_, ?_⟩
-  · obtain ⟨j, hj, -, hj_rows, -⟩ := exists_firstCols_eq_mul e k O 1 (one_mem _) _ (inv_mem hf) hk
-    exact ⟨j, hj, by simp [hj_rows, ← hx]⟩
-  · rintro ⟨k, hk, rfl⟩
-    obtain ⟨j, hj, -, hj_rows, -⟩ := exists_firstCols_eq_mul e k O 1 (one_mem _) f hf hk
-    exact ⟨j, hj, hj_rows.symm⟩
+  obtain ⟨k, hk, hx⟩ := h
+  obtain ⟨j, hj, -, hj_rows, -⟩ := exists_firstCols_eq_mul e k O 1 (one_mem _) _ (inv_mem hf) hk
+  exact ⟨j, hj, by simp [hj_rows, ← hx]⟩
 
 omit [Fintype a] [DecidableEq a] in
 /-- The set of the matrices `firstCols e k` (columns `b` of `k`) with `k ∈ GL n O` is stable under
@@ -365,7 +362,7 @@ lemma left_mul [Finite b] (h : AreMatched O e χ Φ Ψ) {g : GL a R} {x : Matrix
       _ = Φ (invLastRows e k) := (h.apply_eq k hk).symm
   · -- `g * x` is not of the form `invLastRows e k` either, so both sides vanish
     have h_left : Φ (g.val * x) = 0 := by_contra fun h_ne ↦
-      hx ((exists_mul_eq_invLastRows_iff e hg).1 (h.supp_left (g.val * x) h_ne))
+      hx (exists_eq_invLastRows_of_mul_eq e hg (h.supp_left (g.val * x) h_ne))
     rw [h_left, by_contra fun h_ne ↦ hx (h.supp_left x h_ne), mul_zero]
 
 omit [Fintype a] [DecidableEq a] in

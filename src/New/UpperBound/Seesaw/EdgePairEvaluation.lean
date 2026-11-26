@@ -996,8 +996,12 @@ lemma finEval_arrowProduct_equivariant (D : DoubleLiftData X'' q Y Y' Y'') (a b 
   have h_point : finVec (stackedStringMapFin Y Y' Y'') = V'.homAtPoint (flipSum V V'')
       (fromRows (V.formAdjoint V' (((0, 1) : 𝔸 E) • Y.stringMap Y'))
         (((0, 1) : 𝔸 E) • Y'.stringMap Y'')) := by
-    ext <;> simp [finVec, stackedStringMapFin, homAtPoint, matrixToVec, stackedStringMap,
-      formAdjoint, Prod.fst_sum, Prod.snd_sum, Matrix.mul_apply]
+    ext <;> simp only [finVec, stackedStringMapFin, homAtPoint, matrixToVec, stackedStringMap,
+      formAdjoint, AddMonoidHom.mk'_apply, Units.mul_inv_cancel_left, Matrix.mul_apply, sum_sum_type,
+      fromRows_apply_inl, fromRows_apply_inr, conjTranspose_smul, Matrix.smul_apply, smul_eq_mul,
+      Prod.fst_sum, Prod.snd_sum, Prod.fst_mul, Prod.snd_mul, Prod.fst_add, Prod.snd_add,
+      Prod.fst_star, Prod.snd_star, Pi.zero_apply, star_zero, star_one, zero_mul, mul_zero, one_mul,
+      add_zero, Finset.sum_const_zero]
   rw [← leftInverse_arrowTensor (TensorProduct.map _ _ _), arrowTensor_map_liftWeilFin,
     arrowTensor_finEval, h_equivariant]
   -- Split the translation over the two factors (`homHeisenbergOp_arrowProduct`,

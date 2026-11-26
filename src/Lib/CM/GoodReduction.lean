@@ -685,22 +685,14 @@ lemma IsInClass.exists_eq_scaledIdeal_mul {𝒞 : ClassGroup (𝓞 (QuadField d)
     {𝔟 : (FractionalIdeal (𝓞 (QuadField d))⁰ (QuadField d))ˣ} (hC : C.IsInClass 𝒞)
     (hD : D.IsInClass (ClassGroup.mk (QuadField d) 𝔟 * 𝒞)) :
     ∃ c : ℂˣ, D.latticeModule = scaledIdeal d (c, 𝔟) * C.latticeModule := by
-  -- `u 𝔞` is the lattice of `C` and `v 𝔞'` that of `D`.
   obtain ⟨u, 𝔞, rfl, hC⟩ := hC
   obtain ⟨v, 𝔞', h𝔞', hD⟩ := hD
-  have h_class : ClassGroup.mk (QuadField d) (𝔟 * 𝔞 / 𝔞') = 1 := by
-    rw [map_div, map_mul, h𝔞', div_self']
   -- The ideal `𝔟 𝔞 / 𝔞'` is principal, so a multiple of it fixes the lattice of `D`.
-  obtain ⟨w, hw⟩ := exists_eq_scaledIdeal_mul_of_mk_eq_one h_class D.latticeModule
+  obtain ⟨w, hw⟩ := exists_eq_scaledIdeal_mul_of_mk_eq_one
+    (by simp [h𝔞'] : ClassGroup.mk (QuadField d) (𝔟 * 𝔞 / 𝔞') = 1) D.latticeModule
   refine ⟨w * v / u, ?_⟩
-  calc D.latticeModule
-      = scaledIdeal d (w, 𝔟 * 𝔞 / 𝔞') * scaledIdeal d (v, 𝔞') := by
-        rw [← hD]
-        exact hw
-    _ = scaledIdeal d (w * v, 𝔟 * 𝔞) := by
-        rw [← map_mul, Prod.mk_mul_mk, div_mul_cancel]
-    _ = scaledIdeal d (w * v / u, 𝔟) * C.latticeModule := by
-        rw [hC, ← map_mul, Prod.mk_mul_mk, div_mul_cancel]
+  rw [hw, hD, hC, ← map_mul, ← map_mul]
+  simp
 
 /-- For `b = ω` or `ω̄`, with `ω = (1 + √-d) / 2`, there is an ideal class `𝔤` such that, for any CM
 lattices `C` in a class `𝒞` and `D` in the class `𝔤 𝒞`, we have `s_C(b t) s_D((1 - b) t) = 2¹²` and
@@ -766,22 +758,11 @@ lemma prod_scaledDisc_t (hD : ∀ 𝒞 : ClassGroup (𝓞 (QuadField d)), (D �
       (-1) ^ Fintype.card (ClassGroup (𝓞 (QuadField d))) := by
   -- Multiply `s_D(ω t) s_D(t) = -s_C(ω t)` over all classes; the numbers at the `ω t` cancel.
   obtain ⟨𝔤, h𝔤⟩ := exists_class_scaledDisc_mul (d := d) (b := quadGen d) (.inl rfl)
-  set s : ClassGroup (𝓞 (QuadField d)) → ℂ := fun 𝒞 ↦ (D 𝒞).scaledDisc (quadGen d * (D 𝒞).t)
-  set s₀ : ClassGroup (𝓞 (QuadField d)) → ℂ := fun 𝒞 ↦ (D 𝒞).scaledDisc (D 𝒞).t
-  have h_dual (𝒞 : ClassGroup (𝓞 (QuadField d))) :
-      s 𝒞 * (D (𝔤 * 𝒞)).scaledDisc ((1 - quadGen d) * (D (𝔤 * 𝒞)).t) = 2 ^ 12 :=
-    (h𝔤 (hD 𝒞) (hD _)).1
-  have h_step (𝒞 : ClassGroup (𝓞 (QuadField d))) : s (𝔤 * 𝒞) * s₀ (𝔤 * 𝒞) = -s 𝒞 :=
-    (h𝔤 (hD 𝒞) (hD _)).2
-  have h_ne : ∏ 𝒞, s 𝒞 ≠ 0 := prod_ne_zero_iff.2 fun 𝒞 _ ↦
-    left_ne_zero_of_mul ((h_dual 𝒞).trans_ne (by norm_num))
-  apply mul_left_cancel₀ h_ne
-  calc (∏ 𝒞, s 𝒞) * ∏ 𝒞, s₀ 𝒞
-      = ∏ 𝒞, s (𝔤 * 𝒞) * s₀ (𝔤 * 𝒞) := by
-        rw [← prod_mul_distrib]
-        exact (Equiv.prod_comp (Equiv.mulLeft 𝔤) fun 𝒞 ↦ s 𝒞 * s₀ 𝒞).symm
-    _ = (∏ 𝒞, s 𝒞) * (-1) ^ Fintype.card (ClassGroup (𝓞 (QuadField d))) := by
-        simp [h_step, prod_neg, mul_comm]
+  apply mul_left_cancel₀ (a := ∏ 𝒞, (D 𝒞).scaledDisc (quadGen d * (D 𝒞).t))
+  · exact prod_ne_zero_iff.2 fun 𝒞 _ ↦
+      left_ne_zero_of_mul ((h𝔤 (hD 𝒞) (hD _)).1.trans_ne (by norm_num))
+  rw [← prod_mul_distrib, ← Equiv.prod_comp (Equiv.mulLeft 𝔤)]
+  simp [fun 𝒞 ↦ (h𝔤 (hD 𝒞) (hD _)).2, prod_neg, mul_comm]
 
 end Family
 

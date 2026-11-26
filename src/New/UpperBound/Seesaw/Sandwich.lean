@@ -119,7 +119,7 @@ lemma LatticeSplitsAt.conj_scalarFin_mem {Y : Grading V N X s} {w : FinPlace E} 
     {z : unitary (𝔸f E)} (hz_int : z.val ∈ Ô E)
     (hz_off : ∀ u : FinPlace E, u ≠ w → star u ≠ w → z.val u = 1) :
     x⁻¹ * (Y.inclXFin (scalarFin X z) * x) ∈ maxCompactAt ι w := by
-  refine ⟨V.conj_mem_stdLevel_iff.2 fun y hy ↦ ?_, mem_supportedOn.2 fun u hu hu' ↦ ?_⟩
+  refine ⟨V.conj_mem_stdLevel_of_mapsTo_lattice fun y hy ↦ ?_, mem_supportedOn.2 fun u hu hu' ↦ ?_⟩
   · -- The conjugate is integral, as the scaling by `z` maps the lattice of `x` into itself.
     show V.ratCoordMatrixFin (Y.inclXFin (scalarFin X z)) *ᵥ y ∈ V.lattice x
     have h_supp : z.val - 1 = (z.val - 1) * (idem {w} + idem {star w}) := by

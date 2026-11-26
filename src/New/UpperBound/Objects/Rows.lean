@@ -542,42 +542,34 @@ Harish-Chandra parameter λ + ρ of the weight λ with column numbers `D.columns
 exponent `D.lastEntry D.m`. -/
 lemma isHCParam_paramY : IsHCParam D.columnsY (D.lastEntry D.m) (D.paramY D.m) := by
   intro τ
-  -- The decreasing list `sortedParamY` is twice the Harish-Chandra parameter of the weight.
-  have h_sorted (p : ℕ) (hp : p < D.n D.m - 1) :
-      D.sortedParamY τ p = hcParameter D.columnsY (D.lastEntry D.m) (D.n D.m - 1) τ p := by
-    have h_weight : 2 * D.weightY τ p = D.sortedParamY τ p - twiceBlockEntry (D.n D.m - 1) p :=
-      D.two_mul_weightY τ
-    rw [D.weightY_eq τ hp, twiceBlockEntry] at h_weight
-    rw [hcParameter, diagramWeight_apply]
-    linarith
-  -- It remains to find every entry of the parameter in the decreasing list.
-  suffices h_occurs : ∀ i : D.Y D.m, ∃ p < D.n D.m - 1, D.paramY D.m τ i = D.sortedParamY τ p by
-    refine ⟨(D.hasGap_gridParam τ false 0 0 D.m).injective, fun i ↦ ?_⟩
-    obtain ⟨p, hp, h_eq⟩ := h_occurs i
+  refine ⟨(D.hasGap_gridParam τ false 0 0 D.m).injective, ?_⟩
+  -- It suffices to find every entry of the parameter in the decreasing list `sortedParamY`.
+  suffices ∀ i : D.Y D.m, ∃ p < D.n D.m - 1, D.paramY D.m τ i = D.sortedParamY τ p by
+    intro i
+    obtain ⟨p, hp, h_eq⟩ := this i
+    have h_w : 2 * D.weightY τ p = _ := D.two_mul_weightY τ
+    rw [D.weightY_eq τ hp, twiceBlockEntry] at h_w
     rw [card_Y_m]
-    exact ⟨p, hp, h_eq.trans (h_sorted p hp)⟩
+    refine ⟨p, hp, ?_⟩
+    rw [h_eq, hcParameter, diagramWeight_apply]
+    linarith
   have h_rank (l : ℕ) (hl : l < D.m) : D.n l + (D.t + 1) ≤ D.n D.m :=
     (D.n_succ l).ge.trans (D.n_mono hl)
-  have h_even : D.m % 2 = 0 := even_iff.1 D.m_even -- nothing is lowered
+  have h_even : D.m % 2 = 0 := even_iff.1 D.m_even
   refine (D.gridBlockEquiv (z := false) (i := 0)).forall_congr_left.2 ?_
   rintro ((⟨y, hy⟩ | ⟨⟨-, ⟨⟩⟩, -⟩) | ⟨l, b⟩)
   · -- The entry `y` of the target parameter; the summand indexed by `Fin 0` is empty.
-    suffices h_row : ∃ p < D.n D.m - 1, 2 * D.targetParameter τ y = D.sortedParamY τ p by
-      simpa [paramY, gridParam, h_even] using h_row
+    simp [paramY, gridParam, h_even]
     by_cases h_head : y + 1 < D.k
-    · -- An entry of `[k - 1]` keeps its position.
-      exact ⟨y, by grind [D.k_le_n D.m], (ite_eq_left h_head).symm⟩
-    · -- The entry `halfGap - w_{i + 1}` of the target parameter stands just above block `i + 1`.
-      obtain ⟨i, rfl⟩ : ∃ i : ℕ, y = D.k - 1 + i := Nat.exists_eq_add_of_le (by omega)
+    · exact ⟨y, by grind [D.k_le_n D.m], (ite_eq_left h_head).symm⟩
+    · obtain ⟨i, rfl⟩ : ∃ i : ℕ, y = D.k - 1 + i := Nat.exists_eq_add_of_le (by omega)
       have hi : i < D.m := by grind [D.r_add_one]
       exact ⟨D.n i - 1, by grind [D.n_pos i, h_rank i hi], (D.sortedParamY_n_sub_one i τ).symm⟩
   · -- Entry `b` of block `l + 1`.
     refine ⟨D.n l + b, by grind [h_rank l l.isLt], ?_⟩
-    have h_entry : D.paramY D.m τ ((D.gridBlockEquiv (z := false) (i := 0) (j := D.m)).symm
-        (.inr ⟨l, b⟩)) = twiceBlockEntry D.t b - 2 * D.liftWeight (l + 1) τ := by
-      simp [paramY, gridParam, h_even, twiceBlockEntry]
-      ring
-    rw [h_entry, D.sortedParamY_block l τ b.isLt]
+    rw [D.sortedParamY_block l τ b.isLt]
+    simp [paramY, gridParam, h_even, twiceBlockEntry]
+    ring
 
 lemma card_rowIndex_sum_fin : Fintype.card (D.RowIndex ⊕ Fin D.t) = D.r + D.t := by
   rw [Fintype.card_sum, card_rowIndex, Fintype.card_fin]

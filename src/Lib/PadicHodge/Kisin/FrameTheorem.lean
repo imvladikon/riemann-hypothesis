@@ -819,19 +819,12 @@ and only if two conditions hold. First, some power of `tau` = [ε^{1/p}] − 1 m
 in `crysForms`, `E ^ n • μ x` is the image in `BdR` of an element of `BPlus`; here `crysForms` are
 the invariant forms whose restriction to 1 ⊗ L comes from a Z_p-linear map L → `Bmax`, and `E` is
 `k.E`. -/
-theorem mem_kisinAinf_iff_crysForms {x : L.Ambient} :
-    x ∈ L.kisinAinf ↔ x ∈ saturateBy (Submonoid.powers tau) L.ainfLattice ∧
-      ∃ n : ℕ, ∀ μ ∈ L.crysForms, ∃ s : BPlus, k.E.val ^ n • μ x = algebraMap BPlus BdR s := by
-  -- Forwards: expand `x` in a family `v` that spans `kisinAinf` and bound the values on each `v i`.
-  -- Backwards: some `tau ^ N • x` lies in `kisinAinf`, and the crystalline forms show that it is
-  -- divisible by `tau ^ N` there.
-  obtain ⟨v, h_span_S, h_span_A, -⟩ := exists_span_eq_kisinModule_linearIndependent (L := L)
-  refine ⟨fun hx ↦ ⟨mem_saturateBy_of_mem_kisinAinf hx, L.jumpBound, fun μ hμ ↦ ?_⟩,
-    fun ⟨hx_sat, n, h_val⟩ ↦ ?_⟩
-  · obtain ⟨u, rfl⟩ := (mem_span_range_iff_exists_fun Ainf).mp (h_span_A.ge hx)
-    choose q _ hq using fun i ↦
-      exists_mem_bicommutant_pow_smul_eq_of_mem_kisinModule hμ (h_span_S.le (subset_span ⟨i, rfl⟩))
-    exact ⟨∑ i, u i • q i, by simp [Finset.smul_sum, smul_comm _ (u _), hq, algebraMap.smul]⟩
+theorem mem_kisinAinf_of_crysForms {x : L.Ambient}
+    (hx_sat : x ∈ saturateBy (Submonoid.powers tau) L.ainfLattice) {n : ℕ}
+    (h_val : ∀ μ ∈ L.crysForms, ∃ s : BPlus, k.E.val ^ n • μ x = algebraMap BPlus BdR s) :
+    x ∈ L.kisinAinf := by
+  -- Some `tau ^ N • x` lies in `kisinAinf`, and the crystalline forms show that it is divisible by
+  -- `tau ^ N` there.
   rw [← saturateBy_tau_span_kisinModule, ← kisinAinf_eq_span_kisinModule] at hx_sat
   obtain ⟨_, ⟨N, rfl⟩, hx_tau⟩ := hx_sat
   obtain ⟨w, hw, hw_eq⟩ := (mem_smul_pointwise_iff_exists _ (tau ^ N) L.kisinAinf).mp <|
@@ -906,7 +899,7 @@ theorem mem_kisinModule_iff_crysForms {x : L.Ambient} :
     L.jumpBound, fun μ hμ ↦ exists_mem_bicommutant_pow_smul_eq_of_mem_kisinModule hμ hx⟩, ?_⟩
   rintro ⟨hx_sat, n, h_val⟩
   obtain ⟨u, rfl⟩ := (mem_span_range_iff_exists_fun Ainf).mp <| h_span_A.ge <|
-    mem_kisinAinf_iff_crysForms.mpr ⟨hx_sat, n, fun μ hμ ↦ (h_val μ hμ).imp fun _ h ↦ h.2⟩
+    mem_kisinAinf_of_crysForms hx_sat fun μ hμ ↦ (h_val μ hμ).imp fun _ h ↦ h.2
   have hv_mem i : v i ∈ L.kisinModule := h_span_S.le (subset_span ⟨i, rfl⟩)
   have h_diff : ∑ i, (u i - algebraMap k.S Ainf (k.coord₀ (u i))) • v i ∈
       (0 : Ainf) • L.kisinAinf := by

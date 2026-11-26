@@ -108,11 +108,10 @@ lemma isHaarMeasure_map_besselProdEquiv :
     prod.instIsHaarMeasure haar haar
   Y.besselProdEquiv.isHaarMeasure_map _
 
-/-- The groups `R(F_∞)` and `R(𝔸_fin)` of real and finite points of the Bessel subgroup `R` are
-unimodular: their left Haar measures are right invariant. -/
-theorem isMulRightInvariant_haar_besselReal_besselFin [Fintype X] :
-    (haar : Measure Y.besselReal).IsMulRightInvariant ∧
-    (haar : Measure Y.besselFin).IsMulRightInvariant := by
+/-- The group `R(F_∞)` of real points of the Bessel subgroup `R` is unimodular: its left Haar measure
+is right invariant. -/
+theorem isMulRightInvariant_haar_besselReal [Fintype X] :
+    (haar : Measure Y.besselReal).IsMulRightInvariant := by
   -- The group `R(𝔸)` is unimodular and is the product of the two groups.
   let ν : Measure Y.besselGroup := (haar.prod haar).map Y.besselProdEquiv
   have : ν.IsHaarMeasure := Y.isHaarMeasure_map_besselProdEquiv
@@ -125,7 +124,7 @@ theorem isMulRightInvariant_haar_besselReal_besselFin [Fintype X] :
   have h_prod : (haar.prod haar : Measure (Y.besselReal × Y.besselFin)).IsMulRightInvariant := by
     rw [← h_emb.comap_map (haar.prod haar)]
     exact IsMulRightInvariant.comap ν (f := Y.besselProdEquiv.toMulEquiv.toMonoidHom) h_emb
-  exact isMulRightInvariant_of_prod h_prod
+  exact (isMulRightInvariant_of_prod h_prod).1
 
 /-- Let `K` be a level and `J = R(𝔸_fin) ∩ K`. There is a constant `c ≠ 0`, the volume of `J`
 for compatible Haar measures, with this property. Let `t₀` be a point of `R(𝔸_fin)`, and let `f`

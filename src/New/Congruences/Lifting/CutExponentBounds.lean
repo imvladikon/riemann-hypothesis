@@ -568,29 +568,6 @@ lemma SidePairing.exists_stop_of_hasSignBefore {ε : k.Letter → ℤˣ} {β : k
       neg_le_jump_of_fitsWindows (hU _) ((h_plain a ha).imp_left neg_eq_iff_eq_neg.2)
     exact .inr (h.exists_mem_stopPoints_isSafeMoveFst hl h_kill h_down h_up hx' hx hx₀)
 
-/-- Upper bounds on the jumps of three sides: two paired sides `S`, `S'` and the Tate dual side of
-the pairing, with lattice `Hom(Y ⊗ Y', O(1))`, whose jumps are `0` and the `-(u + u') - 1` for jumps
-`u` of `S` and `u'` of `S'`. If at the letter `i` the jumps of the paired sides lie in the low
-window `[-η, η]` and in opposite far windows `∓ε i • [β i, β i + V]`, and `V + 4 η ≤ W`, then the
-jumps of all three sides at `i` are at most `β i + W`. -/
-lemma SidePairing.jumps_le_of_fitsWindows {ε : k.Letter → ℤˣ} {β : k.Letter → ℕ} {η V W : ℕ}
-    (h : S.SidePairing S') (hW : V + 4 * η ≤ W)
-    {i : k.Letter} (h_left : FitsWindows η (-ε i) (β i) V (S.jumpSet i))
-    (h_right : FitsWindows η (ε i) (β i) V (S'.jumpSet i)) :
-    (∀ w ∈ h.tateDualSide.jumpSet i, w ≤ β i + W) ∧
-      (∀ u ∈ S.jumpSet i, u ≤ β i + W) ∧ ∀ u' ∈ S'.jumpSet i, u' ≤ β i + W := by
-  refine ⟨fun w hw ↦ ?_, fun u ↦ h_left.le_add (by omega), fun u' ↦ h_right.le_add (by omega)⟩
-  -- The jumps of the Tate dual side are `0` and the `-(u + u') - 1`.
-  obtain rfl | ⟨u, hu, u', hu', rfl⟩ :
-      w = 0 ∨ ∃ u ∈ S.jumpSet i, ∃ u' ∈ S'.jumpSet i, -(u + u') - 1 = w := by
-    simpa only [mem_insert, mem_image, mem_image₂, exists_exists_and_exists_and_eq_and] using hw
-  · positivity
-  -- As the far windows have opposite signs, `u` and `u'` are not both below `-η`, and neither is
-  -- below `-(β i + V + η)`.
-  have h_sign : ((-ε i : ℤˣ) : ℤ) = -(ε i : ℤ) := Units.val_neg (ε i)
-  rcases h_left u hu, h_right u' hu' with ⟨h_low | h_pos | h_neg, h_low' | h_pos' | h_neg'⟩
-  all_goals omega
-
 /-- The scheme of cuts, a chosen set of letters. Let paired sides have their jumps in the low window
 `[-η, η]` and in opposite far windows `∓ε i • [β i, β i + V]`. Suppose that `η ≥ 1`, `V + 4 η ≤ W`,
 that the shifts have `s i + W ≤ p n`, and that the size conditions `CutSizes` hold: `2 b` bounds all
@@ -626,9 +603,11 @@ lemma SidePairing.isScaledCupCoboundary_of_cut_windows {cut : k.Letter → Prop}
   have hl_least (i : k.Letter) : IsLeast {a : ℕ | 0 < a ∧ cut (i.stepBack a)} (l i) :=
     ⟨⟨(hl_nearest i).pos, (hl_nearest i).cut_stepBack⟩, fun a ⟨ha_pos, ha_cut⟩ ↦
       le_of_not_gt fun ha_lt ↦ (hl_nearest i).not_cut a ⟨ha_pos, ha_lt⟩ ha_cut⟩
-  have h_kill (i : k.Letter) (hi : cut i) : h.tateDualSide.KillsCokernel i κ (s i) :=
-    killsCokernel_of_isKillingCut h_sizes
-      (fun j ↦ (h.jumps_le_of_fitsWindows hW (hU j) (hU' j)).left) (h_killing i hi)
+  have h_kill (i : k.Letter) (hi : cut i) : h.tateDualSide.KillsCokernel i κ (s i) := by
+    refine killsCokernel_of_isKillingCut h_sizes (fun j w hw ↦ ?_) (h_killing i hi)
+    have h_near := tateDualSide_jump_near h (hU j) (hU' j) hw
+    simp only [abs_eq_max_neg] at h_near
+    omega
   -- The standard points of a side `R`; they also have the depth that a plain cut asks.
   have h_points {R : PairingSide O} {σ : k.Letter → ℤˣ}
       (hR : ∀ i : k.Letter, FitsWindows η (σ i) (β i) V (R.jumpSet i)) (d : R.paramLattice) :

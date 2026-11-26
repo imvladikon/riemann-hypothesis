@@ -398,7 +398,7 @@ a family `y` of points of `Y` indexed by `G` with a map `v : B → A` of `k`-alg
 `v ∘ b σ` is a coordinate vector of `y σ` with a unit entry for each `σ`, and the values
 `v (f (X j))` generate the unit ideal. -/
 private def New.Variety.CutsOutLocus.galoisCover {k ι G : Type} [Field k] {R : CommRingCat}
-    [Algebra R.carrier k] [Finite ι] {Y : Over (AlgebraicGeometry.Spec R)}
+    [Algebra R.carrier k] {Y : Over (AlgebraicGeometry.Spec R)}
     (L : LineBundle Y.left ι) [Fact (L.IsProjEmbedding Y.hom)] {B : CommAlg k} {d : ℕ}
     (f : MvPolynomial (Fin (d + 1)) k →ₐ[k] B) (b : G → ι → B) : CommAlg k ⥤ Type 1 :=
   .mk

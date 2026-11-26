@@ -545,12 +545,14 @@ variable {a b n : Type} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] 
   [DecidableEq n] {F : Type} [SemilocalField F] {χ : MulChar F ℂ} {e : b ⊕ a ≃ n}
   {Φ : Matrix a n F → ℂ} {Ψ : Matrix n b F → ℂ}
 
+omit [DecidableEq b] in
 /-- If `Φ` and `Ψ` are matched functions over the ring of integers `O` of `F` (`AreMatched`), then
 `y ↦ Φ yᵀ` vanishes off the primitive matrices (integral, with an integral left inverse). -/
 lemma isPrimitiveMatrix_of_apply_transpose_ne_zero (hΦΨ : AreMatched O e χ Φ Ψ) (y : Matrix n a F)
     (hy : Φ yᵀ ≠ 0) : IsPrimitiveMatrix O y :=
   (exists_eq_invLastRows_iff_isPrimitiveMatrix e yᵀ).1 (hΦΨ.supp_left yᵀ hy)
 
+omit [DecidableEq b] in
 /-- Let `F` be a semilocal field with ring of integers `O` (`SemilocalField.O`), and `χ` a tame
 character of `F`. Let `e : b ⊕ a ≃ n` mark `b` as the first and `a` as the last indices. Let `Φ` and
 `Ψ` be matched functions over `O` (`AreMatched`): they vanish off the rows `a` of `k⁻¹`

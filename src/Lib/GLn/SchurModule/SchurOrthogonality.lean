@@ -245,14 +245,8 @@ lemma weightMinors_add_sum_ite {N : ℕ} (p : n → Fin N) {x : Matrix n n ℂ} 
           c + ∑ h' ∈ t, if p i < h' then (k h' : ℤ) else 0 := by
       gcongr
       lia
-    calc weightMinors (fun i : n ↦ c + ∑ h' ∈ cons h t ht, if p i < h' then (k h' : ℤ) else 0) x
-        = weightMinors (fun i : n ↦ c + ∑ h' ∈ t, if p i < h' then (k h' : ℤ) else 0) x *
-            principalMinor x (p · < h) ^ k h := by
-          simp [add_comm (ite ..), ← add_assoc, weightMinors_add_ite hx (k h).cast_nonneg h_anti,
-            ht]
-      _ = x.det ^ c * ∏ h' ∈ cons h t ht, principalMinor x (p · < h') ^ k h' := by
-          rw [ih, Finset.prod_cons]
-          ring
+    simp [add_comm (ite ..), ← add_assoc, weightMinors_add_ite hx (k h).cast_nonneg h_anti, ht, ih]
+    ring
 
 /-- Let v be the evaluation vector of weight κ at the array `permArray` with entry 1 in row i of
 block τ exactly in column p_τ(i), for bijections p_τ : n_τ ≃ Fin (rankAt n τ), so rankAt n

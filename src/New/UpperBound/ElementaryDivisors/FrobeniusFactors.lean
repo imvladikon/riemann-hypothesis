@@ -275,20 +275,15 @@ lemma _root_.New.adjugate_transpose_mem (G : ℝ → AddSubgroup R) [IsRealFiltr
     (hx_sum : ∑ b : Fin k, x b = 0) (hM : ∀ b c : Fin k, M b c ∈ G (x b - v)) (b c : Fin k) :
     M.adjugateᵀ b c ∈ G (-x b - k * v) := by
   -- A cofactor in row `b` is a sum of products of entries of the other rows.
-  let level : Fin k → ℝ := update (fun i : Fin k ↦ x i - v) b 0
-  have h_entry (i j : Fin k) : M.updateRow b (Pi.single c 1) i j ∈ G (level i) := by
-    obtain rfl | hi := eq_or_ne i b
-    · simp only [updateRow_self, Pi.single_apply, level, Function.update_self]
-      split_ifs
-      exacts [one_mem_graded G, zero_mem _]
-    · simpa [level, hi] using hM i j
-  have h_sum : ∑ i : Fin k, level i = -x b - k * v + v := by
-    simp [level, Finset.sum_update_of_mem, Finset.sum_sub_distrib, hx_sum, Finset.card_sdiff,
-      Finset.inter_univ, cast_pred b.pos]
-    ring
   rw [transpose_apply, adjugate_apply, ← det_transpose, det_apply]
-  exact sum_mem fun π _ ↦ zsmul_mem
-    (antitone (by linarith) (prod_mem_graded G level _ fun i _ ↦ h_entry i (π i))) _
+  refine sum_mem fun π _ ↦ zsmul_mem (antitone ?_ <|
+    prod_mem_graded G (update (fun i ↦ x i - v) b 0) _ fun i _ ↦ ?_) _
+  · simp [Finset.sum_update_of_mem, Finset.sum_sub_distrib, hx_sum, Finset.card_sdiff,
+      Finset.inter_univ, cast_pred b.pos]
+    linarith
+  · obtain rfl | hi := eq_or_ne i b
+    · by_cases hc : π i = c <;> simp [hc, one_mem_graded G]
+    · simpa [hi] using hM i (π i)
 
 /-- Let the entries of row `b` of `M` have level `y b` in the filtration `G`. Rows and columns of
 the `n`-th symmetric power of `M` are indexed by exponent vectors of degree `n`, and row `β` has

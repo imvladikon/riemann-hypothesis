@@ -799,6 +799,42 @@ lemma low_or_far_of_fitsWindows {η β V : ℕ} {σ : ℤˣ} {U : Finset ℤ} {u
     -η ≤ u ∧ u ≤ η ∨ β ≤ u ∧ u ≤ β + V ∨ β ≤ -u ∧ -u ≤ β + V :=
   (hU u hu).imp_right (Or.imp And.right And.right)
 
+/-- In opposite windows two low jumps sum to at most `2η` in absolute value, and two far
+jumps sum to at most `W`. If only one is far, the absolute value of their sum lies between
+`b - η` and `b + W + η`. -/
+lemma _root_.New.Lift.FitsWindows.abs_add_of_opposite {η b W : ℕ} {ε : ℤˣ} {V V' : Finset ℤ}
+    (hV : FitsWindows η (-ε) b W V) (hV' : FitsWindows η ε b W V') {v v' : ℤ}
+    (hv : v ∈ V) (hv' : v' ∈ V') :
+    |v + v'| ≤ max (2 * (η : ℤ)) W ∨ (b : ℤ) - η ≤ |v + v'| ∧ |v + v'| ≤ b + W + η := by
+  have h_sign : ((-ε : ℤˣ) : ℤ) = -(ε : ℤ) := Units.val_neg ε
+  rcases hV v hv with h | ⟨h, hv⟩ | ⟨h, hv⟩ <;>
+    rcases hV' v' hv' with h' | ⟨h', hv'⟩ | ⟨h', hv'⟩ <;> simp only [abs_eq_max_neg] <;> omega
+
+/-- For opposite far windows, the negative sum is bounded by the larger of the
+near-near bound and the near-far bound. -/
+lemma _root_.New.Lift.FitsWindows.neg_add_le_of_opposite {η b W : ℕ} {ε : ℤˣ} {V V' : Finset ℤ}
+    (hV : FitsWindows η (-ε) b W V) (hV' : FitsWindows η ε b W V')
+    {v v' : ℤ} (hv : v ∈ V) (hv' : v' ∈ V') :
+    -(v + v') ≤ max (2 * (η : ℤ)) (b + W + η : ℤ) := by
+  have h := hV.abs_add_of_opposite hV' hv hv'
+  simp only [abs_eq_max_neg] at h
+  omega
+
+/-- Let the jumps of `T` and `S` at a letter `i` lie in `[-η, η]` or in far windows `∓σ [β, β + W]`
+of opposite signs. Then each jump `u` of the Tate dual side of a pairing of `T` and `S` lies near
+`0`, `β` or `-β`: such a jump is `0` or `-(v + w) - 1` for jumps `v` of `T` and `w` of `S`. -/
+lemma tateDualSide_jump_near {k : KummerChart Γ} {O : k.Coeffs} {S : k.PairingSide O} {i : Letter}
+    {η W : ℕ} {T : PairingSide O} (P : SidePairing T S) {σ : ℤˣ} {β : ℕ}
+    (hT_window : FitsWindows η (-σ) β W (T.jumpSet i))
+    (hS_window : FitsWindows η σ β W (S.jumpSet i)) {u : ℤ}
+    (hu : u ∈ P.tateDualSide.jumpSet i) :
+    u = 0 ∨ |u + 1| ≤ max (2 * (η : ℤ)) W ∨
+      (β : ℤ) - η ≤ |u + 1| ∧ |u + 1| ≤ β + W + η := by
+  obtain rfl | ⟨v, hv, w, hw, rfl⟩ : u = 0 ∨ ∃ v ∈ T.jumpSet i, ∃ w ∈ S.jumpSet i,
+    -(v + w) - 1 = u := by simpa [mem_image₂] using hu
+  · exact .inl rfl
+  · exact .inr (by simpa only [sub_add_cancel, abs_neg] using hT_window.abs_add_of_opposite hS_window hv hw)
+
 /-- A side is down, that is, its jumps are at most `η`, at a letter where they lie in the windows
 `[-η, η]` and `σ [β, β + V]` and the far window is negative or ends at or below `η`. -/
 lemma jump_le_of_fitsWindows {η β V : ℕ} {σ : ℤˣ} (hU : FitsWindows η σ β V (S.jumpSet i))

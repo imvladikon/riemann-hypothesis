@@ -549,7 +549,7 @@ lemma mainSecondMoment_div_identitySecondMoment_eq :
   have card_image_ne_zero : (Nat.card (D.filling.reducedImage besselH) : ℝ) ≠ 0 :=
     Nat.cast_ne_zero.2 Nat.card_pos.ne'
   have h_dim : (D.filling.sourceDim : ℝ) ≠ 0 :=
-    Nat.cast_ne_zero.2 D.filling_fits.finrank_levelSpace_eq_sourceDim.2.2.ne'
+    Nat.cast_ne_zero.2 (Nat.mul_pos Fintype.card_pos Fintype.card_pos).ne'
   calc
     _ = D.filling.sourceDim / (Nat.card (D.filling.reducedImage besselS) *
         (D.filling.besselDegree * mass D.E D.r)) := by
@@ -683,7 +683,7 @@ is the preimage of the principal level, reduction is onto, and the size inequali
 instance : D.filling.IsAdmissible := by
   have h_energy : 0 < D.filling.identitySecondMoment :=
     mul_pos (Nat.cast_pos.2 Nat.card_pos)
-      (Nat.cast_pos.2 D.filling_fits.finrank_levelSpace_eq_sourceDim.2.2)
+      (Nat.cast_pos.2 (Nat.mul_pos Fintype.card_pos Fintype.card_pos))
   have h_rank : D.shape.k = D.k := D.card_X₀
   have h_b : D.filling.b = D.b := rfl
   have h_varpi (v : InfinitePlace D.E) : ‖Φ v D.filling.deltaE.val‖ = v

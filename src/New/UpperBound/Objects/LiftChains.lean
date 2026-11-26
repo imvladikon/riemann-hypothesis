@@ -1,5 +1,6 @@
 module
 
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
 public import Lib.General.LinearAlgebra.BlockEmbeddings
 public import Lib.Shimura.HeckeTower.HeckeData
 public import Lib.Weil.CompactLift.ThetaKernelDefs

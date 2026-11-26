@@ -936,7 +936,7 @@ lemma Variety.exists_linearMap_coe_eq_of_comp_eq_torsionLift {E : Type} [Field E
 
 /-- The points of `A` over a point `η` of `S`, seen as points of the fibre of `A` over `η`; the map
 is `𝓞 E`-linear. -/
-noncomputable def Variety.fibrePointMap {E : Type} [Field E] [CMBase E] {S : Scheme}
+noncomputable def Variety.fibrePointMap {E : Type} [Field E] {S : Scheme}
     (A : Over S) [AddObj A] [ModuleObj (𝓞 E) A] (η : Spec (CommRingCat.of ℂ) ⟶ S) :
     (Over.mk η ⟶ A) →ₗ[𝓞 E] (𝟙_ (Over (Spec (CommRingCat.of ℂ))) ⟶ (Over.pullback η).obj A) :=
   ((isGroupBaseChange_counit (O := 𝓞 E) (A := A) η).pointEquiv (T := 𝟙_ _)).symm.toLinearMap

@@ -657,14 +657,11 @@ lemma exists_baseLevel [Nonempty n] {ϑ : D.Twist}
     -- Off `range U`, the places of `O` and their conjugates, `u` has maximal level.
     have h_form : IsFormOfType O c (range U) u.val x.heckePolyAt := by
       refine ⟨h_eig, u.property, hu, fun v hv hv_star g ↦ ?_⟩
-      exact congrArg Subtype.val (levelSpace_le_sphericalAt (by
-        simpa only [Sum.elim_range, toFinset_union, toFinset_range, Finset.mem_union,
-          Finite.mem_toFinset, mem_range, Finset.mem_image, Finset.mem_univ, true_and, not_or,
-          not_exists, mem_union, B] using hv)
-        (by
-          simpa only [Sum.elim_range, toFinset_union, toFinset_range, Finset.mem_union,
-            Finite.mem_toFinset, mem_range, Finset.mem_image, Finset.mem_univ, true_and, not_or,
-            not_exists, mem_union, B] using hv_star) (BaseLevel.formsOfLevel_le_levelSpace hf) g)
+      have h_off (w : FinPlace D.E) (hw : w ∉ range U ∪ O.places) :
+          w ∉ (Set.finite_range U).toFinset ∪ B.places := by
+        simpa [B] using hw
+      exact congrArg Subtype.val (levelSpace_le_sphericalAt (h_off v hv) (h_off (star v) hv_star)
+        (BaseLevel.formsOfLevel_le_levelSpace hf) g)
     exact ⟨h_form.isRepOfType_normalisedRep h_lift hQ (forall_mem_range.2 hU) h_att,
       normalisedRep_quadratic_on_inertia h_lift hQ h_eig h_att
         (hasTwistParahoricType_levelSpace hπ u)⟩

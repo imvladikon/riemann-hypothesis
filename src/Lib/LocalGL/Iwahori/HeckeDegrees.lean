@@ -820,8 +820,8 @@ lemma partialHecke_dual (hϖ : v ϖ.val = exp (-1)) {m : ℕ} {x : V}
   -- `g ↦ c⁻¹ * invTransposeGL g` matches the cosets of `partialCosets m j` with those of
   -- `partialCosets m i`: both conditions unfold to the same bounds on the entries of `g`, `g⁻¹` and
   -- the same valuation of `det g`.
-  have dual (g : GL (Fin N) (LocField w)) :
-      g ∈ partialCosets m j ↔ c⁻¹ * invTransposeGL g ∈ partialCosets m i := by
+  have forward (i j : ℕ) (h_sum : m + (i + j) = N) (g : GL (Fin N) (LocField w)) :
+      g ∈ partialCosets m j → c⁻¹ * invTransposeGL g ∈ partialCosets m i := by
     have h_inv_val : v ϖ⁻¹.val = exp 1 := by
       rw [Units.val_inv_eq_inv_val, map_inv₀, hϖ, WithZero.exp_neg, inv_inv]
     have h_mul (a b : Fin N) :
@@ -868,57 +868,30 @@ lemma partialHecke_dual (hϖ : v ϖ.val = exp (-1)) {m : ℕ} {x : V}
     have h_exp1 : (exp (-1) : ℤᵐ⁰) * exp 1 = 1 := by rw [← exp_add, neg_add_cancel, exp_zero]
     have h_le1 : (1 : ℤᵐ⁰) ≤ exp 1 := by rw [← exp_zero]; exact exp_le_exp.mpr (by decide)
     have h_inv_exp (n : ℤ) : (exp (-n) : ℤᵐ⁰)⁻¹ = exp n := by rw [WithZero.exp_neg, inv_inv]
-    constructor
-    · rintro ⟨⟨hg1, hg2, hg3⟩, hg4⟩
-      refine ⟨⟨fun a b ↦ ?_, fun a b ↦ ?_, ?_⟩, fun b a hb ↦ ?_⟩
-      · rw [h_mul, map_mul]
-        by_cases ha : a.val < m
-        · simpa [ha] using hg4 a b ha
-        · simp only [ha, ↓reduceIte, hϖ]
-          exact (mul_le_mul' le_rfl (hg2 b a)).trans_eq h_exp1
-      · rw [h_im, map_mul]
-        by_cases hb : b.val < m
-        · simp only [hb, ↓reduceIte, map_one, mul_one]
-          exact (hg1 b a).trans h_le1
-        · simp only [hb, ↓reduceIte, h_inv_val]
-          exact (mul_le_mul' (hg1 b a) le_rfl).trans_eq (one_mul _)
-      · rw [h_det, hg3, h_inv_exp, ← exp_add]
-        congr 1; push_cast; ring
-      · simp only [h_im, hb, ↓reduceIte, mul_one]; exact hg1 b a
-    · rintro ⟨⟨h1, h2, h3⟩, h4⟩
-      refine ⟨⟨fun a b ↦ ?_, fun a b ↦ ?_, ?_⟩, fun b a hb ↦ ?_⟩
-      · by_cases ha : a.val < m
-        · have h_ba := h4 a b ha
-          simp only [h_im, ha, ↓reduceIte, mul_one] at h_ba
-          exact h_ba
-        · have h_ba := h2 b a
-          simp only [h_im, ha, ↓reduceIte, map_mul, h_inv_val] at h_ba
-          calc v (g.val a b) = v (g.val a b) * exp 1 * exp (-1) := by
-                rw [mul_assoc, mul_comm (exp 1), h_exp1, mul_one]
-            _ ≤ exp 1 * exp (-1) := mul_le_mul' h_ba le_rfl
-            _ = 1 := by rw [mul_comm, h_exp1]
-      · by_cases hb : b.val < m
-        · have h_ba := h1 b a
-          simp only [h_mul, hb, ↓reduceIte, one_mul] at h_ba
-          exact h_ba.trans h_le1
-        · have h_ba := h1 b a
-          simp only [h_mul, hb, ↓reduceIte, map_mul, hϖ] at h_ba
-          calc v (g⁻¹.val a b) = exp 1 * (exp (-1) * v (g⁻¹.val a b)) := by
-                rw [← mul_assoc, mul_comm (exp 1), h_exp1, one_mul]
-            _ ≤ exp 1 * 1 := mul_le_mul' le_rfl h_ba
-            _ = exp 1 := mul_one _
-      · rw [h_det] at h3
-        have h_inv_eq : (v g.val.det)⁻¹ = exp (↑j : ℤ) := by
-          calc (v g.val.det)⁻¹
-              = exp ((i + j : ℕ) : ℤ) * (exp (-((i + j : ℕ) : ℤ)) * (v g.val.det)⁻¹) := by
-                rw [← mul_assoc, ← exp_add, add_neg_cancel, exp_zero, one_mul]
-            _ = exp ((i + j : ℕ) : ℤ) * exp (-↑i) := by rw [h3]
-            _ = exp (↑j : ℤ) := by rw [← exp_add]; congr 1; push_cast; ring
-        have := congrArg Inv.inv h_inv_eq
-        rwa [inv_inv, ← WithZero.exp_neg] at this
-      · have h_ba := h1 b a
-        simp only [h_mul, hb, ↓reduceIte, one_mul] at h_ba
-        exact h_ba
+    rintro ⟨⟨hg1, hg2, hg3⟩, hg4⟩
+    refine ⟨⟨fun a b ↦ ?_, fun a b ↦ ?_, ?_⟩, fun b a hb ↦ ?_⟩
+    · rw [h_mul, map_mul]
+      by_cases ha : a.val < m
+      · simpa [ha] using hg4 a b ha
+      · simp only [ha, ↓reduceIte, hϖ]
+        exact (mul_le_mul' le_rfl (hg2 b a)).trans_eq h_exp1
+    · rw [h_im, map_mul]
+      by_cases hb : b.val < m
+      · simp only [hb, ↓reduceIte, map_one, mul_one]
+        exact (hg1 b a).trans h_le1
+      · simp only [hb, ↓reduceIte, h_inv_val]
+        exact (mul_le_mul' (hg1 b a) le_rfl).trans_eq (one_mul _)
+    · rw [h_det, hg3, h_inv_exp, ← exp_add]
+      congr 1; push_cast; ring
+    · simp only [h_im, hb, ↓reduceIte, mul_one]; exact hg1 b a
+  -- Dualizing twice recovers the original lattice. For the converse, exchange the two indices.
+  have dual (g : GL (Fin N) (LocField w)) :
+      g ∈ partialCosets m j ↔ c⁻¹ * invTransposeGL g ∈ partialCosets m i := by
+    refine ⟨forward i j h_sum g, fun h ↦ ?_⟩
+    have hc_inv : invTransposeGL c = c⁻¹ := Units.ext (Matrix.diagonal_transpose _)
+    have h_back := forward j i (by rwa [Nat.add_comm j i]) _ h
+    rwa [map_mul, map_inv, hc_inv, inv_inv, ← mul_assoc, inv_mul_cancel, one_mul,
+      show invTransposeGL (invTransposeGL g) = g from invTransposeGL.symm_apply_apply g] at h_back
   -- The two side conditions of `heckeFun_comp` are the right invariance of the translated
   -- indicator and `dual` read on indicators.
   calc

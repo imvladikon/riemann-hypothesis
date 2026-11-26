@@ -20,7 +20,7 @@ Rham period field B_dR = `New.Period.BdR`.
 * `New.Period.hodgeFil`: the step tⁿ B_dR⁺, with t = `New.Period.tPeriod` a uniformiser of the
   discrete valuation ring B_dR⁺ = `New.Period.BdRPlus`, on which g acts by g t = χ(g) t
   (`New.Period.smul_tUnit_zpow`).
-* `New.Period.forall_smul_eq_iff_mem_localFieldOf`: an open subgroup fixes in ℂ_p exactly its fixed
+* `New.Period.exists_mem_localFieldOf_of_forall_smul_eq`: an element of ℂ_p fixed by an open subgroup lies in its fixed
   field K in Q̄_p.
 * `New.Period.BdR.exists_sub_mem_of_smul_sub_mem`: an element of B_dR that is invariant modulo a
   B_dR⁺-submodule S is congruent modulo S to an element of K; S = 0 gives the invariants of B_dR.
@@ -211,18 +211,14 @@ namespace New.Period
 variable {p : ℕ} [ThePrime p] (Γ : Type*) [Group Γ] [𝒥 : OverGp Γ p] {m n : ℤ} {x : BdR}
   {y : BdRPlus}
 
-/-- Ax–Sen–Tate: if `j : Γ → G_p` has open image, an element of `ℂ_p` is fixed by every `j(g)` if
-and only if it lies in the subfield `K` of `ℚ̄_p` fixed by that image. -/
-lemma forall_smul_eq_iff_mem_localFieldOf {x : ℂ_[p]} :
-    (∀ g : Γ, 𝒥.toGp g • x = x) ↔ ∃ a ∈ localFieldOf Γ, x = a := by
-  constructor
-  · intro hx
-    -- by Ax's theorem `x` is algebraic
-    have h_near : ∀ᶠ g : Gp p in Filter.map toGp (nearOne Γ), g • x = x := by simp [hx]
-    obtain ⟨a, rfl⟩ := exists_algebraic_of_fixed_near_one (nhds_one_le_map_nearOne Γ h_near)
-    exact ⟨a, by simpa using hx, rfl⟩
-  · rintro ⟨a, ha, rfl⟩
-    simpa using ha
+/-- Ax–Sen–Tate: if `j : Γ → G_p` has open image, an element of `ℂ_p` fixed by every `j(g)` lies
+in the subfield `K` of `ℚ̄_p` fixed by that image. -/
+lemma exists_mem_localFieldOf_of_forall_smul_eq {x : ℂ_[p]}
+    (hx : ∀ g : Γ, 𝒥.toGp g • x = x) : ∃ a ∈ localFieldOf Γ, x = a := by
+  -- by Ax's theorem `x` is algebraic
+  have h_near : ∀ᶠ g : Gp p in Filter.map toGp (nearOne Γ), g • x = x := by simp [hx]
+  obtain ⟨a, rfl⟩ := exists_algebraic_of_fixed_near_one (nhds_one_le_map_nearOne Γ h_near)
+  exact ⟨a, by simpa using hx, rfl⟩
 
 open BdRPlus Algebra IsDiscreteValuationRing IsFractionRing Submodule algebraMap
 
@@ -337,7 +333,7 @@ lemma BdR.exists_sub_mem_of_smul_sub_mem (S : Submodule BdRPlus BdR) {x : BdR}
       exact isUnit_iff.mp u.isUnit
         (tate_eq_zero_of_cyclotomicGp_twist hn (nhds_one_le_map_nearOne Γ h_near))
     have h_res_fixed : ∀ g : Γ, toGp g • thetaBdR u = thetaBdR u := by simpa using h_res
-    refine ⟨u, ?_, (forall_smul_eq_iff_mem_localFieldOf Γ).mp h_res_fixed⟩
+    refine ⟨u, ?_, exists_mem_localFieldOf_of_forall_smul_eq Γ h_res_fixed⟩
     simpa [Units.smul_def, smul_def'] using hu
   obtain ⟨u, hu, a, ha, h_res⟩ := h_sub_eq_unit 0
   obtain ⟨v, hv, -⟩ := h_sub_eq_unit ⟨a, ha⟩

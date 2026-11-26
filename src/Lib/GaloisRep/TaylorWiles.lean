@@ -181,7 +181,7 @@ above `ℓ`; (b) for each system `x` of level `L`, the forms of `x` in `D.formsO
 `eigenformsAt V κ w (t w)`, where `t = x.heckeEigenvalues` is the chosen system of eigenvalues that
 defines `x`. If `w` splits, (b) says that these forms are spherical at `w` with Hecke eigenvalues
 `t w`; otherwise it is no condition. -/
-def IsOffLevel [ThePrime ℓ] (w : FinPlace E) : Prop :=
+def IsOffLevel (w : FinPlace E) : Prop :=
   -- (a) `w` and its conjugate are off `D.places`, and `w` is not above `ℓ`
   w ∉ D.places ∧
   star w ∉ D.places ∧
@@ -391,7 +391,7 @@ lemma _root_.New.Patching.Isotypic.eventually_le_eigenformsAt_of_fg (x : Isotypi
 omit [PadicIso ℓ] in
 /-- Almost every finite place is off the level `L`: it avoids `D.places`, its conjugates and the
 places above `ℓ`, and each system of level `L` has its eigenvalues there. -/
-lemma eventually_isOffLevel : ∀ᶠ w : FinPlace E in cofinite, D.IsOffLevel L w := by
+lemma eventually_isOffLevel : ∀ᶠ w : FinPlace E in cofinite, D.IsOffLevel (ℓ := ℓ) L w := by
   -- Each of the finitely many systems `x` of level `L` has its eigenvalues at almost all places on
   -- `x.val ⊓ D.formsOfLevel L`, a space of finite dimension.
   have h_systems : ∀ᶠ w : FinPlace E in cofinite, ∀ x ∈ D.Eigensystem L,
@@ -674,7 +674,7 @@ of base level in each system have its eigenvalues at `w j` (`New.Patching.BaseLe
 /-- Let the places `w j` be off the base level. For an integral matrix `k` at `w j`, its reduction
 placed at the index `j` acts on a form `y` of principal level as `k` does in the representation
 `New.Patching.localFormRep` of GL_N(E_{w j}) on forms. -/
-lemma residueRep_mulSingle [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma residueRep_mulSingle [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (k : localIntGL (Fin (card n)) (Q.place j)) (y : ↥(formsOfLevel Q.place)) :
     ((D.residueRep Q (Pi.mulSingle j (reduceGL k))).val y).val =
       localFormRep V κ (Q.apart.star_ne j j) k y := by
@@ -698,7 +698,7 @@ lemma residueRep_mulSingle [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel ![] (Q.
 
 /-- Let the places `w j` be off the base level. An element `g` of GL_N(k_{w j}), placed at the
 index `j`, acts by an operator at `w j`. -/
-lemma residueRep_mem_localOperators [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma residueRep_mem_localOperators [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (g : GL (Fin (card n)) (ResField (Q.place j))) :
     D.residueRep Q (Pi.mulSingle j g) ∈ D.localOperators Q j := by
   -- `g` is the reduction of an integral `k`, and acts as the translation by `k` at `w j`
@@ -723,7 +723,7 @@ private lemma reindexGL_atPlace_mem_proIwahori_of_mem_levelOf {k : Gf E n}
   grind
 
 omit [Fintype J] in
-/-- Let `w j = Q.place j` be the Taylor–Wiles places, all off the base level (`D.IsOffLevel ![]`).
+/-- Let `w j = Q.place j` be the Taylor–Wiles places, all off the base level (`D.IsOffLevel (ℓ := ℓ) ![]`).
 Let `a` be an operator at `w j`, i.e. an element of `D.localOperators Q j`: an endomorphism of the
 forms `formsOfLevel Q.place` that keeps the integral forms and agrees with an
 `EllAdicIntegers`-combination of translations supported at `w j` and its conjugate. If the values of
@@ -732,7 +732,7 @@ forms `formsOfLevel Q.place` that keeps the integral forms and agrees with an
 `(Q.frobData j).place`, which is `Q.place j` by definition) and G in `EllAdicIntegers[X]` there is
 an operator `b` at `w j` with b(y) = G([I₁gI₁])(a(y)) for all y, where
 [I₁gI₁] = `heckeCoset ρ.ρ proIwahori g` is the Hecke operator of the double coset I₁gI₁. -/
-lemma exists_localOperators_aeval_hecke (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma exists_localOperators_aeval_hecke (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {a : D.integralEnd Q.place} (ha : a ∈ D.localOperators Q j)
     (g : GL (Fin (card n)) (LocField (Q.frobData j).place)) (G : EllAdicIntegers[X]) :
     let ρ := localFormRep V κ (Q.apart.star_ne j j)
@@ -850,7 +850,7 @@ lemma exists_orbit_weight {G H Δ : Type*} [Group G] [Group H] [Group Δ] [Finty
 embedded by φ in ∏_j GL_N(k_{w_j}), N = |n|, some operator Ψ on forms of principal level that keeps
 the integral forms has ∑_{g∈Δ} g⁻¹Ψg = c, with g acting by `New.Patching.BaseLevel.residueRep` and c
 the common multiple of the stabiliser orders fixed in `D`. -/
-lemma exists_higman_operator (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma exists_higman_operator (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {Δ : Type*} [Group Δ] [Fintype Δ]
     (φ : Δ →* ∀ j : J, GL (Fin (card n)) (ResField (Q.place j))) (hφ : Function.Injective φ) :
     ∃ Ψ : D.integralEnd Q.place, ∑ g : Δ,

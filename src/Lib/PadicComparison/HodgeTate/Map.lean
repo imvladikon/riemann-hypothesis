@@ -558,7 +558,7 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_true {a : ℕ}
   · -- `σ ⊗ 𝟙` lifts the identity
     exact fun c ↦ addCommGrp_tensor_hom_ext fun a b ↦ by
       change TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b)) = a ⊗ₜ[ℤ] b
-      repeat' erw [TensorProduct.map_tmul]
+      simp only [TensorProduct.map_tmul]
       rfl
   · -- its failure to be natural is the `true` component
     exact fun c d f ↦ addCommGrp_tensor_hom_ext fun a b ↦ by
@@ -566,11 +566,10 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_true {a : ℕ}
         TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b)) +
           TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b))
       simp only [TensorProduct.map_tmul]
-      erw [← add_tmul]
       let F := (formCoeff.map f).hom
       let C := (contractionCocycle.component f).hom
-      have h : (F 0 + C a, F a) = (C a, 0) + (0, F a) := by simp
-      exact congrArg (fun q ↦ q ⊗ₜ[ℤ] F b) h
+      have h : ((F 0 + C a, F a) : contractionCocycle.extension.X₂.obj d) = (C a, 0) + (0, F a) := by simp
+      exact (congrArg (fun q : contractionCocycle.extension.X₂.obj d ↦ q ⊗ₜ[ℤ] F b) h).trans (add_tmul ..)
 
 /-- Let `M`, `L` be functors on pairs, `M` with flat values, `x` a class of degree `a` on `M` and
 `y` a total class on `L`, both with coefficients `formCoeff` (`Λ = ⋀ M`). The `false` component
@@ -598,7 +597,7 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_false {a : ℕ}
   · -- `𝟙 ⊗ σ` lifts the identity
     exact fun c ↦ addCommGrp_tensor_hom_ext fun a b ↦ by
       change TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b)) = a ⊗ₜ[ℤ] b
-      repeat' erw [TensorProduct.map_tmul]
+      simp only [TensorProduct.map_tmul]
       rfl
   · -- its failure to be natural is the `false` component
     exact fun c d f ↦ addCommGrp_tensor_hom_ext fun a b ↦ by
@@ -606,11 +605,10 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_false {a : ℕ}
         TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b)) +
           TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b))
       simp only [TensorProduct.map_tmul]
-      erw [← tmul_add]
       let F := (formCoeff.map f).hom
       let C := (contractionCocycle.component f).hom
       have h : (F 0 + C b, F b) = (C b, 0) + (0, F b) := by simp
-      exact congrArg (fun q ↦ F a ⊗ₜ[ℤ] q) h
+      exact (congrArg (fun q ↦ F a ⊗ₜ[ℤ] q) h).trans (tmul_add ..)
 
 /-- The Leibniz rule for the contraction (`contraction_mul`) on classes. The `false` component of
 `tensorContractionCocycle`, followed by the grade involution (scaling by `-1`) on the first

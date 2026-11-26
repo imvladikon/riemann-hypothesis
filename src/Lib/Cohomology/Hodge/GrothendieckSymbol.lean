@@ -617,9 +617,15 @@ def snocRel.split (m : ℕ) : freeAb.obj (witnessed (snocRel k d) m) ⟶
     (fun c t ↦
       (if hx : lastPoint t ∈ (unimodular.whisker sqZeroExt).obj c then 0 else .of (dropLast t hx))
         ⊗ₜ relFreeAb.mk (unimodular.whisker sqZeroExt) (lastPoint t))
-    fun _ _ φ t ↦ relFreeAb.tmul_mk_congr fun hx ↦ by
-      erw [dite_eq_right hx, dite_eq_right fun h ↦ hx ((unimodular.whisker sqZeroExt).map φ h)]
-      rfl
+    fun c _ φ t ↦ relFreeAb.tmul_mk_congr fun hx ↦ by
+      have ht : lastPoint t ∉ (unimodular.whisker sqZeroExt).obj c :=
+        fun h ↦ hx ((unimodular.whisker sqZeroExt).map φ h)
+      simp only [dite_eq_right hx]
+      let W := witnessed (jouanolouRel (𝟙 (sqZeroExt ⋙ affineSpace k d))) m
+      have h_value : (if h : lastPoint t ∈ (unimodular.whisker sqZeroExt).obj c
+          then 0 else FreeAddCommGroup.of (dropLast t h)) = FreeAddCommGroup.of (dropLast t ht) :=
+        dite_eq_right ht
+      exact (congrArg ((freeAb.obj W).map φ) h_value).symm
 
 /-- The maps `snocRel.split` commute with reindexing the witnesses along g : Fin m → Fin n. -/
 lemma snocRel.reindexWitness_comp_split (m n : ℕ) (g : Fin m → Fin n) :

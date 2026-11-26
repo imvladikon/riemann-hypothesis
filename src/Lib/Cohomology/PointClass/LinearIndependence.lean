@@ -588,8 +588,13 @@ lemma New.Variety.exists_map_separating_class {p : ℕ} {k : Type} [Field k] [Em
       simp [hw₁, hU] at h_coord ⊢
       rw [h_coord]
       rfl
-    erw [← Functor.map_comp_apply, hψ]
-    rfl
+    let A := of k (DualNumber k)
+    let σ : A ⟶ A := SqZeroExt.fst ≫ structureMap
+    let α := pointMap C.point
+    have h_comp : ψ ≫ σ = ψ := (Category.assoc ψ SqZeroExt.fst structureMap).symm.trans hψ
+    have h_nat := α.naturality_apply σ (⟨ψ⟩ : (reprBy C.coordRing).obj A)
+    change α.app A ⟨ψ ≫ σ⟩ = _ at h_nat
+    exact (congrArg (fun f : U.coordRing ⟶ A ↦ α.app A ⟨f⟩) h_comp).symm.trans h_nat
   have h_sep : IsSeparatedFunctor O.toFunctor := isSeparatedFunctor_of_injective j hj
   -- Pull-back along `proj` is injective, by the Noether normalisation `Λ`.
   have h_inj :

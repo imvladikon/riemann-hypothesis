@@ -195,27 +195,13 @@ lemma map_gluedGram {K L : Type*} [CommRing K] [CommRing L] (f : K →+* L) (p q
 /-- The matrices `gluedGram p 0` and `gluedGram 0 p` multiply to `1`. -/
 lemma gluedGram_mul_eq_one [Fintype X] {K : Type*} [CommRing K] (p : K) :
     gluedGram (X := X) (s := s) p 0 * gluedGram 0 p = 1 := by
-  -- The product is computed block by block, by cases on whether there is a middle vector; `A r`,
-  -- `C` and `J r` name the blocks of `gluedGram`.
-  let J (r : K) : Matrix (Fin s) (Fin s) K :=
-    of fun b c ↦ if b = c.rev then (if b = c then -r else 1) else 0
-  let A (r : K) : Matrix (X ⊕ Unit) (X ⊕ Unit) K :=
-    diagonal (1 ⊕ᵥ fun _ : Unit ↦ if Odd s then r else 1)
-  let C : Matrix (X ⊕ Unit) (Fin s) K := of (0 ⊕ᵥ fun _ b ↦ if b = b.rev then -1 else 0)
-  change fromBlocks (A 0) C Cᵀ (J p) * fromBlocks (A p) C Cᵀ (J 0) = 1
-  suffices (A 0 * A p + C * Cᵀ = 1 ∧ A 0 * C + C * J 0 = 0 ∧ Cᵀ * C + J p * J 0 = 1) ∧
-      Cᵀ * A p + J p * Cᵀ = 0 by
-    simp only [fromBlocks_multiply, this, fromBlocks_one]
+  -- Compute the block product by cases on whether `s` is odd (existence of a middle vector).
   by_cases hs : Odd s
-  · constructor
-    · simp [A, C, J, hs, eq_rev_iff_of_odd hs, ← ext_iff, Matrix.mul_apply, Matrix.one_apply,
-        diagonal, Function.swap]
-      grind
-    · simp [A, C, J, hs, eq_rev_iff_of_odd hs, ← ext_iff, Matrix.mul_apply, diagonal,
-        ← Fin.rev_eq_iff, Function.swap]
-      grind
-  · simp [A, C, J, hs, ne_rev_of_not_odd hs, ← ext_iff, Matrix.mul_apply, Matrix.one_apply,
-      diagonal, Function.swap]
+  · simp [gluedGram, fromBlocks_multiply, ← fromBlocks_one, hs, eq_rev_iff_of_odd hs, ← ext_iff,
+      Matrix.mul_apply, Matrix.one_apply, diagonal, Function.swap]
+    grind [eq_rev_iff_of_odd, Fin.rev_eq_iff]
+  · simp [gluedGram, fromBlocks_multiply, ← fromBlocks_one, hs, ne_rev_of_not_odd hs, ← ext_iff,
+      Matrix.mul_apply, Matrix.one_apply, diagonal, Function.swap]
     grind
 
 /-- A ring homomorphism carries the graded Gram matrix with parameter `r` to the one with `f r`. -/

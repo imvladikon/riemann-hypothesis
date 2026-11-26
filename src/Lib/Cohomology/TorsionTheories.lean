@@ -203,23 +203,22 @@ lemma exists_isTensorClass [HasFlatValues N] [HasFlatValues K] (ξ : H N K 2) :
     -- exact functors respect Yoneda products, extension classes and `mk₀`; then both sides are the
     -- same class, written with `abTensor.flip` or `abTensor`
     let Φ := restrictAlong φ ⋙ abTensor.obj S
-    erw [TotalH.map_map]
+    simp only [TotalH.map_map]
     let α : H N N₁ 1 := h_exact.extClass
     let β : H N₁ (kerComplex g₁).X₁ 1 := h_exact₁.extClass
     let γ : H (kerComplex g₁).X₁ K 0 := Ext.mk₀ u
-    erw [TotalH.map_of (Φ := Φ) (α.comp (β.comp γ rfl) rfl)]
     have h_map :
         (α.comp (β.comp γ rfl) rfl).mapExactFunctor Φ =
           (h_exact.map_of_exact Φ).extClass.comp
             ((h_exact₁.map_of_exact Φ).extClass.comp (.mk₀ (Φ.map u)) rfl) rfl := by
-      erw [Ext.mapExactFunctor_comp Φ α (β.comp γ rfl) rfl,
+      simp only [Ext.mapExactFunctor_comp Φ α (β.comp γ rfl) rfl,
         Ext.mapExactFunctor_comp Φ β γ rfl]
       change (h_exact.extClass.mapExactFunctor Φ).comp
         ((h_exact₁.extClass.mapExactFunctor Φ).comp ((Ext.mk₀ u).mapExactFunctor Φ) rfl) rfl = _
-      erw [Ext.mapExactFunctor_extClass Φ h_exact,
+      simp only [Ext.mapExactFunctor_extClass Φ h_exact,
         Ext.mapExactFunctor_extClass Φ h_exact₁, Ext.mapExactFunctor_mk₀ Φ u]
-    erw [h_map]
-    rfl
+    refine Eq.trans ?_ (TotalH.map_of (Φ := Φ) (α.comp (β.comp γ rfl) rfl)).symm
+    exact (congrArg Ext.toTotalH h_map).symm
   · intro D instD φ S E instE ψ
     -- likewise
     simp only [map_of, Ext.mapExactFunctor_comp, Ext.mapExactFunctor_extClass,
@@ -1060,13 +1059,12 @@ lemma TorsionCoeff.pullbackAlong_oneLocConst_surjective :
     fun y ↦ ⟨pullbackAlong (g.whiskerLeft (I.toZerosCoeff _)) y, ?_⟩
   -- each side is one pull-back, and the two composite maps are the same by definition of
   -- `IdealFamily.constToZeros`
-  erw [pullbackAlong_pullbackAlong]
-  change _ =
-    pullbackAlong (relFreeAb.π (I.whisker g).topLocus)
-      (pullbackAlong (abCoker.π (ℓ • 𝟙 (relFreeAb (I.whisker g).topLocus)))
-        (pullbackAlong (g.whiskerLeft I.constToZeros) y))
-  erw [pullbackAlong_pullbackAlong, pullbackAlong_pullbackAlong]
-  rfl
+  let q := relFreeAb.π (I.whisker g).topLocus
+  let r := abCoker.π (ℓ • 𝟙 (relFreeAb (I.whisker g).topLocus))
+  let s := g.whiskerLeft I.constToZeros
+  refine (pullbackAlong_pullbackAlong (f := oneLocConst) (g.whiskerLeft (I.toZerosCoeff _)) y).trans ?_
+  exact ((pullbackAlong_pullbackAlong (f := q) r (pullbackAlong s y)).trans
+    (pullbackAlong_pullbackAlong (f := q ≫ r) s y)).symm
 
 end Theories
 

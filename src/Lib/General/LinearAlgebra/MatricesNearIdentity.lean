@@ -297,49 +297,6 @@ lemma conjTranspose_inv_one_add_smul_mul_form {X J : Matrix n n ℂ}
         rw [h_inv, conjTranspose_one, mul_one, ← mul_assoc, h_adj, neg_mul, mul_assoc,
           commute_inv_one_add_smul (.refl X)]
 
-/-- Let `g` be in `USign ε`, the unitary group of the sign matrix `J = signMatrix ε`, with
-Hilbert–Schmidt distance at most `1 / 2` from `1`. Then its logarithm `L = logOneAdd (g - 1)` lies
-in the Lie algebra `unitaryLie J`, that is, `Lᴴ * J + J * L = 0`. -/
-lemma logOneAdd_mem_unitaryLie {n : Type} [Fintype n] [DecidableEq n] {ε : n → ℤˣ} (g : USign ε)
-    (h_near : ‖((g : GL n ℂ) : Matrix n n ℂ) - 1‖ ≤ 2⁻¹) :
-    logOneAdd (((g : GL n ℂ) : Matrix n n ℂ) - 1) ∈ unitaryLie (signMatrix ε) := by
-  -- Let `J = signMatrix ε`, `X = g - 1` and `G s = (1 + s X)⁻¹ X`. From `gᴴ J g = J` we get
-  -- `(G s)ᴴ J = -J G (1 - s)`; integrate over `s`.
-  set X : Matrix n n ℂ := ((g : GL n ℂ) : Matrix n n ℂ) - 1
-  let G (s : ℝ) : Matrix n n ℂ := (1 + s • X)⁻¹ * X
-  have h_form : (1 + X)ᴴ * signMatrix ε * (1 + X) = signMatrix ε := by
-    rw [add_sub_cancel]
-    exact mem_unitaryGroupOf_iff.1 g.property
-  have h_reflect (s : ℝ) (hs : s ∈ Set.uIcc (0 : ℝ) 1) :
-      (G s)ᴴ * signMatrix ε = -(signMatrix ε * G (1 - s)) :=
-    conjTranspose_inv_one_add_smul_mul_form h_form h_near (by simpa using hs)
-  have hG : ContinuousOn G (Set.uIcc 0 1) := continuousOn_inv_one_add_smul_mul h_near
-  let adj : Matrix n n ℂ →L[ℝ] Matrix n n ℂ := (ContinuousLinearMap.mul ℝ _).flip (signMatrix ε) ∘L
-    (starL' ℝ (A := Matrix n n ℂ)).toContinuousLinearMap
-  have h_left : ∫ s in 0..1, (G s)ᴴ * signMatrix ε = (logOneAdd X)ᴴ * signMatrix ε :=
-    adj.intervalIntegral_comp_comm hG.intervalIntegrable
-  have h_right : ∫ s in 0..1, signMatrix ε * G s = signMatrix ε * logOneAdd X :=
-    (ContinuousLinearMap.mul ℝ _ (signMatrix ε)).intervalIntegral_comp_comm hG.intervalIntegrable
-  change (logOneAdd X)ᴴ * signMatrix ε + signMatrix ε * logOneAdd X = 0
-  rw [← h_left, ← h_right, integral_congr h_reflect, integral_neg,
-    integral_comp_sub_left (fun s ↦ signMatrix ε * G s)]
-  simp
-
-/-- If `X` has Hilbert–Schmidt norm at most `1`, then `exp X` is within `2 * ‖X‖` of `1`. -/
-lemma norm_exp_sub_one_le (hX : ‖X‖ ≤ 1) : ‖NormedSpace.exp X - 1‖ ≤ 2 * ‖X‖ := by
-  -- Compare the series `∑ X ^ (i + 1) / (i + 1)!` with the series of `exp ‖X‖ - 1`.
-  have h_matrix : HasSum (fun i : ℕ ↦ ((i + 1).factorial : ℝ)⁻¹ • X ^ (i + 1))
-      (NormedSpace.exp X - 1) := by
-    -- `using!`: the two instances of the topology on matrices agree only up to defeq.
-    simpa using! (hasSum_nat_add_iff' 1).2 (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) X)
-  have h_real : HasSum (fun i : ℕ ↦ ((i + 1).factorial : ℝ)⁻¹ * ‖X‖ ^ (i + 1))
-      (Real.exp ‖X‖ - 1) := by
-    simpa [← Real.exp_eq_exp_ℝ] using
-      (hasSum_nat_add_iff' 1).2 (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) ‖X‖)
-  calc ‖NormedSpace.exp X - 1‖ ≤ Real.exp ‖X‖ - 1 := h_matrix.norm_le_of_bounded h_real fun i ↦ by
-        grw [norm_smul_of_nonneg (by positivity), norm_pow_le' X i.succ_pos]
-    _ ≤ 2 * ‖X‖ := by grw [le_abs_self (_ - 1), Real.abs_exp_sub_one_le (by simpa), abs_norm]
-
 /-- If `X` has Hilbert–Schmidt norm at most `1 / 2`, then `logOneAdd X`, the integral of
 `(1 + s • X)⁻¹ * X` over `[0, 1]`, has norm at most `2 * ‖X‖`. -/
 lemma norm_logOneAdd_le (hX : ‖X‖ ≤ 2⁻¹) : ‖logOneAdd X‖ ≤ 2 * ‖X‖ := by

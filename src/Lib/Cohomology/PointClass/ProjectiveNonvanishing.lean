@@ -335,14 +335,19 @@ lemma projSpace.cutsOutLocus_stdChart_zero_X :
   simp [ComesFromPoints]
   -- Both sides of the equation are points `[v]`; compare them by cross products.
   change _ ↔ projSpace.mk _ _ = projSpace.mk _ _
-  erw [mk_eq_mk_iff_cross_mul]
+  refine Iff.trans ?_ mk_eq_mk_iff_cross_mul.symm
   simp +contextual
   change Ideal.span (Set.range X) ≤ RingHom.ker α.hom ↔
     0 = α.hom (X 0) ∧ α.hom (X 0) = 0
-  let x : (stdChart k 1 0).coordRing := X 0
-  have hx : Set.range (X : Fin 1 → (stdChart k 1 0).coordRing) = {x} := Set.range_unique
-  erw [hx, Ideal.span_le, Set.singleton_subset_iff, RingHom.mem_ker]
-  exact ⟨fun h ↦ ⟨h.symm, h⟩, And.right⟩
+  constructor
+  · intro h
+    have h₀ : α.hom (X 0) = 0 := Ideal.span_le.mp h ⟨0, rfl⟩
+    exact ⟨h₀.symm, h₀⟩
+  · rintro ⟨_, h₀⟩
+    apply Ideal.span_le.mpr
+    rintro _ ⟨i, rfl⟩
+    rw [Subsingleton.elim i 0]
+    exact h₀
 
 /-- The points of the chart `1` of the projective line (the points `[x : 1]`) avoid
 `affinePoint 0 0 = [1 : 0]`: for every map `ψ` from the chart's ring to `A`, the image of the
@@ -675,7 +680,8 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
           let b₁ := a c u₁.snd
           have h_mul : b₁.down 0 * b₀.down 0 = 1 := by
             change proj c ((A c u₁.snd).down 0) * proj c ((A c u₀.snd).down 0) = 1
-            erw [← _root_.map_mul (proj c).hom, hA_inv c t.down, map_one]
+            exact ((_root_.map_mul (proj c).hom _ _).symm.trans
+              (congrArg (proj c).hom (hA_inv c t.down))).trans (map_one _)
           let v₀ : Fin 2 → MvPolynomial (Fin 1) k :=
             Fin.insertNth (α := fun _ ↦ MvPolynomial (Fin 1) k) 1 1 X
           let v₁ : Fin 2 → MvPolynomial (Fin 1) k :=
@@ -688,7 +694,10 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
           fin_cases i <;> fin_cases j <;>
             simp [hv₀, v₁, Fin.insertNth_zero', aeval_X, mul_comm, h_mul, v₀]
         change (F.app c).hom ((gluing.app c).hom (.of u)) = 0
-        erw [gluing_apply_torus c t, _root_.map_sub, hF, hF, h_eq, sub_self]
+        refine (congrArg (F.app c).hom (gluing_apply_torus c t)).trans ?_
+        refine (_root_.map_sub (F.app c).hom _ _).trans ?_
+        refine (congrArg₂ (· - ·) (hF c u₀) (hF c u₁)).trans ?_
+        rw [h_eq, sub_self]
     · -- `φ` is invariant under the twist, by `ha_twist`.
       let t' : twoDiscs.obj c := ⟨t.fst, ⟨discTwist epsPow t.fst ≫ t.snd.down⟩⟩
       have h_twist : ((oneSub (discTwist epsPow)).app c).hom (.of t) =
@@ -697,7 +706,10 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
         exact congrArg ((T ≫ pointMap (stdChart k 1 (cond t.fst.down 0 1)).point)
           (genericOver.obj c)) (ha_twist c t.fst t.snd).symm
       change (F.app c).hom (((oneSub (discTwist epsPow)).app c).hom (.of t)) = 0
-      erw [h_twist, _root_.map_sub, hF, hF, h_eq, sub_self]
+      refine (congrArg (F.app c).hom h_twist).trans ?_
+      refine (_root_.map_sub (F.app c).hom _ _).trans ?_
+      refine (congrArg₂ (· - ·) (hF c t) (hF c t')).trans ?_
+      rw [h_eq, sub_self]
     · -- Modulo the complement of the point, `∞` and the whole disc `false` vanish.
       intro c u
       let Z : Subfunctor (projSpace k 1) := offPoints {affinePoint 0 0}
@@ -709,7 +721,7 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
       change P.hom ((F.app c).hom (.of u)) =
         (r.app C).hom ((s.app C).hom (J.hom (((freeAb.map a).app c).hom
           (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (.of u)))))
-      erw [hF, _root_.map_sub]
+      refine (congrArg P.hom (hF c u)).trans ((_root_.map_sub P.hom _ _).trans ?_)
       change relFreeAb.mk Z (φ c u) - relFreeAb.mk Z (φ c z) = _
       rw [hz, sub_zero]
       obtain ⟨⟨_ | _⟩, t⟩ := u
@@ -1244,15 +1256,12 @@ lemma New.Variety.projSpace.hodgeTateMap_pointClass_ne_zero {p : ℕ} {k : Type}
       let q := genericOver.whiskerLeft g
       have : IsIso q := Functor.isIso_whiskerLeft _ _
       have h_inj := (IsCohomEquiv.of_isIso (F := genericCoeff) (α := q) (d + d + 2)).1
-      have h_pull : restrictToPairs (H.map genericCoeff q _ x) = 0 := by
-        erw [restrictToPairs_map g, restrictToPairs_x]
-        exact h
+      have h_pull : restrictToPairs (H.map genericCoeff q _ x) = 0 :=
+        (restrictToPairs_map g x).trans ((congrArg (PairH.map g) restrictToPairs_x).trans h)
       apply h_inj
       apply IsChartCovered.pairRestrictBijective.injective_restrictToPairs
-      rw [h_pull]
-      have h_map_zero := map_zero (H.map genericCoeff q (d + d + 2))
-      erw [h_map_zero]
-      exact (map_zero restrictToPairs).symm
+      exact h_pull.trans ((congrArg restrictToPairs
+        (map_zero (H.map genericCoeff q (d + d + 2)))).trans (map_zero restrictToPairs)).symm
     rw [η_reg (N := _ ⋙ freeAb.obj (projSpace k d)) ξ x_zero, map_zero]
   induction d with
   | succ d ih =>

@@ -142,7 +142,7 @@ def detCharAt (χ : HeckeChar E) (k : ℕ) : GL n (LocProd P) →* ℂˣ :=
 /-- The operator `v ↦ Ψ ⊗ v` of the Schrödinger model at `P` on the finite part for the standard
 spaces on `n` and `n'`, as a linear function of the function `Ψ` of matrices over `LocProd P`. Here
 `Ψ` is read as a function of finite adelic matrices through their components at `P`. -/
-def schrodingerOpAt [_h : IsSplitLevel P N] : (Matrix n' n (LocProd P) → ℂ) →ₗ[ℂ]
+def schrodingerOpAt : (Matrix n' n (LocProd P) → ℂ) →ₗ[ℂ]
     Module.End ℂ ((stdSpace E n).hom (stdSpace E n')).finitePart :=
   LinearMap.mk₂ ℂ
     (fun Ψ v ↦ ⟨_, schrodingerOp_mem_finitePart P (Ψ ∘ fun T ↦ (vecToMatrix T).map (evalPlaces P))
@@ -298,10 +298,10 @@ lemma pairWeilFinite_schrodingerOpAt [h : IsSplitLevel P N] (g : GL n (LocProd P
     (f : Matrix n' n (P → ZMod N) → ℂ) (a b : AutChar E) (k : GL n' (LocProd P))
     (v : ((stdSpace E n).hom (stdSpace E n')).finitePart) :
     pairWeilFinite (stdSpace E n) (stdSpace E n') a b (h.embedGL g, h.embedGL k)
-        (h.schrodingerOpAt (h.liftFn f) v) =
+        (schrodingerOpAt (P := P) (h.liftFn f) v) =
       ((detCharAt (b.spaceChar (card n')) (card n') g)⁻¹ *
           detCharAt (a.spaceChar (card n)) (card n) k) •
-        h.schrodingerOpAt
+        schrodingerOpAt (P := P)
           (fun T : Matrix n' n (LocProd P) ↦ h.liftFn f (k⁻¹.val * T * g.val)) v := by
   -- Read `g` and `k` on the right as the components at `P` of their lifts; then this is
   -- `pairWeil_schrodingerOp_of_mem_supportedOn`.
@@ -526,9 +526,9 @@ lemma doubleLiftGluing_eq_sum_schrodingerOpAt [hP : IsSplitLevel P N] (hS : IsSp
         (vacuumProjFinPart ((stdSpace E (n ⊕ Unit)).hom (stdSpace E n')) S v ⊗ₜ[ℂ]
           vacuumProjFinPart ((stdSpace E n').hom (stdSpace E (m ⊕ Unit))) S v') =
       ∑ z : n' → P → ZMod N,
-        hP.schrodingerOpAt (fun T : Matrix n' (n ⊕ Unit) (LocProd P) ↦
+        schrodingerOpAt (P := P) (fun T : Matrix n' (n ⊕ Unit) (LocProd P) ↦
             hP.lastColDatum z (T * (hP.diagN n S).val)) v ⊗ₜ[ℂ]
-          hP.schrodingerOpAt (fun R : Matrix (m ⊕ Unit) n' (LocProd P) ↦
+          schrodingerOpAt (P := P) (fun R : Matrix (m ⊕ Unit) n' (LocProd P) ↦
             hP.charDatum z ((hP.diagN m (P \ S)).val * R)) v' := by
   -- Both sides come from tensors of functions, and these tensors have the same values.
   let F (y : n' → S → ZMod N) := schrodingerAct P (poleColumn n y) (boxIndicator _ P)

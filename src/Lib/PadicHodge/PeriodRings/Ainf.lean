@@ -589,10 +589,9 @@ instance : FaithfulSMul ℤ_[p] (WittVector p k) := by
 
 /-- Let c ∈ A_inf with θ(c) = 0, and let c₀ ∈ O^♭ be its reduction modulo p. If c₀^♯ divides p
 in the integers of C_p, then c generates the kernel of θ. -/
-lemma theta_eq_zero_iff_dvd_of_untilt_dvd {c a : Ainf} (hc : theta c = 0)
-    (hc_dvd : (constantCoeff c).untilt ∣ (p : OC)) :
-    theta a = 0 ↔ c ∣ a := by
-  refine ⟨fun ha ↦ ?_, fun ⟨b, hb⟩ ↦ by simp [hb, hc]⟩
+lemma dvd_of_theta_eq_zero_of_untilt_dvd {c a : Ainf} (hc : theta c = 0)
+    (hc_dvd : (constantCoeff c).untilt ∣ (p : OC)) (ha : theta a = 0) :
+    c ∣ a := by
   -- Apply `dvd_of_mem_of_constantCoeff_dvd` to the ideal `ker θ`, saturated for `p` as `p ≠ 0` in
   -- the domain `OC`.
   have h_sat : ∀ x : Ainf, (p : Ainf) * x ∈ ker theta → x ∈ ker theta := by simp [ne p]

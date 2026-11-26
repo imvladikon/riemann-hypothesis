@@ -359,6 +359,9 @@ lemma lineShift_mem {a : Matrix Unit p (𝔸 E)} (ha : a ∈ ratMatrices E Unit 
   obtain ⟨a₀, rfl⟩ := ha
   simp [lineShift, mem_ratMatrices, ratAdeles]
 
+private noncomputable abbrev lineShiftTerm (a : Matrix Unit p (𝔸 E)) : Matrix n n (𝔸 E) :=
+  A.lAdelic * a * (B.lCoord * A.iCoord) - A.iAdelic * B.kAdelic * aᴴ * A.kCoord
+
 private lemma adeleMatrix_lineShift (a : Matrix Unit p (𝔸 E)) :
     (A.lineShift B a).adeleMatrix =
       1 + (A.lAdelic * a * (B.lCoord * A.iCoord) - A.iAdelic * B.kAdelic * aᴴ * A.kCoord) := by
@@ -427,6 +430,25 @@ lemma actsOnFrame_lineShift_one (hD : D.kAdelic = A.iAdelic * B.kAdelic)
     A.iCoord_mul_iAdelic_mul, B.lCoord_mul_kAdelic, A.kCoord_mul_iAdelic_mul,
     Matrix.mul_zero, Matrix.mul_one, sub_zero, add_zero]
 
+omit [WeilData E] in
+private lemma lineShiftTerm_mul_symm (a b : Matrix Unit p (𝔸 E)) :
+    A.lineShiftTerm B a * A.symm.lineShiftTerm B b =
+      -(A.iAdelic * B.kAdelic * (aᴴ * b) * (B.lCoord * A.iCoord)) := by
+  unfold lineShiftTerm
+  rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub]
+  simp only [Matrix.mul_assoc, symm_iAdelic, symm_iCoord,
+    show A.symm.lAdelic = A.kAdelic from rfl, show A.symm.kCoord = A.lCoord from rfl,
+    A.iCoord_mul_kAdelic_mul, A.iCoord_mul_iAdelic_mul, B.lCoord_mul_kAdelic_mul,
+    A.kCoord_mul_kAdelic_mul, A.kCoord_mul_iAdelic_mul, Matrix.mul_zero, sub_zero, zero_sub]
+
+omit [WeilData E] in
+private lemma radicalTerm_mul_lineShiftTerm (hD : D.kAdelic = A.iAdelic * B.kAdelic)
+    (M : Matrix p p (𝔸 E)) (a : Matrix Unit p (𝔸 E)) :
+    D.kAdelic * M * D.lCoord * A.lineShiftTerm B a = 0 := by
+  rw [lineShiftTerm, lCoord_eq_lCoord_mul_iCoord hD, Matrix.mul_sub]
+  simp only [Matrix.mul_assoc, A.iCoord_mul_lAdelic_mul, A.iCoord_mul_iAdelic_mul,
+    B.lCoord_mul_kAdelic_mul, Matrix.mul_zero, sub_self]
+
 /-- Let the frame of `D` be the image under `A` of the frame of `B` (`hD`), and for adelic rows a, b
 let n₊(a) = `A.lineShift B a` and n₋(b) = `A.symm.lineShift B b` be the shifts of the two isotropic
 vectors of `A` by the frame of `D`: n₊(a) is u ↦ u − k aᴴ on the vector u, and n₋(b) does the same
@@ -441,37 +463,17 @@ lemma lineShift_mul_lineShift_symm (hD : D.kAdelic = A.iAdelic * B.kAdelic)
   have hDl : D.lCoord = B.lCoord * A.iCoord := lCoord_eq_lCoord_mul_iCoord hD
   have h_l : A.symm.lAdelic = A.kAdelic := rfl
   have h_k : A.symm.kCoord = A.lCoord := rfl
-  set X : Matrix n n (𝔸 E) :=
-    A.lAdelic * a * (B.lCoord * A.iCoord) - A.iAdelic * B.kAdelic * aᴴ * A.kCoord
-  set Y : Matrix n n (𝔸 E) :=
-    A.kAdelic * b * (B.lCoord * A.iCoord) - A.iAdelic * B.kAdelic * bᴴ * A.lCoord
+  let X := A.lineShiftTerm B a
+  let Y := A.symm.lineShiftTerm B b
   set Z : Matrix n n (𝔸 E) := D.kAdelic * (-(aᴴ * b) - (-(aᴴ * b))ᴴ) * D.lCoord
   have h_prod (P Q : Matrix n n (𝔸 E)) : (1 + P) * (1 + Q) = 1 + (P + Q + P * Q) := by
-    rw [Matrix.add_mul, Matrix.mul_add, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one,
-      Matrix.one_mul]
+    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one]
     abel
-  have hXY : X * Y = -(A.iAdelic * B.kAdelic * (aᴴ * b) * (B.lCoord * A.iCoord)) := by
-    dsimp only [X, Y]
-    rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc, A.iCoord_mul_kAdelic_mul, A.iCoord_mul_iAdelic_mul,
-      B.lCoord_mul_kAdelic_mul, A.kCoord_mul_kAdelic_mul, A.kCoord_mul_iAdelic_mul,
-      Matrix.mul_zero, sub_zero, zero_sub]
-  have hYX : Y * X = -(A.iAdelic * B.kAdelic * (bᴴ * a) * (B.lCoord * A.iCoord)) := by
-    dsimp only [X, Y]
-    rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc, A.iCoord_mul_lAdelic_mul, A.iCoord_mul_iAdelic_mul,
-      B.lCoord_mul_kAdelic_mul, A.lCoord_mul_lAdelic_mul, A.lCoord_mul_iAdelic_mul,
-      Matrix.mul_zero, sub_zero, zero_sub]
-  have hZX : Z * X = 0 := by
-    dsimp only [Z, X]
-    rw [hDl, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc, A.iCoord_mul_lAdelic_mul, A.iCoord_mul_iAdelic_mul,
-      B.lCoord_mul_kAdelic_mul, Matrix.mul_zero, sub_self]
-  have hZY : Z * Y = 0 := by
-    dsimp only [Z, Y]
-    rw [hDl, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc, A.iCoord_mul_kAdelic_mul, A.iCoord_mul_iAdelic_mul,
-      B.lCoord_mul_kAdelic_mul, Matrix.mul_zero, sub_self]
+  have hXY := lineShiftTerm_mul_symm (A := A) (B := B) a b
+  have hYX := lineShiftTerm_mul_symm (A := A.symm) (B := B) b a
+  simp only [symm_symm, symm_iAdelic, symm_iCoord] at hYX
+  have hZX : Z * X = 0 := radicalTerm_mul_lineShiftTerm hD _ a
+  have hZY : Z * Y = 0 := radicalTerm_mul_lineShiftTerm (A := A.symm) hD _ b
   have hZ : Z = A.iAdelic * B.kAdelic * (bᴴ * a) * (B.lCoord * A.iCoord) -
       A.iAdelic * B.kAdelic * (aᴴ * b) * (B.lCoord * A.iCoord) := by
     dsimp only [Z]
@@ -712,23 +714,14 @@ lemma radicalCentre_comp_fromBlocks (hD : D.kAdelic = A.iAdelic * B.kAdelic)
     rw [Matrix.sub_mul]
     simp only [Matrix.mul_assoc, A.iCoord_mul_kAdelic_mul, A.lCoord_mul_kAdelic_mul,
       Matrix.mul_zero, sub_self]
-  have hUV : U * V = 0 := by
-    dsimp only [U, V]
-    rw [hDl, Matrix.mul_sub]
-    simp only [Matrix.mul_assoc, A.iCoord_mul_kAdelic_mul, A.iCoord_mul_iAdelic_mul,
-      B.lCoord_mul_kAdelic_mul, Matrix.mul_zero, sub_self]
+  have hUV : U * V = 0 := radicalTerm_mul_lineShiftTerm (A := A.symm) hD _ _
   have hUZ : U * Z = 0 := by
     dsimp only [U, Z]
     rw [hDl]
     simp only [Matrix.mul_assoc, A.iCoord_mul_kAdelic_mul, Matrix.mul_zero]
   have h_rhs : (1 + U) * ((1 + V) * (1 + Z)) = 1 + U + V + Z := by
-    have h1 : (1 + V) * (1 + Z) = 1 + V + Z := by
-      rw [Matrix.add_mul, Matrix.mul_add, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one,
-        Matrix.one_mul, hVZ, add_zero]
-      abel
-    rw [h1, Matrix.add_mul, Matrix.mul_add, Matrix.mul_add, Matrix.one_mul, Matrix.one_mul,
-      Matrix.one_mul, Matrix.mul_add, Matrix.mul_add, Matrix.mul_one, hUV, hUZ, add_zero, add_zero]
-    abel
+    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.one_mul, Matrix.mul_one, hVZ, hUV, hUZ,
+      add_zero]
   rw [G.adeleMatrix_mul, G.adeleMatrix_mul, adeleMatrix_radicalCentre, adeleMatrix_radicalCentre,
     adeleMatrix_radicalCentre, adeleMatrix_lineShift, h_l, symm_iAdelic, h_k, symm_iCoord]
   change 1 + (A.comp B).kAdelic * (fromBlocks z b c N - (fromBlocks z b c N)ᴴ) *

@@ -666,19 +666,12 @@ lemma eq_and_comp_toFamily_eq_of_hom (hx : x.HasSpanningCoords) {x₁ x₂ : The
   have h_base : x₁ = x₂ := by
     have h_base_pt : x₁ ≫ τ = x₂ ≫ τ := by simpa [baseHom, specMap] using congrArg specMap h_baseHom
     refine X.eq_of_level_coords_eq _ _ h_base_pt fun l ↦ ?_
-    calc X.lineBundle.pull (x₁ ≫ (X.levelPoints l).left)
-      _ = X.lineBundle.pull ((x₁.levelPoints l).left ≫ x₁.toFamily.left) :=
-        congrArg _ (x₁.levelPoints_comp_toFamily l).symm
-      _ = x₁.lineBundle.pull (x₁.levelPoints l).left := LineBundle.pull_comp _ _ _
-      _ = (x₂.lineBundle.pull j.left).pull (x₁.levelPoints l).left :=
-        congrArg (fun M : LineBundle x₁.groupScheme.left D.dualTorsion ↦
-          M.pull (x₁.levelPoints l).left) h_pull.symm
-      _ = x₂.lineBundle.pull ((x₁.levelPoints l).left ≫ j.left) := (LineBundle.pull_comp _ _ _).symm
-      _ = x₂.lineBundle.pull (x₂.levelPoints l).left := by rw [← Over.comp_left, h_levelPoints l]
-      _ = X.lineBundle.pull ((x₂.levelPoints l).left ≫ x₂.toFamily.left) :=
-        (LineBundle.pull_comp _ _ _).symm
-      _ = X.lineBundle.pull (x₂ ≫ (X.levelPoints l).left) :=
-        congrArg _ (x₂.levelPoints_comp_toFamily l)
+    have h_coord (y : ThetaObject X (Spec ⟨B⟩)) :
+        X.lineBundle.pull (y ≫ (X.levelPoints l).left) =
+          y.lineBundle.pull (y.levelPoints l).left := by
+      rw [← y.levelPoints_comp_toFamily l, LineBundle.pull_comp]
+      rfl
+    rw [h_coord x₁, h_coord x₂, ← h_pull, ← LineBundle.pull_comp, ← Over.comp_left, h_levelPoints l]
   have h_w : (j.left ≫ x₂.toFamily.left) ≫ X.total.hom = x₁.toFamily.left ≫ X.total.hom := by
     rw [assoc, x₂.toFamily.w]
     dsimp only [Over.map_obj_hom]

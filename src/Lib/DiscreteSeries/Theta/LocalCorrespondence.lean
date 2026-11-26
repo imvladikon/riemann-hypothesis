@@ -510,6 +510,7 @@ theorem New.Fischer.perpInDegree_ne_bot {j : ℤ} {G : Submodule ℂ (MvPolynomi
     sup_orthogonal_inf_of_hasOrthogonalProjection inf_le_left
   exact hj (by simpa [h_bot] using h_split)
 
+omit [Fintype ι] in
 /-- Let `Q` be highest of the weight `Λ` of the lowest `K`-type for the rows and harmonic for the
 columns (each `T.swap.fockLaplacian c d` with `ε' c ≠ ε' d` kills `Q`). If `s` times the centred
 parameter `l r - 2γ + card C` of row `r` exceeds `card C - card R`, then `Q` has no variable of sign
@@ -520,9 +521,8 @@ theorem New.IsMatch.pderiv_eq_zero_of_lt_centredParam [DecidableEq C] [Decidable
     (r : R) (s : ℤˣ) (hr : Fintype.card C - Fintype.card R < (s : ℤ) * T.centredParam l r)
     (c : C) (hc : T.varSign (r, c) = -s) : pderiv (T.varEquiv (r, c)) Q = 0 := by
   obtain ⟨h_weight, h_row⟩ := h_highest
-  exact ((polarisation_eq_of_isCompactPrimitive hm.hasGap_row.injective h_row h_harm r s).2
-    (h_weight r)
-    (hm.sign_mul_relWeight_nonneg r s hr)).2 c hc
+  exact (polarisation_self_eq_smul_of_isCompactPrimitive hm.hasGap_row.injective h_row h_harm
+    (h_weight r) (hm.sign_mul_relWeight_nonneg r s hr)).2 c hc
 
 /-- Howe's argument: a column-stable subspace that contains a joint harmonic and the images (a)–(c)
 below is the whole space.

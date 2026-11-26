@@ -206,7 +206,7 @@ lemma zeroTerm_graphSplitting (b : AutChar E) (δ : U S.J) (f f' : 𝒮 (S.hom T
     have hT : IsUnit (T.x⁻¹.val * T.J⁻¹.map toAdele) := by simp [map_J_inv]
     have hS : IsUnit (S.J.map toAdele * S.x.val)ᵀ := by simp [isUnit_transpose, S.map_J]
     simp only [P, hom_point_inv_mul_kronecker]
-    exact (kroneckerGL hT.unit hS.unit).isUnit
+    exact (Matrix.GeneralLinearGroup.kronecker hT.unit hS.unit).isUnit
   have h_per : IsContPeriodic (S.hom T).ratVectors fun x : m × n → 𝔸 E ↦
       pairWeil S T 1 b (S.ratEmbed δ⁻¹, 1) f x * conj (f' x) := by
     obtain ⟨h_invariant, -⟩ := (S.hom T).isThetaFunctional_rawTheta

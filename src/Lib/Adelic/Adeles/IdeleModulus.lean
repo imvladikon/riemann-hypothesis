@@ -379,9 +379,9 @@ lemma volume_map_mul_mul_adele (a : GL n (𝔸 E)) (b : GL Unit (𝔸 E)) :
   -- whose determinant is `b.det ^ card n * a.det`.
   let vecEquiv : Matrix n Unit (𝔸 E) ≃ₜ+ (Unit × n → 𝔸 E) :=
     { toFun := vec, invFun y i j := y (j, i), map_add' := vec_add }
-  let c : GL (Unit × n) (𝔸 E) := kroneckerGL (transposeGL b) a
+  let c : GL (Unit × n) (𝔸 E) := Matrix.GeneralLinearGroup.kronecker (transposeGL b) a
   have det_eq : c.det = b.det ^ card n * a.det :=
-    Units.ext (by simp [c, kroneckerGL, det_kronecker])
+    Units.ext (by simp [c, Matrix.GeneralLinearGroup.kronecker, det_kronecker])
   have h_semiconj (x : Matrix n Unit (𝔸 E)) : vecEquiv (a.val * x * b.val) = c.val *ᵥ vecEquiv x :=
     (kronecker_mulVec_vec a.val x b.valᵀ).symm
   rw [← det_eq]

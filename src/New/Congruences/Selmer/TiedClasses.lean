@@ -116,20 +116,6 @@ theorem tiedSelmer_inf_B1_eq_bot :
     (T.apply_γ_eq_zero (Submodule.mem_inf.1 hz).1)
 
 open scoped Classical in
-/-- If `V i g` says that `g` acts trivially on `T / ℓ ^ M`, the module `T.tiedCocycles` for tied
-primes `J` contains the coboundaries. -/
-lemma B1_le_tiedCocyclesZ1 {x : FinPlace E → AuxPrimeData E (ℓ ^ N) × (ι → O)}
-    (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x)
-    (hV : ∀ g : Gal(Ω/E), V i g ↔ reduceModPow ℓ M T.ρ g = 1) :
-    B1 (T.reductionModule ha).ρ ≤ T.tiedCocyclesZ1 ha R J x i := fun z hz ↦ by
-  obtain ⟨b, hb⟩ := mem_B1_iff.1 hz
-  have h_eq : (z : Gal(Ω/E) → n → QuotSpan a) = fun g ↦ T.ρ g • b - b := (funext hb).symm
-  change (z : Gal(Ω/E) → n → QuotSpan a) ∈ T.tiedCocycles R J x i a
-  rw [h_eq]
-  exact mem_selmerModule_of_subset (T.coboundary_mem_selmerModule hp hV ha b) .rfl
-    fun v hv ↦ Finset.mem_union_left _ hv
-
-open scoped Classical in
 /-- Let `J` be a set of tied primes, where the elements with `V i` act trivially on `T / ℓ ^ M`,
 and let `J' ⊆ J`. Then the module `T.tiedCocycles R J' x i a` with the ties on `J'` contains the
 coboundaries: the tame generators `γ_v` act trivially, and so do the Frobenius elements `φ_v` with
@@ -142,31 +128,19 @@ lemma B1_le_tiedCocyclesZ1_of_subset {x : FinPlace E → AuxPrimeData E (ℓ ^ N
   have h_eq : (z : Gal(Ω/E) → n → QuotSpan a) = fun g ↦ T.ρ g • b - b := (funext hb).symm
   change (z : Gal(Ω/E) → n → QuotSpan a) ∈ T.tiedCocycles R J' x i a
   rw [h_eq]
-  -- The ties on `J'` hold for the coboundary, as in `coboundary_mem_obeying_tieRelations`.
-  have h_ties : (fun g : Gal(Ω/E) ↦ T.ρ g • b - b) ∈
-      obeying (tieRelations J' x i) (QuotSpan a) := by
-    refine mem_obeying_tieRelations_iff.2 fun v hvJ' side ↦ ?_
-    have hvJ := hJ' hvJ'
-    obtain ⟨hv : v ∉ S₀, -, -, hv_conj : star v ∉ S₀⟩ := hp.auxiliary v hvJ
-    have h_aux : IsAuxPrimeDataAt (placesDividing E ℓ) v (x v).1 := hp.isAuxPrimeDataAt v hvJ
-    have h_mem : idOrConjInv side (x v).1.tameGenerator ∈
-        inertiaAbove (T.places : Set (FinPlace E))ᶜ :=
-      idOrConjInv_mem_inertiaAbove (S := (T.places : Set (FinPlace E))ᶜ) h_aux.isPlaceOver
-        h_aux.tame_gen.1 ⟨fun h ↦ hv (T.subset h), fun h ↦ hv_conj (T.subset h)⟩ side
-    have hγ : T.ρ (idOrConjInv side (x v).1.tameGenerator) = 1 := T.unramified _ h_mem
-    by_cases h_slope : (x v).2 i = 0
-    · simp [hγ, h_slope]
-    · have hφ : T.ρ (idOrConjInv side (x v).1.frob) • b = b :=
-        T.smul_eq_self_of_reduceModPow_eq_one ha
-          (hV _ (hp.apply_idOrConjInv_of_slope_ne_zero hvJ h_slope side)) b
-      simp [hγ, hφ]
-  refine mem_selmerModule_iff.2 ⟨fun g h ↦ by simp [mul_smul, smul_sub],
-    fun g ⟨v, hv, B, hB, hg⟩ ↦ by
-      simp [T.unramified g ⟨v, fun h ↦ hv (Finset.mem_union_left _ h), B, hB, hg⟩],
-    mem_obeying.2 ?_, (T.isLocallyConstant_smul ha b).sub (.const b)⟩
-  rintro f (hf | hf)
-  · exact mem_obeying.1 (T.coboundary_mem_obeying_localRelations a b) f hf
-  · exact mem_obeying.1 h_ties f hf
+  refine mem_selmerModule_of_subset (T.coboundary_mem_selmerModule hp hV ha b)
+    (Set.union_subset_union_right _ ?_) (fun _ hv ↦ Finset.mem_union_left _ hv)
+  rintro _ ⟨⟨⟨v, hv⟩, side⟩, rfl⟩
+  exact ⟨(⟨v, hJ' hv⟩, side), rfl⟩
+
+open scoped Classical in
+/-- If `V i g` says that `g` acts trivially on `T / ℓ ^ M`, the module `T.tiedCocycles` for tied
+primes `J` contains the coboundaries. -/
+lemma B1_le_tiedCocyclesZ1 {x : FinPlace E → AuxPrimeData E (ℓ ^ N) × (ι → O)}
+    (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x)
+    (hV : ∀ g : Gal(Ω/E), V i g ↔ reduceModPow ℓ M T.ρ g = 1) :
+    B1 (T.reductionModule ha).ρ ≤ T.tiedCocyclesZ1 ha R J x i :=
+  T.B1_le_tiedCocyclesZ1_of_subset ha hp (fun g ↦ (hV g).mp) (fun _ hv ↦ hv)
 
 /-- Under the hypotheses of `B1_le_tiedCocyclesZ1_of_subset`, the tied Selmer group with the ties
 on `J' ⊆ J` has the length of the module of classes of `T.tiedCocycles R J' x i a` in
@@ -191,12 +165,8 @@ include hp hV
 cohomology `H¹(Gal(Ω/E), T / a)`. -/
 theorem length_tiedSelmer_eq_length_classes :
     length O (T.tiedSelmer R J x i a) =
-      length O ((T.tiedCocyclesZ1 ha R J x i).map (T.reductionModule ha).π₁) := by
-  rw [← (Submodule.comapSubtypeEquivOfLe (T.tiedSelmer_le_Z1 ha)).length_eq,
-    T.comap_tiedSelmer_eq ha]
-  exact length_inf_vanishingAt_eq_length_map (T.reductionModule_ρ_γ ha) T.isUnit_ζ_sub_one
-    (T.reductionModule ha).continuous_orbit _ (T.reductionModule ha).ker_π₁
-    (T.B1_le_tiedCocyclesZ1 ha hp hV)
+      length O ((T.tiedCocyclesZ1 ha R J x i).map (T.reductionModule ha).π₁) :=
+  T.length_tiedSelmer_eq_length_map_π₁ ha hp (fun g ↦ (hV g).mp) (fun _ hv ↦ hv)
 
 /-- `New.Selmer.SelmerDatum.exists_length_tiedSelmer_le` for classes. Let `J` be a set of tied
 primes, where `V i g` says that `g` acts trivially on `T / ℓ ^ M`, and let `M < N` and

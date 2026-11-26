@@ -169,32 +169,21 @@ integral `c` such that the transposition of `a` and `b` conjugates `g (1 + c E_a
 lemma exists_swap_conj_mem_proIwahori (h : a ⋖ b) (hg : g ∈ proIwahori) :
     ∃ c : 𝒪[F],
       MulAut.conj (permGL (Equiv.swap a b)) (g * transvectionGL h.ne c.val) ∈ proIwahori := by
-  -- Choose `c` so that the column operation `transvectionGL h.ne c` clears the entry `(a, b)`. As
-  -- `a` and `b` are adjacent, this is the only entry that the swap moves from above the diagonal to
-  -- below it.
+  -- Choose `c` so `transvectionGL h.ne c` clears entry `(a, b)`, the only entry swapped across
+  -- the diagonal.
   let c : F := -g a b / g a a
-  have hc_int : v c ≤ 1 := by simp_all [c, v_diag_eq_one_of_mem_proIwahori, mem_proIwahori]
-  have h_cleared : g * transvectionGL h.ne c ∈ proIwahori :=
-    mul_mem hg (transvectionGL_mem_proIwahori _ (.inr ⟨hc_int, h.lt⟩))
-  have h_conj_eq : MulAut.conj (permGL (Equiv.swap a b)) (g * transvectionGL h.ne c) =
-      (permGL (swap a b) * diagGL 1)⁻¹ * (g * transvectionGL h.ne c) *
-        (permGL (swap a b) * diagGL 1) := by simp [MulAut.conj_apply, ← map_inv]
-  refine ⟨⟨c, hc_int⟩, ?_⟩
-  rw [mem_proIwahori_iff_blockParahoric] at h_cleared
-  rw [h_conj_eq, mem_proIwahori_iff_blockParahoric]
-  refine conj_monomial_mem_blockParahoric 1 (swap a b) _ h_cleared ?_
-  -- For `t = 1` the condition of `conj_monomial_mem_blockParahoric` asks only that the entry
-  -- `(a, b)` vanish.
-  have h_entry_zero : (g.val * transvection a b c) a b = 0 := by
-    have h_aa_ne : g a a ≠ 0 := fun h_zero ↦ by
-      simpa [h_zero] using v_diag_eq_one_of_mem_proIwahori hg a
-    simp [mul_transvection_apply_same, c, h_aa_ne]
-  obtain ⟨h_lt, h_adj⟩ := h
-  -- Only the pair `(a, b)` is exchanged across the diagonal, and there the entry is `0`.
-  suffices h_pairs : ∀ i j : Fin N, (g.val * transvection a b c) (swap a b i) (swap a b j) = 0 ∨
-        ((if j < i then 1 else 0 : ℤ) ≤ if swap a b j < swap a b i then 1 else 0) by
-    simpa using h_pairs
-  grind [one_pos]
+  have hc : v c ≤ 1 := by simp_all [c, v_diag_eq_one_of_mem_proIwahori, mem_proIwahori]
+  have h_mem : (permGL (swap a b) * diagGL 1)⁻¹ * (g * transvectionGL h.ne c) *
+      (permGL (swap a b) * diagGL 1) ∈ proIwahori :=
+    mem_proIwahori_iff_blockParahoric.mpr <| conj_monomial_mem_blockParahoric 1 (swap a b) _
+      (mem_proIwahori_iff_blockParahoric.mp <|
+        mul_mem hg (transvectionGL_mem_proIwahori _ (.inr ⟨hc, h.lt⟩))) <| by
+    have haa : g a a ≠ 0 := fun h0 ↦ by simpa [h0] using v_diag_eq_one_of_mem_proIwahori hg a
+    have h0 : (g.val * transvection a b c) a b = 0 := by simp [mul_transvection_apply_same, c, haa]
+    obtain ⟨h_lt, h_adj⟩ := h
+    simp
+    grind [one_pos]
+  exact ⟨⟨c, hc⟩, by simpa [MulAut.conj_apply, ← map_inv] using h_mem⟩
 
 /-- If `v u = 1`, every entry of the diagonal torus element with `-u⁻¹` at `a`, `u` at `b` and `1`
 elsewhere has valuation `1`. -/

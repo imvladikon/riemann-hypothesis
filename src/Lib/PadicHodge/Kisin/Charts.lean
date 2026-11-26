@@ -199,7 +199,7 @@ lemma exists_chart_of_pow_mul_eq_neg (f : ℕ+) {x : OC} {e : ℕ} (v : OCˣ) (h
     exact hA_unit.mul_right_dvd.mpr ⟨-(v : OC), by simp [h]⟩
   -- An element of `ker θ` whose reduction modulo `p` has an untilt dividing `p` generates `ker θ`.
   have h_assoc : Associated (ev E₀) xi :=
-    associated_of_dvd_dvd ((theta_eq_zero_iff_dvd_of_untilt_dvd h_ker h_dvd).mp (by simp))
+    associated_of_dvd_dvd (dvd_of_theta_eq_zero_of_untilt_dvd h_ker h_dvd (by simp))
       (theta_eq_zero_iff_xi_dvd.mp h_ker)
   let chart : Chart :=
     { f := f, seriesMap := ev, unitSeries := A, not_isUnit_z := by rwa [hev]

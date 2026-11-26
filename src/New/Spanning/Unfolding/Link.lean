@@ -34,7 +34,7 @@ vanishes if and only if the spans of the frame and of its image under `γ` share
   link as its graph.
 * `New.Filling.linkIsometry_frameImage_mulVec`, `New.Filling.mul_dotProduct_comp_indexX₀_eq_sub`:
   the link on combinations of the second frame, and the norm identity that follows.
-* `New.Filling.termDisc_eq_zero_iff`: the criterion for the vanishing of `termDisc γ`.
+* `New.Filling.termDisc_eq_zero_of_inf_ne_bot`: the sufficient condition for the vanishing of `termDisc γ`.
 
 Notions from other files:
 * `New.Shape.Form.splitGram`: the Gram matrix of `ϱ` hyperbolic planes and a middle space with Gram
@@ -727,13 +727,12 @@ lemma mem_link_iff_linkIsometry {γ : S.G E} {p : 𝔰.MiddleIndex ⊕ 𝔰.Midd
     rw [← linkIsometry_linkSource hq, h_source, h]
   rwa [← eq_of_linkSource_eq_of_linkTarget_eq h_source h_target]
 
-/-- Two elements of `S.G E` have the same link isometry if and only if they have the same link. -/
-theorem linkIsometry_eq_iff {γ γ' : S.G E} :
-    linkIsometry γ = linkIsometry γ' ↔ link γ = link γ' := by
-  refine ⟨fun h ↦ Submodule.ext fun p ↦ ?_, fun h ↦ LinearEquiv.ext fun a ↦ ?_⟩
-  · rw [mem_link_iff_linkIsometry, mem_link_iff_linkIsometry, h]
-  · obtain ⟨p, hp, rfl⟩ := exists_mem_link_linkSource_eq γ a
-    rw [linkIsometry_linkSource hp, linkIsometry_linkSource (h.le hp)]
+/-- Two elements of `S.G E` with the same link have the same link isometry. -/
+theorem linkIsometry_eq_of_link_eq {γ γ' : S.G E} (h : link γ = link γ') :
+    linkIsometry γ = linkIsometry γ' := by
+  refine LinearEquiv.ext fun a ↦ ?_
+  obtain ⟨p, hp, rfl⟩ := exists_mem_link_linkSource_eq γ a
+  rw [linkIsometry_linkSource hp, linkIsometry_linkSource (h.le hp)]
 
 /-- The product of two pairs `p`, `q` for the form `S.linkForm = T ⊕ -T`, where `T` is the form of
 `X₀ ⊥ E z_N`, is the difference of the products, in the positive space `X₀ ⊥ E z⁺` with Gram matrix
@@ -904,16 +903,13 @@ lemma frameImage_mulVec_eq_zero_iff {γ : S.G E} {y : Fin (𝔰.ϱ + 1) → E} :
     besselFrame_injective.eq_iff] using congrFun h_one (𝔰.besselFrame a)
 
 /-- The quantity `S.termDisc γ`, formed from the last two leading minors of the matrix of products
-of the frame `f = (e_1, …, e_ϱ, z)` with `γ f`, vanishes if and only if the spans of `f` and of
-`γ f` have a nonzero intersection. -/
-theorem termDisc_eq_zero_iff {γ : S.G E} :
-    S.termDisc γ = 0 ↔ colSpan (frameImage 1) ⊓ colSpan (frameImage γ.val.val) ≠ ⊥ := by
-  rw [termDisc_eq_zero_iff_exists, Submodule.ne_bot_iff]
-  constructor
-  · rintro ⟨x, y, hy, hxy⟩
-    exact ⟨frameImage γ *ᵥ y, ⟨⟨x, hxy⟩, ⟨y, rfl⟩⟩, frameImage_mulVec_eq_zero_iff.not.2 hy⟩
-  · rintro ⟨t, ⟨⟨x, hxy⟩, ⟨y, rfl⟩⟩, h_ne⟩
-    exact ⟨x, y, frameImage_mulVec_eq_zero_iff.not.1 h_ne, hxy⟩
+of the frame `f = (e_1, …, e_ϱ, z)` with `γ f`, vanishes if the spans of `f` and of `γ f` have a
+nonzero intersection. -/
+theorem termDisc_eq_zero_of_inf_ne_bot {γ : S.G E}
+    (h : colSpan (frameImage 1) ⊓ colSpan (frameImage γ.val.val) ≠ ⊥) :
+    S.termDisc γ = 0 := by
+  obtain ⟨t, ⟨⟨x, hxy⟩, ⟨y, rfl⟩⟩, h_ne⟩ := (Submodule.ne_bot_iff _).1 h
+  exact termDisc_eq_zero_iff_exists.2 ⟨x, y, frameImage_mulVec_eq_zero_iff.not.1 h_ne, hxy⟩
 
 end Filling
 

@@ -279,7 +279,9 @@ lemma rescale_mem_range_seriesToCp {ϖ : ℂ_[p]} (hϖ : ‖ϖ‖ ≤ (p : ℝ) 
     (mod_cast (Fact.out : p.Prime).one_le) (neg_nonpos.2 (varpiValuation_nonneg d p))
   -- Compare `g(ϖ z)` to `g(ϖ₀ z)`, which is an integral series in `ϖ₀ Y`.
   have h_mem (n : ℕ) : rescale ϖ₀ C.formalParam ∈ integralBelow p (n + 1) := mem_integralBelow.2
-    fun k _ ↦ by simpa [hY, coeff_seriesToCp] using mul_le_one₀ h_le (norm_nonneg _) (coeff k Y).2
+    fun k _ ↦ by
+      simpa [hY, coeff_seriesToCp] using
+        (mul_le_of_le_one_left (norm_nonneg _) h_le).trans (coeff k Y).2
   refine mem_range_seriesToCp.2 fun n ↦ le_trans ?_ (mem_integralBelow.1
     (subst_seriesToCp_mem_integralBelow
       (by simp [constantCoeff_rescale, constantCoeff_formalParam]) (h_mem n) f) n n.lt_succ_self)

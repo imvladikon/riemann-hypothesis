@@ -129,7 +129,7 @@ translates at `w j`, such that for all `g` in the Galois group, `Nm_j tr[(γ - 1
 `∂ tr[(γ - 1) g] ≡ Nm_j tr[(φ - 1) H(φ) g]`, where `Nm_j` is the sum over `GL_n(𝔽_w)` at `w = w j`,
 and such that each `g ∈ GL_n(𝔽_w)` has an integral operator `Z` with `c ∂ (g - 1) ≡ Nm_j Z` and
 `δ Nm Z = 0`. -/
-theorem exists_mul_traceElement_tameGenerator_eq_frob (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+theorem exists_mul_traceElement_tameGenerator_eq_frob (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (j : J) {H : EllAdicIntegers[X]} {t : ℕ} (ht : t ≠ 0) (δ : D.heckeAlgebra Q.place)
     (h_chain : ∀ x : D.Eigensystem Q.place, x.val ∈ D.Eigensystem ![] → δ.val x ≠ 0 →
@@ -247,7 +247,7 @@ coefficients of `𝒩 = ∑ 𝒩 S α_S` with `α_S = ∏_{j ∈ S} α j`, that 
 `Y ∅ = δ ^ #J`: one factor `δ` for each place. The first congruence is stated for the coefficient of
 `∏ α j`. As `𝔞` is an ideal, this covers all square-free monomials (multiply by `α_{Sᶜ}`), which are
 all that count where `α j ^ 2 = 0`. -/
-theorem exists_deformed_norm_family (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+theorem exists_deformed_norm_family (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     {H : J → EllAdicIntegers[X]} {t : ℕ} (ht : t ≠ 0) (δ' : D.heckeAlgebra Q.place)
     (h_chain : ∀ (j : J) (x : D.Eigensystem Q.place), x.val ∈ D.Eigensystem ![] → δ'.val x ≠ 0 →
@@ -308,7 +308,7 @@ omit [Nonempty n] [V.IsStd] [WeilData E]
 times a form of base level `![]` is a norm: an integral operator `Ψ` has `Nm (Ψ y) = c y` for all
 such forms `y`, where `Nm` is the sum of the action `residueRep` of the finite group
 `∏ GL_n(𝔽_{w j})` and `c` is the common multiple of the stabiliser orders in `D`. -/
-lemma exists_norm_apply_eq_smul (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j)) :
+lemma exists_norm_apply_eq_smul (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) :
     ∃ Ψ : D.integralEnd Q.place, ∀ y : D.formsOfLevel Q.place, y.val ∈ D.formsOfLevel ![] →
       ((∑ g : (j : J) → GL (Fin (card n)) (ResField (Q.place j)), D.residueRep Q g) * Ψ).val y =
         c • y := by
@@ -365,7 +365,7 @@ omit [Nonempty n] [V.IsStd] [WeilData E] in
 `residueRep` of the finite group `∏ GL_n(𝔽_{w j})` and `δ = c² A δ₀`, with `A`, `δ₀` in the Hecke
 algebra. If the forms `u`, `l`, `y` satisfy `Nm u = d c l` and `A δ₀ l = n₀ A y`, then
 `Nm δ s u = n₀ c² d c A s y` for all `s` in the Hecke algebra. -/
-lemma norm_mul_heckeAction_apply (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma norm_mul_heckeAction_apply (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {A δ₀ : D.heckeAlgebra Q.place} {n₀ : EllAdicIntegers} {u l y : D.formsOfLevel Q.place} {d : ℕ}
     (hu : (∑ g : (j : J) → GL (Fin (card n)) (ResField (Q.place j)), D.residueRep Q g).val u =
       d • c • l)
@@ -397,7 +397,7 @@ omit [V.IsStd] [WeilData E] in
 `δ = c² A δ₀`, and let `Y ∅ = δ ^ i`. If `Nm u = d c l`, `A δ₀ l = n₀ A y`, `δ₀ y = n₀ y` and the
 Hecke elements `coef S` kill `y` for `S ≠ J`, then `∑ S, Y Sᶜ Nm δ (coef S)` sends `u` to
 `(n₀ c²) ^ (i + 1) d c A ^ (i + 1) (coef J) y`. -/
-lemma sum_mul_residueRep_apply_eq_smul (h_offLevel : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma sum_mul_residueRep_apply_eq_smul (h_offLevel : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {A δ₀ : D.heckeAlgebra Q.place} {n₀ : EllAdicIntegers} {u l y : D.formsOfLevel Q.place}
     {d i : ℕ}
     (hu : (∑ g : (j : J) → GL (Fin (Fintype.card n)) (ResField (Q.place j)),
@@ -449,7 +449,7 @@ satisfy `A δ₀ l = n₀ A y`, `δ₀ y = n₀ y` and `𝒟_S y = 0` for `S ≠
 divides `ℓ ^ ν`, where `i₀ = #J + 1`, then `d c A ^ i₀ 𝒟_J y` is integral. In the application `𝒟`
 is Ribet's element, `A` is the indicator function of the congruent systems (so `A ^ i₀ = A`), and
 `y` is the projection of `l` to the lifts. -/
-theorem smul_top_coeff_mem_ellIntegralForms (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+theorem smul_top_coeff_mem_ellIntegralForms (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     {H : J → EllAdicIntegers[X]} {t : ℕ} (ht : t ≠ 0) (A δ₀ : D.heckeAlgebra Q.place)
     (n₀ : EllAdicIntegers)
@@ -641,7 +641,7 @@ the `N x` has a common Ribet element for the `δ i` at `π` whose coefficient `r
 Then there is a function `s` on systems with `v (m s π) ≤ bound` such that, for every natural number
 `d`, the form `d c s y` is integral whenever `l` and `y` are forms of base level, `d l` is integral,
 `y` is supported on `𝓧` and agrees with `l` at the systems where `δ₀ ≠ 0`. -/
-lemma exists_diagOp_mem_ellIntegralForms (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma exists_diagOp_mem_ellIntegralForms (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     {ι : Type} (δ : ι → D.Eigensystem Q.place → PadicAlgCl ℓ)
     {K : Type} [Fintype K] (sel : K → ι) (liftValue : K → EllAdicIntegers)

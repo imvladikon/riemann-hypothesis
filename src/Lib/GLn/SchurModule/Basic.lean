@@ -403,8 +403,7 @@ abbrev weylGramOver {κ : Φ → ℕ → ℕ} : Matrix (WeylIndexFamily n κ) (W
   (weylGram n κ).map (Int.cast : ℤ → R)
 
 /-- The polynomial of a vector ξ of the Weyl module: Σ_i (Gξ)_i b_i, with G the Gram matrix and b_i
-the basis minor products. It is the pairing of the tensor of ξ with the tensor of the variables
-(`toPoly_eq_sum_fillingPoly`). -/
+the basis minor products. -/
 def toPoly : (WeylIndexFamily n κ → R) →ₗ[R] MatrixPoly ((τ : Φ) × n τ) R :=
   GL.nablaCombination κ ∘ₗ ((weylGram n κ).map (Int.cast : ℤ → R)).mulVecLin
 
@@ -739,18 +738,25 @@ lemma diagramWeight_apply (τ : Φ) (i : ℕ) : diagramWeight N κ (τ, i) = (Io
 lemma diagramWeight_add : diagramWeight N (κ + κ') = diagramWeight N κ + diagramWeight N κ' := by
   simp [diagramWeight, smul_sum, sum_add_distrib]
 
+private lemma map_minor {h : ℕ} (I : Fin h → m) :
+    MvPolynomial.map φ (minor R I) = minor S I := by
+  simp only [minor, RingHom.map_det]
+  congr 1
+  ext a b
+  simp
+
 @[simp]
 lemma map_nablaBasis [∀ τ : Φ, DecidableEq (n τ)] (i : WeylIndexFamily n κ) :
     MvPolynomial.map φ (nablaBasis R n κ i) = nablaBasis S n κ i := by
-  simp [nablaBasis, tableauPoly, minor, det_apply]
+  simp [nablaBasis, tableauPoly, map_minor]
 
 @[simp]
 lemma map_highestPoly : MvPolynomial.map φ (highestPoly R κ N) = highestPoly S κ N := by
-  simp [highestPoly, tableauPoly, minor, det_apply]
+  simp [highestPoly, tableauPoly, map_minor]
 
 @[simp]
 lemma map_detPow (e : Φ → ℕ) : MvPolynomial.map φ (detPow R n e) = detPow S n e := by
-  simp [detPow, minor, det_apply]
+  simp [detPow, map_minor]
 
 @[simp]
 lemma detPow_zero : detPow R n 0 = 1 := by simp [detPow]

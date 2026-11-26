@@ -485,7 +485,7 @@ lemma New.SiegelWeil.siegel_weil_fourierCoeff {E κ : Type} [Field E] [CMType E]
 `ψ_f(z (x* x - α) / 2)`, integrated over the self-adjoint finite adeles `z`. The measure of `z`
 gives the codifferent the volume `1`, and that of each coordinate of `x` gives `Ô` the volume
 `volÔ E`. -/
-noncomputable def New.normDensity {E κ : Type} [Field E] [CMType E] [WeilData E] [Fintype κ]
+noncomputable def New.normDensity {E κ : Type} [Field E] [CMType E] [Fintype κ]
     (Φ₀ : (κ → 𝔸f E) → NNReal) (α : 𝔸f E) : ℂ :=
   ∫ z : selfAdjoint (𝔸f E), ∫ x : κ → 𝔸f E,
     (ψf E ((2⁻¹ : E) * (z.val * (star x ⬝ᵥ x - α))) : ℂ) ∂volume.withDensity fun x ↦ Φ₀ x

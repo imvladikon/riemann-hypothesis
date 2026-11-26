@@ -690,7 +690,7 @@ noncomputable def unfoldStageOn :
       (movedDatum ϑ ξ y k) (unfoldStageOn k (by omega)) (γ.val * (ξ (k + 1), y (k + 1)))
 
 /-- The function `𝒲_{k+1}` on `U(Y_{k+1})` that the first `k + 1` unfolding steps leave. -/
-noncomputable def unfoldStage (k : ℕ) (hk : k ≤ 2 * D.ϱ + 1) {X : Type} {s : ℕ} [Fintype X]
+noncomputable def unfoldStage (k : ℕ) (hk : k ≤ 2 * D.ϱ + 1) {X : Type} {s : ℕ}
     [DecidableEq X] (Y' : Grading (D.spaceY (k + 1)) D.N X s) : New.G D.E (D.signsY (k + 1)) → ℂ :=
   (D.gradingY k hk).unfoldStep Y' (rankTwist (D.chainChar ϑ (k + 1))) (movedDatum ϑ ξ y k)
     (unfoldStageOn ϑ t φ ξ y k hk)

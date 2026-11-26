@@ -861,7 +861,7 @@ lemma normalizedDescent_eq_zero_of_mem_orthogonal {Ξ : (D.descentPair ϑ j).For
   -- For every `y`, `⟨Θ y, Ξ⟩ = ⟨Θ y, e₀ Ξ⟩ = ⟨e₀ Θ y, Ξ⟩`, and `e₀ Θ y` is the lift of a good form.
   have h_fix : (D.descentPair ϑ j).groupAlgAction D.e₀ Ξ = Ξ :=
     (D.isCentralProj_e₀.1.map _).mem_range_iff.1 hΞ
-  refine (D.normalizedDescent_eq_zero_iff ϑ Ξ).2 fun y ↦ ?_
+  refine D.normalizedDescent_eq_zero_of_inner_eq_zero ϑ Ξ fun y ↦ ?_
   have h_lift : (D.descentPair ϑ j).groupAlgAction D.e₀ (D.singleLift ϑ j y) ∈
     (D.goodLift ϑ j).range :=
     ⟨⟨_, _, rfl⟩, singleLift_asAlgebraHom ..⟩

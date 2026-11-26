@@ -439,12 +439,6 @@ lemma weylGramOver_eq_transpose_mul :
   rw [weylGramOver, ← fillingMatrix_transpose_mul_self]
   exact Matrix.map_mul (f := Int.castRingHom R)
 
-/-- The polynomial of a vector is the pairing of its tensor with the tensor of the variables. -/
-lemma toPoly_eq_sum_fillingPoly (ξ : WeylIndexFamily n κ → R) :
-    toPoly n κ ξ = ∑ T : ColumnFilling n κ, (fillingMatrixOver R n κ *ᵥ ξ) T • fillingPoly R T := by
-  rw [← nablaCombination_weylGramOver_mulVec, weylGramOver_eq_transpose_mul, ← mulVec_mulVec,
-    nablaCombination_transpose_mulVec]
-
 /-- The integer Gram matrix `weylGram n κ` is symmetric. Its entries are the chosen coefficients of
 the generic kernel `weylKernel n κ` in the products b_i(x) b_j(y) of the basis minor products
 b = `nablaBasis`, indexed by `WeylIndexFamily n κ`. -/

@@ -1,5 +1,6 @@
 module
 
+public import Lib.GLn.SchurModule.SchurMatrix
 public import New.Derivatives.Divisibility.NullFrames
 public import New.Derivatives.FormalGroup.ThetaProducts
 

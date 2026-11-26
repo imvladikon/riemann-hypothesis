@@ -344,12 +344,13 @@ lemma InClass.tensor (h : InClass F K U Y) (h' : InClass F K' U' L) :
   obtain ⟨P, k, hPk, hk, -⟩ := h.isPotentiallyCrystalline.exists_isHodgeTateFrame (finBasis ..) g
   obtain ⟨Q, l, hQl, hl, -⟩ := h'.isPotentiallyCrystalline.exists_isHodgeTateFrame (finBasis ..) g
   have jumps : HasJumps (Y.tensor L).ρ g (Finset.univ.val.map (k · + l ·).uncurry) := by
-    refine (hasJumps_of_rows ((finBasis O Y).tensorProduct (finBasis O L)) (kroneckerGL P⁻¹ Q⁻¹) _
-      ?_).1
+    refine (hasJumps_of_rows ((finBasis O Y).tensorProduct (finBasis O L))
+      (Matrix.GeneralLinearGroup.kronecker P⁻¹ Q⁻¹) _ ?_).1
     filter_upwards [hPk, hQl] with x hPx hQx ⟨a, b⟩ ⟨a', b'⟩
     -- the row identity at `((a, b), (a', b'))` is the product of those for `P⁻¹` and for `Q⁻¹`
     simpa [Matrix.mul_apply, zpow_add, mul_smul, Finset.sum_mul_sum, Fintype.sum_prod_type,
-      LinearMap.toMatrix_apply, mul_comm (_ : O), kroneckerGL, mul_mul_mul_comm] using
+      LinearMap.toMatrix_apply, mul_comm (_ : O), Matrix.GeneralLinearGroup.kronecker,
+      mul_mul_mul_comm] using
       congrArg₂ HMul.hMul (inv_mul_apply_of_isHodgeTateFrame hPx a a')
         (inv_mul_apply_of_isHodgeTateFrame hQx b b')
   -- so a jump is some `k a + l b`, where `k a` is a jump of `Y` and `l b` is a jump of `L`

@@ -172,17 +172,14 @@ and `mayer_vietoris_bijective`. -/
 lemma TestCohomology.mayer_vietoris_injective (hUW : U ≤ W) (hVW : V ≤ W)
     (h_dense : IsCohomDense (locConstCoeff Λ) (((U ⊔ V).preimage W.ι).whisker testIncl)) (n : ℕ)
     {T : Subfunctor Y} (hT : T = U ⊓ V) :
-    ((∀ m < n, ∀ z : H (freeAb.obj (testIncl ⋙ T.toFunctor)) (locConstCoeff Λ) m,
+    (∀ m < n, ∀ z : H (freeAb.obj (testIncl ⋙ T.toFunctor)) (locConstCoeff Λ) m,
         ∃ (x : H (freeAb.obj (testIncl ⋙ U.toFunctor)) (locConstCoeff Λ) m)
           (y : H (freeAb.obj (testIncl ⋙ V.toFunctor)) (locConstCoeff Λ) m),
           map Λ (homOfLe (hT.le.trans inf_le_left)) m x -
             map Λ (homOfLe (hT.le.trans inf_le_right)) m y = z) →
-      Injective ((map Λ (homOfLe hUW) n).prod (map Λ (homOfLe hVW) n))) ∧
-    ((∀ B : CommRingCat, T.toFunctor.obj B → (0 : B) = 1) →
-      Bijective ((map Λ (homOfLe hUW) n).prod (map Λ (homOfLe hVW) n))) := by
+      Injective ((map Λ (homOfLe hUW) n).prod (map Λ (homOfLe hVW) n)) := by
   subst hT
-  exact ⟨mayer_vietoris_injective_of_sub_surjective hUW hVW h_dense n,
-    mayer_vietoris_bijective hUW hVW h_dense n⟩
+  exact mayer_vietoris_injective_of_sub_surjective hUW hVW h_dense n
 
 /-- Downward induction by Zorn's lemma. Let `P` be a property of the elements above `a`. If every
 nonempty chain of counterexamples has an upper bound that is a counterexample, and `P` holds at `m`

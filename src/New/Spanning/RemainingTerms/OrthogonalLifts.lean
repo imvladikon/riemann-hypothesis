@@ -168,15 +168,9 @@ variable {τ : Type} {v : Matrix (𝔰.MiddleIndex ⊕ 𝔰.MiddleIndex) τ E}
 
 /-- Let `u` be an orthogonal lift. In its row of the isotropic basis vector `e_i`, `i ≥ j`, it has
 the identity in its first block of columns and zero in the second. -/
-lemma IsOrthogonalLift.apply_inl (hu : IsOrthogonalLift j γ v u) (i : IndexNotBelow j) :
-    (∀ a : IndexNotBelow j, u (inl i.val) (inl a) = if i = a then 1 else 0) ∧
-      ∀ b : τ, u (inl i.val) (inr b) = 0 := by
-  have h_entry (x : IndexNotBelow j ⊕ τ) : u (inl i.val) x =
-      fromCols (1 : Matrix (IndexNotBelow j) (IndexNotBelow j) E) 0 i x := by
-    simpa [eStarCols, -Subtype.forall, Matrix.mul_apply, Matrix.one_apply] using
-      congrFun₂ hu.dual i x
-  exact ⟨fun a ↦ by simpa [Matrix.one_apply] using h_entry (inl a),
-    fun b ↦ by simpa using h_entry (inr b)⟩
+lemma IsOrthogonalLift.apply_inl (hu : IsOrthogonalLift j γ v u) (i : IndexNotBelow j)
+    (a : IndexNotBelow j) : u (inl i.val) (inl a) = if i = a then 1 else 0 := by
+  simpa [eStarCols, Matrix.mul_apply, Matrix.one_apply] using congrFun₂ hu.dual i (inl a)
 
 /-- If `u` is an orthogonal lift (`IsOrthogonalLift j γ v u`), its first columns `u.toCols₁` are
 orthogonal, for the form `S.ratGram`, to the columns of `isotropicFramePair γ`, which span `A` and

@@ -144,6 +144,7 @@ lemma _root_.New.AreMatched.right_eq_pow_mul_apply_smul {R : Type} [CommRing R] 
   rw [h_smul, mul_comm]
   simpa [eq_comm] using h.right_mul _ ⟨.scalar b ε, rfl⟩ X
 
+omit [DecidableEq r] in
 /-- Let `σ` split `n` into `b` and `r`, let `𝔠` be a tame character: a character `ν = 𝔠.character`
 of `[U(1)]` of weight `μ`, tamely ramified exactly at a finite set `S = 𝔠.ramifiedPlaces` of split
 places, and let `y` lie in the real Fock space of `(U, W)`. There is a number `a` of modulus one
@@ -194,6 +195,7 @@ lemma exists_localDatum_adjointDatum_eq_smul (W : Space E n s) (U : Space E b u)
         ((vecToMatrix (f.finEquiv x)).map (evalPlaces 𝔠.ramifiedPlaces))) _)
   simp only [h_scale]
 
+omit [DecidableEq r] in
 /-- Let `W` have even rank, split by `σ` into `b` and `r`, let `𝔠` be a tame character: a character
 `ν = 𝔠.character` of `[U(1)]` of weight `μ`, tamely ramified exactly at a finite set
 `S = 𝔠.ramifiedPlaces` of split places, and put `γ = rankTwist ν⁻¹ n = ν⁻¹ υ ^ (rk W / 2)`. There is

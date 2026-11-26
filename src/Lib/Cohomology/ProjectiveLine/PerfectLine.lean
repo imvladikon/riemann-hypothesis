@@ -92,7 +92,6 @@ def pointOrTorus : ULift.{1} Bool → CommAlg OFlat
 
 lemma pointOrTorus_true : pointOrTorus ⟨true⟩ = monoidAlg ℚ := rfl
 
-lemma pointOrTorus_false : pointOrTorus ⟨false⟩ = CommAlgCat.of OFlat OFlat := rfl
 
 /-- For O^♭-algebras B_i indexed by Bool and an endofunctor ψ of O^♭-algebras (default the
 identity), the functor S ↦ ⊔_i Hom(ψ(B_i), S^♭) on p-adic tests. -/

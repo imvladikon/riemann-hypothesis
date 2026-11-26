@@ -957,18 +957,13 @@ finite set `L.jumpSet j` of jumps at the letter `j = i.stepBack a` (the one with
 and every form `μ` of type `u` at `j` (a linear map to `B_dR`, `Γ'`-equivariant on `1 ⊗ L`, sending
 its projection to `j` into `hodgeFil (-u)`): the value `valueAt a μ x = μ (φ^{-a} x)` is congruent
 modulo `hodgeFil (o a u) = t^(o a u)B_dR⁺` to a constant in the fixed field of `Γ'`. -/
-lemma mem_invariantsMod_withOrders_iff {i : Letter} {x : L.Ambient} {o : ℕ → ℤ → ℤ}
-    (h_span : x ∈ L.kisinLocAinf) (h_letter : x ∈ L.letterPart i) :
-    x ∈ invariantsMod (L.withOrders i o) ↔
-      ∀ a : ℕ, ∀ u ∈ L.jumpSet (i.stepBack a), ∀ μ ∈ L.formsOfType (i.stepBack a) u,
-        ∃ c : localFieldOf k.subgroup, valueAt a μ x - c ∈ hodgeFil (o a u) := by
-  refine ⟨fun h_inv a u hu μ hμ ↦ ?_, fun h_const g ↦ mem_withOrders_iff.2
-    ⟨sub_mem (galMonoid_smul_mem_kisinLocAinf h_span) h_span,
-      sub_mem ((gal_smul_mem_letterPart g).2 h_letter) h_letter, fun a u hu μ hμ ↦ ?_⟩⟩
-  · exact exists_valueAt_sub_mem_hodgeFil h_span hμ.1 fun g ↦
-      valueAt_mem_hodgeFil_of_mem_withOrders (h_inv g) hu hμ
-  · obtain ⟨c, h_close⟩ := h_const a u hu μ hμ
-    exact valueAt_smul_sub_mem_hodgeFil_of_sub_const_mem h_span hμ.1 h_close g
+lemma exists_valueAt_sub_mem_hodgeFil_of_mem_invariantsMod {i : Letter} {x : L.Ambient}
+    {o : ℕ → ℤ → ℤ} (h_span : x ∈ L.kisinLocAinf) (h_inv : x ∈ invariantsMod (L.withOrders i o))
+    (a : ℕ) {u : ℤ} (hu : u ∈ L.jumpSet (i.stepBack a)) {μ : L.Functional}
+    (hμ : μ ∈ L.formsOfType (i.stepBack a) u) :
+    ∃ c : localFieldOf k.subgroup, valueAt a μ x - c ∈ hodgeFil (o a u) :=
+  exists_valueAt_sub_mem_hodgeFil h_span hμ.1 fun g ↦
+    valueAt_mem_hodgeFil_of_mem_withOrders (h_inv g) hu hμ
 
 /-- Let `i` be a letter and `x` an element of `L.Ambient = W(C^♭) ⊗ L` with orders `lo` at `i`: it
 lies in `L.kisinLocAinf` and in the part at `i`, and for all natural numbers `a`, all jumps `u` at
@@ -983,7 +978,7 @@ lemma mem_withOrders_improvedOrders {i : Letter} {x : L.Ambient} {lo hi : ℕ �
   refine mem_withOrders_iff.2 ⟨h_span, h_letter, fun a u hu μ hμ ↦ ?_⟩
   -- The value is a constant `y` modulo `hodgeFil (hi a u)`.
   obtain ⟨y, h_close⟩ : ∃ y : localFieldOf k.subgroup, valueAt a μ x - y ∈ hodgeFil (hi a u) :=
-    (mem_invariantsMod_withOrders_iff h_span h_letter).1 h_inv a u hu μ hμ
+    exists_valueAt_sub_mem_hodgeFil_of_mem_invariantsMod h_span h_inv a hu hμ
   -- The constant lies in the step `min (lo a u) (hi a u)`, so it is zero if both are positive.
   have h_min : (y : BdR) ∈ hodgeFil (min (lo a u) (hi a u)) :=
     (sub_mem_iff_right _ (hodgeFil_anti (min_le_left _ _) (h_exp a u hu μ hμ))).1

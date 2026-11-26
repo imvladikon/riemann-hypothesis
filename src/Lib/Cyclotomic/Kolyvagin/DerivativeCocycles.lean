@@ -799,20 +799,6 @@ private lemma derivativeSum_commutatorLog_mul_eq_of_isJacobiFamily
     h_shift]
   abel
 
-/-- The cocycles vanish at `γ`. Let `lⁿ • y` be a Jacobi family at level `M`, with `N lⁿ ∣ M` and
-every prime of `I` dividing `M`. As `γ γ γ⁻¹ = γ`, every exponent `commutatorLog (l ^ n) γ (y x) γ`
-is zero, and so is their derivative sum. -/
-private lemma derivativeSum_commutatorLog_self_eq_zero_of_isJacobiFamily
-    (hJ : IsJacobiFamily p B c M (l ^ n • y)) (hM : N * l ^ n ∣ M) {I : Finset Nat.Primes}
-    (hI_dvd : ∀ q ∈ I, (q : ℕ) ∣ M) :
-    derivativeSum e ψ L I 0 (fun x : QZ ↦ commutatorLog (l ^ n) γ (y x) γ) = 0 := by
-  have μ_inj : Injective (rootPowHom Ω (l ^ n)).val := (rootPowHom Ω (l ^ n)).property.left
-  have h_exponent_zero {x : QZ} (hx : M • x = 0) : commutatorLog (l ^ n) γ (y x) γ = 0 := by
-    apply μ_inj
-    rw [rootPowHom_commutatorLog_of_isJacobiFamily hJ hx γ, mul_inv_cancel_right, sub_self,
-      map_zero]
-  rw [derivativeSum_congr hM hI_dvd (fun _ _ ↦ rfl) (G' := 0) h_exponent_zero, map_zero]
-
 /-- The cocycles at the level `M = N lⁿ ∏_{r ∈ I} r`, when `lⁿ • y` is a Jacobi family at level `M`
 and the primes of `I` are `≡ 1 mod c N lⁿ`: `g ↦ derivativeSum e ψ L I 0 F_g`, where `F_g x` is the
 exponent `commutatorLog (l ^ n) γ (y x) g`, is a locally constant cocycle for `Υ = cyc^(e+1) ψ` that
@@ -1024,9 +1010,14 @@ lemma exists_isKolyvaginSystem {O : Type} [CommRing O] {B : ClosurePlace} {N l n
     { mem_vanishingCocycles := fun S hS ↦
         derivativeSum_commutatorLog_mem_vanishingCocycles_of_isJacobiFamily (hJ_level hS) rfl
           (base_dvd S) (prime_dvd S) fun q hq ↦ hP_one q (hS hq)
-      apply_eq_zero := fun S hS ↦
-        derivativeSum_commutatorLog_self_eq_zero_of_isJacobiFamily (hJ_level hS) (base_dvd S)
-          (prime_dvd S)
+      apply_eq_zero := fun S hS ↦ by
+        dsimp only [κ]
+        rw [derivativeSum_congr (base_dvd S) (prime_dvd S) (fun _ _ ↦ rfl) (G' := 0), map_zero]
+        intro x hx
+        apply (rootPowHom Ω (l ^ n)).property.left
+        rw [rootPowHom_commutatorLog_of_isJacobiFamily (hJ_level hS) hx γ, mul_inv_cancel_right,
+          sub_self]
+        simp
       exists_mem_inertiaGroup_eq := fun S hS q hqP hqS A φ hφ hqA ↦
         exists_mem_inertiaGroup_derivativeSum_insert_eq_of_isJacobiFamily hJ rfl (base_dvd S)
           (prime_dvd S) (hp_level hS) (fun r hr ↦ hP_one r (hS hr)) (hP_one q hqP) hqS

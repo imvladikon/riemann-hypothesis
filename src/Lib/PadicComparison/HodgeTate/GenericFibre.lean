@@ -460,32 +460,15 @@ lemma exact_mulMu_proj :
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective b
     rw [mulMu_thickeningProj]
     change Ideal.Quotient.mk _ (algebraMap Ainf _ mu * x) = _ ↔ t * c.thetaGeneric x = _
-    rw [Ideal.Quotient.eq, ht, ← thetaGeneric_algebraMap_ainf, ← map_mul]
-    -- Both sides say `ξ ∣ τ x - y`, as `ker θ = (ξ)`.
-    rw [← sub_mem_ker_iff, h_ker_eq, span_singleton_pow]
-    -- Cancel the regular element `ξ` from `ξ² ∣ ξ (τ x - y)`.
-    have h_cancel : algebraMap Ainf _ xi * algebraMap Ainf _ xi ∣
-          algebraMap Ainf _ xi * (algebraMap Ainf _ tau * x - y) ↔
-        algebraMap Ainf _ xi ∣ algebraMap Ainf _ tau * x - y :=
-      (isLeftRegular_xi c).dvd_cancel_left
+    rw [Ideal.Quotient.eq, ht, ← thetaGeneric_algebraMap_ainf, ← map_mul,
+      ← sub_mem_ker_iff, h_ker_eq, span_singleton_pow]
     simpa [← xi_mul_tau, mul_assoc, ← mul_sub, mem_span_singleton, sq, -isUnit_map_iff] using
-      h_cancel
-  have h_inj : Function.Injective (mulMu c) := by
-    -- injectivity is the case `y = 0`; `using!` is needed since the class of `0` and the unit `t`
-    -- match the ring `genericOver.obj c` only after unfolding.
-    simpa [injective_iff_map_eq_zero'] using! h_mulMu_eq_iff 0
-  refine ⟨h_proj_surj, h_inj, ?_⟩
+      (isLeftRegular_xi c).dvd_cancel_left
+  refine ⟨h_proj_surj, by simpa [injective_iff_map_eq_zero'] using! h_mulMu_eq_iff 0, ?_⟩
   rintro ⟨x⟩
-  refine ⟨fun hx ↦ ?_, ?_⟩
-  · -- an element `ξ y` of the kernel is the image of `t⁻¹ θ(y)`
-    obtain ⟨y, rfl⟩ : algebraMap Ainf (Localization.Away (p : WittVector p c.TiltRing)) xi ∣ x :=
-      mem_span_singleton.mp (h_ker_eq.le hx)
-    -- The witness `t⁻¹ * θ(y)` is left to unification: written out, its ring `c.GenericRing`
-    -- does not match `genericOver.obj c`.
-    exact ⟨_, (h_mulMu_eq_iff y _).mpr (t.mul_inv_cancel_left _)⟩
-  · rintro ⟨a, ha⟩
-    rw [← ha]
-    exact proj_mulMu c a
+  refine ⟨fun hx ↦ ?_, fun ⟨a, ha⟩ ↦ ha ▸ proj_mulMu c a⟩
+  obtain ⟨y, rfl⟩ := mem_span_singleton.mp (h_ker_eq.le hx)
+  exact ⟨_, (h_mulMu_eq_iff y _).mpr (t.mul_inv_cancel_left _)⟩
 
 /-- For a p-adic test with ring R, the multiplicative map x ↦ [x] from the tilt R^♭ to
 B = W(R^♭)[1/p]/(ker θ)², the image of the Teichmüller lift. -/

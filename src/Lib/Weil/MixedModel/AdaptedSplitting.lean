@@ -139,7 +139,8 @@ variable {E : Type _} [Field E] [CMType E] {n n' r : Type _} {p : Type _}
 identity. -/
 noncomputable def adaptedHomBasis {E : Type*} [Field E] [CMType E] {r : Type*}
     (p : Type*) [Fintype r] [DecidableEq r] [Fintype p] [DecidableEq p] {t : r → ℤˣ}
-    (T : Space E r t) : GL (r × p) (𝔸 E) := kroneckerGL (n := p) (star T.x⁻¹) 1
+    (T : Space E r t) : GL (r × p) (𝔸 E) :=
+  Matrix.GeneralLinearGroup.kronecker (m := p) (star T.x⁻¹) 1
 
 variable {M : Matrix n' n (𝔸 E)}
 
@@ -150,8 +151,8 @@ lemma frameAt_homSource :
     (A.homSource T).frameAt 1 (adaptedHomBasis p T) =
       ((1 ⊗ₖ A.kCoordᵀ).fromCols (stdForm E t ⊗ₖ A.lCoordᵀ)).fromCols (1 ⊗ₖ A.iCoordᵀ) := by
   simp [Splitting.frameAt, homSource_iAdelic, mul_assoc, dualFrame, homSource_lAdelic,
-    adaptedHomBasis, kroneckerGL, star_eq_conjTranspose, conjTranspose_kronecker,
-    ← mul_kronecker_mul, homSource_kAdelic, ← conjTranspose_mul]
+    adaptedHomBasis, Matrix.GeneralLinearGroup.kronecker, star_eq_conjTranspose,
+    conjTranspose_kronecker, ← mul_kronecker_mul, homSource_kAdelic, ← conjTranspose_mul]
 
 /-- The term `A.homSlice T x` is the mixed term `slice` of the induced splitting
 `A.homSource T` at the vector of entries of `x` (`matrixToVec x`), after the change of basis
@@ -159,7 +160,8 @@ lemma frameAt_homSource :
 lemma homSlice_eq_adapted_slice [WeilData E] (x : Matrix r p (𝔸 E)) :
     A.homSlice T x = (A.homSource T).slice ((adaptedHomBasis p T)⁻¹.valᴴ *ᵥ matrixToVec x) := by
   simp [slice, homSlice, kronecker_mulVec_eq_matrixToVec, homSource_lAdelic, adaptedHomBasis,
-    kroneckerGL, star_eq_conjTranspose, conjTranspose_kronecker, ← mul_kronecker_mul]
+    Matrix.GeneralLinearGroup.kronecker, star_eq_conjTranspose, conjTranspose_kronecker,
+    ← mul_kronecker_mul]
 
 omit [Fintype n] [DecidableEq n'] [DecidableEq r] [Fintype p] in
 /-- If `M` and `B` are `IsOrthoIntegral`, so is the Kronecker product of `M` and the entrywise

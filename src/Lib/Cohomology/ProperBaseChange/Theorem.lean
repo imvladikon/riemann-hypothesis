@@ -422,8 +422,8 @@ private lemma New.Variety.ResiduePlace.exists_locConstClass_eq_of_isSplitting
     (h_nat n l₁.hom f).trans (hff₁.trans hf₁)
   have h_res₂ : (Coh n).map l₂.hom (locConstClass (σ B) n f) = (Coh n).map l₂.hom y :=
     (h_nat n l₂.hom f).trans (hff₂.trans hf₂)
-  refine ⟨f, (TestCohomology.mayer_vietoris_injective (h_anti l₁) (h_anti l₂) ?_ n
-    (T := placesFiniteOn z J B₃.val) ?_).left ?_ (Prod.ext h_res₁ h_res₂)⟩
+  refine ⟨f, TestCohomology.mayer_vietoris_injective (h_anti l₁) (h_anti l₂) ?_ n
+    (T := placesFiniteOn z J B₃.val) ?_ ?_ (Prod.ext h_res₁ h_res₂)⟩
   · exact isCohomDense_placesFiniteOn_sup_of_isSplitting h_split
   · exact placesFiniteOn_eq_inf_of_isSplitting h_split
   · -- In lower degrees a class over `B₃` comes from a function, which is a difference.

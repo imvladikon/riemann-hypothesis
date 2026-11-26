@@ -718,7 +718,7 @@ lemma exists_span_formsOfType_mod_pred (i : Letter) (u : ℤ) :
     refine (b_indep.eq_coords_of_eq (g := toGp g • c) (LinearMap.ext ?_) m).symm
     refine (L.ρ.apply_bijective g).2.forall.2 ?_
     simpa [← hc, ← hν, f_gal, smul_sum, -toRingHom_ofId] using (f_gal μ · g)
-  choose c' hc' c_eq using fun m ↦ (forall_smul_eq_iff_mem_localFieldOf k.subgroup).1 fun g ↦
+  choose c' hc' c_eq using fun m ↦ exists_mem_localFieldOf_of_forall_smul_eq k.subgroup fun g ↦
     c_fixed g m
   refine ⟨c', fun t g ↦ ?_, fun t ↦ ?_⟩
   · -- The difference is invariant, since `Γ'` fixes the coefficients.

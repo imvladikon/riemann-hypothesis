@@ -345,18 +345,15 @@ lemma mem_withOrders_stdOrders_iff :
       (fun h_dvd ↦ not_frobE_dvd_zTau a (h_dvd.mul_right _)) n).1 ?_
     simpa using valueAt_mem_hodgeFil_of_mem_ainfLattice hμ hn (smul_mem _ _ hx_letter)
 
-/-- An element `x` lies in `L.stdOrdersPart l i`, that is, in `L.kisinLoc` with the standard
-exponents `stdOrders l` at the letter `i`, if and only if it lies in the letter `i` and in
+/-- If an element `x` lies in `L.stdOrdersPart l i`, that is, in `L.kisinLoc` with the standard
+exponents `stdOrders l` at the letter `i`, then it lies in the letter `i` and in
 `L.frobKisinAinf l`, the image of `L.kisinAinf` under `φ ^ l`, and all forms take values in the
 field `valueField 0` on it. -/
-lemma mem_stdOrdersPart_iff :
-    x ∈ L.stdOrdersPart l i ↔
-      x ∈ L.valueFieldPoints (L.frobKisinAinf l) ∧ x ∈ L.letterPart i := by
-  refine ⟨fun ⟨⟨_, h_value⟩, h_std⟩ ↦ ?_, fun ⟨⟨h_frob, h_value⟩, h_letter⟩ ↦ ?_⟩
-  · obtain ⟨h_frob, h_letter⟩ := mem_withOrders_stdOrders_iff.1 h_std
-    exact ⟨⟨h_frob, h_value⟩, h_letter⟩
-  · have h_std := mem_withOrders_stdOrders_iff.2 ⟨h_frob, h_letter⟩
-    exact ⟨⟨withOrders_le_kisinLocAinf h_std, h_value⟩, h_std⟩
+lemma mem_valueFieldPoints_and_letterPart_of_mem_stdOrdersPart (hx : x ∈ L.stdOrdersPart l i) :
+    x ∈ L.valueFieldPoints (L.frobKisinAinf l) ∧ x ∈ L.letterPart i := by
+  obtain ⟨⟨_, h_value⟩, h_std⟩ := hx
+  obtain ⟨h_frob, h_letter⟩ := mem_withOrders_stdOrders_iff.1 h_std
+  exact ⟨⟨h_frob, h_value⟩, h_letter⟩
 
 /-- The projection to the letter `i` of an element of `L.frobKisinAinf l` has the standard
 exponents `stdOrders l` at `i`. -/

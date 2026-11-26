@@ -357,9 +357,11 @@ lemma exists_arc (C : U.GraphClosure γ ν) (z : C.scheme.left) :
   -- So an arc `α` starts at one of these points and has its centre at `z`.
   obtain ⟨k, V, α, h_start, rfl⟩ := New.exists_valuative_arc_of_isDenseFamily _ h_dense z
   -- The closed point of `V` is the image of the point of its residue field.
-  rw [← comap_closedPoint (residue V.valuationSubring)]
+  have h_pt : (specMap (residue V.valuationSubring) ≫ α) (closedPoint _) = α (closedPoint _) :=
+    congrArg α (PrimeSpectrum.comap_residue _ _)
+  rw [← h_pt]
   refine ⟨_, α, (f k).ballPoint 0 (b k), _,
-    (C.scheme.left.SpecToEquivOfField _).left_inv (specMap _ ≫ α), ?_⟩
+    Scheme.descResidueField_stalkClosedPointTo_fromSpecResidueField _ _ (specMap _ ≫ α), ?_⟩
   intro 𝔪 u a h_u
   -- The generic point of `α ≫ u` is the point of `a`.
   refine .of_generic (?_ : U.family.IsPointOf 𝔪 a
@@ -458,10 +460,12 @@ lemma point_surjective (C : U.GraphClosure γ ν)
     simp [(h_pb _).baseHom_eq_comp, hρ, ← m.baseHom_eq]
   obtain ⟨g', ℓ', d', Y', m', hm', h_refl'⟩ := exists_torusModel (f y' e'.fullStructure) h_struct'
   have hψ_cls : (x y').lineBundle.picClass.pull ψ.left = μ • (x y).lineBundle.picClass := by
-    -- `using!`: the point of `ψ` over the centre is its pull-back only after unfolding
-    -- `pointEquiv`.
-    simpa [(h_pb _).lineBundle_eq_pull] using!
-      congr(y'.lineBundle.picClass.pull $(hψ_pt (𝟙 _)).1).trans congr(($h_cls).pull _)
+    -- Over the centre, `ψ` followed by the pull-back map of `y'` is the pull-back map of `y`
+    -- followed by `χ`.
+    have h_left : ψ.left ≫ (h_pb y').schemeMap.left = (h_pb y).schemeMap.left ≫ χ.left := by
+      simpa [pointEquiv_apply] using congrArg Hom.left (hψ_pt (𝟙 _))
+    rw [(h_pb _).lineBundle_eq_pull, (h_pb _).lineBundle_eq_pull, ← Pic.pull_picClass,
+      ← Pic.pull_picClass, ← Pic.pull_comp, h_left, Pic.pull_comp, h_cls, map_nsmul]
   obtain ⟨z, hz_π, -, hz_ℓ⟩ := exists_matrix_of_hom m m' ψ (mod_cast h_pos.ne') hψ_cls
   -- Both descriptions of `ψ` on torsion agree, and torsion determines an adelic matrix.
   have h_matrix : (γ i).2.val⁻¹ = g'⁻¹ * toFinGL z * g := by

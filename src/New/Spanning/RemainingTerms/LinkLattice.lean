@@ -646,7 +646,7 @@ lemma IsOrthogonalLift.eq_mul_of_isotropicRows_mul_eq_zero {σ : Type}
     ω - finAdeleMatrix u.toCols₁.toRows₁ * ω.submatrix (fun a : IndexNotBelow j ↦ a.val) id with hd
   have h_above (a : Fin 𝔰.ϱ) (ha : ¬a.val < j) (b : σ) : d a b = 0 := by
     have h_row (x : IndexNotBelow j) : u (.inl a) (.inl x) = if ⟨a, ha⟩ = x then 1 else 0 :=
-      (hu.apply_inl ⟨a, ha⟩).1 x
+      hu.apply_inl ⟨a, ha⟩ x
     rw [hd, Matrix.sub_apply, Matrix.mul_apply]
     simp [h_row, apply_ite (algebraMap E (𝔸f E))]
   have h_orth : (isotropicRows (finAdeleMatrix (S.frameProducts γ)))ᴴ * d = 0 := by

@@ -167,7 +167,7 @@ noncomputable def lineRep (j : J) :
 omit [Nonempty n] in
 /-- If the auxiliary places `w j = Q.place j` are off the base level, the Hecke algebra commutes
 with `D.residueRep Q`, the action of `∏ GL_n(𝔽_{w j})` on the forms of principal level. -/
-lemma commute_heckeAction_residueRep (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma commute_heckeAction_residueRep (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (s : D.heckeAlgebra Q.place)
       (g : ∀ j : J, GL (Fin (card n)) (ResField (Q.place j))) :
     Commute (heckeAction s) (D.residueRep Q g) := by
@@ -187,7 +187,7 @@ omit [Nonempty n] in
 of the line in `GL_n(E_w)`, `w = Q.place j` (blocks of sizes `1` and `n - 1`), acts on forms of
 principal level through its reduction, which stabilises the line. On the left, `localFormRep` is
 the action of `GL_n(E_w)` on all forms; on the right, `lineRep` is that of the stabiliser. -/
-lemma localFormRep_apply_eq_lineRep (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma localFormRep_apply_eq_lineRep (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {j : J} {k : GL (Fin (card n)) (LocField (Q.place j))}
     (hk : k ∈ blockParahoric (min 1)) (y : D.formsOfLevel Q.place) :
     localFormRep V κ (Q.apart.star_ne j j) k y =
@@ -199,7 +199,7 @@ of the line in `GL_n(𝔽_w)`, `w = Q.place j`, with first entry and determinant
 weight `κ`, then the pro-unipotent Iwahori subgroup `proIwahori` of `GL_n(E_w)` fixes it: `y` lies
 in the space `levelSpace` of its fixed vectors for the action `localFormRep` of `GL_n(E_w)` on
 forms. -/
-lemma mem_levelSpace_proIwahori (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma mem_levelSpace_proIwahori (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {j : J} {y : D.formsOfLevel Q.place}
     (hy : ∀ k : residueLineStabilizer (ResField (Q.place j)) (card n),
       firstEntry k = 1 → Matrix.GeneralLinearGroup.det k.val = 1 →
@@ -219,7 +219,7 @@ auxiliary places be off the base level, and let `P` be a local choice at `w = Q.
 logarithm `P.ind` modulo `ℓ ^ ν` on `𝔽_wˣ`, and `P.indLine g = P.ind g₁₁`. A form `y` of weight `κ`
 on which the stabiliser of the line in `GL_n(𝔽_w)` acts by `ψ ∘ P.indLine` is fixed by `proIwahori`,
 and the parahoric subgroup of the line in `GL_n(E_w)` acts on it by `k ↦ ψ (P.ind k₁₁)`. -/
-lemma mem_parahoricEigenspace_line (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j)) [V.IsStd]
+lemma mem_parahoricEigenspace_line (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) [V.IsStd]
     [WeilData E]
     {j : J} (P : Q.LocalChoice j) (ψ : AddChar (ZMod (ℓ ^ ν)) ℂ) {y : D.formsOfLevel Q.place}
     (hy : ∀ k : residueLineStabilizer (ResField (Q.place j)) (card n),
@@ -240,7 +240,7 @@ auxiliary places be off the base level, and let `P` be a local choice at `w = Q.
 logarithm `P.ind` modulo `ℓ ^ ν` on `𝔽_wˣ`, and `P.indDet = P.ind ∘ det`. A form `y` of weight `κ`
 on which `GL_n(𝔽_w)` acts by `ψ ∘ P.indDet` is fixed by `proIwahori`, and the maximal compact
 subgroup of `GL_n(E_w)` (level function `0`) acts on it by `k ↦ ψ (P.ind (det k))`. -/
-lemma mem_parahoricEigenspace_det (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j)) [V.IsStd]
+lemma mem_parahoricEigenspace_det (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) [V.IsStd]
     [WeilData E]
     {j : J} (P : Q.LocalChoice j) (ψ : AddChar (ZMod (ℓ ^ ν)) ℂ) {y : D.formsOfLevel Q.place}
     (hy : ∀ k : GL (Fin (card n)) (ResField (Q.place j)),
@@ -270,7 +270,7 @@ omit [Nonempty n] [DecidableEq J] [V.IsStd] in
 function that sends a system of level `L` to its `j`-th Hecke eigenvalue at `w.place`, a complex
 number moved to `PadicAlgCl ℓ` by the fixed isomorphism `ιℓ`, lies in the Hecke algebra, which is
 a ring of such `ℓ`-adic functions on systems. -/
-lemma heckeEigenvalues_mem_heckeAlgebra (w : FrobeniusDatum E) (hw : D.IsOffLevel L w.place)
+lemma heckeEigenvalues_mem_heckeAlgebra (w : FrobeniusDatum E) (hw : D.IsOffLevel (ℓ := ℓ) L w.place)
     (j : ℕ) :
     (fun x : D.Eigensystem L ↦ ιℓ (x.val.heckeEigenvalues w.place j)) ∈ D.heckeAlgebra L := by
   obtain ⟨-, -, hℓ, h_sys⟩ := hw
@@ -317,7 +317,7 @@ lemma charpoly_coeff_mem_heckeAlgebra (hN : IsGalRepTwist N a) (g : Gal(Ω/E)) (
         (nhds ((x.val.galRep g).val.charpoly.coeff i)) := by
     obtain ⟨f, ⟨hf_mem, -⟩, hf_ne⟩ := x.property
     exact (Isotypic.attached_galRep hf_mem hf_ne).tendsto_charpoly_coeff g i
-  suffices h_good : ∀ w : FrobeniusDatum E, D.IsOffLevel L w.place →
+  suffices h_good : ∀ w : FrobeniusDatum E, D.IsOffLevel (ℓ := ℓ) L w.place →
       (fun x : D.Eigensystem L ↦ ιℓ ((x.val.heckePolyAt w.place).coeff i)) ∈ D.heckeAlgebra L from
     isClosed_heckeAlgebra.mem_of_tendsto (tendsto_pi_nhds.2 h_lim)
       (Filter.mem_inf_of_left (eventually_mostFrobenii (D.eventually_isOffLevel (L := L)) h_good))
@@ -494,7 +494,7 @@ logarithm `P.ind` modulo `ℓ ^ ν` on `𝔽_wˣ` with `P.ind z̄ = 1`; put `P.i
 `⟨γ⟩ = P.diamond = diag (z̄, 1, …, 1)`. On a form `y` of the system `x` on which `GL_n(𝔽_w)` acts by
 `ψ ∘ P.indDet`, we have `tr[(γ - 1) g p(φ)] = (⟨γ⟩ - 1) tr[g p(φ)]`, where `φ` is the Frobenius
 element and the traces are those of `N x`. -/
-lemma tameTrace_smul_eq_diamond_sub_one (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma tameTrace_smul_eq_diamond_sub_one (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     {N : Isotypic V κ → GalRep ℓ E n} [V.IsStd] [WeilData E] {a : Gal(Ω/E) →* EllAdicIntegers}
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     {j : J} (P : Q.LocalChoice j) (p : EllAdicIntegers[X]) (g : Gal(Ω/E))
@@ -560,7 +560,7 @@ a form `y` of the system `x` through `ψ ∘ P.indLine`, where `ψ ((card n)!) �
 `tr[(γ - 1) g p(φ)] = p(Ũ) tr[(γ - 1) g]` on `y`. Here `γ` is the tame generator at `w`,
 `tr[(γ - 1) g p(φ)]` is `tameTrace`, and `p(Ũ)` is `aevalHecke`, for `Ũ = a(φ) U` with `U` the Hecke
 operator of `diag (ϖ, 1, …, 1)` for the pro-unipotent Iwahori subgroup. -/
-lemma tameTrace_smul_eq_aevalHecke (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma tameTrace_smul_eq_aevalHecke (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (P : Q.LocalChoice j) (p : EllAdicIntegers[X]) (g : Gal(Ω/E))
     {x : D.Eigensystem Q.place} {ψ : AddChar (ZMod (ℓ ^ ν)) ℂ} (hψ : ψ (card n)! ≠ 1)
@@ -598,7 +598,7 @@ logarithm `P.ind` on `𝔽_wˣ` gives `P.indDet = P.ind ∘ det` with values mod
 the norm over `GL_n(𝔽_w)` with weight `f ∘ P.indDet`, then
 `L tr[(γ - 1) g p(φ)] = (⟨γ⟩ - 1) L tr[g p(φ)]`, where `φ` is the Frobenius element at `w`,
 `⟨γ⟩ = P.diamond`, and the traces are `tameTrace` and `traceElement`. -/
-lemma weightedSum_indDet_mul_tameTrace (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma weightedSum_indDet_mul_tameTrace (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (P : Q.LocalChoice j) (p : EllAdicIntegers[X]) (g : Gal(Ω/E)) (f : ZMod (ℓ ^ ν) → ℤ) :
     weightedSum (D.placeRep Q j) P.indDet f * heckeAction (tameTrace Q hN j p g) =
@@ -625,7 +625,7 @@ lemma weightedSum_indDet_mul_tameTrace (hQ : ∀ j : J, D.IsOffLevel ![] (Q.plac
 by `a`, which is `1` at the tame generators (`hN`, `ha`). The norm over `GL_n(𝔽_w)` at
 `w = Q.place i` kills `tr[(γ - 1) g]`, where `γ` is the tame generator at `w` and `traceElement` is
 the trace of the `N x` as an element of the Hecke algebra. -/
-lemma norm_mul_traceElement_tameGenerator_eq_zero (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma norm_mul_traceElement_tameGenerator_eq_zero (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (i : J) (g : Gal(Ω/E)) :
     (∑ k : GL (Fin (card n)) (ResField (Q.place i)), D.residueRep Q (mulSingle i k)) *
@@ -639,7 +639,7 @@ omit [V.IsStd] [WeilData E] in
 /-- Let the auxiliary places be off the base level and `w = Q.place j`. The norm over the stabiliser
 of a line in `GL_n(𝔽_w)` (acting by `lineRep`) with weight `f ∘ P.indLine` has values fixed by the
 pro-unipotent Iwahori subgroup of `GL_n(E_w)`. -/
-lemma weightedSum_indLine_mem_levelSpace (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma weightedSum_indLine_mem_levelSpace (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (P : Q.LocalChoice j) (f : ZMod (ℓ ^ ν) → ℤ) (y : D.formsOfLevel Q.place) :
     ((weightedSum (D.lineRep Q j) P.indLine f).val y : V.forms κ) ∈
       levelSpace (localFormRep V κ (Q.apart.star_ne j j)).ρ proIwahori :=
@@ -656,7 +656,7 @@ entry as `P.indLine`. Let `L f` be the norm over the stabiliser of a line in `GL
 There is an additive map `B` from weights to integral operators made of translates at `w`
 (`localOperators`) with `B f = p(Ũ) L f`. Here `p(Ũ)` is `aevalHecke`, with `Ũ = a(φ) U` for the
 Frobenius element `φ` and the Hecke operator `U` of `diag (P.ϖ, 1, …, 1)`. -/
-lemma exists_aevalHecke_weightedSum (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma exists_aevalHecke_weightedSum (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (P : Q.LocalChoice j) (p : EllAdicIntegers[X]) :
     ∃ B : (ZMod (ℓ ^ ν) → ℤ) →+ D.integralEnd Q.place,
       (∀ f : ZMod (ℓ ^ ν) → ℤ, B f ∈ D.localOperators Q j) ∧
@@ -686,7 +686,7 @@ at `Q.place j`, with tame generator `γ` and Frobenius element `φ`. Let `B f` b
 `σ` on `𝒜 = D.integralEnd Q.place` that kills each `T` with `2 (card n)! T ∈ ℓ ^ ν 𝒜` (`hσ`).
 The traces are `tameTrace`, and `L` is the norm whose weight is the logarithm `P.indLine` lifted to
 `ℤ` by `valMinAbs`. -/
-lemma map_aevalHecke_valMinAbs_mul_tameTrace (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma map_aevalHecke_valMinAbs_mul_tameTrace (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hN : IsGalRepTwist N a) (ha : ∀ j : J, a (Q.frobData j).isPlaceOver.tameGenerator = 1)
     (hB : ∀ (f : ZMod (ℓ ^ ν) → ℤ) (y : D.formsOfLevel Q.place), ((B f).val y : V.forms κ) =
       aevalHecke V κ P a p ((weightedSum (D.lineRep Q j) P.indLine f).val y))
@@ -727,7 +727,7 @@ omit [V.IsStd] [WeilData E] in
 `w = Q.place j` for an index `j`, `p` a polynomial and `a` a character. Let `B f` be
 `p(Ũ) = aevalHecke V κ P a p` after the norm over the stabiliser of the line in `GL_n(𝔽_w)` with
 weight `f ∘ P.indLine` (`hB`). Then the stabiliser fixes the values of `B 1`. -/
-lemma lineRep_mul_eq_self (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma lineRep_mul_eq_self (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hB : ∀ (f : ZMod (ℓ ^ ν) → ℤ) (y : D.formsOfLevel Q.place), ((B f).val y : V.forms κ) =
       aevalHecke V κ P a p ((weightedSum (D.lineRep Q j) P.indLine f).val y))
     (k : residueLineStabilizer (ResField (Q.place j)) (card n)) : D.lineRep Q j k * B 1 = B 1 := by
@@ -760,7 +760,7 @@ the line (`hB`), where `p = (X - q ^ t) H`, `Ũ = a(φ) U` and `U` is the Hecke 
 algebra, and suppose that the Hecke polynomial at `w j` of every base system where `δ` does not
 vanish is, after scaling by `1 / a(φ)`, a chain of `t + 1` roots `1, q, …, q ^ t` times a divisor of
 `H` (`HasRootChain`). Then `δ Nm U' = 0`, where `Nm` is the sum over `∏ GL_n(𝔽_{w i})`. -/
-lemma heckeAction_mul_norm_mul_eq_zero (hQ : ∀ j : J, D.IsOffLevel ![] (Q.place j))
+lemma heckeAction_mul_norm_mul_eq_zero (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (hB : ∀ (f : ZMod (ℓ ^ ν) → ℤ) (y : D.formsOfLevel Q.place), ((B f).val y : V.forms κ) =
       aevalHecke V κ P a p ((weightedSum (D.lineRep Q j) P.indLine f).val y))
     (hB_mem : B 1 ∈ D.localOperators Q j) {H : EllAdicIntegers[X]} {t : ℕ}

@@ -125,7 +125,7 @@ def twistedSelmer {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommRin
 `ψ` with values in a discrete valuation ring `O'` over `O` (by the map `e`): the cocycles in
 `T ψ ⊗ Frac(O') / O'` that vanish at `γ_* = T.γ`, are unramified outside `S ∪ Q ∪ Q̄`,
 where `S = T.places`, and satisfy the local conditions of `T`. -/
-def divisibleSelmer {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommRing O'] [DVR O']
+def divisibleSelmer {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommRing O']
     [Fintype n] [DecidableEq n] (T : SelmerDatum ℓ S₀ g₀ O n) (Q : Finset (FinPlace E))
     (e : O →+* O') (ψ : Gal(Ω/E) →* O') : Submodule O' (Gal(Ω/E) → n → DivisibleQuot O') :=
   selmerModule (twistRep e ψ T.ρ) (unionWithConj T.places Q) (mapRel e '' T.classRelations)
@@ -173,7 +173,7 @@ lemma tieRelations_union {O n ι : Type} [CommRing O] [DecidableEq n] {q : ℕ}
 of `ρ` by `ψ_x(g) = ∏ (1 + x_j) ^ (h_j g)`: we have `len Sel(x) ≤ v(P(x))` at all points `x` over
 all discrete valuation rings of characteristic zero over `O`, not only where `ψ_x` is a
 character. -/
-def BoundsSelmer (ℓ : ℕ) {E : Type} [Field E] [EmbeddedNumberField E] [NumberField.IsCMField E]
+def BoundsSelmer (ℓ : ℕ) {E : Type} [Field E] [EmbeddedNumberField E]
     {O n σ : Type} [CommRing O] [Fintype n] [DecidableEq n] [Fintype σ] {q : ℕ} (M : ℕ)
     (h : σ → Gal(Ω/E) →* Multiplicative (ZMod q)) (ρ : Gal(Ω/E) →* Matrix n n O)
     (S : Set (FinPlace E)) (L : Set (Gal(Ω/E) →₀ Matrix n n O)) (P : MvPolynomial σ O) : Prop :=

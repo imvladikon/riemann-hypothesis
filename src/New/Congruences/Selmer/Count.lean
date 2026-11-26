@@ -121,11 +121,11 @@ lemma mem_obeying_tieRelations_iff {q : ℕ} {x : FinPlace E → AuxPrimeData E 
   rw [mem_obeying, tieRelations, Set.forall_mem_range]
   simp [sub_eq_zero]
 
-/-- Let `J` be a set of tied primes, where `V i g` says that `g` acts trivially on `T / ℓ ^ M`, and
+/-- Let `J` be a set of tied primes, where each `g` with `V i g` acts trivially on `T / ℓ ^ M`, and
 let `a ∣ ℓ ^ M`. Then the coboundary of `b ∈ T / a` obeys the ties on `J`: the tame generators `γ_v`
 fix `T / a`, and so do the Frobenius elements `φ_v` at the primes whose slope `s_v` is not zero. -/
 lemma coboundary_mem_obeying_tieRelations (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x)
-    (hV : ∀ g : Gal(Ω/E), V i g ↔ reduceModPow ℓ M T.ρ g = 1) (ha : a ∣ ℓ ^ M)
+    (hV : ∀ g : Gal(Ω/E), V i g → reduceModPow ℓ M T.ρ g = 1) (ha : a ∣ ℓ ^ M)
     (b : n → QuotSpan a) :
     (fun g : Gal(Ω/E) ↦ T.ρ g • b - b) ∈ obeying (tieRelations J x i) (QuotSpan a) := by
   refine mem_obeying_tieRelations_iff.2 fun v hvJ side ↦ ?_
@@ -140,14 +140,14 @@ lemma coboundary_mem_obeying_tieRelations (hp : IsTiedPrimes ℓ S₀ V W N P₀
   · simp [hγ, h_slope]
   · have hφ : T.ρ (idOrConjInv side (x v).1.frob) • b = b :=
       T.smul_eq_self_of_reduceModPow_eq_one ha
-        ((hV _).1 (hp.apply_idOrConjInv_of_slope_ne_zero hvJ h_slope side)) b
+        (hV _ (hp.apply_idOrConjInv_of_slope_ne_zero hvJ h_slope side)) b
     simp [hγ, hφ]
 
-/-- Let `J` be a set of tied primes, where `V i g` says that `g` acts trivially on `T / ℓ ^ M`, and
+/-- Let `J` be a set of tied primes, where each `g` with `V i g` acts trivially on `T / ℓ ^ M`, and
 let `a ∣ ℓ ^ M`. Then the coboundary of `b ∈ T / a` is a cocycle unramified outside `T.places` that
 obeys the local conditions `T.localRelations` and the ties on `J`. -/
 lemma coboundary_mem_selmerModule (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x)
-    (hV : ∀ g : Gal(Ω/E), V i g ↔ reduceModPow ℓ M T.ρ g = 1) (ha : a ∣ ℓ ^ M)
+    (hV : ∀ g : Gal(Ω/E), V i g → reduceModPow ℓ M T.ρ g = 1) (ha : a ∣ ℓ ^ M)
     (b : n → QuotSpan a) :
     (fun g : Gal(Ω/E) ↦ T.ρ g • b - b) ∈
       selmerModule T.ρ T.places (T.localRelations ∪ tieRelations J x i) (QuotSpan a) := by
@@ -226,7 +226,7 @@ def tiedSetting (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x)
   coboundary_le := by
     rintro v - z ⟨b, hb⟩
     exact ⟨fun g ↦ T.ρ g • b - b, mem_selmerModule_of_subset
-      (T.coboundary_mem_selmerModule hp hV ha b) .rfl (Set.subset_univ _), hb⟩
+      (T.coboundary_mem_selmerModule hp (fun g ↦ (hV g).mp) ha b) .rfl (Set.subset_univ _), hb⟩
 
 open scoped Classical in
 /-- Let `J` be a set of tied primes with first prime `P₀`, where `V i g` says that `g` acts
@@ -340,7 +340,7 @@ lemma length_add_length_tiedSelmer_le (hp : IsTiedPrimes ℓ S₀ V W N P₀ J x
     refine Submodule.eq_top_iff'.2 fun y ↦ ?_
     obtain ⟨b, rfl⟩ := T.bijective_γ_smul_sub.surjective y
     exact Submodule.mem_map_of_mem (f := ev) <| T.mem_cocycles_tiedSetting hp hV hN ha A
-      (T.coboundary_mem_selmerModule hp hV ha b) .rfl fun _ hv ↦ .inl (mem_union_left _ hv)
+      (T.coboundary_mem_selmerModule hp (fun g ↦ (hV g).mp) ha b) .rfl fun _ hv ↦ .inl (mem_union_left _ hv)
   -- A tied class is unramified at the first prime and its conjugate.
   have h_ker : T.tiedSelmer J J x i a ≤ Z ⊓ LinearMap.ker ev := fun c hc ↦
     ⟨T.mem_cocycles_tiedSetting hp hV hN ha A (T.mem_selmerModule_erase hp ha hc)

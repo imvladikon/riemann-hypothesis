@@ -208,24 +208,15 @@ lemma exists_equiv_diagonal_signs (j : ℕ) :
       Sum.elim (D.gridSigns false 0 j j) (fun _ : Unit ↦ (-1) ^ min j D.m) ∘ e =
         D.gridSigns true 0 j j := by
   -- It suffices to compare the cardinalities and the numbers of negative signs.
-  have h_card :
-      Fintype.card (D.GridIndex true j j) = Fintype.card (D.GridIndex false j j ⊕ Unit) := by
-    have h_blocks : j * (D.t + 1) + j * (D.t - 1) = j * D.t + j * D.t := by
-      zify [D.t_odd.pos]
-      ring
-    simp only [card_sum, card_unit, card_gridIndex, Bool.toNat_true, Bool.toNat_false, add_zero,
-      tsub_zero]
-    omega
-  -- the extra point counts as negative exactly when `min j m` is odd
-  have h_extra : negCount (fun _ : Unit ↦ (-1) ^ min j D.m) = min j D.m % 2 := by
-    rcases Nat.even_or_odd (min j D.m) with h_even | h_odd
-    · simp [negCount, h_even.neg_one_pow, Nat.even_iff.1 h_even]
-    · simp [negCount, h_odd.neg_one_pow, Nat.odd_iff.1 h_odd]
-  have h_neg : negCount (D.gridSigns true 0 j j) =
-      negCount (Sum.elim (D.gridSigns false 0 j j) fun _ : Unit ↦ (-1) ^ min j D.m) := by
-    rw [negCount_sumElim, negCount_gridSigns, negCount_gridSigns, h_extra]
-    grind
-  exact exists_equiv_comp_eq_of_negCount_eq h_card h_neg
+  refine exists_equiv_comp_eq_of_negCount_eq ?_ ?_
+  · simp only [card_sum, card_unit, card_gridIndex, Bool.toNat_true, Bool.toNat_false]
+    zify [D.t_odd.pos]
+    ring
+  · rw [negCount_sumElim, negCount_gridSigns, negCount_gridSigns]
+    rcases Nat.even_or_odd (min j D.m) with h | h <;>
+      simp [negCount, h.neg_one_pow]
+    · grind [Nat.even_iff]
+    · grind [Nat.odd_iff]
 
 /-- A bijection from the index set of `Y` at `(j, j)` plus one point to that of `Ỹ`. It is the
 identity for `j = 0`. Otherwise it is chosen to match the signs (`exists_equiv_diagonal_signs`). -/
@@ -449,19 +440,10 @@ lemma halfGap_le_targetParameter_add_liftWeight {p : ℕ} (hp : p < D.posRank j)
     D.halfGap ≤ D.targetParameter τ p + D.liftWeight j τ := by
   rw [posRank] at hp
   rw [targetParameter_eq]
-  split_ifs with h_first
-  · -- The entry is at least `-k`, small against `w_j ≥ D.gap = 2 halfGap`.
-    have h_large : D.gap ≤ D.liftWeight j τ := D.nat_le_of_hasLogBound
-    have h_sizes : D.k + D.t + 1 ≤ D.halfGap := D.k_add_t_add_one_le_halfGap
-    have h_gap : D.gap = 2 * D.halfGap := rfl
-    omega
-  · -- The entry is `halfGap - w_a` with `a = p + 2 - k ≤ j`.
-    have h_index : p + 2 - D.k ≤ j := by omega
-    rcases h_index.eq_or_lt with h_eq | h_lt
-    · rw [h_eq, sub_add_cancel]
-    · have h_below : D.liftWeight (p + 2 - D.k) τ + (if p + 2 - D.k + 1 < j then 2 else 1) * D.gap ≤
-          D.liftWeight j τ := D.liftWeight_add_gap_le τ (p + 2 - D.k) j h_lt
-      split_ifs at h_below <;> omega
+  have h_large : D.gap ≤ D.liftWeight j τ := D.nat_le_of_hasLogBound
+  have h_sizes : D.k + D.t + 1 ≤ D.halfGap := D.k_add_t_add_one_le_halfGap
+  have h_gap : D.gap = 2 * D.halfGap := rfl
+  grind
 
 /-- For `D.posRank j = D.k + j - 1 ≤ p`, the entry `p` of the target parameter lies at least
 `D.halfGap` below the centre `-D.liftWeight j τ`. -/

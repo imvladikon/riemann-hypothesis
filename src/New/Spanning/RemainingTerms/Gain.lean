@@ -85,7 +85,7 @@ lemma termDisc_eq_zero_iff_of_link_eq (h_cell : S.HasCellRank j γ) (h_cell' : S
     (h_link : link γ = link γ') : S.termDisc γ = 0 ↔ S.termDisc γ' = 0 := by
   -- The link determines `X₀^γ`, which is `X₀` if `𝗀 = 0` and a hyperplane of `X₀` otherwise.
   have h_linked : linkedX₀ γ = linkedX₀ γ' := by
-    rw [linkedX₀, linkedX₀, linkIsometry_eq_iff.2 h_link]
+    rw [linkedX₀, linkedX₀, linkIsometry_eq_of_link_eq h_link]
   have h_rank : finrank E (linkedX₀ γ) + (j.val - 𝔰.ϱ) = 𝔰.k := h_cell.finrank_linkedX₀_add_sub
   have h_rank' : finrank E (linkedX₀ γ') + (j'.val - 𝔰.ϱ) = 𝔰.k := h_cell'.finrank_linkedX₀_add_sub
   rw [h_linked] at h_rank

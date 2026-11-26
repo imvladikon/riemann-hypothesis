@@ -145,19 +145,13 @@ lemma firstBlockHom_conj_mem_descentResidueLevel (s : S.ChosenGL r)
     (hx : x ∈ descentResidueLevel S u) :
     (firstBlockHom S u s)⁻¹ * x * firstBlockHom S u s ∈ descentResidueLevel S u := by
   obtain ⟨h_fix, h_parabolic⟩ := (mem_descentResidueLevel_iff S u).1 hx
-  refine (mem_descentResidueLevel_iff S u).2 ⟨fun i ↦ ?_, fun i ↦ ?_⟩
-  · -- With `d = diag(t, 1)` and `e` the inclusion matrix, `d * e = e * t`, so `x` fixes `d * e`.
-    let t : GL r (ResField (S.placeAt (inl i))) := s i
-    let d : GL n (ResField (S.placeAt (inl i))) := extendGL u t
-    let e : Matrix n r (ResField (S.placeAt (inl i))) := inclMatrix _ u
-    have h_block : d.val * e = e * t.val := extendGL_mul_inclMatrix u t
-    have h_fix_block : (x (inl i)).val * (d.val * e) = d.val * e := by
-      rw [h_block, ← Matrix.mul_assoc, h_fix i]
-    have h_apply : ((firstBlockHom S u s)⁻¹ * x * firstBlockHom S u s) (inl i) =
-        d⁻¹ * x (inl i) * d := rfl
-    rw [h_apply, Units.val_mul, Units.val_mul, Matrix.mul_assoc, Matrix.mul_assoc, h_fix_block,
-      ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
-  · simpa only [firstBlockHom_conj_apply_inr] using h_parabolic i
+  refine (mem_descentResidueLevel_iff S u).2 ⟨fun i ↦ ?_,
+    fun i ↦ by simpa only [firstBlockHom_conj_apply_inr] using h_parabolic i⟩
+  let t : GL r (ResField (S.placeAt (inl i))) := s i
+  change ((extendGL u t)⁻¹ * x (inl i) * extendGL u t).val * inclMatrix _ u = inclMatrix _ u
+  simp only [Units.val_mul, Matrix.mul_assoc, extendGL_mul_inclMatrix]
+  rw [← Matrix.mul_assoc (x (inl i)).val, h_fix i, ← extendGL_mul_inclMatrix,
+    ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul]
 
 end
 

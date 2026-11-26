@@ -468,7 +468,7 @@ structure RealPlace.IsTriangularBasis (y : 𝔰.G₁) (Z : 𝔰.FrameMatrix)
 
 end Subframe
 
-private lemma gram_eq_neg_mul_of_J₁_mul {m : Type} [Fintype m]
+private lemma gram_eq_neg_mul_of_J₁_mul {m : Type}
     {y : 𝔰.G₁} {ω : Matrix 𝔰.BesselIndex m ℂ}
     (hω : 𝔰.J₁ * (y⁻¹.val.val * ω) = -(y⁻¹.val.val * ω)) :
     ωᴴ * 𝔰.J₁ * ω = -((y⁻¹.val.val * ω)ᴴ * (y⁻¹.val.val * ω)) := by

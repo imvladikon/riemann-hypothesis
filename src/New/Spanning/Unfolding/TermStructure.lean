@@ -374,7 +374,7 @@ the span `γ A⁺` of its image have the intersection `0`. -/
 theorem disjoint_colSpan_frameImage (h_disc : S.termDisc γ ≠ 0) :
     Disjoint (colSpan (frameImage 1))
       (colSpan (frameImage (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E))) :=
-  disjoint_iff.2 <| by_contra fun h_ne ↦ h_disc (termDisc_eq_zero_iff.2 h_ne)
+  disjoint_iff.2 <| by_contra fun h_ne ↦ h_disc (termDisc_eq_zero_of_inf_ne_bot h_ne)
 
 /-- If `gr(γ) = S.termDisc γ` is not zero, then `I_γ = A ∩ γ A` is zero, where
 `A = ⟨e_1, …, e_ϱ⟩`. -/

@@ -64,12 +64,6 @@ section Raises
 variable {c : ℝ} {K : Subgroup (Gf (P.E s) n)} {p : ℕ} [Fact p.Prime] [PadicPlace p]
   {S : Type*} [AddCommGroup S] [Module ℂ S] (k : Kernel n n' κ e ea K S)
 
-/-- The `p`-adic gauge `New.weylGauge` is ultrametric in the vector. -/
-lemma New.weylGauge_add_le_max (g : Gf (P.E s) n) (ξ η : WeylIndex n κ → ℂ) :
-    weylGauge κ e g (ξ + η) ≤ max (weylGauge κ e g ξ) (weylGauge κ e g η) := by
-  have h_add : ιₚ ∘ (ξ + η) = ιₚ ∘ ξ + ιₚ ∘ η := funext fun i ↦ map_add ιₚ (ξ i) (η i)
-  simpa only [weylGauge, h_add, mulVec_add] using norm_add_le_max _ _
-
 /-- The data `Φ` whose kernel multiplies the `p`-adic gauge by at most `c`: for all `g`, `h` and
 `ξ`, the gauge at `h * d'` of `jetMap (ω (g, h) Φ) ξ` is at most `max c 0` times the gauge at
 `g * d` of `ξ`. The factor is `max c 0` so that `0` is a member for every real `c`; sums stay inside
@@ -80,7 +74,7 @@ def New.Kernel.raises (d : Gf (E P s) n) (d' : Gf (E P s) n') (c : ℝ) : AddSub
       weylGauge κ ea (h * d') (k.jetMap (k.ω (g, h) Φ) ξ) ≤ max c 0 * weylGauge κ e (g * d) ξ}
   add_mem' hΦ hΨ g h ξ := by
     simp only [map_add, LinearMap.add_apply]
-    exact (weylGauge_add_le_max _ _ _).trans (max_le (hΦ g h ξ) (hΨ g h ξ))
+    exact (Rows.weylGauge_add_le_max _ _ _).trans (max_le (hΦ g h ξ) (hΨ g h ξ))
   zero_mem' := by simp [weylGauge, mul_nonneg]
 
 /-- Let `k` be a theta kernel with data in `S`: the pairs of finite adelic points of rank `n`, `n'`

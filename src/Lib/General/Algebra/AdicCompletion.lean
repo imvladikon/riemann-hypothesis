@@ -103,6 +103,11 @@ class PadicPlace (p : outParam ℕ) [Fact p.Prime] where
 
 export PadicPlace (ιₚ)
 
+/-- The valuation ring O_ι ⊂ ℂ of complex numbers whose image under ι : ℂ → ℂ_p has absolute
+value at most 1. -/
+noncomputable abbrev embValRing {p : ℕ} [Fact p.Prime] [ι : PadicPlace p] : ValuationSubring ℂ :=
+  ((NormedField.valuation (K := ℂ_[p])).comap ιₚ).valuationSubring
+
 variable {R : Type*} (N : Type*) [CommRing R] [AddCommGroup N] [Module R N] {π x y : R}
   {p n : ℕ} [Fact p.Prime] {F : Type*} [NormedField F] [PadicField F p] {S : Type*} [CommRing S]
 

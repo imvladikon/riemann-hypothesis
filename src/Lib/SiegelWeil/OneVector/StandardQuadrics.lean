@@ -345,30 +345,6 @@ variable {A κ : Type} [SemilocalField A] [StarRing A] [P : IntegralPlace A] [Fi
 lemma card_eq_card_pair_sum (h : 2 ≤ card κ) : card κ = card (Fin 2 ⊕ Fin (card κ - 2)) := by
   rw [card_sum, card_fin, card_fin, Nat.add_sub_cancel' h]
 
-/-- At a finite place, the standard hermitian form of rank at least two has a basis that begins
-with a hyperbolic pair and ends with orthonormal vectors: its Gram matrix is `planeSumGram 1`. -/
-lemma IntegralPlace.exists_hyperbolic_basis (h : 2 ≤ card κ) :
-    ∃ B : Matrix κ (Fin 2 ⊕ Fin (card κ - 2)) A, Bᴴ * B = planeSumGram 1 := by
-  -- With `c̄ c = -1` and `τ + τ̄ = 1`, two orthonormal vectors `x`, `y` give the hyperbolic pair
-  -- `x + c y`, `τ̄ x - τ c y`.
-  obtain ⟨c, -, hc⟩ : ∃ c : A, c ∈ P.integers ∧ star c * c = -1 := P.isAdelic.exists_norm_neg_one
-  have hτ : P.element + star P.element = 1 := P.element_add_star
-  let e : κ ≃ Fin 2 ⊕ Fin (card κ - 2) := equivOfCardEq (card_eq_card_pair_sum h)
-  let C : Matrix (Fin 2) (Fin 2) A := !![1, star P.element; c, -(P.element * c)]
-  have hC : Cᴴ * C = !![0, 1; 1, 0] :=
-    calc
-      Cᴴ * C = !![1 + star c * c, star P.element - P.element * (star c * c);
-          P.element - star P.element * (star c * c),
-            P.element * star P.element + P.element * star P.element * (star c * c)] := by
-        simp [C, ← ext_iff, Matrix.mul_apply, sub_eq_add_neg, mul_left_comm, mul_assoc]
-      _ = !![0, 1; 1, 0] := by simp [hc, hτ, add_comm (star P.element)]
-  -- The basis is `C` on the first two vectors and the identity on the rest.
-  let D : Matrix (Fin 2 ⊕ Fin (card κ - 2)) (Fin 2 ⊕ Fin (card κ - 2)) A := fromBlocks C 0 0 1
-  have hD : Dᴴ * D = planeSumGram 1 := by
-    simp [D, fromBlocks_conjTranspose, fromBlocks_multiply, hC]
-  refine ⟨D.submatrix e id, ?_⟩
-  rw [conjTranspose_submatrix, submatrix_mul_equiv, hD, submatrix_id_id]
-
 /-- At a finite place, the standard hermitian form has an integral basis that consists of one
 hyperbolic pair, the hyperbolic pairs indexed by `σ`, and orthonormal vectors indexed by `ν`: its
 Gram matrix is `planeSumGram (hyperbolicGram σ 1)`. -/
@@ -420,6 +396,19 @@ lemma IntegralPlace.exists_split_basis {σ ν : Type} [Fintype σ] [DecidableEq 
       all_goals simp [hc_mem, hτ_mem, h_mul]
   refine ⟨D.submatrix e id, ?_, fun i j ↦ hD_int (e i) j⟩
   rw [conjTranspose_submatrix, submatrix_mul_equiv, hD, submatrix_id_id]
+
+/-- At a finite place, the standard hermitian form of rank at least two has a basis that begins
+with a hyperbolic pair and ends with orthonormal vectors: its Gram matrix is `planeSumGram 1`. -/
+lemma IntegralPlace.exists_hyperbolic_basis (h : 2 ≤ card κ) :
+    ∃ B : Matrix κ (Fin 2 ⊕ Fin (card κ - 2)) A, Bᴴ * B = planeSumGram 1 := by
+  -- Take no additional hyperbolic pairs. The remaining columns form the orthonormal block.
+  let ν := Fin (card κ - 2)
+  obtain ⟨B, hB, -⟩ := P.exists_split_basis (σ := Empty) (ν := ν)
+    (by simpa [ν] using card_eq_card_pair_sum h)
+  let cols : Fin 2 ⊕ ν → Fin 2 ⊕ Empty ⊕ ν ⊕ Empty := Sum.map id (Sum.inr ∘ Sum.inl)
+  refine ⟨B.submatrix (Equiv.refl κ) cols, ?_⟩
+  rw [conjTranspose_submatrix, submatrix_mul_equiv, hB]
+  ext (i | i) (j | j) <;> rfl
 
 variable [DecidableEq κ]
 

@@ -26,7 +26,7 @@ definite space V_j.
   pair `New.Data.descentPair` when 1 ≤ j ≤ m and 0 otherwise.
 * `New.DescentPair.inner_thetaLift`: `New.DescentPair.normalizedDescent` is adjoint to
   `New.DescentPair.thetaLift`, for the Petersson product on `W` and the class sum product on `V`.
-* `New.Data.coe_adjoint_singleLift`, `New.Data.normalizedDescent_eq_zero_iff`: the adjoint of
+* `New.Data.coe_adjoint_singleLift`, `New.Data.normalizedDescent_eq_zero_of_inner_eq_zero`: the adjoint of
   Θ_{j,ξ} is the descent θ, so θ kills exactly the forms orthogonal to the lifts.
 * `New.Data.singleLift_injective`, `New.Data.exists_hasSum_rallisTerm_inner_singleLift`: Θ_{j,ξ} is
   injective, and its Gram form is a constant `A` times the factor `New.DescentPair.gramFactor` of
@@ -874,17 +874,16 @@ theorem singleLift_eq_integral {j : D.LiftIndex} (y : D.principalForms (D.spaceW
   (D.singleLift_apply ϑ j y).trans
     ((D.descentPair ϑ j).thetaLift_eq_integral (D.fitsParams_descentPair ϑ j) y.val)
 
-/-- For `1 ≤ j ≤ m`, a form `Ξ` on `V_j` has descent `θ Ξ = 0` exactly when it is orthogonal to the
-lifts of all forms of level `J_M` on `W_j`. -/
-theorem normalizedDescent_eq_zero_iff {j : D.LiftIndex} (Ξ : (D.descentPair ϑ j).FormV) :
-    (D.descentPair ϑ j).normalizedDescent Ξ = 0 ↔
-      ∀ y : D.principalForms (D.spaceW j), inner ℂ (D.singleLift ϑ j y) Ξ = 0 := by
-  have h_descent : (D.descentPair ϑ j).normalizedDescent Ξ = 0 ↔ (D.singleLift ϑ j).adjoint Ξ =
-    0 := by
-    rw [← D.coe_adjoint_singleLift]
-    exact ⟨fun h ↦ Subtype.ext (Subtype.ext h), fun h ↦ by rw [h]; rfl⟩
-  simp only [h_descent, ← LinearMap.adjoint_inner_right]
-  exact ⟨fun h y ↦ by simp [h], fun h ↦ ext_inner_left ℂ (by simpa using h)⟩
+/-- For `1 ≤ j ≤ m`, if a form `Ξ` on `V_j` is orthogonal to the lifts of all forms of level `J_M`
+on `W_j`, then its descent `θ Ξ` vanishes. -/
+theorem normalizedDescent_eq_zero_of_inner_eq_zero {j : D.LiftIndex}
+    (Ξ : (D.descentPair ϑ j).FormV)
+    (h : ∀ y : D.principalForms (D.spaceW j), inner ℂ (D.singleLift ϑ j y) Ξ = 0) :
+    (D.descentPair ϑ j).normalizedDescent Ξ = 0 := by
+  have h_adj : (D.singleLift ϑ j).adjoint Ξ = 0 :=
+    ext_inner_left ℂ fun y ↦ by simpa [LinearMap.adjoint_inner_right] using h y
+  rw [← D.coe_adjoint_singleLift, h_adj]
+  rfl
 
 /-- The function `ofAlgForm` on the adelic group of `V_j`, applied to the algebraic form
 `D.singleLift ϑ j y`, is the theta lift `formLift` of `y`. -/

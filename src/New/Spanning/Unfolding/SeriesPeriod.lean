@@ -291,7 +291,7 @@ theorem exists_dotProduct_besselFn_eq_integral [WeilData E] (h : S.Fits V l kw Y
             Y.sourceFn t (algFormRep kw 0 η ψ) (h.classSection c s) ∂haar := by
   -- Invert the variable, as `R(F_∞)` is unimodular, and compare the integrands.
   obtain ⟨g₀, t, h_formula⟩ := h.exists_besselFn_eq_integral
-  have := Y.isMulRightInvariant_haar_besselReal_besselFin.1
+  have := Y.isMulRightInvariant_haar_besselReal
   have : SecondCountableTopology Y.besselReal := inferInstance
   refine ⟨g₀, t, fun ψ c x ↦ ?_⟩
   rw [h_formula, ← integral_inv_eq_self]

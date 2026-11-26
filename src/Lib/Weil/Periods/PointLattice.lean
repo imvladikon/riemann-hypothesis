@@ -158,13 +158,13 @@ lemma lattice_eq_iff : V.lattice x = V.lattice x' ↔ x⁻¹ * x' ∈ stdLevel E
   refine ⟨fun h ↦ lattice_le_iff.1 h.ge, fun h ↦ le_antisymm ?_ (lattice_le_iff.2 h)⟩
   simpa [lattice_le_iff] using inv_mem h
 
-/-- The conjugate `x⁻¹ g x` lies in the group `stdLevel E ι` of integral unitary matrices if and
-only if `g`, acting through its matrix `V.ratCoordMatrixFin g` in rational coordinates, maps the
-lattice of `x` into itself. -/
-lemma conj_mem_stdLevel_iff :
-    x⁻¹ * (g * x) ∈ stdLevel E ι ↔ ∀ y ∈ V.lattice x, V.ratCoordMatrixFin g *ᵥ y ∈ V.lattice x := by
-  rw [← lattice_le_iff (V := V)]
-  refine ⟨fun h y hy ↦ h (mulVec_mem_lattice_mul.2 hy), fun h z hz ↦ ?_⟩
+/-- If `g`, acting through its matrix `V.ratCoordMatrixFin g` in rational coordinates, maps the
+lattice of `x` into itself, then the conjugate `x⁻¹ g x` lies in the group `stdLevel E ι` of
+integral unitary matrices. -/
+lemma conj_mem_stdLevel_of_mapsTo_lattice
+    (h : ∀ y ∈ V.lattice x, V.ratCoordMatrixFin g *ᵥ y ∈ V.lattice x) :
+    x⁻¹ * (g * x) ∈ stdLevel E ι := by
+  refine (lattice_le_iff (V := V)).1 fun z hz ↦ ?_
   obtain ⟨y, rfl⟩ : ∃ y, V.ratCoordMatrixFin g *ᵥ y = z :=
     ⟨V.ratCoordMatrixFin g⁻¹ *ᵥ z, by simp [ratCoordMatrixFin, Gf.coe_inv, mul_assoc]⟩
   exact h y (mulVec_mem_lattice_mul.1 hz)

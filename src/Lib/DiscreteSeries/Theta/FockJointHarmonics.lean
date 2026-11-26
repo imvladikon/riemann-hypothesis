@@ -355,23 +355,6 @@ theorem DiscreteSeries.polarisation_self_eq_smul_of_isCompactPrimitive [Decidabl
     ((sum_eq_zero_iff_of_nonneg fun c _ ↦ CStarModule.inner_self_nonneg).1 inner_eq.symm c
       (mem_filter.2 ⟨mem_univ c, hc⟩))
 
-/-- Let the entries of `l` be distinct, and let `P` be killed by the compact raising operators of
-the rows and by the Laplacians of the columns. Fix a row `a` and a sign `s`. The polarisation
-`∑ c, X_ac ∂P/∂X_bc` over the variables `X_bc` of sign `s` vanishes if `ε a = ε b` and
-`s * l b < s * l a`. If `E a a` acts on `P` by the entry of the lowest `K`-type, and the weight
-`T.relWeight l a` relative to the vacuum has sign `s` or is zero, then `P` is homogeneous of degree
-`s * T.relWeight l a` in the variables of sign `s` of row `a` and free of those of sign `-s`. -/
-theorem DiscreteSeries.polarisation_eq_of_isCompactPrimitive [DecidableEq R] [DecidableEq C]
-    {P : MvPolynomial ι ℂ}
-    (hl : l.Injective) (h_prim : T.oscRows.IsCompactPrimitive l P)
-    (h_harm : T.swap.IsLaplaceHarmonic P) (a : R) (s : ℤˣ) :
-    (∀ b : R, ε a = ε b → s * l b < s * l a → T.polarisation P a b s = 0) ∧
-      (T.oscRows.E a a P = (l.lowestKType a : ℂ) • P → 0 ≤ s * T.relWeight l a →
-        T.polarisation P a a s = ((s * T.relWeight l a : ℤ) : ℂ) • P ∧
-          ∀ c : C, T.varSign (a, c) = -s → pderiv (T.varEquiv (a, c)) P = 0) :=
-  ⟨fun _ ↦ polarisation_eq_zero_of_isCompactPrimitive hl h_prim h_harm,
-    polarisation_self_eq_smul_of_isCompactPrimitive hl h_prim h_harm⟩
-
 omit [Fintype R] in
 /-- If each mixed derivative `∂_ac ∂_bc Φ` with `ε a ≠ ε b` vanishes, then the Laplacians of the
 rows, which are sums of such derivatives up to sign, kill `Φ`. -/
