@@ -192,7 +192,7 @@ lemma normSqAt_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) 
 /-! ### Theorem A -/
 
 /-- **Theorem A (a).** The source is spanned by the forms `φ` that are integral at every prime `l`
-and `l`-adic place of `ℂ` and satisfy `‖Θ₁ s 𝔭 φ‖_σ² ≤ exp (main - m rem + f a log⁴ b)` for all `s`
+and `l`-adic place of `ℂ` and satisfy `‖Θ₁ s 𝔭 φ‖_σ² ≤ exp (main - m rem + 5 f a log³ b)` for all `s`
 in the finite group `D.chosenGL` and all automorphisms `σ` of `ℂ`. Here
 `s 𝔭 = D.normalizedPoincare s` maps the source to the target, `Θ₁ = D.Θ 1` is the chain of `m = D.m`
 lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conjugate form. In the bound:
@@ -203,10 +203,10 @@ lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conj
   main part `s_main = D.mainPrimeSum`;
 * `f = D.f` is the number of infinite places, `a = D.a` is the long order `x b`, and
   `log b = D.logB` is the logarithm of the weight `b`. -/
-theorem span_short_integralRamified_eq_top :
+theorem span_short_integralRamified_eq_top_cubic :
     span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
       (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
-        exp (D.mainAmount - D.m * D.totalRemainder + D.f * D.a * D.logB ^ 4)} = ⊤ := by
+        exp (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit)} = ⊤ := by
   -- The short forms span the source, so it suffices to bound the lifts for a short form `φ`.
   refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top
   rintro φ ⟨h_integral, h_size⟩
@@ -231,11 +231,20 @@ theorem span_short_integralRamified_eq_top :
   have h_target :
       (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ ≤ exp (D.x ^ 99 + (D.errorUnit + β)) :=
     normSqAt_goodProjTranslate_le h_chain
-  have h_error : D.x ^ 99 + 4 * D.errorUnit + 2 * D.b ≤ D.f * D.a * D.logB ^ 4 :=
-    D.le_of_hasLogBound
+  have h_small : D.x ^ 99 + 2 * D.b ≤ D.errorUnit := D.le_of_hasLogBound
   -- The positive rational number `c_B` adds `2 log c_B`, and the gains cancel.
   grw [D.normSqAt_normalizedPoincare, h_target, ← exp_add, exp_le_exp, β_def]
-  linarith [D.log_invGainFactor_le]
+  linarith [D.log_invGainFactor_le, h_small]
+
+/-- The short spanning family with the fourth-power error. -/
+theorem span_short_integralRamified_eq_top :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder + D.f * D.a * D.logB ^ 4)} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_short_integralRamified_eq_top_cubic
+  intro φ hφ
+  have h_loss : 5 * D.errorUnit ≤ D.f * D.a * D.logB ^ 4 := D.le_of_hasLogBound
+  exact ⟨hφ.1, fun s σ ↦ (hφ.2 s σ).trans (exp_le_exp.2 (by linarith))⟩
 
 /-- The ramified source forms `D.ramifiedSourceForms` have at least half the dimension over `ℂ` of
 all source forms `D.SourceForm`: `finrank ℂ D.SourceForm ≤ 2 * finrank ℂ D.ramifiedSourceForms`. -/
@@ -287,22 +296,19 @@ lemma normalizedPoincare_mem_integralVectors {ι : PrimePadicIso} (s : D.chosenG
   rw [h_smul]
   exact goodProjTranslate_mem_integralForms ι.place h_lift_mem s
 
-/-- Fix `s` in the finite group `D.chosenGL`. A finite family `y` of target forms
-`s 𝔭 φ = D.normalizedPoincare s φ`, with each `φ` a ramified source form integral at every `ι`, has
-logarithmic index at most `δ = dim src · 2 · D.errorUnit` in `D.targetLattice`. Here `src` is the
-space `D.ramifiedSourceForms`, and `D.errorUnit` is the unit of loss `D.f * D.a * D.logB ^ 3`. -/
-lemma indexLe_of_mem_image_normalizedPoincare (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+private lemma indexLe_of_mem_image_normalizedPoincare_sharp
+    (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
-    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)) := by
+    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)) := by
   -- At `ι ∣ l` the map `s 𝔭` takes a submodule of colength `j ≤ err_l D_X` to integral target
   -- forms, `D_X` being the dimension of the space of all source forms. So `e l = D_X err_l` serves,
   -- and `D_X ≤ 2 dim src`.
   refine TwistedLattice.indexLe_of_colengthDvd
     (e := fun l ↦ finrank ℂ D.SourceForm * D.allowedLoss l)
     (fun l ↦ mul_nonneg (by positivity) (D.allowedLoss_nonneg l)) (fun U _ ↦ ?_) fun ι ↦ ?_
-  · have h_errorUnit_nonneg : 0 ≤ D.errorUnit := (HasLogBound.pos D).le
+  · have h_loss_nonneg : 0 ≤ D.allowedLossSumBound := by positivity
     simp only [mul_assoc _ (D.allowedLoss _), ← mul_sum]
-    grw [sum_allowedLoss_mul_log_le, finrank_sourceForm_le_two_mul]
+    grw [sum_allowedLoss_mul_log_le_sharp, finrank_sourceForm_le_two_mul]
     push_cast
     exact le_of_eq (by ring)
   let : PadicPlace ι.1 := ι.place
@@ -320,16 +326,30 @@ lemma indexLe_of_mem_image_normalizedPoincare (s : D.chosenGL) {n : ℕ} {y : Fi
   exact ⟨j, M.map A, hj.trans_eq (mul_comm _ _), fun i ↦ Set.image_mono h_subset (hy i),
     h_source.map A le_sup_left (map_comap_le A _)⟩
 
+/-- A family of integral source forms translated by a single `s` has logarithmic index at most
+`dim src · 2 · D.errorUnit` in the target lattice. -/
+lemma indexLe_of_mem_image_normalizedPoincare (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
+    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)) :=
+  (D.indexLe_of_mem_image_normalizedPoincare_sharp s hy).mono
+    (by grw [D.allowedLossSumBound_le_errorUnit])
+
 /-- **Theorem A (b).** A finite family `y` of target forms `s 𝔭 φ = D.normalizedPoincare s φ`, with
 `s` in a set `t` of translates and `φ` in the source `src = D.ramifiedSourceForms` integral at every
-`ι`, has logarithmic index at most `δ = #t · dim src · 2 f a log³ b` in the target lattice. -/
-theorem indexLe_normalizedPoincare (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+`ι`, has logarithmic index at most `δ = #t · dim src · 64 f a (log b)² (log x₁)²`. -/
+theorem indexLe_normalizedPoincare_sharp (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, ∃ s ∈ t, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
-    D.targetLattice.IndexLe y (#t * finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)) := by
+    D.targetLattice.IndexLe y (#t * finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)) := by
   -- Sort the family by translates; indices add over a union of families.
   rw [mul_assoc]
   exact TwistedLattice.indexLe_card_mul t
-    (fun s _ n z ↦ D.indexLe_of_mem_image_normalizedPoincare s) hy
+    (fun s _ n z ↦ D.indexLe_of_mem_image_normalizedPoincare_sharp s) hy
+
+/-- The index bound for a finite set of translates in units of `D.errorUnit`. -/
+theorem indexLe_normalizedPoincare (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, ∃ s ∈ t, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
+    D.targetLattice.IndexLe y (#t * finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)) :=
+  (D.indexLe_normalizedPoincare_sharp t hy).mono (by grw [D.allowedLossSumBound_le_errorUnit])
 
 /-! ### Theorem B -/
 
