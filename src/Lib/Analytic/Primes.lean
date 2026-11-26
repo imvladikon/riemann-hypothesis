@@ -1,7 +1,13 @@
 module
 
 public import Lib.Analytic.PrimeNumberTheorem.ZeroFreeRegion
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import TauCeti.Analysis.Complex.BorelCaratheodory
 import TauCeti.NumberTheory.ArithmeticFunction.VonMangoldt
+import TauCeti.NumberTheory.DirichletCharacter.LFunction.Basic
+import TauCeti.NumberTheory.LFunctions.Zeros.ZeroFreeRegion.Dirichlet
+import TauCeti.NumberTheory.LSeries.DirichletEulerLog
+import TauCeti.NumberTheory.LSeries.RiemannZeta.Bounds
 
 /-!
 # Primes congruent to `1` modulo `M ^ k` with logarithm in a prescribed window
@@ -134,6 +140,199 @@ lemma New.exists_regularL_eq_of_sq_eq_one {M k : ℕ} [NeZero M] (hM : 4 ∣ M) 
           ← h_LFunction]
     · simp [entireL, hχ₀_one, mt h_one.1 hχ₀_one, h_LFunction (.inl hχ₀_one)]
   exact ⟨χ₀, funext fun z ↦ by by_cases h : χ₀ = 1 <;> simp [regularL, ← h_entire, h_one, h]⟩
+
+/-- In a family of powers of a fixed modulus, the classical zero-free region supplies a disc of
+radius `a / l` around `1`. Characters with trivial square have a fixed nonvanishing neighborhood
+at level `M ^ 2`. -/
+lemma New.exists_eventually_entireL_ne_zero_log_disk {M : ℕ} [NeZero M] (hM : 4 ∣ M) :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ l : ℝ in atTop, ∀ (k : ℕ), 1 < k →
+      ∀ (χ : DirichletCharacter ℂ (M ^ k)) (s : ℂ),
+        (M : ℝ) ^ k ≤ rexp l → ‖s - 1‖ ≤ a / l → entireL χ s ≠ 0 := by
+  obtain ⟨c, hc, -, h_region⟩ := TauCeti.LFunctions.dirichletLFunction_zeroFreeRegion
+  have h_inv : Tendsto (fun l : ℝ ↦ 1 / l) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop tendsto_id
+  have h_neighborhood : ∀ᶠ L : ℝ in atTop, 1 ≤ L ∧ ∀ χ₀ : DirichletCharacter ℂ (M ^ 2),
+      ∀ z : ℂ, ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL χ₀ z‖ :=
+    (eventually_ge_atTop 1).and <| h_inv.eventually <|
+      eventually_all.2 fun χ₀ ↦ eventually_le_norm_regularL χ₀
+  obtain ⟨L, hL, h_near⟩ := h_neighborhood.exists
+  let a := min 1 (min (c / 2) (1 / L))
+  have hL_pos : 0 < L := one_pos.trans_le hL
+  have ha : 0 < a := lt_min one_pos (lt_min (half_pos hc) (one_div_pos.2 hL_pos))
+  have ha_one : a ≤ 1 := min_le_left _ _
+  refine ⟨a, ha, ha_one, ?_⟩
+  filter_upwards [eventually_ge_atTop (4 : ℝ)] with l hl k hk χ s hq hs
+  have hl_pos : 0 < l := by linarith only [hl]
+  have h_radius : a / l ≤ a := div_le_self ha.le (by linarith only [hl])
+  by_cases hχ : χ ^ 2 = 1
+  · obtain ⟨χ₀, h_eq⟩ := exists_regularL_eq_of_sq_eq_one hM hk hχ
+    have ha_L : a ≤ 1 / L := (min_le_right _ _).trans (min_le_right _ _)
+    have h_pos : 0 < ‖regularL χ s‖ :=
+      (one_div_pos.2 hL_pos).trans_le (by rw [h_eq]; exact h_near χ₀ s (hs.trans (h_radius.trans ha_L)))
+    exact fun hz ↦ (norm_pos_iff.1 h_pos) (by simp [regularL, hz])
+  have hχ_ne : χ ≠ 1 := fun h ↦ hχ (by simp [h])
+  let q := M ^ k
+  have hq_one : (1 : ℝ) ≤ (q : ℝ) := Nat.one_le_cast.mpr NeZero.one_le
+  have hq_exp : (q : ℝ) ≤ rexp l := by simpa only [q, Nat.cast_pow] using hq
+  have h_im : |s.im| ≤ 1 := by
+    simpa only [sub_im, one_im, sub_zero] using
+      (abs_im_le_norm (s - 1)).trans (hs.trans (h_radius.trans ha_one))
+  have h_arg : 1 < (q : ℝ) * (|s.im| + 3) := calc
+    _ < 1 * 3 := by norm_num
+    _ ≤ _ := mul_le_mul hq_one (by linarith only [abs_nonneg s.im]) (by norm_num) (by positivity)
+  have h_log : Real.log ((q : ℝ) * (|s.im| + 3)) ≤ 2 * l := by
+    apply (Real.log_le_iff_le_exp (zero_lt_one.trans h_arg)).2
+    rw [two_mul, Real.exp_add]
+    exact mul_le_mul hq_exp (by linarith only [h_im, hl, add_one_le_exp l])
+      (by positivity) (exp_pos l).le
+  have ha_c : a ≤ c / 2 := (min_le_right _ _).trans (min_le_left _ _)
+  have h_width : a / l ≤ c / Real.log ((q : ℝ) * (|s.im| + 3)) := calc
+    _ ≤ (c / 2) / l := div_le_div_of_nonneg_right ha_c hl_pos.le
+    _ = c / (2 * l) := by ring
+    _ ≤ _ := div_le_div_of_nonneg_left hc.le (Real.log_pos h_arg) h_log
+  have h_re_abs : |s.re - 1| ≤ a / l := by
+    simpa only [sub_re, one_re] using (abs_re_le_norm (s - 1)).trans hs
+  have h_re : 1 - c / Real.log ((q : ℝ) * (|s.im| + 3)) ≤ s.re := by
+    linarith only [(abs_le.1 h_re_abs).1, h_width]
+  have h_nonzero : χ.LFunction s ≠ 0 := fun h_zero ↦
+    hχ ((h_region q χ).1 s h_re
+      (χ.meromorphicOrderAt_LFunction_pos_iff.2 ⟨h_zero, .inr hχ_ne⟩)).2.1
+  simpa only [entireL, ite_eq_right hχ_ne] using h_nonzero
+
+private lemma eventually_const_mul_pow_le_exp (C : ℝ) (n : ℕ) :
+    ∀ᶠ l : ℝ in atTop, C * l ^ n ≤ rexp l := by
+  filter_upwards [((isLittleO_pow_exp_pos_mul_atTop n one_pos).const_mul_left C).eventuallyLE]
+    with l h
+  exact (le_norm_self _).trans (by simpa only [one_mul, Real.norm_eq_abs, abs_of_pos (exp_pos l)] using h)
+
+open New in
+private lemma norm_entireL_le_of_disk {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q)
+    {s : ℂ} (hs : ‖s - 1‖ ≤ 1 / 2) : ‖entireL χ s‖ ≤ 32 * q := by
+  have h_re : 1 / 2 ≤ s.re := by
+    have h_abs : |s.re - 1| ≤ 1 / 2 := by
+      simpa only [sub_re, one_re] using (abs_re_le_norm (s - 1)).trans hs
+    linarith only [(abs_le.1 h_abs).1]
+  have h_norm : ‖s‖ ≤ 2 := by
+    linarith only [norm_le_norm_sub_add s 1, norm_one (α := ℂ), hs]
+  have h_factor : ‖(if χ = 1 then s else 1 : ℂ)‖ ≤ 2 := by
+    split_ifs
+    · exact h_norm
+    · simp
+  have h_ne : (if χ = 1 then s else 1 : ℂ) ≠ 0 := by
+    split_ifs
+    · exact ne_zero_of_re_pos (by linarith only [h_re])
+    · exact one_ne_zero
+  have h_eq : entireL χ s = regularL χ s * (if χ = 1 then s else 1) := by
+    rw [regularL, div_mul_cancel₀ _ h_ne]
+  calc
+    _ ≤ (8 * q * ‖s‖) * 2 := by
+      rw [h_eq, norm_mul]
+      exact mul_le_mul (New.norm_regularL_le_linear χ h_re) h_factor (norm_nonneg _) (by positivity)
+    _ ≤ (8 * q * 2) * 2 := by gcongr
+    _ = _ := by ring
+
+open New in
+private lemma mul_exp_neg_re_riemannZeta_le_norm_entireL {q : ℕ} [NeZero q]
+    (χ : DirichletCharacter ℂ q) {r : ℝ} (hr : 0 < r) (hr_one : r ≤ 1) :
+    r * rexp (-(riemannZeta ((1 + r : ℝ) : ℂ)).re) ≤ ‖entireL χ ((1 + r : ℝ) : ℂ)‖ := by
+  let s : ℂ := (1 + r : ℝ)
+  have hs : 1 < s.re := by simpa only [s, ofReal_re] using lt_add_of_pos_right 1 hr
+  have h_lower : rexp (-(riemannZeta s).re) ≤ ‖χ.LFunction s‖ := by
+    simpa only [s, ofReal_re] using χ.exp_neg_re_riemannZeta_le_norm_LFunction hs
+  change r * rexp (-(riemannZeta s).re) ≤ ‖entireL χ s‖
+  by_cases hχ : χ = 1
+  · have hs_ne : s ≠ 1 := ne_of_apply_ne re hs.ne'
+    have h_sub : s - 1 = (r : ℂ) := by simp [s]
+    rw [entireL, ite_eq_left hχ, LFunctionTrivChar₁, Function.update_of_ne hs_ne, h_sub, norm_mul]
+    simp only [norm_real, Real.norm_eq_abs, abs_of_pos hr]
+    exact mul_le_mul_of_nonneg_left (by simpa only [hχ, LFunctionTrivChar] using h_lower) hr.le
+  rw [entireL, ite_eq_right hχ]
+  exact (mul_le_of_le_one_left (exp_pos _).le hr_one).trans h_lower
+
+private lemma borel_factor_le {r d : ℝ} (hr : 0 < r) (hd : d ≤ 3 * r / 2) :
+    4 * (2 * r + d) / (2 * r - d) ^ 2 ≤ 64 / r := by
+  have h_gap : r / 2 ≤ 2 * r - d := by linarith only [hd]
+  have h_sq : (r / 2) ^ 2 ≤ (2 * r - d) ^ 2 := pow_le_pow_left₀ (by positivity) h_gap 2
+  calc
+    _ ≤ 16 * r / (2 * r - d) ^ 2 := div_le_div_of_nonneg_right (by linarith only [hd, hr]) (sq_nonneg _)
+    _ ≤ 16 * r / (r / 2) ^ 2 := div_le_div_of_nonneg_left (by positivity) (by positivity) h_sq
+    _ = _ := by field
+
+/-- A disc of radius `a / l` for the fixed-base family also gives a quadratic logarithmic
+derivative bound. The estimate uses Borel–Carathéodory on a disc centered to the right of `1`. -/
+lemma New.exists_eventually_norm_logDeriv_entireL_le_log_disk {M : ℕ} [NeZero M] (hM : 4 ∣ M) :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∃ B : ℝ, 0 < B ∧
+      ∀ᶠ l : ℝ in atTop, ∀ (k : ℕ), 1 < k → ∀ (χ : DirichletCharacter ℂ (M ^ k)) (s : ℂ),
+        (M : ℝ) ^ k ≤ rexp l → ‖s - 1‖ ≤ a / l →
+          entireL χ s ≠ 0 ∧ ‖logDeriv (entireL χ) s‖ ≤ B * l ^ 2 := by
+  obtain ⟨a, ha, ha_one, h_disk⟩ := exists_eventually_entireL_ne_zero_log_disk hM
+  let D : ℝ := 1 + 4 / a
+  refine ⟨a / 8, by positivity, by linarith only [ha_one], 256 * (D + 2) / a, by dsimp [D]; positivity, ?_⟩
+  filter_upwards [h_disk, eventually_ge_atTop (4 : ℝ), eventually_const_mul_pow_le_exp (128 / a) 1]
+    with l h_free hl h_poly k hk χ s hq hs
+  have hl_pos : 0 < l := by linarith only [hl]
+  let r := a / (4 * l)
+  let b : ℂ := (1 + r : ℝ)
+  have hr : 0 < r := by dsimp [r]; positivity
+  have h_radius : a / l = 4 * r := by dsimp [r]; ring
+  have h_half : a / l ≤ 1 / 2 := (div_le_iff₀ hl_pos).2 (by linarith only [ha_one, hl])
+  have hr_one : r ≤ 1 := by linarith only [h_radius, h_half]
+  have hb : ‖b - 1‖ = r := by
+    rw [show b - 1 = (r : ℂ) by simp [b], norm_real, Real.norm_eq_abs, abs_of_pos hr]
+  have h_outer (w : ℂ) (hw : w ∈ Metric.ball b (2 * r)) : ‖w - 1‖ ≤ a / l := by
+    have h_dist : ‖w - b‖ < 2 * r := by simpa only [Metric.mem_ball, dist_eq_norm] using hw
+    have h_sum := norm_add_le (w - b) (b - 1)
+    rw [sub_add_sub_cancel, hb] at h_sum
+    linarith only [h_sum, h_dist, h_radius, hr]
+  rw [show a / 8 / l = r / 2 by dsimp [r]; ring] at hs
+  have h_target : ‖s - b‖ ≤ 3 * r / 2 := by
+    have h_sum := norm_sub_le (s - 1) (b - 1)
+    rw [sub_sub_sub_cancel_right, hb] at h_sum
+    linarith only [h_sum, hs]
+  have h_rcp : 1 / r = (4 / a) * l := by dsimp [r]; field
+  have hd : (riemannZeta b).re ≤ D * l := by
+    have h := (TauCeti.riemannZeta_re_lt_one_add_one_div_sub_one
+      (σ := 1 + r) (by linarith only [hr]) (by linarith only [hr])).le
+    simp only [add_sub_cancel_left, h_rcp] at h
+    change (riemannZeta ((1 + r : ℝ) : ℂ)).re ≤ (1 + 4 / a) * l
+    rw [add_mul, one_mul]
+    linarith only [h, hl]
+  have h_lower : r * rexp (-D * l) ≤ ‖entireL χ b‖ :=
+    (mul_le_mul_of_nonneg_left
+      (Real.exp_le_exp.2 (by linarith only [hd] : -D * l ≤ -(riemannZeta b).re)) hr.le).trans
+        (mul_exp_neg_re_riemannZeta_le_norm_entireL χ hr hr_one)
+  have h_absorb : 32 ≤ r * rexp l := by
+    have h := (div_le_iff₀ hr).1 (show 32 / r ≤ rexp l by
+      calc
+        _ = 32 * (1 / r) := by ring
+        _ = (128 / a) * l ^ 1 := by rw [h_rcp, pow_one]; ring
+        _ ≤ _ := h_poly)
+    simpa only [mul_comm] using h
+  have hq_cast : ((M ^ k : ℕ) : ℝ) ≤ rexp l := by simpa only [Nat.cast_pow] using hq
+  have h_relative (w : ℂ) (hw : w ∈ Metric.ball b (2 * r)) :
+      ‖entireL χ w‖ ≤ rexp ((D + 2) * l) * ‖entireL χ b‖ := calc
+    _ ≤ (32 : ℝ) * ((M ^ k : ℕ) : ℝ) := norm_entireL_le_of_disk χ ((h_outer w hw).trans h_half)
+    _ ≤ 32 * rexp l := mul_le_mul_of_nonneg_left hq_cast (by norm_num)
+    _ ≤ (r * rexp l) * rexp l := mul_le_mul_of_nonneg_right h_absorb (exp_pos l).le
+    _ = rexp ((D + 2) * l) * (r * rexp (-D * l)) := by
+      have h_exp : rexp ((D + 2) * l) * rexp (-D * l) = rexp l * rexp l := by
+        rw [← Real.exp_add, ← Real.exp_add]
+        congr 1
+        ring
+      rw [mul_left_comm (rexp ((D + 2) * l)) r, h_exp, mul_assoc]
+    _ ≤ _ := mul_le_mul_of_nonneg_left h_lower (exp_pos _).le
+  have h_borel := Complex.norm_logDeriv_le_of_forall_mem_ball_norm_le_mul
+    (fun w _ ↦ (analyticAt_entireL χ w).differentiableAt.differentiableWithinAt)
+    (fun w hw ↦ h_free k hk χ w hq (h_outer w hw)) h_relative
+    (show ‖s - b‖ < 2 * r by linarith only [h_target, hr])
+  rw [Real.log_exp] at h_borel
+  refine ⟨h_free k hk χ s hq (hs.trans (by linarith only [h_radius, hr])), h_borel.trans ?_⟩
+  calc
+    _ ≤ 64 / r * ((D + 2) * l) :=
+      mul_le_mul_of_nonneg_right (borel_factor_le hr h_target) (by dsimp [D]; positivity)
+    _ = _ := by
+      rw [div_eq_mul_inv, ← one_div, h_rcp]
+      ring
 
 /-- A disc of radius `1 / X` with `C * l ^ 9 ≤ X` works for all powers of a fixed modulus
 bounded by `exp l`. The neighborhood used for the real characters comes from modulus `M ^ 2`. -/
