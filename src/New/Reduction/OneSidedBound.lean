@@ -456,18 +456,18 @@ theorem exists_eventually_primeRemainder_natCast_le_with_quadratic_cutoff (P : P
   exact exists_eventually_primeRemainder_natCast_le_of_stretched_cutoff P (by decide)
     (fun _ _ h_cop ↦ exists_eventually_abs_primeRemainder_exp_le_sqrt hd h_cop)
 
-/-- With the sieve bound for the index, the quadratic cutoff contributes only degree two. -/
-theorem exists_eventually_primeRemainder_natCast_le_with_linear_index (P : Parameters) :
+/-- The linear index bound with the translate count estimated using the scale separation. -/
+theorem exists_eventually_primeRemainder_natCast_le_with_sharp_linear_index (P : Parameters) :
     ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop,
       2 * (C * (64 * log x) ^ (2 : ℕ)) ≤ P.subexponentialWindowWidth (log x) ∧
       primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
         (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
-        (440 * C * (64 * log x) ^ (2 : ℕ)) := by
+        (220 * C * (64 * log x) ^ (2 : ℕ)) := by
   have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   obtain ⟨C, hC, h_cutoff, h_tails⟩ := exists_eventually_subexponential_cutoff P (n := 2)
     (by decide) (fun _ _ h_cop ↦ exists_eventually_abs_primeRemainder_exp_le_sqrt hd h_cop)
   let T (x : ℕ) := C * (64 * log x) ^ (2 : ℕ)
-  let L (x : ℕ) := 440 * C * (64 * log x) ^ (2 : ℕ)
+  let L (x : ℕ) := 220 * C * (64 * log x) ^ (2 : ℕ)
   have h_budget : ∀ᶠ x : ℕ in atTop, ∀ D : Data P, D.x = x → 1 ≤ 2 * T x →
       D.logX₁ ≤ 2 * T x → 1 ≤ L x ∧ D.m * D.totalRemainder ≤ 700 * (D.errorUnit * L x) := by
     apply Filter.Eventually.of_forall
@@ -484,26 +484,38 @@ theorem exists_eventually_primeRemainder_natCast_le_with_linear_index (P : Param
       _ ≤ C * (64 * Real.log (x : ℝ)) ^ 2 :=
         le_mul_of_one_le_left (by positivity) hC
       _ ≤ _ := le_mul_of_one_le_left (by positivity) (by norm_num)
-    have h_scale : L x = 220 * (2 * T x) := by dsimp [L, T]; ring
+    have h_scale : L x = 110 * (2 * T x) := by dsimp [L, T]; ring
     have hL : 1 ≤ L x := by rw [h_scale]; linarith
     refine ⟨hL, ?_⟩
     rw [h_scale]
-    exact star_inequality_with_linear_cutoff_index D hV h_upper h_m
+    exact (star_inequality_with_linear_cutoff_index_sharp D hV h_upper h_m).trans_eq (by ring)
   exact ⟨C, hC, (h_cutoff.mono fun _ h ↦ h.2.2).and
     (eventually_primeRemainder_natCast_le_with_subexponential_budget P T L h_cutoff h_tails h_budget)⟩
+
+/-- With the sieve bound for the index, the quadratic cutoff contributes only degree two. -/
+theorem exists_eventually_primeRemainder_natCast_le_with_linear_index (P : Parameters) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop,
+      2 * (C * (64 * log x) ^ (2 : ℕ)) ≤ P.subexponentialWindowWidth (log x) ∧
+      primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
+        (440 * C * (64 * log x) ^ (2 : ℕ)) := by
+  obtain ⟨C, hC, h⟩ := exists_eventually_primeRemainder_natCast_le_with_sharp_linear_index P
+  refine ⟨C, hC, h.mono fun x hx ↦ ⟨hx.1, hx.2.trans ?_⟩⟩
+  gcongr
+  linarith only [hC]
 
 private lemma eventually_primeRemainder_natCast_le_of_subexponential_windows
     (P : Parameters) {s : ℝ} (hs : 0 < s) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + s) := by
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  obtain ⟨C, hC, h_linear⟩ := exists_eventually_primeRemainder_natCast_le_with_linear_index P
+  obtain ⟨C, hC, h_linear⟩ := exists_eventually_primeRemainder_natCast_le_with_sharp_linear_index P
   have h_half : 0 < s / 2 := by positivity
   filter_upwards [h_linear,
     h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 48 by positivity)),
-    eventually_mul_scaled_log_pow_le_rpow (14 * (440 * C)) 2 h_half,
+    eventually_mul_scaled_log_pow_le_rpow (14 * (220 * C)) 2 h_half,
     eventually_ge_atTop 1] with x ⟨_, h_bound⟩ h_logW h_poly hx_one
-  let L := 440 * C * (64 * log (x : ℝ)) ^ (2 : ℕ)
+  let L := 220 * C * (64 * log (x : ℝ)) ^ (2 : ℕ)
   let W := P.subexponentialWindowWidth (log x)
   change log W ≤ s / 48 * log (x : ℝ) at h_logW
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one

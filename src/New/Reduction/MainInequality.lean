@@ -65,13 +65,13 @@ Notions from other files:
 | source   | where             | amount                             |
 |----------|-------------------|------------------------------------|
 | size     | Theorem A (a)     | `5 f a log³ b`                     |
-| index    | Theorems A (b), B | `640 f a log³ b log² x₁`           |
+| index    | Theorems A (b), B | `324 f a log³ b L`                 |
 | covolume | Theorem C         | `10 f a log³ b + 2 b`              |
 
 Each missing dimension costs `2 x₁² b² + b`, so the greedy choice stops at the missing share
 `1 / (1 + 2 x₁² b)`. The total completion cost is at most `dim · b`. The table includes the
-doubled index. The family has `n ≥ (24 / 25) dim` members, and the sum is at most
-`657 f a log³ b log² x₁` per dimension, so `m rem ≤ 700 f a log³ b log² x₁`.
+doubled index. The family has `n ≥ (49 / 50) dim` members, and the sum is at most
+`341 f a log³ b L` per dimension, so `m rem ≤ 350 f a log³ b L`.
 
 ## Relation to the literature
 
@@ -89,7 +89,7 @@ namespace New
 open Real Finset Data Module Submodule
 
 /-- Compare covolumes with a bound `32 f a (log b)² L` on the weighted local losses.
-The resulting main inequality is `m rem ≤ 700 f a (log b)³ L`.
+The resulting main inequality is `m rem ≤ 350 f a (log b)³ L`.
 
 The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 1 mod q₀`. The scales are
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
@@ -98,7 +98,7 @@ private lemma star_inequality_of_weighted_loss_bound {P : Parameters} (D : Data 
     (hL : 1 ≤ L)
     (h_losses : ∀ U : Finset ℕ,
       ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ 32 * (D.f * D.a * D.logB ^ 2 * L)) :
-    D.m * D.totalRemainder ≤ 700 * (D.errorUnit * L) := by
+    D.m * D.totalRemainder ≤ 350 * (D.errorUnit * L) := by
   let denominator : ℝ := 1 + 2 * D.x₁ ^ 2 * D.b
   let share : ℝ := denominator⁻¹
   have hden_pos : 0 < denominator := by
@@ -111,8 +111,8 @@ private lemma star_inequality_of_weighted_loss_bound {P : Parameters} (D : Data 
     dsimp only [share]
     rw [← one_div]
     exact (div_le_div_iff₀ (by positivity) hden_pos).2 (by simpa using hden_sq)
-  have hshare_small : share ≤ 1 / 25 := by
-    have hden_large : 25 ≤ denominator := by
+  have hshare_small : share ≤ 1 / 50 := by
+    have hden_large : 50 ≤ denominator := by
       dsimp [denominator]
       exact D.le_of_hasLogBound
     dsimp only [share]
@@ -121,19 +121,29 @@ private lemma star_inequality_of_weighted_loss_bound {P : Parameters} (D : Data 
   have hshare_lt : share < 1 := hshare_small.trans_lt (by norm_num)
   obtain ⟨t, ht_card, h_fill⟩ := D.exists_few_normalizedPoincare hshare_ge hshare_lt
   rw [show share⁻¹ = denominator by simp [share]] at ht_card
-  have h_log : 1 + log denominator ≤ 2 * D.logB := by
-    have h_mul : 3 * denominator ≤ D.b ^ 2 :=
-      (mul_le_mul_of_nonneg_right (by norm_num) hden_pos.le).trans hden_sq
-    have h := log_le_log (by positivity : 0 < 3 * denominator) h_mul
-    rw [log_mul (by norm_num) hden_pos.ne', log_pow, Data.b, log_exp, Nat.cast_ofNat] at h
-    have h_three : 1 ≤ log 3 :=
-      (le_log_iff_exp_le (by norm_num)).2 exp_one_lt_three.le
-    linarith
-  have h_translate_budget : #t * finrank ℂ D.ramifiedSourceForms ≤ 5 * D.targetDim * D.logB := by
+  have h_logB : 1000 ≤ D.logB := D.le_of_hasLogBound
+  have h_log : 1 + log denominator ≤ (101 / 100) * D.logB := by
+    have h_xb : 1 ≤ D.x₁ ^ 2 * D.b := D.le_of_hasLogBound
+    have h_mul : denominator ≤ 3 * D.x₁ ^ 2 * D.b := by
+      dsimp only [denominator]
+      linarith only [h_xb]
+    have h := log_le_log hden_pos h_mul
+    have h_x₁ : 0 < D.x₁ := HasLogBound.pos D
+    have hb : 0 < D.b := HasLogBound.pos D
+    rw [log_mul (by positivity) hb.ne', log_mul (by norm_num) (by positivity),
+      log_pow, Nat.cast_ofNat, Data.x₁, Data.b, log_exp, log_exp] at h
+    have h_three : log 3 ≤ 2 := by
+      linarith only [log_le_sub_one_of_pos (show (0 : ℝ) < 3 by norm_num)]
+    linarith only [h, h_three, h_logB, D.logX₁_le_logB]
+  have h_translate_budget : #t * finrank ℂ D.ramifiedSourceForms ≤
+      (81 / 32) * D.targetDim * D.logB := by
     calc #t * finrank ℂ D.ramifiedSourceForms ≤
         5 / 2 * (1 + log denominator) * D.targetDim := ht_card
-      _ ≤ 5 / 2 * (2 * D.logB) * D.targetDim := by gcongr
-      _ = 5 * D.targetDim * D.logB := by ring
+      _ ≤ 5 / 2 * ((101 / 100) * D.logB) * D.targetDim := by gcongr
+      _ = (101 / 40) * D.targetDim * D.logB := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_right (by norm_num) D.targetDim.cast_nonneg)
+        (zero_le_one.trans (by linarith only [h_logB]))
   let loss : ℝ := D.errorUnit * L
   let logNormBound : ℝ := D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit
   let short : Set D.ramifiedSourceForms :=
@@ -161,15 +171,15 @@ private lemma star_inequality_of_weighted_loss_bound {P : Parameters} (D : Data 
   -- Index: each translate in `t` contributes twice the weighted local loss per source dimension.
   have hL_nonneg : 0 ≤ L := zero_le_one.trans hL
   have h_allowedLoss_nonneg : 0 ≤ 32 * (D.f * D.a * D.logB ^ 2 * L) := by positivity
-  have h_index_upper : D.targetLattice.IndexLe y (D.targetDim * (320 * loss)) := by
+  have h_index_upper : D.targetLattice.IndexLe y (D.targetDim * (162 * loss)) := by
     have hy_int (i : Fin n) : ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' D.integralRamified := by
       obtain ⟨g, hg, φ, ⟨hφ_int, -⟩, hφ_eq⟩ := h_image_short i
       exact ⟨g, hg, φ, hφ_int, hφ_eq⟩
     refine (D.indexLe_normalizedPoincare_of_loss_bound t hy_int h_losses).mono ?_
     calc #t * finrank ℂ D.ramifiedSourceForms * (2 * (32 * (D.f * D.a * D.logB ^ 2 * L)))
-        ≤ 5 * D.targetDim * D.logB * (2 * (32 * (D.f * D.a * D.logB ^ 2 * L))) := by
+        ≤ (81 / 32) * D.targetDim * D.logB * (2 * (32 * (D.f * D.a * D.logB ^ 2 * L))) := by
           grw [h_translate_budget]
-      _ = D.targetDim * (320 * loss) := by
+      _ = D.targetDim * (162 * loss) := by
         dsimp [loss, Data.errorUnit]
         ring
   have h_completion : ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) ≤
@@ -199,39 +209,48 @@ private lemma star_inequality_of_weighted_loss_bound {P : Parameters} (D : Data 
   have h_b : (D.targetDim : ℝ) * D.b ≤ D.targetDim * loss :=
     mul_le_mul_of_nonneg_left ((show D.b ≤ D.errorUnit from D.le_of_hasLogBound).trans h_loss)
       D.targetDim.cast_nonneg
-  have h_main_cancelled : n * (D.m * D.totalRemainder) ≤ D.targetDim * (657 * loss) := by
+  have h_main_cancelled : n * (D.m * D.totalRemainder) ≤ D.targetDim * (341 * loss) := by
     change D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
-      n * (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit) + 2 * (D.targetDim * (320 * loss)) +
+      n * (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit) + 2 * (D.targetDim * (162 * loss)) +
         ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) at h_volume_index_lower
     linarith only [h_volume_index_lower, h_completion, h_main_comparison, h_error, h_b]
-  have h_rank : (24 / 25 : ℝ) * D.targetDim ≤ n := by
-    grw [show (24 / 25 : ℝ) ≤ 1 - share by linarith, h_near_full_rank]
+  have h_rank : (49 / 50 : ℝ) * D.targetDim ≤ n := by
+    grw [show (49 / 50 : ℝ) ≤ 1 - share by linarith, h_near_full_rank]
   have hn_pos : (0 : ℝ) < n :=
     (mul_pos (by norm_num) (Nat.cast_pos.2 D.targetDim_pos)).trans_le h_rank
   refine le_of_mul_le_mul_left ?_ hn_pos
-  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * (657 * loss) := h_main_cancelled
-    _ = (657 * D.targetDim) * loss := by ring
-    _ ≤ (700 * n) * loss := by
+  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * (341 * loss) := h_main_cancelled
+    _ = (341 * D.targetDim) * loss := by ring
+    _ ≤ (350 * n) * loss := by
       have : (0 : ℝ) ≤ D.targetDim := Nat.cast_nonneg _
       exact mul_le_mul_of_nonneg_right (by linarith) h_loss_pos.le
-    _ = n * (700 * loss) := by ring
+    _ = n * (350 * loss) := by ring
 
 /-- The bound using the harmonic estimate for the local losses. -/
 theorem star_inequality_with_separate_log_losses {P : Parameters} (D : Data P) :
     D.m * D.totalRemainder ≤ 700 * (D.errorUnit * D.logX₁ ^ 2) := by
   have h_logX₁ : 1 ≤ D.logX₁ := by
     linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁, (le_constantBound (P := P)).1]
-  exact star_inequality_of_weighted_loss_bound D (one_le_pow₀ h_logX₁)
-    D.sum_allowedLoss_mul_log_le_sharp
+  exact (star_inequality_of_weighted_loss_bound D (one_le_pow₀ h_logX₁)
+    D.sum_allowedLoss_mul_log_le_sharp).trans
+    (mul_le_mul_of_nonneg_right (by norm_num)
+      (mul_nonneg (HasLogBound.pos D : 0 < D.errorUnit).le (sq_nonneg _)))
 
 /-- The sieve estimate makes the cutoff budget linear when `V` also bounds `(log m)²`. -/
-theorem star_inequality_with_linear_cutoff_index {P : Parameters} (D : Data P) {V : ℝ}
+theorem star_inequality_with_linear_cutoff_index_sharp {P : Parameters} (D : Data P) {V : ℝ}
     (hV : 1 ≤ V) (h_cutoff : D.logX₁ ≤ V) (h_lifts : Real.log D.m ^ 2 ≤ V) :
-    D.m * D.totalRemainder ≤ 700 * (D.errorUnit * (220 * V)) := by
+    D.m * D.totalRemainder ≤ 350 * (D.errorUnit * (220 * V)) := by
   refine star_inequality_of_weighted_loss_bound D (by linarith only [hV]) fun U ↦ ?_
   refine (D.sum_allowedLoss_mul_log_le_of_log_bounds U h_cutoff h_lifts).trans ?_
   have h_nonneg : 0 ≤ D.f * D.a * D.logB ^ 2 * V := by positivity
   nlinarith only [h_nonneg]
+
+theorem star_inequality_with_linear_cutoff_index {P : Parameters} (D : Data P) {V : ℝ}
+    (hV : 1 ≤ V) (h_cutoff : D.logX₁ ≤ V) (h_lifts : Real.log D.m ^ 2 ≤ V) :
+    D.m * D.totalRemainder ≤ 700 * (D.errorUnit * (220 * V)) :=
+  (star_inequality_with_linear_cutoff_index_sharp D hV h_cutoff h_lifts).trans
+    (mul_le_mul_of_nonneg_right (by norm_num) (mul_nonneg (HasLogBound.pos D : 0 < D.errorUnit).le
+      (mul_nonneg (by norm_num) (zero_le_one.trans hV))))
 
 /-- The fourth-power bound obtained from the scale separation `log⁶ x₁ ≤ log b`. -/
 theorem star_inequality_with_completion_cost {P : Parameters} (D : Data P) :
