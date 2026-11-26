@@ -24,8 +24,8 @@ of an infinite place `τ` (not the column count `D.columnCount τ h`).
 * `New.Data.card_stdClasses_le_exp_mul_log`, `New.Data.card_stdClasses_le_exp`: bounds for the
   number of classes of the definite unitary group at a level `K` that contains a given principal
   level.
-* `New.Data.sum_allowedLoss_mul_log_le`: the losses `New.Data.allowedLoss p`, weighted by `log p`,
-  add up to at most `New.Data.errorUnit`.
+* `New.Data.sum_allowedLoss_mul_log_le_sharp`: the losses `New.Data.allowedLoss p`, weighted by
+  `log p`, add up to at most `32 f a (log b)² (log x₁)²`.
 
 Notions from other files:
 * `New.StdClasses K`: the double cosets `Γ \ G_f / K` of the finite adelic unitary group `G_f` of
@@ -304,6 +304,11 @@ lemma allowedLoss_nonneg (p : ℕ) : 0 ≤ D.allowedLoss p := by
   unfold allowedLoss loss
   positivity
 
+/-- The weighted loss bound furnished by the harmonic sum. -/
+noncomputable abbrev allowedLossSumBound : ℝ := 32 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2)
+
+lemma allowedLossSumBound_le_errorUnit : D.allowedLossSumBound ≤ D.errorUnit := D.le_of_hasLogBound
+
 /-- If `p ≥ 2` satisfies `D.IsPlusMinusOneModLifts p`, that is `p ≡ ±1` modulo the number `m = D.m`
 of lifts, then `p = m c ± 1` for some `c` with `1 ≤ c ≤ p` and `m ≤ 2 p / c`. -/
 lemma exists_mul_sub_one_eq_or_mul_add_one_eq {p : ℕ} (hp : 2 ≤ p)
@@ -319,9 +324,9 @@ lemma exists_mul_sub_one_eq_or_mul_add_one_eq {p : ℕ} (hp : 2 ≤ p)
 /-- The admissible data `D` give a real number `x₁`, integers `x`, `b`, `a = x b`, `m`, a prime `N`
 and a field `D.E` with `f` infinite places that contains `K = ℚ(√-d)`, for the prime `d = P.d`. For
 every finite set `U` of natural numbers, the sum over `p ∈ U` of the allowed loss at `p` times
-`log p` is at most `D.errorUnit = f a (log b)³`. -/
-lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
-    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.errorUnit := by
+`log p` is at most `32 f a (log b)² (log x₁)²`. -/
+lemma sum_allowedLoss_mul_log_le_sharp (U : Finset ℕ) :
+    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.allowedLossSumBound := by
   classical
   -- Each term is at most `T / c` for some `1 ≤ c ≤ x₁`, and each `c` serves at most the four
   -- numbers `N`, `m c - 1`, `c`, `m c + 1`. So the sum is at most `4 T` times a harmonic sum.
@@ -365,13 +370,24 @@ lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
     · exact (zero_mul _).trans_le (by positivity)
   have h_harmonic : ∑ c ∈ Icc 1 ⌊D.x₁⌋₊, (c : ℝ)⁻¹ ≤ 1 + D.logX₁ := by
     simpa [harmonic_eq_sum_Icc] using harmonic_floor_le_one_add_log D.x₁ D.le_of_hasLogBound
+  have h_logX₁ : 1 ≤ D.logX₁ := by
+    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁,
+      (le_constantBound (P := P)).1]
+  have h_factor : 1 + D.logX₁ ≤ 2 * D.logX₁ := by linarith only [h_logX₁]
   calc ∑ p ∈ U, D.allowedLoss p * .log p
     _ ≤ ∑ u ∈ J, T / u.1 := by grw [sum_le_sum fun p _ ↦ h_term p,
       sum_fiberwise_eq_sum_filter, filter_subset]
     _ = T * (4 * ∑ c ∈ Icc 1 ⌊D.x₁⌋₊, (c : ℝ)⁻¹) := by
       simp [J, sum_product, division_def, ← mul_sum]
-    _ ≤ T * (4 * (1 + D.logX₁)) := by gcongr
-    _ ≤ D.errorUnit := D.le_of_hasLogBound
+    _ ≤ T * (4 * (2 * D.logX₁)) := by
+      gcongr
+      exact h_harmonic.trans h_factor
+    _ = D.allowedLossSumBound := by unfold T allowedLossSumBound; ring
+
+/-- The weighted local losses are bounded by `errorUnit = f a (log b)³`. -/
+lemma sum_allowedLoss_mul_log_le (U : Finset ℕ) :
+    ∑ p ∈ U, D.allowedLoss p * Real.log p ≤ D.errorUnit :=
+  (D.sum_allowedLoss_mul_log_le_sharp U).trans D.allowedLossSumBound_le_errorUnit
 
 end New.Data
 
