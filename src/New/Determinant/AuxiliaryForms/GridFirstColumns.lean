@@ -84,13 +84,13 @@ lemma disjoint_edges_column {D : Data P} {b : ℕ} (hb : b ≤ D.m) :
 /-- Reduction modulo `𝔪₀ = π_M Q` from the residue ring of `𝔪 = 𝔟Q` (`reduceToTriangle ϑ false`, for
 the grid of the `Y`) is a local homomorphism, because the two moduli have the same primes. -/
 instance (D : Data P) (ϑ : D.MFoldTwist) : IsLocalHom (reduceToTriangle ϑ false) where
-  -- A unit modulo an ideal `I` is a unit modulo `I ^ D.natB`, which lies in the ideal of `𝔪`.
+  -- A unit modulo an ideal `I` is a unit modulo `I ^ D.gridDepth`, which lies in the ideal of `𝔪`.
   map_nonunit := Quot.ind fun _ h ↦
-    ((isUnit_mk_pow_iff_isUnit_mk _ (NeZero.ne D.natB)).2 h).map
+    ((isUnit_mk_pow_iff_isUnit_mk _ (NeZero.ne D.gridDepth)).2 h).map
       (factor (by simp [levelModulus, mul_pow, mul_mono, pow_le_self NeZero.out]))
 
 /-- Let `π_M = D.piM`, let `Q` be the product of the places of a twist `ϑ`, and put `𝔪₀ = π_M Q` and
-`𝔪 = π_M ^ D.natB * Q` (`gridModulus ϑ`). For the space `Y_j` at the node `(false, 0, j)`, the order
+`𝔪 = π_M ^ D.gridDepth * Q` (`gridModulus ϑ`). For the space `Y_j` at the node `(false, 0, j)`, the order
 `triangleGLCard false ϑ j` of `GL(Y_j)` modulo `𝔪₀` is a number `C`, the same for all `ϑ`, times
 `levelIndex ϑ false 0 j`. -/
 lemma exists_triangleGLCard_eq_mul_levelIndex (D : Data P) (j : ℕ) :
@@ -177,7 +177,7 @@ lemma diagonalPeriodForm_formRep (D : Data P) (ϑ : D.MFoldTwist) {j : ℕ} {hj 
   simp only [F, h_mul] -- before `Prod.mul_def` takes the product in `h_mul` apart
   simp [Prod.mul_def]
 
-/-- Let `𝔟` be `D.gridLevelGen = D.piM ^ D.natB`. A form `φ` in `D.gridLevelForms 0`, that is of
+/-- Let `𝔟` be `D.gridLevelGen = D.piM ^ D.gridDepth`. A form `φ` in `D.gridLevelForms 0`, that is of
 level `𝔟` on `Ỹ^0_0`, is fixed under `formRep` by the block matrix
 `U.block (D.gridDiagEquiv 0) (u, 1)`, written `diag(u, 1)`, for every `u` on `Y₀` in
 `principalLevel` of `𝔟`. -/
@@ -210,7 +210,7 @@ lemma gridKernel_zero_true_eq_star (D : Data P) :
 product. The chosen places are the prime divisors of `π_M = D.piM`, and `J_M = D.chosenLevel` is the
 group of integral points that reduce to `1` at them. The family `(D.levelPlaces ϑ).placeAt` adds the
 places of the modulus `Q` of a twist `ϑ`, so its level `levelOf … ⊥` is the level `𝔪₀ = π_M Q`. The
-space `gridLevelForms 0` consists of the forms on `Ỹ^0_0` of principal level `𝔟 = π_M ^ D.natB`. At
+space `gridLevelForms 0` consists of the forms on `Ỹ^0_0` of principal level `𝔟 = π_M ^ D.gridDepth`. At
 a real point `g` there is a linear map `periodRepr` from it to the forms on `Y₀` of level `J_M` such
 that, for every `ϑ` and every form `y` on `Y₀` of level `𝔪₀`, the Petersson product of `y` and
 `periodRepr φ` is the period at `g` of the conjugate of `y` and `φ`. -/
@@ -536,7 +536,7 @@ lemma pointTransposedLift_eq_sum {ϑ : D.MFoldTwist} {z : Bool} {b : ℕ} :
   rfl
 
 /-- Let `b ≤ m = D.m` and take the first column of the grid `z` from `(0, m)` down to `(0, b)`. With
-`π_M = D.piM`, `𝔟 = π_M ^ D.natB` and `Q` the product of the places of `ϑ`, the modulus
+`π_M = D.piM`, `𝔟 = π_M ^ D.gridDepth` and `Q` the product of the places of `ϑ`, the modulus
 `triangleModulus z ϑ` is `π_M Q` for `false` and `𝔟` for `true`, and `triangleGLCard z ϑ i` is the
 order of `GL` of the node `(0, i)` modulo it. The composite `transposedChain ϑ z b` of the
 transposed theta lifts `pointTransposedLift` along the column is the product of these orders,
@@ -670,7 +670,7 @@ lemma map_eq_one_and_edgeChar_eq_one_of_mem_nodeLevel {ϑ : D.MFoldTwist} {z : B
 
 /-- Let `g` be a family of invertible matrices modulo `gridModulus ϑ`, one at each node, whose
 members on the first path (the nodes `(z, 0, i)`, `i ≤ D.m`) lie in `nodeLevel`: they are `1` for
-`z = false` and `1` modulo `D.piM ^ D.natB` for `z = true`. Then `g` fixes `Ψ¹ = firstPointDatum`,
+`z = false` and `1` modulo `D.piM ^ D.gridDepth` for `z = true`. Then `g` fixes `Ψ¹ = firstPointDatum`,
 the indicator that each matrix of the path reduces to the standard inclusion, under the action on
 functions of tuples: the matrix from `p` to `q` becomes `(g q)⁻¹ * S (p, q) * g p`, and the value
 is multiplied by the product of the characters of the edges at `det (g q) / det (g p)`. -/
@@ -724,7 +724,7 @@ def firstPathDatum (ϑ : D.MFoldTwist) (S : EdgeTuple ϑ) : ℂ :=
     firstPointDatum (tupleAction x.family S)
 
 /-- Let `g` be an admissible family of invertible matrices modulo `gridModulus ϑ`: it is `1` at
-`(false, 0, D.m)`, is `1` modulo `D.piM ^ D.natB` at `(true, 0, D.m)`, and at `(true, a, a)` is the
+`(false, 0, D.m)`, is `1` modulo `D.piM ^ D.gridDepth` at `(true, 0, D.m)`, and at `(true, a, a)` is the
 block sum of `g (false, a, a)` with `1`. Then `g` fixes `Ψ⁰ = firstPathDatum ϑ` under translation
 of the matrices (`tupleAction`) followed by multiplication by the product `edgeCharProd` of the
 characters of the edges, because `Ψ⁰` is the sum of the translates of the indicator

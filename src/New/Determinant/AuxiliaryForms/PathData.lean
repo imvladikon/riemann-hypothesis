@@ -25,7 +25,7 @@ and the periods formed with them.
 
 ## Main definitions and results
 
-* `New.Data.gridModulus`: the modulus `𝔪 = 𝔟 Q` with `𝔟 = ϖ ^ D.natB`. For the twist `1` it is `𝔟`
+* `New.Data.gridModulus`: the modulus `𝔪 = 𝔟 Q` with `𝔟 = ϖ ^ D.gridDepth`. For the twist `1` it is `𝔟`
   (`New.Data.gridModulus_one_ideal`).
 * `New.Data.liftMove`, `New.Data.transposedMove`: the theta lift `(a, b) → (a + 1, b)` and the
   transposed lift `(a, b + 1) → (a, b)` with a single matrix as finite datum.
@@ -56,7 +56,7 @@ namespace New.Data
 ## The moduli and levels of the grids
 
 * `New.Data.triangleModulus`: the modulus of the transposed lifts between the nodes `(0, b)`, whose
-  datum is the indicator of an inclusion matrix: `𝔪₀ = ϖ Q` in grid `Y` and `𝔟 = ϖ ^ D.natB` in
+  datum is the indicator of an inclusion matrix: `𝔪₀ = ϖ Q` in grid `Y` and `𝔟 = ϖ ^ D.gridDepth` in
   grid `Ỹ`. It divides the grid modulus (`New.Data.gridModulus_ideal_le_triangleModulus_ideal`).
 -/
 
@@ -69,17 +69,36 @@ variable {P : Parameters} {D : Data P} (ϑ : D.MFoldTwist)
 /-- `D.natB` is nonzero. -/
 instance instNeZeroNatB : NeZero D.natB := .of_pos D.nat_le_of_hasLogBound
 
-/-- The element `ϖ ^ D.natB` of the ring of integers of `E`, with `ϖ = D.piM` the generator of
-the product of the chosen places. -/
-abbrev gridLevelGen : NumberField.RingOfIntegers D.E := D.piM ^ D.natB
+variable (D) in
+/-- The depth required by the restriction test on the auxiliary grid. -/
+def gridDepth : ℕ := ⌈D.x⌉₊ * (20 * D.r ^ 4 * (D.f + 1)) * (3 * D.r + 2)
 
-/-- The modulus `ϖ^{natB} Q` of the twist `ϑ`: the product of the chosen places to the power
-`D.natB`, times the product of the places of `ϑ`. -/
-abbrev gridModulus : Modulus D.E := D.twistModulus ϑ D.natB
+instance instNeZeroGridDepth : NeZero D.gridDepth := .of_pos <| by
+  have hx : 0 < D.x := HasLogBound.pos D
+  have hr : 0 < D.r := Nat.zero_lt_one.trans (show 1 < D.r from D.nat_lt_of_hasLogBound)
+  have hc : 0 < ⌈D.x⌉₊ := Nat.ceil_pos.mpr hx
+  unfold gridDepth
+  positivity
+
+lemma gridDepth_le : (D.gridDepth : ℝ) ≤ D.x ^ 45 := by
+  unfold gridDepth
+  push_cast
+  exact D.le_of_hasLogBound
+
+instance : D.HasLogUpper D.gridDepth (45 * D.logX) :=
+  D.hasLogUpper_of_le_of_nonneg D.gridDepth_le (Nat.cast_nonneg D.gridDepth)
+
+/-- The element `ϖ ^ D.gridDepth` of the ring of integers of `E`, with `ϖ = D.piM` the generator of
+the product of the chosen places. -/
+abbrev gridLevelGen : NumberField.RingOfIntegers D.E := D.piM ^ D.gridDepth
+
+/-- The modulus `ϖ^{gridDepth} Q` of the twist `ϑ`: the product of the chosen places to the power
+`D.gridDepth`, times the product of the places of `ϑ`. -/
+abbrev gridModulus : Modulus D.E := D.twistModulus ϑ D.gridDepth
 
 lemma gridModulus_one_ideal : (D.gridModulus 1).ideal = span {D.gridLevelGen} := by
   -- the trivial twist has no places, so its modulus is the untwisted one
-  rw [show (D.gridModulus 1).ideal = (D.untwistedModulus D.natB).ideal by rfl',
+  rw [show (D.gridModulus 1).ideal = (D.untwistedModulus D.gridDepth).ideal by rfl',
     D.ideal_untwistedModulus_eq_span]
 
 /-- The twist whose places divide `New.Data.triangleModulus`: `ϑ` in the grid `false`, the trivial
@@ -90,10 +109,10 @@ abbrev triangleTwist (ϑ : D.MFoldTwist) : Bool → D.MFoldTwist
 
 variable (D) in
 /-- The exponent of the chosen places in `New.Data.triangleModulus`: `1` in the grid `false`,
-`D.natB` in the grid `true`. -/
+`D.gridDepth` in the grid `true`. -/
 abbrev triangleExponent : Bool → ℕ
   | false => 1
-  | true => D.natB
+  | true => D.gridDepth
 
 /-- The exponent `D.triangleExponent z` is nonzero in both grids. -/
 instance instNeZeroTriangleExponent (z : Bool) : NeZero (D.triangleExponent z) := by
@@ -101,16 +120,16 @@ instance instNeZeroTriangleExponent (z : Bool) : NeZero (D.triangleExponent z) :
 
 /-- The modulus at the nodes `(0, b)` of grid `z` (the triangle of that grid), used for the
 transposed lifts `New.Data.pointTransposedLift` between them: `𝔪₀ = ϖ Q`, with `Q` the product of
-the places of `ϑ`, if `z` is false, and `𝔟 = ϖ ^ D.natB` if `z` is true. Here `ϖ = D.piM`. -/
+the places of `ϑ`, if `z` is false, and `𝔟 = ϖ ^ D.gridDepth` if `z` is true. Here `ϖ = D.piM`. -/
 abbrev triangleModulus (z : Bool) (ϑ : D.MFoldTwist) : Modulus D.E :=
   D.twistModulus (triangleTwist ϑ z) (D.triangleExponent z)
 
 
 
 /-- Let `ϑ` be an `m`-fold twist, `Q` the product of its places, `ϖ = D.piM` the generator of the
-product of the chosen places, and `b = D.natB ≥ 1`. The triangle modulus of grid `z`, which is
-`ϖ Q` for `z = false` (grid `Y`) and `ϖ ^ b` for `z = true` (grid `Ỹ`), divides the grid modulus
-`ϖ ^ b Q`; this is stated as an inclusion of ideals. -/
+product of the chosen places, and `e = D.gridDepth ≥ 1`. The triangle modulus of grid `z`, which is
+`ϖ Q` for `z = false` (grid `Y`) and `ϖ ^ e` for `z = true` (grid `Ỹ`), divides the grid modulus
+`ϖ ^ e Q`. -/
 lemma gridModulus_ideal_le_triangleModulus_ideal (ϑ : D.MFoldTwist) (z : Bool) :
     (gridModulus ϑ).ideal ≤ (triangleModulus z ϑ).ideal := by
   let M : Ideal (NumberField.RingOfIntegers D.E) :=
@@ -118,16 +137,16 @@ lemma gridModulus_ideal_le_triangleModulus_ideal (ϑ : D.MFoldTwist) (z : Bool) 
   let Q : Ideal (NumberField.RingOfIntegers D.E) := ∏ w : ϑ.Q, w.val.asIdeal
   cases z with
   | false =>
-    change M ^ D.natB * Q ≤ M ^ 1 * Q
+    change M ^ D.gridDepth * Q ≤ M ^ 1 * Q
     exact mul_mono_left (pow_le_pow_right NeZero.one_le)
   | true =>
     -- the trivial twist has no places, so its factor is the empty product `1`
-    change M ^ D.natB * Q ≤ M ^ D.natB * 1
+    change M ^ D.gridDepth * Q ≤ M ^ D.gridDepth * 1
     rw [mul_one]
     exact Ideal.mul_le_left
 
-/-- Reduction from the residue ring of `New.Data.gridModulus` = ϖ^b Q to that of
-`New.Data.triangleModulus`, which is ϖQ for z false and ϖ^b for z true, with b = `D.natB`. -/
+/-- Reduction from the residue ring of `New.Data.gridModulus` to that of
+`New.Data.triangleModulus`. -/
 abbrev reduceToTriangle (z : Bool) :
     NumberField.RingOfIntegers D.E ⧸ (gridModulus ϑ).ideal →+*
       NumberField.RingOfIntegers D.E ⧸ (triangleModulus z ϑ).ideal :=
@@ -141,7 +160,7 @@ end GridModuli
 ## Spaces, characters, levels and moves of the two grids
 
 The node `(false, a, b)` is `Y^a_b`, the node `(true, a, b)` is `Ỹ^b_a`, and `Y^0_j` is the space
-`Y_j`. Throughout, `ϖ` generates the product of the chosen places, `𝔟 = ϖ ^ D.natB`, and Q is the
+`Y_j`. Throughout, `ϖ` generates the product of the chosen places, `𝔟 = ϖ ^ D.gridDepth`, and Q is the
 product of the places of the twist ϑ.
 -/
 
@@ -361,7 +380,7 @@ def liftMove
 unitary group of index type `n'`. The pair `(1, k)` is the point of the adelic unitary group of
 signs `s` with real part `1` and finite part `k`, and `G.det` is its determinant. The character
 `gridChar ϑ c l n` of U(1)(𝔸) at this determinant is `∏_{w ∣ 𝔪} ψ_w(det k mod w)`. Here
-`𝔪 = gridModulus ϑ` is the product of the chosen places to the power `D.natB` times the product of
+`𝔪 = gridModulus ϑ` is the product of the chosen places to the power `D.gridDepth` times the product of
 the places of the twist `ϑ`. The family `ψ = gridTamePart ϑ c l` of characters of the residue
 fields is `ω ^ (l + 1)`, times the tame part of `ϑ ^ (l + 1)` if `c` is true, where
 `ω = D.chiMLocal` is a fixed family that is trivial outside the chosen places. The index type `n`
@@ -378,7 +397,7 @@ lemma gridChar_det {ϑ : D.MFoldTwist} (c : Bool) (l : ℕ) (n : Type) [Fintype 
   have h_one : TameChar.one.tamePart w = (1 : MulChar (ResField w) ℂ) := rfl
   cases c <;> simp [liftTamePart, TameChar.pow, hw_chosen, h_one, ϑ.tamePart_eq_one w hw_twist]
 
-/-- Let `𝔪 = 𝔟 Q` be the grid modulus of the twist `ϑ`, with `𝔟 = ϖ ^ D.natB` the grid modulus of
+/-- Let `𝔪 = 𝔟 Q` be the grid modulus of the twist `ϑ`, with `𝔟 = ϖ ^ D.gridDepth` the grid modulus of
 the trivial twist, and let `n` be the basis index set of the node `(z, a, b)`. The number
 `levelIndex ϑ z a b` is the index in `GL_n(O_E / 𝔪)` of the level `nodeLevel` of the node. In the
 grid `Ỹ` (`z = true`), and in the grid `Y` for `a ≠ 0`, this level is the kernel of reduction modulo

@@ -52,7 +52,7 @@ Notions from other files:
   `1`; `V.move x` is the space `V` with its adelic frame multiplied by `x`.
 * `New.Data.principalForms`, `New.Data.gridLevelForms`: the forms fixed by `D.chosenLevel`, and the
   forms on `Ỹ^i_0` fixed by the deep level, that is, the principal level of
-  `D.gridLevelGen = D.piM ^ D.natB`, where `D.piM * star D.piM = D.M` is `M`.
+  `D.gridLevelGen = D.piM ^ D.gridDepth`, where `D.piM * star D.piM = D.M` is `M`.
 * `New.Data.spaceY`: the hermitian space `Y_j` with its adelic frame, chosen as in
   `New.Data.exists_space_isStd_of_le_and_gram_eq_of_lt`.
 * `(l w).HasLargeGap B`: the entries of `l w = 2λ` are distinct, of the parity of `card n - 1`, and
@@ -686,10 +686,10 @@ section RowsReached
 
 open Matrix.Norms.L2Operator
 
-/-- At every infinite place the generator `D.gridLevelGen = D.piM ^ D.natB` of the deep level
-has modulus `√D.M ^ D.natB`. -/
+/-- At every infinite place the generator `D.gridLevelGen = D.piM ^ D.gridDepth` of the deep level
+has modulus `√D.M ^ D.gridDepth`. -/
 lemma New.Data.norm_gridLevelGen {P : Parameters} (D : Data P)
-    (w : NumberField.InfinitePlace D.E) : ‖Φ w D.gridLevelGen.val‖ = √D.M ^ D.natB := by
+    (w : NumberField.InfinitePlace D.E) : ‖Φ w D.gridLevelGen.val‖ = √D.M ^ D.gridDepth := by
   have h_sq : ‖Φ w D.piM‖ ^ 2 = D.M := by
     simpa [sq] using congrArg (fun a : NumberField.RingOfIntegers D.E ↦ ‖Φ w a‖) D.piM_mul_star
   simp [← h_sq]
@@ -744,7 +744,7 @@ lemma New.Data.exists_eq_zero_of_orthogonal_gridLevelForms {P : Parameters} (D :
       pow_le := le_rfl
       pow_le_norm_gridLevelGen := fun w ↦ by
         rw [D.norm_gridLevelGen w, ← pow_mul, ← pow_mul]
-        exact h_mono D.nat_le_of_hasLogBound }
+        simp [Data.gridDepth, A, D.card_rowIndex, mul_assoc] }
   refine Exchange.exists_forall_eq_zero_of_petersson_restrict_eq_zero (D.Y 0) A β
     (h_gap := fun w ↦ (D.hasGap_signsY_paramW w).mono D.nat_le_of_hasLogBound)
     (h_gap' := fun w ↦ (D.hasGap_gridParam w true 0 0 0).neg.mono D.nat_le_of_hasLogBound)

@@ -24,7 +24,7 @@ with delta forms, we get integrality and size for the chain of lifts from `Y₀`
 restrictions of short forms. Throughout, `ϑ` is an `m`-fold twist, `Q` is its finite set of places,
 `ϑ.normQ` is `Nm Q`, and sizes are measured by the parameters `x = D.x` and `b = D.b`. The
 modulus `𝔪 = gridModulus ϑ` of the twist is the product of the chosen places to the power
-`D.natB` (the number `b` as a natural number), times `Q`. The other numbers of the data that occur
+`D.gridDepth`, times `Q`. The other numbers of the data that occur
 are the level `D.M`, the order `D.q₁` of the root of unity that generates `E` over
 `K = ℚ(√-P.d)`, the prime `P.d`, the ranks `D.n j` and the parameter `D.r`; at most
 `D.natB * D.r ^ 4` boxes occur in each diagram of a weight on the last path.
@@ -83,8 +83,8 @@ denominators of each kernel on the last path. The first factor takes the datum o
 standard data, and the second pays for the boxes of the diagram: `2 * D.n D.m` bounds the ranks on
 that path and `D.natB * D.r ^ 4` the numbers of boxes. -/
 def liftDenominator : ℕ :=
-  (D.M ^ D.natB) ^ (2 * Core.numInfPlaces D.E * (2 * D.n D.m * (2 * D.n D.m))) *
-    (D.M ^ D.natB * P.d) ^ (D.natB * D.r ^ 4)
+  (D.M ^ D.gridDepth) ^ (2 * Core.numInfPlaces D.E * (2 * D.n D.m * (2 * D.n D.m))) *
+    (D.M ^ D.gridDepth * P.d) ^ (D.natB * D.r ^ 4)
 
 section Denominators
 
@@ -102,9 +102,9 @@ gauges. -/
 lemma liftDenominator_smul_lastPathEdgeDatum_mem_raises {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.Prime]
     [PadicPlace p] (hp : p.Coprime ϑ.normQ) (S : EdgeTuple ϑ) (z : Bool) {j : ℕ} (hj : j < D.m) :
     (D.liftDenominator : ℂ) • lastPathEdgeDatum S z j ∈ (lastPathKernel ϑ z j).raises 1 1 1 := by
-  have h_dvd : (D.M ^ D.natB) ^
+  have h_dvd : (D.M ^ D.gridDepth) ^
         (2 * Core.numInfPlaces D.E * card (D.LastPathIndex z (j + 1) × D.LastPathIndex z j)) *
-      (D.M ^ D.natB * P.d) ^ boxes (D.lastPathColumns z) (card (D.LastPathIndex z (j + 1))) ∣
+      (D.M ^ D.gridDepth * P.d) ^ boxes (D.lastPathColumns z) (card (D.LastPathIndex z (j + 1))) ∣
       D.liftDenominator := by
     grw [card_prod, boxes_lastPathColumns_le_natB_mul z hj, card_lastPathIndex_le z hj,
       card_lastPathIndex_le z hj.le, liftDenominator]
@@ -118,18 +118,18 @@ lemma liftDenominator_smul_lastPathEdgeDatum_mem_raises {ϑ : D.MFoldTwist} {p :
 and `α = P.α D.towerExp` the fixed idele of the CM field `D.E`, for which `q₁ * α` and `α⁻¹` are
 integral, with `q₁ = P.q₁ D.towerExp`. Write `star` for complex conjugation on the finite adeles of
 `D.E`, `normQ` for the product of the norms of the places in the set `Q` of `ϑ`, `M = D.M` for the
-level and `natB = D.natB` for the exponent of the chosen places in `𝔪`. The flip scalar
+level and `e = D.gridDepth` for the exponent of the chosen places in `𝔪`. The flip scalar
 `u = star (t * α) / (t * α)` becomes an integral adele after multiplication by
-`normQ * M ^ natB * q₁`. -/
+`normQ * M ^ e * q₁`. -/
 lemma generator_inv_mul_normQ_mul_star_mem (ϑ : D.MFoldTwist) :
     (gridModulus ϑ).generator⁻¹.val *
-        algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E) ↑(ϑ.normQ * D.M ^ D.natB) *
+        algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E) ↑(ϑ.normQ * D.M ^ D.gridDepth) *
       (star ((gridModulus ϑ).generator.val * (P.q₁ D.towerExp * (P.α D.towerExp).val)) *
         (P.α D.towerExp)⁻¹.val) ∈
       Ô D.E := by
-  -- `t`, `q₁ * α` and `α⁻¹` are integral, and `t` divides `normQ * M ^ natB`.
+  -- `t`, `q₁ * α` and `α⁻¹` are integral, and `t` divides `normQ * M ^ e`.
   have h_red : (gridModulus ϑ).reduction (algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E)
-      ↑(ϑ.normQ * D.M ^ D.natB)) = 0 :=
+      ↑(ϑ.normQ * D.M ^ D.gridDepth)) = 0 :=
     (Modulus.reduction_eq_zero_iff _).2 (Ideal.mem_map_of_mem _ normQ_mul_M_pow_mem_modulus)
   rw [Modulus.reduction_eq_zero_iff_generator_inv_mul_mem] at h_red
   exact mul_mem h_red (mul_mem
@@ -141,10 +141,10 @@ that does not divide it. Let `u` be the flip scalar `star (t * α) / (t * α)` o
 `Unit`) over the finite adeles. For an infinite place `τ : D.Φ` of the CM field `D.E`, map the
 matrix `(u ^ m)⁻¹` to `ℂ_[p]`. The map is the component at the prime above `p` of the embedding
 `weightEmbedding ιₚ τ`. Let `δ` be the determinant of the image. For every integer `l`, the product
-of `(M ^ natB * q₁) ^ (m * |l|)` and `(δ ^ l)⁻¹` has absolute value at most `1`. -/
+of `(M ^ e * q₁) ^ (m * |l|)` and `(δ ^ l)⁻¹` has absolute value at most `1`. -/
 lemma norm_mul_det_flipScalar_zpow_le_one {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.Prime] [PadicPlace p]
     (hp : p.Coprime ϑ.normQ) (τ : D.Φ) (l : ℤ) :
-    ‖((D.M ^ D.natB * D.q₁) ^ (D.m * l.natAbs) : ℕ) *
+    ‖((D.M ^ D.gridDepth * D.q₁) ^ (D.m * l.natAbs) : ℕ) *
       (((((gridModulus ϑ).flipScalar Unit).val ^ D.m)⁻¹.map
         (adeleExtension (weightEmbedding ιₚ τ))).det ^ l)⁻¹.val‖ ≤ 1 := by
   -- According to the sign of `l`, the number has the norm of a power of the integral adele `a` or
@@ -152,12 +152,12 @@ lemma norm_mul_det_flipScalar_zpow_le_one {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.
   let f : 𝔸f D.E →+* ℂ_[p] := adeleExtension (weightEmbedding ιₚ τ)
   let u : unitary (𝔸f D.E) := divStar (star ((gridModulus ϑ).generator * P.α D.towerExp))
   let a : 𝔸f D.E := (gridModulus ϑ).generator⁻¹.val *
-      algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E) ↑(ϑ.normQ * D.M ^ D.natB) *
+      algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E) ↑(ϑ.normQ * D.M ^ D.gridDepth) *
     (star ((gridModulus ϑ).generator.val * (P.q₁ D.towerExp * (P.α D.towerExp).val)) *
       (P.α D.towerExp)⁻¹.val)
-  have ha_eq : a = ((ϑ.normQ * (D.M ^ D.natB * D.q₁) : ℕ) : 𝔸f D.E) * u.val := by
+  have ha_eq : a = ((ϑ.normQ * (D.M ^ D.gridDepth * D.q₁) : ℕ) : 𝔸f D.E) * u.val := by
     have hnat : (algebraMap (NumberField.RingOfIntegers D.E) (Ô D.E)
-        ↑(ϑ.normQ * D.M ^ D.natB) : 𝔸f D.E) = ((ϑ.normQ * D.M ^ D.natB : ℕ) : 𝔸f D.E) := by
+        ↑(ϑ.normQ * D.M ^ D.gridDepth) : 𝔸f D.E) = ((ϑ.normQ * D.M ^ D.gridDepth : ℕ) : 𝔸f D.E) := by
       simp
     have hu : u.val = star (gridModulus ϑ).generator.val * star (P.α D.towerExp).val *
         (gridModulus ϑ).generator⁻¹.val * (P.α D.towerExp)⁻¹.val := by
@@ -168,7 +168,7 @@ lemma norm_mul_det_flipScalar_zpow_le_one {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.
     rw [hnat, hu]
     simp only [star_mul', star_natCast, Nat.cast_mul, Nat.cast_pow]
     ring
-  have hstar_a_eq : star a = ((ϑ.normQ * (D.M ^ D.natB * D.q₁) : ℕ) : 𝔸f D.E) * (u⁻¹).val := by
+  have hstar_a_eq : star a = ((ϑ.normQ * (D.M ^ D.gridDepth * D.q₁) : ℕ) : 𝔸f D.E) * (u⁻¹).val := by
     rw [ha_eq, star_mul', star_natCast]
     rfl
   have hdet : (((((gridModulus ϑ).flipScalar Unit).val ^ D.m)⁻¹.map f).det : ℂ_[p]) =
@@ -180,13 +180,13 @@ lemma norm_mul_det_flipScalar_zpow_le_one {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.
       congr 1
     rw [map_inv, map_pow, map_inv, map_pow, Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, h1]
   have hnorm (c : 𝔸f D.E) (v : unitary (𝔸f D.E))
-      (hc : c = ((ϑ.normQ * (D.M ^ D.natB * D.q₁) : ℕ) : 𝔸f D.E) * v.val) :
-      ‖((D.M ^ D.natB * D.q₁ : ℕ) : ℂ_[p]) * f v.val‖ = ‖f c‖ := by
+      (hc : c = ((ϑ.normQ * (D.M ^ D.gridDepth * D.q₁) : ℕ) : 𝔸f D.E) * v.val) :
+      ‖((D.M ^ D.gridDepth * D.q₁ : ℕ) : ℂ_[p]) * f v.val‖ = ‖f c‖ := by
     symm
     rw [hc, map_mul, map_natCast, Nat.cast_mul ϑ.normQ, mul_assoc, norm_mul,
       hp.norm_natCast_eq_one, one_mul]
   obtain ⟨k, rfl | rfl⟩ := l.eq_nat_or_neg
-  · have h_eq : ‖((D.M ^ D.natB * D.q₁) ^ (D.m * (k : ℤ).natAbs) : ℕ) *
+  · have h_eq : ‖((D.M ^ D.gridDepth * D.q₁) ^ (D.m * (k : ℤ).natAbs) : ℕ) *
         (((((gridModulus ϑ).flipScalar Unit).val ^ D.m)⁻¹.map f).det ^ (k : ℤ))⁻¹.val‖ =
         ‖f a‖ ^ (D.m * k) := by
       rw [Int.natAbs_natCast, Nat.cast_pow, Units.val_inv_eq_inv_val, Units.val_zpow_eq_zpow_val,
@@ -194,7 +194,7 @@ lemma norm_mul_det_flipScalar_zpow_le_one {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.
     rw [h_eq]
     exact pow_le_one₀ (norm_nonneg _)
       (norm_adeleExtension_le_one _ (generator_inv_mul_normQ_mul_star_mem ϑ))
-  · have h_eq : ‖((D.M ^ D.natB * D.q₁) ^ (D.m * (-(k : ℤ)).natAbs) : ℕ) *
+  · have h_eq : ‖((D.M ^ D.gridDepth * D.q₁) ^ (D.m * (-(k : ℤ)).natAbs) : ℕ) *
         (((((gridModulus ϑ).flipScalar Unit).val ^ D.m)⁻¹.map f).det ^ (-(k : ℤ)))⁻¹.val‖ =
         ‖f (star a)‖ ^ (D.m * k) := by
       rw [Int.natAbs_neg, Int.natAbs_natCast, Nat.cast_pow, Units.val_inv_eq_inv_val,
@@ -212,12 +212,12 @@ end Denominators
 seal Finset.univ in
 /-- The pairing `lastPathPairing v' v = v' ⬝ᵥ lastPathBranching *ᵥ v` of the two halves at the
 middle of the last path, given by an integer branching matrix, is cleared by one natural number
-`N ≠ 0` with `log N ≤ x ^ 98 * b ^ 2`. For every twist `ϑ` and every prime `p` prime to the norm
+`N ≠ 0` with `log N ≤ x ^ 98 * b`. For every twist `ϑ` and every prime `p` prime to the norm
 `ϑ.normQ` of its places, if `v'` has gauge at most `1` at `g` and `v` at the block point
 `lastPathBlockPoint ϑ g = diag (g, u ^ m)`, with `u` the flip scalar of the modulus `gridModulus ϑ`,
 then `N` times the pairing of `v'` and `v`, read `p`-adically by `ιₚ`, is integral. -/
 lemma exists_norm_mul_lastPathPairing_le_one : ∃ N ≠ (0 : ℕ),
-    log N ≤ D.x ^ 98 * D.b ^ 2 ∧
+    log N ≤ D.x ^ 98 * D.b ∧
     ∀ {ϑ : D.MFoldTwist} {p : ℕ} [Fact p.Prime] [PadicPlace p], p.Coprime ϑ.normQ →
       ∀ {g : Gf D.E (D.LastPathIndex false D.m)} {v' : D.LastPathVector false D.m}
         {v : D.LastPathVector true D.m},
@@ -232,10 +232,10 @@ lemma exists_norm_mul_lastPathPairing_le_one : ∃ N ≠ (0 : ℕ),
   have hL_le (τ : D.Φ) : (L τ).natAbs ≤ D.natB * D.r ^ 4 + ⌈20 * D.b⌉₊ :=
     (hL τ).trans (add_le_add (boxes_lastPathColumns_le_natB_mul true le_rfl)
       (natAbs_lastPathDetExp_le true le_rfl τ))
-  let N (τ : D.Φ) : ℕ := (D.M ^ D.natB * D.q₁) ^ (D.m * (L τ).natAbs)
-  have h_log : log (∏ τ, N τ : ℕ) ≤ D.x ^ 98 * D.b ^ 2 :=
+  let N (τ : D.Φ) : ℕ := (D.M ^ D.gridDepth * D.q₁) ^ (D.m * (L τ).natAbs)
+  have h_log : log (∏ τ, N τ : ℕ) ≤ D.x ^ 98 * D.b :=
     calc _ = ∑ τ, D.m * (L τ).natAbs *
-          (D.natB * log D.M + (log P.q₀ + log (towerDeg D.towerExp))) := by
+          (D.gridDepth * log D.M + (log P.q₀ + log (towerDeg D.towerExp))) := by
           simp [N, log_prod, log_mul, NeZero.ne, -Nat.cast_natAbs]
       _ ≤ _ := by
           grw [hL_le]
@@ -273,14 +273,14 @@ lemma exists_norm_mul_lastPathPairing_le_one : ∃ N ≠ (0 : ℕ),
         (prod_le_one₀ (fun _ _ ↦ norm_nonneg _) fun τ _ ↦
       norm_mul_det_flipScalar_zpow_le_one hp τ (L τ))).trans h_int
 
-/-- There is a natural number `0 < N ≤ exp (x ^ 99 * b ^ 2)`, with `x = D.x` and `b = D.b` the size
+/-- There is a natural number `0 < N ≤ exp (x ^ 99 * b)`, with `x = D.x` and `b = D.b` the size
 parameters of the data, such that for every twist `ϑ`, path datum `Ψ` on the last path, pair of
 forms `y` fixed by the levels at the outer ends of the two halves and prime `p` prime to the norm
 `ϑ.normQ` of the places of `ϑ`: if both forms, read as algebraic forms by `lastPathToAlgForm`, have
 gauge at most `1` at every point, then `N * lastPathPeriod Ψ y` lies in `embValRing`, the ring of
 `p`-integral complex numbers. -/
 lemma exists_mul_lastPathPeriod_mem_embValRing : ∃ N ≠ (0 : ℕ),
-    N ≤ exp (D.x ^ 99 * D.b ^ 2) ∧
+    N ≤ exp (D.x ^ 99 * D.b) ∧
     ∀ {ϑ : D.MFoldTwist} {n : ℕ} {Ψ : EdgeTuple ϑ → ℂ} {y : ∀ z : Bool, D.GridForm z 0 D.m}
       {p : ℕ} [Fact p.Prime] [PadicPlace p],
       IsPathDatum n (TwoGridPath.last D.m).edges Ψ → FixedByOuterLevels ϑ y →
@@ -296,9 +296,9 @@ lemma exists_mul_lastPathPeriod_mem_embValRing : ∃ N ≠ (0 : ℕ),
   let d : ℕ := D.liftDenominator
   have hd_ne : d ≠ 0 := by simp [d, liftDenominator, NeZero.ne]
   have h_log_d : log d ≤ 2 * Core.numInfPlaces D.E * (2 * D.n D.m * (2 * D.n D.m)) *
-      (D.natB * log D.M) + D.natB * D.r ^ 4 * (D.natB * log D.M + log P.d) := by
+      (D.gridDepth * log D.M) + D.natB * D.r ^ 4 * (D.gridDepth * log D.M + log P.d) := by
     simp [d, liftDenominator, log_mul, NeZero.ne]
-  have h_log : log (M * (d ^ D.m * d ^ D.m) : ℕ) ≤ D.x ^ 99 * D.b ^ 2 :=
+  have h_log : log (M * (d ^ D.m * d ^ D.m) : ℕ) ≤ D.x ^ 99 * D.b :=
     calc _ = log M + (D.m * log d + D.m * log d) := by simp [log_mul, hM_ne, hd_ne]
       _ ≤ _ := by
         grw [hM_le, h_log_d]
@@ -331,10 +331,10 @@ lemma exists_mul_lastPathPeriod_mem_embValRing : ∃ N ≠ (0 : ℕ),
 /-! ### Sizes on the last path -/
 
 /-- For the trivial twist, the class numbers of the levels along the last path are at most
-`exp (x ^ 99 * b ^ 2)`. -/
+`exp (x ^ 99 * b)`. -/
 lemma card_stdClasses_lastPathLevel_le (z : Bool) {j : ℕ} (hj : j ≤ D.m) :
-    Nat.card (StdClasses (lastPathLevel (1 : D.MFoldTwist) z j)) ≤ exp (D.x ^ 99 * D.b ^ 2) := by
-  have h_level : principalLevel _ (1 * D.M ^ D.natB : ℕ) ≤ lastPathLevel (1 : D.MFoldTwist) z
+    Nat.card (StdClasses (lastPathLevel (1 : D.MFoldTwist) z j)) ≤ exp (D.x ^ 99 * D.b) := by
+  have h_level : principalLevel _ (1 * D.M ^ D.gridDepth : ℕ) ≤ lastPathLevel (1 : D.MFoldTwist) z
     j := by
     unfold lastPathLevel
     rw [← show (1 : D.MFoldTwist).normQ = 1 by simp [toAutChar_one_and_toTwist_one_and_Q_one]]
@@ -346,14 +346,14 @@ lemma card_stdClasses_lastPathLevel_le (z : Bool) {j : ℕ} (hj : j ≤ D.m) :
 the next space of the half `z` of the last path. Let `S` be a tuple of matrices on the edges. The
 operator by which the datum `lastPathEdgeDatum S z j` of this edge carries a value `v` at the point
 `g` to a value at `h` multiplies the norm `√(weylNormSq ·)` of the `σ`-conjugate of `v` by at most
-`exp (x ^ 99 * b ^ 2)`, for each `σ` in `Aut(ℂ)`. -/
+`exp (x ^ 99 * b)`, for each `σ` in `Aut(ℂ)`. -/
 lemma sqrt_weylNormSq_lastPathKernel_le (σ : ℂ ≃+* ℂ) (S : EdgeTuple (1 : D.MFoldTwist)) (z : Bool)
     {j : ℕ} (hj : j < D.m) (g : Gf D.E (D.LastPathIndex z j))
     (h : Gf D.E (D.LastPathIndex z (j + 1))) (v : D.LastPathVector z j) :
     √(weylNormSq
         (σ ∘ (lastPathKernel 1 z j).jetMap
           ((lastPathKernel 1 z j).ω (g, h) (lastPathEdgeDatum S z j)) v)) ≤
-      exp (D.x ^ 99 * D.b ^ 2) * √(weylNormSq (σ ∘ v)) := by
+      exp (D.x ^ 99 * D.b) * √(weylNormSq (σ ∘ v)) := by
   have h_liftWeight := D.isLiftWeight_lastPathColumns z j
   -- The datum is the indicator of one matrix, so the operator bound for jets applies with size `1`.
   apply (P.sqrt_weylNormSq_schurJet_le_of_isVacuumCombination
@@ -379,7 +379,7 @@ lemma sqrt_weylNormSq_lastPathKernel_le (σ : ℂ ≃+* ℂ) (S : EdgeTuple (1 :
 /-- Conjugates of `Ξ = lastPathPeriod Ψ y` for the trivial twist. Let `Ψ` be a path datum on the
 last path and `y` a pair of forms fixed by the levels at the outer ends of the two halves, whose
 values as algebraic forms have `σ`-conjugates of squared norm at most `B false` and `B true`. Then
-`‖σ Ξ‖` is at most `exp (x ^ 200 * b ^ 2) * √(B false) * √(B true)`, with `x = D.x` the length of
+`‖σ Ξ‖` is at most `exp (x ^ 200 * b) * √(B false) * √(B true)`, with `x = D.x` the length of
 the prime sum and `b = D.b` the weight at the `b`-places. -/
 lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
     {y : ∀ z : Bool, D.GridForm z 0 D.m}
@@ -387,11 +387,11 @@ lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
     (hy : D.FixedByOuterLevels 1 y) (σ : ℂ ≃+* ℂ) {B : Bool → ℝ}
     (hB : ∀ (z : Bool) (g : Gf D.E (D.LastPathIndex z 0)),
       weylNormSq (σ ∘ (D.lastPathToAlgForm z (y z)).val g) ≤ B z) :
-    ‖σ (lastPathPeriod Ψ y)‖ ≤ exp (D.x ^ 200 * D.b ^ 2) * √(B false) * √(B true) := by
+    ‖σ (lastPathPeriod Ψ y)‖ ≤ exp (D.x ^ 200 * D.b) * √(B false) * √(B true) := by
   -- By `exists_lastPathPeriod_mem_smul_norm_le` the sum `lastPathPeriod Ψ y` consists of branching
   -- pairings of vectors got from `y` by `m` lifts each. Each lift costs a factor `G` in norm and
   -- each class number is at most `G`.
-  let G : ℝ := exp (D.x ^ 99 * D.b ^ 2)
+  let G : ℝ := exp (D.x ^ 99 * D.b)
   -- After `j` lifts the norm is at most `G ^ j` times its bound at the start.
   let IsSmall (z : Bool) (j : ℕ) (v : D.LastPathVector z j) : Prop :=
     √(weylNormSq (σ ∘ v)) ≤ G ^ j * √(B z)
@@ -439,8 +439,8 @@ lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
     grw [← h_prod true D.m (by simp), ← h_prod false (D.m + 1) le_rfl]
     simp [hn, -Nat.card_eq_fintype_card]
   have h_const : L * (G ^ D.m * G ^ (D.m + 1)) * (C * G ^ D.m * G ^ D.m) ≤
-      exp (D.x ^ 200 * D.b ^ 2) := by
-    have hLC : (L : ℝ) * C ≤ exp (D.x ^ 199 * D.b ^ 2) := by
+      exp (D.x ^ 200 * D.b) := by
+    have hLC : (L : ℝ) * C ≤ exp (D.x ^ 199 * D.b) := by
       have h_normQ : (1 : D.MFoldTwist).normQ = 1 := by
         simp [toAutChar_one_and_toTwist_one_and_Q_one]
       grw [hL]
@@ -454,16 +454,16 @@ lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
         Nat.cast_ofNat]
       exact D.le_of_hasLogBound
     have hG : G ^ (D.m + (D.m + 1) + D.m + D.m) =
-        exp ((D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b ^ 2)) :=
+        exp ((D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b)) :=
       (exp_natCast_mul _ _).symm
     calc (L : ℝ) * (G ^ D.m * G ^ (D.m + 1)) * (C * G ^ D.m * G ^ D.m)
       _ = (L * C) * G ^ (D.m + (D.m + 1) + D.m + D.m) := by ring
-      _ ≤ exp (D.x ^ 199 * D.b ^ 2) *
-            exp ((D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b ^ 2)) := by
+      _ ≤ exp (D.x ^ 199 * D.b) *
+            exp ((D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b)) := by
           rw [hG]; gcongr
-      _ = exp (D.x ^ 199 * D.b ^ 2 +
-            (D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b ^ 2)) := (exp_add _ _).symm
-      _ ≤ exp (D.x ^ 200 * D.b ^ 2) := exp_le_exp.2 D.le_of_hasLogBound
+      _ = exp (D.x ^ 199 * D.b +
+            (D.m + (D.m + 1) + D.m + D.m : ℕ) * (D.x ^ 99 * D.b)) := (exp_add _ _).symm
+      _ ≤ exp (D.x ^ 200 * D.b) := exp_le_exp.2 D.le_of_hasLogBound
   obtain ⟨a, ha, ha_sum⟩ := Set.mem_nsmul_iff_sum.1 h_sum
   calc _ = ‖∑ i, σ (a i)‖ := by rw [← ha_sum, map_sum]
     _ ≤ n * R :=
@@ -473,7 +473,7 @@ lemma norm_lastPathPeriod_le {Ψ : EdgeTuple (1 : D.MFoldTwist) → ℂ}
         exact h : ‖σ (a i)‖ ≤ R)).trans_eq
         (by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul])
     _ = n * (C * G ^ D.m * G ^ D.m) * √(B false) * √(B true) := by ring
-    _ ≤ exp (D.x ^ 200 * D.b ^ 2) * √(B false) * √(B true) := by grw [hn_le, h_const]
+    _ ≤ exp (D.x ^ 200 * D.b) * √(B false) * √(B true) := by grw [hn_le, h_const]
 
 /-! ### Going back through the turns -/
 
@@ -539,11 +539,11 @@ lemma isDualPairing_dualPairing : IsDualPairing D.columnsY (D.lastPathColumns fa
 polynomial for the pairing by differentiation, a positive integer. -/
 abbrev dualHook : ℤ := hookNumber (D.lastPathColumns false) (rankAt fun _ : D.Φ ↦ D.Y D.m)
 
-/-- The product of the hook number of the dual weight, `exp (x ^ 99 * b ^ 2)` and
-`exp (x ^ 200 * b ^ 2)` is at most `exp (x ^ 201 * b ^ 2)`. -/
+/-- The product of the hook number of the dual weight, `exp (x ^ 99 * b)` and
+`exp (x ^ 200 * b)` is at most `exp (x ^ 201 * b)`. -/
 lemma dualHook_mul_exp_le :
-    D.dualHook * exp (D.x ^ 99 * D.b ^ 2) * exp (D.x ^ 200 * D.b ^ 2) ≤
-      exp (D.x ^ 201 * D.b ^ 2) := by
+    D.dualHook * exp (D.x ^ 99 * D.b) * exp (D.x ^ 200 * D.b) ≤
+      exp (D.x ^ 201 * D.b) := by
   have h_hook : (D.dualHook : ℝ) ≤ (((D.natB * D.r ^ 4) ^ (D.natB * D.r ^ 4)) ^ 3 : ℕ) := by
     exact_mod_cast hookNumber_le (boxes_lastPathColumns_le_natB_mul false zero_le)
   rw [mul_assoc, ← exp_add]
@@ -773,7 +773,7 @@ algebraic form `lastPathToAlgForm true φ` of `φ` has `p`-integral values at a 
 not divide `ϑ.normQ`, then `(c ϑ / c 1) • lowerChainAtLevel ϑ (s • r φ)` is in `integralForms`, the
 forms with `p`-integral values. (b) For the trivial twist and `σ` in `Aut(ℂ)`, if the `σ`-conjugates
 of the values of that algebraic form have squared norm `weylNormSq` at most `B`, then those of
-`lowerChain 1 (s • r φ)` have squared norm at most `exp (2 * x ^ 201 * b ^ 2) * B`. -/
+`lowerChain 1 (s • r φ)` have squared norm at most `exp (2 * x ^ 201 * b) * B`. -/
 lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → ℂˣ,
     D.HasAbsUpToNormPower (fun ϑ : D.MFoldTwist ↦ c ϑ)
       (∏ i ∈ range D.m, ∏ j ∈ range D.m, D.turnRatio i j) ∧
@@ -788,7 +788,7 @@ lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → �
           weylNormSq (σ ∘ (D.lastPathToAlgForm true φ.val).val g) ≤ B) →
         ∀ g : Gf D.E (D.Y D.m),
           weylNormSq (σ ∘ (D.lowerChain .one (s • r φ)).val g) ≤
-            exp (2 * D.x ^ 201 * D.b ^ 2) * B := by
+            exp (2 * D.x ^ 201 * D.b) * B := by
   obtain ⟨c, hc, Ψ, hΨ, β, r, hr_onto, h_period⟩ :=
     D.exists_dualPairing_eq_mul_lastPathPeriod
   obtain ⟨N, hN_ne, hN_le, h_integral⟩ := D.exists_mul_lastPathPeriod_mem_embValRing
@@ -828,7 +828,7 @@ lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → �
         ⟨_, mul_mem hε_int (hΞ_int hx w), h_pair ϑ φ x _⟩
   -- (b) The conjugates of the sum `Ξ` for delta forms are small.
   have hΞ_le (v : D.DualVector) :
-      ‖σ (Ξ 1 φ x v)‖ ≤ exp (D.x ^ 200 * D.b ^ 2) * √(weylNormSq (σ ∘ v)) * √B :=
+      ‖σ (Ξ 1 φ x v)‖ ≤ exp (D.x ^ 200 * D.b) * √(weylNormSq (σ ∘ v)) * √B :=
     D.norm_lastPathPeriod_le (hΨ 1) (fixedByOuterLevels_lastPathConjDelta 1 x v φ) σ
       (B := fun z ↦ if z then B else weylNormSq (σ ∘ v))
       (Bool.forall_bool.2 ⟨weylNormSq_lastPathConjDelta_le 1 x v σ, hB⟩)
@@ -836,17 +836,17 @@ lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → �
   have h_hook : (0 : ℝ) ≤ D.dualHook := mod_cast hookNumber_pos.le
   have h_pair_le (v : D.DualVector) :
       ‖σ (v ⬝ᵥ D.dualPairing.map (↑) *ᵥ (D.lowerChain .one (s • r φ)).val x)‖ ≤
-        exp (D.x ^ 201 * D.b ^ 2) * √B * √(weylNormSq (σ ∘ v)) :=
+        exp (D.x ^ 201 * D.b) * √B * √(weylNormSq (σ ∘ v)) :=
     calc _ = ‖σ (D.dualHook * (ε * (N * Ξ 1 φ x v)))‖ := by
           rw [← h_pair, div_self (c 1).ne_zero, one_smul]
           rfl
       _ = D.dualHook * ‖σ ε‖ * N * ‖σ (Ξ 1 φ x v)‖ := by
           simp [abs_of_nonneg h_hook, mul_assoc]
-      _ ≤ D.dualHook * 1 * exp (D.x ^ 99 * D.b ^ 2) *
-          (exp (D.x ^ 200 * D.b ^ 2) * √(weylNormSq (σ ∘ v)) * √B) := by
+      _ ≤ D.dualHook * 1 * exp (D.x ^ 99 * D.b) *
+          (exp (D.x ^ 200 * D.b) * √(weylNormSq (σ ∘ v)) * √B) := by
           gcongr
           exact hΞ_le v
-      _ = D.dualHook * exp (D.x ^ 99 * D.b ^ 2) * exp (D.x ^ 200 * D.b ^ 2) * √B *
+      _ = D.dualHook * exp (D.x ^ 99 * D.b) * exp (D.x ^ 200 * D.b) * √B *
           √(weylNormSq (σ ∘ v)) := by ring
       _ ≤ _ := by grw [D.dualHook_mul_exp_le]
   refine (D.weylNormSq_le_of_dualPairing σ (by positivity) h_pair_le).trans_eq ?_
@@ -856,10 +856,10 @@ lemma exists_lowerChain_integral_and_weylNormSq_le : ∃ c : D.MFoldTwist → �
 /-- The space `gridLevelForms` of forms of level `J(𝔟)` on `Ỹ^m_0`, the space at the outer end of
 the half `true` of the last path, is spanned by the forms `φ` whose algebraic forms
 `lastPathToAlgForm true φ` are short: their values are integral at every prime and all conjugates of
-the values have squared norm at most `exp (x ^ 99 * b ^ 2)`, with `x = D.x` the length of the prime
+the values have squared norm at most `exp (x ^ 99 * b)`, with `x = D.x` the length of the prime
 sum and `b = D.b` the weight at the `b`-places. -/
 lemma span_isShort_eq_top_gridLevelForms : span ℂ {φ : D.gridLevelForms D.m |
-    IsShort (exp (D.x ^ 99 * D.b ^ 2)) (D.lastPathToAlgForm true φ.val)} = ⊤ := by
+    IsShort (exp (D.x ^ 99 * D.b)) (D.lastPathToAlgForm true φ.val)} = ⊤ := by
   -- Transport along the isomorphism `e` between algebraic forms and forms of level `gridLevelGen`.
   let e : _ ≃ₗ[ℂ] D.gridLevelForms D.m :=
     (D.gridSpace 0 true 0 D.m).algFormEquiv (D.isHCParam_lastPathColumns true zero_le)
@@ -880,16 +880,16 @@ fixed power of the norm `ϑ.normQ` of the places of `ϑ`, the product of the rat
 that this space is spanned by the forms `y` with two properties: for all twists `ϑ`,
 `(c ϑ / c 1) • lowerChainAtLevel ϑ y` has values integral at every prime not dividing `ϑ.normQ`, and
 all conjugates of the values of `lowerChain 1 y`, the chain of lifts for the trivial twist, have
-squared norm `weylNormSq` at most `exp (x ^ 202 * b ^ 2)`, with `x = D.x` the length of the prime
+squared norm `weylNormSq` at most `exp (x ^ 202 * b)`, with `x = D.x` the length of the prime
 sum and `b = D.b` the weight at the `b`-places. -/
-lemma exists_span_short_lifts_eq_top : ∃ c : D.MFoldTwist → ℂˣ,
+lemma exists_span_short_lifts_with_linear_norm_eq_top : ∃ c : D.MFoldTwist → ℂˣ,
     D.HasAbsUpToNormPower (fun ϑ : D.MFoldTwist ↦ c ϑ)
       (∏ i ∈ range D.m, ∏ j ∈ range D.m, D.turnRatio i j) ∧
     span ℂ {y : D.principalForms (D.spaceY 0) |
       (∀ (ϑ : D.MFoldTwist) (l : ℕ) [Fact l.Prime] (place : PadicPlace l), l.Coprime ϑ.normQ →
         (c ϑ / c 1 : ℂ) • D.lowerChainAtLevel ϑ y ∈ integralForms (l := l) place) ∧
       ∀ (σ : ℂ ≃+* ℂ) (g : Gf D.E (D.Y D.m)),
-        weylNormSq (σ ∘ (D.lowerChain .one y).val g) ≤ exp (D.x ^ 202 * D.b ^ 2)} = ⊤ := by
+        weylNormSq (σ ∘ (D.lowerChain .one y).val g) ≤ exp (D.x ^ 202 * D.b)} = ⊤ := by
   -- Short forms `φ` span and `r` is onto, so the forms `s • r φ` span.
   obtain ⟨c, hc, r, s, hr_onto, hs_ne, h_integral, h_norm⟩ :=
     D.exists_lowerChain_integral_and_weylNormSq_le
@@ -898,10 +898,24 @@ lemma exists_span_short_lifts_eq_top : ∃ c : D.MFoldTwist → ℂˣ,
   intro φ hφ
   refine (smul_mem_iff _ hs_ne).1 (subset_span
     ⟨fun ϑ p _ place hp ↦ h_integral ϑ p place φ hp (hφ.1 p), fun σ g ↦ ?_⟩)
-  calc _ ≤ exp (2 * D.x ^ 201 * D.b ^ 2) * exp (D.x ^ 99 * D.b ^ 2) :=
+  calc _ ≤ exp (2 * D.x ^ 201 * D.b) * exp (D.x ^ 99 * D.b) :=
         h_norm σ φ _ (hφ.2 σ) g
-    _ = exp (2 * D.x ^ 201 * D.b ^ 2 + D.x ^ 99 * D.b ^ 2) := by rw [exp_add]
+    _ = exp (2 * D.x ^ 201 * D.b + D.x ^ 99 * D.b) := by rw [exp_add]
     _ ≤ _ := exp_le_exp.2 D.le_of_hasLogBound
+
+/-- Integral lifts with the quadratic norm bound also span the space of principal level forms. -/
+lemma exists_span_short_lifts_eq_top : ∃ c : D.MFoldTwist → ℂˣ,
+    D.HasAbsUpToNormPower (fun ϑ : D.MFoldTwist ↦ c ϑ)
+      (∏ i ∈ range D.m, ∏ j ∈ range D.m, D.turnRatio i j) ∧
+    span ℂ {y : D.principalForms (D.spaceY 0) |
+      (∀ (ϑ : D.MFoldTwist) (l : ℕ) [Fact l.Prime] (place : PadicPlace l), l.Coprime ϑ.normQ →
+        (c ϑ / c 1 : ℂ) • D.lowerChainAtLevel ϑ y ∈ integralForms (l := l) place) ∧
+      ∀ (σ : ℂ ≃+* ℂ) (g : Gf D.E (D.Y D.m)),
+        weylNormSq (σ ∘ (D.lowerChain .one y).val g) ≤ exp (D.x ^ 202 * D.b ^ 2)} = ⊤ := by
+  obtain ⟨c, hc, h_span⟩ := D.exists_span_short_lifts_with_linear_norm_eq_top
+  have h_exponent : D.x ^ 202 * D.b ≤ D.x ^ 202 * D.b ^ 2 := D.le_of_hasLogBound
+  refine ⟨c, hc, eq_top_mono (span_mono ?_) h_span⟩
+  exact fun _ h ↦ ⟨h.1, fun σ g ↦ (h.2 σ g).trans (exp_le_exp.2 h_exponent)⟩
 
 end New.Data
 
