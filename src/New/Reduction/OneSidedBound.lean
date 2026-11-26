@@ -24,16 +24,15 @@ open DirichletCharacter Filter Finset Real ZMod
 
 namespace New
 
-private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P) {c u : ℝ} {k : ℕ}
-    (hc : 0 ≤ c) (hu : 0 < u) (h_density : towerDeg D.towerExp ≤ #D.bPlaces * u)
-    (h_bound : D.m * D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k)) :
-    primeRemainder P.d P.q₀ D.x ≤ c * P.q₀.totient * (u * D.logB ^ k) / D.m +
+private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P) {loss u : ℝ}
+    (h_loss : 0 ≤ loss) (hu : 0 < u) (h_density : towerDeg D.towerExp ≤ #D.bPlaces * u)
+    (h_bound : D.m * D.totalRemainder ≤ loss * (D.f * D.a)) :
+    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * (u * loss) / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + u * |primeRemainder P.d 1 D.x₁| := by
   -- Write `R_{q₀}(x)` through the total remainder, divide the main inequality by `m a #Φ_b`, and
   -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b u`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
   have hm : (0 : ℝ) < D.m := Data.HasLogBound.pos D
   have ha : (0 : ℝ) < D.a := Data.HasLogBound.pos D
-  have h_logB_pow_nonneg : 0 ≤ D.logB ^ k := pow_nonneg (Data.HasLogBound.pos D).le _
   have h_aPlaces_pos : (0 : ℝ) < #D.aPlaces := by
     rw [D.card_aPlaces]
     exact Data.HasLogBound.pos D
@@ -41,50 +40,58 @@ private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P)
   have h_bPlaces_pos : (0 : ℝ) < #D.bPlaces :=
     (mul_pos_iff_of_pos_right hu).1 (h_aPlaces_pos.trans_le h_card)
   have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ u := (div_le_iff₀' h_bPlaces_pos).2 h_card
-  have h_main : D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k) / D.m :=
+  have h_main : D.totalRemainder ≤ loss * (D.f * D.a) / D.m :=
     (le_div_iff₀' hm).2 h_bound
   calc primeRemainder P.d P.q₀ D.x
       = D.totalRemainder / (D.a * #D.bPlaces) + primeRemainder P.d P.q₀ D.x₁ -
           #D.aPlaces / #D.bPlaces * primeRemainder P.d 1 D.x₁ := by
         rw [D.totalRemainder_eq]
         field
-    _ ≤ c * (D.f * D.a * D.logB ^ k) / D.m / (D.a * #D.bPlaces) +
+    _ ≤ loss * (D.f * D.a) / D.m / (D.a * #D.bPlaces) +
           |primeRemainder P.d P.q₀ D.x₁| + #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         grw [h_main, le_abs_self (primeRemainder P.d P.q₀ D.x₁), sub_eq_add_neg, ← mul_neg,
           neg_le_abs]
-    _ = c * P.q₀.totient * (#D.aPlaces / #D.bPlaces * D.logB ^ k) / D.m +
+    _ = P.q₀.totient * (#D.aPlaces / #D.bPlaces * loss) / D.m +
           |primeRemainder P.d P.q₀ D.x₁| +
           #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
         field
-    _ ≤ c * P.q₀.totient * (u * D.logB ^ k) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+    _ ≤ P.q₀.totient * (u * loss) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
           u * |primeRemainder P.d 1 D.x₁| := by grw [h_ratio]
 
 /-- The bound at the first cut-off using the fourth power in the main inequality. -/
 lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
     primeRemainder P.d P.q₀ D.x ≤ 128 * P.q₀.totient * D.logB ^ 5 / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
-  simpa only [← pow_succ'] using D.primeRemainder_le_of_main_bound (c := 128) (k := 4)
-    (by norm_num) (Data.HasLogBound.pos D) D.towerDeg_le_card_bPlaces_mul (star_inequality D)
+  have h_bound : D.m * D.totalRemainder ≤ (128 * D.logB ^ 4) * (D.f * D.a) := by
+    convert star_inequality D using 1
+    ring
+  convert D.primeRemainder_le_of_main_bound (by positivity) (Data.HasLogBound.pos D)
+    D.towerDeg_le_card_bPlaces_mul h_bound using 1
+  ring
 
 private lemma eventually_exists_data_scales_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
     ∀ᶠ x : ℕ in atTop, ∃ D : Data P, D.x = x ∧ D.logB ≤ 2 * (x : ℝ) ^ ε ∧
       (x : ℝ) ^ (1 / 2 : ℝ) ≤ D.m ∧ (x : ℝ) ^ (ε / 12) ≤ D.logX₁ ∧
+      D.logX₁ ≤ (x : ℝ) ^ (ε / 6) ∧
       towerDeg D.towerExp ≤ #D.bPlaces * (x : ℝ) ^ γ := by
   have h_two : ∀ᶠ x : ℕ in atTop, (2 : ℝ) ≤ (x : ℝ) ^ (ε / 12) :=
     ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 2
   filter_upwards [eventually_exists_data_with_density P hε hε_lt hγ hγε, h_two, eventually_ge_atTop 1]
-    with x ⟨D, hx, _, _, _, _, hx₁_ge, ⟨_, hb_le⟩, h_density⟩ hx_two hx_one
+    with x ⟨D, hx, hx₁_eq, _, _, _, hx₁_ge, ⟨_, hb_le⟩, h_density⟩ hx_two hx_one
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_eq : D.x = x := by rw [← hx, ← D.exp_logX]
-  refine ⟨D, hx_eq, by linarith [one_le_rpow hx_ge hε.le], ?_, ?_, h_density⟩
+  refine ⟨D, hx_eq, by linarith [one_le_rpow hx_ge hε.le], ?_, ?_, ?_, h_density⟩
   · rw [← hx_eq, Data.x, ← exp_mul, mul_one_div]
     exact (Set.mem_Icc.1 D.m_mem).1
   · have h_sq : (x : ℝ) ^ (ε / 6) = (x : ℝ) ^ (ε / 12) * (x : ℝ) ^ (ε / 12) := by
       rw [← rpow_add (by positivity)]
       ring_nf
     nlinarith
+  · apply exp_le_exp.mp
+    rw [D.exp_logX₁, hx₁_eq]
+    exact Nat.floor_le (exp_pos _).le
 
 /-- Let `0 < ε < 1/100`. A term `D : Data P` (admissible data) bundles all the choices that the main
 inequality needs, among them integer scales `x`, `x₁`, `b` with `x ^ 10⁶ ≤ x₁` and `x₁ ^ 10⁶ ≤ b`
@@ -95,7 +102,7 @@ lemma eventually_exists_data_scales (P : Parameters) {ε : ℝ} (hε : 0 < ε) (
     ∀ᶠ x : ℕ in atTop, ∃ D : Data P, D.x = x ∧ D.logB ≤ 2 * (x : ℝ) ^ ε ∧
       (x : ℝ) ^ (1 / 2 : ℝ) ≤ D.m ∧ (x : ℝ) ^ (ε / 12) ≤ D.logX₁ := by
   filter_upwards [eventually_exists_data_scales_with_density P hε hε_lt hε le_rfl]
-    with x ⟨D, hx, hlog, hm, h₁, _⟩
+    with x ⟨D, hx, hlog, hm, h₁, _, _⟩
   exact ⟨D, hx, hlog, hm, h₁⟩
 
 /-- Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of the parameters `P`, and let
@@ -126,47 +133,85 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
       _ ≤ (x : ℝ) ^ (-2 : ℝ) := rpow_le_rpow_of_exponent_le hx_ge h_exp
   exact (hY (exp l) (by linarith [add_one_le_exp l])).imp h_small.trans' h_small.trans'
 
-/-- For the data scales controlled by `ε` and sparse density controlled by `γ`, the bound at
-integers has exponent `-1/2 + 4 ε + γ`. The density factor multiplies both the covolume error
-and the remainder at `x₁` for the trivial modulus. -/
-lemma eventually_primeRemainder_natCast_le_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+/-- The fourth-power error is replaced by `log³ b log² x₁`. The choices
+`log b ≤ 2 x ^ ε` and `log x₁ ≤ x ^ (ε / 6)` give exponent `-1/2 + (10/3) ε + γ`. -/
+lemma eventually_primeRemainder_natCast_le_with_separate_log_losses
+    (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
     ∀ᶠ x : ℕ in atTop,
-      primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + 4 * ε + γ) := by
+      primeRemainder P.d P.q₀ x ≤
+        (5600 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε + γ) := by
   filter_upwards [eventually_exists_data_scales_with_density P hε hε_lt hγ hγε,
     eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
-    with x ⟨D, hx_eq, h_logB, hm, h_logX₁, h_density⟩ h_at_x₁ hx_one
+    with x ⟨D, hx_eq, h_logB, hm, h_logX₁, h_logX₁_upper, h_density⟩ h_at_x₁ hx_one
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
   obtain ⟨h_rem_q₀, h_rem_one⟩ := h_at_x₁ D.logX₁ h_logX₁
   have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  let t : ℝ := -1 / 2 + 4 * ε + γ
+  have h_logX₁_pos : 0 < D.logX₁ := Data.HasLogBound.pos D
+  let t : ℝ := -1 / 2 + (10 / 3) * ε + γ
   have h_inv : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ t :=
     rpow_le_rpow_of_exponent_le hx_ge (by dsimp [t]; linarith)
   have h_mul : (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ t := by
     rw [← rpow_add hx_pos]
     exact rpow_le_rpow_of_exponent_le hx_ge (by dsimp [t]; linarith)
-  have h_main : ((x : ℝ) ^ γ * ((x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ t := by
-    rw [← rpow_mul_natCast hx_pos.le, ← rpow_add hx_pos, ← rpow_sub hx_pos]
+  have h_power : ((x : ℝ) ^ ε) ^ 3 * ((x : ℝ) ^ (ε / 6)) ^ 2 = (x : ℝ) ^ ((10 / 3) * ε) := by
+    rw [← rpow_mul_natCast hx_pos.le, ← rpow_mul_natCast hx_pos.le, ← rpow_add hx_pos]
     congr 1
     push_cast
+    ring
+  have h_main : ((x : ℝ) ^ γ * (((x : ℝ) ^ ε) ^ 3 * ((x : ℝ) ^ (ε / 6)) ^ 2)) /
+      (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ t := by
+    rw [h_power, ← rpow_add hx_pos, ← rpow_sub hx_pos]
+    congr 1
     dsimp [t]
     ring
+  have h_bound : D.m * D.totalRemainder ≤
+      (700 * (D.logB ^ 3 * D.logX₁ ^ 2)) * (D.f * D.a) := by
+    convert star_inequality_with_separate_log_losses D using 1
+    dsimp [Data.errorUnit]
+    ring
   calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ 25 * P.q₀.totient * ((x : ℝ) ^ γ * D.logB ^ 4) / D.m +
+    _ ≤ P.q₀.totient * ((x : ℝ) ^ γ * (700 * (D.logB ^ 3 * D.logX₁ ^ 2))) / D.m +
         |primeRemainder P.d P.q₀ D.x₁| + (x : ℝ) ^ γ * |primeRemainder P.d 1 D.x₁| :=
-      D.primeRemainder_le_of_main_bound (c := 25) (k := 4) (by norm_num)
-        (rpow_pos_of_pos hx_pos _) h_density (star_inequality_with_completion_cost D)
-    _ ≤ 25 * P.q₀.totient * ((x : ℝ) ^ γ * (2 * (x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ) +
+      D.primeRemainder_le_of_main_bound (by positivity) (rpow_pos_of_pos hx_pos _) h_density h_bound
+    _ ≤ P.q₀.totient * ((x : ℝ) ^ γ * (700 * ((2 * (x : ℝ) ^ ε) ^ 3 *
+        ((x : ℝ) ^ (ε / 6)) ^ 2))) / (x : ℝ) ^ (1 / 2 : ℝ) +
         (x : ℝ) ^ (-2 : ℝ) + (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) := by
-      grw [h_rem_q₀, h_rem_one, h_logB, ← hm]
-    _ = 400 * P.q₀.totient * (((x : ℝ) ^ γ * ((x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ)) +
+      grw [h_rem_q₀, h_rem_one, h_logB, h_logX₁_upper, ← hm]
+    _ = 5600 * P.q₀.totient * (((x : ℝ) ^ γ * (((x : ℝ) ^ ε) ^ 3 *
+        ((x : ℝ) ^ (ε / 6)) ^ 2)) / (x : ℝ) ^ (1 / 2 : ℝ)) +
         (x : ℝ) ^ (-2 : ℝ) + (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) := by
       rw [mul_pow]
       ring
-    _ ≤ 400 * P.q₀.totient * (x : ℝ) ^ t + (x : ℝ) ^ t + (x : ℝ) ^ t := by
+    _ ≤ 5600 * P.q₀.totient * (x : ℝ) ^ t + (x : ℝ) ^ t + (x : ℝ) ^ t := by
       grw [h_main, h_mul, h_inv]
-    _ = (400 * P.q₀.totient + 2) * (x : ℝ) ^ t := by ring
+    _ = (5600 * P.q₀.totient + 2) * (x : ℝ) ^ t := by ring
+
+/-- The fourth-power bound with sparse density. The extra exponent absorbs the coefficient in
+`eventually_primeRemainder_natCast_le_with_separate_log_losses`. -/
+lemma eventually_primeRemainder_natCast_le_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + 4 * ε + γ) := by
+  have h_large : ∀ᶠ x : ℕ in atTop, (14 : ℝ) ≤ (x : ℝ) ^ ((2 / 3) * ε) :=
+    ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 14
+  filter_upwards [eventually_primeRemainder_natCast_le_with_separate_log_losses P hε hε_lt hγ hγε,
+    h_large, eventually_ge_atTop 1] with x h_bound hx_large hx_one
+  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
+  have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
+  let t : ℝ := -1 / 2 + (10 / 3) * ε + γ
+  calc primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) * (x : ℝ) ^ t := h_bound
+    _ ≤ ((400 * P.q₀.totient + 2) * 14) * (x : ℝ) ^ t :=
+      mul_le_mul_of_nonneg_right (by linarith) (rpow_nonneg hx_pos.le _)
+    _ ≤ (400 * P.q₀.totient + 2) * ((x : ℝ) ^ ((2 / 3) * ε) * (x : ℝ) ^ t) := by
+      rw [← mul_assoc]
+      gcongr
+    _ = (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + 4 * ε + γ) := by
+      rw [← rpow_add hx_pos]
+      congr 2
+      dsimp [t]
+      ring
 
 /-- The bound at integers with the greedy choice stopped at the basis completion cost. -/
 lemma eventually_primeRemainder_natCast_le_with_completion_cost
