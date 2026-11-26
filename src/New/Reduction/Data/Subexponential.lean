@@ -1,5 +1,6 @@
 module
 
+import Lib.Analytic.Primes
 public import New.Reduction.Data.Existence
 
 /-!
