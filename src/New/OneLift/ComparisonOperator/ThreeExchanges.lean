@@ -365,10 +365,9 @@ lemma exists_mul_stdClassSum_eq_carrierForm {m : ℕ} [NeZero m] (hm_even : Even
     rw [mul_one, one_mul] at ht
     change modKernel H (stdSpace E (Fin (2 * m) ⊕ Fin m)) (upsilonU1 ^ m) 1 𝔪 (χ ·.det) 1 x (1, h) =
       cx * modKernel H (stdSpace E (Fin (2 * m) ⊕ Fin m)) (upsilonU1 ^ m) c 𝔪 (χ ·.det) 1 x (1, h)
-    rw [ht, ← mul_assoc]
+    rw [ht]
     have h1 : (((1 : AutChar E).val (G.det (s := 1) (1, h)) : Circle) : ℂ) = 1 := rfl
-    rw [h1, one_div]
-    exact (mul_inv_cancel₀ hcx_ne ▸ one_mul _).symm
+    rw [h1, one_div, mul_inv_cancel_left₀ hcx_ne]
   have h_mod3 (y : G E (-1)) :
       modKernel J.neg H (c * upsilonU1 ^ m) 1 𝔪 1
           (∏ τ, variableMinor τ Sum.inr id ^ (2 * m)) y x =
@@ -648,17 +647,6 @@ def invariantTraceChar (Λ : Matrix D.CarrierIndex (FirstFactorIndex j)
   ∑ γ : GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing,
     traceChar Λ (x.map (forgetTwist ϑ.toTameChar) * γ.val)
 
-/-- The invariant trace character `ψ^inv_Λ = invariantTraceChar ϑ j Λ` is invariant under right
-multiplication of its argument `x` by an invertible matrix `γ` over the residue ring of
-`D.twistModulus ϑ 2`. -/
-lemma invariantTraceChar_mul
-    (Λ : Matrix D.CarrierIndex (FirstFactorIndex j) (D.untwistedModulus 2).ResidueRing)
-    (x : Matrix (FirstFactorIndex j) D.CarrierIndex (D.twistModulus ϑ 2).ResidueRing)
-    (γ : GL D.CarrierIndex (D.twistModulus ϑ 2).ResidueRing) :
-    invariantTraceChar ϑ j Λ (x * γ.val) = invariantTraceChar ϑ j Λ x :=
-  Finset.sum_equiv (.mulLeft (γ.map (forgetTwist ϑ.toTameChar))) (by simp)
-    (by simp [Matrix.mul_assoc])
-
 /-- The character of the residue ring modulo `D.twistModulus ϑ 2 = ϖ² Q`, with `ϖ` the product of
 the chosen places and `Q` the product of the places of `ϑ`, that comes from the tame part of
 `twistedChiMPow ϑ j`, the product `χ' = χ^j ϑ` of the fixed character `D.chiM` and the twist. -/
@@ -845,7 +833,8 @@ lemma exists_mul_thirdExchangeLeftSide_eq_choiceFn : ∃ (C : ℂ) (c : D.Twist 
     rw [← integral_carrierForm_mul_eq_card_mul_choiceFn ϑ]
     refine mul_stdClassSum_eq_integral_mul_modKernel _ (enlargedSpace j) (h_tame ϑ).1
       (h_carrier (h_tame ϑ))
-      (invariantTraceChar_mul ϑ j i.matrix) (K := thirdExchangeKernel ϑ j i g) fun Φ Ψ hΦΨ h' ↦ ?_
+      (fun x γ ↦ Finset.sum_equiv (.mulLeft (γ.map (forgetTwist ϑ.toTameChar))) (by simp) (by simp [Matrix.mul_assoc]))
+      (K := thirdExchangeKernel ϑ j i g) fun Φ Ψ hΦΨ h' ↦ ?_
     rw [← matchedPoly_constantRows, eq_div_of_mul_eq'' (firstFactorChar_mul_upsilonU1_pow ϑ j)]
     exact h_third (h_tame₃ ϑ) (constantRows j i.rowChoice (D.shortRows i.rowChoice)) hΦΨ _ _
 
@@ -880,7 +869,7 @@ that lift times a power of the splitting character), its datum is `columnDatum` 
 polynomial is `letterPoly` of the vector `leftSideSeries ϑ j i h` of the Weyl module with column
 counts `colsPlus`. The coordinates of this vector are formed from the kernels at `h` of the summands
 of `W` other than `W_j`. -/
-lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type} [Fintype a]
+lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type}
     (w : Matrix a (FirstFactorIndex j) (D.untwistedModulus 2).ResidueRing) (i : ChoiceIndex j)
     (g : New.G D.E (D.signsW j)) (h : Gf D.E (FirstFactorIndex j)) :
     stdClassSum (stdLevel D.E D.CarrierIndex) (fun h' : Gf D.E D.CarrierIndex ↦ carrierCoeff D.m
@@ -903,9 +892,10 @@ lemma stdClassSum_thirdExchangeKernel_productDatum {a : Type} [Fintype a]
   have h_sign : ((1 : D.CarrierIndex → ℤˣ) ⊕ᵥ (padSigns j ⊕ᵥ 1)) ∘ regroupEquiv j =
       D.signsW j ⊕ᵥ (-1 ⊕ᵥ 1) := by
     ext1 (_ | _ | _ | _ | _) <;> rfl
-  -- `erw` is needed: the kernels are stated on index types that agree only after unfolding
-  erw [← modKernel_reindex (regroupEquiv ..).symm h_sign (.refl _) rfl,
-    ← map_sum ((modKernelBilin ..) _), modKernelBilin_apply]
+  rw [← modKernel_reindex (regroupEquiv ..).symm h_sign (.refl _) rfl]
+  conv_rhs =>
+    simp only [← modKernelBilin_apply]
+    rw [← map_sum, modKernelBilin_apply]
   -- compare the two kernels argument by argument
   congr! 1
   · -- the first spaces

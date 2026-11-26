@@ -863,9 +863,8 @@ lemma mem_vanishingCocycles_of_mem_insert {a m : ℕ} (ha : a ≡ 1 [MOD N]) (hl
       (inertiaOff N l T) := by
   -- Local constancy and the cocycle identity come from `hy`; it remains to show that `y` vanishes
   -- on the inertia groups of the places above neither `l` nor a prime of `T`.
-  suffices hy_zero : ∀ τ ∈ inertiaOff N l T, y τ = 0 by
-    obtain ⟨hy_const, hy_cocycle, -⟩ := hy
-    exact ⟨hy_const, hy_cocycle, hy_zero⟩
+  refine ⟨isLocallyConstant_of_mem_vanishingCocycles hy,
+    apply_mul_of_mem_vanishingCocycles hy, ?_⟩
   rintro τ ⟨A, ⟨h_fix, h_val, hτ⟩, hA⟩
   by_cases hAr : A.valuation (r : Ω) < 1
   · obtain ⟨σ, hσ, h_detect⟩ := exists_isFrob_forall_isTrivialAbove (e := e) (ψ := ψ) (ν := ν) hr

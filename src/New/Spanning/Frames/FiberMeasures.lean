@@ -178,14 +178,14 @@ lemma gram_middleBasisMatrix {N : A} (hN : π * star (π : A) = N) :
   have h_cancel : star (↑π⁻¹ : A) * N = π := by rw [← hN, mul_left_comm, h_inv, mul_one]
   ext (i | ⟨⟩) (j | ⟨⟩)
   · simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-      diagonal, Matrix.one_apply, apply_ite star, h_cancel, h_inv, eq_comm]
-    split_ifs <;> simp_all [h_cancel, h_inv]
+      diagonal, Matrix.one_apply, apply_ite star, h_cancel, eq_comm]
+    split_ifs <;> simp_all
   · by_cases hi : i = 𝔰.k₀ <;>
       simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
         diagonal, apply_ite star, h_cancel, hi, eq_comm]
   · by_cases hj : j = 𝔰.k₀ <;>
       simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-        diagonal, apply_ite star, h_cancel, h_inv, hj, eq_comm]
+        diagonal, h_cancel, h_inv, hj, eq_comm]
   · simp [middleBasisMatrix, latticeMiddleGram, Matrix.mul_apply, h_cancel]
 
 /-- In the basis `middleBasisMatrix`, the orthonormal basis of `X₀` followed by `π⁻¹ z`, the vector

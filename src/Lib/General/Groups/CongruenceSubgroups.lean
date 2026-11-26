@@ -1,6 +1,6 @@
 module
 
-public import Mathlib.Analysis.Matrix.MeasurableSpace -- shake: keep (Mathlib's instance must precede the `MeasurableSpace (Matrix m n R)` instance below)
+public import Mathlib.Analysis.Matrix.MeasurableSpace
 public import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import TauCeti.Topology.Algebra.Group.Units
 public import Aesop.Frontend.Tactic
@@ -127,8 +127,6 @@ deriving instance PolishSpace for Matrix m n R
 
 variable [MeasurableSpace R] [BorelSpace R]
 
-instance : MeasurableSpace (Matrix m n R) := .pi
-
 instance : BorelSpace Rˣ := by
   borelize Rˣ
   use (continuous_val.measurableEmbedding val_injective).comap_eq
@@ -144,7 +142,9 @@ deriving instance Countable, LocallyCompactSpace, BorelSpace for Matrix m n R
 
 end
 
-instance [Fintype m] [Fintype n] [MeasureSpace R] : MeasureSpace (Matrix m n R) := .pi
+/-- The product measure on matrices, over Mathlib's `σ`-algebra `Matrix.instMeasurableSpace`. -/
+instance [Fintype m] [Fintype n] [MeasureSpace R] : MeasureSpace (Matrix m n R) where
+  volume := (volume : Measure (m → n → R))
 
 /-! ### Special matrices -/
 
@@ -186,21 +186,25 @@ def diagGL : (n → Rˣ) →* GL n R :=
 lemma coe_diagGL (t : n → Rˣ) : (diagGL t).val = Matrix.diagonal fun i : n ↦ ↑(t i) := rfl
 
 /-- The transpose of g, as an element of GL_n(R). -/
-@[simps]
+@[simps -isSimp]
 def transposeGL (g : GL n R) : GL n R where
   val := gᵀ
   inv := g⁻¹.valᵀ
   val_inv := by simp [← transpose_mul]
   inv_val := by simp [← transpose_mul]
 
+attribute [simp] val_transposeGL
+
 /-- For distinct indices i, j and a in R, the element 1 + aE_{ij} of GL_n(R), with inverse
 1 − aE_{ij}. -/
-@[simps]
+@[simps -isSimp]
 def transvectionGL {i j : n} (h : i ≠ j) (a : R) : GL n R where
   val := transvection i j a
   inv := transvection i j (-a)
   val_inv := by simp [transvection_mul_transvection_same, h]
   inv_val := by simp [transvection_mul_transvection_same, h]
+
+attribute [simp] val_transvectionGL
 
 /-! ### Integral matrices and congruence subgroups -/
 

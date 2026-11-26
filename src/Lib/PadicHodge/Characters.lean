@@ -23,7 +23,7 @@ of `Ω`: finite type, good, Hodge–Tate jumps, and polynomials killing an eleme
   `New.GaloisRep.JumpsRelAt` (Hodge–Tate jumps) and `New.GaloisRep.PolyKillsAt` (a polynomial kills
   an element) behave when a representation is multiplied by a character. It collects the four
   lemmas `IsFiniteTypeAt.twist`, `IsGoodAt.twist`, `JumpsRelAt.twist` and `PolyKillsAt.twist`.
-* `New.Period.isPotentiallyCrystalline_of_unramified_char`: take a continuous `p`-adic character `ν`
+* Take a continuous `p`-adic character `ν`
   of an open subgroup of `G_p`, trivial on inertia near `1`. An algebra on which `ν` acts by scalars
   is potentially crystalline (`IsPotentiallyCrystalline.of_unramified_char`) with the jumps of the
   trivial action (`jump_eq_jump_one_of_unramified_char`). Weil elements act on its Weil–Deligne
@@ -125,8 +125,8 @@ lemma exists_avatar :
     ext g : 1
     obtain ⟨x, hx⟩ := artinMap_surjective Gal(Ω/K) ⟦g⟧
     have hψ_mul : ψ (θ * θ') x = ψ θ x * ψ θ' x := by
-      simp [ψ, AlgHeckeChar.character, AlgHeckeChar.infinityType, zpow_add, prod_mul_distrib]
-      exact mul_mul_mul_comm ..
+      simpa [ψ, AlgHeckeChar.character, AlgHeckeChar.infinityType, zpow_add, prod_mul_distrib]
+        using mul_mul_mul_comm ..
     rw [MonoidHom.mul_apply, hμ _ x g hx, hμ θ x g hx, hμ θ' x g hx, hψ_mul]
   exact ⟨.mk' μ hμ_mul, fun θ ↦ ⟨hμ_cont θ, fun x g hg ↦ by simp [ψ, hμ θ x g hg]⟩⟩
 
@@ -722,7 +722,9 @@ lemma exists_period_of_character [TopologicalSpace Γ]
     refine isClosed_eq ?_ (by fun_prop)
     -- on a pure tensor `a ⊗ o` the left side is `(toGp g⁻¹ • θ a) * o`
     obtain ⟨s, rfl⟩ : ∃ s : Finset (Ainf × O), y = ∑ i ∈ s, i.1 ⊗ₜ[ℤ_[p]] i.2 := y.exists_finset
-    simp [Θ, Finset.smul_sum, smul_tmul']
+    suffices h : Continuous fun g : Γ ↦
+        ∑ i ∈ s, (toGp g)⁻¹ • (theta i.1 : ℂ_[p]) * algebraMap (PadicAlgCl p) ℂ_[p] i.2 by
+      simpa [Θ, Finset.smul_sum, smul_tmul'] using h
     fun_prop
   -- it holds at `φ ^ k * i` with `i` in inertia: the inverse is a Weil element of degree `f * k`,
   -- so it multiplies `y` by `a ^ (f * k) = (ν φ) ^ k`, and `ν i = 1`

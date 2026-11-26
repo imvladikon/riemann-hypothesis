@@ -191,7 +191,6 @@ variable {E n n₀ p n₁ q : Type*} [Field E] [CMType E] [Fintype n] [Decidable
 
 /-- The rational map of a matrix i carries the frame x₀⁻¹k of V₀, for a rational matrix k, to the
 frame x⁻¹(ik) of V, where x and x₀ are the points of V and V₀. -/
-@[simp]
 lemma ratMap_mul_toAdele (i : Matrix n n₀ E) (k : Matrix n₀ p E) :
     V.ratMap V₀ i * (V₀.x⁻¹.val * k.map toAdele) = V.x⁻¹.val * (i * k).map toAdele := by
   simp [ratMap, Matrix.mul_assoc]

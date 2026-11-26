@@ -260,7 +260,7 @@ private lemma New.Period.map_mulVec_apply_eq_smul_of_isHodgeFrame {p : ℕ} [The
         Y.map (algebraMap BdRPlus BdR ∘ algebraMap (PadicAlgCl p) BdRPlus) = hodgeMatrix W k :=
       hF.mul_map_eq
     -- `simp` distributes the map over the products, which leaves `U * Y` in the form of `hUY`.
-    simp
+    simp only [mapMatrix_apply, Matrix.map_mul, map_map, coe_units_inv]
     rw [hUY, hodgeMatrix, ← mul_assoc]
     simp [jumpProjector, mul_assoc]
   -- `O` commutes with the product `M *ᵥ x`.

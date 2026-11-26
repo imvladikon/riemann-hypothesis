@@ -206,11 +206,6 @@ def discTwist : ULift.{1} Bool → (monoidAlg ℚ≥0 ⟶ monoidAlg ℚ≥0)
 lemma discTwist_comp_evalZero : discTwist χ a ≫ evalZero b = evalZero b := by
   rcases a with ⟨_ | _⟩ <;> simp only [discTwist, charTwist_comp_evalZero]
 
-private lemma oneSub_ofTorus (A : PadicTest) (t : monoidAlg ℚ ⟶ tilt A) :
-    (oneSub (pointOrTorusTwist χ)).app A (ofTorus (ψ := 𝟭 _) t) =
-      ofTorus (ψ := 𝟭 _) t - ofTorus (ψ := 𝟭 _) (charTwist χ (AddMonoidHom.id ℚ) ≫ t) :=
-  freeAb.desc_of (Y := tiltPointsSum pointOrTorus) _ _ A ⟨⟨true⟩, ⟨t⟩⟩
-
 private lemma oneSub_ofPoint (A : PadicTest) (t : CommAlgCat.of OFlat OFlat ⟶ tilt A) :
     (oneSub (pointOrTorusTwist χ)).app A (ofPoint (ψ := 𝟭 _) t) =
       ofPoint (ψ := 𝟭 _) t - ofPoint (ψ := 𝟭 _) t :=
@@ -239,15 +234,12 @@ lemma oneSub_comp_gluing :
     let t' : monoidAlg ℚ ⟶ tilt A := t
     change gluing.app A ((oneSub (pointOrTorusTwist χ)).app A (ofTorus (ψ := 𝟭 _) t')) =
       (oneSub (discTwist χ)).app A (gluing.app A (ofTorus (ψ := 𝟭 _) t'))
-    simp [gluing_ofTorus, oneSub_ofTorus, oneSub_ofDisc, discTwist,
+    have h_torus : (oneSub (pointOrTorusTwist χ)).app A (ofTorus (ψ := 𝟭 _) t') =
+        ofTorus (ψ := 𝟭 _) t' - ofTorus (ψ := 𝟭 _) (charTwist χ (AddMonoidHom.id ℚ) ≫ t') :=
+      freeAb.desc_of (Y := tiltPointsSum pointOrTorus) _ _ A ⟨⟨true⟩, ⟨t'⟩⟩
+    simp [gluing_ofTorus, h_torus, oneSub_ofDisc, discTwist,
       charTwist_comp_discToTorus_assoc]
     exact sub_sub_sub_comm ..
-
-/-- In `O^♭[ℚ]`, the monomial of the absolute value `mabs s` is `T^t` for the rational
-`t = s.nnabs`. -/
-private lemma of_mabs_eq_single_nnabs (s : Multiplicative ℚ) :
-    of OFlat ℚ (mabs s) = single ((s.nnabs : ℚ≥0) : ℚ) (1 : OFlat) :=
-  rfl
 
 /-- The gluing map is a monomorphism: on each test it has a retraction. -/
 instance : Mono gluing := by
@@ -256,8 +248,7 @@ instance : Mono gluing := by
   have h_epi : Epi (discToTorus coeHom) := by
     refine ⟨fun x y h_comp ↦ hom_ext (algHom_ext' (MonoidHom.ext fun s ↦ ?_) (by ext))⟩
     refine mabs_mem_iff (H := MonoidHom.eqLocus ..).mp ?_
-    change x (of OFlat ℚ (mabs s)) = y (of OFlat ℚ (mabs s))
-    rw [of_mabs_eq_single_nnabs]
+    change x (single s.nnabs (1 : OFlat)) = y (single s.nnabs (1 : OFlat))
     simpa using congrArg (fun φ ↦ φ (single s.nnabs (1 : OFlat))) h_comp
   -- On each test `gluing` has a retraction: a point of the disc `false` goes to the point `∗`; a
   -- point of the disc `true` goes to `∗ - t` if it comes from a point `t` of the torus (unique by

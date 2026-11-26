@@ -66,51 +66,36 @@ lemma mem_zmultiples_of_index_prime [V.Normal] {β x : (unitsModule Γ).H2} (h_p
   -- Write `V = ker ψ`. The symbol map `y ↦ (ψ, y)` sends `kˣ` onto the classes split by `V` and
   -- kills the norms `N`; by Tate's formula `kˣ ⧸ N` has prime order `[Γ : V]`, so the image of
   -- `β ≠ 0` generates.
-  have h_fact : Fact V.index.Prime := ⟨h_prime⟩
-  -- The fixed field of `V` is local, and `#(O' / n) = #(O / n) ^ [Γ : V]` for the valuation rings.
+  have : Fact V.index.Prime := ⟨h_prime⟩
   have h_ext : IsLocalExtension k A (V : Subgroup Γ) (fixedFieldOf (V : Subgroup Γ)) := of_finite V
-  have h_cyclic : IsCyclic (Γ ⧸ (V : Subgroup Γ)) := isCyclic_of_prime_card (p := V.index) rfl
-  obtain ⟨ψ, hψ⟩ : ∃ χ : QZChar Γ, QZChar.ker χ = V := exists_ker_eq_of_isCyclic V h_cyclic
-  -- From here on `V` is the kernel of the character `ψ`.
-  obtain ⟨V, V_open⟩ := V
+  obtain ⟨ψ, hψ⟩ := exists_ker_eq_of_isCyclic V (isCyclic_of_prime_card (p := V.index) rfl)
+  obtain ⟨V, _⟩ := V
   obtain rfl : QZChar.ker ψ = V := hψ
   -- The split classes are the symbols `(ψ, y)` with `y ∈ kˣ`.
-  have split_iff : ∀ z : (unitsModule Γ).H2, (unitsModule Γ).resH2 (QZChar.ker ψ) z = 0 ↔
-      ∃ y : kˣ, z = cyclicClass unitsRep ψ (ofBase Γ Ω (Additive.ofMul y)) :=
-    (cyclicClass_spec ψ).left
-  obtain ⟨y, rfl⟩ := (split_iff β).mp hβ
-  obtain ⟨z, rfl⟩ := (split_iff x).mp hx
+  obtain ⟨y, rfl⟩ := ((cyclicClass_spec ψ).1 β).mp hβ
+  obtain ⟨z, rfl⟩ := ((cyclicClass_spec ψ).1 x).mp hx
   -- The symbol map kills the group `N` of norms.
   let N : Subgroup kˣ := map (Units.map (Algebra.norm k : fixedFieldOf (ker ψ) →* k)) ⊤
   let f : kˣ ⧸ N →* Multiplicative (unitsModule Γ).H2 :=
     lift N ((cyclicClass unitsRep ψ).comp (ofBase Γ Ω)).toMultiplicativeRight fun _ ⟨b, _, hb⟩ ↦
       (cyclicClass_eq_zero_iff_norm _).mpr ⟨b, hb⟩
-  have f_mk (a : kˣ) : f (a : kˣ ⧸ N) =
-      Multiplicative.ofAdd (cyclicClass unitsRep ψ (ofBase Γ Ω (Additive.ofMul a))) := rfl
-  -- Tate's formula for the norm from the fixed field `K` of `ker ψ`: with `l = [Γ : ker ψ]`,
-  -- `c = #(O / l)` for the integers `O` of `k`, and `q(Y) = #(Y / Y ^ l) / #Y[l]`, it reads
-  -- `[kˣ : N] ^ (l - 1) * q(Kˣ) = q(kˣ) ^ l`, where `q(kˣ) = l * c` and `q(Kˣ) = l * c ^ l`.
+  -- Tate's formula for the norm from `K = fixedFieldOf (ker ψ)` gives `#(kˣ ⧸ N) = [Γ : ker ψ]`.
   have card_eq : Nat.card (kˣ ⧸ N) = (QZChar.ker ψ).index := by
     set l : ℕ := (QZChar.ker ψ).index
-    set c : ℕ := Nat.card (valRingBelow k A ⧸ Ideal.span {(l : valRingBelow k A)})
-    have h_ne_l : NeZero l := ⟨h_prime.ne_zero⟩
-    let q (Y : Type) [CommGroup Y] : ℚ :=
-      cokerKerIndex (l : Module.End ℤ (Additive (⊤ : Subgroup Y)))
-    obtain ⟨qk_ne, qk_eq⟩ : q kˣ ≠ 0 ∧ q kˣ = l * c :=
-      cokerKerIndex_local_units L l topEquiv.toAdditive
-    have qK_eq : q (fixedFieldOf (ker ψ))ˣ = l * c ^ l := by
-      rw [← Nat.cast_pow, ← h_ext.card_quotient]
-      exact (cokerKerIndex_local_units h_ext.isLocalGalois l topEquiv.toAdditive).right
-    have tate : (N.relIndex ⊤ : ℚ) ^ (l - 1) * q (fixedFieldOf (ker ψ))ˣ = q kˣ ^ l :=
-      tate_index_formula_norm l (finrank_fixedFieldOf (QZChar.ker ψ)) ⊤ ⊤ (comap_top _).symm
-        (fun g y _ ↦ mem_top _) (fun _ _ ↦ ⟨1, mem_top _⟩) qk_ne
+    have : NeZero l := ⟨h_prime.ne_zero⟩
+    obtain ⟨qk_ne, qk_eq⟩ := cokerKerIndex_local_units L l (topEquiv (G := kˣ)).toAdditive
+    have qK_eq := (cokerKerIndex_local_units h_ext.isLocalGalois l
+      (topEquiv (G := (fixedFieldOf (ker ψ))ˣ)).toAdditive).2
+    rw [h_ext.card_quotient, Nat.cast_pow] at qK_eq
+    have tate := tate_index_formula_norm l (finrank_fixedFieldOf (QZChar.ker ψ)) ⊤ ⊤
+      (comap_top _).symm (fun _ _ _ ↦ mem_top _) (fun _ _ ↦ ⟨1, mem_top _⟩) qk_ne
     rw [qK_eq, qk_eq, relIndex_top_right] at tate
     exact Nat.eq_of_pow_sub_one_mul_eq_mul_pow h_prime (by rwa [← qk_eq]) tate
-  have y_ne : (y : kˣ ⧸ N) ≠ 1 := fun hy ↦ hβ_ne (by rw [← ofAdd_eq_one, ← f_mk, hy, map_one])
   -- So `z` is a power `y ^ m` modulo `N`, and applying `f` gives `(ψ, z) = m • (ψ, y)`.
-  obtain ⟨m, hm⟩ : ∃ m : ℤ, (y : kˣ ⧸ N) ^ m = z := mem_zpowers_of_prime_card card_eq y_ne
-  refine AddSubgroup.mem_zmultiples_iff.mpr ⟨m, Multiplicative.ofAdd.injective ?_⟩
-  rw [ofAdd_zsmul, ← f_mk, ← f_mk, ← map_zpow, hm]
+  obtain ⟨m, hm⟩ : ∃ m : ℤ, (y : kˣ ⧸ N) ^ m = z := mem_zpowers_of_prime_card card_eq
+    fun hy ↦ hβ_ne <| ofAdd_eq_one.mp ((congrArg f hy).trans f.map_one)
+  exact AddSubgroup.mem_zmultiples_iff.mpr ⟨m, Multiplicative.ofAdd.injective <|
+    (ofAdd_zsmul _ _).trans <| (f.map_zpow (y : kˣ ⧸ N) m).symm.trans (congrArg f hm)⟩
 
 /-- If the class `β` in `H²(Γ, Ωˣ)` is split by the open normal subgroup `V` (its restriction to
 `V` is zero) and is killed only by multiples of `[Γ : V]`, then every class `x` split by `V` is an

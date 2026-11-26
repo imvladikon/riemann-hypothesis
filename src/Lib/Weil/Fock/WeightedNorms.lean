@@ -366,7 +366,7 @@ lemma exists_tendsto_fockMoment (hv : Exchange.IsSchwartzVector v) :
   refine (fockMoment_integral_le N).trans_eq ?_
   rw [lintegral_prod _ (by fun_prop)]
   simp (disch := positivity) only [fockMoment_eq, smul_one_sub_partialKernelOp_apply,
-    G, g, s, ← smul_sub, ← mul_sub, norm_smul, norm_mul, norm_sub_rev (NormedSpace.exp _),
+    s, ← smul_sub, ← mul_sub, norm_smul, norm_mul, norm_sub_rev (NormedSpace.exp _),
     norm_of_nonneg]
 
 /-! ### The Weil representation -/

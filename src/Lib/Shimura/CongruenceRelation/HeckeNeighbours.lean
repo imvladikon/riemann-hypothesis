@@ -84,9 +84,9 @@ lemma exists_residue_torsion_emb (w : HeightOneSpectrum (𝓞 E)) :
   have h_ker : f.ker = p.ker := ext fun c ↦ h_class_eq_zero_iff (algebraMap _ _ ∘ c)
   have hp : (⇑p).Surjective := (algebraMap_ResField_surjective w).comp_left
   let ρ : (n → ResField w) →ₗ[𝓞 E] AdelicTorsion E n :=
-    p.ker.liftQ f h_ker.ge ∘ₗ (p.quotKerEquivOfSurjective hp).symm.toLinearMap
+    p.liftOfSurjective hp ⟨f, h_ker.ge⟩
   have h_inj : (⇑ρ).Injective :=
-    ρ.ker_eq_bot.mp (by simp [ρ, LinearMap.ker_comp, ker_liftQ, h_ker])
+    ρ.ker_eq_bot.mp (by simp [ρ, LinearMap.liftOfSurjective, LinearMap.ker_comp, ker_liftQ, h_ker])
   have hρ (c : n → 𝓞 E) : ρ (p c) = f c := by simp [ρ]
   refine ⟨ρ, h_inj, ?_, hp.forall.mpr fun c ↦
     ⟨(singleAdele w (uniformizer w)⁻¹ • (Algebra.linearMap (𝓞 E) (𝔸f E)).compLeft n) c, hρ c,

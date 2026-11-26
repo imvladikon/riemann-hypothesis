@@ -273,20 +273,15 @@ theorem IsMatch.exists_isMatchedPair_of_relWeight_ne_zero (hm : IsMatch T l l') 
     (h_ne : T.relWeight l r ≠ 0) :
     ∃ c : C, T.IsMatchedPair l l' r c ∧ T.varSign (r, c) = (T.relWeight l r).sign := by
   obtain ⟨c, h_pair⟩ | h_free := hm.left r
-  · have h_large : (Fintype.card C - Fintype.card R : ℤ) <
-        T.varSign (r, c) * T.centredParam l r := by
-      linarith [h_pair.right, neg_le_abs (Fintype.card R - Fintype.card C : ℤ)]
-    have h_sign : 0 ≤ T.varSign (r, c) * T.relWeight l r :=
-      hm.sign_mul_relWeight_nonneg r (T.varSign (r, c)) h_large
+  · have h_sign := hm.sign_mul_relWeight_nonneg r (T.varSign (r, c))
+      (by linarith [h_pair.right, neg_le_abs (Fintype.card R - Fintype.card C : ℤ)])
     refine ⟨c, h_pair, ?_⟩
-    obtain h_var | h_var := Int.units_eq_one_or (T.varSign (r, c)) <;> rw [h_var] at h_sign ⊢ <;>
-      grind [Units.val_neg, val_one]
+    rcases Int.units_eq_one_or (T.varSign (r, c)) with h | h <;> grind [Units.val_neg, val_one]
   · -- an unmatched row has weight both `≥ 0` and `≤ 0`
-    have h_nonneg : 0 ≤ T.relWeight l r := by
-      simpa using hm.sign_mul_relWeight_nonneg r 1 (by simp; linarith [abs_lt.1 h_free])
-    have h_nonpos : T.relWeight l r ≤ 0 := by
-      simpa using hm.sign_mul_relWeight_nonneg r (-1) (by simp; linarith [abs_lt.1 h_free])
-    exact absurd (h_nonpos.antisymm h_nonneg) h_ne
+    have hf := abs_lt.1 h_free
+    have h1 := hm.sign_mul_relWeight_nonneg r 1 (by grind [val_one])
+    have h2 := hm.sign_mul_relWeight_nonneg r (-1) (by grind [Units.val_neg, val_one])
+    grind [Units.val_neg, val_one]
 
 omit [DecidableEq R] [DecidableEq C] [Fintype ι] in
 /-- Let the row `r` be matched with the column `c` and have nonzero weight `T.relWeight l r`. A row
@@ -428,22 +423,15 @@ theorem IsMatch.exists_isJointHarmonic (hm : IsMatch T l l') :
     ∃ Φ : MvPolynomial ι ℂ, IsJointHarmonic T l l' Φ := by
   classical
   -- Take the product of the minors of the layers of `IsMatch.isLayering`. The same layers serve
-  -- for the columns, with the two signs exchanged.
+  -- for the columns, with the two signs exchanged, since matched weights are opposite.
   let w : ι → ℕ := fun x ↦ let (r, c) := T.varEquiv.symm x
     if T.IsMatchedPair l l' r c then (T.relWeight l r).natAbs else 0
-  have h_rows (r : R) (c : C) : w (T.varEquiv (r, c)) =
-      if T.IsMatchedPair l l' r c then (T.relWeight l r).natAbs else 0 := by simp [w]
-  have h_opposite (r : R) (c : C) (h : T.IsMatchedPair l l' r c) :
-      (T.relWeight l r).natAbs = (T.swap.relWeight l' c).natAbs := by
-    rw [hm.relWeight_eq_neg h, Int.natAbs_neg]
-  -- Both sides assign the same height to a variable, as matched weights are opposite.
-  have h_cols (c : C) (r : R) : w (T.swap.varEquiv (c, r)) =
-      if T.swap.IsMatchedPair l' l c r then (T.swap.relWeight l' c).natAbs else 0 := by
-    refine (h_rows r c).trans ?_
-    grind [pairSign, int_unit_val_eq_one_or_neg_one, val_mul, Units.val_neg]
-  have h_col_layers : IsLayering T.swap l' l'.lowestKType (T.layerCol 1 w) (T.layerRow 1 w) :=
-    hm.swap.isLayering (Equiv.prodComm ℤˣ ℤˣ) w h_cols
-  exact ⟨_, hm, (hm.isLayering 1 w h_rows).isJointHighest_prod_det h_col_layers⟩
+  refine ⟨_, hm, (hm.isLayering 1 w fun _ _ ↦ by simp [w]).isJointHighest_prod_det
+    (hm.swap.isLayering (Equiv.prodComm ℤˣ ℤˣ) w fun c r ↦ ?_)⟩
+  change w (T.varEquiv (r, c)) = _
+  simp only [w, Equiv.symm_apply_apply]
+  grind [hm.relWeight_eq_neg, Int.natAbs_neg, pairSign, int_unit_val_eq_one_or_neg_one,
+    val_mul, Units.val_neg]
 
 end New
 

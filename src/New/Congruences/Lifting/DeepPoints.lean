@@ -98,6 +98,16 @@ lemma pointsOver_nonempty_of_steps_level_zero {κ stepCost : ℕ} {i : k.Letter}
   exact pointsOver_nonempty_of_costs hx (({0} : Finset ℕ).sigma fun _ ↦ steps)
     (by simpa using h_steps) (by simpa [sum_sigma] using h_cost)
 
+private lemma steps_at_level_zero {a t : ℕ} {i : k.Letter} {steps : Finset ℤ}
+    (h : ∀ u ∈ S.jumpSet i, Ico (-u - a) (a + t - u) ⊆ steps)
+    (l : ℕ) (u : ℤ) (hu : u ∈ S.jumpSet (i.stepBack l)) (y : ℤ)
+    (hlo : raisedOrdersAtZero (-a) l u ≤ y) (hhi : y < plainDepth a t 1 0 l u) :
+    l = 0 ∧ y ∈ steps := by
+  obtain ⟨rfl, hy⟩ : l = 0 ∧ -u - a ≤ y ∧ y < a + t - u := by
+    dsimp only [raisedOrdersAtZero, plainDepth, standardDepth] at hlo hhi
+    split_ifs at hlo hhi <;> omega
+  exact ⟨rfl, h u hu (mem_Ico.2 hy)⟩
+
 /-- Deep points under a gap below `0`. Let `p ^ κ * E ^ a` kill the cokernel of the side `S` at the
 letter `i`. Let no jump lie in `[-a, 0)`, and let the set `steps` contain `[-u - a, a + η - u)` for
 every jump `u` at `i`, with sum of the costs `k.cost 0 y = v_p(y) + k.differentBound` at most
@@ -110,17 +120,10 @@ lemma pointsOver_nonempty_of_gap {a κ η stepCost : ℕ} {i : k.Letter}
     (h_cost : ∑ y ∈ steps, k.cost 0 y ≤ stepCost) (c : S.paramLattice.Carrier) :
     (S.pointsOver c i (κ + stepCost) (raisedOrdersAtZero 0) (plainDepth a η 1 0)).Nonempty := by
   -- Deepen a point with a pole of order `a` along `steps`; by the gap the pole disappears.
-  have h_cover : ∀ l : ℕ, ∀ u ∈ S.jumpSet (i.stepBack l), ∀ y : ℤ, raisedOrdersAtZero (-a) l u ≤ y →
-      y < plainDepth a η 1 0 l u → l = 0 ∧ y ∈ steps := by
-    intro l u hu y hy_ge hy_lt
-    obtain ⟨rfl, hy⟩ : l = 0 ∧ -u - a ≤ y ∧ y < a + η - u := by
-      dsimp only [raisedOrdersAtZero, plainDepth, standardDepth] at hy_ge hy_lt
-      split_ifs at hy_ge hy_lt <;> omega
-    exact ⟨rfl, h_steps u hu (mem_Ico.2 hy)⟩
   obtain ⟨x, hx⟩ : Set.Nonempty (S.pointsOver c i (κ + stepCost)
       (improvedOrders (raisedOrdersAtZero (-a)) (plainDepth a η 1 0)) (plainDepth a η 1 0)) :=
     pointsOver_nonempty_of_steps_level_zero (pointsOver_nonempty_of_killsCokernel h_kill c)
-      h_cover h_cost
+      (steps_at_level_zero h_steps) h_cost
   have h_nonneg : ∀ u ∈ S.jumpSet i, -(a : ℤ) ≤ u → -0 ≤ u := fun u hu h ↦ by
     have h' := h_gap u hu
     rw [mem_Ico] at h'
@@ -227,22 +230,15 @@ lemma pointsOver_nonempty_of_fitsWindows {a κ η W t n β : ℕ} {σ : ℤˣ} {
     (h_window : FitsWindows η σ β W (S.jumpSet i)) (hat : a ≤ t) (hn : a + t + max η W ≤ n)
     (c : S.paramLattice.Carrier) : (S.pointsOver c i κ (raisedOrdersAtZero (-t))
       (plainDepth a t 1 0)).Nonempty := by
-  have h_steps : ∀ l : ℕ, ∀ u ∈ S.jumpSet (i.stepBack l), ∀ y : ℤ, raisedOrdersAtZero (-a) l u ≤ y →
-      y < plainDepth a t 1 0 l u → l = 0 ∧ y ∈ twoWindows n β ∪ twoWindows n (-β) := by
-    intro l u hu y hy_ge hy_lt
-    obtain ⟨rfl, hy⟩ : l = 0 ∧ -u - a ≤ y ∧ y < a + t - u := by
-      dsimp only [raisedOrdersAtZero, plainDepth, standardDepth] at hy_ge hy_lt
-      split_ifs at hy_ge hy_lt <;> omega
-    have hu_window : -η ≤ u ∧ u ≤ η ∨ β ≤ u ∧ u ≤ β + W ∨ β ≤ -u ∧ -u ≤ β + W :=
-      low_or_far_of_fitsWindows h_window hu
-    exact ⟨rfl, mem_twoWindows_union_iff.2 (by omega)⟩
-  have h_exponent (l : ℕ) (u : ℤ) :
-      raisedOrdersAtZero (-t) l u ≤ improvedOrders (raisedOrdersAtZero (-a)) (plainDepth a t 1 0) l
-        u := by
+  refine pointsOver_nonempty_of_near_steps hk hβ_gap (pointsOver_nonempty_of_killsCokernel h_kill c)
+    (steps_at_level_zero ?_) ?_
+  · intro u hu y hy
+    rw [mem_Ico] at hy
+    have hu_window := low_or_far_of_fitsWindows h_window hu
+    exact mem_twoWindows_union_iff.2 (by omega)
+  · intro l u _
     dsimp only [improvedOrders, raisedOrdersAtZero, plainDepth, standardDepth]
     split_ifs <;> omega
-  exact pointsOver_nonempty_of_near_steps hk hβ_gap
-    (pointsOver_nonempty_of_killsCokernel h_kill c) h_steps fun l u _ ↦ h_exponent l u
 
 /-- Let the chart be unramified, let all jumps of the side `S` lie in `[-η, 0]`, and let `p` divide
 no nonzero integer within `n ≥ a + t + η` of `0` or `± β`. Then at every letter `i` the side `S` has

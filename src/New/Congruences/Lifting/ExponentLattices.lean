@@ -765,8 +765,7 @@ lemma exists_coordRetract :
     simpa [ℓ, Subtype.ext_iff] using
       sum_map_smul_eq_zero_of_mem_kisinLoc k.coord₀ (fun j ↦ (v j).prop) h_rel
   have hπ : Function.Surjective π := surjective_tensorToSpan _ _
-  refine ⟨(LinearMap.ker π).liftQ ℓ h_ker ∘ₗ (π.quotKerEquivOfSurjective hπ).symm.toLinearMap,
-    fun a x hx hax ↦ ?_⟩
+  refine ⟨π.liftOfSurjective hπ ⟨ℓ, h_ker⟩, fun a x hx hax ↦ ?_⟩
   have h_tmul : π (a ⊗ₜ ⟨x, hx⟩) = ⟨a • x, hax⟩ := by simp [π, Subtype.ext_iff]
   simp [← h_tmul, ℓ]
 

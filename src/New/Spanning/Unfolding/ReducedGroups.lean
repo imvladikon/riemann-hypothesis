@@ -328,13 +328,6 @@ theorem card_reducedImage_besselU : Nat.card (S.reducedImage besselU) = S.unipot
         simp [S.card_chosenPlaces, mul_pow, ← pow_mul, mul_comm d]
     _ = S.unipotentOrder := rfl
 
-/-- If the image `S.inclHFin k` of an element `k` of the unitary group of `X₀` preserves the
-lattice, then its reduction lies in `H̄ = S.reducedImage besselH`. -/
-lemma reduction_inclHFin_mem_reducedImage_besselH {k : Gf E 𝔰.κ}
-    (hk : S.inclHFin k ∈ S.latticeStabilizer) :
-    S.reduction ⟨S.inclHFin k, hk⟩ ∈ S.reducedImage besselH :=
-  ⟨⟨S.inclHFin k, hk⟩, inclHFin_mem_besselH k, rfl⟩
-
 /-- An element of the stabiliser of the lattice lies in the principal congruence subgroup
 `S.principalLevel` if and only if it reduces to `1` at all chosen places. -/
 lemma coe_mem_principalLevel_iff_reduction_eq_one {k : S.latticeStabilizer} :
@@ -353,7 +346,7 @@ theorem relIndex_comap_principalLevel :
     S.coe_mem_principalLevel_iff_reduction_eq_one (k := ⟨S.inclHFin k, k.property⟩))).trans ?_
   suffices reduce.range = S.reducedImage besselH by rw [Subgroup.index_ker, this]
   ext s
-  refine ⟨fun ⟨k, hk⟩ ↦ hk ▸ S.reduction_inclHFin_mem_reducedImage_besselH k.property, ?_⟩
+  refine ⟨fun ⟨k, hk⟩ ↦ hk ▸ ⟨⟨S.inclHFin k.val, k.property⟩, inclHFin_mem_besselH k.val, rfl⟩, ?_⟩
   rintro ⟨⟨x, hx⟩, hx_mem, rfl⟩
   obtain ⟨k, rfl⟩ : x ∈ S.inclHFin.range := range_inclHFin.ge hx_mem
   exact ⟨⟨k, hx⟩, rfl⟩

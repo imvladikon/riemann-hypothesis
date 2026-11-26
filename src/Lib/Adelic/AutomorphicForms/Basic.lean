@@ -207,22 +207,17 @@ lemma isForm_zero : V.IsForm e 0 where
 fixed by convolution with e if e is integrable) is a form of type e. -/
 lemma IsForm.smul_add_smul (hF : V.IsForm e F) (hF' : V.IsForm e F') (a b : ℂ) :
     V.IsForm e (a • F + b • F') := by
-  obtain ⟨C, hC⟩ := hF.bounded
-  obtain ⟨C', hC'⟩ := hF'.bounded
+  rcases hF.bounded, hF'.bounded with ⟨⟨C, hC⟩, ⟨C', hC'⟩⟩
   refine ⟨hF.toIsAutomorphic.map₂ hF'.toIsAutomorphic fun z w ↦ a * z + b * w,
-    ⟨‖a‖ * C + ‖b‖ * C', fun g ↦ ?_⟩, fun he ↦ funext fun g ↦ ?_⟩
-  · exact norm_add_le_of_le (norm_mul_le_of_le le_rfl (hC g)) (norm_mul_le_of_le le_rfl (hC' g))
-  · -- `e` is integrable and forms are bounded, so the integral `realConv e` is linear on them.
-    have h_int {H : G E s → ℂ} (hH : V.IsForm e H) (c : ℂ) :
-        Integrable fun x : GInf E s ↦ c • (e x * H (g * (x, 1))) :=
-      (hH.isBoundedMeasurable.integrable_mul_comp he fun x ↦ g * (x, 1)).fun_smul c
-    calc
-      realConv e (a • F + b • F') g
-          = ∫ x : GInf E s, a • (e x * F (g * (x, 1))) + b • (e x * F' (g * (x, 1))) := by
-        simp [realConv, mul_add, mul_left_comm]
-      _ = a • realConv e F g + b • realConv e F' g := by
-        simp only [realConv, integral_add (h_int hF a) (h_int hF' b), integral_smul]
-      _ = (a • F + b • F') g := by simp [hF.realConv_eq he, hF'.realConv_eq he]
+    ⟨‖a‖ * C + ‖b‖ * C', fun g ↦
+      norm_add_le_of_le (norm_mul_le_of_le le_rfl (hC g)) (norm_mul_le_of_le le_rfl (hC' g))⟩,
+    fun he ↦ funext fun g ↦ ?_⟩
+  -- `e` is integrable and forms are bounded, so the integral `realConv e` is linear on them.
+  have h_int {H : G E s → ℂ} (hH : V.IsForm e H) (c : ℂ) :=
+    (hH.isBoundedMeasurable.integrable_mul_comp he fun x ↦ g * (x, 1)).fun_smul c
+  simp only [realConv, Pi.add_apply, Pi.smul_apply, mul_add, mul_smul_comm,
+    integral_add (h_int hF a) (h_int hF' b), integral_smul]
+  rw [← realConv, ← realConv, hF.realConv_eq he, hF'.realConv_eq he]
 
 /-- The forms of type e for V, as a submodule of the complex functions on G. -/
 def formSubmodule : Submodule ℂ (G E s → ℂ) :=

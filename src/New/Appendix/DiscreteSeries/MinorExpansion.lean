@@ -211,8 +211,11 @@ lemma exists_det_compress_eq_exp_logOneAdd (hP : IsStarProjection P) (hQ : IsSta
         trace ((D - P * D - P * D) * D * (X + Z * X)) -
         trace ((s / 2) • (A - Y) * (A + Y)) := by
     linear_combination (norm := (
-      simp +zetaDelta [hP, hQ, trace_mul_comm P, trace_mul_comm V, trace_mul_comm Y (_ * _),
-        trace_mul_comm X (P * X), mul_sub, sub_mul]
+      simp +zetaDelta only [hP, hQ, trace_mul_comm P, trace_mul_comm V, trace_mul_comm Y (_ * _),
+        trace_mul_comm X (P * X), mul_sub, sub_mul, mul_add, add_mul, mul_assoc, one_mul, mul_one,
+        lie_def, IsStarProjection.isIdempotentElem, IsIdempotentElem.eq,
+        IsIdempotentElem.mul_self_mul, trace_sub, trace_add, trace_smul, smul_add,
+        Algebra.smul_mul_assoc, Algebra.mul_smul_comm, real_smul, ofReal_div, ofReal_ofNat]
       ring_nf))
       h_comm + congr(($hV_mul' * P * W * X * P +
         V * P * (A * ($hW_mul' * P * (1 - W) + W * P * $hW_mul) - $hW_mul * X * P) +
@@ -223,7 +226,9 @@ lemma exists_det_compress_eq_exp_logOneAdd (hP : IsStarProjection P) (hQ : IsSta
       [norm_smul_le_of_le_one s (hρ := hs_mem), norm_smul_le_of_le_one (s / 2) (hρ := hs_half),
       norm_proj_mul_le hP, norm_proj_mul_le hQ, @norm_trace_mul_le, norm_sub_le_of_le,
       norm_add_le_of_le, norm_mul_le_of_le]
-  · nlinarith [mul_nonneg hδ_nonneg (sq_nonneg c), sq_nonneg (δ * c)]
+  · have hδc := mul_nonneg hδ_nonneg (sq_nonneg c)
+    linarith [mul_le_mul_of_nonneg_right hδ hδc,
+      mul_le_mul_of_nonneg_right hδ (mul_nonneg hδ_nonneg hδc)]
 
 end New.DiscreteSeries
 
@@ -396,7 +401,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
       norm_add_le_of_le (norm_mul_le_of_le hB_le le_rfl) (norm_mul_le_of_le hu le_rfl)
     have := norm_sub_le_of_le (norm_add_le_of_le hG (norm_mul_le_of_le hm' hC_le))
       (norm_mul_le_of_le (norm_sub_le_of_le (norm_add_le_of_le hG hB_le) (le_refl ‖A‖)) (hr l))
-    nlinarith [mul_nonneg hX_nonneg hA_nonneg,
+    linarith [mul_nonneg hX_nonneg hA_nonneg,
       mul_le_mul_of_nonneg_right hX_half (mul_nonneg hX_nonneg hA_nonneg)]
   -- The complementary minor of `g`.
   have ⟨x, hx_eq, hx⟩ := exists_det_compress_eq_exp_logOneAdd (Y := -A) hP_compl hP_compl hX_half
@@ -404,7 +409,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
   -- The complementary minor of `y l`, which is that of `g`.
   have h_near_compl : ‖⁅1 - P, y l - 1⁆ - (B + C - A)‖ ≤ 4 * ‖X‖ * (4 * ‖A‖) := by
     rw [show ⁅1 - P, y l - 1⁆ - (B + C - A) = H by simp +zetaDelta; noncomm_ring]
-    nlinarith [mul_nonneg hX_nonneg hA_nonneg]
+    linarith [mul_nonneg hX_nonneg hA_nonneg]
   have ⟨z, hz_eq, hz⟩ := exists_det_compress_eq_exp_logOneAdd (Y := B + C - A) hP_compl hP_compl
     hX_four (hy_near l) (by simp) h_near_compl
     (by linarith [norm_sub_le_of_le (norm_add_le_of_le hB_le hC_le) (le_refl ‖A‖)]) (by simp)
@@ -420,7 +425,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
       simp +zetaDelta; noncomm_ring]
     have := norm_sub_le_of_le (norm_sub_le_of_le (norm_mul_le_of_le (hy_near l) hPQ)
       (norm_mul_le_of_le hPQ (hy_near l))) hH
-    nlinarith [mul_nonneg hX_nonneg hA_nonneg, mul_nonneg hX_nonneg hPk_nonneg]
+    linarith [mul_nonneg hX_nonneg hA_nonneg, mul_nonneg hX_nonneg hPk_nonneg]
   have ⟨t, ht_eq, ht⟩ := exists_det_compress_eq_exp_logOneAdd (P := Q) (Y := A - B - C)
     (hP.map (Unitary.conjStarAlgAut ℂ _ ⟨k, hk, hk'⟩)) hP hX_four (hy_near l) h_comm h_near
     (by linarith [norm_sub_le_of_le (norm_sub_le_of_le (le_refl ‖A‖) hB_le) hC_le])
@@ -453,7 +458,7 @@ lemma exists_principalMinor_eq_exp (hl : l.HasGap h) (g : USign ε)
       mul_sub, sub_mul, ← trace_star_mul_self_eq_norm_sq]
     ring_nf
   · have := norm_add_le_of_le (norm_sub_le_of_le (norm_add_le_of_le ht hz) hx) h_corr
-    nlinarith [mul_nonneg hX_nonneg (sq_nonneg ‖A‖), mul_nonneg hX_nonneg (sq_nonneg ‖⁅P, k⁆‖),
+    linarith [mul_nonneg hX_nonneg (sq_nonneg ‖A‖), mul_nonneg hX_nonneg (sq_nonneg ‖⁅P, k⁆‖),
       mul_nonneg hX_nonneg (sq_nonneg (‖A‖ - ‖⁅P, k⁆‖)),
       mul_le_mul_of_nonneg_right hX_half (mul_nonneg hX_nonneg (sq_nonneg ‖A‖))]
 

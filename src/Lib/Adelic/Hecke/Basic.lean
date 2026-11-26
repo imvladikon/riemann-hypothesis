@@ -143,7 +143,7 @@ lemma eq_and_eq_one_of_doubleCoset_rep {e : Δ →* G}
 
 /-- The class sum of f: the sum over the double cosets c in Γ\G/K of f(g_c)/#(Γ ∩ g_c K g_c⁻¹), g_c
 a chosen representative. For f left invariant under Γ and right invariant under K the choice of
-representatives does not matter (`New.classSum_eq_finsum_of_rep`). -/
+representatives does not matter. -/
 def classSum [Module ℚ W] (Γ K : Subgroup G) (f : G → W) : W :=
   ∑ᶠ c : DoubleCoset.Quotient (Γ : Set G) K, (Nat.card (classAut Γ K c.out) : ℚ)⁻¹ • f c.out
 

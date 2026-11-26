@@ -463,7 +463,6 @@ lemma projOn_vacElem : V.projOn S V.vacElem = V.vacElem :=
   V.map_projOn_eq_const 1 fun _ hy ↦
     finHeisenbergOp_vacElem (smul_mem_stdLattice (idem_mem_Ô S.conjClosure) hy)
 
-@[simp]
 lemma projReal_vacElem : V.projReal V.vacElem = V.vacElem := by
   simpa using (V.dataInner_vacElem_smul_vacElem V.vacElem).symm
 
@@ -504,7 +503,7 @@ lemma exists_rho_vacElem_eq_integrated (y : n → 𝔸 E) :
       V.ϱ y V.vacElem = V.integrated w (V.finHeisenbergOp (finCoord y) V.vacElem) := by
   refine (V.exists_rho_integrated_eq y Fock.vacVector).imp fun w hw ↦ ?_
   -- The vector `integrated vacVector vacElem` is the vacuum.
-  simpa using hw V.vacElem
+  simpa [projReal_vacElem] using hw V.vacElem
 
 open scoped Classical in
 /-- P^S is the operator on 𝒮(V) given by the mean over y in Ô^n of the finite Heisenberg operators

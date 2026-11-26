@@ -154,21 +154,15 @@ theorem IsMatch.relWeight_eq_neg (hm : IsMatch T l l') {r : R} {c : C}
   -- of `r` is the negative of that of `c` and exceeds `|card R - card C|` in absolute value.
   let F (j : R) : ℤ := T.swap.varSign (c, j) - ε r * ε j * (l j - l r).sign
   let G (d : C) : ℤ := ε' c * ε' d * (l' d - l' c).sign - T.varSign (r, d)
-  have matched (j : R) (d : C) (hjd : T.IsMatchedPair l l' j d) : G d = F j := by
-    grind [pairSign, val_mul, Units.val_neg]
-  have free_row (j : R) (hj : |T.centredParam l j| < card R - card C) : F j = 0 := by
-    grind [pairSign, val_mul, Units.val_neg]
-  have free_col (d : C) (hd : |T.swap.centredParam l' d| < card C - card R) : G d = 0 := by
-    grind [pairSign, val_mul, Units.val_neg]
-  have sum_eq : ∑ d : C, G d = ∑ j : R, F j :=
-    le_antisymm
-      (hm.sum_cols_le_sum_rows F G (fun j d hjd ↦ (matched j d hjd).le)
-        (fun j hj ↦ (free_row j hj).ge) fun d hd ↦ (free_col d hd).le)
-      (by simpa using hm.sum_cols_le_sum_rows (-F) (-G)
-            (fun j d hjd ↦ neg_le_neg (matched j d hjd).ge)
-            (fun j hj ↦ neg_nonneg.2 (free_row j hj).le) fun d hd ↦ neg_nonpos.2 (free_col d hd).ge)
+  have hle (s : ℤ) : ∑ d : C, s * G d ≤ ∑ j : R, s * F j :=
+    hm.sum_cols_le_sum_rows (fun j ↦ s * F j) (fun d ↦ s * G d)
+      (fun j d hjd ↦ by grind [pairSign, val_mul, Units.val_neg])
+      (fun j hj ↦ by grind [pairSign, val_mul, Units.val_neg])
+      (fun d hd ↦ by grind [pairSign, val_mul, Units.val_neg])
+  have h1 := hle 1
+  have h2 := hle (-1)
   have param : l r - 2 * T.rowShift + card C = -(l' c - 2 * T.columnShift + card R) := hrc.1
-  simp only [F, G, sum_sub_distrib] at sum_eq
+  simp only [F, G, one_mul, neg_mul, sum_neg_distrib, sum_sub_distrib] at h1 h2
   linarith [hm.hasGap_row.two_mul_relWeight (T := T) r,
     hm.hasGap_column.two_mul_relWeight (T := T.swap) c]
 

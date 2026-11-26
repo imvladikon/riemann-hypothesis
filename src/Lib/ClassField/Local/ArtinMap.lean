@@ -482,8 +482,8 @@ lemma localArtin_localNorm_eq_of_isCompletionEmb {p : ℕ} [Fact p.Prime]
   let U : OpenSubgroup D' :=
     ⟨φ.range, (isOpenEmbedding_galois_restrict (L := W) φ hφ).isOpen_range⟩
   have U_open : Fact (IsOpen U.toSubgroup.carrier) := ⟨U.isOpen'⟩
-  obtain ⟨-, range_eq, -⟩ := isClosedEmbedding_galois_restrict (L := W) φ hφ
-  have gal_U : IsProGalois φ.range W (PadicAlgCl p) := of_fixingSubgroup_eq (K := V) range_eq.symm
+  have gal_U : IsProGalois φ.range W (PadicAlgCl p) :=
+    of_fixingSubgroup_eq (K := V) (range_eq_fixingSubgroup_of_smul_eq_smul (L := W) φ hφ).symm
   refine abelianization_ext fun χ ↦ Multiplicative.ext (inj_u ?_)
   let Φ : D →ₜ* D' := ⟨φ, φ_cont⟩
   obtain ⟨r, hr⟩ := emb_u.exists_resH2_classOfInvariant_eq U
@@ -573,8 +573,8 @@ lemma isNormCompatible (ψ : Γ →* Γ') (j : Ω →+* Ω)
   -- The image of `φ` is open (hence closed), the Galois group of `ℚ̄_p` over `K_w`.
   have range_open : Fact (IsOpen φ.range.carrier) :=
     ⟨(isOpenEmbedding_galois_restrict (L := W) φ hφ).isOpen_range⟩
-  obtain ⟨-, range_eq, -⟩ := isClosedEmbedding_galois_restrict (L := W) φ hφ
-  have gal_U : IsProGalois φ.range W (PadicAlgCl p) := of_fixingSubgroup_eq (K := V) range_eq.symm
+  have gal_U : IsProGalois φ.range W (PadicAlgCl p) :=
+    of_fixingSubgroup_eq (K := V) (range_eq_fixingSubgroup_of_smul_eq_smul (L := W) φ hφ).symm
   refine ⟨fun {y g} hy ↦ ?_, fun {χ x} hχ hx ↦ ?_⟩
   · -- the symbol of the norm, computed in `ℚ̄_p`
     simp_rw [ψ_eq]

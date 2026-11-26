@@ -214,13 +214,12 @@ lemma mem_levelSpace_proIwahori (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (
       (congrArg Subtype.val (hy _ (entry_one _) det_one))
   simpa using fixed
 
-/-- Let `V` be the standard hermitian space, let `E` carry Weil representation data, let the
-auxiliary places be off the base level, and let `P` be a local choice at `w = Q.place j`: it has a
+/-- Let `V` be the standard hermitian space, assume the auxiliary places are off the base
+level, and let `P` be a local choice at `w = Q.place j`: it has a
 logarithm `P.ind` modulo `ℓ ^ ν` on `𝔽_wˣ`, and `P.indLine g = P.ind g₁₁`. A form `y` of weight `κ`
 on which the stabiliser of the line in `GL_n(𝔽_w)` acts by `ψ ∘ P.indLine` is fixed by `proIwahori`,
 and the parahoric subgroup of the line in `GL_n(E_w)` acts on it by `k ↦ ψ (P.ind k₁₁)`. -/
 lemma mem_parahoricEigenspace_line (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) [V.IsStd]
-    [WeilData E]
     {j : J} (P : Q.LocalChoice j) (ψ : AddChar (ZMod (ℓ ^ ν)) ℂ) {y : D.formsOfLevel Q.place}
     (hy : ∀ k : residueLineStabilizer (ResField (Q.place j)) (card n),
       (D.lineRep Q j k).val y = ψ (P.indLine k).toAdd • y) :
@@ -235,13 +234,12 @@ lemma mem_parahoricEigenspace_line (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![
   rw [localFormRep_apply_eq_lineRep hQ hk, hy, MonoidHom.comp_apply, entry]
   simp
 
-/-- Let `V` be the standard hermitian space, let `E` carry Weil representation data, let the
-auxiliary places be off the base level, and let `P` be a local choice at `w = Q.place j`: it has a
+/-- Let `V` be the standard hermitian space, assume the auxiliary places are off the base
+level, and let `P` be a local choice at `w = Q.place j`: it has a
 logarithm `P.ind` modulo `ℓ ^ ν` on `𝔽_wˣ`, and `P.indDet = P.ind ∘ det`. A form `y` of weight `κ`
 on which `GL_n(𝔽_w)` acts by `ψ ∘ P.indDet` is fixed by `proIwahori`, and the maximal compact
 subgroup of `GL_n(E_w)` (level function `0`) acts on it by `k ↦ ψ (P.ind (det k))`. -/
 lemma mem_parahoricEigenspace_det (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j)) [V.IsStd]
-    [WeilData E]
     {j : J} (P : Q.LocalChoice j) (ψ : AddChar (ZMod (ℓ ^ ν)) ℂ) {y : D.formsOfLevel Q.place}
     (hy : ∀ k : GL (Fin (card n)) (ResField (Q.place j)),
       (D.placeRep Q j k).val y = ψ (P.indDet k).toAdd • y) :

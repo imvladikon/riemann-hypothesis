@@ -153,8 +153,9 @@ lemma projOn_translateDatum_mem_standardData (x : D.Translations) (j : ℕ) (δ 
     {𝔪 : Modulus D.E} (h_places : 𝔪.places = Set.range ((↑) : D.nonInducedPlaces → FinPlace D.E)) :
     (D.homX j).projOn 𝔪.places (D.translateDatum x j).val ∈
       Parameters.standardData (p := D.N) (D.homX j) δ := by
-  -- A translate datum is a Heisenberg translate of the vacuum by definition, hence `erw`.
-  erw [projOn_finHeisenbergOp _ (by simp [intVacuum]), boxIndicator_apply]
+  change (D.homX j).projOn 𝔪.places
+    ((D.homX j).finHeisenbergOp (x j) (P.intVacuum (D.homX j))) ∈ _
+  rw [projOn_finHeisenbergOp _ (by simp [intVacuum]), boxIndicator_apply]
   split_ifs with h_box
   · rw [one_smul]
     refine Submodule.subset_span ⟨_, fun l w hw ↦ ?_, rfl⟩
@@ -431,7 +432,7 @@ lemma liftInPairs_gluedDoubleLiftDatum (v : ∀ j : ℕ, (D.homX j).finitePart) 
   simp only [map_sum, LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply, smul_sum,
     TensorChain.liftInPairs_tmul, lastColDatum, charDatum, h_first]
   refine Finset.sum_congr rfl fun y _ ↦ ?_
-  erw [h_second]
+  rw [h_second]
   simp only [ρ.self_inv_apply, smul_smul, Units.smul_def, map_smul, gluedFactor,
     Units.val_mul, MonoidHom.coe_comp, Function.comp_apply, map_inv, k₂]
 

@@ -16,8 +16,6 @@ losses are powers of `Γ.loss = 2 / modulus α`.
 
 ## Main definitions and results
 
-* `New.Floors.IntegralPlace.IsLargeLatticeData.exists_ideal_depth_eq`: at a near point the products
-  with the stable vectors form an ideal of `R`, and the depth is its index.
 * `New.Floors.IntegralPlace.IsLargeLatticeData.prod_mem_of_formMajorant_ne_zero`: the forms vanish
   unless the leading products of both heads are integral.
 * `New.Floors.IntegralPlace.IsLargeLatticeData.exists_gauge_of_formMajorant_ne_zero`: a scale
@@ -352,16 +350,16 @@ theorem exists_gauge_of_formMajorant_ne_zero {F : PlaceData ι T (m + 1)} [h : I
   let Γ : Gauge F := h.gauge α hα_mem hα_star
   have h_size (z : A) : z ∈ Γ.ofSize 1 ↔ α.val * z ∈ integers := by simp [Γ]
   -- A unit that divides `β` or `γ` divides `α`, and so does `g`.
-  have h_dvd_left (u : Aˣ) (hu : (β / u).val ∈ integers) : α.val * u⁻¹.val ∈ integers := by
-    have h_quot : α * u⁻¹ = F.levelUnit * star (β * γ) * γ * (β / u) := by
-      simp only [α, div_eq_mul_inv, mul_assoc, mul_left_comm]
+  have h_dvd (v w u : Aˣ) (hvw : β * γ = v * w)
+      (hw : w.val ∈ integers) (hu : (v / u).val ∈ integers) :
+      α.val * u⁻¹.val ∈ integers := by
+    have h_quot : α * u⁻¹ = F.levelUnit * star (β * γ) * w * (v / u) := by
+      rw [show α = F.levelUnit * star (β * γ) * (β * γ) by simp [α, mul_assoc], hvw]
+      simp [div_eq_mul_inv, mul_assoc, mul_left_comm]
     rw [← Units.val_mul, h_quot]
-    exact mul_mem (mul_mem (mul_mem hg h_star) hγ) hu
-  have h_dvd_right (u : Aˣ) (hu : (γ / u).val ∈ integers) : α.val * u⁻¹.val ∈ integers := by
-    have h_quot : α * u⁻¹ = F.levelUnit * star (β * γ) * β * (γ / u) := by
-      simp only [α, div_eq_mul_inv, mul_assoc]
-    rw [← Units.val_mul, h_quot]
-    exact mul_mem (mul_mem (mul_mem hg h_star) hβ) hu
+    exact mul_mem (mul_mem (mul_mem hg h_star) hw) hu
+  have h_dvd_left (u : Aˣ) := h_dvd β γ u rfl hγ
+  have h_dvd_right (u : Aˣ) := h_dvd γ β u (mul_comm β γ) hβ
   have h_dvd_g : α.val * F.levelUnit⁻¹.val ∈ integers := by
     have h_quot : α * F.levelUnit⁻¹ = star (β * γ) * β * γ := by
       rw [mul_comm]

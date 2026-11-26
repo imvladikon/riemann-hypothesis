@@ -353,7 +353,8 @@ lemma exists_row_reduction (g : GL n F) (s : Finset n) :
       grind
     have he_mul (r l : n) :
         (e * m) r l = if r < a then m r l - m r j / m a j * m a l else m r l := by
-      simp [e, col, updateCol_apply, Matrix.mul_apply, Finset.sum_ite, Finset.filter_eq', Matrix.one_apply]
+      simp [e, col, updateCol_apply, Matrix.mul_apply, Finset.sum_ite, Finset.filter_eq',
+        Matrix.one_apply]
       grind
     have he_mem (hg : g ∈ proIwahori) : e ∈ proIwahori := by
       obtain ⟨hm_int, -, -⟩ := mem_proIwahori.mp (hm_K hg)
@@ -800,7 +801,7 @@ lemma exists_inv_mul_mul_map_eq_diagGL_mul [CompactSpace 𝒪[F]]
     have h_cont :
         Continuous fun k : proIwahori ↦ (MulAut.conj (diagGL t) ^ j) (twistedConj t g σ k) := by
       -- `simp` writes the conjugation by `diagGL t ^ j` as a product, which `fun_prop` handles
-      simp [← map_zpow]
+      simp only [← map_zpow, MulAut.conj_apply]
       fun_prop
     have h_closed : IsClosed (twistedConj t g σ ⁻¹' conjProIwahori t j) :=
       (proIwahori.isClosed_of_isOpen isOpen_proIwahori).preimage h_cont

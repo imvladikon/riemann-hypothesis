@@ -38,7 +38,7 @@ principal ideal `(a)` by divisibility of the difference by `a`.
 /-! ## Open subgroups, a tube lemma, and congruence modulo a principal ideal -/
 
 /-- The subgroup U of G is an open subset of G. -/
-@[to_additive]
+@[to_additive /-- The additive subgroup U of G is an open subset of G. -/]
 protected abbrev Subgroup.IsOpen {G : Type*} [Group G] [TopologicalSpace G] (U : Subgroup G) :
     Prop := IsOpen (X := G) U
 

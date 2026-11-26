@@ -276,12 +276,15 @@ lemma mem_bicommutant_of_mul {u v : BPlus} (hv : v ∈ c.bicommutant) (hv_ne : v
   apply mul_left_cancel₀ hv_ne
   rw [← h_v, ← mul_assoc, h_vu, mul_assoc]
 
+/-- A unit of `BPlus` in the bicommutant has its inverse there as well. -/
+private lemma exists_bicommutant_mul_eq_one {v : BPlus} (hv : v ∈ c.bicommutant)
+    (h_unit : IsUnit v) : ∃ u ∈ c.bicommutant, u * v = 1 :=
+  ⟨↑h_unit.unit⁻¹, c.mem_bicommutant_of_mul hv h_unit.ne_zero
+    (h_unit.mul_val_inv.symm ▸ one_mem _), h_unit.val_inv_mul⟩
+
 /-- The inverse of `p` in B^+ lies in S_B = `c.bicommutant`. -/
-lemma exists_bicommutant_mul_p_eq_one : ∃ u ∈ c.bicommutant, u * p = 1 := by
-  -- `p` and the product `p * p⁻¹ = 1` lie in `c.bicommutant`.
-  refine ⟨↑isUnit_p.unit⁻¹, c.mem_bicommutant_of_mul (natCast_mem c.bicommutant p)
-    isUnit_p.ne_zero ?_, isUnit_p.val_inv_mul⟩
-  simp [one_mem]
+lemma exists_bicommutant_mul_p_eq_one : ∃ u ∈ c.bicommutant, u * p = 1 :=
+  c.exists_bicommutant_mul_eq_one (natCast_mem c.bicommutant p) isUnit_p
 
 /-! ### Coordinates, Frobenius and decompositions on S_B -/
 
@@ -371,10 +374,7 @@ lemma exists_bicommutant_mul_phi_E_eq_one : ∃ u ∈ c.bicommutant, u * ainfToB
     -- `ainfToBPlus` is the composite of the maps `Ainf → Amax → BPlus`.
     change IsUnit (algebraMap Amax BPlus (algebraMap Ainf Amax (frobEnd c.E.val)))
     exact (h_assoc.map (algebraMap Amax BPlus)).isUnit (by rw [map_natCast]; exact isUnit_p)
-  -- The inverse lies in `c.bicommutant`, as `φ E` and the product `1` do.
-  refine ⟨↑h_unit.unit⁻¹, c.mem_bicommutant_of_mul (ainfToBPlus_mem_bicommutant (c.φ c.E))
-    h_unit.ne_zero ?_, h_unit.val_inv_mul⟩
-  simp [one_mem]
+  exact c.exists_bicommutant_mul_eq_one (ainfToBPlus_mem_bicommutant (c.φ c.E)) h_unit
 
 /-- Let `ν` in `c.S` have `ξ ∈ (p, ν)` in A_inf, and let `b` be in A_max. For every `M`, the
 extended coordinate at `c.oneIndex` (the one that is the identity on `c.S`) satisfies

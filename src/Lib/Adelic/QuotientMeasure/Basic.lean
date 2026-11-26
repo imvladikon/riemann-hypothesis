@@ -68,7 +68,8 @@ variable {H X G : Type*} [MeasurableSpace H] [MeasurableSpace X] [SMul H X] (ν 
 
 /-- The subgroup N of G is cocompact: there is a compact C ⊂ G such that every g has a translate
 γg in C with γ ∈ N. -/
-@[to_additive]
+@[to_additive /-- The additive subgroup N of G is cocompact: there is a compact C ⊂ G such that
+every g has a translate γ + g in C with γ ∈ N. -/]
 abbrev Subgroup.IsCocompact [TopologicalSpace G] : Prop :=
   ∃ C : Set G, IsCompact C ∧ ∀ g : G, ∃ γ ∈ N, γ * g ∈ C
 
@@ -80,23 +81,29 @@ abbrev Subgroup.FixesLeft {W : Sort*} (F : G → W) : Prop := ∀ γ ∈ N, ∀ 
 namespace New
 
 /-- The property that β: X → [0, ∞] is measurable and ∫_H β(hx) dν(h) = 1 for every x in X. -/
-@[to_additive IsAddCutoff]
+@[to_additive IsAddCutoff /-- The property that β: X → [0, ∞] is measurable and
+∫_H β(h +ᵥ x) dν(h) = 1 for every x in X, for an additive action of H on X. -/]
 def IsCutoff (β : X → ENNReal) : Prop := Measurable β ∧ ∀ x : X, ∫⁻ h : H, β (h • x) ∂ν = 1
 
 /-- A chosen weight for the action of `H`, with measure `ν`, on `X`. It is a cutoff when the action
 has one (`New.isCutoff_chosenCutoff`); otherwise it is an unspecified function. -/
-@[to_additive chosenAddCutoff]
+@[to_additive chosenAddCutoff /-- A chosen weight for the additive action of `H`, with measure
+`ν`, on `X`. It is a cutoff when the action has one (`New.isAddCutoff_chosenAddCutoff`); otherwise
+it is an unspecified function. -/]
 noncomputable abbrev chosenCutoff : X → ENNReal := Classical.epsilon (IsCutoff ν)
 
 /-- The measure βμ on X for the weight β = `New.chosenCutoff ν`. When a cutoff exists
 (`New.HasCutoff`), ν is inversion invariant and μ is H-invariant, both s-finite, integrating an
 H-invariant function against it gives the integral over H\X, for every choice of cutoff. -/
-@[to_additive addOrbitMeasure]
+@[to_additive addOrbitMeasure /-- The measure βμ on X for the weight
+β = `New.chosenAddCutoff ν`, for an additive action of H on X; the additive version of
+`New.orbitMeasure`. -/]
 noncomputable abbrev orbitMeasure : Measure X := μ.withDensity (chosenCutoff ν)
 
 /-- The hypothesis that the action of H, with measure ν, on X admits a cutoff: a measurable
 weight with integral one over each orbit. -/
-@[to_additive HasAddCutoff]
+@[to_additive HasAddCutoff /-- The hypothesis that the additive action of H, with measure ν, on X
+admits a cutoff: a measurable weight with integral one over each orbit. -/]
 abbrev HasCutoff (X : Type*) [MeasurableSpace X] [SMul H X] : Prop :=
   Fact (∃ β : X → ENNReal, IsCutoff (X := X) ν β)
 
@@ -117,7 +124,10 @@ instance (priority := high) smulSubgroupSelf : SMul N G := inferInstance
 /-- The measure on G that computes integrals over N\G, when N with counting measure has a cutoff
 (for example when N is discrete) and μ is invariant under N. It is μ weighted by a cutoff chosen for
 the action of N, with counting measure, on G. By default μ is `volume`. -/
-@[to_additive]
+@[to_additive /-- The measure on G that computes integrals over the quotient of G by the additive
+subgroup N, when N with counting measure has a cutoff (for example when N is discrete) and μ is
+invariant under N. It is μ weighted by a cutoff chosen for the action of N, with counting measure,
+on G. By default μ is `volume`. -/]
 noncomputable abbrev _root_.Subgroup.quotMeasure [MeasurableSpace G]
     (μ : Measure G := by volume_tac) : Measure G :=
   orbitMeasure (@count N _) μ

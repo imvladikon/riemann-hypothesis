@@ -359,8 +359,12 @@ lemma smul_grothendieckSymbol_eq_fractionClass (hf : U ≤ unimodularLocus f)
     (fun C t ↦ ?_) fun _ _ ↦ rfl
   -- The cocycles agree since `det (l * σ M) = det l * σ (det M)`.
   simp [volumeForm, formOfExteriorPower, w]
-  -- (`erw`: the rows `l i ᵥ* σ M` are the product matrix only up to unfolding `Matrix.mul`)
-  erw [det_mul, ← map_det]
+  let rows : Matrix (Fin d) (Fin d) C.baseAlg := fun i ↦ (t.val.2 i).down
+  conv in (det (fun i ↦ _)) =>
+    change det (rows * M.map t.val.1.down.fst)
+    tactic =>
+      exact (det_mul rows _).trans
+        (congrArg (rows.det * ·) (t.val.1.down.fst.hom.toRingHom.map_det M).symm)
   refine congrArg ULift.up (.trans ?_
     (congrArg (_ • ·) ((add_zero _).trans (exteriorMap_smul ..))).symm)
   simp [exteriorMap_iotaMulti, mul_smul, ← smul_comm a]

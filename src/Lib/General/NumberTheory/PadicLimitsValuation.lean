@@ -295,8 +295,6 @@ variable (O) in
 protected noncomputable def uniformizer : ↑O := (exists_irreducible O).choose
 
 variable (O) in
-lemma irreducible_uniformizer : Irreducible O.uniformizer := (exists_irreducible O).choose_spec
-
 /-- Normalised length: the additive map sending n to n·v(ϖ) and ∞ to ∞, where ϖ is the chosen
 uniformiser `O.uniformizer` and v(ℓ) = 1. The value does not depend on the choice of ϖ
 (`normLength_natCast_of_irreducible`). -/
@@ -319,7 +317,7 @@ let the normalised length `normLength` send n to n·v(ϖ) (and ∞ to ∞). Then
 normalised by v(ℓ) = 1. -/
 @[simp]
 lemma normLength_addVal (x : ↑O) : O.normLength (addVal O x) = ellVal x.val := by
-  have hϖ : Irreducible O.uniformizer := O.irreducible_uniformizer
+  have hϖ : Irreducible O.uniformizer := (exists_irreducible O).choose_spec
   obtain rfl | hx := eq_or_ne x 0
   · simp [ellVal, normLength_top]
   -- `x = u * ϖ ^ n` with `‖u‖ = 1`, and both sides are `n` times the valuation of `ϖ`

@@ -323,35 +323,22 @@ lemma IsLaplaceDatum.phase_logOneAdd (hj : IsLaplaceDatum l k j τ B e φ) (s : 
     l.phase k ((subOnePair j s).map logOneAdd logOneAdd) = φ s := by
   -- In the geometric series of `phase ((1 + r • x)⁻¹ * x)` only the term `phase x = φ s` is left,
   -- by `phase_pow_mul`; integrate over `r`.
-  have h_powers (i : ℕ) : l.phase k (subOnePair j s ^ i * subOnePair j s) = 0 ^ i * φ s :=
-    hj.phase_pow_mul s i
-  set x : Matrix n n ℂ × Matrix m m ℂ := subOnePair j s
-  let D : Matrix n n ℂ := intDiagonal l.lowestKType
-  let D' : Matrix m m ℂ := intDiagonal k.lowestKType
-  have h_integrand (r : ℝ) (hr : r ∈ Set.Icc 0 1) :
-      (D * ((1 + r • x.1)⁻¹ * x.1)).trace - (D' * ((1 + r • x.2)⁻¹ * x.2)).trace = φ s := by
-    have h_term (i : ℕ) :
-        (D * ((-(r • x.1)) ^ i * x.1)).trace - (D' * ((-(r • x.2)) ^ i * x.2)).trace =
-          (-r : ℂ) ^ i * (0 ^ i * φ s) := by
-      rw [← h_powers]
-      simp [D, D', phase, ← neg_smul, smul_pow, mul_sub]
-    have h_single : HasSum (fun i : ℕ ↦ (-r : ℂ) ^ i * (0 ^ i * φ s)) (φ s) := by
-      convert hasSum_ite_eq (0 : ℕ) (φ s) with i
-      cases i <;> simp
-    refine ((hasSum_trace_geom h_fst D hr).sub (hasSum_trace_geom h_snd D' hr)).unique ?_
-    simpa only [h_term] using h_single
-  calc l.phase k (x.map logOneAdd logOneAdd)
-      = ∫ r : ℝ in 0..1,
-          ((D * ((1 + r • x.1)⁻¹ * x.1)).trace - (D' * ((1 + r • x.2)⁻¹ * x.2)).trace) := by
-        rw [intervalIntegral.integral_sub
-            (intervalIntegrable_trace_mul_inv_one_add_smul_mul h_fst D)
-            (intervalIntegrable_trace_mul_inv_one_add_smul_mul h_snd D'),
-          integral_trace_mul_inv_one_add_smul_mul h_fst,
-          integral_trace_mul_inv_one_add_smul_mul h_snd, phase, Prod.map_fst, Prod.map_snd]
-    _ = ∫ _ : ℝ in 0..1, φ s :=
-        intervalIntegral.integral_congr fun r hr ↦
-          h_integrand r (by rwa [Set.uIcc_of_le zero_le_one] at hr)
-    _ = φ s := by simp
+  let D := intDiagonal l.lowestKType
+  let D' := intDiagonal k.lowestKType
+  rw [phase, Prod.map_fst, Prod.map_snd,
+    ← integral_trace_mul_inv_one_add_smul_mul h_fst,
+    ← integral_trace_mul_inv_one_add_smul_mul h_snd,
+    ← intervalIntegral.integral_sub
+      (intervalIntegrable_trace_mul_inv_one_add_smul_mul h_fst D)
+      (intervalIntegrable_trace_mul_inv_one_add_smul_mul h_snd D')]
+  refine (intervalIntegral.integral_congr (g := fun _ ↦ φ s) fun r hr ↦ ?_).trans (by simp)
+  rw [Set.uIcc_of_le zero_le_one] at hr
+  refine ((hasSum_trace_geom h_fst D hr).sub (hasSum_trace_geom h_snd D' hr)).unique ?_
+  convert hasSum_ite_eq (0 : ℕ) (φ s) with i
+  trans (-r : ℂ) ^ i * (0 ^ i * φ s)
+  · rw [← hj.phase_pow_mul s i]
+    simp [D, D', phase, ← neg_smul, smul_pow, mul_sub]
+  · cases i <;> simp
 
 /-! ### Left translation by `U(X)` -/
 
@@ -486,22 +473,16 @@ lemma one_add_sum_le_prod_one_add {ι : Type*} (s : Finset ι) {μ : ι → ℝ}
 lemma one_add_norm_sq_le_norm_det_one_add (A : Matrix n n ℂ) :
     1 + ‖A‖ ^ 2 ≤ ‖(1 + Aᴴ * A).det‖ := by
   -- In terms of the eigenvalues `μ i ≥ 0` of `Aᴴ * A` this is `1 + ∑ μ i ≤ ∏ (1 + μ i)`.
-  have hA : (Aᴴ * A).PosSemidef := A.posSemidef_conjTranspose_mul_self
-  let μ : n → ℝ := hA.isHermitian.eigenvalues
-  have hμ (i : n) : 0 ≤ μ i := hA.eigenvalues_nonneg i
-  have h_sum : ‖A‖ ^ 2 = ∑ i : n, μ i := by
-    rw [← ofReal_inj, ← trace_star_mul_self_eq_norm_sq, hA.isHermitian.trace_eq_sum_eigenvalues]
-    simp [μ]
-  have h_prod : ‖(1 + Aᴴ * A).det‖ = ∏ i : n, (1 + μ i) :=
-    calc ‖(1 + Aᴴ * A).det‖ = ‖(Aᴴ * A).charpoly.eval (-1)‖ := by
-          rw [eval_charpoly, map_neg, map_one, ← neg_add', det_neg]
-          simp
-      _ = ∏ i : n, ‖(-1 : ℂ) - μ i‖ := by
-          simp [μ, hA.isHermitian.charpoly_eq, Polynomial.eval_prod]
-      _ = ∏ i : n, (1 + μ i) := prod_congr rfl fun i _ ↦ by
-          rw [← neg_add', norm_neg, ← ofReal_one, ← ofReal_add,
-            Complex.norm_of_nonneg (add_nonneg zero_le_one (hμ i))]
-  simpa [h_sum, h_prod] using one_add_sum_le_prod_one_add Finset.univ hμ
+  have hA := A.posSemidef_conjTranspose_mul_self
+  convert one_add_sum_le_prod_one_add Finset.univ hA.eigenvalues_nonneg using 2
+  · rw [← ofReal_inj, ← trace_star_mul_self_eq_norm_sq, hA.isHermitian.trace_eq_sum_eigenvalues]
+    simp
+  · rw [show ‖(1 + Aᴴ * A).det‖ = ‖(Aᴴ * A).charpoly.eval (-1)‖ from by
+      rw [eval_charpoly, map_neg, map_one, ← neg_add', det_neg]
+      simp, hA.isHermitian.charpoly_eq, Polynomial.eval_prod, norm_prod]
+    exact prod_congr rfl fun i _ ↦ by
+      simpa [← neg_add', ← ofReal_one, ← ofReal_add] using
+        Complex.norm_of_nonneg (add_nonneg zero_le_one (hA.eigenvalues_nonneg i))
 
 /-- The part of `gᴴ ε g = ε` that commutes with `ε` reads `aᴴ a = 1 + yᴴ y`, for the compact part
 `a = blockDiagPart ε g` and the noncompact part `y = noncompactPart ε g`. -/
@@ -554,29 +535,22 @@ lemma IsLaplaceDatum.norm_intDiagonal_mul_subOnePair_sq_le (hj : IsLaplaceDatum 
       6 * (‖noncompactPart ε (j s).1‖ ^ 2 + ‖noncompactPart η (j s).2‖ ^ 2) := by
   -- Sum the row relations of `g` with the weights `-l.lowestKType`, those of `g'` with the weights
   -- `k.lowestKType`, and add: the real parts of the traces cancel.
-  have h_lower (i : n) : B * (offBlockIndicator e i : ℝ) ^ 2 ≤ (-l.lowestKType) i := by
-    obtain ⟨x | a, rfl⟩ := e.surjective i
-    · simp [offBlockIndicator, hj.weight_eq_zero]
-    · simpa [offBlockIndicator, le_neg] using (hj.weight_mem a).2
-  have h_upper (i : n) : ((-l.lowestKType) i : ℝ) ≤ 3 * B := by
-    obtain ⟨x | a, rfl⟩ := e.surjective i
-    · simpa [hj.weight_eq_zero] using zero_le_one.trans hB
-    · simpa [neg_le] using (hj.weight_mem a).1
-  have h_fst : B * ‖intDiagonal (offBlockIndicator e) * (subOnePair j s).1‖ ^ 2 -
-        2 * (intDiagonal l.lowestKType * (subOnePair j s).1).trace.re ≤
-      2 * (3 * B) * ‖noncompactPart ε (j s).1‖ ^ 2 := by
-    simpa [← diagonal_neg, ← sub_eq_add_neg] using
-      norm_sq_add_re_trace_le (j s).1 B (3 * B) (offBlockIndicator e) (-l.lowestKType) h_lower
-        fun i _ _ ↦ h_upper i
-  have h_snd : 2 * (intDiagonal k.lowestKType * (subOnePair j s).2).trace.re ≤
-      2 * (3 * B) * ‖noncompactPart η (j s).2‖ ^ 2 := by
-    simpa using norm_sq_add_re_trace_le (j s).2 0 (3 * B) 0 k.lowestKType
-      (fun i ↦ by simpa using (hj.weight_nonneg_and_le i i).1)
-      fun i i' ↦ (hj.weight_nonneg_and_le i i').2
+  have h_fst := norm_sq_add_re_trace_le (j s).1 B (3 * B) (offBlockIndicator e) (-l.lowestKType)
+    (fun i ↦ by
+      obtain ⟨x | a, rfl⟩ := e.surjective i
+      · simp [offBlockIndicator, hj.weight_eq_zero]
+      · simpa [offBlockIndicator, le_neg] using (hj.weight_mem a).2)
+    (fun i _ _ ↦ by
+      obtain ⟨x | a, rfl⟩ := e.surjective i
+      · simpa [hj.weight_eq_zero] using zero_le_one.trans hB
+      · simpa [neg_le] using (hj.weight_mem a).1)
+  have h_snd := norm_sq_add_re_trace_le (j s).2 0 (3 * B) 0 k.lowestKType
+    (fun i ↦ by simpa using (hj.weight_nonneg_and_le i i).1)
+    fun i i' ↦ (hj.weight_nonneg_and_le i i').2
+  simp [← diagonal_neg] at h_fst h_snd
   -- The two weighted traces differ by `φ s`, which is imaginary.
-  have h_traces : (intDiagonal l.lowestKType * (subOnePair j s).1).trace.re =
-      (intDiagonal k.lowestKType * (subOnePair j s).2).trace.re := by
-    rw [← sub_eq_zero, ← sub_re, ← hj.re_phase_eq_zero s, ← hj.phase_eq s, phase]
+  have h_traces := hj.re_phase_eq_zero s
+  rw [← hj.phase_eq s, phase, sub_re] at h_traces
   exact le_of_mul_le_mul_left (by linarith) (zero_lt_one.trans_le hB)
 
 /-- In the setting of `IsLaplaceDatum.norm_intDiagonal_mul_subOnePair_sq_le`, let `(g, g') = j s`.

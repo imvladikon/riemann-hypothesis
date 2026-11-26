@@ -541,6 +541,8 @@ scoped instance : NormedAddCommGroup (MvPolynomial ι ℂ) :=
         -- definite
         by grind [fockPairing_star_self_pos, inner]⟩)
 
+/-- The Fischer inner product `⟪P, Q⟫ = fockPairing (conj P) Q` makes the complex polynomials an
+inner product space. -/
 scoped instance : InnerProductSpace ℂ (MvPolynomial ι ℂ) := .ofCore _
 
 /-- For the Fischer inner product on complex polynomials, multiplication by `X b` is adjoint to the

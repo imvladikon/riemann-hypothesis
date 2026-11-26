@@ -88,9 +88,11 @@ abbrev blockSigns : b → ℤˣ := (1 ⊕ᵥ -1) ∘ f.symm
 
 /-- The embedding of the compact groups `U(m)`, one for each infinite place, as the positive block
 of the unitary group of signs `blockSigns j`. -/
-@[simps!]
+@[simps! -isSimp]
 def posBlockEmb : GInf E (1 : m → ℤˣ) →* GInf E (blockSigns j) :=
   ((U.reindex j (by simp [signMatrix])).toMonoidHom.comp (U.inl 1 (-1))).compLeft (InfinitePlace E)
+
+attribute [simp] val_posBlockEmb_apply_coe
 
 omit [NumberField E] in
 /-- At each place, the inverse of the image of `k` has the matrix of the image of `k⁻¹`. -/

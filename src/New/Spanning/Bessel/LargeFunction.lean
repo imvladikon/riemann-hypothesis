@@ -157,10 +157,6 @@ private lemma embedH_mul_apply_inr_of_apply_inr (h : U (1 : Matrix 𝔰.κ 𝔰.
   · exact sum_eq_zero fun r _ ↦ by simp only [reduceCtorEq, ↓reduceIte, mul_zero]
   · simp only [Sum.inr.injEq, mul_ite, mul_one, mul_zero, sum_ite_eq', mem_univ, ↓reduceIte]
 
-private lemma besselFrame_ne_eStar (b : Fin (𝔰.ϱ + 1)) (a : Fin 𝔰.ϱ) :
-    𝔰.besselFrame b ≠ eStar a :=
-  Fin.lastCases (by simp [Shape.besselFrame]) (fun _ ↦ by simp [Shape.besselFrame]) b
-
 private lemma continuousMul_G₁ : ContinuousMul 𝔰.G₁ := inferInstance
 
 private lemma continuousInv_G₁ : ContinuousInv 𝔰.G₁ := inferInstance
@@ -224,38 +220,23 @@ lemma exists_sub_one_mul_frameCols_eq (s : 𝔰.besselGraph) :
       ((s.val.fst : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ) - 1) * 𝔰.frameCols =
         𝔰.isotropicCols * N ∧
       ∑ a : Fin 𝔰.ϱ, N a a.succ = simpleRootSum s.val.fst := by
-  -- Write `s = h u` with `u` in `𝖴`; the factor `h` fixes the frame, and `u` is unitriangular
-  -- on it.
-  obtain ⟨⟨⟨u, hu⟩, h⟩, rfl⟩ := 𝔰.besselGraphChart.surjective s
-  refine ⟨(frameMatrix u - 1).submatrix castSucc id,
-    fun a b hab ↦ sub_eq_zero.2 (frameMatrix_unitriangular hu _ _ hab), ?_, ?_⟩
+  -- Each frame column of s - 1 is supported on rows of strictly lower level.
+  let M := (s.val.fst : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ) - 1
+  have h_zero (i : 𝔰.BesselIndex) (b : Fin (𝔰.ϱ + 1)) (hb : b.val ≤ BesselIndex.level i) :
+      M i (𝔰.besselFrame b) = 0 :=
+    sub_eq_zero.2 (mem_besselS_iff_frameImage.mp (besselGraph_fst_mem_besselS s) i b hb)
+  refine ⟨M.submatrix Sum.inl 𝔰.besselFrame, fun a b hab ↦ h_zero _ _ hab, ?_, ?_⟩
   · ext i b
-    rw [mul_inclMatrix, submatrix_apply, id_eq, isotropicCols_mul_apply, Matrix.sub_apply,
-      Shape.besselGraphChart_apply_coe, Subgroup.coe_mul, Units.val_mul]
+    rw [mul_inclMatrix, submatrix_apply, id_eq, isotropicCols_mul_apply]
     rcases i with a | r
-    · rw [embedH_mul_apply_inl]
-      simp only [submatrix_apply, id_eq, Matrix.sub_apply, frameMatrix, Shape.besselFrame,
-        snoc_castSucc, Matrix.one_apply]
-      congr 1
-      by_cases h_eq : a.castSucc = b
-      · subst h_eq; simp
-      · have h_ne : (Sum.inl a : 𝔰.BesselIndex) ≠ 𝔰.besselFrame b := fun h' ↦
-          h_eq (besselFrame_injective (by simpa only [Shape.besselFrame, snoc_castSucc] using h'))
-        rw [Shape.besselFrame] at h_ne
-        simp only [h_eq, h_ne, ↓reduceIte]
-    · rw [embedH_mul_apply_inr_of_apply_inr h u.val.val r (𝔰.besselFrame b)
-        (fun k ↦ apply_inr_of_mem_besselU hu k (𝔰.besselFrame b) (besselFrame_ne_eStar b))]
-      refine sub_eq_zero.2 ?_
-      refine Fin.lastCases ?_ (fun c ↦ ?_) b
-      · rcases r with (d | ⟨⟩) | d <;>
-          simp [Shape.besselFrame, val_toBesselH_apply_coe, Matrix.one_apply]
-      · simp [Shape.besselFrame, val_toBesselH_apply_coe]
-  · rw [simpleRootSum]
-    refine sum_congr rfl fun a _ ↦ ?_
-    rw [submatrix_apply, id_eq, Matrix.sub_apply, Matrix.one_apply_ne castSucc_lt_succ.ne,
-      sub_zero, frameMatrix, submatrix_apply, Shape.besselGraphChart_apply_coe,
-      Subgroup.coe_mul, Units.val_mul, Shape.besselFrame, snoc_castSucc]
-    exact (embedH_mul_apply_inl h u.val.val a (𝔰.besselFrame a.succ)).symm
+    · rfl
+    · exact h_zero _ _ (b.is_le.trans (le_level_inr r))
+  · refine sum_congr rfl fun a _ ↦ ?_
+    have h_ne : (Sum.inl a : 𝔰.BesselIndex) ≠ 𝔰.besselFrame a.succ := by
+      rw [← besselFrame_castSucc]
+      exact besselFrame_injective.ne castSucc_lt_succ.ne
+    simp only [submatrix_apply, M, Matrix.sub_apply, Matrix.one_apply_ne h_ne, sub_zero,
+      besselFrame_castSucc]
 
 /-- An element `s` of `besselGraph` (the group `R`) acts on `X₀`, the span of the columns of
 `definiteCols`, by its image `s.val.snd` in `H`, modulo the span of `e₁, …, e_ϱ` (the columns of

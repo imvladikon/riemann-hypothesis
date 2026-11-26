@@ -122,9 +122,6 @@ lemma denominatorError_eq_natCast :
           ℝ≥0∞) := by
   simp [denominatorError]
 
-lemma denominatorError_ne_top : denominatorError D ℓ ≠ ⊤ :=
-  (denominatorError_eq_natCast D ℓ).trans_ne (ENNReal.natCast_ne_top _)
-
 /-- The clearing bound `β_ℓ = loc_ℓ + (1 + 2 t) e'_ℓ + e_ℓ + v_ℓ(N)` per unit of rank of a main
 summand at `ℓ`, where `N = D.chosenGroupOrder`. Here `loc_ℓ = localDefectBound D ℓ` bounds the local
 defect, `e'_ℓ = twistError ℓ D` is the number `(4 f + 3) r v_ℓ(N) + 2 ^ (-ℓ)` allowed for the Selmer
@@ -155,7 +152,8 @@ lemma add_denominatorError_le_mul_clearingBound {r' t' : ℕ} (hr' : r' ∈ Set.
     _ = r' * loc + 1 * ((1 + 2 * D.t) * err + denominatorError D ℓ + v) := by ring
     _ ≤ r' * loc + r' * ((1 + 2 * D.t) * err + denominatorError D ℓ + v) := by gcongr
     _ = r' * clearingBound D ℓ := by
-      simp [clearingBound, err, loc, v, coe_toNNReal (denominatorError_ne_top D ℓ), mul_add,
+      simp [clearingBound, err, loc, v,
+        coe_toNNReal ((denominatorError_eq_natCast D ℓ).trans_ne (ENNReal.natCast_ne_top _)), mul_add,
         add_assoc]
 
 /-- The cost of `t' ≤ D.t` characters, an inequality between numbers. Let `v` be the `ℓ`-adic

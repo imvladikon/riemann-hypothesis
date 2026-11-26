@@ -106,9 +106,8 @@ lemma framePoint_eq_mulVec (h : D.IsAdapted 1 b) (a : InfinitePlace E × r → �
       fun ((w, i) : InfinitePlace E × ((r ⊕ r) ⊕ n')) ↦
         (vecToMatrix a w ⊕ᵥ vecToMatrix c w ⊕ᵥ vecToMatrix z w) i := by
   ext ⟨w, i⟩
-  simp [vecToMatrix, framePoint, IsAdapted.mixedModel, mulVec, dotProduct, sum_prod_type,
-    Splitting.frameAt, realMatrix, blockDiagonal, G.adeleMatrix_one]
-  exact add_right_comm ..
+  simpa [vecToMatrix, framePoint, IsAdapted.mixedModel, mulVec, dotProduct, sum_prod_type,
+    Splitting.frameAt, realMatrix, blockDiagonal, G.adeleMatrix_one] using add_right_comm ..
 
 /-- At the infinite place `w`, the point `framePoint h a z c`, which is `L a + I z + K c`, is the
 image under the component at `w` of the adapted frame `D.frameAt 1 b` of the three blocks of
@@ -390,9 +389,7 @@ lemma detVector_apply (k : ℕ) (m : InfinitePlace E → ℕ) (F : InfinitePlace
       Fintype.sum_eq_zero _ fun j ↦ by simp [units_int_mul_eq_one_iff, Ne.symm j.2]
     rw [h_zero, add_zero] at h_split
     simp [detPolyMatrix, posCoordMatrix, toSquareBlockProp, Matrix.mul_apply, holomorphicCoord_eq,
-      posProj, mulVec_diagonal, pairSign, i.2, mul_comm]
-    rw [← h_split]
-    exact Fintype.sum_congr _ _ fun j ↦ by simp [j.2]
+      posProj, mulVec_diagonal, pairSign, i.2, mul_comm, ← h_split, fun j : {j // s j = σ} ↦ j.2]
   have h_minor (w : InfinitePlace E) (σ : ℤˣ) :
       eval (holomorphicCoord (realSigns E (homSigns s t)) u ∘ Subtype.val)
         (detPolyMatrix s t F w σ).det =
@@ -564,9 +561,8 @@ lemma posCoordMatrix_liftFrame (β : Bool) (a : InfinitePlace E → ℂ)
         (w, i, j)) = -(a w • (xp * cp)) + xi * U * ci := by
     rw [posProj_mulVec_framePoint, midpoint_self]
     ext i j
-    simp [framePoint_lineTermSplitting_apply, Matrix.mul_apply, Fintype.sum_sum_type, hxp, hcp,
-      hxi, hci, hU, Finset.sum_mul]
-    rw [Finset.sum_comm]
+    simpa [framePoint_lineTermSplitting_apply, Matrix.mul_apply, Fintype.sum_sum_type, hxp, hcp,
+      hxi, hci, hU, Finset.sum_mul] using Finset.sum_comm
   -- The coordinates of `A` are dual to its frames.
   obtain ⟨⟨h_kk, h_kl, h_ki⟩, ⟨h_lk, h_ll, h_li⟩, h_ik, h_il, h_ii⟩ := A.coord_mul_frame
   have h_pp : cp * ap = 1 := by

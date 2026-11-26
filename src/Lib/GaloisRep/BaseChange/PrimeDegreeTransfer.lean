@@ -586,20 +586,6 @@ section TransferLevel
 variable {σ : Gal(E'/E)} {κ : Weight E} {f : (stdSpace E n).forms κ} {Z X : Set (FinPlace E)}
   {K L₁ K₁ C 𝓛 : Subgroup (Gf E' n)}
 
-/-- A place of `E'` above a place of `X` is split. -/
-private lemma IsTransferLevel.isSplit_of_below_mem
-    (h_level : IsTransferLevel σ μ f Z X K L₁ K₁ C 𝓛) {u : FinPlace E'} (hu : u.below E ∈ X) :
-    u.IsSplit := by
-  refine ne_of_apply_ne (FinPlace.below E) ?_
-  simpa only [below_star] using h_level.isSplit (u.below E) hu
-
-/-- The elements over `E` supported at a place of `X` and its conjugate map into `C`. -/
-private lemma IsTransferLevel.supportedOn_le_comap
-    (h_level : IsTransferLevel σ μ f Z X K L₁ K₁ C 𝓛) {w : FinPlace E} (hw : w ∈ X) :
-    supportedOn n {w} ≤ C.comap baseChangeGf := by
-  exact fun g hg ↦ h_level.supportedOn_placesAbove_le
-    (baseChangeGf_mem_supportedOn (supportedOn_mono (singleton_subset_iff.mpr hw) hg))
-
 /-- Let `G` be a retract at `Z` whose level `L` has preimage the pull-back of `L₁` to `E`, and let
 `F j` be `L`-bi-invariant functions with commuting operators. At the pull-back of `𝓛` to `E`, the
 operators of the `F j` and the spherical operators at the places of `X` form a commuting family
@@ -728,7 +714,9 @@ private lemma exists_eigenvector_of_isTransferLevel [hμ : IsStep (E := E) E' μ
     simpa using x.property.right.left
   have X'_max (x : X') : maxCompactAt n x.val ≤ 𝓛 := x.property.right.right
   let above (u : FinPlace E') (hu : u.below E ∈ X) : X' :=
-    ⟨u, h_level.isSplit_of_below_mem hu, h_level.notMem_conjClosure (u.below E) hu,
+    ⟨u, ne_of_apply_ne (FinPlace.below E)
+      (by simpa only [below_star] using h_level.isSplit (u.below E) hu),
+      h_level.notMem_conjClosure (u.below E) hu,
       h_level.kf_inf_supportedOn_le (u.below E) hu (by simp [placesAbove])⟩
   have X_split (x : X) : x.val.IsSplit := h_level.isSplit x x.property
   -- The commuting operators over `E` and `E'`. `R k t φ` implies that `t` is the operator of the
@@ -788,7 +776,8 @@ private lemma exists_eigenvector_of_isTransferLevel [hμ : IsStep (E := E) E' μ
       -- elements.
       let u' : X' := above (U w) (U_mem w)
       exact ⟨k, hk, _, D_stable w d hd (X_split w) (X'_split u') j,
-        hR.spherical_mul hq w j (h_level.supportedOn_le_comap w.property),
+        hR.spherical_mul hq w j (fun g hg ↦ h_level.supportedOn_placesAbove_le
+          (baseChangeGf_mem_supportedOn (supportedOn_mono (singleton_subset_iff.mpr w.property) hg))),
         hR'.spherical_mul hq' u' j
           ((supportedOn_mono (by simp [u', above, placesAbove, U_mem w])).trans
             h_level.supportedOn_placesAbove_le)⟩

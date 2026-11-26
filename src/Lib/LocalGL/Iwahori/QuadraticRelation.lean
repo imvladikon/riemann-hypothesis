@@ -67,6 +67,12 @@ lemma mem_proIwahori_iff_blockParahoric :
     g ∈ proIwahori ↔ g ∈ blockParahoric id ∧ ∀ i : Fin N, g i i ∈ {x : F | v (x - 1) < 1} :=
   and_assoc.symm
 
+omit [Valued F ℤᵐ⁰] in
+private lemma conj_monomial_apply (t : Fin N → Fˣ) (σ : Perm (Fin N)) (a b : Fin N) :
+    ((permGL σ * diagGL t)⁻¹ * g * (permGL σ * diagGL t) : GL (Fin N) F) a b =
+      (t a).val⁻¹ * g (σ a) (σ b) * (t b).val := by
+  simp [← map_inv, Matrix.mul_apply, symm_apply_eq, diagonal, mul_assoc]
+
 /-- Let `c` and `d` be level functions `ℕ → ℕ` (see `New.blockParahoric`), and let `g` lie in the
 parahoric of level function `d`. Let `m = σ diag(t)`, with `σ` a permutation matrix. Suppose that
 for all `a`, `b` either `g_{σa,σb} = 0` or
@@ -80,20 +86,13 @@ lemma conj_monomial_mem_blockParahoric_of_mem (t : Fin N → Fˣ) (σ : Perm (Fi
         log (v (t a).val) + if d (σ b) < d (σ a) then 1 else 0) :
     (permGL σ * diagGL t)⁻¹ * g * (permGL σ * diagGL t) ∈ blockParahoric c := by
   set k : GL (Fin N) F := (permGL σ * diagGL t)⁻¹ * g * (permGL σ * diagGL t)
-  have h_entry (a b : Fin N) : k a b = (t a).val⁻¹ * g (σ a) (σ b) * (t b).val := by
-    simp [k, ← map_inv, Matrix.mul_apply, symm_apply_eq, diagonal, mul_assoc]
   have h_det : k.val.det = g.val.det := det_units_conj' _ _
-  simp only [mem_blockParahoric, mem_intGL_iff_det, h_entry, h_det, map_mul, map_inv₀] at hg ⊢
+  simp only [mem_blockParahoric, mem_intGL_iff_det, k, conj_monomial_apply, h_det, map_mul, map_inv₀] at hg ⊢
   obtain ⟨⟨hg_int, hg_det⟩, hg_below⟩ :
       ((∀ a b : Fin N, v (g a b) ≤ 1) ∧ v g.val.det = 1) ∧
         (∀ i j : Fin N, d j.val < d i.val → v (g i j) < 1) := hg
-  refine ⟨⟨fun a b ↦ ?_, hg_det⟩, fun i j hij ↦ ?_⟩
-  -- For a nonzero entry of `g` take `log` of its valuation, an integer that is `≤ 0`, or `≤ -1`
-  -- if `d (σ b) < d (σ a)`, and add the inequality `ht`.
-  · -- the entries of `k` are integral
-    grind [Units.ne_zero, =_ log_le_log, =_ log_lt_log, map_eq_zero, log_mul, log_inv, mul_eq_zero,
-      one_pos]
-  · -- the entries `(i, j)` of `k` with `c j < c i` lie in the maximal ideal
+  -- For nonzero entries, `ht` gives the required bound on the log of the valuation.
+  refine ⟨⟨fun a b ↦ ?_, hg_det⟩, fun i j hij ↦ ?_⟩ <;>
     grind [Units.ne_zero, =_ log_le_log, =_ log_lt_log, map_eq_zero, log_mul, log_inv, mul_eq_zero,
       one_pos]
 
@@ -103,11 +102,7 @@ they lie in every set `S` that holds the diagonal entries of `g`. -/
 lemma conj_monomial_apply_self_mem (t : Fin N → Fˣ) (σ : Perm (Fin N)) {S : Set F}
     (hgS : ∀ i : Fin N, g i i ∈ S) (i : Fin N) :
     ((permGL σ * diagGL t)⁻¹ * g * (permGL σ * diagGL t) : GL (Fin N) F) i i ∈ S := by
-  have h_entry (a b : Fin N) :
-      ((permGL σ * diagGL t)⁻¹ * g * (permGL σ * diagGL t) : GL (Fin N) F) a b =
-        (t a).val⁻¹ * g (σ a) (σ b) * (t b).val := by
-    simp [← map_inv, Matrix.mul_apply, symm_apply_eq, diagonal, mul_assoc]
-  rw [h_entry, mul_right_comm, inv_mul_cancel₀ (t i).ne_zero, one_mul]
+  rw [conj_monomial_apply, mul_right_comm, inv_mul_cancel₀ (t i).ne_zero, one_mul]
   exact hgS (σ i)
 
 /-- Let `g` lie in the parahoric of level function `d`, with diagonal entries in `S`, and let

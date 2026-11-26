@@ -225,7 +225,7 @@ lemma selfDualAddChar_congr {a b o : 𝔸f E} (t : 𝔸f E) (ho : o ∈ Ô E)
 /-! ### The vacuum and the Heisenberg datum -/
 
 /-- For a finite adelic vector x, the complex number ψ₀(c₀ x* x / 2). It equals ψ_f(−y* y / 4) at
-y = αx (`New.stdLattice.semichar_eq_ψf`) and is a sign on the lattice Ô^ι. -/
+y = αx and is a sign on the lattice Ô^ι. -/
 def semichar (x : ι → 𝔸f E) : ℂ := selfDualAddChar E (traceOneAdele * half * star x ⬝ᵥ x)
 
 lemma isOfFinOrder_semichar (x : ι → 𝔸f E) : IsOfFinOrder (semichar x) := by
@@ -556,12 +556,6 @@ def denominatorIdele (x : (𝔸f E)ˣ) : (𝔸f E)ˣ where
   val_inv := by grind [idem_compl, idem_mul_self, Units.inv_mul]
   inv_val := by grind [idem_compl, idem_mul_self, Units.inv_mul]
 
-/-- The inverse of the denominator of `x` is `1` where `x` is integral and `x` elsewhere. -/
-lemma coe_inv_denominatorIdele (x : (𝔸f E)ˣ) :
-    (denominatorIdele x)⁻¹.val =
-      idem {w : FinPlace E | v (x.val w) ≤ 1} + idem {w : FinPlace E | v (x.val w) ≤ 1}ᶜ * x.val :=
-      rfl
-
 /-- The valuation of the denominator of `x` at `w` is the inverse of `max 1 |x_w|`. -/
 lemma v_denominatorIdele (x : (𝔸f E)ˣ) (w : FinPlace E) :
     v ((denominatorIdele x).val w) = (max 1 (v (x.val w)))⁻¹ := by
@@ -586,7 +580,7 @@ lemma isSaturating_diagGL (d : ι → (𝔸f E)ˣ) :
       mul_inv_le_one_of_le₀ (le_max_right _ _) zero_le
     simpa [v_denominatorIdele] using h_le
   · rw [← map_inv, coe_diagGL, coe_diagGL, diagonal_mul_diagonal, diagonal_add]
-    exact congrArg diagonal (funext fun i ↦ coe_inv_denominatorIdele (d i))
+    rfl
 
 /-! ### The chosen saturating matrix -/
 

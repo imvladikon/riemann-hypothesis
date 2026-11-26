@@ -213,7 +213,6 @@ lemma weilOp_mul (hc_one : ∀ g : G, c g 1 = 1) (h : G) :
 
 /-- If c(g, 1) = 1, the Weil operator `weilOp B g` preserves the inner product
 `New.Heisenberg.IsVacuum.modelInner` (v, w) ↦ ∫ conj(v) w dμ of the model space. -/
-@[simp]
 lemma modelInner_weilOp (hc_one : c g 1 = 1) :
     modelInner (weilOp B g v) (weilOp B g w) = modelInner v w := by
   -- The operator of `g⁻¹` is both a left inverse and an adjoint of the operator of `g`.
@@ -240,7 +239,7 @@ def cocycleRadical (h1 : ∀ g : G, c g 1 = 1) : Subgroup G :=
   -- Apply both products to the vacuum and pair with the unit vector `weilOp B (g * h * k) vacElem`:
   -- by `weilOp_mul` this is the cocycle identity for `c`.
   have h_cocycle (g h k : G) : c g h * c (g * h) k = c h k * c g (h * k) := by
-    simpa [weilOp_mul, h1, he.apply_zero, mul_assoc g] using
+    simpa [weilOp_mul, h1, he.apply_zero, mul_assoc g, modelInner_weilOp] using
       congr(modelInner (weilOp B (g * h * k) vacElem) ($(h_assoc g h k) vacElem))
   { carrier := {s : G | ∀ g : G, c g s = 1}
     one_mem' := h1
@@ -260,7 +259,7 @@ v(x) = ∫ v(y) β(y,x) e(x−y) dμ(y). Let `A` be an action of `G` on `W` that
 multiplier Δ and cocycle 1. Then each Weil operator `weilRep A g`, v ↦ Δ(g) ∫ v(y) ρ(g • y) e dμ(y),
 preserves the pairing `modelInner` (v, w) = ∫ conj(v) w dμ. -/
 lemma modelInner_weilRep : modelInner (weilRep A g v) (weilRep A g w) = modelInner v w := by
-  simp [weilRep]
+  simp [weilRep, modelInner_weilOp]
 
 attribute [simp] weilOp modelInner_weilRep
 
@@ -361,8 +360,7 @@ end New.Heisenberg.IsVacuum
   is bounded by the number of terms that fall in a fixed compact set, times a constant `M` and the
   norm of the model vector `v`.
 * `New.Heisenberg.OrthogonalSum.tmul`: the tensor product of model vectors, a product of functions.
-  It is multiplicative for norms and inner products (`New.Heisenberg.OrthogonalSum.norm_tmul`,
-  `New.Heisenberg.OrthogonalSum.modelInner_tmul`).
+  It is multiplicative for inner products (`New.Heisenberg.OrthogonalSum.modelInner_tmul`).
 * `New.Heisenberg.OrthogonalSum.weilRep_tmul`, `New.Heisenberg.Rep.integrated_tmul`: the tensor
   product is compatible with the Weil representation and with the integrated action.
 -/

@@ -11,8 +11,7 @@ This file collects known facts on complex matrices near the identity.
 It proves Jacobi's formula for the derivative of the determinant at the identity and
 `det (exp M) = exp (tr M)`.
 Estimates in the Hilbert–Schmidt norm, which is the norm of all matrices in this file, control the
-inverse and the logarithm of `1 + X` and the exponential of `X`.
-The logarithm of an element of `USign ε` near `1` lies in the Lie algebra.
+inverse and the logarithm of `1 + X`.
 A matrix at distance less than `1` from the identity is accretive.
 
 ## Main definitions and results
@@ -22,8 +21,6 @@ A matrix at distance less than `1` from the identity is accretive.
 * `New.DiscreteSeries.logOneAdd` and `exp_logOneAdd`: the logarithm of `1 + X` for `‖X‖ ≤ 1 / 2`.
 
 Notions from other files:
-* `signMatrix ε` is the diagonal matrix with entries `ε i = ±1`, and `USign ε` is its unitary group.
-* `unitaryLie J` is the space of matrices `X` with `Xᴴ * J + J * X = 0`.
 * `entryMask r X` keeps the entries `(i, j)` of `X` with `r i j` and replaces the others by `0`.
 * A matrix `A` is accretive (`A.IsAccretive`) if `A + Aᴴ` is positive definite.
 -/
@@ -53,8 +50,7 @@ lemma New.hasDerivAt_det_of_eq_one {n : Type*} [Fintype n] [DecidableEq n] {γ :
 
 The main results are the bound `‖tr (X Y)‖ ≤ ‖X‖ ‖Y‖`, invariance under unitary left factors, the
 inverse of `1 + X` for small `X`, the formula `det (exp M) = exp (tr M)`, and the logarithm of
-`1 + X`, written as the integral of `(1 + s X)⁻¹ X` over `[0, 1]`. The logarithm of an element of
-`USign ε` near `1` lies in the Lie algebra, and a matrix at distance less than `1` from the identity
+`1 + X`, written as the integral of `(1 + s X)⁻¹ X` over `[0, 1]`. A matrix at distance less than `1` from the identity
 is accretive.
 -/
 
@@ -268,34 +264,6 @@ lemma exp_logOneAdd (hX : ‖X‖ ≤ 2⁻¹) : NormedSpace.exp (logOneAdd X) = 
 lemma det_one_add_eq_exp_trace_logOneAdd (hX : ‖X‖ ≤ 2⁻¹) :
     (1 + X).det = cexp (logOneAdd X).trace := by
   rw [← det_exp, exp_logOneAdd hX]
-
-/-- If `1 + X` preserves the form `J`, that is `(1 + X)ᴴ * J * (1 + X) = J`, and `‖X‖ ≤ 1 / 2`, then
-for `0 ≤ s ≤ 1` the integrand `G s = (1 + s • X)⁻¹ * X` of `logOneAdd X` satisfies
-`(G s)ᴴ * J = -(J * G (1 - s))`. -/
-lemma conjTranspose_inv_one_add_smul_mul_form {X J : Matrix n n ℂ}
-    (h_form : (1 + X)ᴴ * J * (1 + X) = J) (h_norm : ‖X‖ ≤ 2⁻¹) {s : ℝ}
-    (hs : s ∈ Set.Icc (0 : ℝ) 1) :
-    ((1 + s • X)⁻¹ * X)ᴴ * J = -(J * ((1 + (1 - s) • X)⁻¹ * X)) := by
-  set A : Matrix n n ℂ := 1 + s • X
-  set A' : Matrix n n ℂ := 1 + (1 - s) • X
-  have h_adj : Xᴴ * J * (1 + X) = -(J * X) := by
-    rw [conjTranspose_add, conjTranspose_one] at h_form
-    linear_combination (norm := noncomm_ring) h_form
-  have h_inv : A * A⁻¹ = 1 := mul_nonsing_inv _ (det_one_add_smul_ne_zero h_norm hs).isUnit
-  have h_inv' : A' * A'⁻¹ = 1 :=
-    mul_nonsing_inv _ (det_one_add_smul_ne_zero h_norm (Set.Icc.one_sub_mem hs)).isUnit
-  have h_line : Aᴴ * (J * (1 + X)) = J * A' :=
-    calc Aᴴ * (J * (1 + X)) = J * (1 + X) + s • (Xᴴ * J * (1 + X)) := by
-          simp [A, add_mul, mul_assoc, star_trivial]
-      _ = J * A' := by
-          simp [h_adj, A', mul_add J, sub_smul, mul_sub, add_sub_assoc, ← sub_eq_add_neg]
-  calc (A⁻¹ * X)ᴴ * J = Xᴴ * A⁻¹ᴴ * (J * A') * A'⁻¹ := by
-        simp only [conjTranspose_mul, mul_assoc, h_inv', mul_one]
-    _ = Xᴴ * (A * A⁻¹)ᴴ * (J * (1 + X)) * A'⁻¹ := by
-        simp only [← h_line, conjTranspose_mul, mul_assoc]
-    _ = -(J * (A'⁻¹ * X)) := by
-        rw [h_inv, conjTranspose_one, mul_one, ← mul_assoc, h_adj, neg_mul, mul_assoc,
-          commute_inv_one_add_smul (.refl X)]
 
 /-- If `X` has Hilbert–Schmidt norm at most `1 / 2`, then `logOneAdd X`, the integral of
 `(1 + s • X)⁻¹ * X` over `[0, 1]`, has norm at most `2 * ‖X‖`. -/

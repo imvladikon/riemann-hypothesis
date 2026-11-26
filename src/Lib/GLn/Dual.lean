@@ -1026,8 +1026,7 @@ structure IsDualPairing (A : Matrix (WeylIndex n κ') (WeylIndex n κ) ℤ) : Pr
     (v' : WeylIndex n κ' → R) (v : WeylIndex n κ → R) :
     weylRep κ' e' g *ᵥ v' ⬝ᵥ A.map (↑) *ᵥ weylRep κ e g *ᵥ v = v' ⬝ᵥ A.map (↑) *ᵥ v
   /-- The function of a form of weight `(κ', e')` is the pairing of its value with a translate of
-  the highest vector of `l`. Here the pairing is written as a bilinear map; see
-  `New.IsDualPairing.ofAlgForm_apply`. -/
+  the highest vector of `l`. Here the pairing is written as a bilinear map. -/
   ofAlgForm_eq_bilin (s : n → ℤˣ) (η : AlgForm n κ' e') (x : GInf E s) (g : Gf E n) :
     ofAlgForm (-l) s η (x, g) = (dotProductBilin ℂ ℂ).compl₂ (A.map (↑)).mulVecLin (η.val g)
       (conjWeylRep κ e x (highestVector κ l))

@@ -70,6 +70,7 @@ attribute [instance 20] SetLike.GradeZero.instMonoid SetLike.GradeZero.instCommM
 -- and then fail on a side condition. Tagging a lemma in both directions erases both, and, unlike
 -- `attribute [-simp]`, the effect passes to importers. The reversed tags last one command only,
 -- so the warning about their head symbols does not apply.
+set_option warning.simp.varHead false in
 attribute [simp ←, simp] Matrix.conjTranspose_eq_transpose_of_trivial MonoidHom.CompTriple.comp_eq
   LinearMap.identityMapOfZeroModuleIsZero smul_left_cancel_iff mul_cancel_left_mem_nonZeroDivisors
   IsAddKleinFour.card_four' MeasureTheory.lintegral_of_isEmpty Nat.card_eq_zero_of_infinite

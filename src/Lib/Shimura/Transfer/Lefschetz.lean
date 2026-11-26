@@ -325,14 +325,6 @@ private lemma exists_isFixedPair_of_countTerm_ne_zero {b : heckeAlgebra n ℂ �
   simp only [p, tripleClass, Quotient.out_eq]
   exact c.out_eq
 
-/-- Moving a point of level `i` by a deck transformation does not change its image under
-`X.leg i ⟦1⟧`. -/
-private lemma Model.comp_leg_eq_of_comp_deck_eq {i : Finset (nonZeroDivisors (𝓞 E) × GUPlus E n)}
-    {p : ModuliPoint E n ν} {y : specOver R ℂ ⟶ X.cover i} {δ : X.deckGroup i}
-    (e : X.point i p ≫ (X.deck i δ).asHom = y) :
-    X.point i p ≫ X.leg i ⟦1⟧ = y ≫ X.leg i ⟦1⟧ := by
-  rw [← e, Category.assoc, (X.covering i).comp_eq]
-
 /-- Let `t` be a fixed pair of `p` and `t'` one of `p'`, with the same class of triples. Then the
 point of `p'` on level `i` is the point of `p` with its vectors replaced by solutions `u`, moved
 by a deck transformation `δ`. -/
@@ -371,7 +363,9 @@ private lemma Model.exists_isFixedPair_of_point_eq
     ∃ t' : GL n E × n, IsFixedPair b α p' t' ∧ tripleClass 𝔑 p'.frame t' = tripleClass 𝔑 p.frame
       t := by
   -- An isomorphism `w` from the moved point to `p'` carries `t` to a fixed pair of `p'`.
-  obtain ⟨w, hw⟩ := (X.point_eq_iff i _ _).mp (X.comp_leg_eq_of_comp_deck_eq hu)
+  obtain ⟨w, hw⟩ :=
+    (X.point_eq_iff i {p with markedPoint j := (u.fst j).out} p').mp
+      (by rw [← hu, Category.assoc, (X.covering i).comp_eq])
   have h_fixed_u : IsFixedPair b α {p with markedPoint j := (u.fst j).out} t :=
     ⟨ht.heckeCosetFn_ne_zero, ht.reflection_eq, fun j ↦ (u.fst j).out.prop⟩
   exact ⟨_, h_fixed_u.conj hw, (triple_class_eq_iff (h_fixed_u.conj hw).reflection_eq

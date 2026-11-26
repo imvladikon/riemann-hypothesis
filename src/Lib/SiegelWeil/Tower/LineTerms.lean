@@ -356,40 +356,24 @@ lemma frameAt_lineTermSplitting (β : Bool) :
   -- Compare the three column blocks: the basis and its dual are block diagonal, so they act on each
   -- frame separately.
   simp only [Splitting.frameAt, inv_one, G.adeleMatrix_one, Matrix.one_mul, fromCols_ext_iff]
-  cases β
-  -- The second `simp only` may open `hom` only after `hom_point_inv_mul_kronecker` runs.
-  · simp only [lAdelic, lineTermSplitting, Splitting.comp, planeSplitting, Matrix.mul_assoc,
-    mul_inv_cancel_left_of_invertible, planeModel, removePlanes, Splitting.symm, cond_eq_ite,
-    Bool.false_eq_true, ↓reduceIte, fromCols_mul_fromRows, Matrix.mul_one, Matrix.mul_zero,
-    add_zero, zero_add, fromCols_map, mul_fromCols, hom_point_inv_mul_kronecker, fromRows_map,
-    Matrix.map_mul, map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis,
-    Matrix.GeneralLinearGroup.kronecker, Units.val_one, transposeGL, star, val_blockGL_apply,
-    ← map_inv, Prod.inv_mk,
-    Units.inv_mk, inv_one, adaptedHomBasis, inv_inv, fromBlocks_conjTranspose,
-    conjTranspose_kronecker, conjTranspose_one, conjTranspose_transpose_eq_transpose_conjTranspose,
-    conjTranspose_conjTranspose, conjTranspose_zero, fromCols_mul_fromBlocks, ← mul_kronecker_mul,
-    ← transpose_mul, iCoord, iAdelic, ratMap, conjTranspose_mul, conjTranspose_map_toAdele, kCoord,
-    kAdelic, lCoord]
-    simp only [coe_units_inv, conjTranspose_nonsing_inv, fromBlocks_mul_fromRows, isUnits_det_units,
-      nonsing_inv_mul_cancel_left, Matrix.zero_mul, add_zero, Matrix.one_mul, zero_add,
-      transpose_fromRows, det_conjTranspose, isUnit_star, mul_nonsing_inv, mul_one, and_self, hom,
-      ← mul_kronecker_mul, Matrix.mul_assoc, ← transpose_mul]
-  · simp only [lAdelic, lineTermSplitting, Splitting.comp, planeSplitting, Matrix.mul_assoc,
-    mul_inv_cancel_left_of_invertible, planeModel, removePlanes, Splitting.symm, cond_eq_ite,
-    ↓reduceIte, fromCols_mul_fromRows, Matrix.mul_zero, Matrix.mul_one, zero_add, add_zero,
-    fromCols_map, mul_fromCols, hom_point_inv_mul_kronecker, fromRows_map, Matrix.map_mul,
-    map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis,
-    Matrix.GeneralLinearGroup.kronecker,
-    Units.val_one, transposeGL, star, val_blockGL_apply, ← map_inv, Prod.inv_mk, Units.inv_mk,
-    inv_one, adaptedHomBasis, inv_inv, fromBlocks_conjTranspose, conjTranspose_kronecker,
-    conjTranspose_one, conjTranspose_transpose_eq_transpose_conjTranspose,
-    conjTranspose_conjTranspose, conjTranspose_zero, fromCols_mul_fromBlocks, ← mul_kronecker_mul,
-    ← transpose_mul, iCoord, iAdelic, ratMap, conjTranspose_mul, conjTranspose_map_toAdele, kCoord,
-    kAdelic, lCoord]
-    simp only [coe_units_inv, conjTranspose_nonsing_inv, fromBlocks_mul_fromRows, isUnits_det_units,
-      nonsing_inv_mul_cancel_left, Matrix.zero_mul, add_zero, Matrix.one_mul, zero_add,
-      transpose_fromRows, det_conjTranspose, isUnit_star, mul_nonsing_inv, mul_one, and_self, hom,
-      ← mul_kronecker_mul, Matrix.mul_assoc, ← transpose_mul]
+  -- Open `hom` only after rewriting with `hom_point_inv_mul_kronecker`.
+  cases β <;>
+    simp only [lAdelic, lineTermSplitting, Splitting.comp, planeSplitting, Matrix.mul_assoc,
+      mul_inv_cancel_left_of_invertible, planeModel, removePlanes, Splitting.symm, cond_eq_ite,
+      Bool.false_eq_true, ↓reduceIte, fromCols_mul_fromRows, Matrix.mul_one, Matrix.mul_zero,
+      add_zero, zero_add, fromCols_map, mul_fromCols, hom_point_inv_mul_kronecker, fromRows_map,
+      Matrix.map_mul, map_J_inv, Space.map_J, fromRows_mul, Units.inv_mul_cancel_right, lineTermBasis,
+      Matrix.GeneralLinearGroup.kronecker, Units.val_one, transposeGL, star, val_blockGL_apply,
+      ← map_inv, Prod.inv_mk,
+      Units.inv_mk, inv_one, adaptedHomBasis, inv_inv, fromBlocks_conjTranspose,
+      conjTranspose_kronecker, conjTranspose_one, conjTranspose_transpose_eq_transpose_conjTranspose,
+      conjTranspose_conjTranspose, conjTranspose_zero, fromCols_mul_fromBlocks, ← mul_kronecker_mul,
+      ← transpose_mul, iCoord, iAdelic, ratMap, conjTranspose_mul, conjTranspose_map_toAdele, kCoord,
+      kAdelic, lCoord]
+    <;> simp only [coe_units_inv, conjTranspose_nonsing_inv, fromBlocks_mul_fromRows, isUnits_det_units,
+        nonsing_inv_mul_cancel_left, Matrix.zero_mul, add_zero, Matrix.one_mul, zero_add,
+        transpose_fromRows, det_conjTranspose, isUnit_star, mul_nonsing_inv, mul_one, and_self, hom,
+        ← mul_kronecker_mul, Matrix.mul_assoc, ← transpose_mul]
 
 /-- If the frames of `A` and `X` are orthonormal at the infinite places and integral at the finite
 ones, so is the frame of `lineTermSplitting` in the basis `lineTermBasis`. -/
@@ -430,26 +414,17 @@ lemma isAdapted_lineTermSplitting [hA : IsBaseAdapted A] [hX : IsBaseAdapted X] 
   rw [frameAt_lineTermSplitting]
   -- The matrix identity, block by block: every entry is a signed product of entries of the frames.
   clear hA hX h_cols inv
-  cases β
-  · simp only [iCoord, stdForm, iAdelic, Matrix.mul_assoc, transpose_mul, diagonal_transpose,
-    kCoord, lCoord, cond_eq_ite, Bool.false_eq_true, ↓reduceIte,
-    conjTranspose_fromCols_eq_fromRows_conjTranspose, Sum.swap_inl, Sum.swap_inr, ← ext_iff,
-    mul_diagonal, submatrix_apply, id_eq, diagonal_mul, kroneckerMap_apply, transpose_apply,
-    Sum.forall, fromCols_apply_inl, Sum.elim_inl, Prod.forall, conjTranspose_apply,
-    fromRows_apply_inr, fromCols_apply_inr, fromRows_apply_inl, Sum.elim_inr, Pi.one_apply,
-    Units.val_one, Int.cast_one, Subsingleton.forall₂_iff, Prod.map_fst, Prod.map_snd, cols, colMap,
-    signs]
-    ac_nf
-    simp only [eq_self, and_self, implies_true]
-  · simp only [iCoord, stdForm, iAdelic, Matrix.mul_assoc, transpose_mul, diagonal_transpose,
-    kCoord, lCoord, cond_eq_ite, ↓reduceIte, conjTranspose_fromCols_eq_fromRows_conjTranspose,
-    Sum.swap_inl, Sum.swap_inr, ← ext_iff, mul_diagonal, submatrix_apply, id_eq, diagonal_mul,
-    kroneckerMap_apply, transpose_apply, Sum.forall, fromCols_apply_inl, Sum.elim_inl, Prod.forall,
-    conjTranspose_apply, fromRows_apply_inr, fromCols_apply_inr, fromRows_apply_inl, Sum.elim_inr,
-    Pi.one_apply, Units.val_one, Int.cast_one, Subsingleton.forall₂_iff, Prod.map_fst, Prod.map_snd,
-    cols, colMap, signs]
-    ac_nf
-    simp only [eq_self, and_self, implies_true]
+  cases β <;>
+    simp only [iCoord, stdForm, iAdelic, Matrix.mul_assoc, transpose_mul, diagonal_transpose,
+      kCoord, lCoord, cond_eq_ite, Bool.false_eq_true, ↓reduceIte,
+      conjTranspose_fromCols_eq_fromRows_conjTranspose, Sum.swap_inl, Sum.swap_inr, ← ext_iff,
+      mul_diagonal, submatrix_apply, id_eq, diagonal_mul, kroneckerMap_apply, transpose_apply,
+      Sum.forall, fromCols_apply_inl, Sum.elim_inl, Prod.forall, conjTranspose_apply,
+      fromRows_apply_inr, fromCols_apply_inr, fromRows_apply_inl, Sum.elim_inr, Pi.one_apply,
+      Units.val_one, Int.cast_one, Subsingleton.forall₂_iff, Prod.map_fst, Prod.map_snd, cols, colMap,
+      signs]
+    <;> ac_nf
+    <;> simp only [eq_self, and_self, implies_true]
 
 end TwoLineTerms
 

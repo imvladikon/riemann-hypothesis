@@ -226,21 +226,14 @@ theorem exists_levelBox_disjoint {J : Subgroup (Gf E n)} (hJ : J ≤ stdLevel E 
   -- The quotient `γ'⁻¹ γ` is conjugate to `z' z⁻¹`, which is integral and close to the identity.
   obtain ⟨c, hc, h_one⟩ := V.exists_eq_one_of_norm_sub_one_le
   refine ⟨4 * c, by linarith, fun g x γ γ' z hz z' hz' h_eq ↦ ?_⟩
-  obtain ⟨hz_inf, hz_fin⟩ := mem_levelBox.1 hz
-  obtain ⟨hz'_inf, hz'_fin⟩ := mem_levelBox.1 hz'
-  have h_quot : x⁻¹ * V.ratEmbed (γ'⁻¹ * γ) * x = z' * z⁻¹ :=
-    calc x⁻¹ * V.ratEmbed (γ'⁻¹ * γ) * x
-        = (g⁻¹ * V.ratEmbed γ' * x)⁻¹ * (g⁻¹ * V.ratEmbed γ * x * z) * z⁻¹ := by
-          simp [mul_assoc]
-      _ = z' * z⁻¹ := by rw [h_eq, inv_mul_cancel_left]
-  have h_radius : (4 * c * V.height x ^ 2)⁻¹ ≤ 1 := inv_le_one_of_one_le₀
+  rw [mem_levelBox] at hz hz'
+  have h_quot : x⁻¹ * V.ratEmbed (γ'⁻¹ * γ) * x = z' * z⁻¹ := eq_mul_inv_iff_mul_eq.2 <| by
+    simpa [mul_assoc] using congrArg ((g⁻¹ * V.ratEmbed γ' * x)⁻¹ * ·) h_eq
+  have h_rad : (4 * c * V.height x ^ 2)⁻¹ ≤ 1 := inv_le_one_of_one_le₀
     (one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ (V.one_le_height x)))
-  have h_int : (z' * z⁻¹).2 ∈ stdLevel E n := hJ (J.mul_mem hz'_fin (J.inv_mem hz_fin))
-  have h_close (w : InfinitePlace E) :
-      ‖((z' * z⁻¹).1 w).val.val - 1‖ ≤ (c * V.height x ^ 2)⁻¹ :=
-    (norm_mul_inv_sub_one_le h_radius (hz_inf w) (hz'_inf w)).trans_eq (by ring)
-  rw [← h_quot] at h_int h_close
-  exact (inv_mul_eq_one.1 (h_one x (γ'⁻¹ * γ) h_int h_close)).symm
+  exact (inv_mul_eq_one.1 (h_one x (γ'⁻¹ * γ) (h_quot.symm ▸ hJ (J.mul_mem hz'.2 (J.inv_mem hz.2)))
+    fun w ↦ h_quot.symm ▸
+      (norm_mul_inv_sub_one_le h_rad (hz.1 w) (hz'.1 w)).trans_eq (by ring))).symm
 
 /-- The majorant `|φ(y_fin)| ‖y_∞‖ ^ (-A)`, where `‖y_∞‖` is the product of the operator norms at
 the infinite places. -/

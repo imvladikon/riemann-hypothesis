@@ -58,7 +58,7 @@ lemma exists_mem_algebraMap_eq_mul {a : 𝓞 E} {𝔟 𝔠 : Ideal (𝓞 E)} (h�
   obtain ⟨y, hy⟩ : ∃ y : 𝓞 E, algebraMap (𝓞 E) E y = algebraMap (𝓞 E) E r * ν :=
     ⟨⟨_, mem_denominator.1 (hν hr)⟩, rfl⟩
   exact Ideal.mem_span_singleton'.2 ⟨y, RingOfIntegers.coe_injective <| by
-    simp only [map_mul, hx, hy, mul_assoc, mul_left_comm, mul_comm]⟩
+    simp only [map_mul, hx, hy, mul_left_comm, mul_comm]⟩
 
 /-- For a nonzero ideal `𝔟`, the numbers `ν` whose denominator (the ideal of the integers `a`
 with `a ν` integral) contains `𝔟` can be given `N 𝔟` labels so that two numbers with the same

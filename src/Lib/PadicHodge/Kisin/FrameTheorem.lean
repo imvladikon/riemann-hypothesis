@@ -792,11 +792,6 @@ private lemma mem_kisinAinf_of_mem_kisinModule {x : L.Ambient} (hx : x ∈ L.kis
     x ∈ L.kisinAinf :=
   hx.left
 
-/-- Some power of `tau` multiplies a vector of `kisinAinf` into `ainfLattice`. -/
-private lemma mem_saturateBy_of_mem_kisinAinf {x : L.Ambient} (hx : x ∈ L.kisinAinf) :
-    x ∈ saturateBy (Submonoid.powers tau) L.ainfLattice :=
-  hx.left
-
 /-- After inverting `tau`, the `Ainf`-span of the Kisin module and `ainfLattice` agree: they have
 the same saturation by the powers of `tau`. This is a case of the comparison over `A_inf[1/μ]` for
 Breuil–Kisin–Fargues modules (Bhatt–Morrow–Scholze 2018, Lemma 4.26), before the Frobenius twist. -/
@@ -895,7 +890,7 @@ theorem mem_kisinModule_iff_crysForms {x : L.Ambient} :
   -- by a vector annihilated by every crystalline form, which is `0` by the `d = 0` divisibility
   -- test.
   obtain ⟨v, h_span_S, h_span_A, -⟩ := exists_span_eq_kisinModule_linearIndependent (L := L)
-  refine ⟨fun hx ↦ ⟨mem_saturateBy_of_mem_kisinAinf (mem_kisinAinf_of_mem_kisinModule hx),
+  refine ⟨fun hx ↦ ⟨(mem_kisinAinf_of_mem_kisinModule hx).left,
     L.jumpBound, fun μ hμ ↦ exists_mem_bicommutant_pow_smul_eq_of_mem_kisinModule hμ hx⟩, ?_⟩
   rintro ⟨hx_sat, n, h_val⟩
   obtain ⟨u, rfl⟩ := (mem_span_range_iff_exists_fun Ainf).mp <| h_span_A.ge <|

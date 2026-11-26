@@ -755,11 +755,11 @@ lemma _root_.New.NormOnePairOccursFrom.notMem_remainingTerms
     rw [flagSpan_zero, bot_sup_eq] at h_one h_coe
     exact h_ne (h_one.symm.trans h_coe)
 
-/-- Let `E` contain a primitive root of unity of order `5040`. If `γ` agrees and is not in the set
+/-- If `γ` agrees and is not in the set
 `Γ*` of the remaining terms, then a norm-one pair occurs for `γ` from the index `0` on: for one `ζ`
 with `ζ ζ̄ = 1`, the frame and its image under `γ` share a vector with the leading coefficients `ζ`
 and `1` at every index. -/
-lemma CharsAgree.normOnePairOccursFrom_zero [HasPrimitiveRoot5040 E] (h_agree : S.CharsAgree γ)
+lemma CharsAgree.normOnePairOccursFrom_zero (h_agree : S.CharsAgree γ)
     (hγ : γ ∉ S.remainingTerms) : NormOnePairOccursFrom 0 γ := by
   have h_disc : S.termDisc γ = 0 := by_contra fun h ↦ hγ (.inl h)
   have h_span : isotropicSpan 1 = isotropicSpan (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E) :=

@@ -692,9 +692,9 @@ lemma exists_mem_nhds_isIntegral_sub_div {E : Type*} [Field E] [NumberField E] (
     mem_nhds_zero_finAdele_iff.mpr ⟨c, hc, fun z hz ↦ ⟨z, hz, rfl⟩⟩
   have hU : U ∈ nhds y₀ := (continuous_sub_right y₀).tendsto' y₀ 0 (sub_self y₀) h_zero
   refine ⟨U, hU, fun x x' ⟨z, hz, hx⟩ ⟨z', hz', hx'⟩ ↦ algebraMap_mem_Ô.mp ?_⟩
-  have h_diff : algebraMap E (𝔸f E) (x - x') = c * (z - z') := by simp [mul_sub, ← hx, ← hx']
   have h_mul : (c : 𝔸f E) * algebraMap E (𝔸f E) ((x - x') / c) = c * (z - z') := by
-    rw [← h_diff, ← map_natCast (algebraMap E (𝔸f E)), ← map_mul, mul_div_cancel₀ _ (mod_cast hc)]
+    rw [← map_natCast (algebraMap E (𝔸f E)), ← map_mul, mul_div_cancel₀ _ (mod_cast hc)]
+    simp [mul_sub, ← hx, ← hx']
   rw [(isUnit_natCast_finAdele hc).mul_left_cancel h_mul]
   exact sub_mem hz hz'
 

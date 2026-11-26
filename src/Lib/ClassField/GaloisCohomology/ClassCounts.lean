@@ -155,12 +155,9 @@ vanish at `γ` map onto the image of `W`. -/
 theorem map_inf_vanishingAt_eq_map_of_linear {H : Type*} [AddCommGroup H] [Module R H]
     (π : Z1 ρ →ₗ[R] H) (hπ : LinearMap.ker π = B1 ρ) {W : Submodule R (Z1 ρ)} (hBW : B1 ρ ≤ W) :
     (W ⊓ vanishingAt ρ γ).map π = W.map π := by
-  refine le_antisymm (Submodule.map_mono inf_le_left) ?_
-  rintro _ ⟨z, hz, rfl⟩
-  obtain ⟨b, hb, hzb⟩ := exists_sub_mem_B1_apply_eq_zero hγ hζ hρ z
-  have hπb : π b = 0 := LinearMap.mem_ker.1 (hπ ▸ hb)
-  exact ⟨z - b, Submodule.mem_inf.2 ⟨W.sub_mem hz (hBW hb), hzb⟩, by
-    rw [map_sub, hπb, sub_zero]⟩
+  apply Submodule.toAddSubgroup_injective
+  exact map_inf_vanishingAt_eq_map hγ hζ hρ π.toAddMonoidHom
+    (congrArg Submodule.toAddSubgroup hπ) ((Submodule.toAddSubgroup_le _ _).2 hBW)
 
 variable {H : Type*} [AddGroup H] (π : Z1 ρ →+ H) (hπ : π.ker = (B1 ρ).toAddSubgroup)
 include hπ

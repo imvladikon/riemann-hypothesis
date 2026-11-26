@@ -187,7 +187,8 @@ def Kernel.lift : S →ₗ[ℂ] AlgForm n κ e →ₗ[ℂ] AlgForm n' κ ea := b
     (fun Φ φ ↦
       ⟨fun h ↦ classIntegral stdRatPoints K fun g ↦ k.jetMap (k.ω (g, h) Φ) (φ.val g), ?_,
         fun γ h ↦ ?_⟩)
-    (fun Φ Φ' φ ↦ ?_) (fun c Φ φ ↦ ?_) (fun Φ φ φ' ↦ ?_) fun c Φ φ ↦ ?_
+    (fun Φ Φ' φ ↦ ?addDatum) (fun c Φ φ ↦ ?smulDatum)
+    (fun Φ φ φ' ↦ ?addForm) fun c Φ φ ↦ ?smulForm
   · -- Smoothness: the lift is fixed by the open subgroup of the `a` with `(1, a)` fixing `Φ`.
     refine (comap (.inr _ _) (rightStabilizer fun g ↦ k.ω g Φ)).isOpen_mono (fun a ha h ↦ ?_)
       ((k.isOpen_stabilizer Φ).preimage (.prodMk_right 1))
@@ -196,15 +197,11 @@ def Kernel.lift : S →ₗ[ℂ] AlgForm n κ e →ₗ[ℂ] AlgForm n' κ ea := b
     -- moves it into `k.ω`.
     exact classIntegral_map_mul_right (weightRep κ ea _ γ).toAddMonoidHom 1
       (k.integrand_mem_smoothInvariants Φ φ h) (by simp [← k.equivariant 1])
-  -- Bilinearity: the integral is additive and commutes with scalars.
-  · ext : 2
+  case addDatum | addForm =>
+    ext : 2
     simp [classIntegral_add, ← Pi.add_def]
-  · ext h : 2
-    exact classIntegral_map_mul_right (DistribSMul.toAddMonoidHom _ c) 1
-      (k.integrand_mem_smoothInvariants Φ φ h) (by simp)
-  · ext : 2
-    simp [classIntegral_add, ← Pi.add_def]
-  · ext h : 2
+  case smulDatum | smulForm =>
+    ext h : 2
     exact classIntegral_map_mul_right (DistribSMul.toAddMonoidHom _ c) 1
       (k.integrand_mem_smoothInvariants Φ φ h) (by simp)
 

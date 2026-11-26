@@ -182,8 +182,6 @@ theorem length_eq_length_map_π₁_add_length_inf_B1 (W : Submodule R (Z1 A.ρ))
 def quotEquivH1 : (Z1 A.ρ ⧸ B1 A.ρ) ≃ₗ[R] A.H 1 :=
   (Submodule.quotEquivOfEq _ _ A.ker_π₁.symm).trans (A.π₁.quotKerEquivOfSurjective A.π₁_surjective)
 
-@[simp]
-lemma quotEquivH1_mk (z : Z1 A.ρ) : A.quotEquivH1 (Submodule.Quotient.mk z) = A.π₁ z := rfl
 
 /-! ### Restriction in degree one -/
 

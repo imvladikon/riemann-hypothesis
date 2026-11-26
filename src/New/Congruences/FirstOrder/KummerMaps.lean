@@ -85,9 +85,8 @@ lemma isOpenEmbedding_toGalPlus : Topology.IsOpenEmbedding (toGalPlus E) :=
   isOpenEmbedding_galois_restrict (toGalPlus E) fun _ _ ↦ rfl
 
 lemma index_range_toGalPlus : (toGalPlus E).range.index = 2 := by
-  obtain ⟨-, -, h_index⟩ := isClosedEmbedding_galois_restrict (K := maximalRealSubfield E)
-    (L := E) (toGalPlus E) fun _ _ ↦ rfl
-  rw [h_index, Algebra.IsQuadraticExtension.finrank_eq_two]
+  rw [index_range_eq_finrank_of_smul_eq_smul (K := maximalRealSubfield E) (L := E)
+    (toGalPlus E) (fun _ _ ↦ rfl), Algebra.IsQuadraticExtension.finrank_eq_two]
 
 lemma isComplexConj_conjPlus : IsComplexConj (conjPlus E) := isComplexConj_cmConj
 

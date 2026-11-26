@@ -797,11 +797,18 @@ def restrictToY :
         (smooth.preimage cont)
     -- `branching` intertwines the action of `diag (γ, 1)` with that of `γ`
     simp [stdSpace_weightRep_apply]
-    -- `erw`: the index types of `borderU` and of `stdSpace` agree only up to unfolding.
-    erw [block_embFin, equivariant, stdSpace_weightRep_apply]
+    let ε := D.lastIndexEquiv.sumCongr (Equiv.refl Unit)
+    have h_block : D.borderU ((stdSpace D.E (D.Y D.m)).embFin γ) =
+        (stdSpace D.E (D.InitIndex D.m ⊕ Unit)).embFin (U.block ε (γ, 1)) :=
+      block_embFin ε γ
+    rw [h_block]
+    refine (congrArg (D.branching.map (↑) *ᵥ ·)
+      (equivariant (U.block ε (γ, 1)) (D.borderU g))).trans ?_
+    refine (congrArg (D.branching.map (↑) *ᵥ ·)
+      (stdSpace_weightRep_apply (γ := U.block ε (γ, 1)) (v := ψ (D.borderU g)))).trans ?_
     rw [mulVec_mulVec, D.isBranchingMap_branching.mul_weylRep _ _ 1, Finset.prod_eq_one,
       one_smul] <;>
-      simp [← ext_iff, GL.blockScalar])
+      simp [← ext_iff, GL.blockScalar, ε])
 
 end New.Data
 

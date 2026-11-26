@@ -24,7 +24,7 @@ public import Lib.General.Topology
 
 In the strong integral, operator-valued functions are integrated vector by vector, so no
 measurability in the operator norm is needed. In the results on analytic families, E is a
-finite-dimensional complex normed space, K a compact R₁ space and f : E → K → ℂ a family of
+finite-dimensional complex normed space, K a compact space and f : E → K → ℂ a family of
 functions on K with parameter in E. The file also contains the Schwarz lemma in normed spaces,
 holomorphy of dominated parameter integrals, a uniqueness result for analytic functions along
 submersions, and Hua's bound for negative powers of determinants.
@@ -169,11 +169,11 @@ lemma DiscreteSeries.IsAnalyticFamily.analyticAt_integral {mK : MeasurableSpace 
     (h_eq.mono fun x hx ↦ ?_)
   simp [strongIntegral_eval, hx]
 
-/-- Let E be a finite-dimensional complex normed space and K a compact R₁ space. If, for all x near
+/-- Let E be a finite-dimensional complex normed space and K a compact space. If, for all x near
 p ∈ E and all k ∈ K, f : E → K → ℂ is jointly continuous at (x, k) and f(·, k) is complex
 differentiable at x, then x ↦ f(x, ·) is analytic at p as a map to the Banach space C(K, ℂ), that
 is, `IsAnalyticFamily f p`. -/
-lemma isAnalyticFamily_of_continuousAt_of_differentiableAt [R1Space K] {f : E → K → ℂ} {p : E}
+lemma isAnalyticFamily_of_continuousAt_of_differentiableAt {f : E → K → ℂ} {p : E}
     (hf_cont : ∀ᶠ x : E in nhds p, ∀ k : K, ContinuousAt f.uncurry (x, k))
     (hf_diff : ∀ᶠ x : E in nhds p, ∀ k : K, DifferentiableAt ℂ (fun z : E ↦ f z k) x) :
     DiscreteSeries.IsAnalyticFamily f p := by
@@ -205,11 +205,11 @@ lemma isAnalyticFamily_of_continuousAt_of_differentiableAt [R1Space K] {f : E �
       exact (((hU (line z) hz).2 k).comp z (hline z)).differentiableWithinAt
   simpa only [Function.comp_def, e.symm_apply_apply] using h.comp (e.analyticAt p)
 
-/-- Let E be a finite-dimensional complex normed space, K a compact R₁ space and f : E → K → ℂ. If,
+/-- Let E be a finite-dimensional complex normed space, K a compact space and f : E → K → ℂ. If,
 for all x near p ∈ E and all k ∈ K, f is jointly continuous at (x, k) and f(·, k) is complex
 differentiable at x, then x ↦ f(x, ·) is analytic at p as a map to C(K, ℂ). The two hypotheses of
 `New.isAnalyticFamily_of_continuousAt_of_differentiableAt` are here joined in one. -/
-lemma isAnalyticFamily_of_differentiable [R1Space K]
+lemma isAnalyticFamily_of_differentiable
     (hf : ∀ᶠ x : E in nhds p, ∀ k : K,
       ContinuousAt f.uncurry (x, k) ∧ DifferentiableAt ℂ (fun z : E ↦ f z k) x) :
     DiscreteSeries.IsAnalyticFamily f p :=

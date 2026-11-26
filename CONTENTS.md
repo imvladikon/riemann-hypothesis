@@ -647,6 +647,7 @@ The heads of these files give an overview of a theory: `Lib/ClassField/Global/Ar
 - `Lib/ClassField/Places/ProfiniteGalois` (135): Profinite Galois groups: continuity, restriction maps and the Galois correspondence
 - `Lib/ClassField/Places/DecompositionCyclotomic` (199): Decomposition and inertia groups, and cyclotomic characters at Frobenii and inertia
 - `Lib/ClassField/Places/ValuationSubrings` (341): Valuation subrings over primes, primes from p-adic embeddings, and the efg formula
+- `Lib/ClassField/Places/AbsoluteValues` (62): Places as valuation subrings and as absolute values
 - `Lib/ClassField/Places/LocalFields` (445): Local fields: Frobenius, uniformisers, normalised valuation, extensions, unramified characters
 - `Lib/ClassField/Places/DecompositionCompletion` (497): Decomposition groups of places above p as Galois groups of local fields in ℚ̄_p
 - `Lib/ClassField/Places/Ideles` (237): Finite ideles, principal ideles and the class group; finite index of open subgroups

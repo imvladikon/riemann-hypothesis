@@ -565,13 +565,15 @@ lemma _root_.New.weylNormSq_le_mul_of_toPoly_eq {ξ : WeylIndexFamily n κ → �
   -- The hypothesis in coordinates: multiplication sends `G ξ ⊗ G η` to `G ζ`.
   have h_coord : (vecMulVec (weylGramOver *ᵥ η) (weylGramOver *ᵥ ξ)).vec ᵥ* C = weylGramOver *ᵥ ζ :=
     vecMul_comulMatrix_eq_iff.mpr h_toPoly_eq.symm
+  have h_tensorVec : B *ᵥ v = (vecMulVec (weylGramOver *ᵥ η) (weylGramOver *ᵥ ξ)).vec := by
+    simp [B, v, vecMul_transpose _ ξ, kronecker_mulVec_vec, mul_vecMulVec, vecMulVec_mul]
   have h_pair : star (C *ᵥ ζ) ⬝ᵥ B *ᵥ v = weylNormSq ζ := by
-    simp [B, v, star_mulVec, ← dotProduct_mulVec, h_coord, ← coe_weylNormSq, hC_real,
-      vecMul_transpose _ ξ, kronecker_mulVec_vec, mul_vecMulVec, vecMulVec_mul, mulVec_transpose]
+    rw [h_tensorVec]
+    simp [star_mulVec, ← dotProduct_mulVec, h_coord, ← coe_weylNormSq, hC_real, mulVec_transpose]
   have h_tensor : (star v ⬝ᵥ B *ᵥ v).re = weylNormSq η * weylNormSq ξ := by
-    simp [B, v, ← coe_weylNormSq, ↓map_vecMulVec_star, ← dotProduct_mulVec,
-      vecMul_transpose _ ξ, kronecker_mulVec_vec, mul_vecMulVec, vecMulVec_mul, star_vec,
-      vec_dotProduct_vec, vecMulVec_mulVec]
+    rw [h_tensorVec]
+    simp [v, ← coe_weylNormSq, ↓map_vecMulVec_star, star_vec, vec_dotProduct_vec,
+      vecMulVec_mul_vecMulVec, mul_comm]
   have h_isom : (star (C *ᵥ ζ) ⬝ᵥ B *ᵥ (C *ᵥ ζ)).re = weylNormSq ζ := by
     simp [B, C, star_mulVec, ← dotProduct_mulVec, hC_real, mulVec_mulVec, comulMatrix_isometry,
       ← coe_weylNormSq]

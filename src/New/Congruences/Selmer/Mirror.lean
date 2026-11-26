@@ -621,10 +621,8 @@ lemma exists_linearMap_apply_eq_dualSelmer_conj {hp : IsTiedPrimes ℓ S₀ V W 
     rintro t _ ⟨h', hh', rfl⟩
     simpa [LinearMap.mem_ker.1 hα] using h_pair α t (conjGal_mem_sahGroup hh')
   -- So `θ` factors through the surjection `π`.
-  let η : (n → QuotSpan a) →ₗ[O] CharacterModule (n → QuotSpan a) :=
-    (LinearMap.ker π).liftQ θ h_ker ∘ₗ (π.quotKerEquivOfSurjective hπ).symm.toLinearMap
-  have hη (α : T.sahGroup →₀ O) : η (π α) = θ α := by simp [η]
-  exact ⟨η, fun h hh ↦ by simpa [π, θ] using hη (Finsupp.single ⟨h, hh⟩ 1)⟩
+  refine ⟨π.liftOfSurjective hπ ⟨θ, h_ker⟩, fun h hh ↦ ?_⟩
+  simpa [π, θ] using LinearMap.equivOfSurjective_apply hπ h_ker (m := Finsupp.single ⟨h, hh⟩ 1)
 
 /-- Let `y` lie in the dual Selmer group, let `z` be a cocycle such that `z(H)` spans `(O / a) ^ n`,
 and let `η` be linear with `η(z(h)) = y(h^c)` on `H`. Then `η` lies in `conjDualHom ℓ T.ρ a`: it

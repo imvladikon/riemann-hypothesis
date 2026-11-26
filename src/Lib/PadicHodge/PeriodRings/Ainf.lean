@@ -1,6 +1,6 @@
 module
 
-public import TauCeti.RingTheory.Perfectoid.Cyclotomic
+public import TauCeti.RingTheory.Perfectoid.Cyclotomic.Basic
 public import TauCeti.RingTheory.Perfectoid.Padic
 public import Mathlib.Algebra.CharP.Pi
 public import Mathlib.Algebra.Order.Star.Rat

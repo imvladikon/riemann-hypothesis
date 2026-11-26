@@ -327,7 +327,7 @@ q ≠ 0. If X − q^d c kills s at A for the one-dimensional representation μ, 
 for χ_ℓ^d · μ, where χ_ℓ is the ℓ-adic cyclotomic character. "P kills s at A" (`PolyKillsAt`) means
 P(r(s)) = 0 when ℓ is a unit at A, and otherwise the Weil-pair condition `New.Period.IsKilledBy`
 along every local datum at A. -/
-lemma polyKillsAt_scalarRep_cyclotomicCharIn_pow_mul [PadicIso ℓ]
+lemma polyKillsAt_scalarRep_cyclotomicCharIn_pow_mul
     (μ : Gal(Ω/E) →* (PadicAlgCl ℓ)ˣ) (A : ClosurePlace) (d : ℕ) (s : Gal(Ω/E)) (q : ℕ)
     (c : PadicAlgCl ℓ) (hq : q ≠ 0) (hs : IsFrob A q s⁻¹)
     (h : PolyKillsAt (scalarRep μ) A s (X - C (q ^ d * c))) :

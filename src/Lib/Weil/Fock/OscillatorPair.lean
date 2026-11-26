@@ -354,13 +354,6 @@ variable {ε : R → ℤˣ} {ε' : C → ℤˣ} (f : USign ε →* USign ε') (�
 
 variable {f : USign ε →* USign ε'} {γ : ℤ}
 
-/-- For `g` in U(ε′), the operator norm of the Weil operator `realWeil g` on the Fock space is at
-most the norm of the vacuum vector times the modulus of `realMultiplier g`, the conjugate of the
-determinant of the negative block of `g`. -/
-lemma norm_realWeil_le (g : USign ε') :
-    ‖realWeil g‖ ≤ ‖(vacVector : fockSpace ε')‖ * ‖realMultiplier g‖ :=
-  norm_weilRep_le (realAction ε') g
-
 /-- Let `f` be a continuous homomorphism from U(ε) to U(ε′) with `‖f g‖ ≤ a * ‖g‖`. Then
 `detTwist f γ`, the Weil representation pulled back along `f` and twisted by `det ^ γ`, is strongly
 continuous, preserves the positive definite hermitian form `fockInner`, and has operator norm
@@ -386,7 +379,7 @@ lemma isUnitaryRep_detTwist {a : ℝ}
     positivity
   · -- The determinant has modulus one, and the multiplier grows at most like `‖f g‖ ^ card C`.
     calc ‖detTwist f γ g‖ = ‖realWeil (f g)‖ := by simp [norm_smul]
-      _ ≤ ‖(vacVector : fockSpace ε')‖ * ‖realMultiplier (f g)‖ := norm_realWeil_le (f g)
+      _ ≤ ‖(vacVector : fockSpace ε')‖ * ‖realMultiplier (f g)‖ := norm_weilRep_le (realAction ε') (f g)
       _ ≤ ‖(vacVector : fockSpace ε')‖ * a ^ card C * ‖(g : Matrix R R ℂ)‖ ^ card C := by
         grw [mul_assoc, ← mul_pow, norm_realMultiplier_le, h_norm]
 

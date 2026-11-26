@@ -190,24 +190,17 @@ variable (χ : QZChar Γ) {L : Type} [Field L] [EmbeddedNumberField L] [Algebra 
 lemma QZChar.eventually_artinAt_eq_one :
     ∀ᶠ a : (𝔸f K)ˣ in nhds 1,
       a ∈ idelesUnitOff ∅ ∧ ∀ v : FinPlace K, abelianLift χ (artinAt Γ v (ideleAt v a)) = 1 := by
-  -- Only finitely many places ramify for `χ`. At these the condition is open; at the others
-  -- it holds for every unit idele. (Every homomorphism from the units of a completion to the
-  -- abelianisation of `Γ` is continuous: `continuous_hom_locField_units`.)
-  let R : Set (FinPlace K) :=
-    {v : FinPlace K | ∀ A : ClosurePlace, IsPlaceOver A v → inertiaGroup Γ A ≤ ker χ}ᶜ
-  have h_open : IsOpen (⋂ v ∈ R, ideleAt v ⁻¹' ((abelianLift χ).comp (artinAt Γ v)).ker) := by
-    refine (finite_ramified (isOpen_ker χ)).isOpen_biInter fun v _ ↦
-      IsOpen.preimage (by fun_prop) ?_
-    exact continuous_iff_forall_isOpen_ker_comp.mp (continuous_hom_locField_units _) χ
-  filter_upwards [((isOpen_idelesUnitOff ∅).inter h_open).mem_nhds (by simp)]
-    with a ⟨h_unit, h_ram⟩
-  refine ⟨h_unit, fun v ↦ ?_⟩
-  by_cases hv : v ∈ R
-  · exact mem_iInter₂.1 h_ram v hv
-  · have h_unr : inertiaGroup Γ (placeOver v) ≤ ker χ :=
-      not_not.1 hv _ v.isPlaceOver_placeOver
-    exact (v.isPlaceOver_placeOver.artinAt_units_trivial_iff_inertiaGroup_le χ).2 h_unr _
-      (mem_idelesUnitOff.1 h_unit v (notMem_empty v))
+  -- Only finitely many places ramify for `χ`; at these the condition is open, and at the others
+  -- it holds for every unit idele.
+  have h_open := (finite_ramified (isOpen_ker χ)).isOpen_biInter fun v _ ↦
+    IsOpen.preimage (by fun_prop : Continuous (ideleAt v))
+      (continuous_iff_forall_isOpen_ker_comp.mp (continuous_hom_locField_units (artinAt Γ v)) χ)
+  filter_upwards [((isOpen_idelesUnitOff ∅).inter h_open).mem_nhds (by simp)] with a ⟨hu, hr⟩
+  refine ⟨hu, fun v ↦ ?_⟩
+  by_cases hv : ∀ A : ClosurePlace, IsPlaceOver A v → inertiaGroup Γ A ≤ ker χ
+  · exact (v.isPlaceOver_placeOver.artinAt_units_trivial_iff_inertiaGroup_le χ).2
+      (hv _ v.isPlaceOver_placeOver) _ (mem_idelesUnitOff.1 hu v (notMem_empty v))
+  · exact mem_iInter₂.1 hr v hv
 
 /-- A character `χ` of `Γ` takes the global Artin symbol of a finite idele `a` to the product over
 the finite places `v` of its values on the local symbols of the components of `a`. -/

@@ -132,7 +132,7 @@ def divisibleSelmer {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommR
     (DivisibleQuot O')
 
 /-- The length over `O'` of the Selmer group `Sel_Q(T ψ)` with coefficients in `Frac(O') / O'`. -/
-def divisibleLength {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommRing O'] [DVR O']
+def divisibleLength {O O' n : Type} [CommRing O] [PadicIntegerRing O ℓ] [CommRing O']
     [Fintype n] [DecidableEq n] (T : SelmerDatum ℓ S₀ g₀ O n) (Q : Finset (FinPlace E))
     (e : O →+* O') (ψ : Gal(Ω/E) →* O') : ℕ∞ :=
   length O' (T.divisibleSelmer Q e ψ)

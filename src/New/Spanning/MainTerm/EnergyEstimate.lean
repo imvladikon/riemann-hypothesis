@@ -145,12 +145,12 @@ noncomputable abbrev normalizingConst (S : Filling E 𝔰) (k : ℕ) : ℝ :=
     √𝔰.openCellConst * ∏ a : Fin 𝔰.n, S.frameScaleSq v a ^ (k + 2 * a.rev)) /
       Fintype.card S.BesselCoord
 
-/-- Assume `S.IsAdmissible` and `𝔰.k = kPred + 1`. The product of the Poisson summation constants
+/-- Assume `𝔰.k = kPred + 1`. The product of the Poisson summation constants
 `S.poissonConst i` over `i < 𝔰.n` is `S.normalizingConst kPred ^ 2` times
 `volÔ E ^ 𝔰.n (dim / Λ) ^ 2 / c_G ^ f`, where `dim = Fintype.card S.BesselCoord` is the number of
 Bessel coordinates, `Λ = S.frameScaleProd`, `c_G = 𝔰.openCellConst` and `f` is the number of
 infinite places. -/
-lemma prod_poissonConst_eq [S.IsAdmissible] {kPred : ℕ} (hk : 𝔰.k = kPred + 1) :
+lemma prod_poissonConst_eq {kPred : ℕ} (hk : 𝔰.k = kPred + 1) :
     ∏ i ∈ Finset.range 𝔰.n, S.poissonConst i =
       S.normalizingConst kPred ^ 2 *
         (volÔ E ^ 𝔰.n * (Fintype.card S.BesselCoord / S.frameScaleProd) ^ 2 /
@@ -347,7 +347,7 @@ lemma sieve_constant_le [S.IsAdmissible] {kPred numSieved : ℕ} (hk : 𝔰.k = 
     _ = _ := by ring
 
 /-- The square of the normalising constant is positive. -/
-lemma normalizingConst_sq_pos [S.IsAdmissible] (kPred : ℕ) :
+lemma normalizingConst_sq_pos (kPred : ℕ) :
     0 < S.normalizingConst kPred ^ 2 := by
   have h_prod : 0 < ∏ v : NumberField.InfinitePlace E,
       √𝔰.openCellConst * ∏ a : Fin 𝔰.n, S.frameScaleSq v a ^ (kPred + 2 * a.rev) :=

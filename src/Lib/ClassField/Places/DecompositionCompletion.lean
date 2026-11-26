@@ -76,17 +76,12 @@ lemma valuation_comap_intQpBar_lt_one : ((intQpBar p).comap ι) p < 1 := by
   rw [comap_apply_lt_one_iff, map_natCast, valuation_intQpBar_lt_one_iff]
   exact PadicAlgCl.norm_p_lt_one p
 
-/-- The valuation ring that `ℚ̄_p` induces on `ℚ_p` is `ℤ_p`: both consist of the elements of norm
-at most `1`. -/
-private lemma toSubring_valRingBelow_intQpBar :
-    (valRingBelow ℚ_[p] (intQpBar p)).toSubring = subring p := by
-  ext x
-  change intQpBar p (algebraMap ℚ_[p] (PadicAlgCl p) x) ≤ 1 ↔ ‖x‖ ≤ 1
-  rw [← map_one (intQpBar p).valuation, valuation_intQpBar_le_iff, norm_one, norm_algebraMap']
-
 /-- The valuation ring that `ℚ̄_p` induces on `ℚ_p`, identified with `ℤ_p`. -/
 private noncomputable def valRingBelowEquivPadicInt : valRingBelow ℚ_[p] (intQpBar p) ≃+* ℤ_[p] :=
-  .subringCongr toSubring_valRingBelow_intQpBar
+  .subringCongr (by
+    ext x
+    change intQpBar p (algebraMap ℚ_[p] (PadicAlgCl p) x) ≤ 1 ↔ ‖x‖ ≤ 1
+    rw [← map_one (intQpBar p).valuation, valuation_intQpBar_le_iff, norm_one, norm_algebraMap'])
 
 /-- The residue field of `ℚ_p` for the valuation ring that `ℚ̄_p` induces on it (which is `ℤ_p`) has
 `p` elements. -/

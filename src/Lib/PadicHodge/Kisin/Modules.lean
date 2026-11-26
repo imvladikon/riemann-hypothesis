@@ -619,10 +619,13 @@ lemma letterProj_mk_mem_ainfLattice (t : Rep.of (overZp L.ρ)) :
 lemma comp_letterProj_mem_forms (h : μ ∈ L.forms) : μ ∘ₗ L.letterProj i ∈ L.forms := by
   intro t g
   -- `μ` commutes with `g` on `fracSpan`, and `g` commutes with `letterProj i`
-  -- Elaborator: `erw`, as the goal carries `letterProj i` with its scalars restricted to A_inf.
-  erw [← form_gal_smul ⟨_, g, rfl⟩ h (mem_saturateBy_of_mem (letterProj_mk_mem_ainfLattice t)),
-    gal_smul_letterProj]
-  simp
+  let γ : k.galMonoid := ⟨inr g.val, g, rfl⟩
+  have h_mk : γ.val • (DiagTensor.mk 1 t : L.Ambient) = DiagTensor.mk 1 (L.ρ g t) := by
+    simp [γ]
+  change μ (L.letterProj i (DiagTensor.mk 1 (L.ρ g t))) =
+    γ • μ (L.letterProj i (DiagTensor.mk 1 t))
+  rw [← h_mk, ← gal_smul_letterProj γ]
+  exact form_gal_smul γ h (mem_saturateBy_of_mem (letterProj_mk_mem_ainfLattice t))
 
 lemma valueAt_comp_wittMap {μ : L'.Ambient →ₗ[Ainf] BdR} :
     valueAt a (μ ∘ₗ F.wittMap) x = valueAt a μ (F.wittMap x) := by simp [valueAt]
@@ -691,13 +694,18 @@ lemma exists_span_formsOfType_mod_pred (i : Letter) (u : ℤ) :
   have f_gal (μ : L.formsOfType i u) (t : Rep.of (overZp L.ρ)) (g : k.subgroup) :
       f μ (L.ρ g t) = (χ g ^ (-u)).val • toGp g • f μ t :=
     theta_a <| by
-      erw [comp_letterProj_mem_forms μ.property.1, ← ha, smul_distrib_smul, smul_tUnit_zpow,
-        smul_comm, ← smul_assoc]
+      have h_inv : μ.val (L.letterProj i (.mk 1 (L.ρ g t))) =
+          toGp g.val • μ.val (L.letterProj i (.mk 1 t)) :=
+        comp_letterProj_mem_forms μ.property.1 t g
+      rw [h_inv, ← ha, smul_distrib_smul, smul_tUnit_zpow, smul_comm, ← smul_assoc]
   have f_ζ (μ : L.formsOfType i u) (t : Rep.of (overZp L.ρ)) :
       f μ (O.ζ.val • t) = theta (k.letterTeich i) * f μ t :=
-    theta_a (by
-      erw [← mulZeta.wittMap_letterProj (.mk 1 t),
-        mem_letterPart_iff_mulZeta.1 letterProj_mem_letterPart, μ.val.map_smul, ← ha, ← smul_assoc])
+    theta_a <| by
+      have h_mk : (DiagTensor.mk 1 (O.ζ.val • t) : L.Ambient) = L.mulZeta.wittMap (.mk 1 t) := by
+        simp [mulZeta]
+      rw [h_mk, ← mulZeta.wittMap_letterProj (.mk 1 t),
+        mem_letterPart_iff_mulZeta.1 letterProj_mem_letterPart, smul_eq_val_smul,
+        μ.val.map_smul, ← ha, ← smul_assoc]
   -- A basis `b` of the span of the symbols, made of symbols `b m = f (ν m)`.
   obtain ⟨b, hb, span_b, b_indep⟩ := exists_fun_fin_finrank_span_eq ℂ_[p] (.range f)
   choose ν hν using hb

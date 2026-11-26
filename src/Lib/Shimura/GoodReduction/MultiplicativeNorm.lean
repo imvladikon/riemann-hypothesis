@@ -640,7 +640,7 @@ lemma hasShiftBound_of_torsionAction
     have h_ample : IsAmpleType B χ :=
       ⟨h_ah, h.isAmpleType.isPosRiemann, 2 * Nat.card (h.MulKernel c), by simp, h_order⟩
     refine .of_mem_thetaSpace h_ample ⟨?_, fun l hl z ↦ ?_⟩
-    · simp [s, normalizedShift, canonicalMultiplier]
+    · simp only [normShift, normalizedShift, canonicalMultiplier, LinearMap.smul_apply, s]
       fun_prop
     -- translation by `l ∈ L` multiplies `s ξ` by `ξ (c⁻¹ l)`
     let y : h.divLattice c := ⟨(F c).inverse l, by simpa [divLattice]⟩
@@ -762,7 +762,7 @@ lemma hasMultiplicativeNorm_of_frequently_hasShiftBound
   -- distorts sizes: `A.HasShiftBound v w 1` for all `A` and `w`.
   have h_tendsto : Tendsto (fun e : V →L[ℂ] V ↦ pullForm e (B + B)) (nhds 0) (nhds 0) := by
     refine Continuous.tendsto' ?_ 0 0 (by aesop)
-    simp [continuous_clm_apply]
+    simp only [continuous_clm_apply, pullForm_apply_apply, add_apply]
     fun_prop
   obtain ⟨e, ⟨c, hc_ne, hce, h_ker⟩, h_pos⟩ : ∃ e : V →L[ℂ] V,
       (∃ c : R, c ≠ 0 ∧ (∀ x : V, F c (e x) = x) ∧
@@ -974,7 +974,7 @@ lemma New.ThetaTori.ThetaTorus.hasGoodReduction_and_val_card_eq_one {E : Type} [
   -- The inverse of `x.intAction c` is `complexMul` of a small vector, and `complexMul` is
   -- continuous at `0`.
   have h_cont : Continuous x.isPeriodMap.complexMul := by
-    simp [continuous_clm_apply]
+    simp only [continuous_clm_apply, Variety.IsPeriodMap.complexMul_apply_apply]
     fun_prop
   refine (h_cont.tendsto' 0 _ (map_zero _)).frequently
     (Metric.nhds_basis_ball.frequently_iff.mpr fun r hr_pos ↦ ?_)

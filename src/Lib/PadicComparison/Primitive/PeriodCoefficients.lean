@@ -193,13 +193,6 @@ section PeriodLifting
 open CategoryTheory TensorProduct Function Functor Module LinearMap AlgebraTensorModule Period Lift
   WittVector AdicCompletion Submodule ModuleCat Comparison AddCommGrpCat
 
-/-- If `p * y` lies in `W(𝔪) = wittOfMaxIdeal`, for `𝔪` the maximal ideal of `O♭`, so does `y`:
-`W(𝔪)` is the kernel of the map to the Witt vectors of the residue field, a domain in which
-`p ≠ 0`. -/
-private lemma mem_wittOfMaxIdeal_of_natCast_mul_mem {p : ℕ} [ThePrime p] {y : Ainf}
-    (h : (p : Ainf) * y ∈ wittOfMaxIdeal) : y ∈ wittOfMaxIdeal := by
-  aesop (add simp [wittOfMaxIdeal, p_ne_zero])
-
 /-- There is a linear map `W(𝔪) → 𝔪` that is onto with kernel `p W(𝔪)`: the zeroth coordinate.
 Here `𝔪` is the maximal ideal of `O♭` and `W(𝔪) = wittOfMaxIdeal`. -/
 lemma exists_isReductionMod_wittOfMaxIdeal {p : ℕ} [ThePrime p] :
@@ -222,7 +215,8 @@ lemma exists_isReductionMod_wittOfMaxIdeal {p : ℕ} [ThePrime p] :
     simpa [Subtype.ext_iff] using h_iff
   constructor
   · rintro ⟨y, rfl⟩
-    exact ⟨y, mem_wittOfMaxIdeal_of_natCast_mul_mem hx, rfl⟩
+    -- The Witt vectors of the residue field form a domain, and `p` is nonzero there.
+    exact ⟨y, by simpa [wittOfMaxIdeal, p_ne_zero] using hx, rfl⟩
   · rintro ⟨y, -, rfl⟩
     exact ⟨y, rfl⟩
 

@@ -375,8 +375,7 @@ def nonnegMaps : AddSubgroup (ratMatrices E ι' ι) where
 
 /-- Multiplication by `𝔢`: the rational map `V → V` that kills `X` and the last string vector and
 sends the string vector `b` to a multiple of the vector `b + 1`. The factor is `-N c` if `b` has
-weight `0`, `-N c²` if `b` has weight `1`, and `c` otherwise. It sends `𝔢 ^ i` to `𝔢 ^ (i + 1)`
-(`New.Grading.shift_mulVec_stringPower`). -/
+weight `0`, `-N c²` if `b` has weight `1`, and `c` otherwise. It sends `𝔢 ^ i` to `𝔢 ^ (i + 1)`. -/
 def shift : Matrix ι ι (𝔸 E) :=
   -- For `a = b + 1`: `b` has weight zero iff `2 * b + 1 = s`, and weight one iff `2 * a = s`.
   (gradedBlocks Y.indexEquiv Y.indexEquiv 0 <| Matrix.of fun a b : Fin s ↦
@@ -445,7 +444,6 @@ lemma vecMul_J_apply (y : ι → 𝔸 E) :
   simp [Y.gram_eq, gradedGram, vecMul_apply_eq_sum, reindex_equiv Y.indexEquiv, apply_ite toAdele,
     stringReversal, Matrix.one_apply]
 
-@[simp]
 lemma J_inv_eq_gradedGram : V.J⁻¹ = gradedGram Y.indexEquiv N⁻¹ := by
   rw [Y.gram_eq]
   refine inv_eq_left_inv ?_

@@ -215,8 +215,8 @@ lemma exists_equiv_diagonal_signs (j : ℕ) :
   · rw [negCount_sumElim, negCount_gridSigns, negCount_gridSigns]
     rcases Nat.even_or_odd (min j D.m) with h | h <;>
       simp [negCount, h.neg_one_pow]
-    · grind [Nat.even_iff]
-    · grind [Nat.odd_iff]
+    · grind
+    · grind
 
 /-- A bijection from the index set of `Y` at `(j, j)` plus one point to that of `Ỹ`. It is the
 identity for `j = 0`. Otherwise it is chosen to match the signs (`exists_equiv_diagonal_signs`). -/
@@ -688,12 +688,6 @@ section Steps
 
 variable {j : ℕ} {P : Parameters} (D : Data P) {z : Bool} {o i : ℕ} (τ : D.Φ)
 
-/-- Each entry of the doubled parameter `D.gridParam z o i j τ` at the node `(i, j)` has the parity
-of `card (D.GridIndex z i j) - 1`, the size of the index set minus one. -/
-lemma even_gridParam_add_card_sub_one (x : D.GridIndex z i j) :
-    Even (D.gridParam z o i j τ x + card (D.GridIndex z i j) - 1) :=
-  (D.hasGap_compactForm_gridParam (o := o) (i := i) (j := j) τ z).parity x
-
 /-- At the infinite place `τ`, two entries of the doubled parameter at a node whose signs differ
 are at least `2 * D.gap = 4 * D.halfGap` apart. -/
 lemma two_mul_gap_le_abs_gridParam_sub {x y : D.GridIndex z i j}
@@ -730,7 +724,7 @@ infinite place `τ`, the gap `D.gap` for the signs of the node (`HasGap`): its e
 have the parity of the rank minus one, and differ by at least `2 * D.gap` where the signs differ. -/
 lemma hasGap_gridParam (z : Bool) (o i j : ℕ) : (D.gridParam z o i j τ).HasGap D.gap where
   injective := D.gridParam_injective τ
-  parity := D.even_gridParam_add_card_sub_one τ
+  parity := (D.hasGap_compactForm_gridParam (o := o) (i := i) (j := j) τ z).parity
   gap _ _ := D.two_mul_gap_le_abs_gridParam_sub τ
 
 /-- Let `o + j ≤ m`, with `o = 0` (the grids) or `i = 0` (the triangles). For every infinite place

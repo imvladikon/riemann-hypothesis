@@ -70,13 +70,6 @@ variable {X : Scheme.{0}} {ι : Type} {L : LineBundle X ι} {R : Type} [CommRing
 private lemma _root_.New.LineBundle.H0.isSection_val (r : L.H0 R) : L.IsSection r.val :=
   r.prop.left
 
-/-- At a point that lands in the charts `i` and `j`, the components of a global section `r`
-differ by the transition function: `r i = g_ij · r j`. -/
-private lemma _root_.New.LineBundle.H0.val_eq_transition_mul (r : L.H0 R) (i j : ι)
-    (A : CommRingCat) (t : Spec A ⟶ X) (hi : LandsIn t (L.opens i)) (hj : LandsIn t (L.opens j)) :
-    r.val i A t = L.transition i j A t * r.val j A t :=
-  (LineBundle.H0.isSection_val r).right i j A t hi hj
-
 /-- A component `r.val i` of a global section vanishes at the points outside the chart `i`. -/
 private lemma _root_.New.LineBundle.H0.val_eq_zero_of_not_landsIn (r : L.H0 R) (i : ι)
     (A : CommRingCat) (t : Spec A ⟶ X) (h_out : ¬LandsIn t (L.opens i)) : r.val i A t = 0 :=
@@ -164,7 +157,7 @@ lemma thetaEval_eq_iff (h : HasThetaCoords Λ (atGeneric s) L B χ θ) (r : L.H0
   -- the chart does not matter: `θ z i * r i = θ z j * r j` if `θ z i` and `θ z j` are not zero
   constructor
   · rintro rfl i z hi
-    simp [thetaEval, LineBundle.H0.val_eq_transition_mul r i (thetaChart h z),
+    simp [thetaEval, (LineBundle.H0.isSection_val r).right i (thetaChart h z),
       h.hasFieldCoords .., field, apply_thetaChart_ne_zero h, hi]
   · -- at each `z` the value of `thetaEval h r` is read in the chart `thetaChart h z`
     intro h_val

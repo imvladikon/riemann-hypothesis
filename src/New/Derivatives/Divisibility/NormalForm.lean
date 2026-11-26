@@ -10,8 +10,7 @@ public import Lib.General.Algebra.SeriesCongruences
   `F(ϖ z) = W exp (c_ϖ Ξ)` with `W` integral, `c_ϖ = ϖ ^ (p + 1) / p` and
   `Ξ = ∑_{e ∈ S} ∑_j λ_{e j} Γ_e ^ p ^ j`, for any rule that assigns partners to places.
 * `New.HasNormalForm.rescale`: the normal form is kept, with other numbers `λ_{e j}`, under
-  `z ↦ α z` with `α` integral; so its existence depends only on the valuation of `ϖ`
-  (`New.HasNormalForm.exists_of_norm_eq`).
+  `z ↦ α z` with `α` integral.
 * `New.HasNormalForm.norm_coeff_subst_le_one`: if `F` has the normal form and `Z` is integral
   without constant term, then `F(ϖ Z)` is integral in degrees at most `B` if the couplings `Γ_e(Z)`
   with `e ∈ S`, `e ≤ log_p B` are divisible by some `π` with `‖c_ϖ π‖ ≤ p ^ (-1 / (p - 1))`.

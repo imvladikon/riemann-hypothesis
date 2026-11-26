@@ -236,7 +236,6 @@ lemma rpow_le_norm_factorial {n : ℕ} : p ^ (-(n / (p - 1)) : ℝ) ≤ ‖(n ! 
     _ = ‖(n ! : ℂ_[p])‖ := by simp [norm_natCast_eq_inv_pow_padicValNat n.factorial_ne_zero]
 
 /-- Substituting `a` into the rescaled series `f(c X)` is substituting `c • a` into `f`. -/
-@[simp]
 lemma subst_rescale_eq_subst_smul {c : ℂ_[p]} (a : MvPowerSeries σ ℂ_[p]) (ha : HasSubst a)
     (f : ℂ_[p]⟦X⟧) :
     (rescale c f).subst a = f.subst (c • a) := by

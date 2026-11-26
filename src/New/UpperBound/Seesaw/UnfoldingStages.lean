@@ -775,6 +775,9 @@ lemma integral_unfoldStageOn (ϑ : D.TameChar)
     using integral_besselGroup_unfold Y' (rankTwist (D.chainChar ϑ (k + 1))) (movedDatum ϑ ξ y k)
       (isEquivariant_unfoldStageOn ϑ t φ ξ y k hk) hz_aut hz_rapid
 
+/-- Decidable equality on the sum of `q × X_{2i+1}` and the type of pairs `(a, b)` of an index `a`
+of `Y_{2i} ⊕ Y_{2i+2}` and an index `b` of `Y_{2i+1}` whose grades have positive difference, built
+from the instances for sums, products and subtypes. -/
 noncomputable local instance instDecidableEqDoubleLiftSplitting (i : ℕ) (hi : 2 * i < 2 * D.ϱ + 1)
     {X q : Type} {s : ℕ} [Fintype X] [DecidableEq X] [Fintype q] [DecidableEq q]
     {Y : Grading (D.spaceY (2 * i + 2)) D.N X s} :
@@ -997,16 +1000,12 @@ lemma map_evaluatedDatum_of_conj_mem (ϑ : D.TameChar) (y : ∀ k : ℕ, Gf D.E 
   -- The evaluation carries `ω(1, z)` on the data for the `Y_k` to `ω(1, u)`, where `z` is the image
   -- of `u`; the former fixes the translated datum, as the level fixes `pointDatumY`.
   let Φ (j : ℕ) : ((D.spaceY j).hom (D.spaceY (j + 1))).finitePart := translatedPointDatumY ϑ y j
-  let z : Gf D.E (D.Y (2 * i + 1 + 1)) := (D.gradingY _ hi).inclXFin u
   have fix_lower :
-      liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, z) (Φ (2 * i + 1)) = Φ (2 * i + 1) :=
+      liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, (D.gradingY _ hi).inclXFin u)
+        (Φ (2 * i + 1)) = Φ (2 * i + 1) :=
     liftWeilFin_translatedPointDatumY ϑ y (2 * i + 1) hu
-  have equivariant :
-      D.doubleLiftEvalY i (arrowProduct (Φ (2 * i)).val
-          (liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, z) (Φ (2 * i + 1))).val) =
-        TensorProduct.map .id (liftWeilFin (D.chainChar ϑ (2 * i + 1 + 1)) (1, u))
-          (D.doubleLiftEvalY i (arrowProduct (Φ (2 * i)).val (Φ (2 * i + 1)).val)) :=
-    doubleLiftEvalY_inclXFin i hi (D.chainChar ϑ (2 * i + 1 + 1)) u (Φ (2 * i)) (Φ (2 * i + 1))
+  have equivariant := doubleLiftEvalY_inclXFin i hi (D.chainChar ϑ (2 * i + 1 + 1)) u
+    (Φ (2 * i)) (Φ (2 * i + 1))
   rw [fix_lower] at equivariant
   exact equivariant.symm
 

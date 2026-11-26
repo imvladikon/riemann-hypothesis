@@ -1148,8 +1148,8 @@ lemma New.Variety.hodgeTateMap_pointClass_eq_zero_of_ne {p : ℕ} {k : Type} [Fi
           HodgeH.scale t x = H.map hodgeCoeff (freeAb.map (scaledGraph t (𝟙 X) (constMap z))) d
             δ.baseChange := by
         change H.map hodgeCoeff S d (H.map hodgeCoeff g' d δ.baseChange) = _
-        erw [← H.map_comp, h_graph]
-        rfl
+        exact (H.map_comp ..).symm.trans
+          (congrArg (fun f ↦ H.map hodgeCoeff f d δ.baseChange) h_graph)
       refine h_scale.trans ?_
       have h_sum := hδ _ _ _ t _ h_coincidence fun w _ ↦ h_jacobian t w
       exact h_sum.trans (by simp; rfl)

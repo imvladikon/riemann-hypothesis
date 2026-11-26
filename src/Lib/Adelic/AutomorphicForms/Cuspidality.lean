@@ -833,32 +833,25 @@ minimum, cut off at 1, of `V.move g`. -/
 theorem exists_norm_mul_height_pow_le (he : IsCuspKernel B e) (K : OpenSubgroup (Gf E n)) (A : ℕ) :
     ∃ R : ℝ, ∀ {F : G E s → ℂ} {c : ℝ} (_h_form : V.IsForm e F) (_h_level : HasLevel F K)
       (_h_bound : ∀ g : G E s, ‖F g‖ ≤ c) (g : G E s), ‖F g‖ * V.height g ^ A ≤ c * R := by
-  -- High in the cusp use rapid decay with `δ ^ n = κ / V.height g`; elsewhere the height is at most
-  -- `κ`.
+  -- High in the cusp use rapid decay with `δ ^ n = κ / V.height g`; elsewhere height is ≤ `κ`.
   cases isEmpty_or_nonempty n
-  · -- If `n` is empty the lattice has no nonzero vector, so the height is `1`.
-    exact ⟨1, by simp +contextual [height, firstMinimum, funext_iff]⟩
+  · exact ⟨1, by simp +contextual [height, firstMinimum, funext_iff]⟩
   let J : OpenSubgroup (Gf E n) := K ⊓ ⟨stdLevel E n, isOpen_stdLevel⟩
   have : IsLevel J.toSubgroup := ⟨inf_le_right, J.isOpen⟩
   obtain ⟨δ₀, hδ₀, h_decay⟩ := exists_norm_le_of_radicalCovered he (Fintype.card n * A)
   obtain ⟨κ, hκ, h_cusp⟩ := exists_cuspFrame_of_height (s := s) J
   refine ⟨(κ / (δ₀ ⊓ 1) ^ Fintype.card n) ^ A, fun {F c} hF h_level hc g ↦ ?_⟩
-  obtain ⟨δ, hδ_pos, hδ, h_frame⟩ := h_cusp V g
+  obtain ⟨δ, hδ_pos, rfl, h_frame⟩ := h_cusp V g
   have hc₀ : 0 ≤ c := (norm_nonneg _).trans (hc 1)
-  have h_bound : ‖F g‖ ≤ (δ / (δ₀ ⊓ 1)) ^ (Fintype.card n * A) * c := by
-    rcases le_total δ 1 with hδ_le | hδ_ge
-    · obtain ⟨cusp, h_cover⟩ := h_frame hδ_le
-      have h_cusp_bound : ‖F g‖ ≤ (δ / δ₀) ^ (Fintype.card n * A) * c :=
-        h_decay J V g δ cusp.isotropicCols hδ_pos.le cusp.ne_zero cusp.isotropic h_cover F c
-          hF.continuous hc
-          (hF.realConv_eq he.integrable) (fun k hk ↦ h_level k hk.1) fun ν _ ↦ hF.rat_mul _ ⟨ν, rfl⟩
-      grw [h_cusp_bound, (inf_le_left : δ₀ ⊓ 1 ≤ δ₀)]
-    · refine (hc g).trans (le_mul_of_one_le_left hc₀ (one_le_pow₀ ?_))
-      exact (one_le_div (by positivity)).2 (inf_le_right.trans hδ_ge)
-  calc ‖F g‖ * V.height g ^ A ≤ (δ / (δ₀ ⊓ 1)) ^ (Fintype.card n * A) * c * V.height g ^ A :=
-        mul_le_mul_of_nonneg_right h_bound (pow_nonneg (V.height_pos g).le A)
-    _ = c * ((δ ^ Fintype.card n * V.height g) / (δ₀ ⊓ 1) ^ Fintype.card n) ^ A := by ring
-    _ = c * (κ / (δ₀ ⊓ 1) ^ Fintype.card n) ^ A := by rw [hδ]
+  suffices ‖F g‖ ≤ (δ / (δ₀ ⊓ 1)) ^ (Fintype.card n * A) * c from
+    (mul_le_mul_of_nonneg_right this (pow_nonneg (V.height_pos g).le A)).trans_eq (by ring)
+  rcases le_total δ 1 with hδ_le | hδ_ge
+  · obtain ⟨cusp, h_cover⟩ := h_frame hδ_le
+    grw [h_decay J V g δ cusp.isotropicCols hδ_pos.le cusp.ne_zero cusp.isotropic h_cover F c
+      hF.continuous hc (hF.realConv_eq he.integrable) (fun k hk ↦ h_level k hk.1)
+      (fun ν _ ↦ hF.rat_mul _ ⟨ν, rfl⟩), (inf_le_left : δ₀ ⊓ 1 ≤ δ₀)]
+  · exact (hc g).trans (le_mul_of_one_le_left hc₀ (one_le_pow₀
+      ((one_le_div (by positivity)).2 (inf_le_right.trans hδ_ge))))
 
 /-- Let `V` be a hermitian space over the CM field `E`, and let `e` be a cusp kernel of order `B` on
 `G_∞`. Such a kernel is a minimal idempotent `e` such that (a) `‖x‖^(B+1) e(x)` is integrable, (b)

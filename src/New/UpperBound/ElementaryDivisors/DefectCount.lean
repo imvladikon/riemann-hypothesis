@@ -873,10 +873,14 @@ lemma FrobeniusCycle.index_mul_relIndex_le (T : FrobeniusCycle N W K) (r : ℕ) 
   -- The entries of the Levi subgroup between the blocks vanish, and
   -- `twoBlock k r i < twoBlock k r j` implies `i < j`.
   have h_levi : levi W (twoBlock k r) ≤ parahoric W (twoBlock k r) := fun g hg ↦ by
-    simp [parahoric, parabolic, BlockTriangular]
+    suffices ∀ ⦃i j⦄, twoBlock k r i < twoBlock k r j → g.val i j ∈ IsLocalRing.maximalIdeal W by
+      simpa [parahoric, parabolic, BlockTriangular]
     exact fun i j h ↦ by simp [hg i j h.ne]
   have h_iwahori_le : parahoric W Fin.val ≤ parahoric W (twoBlock k r) := fun g hg ↦ by
-    simp [parahoric, parabolic, BlockTriangular] at hg ⊢
+    replace hg : ∀ ⦃i j : Fin k⦄, i < j → g.val i j ∈ IsLocalRing.maximalIdeal W := by
+      simpa [parahoric, parabolic, BlockTriangular] using hg
+    suffices ∀ ⦃i j⦄, twoBlock k r i < twoBlock k r j → g.val i j ∈ IsLocalRing.maximalIdeal W by
+      simpa [parahoric, parabolic, BlockTriangular]
     exact fun i j h ↦ hg (by grind [twoBlock])
   grw [relIndex_le_of_le_right h_levi index_ne_zero_of_finite, mul_comm, ← cast_mul,
     relIndex_mul_index h_iwahori_le, parahoric, index_comap,

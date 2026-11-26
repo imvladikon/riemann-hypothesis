@@ -571,16 +571,15 @@ lemma formAdjoint_mul_self_mulVec_apply_eq_of_survives {w : Matrix ι' ι (𝔸 
       rw [homBicharacter_eq, ← stdAddChar_inv_two_mul_add_star,
         ← stdAddChar_inv_two_mul_add_star (toAdele j * star x ⬝ᵥ (yᴴ * V'.J.map toAdele * y) *ᵥ v)]
       exact congrArg (fun z ↦ (stdAddChar E (toAdele 2⁻¹ * z) : ℂ)) h_sum
+    have h_half : toAdele ((j : E) / 2) + toAdele ((j : E) / 2) = toAdele (j : E) := by
+      rw [← map_add, add_halves]
     simp [u_mat, formAdjoint, ← dotProduct_mulVec, dotProduct_comm _ (_ ᵥ* _), ← Matrix.mul_assoc,
       mul_eq_one_symm V.map_J_inv_mul_map_J, (isHermitian_J _).eq, ← trace_conjTranspose,
       conjTranspose_nonsing_inv, trace_mul_comm _ (map _ _), Matrix.mulVec_add, Matrix.mulVec_smul,
       Matrix.mul_add, eichlerMap, mul_sub, mul_vecMulVec,
-        star_dotProduct_mulVec_comm]
+        star_dotProduct_mulVec_comm, neg_div, ← h_half]
     -- The trace terms and the terms in `star x ⬝ᵥ J *ᵥ x` cancel; the pairings of `x` with `v`
     -- add up.
-    have h_half : toAdele ((j : E) / 2) + toAdele ((j : E) / 2) = toAdele (j : E) := by
-      rw [← map_add, add_halves]
-    rw [neg_div, map_neg, ← h_half]
     ring
   have u_deg :
       HasDegreeGe Y.gradeOf Y.gradeOf 2 (V.ratCoordMatrix u - 1) ∧
@@ -803,10 +802,10 @@ private lemma hasLeftInv_submatrix_of_survives {x : Matrix ι' ι E}
   -- A kernel vector `u` vanishes, by induction on the weight of the coordinate.
   refine .of_ker_le_bot fun u hu ↦ funext (int_weight_induction (fun a : A ↦ Y.gradeOf a) ?_)
   -- Indices of positive weight lie on the string; let `a` be the last one there with `u a ≠ 0`.
-  simp [A, reindex_equiv Y.indexEquiv]
-  change ∀ (b : Fin s) (hb : 2 * ((b : ℕ) : ℤ) < (s : ℤ) - 1),
-    (∀ (b' : Fin s) (hb' : 2 * ((b' : ℕ) : ℤ) < (s : ℤ) - 1), b < b' →
-      u ⟨Y.indexEquiv (.inr b'), _⟩ = 0) → u ⟨Y.indexEquiv (.inr b), _⟩ = 0
+  suffices h : ∀ (b : Fin s) (hb : 2 * ((b : ℕ) : ℤ) < (s : ℤ) - 1),
+      (∀ (b' : Fin s) (hb' : 2 * ((b' : ℕ) : ℤ) < (s : ℤ) - 1), b < b' →
+        u ⟨Y.indexEquiv (.inr b'), _⟩ = 0) → u ⟨Y.indexEquiv (.inr b), _⟩ = 0 by
+    simpa [A, reindex_equiv Y.indexEquiv] using h
   by_contra! ⟨a, a_pos, ih, u_ne⟩
   -- `v` is `u` extended by zero, as an adelic vector.
   let v : ι → 𝔸 E := toAdele ∘ Finsupp.indicator A (u ⟨·, ·⟩)

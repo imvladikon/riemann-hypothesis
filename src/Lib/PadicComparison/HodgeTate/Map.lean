@@ -525,12 +525,12 @@ def HodgeTatePair.tensorContractionCocycle :
       · change (F.map (f ≫ g)).hom a ⊗ₜ (C.component (f ≫ g)).hom b =
           (F.map g).hom ((F.map f).hom a) ⊗ₜ (F.map g).hom ((C.component f).hom b) +
             (F.map g).hom ((F.map f).hom a) ⊗ₜ (C.component g).hom ((F.map f).hom b)
-        erw [h_map, h_cocycle]
+        rw [h_map, h_cocycle]
         exact tmul_add _ _ _
       · change (C.component (f ≫ g)).hom a ⊗ₜ (F.map (f ≫ g)).hom b =
           (F.map g).hom ((C.component f).hom a) ⊗ₜ (F.map g).hom ((F.map f).hom b) +
             (C.component g).hom ((F.map f).hom a) ⊗ₜ (F.map g).hom ((F.map f).hom b)
-        erw [h_map, h_cocycle]
+        rw [h_map, h_cocycle]
         exact add_tmul _ _ _
 
 /-- Let `M`, `L` be functors on pairs, `M` with flat values, `x` a class of degree `a` on `M` and
@@ -549,12 +549,12 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_true {a : ℕ}
       contractionCocycle.extension.X₃.obj c ⟶ contractionCocycle.extension.X₂.obj c :=
     ofHom (.inr _ (formCoeff c))
   simp_rw [TotalH.cup, TotalH.map_comp, comp_assoc]
-  -- `erw`: `cohomClass` is the class of the extension only after unfolding its definition.
-  erw [map_extClass contractionCocycle.shortExact_extension]
   refine congrArg (_ ∘ _) <| .trans (tensorContractionCocycle.cohomClass_comp_eq_extClass
     (S := ⟨_, _, _⟩) _ (𝟙 _) (piAbFunctor.π _ true)
       (fun c ↦ by exact abTensorMap (σ c) (𝟙 _)) ?_ ?_)
-    pullbackAlong_id
+    (pullbackAlong_id.trans
+      (TotalH.map_extClass (Φ := abTensor.flip.obj formCoeff)
+        contractionCocycle.shortExact_extension).symm)
   · -- `σ ⊗ 𝟙` lifts the identity
     exact fun c ↦ addCommGrp_tensor_hom_ext fun a b ↦ by
       change TensorProduct.map _ _ (TensorProduct.map _ _ (a ⊗ₜ[ℤ] b)) = a ⊗ₜ[ℤ] b
@@ -587,9 +587,14 @@ lemma HodgeTatePair.cup_comp_tensorContractionCocycle_π_false {a : ℕ}
       contractionCocycle.extension.X₃.obj c ⟶ contractionCocycle.extension.X₂.obj c :=
     ofHom (.inr _ (formCoeff c))
   simp_rw [TotalH.cup, TotalH.map_comp, comp_assoc]
-  -- `erw`: `cohomClass` is the class of the extension only after unfolding its definition.
-  erw [← map_zsmul, map_extClass contractionCocycle.shortExact_extension,
-    ← extClass_sign_comm (abTensor_shortExact contractionCocycle.shortExact_extension)]
+  rw [← map_zsmul]
+  refine Eq.trans ?_ (congrArg
+    (fun e ↦ comp (map (abTensor.obj M) y)
+      ((-1 : ℤ) ^ a • comp e (map (abTensor.flip.obj formCoeff) x.toTotalH)))
+    (TotalH.map_extClass (Φ := abTensor.obj M)
+      contractionCocycle.shortExact_extension).symm)
+  refine Eq.trans ?_ (congrArg _
+    (extClass_sign_comm (abTensor_shortExact contractionCocycle.shortExact_extension) x))
   refine congrArg (_ ∘ _) <| .trans (tensorContractionCocycle.cohomClass_comp_eq_extClass
     (S := ⟨_, _, _⟩) _ (𝟙 _) (piAbFunctor.π _ false)
       (fun c ↦ by exact abTensorMap (𝟙 _) (σ c)) ?_ ?_)
@@ -670,13 +675,13 @@ lemma HodgeTatePair.contractionPow_cup {a : ℕ} {M L : AbFunctor HodgeTatePair}
       let z : H M formCoeff (a + 1) := x.comp contractionCocycle.shortExact_extension.extClass rfl
       have hz : comp x.toTotalH contractionCocycle.cohomClass = z.toTotalH :=
         comp_of x contractionCocycle.shortExact_extension.extClass rfl
-      erw [hz]
+      rw [hz]
       change comp (z.toTotalH.cup y) (pullbackAlong wedgePairing (contractionPow l)) = _
-      erw [ih z y]
+      rw [ih z y]
       apply sum_congr rfl
       intro h _
       rw [show a + 1 + h = a + (h + 1) by omega]
-      erw [← hz, comp_assoc (x := x.toTotalH) contractionCocycle.cohomClass (contractionPow h)]
+      rw [← hz, comp_assoc (x := x.toTotalH) contractionCocycle.cohomClass (contractionPow h)]
 
 
 /-- Product formula: let `N`, `N'` be functors from `k`-algebras to abelian groups, `x` a Hodge

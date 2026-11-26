@@ -409,7 +409,7 @@ lemma New.exists_character_components {N : ℕ} [NeZero N] {E : Type} [Field E] 
           (4 * φ N) • x = 0) := by
   let ι : Gal(Ω/E) →* Gal(Ω/ℚ) := MulSemiringAction.toAlgAut Gal(Ω/E) ℚ Ω
   have hι : Topology.IsClosedEmbedding ι :=
-    (isClosedEmbedding_galois_restrict (K := ℚ) (L := E) ι fun _ _ ↦ rfl).1
+    isClosedEmbedding_of_smul_eq_smul (K := ℚ) (L := E) ι fun _ _ ↦ rfl
   have h_lift : ∀ g ∈ cycloGalGroup N, ∃ w : Gal(Ω/E), ι w = g :=
     fun g hg ↦ ⟨⟨g, g.map_mul', g.map_add', fun x ↦ h_sub x ⟨g, hg⟩⟩, rfl⟩
   have h_conj (g : Gal(Ω/E)) : ι (conjGal g) = cmConj * ι g * cmConj := rfl

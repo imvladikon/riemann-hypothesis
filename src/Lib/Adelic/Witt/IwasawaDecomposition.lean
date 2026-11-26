@@ -25,8 +25,7 @@ and further choices).
 * `New.Space.Splitting.centreCoeff`: the Fourier coefficients of a function along this centre.
 * `New.Space.Splitting.iwasawa`: the Iwasawa decomposition for the maximal compact subgroup
   `New.maxCompact`, obtained at each infinite place and over the finite adeles from Witt's theorem
-  (`New.Space.Splitting.iwasawa_of_witt`). The compact factor can be taken trivial where the given
-  element is (`New.Space.Splitting.exists_mem_maxCompact_actsOnFrame_and_eq_one`).
+  (`New.Space.Splitting.iwasawa_of_witt`).
 * `New.Space.Splitting.exists_eq_radicalElement_mul_levi_mul_isAdapted`: every element is a product
   of an element of the radical, a Levi element and an element adapted to the splitting.
 

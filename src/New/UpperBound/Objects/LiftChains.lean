@@ -318,7 +318,7 @@ lemma apply_kernelProduct_le_prod_mul (size : ∀ j : ℕ, Gf E (n j) → (WeylI
 pure tensors of the data `Φ x` under one linear map. Then the value at `p` of the combination of the
 chains applied to `φ` is a sum of elements of `A`, one for each tuple of double cosets in
 `StdClasses (K j)`, `j < m`. -/
-lemma IsJointlyInvariant.sum_chain_mem_nsmul [WeilData E] {X : Type*} {m : ℕ} {s : Finset X}
+lemma IsJointlyInvariant.sum_chain_mem_nsmul {X : Type*} {m : ℕ} {s : Finset X}
     {L : X → (WeylIndex (n m) κ → ℂ) →ₗ[ℂ] M} {Φ : X → ∀ j : ℕ, S j}
     (h_inv : IsJointlyInvariant k m s L Φ)
     (h_free : ∀ j < m, ∀ g : Gf E (n j), classAut stdRatPoints (K j) g = ⊥)

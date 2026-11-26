@@ -732,9 +732,9 @@ lemma kroneckerOne_scalingUnitary_smul (hκ : IsScalingAtM N β δ κ)
   rw [kroneckerOne_smul]
   exact mulVec_diagonal κ _ i.1
 
-/-- At a level prime `N` split as `P` and its conjugate, the matrix of `latticeUnitary` is
+/-- For a split level `N` with chosen places `P`, the matrix of `latticeUnitary` is
 `(diagonal κ * γ) ⊗ 1`, where `γ = neighbourMatrix X X'' P π`. -/
-lemma coe_latticeUnitary [Fact N.Prime] (hP : IsSplitLevel P N)
+lemma coe_latticeUnitary (hP : IsSplitLevel P N)
     (hπ : IsSplitSquarefree P (N : E) π) (hκ : IsScalingAtM N β δ κ) :
     (latticeUnitary X' hπ hκ : Matrix (PairIndex X X'' × X') (PairIndex X X'' × X') (𝔸f E)) =
       (diagonal κ * neighbourMatrix X X'' P π) ⊗ₖ (1 : Matrix X' X' (𝔸f E)) := by

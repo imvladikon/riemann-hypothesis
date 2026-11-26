@@ -256,7 +256,6 @@ lemma exists_norm_mul_lastPathPairing_le_one : ∃ N ≠ (0 : ℕ),
       congr 1
       simp only [LinearMap.compl₂_apply, Matrix.mulVecLin_apply, dotProductBilin_apply_apply,
         dotProduct, mulVec, map_sum, map_mul, map_intCast, Matrix.map_apply, Function.comp_apply]
-
   calc _ = (∏ τ, ‖N τ * (χ τ)⁻¹.val‖) * ‖w' ⬝ᵥ D.lastPathBranching.map (↑) *ᵥ w‖ := by
         rw [h_char, ← norm_prod, ← norm_mul, ← mul_assoc, Units.coe_prod, ← prod_mul_distrib]
         simp only [mul_assoc, Units.inv_mul, mul_one, map_mul, map_natCast, map_prod,

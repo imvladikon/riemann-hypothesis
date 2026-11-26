@@ -761,8 +761,9 @@ lemma isLerayHirschBasis_lineBasis_of_injective
   let π := elementsProj (projLineAlong g)
   change _ = sliceEquiv
     (Θ.mulClass (etaClass g).toTotalH p.1 + sliceEquiv.symm (TotalH.map (restrictAlong π) p.2))
-  erw [map_add, Θ.sliceEquiv_mulClass, AddEquiv.apply_symm_apply]
-  exact add_comm _ _
+  refine (add_comm _ _).trans ?_
+  exact ((map_add sliceEquiv _ _).trans
+    (congrArg₂ (· + ·) (Θ.sliceEquiv_mulClass ..) (sliceEquiv.apply_symm_apply _))).symm
 
 
 -- Keeps definitional checks from unfolding the group structure of the Ext groups.
@@ -1061,7 +1062,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_coord (g : ℚ≥0 →+ ℚ) :
           (discToTorus g ≫ y.down).hom (single 1 1) = y.down.hom (single (g 1) 1) := by
         change y.down.hom (mapDomain g (single 1 1)) = _
-        erw [AddMonoidAlgebra.mapDomain_single]
+        exact congrArg y.down.hom (AddMonoidAlgebra.mapDomain_single ..)
       simp only [z₀, z₁, Bool.cond_false, Bool.cond_true, h_coord]
       change v = (F c (0, 0) - F c (0, X')) - (F c (0, 0) - F c (X - 1, 1))
       simpa only [sub_sub_sub_cancel_left, eq_sub_iff_add_eq] using h_frame

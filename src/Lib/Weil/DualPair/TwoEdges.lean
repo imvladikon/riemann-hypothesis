@@ -181,7 +181,9 @@ lemma finHeisenbergOp_arrowProduct (y : (ι ⊕ ι'') × ι' → 𝔸f E) :
     -- Without -two_mul_half, grind rewrites 2 * half = 1 first and misses the ring identity.
     grind [-stdLattice.two_mul_half]
   -- The action passes through the product and the flip; it remains to compare the scalars.
-  simp [finHeisenbergOp, arrowProduct, rho_boxProd, ← CoordChange.map_rho, ← mul_smul]
+  simp only [finHeisenbergOp, arrowProduct, Equiv.prodCongr_refl_refl, Equiv.trans_refl,
+    ContinuousLinearMap.comp_apply, _root_.smul_apply, rho_boxProd, ← CoordChange.map_rho, map_smul,
+    ← mul_smul]
   have h_vec : (flipCoords star_normNegOne_mul_self rfl (t := ε) (s := ε')).φ
       (finVec y ∘ (Equiv.sumProdDistrib ι ι'' ι').symm ∘ Sum.inl) =
       finVec (fun q : ι' × ι ↦ ((normNegOne : (Ô E)ˣ) : 𝔸f E) * star (y (Sum.inl q.2, q.1))) :=
@@ -243,20 +245,20 @@ lemma range_arrowTensor : arrowTensor.range = (V'.hom (flipSum V V'')).finitePar
   -- Both sides are spans. By `finHeisenbergOp_arrowProduct` each generator
   -- `finHeisenbergOp _ y vacElem` of `finitePart` is a nonzero multiple of `arrowProduct` of two
   -- generators; what is left is that every pair of generators arises from some `y`.
-  simp [← map₂_eq_range_lift_comp_mapIncl, finitePart, map₂_span_span, ← arrowProduct_vacElem,
-    finHeisenbergOp_arrowProduct, le_antisymm_iff, span_le, smul_mem, mem_span_of_mem,
-    arrowTensor, Set.range_subset_iff]
-  change ∀ (x : ι' × ι → 𝔸f E) (x' : ι'' × ι' → 𝔸f E),
-    arrowProduct ((V.hom V').finHeisenbergOp x (V.hom V').vacElem)
-        ((V'.hom V'').finHeisenbergOp x' (V'.hom V'').vacElem) ∈
-      span ℂ (Set.range fun z : (ι ⊕ ι'') × ι' → 𝔸f E ↦
-        (stdLattice.semichar fun q : ι' × ι ↦ z (Sum.inl q.2, q.1)) ^ 2 •
-          arrowProduct
-            ((V.hom V').finHeisenbergOp
-              (fun q : ι' × ι ↦ ((normNegOne : (Ô E)ˣ) : 𝔸f E) * star (z (Sum.inl q.2, q.1)))
-              (V.hom V').vacElem)
-            ((V'.hom V'').finHeisenbergOp (fun q : ι'' × ι' ↦ z (Sum.inr q.1, q.2))
-              (V'.hom V'').vacElem))
+  suffices h : ∀ (x : ι' × ι → 𝔸f E) (x' : ι'' × ι' → 𝔸f E),
+      arrowProduct ((V.hom V').finHeisenbergOp x (V.hom V').vacElem)
+          ((V'.hom V'').finHeisenbergOp x' (V'.hom V'').vacElem) ∈
+        span ℂ (Set.range fun z : (ι ⊕ ι'') × ι' → 𝔸f E ↦
+          (stdLattice.semichar fun q : ι' × ι ↦ z (Sum.inl q.2, q.1)) ^ 2 •
+            arrowProduct
+              ((V.hom V').finHeisenbergOp
+                (fun q : ι' × ι ↦ ((normNegOne : (Ô E)ˣ) : 𝔸f E) * star (z (Sum.inl q.2, q.1)))
+                (V.hom V').vacElem)
+              ((V'.hom V'').finHeisenbergOp (fun q : ι'' × ι' ↦ z (Sum.inr q.1, q.2))
+                (V'.hom V'').vacElem)) by
+    simpa [← map₂_eq_range_lift_comp_mapIncl, finitePart, map₂_span_span, ← arrowProduct_vacElem,
+      finHeisenbergOp_arrowProduct, le_antisymm_iff, span_le, smul_mem, mem_span_of_mem,
+      arrowTensor, Set.range_subset_iff] using h
   intro x x'
   -- Conjugation followed by multiplication by the unit `normNegOne` is onto.
   obtain ⟨y, rfl⟩ :
