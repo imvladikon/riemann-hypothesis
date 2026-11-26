@@ -113,8 +113,7 @@ lemma twoSidedSubst_stackedDetProd (e : a ⊕ N ≃ L) [Fintype Φ] {ι : Φ →
       · simp [A, Matrix.mul_apply, mul_sum, mul_add, mul_assoc, mul_comm (X _), ← e.sum_comp,
           ← C_mul']
     simp only [h_left, det_mul, ← RingHom.map_det]
-    simp [stackedDet, A, ← C_mul', mul_assoc]
-    exact .inl (mul_comm _ _)
+    simpa [stackedDet, A, ← C_mul', mul_assoc] using .inl (mul_comm _ _)
   simp only [stackedDetProd, map_prod, h_factor, prod_smul, prod_const, card_univ]
 
 /-- The coordinate `l` of `F` in the first `p` columns: regard `F` as a polynomial in these

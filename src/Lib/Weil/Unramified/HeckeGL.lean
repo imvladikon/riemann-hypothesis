@@ -174,6 +174,11 @@ others to 0. -/
 def residueOrZero (x : LocField w) : ResField w :=
   if h : v x ≤ 1 then residue (LocInt w) ⟨x, h⟩ else 0
 
+/-- The matrix `g` has entries in `O_w`, and `0` is a simple root of its characteristic polynomial
+modulo `w`. -/
+def HasSimpleZero (g : GL n (LocField w)) : Prop :=
+  (∀ i j : n, Valued.v (g i j) ≤ 1) ∧ (g.val.map residueOrZero).charpoly.rootMultiplicity 0 = 1
+
 /-- The kernel, in column vectors over the residue field at w, of the entrywise reduction
 `New.residueOrZero` of the matrix z. -/
 abbrev residueKer (z : Matrix m n (LocField w)) : Submodule (ResField w) (n → ResField w) :=
@@ -303,17 +308,15 @@ lemma mul_inv_mem_localIntGL_iff (hg : g ∈ basicDoubleCoset n w j)
     (hg' : g' ∈ basicDoubleCoset n w i) :
     g * g'⁻¹ ∈ localIntGL n w ↔ residueKer g.val = residueKer g'.val := by
   -- Apply `v_mul_inv_le_one_iff` to `g * g'⁻¹` and to its inverse `g' * g⁻¹`.
-  have h_left : (∀ a b : n, v ((g.val * g'⁻¹.val) a b) ≤ 1) ↔
-      residueKer g'.val ≤ residueKer g.val := by
-    simpa [show ∀ a b : n, v (g.val a b) ≤ 1 from hg.left] using
-      v_mul_inv_le_one_iff hg' (z := g.val)
-  have h_right : (∀ a b : n, v ((g'.val * g⁻¹.val) a b) ≤ 1) ↔
-      residueKer g.val ≤ residueKer g'.val := by
-    simpa [show ∀ a b : n, v (g'.val a b) ≤ 1 from hg'.left] using
-      v_mul_inv_le_one_iff hg (z := g'.val)
+  have h_integral {k k' : GL n (LocField w)} {a b : ℕ}
+      (hk : k ∈ basicDoubleCoset n w a) (hk' : k' ∈ basicDoubleCoset n w b) :
+      (∀ s t : n, v ((k.val * k'⁻¹.val) s t) ≤ 1) ↔
+        residueKer k'.val ≤ residueKer k.val := by
+    simpa [show ∀ s t : n, v (k.val s t) ≤ 1 from hk.left] using
+      v_mul_inv_le_one_iff hk' (z := k.val)
   -- Entries in the local integers are those of valuation at most `1`. `coe_units_inv` is left out
-  -- so that `h_left` and `h_right` apply as stated.
-  simp [mem_intGL, mem_LocInt, -coe_units_inv, h_left, h_right, le_antisymm_iff, and_comm]
+  -- so that `h_integral` apply as stated.
+  simp [mem_intGL, mem_LocInt, -coe_units_inv, h_integral hg hg', h_integral hg' hg, le_antisymm_iff, and_comm]
 
 /-- Let g lie in `New.basicDoubleCoset` n w j and let U have the same dimension as the kernel of g
 mod w. Then some k in the same double coset has kernel U mod w and lies in g GL_n(O_w). -/

@@ -915,26 +915,19 @@ lemma div_tailScale_pow_mul_identitySecondMoment_le_cellRankSecondMoment (hj : j
     S.tailScale ^ 8 / (S.tailScale ^ 32) ^ min 𝔰.ϱ j * S.identitySecondMoment ≤
       S.cellRankSecondMoment j := by
   have hτ : 1 ≤ S.tailScale := one_le_two.trans two_le_tailScale
-  have h_identityMoment_nonneg : 0 ≤ S.identitySecondMoment := identitySecondMoment_nonneg
+  have h_id : 0 ≤ S.identitySecondMoment := identitySecondMoment_nonneg
   unfold cellRankSecondMoment
   split_ifs with h_top
-  · calc S.tailScale ^ 8 / (S.tailScale ^ 32) ^ min 𝔰.ϱ j * S.identitySecondMoment
-        ≤ S.tailScale ^ 8 * S.identitySecondMoment := by
-          grw [div_le_self (by positivity) (by bound)]
-      _ ≤ S.tailScale ^ 44 * S.identitySecondMoment := by
-          gcongr
-          lia
-      _ ≤ S.mainSecondMoment := tailScale_pow_mul_identitySecondMoment_le
-  · have h_min_ne : min 𝔰.ϱ j ≠ 0 := by
-      rw [min_eq_right (not_lt.1 h_top)]
-      exact val_ne_zero_iff.2 hj
-    calc S.tailScale ^ 8 / (S.tailScale ^ 32) ^ min 𝔰.ϱ j * S.identitySecondMoment
-        ≤ S.tailScale ^ 8 / S.tailScale ^ 32 * S.identitySecondMoment := by
-          grw [← le_self_pow₀ (by bound) h_min_ne]
-      _ = S.identitySecondMoment / S.tailScale ^ 24 := by field_simp
-      _ ≤ S.identitySecondMoment / S.tailScale ^ 16 := by
-          gcongr
-          lia
+  · refine le_trans ?_ tailScale_pow_mul_identitySecondMoment_le
+    grw [div_le_self (by positivity) (by bound)]
+    gcongr
+    lia
+  · grw [← le_self_pow₀ (by bound)
+      ((min_eq_right (not_lt.1 h_top)).trans_ne (val_ne_zero_iff.2 hj))]
+    rw [show S.tailScale ^ 8 / S.tailScale ^ 32 * S.identitySecondMoment =
+        S.identitySecondMoment / S.tailScale ^ 24 by field_simp]
+    gcongr
+    lia
 
 omit [HasPrimitiveRoot5040 E] [S.IsAdmissible] in
 /-- The field `le_M` of `S` gives `S.b ^ 19 ≤ S.M`, so the factor `S.b ^ 13 / S.M²` is at most

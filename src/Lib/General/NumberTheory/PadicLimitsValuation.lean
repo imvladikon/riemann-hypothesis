@@ -180,30 +180,21 @@ limit of images under `ιₚ` of pairs `(α, α ᾱ)` with `α` an integer of `K
 lemma mem_normPairClosure_of_pow_eq {ζ : ℂ_[p]} (hζ_norm : ‖ζ‖ = 1)
     (hζ_pow : ζ ^ primeNorm d p = ζ) : (ζ, ζ ^ (p + 1)) ∈ normPairClosure d := by
   -- Lift the residue of `ζ` to an integer `a` of `K` whose conjugate lifts that of `ζ ^ p`.
-  -- With `q = q_p`, the powers `a ^ q ^ n` tend to `ζ` and their conjugates to `ζ ^ p`.
   let φ : 𝓞 (QuadField d) →+* valRingCp p :=
     ((ιₚ.domRestrict (QuadField d)).comp (algebraMap _ _)).codRestrict (valRingCp p)
       (norm_ringOfIntegers_le (ιₚ.domRestrict (QuadField d)))
   let z : valRingCp p := ⟨ζ, hζ_norm.le⟩
-  obtain ⟨a, ha, ha_star⟩ : ∃ a : 𝓞 (QuadField d),
-      residue (valRingCp p) (φ a) = residue (valRingCp p) z ∧
-      residue (valRingCp p) (φ (star a)) = residue (valRingCp p) z ^ p :=
-    exists_map_eq_and_map_star_eq_pow d ((residue (valRingCp p)).comp φ) _
-      (by rw [← map_pow]; exact congrArg _ (Subtype.ext hζ_pow))
-  set q : ℕ := primeNorm d p
+  obtain ⟨a, ha, ha_star⟩ := exists_map_eq_and_map_star_eq_pow d
+    ((residue (valRingCp p)).comp φ) (residue _ z)
+    ((map_pow (residue _) z _).symm.trans (congrArg _ (Subtype.ext hζ_pow)))
+  set q := primeNorm d p
   have hq : p ∣ q := by simp [q, apply_ite]
-  have hζ_fixed (n : ℕ) : ζ ^ q ^ n = ζ := by
-    simpa using Function.iterate_fixed (f := fun w : ℂ_[p] ↦ w ^ q) hζ_pow n
-  have lim_a : Filter.Tendsto (fun n : ℕ ↦ (φ a).val ^ q ^ n) Filter.atTop (nhds ζ) :=
-    tendsto_pow_pow_of_residue_eq hq ha hζ_norm hζ_fixed
-  have lim_star : Filter.Tendsto (fun n : ℕ ↦ (φ (star a)).val ^ q ^ n) .atTop (nhds (ζ ^ p)) :=
-    tendsto_pow_pow_of_residue_eq (y := z ^ p) hq ha_star (by simp [z, hζ_norm])
-      (by simp [z, pow_right_comm _ p, hζ_fixed])
-  -- The approximating integers are `b n = a ^ q ^ n`.
-  let b : ℕ → ℂ := fun n ↦ ((a ^ q ^ n : 𝓞 (QuadField d)) : QuadField d)
-  refine mem_closure_iff_seq_limit.2
-    ⟨fun n ↦ (ιₚ (b n), ιₚ (b n * conj (b n))), fun n ↦ ⟨b n, ⟨a ^ q ^ n, rfl⟩, rfl⟩, ?_⟩
-  simpa [b, φ, RingHom.codRestrict, pow_succ'] using lim_a.prodMk_nhds (lim_a.mul lim_star)
+  have hζ_fixed n : ζ ^ q ^ n = ζ := by simpa using Function.iterate_fixed (f := (· ^ q)) hζ_pow n
+  have lim_a := tendsto_pow_pow_of_residue_eq hq ha hζ_norm hζ_fixed
+  have lim_star := tendsto_pow_pow_of_residue_eq (y := z ^ p) hq ha_star
+    (by simp [z, hζ_norm]) (by simp [z, pow_right_comm _ p, hζ_fixed])
+  refine mem_closure_iff_seq_limit.2 ⟨_, fun n ↦ ⟨_, ⟨a ^ q ^ n, rfl⟩, rfl⟩, ?_⟩
+  simpa [φ, RingHom.codRestrict, pow_succ'] using lim_a.prodMk_nhds (lim_a.mul lim_star)
 
 end TeichmullerLimits
 

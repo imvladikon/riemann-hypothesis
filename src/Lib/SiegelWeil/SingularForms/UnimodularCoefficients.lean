@@ -175,7 +175,9 @@ def closureIntegers {E : Type} [Field E] [NumberField E] [IsCMField E] (S : Set 
     exact (Ô E).mul_mem ha hb
   · change (idemAdele S.conjClosure * 1).2 ∈ Ô E
     rw [mul_one]
-    simp [Ô, idem_apply]
+    simp only [Ô, Subring.mem_mk, Subalgebra.mem_toSubsemiring,
+      IsDedekindDomain.FiniteAdeleRing.mem_integralAdeles, idem_apply, Set.mem_union,
+      Set.star_preimage, Set.mem_star]
     intro i
     split_ifs <;> simp only [one_mem, zero_mem]
   · change (idemAdele S.conjClosure * (_ + _)).2 ∈ Ô E

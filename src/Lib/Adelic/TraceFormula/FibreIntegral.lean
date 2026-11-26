@@ -51,7 +51,7 @@ lemma TestFunction.conjugate_apply (j : Γ →ₜ* G) (g : Γ) (f : TestFunction
 
 /-- The action of `Γ` on the test functions on `G` by conjugation through `j` is smooth: every test
 function is fixed by the elements of a neighbourhood of `1`. -/
-instance TestFunction.isSmoothRep_conjugate [WeaklyLocallyCompactSpace G] (j : Γ →ₜ* G) :
+instance TestFunction.isSmoothRep_conjugate (j : Γ →ₜ* G) :
     IsSmoothRep (conjugate j) where
   eventually_fixed f :=
     ((j.continuous.prodMk j.continuous).tendsto' 1 1 (Prod.ext (map_one j) (map_one j))).eventually
@@ -198,7 +198,7 @@ structure IsInvariantDistribution (j : Γ →ₜ* G) (C : Set G) (I : TestFuncti
 
 section Mean
 
-variable {j : Γ →ₜ* G} {C : Set G} {I : TestFunction G →ₗ[ℂ] ℂ} [WeaklyLocallyCompactSpace G]
+variable {j : Γ →ₜ* G} {C : Set G} {I : TestFunction G →ₗ[ℂ] ℂ}
   {K L : Subgroup Γ} [CompactSpace K] [CompactSpace L]
 
 /-- An invariant distribution `I` on `C`, for conjugation by `Γ` through `j`, takes the same value

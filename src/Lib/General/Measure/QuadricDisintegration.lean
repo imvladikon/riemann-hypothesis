@@ -569,25 +569,15 @@ lemma continuous_lintegral_flatChart (hT : Tᴴ = T) {f : (Fin 2 ⊕ ι → A) �
   -- The coordinate `a` is recovered from the chart point by `π`, free of `b`, so it stays in
   -- the compact set `π '' tsupport f`.
   let π (x : Fin 2 ⊕ ι → A) : skewAdjoint A := skewPart (star P.element * p.1⁻¹ʳ * x (inl 0))
-  have hπ (b a : skewAdjoint A) : π (flatChart T b (p, a)) = a := by
-    let q : A := star p.2 ⬝ᵥ T *ᵥ p.2
-    have h_inv : p.1⁻¹ʳ * p.1 = 1 := inverse_mul_cancel p.1 hp
-    -- With `s` the first coordinate, expand `τ̄ t⁻¹ s - τ t̄⁻¹ s̄`: the hermitian terms cancel, and
-    -- `(τ̄ + τ) a = a` remains.
-    suffices star P.element * p.1⁻¹ʳ * (star p.1⁻¹ʳ * element * (skewUnit⁻¹.val * b - q) + p.1 * a)
-      -
-        P.element * star p.1⁻¹ʳ * (p.1⁻¹ʳ * star P.element * (skewUnit⁻¹.val * b - q) - star p.1 *
-          a) = a by
-      simpa [Subtype.ext_iff, π, flatChart, inverse_star, star_dotProduct_mulVec_comm hT p.2 p.2,
-        ← sub_eq_add_neg]
+  refine continuous_lintegral_of_compact_support (hf_supp.image_of_continuous π) (hf.comp ?_)
+    fun b a h_ne ↦ ⟨flatChart T b (p, a), subset_closure h_ne, ?_⟩
+  · simp only [flatChart, continuous_pi_iff, Sum.forall, elim_inl, elim_inr]
+    exact ⟨by fun_prop, by fun_prop⟩
+  · simp [Subtype.ext_iff, π, flatChart, inverse_star, star_dotProduct_mulVec_comm hT p.2 p.2]
+    have h_inv := inverse_mul_cancel p.1 hp
     have h_inv_star : star p.1⁻¹ʳ * star p.1 = 1 := by rw [← star_mul', h_inv, star_one]
     linear_combination a.val * (star P.element * h_inv + P.element * h_inv_star +
       P.element_add_star)
-  have h_chart : Continuous fun q : skewAdjoint A × skewAdjoint A ↦ flatChart T q.1 (p, q.2) := by
-    simp only [flatChart, continuous_pi_iff, Sum.forall, elim_inl, elim_inr]
-    exact ⟨by fun_prop, by fun_prop⟩
-  exact continuous_lintegral_of_compact_support (hf_supp.image_of_continuous π) (hf.comp h_chart)
-    fun b a h_ne ↦ ⟨flatChart T b (p, a), subset_closure h_ne, hπ b a⟩
 
 /-- For f ≥ 0 continuous of compact support, the integral of f over the fibre of the flat chart at
 p = (t, w) is at most sup f times the supremum over b of the ν-measures of the sets

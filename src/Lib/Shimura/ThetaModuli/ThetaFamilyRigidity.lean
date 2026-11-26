@@ -141,7 +141,7 @@ lemma isGroupBaseChange : IsGroupBaseChange x x.toFamily := isGroupBaseChange_co
 instance smoothOfRelativeDimension :
     SmoothOfRelativeDimension (abelianDim E D.Index) x.groupScheme.hom := by
   -- `simp` writes the structure map of the pull-back as `pullback.snd`, which has the instance
-  simp [groupScheme]
+  simp only [groupScheme, pullback_obj_left, pullback_obj_hom]
   infer_instance
 
 attribute [irreducible] groupScheme toFamily

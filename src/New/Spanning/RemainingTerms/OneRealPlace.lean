@@ -81,18 +81,11 @@ lemma frameVolume_pos (γ : 𝔰.G₁) : 0 < frameVolume γ := by
   simp_rw [frameVolume, norm_pos_iff, ← exists_mulVec_eq_zero_iff.not, ← mulVec_mulVec]
   intro ⟨v, hv, h_ker⟩
   set w : 𝔰.BesselIndex → ℂ := γ⁻¹.val.val *ᵥ 𝔰.frameCols *ᵥ v
-  have h_fix : 𝔰.J₁ *ᵥ w = w := J₁_mulVec_eq_self h_ker
-  have h_form : star w ⬝ᵥ w = -(‖v 𝔰.top‖ ^ 2 : ℝ) := by
-    calc
-      _ = star w ⬝ᵥ 𝔰.J₁ *ᵥ w := by rw [h_fix]
-      _ = star (𝔰.frameCols *ᵥ v) ⬝ᵥ 𝔰.J₁ *ᵥ 𝔰.frameCols *ᵥ v := U.form_mulVec_mulVec γ⁻¹ _ _
-      _ = _ := form_frameCols_mulVec v
-  have hw_zero : w = 0 :=
-    dotProduct_star_self_pos_iff.not_left.1 (by simp [h_form, not_lt_of_ge])
-  have hv_image : 𝔰.frameCols *ᵥ v = 0 := by simpa [w] using congrArg (γ.val.val *ᵥ ·) hw_zero
-  -- Apply the left inverse `frameColsᴴ` of `frameCols`.
-  simpa [inclMatrix_gram_eq_one besselFrame_injective, hv] using
-    congrArg (𝔰.frameColsᴴ *ᵥ ·) hv_image
+  have hw : w = 0 := dotProduct_star_self_pos_iff.not_left.1 <| by
+    simp [(congrArg (star w ⬝ᵥ ·) (J₁_mulVec_eq_self h_ker).symm).trans
+      ((U.form_mulVec_mulVec γ⁻¹ _ _).trans (form_frameCols_mulVec v)), not_lt_of_ge]
+  simpa [w, inclMatrix_gram_eq_one besselFrame_injective, hv] using
+    congrArg (fun x => 𝔰.frameColsᴴ *ᵥ γ.val.val *ᵥ x) hw
 
 /-- The volume does not change when the point `y` is moved by a unipotent element `γ` that fixes
 every vector of the frame. -/
@@ -193,21 +186,15 @@ the coefficients `x top` and `x' top` of `z` have the same modulus. -/
 lemma RealPlace.conjTranspose_realFrameGram_mulVec {γ : 𝔰.G₁} {x x' : Fin 𝔰.n → ℂ}
     (h_shared : γ.val.val *ᵥ 𝔰.frameCols *ᵥ x' = 𝔰.frameCols *ᵥ x) :
     (realFrameGram γ)ᴴ *ᵥ x = Pi.single 𝔰.top (-x' 𝔰.top) ∧ ‖x' 𝔰.top‖ = ‖x 𝔰.top‖ := by
-  have h_diagonal (w : Fin 𝔰.n → ℂ) :
-      (𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols) *ᵥ w = Pi.single 𝔰.top (-w 𝔰.top) := by
-    ext a
-    rw [frameCols_J₁_gram, mulVec_diagonal]
-    cases a using lastCases <;> simp
   constructor
-  · rw [← h_diagonal, ← U.gram_invariant γ, ← mulVec_mulVec, ← mulVec_mulVec x', h_shared,
+  · suffices (realFrameGram γ)ᴴ *ᵥ x = (𝔰.frameColsᴴ * 𝔰.J₁ * 𝔰.frameCols) *ᵥ x' by
+      ext a
+      cases a using lastCases <;> simp [this, frameCols_J₁_gram, mulVec_diagonal]
+    rw [← U.gram_invariant γ, ← mulVec_mulVec, ← mulVec_mulVec x', h_shared,
       realFrameGram_eq_conjTranspose_mul, mulVec_mulVec]
     simp [Matrix.mul_assoc, isHermitian.eq]
-  · have h_form : star (γ.val.val *ᵥ 𝔰.frameCols *ᵥ x') ⬝ᵥ
-        𝔰.J₁ *ᵥ γ.val.val *ᵥ 𝔰.frameCols *ᵥ x' =
-        star (𝔰.frameCols *ᵥ x') ⬝ᵥ 𝔰.J₁ *ᵥ 𝔰.frameCols *ᵥ x' :=
-      U.form_mulVec_mulVec γ _ _
-    rw [h_shared, form_frameCols_mulVec, form_frameCols_mulVec, neg_inj, Complex.ofReal_inj]
-      at h_form
+  · have h_form := U.form_mulVec_mulVec γ (𝔰.frameCols *ᵥ x') (𝔰.frameCols *ᵥ x')
+    simp only [h_shared, form_frameCols_mulVec, neg_inj, Complex.ofReal_inj] at h_form
     exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 h_form.symm
 
 /-- An element `y` preserves the form `J₁`, so `J₁ y = (y⁻¹)ᴴ J₁`. -/

@@ -155,18 +155,11 @@ lemma Filling.exists_frameImage_eq_of_pairOccursAt {γ : T.G} {j : Fin (𝔰.ϱ 
   induction j using reverseInduction with
   | last => exact ⟨0, 0, fun a ha ↦ absurd a.is_lt (not_lt.2 ha), by simp⟩
   | cast j ih =>
-    obtain ⟨x, z, hzy, hxz⟩ : ∃ x z : Fin (𝔰.ϱ + 1) → F,
-        (∀ a : Fin (𝔰.ϱ + 1), j.succ.val ≤ a.val → z a = y a) ∧
-        frameImage 1 *ᵥ x = frameImage γ.val.val *ᵥ z :=
-      ih fun a ha ↦ h_shared a (le_of_lt ha)
-    obtain ⟨X, Y, hXY, -, hY_one, h_above⟩ : ∃ X Y : Fin (𝔰.ϱ + 1) → F,
-        frameImage 1 *ᵥ X = frameImage γ.val.val *ᵥ Y ∧ X j = c ∧ Y j = 1 ∧
-          ∀ b > j, X b = 0 ∧ Y b = 0 := h_shared j le_rfl
-    refine ⟨x + (y - z) j • X, z + (y - z) j • Y, fun a ha ↦ ?_, ?_⟩
-    · obtain rfl | hlt : j = a ∨ j < a := eq_or_lt_of_le ha
-      · simp [hY_one]
-      · simp [h_above a hlt, hzy a hlt]
-    · simp [mulVec_add, mulVec_smul, hxz, hXY]
+    obtain ⟨x, z, hzy, hxz⟩ := ih fun a ha ↦ h_shared a (le_of_lt ha)
+    obtain ⟨X, Y, hXY, -, hY_one, h_above⟩ := h_shared j le_rfl
+    refine ⟨x + (y - z) j • X, z + (y - z) j • Y, fun a ha ↦ (eq_or_lt_of_le (a := j) ha).elim
+      (fun | rfl => by simp [hY_one]) (fun hlt ↦ by simp [h_above a hlt, hzy a hlt]),
+      by simp [mulVec_add, mulVec_smul, hxz, hXY]⟩
 
 /-- Let `γ` satisfy the norm-one pair condition from some `j ≤ ϱ + 1` (for some `c` of norm `1`, the
 flags of the frame `f = (e₁, …, e_ϱ, z)` and of `γ f` share a vector with leading coefficients `c`
@@ -761,17 +754,11 @@ lemma _root_.New.mem_link_iff_orthogonal {γ : S.G E} {p : 𝔰.MiddleIndex ⊕ 
   -- The difference `d` of `Υ_γ (linkSource p)` and `linkTarget p` is `linkTarget q` for some `q` in
   -- the link, and the hypothesis at `q` says that `d` has norm `0`.
   rw [mem_link_iff_linkIsometry, ← sub_eq_zero]
-  set d : 𝔰.MiddleIndex → E := linkIsometry γ (linkSource E 𝔰 p) - linkTarget E 𝔰 p with hd
-  obtain ⟨q, hq, h_source⟩ := exists_mem_link_linkSource_eq γ ((linkIsometry γ).symm d)
-  have h_target : linkTarget E 𝔰 q = d := by
-    rw [← linkIsometry_linkSource hq, h_source, LinearEquiv.apply_symm_apply]
+  obtain ⟨q, hq, hq'⟩ := exists_mem_link_linkSource_eq γ
+    ((linkIsometry γ).symm (linkIsometry γ (linkSource E 𝔰 p) - linkTarget E 𝔰 p))
   refine eq_zero_of_positiveGram_form_eq_zero (S := S) ?_
-  calc star d ⬝ᵥ S.positiveGram *ᵥ d
-      = star (linkTarget E 𝔰 q) ⬝ᵥ S.positiveGram *ᵥ linkIsometry γ (linkSource E 𝔰 p) -
-          star (linkTarget E 𝔰 q) ⬝ᵥ S.positiveGram *ᵥ linkTarget E 𝔰 p := by
-        rw [← dotProduct_sub, ← mulVec_sub, h_target]
-    _ = 0 := by rw [← h_orth q hq, ← linkIsometry_linkSource hq,
-      dotProduct_positiveGram_mulVec_linkIsometry, sub_self]
+  rw [mulVec_sub, dotProduct_sub, sub_eq_zero, ← (linkIsometry γ).apply_symm_apply (_ - _), ← hq',
+    dotProduct_positiveGram_mulVec_linkIsometry, linkIsometry_linkSource hq, h_orth q hq]
 
 /-! ### The link on the second frame, and the vanishing of `termDisc` -/
 

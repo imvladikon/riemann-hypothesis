@@ -567,8 +567,8 @@ lemma rankInner_greenTau (hP : Irreducible P) (h0 : P.coeff 0 ≠ 0) (hm : P.Mon
           rankInner (finrank k L) (greenCuspidal k (θ χ))
             ((brauerLift k (θ ξ)).mulMoebius * constOne) := by
       have h_sign : (-1 : ℂ) ^ finrank k L * (-1) ^ finrank k L = 1 := by simp [← mul_pow]
-      simp [hS_deg, ← natCard_eq_pow_finrank, rankInner, θ, greenCuspidal, ← mul_assoc]
-      simp_rw [mul_right_comm ((-1 : ℂ) ^ finrank k L) _ ((-1 : ℂ) ^ finrank k L), h_sign, one_mul]
+      simp [hS_deg, ← natCard_eq_pow_finrank, rankInner, θ, greenCuspidal, ← mul_assoc,
+        mul_right_comm ((-1 : ℂ) ^ finrank k L) _ ((-1 : ℂ) ^ finrank k L), h_sign]
     have h_second : rankInner 0 constOne (brauerLift k (θ ξ)).mulMoebius = 0 := by
       simp [mulMoebius, brauerLift, rankInner, charpoly_monic, eq_one_of_monic_natDegree_zero,
         charpoly_natDegree]
@@ -710,19 +710,19 @@ private lemma rankInner_greenTau_mul_mulMoebius (P : Polynomial k) (hP : Irreduc
   -- Move `τ_P` to the other side of the pairing by adjunction. Conjugating turns the conjugates in
   -- `rankInner` into plain values; on both sides only the identity classes contribute.
   rw [rankInner_mul_eq_rankInner_skew greenTau_eq_zero_of_dim_ne, ← star_inj]
-  simp [identityIndicator, skew, greenTau, field, ite_div, ite_and, forall_and,
-    LinearMap.ext_iff (M := _ × _), rankInner, finMean, finsum_eq_sum_of_fintype,
-    simClassOf_out_eq_one_iff] at h_mulMu_one ⊢
-  -- The goal now reads `F(1) C(1) μ(1) μ'(1) (q ^ d - 1) = F(1) μ'(1) |GL_d|`, where `C` is
-  -- `greenCuspidal k θ_x` and `μ`, `μ'` are `moebius` at the identities of rank `d`, `m`.
-  -- This is `h_mulMu_one` at `η = θ_x`, where `θ_x 1 = 1`, multiplied by `F(1) μ'(1)`.
   set one : SimClass k := simClassOf (1 : End k (Fin P.natDegree → k))
   set one_m : SimClass k := simClassOf (1 : End k (Fin m → k))
   have h_theta_one :
       greenCuspidal k (thetaChar T (Nat.card k ^ P.natDegree) (chosenRoot K P)) one *
           moebius one * ((Nat.card k : ℂ) ^ P.natDegree - 1) =
         Fintype.card (End k (Fin P.natDegree → k))ˣ := by
-    rw [h_mulMu_one, map_one, one_mul]
+    simpa using h_mulMu_one (thetaChar T (Nat.card k ^ P.natDegree) (chosenRoot K P))
+  simp [identityIndicator, skew, greenTau, field, ite_div, ite_and, forall_and,
+    LinearMap.ext_iff (M := _ × _), rankInner, finMean, finsum_eq_sum_of_fintype,
+    simClassOf_out_eq_one_iff]
+  -- The goal now reads `F(1) C(1) μ(1) μ'(1) (q ^ d - 1) = F(1) μ'(1) |GL_d|`, where `C` is
+  -- `greenCuspidal k θ_x` and `μ`, `μ'` are `moebius` at the identities of rank `d`, `m`.
+  -- This is `h_mulMu_one` at `η = θ_x`, where `θ_x 1 = 1`, multiplied by `F(1) μ'(1)`.
   linear_combination (F one_m * moebius one_m) * h_theta_one
 
 /-- Let `c` be a label of degree `r`, `q = |k|` and `δ` the indicator function of the identity

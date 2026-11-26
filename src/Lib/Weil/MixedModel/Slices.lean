@@ -450,32 +450,26 @@ lemma slice_localDatum (h : ReadsAt S π) {D : (W'.hom T').Splitting (W.hom T) p
 /-- For a base-adapted splitting `A`, the images under `π` of the finite parts of the adelic frame
 `(k, ι, l)` and of its dual frame, as mutually inverse integral matrices over `F`. -/
 def adaptedFrame (h : ReadsAt S π) (A : W'.Splitting W p) [k : IsBaseAdapted A] :
-    IntegralFrame F n' n p where
-  K := A.kAdelic.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  L := A.lAdelic.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  I := A.iAdelic.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  dualK := A.kCoord.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  dualL := A.lCoord.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  dualI := A.iCoord.map (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)))
-  isIntMatrix_and_mul_eq_one := by
-                          -- The matrices are square by `A.card_eq`, so one of the two products
-                          -- suffices. Three claims remain: the frame and its dual are integral, and
-                          -- their product is one.
-                          simp +arith [↓mul_eq_one_comm_of_card_eq _ n', A.card_eq, ← add_assoc,
-                            fromCols_mul_fromRows]
-                          obtain ⟨-, h_int⟩ := k.isOrthoIntegral
-                          refine ⟨?_, ?_, ?_⟩
-                          · -- the frame is integral
-                            simp_all [IsIntMatrix, h.mem_iff, mul_mem]
-                          · -- so is the dual frame, which is made of conjugate transposes of the
-                            -- frame
-                            simp_all [IsIntMatrix, h.mem_iff, mul_mem, kCoord, iCoord, lCoord,
-                              star_mem_Ô, stdForm]
-                          · -- apply `π` to the finite part of the decomposition of the identity
-                            simpa [map_add, -RingHom.coe_comp] using! congrArg
-                              (π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ)
-                                (𝔸f E))).mapMatrix
-                              A.sum_frame_mul_coord_eq_one
+    IntegralFrame F n' n p :=
+  let read := π.comp (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E))
+  { K := A.kAdelic.map read
+    L := A.lAdelic.map read
+    I := A.iAdelic.map read
+    dualK := A.kCoord.map read
+    dualL := A.lCoord.map read
+    dualI := A.iCoord.map read
+    isIntMatrix_and_mul_eq_one := by
+      -- The matrices are square by `A.card_eq`, so one of the two products suffices.
+      simp +arith [↓mul_eq_one_comm_of_card_eq _ n', A.card_eq, ← add_assoc,
+        fromCols_mul_fromRows]
+      obtain ⟨-, h_int⟩ := k.isOrthoIntegral
+      refine ⟨?_, ?_, ?_⟩
+      · simp_all [IsIntMatrix, h.mem_iff, mul_mem, read]
+      · simp_all [IsIntMatrix, h.mem_iff, mul_mem, kCoord, iCoord, lCoord,
+          star_mem_Ô, stdForm, read]
+      · simpa [map_add, -RingHom.coe_comp] using!
+          congrArg read.mapMatrix A.sum_frame_mul_coord_eq_one }
+
 
 end NamedSlices
 

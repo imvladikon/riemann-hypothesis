@@ -759,22 +759,16 @@ lemma trace_besselTranslate_eq_mul_reducedChar {j : Fin 2} {s : S.ResidueGL} (hs
   split_ifs with h
   · -- If `s` is the reduction of a unipotent `k`, the block at `s⁻¹` is `ψ_U(k)` times the block at
     -- `1`, which is the covolume times the identity.
-    obtain ⟨hk_unip, hk_red⟩ :
-        h.choose.val ∈ (S.latticeMiddle (𝔸f E)).besselU ∧ S.reduction h.choose = s := h.choose_spec
-    have h_move (c : S.Classes) :
-        S.amplitudeSum .full (S.ratMiddle E).besselS c s⁻¹ c =
-          S.unipotentChar h.choose • S.amplitudeSum .full (S.ratMiddle E).besselS c 1 c := by
-      simpa [hk_red] using
-        amplitudeSum_besselU_mul isStable_besselS (u := 1) (one_mem _) hk_unip c 1 c
+    obtain ⟨hk_unip, hk_red⟩ := h.choose_spec
+    have h_move (c : S.Classes) :=
+      amplitudeSum_besselU_mul (side := .full) isStable_besselS (u := 1) (one_mem _) hk_unip c 1 c
+    simp [hk_red] at h_move
     simp [h_move, amplitudeSum_besselS_one_eq_ite, S.unipotentCovolume_pos.ne', sourceDim]
   · -- Otherwise there is no term: its translate `k` by the class representatives would be unipotent
     -- with the reduction `s⁻¹`.
-    have h_empty (c : S.Classes) :
-        IsEmpty ↥(↑(S.ratMiddle E).besselS ∩ S.termsOver c s⁻¹ c) := by
-      refine ⟨fun ⟨γ, hγ, k, hk_red, hk⟩ ↦ ?_⟩
-      have hk_unip : k.val ∈ (S.latticeMiddle (𝔸f E)).besselU :=
-        S.mem_besselU_of_reduction_eq_one (j := j) hγ hk (by simp [hk_red, hs])
-      exact h ⟨k⁻¹, inv_mem hk_unip, by simp [hk_red]⟩
+    have (c : S.Classes) : IsEmpty ↥(↑(S.ratMiddle E).besselS ∩ S.termsOver c s⁻¹ c) :=
+      ⟨fun ⟨_, hγ, k, hk_red, hk⟩ ↦ h ⟨k⁻¹, inv_mem <|
+        S.mem_besselU_of_reduction_eq_one (j := j) hγ hk (by simp [hk_red, hs]), by simp [hk_red]⟩⟩
     simp [amplitudeSum, tsum_empty]
 
 omit ok [WeilData E] in

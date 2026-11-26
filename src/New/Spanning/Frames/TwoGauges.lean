@@ -350,12 +350,9 @@ lemma hasMatrixSize_weylElem_inv (hp : ∀ a : Fin 𝔰.ϱ, a < j → (p a : A) 
   intro k m
   obtain ⟨h_zero, h_one⟩ := S.zero_one_mem_ofSize i
   by_cases hm : floorOf m < j ∧ floorOf m < 𝔰.ϱ
-  · simp [weylElem, weylOn, hm.1, hm.2]
-    split_ifs
-    exacts [star_mem_ofSize (hp ⟨_, hm.2⟩ hm.1), hp_inv ⟨_, hm.2⟩ hm.1, h_zero]
-  · simp [weylElem, weylOn, hm]
-    split_ifs
-    exacts [h_one, h_zero]
+  · simp [weylElem, weylOn, hm.1, hm.2, apply_ite (· ∈ S.ofSize i), h_zero,
+      star_mem_ofSize (hp ⟨_, hm.2⟩ hm.1), hp_inv ⟨_, hm.2⟩ hm.1]
+  · simp [weylElem, weylOn, hm, apply_ite (· ∈ S.ofSize i), h_one, h_zero]
 
 /-- Let j ≤ ϱ and let the isometry s lie in R^(j) = `partialUnitriangularGroup j` and in
 `unipotentBelow j`. If the columns s e*_a, a < j, have size d, then s⁻¹ has size (4 (d + 1) + 12)

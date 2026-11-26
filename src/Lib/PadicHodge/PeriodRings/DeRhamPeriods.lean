@@ -61,9 +61,7 @@ variable {p : ℕ} [ThePrime p]
 @[simp]
 lemma iterate_frobEnd_teichmuller (x : OFlat) (n : ℕ) :
     frobEnd^[n] (teichmuller p x) = teichmuller p x ^ p ^ n := by
-  induction n with
-  | zero => simp
-  | succ n ih => simp [ih, pow_succ, pow_mul]
+  simpa only [map_pow] using Period.iterate_frobEnd_teichmuller n x
 
 /-- If `ξ` divides `x - y` in `A_inf`, then `x ^ p ^ m - y ^ p ^ m` lies in the `m`-th power of the
 ideal `(p, ξ)`. -/

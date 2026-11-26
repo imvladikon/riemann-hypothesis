@@ -13,6 +13,7 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.RingTheory.TotallySplit
 public import Lib.General.LinearAlgebra.HermiteForm
+import TauCeti.LinearAlgebra.Determinant.Basic
 
 /-!
 # Relations, relative lengths and Fitting ideals for Selmer group estimates
@@ -138,7 +139,8 @@ lemma relLength_add_length_inf : relLength S T + length A ↥(S ⊓ T) = length 
   rw [relLength, ← (T.submoduleOfEquivInf S).length_eq, add_comm]
   exact (length_eq_add_of_exact (T.submoduleOf S).subtype (T.submoduleOf S).mkQ
     (Submodule.subtype_injective _) (mkQ_surjective _) (LinearMap.exact_subtype_mkQ _)).symm
-/-- The length of `S` is the sum of the lengths of its image under `f` and the kernel of `f` on `S`. -/
+/-- The length of `S` is the sum of the lengths of its image under `f` and the kernel of `f` on
+`S`. -/
 lemma length_map_add_length_inf_ker :
     length A (S.map f) + length A ↥(S ⊓ f.ker) = length A S := by
   rw [← relLength_ker S f, relLength_add_length_inf]
@@ -532,27 +534,13 @@ lemma mul_det_mem_fittingIdeal {r : R} {v : ι → R} (h_smul : r • v ∈ N) {
 This is a case of the inclusion `Fitt(M') * Fitt(M'') ≤ Fitt(M)` for an exact sequence
 `M' → M → M'' → 0`: here `M' = R / (r)` maps to `M = R^ι / N` by `1 ↦ v`. -/
 lemma fittingIdeal.mul_mem_of_smul_mem {r : R} {v : ι → R} (h_smul : r • v ∈ N) :
-    ∀ d ∈ fittingIdeal (N ⊔ R ∙ v), r * d ∈ fittingIdeal N := by
-  -- Each row of `B` is a combination of `v` and of elements of `N`. Expand `det B` in the rows.
-  refine (span_le (p := comap (.mulLeft R r) (fittingIdeal N))).2
-    (Set.forall_mem_image.2 fun B hB ↦ ?_)
-  change r * det B ∈ fittingIdeal N
-  have h_comb (i : ι) :
-      ∃ c : (ι → R) →₀ R, ↑c.support ⊆ (N : Set (ι → R)) ∪ {v} ∧ ∑ w ∈ c.support, c w • w = B i :=
-    mem_span_set.1 (by simpa only [← N.sup_span] using hB i)
-  choose c hc h_row using h_comb
-  have h_expand :
-      det B = ∑ s ∈ Fintype.piFinset fun i ↦ (c i).support, (∏ i, c i (s i)) * det (of s) := by
-    -- The determinant is multilinear in the rows.
-    change detRowAlternating.toMultilinearMap B = _
-    rw [← funext h_row, MultilinearMap.map_sum_finset]
-    exact Finset.sum_congr rfl fun s _ ↦ det_mul_column (fun i ↦ c i (s i)) s
-  rw [h_expand, Finset.mul_sum]
-  -- In each term, every row of `s` lies in `N` or equals `v`.
-  refine sum_mem fun s hs ↦ ?_
-  rw [mul_left_comm]
-  exact Ideal.mul_mem_left _ _
-    (mul_det_mem_fittingIdeal h_smul fun i ↦ hc i (Fintype.mem_piFinset.1 hs i))
+    ∀ d ∈ fittingIdeal (N ⊔ R ∙ v), r * d ∈ fittingIdeal N :=
+  (span_le (p := comap (.mulLeft R r) (fittingIdeal N))).2 <|
+    Set.forall_mem_image.2 fun B hB ↦
+      TauCeti.det_mem_of_mem_span (I := comap (.mulLeft R r) (fittingIdeal N))
+        (s := (N : Set (ι → R)) ∪ {v}) LinearMap.proj
+        (fun i ↦ by simpa only [← N.sup_span] using hB i)
+        fun _ hs ↦ mul_det_mem_fittingIdeal h_smul hs
 
 /-- Let `I` be a finite ordered set of indices. Suppose that for each `j ∈ I`, every submodule
 `K ≥ N` that contains the `v i` with `i ∈ I`, `i < j` also contains `r j • v j`. Then there is

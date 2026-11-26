@@ -547,25 +547,17 @@ on the adelic group the Poincaré series `X.poincareSeries φ`. -/
 theorem coe_poincareMap (X : S.Fits V l kw Y η) [S.IsAdmissible]
     (φ : EuclideanSpace ℂ (S.Classes × S.BesselCoord)) :
     ⇑(X.poincareMap φ : V.Form (typeKernel l ε)) = X.poincareSeries φ := by
-  -- The series of each `X.cutBessel a` is a form `y a`, and `X.poincareMap φ = ∑_a φ_a y a`.
-  let y (a : S.Classes × S.BesselCoord) :
-      levelSpace (V.formRep (typeKernel l ε)) S.stdPrincipalLevel :=
-    (X.exists_levelSpace_tsum_cutBessel_eq a).choose
-  have hy (a : S.Classes × S.BesselCoord) (g : New.G E ε) :
-      ∑' γ : V.Γ, X.cutBessel a (γ * g) = (y a : V.Form (typeKernel l ε)) g :=
-    (X.exists_levelSpace_tsum_cutBessel_eq a).choose_spec g
-  have h_sum : X.poincareMap φ = ∑ a : S.Classes × S.BesselCoord, φ a • y a := by
-    simp [poincareMap, y]
   funext g
-  -- Evaluation at `g` is linear.
+  -- Evaluation at `g` is linear on the level space.
   let ev : levelSpace (V.formRep (typeKernel l ε)) S.stdPrincipalLevel →ₗ[ℂ] ℂ :=
     { toFun z := (z : V.Form (typeKernel l ε)) g
       map_add' _ _ := rfl
       map_smul' _ _ := rfl }
-  calc ev (X.poincareMap φ)
-      = ∑ a : S.Classes × S.BesselCoord, φ a * ev (y a) := by
-        simp only [h_sum, map_sum, map_smul, smul_eq_mul]
-    _ = X.poincareSeries φ g := sum_congr rfl fun a _ ↦ congrArg (φ a * ·) (hy a g).symm
+  change ev (X.poincareMap φ) = X.poincareSeries φ g
+  rw [show ev (X.poincareMap φ) =
+      ∑ a, φ a * ev (X.exists_levelSpace_tsum_cutBessel_eq a).choose by simp [poincareMap]]
+  exact sum_congr rfl fun a _ ↦
+    congrArg (φ a * ·) ((X.exists_levelSpace_tsum_cutBessel_eq a).choose_spec g).symm
 
 omit [S.IsAdmissible] [HasPrimitiveRoot5040 E] in
 /-- The homeomorphism `X.realHomeomorph` from G_∞ onto ∏_v `𝔰.G₁` preserves the volumes. -/

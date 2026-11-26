@@ -141,15 +141,6 @@ private lemma stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) (j : Fin N
   simp +decide [dominantTorus, stepTorus, apply_ite, ite_apply, hϖ, Monotone]
   omega
 
-omit [Valued F ℤᵐ⁰] in
-/-- For `i < j`, exchanging the entries `i` and `j` of `stepTorus ϖ j` moves one factor `ϖ`
-from the index `i` to the index `j`. -/
-private lemma stepTorus_comp_swap {i j : Fin N} (hij : i < j) :
-    stepTorus ϖ j ∘ Equiv.swap i j = stepTorus ϖ j * mulSingle j ϖ * mulSingle i ϖ⁻¹ := by
-  ext
-  simp [stepTorus, mulSingle_apply]
-  grind
-
 /-- Let `ϖ` be a uniformiser, `j = i + 1`, and `t` dominant with `v (t i) < v (t j)`. Then
 `t / stepTorus ϖ j` is still dominant. -/
 private lemma div_stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) {i j : Fin N}
@@ -157,10 +148,12 @@ private lemma div_stepTorus_mem_dominantTorus (hϖ : v ϖ.val = exp (-1)) {i j :
     t / stepTorus ϖ j ∈ dominantTorus := by
   -- In terms of the integers `log (v (t a))`: adding `1` to the entries before `j` keeps them
   -- monotone.
+  have ht' : ∀ ⦃a b : Fin N⦄, a ≤ b → (v (t a).val).log ≤ (v (t b).val).log := by
+    simpa [dominantTorus, ← log_le_log, Monotone] using ht
   simp [dominantTorus, stepTorus, ← log_le_log, ← log_lt_log, apply_ite, hϖ, Monotone]
-    at ht h_lt hcov ⊢
-  have h_from_j (b : Fin N) (hb : j ≤ b) : (v (t j).val).log ≤ (v (t b).val).log := ht hb
-  have h_to_i (a : Fin N) (ha : a ≤ i) : (v (t a).val).log ≤ (v (t i).val).log := ht ha
+    at h_lt hcov ⊢
+  have h_from_j (b : Fin N) (hb : j ≤ b) : (v (t j).val).log ≤ (v (t b).val).log := ht' hb
+  have h_to_i (a : Fin N) (ha : a ≤ i) : (v (t a).val).log ≤ (v (t i).val).log := ht' ha
   grind
 
 variable [CompactSpace 𝒪[F]]
@@ -362,7 +355,10 @@ lemma IsExponent.exists_sorted (hϖ : v ϖ.val = exp (-1)) (hx : x ∈ levelSpac
   -- the dominant element whose order drops by one from `i` to `j` and nowhere else
   let w : Fin N → Fˣ := stepTorus ϖ j
   have hw : w ∈ dominantTorus := stepTorus_mem_dominantTorus hϖ j
-  have w_swap : w ∘ swap i j = w * mulSingle j ϖ * mulSingle i ϖ⁻¹ := stepTorus_comp_swap hij
+  have w_swap : w ∘ swap i j = w * mulSingle j ϖ * mulSingle i ϖ⁻¹ := by
+    ext
+    simp [w, stepTorus, mulSingle_apply]
+    grind
   -- The mean drops out on vectors fixed by the transvections at `(i, j)`.
   have S_eq {z : ρ} (hz : ∀ a : F, v a ≤ 1 → ρ (transvectionGL hne a) z = z) : S z = s z :=
     hl.apply_permGL_swap_compactMean_of_forall_transvectionGL hcov hz
@@ -574,8 +570,8 @@ lemma exists_sorted_isIwahoriEigen_of_diagGL_smul (hϖ : v ϖ.val = exp (-1))
     rw [apply_symm_apply]
     exact (AwayMap.lift_eq _ loc hχs t).symm
   have hθτ (i : Fin N) (ε : Fˣ) (hε : v ε.val = 1) : θ i ε = τ (mulSingle i ε) := by
-    simp +contextual [E, smul_left_inj, hy_eigen, hθ, y_ne, normAbsChar] at hyE
-    exact hyE i ε hε
+    revert i ε
+    simpa +contextual [E, smul_left_inj, hy_eigen, hθ, y_ne, normAbsChar] using hyE
   have y_eig : IsIwahoriEigen ρ (torusChar θ) (y : ρ) := by
     refine ⟨by simpa using y_ne, y.prop, fun t ht ↦ ?_⟩
     rw [← hθ ⟨t, ht⟩]

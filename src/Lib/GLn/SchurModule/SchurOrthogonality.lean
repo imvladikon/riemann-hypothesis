@@ -202,7 +202,10 @@ groups of signs `s`. -/
 @[fun_prop]
 lemma continuous_conjWeylRep (ξ : WeylIndex n κ → ℂ) :
     Continuous (conjWeylRep (s := s) κ e · ξ) := by
-  simp [conjWeylRep, weylRep, smul_mulVec]
+  suffices Continuous fun x : Φ → USign s ↦
+      (∏ τ, ((x τ : GL n ℂ).map (starRingEnd ℂ)).det ^ e τ) •
+        schur κ (fun τ ↦ (x τ : Matrix n n ℂ).map (starRingEnd ℂ)) *ᵥ ξ by
+    simpa [conjWeylRep, weylRep, smul_mulVec] using this
   fun_prop
 
 /-- For matrix representations S, R of a compact group with a Haar measure ν and a matrix M such
@@ -286,7 +289,8 @@ lemma schur_orthogonality (e : Φ → ℤ) (f : (WeylIndex n κ → ℂ) →ₗ[
   have h_cont : Continuous fun x : Φ → USign (1 : n → ℤˣ) ↦
       conjWeylMatrix κ e x * ((gramForm a).smulRight c).toMatrix' * conjWeylMatrix κ e x⁻¹ := by
     -- Both factors are, by definition, products of determinant powers and Schur matrices.
-    simp [-Pi.inv_apply, weylRep]
+    simp only [MonoidHom.coe_comp, weylRep, MonoidHom.coe_mk, OneHom.coe_mk, Function.comp_apply,
+      MonoidHom.pi_apply, Pi.coe_evalMonoidHom]
     fun_prop
   obtain ⟨B, h_comm : ∀ y : Φ → USign (1 : n → ℤˣ),
       B * conjWeylMatrix κ e y = conjWeylMatrix κ e y * B, h_mean⟩ :=

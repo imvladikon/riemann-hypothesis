@@ -367,7 +367,8 @@ lemma New.Variety.exists_hasHodgeTateWeight {p h : ℕ} {R : CommRingCat} {E k :
       _ = J Y ((cyclotomicGp (toGp g) ^ (-h : ℤ)).val • v) := by
         simp [algebra_compatible_smul (PadicAlgCl p), J_semi, hv]
   · -- Naturality of `hodgeTateMap`, `restrictToPairs`, `J` and `B` in `u`.
-    simp [hodgeTateMap_map, hξ, J_nat, hv, ← restrictToPairs_map]
+    simp only [HodgeH.baseChange_map, hodgeTateMap_map, hξ, ← restrictToPairs_map, J_nat, hv,
+      LinearMap.comp_apply, LinearEquiv.coe_coe, LinearMap.coe_mk, LinearMap.coe_toAddHom]
     -- It remains that `B` commutes with the pull-back along `u`: `B` is `mapₗ` along the maps
     -- `toGenericPoints`, which are natural in the scheme.
     rw [(B W).symm_apply_eq.mpr]

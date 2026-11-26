@@ -535,14 +535,6 @@ lemma _root_.Set.Nonempty.exists_retraction {α : Type*} {S : Set α} (hS : S.No
   obtain ⟨b₀, hb₀⟩ := hS
   exact ⟨fun b ↦ if b ∈ S then b else b₀, fun b ↦ by grind, fun b hb ↦ ite_eq_left hb⟩
 
-/-- A real linear map `P` from (E ⊗ ℝ)ⁿ to the fibre `New.Variety.BallFibre` is injective if a form
-`A` has Re A(w, P w) > 0 for every w ≠ 0. -/
-private lemma injective_of_re_pos {P : RealVectors E D.Index →ₗ[ℝ] BallFibre E D.Index}
-    {A : RealVectors E D.Index →L[ℝ] BallFibre E D.Index →L[ℂ] ℂ}
-    (hA : ∀ w ≠ 0, 0 < (A w (P w)).re) : Function.Injective P := by
-  refine (injective_iff_map_eq_zero P).2 fun w hw ↦ by_contra fun hw_ne ↦ ?_
-  simpa [hw] using hA w hw_ne
-
 /-- If a form `A` has Re A(w, P w) > 0 for every w ≠ 0 and the real isomorphism `Q` agrees with
 `P`, then the form B = A ∘ Q⁻¹ on the fibre has Re B(u, u) > 0 for every u ≠ 0. -/
 private lemma re_comp_symm_apply_self_pos {P : RealVectors E D.Index →ₗ[ℝ] BallFibre E D.Index}
@@ -616,7 +608,9 @@ lemma exists_analyticFamily_positiveBall (e : (D.Index → ℂ) ≃L[ℂ] ℂ ×
     ballPeriod E e H (1, r b)
   have hP_pos (b : BallBase D.Index) : ∀ w ≠ 0, 0 < (A w (P b w)).re := A_pos _ (hr b)
   -- By positivity of `A` the map `P b` is injective, so it is an isomorphism by dimension.
-  have P_inj (b : BallBase D.Index) : Function.Injective (P b) := injective_of_re_pos (hP_pos b)
+  have P_inj (b : BallBase D.Index) : Function.Injective (P b) := by
+    refine (injective_iff_map_eq_zero (P b)).2 fun w hw ↦ by_contra fun hw_ne ↦ ?_
+    simpa [hw] using hP_pos b w hw_ne
   let Q (b : BallBase D.Index) : RealVectors E D.Index ≃L[ℝ] BallFibre E D.Index :=
     ((P b).linearEquivOfInjective (P_inj b) finrank_realVectors_eq_finrank_ballFibre)
       |>.toContinuousLinearEquiv

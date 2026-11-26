@@ -567,7 +567,8 @@ lemma IsAdapted.exists_omega_vacElem_of_isMixedLaw {E : Type u_1} {n : Type u_3}
   -- integrality.
   have h_fin : T (t.val⁻¹ᴴ *ᵥ finVec z) u =
       boxIndicator p (⊤ : Set (FinPlace E)).conjClosure z • V₀.projOn ⊤ (T 0 u) := by
-    simpa [u, ↓idem_compl, Set.conjClosure] using h_adapted.omega_projOn_of_isMixedLaw hT z V.vacElem (S := ⊤)
+    simpa [u, ↓idem_compl, Set.conjClosure] using
+      h_adapted.omega_projOn_of_isMixedLaw hT z V.vacElem (S := ⊤)
   -- The two projections together land on the line of the vacuum; the vacuum function at
   -- `t.1ᴴ *ᵥ x` is the product of its real and finite factors.
   have h_line : V₀.projReal (V₀.projOn Set.univ (T 0 u)) =

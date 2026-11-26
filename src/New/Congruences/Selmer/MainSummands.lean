@@ -136,8 +136,8 @@ lemma IsMainSummandLike.sum_finrank_crysCocyclesAt_le (hrow : IsMainSummandLike 
         v).isPotentiallyCrystalline
       (hrow.toIsConjSelfDualOfLevel.hasJumps_localLattice hu v)).trans (by simp)
   -- Each embedding is counted at one place at most.
-  simp [h_rank, sum_add_distrib, add_mul]
-  exact (sum_complexEmbeddingOf_le _).trans hrow.sum_countP_neg_le
+  simpa [h_rank, sum_add_distrib, add_mul] using
+    (sum_complexEmbeddingOf_le _).trans hrow.sum_countP_neg_le
 
 /-- The global term. Let `u` be an `O`-lattice (`IsLatticeIn R u`) in a main summand `R` whose image
 spans all matrices. Let some `g` act by a scalar `α` and have cyclotomic character `p_l ^ card n`,

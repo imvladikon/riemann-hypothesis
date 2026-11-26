@@ -406,7 +406,8 @@ lemma isMatchingPairAbove_of_mem_biInvariantPairs {μ : (𝔸f E)ˣ →* ℂˣ} 
         simpa [placesAbove] using hu
       exact atPlace_iterate_galoisGf_mem_localIntGL 1 (hk _ hu_comap)
     intro δ
-    show ((localLevel n A : Set (Gf E' n)).indicator 1 * F : Gf E' n → ℂ) (k⁻¹ * δ * galoisGf σ k) =
+    change ((localLevel n A : Set (Gf E' n)).indicator 1 * F : Gf E' n → ℂ)
+        (k⁻¹ * δ * galoisGf σ k) =
       ((localLevel n A : Set (Gf E' n)).indicator 1 * F : Gf E' n → ℂ) δ
     simp_all [IsBiInvariantAt, indicator, leftTranslation, funext_iff, mul_mem_cancel_left,
       mul_mem_cancel_right]

@@ -994,11 +994,13 @@ lemma IsChartOf.exists_isPeriodMatrixOf (hc : IsChartOf c 𝒥.toGp) (h : IsCrys
     · rw [smul_mul_smul, ← mul_pow, hw, hX'X, one_pow, one_smul]
     · -- `φ (E τ) = φ E * μ = φ E * v * E τ`
       refine (hU_smul _).trans ?_
-      simp [Units.smul_def, hU, hX, ← hv, φ, FrobGal.smul_def, mul_assoc, AlgHom.map_smul_of_tower]
       -- both sides are `(φ E · E τ v) ^ a` times `φ M`
-      change (frobEnd c.E.val * (c.E.val * (tau * v.val))) ^ a • matrixAction (.ofAdd 1, 1) M.val =
-        v.val ^ a • Chart.ainfToBPlus (frobEnd c.E.val) ^ a • (c.E.val * tau) ^ a •
-          matrixAction (.ofAdd 1, 1) M.val
+      suffices h : (frobEnd c.E.val * (c.E.val * (tau * v.val))) ^ a •
+            matrixAction (.ofAdd 1, 1) M.val =
+          v.val ^ a • Chart.ainfToBPlus (frobEnd c.E.val) ^ a • (c.E.val * tau) ^ a •
+            matrixAction (.ofAdd 1, 1) M.val by
+        simpa [Units.smul_def, hU, hX, ← hv, φ, FrobGal.smul_def, mul_assoc,
+          AlgHom.map_smul_of_tower] using h
       module
   have h_exists_gal (g : Gp p) (hg : c.FixesThetaZ g) :
       ∃ R : Matrix ι ι Ainf, R.map Chart.ainfToBPlus * g • U = U := by

@@ -99,7 +99,8 @@ lemma exists_compact_parabolic_normal_form :
   obtain ⟨N, hN, hN_cover⟩ := IsCovolOneLattice.exists_compact_cover (ratMatrices E p p)
   obtain ⟨M, _, hM, h_bases⟩ := exists_isCompact_profileBases E p
   have h_levi : Continuous fun a : GL p (𝔸 E) ↦ P.levi (a, 1) := by
-    simp [↓continuous_iff, Splitting.levi, -coe_units_inv]
+    simp only [↓continuous_iff, Splitting.levi, mk'_apply, adeleMatrix_one, Matrix.mul_one,
+      adeleMatrix_ofMatrix]
     fun_prop
   -- The compact set is `N ×ˢ (K * levi '' M)⁻¹` with `K` the maximal compact subgroup.
   open Pointwise in

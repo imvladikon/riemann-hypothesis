@@ -196,17 +196,18 @@ lemma New.GaloisRep.avatarCompatAt_of_hasPrimitiveRoot5040 {ℓ : ℕ} [ThePrime
     [HasPrimitiveRoot5040 E] (θ : AlgHeckeChar E) :
     AvatarCompatAt w θ := by
   intro A hA
-  -- The field `L` of `exists_isStep_hasQuadSubfield` for `n = w.q` is fixed by the decomposition
-  -- group of `A` (`h_dec`), so the place `u` of `L` under `A` has the norm of `w`; and `u` lies
-  -- over a split place of an imaginary quadratic subfield (`h_spl`), so it is split.
-  obtain ⟨χ, D, _, _, -, h_spl, h_dec⟩ := exists_isStep_hasQuadSubfield E w.q w.one_lt_q.ne_bot
+  -- The field `L` of `exists_isQuadraticStep` for `n = w.q` is fixed by the decomposition group of
+  -- `A`, so the place `u` of `L` under `A` has the norm of `w`; and `u` lies over a split place of
+  -- an imaginary quadratic subfield, so it is split.
+  obtain ⟨χ, D, _, h_quad⟩ := exists_isQuadraticStep E w.q w.one_lt_q.ne_bot
   let L : IntermediateField E Ω := QZChar.stepField χ
   let j : Gal(Ω/L) →* Gal(Ω/E) := restrictScalarsHom E
   have h_fix : decompGroup Gal(Ω/E) A ≤ QZChar.ker (QZChar.symmetrise χ) :=
-    (h_dec hA w.asIdeal.absNorm_mem).1
+    h_quad.decompGroup_le_ker_symmetrise hA w.asIdeal.absNorm_mem
   obtain ⟨u, hu, rfl⟩ : ∃ u : FinPlace L, IsPlaceOver A u ∧ u.below E = w := hA.exists_above
   have hq : u.q = (u.below E).q := (hA.q_eq_and_comap_ne_self_of_decompGroup_le h_fix u rfl).1
-  have hu_split : u.IsSplit := (h_spl u (by simpa [← hq] using u.1.absNorm_mem)).isSplit_of_below
+  have hu_split : u.IsSplit :=
+    (h_quad.isSplitPrimeToDisc_below u (by simpa [← hq] using u.1.absNorm_mem)).isSplit_of_below
   obtain ⟨h_fin, h_jump, h_poly⟩ := avatarCompatAt_of_isSplit hu_split θ.baseChange hu
   -- The three clauses descend from `L` to `E`, as the avatar over `L` is the restriction of the
   -- avatar over `E`.

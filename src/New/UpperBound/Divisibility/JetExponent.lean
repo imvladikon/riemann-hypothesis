@@ -156,7 +156,9 @@ lemma collisionSum_le {S : Finset D.Φ} {o : ℕ}
     have h_bound (e : ℕ) : ‖t (o + e)‖ ≤ D.a / p ^ o * 2 / 2 / 2 ^ e :=
       calc ‖t (o + e)‖ ≤ (D.a / p ^ o / p ^ e : ℝ) := by
             unfold t
-            split <;> simp [pow_add, ← div_div]; positivity
+            split
+            · simp [pow_add, ← div_div]
+            · rw [norm_zero]; positivity
         _ ≤ D.a / p ^ o / 2 ^ e := by gcongr; exact mod_cast q.out.two_le
         _ = _ := by ring
     grw [← (add_right_injective o).tsum_eq h_support, le_norm_self (tsum _)]

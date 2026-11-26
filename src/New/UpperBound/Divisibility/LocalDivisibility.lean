@@ -211,7 +211,8 @@ lemma IsWeakChainDatum.gaugeLe_restrictedChain_collisionSum (hΨ : IsWeakChainDa
       div_le_div_of_nonneg_right (D.le_loss p) hm_pos.le
     rw [sub_div]
     linarith
-  refine (hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hp_N (fun x hx j _ ↦ h_raises x hx j) hv).rpow_mono ?_
+  refine (hΨ.gaugeLe_restrictedChain_of_mem_raises hQ hp_N
+    (fun x hx j _ ↦ h_raises x hx j) hv).rpow_mono ?_
   calc ∑ j ∈ range D.m, -D.divisibilityBound p j ∅
       ≤ ∑ _j ∈ range D.m, (D.collisionSum p ∅ + (D.loss p - D.gain p) / D.m) := sum_le_sum h_lift
     _ = D.m * D.collisionSum p ∅ + D.loss p - D.gain p := by

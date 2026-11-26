@@ -305,8 +305,11 @@ lemma thickeningOver.teichmullerLift_epsTilt (c : PadicTest) :
   have h_lift : teichmullerLift (k := k) c (algebraMap OFlat (tilt.obj c) epsTilt) =
       algebraMap (WittVector p OFlat) c.Thickening (teichmuller p epsTilt) :=
     congrArg (algebraMap (WittVector p c.TiltRing) c.Thickening) (map_teichmuller ..).symm
-  erw [h_lift, ← map_one c.thickeningProj, mulMu_thickeningProj]
-  simp only [mu_eq, _root_.map_sub, map_one, mul_one]
+  have h_mu : mulMu c (1 : genericOver.obj c) = algebraMap Ainf c.Thickening mu :=
+    (congrArg (mulMu c) c.thickeningProj.map_one).symm.trans
+      ((mulMu_thickeningProj c 1).trans (mul_one _))
+  refine h_lift.trans (Eq.trans ?_ (congrArg (fun z : c.Thickening ↦ 1 + z) h_mu).symm)
+  simp only [mu_eq, _root_.map_sub, map_one]
   let x : c.Thickening := algebraMap Ainf c.Thickening (teichmuller p epsTilt)
   change x = 1 + (x - 1)
   rw [add_comm, sub_add_cancel]
@@ -480,13 +483,15 @@ lemma teichmullerCoordinate_comp_proj_charTwist (c : PadicTest) (i : Bool)
       (((algebraMap OFlat (AddMonoidAlgebra OFlat ℚ≥0)).toMonoidHom.comp
         (epsPow.comp g.toMultiplicative)) *
         AddMonoidAlgebra.of OFlat ℚ≥0) (AddMonoidAlgebra.of OFlat ℚ≥0 (.ofAdd 1))) = _
-    erw [AddMonoidAlgebra.lift_of, MonoidHom.mul_apply, _root_.map_mul]
+    simp only [AddMonoidAlgebra.lift_of, MonoidHom.mul_apply, _root_.map_mul]
     exact congrArg (fun z ↦ z * t.down.hom (.single 1 1)) (t.down.hom.commutes (epsPow sign))
   apply ULift.down_injective
   funext j
   change proj c (teichmullerLift c ((charTwist epsPow g ≫
     t.down).hom (.single 1 1))) = proj c (teichmullerLift c (t.down.hom (.single 1 1)))
-  erw [h_twist, _root_.map_mul, _root_.map_mul]
+  let F : tilt.obj c →* genericOver.obj c :=
+    (proj (k := k) c).hom.toRingHom.toMonoidHom.comp (teichmullerLift c)
+  refine (congrArg F h_twist).trans ((map_mul F _ _).trans ?_)
   change θ sign * proj c (teichmullerLift c (t.down.hom (.single 1 1))) = _
   rw [θ.mem_ker.mp h_eps, one_mul]
 
@@ -581,16 +586,6 @@ private lemma projSpace.map_unitsExtClass_eq_map_of_comp_eq {B : AbFunctor Padic
       rw [hj']
     _ = _ := H.map_comp ..
 
-private lemma gluing_apply_point (c : PadicTest)
-    (t : (tilt ⋙ reprBy (CommAlgCat.of OFlat OFlat)).obj c) :
-    (gluing.app c).hom (.of (⟨⟨false⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
-      .of (⟨⟨false⟩, ⟨evalZero _ ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
-
-private lemma gluing_apply_torus (c : PadicTest) (t : (tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
-    (gluing.app c).hom (.of (⟨⟨true⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
-      .of (⟨⟨false⟩, ⟨discToTorus (-coeHom) ≫ t.down⟩⟩ : twoDiscs.obj c) -
-        .of (⟨⟨true⟩, ⟨discToTorus coeHom ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
-
 /-- The map `j` of a Toda cancellation lifts through the projective line. Let `A` be a natural map
 from the perfect disc to the affine line over `B` whose values at `u` and `u⁻¹` multiply to `1` on
 the torus (`hA_inv`), and let its image `a` in `R[1/p]` be invariant under the twists of the two
@@ -653,10 +648,11 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
         .of (φ c ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩) := by
     let z : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩
     have ho : ((origin ⟨false⟩ twoDiscs).app c).hom (.of u) = .of z := freeAb.desc_of ..
-    change (((freeAb.map φ - origin ⟨false⟩ twoDiscs ≫ freeAb.map φ).app c).hom)
-      (.of u) = _
-    erw [NatTrans.app_sub, AddCommGrpCat.hom_sub, AddMonoidHom.sub_apply,
-      NatTrans.comp_app, AddCommGrpCat.comp_apply, ho, freeAb.map_of, freeAb.map_of]
+    let m := ((freeAb.map φ).app c).hom
+    let o := ((origin ⟨false⟩ twoDiscs).app c).hom
+    change (m - m.comp o) (.of u) = _
+    exact (AddMonoidHom.sub_apply m (m.comp o) _).trans
+      (congrArg₂ (· - ·) (freeAb.map_of ..) ((congrArg m ho).trans (freeAb.map_of ..)))
   -- The map `x ↦ [φ x] - [∞]` on the discs, `∞` the image of the origin of the disc `false`, lifts
   -- `j` to `j'` with values in `freeAb (projSpace k 1)`.
   obtain ⟨j', hj'⟩ :
@@ -669,7 +665,12 @@ private lemma projSpace.exists_map_eq_map_of_isTodaCancellation
       rintro c ⟨⟨_ | _⟩, t⟩
       · let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨false⟩, t⟩
         change (F.app c).hom ((gluing.app c).hom (.of u)) = 0
-        erw [gluing_apply_point c t, evalZero_comp, hF, sub_self]
+        let z : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero (tilt.obj c)⟩⟩
+        let z' : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero _ ≫ t.down⟩⟩
+        have h_origin : z' = z :=
+          congrArg (fun f ↦ (⟨⟨false⟩, ⟨f⟩⟩ : twoDiscs.obj c)) (evalZero_comp t.down)
+        refine (congrArg (F.app c).hom (gluing_apply_point c t)).trans ((hF c z').trans ?_)
+        exact sub_eq_zero.mpr (congrArg (fun v ↦ FreeAddCommGroup.of (φ c v)) h_origin)
       · let u : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, t⟩
         let u₀ : twoDiscs.obj c := ⟨⟨false⟩, ⟨discToTorus (-coeHom) ≫ t.down⟩⟩
         let u₁ : twoDiscs.obj c := ⟨⟨true⟩, ⟨discToTorus coeHom ≫ t.down⟩⟩

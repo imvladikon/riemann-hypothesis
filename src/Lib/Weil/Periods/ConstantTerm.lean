@@ -711,24 +711,18 @@ lemma hasDegreeGe_ratCoordMatrix_onHom_sub_one {γ : G E ε} {δ : G E ε'} (hγ
     HasDegreeGe (Y.mapDegree d) (Y.mapDegree d) 1
       ((V.hom V').ratCoordMatrix (G.onHom (γ, δ)) - 1) := by
   intro i l hil
-  have δ_eq (h_le : d i.1 ≤ d l.1) :
-      V'.ratCoordMatrix δ i.1 l.1 = (1 : Matrix ι' ι' (𝔸 E)) i.1 l.1 :=
-    sub_eq_zero.1 (hδ i.1 l.1 (Int.lt_add_one_of_le h_le))
-  have γ_eq (h_le : Y.gradeOf l.2 ≤ Y.gradeOf i.2) :
-      V.ratCoordMatrix γ⁻¹ l.2 i.2 = (1 : Matrix ι ι (𝔸 E)) l.2 i.2 :=
-    sub_eq_zero.1 (Y.mem_unipotent.1 (inv_mem hγ) l.2 i.2 (Int.lt_add_one_of_le h_le))
-  suffices h_entry : V'.ratCoordMatrix δ i.1 l.1 * V.ratCoordMatrix γ⁻¹ l.2 i.2 =
-      (1 : Matrix ι' ι' (𝔸 E)) i.1 l.1 * (1 : Matrix ι ι (𝔸 E)) l.2 i.2 by
-    rw [ratCoordMatrix_onHom, ← one_kronecker_one, ← transpose_one (n := ι)]
-    exact sub_eq_zero.2 h_entry
-  -- Either both factors are entries of the identity, or one of them is off the diagonal and zero.
-  obtain ⟨h_target, h_source⟩ | h_target | h_source :
-      d i.1 ≤ d l.1 ∧ Y.gradeOf l.2 ≤ Y.gradeOf i.2 ∨ d i.1 < d l.1 ∨
-        Y.gradeOf l.2 < Y.gradeOf i.2 := by
-    lia
-  · rw [δ_eq h_target, γ_eq h_source]
-  · rw [δ_eq h_target.le, one_apply_ne (ne_of_apply_ne d h_target.ne), zero_mul, zero_mul]
-  · rw [γ_eq h_source.le, one_apply_ne (ne_of_apply_ne Y.gradeOf h_source.ne), mul_zero, mul_zero]
+  have hδ' (h : d i.1 ≤ d l.1) := sub_eq_zero.1 (hδ i.1 l.1 (Int.lt_add_one_of_le h))
+  have hγ' (h : Y.gradeOf l.2 ≤ Y.gradeOf i.2) :=
+    sub_eq_zero.1 (Y.mem_unipotent.1 (inv_mem hγ) l.2 i.2 (Int.lt_add_one_of_le h))
+  rw [ratCoordMatrix_onHom, ← one_kronecker_one, ← transpose_one (n := ι)]
+  refine sub_eq_zero.2 (show V'.ratCoordMatrix δ i.1 l.1 * V.ratCoordMatrix γ⁻¹ l.2 i.2 =
+    (1 : Matrix ι' ι' (𝔸 E)) i.1 l.1 * (1 : Matrix ι ι (𝔸 E)) l.2 i.2 from ?_)
+  -- Either both factors are entries of the identity, or one is off-diagonal and zero.
+  rcases lt_or_ge (d i.1) (d l.1) with h | h
+  · rw [hδ' h.le, one_apply_ne (ne_of_apply_ne d h.ne), zero_mul, zero_mul]
+  · rcases lt_or_ge (Y.gradeOf l.2) (Y.gradeOf i.2) with h' | h'
+    · rw [hγ' h'.le, one_apply_ne (ne_of_apply_ne Y.gradeOf h'.ne), mul_zero, mul_zero]
+    · rw [hδ' (by lia), hγ' (by lia)]
 
 /-- Substitution law of the constant term for unipotent points. Let the weights `d` on `V'` be odd
 under the string reversal of `Y'`, let `γ` be unipotent for the grading `Y`, and let `δ - 1` raise

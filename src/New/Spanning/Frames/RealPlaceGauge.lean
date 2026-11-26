@@ -1180,29 +1180,18 @@ lemma realDepth_lt_iff {a : Fin 𝔰.ϱ} {g g' : 𝔰.G₁} {t : ℝ} :
         lengthAt g ζ ^ 2 + lengthAt g' ζ' ^ 2 < t := by
   have : Nonempty {ζ : 𝔰.BesselIndex → ℂ // IsOrthogonalBelow a ζ ∧ ζ (eStar a) = 1} :=
     ⟨Pi.single (eStar a) 1, fun b hb ↦ by simp [Fin.ne_of_lt hb], by simp⟩
-  have h_bdd : BddBelow (range
-      fun ζ : {ζ : 𝔰.BesselIndex → ℂ // IsOrthogonalBelow a ζ ∧ ζ (eStar a) = 1} ↦
-        inducedLength g a ζ ^ 2 + inducedLength g' a ζ ^ 2) :=
-    ⟨0, forall_mem_range.2 fun _ ↦ by positivity⟩
-  rw [realDepth, ciInf_lt_iff h_bdd]
+  rw [realDepth, ciInf_lt_iff ⟨0, forall_mem_range.2 fun _ ↦ by positivity⟩]
   constructor
   · -- Choose a lift `ζ₁` at `g`, then a lift `ζ₂` at `g'`.
     rintro ⟨⟨ζ, h_orth, h_one⟩, h_lt⟩
-    obtain ⟨ζ₁, h₁, h_lt₁⟩ : ∃ ζ₁ : 𝔰.BesselIndex → ℂ, CongrBelow a ζ ζ₁ ∧
-        lengthAt g ζ₁ ^ 2 < t - inducedLength g' a ζ ^ 2 :=
-      inducedLength_sq_lt_iff.1 (lt_sub_iff_add_lt.2 h_lt)
-    obtain ⟨ζ₂, h₂, h_lt₂⟩ : ∃ ζ₂ : 𝔰.BesselIndex → ℂ, CongrBelow a ζ ζ₂ ∧
-        lengthAt g' ζ₂ ^ 2 < t - lengthAt g ζ₁ ^ 2 :=
-      inducedLength_sq_lt_iff.1 (lt_sub_comm.1 h_lt₁)
-    have h_orth₁ : IsOrthogonalBelow a ζ₁ := h_orth.of_congrBelow h₁ a.isLt.le
-    have h_one₁ : ζ₁ (eStar a) = 1 := (h₁.apply_eStar a.isLt.le a).trans h_one
-    exact ⟨ζ₁, ζ₂, h_orth₁, h_one₁, h₁.symm.trans h₂, lt_sub_iff_add_lt'.1 h_lt₂⟩
+    obtain ⟨ζ₁, h₁, h_lt₁⟩ := inducedLength_sq_lt_iff.1 (lt_sub_iff_add_lt.2 h_lt)
+    obtain ⟨ζ₂, h₂, h_lt₂⟩ := inducedLength_sq_lt_iff.1 (lt_sub_comm.1 h_lt₁)
+    exact ⟨ζ₁, ζ₂, h_orth.of_congrBelow h₁ a.isLt.le, (h₁.apply_eStar a.isLt.le a).trans h_one,
+      h₁.symm.trans h₂, lt_sub_iff_add_lt'.1 h_lt₂⟩
   · rintro ⟨ζ, ζ', h_orth, h_one, h_congr, h_lt⟩
-    have h_lt₂ : inducedLength g' a ζ ^ 2 < t - lengthAt g ζ ^ 2 :=
-      inducedLength_sq_lt_iff.2 ⟨ζ', h_congr, lt_sub_iff_add_lt'.2 h_lt⟩
-    have h_lt₁ : inducedLength g a ζ ^ 2 < t - inducedLength g' a ζ ^ 2 :=
-      inducedLength_sq_lt_iff.2 ⟨ζ, .refl a ζ, lt_sub_comm.1 h_lt₂⟩
-    exact ⟨⟨ζ, h_orth, h_one⟩, lt_sub_iff_add_lt.1 h_lt₁⟩
+    have h_lt₂ := inducedLength_sq_lt_iff.2 ⟨ζ', h_congr, lt_sub_iff_add_lt'.2 h_lt⟩
+    exact ⟨⟨ζ, h_orth, h_one⟩,
+      lt_sub_iff_add_lt.1 (inducedLength_sq_lt_iff.2 ⟨ζ, .refl a ζ, lt_sub_comm.1 h_lt₂⟩)⟩
 
 /-- At ℂ a number c lies in `stableProducts a x y` exactly if c = ⟨e_a, ω⟩ for a vector ω orthogonal
 to the e_b, b < a, whose class modulo these e_b has a lift ω' with |ω|_x² + |ω'|_{x y}² < 1. -/

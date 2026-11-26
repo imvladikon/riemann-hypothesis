@@ -311,7 +311,8 @@ lemma sq_lt_norm_sq_last_frameProducts {σ : S.G E} (hσ : σ ∈ floorGroup �
     mul_star_dotProduct_eq_last_frameProducts hσ
   have h_nonneg : 0 ≤ Φ v (θ * star θ - S.N ^ 2) := by
     rw [← h_norm]
-    simp [dotProduct, conj_mul']
+    simp only [dotProduct, Pi.star_apply, map_mul, map_natCast, _root_.map_sum, map_star_complex,
+      star_def, conj_mul']
     -- The goal is `0 ≤ N ∑ j, ‖ω j‖²` at the place `v`.
     positivity
   have h_pos : 0 < Φ v (θ * star θ - S.N ^ 2) := ((map_ne_zero (Φ v)).2 hθ).lt_of_le' h_nonneg
@@ -576,8 +577,9 @@ theorem IsFillingData.unipotentOrder_mul_unipotentMass_eq_one [hF : S.IsFillingD
     induction n with
     | zero => simp
     | succ n ih => grind [Finset.sum_range_succ']
-  simp [-Nat.cast_mul, PlaceData.unipotentMass, PlaceData.floorModulus, hF.modulus_levelUnit,
-    ← rpow_natCast_mul, ← pow_mul _ 2, ← pow_succ, Finset.prod_pow_eq_pow_sum]
+  simp only [Nat.cast_pow, PlaceData.unipotentMass, PlaceData.floorModulus, hF.modulus_levelUnit,
+    ← rpow_natCast_mul, Nat.cast_ofNat, mul_inv_cancel₀ (two_ne_zero' ℝ), rpow_one, ← pow_mul _ 2,
+    ← pow_succ, Finset.prod_pow_eq_pow_sum]
   rw [pow_mul, h_sum, ← mul_pow]
   simp [ENNReal.mul_inv_cancel, Nat.Prime.ne_zero, -Nat.cast_mul]
 

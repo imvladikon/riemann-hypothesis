@@ -1,7 +1,6 @@
 module
 
 public import Lib.Adelic.TraceFormula.LineCount
-public import Lib.Adelic.TraceFormula.TestFunction
 public import Lib.Shimura.HeckeTower.HeckeData
 
 /-!

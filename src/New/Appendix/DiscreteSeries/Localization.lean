@@ -184,7 +184,8 @@ abbrev onBlock (e : X ⊕ Fin M ≃ n) (A : Matrix n n ℂ) : Matrix X X ℂ :=
 
 lemma norm_onBlock_le (e : X ⊕ Fin M ≃ n) (A : Matrix n n ℂ) : ‖onBlock e A‖ ≤ ‖A‖ := by
   rw [← sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)]
-  simp [frobenius_norm_sq_eq_sum, ← e.sum_comp, sum_add_distrib, add_assoc]
+  simp only [frobenius_norm_sq_eq_sum, submatrix_apply, Function.comp_apply, ← e.sum_comp,
+    Fintype.sum_sum_type, sum_add_distrib, add_assoc, le_add_iff_nonneg_right]
   positivity
 
 /-- The square of the Frobenius norm of `A` is at most the sum of those of its rows off `X`, its

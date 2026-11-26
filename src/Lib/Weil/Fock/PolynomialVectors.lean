@@ -371,8 +371,8 @@ theorem hasDerivAt_realWeil [DecidableEq ι] {γ : ℝ → USign ε} {Y : Matrix
         (hasDerivAt_det_posProj_add_mul hγ_zero hγ).inv
     -- Pairing with the vacuum evaluates at `0` (`valueAt_zero_polyVector_glOp_one`).
     rw [B_apply, (pair_deriv 1 1).unique vacuum_coeff, trace_mul_comm]
-    simp [weilDeriv, trace, Matrix.mul_apply, ← valueAt_apply, valueAt_zero_polyVector_glOp_one, mul_sub,
-      sum_sub_distrib, Matrix.one_apply]
+    simp [weilDeriv, trace, Matrix.mul_apply, ← valueAt_apply, valueAt_zero_polyVector_glOp_one,
+      mul_sub, sum_sub_distrib, Matrix.one_apply]
   -- At `u = 1` the relations `fockMatrixCoeff_raiseOp` and `fockMatrixCoeff_lowerOp` say that
   -- `raiseOp ε i` and `ε i * lowerOp ε i` are adjoint.
   have raise_adjoint (P Q : MvPolynomial ι ℂ) (i : ι) :

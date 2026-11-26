@@ -176,33 +176,17 @@ lemma gram_middleBasisMatrix {N : A} (hN : π * star (π : A) = N) :
       (-1) := by
   have h_inv : star (↑π⁻¹ : A) * star (π : A) = 1 := by rw [← star_mul, π.mul_inv, star_one]
   have h_cancel : star (↑π⁻¹ : A) * N = π := by rw [← hN, mul_left_comm, h_inv, mul_one]
-  -- The pairings of the new basis with the lattice basis: only `x_{k₀} = π̄ v - π⁻¹ z` and `π⁻¹ z`
-  -- pair with `v` (at the index `k₀`), and only `π⁻¹ z` pairs with `z`.
-  have h_pairing : (middleBasisMatrix 𝔰 π)ᴴ * latticeMiddleGram 𝔰 N =
-      fromBlocks (Filling.scaleAt (star (↑π⁻¹ : A)) 𝔰.k₀) 0
-        (of fun _ j ↦ if j = 𝔰.k₀ then -star (↑π⁻¹ : A) else 0) (of fun _ _ ↦ -(π : A)) := by
-    ext (i | ⟨⟩) (j | ⟨⟩)
-    · by_cases hi : i = 𝔰.k₀ <;> by_cases hj : j = 𝔰.k₀ <;>
-        simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-          diagonal, apply_ite star,
-          hi, hj, eq_comm]
-    · by_cases hi : i = 𝔰.k₀ <;>
-        simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
-          diagonal, apply_ite star,
-          h_cancel, hi, eq_comm]
-    · simp [middleBasisMatrix, latticeMiddleGram, Matrix.mul_apply]
-    · simp [middleBasisMatrix, latticeMiddleGram, Matrix.mul_apply, h_cancel]
-  -- Multiply by the new basis: the `x_i` are orthonormal and orthogonal to `π⁻¹ z`, whose norm
-  -- is `-π π⁻¹ = -1`.
-  rw [h_pairing]
   ext (i | ⟨⟩) (j | ⟨⟩)
-  · by_cases hi : i = 𝔰.k₀ <;> by_cases hj : j = 𝔰.k₀ <;>
-      simp [middleBasisMatrix, middleInclusionMatrix, Matrix.mul_apply, diagonal, Matrix.one_apply,
-        h_inv, hi, hj, eq_comm]
-  · simp [middleBasisMatrix, Matrix.mul_apply]
+  · simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
+      diagonal, Matrix.one_apply, apply_ite star, h_cancel, h_inv, eq_comm]
+    split_ifs <;> simp_all [h_cancel, h_inv]
+  · by_cases hi : i = 𝔰.k₀ <;>
+      simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
+        diagonal, apply_ite star, h_cancel, hi, eq_comm]
   · by_cases hj : j = 𝔰.k₀ <;>
-      simp [middleBasisMatrix, middleInclusionMatrix, Matrix.mul_apply, diagonal, h_inv, hj]
-  · simp [middleBasisMatrix, Matrix.mul_apply]
+      simp [middleBasisMatrix, middleInclusionMatrix, latticeMiddleGram, Matrix.mul_apply,
+        diagonal, apply_ite star, h_cancel, h_inv, hj, eq_comm]
+  · simp [middleBasisMatrix, latticeMiddleGram, Matrix.mul_apply, h_cancel]
 
 /-- In the basis `middleBasisMatrix`, the orthonormal basis of `X₀` followed by `π⁻¹ z`, the vector
 `vectorOfLastEntry π t x = x - (π π̄)⁻¹ t z` has the coordinates `x` on `X₀` and `-π̄⁻¹ t` at

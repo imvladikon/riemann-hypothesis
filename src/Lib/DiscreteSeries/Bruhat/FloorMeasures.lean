@@ -177,8 +177,8 @@ lemma heisenbergElem_mul :
     star_dotProduct_mulVec_comm IsHermitianUnit.conjTranspose_eq v' v
   refine Subtype.ext (Units.ext ?_)
   refine ext_iff_mulVec.2 fun w ↦ ?_
-  simp [← hv, ← hv', ← mulVec_mulVec, mulVec_add, mulVec_smul, hv_coord, hv'_coord, h_star]
-  rw [eq_sub_of_add_eq' (element_add_star (A := A))]
+  simp [← hv, ← hv', ← mulVec_mulVec, mulVec_add, mulVec_smul, hv_coord, hv'_coord, h_star,
+    eq_sub_of_add_eq' (element_add_star (A := A))]
   module
 
 /-- An isotropic vector w that vanishes on the floors below a and has coordinate 1 at e*_a is
@@ -384,8 +384,8 @@ lemma frameMatrix_heisenbergElem :
         (𝔰.besselFrame b) := by
     simp [frameMatrix, -heisenbergElem_mulVec]
   rw [h_col, heisenbergElem_mulVec, h_dual, ← besselFrame_castSucc]
-  simp [vecMulVec_apply, Pi.single_apply, Matrix.one_apply, besselFrame_injective.eq_iff, sub_eq_add_neg,
-    -besselFrame_castSucc]
+  simp [vecMulVec_apply, Pi.single_apply, Matrix.one_apply, besselFrame_injective.eq_iff,
+    sub_eq_add_neg, -besselFrame_castSucc]
 
 /-- Let s be in G_{a+1}, so that s fixes the basis vectors of floor below a + 1. Let v be a vector
 of the floors at least a + 1, extended by zero, let β be skew, and let ν(v,
@@ -481,13 +481,6 @@ lemma map_inclMatrix_middle_eq_floorVolume :
 /-- The indices of the hyperbolic pairs of `V_b` after the first: the `m` other pairs of `V_ϱ`, and
 the pairs `e_a`, `e*_a` with `b ≤ a`. -/
 abbrev FloorPairs (m : ℕ) : Type := Fin m ⊕ {i : Fin 𝔰.ϱ // b.val ≤ i}
-
-/-- The vector of index `j` of the basis `F` of `V_ϱ`, extended by zero to the coordinates of the
-`e_a` and the `e*_a`. -/
-def HyperbolicBasis.middleVector (j : Fin 2 ⊕ SplitIndex m ι) : 𝔰.BesselIndex → A
-  | inl _ => 0
-  | inr (inl i) => F.basisMatrix i j
-  | inr (inr _) => 0
 
 /-- The basis of `V_b` made of the basis `F` of `V_ϱ` and the pairs `e_a`, `e*_a` with `b ≤ a`, as
 the columns of a matrix. It is the block matrix of `F.basisMatrix` and the identity on these pairs,
@@ -921,6 +914,7 @@ lemma ae_ascConv_mem_unipotentBelow :
     exact ae_mem_mconv (ih.mono (by grind)) (ae_mem_floorUnipotent.mono fun _ hx ↦ hx.2)
       (isClosed_of_entries_eq_one mem_unipotentBelow).measurableSet
 
+omit [DecidableEq ι] in
 /-- Plancherel's inequality with a damping factor `∏ i, G (v i)`, for `G ≥ 0` continuous and
 integrable and the additive character `ψ` of the place `A`: the constant is the `L¹` norm of the
 transform of `G` (dilated by `ξ`), to the power `card ι`. -/

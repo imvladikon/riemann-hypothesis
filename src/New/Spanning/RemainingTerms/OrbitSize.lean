@@ -272,7 +272,7 @@ the number of classes and `N = -h(z, z)` the prime `S.N`, `n_p = pairCountScale`
 `#R̄₀ n_X N ^ (-k f)`, and `a_* = scaledSiegelConst` is `#R̄₀ n_X` times
 `unipotentOrder = M ^ (f ϱ (2 k + 2 ϱ + 1))` times `siegelConst = (π ^ k / ((k - 1)! N ^ k)) ^ f
 |disc E| ^ (1 / 4) vol(Ô) ^ k`. -/
-lemma two_pow_mul_pairCountScale_mul_le [S.IsAdmissible] :
+lemma two_pow_mul_pairCountScale_mul_le :
     2 ^ (𝔰.k * numInfPlaces E) * (S.pairCountScale * S.M ^ (2 * 𝔰.ϱ * numInfPlaces E * 𝔰.k)) ≤
       S.tailScale * (S.scaledSiegelConst * volÔ E ^ 𝔰.n) := by
   -- With `x = 200 f k rd` we have `x ^ 1000 ≤ b`, so `x ^ (4 k f) ≤ τ`. This absorbs the powers of

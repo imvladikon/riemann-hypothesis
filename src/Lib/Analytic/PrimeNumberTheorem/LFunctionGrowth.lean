@@ -246,21 +246,15 @@ lemma norm_deriv_regularL_le_log_quadratic (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp
     (h_re : 1 - 1 / l / 2 ≤ s.re) (h_norm : ‖s‖ ≤ 2 * rexp l) :
     ‖deriv (regularL χ) s‖ ≤ 2 * K * l ^ 2 := by
   have inv_le : 1 / l ≤ 1 / 6 := one_div_le_one_div_of_le (by norm_num) (by linarith)
-  have disc (z : ℂ) (hz : z ∈ closedBall s (1 / l / 2)) :
-      1 - 1 / l ≤ z.re ∧ ‖z‖ ≤ 3 * rexp l := by
-    rw [mem_closedBall_iff_norm] at hz
-    exact ⟨by linarith [neg_le_of_abs_le (abs_re_le_norm (z - s)), sub_re z s],
-      by linarith [norm_le_norm_sub_add z s, add_one_le_exp l]⟩
-  have h_diff : DiffContOnCl ℂ (regularL χ) (ball s (1 / l / 2)) :=
-    DifferentiableOn.diffContOnCl_ball (fun z hz ↦ (differentiableAt_regularL χ
-      (by linarith [(disc z hz).1])).differentiableWithinAt) subset_rfl
-  have h_sphere (z : ℂ) (hz : z ∈ sphere s (1 / l / 2)) : ‖regularL χ z‖ ≤ K * l := by
-    obtain ⟨hz_re, hz_norm⟩ := disc z (sphere_subset_closedBall hz)
-    exact norm_regularL_le_log_linear χ hl hN hz_re hz_norm
-  calc
-    _ ≤ K * l / (1 / l / 2) :=
-      norm_deriv_le_of_forall_mem_sphere_norm_le (by positivity) h_diff h_sphere
-    _ = 2 * K * l ^ 2 := by field
+  have disc {z : ℂ} (hz : z ∈ closedBall s (1 / l / 2)) : 1 - 1 / l ≤ z.re ∧ ‖z‖ ≤ 3 * rexp l :=
+    ⟨by linarith [mem_closedBall_iff_norm.mp hz, neg_le_of_abs_le (abs_re_le_norm (z - s)),
+        sub_re z s],
+      by linarith [mem_closedBall_iff_norm.mp hz, norm_le_norm_sub_add z s, add_one_le_exp l]⟩
+  refine ((norm_deriv_le_of_forall_mem_sphere_norm_le (by positivity)
+    (DifferentiableOn.diffContOnCl_ball (fun _ hz ↦ (differentiableAt_regularL χ
+      (by linarith [(disc hz).1])).differentiableWithinAt) subset_rfl)
+    fun _ hz ↦ norm_regularL_le_log_linear χ hl hN (disc (sphere_subset_closedBall hz)).1
+      (disc (sphere_subset_closedBall hz)).2 : _ ≤ K * l / (1 / l / 2))).trans_eq (by field)
 
 /-- Cauchy's estimate with the three-lines constant absorbed into `l`. -/
 lemma norm_deriv_regularL_le (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1 / l / 2 ≤ s.re)

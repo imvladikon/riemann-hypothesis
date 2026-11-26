@@ -211,10 +211,11 @@ variable {P : Parameters} {D : Data P}
 
 /-- Let the tensor of data `∑ x, Ψ x • ⊗ⱼ Φ x j` be jointly invariant: it is unchanged when `Φ x j`
 is moved by `(D.liftKernel ϑ j).ω (a j, a (j + 1))`, for `a j` in the level `D.levelX j` and
-`a j = 1` for `j ≥ m = D.m`. Let the `Ψ x` with `x ∈ Ψ.support` be integral at `p`, and let the kernel of each `Φ x j`
-send vectors of gauge `c` at `g * d j` to vectors of gauge at most `p ^ r j * c` at `g' * d (j + 1)`
-(`raises`). Then the `Ψ`-combination of the chains of `m` lifts sends a source form of gauge at most
-`1` at `d 0` to a form of gauge at most `p ^ ∑ j < m, r j` at `d m`. -/
+`a j = 1` for `j ≥ m = D.m`. Let the `Ψ x` with `x ∈ Ψ.support` be integral at `p`, and let the
+kernel of each `Φ x j` send vectors of gauge `c` at `g * d j` to vectors of gauge at most
+`p ^ r j * c` at `g' * d (j + 1)` (`raises`). Then the `Ψ`-combination of the chains of `m` lifts
+sends a source form of gauge at most `1` at `d 0` to a form of gauge at most `p ^ ∑ j < m, r j` at
+`d m`. -/
 lemma gaugeLe_chainCombination {Φ : D.Translations → ∀ j : ℕ, (D.homX j).finitePart}
     (h_inv : IsJointlyInvariant (D.liftKernel ϑ) D.m Ψ.support
       (fun x : D.Translations ↦ Ψ x • LinearMap.id) Φ)
@@ -267,8 +268,8 @@ lemma IsWeakChainDatum.gaugeLe_chain (h_weak : IsWeakChainDatum ϑ Ψ) (hQ : p.C
     -- apply the invariance of the original data to `β` composed with the tensor of the `t j`
     simpa +contextual [*] using
       h_weak.isJointlyInvariant a ha (β ∘ₗ TensorChain.map (fun j ↦ t j) D.m)
-  exact gaugeLe_chainCombination h_inv (fun x _ ↦ by simpa using h_weak.integral x p hQ ιₚ) d h_raise
-    hφ
+  exact gaugeLe_chainCombination h_inv (fun x _ ↦ by simpa using h_weak.integral x p hQ ιₚ) d
+    h_raise hφ
 
 lemma norm_star_piMBar_le_one : ‖ιₚ (star D.piMBar)‖ ≤ 1 :=
   norm_le_one_of_isIntegral (ιₚ.comp (starRingEnd _)) D.piMBar.prop.algebraMap

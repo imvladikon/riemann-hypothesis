@@ -184,7 +184,7 @@ lemma smul_eq_adeleMatrix_mulVec (x : n → 𝔸 E) : g • x = g.adeleMatrix *�
 
 instance : ContinuousSMul (G E s) (n → 𝔸 E) := by
   refine ⟨?_⟩
-  simp
+  simp only [smul_eq_adeleMatrix_mulVec]
   fun_prop
 
 end
@@ -239,7 +239,6 @@ namespace New
 
 open NumberField Matrix WeilData Filter Finset Heisenberg Fock IsVacuum Space Equiv Circle
   Complex
-open scoped Classical
 
 variable {E : Type*} [Field E] [CMType E] [WeilData E]
   {n : Type _} [Fintype n] [DecidableEq n]
@@ -327,6 +326,7 @@ omit [DecidableEq n] in
 /-- The vacuum function of `𝔸^n` is the product, over the coordinates, of the vacuum functions of
 the lines. -/
 lemma vacuumFn_eq_prod : vacuumFn x = ∏ i : n, vacuumFn fun _ : Unit ↦ x i := by
+  classical
   -- The indicator, the Gaussian and the character `ψf E` each factor over the coordinates.
   simp [vacuumFn, prod_ite_zero, ← Complex.exp_sum, mul_sum,
     prod_mul_distrib, AddChar.map_sum_eq_prod, Circle.coe_prod]
@@ -800,7 +800,6 @@ namespace New
 
 open NumberField Matrix WeilData Filter Finset Heisenberg Fock IsVacuum Space Equiv Circle
   Complex
-open scoped Classical
 
 variable {E : Type*} [Field E] [CMType E] [WeilData E]
   {n : Type _} [Fintype n] [DecidableEq n] {s : n → ℤˣ} (V : Space E n s)
@@ -823,6 +822,7 @@ lemma exists_isThetaFunctional_signedSpace :
     ∃ θ : Model (adelicHeisenberg E s) →L[ℂ] ℂ,
       (signedSpace E s).IsThetaFunctional θ ∧
       ∀ x : n → 𝔸 E, θ (heisenbergOp x IsVacuum.vacElem) = ∏ i : n, lineTheta (s i) (x i) := by
+  classical
   -- Take any theta functional θ. The identity θ(f) conj θ(f') = ∑_γ ⟨f', ϱ(γ) f⟩
   -- (`hasSum_modelInner`) factors over the coordinates, so θ(ϱ(x) vac) is proportional to the
   -- product; rescale θ by a factor of modulus 1.
@@ -919,6 +919,7 @@ lemma IsThetaFunctional.comp {V₁ : Space E n' s'} {θ : Model (adelicHeisenber
 
 /-! ### The choice of the theta functional of `V` -/
 
+open scoped Classical in
 /-- The functional θ₀ = θ_s ∘ ω(g) on 𝒮(V), where θ_s is the theta functional of the standard space
 of signs s chosen in `New.exists_isThetaFunctional_signedSpace`, and g is a chosen element carrying
 the rational vectors of V to those of the standard space. Such a g exists by Landherr's theorem
@@ -941,6 +942,7 @@ lemma theta_eq_rawTheta : V.θ = V.rawTheta := by
 /-- The functional `V.rawTheta` is a theta functional of `V`: it is invariant under the rational
 points, and |θ(ϱ(x)vac)|² has mean 1 over adelic vectors x modulo these. -/
 lemma isThetaFunctional_rawTheta : V.IsThetaFunctional V.rawTheta := by
+  classical
   -- In the second branch of the definition, `rawTheta` is a theta functional by choice.
   refine dite_mem (s := {θ | V.IsThetaFunctional θ}).2
     ⟨fun h_move ↦ ?_, fun _ ↦ V.exists_isThetaFunctional.choose_spec⟩

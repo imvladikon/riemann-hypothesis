@@ -677,22 +677,13 @@ lemma gram_besselLatticeBasis (p : Rˣ) (N : R) (hN : p * star ↑p = N) :
     (besselLatticeBasis 𝔰 p).valᴴ * (𝔰.middleGram N).splitGram * besselLatticeBasis 𝔰 p =
       (latticeMiddleGram 𝔰 N).splitGram := by
   subst hN
-  have h_norm : (p : R) * star ↑p * (star (↑p⁻¹ : R) * ↑p⁻¹) = 1 := by
-    grind [p.mul_inv, star_mul, star_one]
-  let A : Matrix 𝔰.MiddleIndex 𝔰.MiddleIndex R :=
-    fromBlocks (scaleAt (star (↑p⁻¹ : R)) 𝔰.k₀) 0
-      (of fun _ j ↦ if j = 𝔰.k₀ then ↑(p * star p)⁻¹ else 0) 1
-  -- Outside the middle block the basis is standard. In it, the entries away from `k₀` agree at
-  -- once and those at `k₀` follow from `h_norm`.
-  have h_mid : Aᴴ * 𝔰.middleGram ((p : R) * star ↑p) * A =
-      latticeMiddleGram 𝔰 ((p : R) * star ↑p) := by
-    ext (i | i) (j | j) <;>
-      simp [A, Shape.middleGram, latticeMiddleGram, diagonal, fromBlocks_conjTranspose,
-        fromBlocks_multiply, Matrix.mul_apply] <;>
-      grind [star_star, star_mul, star_one, star_zero] -- uses `h_norm` at the entries of `k₀`
-  have h_basis : (besselLatticeBasis 𝔰 p).val = fromBlocks 1 0 0 (fromBlocks A 0 0 1) := rfl
-  simp [h_basis, Shape.Form.splitGram, Floors.hyperbolicGram, fromBlocks_conjTranspose,
-    fromBlocks_multiply, fromBlocks_mul_fromRows, fromCols_mul_fromBlocks, ← h_mid]
+  -- Outside the middle block the basis is standard; reduce to the middle block and check entries.
+  simp [besselLatticeBasis, Shape.Form.splitGram, Floors.hyperbolicGram, fromBlocks_conjTranspose,
+    fromBlocks_multiply, fromBlocks_mul_fromRows, fromCols_mul_fromBlocks]
+  ext (i | i) (j | j)
+  all_goals simp [Shape.middleGram, latticeMiddleGram, diagonal, fromBlocks_conjTranspose,
+    fromBlocks_multiply, Matrix.mul_apply]
+  all_goals grind [p.mul_inv, star_star, star_mul, star_one, star_zero]
 
 /-- For γ in the unitary group, the matrix (f | γf) of the frame f and its image under γ, side by
 side. -/
@@ -769,9 +760,7 @@ lemma gram_framePair (N : R) (hN : star N = N) (γ : (𝔰.middleGram N).G) :
         (castSucc_ne_last _).symm]
   have h_herm : (𝔰.middleGram N).splitGramᴴ = (𝔰.middleGram N).splitGram := by
     simp [Shape.Form.splitGram, Shape.middleGram, ← Matrix.ext_iff, hN, Matrix.one_apply,
-      apply_ite star]
-    exact ⟨fun _ _ ↦ if_congr eq_comm rfl rfl, fun _ _ ↦ if_congr eq_comm rfl rfl,
-      fun _ _ ↦ if_congr eq_comm rfl rfl⟩
+      apply_ite star, @eq_comm (Fin 𝔰.ϱ), @eq_comm 𝔰.κ]
   have h_block (x y : Matrix 𝔰.BesselIndex 𝔰.BesselIndex R) :
       (frameImage x)ᴴ * (𝔰.middleGram N).splitGram * frameImage y =
         (xᴴ * (𝔰.middleGram N).splitGram * y).submatrix 𝔰.besselFrame 𝔰.besselFrame := rfl

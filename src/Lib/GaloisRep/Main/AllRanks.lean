@@ -101,7 +101,6 @@ section SphericalAllRanks
 
 open New NumberField Matrix Polynomial Filter Fintype Finset AlgHeckeChar AutChar Metric
   Units
-open scoped Classical
 
 /-- Let `E` be a CM field with Weil data, including a splitting character `υ`, and let `e` assign an
 integer to each infinite place. Then there are two characters `μ 0`, `μ 1` of `U(1)(𝔸)` (norm-one
@@ -507,7 +506,7 @@ lemma New.GaloisRep.sphericalCompat_std {ℓ : ℕ} {E n : Type} [ThePrime ℓ] 
     (GeneralLinearGroup.scalar (Fin 1)).comp (ψ i l)
   have hχ_cont (i : Fin 2) (l : Fin t) : Continuous (χ i l) := by
     refine .of_coeHom_comp (.matrix_diagonal ?_)
-    simp
+    simp only [Pi.constRingHom_eq_algebraMap]
     fun_prop
   choose hρ_good hρ_jumps hρ_kill using fun i : Fin 2 ↦ hρ_loc i hfK A hA
   -- The trace of `r` is `tr ρ i - ∑ l, ψ i l`, so the local clauses pass from `ρ i` to `r`.
@@ -543,7 +542,6 @@ of the finite adelic group on it by right translation, and `New.heckeSplit` the 
 namespace New.Patching
 
 open NumberField Filter Submodule Set Gf GaloisRep Algebra Fintype
-open scoped Classical
 
 section
 

@@ -381,7 +381,7 @@ lemma star_inv_mul_apply_eStar_eq_neg {c : S.Classes} (γ : S.classUnipotent c) 
 
 /-- For admissible `S` and `γ ∈ S.classUnipotent c`, the (e_a, e*_a) entry of `γ` is the level
 `S.M` times an algebraic integer. -/
-lemma isIntegral_inv_mul_apply_eStar [HasPrimitiveRoot5040 E] [S.IsAdmissible] {c : S.Classes}
+lemma isIntegral_inv_mul_apply_eStar [HasPrimitiveRoot5040 E] {c : S.Classes}
     (γ : S.classUnipotent c) (a : Fin 𝔰.ϱ) :
     IsIntegral ℤ
       ((S.M : E)⁻¹ * (γ : Matrix 𝔰.BesselIndex 𝔰.BesselIndex E) (inl a) (eStar a)) := by

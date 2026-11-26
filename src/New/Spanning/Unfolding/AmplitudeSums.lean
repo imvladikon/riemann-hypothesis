@@ -582,24 +582,13 @@ for all classes `d`. The sum of the integrals `∫ β_c(y) β_d(γ⁻¹ y) ‖W(
 theorem tsum_amplitudeMajorant_lt_top (T : Set (S.G E)) (c : S.Classes) (s : S.ResidueGL) :
     ∑' (d : S.Classes) (γ : ↥(T ∩ S.termsOver c s d)), S.amplitudeMajorant side c d γ < ∞ := by
   choose w a hw using fun v : InfinitePlace E ↦ (S.besselSystem v).isCutPair.exists_majorant
-  have h_majorant (y : InfinitePlace E → 𝔰.G₁) :
-      ∏ v, ‖(S.besselSystem v).besselFn side (y v)‖ₑ ≤ ∏ v, w v (y v) :=
-    (le_scaledBesselLengthProd_pow_mul y _ _).trans (pow_mul_prod_enorm_le_majorant hw y)
-  have h_decay (z : InfinitePlace E → 𝔰.G₁) : ∏ v, ‖(S.besselSystem v).besselFn side (z v)‖ₑ ≤
-      (∏ v, a v) * .ofReal ((S.scaledBesselLengthProd z)⁻¹ ^ (𝔰.r ^ 3 * numInfPlaces E)) :=
-    (le_scaledBesselLengthProd_pow_mul z _ _).trans (pow_mul_prod_enorm_le_bound hw z)
-  calc
-    _ ≤ ∑' (d : S.Classes) (γ : ↥(T ∩ S.termsOver c s d)), ∫⁻ y : InfinitePlace E → 𝔰.G₁,
-          S.classCutoff c y * S.classCutoff d ((S.ratToInf γ)⁻¹ * y) *
-            ((∏ v, w v (y v)) * ((∏ v, a v) * .ofReal
-              ((S.scaledBesselLengthProd ((S.ratToInf γ)⁻¹ * y))⁻¹ ^
-                (𝔰.r ^ 3 * numInfPlaces E)))) := by
-      simp_rw [amplitudeMajorant, enorm_besselKernel]
-      grw [h_majorant, h_decay]
-    _ ≤ .ofReal S.unipotentCovolume * .ofReal (2 * S.b ^ (12 * 𝔰.n ^ 3 * 𝔰.r * numInfPlaces E)) *
-          (.ofReal (S.b ^ (400 * 𝔰.r ^ 2)) ^ numInfPlaces E * card S.BesselCoord) :=
-      tsum_lintegral_classCutoff_mul_majorant_le T c s hw
-    _ < ∞ := by finiteness
+  refine lt_of_le_of_lt (le_trans ?_ (tsum_lintegral_classCutoff_mul_majorant_le T c s hw))
+    (by finiteness)
+  simp_rw [amplitudeMajorant, enorm_besselKernel]
+  refine ENNReal.tsum_le_tsum fun d ↦ ENNReal.tsum_le_tsum fun γ ↦ lintegral_mono fun y ↦ ?_
+  exact mul_le_mul' le_rfl (mul_le_mul'
+    ((le_scaledBesselLengthProd_pow_mul y _ _).trans (pow_mul_prod_enorm_le_majorant hw y))
+    ((le_scaledBesselLengthProd_pow_mul _ _ _).trans (pow_mul_prod_enorm_le_bound hw _)))
 
 /-- Let `S` be admissible, let `d` run over all classes and `γ` over the elements of `T` that are
 terms over `(c, s, d)`. The kernel `besselKernel side γ y` is `W(y) ⊗ W(γ⁻¹ y)^*`. The sum of the

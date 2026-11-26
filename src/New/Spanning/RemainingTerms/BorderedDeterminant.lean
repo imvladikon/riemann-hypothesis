@@ -768,8 +768,8 @@ lemma HasCellRank.minorGauge_eq {S : Filling E 𝔰} {j : Fin (𝔰.ϱ + 2)} {γ
     ring
   rw [minorGauge, h_norm, mul_div_mul_right _ _ hN]
 
-/-- Let the CM field `E` have `r` infinite places and contain a primitive `5040`-th root of unity,
-let `N = S.N` be the prime of the data `S`, and let `γ` have the cell rank `j`. Let `m` be the
+/-- Let the CM field `E` have `r` infinite places. Let
+`N = S.N` be the prime of the data `S`, and let `γ` have the cell rank `j`. Let `m` be the
 larger of `N ^ r * S.minorNorm j γ` and `S.termDiscNorm γ`, the product of the absolute values of
 `𝗀(γ) = S.termDisc γ` at the infinite places. Put
 `k = S.translateByClassReps c c' γ = h_c⁻¹ γ h_c'`. Take the rows `a = 1, …, ϱ` of the matrix of

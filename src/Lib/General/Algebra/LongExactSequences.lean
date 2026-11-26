@@ -511,23 +511,15 @@ lemma exists_acyclic_cover (M : C ⥤ Ab) :
       (h_ses : (kerComplex g).ShortExact),
       ∀ (F : AbFunctor C) (n : ℕ), Surjective ((contravariant h_ses F).δ n) := by
   -- Take one copy of h_A for each object A and each element x of M(A), mapped to M by Yoneda.
-  let c : (Σ A : C, M.obj A) → C := fun x ↦ x.1
-  let g : freeAb.obj (sigma fun x ↦ reprBy (c x)) ⟶ M :=
+  let g : freeAb.obj (sigma fun x : Σ A : C, M.obj A ↦ reprBy x.1) ⟶ M :=
     (freeAb.homEquiv ..).symm (sigma.desc fun x ↦ pointMap x.2)
-  have hg (A : C) : Surjective (g.app A) := by
-    intro x
-    -- `x` is the image of the identity of A in the copy indexed by (A, x)
-    refine ⟨FreeAddCommGroup.of ⟨⟨A, x⟩, ULift.up (𝟙 A)⟩, ?_⟩
-    calc g.app A (FreeAddCommGroup.of ⟨⟨A, x⟩, ULift.up (𝟙 A)⟩)
-      _ = (pointMap (Y := M ⋙ forget Ab) x).app A (ULift.up (𝟙 A)) :=
-        FreeAddCommGroup.lift_apply_of _ _
-      _ = x := (uliftCoyonedaEquiv (F := M ⋙ forget Ab)).apply_symm_apply x
-  refine ⟨Σ A : C, M.obj A, c, g, kerComplex_shortExact hg, fun F n x ↦ ?_⟩
-  -- on each summand ℤ[h_A] the pull-back of `x` vanishes, as this summand is projective
-  have h_pullback : (mk₀ g).comp x (zero_add _) = 0 := (H.sigma_bijective _ F (n + 1)).injective <|
-    funext fun _ ↦ (eq_zero_of_projective _).trans (eq_zero_of_projective _).symm
-  -- so, by exactness, `x` is in the image of the connecting map
-  exact contravariant_sequence_exact₃ _ F x h_pullback (add_comm 1 n)
+  exact ⟨Σ A : C, M.obj A, Sigma.fst, g, kerComplex_shortExact fun A x ↦
+    ⟨FreeAddCommGroup.of ⟨⟨A, x⟩, ULift.up (𝟙 A)⟩, (FreeAddCommGroup.lift_apply_of _ _).trans <|
+      (uliftCoyonedaEquiv (F := M ⋙ forget Ab)).apply_symm_apply x⟩,
+    -- On each projective summand ℤ[h_A] the pull-back vanishes, so exactness gives a preimage.
+    fun F n x ↦ contravariant_sequence_exact₃ _ F x ((H.sigma_bijective _ F (n + 1)).injective <|
+      funext fun _ ↦ (eq_zero_of_projective _).trans (eq_zero_of_projective _).symm)
+      (add_comm 1 n)⟩
 
 /-- Given natural transformations N→F_i for each index i, the natural transformation from N to
 the pointwise product of the functors F_i having these as components. -/

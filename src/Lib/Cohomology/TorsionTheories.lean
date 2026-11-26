@@ -1013,9 +1013,9 @@ lemma IdealFamily.isCohomEquiv_constToZeros (hΘ : Θ.functor = locConstAlong g)
       change ℓ • (r • relFreeAb.mk (I.topLocus.whisker φ) ⟨⟩) =
         ((relFreeAb I.topLocus).map (φ.map f.down)).hom
           ((↑ℓ * r) • relFreeAb.mk (I.topLocus.whisker φ) ⟨⟩)
-      erw [map_zsmul]
-      rw [h_map]
-      exact (mul_smul (ℓ : ℤ) r (relFreeAb.mk (I.topLocus.whisker φ) (A := B) ⟨⟩)).symm
+      refine Eq.trans ?_ (map_zsmul ((relFreeAb I.topLocus).map (φ.map f.down)).hom _ _).symm
+      refine (mul_smul (ℓ : ℤ) r (relFreeAb.mk (I.topLocus.whisker φ) (A := B) ⟨⟩)).symm.trans ?_
+      exact (congrArg ((↑ℓ * r : ℤ) • ·) h_map).symm
   · -- Cokernel: a locally constant function is constant near each maximal ideal, and constants
     -- are in the image.
     have h_loc : IsZariskiLocallyTop (ringOf g) (zeroSection (abCoker I.constToZeros)) := by

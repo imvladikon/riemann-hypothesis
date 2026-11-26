@@ -629,8 +629,8 @@ theorem New.sum_norm_sq_le_sum_re_inner_lie {n : Type} [Fintype n] [DecidableEq 
             LinearMap.sub_apply]
           grw [filter_subset, norm_sub_le, add_sq_le]
       _ = 4 * Fintype.card n * N := by
-          simp [N, DFunLike.ite_apply, apply_ite (‖P ·‖), sum_add_distrib, ← mul_sum, mul_add]
-          rw [sum_comm]
+          simp [N, DFunLike.ite_apply, apply_ite (‖P ·‖), sum_add_distrib, ← mul_sum, mul_add,
+            sum_comm (f := fun p q : n ↦ ‖P (ρ.E p q y)‖ ^ 2)]
           ring
   -- Expand the square of `P (E_qp E_dc y) = E_dc (P (E_qp y)) + P (⁅E_qp, E_dc⁆ y)`.
   have h_square (p q c d : n) (hcd : ε d = ε c) : ‖P (ρ.E q p (ρ.E d c y))‖ ^ 2 =
@@ -873,7 +873,8 @@ theorem HCParam.IsKHighest.coeffMap_eq_zero [InnerProductSpace ℂ H] {ρ : GlMo
     refine image_norm_le_of_norm_deriv_right_lt_deriv_boundary
       (HasDerivAt.continuousOn fun t _ ↦ h_coef g Y v t)
       (fun t _ ↦ (h_coef g Y v t).hasDerivWithinAt)
-      (by simp [hg s v hv]; positivity) (fun _ ↦ hasDerivAt_deriv_iff.2 (by fun_prop))
+      (by simp only [zero_smul, expU_zero, mul_one, hg s v hv, norm_zero]; positivity)
+      (fun _ ↦ hasDerivAt_deriv_iff.2 (by fun_prop))
       fun t ⟨ht_nonneg, ht_lt⟩ h_touch ↦ ?_
     -- where `f_v` touches the barrier, `‖f_v t‖ ≤ D * ‖v‖` forces `R + 1 + s < m * decay t ≤ m`
     have h_lt : R + 1 + s < m * decay t := by
@@ -882,7 +883,8 @@ theorem HCParam.IsKHighest.coeffMap_eq_zero [InnerProductSpace ℂ H] {ρ : GlMo
       simpa [← exp_add, field] using h_le
     have hs : s < m := by
       rify
-      nlinarith [show decay t ≤ 1 by simp [decay]; positivity]
+      nlinarith [show decay t ≤ 1 by
+          simp only [decay, neg_mul, exp_le_one_iff, Left.neg_nonpos_iff]; positivity]
     -- `‖Y v‖ ≤ growth * (R + 1 + s) * ‖v‖`, and `R + 1 + s` is below `m * decay t`
     have h_deriv_lt : |D| * ‖ρ Y v‖ + 1 < (growth + 1) * (m * decay t) * (|D| * ‖v‖ + 1) := by
       grw [hYv_le, ← h_lt, ← sub_nonneg]

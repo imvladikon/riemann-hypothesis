@@ -361,7 +361,8 @@ lemma MixedModel.exists_isSchwartzVector_slice_eq {τ : (p → ℂ) → ℂ} (h�
     τ x * (star (principalMinor (S x) (ε · = -1)) * cexp (star x ⬝ᵥ x))
   have d_supp : HasCompactSupport d := (hτ_supp.comp_homeomorph (PiLp.homeomorph ..)).mul_right
   have d_smooth : ContDiff ℝ ∞ d := by
-    simp [d, principalMinor, dotProduct, det_apply, toSquareBlockProp]
+    simp only [d, principalMinor, dotProduct, det_apply, toSquareBlockProp, toBlock_apply,
+      Pi.star_apply, star_def]
     fun_prop
   -- `A x y = I (S x y)`.
   let A (x : EuclideanSpace ℂ p) : (ι → ℂ) →L[ℝ] ι' → ℂ :=

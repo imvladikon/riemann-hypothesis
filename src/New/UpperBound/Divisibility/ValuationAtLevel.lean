@@ -106,9 +106,13 @@ lemma exists_mem_inducedPlace_one_le_norm : ∃ δ : 𝓞 P.K, 1 ≤ ‖ιₚ (s
   -- Let `q` be the reduction of the integers of `K` at the prime induced by `ιₚ`.
   -- It maps into the residue field of `E` at that prime.
   let q : 𝓞 P.K →+* 𝓞 D.E ⧸ (D.inducedPlace 1).asIdeal := algebraMap _ _
-  have h_ker (x : 𝓞 P.K) : q x = 0 ↔ ‖ιₚ x‖ < 1 := by
-    -- `q x` is by definition the class of `algebraMap x`, hence `erw`.
-    erw [eq_zero_iff_mem, mem_placeOfEmb, ιₚ.comp_apply, phi_algebraMap]
+  have h_mem (σ : D.Φ) (x : 𝓞 P.K) :
+      algebraMap (𝓞 P.K) (𝓞 D.E) x ∈ (D.inducedPlace σ).asIdeal ↔ ‖ιₚ x‖ < 1 := by
+    change _ ∈ (placeOfEmb (ιₚ.comp (Φ σ))).asIdeal ↔ _
+    exact (mem_placeOfEmb _ _).trans
+      (congrArg (fun z : ℂ ↦ ‖ιₚ z‖ < 1) (phi_algebraMap P _ σ (x : P.K))).to_iff
+  have h_ker (x : 𝓞 P.K) : q x = 0 ↔ ‖ιₚ x‖ < 1 :=
+    Ideal.Quotient.eq_zero_iff_mem.trans (h_mem 1 x)
   -- The residue field has prime order `N`, so the generator `betaK P.d` reduces to some `c : ℕ`.
   have h_card : Nat.card (𝓞 D.E ⧸ (D.inducedPlace 1).asIdeal) = D.N :=
     (Ideal.absNorm_eq_natCard _).symm.trans
@@ -135,7 +139,7 @@ lemma exists_mem_inducedPlace_one_le_norm : ∃ δ : 𝓞 P.K, 1 ≤ ‖ιₚ (s
       exact hsq
     simpa using (h_ker _).2.mt h_ne
   · -- On `K` all the induced primes give the kernel of `q`.
-    erw [mem_placeOfEmb, ιₚ.comp_apply, phi_algebraMap, ← h_ker]
+    apply (h_mem σ δ).mpr ((h_ker δ).mp ?_)
     simp [δ, ← hc]
 
 /-- Let `x = (x_j)` be a tuple of finite adelic matrices, and let `D.translateDatum x j` be the

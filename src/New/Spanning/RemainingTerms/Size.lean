@@ -189,18 +189,10 @@ lemma secondMoment_sub_cut_le [HasPrimitiveRoot5040 E] [S.IsAdmissible]
     (U : Set (S.G E)) {Ω : Set S.ResidueGL} :
     secondMoment (S.amplitudeSum .full U - S.amplitudeSum .cut U) Ω ≤
       (S.b ^ 40)⁻¹ * S.identitySecondMoment := by
-  -- Each row `(c, s)` of the difference has square norm at most `η²`; the number of reductions `s`
-  -- times `η²` is at most `b⁻⁴⁰ unipotentCovolume²`, and the number of classes `c` is at most
-  -- `identitySecondMoment`.
   have hν : 0 < S.unipotentCovolume := S.unipotentCovolume_pos
   have hb : 1 ≤ S.b := S.one_le_b
-  set f : ℕ := numInfPlaces E
-  set η : ℝ := S.unipotentCovolume * (S.b ^ (𝔰.k ^ 3 * f))⁻¹ / 2 with hη
-  have h_classes : (Fintype.card S.Classes : ℝ) ≤ S.identitySecondMoment := by
-    -- The reduced image is nonempty, and `sourceDim` is a positive multiple of the class number.
-    grw [identitySecondMoment, sourceDim, ← Nat.card_pos.succ_le,
-      ← le_mul_of_one_le_right' NeZero.one_le]
-    simp
+  set η : ℝ := S.unipotentCovolume * (S.b ^ (𝔰.k ^ 3 * numInfPlaces E))⁻¹ / 2 with hη
+  -- Bound each row's sum of squares by the square of its sum, then count classes and reductions.
   calc
     _ ≤ (∑ c, ∑ s, ∑ c', ‖S.amplitudeSum .full U c s c' - S.amplitudeSum .cut U c s c'‖ ^ 2) /
         S.unipotentCovolume ^ 2 := by
@@ -208,14 +200,12 @@ lemma secondMoment_sub_cut_le [HasPrimitiveRoot5040 E] [S.IsAdmissible]
       simp [Finset.sum_div, Finset.sum_comm (s := (Finset.univ : Finset S.ResidueGL))]
     _ ≤ (∑ c : S.Classes, ∑ s : S.ResidueGL, η ^ 2) / S.unipotentCovolume ^ 2 := by
       gcongr with c _ s
-      -- The sum of squares of a row is at most the square of its sum.
       grw [sum_sq_le_sq_sum_of_nonneg (by simp), sum_norm_amplitudeSum_sub_cut_le U c s]
-    _ = Fintype.card S.Classes * (Fintype.card S.ResidueGL * η ^ 2) / S.unipotentCovolume ^ 2 := by
-      simp
-    _ ≤ S.identitySecondMoment * ((S.b ^ (𝔰.k ^ 3 * f) * 2) ^ 2 / S.b ^ 40 * η ^ 2) /
-        S.unipotentCovolume ^ 2 := by
-      grw [← h_classes, (le_div_iff₀ (by positivity)).2 card_residueGL_mul_b_pow_le]
-    _ = (S.b ^ 40)⁻¹ * S.identitySecondMoment := by simp [hη, field]
+    _ ≤ (S.b ^ 40)⁻¹ * S.identitySecondMoment := by
+      simp only [sum_const, card_univ, nsmul_eq_mul]
+      grw [(le_div_iff₀ (by positivity)).2 card_residueGL_mul_b_pow_le, identitySecondMoment,
+        sourceDim, ← Nat.card_pos.succ_le, ← le_mul_of_one_le_right' NeZero.one_le]
+      simp [hη, field]
 
 end New.Filling
 

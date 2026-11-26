@@ -401,8 +401,8 @@ def heisenbergRep : H.Rep he.Model :=
           fun x ↦ by
             -- translate the variable of integration by `y` and use the equation of `v` at `x - y`
             rw [← integral_add_right_eq_self _ y]
-            simp [↓← v.property.2 (x - _), ← integral_const_mul, sub_eq_add_neg, add_right,
-              self_eq_one, add_left]
+            simp only [↓← v.property.2 (x - _), ← integral_const_mul, sub_eq_add_neg, add_right,
+              self_eq_one, add_left, mul_one, add_neg_cancel_right, neg_add_rev, beta_neg_right]
             ac_nf⟩
       map_add' v w := ext fun x ↦ mul_add (H.β y x) (v (x - y)) (w (x - y))
       map_smul' c v := ext fun x ↦ mul_left_comm (H.β y x) c (v (x - y))
@@ -424,7 +424,7 @@ def heisenbergRep : H.Rep he.Model :=
         refine continuous_of_dominated (fun t ↦ ((h_int _).sub (h_int _)).1) ?_ (h_int (-ρ a v))
           (.of_forall ?_)
         · simp [(abs_norm_sub_norm_le ..).trans]
-        · simp [↓add_apply, ρ, coe]
+        · simp only [↓add_apply, ρ, coe, Complex.norm_mul]
           fun_prop
       simpa [norm_map, integral_sub, h_int, ← norm_eq_integral_norm, ← sub_eq_add_neg] using
         (h_cont.tendsto a).const_sub ‖v‖ }

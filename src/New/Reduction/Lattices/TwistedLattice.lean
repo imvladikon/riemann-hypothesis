@@ -475,9 +475,9 @@ lemma heightLe_volume_div {n n' : ℕ} {y : Fin n → V} {z : Fin n' → V}
   exact (mul_div_mul_right _ _ (det_gram_ne_zero_iff_linearIndependent.2 h_indep)).symm
 
 /-- **A twist for each prime.** Let `L` be a twisted lattice on `V` with maps `Θ_ξ = L.lift ξ`.
-Let `y_1, …, y_n, z_1, …, z_n'` be a basis of `V`, and let `ξ_ι = θ ι` be allowed at the prime of `ι`.
-Only the untwisted map must be injective, and only the selected volumes `Z(ξ_ι)` must be nonzero.
-Write `ῑ = ι.conj`. Suppose that
+Let `y_1, …, y_n, z_1, …, z_n'` be a basis of `V`, and let `ξ_ι = θ ι` be allowed at the prime of
+`ι`. Only the untwisted map must be injective, and only the selected volumes `Z(ξ_ι)` must be
+nonzero. Write `ῑ = ι.conj`. Suppose that
 * `y` has covolume at most `c` and index at most `δ`;
 * `γ_ι ≠ 0`, and `γ_ι Θ_{ξ_ι} z_i` is integral at both `ι` and `ῑ`;
 * `⟨σ Θ₁ z_i, σ Θ₁ z_i⟩ ≤ exp b_short` for all automorphisms `σ` of `ℂ`;

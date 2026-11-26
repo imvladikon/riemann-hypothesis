@@ -85,16 +85,6 @@ lemma IsDetectedAtPoints.isOpen_setOf_map_eq_zero {F : AbFunctor D}
       H.map F (freeAb.map (g.whiskerLeft (reprMap (residueTest c P).hom))) n x = 0} :=
   (h_detect.isOpen_zero_set_and_eq_zero c n x).1
 
-/-- For a coefficient `F` that satisfies `New.Variety.IsDetectedAtPoints`, a class `x` over a test
-`c` that vanishes at the residue field of every prime of `c` is zero. -/
-lemma IsDetectedAtPoints.eq_zero_of_setOf_map_eq_zero_eq_univ {F : AbFunctor D}
-    (h_detect : IsDetectedAtPoints g F) (c : TestOver A) (n : ℕ)
-    (x : H (freeAb.obj (g ⋙ reprFunctor.obj (Opposite.op c))) F n)
-    (h_univ : {P : PrimeSpectrum c.obj |
-      H.map F (freeAb.map (g.whiskerLeft (reprMap (residueTest c P).hom))) n x = 0} = Set.univ) :
-    x = 0 :=
-  (h_detect.isOpen_zero_set_and_eq_zero c n x).2 h_univ
-
 /-- The Yoneda isomorphism `sectionEquiv` is natural: for `φ : e ⟶ e'`, pulling the class of a
 section `t ∈ G(e)` back along `ℤ[h_e'] → ℤ[h_e]` gives the class of the image of `t` in `G(e')`. -/
 lemma TotalH.comp_homClass_sectionEquiv (G : AbFunctor D) {e e' : D} (φ : e ⟶ e') (t : G e) :
@@ -198,7 +188,7 @@ lemma isLerayHirschBasis_of_forall_isField [InvertsPrime A ℓ] {F : AbFunctor D
     not_imp_comm.mp fun hi ↦ congrArg ULift.up (LocallyConstant.ext (h_coef_zero i hi))
   refine ⟨m, (sub_eq_zero.mp (DFinsupp.ext fun n ↦ ?_)).symm, fun m' hm' ↦ ?_⟩
   · -- `y - lerayHirsch θ _ (s c m)` vanishes at every prime, hence is zero
-    exact h_detect.eq_zero_of_setOf_map_eq_zero_eq_univ c n _
+    exact (h_detect.isOpen_zero_set_and_eq_zero c n _).2
       (top_unique fun P _ ↦ (coef_iff m P).mp (ext fun _ ↦ rfl) n)
   · ext i P
     have h_coef : coef P = ev P m' := (coef_iff m' P).mpr fun n ↦ by simp [← hm']
@@ -579,6 +569,24 @@ lemma exists_isTodaCancellation {i : W' ⟶ W} [Mono i] {δ' : W' ⟶ W'} {δ : 
     rw [← hs_eq, pullbackAlong_pullbackAlong, ← Φ.map_comp, hyu]
   · exact fun Φ _ _ h_acyclic ↦ (h_bij Φ h_acyclic).2
 
+section
+
+variable {p : ℕ} [ThePrime p]
+
+open Period in
+lemma gluing_apply_point (c : PadicTest)
+    (t : (PadicTest.tilt ⋙ reprBy (CommAlgCat.of OFlat OFlat)).obj c) :
+    (gluing.app c).hom (.of (⟨⟨false⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
+      .of (⟨⟨false⟩, ⟨evalZero _ ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
+
+open Period in
+lemma gluing_apply_torus (c : PadicTest) (t : (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ)).obj c) :
+    (gluing.app c).hom (.of (⟨⟨true⟩, t⟩ : (tiltPointsSum pointOrTorus).obj c)) =
+      .of (⟨⟨false⟩, ⟨discToTorus (-NNRat.coeHom) ≫ t.down⟩⟩ : twoDiscs.obj c) -
+        .of (⟨⟨true⟩, ⟨discToTorus NNRat.coeHom ≫ t.down⟩⟩ : twoDiscs.obj c) := freeAb.desc_of ..
+
+end
+
 variable {ℓ : ℕ}
   {A : Type} [CommRing A] [InvertsPrime A ℓ]
   {g : C ⥤ TestOver A} (M : TorsionCoeff g) (Θ : Theory g)
@@ -888,14 +896,14 @@ private lemma exists_isTodaCancellation_etaClass_of_squares [Algebra A ℂ_[ℓ]
     let z : twoDiscs.obj c := ⟨⟨true⟩, ⟨evalZero _⟩⟩
     have h_origin_app : (origin ⟨true⟩).app c (FreeAddCommGroup.of x) = FreeAddCommGroup.of z :=
       freeAb.desc_of ..
-    erw [NatTrans.comp_app, AddCommGrpCat.comp_apply, h_origin_app]
-    change FreeAddCommGroup.lift _ (FreeAddCommGroup.of z) = _
-    erw [FreeAddCommGroup.lift_apply_of]
-    change Sub.sub (FreeAddCommGroup.of z) (FreeAddCommGroup.of
-      (⟨⟨true⟩, ⟨discTwist χ ⟨true⟩ ≫ evalZero (PadicTest.tilt.obj c)⟩⟩ : twoDiscs.obj c)) = _
-    erw [discTwist_comp_evalZero]
-    change FreeAddCommGroup.of z - FreeAddCommGroup.of z = 0
-    exact sub_self _
+    let z' : twoDiscs.obj c :=
+      ⟨⟨true⟩, ⟨discTwist χ ⟨true⟩ ≫ evalZero (PadicTest.tilt.obj c)⟩⟩
+    have h_twist : (oneSub (discTwist χ)).app c (.of z) = .of z - .of z' :=
+      freeAb.desc_of ..
+    have h_fixed : z' = z :=
+      congrArg (fun t ↦ (⟨⟨true⟩, ⟨t⟩⟩ : twoDiscs.obj c)) (discTwist_comp_evalZero ..)
+    exact (congrArg ((oneSub (discTwist χ)).app c) h_origin_app).trans
+      (h_twist.trans (sub_eq_zero.mpr (congrArg FreeAddCommGroup.of h_fixed.symm)))
   obtain ⟨B, K, j, y, ω, h_toda⟩ := exists_isTodaCancellation (oneSub_comp_gluing χ) (origin ⟨true⟩)
     h_origin
     (cocycle _).shortExact_extension (shortExact_kummerSeq (genericTestOver A)) f α κ (𝟙 _) _
@@ -904,9 +912,9 @@ private lemma exists_isTodaCancellation_etaClass_of_squares [Algebra A ℂ_[ℓ]
   have h_eta : (cocycle (genericTestOver A)).shortExact_extension.extClass.comp
       (H.map _ (𝟙 _) 1 (shortExact_kummerSeq (genericTestOver A)).extClass) rfl =
       etaClass (genericTestOver A) := by
-    erw [H.map_id]
     unfold etaClass
-    rfl
+    exact congrArg (fun x ↦ (cocycle (genericTestOver A)).shortExact_extension.extClass.comp x rfl)
+      (H.map_id (x := (shortExact_kummerSeq (genericTestOver A)).extClass))
   refine ⟨oneSub (discTwist χ), f ≫ (cocycle (genericTestOver A)).extension.g, B, K, j, y, ω, ?_⟩
   rw [← h_eta, ← h_gen]
   exact h_toda
@@ -1015,10 +1023,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
     · let y₀ : (tiltPointsSum pointOrTorus).obj c := ⟨⟨false⟩, y⟩
       let z : twoDiscs.obj c := ⟨⟨false⟩, ⟨evalZero (PadicTest.tilt.obj c)⟩⟩
       have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₀) = FreeAddCommGroup.of z := by
-        change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₀) = _
-        erw [FreeAddCommGroup.lift_apply_of]
-        exact congrArg (fun a ↦ FreeAddCommGroup.of (⟨⟨false⟩, ⟨a⟩⟩ : twoDiscs.obj c))
-          (evalZero_comp y.down)
+        simpa only [y₀, z, evalZero_comp] using gluing_apply_point c y
       have h_a : (α.app c).hom (FreeAddCommGroup.of y₀) = 0 := by
         change FreeAddCommGroup.lift (pow c)
           (((projFirst (B := pointOrTorus)).app c).hom (FreeAddCommGroup.of y₀)) = 0
@@ -1048,11 +1053,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       let y₁ : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, y⟩
       let z₀ : twoDiscs.obj c := ⟨⟨false⟩, ⟨discToTorus (-NNRat.coeHom) ≫ y.down⟩⟩
       let z₁ : twoDiscs.obj c := ⟨⟨true⟩, ⟨discToTorus NNRat.coeHom ≫ y.down⟩⟩
-      have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₁) =
-          FreeAddCommGroup.of z₀ - FreeAddCommGroup.of z₁ := by
-        change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₁) = _
-        erw [FreeAddCommGroup.lift_apply_of]
-        rfl
+      have h_glue := gluing_apply_torus c y
       change ((cocycle _).extension.f.app c).hom
           (((kummerSeq (genericTestOver A)).g.app c).hom ((α.app c).hom (FreeAddCommGroup.of y₁))) =
         (f.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₁))
@@ -1092,10 +1093,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
         erw [Category.id_comp]
         exact sub_self _
       have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₀) = FreeAddCommGroup.of z := by
-        change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₀) = _
-        erw [FreeAddCommGroup.lift_apply_of]
-        exact congrArg (fun a ↦ FreeAddCommGroup.of (⟨⟨false⟩, ⟨a⟩⟩ : twoDiscs.obj c))
-          (evalZero_comp y.down)
+        simpa only [y₀, z, evalZero_comp] using gluing_apply_point c y
       change (α.app c).hom (((oneSub (pointOrTorusTwist χ)).app c).hom (FreeAddCommGroup.of y₀)) =
         ((kummerSeq (genericTestOver A)).f.app c).hom
           ((κ.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₀)))
@@ -1110,11 +1108,7 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
         ⟨charTwist χ (AddMonoidHom.id ℚ) ≫ y.down⟩
       let z₀ : twoDiscs.obj c := ⟨⟨false⟩, ⟨discToTorus (-NNRat.coeHom) ≫ y.down⟩⟩
       let z₁ : twoDiscs.obj c := ⟨⟨true⟩, ⟨discToTorus NNRat.coeHom ≫ y.down⟩⟩
-      have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₁) =
-          FreeAddCommGroup.of z₀ - FreeAddCommGroup.of z₁ := by
-        change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₁) = _
-        erw [FreeAddCommGroup.lift_apply_of]
-        rfl
+      have h_glue := gluing_apply_torus c y
       let π := (freeAb.map (toUnit (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ≥0)))).app c
       let τ := ((tateGen (genericTestOver A)).app c).hom
       have h_zero : (κ.app c).hom (FreeAddCommGroup.of z₀) = 0 := by

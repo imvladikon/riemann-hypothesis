@@ -514,9 +514,8 @@ lemma exists_blockSumOne_mul_mem_stdLevel {Y : GL b (𝔸 E)} {k : GL b (𝔸f E
     witt_Ô_of_orthonormal hZ_orth hZ₀_orth hZ_int hZ₀_int
   obtain ⟨w', hw'⟩ : ∃ w' : Gf E n, U.blockSumOne (1, w') = g₀ * (u⁻¹ * U.blockSumOne w) :=
     (New.U.mem_range_sum_right fromBlocks_one isUnit_one).mpr h_cols
-  have h_eq : U.blockSumOne ((1, w') / w) * u = g₀ := by
-    rw [map_div, hw', ← mul_assoc, mul_div_cancel_right, inv_mul_cancel_right]
-  exact ⟨(1, w') / w, by rwa [h_eq]⟩
+  refine ⟨(1, w') / w, ?_⟩
+  rwa [map_div, hw', ← mul_assoc, mul_div_cancel_right, inv_mul_cancel_right]
 
 open scoped Classical in
 /-- Let `x` in `GL_b(𝔸_f)` have integral entries. The vector of `𝒮(Hom(W₁, V' ⊕ W₁))` given at the

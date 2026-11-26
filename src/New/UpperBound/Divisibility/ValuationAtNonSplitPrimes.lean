@@ -996,7 +996,6 @@ theorem IsWeakChainDatum.gaugeLe_scaledHeckeOperator_pow (H : IsWeakChainDatum �
   let Y : Module.End embValRing D.SourceForm := (Λ.attach.toList.map hΛ.scaledHeckeOperator).prod
   choose t ht using fun j ↦
     H.exists_lift_eq_chain_scaledHeckeOperator hQ hΛ j Λ.attach.nodup_toList
-
   have h_chain (x : D.Translations) (hx : x ∈ Ψ.support) (j : ℕ) :
       chain (D.liftKernel ϑ) (fun j ↦ t j (D.translateDatum x j)) j v =
         chain (D.liftKernel ϑ) (D.translateDatum x) j ((Y ^ j) v) := by

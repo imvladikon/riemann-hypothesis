@@ -580,7 +580,8 @@ lemma multinomialExponent_mul_le_degree (h_large : T.IsLargeDegree k n r θ) :
     (T.multinomialExponent k : ℝ) * T.P ^ (2 * r) ≤ n := by
   have hN : 0 < N := NeZero.pos N
   have hk : 0 < k := lt_of_lt_of_le (by decide : 0 < 2) h_large.two_le_rank
-  have h_coeff : T.multinomialExponent k ≤ 8 * N * k * defectThreshold k (T.congruencePrecision k) := by
+  have h_coeff : T.multinomialExponent k ≤
+      8 * N * k * defectThreshold k (T.congruencePrecision k) := by
     simp only [defectThreshold, congruencePrecision, ← Nat.mul_assoc]
     exact Nat.le_mul_of_pos_left _ (by positivity)
   calc (T.multinomialExponent k : ℝ) * T.P ^ (2 * r)
@@ -696,7 +697,8 @@ theorem exists_isEdgeCondition (hp : ¬IsUnit (T.p : O)) {r : ℕ} {θ : ℝ}
   set c : ℕ := T.congruencePrecision k
   have hr_pos : 0 < r := h_large.block_pos
   have hc : 0 < c :=
-    Nat.mul_pos (by decide) (zero_lt_two.trans_le (T.two_le_mul_multinomialExponent h_large.two_le_rank))
+    Nat.mul_pos (by decide)
+      (zero_lt_two.trans_le (T.two_le_mul_multinomialExponent h_large.two_le_rank))
   lift r to Fin k using by linarith [h_large.two_mul_block_le]
   obtain ⟨a, ha⟩ : ∃ a : Fin k, a + 1 = r.val :=
     ⟨⟨r - 1, by lia⟩, Nat.sub_one_add_one_eq_of_pos hr_pos⟩

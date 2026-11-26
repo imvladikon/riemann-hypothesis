@@ -97,7 +97,8 @@ lemma New.q_binomial_submodule (n k : Type*) [Finite n] [Field k] [Finite k]
     intro T
     change weight (finrank k T) = heckePolyCoeff X (T.map W.subtype)
     unfold heckePolyCoeff
-    rw [Nat.card_eq_fintype_card, ← (T.equivMapOfInjective W.subtype W.subtype_injective).finrank_eq]
+    rw [Nat.card_eq_fintype_card,
+      ← (T.equivMapOfInjective W.subtype W.subtype_injective).finrank_eq]
   -- Collect the terms of each dimension and apply the finite q-binomial theorem.
   have ranks (U : Submodule k W) (_ : U ∈ univ) : finrank k U ∈ range (d + 1) :=
     mem_range.mpr (Nat.lt_succ_of_le U.finrank_le)
@@ -181,28 +182,20 @@ Vandermonde determinant `det (r i ^ l j)`. -/
 lemma rootCoeffEval_genericSchur_mul_det [IsDomain R] :
     rootCoeffEval (univ.val.map r) (genericSchur l) * (vandermonde r).det =
       (of fun i j : Fin a ↦ r i ^ l j).det := by
-  -- `φ` specialises the generic monic polynomial `freeMonic ℤ a` to `∏ (X - r k)`, which
-  -- vanishes at `r i`; so the remainder of `X ^ l j` takes the value `r i ^ l j` there.
-  let p : MonicDegreeEq R a := .mk (nodal univ r) nodal_monic (by simp)
-  let φ : MvPolynomial (Fin a) ℤ →ₐ[ℤ] R := (MvPolynomial.mapEquivMonic ℤ R a).symm p
+  -- Specialise `freeMonic ℤ a` to `nodal univ r = ∏ (X - r k)` via `φ = rootCoeffEval`.
+  let φ := (MvPolynomial.mapEquivMonic ℤ R a).symm (.mk (nodal univ r) nodal_monic (by simp))
   have hφ : (freeMonic ℤ a).map φ = nodal univ r :=
-    congrArg Subtype.val ((MvPolynomial.mapEquivMonic ℤ R a).apply_symm_apply p)
+    congrArg Subtype.val ((MvPolynomial.mapEquivMonic ℤ R a).apply_symm_apply _)
   have hφ_eq : rootCoeffEval (univ.val.map r) = φ := MvPolynomial.algHom_ext fun k ↦ by
-    simp [rootCoeffEval, φ, p, MvPolynomial.mapEquivMonic, nodal, ← Fin.prod_ofFn,
-      Function.comp_def]
-  have h_rem (i j : Fin a) : (X ^ l j %ₘ freeMonic ℤ a).eval₂ φ (r i) = r i ^ l j := by
-    rw [eval₂_modByMonic_eq_self_of_root (by simp [eval₂_eq_eval_map, hφ, eval_nodal_at_node]),
-      eval₂_X_pow]
-  -- Expanding this value in powers of `r i`: the Vandermonde matrix times the matrix of
-  -- coefficients of the remainders has entries `r i ^ l j`.
-  have h_mul : vandermonde r *
-      φ.mapMatrix (of fun k j : Fin a ↦ (X ^ l j %ₘ freeMonic ℤ a).coeff k.val) =
-        of fun i j : Fin a ↦ r i ^ l j := by
-    ext i j
-    rw [of_apply, ← h_rem i j]
-    conv_rhs => rw [← sum_modByMonic_coeff (monic_freeMonic ℤ a) (degree_freeMonic ℤ a).le]
+    simp [rootCoeffEval, φ, MvPolynomial.mapEquivMonic, nodal, ← Fin.prod_ofFn, Function.comp_def]
+  rw [hφ_eq, genericSchur, mul_comm, AlgHom.map_det, ← det_mul]
+  refine congrArg det (Matrix.ext fun i j ↦ ?_)
+  -- Each entry `(i, j)` evaluates `X ^ l j %ₘ freeMonic ℤ a` at `r i`, giving `r i ^ l j`.
+  trans (X ^ l j %ₘ freeMonic ℤ a).eval₂ φ (r i)
+  · conv_rhs => rw [← sum_modByMonic_coeff (monic_freeMonic ℤ a) (degree_freeMonic ℤ a).le]
     simp [Matrix.mul_apply, mul_comm, eval₂_finsetSum]
-  rw [hφ_eq, genericSchur, mul_comm, AlgHom.map_det, ← det_mul, h_mul]
+  · rw [eval₂_modByMonic_eq_self_of_root (by simp [eval₂_eq_eval_map, hφ, eval_nodal_at_node]),
+      eval₂_X_pow, of_apply]
 
 end New.Variety
 

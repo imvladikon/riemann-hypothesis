@@ -223,7 +223,8 @@ lemma New.stoneWeierstrass_ultrametric (N : Submodule k C(X, k)) (φ : C(X, k))
       calc ‖(f : C(X, k)) x‖ ^ n * ‖g x‖ ≤ r / (‖g x‖ + 1) * ‖g x‖ := by grw [hn]
         _ ≤ r := by simp [field]
     have h_mono (e f : P) : U f ⊆ U (e * f) := fun x hx ↦ by
-      simp [U, mul_assoc] at hx ⊢
+      simp only [U, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right, ContinuousMap.coe_mul,
+        Pi.mul_apply, MulMemClass.coe_mul, norm_mul, mul_assoc] at hx ⊢
       grw [norm_coe_le_norm, norm_le_one, one_mul, hx]
     have h_open (f : P) : IsOpen (U f) :=
       (isOpen_closedBall 0 hr.ne').preimage ((f : C(X, k)) * g).continuous
@@ -355,7 +356,8 @@ lemma New.mem_uniformClosure_weylRep_coeff {l N : ℕ} {Φ : Type} [Fact l.Prime
   let κ (d : Φ → ℕ) (τ : Φ) (h : ℕ) : ℕ := (N + 1) ^ (4 * (N - h)) + if h = 1 then d τ else 0
   let E (F : MatrixPoly (Σ _ : Φ, Fin N) k) : C(X, k) :=
     ⟨fun γ ↦ (rowSubst (fun τ ↦ (z γ τ).val) F).eval y, by
-      simp [rowSubst, eval₂_eq]
+      simp only [rowSubst, map_aeval, algebraMap_eq, map_sum, smul_eval, eval_X, coe_eval₂Hom,
+        eval₂_eq]
       fun_prop⟩
   let S : Submodule k C(X, k) :=
     span k {E F | (d) (F ∈ nabla k Sigma.fst (diagramWeight (fun _ ↦ N + 1) (κ d)))}
@@ -555,8 +557,8 @@ lemma GaloisRep.exists_padicModel_hecke_contraction (j : ℕ) :
         congrArg (padicModel κ κ' M · z) (h_eig (N - j))
     -- `P` is the Hecke polynomial, whose coefficient of degree `j` is `c` times `t (N - j)`
     have h_coeff : P.coeff j = c * t (N - j) := by rw [hP, coeff_heckePoly, Fintype.card_fin]
-    rw [LinearMap.smul_apply, LinearMap.smul_apply, h_hecke, h_coeff, map_mul, map_intCast, mul_smul,
-      mul_smul, Int.cast_smul_eq_zsmul]
+    rw [LinearMap.smul_apply, LinearMap.smul_apply, h_hecke, h_coeff, map_mul, map_intCast,
+      mul_smul, mul_smul, Int.cast_smul_eq_zsmul]
     exact smul_comm _ _ _
 
 attribute [local fun_prop] Continuous.if_const

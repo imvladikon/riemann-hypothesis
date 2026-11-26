@@ -417,21 +417,6 @@ private lemma translation_comp_eq_of_nsmul_mem {ν : A'.left ⟶ A'.left}
     (translation (s' z₀)).left ≫ ν = ν := by
   simp [← hν_def, ← comp_nsmul _, ← map_nsmul, hs' _ h_mem, ← comp_left, comp_nsmul]
 
-omit h hs' hn h_tors_lift hM [IsProper A'.hom] in
-/-- The translation of `A'` by `s' z₀` moves the complex point `atGeneric s' x` to
-`atGeneric s' (x + z₀)`. -/
-private lemma atGeneric_comp_translation (x z₀ : V) :
-    atGeneric s' x ≫ (translation (s' z₀)).left = atGeneric s' (x + z₀) := by
-  simp [atGeneric, ← comp_left, comp_add]
-
-omit h hs' hn h_tors_lift hM [IsProper A'.hom] in
-/-- If the homomorphism `π : A' ⟶ A` sends `s' z` to `u.expMap z`, it carries the translation of
-`A'` by `s' z₀` to the translation of `A` by `u.expMap z₀`. -/
-private lemma comp_translation_eq_translation_comp (π : A' ⟶ A) [IsAdditive π]
-    (h_lift : ∀ z : V, s' z ≫ π = u.expMap z) (z₀ : V) :
-    π.left ≫ (translation (u.expMap z₀)).left = (translation (s' z₀)).left ≫ π.left := by
-  simp [h_lift, ← comp_left, comp_add, add_comp]
-
 /-- Assume the standing hypotheses from the section head (`h`, `IsPosRiemann B`, unit `n` with
 `h_tors_lift`, `s'` killing `u.lattice`, `A'` proper, `hM`). Let `π : A' ⟶ A` be a homomorphism that
 sends `s' z` to `u.expMap z`. Let the theta coordinates `f` of `M` along `s'` have the same type
@@ -500,9 +485,10 @@ lemma exists_section_of_hasThetaCoords (π : A' ⟶ A) [IsAdditive π] {f : V �
     obtain ⟨h_tors, -⟩ := h_tors_lift z₀ hz₀
     let T : A'.left ⟶ A'.left := (translation (s' z₀)).left
     have hTν : T ≫ ν = ν := translation_comp_eq_of_nsmul_mem u hs' hν_def h_tors
-    have hT (x : V) : atGeneric s' x ≫ T = atGeneric s' (x + z₀) := atGeneric_comp_translation x z₀
-    have hTπ : π.left ≫ (translation (u.expMap z₀)).left = T ≫ π.left :=
-      comp_translation_eq_translation_comp u π h_lift z₀
+    have hT (x : V) : atGeneric s' x ≫ T = atGeneric s' (x + z₀) := by
+      simp [T, atGeneric, ← comp_left, comp_add]
+    have hTπ : π.left ≫ (translation (u.expMap z₀)).left = T ≫ π.left := by
+      simp [T, h_lift, ← comp_left, comp_add, add_comp]
     let Q := M.mul (N.pull π.left)
     obtain ⟨⟨b, b₁, b', i'⟩, hb⟩ := (M.mul ((M.pull T).mul (Q.pull ν))).exists_landsIn (ζ ≫ p)
     have hr_reg (j : κ) := (LineBundle.H0.isSection_val (r j : N.H0 O)).left
@@ -516,12 +502,13 @@ lemma exists_section_of_hasThetaCoords (π : A' ⟶ A) [IsAdditive π] {f : V �
     let φ (b : κ) (i : ι) (j : κ) : PointFn A'.left :=
       w ((i', fun _ ↦ b), b', fun _ ↦ i) * ((r j : N.H0 O).val i ^ m).pull π.left
     simp [IsFrame, IsSection, IsRegularOn, pow, landsIn_iInf] at hw
-    simp [IsRegularOn] at hr_reg hM_reg
-    simp [pow, landsIn_iInf] at hw_unit
-    simp [IsHomogeneousCoords] at h_lifts
+    simp only [IsRegularOn] at hr_reg hM_reg
+    simp only [pow, mul_opens, pull_opens, pi_opens, inv_opens, landsIn_inf, landsIn_preimage,
+      assoc, landsIn_iInf, isUnit_iff_ne_zero] at hw_unit
+    simp only [IsHomogeneousCoords, isUnit_iff_ne_zero, ne_eq, Ring.inverse_eq_inv'] at h_lifts
     push Not at h_zero
-    simp [hTπ] at ha
-    simp [Q] at hb
+    simp only [assoc, hTπ] at ha
+    simp only [mul_opens, pull_opens, landsIn_inf, landsIn_preimage, assoc, Q] at hb
     have key : (φ b i b * (M.transition b₁ j ^ m).pull T).pull p _ ζ =
         (φ b₁ a j).pull (p ≫ T) _ ζ := by
       -- Both sides are regular on the open `U` of `Γ` and agree at the `P z` in it; `ζ` is in `U`.

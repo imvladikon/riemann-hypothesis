@@ -441,7 +441,10 @@ lemma iCoord_mul_lAdelic : D.iCoord * D.lAdelic = 0 := by
 lemma iCoord_mul_iAdelic : D.iCoord * D.iAdelic = 1 := by
   have h_point₀ : V₀.x.valᴴ * (V₀.J.map toAdele * V₀.x.val) = stdForm E s₀ := by
     rw [← Matrix.mul_assoc, V₀.gram_point]
-  simp [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc]
+  suffices h : stdForm E s₀ * (V₀.x.valᴴ * (D.iᴴ.map toAdele *
+      (V.J.map toAdele * (D.i.map toAdele * V₀.x.val)))) = 1 by
+    simpa [iCoord, iAdelic, ratMap, ← V.gram_point, conjTranspose_nonsing_inv, Matrix.mul_assoc]
+      using h
   rw [← Matrix.mul_assoc (V.J.map toAdele), ← Matrix.mul_assoc (D.iᴴ.map toAdele),
     V.map_conjTranspose_mul_map_J_mul_map]
   simp [h_point₀]
@@ -722,7 +725,8 @@ lemma radicalElement_mul (c' : Matrix n₀ p (𝔸 E)) (b' : Matrix p p (𝔸 E)
   -- The coefficients agree by `j⁻¹ j = 1` and `2⁻¹ + 2⁻¹ = 1`.
   have hj : toAdele (j⁻¹ : E) * toAdele (j : E) = 1 := by
     rw [← toAdele.map_mul, inv_mul_cancel₀ j_ne_zero, toAdele.map_one]
-  match_scalars <;> simp only [hj, mul_one, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
+  match_scalars <;>
+    simp only [hj, mul_one, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
 
 lemma radicalElement_inv : (D.radicalElement c b)⁻¹ = D.radicalElement (-c) (-b) :=
   inv_eq_of_mul_eq_one_right (ext_adeleMatrix (by simp [Matrix.mul_assoc]))
@@ -840,7 +844,8 @@ lemma exists_eq_radicalElement_mul_levi (hk : D.ActsOnFrame g a) :
       have hj : toAdele (j⁻¹ : E) * toAdele (j : E) = 1 := by
         rw [← toAdele.map_mul, inv_mul_cancel₀ j_ne_zero, toAdele.map_one]
       match_scalars <;>
-        simp only [hj, mul_one, ← neg_add, neg_neg, (toAdele_half_add_half (E := E)), neg_add_cancel, neg_zero]
+        simp only [hj, mul_one, ← neg_add, neg_neg, (toAdele_half_add_half (E := E)),
+          neg_add_cancel, neg_zero]
   · -- The matrix of `g₀` is the `V₀`-block of `g`.
     simp [g₀, hg, Matrix.add_mul, Matrix.mul_assoc, Matrix.mul_add]
 
@@ -1155,20 +1160,14 @@ lemma exists_mul_mem_siegelParabolic (hg : g.val.val * D.k = D.k * a + D.l * c) 
     ∃ v ∈ D.symm.siegelParabolic, v * g ∈ D.siegelParabolic := by
   -- Take the translation `l ↦ l`, `k ↦ k - l c a⁻¹`.
   obtain ⟨a, rfl⟩ := ha
-  have h_iso : cᴴ * a = -(a.valᴴ * c) :=
-    eq_neg_of_add_eq_zero_right (conjTranspose_mul_add_eq_zero hg)
-  have h_skew : (-(c * a⁻¹.val))ᴴ = -(-(c * a⁻¹.val)) :=
-    calc (-(c * a⁻¹.val))ᴴ
-      _ = -(a⁻¹.valᴴ * (cᴴ * a) * a⁻¹.val) := by simp [Matrix.mul_assoc]
-      _ = -(-(c * a⁻¹.val)) := by simp [h_iso, ← Matrix.mul_assoc, ← conjTranspose_mul]
-  obtain ⟨v, hv, hv_l, hv_k⟩ : ∃ v ∈ D.symm.siegelParabolic,
-      v.val.val * D.l = D.l ∧ v.val.val * D.k = D.k + D.l * -(c * a⁻¹.val) :=
-    D.symm.exists_mem_siegelParabolic_mul_l_eq h_skew
+  obtain ⟨v, hv, hv_l, hv_k⟩ := D.symm.exists_mem_siegelParabolic_mul_l_eq (b := -(c * a⁻¹.val)) (by
+    rw [show (-(c * a⁻¹.val))ᴴ = -(a⁻¹.valᴴ * (cᴴ * a) * a⁻¹.val) by simp [Matrix.mul_assoc]]
+    simp [eq_neg_of_add_eq_zero_right (conjTranspose_mul_add_eq_zero hg),
+      ← Matrix.mul_assoc, ← conjTranspose_mul])
   refine ⟨v, hv, a, ?_⟩
-  calc (v * g).val.val * D.k
-    _ = v.val.val * D.k * a.val + v.val.val * D.l * c := by
-      simp [hg, Matrix.mul_assoc, Matrix.mul_add]
-    _ = D.k * a.val := by simp [hv_k, hv_l, Matrix.add_mul, Matrix.mul_assoc]
+  rw [Subgroup.coe_mul, Units.val_mul, Matrix.mul_assoc, hg, Matrix.mul_add, ← Matrix.mul_assoc,
+    ← Matrix.mul_assoc, show v.val.val * D.k = _ from hv_k, show v.val.val * D.l = _ from hv_l]
+  simp [symm, Matrix.add_mul, Matrix.mul_assoc]
 
 variable (D)
 

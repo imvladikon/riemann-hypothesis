@@ -33,8 +33,8 @@ Notions from other files:
 
 Known result: The Ax–Sen–Tate theorem and Tate's vanishing of the invariants of C_p(i). Ax's theorem
 is not proved in this file; it comes from an imported file, as `ax_mem_closure_fixedField` and
-`exists_algebraic_of_fixed_near_one`, without the constant. Tate's theorem for H⁰ on an open subgroup follows
-from Tau Ceti's vanishing theorem over its finite fixed field. A consequence
+`exists_algebraic_of_fixed_near_one`, without the constant. Tate's theorem for H⁰ on an open
+subgroup follows from Tau Ceti's vanishing theorem over its finite fixed field. A consequence
 is that invariants of B_dR modulo a submodule come from the base field. Source: J. Ax, Zeros of
 polynomials over local fields: the Galois action, J. Algebra 15 (1970); J. Tate, p-divisible groups
 (1967), §3; proofs in Fontaine–Ouyang 3.3-3.5 and Brinon–Conrad §14.

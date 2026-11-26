@@ -293,7 +293,8 @@ abbrev swap : ThetaKernel X T S where
   ω := K.ω.comp MulEquiv.prodComm.toMonoidHom
   θ := K.θ
   continuous := by
-    simp
+    simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_comp, MonoidHom.coe_ofClass,
+      MulEquiv.coe_prodComm, Function.comp_apply]
     fun_prop
   rat_mul := by simp_all [K.rat_mul]
 

@@ -566,15 +566,7 @@ theorem exists_heckeSplit_eq_smul (p : ℂ → ℂ) :
       zero_mem' := ⟨0, by simp⟩
       add_mem' := fun ⟨c, hc⟩ ⟨d, hd⟩ ↦ ⟨c + d, by simp +contextual [hc, hd, add_smul]⟩
       smul_mem' := fun a _ ⟨c, hc⟩ ↦ ⟨a * c, by simp +contextual [hc, mul_smul]⟩ }
-  -- it contains the Hecke polynomial at every point, hence each Hecke operator
-  have h_poly_mem (T : ℂ) : heckePolyOp π hw T ∈ N := by
-    refine ⟨p T, fun y hy ↦ ?_⟩
-    obtain ⟨-, h_eigen⟩ : y ∈ sphericalAt π w ∧ ∀ T : ℂ, heckePolyOp π hw T y = p T • y := hy
-    exact h_eigen T
-  have h_mem (i : ℕ) : ∃ c : ℂ, ∀ y : W, HasHeckePolynomial π hw p y → heckeSplit π hw i y = c •
-    y :=
-    heckeSplit_mem_of_heckePolyOp N h_poly_mem i
-  choose t ht using h_mem
+  choose t ht using heckeSplit_mem_of_heckePolyOp N fun T ↦ ⟨p T, fun _ hy ↦ hy.2 T⟩
   exact ⟨t, fun y hy i ↦ ht i y hy⟩
 
 end SphericalHecke

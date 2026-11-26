@@ -317,19 +317,13 @@ lemma frameMiddle_translateByClassReps_mul_classCoordX₀ (c c' : S.Classes) (γ
       (finAdeleMatrix (framePartX₀ γ))ᴴ := by
   -- The basis of `X₀` is orthonormal and orthogonal to `z`.
   have h_gram : ((S.classCoordX₀ c).fromCols (fromRows 0 (1 : Matrix Unit Unit (𝔸f E))))ᴴ *
-      S.latticeMiddle (𝔸f E) * S.classCoordX₀ c = (S.ratMiddle (𝔸f E)).toCols₁ := by
-    refine Matrix.ext fun i k ↦ ?_
-    have h_entry : ((S.classCoord c)ᴴ * (S.latticeMiddle (𝔸f E)).splitGram * S.classCoord c)
-        (.inr (.inl i)) (𝔰.indexX₀ k) =
-          (S.ratMiddle (𝔸f E)).splitGram (.inr (.inl i)) (𝔰.indexX₀ k) :=
-      congrFun₂ (classCoord_conj_splitGram c) _ _
-    simpa [classCoord_eq_fromBlocks, splitGram, fromBlocks_conjTranspose, fromBlocks_multiply] using
-      h_entry
+      S.latticeMiddle (𝔸f E) * S.classCoordX₀ c = (S.ratMiddle (𝔸f E)).toCols₁ :=
+    Matrix.ext fun i k ↦ by
+      simpa [classCoord_eq_fromBlocks, splitGram, fromBlocks_conjTranspose, fromBlocks_multiply]
+        using congrFun₂ (classCoord_conj_splitGram c) (.inr (.inl i)) (𝔰.indexX₀ k)
   rw [frameMiddle_translateByClassReps, conjTranspose_mul,
-    Matrix.mul_assoc _ _ (S.latticeMiddle (𝔸f E)),
-    Matrix.mul_assoc, h_gram]
-  refine Matrix.ext fun b k ↦ ?_
-  simp [framePartX₀, middleGram, Matrix.mul_apply, Matrix.one_apply]
+    Matrix.mul_assoc _ _ (S.latticeMiddle (𝔸f E)), Matrix.mul_assoc, h_gram]
+  exact Matrix.ext fun b k ↦ by simp [framePartX₀, middleGram, Matrix.mul_apply, Matrix.one_apply]
 
 omit [HasPrimitiveRoot5040 E] in
 /-- Let `Λ` be the lattice of the class `c`. The parts in `X₀` of two frames of terms over `c` with
@@ -663,7 +657,8 @@ lemma IsNear.genIndex_M_mul_leadingMinor_le {γ : S.G E} (j : Fin (𝔰.ϱ + 2))
   simp only [map_mul, map_natCast, norm_mul, Complex.norm_natCast]
   gcongr
   have hb : 1 ≤ S.b ^ (270 * 𝔰.n ^ 2) := one_le_pow₀ S.one_le_b
-  exact le_of_sq_le_sq ((h_near.norm_map_leadingMinor_sq_le j v).trans (le_self_pow₀ hb two_ne_zero))
+  exact le_of_sq_le_sq
+    ((h_near.norm_map_leadingMinor_sq_le j v).trans (le_self_pow₀ hb two_ne_zero))
     (zero_le_one.trans hb)
 
 omit [S.IsAdmissible] [HasPrimitiveRoot5040 E] in

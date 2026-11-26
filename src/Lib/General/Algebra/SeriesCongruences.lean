@@ -316,7 +316,8 @@ multiple of `π`. -/
 lemma dvd_of_hasSum {π a : valRingCp p} {f : ι → valRingCp p} (h_sum : HasSum f a)
     (hf : ∀ i : ι, π ∣ f i) : π ∣ a := by
   have h_closed : IsClosed {y : valRingCp p | π ∣ y} := by
-    simpa only [valRingCp.dvd_iff_norm_le] using isClosed_le continuous_subtypeVal.norm continuous_const
+    simpa only [valRingCp.dvd_iff_norm_le] using
+      isClosed_le continuous_subtypeVal.norm continuous_const
   exact h_closed.mem_of_tendsto h_sum (.of_forall fun t ↦ Finset.dvd_sum fun i _ ↦ hf i)
 
 /-- A convergent sum of power series over the valuation ring `valRingCp p` of `ℂ_[p]`, each

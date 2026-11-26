@@ -406,7 +406,6 @@ lemma prod_twist_det_eq_inv_mul_charOfTamePart {s : Matrix a N O.chosenModulusSq
         (levelResidueAt (inl i) (S.submatrix V.fixedEmb id).det) = 1 := by
     simp [RingHom.map_det, ← submatrix_map, (V.genResidue_smul_eq_inclMatrix_iff S V.fixedEmb).1 hS,
       inclMatrix, -elim_inl]
-
   -- At the places of `Q` the lift of `Y` reduces to `1`.
   have h_lift (i : O.TwistIndex) :
     stdLevel.reduceAt ((O.chosenPlace ⊕ᵥ O.twistPlace) (inr i)) (liftMod Y.val) = 1 :=

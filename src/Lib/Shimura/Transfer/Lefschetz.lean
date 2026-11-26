@@ -322,7 +322,7 @@ private lemma exists_isFixedPair_of_countTerm_ne_zero {b : heckeAlgebra n ℂ �
     (isReflection_markedReflection_and_exists_eq_iff (h_reg h_ne)).left _⟩
   refine ⟨p, ⟨h_ne, rfl, fun j ↦ zero_mem _⟩, ?_⟩
   -- `simp` unfolds `p` and the coset of `c.out.fst.out`; what is left is `⟦c.out⟧ = c`.
-  simp [p, tripleClass]
+  simp only [p, tripleClass, Quotient.out_eq]
   exact c.out_eq
 
 /-- Moving a point of level `i` by a deck transformation does not change its image under

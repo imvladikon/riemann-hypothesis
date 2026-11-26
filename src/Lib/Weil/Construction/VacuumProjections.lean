@@ -866,7 +866,8 @@ lemma exists_eq_smul_omega_vacElem {g : Gf E n} (hf : f ∈ V.finitePart)
   let f' : 𝒮 V := V.ω (1, g⁻¹) f
   have h_fin : V.projOn univ f' = f' := by
     refine V.map_projOn_eq_const (ContinuousLinearMap.id ℂ (𝒮 V)) fun y hy ↦ ?_
-    rw [show (univ : Set (FinPlace E)).conjClosure = univ from Set.univ_union _, idem_univ, one_smul]
+    rw [show (univ : Set (FinPlace E)).conjClosure = univ from Set.univ_union _, idem_univ,
+      one_smul]
     simpa using congrArg (V.ω (1, g⁻¹)) (h_fix y hy)
   have h_real : V.projReal f' = f' := projReal_eq_self_of_mem_finitePart (omega_mem_finitePart _ hf)
   have h_vac : V.dataInner V.vacElem f' • V.vacElem = f' := by

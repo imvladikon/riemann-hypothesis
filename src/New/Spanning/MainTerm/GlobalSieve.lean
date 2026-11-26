@@ -274,28 +274,19 @@ lemma mem_ratIntegralOff_of_transform_ne_zero {G : 𝔸 E → ℂ}
     (hG : ∀ a ∈ Ô E, ∀ z : 𝔸 E, G ((0, a - adeleOfLocal T (evalPlaces T a)) + z) = G z) {y : E}
     (hy : ∫ z : 𝔸 E, New.stdAddChar E (toAdele (y / S.deltaE) * -z) * G z ≠ 0) :
     y ∈ ratIntegralOff T := by
-  -- Translation multiplies the transform by a value of the character, so these values are `1`;
-  -- and `Ô E` is its own dual.
   rw [ratIntegralOff, Subring.mem_comap, ← sub_adeleOfLocal_mem_iff,
     ← S.forall_selfDualChar_mul_eq_one_iff]
   rintro ⟨a, ha⟩
   let a' : 𝔸 E := (0, a - adeleOfLocal T (evalPlaces T a))
-  have h_shift : ∫ z, New.stdAddChar E (toAdele (y / S.deltaE) * -z) * G z =
-      New.stdAddChar E (toAdele (y / S.deltaE) * -a') *
-        ∫ z, New.stdAddChar E (toAdele (y / S.deltaE) * -z) * G z := by
-    rw [← integral_const_mul, ← integral_add_left_eq_self _ a']
-    congr with z
-    rw [hG a ha, neg_add, mul_add, AddChar.map_add_eq_mul, Circle.coe_mul, mul_assoc]
-  -- The factor is a value of the finite character: removing the components at `T` is
-  -- multiplication by an idempotent, which can be moved from `a` to `y`.
-  have h_arg :
-      algebraMap E (𝔸f E) (-(S.deltaE : E)⁻¹) * (a * (y - adeleOfLocal T (evalPlaces T y))) =
-        (toAdele (y / S.deltaE) * -a').2 := by
-    simp only [a', adeleOfLocal_evalPlaces, Prod.snd_mul, Prod.snd_neg, toAdele_apply_snd,
-      div_eq_mul_inv, map_mul, map_neg]
-    ring
-  rw [selfDualChar_apply, h_arg, ← (mul_eq_right₀ hy).1 h_shift.symm]
-  simp [New.stdAddChar, a']
+  -- Translation by `a'` multiplies the transform by a character value, which must be `1`.
+  suffices (New.stdAddChar E (toAdele (y / S.deltaE) * -a') : ℂ) = 1 by
+    rw [← this, selfDualChar_apply]
+    simp [New.stdAddChar, a', adeleOfLocal_evalPlaces, div_eq_mul_inv]
+    exact congrArg _ (by ring)
+  refine (mul_eq_right₀ hy).1 (Eq.symm ?_)
+  rw [← integral_const_mul, ← integral_add_left_eq_self _ a']
+  congr with z
+  rw [hG a ha, neg_add, mul_add, AddChar.map_add_eq_mul, Circle.coe_mul, mul_assoc]
 
 /-- The function on the adeles that reads `F` after scaling by `r` at the infinite places and
 projecting to `T`, on the adeles that are integral off `T`, and is zero elsewhere. -/
@@ -1083,7 +1074,8 @@ lemma one_le_pow_mul_prod_poissonConst [S.IsAdmissible] {i : ℕ} (hi : i ≤ �
   calc
     _ ≤ S.b ^ (100 * 𝔰.n ^ 2 * numInfPlaces E) * ∏ _a ∈ range i,
           (S.b ^ numInfPlaces E)⁻¹ / ∏ _v : InfinitePlace E, ((S.b ^ 23) ^ (2 * 𝔰.ϱ)) ^ 2 := by
-      simp [field, ← pow_mul, ← pow_add]
+      simp only [← pow_mul, prod_const, card_univ, Finset.card_range, div_pow, inv_pow, field,
+        ← pow_add]
       gcongr
       grw [hi]
       lia

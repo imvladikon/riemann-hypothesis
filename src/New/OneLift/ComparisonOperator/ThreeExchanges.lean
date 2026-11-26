@@ -596,21 +596,6 @@ private lemma carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow (ϑ : D.Twist
   -- compare the exponents of each character
   match_scalars <;> grind [mainPairPoint]
 
-/-- The character `χ'⁻¹ υ ^ m`, with `χ' = twistedChiMPow ϑ j`, is `ϑ⁻¹` divided by
-`υ ^ (-m) χ ^ j`, the character of `exchangePair j (some 1)`. -/
-private lemma twistedChiMPow_inv_mul_upsilonU1_pow (ϑ : D.Twist) (j : D.LiftIndex) :
-    (twistedChiMPow ϑ.toTameChar j)⁻¹ * upsilonU1 ^ D.m =
-      ϑ.toAutChar⁻¹ / ((upsilonU1 ^ D.m)⁻¹ * D.chiM ^ j.val) := by
-  rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar⁻¹, _root_.mul_inv_rev, _root_.mul_inv_rev, inv_inv,
-    mul_assoc]
-
-/-- The character `χ' υ ^ (m / 2)`, with `χ' = twistedChiMPow ϑ j`, is `ϑ` divided by
-`υ ^ (-m / 2) χ ^ (-j)`, the character of `exchangePair j (some (-1))`. -/
-private lemma twistedChiMPow_mul_upsilonU1_pow (ϑ : D.Twist) (j : D.LiftIndex) :
-    twistedChiMPow ϑ.toTameChar j * upsilonU1 ^ (D.m / 2) =
-      ϑ.toAutChar / ((upsilonU1 ^ (D.m / 2))⁻¹ / D.chiM ^ j.val) := by
-  rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar, inv_div, div_inv_eq_mul, mul_left_comm, mul_assoc]
-
 variable (ϑ : D.Twist) (j : D.LiftIndex)
 
 /-- The space `W' = W_j ⊕ (E^j)⁻ ⊕ E^{3m-j} ⊕ W♭` of the third exchange, where `W♭` is the standard
@@ -845,8 +830,14 @@ lemma exists_mul_thirdExchangeLeftSide_eq_choiceFn : ∃ (C : ℂ) (c : D.Twist 
       exchangePair,
       hc₃_norm, hc₁₂_norm, signPoint, ← division_def, div_right_comm _ (_ * _), div_mul_div_comm]
     -- what is left are the characters of the three pairs
-    rw [carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow, twistedChiMPow_inv_mul_upsilonU1_pow,
-      twistedChiMPow_mul_upsilonU1_pow]
+    have h_inv : (twistedChiMPow ϑ.toTameChar j)⁻¹ * upsilonU1 ^ D.m =
+        ϑ.toAutChar⁻¹ / ((upsilonU1 ^ D.m)⁻¹ * D.chiM ^ j.val) := by
+      rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar⁻¹, _root_.mul_inv_rev, _root_.mul_inv_rev,
+        inv_inv, mul_assoc]
+    have h_half : twistedChiMPow ϑ.toTameChar j * upsilonU1 ^ (D.m / 2) =
+        ϑ.toAutChar / ((upsilonU1 ^ (D.m / 2))⁻¹ / D.chiM ^ j.val) := by
+      rw [twistedChiMPow, div_eq_mul_inv ϑ.toAutChar, inv_div, div_inv_eq_mul, mul_left_comm, mul_assoc]
+    rw [carrierChar_inv_div_twistedChiMPow_mul_upsilonU1_pow, h_inv, h_half]
   · have hN : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.2 card_ne_zero
     suffices h_mul : c₃ (h_tame₃ ϑ) * c₁₂ (h_tame ϑ) * thirdExchangeLeftSide ϑ j i g =
         N * choiceFn j i g by
@@ -1127,9 +1118,10 @@ lemma polyVector_letterPoly_mem_holomorphicData (ξ : WeylIndexFamily
     (letterPoly_highestVector_mem_holomorphicData isPosFirstOrder_orderW (paramW_lt_of_orderW_lt 1)
       h_inj
       (h_fit.numbering_eq 1) _ h_fit.colsPlus_eq_zero).2
-  -- `erw` sees through the composite linear map
-  erw [realPairWeil_fockLetters, star_mulVec]
-  simp [letterPoly, weylRep, ← mulVec_transpose, comp_def, conjTranspose_transpose]
+  simp only [letterPoly, LinearMap.comp_apply, AlgHom.toLinearMap_apply]
+  rw [realPairWeil_fockLetters]
+  simp [conjWeylRep, weylRep, star_mulVec, ← mulVec_transpose, comp_def,
+    conjTranspose_transpose]
 
 /-- The function `𝖥_i = choiceFn j i` on `U(W_j)` is a multiple of the theta series
 `kernelClassSum` for the trivial twist, at the level cut out by the rows of `Λ = i.matrix`. -/

@@ -467,10 +467,10 @@ lemma exists_smul_eq_zero_of_mem_ribetCocyclesIn [DVR O] [Fintype Y] {r : Type} 
 
 /-- From coefficients modulo powers of `p` to coefficients in `K/O = Frac(O) / O`. Let `u x` be a
 finite family of representations of `G` over `O`. Consider the cocycles `c` of `ρ` that vanish on
-`T` and at `γ` and have `∑ θ g • c g = 0` whenever `∑ θ g • (u x g - 1) = 0` for all `x`. It suffices to bound the length by `b` at the single
-level `a = p ^ (b + 1)`, where `p ≠ 0` is not a unit. Division by `a` maps the cocycles modulo
-`a` onto the `a`-torsion; as `v(a) > b`, this torsion is everything. No uniform bound over all
-truncation levels is needed. -/
+`T` and at `γ` and have `∑ θ g • c g = 0` whenever `∑ θ g • (u x g - 1) = 0` for all `x`. It
+suffices to bound the length by `b` at the single level `a = p ^ (b + 1)`, where `p ≠ 0` is not a
+unit. Division by `a` maps the cocycles modulo `a` onto the `a`-torsion; as `v(a) > b`, this torsion
+is everything. No uniform bound over all truncation levels is needed. -/
 lemma length_ribetCocyclesVanishingOn_divisibleQuot_le [DVR O] [Fintype Y] {r : Type}
     [Fintype r] [DecidableEq r] (ρ : G →* Matrix r r O) (T : Set G) (γ : G) {p : O} (hp : p ≠ 0)
     (hp_unit : ¬IsUnit p) {b : ℕ}

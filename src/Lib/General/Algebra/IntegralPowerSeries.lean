@@ -65,7 +65,8 @@ open MvPowerSeries PowerSeries
 namespace New
 
 /-- The linear form ∑ c_i z_i, as a power series in the variables z_i. -/
-noncomputable def linearSeries {ι R : Type*} [Fintype ι] [CommSemiring R] (c : ι → R) : MvPowerSeries ι R :=
+noncomputable def linearSeries {ι R : Type*} [Fintype ι] [CommSemiring R] (c : ι → R) :
+    MvPowerSeries ι R :=
   ∑ i : ι, c i • MvPowerSeries.X i
 
 variable {σ : Type*} {R S : Type*} [CommRing R] [CommRing S] {p : ℕ} [Fact p.Prime]

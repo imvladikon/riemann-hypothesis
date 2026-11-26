@@ -75,14 +75,6 @@ def selmerModuleMapOfInjective {f : B →ₗ[O] B'} (hf : Function.Injective f) 
   ((f.compLeft n).compLeft Gal(Ω/E)).restrict fun (_ : Gal(Ω/E) → n → B) hz ↦
     (comp_mem_selmerModule_iff ρ S L hf).2 hz
 
-/-- The value at `g` and `i` of the image of a Selmer cocycle `z` under the map induced by `f` is
-`f (z g i)`. -/
-lemma selmerModuleMapOfInjective_apply {f : B →ₗ[O] B'} (hf : Function.Injective f)
-    (z : selmerModule ρ S L B) (g : Gal(Ω/E)) (i : n) :
-    (selmerModuleMapOfInjective ρ S L hf z : Gal(Ω/E) → n → B') g i =
-      f ((z : Gal(Ω/E) → n → B) g i) :=
-  rfl
-
 /-- An injective map of coefficient modules induces an injective map of Selmer modules. -/
 lemma selmerModuleMapOfInjective_injective {f : B →ₗ[O] B'} (hf : Function.Injective f) :
     Function.Injective (selmerModuleMapOfInjective ρ S L hf) :=
@@ -110,7 +102,6 @@ lemma range_selmerModuleMapOfInjective {a : O} {f : QuotSpan a →ₗ[O] B}
       simpa only [hz] using hy_mem
     refine ⟨⟨z, (comp_mem_selmerModule_iff ρ S L hf).1 hfz_mem⟩, ?_⟩
     ext g i
-    rw [selmerModuleMapOfInjective_apply]
     exact hz g i
 
 /-- If `f` identifies `O / a` (that is, `QuotSpan a`) with the `a`-torsion of `B`, then the Selmer
@@ -156,9 +147,9 @@ that are unramified outside `S` and obey the relations `L`. -/
 noncomputable def divisibleSelmerLength : ℕ∞ :=
   Module.length O (selmerModule ρ S L (DivisibleQuot O))
 
-/-- Let `E` be an embedded number field and `a ≠ 0`. The Selmer module (cocycles for `ρ` unramified outside `S` that obey the relations `L`) with
-coefficients in `O / a` has length at most `divisibleSelmerLength ρ S L`, the length of the one with
-coefficients in `Frac(O) / O`. -/
+/-- Let `E` be an embedded number field and `a ≠ 0`. The Selmer module (cocycles for `ρ` unramified
+outside `S` that obey the relations `L`) with coefficients in `O / a` has length at most
+`divisibleSelmerLength ρ S L`, the length of the one with coefficients in `Frac(O) / O`. -/
 lemma length_le_divisibleSelmerLength {a : O} (ha : a ≠ 0) :
     Module.length O (selmerModule ρ S L (QuotSpan a)) ≤ divisibleSelmerLength ρ S L :=
   length_selmerModule_le_divisibleQuot ρ S L ha

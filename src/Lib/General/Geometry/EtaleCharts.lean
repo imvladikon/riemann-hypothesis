@@ -231,7 +231,8 @@ lemma map_eq_top_iff_forall_isField (φ : A ⟶ B) :
 
 /-- If `V` is open, a point lies in `V` as soon as all its values in fields do. Here
 `fieldLocus V` is the subfunctor of points whose values in fields lie in `V`. -/
-lemma IsOpenSubfunctor.fieldLocus_le (hV : IsOpenSubfunctor V) : fieldLocus (fun K x ↦ x ∈ V K) ≤ V := by
+lemma IsOpenSubfunctor.fieldLocus_le (hV : IsOpenSubfunctor V) :
+    fieldLocus (fun K x ↦ x ∈ V K) ≤ V := by
   intro A x hx
   obtain ⟨I, hI⟩ : ∃ I : Ideal A, ∀ (B : CommAlg k) (φ : A ⟶ B),
       X.map φ x ∈ V B ↔ I.map φ.hom = ⊤ := hV A x

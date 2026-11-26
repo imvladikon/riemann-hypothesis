@@ -542,12 +542,15 @@ theorem IsMatch.isEigenDirection_of_swap_polarisation (hm : IsMatch T l l') {F :
     {r : R} {c d : C} {μ : ℂ} (hrd : T.IsMatchedPair l l' r d)
     (h_eigen : T.swap.polarisation F d c (T.swap.varSign (c, r)) = μ • F) :
     IsEigenDirection F (T.matchingPoint l l') (T.varEquiv (r, c)) := by
-  have only_r (a : R) : T.matchingPoint l l' (T.varEquiv (a, d)) ≠ 0 ↔ a = r := by
-    grind [matchingPoint_ne_zero_iff, hm.row_eq_of_isMatchedPair]
-  have field : ∑ a with T.swap.varSign (c, a) = T.swap.varSign (c, r),
-      X (T.varEquiv (a, d)) * pderiv (T.varEquiv (a, c)) F = μ • F := h_eigen
-  exact ⟨R, _, fun a ↦ T.varEquiv (a, d), fun a ↦ T.varEquiv (a, c), r, μ, by simp, rfl, only_r,
-    field⟩
+  have h_point : T.swap.matchingPoint l' l = T.matchingPoint l l' := by
+    funext i
+    obtain ⟨⟨a, b⟩, rfl⟩ := T.varEquiv.surjective i
+    have h_pair : T.swap.IsMatchedPair l' l b a ↔ T.IsMatchedPair l l' a b :=
+      ⟨fun h ↦ by simpa only [T.swap_swap] using h.swap, fun h ↦ h.swap⟩
+    change T.swap.matchingPoint l' l (T.swap.varEquiv (b, a)) = _
+    simp only [matchingPoint, Equiv.symm_apply_apply, h_pair]
+  rw [← h_point]
+  exact hm.swap.isEigenDirection_of_polarisation hrd.swap h_eigen
 
 variable [DecidableEq R] [DecidableEq C]
 

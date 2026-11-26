@@ -1069,7 +1069,8 @@ theorem singleLift_principalRep (ϑ : D.TameChar) {j : D.LiftIndex} (s : D.chose
 group algebra of `D.chosenGL`, the product of the groups `GL_r` over the residue fields of the
 chosen places. An element `x` acts through `principalRep` on `principalForms`, the forms on the
 hermitian space `W_j = D.spaceW j` fixed by the principal level at the chosen places. It acts by
-the group algebra action of `formAction` on the forms on the larger space of `D.descentPair ϑ j`, the datum of the lift. -/
+the group algebra action of `formAction` on the forms on the larger space of `D.descentPair ϑ j`,
+the datum of the lift. -/
 lemma singleLift_asAlgebraHom {ϑ : D.TameChar} {j : D.LiftIndex} {x : MonoidAlgebra ℂ D.chosenGL}
     (y : D.principalForms (D.spaceW j)) :
     D.singleLift ϑ j ((D.principalRep (D.spaceW j)).asAlgebraHom x y) =

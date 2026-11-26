@@ -168,7 +168,8 @@ lemma HasLatticeBounds.latticeMinus_componentOn {V : Space E ι ε} {Y : Grading
   have h_on : idem T • y ∈ V.lattice (Gf.componentOn ι Q x) ↔ idem T • y ∈ V.lattice x :=
     V.idem_smul_mem_lattice_congr fun w hw ↦ by rw [Gf.atPlace_componentOn, ite_eq_left hw]
   have h_off : idem Tᶜ • y ∈ V.lattice (Gf.componentOn ι Q x) ↔ idem Tᶜ • y ∈ V.lattice 1 :=
-    V.idem_smul_mem_lattice_congr fun w hw ↦ by rw [Gf.atPlace_componentOn, ite_eq_right hw, map_one]
+    V.idem_smul_mem_lattice_congr fun w hw ↦ by
+      rw [Gf.atPlace_componentOn, ite_eq_right hw, map_one]
   have h_incl {c : 𝔸f E} {g g' : Gf E ι} (hc : ∀ w ∈ Tᶜ, v (c w) = 1)
       (h_le : c • Y.latticeMinus g ≤ Y.latticeMinus g') (hg : idem Tᶜ • y ∈ V.lattice g) :
       idem Tᶜ • y ∈ V.lattice g' :=

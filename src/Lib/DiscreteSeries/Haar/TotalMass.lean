@@ -326,8 +326,9 @@ instance isProbabilityMeasure_haarU :
       _ = ∫⁻ Y : Matrix n n ℂ, S.indicator 1 (gramCoords 1 Y) :=
           (lintegral_indicator ((continuous_gramCoords 1).measurable hS.measurableSet) _).symm
       _ = c * (1 * volume S) := by
-          simpa [hS.measurableSet, Set.univ_inter] using hW _ (measurable_one.indicator hS.measurableSet)
-            (support_indicator_subset.trans (by grind))
+          simpa [hS.measurableSet, Set.univ_inter] using
+            hW _ (measurable_one.indicator hS.measurableSet)
+              (support_indicator_subset.trans (by grind))
 
 /-- For all signs equal to one, the unitary group of the sign matrix `signMatrix 1`, which equals
 `1` by `signMatrix_one`, has total mass one. -/

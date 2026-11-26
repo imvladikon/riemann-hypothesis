@@ -123,7 +123,7 @@ lemma isIntegral_conjTranspose_mul {S : Filling E 𝔰} {c : S.Classes}
 
 /-- A nonzero vector of `Λ ∩ X₀`, for the lattice `Λ` of the class `c`, has length at least `1` at
 some place, so the lattice of columns is discrete. -/
-instance {S : Filling E 𝔰} {c : S.Classes} [HasPrimitiveRoot5040 E] [S.IsAdmissible] :
+instance {S : Filling E 𝔰} {c : S.Classes} :
     DiscreteTopology (S.columnLattice ι c) := by
   refine discreteTopology_of_isOpen_singleton_zero ?_
   -- The tuples all of whose vectors are short at every place form a neighbourhood of zero.

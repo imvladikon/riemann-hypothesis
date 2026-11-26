@@ -167,23 +167,15 @@ weight `(κ, e)` and `h ∈ G'_f`, the integrand `g ↦ jetMap(ω(g, h)Φ)(φ(g)
 @[simp]
 lemma Kernel.integrand_mem_smoothInvariants (Φ : S) (φ : AlgForm n κ e) (h : Gf E n') :
     (fun g : Gf E n ↦ k.jetMap (k.ω (g, h) Φ) (φ.val g)) ∈ smoothInvariants stdRatPoints := by
-  obtain ⟨hφ_smooth, hφ_equiv⟩ := φ.property
-  constructor
-  · -- Left invariance: `φ` is equivariant, and `equivariant` at `(γ, 1)` absorbs `γ`.
-    rintro _ ⟨γ, rfl⟩ g
-    simpa [hφ_equiv γ] using k.equivariant γ 1 (k.ω (g, h) Φ) (φ.val g)
-  · -- The stabiliser contains the open subgroup of the `a` that fix `φ` and for which `(a, 1)`
-    -- fixes `Φ`.
-    let L : Subgroup (Gf E n) :=
-      rightStabilizer φ.val ⊓ comap (.inl _ _) (rightStabilizer fun g ↦ k.ω g Φ)
-    have hL_open : IsOpen (L : Set (Gf E n)) :=
-      .inter hφ_smooth ((k.isOpen_stabilizer Φ).preimage (.prodMk_left 1))
-    refine L.isOpen_mono (fun a ha ↦ ?_) hL_open
-    obtain ⟨ha_φ, ha_Φ⟩ := Subgroup.mem_inf.1 ha
-    refine mem_rightStabilizer.2 fun g ↦ ?_
-    have h_ω_eq : k.ω (g * a, h) Φ = k.ω (g, h) Φ := by
-      simpa using mem_rightStabilizer.1 (Subgroup.mem_comap.1 ha_Φ) (g, h)
-    rw [h_ω_eq, mem_rightStabilizer.1 ha_φ g]
+  -- Left invariance follows from `equivariant` at `(γ, 1)`; openness from intersecting stabilisers.
+  refine ⟨?_, (rightStabilizer φ.val ⊓
+      comap (.inl _ _) (rightStabilizer fun g ↦ k.ω g Φ)).isOpen_mono
+    (fun a ⟨ha_φ, ha_Φ⟩ ↦ mem_rightStabilizer.2 fun g ↦ by
+      simpa [mem_rightStabilizer.1 ha_φ g] using
+        congrArg (k.jetMap · (φ.val g)) (mem_rightStabilizer.1 (mem_comap.1 ha_Φ) (g, h)))
+    (.inter φ.property.1 ((k.isOpen_stabilizer Φ).preimage (.prodMk_left 1)))⟩
+  rintro _ ⟨γ, rfl⟩ g
+  simpa [φ.property.2 γ] using k.equivariant γ 1 (k.ω (g, h) Φ) (φ.val g)
 
 variable [IsLevel K]
 

@@ -588,7 +588,8 @@ private theorem RowColExchangeIdentity.descendCone (U : Space E b u) {V' : Space
   refine h.of_planeConstantTerm_eq U A X σ (by positivity) (C := C ^ 2) fun 𝔠 ↦ ?_
   obtain ⟨γ, hγ, h_term⟩ := h_plane 𝔠
   have hγ_pos : 0 < ‖γ‖ := (mul_pos hC (lSharp_pos 𝔠 (by simp))).trans_eq hγ.symm
-  exact ⟨γ, norm_pos_iff.1 hγ_pos, hγ.symm ▸ h_scale 𝔠 C, fun w hw g ↦ h_term x h.left w hw 1 g (.inl rfl)⟩
+  exact ⟨γ, norm_pos_iff.1 hγ_pos, hγ.symm ▸ h_scale 𝔠 C,
+    fun w hw g ↦ h_term x h.left w hw 1 g (.inl rfl)⟩
 
 /-- Removing a plane by the cone integral. Let `W` have even rank, let `A` and `X` be splittings
 `W' = W ⊕ H` and `V' = V ⊕ H` with a hyperbolic plane `H`, both adapted, and let

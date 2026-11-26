@@ -50,22 +50,15 @@ open Finset Real Nat Prime
 `∏ p ∈ S, (1 - p⁻¹) ≥ a / (a + #S)`. -/
 lemma New.div_add_card_le_prod_one_sub_inv (S : Finset ℕ) (a : ℕ) (ha : ∀ p ∈ S, a < p) :
     (a : ℚ) / (a + #S) ≤ ∏ p ∈ S, (1 - (p : ℚ)⁻¹) := by
-  -- Remove the least element `b` of `S`: by induction the product is at least
-  -- `(1 - b⁻¹) * b / (b + #S - 1) = (b - 1) / (b + #S - 1)`, and `a ≤ b - 1`.
+  -- Remove the least element `b` of `S` and apply induction.
   induction S using Finset.induction_on_min generalizing a with
   | empty => simp [div_self_le_one]
   | insert b S b_min ih =>
     have hab : (a : ℚ) + 1 ≤ b := mod_cast ha b (mem_insert_self b S)
-    have hb : 0 < (b : ℚ) := lt_of_lt_of_le (by positivity) hab
-    have hb_notMem : b ∉ S := fun h ↦ (b_min b h).false
-    rw [prod_insert hb_notMem, card_insert_of_notMem hb_notMem, Nat.cast_succ]
-    calc
-      (a : ℚ) / (a + (#S + 1)) ≤ (b - 1) / (b + #S) := by
-        rw [div_le_div_iff₀ (by positivity) (by positivity)]
-        nlinarith
-      _ = (1 - (b : ℚ)⁻¹) * (b / (b + #S)) := by field_simp
-      _ ≤ (1 - (b : ℚ)⁻¹) * ∏ p ∈ S, (1 - (p : ℚ)⁻¹) :=
-        mul_le_mul_of_nonneg_left (ih b b_min) (sub_nonneg.2 (cast_inv_le_one b))
+    rw [prod_insert fun h ↦ (b_min b h).false, card_insert_of_notMem fun h ↦ (b_min b h).false]
+    refine le_trans ?_ (mul_le_mul_of_nonneg_left (ih b b_min) (sub_nonneg.2 (cast_inv_le_one b)))
+    rw [Nat.cast_succ, ← mul_div_assoc, div_le_div_iff₀ (by positivity) (by linarith)]
+    nlinarith [mul_inv_cancel₀ (a := (b : ℚ)) (by linarith)]
 
 /-- Every positive integer satisfies `n ≤ φ n * (2 * log n + 1)`. -/
 lemma New.le_totient_mul_log {n : ℕ} (hn : 0 < n) : n ≤ φ n * (2 * Real.log n + 1) := by
@@ -104,23 +97,17 @@ lemma New.factorsThrough_sq_of_sq_eq_one {M k : ℕ} [NeZero M] (hM : 4 ∣ M) (
     χ.FactorsThrough (M ^ 2) := by
   refine (χ.factorsThrough_iff_ker_unitsMap (pow_dvd_pow M hk)).mpr fun u hu ↦ ?_
   obtain ⟨m, hm⟩ := hM
-  obtain ⟨t, ht⟩ : (↑(M ^ 2) : ℤ) ∣ 1 - (u : ZMod (M ^ k)).cast :=
-    (intCast_eq_intCast_iff_dvd_sub u.val.cast 1 (M ^ 2)).mp
-      (by simpa [unitsMap_def] using congrArg Units.val (MonoidHom.mem_ker.1 hu))
-  have u_lin : 1 - (u : ZMod (M ^ k)) = M ^ 2 * t := by
-    simpa using congrArg (Int.cast : ℤ → ZMod (M ^ k)) ht
-  -- Newton's iteration from `0` solves `c ^ 2 + c = -M * m * t`, as the right side is nilpotent;
-  -- then `(1 + 2 * c) ^ 2 = 1 - 4 * M * m * t = u`
-  obtain ⟨c, hc⟩ : ∃ c : ZMod (M ^ k), M * m * t + c ^ 2 + c = 0 := by
-    have h_nil : IsNilpotent ((M : ZMod (M ^ k)) * m * t) :=
-      ⟨k, by simp [mul_pow, natCast_pow_eq_zero_of_le]⟩
-    obtain ⟨c, ⟨-, hc⟩, -⟩ := existsUnique_nilpotent_sub_and_aeval_eq_zero (x := (0 : ZMod (M ^ k)))
-      (P := C ((M : ZMod (M ^ k)) * m * t) + X ^ 2 + X) (by simpa using h_nil) (by simp)
-    exact ⟨c, by simpa using hc⟩
-  have hM_cast : (M : ZMod (M ^ k)) = 4 * m := by simp [hm]
-  have u_eq : u = (1 + 2 * c) ^ 2 := by linear_combination -u_lin - 4 * hc - M * t * hM_cast
-  refine Units.ext ?_
-  simpa [u_eq, ← pow_apply', hχ] using one_apply_coe u
+  obtain ⟨t, ht⟩ := (intCast_eq_intCast_iff_dvd_sub u.val.cast 1 (M ^ 2)).mp
+    (by simpa [unitsMap_def] using congrArg Units.val (MonoidHom.mem_ker.1 hu))
+  -- Newton's iteration from `0` solves `c ^ 2 + c = -M * m * t`, so `(1 + 2 * c) ^ 2 = u`.
+  obtain ⟨c, ⟨-, hc⟩, -⟩ := existsUnique_nilpotent_sub_and_aeval_eq_zero (x := (0 : ZMod (M ^ k)))
+    (P := C ((M : ZMod (M ^ k)) * m * t) + X ^ 2 + X)
+    ⟨k, by simp [mul_pow, natCast_pow_eq_zero_of_le]⟩ (by simp)
+  replace ht := congrArg (Int.cast : ℤ → ZMod (M ^ k)) ht
+  simp at ht hc
+  have u_eq : (u : ZMod (M ^ k)) = (1 + 2 * c) ^ 2 := by
+    linear_combination -ht - 4 * hc - M * t * (by simp [hm] : (M : ZMod (M ^ k)) = 4 * m)
+  exact Units.ext <| by simpa [u_eq, ← pow_apply', hχ] using one_apply_coe u
 
 /-- If `4 ∣ M` and `2 ≤ k`, then for a character `χ` mod `M ^ k` with trivial square there is a
 character `χ₀` mod `M ^ 2` with `regularL χ = regularL χ₀`, as the two moduli have the same prime

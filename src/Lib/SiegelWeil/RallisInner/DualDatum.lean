@@ -331,7 +331,7 @@ theorem exists_dualDatum (b : AutChar E) (h_rank : 2 * card n ≤ card m) {f : �
         simpa [hP_act] using finHeisenbergOp_omega_of_projOn hf (onHom (g, (1 : G E t))) h_lat
       have h_one := selfDualAddChar_eq_one_of_dataInner_ne_zero hY₀ hYu h_ne'
       have h_dot : star e ⬝ᵥ Y = idem A.conjClosure * ((1 + z) * (d * σ) * h i l) := by
-        show star (idem A.conjClosure •
+        change star (idem A.conjClosure •
             matrixToVec (of fun r k ↦ if r = u k then (1 : 𝔸f E) else 0)) ⬝ᵥ
           (idem A.conjClosure •
             matrixToVec ((κ : Matrix m m (𝔸f E)) * single (u l) i (d * σ) * h)) = _

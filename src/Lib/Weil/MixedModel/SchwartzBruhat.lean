@@ -195,21 +195,12 @@ Schwartz–Bruhat above `S`. -/
 lemma comp {m : Type*} [Fintype m] {A : Matrix n m (𝔸f E)} (B : Matrix m n (𝔸f E))
     (h_left_inv : ∀ y : m → 𝔸f E, B *ᵥ A *ᵥ y = y) (y : n → 𝔸f E) :
     IsSchwartzBruhat S fun x : m → 𝔸f E ↦ Ψ (A *ᵥ x + y) := by
-  -- The image of the compact set for `Ψ` under `z ↦ B (z - idem S • y)` serves.
-  obtain ⟨C, hC, h_supp⟩ : ∃ C : Set (n → 𝔸f E), IsCompact C ∧
-      ∀ x : n → 𝔸f E, Ψ x ≠ 0 → idem S • x ∈ C := hΨ.compact_support
-  have h_smul (x : m → 𝔸f E) : A *ᵥ (idem S • x) + idem S • y = idem S • (A *ᵥ x + y) := by
-    rw [mulVec_smul, smul_add]
-  have h_cont : Continuous fun z : n → 𝔸f E ↦ B *ᵥ (z - idem S • y) := by fun_prop
+  obtain ⟨C, hC, h_supp⟩ := hΨ.compact_support
   refine ⟨fun x ↦ ?_, hΨ.locally_constant.comp_continuous (by fun_prop),
-    (fun z ↦ B *ᵥ (z - idem S • y)) '' C, hC.image h_cont, ?_⟩
-  · -- Both arguments of `Ψ` have the same part at `S`.
-    have h_part : idem S • (A *ᵥ (idem S • x) + y) = idem S • (A *ᵥ x + y) := by
-      rw [← h_smul (idem S • x), ← h_smul x, smul_smul, idem_mul_self]
-    rw [← hΨ.idem_smul (A *ᵥ (idem S • x) + y), h_part, hΨ.idem_smul]
-  · intro x hx
-    refine ⟨idem S • (A *ᵥ x + y), h_supp _ hx, ?_⟩
-    simp only [← h_smul, add_sub_cancel_right, h_left_inv]
+    (fun z ↦ B *ᵥ (z - idem S • y)) '' C, hC.image (by fun_prop), fun x hx ↦
+      ⟨idem S • (A *ᵥ x + y), h_supp _ hx, by simp [smul_add, ← mulVec_smul, h_left_inv]⟩⟩
+  rw [← hΨ.idem_smul (A *ᵥ (idem S • x) + y), ← hΨ.idem_smul (A *ᵥ x + y)]
+  simp [smul_add, mulVec_smul, smul_smul, idem_mul_self]
 
 /-- A translate of a Schwartz–Bruhat function above `S` is Schwartz–Bruhat above `S`. -/
 instance comp_add (y : n → 𝔸f E) : IsSchwartzBruhat S fun x : n → 𝔸f E ↦ Ψ (x + y) := by

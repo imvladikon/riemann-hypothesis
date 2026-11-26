@@ -484,7 +484,8 @@ attribute [simps (attr := local simp) (rhsMd := .default) -isSimp coe_val, irred
 complement. -/
 theorem coe_embedH (h : U (1 : Matrix 𝔰.κ 𝔰.κ ℂ)) :
     (embedH h).val.val = actOnCols 𝔰.definiteCols h.val.val := by
-  simp [actOnCols, val_toBesselH_apply_coe, inclMatrix, ← ext_iff, Matrix.one_apply, Matrix.mul_apply]
+  simp [actOnCols, val_toBesselH_apply_coe, inclMatrix, ← ext_iff, Matrix.one_apply,
+    Matrix.mul_apply]
 
 /-- Each explicit isometry `unipotentOf q` lies in 𝖴⁰ = `besselU0`: it is block upper unitriangular
 for the levels `New.BesselIndex.level` and fixes the frame e_0, …, e_{ϱ-1}, z. -/

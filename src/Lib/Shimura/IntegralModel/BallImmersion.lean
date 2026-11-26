@@ -347,7 +347,8 @@ lemma exists_arc (C : U.GraphClosure γ ν) (z : C.scheme.left) :
   -- In each family some member `b k` is generic: its point specialises to those of all members.
   choose b hb_mem hb using fun k ↦ exists_generic_member C.scheme.hom
     ((f k).domain.isOpen.prod isOpen_univ)
-    ((f k).isConnected.prod isConnected_univ) fun p hp ↦ C.holomorphicAt_point 0 p (Set.mem_prod.1 hp).1
+    ((f k).isConnected.prod isConnected_univ)
+    fun p hp ↦ C.holomorphicAt_point 0 p (Set.mem_prod.1 hp).1
   have h_dense : IsDenseFamily fun k ↦ (C.point ((f k).ballPoint 0 (b k))).left := by
     intro w
     refine C.isSeparatingFamily.right.induction_on w isClosed_closure fun a ↦ ?_

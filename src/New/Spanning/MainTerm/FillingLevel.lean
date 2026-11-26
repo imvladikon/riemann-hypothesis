@@ -317,8 +317,9 @@ lemma exists_isAddHaarMeasure_skewAdjoint {i τ : LocProd T} (hi : i ∈ O) (hτ
       mem_of_eq_of_mem h_trace (mul_mem (neg_mem hi) (add_mem hx (IsStarStable.star_mem hx)))
     exact ⟨ha, (add_mem_cancel_left (mul_mem (mul_mem hτ hi) ha)).1 hx⟩
   have h_map : (ν.prod ν).map π = volume := by
-    simpa [h_pre, SemilocalField.volume_O, hν, Set.inter_univ] using measure_smul_map_restrict_eq_smul_neg
-      (ν.prod ν) volume (by measurability) .univ h_lift isCompact_O.measurableSet
+    simpa [h_pre, SemilocalField.volume_O, hν, Set.inter_univ] using
+      measure_smul_map_restrict_eq_smul_neg (ν.prod ν) volume (by measurability) .univ h_lift
+        isCompact_O.measurableSet
   exact ⟨ν, inferInstance, hν, by fun_prop, h_map⟩
 
 /-- If the integers at `T` are self-dual for the character `ψ`, then there is a kernel `G` for
@@ -436,7 +437,8 @@ theorem exists_integralPlace : ∃ P : IntegralPlace (LocProd T), P.ψ = S.charO
       kernelBound := 1
       continuous_psi := continuous_ψf.subtypeVal.comp ((continuous_adeleOfLocal T).const_mul _)
       measurable_modulus := by
-        simp [modulus, genIndex_eq_inv_prod_norm]
+        simp only [modulus, genIndex_eq_inv_prod_norm, MonoidHom.coe_mk, OneHom.coe_mk,
+          measurable_inv_iff]
         fun_prop
       star_skewUnit := by simp [h_skew]
       measurePreserving_split := h_split

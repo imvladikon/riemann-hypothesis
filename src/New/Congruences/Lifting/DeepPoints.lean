@@ -17,7 +17,8 @@ chart is unramified and all jumps of the second side lie in `[-η, 0]`.
 ## Main definitions and results
 
 * `New.Lift.KummerChart.PairingSide.sum_cost_eq_card_mul`: if no nonzero step is divisible by
-  `p`, the total cost of any set of steps in the windows is its cardinality times the different bound.
+  `p`, the total cost of any set of steps in the windows is its cardinality times the different
+  bound.
 * `New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_gap`,
   `New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_jumps_nonpos`: the cup
   conditions when no jump lies in `[-a, 0)`, and when all jumps of `S'` lie in `[-η, 0]`.
@@ -148,10 +149,10 @@ letter `i` of the chart `k` (a unit of its residue field), a finite set `jumpSet
 every letter let `p ^ κ * E ^ a`, with `E` the distinguished element of the chart, kill the
 cokernels of `S`, `S'` and `P.tateDualSide`. Let the jumps of `S` lie in `[-η, η]` or in
 `-ε i • [b i, b i + W]`, those of `S'` in `[-η, η]` or in `ε i • [b i, b i + W]` for a sign
-`ε i = ±1`, none of them in `[-a, 0)`. For each side, its step set contains `[-u - a, a + η - u)` for
-every jump `u` at `i`, with sum of the costs `k.cost 0 y = v_p(y) + k.differentBound` at most `stepCost`. Then
-for `H ≥ 3 κ + 2 stepCost` the cup product of the cocycles that `S` and `S'` attach to `c` and
-`p ^ H • c'` is a continuous coboundary. -/
+`ε i = ±1`, none of them in `[-a, 0)`. For each side, its step set contains `[-u - a, a + η - u)`
+for every jump `u` at `i`, with sum of the costs `k.cost 0 y = v_p(y) + k.differentBound` at most
+`stepCost`. Then for `H ≥ 3 κ + 2 stepCost` the cup product of the cocycles that `S` and `S'` attach
+to `c` and `p ^ H • c'` is a continuous coboundary. -/
 lemma SidePairing.isScaledCupCoboundary_of_gap (P : S.SidePairing S') {a κ η H W : ℕ}
     {b : k.Letter → ℕ} {ε : k.Letter → ℤˣ} {stepCost : ℕ}
     (h_kill_tateDual : ∀ i : k.Letter, P.tateDualSide.KillsCokernel i κ a)
@@ -160,10 +161,12 @@ lemma SidePairing.isScaledCupCoboundary_of_gap (P : S.SidePairing S') {a κ η H
     (h_window : ∀ i : k.Letter, FitsWindows η (-ε i) (b i) W (S.jumpSet i))
     (h_window' : ∀ i : k.Letter, FitsWindows η (ε i) (b i) W (S'.jumpSet i))
     (h_gap : ∀ i : k.Letter, ∀ u ∈ S.jumpSet i, u ∉ Ico (-a : ℤ) 0)
-    (h_gap' : ∀ i : k.Letter, ∀ u ∈ S'.jumpSet i, u ∉ Ico (-a : ℤ) 0) (steps : k.Letter → ℤˣ → Finset ℤ)
+    (h_gap' : ∀ i : k.Letter, ∀ u ∈ S'.jumpSet i, u ∉ Ico (-a : ℤ) 0)
+    (steps : k.Letter → ℤˣ → Finset ℤ)
     (h_steps : ∀ i : k.Letter, ∀ u ∈ S.jumpSet i, Ico (-u - a) (a + η - u) ⊆ steps i (-ε i))
     (h_steps' : ∀ i : k.Letter, ∀ u ∈ S'.jumpSet i, Ico (-u - a) (a + η - u) ⊆ steps i (ε i))
-    (h_cost : ∀ (i : k.Letter) (σ : ℤˣ), ∑ y ∈ steps i σ, k.cost 0 y ≤ stepCost) (hH : 3 * κ + 2 * stepCost ≤ H)
+    (h_cost : ∀ (i : k.Letter) (σ : ℤˣ), ∑ y ∈ steps i σ, k.cost 0 y ≤ stepCost)
+    (hH : 3 * κ + 2 * stepCost ≤ H)
     (c : S.paramLattice.Carrier) (c' : S'.paramLattice.Carrier) :
       P.IsScaledCupCoboundary H c c' := by
   -- Both sides have deep points without pole at every letter. At each letter the side whose far

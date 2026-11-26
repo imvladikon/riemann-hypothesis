@@ -211,22 +211,16 @@ lemma IsFrameSet.encard_range_sharedVectors_le (hB : S.IsFrameSet c B)
       ENNReal.ofReal (S.b ^ (366 * 𝔰.n ^ 4 * numInfPlaces E)) := by
   -- The entries are integral and bounded at every infinite place.
   have hb : 1000 ≤ S.b := S.thousand_le_b
-  have h_packing : (Set.range fun p : B ↦ S.sharedVectors j p.val.2).encard ≤ ENNReal.ofReal
-      ((1 + 2 * S.b ^ (182 * 𝔰.n ^ 2)) ^ (card (Fin 𝔰.ϱ × Fin 𝔰.n) * numInfPlaces E * 2)) := by
-    refine encard_le_of_isIntegral_norm_le Function.uncurry (by positivity) ?_
-      Function.uncurry_injective.injOn
-    rintro _ ⟨⟨p, hp⟩, rfl⟩ ⟨a, k⟩
-    obtain ⟨s, h_over⟩ : ∃ s : S.ResidueGL, p.2 ∈ S.termsOver c s p.1 := hB.mem_termsOver p hp
+  refine (encard_le_of_isIntegral_norm_le Function.uncurry
+    (by positivity : 0 ≤ S.b ^ (182 * 𝔰.n ^ 2)) ?_
+    Function.uncurry_injective.injOn).trans (ofReal_le_ofReal ?_)
+  · rintro _ ⟨⟨p, hp⟩, rfl⟩ ⟨a, k⟩
+    obtain ⟨s, h_over⟩ := hB.mem_termsOver p hp
     exact ⟨isIntegral_sharedVectors h_over a k,
       fun v ↦ (h_cellRank p hp).norm_sharedVectors_le (hB.near p hp) v a k⟩
-  have h_radius : 1 + 2 * S.b ^ (182 * 𝔰.n ^ 2) ≤ S.b ^ (183 * 𝔰.n ^ 2) :=
-    one_add_two_mul_pow_le_pow (by linarith) (by lia)
-  have h_exponent : 183 * 𝔰.n ^ 2 * (card (Fin 𝔰.ϱ × Fin 𝔰.n) * numInfPlaces E * 2) ≤
-      366 * 𝔰.n ^ 4 * numInfPlaces E := by
-    rw [card_prod, Fintype.card_fin, Fintype.card_fin]
-    lia
-  grw [h_packing, h_radius, ← pow_mul]
-  exact ofReal_le_ofReal (pow_le_pow_right₀ (by linarith) h_exponent)
+  · grw [one_add_two_mul_pow_le_pow (m' := 183 * 𝔰.n ^ 2) (by linarith) (by lia), ← pow_mul,
+      card_prod, Fintype.card_fin, Fintype.card_fin]
+    exact pow_le_pow_right₀ (by linarith) (by lia)
 
 omit [S.IsAdmissible] in
 /-- Let `γ` and `γ'` have the same integral matrix of products `Z` with nonzero leading minor of

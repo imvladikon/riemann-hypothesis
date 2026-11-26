@@ -888,8 +888,7 @@ def levelTranslate (O : DescentPair E r n) :
   toFun h := star (O.levelChar h) • LinearMap.funLeft ℂ ℂ (leftMul E r n h.val⁻¹)
   map_one' := LinearMap.ext fun Ψ ↦ funext fun x ↦ by simp
   map_mul' h k := LinearMap.ext fun Ψ ↦ funext fun x ↦ by
-    simp [mul_assoc]
-    exact mul_left_comm ..
+    simpa [mul_assoc] using mul_left_comm (star (O.levelChar h)) (star (O.levelChar k)) _
 
 lemma levelTranslate_apply (h : O.levelGroup) (Ψ : (n × r → 𝔸f E) → ℂ) (x : n × r → 𝔸f E) :
     O.levelTranslate h Ψ x = star (O.levelChar h) * Ψ (leftMul E r n h.val⁻¹ x) := rfl

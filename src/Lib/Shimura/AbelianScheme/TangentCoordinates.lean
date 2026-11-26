@@ -193,7 +193,8 @@ lemma exists_isEtaleChart (x : X) {d : ℕ} (hf : SmoothOfRelativeDimension d f)
   let ξ_alg : Γ(X, V) →ₐ[MvPolynomial (Fin d) Γ(S, U)] C' := ⟨ξ.hom, RingHom.congr_fun hξ⟩
   let ψ_alg : C →ₐ[MvPolynomial (Fin d) Γ(S, U)] C' := ⟨ψ.hom, map_eval₂Hom _ _ _⟩
   have : FormallyEtale (MvPolynomial (Fin d) Γ(S, U)) Γ(X, V) := h_etale.formallyEtale
-  obtain ⟨ρ, hρ, h_unique⟩ := New.Variety.existsUnique_algHom_lift ξ_alg ψ_alg hψ.coe_surjective h_nil
+  obtain ⟨ρ, hρ, h_unique⟩ :=
+    New.Variety.existsUnique_algHom_lift ξ_alg ψ_alg hψ.coe_surjective h_nil
   have h_lift : ofHom ρ.toRingHom ≫ ψ = ξ := by
     ext a
     exact AlgHom.congr_fun hρ a
@@ -242,7 +243,8 @@ lemma HasSignature.of_points [Fintype ι] [DecidableEq ι]
     simpa [← hq, Matrix.map_add, map_smul', vecMulVec] using congr_fun₂ (hX_rank n) i j
   have h_eigen_b (n : N) (i : ι) :
       ∑ j : ι, σ n (q i j) * X n j + σ n (ρ b') * X n i = σ n (ρ b) * X n i := by
-    simpa [← hq, Matrix.one_apply, add_mul, Finset.sum_add_distrib, apply_ite (σ n)] using h_eigen n b i
+    simpa [← hq, Matrix.one_apply, add_mul, Finset.sum_add_distrib, apply_ite (σ n)] using
+      h_eigen n b i
   have h_trace : ρ b - ρ b' - ∑ i, q i i = 0 := by
     -- `q X = (ξ ⬝ X) X` is the trace times `X`; compare with `q X = (ρ b - ρ b') X` at a unit
     -- entry of `X`.
@@ -330,8 +332,8 @@ lemma tangentCoords_comp (h_zero_in : LandsIn (0 : mk t ⟶ A).left V) (hy : IsI
 
 /-- The coordinates z(y) − z(0) of a C-point y that is infinitesimal for the square-zero extension
 ψ lie in ker ψ; here z are coordinates on V, which contains the zero C-point. -/
-lemma map_tangentCoords_eq_zero (h_zero_in : LandsIn (0 : mk t ⟶ A).left V) (hy : IsInfinitesimal ψ y) [hψ : IsSqZeroExt ψ]
-    (k : ι) :
+lemma map_tangentCoords_eq_zero (h_zero_in : LandsIn (0 : mk t ⟶ A).left V)
+    (hy : IsInfinitesimal ψ y) [hψ : IsSqZeroExt ψ] (k : ι) :
     ψ (tangentCoords z y k) = 0 := by
   -- `ψ ∘ tangentCoords z y` is `tangentCoords z` of the reduction of `y`, which is `0`.
   have hy_zero : (homMk (map ψ) : mk (map ψ ≫ t) ⟶ mk t) ≫ y = 0 := hy
@@ -363,14 +365,6 @@ the zero C-point of A lies in V. -/
 lemma IsLieChart.zero_landsIn {s : Spec B ⟶ S} {V : A.left.Opens} {z : ι → Γ(A.left, V)}
     {m : O → Matrix ι ι B} (h_lie : IsLieChart A s V z m) {φ : B ⟶ C} (ht : Spec.map φ ≫ s = t) :
     LandsIn (0 : mk t ⟶ A).left V := (h_lie.2 ht).1
-
-/-- For a chart at 0 over s, the point t = Spec φ ≫ s, and C-points y, x that are infinitesimal
-for a square-zero extension ψ: dz(y + x) = dz(y) + dz(x), where dz = `New.tangentCoords z`. -/
-lemma IsLieChart.tangentCoords_add {s : Spec B ⟶ S} {V : A.left.Opens} {z : ι → Γ(A.left, V)}
-    {m : O → Matrix ι ι B} (h_lie : IsLieChart A s V z m) {φ : B ⟶ C} (ht : Spec.map φ ≫ s = t)
-    {ψ : C ⟶ C'} [IsSqZeroExt ψ] {y x : mk t ⟶ A} (hy : IsInfinitesimal ψ y)
-    (hx : IsInfinitesimal ψ x) :
-    tangentCoords z (y + x) = tangentCoords z y + tangentCoords z x := ((h_lie.2 ht).2 hy).2 x hx
 
 /-- The four conditions of a chart at 0, each with its own quantifiers, give `New.IsLieChart`. -/
 lemma IsLieChart.of_isEtaleChart {s : Spec B ⟶ S} {V : A.left.Opens} {z : ι → Γ(A.left, V)}
@@ -439,8 +433,8 @@ lemma exists_isLieChart {g : ℕ} (hd : SmoothOfRelativeDimension g A.hom) [IsLo
     have h_pull (c : Fin g → Fin g ⊕ Fin g) {x : mk (map φ ≫ s) ⟶ A} (hx : IsInfinitesimal ψ x)
         (hL : tangentCoords z x = L ∘ c) : q ≫ Y c = x := by
       refine (hz.existsUnique_tangentCoords_eq h_in hψ (tangentCoords z x)
-          (IsEtaleChart.map_tangentCoords_eq_zero h_in hx)).unique ⟨(hY c).precomp q rfl (φ ≫ ψ) ?_, ?_⟩
-        ⟨hx, rfl⟩
+          (IsEtaleChart.map_tangentCoords_eq_zero h_in hx)).unique
+        ⟨(hY c).precomp q rfl (φ ≫ ψ) ?_, ?_⟩ ⟨hx, rfl⟩
       · exact hom_ext (RingHom.ext fun _ ↦ (map_add _ _ _).trans (add_eq_left.2 (h_ker _)))
       · simp [IsEtaleChart.tangentCoords_comp (z := z) h_in (hY c) q rfl, hY_coords, hL, funext_iff]
     -- The universal coordinates have no `B`-part; pull them back along `q`.
@@ -484,7 +478,7 @@ lemma IsInfinitesimal.eq_zero_of_isUnit_and_nsmul_eq_zero_of_cast_eq_zero (hy : 
   have h_nsmul (k : ℕ) : IsInfinitesimal ψ (k • y) := by simpa using hy.smul (k : ℤ)
   have h_add (k : ℕ) :
       tangentCoords z (k • y + y) = tangentCoords z (k • y) + tangentCoords z y :=
-    h_lie.tangentCoords_add h_base (h_nsmul k) hy
+    ((h_lie.2 h_base).2 (h_nsmul k)).2 y hy
   have h_dv : tangentCoords z (m • y) = (m : C) • tangentCoords z y := by
     induction m with
     | zero => simp

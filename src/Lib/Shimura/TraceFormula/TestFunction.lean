@@ -310,7 +310,8 @@ lemma exists_iwahori_hecke_element (π : Representation ℂ (GL (Fin a) (𝔸f E
     have hg_one : dualComponent w g = 1 := MonoidHom.mem_ker.mp hg.2
     -- `dualComponent w (j z t g)` is `j · N t`, since `dualComponent` inverts the scalar `z`; `N t`
     -- is strictly dominant like `t`
-    refine ⟨fun i ↦ .mk0 N (mod_cast hN) * t i, by simpa [StrictMono, pos_iff_ne_zero, hN], j, 1, ?_⟩
+    refine ⟨fun i ↦ .mk0 N (mod_cast hN) * t i,
+      by simpa [StrictMono, pos_iff_ne_zero, hN], j, 1, ?_⟩
     rw [map_mul, map_mul, map_mul, dualComponent_conjAtSplit, dualComponent_conjAtSplit, hg_one]
     simp [z, dualComponent, invTransposeGL, Equiv.symm, Units.ext_iff, Matrix.map_natCast,
       map_zero]

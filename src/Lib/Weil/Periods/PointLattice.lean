@@ -408,7 +408,8 @@ lemma exists_inclXFin_eq_of_mulVec_eq {g : Gf E ι}
   have h_blocks : M = gradedBlocks Y.indexEquiv Y.indexEquiv A 1 := by
     ext1 i j
     obtain ⟨i' | i', rfl⟩ := Y.indexEquiv.surjective i <;>
-      obtain ⟨j' | j', rfl⟩ := Y.indexEquiv.surjective j <;> simp [A, h_row, h_col, Matrix.one_apply]
+      obtain ⟨j' | j', rfl⟩ := Y.indexEquiv.surjective j <;>
+      simp [A, h_row, h_col, Matrix.one_apply]
   have hA : Aᴴ * 1 * A = 1 := by
     have h_isom := Space.ratCoordMatrixFin_isometry (V := V) g
     rw [show V.ratCoordMatrixFin g = _ from h_blocks, Y.gram_eq] at h_isom

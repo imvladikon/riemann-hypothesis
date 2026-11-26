@@ -347,22 +347,12 @@ theorem Gauge.formMajorant_sq_le_of_floorMassLe (hk : F.IsCut W) (hj : j ≤ �
     F.formMajorant j p q W x ^ 2 ≤ V ^ 2 * Γ.weightedSquareProduct j p q W x := by
   -- Each pivot costs a factor `V`; the constant `Γ.floorsConst ≥ 1` is not needed.
   refine Γ.sq_lintegral_le_weightedSquareProduct hk hj hp hx fun y _ ↦ ?_
-  let k₁ : T.G → T.G → ℂ := frameCorrelation W 1
-  let k₂ : T.G → T.G → ℂ := frameCorrelation W (weylRatio j p q)
-  let z : T.G := (weylElem j p)⁻¹ * y
-  have h_pivot {k : T.G → T.G → ℂ} {d : T.G} (hK : F.IsPairingKernel j k d) (g : T.G) :
-      F.pivotL1Norm j k g (g * x) ^ 2 ≤
-        V * (F.weightedSquareSum k x j g / F.depthWeight j g x) := by
-    grw [hK.pivotL1Norm_sq_le_of_floorMassLe_one h_vol, lintegral_partialCorrelation_sq_le hj]
-  have h_const : 1 ≤ Γ.floorsConst := one_le_pow₀ Γ.one_le_loss
-  calc (F.pivotL1Norm j k₁ y (y * x) * F.pivotL1Norm j k₂ z (z * x)) ^ 2
-      ≤ V * (F.weightedSquareSum k₁ x j y / F.depthWeight j y x) *
-          (V * (F.weightedSquareSum k₂ x j z / F.depthWeight j z x)) := by
-        grw [mul_pow, h_pivot (Γ.isPairingKernel_frameCorrelation_one hk j),
-          h_pivot (Γ.isPairingKernel_frameCorrelation hk j p q)]
-    _ = V ^ 2 * 1 * (F.weightedSquareSum k₁ x j y / F.depthWeight j y x) *
-          (F.weightedSquareSum k₂ x j z / F.depthWeight j z x) := by ring
-    _ ≤ _ := by grw [h_const]
+  have h_const : (1 : ℝ≥0∞) ≤ Γ.floorsConst := one_le_pow₀ Γ.one_le_loss
+  grw [mul_pow,
+    (Γ.isPairingKernel_frameCorrelation_one hk j).pivotL1Norm_sq_le_of_floorMassLe_one h_vol,
+    (Γ.isPairingKernel_frameCorrelation hk j p q).pivotL1Norm_sq_le_of_floorMassLe_one h_vol,
+    lintegral_partialCorrelation_sq_le hj, lintegral_partialCorrelation_sq_le hj, ← h_const]
+  exact le_of_eq (by ring)
 
 /-- Let `W` be a cut Bessel function, `p` a head of length j ≤ ϱ, `q` a second sequence of units,
 `x` a position and `F.groupMeasure` a Haar measure. Let `V ≥ 1` bound the mass of floor `j`: for

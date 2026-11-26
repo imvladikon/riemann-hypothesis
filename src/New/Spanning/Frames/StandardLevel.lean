@@ -959,25 +959,18 @@ theorem le_partialGroupMeasure_boxSet (i l : ℕ) (hl : l + i = 𝔰.ϱ) :
   | zero =>
     obtain rfl : l = 𝔰.ϱ := hl
     obtain ⟨h_theta, -, h_norm, -⟩ := h.volume_le_and_boxSet_closePairs_positions_eq
-    calc volume P.intUnits ^ (0 + 1)
-      _ ≤ F.measureH F.boxSet * F.topFloorMeasure F.boxSet := by simpa [h_norm] using h_theta
-      _ ≤ (F.measureH ∗ₘ F.topFloorMeasure) F.boxSet := h.mul_le_mconv_boxSet _ _
-      _ = F.partialGroupMeasure 𝔰.ϱ (0 + 2) F.boxSet := by simp [descConv, floorMeasure]
+    simp [descConv, floorMeasure]
+    grw [← h.mul_le_mconv_boxSet]
+    simpa [h_norm] using h_theta
   | succ i ih =>
     have h_eta : heisenbergMeasure l F.boxSet = 1 := by
       simpa [floorModulus, ← h.boxSet_eq] using
         h.heisenbergMeasure_eq_floorModulus (g := 1) (by simp) ⟨l, by lia⟩ bot_le
-    calc volume P.intUnits ^ (i + 1 + 1)
-      _ ≤ F.partialGroupMeasure (l + 1) (i + 2) F.boxSet *
-          (heisenbergMeasure l F.boxSet * (weylLaw l F.boxSet * heisenbergMeasure l F.boxSet)) := by
-        rw [h_eta, mul_one, one_mul, pow_succ]
-        exact mul_le_mul' (ih (l + 1) (by lia)) (h.volume_intUnits_le_weylLaw_boxSet l)
-      _ ≤ (F.partialGroupMeasure (l + 1) (i + 2) ∗ₘ
-            (heisenbergMeasure l ∗ₘ (weylLaw l ∗ₘ heisenbergMeasure l))) F.boxSet := by
-        grw [h.mul_le_mconv_boxSet, h.mul_le_mconv_boxSet, h.mul_le_mconv_boxSet]
-      _ = F.partialGroupMeasure l (i + 1 + 2) F.boxSet := by
-        have hl_lt : l < 𝔰.ϱ := by lia
-        simp [descConv, floorMeasure, hl_lt]
+    rw [pow_succ]
+    grw [ih (l + 1) (by lia), h.volume_intUnits_le_weylLaw_boxSet l]
+    rw [← one_mul (weylLaw l F.boxSet), ← mul_one (weylLaw l F.boxSet), ← h_eta]
+    grw [h.mul_le_mconv_boxSet, h.mul_le_mconv_boxSet, h.mul_le_mconv_boxSet]
+    simp [descConv, floorMeasure, show l < 𝔰.ϱ by lia]
 
 /-- For a large lattice datum, `F.groupMeasure` is a Haar measure. -/
 instance isHaarMeasure_groupMeasure : F.groupMeasure.IsHaarMeasure := by

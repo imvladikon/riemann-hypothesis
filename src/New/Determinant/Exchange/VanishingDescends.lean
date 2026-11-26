@@ -266,16 +266,11 @@ theorem ThetaLargeVanishesOnDetVectors.of_add_planes {k : ℕ} {W' : Space E n' 
     let τ : b ⊕ (Unit ⊕ Unit) ⊕ r ≃ (Unit ⊕ Unit) ⊕ n :=
       equivOfCardEq (by simp +arith [← h_card_σ])
     -- One plane raises each rank by two and each number of negative signs by one.
-    have h_card_W : card ((Unit ⊕ Unit) ⊕ n) = card n + 2 := by simp +arith
-    have h_card_V : card ((Unit ⊕ Unit) ⊕ r) = card r + 2 := by simp +arith
-    have h_neg_W : negCount (Sum.elim (hyperbolicSigns Unit) s) = 1 + negCount s := by simp
-    have h_neg_V : negCount (Sum.elim (hyperbolicSigns Unit) t) = 1 + negCount t := by simp
     have h_card_above : card ((Unit ⊕ Unit) ⊕ n) =
-        2 * (k + negCount (Sum.elim (hyperbolicSigns Unit) s)) := by omega
-    have h_above : ThetaLargeVanishesOnDetVectors 𝔠 k (hyperbolicSum Unit W)
-        (hyperbolicSum Unit V) τ :=
-      ih (hyperbolicSum Unit W) (hyperbolicSum Unit V) τ h_card_above (by omega) (by omega)
-        (by omega)
+        2 * (k + negCount (Sum.elim (hyperbolicSigns Unit) s)) := by simp +arith [h_card, two_mul]
+    have h_above := ih (hyperbolicSum Unit W) (hyperbolicSum Unit V) τ h_card_above
+      (by simp +arith [h_rank, two_mul]) (by simp +arith [h_negCount_W])
+      (by simp +arith [h_negCount_V])
     exact h_above.of_add_plane (removePlanes Unit W) (removePlanes Unit V) σ ⟨_, h_card⟩ hk_le
       h_card_above
 
