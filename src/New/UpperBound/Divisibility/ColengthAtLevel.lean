@@ -13,13 +13,14 @@ import New.UpperBound.Objects.Rows
 This file compares three modules of source forms, `𝒜_ι`, `𝒜^L` and `𝒜^∨`, with values integral
 for the standard lattice, for `L_0` and for `L_0^∨` at `Σ_N`. These are
 `integralFormsAt D.SourceForm d` for `d = 1`, `diagPointN 0` and `dualPointN 0`. The comparison
-shows that `𝒜' ∩ 𝒜_ι` has colength at most `m f b D_X` in `𝒜_ι`, where `D_X` is the dimension of
-the space of source forms. It bounds a colength by a mean degree. The case of monomials, which is
-not used later, comes first as a model.
+shows that `𝒜' ∩ 𝒜_ι` has colength at most `(ϱ + 2) f a D_X / k` in `𝒜_ι`, where `D_X` is the
+dimension of the space of source forms. It bounds a colength by a mean degree. The case of monomials
+comes first as a model.
 
 ## Main definitions and results
 
-* `New.Data.exists_colengthDvd_upIntegralForms_pow`: `𝒜'` has colength at most `m f b D_X`.
+* `New.Data.exists_colengthDvd_upIntegralForms_pow_sharp`: the colength of `𝒜'` is bounded by
+  `D_X` times `New.Data.levelColengthLoss`.
 
 Notions from other files:
 * `New.Data.nonInducedPlaces`: the set `Σ_N` of the conjugates of the places above `N` that `ιₚ`
@@ -223,30 +224,48 @@ lemma colengthDvd_comap_upOperator_pow (i : ℕ) :
     refine ih.trans (D.colengthDvd_integralFormsAt_diagPointN.comap _ (fun φ hφ ↦ ?_) fun _ _ h ↦ h)
     simpa [pow_succ'] using D.upOperator_mem_integralFormsAt hφ
 
+/-- The colength exponent per source dimension at the level prime. -/
+abbrev levelColengthLoss : ℝ := (D.ϱ + 1 + 1) * (D.f * D.a) / D.k
+
+omit [PadicPlace D.N] in
+lemma levelColengthLoss_le_mfb : D.levelColengthLoss ≤ D.m * D.f * D.b := by
+  have h_size : (D.ϱ + 1 + 1 : ℝ) * D.a ≤ D.m * D.b * D.k := D.le_of_hasLogBound
+  apply (div_le_iff₀ (Nat.cast_pos.2 D.k_pos)).2
+  calc (D.ϱ + 1 + 1 : ℝ) * (D.f * D.a)
+    _ = (D.f : ℝ) * ((D.ϱ + 1 + 1 : ℝ) * D.a) := by ring
+    _ ≤ D.f * (D.m * D.b * D.k) := mul_le_mul_of_nonneg_left h_size (Nat.cast_nonneg _)
+    _ = _ := by ring
+
 /-- **The prime `N`, colength.** Let `𝒜_ι` be the module of source forms with `N`-integral values
 for the standard lattice, and `𝒜' = D.upIntegralForms` the module of forms `φ` on `X_0` such that
 `Up ^ (m / 2) φ` is a source form integral at `D.diagPointN 0`, with
-`Up = upOperator (D.formRepAtN 0)`. There is `e ≤ m f b D_X` such that every finite family in `𝒜_ι`
-is carried into `𝒜'` by a square matrix whose determinant divides `N ^ e`. Here `m = D.m` is the
-number of theta lifts from `X_0` to `X_m`, `f = D.f` the number of infinite places of `E`, `b = D.b`
-the value of `D.weight` on the set `D.bPlaces` of infinite places, and `D_X` the dimension of the
-space of source forms. -/
-lemma exists_colengthDvd_upIntegralForms_pow :
+`Up = upOperator (D.formRepAtN 0)`. There is `e ≤ levelColengthLoss D · D_X` such that every finite
+family in `𝒜_ι` is carried into `𝒜'` by a square matrix whose determinant divides `N ^ e`. Here
+`D_X` is the dimension of the space of source forms. -/
+lemma exists_colengthDvd_upIntegralForms_pow_sharp :
     ∃ e : ℕ,
-      e ≤ D.m * D.f * D.b * Module.finrank ℂ D.SourceForm ∧
+      e ≤ D.levelColengthLoss * Module.finrank ℂ D.SourceForm ∧
       ColengthDvd (integralFormsAt D.SourceForm 1) D.upIntegralForms (D.N ^ e) := by
   let l : ℕ := D.sumDegreeOf (.inr ())
   refine ⟨l * (D.ϱ + 1 + 1), ?_, D.colengthDvd_comap_upOperator_pow (D.ϱ + 1)⟩
   have hl : (D.k * l : ℝ) ≤ Module.finrank ℂ D.SourceForm * (D.f * D.a) :=
     mod_cast D.mul_sumDegreeOf_le (.inr ())
-  have h_size : (D.ϱ + 1 + 1 : ℝ) * D.a ≤ D.m * D.b * D.k := D.le_of_hasLogBound
-  refine le_of_mul_le_mul_left (a := (D.k : ℝ)) ?_ (by simp)
+  rw [levelColengthLoss, div_mul_eq_mul_div]
+  apply (le_div_iff₀ (Nat.cast_pos.2 D.k_pos)).2
   push_cast
-  calc
-    _ ≤ Module.finrank ℂ D.SourceForm * (D.f * D.a) * (D.ϱ + 1 + 1 : ℝ) := by grw [← mul_assoc, hl]
-    _ = Module.finrank ℂ D.SourceForm * D.f * ((D.ϱ + 1 + 1 : ℝ) * D.a) := by ring
-    _ ≤ Module.finrank ℂ D.SourceForm * D.f * (D.m * D.b * D.k) := by gcongr
-    _ = D.k * (D.m * D.f * D.b * Module.finrank ℂ D.SourceForm) := by ring
+  calc (l * (D.ϱ + 1 + 1) : ℝ) * D.k
+    _ = (D.k * l : ℝ) * (D.ϱ + 1 + 1) := by ring
+    _ ≤ Module.finrank ℂ D.SourceForm * (D.f * D.a) * (D.ϱ + 1 + 1 : ℝ) :=
+      mul_le_mul_of_nonneg_right hl (by positivity)
+    _ = _ := by ring
+
+/-- The colength of the preimage under `Up ^ (ϱ + 1)`, bounded in terms of `m f b`. -/
+lemma exists_colengthDvd_upIntegralForms_pow :
+    ∃ e : ℕ,
+      e ≤ D.m * D.f * D.b * Module.finrank ℂ D.SourceForm ∧
+      ColengthDvd (integralFormsAt D.SourceForm 1) D.upIntegralForms (D.N ^ e) := by
+  obtain ⟨e, he, h⟩ := D.exists_colengthDvd_upIntegralForms_pow_sharp
+  exact ⟨e, he.trans (mul_le_mul_of_nonneg_right D.levelColengthLoss_le_mfb (Nat.cast_nonneg _)), h⟩
 
 end New.Data
 

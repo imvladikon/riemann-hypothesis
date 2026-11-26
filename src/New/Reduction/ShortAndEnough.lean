@@ -293,25 +293,26 @@ lemma normalizedPoincare_mem_integralVectors {ι : PrimePadicIso} (s : D.chosenG
   rw [h_smul]
   exact goodProjTranslate_mem_integralForms ι.place h_lift_mem s
 
-private lemma indexLe_of_mem_image_normalizedPoincare_sharp
+private lemma indexLe_of_mem_image_normalizedPoincare_colength
     (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
-    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)) := by
-  -- At `ι ∣ l` the map `s 𝔭` takes a submodule of colength `j ≤ err_l D_X` to integral target
-  -- forms, `D_X` being the dimension of the space of all source forms. So `e l = D_X err_l` serves,
-  -- and `D_X ≤ 2 dim src`.
+    D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound)) := by
+  -- At each place the map takes the submodule supplied by the local divisibility theorem into
+  -- integral target forms. The colength bound uses all source forms, whose dimension is at most
+  -- twice that of the ramified source forms.
   refine TwistedLattice.indexLe_of_colengthDvd
-    (e := fun l ↦ finrank ℂ D.SourceForm * D.allowedLoss l)
-    (fun l ↦ mul_nonneg (by positivity) (D.allowedLoss_nonneg l)) (fun U _ ↦ ?_) fun ι ↦ ?_
-  · have h_loss_nonneg : 0 ≤ D.allowedLossSumBound := by positivity
-    simp only [mul_assoc _ (D.allowedLoss _), ← mul_sum]
-    grw [D.sum_allowedLoss_mul_log_le_sharp U, finrank_sourceForm_le_two_mul]
+    (e := fun l ↦ finrank ℂ D.SourceForm * D.colengthLoss l)
+    (fun l ↦ mul_nonneg (by positivity) (D.colengthLoss_nonneg l)) (fun U _ ↦ ?_) fun ι ↦ ?_
+  · have h_loss_nonneg : 0 ≤ D.colengthLossSumBound := by
+      simpa using D.sum_colengthLoss_mul_log_le ∅
+    simp only [mul_assoc _ (D.colengthLoss _), ← mul_sum]
+    grw [D.sum_colengthLoss_mul_log_le U, finrank_sourceForm_le_two_mul]
     push_cast
     exact le_of_eq (by ring)
   let : PadicPlace ι.prime := ι.place
   -- On `S` the chain has valuation at least `gain_l - err_l`, for all twists prime to `l`.
   obtain ⟨j, S, hj, h_index, h_gauge⟩ :=
-    exists_colengthDvd_gaugeLe_compositeLift (D := D) (p := ι.prime)
+    exists_colengthDvd_gaugeLe_compositeLift_sharp (D := D) (p := ι.prime)
   let A : D.ramifiedSourceForms →ₗ[ι.integers] D.targetForms :=
     (D.normalizedPoincare s).restrictScalars _
   let M : Submodule ι.integers D.ramifiedSourceForms :=
@@ -323,23 +324,43 @@ private lemma indexLe_of_mem_image_normalizedPoincare_sharp
   exact ⟨j, M.map A, hj.trans_eq (mul_comm _ _), fun i ↦ Set.image_mono h_subset (hy i),
     h_source.map A le_sup_left (map_comap_le A _)⟩
 
+private lemma colengthLossSumBound_le_allowedLossSumBound :
+    D.colengthLossSumBound ≤ D.allowedLossSumBound := by
+  have h_logB : 1 ≤ D.logB ^ 2 := D.le_of_hasLogBound
+  have h_scale : 31 ≤ 32 * D.logB ^ 2 := by linarith
+  unfold colengthLossSumBound allowedLossSumBound
+  calc 31 * (D.f * D.a * D.logX₁ ^ 2)
+    _ ≤ (32 * D.logB ^ 2) * (D.f * D.a * D.logX₁ ^ 2) :=
+      mul_le_mul_of_nonneg_right h_scale (by positivity)
+    _ = _ := by ring
+
 /-- A family of integral source forms translated by a single `s` has logarithmic index at most
 `dim src · 2 · D.errorUnit` in the target lattice. -/
 lemma indexLe_of_mem_image_normalizedPoincare (s : D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
     D.targetLattice.IndexLe y (finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)) :=
-  (D.indexLe_of_mem_image_normalizedPoincare_sharp s hy).mono
-    (by grw [D.allowedLossSumBound_le_errorUnit])
+  (D.indexLe_of_mem_image_normalizedPoincare_colength s hy).mono
+    (by grw [D.colengthLossSumBound_le_allowedLossSumBound, D.allowedLossSumBound_le_errorUnit])
 
 /-- **Theorem A (b).** A finite family `y` of target forms `s 𝔭 φ = D.normalizedPoincare s φ`, with
 `s` in a set `t` of translates and `φ` in the source `src = D.ramifiedSourceForms` integral at every
-`ι`, has logarithmic index at most `δ = #t · dim src · 64 f a (log b)² (log x₁)²`. -/
-theorem indexLe_normalizedPoincare_sharp (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+`ι`, has logarithmic index at most `#t · dim src · 62 f a (log x₁)²`. -/
+theorem indexLe_normalizedPoincare_colength (t : Finset D.chosenGL) {n : ℕ}
+    {y : Fin n → D.targetForms}
     (hy : ∀ i : Fin n, ∃ s ∈ t, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
-    D.targetLattice.IndexLe y (#t * finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)) := by
+    D.targetLattice.IndexLe y
+      (#t * finrank ℂ D.ramifiedSourceForms * (2 * (31 * (D.f * D.a * D.logX₁ ^ 2)))) := by
   rw [mul_assoc]
   exact TwistedLattice.indexLe_card_mul t
-    (fun s _ _ _ hs ↦ D.indexLe_of_mem_image_normalizedPoincare_sharp s hs) hy
+    (fun s _ _ _ hs ↦ D.indexLe_of_mem_image_normalizedPoincare_colength s hs) hy
+
+/-- The index bound in units of the weighted valuation loss bound. -/
+theorem indexLe_normalizedPoincare_sharp (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}
+    (hy : ∀ i : Fin n, ∃ s ∈ t, y i ∈ D.normalizedPoincare s '' D.integralRamified) :
+    D.targetLattice.IndexLe y (#t * finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)) :=
+  (D.indexLe_normalizedPoincare_colength t hy).mono (by
+    change #t * finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound) ≤ _
+    grw [D.colengthLossSumBound_le_allowedLossSumBound])
 
 /-- The index bound for a finite set of translates in units of `D.errorUnit`. -/
 theorem indexLe_normalizedPoincare (t : Finset D.chosenGL) {n : ℕ} {y : Fin n → D.targetForms}

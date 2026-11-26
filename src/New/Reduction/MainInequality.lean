@@ -4,7 +4,7 @@ import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Reduction.PrimeSums
 import New.Determinant.Twist.LongForms
 import New.Reduction.ShortAndEnough
-import New.UpperBound.Size.Estimates
+import New.UpperBound.Divisibility.LocalDivisibility
 
 /-!
 # The main inequality
@@ -34,7 +34,7 @@ Notions from other files:
 ## The inputs
 
 * Theorem A: (a) `span_short_integralRamified_eq_top_cubic` (size) and
-  (b) `indexLe_normalizedPoincare_sharp` (index), both in `New.Reduction.ShortAndEnough`.
+  (b) `indexLe_normalizedPoincare_colength` (index), both in `New.Reduction.ShortAndEnough`.
 * Theorem B: `exists_few_normalizedPoincare` in `New.Reduction.ShortAndEnough`.
 * Theorem C: `integral_forms_long_with_linear_completion` in `New.Determinant.Twist.LongForms`,
   from a twist for each prime
@@ -45,7 +45,7 @@ Notions from other files:
 
 ## What cancels, and where
 
-* The main amount cancels in `star_inequality_with_polynomial_completion`.
+* The main amount cancels in `star_inequality_with_colength_budget`.
 * The gains `∑ gain_l log l` in the size of the chain, against `log c_B`:
   `span_short_integralRamified_eq_top`.
 * The constant `c₁ = (logDerivMean d 1 1).re`, between the period and the expected value
@@ -64,13 +64,13 @@ Notions from other files:
 | source   | where             | amount                             |
 |----------|-------------------|------------------------------------|
 | size     | Theorem A (a)     | `5 f a log³ b`                     |
-| index    | Theorems A (b), B | `2 f a log³ b`                     |
+| index    | Theorems A (b), B | `2 f a (log x₁)³`                  |
 | covolume | Theorem C         | `10 f a log³ b + 2 b`              |
 
 Each missing dimension costs `(1 + 2 x²⁰²) b`, so the greedy choice stops at the missing share
 `1 / (1 + 2 x²⁰²)`. The total completion cost is at most `dim · b`. The table includes the
 doubled index. The family has `n ≥ (49 / 50) dim` members, and the sum is at most
-`19 f a log³ b` per dimension, so `m rem ≤ 20 f a log³ b`.
+`(35 / 2) f a log³ b` per dimension, so `m rem ≤ 18 f a log³ b`.
 
 ## Relation to the literature
 
@@ -102,38 +102,26 @@ private lemma one_add_log_completionFactor_le {P : Parameters} (D : Data P) :
     linarith [D.constantBound_le, D.mul_log_logB_le_logX, (le_constantBound (P := P)).1]
   linarith only [h, h_three, hx]
 
-private lemma translateLoss_le_errorUnit {P : Parameters} (D : Data P) :
-    5 * (1 + log (completionFactor D)) * D.allowedLossSumBound ≤ D.errorUnit := by
+private lemma translateColengthLoss_le_cutoffCube {P : Parameters} (D : Data P) :
+    5 * (1 + log (completionFactor D)) * D.colengthLossSumBound ≤ D.f * D.a * D.logX₁ ^ 3 := by
   have h_logX : 0 ≤ D.logX := by
     linarith [D.constantBound_le, D.mul_log_logB_le_logX, (le_constantBound (P := P)).1]
-  have h_cutoff : 1 ≤ D.logX₁ := by
-    linarith [D.constantBound_le, D.mul_log_logB_le_logX, D.logX_le_logX₁, (le_constantBound (P := P)).1]
-  have h_count : 32800 * D.logX ≤ D.logX₁ := by
-    linarith only [D.logX_le_logX₁, h_logX]
-  have h_power : D.logX₁ ^ 6 ≤ D.logB := by
-    rw [← log_le_log_iff (HasLogBound.pos D) (HasLogBound.pos D), log_pow]
-    exact_mod_cast D.log_logX₁_le_log_logB
-  have h_budget : (32800 * D.logX) * D.logX₁ ^ 2 ≤ D.logB := calc
-    _ ≤ D.logX₁ * D.logX₁ ^ 2 := by gcongr
-    _ = D.logX₁ ^ 3 := by ring
-    _ ≤ D.logX₁ ^ 6 := pow_le_pow_right₀ h_cutoff (by decide)
-    _ ≤ _ := h_power
-  unfold allowedLossSumBound
-  calc
-    _ ≤ 5 * (205 * D.logX) * (32 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2)) :=
-      mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_left (one_add_log_completionFactor_le D) (by norm_num)) (by positivity)
-    _ = ((32800 * D.logX) * D.logX₁ ^ 2) * (D.f * D.a * D.logB ^ 2) := by ring
-    _ ≤ D.logB * (D.f * D.a * D.logB ^ 2) := mul_le_mul_of_nonneg_right h_budget (by positivity)
-    _ = D.errorUnit := by unfold Data.errorUnit; ring
+  have h_scale : 31775 * D.logX ≤ D.logX₁ := by linarith only [D.logX_le_logX₁, h_logX]
+  calc 5 * (1 + log (completionFactor D)) * D.colengthLossSumBound
+    _ ≤ 5 * (205 * D.logX) * D.colengthLossSumBound := by
+      gcongr
+      exact one_add_log_completionFactor_le D
+    _ = (31775 * D.logX) * (D.f * D.a * D.logX₁ ^ 2) := by unfold colengthLossSumBound; ring
+    _ ≤ D.logX₁ * (D.f * D.a * D.logX₁ ^ 2) := mul_le_mul_of_nonneg_right h_scale (by positivity)
+    _ = _ := by ring
 
-/-- The main inequality with a polynomial completion factor and a cubic error.
+/-- The main inequality with a polynomial completion factor and the weighted colength budget.
 
 The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 1 mod q₀`. The scales are
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
 `log log b ≥ 10¹² P.constantBound`. -/
-theorem star_inequality_with_polynomial_completion {P : Parameters} (D : Data P) :
-    D.m * D.totalRemainder ≤ 20 * D.errorUnit := by
+theorem star_inequality_with_colength_budget {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 18 * D.errorUnit := by
   let denominator := completionFactor D
   let share : ℝ := denominator⁻¹
   have hden_pos : 0 < denominator := by
@@ -179,20 +167,20 @@ theorem star_inequality_with_polynomial_completion {P : Parameters} (D : Data P)
     obtain ⟨g, -, φ, ⟨-, hφ_short⟩, hφ_eq⟩ := h_image_short i
     rw [normSqAt_targetLattice, ← hφ_eq]
     exact hφ_short g σ
-  -- Index: each translate in `t` contributes twice the weighted local loss per source dimension.
-  have h_loss : 0 ≤ D.allowedLossSumBound := by
-    simpa using D.sum_allowedLoss_mul_log_le_sharp ∅
-  have h_index_upper : D.targetLattice.IndexLe y (D.targetDim * D.errorUnit) := by
+  -- Index: each translate in `t` contributes twice the weighted colength loss per source dimension.
+  let indexBudgetPerDim : ℝ := D.f * D.a * D.logX₁ ^ 3
+  have h_loss : 0 ≤ D.colengthLossSumBound := by simpa using D.sum_colengthLoss_mul_log_le ∅
+  have h_index_upper : D.targetLattice.IndexLe y (D.targetDim * indexBudgetPerDim) := by
     have hy_int (i : Fin n) : ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' D.integralRamified := by
       obtain ⟨g, hg, φ, ⟨hφ_int, -⟩, hφ_eq⟩ := h_image_short i
       exact ⟨g, hg, φ, hφ_int, hφ_eq⟩
-    refine (D.indexLe_normalizedPoincare_sharp t hy_int).mono ?_
-    calc #t * finrank ℂ D.ramifiedSourceForms * (2 * D.allowedLossSumBound)
-        ≤ (5 / 2 * (1 + log denominator) * D.targetDim) * (2 * D.allowedLossSumBound) :=
+    refine (D.indexLe_normalizedPoincare_colength t hy_int).mono ?_
+    calc #t * finrank ℂ D.ramifiedSourceForms * (2 * D.colengthLossSumBound)
+        ≤ (5 / 2 * (1 + log denominator) * D.targetDim) * (2 * D.colengthLossSumBound) :=
           mul_le_mul_of_nonneg_right ht_card (by positivity)
-      _ = D.targetDim * (5 * (1 + log denominator) * D.allowedLossSumBound) := by ring
-      _ ≤ D.targetDim * D.errorUnit :=
-        mul_le_mul_of_nonneg_left (translateLoss_le_errorUnit D) D.targetDim.cast_nonneg
+      _ = D.targetDim * (5 * (1 + log denominator) * D.colengthLossSumBound) := by ring
+      _ ≤ D.targetDim * indexBudgetPerDim :=
+        mul_le_mul_of_nonneg_left (translateColengthLoss_le_cutoffCube D) D.targetDim.cast_nonneg
   have h_completion : ((D.targetDim : ℝ) - n) * (denominator * D.b) ≤ D.targetDim * D.b := by
     calc ((D.targetDim : ℝ) - n) * (denominator * D.b)
         ≤ (share * D.targetDim) * (denominator * D.b) :=
@@ -208,22 +196,39 @@ theorem star_inequality_with_polynomial_completion {P : Parameters} (D : Data P)
     mul_le_mul_of_nonneg_right hn_le (add_nonneg D.mainAmount_nonneg (by positivity))
   have h_b : (D.targetDim : ℝ) * D.b ≤ D.targetDim * D.errorUnit :=
     mul_le_mul_of_nonneg_left D.le_of_hasLogBound D.targetDim.cast_nonneg
-  have h_main_cancelled : n * (D.m * D.totalRemainder) ≤ D.targetDim * (19 * D.errorUnit) := by
+  have h_index_cost : 2 * (D.targetDim * indexBudgetPerDim) ≤ D.targetDim * (D.errorUnit / 2) := by
+    have h_cutoff : D.logX₁ ^ 3 ≤ D.logB := D.le_of_hasLogBound
+    have h_scale : 4 ≤ D.logB ^ 2 := D.le_of_hasLogBound
+    have h_logB : 0 < D.logB := HasLogBound.pos D
+    have h_budget : 2 * D.logX₁ ^ 3 ≤ D.logB ^ 3 / 2 := calc
+      _ ≤ 2 * D.logB := by linarith
+      _ ≤ _ := by nlinarith only [mul_le_mul_of_nonneg_right h_scale h_logB.le]
+    dsimp [indexBudgetPerDim, Data.errorUnit]
+    linarith only [mul_le_mul_of_nonneg_left h_budget
+      (show (0 : ℝ) ≤ D.targetDim * D.f * D.a by positivity)]
+  have h_main_cancelled : n * (D.m * D.totalRemainder) ≤ D.targetDim * (35 / 2 * D.errorUnit) := by
     change D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
-      n * (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit) + 2 * (D.targetDim * D.errorUnit) +
-        ((D.targetDim : ℝ) - n) * (denominator * D.b) at h_volume_index_lower
-    linarith only [h_volume_index_lower, h_completion, h_main_comparison, h_b]
+      n * (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit) +
+        2 * (D.targetDim * indexBudgetPerDim) + ((D.targetDim : ℝ) - n) * (denominator * D.b)
+      at h_volume_index_lower
+    linarith only [h_volume_index_lower, h_completion, h_main_comparison, h_b, h_index_cost]
   have h_rank : (49 / 50 : ℝ) * D.targetDim ≤ n := by
     grw [show (49 / 50 : ℝ) ≤ 1 - share by linarith, h_near_full_rank]
   have hn_pos : (0 : ℝ) < n :=
     (mul_pos (by norm_num) (Nat.cast_pos.2 D.targetDim_pos)).trans_le h_rank
   refine le_of_mul_le_mul_left ?_ hn_pos
   have h_dim_nonneg : (0 : ℝ) ≤ D.targetDim := Nat.cast_nonneg _
-  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * (19 * D.errorUnit) := h_main_cancelled
-    _ = (19 * D.targetDim) * D.errorUnit := by ring
-    _ ≤ (20 * n) * D.errorUnit :=
+  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * (35 / 2 * D.errorUnit) := h_main_cancelled
+    _ = (35 / 2 * D.targetDim) * D.errorUnit := by ring
+    _ ≤ (18 * n) * D.errorUnit :=
       mul_le_mul_of_nonneg_right (by linarith only [h_rank, h_dim_nonneg]) h_errorUnit_pos.le
-    _ = n * (20 * D.errorUnit) := by ring
+    _ = n * (18 * D.errorUnit) := by ring
+
+/-- The main inequality with a polynomial completion factor and a cubic error. -/
+theorem star_inequality_with_polynomial_completion {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 20 * D.errorUnit :=
+  (star_inequality_with_colength_budget D).trans
+    (mul_le_mul_of_nonneg_right (by norm_num) (HasLogBound.pos D).le)
 
 /-- The main inequality with the fifth-power error. -/
 theorem star_inequality {P : Parameters} (D : Data P) :
