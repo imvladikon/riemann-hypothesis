@@ -296,8 +296,8 @@ lengths of the Young diagrams of the weight of lift `j`. The sum over `j < m` is
 `chainSize = m (#Φ_a s_∞(a) + k ∑ τ, s_∞(κ(τ)))` plus half of `errorUnit = f a log³ b`. Here
 `Φ_a = D.aPlaces`, `k = D.k` is the rank of the source, `κ(τ) = D.weight τ` is the weight at the
 infinite place `τ`, `f` is the number of infinite places, and `a = x b` for the scales `x`, `b`. -/
-lemma sum_rowSizeSum_le {P : Parameters} (D : Data P) :
-    ∑ j ∈ range D.m, D.rowSizeSum j ≤ D.chainSize + D.errorUnit / 2 := by
+lemma sum_rowSizeSum_le_quadratic {P : Parameters} (D : Data P) :
+    ∑ j ∈ range D.m, D.rowSizeSum j ≤ D.chainSize + D.quadraticErrorUnit / 2 := by
   -- Compare each row with its main length; each box of the slack costs at most `25 log b`.
   have h_log : 0 < D.logB := HasLogBound.pos D
   have h_box : log ((2 * D.a : ℕ) + 1) + log (D.M / P.bigOmega D.towerExp) ≤ 25 * D.logB := by
@@ -329,13 +329,19 @@ lemma sum_rowSizeSum_le {P : Parameters} (D : Data P) :
     calc (0 : ℝ) ≤ 20 * D.weight τ * D.logB := by positivity
       _ ≤ D.jetSize (D.weight τ) := (D.jetSize_mem_Icc D.nat_le_of_hasLogBound).1
   -- The error is `O(b log b)` for each of the `m f` pairs `(j, τ)`, and `m b ≤ a`.
-  have h_error : D.m * slack ≤ D.errorUnit / 2 := D.le_of_hasLogBound
+  have h_error : D.m * slack ≤ D.quadraticErrorUnit / 2 := D.le_of_hasLogBound
   calc ∑ j ∈ range D.m, D.rowSizeSum j
       ≤ D.m * (main + slack) := by grw [sum_le_sum h_lift, sum_const, card_range, nsmul_eq_mul]
-    _ ≤ D.chainSize + D.errorUnit / 2 := by
+    _ ≤ D.chainSize + D.quadraticErrorUnit / 2 := by
         grw [mul_add, h_error]
         simp only [main]
         grw [h_first, sub_le_self (D.k : ℝ) zero_le_one, chainSize]
+
+/-- The sum over rows and lifts, with its error bounded in cubic units. -/
+lemma sum_rowSizeSum_le {P : Parameters} (D : Data P) :
+    ∑ j ∈ range D.m, D.rowSizeSum j ≤ D.chainSize + D.errorUnit / 2 :=
+  (D.sum_rowSizeSum_le_quadratic).trans
+    (by linarith only [D.quadraticErrorUnit_le_errorUnit])
 
 /-- The main term `chainSize = m (#Φ_a s_∞(a) + k ∑ τ, s_∞(κ(τ)))` of the size of the chain of `m`
 lifts, less the saving `#Φ_a a log N` from the restriction, is at most
@@ -360,18 +366,19 @@ function whose sum is invariant, with `∑ t, |σ (Ψ t)| ≤ exp (D.x ^ 60)` am
 `restrictedChain TameChar.one Ψ φ` lifts the form `φ` from `X_0` to `X_m` with these translates,
 combines the results by `Ψ` and restricts to `Y_m`. If the values of `σ φ` have squared norm at most
 `exp B`, then those of the `σ`-conjugate of the lift have squared norm at most `exp (B + β)`, where
-`β = h_main - m rem + 2 ∑ gain_p log p + f a log³ b`. Here `h_main = D.mainAmount` is a difference
+`β = h_main - m rem + 2 ∑ gain_p log p + f a (log b)²`. Here `h_main = D.mainAmount` is a difference
 of archimedean sizes and prime sums, and `rem = D.totalRemainder` one of prime sums and their
 expected mean `D.mainPrimeSum`, `gain_p` is the divisibility asked at a prime `p < D.x₁` that does
 not split in `ℚ(√-d)`, `f` is the number of infinite places of `E`, and `a = x b` for the scales
 `x`, `b`. -/
-lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Translations →₀ ℂ}
+lemma weylNormSq_restrictedChain_le_quadratic {P : Parameters} {D : Data P}
+    {Ψ : D.Translations →₀ ℂ}
     (hΨ : D.IsWeakChainDatum 1 Ψ) {σ : ℂ ≃+* ℂ} {φ : D.SourceForm} {B : ℝ}
     (hB : ∀ g : Gf D.E (D.X 0), weylNormSq (σ ∘ (φ : D.FormX 0).val g) ≤ exp B)
     (y : Gf D.E (D.Y D.m)) :
     weylNormSq (σ ∘ (restrictedChain TameChar.one Ψ φ).val y) ≤
       exp (B + (D.mainAmount - D.m * D.totalRemainder +
-        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) := by
+        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.quadraticErrorUnit)) := by
   -- A value of the chain is a sum, over tuples of classes and over `t`, of `Ψ t` times products
   -- of `m` kernels. Bound each product by `R`, count the terms, and restrict to `Y_m`.
   let size (j : ℕ) (ξ : WeylIndex (D.X j) D.columnCount → ℂ) : ℝ := √(weylNormSq (σ ∘ ξ))
@@ -410,7 +417,7 @@ lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Transl
         grw [h_count, h_coeff, mul_assoc]
   have h_rest : exp (70 * D.logX) + D.f * (D.m * D.halfGap) * log D.N +
       2 * (D.m * exp (30 * D.logX) + exp (60 * D.logX) + D.m * exp (50 * D.logX)) +
-      32 * (D.f * D.a * D.logB) ≤ D.errorUnit / 2 :=
+      32 * (D.f * D.a * D.logB) ≤ D.quadraticErrorUnit / 2 :=
     D.le_of_hasLogBound
   have hx (k : ℕ) : D.x ^ k = exp (k * D.logX) := (exp_natCast_mul _ _).symm
   calc weylNormSq (σ ∘ (restrictedChain TameChar.one Ψ φ).val y)
@@ -426,34 +433,56 @@ lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Transl
           (D.m * D.x ^ 50 + (∑ j ∈ range D.m, D.rowSizeSum j) / 2 + B / 2)))) := by
       simp [R, ← exp_natCast_mul, ← exp_sum, sum_add_distrib, ← sum_div, ← exp_half, ← exp_add]
     _ ≤ exp (B + (D.mainAmount - D.m * D.totalRemainder +
-        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) := by
+        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.quadraticErrorUnit)) := by
       refine exp_le_exp.2 ?_
       simp only [hx]
       push_cast
-      linarith [D.sum_rowSizeSum_le, D.chainSize_sub_le]
+      linarith [D.sum_rowSizeSum_le_quadratic, D.chainSize_sub_le]
+
+/-- The bound for a weak chain datum with the cubic error unit. -/
+lemma weylNormSq_restrictedChain_le {P : Parameters} {D : Data P} {Ψ : D.Translations →₀ ℂ}
+    (hΨ : D.IsWeakChainDatum 1 Ψ) {σ : ℂ ≃+* ℂ} {φ : D.SourceForm} {B : ℝ}
+    (hB : ∀ g : Gf D.E (D.X 0), weylNormSq (σ ∘ (φ : D.FormX 0).val g) ≤ exp B)
+    (y : Gf D.E (D.Y D.m)) :
+    weylNormSq (σ ∘ (restrictedChain TameChar.one Ψ φ).val y) ≤
+      exp (B + (D.mainAmount - D.m * D.totalRemainder +
+        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) :=
+  (weylNormSq_restrictedChain_le_quadratic hΨ hB y).trans
+    (exp_le_exp.mpr (by linarith only [D.quadraticErrorUnit_le_errorUnit]))
 
 /-- **Size of the composite lift.** Let `Ψ` be a chain datum for the trivial twist and `σ` an
 automorphism of `ℂ`. `compositeLift TameChar.one Ψ φ` lifts the form `φ` from the hermitian space
 `X_0` over `E = D.E` to `X_m` by `m = D.m` theta lifts, with the glued tensor as Schwartz data, and
 restricts to `Y_m`; `Gf` denotes finite adelic points. If the values of `σ φ` have squared norm at
 most `exp B`, then those of the `σ`-conjugate of the lift have squared norm at most `exp (B + β)`,
-where `β = h_main - m rem + 2 ∑ gain_p log p + f a log³ b`. Here `h_main = D.mainAmount` is a
+where `β = h_main - m rem + 2 ∑ gain_p log p + f a (log b)²`. Here `h_main = D.mainAmount` is a
 difference of archimedean sizes and prime sums, and `rem = D.totalRemainder` one of prime sums and
 their expected mean `D.mainPrimeSum`, `gain_p` is the divisibility asked at a prime `p < D.x₁` that
 does not split in `ℚ(√-d)`, `f` is the number of infinite places of `E`, and `a = x b` for the
 scales `x`, `b`. -/
+theorem weylNormSq_compositeLift_le_quadratic {P : Parameters} {D : Data P}
+    {Ψ : D.Translations →₀ ℂ} (hΨ : D.IsChainDatum 1 Ψ) {σ : ℂ ≃+* ℂ} {φ : D.SourceForm} {B : ℝ}
+    (hB : ∀ g : Gf D.E (D.X 0), weylNormSq (σ ∘ (φ : D.FormX 0).val g) ≤ exp B)
+    (y : Gf D.E (D.Y D.m)) :
+    weylNormSq (σ ∘ (compositeLift TameChar.one Ψ φ).val y) ≤
+      exp (B + (D.mainAmount - D.m * D.totalRemainder +
+        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.quadraticErrorUnit)) := by
+  obtain ⟨Ψ', h_weak, h_eq⟩ : ∃ Ψ' : D.Translations →₀ ℂ, D.IsWeakChainDatum 1 Ψ' ∧
+      ∀ φ : D.SourceForm, compositeLift TameChar.one Ψ φ = restrictedChain TameChar.one Ψ' φ :=
+    hΨ.exists_isWeakChainDatum_compositeLift_eq
+  rw [h_eq φ]
+  exact weylNormSq_restrictedChain_le_quadratic h_weak hB y
+
+/-- The composite lift size bound with the cubic error unit. -/
 theorem weylNormSq_compositeLift_le {P : Parameters} {D : Data P}
     {Ψ : D.Translations →₀ ℂ} (hΨ : D.IsChainDatum 1 Ψ) {σ : ℂ ≃+* ℂ} {φ : D.SourceForm} {B : ℝ}
     (hB : ∀ g : Gf D.E (D.X 0), weylNormSq (σ ∘ (φ : D.FormX 0).val g) ≤ exp B)
     (y : Gf D.E (D.Y D.m)) :
     weylNormSq (σ ∘ (compositeLift TameChar.one Ψ φ).val y) ≤
       exp (B + (D.mainAmount - D.m * D.totalRemainder +
-        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) := by
-  obtain ⟨Ψ', h_weak, h_eq⟩ : ∃ Ψ' : D.Translations →₀ ℂ, D.IsWeakChainDatum 1 Ψ' ∧
-      ∀ φ : D.SourceForm, compositeLift TameChar.one Ψ φ = restrictedChain TameChar.one Ψ' φ :=
-    hΨ.exists_isWeakChainDatum_compositeLift_eq
-  rw [h_eq φ]
-  exact weylNormSq_restrictedChain_le h_weak hB y
+        2 * ∑ p ∈ D.smallNonsplitPrimes, D.gain p * log p + D.errorUnit)) :=
+  (weylNormSq_compositeLift_le_quadratic hΨ hB y).trans
+    (exp_le_exp.mpr (by linarith only [D.quadraticErrorUnit_le_errorUnit]))
 
 end New.Data
 

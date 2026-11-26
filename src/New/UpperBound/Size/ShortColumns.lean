@@ -171,6 +171,10 @@ def IsShort (B : ℝ) (φ : AlgForm n κ e) : Prop :=
   (∀ (p : ℕ) [Fact p.Prime] [PadicPlace p], GaugeLe 1 1 φ) ∧
   ∀ (σ : ℂ ≃+* ℂ) (g : Gf E n), weylNormSq (σ ∘ φ.val g) ≤ B
 
+lemma IsShort.mono {B B' : ℝ} {φ : AlgForm n κ e} (hφ : IsShort B φ) (hB : B ≤ B') :
+    IsShort B' φ :=
+  ⟨hφ.1, fun σ g ↦ (hφ.2 σ g).trans hB⟩
+
 /-- Let G_f = `Gf E n` be the unitary group of the form ∑ xᵢx̄ᵢ over the finite adeles of the CM
 field E, and φ an algebraic form on G_f of weight (κ, e): at the infinite place τ the Young diagram
 has κ τ h columns of height h, and e τ is the power of the determinant. Let φ be B-short, and let
@@ -992,21 +996,31 @@ lemma isShort_ramifyingOp {P : Parameters} (D : Data P) (s : Finset D.piNPlaces)
         (D.scalarFin_scalingGenerator_mem_maxCompactAt w (D.X 0)))
 
 /-- For admissible data `D` (`New.Data`), let `f = D.f` be the number of infinite places of the
-field `D.E`, let `x` and `b` be the scales of `D` and `a = x b`, so that
-`D.errorUnit = f a (log b)³`. The source forms are spanned by those that are `B`-short for
-`B = exp D.errorUnit / 4 ^ f`: their values are `p`-adically integral for every `p`, and all
-conjugates of the values have squared norm at most `B`. -/
-lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
-    span ℂ {φ : D.SourceForm | IsShort (D.errorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
+field `D.E`, let `x` and `b` be the scales of `D` and `a = x b`. -/
+abbrev quadraticErrorUnit {P : Parameters} (D : Data P) : ℝ := D.f * D.a * D.logB ^ 2
+
+lemma quadraticErrorUnit_le_errorUnit {P : Parameters} (D : Data P) :
+    D.quadraticErrorUnit ≤ D.errorUnit := by
+  have h_log : 1 ≤ D.logB := by
+    rw [← Real.log_nonneg_iff (HasLogBound.pos D)]
+    linarith [D.constantBound_le, (le_constantBound (P := P)).1]
+  calc D.quadraticErrorUnit ≤ D.quadraticErrorUnit * D.logB :=
+        le_mul_of_one_le_right (by unfold quadraticErrorUnit; positivity) h_log
+    _ = D.errorUnit := by unfold quadraticErrorUnit errorUnit; ring
+
+/-- The source forms are spanned by integral forms with squared conjugate norms at most
+`exp (f a (log b)²) / 4 ^ f`. -/
+lemma span_isShort_eq_top_quadratic {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.SourceForm | IsShort (D.quadraticErrorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
   have h_boxes : boxes D.columnCount (Fintype.card (D.X 0)) ≤ D.f * D.a := by
     simpa using sum_le_card_nsmul univ _ D.a fun τ _ ↦ D.sum_height_mul_columnCount_le τ
   -- The base in `h_bound` is `shortBasisConst` for the rank `D.k` of `X_0` and the natural number
-  -- `D.q₁ * P.d`, which lies in the different of `E`; `D.errorUnit` bounds its logarithm.
+  -- `D.q₁ * P.d`, which lies in the different of `E`.
   have h_const : (shortBasisConst D.E (D.X 0) (D.q₁ * P.d) : ℝ) =
       6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 := by
     simp [n]
   have h_bound : 4 ^ D.f * (6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 : ℝ) ^
-      (6 * (D.k * D.f + D.f * D.a)) ≤ D.errorUnit.exp :=
+      (6 * (D.k * D.f + D.f * D.a)) ≤ D.quadraticErrorUnit.exp :=
     Real.le_exp_of_log_le D.le_of_hasLogBound
   have h_rank : Fintype.card (D.X 0) = D.k := by rw [card_X, n, zero_mul, add_zero]
   refine New.span_isShort_eq_top D.classAut_levelX_zero_eq_bot P.conductor_mem_differentIdeal
@@ -1014,19 +1028,36 @@ lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
   rw [le_div_iff₀' (by positivity), h_const, h_rank]
   exact h_bound
 
+/-- The short spanning family expressed with the cubic error unit. -/
+lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.SourceForm | IsShort (D.errorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_isShort_eq_top_quadratic
+  intro φ hφ
+  apply IsShort.mono hφ
+  exact div_le_div_of_nonneg_right (Real.exp_le_exp.mpr D.quadraticErrorUnit_le_errorUnit)
+    (by positivity)
+
 /-- The ramified source forms `D.ramifiedSourceForms` are spanned by those that are `B`-short for
-`B = exp D.errorUnit`: their values are `p`-adically integral for every `p`, and all conjugates of
+`B = exp (f a (log b)²)`: their values are `p`-adically integral for every `p`, and all conjugates of
 the values have squared norm at most `B`. -/
-lemma span_isShort_ramifiedSourceForms_eq_top {P : Parameters} (D : Data P) :
-    span ℂ {φ : D.ramifiedSourceForms | IsShort D.errorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
+lemma span_isShort_ramifiedSourceForms_eq_top_quadratic {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.ramifiedSourceForms | IsShort D.quadraticErrorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
   -- The `Z`-short source forms span, and `∏ (1 - z_w)` makes them `4 ^ f Z`-short.
-  let Z : ℝ := D.errorUnit.exp / 4 ^ D.f
+  let Z : ℝ := D.quadraticErrorUnit.exp / 4 ^ D.f
   have h_maps : Set.MapsTo (D.ramifyingOp univ) {φ : D.SourceForm | IsShort Z φ.val}
-      {φ : D.SourceForm | IsShort D.errorUnit.exp φ.val} := by
+      {φ : D.SourceForm | IsShort D.quadraticErrorUnit.exp φ.val} := by
     intro φ hφ
     simpa [Z, card_piNPlaces, mul_div_cancel₀] using D.isShort_ramifyingOp univ hφ
-  exact span_setOf_mem_eq_top_of_eq_range (T := {φ : D.SourceForm | IsShort D.errorUnit.exp φ.val})
-    D.ramifiedSourceForms_eq_range D.span_isShort_eq_top h_maps
+  exact span_setOf_mem_eq_top_of_eq_range
+    (T := {φ : D.SourceForm | IsShort D.quadraticErrorUnit.exp φ.val})
+    D.ramifiedSourceForms_eq_range D.span_isShort_eq_top_quadratic h_maps
+
+/-- The ramified short spanning family expressed with the cubic error unit. -/
+lemma span_isShort_ramifiedSourceForms_eq_top {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.ramifiedSourceForms | IsShort D.errorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_quadratic
+  intro φ hφ
+  exact IsShort.mono hφ (Real.exp_le_exp.mpr D.quadraticErrorUnit_le_errorUnit)
 
 end Data
 

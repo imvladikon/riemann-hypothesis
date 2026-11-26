@@ -90,10 +90,11 @@ lemma sum_log_smallNonsplitPrimes_union_le : ∑ l ∈ D.smallNonsplitPrimes ∪
     _ ≤ ⌈D.x₁⌉₊ * D.x₁ + log D.N := by grw [sum_le_card_nsmul _ _ _ h_term, nsmul_eq_mul, h_card]
     _ ≤ D.b := D.le_of_hasLogBound
 
-/-- The number `c_B = D.invGainFactor` satisfies `log c_B ≤ -∑ gain_l log l + f a log³ b + b`, the
+/-- The number `c_B = D.invGainFactor` satisfies the bound with the weighted valuation loss, the
 sum taken over the non-split primes `l` below the cut-off `x₁ = D.x₁`. -/
-lemma log_invGainFactor_le :
-    log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.errorUnit + D.b := by
+lemma log_invGainFactor_le_with_loss :
+    log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l +
+      D.allowedLossSumBound + D.b := by
   have h_ne : ∀ l ∈ D.smallNonsplitPrimes ∪ {D.N}, (l : ℝ) ^ (-D.gainExponent l) ≠ 0 := fun l hl ↦
     zpow_ne_zero _ (mod_cast (D.prime_of_mem_smallNonsplitPrimes_union hl).ne_zero)
   -- The level `N` is at least `x₁`, so it has no gain.
@@ -113,8 +114,13 @@ lemma log_invGainFactor_le :
           ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, D.allowedLoss l * log l +
           ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, log l := by
         simp only [h_gain, add_mul, neg_mul, one_mul, sum_add_distrib, sum_neg_distrib]
-    _ ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.errorUnit + D.b := by
-        grw [sum_allowedLoss_mul_log_le, sum_log_smallNonsplitPrimes_union_le]
+    _ ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.allowedLossSumBound + D.b := by
+        grw [sum_allowedLoss_mul_log_le_sharp, sum_log_smallNonsplitPrimes_union_le]
+
+/-- The normalization bound with the valuation loss estimated in cubic units. -/
+lemma log_invGainFactor_le :
+    log D.invGainFactor ≤ -∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.errorUnit + D.b :=
+  (D.log_invGainFactor_le_with_loss).trans (by grw [D.allowedLossSumBound_le_errorUnit])
 
 /-- For a prime `l`, the absolute value in `ℂ_l` of `c_B = D.invGainFactor` is that of
 `l ^ (-g_l)`. -/
@@ -188,7 +194,8 @@ lemma normSqAt_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) 
 /-! ### Theorem A -/
 
 /-- **Theorem A (a).** The source is spanned by the forms `φ` that are integral at every prime `l`
-and `l`-adic place of `ℂ` and satisfy `‖Θ₁ s 𝔭 φ‖_σ² ≤ exp (main - m rem + 5 f a log³ b)` for all `s`
+and `l`-adic place of `ℂ` and satisfy the size bound with error
+`3 f a (log b)² + 2 allowedLossSumBound` for all `s`
 in the finite group `D.chosenGL` and all automorphisms `σ` of `ℂ`. Here
 `s 𝔭 = D.normalizedPoincare s` maps the source to the target, `Θ₁ = D.Θ 1` is the chain of `m = D.m`
 lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conjugate form. In the bound:
@@ -199,12 +206,13 @@ lifts for the trivial twist, and `‖·‖_σ²` is the squared norm of the conj
   main part `s_main = D.mainPrimeSum`;
 * `f = D.f` is the number of infinite places, `a = D.a` is the long order `x b`, and
   `log b = D.logB` is the logarithm of the weight `b`. -/
-theorem span_short_integralRamified_eq_top_cubic :
+theorem span_short_integralRamified_eq_top_with_losses :
     span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
       (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
-        exp (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit)} = ⊤ := by
+        exp (D.mainAmount - D.m * D.totalRemainder +
+          (3 * D.quadraticErrorUnit + 2 * D.allowedLossSumBound))} = ⊤ := by
   -- The short forms span the source, so it suffices to bound the lifts for a short form `φ`.
-  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top
+  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_quadratic
   rintro φ ⟨h_integral, h_size⟩
   refine ⟨fun ι ↦ ?_, fun s σ ↦ ?_⟩
   · -- A short form is integral at every `ι`.
@@ -215,23 +223,34 @@ theorem span_short_integralRamified_eq_top_cubic :
         D.lowerChain .one (D.poincare (D.scaledInclusion φ)) = compositeLift .one Ψ φ :=
     D.exists_lowerChain_poincare_eq 1
   set chainLogBound : ℝ := D.mainAmount - D.m * D.totalRemainder +
-    2 * ∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.errorUnit with chainLogBound_def
+    2 * ∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.quadraticErrorUnit with chainLogBound_def
   -- The values of `ι₁ z = B₁ φ`, for `z = c_ss⁻¹ 𝒫 φ`, are bounded by the sizes of `φ` and the
   -- chain.
   have h_composite_size (g : Gf D.E (D.Y D.m)) :
       weylNormSq (σ ∘ (D.lowerChain .one (D.poincare (D.scaledInclusion φ))).val g) ≤
-        exp (D.errorUnit + chainLogBound) := by
+        exp (D.quadraticErrorUnit + chainLogBound) := by
     rw [h_seesaw φ]
-    exact weylNormSq_compositeLift_le hΨ (h_size σ) g
+    exact weylNormSq_compositeLift_le_quadratic hΨ (h_size σ) g
   -- The passage from `z` to the target form `y = #Ḡ · e₀ s z` adds `x ^ 99`.
   have h_projected_size :
-      (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ ≤ exp (D.x ^ 99 + (D.errorUnit + chainLogBound)) :=
+      (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ ≤
+        exp (D.x ^ 99 + (D.quadraticErrorUnit + chainLogBound)) :=
     normSqAt_goodProjTranslate_le h_composite_size
-  have h_rounding_cost : D.x ^ 99 + 2 * D.b ≤ D.errorUnit := D.le_of_hasLogBound
+  have h_rounding_cost : D.x ^ 99 + 2 * D.b ≤ D.quadraticErrorUnit := D.le_of_hasLogBound
   -- The rational normalization adds `2 log c_B` to the log squared norm, cancelling the
   -- finite-place gains.
   grw [D.normSqAt_normalizedPoincare, h_projected_size, ← exp_add, exp_le_exp, chainLogBound_def]
-  linarith [D.log_invGainFactor_le, h_rounding_cost]
+  linarith [D.log_invGainFactor_le_with_loss, h_rounding_cost]
+
+/-- The short spanning family with the cubic error. -/
+theorem span_short_integralRamified_eq_top_cubic :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincare s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder + 5 * D.errorUnit)} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_short_integralRamified_eq_top_with_losses
+  intro φ hφ
+  refine ⟨hφ.1, fun s σ ↦ (hφ.2 s σ).trans (exp_le_exp.2 ?_)⟩
+  linarith only [D.quadraticErrorUnit_le_errorUnit, D.allowedLossSumBound_le_errorUnit]
 
 /-- The short spanning family with the fourth-power error. -/
 theorem span_short_integralRamified_eq_top :
