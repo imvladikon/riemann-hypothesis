@@ -33,14 +33,9 @@ open DirichletCharacter Filter Finset Real ZMod
 
 namespace New
 
-/-- Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of the parameters `P`. Let
-`R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q) - c_q`. Admissible data
-`D` for `P` include scales `x = D.x`, `x₁ = D.x₁` and `b` (`D.logB = log b`) with
-`(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and `log log b ≥ 10¹² P.constantBound`, and an
-integer `m = D.m` in `[√x, 2 √x]`. Then `R_{q₀}(x) ≤ 20 φ(q₀) log⁴ b / m + |R_{q₀}(x₁)| + log
-b · |R₁(x₁)|`. -/
-lemma Data.primeRemainder_le_cubic {P : Parameters} (D : Data P) :
-    primeRemainder P.d P.q₀ D.x ≤ 20 * P.q₀.totient * D.logB ^ 4 / D.m +
+private lemma Data.primeRemainder_le_of_loss {P : Parameters} (D : Data P) {loss : ℝ}
+    (h_loss : 0 ≤ loss) (h_bound : D.m * D.totalRemainder ≤ D.f * D.a * loss) :
+    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * (D.logB * loss) / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   -- Write `R_{q₀}(x)` through the total remainder, divide the main inequality by `m a #Φ_b`, and
   -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b log b`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
@@ -56,24 +51,43 @@ lemma Data.primeRemainder_le_cubic {P : Parameters} (D : Data P) :
   have h_bPlaces_pos : (0 : ℝ) < #D.bPlaces :=
     (mul_pos_iff_of_pos_right h_logB_pos).1 (h_aPlaces_pos.trans_le h_card)
   have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ D.logB := (div_le_iff₀' h_bPlaces_pos).2 h_card
-  have h_main : D.totalRemainder ≤ 20 * (D.f * D.a * D.logB ^ 3) / D.m :=
-    (le_div_iff₀' hm).2 (by simpa only [Data.errorUnit] using star_inequality_with_polynomial_completion D)
+  have h_main : D.totalRemainder ≤ D.f * D.a * loss / D.m := (le_div_iff₀' hm).2 h_bound
   calc primeRemainder P.d P.q₀ D.x
       = D.totalRemainder / (D.a * #D.bPlaces) + primeRemainder P.d P.q₀ D.x₁ -
           #D.aPlaces / #D.bPlaces * primeRemainder P.d 1 D.x₁ := by
         rw [D.totalRemainder_eq]
         field
-    _ ≤ 20 * (D.f * D.a * D.logB ^ 3) / D.m / (D.a * #D.bPlaces) + |primeRemainder P.d P.q₀ D.x₁| +
+    _ ≤ D.f * D.a * loss / D.m / (D.a * #D.bPlaces) + |primeRemainder P.d P.q₀ D.x₁| +
           #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         grw [h_main, le_abs_self (primeRemainder P.d P.q₀ D.x₁), sub_eq_add_neg, ← mul_neg,
           neg_le_abs]
-    _ = 20 * P.q₀.totient * (#D.aPlaces / #D.bPlaces * D.logB ^ 3) / D.m +
+    _ = P.q₀.totient * (#D.aPlaces / #D.bPlaces * loss) / D.m +
           |primeRemainder P.d P.q₀ D.x₁| +
           #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
         field
-    _ ≤ 20 * P.q₀.totient * D.logB ^ 4 / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-          D.logB * |primeRemainder P.d 1 D.x₁| := by grw [h_ratio, ← pow_succ']
+    _ ≤ _ := by grw [h_ratio]
+
+/-- The one-sided prime remainder bound using the weighted valuation loss. -/
+lemma Data.primeRemainder_le_weighted_loss {P : Parameters} (D : Data P) :
+    primeRemainder P.d P.q₀ D.x ≤ 90 * P.q₀.totient * (D.logB ^ 3 * D.logX₁ ^ 2) / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (90 * (D.logB ^ 2 * D.logX₁ ^ 2)) := by
+    calc _ ≤ 90 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2) := star_inequality_with_weighted_loss D
+      _ = _ := by ring
+  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  ring
+
+/-- The one-sided prime remainder bound with the error expressed using cubic units. -/
+lemma Data.primeRemainder_le_cubic {P : Parameters} (D : Data P) :
+    primeRemainder P.d P.q₀ D.x ≤ 20 * P.q₀.totient * D.logB ^ 4 / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  have h_logB : 0 < D.logB := Data.HasLogBound.pos D
+  have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (20 * D.logB ^ 3) := by
+    calc _ ≤ 20 * D.errorUnit := star_inequality_with_polynomial_completion D
+      _ = _ := by unfold Data.errorUnit; ring
+  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  ring
 
 /-- The prime remainder with the sixth-power error. -/
 lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
@@ -142,13 +156,13 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
 the parameters `P`, and let `0 < ε < 1/100`. Let
 `R(y) = primeRemainder d q₀ y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q₀) - c`, where
 `λ(n) = Λ(n) (1 - (n/d))` for `n ≡ 1` modulo `q₀` and `0` otherwise, `(·/d)` is the Legendre symbol,
-and `c` is the constant with `R(y) → 0`. Then `R(x) ≤ (320 φ(q₀) + 3) x ^ (-1/2 + 4 ε)` for all large
-integers `x`. -/
-lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
+and `c` is the constant with `R(y) → 0`. The weighted loss gives exponent `-1/2 + (10/3) ε`
+for all large integers `x`. -/
+lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
-      primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-  -- Insert the scales of the data and the bounds at `x₁` into `Data.primeRemainder_le_cubic`.
+      primeRemainder P.d P.q₀ x ≤
+        (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
   filter_upwards [eventually_exists_data_scales P hε hε_lt,
     eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
     with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
@@ -157,25 +171,72 @@ lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (h�
   obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
       |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
   have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_remainder_decay : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 4 * ε) :=
+  have h_logX₁_pos : 0 < D.logX₁ := Data.HasLogBound.pos D
+  have h_cutoff_sq : D.logX₁ ^ 2 ≤ D.logB ^ (1 / 3 : ℝ) := by
+    rw [← log_le_log_iff (by positivity) (rpow_pos_of_pos h_logB_pos _), log_pow,
+      log_rpow h_logB_pos]
+    norm_num
+    linarith only [D.log_logX₁_le_log_logB]
+  have h_weight : D.logB ^ 3 * D.logX₁ ^ 2 ≤ 16 * (x : ℝ) ^ ((10 / 3 : ℝ) * ε) := calc
+    _ ≤ D.logB ^ 3 * D.logB ^ (1 / 3 : ℝ) :=
+      mul_le_mul_of_nonneg_left h_cutoff_sq (by positivity)
+    _ = D.logB ^ (10 / 3 : ℝ) := by
+      rw [← rpow_natCast _ 3, ← rpow_add h_logB_pos]
+      norm_num
+    _ ≤ (2 * (x : ℝ) ^ ε) ^ (10 / 3 : ℝ) :=
+      rpow_le_rpow h_logB_pos.le h_logB (by norm_num)
+    _ = (2 : ℝ) ^ (10 / 3 : ℝ) * (x : ℝ) ^ ((10 / 3 : ℝ) * ε) := by
+      rw [mul_rpow (by norm_num) (rpow_nonneg hx_pos.le _), ← rpow_mul hx_pos.le, mul_comm ε]
+    _ ≤ _ := by
+      apply mul_le_mul_of_nonneg_right _ (by positivity)
+      calc (2 : ℝ) ^ (10 / 3 : ℝ) ≤ (2 : ℝ) ^ (4 : ℝ) :=
+            rpow_le_rpow_of_exponent_le (by norm_num) (by norm_num)
+        _ = 16 := by
+          simpa only [Nat.cast_ofNat] using
+            (rpow_natCast (2 : ℝ) 4).trans (by norm_num : (2 : ℝ) ^ (4 : ℕ) = 16)
+  have h_remainder_decay : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) :=
     rpow_le_rpow_of_exponent_le hx_ge (by linarith)
   have h_weighted_remainder_decay :
-      (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
+      (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
     rw [← rpow_add hx_pos]
     exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
   have h_main_exponent :
-      ((x : ℝ) ^ ε) ^ 4 / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-    rw [← rpow_mul_natCast hx_pos.le, ← rpow_sub hx_pos]
+      (x : ℝ) ^ ((10 / 3 : ℝ) * ε) / (x : ℝ) ^ (1 / 2 : ℝ) =
+        (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+    rw [← rpow_sub hx_pos]
     ring_nf
   calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ 20 * P.q₀.totient * D.logB ^ 4 / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁| := D.primeRemainder_le_cubic
-    _ ≤ 20 * P.q₀.totient * (2 * (x : ℝ) ^ ε) ^ 4 / (x : ℝ) ^ (1 / 2 : ℝ) + (x : ℝ) ^ (-2 : ℝ) +
-        2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
-      grw [h_rem_q₀, h_rem_one, h_logB, ← hm]
-    _ ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-      rw [mul_pow, mul_div_assoc, mul_div_assoc, h_main_exponent]
+    _ ≤ 90 * P.q₀.totient * (D.logB ^ 3 * D.logX₁ ^ 2) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+        D.logB * |primeRemainder P.d 1 D.x₁| := D.primeRemainder_le_weighted_loss
+    _ ≤ 90 * P.q₀.totient * (16 * (x : ℝ) ^ ((10 / 3 : ℝ) * ε)) / (x : ℝ) ^ (1 / 2 : ℝ) +
+        (x : ℝ) ^ (-2 : ℝ) + 2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
+      grw [h_rem_q₀, h_rem_one, h_weight, h_logB, ← hm]
+    _ ≤ (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
+      rw [mul_div_assoc, mul_div_assoc, h_main_exponent]
       linarith
+
+/-- The integer remainder bound with exponent `-1/2 + 4 ε`. -/
+lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
+  have h_growth : ∀ᶠ x : ℕ in atTop, (5 : ℝ) ≤ (x : ℝ) ^ ((2 / 3 : ℝ) * ε) :=
+    ((tendsto_rpow_atTop (show 0 < (2 / 3 : ℝ) * ε by positivity)).comp
+      tendsto_natCast_atTop_atTop).eventually_ge_atTop 5
+  filter_upwards [eventually_primeRemainder_natCast_le_weighted_loss P hε hε_lt,
+    h_growth, eventually_ge_atTop 1] with x hx_bound hx_growth hx_one
+  have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
+  have h_coeff : (1440 : ℝ) * P.q₀.totient + 3 ≤ (320 * P.q₀.totient + 3) * 5 := by
+    linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
+  calc primeRemainder P.d P.q₀ x
+    _ ≤ (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := hx_bound
+    _ ≤ ((320 * P.q₀.totient + 3) * 5) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) :=
+      mul_le_mul_of_nonneg_right h_coeff (rpow_nonneg hx_pos.le _)
+    _ ≤ ((320 * P.q₀.totient + 3) * (x : ℝ) ^ ((2 / 3 : ℝ) * ε)) *
+        (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by gcongr
+    _ = _ := by
+      rw [mul_assoc, ← rpow_add hx_pos]
+      ring_nf
 
 /-- The integer bound with coefficient `64 φ(q₀) + 3` follows by using the extra `2 ε`. -/
 lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 < ε)
