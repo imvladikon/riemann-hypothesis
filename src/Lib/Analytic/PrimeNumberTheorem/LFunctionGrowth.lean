@@ -9,7 +9,8 @@ import TauCeti.NumberTheory.DirichletCharacter.LFunction.Bounds
 Let `χ` be a character modulo `N`, and let `𝖿_χ(s)` (`regularL χ s`) be `L(s, χ)`, times
 `(s - 1) / s` if `χ` is principal. The right-half-plane bound from Tau Ceti gives
 `|𝖿_χ(s)| ≤ 8 N |s|` in `re s ≥ 1 / 2`, and the three-lines theorem improves this to
-`|𝖿_χ(s)| ≤ l²` for `re s ≥ 1 - 1 / l` and `|s| ≤ 3 e^l`, whenever `l ≥ 10¹⁰` and `N ≤ e^l`.
+`|𝖿_χ(s)| ≤ K l` for `re s ≥ 1 - 1 / l` and `|s| ≤ 3 e^l`, whenever `l ≥ 10¹⁰` and `N ≤ e^l`.
+Here `K = 4 · 3¹⁸`.
 
 Notions from other files:
 * `entireL χ`: the entire function equal to `L(s, χ)` if `χ` is not principal, and to the
@@ -17,9 +18,8 @@ Notions from other files:
 
 ## Relation to the literature
 
-Known result: the bound `L(s, χ) ≪ log (N |s|)` near `re s = 1` and away from the pole. It is proved
-here for `𝖿_χ` and with a square in place of the first power. Source: Montgomery and Vaughan,
-Multiplicative Number Theory I, 2007, Lemma 10.15.
+The bound `L(s, χ) ≪ log (N |s|)` near `re s = 1` and away from the pole is classical.
+See Montgomery and Vaughan, Multiplicative Number Theory I, 2007, Lemma 10.15.
 -/
 
 @[expose] public section
@@ -31,6 +31,8 @@ open Complex Real Set Filter Topology MeasureTheory Metric Asymptotics Dirichlet
 open scoped Classical
 
 namespace New
+
+local notation "K" => (4 * (3 : ℝ) ^ (18 : ℕ))
 
 variable {N : ℕ} [NeZero N] (χ : DirichletCharacter ℂ N) {s : ℂ} {l : ℝ}
 
@@ -165,11 +167,11 @@ lemma norm_LSeries_le_mul_norm_regularL (hs : 1 < s.re) (hl : 1 ≤ l)
     _ ≤ ‖LSeries (χ ·) s‖ / ‖s‖ * (2 * l * ‖s - if χ = 1 then 1 else 0‖) := by gcongr
     _ = 2 * l * ‖regularL χ s‖ := by simp [regularL_eq χ hs]; ring
 
-/-- If `l ≥ 10¹⁰` and the modulus `N` is at most `e^l`, then `|𝖿_χ(s)| ≤ l²` for
+/-- If `l ≥ 10¹⁰` and the modulus `N` is at most `e^l`, then `|𝖿_χ(s)| ≤ 4 · 3¹⁸ l` for
 `re s ≥ 1 - 1 / l` and `|s| ≤ 3 e^l`. Here `𝖿_χ` (`regularL χ`) is `L(s, χ)`, times
 `(s - 1) / s` if `χ` is principal. -/
-lemma norm_regularL_le_sq (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1 / l ≤ s.re)
-    (h_norm : ‖s‖ ≤ 3 * rexp l) : ‖regularL χ s‖ ≤ l ^ 2 := by
+lemma norm_regularL_le_log_linear (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l)
+    (h_re : 1 - 1 / l ≤ s.re) (h_norm : ‖s‖ ≤ 3 * rexp l) : ‖regularL χ s‖ ≤ K * l := by
   -- Apply the three-lines theorem to `g(z) = 𝖿_χ(z) / (z - s + 2)` on the strip
   -- `a ≤ re z ≤ a + 1 / 3` whose right edge lies at `re s + 2 / l ≥ 1 + 1 / l`. The left edge,
   -- where `|g| ≤ e^(3 l)`, has the weight `6 / l` at `s`. The denominator makes `g` bounded; it
@@ -231,13 +233,21 @@ lemma norm_regularL_le_sq (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1
   calc
     ‖regularL χ s‖ = 2 * ‖g s‖ := by simp [g, mul_div_cancel₀]
     _ ≤ 2 * (3 ^ 18 * (1 + l)) := by grw [three_lines, left_factor, right_factor]
-    _ ≤ l ^ 2 := by nlinarith
+    _ ≤ K * l := by nlinarith
 
-/-- Cauchy's estimate: if `l ≥ 10¹⁰` and the modulus `N` is at most `e^l`, then `|𝖿_χ'(s)| ≤ 2 l³`
+/-- The bound obtained by absorbing the three-lines constant into `l`. -/
+lemma norm_regularL_le_sq (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1 / l ≤ s.re)
+    (h_norm : ‖s‖ ≤ 3 * rexp l) : ‖regularL χ s‖ ≤ l ^ 2 := by
+  have hK : K ≤ l := (by norm_num : K ≤ (10 : ℝ) ^ 10).trans hl
+  exact (norm_regularL_le_log_linear χ hl hN h_re h_norm).trans
+    (by rw [pow_two]; exact mul_le_mul_of_nonneg_right hK (by linarith))
+
+/-- Cauchy's estimate gives `|𝖿_χ'(s)| ≤ 8 · 3¹⁸ l²` when `l ≥ 10¹⁰` and `N ≤ e^l`
 for `re s ≥ 1 - 1 / (2 l)` and `|s| ≤ 2 e^l`. Here `𝖿_χ` (`regularL χ`) is `L(s, χ)`, times
 `(s - 1) / s` if `χ` is principal. -/
-lemma norm_deriv_regularL_le (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1 / l / 2 ≤ s.re)
-    (h_norm : ‖s‖ ≤ 2 * rexp l) : ‖deriv (regularL χ) s‖ ≤ 2 * l ^ 3 := by
+lemma norm_deriv_regularL_le_log_quadratic (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l)
+    (h_re : 1 - 1 / l / 2 ≤ s.re) (h_norm : ‖s‖ ≤ 2 * rexp l) :
+    ‖deriv (regularL χ) s‖ ≤ 2 * K * l ^ 2 := by
   have inv_le : 1 / l ≤ 1 / 6 := one_div_le_one_div_of_le (by norm_num) (by linarith)
   have disc (z : ℂ) (hz : z ∈ closedBall s (1 / l / 2)) :
       1 - 1 / l ≤ z.re ∧ ‖z‖ ≤ 3 * rexp l := by
@@ -247,13 +257,22 @@ lemma norm_deriv_regularL_le (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 
   have h_diff : DiffContOnCl ℂ (regularL χ) (ball s (1 / l / 2)) :=
     DifferentiableOn.diffContOnCl_ball (fun z hz ↦ (differentiableAt_regularL χ
       (by linarith [(disc z hz).1])).differentiableWithinAt) subset_rfl
-  have h_sphere (z : ℂ) (hz : z ∈ sphere s (1 / l / 2)) : ‖regularL χ z‖ ≤ l ^ 2 := by
+  have h_sphere (z : ℂ) (hz : z ∈ sphere s (1 / l / 2)) : ‖regularL χ z‖ ≤ K * l := by
     obtain ⟨hz_re, hz_norm⟩ := disc z (sphere_subset_closedBall hz)
-    exact norm_regularL_le_sq χ hl hN hz_re hz_norm
+    exact norm_regularL_le_log_linear χ hl hN hz_re hz_norm
   calc
-    _ ≤ l ^ 2 / (1 / l / 2) :=
+    _ ≤ K * l / (1 / l / 2) :=
       norm_deriv_le_of_forall_mem_sphere_norm_le (by positivity) h_diff h_sphere
-    _ = 2 * l ^ 3 := by field
+    _ = 2 * K * l ^ 2 := by field
+
+/-- Cauchy's estimate with the three-lines constant absorbed into `l`. -/
+lemma norm_deriv_regularL_le (hl : 10 ^ 10 ≤ l) (hN : N ≤ rexp l) (h_re : 1 - 1 / l / 2 ≤ s.re)
+    (h_norm : ‖s‖ ≤ 2 * rexp l) : ‖deriv (regularL χ) s‖ ≤ 2 * l ^ 3 := by
+  have hK : K ≤ l := (by norm_num : K ≤ (10 : ℝ) ^ 10).trans hl
+  refine (norm_deriv_regularL_le_log_quadratic χ hl hN h_re h_norm).trans ?_
+  rw [pow_succ' l 2]
+  simpa only [mul_assoc] using mul_le_mul_of_nonneg_right
+    (mul_le_mul_of_nonneg_left hK (by norm_num : 0 ≤ (2 : ℝ))) (sq_nonneg l)
 
 end New
 
