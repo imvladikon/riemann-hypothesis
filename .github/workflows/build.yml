@@ -1,112 +1,98 @@
-name: build
-
-# Builds every pull request to main, and main itself, on a GitHub-hosted runner with the shared
-# build cache (CACHE.md). It fails if the build fails, if any module reports `sorry`, or if one of
-# the five theorems of src/Main.lean depends on an axiom other than propext, Classical.choice and
-# Quot.sound.
-#
-# This runs the pull request's code, so it uses `pull_request` (not `pull_request_target`), a
-# read-only token and no secrets, and never runs on the self-hosted runners. It publishes
-# nothing: the cache is only read, over public HTTPS, and every artifact is checked against the
-# SHA-256 in the record it was selected from.
-#
-# The cache restore uses the record for the exact build inputs when there is one. A pull request
-# that changes src never has one, so scripts/ci-cache-get.py --baseline falls back to the newest
-# published record on main's first-parent history (else the record pinned in
-# scripts/cache-baseline.json), and `lake build` compiles only the modules whose inputs changed
-# and the modules that import them. Nothing here publishes a record for main, so until someone
-# publishes one by hand, the baseline falls behind main and builds get slower as main moves.
-#
-# A change to a module that most of src imports (Lib.Base, Lib.Speed, ...) rebuilds all 803
-# modules: about 4 hours of module build time, so one to two hours on the 4 cores of
-# ubuntu-latest, and single modules peak at about 9 GB of its 16 GB. A change to lean-toolchain
-# or lake-manifest.json gets no baseline, and Mathlib's cache must also match.
-
+name: Verify the fourth-power main inequality
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: build-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 jobs:
-  build:
-    name: lake build
-    runs-on: ubuntu-latest
-    timeout-minutes: 360
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 125
+    defaults:
+      run:
+        shell: bash
+    env:
+      RH_BASE: 843cb9db91a39362b8d3b9f0de7a98bb651660e2
+      RH_HEAD: ed3a25a732d656735aad22031a1fcbbd1abd0939
+      RH_BASE_SOURCE: 213845d02a01530329b600e1923ac732aceba625
+      RH_COMPLETION: b507dc564769d1107f5b0e27f34cb0ea626ba88a
+      RH_COMBINED_TREE: 6074941a7494a2b0475f3aa66feaefb9e5d2b991
+      MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
+      LEAN_NUM_THREADS: '2'
+      LEAN_ABORT_ON_PANIC: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          fetch-depth: 5
           persist-credentials: false
-
-      - name: Fetch main's history for the cache baseline
-        # On a pull request the checkout is GitHub's merge of the head into main. The baseline is
-        # looked up along main's first-parent history (at most 200 commits).
-        run: git fetch --no-tags --depth=200 origin +refs/heads/main:refs/remotes/origin/main
-
-      - name: Install elan and the toolchain in lean-toolchain
+      - name: Verify the pinned proposal and install Lean
         run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
-          sh elan-init.sh -y --default-toolchain none
-          rm elan-init.sh
+          test "$(git rev-parse HEAD^)" = "$RH_HEAD"
+          test "$(git rev-parse "$RH_HEAD^")" = "$RH_BASE"
+          test "$(git rev-parse "$RH_BASE:src")" = "$RH_BASE_SOURCE"
+          git diff --exit-code "$RH_HEAD" HEAD -- src GUIDE.md lakefile.toml lake-manifest.json lean-toolchain
+          git diff --check "$RH_BASE" "$RH_HEAD"
+          git diff --exit-code "$RH_BASE" "$RH_HEAD" -- Challenge.lean comparator.json src/Main.lean src/New/Main.lean src/Statements.lean lakefile.toml lake-manifest.json lean-toolchain
+          mkdir -p "$RUNNER_TEMP/rh-fourth-power"
+          cp .github/workflows/fourth-power-verification/FourthPowerAudit.lean "$RUNNER_TEMP/rh-fourth-power/"
+          uname -n
+          free -h
+          df -h "$GITHUB_WORKSPACE"
+          sudo sysctl -w vm.max_map_count=1048576
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/lake" --version
-
-      - name: Test the cache baseline selection
-        run: python3 -I scripts/tests/test_ci_cache_baseline.py
-
-      - name: Restore Mathlib's cache
-        # As in scripts/lake-cache-get.sh, which `lake exe cache get` runs.
-        env:
-          MATHLIB_CACHE_GET_URL: https://cache.mathlib.org/mathlib4
-        run: lake exe mathlib/cache get
-
-      - name: Restore Tau Ceti's cache
-        # As in scripts/lake-cache-get.sh: checks the Mathlib pins agree and that the statements
-        # import no Tau Ceti module, then fetches the oleans of the imported Tau Ceti modules.
-        run: python3 scripts/tauceti-cache-get.py
-
-      - name: Restore this project's cache
-        # Exit 0: the exact build inputs were restored, and nothing should compile.
-        # Exit 4: a baseline was restored, and lake build compiles what changed since.
-        # Exit 3: no record at all, and lake build compiles everything.
+      - name: Validate and restore the exact cache for batch m3
         run: |
+          mkdir -p .lake
+          if command -v mkfs.btrfs >/dev/null && sudo modprobe btrfs; then
+            rh_volume="$RUNNER_TEMP/rh-build.btrfs"
+            truncate -s 120G "$rh_volume"
+            mkfs.btrfs --quiet --nodiscard "$rh_volume"
+            sudo mount -o loop,compress-force=zstd:3 "$rh_volume" .lake
+            sudo chown "$(id -u):$(id -g)" .lake
+          else
+            sudo rm -rf -- /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          fi
+          git -c advice.detachedHead=false checkout --detach "$RH_BASE"
+          lake --version
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 18m lake exe mathlib/cache get
+          timeout 12m python3 scripts/tauceti-cache-get.py
           ulimit -Sn "$(ulimit -Hn)"
-          status=0
-          python3 scripts/ci-cache-get.py --baseline origin/main || status=$?
-          case "$status" in
-            0) echo "::notice::Restored the cache for these exact build inputs." ;;
-            4) echo "::notice::Restored a baseline cache; lake build compiles the modules that changed since and the modules that import them." ;;
-            3) echo "::warning::No cache record matches these build inputs or any baseline; lake build compiles every module." ;;
-            *) exit "$status" ;;
-          esac
-
-      - name: lake build
+          timeout 38m python3 scripts/ci-cache-get.py --jobs 6
+      - name: Build all default targets at the proposal
         run: |
-          set -o pipefail
-          lake build 2>&1 | tee build.log
-          # Lake replays the saved messages of the modules it did not compile, so this covers
-          # restored modules too.
-          if grep -n "declaration uses 'sorry'" build.log; then
-            echo "::error::The build reports declarations that use sorry."
+          git -c advice.detachedHead=false checkout --detach "$RH_HEAD"
+          test "$(git rev-parse HEAD)" = "$RH_HEAD"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          rh_log="$RUNNER_TEMP/rh-fourth-power/lake-build.log"
+          timeout 36m lake build 2>&1 | tee "$rh_log"
+          if rg -F "declaration uses 'sorry'" "$rh_log"; then
             exit 1
           fi
-
-      - name: Check the axioms of the five theorems
+          git diff --exit-code -- src lakefile.toml lake-manifest.json lean-toolchain
+      - name: Verify the previous bounds, the proof chain and axioms
         run: |
-          set -o pipefail
-          lake env lean scripts/PrintAxioms.lean 2>&1 | tee axioms.log
-          axioms='depends on axioms: [propext, Classical.choice, Quot.sound]'
-          printf "'%s' $axioms\n" riemannHypothesis riemannZeta_eq_zero_re LFunction_ne_zero_of_half_lt_re \
-            LFunction_eq_zero_re LFunction_eq_zero_re_of_isPrimitive > expected-axioms.log
-          if ! diff -u expected-axioms.log axioms.log; then
-            echo "::error::The five theorems must depend on exactly propext, Classical.choice and Quot.sound."
-            exit 1
-          fi
+          rh_audit="$RUNNER_TEMP/rh-fourth-power"
+          export LEAN_PATH="$rh_audit"
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxHeartbeats=4000000 -R "$rh_audit" -o "$rh_audit/FourthPowerAudit.olean" "$rh_audit/FourthPowerAudit.lean"
+          timeout 7m lake env leanchecker -v FourthPowerAudit
+      - name: Replay the main inequality and its production route
+        run: |
+          for module in New.Reduction.MainInequality New.Reduction.OneSidedBound New.Main Main; do
+            timeout 8m lake env leanchecker -v "$module"
+          done
+      - name: Build the exact combined tree with PR 5644
+        run: |
+          git fetch --no-tags --depth=2 origin "$RH_COMPLETION"
+          test "$(git rev-parse FETCH_HEAD)" = "$RH_COMPLETION"
+          test "$(git merge-tree --write-tree "$RH_HEAD" "$RH_COMPLETION")" = "$RH_COMBINED_TREE"
+          git read-tree --reset -u "$RH_COMBINED_TREE"
+          test "$(git write-tree)" = "$RH_COMBINED_TREE"
+          export LAKE_CACHE_DIR="$PWD/.lake/cache"
+          timeout 24m lake build
+          git diff --exit-code -- src GUIDE.md lakefile.toml lake-manifest.json lean-toolchain
+          rh_audit="$RUNNER_TEMP/rh-fourth-power"
+          timeout 8m lake env lean -j2 --tstack=400000 -DautoImplicit=false -DrelaxedAutoImplicit=false -DmaxHeartbeats=4000000 -R "$rh_audit" "$rh_audit/FourthPowerAudit.lean"
