@@ -1,6 +1,8 @@
 module
 
 public import Lib.Weil.DualPair.FiniteAction
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Theta kernels of unitary pairs modulo an ideal: formal laws and seesaw identities

@@ -1,10 +1,21 @@
 module
 
-public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
-public import Mathlib.MeasureTheory.Integral.CompactlySupported
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+import Mathlib.MeasureTheory.Integral.CompactlySupported
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
+import Mathlib.Tactic.Monotonicity.Lemmas
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.AutomorphicForms.Basic
-public import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
-public import Lib.DiscreteSeries.Rigidity.KernelFixes
+public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Rigidity.KernelFixes
 
 /-!
 # Convolution over real points, cusp kernels, the Petersson product and Poincaré series

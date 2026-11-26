@@ -1,7 +1,10 @@
 module
 
-public import New.OneLift.ComparisonOperator.FirstFactors
-public import New.UpperBound.Divisibility.ChainValuation
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.OneLift.HeckeValues.CharacterLiftNorm
+import New.Determinant.Twist.FitTwists
+import New.OneLift.ComparisonOperator.FirstFactors
+import New.UpperBound.Divisibility.ChainValuation
 
 /-!
 # The lift of a character: denominators, and one group ring element for all twists

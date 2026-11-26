@@ -1,6 +1,7 @@
 module
 
-public import Std.Tactic.BVDecide.Normalize.Bool
+import Mathlib.Data.Rat.Cast.OfScientific
+import Std.Tactic.BVDecide.Normalize.Bool
 public import Lib.Weil.Lift
 public import New.UpperBound.Objects.InsertBlock
 public import New.UpperBound.Objects.LabelsAndIndexTypes

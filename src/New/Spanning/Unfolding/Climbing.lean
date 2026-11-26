@@ -1,8 +1,17 @@
 module
 
-public import Std.Tactic.BVDecide.Normalize.Bool
-public import Lib.Adelic.QuotientMeasure.UnfoldingInStages
-public import New.Spanning.Unfolding.AmplitudeSums
+import Std.Tactic.BVDecide.Normalize.Bool
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import New.Spanning.Unfolding.Terms
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.QuotientMeasure.UnfoldingInStages
+import Lib.Adelic.Unitary.CongruenceLevels
+import Lib.Base
+import New.Spanning.RemainingTerms.BorderedDeterminant
+import New.Spanning.Unfolding.AmplitudeSums
+import New.Spanning.Unfolding.CutoffIntegral
+import New.Spanning.Unfolding.Packing
 
 /-!
 # Residue lifts, lattice charts and common flag vectors: which filling terms contribute

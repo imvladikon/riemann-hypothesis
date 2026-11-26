@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.RingTheory.PicardGroup
 public import Lib.Adelic.TraceFormula.TestFunction
 public import Lib.LocalGL.Green.LabelCharacters
 

@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.AlgebraicGeometry.Morphisms.LocalFlatDescent
-public import Lib.General.Geometry.SerreTheorem
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.LocalFlatDescent
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
 public import Lib.Shimura.ThetaNormality.RiemannRelation
 public import Lib.Shimura.Uniformisation.TorusModel
+public import Lib.Adelic.Hecke.ClassSums
+import Lib.General.Geometry.SerreTheorem
+import Lib.Shimura.AbelianScheme.Pairings
 
 /-!
 # Linear systems and theta families from dense complex points carrying theta tori

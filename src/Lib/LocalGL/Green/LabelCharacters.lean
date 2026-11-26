@@ -1,8 +1,16 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+import Mathlib.NumberTheory.MulChar.Lemmas
+import Mathlib.RingTheory.Artinian.Instances
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.RepresentationTheory.Character.Basic
 public import Lib.General.Geometry.GaloisCovers
 public import Lib.LocalGL.Shintani.CosetDescent
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.LocalGL.Green.CuspidalFunctions
 
 /-!
 # Label characters Ξ_c: orthonormality, central idempotents and twisting by χ∘det

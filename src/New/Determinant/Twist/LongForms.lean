@@ -1,10 +1,14 @@
 module
 
-public import New.Congruences.FitTwistsExist
-public import New.Determinant.AuxiliaryForms.SpanningForms
-public import New.OneLift.LiftVolumeHeight
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import New.Reduction.IntegralTargetForms
-public import New.UpperBound.Size.ArchimedeanSize
+public import New.Determinant.AuxiliaryForms.Turns
+public import New.Reduction.PrimeSums
+import New.Congruences.FitTwistsExist
+import New.Determinant.AuxiliaryForms.SpanningForms
+import New.OneLift.LiftVolumeHeight
+import New.UpperBound.Size.ArchimedeanSize
 
 /-!
 # Theorem C: integral forms are long

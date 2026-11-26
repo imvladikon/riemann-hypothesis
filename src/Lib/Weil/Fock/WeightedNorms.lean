@@ -1,7 +1,10 @@
 module
 
-public import Mathlib.Analysis.Distribution.TemperateGrowth
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Distribution.TemperateGrowth
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Weil.Fock.Basic
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Moments on Fock space, approximation by polynomial vectors, bounds for functionals

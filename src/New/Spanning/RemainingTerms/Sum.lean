@@ -1,7 +1,13 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Topology.Sheaves.Presheaf
 public import New.Spanning.RemainingTerms.Count
 public import New.Spanning.RemainingTerms.Size
+public import New.Spanning.Unfolding.Climbing
+import New.Spanning.RemainingTerms.Gain
 
 /-!
 # The remaining terms: a bound for their sum

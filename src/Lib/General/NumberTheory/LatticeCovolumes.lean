@@ -1,7 +1,15 @@
 module
 
-public import Lib.Adelic.Reduction.MinkowskiTheorems
+public import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Shimura.Uniformisation.AdelicFrames
+public import Lib.Adelic.Adeles.AdditiveCharacter
+public import Lib.General.Measure.HaarModulus
+import Lib.Adelic.Reduction.MinkowskiTheorems
+import Lib.Adelic.Witt.WittTheorem
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # Lattice indices, primitive matrices, Jacobi's identity and covolumes of fundamental domains

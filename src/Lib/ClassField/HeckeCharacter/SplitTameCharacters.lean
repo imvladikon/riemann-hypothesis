@@ -2,6 +2,9 @@ module
 
 public import Lib.Adelic.Adeles.SemilocalProducts
 public import Lib.Weil.DualPair.Defs
+public import Lib.Adelic.Reduction.FiniteVolume
+public import Lib.ClassField.HeckeL.EulerProduct
+import Lib.Adelic.Unitary.CongruenceLevels
 
 /-!
 # Splitting character on U(1), characters tamely ramified at split places, theta integrals

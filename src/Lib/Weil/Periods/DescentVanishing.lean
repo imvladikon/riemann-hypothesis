@@ -1,9 +1,29 @@
 module
 
-public import Mathlib.Analysis.Complex.Tietze
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.Tietze
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.QuotientMeasure.UnfoldingInStages
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
 public import Lib.Weil.DualPair.ThetaIntegrals
+public import Lib.Weil.DualPair.ThetaLiftConvergence
+public import Lib.Weil.DualPair.WeilAction
+import Lib.Adelic.AutomorphicForms.RealConvolution
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.FiniteAction
 
 /-!
 # Vanishing theta descents for unitary groups: Fourier coefficients and periods

@@ -1,7 +1,15 @@
 module
 
-public import Mathlib.NumberTheory.SumFourSquares
-public import New.Derivatives.Sharpness.OneCurve
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.NumberTheory.SumFourSquares
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.RingTheory.MvPowerSeries.Derivative
+import TauCeti.RingTheory.PowerSeries.Rescale
+public import Lib.CM.FormalGroup.PrimeNotation
+public import New.Derivatives.FormalGroup.Resolution
+import New.Derivatives.FormalGroup.ThetaProducts
+import New.Derivatives.Sharpness.OneCurve
 
 /-!
 # Least valuations of coefficients of theta products

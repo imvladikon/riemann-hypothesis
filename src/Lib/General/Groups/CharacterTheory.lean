@@ -1,31 +1,22 @@
 module
 
-public import TauCeti.RepresentationTheory.CharacterTable.CentralCharacter
-public import TauCeti.RepresentationTheory.CharacterTable.Completeness
 import TauCeti.RepresentationTheory.Simple.Basic
 import TauCeti.RepresentationTheory.CharacterTable.Values
 public import Aesop.BuiltinRules
-public import Aesop.Frontend.Tactic
-public import Aesop.Main
-public import Mathlib.Algebra.Category.ModuleCat.Projective
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.Algebra.Order.PUnit
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TotallySplit
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.RepresentationTheory.Character
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.PUnit
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.RepresentationTheory.CharacterTable.CentralCharacter
+import TauCeti.RepresentationTheory.CharacterTable.Completeness
 public import Lib.Speed
 
 /-!

@@ -2,10 +2,21 @@ module
 
 public import Mathlib.Algebra.CharP.Subring
 public import Mathlib.RingTheory.Polynomial.DegreeLT
-public import Mathlib.RingTheory.PowerSeries.Expand
-public import Mathlib.RingTheory.PowerSeries.Ideal
-public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
-public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
+public import Mathlib.RingTheory.PowerSeries.Basic
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.RingTheory.AdicCompletion.Completeness
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PowerSeries.Expand
+import Mathlib.RingTheory.PowerSeries.Ideal
+import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import TauCeti.NumberTheory.Padics.Complex.Basic
+public import Lib.PadicHodge.PeriodRings.CrystallineRings
+import Lib.General.Topology
+import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!
 # Power series charts Λ⟦z⟧ in A_inf: Weierstrass division and fixed elements

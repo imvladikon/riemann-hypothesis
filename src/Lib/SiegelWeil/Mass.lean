@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-public import Lib.Adelic.Reduction.DefiniteClassSums
-public import Lib.ClassField.HeckeL.EulerProduct
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
 public import Lib.Weil.Construction.FiniteMultiplier
+public import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.CongruenceLevels
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.HeckeL.EulerProduct
 
 /-!
 # Masses of definite hermitian lattices and ideal zeta bounds for adelic Gauss sums

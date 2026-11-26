@@ -1,7 +1,16 @@
 module
 
-public import Lib.SiegelWeil.RallisInner.SharpData
-public import Lib.Weil.CompactLift.DefiniteThetaLift
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.SiegelWeil.RallisInner.Doubling
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.RallisInner.SharpData
+import Lib.Weil.CompactLift.DefiniteThetaLift
+import Lib.Weil.Unramified.HeckeTransfer
 
 /-!
 # Theta lift of an algebraic form to a larger definite unitary group and its Hecke polynomials

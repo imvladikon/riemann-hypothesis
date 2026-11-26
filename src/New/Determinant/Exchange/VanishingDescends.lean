@@ -1,7 +1,10 @@
 module
 
 public import Lib.SiegelWeil.Tower.TestVector
-public import New.Determinant.Exchange.RemovingPlanes
+public import Lib.SiegelWeil.Tower.LineGaussSums
+public import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Weil.Construction.CanonicalTheta
+import New.Determinant.Exchange.RemovingPlanes
 
 /-!
 # Vanishing of theta integrals descends along hyperbolic planes

@@ -1,7 +1,15 @@
 module
 
-public import Lib.Adelic.QuotientMeasure.UnfoldingInStages
+import Mathlib.Algebra.CharP.Pi
+import Mathlib.Algebra.Order.Star.Int
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.DualPair.WeilAction
+public import Lib.Adelic.Witt.WittTheorem
+import Lib.Adelic.QuotientMeasure.UnfoldingInStages
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # Integrals over the Bessel subgroup and the orbits surviving unipotent twists

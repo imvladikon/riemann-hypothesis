@@ -1,8 +1,25 @@
 module
 
-public import Lib.Analytic.EntireLFunction
-public import Lib.SiegelWeil.Formula.WeilRange
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Topology.LocallyConstant.Algebra
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.Weil.MixedModel.AdaptedSplitting
+public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
+public import Lib.SiegelWeil.Mass
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Analytic.EntireLFunction
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.Formula.WeilRange
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import Lib.Weil.DualPair.WeilAction
+import Lib.Weil.MixedModel.ThetaInvariance
 
 /-!
 # Siegel–Weil for one vector, Siegel's class sum formula and the ratio of masses

@@ -1,7 +1,15 @@
 module
 
-public import Lib.DiscreteSeries.Haar.TotalMass
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.Matrix.Hermitian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.General.Measure.FibreMeasure
+public import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # The fibre measure of the Gram map

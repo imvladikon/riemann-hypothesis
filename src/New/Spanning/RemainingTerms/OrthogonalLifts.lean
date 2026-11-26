@@ -1,6 +1,9 @@
 module
 
+import TauCeti.LinearAlgebra.Matrix.Range
 public import New.Spanning.RemainingTerms.BorderedDeterminant
+public import Lib.General.NumberTheory.LatticeCovolumes
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Orthogonal lifts and the two isotropic lists of a link

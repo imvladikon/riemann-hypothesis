@@ -1,11 +1,5 @@
 module
 
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
 public import Lib.Speed
 
 /-!

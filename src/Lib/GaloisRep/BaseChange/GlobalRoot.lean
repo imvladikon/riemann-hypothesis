@@ -1,10 +1,20 @@
 module
 
-public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
-public import Lib.ClassField.Global.CMSplittingCharacters
-public import Lib.ClassField.Global.ExistenceTheorem
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
+import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 public import Lib.GaloisRep.BaseChange.CommutingHeckeFamilies
-public import Lib.General.NumberTheory.CMFields
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.CMSplittingCharacters
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.Global.NormTheorems
+import Lib.GaloisRep.Hilbert90.TameActions
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.General.NumberTheory.CMFields
 
 /-!
 # Idele Hasse principle, unitary roots and rationality of adelic roots up to coboundary

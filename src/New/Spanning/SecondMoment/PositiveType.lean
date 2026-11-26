@@ -1,17 +1,18 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Algebra.Ring.IsFormallyReal
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.Analysis.InnerProductSpace.TensorProduct
-public import Mathlib.NumberTheory.LegendreSymbol.Complex
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.TotallySplit
-public import Lib.General.Analysis.FiniteFourier
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.NumberTheory.LegendreSymbol.Complex
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
 public import Lib.General.LinearAlgebra.IntegralLattices
+import Lib.General.Analysis.FiniteFourier
 
 /-!
 # Functions of positive type and singular minors

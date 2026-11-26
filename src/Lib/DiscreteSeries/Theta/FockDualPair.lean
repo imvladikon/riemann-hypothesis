@@ -1,10 +1,11 @@
 module
 
 import TauCeti.Algebra.Lie.GeneralLinear.Oscillator.Basic
+import Mathlib.Algebra.Order.Star.Int
 public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
 public import Lib.GLn.SchurModule.Basic
 public import Lib.Weil.Fock.Basic
-public import Lib.Cohomology.Etale.Basic
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # Fock space oscillator actions, joint harmonics and Fischer decomposition

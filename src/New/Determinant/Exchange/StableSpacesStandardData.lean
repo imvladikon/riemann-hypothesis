@@ -1,6 +1,15 @@
 module
 
-public import New.Determinant.Exchange.MatchingPartners
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.SiegelWeil.Tower.LineGaussSums
+import Lib.Adelic.Landherr
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.DualPair.ThetaIntegrals
+import New.Determinant.Exchange.MatchingPartners
 
 /-!
 # Criteria for a function with a matched function to lie in a stable space; vanishing of lifts

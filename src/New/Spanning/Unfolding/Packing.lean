@@ -1,6 +1,10 @@
 module
 
-public import New.Spanning.Unfolding.ReducedPoints
+import Mathlib.Algebra.Order.Star.Int
+public import New.Spanning.RemainingTerms.Box
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.NumberTheory.SUnitsAndClassNumber
+import New.Spanning.Unfolding.ReducedPoints
 
 /-!
 # Class cutoffs and counting frames in boxes

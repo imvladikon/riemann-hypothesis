@@ -1,7 +1,12 @@
 module
 
-public import Mathlib.GroupTheory.IndexNSmul
+import Mathlib.GroupTheory.IndexNSmul
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Weil.Construction.ThetaDictionary
+public import Lib.General.Algebra.AdicCompletion
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # Fourier inversion for theta functions

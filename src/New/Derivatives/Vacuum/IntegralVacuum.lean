@@ -1,9 +1,14 @@
 module
 
-public import Mathlib.Tactic.PNatToNat
-public import Lib.CM.FiniteLattices
-public import Lib.Weil.Construction.CanonicalTheta
+import Mathlib.Tactic.PNatToNat
+import TauCeti.Analysis.Normed.Ring.Ultra
 public import New.Derivatives.Vacuum.TightFrames
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.CM.ChowlaSelberg
+import Lib.CM.FiniteLattices
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.Construction.FourierInversion
 
 /-!
 # The integral vacuum θ°: integrality and bounds of its values, standard data at p

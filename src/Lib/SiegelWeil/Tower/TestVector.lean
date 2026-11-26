@@ -1,7 +1,11 @@
 module
 
-public import Mathlib.LinearAlgebra.AffineSpace.MidpointZero
+import Mathlib.LinearAlgebra.AffineSpace.MidpointZero
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.SiegelWeil.Tower.RealConeIntegral
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.SiegelWeil.Tower.PrincipalIdeles
 
 /-!
 # Determinant vectors: the test vectors of the cone integral

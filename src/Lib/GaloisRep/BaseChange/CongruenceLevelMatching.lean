@@ -1,8 +1,14 @@
 module
 
-public import Mathlib.RingTheory.Polynomial.IsIntegral
+import Mathlib.RingTheory.Polynomial.IsIntegral
+import Mathlib.RingTheory.Valuation.Integral
 public import Lib.GaloisRep.BaseChange.CommutingHeckeFamilies
-public import Lib.ClassField.Local.ArtinMap
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.Local.ArtinMap
+import Lib.GaloisRep.Hilbert90.TameActions
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Matching unit pairs at congruence levels and at unramified places of a step

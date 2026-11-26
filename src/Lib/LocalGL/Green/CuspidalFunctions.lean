@@ -1,14 +1,19 @@
 module
 
-public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
-public import Mathlib.LinearAlgebra.Eigenspace.Zero
 public import Mathlib.LinearAlgebra.Lagrange
-public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
 public import Mathlib.LinearAlgebra.Semisimple
-public import Mathlib.RingTheory.Artinian.Instances
-public import Lib.General.LinearAlgebra.MatrixPolynomials
-public import Lib.General.NumberTheory.FrobeniusOrbits
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.LinearAlgebra.Eigenspace.Zero
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+import Mathlib.RingTheory.Artinian.Instances
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.LocalGL.Green.HallAlgebra
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Cuspidal class functions on GL_n over a finite field: μ, supports, values, inner products

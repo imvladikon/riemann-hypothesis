@@ -1,7 +1,11 @@
 module
 
+import Mathlib.MeasureTheory.Group.IntegralConvolution
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.Densities
 public import New.Spanning.Frames.StandardLevel
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # The Bessel vector at the finite places

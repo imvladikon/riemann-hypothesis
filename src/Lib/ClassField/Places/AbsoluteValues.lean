@@ -1,7 +1,9 @@
 module
 
-public import Lib.ClassField.Places.ValuationSubrings
 public import TauCeti.Analysis.AbsoluteValue.Equivalence
+public import Lib.Adelic.Adeles.Basic
+public import Lib.ClassField.Places.GaloisDefs
+import Lib.ClassField.Places.ValuationSubrings
 
 /-!
 # Places as valuation subrings and as absolute values

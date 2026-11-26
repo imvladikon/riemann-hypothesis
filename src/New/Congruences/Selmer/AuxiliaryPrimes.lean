@@ -1,9 +1,13 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.ClassField.Global.CMSplittingCharacters
-public import Lib.ClassField.Global.Chebotarev
-public import Lib.ClassField.Global.ExistenceTheorem
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.Chebotarev
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.Places.TameInertia
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Auxiliary primes, anticyclotomic characters, slopes and ties

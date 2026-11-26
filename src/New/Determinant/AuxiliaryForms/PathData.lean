@@ -1,9 +1,17 @@
 module
 
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Std.Tactic.BVDecide.Normalize.Bool
 public import Lib.Weil.DualPair.Flip
 public import New.Determinant.AuxiliaryForms.GridPaths
 public import New.Determinant.Chain.SquareLaw
-public import New.OneLift.ComparisonOperator.ExchangeData
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.Weil.Seesaw
+public import New.UpperBound.Objects.Rows
+public import Lib.Adelic.Unitary.RationalPoints -- shake: keep (needed public by an exposed definition)
+import Lib.Adelic.Unitary.WeakApproximation
+import New.OneLift.ComparisonOperator.ExchangeData
 
 /-!
 # Moduli, spaces, moves, path data and periods on the two grids

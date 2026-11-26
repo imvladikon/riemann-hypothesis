@@ -1,4 +1,4 @@
-module
+module -- shake: keep-all (its imports stay public: its settings apply to them, and the tactic extensions below are used by nearly every file)
 
 public import Mathlib.Algebra.DirectSum.Internal
 public import Mathlib.Algebra.Order.Floor.Extended
@@ -47,6 +47,15 @@ public import Mathlib.Tactic.NormNum.Prime
 public import Mathlib.Tactic.NormNum.RealSqrt
 public import Mathlib.Tactic.TypeStar
 public import Mathlib.Topology.Sheaves.Init
+public import Aesop.Frontend.Tactic
+public import Aesop.Main
+public import Mathlib.RingTheory.WittVector.IsPoly
+public import Mathlib.Tactic.Basify
+public import Mathlib.Tactic.ENatToNat
+public import Mathlib.Tactic.Polynomial.Basic
+public import Mathlib.Tactic.ReduceModChar
+public import Std.Internal.Order.Automation
+public import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Speed settings

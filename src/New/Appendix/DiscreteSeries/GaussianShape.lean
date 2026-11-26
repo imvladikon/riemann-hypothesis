@@ -1,7 +1,14 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
-public import New.Appendix.DiscreteSeries.MinorExpansion
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+public import Lib.General.LinearAlgebra.MatricesNearIdentity
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import New.Appendix.DiscreteSeries.MinorExpansion
 
 /-!
 # The Gaussian shape of the coefficient

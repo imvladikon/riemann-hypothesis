@@ -1,6 +1,8 @@
 module
 
-public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.ProperAction.Torsor
 public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!

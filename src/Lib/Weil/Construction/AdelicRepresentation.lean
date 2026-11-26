@@ -1,10 +1,23 @@
 module
 
-public import Mathlib.Analysis.LocallyConvex.Barrelled
-public import Mathlib.Data.Finset.Functor
-public import Lib.Adelic.Unitary.RationalPoints
-public import Lib.Weil.Construction.FiniteCocycle
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.LocallyConvex.Barrelled
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+import Mathlib.Data.Finset.Functor
+import Mathlib.Topology.Algebra.ProperConstSMul
+import TauCeti.Algebra.Group.AddChar.Basic
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Fock.Basic
+public import Lib.General.Analysis.FourierTransforms
+public import Lib.General.Analysis.HolomorphicIntegrals
+public import Lib.Weil.Construction.FiniteMultiplier
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Base
+public import Lib.Weil.Construction.FiniteCocycle -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The adelic Weil representation on 𝒮(V) and its theta functional

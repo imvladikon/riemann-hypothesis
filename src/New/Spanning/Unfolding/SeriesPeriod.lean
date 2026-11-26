@@ -1,10 +1,15 @@
 module
 
-public import Lib.Adelic.QuotientMeasure.MovingTheQuotient
+import Mathlib.Algebra.CharP.Pi
 public import Lib.Weil.Periods.RealAndFinitePoints
 public import New.Spanning.Unfolding.BesselFormula
 public import New.Spanning.Unfolding.FillingAdmissible
 public import New.UpperBound.Objects.PoincareMap
+public import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.Adelic.QuotientMeasure.MovingTheQuotient
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import New.Spanning.Unfolding.Packing
 
 /-!
 # The Poincaré map as a Poincaré series of the Bessel function

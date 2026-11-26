@@ -1,10 +1,19 @@
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Dynamics.FixedPoints.Topology
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.Tactic.Linter.Style
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Dynamics.FixedPoints.Topology
+import Mathlib.NumberTheory.NumberField.Discriminant.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.Adeles.Basic
 public import Lib.Adelic.QuotientMeasure.Basic
 public import Lib.General.Groups.CongruenceSubgroups

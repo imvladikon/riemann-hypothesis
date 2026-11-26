@@ -1,15 +1,15 @@
 module
 
-public import TauCeti.Algebra.BigOperators.ZPow
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.Algebra.MvPolynomial.Coeff
 public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Finiteness.Lattice
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TotallySplit
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.MvPolynomial.Coeff
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.Lattice
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.Algebra.BigOperators.ZPow
 public import Lib.GLn.SchurModule.Basic
 public import Lib.General.Groups.BesselGroups
 

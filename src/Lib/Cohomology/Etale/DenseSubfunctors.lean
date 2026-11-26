@@ -1,9 +1,11 @@
 module
 
-public import Mathlib.CategoryTheory.Abelian.CommSq
 public import Mathlib.CategoryTheory.Limits.FunctorCategory.BinaryBiproducts
-public import Mathlib.CategoryTheory.Limits.Types.Multicoequalizer
-public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Algebra.Category.Grp.Biproducts
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.CategoryTheory.Abelian.CommSq
+import Mathlib.CategoryTheory.Limits.Types.Multicoequalizer
+import Mathlib.RingTheory.LocalProperties.Reduced
 public import Lib.Cohomology.Etale.BijectiveComparisons
 
 /-!

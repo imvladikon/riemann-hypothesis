@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Kernels
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.Cohomology.ProjectiveLine.PerfectLine
 public import Lib.Cohomology.ProperBaseChange.Theorem
+public import Lib.PadicComparison.Primitive.PeriodCoefficients
+import Lib.Cohomology.Etale.DenseSubfunctors
 
 /-!
 # Leray–Hirsch bases and the projective line formula for the tilted theory

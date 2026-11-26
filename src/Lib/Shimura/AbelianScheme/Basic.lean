@@ -1,10 +1,11 @@
 module
 
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic.Linter.Style
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Linter.Style
 public import Lib.General.Geometry.LineBundles
 
 /-!

@@ -1,9 +1,14 @@
 module
 
-public import Lib.Weil.Seesaw
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.UpperBound.Objects.AuxiliaryPair
 public import New.UpperBound.Objects.Columns
 public import New.UpperBound.Objects.Parameters
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Weil.Seesaw
 
 /-!
 # Spaces Y_j and W_j, the forms on them, and the target parameter

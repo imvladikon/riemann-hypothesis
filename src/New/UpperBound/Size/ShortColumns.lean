@@ -1,9 +1,20 @@
 module
 
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.Topology.Algebra.Ring.Compact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.CM.FormalGroup.PrimeNotation
-public import Lib.GLn.Dual
-public import New.UpperBound.Kernels.JetConjugatesAndBounds
 public import New.UpperBound.Objects.Columns
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
+import Lib.GLn.Dual
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.PadicComparison.Descent.TestCategory
+import New.Reduction.Data.Sizes
+import New.UpperBound.Kernels.JetConjugatesAndBounds
 
 /-!
 # Prime-by-prime divisibility measures; short forms span the ramified source forms

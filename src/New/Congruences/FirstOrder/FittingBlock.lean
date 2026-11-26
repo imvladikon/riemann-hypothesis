@@ -1,7 +1,7 @@
 module
 
-public import Mathlib.RingTheory.MvPolynomial.Basic -- shake: keep
 public import Mathlib.Algebra.MvPolynomial.Comap -- shake: keep (`open ... hiding comap`)
+public import Mathlib.RingTheory.MvPolynomial.Basic -- shake: keep
 public import Lib.General.Algebra.BlockFittingBound
 public import New.Congruences.LocalLoss.Basic
 

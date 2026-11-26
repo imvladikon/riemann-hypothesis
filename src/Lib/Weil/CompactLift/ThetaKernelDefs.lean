@@ -1,6 +1,9 @@
 module
 
 public import Lib.Weil.DualPair.WeilAction
+public import Lib.Adelic.Reduction.DefiniteClassSums -- shake: keep (needed public by an exposed definition)
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
 
 /-!
 # The jet matrix of a definite pair is a kernel for algebraic forms

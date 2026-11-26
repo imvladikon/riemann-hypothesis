@@ -1,7 +1,8 @@
 module
 
 public import Lib.ClassField.GaloisCohomology.Cohomology
-public import Lib.ClassField.GreenbergWiles.SelmerRelations
+public import Lib.ClassField.GreenbergWiles.SplitPrimeReciprocity
+import Lib.ClassField.GreenbergWiles.SelmerRelations
 
 /-!
 # Selmer groups of cohomology classes

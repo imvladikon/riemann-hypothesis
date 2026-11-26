@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.Analysis.Complex.SqrtDeriv
-public import Lib.General.Analysis.HolomorphicIntegrals
+public import Mathlib.Analysis.RCLike.Sqrt
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.FDeriv.Star
+import Mathlib.Analysis.Complex.SqrtDeriv
 public import New.Spanning.Bessel.Basic
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # The Gram section γ_Z of the frame Gram matrix map on the unitary group G₁

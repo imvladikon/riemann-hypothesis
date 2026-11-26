@@ -1,9 +1,15 @@
 module
 
-public import Lib.Adelic.Reduction.DefiniteClassSums
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.MeasureTheory.Integral.Pi
 public import Lib.GLn.SchurModule.SchurOrthogonality
 public import Lib.GaloisRep.Main.Defs
 public import Lib.Weil.Construction.ThetaJets
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.GLn.SchurModule.WeylKernel
 
 /-!
 # Algebraic forms on definite unitary groups, their pairing and Harish-Chandra parameters

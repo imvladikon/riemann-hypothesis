@@ -1,8 +1,10 @@
 module
 
-public import Mathlib.Algebra.GroupWithZero.Action.Regular
 public import Mathlib.GroupTheory.Transfer
+import Mathlib.Algebra.GroupWithZero.Action.Regular
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Weil.Unramified.HeckeGL
+public import Lib.LocalGL.Iwahori.ParahoricStructure
 
 /-!
 # Norms, logarithms and first-order deformations of the norm

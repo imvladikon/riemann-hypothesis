@@ -1,7 +1,13 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.DiscreteSeries.Bruhat.FloorMeasures
 public import Lib.SiegelWeil.Mass
+public import Lib.Adelic.Adeles.LocalFactors
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.Measure.HaarNormalisation
 
 /-!
 # Local measure bounds and local densities at a finite place

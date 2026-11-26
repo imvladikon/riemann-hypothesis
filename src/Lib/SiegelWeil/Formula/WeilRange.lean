@@ -1,8 +1,21 @@
 module
 
-public import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
-public import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Siegel sets and the Siegel–Weil formula in Weil's range

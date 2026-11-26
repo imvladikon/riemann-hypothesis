@@ -1,10 +1,26 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.CharP
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.LinearAlgebra.Matrix.CharP
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
 public import Lib.SiegelWeil.Tower.LineTerms
 public import Lib.SiegelWeil.Tower.PrincipalIdeles
 public import Lib.Weil.DualPair.ThetaIntegrals
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # The constant term of a theta integral, unfolded along isotropic lines

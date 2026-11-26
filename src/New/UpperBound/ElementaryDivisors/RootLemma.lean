@@ -1,11 +1,12 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Algebra.Ring.IsFormallyReal
-public import Mathlib.Data.Finsupp.Pointwise
 public import Mathlib.LinearAlgebra.Matrix.Swap
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
 public import New.UpperBound.ElementaryDivisors.TwistingData
 
 /-!

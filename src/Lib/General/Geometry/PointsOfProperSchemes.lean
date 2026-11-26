@@ -2,12 +2,17 @@ module
 
 import TauCeti.AlgebraicGeometry.Morphisms.Separated
 import TauCeti.AlgebraicGeometry.Morphisms.Smooth.StandardSmooth
-public import Mathlib.AlgebraicGeometry.QuasiAffine
-public import Mathlib.AlgebraicGeometry.ValuativeCriterion
-public import Mathlib.CategoryTheory.Sites.SubcanonicalOver
+public import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.AlgebraicGeometry.QuasiAffine
+import Mathlib.AlgebraicGeometry.ValuativeCriterion
+import Mathlib.CategoryTheory.Sites.SubcanonicalOver
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Cohomology.ProperBaseChange.PlaceSpace
 public import Lib.General.Geometry.EtaleCharts
 public import Lib.Shimura.AbelianScheme.Basic
+import Lib.Cohomology.Etale.DenseSubfunctors
 
 /-!
 # Functors of points of proper schemes: closed loci, atlases and descent of relations

@@ -1,8 +1,8 @@
 module
 
-public import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 public import Lib.General.NumberTheory.PadicLimitsValuation
 public import New.Congruences.Selmer.AuxiliaryPrimes
+import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 
 /-!
 # Even classes and auxiliary places for Selmer cocycles

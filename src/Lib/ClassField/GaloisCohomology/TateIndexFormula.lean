@@ -1,19 +1,22 @@
 module
 
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.Algebra.Ring.IsFormallyReal
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
-public import Mathlib.GroupTheory.IndexNSmul
-public import Mathlib.GroupTheory.Nilpotent
-public import Mathlib.LinearAlgebra.Dimension.Torsion.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Zero
-public import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
-public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.TotallySplit
-public import Mathlib.Topology.Sheaves.Presheaf
-public import Lib.ClassField.Places.DecompositionCyclotomic
+public import Mathlib.RepresentationTheory.Invariants
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.GroupTheory.IndexNSmul
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.LinearAlgebra.Dimension.Torsion.Basic
+import Mathlib.LinearAlgebra.Eigenspace.Zero
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
+import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Sheaves.Presheaf
+public import Lib.Speed
+import Lib.ClassField.Places.DecompositionCyclotomic
+import Lib.ClassField.Places.ProfiniteGalois
 
 /-!
 # Coker/ker indices and Tate's index formula for cyclic actions of prime order

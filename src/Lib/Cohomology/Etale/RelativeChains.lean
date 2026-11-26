@@ -1,8 +1,10 @@
 module
 
 public import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
-public import Lib.Cohomology.Etale.DenseSubfunctors
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory
+public import Mathlib.Order.CompletePartialOrder
 public import Lib.Cohomology.Hodge.CupProduct
+public import Lib.Cohomology.Etale.DenseSubfunctors -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Relative chains ℤ[V]/ℤ[U]: local isomorphisms, transfer, excision and gluing

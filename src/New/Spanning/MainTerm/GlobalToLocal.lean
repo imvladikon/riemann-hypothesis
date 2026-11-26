@@ -1,9 +1,20 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.TopCorrelation
 public import New.Spanning.MainTerm.FillingLevel
 public import New.Spanning.MainTerm.KloostermanSum
-public import New.Spanning.Unfolding.AmplitudeSums
+import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.DiscreteSeries.Bruhat.BigCell
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.Unfolding.AmplitudeSums
+import New.Spanning.Unfolding.Link
+import New.Spanning.Unfolding.Packing
 
 /-!
 # Class sums as orbit sums, and unfolding at a set of primes

@@ -1,6 +1,12 @@
 module
 
-public import Lib.Adelic.Witt.WittTheorem
+public import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+public import Lib.Adelic.Unitary.Defs
+public import Lib.General.LinearAlgebra.IntegralLattices
+public import Lib.Adelic.Witt.WittTheorem -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Components of unitary adelic points at places; sums and moves of hermitian spaces

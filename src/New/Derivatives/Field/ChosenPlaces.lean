@@ -1,5 +1,7 @@
 module
 
+import Mathlib.Data.Pi.Interval
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Reduction.Data.Magnitudes
 
 /-!

@@ -1,9 +1,15 @@
 module
 
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Seesaw
 public import New.Determinant.Chain.SquareLaw
-public import New.Determinant.Exchange.TheoremForPartners
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.SiegelWeil.Tower.FiniteTateIntegral
+import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.General.Algebra.MultivariatePolynomials
+import New.Determinant.Exchange.TheoremForPartners
 
 /-!
 # One square: up then down against down then up

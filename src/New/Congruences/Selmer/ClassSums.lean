@@ -1,11 +1,17 @@
 module
 
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Congruences.GaloisRepresentations.SelmerHypotheses
 public import New.Congruences.Selmer.AuxiliaryPrimes
-public import New.OneLift.ComparisonOperator.ThreeExchanges
 public import New.OneLift.HeckeValues.AlgebraicPartIntegrality
 public import New.OneLift.HeckeValues.PeriodAtOne
-public import New.OneLift.HeckeValues.TwistedRatio
+public import Lib.SiegelWeil.Tower.FiniteTateIntegral
+public import New.Determinant.Twist.FitTwists
+import Lib.ClassField.Global.NormTheorems
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import New.OneLift.ComparisonOperator.FirstFactors
+import New.OneLift.ComparisonOperator.ThreeExchanges
+import New.OneLift.HeckeValues.TwistedRatio
 
 /-!
 # L-values of a pair as integral measures, and avatars of tame characters

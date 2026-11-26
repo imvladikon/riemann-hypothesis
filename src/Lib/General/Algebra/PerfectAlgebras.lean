@@ -2,9 +2,11 @@ module
 
 import TauCeti.RingTheory.Smooth.Lifting
 import TauCeti.AlgebraicGeometry.Frobenius.Perfect
-public import Mathlib.CategoryTheory.Limits.Shapes.Connected
-public import Mathlib.FieldTheory.IsPerfectClosure
-public import Lib.PadicComparison.Descent.TestCovers
+import Mathlib.CategoryTheory.Limits.Shapes.Connected
+import Mathlib.FieldTheory.IsPerfectClosure
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.PadicComparison.Descent.TestCovers -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Perfect algebras, étale algebras over perfect rings, and constant Laurent polynomials

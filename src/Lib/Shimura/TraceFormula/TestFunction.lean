@@ -1,7 +1,12 @@
 module
 
-public import Lib.LocalGL.Iwahori.QuadraticRelation
-public import Lib.Shimura.HeckeTower.Model
+import Mathlib.Algebra.Order.Star.Rat
+public import Lib.LocalGL.Iwahori.ParahoricStructure
+public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.LocalGL.Iwahori.QuadraticRelation
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.HeckeTower.Model
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Test vectors, and the regular Hecke element that does not kill them

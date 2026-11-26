@@ -1,7 +1,9 @@
 module
 
-public import New.Congruences.FirstOrder.RibetLemma
+import Mathlib.FieldTheory.Galois.Profinite
 public import New.Congruences.FirstOrder.TraceRelations
+import New.Congruences.FirstOrder.RibetLemma
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
 
 /-!
 # Ribet's element for conjugate self-dual representations

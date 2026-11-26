@@ -1,8 +1,10 @@
 module
 
 public import Lib.Weil.Construction.AdelicRepresentation
-public import Lib.Weil.Fock.PolynomialVectors
 public import Lib.Weil.MixedModel.SchwartzBruhat
+import Lib.General.Measure.HaarNormalisation
+import Lib.Weil.Construction.FiniteCocycle
+import Lib.Weil.Fock.PolynomialVectors
 
 /-!
 # Vacuum projections and the finite part of the Weil representation

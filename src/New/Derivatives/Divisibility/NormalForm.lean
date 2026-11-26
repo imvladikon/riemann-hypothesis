@@ -1,7 +1,13 @@
 module
 
-public import Lib.General.Algebra.SeriesBounds
-public import Lib.General.Algebra.SeriesCongruences
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.RingTheory.MvPowerSeries.Derivative
+import TauCeti.RingTheory.MvPowerSeries.Dvd
+public import Lib.General.Algebra.IntegralPowerSeries
+import Lib.General.Algebra.SeriesBounds
+import Lib.General.Algebra.SeriesCongruences
 
 /-!
 # Couplings and the normal form

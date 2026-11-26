@@ -1,9 +1,12 @@
 module
 
-public import Lib.Adelic.Adeles.LocalFactors
-public import Lib.ClassField.Global.AlbertBrauerHasseNoether
-public import Lib.Cyclotomic.Voronoi
+public import Mathlib.NumberTheory.DirichletCharacter.Basic
 public import Lib.General.Algebra.FittingIdealsAndLengths
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.ClassField.Local.ArtinMap
+import Lib.Adelic.Adeles.LocalFactors
+public import Lib.ClassField.Global.AlbertBrauerHasseNoether -- shake: keep (needed public by an exposed definition)
+import Lib.Cyclotomic.Voronoi
 
 /-!
 # Selmer modules, Tate twists, components of cocycles and places above a prime

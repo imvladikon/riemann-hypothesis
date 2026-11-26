@@ -1,6 +1,13 @@
 module
 
-public import New.Spanning.Frames.QuadricPlancherel
+import Mathlib.Algebra.Order.Star.Int
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import New.Spanning.Frames.Correlations
+import Lib.Base
+import New.Spanning.Frames.QuadricPlancherel
+import New.Spanning.Frames.QuadricVolumes
+import New.Spanning.Frames.TwoGauges
 
 /-!
 # Depth

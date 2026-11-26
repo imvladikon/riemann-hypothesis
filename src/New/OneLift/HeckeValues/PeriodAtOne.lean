@@ -1,7 +1,14 @@
 module
 
-public import Lib.ClassField.Avatar.HeckeBaseChange
-public import New.UpperBound.Kernels.DefiniteKernelSize
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.RingTheory.Etale.Weakly
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.General.LinearAlgebra.MatrixPolynomials
+public import Lib.Weil.Unramified.HeckeTransfer
+import Lib.ClassField.Avatar.HeckeBaseChange
+import Lib.PadicComparison.Descent.TestCategory
+import New.UpperBound.Kernels.DefiniteKernelSize
 
 /-!
 # The period of a determinant theta kernel (used in rank two for the L-value at z = 1)

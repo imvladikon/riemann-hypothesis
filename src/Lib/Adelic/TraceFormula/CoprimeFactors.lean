@@ -1,9 +1,18 @@
 module
 
-public import TauCeti.LinearAlgebra.Trace.Idempotent
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Topology.Algebra.Nonarchimedean.TotallyDisconnected
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.LocallyConstant.Algebra
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.LinearAlgebra.Trace.Idempotent
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.TraceFormula.FibreIntegral
-public import Lib.General.LinearAlgebra.Eigenvalues
+public import Lib.LocalGL.Iwahori.ParahoricStructure
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Coprime factors

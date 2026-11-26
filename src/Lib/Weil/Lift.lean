@@ -1,9 +1,18 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.Cuspidality
+import Mathlib.MeasureTheory.Integral.CompactlySupported
+import Mathlib.MeasureTheory.Integral.Pi
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Theta.BlockRule
-public import Lib.DiscreteSeries.Theta.LocalCorrespondence
 public import Lib.Weil.DualPair.ThetaLiftConvergence
+public import Lib.Adelic.AutomorphicForms.RealConvolution
+public import Lib.DiscreteSeries.Rigidity.KernelFixes
+public import Lib.Weil.DualPair.WeilAction
+import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Theta.FockJointHarmonics
+import Lib.DiscreteSeries.Theta.LocalCorrespondence
 
 /-!
 # Theta lifts of forms: products of minors, edges, arrows between spaces of forms

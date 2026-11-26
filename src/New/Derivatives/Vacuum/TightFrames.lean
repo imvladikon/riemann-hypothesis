@@ -1,9 +1,19 @@
 module
 
-public import Lib.CM.ChowlaSelberg
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.Weil.Construction.FourierInversion
+import Mathlib.Algebra.Ring.IsFormallyReal
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import New.Derivatives.Field.WeilData
+public import Lib.CM.ConjugateCurve
+public import Lib.ClassField.Places.ValuationSubrings
+public import Lib.General.Algebra.IntegralPowerSeries
+public import Lib.Weil.Construction.ThetaDictionary
+import Lib.Adelic.Adeles.StrongApproximation
+public import Lib.CM.ChowlaSelberg -- shake: keep (needed public by an exposed definition)
+import Lib.CM.Integrality.TorsionValues
+import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import Lib.Cohomology.Etale.Basic
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Weil.Construction.FourierInversion
 
 /-!
 # Scale of theta Taylor series, tight frames, jet series along lines

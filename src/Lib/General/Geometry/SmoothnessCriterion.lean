@@ -1,9 +1,19 @@
 module
 
-public import TauCeti.RingTheory.MvPolynomial.IntegrallyClosed
-public import Lib.General.Analysis.HolomorphicIntegrals
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Algebra.DualNumber
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.Unramified.LocalStructure
+import TauCeti.RingTheory.MvPolynomial.IntegrallyClosed
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.Cohomology.Etale.Basic
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Smoothness near an arc from an immersive generic family and a bound on the tangent space

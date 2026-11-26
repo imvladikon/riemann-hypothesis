@@ -2,8 +2,9 @@ module
 
 public import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 public import Lib.ClassField.GreenbergWiles.SelmerLevels
-public import Lib.General.NumberTheory.CoefficientRings
 public import New.Congruences.Selmer.AuxiliaryPrimes
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.General.NumberTheory.CoefficientRings
 
 /-!
 # Selmer data, tied Selmer groups and classes as functions

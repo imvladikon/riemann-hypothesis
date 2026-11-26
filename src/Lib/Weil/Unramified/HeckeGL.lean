@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Module
-public import Mathlib.LinearAlgebra.Projectivization.Cardinality
+import Mathlib.LinearAlgebra.Matrix.Module
+import Mathlib.LinearAlgebra.Projectivization.Cardinality
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Adelic.Unitary.CongruenceLevels
-public import Lib.LocalGL.Iwahori.ParahoricStructure
+public import Lib.Adelic.Hecke.ClassSums
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+import Lib.Adelic.Adeles.IdeleModulus
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.LocalGL.Iwahori.ParahoricStructure
 
 /-!
 # Hecke operators of GL_n at a finite place and local criteria for principal level

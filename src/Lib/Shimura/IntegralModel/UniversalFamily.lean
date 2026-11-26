@@ -1,9 +1,15 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
 public import Lib.General.Geometry.GaloisCovers
-public import Lib.General.Geometry.SerreTheorem
 public import Lib.Shimura.HeckeTower.Model
 public import Lib.Shimura.Uniformisation.TorusModel
+public import Lib.Shimura.Uniformisation.BallModel
+import Lib.General.Geometry.SerreTheorem
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.ArcExtension
 
 /-!
 # The universal family: models along arcs, rigid fibres and points of linear data

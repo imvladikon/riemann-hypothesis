@@ -1,7 +1,10 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.Unramified.LocalStructure
 public import Lib.Cohomology.ProjectiveLine.ConstantLineFormula
 public import Lib.PadicComparison.Duality.GoodPairs
+import Lib.Cohomology.Etale.DenseSubfunctors
 
 /-!
 # Charted varieties, and smooth base change from a valuation ring to its fraction field

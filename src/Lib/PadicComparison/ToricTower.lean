@@ -1,9 +1,14 @@
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.Algebra.AddConstMap.Basic
 public import Mathlib.CategoryTheory.SingleObj
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory
+import Mathlib.Algebra.AddConstMap.Basic
+import Mathlib.Algebra.Category.Grp.Ulift
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.Algebra.Order.Star.Rat
 public import Lib.PadicComparison.Descent.AlmostDescent
+import Lib.PadicComparison.Descent.TestCovers
 
 /-!
 # Wang sequence on C × Bℕ, lines, and root systems of units via periodic sequences

@@ -1,8 +1,12 @@
 module
 
+import Mathlib.RingTheory.PiTensorProduct
+import TauCeti.Analysis.Normed.Ring.Ultra
 public import Lib.General.LinearAlgebra.GramDeterminant
 public import New.Reduction.Lattices.Colength
 public import New.Reduction.Lattices.Heights
+public import Lib.ClassField.Places.ValuationSubrings
+import Lib.General.LinearAlgebra.MinorProducts
 
 /-!
 # Twisted lattices

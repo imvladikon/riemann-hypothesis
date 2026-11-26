@@ -1,6 +1,7 @@
 module
 
 public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Lib.General.Measure.HaarModulus
 
 /-!
 # The big cell: Bruhat decomposition of terms with non-zero leading minors, and its freeness

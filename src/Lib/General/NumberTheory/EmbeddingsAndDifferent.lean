@@ -1,7 +1,10 @@
 module
 
 public import Mathlib.Algebra.AffineMonoid.Basic
-public import Mathlib.RingTheory.Ideal.Int
+public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
+public import Mathlib.RingTheory.DedekindDomain.Different
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import Mathlib.RingTheory.Ideal.Int
 public import Lib.Adelic.Adeles.AdditiveCharacter
 
 /-!

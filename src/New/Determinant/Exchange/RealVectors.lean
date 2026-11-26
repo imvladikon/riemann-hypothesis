@@ -1,6 +1,16 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import New.Determinant.Exchange.LargeTriple
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.General.Analysis.MeanValueAndTaylor
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Weil.MixedModel.ThetaInvariance
 
 /-!
 # Smooth local Witt theorem and the exchange identity for `V' ⊕ W₁` and `V'`

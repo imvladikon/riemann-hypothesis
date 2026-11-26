@@ -1,9 +1,16 @@
 module
 
-public import Mathlib.Analysis.Calculus.VectorField
-public import Lib.DiscreteSeries.Haar.TotalMass
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Algebra.Algebra.Field
+import Mathlib.Analysis.Calculus.VectorField
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
-public import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Right derivatives and bump convolution for smooth functions on U(p,q)

@@ -1,10 +1,11 @@
 module
 
-public import Mathlib.RingTheory.Polynomial.Chebyshev
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.RingTheory.Polynomial.Chebyshev
 public import Lib.Shimura.AbelianScheme.TangentCoordinates
 public import Lib.Shimura.ThetaGroup
 public import Lib.Shimura.ThetaModuli.PELThetaTori
-public import Lib.Shimura.AbelianScheme.Pairings
+public import Lib.Shimura.AbelianScheme.Pairings -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Theta objects of PEL moduli problems, their pull-backs, and rigidity over local rings

@@ -1,9 +1,16 @@
 module
 
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.Analysis.Normed.Ring.Ultra
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.SiegelWeil.OneVector.SiegelClassSum
 public import New.Spanning.Frames.TopFloor
-public import New.Spanning.MainTerm.GlobalToLocal
-public import New.Spanning.Unfolding.ReducedGroups
+public import New.Spanning.MainTerm.FillingLevel
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.MainTerm.GlobalToLocal
+import New.Spanning.Unfolding.Climbing
+import New.Spanning.Unfolding.ReducedGroups
 
 /-!
 # Siegel's formula as an upper bound, and domination of class sums by the density at the last entry

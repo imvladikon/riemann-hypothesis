@@ -1,7 +1,12 @@
 module
 
+public import Mathlib.RingTheory.Etale.StandardEtale
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
 public import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
 public import Lib.PadicComparison.Duality.LineIntegration
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.PadicComparison.Descent.TestCovers
 
 /-!
 # Good pairs: excision, Thom retraction and Alexander duality for principal opens

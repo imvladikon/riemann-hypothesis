@@ -1,9 +1,21 @@
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Exponential
-public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.Analysis.CStarAlgebra.Exponential
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
 public import Lib.GLn.SchurModule.TensorModel
-public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.GLn.SchurModule.SchurMatrix
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Groups.CongruenceSubgroups
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # The Weyl kernel and its Gram matrix: the hook number bound, positivity, Schur's lemma

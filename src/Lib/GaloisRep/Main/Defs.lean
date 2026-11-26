@@ -1,7 +1,14 @@
 module
 
-public import Lib.ClassField.Global.Chebotarev
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Weil.Unramified.SplitHecke
+public import Lib.Adelic.Unitary.CongruenceLevels
+public import Lib.ClassField.Places.DecompositionCompletion
+import Lib.ClassField.Global.Chebotarev
+import Lib.Weil.Unramified.HeckeGL
 
 /-!
 # Weights, Hecke polynomials, eigenforms and the filter of most Frobenii

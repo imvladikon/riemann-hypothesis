@@ -1,5 +1,7 @@
 module
 
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Cohomology.Hodge.GrothendieckSymbol
 
 /-!

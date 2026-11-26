@@ -1,7 +1,8 @@
 module
 
 public import Lib.Adelic.Reduction.DefiniteClassSums
-public import New.Spanning.RemainingTerms.Box
+import Lib.Adelic.Adeles.SemilocalProducts
+import New.Spanning.RemainingTerms.Box
 
 /-!
 # Explicit bound for the number of classes in the genus

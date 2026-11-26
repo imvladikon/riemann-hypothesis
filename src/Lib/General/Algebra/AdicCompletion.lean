@@ -1,26 +1,19 @@
 module
 
-public import TauCeti.NumberTheory.Padics.Complex.Basic
 import TauCeti.RingTheory.AdicCompletion.Pi
-public import Aesop.Frontend.Tactic
-public import Aesop.Main
-public import Mathlib.RingTheory.AdicCompletion.LocalRing
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.Ideal.Finsupp
-public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TotallySplit
-public import Mathlib.RingTheory.Valuation.Integral
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Sheaves.Presheaf
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+import Mathlib.RingTheory.AdicCompletion.LocalRing
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Ideal.Finsupp
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.Valuation.Integral
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import Lib.Speed
 
 /-!

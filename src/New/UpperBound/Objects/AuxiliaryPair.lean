@@ -1,11 +1,19 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
-public import Lib.ClassField.HeckeCharacter.TameModulus
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
 public import Lib.GLn.Dual
 public import Lib.General.Algebra.LevelModulus
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
 public import Lib.Weil.Unramified.HeckeTransfer
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Theta.FockJointHarmonics
+import Lib.DiscreteSeries.Theta.LocalCorrespondence
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Descent pairs: descent data for theta lifts to definite unitary groups

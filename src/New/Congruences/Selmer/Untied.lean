@@ -1,6 +1,7 @@
 module
 
 public import New.Congruences.Selmer.OneSystem
+public import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
 
 /-!
 # The failure to be tied

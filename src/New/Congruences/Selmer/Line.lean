@@ -1,9 +1,16 @@
 module
 
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.FieldTheory.Galois.Profinite
 public import Lib.General.NumberTheory.CoefficientInclusion
-public import New.Congruences.Selmer.Descent
-public import New.Congruences.Selmer.StickelbergerLine
 public import New.Congruences.Selmer.Untied
+public import Lib.General.Algebra.BlockFittingBound
+public import Lib.General.NumberTheory.GaussValuation
+public import New.Congruences.Selmer.SelmerData
+public import New.Congruences.Selmer.StickelbergerSystems
+import Lib.GaloisRep.Main.DivisibleSelmerModules
+import New.Congruences.Selmer.Descent
+import New.Congruences.Selmer.StickelbergerLine
 
 /-!
 # Restriction to a line

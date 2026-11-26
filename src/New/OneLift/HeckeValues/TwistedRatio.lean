@@ -2,6 +2,7 @@ module
 
 public import Lib.SiegelWeil.Tower.FiniteTateIntegral
 public import New.Determinant.Twist.FitTwists
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # The algebraic part as a Hecke L-value, and products of L-values of twists

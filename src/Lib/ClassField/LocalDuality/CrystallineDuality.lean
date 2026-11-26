@@ -1,11 +1,21 @@
 module
 
-public import Mathlib.LinearAlgebra.PerfectPairing.Basic
-public import Lib.PadicComparison.Descent.TestCategory
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.GroupTheory.FiniteAbelian.Duality
+import Mathlib.LinearAlgebra.PerfectPairing.Basic
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
 public import Lib.PadicHodge.BlochKato
-public import Lib.PadicHodge.Crystalline.Regularity
-public import Lib.ClassField.LocalDuality.DualityInequality
-public import Lib.Weil.DualPair.Kronecker
+public import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+public import Lib.ClassField.Places.DecompositionCompletion
+import Lib.ClassField.LocalDuality.DualityInequality
+import Lib.ClassField.Places.LocalFields
+import Lib.ClassField.Places.TameInertia
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Classes of Galois lattices, pairings and local duality for crystalline cocycles

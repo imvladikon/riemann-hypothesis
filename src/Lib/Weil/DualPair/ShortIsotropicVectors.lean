@@ -2,6 +2,10 @@ module
 
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
 public import Lib.Weil.DualPair.Defs
+public import Lib.Weil.Fock.WeightedNorms
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # Short isotropic vectors and means of theta functionals over isotropic subspaces

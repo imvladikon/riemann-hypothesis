@@ -1,7 +1,11 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Mathlib.Algebra.CharP.Pi
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.Weil.Periods.Grading
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
 
 /-!
 # The character `ψ_U` and the function `𝒲_φ`

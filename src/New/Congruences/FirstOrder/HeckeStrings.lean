@@ -1,7 +1,15 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Polynomial.Norm
+import Mathlib.FieldTheory.Galois.Profinite
+import TauCeti.Analysis.Normed.Ring.CompactMonoid
 public import Lib.LocalGL.SphericalChainLemma
 public import New.Congruences.GaloisRepresentations.SelmerHypotheses
+public import Lib.GaloisRep.Main.AllRanks
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.General.Algebra.SeriesBounds
+import Lib.General.LinearAlgebra.Eigenvalues
 
 /-!
 # Chains of roots for weak lifts, and Hecke-stable subspaces of forms

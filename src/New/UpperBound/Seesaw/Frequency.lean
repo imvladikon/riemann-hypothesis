@@ -2,6 +2,7 @@ module
 
 public import Lib.Weil.Periods.PointLattice
 public import New.UpperBound.Seesaw.EdgePairEvaluation
+public import Lib.Weil.Periods.ConstantTerm
 
 /-!
 # The shift at a nonzero constant term maps lattices into lattices

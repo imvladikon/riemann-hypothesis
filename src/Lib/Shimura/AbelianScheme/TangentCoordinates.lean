@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
-public import Lib.General.Geometry.PointsOfProperSchemes
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.TrivSqZeroExt.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Data.Matrix.ColumnRowPartitioned
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
+public import Lib.Shimura.AbelianScheme.Basic
+import Lib.General.Geometry.PointsOfProperSchemes
 
 /-!
 # Étale coordinates at zero, infinitesimal points and unramified torsion

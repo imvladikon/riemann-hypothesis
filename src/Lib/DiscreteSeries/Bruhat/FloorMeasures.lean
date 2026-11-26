@@ -1,13 +1,17 @@
 module
 
 import TauCeti.Algebra.Group.AddChar.Basic
-public import Mathlib.Algebra.GroupWithZero.Torsion
-public import Mathlib.CategoryTheory.Countable
-public import Mathlib.MeasureTheory.Function.FactorsThrough
-public import TauCeti.MeasureTheory.Integral.Pi
+import Mathlib.Algebra.GroupWithZero.Torsion
+import Mathlib.CategoryTheory.Countable
+import Mathlib.MeasureTheory.Function.FactorsThrough
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
+import TauCeti.MeasureTheory.Integral.Pi
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.DiscreteSeries.Bruhat.FloorGroups
-public import Lib.General.Measure.IntegralOperators
 public import Lib.General.Measure.QuadricDisintegration
+public import Lib.Adelic.QuotientMeasure.Basic
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # Heisenberg elements, measures of the floors, hyperbolic bases and Plancherel at a place

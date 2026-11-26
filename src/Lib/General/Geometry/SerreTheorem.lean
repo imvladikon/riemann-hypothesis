@@ -1,8 +1,17 @@
 module
 
-public import Lib.General.Algebra.MultivariatePolynomials
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import TauCeti.AlgebraicGeometry.Scheme.AffinePoints
+import TauCeti.RingTheory.MvPolynomial.Homogeneous
 public import Lib.Shimura.ThetaGroup
 public import Lib.Shimura.ThetaNormality.NormalGeneration
+public import Lib.General.Algebra.AbsIntegrallyClosed
+import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # Absolute Frobenius, Serre's theorem on sections of powers, and projective embeddings

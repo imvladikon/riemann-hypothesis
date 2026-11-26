@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.Analysis.Polynomial.Norm
-public import Lib.GLn.SchurModule.SchurNorm
+import Mathlib.Analysis.Polynomial.Norm
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.PadicHodge.Characters
 public import Lib.Weil.DualPair.FiniteAction
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+public import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Weil.Unramified.HeckeGL
 
 /-!
 # Attached Galois representations: traces, characteristic polynomials and rank one

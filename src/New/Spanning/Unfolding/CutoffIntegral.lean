@@ -1,7 +1,14 @@
 module
 
-public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
-public import New.Spanning.Unfolding.Packing
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Topology.UniformSpace.Uniformizable
+public import Lib.General.NumberTheory.LatticeCovolumes
+public import New.Spanning.RemainingTerms.SiegelLemma
+public import New.Spanning.Unfolding.BesselLevelStructure
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import New.Spanning.Unfolding.Packing
+import New.Spanning.Unfolding.ReducedPoints
 
 /-!
 # The Bessel kernel and the integral of a class cutoff over the real unipotent group

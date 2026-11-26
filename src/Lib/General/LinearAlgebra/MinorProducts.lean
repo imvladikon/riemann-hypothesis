@@ -1,14 +1,18 @@
 module
 
-public import TauCeti.LinearAlgebra.Matrix.Triangular
 import TauCeti.Analysis.ExteriorPower.Plucker
 import TauCeti.Analysis.InnerProductSpace.Gram.Hadamard
 import TauCeti.Analysis.Matrix.GramFactorization
 import TauCeti.Analysis.Matrix.OstrowskiTaussky
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
 public import Mathlib.Order.Hom.PowersetCard
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import TauCeti.LinearAlgebra.Matrix.Triangular
 public import Lib.DiscreteSeries.FlenstedJensen.Defs
-public import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Products of principal minors, Fischer's inequality and the Cauchy–Binet formula

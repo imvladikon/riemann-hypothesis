@@ -1,6 +1,8 @@
 module
 
-public import New.UpperBound.Divisibility.ChainValuation
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.UpperBound.Objects.Columns
+import New.UpperBound.Divisibility.ChainValuation
 
 /-!
 # Two invariant sums of translates attached to a chain datum

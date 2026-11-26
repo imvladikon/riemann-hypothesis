@@ -1,11 +1,17 @@
 module
 
-public import New.Congruences.GaloisRepresentations.SelmerHypotheses
-public import New.Derivatives.Sharpness.BoundAttained
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.OneLift.ComparisonOperator.ThreeExchanges
-public import New.OneLift.FalseLifts.PeriodsOfFalseLifts
 public import New.OneLift.HeckeValues.AlgebraicPartSize
-public import New.OneLift.HeckeValues.CentralAction
+public import Lib.DiscreteSeries.Bruhat.ComplexPlace
+public import New.OneLift.HeckeValues.TwistedRatio
+public import New.UpperBound.Size.ShortColumns
+import New.Congruences.GaloisRepresentations.SelmerHypotheses
+import New.Derivatives.Sharpness.BoundAttained
+import New.OneLift.FalseLifts.PeriodsOfFalseLifts
+import New.OneLift.HeckeValues.CentralAction
+import New.UpperBound.Size.Estimates
 
 /-!
 # Heights of ratios of twisted to untwisted Hecke values via rank-one theta lifts

@@ -1,11 +1,11 @@
 module
 
-public import Mathlib.NumberTheory.Multiplicity
-public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-public import Mathlib.Tactic.ENatToNat
-public import Lib.ClassField.Places.ProfiniteGalois
+import Mathlib.NumberTheory.Multiplicity
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 public import Lib.General.Topology
+public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
+public import Lib.ClassField.Places.ProfiniteGalois -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Decomposition and inertia groups, and cyclotomic characters at Frobenii and inertia

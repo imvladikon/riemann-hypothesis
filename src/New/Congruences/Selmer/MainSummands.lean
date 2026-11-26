@@ -1,8 +1,14 @@
 module
 
-public import New.Congruences.GaloisRepresentations.AttachedRepresentations
-public import New.Congruences.LocalLoss.LocalLattices
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Topology.Algebra.Module.Compact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import New.Congruences.Selmer.SelmerData
+public import New.Congruences.GaloisRepresentations.SelmerHypotheses
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.LocalLoss.LocalLattices
 
 /-!
 # Main summands are Selmer data

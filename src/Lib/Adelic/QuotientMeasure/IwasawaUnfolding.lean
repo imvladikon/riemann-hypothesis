@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Topology.Algebra.ProperAction.Torsor
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!

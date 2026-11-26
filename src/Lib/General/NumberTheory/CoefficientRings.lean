@@ -1,9 +1,13 @@
 module
 
-public import TauCeti.RingTheory.Length
-public import Mathlib.Algebra.Ring.Subring.IntPolynomial
-public import Mathlib.NumberTheory.Padics.ProperSpace
-public import Mathlib.Topology.Algebra.Module.Compact
+import Mathlib.Algebra.Ring.Subring.IntPolynomial
+import Mathlib.NumberTheory.Padics.ProperSpace
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Topology.Algebra.Module.Compact
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.RingTheory.Length
 public import Lib.General.Algebra.AdicCompletion
 public import Lib.General.Algebra.FittingIdealsAndLengths
 

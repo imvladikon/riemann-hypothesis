@@ -1,7 +1,14 @@
 module
 
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.TraceFormula.Convergence
-public import Lib.Adelic.TraceFormula.CoprimeFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.TraceFormula.CoprimeFactors
 
 /-!
 # The geometric side, polynomial by polynomial

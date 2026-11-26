@@ -1,7 +1,16 @@
 module
 
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Haar.GramCoordinates
+public import Lib.DiscreteSeries.Haar.CayleyChart
 
 /-!
 # The polar formula for the Gram map on bases

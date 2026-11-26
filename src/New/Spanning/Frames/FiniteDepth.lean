@@ -1,7 +1,9 @@
 module
 
 public import New.Spanning.Frames.BesselVector
-public import New.Spanning.Frames.OneFrame
+public import New.Spanning.Unfolding.BesselLevelStructure
+import New.Spanning.Frames.OneFrame
+import New.Spanning.Frames.TwoGauges
 
 /-!
 # Depth, heads and far positions at the finite places

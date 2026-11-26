@@ -1,8 +1,13 @@
 module
 
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.Linter.Style
 public import Lib.Weil.DualPair.HolomorphicData
 public import New.OneLift.HeckeValues.CharacterLift
 public import New.UpperBound.Objects.Rows
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Data of the three exchanges: the carrier, the choices and the functions 𝖥_i

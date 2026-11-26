@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.RingTheory.Frobenius
+import Mathlib.RingTheory.Frobenius
+import Mathlib.Topology.Algebra.Group.Units
+import TauCeti.RepresentationTheory.Subrepresentation
 public import Lib.GaloisRep.BaseChange.PrimeDegreeTransfer
-public import Lib.LocalGL.Shintani.LiftingGreenCharacters
+public import Lib.LocalGL.Shintani.CosetDescent
+import Lib.LocalGL.Shintani.LiftingGreenCharacters
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Base change at an inert place carries a label to its Shintani lift

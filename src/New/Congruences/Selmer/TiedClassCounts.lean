@@ -2,6 +2,7 @@ module
 
 public import New.Congruences.Selmer.Line
 public import New.Congruences.Selmer.TiedClasses
+public import New.Congruences.Selmer.Descent
 
 /-!
 # The descent bounds for tied Selmer groups, stated for classes

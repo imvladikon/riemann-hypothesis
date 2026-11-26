@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
 public import New.Spanning.RemainingTerms.Box
 public import New.Spanning.RemainingTerms.SiegelLemma
 public import New.Spanning.Unfolding.BesselLevelStructure
+import Lib.SiegelWeil.Mass
 
 /-!
 # Near terms in the filling theorem: frames, cell ranks, nearness and integrality

@@ -1,9 +1,21 @@
 module
 
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-public import Mathlib.MeasureTheory.Group.GeometryOfNumbers
-public import Lib.Adelic.Unitary.RationalPoints
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Group.GeometryOfNumbers
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.ProperConstSMul
+import Mathlib.Topology.Separation.Connected
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.General.NumberTheory.EmbeddingsAndDifferent
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Base
+import Lib.General.Measure.HaarModulus
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Transference, first minima and short bases of lattices of hermitian spaces

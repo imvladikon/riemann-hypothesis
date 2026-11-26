@@ -1,11 +1,18 @@
 module
 
-public import Lib.Shimura.AbelianScheme.IsogenyFlatness
-public import Lib.Shimura.ArcExtension
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.Valuation.Integral
 public import Lib.Shimura.ThetaModuli.ThetaFamilyRigidity
-public import Lib.Shimura.Uniformisation.AppellHumbert
-public import Lib.Shimura.Uniformisation.BallModel
-public import Lib.Shimura.Uniformisation.LieExponential
+public import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.ArcExtension
+import Lib.Shimura.Uniformisation.AppellHumbert
+import Lib.Shimura.Uniformisation.BallModel
+import Lib.Shimura.Uniformisation.LieExponential
 
 /-!
 # Objects modelled on complex tori and their homomorphisms as rational matrices

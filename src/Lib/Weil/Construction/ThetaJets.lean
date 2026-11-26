@@ -1,5 +1,7 @@
 module
 
+public import Mathlib.RingTheory.MvPowerSeries.Rename
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.General.LinearAlgebra.PolarDecomposition
 public import Lib.Shimura.ComplexTheta.DimensionFormula
 public import Lib.Weil.DualPair.Defs

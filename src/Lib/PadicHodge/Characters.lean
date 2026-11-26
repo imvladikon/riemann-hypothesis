@@ -1,9 +1,30 @@
 module
 
-public import Lib.ClassField.Global.ExistenceTheorem
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.Group.SubmonoidClosure
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.FieldTheory.Galois.IsometricAction
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.GaloisRep.Main.Defs
 public import Lib.GaloisRep.Main.LocalConditions
 public import Lib.General.NumberTheory.PadicLimitsValuation
+public import Lib.ClassField.HeckeL.EulerProduct
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.Global.NormTheorems
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.ClassField.Places.LocalFields
+import Lib.ClassField.Places.TameInertia
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # p-adic avatars of Hecke characters and local conditions for twists and characters

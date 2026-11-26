@@ -1,8 +1,16 @@
 module
 
-public import Lib.General.LinearAlgebra.MatrixPolynomials
-public import Lib.PadicHodge.Crystalline.HodgeTateJumps
-public import Lib.PadicHodge.Crystalline.Regularity
+public import Aesop.BuiltinRules
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+public import Lib.ClassField.Places.DecompositionCompletion
+public import Lib.PadicHodge.Crystalline.Basic
+import Lib.ClassField.Places.DecompositionCyclotomic
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Local conditions on ℓ-adic Galois representations and their passage to retracts

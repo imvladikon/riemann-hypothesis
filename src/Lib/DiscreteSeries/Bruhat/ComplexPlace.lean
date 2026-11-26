@@ -1,8 +1,23 @@
 module
 
-public import Mathlib.Analysis.Matrix.MeasurableSpace
-public import Mathlib.MeasureTheory.Order.Group.Lattice
-public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform -- shake: keep (needed public by an exposed definition)
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral -- shake: keep (needed public by an exposed definition)
+import Mathlib.MeasureTheory.Order.Group.Lattice
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Bessel.Basic
+public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.GaussianIntegral
 
 /-!
 # The place ℂ: polar coordinates, Cartan decomposition and the measure of the hyperboloid

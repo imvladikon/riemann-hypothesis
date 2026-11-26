@@ -1,8 +1,15 @@
 module
 
-public import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.OneLift.ComparisonOperator.ThetaKernelEstimates
-public import New.OneLift.ComparisonOperator.ThreeExchanges
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Holomorphic.ModelFunction
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.SiegelWeil.Reproduction
+import New.Determinant.Norms.AdjointThetaLift
+import New.OneLift.ComparisonOperator.ThreeExchanges
 
 /-!
 # Products span

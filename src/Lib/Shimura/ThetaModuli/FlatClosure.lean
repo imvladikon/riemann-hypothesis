@@ -1,9 +1,16 @@
 module
 
-public import Mathlib.Algebra.Order.Group.Ideal
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Mathlib.Algebra.Group.Ideal
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.Algebra.Order.Group.Ideal
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.Data.Finsupp.PWO
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
 public import Lib.General.Geometry.GeometricPoints
-public import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Flat families of ideals cut out by points and the flat closure of theta points

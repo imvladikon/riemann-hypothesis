@@ -1,6 +1,10 @@
 module
 
+public import Mathlib.RepresentationTheory.Coinduced
+import TauCeti.FieldTheory.Galois.IsometricAction
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import Lib.PadicHodge.Kisin.KummerChartExistence
+public import Lib.General.Algebra.FittingIdealsAndLengths
 
 /-!
 # W(𝔪^♭), the diagonal tensor module W(C^♭) ⊗ T and the Artin–Schreier sequence

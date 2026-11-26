@@ -1,7 +1,17 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
+import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.General.Analysis.MeanValueAndTaylor
+import Lib.General.LinearAlgebra.PolarDecomposition
+import Lib.General.Measure.IdempotentKernel
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # First properties of c_λ and its K-types

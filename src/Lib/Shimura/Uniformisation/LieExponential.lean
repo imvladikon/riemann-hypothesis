@@ -1,12 +1,21 @@
 module
 
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-public import Mathlib.Analysis.Calculus.TangentCone.Seq
-public import Mathlib.Analysis.Normed.Module.ContinuousInverse
-public import Lib.General.Analysis.HolomorphicIntegrals
-public import Lib.General.Geometry.GeometricPoints
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.Calculus.TangentCone.Seq
+import Mathlib.Analysis.Normed.Module.ContinuousInverse
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Algebra.Group.SubmonoidClosure
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Geometry.GeometricPoints
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Exponential of compact commutative Lie groups and uniformisation of abelian varieties

@@ -1,8 +1,13 @@
 module
 
-public import Mathlib.NumberTheory.MulChar.Duality
-public import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-public import Lib.LocalGL.Green.CuspidalFunctions
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.FieldTheory.Finite.Extension
+import Mathlib.NumberTheory.MulChar.Duality
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
+import Mathlib.Tactic.Linter.Style
+public import Lib.LocalGL.Green.HallAlgebra
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.LocalGL.Green.CuspidalFunctions
 
 /-!
 # Green's characters of GL_n over a finite field: θ_x, τ_P, labels and their degrees

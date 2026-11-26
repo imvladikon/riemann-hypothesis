@@ -1,13 +1,7 @@
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Probability.HasLaw
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
+import Mathlib.Probability.HasLaw
 public import Lib.Speed
 
 /-!

@@ -1,10 +1,16 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Int
-public import Mathlib.Analysis.InnerProductSpace.Trace
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import New.Spanning.SecondMoment.PositiveType
-public import Lib.PadicComparison.Descent.TestCategory
+public import Aesop.BuiltinRules
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Order.CompletePartialOrder
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+public import Lib.Speed
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import New.Spanning.SecondMoment.PositiveType
 
 /-!
 # Few translates fill

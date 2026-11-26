@@ -1,7 +1,10 @@
 module
 
-public import Mathlib.Algebra.Ring.Divisibility.Lemmas
-public import Lib.GaloisRep.Hilbert90.TameActions
+import Mathlib.Algebra.Ring.Divisibility.Lemmas
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.GaloisRep.BaseChange.Defs
+import Lib.GaloisRep.Hilbert90.TameActions
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Hilbert 90 for unitary groups over profinite rings and for finite ideles

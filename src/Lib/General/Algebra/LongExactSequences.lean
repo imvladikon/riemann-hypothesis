@@ -1,6 +1,9 @@
 module
 
-public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughProjectives
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives -- shake: keep (needed public by an exposed definition)
+import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughProjectives
+import Mathlib.CategoryTheory.Abelian.Exact
+import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Lib.Cohomology.Etale.Basic
 
 /-!

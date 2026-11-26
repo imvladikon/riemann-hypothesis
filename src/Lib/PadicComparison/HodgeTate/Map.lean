@@ -1,7 +1,12 @@
 module
 
 public import Mathlib.RingTheory.LocalRing.Pullback
-public import Lib.PadicComparison.Primitive.PeriodCoefficients
+public import Aesop.BuiltinRules
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.PadicComparison.HodgeTate.ExtCocycles
+public import Lib.PadicComparison.HodgeTate.GenericFibre
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.PadicComparison.Primitive.PeriodCoefficients
 
 /-!
 # The Hodge–Tate maps λ_h on pairs (S, M): construction, properties and restriction

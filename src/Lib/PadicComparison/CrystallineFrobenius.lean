@@ -1,7 +1,15 @@
 module
 
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Lib.PadicComparison.Crystalline.ComparisonMap
-public import Lib.PadicComparison.HodgeTate.PeriodMap
+public import Lib.Cohomology.Etale.EllAdicCohomology
+public import Lib.GaloisRep.Main.LocalConditions
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.General.Geometry.PointsOfProperSchemes
+import Lib.PadicComparison.Crystalline.DividedPowerEnvelope
+import Lib.PadicComparison.HodgeTate.PeriodMap
+import Lib.PadicComparison.Primitive.ComparisonTheorem
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Crystallinity of p-adic cohomology of charted proper schemes and Frobenius congruences

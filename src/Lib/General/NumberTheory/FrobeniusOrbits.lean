@@ -1,7 +1,8 @@
 module
 
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
-public import Mathlib.FieldTheory.Finite.Extension
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.FieldTheory.Finite.Extension
+import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
 public import Lib.Adelic.Adeles.Basic
 
 /-!

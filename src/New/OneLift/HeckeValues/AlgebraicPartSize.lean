@@ -1,7 +1,16 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.PNatToNat
 public import New.OneLift.HeckeValues.AlgebraicPartIntegrality
-public import New.OneLift.HeckeValues.TwistedRatio
+public import New.Determinant.Twist.FitTwists
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import New.OneLift.HeckeValues.TwistedRatio
+import New.UpperBound.Kernels.ThetaLiftGauge
+import New.UpperBound.Size.Estimates
 
 /-!
 # Archimedean bounds and heights of squared norms of rank-one theta lifts

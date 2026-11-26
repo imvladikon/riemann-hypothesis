@@ -1,9 +1,9 @@
 module
 
-public import Mathlib.Algebra.Order.Sub.Prod
-public import Mathlib.Algebra.Polynomial.Bivariate
-public import Mathlib.Data.Finsupp.Pointwise
-public import Mathlib.Order.Grade
+import Mathlib.Algebra.Order.Sub.Prod
+import Mathlib.Algebra.Polynomial.Bivariate
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.Order.Grade
 public import Lib.GLn.SchurModule.Basic
 
 /-!

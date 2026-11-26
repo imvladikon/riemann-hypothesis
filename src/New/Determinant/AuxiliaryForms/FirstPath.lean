@@ -1,8 +1,11 @@
 module
 
-public import New.Determinant.AuxiliaryForms.DeepLevelVanishing
 public import New.Determinant.AuxiliaryForms.GridFirstColumns
-public import New.Determinant.Chain.ChainNorms
+public import New.Determinant.Chain.TriangleLifts
+public import New.Determinant.Chain.TriangleNorms
+import New.Determinant.AuxiliaryForms.DeepLevelVanishing
+import New.Determinant.Chain.ChainNorms
+import New.OneLift.ComparisonOperator.ExchangeData
 
 /-!
 # The maps `Θ^♭` and `res^♭`, and the first path

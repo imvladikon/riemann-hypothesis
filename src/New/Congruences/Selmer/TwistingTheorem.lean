@@ -1,10 +1,19 @@
 module
 
-public import Lib.General.NumberTheory.LargeResidueField
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Congruences.FirstOrder.EvenClasses
 public import New.Congruences.Selmer.GeneralTheorem
-public import New.Congruences.Selmer.LValueSystems
-public import New.Congruences.Selmer.MainSummands
+public import New.Congruences.GaloisRepresentations.SelmerHypotheses
+public import New.Determinant.Twist.FitTwists
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.NormTheorems
+import Lib.General.NumberTheory.LargeResidueField
+import Lib.PadicHodge.BlochKato
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.Selmer.LValueSystems
+import New.Congruences.Selmer.MainSummands
 
 /-!
 # The twisting theorem

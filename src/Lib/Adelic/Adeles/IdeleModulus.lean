@@ -1,10 +1,15 @@
 module
 
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.RingTheory.Complex
-public import Mathlib.RingTheory.TotallySplit
+public import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.ClassField.Places.Ideles
-public import Lib.Weil.DualPair.Kronecker
+public import Lib.General.NumberTheory.EmbeddingsAndDifferent
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # The module of an idele, Haar measure scaling and the norm map on finite adeles

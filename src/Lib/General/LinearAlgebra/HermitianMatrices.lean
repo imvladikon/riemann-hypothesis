@@ -4,9 +4,10 @@ import TauCeti.Analysis.Matrix.LDL
 import TauCeti.Analysis.Matrix.PosSemidef.Determinant
 import TauCeti.LinearAlgebra.Matrix.Determinant.ComplementaryMinor
 public import Aesop.BuiltinRules
-public import Mathlib.Algebra.Order.Archimedean.Real.Hom
-public import Mathlib.Analysis.CStarAlgebra.Hom
-public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Analysis.CStarAlgebra.Hom
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.General.Groups.CongruenceSubgroups
 
 /-!

@@ -1,9 +1,15 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.CompactLift.ThetaKernelDefs
 public import Lib.Weil.Lift
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Theta.FockJointHarmonics
+import Lib.GLn.SchurModule.WeylKernel
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Theta lifts between definite unitary groups and algebraic lifts by jets

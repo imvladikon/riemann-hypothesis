@@ -1,6 +1,14 @@
 module
 
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient -- shake: keep (needed public by an exposed definition)
+import Mathlib.Topology.Algebra.Group.Units
+public import Mathlib.Topology.Algebra.Star.Unitary -- shake: keep (needed public by an exposed definition)
 public import Lib.Weil.MixedModel.NamedData
+public import Lib.Adelic.Hecke.ClassSums
+public import Lib.Adelic.Unitary.GramMatrix
+public import Lib.DiscreteSeries.Theta.FockDualPair
+public import Lib.Weil.DualPair.Kronecker
+public import Lib.Adelic.Adeles.LocalFactors -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Hom(S,T), the Weil representation and theta kernel of a pair, and data modulo an ideal

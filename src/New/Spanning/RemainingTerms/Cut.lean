@@ -1,8 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PicardGroup
 public import New.Spanning.RemainingTerms.LinkLattice
 public import New.Spanning.RemainingTerms.LinkVectors
 public import New.Spanning.RemainingTerms.Data
+public import New.Spanning.Unfolding.Climbing
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # The cut: from the lattice of a link to the vectors common to two links

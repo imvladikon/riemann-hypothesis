@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-public import Mathlib.FieldTheory.PurelyInseparable.Exponent
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import Mathlib.FieldTheory.PurelyInseparable.Exponent
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
 public import Lib.GaloisRep.Main.Defs
+public import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Free cocharacter weights force rank n and identify killing polynomials

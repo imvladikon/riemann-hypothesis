@@ -1,8 +1,18 @@
 module
 
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 public import Lib.GaloisRep.BaseChange.PrimeDegreeTransfer
 public import Lib.GaloisRep.LocalGlobal.LocalFormTypes
-public import Lib.LocalGL.Iwahori.HeckeDegrees
+import Lib.Adelic.Landherr
+import Lib.GaloisRep.BaseChange.StepMatchingPairs
+import Lib.GaloisRep.Hilbert90.TameActions
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.LocalGL.Iwahori.HeckeDegrees
+import Lib.LocalGL.Iwahori.QuadraticRelation
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Hilbert 90 for the pro-p Iwahori group and base change of Iwahori eigenforms

@@ -1,10 +1,31 @@
 module
 
-public import Mathlib.MeasureTheory.MeasurableSpace.NCard
-public import Lib.ClassField.Avatar.HeckeBaseChange
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.MeasureTheory.MeasurableSpace.NCard
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.LinearAlgebra.Matrix.Range
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.DualPair.MixedModel
-public import Lib.Weil.Unramified.HeckeTransfer
-public import Lib.Adelic.Witt.IwasawaDecomposition
+public import Lib.Adelic.Reduction.FiniteVolume
+public import Lib.General.Combinatorics
+public import Lib.Weil.Unramified.HeckeGL
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.IwasawaDecomposition
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Base
+import Lib.ClassField.Avatar.HeckeBaseChange
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.FiniteAction
+import Lib.Weil.MixedModel.ThetaInvariance
+import Lib.Weil.Unramified.HeckeTransfer
 
 /-!
 # Lagrangians, zero terms of the Weil representation and vanishing of dominated functionals

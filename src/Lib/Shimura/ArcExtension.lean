@@ -1,11 +1,20 @@
 module
 
-public import Lib.General.Geometry.GeometricPoints
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
 public import Lib.Shimura.ThetaGroup
-public import Lib.Shimura.ThetaNormality.NormalGeneration
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
-public import Lib.Shimura.AbelianScheme.Pairings
+public import Lib.General.Geometry.DenseComplexPoints
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Geometry.GeometricPoints
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.ThetaNormality.NormalGeneration
 
 /-!
 # Uniformisations over an arc: theta coordinates, Weil pairing and extension of maps

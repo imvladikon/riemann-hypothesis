@@ -1,8 +1,14 @@
 module
 
 import Mathlib.CategoryTheory.Sites.ConcreteSheafification -- shake: keep (found by bisection: without it a `DiscreteTopology (Gp _)` search below times out)
-public import Lib.General.NumberTheory.CoefficientRings
-public import Lib.PadicHodge.TateSen
+public import Aesop.BuiltinRules
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Topology.Separation.CompletelyRegular
+public import Lib.PadicHodge.Crystalline.Basic
+import Lib.General.NumberTheory.CoefficientRings
+import Lib.PadicHodge.TateSen
 
 /-!
 # Semilinear forms of given weight: independence, finiteness, and jumps read off a basis

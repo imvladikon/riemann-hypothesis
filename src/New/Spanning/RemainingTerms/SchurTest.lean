@@ -1,7 +1,11 @@
 module
 
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.RemainingTerms.OneRealPlace
-public import New.Spanning.Unfolding.AmplitudeSums
+import New.Spanning.Unfolding.AmplitudeSums
+import New.Spanning.Unfolding.CutoffIntegral
+import New.Spanning.Unfolding.Packing
 
 /-!
 # Schur's test: Cauchy–Schwarz and integration in stages

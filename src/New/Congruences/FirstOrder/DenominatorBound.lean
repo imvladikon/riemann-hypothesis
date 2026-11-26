@@ -1,11 +1,25 @@
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Semisimple
-public import New.Congruences.FirstOrder.AuxiliaryPrimeTie
-public import New.Congruences.FirstOrder.HeckeStrings
-public import New.Congruences.FirstOrder.RibetElement
-public import New.Congruences.FirstOrder.TrianglePrimes
-public import New.Congruences.GaloisRepresentations.BaseLevelOfLabel
+import Mathlib.Analysis.InnerProductSpace.Semisimple
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import TauCeti.Analysis.Normed.Ring.CompactMonoid
+public import Lib.GaloisRep.TaylorWiles
+public import Lib.LocalGL.SphericalChainLemma
+public import New.Congruences.FirstOrder.TraceRelations
+import Lib.Cyclotomic.Kolyvagin.DerivativeCocycles
+import Lib.GaloisRep.Main.ThetaLift
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.PadicComparison.ToricTower
+import New.Congruences.FirstOrder.AuxiliaryPrimeTie
+import New.Congruences.FirstOrder.HeckeStrings
+import New.Congruences.FirstOrder.RibetElement
+import New.Congruences.FirstOrder.TrianglePrimes
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.GaloisRepresentations.BaseLevelOfLabel
+import New.Reduction.Data.Sizes
 
 /-!
 # The bound for denominators

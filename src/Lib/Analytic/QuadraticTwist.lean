@@ -1,12 +1,18 @@
 module
 
-public import Mathlib.Analysis.Complex.Hadamard
-public import Mathlib.NumberTheory.LSeries.PrimesInAP
-public import Mathlib.NumberTheory.LSeries.SumCoeff
-public import Mathlib.Tactic.PNatToNat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Hadamard
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+import Mathlib.NumberTheory.LSeries.SumCoeff
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.PNatToNat
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.NumberTheory.DirichletCharacter.Conductor
 public import Lib.Analytic.DirichletTheta
-public import Lib.Analytic.EntireLFunction
-public import Lib.Analytic.PolyaVinogradov
+public import Lib.General.NumberTheory.ImaginaryQuadraticField
+import Lib.Analytic.EntireLFunction
+import Lib.Analytic.PolyaVinogradov
+import Lib.Analytic.ZeroSymmetry
 
 /-!
 # A prime `d` in a class whose quadratic twists have no zero in a box

@@ -1,9 +1,23 @@
 module
 
-public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
-public import Mathlib.MeasureTheory.Integral.CurveIntegral.Basic
-public import Lib.General.Analysis.MeanValueAndTaylor
-public import Lib.General.LinearAlgebra.PolarDecomposition
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Integral.CurveIntegral.Basic
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.LinearAlgebra.Matrix.Triangular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Analysis.MeanValueAndTaylor
+import Lib.General.LinearAlgebra.PolarDecomposition
 
 /-!
 # Exponentials in U(diag ε) and holomorphic extension of coefficients of highest vectors

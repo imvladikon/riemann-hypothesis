@@ -1,6 +1,13 @@
 module
 
-public import Lib.PadicHodge.Kisin.PeriodMatrixBasis
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.RingTheory.PicardGroup
+public import Lib.General.NumberTheory.CoefficientRings
+public import Lib.PadicHodge.Kisin.Bicommutant
+public import Lib.PadicHodge.Kisin.KummerChartExistence
+public import Lib.PadicHodge.TateSen
+import Lib.PadicHodge.Crystalline.FixedRatios
+import Lib.PadicHodge.Kisin.PeriodMatrixBasis
 
 /-!
 # Kummer charts: the different, the primes φ^a E of A_inf and their images in B_dR

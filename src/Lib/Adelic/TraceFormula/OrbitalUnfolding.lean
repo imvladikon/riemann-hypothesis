@@ -1,9 +1,17 @@
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.TraceFormula.ChangingSigns
 public import Lib.Adelic.TraceFormula.ReduciblePolynomials
-public import Lib.Weil.Periods.Grading
+public import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.Weil.Periods.Grading
 
 /-!
 # Kernels of levels as forms, and unfolding of orbital integrals

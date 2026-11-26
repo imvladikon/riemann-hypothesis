@@ -1,7 +1,13 @@
 module
 
-public import Lib.Adelic.Witt.WittTheorem
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Sheaves.Presheaf
 public import New.Appendix.DiscreteSeries.SteepParameters
+public import Lib.General.LinearAlgebra.IntegralLattices
+import Lib.Adelic.Witt.WittTheorem
 
 /-!
 # Positions of a smaller unitary group, and the two traces

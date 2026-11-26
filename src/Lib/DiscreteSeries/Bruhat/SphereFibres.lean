@@ -1,8 +1,11 @@
 module
 
-public import Mathlib.Probability.Kernel.WithDensity
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.MeasureTheory.Order.Group.Lattice
+import Mathlib.Probability.Kernel.WithDensity
 public import Lib.DiscreteSeries.Bruhat.ComplexPlace
-public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # The spheres of ℂ^κ as fibres of the standard form

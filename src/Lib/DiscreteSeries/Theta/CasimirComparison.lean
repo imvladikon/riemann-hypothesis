@@ -1,7 +1,7 @@
 module
 
-public import TauCeti.Algebra.Lie.GeneralLinear.Oscillator.Casimir
-public import Mathlib.Data.Finset.Slice
+import Mathlib.Data.Finset.Slice
+import TauCeti.Algebra.Lie.GeneralLinear.Oscillator.Casimir
 public import Lib.DiscreteSeries.Theta.FockDualPair
 
 /-!

@@ -1,7 +1,22 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import TauCeti.Analysis.Normed.Ring.Ultra
+import TauCeti.NumberTheory.NumberField.Countable
 public import New.Spanning.SecondMoment.FewTranslates
-public import New.Spanning.Unfolding.MomentBounds
+public import Lib.General.Groups.CharacterTheory
+public import Lib.Shimura.ComplexTheta.AppellHumbertData
+public import New.Spanning.Frames.FixedLines
+public import New.Spanning.RemainingTerms.Size
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import New.Spanning.Frames.FiniteDepth
+import New.Spanning.Frames.FiniteShells
+import New.Spanning.MainTerm.GlobalToLocal
+import New.Spanning.Unfolding.MomentBounds
+import New.Spanning.Unfolding.SquareExpansion
 
 /-!
 # The second moments of the operators `P* s P`, and good forms

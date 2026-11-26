@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.Analysis.Complex.HalfPlane
+public import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.Complex.HalfPlane
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.ClassField.HeckeL.EulerProduct
 public import Lib.ClassField.HeckeL.IdelicThetaSum
-public import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Analyticity at 1 of L-functions of nontrivial Hecke characters

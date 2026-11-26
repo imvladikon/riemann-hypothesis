@@ -1,7 +1,16 @@
 module
 
 import TauCeti.MeasureTheory.Measure.Disintegration.Continuous
-public import Lib.Adelic.Witt.WittTheorem
+public import Aesop.BuiltinRules
+public import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+public import Lib.General.Groups.CongruenceSubgroups
+import Lib.Adelic.QuotientMeasure.Basic
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Base
+import Lib.General.Measure.HaarModulus
 
 /-!
 # Measures on hermitian quadrics: existence and uniqueness of disintegrations

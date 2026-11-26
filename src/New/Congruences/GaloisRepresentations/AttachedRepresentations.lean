@@ -1,7 +1,25 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Card
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import New.Congruences.GaloisRepresentations.SelmerHypotheses
-public import New.OneLift.HeckeValues.TwistedRatio
+public import Lib.ClassField.Global.CMSplittingCharacters
+public import New.Determinant.Twist.FitTwists
+import Lib.ClassField.Avatar.LocalGlobalCompatibility
+import Lib.ClassField.Places.TameInertia
+import Lib.GaloisRep.Main.AllRanks
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.LocalGL.Shintani.LiftingGreenCharacters
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Crystalline.Regularity
+import New.OneLift.HeckeValues.TwistedRatio
 
 /-!
 # Lift settings and conjugate self-duality of attached Galois representations

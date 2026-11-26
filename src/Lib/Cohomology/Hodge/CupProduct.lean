@@ -1,7 +1,6 @@
 module
 
-public import Mathlib.Algebra.Homology.ShortComplex.ExactFunctor
-public import Lib.General.Algebra.LongExactSequences
+import Mathlib.Algebra.Homology.ShortComplex.ExactFunctor
 public import Lib.Cohomology.Etale.BijectiveComparisons -- shake: keep (instance attribute)
 
 /-!

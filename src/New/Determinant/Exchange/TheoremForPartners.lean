@@ -1,8 +1,21 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Topology.Connected.Separation
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.DualPair.Flip
-public import New.Determinant.Exchange.RealVectors
 public import New.Determinant.Exchange.VanishingDescends
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import New.Determinant.Exchange.LargeTriple
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.ClassField.HeckeCharacter.SplittingCharacters
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import New.Determinant.Exchange.RealVectors
+import New.Determinant.Exchange.RemovingPlanes
 
 /-!
 # Exchange of theta integrals for matched functions and for data modulo an ideal

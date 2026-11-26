@@ -1,28 +1,19 @@
 module
 
 public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.Basic
-public import TauCeti.NumberTheory.NumberField.Countable
 import TauCeti.RingTheory.DedekindDomain.AdicValuation.Completion
-public import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
-public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
-public import Aesop.Frontend.Tactic
-public import Aesop.Main
 public import Mathlib.Algebra.Star.Subsemiring
 public import Mathlib.NumberTheory.NumberField.CMField
-public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Group.SubmonoidClosure
-public import Mathlib.Topology.Algebra.Valued.LocallyCompact
-public import Mathlib.Topology.UniformSpace.Uniformizable
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+import Mathlib.Topology.Algebra.Group.SubmonoidClosure
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
 public import Lib.Speed
 
 /-!

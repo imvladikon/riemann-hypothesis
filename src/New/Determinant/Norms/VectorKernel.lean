@@ -1,6 +1,7 @@
 module
 
 public import New.UpperBound.Objects.AuxiliaryPair
+import Lib.GLn.SchurModule.SchurNorm
 
 /-!
 # The theta kernel of a descent pair with values in the weight representation

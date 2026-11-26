@@ -2,8 +2,14 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.Analysis.InnerProductSpace.NormDet
-public import Mathlib.RingTheory.Henselian
-public import Lib.General.LinearAlgebra.MinorProducts
+public import Aesop.BuiltinRules
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Lib.Speed
+import Lib.General.LinearAlgebra.MinorProducts
 
 /-!
 # Gram determinants

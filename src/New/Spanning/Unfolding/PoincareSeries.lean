@@ -1,8 +1,17 @@
 module
 
+public import TauCeti.Topology.Algebra.Group.Units
+public import TauCeti.Topology.Instances.Matrix
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Integral.Pi
 public import New.Spanning.Bessel.LargeFunction
-public import New.Spanning.Unfolding.AmplitudeSums
 public import New.UpperBound.Objects.Rows
+public import New.Spanning.Unfolding.Terms
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import New.Spanning.Unfolding.AmplitudeSums
+import New.Spanning.Unfolding.CutoffIntegral
+import New.Spanning.Unfolding.Packing
 
 /-!
 # Poincaré series of fitting spaces, unfolding, Petersson products and source form coordinates

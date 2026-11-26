@@ -1,11 +1,21 @@
 module
 
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-public import Mathlib.Topology.ExtremallyDisconnected
-public import Lib.Adelic.Witt.WittTheorem
-public import Lib.DiscreteSeries.Haar.GramPolar
-public import Lib.General.Analysis.PackingAndSobolev
-public import Lib.General.Analysis.GaussianIntegral
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.ExtremallyDisconnected
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Separation.Connected
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Haar.CayleyChart
+public import Lib.DiscreteSeries.Haar.GramCoordinates
+import Lib.Adelic.Witt.WittTheorem
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # Haar measure on U(J): U(n) has mass one, covering bounds for norm balls

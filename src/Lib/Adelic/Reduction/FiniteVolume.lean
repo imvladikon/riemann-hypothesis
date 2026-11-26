@@ -1,8 +1,19 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Int.Log
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.Reduction.MinkowskiTheorems
-public import Lib.Adelic.Unitary.WeakApproximation
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.DiscreteSeries.Haar.CayleyChart
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Adelic reduction theory, Mahler's criterion and finite volume of the arithmetic quotient

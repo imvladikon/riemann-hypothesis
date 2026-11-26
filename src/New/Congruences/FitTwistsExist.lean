@@ -1,10 +1,17 @@
 module
 
-public import New.Congruences.FirstOrder.DenominatorBound
-public import New.Congruences.GaloisRepresentations.RowsFromEigensystems
-public import New.Congruences.Selmer.TwistingTheorem
-public import New.Determinant.Chain.NormOfChain
-public import New.OneLift.HeckeValues.CentralAction
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.Congruences.FirstOrder.TraceRelations
+public import New.Determinant.Twist.FitTwists
+import New.Congruences.FirstOrder.DenominatorBound
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.GaloisRepresentations.RowsFromEigensystems
+import New.Congruences.Selmer.ClassSums
+import New.Congruences.Selmer.TwistingTheorem
+import New.Determinant.Chain.NormOfChain
+import New.OneLift.HeckeValues.CentralAction
+import New.Reduction.Data.Sizes
+import New.UpperBound.Size.Estimates
 
 /-!
 # All data have regular families of m-fold twists

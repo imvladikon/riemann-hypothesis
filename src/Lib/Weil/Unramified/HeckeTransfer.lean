@@ -1,10 +1,16 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.General.Combinatorics
 public import Lib.General.LinearAlgebra.BlockEmbeddings
-public import Lib.Weil.DualPair.FiniteAction
 public import Lib.Weil.Lift
+public import Lib.ClassField.HeckeL.EulerProduct
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.Weil.DualPair.FiniteAction
 
 /-!
 # Hecke polynomials pass through a theta lift

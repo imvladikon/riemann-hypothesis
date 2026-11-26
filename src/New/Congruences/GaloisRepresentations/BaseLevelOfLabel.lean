@@ -1,8 +1,10 @@
 module
 
+import Mathlib.Data.Rat.Cast.OfScientific
 public import Lib.GaloisRep.TaylorWiles
 public import New.Congruences.GaloisRepresentations.RowsAndColumnsFromLabels
-public import New.OneLift.FalseLifts.BottomOfTower
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.OneLift.FalseLifts.BottomOfTower
 
 /-!
 # Base data whose forms contain those with given labels in a lift setting

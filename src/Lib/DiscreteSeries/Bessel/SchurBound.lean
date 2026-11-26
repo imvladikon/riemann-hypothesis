@@ -1,8 +1,15 @@
 module
 
-public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
-public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Function.Holder
+import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.DiscreteSeries.Bessel.Basic
 
 /-!

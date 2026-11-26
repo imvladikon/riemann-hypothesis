@@ -1,5 +1,6 @@
 module
 
+import Mathlib.Order.CompletePartialOrder
 public import Lib.Adelic.Witt.WittTheorem
 
 /-!

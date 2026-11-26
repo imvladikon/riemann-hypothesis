@@ -1,10 +1,15 @@
 module
 
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Lib.General.LinearAlgebra.HermiteForm
-public import New.UpperBound.ElementaryDivisors.InvariantAverage
-public import New.UpperBound.ElementaryDivisors.RootLemma
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+public import New.UpperBound.ElementaryDivisors.TwistingData
+import Lib.General.LinearAlgebra.HermiteForm
+import New.UpperBound.ElementaryDivisors.InvariantAverage
+import New.UpperBound.ElementaryDivisors.RootLemma
 
 /-!
 # Edges, halfway lattices and duality

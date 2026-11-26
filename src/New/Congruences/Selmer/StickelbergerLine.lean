@@ -1,7 +1,14 @@
 module
 
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.LinearAlgebra.Lagrange
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
 public import New.Congruences.Selmer.OneSystem
 public import New.Congruences.Selmer.StickelbergerSystems
+public import Lib.General.NumberTheory.GaussValuation
+import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # Stickelberger systems on a line

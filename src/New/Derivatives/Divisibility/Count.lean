@@ -1,8 +1,9 @@
 module
 
-public import Lib.GLn.SchurModule.SchurMatrix
 public import New.Derivatives.Divisibility.NullFrames
 public import New.Derivatives.FormalGroup.ThetaProducts
+import Lib.GLn.SchurModule.SchurMatrix
+import Lib.General.Algebra.SeriesCongruences
 
 /-!
 # Divisibility of the jets of a series with the normal form along products of minors

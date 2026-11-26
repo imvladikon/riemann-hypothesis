@@ -1,8 +1,16 @@
 module
 
-public import TauCeti.RingTheory.PowerSeries.Dvd
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.NumberTheory.Padics.Complex.Basic
+import TauCeti.RingTheory.PowerSeries.Dvd
+import TauCeti.RingTheory.PowerSeries.Rescale
 public import Lib.General.Algebra.SeriesCongruences
-public import New.Derivatives.FormalGroup.FrobeniusCongruence
+public import Lib.CM.FormalGroup.FormalParameter
+import Lib.General.Algebra.SeriesBounds
+import New.Derivatives.FormalGroup.FrobeniusCongruence
 
 /-!
 # The exponent on one curve

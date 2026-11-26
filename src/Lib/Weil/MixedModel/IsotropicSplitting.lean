@@ -1,7 +1,11 @@
 module
 
-public import Lib.General.LinearAlgebra.Eigenvalues
 public import Lib.Weil.Construction.AdelicRepresentation
+public import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.RationalPoints
+public import Lib.Adelic.Unitary.WeakApproximation -- shake: keep (needed public by an exposed definition)
+import Lib.General.LinearAlgebra.Eigenvalues
 
 /-!
 # Hyperbolic space and splittings of a hermitian space along isotropic subspaces

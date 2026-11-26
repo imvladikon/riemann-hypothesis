@@ -1,9 +1,25 @@
 module
 
-public import Mathlib.Analysis.Fourier.AddCircleMulti
-public import Mathlib.Data.Finset.CastCard
-public import Lib.GLn.SchurModule.SchurOrthogonality
-public import Lib.General.LinearAlgebra.Eigenvalues
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Fourier.AddCircleMulti
+import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Data.Finset.CastCard
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+import Mathlib.LinearAlgebra.Matrix.Permutation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.UniformSpace.Uniformizable
+public import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+public import Lib.GLn.SchurModule.SchurMatrix
+public import Lib.General.Groups.BesselGroups
+import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.GLn.SchurModule.SchurOrthogonality
+import Lib.GLn.SchurModule.WeylKernel
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # Laurent polynomials on the torus and Weyl's character and dimension formulas

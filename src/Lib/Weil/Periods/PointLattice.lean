@@ -1,6 +1,10 @@
 module
 
 public import Lib.Weil.Periods.Grading
+import Lib.Adelic.Adeles.IdeleModulus
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Witt.WittTheorem
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # The lattice of a finite point of a graded space

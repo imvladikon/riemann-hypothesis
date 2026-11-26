@@ -1,7 +1,13 @@
 module
 
-public import New.Determinant.Chain.ChainNorms
+public import Mathlib.Analysis.InnerProductSpace.NormDet
+import Mathlib.Algebra.Order.Star.Real
 public import New.Spanning.Multiplicities.EqualMultiplicities
+public import New.Determinant.Chain.Moduli
+public import New.Determinant.Chain.TriangleLifts
+public import New.Determinant.Chain.TriangleNorms
+import Lib.PadicComparison.Descent.TestCategory
+import New.Determinant.Chain.ChainNorms
 
 /-!
 # The volume of ι on the target forms as a product of volumes of theta lifts

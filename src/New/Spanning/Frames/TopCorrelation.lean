@@ -1,6 +1,11 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.BesselVector
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # Scaled orbital integrals of the finite Bessel vector on the floor group

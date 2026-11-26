@@ -1,10 +1,11 @@
 module
 
-public import Mathlib.Analysis.Complex.HalfPlane
-public import Mathlib.Analysis.Complex.TaylorSeries
-public import Mathlib.Analysis.Meromorphic.Order
-public import Mathlib.MeasureTheory.Order.Group.Lattice
 public import Mathlib.Probability.Moments.ComplexMGF
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.HalfPlane
+import Mathlib.Analysis.Complex.TaylorSeries
+import Mathlib.Analysis.Meromorphic.Order
+import Mathlib.MeasureTheory.Order.Group.Lattice
 public import Lib.Analytic.EntireLFunction
 
 /-!

@@ -1,15 +1,21 @@
 module
 
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.Algebra.Ring.IsFormallyReal
-public import Mathlib.Analysis.Calculus.FDeriv.Star
-public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 public import Mathlib.LinearAlgebra.Matrix.Bilinear
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.RingTheory.Complex
-public import Mathlib.RingTheory.TotallySplit
-public import Mathlib.Tactic.Linter.Style
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Calculus.FDeriv.Star
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.General.LinearAlgebra.HermitianMatrices
 public import Lib.General.Measure.HaarNormalisation
 

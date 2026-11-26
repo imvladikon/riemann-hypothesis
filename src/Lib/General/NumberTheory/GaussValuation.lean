@@ -1,7 +1,12 @@
 module
 
-public import TauCeti.Algebra.Ring.GeomSum
-public import Lib.General.NumberTheory.PadicLimitsValuation
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import TauCeti.Algebra.Ring.GeomSum
+public import Lib.GaloisRep.Main.SelmerModules
+import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # The Gauss valuation of a polynomial over the ring of integers of ℚ̄_ℓ

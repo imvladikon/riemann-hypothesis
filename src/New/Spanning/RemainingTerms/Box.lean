@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
-public import Lib.Adelic.Adeles.SemilocalProducts
+import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
+import Mathlib.Tactic.Linter.Style
+import TauCeti.NumberTheory.NumberField.Countable
 public import New.Spanning.Unfolding.Setup
+import Lib.Adelic.Adeles.SemilocalProducts
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # The box

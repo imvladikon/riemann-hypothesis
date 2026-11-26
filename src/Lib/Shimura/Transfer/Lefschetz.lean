@@ -1,8 +1,14 @@
 module
 
-public import Lib.General.Combinatorics
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.Finset.Functor
+import Mathlib.RingTheory.PicardGroup
 public import Lib.Shimura.HeckeTower.Model
-public import Lib.Shimura.Transfer.MarkedPairs
+import Lib.General.Combinatorics
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Transfer.MarkedPairs
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # h-null Hecke elements and the Lefschetz formula as a sum over marked pairs

@@ -1,6 +1,9 @@
 module
 
-public import Mathlib.Topology.Algebra.Nonarchimedean.TotallyDisconnected
+import Mathlib.Topology.Algebra.Nonarchimedean.TotallyDisconnected
+import Mathlib.Topology.LocallyConstant.Algebra
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Separation.Connected
 public import Lib.Adelic.TraceFormula.TestFunction
 
 /-!

@@ -1,7 +1,17 @@
 module
 
+public import Mathlib.Topology.Connected.Separation
+public import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Finset.Functor
+import Mathlib.MeasureTheory.Integral.Pi
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.StandardLevel
 public import New.Spanning.MainTerm.GlobalSieve
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # The place and level of a set of primes, orbit sums and the set of entries

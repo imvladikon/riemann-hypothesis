@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Valuation.LocalSubring
 public import Lib.Cohomology.ProperBaseChange.LineCharts
 
 /-!

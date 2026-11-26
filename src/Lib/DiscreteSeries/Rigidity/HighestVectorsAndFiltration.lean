@@ -1,10 +1,18 @@
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Star
-public import Mathlib.Data.Set.Finite.List
-public import Mathlib.RingTheory.Finiteness.Lattice
-public import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
-public import Lib.General.LinearAlgebra.Eigenvalues
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Star
+import Mathlib.Data.Set.Finite.List
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Lib.DiscreteSeries.Rigidity.RepresentationsAndCasimirs
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.LinearAlgebra.Eigenvalues
 
 /-!
 # K-highest vectors, norm bounds, Casimir growth on the filtration, and analytic vectors

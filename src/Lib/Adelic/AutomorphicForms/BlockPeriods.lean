@@ -1,7 +1,12 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.GLn.Branching.IntegralMap
+public import Lib.Adelic.AutomorphicForms.Basic
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
 
 /-!
 # Periods of algebraic forms over a block subgroup as class sums via branching

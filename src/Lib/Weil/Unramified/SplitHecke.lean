@@ -1,8 +1,15 @@
 module
 
 public import Mathlib.RingTheory.PowerSeries.Inverse
-public import Lib.General.LinearAlgebra.Eigenvalues
-public import Lib.Weil.Unramified.HeckeGL
+public import Aesop.BuiltinRules
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+public import Lib.Adelic.Hecke.ClassSums
+public import Lib.Adelic.Unitary.Defs
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.Weil.Unramified.HeckeGL
 
 /-!
 # Hecke operators and Hecke polynomials at split places; spherical eigenvectors

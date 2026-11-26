@@ -1,13 +1,21 @@
 module
 
 public import Lib.ClassField.Avatar.HeckeBaseChange
-public import Lib.GaloisRep.KillingPolynomials
-public import Lib.GaloisRep.Main.CuspidalTypes
-public import Lib.Shimura.Eigenspace
-public import Lib.Shimura.IntegralModel.PELDataExistence
-public import Lib.Shimura.IntegralModel.TowerExistence
-public import Lib.Shimura.ThetaModuli.UniversalFamily
-public import Lib.Shimura.Transfer.WeightOccurs
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+public import Lib.GaloisRep.Main.QuadraticStep
+public import Lib.Shimura.TraceFormula.DefiniteTrace
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.GaloisRep.KillingPolynomials
+import Lib.GaloisRep.Main.CuspidalTypes
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.PadicHodge.Characters
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.Shimura.Eigenspace
+import Lib.Shimura.IntegralModel.PELDataExistence
+import Lib.Shimura.IntegralModel.TowerExistence
+import Lib.Shimura.ThetaModuli.UniversalFamily
+import Lib.Shimura.Transfer.WeightOccurs
 
 /-!
 # Seed representations: odd rank, a cuspidal type and free jumps

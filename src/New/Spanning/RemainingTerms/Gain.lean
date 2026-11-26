@@ -1,7 +1,12 @@
 module
 
 import TauCeti.Analysis.Matrix.OstrowskiTaussky
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.LinearAlgebra.Matrix.Range
 public import New.Spanning.RemainingTerms.Cut
+import Lib.Base
 
 /-!
 # The gain: a discriminant bound for the common lattice of two terms over one block

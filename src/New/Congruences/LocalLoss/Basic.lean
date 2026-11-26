@@ -1,8 +1,12 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.RingTheory.TotallySplit
 public import Lib.GaloisRep.Main.LocalConditions
 public import Lib.General.NumberTheory.PadicLimitsValuation
 public import New.Reduction.Data.AdmissibleData
+import Lib.ClassField.Places.TameInertia
+import Lib.PadicHodge.Crystalline.HodgeTateForms
 
 /-!
 # Local loss above ℓ: main summand weights, b-places, crystalline relations and crystalline colength

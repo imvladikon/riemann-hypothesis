@@ -1,8 +1,19 @@
 module
 
-public import TauCeti.RingTheory.TrivSqZeroExt
-public import Lib.General.Geometry.SerreTheorem
-public import Lib.Shimura.Deformation.TangentCount
+public import Mathlib.Algebra.DualNumber
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.RingTheory.TrivSqZeroExt
+public import Lib.General.Geometry.PointsOfProperSchemes
+public import Lib.Shimura.ThetaModuli.ThetaFamilyRigidity
+import Lib.General.Geometry.SerreTheorem
+import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.Deformation.TangentCount
+import Lib.Shimura.HeckeTower.Model
 
 /-!
 # Drinfeld lifting over k[ε] and a bound on the tangent space of the moduli scheme

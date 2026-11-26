@@ -1,8 +1,13 @@
 module
 
 import TauCeti.Analysis.SpecialFunctions.Elliptic.LatticeClassification
-public import Mathlib.RingTheory.PowerSeries.Ideal
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PowerSeries.Ideal
 public import Lib.CM.GoodReduction
+public import Lib.CM.Sigma.ThetaSections
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Galois conjugates of CM curves: conjugate sections, isogenies and translates of θ

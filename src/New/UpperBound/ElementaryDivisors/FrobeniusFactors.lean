@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import New.UpperBound.ElementaryDivisors.RootLemma
 
 /-!

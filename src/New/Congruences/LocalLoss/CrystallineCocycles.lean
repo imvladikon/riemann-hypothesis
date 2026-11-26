@@ -1,5 +1,11 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.TotallySplit
 public import New.Congruences.Lifting.CupOrthogonalityBounds
 public import New.Congruences.LocalLoss.Basic
 

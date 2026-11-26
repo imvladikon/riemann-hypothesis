@@ -1,9 +1,9 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-public import Mathlib.MeasureTheory.Integral.Pi
 public import Mathlib.Topology.Algebra.IsOpenUnits
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+import Mathlib.MeasureTheory.Integral.Pi
 public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!

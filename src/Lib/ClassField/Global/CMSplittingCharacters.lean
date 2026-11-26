@@ -1,7 +1,16 @@
 module
 
-public import Lib.ClassField.Global.NormTheorems
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.GaloisRep.Main.SelmerModules
+public import Lib.Weil.Construction.WeilData
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ArtinReciprocity
+import Lib.ClassField.Global.NormTheorems
 
 /-!
 # CM fields: complex conjugation, invariant ideles and splitting characters

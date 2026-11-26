@@ -1,6 +1,12 @@
 module
 
-public import Lib.General.NumberTheory.PadicLimitsValuation
+public import Aesop.BuiltinRules
+public import TauCeti.Analysis.Normed.Ring.Ultra
+import Mathlib.Algebra.Order.Star.Real
+public import Lib.General.Algebra.AdicCompletion
+public import Lib.General.NumberTheory.ImaginaryQuadraticField
+import Lib.General.NumberTheory.PadicLimitsValuation
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Notation at a prime, and elements of prime-power norm at split primes

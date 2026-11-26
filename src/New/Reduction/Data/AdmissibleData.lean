@@ -1,7 +1,10 @@
 module
 
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
 public import New.Derivatives.Vacuum.IntegralVacuum
 public import New.Reduction.Zeros.PrimeError
+public import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Admissible data

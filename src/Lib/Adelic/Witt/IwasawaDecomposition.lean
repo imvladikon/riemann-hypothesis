@@ -1,9 +1,15 @@
 module
 
-public import Lib.Adelic.Landherr
-public import Lib.Cohomology.Etale.Basic
-public import Lib.General.LinearAlgebra.PolarDecomposition
+import Mathlib.RingTheory.PicardGroup
 public import Lib.Weil.MixedModel.IsotropicSplitting
+public import Lib.DiscreteSeries.FlenstedJensen.Defs
+import Lib.Adelic.Landherr
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Cohomology.Etale.Basic
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.LinearAlgebra.PolarDecomposition
 
 /-!
 # Maximal compact subgroup, splittings of isotropic frames and the Iwasawa decomposition

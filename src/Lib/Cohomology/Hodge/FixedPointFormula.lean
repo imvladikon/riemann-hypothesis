@@ -1,9 +1,15 @@
 module
 
 public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Lib.Cohomology.Hodge.DiagonalClass
-public import Lib.Cohomology.Hodge.Kunneth
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Mathlib.Algebra.DualNumber
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Lib.Cohomology.Hodge.GrothendieckSymbol
+import Lib.Cohomology.Hodge.DiagonalClass
+import Lib.Cohomology.Hodge.Kunneth
+import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # Reduced coincidences and the fixed point formula in Hodge cohomology

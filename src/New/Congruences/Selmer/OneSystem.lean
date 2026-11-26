@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.Topology.Algebra.ClopenNhdofOne
+import Mathlib.Topology.Connected.Separation
 public import Lib.General.Algebra.SharpMinors
-public import New.Congruences.Selmer.SelmerData
+public import New.Congruences.Selmer.AuxiliaryPrimes
+import New.Congruences.Selmer.SelmerData
 
 /-!
 # The universal twist and one system of equations for all twists

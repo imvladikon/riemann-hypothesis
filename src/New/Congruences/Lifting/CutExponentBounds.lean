@@ -1,7 +1,9 @@
 module
 
-public import New.Congruences.Lifting.LongGap
-public import New.Congruences.Lifting.SafeMoves
+import Mathlib.Algebra.Order.Star.Int
+public import New.Congruences.Lifting.SidePoints
+import New.Congruences.Lifting.LongGap
+import New.Congruences.Lifting.SafeMoves
 
 /-!
 # Exponent bounds by cuts for paired sides of a Kummer chart: sparse thick letters, two sizes

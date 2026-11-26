@@ -1,8 +1,14 @@
 module
 
 public import Lib.Adelic.AutomorphicForms.PAdicGauge
-public import Lib.General.LinearAlgebra.BlockEmbeddings
 public import New.Determinant.Exchange.MatchingPartners
+public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.Weil.DualPair.WeilAction
+import Lib.Adelic.AutomorphicForms.RealConvolution
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.Weil.DualPair.ThetaLiftConvergence
 
 /-!
 # One exchange, and class sums at the level of a row stabilizer

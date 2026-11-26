@@ -1,9 +1,15 @@
 module
 
-public import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
-public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.AlgebraicGeometry.AlgClosed.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
 public import Lib.Cohomology.Etale.Basic
 public import Lib.General.Geometry.DenseComplexPoints
 public import Lib.Shimura.AbelianScheme.Basic

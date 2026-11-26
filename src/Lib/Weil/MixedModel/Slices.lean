@@ -1,9 +1,15 @@
 module
 
+import Mathlib.MeasureTheory.Integral.Pi
+import TauCeti.Algebra.Group.AddChar.Basic
 public import Lib.SiegelWeil.Tower.LineTerms
-public import Lib.Weil.DualPair.ThetaIntegrals
 public import Lib.Weil.MixedModel.FockSections
 public import Lib.Weil.TameGaussSum
+public import Lib.Base
+public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+public import Lib.Weil.DualPair.WeilAction
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.DualPair.ThetaIntegrals
 
 /-!
 # Real, named and finite slices of data in the mixed model of an adapted splitting

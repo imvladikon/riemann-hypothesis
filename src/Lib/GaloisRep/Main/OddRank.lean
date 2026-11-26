@@ -1,7 +1,20 @@
 module
 
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
 public import Lib.GaloisRep.BaseChange.PrimeDegreeTransfer
-public import Lib.GaloisRep.Main.SplitCase
+public import Lib.ClassField.Grunwald
+public import Lib.GaloisRep.Main.AttachedRepresentations
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.Chebotarev
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.GaloisRep.Main.SplitCase
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.PadicComparison.ToricTower
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Attached Galois representations in odd rank and their descent along weak base change

@@ -1,7 +1,10 @@
 module
 
-public import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
-public import Lib.PadicComparison.Duality.LineIntegration
+public import Lib.Cohomology.ProperBaseChange.Theorem
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
+import Lib.PadicComparison.Descent.TestCovers
+import Lib.PadicComparison.Duality.LineIntegration
 
 /-!
 # The projective line formula for locally constant ℤ/ℓ coefficients

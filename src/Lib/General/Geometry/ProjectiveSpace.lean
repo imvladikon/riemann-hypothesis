@@ -1,12 +1,15 @@
 module
 
-public import TauCeti.RingTheory.MvPolynomial.Homogeneous
-public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
-public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
+import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.RingTheory.MvPolynomial.Homogeneous
 public import Lib.General.Geometry.LineBundles
 
 /-!

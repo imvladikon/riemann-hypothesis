@@ -1,7 +1,20 @@
 module
 
-public import Lib.Cohomology.Etale.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.RealShells
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.GaussianIntegral
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.Frames.Gains
 
 /-!
 # The normalized cell integral Ξ and the local bounds at ℂ for cut Bessel functions

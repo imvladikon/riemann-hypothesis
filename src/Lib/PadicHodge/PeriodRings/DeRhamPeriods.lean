@@ -1,8 +1,15 @@
 module
 
-public import Mathlib.LinearAlgebra.SModEq.Pow
-public import Lib.ClassField.Places.DecompositionCyclotomic
+import Mathlib.LinearAlgebra.SModEq.Pow
+import Mathlib.NumberTheory.Multiplicity
+public import Mathlib.RingTheory.Etale.Field -- shake: keep (needed public by an exposed definition)
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.Smooth.AdicCompletion -- shake: keep (needed public by an exposed definition)
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.PadicHodge.PeriodRings.CrystallineRings
+import Lib.ClassField.Places.DecompositionCyclotomic
 
 /-!
 # The cyclotomic action on μ, the period t, and the de Rham field B_dR

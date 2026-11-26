@@ -1,10 +1,16 @@
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.Deriv.Star
-public import Lib.DiscreteSeries.Theta.FockDualPair
-public import Lib.General.LinearAlgebra.MatricesNearIdentity
-public import Lib.Weil.Fock.WeightedNorms
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.Deriv.Star
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Lib.GLn.SchurModule.Basic
+public import Lib.Weil.Fock.Basic
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Theta.FockDualPair
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.LinearAlgebra.MatricesNearIdentity
+import Lib.General.Measure.HaarModulus
+import Lib.Weil.Fock.WeightedNorms
 
 /-!
 # Polynomial vectors in Fock space: inner product, density and Weil derivative

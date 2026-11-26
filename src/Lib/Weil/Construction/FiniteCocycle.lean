@@ -1,8 +1,11 @@
 module
 
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Mathlib.Topology.Algebra.ProperConstSMul
 public import Lib.Weil.Construction.FiniteMultiplier
 public import Lib.Weil.Construction.WeilOperators
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.Measure.HaarNormalisation
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # The finite cocycle as a finite Gauss sum, and its triviality

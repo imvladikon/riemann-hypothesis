@@ -1,7 +1,10 @@
 module
 
 import TauCeti.RingTheory.AdicCompletion.DiscreteValuationRing
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.RingTheory.Perfectoid.Integral.Tilt
 public import Lib.PadicHodge.PeriodRings.Ainf
 
 /-!

@@ -1,10 +1,24 @@
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 public import Mathlib.Geometry.Manifold.PartitionOfUnity
-public import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
-public import Mathlib.Topology.Germ
-public import Lib.DiscreteSeries.FlenstedJensen.FlagDensities
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.LineDeriv.Basic
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
+import Mathlib.Topology.Germ
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+public import Lib.General.Analysis.GaussianIntegral
+public import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.DiscreteSeries.FlenstedJensen.FlagDensities
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.MeanValueAndTaylor
+import Lib.General.LinearAlgebra.PolarDecomposition
 
 /-!
 # Flensted-Jensen's integral, analyticity of c_λ and its Casimir eigenvalue

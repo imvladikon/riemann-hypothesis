@@ -1,11 +1,11 @@
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
-public import Mathlib.Analysis.InnerProductSpace.NormDet
 import Mathlib.Algebra.DirectSum.LinearMap
 import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import Mathlib.LinearAlgebra.Eigenspace.Zero
+import Mathlib.Analysis.InnerProductSpace.NormDet
 public import Lib.Speed
 
 /-!

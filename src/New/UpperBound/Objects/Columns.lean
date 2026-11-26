@@ -1,13 +1,22 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
-public import Lib.ClassField.HeckeCharacter.TameModulus
+import Mathlib.Algebra.Order.Sub.Prod
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.GLn.Branching.IntegralMap
-public import Lib.General.Algebra.LevelModulus
 public import New.UpperBound.Objects.LiftChains
 public import New.UpperBound.Objects.Weights
 public import New.UpperBound.Seesaw.AdmissibleCombinations
 public import New.UpperBound.Objects.LiftLawsModuloN
+public import Lib.General.LinearAlgebra.BlockEmbeddings
+public import Lib.SiegelWeil.SingularForms.CentreCoefficients
+public import Lib.Weil.DualPair.FiniteAction
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.General.Algebra.LevelModulus
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Levels of the chain, chain data, and the composite lift

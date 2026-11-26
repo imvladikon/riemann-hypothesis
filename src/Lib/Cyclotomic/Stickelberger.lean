@@ -1,7 +1,16 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.NumberTheory.MulChar.Lemmas
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+import Mathlib.RingTheory.Valuation.LocalSubring
+import TauCeti.Algebra.Group.AddChar.Basic
 public import Lib.GaloisRep.Main.SelmerModules
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # A weak form of Stickelberger's theorem for Gauss sums, and a family of Jacobi-type quotients

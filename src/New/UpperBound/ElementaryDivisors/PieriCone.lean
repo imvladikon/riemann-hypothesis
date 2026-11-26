@@ -1,8 +1,7 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Permutation
-public import TauCeti.LinearAlgebra.Determinant.Basic
-public import Aesop.Main
+import Mathlib.LinearAlgebra.Matrix.Permutation
+import TauCeti.LinearAlgebra.Determinant.Basic
 public import Lib.Speed
 
 /-!

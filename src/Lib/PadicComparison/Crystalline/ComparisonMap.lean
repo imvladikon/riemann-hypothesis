@@ -1,9 +1,20 @@
 module
 
-public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
-public import Lib.PadicComparison.Crystalline.DividedPowerEnvelope
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.KrullDimension.PID
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.RingTheory.Perfectoid.Integral.Tilt
 public import Lib.PadicComparison.Primitive.PeriodCoefficients
+public import Lib.PadicComparison.Completion
+public import Lib.PadicComparison.Descent.TestCovers
+public import Lib.PadicComparison.ToricTower
+import Lib.Cohomology.Etale.DenseSubfunctors
+public import Lib.PadicComparison.Crystalline.DividedPowerEnvelope -- shake: keep (needed public by an exposed definition)
+import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!
 # Crystalline comparison: bijectivity on étale charts and spanning of period cohomology

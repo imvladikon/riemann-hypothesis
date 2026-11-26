@@ -1,6 +1,10 @@
 module
 
-public import Lib.SiegelWeil.RallisInner.Doubling
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.SiegelWeil.UnramifiedSeries.VacuumCoefficients
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.SiegelWeil.RallisInner.Doubling
 
 /-!
 # Summability of the vacuum coefficients from the doubling formula

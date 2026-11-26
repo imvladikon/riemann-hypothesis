@@ -1,6 +1,7 @@
 module
 
-public import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.MeasureTheory.Integral.Pi
 public import Lib.General.Groups.BesselGroups
 public import Lib.General.Measure.IntegralOperators
 

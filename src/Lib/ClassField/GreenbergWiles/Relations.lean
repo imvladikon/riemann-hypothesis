@@ -1,7 +1,11 @@
 module
 
-public import Lib.ClassField.GreenbergWiles.CocycleCounts
-public import Lib.ClassField.GreenbergWiles.SelmerRelations
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Topology.Sheaves.Presheaf
+public import Lib.ClassField.GreenbergWiles.SelmerLevels
+import Lib.ClassField.GreenbergWiles.CocycleCounts
+import Lib.ClassField.GreenbergWiles.SelmerRelations
+import Lib.ClassField.Places.TameInertia
 
 /-!
 # Relations at split primes

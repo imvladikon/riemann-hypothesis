@@ -1,6 +1,8 @@
 module
 
-public import Mathlib.MeasureTheory.Group.IntegralConvolution
+import Mathlib.MeasureTheory.Group.IntegralConvolution
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.Levels
 
 /-!

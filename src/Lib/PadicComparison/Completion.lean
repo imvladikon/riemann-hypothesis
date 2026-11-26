@@ -1,7 +1,9 @@
 module
 
-public import Mathlib.Algebra.Category.Grp.Ulift
-public import Mathlib.RingTheory.Regular.Category
+import Mathlib.Algebra.Category.Grp.Ulift
+import Mathlib.RingTheory.Regular.Category
+import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Lib.General.Algebra.CohomologyBaseChange
 
 /-!

@@ -1,6 +1,8 @@
 module
 
-public import Lib.Adelic.TraceFormula.ChangingSigns
+public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.Adelic.TraceFormula.ChangingSigns
+import Lib.General.LinearAlgebra.Eigenvalues
 
 /-!
 # Eigenline reflections of a separable matrix, and the term of the count at a marked triple

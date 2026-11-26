@@ -1,8 +1,12 @@
 module
 
 import TauCeti.Analysis.Convex.Lipschitz
-public import Mathlib.Analysis.Complex.HalfPlane
-public import Lib.Analytic.EntireLFunction
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.HalfPlane
+import Mathlib.Order.CompletePartialOrder
+public import Lib.Speed
+import Lib.Analytic.EntireLFunction
 
 /-!
 # A Tauberian theorem with a stretched exponential remainder

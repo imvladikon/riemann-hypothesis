@@ -1,6 +1,11 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.Densities
+import New.Spanning.Frames.QuadricPlancherel
 
 /-!
 # One frame

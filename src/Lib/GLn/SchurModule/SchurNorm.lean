@@ -1,6 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Data.Finset.Slice
+public import Mathlib.Analysis.Matrix.Order -- shake: keep (opened namespace `MatrixOrder`)
 public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+public import Lib.GLn.SchurModule.GramMatrix
+import Lib.Base
+import Lib.Cohomology.Etale.Basic
+import Lib.GLn.SchurModule.WeylKernel
 
 /-!
 # Norm bound for Schur matrices and basic facts on the weight representations

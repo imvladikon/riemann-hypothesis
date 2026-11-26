@@ -1,7 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.CategoryTheory.ExtremalEpi
 public import Lib.Shimura.CongruenceRelation.KernelReduction
 public import Lib.Shimura.IntegralModel.UniversalFamily
+public import Lib.General.Geometry.SerreTheorem
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.Shimura.AbelianScheme.IsogenyFlatness
+import Lib.Shimura.AbelianScheme.Pairings
 
 /-!
 # Hecke elements on adelic torsion and reductions of Frobenius twists of Hecke neighbours

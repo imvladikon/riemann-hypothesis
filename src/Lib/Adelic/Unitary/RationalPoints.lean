@@ -1,6 +1,10 @@
 module
 
-public import Lib.Adelic.Unitary.WeakApproximation
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Base
 
 /-!
 # Rational points and vectors of spaces under sums, moves and block embeddings

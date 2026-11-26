@@ -1,8 +1,20 @@
 module
 
-public import Lib.SiegelWeil.OneVector.StandardQuadrics
-public import New.Spanning.Frames.QuadricPlancherel
-public import New.Spanning.Unfolding.BesselLevelStructure
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.CategoryTheory.Countable
+public import Mathlib.Topology.Algebra.ProperConstSMul -- shake: keep (needed public by an exposed definition)
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+public import Lib.SiegelWeil.OneVector.FinitePlaceDensity
+public import New.Spanning.Bessel.Basic
+public import New.Spanning.Frames.Correlations
+import Lib.Base
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.SiegelWeil.OneVector.StandardQuadrics
+import New.Spanning.Frames.QuadricPlancherel
+import New.Spanning.Frames.QuadricVolumes
+import New.Spanning.Unfolding.BesselLevelStructure
 
 /-!
 # Place data and gauges at a finite place from the lattice of integral vectors

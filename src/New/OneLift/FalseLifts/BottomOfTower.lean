@@ -1,8 +1,14 @@
 module
 
+import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import Mathlib.NumberTheory.MulChar.Lemmas
+import Mathlib.Topology.Algebra.Group.Matrix
 public import Lib.LocalGL.Green.TauFunctions
 public import Lib.Weil.Periods.DescentVanishing
 public import New.UpperBound.Objects.AuxiliaryPair
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # The bottom of the tower: from the block datum to all data

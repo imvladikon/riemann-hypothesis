@@ -1,6 +1,8 @@
 module
 
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.UpperBound.Divisibility.JetExponent
+import New.Reduction.Data.Sizes
 
 /-!
 # Marked primes above `p`, full marks and the scaled Hecke operator

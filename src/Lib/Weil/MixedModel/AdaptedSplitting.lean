@@ -1,6 +1,7 @@
 module
 
 public import Lib.Weil.DualPair.MixedModel
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Adapted splittings: hyperbolic polarisation, Hom spaces, composition and stages

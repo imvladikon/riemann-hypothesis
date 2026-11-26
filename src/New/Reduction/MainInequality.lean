@@ -1,7 +1,9 @@
 module
 
-public import New.Determinant.Twist.LongForms
-public import New.Reduction.ShortAndEnough
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.Reduction.PrimeSums
+import New.Determinant.Twist.LongForms
+import New.Reduction.ShortAndEnough
 
 /-!
 # The main inequality

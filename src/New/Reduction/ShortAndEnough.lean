@@ -1,10 +1,15 @@
 module
 
+import Mathlib.Data.Rat.Cast.OfScientific
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import New.Reduction.IntegralTargetForms
 public import New.Spanning.SecondMoment.SpanningTheorem
-public import New.UpperBound.Divisibility.LocalDivisibility
-public import New.UpperBound.Seesaw.SeesawIdentity
-public import New.UpperBound.Size.ArchimedeanSize
+public import New.Reduction.PrimeSums
+public import New.UpperBound.Divisibility.MarkedPrimes
+public import New.UpperBound.Size.Estimates
+import New.UpperBound.Divisibility.LocalDivisibility
+public import New.UpperBound.Seesaw.SeesawIdentity -- shake: keep (needed public by an exposed definition)
+import New.UpperBound.Size.ArchimedeanSize
 
 /-!
 # Theorem A (short forms) and Theorem B (enough forms)

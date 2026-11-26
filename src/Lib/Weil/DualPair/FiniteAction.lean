@@ -1,7 +1,10 @@
 module
 
-public import Lib.Weil.Construction.CanonicalTheta
-public import Lib.Weil.DualPair.WeilAction
+public import Lib.Weil.DualPair.Defs
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Weil.Construction.CanonicalTheta
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Weil representation of unitary pairs: finite action, sums, negation and change of point

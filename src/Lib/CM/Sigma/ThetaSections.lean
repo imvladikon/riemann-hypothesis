@@ -1,7 +1,13 @@
 module
 
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
 public import Lib.CM.Sigma.Basic
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+public import Lib.Shimura.ComplexTheta.DimensionFormula
+import Lib.General.Groups.CongruenceSubgroups
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Theta functions of a CM elliptic curve: Weierstrass equation and spanning monomials

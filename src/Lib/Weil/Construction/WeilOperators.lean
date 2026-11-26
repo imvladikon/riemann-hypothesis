@@ -1,8 +1,10 @@
 module
 
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Topology.Sheaves.Presheaf
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.Weil.Construction.HeisenbergModel
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Measure.HaarNormalisation
 
 /-!
 # Weil operators, orthogonal sums and transport of the reproducing model

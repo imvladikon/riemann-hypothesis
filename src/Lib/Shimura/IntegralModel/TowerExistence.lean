@@ -1,9 +1,15 @@
 module
 
-public import Mathlib.Combinatorics.Enumerative.IncidenceAlgebra
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.Combinatorics.Enumerative.IncidenceAlgebra
+import Mathlib.RingTheory.Etale.Weakly
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.General.Combinatorics
-public import Lib.Shimura.CongruenceRelation.HeckeNeighbours
-public import Lib.Shimura.IntegralModel.BallImmersion
+public import Lib.Shimura.IntegralModel.UniversalFamily
+import Lib.ClassField.Places.ValuationSubrings
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.CongruenceRelation.HeckeNeighbours
+import Lib.Shimura.IntegralModel.BallImmersion
 
 /-!
 # Existence of the model: the tower of Kuga–Sato covers with its congruence relation

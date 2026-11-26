@@ -1,7 +1,11 @@
 module
 
-public import Mathlib.Data.NNRat.BigOperators
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.NNRat.BigOperators
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.General.NumberTheory.GaussValuation
+import Lib.General.NumberTheory.PadicLimitsValuation
 
 /-!
 # Roots of unity `ζ` with polynomials hardly more divisible at `ζ - 1` than at given points

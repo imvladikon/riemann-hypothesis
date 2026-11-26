@@ -1,8 +1,11 @@
 module
 
-public import Lib.DiscreteSeries.Bruhat.FourierKernels
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Topology.Algebra.Group.Units
 public import New.Spanning.Frames.Correlations
-public import New.Spanning.Frames.TwoGauges
+public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+import Lib.DiscreteSeries.Bruhat.FourierKernels
+import New.Spanning.Frames.TwoGauges
 
 /-!
 # Volumes on quadrics and on sections

@@ -1,9 +1,16 @@
 module
 
-public import Mathlib.Tactic.Monotonicity.Lemmas
 public import TauCeti.Analysis.Normed.Ring.Ultra
-public import Lib.LocalGL.Iwahori.QuadraticRelation
+import Mathlib.Algebra.FiniteSupport.Basic
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.Tactic.Monotonicity.Lemmas
 public import Lib.Weil.Unramified.HeckeGL
+public import Lib.LocalGL.Iwahori.ParahoricStructure
+import Lib.Adelic.Adeles.IdeleModulus
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.LocalGL.Iwahori.QuadraticRelation
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Iwahori degrees, partial Hecke sums and Satake's formula

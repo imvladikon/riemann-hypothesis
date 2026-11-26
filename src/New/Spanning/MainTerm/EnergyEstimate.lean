@@ -1,7 +1,14 @@
 module
 
-public import New.Spanning.MainTerm.FiniteSieveSystem
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.MeasureTheory.Integral.Pi
 public import New.Spanning.RemainingTerms.Size
+public import New.Spanning.MainTerm.SiegelTopBound
+public import New.Spanning.Unfolding.Climbing
+import New.Spanning.MainTerm.FiniteSieveSystem
+import New.Spanning.MainTerm.GlobalToLocal
 
 /-!
 # Main-term bound for the second moment over open reductions fixing given vectors

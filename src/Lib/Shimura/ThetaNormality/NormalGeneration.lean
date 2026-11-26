@@ -1,9 +1,15 @@
 module
 
-public import Mathlib.GroupTheory.Schreier
-public import Mathlib.LinearAlgebra.Span.TensorProduct
-public import Mathlib.RingTheory.Valuation.Extension
+import Mathlib.GroupTheory.Schreier
+import Mathlib.LinearAlgebra.Span.TensorProduct
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.Valuation.Extension
 public import Lib.Shimura.GoodReduction.TorsionSizes
+import Lib.Shimura.ComplexTheta.DimensionFormula
 
 /-!
 # Orthogonality of theta translates and balls of integral theta functions

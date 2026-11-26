@@ -1,8 +1,22 @@
 module
 
-public import Lib.DiscreteSeries.Bruhat.ComplexPlace
-public import Lib.SiegelWeil.Formula.LagrangianZeroTerms
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Periods.DescentVanishing
+public import Lib.Weil.DualPair.KernelDecay
+public import Lib.Weil.Unramified.HeckeTransfer
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.Formula.LagrangianZeroTerms
+import Lib.Weil.DualPair.FiniteAction
 
 /-!
 # Vanishing of theta descents from W to W plus hyperbolic planes

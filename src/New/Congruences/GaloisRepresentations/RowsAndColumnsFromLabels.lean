@@ -1,7 +1,15 @@
 module
 
-public import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Congruences.Selmer.AuxiliaryPrimes
+public import New.Congruences.GaloisRepresentations.SelmerHypotheses
+import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.PadicComparison.ToricTower
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
 
 /-!
 # Main summands and conjugate self-dual representations from type polynomials

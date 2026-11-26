@@ -2,8 +2,10 @@ module
 
 public import Lib.ClassField.HeckeL.EulerProduct
 public import Lib.ClassField.Local.ArtinMap
-public import Lib.Cohomology.Etale.Basic
 public import Lib.Weil.Construction.FiniteMultiplier
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.CongruenceLevels
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # Values of algebraic Hecke characters

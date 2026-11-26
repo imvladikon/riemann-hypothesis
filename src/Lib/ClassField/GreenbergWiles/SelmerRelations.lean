@@ -1,8 +1,12 @@
 module
 
-public import Mathlib.Data.Set.Finite.Monad
-public import Lib.ClassField.Global.Chebotarev
+import Mathlib.Data.Set.Finite.Monad
+import Mathlib.FieldTheory.Galois.Profinite
 public import Lib.ClassField.GreenbergWiles.SplitPrimeReciprocity
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.Chebotarev
+import Lib.ClassField.LocalDuality.KummerFiniteness
+import Lib.ClassField.Places.LocalFields
 
 /-!
 # Relations at split primes and their number (Greenberg–Wiles)

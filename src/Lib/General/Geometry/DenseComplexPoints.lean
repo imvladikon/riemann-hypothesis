@@ -1,9 +1,15 @@
 module
 
-public import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.AlgebraicGeometry.Noetherian
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.Valuation.LocalSubring
 public import Lib.General.Geometry.ProjectiveSpace
 
 /-!

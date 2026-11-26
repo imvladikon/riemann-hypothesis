@@ -1,7 +1,12 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Int
 public import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+public import Mathlib.Analysis.Complex.Circle
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Topology.Algebra.Group.Units -- shake: keep (needed public by an exposed definition)
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.DiscreteSeries.Haar.CayleyChart
 
 /-!

@@ -1,10 +1,16 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Matrix
 public import Lib.Adelic.AutomorphicForms.Basic
 public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
 public import Lib.Weil.Fock.OscillatorPair
-public import Lib.Weil.MixedModel.ThetaInvariance
 public import Lib.Weil.Periods.Grading
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.Weil.MixedModel.ThetaInvariance
 
 /-!
 # Laws of the Weil action of a pair: translations, real points, levels, rational maps

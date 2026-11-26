@@ -1,6 +1,8 @@
 module
 
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import New.Spanning.Unfolding.Link
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Links, lifts and gauges of a term

@@ -1,8 +1,13 @@
 module
 
-public import Lib.Weil.CompactLift.DefiniteThetaLift
 public import New.Determinant.Norms.VectorKernel
-public import New.UpperBound.Kernels.JetConjugatesAndBounds
+public import Lib.Weil.CompactLift.ThetaKernelDefs
+public import Lib.Weil.DualPair.GaloisLaw
+public import New.Derivatives.Vacuum.TightFrames
+import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+import Lib.Weil.CompactLift.DefiniteThetaLift
+import New.UpperBound.Kernels.JetConjugatesAndBounds
 
 /-!
 # The lift of a character from U(1): kernel, descent and Galois conjugates

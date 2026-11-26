@@ -1,7 +1,10 @@
 module
 
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
-public import Lib.General.Algebra.SeriesBounds
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+public import Lib.CM.FormalGroup.IntegralParameter
+public import Lib.CM.Integrality.TorsionValues
+import Lib.CM.GoodReduction
+import Lib.General.Algebra.SeriesBounds
 
 /-!
 # The integrality principle in one variable

@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import New.Congruences.LocalLoss.CrystallineCocycles
 
 /-!

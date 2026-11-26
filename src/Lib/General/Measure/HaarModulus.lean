@@ -2,11 +2,13 @@ module
 
 import TauCeti.MeasureTheory.Measure.Haar.DistribChar
 public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import TauCeti.Topology.Instances.Matrix
 public import Lib.General.LinearAlgebra.IntegralLattices
 
 /-!

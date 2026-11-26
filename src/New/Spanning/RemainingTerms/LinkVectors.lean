@@ -1,6 +1,8 @@
 module
 
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import New.Spanning.Unfolding.TermStructure
+public import New.Spanning.RemainingTerms.BorderedDeterminant
 
 /-!
 # The vectors `z⁺` and `Υ_γ⁻¹ z⁺`

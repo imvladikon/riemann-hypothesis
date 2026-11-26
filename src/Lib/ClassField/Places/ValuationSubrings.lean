@@ -1,13 +1,17 @@
 module
 
-public import Mathlib.RingTheory.Invariant.Profinite
 public import Mathlib.RingTheory.Valuation.Extension
-public import Mathlib.RingTheory.Valuation.IsTrivialOn
-public import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.NumberTheory.RamificationInertia.Galois
+import Mathlib.RingTheory.Invariant.Profinite
+import Mathlib.RingTheory.Valuation.IsTrivialOn
+import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.Adelic.Adeles.Basic
-public import Lib.ClassField.Places.ProfiniteGalois
 public import Lib.General.Algebra.AdicCompletion
 public import Lib.General.Topology
+public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
+import Lib.ClassField.Places.ProfiniteGalois
 
 /-!
 # Valuation subrings over primes, primes from p-adic embeddings, and the efg formula

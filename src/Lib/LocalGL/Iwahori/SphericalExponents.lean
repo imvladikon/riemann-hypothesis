@@ -1,6 +1,11 @@
 module
 
-public import Lib.LocalGL.Iwahori.HeckeDegrees
+public import Lib.Adelic.Adeles.Basic
+public import Lib.LocalGL.Iwahori.ParahoricStructure
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.LocalGL.Iwahori.HeckeDegrees
+import Lib.LocalGL.Iwahori.QuadraticRelation
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Exponents that survive on spherical vectors, and a Hecke operator on parahoric eigenvectors

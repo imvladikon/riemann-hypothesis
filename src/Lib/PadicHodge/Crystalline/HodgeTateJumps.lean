@@ -1,11 +1,20 @@
 module
 
-public import Mathlib.Data.Finsupp.Pointwise
-public import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Lib.General.Measure.HaarModulus
-public import Lib.PadicHodge.Crystalline.HodgeTateForms
+public import Aesop.BuiltinRules
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Adelic.Hecke.ClassSums
+public import Lib.PadicHodge.TateSen
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.Measure.HaarModulus
+import Lib.General.NumberTheory.CoefficientRings
+import Lib.PadicHodge.Crystalline.HodgeTateForms
 
 /-!
 # Hodge frames and Hodge–Tate jumps under operations on representations

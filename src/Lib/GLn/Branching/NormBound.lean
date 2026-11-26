@@ -1,8 +1,17 @@
 module
 
-public import Mathlib.Algebra.AffineMonoid.Basic
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.GLn.SchurModule.GramMatrix
+public import Lib.GLn.SchurModule.WeylKernel
+import Lib.Base
+import Lib.GLn.SchurModule.SchurMatrix
 
 /-!
 # Branching from GL(n+1) to GL(n) × GL(1): the branching vector and the norm bound

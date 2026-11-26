@@ -1,7 +1,13 @@
 module
 
 import TauCeti.NumberTheory.Padics.Complex.TateTwist
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.PadicHodge.Crystalline.Basic
+public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.General.Groups.ProfiniteCharacters
 
 /-!
 # Tate's vanishing theorem, Hodge–Tate elimination and the filtration of B_dR

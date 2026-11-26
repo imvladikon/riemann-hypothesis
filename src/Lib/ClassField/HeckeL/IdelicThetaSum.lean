@@ -1,7 +1,12 @@
 module
 
-public import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.ProperConstSMul
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.Adelic.Adeles.IdeleModulus
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Idelic theta sums over principal ideles as Riemann sums

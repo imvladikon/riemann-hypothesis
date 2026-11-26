@@ -2,7 +2,11 @@ module
 
 public import New.Derivatives.FormalGroup.Resolution
 public import New.Derivatives.Vacuum.IntegralVacuum
-public import New.UpperBound.Seesaw.AdmissibleCombinations
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.CM.Integrality.IsogenyIntegrality
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import New.UpperBound.Seesaw.AdmissibleCombinations
 
 /-!
 # Integrality of jets of theta products and stability of standard data

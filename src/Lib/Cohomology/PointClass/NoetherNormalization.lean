@@ -1,11 +1,19 @@
 module
 
-public import Mathlib.GroupTheory.CosetCover
-public import Mathlib.RingTheory.Invariant.Galois
-public import Lib.General.Algebra.MultivariatePolynomials
-public import Lib.General.Geometry.PointsOfProperSchemes
+public import Aesop.BuiltinRules
+public import Mathlib.RingTheory.Invariant.Defs
+import Mathlib.FieldTheory.PurelyInseparable.Exponent
+import Mathlib.GroupTheory.CosetCover
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Invariant.Galois
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.Valuation.LocalSubring
+import TauCeti.RingTheory.MvPolynomial.Homogeneous
 public import Lib.General.Geometry.ProjectiveSpace
-public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.General.Geometry.EtaleCharts
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.Geometry.PointsOfProperSchemes
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Projective Noether normalisation and homogeneous coordinates of embedded points

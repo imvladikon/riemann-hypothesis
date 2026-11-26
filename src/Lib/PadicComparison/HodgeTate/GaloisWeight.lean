@@ -1,6 +1,7 @@
 module
 
 public import Lib.PadicComparison.HodgeTate.Map
+import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!
 # Galois twists and the weight of the Hodge–Tate map

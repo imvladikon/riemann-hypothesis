@@ -1,8 +1,14 @@
 module
 
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Bessel.FrameFibre
-public import Lib.DiscreteSeries.Bruhat.ComplexPlace
 public import New.Spanning.Bessel.GramSection
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # The mean value inequality over the Gram matrix of two frames

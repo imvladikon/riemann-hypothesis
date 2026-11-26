@@ -1,8 +1,16 @@
 module
 
-public import Lib.Adelic.Adeles.AdditiveCharacter
+public import TauCeti.RingTheory.DedekindDomain.FiniteAdeleRing.BorelSpace
+import Mathlib.RingTheory.PiTensorProduct
+public import Mathlib.Topology.Algebra.Group.Matrix -- shake: keep (needed public by an exposed definition)
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
+import TauCeti.RingTheory.DedekindDomain.AdicValuation.ResidueField
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.Adelic.Hecke.Basic
 public import Lib.General.Topology
+public import Lib.Adelic.Adeles.Basic
+public import Lib.General.Groups.CongruenceSubgroups
+import Lib.Adelic.Adeles.AdditiveCharacter
 
 /-!
 # Adelic unitary groups over a CM field: levels, hermitian spaces, lattices and mass

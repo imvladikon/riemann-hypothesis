@@ -1,8 +1,13 @@
 module
 
-public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
-public import Lib.Adelic.Reduction.FiniteVolume
-public import Lib.Shimura.Transfer.MarkedPairs
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
+import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
+import Mathlib.Topology.Algebra.Group.Units
+public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.Adelic.Reduction.FiniteVolume
+import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Shimura.Transfer.MarkedPairs
 
 /-!
 # Trace formula for algebraic forms, finiteness of signed frame classes, the definite side

@@ -1,10 +1,10 @@
 module
 
-public import Mathlib.FieldTheory.Galois.Profinite
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.Topology.Connected.Separation
-public import Mathlib.Topology.Separation.CompletelyRegular
+public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Topology.Connected.Separation
 public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
 
 /-!

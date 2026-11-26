@@ -1,8 +1,15 @@
 module
 
-public import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.RingTheory.PiTensorProduct
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.AutomorphicForms.RealConvolution
-public import Lib.DiscreteSeries.CuspKernel
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.DiscreteSeries.CuspKernel
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # The mean along a unipotent radical vanishes; reduction in the radical

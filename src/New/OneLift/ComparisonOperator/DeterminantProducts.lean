@@ -1,6 +1,8 @@
 module
 
+import Mathlib.Algebra.AffineMonoid.UniqueSums
 public import New.OneLift.ComparisonOperator.ExchangeData
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # Products of determinants and first-column coordinates under substitution

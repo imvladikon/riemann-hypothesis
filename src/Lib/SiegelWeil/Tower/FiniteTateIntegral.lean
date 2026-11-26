@@ -1,9 +1,14 @@
 module
 
-public import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Order.Interval.Finset.Box
+import TauCeti.Topology.Algebra.Group.Units
 public import Lib.ClassField.Avatar.HeckeBaseChange
-public import Lib.ClassField.HeckeCharacter.TameModulus
 public import Lib.SiegelWeil.Tower.RealConeIntegral
+public import Lib.SiegelWeil.Tower.PrincipalIdeles
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.Weil.DualPair.ThetaIntegrals
 
 /-!
 # Products of `L`-values and Tate's integral at the finite places

@@ -1,6 +1,7 @@
 module
 
-public import New.Congruences.Lifting.SafeMoves
+public import New.Congruences.Lifting.SidePoints
+import New.Congruences.Lifting.SafeMoves
 
 /-!
 # Deep points and scaled cup coboundaries for a gap below zero or nonpositive jumps

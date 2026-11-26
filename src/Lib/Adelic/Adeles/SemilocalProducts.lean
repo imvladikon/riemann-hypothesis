@@ -1,7 +1,13 @@
 module
 
-public import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.SiegelWeil.Mass
+public import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Reduction.FirstMinimumShortBases
 
 /-!
 # Products of completions at finite sets of places and approximation of adeles by elements of E

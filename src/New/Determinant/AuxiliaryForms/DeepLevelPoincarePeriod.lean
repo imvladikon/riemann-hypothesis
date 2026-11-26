@@ -1,8 +1,21 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Appendix.DiscreteSeries.SteepParameters
-public import New.UpperBound.Objects.Columns
 public import New.UpperBound.Objects.Parameters
+public import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.PackingAndSobolev
+import New.UpperBound.Objects.Columns
 
 /-!
 # Steep parameters of Y₀ and Ỹ^0_0; periods of Poincaré series of deep level

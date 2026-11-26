@@ -1,9 +1,21 @@
 module
 
+import Mathlib.Algebra.Category.Grp.Ulift
+import Mathlib.Algebra.Category.ModuleCat.Biproducts
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.RingTheory.AdicCompletion.Completeness
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.Instances.ZMod
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.Cohomology.TorsionTheories
 public import Lib.PadicComparison.Descent.AlmostDescent
 public import Lib.PadicComparison.HodgeTate.GenericFibre
 public import Lib.PadicHodge.ArtinSchreierSequence
+import Lib.PadicComparison.Completion
+import Lib.PadicComparison.Descent.TestCovers
 
 /-!
 # Tilts and period coefficients of p-adic tests: products, comparisons, theories

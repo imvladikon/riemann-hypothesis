@@ -1,10 +1,13 @@
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
-public import Mathlib.GroupTheory.FiniteAbelian.Duality
-public import Mathlib.Tactic.ENatToNat
 public import Mathlib.Topology.Instances.ZMod
-public import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.GroupTheory.FiniteAbelian.Duality
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Separation.Connected
 public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
 public import Lib.General.Topology
 

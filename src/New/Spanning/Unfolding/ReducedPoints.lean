@@ -1,6 +1,8 @@
 module
 
-public import New.Spanning.RemainingTerms.BorderedDeterminant
+public import New.Spanning.Unfolding.Terms
+import Lib.General.NumberTheory.LatticeCovolumes
+import New.Spanning.RemainingTerms.BorderedDeterminant
 
 /-!
 # Eichler-type unipotent elements, colouring bounds and reduced points

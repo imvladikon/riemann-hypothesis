@@ -1,7 +1,14 @@
 module
 
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Weil.MixedModel.NamedData
-public import Lib.Weil.MixedModel.RealTheta
+public import Lib.Weil.MixedModel.IsotropicSplitting
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Base
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.MixedModel.RealTheta
 
 /-!
 # Zero term and mixed model of the Weil representation: slices and θ as a sum of slices

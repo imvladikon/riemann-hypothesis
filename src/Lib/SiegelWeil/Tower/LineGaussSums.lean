@@ -1,8 +1,11 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.TameModulus
+import TauCeti.Topology.Instances.Matrix
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
 public import Lib.Weil.MixedModel.Slices
+public import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.HeckeCharacter.TameModulus
 
 /-!
 # Standard partners, shear invariance, Gauss sums along lines and coefficients of lifts

@@ -1,10 +1,31 @@
 module
 
-public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
-public import Mathlib.MeasureTheory.Measure.RegularityCompacts
-public import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
-public import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+public import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+public import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.General.LinearAlgebra.PolarDecomposition
+import Lib.General.Measure.IdempotentKernel
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # Decay, tail bounds and the L² model of the discrete series coefficient c_λ

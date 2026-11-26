@@ -1,7 +1,9 @@
 module
 
-public import Lib.Adelic.Unitary.ComponentsAndBlockSums
-public import Lib.General.LinearAlgebra.HermiteForm
+public import Lib.General.LinearAlgebra.IntegralLattices
+import Lib.Adelic.Unitary.ComponentsAndBlockSums
+import Lib.Adelic.Witt.WittTheorem
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # Rows and columns of integral matrices, primitive matrices and the law of partners

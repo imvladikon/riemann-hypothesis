@@ -1,8 +1,16 @@
 module
 
-public import Mathlib.MeasureTheory.SpecificCodomains.Pi
-public import Lib.Adelic.AutomorphicForms.RealConvolution
-public import Lib.GLn.SchurModule.SchurNorm
+import Mathlib.MeasureTheory.SpecificCodomains.Pi
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.Adelic.AutomorphicForms.Basic
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.Adelic.AutomorphicForms.RealConvolution
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Rigidity.KernelFixes
+import Lib.GLn.SchurModule.SchurNorm
 
 /-!
 # Automorphic forms on standard definite spaces as algebraic forms

@@ -1,7 +1,12 @@
 module
 
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Congruences.LocalLoss.CrystallineCocycles
 public import New.Reduction.Data.Magnitudes
+import Lib.ClassField.Places.TameInertia
 
 /-!
 # The defect of the dual of a summand at a place above ℓ

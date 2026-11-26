@@ -1,8 +1,13 @@
 module
 
+public import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
-public import Lib.SiegelWeil.Tower.PrincipalIdeles
 public import Lib.Weil.MixedModel.Slices
+import Lib.SiegelWeil.Tower.PrincipalIdeles
 
 /-!
 # The real cone integral

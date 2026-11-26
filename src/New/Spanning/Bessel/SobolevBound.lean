@@ -1,8 +1,21 @@
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Pi
-public import Lib.DiscreteSeries.Bessel.SchurBound
-public import New.Spanning.Bessel.MeanValue
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Calculus.Deriv.Pi
+import Mathlib.CategoryTheory.Countable
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import New.Spanning.Bessel.GramSection
+import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Analysis.PackingAndSobolev
+import New.Spanning.Bessel.MeanValue
 
 /-!
 # Unfolding bounds over G₁ and the L² bound at the section γ_Z via Sobolev

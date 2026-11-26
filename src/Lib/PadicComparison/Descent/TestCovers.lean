@@ -1,10 +1,17 @@
 module
 
-public import Mathlib.Algebra.Regular.Pi
-public import Mathlib.Data.List.Intervals
+import Mathlib.Algebra.Regular.Pi
+import Mathlib.CategoryTheory.Abelian.Exact
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.Data.List.Intervals
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.Valuation.LocalSubring
+import TauCeti.RingTheory.Perfectoid.Integral.Tilt
 public import Lib.Cohomology.Etale.FilteredLimits
 public import Lib.General.Algebra.CohomologyBaseChange
 public import Lib.General.Geometry.EtaleCharts
+import Lib.Cohomology.Etale.DenseSubfunctors
 
 /-!
 # p-adic tests: tilts, Fontaine's map, covers by tests and flat base change

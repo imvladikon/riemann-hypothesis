@@ -1,6 +1,8 @@
 module
 
-public import New.UpperBound.Seesaw.EdgePairEvaluation
+public import New.UpperBound.Objects.LiftLawsModuloN
+public import New.UpperBound.Seesaw.AdmissibleCombinations
+public import New.UpperBound.Seesaw.EdgePairEvaluation -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The neighbour lattice of a pair of edges

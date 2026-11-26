@@ -1,7 +1,17 @@
 module
 
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.Topology.Algebra.ProperConstSMul
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.Reduction.FiniteVolume
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
+public import Lib.Adelic.Hecke.ClassSums
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Measure.IdempotentKernel
 
 /-!
 # Mahler's criterion for hermitian spaces and class sums for definite spaces

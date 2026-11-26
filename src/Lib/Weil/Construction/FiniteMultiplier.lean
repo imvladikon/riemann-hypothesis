@@ -1,6 +1,12 @@
 module
 
-public import Lib.Adelic.Adeles.LocalFactors
+public import Lib.Adelic.Adeles.IdeleModulus
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.Weil.Construction.WeilData
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.Measure.HaarNormalisation
 
 /-!
 # Finite Heisenberg datum, its lattice vacuum and the finite multiplier

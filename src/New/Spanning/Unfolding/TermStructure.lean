@@ -1,6 +1,11 @@
 module
 
-public import New.Spanning.Unfolding.Climbing
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.LinearAlgebra.Matrix.Rank
+public import New.Spanning.Unfolding.Link
+import Lib.Cohomology.Etale.Basic
+import New.Spanning.RemainingTerms.BorderedDeterminant
+import New.Spanning.Unfolding.Climbing
 
 /-!
 # The structure of a term

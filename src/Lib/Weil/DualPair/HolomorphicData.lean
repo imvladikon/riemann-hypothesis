@@ -1,6 +1,12 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.Weil.DualPair.KernelLaws
+public import Lib.Weil.DualPair.WeilAction
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.Weil.DualPair.ThetaLiftConvergence
 
 /-!
 # Holomorphic data, functions of a level, and theta kernels modulo 𝔪 as level multipliers

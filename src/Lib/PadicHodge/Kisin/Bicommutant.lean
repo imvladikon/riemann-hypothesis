@@ -1,6 +1,7 @@
 module
 
-public import Mathlib.Algebra.Module.Torsion.PrimaryComponent
+import Mathlib.Algebra.Module.Torsion.PrimaryComponent
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.PadicHodge.Kisin.Charts
 
 /-!

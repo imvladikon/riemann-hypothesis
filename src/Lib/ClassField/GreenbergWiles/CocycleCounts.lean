@@ -1,6 +1,13 @@
 module
 
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.CategoryTheory.Shift.Basic
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.ClassField.GreenbergWiles.SplitPrimeReciprocity
+import Lib.ClassField.GaloisCohomology.TateIndexFormula
 
 /-!
 # Counts of trivialised Galois cocycles for projective modules and central scalars

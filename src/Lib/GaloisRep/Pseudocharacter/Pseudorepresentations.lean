@@ -1,8 +1,15 @@
 module
 
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
 public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
-public import Lib.General.NumberTheory.PadicLimitsValuation
-public import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.NumberTheory.PadicLimitsValuation
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Spanning criteria, limits of traces and pseudorepresentations

@@ -1,8 +1,10 @@
 module
 
-public import Std.Tactic.BVDecide.Normalize.BitVec
-public import Lib.Cohomology.Etale.Basic
-public import Lib.General.Algebra.SeriesCongruences
+import Mathlib.RingTheory.PiTensorProduct
+import Std.Tactic.BVDecide.Normalize.BitVec
+public import Lib.General.Algebra.AdicCompletion
+import Lib.Cohomology.Etale.Basic
+import Lib.General.Algebra.SeriesCongruences
 
 /-!
 # The change of directions

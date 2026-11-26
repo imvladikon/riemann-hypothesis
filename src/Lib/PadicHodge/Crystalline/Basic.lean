@@ -1,7 +1,9 @@
 module
 
-public import Lib.ClassField.Places.DecompositionCompletion
-public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
+public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
+public import Lib.PadicHodge.PeriodRings.CrystallineRings
+public import Lib.ClassField.Places.DecompositionCompletion -- shake: keep (needed public by an exposed definition)
+import Lib.PadicHodge.PeriodRings.DeRhamPeriods
 
 /-!
 # Crystalline and potentially crystalline representations and admissibility

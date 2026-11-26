@@ -1,9 +1,13 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import Lib.Weil.DualPair.TwoEdges
 public import Lib.Weil.MixedModel.AdaptedSplitting
-public import Lib.Weil.Periods.ConstantTerm
 public import New.UpperBound.Objects.Rows
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Weil.Periods.ConstantTerm
 
 /-!
 # Finite zero terms and the evaluation of pairs of edges in the tower of spaces `Y_k`

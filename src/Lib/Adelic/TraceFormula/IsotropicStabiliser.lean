@@ -1,7 +1,9 @@
 module
 
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # The stabiliser of an isotropic subspace

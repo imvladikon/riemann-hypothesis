@@ -1,7 +1,14 @@
 module
 
-public import Lib.Adelic.Unitary.RationalPoints
-public import Lib.DiscreteSeries.Rigidity.KernelFixes
+import Mathlib.Algebra.Order.Star.Int
+public import Lib.Adelic.Adeles.StrongApproximation
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.DiscreteSeries.FlenstedJensen.Defs
+public import Lib.General.Measure.IdempotentKernel
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Rigidity.KernelFixes
 
 /-!
 # Graded hermitian spaces X ⊕ J_s, Bessel subgroups, the map T, and c_λ in a frame

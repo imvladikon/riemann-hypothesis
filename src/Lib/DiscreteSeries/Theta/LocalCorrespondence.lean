@@ -1,9 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.DiscreteSeries.Rigidity.KernelFixes
-public import Lib.DiscreteSeries.Theta.CasimirComparison
-public import Lib.DiscreteSeries.Theta.FockJointHarmonics
 public import Lib.Weil.Fock.OscillatorPair
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.DiscreteSeries.Theta.CasimirComparison
+import Lib.DiscreteSeries.Theta.FockJointHarmonics
 
 /-!
 # Existence of joint harmonics, Howe's argument and the local theta correspondence

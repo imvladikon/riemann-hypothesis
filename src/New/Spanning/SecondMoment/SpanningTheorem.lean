@@ -1,10 +1,12 @@
 module
 
-public import New.Determinant.AuxiliaryForms.RegularParameters
-public import New.Spanning.MainTerm.BadTypes
-public import New.Spanning.Multiplicities.EqualMultiplicities
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Spanning.Unfolding.Moments
 public import New.Spanning.Unfolding.SeriesPeriod
+import Lib.DiscreteSeries.Character.FormalDegree
+import New.Determinant.AuxiliaryForms.RegularParameters
+import New.Spanning.MainTerm.BadTypes
+import New.Spanning.Multiplicities.EqualMultiplicities
 
 /-!
 # The dimension of the target and one good translate of the Poincaré map

@@ -1,8 +1,10 @@
 module
 
-public import Lib.General.LinearAlgebra.Eigenvalues
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.LocalGL.Iwahori.ParahoricStructure
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Quadratic relation and injectivity of U_t at pro-p Iwahori level

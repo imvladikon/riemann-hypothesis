@@ -1,14 +1,17 @@
 module
 
-public import TauCeti.NumberTheory.RamificationInertia.Tower
 import TauCeti.NumberTheory.ArithmeticDirichletSeries.Convergence
-public import Mathlib.Analysis.Complex.CoveringMap
-public import Mathlib.Analysis.Normed.Group.Tannery
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-public import Mathlib.Data.Finset.Functor
-public import Mathlib.NumberTheory.NumberField.DedekindZeta
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.CoveringMap
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.Data.Finset.Functor
+import Mathlib.NumberTheory.NumberField.DedekindZeta
+import Mathlib.RingTheory.Ideal.Int
+import TauCeti.NumberTheory.RamificationInertia.Tower
 public import Lib.ClassField.Places.Ideles
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Euler products over primes of a number field and densities at primes of degree one

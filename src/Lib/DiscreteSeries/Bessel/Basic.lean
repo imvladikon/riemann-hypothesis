@@ -1,7 +1,12 @@
 module
 
-public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
 public import Lib.DiscreteSeries.Haar.CayleyChart
+public import Lib.Adelic.QuotientMeasure.Basic
+public import Lib.DiscreteSeries.Bruhat.FloorGroups
+public import Lib.General.Measure.IdempotentKernel
+public import Lib.General.Measure.QuadricDisintegration
+import Lib.DiscreteSeries.Bruhat.FloorMeasures
 
 /-!
 # The real unitary group G₁, unipotent coordinates and Bessel functions

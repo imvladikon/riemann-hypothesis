@@ -1,7 +1,12 @@
 module
 
-public import New.Derivatives.Vacuum.JetIntegrality
-public import New.Derivatives.Vacuum.ShortVectors
+public import New.Derivatives.FormalGroup.Resolution
+public import New.Derivatives.Vacuum.IntegralVacuum
+import Lib.CM.Integrality.IsogenyIntegrality
+import Lib.General.NumberTheory.SUnitsAndClassNumber
+import Lib.Weil.Construction.FourierInversion
+import New.Derivatives.Vacuum.JetIntegrality
+import New.Derivatives.Vacuum.ShortVectors
 
 /-!
 # Standard data as products of theta functions of the curve

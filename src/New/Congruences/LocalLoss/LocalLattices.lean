@@ -1,7 +1,11 @@
 module
 
+import Mathlib.Algebra.Module.StablyFree.Basic
+import TauCeti.LinearAlgebra.Pi
 public import New.Congruences.GaloisRepresentations.SelmerHypotheses
 public import New.Congruences.LocalLoss.CrystallineCocycles
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Tame classes from roots of unity and lattices read at a place above ℓ

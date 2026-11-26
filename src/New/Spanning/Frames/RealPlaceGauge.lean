@@ -1,11 +1,28 @@
 module
 
-public import Lib.Shimura.ComplexTheta.AppellHumbertData
-public import Lib.DiscreteSeries.Bessel.FrameFibre
-public import Lib.DiscreteSeries.Bruhat.FloorFibre
-public import Lib.DiscreteSeries.Bruhat.SphereFibres
-public import New.Spanning.Bessel.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.CategoryTheory.Countable
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Frames.Correlations
+public import Lib.DiscreteSeries.Bruhat.ComplexPlace
+public import Lib.DiscreteSeries.Haar.GramFibre
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Bessel.FrameFibre
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Bruhat.FloorFibre
+public import Lib.DiscreteSeries.Bruhat.SphereFibres -- shake: keep (needed public by an exposed definition)
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+public import Lib.DiscreteSeries.Haar.TotalMass -- shake: keep (needed public by an exposed definition)
+public import Lib.General.Analysis.GaussianIntegral -- shake: keep (needed public by an exposed definition)
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.Bessel.Basic
 
 /-!
 # Floor measures at the complex place: Haar measure, place datum and gauge

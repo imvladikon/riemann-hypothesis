@@ -1,8 +1,20 @@
 module
 
-public import New.Spanning.Bessel.OpenCellPairing
-public import New.Spanning.RemainingTerms.SchurOrbit
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.CategoryTheory.Shift.Basic
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Unfolding.TermStructure
+public import New.Spanning.RemainingTerms.Data
+public import New.Spanning.Unfolding.AmplitudeSums
+import Lib.Adelic.Unitary.CongruenceLevels
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import New.Spanning.Bessel.OpenCellPairing
+import New.Spanning.RemainingTerms.SchurOrbit
+import New.Spanning.Unfolding.Climbing
+import New.Spanning.Unfolding.CutoffIntegral
+import New.Spanning.Unfolding.Packing
 
 /-!
 # The orbit bound: a bound for a block of amplitudes; the second moment of a set of terms

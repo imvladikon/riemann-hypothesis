@@ -1,8 +1,15 @@
 module
 
-public import Mathlib.Data.ENat.BigOperators
-public import Lib.GaloisRep.Main.DivisibleSelmerModules
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.ENat.BigOperators
+import Mathlib.Data.Finset.Functor
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Sheaves.Presheaf
 public import New.Congruences.Selmer.Mirror
+import Lib.ClassField.GreenbergWiles.SelmerRelations
+import Lib.GaloisRep.Main.DivisibleSelmerModules
 
 /-!
 # The descent

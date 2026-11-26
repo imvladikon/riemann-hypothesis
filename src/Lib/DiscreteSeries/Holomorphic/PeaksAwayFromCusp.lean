@@ -1,8 +1,17 @@
 module
 
 public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
-public import Mathlib.NumberTheory.ModularForms.QExpansion
+public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.Schwarz
+import Mathlib.NumberTheory.ModularForms.QExpansion
+import TauCeti.LinearAlgebra.Matrix.Triangular
 public import Lib.Weil.DualPair.HolomorphicData
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
 
 /-!
 # The peaks of a bounded holomorphic form lie away from the cusps

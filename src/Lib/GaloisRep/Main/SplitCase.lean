@@ -1,8 +1,17 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.GaloisRep.Main.AttachedRepresentations
-public import Lib.GaloisRep.Main.SeedRepresentation
 public import Lib.GaloisRep.WeightCongruence
+public import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.GaloisRep.Main.CuspidalTypes
+import Lib.GaloisRep.Main.SeedRepresentation
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.PadicComparison.ToricTower
+import Lib.PadicHodge.Limit.TraceLimit
 
 /-!
 # Attached Galois representations in odd rank: the split case

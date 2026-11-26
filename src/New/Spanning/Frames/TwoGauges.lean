@@ -1,5 +1,6 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
 public import New.Spanning.Frames.Lengths
 
 /-!

@@ -1,10 +1,12 @@
 module
 
-public import Mathlib.RingTheory.DualNumber
+import Mathlib.Algebra.CharP.Pi
+import Mathlib.RingTheory.DualNumber
 public import Lib.Cohomology.Hodge.FixedPointFormula
 public import Lib.Cohomology.PointClass.ProjectiveSpace
-public import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
 public import Lib.PadicComparison.HodgeTate.Map
+public import Lib.Cohomology.ProjectiveLine.PerfectLine
+import Lib.Cohomology.ProjectiveLine.TiltedLineFormula
 
 /-!
 # The Hodge–Tate map does not kill point classes of the projective line and space

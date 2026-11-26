@@ -1,6 +1,6 @@
 module
 
-public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
 public import Lib.PadicComparison.Completion
 public import Lib.PadicComparison.ToricTower
 

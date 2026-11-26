@@ -1,7 +1,12 @@
 module
 
 public import Mathlib.NumberTheory.Padics.Complex
-public import Lib.CM.Sigma.ThetaSections
+public import Mathlib.NumberTheory.NumberField.ClassNumber
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.CM.Sigma.Basic
+import Lib.CM.Sigma.ThetaSections
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # CM lattices as multiples of fractional ideals, and good reduction of CM curves

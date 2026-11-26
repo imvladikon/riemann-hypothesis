@@ -1,5 +1,8 @@
 module
 
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
 public import Lib.PadicHodge.Kisin.PeriodMatrixBasis
 
 /-!

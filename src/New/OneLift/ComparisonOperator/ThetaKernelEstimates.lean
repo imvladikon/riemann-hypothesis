@@ -1,8 +1,23 @@
 module
 
-public import Lib.DiscreteSeries.Holomorphic.ModelFunction
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.CStarAlgebra.Spectrum
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.RingTheory.Etale.Weakly
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Holomorphic.PeaksAwayFromCusp
 public import New.OneLift.ComparisonOperator.ExchangeData
+public import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Holomorphic.ModelFunction
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Decay of Fock matrix coefficients, sparse theta sums and the isolation estimate

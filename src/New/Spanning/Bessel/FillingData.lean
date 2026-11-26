@@ -1,12 +1,25 @@
 module
 
-public import Lib.DiscreteSeries.Character.FormalDegree
-public import New.Determinant.AuxiliaryForms.DeepLevelPoincarePeriod
-public import New.Spanning.Bessel.CutTailBound
-public import New.Spanning.Bessel.SchurBound
-public import New.Spanning.Frames.RealBandLimits
-public import New.Spanning.Unfolding.Climbing
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import Mathlib.Tactic.Monotonicity.Lemmas
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.UpperBound.Objects.Rows
+public import New.Spanning.Bessel.LargeFunction
+public import New.Spanning.Frames.RealPlaceGauge
+public import New.Spanning.Unfolding.Setup
+import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.DiscreteSeries.Character.FormalDegree
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.GLn.SchurModule.SchurNorm
+import New.Determinant.AuxiliaryForms.DeepLevelPoincarePeriod
+import New.Spanning.Bessel.CutTailBound
+import New.Spanning.Bessel.SchurBound
+import New.Spanning.Frames.RealBandLimits
+import New.Spanning.Unfolding.Climbing
 
 /-!
 # Filling data from admissible data, with Bessel systems at the real places

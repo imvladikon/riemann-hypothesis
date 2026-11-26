@@ -1,5 +1,7 @@
 module
 
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Derivatives.Sharpness.Couplings
 public import New.Derivatives.Sharpness.NearPairs
 

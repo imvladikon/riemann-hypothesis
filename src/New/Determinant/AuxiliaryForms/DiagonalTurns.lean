@@ -1,6 +1,10 @@
 module
 
+import Std.Tactic.BVDecide.Normalize.BitVec
 public import New.Determinant.AuxiliaryForms.Turns
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.General.Algebra.MultivariatePolynomials
+import New.Determinant.Exchange.OneSquare
 
 /-!
 # Turns on the diagonal, and the transfer of periods from the first path to the last

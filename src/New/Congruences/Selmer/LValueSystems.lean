@@ -2,6 +2,7 @@ module
 
 public import New.Congruences.Selmer.ClassSums
 public import New.Congruences.Selmer.StickelbergerSystems
+import Lib.General.NumberTheory.GaussValuation
 
 /-!
 # The Stickelberger systems of the L-values

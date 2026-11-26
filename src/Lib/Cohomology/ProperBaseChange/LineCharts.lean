@@ -1,12 +1,15 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Int
-public import Mathlib.Data.Finset.Functor
 public import Mathlib.GroupTheory.Nilpotent
-public import Mathlib.Order.Filter.AtTopBot.Interval
-public import Mathlib.Tactic.Linter.Style
-public import Lib.General.Algebra.MultivariatePolynomials
-public import Lib.PadicComparison.Descent.TestCategory
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Finset.Functor
+import Mathlib.Order.Filter.AtTopBot.Interval
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Linter.Style
+public import Lib.Cohomology.Etale.Basic
+public import Lib.General.Algebra.AdicCompletion
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Mayer–Vietoris for two charts of a line modulo an ideal

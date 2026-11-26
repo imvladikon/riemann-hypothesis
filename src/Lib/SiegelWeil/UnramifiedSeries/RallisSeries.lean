@@ -1,7 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Data.Finset.Functor
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.SiegelWeil.UnramifiedSeries.VacuumCoefficients
-public import Lib.SiegelWeil.RallisInner.VacuumSummability
+public import Lib.Adelic.AutomorphicForms.Basic
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.SiegelWeil.RallisInner.VacuumSummability
 
 /-!
 # The series of translates weighted by the coefficients of the vacuum

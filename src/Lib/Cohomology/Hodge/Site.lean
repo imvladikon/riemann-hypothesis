@@ -1,6 +1,8 @@
 module
 
 public import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Cohomology.Hodge.CupProduct
 public import Lib.General.Geometry.EtaleCharts
 

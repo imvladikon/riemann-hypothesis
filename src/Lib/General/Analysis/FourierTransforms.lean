@@ -1,14 +1,18 @@
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Real.Hom
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.CStarAlgebra.ContinuousMap
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Topology.UniformSpace.Uniformizable
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.ContinuousMap
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import Lib.Adelic.QuotientMeasure.Basic
 
 /-!

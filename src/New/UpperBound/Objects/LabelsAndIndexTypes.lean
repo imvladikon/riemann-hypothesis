@@ -2,6 +2,7 @@ module
 
 public import Lib.LocalGL.Green.LabelCharacters
 public import New.Reduction.Data.LevelAndTwists
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Good labels, index types of hermitian spaces, the group 𝖦 and idempotent e₀

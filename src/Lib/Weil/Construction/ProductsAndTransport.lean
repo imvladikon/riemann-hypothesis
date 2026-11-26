@@ -1,6 +1,9 @@
 module
 
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Lib.Weil.Construction.AdelicRepresentation
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.RationalPoints
 
 /-!
 # Products of data along a splitting of coordinates, and changes of coordinates

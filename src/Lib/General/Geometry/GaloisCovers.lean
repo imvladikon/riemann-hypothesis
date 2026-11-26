@@ -1,14 +1,27 @@
 module
 
-public import Mathlib.Algebra.Module.Card
-public import Mathlib.Algebra.MvPolynomial.Cardinal
-public import Mathlib.RingTheory.Localization.Cardinality
-public import Mathlib.Topology.Baire.BaireMeasurable
-public import Mathlib.Topology.Baire.LocallyCompactRegular
-public import Lib.General.Geometry.GeometricPoints
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Module.Card
+import Mathlib.Algebra.MvPolynomial.Cardinal
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.RingTheory.Algebraic.Cardinality
+import Mathlib.RingTheory.Artinian.Instances
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.Localization.Cardinality
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Baire.BaireMeasurable
 public import Lib.LocalGL.Green.TauFunctions
 public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.Cohomology.Etale.Basic
+public import Lib.General.Geometry.DenseComplexPoints
+import Lib.General.Geometry.GeometricPoints
+import Lib.General.Geometry.PointsOfProperSchemes
+import Lib.LocalGL.Green.CuspidalFunctions
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Complex points over countable rings, Zariski generic members and Galois coverings

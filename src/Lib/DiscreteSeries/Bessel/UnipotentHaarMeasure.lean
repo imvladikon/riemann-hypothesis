@@ -1,9 +1,26 @@
 module
 
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.MeasureTheory.Measure.Haar.MulEquivHaarChar
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Countable
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Measure.Haar.MulEquivHaarChar
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.ProperAction.Torsor
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Bessel.Basic
-public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.GaussianIntegral
+import Lib.General.Measure.HaarModulus
 
 /-!
 # Haar measures on the Bessel unipotent groups 𝖴⁰ ⊆ 𝖴 and σ-finiteness on G₁

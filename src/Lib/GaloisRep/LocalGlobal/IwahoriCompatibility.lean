@@ -1,9 +1,25 @@
 module
 
-public import Lib.GaloisRep.BaseChange.IwahoriEigenforms
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 public import Lib.GaloisRep.Main.AllRanks
-public import Lib.LocalGL.Iwahori.SortedExponents
 public import Lib.LocalGL.Iwahori.SphericalExponents
+public import Lib.GaloisRep.LocalGlobal.LocalFormTypes
+public import Lib.Weil.Unramified.HeckeGL
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.Places.TameInertia
+import Lib.GaloisRep.BaseChange.IwahoriEigenforms
+import Lib.GaloisRep.Main.OddRank
+import Lib.General.Algebra.LevelModulus
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.LocalGL.Iwahori.HeckeDegrees
+import Lib.LocalGL.Iwahori.QuadraticRelation
+import Lib.LocalGL.Iwahori.SortedExponents
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Local-global compatibility at split places for Iwahori eigencharacters and parahoric types

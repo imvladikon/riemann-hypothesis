@@ -1,11 +1,26 @@
 module
 
-public import Lib.Cohomology.WoodsHole
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Data.Finset.Functor
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.GaloisRep.Main.Defs
-public import Lib.PadicComparison.CrystallineFrobenius
 public import Lib.PadicHodge.Limit.CrystallineLimit
-public import Lib.Shimura.CongruenceRelation.EichlerShimura
 public import Lib.Shimura.Transfer.Lefschetz
+public import Lib.Cohomology.Etale.EllAdicCohomology
+public import Lib.GaloisRep.Main.LocalConditions
+public import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.ClassField.Places.TameInertia
+import Lib.Cohomology.WoodsHole
+import Lib.General.Geometry.GaloisCovers
+import Lib.General.Geometry.PointsOfProperSchemes
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.PadicComparison.CrystallineFrobenius
+import Lib.PadicComparison.HodgeTate.PeriodMap
+import Lib.PadicComparison.Primitive.ComparisonTheorem
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.Regularity
+import Lib.Shimura.CongruenceRelation.EichlerShimura
 
 /-!
 # Eigenquotients for Hecke eigensystems and the Galois representations they cut out

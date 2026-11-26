@@ -2,6 +2,7 @@ module
 
 public import New.OneLift.ComparisonOperator.OneExchange
 public import New.OneLift.TestedForms
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # Gluing: residue rings, divided lattices, the congruence group and glued lattices

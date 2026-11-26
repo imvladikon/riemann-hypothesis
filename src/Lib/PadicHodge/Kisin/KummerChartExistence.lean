@@ -1,9 +1,22 @@
 module
 
 public import Mathlib.GroupTheory.NoncommCoprod
-public import Lib.PadicHodge.Crystalline.HodgeTateForms
+public import Aesop.BuiltinRules
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.AdicCompletion.Completeness
+import Mathlib.RingTheory.MvPowerSeries.Inverse
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.PadicHodge.Kisin.Charts
-public import Lib.ClassField.Places.TameInertia
+public import Lib.ClassField.Places.DecompositionCompletion
+public import Lib.PadicHodge.Crystalline.Basic
+import Lib.Adelic.Hecke.ClassSums
+import Lib.ClassField.Places.LocalFields
+import Lib.ClassField.Places.TameInertia
+import Lib.General.NumberTheory.CoefficientRings
+public import Lib.PadicHodge.Crystalline.HodgeTateForms -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Witt coefficients, the Frobenius group action and existence of Kummer charts

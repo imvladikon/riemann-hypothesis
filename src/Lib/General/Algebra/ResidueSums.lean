@@ -1,7 +1,6 @@
 module
 
 public import Mathlib.LinearAlgebra.Lagrange
-public import Std.Internal.Order.Automation
 public import Lib.Speed
 
 /-!

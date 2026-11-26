@@ -2,6 +2,8 @@ module
 
 public import Lib.Shimura.HeckeTower.HeckeData
 public import Lib.Weil.Unramified.SplitHecke
+public import Lib.GaloisRep.BaseChange.Defs
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
 
 /-!
 # Steps E'/E of base change and commuting families of Hecke operators

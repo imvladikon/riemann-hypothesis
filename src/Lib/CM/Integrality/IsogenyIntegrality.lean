@@ -1,6 +1,9 @@
 module
 
-public import Lib.CM.Integrality.IntegralSections
+import TauCeti.RingTheory.PowerSeries.Rescale
+public import Lib.CM.FormalGroup.IntegralParameter
+public import Lib.CM.Integrality.TorsionValues
+import Lib.CM.Integrality.IntegralSections
 
 /-!
 # Isogenies and translates act integrally on expansions

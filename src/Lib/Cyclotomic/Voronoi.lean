@@ -1,25 +1,19 @@
 module
 
-public import TauCeti.LinearAlgebra.Matrix.GroupMatrix
-public import TauCeti.NumberTheory.Bernoulli.Basic
-public import TauCeti.NumberTheory.DirichletCharacter.LFunction.TrivialZeros
-public import TauCeti.NumberTheory.MulChar.Orthogonality
 import TauCeti.NumberTheory.ZetaValues
-public import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
-public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
-public import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
-public import Mathlib.NumberTheory.Multiplicity
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.Basify
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Std.Internal.Order.Automation
-public import Std.Tactic.BVDecide.Normalize.Prop
+public import TauCeti.NumberTheory.DirichletCharacter.GeneralizedBernoulli
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
+import Mathlib.NumberTheory.Multiplicity
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import TauCeti.LinearAlgebra.Matrix.GroupMatrix
+import TauCeti.NumberTheory.Bernoulli.Basic
+import TauCeti.NumberTheory.DirichletCharacter.LFunction.TrivialZeros
+import TauCeti.NumberTheory.MulChar.Orthogonality
 public import Lib.Speed
 
 /-!

@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.Topology.MetricSpace.Ultra.Pi
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.Topology.MetricSpace.Ultra.Pi
 public import Lib.Adelic.AutomorphicForms.HeckeEigenforms
-public import Lib.General.LinearAlgebra.MatrixNormBounds
-public import Lib.PadicComparison.Descent.TestCategory
+public import Lib.Adelic.Adeles.StrongApproximation
+public import Lib.Adelic.Reduction.DefiniteClassSums
+public import Lib.GLn.SchurModule.GramMatrix
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.GLn.SchurModule.WeylKernel
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # The p-adic gauge of algebraic forms, class sums, and integral forms of a level

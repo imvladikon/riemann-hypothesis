@@ -1,10 +1,16 @@
 module
 
-public import Mathlib.Analysis.Normed.Group.Completeness
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Function.LpSpace.InfiniteSum
-public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Lib.General.Analysis.HolomorphicIntegrals
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Normed.Group.Completeness
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Function.LpSpace.InfiniteSum
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Monotonicity.Lemmas
+public import Lib.Speed
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Heisenberg cocycles, vacua, the reproducing model and Schur's lemma

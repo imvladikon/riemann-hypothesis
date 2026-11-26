@@ -1,11 +1,13 @@
 module
 
-public import TauCeti.RingTheory.MvPowerSeries.Dvd
-public import TauCeti.RingTheory.MvPowerSeries.Order
-public import Mathlib.Algebra.Order.Star.Int
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.PowerSeries.Expand
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PowerSeries.Expand
+import TauCeti.RingTheory.MvPowerSeries.Dvd
+import TauCeti.RingTheory.MvPowerSeries.Order
 public import Lib.General.Algebra.AdicCompletion
 
 /-!

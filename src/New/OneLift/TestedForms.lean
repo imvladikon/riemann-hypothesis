@@ -1,7 +1,11 @@
 module
 
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.CStarAlgebra.CStarMatrix
 public import Lib.LocalGL.Green.LabelCharacters
 public import New.UpperBound.Objects.AuxiliaryPair
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.GLn.SchurModule.SchurNorm
 
 /-!
 # Point forms, Hecke adjoints and false lifts on the definite space of a descent pair

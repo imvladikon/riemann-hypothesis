@@ -1,7 +1,12 @@
 module
 
-public import New.Spanning.Frames.FiniteDepth
+import Mathlib.Topology.Sheaves.Presheaf
 public import New.Spanning.Frames.Shells
+public import New.Spanning.Frames.BesselVector
+public import New.Spanning.Unfolding.BesselLevelStructure
+import New.Spanning.Frames.FiniteDepth
+import New.Spanning.Frames.Gains
+import New.Spanning.Frames.QuadricPlancherel
 
 /-!
 # Shells, decay and mass at the finite places

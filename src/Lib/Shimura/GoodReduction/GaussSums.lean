@@ -1,10 +1,14 @@
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Module
-public import Mathlib.NumberTheory.SumFourSquares
-public import Lib.Shimura.GoodReduction.TorsionSizes
-public import Lib.Shimura.Uniformisation.HolomorphicFamilies
-public import Lib.PadicComparison.Descent.TestCategory
+public import Aesop.BuiltinRules
+import Mathlib.LinearAlgebra.Matrix.Module
+import Mathlib.NumberTheory.SumFourSquares
+import Mathlib.Topology.UniformSpace.Uniformizable
+public import Lib.Shimura.ComplexTheta.DimensionFormula
+import Lib.General.Analysis.GaussianIntegral
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.GoodReduction.TorsionSizes
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Hermitian tori with multiplications, Gauss sums and unfolding of the Poincaré kernel

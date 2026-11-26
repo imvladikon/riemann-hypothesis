@@ -1,9 +1,27 @@
 module
 
-public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
-public import Mathlib.Topology.Metrizable.ContinuousMap
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Compactness.CompactlyGeneratedSpace
+import Mathlib.Topology.ContinuousMap.SecondCountableSpace
+import Mathlib.Topology.Metrizable.ContinuousMap
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Character.WeylCharacterFormula
-public import Lib.DiscreteSeries.Rigidity.KernelFixes
+public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.DiscreteSeries.Rigidity.KernelFixes
 
 /-!
 # K-type multiplicities of the discrete series and orbital integrals as Laurent polynomials

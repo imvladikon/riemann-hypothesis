@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.NumberTheory.MulChar.Duality
-public import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+public import Mathlib.Analysis.Complex.Circle
+import Mathlib.NumberTheory.MulChar.Duality
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Star.Unitary
 public import Lib.ClassField.Places.Ideles
-public import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
 
 /-!
 # Characters of U(1) of a CM field: existence, weights and conjugates

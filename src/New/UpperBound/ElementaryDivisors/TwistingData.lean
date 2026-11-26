@@ -1,6 +1,6 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Int
 public import Lib.GLn.SchurModule.Basic
 public import Lib.General.Groups.BesselGroups
 

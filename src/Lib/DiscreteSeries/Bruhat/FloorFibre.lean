@@ -1,7 +1,14 @@
 module
 
+import Mathlib.CategoryTheory.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Bruhat.ComplexPlace
 public import Lib.General.Measure.FibreMeasure
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.Base
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Haar.GramPolar
 
 /-!
 # Measures of a floor below fibre measures, at the place ℂ

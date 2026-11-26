@@ -1,10 +1,17 @@
 module
 
-public import Lib.General.LinearAlgebra.BlockEmbeddings
-public import Lib.General.LinearAlgebra.TensorChains
-public import New.Spanning.Frames.FiniteShells
+import TauCeti.Algebra.Group.AddChar.Basic
+import TauCeti.MeasureTheory.Integral.Pi
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.MainTerm.FillingLevel
 public import New.Spanning.Unfolding.Climbing
+public import New.Spanning.Frames.BesselVector
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.General.LinearAlgebra.TensorChains
+import New.Spanning.Frames.FiniteDepth
+import New.Spanning.Frames.FiniteShells
 
 /-!
 # Groups that fix given vectors at chosen places have a small mass integral

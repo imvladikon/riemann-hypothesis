@@ -1,10 +1,15 @@
 module
 
-public import TauCeti.RingTheory.PowerSeries.Substitution
-public import TauCeti.RingTheory.PowerSeries.Rescale
 public import Mathlib.Algebra.CubicDiscriminant
-public import Lib.CM.Integrality.TorsionValues
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.AdicCompletion.Completeness
+import Mathlib.RingTheory.PiTensorProduct
+import TauCeti.RingTheory.PowerSeries.Rescale
+import TauCeti.RingTheory.PowerSeries.Substitution
 public import Lib.General.Algebra.IntegralPowerSeries
+public import Lib.CM.Sigma.Basic
+import Lib.CM.Integrality.TorsionValues
 
 /-!
 # Integral series rings 𝔬[[T]], congruence parts of power series, a functional equation

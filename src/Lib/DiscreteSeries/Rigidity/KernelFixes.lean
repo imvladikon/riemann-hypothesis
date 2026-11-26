@@ -1,6 +1,17 @@
 module
 
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+public import Lib.General.Measure.IdempotentKernel
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Rigidity.HighestVectorsAndFiltration
+import Lib.General.LinearAlgebra.PolarDecomposition
 
 /-!
 # The idempotent e_λ, the operator π(e_λ), and rigidity of highest vectors of type Λ

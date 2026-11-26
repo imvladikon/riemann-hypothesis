@@ -1,15 +1,18 @@
 module
 
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-public import Mathlib.Analysis.Analytic.Polynomial
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
-public import Mathlib.RingTheory.Complex
-public import Mathlib.RingTheory.DualNumber
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.AlgebraicGeometry.Modules.Sheaf
+import Mathlib.AlgebraicGeometry.ValuativeCriterion
+import Mathlib.Analysis.Analytic.Polynomial
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.DualNumber
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.UniformSpace.Uniformizable
 public import Lib.General.Geometry.ProjectiveSpace
 public import Lib.Shimura.AbelianScheme.TangentCoordinates
 public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.Cohomology.Etale.Basic
 
 /-!
 # Holomorphic families of complex points, jets, uniformisations and theta coordinates

@@ -1,9 +1,20 @@
 module
 
+public import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.Monotonicity.Lemmas
 public import New.OneLift.ComparisonOperator.GluedForms
 public import New.OneLift.ComparisonOperator.ProductsSpan
-public import New.OneLift.FalseLifts.PeriodsOfFalseLifts
-public import New.Spanning.SecondMoment.SpanningTheorem
+public import New.Determinant.Twist.FitTwists
+public import New.OneLift.ComparisonOperator.FirstFactors
+public import New.OneLift.ComparisonOperator.ThreeExchanges
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import New.OneLift.FalseLifts.PeriodsOfFalseLifts
+import New.Spanning.Multiplicities.EqualMultiplicities
+import New.Spanning.SecondMoment.SpanningTheorem
+import New.UpperBound.Kernels.ThetaLiftGauge
+import New.UpperBound.Size.Estimates
 
 /-!
 # The first factors and the gluing maps

@@ -1,6 +1,15 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.GLn.SchurModule.SchurOrthogonality
+public import Lib.GLn.SchurModule.GramMatrix
+public import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.GLn.SchurModule.WeylKernel
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # Irreducibility under U(n)^Φ, polarisation and averaging of determinant polynomials

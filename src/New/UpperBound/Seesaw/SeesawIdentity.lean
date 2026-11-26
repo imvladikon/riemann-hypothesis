@@ -1,11 +1,12 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.BlockPeriods
-public import Lib.DiscreteSeries.Bruhat.ComplexPlace
-public import New.UpperBound.Divisibility.ChainValuation
 public import New.UpperBound.Objects.PoincareMap
 public import New.UpperBound.Seesaw.Cut
-public import New.UpperBound.Seesaw.GoodDatum
+import Lib.Adelic.AutomorphicForms.BlockPeriods
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import New.UpperBound.Divisibility.ChainValuation
+import New.UpperBound.Seesaw.GoodDatum
 
 /-!
 # The seesaw identity and the top of the chain

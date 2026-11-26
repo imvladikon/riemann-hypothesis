@@ -1,8 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.AutomorphicForms.Cuspidality
 public import Lib.Adelic.TraceFormula.IsotropicStabiliser
 public import Lib.Adelic.TraceFormula.KernelBound
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.TraceFormula.Stretch
 
 /-!
 # Convergence of the geometric side

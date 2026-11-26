@@ -1,8 +1,12 @@
 module
 
-public import Lib.Cyclotomic.OddSha
+import Mathlib.Algebra.Azumaya.Basic
 public import Lib.GaloisRep.TaylorWiles
 public import New.Congruences.FirstOrder.KummerMaps
+import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
+import Lib.Cyclotomic.OddSha
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Taylor–Wiles places in a triangle for the even classes, with prescribed Frobenii

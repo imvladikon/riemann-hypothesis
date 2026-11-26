@@ -1,7 +1,15 @@
 module
 
-public import Mathlib.RingTheory.Ideal.MinimalPrime.Colon
-public import Lib.Cohomology.PointClass.ProjectiveNonvanishing
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Ideal.MinimalPrime.Colon
+import Mathlib.RingTheory.TotallySplit
+public import Lib.Cohomology.Hodge.FixedPointFormula
+public import Lib.Cohomology.PointClass.ProjectiveSpace
+public import Lib.PadicComparison.HodgeTate.Map
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.Cohomology.PointClass.ProjectiveNonvanishing
+import Lib.General.Algebra.MultivariatePolynomials
+import Lib.General.Geometry.GeometricPoints
 
 /-!
 # The Hodge–Tate map keeps classes of points on a projective variety linearly independent

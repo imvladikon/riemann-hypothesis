@@ -1,6 +1,11 @@
 module
 
-public import New.Determinant.Exchange.MatchingPartners
+import Mathlib.Algebra.Ring.IsFormallyReal
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.General.Analysis.FiniteFourier
+public import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Cohomology.Etale.Basic
+import New.Determinant.Exchange.MatchingPartners
 
 /-!
 # The finite square law for theta lifts: special data, matched functions and Fourier form

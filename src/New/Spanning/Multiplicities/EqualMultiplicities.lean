@@ -1,9 +1,15 @@
 module
 
 import TauCeti.LinearAlgebra.Matrix.Charpoly.Newton
-public import Lib.Adelic.TraceFormula.CuspidalComparison
-public import Lib.Adelic.TraceFormula.CuspidalType
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.LinearAlgebra.PID
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import New.Determinant.Norms.AdjointThetaLift
+import Lib.Adelic.TraceFormula.CuspidalComparison
+import Lib.Adelic.TraceFormula.CuspidalType
+import Lib.PadicComparison.Descent.TestCategory
+import New.Reduction.Data.Sizes
 
 /-!
 # Equality of multiplicities

@@ -1,7 +1,11 @@
 module
 
-public import Lib.CM.GoodReduction
-public import Lib.CM.Integrality.Doubling
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+public import Lib.CM.Sigma.ThetaSections
+public import Lib.General.Algebra.AdicCompletion
+import Lib.CM.GoodReduction
+import Lib.CM.Integrality.Doubling
 
 /-!
 # Integrality of values of sections at torsion points

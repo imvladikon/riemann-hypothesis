@@ -1,6 +1,7 @@
 module
 
 public import Lib.SiegelWeil.RallisInner.Doubling
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # The dual datum of a vacuum

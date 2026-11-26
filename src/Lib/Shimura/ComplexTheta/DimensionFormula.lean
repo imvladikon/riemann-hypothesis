@@ -1,13 +1,21 @@
 module
 
-public import Mathlib.Algebra.Azumaya.Basic
-public import Mathlib.Algebra.Central.End
-public import Mathlib.Algebra.Module.ZLattice.Summable
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.RingTheory.Etale.Weakly
-public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-public import Lib.General.Analysis.HolomorphicIntegrals
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.End
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Module.ZLattice.Summable
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
 public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Theta functions on complex tori: dimension formula, base points, multipliers

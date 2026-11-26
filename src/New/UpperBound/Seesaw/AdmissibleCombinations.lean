@@ -1,9 +1,12 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.PAdicGauge
-public import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import Mathlib.Algebra.Ring.IsFormallyReal
 public import Lib.General.LinearAlgebra.TensorChains
-public import Lib.Weil.DualPair.WeilAction
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+public import Lib.Weil.Periods.Grading
+import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Graded lattices, integrality away from q and admissible combinations of translates

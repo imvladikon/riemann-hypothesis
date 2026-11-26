@@ -1,6 +1,17 @@
 module
 
-public import Lib.GaloisRep.Main.OddRank
+import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.GaloisRep.Main.AttachedRepresentations
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.ClassField.Global.ArtinMap
+import Lib.GaloisRep.Main.OddRank
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Local-global compatibility for the ℓ-adic avatar of an algebraic Hecke character

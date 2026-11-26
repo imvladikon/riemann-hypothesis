@@ -1,11 +1,23 @@
 module
 
-public import Lib.ClassField.Global.CMSplittingCharacters
-public import Lib.ClassField.Global.Chebotarev
-public import Lib.ClassField.Global.ExistenceTheorem
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.GaloisRep.BaseChange.CommutingHeckeFamilies
-public import Lib.General.NumberTheory.CMFields
-public import Lib.General.NumberTheory.FrobeniusOrbits
+public import Lib.GaloisRep.Main.SelmerModules
+public import Lib.Weil.Construction.WeilData
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ArtinReciprocity
+public import Lib.ClassField.Global.CMSplittingCharacters -- shake: keep (needed public by an exposed definition)
+import Lib.ClassField.Global.Chebotarev
+import Lib.ClassField.Global.ExistenceTheorem
+import Lib.ClassField.Global.NormTheorems
+import Lib.General.NumberTheory.CMFields
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Grunwald's theorem in prime degree and CM steps with prescribed local behaviour

@@ -1,8 +1,17 @@
 module
 
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
-public import Mathlib.LinearAlgebra.FixedSubmodule
+public import Mathlib.RingTheory.DualNumber
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.LinearAlgebra.FixedSubmodule
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Shimura.CongruenceRelation.KernelReduction
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.AbelianScheme.Pairings
+import Lib.Shimura.HeckeTower.Model
 
 /-!
 # Counting w-torsion points bounds a space of natural semilinear functions by n − 1

@@ -1,9 +1,24 @@
 module
 
+import Mathlib.Data.Finset.Functor
+import Mathlib.Order.Interval.Finset.Box
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.ClassField.HeckeCharacter.TameModulus
-public import Lib.General.Algebra.LevelModulus
-public import Lib.SiegelWeil.RallisInner.DualDatum
 public import Lib.SiegelWeil.UnramifiedSeries.RallisSeries
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.SiegelWeil.RallisInner.Doubling
+public import Lib.Weil.Lift
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.General.Algebra.LevelModulus
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.RallisInner.DualDatum
+import Lib.SiegelWeil.RallisInner.VacuumSummability
+import Lib.Weil.Unramified.HeckeTransfer
 
 /-!
 # Rallis' inner product formula for sharp data and injectivity of the theta lift

@@ -2,9 +2,9 @@ module
 
 import TauCeti.Analysis.Contour.Residue.LogDeriv
 import TauCeti.Analysis.LaplaceTransform.Elementary
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
 public import Mathlib.Analysis.Meromorphic.Basic
-public import Mathlib.NumberTheory.LSeries.Nonvanishing
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.NumberTheory.LSeries.Nonvanishing
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
 
 /-!

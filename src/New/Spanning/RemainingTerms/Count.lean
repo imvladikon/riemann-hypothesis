@@ -1,7 +1,10 @@
 module
 
-public import New.Spanning.RemainingTerms.Gain
-public import New.Spanning.RemainingTerms.LatticesOfCorank
+import Mathlib.Algebra.Order.Star.Int
+public import New.Spanning.RemainingTerms.Data
+import New.Spanning.RemainingTerms.FramesOverLattice
+import New.Spanning.RemainingTerms.Gain
+import New.Spanning.RemainingTerms.LatticesOfCorank
 
 /-!
 # The sum over pairs of near terms

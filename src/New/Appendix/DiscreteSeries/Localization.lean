@@ -1,7 +1,12 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 public import New.Appendix.DiscreteSeries.SteepParameters
+import Lib.DiscreteSeries.FlenstedJensen.SquareIntegrability
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.General.LinearAlgebra.PolarDecomposition
 
 /-!
 # Localizing products of discrete series coefficients near the compact subgroups

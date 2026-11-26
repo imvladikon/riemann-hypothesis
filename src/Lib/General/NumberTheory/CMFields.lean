@@ -1,8 +1,13 @@
 module
 
-public import Mathlib.RingTheory.IsAdjoinRoot
-public import Mathlib.RingTheory.PicardGroup
-public import Lib.Adelic.Adeles.IdeleModulus
+public import Aesop.BuiltinRules
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.IsAdjoinRoot
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+public import Lib.Adelic.Adeles.Basic
+import Lib.Adelic.Adeles.IdeleModulus
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Criteria for CM fields

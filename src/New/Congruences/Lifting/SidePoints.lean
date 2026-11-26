@@ -1,7 +1,12 @@
 module
 
-public import Mathlib.Order.Interval.Finset.Box
+public import Mathlib.RingTheory.PicardGroup
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Order.Interval.Finset.Box
+import Mathlib.Topology.Sheaves.Presheaf
 public import New.Congruences.Lifting.CupProductBound
+public import New.Congruences.Lifting.HodgeExpansion
+import Lib.PadicHodge.Kisin.FrameTheorem
 
 /-!
 # Jump windows, the gap condition and points of the sides of a Kummer chart

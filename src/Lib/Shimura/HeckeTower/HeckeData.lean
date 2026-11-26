@@ -1,12 +1,16 @@
 module
 
-public import Mathlib.Analysis.Matrix.Order
 public import Mathlib.LinearAlgebra.Lagrange
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
-public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
 public import Lib.Shimura.Uniformisation.AdelicFrames
 public import Lib.Weil.Unramified.HeckeGL
+public import Lib.Adelic.Adeles.IdeleModulus
+public import Lib.Cohomology.Etale.Basic
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Hecke elements in group rings, marked triples, local terms and neat levels

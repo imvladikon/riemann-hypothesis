@@ -1,8 +1,11 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.ClassField.GreenbergWiles.RelationsModL
 public import Lib.GaloisRep.Main.Defs
 public import New.Congruences.FirstOrder.EvenClasses
+import Lib.ClassField.GaloisCohomology.TameSelmerCocycles
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
 
 /-!
 # Kummer maps

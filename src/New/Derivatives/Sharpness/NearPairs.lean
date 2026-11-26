@@ -1,7 +1,10 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.Derivatives.FormalGroup.ThetaProducts
 public import New.UpperBound.Size.ShortColumns
+import New.Reduction.Data.Sizes
 
 /-!
 # Near pairs of `b`-places and the losses in the sharpness bound

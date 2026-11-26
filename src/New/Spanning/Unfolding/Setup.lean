@@ -1,7 +1,16 @@
 module
 
-public import Lib.Adelic.Reduction.DefiniteClassSums
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.NumberTheory.NumberField.Countable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Bessel.Basic
+public import Lib.Adelic.Hecke.ClassSums
+public import Lib.General.NumberTheory.EmbeddingsAndDifferent
+public import Lib.Adelic.Reduction.DefiniteClassSums -- shake: keep (needed public by an exposed definition)
 
 /-!
 # The data, standing hypotheses and amplitudes of the filling theorem

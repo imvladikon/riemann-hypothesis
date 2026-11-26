@@ -2,12 +2,16 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
-public import Mathlib.GroupTheory.IndexNSmul
 public import Mathlib.NumberTheory.ModularForms.Discriminant
 import TauCeti.Analysis.SpecialFunctions.Elliptic.AdditionTheorem
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.GroupTheory.IndexNSmul
 public import Lib.General.Analysis.MeanValueAndTaylor
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
-public import Lib.Shimura.ComplexTheta.DimensionFormula
+public import Lib.Shimura.ComplexTheta.AppellHumbertData
+import Lib.Shimura.ComplexTheta.DimensionFormula
 
 /-!
 # Sigma and Weierstrass functions, lattice invariants and lattices with complex multiplication

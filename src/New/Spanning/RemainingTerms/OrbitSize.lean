@@ -1,5 +1,7 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
 public import New.Spanning.Unfolding.Terms
 
 /-!

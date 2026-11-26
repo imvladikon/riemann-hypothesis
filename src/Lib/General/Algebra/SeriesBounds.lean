@@ -1,12 +1,13 @@
 module
 
-public import TauCeti.RingTheory.PowerSeries.Log
 import TauCeti.RingTheory.PowerSeries.Exp.Padic.Subst
-public import Mathlib.NumberTheory.Padics.MahlerBasis
-public import Mathlib.RingTheory.Valuation.Extension
-public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.RingTheory.PowerSeries.Log
+import Mathlib.NumberTheory.Padics.MahlerBasis
+import Mathlib.RingTheory.Valuation.Extension
+import Mathlib.RingTheory.Valuation.LocalSubring
+import TauCeti.RingTheory.PowerSeries.Log
 public import Lib.CM.FormalGroup.IntegralParameter
-public import Lib.General.Algebra.AbsIntegrallyClosed
+import Lib.General.Algebra.AbsIntegrallyClosed
 
 /-!
 # Integrality of exponentials, logarithms and roots of power series

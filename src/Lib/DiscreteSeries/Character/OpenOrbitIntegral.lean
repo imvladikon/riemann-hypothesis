@@ -1,6 +1,23 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.Topology.Algebra.Group.Matrix
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Character.WeylCharacterFormula
+public import Lib.DiscreteSeries.FlenstedJensen.FlagDensities
+public import Lib.General.Analysis.GaussianIntegral
+import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.LinearAlgebra.PolarDecomposition
+import Lib.General.Measure.IdempotentKernel
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # Orbital integrals of discrete series coefficients and Weyl characters of U(n)

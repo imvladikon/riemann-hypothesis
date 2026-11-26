@@ -1,8 +1,13 @@
 module
 
 public import Lib.GaloisRep.BaseChange.CongruenceLevelMatching
-public import Lib.GaloisRep.BaseChange.StepMatchingPairs
 public import Lib.GaloisRep.BaseChange.TwistedTraceIdentity
+import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+import Lib.GaloisRep.BaseChange.GlobalRoot
+import Lib.GaloisRep.BaseChange.StepMatchingPairs
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Base change in prime degree for definite U(n): a weak base change eigenform

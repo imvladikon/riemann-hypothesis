@@ -1,8 +1,22 @@
 module
 
-public import Lib.DiscreteSeries.Holomorphic.ModelFunction
-public import Lib.SiegelWeil.RallisInner.SharpData
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.DualPair.HolomorphicData
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
+public import Lib.General.LinearAlgebra.MatrixPolynomials
+public import Lib.Weil.Lift
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.DiscreteSeries.Holomorphic.ModelFunction
+import Lib.DiscreteSeries.Theta.LocalCorrespondence
+import Lib.GLn.SchurModule.WeylKernel
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
+import Lib.SiegelWeil.RallisInner.SharpData
 
 /-!
 # Holomorphic Fock vectors and a reproducing formula by theta lifts

@@ -1,8 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.Shimura.ThetaModuli.FlatClosure
 public import Lib.Shimura.ThetaNormality.NormalGeneration
 public import Lib.Shimura.Uniformisation.AdelicFrames
+public import Lib.Adelic.Adeles.AdditiveCharacter
+public import Lib.Shimura.ComplexTheta.DimensionFormula
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Base
 
 /-!
 # PEL data, the adelic Riemann form and theta coordinates of polarised period maps

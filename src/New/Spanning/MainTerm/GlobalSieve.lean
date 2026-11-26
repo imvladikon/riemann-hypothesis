@@ -1,8 +1,17 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
+import TauCeti.NumberTheory.NumberField.Countable
 public import New.Spanning.MainTerm.Frequencies
-public import New.Spanning.RemainingTerms.Box
 public import New.Spanning.Unfolding.BesselLevelStructure
+public import Lib.Adelic.Adeles.SemilocalProducts
+import Lib.Cohomology.Etale.Basic
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.RemainingTerms.Box
 
 /-!
 # One-sided Poisson summation, sums over frequencies, and the sieve over all places

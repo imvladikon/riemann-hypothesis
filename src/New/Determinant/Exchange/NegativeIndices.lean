@@ -1,6 +1,15 @@
 module
 
+import Mathlib.Analysis.Convex.Integral
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Periods.DescentVanishing
+import Lib.Adelic.Witt.WittTheorem
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
+import Lib.General.Analysis.MeanValueAndTaylor
 
 /-!
 # Theta coefficients vanish off negative forms

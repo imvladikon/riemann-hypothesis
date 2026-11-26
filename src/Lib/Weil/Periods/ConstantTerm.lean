@@ -1,10 +1,17 @@
 module
 
-public import Lib.General.LinearAlgebra.BlockEmbeddings
-public import Lib.Weil.DualPair.MixedModel
+public import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import Mathlib.Algebra.Order.Star.Int
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Periods.BesselIntegral
 public import Lib.Weil.Periods.Equivariant
-public import Lib.Adelic.Witt.IwasawaDecomposition
+public import Lib.Weil.MixedModel.ZeroTerm
+import Lib.Adelic.Witt.IwasawaDecomposition
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.General.Measure.IntegralOperators
+import Lib.Weil.DualPair.MixedModel
+import Lib.Weil.MixedModel.ThetaInvariance
 
 /-!
 # Constant terms of Weil functions along maps of positive degree

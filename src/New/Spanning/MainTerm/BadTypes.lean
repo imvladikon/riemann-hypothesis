@@ -1,7 +1,8 @@
 module
 
-public import Lib.Analytic.Primes
 public import New.UpperBound.Objects.LabelsAndIndexTypes
+import Lib.Analytic.Primes
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # The share of non-allowed polynomials and the bad share

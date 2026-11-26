@@ -1,5 +1,7 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+public import TauCeti.LinearAlgebra.Matrix.GeneralLinearGroup.Lift -- shake: keep (needed public by an exposed definition)
 public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
 public import Lib.General.LinearAlgebra.TensorChains
 

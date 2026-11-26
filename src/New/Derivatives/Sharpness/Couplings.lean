@@ -1,6 +1,8 @@
 module
 
+import TauCeti.RingTheory.MvPowerSeries.Derivative
 public import New.Derivatives.Sharpness.LeastValuation
+public import New.Derivatives.Divisibility.NormalForm
 
 /-!
 # Least valuations along couplings

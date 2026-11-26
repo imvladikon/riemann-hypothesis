@@ -1,7 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.TotallySplit
 public import New.Spanning.RemainingTerms.Data
 public import New.Spanning.RemainingTerms.FrameCount
+import New.Spanning.Unfolding.ReducedPoints
 
 /-!
 # The part in `X₀` of a frame, moves, and lifts of a lattice

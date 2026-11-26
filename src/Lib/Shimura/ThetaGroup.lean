@@ -1,6 +1,9 @@
 module
 
-public import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.Sites.Fpqc
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.General.Geometry.ProjectiveSpace
 public import Lib.Shimura.AbelianScheme.Basic
 

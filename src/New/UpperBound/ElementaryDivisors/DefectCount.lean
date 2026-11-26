@@ -1,12 +1,16 @@
 module
 
-public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-public import Mathlib.Analysis.Convex.Measure
-public import Std.Tactic.BVDecide.Normalize.Bool
-public import Lib.General.Measure.IntegralOperators
-public import Lib.LocalGL.Green.CuspidalFunctions
+import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.BoxIntegral.UnitPartition
+import Mathlib.Analysis.Convex.Measure
+import Mathlib.RingTheory.Etale.Weakly
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.UpperBound.ElementaryDivisors.PieriCone
 public import New.UpperBound.ElementaryDivisors.RootLemma
+import Lib.General.Measure.IntegralOperators
+import Lib.LocalGL.Green.CuspidalFunctions
 
 /-!
 # The dimension of the forms of bounded defect

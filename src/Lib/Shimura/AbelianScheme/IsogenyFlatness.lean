@@ -2,11 +2,18 @@ module
 
 import TauCeti.AlgebraicGeometry.Morphisms.Flat.Descent
 import TauCeti.RingTheory.Ideal.MinimalPrime.Localization
-public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
-public import Mathlib.CategoryTheory.Limits.Shapes.Connected
-public import Mathlib.RingTheory.Etale.Weakly
-public import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
-public import Lib.General.Geometry.PointsOfProperSchemes
+public import Aesop.BuiltinRules
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
+import Mathlib.AlgebraicGeometry.Morphisms.WeaklyEtale
+import Mathlib.AlgebraicGeometry.QuasiAffine
+import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+import Mathlib.CategoryTheory.Limits.Shapes.Connected
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.AlgebraicGeometry.Morphisms.Smooth.GeometricallyReduced
+public import Lib.Shimura.AbelianScheme.Basic
+import Lib.General.Geometry.PointsOfProperSchemes
 
 /-!
 # Isogenies: factorisation of homomorphisms, finiteness and flatness

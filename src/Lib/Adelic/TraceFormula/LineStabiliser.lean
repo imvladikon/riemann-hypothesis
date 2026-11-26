@@ -1,7 +1,10 @@
 module
 
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.Adelic.TraceFormula.LineCount
 public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.General.LinearAlgebra.HermiteForm
 
 /-!
 # The stabiliser of a line at a finite place

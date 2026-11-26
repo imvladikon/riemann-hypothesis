@@ -1,9 +1,12 @@
 module
 
-public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
-public import Mathlib.Tactic.Monotonicity.Lemmas
-public import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Monotonicity.Lemmas
+import Mathlib.Topology.Sheaves.Presheaf
 public import Lib.DiscreteSeries.Bruhat.QuadricBlocks
+import Lib.DiscreteSeries.Bruhat.FloorMeasures
+import Lib.General.Measure.IdempotentKernel
 
 /-!
 # Fourier kernels between solved measures

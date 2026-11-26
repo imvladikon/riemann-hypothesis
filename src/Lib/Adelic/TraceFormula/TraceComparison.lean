@@ -1,8 +1,20 @@
 module
 
-public import Lib.Adelic.Landherr
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Integral.Pi
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.TraceFormula.OrbitalUnfolding
-public import Lib.DiscreteSeries.Character.FormalDegree
+public import Lib.DiscreteSeries.Character.WeylCharacterFormula
+import Lib.Adelic.Landherr
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.Character.FormalDegree
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.LinearAlgebra.MatrixPolynomials
+import Lib.Weil.Periods.Grading
 
 /-!
 # Comparison of traces of operators on forms for different spaces and signs

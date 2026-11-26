@@ -1,8 +1,11 @@
 module
 
+import Mathlib.Tactic.Linter.Style
 public import Lib.Weil.DualPair.FiniteAction
-public import Lib.Weil.Periods.GradedLattice
-public import New.UpperBound.Seesaw.StandardLines
+public import Lib.Weil.Periods.PointLattice
+public import New.UpperBound.Seesaw.AdmissibleCombinations
+import Lib.Weil.Periods.GradedLattice
+import New.UpperBound.Seesaw.StandardLines
 
 /-!
 # Bounds for the lattices of points on graded spaces

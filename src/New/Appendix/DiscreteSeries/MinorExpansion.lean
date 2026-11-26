@@ -1,7 +1,13 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.General.LinearAlgebra.MatricesNearIdentity
+import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
+import Lib.DiscreteSeries.Holomorphic.HighestVectorExtension
+import Lib.DiscreteSeries.Holomorphic.MaximalCompactMinors
 
 /-!
 # One minor near the identity

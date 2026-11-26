@@ -1,6 +1,9 @@
 module
 
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.CM.GoodReduction
+import Lib.CM.Sigma.ThetaSections
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Finitely many CM lattices

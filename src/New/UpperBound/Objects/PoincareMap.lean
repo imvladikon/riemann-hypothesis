@@ -1,6 +1,11 @@
 module
 
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.UpperBound.Seesaw.EdgePairEvaluation
+public import Lib.Weil.Periods.BesselIntegral
+public import Lib.Weil.Periods.Equivariant
+import Lib.General.Measure.IntegralOperators
 
 /-!
 # The Poincaré map

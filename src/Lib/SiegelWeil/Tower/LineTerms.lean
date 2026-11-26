@@ -1,7 +1,8 @@
 module
 
-public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
 public import Lib.Weil.MixedModel.AdaptedSplitting
+import Lib.ClassField.HeckeCharacter.SplitTameCharacters
+public import Lib.Weil.DualPair.WeilAction -- shake: keep (needed public by an exposed definition)
 
 /-!
 # Coordinates on a line parabolic and Poisson's formula for terms along lines

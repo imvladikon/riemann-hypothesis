@@ -1,6 +1,15 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import New.Congruences.Lifting.CupProductBound
+public import Lib.PadicComparison.Descent.TestCategory
+import Lib.ClassField.Places.TameInertia
+import Lib.PadicHodge.Crystalline.Regularity
+import Lib.PadicHodge.Kisin.FrameTheorem
+import New.Congruences.Lifting.HodgeExpansion
 
 /-!
 # Tame Kummer charts and the power of p that kills cokernels of Kisin modules

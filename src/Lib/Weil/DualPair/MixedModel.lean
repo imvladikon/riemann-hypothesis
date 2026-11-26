@@ -1,6 +1,9 @@
 module
 
-public import Lib.Weil.DualPair.WeilAction
+public import Lib.Weil.DualPair.Defs
+public import Lib.Weil.MixedModel.ZeroTerm
+import Lib.Weil.DualPair.WeilAction
+import Lib.Weil.MixedModel.ThetaInvariance
 
 /-!
 # Mixed models and zero terms of a pair with one split space: Levi and radical laws

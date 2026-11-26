@@ -1,8 +1,12 @@
 module
 
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TensorProduct.Nontrivial
 public import Lib.PadicHodge.Kisin.Modules
-public import Lib.PadicHodge.Kisin.PeriodMatrixFrame
-public import Lib.PadicHodge.RadiusLemma
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Kisin.PeriodMatrixFrame
+import Lib.PadicHodge.RadiusLemma
 
 /-!
 # The frame theorem for Kisin modules and stability under normalising Galois elements

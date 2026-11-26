@@ -1,9 +1,10 @@
 module
 
-public import Mathlib.CategoryTheory.Shift.Basic
-public import Mathlib.GroupTheory.IndexNormal
-public import Mathlib.Topology.Sheaves.Presheaf
-public import Lib.General.Groups.ProfiniteCharacters
+import Mathlib.CategoryTheory.Shift.Basic
+import Mathlib.GroupTheory.IndexNormal
+import Mathlib.Topology.Sheaves.Presheaf
+public import Lib.ClassField.GaloisCohomology.ContinuousCocycles
+import Lib.General.Groups.ProfiniteCharacters
 
 /-!
 # Shapiro's lemma, corestriction and reduction of H² statements to steps of prime index

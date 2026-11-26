@@ -1,9 +1,15 @@
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.GroupTheory.Nilpotent
-public import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.PadicHodge.Crystalline.Basic
+public import Lib.General.Topology
+import Lib.ClassField.GaloisCohomology.KummerCyclicClasses
+import Lib.ClassField.Places.DecompositionCompletion
+import Lib.ClassField.Places.LocalFields
 
 /-!
 # Tame inertia, Frobenius on roots of unity over ℚ_p, the cyclotomic character, Weil pairs

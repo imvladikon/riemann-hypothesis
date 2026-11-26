@@ -1,6 +1,11 @@
 module
 
-public import Lib.GLn.SchurModule.SchurNorm
+import Mathlib.Algebra.Order.Star.Rat
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Cohomology.Etale.Basic
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.GLn.SchurModule.WeylKernel
 
 /-!
 # Algebraic modular forms: delta forms, unitary translation and spanning by Hecke eigenforms

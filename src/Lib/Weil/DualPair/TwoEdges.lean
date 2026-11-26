@@ -1,8 +1,10 @@
 module
 
-public import Lib.General.LinearAlgebra.TensorChains
 public import Lib.Weil.CompactLift.ThetaKernelDefs
 public import Lib.Weil.DualPair.Flip
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Cohomology.Etale.Basic
+import Lib.General.LinearAlgebra.TensorChains
 
 /-!
 # Two edges V → V′ → V″ joined into one datum of the pair (V′, V⁻ ⊕ V″)

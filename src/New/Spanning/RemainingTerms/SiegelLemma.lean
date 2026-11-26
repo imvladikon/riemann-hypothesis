@@ -1,8 +1,16 @@
 module
 
-public import Lib.Adelic.Adeles.LocalFactors
-public import Lib.General.NumberTheory.LatticeCovolumes
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PicardGroup
+import TauCeti.LinearAlgebra.Matrix.Range
 public import Lib.Adelic.Reduction.FirstMinimumShortBases
+public import Lib.Adelic.Reduction.MinkowskiTheorems
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Witt.WittTheorem
+import Lib.General.Analysis.PackingAndSobolev
+import Lib.General.LinearAlgebra.PolarDecomposition
+import Lib.General.NumberTheory.LatticeCovolumes
 
 /-!
 # Discriminants of sublattices, Siegel's lemma and a height zeta function of subspaces

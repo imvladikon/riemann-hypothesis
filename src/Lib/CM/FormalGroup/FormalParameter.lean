@@ -1,7 +1,10 @@
 module
 
-public import Lib.CM.FormalGroup.InseparableDegree
+import TauCeti.RingTheory.PowerSeries.Rescale
+import TauCeti.RingTheory.PowerSeries.Substitution
 public import Lib.CM.Integrality.LogTheta
+public import Lib.CM.FormalGroup.PrimeNotation
+import Lib.CM.FormalGroup.InseparableDegree
 
 /-!
 # The formal parameter

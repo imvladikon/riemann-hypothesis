@@ -2,10 +2,14 @@ module
 
 import TauCeti.Algebra.BigOperators.Finset.LayerCake
 import TauCeti.RingTheory.MvPolynomial.Symmetric.Alternant
-public import Mathlib.RingTheory.PiTensorProduct
-public import Std.Tactic.BVDecide.Normalize.Bool
-public import Lib.General.Algebra.MultivariatePolynomials
+public import Mathlib.RingTheory.Nullstellensatz
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.UpperBound.ElementaryDivisors.TwistingData
+import Lib.General.Algebra.MultivariatePolynomials
 
 /-!
 # Few forms have only deep translates

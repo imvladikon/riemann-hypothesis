@@ -1,8 +1,13 @@
 module
 
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.Shimura.IntegralModel.UniversalFamily
-public import Lib.Shimura.TraceFormula.DefiniteTrace
-public import Lib.Shimura.Uniformisation.ModelExists
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.Geometry.SerreTheorem
+import Lib.Shimura.TraceFormula.DefiniteTrace
+import Lib.Shimura.Uniformisation.ModelExists
 
 /-!
 # Balls immerse; holomorphy, arcs and complex points of the covers

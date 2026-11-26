@@ -1,8 +1,15 @@
 module
 
-public import New.UpperBound.Divisibility.ChainDatumExpansion
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.UpperBound.Divisibility.SetupAtLevel
-public import New.UpperBound.Objects.CharactersAtLevel
+public import New.UpperBound.Kernels.ThetaLiftGauge
+import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import Lib.ClassField.HeckeCharacter.TameModulus
+import Lib.General.Algebra.LevelModulus
+import New.Derivatives.Vacuum.JetIntegrality
+import New.UpperBound.Divisibility.ChainDatumExpansion
+import New.UpperBound.Divisibility.ChainValuation
+import New.UpperBound.Objects.CharactersAtLevel
 
 /-!
 # N-adic valuation of the lifts between the X_j at the level prime N

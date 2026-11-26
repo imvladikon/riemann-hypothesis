@@ -1,6 +1,14 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 public import Lib.Weil.MixedModel.ZeroTerm
+import Lib.Adelic.Adeles.LocalFactors
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.MixedModel.RealTheta
 
 /-!
 # Mixed model of the Weil representation: Levi intertwining and invariance of θ

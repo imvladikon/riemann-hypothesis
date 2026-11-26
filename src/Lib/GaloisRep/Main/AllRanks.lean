@@ -1,8 +1,27 @@
 module
 
-public import TauCeti.Analysis.Normed.Ring.CompactMonoid
-public import Lib.ClassField.Avatar.LocalGlobalCompatibility
-public import Lib.GaloisRep.Main.ThetaLift
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.Analysis.Normed.Ring.CompactMonoid
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.GaloisRep.Main.AttachedRepresentations
+public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
+import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+import Lib.ClassField.Avatar.LocalGlobalCompatibility
+import Lib.GaloisRep.Main.OddRank
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.GaloisRep.Main.ThetaLift
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Limit.TraceLimit
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Isotypic spaces of eigenforms and attached Galois representations in every positive rank

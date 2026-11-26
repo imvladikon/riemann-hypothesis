@@ -1,8 +1,21 @@
 module
 
-public import Mathlib.Topology.Algebra.Group.OpenMapping
-public import Mathlib.Topology.Baire.LocallyCompactRegular
-public import Lib.ClassField.Global.NormTheorems
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.Topology.Algebra.Group.OpenMapping
+import Mathlib.Topology.Baire.LocallyCompactRegular
+import TauCeti.Topology.Algebra.Group.Units
+public import Lib.ClassField.GaloisCohomology.TateIndexFormula
+public import Lib.ClassField.Local.ArtinMap
+import Lib.Adelic.Hecke.ClassSums
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.ArtinMap
+import Lib.ClassField.Global.ArtinReciprocity
+import Lib.ClassField.Global.NormTheorems
+import Lib.ClassField.LocalDuality.KummerFiniteness
+import Lib.ClassField.Places.LocalFields
+import Lib.ClassField.Places.TameInertia
+import Lib.General.NumberTheory.SUnitsAndClassNumber
 
 /-!
 # Kummer characters, power indices and the existence theorem for totally complex fields

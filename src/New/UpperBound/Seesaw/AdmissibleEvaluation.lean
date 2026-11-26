@@ -1,6 +1,7 @@
 module
 
 public import New.UpperBound.Seesaw.NeighbourVacuum
+public import New.UpperBound.Seesaw.EdgePairEvaluation
 
 /-!
 # Finite evaluation of edge pairs takes translates of the vacuum to admissible combinations

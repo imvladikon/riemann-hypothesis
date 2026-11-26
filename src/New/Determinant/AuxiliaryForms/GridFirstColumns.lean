@@ -1,9 +1,13 @@
 module
 
+import Std.Tactic.BVDecide.Normalize.Bool
 public import New.Determinant.AuxiliaryForms.PathData
-public import New.Determinant.Chain.Moduli
-public import New.OneLift.ComparisonOperator.GluedLattices
-public import New.UpperBound.Seesaw.LevelIdeles
+import Lib.Adelic.AutomorphicForms.Cuspidality
+import Lib.Adelic.Unitary.RationalPoints
+import New.Determinant.Chain.Moduli
+import New.OneLift.ComparisonOperator.ExchangeData
+import New.OneLift.ComparisonOperator.GluedLattices
+import New.UpperBound.Seesaw.LevelIdeles
 
 /-!
 # Periods on the diagonal and path data on the first path

@@ -1,6 +1,13 @@
 module
 
-public import New.Spanning.Frames.OneFrame
+import Mathlib.Algebra.Order.Star.Int
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import New.Spanning.Frames.Densities
+public import New.Spanning.Frames.QuadricVolumes
+import New.Spanning.Frames.OneFrame
+import New.Spanning.Frames.QuadricPlancherel
+import New.Spanning.Frames.TwoGauges
 
 /-!
 # Two frames: separation and the gains at one position

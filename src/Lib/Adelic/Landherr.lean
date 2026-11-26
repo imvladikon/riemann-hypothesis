@@ -1,7 +1,21 @@
 module
 
-public import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
-public import Lib.ClassField.Global.CMSplittingCharacters
+public import Mathlib.Algebra.QuadraticAlgebra.Basic
+import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
+import Mathlib.Analysis.Complex.HalfPlane
+import Mathlib.RingTheory.PicardGroup
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+public import Lib.ClassField.Places.Ideles
+public import Lib.GaloisRep.BaseChange.Defs
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Unitary.GramMatrix
+import Lib.Adelic.Witt.WittTheorem
+import Lib.ClassField.Global.AlbertBrauerHasseNoether
+import Lib.ClassField.Global.CMSplittingCharacters
+import Lib.ClassField.Global.NormTheorems
+import Lib.GaloisRep.Hilbert90.TameActions
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.General.LinearAlgebra.MatrixPolynomials
 
 /-!
 # Sums of two squares, Landherr's theorem and the Hasse principle for unitary cocycles

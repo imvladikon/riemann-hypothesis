@@ -1,19 +1,15 @@
 module
 
-public import Aesop.Main
-public import Mathlib.NumberTheory.Padics.ProperSpace
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.RingTheory.ZMod.UnitsCyclic
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.ClopenNhdofOne
-public import Mathlib.Topology.Algebra.Module.Compact
-public import Mathlib.Topology.Compactness.Paracompact
-public import Mathlib.Topology.Connected.Separation
-public import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
-public import Mathlib.Topology.Separation.Connected
-public import Std.Internal.Order.Automation
+public import Mathlib.NumberTheory.Padics.RingHoms
+import Mathlib.NumberTheory.Padics.ProperSpace
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.ZMod.UnitsCyclic
+import Mathlib.Topology.Algebra.ClopenNhdofOne
+import Mathlib.Topology.Algebra.Module.Compact
+import Mathlib.Topology.Compactness.Paracompact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import Mathlib.Topology.Separation.Connected
 public import Lib.Speed
 
 /-!

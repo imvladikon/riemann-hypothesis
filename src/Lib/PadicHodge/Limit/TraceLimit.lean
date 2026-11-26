@@ -1,9 +1,18 @@
 module
 
-public import Mathlib.RingTheory.Finiteness.Nilpotent
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.RingTheory.Finiteness.Nilpotent
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.PicardGroup
 public import Lib.GaloisRep.Main.LocalConditions
-public import Lib.General.LinearAlgebra.TensorChains
 public import Lib.PadicHodge.Limit.CrystallineLimit
+public import Lib.General.NumberTheory.PadicLimitsValuation
+public import Lib.PadicHodge.PeriodRings.DeRhamPeriods
+import Lib.ClassField.Places.TameInertia
+import Lib.General.LinearAlgebra.TensorChains
+import Lib.PadicHodge.Crystalline.HodgeTateForms
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Crystalline.Regularity
 
 /-!
 # Hodge–Tate jumps with bounded denominators and local conditions at limits of traces

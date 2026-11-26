@@ -1,12 +1,26 @@
 module
 
 import TauCeti.Analysis.SpecialFunctions.Gaussian.Reproducing
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.LineDeriv.Basic
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Topology.Sheaves.Presheaf
+public import TauCeti.Topology.Instances.Matrix -- shake: keep (needed public by an exposed definition)
 public import Lib.General.LinearAlgebra.HermitianMatrices
-public import Lib.General.Measure.HaarModulus
-public import Lib.General.Measure.IntegralOperators
 public import Lib.Weil.Construction.WeilOperators
+public import Lib.General.Analysis.GaussianIntegral
+import Lib.Base
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.Measure.HaarModulus
+import Lib.General.Measure.IntegralOperators
+import Lib.General.Topology
 
 /-!
 # The Fock model of the Weil representation of U(ε) at a real place

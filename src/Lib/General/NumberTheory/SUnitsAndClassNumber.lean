@@ -2,9 +2,9 @@ module
 
 import TauCeti.NumberTheory.EffectiveBounds.ClassNumber.Basic
 import TauCeti.NumberTheory.NumberField.Units.SUnit.Basic
-public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.NormLeOne
 public import Mathlib.NumberTheory.NumberField.ClassNumber
-public import Mathlib.NumberTheory.NumberField.House
+import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.NormLeOne
+import Mathlib.NumberTheory.NumberField.House
 public import Lib.General.NumberTheory.ImaginaryQuadraticField
 
 /-!

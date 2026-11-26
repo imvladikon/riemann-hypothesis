@@ -1,7 +1,17 @@
 module
 
-public import Mathlib.AlgebraicGeometry.PointsPi
+import Mathlib.AlgebraicGeometry.PointsPi
+import Mathlib.AlgebraicGeometry.QuasiAffine
+import Mathlib.AlgebraicGeometry.ValuativeCriterion
+import Mathlib.NumberTheory.Padics.ProperSpace
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.Module.Compact
 public import Lib.Cohomology.SmoothBaseChange
+import Lib.Cohomology.Etale.DenseSubfunctors
+import Lib.General.Geometry.PointsOfProperSchemes
+import Lib.General.NumberTheory.CoefficientRings
+import Lib.PadicComparison.Descent.TestCovers
 
 /-!
 # The primitive comparison theorem and finiteness of p-adic cohomology

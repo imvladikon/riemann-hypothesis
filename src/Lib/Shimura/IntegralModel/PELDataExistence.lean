@@ -1,7 +1,12 @@
 module
 
-public import Lib.GaloisRep.Main.QuadraticStep
-public import Lib.Shimura.HeckeTower.Model
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+public import Lib.Shimura.HeckeTower.HeckeData
+public import Lib.Shimura.ThetaModuli.PELThetaTori
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.Shimura.HeckeTower.Model
 
 /-!
 # Existence of PEL data at levels good at all safe places, with the form ξ and a Lagrangian

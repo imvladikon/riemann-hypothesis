@@ -1,9 +1,11 @@
 module
 
-public import TauCeti.RingTheory.MvPowerSeries.Derivative
 import TauCeti.NumberTheory.Padics.Factorial
-public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
 public import Mathlib.RingTheory.PowerSeries.Exp
+public import Mathlib.RingTheory.MvPowerSeries.Rename
+import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+import Mathlib.Topology.Algebra.Valued.LocallyCompact
+import TauCeti.RingTheory.MvPowerSeries.Derivative
 public import Lib.GLn.SchurModule.Basic
 public import Lib.General.Algebra.AdicCompletion
 

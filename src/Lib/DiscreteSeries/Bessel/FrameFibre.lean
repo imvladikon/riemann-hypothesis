@@ -1,7 +1,13 @@
 module
 
-public import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.DiscreteSeries.Haar.GramFibre
+public import Lib.DiscreteSeries.Bessel.Basic
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
 
 /-!
 # Haar measure of G₁ and the fibre measure on frames

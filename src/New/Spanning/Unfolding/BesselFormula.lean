@@ -1,5 +1,7 @@
 module
 
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 public import Lib.Weil.Periods.Equivariant
 public import New.Spanning.Unfolding.PoincareSeries
 

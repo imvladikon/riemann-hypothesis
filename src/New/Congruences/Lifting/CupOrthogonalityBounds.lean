@@ -1,11 +1,19 @@
 module
 
-public import Mathlib.Algebra.GCDMonoid.FinsetLemmas
-public import Mathlib.RingTheory.Finiteness.Quotient
-public import Lib.General.Algebra.IntegralPowerSeries
-public import New.Congruences.Lifting.CutExponentBounds
-public import New.Congruences.Lifting.FewLowJumps
+import Mathlib.Algebra.GCDMonoid.FinsetLemmas
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.RingTheory.Finiteness.Quotient
+import Mathlib.RingTheory.LocalRing.Quotient
 public import New.Congruences.Lifting.TameCharts
+public import New.Congruences.Lifting.SidePoints
+import Lib.ClassField.Places.TameInertia
+import Lib.General.Algebra.IntegralPowerSeries
+import Lib.PadicHodge.Crystalline.Regularity
+import New.Congruences.Lifting.CutExponentBounds
+import New.Congruences.Lifting.DeepPoints
+import New.Congruences.Lifting.FewLowJumps
+import New.Congruences.Lifting.SafeMoves
 
 /-!
 # From sides to lattices: few low jumps, b-letters and tame types

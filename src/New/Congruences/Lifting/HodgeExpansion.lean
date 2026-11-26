@@ -1,8 +1,16 @@
 module
 
-public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-public import Lib.General.LinearAlgebra.MatrixNormBounds
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
 public import New.Congruences.Lifting.ExponentLattices
+import Lib.General.LinearAlgebra.MatrixNormBounds
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.PadicHodge.Kisin.FrameTheorem
 
 /-!
 # Exponents of lattice elements in a Hodge basis and the length of one step on a line

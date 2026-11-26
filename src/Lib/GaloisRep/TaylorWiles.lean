@@ -1,7 +1,12 @@
 module
 
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
 public import Lib.GaloisRep.LocalGlobal.LocalFormTypes
 public import Lib.GaloisRep.Main.AllRanks
+public import Lib.Adelic.AutomorphicForms.PAdicGauge
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.PadicComparison.Descent.TestCategory
 
 /-!
 # Auxiliary places, base level, integral Hecke algebra and operators at the auxiliary places

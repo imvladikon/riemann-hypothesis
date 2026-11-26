@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.GroupTheory.Nilpotent
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
 public import Lib.Cohomology.Etale.FilteredLimits
 public import Lib.PadicComparison.Completion
 

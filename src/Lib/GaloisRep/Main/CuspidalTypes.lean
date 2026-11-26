@@ -1,9 +1,23 @@
 module
 
-public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
-public import Lib.PadicHodge.Characters
-public import Lib.PadicHodge.Limit.TraceLimit
+import Mathlib.FieldTheory.Finite.Extension
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.Shimura.HeckeTower.HeckeData
+public import Lib.GaloisRep.Main.LocalConditions
+public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
+public import Lib.PadicHodge.Limit.CrystallineLimit
+import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
+import Lib.General.LinearAlgebra.HermiteForm
+import Lib.General.NumberTheory.SUnitsAndClassNumber
+import Lib.PadicHodge.Characters
+import Lib.PadicHodge.Crystalline.HodgeTateJumps
+import Lib.PadicHodge.Limit.TraceLimit
 
 /-!
 # Cuspidal types, multiplicity-free sums and the Hodge–Tate cocharacter

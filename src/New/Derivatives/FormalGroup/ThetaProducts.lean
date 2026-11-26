@@ -1,9 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import TauCeti.RingTheory.PowerSeries.Rescale
 public import New.Derivatives.Divisibility.NormalForm
-public import New.Derivatives.FormalGroup.Exponent
 public import New.Derivatives.FormalGroup.Resolution
 public import New.Derivatives.Vacuum.TightFrames
+public import Lib.CM.FormalGroup.PrimeNotation
+import New.Derivatives.FormalGroup.Exponent
 
 /-!
 # The normal form of theta products at non-split primes

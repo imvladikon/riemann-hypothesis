@@ -1,6 +1,11 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Units
 public import Lib.SiegelWeil.SingularForms.UnimodularCoefficients
+public import Lib.Adelic.Witt.WittTheorem
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.Shimura.ComplexTheta.AppellHumbertData
 
 /-!
 # Strong approximation and constancy of automorphic functions in equal rank

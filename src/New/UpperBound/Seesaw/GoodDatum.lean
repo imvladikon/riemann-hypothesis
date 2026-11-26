@@ -1,8 +1,10 @@
 module
 
 public import New.UpperBound.Seesaw.AdmissibleEvaluation
-public import New.UpperBound.Seesaw.LevelIdeles
-public import New.UpperBound.Size.ShortColumns
+import Lib.ClassField.HeckeCharacter.AlgebraicValues
+import New.OneLift.ComparisonOperator.ExchangeData
+import New.UpperBound.Seesaw.LevelIdeles
+import New.UpperBound.Size.ShortColumns
 
 /-!
 # Evaluated data as admissible combinations of glued translates of the vacuum

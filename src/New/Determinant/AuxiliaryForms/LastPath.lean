@@ -1,9 +1,18 @@
 module
 
-public import Std.Tactic.BVDecide.Normalize.BitVec
-public import Lib.Adelic.AutomorphicForms.BlockPeriods
-public import New.Determinant.AuxiliaryForms.GridFirstColumns
-public import New.Determinant.AuxiliaryForms.RegularParameters
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
+import Std.Tactic.BVDecide.Normalize.BitVec
+public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
+public import New.Determinant.AuxiliaryForms.PathData
+import Lib.Adelic.AutomorphicForms.BlockPeriods
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.Weil.CompactLift.DefiniteThetaLift
+import New.Determinant.AuxiliaryForms.GridFirstColumns
+import New.Determinant.AuxiliaryForms.RegularParameters
+import New.OneLift.ComparisonOperator.GluedLattices
+import New.UpperBound.Kernels.JetConjugatesAndBounds
 
 /-!
 # The branching pairing and the periods on the last path

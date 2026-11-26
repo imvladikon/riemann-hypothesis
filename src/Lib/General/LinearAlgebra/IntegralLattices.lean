@@ -1,9 +1,9 @@
 module
 
-public import TauCeti.LinearAlgebra.Matrix.Range
-public import Mathlib.Algebra.Module.StablyFree.Basic
-public import Mathlib.LinearAlgebra.Matrix.Swap
-public import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.LinearAlgebra.Matrix.Swap
+import Mathlib.RingTheory.PiTensorProduct
+import TauCeti.LinearAlgebra.Matrix.Range
 public import Lib.Adelic.Hecke.Basic
 public import Lib.General.Groups.BesselGroups
 

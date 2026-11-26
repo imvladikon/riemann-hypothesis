@@ -1,8 +1,10 @@
 module
 
-public import TauCeti.Analysis.Normed.Ring.CompactMonoid
-public import Lib.General.NumberTheory.GaussValuation
+import Mathlib.FieldTheory.Galois.Profinite
+import TauCeti.Analysis.Normed.Ring.CompactMonoid
 public import New.Congruences.Selmer.AuxiliaryPrimes
+import Lib.GaloisRep.Hilbert90.UnitaryGroups
+import Lib.General.NumberTheory.GaussValuation
 
 /-!
 # Stickelberger systems

@@ -1,10 +1,12 @@
 module
 
-public import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Lib.Adelic.Adeles.AdditiveCharacter
+public import Mathlib.Algebra.Module.ZLattice.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.RingTheory.PiTensorProduct
 public import Lib.General.Analysis.FourierTransforms
-public import Lib.General.Topology
+import Lib.Adelic.Adeles.AdditiveCharacter
+import Lib.General.Topology
 
 /-!
 # Theta functions on complex tori: Appell–Humbert data and factors of automorphy

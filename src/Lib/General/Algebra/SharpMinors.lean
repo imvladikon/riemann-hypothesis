@@ -1,9 +1,17 @@
 module
 
-public import Mathlib.Algebra.Module.PID
-public import Lib.General.Algebra.FittingIdealsAndLengths
 import TauCeti.LinearAlgebra.Determinant.Basic
 import TauCeti.RingTheory.Length.Determinant
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
+import Mathlib.Algebra.Module.PID
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.OrderOfVanishing.Noetherian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.TotallySplit
+public import Lib.General.Algebra.FittingIdealsAndLengths
 
 /-!
 # Maximal minors and lengths

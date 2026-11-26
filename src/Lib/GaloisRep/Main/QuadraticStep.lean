@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.NumberTheory.LSeries.PrimesInAP
-public import Mathlib.NumberTheory.SumTwoSquares
-public import Lib.Adelic.Reduction.FirstMinimumShortBases
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
+import Mathlib.NumberTheory.SumTwoSquares
 public import Lib.ClassField.Grunwald
+import Lib.Adelic.Reduction.FirstMinimumShortBases
+import Lib.ClassField.Global.CMSplittingCharacters
+import Lib.ClassField.Places.TameInertia
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Split places over ℚ(√−d) and quadratic steps with prescribed splitting

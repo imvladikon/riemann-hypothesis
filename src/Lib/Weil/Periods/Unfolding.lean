@@ -1,7 +1,14 @@
 module
 
-public import Lib.Weil.DualPair.ThetaLiftConvergence
+public import Mathlib.Topology.Sheaves.Presheaf
+import Mathlib.Topology.UniformSpace.Uniformizable
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Weil.Periods.ConstantTerm
+import Lib.Adelic.QuotientMeasure.IwasawaUnfolding
+import Lib.Adelic.QuotientMeasure.UnfoldingInStages
+import Lib.Cohomology.Etale.Basic
+import Lib.Weil.DualPair.ThetaLiftConvergence
 
 /-!
 # One step of the seesaw unfolding of the theta integral over the Bessel group

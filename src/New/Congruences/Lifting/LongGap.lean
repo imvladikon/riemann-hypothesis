@@ -1,6 +1,7 @@
 module
 
 public import New.Congruences.Lifting.SidePoints
+import Lib.PadicHodge.Kisin.FrameTheorem
 
 /-!
 # The long gap lemma for a side of a Kummer chart, by expansion in powers of E

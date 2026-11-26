@@ -1,8 +1,10 @@
 module
 
-public import Mathlib.Probability.Kernel.Deterministic
+public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
+import Mathlib.Probability.Kernel.Deterministic
 public import Lib.General.Measure.QuadricDisintegration
 public import Lib.DiscreteSeries.Bruhat.FloorGroups -- shake: keep (`open FloorGroups`)
+import Lib.Adelic.QuotientMeasure.Basic
 
 /-!
 # Solving the equation of a quadric in a block of coordinates

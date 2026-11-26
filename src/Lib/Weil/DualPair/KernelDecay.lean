@@ -1,7 +1,11 @@
 module
 
 public import Lib.Weil.DualPair.ShortIsotropicVectors
-public import Lib.Weil.DualPair.ThetaLiftConvergence
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Base
+import Lib.General.LinearAlgebra.PartnerAlgebra
+import Lib.Weil.DualPair.ThetaLiftConvergence
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Rapid decay of theta kernels of unitary dual pairs under support conditions

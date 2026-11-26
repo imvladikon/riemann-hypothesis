@@ -1,8 +1,13 @@
 module
 
-public import TauCeti.LinearAlgebra.Matrix.Rank
-public import Lib.DiscreteSeries.Bruhat.BigCell
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.LinearAlgebra.Matrix.Rank
 public import New.Spanning.Unfolding.Terms
+import Lib.DiscreteSeries.Bruhat.BigCell
 
 /-!
 # Links of isometries, the link isometry Υ_γ, and invariance under `besselU`

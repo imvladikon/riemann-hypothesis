@@ -1,6 +1,7 @@
 module
 
 public import New.UpperBound.Objects.Rows
+public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
 
 /-!
 # The chain of theta lifts ι_μ along the spaces Y_j: level, character and 𝖦-equivariance

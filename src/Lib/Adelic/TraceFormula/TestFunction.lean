@@ -1,6 +1,7 @@
 module
 
-public import Mathlib.Topology.LocallyConstant.Algebra
+import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.Topology.LocallyConstant.Algebra -- shake: keep (needed public by an exposed definition)
 public import Lib.Adelic.Adeles.LocalFactors
 public import Lib.General.LinearAlgebra.IdempotentRadical
 public import Lib.Weil.Unramified.HeckeGL

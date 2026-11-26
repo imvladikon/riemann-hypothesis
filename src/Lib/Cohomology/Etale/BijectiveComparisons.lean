@@ -1,9 +1,14 @@
 module
 
-public import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
-public import Mathlib.CategoryTheory.EffectiveEpi.Comp
-public import Mathlib.CategoryTheory.ExtremalEpi
-public import Mathlib.CategoryTheory.Subfunctor.Equalizer
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughProjectives
+public import Mathlib.CategoryTheory.Monoidal.FunctorCategory
+public import Mathlib.CategoryTheory.Monoidal.Types.Basic
+import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
+import Mathlib.CategoryTheory.Abelian.Exact
+import Mathlib.CategoryTheory.EffectiveEpi.Comp
+import Mathlib.CategoryTheory.ExtremalEpi
+import Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory
+import Mathlib.CategoryTheory.Subfunctor.Equalizer
 public import Lib.General.Algebra.LongExactSequences
 
 /-!

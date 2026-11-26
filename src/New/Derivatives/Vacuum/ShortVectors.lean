@@ -1,6 +1,10 @@
 module
 
-public import New.Reduction.Data.Magnitudes
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
+public import New.Reduction.Data.AdmissibleData
+import New.Reduction.Data.Magnitudes
 
 /-!
 # Tight frames in `𝔞₀`

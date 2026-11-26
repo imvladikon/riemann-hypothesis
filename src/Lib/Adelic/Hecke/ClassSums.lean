@@ -1,9 +1,9 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Adelic.Hecke.Basic
 public import Lib.Adelic.QuotientMeasure.Basic
 

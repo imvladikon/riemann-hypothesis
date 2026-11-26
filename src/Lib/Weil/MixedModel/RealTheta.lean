@@ -1,8 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PicardGroup
 public import Lib.Weil.Construction.ProductsAndTransport
 public import Lib.Weil.MixedModel.IsotropicSplitting
-public import Lib.Weil.Construction.VacuumProjections
+import Lib.Base
+import Lib.General.Measure.IdempotentKernel
+import Lib.Weil.Construction.VacuumProjections
 
 /-!
 # Real data, the entire theta function, and the real vacuum in the mixed model

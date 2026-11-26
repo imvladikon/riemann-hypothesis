@@ -1,8 +1,20 @@
 module
 
-public import New.Congruences.GaloisRepresentations.RowsAndColumnsFromLabels
-public import New.Determinant.AuxiliaryForms.RegularParameters
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import New.OneLift.ComparisonOperator.ExchangeData
+public import New.Congruences.GaloisRepresentations.SelmerHypotheses
+public import New.Determinant.Twist.FitTwists
+import Lib.GaloisRep.Main.AllRanks
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.General.NumberTheory.FrobeniusOrbits
+import Lib.PadicComparison.Descent.TestCategory
+import New.Congruences.GaloisRepresentations.AttachedRepresentations
+import New.Congruences.GaloisRepresentations.RowsAndColumnsFromLabels
+import New.Determinant.AuxiliaryForms.RegularParameters
 
 /-!
 # Main summand conditions on Hodge–Tate jumps and existence of main summands for Hecke eigensystems

@@ -1,10 +1,19 @@
 module
 
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 public import Lib.GaloisRep.LocalGlobal.LabelCompatibility
 public import Lib.GaloisRep.Main.DivisibleSelmerModules
 public import New.Congruences.LocalLoss.Basic
 public import New.OneLift.TestedForms
 public import New.UpperBound.Objects.Rows
+public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.GaloisRep.Pseudocharacter.SemisimpleRepresentations
+import Lib.ClassField.Avatar.LocalGlobalCompatibility
+import Lib.ClassField.Global.CMSplittingCharacters
+import Lib.ClassField.HeckeL.ContinuationAtOne
+import Lib.GaloisRep.Main.QuadraticStep
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Bad places, ℓ-adic avatars and hypotheses on conjugate self-dual representations

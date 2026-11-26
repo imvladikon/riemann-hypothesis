@@ -1,9 +1,20 @@
 module
 
-public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-public import Lib.General.NumberTheory.SUnitsAndClassNumber
+import Mathlib.Algebra.GroupWithZero.Torsion
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.RingTheory.Valuation.Integral
 public import Lib.Shimura.GoodReduction.GaussSums
 public import Lib.Shimura.ThetaModuli.PELThetaTori
+import Lib.General.NumberTheory.SUnitsAndClassNumber
+import Lib.General.Topology
+import Lib.PadicComparison.Descent.TestCategory
+import Lib.Shimura.Uniformisation.HolomorphicFamilies
 
 /-!
 # Good reduction of theta tori from shift bounds on kernels of multiplications

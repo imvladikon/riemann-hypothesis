@@ -1,6 +1,11 @@
 module
 
-public import New.Congruences.Lifting.DeepPoints
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.RingTheory.PiTensorProduct
+public import New.Congruences.Lifting.SidePoints
+import Lib.PadicComparison.Descent.TestCategory
+import New.Congruences.Lifting.DeepPoints
+import New.Congruences.Lifting.SafeMoves
 
 /-!
 # Few low jumps: length lost to depth and a submodule cupping to zero

@@ -1,8 +1,19 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.RealConvolution
-public import Lib.Adelic.TraceFormula.Stretch
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Separation.CompletelyRegular
+import TauCeti.NumberTheory.NumberField.Countable
 public import Lib.Adelic.TraceFormula.TestFunction
+public import Lib.Adelic.Reduction.FirstMinimumShortBases
+public import Lib.DiscreteSeries.Haar.CayleyChart
+import Lib.Adelic.AutomorphicForms.RealConvolution
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.TraceFormula.Stretch
+import Lib.DiscreteSeries.FlenstedJensen.PsiKTypes
+import Lib.DiscreteSeries.Haar.GramPolar
+import Lib.DiscreteSeries.Haar.TotalMass
 
 /-!
 # The sum of a majorant over the rational points

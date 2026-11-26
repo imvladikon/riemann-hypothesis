@@ -1,8 +1,13 @@
 module
 
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.NumberTheory.MulChar.Lemmas
 public import Lib.Adelic.AutomorphicForms.HeckeEigenforms
-public import Lib.General.LinearAlgebra.BlockEmbeddings
-public import Lib.LocalGL.Shintani.LiftingGreenCharacters
+public import Lib.General.Geometry.GaloisCovers
+public import Lib.LocalGL.Iwahori.ParahoricStructure
+import Lib.General.LinearAlgebra.BlockEmbeddings
+import Lib.LocalGL.Green.LabelCharacters
+import Lib.LocalGL.Shintani.LiftingGreenCharacters
 
 /-!
 # Local GL_N(E_w)-action on forms, parahoric types and labels at a split place

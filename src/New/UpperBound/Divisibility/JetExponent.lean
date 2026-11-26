@@ -1,7 +1,12 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Tactic.Monotonicity.Lemmas
 public import New.Derivatives.Divisibility.Count
-public import New.Derivatives.Sharpness.NearPairs
+public import New.UpperBound.Size.ShortColumns
+import New.Derivatives.Sharpness.NearPairs
 
 /-!
 # A lower bound for the divisibility bound by the gain

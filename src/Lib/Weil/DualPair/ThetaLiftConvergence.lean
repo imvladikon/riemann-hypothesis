@@ -1,10 +1,19 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.RealConvolution
-public import Lib.DiscreteSeries.CuspKernel
-public import Lib.Weil.DualPair.WeilAction
 
 import TauCeti.RepresentationTheory.Continuous.StronglyContinuous
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Topology.Sheaves.Presheaf
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.Adelic.AutomorphicForms.Basic
+public import Lib.Weil.DualPair.Defs
+import Lib.Adelic.AutomorphicForms.RealConvolution
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Adelic.Unitary.RationalPoints
+import Lib.DiscreteSeries.CuspKernel
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.DualPair.WeilAction
 
 /-!
 # Growth of theta kernels and convergence of theta lifts

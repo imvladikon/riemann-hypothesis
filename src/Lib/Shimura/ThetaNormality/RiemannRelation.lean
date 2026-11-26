@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.RingTheory.PiTensorProduct
+import TauCeti.RingTheory.MvPolynomial.Homogeneous
 public import Lib.Shimura.ThetaModuli.PELThetaTori
 
 /-!

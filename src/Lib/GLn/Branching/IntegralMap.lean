@@ -1,6 +1,15 @@
 module
 
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.LinearAlgebra.Matrix.Bilinear
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic.Linter.Style
 public import Lib.GLn.Branching.NormBound
+public import Lib.GLn.SchurModule.SchurMatrix
+import Lib.General.Analysis.HolomorphicIntegrals
 
 /-!
 # Branching from GL(n+1) to GL(n) × GL(1): integral equivariant branching maps

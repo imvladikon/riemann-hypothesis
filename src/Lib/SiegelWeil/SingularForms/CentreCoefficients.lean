@@ -1,8 +1,12 @@
 module
 
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import Lib.Adelic.Witt.IwasawaDecomposition
 public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
-public import Lib.Weil.MixedModel.ZeroTerm
+import Lib.Adelic.Unitary.WeakApproximation
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.Weil.MixedModel.ZeroTerm
 
 /-!
 # Fourier coefficients along the centre of a unipotent radical and their partial means

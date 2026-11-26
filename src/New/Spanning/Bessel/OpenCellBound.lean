@@ -1,8 +1,18 @@
 module
 
-public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
 public import New.Spanning.Bessel.SobolevBound
-public import New.Spanning.Unfolding.Link
+import Lib.DiscreteSeries.Bessel.SchurBound
+import Lib.DiscreteSeries.Bessel.UnipotentHaarMeasure
+import Lib.DiscreteSeries.Bruhat.ComplexPlace
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.GaussianIntegral
+import Lib.Shimura.ComplexTheta.AppellHumbertData
+import New.Spanning.Unfolding.Link
 
 /-!
 # Bounds near a point of Ω and the open cell bound for a Bessel system

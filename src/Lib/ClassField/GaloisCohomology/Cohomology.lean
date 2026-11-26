@@ -1,8 +1,8 @@
 module
 
-public import TauCeti.RepresentationTheory.Homological.ContCohomology.Additive
 public import TauCeti.RepresentationTheory.Homological.ContCohomology.ContinuousCohomologyIso
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
+import TauCeti.RepresentationTheory.Homological.ContCohomology.Additive
 public import Lib.ClassField.GaloisCohomology.ClassCounts
 
 /-!

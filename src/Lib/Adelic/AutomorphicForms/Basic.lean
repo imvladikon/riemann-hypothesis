@@ -1,6 +1,19 @@
 module
 
-public import Lib.Adelic.Reduction.DefiniteClassSums
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.TotallySplit
+import TauCeti.Topology.Algebra.Group.Units
+import TauCeti.Topology.Instances.Matrix
+public import Lib.Adelic.Reduction.FiniteVolume
+public import Lib.Adelic.Reduction.FirstMinimumShortBases
+public import Lib.DiscreteSeries.FlenstedJensen.Defs
+public import Lib.General.Measure.IdempotentKernel
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.Reduction.DefiniteClassSums
 
 /-!
 # Automorphic forms on adelic unitary groups, the Petersson product and rapid decay

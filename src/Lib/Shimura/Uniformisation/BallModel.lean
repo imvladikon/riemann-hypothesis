@@ -1,9 +1,23 @@
 module
 
-public import Mathlib.Algebra.Order.Ring.Opposite
 public import Mathlib.Topology.Algebra.Algebra.Rat
+public import Mathlib.Algebra.Azumaya.Basic
+public import Mathlib.RingTheory.PicardGroup
+import Mathlib.Algebra.AffineMonoid.UniqueSums
+import Mathlib.Algebra.Order.Ring.Opposite
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+import Mathlib.RingTheory.TotallySplit
 public import Lib.Shimura.ThetaModuli.PELThetaTori
-public import Lib.Shimura.Transfer.MarkedPairs
+public import Lib.Shimura.HeckeTower.HeckeData
+import Lib.Adelic.TraceFormula.ChangingSigns
+import Lib.Adelic.Witt.WittTheorem
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.LinearAlgebra.Eigenvalues
+import Lib.Shimura.Transfer.MarkedPairs
 
 /-!
 # Period signatures, analytic families of theta tori and the ball chart of moduli points

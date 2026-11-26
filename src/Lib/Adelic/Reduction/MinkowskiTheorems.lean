@@ -1,8 +1,15 @@
 module
 
-public import Mathlib.Data.Int.Log
-public import Lib.General.LinearAlgebra.PolarDecomposition
-public import Lib.General.NumberTheory.FrobeniusOrbits
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Int.Log
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.RingTheory.PicardGroup
+public import Lib.Adelic.Adeles.IdeleModulus
+public import Lib.Adelic.Unitary.Defs
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.General.LinearAlgebra.PolarDecomposition
+import Lib.General.NumberTheory.FrobeniusOrbits
 
 /-!
 # Adelic Minkowski theorems and counts of rational points in boxes

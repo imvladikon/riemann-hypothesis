@@ -1,5 +1,8 @@
 module
 
+import Mathlib.Topology.Algebra.Group.Units
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.Separation.CompletelyRegular
 public import Lib.ClassField.Local.ArtinMap
 
 /-!

@@ -1,8 +1,18 @@
 module
 
-public import Mathlib.Topology.Algebra.Group.CompactOpen
-public import Lib.Adelic.AutomorphicForms.PAdicGauge
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Algebra.Group.CompactOpen
+import Mathlib.Topology.Algebra.Group.Matrix
+import Mathlib.Topology.MetricSpace.Ultra.ContinuousMaps
 public import Lib.GaloisRep.Pseudocharacter.Pseudorepresentations
+public import Lib.Adelic.AutomorphicForms.SmoothAlgebraicForms
+import Lib.Adelic.Adeles.StrongApproximation
+import Lib.Adelic.AutomorphicForms.HeckeEigenforms
+import Lib.Adelic.Reduction.DefiniteClassSums
+import Lib.Cohomology.Etale.Basic
+import Lib.GLn.SchurModule.SchurNorm
+import Lib.Weil.Unramified.HeckeGL
 
 /-!
 # ℓ-adic models of algebraic forms and congruences that change the weight

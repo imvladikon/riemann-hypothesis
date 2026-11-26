@@ -1,10 +1,16 @@
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.WithLp
 public import Mathlib.Topology.Algebra.Module.FiniteDimensionBilinear
-public import Lib.General.Analysis.FourierTransforms
-public import Lib.General.Analysis.MeanValueAndTaylor
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Topology.Separation.CompletelyRegular
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.WithLp
+import Mathlib.Analysis.Distribution.TemperateGrowth
+import Mathlib.Analysis.Fourier.Inversion
+import Mathlib.RingTheory.SimpleRing.Principal
 public import Lib.Weil.Fock.WeightedNorms
+import Lib.General.Analysis.FourierTransforms
+import Lib.General.Analysis.MeanValueAndTaylor
 
 /-!
 # Mixed Schrödinger–Fock models and rapid sections with prescribed values

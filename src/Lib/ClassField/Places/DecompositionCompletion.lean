@@ -1,11 +1,19 @@
 module
 
-public import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.Analysis.Normed.Algebra.Basic
-public import Mathlib.Tactic.Linter.Style
-public import Mathlib.Topology.Algebra.Ring.Compact
-public import Lib.ClassField.Places.LocalFields
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.Analysis.Normed.Algebra.Basic
+import Mathlib.FieldTheory.Galois.Profinite
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Topology.Algebra.Ring.Compact
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.NumberTheory.Padics.Complex.Basic
+import TauCeti.RingTheory.Valuation.ValuationSubring
 public import Lib.PadicHodge.PeriodRings.AxTheorem
+public import Lib.ClassField.Places.ProfiniteGalois
+public import Lib.ClassField.Places.ValuationSubrings
+import Lib.ClassField.Places.DecompositionCyclotomic
+import Lib.ClassField.Places.LocalFields
 
 /-!
 # Decomposition groups of places above p as Galois groups of local fields in ℚ̄_p

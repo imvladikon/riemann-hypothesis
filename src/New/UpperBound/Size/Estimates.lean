@@ -1,8 +1,10 @@
 module
 
-public import Mathlib.NumberTheory.Harmonic.Bounds
-public import New.UpperBound.Size.ClassCount
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.NumberTheory.Harmonic.Bounds
 public import New.UpperBound.Size.ShortColumns
+import New.UpperBound.Size.ClassCount
 
 /-!
 # Numerical inequalities between the parameters of the data

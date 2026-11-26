@@ -1,8 +1,11 @@
 module
 
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Data.Rat.Cast.OfScientific
+import TauCeti.NumberTheory.Padics.Complex.Basic
 public import New.Reduction.Lattices.Colength
 public import New.UpperBound.Divisibility.SetupAtLevel
-public import New.UpperBound.Objects.Rows
+import New.UpperBound.Objects.Rows
 
 /-!
 # The colength of source forms at p = N

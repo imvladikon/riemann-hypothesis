@@ -1,13 +1,17 @@
 module
 
-public import Lib.Analytic.PrimeNumberTheorem.LFunctionGrowth
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
+import Mathlib.NumberTheory.LSeries.Nonvanishing
 import TauCeti.Analysis.Complex.BorelCaratheodory
 import TauCeti.NumberTheory.DirichletCharacter.LFunction.Basic
 import TauCeti.NumberTheory.LFunctions.Zeros.ZeroFreeRegion.Dirichlet
 import TauCeti.NumberTheory.LSeries.DirichletEulerLog
 import TauCeti.NumberTheory.LSeries.RiemannZeta.Bounds
+public import Lib.Analytic.PrimeNumberTheorem.LFunctionGrowth
+import Lib.Analytic.EntireLFunction
 
 /-!
 # A zero-free region for Dirichlet L-functions

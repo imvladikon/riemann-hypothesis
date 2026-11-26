@@ -1,7 +1,9 @@
 module
 
-public import New.OneLift.ComparisonOperator.ExchangeData
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Rat.Cast.OfScientific
 public import New.OneLift.HeckeValues.TwistedRatio
+import New.OneLift.ComparisonOperator.ExchangeData
 
 /-!
 # Ratios of Hecke values and heights of functions of the twist

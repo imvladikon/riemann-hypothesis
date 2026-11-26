@@ -1,10 +1,17 @@
 module
 
-public import New.UpperBound.Divisibility.ColengthAtLevel
-public import New.UpperBound.Divisibility.MarkOperator
-public import New.UpperBound.Divisibility.ValuationAtLevel
-public import New.UpperBound.Divisibility.ValuationAtNonSplitPrimes
+import Mathlib.Data.Rat.Cast.OfScientific
+import Mathlib.Topology.MetricSpace.Ultra.Pi
 public import New.UpperBound.Size.Estimates
+public import New.Reduction.Lattices.Colength
+public import New.UpperBound.Divisibility.MarkedPrimes
+public import New.UpperBound.Kernels.ThetaLiftGauge
+import New.UpperBound.Divisibility.ChainDatumExpansion
+import New.UpperBound.Divisibility.ChainValuation
+import New.UpperBound.Divisibility.ColengthAtLevel
+import New.UpperBound.Divisibility.MarkOperator
+import New.UpperBound.Divisibility.ValuationAtLevel
+import New.UpperBound.Divisibility.ValuationAtNonSplitPrimes
 
 /-!
 # The divisibility of the composite lift at each prime

@@ -1,9 +1,13 @@
 module
 
-public import Mathlib.Combinatorics.Additive.AP.Three.Behrend
-public import Mathlib.NumberTheory.SumTwoSquares
-public import Lib.Analytic.Primes
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Combinatorics.Additive.AP.Three.Behrend
+import Mathlib.NumberTheory.SumTwoSquares
+import Mathlib.RingTheory.ZMod.UnitsCyclic
 public import New.Reduction.Data.AdmissibleData
+import Lib.Analytic.Primes
 
 /-!
 # Admissible data exist at every large x

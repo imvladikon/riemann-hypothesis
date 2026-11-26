@@ -1,6 +1,6 @@
 module
 
-public import TauCeti.RepresentationTheory.AsAlgebraHom
+import TauCeti.RepresentationTheory.AsAlgebraHom
 public import Lib.Adelic.TraceFormula.LevelAlgebra
 public import Lib.Adelic.TraceFormula.LineDeterminant
 public import Lib.Adelic.TraceFormula.LineStabiliser

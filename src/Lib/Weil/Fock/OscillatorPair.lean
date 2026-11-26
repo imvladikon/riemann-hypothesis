@@ -1,7 +1,19 @@
 module
 
-public import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+import Mathlib.Topology.Algebra.Group.Matrix
 public import Lib.Weil.Fock.PolynomialVectors
+public import Lib.DiscreteSeries.Theta.FockDualPair
+public import Lib.Weil.DualPair.Kronecker
+import Lib.Cohomology.Etale.Basic
+import Lib.DiscreteSeries.FlenstedJensen.RightDerivatives
+import Lib.DiscreteSeries.Haar.TotalMass
+import Lib.General.Analysis.HolomorphicIntegrals
+import Lib.General.LinearAlgebra.MatricesNearIdentity
+import Lib.General.Measure.HaarModulus
 
 /-!
 # Harmonic matrix coefficients of the Weil representation and oscillator pairs on matrices

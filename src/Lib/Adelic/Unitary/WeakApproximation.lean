@@ -1,7 +1,12 @@
 module
 
 import TauCeti.LinearAlgebra.Matrix.Nonsingular.Inverse
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Topology.Algebra.Group.Units
+import TauCeti.Analysis.Matrix.IndefiniteUnitaryGroup
 public import Lib.Adelic.Unitary.GramMatrix
+public import Lib.Adelic.Unitary.ComponentsAndBlockSums
+import Lib.Adelic.Adeles.StrongApproximation
 
 /-!
 # Closed matrix embedding of adelic unitary groups, discrete rational points, weak approximation

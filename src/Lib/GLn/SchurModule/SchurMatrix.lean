@@ -1,11 +1,12 @@
 module
 
-public import Mathlib.Algebra.Order.Ring.Opposite
-public import Mathlib.Algebra.Order.Star.Int
-public import Mathlib.Algebra.TrivSqZeroExt.Basic
-public import Mathlib.Data.Finset.Slice
-public import Lib.GLn.SchurModule.MinorBasis
-public import Lib.General.Groups.CongruenceSubgroups
+import Mathlib.Algebra.Order.Ring.Opposite
+import Mathlib.Algebra.Order.Star.Int
+import Mathlib.Algebra.TrivSqZeroExt.Basic
+import Mathlib.Data.Finset.Slice
+public import Lib.GLn.SchurModule.Basic
+import Lib.GLn.SchurModule.MinorBasis
+import Lib.General.Groups.CongruenceSubgroups
 
 /-!
 # Schur matrices, the standard basis of ∇, its weights and the highest vector

@@ -1,17 +1,25 @@
 module
 
-import TauCeti.RingTheory.WittVector.PadicConstants
-public import TauCeti.RingTheory.Perfectoid.Cyclotomic.Basic
-public import TauCeti.RingTheory.Perfectoid.Padic
 import TauCeti.RingTheory.WittVector.ArtinSchreier
-public import Mathlib.Algebra.CharP.Pi
-public import Mathlib.Algebra.Order.Star.Rat
 public import Mathlib.FieldTheory.IsAlgClosed.Classification
-public import Mathlib.RingTheory.Algebraic.Cardinality
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.PicardGroup
 public import Mathlib.RingTheory.WittVector.Compare
-public import Mathlib.Topology.Algebra.Module.Cardinality
+public import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import Mathlib.Topology.Algebra.Nonarchimedean.Completion
+public import TauCeti.RingTheory.Huber.Pair
+public import TauCeti.RingTheory.Perfectoid.Integral.Basic
+public import TauCeti.RingTheory.WittVector.Cyclotomic
+import Mathlib.Algebra.CharP.Pi
+import Mathlib.Algebra.Order.Star.Rat
+import Mathlib.RingTheory.Algebraic.Cardinality
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Topology.Algebra.Module.Cardinality
+import Mathlib.Topology.Connected.Separation
+import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
+import TauCeti.RingTheory.Perfectoid.Cyclotomic.Basic
+import TauCeti.RingTheory.Perfectoid.Padic
 public import Lib.PadicHodge.PeriodRings.AxTheorem
 
 /-!
