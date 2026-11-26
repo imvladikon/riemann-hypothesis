@@ -271,7 +271,8 @@ lemma conjTranspose_latticeLift_mulVec_stackedStringMapFin [Finite X'] :
 
 variable [Fact N.Prime]
 
-/-- Let `P` contain one place of each conjugate pair above the prime `N` (`hP`), let `N = π π̄`
+omit [Fact (Nat.Prime N)] in
+/-- Let `P` contain one place of each conjugate pair above `N` (`hP`), let `N = π π̄`
 with `π` a uniformiser at the places of `P` and a unit elsewhere (`hπ`), and let `κ` be scaling
 factors with values `1` or `δ`, trivial above `N`, with denominators bounded by the integral adele
 `β` and its conjugate (`hκ`).
@@ -449,7 +450,8 @@ lemma conjTranspose_latticeLift_mulVec_mem (hP : IsSplitLevel P N) (hκ : IsScal
 
 end
 
-/-- Let `P` contain one place of each conjugate pair above the prime `N` (`hP`), let `N = π π̄` with
+omit [Fact (Nat.Prime N)] in
+/-- Let `P` contain one place of each conjugate pair above `N` (`hP`), let `N = π π̄` with
 `π` a uniformiser at the places of `P` and a unit elsewhere (`hπ`), and let `κ` be scaling factors
 with values `1` or `δ`, trivial above `N`, with denominators bounded by the integral adele `β` and
 its conjugate (`hκ`). Let `D` be the data of two consecutive lifts between the graded hermitian

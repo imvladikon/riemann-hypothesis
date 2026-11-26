@@ -440,4 +440,65 @@ end SplitTameChar
 
 end New.Exchange
 
+/-! ## Characters of given weight on determinants of integral unitary points -/
+
+namespace New.AutChar.HasWeight
+
+open Matrix Prod IsIntMatrix
+
+variable {E n : Type _} [Field E] [CMType E] [Fintype n] [DecidableEq n]
+  {μ : AutChar E} {e : NumberField.InfinitePlace E → ℤ}
+  {ψ : (w : FinPlace E) → MulChar (ResField w) ℂ} {s : n → ℤˣ}
+
+/-- Let `μ` have weight `e` and tame part `ψ` (`μ.HasWeight e ψ`, with `ψ u` a character of the
+residue field at `u`), and let `ψ` be trivial outside the distinct places `w i`. Then for `k` in the
+stabiliser `K₀ = stdLevel E n` of the standard lattice, `μ (det k) = ∏ i, ψ (w i) (det (k mod w
+i))`, where `detFin s k` is the determinant of `k` as a norm-one adele. -/
+lemma apply_det_eq_prod (h : μ.HasWeight e ψ) {ι : Type*} [Fintype ι] {w : ι → FinPlace E}
+    (hw : w.Injective) (hψ : ∀ u : FinPlace E, u ∉ Set.range w → ψ u = 1) (k : stdLevel E n) :
+    μ.val (detFin s k.val) = ∏ i : ι, ψ (w i) (stdLevel.reduceAt (w i) k).val.det := by
+  -- Reduction modulo a place is a ring homomorphism on `Ô E`, so it commutes with `det`.
+  have h_red (u : FinPlace E) (h_int : (G.adeleMatrix (s := s) (1, k.val)).det.snd ∈ Ô E) :
+      reduceAt u ⟨_, h_int⟩ = (stdLevel.reduceAt u k).val.det := by
+    -- `convert!` matches `RingHom.map_det` across the coercions between `Ô E`, `𝔸f E` and the
+    -- finite part of `(1, k)`; the remaining goal is the finite part of the determinant.
+    convert! RingHom.map_det ..
+    -- `simp` reduces both sides to the entries of `k`; they agree up to the coercion into `Ô E`.
+    simp [det_apply', snd_sum, snd_prod]
+    rfl
+  -- `μ (det k)` is the archimedean part, which is `1`, times the tame product, which is a product
+  -- over the places `w i` because `ψ` is trivial elsewhere.
+  have hψ_map : ∀ u : FinPlace E, u ∉ Finset.univ.map ⟨w, hw⟩ → ψ u = 1 := by simpa using hψ
+  have h_int : (detFin s k.val : 𝔸 E).snd ∈ Ô E := by simp [det_mem (mem_stdLevel.mp k.property)]
+  rw [h.apply_eq _ h_int, finprod_tame_eq_prod_reduceU1 (u := detFin s k.val) hψ_map h_int]
+  simp [reduceU1, -snd_det, h_red]
+
+/-- A character `μ` with trivial tame part (`μ.HasWeight e 1`) is trivial on the determinant
+`detFin s k` of every `k` in the stabiliser `stdLevel E n` of the standard lattice. -/
+lemma apply_det_eq_one (h : μ.HasWeight e 1) {k : Gf E n} (hk : k ∈ stdLevel E n) :
+    μ.val (detFin s k) = 1 := by
+  -- The archimedean part of `det (1, k)` is `1`, and the tame part is trivial at every place.
+  ext
+  -- `↓` turns the tame product into a product over `∅` before simp unfolds it; without it
+  -- `∏ᶠ w, 1 (reduceAt w (det k))` is left.
+  simp [h.apply_eq, det_mem (mem_stdLevel.mp hk), ↓finprod_tame_eq_prod_reduceU1 (S := ∅)]
+
+/-- Let `μ` have weight `e` and tame part `ψ`, trivial at the places of `A` and their conjugates.
+Then `μ` is trivial on `det k` for every integral point `k` supported on `A` and its conjugate. -/
+lemma apply_det_eq_one_of_supportedOn (h : μ.HasWeight e ψ) {A : Set (FinPlace E)}
+    (hψ : ∀ w ∈ A.conjClosure, ψ w = 1) {k : Gf E n} (hk : k ∈ stdLevel E n ⊓ Gf.supportedOn n A) :
+    μ.val (detFin s k) = 1 := by
+  -- `μ (det k)` is a product over the places where `ψ` is not trivial, and there `k` is `1`.
+  obtain ⟨k_int, k_supp⟩ := hk
+  have : Fintype {w : FinPlace E | ψ w ≠ 1} := h.finite_ramification.fintype
+  have h_red (w : FinPlace E) (hw : ψ w ≠ 1) : stdLevel.reduceAt w ⟨k, k_int⟩ = 1 := by
+    obtain ⟨h_not, h_star_not⟩ : w ∉ A ∧ star w ∉ A := not_or.1 fun h_mem ↦ hw (hψ w h_mem)
+    exact stdLevel.reduceAt_eq_one_of_atPlace (Gf.mem_supportedOn.1 k_supp w h_not h_star_not)
+  have h_prod : (μ.val (detFin s k) : ℂ) =
+      ∏ w : {w : FinPlace E | ψ w ≠ 1}, ψ w (stdLevel.reduceAt w.val ⟨k, k_int⟩).val.det :=
+    h.apply_det_eq_prod Subtype.val_injective (by simp) ⟨k, k_int⟩
+  exact Circle.ext (h_prod.trans (Finset.prod_eq_one fun w _ ↦ by simp [h_red w.val w.property]))
+
+end New.AutChar.HasWeight
+
 end

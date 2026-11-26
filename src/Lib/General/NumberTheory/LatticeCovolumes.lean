@@ -397,18 +397,10 @@ omit [DecidableEq π] [DecidableEq σ] in
 vectors of `I^⊥` it takes the value of `J` on the vectors themselves, for hermitian `J`. -/
 lemma gram_coord (h : IsQuotientBasis R J ι B q) (hJ : Jᴴ = J) (hx : ιᴴ * J * x = 0)
     (hy : ιᴴ * J * y = 0) : (q * x)ᴴ * (Bᴴ * J * B) * (q * y) = xᴴ * J * y := by
-  have h_swap {τ τ' : Type} (s : Matrix π τ A) (t : Matrix π τ' A) :
-      (sᴴ * J * t)ᴴ = tᴴ * J * s := by
-    rw [conjTranspose_mul, conjTranspose_mul, conjTranspose_conjTranspose, hJ, Matrix.mul_assoc]
-  have hy' : yᴴ * J * ι = 0 := orthogonal_symm hJ hy
-  have hB : Bᴴ * J * ι = 0 := orthogonal_symm hJ h.basis_orthogonal
   -- Replace the class of `y` by `y`, transpose, and then replace the class of `x` by `x`.
-  calc (q * x)ᴴ * (Bᴴ * J * B) * (q * y)
-    _ = (q * x)ᴴ * (Bᴴ * J * y) := by rw [Matrix.mul_assoc, h.mul_basis_mul_coord hB hy]
-    _ = (yᴴ * J * B * (q * x))ᴴ := by
-      rw [conjTranspose_mul (yᴴ * J * B), h_swap y B]
-    _ = (yᴴ * J * x)ᴴ := by rw [h.mul_basis_mul_coord hy' hx]
-    _ = xᴴ * J * y := h_swap y x
+  rw [Matrix.mul_assoc, h.mul_basis_mul_coord (orthogonal_symm hJ h.basis_orthogonal) hy]
+  simpa [hJ, Matrix.mul_assoc] using
+    congrArg conjTranspose (h.mul_basis_mul_coord (orthogonal_symm hJ hy) hx)
 
 omit [DecidableEq σ] in
 /-- Let `Λ = R^π` carry the form `J`, let the columns of `ι` be a basis of `Λ ∩ I` for an isotropic
@@ -418,20 +410,14 @@ matrix `Bᴴ J B`. -/
 lemma isUnimodular [IsStarStable R] (h : IsQuotientBasis R J ι B q) (hJ : IsUnimodular R J) :
     IsUnimodular R (Bᴴ * J * B) := by
   -- The columns of `D = J⁻¹ qᴴ` are integral, orthogonal to `I` and dual to those of `B`.
-  have hJ_int : IsIntMatrix R J := hJ.isIntMatrix
   obtain ⟨h_herm, U, hU, rfl⟩ := hJ
-  let D := U⁻¹.val * qᴴ
-  have h_products {τ : Type} (s : Matrix π τ A) : sᴴ * U.val * D = (q * s)ᴴ := by
-    simp [D, Matrix.mul_assoc]
-  have h_dual : ιᴴ * U.val * D = 0 := by rw [h_products, h.coord_mul_isotropic, conjTranspose_zero]
-  have h_inv : Bᴴ * U.val * B * (q * D) = 1 := by
-    rw [h.mul_basis_mul_coord (orthogonal_symm h_herm h.basis_orthogonal) h_dual, h_products,
-      h.coord_mul_basis, conjTranspose_one]
-  refine ⟨by simp [h_herm, Matrix.mul_assoc], isPrimitiveMatrix_iff.1 ⟨?_, q * D, ?_, ?_⟩⟩
-  · exact (h.isIntMatrix_basis.conjTranspose.mul hJ_int).mul h.isIntMatrix_basis
-  · exact h.isIntMatrix_coord.mul
-      (IsIntMatrix.mul (mem_intGL.1 hU).2 h.isIntMatrix_coord.conjTranspose)
-  · exact mul_eq_one_comm.1 h_inv
+  exact ⟨by simp [h_herm, Matrix.mul_assoc], isPrimitiveMatrix_iff.1 ⟨
+    (h.isIntMatrix_basis.conjTranspose.mul (mem_intGL.1 hU).1).mul h.isIntMatrix_basis,
+    q * (U⁻¹.val * qᴴ),
+    h.isIntMatrix_coord.mul (IsIntMatrix.mul (mem_intGL.1 hU).2 h.isIntMatrix_coord.conjTranspose),
+    mul_eq_one_comm.1 <| (h.mul_basis_mul_coord (orthogonal_symm h_herm h.basis_orthogonal)
+      (by simpa [Matrix.mul_assoc] using congrArg conjTranspose h.coord_mul_isotropic)).trans
+      (by simpa [Matrix.mul_assoc] using congrArg conjTranspose h.coord_mul_basis)⟩⟩
 
 end IsQuotientBasis
 

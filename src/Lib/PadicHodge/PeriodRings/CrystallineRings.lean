@@ -1,5 +1,6 @@
 module
 
+import TauCeti.RingTheory.AdicCompletion.DiscreteValuationRing
 public import Mathlib.Algebra.AffineMonoid.UniqueSums
 public import Lib.PadicHodge.PeriodRings.Ainf
 
@@ -895,33 +896,19 @@ lemma thetaBdR_eq_zero_iff : thetaBdR x = 0 ↔ ↑xi ∣ x := by
     rw [hx, dvd_add_left (dvd_mul_right _ _), h_dvd_y]
   rw [h_theta, h_dvd, thetaBPlus_eq_zero_iff]
 
+local instance : (span {(xi : BPlus)}).IsMaximal :=
+  Ideal.Quotient.maximal_of_isField _
+    (thetaEquiv.toRingEquiv.toMulEquiv.isField (Field.toIsField _))
+
 /-- An element `x` of `B_dR⁺` is a unit if and only if `θ x ≠ 0`. -/
 @[simp]
 lemma BdRPlus.isUnit_iff : IsUnit x ↔ thetaBdR x ≠ 0 := by
-  constructor
-  · intro hx_unit
-    exact (hx_unit.map thetaBdR).ne_zero
-  · intro hx
-    -- if `θ b = (θ x)⁻¹`, then `x * b ≡ 1` modulo `ξ`; by `ξ`-adic completeness `x * b` is a unit
-    obtain ⟨b, hb⟩ : ∃ b : BPlus, thetaBPlus b = (thetaBdR x)⁻¹ := thetaBPlus_surjective _
-    have h_theta : thetaBdR (x * b - 1) = 0 := by
-      rw [map_sub, map_mul, map_one, thetaBdR_algebraMap_BPlus, hb, mul_inv_cancel₀ hx, sub_self]
-    have h_dvd : (xi : BdRPlus) ∣ x * b - 1 := thetaBdR_eq_zero_iff.mp h_theta
-    -- The `ξ`-adic completeness of `B_dR⁺` is given explicitly.
-    have h_unit : IsUnit (x * b) :=
-      @isUnit_of_dvd_sub _ _ _ _ _ isAdicComplete isUnit_one h_dvd
-    exact isUnit_of_mul_isUnit_left h_unit
+  rw [Ne, thetaBdR_eq_zero_iff]
+  exact AdicCompletion.isUnit_iff_not_dvd_of_isMaximal_span x
 
 /-- Every nonzero element of `B_dR⁺` is a power of `ξ` times a unit. -/
-lemma BdRPlus.exists_associated_xi_pow (hx : x ≠ 0) : ∃ n : ℕ, Associated (xi ^ n : BdRPlus) x := by
-  -- `x = ξ ^ n * u` with `ξ ∤ u`, that is, `θ u ≠ 0`: so `u` is a unit
-  have h_not_dvd : ¬∀ m : ℕ, (xi : BdRPlus) ^ m ∣ x :=
-    fun h_all ↦ hx (Adic.eq_zero_of_forall_pow_dvd h_all)
-  obtain ⟨n, u, rfl, hu⟩ := exists_eq_pow_mul_of_not_forall_dvd (xi : BdRPlus) x h_not_dvd
-  have hu_unit : IsUnit u := by
-    rw [isUnit_iff, Ne, thetaBdR_eq_zero_iff]
-    exact hu
-  exact ⟨n, associated_mul_unit_right _ _ hu_unit⟩
+lemma BdRPlus.exists_associated_xi_pow (hx : x ≠ 0) : ∃ n : ℕ, Associated (xi ^ n : BdRPlus) x :=
+  AdicCompletion.exists_associated_pow_of_isMaximal_span hx
 
 open scoped Classical in
 instance [FaithfulSMul R BPlus] : FaithfulSMul R BdRPlus := by

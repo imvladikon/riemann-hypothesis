@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.Matrix.OstrowskiTaussky
 public import New.Spanning.RemainingTerms.BorderedDeterminant
 
 /-!
@@ -655,7 +656,7 @@ lemma norm_det_mul_le_volumeRatio (h : IsTriangularBasis hi y Z ω L)
         (inclMatrix ℂ (subframeIndex hi) * (subframeBlock hi Z)⁻¹ * L)
   have h_ostrowski : ‖(1 + vᴴ * v).det‖ ≤ 2 ^ (i + 1) * ‖(-K).det‖ := by
     simpa only [Fintype.card_fin] using
-      ostrowski_taussky (PosSemidef.one.add v.posSemidef_conjTranspose_mul_self) h_negative
+      (PosSemidef.one.add v.posSemidef_conjTranspose_mul_self).norm_det_le_two_pow_mul h_negative
   have hL : 0 < ‖L.det‖ := norm_pos_iff.2 h.det_ne_zero
   have h_det : ‖(-K).det‖ = volumeRatio γ y * ‖L.det‖ ^ 2 / ‖(subframeBlock hi Z).det‖ := by
     have h_factor : K = ((γ.val.val * subframeCols hi)ᴴ * 𝔰.J₁ * ω)ᴴ * (subframeBlock hi Z)⁻¹ *

@@ -1,7 +1,7 @@
 module
 
 public import Lib.Adelic.AutomorphicForms.PAdicGauge
-public import Lib.ClassField.HeckeCharacter.TameModulus
+public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
 
 /-!
 # Vacuum coefficients and coset representatives

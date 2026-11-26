@@ -95,9 +95,9 @@ class HasFiniteType : Prop where
   isCompact : IsCompact (K : Set G)
 
 -- `open New.HasFiniteType` turns the two finiteness fields into instances and gives every finite
--- type a `Fintype` instance.
+-- type a `Fintype` instance, at low priority so that a structural `Fintype` instance wins.
 scoped[New.HasFiniteType] attribute [instance] HasFiniteType.finite_classes HasFiniteType.finite_aut
-  Fintype.ofFinite
+scoped[New.HasFiniteType] attribute [instance low] Fintype.ofFinite
 
 open HasFiniteType
 

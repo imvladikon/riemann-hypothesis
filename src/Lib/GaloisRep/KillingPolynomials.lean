@@ -387,13 +387,6 @@ private lemma exists_surjective_comp_eq_of_powMinor_diagonal_eq_zero (he_inj : e
   choose c hc using exists_eq_of_powMinor_diagonal_eq_zero he_inj hl h_minor
   exact ⟨c, fun i ↦ ⟨l i, he_inj ((hc (l i)).trans (hl i))⟩, funext hc⟩
 
-omit [Fintype N] [DecidableEq N] in
-/-- The matrix of variables `X (i, j)`, evaluated at the entries of a matrix `M` over `k`, is
-`M`. -/
-private lemma mvPolynomialX_map_eval_uncurry (M : Matrix N N k) :
-    (mvPolynomialX N N k).map (MvPolynomial.eval (uncurry M)) = M :=
-  mvPolynomialX_map_eval₂ (RingHom.id k) M
-
 /-- Let `E` be a number field inside `Ω`, a fixed algebraic closure of `ℚ`, let `r` be a continuous
 representation of `Gal(Ω/E)` on `K ^ N`, and let `k` be a normed field over `K`. Suppose:
 * the span of the image of `r` contains every diagonal matrix;
@@ -441,8 +434,10 @@ lemma card_eq_and_charpoly_eq [NeZero n] {E : Type} [Field E] [NumberField E] [A
     have h_poly : (powMinor M m a).aeval
         (diagonal (T ∘ κ) * (Q : Matrix N N k).map LaurentPolynomial.C).uncurry = 0 :=
       h_torus (powMinor M m a) <| h.mono fun g hg ↦ by
-        simpa [M, φ, ρ, mvPolynomialX_map_eval_uncurry, units_smul_def, mul_assoc, ofId,
-          comp_def] using congrFun hg a
+        have h_eval (A : Matrix N N k) :
+            (mvPolynomialX N N k).map (MvPolynomial.eval A.uncurry) = A :=
+          mvPolynomialX_map_eval₂ (RingHom.id k) A
+        simpa [M, φ, ρ, h_eval, units_smul_def, mul_assoc, ofId, comp_def] using congrFun hg a
     simp only [M, map_powMinor, AlgHom.mapMatrix_apply, Matrix.map_mul, Matrix.map_map, comp_def,
       MvPolynomial.aeval_C] at h_poly
     let B := diagonal (T ∘ κ) * (Q : Matrix N N k).map LaurentPolynomial.C

@@ -671,12 +671,10 @@ lemma blockAverage_mul :
     have hA (v : V) : v ∈ A.val ↔ v ∈ A'.val := by simpa using mem_iff 0 v
     obtain rfl : A = A' := Subtype.ext (SetLike.ext hA)
     -- at `v = -s w` the left side holds for `w ∈ B`, and at `v = -s' w` the right side for `w ∈ B'`
-    have h_left (w : W) (hw : w ∈ B.val) : w ∈ B'.val ∧ -s.out w + s'.out w ∈ A.val := by
-      have h_mem : w ∈ B.val ∧ -s.out w + s.out w ∈ A.val := ⟨hw, by simp⟩
-      exact (mem_iff w (-s.out w)).1 h_mem
-    have h_right (w : W) (hw : w ∈ B'.val) : w ∈ B.val := by
-      have h_mem : w ∈ B'.val ∧ -s'.out w + s'.out w ∈ A.val := ⟨hw, by simp⟩
-      exact ((mem_iff w (-s'.out w)).2 h_mem).1
+    have h_left (w : W) (hw : w ∈ B.val) : w ∈ B'.val ∧ -s.out w + s'.out w ∈ A.val :=
+      (mem_iff w (-s.out w)).1 ⟨hw, by simp⟩
+    have h_right (w : W) (hw : w ∈ B'.val) : w ∈ B.val :=
+      ((mem_iff w (-s'.out w)).2 ⟨hw, by simp⟩).1
     obtain rfl : B = B' :=
       Subtype.ext (SetLike.ext fun w ↦ ⟨fun hw ↦ (h_left w hw).left, h_right w⟩)
     -- `-s w + s' w ∈ A` for `w ∈ B`: the two classes agree

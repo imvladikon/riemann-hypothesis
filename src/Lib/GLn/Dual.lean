@@ -1038,10 +1038,7 @@ lemma exists_isDualPairing_of_isHCParam [Nonempty n] (hl : IsHCParam κ e l)
     ∃ A : Matrix (WeylIndex n κ') (WeylIndex n κ) ℤ, IsDualPairing κ κ' e e' l A := by
   -- Numbering the indices by decreasing `l` numbers them backwards for `-l`, so `κ'` is dual to
   -- `κ`. The pairing is `A = G * J`, with `G` the Gram matrix and `J` the duality of frames.
-  have h_enum (w : InfinitePlace E) : ∃ f : n ≃ Fin (card n), ∀ a : n,
-      decreasingPosition (l w) a = f a ∧ decreasingPosition (-l w) a = (f a).rev :=
-    exists_equiv_decreasingPosition (hl w).left
-  choose p hp using h_enum
+  choose p hp using fun w : InfinitePlace E ↦ exists_equiv_decreasingPosition (hl w).left
   -- `J` is a unimodular isometry, and over a field it matches the evaluation vectors at the two
   -- numberings and intertwines `g` with its inverse transpose.
   obtain ⟨J, hJ⟩ : ∃ J : Matrix (WeylIndex n κ') (WeylIndex n κ) ℤ, GL.IsDualIsometry p J :=

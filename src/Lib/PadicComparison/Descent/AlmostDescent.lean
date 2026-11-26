@@ -276,8 +276,6 @@ lemma exists_faithfullyFlat_padicTest (V : CommAlg OFlat) [IsDomain V] [Valuatio
     rw [hφv, zero_dvd_iff] at h_img_dvd
     exact absurd ((hφ_alg pFlat).symm.trans h_img_dvd) h_tilt_ne
 
-local instance : IsScalarTower S S M := inferInstance
-
 /-- For a functor Φ from C to S-modules, a functor K from C to abelian groups and a degree n: the
 additive map that sends an S-linear map f: M → M' to the induced homomorphism
 H^n(K, M ⊗_S Φ) → H^n(K, M' ⊗_S Φ). -/

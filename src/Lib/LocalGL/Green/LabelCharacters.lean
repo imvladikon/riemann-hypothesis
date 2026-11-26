@@ -36,9 +36,8 @@ Notions from other files:
   of k to k^×, inverse to a ↦ θ_a restricted to k, with θ_a taken for Q = |k|.
 * `New.Hall.rankInner`: For complex functions F, H on similarity classes, the average over GL_n(k)
   of the conjugate of F times H.
-* `New.IsIrreducibleChar`: `f` is an irreducible character, stated as three conditions: (a) `f` is a
-  character, (b) `New.classInner f f = 1`, and (c) for every class function `h` and every `y`,
-  `f 1 * New.classInner f (h (· * y)) = New.classInner f h * f y`.
+* `New.IsIrreducibleChar`: `f` is the character of a simple finite-dimensional complex
+  representation.
 * `New.IsFaithfulMulChar`: K is algebraically closed and the character T of Kˣ is injective.
 * `New.thetaChar`: The character θ_x = T^a of K, where a is a chosen natural number with
   T(x) = exp(2πi/(Q−1))^a.
@@ -249,9 +248,8 @@ lemma rankInner_labelChar (hc : IsLabel r c) (c' : k[X]) (hc' : IsLabel r c') :
 /-- This is a case of Green's theorem: let K be an algebraically closed field over the finite field
 k, with an injective multiplicative character T : K → ℂ. Let c be a label of degree |n|, i.e. a
 monic squarefree polynomial of degree |n| with nonzero constant term. Then Green's class function
-Ξ_c, evaluated on GL_n(k), is an irreducible character in the sense of `IsIrreducibleChar`, which
-also requires that class functions act by scalars. Ξ_c is the parabolic-induction product of τ_P
-over the monic irreducible factors P of c. -/
+Ξ_c, evaluated on GL_n(k), is an irreducible character. Ξ_c is the parabolic-induction product of
+τ_P over the monic irreducible factors P of c. -/
 lemma IsLabel.isIrreducibleChar_labelChar (hc : IsLabel (Fintype.card n) c) :
     IsIrreducibleChar ((labelChar T c).evalGL (n := n)) := by
   -- `labelChar T c` is a virtual character, as it has a lift over `ℤ` along `k/k`: the Brauer lift
@@ -278,7 +276,7 @@ lemma IsLabel.isIrreducibleChar_labelChar (hc : IsLabel (Fintype.card n) c) :
 lemma IsLabel.isChar_labelChar (hc : IsLabel r c) : IsChar ((labelChar T c).evalGL (n := n)) := by
   -- `labelChar T c` is an irreducible character in dimension `r` and vanishes in the others.
   obtain rfl | h_card_ne := eq_or_ne (Fintype.card n) r
-  · exact (hc.isIrreducibleChar_labelChar (n := n) T).left
+  · exact (hc.isIrreducibleChar_labelChar (n := n) T).isChar
   · have h_zero : (labelChar T c).evalGL (n := n) = 0 := by
       rw [← rankPart_labelChar T hc]
       funext g
@@ -338,12 +336,12 @@ lemma labelIdem_orthogonal : OrthogonalIdempotents (labelIdem (k := k) n) := by
     aesop (add simp labelIdem)
   ext x
   -- Convolution identity of the irreducible character `Ξ d` paired with `Ξ c`.
-  have h_conv := (hd.isIrreducibleChar_labelChar (n := n) (faithfulChar k)).2.2
-    (labelChar (faithfulChar k) c).evalGL isClassFunction_evalGL x⁻¹
+  have h_conv := (hd.isIrreducibleChar_labelChar (n := n) (faithfulChar k)).mul_classInner_translate
+    (φ := (labelChar (faithfulChar k) c).evalGL) isClassFunction_evalGL x⁻¹
   simp only [classInner_evalGL, rankInner_labelChar _ hd c hc, finMean,
     finsum_eq_sum_of_fintype, Nat.card_eq_fintype_card] at h_conv
   simp [hc, hd, apply_ite (coeff · x), eq_comm (a := c),
-    ← (hc.isIrreducibleChar_labelChar (n := n) (faithfulChar k)).1.apply_inv,
+    ← (hc.isIrreducibleChar_labelChar (n := n) (faithfulChar k)).isChar.apply_inv,
     mul_mul_mul_comm _ _ (_ / _), ← mul_sum, labelIdem, coeff_mul_apply_right,
     Finsupp.sum_fintype]
   grind
@@ -413,7 +411,7 @@ lemma hyperplaneSum_mul_labelIdem {c : Polynomial k} {χ : MulChar k ℂ}
   let ρ : Representation ℂ N ℂ :=
     .comp .smulOneHom { toFun g := χ⁻¹ g.val.det, map_one' := by simp, map_mul' := by simp }
   let Ξ : GL n k → ℂ := (labelChar (faithfulChar k) c).evalGL
-  obtain ⟨h_isChar, -, -⟩ := hc.isIrreducibleChar_labelChar (n := n) (faithfulChar k)
+  have h_isChar := (hc.isIrreducibleChar_labelChar (n := n) (faithfulChar k)).isChar
   have h_orth : finMean (Ξ ∘ N.subtype * ρ.character) = 0 := by
     -- Through `param`, the mean over `N` becomes the mean over the scalar block `g` of `χ⁻¹(det g)`
     -- times the block average over `x`: a value of the skew function of `χ ∘ det`.

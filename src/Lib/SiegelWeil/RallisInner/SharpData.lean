@@ -1,5 +1,6 @@
 module
 
+public import Lib.ClassField.HeckeCharacter.TameModulus
 public import Lib.General.Algebra.LevelModulus
 public import Lib.SiegelWeil.RallisInner.DualDatum
 public import Lib.SiegelWeil.UnramifiedSeries.RallisSeries

@@ -66,22 +66,15 @@ lemma exists_absFrobenius :
     ∃ F : X.left ⟶ X.left, ∀ (B : CommRingCat) (t : Spec B ⟶ X.left),
       t ≫ F =
         specMap (frobPow (natCast_eq_zero_of_over_charP (l := l) (B := B) (t ≫ X.hom)) f) ≫ t := by
-  -- Glue the maps `Spec (x ↦ x ^ l ^ f) ≫ t` over all ring-valued points `t` of `X`.
-  let twist (B : CommRingCat) (t : Spec B ⟶ X.left) : Spec B ⟶ X.left :=
-    specMap (frobPow (natCast_eq_zero_of_over_charP (l := l) (B := B) (t ≫ X.hom)) f) ≫ t
-  -- Ring maps commute with `x ↦ x ^ l ^ f`.
-  have frob_comm {A B : CommRingCat} (φ : A ⟶ B) (hA : (l : A) = 0) (hB : (l : B) = 0) :
-      φ ≫ ofHom (frobPow hB f) = ofHom (frobPow hA f) ≫ φ := by
-    ext x
-    simp
-  have twist_comp (A B : CommRingCat) (φ : A ⟶ B) (t : Spec A ⟶ X.left) :
-      twist B (Spec.map φ ≫ t) = Spec.map φ ≫ twist A t := by
-    simp only [twist, ← map_comp_assoc]
-    rw [frob_comm]
-  -- Glue on the cover of `X` by the single open set `⊤`.
-  obtain ⟨F, hF⟩ := exists_hom_of_cover isOpenCover_top (fun (_ : Unit) B t _ ↦ twist B t)
-    fun _ _ A B φ t _ _ ↦ twist_comp A B φ t
-  exact ⟨F, fun B t ↦ hF () B t landsIn_top⟩
+  -- Glue the maps `Spec (x ↦ x ^ l ^ f) ≫ t` on the trivial open cover `⊤` of `X`.
+  refine (exists_hom_of_cover isOpenCover_top
+    (fun (_ : Unit) _ t _ ↦
+      specMap (frobPow (natCast_eq_zero_of_over_charP (l := l) (t ≫ X.hom)) f) ≫ t)
+    fun _ _ _ _ φ t _ _ ↦ ?_).imp fun F hF B t ↦ hF () B t landsIn_top
+  simp only [← map_comp_assoc]
+  congr 2
+  ext x
+  simp
 
 /-- For a scheme `X` over a field `k` of prime characteristic `l`, the absolute `l ^ f`-Frobenius of
 the underlying scheme. It acts on `B`-valued points through `x ↦ x ^ l ^ f` on `B`

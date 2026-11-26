@@ -1,6 +1,7 @@
 module
 
 public import TauCeti.RingTheory.MvPowerSeries.Derivative
+import TauCeti.NumberTheory.Padics.Factorial
 public import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
 public import Mathlib.RingTheory.PowerSeries.Exp
 public import Lib.GLn.SchurModule.Basic
@@ -21,7 +22,6 @@ with coefficients in the ring of integers of `ℂ_[p]`.
 * `New.expSubst`: the exponential `exp a` of a power series `a` in several variables without
   constant term; it turns finite sums into products (`New.expSubst_add`, `New.expSubst_sum`).
 * `New.padicValNat_factorial_mem_Icc`: `n / (p - 1) - v_p(n!)` lies in `[0, K]` for `n < p ^ K`.
-* `New.rpow_le_norm_factorial`: the lower bound `p ^ (-n / (p - 1)) ≤ ‖n!‖` for the `p`-adic norm.
 
 Notions from other files:
 * `New.jet`: the bilinear pairing `P(∂)F(0)` of a polynomial `P` with a power series `F`, the sum
@@ -207,33 +207,13 @@ lemma norm_prod_natCast_eq_rpow_neg_sum {X : Type*} [Fintype X] {n : X → ℕ}
 of Legendre's formula. -/
 lemma padicValNat_factorial_mem_Icc {n K : ℕ} (hn : n < p ^ K) :
     (padicValNat p n ! : ℝ) ∈ Set.Icc ((n : ℝ) / (p - 1) - K) (n / (p - 1)) := by
-  -- By Legendre's formula `n - (p - 1) * v_p(n!)` is the sum of the base `p` digits of `n`. There
-  -- are at most `K` digits, each at most `p - 1`.
-  have hp1 : 1 < p := hp.out.one_lt
-  have legendre : (p - 1) * padicValNat p n ! + (p.digits n).sum = n := by
-    rw [Nat.padicValNat_def, Nat.Prime.sub_one_mul_multiplicity_factorial,
-      Nat.sub_add_cancel (digit_sum_le p n)]
-    exact hp.out
-  have digit_le : ∀ d ∈ p.digits n, d ≤ p - 1 :=
-    fun d hd ↦ le_sub_one_of_lt (digits_lt_base hp1 hd)
-  have sum_le : (p.digits n).sum ≤ K * (p - 1) :=
-    calc (p.digits n).sum ≤ (p.digits n).length * (p - 1) := sum_le_length_nsmul _ _ digit_le
-      _ ≤ K * (p - 1) := Nat.mul_le_mul_right _ ((digits_length_le_iff hp1 n).2 hn)
-  have lower : n ≤ (p - 1) * (padicValNat p n ! + K) := by grind
-  have upper : (p - 1) * padicValNat p n ! ≤ n := by omega
-  have h_pos : (0 : ℝ) < (p - 1 : ℕ) := cast_pos.2 (Nat.sub_pos_of_lt hp1)
-  rw [Set.mem_Icc, sub_le_iff_le_add, ← cast_pred hp.out.pos, div_le_iff₀' h_pos,
-    le_div_iff₀' h_pos]
-  exact_mod_cast And.intro lower upper
-
-/-- For a prime `p` and a natural number `n`, the norm of `n !` in the `p`-adic complex numbers
-`ℂ_[p]` is at least `p ^ (-(n / (p - 1)))`, where the exponent is a real number. -/
-lemma rpow_le_norm_factorial {n : ℕ} : p ^ (-(n / (p - 1)) : ℝ) ≤ ‖(n ! : ℂ_[p])‖ := by
-  have h_val : (padicValNat p n ! : ℝ) ≤ n / (p - 1) :=
-    (padicValNat_factorial_mem_Icc (n.lt_pow_self hp.out.one_lt)).2
-  calc (p : ℝ) ^ (-(n / (p - 1)) : ℝ) ≤ p ^ (-(padicValNat p n ! : ℝ)) :=
-        Real.rpow_le_rpow_of_exponent_le (mod_cast hp.out.one_le) (neg_le_neg h_val)
-    _ = ‖(n ! : ℂ_[p])‖ := by simp [norm_natCast_eq_inv_pow_padicValNat n.factorial_ne_zero]
+  rcases eq_or_ne n 0 with rfl | hn0
+  · simp [Nat.padicValNat_def]
+  rw [Set.mem_Icc, Nat.padicValNat_def]
+  refine ⟨?_, TauCeti.multiplicity_factorial_le_div p n⟩
+  have hlog : Nat.log p n + 1 ≤ K := Nat.succ_le_of_lt (Nat.log_lt_of_lt_pow hn0 hn)
+  exact (sub_le_sub_left (by exact_mod_cast hlog) _).trans
+    (TauCeti.div_sub_log_le_multiplicity_factorial p n)
 
 /-- Substituting `a` into the rescaled series `f(c X)` is substituting `c • a` into `f`. -/
 lemma subst_rescale_eq_subst_smul {c : ℂ_[p]} (a : MvPowerSeries σ ℂ_[p]) (ha : HasSubst a)

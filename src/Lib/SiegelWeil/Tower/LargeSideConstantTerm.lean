@@ -162,9 +162,6 @@ theorem homSlice_zero_planeDatum (σ' : b ⊕ r' ≃ n') (v : PairFock E s' t')
   simpa [localDatum, ← Pi.zero_def] using 𝔠.readsAt.homSlice_localDatum A V' (G := 0)
     (stdRowDatum_mem σ' 𝔠.semilocalChar) 0 v fun w hw ↦ h_std w (by simpa using hw)
 
-/-- A shortcut for instance search, for the Haar measures on `maxCompact E t` below. -/
-local instance : LocallyCompactSpace (maxCompact E t) := inferInstance
-
 /-- Let `A` and `X` be base-adapted splittings of a plane off `W'` and `V'`, let `v` be a Schwartz
 vector (all Fock moments finite), let `y` be a matrix over the completions at the places
 `𝔠.ramifiedPlaces`, and let `g ∈ U(W)` and `σ : b ⊕ r ≃ n`. Then for every character `ψ`, every side

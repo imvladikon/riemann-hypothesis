@@ -4,6 +4,7 @@ public import TauCeti.LinearAlgebra.Matrix.Triangular
 import TauCeti.Analysis.ExteriorPower.Plucker
 import TauCeti.Analysis.InnerProductSpace.Gram.Hadamard
 import TauCeti.Analysis.Matrix.GramFactorization
+import TauCeti.Analysis.Matrix.OstrowskiTaussky
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
 public import Mathlib.Order.Hom.PowersetCard
 public import Lib.DiscreteSeries.FlenstedJensen.Defs
@@ -255,7 +256,7 @@ theorem New.fischer_det_inequality {m : Type*} [Fintype m] [DecidableEq m]
   have hΘ_add : Θ + Θᴴ = z + z := by
     ext (i | i) (j | j) <;> simp [Θ, hz.1.apply, toBlocks₁₁, toBlocks₁₂, toBlocks₂₂]
   have h_bound : ‖(z + z).det‖ ≤ 2 ^ Fintype.card (m ⊕ n) * ‖Θ.det‖ :=
-    ostrowski_taussky (hz.add hz) (by simp [hΘ_add, PosSemidef.zero])
+    (hz.add hz).norm_det_le_two_pow_mul (by simp [hΘ_add, PosSemidef.zero])
   simpa [← two_smul ℂ z, Θ] using h_bound
 
 /-- **Fischer's inequality.** Let `z` be positive semidefinite and let the index set `r` be the

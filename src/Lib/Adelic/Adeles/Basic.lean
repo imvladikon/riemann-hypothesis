@@ -146,9 +146,6 @@ abbrev LocInt : ValuationSubring (adicCompletion E w) := w.adicCompletionInteger
 
 instance : CommSemiring (LocInt w) := CommRing.toCommSemiring
 
--- The local ring structure, for the semiring structure that comes from the commutative ring one.
-instance : @IsLocalRing (LocInt w) CommRing.toCommSemiring.toSemiring := inferInstance
-
 /-- The residue field of the completion E_w of E at the finite place w. -/
 @[instance_reducible]
 def ResField : Type _ := IsLocalRing.ResidueField (LocInt w)
@@ -228,9 +225,6 @@ instance : BorelSpace (LocField w) := ⟨rfl⟩
 such as `(n → InfinitePlace E → ℂ) × (n → 𝔸f E)`, the instance term exceeds
 `synthInstance.maxSize`. -/
 instance : PolishSpace (𝔸f E) := inferInstance
-
-/-- Tau Ceti's local compactness, as a shortcut, for the same reason. -/
-instance : LocallyCompactSpace (𝔸f E) := inferInstance
 
 /-- Tau Ceti's second countability, as a shortcut, for the same reason. -/
 instance : SecondCountableTopology (𝔸f E) := inferInstance

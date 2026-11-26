@@ -250,11 +250,10 @@ lemma isCohomEquiv_tensorPoint_tateGen (hS : ∀ (c : C) (x : S c), ℓ • x = 
     -- pair s ⊗ t with l (tateRoot ψ t) ∈ ZMod ℓ, which acts on S c
     let pairing : S c →ₗ[ℤ] tateModule g c →ₗ[ℤ] S c :=
       ((l.toAddMonoidHom.comp (tateRoot ψ)).toIntLinearMap.smulRight 1).flip
-    have h_tmul : s ⊗ₜ[ℤ] ε = 0 := hs
     have h_smul : l (tateRoot ψ ε) • s = 0 := by
-      have h0 := congrArg (lift pairing) h_tmul
-      rw [lift.tmul, map_zero] at h0
-      exact h0
+      change pairing s ε = 0
+      simpa only [lift.tmul, map_zero] using
+        congrArg (lift pairing) (show s ⊗ₜ[ℤ] ε = 0 from hs)
     obtain rfl : s = 0 := (smul_eq_zero_iff_right hl).mp h_smul
     exact ⟨1, m.one_notMem, fun b f' _ ↦ map_zero (S.map _).hom⟩
   · -- Cokernel: t (1 / ℓ) = ζ ^ i at m, so y = t' (1 / ℓ) is 1 at m for t' = t - i • ε.

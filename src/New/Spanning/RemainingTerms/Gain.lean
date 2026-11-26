@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.Matrix.OstrowskiTaussky
 public import New.Spanning.RemainingTerms.Cut
 
 /-!
@@ -121,8 +122,7 @@ lemma abs_norm_det_gram_sub_le {i : ℕ} {b b' : Matrix 𝔰.MiddleIndex (Fin i)
       (2 ^ 2) ^ (2 * i * numInfPlaces E) *
         |(Algebra.norm ℚ (bᴴ * S.positiveGram * b).det : ℝ)| := by
   -- The Gram matrices of `b - b'` and `b + b'` are positive and add up to `4` times that of `b`,
-  -- which is `Θ + Θᴴ`. So the determinant of the first is at most `2 ^ i ‖det Θ‖` at each place
-  -- (`ostrowski_taussky`).
+  -- which is `Θ + Θᴴ`. Ostrowski–Taussky bounds the first determinant by `2 ^ i ‖det Θ‖`.
   let Θ : Matrix (Fin i) (Fin i) E := (2 : E) • (bᴴ * S.positiveGram * b)
   have h_herm : S.positiveGramᴴ = S.positiveGram := by
     ext (a | a) (a' | a') <;> simp [positiveGram, diagonal_apply, eq_comm, apply_ite star]
@@ -142,7 +142,7 @@ lemma abs_norm_det_gram_sub_le {i : ℕ} {b b' : Matrix 𝔰.MiddleIndex (Fin i)
       rw [h_sum]
       exact h_pos w (b + b')
     rw [Matrix.map_sub _ (map_sub _), Matrix.map_add _ (map_add _), map_conjTranspose] at h_rest
-    simpa [RingHom.map_det] using ostrowski_taussky (h_pos w (b - b')) h_rest
+    simpa [RingHom.map_det] using (h_pos w (b - b')).norm_det_le_two_pow_mul h_rest
   have h_two (w : InfinitePlace E) : ‖Φ w (2 : E)‖ = 2 := by simp [map_ofNat]
   calc
     _ ≤ 2 ^ (2 * i * numInfPlaces E) * |(Algebra.norm ℚ Θ.det : ℝ)| := by

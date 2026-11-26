@@ -999,8 +999,7 @@ lemma exchange_theorem (σ : b ⊕ a ≃ n) (h_signs : negCount s = negCount t +
   obtain ⟨c, hc, h_exch⟩ := h_core 𝔠
   -- the size of `c`: the right side below is not zero, so neither `C` nor `c` is
   have hL : lValueProdInt 𝔠 e = lValueProd 𝔪.places ν e := by
-    rw [lValueProdInt_natCast]
-    exact congrArg (fun S : Set (FinPlace E) ↦ lValueProd S ν e) h_places
+    rw [lValueProdInt_natCast, h_places]
   replace hc : C * ‖c‖ ^ 2 = lValueProd 𝔪.places ν e * C₀ := by
     rw [hc, show (card a - card n / 2 : ℤ) = e by omega, hL, h_value]
   have hL_ne : lValueProd 𝔪.places ν e ≠ 0 := hL.symm.trans_ne (lValueProdInt_pos 𝔠 e).ne'

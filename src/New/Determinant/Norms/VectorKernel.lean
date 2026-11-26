@@ -124,12 +124,6 @@ lemma vectorKernel_rational_mul (γ : U (stdSpace E n).J) (g : G E O.signs) (x :
       (stdSpace E n).weightRep O.columnCount O.detExp γ (O.vectorKernel g x) := by
   simpa using O.vectorKernel_equivariant γ 1 g x
 
-/-- For `g` in `U(W)(𝔸)`, the kernel `θ_W(g, ·) = O.vectorKernel g` transforms under right
-translation by the level `O.levelGroup` of `U(V)` by the character `O.levelChar`. -/
-lemma vectorKernel_mul_level (k : O.levelGroup) (g : G E O.signs) (x : Gf E n) :
-    O.vectorKernel g (x * k.val) = O.levelChar k • O.vectorKernel g x := by
-  simpa using O.vectorKernel_equivariant 1 k g x
-
 /-- For `g` in `U(W)(𝔸)`, the function `θ_W(g, ·) = O.vectorKernel g` as an element of `O.FormV`,
 the algebraic forms on `V`: smooth functions on the finite points of `U(V)` with values in the
 representation of weight `(O.columnCount, O.detExp)` that are equivariant under the rational points
@@ -138,7 +132,7 @@ def vectorKernelForm (g : G E O.signs) : O.FormV :=
   have h_level (k : O.levelGroup) :
       rightRegular ℂ (Gf E n) (WeylIndex n O.columnCount → ℂ) k.val (O.vectorKernel g) =
         O.levelChar k • O.vectorKernel g :=
-    funext (O.vectorKernel_mul_level k g)
+    funext fun x ↦ by simpa using O.vectorKernel_equivariant 1 k g x
   ⟨⟨O.vectorKernel g, mem_smoothFunctions_of_eigen O.levelChar isOpen_levelOf h_level,
       fun (γ : U (stdSpace E n).J) (x : Gf E n) ↦ O.vectorKernel_rational_mul γ g x⟩,
     fun k : O.levelGroup ↦ Subtype.ext (h_level k)⟩

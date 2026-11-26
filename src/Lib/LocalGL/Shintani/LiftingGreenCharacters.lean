@@ -699,7 +699,7 @@ private lemma lift_labelChar_of_not_isRoot_one {P : k[X]} {m : ℕ} (hL : IsLabe
   -- `Ψ` is `Y'` on `GL m k'`, and `Φ`, which descends to `Y` (`hΦ_down`), over the `σ ≠ 1`.
   have h_on_cosets : DescendsTo Ψ Y := by
     simpa +contextual [Ψ, DescendsTo, DescendsOnCoset, hasFixedField_iff_ne_one hp] using hΦ_down
-  exact .rankPart_of_hasCommonLift ⟨Ψ, h_irr.left.mem_virtualChars, h_on_cosets, by simp [Ψ, Y']⟩
+  exact .rankPart_of_hasCommonLift ⟨Ψ, h_irr.isChar.mem_virtualChars, h_on_cosets, by simp [Ψ, Y']⟩
 
 /-- Shintani lifting: let `k'/k` be an extension of finite fields of prime degree (`hp`), `T`
 injective (`IsFaithfulMulChar`) and `c` a label over `k` (`IsLabel`: monic, squarefree,

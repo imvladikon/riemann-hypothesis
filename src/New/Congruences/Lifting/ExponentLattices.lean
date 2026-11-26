@@ -861,8 +861,6 @@ variable {p : ℕ} [ThePrime p] [Γ : GroupOverGp p]
   {k : KummerChart Γ} {O : Coeffs} {L : JumpLattice O} {a : ℕ} {i : Letter} {n : ℤ} {x : L.Ambient}
   (Q : Submodule Ainf L.Ambient)
 
-instance : Module ℤ_[p] L.kisinLoc := inferInstance
-
 /-- For an A_inf-submodule Q of W(C^♭)⊗L, the Z_p-submodule of
 `New.Lift.KummerChart.JumpLattice.kisinLoc` of the elements that lie in Q. -/
 abbrev locKisinPart : Submodule ℤ_[p] L.kisinLoc :=

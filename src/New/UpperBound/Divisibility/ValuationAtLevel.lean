@@ -285,10 +285,6 @@ noncomputable def schrodingerOpAtN (j : ℕ)
     Module.End ℂ (D.homX j).finitePart :=
   (D.liftKernel ϑ j).ω (D.diagPointN j, D.diagPointN (j + 1)) ∘ₗ schrodingerOpAt Ψ
 
-/-- Complex scalars on forms commute. A shortcut for instance search. -/
-local instance smulCommClass_formX (j : ℕ) : SMulCommClass ℂ ℂ (D.FormX j) :=
-  ⟨fun a b φ ↦ Subtype.ext (smul_comm a b φ.val)⟩
-
 /-- The lift from `X_j` to `X_{j+1}` by `v` with the function `Ψ` at `Σ_N`, written in bases of
 `L_j` and `L_{j+1}`, as a linear map in `Ψ`. -/
 noncomputable def liftAtN (j : ℕ) (v : (D.homX j).finitePart) :

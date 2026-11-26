@@ -86,9 +86,6 @@ open Period WittVector Submodule Set FrobGroup Module Fintype Algebra
 variable {p : ℕ} [ThePrime p] [Γ : GroupOverGp p] [k : KummerChart Γ]
   {R X : Type*} [CommRing R] [AddCommGroup X] [Module R X] {Q : Submodule R X}
 
-/-- The actions of ℤ_p and of A_inf on W(C^♭) commute. -/
-instance : SMulCommClass ℤ_[p] Ainf WittCFlat := inferInstance
-
 /-! ### Saturation of a submodule -/
 
 /-- The saturation of a submodule P of X by a submonoid M: the x in X with mx in P for some m in

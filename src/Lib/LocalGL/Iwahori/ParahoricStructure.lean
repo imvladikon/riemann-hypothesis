@@ -93,9 +93,6 @@ lemma permGL_mul_transvectionGL (hij : i ≠ j) (a : R) :
   aesop (add simp [Perm.inv_def, transvection, Matrix.single, toMatrix_mul_apply, Matrix.one_apply,
     mul_toMatrix_toPEquiv])
 
-open scoped Classical in
-instance : IsLocalRing 𝒪[F] := inferInstance
-
 @[simp high]
 lemma residue_eq_zero_iff_valuation_lt_one {a : 𝒪[F]} : residue 𝒪[F] a = 0 ↔ v a.val < 1 :=
   residue_eq_iff_valuation_sub_lt_one.trans (by simp)

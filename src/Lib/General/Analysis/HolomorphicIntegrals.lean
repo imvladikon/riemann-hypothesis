@@ -217,9 +217,9 @@ lemma isAnalyticFamily_of_differentiable
     (hf.mono fun _ hx k ↦ (hx k).2)
 
 /-- Let E be a finite-dimensional complex normed space and F a complex normed space. If ι : K → F is
-continuous, K is compact and R₁, and Θ is analytic at (p, ι k) for every k, then x ↦ Θ(x, ι ·) is
+continuous, K is compact, and Θ is analytic at (p, ι k) for every k, then x ↦ Θ(x, ι ·) is
 analytic at p ∈ E as a map to C(K, ℂ), that is, an `IsAnalyticFamily` at p. -/
-lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt [R1Space K] {ι : K → F} (hι : Continuous ι)
+lemma DiscreteSeries.IsAnalyticFamily.of_analyticAt {ι : K → F} (hι : Continuous ι)
     (Θ : E × F → ℂ) (hΘ : ∀ k : K, AnalyticAt ℂ Θ (p, ι k)) :
     IsAnalyticFamily (fun (x : E) (k : K) ↦ Θ (x, ι k)) p := by
   -- By compactness of `K`, `Θ` is analytic at `(x, ι k)` for all `k` and all `x` near `p`.

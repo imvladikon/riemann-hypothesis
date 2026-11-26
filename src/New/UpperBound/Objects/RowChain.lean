@@ -80,15 +80,6 @@ abbrev datumY (ϑ : D.TameChar) (j : ℕ) : 𝒮 ((D.spaceY j).hom (D.spaceY (j 
   (hom (D.spaceY j) (D.spaceY (j + 1))).integrated
     (Fock.polyVector _ (D.harmonicY j)) (pointDatumY ϑ j).val
 
-/-- For j < m the doubled parameters `New.Data.paramY` of Y_j and Y_(j+1), with their signs,
-correspond (`New.ParamsCorrespond`) for the weights `New.Data.gridWeight` of the characters of lift
-j + 1. -/
-lemma paramsCorrespond_paramY {j : ℕ} (hj : j < D.m) :
-    ParamsCorrespond (D.gridWeight true j (D.Y j)) (D.gridWeight true j (D.Y (j + 1)))
-      (D.paramY j) (D.paramY (j + 1)) (D.signsY j) (D.signsY (j + 1)) :=
-  -- The node `(0, j)` of the grid is the space `Y_j`, and lift `j + 1` is a step of the grid.
-  D.paramsCorrespond_grid_succ_right false 0 0 j D.m.zero_le hj (.inl rfl)
-
 /-- For j < m the datum `New.Data.datumY` ϑ j of lift j + 1 is an arrow (`New.IsArrow`: a kernel
 whose lifts take forms of the source type to forms of the target type) both ways: (a) from forms on
 Y_j to forms on Y_(j+1), and (b) for the swapped Weil representation, from forms of the conjugate
@@ -102,7 +93,7 @@ lemma isArrow_datumY (ϑ : D.TameChar) {j : ℕ} (hj : j < D.m) :
       (star (typeKernel (D.paramY j) (D.signsY j))) (datumY ϑ j) :=
   -- The parameters of `Y_j` and `Y_(j+1)` correspond, so the joint harmonic is an edge; an edge
   -- tensored with a finite datum is an arrow both ways.
-  (paramsCorrespond_paramY hj).isEdge_jointHarmonic.isArrow _ _ (pointDatumY ϑ j).prop
+  (D.paramsCorrespond_grid_succ_right false 0 0 j D.m.zero_le hj (.inl rfl)).isEdge_jointHarmonic.isArrow _ _ (pointDatumY ϑ j).prop
 
 /-- For j < m the datum `New.Data.datumY` ϑ j of lift j + 1 is an arrow for the swapped Weil
 representation, from forms of the conjugate type on Y_(j+1) to forms of the conjugate type on

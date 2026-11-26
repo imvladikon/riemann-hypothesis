@@ -583,10 +583,6 @@ variable {D : PEL E} {R : Subalgebra (𝓞 E) E} {κ : Sort _} {ν : ℕ} [Finit
   {O : Type} [CommRing O] [ValuativeArc O] {U : UniversalFamily D R} {𝔪 : (𝓞 E)⁰}
   {y : ThetaObject X T} {Q : κ → (𝟙_ (Over T) ⟶ y.groupScheme)} {a : ModuliPoint E D.Index ν}
 
-/-- Finite products exist in `Over S`: a diagram indexed by the finite discrete category of κ has a
-limit. -/
-instance {S : Scheme} {F : Discrete κ ⥤ Over S} : HasLimit F := inferInstance
-
 /-! ### Fibre powers and the points of linear data -/
 
 /-- For a finite set κ, the κ-fold fibre power of the abelian scheme `X.total` over its base, as a

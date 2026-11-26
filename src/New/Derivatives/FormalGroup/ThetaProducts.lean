@@ -75,8 +75,7 @@ open MvPolynomial
 @[simp] lemma rescale_subst_linearSeries {a : ℂ_[p]} (c : X → ℂ_[p]) (g : PowerSeries ℂ_[p]) :
     rescale (fun _ : X ↦ a) (g.subst (linearSeries c)) = (g.rescale a).subst (linearSeries c) := by
   ext D
-  simp [coeff_subst_linearSeries, prod_pow_eq_pow_sum, degree_eq_sum, field,
-    -subst_rescale_eq_subst_smul]
+  simp [coeff_subst_linearSeries, prod_pow_eq_pow_sum, degree_eq_sum, field]
 
 end New
 

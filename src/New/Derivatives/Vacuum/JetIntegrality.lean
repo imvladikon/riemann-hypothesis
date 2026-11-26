@@ -129,10 +129,6 @@ lemma smul_mem_jetRing {c : ℂ_[p]} (hc : ‖c‖ ≤ 1) (hF : F ∈ C.jetRing 
   rw [smul_eq_C_mul]
   exact mul_mem (C.mem_jetRing_of_mem_multiSeriesRing (C.C_mem_multiSeriesRing hc)) hF
 
-/-- The product `∏ θ(μ_i z) ^ m i` lies in `jetRing`. -/
-lemma thetaProd_mem_jetRing (m : I → ℕ) : C.thetaProd μ m ∈ C.jetRing μ :=
-  prod_mem fun i _ ↦ pow_mem (C.theta_mem_jetRing i) (m i)
-
 end Generators
 
 /-- Let `C` be a CM lattice, and let `θ` and `y` be the Taylor series at `0` of `C.θ` and of
@@ -205,7 +201,8 @@ lemma norm_jet_thetaProd_pow_mul_le_one {ν : I → X → ℂ_[p]}
     ‖jet ℂ_[p] (Q.map φ) (C.thetaProd ((d : ℂ_[p]) • ν) m ^ N * H)‖ ≤ 1 :=
   norm_jet_le_one_of_pderiv_mem (fun _ ↦ C.norm_constantCoeff_le_of_mem_jetRing)
     (fun _ ↦ C.pderiv_mem_jetRing hν) hφ Q
-    (mul_mem (pow_mem (C.thetaProd_mem_jetRing m) N) (C.mem_jetRing_of_mem_multiSeriesRing hH))
+    (mul_mem (pow_mem (prod_mem fun i _ ↦ pow_mem (C.theta_mem_jetRing i) (m i)) N)
+      (C.mem_jetRing_of_mem_multiSeriesRing hH))
 
 end CMLattice
 

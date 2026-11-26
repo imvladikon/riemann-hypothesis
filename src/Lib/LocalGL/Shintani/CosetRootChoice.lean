@@ -33,9 +33,8 @@ and `New.virtualChars` is the span of the characters.
 * `New.DescendsOnCoset.induce`: descent commutes with induction.
 
 Notions from other files:
-* `New.IsIrreducibleChar`: `f` is an irreducible character, stated as three conditions: (a) `f` is a
-  character, (b) `New.classInner f f = 1`, and (c) for every class function `h` and every `y`, `f 1
-  * New.classInner f (h (· * y)) = New.classInner f h * f y`.
+* `New.IsIrreducibleChar`: `f` is the character of a simple finite-dimensional complex
+  representation.
 
 ## Relation to the literature
 
@@ -297,7 +296,8 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
   -- I be class functions, ⟨I, f⟩ ≠ 0, ⟨f, f⟩ = 1, 0 ≤ re f(1), and ⟨χ, f⟩ ∈ ℤ for every character χ
   -- with ⟨χ, I⟩ ≠ 0 and χ(1) ⟨χ, I(· y)⟩ = ⟨χ, I⟩ χ(y). Means over G ⋊ Γ are split by the simp
   -- lemma `finMean_ite`.
-  obtain ⟨hY_char, hY_norm, hY_conv⟩ := hY
+  have hY_char := hY.isChar
+  have hY_norm := hY.classInner_self
   have hf_class : IsClassFunction fun x : G ⋊[α] Γ ↦ if x.right = 1 then Y x.left else Φ x := by
     simp +contextual [hY_char.isClassFunction, isClassFunction_of_mem_virtualChars hΦ, h_stable]
   have hI_class : IsClassFunction fun x : G ⋊[α] Γ ↦ if x.right = 1 then Y x.left else 0 := by
@@ -335,10 +335,10 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
     simp [← hV]
   -- χ meets I, so its restriction to G is a multiple of Y: compare the two convolution identities
   have h_res (g : G) : χ (inl g) = χ 1 / Y 1 * Y g := by
-    -- the identity `hY_conv` for χ|G at g⁻¹, translated by g and conjugated
+    -- `IsIrreducibleChar.mul_classInner_translate` for χ|G at g⁻¹, translated by g and conjugated
     have h_convY : conj (Y 1 * finMean fun t ↦ conj (Y (t * g)) * χ (inl (t * g * g⁻¹))) =
         conj (classInner Y (χ ∘ inl) * Y g⁻¹) := by
-      rw [← hY_conv _ (hχ.comp inl).isClassFunction]
+      rw [← hY.mul_classInner_translate (hχ.comp inl).isClassFunction]
       congr 2
       exact (finMean_equiv (.mulRight g) (by simp)).symm
     have h_conv_g : χ 1 * (finMean fun t : G ↦ conj (χ (inl t)) * Y (t * g)) =
@@ -351,9 +351,9 @@ lemma IsIrreducibleChar.extend_semidirect [Finite Γ] (hY : IsIrreducibleChar Y)
     have h_pair_ne : (finMean fun t : G ↦ conj (χ (inl t)) * Y t) ≠ 0 := by
       simpa [← finMean_conj, ← hY_char.apply_inv, field, classInner] using h_ne
     have hY_one_ne : Y 1 ≠ 0 := fun h_zero ↦ by
-      -- otherwise `hY_conv` for `Y` itself gives `Y = 0`, against `⟨Y, Y⟩ = 1`
+      -- otherwise the same identity for `Y` itself gives `Y = 0`, against `⟨Y, Y⟩ = 1`
       have hY_zero (t : G) : Y t = 0 := by
-        simpa [h_zero, hY_norm] using (hY_conv Y hY_char.isClassFunction t).symm
+        simpa [h_zero, hY_norm] using (hY.mul_classInner_translate hY_char.isClassFunction t).symm
       simp [classInner, hY_zero, finMean_eq] at hY_norm
     -- the two identities share the left mean: eliminate it and cancel the pairing
     field_simp

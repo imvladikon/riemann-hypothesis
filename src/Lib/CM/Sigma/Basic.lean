@@ -429,14 +429,6 @@ lemma not_even_of_mem_thetaSpace (hf : f ∈ L.hermitianForm.thetaSpace (sigmaSi
   exact L.ω₁_div_two_notMem_lattice <| (theta_eq_zero_iff_mem_lattice
     (thetaShift_mem hf (L.ω₂ / 2)) shift_ne shift_zero).1 shift_half
 
-/-- For a theta function `f ≠ 0` for `L.hermitianForm` and the multiplier `sigmaSign L`, the
-function `z ↦ f z - f (-z)` is not zero. -/
-lemma sub_comp_neg_ne_zero_of_mem_thetaSpace (hf : f ∈ L.hermitianForm.thetaSpace (sigmaSign L))
-    (hf_ne : f ≠ 0) :
-    (f - fun z : ℂ ↦ f (-z)) ≠ 0 :=
-  fun h_zero ↦ not_even_of_mem_thetaSpace hf hf_ne fun z ↦
-    (sub_eq_zero.1 (congrFun h_zero z)).symm
-
 /-- There is an odd theta function with derivative `1` at `0` for `L.hermitianForm` and the
 multiplier `sigmaSign L` (`1` on twice the lattice, `-1` elsewhere): an entire `f` with `f
 (z + l) = sigmaSign L l * exp (H l z + H l l / 2) * f z` for lattice points `l`. Here `H` is
@@ -452,7 +444,9 @@ lemma exists_odd_mem_thetaSpace_deriv_eq_one :
   let g : ℂ → ℂ := f - fun z ↦ f (-z)
   have hg : g ∈ L.hermitianForm.thetaSpace (sigmaSign L) := sub_mem hf (comp_neg_mem_thetaSpace hf)
   have deriv_ne : deriv g 0 ≠ 0 :=
-    deriv_theta_ne_zero hg (sub_comp_neg_ne_zero_of_mem_thetaSpace hf hf_ne) (by simp [g])
+    deriv_theta_ne_zero hg
+      (fun h_zero ↦ not_even_of_mem_thetaSpace hf hf_ne fun z ↦ (sub_eq_zero.1 (congrFun h_zero z)).symm)
+      (by simp [g])
       (zero_mem _)
   refine ⟨(deriv g 0)⁻¹ • g, smul_mem _ _ hg, fun z ↦ by simp [g, mul_sub], ?_⟩
   exact (deriv_const_mul_field _).trans (inv_mul_cancel₀ deriv_ne)

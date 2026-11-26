@@ -570,11 +570,6 @@ lemma isNormCompatible (ψ : Γ →* Γ') (j : Ω →+* Ω)
     have h_w : i (j (ψ g • x)) = g • i (j x) := (congrArg i (hψ g x)).trans (emb_w.equivariant g _)
     have h_u : i (j ((φ g : Γ') • x)) = φ g • i (j x) := emb_u.equivariant (φ g) x
     rw [h_w, h_u, hφ]
-  -- The image of `φ` is open (hence closed), the Galois group of `ℚ̄_p` over `K_w`.
-  have range_open : Fact (IsOpen φ.range.carrier) :=
-    ⟨(isOpenEmbedding_galois_restrict (L := W) φ hφ).isOpen_range⟩
-  have gal_U : IsProGalois φ.range W (PadicAlgCl p) :=
-    of_fixingSubgroup_eq (K := V) (range_eq_fixingSubgroup_of_smul_eq_smul (L := W) φ hφ).symm
   refine ⟨fun {y g} hy ↦ ?_, fun {χ x} hχ hx ↦ ?_⟩
   · -- the symbol of the norm, computed in `ℚ̄_p`
     simp_rw [ψ_eq]
@@ -588,7 +583,9 @@ lemma isNormCompatible (ψ : Γ →* Γ') (j : Ω →+* Ω)
       simpa using! hχ g'
     have cyc_zero : cyclicClass _ χ (DiscreteUnits.ofBase _ (PadicAlgCl p) (.ofMul x)) = 0 := by
       simpa [u, hx] using art_u χ x
-    have gal_ker : IsProGalois (QZChar.ker χ) W (PadicAlgCl p) := by rwa [ker_eq]
+    have gal_ker : IsProGalois (QZChar.ker χ) W (PadicAlgCl p) :=
+      of_fixingSubgroup_eq (K := V)
+        (ker_eq.trans (range_eq_fixingSubgroup_of_smul_eq_smul (L := W) φ hφ)).symm
     obtain ⟨z, hz⟩ := (cyclicClass_eq_zero_iff_norm (J := gal_ker) x).mp cyc_zero
     exact ⟨z, (norm_eq z).trans hz⟩
 
@@ -1039,11 +1036,8 @@ lemma exists_eq_pow_and_apply_conj_eq_pow {γ : inertiaGroup Gal(Ω/K) A} (hγ :
       ∀ (q : ℕ) (φ : D), IsFrob A q φ →
         ∃ h_mem : φ * s * φ⁻¹ ∈ inertiaGroup D A, f' ⟨φ * s * φ⁻¹, h_mem⟩ = f' s ^ q :=
     (h_galois.tame_inertia (h_unif hπ) hn hy f' h_open fun g ↦ hP _ g.property).right
-  obtain ⟨h_gen, -⟩ := h_local (incl γ)
-  obtain ⟨-, h_frob⟩ := h_local (incl s)
-  refine ⟨h_gen h_prim (incl s), fun q φ hφ ↦ ?_⟩
-  obtain ⟨h_mem, h_conj⟩ := h_frob q ⟨φ, hφ.left⟩ hφ
-  exact h_conj
+  exact ⟨(h_local (incl γ)).1 h_prim (incl s), fun q φ hφ ↦
+    ((h_local (incl s)).2 q ⟨φ, hφ.left⟩ hφ).choose_spec⟩
 
 /-- The structure of tame inertia for the chosen tame generator. Let `f` kill the elements of
 inertia near `1` and have `f g ^ n = 1` on inertia, with `n` prime to `w`. For `s` in inertia,

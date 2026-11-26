@@ -1,5 +1,6 @@
 module
 
+import TauCeti.Analysis.SpecialFunctions.Gaussian.Reproducing
 public import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
 public import Lib.General.LinearAlgebra.HermitianMatrices
@@ -281,23 +282,15 @@ lemma integral_exp_holomorphicCoord (c ζ₀ : ι → ℂ) :
     ∫ z : ι → ℂ, exp (c ⬝ᵥ holomorphicCoord ε z) * exp (star (holomorphicCoord ε z) ⬝ᵥ ζ₀) * exp
       (-(star z ⬝ᵥ z))
       ∂normalizedVolume ι = exp (c ⬝ᵥ ζ₀) := by
-  -- The exponent is `z* p + q z - z* z`, where `p` and `q` take their coordinates from `c` and `ζ₀`
-  -- according to the sign. In the variable `w = z - conj q` it is `q p - w* (w - (p - conj q))`.
-  let p : ι → ℂ := fun i ↦ if ε i = 1 then c i else ζ₀ i
-  let q : ι → ℂ := fun i ↦ if ε i = 1 then ζ₀ i else c i
-  have h_exponent (z : ι → ℂ) :
-      c ⬝ᵥ holomorphicCoord ε z + star (holomorphicCoord ε z) ⬝ᵥ ζ₀ + -(star z ⬝ᵥ z) =
-        c ⬝ᵥ ζ₀ + -(star (z - star q) ⬝ᵥ 1 *ᵥ (z - star q - (p - star q))) := by
-    simp only [dotProduct, one_mulVec, ← sum_neg_distrib, ← sum_add_distrib]
-    refine sum_congr rfl fun i _ ↦ ?_
-    by_cases h_sign : ε i = 1 <;> simp [p, q, holomorphicCoord_eq, h_sign] <;> ring
-  have h_gauss :
-      ∫ z : ι → ℂ, exp (-(star (z - star q) ⬝ᵥ 1 *ᵥ (z - star q - (p - star q)))) ∂normalizedVolume
-        ι =
-        (1 : Matrix ι ι ℂ).det⁻¹ :=
-    (integral_sub_right_eq_self _ (star q)).trans
-      (integral_gauss PosDef.one.isAccretive (p - star q))
-  simp_rw [← exp_add, h_exponent, exp_add, integral_const_mul, h_gauss, det_one, inv_one, mul_one]
+  have h_measure : ENNReal.ofReal ((1 / Real.pi) ^ Fintype.card ι) •
+      (volume : Measure (ι → ℂ)) = normalizedVolume ι := by
+    rw [normalizedVolume, ← Measure.coe_nnreal_smul, ← ENNReal.ofReal_coe_nnreal]
+    congr 2
+    simp
+  have h := TauCeti.integral_cexp_reproducing (by norm_num : (0 : ℝ) < 1)
+    (fun i ↦ decide (ε i = 1)) c ζ₀
+  rw [h_measure] at h
+  simpa [dotProduct, holomorphicCoord_eq, ← conj_mul'] using h
 
 /-- The Gaussian `New.Fock.realVac` is a vacuum for the Heisenberg datum `New.Fock.realHeisenberg ε`
 and the normalised measure `New.Fock.normalizedVolume`. -/

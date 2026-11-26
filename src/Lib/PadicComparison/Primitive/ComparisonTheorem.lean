@@ -260,7 +260,7 @@ lemma finite_and_primitive_comparison [IsAlgClosed Ω]
       (TestOver.toTest Ω ⋙ oFlatLocConst) ⋙ tensorCoeff M :=
     NatIso.ofComponents
       (fun _ ↦ ((cancelBaseChange ..).symm ≪≫ₗ TensorProduct.comm ..).toModuleIso)
-      fun _ ↦ ModuleCat.hom_ext (tmul_ext fun _ _ ↦ rfl)
+      fun _ ↦ ModuleCat.hom_ext (tmul_ext fun _ _ ↦ by rfl)
   let γ : moduleCoeff (asModules (TestOver.toTest Ω ⋙ testIncl ⋙ locConstAlg) ⋙ tensorWith _ M) ≅
       TestOver.toTest Ω ⋙ oFlatLocConst ⋙ moduleCoeff (tensorCoeff M) :=
     isoWhiskerRight γ₀ (moduleCoeff (𝟭 _))
@@ -281,7 +281,7 @@ lemma finite_and_primitive_comparison [IsAlgClosed Ω]
       IsLerayHirschBasis D.comparison (freeAb X) ↔ c.IsBijective (freeAbMap u.hom) := by
     -- By the basis `b`, flat base change and `γ`, the cohomology of `M ⊗ L` is a sum of copies
     -- of that of `L`.
-    let E : (_ →₀ TotalH (freeAb X) _) ≃+ TotalH (freeAb X) _ :=
+    let E₀ : (_ →₀ TotalH (freeAb X) _) ≃+ TotalH (freeAb X) _ :=
       ((equivFinsuppOfBasisLeft b).symm ≪≫ₗ directSumRight ..).toAddEquiv.trans
         (congrAddEquiv fun n ↦
           .trans (.ofBijective _ (hX ..))
@@ -290,15 +290,17 @@ lemma finite_and_primitive_comparison [IsAlgClosed Ω]
     have hE (i : Module.Free.ChooseBasisIndex (ZMod p) M) (n : ℕ)
         (x : H (freeAb X)
           (moduleCoeff (asModules (TestOver.toTest Ω ⋙ testIncl ⋙ locConstAlg))) n) :
-        E (.single i (.of _ n x)) =
+        E₀ (.single i (.of _ n x)) =
           TotalH.comp (.comp (.of _ n x) (.homClass (tensorWith.mk _ (b i) _)))
             (.homClass γ.hom) := by
-      simp [E, ← lof_eq_of (ZMod p)]
+      simp [E₀, ← lof_eq_of (ZMod p)]
       -- on the summand `n`: base change sends `b i ⊗ x` to the push of `x` along `x ↦ b i ⊗ x`,
       -- and pushing along a map is composing with its class (`of_comp_homClass`)
       simp only [lof_eq_of, of_comp_homClass, ← AddEquiv.coe_toAddMonoidHom, coe_congrAddEquiv,
         DirectSum.map_of]
       rfl
+    -- `E` is `E₀` with its source written as the source of the Leray–Hirsch map of `D`.
+    let E : (D.Index →₀ TotalH (freeAb X) Theory.locallyConstant.functor) ≃+ _ := E₀
     -- Under `E` the Leray–Hirsch map is restriction along `genericTestOver Ω` followed by
     -- `c.coeffHom`.
     have key : (lerayHirsch D.comparison (freeAb X)).toAddMonoidHom =
@@ -377,6 +379,7 @@ lemma finite_padic_cohomology (n : ℕ) :
   -- The primitive comparison, after a choice of embedding of `Ω` in `ℂ_p`, gives the finiteness of
   -- `Hⁿ(Y_Ω, 𝔽_p)` (its acyclicity hypothesis is supplied for the zero module); finiteness
   -- modulo `p` lifts to `ℤ_p` by `finite_H_ellAdicCoeff`.
+  have : Module.IsTorsionFree ℚ ℂ_[p] := DivisionSemiring.to_moduleIsTorsionFree
   let alg_Ω : Algebra Ω ℂ_[p] := (IsAlgClosed.lift : Ω →ₐ[ℚ] ℂ_[p]).toAlgebra
   obtain ⟨-, h_finite_mod_p, -⟩ :=
     finite_and_primitive_comparison Ω (isAcyclicOnPerfect_almostCoeff (N := Unit) (by simp)) Y
@@ -410,7 +413,8 @@ lemma ellAdicCohom.continuous_galoisAction (n : ℕ) (K : Type*) [Field K] [Alge
   refine continuous_finsetSum S fun ⟨a, t⟩ _ ↦ continuous_iff_continuousAt.2 fun g₀ ↦ ?_
   refine tendsto_sub_nhds_zero_iff.1 fun U hU ↦ (map_mul_left_nhds_one _).ge (Filter.mem_map.2 ?_)
   let L : M →ₗ[ℤ_[p]] Fin N → PadicAlgCl p :=
-    (l ∘ₗ galoisAction R Ω Gal(Ω/K) Y n g₀).restrictScalars ℤ_[p] ∘ₗ TensorProduct.mk _ _ _ a
+    (l ∘ₗ galoisAction R Ω Gal(Ω/K) Y n g₀).restrictScalars ℤ_[p] ∘ₗ
+      TensorProduct.mk ℤ_[p] ℚ_[p] M a
   -- `M` is finitely generated, so `L M` is compact, hence bounded.
   have h_bounded : Bornology.IsVonNBounded ℚ_[p] (Submodule.map L ⊤ : Set (Fin N → PadicAlgCl p)) :=
     (Submodule.isCompact_of_fg (.map L (finite_padic_cohomology n).fg_top)).isVonNBounded ℚ_[p]

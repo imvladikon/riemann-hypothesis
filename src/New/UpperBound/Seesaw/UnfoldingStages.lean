@@ -719,7 +719,7 @@ lemma unfoldStageOn_update {l : ℕ} (a : GInf D.E (D.signsY l)) (b : Gf D.E (D.
 /-- The function `𝒲_{k+1}` (`unfoldStage`) depends only on the outer variables `g_j = (ξ j, y j)`
 for `j ≤ k`: changing `ξ` and `y` at an index `l > k` does not change it. -/
 lemma unfoldStage_update {l : ℕ} (a : GInf D.E (D.signsY l)) (b : Gf D.E (D.Y l)) (k : ℕ)
-    (hk : k ≤ 2 * D.ϱ + 1) (hkl : k < l) {X : Type} {s : ℕ} [Fintype X] [DecidableEq X]
+    (hk : k ≤ 2 * D.ϱ + 1) (hkl : k < l) {X : Type} {s : ℕ} [DecidableEq X]
     (Y' : Grading (D.spaceY (k + 1)) D.N X s) :
     unfoldStage ϑ t φ (update ξ l a) (update y l b) k hk Y' = unfoldStage ϑ t φ ξ y k hk Y' := by
   simp only [unfoldStage, movedDatum, unfoldStageOn_update ϑ t φ ξ y a b k hk hkl,

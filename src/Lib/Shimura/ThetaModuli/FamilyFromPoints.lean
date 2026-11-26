@@ -1103,9 +1103,8 @@ theorem Variety.exists_thetaFamily_of_points (j : ι → κ) (hη : IsDenseFamil
             eq_of_level_coords_eq t t' h_base h_coord := ?ext }, fun i ↦ ?model⟩
   case ext =>
     -- The lists agree, so do the pull-backs of the product of the `c l`.
-    have h_pi : pi (fun l : D.levelTorsion ↦ N.pull (t ≫ (ς l).left)) =
-        pi (fun l : D.levelTorsion ↦ N.pull (t' ≫ (ς l).left)) := congrArg pi (funext h_coord)
-    exact hπ.ext (by simpa [← hσ_pull, pull_pi] using h_pi) (hφ.right_cancellation _ _ h_base)
+    exact hπ.ext (by simpa [← hσ_pull, pull_pi] using congrArg pi (funext h_coord))
+      (hφ.right_cancellation _ _ h_base)
   case model =>
     refine ⟨⟨hη_base i, u i, _, _, hu_theta i, fun d w ↦ ?_, fun l ↦ ?_, hu_L i⟩, rfl⟩
     -- `using!`: the exponential map `u i` matches `fibrePointMap A (η i)` only up to unfolding.

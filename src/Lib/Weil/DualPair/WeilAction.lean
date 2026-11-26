@@ -162,19 +162,12 @@ lemma G.onHom_snd :
     ((onHom p).2 : Matrix (n' × n) (n' × n) (𝔸f E)) =
       (p.2.2 : Matrix n' n' (𝔸f E)) ⊗ₖ ((p.1.2⁻¹ : Gf E n) : Matrix n n (𝔸f E))ᵀ := rfl
 
-@[simp]
-lemma G.coe_det : g.det.val = g.adeleMatrix.det := rfl
-
 /-- For finite points `g`, `h`, the image of the pair `((1, g), (1, h))` under `onHom` has
 infinite component `1`. -/
 lemma G.onHom_fin (g : Gf E n) (h : Gf E n') :
     let k : G E (homSigns s s') := onHom ((1, g), 1, h)
     k = (1, k.2) := by
   simp [onHom_eq, mk_one_one, ← Pi.one_def]
-
-@[simp↓]
-lemma G.det_snd : (g.det : 𝔸 E).2 = (g.2 : Matrix n n (𝔸f E)).det :=
-  map_det (RingHom.snd (NumberField.InfinitePlace E → ℂ) (𝔸f E)) g.adeleMatrix
 
 @[fun_prop]
 lemma G.continuous_det : Continuous (det : G E s → unitary (𝔸 E)) :=
@@ -185,13 +178,6 @@ Hom(S,T) is (det h)^n (det g)^(−n'). -/
 lemma G.det_onHom : (onHom p).det = p.2.det ^ card n * p.1.det⁻¹ ^ card n' := by
   ext1
   simp [← map_inv, det_kronecker]
-
-/-- The infinite component of `det g` is, at each infinite place `w`, the determinant of the
-component of `g` at `w`. -/
-@[simp↓]
-lemma det_fst : (g.det : 𝔸 E).1 =
-    fun w : NumberField.InfinitePlace E ↦ ((g.1 w : GL n ℂ) : Matrix n n ℂ).det :=
-  funext fun w ↦ (evalInf w).map_det g.adeleMatrix
 
 /-- The component of `det g` at a finite place `w` is the determinant of the component of `g`
 at `w`. -/
