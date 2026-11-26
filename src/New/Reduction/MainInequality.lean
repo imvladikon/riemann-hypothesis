@@ -30,8 +30,8 @@ Notions from other files:
 
 * Theorem A: (a) `span_short_integralRamified_eq_top` (size) and (b) `indexLe_normalizedPoincare`
   (index).
-* Theorem B: `enough_forms`.
-* Theorem C: `integral_forms_long`, from a twist for each prime
+* Theorem B: `exists_few_normalizedPoincare`.
+* Theorem C: `integral_forms_long_with_completion_cost`, from a twist for each prime
   (`TwistedLattice.covolume_add_index_nonneg`) and the height of `Z(1) / Z(ξ_ι)`
   (`heightLe_chainDeterminant_one_div`).
 * Hadamard's bound for the covolume: `TwistedLattice.covolumeLe_of_normSqAt_le`.
@@ -40,7 +40,7 @@ Notions from other files:
 ## What cancels, and where
 
 * The main amount, between the upper and the lower bound: the comparison step of
-  `star_inequality`.
+  `star_inequality_with_completion_cost`.
 * The gains `∑ gain_l log l` in the size of the chain, against `log c_B`:
   `span_short_integralRamified_eq_top`.
 * The constant `c₁ = (logDerivMean d 1 1).re`, between the period and the expected value
@@ -59,13 +59,13 @@ Notions from other files:
 | source   | where             | amount                              |
 |----------|-------------------|-------------------------------------|
 | size     | Theorem A (a)     | `f a log⁴ b`                        |
-| index    | Theorems A (b), B | `20 log (1 + 2 b²) · f a log³ b`    |
-| covolume | Theorem C         | `3 f a log⁴ b`                      |
+| index    | Theorems A (b), B | `20 f a log⁴ b`                     |
+| covolume | Theorem C         | `f a log⁴ b + 2 b`                  |
 
-The index enters twice, and the table shows the doubled amount. Since `1 + 2 b² ≤ b³` for `b ≥ 3`,
-the index contributes at most `60 f a log⁴ b`. The family has `n ≥ dim / 2` members, so `m rem`
-is at most twice the sum, which is at most `128 f a log⁴ b`. The scales are listed in
-`New.Reduction.Data.Sizes`.
+Each missing dimension costs `2 x₁² b² + b`, so the greedy choice stops at the missing share
+`1 / (1 + 2 x₁² b)`. The total completion cost is at most `dim · b`. The table includes the
+doubled index. The family has `n ≥ (24 / 25) dim` members, and the sum is at most `24 f a log⁴ b`
+per dimension. Therefore `m rem ≤ 25 f a log⁴ b`.
 
 ## Relation to the literature
 
@@ -80,22 +80,50 @@ namespace New
 
 open Real Finset Data Module Submodule
 
-/-- **Main inequality.** For the data `D` we have `m rem ≤ 128 f a log⁴ b`.
+/-- **Main inequality.** For the data `D` we have `m rem ≤ 25 f a log⁴ b`.
 
 The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 1 mod q₀`. The scales are
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
 `log log b ≥ 10¹² P.constantBound`. -/
-theorem star_inequality {P : Parameters} (D : Data P) :
-    D.m * D.totalRemainder ≤ 128 * (D.f * D.a * D.logB ^ 4) := by
-  -- Choose many independent images of short integral forms, bound their covolume and index from
-  -- above, and compare with the lower bound `integral_forms_long`.
-  obtain ⟨h_dim_pos, t, ht_card, h_fill⟩ : 0 < D.targetDim ∧ ∃ t : Finset D.chosenGL,
-      #t * finrank ℂ D.ramifiedSourceForms ≤ 5 * D.targetDim * log (1 + 2 * D.b ^ 2) ∧
-      (1 - 4 / D.b ^ 2) * D.targetDim ≤ finrank ℂ ↥(⨆ g ∈ t, (D.normalizedPoincare g).range) :=
-    D.enough_forms
+theorem star_inequality_with_completion_cost {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 25 * (D.f * D.a * D.logB ^ 4) := by
+  let denominator : ℝ := 1 + 2 * D.x₁ ^ 2 * D.b
+  let share : ℝ := denominator⁻¹
+  have hden_pos : 0 < denominator := by
+    dsimp [denominator]
+    positivity
+  have hden_sq : 4 * denominator ≤ D.b ^ 2 := by
+    dsimp [denominator]
+    exact D.le_of_hasLogBound
+  have hshare_ge : 4 / D.b ^ 2 ≤ share := by
+    dsimp only [share]
+    rw [← one_div]
+    exact (div_le_div_iff₀ (by positivity) hden_pos).2 (by simpa using hden_sq)
+  have hshare_small : share ≤ 1 / 25 := by
+    have hden_large : 25 ≤ denominator := by
+      dsimp [denominator]
+      exact D.le_of_hasLogBound
+    dsimp only [share]
+    rw [← one_div]
+    exact (div_le_div_iff₀ hden_pos (by norm_num)).2 (by simpa using hden_large)
+  have hshare_lt : share < 1 := hshare_small.trans_lt (by norm_num)
+  obtain ⟨t, ht_card, h_fill⟩ := D.exists_few_normalizedPoincare hshare_ge hshare_lt
+  rw [show share⁻¹ = denominator by simp [share]] at ht_card
+  have h_log : 1 + log denominator ≤ 2 * D.logB := by
+    have h_mul : 3 * denominator ≤ D.b ^ 2 :=
+      (mul_le_mul_of_nonneg_right (by norm_num) hden_pos.le).trans hden_sq
+    have h := log_le_log (by positivity : 0 < 3 * denominator) h_mul
+    rw [log_mul (by norm_num) hden_pos.ne', log_pow, Data.b, log_exp, Nat.cast_ofNat] at h
+    have h_three : 1 ≤ log 3 :=
+      (le_log_iff_exp_le (by norm_num)).2 exp_one_lt_three.le
+    linarith
+  have ht_count : #t * finrank ℂ D.ramifiedSourceForms ≤ 5 * D.targetDim * D.logB := by
+    calc #t * finrank ℂ D.ramifiedSourceForms ≤
+        5 / 2 * (1 + log denominator) * D.targetDim := ht_card
+      _ ≤ 5 / 2 * (2 * D.logB) * D.targetDim := by gcongr
+      _ = 5 * D.targetDim * D.logB := by ring
   let loss : ℝ := D.f * D.a * D.logB ^ 4
   let logNormSq : ℝ := D.mainAmount - D.m * D.totalRemainder + loss
-  let indexPerDim : ℝ := 10 * log (1 + 2 * D.b ^ 2) * D.errorUnit
   let short : Set D.ramifiedSourceForms :=
     {φ ∈ D.integralRamified | ∀ (g : D.chosenGL) (σ : ℂ ≃+* ℂ),
       (D.Θ 1 (D.normalizedPoincare g φ)).normSqAt σ ≤ exp logNormSq}
@@ -103,7 +131,7 @@ theorem star_inequality {P : Parameters} (D : Data P) :
   -- The family: among the forms `D.normalizedPoincare g φ` with `g ∈ t` and `φ` short, a basis of
   -- their span.
   obtain ⟨n, y, h_indep, h_many, hy⟩ : ∃ (n : ℕ) (y : Fin n → D.targetForms),
-      LinearIndependent ℂ y ∧ (1 - 4 / D.b ^ 2) * D.targetDim ≤ n ∧
+      LinearIndependent ℂ y ∧ (1 - share) * D.targetDim ≤ n ∧
       ∀ i : Fin n, ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' short := by
     let images : Set D.targetForms := ⋃ g ∈ t, D.normalizedPoincare g '' short
     have span_eq : span ℂ images = ⨆ g ∈ t, (D.normalizedPoincare g).range := by
@@ -120,60 +148,54 @@ theorem star_inequality {P : Parameters} (D : Data P) :
     exact hφ_short g σ
   -- Index: each translate in `t` contributes `2 · errorUnit` per dimension of the source.
   have h_errorUnit_nonneg : 0 ≤ D.errorUnit := (HasLogBound.pos D).le
-  have h_index : D.targetLattice.IndexLe y (D.targetDim * indexPerDim) := by
+  have h_index : D.targetLattice.IndexLe y (D.targetDim * (10 * loss)) := by
     have hy_int (i : Fin n) : ∃ g ∈ t, y i ∈ D.normalizedPoincare g '' D.integralRamified := by
       obtain ⟨g, hg, φ, ⟨hφ_int, -⟩, hφ_eq⟩ := hy i
       exact ⟨g, hg, φ, hφ_int, hφ_eq⟩
     refine (D.indexLe_normalizedPoincare t hy_int).mono ?_
     calc #t * finrank ℂ D.ramifiedSourceForms * (2 * D.errorUnit)
-        ≤ 5 * D.targetDim * log (1 + 2 * D.b ^ 2) * (2 * D.errorUnit) := by grw [ht_card]
-      _ = D.targetDim * indexPerDim := by ring
-  -- Comparison: as `mainAmount + loss ≥ 0` and `n ≤ targetDim`, the terms `targetDim · mainAmount`
-  -- cancel.
-  have h_long :
-      D.targetDim * (D.mainAmount - 3 * loss) ≤ n * logNormSq + 2 * (D.targetDim * indexPerDim) :=
-    integral_forms_long h_indep h_many h_index h_cov
+        ≤ 5 * D.targetDim * D.logB * (2 * D.errorUnit) := by grw [ht_count]
+      _ = D.targetDim * (10 * loss) := by
+        dsimp [loss, Data.errorUnit]
+        ring
+  have h_completion : ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) ≤
+      D.targetDim * D.b := by
+    have h_cost : share * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) = D.b := by
+      have h_factor : 2 * D.x₁ ^ 2 * D.b ^ 2 + D.b = denominator * D.b := by
+        dsimp [denominator]
+        ring
+      dsimp only [share]
+      rw [h_factor, ← mul_assoc, inv_mul_cancel₀ hden_pos.ne', one_mul]
+    calc ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b)
+        ≤ (share * D.targetDim) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) :=
+          mul_le_mul_of_nonneg_right (by linarith [h_many]) (by positivity)
+      _ = D.targetDim * (share * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b)) := by ring
+      _ = D.targetDim * D.b := by rw [h_cost]
+  have h_long := integral_forms_long_with_completion_cost h_indep h_index h_cov
   have h_loss_pos : 0 < loss := HasLogBound.pos D
   have h_main : n * (D.mainAmount + loss) ≤ D.targetDim * (D.mainAmount + loss) :=
     mul_le_mul_of_nonneg_right hn_le (add_nonneg D.mainAmount_nonneg h_loss_pos.le)
-  let err : ℝ := 4 * loss + 2 * indexPerDim
-  have h_both : n * (D.m * D.totalRemainder) ≤ D.targetDim * err := by
-    simp only [logNormSq, err] at h_long ⊢
-    linarith [h_long, h_main]
-  -- Divide by `n ≥ targetDim / 2 > 0`.
-  have h_half : (D.targetDim : ℝ) ≤ n * 2 := by
-    have h_share : 4 / D.b ^ 2 ≤ 2⁻¹ := D.le_of_hasLogBound
-    calc (D.targetDim : ℝ) = (1 - 2⁻¹) * D.targetDim * 2 := by ring
-      _ ≤ (1 - 4 / D.b ^ 2) * D.targetDim * 2 := by grw [h_share]
-      _ ≤ n * 2 := by grw [h_many]
+  have h_b : (D.targetDim : ℝ) * D.b ≤ D.targetDim * loss :=
+    mul_le_mul_of_nonneg_left D.le_of_hasLogBound D.targetDim.cast_nonneg
+  have h_rem : n * (D.m * D.totalRemainder) ≤ D.targetDim * (24 * loss) := by
+    change D.targetDim * (D.mainAmount - loss - D.b) ≤
+      n * (D.mainAmount - D.m * D.totalRemainder + loss) + 2 * (D.targetDim * (10 * loss)) +
+        ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) at h_long
+    linarith only [h_long, h_completion, h_main, h_b]
+  have h_rank : (24 / 25 : ℝ) * D.targetDim ≤ n := by
+    grw [show (24 / 25 : ℝ) ≤ 1 - share by linarith, h_many]
   have hn_pos : (0 : ℝ) < n :=
-    pos_of_mul_pos_left ((Nat.cast_pos.2 h_dim_pos).trans_le h_half) zero_le_two
-  have hb : 3 ≤ D.b := D.le_of_hasLogBound
-  have hb_sq : 1 ≤ D.b ^ 2 := by nlinarith [sq_nonneg (D.b - 3)]
-  have h_poly : 1 + 2 * D.b ^ 2 ≤ D.b ^ 3 := by
-    nlinarith only [mul_nonneg (sub_nonneg.mpr hb) (sq_nonneg D.b), hb_sq]
-  have h_log : log (1 + 2 * D.b ^ 2) ≤ 3 * D.logB := by
-    calc log (1 + 2 * D.b ^ 2) ≤ log (D.b ^ 3) := log_le_log (by positivity) h_poly
-      _ = 3 * D.logB := by rw [log_pow, Data.b, log_exp, Nat.cast_ofNat]
-  have h_index_le : indexPerDim ≤ 30 * loss := by
-    calc indexPerDim ≤ 10 * (3 * D.logB) * D.errorUnit := by
-           dsimp only [indexPerDim]
-           gcongr
-      _ = 30 * loss := by
-        dsimp [Data.errorUnit, loss]
-        ring
-  have h_log_nonneg : 0 ≤ log (1 + 2 * D.b ^ 2) :=
-    log_nonneg (by linarith [sq_nonneg D.b])
-  have h_err_nonneg : 0 ≤ err := by
-    dsimp only [err, indexPerDim]
-    positivity
-  have h_err_le : err ≤ 64 * loss := by
-    dsimp only [err]
-    linarith
+    (mul_pos (by norm_num) (Nat.cast_pos.2 D.targetDim_pos)).trans_le h_rank
   refine le_of_mul_le_mul_left ?_ hn_pos
-  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * err := h_both
-    _ ≤ n * 2 * err := mul_le_mul_of_nonneg_right h_half h_err_nonneg
-    _ ≤ n * 2 * (64 * loss) := mul_le_mul_of_nonneg_left h_err_le (by positivity)
-    _ = n * (128 * loss) := by ring
+  calc n * (D.m * D.totalRemainder) ≤ D.targetDim * (24 * loss) := h_rem
+    _ = (24 * D.targetDim) * loss := by ring
+    _ ≤ (25 * n) * loss := mul_le_mul_of_nonneg_right (by linarith) h_loss_pos.le
+    _ = n * (25 * loss) := by ring
+
+/-- The fourth-power bound with the earlier coefficient. -/
+theorem star_inequality {P : Parameters} (D : Data P) :
+    D.m * D.totalRemainder ≤ 128 * (D.f * D.a * D.logB ^ 4) :=
+  (star_inequality_with_completion_cost D).trans
+    (mul_le_mul_of_nonneg_right (by norm_num) (HasLogBound.pos D).le)
 
 end New
