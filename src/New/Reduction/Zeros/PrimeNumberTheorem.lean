@@ -212,21 +212,27 @@ lemma eventually_norm_logDerivMean_div_le : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ
       _ ≤ 10 * l ^ 25 := by linarith [one_le_pow₀ hl_one (n := 25)]
       _ ≤ l ^ 26 := by grw [hl, pow_succ' l 25]
 
-/-- **Prime number theorem** in the class `1` mod `q`, with weights `λ(n) = Λ(n) (1 - (n/d))`. Let
-`d` be an odd prime and `q` prime to `d`. For every natural number `B` the remainder
-`primeRemainder d q`, that is `R_q(y) = ∑_{n ≤ y, n ≡ 1} λ(n) (1/n - 1/y) - log y / φ(q) - c_q`,
-satisfies `|R_q(y)| ≤ (log y) ^ (-B)` for all large `y`, by a Tauberian theorem applied to the
-Laplace transform of `v ↦ R_q(e ^ v)`; it also follows from the Siegel–Walfisz theorem. -/
-theorem eventually_abs_primeRemainder_le (hd : d ≠ 2) (h_cop : q.Coprime d) (B : ℕ) :
-    ∀ᶠ y : ℝ in atTop, |primeRemainder d q y| ≤ 1 / y.log ^ B := by
-  -- Apply the Tauberian theorem to `v ↦ R_q(e^v)` and `F(s) = logDerivMean d q s / s`.
+/-- The weighted prime remainder in logarithmic coordinates. -/
+theorem eventually_abs_primeRemainder_exp_le_stretched {d q : ℕ} [Fact d.Prime] [NeZero q]
+    (hd : d ≠ 2) (h_cop : q.Coprime d) :
+    ∀ᶠ v : ℝ in atTop, |primeRemainder d q (rexp v)| ≤ rexp (-(v ^ (1 / 27 : ℝ) / 32)) := by
   let F : ℂ → ℂ := fun s ↦ logDerivMean d q s / s
   have h_transform (s : ℂ) (hs : 2 < s.re) : (F s - F 1) / (s - 1) =
       ∫ v : ℝ in Set.Ioi 0, (primeRemainder d q (rexp v) : ℂ) * cexp ((1 - s) * v) := by
     simp [F, integral_primeRemainder hd h_cop hs, ofReal_re_logDerivMean_one hd h_cop]
-  have h_bound : ∀ᶠ v : ℝ in atTop, |primeRemainder d q (rexp v)| ≤ 1 / v ^ B :=
-    eventually_abs_le_inv_pow_of_transform (by fun_prop [primeRemainder, lambdaKSum])
-      (fun u v ↦ abs_primeRemainder_exp_sub_le) h_transform eventually_norm_logDerivMean_div_le B
+  have h_bound := eventually_abs_le_exp_rpow_of_transform
+    (by fun_prop [primeRemainder, lambdaKSum]) (fun u v ↦ abs_primeRemainder_exp_sub_le)
+    h_transform (A := 26) eventually_norm_logDerivMean_div_le
+  simpa only [Nat.cast_ofNat, show (26 : ℝ) + 1 = 27 by norm_num] using h_bound
+
+/-- Every inverse power of `log y` bounds the prime remainder for all large `y`. -/
+theorem eventually_abs_primeRemainder_le (hd : d ≠ 2) (h_cop : q.Coprime d) (B : ℕ) :
+    ∀ᶠ y : ℝ in atTop, |primeRemainder d q y| ≤ 1 / y.log ^ B := by
+  have h_bound : ∀ᶠ v : ℝ in atTop, |primeRemainder d q (rexp v)| ≤ 1 / v ^ B := by
+    filter_upwards [eventually_abs_primeRemainder_exp_le_stretched hd h_cop,
+      eventually_exp_neg_rpow_div_le_inv_pow (show 0 < (1 / 27 : ℝ) by norm_num) B]
+      with v hv h_exp
+    exact hv.trans h_exp
   filter_upwards [tendsto_log_atTop.eventually h_bound, eventually_gt_atTop 0] with y hy hy_pos
   rwa [Real.exp_log hy_pos] at hy
 

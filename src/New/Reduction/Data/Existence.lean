@@ -14,7 +14,9 @@ field, the places, the scales and the primes in turn.
 * `New.Parameters.IsAdmissibleData`: admissible data, with explicit values of the ranks and scales
   and any `b`-places and primes that have the required properties.
 * `New.eventually_exists_data_of_isAdmissibleData`: at every large `x` such data give the ranks,
-  scales and tower exponent (`New.Data.HasFields`) of the data `New.Data`.
+  scales, tower exponent and set of `b`-places of the data `New.Data`.
+* `New.eventually_exists_data_with_density`: admissible data exist at every large `x`, with the
+  loss in the number of `b`-places controlled by a separate exponent.
 * `New.eventually_exists_data`: admissible data exist at every large `x`.
 
 Notions from other files:
@@ -467,22 +469,34 @@ lemma pow_mul_exp_le_exp_pow_six {n : ℕ} {W : ℝ} (hW : 1 ≤ W) (hn : n + 1 
     _ = exp ((n + 1) * W) := by rw [← exp_natCast_mul, ← exp_add, add_one_mul]
     _ ≤ exp (W ^ 6) := by grw [hn, ← sq, pow_le_pow_right₀ hW (by norm_num : 2 ≤ 6)]
 
-/-- The scale `b`, the least multiple of `q x₁` above `exp (W ^ 6)`, where `x₁ = ⌊exp W⌋` and
-`q ≤ W ^ n`: `log b` lies in `[W ^ 6, W ^ 6 + 1]`, and `log log b` in `[6 log W, 6 log W + 1]`. -/
-lemma exists_isLeast_dvd_log_log_mem_Icc {q n : ℕ} {W : ℝ} (hq : 0 < q) (hW : 1 ≤ W)
-    (hn : n + 1 ≤ W) (hq_le : q ≤ W ^ n) :
-    ∃ b : ℕ, IsLeast {b : ℕ | q * ⌊exp W⌋₊ ∣ b ∧ exp (W ^ 6) < b} b ∧
+private lemma exists_isLeast_dvd_log_log_mem_Icc_of_cutoff {q n : ℕ} {W V : ℝ}
+    (hq : 0 < q) (hV : 1 ≤ V) (hVW : V ≤ W) (hn : n + 1 ≤ W) (hq_le : q ≤ W ^ n) :
+    ∃ b : ℕ, IsLeast {b : ℕ | q * ⌊exp V⌋₊ ∣ b ∧ exp (W ^ 6) < b} b ∧
       log b ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧
       log (log b) ∈ Set.Icc (6 * log W) (6 * log W + 1) := by
+  have hW := hV.trans hVW
   have hW_pow : 1 ≤ W ^ 6 := one_le_pow₀ hW
-  have h_step_le : (q * ⌊exp W⌋₊ : ℕ) ≤ exp (W ^ 6) := by
-    grw [← pow_mul_exp_le_exp_pow_six hW hn, Nat.cast_mul, hq_le, Nat.floor_le (exp_pos W).le]
+  have h_step_le : (q * ⌊exp V⌋₊ : ℕ) ≤ exp (W ^ 6) := by
+    have h_floor : (⌊exp V⌋₊ : ℝ) ≤ exp W :=
+      (Nat.floor_le (exp_pos V).le).trans (exp_le_exp.mpr hVW)
+    rw [Nat.cast_mul]
+    exact (mul_le_mul hq_le h_floor (by positivity) (pow_nonneg (zero_le_one.trans hW) _)).trans
+      (pow_mul_exp_le_exp_pow_six hW hn)
   obtain ⟨b, hb, h_lower, h_upper⟩ := exists_isLeast_dvd_and_exp_lt
     (mul_pos hq (Nat.floor_pos.2 (one_le_exp (by linarith)))) h_step_le
   have h_log_pow : log (W ^ 6) = 6 * log W := by simp
   refine ⟨b, hb, ⟨h_lower, h_upper⟩, h_log_pow.ge.trans (log_le_log (by linarith) h_lower), ?_⟩
   rw [← h_log_pow, log_le_iff_le_exp (by linarith), exp_add, exp_log (by linarith)]
   nlinarith [add_one_le_exp 1]
+
+/-- The scale `b`, the least multiple of `q x₁` above `exp (W ^ 6)`, where `x₁ = ⌊exp W⌋` and
+`q ≤ W ^ n`: `log b` lies in `[W ^ 6, W ^ 6 + 1]`, and `log log b` in `[6 log W, 6 log W + 1]`. -/
+lemma exists_isLeast_dvd_log_log_mem_Icc {q n : ℕ} {W : ℝ} (hq : 0 < q) (hW : 1 ≤ W)
+    (hn : n + 1 ≤ W) (hq_le : q ≤ W ^ n) :
+    ∃ b : ℕ, IsLeast {b : ℕ | q * ⌊exp W⌋₊ ∣ b ∧ exp (W ^ 6) < b} b ∧
+      log b ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧
+      log (log b) ∈ Set.Icc (6 * log W) (6 * log W + 1) :=
+  exists_isLeast_dvd_log_log_mem_Icc_of_cutoff hq hW le_rfl hn hq_le
 
 /-- Let `2 ≤ y`, `0 < n`, `10⁶ y ≤ W ≤ exp (y / 2) ≤ m`, `r ≤ 3 exp (5 y)`,
 `2 ^ s = m ^ 22 ≤ W ^ n`, `s ≤ 32 y`, `(5184 y) ^ n ≤ W` and `7776 y n 2 ^ n ≤ W`. At least
@@ -549,13 +563,15 @@ lemma rpow_div_six_pow_six (x : ℕ) (ε : ℝ) : ((x : ℝ) ^ (ε / 6)) ^ 6 = (
 
 /-! ### Admissible data -/
 
-/-- The admissible data at the integer `x` and the real `W`. The ranks `m`, `r`, the exponent `s`
-and the scales `x₁ = ⌊exp W⌋` and `b` are determined by `x` and `W`; the set `T` of `b`-places (the
+/-- The admissible data at the integer `x`, with window scale `W` and cutoff `x₁ = ⌊exp V⌋`.
+The ranks `m`, `r`, the exponent `s` and the least multiple `b` are determined by these scales.
+The cutoff parameter defaults to `V = W`. The set `T` of `b`-places (the
 infinite places of `P.E s` that get the weight `b`), the
 primes `p₀ = g 0`, `p₁ = g 1`, `N` and the elements `α`, `β` with `α ᾱ = p₀ p₁` and `β β̄ = N` are
 any with the listed properties. -/
 structure Parameters.IsAdmissibleData (P : Parameters) (x : ℕ) (W : ℝ) (m r s b : ℕ)
-    (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ) (β : 𝓞 (P.E s)) : Prop where
+    (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ) (β : 𝓞 (P.E s))
+    (V : ℝ := W) : Prop where
   /-- `m` is the least power of `2` with `m ≥ √x`. -/
   isLeast_m : IsLeast {n : ℕ | (∃ j : ℕ, n = 2 ^ j) ∧ √x ≤ n} m
   /-- `r` is the least power of `3` with `r ≥ x⁵`. -/
@@ -563,7 +579,7 @@ structure Parameters.IsAdmissibleData (P : Parameters) (x : ℕ) (W : ℝ) (m r 
   /-- `s = 22 log₂ m`. -/
   two_pow_eq : 2 ^ s = m ^ 22
   /-- `b` is the least multiple of `q₁ x₁` that exceeds `exp (W ^ 6)`. -/
-  isLeast_b : IsLeast {c : ℕ | P.q₁ s * ⌊exp W⌋₊ ∣ c ∧ exp (W ^ 6) < c} b
+  isLeast_b : IsLeast {c : ℕ | P.q₁ s * ⌊exp V⌋₊ ∣ c ∧ exp (W ^ 6) < c} b
   /-- The `b`-places are `≡ -1` modulo `q₀`. -/
   placeClass_eq_neg_one : ∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1
   /-- There are at least `towerDeg s / log b` of them. -/
@@ -586,7 +602,7 @@ structure Parameters.IsAdmissibleData (P : Parameters) (x : ℕ) (W : ℝ) (m r 
   N_modEq_one : N ≡ 1 [MOD P.q₂ s ^ 2]
   /-- `log N₋ ≤ log N ≤ log N₋ + √(log b)`, for the weights `b` on `T` and `x b / x₁` elsewhere. -/
   log_N_mem :
-    let κ (τ : P.Φ s) : ℕ := if τ ∈ T then b else x * b / ⌊exp W⌋₊
+    let κ (τ : P.Φ s) : ℕ := if τ ∈ T then b else x * b / ⌊exp V⌋₊
     log N ∈ Set.Icc (P.logLevelMin s m κ (g 0 * g 1) (log b))
       (P.logLevelMin s m κ (g 0 * g 1) (log b) + √(log b))
   /-- `β` times its complex conjugate is `N`. -/
@@ -701,6 +717,19 @@ lemma q₁_mul_d_le_exp (h_scale : P.IsLargeScale n y W) (hs : s ≤ 32 * y) {L 
   grw [h_scale.q₁_mul_d_le hs, ← hL,
     ← pow_mul_exp_le_exp_pow_six h_scale.one_le h_scale.add_one_le, ← one_le_exp hW, mul_one]
 
+private lemma exists_isLeast_dvd_log_log_mem_Icc_of_cutoff (h_scale : P.IsLargeScale n y W)
+    (hs : s ≤ 32 * y) {V : ℝ} (hV : 1 ≤ V) (hVW : V ≤ W) :
+    ∃ b : ℕ, IsLeast {c : ℕ | P.q₁ s * ⌊exp V⌋₊ ∣ c ∧ exp (W ^ 6) < c} b ∧
+      exp (log b) = b ∧
+      log b ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧
+      log (log b) ∈ Set.Icc (6 * log W) (6 * log W + 1) := by
+  have hq₁_le : P.q₁ s ≤ W ^ n := by
+    grw [Nat.le_mul_of_pos_right (P.q₁ s) P.d_prime.pos, h_scale.q₁_mul_d_le hs]
+  obtain ⟨b, hb, h_log⟩ :=
+    New.exists_isLeast_dvd_log_log_mem_Icc_of_cutoff (NeZero.pos (P.q₁ s)) hV hVW
+      h_scale.add_one_le hq₁_le
+  exact ⟨b, hb, exp_log ((exp_pos (W ^ 6)).trans hb.1.2), h_log⟩
+
 /-- Let the real `W` be a large scale for the real `y`, and let `s` be a natural number with
 `s ≤ 32 y`. The least multiple `b` of `P.q₁ s * ⌊exp W⌋` above `exp (W ^ 6)` is positive, in the
 form `exp (log b) = b`; it has `log b` in `[W ^ 6, W ^ 6 + 1]` and `log log b` in
@@ -709,30 +738,23 @@ lemma exists_isLeast_dvd_log_log_mem_Icc (h_scale : P.IsLargeScale n y W) (hs : 
     ∃ b : ℕ, IsLeast {c : ℕ | P.q₁ s * ⌊exp W⌋₊ ∣ c ∧ exp (W ^ 6) < c} b ∧
       exp (log b) = b ∧
       log b ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧
-      log (log b) ∈ Set.Icc (6 * log W) (6 * log W + 1) := by
-  have hq₁_le : P.q₁ s ≤ W ^ n := by
-    grw [Nat.le_mul_of_pos_right (P.q₁ s) P.d_prime.pos, h_scale.q₁_mul_d_le hs]
-  obtain ⟨b, ⟨⟨hb_dvd, hb_lt⟩, hb_min⟩, h_log⟩ :=
-    New.exists_isLeast_dvd_log_log_mem_Icc (NeZero.pos (P.q₁ s)) h_scale.one_le h_scale.add_one_le
-      hq₁_le
-  exact ⟨b, ⟨⟨hb_dvd, hb_lt⟩, hb_min⟩, exp_log ((exp_pos (W ^ 6)).trans hb_lt), h_log⟩
+      log (log b) ∈ Set.Icc (6 * log W) (6 * log W + 1) :=
+  h_scale.exists_isLeast_dvd_log_log_mem_Icc_of_cutoff hs h_scale.one_le le_rfl
 
 end Parameters.IsLargeScale
 
-/-- Let `W` be a large scale for `log x`, and let admissible data at `x` and `W` be given. A term
-`D : Data P` bundles such objects and scales `x`, `x₁` with the inequalities `(log b) ^ 100 ≤ x`,
-`x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b`, `(log x₁) ^ 6 ≤ log b`, `10¹² P.constantBound ≤ log log b`,
-`m ∈ [√x, 2 √x]` and `r ∈ [x⁵, 3 x⁵]`. There is a `D` whose ranks, scales and tower exponent are
-the given ones, with `x₁ = ⌊exp W⌋` (`Data.HasFields`). Moreover `W - 1 ≤ log x₁` and `W ^ 6 ≤ log b ≤ W ^ 6 + 1`. -/
-lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b N : ℕ} {W : ℝ}
+private lemma Parameters.IsAdmissibleData.exists_hasFields_at_cutoff {P : Parameters}
+    {x n m r s b N : ℕ} {W V : ℝ}
     {T : Finset (P.Φ s)} {g : Fin 2 → ℕ} {α : 𝓞 P.K} {β : 𝓞 (P.E s)}
-    (h_adm : P.IsAdmissibleData x W m r s b T g α N β) (h_scale : P.IsLargeScale n (log x) W) :
+    (h_adm : P.IsAdmissibleData x W m r s b T g α N β (V := V))
+    (h_scale : P.IsLargeScale n (log x) W) (hV : 2e6 * log x ≤ V) (hVW : V ≤ W) :
     ∃ D : Data P,
-      D.HasFields x W m r s b ∧
-      W - 1 ≤ D.logX₁ ∧
-      D.logB ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) := by
+      D.HasFields x V m r s b ∧
+      D.logX₁ ∈ Set.Icc (V - 1) V ∧
+      D.logB ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧ D.bPlaces ≍ T := by
   have hW_one : 1 ≤ W := h_scale.one_le
   have hy : 100 ≤ log x := h_scale.hundred_le
+  have hV_one : 1 ≤ V := by linarith
   have hx_pos : (0 : ℝ) < x := by linarith [log_le_self x.cast_nonneg]
   -- The ranks are those of `exists_isLeast_two_pow_three_pow`, and `b` is that of
   -- `exists_isLeast_dvd_log_log_mem_Icc`.
@@ -743,36 +765,36 @@ lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b
   obtain rfl : s = s' := Nat.pow_right_injective le_rfl <|
     show 2 ^ s = 2 ^ s' by rw [h_adm.two_pow_eq, hs_eq, pow_mul, ← hm_pow]
   obtain ⟨b', hb, hb_eq, h_log_b, h_log_log_lower, h_log_log_upper⟩ :=
-    h_scale.exists_isLeast_dvd_log_log_mem_Icc hs
+    h_scale.exists_isLeast_dvd_log_log_mem_Icc_of_cutoff hs hV_one hVW
   obtain rfl : b = b' := h_adm.isLeast_b.unique hb
   obtain ⟨⟨-, hm_lower : exp (log x / 2) ≤ m⟩, -⟩ := hm
   obtain ⟨⟨-, hr_lower : exp (5 * log x) ≤ r⟩, -⟩ := hr
-  obtain ⟨⟨hb_dvd : P.q₁ s * ⌊exp W⌋₊ ∣ b, -⟩, -⟩ := hb
-  obtain ⟨hx₁_lower : W - 1 ≤ log ⌊exp W⌋₊, hx₁_upper : log ⌊exp W⌋₊ ≤ W⟩ :=
-    log_floor_exp_mem_Icc (zero_le_one.trans hW_one)
+  obtain ⟨⟨hb_dvd : P.q₁ s * ⌊exp V⌋₊ ∣ b, -⟩, -⟩ := hb
+  obtain ⟨hx₁_lower : V - 1 ≤ log ⌊exp V⌋₊, hx₁_upper : log ⌊exp V⌋₊ ≤ V⟩ :=
+    log_floor_exp_mem_Icc (zero_le_one.trans hV_one)
   have hb_large : 2e8 * W ≤ log b := by
     nlinarith only [pow_le_pow_right₀ hW_one (by norm_num : 2 ≤ 6), h_log_b.1, h_scale.mul_y_le_W,
       hy]
-  have h_log_log : log (log ⌊exp W⌋₊) ≤ log W :=
-    log_le_log (by linarith [h_scale.mul_y_le_W]) hx₁_upper
+  have h_log_log : log (log ⌊exp V⌋₊) ≤ log W :=
+    log_le_log (by linarith) (hx₁_upper.trans hVW)
   -- the fields not listed are the fields of `h_adm` of the same name
   let D : Data P :=
     { h_adm with
       m, r, towerExp := s, levelPrime := g, N
-      natX := x, natX₁ := ⌊exp W⌋₊, natB := b
-      logX := log x, logX₁ := log ⌊exp W⌋₊, logB := log b
+      natX := x, natX₁ := ⌊exp V⌋₊, natB := b
+      logX := log x, logX₁ := log ⌊exp V⌋₊, logB := log b
       bPlaces := T, piMBar := α, piN := β
       levelPrime_prime := h_adm.levelPrime_prime
       levelPrime_modEq_one_q₂_sq := h_adm.levelPrime_modEq_one
       levelPrime_injective := h_adm.levelPrime_injective
       N_modEq_one_q₂_sq := h_adm.N_modEq_one
-      weight τ := if τ ∈ T then b else x * b / ⌊exp W⌋₊
+      weight τ := if τ ∈ T then b else x * b / ⌊exp V⌋₊
       exp_logX := exp_log hx_pos
       exp_logX₁ := exp_log (mod_cast Nat.floor_pos.2 (one_le_exp (by linarith)))
       exp_logB := hb_eq
       constantBound_le := by linarith [h_scale.const_le, log_nonneg hW_one]
       mul_log_logB_le_logX := by linarith [h_scale.log_W_le]
-      logX_le_logX₁ := by linarith [h_scale.mul_y_le_W]
+      logX_le_logX₁ := by linarith
       logX₁_le_logB := by linarith
       log_logX₁_le_log_logB := by linarith
       m_mem := ⟨hm_lower, hm_upper⟩, r_mem := ⟨hr_lower, hr_upper⟩
@@ -782,13 +804,29 @@ lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b
       towerDeg_le_card_bPlaces_mul := h_adm.towerDeg_le
       levelPrime_mem i := by simpa only [hb_eq] using h_adm.levelPrime_mem i
       piMBar_mul_star := h_adm.α_mul_star, piN_mul_star := h_adm.β_mul_star }
-  have h_fields : D.HasFields x W m r s b := ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
-  exact ⟨D, h_fields, hx₁_lower, h_log_b⟩
+  have h_fields : D.HasFields x V m r s b := ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+  exact ⟨D, h_fields, ⟨hx₁_lower, hx₁_upper⟩, h_log_b, .rfl⟩
+
+/-- Let `W` be a large scale for `log x`, and let admissible data at `x` and `W` be given. A term
+`D : Data P` bundles such objects and scales `x`, `x₁` with the inequalities `(log b) ^ 100 ≤ x`,
+`x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b`, `(log x₁) ^ 6 ≤ log b`, `10¹² P.constantBound ≤ log log b`,
+`m ∈ [√x, 2 √x]` and `r ∈ [x⁵, 3 x⁵]`. There is a `D` with the given ranks, scales, tower exponent
+and set of `b`-places. Moreover `W - 1 ≤ log x₁` and `W ^ 6 ≤ log b ≤ W ^ 6 + 1`. -/
+lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b N : ℕ} {W : ℝ}
+    {T : Finset (P.Φ s)} {g : Fin 2 → ℕ} {α : 𝓞 P.K} {β : 𝓞 (P.E s)}
+    (h_adm : P.IsAdmissibleData x W m r s b T g α N β) (h_scale : P.IsLargeScale n (log x) W) :
+    ∃ D : Data P,
+      D.HasFields x W m r s b ∧
+      W - 1 ≤ D.logX₁ ∧
+      D.logB ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧ D.bPlaces ≍ T := by
+  obtain ⟨D, h_fields, h_logX₁, h_logB, h_places⟩ :=
+    h_adm.exists_hasFields_at_cutoff h_scale h_scale.mul_y_le_W le_rfl
+  exact ⟨D, h_fields, h_logX₁.1, h_logB, h_places⟩
 
 /-- **Admissible data are fields of the data.** Let `0 < ε < 1 / 100`. For every large enough
 integer `x`, any admissible data (`Parameters.IsAdmissibleData`) at `x` and `W = x ^ (ε / 6)` give
-the ranks, scales and tower exponent of some `D : Data P` (`Data.HasFields`). This `D` has `x ^ (ε / 6) - 1 ≤ D.logX₁`, and
-`D.logB` lies in `[x ^ ε, x ^ ε + 1]`. -/
+the ranks, scales, tower exponent and set of `b`-places of some `D : Data P`. This `D` has
+`x ^ (ε / 6) - 1 ≤ D.logX₁`, and `D.logB` lies in `[x ^ ε, x ^ ε + 1]`. -/
 theorem eventually_exists_data_of_isAdmissibleData (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop, ∀ (m r s b : ℕ) (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ)
@@ -796,29 +834,35 @@ theorem eventually_exists_data_of_isAdmissibleData (P : Parameters) {ε : ℝ} (
       ∃ D : Data P,
         D.HasFields x ((x : ℝ) ^ (ε / 6)) m r s b ∧
         (x : ℝ) ^ (ε / 6) - 1 ≤ D.logX₁ ∧
-        D.logB ∈ Set.Icc ((x : ℝ) ^ ε) ((x : ℝ) ^ ε + 1) := by
+        D.logB ∈ Set.Icc ((x : ℝ) ^ ε) ((x : ℝ) ^ ε + 1) ∧ D.bPlaces ≍ T := by
   obtain ⟨n, h_scale⟩ := P.exists_eventually_isLargeScale hε hε_lt
   filter_upwards [h_scale] with x hx m r s b T g α N β h_adm
   simpa only [rpow_div_six_pow_six] using h_adm.exists_hasFields hx
 
-/-- Let `W` be a large scale for `y = log x` with exponent `n`. Let the windows `[U, U + W]` with
-`W ≤ U ≤ W ^ (n + 7)` hold logarithms of primes `≡ 1` modulo the powers `(q₀ d) ^ k ≤ W ^ (n + 7)`,
-`k > 1`. Then admissible data exist at `x` and `W`: the least powers `m ≥ √x` of `2` and `r ≥ x⁵` of
-`3`; `s` with `2 ^ s = m ^ 22`; the least multiple `b > exp (W ^ 6)` of `P.q₁ s * ⌊exp W⌋`; a sparse
-set `T` of at least `towerDeg s / log b` infinite places of `E = P.E s` of class `-1` modulo `q₀`;
+/-- Let `W` be a large scale for `y = log x` with exponent `n`, and let `U ≤ W` be another large
+scale for `y`. Let the windows `[L, L + W]` with `W ≤ L ≤ W ^ (n + 7)` hold logarithms of primes
+`≡ 1` modulo the powers `(q₀ d) ^ k ≤ W ^ (n + 7)`,
+`k > 1`. For a cutoff parameter `2e6 log x ≤ V ≤ W`, the admissible data use the least powers
+`m ≥ √x` of `2` and `r ≥ x⁵` of `3`; `s` with `2 ^ s = m ^ 22`; the least multiple
+`b > exp (W ^ 6)` of `P.q₁ s * ⌊exp V⌋`; a sparse
+set `T` of at least `towerDeg s / U ^ 6` infinite places of `E = P.E s` of class `-1` modulo `q₀`;
 distinct primes `g 0`, `g 1` in `[b¹⁰, b¹¹]` and a prime `N` with `log N` in the interval of length
 `√(log b)` that starts at `P.logLevelMin`, all `≡ 1` modulo `(q₀ d) ^ (2 (s + 6))`; and integers `α`
 of `K = P.K = ℚ(√-d)` and `β` of `E` with `α ᾱ = g 0 * g 1` and `β β̄ = N`. -/
-lemma Parameters.IsLargeScale.exists_isAdmissibleData {P : Parameters} {x n : ℕ} {W : ℝ}
+private lemma Parameters.IsLargeScale.exists_isAdmissibleData_at_cutoff
+    {P : Parameters} {x n n' : ℕ} {W U V : ℝ}
     (h_scale : P.IsLargeScale n (log x) W)
+    (h_sparse_scale : P.IsLargeScale n' (log x) U) (hUW : U ≤ W)
+    (hV : 2e6 * log x ≤ V) (hVW : V ≤ W)
     (h_window : ∀ k : ℕ, 1 < k → ((P.q₀ * P.d : ℕ) : ℝ) ^ k ≤ W ^ (n + 7) →
       ∀ U ∈ Set.Icc W (W ^ (n + 7)), ∃ p : ℕ,
         p.Prime ∧ p ≡ 1 [MOD (P.q₀ * P.d) ^ k] ∧ log p ∈ Set.Icc U (U + W)) :
     ∃ (m r s b : ℕ) (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ) (β : 𝓞 (P.E s)),
-      P.IsAdmissibleData x W m r s b T g α N β := by
+      P.IsAdmissibleData x W m r s b T g α N β (V := V) ∧ towerDeg s ≤ #T * U ^ 6 := by
   have hW_one : 1 ≤ W := h_scale.one_le
   have hW_pos : 0 < W := by linarith
   have hy : 100 ≤ log x := h_scale.hundred_le
+  have hV_one : 1 ≤ V := by linarith
   have h_large : 2e6 * log x ≤ W := h_scale.mul_y_le_W
   have hx_pos : (0 : ℝ) < x := by linarith [log_le_self x.cast_nonneg]
   have hW_le : W ≤ exp (log x / 2) :=
@@ -831,19 +875,22 @@ lemma Parameters.IsLargeScale.exists_isAdmissibleData {P : Parameters} {x n : �
   have hm_le : m ≤ W ^ n :=
     h_two_pow.trans' (mod_cast (Nat.le_self_pow (by norm_num) m).trans h_pow.ge)
   have hm_lower : exp (log x / 2) ≤ m := hm.1.2
-  -- places
-  obtain ⟨T, h_class_T, h_card, h_sparse⟩ := P.exists_isSparse_of_ranks (by linarith) h_scale.n_pos
-    hm_lower hr_upper h_pow hs hW_le h_two_pow (by linarith) h_scale.pow_le h_scale.mul_two_pow_le
+  -- Use the smaller scale only for the sparse set.
+  obtain ⟨T, h_class_T, h_card, h_sparse⟩ := P.exists_isSparse_of_ranks (by linarith)
+    h_sparse_scale.n_pos hm_lower hr_upper h_pow hs (hUW.trans hW_le)
+    (h_sparse_scale.two_pow_le hs) (by linarith [h_sparse_scale.mul_y_le_W])
+    h_sparse_scale.pow_le h_sparse_scale.mul_two_pow_le
+  have hU_pow : U ^ 6 ≤ W ^ 6 := pow_le_pow_left₀ (by linarith [h_sparse_scale.one_le]) hUW _
   -- scales and weights
-  obtain ⟨b, hb, hb_eq, hL, -⟩ := h_scale.exists_isLeast_dvd_log_log_mem_Icc hs
+  obtain ⟨b, hb, hb_eq, hL, -⟩ := h_scale.exists_isLeast_dvd_log_log_mem_Icc_of_cutoff hs hV_one hVW
   set L : ℝ := log b
   have hL_sq : W ^ 2 ≤ L := (pow_le_pow_right₀ hW_one (by norm_num)).trans hL.1
   have hL_large : 2e8 * W ≤ L := by nlinarith only [hL_sq, h_large, hy]
   have hm_mul : L ≤ m * L := le_mul_of_one_le_left (by linarith) (by linarith)
-  have hx_le : x ≤ ⌊exp W⌋₊ := Nat.le_floor ((log_le_iff_le_exp hx_pos).1 (by linarith))
-  have hb_ge : ⌊exp W⌋₊ ≤ b :=
+  have hx_le : x ≤ ⌊exp V⌋₊ := Nat.le_floor ((log_le_iff_le_exp hx_pos).1 (by linarith))
+  have hb_ge : ⌊exp V⌋₊ ≤ b :=
     Nat.le_of_dvd (mod_cast (exp_pos L).trans_eq hb_eq) (dvd_of_mul_left_dvd hb.1.1)
-  let κ (τ : P.Φ s) : ℕ := if τ ∈ T then b else x * b / ⌊exp W⌋₊
+  let κ (τ : P.Φ s) : ℕ := if τ ∈ T then b else x * b / ⌊exp V⌋₊
   have hκ (τ : P.Φ s) : (κ τ : ℝ) ∈ Set.Icc 1 (exp L) := by
     simpa [hb_eq] using ite_mul_div_mem_Icc (mod_cast hx_pos) hx_le hb_ge (τ ∈ T)
   -- primes and level, from windows that start in `[L, 24 m L] ⊆ [W, W ^ (n + 7)]`
@@ -871,13 +918,88 @@ lemma Parameters.IsLargeScale.exists_isAdmissibleData {P : Parameters} {x n : �
     { isLeast_m := by simpa [exp_half, exp_log hx_pos] using hm
       isLeast_r := by simpa [exp_five_mul_log hx_pos] using hr
       two_pow_eq := h_pow, isLeast_b := hb
-      placeClass_eq_neg_one := h_class_T, towerDeg_le := by grw [h_card, hL.1]
+      placeClass_eq_neg_one := h_class_T, towerDeg_le := by grw [h_card, hU_pow, hL.1]
       sparse := h_sparse
       levelPrime_prime i := (hg i).prime, levelPrime_modEq_one i := (hg i).modEq_one
       levelPrime_injective := Matrix.injective_pair_iff_ne.2 h_ne
       levelPrime_mem i := by simpa only [hb_eq] using (hg i).mem_Icc
       α_mul_star := h_norm
-      N_prime := hN, N_modEq_one := hN_mod, log_N_mem := hN_log, β_mul_star := hβ }⟩
+      N_prime := hN, N_modEq_one := hN_mod, log_N_mem := hN_log, β_mul_star := hβ }, h_card⟩
+
+/-- The admissible choices with cutoff `x₁ = ⌊exp W⌋`. -/
+lemma Parameters.IsLargeScale.exists_isAdmissibleData {P : Parameters} {x n n' : ℕ} {W U : ℝ}
+    (h_scale : P.IsLargeScale n (log x) W)
+    (h_sparse_scale : P.IsLargeScale n' (log x) U) (hUW : U ≤ W)
+    (h_window : ∀ k : ℕ, 1 < k → ((P.q₀ * P.d : ℕ) : ℝ) ^ k ≤ W ^ (n + 7) →
+      ∀ U ∈ Set.Icc W (W ^ (n + 7)), ∃ p : ℕ,
+        p.Prime ∧ p ≡ 1 [MOD (P.q₀ * P.d) ^ k] ∧ log p ∈ Set.Icc U (U + W)) :
+    ∃ (m r s b : ℕ) (T : Finset (P.Φ s)) (g : Fin 2 → ℕ) (α : 𝓞 P.K) (N : ℕ) (β : 𝓞 (P.E s)),
+      P.IsAdmissibleData x W m r s b T g α N β ∧ towerDeg s ≤ #T * U ^ 6 :=
+  h_scale.exists_isAdmissibleData_at_cutoff h_sparse_scale hUW h_scale.mul_y_le_W le_rfl h_window
+
+/-- At every large integer `x`, any cutoff `2e6 log x ≤ V ≤ x ^ (ε / 6)` gives admissible data
+with `x₁ = ⌊exp V⌋`, `log b` in `[x ^ ε, x ^ ε + 1]`, and density loss at most `x ^ γ`.
+The prime windows keep their original width `x ^ (ε / 6)`. -/
+theorem eventually_exists_data_with_cutoff (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
+    ∀ᶠ x : ℕ in atTop, ∀ V : ℝ, 2e6 * log x ≤ V → V ≤ (x : ℝ) ^ (ε / 6) → ∃ D : Data P,
+      D.natX = x ∧
+      D.natX₁ = ⌊exp V⌋₊ ∧
+      IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp ((x : ℝ) ^ ε) < b} D.natB ∧
+      IsLeast {n : ℕ | (∃ j : ℕ, n = 2 ^ j) ∧ √x ≤ n} D.m ∧
+      IsLeast {n : ℕ | (∃ j : ℕ, n = 3 ^ j) ∧ (x : ℝ) ^ 5 ≤ n} D.r ∧
+      D.logX₁ ∈ Set.Icc (V - 1) V ∧
+      D.logB ∈ Set.Icc ((x : ℝ) ^ ε) ((x : ℝ) ^ ε + 1) ∧
+      towerDeg D.towerExp ≤ #D.bPlaces * (x : ℝ) ^ γ := by
+  obtain ⟨n, h_scale⟩ := P.exists_eventually_isLargeScale hε hε_lt
+  obtain ⟨n', h_sparse_scale⟩ := P.exists_eventually_isLargeScale hγ (hγε.trans_lt hε_lt)
+  have h_four : 4 ∣ P.q₀ * P.d := Dvd.dvd.mul_right (.trans (by norm_num) P.dvd_q₀) P.d
+  have hW : Tendsto (fun x : ℕ ↦ (x : ℝ) ^ (ε / 6)) atTop atTop :=
+    (tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop
+  filter_upwards [h_scale, h_sparse_scale, hW.eventually (exists_prime_modEq_one_log_mem _ (n + 7) h_four)]
+    with x hx hx_sparse h_window V hV hVW
+  have hx_one : (1 : ℝ) ≤ x := by linarith [hx.hundred_le, log_le_self x.cast_nonneg]
+  have hUW : (x : ℝ) ^ (γ / 6) ≤ (x : ℝ) ^ (ε / 6) :=
+    rpow_le_rpow_of_exponent_le hx_one (by linarith)
+  obtain ⟨m, r, s, b, T, g, α, N, β, h_adm, h_card⟩ :=
+    hx.exists_isAdmissibleData_at_cutoff hx_sparse hUW hV hVW h_window
+  obtain ⟨D, h_fields, h_logX₁, h_logB, h_places⟩ := h_adm.exists_hasFields_at_cutoff hx hV hVW
+  obtain rfl : D.m = m := h_fields.m_eq
+  obtain rfl : D.r = r := h_fields.r_eq
+  obtain rfl : D.natB = b := h_fields.natB_eq
+  obtain rfl : D.towerExp = s := h_fields.towerExp_eq
+  have h_natB : IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp ((x : ℝ) ^ ε) < b} D.natB := by
+    simpa only [h_fields.natX₁_eq, rpow_div_six_pow_six] using h_adm.isLeast_b
+  refine ⟨D, h_fields.natX_eq, h_fields.natX₁_eq, h_natB, h_adm.isLeast_m, h_adm.isLeast_r, h_logX₁,
+    by simpa only [rpow_div_six_pow_six] using h_logB, ?_⟩
+  simpa only [eq_of_heq h_places, rpow_div_six_pow_six] using h_card
+
+/-- A fixed multiple of `log x` is eventually at most `x ^ δ` for `δ > 0`. -/
+lemma eventually_mul_log_le_rpow (c : ℝ) {δ : ℝ} (hδ : 0 < δ) :
+    ∀ᶠ x : ℕ in atTop, c * log x ≤ (x : ℝ) ^ δ := by
+  filter_upwards [tendsto_natCast_atTop_atTop.eventually
+    ((isLittleO_log_rpow_atTop hδ).const_mul_left c).eventuallyLE] with x hx
+  simpa [abs_of_nonneg (rpow_nonneg x.cast_nonneg _)] using (le_norm_self _).trans hx
+
+/-- For `0 < γ ≤ ε < 1 / 100`, the data with the prescribed scales at every large integer `x` can
+be chosen with at least `towerDeg s / x ^ γ` many `b`-places. The scales `x₁` and `b` use
+`x ^ (ε / 6)`, while the sparse set uses `x ^ (γ / 6)`. -/
+theorem eventually_exists_data_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
+    ∀ᶠ x : ℕ in atTop, ∃ D : Data P,
+      D.natX = x ∧
+      D.natX₁ = ⌊exp ((x : ℝ) ^ (ε / 6))⌋₊ ∧
+      IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp ((x : ℝ) ^ ε) < b} D.natB ∧
+      IsLeast {n : ℕ | (∃ j : ℕ, n = 2 ^ j) ∧ √x ≤ n} D.m ∧
+      IsLeast {n : ℕ | (∃ j : ℕ, n = 3 ^ j) ∧ (x : ℝ) ^ 5 ≤ n} D.r ∧
+      (x : ℝ) ^ (ε / 6) - 1 ≤ D.logX₁ ∧
+      D.logB ∈ Set.Icc ((x : ℝ) ^ ε) ((x : ℝ) ^ ε + 1) ∧
+      towerDeg D.towerExp ≤ #D.bPlaces * (x : ℝ) ^ γ := by
+  filter_upwards [eventually_exists_data_with_cutoff P hε hε_lt hγ hγε,
+    eventually_mul_log_le_rpow 2e6 (div_pos hε (by norm_num : (0 : ℝ) < 6))]
+    with x h_data h_cutoff
+  obtain ⟨D, hx, hx₁, hb, hm, hr, h_logX₁, h_logB, h_density⟩ := h_data _ h_cutoff le_rfl
+  exact ⟨D, hx, hx₁, hb, hm, hr, h_logX₁.1, h_logB, h_density⟩
 
 /-- **Existence of the data.** A term `D : Data P` consists of integer scales `x`, `x₁`, `b` with
 `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁` and `x₁ ^ 10⁶ ≤ b`, ranks `m`, `r`, the exponent `s` with
@@ -896,22 +1018,8 @@ theorem eventually_exists_data (P : Parameters) {ε : ℝ} (hε : 0 < ε) (hε_l
       IsLeast {n : ℕ | (∃ j : ℕ, n = 3 ^ j) ∧ (x : ℝ) ^ 5 ≤ n} D.r ∧
       (x : ℝ) ^ (ε / 6) - 1 ≤ D.logX₁ ∧
       D.logB ∈ Set.Icc ((x : ℝ) ^ ε) ((x : ℝ) ^ ε + 1) := by
-  obtain ⟨n, h_scale⟩ := P.exists_eventually_isLargeScale hε hε_lt
-  have h_four : 4 ∣ P.q₀ * P.d := Dvd.dvd.mul_right (.trans (by norm_num) P.dvd_q₀) P.d
-  have hW : Tendsto (fun x : ℕ ↦ (x : ℝ) ^ (ε / 6)) atTop atTop :=
-    (tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop
-  filter_upwards [h_scale, hW.eventually (exists_prime_modEq_one_log_mem _ (n + 7) h_four)]
-    with x hx h_window
-  -- admissible data exist, and they are the fields of the data `D`
-  obtain ⟨m, r, s, b, T, g, α, N, β, h_adm⟩ := hx.exists_isAdmissibleData h_window
-  obtain ⟨D, h_fields, h_logX₁, h_logB⟩ := h_adm.exists_hasFields hx
-  obtain rfl : D.m = m := h_fields.m_eq
-  obtain rfl : D.r = r := h_fields.r_eq
-  obtain rfl : D.natB = b := h_fields.natB_eq
-  obtain rfl : D.towerExp = s := h_fields.towerExp_eq
-  have h_natB : IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp ((x : ℝ) ^ ε) < b} D.natB := by
-    simpa only [h_fields.natX₁_eq, rpow_div_six_pow_six] using h_adm.isLeast_b
-  exact ⟨D, h_fields.natX_eq, h_fields.natX₁_eq, h_natB, h_adm.isLeast_m, h_adm.isLeast_r, h_logX₁,
-    by simpa only [rpow_div_six_pow_six] using h_logB⟩
+  filter_upwards [eventually_exists_data_with_density P hε hε_lt hε le_rfl]
+    with x ⟨D, hx, hx₁, hb, hm, hr, h_logX₁, h_logB, _⟩
+  exact ⟨D, hx, hx₁, hb, hm, hr, h_logX₁, h_logB⟩
 
 end New
