@@ -199,11 +199,11 @@ lemma New.eventually_norm_logDeriv_entireL_le_near_one_of_exp {M : ℕ} [NeZero 
   filter_upwards [h_disc, eventually_mul_pow_nine_le_two_mul_pow C] with l h h_le k hk χ s X hq hX hs
   exact h k hk χ s X hq (h_le.trans hX) hs
 
-private lemma eventually_two_mul_log_pow_le (c : ℝ) :
-    ∀ᶠ X : ℝ in atTop, 2 * (c * Real.log X) ^ (25 : ℕ) ≤ X := by
-  filter_upwards [((isLittleO_pow_log_id_atTop (n := 25)).const_mul_left (2 * c ^ 25)).eventuallyLE,
+private lemma eventually_const_mul_log_pow_le (B c : ℝ) (n : ℕ) :
+    ∀ᶠ X : ℝ in atTop, B * (c * Real.log X) ^ n ≤ X := by
+  filter_upwards [((isLittleO_pow_log_id_atTop (n := n)).const_mul_left (B * c ^ n)).eventuallyLE,
     eventually_ge_atTop (0 : ℝ)] with X h hX
-  have h_le : (2 * c ^ 25) * Real.log X ^ 25 ≤ X :=
+  have h_le : (B * c ^ n) * Real.log X ^ n ≤ X :=
     (le_norm_self _).trans (by simpa only [id, Real.norm_eq_abs, abs_of_nonneg hX] using h)
   simpa only [mul_pow, ← mul_assoc] using h_le
 
@@ -218,7 +218,7 @@ lemma New.eventually_norm_logDeriv_entireL_le_near_one (A : ℕ) {M : ℕ} [NeZe
   have h_log : Tendsto (fun X : ℝ ↦ (A + 1 : ℕ) * X.log) atTop atTop :=
     tendsto_log_atTop.const_mul_atTop (by positivity)
   filter_upwards [h_log.eventually (eventually_norm_logDeriv_entireL_le_near_one_of_exp hM),
-    eventually_two_mul_log_pow_le (A + 1 : ℕ), eventually_ge_atTop (1 : ℝ)]
+    eventually_const_mul_log_pow_le 2 (A + 1 : ℕ) 25, eventually_ge_atTop (1 : ℝ)]
     with X h_free h_small hX k hk χ s hq hs
   refine h_free k hk χ s X (hq.trans ?_) h_small hs
   rw [Real.exp_natCast_mul, Real.exp_log (one_pos.trans_le hX)]
@@ -270,45 +270,63 @@ lemma New.norm_one_sub_mul_sum_div_totient_le {q : ℕ} [NeZero q] {z : ℂ}
   grw [norm_sub_le, norm_sum_le, norm_one]
   linarith
 
-/-- On the circle `‖z‖ = 1 / X` the real part of `2 - U z - X (1 + X z)² / 4`, the exponent in
-Newman's method, is at least (in fact equal to) that of `2 - (U + t) z` for some `t ∈ [0, X ^ 2]`,
-namely `t = X ^ 2 / 2 * (1 + X * re z)`: the quadratic term acts as a shift of `U` by `t`. -/
-lemma New.exists_shift_le_re_exponent (U : ℝ) {X : ℝ} (hX : 0 < X) {z : ℂ} (hz : ‖z‖ = X⁻¹) :
-    ∃ t : ℝ, 0 ≤ t ∧ t ≤ X ^ 2 ∧
-      2 - (U + t) * z.re ≤ (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re := by
-  refine ⟨X ^ 2 / 2 * (1 + X * z.re), ?_⟩
+private lemma sq_div_four_mul {X : ℝ} (hX : 0 < X) : X ^ 2 / (4 * X) = 4⁻¹ * X := by field
+
+private lemma ofReal_sq_div_four_mul {X : ℝ} (hX : 0 < X) :
+    ((X ^ 2 / (4 * X) : ℝ) : ℂ) = 4⁻¹ * X := by
+  rw [sq_div_four_mul hX, ofReal_mul, ofReal_inv, show ((4 : ℝ) : ℂ) = 4 from rfl]
+
+/-- On the circle `‖z‖ = 1 / X`, the quadratic term with coefficient `W / (4 * X)` shifts
+the cutoff `U` by `t = W / 2 * (1 + X * re z)`, which lies in `[0, W]`. -/
+private lemma exists_shift_le_re_exponent_of_width (U : ℝ) {X W : ℝ} (hX : 0 < X) (hW : 0 ≤ W)
+    {z : ℂ} (hz : ‖z‖ = X⁻¹) :
+    ∃ t : ℝ, 0 ≤ t ∧ t ≤ W ∧
+      2 - (U + t) * z.re ≤ (2 - U * z - ((W / (4 * X) : ℝ) : ℂ) * (1 + X * z) ^ 2).re := by
+  refine ⟨W / 2 * (1 + X * z.re), ?_⟩
   obtain ⟨h_lower, h_upper⟩ : -1 ≤ X * z.re ∧ X * z.re ≤ 1 := by
     rw [← abs_le, abs_mul, abs_of_pos hX]
     grw [z.abs_re_le_norm, hz, mul_inv_cancel₀ hX.ne']
   have h_im : X ^ 2 * z.im ^ 2 = 1 - (X * z.re) ^ 2 := by
     rw [← z.sq_norm_sub_sq_re, hz]
     field_simp
-  have h_exponent : (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re =
-      2 - U * z.re - X / 4 * ((1 + X * z.re) ^ 2 - X ^ 2 * z.im ^ 2) := by simp [sq]; ring
-  refine ⟨mul_nonneg (by positivity) (by linarith), by nlinarith, le_of_eq ?_⟩
-  linear_combination -h_exponent - X / 4 * h_im
+  have h_exponent : (2 - U * z - ((W / (4 * X) : ℝ) : ℂ) * (1 + X * z) ^ 2).re =
+      2 - U * z.re - W / (4 * X) * ((1 + X * z.re) ^ 2 - X ^ 2 * z.im ^ 2) := by
+    have h_two : (2 : ℂ).re = 2 := by norm_num
+    simp only [pow_two, sub_re, mul_re, ofReal_re, ofReal_im, add_re, one_re, add_im, mul_im, one_im,
+      h_two]
+    ring
+  refine ⟨mul_nonneg (by positivity) (by linarith only [h_lower]), ?_, le_of_eq ?_⟩
+  · calc
+      _ ≤ W / 2 * 2 := mul_le_mul_of_nonneg_left (by linarith only [h_upper]) (by positivity)
+      _ = W := by ring
+  · rw [h_exponent, h_im]
+    field
+
+/-- The contour shift when the logarithmic window has length `X ^ 2`. -/
+lemma New.exists_shift_le_re_exponent (U : ℝ) {X : ℝ} (hX : 0 < X) {z : ℂ} (hz : ‖z‖ = X⁻¹) :
+    ∃ t : ℝ, 0 ≤ t ∧ t ≤ X ^ 2 ∧
+      2 - (U + t) * z.re ≤ (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re := by
+  simpa only [ofReal_sq_div_four_mul hX] using exists_shift_le_re_exponent_of_width U hX (sq_nonneg X) hz
 
 section Circle
 
 variable {a : ℕ → ℝ} {b : ℕ → ℂ} {F : ℂ → ℂ} {X U C : ℝ}
 
 /-- Let `a ≥ 0` have the Dirichlet series `F z / z` at `1 + z` for `0 < re z`, with `‖F‖ ≤ 2` on
-`‖z‖ ≤ 1 / X`, and let the series of `b` at `3 / 4` have absolute sum `C ≤ X`, where `200 ≤ X` and
-`X² ≤ U`. If on a set of `n` the terms of the series of `a` at `1 + z` are at most `e ^ E` times
+`‖z‖ ≤ 1 / X`, and let the series of `b` at `3 / 4` have absolute sum `C ≤ X`, where `0 < X ≤ U`.
+If on a set of `n` the terms of the series of `a` at `1 + z` are at most `e ^ E` times
 the sum of those of `a` at `1 + 1 / U` and those of `b` at `3 / 4`, then this part of the series is
 at most `3 U e ^ E`. -/
-lemma New.norm_le_of_term_le_majorant (ha : ∀ n : ℕ, 0 ≤ a n)
+private lemma norm_le_of_term_le_majorant_of_le (ha : ∀ n : ℕ, 0 ≤ a n)
     (h_series : ∀ z : ℂ, 0 < z.re → LSeriesHasSum (fun n : ℕ ↦ (a n : ℂ)) (1 + z) (F z / z))
     (hF : ∀ z : ℂ, ‖z‖ ≤ X⁻¹ → ‖F z‖ ≤ 2) (hC : HasSum (fun n : ℕ ↦ ‖term b (1 + -4⁻¹) n‖) C)
-    (hCX : C ≤ X) (hX : 200 ≤ X) (hU : X ^ 2 ≤ U) {z S : ℂ} {E : ℝ} {s : Set ℕ}
+    (hCX : C ≤ X) (hX : 0 < X) (hXU : X ≤ U) {z S : ℂ} {E : ℝ} {s : Set ℕ}
     (hS : HasSum (fun n : s ↦ term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n) S)
     (h_le : ∀ n ∈ s, ‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n‖ ≤
       rexp E * (‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + (U⁻¹ : ℝ)) n‖ + ‖term b (1 + -4⁻¹) n‖)) :
     ‖S‖ ≤ rexp E * (3 * U) := by
   -- The whole series of `a` at `1 + 1 / U` is `U F (1 / U) ≤ 2 U`.
-  have hXU : X ≤ U := by nlinarith
-  have hU_pos : 0 < U := by linarith
-  have hX_pos' : 0 < X := by linarith
+  have hU_pos : 0 < U := hX.trans_le hXU
   have h_norm : HasSum (fun n : ℕ ↦ (‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + (U⁻¹ : ℝ)) n‖ : ℂ))
       (F (U⁻¹ : ℝ) / (U⁻¹ : ℝ)) := by
     refine (h_series _ (by simpa using hU_pos)).congr_fun fun n ↦ ?_
@@ -316,7 +334,7 @@ lemma New.norm_le_of_term_le_majorant (ha : ∀ n : ℕ, 0 ≤ a n)
     exact norm_of_nonneg' (mod_cast term_nonneg (mod_cast ha n) (1 + U⁻¹))
   have h_total : (F (U⁻¹ : ℝ) / (U⁻¹ : ℝ)).re ≤ 2 * U := by
     have h_abs : ‖((U⁻¹ : ℝ) : ℂ)‖ = U⁻¹ := by simp [hU_pos.le]
-    grw [re_le_norm, norm_div, hF _ (h_abs.trans_le (inv_anti₀ hX_pos' hXU)), h_abs, div_inv_eq_mul]
+    grw [re_le_norm, norm_div, hF _ (h_abs.trans_le (inv_anti₀ hX hXU)), h_abs, div_inv_eq_mul]
   have h_part : HasSum (s.indicator (term (fun n : ℕ ↦ (a n : ℂ)) (1 + z))) S :=
     hasSum_subtype_iff_indicator.1 hS
   have h_bound (n : ℕ) : ‖s.indicator (term (fun n : ℕ ↦ (a n : ℂ)) (1 + z)) n‖ ≤
@@ -330,41 +348,53 @@ lemma New.norm_le_of_term_le_majorant (ha : ∀ n : ℕ, 0 ≤ a n)
       gcongr
       linarith
 
-/-- The bound on the circle in Newman's method. Let `a ≥ 0` have the Dirichlet series `F z / z` at
-`1 + z` for `0 < re z` (here `term a s n` is the summand `a n / n ^ s`), with `‖F‖ ≤ 2` on
-`‖z‖ ≤ 1 / X`. Let the series of `b` at `3 / 4` have absolute sum `C ≤ X`, let `200 ≤ X` and
-`X² ≤ U`, and let `|a n| ≤ |b n|` whenever `log n` lies in `[U, U + X²]`. Then on `‖z‖ = 1 / X` we
-have `‖F z - z P z‖ ≤ 3 U e ^ E`, where `P z` is the part with `n < e ^ U` of the series of `a`
-and `E` is the real part of `2 - U z - X (1 + X z)² / 4`. -/
-lemma New.norm_sub_mul_sum_term_le (ha : ∀ n : ℕ, 0 ≤ a n)
+/-- The majorant estimate for a square window. -/
+lemma New.norm_le_of_term_le_majorant (ha : ∀ n : ℕ, 0 ≤ a n)
     (h_series : ∀ z : ℂ, 0 < z.re → LSeriesHasSum (fun n : ℕ ↦ (a n : ℂ)) (1 + z) (F z / z))
     (hF : ∀ z : ℂ, ‖z‖ ≤ X⁻¹ → ‖F z‖ ≤ 2) (hC : HasSum (fun n : ℕ ↦ ‖term b (1 + -4⁻¹) n‖) C)
-    (hCX : C ≤ X) (hX : 200 ≤ X) (hU : X ^ 2 ≤ U)
-    (h_window : ∀ n : ℕ, Real.log n ∈ Set.Icc U (U + X ^ 2) → ‖(a n : ℂ)‖ ≤ ‖b n‖) {z : ℂ}
+    (hCX : C ≤ X) (hX : 200 ≤ X) (hU : X ^ 2 ≤ U) {z S : ℂ} {E : ℝ} {s : Set ℕ}
+    (hS : HasSum (fun n : s ↦ term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n) S)
+    (h_le : ∀ n ∈ s, ‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n‖ ≤
+      rexp E * (‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + (U⁻¹ : ℝ)) n‖ + ‖term b (1 + -4⁻¹) n‖)) :
+    ‖S‖ ≤ rexp E * (3 * U) :=
+  norm_le_of_term_le_majorant_of_le ha h_series hF hC hCX (by linarith only [hX])
+    ((le_self_pow₀ (by linarith only [hX]) (by decide : (2 : ℕ) ≠ 0)).trans hU) hS h_le
+
+/-- The bound on the circle in Newman's method. Let `a ≥ 0` have the Dirichlet series `F z / z` at
+`1 + z` for `0 < re z` (here `term a s n` is the summand `a n / n ^ s`), with `‖F‖ ≤ 2` on
+`‖z‖ ≤ 1 / X`. Let the series of `b` at `3 / 4` have absolute sum `C ≤ X`, let `200 ≤ X ≤ U`,
+`0 ≤ W ≤ U`, and let `|a n| ≤ |b n|` whenever `log n` lies in `[U, U + W]`. Then on `‖z‖ = 1 / X` we
+have `‖F z - z P z‖ ≤ 3 U e ^ E`, where `P z` is the part with `n < e ^ U` of the series of `a`
+and `E` is the real part of `2 - U z - (W / (4 * X)) (1 + X z)²`. -/
+private lemma norm_sub_mul_sum_term_le_of_width {W : ℝ} (ha : ∀ n : ℕ, 0 ≤ a n)
+    (h_series : ∀ z : ℂ, 0 < z.re → LSeriesHasSum (fun n : ℕ ↦ (a n : ℂ)) (1 + z) (F z / z))
+    (hF : ∀ z : ℂ, ‖z‖ ≤ X⁻¹ → ‖F z‖ ≤ 2) (hC : HasSum (fun n : ℕ ↦ ‖term b (1 + -4⁻¹) n‖) C)
+    (hCX : C ≤ X) (hX : 200 ≤ X) (hXU : X ≤ U) (hW : W ∈ Set.Icc 0 U)
+    (h_window : ∀ n : ℕ, Real.log n ∈ Set.Icc U (U + W) → ‖(a n : ℂ)‖ ≤ ‖b n‖) {z : ℂ}
     (hz : ‖z‖ = X⁻¹) :
     ‖F z - z * ∑ n ∈ .range ⌈rexp U⌉₊, term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n‖ ≤
-      rexp (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re * (3 * U) := by
+      rexp (2 - U * z - ((W / (4 * X) : ℝ) : ℂ) * (1 + X * z) ^ 2).re * (3 * U) := by
   have hX_pos : 0 < X := by linarith
-  have hU_pos : 0 < U := (pow_pos hX_pos 2).trans_le hU
+  have hU_pos : 0 < U := hX_pos.trans_le hXU
   have hz_small : ‖z‖ ≤ 200⁻¹ := hz.trans_le (inv_anti₀ (by simp) hX)
-  set E : ℝ := (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re
+  set E : ℝ := (2 - U * z - ((W / (4 * X) : ℝ) : ℂ) * (1 + X * z) ^ 2).re
   set P : ℂ := ∑ n ∈ .range ⌈rexp U⌉₊, term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n
-  -- On the circle the Gaussian factor shifts the cut from `U` to a point `U + t` of the window.
-  obtain ⟨t, ht_nonneg, ht_le, hE⟩ : ∃ t : ℝ, 0 ≤ t ∧ t ≤ X ^ 2 ∧ 2 - (U + t) * z.re ≤ E :=
-    exists_shift_le_re_exponent U hX_pos hz
+  -- On the circle the quadratic term shifts the cutoff to `U + t` in the window.
+  obtain ⟨t, ht_nonneg, ht_le, hE⟩ : ∃ t : ℝ, 0 ≤ t ∧ t ≤ W ∧ 2 - (U + t) * z.re ≤ E :=
+    exists_shift_le_re_exponent_of_width U hX_pos hW.1 hz
   have h_unit : U * U⁻¹ = 1 := mul_inv_cancel₀ hU_pos.ne'
-  have h_shift : t * U⁻¹ ≤ 1 := (div_le_one hU_pos).2 (ht_le.trans hU)
+  have h_shift : t * U⁻¹ ≤ 1 := (div_le_one hU_pos).2 (ht_le.trans hW.2)
   have h_term_le_sum {n : ℕ} (h : Real.log n * (U⁻¹ - z.re) ≤ E) :
       ‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n‖ ≤ rexp E *
         (‖term (fun n : ℕ ↦ (a n : ℂ)) (1 + (U⁻¹ : ℝ)) n‖ + ‖term b (1 + -4⁻¹) n‖) :=
-    (norm_term_le_exp_mul _ U⁻¹ E h).trans (by gcongr; simp)
+    (New.norm_term_le_exp_mul _ U⁻¹ E h).trans (by gcongr; simp)
   rcases le_total z.re U⁻¹ with h_left | h_right
   · -- If `re z ≤ 1 / U`, then `E ≥ 0`, and we bound `F` and the finite sum `P` separately.
     have hU_re : U * z.re ≤ 1 := (mul_le_mul_of_nonneg_left h_left hU_pos.le).trans_eq h_unit
     have ht_re : t * z.re ≤ 1 := (mul_le_mul_of_nonneg_left h_left ht_nonneg).trans h_shift
     have hE_nonneg : 0 ≤ E := by linarith
     have hP : ‖P‖ ≤ rexp E * (3 * U) := by
-      refine norm_le_of_term_le_majorant ha h_series hF hC hCX hX hU (Finset.hasSum ..) fun n hn ↦
+      refine norm_le_of_term_le_majorant_of_le ha h_series hF hC hCX hX_pos hXU (Finset.hasSum ..) fun n hn ↦
         h_term_le_sum ?_
       have hn_lt : n < rexp U := Nat.lt_ceil.1 (mem_range.1 hn)
       have h_log : Real.log n ≤ U := by
@@ -377,27 +407,30 @@ lemma New.norm_sub_mul_sum_term_le (ha : ∀ n : ℕ, 0 ≤ a n)
     calc
       ‖F z - z * P‖ ≤ ‖F z‖ + ‖z‖ * ‖P‖ := by grw [norm_sub_le, norm_mul]
       _ ≤ 2 + 200⁻¹ * (rexp E * (3 * U)) := by grw [hF z hz.le, hz_small, hP]
-      _ ≤ rexp E * (3 * U) := by nlinarith only [E.one_le_exp hE_nonneg, hU, hX]
+      _ ≤ rexp E * (3 * U) := by
+        have h_large : 3 * U ≤ rexp E * (3 * U) :=
+          le_mul_of_one_le_left (by positivity) (E.one_le_exp hE_nonneg)
+        linarith only [hX, hXU, h_large]
   · -- If `re z ≥ 1 / U`, then `F z - z P` is `z` times the tail `n ≥ e ^ U` of the series.
     have h_pos : 0 < z.re := (inv_pos.2 hU_pos).trans_le h_right
     have h_tail : ‖F z / z - P‖ ≤ rexp E * (3 * U) := by
-      refine norm_le_of_term_le_majorant ha h_series hF hC hCX hX hU
+      refine norm_le_of_term_le_majorant_of_le ha h_series hF hC hCX hX_pos hXU
         (s := {n | n ∉ Finset.range ⌈rexp U⌉₊})
         ((Finset.hasSum_iff_compl _).1 (h_series z h_pos)) fun n hn ↦ ?_
       have hn_ge : rexp U ≤ n := Nat.ceil_le.1 (not_lt.1 (mt Finset.mem_range.2 hn))
       have h_log : U ≤ Real.log n := (le_log_iff_exp_le (U.exp_pos.trans_le hn_ge)).2 hn_ge
-      rcases le_total (Real.log n) (U + X ^ 2) with h_in | h_out
+      rcases le_total (Real.log n) (U + W) with h_in | h_out
       · -- In the window compare with the series of `b`.
         have ht_re : t * z.re ≤ U * 200⁻¹ :=
-          mul_le_mul (ht_le.trans hU) (z.re_le_norm.trans hz_small) h_pos.le hU_pos.le
+          mul_le_mul (ht_le.trans hW.2) (z.re_le_norm.trans hz_small) h_pos.le hU_pos.le
         have h_exponent_le : Real.log n * (-4⁻¹ - z.re) ≤ E := by
           have h_move : Real.log n * (-4⁻¹ - z.re) ≤ U * (-4⁻¹ - z.re) :=
             mul_le_mul_of_nonpos_right h_log (by linarith)
           linarith
         grw [← norm_term_le (f := fun n : ℕ ↦ (a n : ℂ)) (g := b) _ (h_window n ⟨h_log, h_in⟩),
-          norm_term_le_exp_mul _ _ E h_exponent_le]
+          New.norm_term_le_exp_mul _ _ E h_exponent_le]
         simp [exp_pos]
-      · -- Beyond the window we have `log n ≥ U + X² ≥ U + t`.
+      · -- Beyond the window we have `log n ≥ U + W ≥ U + t`.
         refine h_term_le_sum ?_
         have h_move : Real.log n * (U⁻¹ - z.re) ≤ (U + t) * (U⁻¹ - z.re) :=
           mul_le_mul_of_nonpos_right (by linarith) (sub_nonpos.2 h_right)
@@ -406,6 +439,19 @@ lemma New.norm_sub_mul_sum_term_le (ha : ∀ n : ℕ, 0 ≤ a n)
       ‖F z - z * P‖ = ‖z * (F z / z - P)‖ := by
         rw [mul_sub, mul_div_cancel₀ _ (ne_zero_of_re_pos h_pos)]
       _ ≤ rexp E * (3 * U) := by grw [norm_mul, h_tail, show ‖z‖ ≤ 1 by linarith, one_mul]
+
+/-- The bound on the circle for a window of length `X ^ 2`. -/
+lemma New.norm_sub_mul_sum_term_le (ha : ∀ n : ℕ, 0 ≤ a n)
+    (h_series : ∀ z : ℂ, 0 < z.re → LSeriesHasSum (fun n : ℕ ↦ (a n : ℂ)) (1 + z) (F z / z))
+    (hF : ∀ z : ℂ, ‖z‖ ≤ X⁻¹ → ‖F z‖ ≤ 2) (hC : HasSum (fun n : ℕ ↦ ‖term b (1 + -4⁻¹) n‖) C)
+    (hCX : C ≤ X) (hX : 200 ≤ X) (hU : X ^ 2 ≤ U)
+    (h_window : ∀ n : ℕ, Real.log n ∈ Set.Icc U (U + X ^ 2) → ‖(a n : ℂ)‖ ≤ ‖b n‖) {z : ℂ}
+    (hz : ‖z‖ = X⁻¹) :
+    ‖F z - z * ∑ n ∈ .range ⌈rexp U⌉₊, term (fun n : ℕ ↦ (a n : ℂ)) (1 + z) n‖ ≤
+      rexp (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2 : ℂ).re * (3 * U) := by
+  have hXU : X ≤ U := (le_self_pow₀ (by linarith only [hX]) (by decide : (2 : ℕ) ≠ 0)).trans hU
+  simpa only [ofReal_sq_div_four_mul (by linarith only [hX] : 0 < X)] using
+    norm_sub_mul_sum_term_le_of_width ha h_series hF hC hCX hX hXU ⟨sq_nonneg X, hU⟩ h_window hz
 
 end Circle
 
@@ -427,9 +473,9 @@ lemma New.analyticOnNhd_sub_mul_sum_term (q : ℕ) [NeZero q] (N : ℕ) {r : ℝ
 
 open New in
 private theorem exists_eventually_prime_modEq_one_log_mem_of_contour (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
-    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
-      (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) →
-        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
+    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U W : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
+      (M : ℝ) ^ k ≤ rexp l → X ≤ U → W ∈ Set.Icc 0 U → 3 * U * rexp l * rexp 2 < rexp (W / (4 * X)) →
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + W) := by
   obtain ⟨C, hC, h_disc⟩ := exists_eventually_norm_logDeriv_entireL_le_near_one hM
   refine ⟨C, hC, ?_⟩
   let b (n : ℕ) : ℂ := ↑(if n.Prime then 0 else vonMangoldt n : ℝ)
@@ -442,13 +488,13 @@ private theorem exists_eventually_prime_modEq_one_log_mem_of_contour (M : ℕ) [
     simp [b, hn, apply_ite, abs_of_nonneg vonMangoldt_nonneg]
   obtain ⟨B, hB⟩ := h_sum
   filter_upwards [h_disc, eventually_ge_atTop 200, eventually_ge_atTop B]
-    with l h_free hl hB_le X U k hk hX_le hq hU h_exp
+    with l h_free hl hB_le X U W k hk hX_le hq hXU hW h_exp
   have hl_le_X : l ≤ X := calc
     _ ≤ l ^ 9 := le_self_pow₀ (by linarith only [hl]) (by decide)
     _ ≤ C * l ^ 9 := le_mul_of_one_le_left (by positivity) (by linarith only [hC])
     _ ≤ X := hX_le
   have hX : 0 < X := by linarith
-  have hU_pos : 0 < U := (pow_pos hX 2).trans_le hU
+  have hU_pos : 0 < U := hX.trans_le hXU
   set q : ℕ := M ^ k
   have hq_cast : (q : ℝ) ≤ rexp l := by simpa [q] using hq
   let a (n : ℕ) : ℂ := residueClass (1 : ZMod q) n
@@ -463,7 +509,8 @@ private theorem exists_eventually_prime_modEq_one_log_mem_of_contour (M : ℕ) [
     grw [norm_mul, hz, (h_disc hz χ).2, inv_mul_cancel₀ hX.ne']
   by_contra h_none
   let P (z : ℂ) : ℂ := ∑ n ∈ .range ⌈U.exp⌉₊, term a (1 + z) n
-  let G (z : ℂ) : ℂ := (F z - z * P z) / (2 - U * z - 4⁻¹ * X * (1 + X * z) ^ 2).exp
+  let H : ℝ := W / (4 * X)
+  let G (z : ℂ) : ℂ := (F z - z * P z) / (2 - U * z - (H : ℂ) * (1 + X * z) ^ 2).exp
   suffices h_circle : ∀ z : ℂ, ‖z‖ = X⁻¹ → ‖G z‖ ≤ 3 * U by
     have hG : AnalyticOnNhd ℂ G (Metric.closedBall 0 X⁻¹) := fun s hs ↦
       (analyticOnNhd_sub_mul_sum_term q ⌈U.exp⌉₊ (fun z hz χ ↦ (h_disc hz χ).1) s hs).div
@@ -471,22 +518,68 @@ private theorem exists_eventually_prime_modEq_one_log_mem_of_contour (M : ℕ) [
     have h_zero : ‖G 0‖ ≤ 3 * U := by
       simpa using norm_iteratedDeriv_le_of_forall_mem_sphere_norm_le 0 (inv_pos.2 hX)
         (hG.differentiableOn.diffContOnCl_ball le_rfl) (by simpa using h_circle)
-    have h_value : ‖G 0‖ = rexp (4⁻¹ * X) / rexp 2 / q.totient := by
+    have h_value : ‖G 0‖ = rexp H / rexp 2 / q.totient := by
       simp [G, F, norm_exp, Real.exp_sub, field]
-    have h_large : 3 * U < rexp (4⁻¹ * X) / rexp 2 / q.totient := by
+    have h_large : 3 * U < rexp H / rexp 2 / q.totient := by
       rw [lt_div_iff₀ (mod_cast Nat.totient_pos.2 (NeZero.pos q)), lt_div_iff₀ (exp_pos 2)]
       exact lt_of_le_of_lt (by grw [Nat.totient_le, hq_cast]) h_exp
     linarith
   intro z hz
   rw [norm_div, norm_exp, div_le_iff₀' (by bound)]
-  refine norm_sub_mul_sum_term_le (residueClass_nonneg _) h_series hF hB (hB_le.trans hl_le_X)
-    (hl.trans hl_le_X) hU (fun n hn ↦ ?_) hz
+  refine norm_sub_mul_sum_term_le_of_width (residueClass_nonneg _) h_series hF hB (hB_le.trans hl_le_X)
+    (hl.trans hl_le_X) hXU hW (fun n hn ↦ ?_) hz
   by_cases h_prime : n.Prime
   · have h_class : (n : ZMod q) ≠ 1 := fun h ↦
       h_none ⟨n, h_prime, (ZMod.natCast_eq_natCast_iff n 1 q).1
         (by simpa only [Nat.cast_one] using h), hn⟩
     simp [residueClass, h_class]
   · simpa [b, h_prime, abs_of_nonneg, residueClass_nonneg] using residueClass_le (1 : ZMod q) n
+
+private lemma contour_bound_of_exp_le {l U : ℝ} (hl : 8 ≤ l) (hU : U ≤ rexp l) :
+    3 * U * rexp l * rexp 2 < rexp (3 * l) := calc
+  _ ≤ 3 * rexp l * rexp l * rexp 2 := by grw [hU]
+  _ = rexp (Real.log 3 + l + l + 2) := by
+    simp only [Real.exp_add, exp_log (by norm_num : (0 : ℝ) < 3)]
+  _ < _ := exp_lt_exp.2 (by linarith only [hl, log_le_self (by norm_num : (0 : ℝ) ≤ 3)])
+
+/-- For powers of a fixed multiple of `4`, the contour produces a prime in a logarithmic window
+of width `C * l ^ 10 ≤ W ≤ U` when both the modulus and the left endpoint `U` are at most `exp l`. -/
+theorem New.exists_eventually_prime_modEq_one_log_mem_of_width
+    (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
+    ∃ C : ℝ, 0 < C ∧ ∀ᶠ l : ℝ in atTop, ∀ (W U : ℝ) (k : ℕ), 1 < k → C * l ^ 10 ≤ W →
+      (M : ℝ) ^ k ≤ rexp l → W ≤ U → U ≤ rexp l →
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + W) := by
+  obtain ⟨C, hC, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  have hC_pos : 0 < C := by linarith only [hC]
+  refine ⟨12 * C, by positivity, ?_⟩
+  filter_upwards [h_window, eventually_ge_atTop 8] with l h hl W U k hk hW hq hWU hU
+  let X := C * l ^ 9
+  have hX : 0 < X := mul_pos hC_pos (pow_pos (by linarith only [hl]) _)
+  have h_width : 12 * l * X ≤ W := calc
+    _ = (12 * C) * l ^ 10 := by dsimp only [X]; ring
+    _ ≤ W := hW
+  have hXW : X ≤ W := (le_mul_of_one_le_left hX.le (by linarith only [hl])).trans h_width
+  have h_exp : 3 * l ≤ W / (4 * X) := (le_div_iff₀ (by positivity)).2 <| by
+    rw [show (3 * l) * (4 * X) = 12 * l * X by ring]
+    exact h_width
+  exact h X U W k hk le_rfl hq (hXW.trans hWU) ⟨hX.le.trans hXW, hWU⟩
+    ((contour_bound_of_exp_le hl hU).trans_le (exp_le_exp.2 h_exp))
+
+private theorem exists_eventually_prime_modEq_one_log_mem_of_square_contour
+    (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
+    ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
+      (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) →
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
+  obtain ⟨C, hC, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  refine ⟨C, hC, ?_⟩
+  filter_upwards [h_window, eventually_ge_atTop 1] with l h hl X U k hk hX hq hU h_exp
+  have h_one : 1 ≤ X := calc
+    _ ≤ C := by linarith only [hC]
+    _ ≤ C * l ^ 9 := le_mul_of_one_le_right (by linarith only [hC]) (one_le_pow₀ hl)
+    _ ≤ X := hX
+  have hXU : X ≤ U := (le_self_pow₀ h_one (by decide : (2 : ℕ) ≠ 0)).trans hU
+  exact h X U (X ^ 2) k hk hX hq hXU ⟨sq_nonneg X, hU⟩
+    (by simpa only [sq_div_four_mul (one_pos.trans_le h_one)] using h_exp)
 
 /-- If both the modulus and the left endpoint are at most `exp l`, the contour bound follows
 from `C * l ^ 9 ≤ X` and the logarithmic window has length `X ^ 2`. -/
@@ -495,7 +588,7 @@ theorem New.exists_eventually_prime_modEq_one_log_mem_of_shared_exp_bound
     ∃ C : ℝ, 16 ≤ C ∧ ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → C * l ^ 9 ≤ X →
       (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → U ≤ rexp l →
         ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
-  obtain ⟨C, hC, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  obtain ⟨C, hC, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_square_contour M hM
   refine ⟨C, hC, ?_⟩
   filter_upwards [h_window, eventually_ge_atTop 8] with l h hl X U k hk hX hq hU hU_exp
   have h_lX : 16 * l ≤ X := calc
@@ -503,20 +596,15 @@ theorem New.exists_eventually_prime_modEq_one_log_mem_of_shared_exp_bound
       (le_self_pow₀ (by linarith only [hl]) (by decide)) (by norm_num)
     _ ≤ C * l ^ 9 := mul_le_mul_of_nonneg_right hC (by positivity)
     _ ≤ X := hX
-  apply h X U k hk hX hq hU
-  calc
-    3 * U * rexp l * rexp 2 ≤ 3 * rexp l * rexp l * rexp 2 := by grw [hU_exp]
-    _ = rexp (Real.log 3 + l + l + 2) := by
-      simp only [Real.exp_add, exp_log (by norm_num : (0 : ℝ) < 3)]
-    _ ≤ rexp (3 * l) := exp_le_exp.2 (by linarith only [hl, log_le_self (by norm_num : (0 : ℝ) ≤ 3)])
-    _ < rexp (4⁻¹ * X) := exp_lt_exp.2 (by linarith only [hl, h_lX])
+  exact h X U k hk hX hq hU
+    ((contour_bound_of_exp_le hl hU_exp).trans_le (exp_le_exp.2 (by linarith only [hl, h_lX])))
 
 /-- Use explicit bounds on the modulus and the left endpoint in the prime window argument. -/
 theorem New.eventually_exists_prime_modEq_one_log_mem_of_exp (M : ℕ) [NeZero M] (hM : 4 ∣ M) :
     ∀ᶠ l : ℝ in atTop, ∀ (X U : ℝ) (k : ℕ), 1 < k → 2 * l ^ 25 ≤ X →
       (M : ℝ) ^ k ≤ rexp l → X ^ 2 ≤ U → 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) →
         ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + X ^ 2) := by
-  obtain ⟨C, -, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_contour M hM
+  obtain ⟨C, -, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_square_contour M hM
   filter_upwards [h_window, eventually_mul_pow_nine_le_two_mul_pow C] with l h h_le X U k hk hX
   exact h X U k hk (h_le.trans hX)
 
@@ -526,31 +614,14 @@ of the Siegel–Walfisz theorem, proved here directly by Newman's contour method
 theorem New.exists_prime_modEq_one_log_mem (M A : ℕ) [NeZero M] (hM : 4 ∣ M) :
     ∀ᶠ W : ℝ in atTop, ∀ k : ℕ, 1 < k → (M : ℝ) ^ k ≤ W ^ A → ∀ U : ℝ, U ∈ Set.Icc W (W ^ A) →
       ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD M ^ k] ∧ Real.log p ∈ Set.Icc U (U + W) := by
-  let c : ℕ := 2 * A + 1
-  have h_log : Tendsto (fun X : ℝ ↦ (c : ℝ) * Real.log X) atTop atTop :=
-    tendsto_log_atTop.const_mul_atTop (by dsimp [c]; positivity)
-  have h_growth := (tendsto_exp_mul_div_rpow_atTop (4 * A + 1 : ℕ) 4⁻¹ (by simp)).eventually_gt_atTop
-    (rexp 2 * 3)
-  rw [← comap_sqrt_atTop, eventually_comap]
-  filter_upwards [h_log.eventually (eventually_exists_prime_modEq_one_log_mem_of_exp M hM),
-    eventually_two_mul_log_pow_le c, h_growth, eventually_ge_atTop (1 : ℝ)]
-    with X h_window h_small h_large hX W hW k hk hq U hU
-  have hX_pos : 0 < X := one_pos.trans_le hX
-  obtain rfl : W = X ^ 2 := by rw [← hW, sq_sqrt (sqrt_pos.1 (hX_pos.trans_eq hW.symm)).le]
-  let l : ℝ := c * Real.log X
-  have h_exp : rexp l = X ^ c := by dsimp [l]; rw [Real.exp_natCast_mul, Real.exp_log hX_pos]
-  have hq' : (M : ℝ) ^ k ≤ rexp l := by
-    calc
-      _ ≤ (X ^ 2) ^ A := hq
-      _ = X ^ (2 * A) := (pow_mul ..).symm
-      _ ≤ _ := by rw [h_exp]; exact pow_le_pow_right₀ hX (by dsimp [c]; omega)
-  have h_explicit : 3 * U * rexp l * rexp 2 < rexp (4⁻¹ * X) := calc
-    _ ≤ 3 * (X ^ 2) ^ A * X ^ c * rexp 2 := by grw [h_exp, hU.2]
-    _ = (rexp 2 * 3) * X ^ (4 * A + 1) := by
-      have h_index : 4 * A + 1 = 2 * A + c := by dsimp [c]; omega
-      rw [h_index, pow_add, pow_mul]
-      ring
-    _ < _ := (lt_div_iff₀ (by positivity)).1 (by simpa only [rpow_natCast] using h_large)
-  exact h_window X U k hk h_small hq' hU.1 h_explicit
+  obtain ⟨C, -, h_window⟩ := exists_eventually_prime_modEq_one_log_mem_of_width M hM
+  have h_log : Tendsto (fun W : ℝ ↦ (A + 1 : ℕ) * W.log) atTop atTop :=
+    tendsto_log_atTop.const_mul_atTop (by positivity)
+  filter_upwards [h_log.eventually h_window, eventually_const_mul_log_pow_le C (A + 1 : ℕ) 10,
+    eventually_ge_atTop (1 : ℝ)] with W h h_small hW k hk hq U hU
+  have h_exp : W ^ A ≤ rexp ((A + 1 : ℕ) * W.log) := by
+    rw [Real.exp_natCast_mul, Real.exp_log (one_pos.trans_le hW)]
+    exact pow_le_pow_right₀ hW A.le_succ
+  exact h W U k hk h_small (hq.trans h_exp) hU.1 (hU.2.trans h_exp)
 
 end AuxiliaryPrimes
