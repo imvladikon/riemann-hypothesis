@@ -10,7 +10,7 @@ public import Statements
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality and the prime number theorem at a much
-larger cut-off `x₁` give the bound `R_{q₀}(x) ≤ (128 φ(q₀) + 32) x ^ (-1/2 + ε)` for large `x`.
+larger cut-off `x₁` give the bound `R_{q₀}(x) ≤ (8192 φ(q₀) + 32) x ^ (-1/2 + ε)` for large `x`.
 The one-sided criterion gives non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
 
 Notions from other files:
@@ -28,14 +28,9 @@ open DirichletCharacter Filter Finset Real ZMod
 
 namespace New
 
-/-- Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of the parameters `P`. Let
-`R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q) - c_q`. Admissible data
-`D` for `P` include scales `x = D.x`, `x₁ = D.x₁` and `b` (`D.logB = log b`) with
-`(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and `log log b ≥ 10¹² P.constantBound`, and an
-integer `m = D.m` in `[√x, 2 √x]`. Then `R_{q₀}(x) ≤ φ(q₀) log⁶ b / m + |R_{q₀}(x₁)| + log
-b · |R₁(x₁)|`. -/
-lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
-    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * D.logB ^ 6 / D.m +
+private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P) {c : ℝ} {k : ℕ}
+    (hc : 0 ≤ c) (h_bound : D.m * D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k)) :
+    primeRemainder P.d P.q₀ D.x ≤ c * P.q₀.totient * D.logB ^ (k + 1) / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   -- Write `R_{q₀}(x)` through the total remainder, divide the main inequality by `m a #Φ_b`, and
   -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b log b`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
@@ -51,24 +46,43 @@ lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
   have h_bPlaces_pos : (0 : ℝ) < #D.bPlaces :=
     (mul_pos_iff_of_pos_right h_logB_pos).1 (h_aPlaces_pos.trans_le h_card)
   have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ D.logB := (div_le_iff₀' h_bPlaces_pos).2 h_card
-  have h_main : D.totalRemainder ≤ D.f * D.a * D.logB ^ 5 / D.m :=
-    (le_div_iff₀' hm).2 (star_inequality D)
+  have h_main : D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k) / D.m :=
+    (le_div_iff₀' hm).2 h_bound
   calc primeRemainder P.d P.q₀ D.x
       = D.totalRemainder / (D.a * #D.bPlaces) + primeRemainder P.d P.q₀ D.x₁ -
           #D.aPlaces / #D.bPlaces * primeRemainder P.d 1 D.x₁ := by
         rw [D.totalRemainder_eq]
         field
-    _ ≤ D.f * D.a * D.logB ^ 5 / D.m / (D.a * #D.bPlaces) + |primeRemainder P.d P.q₀ D.x₁| +
-          #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
+    _ ≤ c * (D.f * D.a * D.logB ^ k) / D.m / (D.a * #D.bPlaces) +
+          |primeRemainder P.d P.q₀ D.x₁| + #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         grw [h_main, le_abs_self (primeRemainder P.d P.q₀ D.x₁), sub_eq_add_neg, ← mul_neg,
           neg_le_abs]
-    _ = P.q₀.totient * (#D.aPlaces / #D.bPlaces * D.logB ^ 5) / D.m +
+    _ = c * P.q₀.totient * (#D.aPlaces / #D.bPlaces * D.logB ^ k) / D.m +
           |primeRemainder P.d P.q₀ D.x₁| +
           #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
         field
-    _ ≤ P.q₀.totient * D.logB ^ 6 / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+    _ ≤ c * P.q₀.totient * D.logB ^ (k + 1) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
           D.logB * |primeRemainder P.d 1 D.x₁| := by grw [h_ratio, ← pow_succ']
+
+/-- Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of the parameters `P`. Let
+`R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q) - c_q`. Admissible data
+`D` for `P` include scales `x = D.x`, `x₁ = D.x₁` and `b` (`D.logB = log b`) with
+`(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and `log log b ≥ 10¹² P.constantBound`, and an
+integer `m = D.m` in `[√x, 2 √x]`. Then `R_{q₀}(x) ≤ φ(q₀) log⁶ b / m + |R_{q₀}(x₁)| + log
+b · |R₁(x₁)|`. -/
+lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
+    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * D.logB ^ 6 / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  simpa only [one_mul] using
+    D.primeRemainder_le_of_main_bound (c := 1) (k := 5) zero_le_one
+      (by simpa only [one_mul] using star_inequality D)
+
+/-- The bound at the first cut-off using the fourth power in the main inequality. -/
+lemma Data.primeRemainder_le_log_pow_five {P : Parameters} (D : Data P) :
+    primeRemainder P.d P.q₀ D.x ≤ 128 * P.q₀.totient * D.logB ^ 5 / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| :=
+  D.primeRemainder_le_of_main_bound (by norm_num) (star_inequality_log_pow_four D)
 
 /-- Let `0 < ε < 1/100`. A term `D : Data P` (admissible data) bundles all the choices that the main
 inequality needs, among them integer scales `x`, `x₁`, `b` with `x ^ 10⁶ ≤ x₁` and `x₁ ^ 10⁶ ≤ b`
@@ -120,6 +134,44 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
       _ ≤ (x : ℝ) ^ (-2 : ℝ) := rpow_le_rpow_of_exponent_le hx_ge h_exp
   exact (hY (exp l) (by linarith [add_one_le_exp l])).imp h_small.trans' h_small.trans'
 
+private lemma eventually_primeRemainder_natCast_le_of_data_bound (P : Parameters) {ε : ℝ}
+    (hε : 0 < ε) (hε_lt : ε < 1 / 100) {c : ℝ} (hc : 0 ≤ c) {k : ℕ}
+    (h_bound : ∀ D : Data P, primeRemainder P.d P.q₀ D.x ≤
+      c * P.q₀.totient * D.logB ^ k / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+        D.logB * |primeRemainder P.d 1 D.x₁|) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (c * 2 ^ k * P.q₀.totient + 3) *
+        (x : ℝ) ^ (-1 / 2 + k * ε) := by
+  -- Insert the scales and the bounds at `x₁` into the supplied bound on the prime remainder.
+  filter_upwards [eventually_exists_data_scales P hε hε_lt,
+    eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
+    with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
+  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
+  have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
+  obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
+      |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
+  have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
+  have h_exp_nonneg : 0 ≤ (k : ℝ) * ε := by positivity
+  have h_inv : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + k * ε) :=
+    rpow_le_rpow_of_exponent_le hx_ge (by linarith)
+  have h_mul : (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + k * ε) := by
+    rw [← rpow_add hx_pos]
+    exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
+  have h_main : ((x : ℝ) ^ ε) ^ k / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ (-1 / 2 + k * ε) := by
+    rw [← rpow_mul_natCast hx_pos.le, ← rpow_sub hx_pos]
+    ring_nf
+  calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
+    _ ≤ c * P.q₀.totient * D.logB ^ k / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+        D.logB * |primeRemainder P.d 1 D.x₁| := h_bound D
+    _ ≤ c * P.q₀.totient * (2 * (x : ℝ) ^ ε) ^ k / (x : ℝ) ^ (1 / 2 : ℝ) +
+        (x : ℝ) ^ (-2 : ℝ) + 2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
+      grw [h_rem_q₀, h_rem_one, h_logB, ← hm]
+    _ ≤ c * P.q₀.totient * 2 ^ k * (x : ℝ) ^ (-1 / 2 + k * ε) +
+        (x : ℝ) ^ (-1 / 2 + k * ε) + 2 * (x : ℝ) ^ (-1 / 2 + k * ε) := by
+      rw [mul_pow, ← mul_assoc, mul_div_assoc, h_main, mul_assoc (2 : ℝ)]
+      gcongr
+    _ = (c * 2 ^ k * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + k * ε) := by ring
+
 /-- The one-sided bound at integers. Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of
 the parameters `P`, and let `0 < ε < 1/100`. Let
 `R(y) = primeRemainder d q₀ y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q₀) - c`, where
@@ -130,33 +182,19 @@ lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-  -- Insert the scales of the data and the bounds at `x₁` into `Data.primeRemainder_le`; each of the
-  -- three terms is at most a multiple of `x ^ (-1/2 + 6 ε)`.
-  filter_upwards [eventually_exists_data_scales P hε hε_lt,
-    eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
-    with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
-  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
-  have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
-  obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
-      |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
-  have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_inv : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 6 * ε) :=
-    rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_mul : (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-    rw [← rpow_add hx_pos]
-    exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_main : ((x : ℝ) ^ ε) ^ 6 / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-    rw [← rpow_mul_natCast hx_pos.le, ← rpow_sub hx_pos]
-    ring_nf
-  calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ P.q₀.totient * D.logB ^ 6 / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁| := D.primeRemainder_le
-    _ ≤ P.q₀.totient * (2 * (x : ℝ) ^ ε) ^ 6 / (x : ℝ) ^ (1 / 2 : ℝ) + (x : ℝ) ^ (-2 : ℝ) +
-        2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
-      grw [h_rem_q₀, h_rem_one, h_logB, ← hm]
-    _ ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-      rw [mul_pow, mul_div_assoc, mul_div_assoc, h_main]
-      linarith
+  simpa only [one_mul, show (2 : ℝ) ^ 6 = 64 by norm_num, Nat.cast_ofNat] using
+    eventually_primeRemainder_natCast_le_of_data_bound P hε hε_lt (c := 1) (k := 6) zero_le_one
+      (fun D ↦ by simpa only [one_mul] using D.primeRemainder_le)
+
+/-- The one-sided bound with the fourth power in the main inequality. For all large integers
+`x`, the prime remainder is at most `(4096 φ(q₀) + 3) x ^ (-1/2 + 5 ε)`. -/
+lemma eventually_primeRemainder_natCast_le_log_pow_five (P : Parameters) {ε : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (4096 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 5 * ε) := by
+  simpa only [show (128 * 2 ^ 5 : ℝ) = 4096 by norm_num, Nat.cast_ofNat] using
+    eventually_primeRemainder_natCast_le_of_data_bound P hε hε_lt (c := 128) (k := 5)
+      (by norm_num) (fun D ↦ D.primeRemainder_le_log_pow_five)
 
 /-- Let `d` be a prime, `q > 0`, and `R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) -
 log y / φ(q) - c_q`. Then `R_q(y) - R_q(⌊y⌋) ≤ 26 / y` for `y ≥ 2`. -/
@@ -199,27 +237,27 @@ lemma dvd_two_mul_succ_and_not_dvd_succ {q₀ d : ℕ} (hq₀_pos : 0 < q₀) (h
 
 /-- **One-sided bound.** Let `q₀ > 0` be a multiple of `18480`, let `d ≡ q₀ / 2 - 1` modulo `q₀` be
 a prime, and let `ε > 0`. Then `R = primeRemainder d q₀` satisfies
-`R(y) ≤ (128 φ(q₀) + 32) y ^ (-1/2 + ε)` for all large real `y`. -/
+`R(y) ≤ (8192 φ(q₀) + 32) y ^ (-1/2 + ε)` for all large real `y`. -/
 theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ : 18480 ∣ q₀) {d : ℕ}
     [hd_prime : Fact d.Prime] (hd : d ≡ q₀ / 2 - 1 [MOD q₀]) {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ y ≤ (128 * q₀.totient + 32) * y ^ (-1 / 2 + ε) := by
+    ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ y ≤ (8192 * q₀.totient + 32) * y ^ (-1 / 2 + ε) := by
   let P : Parameters :=
     { q₀ := q₀
       d := d
       dvd_q₀ := hq₀
       d_prime := hd_prime.out
       q₀_dvd_and_not_dvd := dvd_two_mul_succ_and_not_dvd_succ (NeZero.pos q₀) (by omega) hd }
-  -- It suffices to prove the bound with `6 δ` in place of `ε`, for `0 < δ < 1/100`.
-  obtain ⟨δ, hδ, hδ_lt, hδε⟩ : ∃ δ > (0 : ℝ), δ < 1 / 100 ∧ 6 * δ ≤ ε := by
-    refine ⟨min (1 / 200) (ε / 6), by positivity, ?_, ?_⟩
-    · linarith [min_le_left (1 / 200) (ε / 6)]
-    · linarith [min_le_right (1 / 200) (ε / 6)]
-  set C : ℝ := 64 * q₀.totient + 3
-  set t : ℝ := -1 / 2 + 6 * δ with ht
+  -- It suffices to prove the bound with `5 δ` in place of `ε`, for `0 < δ < 1/100`.
+  obtain ⟨δ, hδ, hδ_lt, hδε⟩ : ∃ δ > (0 : ℝ), δ < 1 / 100 ∧ 5 * δ ≤ ε := by
+    refine ⟨min (1 / 200) (ε / 5), by positivity, ?_, ?_⟩
+    · linarith [min_le_left (1 / 200) (ε / 5)]
+    · linarith [min_le_right (1 / 200) (ε / 5)]
+  set C : ℝ := 4096 * q₀.totient + 3
+  set t : ℝ := -1 / 2 + 5 * δ with ht
   have ht_ge : -1 ≤ t := by linarith
   have ht_le : t ≤ 0 := by linarith
   have h_floor : ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ ⌊y⌋₊ ≤ C * (⌊y⌋₊ : ℝ) ^ t :=
-    tendsto_nat_floor_atTop.eventually (eventually_primeRemainder_natCast_le P hδ hδ_lt)
+    tendsto_nat_floor_atTop.eventually (eventually_primeRemainder_natCast_le_log_pow_five P hδ hδ_lt)
   filter_upwards [h_floor, eventually_ge_atTop 2] with y hy_floor hy
   have hy_one : 1 ≤ y := one_le_two.trans hy
   calc primeRemainder d q₀ y
@@ -229,8 +267,8 @@ theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ 
     _ ≤ C * (2 * y ^ t) + 26 * y ^ t := by
         gcongr
         exact natFloor_rpow_le_two_mul_rpow hy ht_ge ht_le
-    _ = (128 * q₀.totient + 32) * y ^ t := by dsimp [C]; ring
-    _ ≤ (128 * q₀.totient + 32) * y ^ (-1 / 2 + ε) :=
+    _ = (8192 * q₀.totient + 32) * y ^ t := by dsimp [C]; ring
+    _ ≤ (8192 * q₀.totient + 32) * y ^ (-1 / 2 + ε) :=
       mul_le_mul_of_nonneg_left (rpow_le_rpow_of_exponent_le hy_one (by linarith [ht])) (by positivity)
 
 /-- **Main theorem**, in half-plane form: no Dirichlet `L`-function vanishes in `re s > 1/2`
@@ -254,7 +292,7 @@ theorem grh : DirichletLNonvanishingRightOfHalf := by
   -- The one-sided bound is the hypothesis of the criterion.
   have h_bound (d : Nat.Primes) (hd : (d : ℕ) ≡ d₀ [MOD 18480 * q]) :
       ∃ A : ℝ, ∀ᶠ x : ℝ in atTop, primeRemainder d (18480 * q) x ≤ A * x ^ (β - 1) := by
-    refine ⟨128 * (18480 * q).totient + 32, ?_⟩
+    refine ⟨8192 * (18480 * q).totient + 32, ?_⟩
     have hd₀_eq : d₀ = 18480 * q / 2 - 1 := by omega
     have h_exp : β - 1 = -1 / 2 + (β - 1 / 2) := by ring
     rw [hd₀_eq] at hd
