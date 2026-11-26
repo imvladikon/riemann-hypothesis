@@ -937,6 +937,33 @@ lemma Parameters.IsLargeScale.exists_isAdmissibleData {P : Parameters} {x n n' :
       P.IsAdmissibleData x W m r s b T g α N β ∧ towerDeg s ≤ #T * U ^ 6 :=
   h_scale.exists_isAdmissibleData_at_cutoff h_sparse_scale hUW h_scale.mul_y_le_W le_rfl h_window
 
+/-- Construct the data from the large-scale inequalities and the prime windows at this scale. -/
+lemma Parameters.IsLargeScale.exists_data_at_cutoff {P : Parameters} {x n n' : ℕ} {W U V : ℝ}
+    (h_scale : P.IsLargeScale n (log x) W)
+    (h_sparse_scale : P.IsLargeScale n' (log x) U) (hUW : U ≤ W)
+    (hV : 2e6 * log x ≤ V) (hVW : V ≤ W)
+    (h_window : ∀ k : ℕ, 1 < k → ((P.q₀ * P.d : ℕ) : ℝ) ^ k ≤ W ^ (n + 7) →
+      ∀ start ∈ Set.Icc W (W ^ (n + 7)), ∃ p : ℕ,
+        p.Prime ∧ p ≡ 1 [MOD (P.q₀ * P.d) ^ k] ∧ log p ∈ Set.Icc start (start + W)) :
+    ∃ D : Data P, D.natX = x ∧ D.natX₁ = ⌊exp V⌋₊ ∧
+      IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp (W ^ 6) < b} D.natB ∧
+      IsLeast {m : ℕ | (∃ j : ℕ, m = 2 ^ j) ∧ √x ≤ m} D.m ∧
+      IsLeast {r : ℕ | (∃ j : ℕ, r = 3 ^ j) ∧ (x : ℝ) ^ 5 ≤ r} D.r ∧
+      D.logX₁ ∈ Set.Icc (V - 1) V ∧ D.logB ∈ Set.Icc (W ^ 6) (W ^ 6 + 1) ∧
+      towerDeg D.towerExp ≤ #D.bPlaces * U ^ 6 := by
+  obtain ⟨m, r, s, b, T, g, α, N, β, h_adm, h_card⟩ :=
+    h_scale.exists_isAdmissibleData_at_cutoff h_sparse_scale hUW hV hVW h_window
+  obtain ⟨D, h_fields, h_logX₁, h_logB, h_places⟩ := h_adm.exists_hasFields_at_cutoff h_scale hV hVW
+  obtain rfl : D.m = m := h_fields.m_eq
+  obtain rfl : D.r = r := h_fields.r_eq
+  obtain rfl : D.natB = b := h_fields.natB_eq
+  obtain rfl : D.towerExp = s := h_fields.towerExp_eq
+  have h_natB : IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp (W ^ 6) < b} D.natB := by
+    simpa only [h_fields.natX₁_eq] using h_adm.isLeast_b
+  refine ⟨D, h_fields.natX_eq, h_fields.natX₁_eq, h_natB, h_adm.isLeast_m, h_adm.isLeast_r, h_logX₁,
+    h_logB, ?_⟩
+  simpa only [eq_of_heq h_places] using h_card
+
 /-- At every large integer `x`, any cutoff `2e6 log x ≤ V ≤ x ^ (ε / 6)` gives admissible data
 with `x₁ = ⌊exp V⌋`, `log b` in `[x ^ ε, x ^ ε + 1]`, and density loss at most `x ^ γ`.
 The prime windows keep their original width `x ^ (ε / 6)`. -/
@@ -961,18 +988,7 @@ theorem eventually_exists_data_with_cutoff (P : Parameters) {ε γ : ℝ} (hε :
   have hx_one : (1 : ℝ) ≤ x := by linarith [hx.hundred_le, log_le_self x.cast_nonneg]
   have hUW : (x : ℝ) ^ (γ / 6) ≤ (x : ℝ) ^ (ε / 6) :=
     rpow_le_rpow_of_exponent_le hx_one (by linarith)
-  obtain ⟨m, r, s, b, T, g, α, N, β, h_adm, h_card⟩ :=
-    hx.exists_isAdmissibleData_at_cutoff hx_sparse hUW hV hVW h_window
-  obtain ⟨D, h_fields, h_logX₁, h_logB, h_places⟩ := h_adm.exists_hasFields_at_cutoff hx hV hVW
-  obtain rfl : D.m = m := h_fields.m_eq
-  obtain rfl : D.r = r := h_fields.r_eq
-  obtain rfl : D.natB = b := h_fields.natB_eq
-  obtain rfl : D.towerExp = s := h_fields.towerExp_eq
-  have h_natB : IsLeast {b : ℕ | D.q₁ * D.natX₁ ∣ b ∧ exp ((x : ℝ) ^ ε) < b} D.natB := by
-    simpa only [h_fields.natX₁_eq, rpow_div_six_pow_six] using h_adm.isLeast_b
-  refine ⟨D, h_fields.natX_eq, h_fields.natX₁_eq, h_natB, h_adm.isLeast_m, h_adm.isLeast_r, h_logX₁,
-    by simpa only [rpow_div_six_pow_six] using h_logB, ?_⟩
-  simpa only [eq_of_heq h_places, rpow_div_six_pow_six] using h_card
+  simpa only [rpow_div_six_pow_six] using hx.exists_data_at_cutoff hx_sparse hUW hV hVW h_window
 
 /-- A fixed multiple of `log x` is eventually at most `x ^ δ` for `δ > 0`. -/
 lemma eventually_mul_log_le_rpow (c : ℝ) {δ : ℝ} (hδ : 0 < δ) :
