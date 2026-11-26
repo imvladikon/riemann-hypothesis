@@ -243,10 +243,10 @@ lemma isGlued_glueLattice (i : ChoiceIndex j) : (splittingV j ϑ).IsGlued i.1 (g
 /-- The constant `c″ ≠ 0` that makes the vectors `c″ Υ_{ϑ,i} (h)` integral away from `Q`, and small
 for `ϑ = 1`. Here `Υ_{ϑ,i}` is `leftSideSeries`, a theta kernel times a class sum of theta kernels
 formed from the choice `i`. The constant depends neither on the twist nor on the choice. -/
-def firstFactorScale : ℂ := (exists_isIntegralAndSmall_leftSideSeries j).choose
+def firstFactorScale : ℂ := (exists_isIntegralAndSmall_leftSideSeries_linear j).choose
 
 lemma firstFactorScale_ne_zero : firstFactorScale j ≠ 0 :=
-  (exists_isIntegralAndSmall_leftSideSeries j).choose_spec.1
+  (exists_isIntegralAndSmall_leftSideSeries_linear j).choose_spec.1
 
 /-- The first factor `φ″_{ϑ,i}`, the complex conjugate of `c″ Υ_{ϑ,i}`, where `Υ_{ϑ,i}`
 (`leftSideSeries`) is a function on the finite points of `U(V″)` and `c″ = firstFactorScale j`. -/
@@ -332,7 +332,15 @@ lemma twistFactor_mul_firstFactorPairing (i : ChoiceIndex j) (g : G D.E (D.signs
 is empty, their conjugates have squared norm at most `exp (f m b log² b)` (`IsIntegralAndSmall`). -/
 lemma isIntegralAndSmall_firstFactor (i : ChoiceIndex j) (h : Gf D.E (FirstFactorIndex j)) :
     IsIntegralAndSmall ϑ j h (firstFactor j ϑ i h) :=
-  (exists_isIntegralAndSmall_leftSideSeries j).choose_spec.2 i ϑ h
+  ⟨((exists_isIntegralAndSmall_leftSideSeries_linear j).choose_spec.2 i ϑ h).1,
+    fun hQ σ ↦ (((exists_isIntegralAndSmall_leftSideSeries_linear j).choose_spec.2 i ϑ h).2 hQ σ).trans
+      (exp_le_exp.mpr D.comparisonSizeBudget_le_quadratic)⟩
+
+/-- The squared norm of a conjugate of the first factor at the empty conductor. -/
+lemma weylNormSq_firstFactor_le_linear (i : ChoiceIndex j) (h : Gf D.E (FirstFactorIndex j))
+    (hQ : ϑ.toTameChar.Q = ∅) (σ : ℂ ≃+* ℂ) :
+    weylNormSq (σ ∘ firstFactor j ϑ i h) ≤ exp D.comparisonSizeBudget :=
+  ((exists_isIntegralAndSmall_leftSideSeries_linear j).choose_spec.2 i ϑ h).2 hQ σ
 
 /-- Arithmetic of the first factors: the value of `φ″_{ϑ,i}` at `h` is integral (`weylGauge` at
 most `1`) at a place above a prime `l` that does not divide the norm of the level of `ϑ`. -/
@@ -678,16 +686,16 @@ lemma principalLevel_le_gluingLevel (i : ChoiceIndex j) :
   with_unfolding_all
     exact Modulus.principalLevel_le_levelOfSubgroup (D.ideal_untwistedModulus_eq_span.ge (by simp))
 
-/-- The bound `(M ^ l₁)² · exp b · (n · exp b · G)² ≤ exp (f m b log² b)`. Here `M = D.M` is the
+/-- The bound `(M ^ l₁)² · exp b · (n · exp b · G)² ≤ exp (10000 f m b log b)`. Here `M = D.M` is the
 principal level, `l₁ = DividedSplitting.denominatorExponent` the exponent of `M` in the denominator
 for the splitting `V_j = V″ ⊕ V°`, `exp b` bounds the numbers of classes of `U(V_j)` and `U(V″)`,
 `n` the number of pairs of a choice and a class of `U(V°)`, `G = D.chosenGroupOrder` the bound on
 the orders of the stabilisers, `f = D.f` the number of infinite places, `m = D.m` the number of
 lifts and `b = D.b` the weight at the `b`-places, with `log b = D.logB`. -/
-lemma M_pow_denominatorExponent_sq_mul_le_exp :
+lemma M_pow_denominatorExponent_sq_mul_le_exp_linear :
     (D.M ^ (splittingV j 1).denominatorExponent) ^ 2 * (exp D.b *
       (card (ChoiceIndex j × D.SecondFactorClasses) * (exp D.b * D.chosenGroupOrder)) ^ 2) ≤
-      exp (D.f * D.m * D.b * D.logB ^ 2) := by
+      exp D.comparisonSizeBudget := by
   have hM : (1 : ℝ) ≤ D.M := mod_cast NeZero.one_le
   have h_aut : 0 < D.chosenGroupOrder := NeZero.pos _
   set L : ℕ := card D.Φ * (D.t * (D.t * D.gap)) with hL
@@ -726,31 +734,56 @@ lemma M_pow_denominatorExponent_sq_mul_le_exp :
   have h_rows : card D.Φ * (D.reducedHalfGap * ((2 * D.m : ℕ) * log (card D.FlatIndex))) ≤
       card D.Φ * (D.halfGap * ((2 * D.m : ℕ) * (card D.FlatIndex : ℝ))) := by
     grw [log_le_self (Nat.cast_nonneg _), reducedHalfGap, Nat.sub_le]
+  have hB : 0 < D.logB := HasLogBound.pos D
+  have h_M : 0 ≤ log (D.M : ℝ) := log_natCast_nonneg _
+  have h_small : (D.t * (D.t * D.gap) : ℝ) ≤ D.m * D.b := D.le_of_hasLogBound
+  have h_e : (e : ℝ) ≤ 7 * (D.f * D.m * D.b) := calc
+    _ = D.f * (3 * D.m * ((D.natB + D.offWeight + D.gap + D.m * D.gap : ℕ) : ℝ)) +
+        D.f * (D.t * (D.t * D.gap)) := by
+      simp only [he, hL, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat]
+    _ ≤ D.f * (3 * D.m * (2 * D.b)) + D.f * (D.m * D.b) := by
+      grw [D.firstFactorBoxes_le_two_mul_b, h_small]
+    _ = _ := by ring
+  have h_tail : D.b + 2 * (a + (D.b +
+      card D.Φ * (D.halfGap * ((2 * D.m : ℕ) * (card D.FlatIndex : ℝ)))) + D.b +
+      (D.b + log D.chosenGroupOrder)) ≤ D.f * D.m * D.b * D.logB := by
+    simpa [ha, D.t_eq_five_mul_r, card_firstFactorIndex j, add_assoc] using D.le_of_hasLogBound
   have h_size : 2 * (e * log D.M) + (D.b + 2 * (a + (D.b +
       card D.Φ * (D.halfGap * ((2 * D.m : ℕ) * (card D.FlatIndex : ℝ)))) + D.b +
-      (D.b + log D.chosenGroupOrder))) ≤ D.f * D.m * D.b * D.logB ^ 2 := by
-    simpa [ha, he, hL, D.t_eq_five_mul_r, card_firstFactorIndex j, add_assoc] using
-      D.le_of_hasLogBound
+      (D.b + log D.chosenGroupOrder))) ≤ D.comparisonSizeBudget := calc
+    _ ≤ 2 * (7 * (D.f * D.m * D.b) * (22 * D.logB)) + D.f * D.m * D.b * D.logB := by
+      grw [h_e, D.log_M_le_twenty_two_mul_logB, h_tail]
+    _ ≤ _ := by
+      unfold comparisonSizeBudget
+      linarith only [show 0 ≤ D.f * D.m * D.b * D.logB by positivity]
   grw [h_exponent, h_card, h_ring]
   refine le_exp_of_log_le ?_
   grw [← h_size, ← h_rows]
   simp (disch := positivity) only [ha, log_mul, log_pow, log_exp, Nat.cast_pow, Nat.cast_ofNat,
     le_refl]
 
+/-- The gluing denominator and class count with a quadratic exponent. -/
+lemma M_pow_denominatorExponent_sq_mul_le_exp :
+    (D.M ^ (splittingV j 1).denominatorExponent) ^ 2 * (exp D.b *
+      (card (ChoiceIndex j × D.SecondFactorClasses) * (exp D.b * D.chosenGroupOrder)) ^ 2) ≤
+      exp (D.f * D.m * D.b * D.logB ^ 2) :=
+  (M_pow_denominatorExponent_sq_mul_le_exp_linear j).trans
+    (exp_le_exp.mpr D.comparisonSizeBudget_le_quadratic)
+
 /-- One term of the gluing map at the trivial twist. Let `p = (i, c)` be a choice and a class of
 `U(V°)`, `h` a finite point of `U(V″)` and `g` one of `U(V_j)`. Take the form on `V_j`
 (`productForm`) supported on the class of `(h, c.out)` times the matrix of `glueLattice j 1 i`, made
 from the product of the vectors `firstFactor j 1 i h` and `ζ p`. Let `σ` be a field automorphism of
 `ℂ`. The squared norm (`weylNormSq`) of the value of this form at `g`, moved by `σ`, is at most
-`A² exp (f m b log² b) ‖ζ‖_σ²`. Here `‖ζ‖_σ² = formTupleNormSq σ ζ`, `A = D.chosenGroupOrder` bounds
+`A² exp (10000 f m b log b) ‖ζ‖_σ²`. Here `‖ζ‖_σ² = formTupleNormSq σ ζ`, `A = D.chosenGroupOrder` bounds
 the orders of the stabilisers, `f` is the number of infinite places, `m` the number of lifts and `b`
 the weight `exp D.logB`. -/
-lemma weylNormSq_evalForm_productForm_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ)
+lemma weylNormSq_evalForm_productForm_le_linear (ζ : FormTuples j) (σ : ℂ ≃+* ℂ)
     (p : ChoiceIndex j × D.SecondFactorClasses) (h : Gf D.E (FirstFactorIndex j))
     (g : Gf D.E (D.RowIndex ⊕ Fin D.t)) :
     weylNormSq (σ ∘ evalForm g ((splittingV j 1).productForm (glueLattice j 1 p.1) (h, p.2.out)
         (firstFactor j 1 p.1 h) (ζ p))) ≤
-      D.chosenGroupOrder ^ 2 * (exp (D.f * D.m * D.b * D.logB ^ 2) * formTupleNormSq σ ζ) := by
+      D.chosenGroupOrder ^ 2 * (exp D.comparisonSizeBudget * formTupleNormSq σ ζ) := by
   obtain ⟨h_plus, h_minus⟩ := (splittingV j 1).hasColumnsBelow
   let V := splittingV j 1
   let x : Gf D.E (D.RowIndex ⊕ Fin D.t) := U.block V.ε (h, p.2.out) * (glueLattice j 1 p.1).point
@@ -761,8 +794,8 @@ lemma weylNormSq_evalForm_productForm_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ
   have h_map : σ ∘ cartanProduct V.ε 1 (firstFactor j 1 p.1 h) (ζ p) =
       cartanProduct V.ε 1 (σ ∘ firstFactor j 1 p.1 h) (σ ∘ ζ p) :=
     map_cartanProduct h_plus h_minus V.ε (firstFactor j 1 p.1 h) (ζ p) σ.toRingHom
-  have h_first : weylNormSq (σ ∘ firstFactor j 1 p.1 h) ≤ exp (D.f * D.m * D.b * D.logB ^ 2) :=
-    (isIntegralAndSmall_firstFactor j 1 p.1 h).weylNormSq_le rfl σ
+  have h_first : weylNormSq (σ ∘ firstFactor j 1 p.1 h) ≤ exp D.comparisonSizeBudget :=
+    weylNormSq_firstFactor_le_linear j 1 p.1 h rfl σ
   have h_second : weylNormSq (σ ∘ ζ p) ≤ formTupleNormSq σ ζ :=
     single_le_sum (fun q _ ↦ weylNormSq_nonneg (σ ∘ ζ q)) (mem_univ p)
   -- A form supported on one class costs the order of a stabiliser, and the norm of the product
@@ -775,6 +808,17 @@ lemma weylNormSq_evalForm_productForm_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ
         (mul_le_mul h_first h_second (weylNormSq_nonneg _) (exp_pos _).le)
         (mul_nonneg (weylNormSq_nonneg _) (weylNormSq_nonneg _)) (sq_nonneg _)
 
+/-- A term in the gluing map bounded with a quadratic exponent. -/
+lemma weylNormSq_evalForm_productForm_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ)
+    (p : ChoiceIndex j × D.SecondFactorClasses) (h : Gf D.E (FirstFactorIndex j))
+    (g : Gf D.E (D.RowIndex ⊕ Fin D.t)) :
+    weylNormSq (σ ∘ evalForm g ((splittingV j 1).productForm (glueLattice j 1 p.1) (h, p.2.out)
+        (firstFactor j 1 p.1 h) (ζ p))) ≤
+      D.chosenGroupOrder ^ 2 * (exp (D.f * D.m * D.b * D.logB ^ 2) * formTupleNormSq σ ζ) := by
+  refine (weylNormSq_evalForm_productForm_le_linear j ζ σ p h g).trans ?_
+  have hζ : 0 ≤ formTupleNormSq σ ζ := sum_nonneg fun _ _ ↦ weylNormSq_nonneg _
+  grw [D.comparisonSizeBudget_le_quadratic]
+
 /-- At the trivial twist `1`, every place `placeAt i` of the level of `V_j` (the places of
 `descentPair 1 j`) contains `piM ^ 2`. -/
 lemma piM_sq_mem_placeAt_descentPair_one
@@ -786,16 +830,16 @@ lemma piM_sq_mem_placeAt_descentPair_one
 
 /-- Norm bound for the gluing map at the trivial twist: for a tuple `ζ` of forms on `V°` and an
 automorphism `σ` of `ℂ`, the squared norm `normSqAt σ` of the form `glue j 1 ζ` on `V_j` is at most
-`exp (2 f m b log² b)` times `‖ζ‖_σ²` (`formTupleNormSq`). Here `f` is the number of infinite
+`exp (20000 f m b log b)` times `‖ζ‖_σ²` (`formTupleNormSq`). Here `f` is the number of infinite
 places, `m` the number of lifts and `b` the weight `exp D.logB`. -/
-lemma normSqAt_glue_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ) :
+lemma normSqAt_glue_le_linear (ζ : FormTuples j) (σ : ℂ ≃+* ℂ) :
     (glue j (1 : D.Twist) ζ).normSqAt σ ≤
-      exp (2 * (D.f * D.m * D.b * D.logB ^ 2)) * formTupleNormSq σ ζ := by
+      exp (2 * (D.comparisonSizeBudget)) * formTupleNormSq σ ζ := by
   -- Each value of each term of `glue ζ` has norm at most `√(chosenGroupOrder ^ 2 * S)`. The norm of
-  -- a sum is at most its number of terms times this; `M_pow_denominatorExponent_sq_mul_le_exp`
+  -- a sum is at most its number of terms times this; `M_pow_denominatorExponent_sq_mul_le_exp_linear`
   -- collects these numbers and `M ^ l₁`.
   rw [two_mul, exp_add, mul_assoc]
-  set S : ℝ := exp (D.f * D.m * D.b * D.logB ^ 2) * formTupleNormSq σ ζ
+  set S : ℝ := exp D.comparisonSizeBudget * formTupleNormSq σ ζ
   have hS : 0 ≤ S := by simp [S, formTupleNormSq, exp_pos, Finset.sum_nonneg]
   let v (g : Gf D.E (D.RowIndex ⊕ Fin D.t)) := ∑ p : ChoiceIndex j × D.SecondFactorClasses,
     stdClassSum (gluingLevel j 1 p.1.1) fun h ↦ evalForm g ((splittingV j 1).productForm
@@ -809,7 +853,7 @@ lemma normSqAt_glue_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ) :
     grw [← card_stdClasses_le_exp_of_le (principalLevel_le_gluingLevel j p.1)
       (card_firstFactorIndex_le_two_mul_n j)]
     exact sqrt_weylNormSq_classSum_le σ fun h ↦
-      sqrt_le_sqrt (weylNormSq_evalForm_productForm_le j ζ σ p h g)
+      sqrt_le_sqrt (weylNormSq_evalForm_productForm_le_linear j ζ σ p h g)
   have h_classes : Nat.card (DoubleCosets stdRatPoints K) ≤ exp D.b :=
     card_stdClasses_le_exp_of_le (principalLevel_le_levelOf (piM_sq_mem_placeAt_descentPair_one j))
       (card_rowIndex_sum_fin_le_two_mul_n D)
@@ -821,8 +865,16 @@ lemma normSqAt_glue_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ) :
         grw [classSum_le_card_mul_sq h_value, h_classes]
     _ = c * (exp D.b * (N * (exp D.b * D.chosenGroupOrder)) ^ 2) * S := by
         simp (disch := positivity) [mul_pow, sq_sqrt, mul_assoc]
-    _ ≤ exp (D.f * D.m * D.b * D.logB ^ 2) * S := by
-        grw [M_pow_denominatorExponent_sq_mul_le_exp j]
+    _ ≤ exp D.comparisonSizeBudget * S := by
+        grw [M_pow_denominatorExponent_sq_mul_le_exp_linear j]
+
+/-- The gluing map norm bound with a quadratic exponent. -/
+lemma normSqAt_glue_le (ζ : FormTuples j) (σ : ℂ ≃+* ℂ) :
+    (glue j (1 : D.Twist) ζ).normSqAt σ ≤
+      exp (2 * (D.f * D.m * D.b * D.logB ^ 2)) * formTupleNormSq σ ζ := by
+  refine (normSqAt_glue_le_linear j ζ σ).trans ?_
+  have hζ : 0 ≤ formTupleNormSq σ ζ := sum_nonneg fun _ _ ↦ weylNormSq_nonneg _
+  grw [D.comparisonSizeBudget_le_quadratic]
 
 /-! ### Periods of false lifts -/
 

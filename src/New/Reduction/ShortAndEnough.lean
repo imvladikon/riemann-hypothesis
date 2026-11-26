@@ -233,14 +233,14 @@ lemma normSqAt_normalizedPoincare (s : D.chosenGL) (φ : D.ramifiedSourceForms) 
 
 /-! ### Theorem A -/
 
-private theorem span_short_integralRamified_eq_top_of_loss (loss : ℕ → ℝ) {budget : ℝ}
+private theorem span_short_integralRamified_eq_top_linear_of_loss (loss : ℕ → ℝ) {budget : ℝ}
     (h_budget : ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, loss l * log l ≤ budget) :
     span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
       (D.Θ 1 (D.normalizedPoincareWithLoss loss s φ)).normSqAt σ ≤
         exp (D.mainAmount - D.m * D.totalRemainder +
-          (3 * D.quadraticErrorUnit + 2 * budget))} = ⊤ := by
+          (36 * D.linearErrorUnit + 2 * budget))} = ⊤ := by
   -- The short forms span the source, so it suffices to bound the lifts for a short form `φ`.
-  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_quadratic
+  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_linear
   rintro φ ⟨h_integral, h_size⟩
   refine ⟨fun ι ↦ ?_, fun s σ ↦ ?_⟩
   · -- A short form is integral at every `ι`.
@@ -251,24 +251,44 @@ private theorem span_short_integralRamified_eq_top_of_loss (loss : ℕ → ℝ) 
         D.lowerChain .one (D.poincare (D.scaledInclusion φ)) = compositeLift .one Ψ φ :=
     D.exists_lowerChain_poincare_eq 1
   set chainLogBound : ℝ := D.mainAmount - D.m * D.totalRemainder +
-    2 * ∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + D.quadraticErrorUnit with chainLogBound_def
+    2 * ∑ l ∈ D.smallNonsplitPrimes, D.gain l * log l + 34 * D.linearErrorUnit with chainLogBound_def
   -- The values of `ι₁ z = B₁ φ`, for `z = c_ss⁻¹ 𝒫 φ`, are bounded by the sizes of `φ` and the
   -- chain.
   have h_composite_size (g : Gf D.E (D.Y D.m)) :
       weylNormSq (σ ∘ (D.lowerChain .one (D.poincare (D.scaledInclusion φ))).val g) ≤
-        exp (D.quadraticErrorUnit + chainLogBound) := by
+        exp (D.linearErrorUnit + chainLogBound) := by
     rw [h_seesaw φ]
-    exact weylNormSq_compositeLift_le_quadratic hΨ (h_size σ) g
+    exact weylNormSq_compositeLift_le_linear hΨ (h_size σ) g
   -- The passage from `z` to the target form `y = #Ḡ · e₀ s z` adds `x ^ 99`.
   have h_projected_size :
       (D.Θ 1 (D.projectedPoincare s φ)).normSqAt σ ≤
-        exp (D.x ^ 99 + (D.quadraticErrorUnit + chainLogBound)) :=
+        exp (D.x ^ 99 + (D.linearErrorUnit + chainLogBound)) :=
     normSqAt_goodProjTranslate_le h_composite_size
-  have h_rounding_cost : D.x ^ 99 + 2 * D.b ≤ D.quadraticErrorUnit := D.le_of_hasLogBound
+  have h_rounding_cost : D.x ^ 99 + 2 * D.b ≤ D.linearErrorUnit := D.le_of_hasLogBound
   -- The rational normalization adds `2 log c_B` to the log squared norm, cancelling the
   -- finite-place gains.
   grw [D.normSqAt_normalizedPoincareWithLoss, h_projected_size, ← exp_add, exp_le_exp, chainLogBound_def]
   linarith [D.log_invGainFactorWithLoss_le loss h_budget, h_rounding_cost]
+
+private theorem span_short_integralRamified_eq_top_of_loss (loss : ℕ → ℝ) {budget : ℝ}
+    (h_budget : ∑ l ∈ D.smallNonsplitPrimes ∪ {D.N}, loss l * log l ≤ budget) :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincareWithLoss loss s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder +
+          (3 * D.quadraticErrorUnit + 2 * budget))} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) (D.span_short_integralRamified_eq_top_linear_of_loss loss h_budget)
+  intro φ hφ
+  refine ⟨hφ.1, fun s σ ↦ (hφ.2 s σ).trans (exp_le_exp.mpr ?_)⟩
+  linarith only [D.mul_linearErrorUnit_le_quadraticErrorUnit (D.le_of_hasLogBound : (12 : ℝ) ≤ D.logB)]
+
+/-- Theorem A (a) with the linear short-form and valuation bounds. -/
+theorem span_short_integralRamified_eq_top_linear :
+    span ℂ {φ ∈ D.integralRamified | ∀ (s : D.chosenGL) (σ : ℂ ≃+* ℂ),
+      (D.Θ 1 (D.normalizedPoincareWithLoss D.valuationLoss s φ)).normSqAt σ ≤
+        exp (D.mainAmount - D.m * D.totalRemainder + 684 * D.linearErrorUnit)} = ⊤ := by
+  simpa only [← mul_assoc, ← add_mul, show (36 : ℝ) + 2 * 324 = 684 by norm_num] using
+    D.span_short_integralRamified_eq_top_linear_of_loss D.valuationLoss
+      (D.sum_valuationLoss_mul_log_le_linear _)
 
 /-- **Theorem A (a).** The source is spanned by the forms `φ` that are integral at every prime `l`
 and `l`-adic place of `ℂ` and satisfy the size bound with error
