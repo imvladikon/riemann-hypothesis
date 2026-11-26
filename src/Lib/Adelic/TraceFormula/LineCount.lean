@@ -96,13 +96,8 @@ the hyperplane `z i = 0`, exactly when the `i`-th row of `h` is a multiple of th
 lemma mul_inv_mem_parabolic_eq :
     h * g⁻¹ ∈ parabolic (· = i) ↔
       ∃ c : F, (h : Matrix n n F).row i = c • (g : Matrix n n F).row i := by
-  have h_row (j : n) : (h * g⁻¹) i j = ((h : Matrix n n F).row i ᵥ* (g⁻¹ : GL n F)) j := by
-    simp [Matrix.mul_apply, vecMul, dotProduct]
-  simp only [mem_parabolic_eq, h_row, ← exists_eq_smul_single_iff]
-  refine exists_congr fun c ↦ ?_
-  rw [← single_one_vecMul i (g : Matrix n n F), ← smul_vecMul]
-  exact ⟨fun h_eq ↦ by simp [← h_eq, vecMul_vecMul],
-    fun h_eq ↦ by simp [h_eq, vecMul_vecMul]⟩
+  simpa [mem_parabolic_eq, mem_parabolic_ne, transposeGL, ← transpose_mul, Matrix.col, Matrix.row]
+    using (inv_mul_mem_parabolic_ne (i := i) (g := transposeGL g) (h := transposeGL h))
 
 /-- If the `i`-th column of an invertible `g` vanishes off the diagonal, then `g i i ≠ 0`. -/
 lemma diag_ne_zero_of_col (hg : ∀ j ≠ i, g j i = 0) : g i i ≠ 0 :=
@@ -110,7 +105,7 @@ lemma diag_ne_zero_of_col (hg : ∀ j ≠ i, g j i = 0) : g i i ≠ 0 :=
 
 /-- If the `i`-th row of an invertible `g` vanishes off the diagonal, then `g i i ≠ 0`. -/
 lemma diag_ne_zero_of_row (hg : ∀ j ≠ i, g i j = 0) : g i i ≠ 0 :=
-  fun h_zero ↦ g.det_ne_zero (det_eq_zero_of_row_eq_zero i fun j ↦ by grind)
+  diag_ne_zero_of_col (g := transposeGL g) hg
 
 /-- Replacing the `j`-th column of the identity matrix by `z` gives determinant `z j`. -/
 lemma det_updateCol_one (j : n) (z : n → F) : (updateCol 1 j z).det = z j := by

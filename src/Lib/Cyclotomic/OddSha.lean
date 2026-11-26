@@ -131,17 +131,6 @@ private lemma totient_add_le_pow_twenty {N l y c : ℕ} (hNy : N ≤ y) (hly : l
     _ ≤ (y ^ 5) ^ 4 := Nat.pow_le_pow_left hMy 4
     _ = y ^ 20 := by ring
 
-/-- If a place `v` of an intermediate field `K` of `Ω/ℚ` is prime to `l`, then so is some place of
-`E` lying under the chosen valuation subring `placeOver v` of `Ω`. -/
-private lemma exists_notMem_placesDividing_isPlaceOver (E : Type) [Field E]
-    [EmbeddedNumberField E] {l : ℕ} {K : IntermediateField ℚ Ω} [NumberField K]
-    {v : FinPlace K} (hv : v ∉ placesDividing K l) :
-    ∃ w : FinPlace E, w ∉ placesDividing E l ∧ IsPlaceOver (placeOver v) w := by
-  have hv_over : IsPlaceOver (placeOver v) v := v.isPlaceOver_placeOver
-  obtain ⟨w, hw, -⟩ := (hv_over.isPlaceOver_below (K := ℚ)).exists_above (L := E)
-  exact ⟨w, fun h_mem ↦ hv
-    (hv_over.valuation_natCast_lt_one_iff.mp (hw.valuation_natCast_lt_one_iff.mpr h_mem)), hw⟩
-
 open scoped Matrix.Module in
 /-- Few points detect unramified cocycles. Let `E` be a number field whose image in the algebraic
 closure `Ω` lies in `ℚ(μ_N)` (`h_sub`), and `l` a prime. There is a finite set `s` in `Gal(Ω/E)`
@@ -218,7 +207,10 @@ lemma New.OddPart.exists_detecting_points_cocycles {N : ℕ} {E : Type} [NeZero 
     -- an inertia group of `K` away from `l` lies in an inertia group of `E` away from `l`
     have h_unr' (v : FinPlace K) (hv : v ∉ placesDividing K l) (g : cycloGalGroup M)
         (hg : g ∈ inertiaGroup (cycloGalGroup M) (placeOver v)) : z (r g) = 0 := by
-      obtain ⟨w, hw_notMem, hw⟩ := exists_notMem_placesDividing_isPlaceOver E hv
+      have hv_over := v.isPlaceOver_placeOver
+      obtain ⟨w, hw, -⟩ := (hv_over.isPlaceOver_below (K := ℚ)).exists_above (L := E)
+      have hw_notMem : w ∉ placesDividing E l := fun h_mem ↦
+        hv (hv_over.valuation_natCast_lt_one_iff.mp (hw.valuation_natCast_lt_one_iff.mpr h_mem))
       exact h_unr _ ⟨w, hw_notMem, _, hw, hg⟩
     -- so `z` vanishes on `G_K`, by `exists_detecting_points_hom`
     have h_hom : IsUnramifiedTorsionHom (placesDividing K l) M (z ∘ r) :=

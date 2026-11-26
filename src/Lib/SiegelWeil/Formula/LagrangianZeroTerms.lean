@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.MeasureTheory.MeasurableSpace.NCard
+public import Lib.ClassField.Avatar.HeckeBaseChange
 public import Lib.Weil.DualPair.MixedModel
 public import Lib.Weil.Unramified.HeckeTransfer
 public import Lib.Adelic.Witt.IwasawaDecomposition

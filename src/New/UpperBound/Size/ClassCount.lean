@@ -1,6 +1,6 @@
 module
 
-public import Lib.Adelic.AutomorphicForms.PAdicGauge
+public import Lib.Adelic.Reduction.DefiniteClassSums
 public import New.Spanning.RemainingTerms.Box
 
 /-!

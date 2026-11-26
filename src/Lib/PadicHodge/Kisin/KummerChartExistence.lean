@@ -254,11 +254,14 @@ lemma exists_smul_teichmuller_eq (C : Subgroup (Gp p)) [hC : IsClosed (C : Set (
   have hg_C : g ∈ C := (hg 0).left
   refine ⟨g, hg_C, (map_teichmuller ..).trans (congrArg _ (Perfection.ext fun n ↦ ?_))⟩
   -- the `n`-th coefficient is the class of the `n`-th component modulo `p`
-  erw [map_pow, pow_one, ← coeff_tiltMap _ (mk_untiltRoot ..), ← mk_untiltRoot]
+  change Perfection.coeff (ModP OC p) p n (g • u) = _
+  have h_tilt : g • u = tiltMap (MulSemiringAction.toRingHom (Gp p) OC g) u := pow_one _
+  refine (congrArg (Perfection.coeff (ModP OC p) p n) h_tilt).trans ?_
+  refine (coeff_tiltMap _ (u.mk_untiltRoot n)).symm.trans ?_
   have hg_n : ((g • b u n : PadicAlgCl p) : ℂ_[p]) = (v.untiltRoot n).val := (hg n).right
   have h_root_eq : g • untiltRoot n u = untiltRoot n v :=
     Subtype.ext (by simpa [← hb] using hg_n)
-  exact congrArg (Ideal.Quotient.mk (span {(p : OC)})) h_root_eq
+  exact (congrArg (Ideal.Quotient.mk (span {(p : OC)})) h_root_eq).trans (v.mk_untiltRoot n)
 
 /-- A Kummer chart for j : Γ → G_p with open image: a chart S = Λ⟦z⟧ ⊂ A_inf, Λ = W(𝔽_{p^f}), and a
 subgroup Γ' (the field `subgroup`) of Γ of index prime to p, with four properties. The image j(Γ')

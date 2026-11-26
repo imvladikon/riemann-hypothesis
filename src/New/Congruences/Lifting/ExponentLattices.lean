@@ -373,12 +373,11 @@ lemma kisinModule_le_kisinLoc : L.kisinModule ≤ L.kisinLoc :=
 holds on the Kisin module `L.kisinModule` and passes from `p_a • y` to `y` holds on `L.kisinLoc`. -/
 lemma kisinLoc_induction {C : L.Ambient → Prop} (hx : x ∈ L.kisinLoc)
     (h_base : ∀ y ∈ L.kisinModule, C y)
-    (h_step : ∀ a : ℕ, ∀ y ∈ L.kisinLoc, C ((k.frobE a).val • y) → C y) : C x := by
-  have h_span := mem_kisinLocAinf_of_mem_kisinLoc hx
-  revert hx
-  exact saturateBy_induction (C := fun y ↦ y ∈ L.kisinLoc → C y) h_span
+    (h_step : ∀ a : ℕ, ∀ y ∈ L.kisinLoc, C ((k.frobE a).val • y) → C y) : C x :=
+  saturateBy_induction (C := fun y ↦ y ∈ L.kisinLoc → C y)
+    (mem_kisinLocAinf_of_mem_kisinLoc hx)
     (fun z hz_span ⟨_, hz_val⟩ ↦ h_base z ⟨hz_span, hz_val⟩)
-    fun a z ih hz ↦ h_step a z hz (ih (smul_mem _ (k.frobE a) hz))
+    (fun a z ih hz ↦ h_step a z hz (ih (smul_mem _ (k.frobE a) hz))) hx
 
 /-- The Kisin module `L.kisinLoc` with all `φ^a E` inverted is stable under multiplication and
 division by the integer powers of `k.frobEUnit a`, which is `φ^a E` as a unit of `W(C^♭)`. -/
@@ -685,20 +684,12 @@ lemma span_kisinLoc : span Ainf (L.kisinLoc : Set L.Ambient) = L.kisinLocAinf :=
   exact span_eq_of_le _ (fun x ↦ mem_kisinLocAinf_of_mem_kisinLoc)
     fun x hx ↦ saturateBy_induction hx h_base h_step
 
-/-- An S-linear map f: A_inf → S preserves linear relations among elements v_i of `L.fracSpan` on
-which all Γ'-equivariant forms take values in the field 𝒦₀ = `valueField 0`. This is a part of
-`frame_theorem`. -/
-lemma sum_map_smul_eq_zero_of_mem_valueFieldPoints (f : Ainf →ₗ[k.S] k.S) {ι : Type} [Fintype ι]
-    {v : ι → L.Ambient} {b : ι → Ainf} (hv : ∀ i : ι, v i ∈ L.valueFieldPoints L.fracSpan)
-    (h_zero : ∑ i : ι, b i • v i = 0) : ∑ i : ι, f (b i) • v i = 0 :=
-  L.frame_theorem.sum_map_smul_eq_zero f v b hv h_zero
-
 /-- An S-linear map f: A_inf → S preserves linear relations among elements v_i of `L.kisinLoc`, the
 Kisin module with all φ^a E inverted: if ∑ b_i v_i = 0 with b_i in A_inf, then ∑ f(b_i) v_i = 0. -/
 lemma sum_map_smul_eq_zero_of_mem_kisinLoc (f : Ainf →ₗ[k.S] k.S) {ι : Type} [Fintype ι]
     {v : ι → L.Ambient} {b : ι → Ainf} (hv : ∀ i : ι, v i ∈ L.kisinLoc)
     (h_zero : ∑ i : ι, b i • v i = 0) : ∑ i : ι, f (b i) • v i = 0 := by
-  refine sum_map_smul_eq_zero_of_mem_valueFieldPoints f (fun i ↦ ?_) h_zero
+  refine L.frame_theorem.sum_map_smul_eq_zero f _ _ (fun i ↦ ?_) h_zero
   exact ⟨kisinLocAinf_le_fracSpan (hv i).1, (hv i).2⟩
 
 /-- Let L be a Galois lattice over the Kummer chart and a ≥ 0. Let μ be a form, that is, an

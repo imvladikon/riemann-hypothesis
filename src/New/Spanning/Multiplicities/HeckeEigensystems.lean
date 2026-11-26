@@ -183,11 +183,41 @@ lemma mem_sphericalAlgebra_of_mem_universalLevelAlgebra {a : ℂ[D.offLevelGroup
   D.mem_sphericalAlgebra.2
     (mapDomain_mem_universalLevelAlgebra levelOf_le_stdLevel inf_trivialOn_le_levelOf ha)
 
+/-- The families `T` of operators `T V` on the forms of principal level `D.principalForms V`, one
+for each hermitian space `V`, with the pointwise operations. -/
+def OperatorFamily : Type :=
+  ∀ {s : D.RowIndex → ℤˣ} (V : Space D.E D.RowIndex s), End ℂ (D.principalForms V)
+
+instance : Ring D.OperatorFamily := Pi.ring
+
+instance : Algebra ℂ D.OperatorFamily := Pi.algebra _ _
+
+namespace OperatorFamily
+
+variable {D}
+
+@[simp] lemma zero_apply : (@OfNat.ofNat D.OperatorFamily 0 _) V = 0 := rfl
+
+@[simp] lemma one_apply : (@OfNat.ofNat D.OperatorFamily 1 _) V = 1 := rfl
+
+@[simp] lemma add_apply (S T : D.OperatorFamily) :
+    HAdd.hAdd (α := D.OperatorFamily) @S @T V = S V + T V := rfl
+
+@[simp] lemma mul_apply (S T : D.OperatorFamily) :
+    HMul.hMul (α := D.OperatorFamily) @S @T V = S V * T V := rfl
+
+@[simp] lemma smul_apply (c : ℂ) (T : D.OperatorFamily) :
+    HSMul.hSMul (β := D.OperatorFamily) c @T V = c • T V := rfl
+
+@[simp] lemma sub_apply (S T : D.OperatorFamily) :
+    HSub.hSub (α := D.OperatorFamily) @S @T V = S V - T V := rfl
+
+end OperatorFamily
+
 /-- The spherical Hecke operators away from `M`: the families `T` of operators `T V` on the forms of
 principal level of all hermitian spaces `V` that are given by one spherical element `a` of the group
 algebra of `G^M = D.offLevelGroup`. -/
-def heckeAlgebra : Subalgebra ℂ
-    (∀ {s : D.RowIndex → ℤˣ} (V : Space D.E D.RowIndex s), End ℂ (D.principalForms V)) where
+def heckeAlgebra : Subalgebra ℂ D.OperatorFamily where
   carrier := {T | ∃ a ∈ D.sphericalAlgebra,
     ∀ {s : D.RowIndex → ℤˣ} (V : Space D.E D.RowIndex s) (y : D.principalForms V),
       (T V y).val = (V.formRep (typeKernel D.paramW s)).asAlgebraHom
@@ -195,7 +225,8 @@ def heckeAlgebra : Subalgebra ℂ
   mul_mem' := by
     rintro S T ⟨a, ha, hS⟩ ⟨b, hb, hT⟩
     exact ⟨a * b, mul_mem ha hb,
-      fun V y ↦ by simp only [mapDomain_mul, map_mul, mul_apply_eq_comp, Pi.mul_apply, hS, hT]⟩
+      fun V y ↦ by
+        simp only [mapDomain_mul, map_mul, mul_apply_eq_comp, OperatorFamily.mul_apply, hS, hT]⟩
   add_mem' := by
     rintro S T ⟨a, ha, hS⟩ ⟨b, hb, hT⟩
     exact ⟨a + b, add_mem ha hb, fun V y ↦ by simp [mapDomain_add, hS, hT]⟩
@@ -318,13 +349,11 @@ lemma exists_hecke_proj_eigenPart (q : FinPlace D.E × ℕ → ℂ) (F : Finset 
       ∀ {s : D.RowIndex → ℤˣ} {V : Space D.E D.RowIndex s}, ∀ y ∈ D.eigenPart V d,
         T.val V y = if d = q then y else 0 := by
   induction F using Finset.induction with
-  -- The witnesses are written with `algebraMap ℂ _ 1` and `+ (-c) •` rather than `1` and `-`:
-  -- the `One` and `Sub` instances of `D.heckeAlgebra` are slow for the kernel to check.
   | empty =>
-    refine ⟨algebraMap ℂ _ 1, fun d hd s V y _ ↦ ?_⟩
+    refine ⟨1, fun d hd s V y _ ↦ ?_⟩
     rw [insert_empty_eq, Finset.mem_singleton] at hd
     rw [hd, ite_eq_left rfl]
-    exact one_smul ℂ y
+    rfl
   | insert e F _ ih =>
     obtain ⟨T, hT⟩ := ih
     by_cases he_eq_q : e = q
@@ -332,13 +361,14 @@ lemma exists_hecke_proj_eigenPart (q : FinPlace D.E × ℕ → ℂ) (F : Finset 
     -- Choose `x` with `e x ≠ q x` and multiply by `(T_x - e x) / (q x - e x)`, which is `1` on the
     -- `q`-part and `0` on the `e`-part.
     obtain ⟨x, hx⟩ : ∃ x : FinPlace D.E × ℕ, q x ≠ e x := Function.ne_iff.1 (Ne.symm he_eq_q)
-    refine ⟨(q x - e x)⁻¹ • (T * D.heckeOperator x + (-e x) • T), fun d hd s V y hy ↦ ?_⟩
-    have h_apply : ((q x - e x)⁻¹ • (T * D.heckeOperator x + (-e x) • T)).val V y =
+    refine ⟨(q x - e x)⁻¹ • (T * D.heckeOperator x - e x • T), fun d hd s V y hy ↦ ?_⟩
+    have h_apply : ((q x - e x)⁻¹ • (T * D.heckeOperator x - e x • T)).val V y =
         ((q x - e x)⁻¹ * (d x - e x)) • T.val V y := by
-      simp only [SetLike.val_smul, Subalgebra.coe_add, MulMemClass.coe_mul, Pi.smul_apply,
-        Pi.add_apply, Pi.mul_apply, LinearMap.smul_apply, LinearMap.add_apply, mul_apply_eq_comp,
+      simp only [SetLike.val_smul, Subalgebra.coe_sub, MulMemClass.coe_mul,
+        OperatorFamily.smul_apply, OperatorFamily.sub_apply, OperatorFamily.mul_apply,
+        LinearMap.smul_apply, LinearMap.sub_apply, mul_apply_eq_comp,
         (D.mem_eigenPart V).1 hy x, map_smul]
-      rw [← add_smul, ← sub_eq_add_neg, smul_smul]
+      rw [← sub_smul, smul_smul]
     rw [h_apply]
     obtain rfl | hd_ne_e := eq_or_ne d e
     · simp only [sub_self, mul_zero, zero_smul, he_eq_q, ↓reduceIte]

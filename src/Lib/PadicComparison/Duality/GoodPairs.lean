@@ -649,14 +649,14 @@ lemma isFiniteLerayHirsch_offClosedFibre_sup_testUnitLocus_preimage
     Subfunctor.range (j x) ⊔ offClosedFibre (ringOf (𝟭 _) ⋙ projLinePow (Fin d))
   have h_sup : Subfunctor.range (j P.g) ⊔ W (P.g * P.f) = W P.g := by
     ext c q
-    simp [W, j, range_comp, testUnitLocus]
+    simp only [W, j, range_comp, range_ι, testUnitLocus, map_mul, IsUnit.mul_iff]
     exact ⟨fun h ↦ h.elim .inl fun h ↦ h.elim (fun ⟨ψ, ⟨hg, _⟩, hq⟩ ↦ .inl ⟨ψ, hg, hq⟩) .inr,
       fun h ↦ h.elim .inl (.inr ∘ .inr)⟩
   have h_pre : (W (P.g * P.f)).preimage (j P.g) =
       (offClosedFibre (testSpec A R[X]) ⊔ testUnitLocus P.f).preimage
         (testUnitLocus (A := A) P.g).ι := by
     ext c ⟨ψ, hψg⟩
-    simp [W, j, range_comp, testUnitLocus]
+    simp only [W, j, range_comp, range_ι, testUnitLocus, map_mul, IsUnit.mul_iff]
     constructor
     · rintro (⟨ψ', ⟨_, hψ'f⟩, h_eq⟩ | h)
       · have hψ_eq : ψ' = ψ := injective_of_mono ((affineToLines e).app c) h_eq

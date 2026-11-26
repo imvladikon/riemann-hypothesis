@@ -496,7 +496,7 @@ by `-σ` and swaps `γ`, `γ'`. Here a joint harmonic for matching parameters is
 that is `K`-highest of the lowest `K`-type weights for the row and column actions, and that has no
 monomial with two variables of one column from rows of opposite signs, or of one row from columns of
 opposite signs. -/
-theorem IsJointHarmonic.swap [Fintype ι] {l' : HCParam ε'} {l : HCParam ε} {P : MvPolynomial ι ℂ}
+theorem IsJointHarmonic.swap {l' : HCParam ε'} {l : HCParam ε} {P : MvPolynomial ι ℂ}
     (hP : IsJointHarmonic T l l' P) : IsJointHarmonic T.swap l' l P :=
   ⟨hP.toIsMatch.swap, hP.isJointHighest.swap⟩
 

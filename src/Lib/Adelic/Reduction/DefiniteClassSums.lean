@@ -213,6 +213,19 @@ namespace New
 
 open MeasureTheory Measure Set DoubleCoset Subgroup HasFiniteType
 
+section StandardClasses
+
+variable {E n : Type} [Field E] [CMType E] [Fintype n] [DecidableEq n]
+
+/-- The set of classes of the standard space I_n for a subgroup K: double cosets of the finite
+adelic unitary group by its rational points on the left and K on the right. -/
+abbrev StdClasses (K : Subgroup (Gf E n)) : Type := DoubleCosets (stdSpace E n).Γf K
+
+noncomputable instance {K : Subgroup (Gf E n)} [HasFiniteType stdRatPoints K] :
+    Fintype (StdClasses K) := @.ofFinite _ HasFiniteType.finite_classes
+
+end StandardClasses
+
 section FinitePart
 
 variable {E n : Type*} [Field E] [CMType E] [Fintype n] [DecidableEq n]

@@ -307,16 +307,6 @@ lemma jet_monomial :
   classical
   aesop
 
-/-- Raising the exponent at `i` by one multiplies `d!` by `d i + 1`. -/
-private lemma prod_factorial_add_single (d : σ →₀ ℕ) (i : σ) :
-    ((d + Finsupp.single i 1).prod fun (_k : σ) (j : ℕ) ↦ (j ! : R)) =
-      ((d i : R) + 1) * d.prod fun (_k : σ) (j : ℕ) ↦ (j ! : R) := by
-  rw [← mul_prod_erase' (d + Finsupp.single i 1) i _ (by simp), ← mul_prod_erase' d i _ (by simp),
-    Finsupp.erase_add, Finsupp.erase_single, add_zero, Finsupp.add_apply, Finsupp.single_eq_same,
-    factorial_succ]
-  push_cast
-  ring
-
 /-- For the pairing `jet R f F = f(∂) F (0)` of a polynomial with a power series, multiplication of
 `f` by `X i` is adjoint to the derivative of `F` in `X i`. -/
 @[local simp↓]
@@ -325,7 +315,11 @@ lemma jet_mul_X : jet R (f * X i) F = jet R f (F.pderiv i) := by
   rw [jet_eq_sum, jet_eq_sum, support_mul_X, sum_map]
   refine sum_congr rfl fun x _ ↦ ?_
   -- At the exponent `x + single i 1`: `(x i + 1)! = (x i + 1) * (x i)!` matches the derivative.
-  rw [addRightEmbedding_apply, coeff_mul_X, prod_factorial_add_single, F.coeff_pderiv]
+  rw [addRightEmbedding_apply, coeff_mul_X, F.coeff_pderiv,
+    ← mul_prod_erase' (x + Finsupp.single i 1) i _ (by simp), ← mul_prod_erase' x i _ (by simp),
+    Finsupp.erase_add, Finsupp.erase_single, add_zero, Finsupp.add_apply, Finsupp.single_eq_same,
+    factorial_succ]
+  push_cast
   ring
 
 /-- The Fock pairing `⟨a * X ^ α, g⟩` is `α! * a * g.coeff α`, where `α!` is the product of the
@@ -692,11 +686,12 @@ lemma fockPairing_rowSubst [∀ τ : Φ, DecidableEq (n τ)] (p : MatrixPoly ((�
       obtain ⟨⟨τ', a'⟩, k'⟩ := j
       have h_X : w (X (⟨τ', a'⟩, k')) = ∑ d : n' τ', z τ' d a' • X (⟨τ', d⟩, k') := by
         simp [w, rowSubst]
-      simp [h_q, mul_sum (ι := n _), apply_ite, sum_add_distrib, Pi.single_apply, smul_add, h_X]
       -- Both sides are `z τ b a' • w q` if `τ' = τ` and `k' = k`, and `0` otherwise; `aesop`
       -- matches the dependent pairs.
-      change (w q * ∑ x : n' τ', if (τ' = τ ∧ x ≍ b) ∧ k' = k then z τ' x a' • 1 else 0) =
-          ∑ x : n τ, if (τ' = τ ∧ a' ≍ x) ∧ k' = k then z τ b x • w q else 0
+      suffices h : (w q * ∑ x : n' τ', if (τ' = τ ∧ x ≍ b) ∧ k' = k then z τ' x a' • 1 else 0) =
+          ∑ x : n τ, if (τ' = τ ∧ a' ≍ x) ∧ k' = k then z τ b x • w q else 0 by
+        simpa [h_q, mul_sum (ι := n _), apply_ite, sum_add_distrib, Pi.single_apply, smul_add, h_X]
+          using h
       aesop (add simp ite_and)
   -- Induction on `p`: multiplication by a variable is adjoint to the partial derivative.
   induction p using MvPolynomial.induction_on with

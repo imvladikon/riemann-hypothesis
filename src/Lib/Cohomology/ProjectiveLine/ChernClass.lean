@@ -413,7 +413,8 @@ lemma TorsionCoeff.mulClass_naturality [HasFlatValues S] (ξ : TotalH P (tateMod
       (congrArg₂ (fun a b ↦ TotalH.comp a b) h_ξ
         (congrArg₂ (fun a b ↦ TotalH.comp a b) h_y (K.tateAction_comm φ M' T)))
   exact h_step1.trans
-    (congrArg _ (map_comp_assoc (abTensor.flip.obj (tateModule (φ ⋙ g))) M'.tateAction.toTotalH).symm)
+    (congrArg _
+      (map_comp_assoc (abTensor.flip.obj (tateModule (φ ⋙ g))) M'.tateAction.toTotalH).symm)
 
 /-- Let Θ be a theory along g (an ℓ-torsion coefficient F = Θ.functor with Zariski descent that
 behaves well on closed loci). Let J be a compatible family of ideals J_c of the rings g(c), and
@@ -856,7 +857,7 @@ lemma map_etaClass_eq_zero_of_coboundary (b : freeAb Y ⟶ freeAb (projLineAlong
   have h_nat (c d : C) (f : c ⟶ d) (x : Y c) :
       s d (Y.map f x) = (cocycle g).extension.X₂.map f (s c x) := by
     refine Prod.ext ?_ (b.naturality_apply f (.of x))
-    show -u d (Y.map f x) = (ringOf g ⋙ Gm).map f (-u c x) + (cocycle g).component f (b c (.of x))
+    change -u d (Y.map f x) = (ringOf g ⋙ Gm).map f (-u c x) + (cocycle g).component f (b c (.of x))
     rw [map_neg, h_coboundary c d f x]
     abel
   let b' : freeAb Y ⟶ (cocycle g).extension.X₂ := freeAb.desc s h_nat

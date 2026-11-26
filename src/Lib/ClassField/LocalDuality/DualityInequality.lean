@@ -206,7 +206,7 @@ lemma eq_zero_of_evalCup_eq_zero_of_trivialOn [Finite M] (h_kill : ∀ m : M, l 
         simp [ZMod.val_add, add_smul, ← nsmul_eq_mod_nsmul, smul_sub l, ← map_nsmul, ha,
           DiscreteUnits.ext_iff]),
       .congr (by
-        simp
+        simp only [AddMonoidHom.mk'_apply]
         fun_prop) (leftInverse_invFun coe_injective ∘' _),
       by simp [ext_iff, h_triv, smul_sub]⟩
   -- Its cup product with `y` is minus the symbol (`mk_eq_neg_cyclicClass_ofZModCocycle`).

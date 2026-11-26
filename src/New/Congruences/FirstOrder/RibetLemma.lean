@@ -328,19 +328,13 @@ lemma exists_areCoordinates_ribetGenerators (u : Y → G →* Matrix σ σ O) [D
       AreCoordinates u (ribetGenerators δ s₀ s) z := by
   classical
   let v (g : G) : Y → Matrix σ σ O := fun x ↦ u x g - 1
-  have h_compact : IsCompactElement (⨆ g : G, O ∙ v g) := (fg_iff_compact _).1 .of_finite
-  obtain ⟨s₀, hs₀⟩ : ∃ s₀ : Finset G, ⨆ g : G, (O ∙ v g) ≤ ⨆ g ∈ s₀, (O ∙ v g) :=
-    h_compact.exists_finset_of_le_iSup _ le_rfl
-  let gen : W ⊕ s₀ ⊕ s → G := ribetGenerators δ s₀ s
-  let T : (W ⊕ s₀ ⊕ s → O) →ₗ[O] Y → Matrix σ σ O :=
-    Fintype.linearCombination O fun i ↦ v (gen i)
-  have h_range : ⨆ g ∈ s₀, (O ∙ v g) ≤ T.range := by
-    refine iSup₂_le fun g hg ↦ ?_
-    rw [span_singleton_le_iff_mem]
-    exact ⟨Pi.single (inr (inl ⟨g, hg⟩)) 1, by simp [T, gen]⟩
-  have exists_z (g : G) : ∃ m : W ⊕ s₀ ⊕ s → O, T m = v g :=
+  obtain ⟨s₀, hs₀⟩ :=
+    ((fg_iff_compact (⨆ g : G, O ∙ v g)).1 .of_finite).exists_finset_of_le_iSup _ le_rfl
+  let T := Fintype.linearCombination O fun i ↦ v (ribetGenerators δ s₀ s i)
+  have h_range : ⨆ g ∈ s₀, (O ∙ v g) ≤ T.range := iSup₂_le fun g hg ↦
+    (span_singleton_le_iff_mem _ _).2 ⟨Pi.single (inr (inl ⟨g, hg⟩)) 1, by simp [T]⟩
+  choose z hz using fun g ↦
     LinearMap.mem_range.1 (hs₀.trans h_range (mem_iSup_of_mem g (mem_span_singleton_self _)))
-  choose z hz using exists_z
   exact ⟨s₀, z, hz⟩
 
 section CharacterRows

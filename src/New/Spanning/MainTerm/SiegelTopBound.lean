@@ -183,7 +183,7 @@ is `x ↦ ψf E (-x / ϖ)` (`S.charOnPlaces T`).
 This is a two-factor form of the factorization of the finite adelic density into local densities,
 as in Siegel–Weil theory: the density at `T` and one integral of Gauss sums, not split over the
 remaining places. -/
-lemma normDensity_indicator_eq_mul [WeilData E] (hψ : P.ψ = S.charOnPlaces T) {κ : Type} [Fintype κ]
+lemma normDensity_indicator_eq_mul (hψ : P.ψ = S.charOnPlaces T) {κ : Type} [Fintype κ]
     {Ψ : (κ → LocProd T) → ℝ≥0} (hΨ : Continuous Ψ) {β : 𝔸f E} (hβ : star β = β) :
     normDensity ((intVectors (integralOff T) κ : Set (κ → 𝔸f E)).indicator
         fun x : κ → 𝔸f E ↦ Ψ (evalPlaces T ∘ x)) β =

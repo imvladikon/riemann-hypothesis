@@ -310,14 +310,14 @@ lemma IsFillingData.exists_intermediateGroup_sieveSystem {E : Type} {𝔰 : Shap
     -- floor `j` is the integral of floor `j + 1`
     simp_rw [← mul_div_assoc, integral_div, ite_eq_left hj]
     split_ifs with hj'
-    · obtain ⟨h_int, h_eq⟩ := hF.gauge.integral_psi_mul_floorForm_succ (p := p) (q := q)
+    case' pos =>
+      obtain ⟨h_int, h_eq⟩ := hF.gauge.integral_psi_mul_floorForm_succ (p := p) (q := q)
         (isCut_besselVector Z) ⟨j, hj'⟩ 1 ξ (hF.lintegral_formMajorant_ne_top Z 0 hj (by omega))
       simp only [one_mul] at h_int h_eq
-      rw [h_eq]
-      exact ⟨h_int.div_const _, fun hξ ↦ by simp [hξ, Pi.one_def],
-        fun hξ ↦ hF.norm_floorForm_div_massRatio_le Z hj hξ (.inl rfl)⟩
-    · obtain rfl : j = 𝔰.ϱ := by omega
+    case' neg =>
+      obtain rfl : j = 𝔰.ϱ := by omega
       obtain ⟨h_int, h_eq⟩ := integral_lastEntryDensity Z p q piNAt_mul_star ξ
+    all_goals
       rw [h_eq]
       exact ⟨h_int.div_const _, fun hξ ↦ by simp [hξ, Pi.one_def],
         fun hξ ↦ hF.norm_floorForm_div_massRatio_le Z hj hξ (.inl rfl)⟩

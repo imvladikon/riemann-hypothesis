@@ -360,7 +360,8 @@ lemma integral_mul_finIdeleAbs_rpow_eq_eulerProd_mul (hψ : IsHeckeOfType ψ n)
       exists_divisor_eq_coeIdeal_of_supp hd_count hx_integral hx_unit
     simp [hI, coeIdeal_inj]
   have h_countable : Countable (Ideal (𝓞 K)) :=
-    .of_preimage_singleton fun N ↦ (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) N).countable
+    .of_preimage_singleton fun N ↦
+      (Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) N).countable
   -- Integrate term by term; the coefficients `χ I * N I ^ (-s)` sum to the Euler product.
   have h_value : ∫ x, Z x ∂μ = eulerProd (heckeCoeff ψ S) s * μ.real W := by
     simp only [h_Z]

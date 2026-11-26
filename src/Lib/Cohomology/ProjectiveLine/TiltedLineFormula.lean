@@ -1088,21 +1088,21 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_twist : ((oneSub (pointOrTorusTwist χ)).app c).hom
           (FreeAddCommGroup.of y₀) = 0 := by
         change FreeAddCommGroup.lift _ (FreeAddCommGroup.of y₀) = _
-        erw [FreeAddCommGroup.lift_apply_of]
+        rw [FreeAddCommGroup.lift_apply_of]
         change Sub.sub (FreeAddCommGroup.of y₀)
           (FreeAddCommGroup.of (⟨⟨false⟩, ⟨𝟙 _ ≫ y.down⟩⟩ : (tiltPointsSum pointOrTorus).obj c)) = 0
-        erw [Category.id_comp]
+        rw [Category.id_comp]
         exact sub_self _
       have h_glue : (gluing.app c).hom (FreeAddCommGroup.of y₀) = FreeAddCommGroup.of z := by
         simpa only [y₀, z, evalZero_comp] using gluing_apply_point c y
       change (α.app c).hom (((oneSub (pointOrTorusTwist χ)).app c).hom (FreeAddCommGroup.of y₀)) =
         ((kummerSeq (genericTestOver A)).f.app c).hom
           ((κ.app c).hom ((gluing.app c).hom (FreeAddCommGroup.of y₀)))
-      erw [h_twist, h_glue]
+      rw [h_twist, h_glue]
       change _ = ((kummerSeq (genericTestOver A)).f.app c).hom
         (((tateGen (genericTestOver A)).app c).hom ((freeAb.map (toUnit _)).app c
           (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom (FreeAddCommGroup.of z))))
-      erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z.snd]
+      rw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z.snd]
       simp only [map_zero]
     · let y₁ : (tiltPointsSum pointOrTorus).obj c := ⟨⟨true⟩, y⟩
       let t : (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ)).obj c :=
@@ -1115,15 +1115,15 @@ lemma exists_isTodaCancellation_etaClass [Algebra A ℂ_[ℓ]] :
       have h_zero : (κ.app c).hom (FreeAddCommGroup.of z₀) = 0 := by
         change τ (π (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
           (FreeAddCommGroup.of z₀))) = 0
-        erw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z₀.snd]
+        rw [projFirst_false (B := fun _ ↦ monoidAlg ℚ≥0) c z₀.snd]
         simp only [map_zero]
       have h_one : (κ.app c).hom (FreeAddCommGroup.of z₁) = τ (FreeAddCommGroup.of PUnit.unit) := by
         change τ (π (((projFirst (B := fun _ ↦ monoidAlg ℚ≥0)).app c).hom
           (FreeAddCommGroup.of z₁))) = _
-        erw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c z₁.snd]
+        rw [projFirst_true (B := fun _ ↦ monoidAlg ℚ≥0) c z₁.snd]
         change τ ((freeAb.map (toUnit (PadicTest.tilt ⋙ reprBy (monoidAlg ℚ≥0)))).app c
           (FreeAddCommGroup.of z₁.snd)) = _
-        erw [freeAb.map_of]
+        rw [freeAb.map_of]
         rfl
       change (α.app c).hom (((oneSub (pointOrTorusTwist χ)).app c).hom (FreeAddCommGroup.of y₁)) =
         ((kummerSeq (genericTestOver A)).f.app c).hom

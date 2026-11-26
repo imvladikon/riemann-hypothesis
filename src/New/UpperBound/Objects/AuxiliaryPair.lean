@@ -4,6 +4,7 @@ public import Lib.Adelic.AutomorphicForms.AutomorphicAsAlgebraic
 public import Lib.ClassField.HeckeCharacter.TameModulus
 public import Lib.GLn.Dual
 public import Lib.General.Algebra.LevelModulus
+public import Lib.Shimura.Uniformisation.HolomorphicFamilies
 public import Lib.Weil.Unramified.HeckeTransfer
 
 /-!
@@ -926,9 +927,7 @@ lemma FitsParams.lowestKType_eq_staircaseWeight {O : DescentPair E r n}
       ((toHCParam O.signs (-l w)).lowestKType c : ℂ) • O.productOfMinors w := by
     obtain ⟨h_torus_Q, -⟩ := hQ.isJointHighest.isKHighest_cols
     rw [ha, map_smul, h_torus_Q, smul_comm]
-  have h_cast : ((toHCParam O.signs (-l w)).lowestKType c : ℂ) = ν c :=
-    (smul_left_inj h_ne).1 (h_eigen.symm.trans (h_torus c))
-  exact Int.cast_injective h_cast
+  exact Int.cast_injective ((smul_left_inj h_ne).1 (h_eigen.symm.trans (h_torus c)))
 
 /-- If l fits O, the product of minors at w is a joint harmonic for (V, W), with weights r₋ (the
 number of minus signs of W) and −(⌊n/2⌋ + `O.weight w`) and parameters `O.paramV w` and −l_w. -/

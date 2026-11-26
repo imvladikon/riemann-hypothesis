@@ -1,5 +1,6 @@
 module
 
+public import Lib.ClassField.Avatar.HeckeBaseChange
 public import New.UpperBound.Objects.Rows
 public import New.UpperBound.Size.ShortColumns
 

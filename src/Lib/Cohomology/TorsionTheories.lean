@@ -316,10 +316,10 @@ lemma map_eq_zero_of_dies_along_quotient_sieve {A : C'} {R : Subfunctor (reprBy 
     (isBijective_reprBy_iff.mp h_acyclic).1
   -- so it suffices to check `F.map q x` under each `g`, and `q ≫ g` lies in `R`
   refine h_sec.injective (freeAb.hom_ext fun d g ↦ ?_)
-  rw [homOfValue_app]
+  rw [homOfValue_app, homOfValue_app]
   have h_zero : (φ ⋙ F).map (φ.preimage (q ≫ g.down)) x = 0 :=
     h_dies d _ (h_mem _ g.down (φ.map_preimage _).symm)
-  erw [AddMonoidHom.map_zero]
+  refine Eq.trans ?_ (map_zero (F.map g.down).hom).symm
   change F.map g.down (F.map q x) = 0
   simpa using h_zero
 
@@ -863,7 +863,7 @@ lemma Theory.isCohomDense_botLocus : IsCohomDense (I.zerosCoeff Θ.functor) I.bo
       -- `x` dies in `I.zerosCoeff Θ.functor` where `I` is zero, and there `I.zerosCoeff Θ.functor`
       -- is `Θ.functor`
       apply (homReprEquiv c (I.zerosCoeff Θ.functor)).injective
-      erw [AddEquiv.apply_symm_apply, map_zero]
+      refine (AddEquiv.apply_symm_apply _ _).trans (Eq.trans ?_ (map_zero _).symm)
       refine (eq_zero_iff x).2 ?_
       change ∀ (d : C) (f : c ⟶ d), I.ideal d = ⊥ → Θ.functor.map f x = 0
       intro d f hd

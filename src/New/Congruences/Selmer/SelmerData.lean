@@ -456,22 +456,16 @@ lemma eq_top_of_stable_of_isUnit {O n : Type} [CommRing O] [Fintype n] [Decidabl
     {s : Set (Matrix n n O)} (hs : Submodule.span O s = ⊤) {X : Submodule O (n → QuotSpan a)}
     (h_stable : ∀ B ∈ s, ∀ u ∈ X, B • u ∈ X) {u : n → QuotSpan a} (hu : u ∈ X) {j : n}
     (hu_unit : IsUnit (u j)) : X = ⊤ := by
-  have h_all (B : Matrix n n O) : B • u ∈ X := by
-    induction Submodule.eq_top_iff'.1 hs B using Submodule.span_induction with
-    | mem B hB => exact h_stable B hB u hu
-    | zero => simp
-    | add B C _ _ hB hC => simpa only [add_smul] using X.add_mem hB hC
-    | smul t B _ hB => simpa only [smul_assoc] using X.smul_mem t hB
-  -- The matrix whose only nonzero column, the `j`-th, lifts `m / u j` takes `u` to `m`.
   refine Submodule.eq_top_iff'.2 fun m ↦ ?_
-  obtain ⟨w, hw⟩ : ∃ w : QuotSpan a, w * u j = 1 := hu_unit.exists_left_inv
-  have h_lift (k : n) : ∃ c : O, Ideal.Quotient.mk _ c = m k * w := Ideal.Quotient.mk_surjective _
-  choose c hc using h_lift
-  have h_eq : (Matrix.of fun k k' ↦ if k' = j then c k else 0) • u = m := by
-    ext k
-    simp [Matrix.Module.smul_apply, ite_smul, Algebra.smul_def (c k), hc, mul_assoc, hw]
-  rw [← h_eq]
-  exact h_all _
+  obtain ⟨w, hw⟩ := hu_unit.exists_left_inv
+  choose c hc using fun k ↦ Ideal.Quotient.mk_surjective (m k * w)
+  -- The matrix whose only nonzero column, the `j`-th, lifts `m / u j` takes `u` to `m`.
+  convert Submodule.span_induction (p := fun B _ ↦ B • u ∈ X) (fun B hB ↦ h_stable B hB u hu)
+    (by simp) (fun _ _ _ _ hB hC ↦ by simpa only [add_smul] using X.add_mem hB hC)
+    (fun t _ _ hB ↦ by simpa only [smul_assoc] using X.smul_mem t hB)
+    (Submodule.eq_top_iff'.1 hs (Matrix.of fun k k' ↦ if k' = j then c k else 0))
+  ext k
+  simp [Matrix.Module.smul_apply, ite_smul, Algebra.smul_def (c k), hc, mul_assoc, hw]
 
 namespace SelmerDatum
 

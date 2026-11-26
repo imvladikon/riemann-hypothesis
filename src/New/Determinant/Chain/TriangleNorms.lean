@@ -246,20 +246,11 @@ lemma ChainAdjoint.succ {i n : ℕ} {κ κ' : I → ℂ} (h_chain : ChainAdjoint
     ChainAdjoint w a d j i (n + 1) (κ * κ') := by
   -- Move the last arrow to the other side of the inner product: `x` is its adjoint vector at `z`.
   intro t y z
-  obtain ⟨x, adjoint_a, adjoint_d⟩ : ∃ x : F i (n + 1),
-      (∀ v : F i (n + 1), ⟪a t i (n + 1) v, z⟫ = ⟪v, x⟫) ∧
-      ∀ v : F (i + 1) n, ⟪d t i n x, v⟫ = κ' t * ⟪d t i (n + 1) z, a t (i + 1) n v⟫ :=
-    h_square t z
-  rw [weightedChain_succ_apply, weightedChain_succ_apply]
-  set X : F i n := weightedChain w a t i n (j i y)
-  set Y : F (i + 1) n := weightedChain w a t (i + 1) n (j (i + 1) y)
-  calc
-    ⟪z, a t i (n + 1) ((w t n : ℂ) • a t i n X)⟫ = w t n * ⟪x, a t i n X⟫ := by
-      rw [← inner_conj_symm, adjoint_a, inner_conj_symm, inner_smul_right]
-    _ = w t n * (κ t * ⟪d t i n x, Y⟫) := by rw [h_chain]
-    _ = (κ * κ') t * ⟪d t i (n + 1) z, (w t n : ℂ) • a t (i + 1) n Y⟫ := by
-      rw [adjoint_d, inner_smul_right, Pi.mul_apply]
-      ring
+  obtain ⟨x, adjoint_a, adjoint_d⟩ := h_square t z
+  rw [weightedChain_succ_apply, weightedChain_succ_apply,
+    ← inner_conj_symm, adjoint_a, inner_conj_symm, inner_smul_right,
+    h_chain, adjoint_d, inner_smul_right, Pi.mul_apply]
+  ring
 
 /-- Take a triangle of size `m` (`IsTriangle`): spaces `F i n` with arrows `a` along the rows and
 maps `d : F i (n + 1) → F (i + 1) n`, such that `⟪v, a (j i y)⟫ = ⟪d v, j (i + 1) y⟫` on the

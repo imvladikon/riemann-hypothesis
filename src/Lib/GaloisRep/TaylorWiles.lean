@@ -698,7 +698,8 @@ lemma residueRep_mulSingle [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel (ℓ :=
 
 /-- Let the places `w j` be off the base level. An element `g` of GL_N(k_{w j}), placed at the
 index `j`, acts by an operator at `w j`. -/
-lemma residueRep_mem_localOperators [DecidableEq J] (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
+lemma residueRep_mem_localOperators [DecidableEq J]
+    (hQ : ∀ j : J, D.IsOffLevel (ℓ := ℓ) ![] (Q.place j))
     (g : GL (Fin (card n)) (ResField (Q.place j))) :
     D.residueRep Q (Pi.mulSingle j g) ∈ D.localOperators Q j := by
   -- `g` is the reduction of an integral `k`, and acts as the translation by `k` at `w j`
@@ -723,7 +724,8 @@ private lemma reindexGL_atPlace_mem_proIwahori_of_mem_levelOf {k : Gf E n}
   grind
 
 omit [Fintype J] in
-/-- Let `w j = Q.place j` be the Taylor–Wiles places, all off the base level (`D.IsOffLevel (ℓ := ℓ) ![]`).
+/-- Let `w j = Q.place j` be the Taylor–Wiles places, all off the base level
+(`D.IsOffLevel (ℓ := ℓ) ![]`).
 Let `a` be an operator at `w j`, i.e. an element of `D.localOperators Q j`: an endomorphism of the
 forms `formsOfLevel Q.place` that keeps the integral forms and agrees with an
 `EllAdicIntegers`-combination of translations supported at `w j` and its conjugate. If the values of

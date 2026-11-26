@@ -942,18 +942,6 @@ section Parameter
 
 variable {Φ n : Type} [Fintype Φ] [Fintype n] {κ κ' : Φ → ℕ → ℕ} {e e' : Φ → ℤ} {l : Φ → n → ℤ}
 
-/-- In rank `N`, for `p + 1 < N`, entries `p` and `p + 1` of the parameter `New.hcParameter`
-differ by twice the number `κ w (p + 1)` of columns of height `p + 1`, plus two. -/
-lemma hcParameter_sub_succ {N p : ℕ} (w : Φ) (hp : p + 1 < N) :
-    hcParameter κ e N w p - hcParameter κ e N w (p + 1) = 2 * κ w (p + 1) + 2 := by
-  classical
-  have h_row : diagramWeight (fun _ ↦ N) κ (w, p) =
-      diagramWeight (fun _ ↦ N) κ (w, p + 1) + κ w (p + 1) := by
-    rw [GL.diagramWeight_eq_succ_add, ite_eq_left hp]
-  simp only [hcParameter, h_row]
-  push_cast
-  ring
-
 /-- If `l` and `-l` list the parameters (`New.IsHCParam`) of `(κ, e)` and `(κ', e')`, then each
 parameter is the negative of the other read backwards: for `p + q + 1 = card n`, entry `p` of the
 parameter of `(κ', e')` is minus entry `q` of that of `(κ, e)`. -/

@@ -861,7 +861,8 @@ lemma IsCohomContinuous.isFilteredColimit_adjoin (h : IsCohomContinuous Λ X) (T
       fun i x y h_eq ↦ ⟨i, 𝟙 _, Subtype.ext h_eq⟩
   let : (pullbackOver s).IsRightAdjoint := pullbackOver_isRightAdjoint s
   have h_preserves : PreservesLimitsOfShape (Finset T)ᵒᵖ (pullbackOver s) :=
-    (Adjunction.ofIsRightAdjoint (pullbackOver s)).rightAdjoint_preservesLimits.preservesLimitsOfShape
+    (Adjunction.ofIsRightAdjoint (pullbackOver s)).rightAdjoint_preservesLimits
+      |>.preservesLimitsOfShape
   let D' := ((D ⋙ Under.map a).op ⋙ (opEquivOpUnder R).inverse) ⋙
     Over.post (X := Opposite.op R) uliftCoyoneda
   have h_pullback : PreservesLimit D' (pullbackOver s) := h_preserves.preservesLimit

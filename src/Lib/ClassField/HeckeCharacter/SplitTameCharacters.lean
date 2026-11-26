@@ -61,6 +61,10 @@ variable {E : Type*} [Field E] [CMType E]
 
 /-! ### Base change at local units -/
 
+lemma WeilData.charUnramifiedAt_upsilon [SplittingChar E] (v : FinPlace E) :
+    CharUnramifiedAt υ.finPart v := by
+  simp_all [CharUnramifiedAt, HeckeChar.finPart, upsilon_eq_atUniformizer_zpow v]
+
 lemma AutChar.HasWeight.of_weight_eq (h : μ.HasWeight e ψ) {e' : InfinitePlace E → ℤ}
     (he : e = e') : μ.HasWeight e' ψ := by
   rwa [← he]

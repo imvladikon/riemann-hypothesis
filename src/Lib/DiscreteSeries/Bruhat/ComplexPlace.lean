@@ -228,7 +228,7 @@ lemma embedH_mem_floorGroup (k : U 1) : embedH (𝔰 := 𝔰) k ∈ floorGroup �
 @[fun_prop]
 lemma measurable_cellChart {l : ℕ} : Measurable (cellChart 𝔰 l) := by
   refine measurable_unitary_of_coe ?_
-  simp -iota [cellChart, cellBoost, apply_dite]
+  simp -iota only [cellChart, cellBoost, apply_dite, U.val_of_coe, dite_eq_ite]
   apply Measurable.ite <;> measurability
 
 /-- The density of floor l is a measurable function on ℂ. -/

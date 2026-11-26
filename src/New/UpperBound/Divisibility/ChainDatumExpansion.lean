@@ -225,11 +225,6 @@ noncomputable def ungluedVacuum (t : D.Translations) : D.ChainTensor :=
   pure (fun i : ℕ ↦ D.translateDatum t (2 * i) ⊗ₜ D.translateDatum t (2 * i + 1)) (D.ϱ + 1)
 
 variable {D} in
-/-- The plain tensor of `Ψ` is `∑ x, Ψ x • D.ungluedVacuum x`. -/
-lemma plainTensor_eq_sum_ungluedVacuum (Ψ : D.Translations →₀ ℂ) :
-    plainTensor Ψ = Ψ.sum fun (x : D.Translations) (c : ℂ) ↦ c • D.ungluedVacuum x :=
-  rfl
-
 open scoped Classical in
 /-- If the translations `t` vanish at the places above `N`, the glued tensor `D.gluedVacuum t` is
 the sum, over the classes `y` of the gluing, of `D.ungluedVacuum (t + gluingTuple y)`: the tensors,
@@ -374,7 +369,7 @@ lemma IsChainDatum.exists_isWeakChainDatum_compositeLift_eq {ϑ : D.Twist}
     h_outer.bind 1 (D.N ^ (D.f * D.m * D.n D.m))
       (fun x hx ↦ isAdmissibleCombination_sum_ungluedVacuum (Set.inter_subset_left hx) (ϑ.Q = ∅))
       (by simp) fun _ ↦ by simpa using h_size
-  have h_eq : gluedTensor Ψ = plainTensor Ψ' := by rw [h_sum, plainTensor_eq_sum_ungluedVacuum]
+  have h_eq : gluedTensor Ψ = plainTensor Ψ' := h_sum
   have h_inv : (plainTensor Ψ').IsInvariant ϑ := by simpa [← h_eq] using hΨ.isInvariant
   refine ⟨Ψ', ⟨h_adm, isJointlyInvariant_of_plainTensor h_inv⟩, fun φ ↦ ?_⟩
   have h_chain : chainOfTensor ϑ φ (plainTensor Ψ') =

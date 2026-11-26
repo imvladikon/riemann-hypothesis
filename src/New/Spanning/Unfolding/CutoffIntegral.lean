@@ -594,12 +594,12 @@ lemma exists_rowCoords_fst_eq (c : S.Classes) (a : Fin 𝔰.ϱ)
       h_col, hd.ne']
   · simp [funext_iff, imRowCoords, coe_classUnipotentToInf_apply, hγ, hd.ne']
 
-/-- Let `E` contain a primitive 5040th root of unity and let `S` be admissible. Suppose that at the
-place `v`, right multiplication by the image `classUnipotentToInf c γ v` of `γ ∈ S.classUnipotent c`
+/-- Let `E` contain a primitive 5040th root of unity. Suppose that at the place `v`, right
+multiplication by the image `classUnipotentToInf c γ v` of `γ ∈ S.classUnipotent c`
 adds its (e_a, e*_a) entry to that of every `x` in `besselU`. Then the imaginary parts of this entry
 of `classUnipotentToInf c γ` at all places form a vector `(S.M / S.frameScaleSq w a * Im Φ_w(s))_w`
 for an integer `s` of `E` with `star s = -s` (`imSkewLattice`). -/
-lemma rowCoords_snd_mem_imSkewLattice [S.IsAdmissible] (c : S.Classes) (a : Fin 𝔰.ϱ) (γ : S.classUnipotent c)
+lemma rowCoords_snd_mem_imSkewLattice (c : S.Classes) (a : Fin 𝔰.ϱ) (γ : S.classUnipotent c)
     (v : InfinitePlace E)
     (h_add : ∀ x : (𝔰.middleGram (1 : ℂ)).besselU,
       (↑(x * classUnipotentToInf c γ v) : Matrix 𝔰.BesselIndex 𝔰.BesselIndex ℂ) (inl a) (eStar a) =

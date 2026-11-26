@@ -584,10 +584,9 @@ lemma New.Variety.exists_map_separating_class {p : ℕ} {k : Type} [Field k] [Em
     have hψ : (ψ ≫ SqZeroExt.fst) ≫ structureMap = ψ := by
       refine U.lift_unique (π := SqZeroExt.fst) fst_surjective_and_kerIdeal_sq_eq_bot (by rfl)
         fun i ↦ ?_
-      have h_coord := mk_eq_mk_iff_cross_mul (v := ψ ∘ _).mp hy i.succ 0
-      simp [hw₁, hU] at h_coord ⊢
-      rw [h_coord]
-      rfl
+      have h_coord : ψ (evalForms Λ w i.succ) = algebraMap k _ (q i) := by
+        simpa [hw₁, hU] using mk_eq_mk_iff_cross_mul (v := ψ ∘ _).mp hy i.succ 0
+      simp [hU, h_coord]
     let A := of k (DualNumber k)
     let σ : A ⟶ A := SqZeroExt.fst ≫ structureMap
     let α := pointMap C.point

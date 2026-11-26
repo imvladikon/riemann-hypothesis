@@ -422,23 +422,20 @@ def lastPathDetExp : ℕ → D.Φ → ℤ := (D.exists_isLiftWeight_isHCParam z)
 weight at the upper end of the character of the edge between them. -/
 lemma isLiftWeight_lastPathColumns :
     IsLiftWeight (D.LastPathIndex z j) (D.LastPathIndex z (j + 1)) (D.lastPathColumns z)
-      (D.gridWeight z j (D.LastPathIndex z (j + 1))) (D.lastPathDetExp z j) := by
-  obtain ⟨h_lift, -, -⟩ := (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec
-  exact h_lift j
+      (D.gridWeight z j (D.LastPathIndex z (j + 1))) (D.lastPathDetExp z j) :=
+  (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec.1 j
 
 /-- The weight at the lower end of the character of the edge from `(z, j, m)` to `(z, j + 1, m)` is
 the exponent of the determinant at `(z, j + 1, m)`. -/
 lemma gridWeight_eq_lastPathDetExp :
-    D.gridWeight z j (D.LastPathIndex z j) = D.lastPathDetExp z (j + 1) := by
-  obtain ⟨-, h_next, -⟩ := (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec
-  exact h_next j
+    D.gridWeight z j (D.LastPathIndex z j) = D.lastPathDetExp z (j + 1) :=
+  (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec.2.1 j
 
 /-- For `j ≤ m`, the weight at the node `(z, j, m)` has the doubled Harish-Chandra parameter
 `-gridParam z 0 j m`. -/
 lemma isHCParam_lastPathColumns {j : ℕ} (hj : j ≤ D.m) :
-    IsHCParam (D.lastPathColumns z) (D.lastPathDetExp z j) (-D.gridParam z 0 j D.m) := by
-  obtain ⟨-, -, h_param⟩ := (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec
-  exact h_param j hj
+    IsHCParam (D.lastPathColumns z) (D.lastPathDetExp z j) (-D.gridParam z 0 j D.m) :=
+  (D.exists_isLiftWeight_isHCParam z).choose_spec.choose_spec.2.2 j hj
 
 /-- The space of values of the algebraic forms at the node `(z, j, m)`. -/
 abbrev LastPathVector : Type := WeylIndex (D.LastPathIndex z j) (D.lastPathColumns z) → ℂ

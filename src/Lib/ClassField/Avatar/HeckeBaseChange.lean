@@ -66,10 +66,6 @@ open WeilData Finset Complex Real Variety
 
 variable {E : Type _} [Field E] [CMType E] {e : NumberField.InfinitePlace E → ℤ} (ν : AutChar E)
 
-lemma WeilData.charUnramifiedAt_upsilon [SplittingChar E] (v : FinPlace E) :
-    CharUnramifiedAt υ.finPart v := by
-  simp_all [CharUnramifiedAt, HeckeChar.finPart, upsilon_eq_atUniformizer_zpow v]
-
 /-- The Euler product of the character `x ↦ ν (x / x̄)` of `E`, without the factors at `S ∪ S̄`.
 It is the partial Hecke `L`-function if `S ∪ S̄` contains the ramified places. -/
 def AutChar.L (S : Set (FinPlace E)) : ℝ → ℂ :=

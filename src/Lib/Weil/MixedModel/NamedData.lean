@@ -493,13 +493,6 @@ lemma schrodingerOp_union {Ψ' : (n → 𝔸f E) → ℂ} {T : Set (FinPlace E)}
     simp [projOn_union, projOn_rho _ h_off, smul_smul, h_idem]
   simp [sum_mul, mul_sum, Finsupp.sum.eq_1, h_term]
 
-omit [WeilData E] in
-/-- The finite parts of the entries of `g.adeleMatrix` are the entries of the finite component
-`g.snd`. -/
-private lemma map_snd_adeleMatrix (g : G E s) :
-    g.adeleMatrix.map (fun a : 𝔸 E ↦ a.2) = ((↑g.snd : GL n (𝔸f E)) : Matrix n n (𝔸f E)) :=
-  Matrix.ext fun _ _ ↦ rfl
-
 include hS
 /-- Let S be disjoint from its conjugate, Ψ be Schwartz–Bruhat above S, g ∈ `G E s` with finite
 component g_f = `g.snd`, and f ∈ 𝒮(V), and write Φ⊗ = `V.schrodingerOp S Φ` for the operator ∑ c_y
@@ -524,7 +517,9 @@ lemma omega_schrodingerOp (g : G E s) (f : 𝒮 V) :
     -- The translation by the image of `y` is `g.adeleMatrix` applied to the translation by `y`.
     have h_vec : finVec (idem S.conjClosure • (M *ᵥ y)) =
         g.adeleMatrix *ᵥ finVec (idem S.conjClosure • y) := by
-      rw [mulVec_finVec, map_snd_adeleMatrix, mulVec_smul]
+      rw [mulVec_finVec]
+      change _ = finVec (M *ᵥ (idem S.conjClosure • y))
+      rw [mulVec_smul]
     rw [h_vec, ← omega_rho, rho_schrodingerOp hS]
     simp [T, M, schrodingerAct, LinearMap.pi, LinearMap.funLeft, Function.comp_def, mulVec_add]
   -- Integral translations, corrected by `semichar`, fix the box function, so their mean fixes `u`.

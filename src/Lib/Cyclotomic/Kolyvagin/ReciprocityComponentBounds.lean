@@ -618,7 +618,8 @@ lemma sum_floorDiff_dvd (h : IsStickelbergerBound N e X)
     simp only [floorDiff, ↓← map_neg, ofZMod_apply, QZ.fracRep_mk, mul_div, mod_eq_of_lt, val_lt,
       Int.fract_div_natCast_eq_div_natCast_mod]
     norm_cast
-    simp [-natCast_val, U, two_mul, sub_mul]
+    simp only [Int.cast_subNatNat, sub_mul, sum_sub_distrib, map_sub, map_sum, map_mul, map_natCast,
+      map_pow, two_mul, U]
     nth_rw 2 [← neg_bijective.sum_comp]
     simp [← h_odd, ← mul_assoc, ← mul_pow, h_char]
   -- Use `IsStickelbergerBound` at the levels `lⁿ⁺¹` and `lⁿ`. As `e ≠ 0`, the factor `l ^ e` turns
@@ -1096,7 +1097,8 @@ lemma exists_detecting_points_component (h_bound : IsStickelbergerBound N e X)
   by_contra! h_blind
   set m : ℕ := X.factorization l + 1
   have h_two : IsUnit (2 : O) := by
-    exact_mod_cast isUnit_natCast_of_not_dvd (O := O) (not_dvd_of_pos_of_lt two_pos (by lia : 2 < l))
+    exact_mod_cast isUnit_natCast_of_not_dvd (O := O)
+      (not_dvd_of_pos_of_lt two_pos (by lia : 2 < l))
   have h_totient : IsUnit (φ (N * l) : O) := isUnit_totient_mul (by lia)
   obtain ⟨a, ha, hla, h_pow, h_pow_succ⟩ :=
     exists_modEq_one_coprime_isUnit_pow_sub_one (O := O) he_ne_zero hl

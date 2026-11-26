@@ -678,12 +678,6 @@ private lemma hasGap_compactForm_gridParam {j : ℕ} {P : Parameters} (D : Data 
     (D.gridParam z o i j τ).compactForm.HasGap (D.gap - D.t - 2) :=
   (D.isParam_compactForm_gridParam τ z).hasGap (D.isSeparated_gridCentres_on τ z _) (fun _ hx ↦ hx)
 
-/-- At an infinite place `τ` the doubled parameter of the node `(i, j)` of grid `z` with offset `o`
-takes distinct values at distinct indices. -/
-lemma gridParam_injective {j : ℕ} {P : Parameters} (D : Data P) {z : Bool} {o i : ℕ} (τ : D.Φ) :
-    Injective (D.gridParam z o i j τ) :=
-  (D.hasGap_compactForm_gridParam (o := o) (i := i) (j := j) τ z).injective
-
 section Steps
 
 variable {j : ℕ} {P : Parameters} (D : Data P) {z : Bool} {o i : ℕ} (τ : D.Φ)
@@ -723,7 +717,7 @@ lemma two_mul_gap_le_abs_gridParam_sub {x y : D.GridIndex z i j}
 infinite place `τ`, the gap `D.gap` for the signs of the node (`HasGap`): its entries are distinct,
 have the parity of the rank minus one, and differ by at least `2 * D.gap` where the signs differ. -/
 lemma hasGap_gridParam (z : Bool) (o i j : ℕ) : (D.gridParam z o i j τ).HasGap D.gap where
-  injective := D.gridParam_injective τ
+  injective := (D.hasGap_compactForm_gridParam (o := o) (i := i) (j := j) τ z).injective
   parity := (D.hasGap_compactForm_gridParam (o := o) (i := i) (j := j) τ z).parity
   gap _ _ := D.two_mul_gap_le_abs_gridParam_sub τ
 

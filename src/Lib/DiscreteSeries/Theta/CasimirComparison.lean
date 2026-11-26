@@ -2,7 +2,6 @@ module
 
 public import TauCeti.Algebra.Lie.GeneralLinear.Oscillator.Casimir
 public import Mathlib.Data.Finset.Slice
-public import Lib.DiscreteSeries.FlenstedJensen.CasimirEigenfunction
 public import Lib.DiscreteSeries.Theta.FockDualPair
 
 /-!

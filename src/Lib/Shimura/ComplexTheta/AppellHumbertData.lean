@@ -106,7 +106,8 @@ def RealComplexForm.thetaSpace (B : ThetaTori.LatticeForm L) : Submodule ℂ (V 
       Differentiable ℂ f ∧
       ∀ l ∈ L, ∀ z : V, f (z + l) = χ l * Complex.exp (B l z + B l l / 2) * f z}
     ⟨0, by simp⟩ (by
-      simp +contextual [field]
+      simp +contextual only [Set.mem_ofPred_eq, Pi.add_apply, Pi.smul_apply, smul_eq_mul, and_imp,
+        field, implies_true, and_true]
       fun_prop)
 
 /-- The Riemann form of B: the alternating real form E(u, v) = Im(B(u,v) − B(v,u))/(2π). It is
@@ -587,7 +588,7 @@ lemma IsPosRiemann.eventually_add_neg :
     refine (isCompact_sphere 0 1).eventually_forall_mem (fun A u ↦ (B - A).riemannForm u (I • u)) _
       (fun u hu ↦ Ioi_mem_nhds ?_) ?_
     · simpa using hp.riemannForm_pos u (ne_zero_of_mem_unit_sphere ⟨u, hu⟩)
-    · simp [riemannForm]
+    · simp only [riemannForm_def]
       fun_prop
   -- Scale a nonzero vector to the sphere.
   filter_upwards [sphere_pos] with A hA

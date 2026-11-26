@@ -79,22 +79,15 @@ lemma IsMainSummandLike.conjGal_inv_eq_smul_one (hrow : IsMainSummandLike D t J 
     (h_span_top : Submodule.span O (Set.range u) = ⊤) {g : AbsGal D} {y : ↑O} (hy : u g = y • 1) :
     u (conjGal g)⁻¹ = (cyclotomicInv ℓ D.E O g⁻¹ ^ (t - 1) * y) • 1 := by
   -- The `u x` span all matrices, so it is enough to compare traces against them.
-  set y' : ↑O := cyclotomicInv ℓ D.E O g⁻¹ ^ (t - 1) * y with hy'
-  have h_trace (x : AbsGal D) :
-      (u x * u (conjGal g)⁻¹).trace = (u x * y' • (1 : Matrix n n O)).trace := by
-    -- Self-duality at `x^c g⁻¹` and at `x^c`: both traces are multiples of `tr u (x^c)⁻¹`.
-    have h_dual_xg : (u x * u (conjGal g)⁻¹).trace =
-        cyclotomicInv ℓ D.E O (conjGal x * g⁻¹) ^ (t - 1) * (y * (u (conjGal x)⁻¹).trace) := by
-      simpa [hy] using hrow.trace_lattice_conjGal hu (conjGal x * g⁻¹)
-    have h_dual_x : (u x).trace =
-        cyclotomicInv ℓ D.E O (conjGal x) ^ (t - 1) * (u (conjGal x)⁻¹).trace := by
-      simpa using hrow.trace_lattice_conjGal hu (conjGal x)
-    rw [h_dual_xg, Matrix.mul_smul, mul_one, trace_smul, smul_eq_mul, h_dual_x, map_mul, hy']
-    ring
-  have h_forms : traceLinearMap n O O ∘ₗ mulRight O (u (conjGal g)⁻¹) =
-      traceLinearMap n O O ∘ₗ mulRight O (y' • (1 : Matrix n n O)) :=
-    ext_on_range h_span_top h_trace
-  exact ext_iff_trace_mul_left.2 (LinearMap.ext_iff.1 h_forms)
+  refine ext_iff_trace_mul_left.2 ((LinearMap.ext_iff
+    (f := traceLinearMap n O O ∘ₗ mulRight O _)
+    (g := traceLinearMap n O O ∘ₗ mulRight O _)).1 (ext_on_range h_span_top fun x ↦ ?_))
+  -- Self-duality at `x^c g⁻¹` and at `x^c`: both traces are multiples of `tr u (x^c)⁻¹`.
+  have h₁ := hrow.trace_lattice_conjGal hu (conjGal x * g⁻¹)
+  have h₂ := hrow.trace_lattice_conjGal hu (conjGal x)
+  simp [hy, map_mul] at h₁ h₂ ⊢
+  rw [h₁, h₂]
+  ring
 
 /-- A scalar by which a Galois element acts through `u` is a unit. The hypothesis `hrow` is used
 only to know that `n` is not empty. -/

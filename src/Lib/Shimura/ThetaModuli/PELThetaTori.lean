@@ -769,18 +769,16 @@ lemma lagrangianTheta_mem_thetaSpace_lagrangian :
       x.multiplier :=
   x.exists_generator_thetaSpace.choose.prop
 
-lemma lagrangianTheta_ne_zero : x.lagrangianTheta ≠ 0 := by
-  obtain ⟨h_ne, -⟩ := x.exists_generator_thetaSpace.choose_spec
-  exact fun h_zero ↦ h_ne (Subtype.ext h_zero)
+lemma lagrangianTheta_ne_zero : x.lagrangianTheta ≠ 0 :=
+  fun h_zero ↦ x.exists_generator_thetaSpace.choose_spec.1 (Subtype.ext h_zero)
 
 /-- Every theta function for the lattice over the Lagrangian subgroup is a complex multiple of
 `x.lagrangianTheta`. -/
 lemma exists_smul_lagrangianTheta_eq {f : V → ℂ}
     (hf : f ∈ x.automorphyForm.thetaSpace (L := x.latticeOver D.lagrangian) x.multiplier) :
-    ∃ c : ℂ, c • x.lagrangianTheta = f := by
-  obtain ⟨-, h_span⟩ := x.exists_generator_thetaSpace.choose_spec
-  obtain ⟨c, hc⟩ := h_span ⟨f, hf⟩
-  exact ⟨c, congrArg Subtype.val hc⟩
+    ∃ c : ℂ, c • x.lagrangianTheta = f :=
+  (x.exists_generator_thetaSpace.choose_spec.2 ⟨f, hf⟩).imp
+    fun _ hc ↦ congrArg Subtype.val hc
 
 /-- The theta coordinate at `t`: the normalised translate of `x.lagrangianTheta` by the chosen
 lift of `t`. -/

@@ -63,19 +63,13 @@ lemma boxes_le_card_mul_of_isHCParam {κ : Φ → ℕ → ℕ} {e : Φ → ℤ} 
   classical
   -- The boxes are counted by rows. A row length is at most half the difference between an entry
   -- of `l w` and the smallest entry `2 e w + 1 - card n`, so at most `β`.
-  have h_row (w : Φ) (i : Fin (card n)) : diagramWeight (rankAt fun _ ↦ n) κ (w, i) ≤ β := by
-    have h_entry :
-        |2 * (e w + diagramWeight (rankAt fun _ ↦ n) κ (w, i)) + card n - 1 - 2 * (i : ℕ)| ≤ β :=
-      abs_hcParameter_le_of_isHCParam hl (hβ w) i.isLt
-    have h_last : |2 * e w + 1 - card n| ≤ β := by
-      simpa [hcParameter_sub_one κ e i.pos w] using
-        abs_hcParameter_le_of_isHCParam hl (hβ w) (Nat.sub_one_lt_of_lt i.isLt)
-    grind [abs_le]
-  calc boxes κ (card n)
-      = ∑ x : Φ × Fin (card n), diagramWeight (rankAt fun _ ↦ n) κ (x.1, x.2) :=
-        FitsRanks.refl.sum_diagramWeight_eq_boxes.symm
-    _ ≤ ∑ _x : Φ × Fin (card n), β := sum_le_sum fun x _ ↦ h_row x.1 x.2
-    _ = card Φ * card n * β := by simp
+  rw [← FitsRanks.refl.sum_diagramWeight_eq_boxes]
+  refine (sum_le_card_nsmul _ _ β fun ⟨w, i⟩ _ ↦ ?_).trans_eq (by simp)
+  have : |2 * (e w + diagramWeight (rankAt fun _ ↦ n) κ (w, i)) + card n - 1 - 2 * (i : ℕ)| ≤ β :=
+    abs_hcParameter_le_of_isHCParam hl (hβ w) i.isLt
+  have h2 := abs_hcParameter_le_of_isHCParam hl (hβ w) (Nat.sub_one_lt_of_lt i.isLt)
+  rw [hcParameter_sub_one κ e i.pos w] at h2
+  grind [abs_le]
 
 /-- Let `n` be nonempty. If `l` is twice the Harish-Chandra parameter of the weight `(κ, e)` and
 `|l w i| ≤ β` for all `i`, then the power of the determinant at `w` satisfies `|e w| ≤ β`. -/

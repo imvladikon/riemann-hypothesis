@@ -161,10 +161,15 @@ lemma hasPartitions_periodAlg (θ : asModules (tilt ⋙ periodAlg S) ⋙ tensorW
   have h_ten : Function.Bijective fun x : Φ.obj A ↦ (Φ.map f x, Φ.map g x) :=
     (h_witt.map_prod (tensorWith S S ⋙ forget _)).map_prod
       (moduleCompletion S p ⋙ tensorWith K K ⋙ forget _)
-  -- The composite `Φ` is isomorphic to `Ψ`, by `moduleCompletionIso` and `θ`.
-  let θ' : Φ ≅ Ψ :=
-    (Functor.isoWhiskerRight
-      ((tilt ⋙ wittFunctor ⋙ algBaseChange S).isoWhiskerLeft (moduleCompletionIso S p)) _ ≪≫ θ :)
+  -- The composite `Φ` is isomorphic to `Ψ`, by `moduleCompletionIso` and `θ`. The whiskering `κ`
+  -- is stated for any functors `Q`, `Q'` in place of the two completions.
+  have κ {Q : ModuleCat S ⥤ ModuleCat S} {Q' : CommAlg S ⥤ CommAlg S}
+      (ι : asModules (𝟭 (CommAlg S)) ⋙ Q ≅ asModules Q') :
+      asModules (tilt ⋙ wittFunctor ⋙ algBaseChange S) ⋙ Q ⋙ tensorWith K K ≅
+        asModules (tilt ⋙ wittFunctor ⋙ algBaseChange S ⋙ Q') ⋙ tensorWith K K :=
+    (Functor.isoWhiskerRight ((tilt ⋙ wittFunctor ⋙ algBaseChange S).isoWhiskerLeft ι)
+      (tensorWith K K) :)
+  let θ' : Φ ≅ Ψ := κ (moduleCompletionIso S p) ≪≫ θ
   -- The square of `θ'` with the two pairs of maps commutes, by naturality of `θ'`.
   have h_comm (x : Φ.obj A) : (Ψ.map f (θ'.hom.app A x), Ψ.map g (θ'.hom.app A x)) =
       Prod.map (θ'.hom.app B₁) (θ'.hom.app B₂) (Φ.map f x, Φ.map g x) := by
@@ -182,7 +187,8 @@ lemma IsPeriodRingPair.pFlat_smul_eq_zero (hK : IsPeriodRingPair p S K) (x : OFl
   have h_dvd : (p : OFlat ⊗[Ainf] S) ∣ algebraMap Ainf (OFlat ⊗[Ainf] S) xi := by
     simpa using map_dvd (includeRight (R := Ainf) (A := OFlat)) hK.dvd_xi
   change xi • x = 0
-  simpa [Algebra.smul_def, natCast_eq_zero_of_algebra_oFlat] using h_dvd.mul_right x
+  rw [natCast_eq_zero_of_algebra_oFlat, zero_dvd_iff] at h_dvd
+  rw [Algebra.smul_def, h_dvd, zero_mul]
 
 end PeriodPairs
 
@@ -264,7 +270,7 @@ private lemma CoeffCompBijective.completion_wittOfMaxIdeal_of_almostCoeff {C C' 
     asModules (wittFunctor (k := OFlat)) ⋙ tensorWith S (S ⊗[Ainf] wittOfMaxIdeal)
   let Q : ModuleCat S ⥤ ModuleCat S := moduleCompletion S p
   -- `red b` takes zeroth coordinates, applies `c`, then rearranges the factors.
-  have h_smul : CompatibleSMul Ainf OFlat (OFlat ⊗[Ainf] S) MaxIdealFlat :=
+  have h_smul : TensorProduct.CompatibleSMul Ainf OFlat (OFlat ⊗[Ainf] S) MaxIdealFlat :=
     CompatibleSMul.of_algebraMap_surjective (OFlat ⊗[Ainf] S) MaxIdealFlat h_modW.left
   let rearrange (b : CommAlg OFlat) : S ⊗[Ainf] MaxIdealFlat ⊗[Ainf] b ≃ₗ[Ainf]
       b ⊗[OFlat] (OFlat ⊗[Ainf] S ⊗[OFlat] MaxIdealFlat) :=
@@ -337,10 +343,22 @@ private lemma CoeffCompBijective.completion_wittOfMaxIdeal_of_almostCoeff {C C' 
   have h_dc {D : Type 1} [Category D] (χ : D ⥤ CommAlg OFlat) (L : AbFunctor D) (n : ℕ) :
       IsDerivedComplete (p : S) (H L (moduleCoeff (χ ⋙ P ⋙ Q)) n) :=
     .cohomology (fun _ ↦ .of_isAdicComplete (isAdicComplete h_fg)) L n
-  refine .of_mod (h_exact hψ) (h_exact hψ') ?_ (fun n _ ↦ h_dc ψ N n) (h_dc ψ' N') h_red
-  -- The square of `redCompl` and `β` commutes: it is its naturality, read in `ULift`.
-  ext A x
-  exact congrArg ULift.up (ConcreteCategory.congr_hom (redCompl.naturality (β.app A)) x.down)
+  -- The adic step is stated for any functor `F` with a map `r` to the almost coefficients, in
+  -- place of `P ⋙ Q` and `redCompl`.
+  have h_adic {F : CommAlg OFlat ⥤ ModuleCat S}
+      (r : F ⋙ forget₂ _ Ab ⟶ almostCoeff (OFlat ⊗[Ainf] S) ⋙ forget₂ _ Ab)
+      (h : ∀ {D : Type 1} [Category D] {χ : D ⥤ CommAlg OFlat},
+        (∀ A : D, IsPerfectTorsionFree (χ.obj A)) →
+          ModShortExact (Φ := χ ⋙ F) (G := moduleCoeff (χ ⋙ almostCoeff (OFlat ⊗[Ainf] S)))
+            (p : S) (whiskerRight (χ.whiskerLeft r) uliftFunctor))
+      (h' : ∀ {D : Type 1} [Category D] (χ : D ⥤ CommAlg OFlat) (L : AbFunctor D) (n : ℕ),
+        IsDerivedComplete (p : S) (H L (moduleCoeff (χ ⋙ F)) n)) :
+      CoeffCompBijective β α F := by
+    refine .of_mod (h hψ) (h hψ') ?_ (fun n _ ↦ h' ψ N n) (h' ψ' N') h_red
+    -- The square of `r` and `β` commutes: it is its naturality, read in `ULift`.
+    ext A x
+    exact congrArg ULift.up (ConcreteCategory.congr_hom (r.naturality (β.app A)) x.down)
+  exact h_adic redCompl h_exact h_dc
 
 /-- After `p`-adic completion and `K ⊗ –`, the functors `b ↦ (S ⊗ W(𝔪)) ⊗ W(b)` and
 `b ↦ S ⊗ W(b)` are isomorphic, for a period ring pair `(S, K)`: tensored with `W(b)`, the maps of
@@ -362,9 +380,10 @@ private lemma nonempty_completion_wittOfMaxIdeal_iso {p : ℕ} [ThePrime p] {S K
   -- Tensoring `u₀`, `v₀` with `W(b)` gives maps `u`, `v` between `P b` and `B b` that compose to
   -- `τ` in both orders.
   let u : P ⟶ asModules B :=
-    { app _ := ↟(rTensor _ _ u₀)
+    { app _ := ↟(AlgebraTensorModule.rTensor _ _ u₀)
       naturality b b' f := hom_ext (tmul_ext fun _ _ ↦ rfl) }
-  let v (b : CommAlg OFlat) : (asModules B).obj b ⟶ P.obj b := ↟(rTensor _ _ v₀)
+  let v (b : CommAlg OFlat) : (asModules B).obj b ⟶ P.obj b :=
+    ↟(AlgebraTensorModule.rTensor _ _ v₀)
   have huv (b : CommAlg OFlat) : u.app b ≫ v b = τ • 𝟙 (P.obj b) :=
     hom_ext (tmul_ext fun m x ↦ congrArg (fun w ↦ w ⊗ₜ x) (LinearMap.congr_fun huv₀ m))
   have hvu (b : CommAlg OFlat) : v b ≫ u.app b = τ • 𝟙 ((asModules B).obj b) :=
@@ -414,18 +433,30 @@ lemma CoeffCompBijective.periodAlg_of_almostCoeff {C C' : Type 1} [Category C] [
     .completion_wittOfMaxIdeal_of_almostCoeff hK.regular hψ hψ' h_red
   obtain ⟨U⟩ : Nonempty (P ⋙ G ≅ asModules B ⋙ G) := nonempty_completion_wittOfMaxIdeal_iso hK
   -- Transport along `U` and along `moduleCompletionIso`, which compares the completions of
-  -- modules and of algebras.
-  let V : P ⋙ G ≅ asModules (periodAlg S) ⋙ tensorWith K K :=
-    U ≪≫ B.isoWhiskerLeft (isoWhiskerRight (moduleCompletionIso S p) _)
-  let γ {D : Type 1} [Category.{0} D] (χ : D ⥤ CommAlg OFlat) :
-      moduleCoeff (χ ⋙ P ⋙ G) ≅ moduleCoeff (χ ⋙ asModules (periodAlg S) ⋙ tensorWith K K) :=
-    isoWhiskerRight (isoWhiskerRight (χ.isoWhiskerLeft V) (forget₂ _ Ab)) uliftFunctor
-  -- By `hN` and `hN'`, `K ⊗ –` carries `h_cpl` to the coefficients `P ⋙ G`.
-  refine (isBijective_iff_of_coeff_iso
-    (c := ofModuleHom φ (Φ := ψ ⋙ P ⋙ G) (whiskerRight β (P ⋙ G))) (γ ψ).hom (γ ψ').hom ?_).mp
-    ((IsBijective.baseChangeMap_bijective_iff h_cpl hN).mp (hN' _))
-  ext A x
-  exact congrArg ULift.up (ConcreteCategory.congr_hom (V.hom.naturality (β.app A)).symm x.down)
+  -- modules and of algebras. The whiskering `κ` is stated for any functors `Q`, `Q'` in place of
+  -- the two completions.
+  have κ {Q : ModuleCat S ⥤ ModuleCat S} {Q' : CommAlg S ⥤ CommAlg S}
+      (ι : asModules (𝟭 (CommAlg S)) ⋙ Q ≅ asModules Q') :
+      asModules B ⋙ Q ⋙ tensorWith K K ≅
+        asModules (wittFunctor (k := OFlat) ⋙ algBaseChange S ⋙ Q') ⋙ tensorWith K K :=
+    (B.isoWhiskerLeft (isoWhiskerRight ι (tensorWith K K)) :)
+  let V : P ⋙ G ≅ asModules (periodAlg S) ⋙ tensorWith K K := U ≪≫ κ (moduleCompletionIso S p)
+  -- Bijectivity passes along an isomorphism `W` of coefficient functors `F` and `F'`.
+  have h_iso {F F' : CommAlg OFlat ⥤ ModuleCat K} (W : F ≅ F') (h : CoeffCompBijective β α F) :
+      CoeffCompBijective β α F' := by
+    let γ {D : Type 1} [Category.{0} D] (χ : D ⥤ CommAlg OFlat) :
+        moduleCoeff (χ ⋙ F) ≅ moduleCoeff (χ ⋙ F') :=
+      isoWhiskerRight (isoWhiskerRight (χ.isoWhiskerLeft W) (forget₂ _ Ab)) uliftFunctor
+    refine (isBijective_iff_of_coeff_iso
+      (c := ofModuleHom φ (Φ := ψ ⋙ F) (whiskerRight β F)) (γ ψ).hom (γ ψ').hom ?_).mp h
+    ext A x
+    exact congrArg ULift.up (ConcreteCategory.congr_hom (W.hom.naturality (β.app A)).symm x.down)
+  -- By `hN` and `hN'`, `K ⊗ –` carries bijectivity from the coefficients `F ⋙ Q` to
+  -- `F ⋙ Q ⋙ tensorWith K K`.
+  have h_tensor (F : CommAlg OFlat ⥤ ModuleCat S) (Q : ModuleCat S ⥤ ModuleCat S)
+      (h : CoeffCompBijective β α (F ⋙ Q)) : CoeffCompBijective β α (F ⋙ Q ⋙ tensorWith K K) :=
+    (IsBijective.baseChangeMap_bijective_iff h hN).mp (hN' _)
+  exact h_iso V (h_tensor P (moduleCompletion S p) h_cpl)
 
 end PeriodLifting
 
@@ -541,7 +572,7 @@ def locConstToTilt : genericTest ⋙ testIncl ⋙ locConstAlg ⟶ tilt ⋙ restr
     -- Compare the images in the localisation of `d.ProdRing/p` at each prime `q`; by `hφ` both are
     -- the value of the function at the image of `q`.
     ext x
-    refine ext fun n ↦ toPiLocalization_injective _ (funext fun q ↦ .trans ?_
+    refine Perfection.ext fun n ↦ toPiLocalization_injective _ (funext fun q ↦ .trans ?_
       (Localization.localRingHom_to_map _ _ (quotientMap _ f.1 (by simp)) (comap_asIdeal ..) _))
     let ρ := quotientMap (I := Ideal.span {(p : c.ProdRing)})
       (Ideal.span {(p : d.ProdRing)}) f.1 (by simp)

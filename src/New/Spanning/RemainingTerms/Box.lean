@@ -199,11 +199,18 @@ lemma mul_mem_reducedPoints_iff {s y : InfinitePlace E → 𝔰.G₁}
   simp only [reducedPoints, mem_ofPred_eq, h_triangle]
 
 variable (S) in
+/-- The chosen set of representatives modulo the level lattice at the infinite places. -/
+noncomputable def residueDomain : Set (InfinitePlace E → ℂ) := Classical.epsilon S.IsResidueDomain
+
+lemma isResidueDomain_residueDomain [S.IsAdmissible] : S.IsResidueDomain S.residueDomain :=
+  Classical.epsilon_spec S.exists_isResidueDomain
+
+variable (S) in
 /-- The boxed points: the archimedean points `y` that are reduced for a chosen set satisfying
 `New.Filling.IsResidueDomain` (one exists for admissible data) and lie in the cut at every infinite
 place `v`, that is, `besselLength (y v) ≤ S.b ^ (6 * 𝔰.n + 2)`. -/
 def boxedPoints : Set (InfinitePlace E → 𝔰.G₁) :=
-  {y ∈ S.reducedPoints (Classical.epsilon S.IsResidueDomain) |
+  {y ∈ S.reducedPoints S.residueDomain |
     ∀ v : InfinitePlace E, InCut (y v) S.b}
 
 /-- A boxed point `y` lies in the cut at every infinite place `v`, that is,
@@ -317,24 +324,20 @@ infimum of `‖s * g‖ + 1` over `s` in the Bessel subgroup `besselS` of `𝔰.
 `frameBox` of radius `S.frameBoxRadius = S.b ^ (37 n)`. -/
 lemma mem_frameBox_of_mem_boxedPoints [S.IsAdmissible] {y : InfinitePlace E → 𝔰.G₁}
     (hy : y ∈ S.boxedPoints) (v : InfinitePlace E) : y v ∈ frameBox S.frameBoxRadius := by
-  have hy_reduced : y ∈ S.reducedPoints (Classical.epsilon S.IsResidueDomain) := hy.left
+  have hy_reduced : y ∈ S.reducedPoints S.residueDomain := hy.left
   have hy_cut : besselLength (y v) ≤ S.b ^ (6 * 𝔰.n + 2) := inCut_of_mem_boxedPoints hy v
   intro (a : Fin (𝔰.ϱ + 1))
   show ‖frameVector (y v) a‖ ≤ S.frameBoxRadius
   have hb : 1 ≤ S.b := S.one_le_b
-  have hD : S.IsResidueDomain (Classical.epsilon S.IsResidueDomain) :=
-    Classical.epsilon_spec S.exists_isResidueDomain
   -- The norm is at most `b ^ 27 * b ^ (6 n + 2) ≤ b ^ (37 n)`.
-  grw [hD.mem_frameBox hy_reduced v a, hy_cut, frameBoxRadius, ← pow_add]
+  grw [isResidueDomain_residueDomain.mem_frameBox hy_reduced v a, hy_cut, frameBoxRadius, ← pow_add]
   exact pow_le_pow_right₀ hb (by lia)
 
 /-- For admissible data the set of boxed points is measurable. -/
 lemma measurableSet_boxedPoints [S.IsAdmissible] : MeasurableSet S.boxedPoints := by
-  have hD : S.IsResidueDomain (Classical.epsilon S.IsResidueDomain) :=
-    Classical.epsilon_spec S.exists_isResidueDomain
-  change MeasurableSet (S.reducedPoints (Classical.epsilon S.IsResidueDomain) ∩
+  change MeasurableSet (S.reducedPoints S.residueDomain ∩
     {y : InfinitePlace E → 𝔰.G₁ | ∀ v, InCut (y v) S.b})
-  refine hD.measurableSet_reducedPoints.inter ?_
+  refine isResidueDomain_residueDomain.measurableSet_reducedPoints.inter ?_
   change MeasurableSet {y : InfinitePlace E → 𝔰.G₁ | ∀ v, besselLength (y v) ≤ S.b ^ (6 * 𝔰.n + 2)}
   measurability
 

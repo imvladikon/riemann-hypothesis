@@ -239,15 +239,13 @@ lemma exists_int_eq_sum_re {E : Type} [Field E] [CMType E] [HasPrimitiveRoot5040
   push_cast at hp
   exact ⟨n, by linarith⟩
 
-/-- Let `E` be a CM field that contains a primitive root of unity of order `5040`. Let `S` be
-admissible filling data over `E`: the level in `U(X₀)`, for `X₀ = E ^ 𝔰.κ`, is the preimage of the
-principal congruence subgroup of level `S.M`, reduction at the chosen places is onto, and size
-bounds in terms of `S.b` hold. The subgroup `S.columnLattice ι c` is the image of the `ι`-tuples of
+/-- Let `E` be a CM field containing a primitive root of unity of order `5040`, and let `S`
+be filling data over `E`. The subgroup `S.columnLattice ι c` is the image of the `ι`-tuples of
 vectors of `Λ ∩ X₀` under the conjugates of the chosen complex embeddings, one for each infinite
 place. It has a measurable fundamental domain whose Lebesgue measure is finite and at least `1`. -/
 theorem exists_isAddFundamentalDomain_columnLattice {E : Type} [Field E] [CMType E] {𝔰 : Shape}
     (ι : Type) [Fintype ι] (S : Filling E 𝔰) (c : S.Classes)
-    [HasPrimitiveRoot5040 E] [S.IsAdmissible] :
+    [HasPrimitiveRoot5040 E] :
     ∃ D : Set (InfinitePlace E → ι → 𝔰.κ → ℂ),
       MeasurableSet D ∧
       IsAddFundamentalDomain (S.columnLattice ι c) D volume ∧

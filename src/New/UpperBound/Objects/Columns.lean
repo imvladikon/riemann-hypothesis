@@ -1,6 +1,6 @@
 module
 
-public import Lib.ClassField.Avatar.HeckeBaseChange
+public import Lib.ClassField.HeckeCharacter.SplitTameCharacters
 public import Lib.ClassField.HeckeCharacter.TameModulus
 public import Lib.GLn.Branching.IntegralMap
 public import Lib.General.Algebra.LevelModulus

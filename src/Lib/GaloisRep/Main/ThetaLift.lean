@@ -132,22 +132,15 @@ private lemma mem_Ô_of_mul_add_sum_mem_Ô {z : 𝔸f E} {g : Gf E n}
     (hD_def : D = g⁻¹.val.val - 1) {u : n → n → 𝔸f E} (hu : ∀ p k : n, u p k ∈ Ô E)
     (h_int : ∀ p j : n, z * D p j + ∑ k : n, u p k * D k j ∈ Ô E) (i j : n) : D i j ∈ Ô E := by
   refine mem_Ô.mpr fun w ↦ ?_
-  have h_nonempty : Nonempty n := ⟨i⟩
+  have : Nonempty n := ⟨i⟩
   obtain ⟨p, hp⟩ := Finite.exists_max fun i' : n ↦ v (D i' j w)
-  refine (hp i).trans (le_of_not_gt fun h_big ↦ ?_)
+  refine (hp i).trans (le_of_not_gt fun h_big ↦ h_big.not_ge <| hD_def ▸ v.map_sub_le
+    ((hg w ?_).isIntMatrix_inv p j) (mem_Ô.mp (by simp [Matrix.one_apply, ite_mem]) w))
   -- `O` is the set of adeles whose valuation at `w` is at most that of `D p j`.
   let O : AddSubgroup (𝔸f E) := (v.comap (evalAt w)).leAddSubgroup (v (D p j w))
-  have h_sum : ∑ k : n, u p k * D k j ∈ O :=
-    sum_mem fun k _ ↦ by simp [O, mul_le_of_le_one_of_le, mem_Ô.mp, hu, hp]
-  have h_all : z * D p j + ∑ k : n, u p k * D k j ∈ O := (mem_Ô.mp (h_int p j) w).trans h_big.le
-  have hzD_mem : z * D p j ∈ O := (O.add_mem_cancel_right h_sum).mp h_all
-  -- so `z` is integral at `w`, where `g⁻¹` is then integral, and `D p j` too
-  have hw : w ∈ {w : FinPlace E | 1 < v (z w)}ᶜ := by simpa [O, h_big.pos] using hzD_mem
-  have h_one : (1 : Matrix n n (𝔸f E)) p j ∈ Ô E := by simp [Matrix.one_apply, ite_mem]
-  have hD_le : v (D p j w) ≤ 1 := by
-    rw [hD_def]
-    exact v.map_sub_le ((hg w hw).isIntMatrix_inv p j) (mem_Ô.mp h_one w)
-  exact h_big.not_ge hD_le
+  simpa [O, h_big.pos] using (O.add_mem_cancel_right (show ∑ k : n, u p k * D k j ∈ O from
+    sum_mem fun k _ ↦ by simp [O, mul_le_of_le_one_of_le, mem_Ô.mp, hu, hp])).mp
+    ((mem_Ô.mp (h_int p j) w).trans h_big.le)
 
 /-- Let the row `ρ p` of `x` be the unit vector at `p`, let `g` be integral at every place where
 the finite adele `z` is integral, and let `D = g⁻¹ - 1`. Unless `g` is integral with every

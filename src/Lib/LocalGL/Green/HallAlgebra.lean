@@ -408,7 +408,12 @@ lemma simClassOf_eq_dualMap : simClassOf g = simClassOf g.dualMap := by
     E ≪≫ₗ piCongrRight (fun i ↦ toDual _ (hL i)) ≪≫ₗ lsum k _ k ≪≫ₗ E.dualMap
   -- Multiplication by `X` is self-adjoint for these pairings, so `D` carries `g` to its transpose.
   refine simClassOf_eq_of_equiv D ?_
-  simp [D, toDual, LinearMap.ext_iff, E, ← AEval'.X_smul_of]
+  simp only [toDual, trans_apply, ← X_smul_of, LinearEquiv.restrictScalars_apply,
+    LinearEquiv.map_smul, LinearMap.lsum_apply, piCongrRight_apply, Pi.smul_apply,
+    linearEquivOfInjective_apply, map_sum, LinearMap.ext_iff, LinearMap.coe_sum, Finset.sum_apply,
+    LinearEquiv.dualMap_apply, coe_comp, coe_proj, Function.comp_apply, Function.eval, compr₂_apply,
+    mul_apply_apply, Algebra.smul_mul_assoc, LinearMap.dualMap_apply, Algebra.mul_smul_comm,
+    implies_true, D, E]
 
 open scoped Classical in
 /-- For finite `k`, the induction product makes the class functions a commutative ring. -/
@@ -425,8 +430,11 @@ instance : CommRing (Hall k) := by
     have h_sums_sub (W : StableSubspace g) :=
       sum_comap (g := W.endOnSub) W.val.subtype (congrFun rfl)
     have h_sums_quot (W : StableSubspace g) :=
-      sum_comap (g := g) (g' := W.endOnQuot) W.val.mkQ (by aesop)
-    simp_all [mul_assoc, sum_comm, sum_filter, finsum_eq_sum_of_fintype, sum_mul, mul_sum]
+      sum_comap (g := g) (g' := W.endOnQuot) W.val.mkQ (by intro; rfl)
+    simp_all only [ker_subtype, bot_le, filter_true, range_subtype, Subtype.coe_le_coe, sum_filter,
+      Subtype.forall, ker_mkQ, range_mkQ, le_top, Hall.mul_simClassOf, finsum_eq_sum_of_fintype,
+      Subtype.coe_eta, simClassOf_endOnSub_comap, sum_mul, ite_mul, mul_assoc, zero_mul, sum_comm,
+      simClassOf_endOnQuot_comap, mul_sum]
     -- For `U ≤ W`, the quotient of `W` by `U` is the image of `W` in the quotient by `U`.
     congr!
     apply simClassOf_endOnQuot ((mkQ _).submoduleComap _) ?h_comm _ ?h_surj
@@ -641,8 +649,16 @@ lemma blockAverage_mul :
   let φ : (Σ P : StableSubspace a × StableSubspace b, S P × ((W →ₗ[k] V) ⧸ S P)) →
       Σ x : W →ₗ[k] V, StableSubspace (blockTriangularEnd a b x)
     | ⟨⟨A, B⟩, y, s⟩ => ⟨a ∘ₗ s.out - s.out ∘ₗ b + y,
-      comap (LinearEquiv.skewProd 1 1 s.out).1 (g' := blockTriangularEnd a b y) (by simp; grind)
-        ⟨.prod B A, by aesop⟩⟩
+      comap (LinearEquiv.skewProd 1 1 s.out).1 (g' := blockTriangularEnd a b y)
+        (by
+          rintro ⟨w, v⟩
+          simp only [coprod_apply, LinearMap.prod_apply, LinearMap.coe_add, Function.prod_apply,
+            Pi.add_apply, LinearMap.sub_apply, coe_comp, Function.comp_apply, LinearMap.zero_apply,
+            Prod.mk_add_mk, add_zero, LinearEquiv.coe_coe, LinearEquiv.skewProd_apply,
+            one_apply_eq_self, map_add, Prod.mk.injEq, true_and]
+          grind)
+        ⟨.prod B A, fun _ hx ↦
+          ⟨add_mem (B.prop _ hx.1) (zero_mem _), add_mem (y.prop hx.1) (A.prop _ hx.2)⟩⟩⟩
   have mem_φ (P : StableSubspace a × StableSubspace b) (y : S P) (s : (W →ₗ[k] V) ⧸ S P) (w : W)
       (v : V) : (w, v) ∈ (φ ⟨P, y, s⟩).snd.val ↔ w ∈ P.snd.val ∧ v + s.out w ∈ P.fst.val := by
     simp [φ, comap]
@@ -870,7 +886,7 @@ lemma rankInner_mul_eq_sum_skew :
           congrLinearEquiv (U.quotientEquivOfIsCompl Z hZ)
             (ofLinearEquiv (Quotient.equiv U U (toLinearEquiv g) (map_eq g hg))),
           U.projectionOnto Z hZ ∘ₗ domRestrict g Z)
-      left_inv := by aesop_cat
+      left_inv _ := by ext <;> simp [e]
       right_inv _ := by
         ext : 2
         simp [e, LinearMap.ext_iff]

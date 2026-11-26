@@ -296,6 +296,18 @@ lemma isHCParam_hcParameter (n : Type) [Fintype n] (κ : Φ → ℕ → ℕ) (e 
       hcParameter κ e (Fintype.card n) w (Fintype.equivFin n i) := by
   simp [IsHCParam, Function.Injective, hcParameter_strictAnti.injective.eq_iff, Fin.val_inj]
 
+/-- In rank `N`, for `p + 1 < N`, entries `p` and `p + 1` of the parameter `New.hcParameter`
+differ by twice the number `κ w (p + 1)` of columns of height `p + 1`, plus two. -/
+lemma hcParameter_sub_succ {N p : ℕ} (w : Φ) (hp : p + 1 < N) :
+    hcParameter κ e N w p - hcParameter κ e N w (p + 1) = 2 * κ w (p + 1) + 2 := by
+  classical
+  have h_row : diagramWeight (fun _ ↦ N) κ (w, p) =
+      diagramWeight (fun _ ↦ N) κ (w, p + 1) + κ w (p + 1) := by
+    rw [GL.diagramWeight_eq_succ_add, ite_eq_left hp]
+  simp only [hcParameter, h_row]
+  push_cast
+  ring
+
 /-- Let L be a sequence of integers with L(p) − L(p+1) = 2κ_w(p+1) + 2 whenever p + 1 < N. If L
 agrees with `New.hcParameter κ e N w` at one index q < N, then it agrees with it at every p < N.
 That sequence is the decreasing parameter for rank N, and it has these same steps. -/
@@ -310,12 +322,8 @@ lemma hcParameter_eq_of_steps (w : Φ) (L : ℕ → ℤ)
     induction p with
     | zero => rfl
     | succ p ih =>
-      have h_row : diagramWeight (fun _ ↦ N) κ (w, p) =
-          diagramWeight (fun _ ↦ N) κ (w, p + 1) + κ w (p + 1) := by
-        rw [GL.diagramWeight_eq_succ_add, ite_eq_left hp]
-      have h_param : hcParameter κ e N w p = hcParameter κ e N w (p + 1) + 2 * κ w (p + 1) + 2 := by
-        grind [hcParameter]
-      linarith [ih (Nat.lt_of_succ_lt hp), h_step p hp]
+      linarith [ih (Nat.lt_of_succ_lt hp), h_step p hp,
+        hcParameter_sub_succ (κ := κ) (e := e) w hp]
   intro p hp
   linarith [diff_const p hp, diff_const q hq]
 
