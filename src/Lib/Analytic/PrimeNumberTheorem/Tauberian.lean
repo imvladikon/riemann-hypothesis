@@ -284,29 +284,35 @@ private lemma eventually_const_mul_pow_le_exp (C : ℝ) (n : ℕ) :
     simpa [Real.norm_eq_abs, div_eq_mul_inv, mul_comm] using hl)
 
 /-- Choose the degree of the Gamma kernel exponentially in the parameter of the zero-free
-region. On the scale `u = l ^ (A + 1)`, both errors then decay exponentially in `l`. -/
-private lemma eventually_abs_apply_pow_le_exp_of_transform {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
+region. On the scale `u = l ^ (A + 1) / a`, both errors then decay exponentially in `l`. -/
+private lemma eventually_abs_apply_pow_div_le_exp_of_transform {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
     (hR : Measurable R)
     (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
     (h_transform : ∀ s : ℂ, 2 < s.re →
-      (F s - F 1) / (s - 1) = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v)) {A : ℕ}
-    (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - 1 / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
-      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
-    ∀ᶠ l : ℝ in atTop, |R (l ^ (A + 1))| ≤ rexp (-(l / 32)) := by
+      (F s - F 1) / (s - 1) = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
+    {a : ℝ} (ha : 0 < a) (ha_one : a ≤ 1) {A B : ℕ}
+    (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - a / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ B) :
+    ∀ᶠ l : ℝ in atTop, |R (l ^ (A + 1) / a)| ≤ rexp (-(l / 32)) := by
   have hL : 0 ≤ L := by simpa using (abs_nonneg _).trans (h_lip 0 1 le_rfl zero_le_one (by simp))
   have Φ_eq (s : ℂ) (hs : 2 < s.re) :
       dslope F 1 s = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v) := by
     have hs_ne : s ≠ 1 := fun h ↦ by norm_num [h] at hs
     rw [← h_transform s hs, dslope_of_ne _ hs_ne, slope_def_field]
-  filter_upwards [hF, eventually_const_mul_pow_le_exp 8 (2 * A),
-    eventually_const_mul_pow_le_exp 1 ((A + 1) * 2), eventually_ge_atTop (max 16 (64 * L))]
+  filter_upwards [hF, eventually_const_mul_pow_le_exp (8 / a) (A + B),
+    eventually_const_mul_pow_le_exp (1 / a ^ 2) ((A + 1) * 2),
+    eventually_ge_atTop (max 16 (64 * L))]
     with l h_region h_poly h_u_sq hl
   have hl_sixteen : 16 ≤ l := (le_max_left _ _).trans hl
   have hl_pos : 0 < l := by linarith
-  let u := l ^ (A + 1)
-  have hu_one : 1 ≤ u := one_le_pow₀ (by linarith)
+  have hl_one : 1 ≤ l := by linarith
+  let u := l ^ (A + 1) / a
+  have hu_one : 1 ≤ u := (le_div_iff₀ ha).2
+    (by simpa only [one_mul] using ha_one.trans (one_le_pow₀ (n := A + 1) hl_one))
   have hu_pos : 0 < u := one_pos.trans_le hu_one
-  have hu_sq : u ^ 2 ≤ rexp (l / 8) := by simpa [u, pow_mul] using h_u_sq
+  have hu_sq : u ^ 2 ≤ rexp (l / 8) := calc
+    _ = (1 / a ^ 2) * l ^ ((A + 1) * 2) := by dsimp only [u]; rw [pow_mul]; field
+    _ ≤ _ := h_u_sq
   let k : ℕ := ⌊rexp (l / 4)⌋₊
   have hk_ge : rexp (l / 4) ≤ k + 1 := (Nat.lt_floor_add_one _).le
   have hk_le : (k : ℝ) ≤ rexp (l / 4) := Nat.floor_le (by positivity)
@@ -319,11 +325,11 @@ private lemma eventually_abs_apply_pow_le_exp_of_transform {R : ℝ → ℝ} {F 
   have h_e_one : 1 ≤ rexp (l / 4) := Real.one_le_exp (by positivity)
   have hH_le : H ≤ 2 * rexp (l / 4) :=
     (div_le_self (by positivity) hu_one).trans (by linarith)
-  let η : ℝ := 1 / l ^ A
+  let η : ℝ := a / l ^ A
   have hη : 0 < η := by positivity
-  have hη_le : η ≤ 1 := (div_le_one (by positivity)).2 (one_le_pow₀ (by linarith))
+  have hη_le : η ≤ 1 := (div_le_one (by positivity)).2 (ha_one.trans (one_le_pow₀ hl_one))
   have h_disc (s : ℂ) (hs : s ∈ closedBall (1 + H : ℂ) (H + η)) :
-      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A := by
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ B := by
     obtain ⟨h_re, h_norm⟩ := one_sub_le_re_and_norm_le_of_mem_closedBall (by positivity) hs
     refine h_region s h_re (h_norm.trans ?_)
     calc 2 * H + η + 1 ≤ 6 * rexp (l / 4) := by linarith
@@ -337,15 +343,15 @@ private lemma eventually_abs_apply_pow_le_exp_of_transform {R : ℝ → ℝ} {F 
   let coeff : ℂ := (-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)
   let d := rexp (-(l / 16))
   have h_small : ‖coeff‖ ≤ d := calc
-    _ ≤ 4 * l ^ A * H / η * rexp (-(l / 2)) := by
+    _ ≤ 4 * l ^ B * H / η * rexp (-(l / 2)) := by
       simpa only [coeff, h_gain] using norm_taylorCoeff_dslope_le hη (hη_le.trans hH.le) h_disc k
-    _ ≤ 4 * l ^ A * (2 * rexp (l / 4)) / η * rexp (-(l / 2)) := by gcongr
-    _ = 8 * l ^ (2 * A) * rexp (-(l / 4)) := by
+    _ ≤ 4 * l ^ B * (2 * rexp (l / 4)) / η * rexp (-(l / 2)) := by gcongr
+    _ = (8 / a) * l ^ (A + B) * rexp (-(l / 4)) := by
       have he : rexp (l / 4) * rexp (-(l / 2)) = rexp (-(l / 4)) := by
         rw [← Real.exp_add]
         congr 1
         ring
-      rw [← he, mul_comm 2 A, pow_mul]
+      rw [← he, pow_add]
       dsimp [η]
       field
     _ ≤ rexp (l / 8) * rexp (-(l / 4)) := by gcongr
@@ -369,9 +375,30 @@ private lemma eventually_abs_apply_pow_le_exp_of_transform {R : ℝ → ℝ} {F 
       linarith [(le_max_right 16 (64 * L)).trans hl, Real.add_one_le_exp (l / 32)]
     _ = rexp (-(l / 32)) := by dsimp [d]; rw [← Real.exp_add]; congr 1; ring
 
-/-- **Tauberian theorem.** If the transform has a holomorphic continuation with
-`‖F s‖ ≤ l ^ A` in the given region, then the remainder is eventually bounded by
-`exp (-(u ^ (1 / (A + 1)) / 32))`. -/
+/-- A strip of width `a / l ^ A` and polynomial growth in `l` give a stretched exponential
+remainder with exponent `1 / (A + 1)`. -/
+theorem eventually_abs_le_exp_rpow_of_transform_of_width {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
+    (hR : Measurable R)
+    (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
+    (h_transform : ∀ s : ℂ, 2 < s.re →
+      (F s - F 1) / (s - 1) = ∫ v in Ioi (0 : ℝ), R v * cexp ((1 - s) * v))
+    {a : ℝ} (ha : 0 < a) (ha_one : a ≤ 1) {A B : ℕ}
+    (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - a / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
+      DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ B) :
+    ∀ᶠ u : ℝ in atTop, |R u| ≤ rexp (-((a * u) ^ (1 / ((A : ℝ) + 1)) / 32)) := by
+  have h_root : Tendsto (fun u : ℝ ↦ (a * u) ^ (1 / ((A : ℝ) + 1))) atTop atTop :=
+    (tendsto_rpow_atTop (by positivity)).comp (tendsto_id.const_mul_atTop ha)
+  filter_upwards [h_root.eventually
+    (eventually_abs_apply_pow_div_le_exp_of_transform hR h_lip h_transform ha ha_one hF),
+    eventually_ge_atTop 0] with u hu hu_nonneg
+  have h_restore : ((a * u) ^ (1 / ((A : ℝ) + 1))) ^ (A + 1) / a = u := by
+    rw [← Real.rpow_mul_natCast (mul_nonneg ha.le hu_nonneg)]
+    push_cast
+    rw [one_div, inv_mul_cancel₀ (by positivity : (A : ℝ) + 1 ≠ 0), Real.rpow_one,
+      mul_div_assoc, mul_div_cancel₀ _ ha.ne']
+  simpa only [h_restore] using hu
+
+/-- The stretched exponential bound with unit width multiplier and equal width and growth powers. -/
 theorem eventually_abs_le_exp_rpow_of_transform {R : ℝ → ℝ} {F : ℂ → ℂ} {L : ℝ}
     (hR : Measurable R)
     (h_lip : ∀ u v : ℝ, 0 ≤ u → u ≤ v → v ≤ u + 1 → |R v - R u| ≤ L * (v - u))
@@ -380,14 +407,8 @@ theorem eventually_abs_le_exp_rpow_of_transform {R : ℝ → ℝ} {F : ℂ → �
     (hF : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ, 1 - 1 / l ^ A ≤ s.re → ‖s‖ ≤ rexp l →
       DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
     ∀ᶠ u : ℝ in atTop, |R u| ≤ rexp (-(u ^ (1 / ((A : ℝ) + 1)) / 32)) := by
-  have h_root := tendsto_rpow_atTop (show 0 < 1 / ((A : ℝ) + 1) by positivity)
-  filter_upwards [h_root.eventually (eventually_abs_apply_pow_le_exp_of_transform hR h_lip h_transform hF),
-    eventually_ge_atTop 0] with u hu hu_nonneg
-  have h_restore : (u ^ (1 / ((A : ℝ) + 1))) ^ (A + 1) = u := by
-    rw [← Real.rpow_mul_natCast hu_nonneg]
-    push_cast
-    rw [one_div, inv_mul_cancel₀ (by positivity : (A : ℝ) + 1 ≠ 0), Real.rpow_one]
-  simpa only [h_restore] using hu
+  simpa only [one_mul] using eventually_abs_le_exp_rpow_of_transform_of_width hR h_lip h_transform
+    zero_lt_one le_rfl hF
 
 /-- A stretched exponential is eventually at most any fixed inverse power. -/
 lemma eventually_exp_neg_rpow_div_le_inv_pow {p : ℝ} (hp : 0 < p) (B : ℕ) :

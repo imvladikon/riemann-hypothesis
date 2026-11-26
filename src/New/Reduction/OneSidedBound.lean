@@ -85,18 +85,23 @@ private lemma eventually_mul_scaled_log_pow_le_rpow (C : ℝ) (n : ℕ) {s : ℝ
   simpa only [mul_pow, ← mul_assoc] using
     (le_abs_self ((C * (64 : ℝ) ^ n) * log (x : ℝ) ^ n)).trans hx
 
-private lemma polylog_cutoff_bounds_of_log {x : ℝ} (hx_log : 1 ≤ log x) :
-    2e6 * log x ≤ 2 * (64 * log x) ^ (27 : ℕ) ∧
-      (64 * log x) ^ (27 : ℕ) ≤ 2 * (64 * log x) ^ (27 : ℕ) - 1 := by
-  have h_pow : log x ≤ log x ^ (27 : ℕ) := by
-    simpa only [pow_one] using pow_le_pow_right₀ hx_log (by decide : (1 : ℕ) ≤ 27)
-  have h_one : 1 ≤ (64 * log x) ^ (27 : ℕ) := one_le_pow₀ (by linarith)
+private lemma polylog_cutoff_bounds_of_log {x C : ℝ} (hx_log : 1 ≤ log x) (hC : 1 ≤ C)
+    {n : ℕ} (hn : 4 ≤ n) :
+    2e6 * log x ≤ 2 * (C * (64 * log x) ^ n) ∧
+      C * (64 * log x) ^ n ≤ 2 * (C * (64 * log x) ^ n) - 1 := by
+  have h_pow : log x ≤ log x ^ (4 : ℕ) := le_self_pow₀ hx_log (by decide)
+  have h_base : 1 ≤ 64 * log x := by linarith
+  have h_one : 1 ≤ C * (64 * log x) ^ n := one_le_mul_of_one_le_of_one_le hC (one_le_pow₀ h_base)
   refine ⟨?_, by linarith⟩
-  calc 2e6 * log x ≤ (2 * (64 : ℝ) ^ (27 : ℕ)) * log x :=
-    mul_le_mul_of_nonneg_right (by norm_num) (by linarith)
-    _ ≤ (2 * (64 : ℝ) ^ (27 : ℕ)) * log x ^ (27 : ℕ) :=
+  calc 2e6 * log x ≤ (2 * (64 : ℝ) ^ (4 : ℕ)) * log x :=
+        mul_le_mul_of_nonneg_right (by norm_num) (by linarith)
+    _ ≤ (2 * (64 : ℝ) ^ (4 : ℕ)) * log x ^ (4 : ℕ) :=
       mul_le_mul_of_nonneg_left h_pow (by positivity)
-    _ = 2 * (64 * log x) ^ (27 : ℕ) := by rw [mul_pow, mul_assoc]
+    _ = 2 * (64 * log x) ^ (4 : ℕ) := by rw [mul_pow, mul_assoc]
+    _ ≤ 2 * (64 * log x) ^ n := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ h_base hn) (by norm_num)
+    _ ≤ 2 * (C * (64 * log x) ^ n) :=
+      mul_le_mul_of_nonneg_left (le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h_base) _) hC)
+        (by norm_num)
 
 /-- The cutoff `2 (64 log x) ^ 27` fits the prime windows and clears the remainder threshold
 after taking the integer part of its exponential. -/
@@ -108,29 +113,42 @@ private lemma eventually_polylog_cutoff_bounds {ε : ℝ} (hε : 0 < ε) :
     tendsto_natCast_atTop_atTop.eventually (tendsto_log_atTop.eventually_ge_atTop 1)]
     with x hx hx_log
   obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx_log
+    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (4 : ℕ) ≤ 27)
+  simp only [one_mul] at h_lower h_tail
   exact ⟨h_lower, hx, h_tail⟩
 
-/-- A logarithmic cutoff of order `(log x) ^ 27` suffices to make each tail at most `x ^ (-2)`. -/
+private lemma eventually_abs_primeRemainder_exp_le_of_stretched_cutoff {d q : ℕ} [Fact d.Prime] [NeZero q]
+    {a : ℝ} (ha : 0 < a) {n : ℕ} (hn : n ≠ 0)
+    (hR : ∀ᶠ v : ℝ in atTop,
+      |primeRemainder d q (exp v)| ≤ exp (-((a * v) ^ (1 / (n : ℝ)) / 32))) :
+    ∀ᶠ x : ℝ in atTop, ∀ v : ℝ, (64 * Real.log x) ^ n / a ≤ v →
+      |primeRemainder d q (exp v)| ≤ x ^ (-2 : ℝ) := by
+  obtain ⟨t, ht⟩ := eventually_atTop.1 hR
+  have h_log : Tendsto (fun x : ℝ ↦ 64 * Real.log x) atTop atTop :=
+    Real.tendsto_log_atTop.const_mul_atTop (by norm_num)
+  have h_cutoff : Tendsto (fun x : ℝ ↦ (64 * Real.log x) ^ n / a) atTop atTop :=
+    Tendsto.atTop_div_const ha ((tendsto_pow_atTop hn).comp h_log)
+  filter_upwards [h_cutoff.eventually_ge_atTop t, eventually_ge_atTop 1] with x hx hx_one v hv
+  have hx_pos : 0 < x := one_pos.trans_le hx_one
+  have h_log_nonneg : 0 ≤ 64 * Real.log x := mul_nonneg (by norm_num) (Real.log_nonneg hx_one)
+  have h_nv : (64 * Real.log x) ^ n ≤ a * v := by
+    simpa only [mul_comm v a] using (div_le_iff₀ ha).1 hv
+  have h_root : 64 * Real.log x ≤ (a * v) ^ (1 / (n : ℝ)) := calc
+    _ = ((64 * Real.log x) ^ n) ^ (1 / (n : ℝ)) := by
+      rw [← Real.rpow_natCast_mul h_log_nonneg, one_div, mul_inv_cancel₀ (Nat.cast_ne_zero.mpr hn),
+        Real.rpow_one]
+    _ ≤ _ := Real.rpow_le_rpow (pow_nonneg h_log_nonneg _) h_nv (by positivity)
+  calc |primeRemainder d q (exp v)| ≤ exp (-((a * v) ^ (1 / (n : ℝ)) / 32)) := ht v (hx.trans hv)
+    _ ≤ exp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
+    _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
+
 private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff_for_modulus {d q : ℕ} [Fact d.Prime] [NeZero q]
     (hd : d ≠ 2) (h_cop : q.Coprime d) :
     ∀ᶠ x : ℝ in atTop, ∀ v : ℝ, (64 * Real.log x) ^ (27 : ℕ) ≤ v →
       |primeRemainder d q (exp v)| ≤ x ^ (-2 : ℝ) := by
-  obtain ⟨t, ht⟩ := eventually_atTop.1 (eventually_abs_primeRemainder_exp_le_stretched hd h_cop)
-  have h_log : Tendsto (fun x : ℝ ↦ 64 * Real.log x) atTop atTop :=
-    Real.tendsto_log_atTop.const_mul_atTop (by norm_num)
-  have h_cutoff : Tendsto (fun x : ℝ ↦ (64 * Real.log x) ^ (27 : ℕ)) atTop atTop :=
-    (tendsto_pow_atTop (by decide : (27 : ℕ) ≠ 0)).comp h_log
-  filter_upwards [h_cutoff.eventually_ge_atTop t, eventually_ge_atTop 1] with x hx hx_one v hv
-  have hx_pos : 0 < x := one_pos.trans_le hx_one
-  have h_log_nonneg : 0 ≤ 64 * Real.log x := mul_nonneg (by norm_num) (Real.log_nonneg hx_one)
-  have h_root : 64 * Real.log x ≤ v ^ (1 / 27 : ℝ) := calc
-    _ = ((64 * Real.log x) ^ (27 : ℕ)) ^ (1 / 27 : ℝ) := by
-      rw [← Real.rpow_natCast_mul h_log_nonneg]
-      norm_num
-    _ ≤ v ^ (1 / 27 : ℝ) := Real.rpow_le_rpow (by positivity) hv (by norm_num)
-  calc |primeRemainder d q (exp v)| ≤ exp (-(v ^ (1 / 27 : ℝ) / 32)) := ht v (hx.trans hv)
-    _ ≤ exp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
-    _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
+  simpa only [div_one] using eventually_abs_primeRemainder_exp_le_of_stretched_cutoff
+    (a := 1) (n := 27) zero_lt_one (by decide)
+    (by simpa only [one_mul, Nat.cast_ofNat] using eventually_abs_primeRemainder_exp_le_stretched hd h_cop)
 
 private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff (P : Parameters) :
     ∀ᶠ x : ℕ in atTop, ∀ l : ℝ, (64 * log x) ^ (27 : ℕ) ≤ l →
@@ -144,6 +162,33 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff (P : Parame
       (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff_for_modulus hd P.d.coprime_one_left)]
     with x h_q₀ h_one l hl
   exact ⟨h_q₀ l hl, h_one l hl⟩
+
+private lemma exists_eventually_abs_primeRemainder_exp_le_of_tenth_cutoff (P : Parameters) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop, ∀ l : ℝ, C * (64 * log x) ^ (10 : ℕ) ≤ l →
+      |primeRemainder P.d P.q₀ (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
+      |primeRemainder P.d 1 (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ) := by
+  have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
+  have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
+  obtain ⟨a₀, ha₀, ha₀_one, h₀⟩ := exists_eventually_abs_primeRemainder_exp_le_tenth hd h_cop
+  obtain ⟨a₁, ha₁, _, h₁⟩ := exists_eventually_abs_primeRemainder_exp_le_tenth hd P.d.coprime_one_left
+  let C := max (1 / a₀) (1 / a₁)
+  refine ⟨C, (one_le_one_div ha₀ ha₀_one).trans (le_max_left _ _), ?_⟩
+  filter_upwards [tendsto_natCast_atTop_atTop.eventually
+    (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff (n := 10) ha₀ (by decide) h₀),
+    tendsto_natCast_atTop_atTop.eventually
+      (eventually_abs_primeRemainder_exp_le_of_stretched_cutoff (n := 10) ha₁ (by decide) h₁)]
+    with x h_q₀ h_one l hl
+  let T := (64 * log (x : ℝ)) ^ (10 : ℕ)
+  have hT : 0 ≤ T := by dsimp only [T]; positivity
+  have h_q₀_le : T / a₀ ≤ l := calc
+    _ = (1 / a₀) * T := by ring
+    _ ≤ C * T := mul_le_mul_of_nonneg_right (le_max_left _ _) hT
+    _ ≤ l := hl
+  have h_one_le : T / a₁ ≤ l := calc
+    _ = (1 / a₁) * T := by ring
+    _ ≤ C * T := mul_le_mul_of_nonneg_right (le_max_right _ _) hT
+    _ ≤ l := hl
+  exact ⟨h_q₀ l h_q₀_le, h_one l h_one_le⟩
 
 /-- The same data give the scaled logarithms, the density bound and both remainders at `x₁`. -/
 lemma eventually_exists_data_with_polylog_cutoff (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
@@ -272,27 +317,22 @@ lemma eventually_primeRemainder_natCast_le_with_polylog_cutoff
   exact (D.primeRemainder_le_of_scales hx hx_ge (one_le_rpow hx_ge hε.le)
     (one_le_rpow hx_ge hγ.le) hV hb hm h_cutoff h_density h_q₀ h_one).trans_eq (by rw [h_power]; ring)
 
-/-- With the subexponential width `W`, the logarithmic size and the density contribute
-`W ^ 24`, and the auxiliary cutoff contributes the same degree-`54` logarithmic factor. -/
-theorem eventually_primeRemainder_natCast_le_with_subexponential_windows (P : Parameters) :
+private lemma eventually_primeRemainder_natCast_le_with_subexponential_cutoff
+    (P : Parameters) (T : ℕ → ℝ)
+    (h_cutoff : ∀ᶠ x : ℕ in atTop, 2e6 * log x ≤ 2 * T x ∧ T x ≤ 2 * T x - 1 ∧
+      2 * T x ≤ P.subexponentialWindowWidth (log x))
+    (h_tails : ∀ᶠ x : ℕ in atTop, ∀ l : ℝ, T x ≤ l →
+      |primeRemainder P.d P.q₀ (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
+      |primeRemainder P.d 1 (exp l)| ≤ (x : ℝ) ^ (-2 : ℝ)) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
-        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
-        (2 * (64 * log x) ^ (27 : ℕ)) ^ 2 := by
-  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
-    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [eventually_exists_data_with_subexponential_windows P,
-    h_log.eventually P.eventually_polylog_cutoff_le_window,
-    eventually_abs_primeRemainder_exp_le_of_polylog_cutoff P,
-    h_log.eventually_ge_atTop 1, eventually_ge_atTop 1]
-    with x ⟨hW, h_data⟩ hVW h_tails hx_log hx_one
-  let V := 2 * (64 * log (x : ℝ)) ^ (27 : ℕ)
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 * (2 * T x) ^ 2 := by
+  filter_upwards [eventually_exists_data_with_subexponential_windows P, h_cutoff,
+    h_tails, eventually_ge_atTop 1] with x ⟨hW, h_data⟩ ⟨hV_min, hV_tail, hVW⟩ h_tails hx_one
+  let V := 2 * T x
   let W := P.subexponentialWindowWidth (log x)
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
-  have hV : 1 ≤ V := by
-    dsimp [V]
-    linarith [one_le_pow₀ (n := 27) (by linarith : 1 ≤ 64 * log (x : ℝ))]
-  obtain ⟨hV_min, hV_tail⟩ := polylog_cutoff_bounds_of_log hx_log
+  have hV : 1 ≤ V := by dsimp only [V]; linarith only [hV_tail]
   obtain ⟨D, hx, _, hm, h_cutoff, hb, h_density⟩ := h_data V hV_min hVW
   obtain ⟨h_q₀, h_one⟩ := h_tails D.logX₁ (hV_tail.trans h_cutoff.1)
   rw [sqrt_eq_rpow] at hm
@@ -303,6 +343,45 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_windows (P : Pa
         (5600 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 24 * V ^ 2
       ring)
 
+/-- The subexponential window bound with the degree-`27` auxiliary cutoff. -/
+theorem eventually_primeRemainder_natCast_le_with_subexponential_windows (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
+        (2 * (64 * log x) ^ (27 : ℕ)) ^ 2 := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  refine eventually_primeRemainder_natCast_le_with_subexponential_cutoff P
+    (fun x ↦ (64 * log (x : ℝ)) ^ (27 : ℕ)) ?_ (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff P)
+  filter_upwards [h_log.eventually P.eventually_polylog_cutoff_le_window, h_log.eventually_ge_atTop 1]
+    with x hVW hx_log
+  obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx_log
+    (by norm_num : (1 : ℝ) ≤ 1) (by decide : (4 : ℕ) ≤ 27)
+  simp only [one_mul] at h_lower h_tail
+  exact ⟨h_lower, h_tail, hVW⟩
+
+/-- The cutoff supplied by the fixed-modulus zero-free region contributes a logarithmic factor
+of degree `20` to the subexponential window bound. -/
+theorem exists_eventually_primeRemainder_natCast_le_with_tenth_cutoff (P : Parameters) :
+    ∃ C : ℝ, 1 ≤ C ∧ ∀ᶠ x : ℕ in atTop,
+      2 * (C * (64 * log x) ^ (10 : ℕ)) ≤ P.subexponentialWindowWidth (log x) ∧
+      primeRemainder P.d P.q₀ x ≤ (5600 * P.q₀.totient + 2) *
+        (x : ℝ) ^ (-1 / 2 : ℝ) * (P.subexponentialWindowWidth (log x)) ^ 24 *
+        (2 * (C * (64 * log x) ^ (10 : ℕ))) ^ 2 := by
+  obtain ⟨C, hC, h_tails⟩ := exists_eventually_abs_primeRemainder_exp_le_of_tenth_cutoff P
+  let T (x : ℕ) := C * (64 * log (x : ℝ)) ^ (10 : ℕ)
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  have h_fits : ∀ᶠ x : ℕ in atTop, 2 * T x ≤ P.subexponentialWindowWidth (log x) := by
+    simpa only [T, mul_pow, ← mul_assoc] using
+      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth (2 * C * 64 ^ 10) 10)
+  have h_cutoff : ∀ᶠ x : ℕ in atTop, 2e6 * log x ≤ 2 * T x ∧ T x ≤ 2 * T x - 1 ∧
+      2 * T x ≤ P.subexponentialWindowWidth (log x) := by
+    filter_upwards [h_log.eventually_ge_atTop 1, h_fits] with x hx h_fit
+    obtain ⟨h_lower, h_tail⟩ := polylog_cutoff_bounds_of_log hx hC (by decide : (4 : ℕ) ≤ 10)
+    exact ⟨h_lower, h_tail, h_fit⟩
+  exact ⟨C, hC, h_fits.and (eventually_primeRemainder_natCast_le_with_subexponential_cutoff P T h_cutoff h_tails)⟩
+
 private lemma eventually_primeRemainder_natCast_le_of_subexponential_windows
     (P : Parameters) {s : ℝ} (hs : 0 < s) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + s) := by
@@ -310,12 +389,14 @@ private lemma eventually_primeRemainder_natCast_le_of_subexponential_windows
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   have h_const : ∀ᶠ x : ℕ in atTop, (14 : ℝ) ≤ (x : ℝ) ^ (s / 2) :=
     ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 14
-  filter_upwards [eventually_primeRemainder_natCast_le_with_subexponential_windows P,
+  obtain ⟨C, hC, h_tenth⟩ := exists_eventually_primeRemainder_natCast_le_with_tenth_cutoff P
+  have hC_pos : 0 < C := zero_lt_one.trans_le hC
+  filter_upwards [h_tenth,
     h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 52 by positivity)),
-    h_log.eventually P.eventually_polylog_cutoff_le_window, h_const, eventually_ge_atTop 1]
-    with x h_bound h_logW hVW hx_const hx_one
-  let V := 2 * (64 * log (x : ℝ)) ^ (27 : ℕ)
+    h_const, eventually_ge_atTop 1] with x ⟨hVW, h_bound⟩ h_logW hx_const hx_one
+  let V := 2 * (C * (64 * log (x : ℝ)) ^ (10 : ℕ))
   let W := P.subexponentialWindowWidth (log x)
+  change V ≤ W at hVW
   change log W ≤ s / 52 * log (x : ℝ) at h_logW
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge

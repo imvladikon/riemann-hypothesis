@@ -211,13 +211,18 @@ theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
     _ < _ := exp_lt_exp.2 (by linarith only [hl, h_lX])
   simpa only [hX_sq] using h_window X U k hk hX (hq.trans h_exp_upper) (hX_sq.le.trans hU.1) h_total
 
-/-- A polylogarithmic auxiliary cutoff fits the subexponential window width. -/
+/-- Every fixed polynomial cutoff fits the subexponential window width. -/
+theorem Parameters.eventually_mul_pow_le_subexponentialWindowWidth (P : Parameters) (C : ℝ) (n : ℕ) :
+    ∀ᶠ y : ℝ in atTop, C * y ^ n ≤ P.subexponentialWindowWidth y := by
+  filter_upwards [P.eventually_isLargeScale_subexponential, eventually_mul_pow_le_exp_sqrt C n]
+    with y ⟨_, _, _, hW⟩ hy
+  exact hy.trans ((exp_le_exp.2 (by linarith [sqrt_nonneg y])).trans hW)
+
+/-- The polylogarithmic cutoff of degree `27` fits the window. -/
 theorem Parameters.eventually_polylog_cutoff_le_window (P : Parameters) :
     ∀ᶠ y : ℝ in atTop, 2 * (64 * y) ^ (27 : ℕ) ≤ P.subexponentialWindowWidth y := by
-  have h_cutoff : ∀ᶠ y : ℝ in atTop, 2 * (64 * y) ^ (27 : ℕ) ≤ exp (sqrt y) := by
-    simpa only [mul_pow, ← mul_assoc] using eventually_mul_pow_le_exp_sqrt (2 * 64 ^ 27) 27
-  filter_upwards [P.eventually_isLargeScale_subexponential, h_cutoff] with y ⟨_, _, _, hW⟩ hy
-  exact hy.trans ((exp_le_exp.2 (by linarith [sqrt_nonneg y])).trans hW)
+  simpa only [mul_pow, ← mul_assoc] using
+    P.eventually_mul_pow_le_subexponentialWindowWidth (2 * 64 ^ 27) 27
 
 /-- Use the same subexponential width for the prime windows and for the density estimate. -/
 theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :

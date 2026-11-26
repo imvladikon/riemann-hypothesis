@@ -165,54 +165,108 @@ lemma norm_logDerivMean_le {s : ℂ} {C : ℝ}
     DirichletCharacter.card_eq_totient_of_hasEnoughRootsOfUnity]
   linarith
 
-/-- Let `d` be a prime and `q ≠ 0`. Let `G_q = logDerivMean d q` be the mean over the characters `ψ`
-mod `q` of the logarithmic derivatives of `L(s, ψ (·/d)) / L(s, ψ)`, less `1 / φ(q)`; here the
-`L`-function of a principal character is multiplied by `s - 1`. For all large `l` the function
-`G_q(s) / s` is holomorphic and of norm at most `l²⁶` on `re s ≥ 1 - l⁻²⁶`, `|s| ≤ e^l`. -/
+private lemma differentiableAt_and_norm_logDerivMean_div_le {s : ℂ} {C : ℝ} (h_half : 1 / 2 ≤ s.re)
+    (h_char : ∀ ψ : DirichletCharacter ℂ q, entireL ψ s ≠ 0 ∧ ‖logDeriv (entireL ψ) s‖ ≤ C)
+    (h_twist : ∀ ψ : DirichletCharacter ℂ q,
+      entireL (quadTwist ψ d) s ≠ 0 ∧ ‖logDeriv (entireL (quadTwist ψ d)) s‖ ≤ C) :
+    DifferentiableAt ℂ (fun z : ℂ ↦ logDerivMean d q z / z) s ∧
+      ‖logDerivMean d q s / s‖ ≤ 4 * C + 2 := by
+  obtain ⟨h_char_ne, h_char_le⟩ := forall_and.1 h_char
+  obtain ⟨h_twist_ne, h_twist_le⟩ := forall_and.1 h_twist
+  have hC : 0 ≤ C := (norm_nonneg _).trans (h_char_le 1)
+  constructor
+  · exact (analyticAt_logDerivMean h_char_ne h_twist_ne).differentiableAt.fun_div
+      differentiableAt_id (ne_zero_of_re_pos (by linarith))
+  · calc ‖logDerivMean d q s / s‖ ≤ (2 * C + 1) / (1 / 2) := by
+          grw [norm_div, norm_logDerivMean_le h_char_le h_twist_le, ← re_le_norm s, ← h_half]
+      _ = _ := by ring
+
+/-- Choose one neighborhood of `1` for all the characters and their twists at the fixed moduli. -/
+lemma exists_eventually_norm_logDerivMean_div_le_of_fixed_neighborhood :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ l : ℝ in atTop, ∀ s : ℂ,
+      1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
+        DifferentiableAt ℂ (fun z : ℂ ↦ logDerivMean d q z / z) s ∧
+          ‖logDerivMean d q s / s‖ ≤ l ^ 10 := by
+  have h_inverse : Tendsto (fun L : ℝ ↦ 1 / L) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop tendsto_id
+  have h_near : ∀ᶠ L : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (z : ℂ),
+      ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL ψ z‖ :=
+    eventually_all.2 fun ψ ↦ h_inverse.eventually (eventually_le_norm_regularL ψ)
+  have h_near_twist : ∀ᶠ L : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (z : ℂ),
+      ‖z - 1‖ ≤ 1 / L → 1 / L ≤ ‖regularL (quadTwist ψ d) z‖ :=
+    eventually_all.2 fun ψ ↦ h_inverse.eventually (eventually_le_norm_regularL (quadTwist ψ d))
+  obtain ⟨L, hL, h_near, h_near_twist⟩ := ((eventually_ge_atTop 1).and (h_near.and h_near_twist)).exists
+  let a := fixedZeroFreeWidth L
+  have ha : 0 < a := fixedZeroFreeWidth_pos L
+  have ha_one : a ≤ 1 := fixedZeroFreeWidth_le_one L
+  have h_char : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
+      1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
+        entireL ψ s ≠ 0 ∧ ‖logDeriv (entireL ψ) s‖ ≤ l ^ 9 / a :=
+    eventually_all.2 fun ψ ↦ eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood ψ hL
+      (fun _ ↦ h_near ψ)
+  have h_twist : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
+      1 - a / l ^ 9 ≤ s.re → ‖s‖ ≤ rexp l →
+        entireL (quadTwist ψ d) s ≠ 0 ∧ ‖logDeriv (entireL (quadTwist ψ d)) s‖ ≤ l ^ 9 / a :=
+    eventually_all.2 fun ψ ↦ eventually_norm_logDeriv_entireL_le_of_fixed_neighborhood (quadTwist ψ d) hL
+      (fun _ ↦ h_near_twist ψ)
+  refine ⟨a, ha, ha_one, ?_⟩
+  filter_upwards [h_char, h_twist, eventually_ge_atTop (2 : ℝ), eventually_ge_atTop (6 / a)]
+    with l hl_char hl_twist hl_two hl s h_re h_norm
+  have hl_one : 1 ≤ l := one_le_two.trans hl_two
+  have h_pow : 2 ≤ l ^ 9 := hl_two.trans (le_self_pow₀ hl_one (by decide))
+  have h_width : a / l ^ 9 ≤ 1 / 2 :=
+    (div_le_div_of_nonneg_right ha_one (by positivity)).trans (one_div_le_one_div_of_le two_pos h_pow)
+  have h_half : 1 / 2 ≤ s.re := by linarith
+  have h_low : 1 ≤ l ^ 9 / a := (le_div_iff₀ ha).2 (by linarith)
+  obtain ⟨h_diff, h_bound⟩ := differentiableAt_and_norm_logDerivMean_div_le h_half
+    (fun ψ ↦ hl_char ψ s h_re h_norm) (fun ψ ↦ hl_twist ψ s h_re h_norm)
+  refine ⟨h_diff, h_bound.trans ?_⟩
+  calc 4 * (l ^ 9 / a) + 2 ≤ 6 * (l ^ 9 / a) := by linarith
+    _ = (6 / a) * l ^ 9 := by ring
+    _ ≤ l ^ 10 := by rw [pow_succ' l 9]; exact mul_le_mul_of_nonneg_right hl (by positivity)
+
+/-- The logarithmic derivative mean on the strip with width `l⁻²⁶`. -/
 lemma eventually_norm_logDerivMean_div_le : ∀ᶠ l : ℝ in atTop, ∀ s : ℂ,
     1 - 1 / l ^ 26 ≤ s.re → ‖s‖ ≤ rexp l →
       DifferentiableAt ℂ (fun z : ℂ ↦ logDerivMean d q z / z) s ∧
         ‖logDerivMean d q s / s‖ ≤ l ^ 26 := by
-  -- The region lies in the zero-free regions `re s ≥ 1 - l⁻²⁵` of the finitely many `L`-functions;
-  -- the exponent `26` in place of `25` absorbs the constants.
-  have h_char : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
-      1 - 1 / l ^ 25 ≤ s.re → ‖s‖ ≤ rexp l →
-        entireL ψ s ≠ 0 ∧ ‖logDeriv (entireL ψ) s‖ ≤ 2 * l ^ 25 :=
-    eventually_all.2 eventually_norm_logDeriv_entireL_le
-  have h_twist : ∀ᶠ l : ℝ in atTop, ∀ (ψ : DirichletCharacter ℂ q) (s : ℂ),
-      1 - 1 / l ^ 25 ≤ s.re → ‖s‖ ≤ rexp l →
-        entireL (quadTwist ψ d) s ≠ 0 ∧ ‖logDeriv (entireL (quadTwist ψ d)) s‖ ≤ 2 * l ^ 25 :=
-    eventually_all.2 fun ψ ↦ eventually_norm_logDeriv_entireL_le (quadTwist ψ d)
-  filter_upwards [h_char, h_twist, eventually_ge_atTop (10 : ℝ)]
-    with l hl_char hl_twist hl s h_re h_norm
-  have hl_two : 2 ≤ l := by linarith
-  have hl_one : 1 ≤ l := one_le_two.trans hl_two
-  have h_re' : 1 - 1 / l ^ 25 ≤ s.re := by
-    linarith [one_div_pow_le_one_div_pow_of_le hl_one (show 25 ≤ 26 by norm_num)]
-  have h_half : 1 / 2 ≤ s.re := by
-    have h_pow : 2 ≤ l ^ 25 := hl_two.trans (le_self_pow₀ hl_one (by simp))
-    linarith [one_div_le_one_div_of_le two_pos h_pow]
-  obtain ⟨h_char_ne, h_char_le⟩ := forall_and.1 fun ψ ↦ hl_char ψ s h_re' h_norm
-  obtain ⟨h_twist_ne, h_twist_le⟩ := forall_and.1 fun ψ ↦ hl_twist ψ s h_re' h_norm
-  constructor
-  · exact (analyticAt_logDerivMean h_char_ne h_twist_ne).differentiableAt.fun_div
-      differentiableAt_id (ne_zero_of_re_pos (by linarith))
-  · calc ‖logDerivMean d q s / s‖ ≤ (2 * (2 * l ^ 25) + 1) / (1 / 2) := by
-          grw [norm_div, norm_logDerivMean_le h_char_le h_twist_le, ← re_le_norm s, ← h_half]
-      _ ≤ 10 * l ^ 25 := by linarith [one_le_pow₀ hl_one (n := 25)]
-      _ ≤ l ^ 26 := by grw [hl, pow_succ' l 25]
+  obtain ⟨a, ha, _, hF⟩ := exists_eventually_norm_logDerivMean_div_le_of_fixed_neighborhood (d := d) (q := q)
+  filter_upwards [hF, eventually_ge_atTop (1 : ℝ), eventually_ge_atTop (1 / a)] with l hl hl_one hl_a s hs hnorm
+  have hl_pos : 0 < l := one_pos.trans_le hl_one
+  have h_inv : 1 / l ≤ a := (div_le_iff₀ hl_pos).2 (by
+    simpa only [mul_comm] using (div_le_iff₀ ha).1 hl_a)
+  have h_width : 1 / l ^ 26 ≤ a / l ^ 9 := calc
+    _ ≤ 1 / l ^ 10 := one_div_pow_le_one_div_pow_of_le hl_one (by decide)
+    _ = (1 / l) / l ^ 9 := by field
+    _ ≤ _ := div_le_div_of_nonneg_right h_inv (by positivity)
+  have hs' : 1 - a / l ^ 9 ≤ s.re := by linarith
+  exact (hl s hs' hnorm).imp_right
+    (·.trans (pow_le_pow_right₀ hl_one (by decide : (10 : ℕ) ≤ 26)))
+
+private lemma logDerivMean_div_transform (hd : d ≠ 2) (h_cop : q.Coprime d) (s : ℂ) (hs : 2 < s.re) :
+    (logDerivMean d q s / s - logDerivMean d q 1 / 1) / (s - 1) =
+      ∫ v : ℝ in Set.Ioi 0, (primeRemainder d q (rexp v) : ℂ) * cexp ((1 - s) * v) := by
+  simp [integral_primeRemainder hd h_cop hs, ofReal_re_logDerivMean_one hd h_cop]
+
+/-- At fixed moduli the weighted prime remainder decays with stretched exponential exponent
+`1 / 10` in logarithmic coordinates. -/
+theorem exists_eventually_abs_primeRemainder_exp_le_tenth (hd : d ≠ 2) (h_cop : q.Coprime d) :
+    ∃ a : ℝ, 0 < a ∧ a ≤ 1 ∧ ∀ᶠ v : ℝ in atTop,
+      |primeRemainder d q (rexp v)| ≤ rexp (-((a * v) ^ (1 / 10 : ℝ) / 32)) := by
+  obtain ⟨a, ha, h_one, hF⟩ := exists_eventually_norm_logDerivMean_div_le_of_fixed_neighborhood (d := d) (q := q)
+  refine ⟨a, ha, h_one, ?_⟩
+  have h_bound := eventually_abs_le_exp_rpow_of_transform_of_width
+    (by fun_prop [primeRemainder, lambdaKSum]) (fun u v ↦ abs_primeRemainder_exp_sub_le)
+    (logDerivMean_div_transform hd h_cop) ha h_one (A := 9) (B := 10) hF
+  simpa only [Nat.cast_ofNat, show (9 : ℝ) + 1 = 10 by norm_num] using h_bound
 
 /-- The weighted prime remainder in logarithmic coordinates. -/
 theorem eventually_abs_primeRemainder_exp_le_stretched {d q : ℕ} [Fact d.Prime] [NeZero q]
     (hd : d ≠ 2) (h_cop : q.Coprime d) :
     ∀ᶠ v : ℝ in atTop, |primeRemainder d q (rexp v)| ≤ rexp (-(v ^ (1 / 27 : ℝ) / 32)) := by
-  let F : ℂ → ℂ := fun s ↦ logDerivMean d q s / s
-  have h_transform (s : ℂ) (hs : 2 < s.re) : (F s - F 1) / (s - 1) =
-      ∫ v : ℝ in Set.Ioi 0, (primeRemainder d q (rexp v) : ℂ) * cexp ((1 - s) * v) := by
-    simp [F, integral_primeRemainder hd h_cop hs, ofReal_re_logDerivMean_one hd h_cop]
   have h_bound := eventually_abs_le_exp_rpow_of_transform
     (by fun_prop [primeRemainder, lambdaKSum]) (fun u v ↦ abs_primeRemainder_exp_sub_le)
-    h_transform (A := 26) eventually_norm_logDerivMean_div_le
+    (logDerivMean_div_transform hd h_cop) (A := 26) eventually_norm_logDerivMean_div_le
   simpa only [Nat.cast_ofNat, show (26 : ℝ) + 1 = 27 by norm_num] using h_bound
 
 /-- Every inverse power of `log y` bounds the prime remainder for all large `y`. -/
