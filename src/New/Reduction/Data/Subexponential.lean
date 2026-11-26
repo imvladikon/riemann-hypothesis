@@ -186,9 +186,9 @@ theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
   have hD : 0 < D := by dsimp [D]; positivity
   have hD_top : Tendsto (fun y : ℝ ↦ D * y) atTop atTop := tendsto_id.const_mul_atTop hD
   have h_four : 4 ∣ P.q₀ * P.d := Dvd.dvd.mul_right (.trans (by norm_num) P.dvd_q₀) P.d
-  obtain ⟨C, -, h_prime⟩ := exists_eventually_prime_modEq_one_log_mem_of_width _ h_four
-  have h_width : ∀ᶠ y : ℝ in atTop, C * (D * y) ^ (10 : ℕ) ≤ P.subexponentialWindowWidth y := by
-    simpa only [mul_pow, ← mul_assoc] using P.eventually_mul_pow_le_subexponentialWindowWidth (C * D ^ 10) 10
+  obtain ⟨C, -, h_prime⟩ := exists_eventually_prime_modEq_one_log_mem_of_quadratic_width _ h_four
+  have h_width : ∀ᶠ y : ℝ in atTop, C * (D * y) ^ (2 : ℕ) ≤ P.subexponentialWindowWidth y := by
+    simpa only [mul_pow, ← mul_assoc] using P.eventually_mul_pow_le_subexponentialWindowWidth (C * D ^ 2) 2
   filter_upwards [P.eventually_isLargeScale_subexponential,
     hD_top.eventually h_prime, h_width] with y ⟨n, h_scale, h_top, _⟩ h_window hW_le
   let W := P.subexponentialWindowWidth y
