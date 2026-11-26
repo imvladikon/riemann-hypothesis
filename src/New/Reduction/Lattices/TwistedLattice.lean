@@ -307,20 +307,28 @@ lemma covolumeLe_of_normSqAt_le {n : ℕ} {z : Fin n → V} {h : ℝ}
     L.CovolumeLe z (n * h) :=
   fun σ ↦ norm_det_formGram_le L.posDef_gramMatrix.posSemidef fun i ↦ hz i σ
 
+/-- The completion can be bounded after subtracting the span of the first family independently
+at each complex embedding. -/
+theorem CovolumeLe.sumElim_of_residuals {S' : Type} [Fintype S'] [DecidableEq S']
+    {y : S → V} {z : S' → V} {c c' : ℝ} (hy : L.CovolumeLe y c)
+    (a : (ℂ ≃+* ℂ) → Matrix S S' ℂ)
+    (hz : ∀ σ : ℂ ≃+* ℂ, ‖(formGram (L.gramMatrix.map (↑))
+      (fun j ↦ L.conjCoord σ (z j) - ∑ i, a σ i j • L.conjCoord σ (y i))).det‖ ≤ Real.exp c') :
+    L.CovolumeLe (Sum.elim y z) (c + c') := by
+  intro σ
+  rw [Sum.comp_elim]
+  refine (norm_det_formGram_sumElim_le_of_sub L.posDef_gramMatrix.posSemidef
+    (L.conjCoord σ ∘ y) (L.conjCoord σ ∘ z) (a σ)).trans ?_
+  rw [Real.exp_add]
+  exact mul_le_mul (hy σ) (hz σ) (norm_nonneg _) (Real.exp_nonneg c)
+
 /-- **Gram determinants, adjoining vectors.** If two families have covolume at most `c` and
 `c'`, their union has covolume at most `c + c'` by Fischer's inequality. -/
 lemma CovolumeLe.sumElim {S' : Type} [Fintype S'] [DecidableEq S']
     {y : S → V} {z : S' → V} {c c' : ℝ} (hy : L.CovolumeLe y c) (hz : L.CovolumeLe z c') :
     L.CovolumeLe (Sum.elim y z) (c + c') := by
-  -- Apply Fischer's inequality to the Gram matrix `M` of the union at `σ`.
-  intro σ
-  rw [Sum.comp_elim]
-  set M : Matrix (S ⊕ S') (S ⊕ S') ℂ :=
-    formGram (L.gramMatrix.map (↑)) (Sum.elim (L.conjCoord σ ∘ y) (L.conjCoord σ ∘ z))
-  calc ‖M.det‖ ≤ ‖M.toBlocks₁₁.det‖ * ‖M.toBlocks₂₂.det‖ :=
-        fischer_det_inequality (posSemidef_formGram L.posDef_gramMatrix.posSemidef _)
-    _ ≤ exp c * exp c' := mul_le_mul (hy σ) (hz σ) (norm_nonneg _) (exp_nonneg c)
-    _ = exp (c + c') := (Real.exp_add _ _).symm
+  refine hy.sumElim_of_residuals (fun _ ↦ 0) fun σ ↦ ?_
+  simpa [Function.comp_def] using hz σ
 
 end Covolume
 
@@ -470,6 +478,28 @@ lemma heightLe_volume_div {n n' : ℕ} {y : Fin n → V} {z : Fin n' → V}
   simp [hG, field]
   exact (mul_div_mul_right _ _ (det_gram_ne_zero_iff_linearIndependent.2 h_indep)).symm
 
+/-- The product formula uses the bound for the completed family and the integrality of the
+original added vectors. -/
+theorem covolume_add_index_nonneg_of_completed {n n' : ℕ} {y : Fin n → V} {z : Fin n' → V}
+    (h_inj : Function.Injective (L.lift 1))
+    (h_indep : LinearIndependent ℂ (Sum.elim y z)) (h_card : finrank ℂ V = n + n')
+    {θ : PrimePadicIso → T} (hθ : ∀ ι : PrimePadicIso, L.IsAllowed ι.prime (θ ι))
+    (h_volume_ne : ∀ ι : PrimePadicIso, L.volume (θ ι) ≠ 0)
+    {a δ b_volume b_denom : ℝ} (ha : L.CovolumeLe (Sum.elim y z) a) (hδ : L.IndexLe y δ)
+    {γ : PrimePadicIso → ℂ} (hγ_ne : ∀ ι, γ ι ≠ 0)
+    (hz_int : ∀ (ι : PrimePadicIso) (i : Fin n'), γ ι • L.lift (θ ι) (z i) ∈ L.lattice (θ ι) ι)
+    (hz_conj : ∀ (ι : PrimePadicIso) (i : Fin n'),
+      γ ι • L.lift (θ ι) (z i) ∈ L.lattice (θ ι) ι.conj)
+    (hγ : HeightLe b_denom fun ι : PrimePadicIso ↦ ((‖γ ι‖ : ℂ) ^ 2)⁻¹)
+    (hZ : HeightLe b_volume fun ι : PrimePadicIso ↦ L.volume 1 / L.volume (θ ι)) :
+    0 ≤ a + 2 * δ + n' * b_denom + b_volume := by
+  have h_forward := heightLe_volume_div h_inj h_indep h_card hθ ha hδ hγ_ne hz_int hz_conj hγ
+  have h_one : HeightLe ((a + (2 * δ + n' * b_denom)) + b_volume) 1 := by
+    convert h_forward.mul hZ using 1
+    funext ι
+    simp [field, volume_ne_zero h_inj, h_volume_ne ι]
+  linarith [h_one.nonneg_of_one]
+
 /-- **A twist for each prime.** Let `L` be a twisted lattice on `V` with maps `Θ_ξ = L.lift ξ`.
 Let `y_1, …, y_n, z_1, …, z_n'` be a basis of `V`, and let `ξ_ι = θ ι` be allowed at the prime of
 `ι`. Only the untwisted map must be injective, and only the selected volumes `Z(ξ_ι)` must be
@@ -495,14 +525,9 @@ theorem covolume_add_index_nonneg {n n' : ℕ} {y : Fin n → V} {z : Fin n' →
     (hγ : HeightLe b_denom fun ι : PrimePadicIso ↦ ((‖γ ι‖ : ℂ) ^ 2)⁻¹)
     (hZ : HeightLe b_volume fun ι : PrimePadicIso ↦ L.volume 1 / L.volume (θ ι)) :
     0 ≤ c + 2 * δ + n' * (b_short + b_denom) + b_volume := by
-  have h_forward := heightLe_volume_div h_inj h_indep h_card hθ
-    (hc.sumElim (covolumeLe_of_normSqAt_le hz_short)) hδ hγ_ne hz_int hz_conj hγ
-  -- The forward and inverse ratios use the same twist at each place, so their product is one.
-  have h_one : HeightLe ((c + n' * b_short) + (2 * δ + n' * b_denom) + b_volume) 1 := by
-    convert h_forward.mul hZ using 1
-    funext ι
-    simp [field, volume_ne_zero h_inj, h_volume_ne ι]
-  linarith [h_one.nonneg_of_one]
+  have h_bound := covolume_add_index_nonneg_of_completed h_inj h_indep h_card hθ h_volume_ne
+    (hc.sumElim (covolumeLe_of_normSqAt_le hz_short)) hδ hγ_ne hz_int hz_conj hγ hZ
+  linarith only [h_bound]
 
 end Twist
 
