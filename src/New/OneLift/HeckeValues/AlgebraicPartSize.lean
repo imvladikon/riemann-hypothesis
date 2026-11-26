@@ -473,13 +473,11 @@ lemma CriticalPair.IsMainPair.negWeight_sub_z_mem_Icc {p : D.CriticalPair} {j : 
 /-- Let `p = (ν, z)` be a main pair for `j`, with `m = D.m` the number of lifts, `r = D.r` the rank
 of the target and `t = 5 r`. Take the squared norm `‖φ‖²` of the untwisted lift of `ν` to `U(2 z)`
 as a constant family, indexed by the primes `l` with an isomorphism `ℂ ≃ ℚ̄_l`. Then it has height
-(`New.HeightLe`) at most `denominatorBudget - ∑ τ, jetSize (κ τ)`. Here
-`denominatorBudget = f a log³ b / (m k)`, with `f` the number of infinite places `τ`, `b = D.b` the
-weight scale, `a = x b` for the length `x` of the prime sum and `k = r + 1 - m`; further
-`κ τ = D.weight τ`, and `jetSize i = log i! + i log (M / Ω)` is the size of a derivative of order
-`i`, with `M = D.M` and `Ω = P.bigOmega D.towerExp`. -/
-lemma heightLe_norm_trivialLift_sq {j : ℕ} {p : D.CriticalPair} (hp : p.IsMainPair j) :
-    HeightLe (D.denominatorBudget - ∑ τ : D.Φ, D.jetSize (D.weight τ)) fun _ : PrimePadicIso ↦
+(`New.HeightLe`) at most `x³³ + 8 f - ∑ τ, jetSize (κ τ)`. Here `f` is the number of infinite places
+and `κ τ = D.weight τ`. The two positive terms come from the integral multiplier and comparison
+with the empty row. -/
+lemma heightLe_norm_trivialLift_sq_sharp {j : ℕ} {p : D.CriticalPair} (hp : p.IsMainPair j) :
+    HeightLe (D.x ^ 33 + 8 * D.f - ∑ τ : D.Φ, D.jetSize (D.weight τ)) fun _ : PrimePadicIso ↦
       ‖trivialLift hp.hasLiftRank TameChar.one‖ ^ 2 := by
   -- Compare with the critical pair with an empty row `q = (υ ^ (-z), z)` of the same rank. The
   -- multiplier is `q.integralAlgebraicPart / ‖φ‖²`: its product with `‖φ‖²` is
@@ -495,7 +493,7 @@ lemma heightLe_norm_trivialLift_sq {j : ℕ} {p : D.CriticalPair} (hp : p.IsMain
   let normSqP : ℂ := ‖trivialLift hp.hasLiftRank .one‖ ^ 2
   let normSqQ : ℂ := ‖trivialLift h_flat.2 .one‖ ^ 2
   let mult : ℂ := q.integralAlgebraicPart h_flat.2 .one / normSqP
-  have h_conj (σ : Gal(ℂ/P.K)) : log ‖σ mult‖ ≤ D.denominatorBudget - ∑ τ,
+  have h_conj (σ : Gal(ℂ/P.K)) : log ‖σ mult‖ ≤ D.x ^ 33 + 8 * D.f - ∑ τ,
     D.jetSize (D.weight τ) := by
     obtain ⟨c, hc⟩ := exists_log_norm_map_norm_sq_trivialLift_eq_add_sum_jetSize D
       (RankOneIndex p.z) σ
@@ -518,10 +516,9 @@ lemma heightLe_norm_trivialLift_sq {j : ℕ} {p : D.CriticalPair} (hp : p.IsMain
     have h_log_int : log (D.chosenGroupOrder * q.denomBound ^ 2) ≤ D.x ^ 33 :=
       (log_le_iff_le_exp (by simp [h_flat, denomBound, NeZero.pos])).2
         (chosenGroupOrder_mul_denomBound_sq_le h_flat)
-    have h_budget : D.x ^ 33 + 8 * D.f ≤ D.denominatorBudget := D.le_of_hasLogBound
     linarith [hr₀_le h_flat]
   -- The multiplier takes the whole bound at infinity, and nothing is lost at the primes.
-  refine .of_mul_le (H := mult) (α := D.denominatorBudget - ∑ τ, D.jetSize (D.weight τ)) (e := 0)
+  refine .of_mul_le (H := mult) (α := D.x ^ 33 + 8 * D.f - ∑ τ, D.jetSize (D.weight τ)) (e := 0)
     (by simp [mult, normSqP]) (fun σ ↦ ?_) (fun ι ↦ ?_) (by simp)
   · -- `σ` has the same moduli as some `σ'` fixing `K`
     obtain ⟨σ', hσ'⟩ := P.exists_algEquiv_norm_eq σ
@@ -531,6 +528,14 @@ lemma heightLe_norm_trivialLift_sq {j : ℕ} {p : D.CriticalPair} (hp : p.IsMain
       div_mul_cancel₀ _ (by simp [normSqP])
     change ‖ι.iso (mult * normSqP)‖ ≤ exp 0
     simp [h_prod, norm_integralAlgebraicPart_one_le_one]
+
+/-- The squared norm of the untwisted lift with the archimedean error bounded by
+`denominatorBudget`. -/
+lemma heightLe_norm_trivialLift_sq {j : ℕ} {p : D.CriticalPair} (hp : p.IsMainPair j) :
+    HeightLe (D.denominatorBudget - ∑ τ : D.Φ, D.jetSize (D.weight τ)) fun _ : PrimePadicIso ↦
+      ‖trivialLift hp.hasLiftRank TameChar.one‖ ^ 2 :=
+  (heightLe_norm_trivialLift_sq_sharp hp).mono (sub_le_sub_right D.le_of_hasLogBound _)
+    fun _ ↦ le_rfl
 
 end New.Data
 

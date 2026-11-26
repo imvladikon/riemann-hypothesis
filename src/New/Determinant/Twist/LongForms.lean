@@ -174,13 +174,23 @@ private lemma cubic_loss_le_fourth_power (D : Data P) :
         mul_le_mul_of_nonneg_right h_log (by positivity)
     _ = D.f * D.a * D.logB ^ 4 := by ring
 
+private lemma quadratic_loss_le_cubic (D : Data P) :
+    17 * (D.f * D.a * D.logB ^ 2) ≤ 10 * D.errorUnit := by
+  have h_log : 17 ≤ D.logB := D.le_of_hasLogBound
+  calc 17 * (D.f * D.a * D.logB ^ 2)
+    _ ≤ D.logB * (D.f * D.a * D.logB ^ 2) := mul_le_mul_of_nonneg_right h_log (by positivity)
+    _ = D.errorUnit := by unfold Data.errorUnit; ring
+    _ ≤ 10 * D.errorUnit := by
+      linarith only [(HasLogBound.pos D : 0 < D.errorUnit)]
+
 variable (D) in
-private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic :
+private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_quadratic :
     ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∀ j ∈ Icc 1 D.m,
-      HeightLe (D.targetDim * (10 * D.errorUnit / D.m - D.k * D.directionAmount))
+      HeightLe (D.targetDim * (17 * (D.f * D.a * D.logB ^ 2) / D.m - D.k * D.directionAmount))
         fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
-  obtain ⟨θ, hθ⟩ := exists_isRegularFamily D
-  exact ⟨θ, hθ.toHasSmallRatios, fun j hj ↦ heightLe_liftDeterminant_ratio_cubic hθ ⟨j, mem_Icc.1 hj⟩⟩
+  obtain ⟨θ, hθ, γ, h_sum, h_local⟩ := exists_hasSmallRatios_and_quadratic_denominators D
+  exact ⟨θ, hθ, fun j hj ↦ heightLe_liftDeterminant_ratio_quadratic hθ ⟨j, mem_Icc.1 hj⟩
+    (β := γ) h_sum fun ι ↦ h_local ι _⟩
 
 variable (D) in
 /-- **Single lifts at good twists.** There is a family of `m`-fold twists `ξ_ι = θ ι`, one for each
@@ -190,9 +200,9 @@ theorem exists_hasSmallRatios_heightLe_liftDeterminant_div :
     ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∀ j ∈ Icc 1 D.m,
       HeightLe (D.targetDim * (D.f * D.a * D.logB ^ 4 / D.m - D.k * D.directionAmount))
         fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
-  obtain ⟨θ, hθ, h_lifts⟩ := exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic D
+  obtain ⟨θ, hθ, h_lifts⟩ := exists_hasSmallRatios_heightLe_liftDeterminant_div_quadratic D
   refine ⟨θ, hθ, fun j hj ↦ (h_lifts j hj).mono ?_ fun _ ↦ le_rfl⟩
-  have h_loss := cubic_loss_le_fourth_power D
+  have h_loss := (quadratic_loss_le_cubic D).trans (cubic_loss_le_fourth_power D)
   gcongr
 
 variable (D) in
@@ -256,15 +266,15 @@ lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (h
 
 /-! ### The lower bound -/
 
-/-- The covolume bound with cubic lift error and completion cost `(1 + 2 x²⁰²) b`
+/-- The covolume bound with quadratic lift error and completion cost `(1 + 2 x²⁰²) b`
 per missing dimension. -/
-theorem integral_forms_long_with_linear_completion {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+theorem integral_forms_long_with_quadratic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
     (hy : LinearIndependent ℂ y)
     (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
-    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
+    D.targetDim * (D.mainAmount - 17 * (D.f * D.a * D.logB ^ 2) - D.b) ≤
       c + 2 * δ + ((D.targetDim : ℝ) - n) * ((1 + 2 * D.x ^ 202) * D.b) := by
   obtain ⟨θ, h_small_ratios, h_single_lift_heights⟩ :=
-    D.exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic
+    D.exists_hasSmallRatios_heightLe_liftDeterminant_div_quadratic
   obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_auxiliary_span⟩ :=
     D.exists_span_isAuxiliaryForm_with_linear_norm_eq_top
   obtain ⟨n', z, hz, h_completed_indep, h_completed_card⟩ :=
@@ -282,7 +292,8 @@ theorem integral_forms_long_with_linear_completion {n : ℕ} {y : Fin n → D.ta
     refine ((h_small_ratios.heightLe_inv_rpow_mul_prod_turnRatio e).pow 2).mono (mod_cast h_cost)
       fun ι ↦ le_of_eq ?_
     rw [hγ_norm, Pi.pow_apply, inv_pow]
-  have h_chain_ratio_height : HeightLe (D.targetDim * (D.b + 10 * D.errorUnit - D.mainAmount))
+  have h_chain_ratio_height :
+      HeightLe (D.targetDim * (D.b + 17 * (D.f * D.a * D.logB ^ 2) - D.mainAmount))
       fun ι : PrimePadicIso ↦ D.targetLattice.volume 1 / D.targetLattice.volume (θ ι) :=
     heightLe_chainDeterminant_one_div_of_bound h_small_ratios h_single_lift_heights
   have h_product := TwistedLattice.covolume_add_index_nonneg
@@ -296,6 +307,16 @@ theorem integral_forms_long_with_linear_completion {n : ℕ} {y : Fin n → D.ta
   have h_missing_dimension : (n' : ℝ) = D.targetDim - n := by linarith
   rw [← h_missing_dimension, add_mul, one_mul, add_comm D.b]
   linarith only [h_product]
+
+/-- The covolume bound expressed in units of the cubic lift error. -/
+theorem integral_forms_long_with_linear_completion {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y)
+    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
+    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * ((1 + 2 * D.x ^ 202) * D.b) := by
+  refine le_trans ?_ (integral_forms_long_with_quadratic_error hy hδ hc)
+  have h_loss := quadratic_loss_le_cubic D
+  gcongr
 
 /-- The covolume bound expressed with the fourth-power error and the explicit completion cost. -/
 theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}

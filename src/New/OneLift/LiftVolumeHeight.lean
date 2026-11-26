@@ -721,21 +721,18 @@ lemma mFoldTwist_one_pow (j : ℕ) : (1 : D.MFoldTwist).pow j = (TameChar.one : 
   rw [TameChar.pow]
   congr 1 <;> exact one_pow j
 
-private lemma lift_height_cost_le (D : Data P) :
-    3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * D.denominatorBudget +
-      (10 * D.m * D.x₁ + D.k * (6 * D.denominatorBudget)) ≤ 10 * D.errorUnit / D.m := by
+private lemma lift_height_cost_le (D : Data P) {budget ratioLoss loss : ℝ} (h_budget : 0 ≤ budget)
+    (h_loss : 12 * (D.f * D.a * D.logB ^ 2) + 2 * (D.m * D.k * budget) +
+      D.f * D.a * D.logB ^ 2 + D.m * D.k * ratioLoss ≤ loss) :
+    3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * budget +
+      (10 * D.m * D.x₁ + D.k * ratioLoss) ≤ loss / D.m := by
   have hm : (0 : ℝ) < D.m := HasLogBound.pos D
-  have hk : (0 : ℝ) < D.k := HasLogBound.pos D
-  have h_log : 12 ≤ D.logB := D.le_of_hasLogBound
   have h_m_sq : (D.m : ℝ) ^ 2 ≤ 4 * D.x := by
     have h_exp_sq : exp (D.logX / 2) ^ 2 = D.x := by rw [sq, ← exp_add, add_halves, x]
     obtain ⟨-, h_upper⟩ : exp (D.logX / 2) ≤ D.m ∧ D.m ≤ 2 * exp (D.logX / 2) := D.m_mem
     calc (D.m : ℝ) ^ 2 ≤ (2 * exp (D.logX / 2)) ^ 2 := by gcongr
       _ = 4 * D.x := by norm_num [mul_pow, h_exp_sq]
-  have h_budget : D.m * D.k * D.denominatorBudget = D.errorUnit := by
-    rw [denominatorBudget]
-    field_simp [hm.ne', hk.ne']
-  have h_arch : D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2)) ≤ D.errorUnit := by
+  have h_arch : D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2)) ≤ 12 * (D.f * D.a * D.logB ^ 2) := by
     calc D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2))
         = (3 * D.f * D.b * D.logB ^ 2) * (D.m : ℝ) ^ 2 := by ring
       _ ≤ (3 * D.f * D.b * D.logB ^ 2) * (4 * D.x) :=
@@ -743,42 +740,31 @@ private lemma lift_height_cost_le (D : Data P) :
       _ = 12 * (D.f * D.a * D.logB ^ 2) := by
         rw [x, b, a, Nat.cast_mul, D.exp_logX, D.exp_logB]
         ring
-      _ ≤ D.logB * (D.f * D.a * D.logB ^ 2) :=
-        mul_le_mul_of_nonneg_right h_log (by positivity)
-      _ = D.errorUnit := by rw [errorUnit]; ring
   have h_r : (D.r : ℝ) ≤ 2 * D.k := by
     exact_mod_cast (show D.r ≤ 2 * D.k by linarith [D.r_add_one, D.hundred_mul_m_le_k])
-  have h_padic : D.m * (D.r * D.denominatorBudget) ≤ 2 * D.errorUnit := by
-    have h_nonneg : 0 ≤ D.denominatorBudget := (HasLogBound.pos D).le
-    calc D.m * (D.r * D.denominatorBudget) ≤ D.m * ((2 * D.k) * D.denominatorBudget) := by gcongr
-      _ = 2 * (D.m * D.k * D.denominatorBudget) := by ring
-      _ = 2 * D.errorUnit := by rw [h_budget]
-  have h_ratios : D.m * (10 * D.m * D.x₁) ≤ D.errorUnit := by
+  have h_padic : D.m * (D.r * budget) ≤ 2 * (D.m * D.k * budget) := calc
+    _ ≤ D.m * ((2 * D.k) * budget) := by gcongr
+    _ = _ := by ring
+  have h_ratios : D.m * (10 * D.m * D.x₁) ≤ D.f * D.a * D.logB ^ 2 := by
     calc D.m * (10 * D.m * D.x₁) = 10 * D.x₁ * (D.m : ℝ) ^ 2 := by ring
       _ ≤ 10 * D.x₁ * (4 * D.x) := mul_le_mul_of_nonneg_left h_m_sq (by positivity)
       _ = 40 * D.x * D.x₁ := by ring
-      _ ≤ D.errorUnit := D.le_of_hasLogBound
+      _ ≤ _ := D.le_of_hasLogBound
   apply (le_div_iff₀' hm).2
-  calc D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * D.denominatorBudget +
-        (10 * D.m * D.x₁ + D.k * (6 * D.denominatorBudget)))
-      = D.m * (3 * (D.f * D.m * D.b * D.logB ^ 2)) + D.m * (D.r * D.denominatorBudget) +
-          D.m * (10 * D.m * D.x₁) + 6 * D.errorUnit := by rw [← h_budget]; ring
-    _ ≤ 10 * D.errorUnit := by linarith only [h_arch, h_padic, h_ratios]
+  linarith only [h_arch, h_padic, h_ratios, h_loss]
 
-/-- For a family of twists `ξ_ι = θ ι` as in `IsRegularFamily`, the ratio `Z_j (1) / Z_j (ξ_ι ^ j)`
-has height at most `d (10 · errorUnit / m - k · directionAmount)`.
-Here `d = D.targetDim` is the dimension of the good forms, `k = D.k = D.r + 1 - D.m`,
-`errorUnit = f a log³ b`, and `directionAmount = D.directionAmount` is the sum over the infinite places `σ`, of
-weight `κ = D.weight σ`, of `D.jetSize κ = log κ! + κ log (M / Ω)`, the size of a derivative of
-order `κ`, less the prime sum `D.primeSum κ σ` that measures its divisibility. -/
-lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegularFamily θ)
-    (j : D.LiftIndex) :
-    HeightLe (D.targetDim * (10 * D.errorUnit / D.m - D.k * D.directionAmount))
+private lemma heightLe_liftDeterminant_ratio_of_bounds {θ : PrimePadicIso → D.MFoldTwist}
+    (hθ : D.HasSmallRatios θ) (j : D.LiftIndex) {budget ratioLoss loss : ℝ}
+    (h_denominators : D.HasDenominatorsWithin θ j budget)
+    (h_hecke : HeightLe (10 * D.m * D.x₁ + D.k * (ratioLoss - D.directionAmount))
+      fun ι : PrimePadicIso ↦ (heckeValueProd j ((θ ι).powTwist j) / heckeValueProd j 1)⁻¹)
+    (h_cost : 3 * (D.f * D.m * D.b * D.logB ^ 2) + D.r * budget +
+      (10 * D.m * D.x₁ + D.k * ratioLoss) ≤ loss) :
+    HeightLe (D.targetDim * (loss - D.k * D.directionAmount))
       fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
   -- The ratio is `det (pr U_ξ) / det (pr U_1)` times the `d`-th power of the inverse ratio of
   -- Hecke values.
-  obtain ⟨β, hβ_sum, hβ_denom⟩ : ∃ β : ℕ → ℝ, D.IsDenominatorBound θ j β :=
-    hθ.exists_denominator_bound j
+  obtain ⟨β, hβ_sum, hβ_denom⟩ := h_denominators
   rw [D.targetDim_eq_finrank_goodForms_spaceW j]
   have hU : IsComparisonOperator j (comparisonOp j) := isComparisonOperator_comparisonOp j
   set d : ℕ := finrank ℂ (D.goodForms (D.spaceW j))
@@ -797,16 +783,16 @@ lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist}
     hU.norm_padic_det_liftCompression_le ((θ ι).powTwist j) ι (hθ.coprime ι)
       (hβ_denom ι).clearsProjection
   -- Take `Δ 1` as the denominator; its conjugates and the norms of `Δ ξ` at `ι` bound the height.
-  have h_height : HeightLe (d * (3 * A) + d * (D.r * D.denominatorBudget))
+  have h_height : HeightLe (d * (3 * A) + d * (D.r * budget))
       fun ι : PrimePadicIso ↦ Δ ((θ ι).powTwist j) / Δ 1 := by
     refine .of_mul_le (e := fun l : ℕ ↦ d * (D.r * β l)) (hΔ_ne 1) h_arch (fun ι ↦ ?_)
       fun T hT ↦ ?_
     · simpa only [mul_div_cancel₀ _ (hΔ_ne 1)] using h_padic ι
     · grw [← mul_sum, ← mul_sum, hβ_sum T hT]
-  refine (h_height.mul ((heightLe_inv_heckeValueProd_div hθ j).pow d)).mono ?_ fun ι ↦ ?_
+  refine (h_height.mul (h_hecke.pow d)).mono ?_ fun ι ↦ ?_
   · rw [← mul_add, ← mul_add, mul_sub (D.k : ℝ), add_sub, add_sub]
     exact mul_le_mul_of_nonneg_left
-      (sub_le_sub_right (lift_height_cost_le D) _) (Nat.cast_nonneg _)
+      (sub_le_sub_right h_cost _) (Nat.cast_nonneg _)
   · set ρ : ℂ := heckeValueProd j ((θ ι).powTwist j) / heckeValueProd j 1
     have h_twist : D.liftDeterminant (θ ι) j * Δ ((θ ι).powTwist j) = C * ρ ^ d :=
       h_cancel ((θ ι).powTwist j)
@@ -819,6 +805,52 @@ lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist}
       rw [eq_div_of_mul_eq (hΔ_ne _) h_twist, eq_div_of_mul_eq (hΔ_ne _) h_trivial, inv_pow]
       field [hΔ_ne, pow_ne_zero d hρ]
     rw [h_eq, Pi.mul_apply, Pi.pow_apply]
+
+/-- The single-lift determinant ratio when the sum of the local denominators is at most
+`f a (log b)² / (m k)`. -/
+lemma heightLe_liftDeterminant_ratio_quadratic {θ : PrimePadicIso → D.MFoldTwist}
+    (hθ : D.HasSmallRatios θ) (j : D.LiftIndex) {β : ℕ → ℝ}
+    (hβ_sum : ∀ T : Finset ℕ, (∀ l ∈ T, l.Prime) →
+      ∑ l ∈ T, β l ≤ (D.f * D.a * D.logB ^ 2) / (D.m * D.k))
+    (hβ_local : ∀ ι : PrimePadicIso, D.HasDenominatorsLe ι.iso ((θ ι).powTwist j) j (β ι.prime)) :
+    HeightLe (D.targetDim * (17 * (D.f * D.a * D.logB ^ 2) / D.m - D.k * D.directionAmount))
+      fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
+  let Q : ℝ := D.f * D.a * D.logB ^ 2
+  let budget : ℝ := Q / (D.m * D.k)
+  have h_denom : D.HasDenominatorsWithin θ j budget := ⟨β, hβ_sum, hβ_local⟩
+  refine heightLe_liftDeterminant_ratio_of_bounds hθ j h_denom
+    (heightLe_inv_heckeValueProd_div_with_denominators hθ j h_denom) ?_
+  apply lift_height_cost_le D (by dsimp [budget, Q]; positivity)
+  have hm : (0 : ℝ) < D.m := HasLogBound.pos D
+  have hk : (0 : ℝ) < D.k := HasLogBound.pos D
+  have h_budget : D.m * D.k * budget = Q := by
+    dsimp [budget]
+    field_simp [hm.ne', hk.ne']
+  have h_extra : D.mainPairRatioError ≤ budget := by
+    dsimp [mainPairRatioError, budget, Q]
+    exact D.le_of_hasLogBound
+  have h_hecke : D.m * D.k * (budget + D.mainPairRatioError) ≤ 2 * Q := calc
+    _ ≤ D.m * D.k * (budget + budget) := by gcongr
+    _ = 2 * Q := by rw [← h_budget]; ring
+  linarith only [h_budget, h_hecke]
+
+/-- The single-lift determinant ratio for a regular family with the cubic denominator budget. -/
+lemma heightLe_liftDeterminant_ratio_cubic {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegularFamily θ)
+    (j : D.LiftIndex) :
+    HeightLe (D.targetDim * (10 * D.errorUnit / D.m - D.k * D.directionAmount))
+      fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
+  refine heightLe_liftDeterminant_ratio_of_bounds hθ.toHasSmallRatios j (hθ.denominatorsWithin j)
+    (heightLe_inv_heckeValueProd_div hθ j) ?_
+  apply lift_height_cost_le D (HasLogBound.pos D).le
+  have hm : (0 : ℝ) < D.m := HasLogBound.pos D
+  have hk : (0 : ℝ) < D.k := HasLogBound.pos D
+  have h_budget : D.m * D.k * D.denominatorBudget = D.errorUnit := by
+    rw [denominatorBudget]
+    field_simp [hm.ne', hk.ne']
+  have h_arch : 12 * (D.f * D.a * D.logB ^ 2) ≤ D.errorUnit := D.le_of_hasLogBound
+  have h_ratios : D.f * D.a * D.logB ^ 2 ≤ D.errorUnit := by
+    linarith only [h_arch, (show 0 ≤ D.f * D.a * D.logB ^ 2 by positivity)]
+  linarith only [h_budget, h_arch, h_ratios]
 
 /-- The single-lift estimate expressed with the logarithmic denominator budget. -/
 lemma heightLe_liftDeterminant_ratio {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.IsRegularFamily θ)

@@ -55,6 +55,21 @@ U(2,2) and the Bloch–Kato conjecture, 2009; Mazur–Rubin, Ranks of twists of 
 
 open New Selmer Submodule Data GaloisRep Polynomial Multiset Finset Real
 
+/-- A quadratic bound for the sum of logarithmic denominators. -/
+noncomputable abbrev New.Data.quadraticDenominatorBudget {P : Parameters} (D : Data P) : ℝ :=
+  (D.f * D.a * D.logB ^ 2) / (D.m * D.k)
+
+lemma New.Data.quadraticDenominatorBudget_le {P : Parameters} (D : Data P) :
+    D.quadraticDenominatorBudget ≤ D.denominatorBudget := by
+  have h_log : 1 ≤ D.logB := by
+    rw [← Real.log_nonneg_iff (HasLogBound.pos D)]
+    linarith [D.constantBound_le, (le_constantBound (P := P)).1]
+  unfold quadraticDenominatorBudget denominatorBudget errorUnit
+  apply div_le_div_of_nonneg_right _ (by positivity)
+  calc D.f * D.a * D.logB ^ 2
+    _ ≤ (D.f * D.a * D.logB ^ 2) * D.logB := le_mul_of_one_le_right (by positivity) h_log
+    _ = _ := by ring
+
 /-- Let the projection to the space `Z` of lifts have denominator at most `exp β` per dimension of
 `Z` and per unit of the rank `r` of the source (`DenominatorLe`). If `β ≤ β'`, then some operator
 with determinant of norm at least `exp (-(dim Z · r · β'))` clears this denominator
@@ -240,14 +255,15 @@ projection to lifts, per dimension and per unit of rank of the source: a sum of 
 `D.chosenGroupOrder`. The number of `StdClasses` at the level `D.chosenLevel` is the class number of
 `U(1)` there. Summed over a finite set `T` of primes `l` with weights `log l`, the clearing bounds
 and the `l`-adic valuations of this class number are at most
-`D.denominatorBudget = D.errorUnit / (m k)`, for `m` the number of lifts and `k = r + 1 - m`. -/
-lemma New.Selmer.sum_clearingBound_add_padicValNat_le {P : Parameters} (D : Data P) (T : Finset ℕ)
+`D.quadraticDenominatorBudget = f a (log b)² / (m k)`, for `m` the number of lifts and
+`k = r + 1 - m`. -/
+lemma New.Selmer.sum_clearingBound_add_padicValNat_le_quadratic {P : Parameters} (D : Data P)
+    (T : Finset ℕ)
     (hT : ∀ l ∈ T, l.Prime) :
     ∑ l ∈ T, (clearingBound D l * log l +
       padicValNat l (Nat.card (StdClasses (n := Unit) D.chosenLevel)) * log l) ≤
-        D.denominatorBudget := by
-  -- the terms are the local loss and negligible numbers, and all are small against
-  -- `denominatorBudget`
+        D.quadraticDenominatorBudget := by
+  -- The local loss is linear in `log b`. All other terms use only lower scales.
   calc _ = ∑ l ∈ T, (localDefectBound D l : ℝ) * log l +
         (1 + 2 * D.t) * ∑ l ∈ T, (twistError l D : ℝ) * log l +
         ∑ l ∈ T, (denominatorError D l).toReal * log l +
@@ -264,7 +280,15 @@ lemma New.Selmer.sum_clearingBound_add_padicValNat_le {P : Parameters} (D : Data
           (isNegligible_denominatorError D).sum_mul_log_le T hT,
           sum_padicValNat_mul_log_le T hT (a := D.chosenGroupOrder) le_rfl,
           (isNegligible_padicValNat_card_stdClasses D).sum_mul_log_le T hT]
-    _ ≤ D.denominatorBudget := D.le_of_hasLogBound
+    _ ≤ D.quadraticDenominatorBudget := D.le_of_hasLogBound
+
+/-- The sum of the clearing bounds and of the logarithmic class group denominators. -/
+lemma New.Selmer.sum_clearingBound_add_padicValNat_le {P : Parameters} (D : Data P) (T : Finset ℕ)
+    (hT : ∀ l ∈ T, l.Prime) :
+    ∑ l ∈ T, (clearingBound D l * log l +
+      padicValNat l (Nat.card (StdClasses (n := Unit) D.chosenLevel)) * log l) ≤
+        D.denominatorBudget :=
+  (sum_clearingBound_add_padicValNat_le_quadratic D T hT).trans D.quadraticDenominatorBudget_le
 
 /-- A descent pair `O` consists of the data of a theta lift from a hermitian space `W` to one of
 rank `#n`: a finite set of level places, a character of `U(1)` with its weight and tame part, and
@@ -524,11 +548,14 @@ lemma New.Selmer.exists_mFoldTwist_hasDenominatorsLe {P : Parameters} (D : Data 
       (h_selmer₁ j ⟨(p, j), hp⟩)
     exact h_line_denominator.norm_inner_starProjection_le _ h_free hΞ hΞ'
 
-/-- **Twists with few congruences.** All data `D` have a regular family of `m`-fold twists `θ κ`,
-one for each pair `κ` of a prime `ℓ` and an isomorphism `ℂ ≃ ℚ̄_ℓ`. The modulus of `θ κ` is prime to
-`ℓ`. -/
-lemma New.exists_isRegularFamily {P : Parameters} (D : Data P) :
-    ∃ θ : PrimePadicIso → D.MFoldTwist, D.IsRegularFamily θ := by
+/-- **Twists with few congruences.** One family `θ κ` has small ratios and a common denominator
+bound `γ ℓ` for all lift indices. The weighted sum of the denominators is at most
+`f a (log b)² / (m k)`. -/
+lemma New.exists_hasSmallRatios_and_quadratic_denominators {P : Parameters} (D : Data P) :
+    ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∃ γ : ℕ → ℝ,
+      (∀ T : Finset ℕ, (∀ l ∈ T, l.Prime) → ∑ l ∈ T, γ l ≤ D.quadraticDenominatorBudget) ∧
+      ∀ (κ : PrimePadicIso) (j : D.LiftIndex),
+        D.HasDenominatorsLe κ.iso ((θ κ).powTwist j) j (γ κ.prime) := by
   have h_local_twist (κ : PrimePadicIso) : ∃ τ : D.MFoldTwist, Nat.Coprime κ.prime τ.normQ ∧
       (∀ (j : D.LiftIndex) (p : D.CriticalPair) (s : ℤˣ), p.IsRamified →
         ‖κ.iso (p.ratio (τ.powTwist j) s)⁻¹‖ ≤ exp (twistError κ.prime D * log (κ.prime : ℕ))) ∧
@@ -543,8 +570,12 @@ lemma New.exists_isRegularFamily {P : Parameters} (D : Data P) :
   have h_ratio_height_budget (T : Finset ℕ) (hT : ∀ l ∈ T, l.Prime) :
       ∑ l ∈ T, twistError l D * log l ≤ D.x₁ :=
     ((isNegligible_twistError D).sum_mul_log_le T hT).trans D.le_of_hasLogBound
-  exact ⟨θ,
-    { coprime := h_coprime
-      height_le j p s hp := HeightLe.of_le h_ratio_height_budget fun κ ↦ h_ratio κ j p s hp
-      exists_denominator_bound j := ⟨_, sum_clearingBound_add_padicValNat_le D, fun κ ↦
-        h_denominators κ j⟩ }⟩
+  exact ⟨θ, ⟨h_coprime, fun j p s hp ↦ HeightLe.of_le h_ratio_height_budget fun κ ↦
+    h_ratio κ j p s hp⟩, _, sum_clearingBound_add_padicValNat_le_quadratic D, h_denominators⟩
+
+/-- All data `D` have a regular family of `m`-fold twists. -/
+lemma New.exists_isRegularFamily {P : Parameters} (D : Data P) :
+    ∃ θ : PrimePadicIso → D.MFoldTwist, D.IsRegularFamily θ := by
+  obtain ⟨θ, h_small, γ, h_sum, h_local⟩ := exists_hasSmallRatios_and_quadratic_denominators D
+  exact ⟨θ, ⟨h_small, fun j ↦ ⟨γ, fun T hT ↦ (h_sum T hT).trans D.quadraticDenominatorBudget_le,
+    fun κ ↦ h_local κ j⟩⟩⟩
