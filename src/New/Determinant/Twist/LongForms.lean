@@ -132,6 +132,22 @@ lemma mul_completion_cost_le {n n' : ℕ} (hn : (1 - 4 / D.b ^ 2) * D.targetDim 
 
 /-! ### The inverse ratio -/
 
+private lemma cubic_loss_le_fourth_power (D : Data P) :
+    10 * D.errorUnit ≤ D.f * D.a * D.logB ^ 4 := by
+  have h_log : 10 ≤ D.logB := D.le_of_hasLogBound
+  rw [errorUnit]
+  calc 10 * (D.f * D.a * D.logB ^ 3) ≤ D.logB * (D.f * D.a * D.logB ^ 3) :=
+        mul_le_mul_of_nonneg_right h_log (by positivity)
+    _ = D.f * D.a * D.logB ^ 4 := by ring
+
+variable (D) in
+private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic :
+    ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∀ j ∈ Icc 1 D.m,
+      HeightLe (D.targetDim * (10 * D.errorUnit / D.m - D.k * D.directionAmount))
+        fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
+  obtain ⟨θ, hθ⟩ := exists_isRegularFamily D
+  exact ⟨θ, hθ.toHasSmallRatios, fun j hj ↦ heightLe_liftDeterminant_ratio_cubic hθ ⟨j, mem_Icc.1 hj⟩⟩
+
 variable (D) in
 /-- **Single lifts at good twists.** There is a family of `m`-fold twists `ξ_ι = θ ι`, one for each
 prime `l` and `ι : ℂ ≃ ℚ̄_l`, with small ratios such that for `1 ≤ j ≤ m` the family
@@ -140,15 +156,10 @@ theorem exists_hasSmallRatios_heightLe_liftDeterminant_div :
     ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∀ j ∈ Icc 1 D.m,
       HeightLe (D.targetDim * (D.f * D.a * D.logB ^ 4 / D.m - D.k * D.directionAmount))
         fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
-  -- Every regular family serves.
-  obtain ⟨θ, hθ⟩ := exists_isRegularFamily D
-  refine ⟨θ, hθ.toHasSmallRatios, fun j hj ↦ ?_⟩
-  have hk : (D.k : ℝ) ≠ 0 := (HasLogBound.pos D).ne'
-  have h_budget : D.k * (D.logB * D.denominatorBudget) = D.f * D.a * D.logB ^ 4 / D.m := by
-    rw [denominatorBudget, errorUnit]
-    field_simp
-  rw [← h_budget, ← mul_sub]
-  exact heightLe_liftDeterminant_ratio hθ ⟨j, mem_Icc.1 hj⟩
+  obtain ⟨θ, hθ, h_lifts⟩ := exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic D
+  refine ⟨θ, hθ, fun j hj ↦ (h_lifts j hj).mono ?_ fun _ ↦ le_rfl⟩
+  have h_loss := cubic_loss_le_fourth_power D
+  gcongr
 
 variable (D) in
 /-- The inverted factorisation of the Gram determinant `D.chainDeterminant ϑ` of the lift `D.Θ ϑ`:
@@ -171,17 +182,12 @@ lemma exists_chainDeterminant_one_div_eq :
   rw [← inv_div, h_ratio, mul_inv, inv_pow, ← prod_inv_distrib]
   simp only [inv_div]
 
-/-- **The inverse ratio.** Let the family of `m`-fold twists `ξ_ι = θ ι`, one for each
-`ι : ℂ ≃ ℚ̄_l`, have small ratios, and suppose that for `1 ≤ j ≤ m` the family
-`D.liftDeterminant 1 j / D.liftDeterminant ξ_ι j` of quotients of Gram determinants of the `j`-th
-single lift has height at most `d (f a log⁴ b / m - k D.directionAmount)`. Then the family
-`Z(1) / Z(ξ_ι)` has height at most `d (b + f a log⁴ b - D.mainAmount)`, where
-`D.mainAmount = m k D.directionAmount`. -/
-lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.HasSmallRatios θ)
+private lemma heightLe_chainDeterminant_one_div_of_bound {θ : PrimePadicIso → D.MFoldTwist}
+    (hθ : D.HasSmallRatios θ) {loss : ℝ}
     (h_single : ∀ j ∈ Icc 1 D.m,
-      HeightLe (D.targetDim * (D.f * D.a * D.logB ^ 4 / D.m - D.k * D.directionAmount))
+      HeightLe (D.targetDim * (loss / D.m - D.k * D.directionAmount))
         fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j) :
-    HeightLe (D.targetDim * (D.b + D.f * D.a * D.logB ^ 4 - D.mainAmount))
+    HeightLe (D.targetDim * (D.b + loss - D.mainAmount))
       fun ι : PrimePadicIso ↦ D.chainDeterminant (1 : D.MFoldTwist) / D.chainDeterminant (θ ι) := by
   -- Add the heights of the factors of `Z(1) / Z(ξ_ι)`.
   obtain ⟨e, h_factor⟩ := D.exists_chainDeterminant_one_div_eq
@@ -193,7 +199,7 @@ lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (h
     have h_cost : D.m * D.m * (D.t * D.x₁) ≤ D.b := D.le_of_hasLogBound
     exact (hθ.heightLe_inv_rpow_mul_prod_quotientRatio e).mono h_cost fun _ ↦ le_rfl
   -- The `m` bounds for the single lifts add up, as `m k D.directionAmount = D.mainAmount`.
-  have h_lifts : HeightLe (D.targetDim * (D.f * D.a * D.logB ^ 4 - D.mainAmount))
+  have h_lifts : HeightLe (D.targetDim * (loss - D.mainAmount))
       (∏ j ∈ Icc 1 D.m, fun ι : PrimePadicIso ↦
         D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j) := by
     have hm : (D.m : ℝ) ≠ 0 := (HasLogBound.pos D).ne'
@@ -203,18 +209,28 @@ lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (h
   refine ((h_scalar.pow D.targetDim).mul h_lifts).mono (le_of_eq (by ring)) fun ι ↦ le_of_eq ?_
   rw [h_factor, Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
 
+/-- For each `ι : ℂ ≃ ℚ̄_l`, let `ξ_ι = θ ι` have small ratios. If the quotient of Gram determinants
+of the `j`-th single lift has height at most `d (f a log⁴ b / m - k D.directionAmount)` for every
+`1 ≤ j ≤ m`, the quotient `Z(1) / Z(ξ_ι)` has height at most `d (b + f a log⁴ b - D.mainAmount)`. -/
+lemma heightLe_chainDeterminant_one_div {θ : PrimePadicIso → D.MFoldTwist} (hθ : D.HasSmallRatios θ)
+    (h_single : ∀ j ∈ Icc 1 D.m,
+      HeightLe (D.targetDim * (D.f * D.a * D.logB ^ 4 / D.m - D.k * D.directionAmount))
+        fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j) :
+    HeightLe (D.targetDim * (D.b + D.f * D.a * D.logB ^ 4 - D.mainAmount))
+      fun ι : PrimePadicIso ↦ D.chainDeterminant (1 : D.MFoldTwist) / D.chainDeterminant (θ ι) :=
+  heightLe_chainDeterminant_one_div_of_bound hθ h_single
+
 /-! ### The lower bound -/
 
-/-- The covolume bound with the cost of each of the `d - n` auxiliary forms made explicit.
-Here `d = D.targetDim`, and every independent family with index at most `δ` and covolume at most
-`c` can be completed using forms of cost at most `2 x₁² b² + b` each. -/
-theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+/-- The covolume bound with cubic lift error `10 · errorUnit` and the explicit completion cost
+`2 x₁² b² + b` per missing dimension. -/
+theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
     (hy : LinearIndependent ℂ y)
     (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
-    D.targetDim * (D.mainAmount - D.f * D.a * D.logB ^ 4 - D.b) ≤
+    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
       c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
   -- Complete `y` to a basis by auxiliary forms `z` and take a twist for each prime.
-  obtain ⟨θ, hθ, h_single⟩ := D.exists_hasSmallRatios_heightLe_liftDeterminant_div
+  obtain ⟨θ, hθ, h_single⟩ := D.exists_hasSmallRatios_heightLe_liftDeterminant_div_cubic
   obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_span⟩ := D.exists_span_isAuxiliaryForm_eq_top
   obtain ⟨n', z, hz, h_indep, h_card⟩ := exists_extend_basis_of_span_eq_top hy h_span
   have hz_aux (i : Fin n') : D.IsAuxiliaryForm γ (z i) := hz i
@@ -230,18 +246,28 @@ theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targ
     refine ((hθ.heightLe_inv_rpow_mul_prod_turnRatio e).pow 2).mono (mod_cast h_cost)
       fun ι ↦ le_of_eq ?_
     rw [hγ_norm, Pi.pow_apply, inv_pow]
-  have h_volume : HeightLe (D.targetDim * (D.b + D.f * D.a * D.logB ^ 4 - D.mainAmount))
+  have h_volume : HeightLe (D.targetDim * (D.b + 10 * D.errorUnit - D.mainAmount))
       fun ι : PrimePadicIso ↦ D.targetLattice.volume 1 / D.targetLattice.volume (θ ι) := by
     simp only [volume_targetLattice]
-    exact heightLe_chainDeterminant_one_div hθ h_single
+    exact heightLe_chainDeterminant_one_div_of_bound hθ h_single
   have h_nonneg : 0 ≤ c + 2 * δ + n' * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) +
-      D.targetDim * (D.b + D.f * D.a * D.logB ^ 4 - D.mainAmount) :=
+      D.targetDim * (D.b + 10 * D.errorUnit - D.mainAmount) :=
     TwistedLattice.covolume_add_index_nonneg injective_lift_targetLattice h_indep h_card hθ.coprime
       hc hδ hγ_ne hz_int hz_short h_scalar h_volume
   have h_dim : (D.targetDim : ℝ) = n + n' := mod_cast h_card
   have h_missing : (n' : ℝ) = D.targetDim - n := by linarith
   rw [h_missing] at h_nonneg
   linarith
+
+/-- The covolume bound expressed with the fourth-power error and the explicit completion cost. -/
+theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y)
+    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
+    D.targetDim * (D.mainAmount - D.f * D.a * D.logB ^ 4 - D.b) ≤
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
+  refine le_trans ?_ (integral_forms_long_with_cubic_error hy hδ hc)
+  exact mul_le_mul_of_nonneg_left
+    (sub_le_sub_right (sub_le_sub_left (cubic_loss_le_fourth_power D) _) _) (Nat.cast_nonneg _)
 
 /-- **Theorem C: integral forms are long.** Let `y_1, …, y_n` be independent target forms with
 `n ≥ (1 - 4 / b²) d`. Suppose that `y` has index at most `δ`: there are `δ_l ≥ 0` with
