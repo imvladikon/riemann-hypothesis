@@ -62,24 +62,29 @@ structure IsAuxiliaryForm (γ : D.MFoldTwist → ℂ) (y : D.targetForms) : Prop
   `exp (2 x₁² b²)`. -/
   normSqAt_lift_le (σ : ℂ ≃+* ℂ) : (D.Θ 1 y).normSqAt σ ≤ exp (2 * D.x₁ ^ 2 * D.b ^ 2)
 
+private lemma linear_auxiliary_exponent_le (D : Data P) :
+    2 * D.x ^ 202 * D.b ≤ 2 * D.x₁ ^ 2 * D.b ^ 2 :=
+  D.le_of_hasLogBound
+
 variable (D) in
 /-- **Auxiliary forms.** There are an integer `e` and numbers `γ ϑ ≠ 0`, for the `m`-fold twists
 `ϑ`, such that `γ 1 = 1`, the absolute value of `γ ϑ` is the norm `ϑ.normQ` of the modulus of `ϑ` to
 the power `e / 2` times the numbers `D.turnRatio i j ϑ` for `0 ≤ i, j < m`, and the space
 `D.targetForms` is spanned by the forms `y` that are auxiliary for `γ`: each lift `γ ϑ • D.Θ ϑ y` is
 integral at the primes not dividing `ϑ.normQ`, and every conjugate of `D.Θ 1 y` has squared norm at
-most `exp (2 x₁² b²)`, for the scales `x₁`, `b` of `D`. -/
-theorem exists_span_isAuxiliaryForm_eq_top :
+most `exp (2 x²⁰² b)`. -/
+theorem exists_span_isAuxiliaryForm_with_linear_norm_eq_top :
     ∃ (e : ℤ) (γ : D.MFoldTwist → ℂ),
       (∀ ϑ : D.MFoldTwist, γ ϑ ≠ 0) ∧
       γ 1 = 1 ∧
       (∀ ϑ : D.MFoldTwist, ‖γ ϑ‖ = (ϑ.normQ : ℝ) ^ (e / 2 : ℝ) *
         ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j ϑ) ∧
-      span ℂ {y : D.targetForms | D.IsAuxiliaryForm γ y} = ⊤ := by
+      span ℂ {y : D.targetForms | D.IsAuxiliaryForm γ y ∧
+        ∀ σ, (D.Θ 1 y).normSqAt σ ≤ exp (2 * D.x ^ 202 * D.b)} = ⊤ := by
   -- Apply `D.goodProjTranslate 1`, a multiple of the projection to the target, to the spanning
   -- forms on `Y₀` with short lifts. The lifts stay integral, and the logarithms of their squared
-  -- norms are at most `x ^ 99 + x ^ 202 b²`.
-  obtain ⟨scalar, h_modulus, h_span⟩ := D.exists_span_short_lifts_eq_top
+  -- norms are at most `x ^ 99 + x ^ 202 b`.
+  obtain ⟨scalar, h_modulus, h_span⟩ := D.exists_span_short_lifts_with_linear_norm_eq_top
   set F : D.MFoldTwist → ℝ := ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j
   have hF (ϑ : D.MFoldTwist) :
       F ϑ = ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j ϑ := by
@@ -107,11 +112,28 @@ theorem exists_span_isAuxiliaryForm_eq_top :
   rw [← h_span, ← span_image] at h_onto
   refine eq_top_mono (span_mono ?_) h_onto
   rintro _ ⟨ψ, ⟨h_int, h_short⟩, rfl⟩
-  have h_exponent_le : D.x ^ 99 + D.x ^ 202 * D.b ^ 2 ≤ 2 * D.x₁ ^ 2 * D.b ^ 2 :=
-    D.le_of_hasLogBound
-  refine ⟨fun ι ϑ hϑ ↦ ?_, fun σ ↦ ?_⟩
-  · exact goodProjTranslate_mem_integralForms ι.place (h_int ϑ ι.prime ι.place hϑ) 1
-  · exact (normSqAt_goodProjTranslate_le (h_short σ)).trans (exp_le_exp.2 h_exponent_le)
+  have h_exponent_le : D.x ^ 99 + D.x ^ 202 * D.b ≤ 2 * D.x ^ 202 * D.b := by
+    have h_projection : D.x ^ 99 ≤ D.x ^ 202 * D.b := D.le_of_hasLogBound
+    linarith only [h_projection]
+  have h_norm (σ : ℂ ≃+* ℂ) :
+      (D.Θ 1 (D.goodProjTranslate 1 ψ)).normSqAt σ ≤ exp (2 * D.x ^ 202 * D.b) :=
+    (normSqAt_goodProjTranslate_le (s := 1) (h_short σ)).trans (exp_le_exp.2 h_exponent_le)
+  exact ⟨⟨fun ι ϑ hϑ ↦ goodProjTranslate_mem_integralForms ι.place (h_int ϑ ι.prime ι.place hϑ) 1,
+    fun σ ↦ (h_norm σ).trans (exp_le_exp.2 (linear_auxiliary_exponent_le D))⟩, h_norm⟩
+
+variable (D) in
+/-- The target space is spanned by auxiliary forms for a common family of clearing scalars. -/
+theorem exists_span_isAuxiliaryForm_eq_top :
+    ∃ (e : ℤ) (γ : D.MFoldTwist → ℂ),
+      (∀ ϑ : D.MFoldTwist, γ ϑ ≠ 0) ∧
+      γ 1 = 1 ∧
+      (∀ ϑ : D.MFoldTwist, ‖γ ϑ‖ = (ϑ.normQ : ℝ) ^ (e / 2 : ℝ) *
+        ∏ i ∈ Finset.range D.m, ∏ j ∈ Finset.range D.m, D.turnRatio i j ϑ) ∧
+      span ℂ {y : D.targetForms | D.IsAuxiliaryForm γ y} = ⊤ := by
+  obtain ⟨e, γ, h_ne, h_one, h_norm, h_span⟩ := D.exists_span_isAuxiliaryForm_with_linear_norm_eq_top
+  refine ⟨e, γ, h_ne, h_one, h_norm, eq_top_mono (span_mono ?_) h_span⟩
+  intro y hy
+  exact hy.1
 
 /-- Let `ξ_ι = θ ι` be a family of `m`-fold twists, one for each `ι : ℂ ≃ ℚ̄_l`. Assume the family
 has small ratios: `Nm Q(ξ_ι) = (θ ι).normQ` is prime to `l`, and the inverse ratios of Hecke
@@ -283,28 +305,41 @@ theorem integral_forms_long_of_completed {n n' : ℕ}
   exact mul_le_mul_of_nonneg_left
     (sub_le_sub_right (sub_le_sub_left (cubic_loss_le_fourth_power D) _) _) (Nat.cast_nonneg _)
 
-/-- The covolume bound with cubic lift error `10 · errorUnit` and the explicit completion cost
-`2 x₁² b² + b` per missing dimension. -/
-theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+/-- The covolume bound with cubic lift error and completion cost `(1 + 2 x²⁰²) b`
+per missing dimension. -/
+theorem integral_forms_long_with_linear_completion {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
     (hy : LinearIndependent ℂ y)
     (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
     D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
-      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
-  obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_auxiliary_span⟩ := D.exists_span_isAuxiliaryForm_eq_top
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * ((1 + 2 * D.x ^ 202) * D.b) := by
+  obtain ⟨e, γ, hγ_ne, -, hγ_norm, h_auxiliary_span⟩ :=
+    D.exists_span_isAuxiliaryForm_with_linear_norm_eq_top
   obtain ⟨n', z, hz, h_completed_indep, h_completed_card⟩ :=
     exists_extend_basis_of_span_eq_top hy h_auxiliary_span
-  have hz_aux (i : Fin n') : D.IsAuxiliaryForm γ (z i) := hz i
+  have hz_aux (i : Fin n') : D.IsAuxiliaryForm γ (z i) := (hz i).1
   have hz_short (i : Fin n') (σ : ℂ ≃+* ℂ) :
-      D.targetLattice.normSqAt (z i) σ ≤ exp (2 * D.x₁ ^ 2 * D.b ^ 2) :=
-    (normSqAt_targetLattice (z i) σ).trans_le ((hz_aux i).normSqAt_lift_le σ)
+      D.targetLattice.normSqAt (z i) σ ≤ exp (2 * D.x ^ 202 * D.b) :=
+    (normSqAt_targetLattice (z i) σ).trans_le ((hz i).2 σ)
   have h_long := integral_forms_long_with_cubic_error_of_completed
     h_completed_indep h_completed_card hδ
     (hc.sumElim (TwistedLattice.covolumeLe_of_normSqAt_le hz_short))
     hγ_ne hγ_norm (fun i ι ϑ hϑ ↦ (hz_aux i).smul_lift_mem_integralForms ι ϑ hϑ)
   have h_dim : (D.targetDim : ℝ) = n + n' := mod_cast h_completed_card
   have h_missing_dimension : (n' : ℝ) = D.targetDim - n := by linarith
-  rw [← h_missing_dimension]
+  rw [← h_missing_dimension, add_mul, one_mul, add_comm D.b]
   linarith only [h_long]
+
+/-- The covolume bound with cubic lift error `10 · errorUnit` and the completion budget
+`2 x₁² b² + b` per missing dimension. -/
+theorem integral_forms_long_with_cubic_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
+    (hy : LinearIndependent ℂ y)
+    (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
+    D.targetDim * (D.mainAmount - 10 * D.errorUnit - D.b) ≤
+      c + 2 * δ + ((D.targetDim : ℝ) - n) * (2 * D.x₁ ^ 2 * D.b ^ 2 + D.b) := by
+  have h_rank : n ≤ D.targetDim := by simpa using hy.fintype_card_le_finrank
+  refine (integral_forms_long_with_linear_completion hy hδ hc).trans (add_le_add le_rfl ?_)
+  refine mul_le_mul_of_nonneg_left ?_ (sub_nonneg.mpr (by exact_mod_cast h_rank))
+  linarith only [linear_auxiliary_exponent_le D]
 
 /-- The covolume bound expressed with the fourth-power error and the explicit completion cost. -/
 theorem integral_forms_long_with_completion_cost {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}

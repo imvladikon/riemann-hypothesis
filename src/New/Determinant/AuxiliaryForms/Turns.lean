@@ -750,7 +750,7 @@ lemma exists_squareLaw_grid_hasAbsUpToNormPower (z : Bool) (ha : a < D.m) (hb : 
           (D.GridIndex z a (b + 1) ⊕ D.GridIndex z (a + 1) b) := by
     simpa only [inv_inv] using gridChar_mul_gridChar_eq_rankTwist z ha hb ϑ hpq
   have h_square : ∃ (C : ℝ) (κ : ℂ), ∀ ϑ : D.MFoldTwist, ∃ c ≠ (0 : ℂ),
-      ‖c‖ ^ 2 = C * lValueProd (D.twistModulus ϑ D.natB).places
+      ‖c‖ ^ 2 = C * lValueProd (D.twistModulus ϑ D.gridDepth).places
         (pair.character * ϑ.toAutChar ^ n.val)⁻¹ D.t ∧
       ∀ (f : D.GridForm z a (b + 1)) (l : D.GridForm z (a + 1) b →ₗ[ℂ] ℂ),
         SquareLaw ((gridModulus ϑ).charOfTamePart (pair.tamePart * ϑ.tamePart ^ n.val))⁻¹
@@ -763,11 +763,11 @@ lemma exists_squareLaw_grid_hasAbsUpToNormPower (z : Bool) (ha : a < D.m) (hb : 
       (isEdgeFamily_grid_succ_left id ha hb) (isEdgeFamily_grid_succ_left id ha hb.le)
       (isEdgeFamily_grid_succ_right id ha.le hb) (equivOfCardEq h_card) h_signs D.t h_rank h_few_neg
       (card_gridIndex_square_le z ha hb)
-      (pair.isTameFor_inv_mul_pow (isRamified_squarePair ha hb) D.natB n) h_chars
+      (pair.isTameFor_inv_mul_pow (isRamified_squarePair ha hb) D.gridDepth n) h_chars
   choose C κ c hc_ne hc_norm h_law using h_square
   refine ⟨κ, equivOfCardEq h_card, fun ϑ ↦ Units.mk0 (c ϑ) (hc_ne ϑ), ?_, fun ϑ f l ↦ ?_⟩
   · simpa only [h_ratio, Units.val_mk0] using
-      pair.hasAbsUpToNormPower_of_norm_sq_eq_lValueProd D.natB n hc_norm
+      pair.hasAbsUpToNormPower_of_norm_sq_eq_lValueProd D.gridDepth n hc_norm
   · rw [edgeChar_columnEdge_mul_rowEdge z ha hb ϑ]
     exact h_law ϑ f l
 

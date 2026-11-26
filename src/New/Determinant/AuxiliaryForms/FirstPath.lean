@@ -64,7 +64,7 @@ column has the nodes `0, …, m`. Let `χ = gridChar ϑ (!z) i n'` be the idele 
 of the restriction `upsilonU1` to `U(1)` of the splitting character of the Weil representation.
 Then `χ` is trivial on the determinant `detFin s u` of every finite integral point `u` of a unitary
 group that is trivial modulo `triangleModulus z ϑ`, the ideal `π_M Q` for the `Y` and
-`π_M ^ D.natB` for the `Ỹ`. The signs `s` are those of the hermitian form at the infinite places
+`π_M ^ D.gridDepth` for the `Ỹ`. The signs `s` are those of the hermitian form at the infinite places
 and do not matter at the finite ones. -/
 lemma gridChar_detFin_eq_one (z : Bool) (ϑ : D.MFoldTwist) (i : ℕ) (n' : Type) [Fintype n']
     {n : Type} [Fintype n] [DecidableEq n] (s : n → ℤˣ) {u : stdLevel D.E n}
@@ -198,7 +198,7 @@ lemma integral_transposedChain_mul_weightedChain (z : Bool) (ϑ : D.MFoldTwist) 
 
 /-- The grid of the `Ỹ` (the Boolean `true`) has the weight of the `Y` with the opposite sign, so
 its `TriangleForm`s are conjugate forms; `D.triangleBase true` consists of those on `Ỹ^0_0` of level
-`𝔟 = D.piM ^ D.natB`. The weighted chain of all `D.m` theta lifts `New.Data.triangleLift` from
+`𝔟 = D.piM ^ D.gridDepth`. The weighted chain of all `D.m` theta lifts `New.Data.triangleLift` from
 `Ỹ^0_0` to `Ỹ^m_0`, for the trivial twist `1`, is injective on this space. -/
 lemma eq_zero_of_weightedChain_triangleLift_eq_zero {y : D.triangleBase true}
     (hy : Exchange.weightedChain (D.triangleGLCard true) (D.triangleLift true) 1 0 D.m y = 0) :
@@ -208,7 +208,7 @@ lemma eq_zero_of_weightedChain_triangleLift_eq_zero {y : D.triangleBase true}
 
 /-- Let `Ỹ^i_0` be the hermitian space at the node `(0, i)` of the grid of the `Ỹ` (the Boolean
 `true`), and `D.gridLevelForms i` the forms of level `𝔟` on it: those fixed under right translation
-by the finite integral points congruent to `1` modulo `𝔟 = D.piM ^ D.natB`, a power of the generator
+by the finite integral points congruent to `1` modulo `𝔟 = D.piM ^ D.gridDepth`, a power of the generator
 of the product of the chosen places. For `i < m` the transposed theta lift from `Ỹ^(i+1)_0` to
 `Ỹ^i_0` is weighted by the index of that level on `Ỹ^i_0`. The composite
 `Θ^♭ = D.transposedChain 1 true 0` of all `D.m` of them, for the trivial twist `1`, maps forms of
@@ -273,7 +273,7 @@ variable {P : Parameters} (D : Data P)
 The level `J_M` consists of the finite integral points that are congruent to `1` modulo every chosen
 place, that is, modulo every prime divisor of `π_M = D.piM`; `principalForms` are the forms of this
 level. There is a real point `g₀` of `U(Ỹ^0_0)` such that for every such form `y ≠ 0` on `Y₀` there
-is a form `φ` of level `𝔟 = π_M ^ D.natB` on the definite space `Ỹ^m_0` (`gridLevelForms D.m`) with
+is a form `φ` of level `𝔟 = π_M ^ D.gridDepth` on the definite space `Ỹ^m_0` (`gridLevelForms D.m`) with
 a nonzero pairing `diagonalPeriodForm` of the conjugate `conjForm` of `y` and `Θ^♭ φ` at `g₀`: the
 integral of `star (y h)` times `(Θ^♭ φ) (h g₀)` over `U(Y₀)`. Here `Θ^♭` is
 `D.transposedChain 1 true 0`, the composite of the transposed theta lifts whose datum at the places
@@ -317,7 +317,7 @@ def IsFlatRestriction (g : GInf D.E (D.gridSigns true 0 0 0))
         (D.transposedChain 1 true 0 φ)
 
 /-- Let `g` be a real point (`GInf`) of the unitary group of `Ỹ^0_0`, the sum of `Y₀ = D.spaceY 0`
-and a line. Some linear map `r` from the forms of level `𝔟 = π_M ^ D.natB`, where `π_M = D.piM`, on
+and a line. Some linear map `r` from the forms of level `𝔟 = π_M ^ D.gridDepth`, where `π_M = D.piM`, on
 `Ỹ^m_0` (`gridLevelForms D.m`) to the forms on `Y₀` of level `J_M` (`principalForms`: integral
 points congruent to `1` modulo the prime divisors of `π_M`) satisfies `IsFlatRestriction g`. -/
 lemma exists_isFlatRestriction (g : GInf D.E (D.gridSigns true 0 0 0)) :
@@ -329,7 +329,7 @@ lemma exists_isFlatRestriction (g : GInf D.E (D.gridSigns true 0 0 0)) :
   exact ⟨proj ∘ₗ thetaFlat, fun φ ↦ h_proj (thetaFlat φ)⟩
 
 /-- Let `Ỹ^0_0` be the orthogonal sum of `Y₀` and a line. There are a real point `g` of its unitary
-group and a surjective linear map `r` from the forms of level `𝔟 = π_M ^ D.natB` on `Ỹ^m_0` to the
+group and a surjective linear map `r` from the forms of level `𝔟 = π_M ^ D.gridDepth` on `Ỹ^m_0` to the
 forms on `Y₀` of level `J_M` with `IsFlatRestriction g r`: every form `y` on `Y₀` of level
 `𝔪₀ = π_M Q`, for an `m`-fold twist with modulus `Q`, has the same Petersson product with `r φ` as
 with the function `h ↦ (Θ^♭ φ) (h g)` on `U(Y₀)`. -/
