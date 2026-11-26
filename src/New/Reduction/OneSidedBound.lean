@@ -8,7 +8,7 @@ import Statements
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality and the prime number theorem at a much
-larger cut-off `x₁` give the bound `R_{q₀}(x) ≤ (1600 φ(q₀) + 32) x ^ (-1/2 + ε)` for large `x`.
+larger cut-off `x₁` give the bound `R_{q₀}(x) ≤ (800 φ(q₀) + 30) x ^ (-1/2 + ε)` for large `x`.
 The one-sided criterion gives non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
 
 Notions from other files:
@@ -24,24 +24,23 @@ open DirichletCharacter Filter Finset Real ZMod
 
 namespace New
 
-private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P) {c : ℝ} {k : ℕ}
-    (hc : 0 ≤ c) (h_bound : D.m * D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k)) :
-    primeRemainder P.d P.q₀ D.x ≤ c * P.q₀.totient * D.logB ^ (k + 1) / D.m +
-      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P) {c u : ℝ} {k : ℕ}
+    (hc : 0 ≤ c) (hu : 0 < u) (h_density : towerDeg D.towerExp ≤ #D.bPlaces * u)
+    (h_bound : D.m * D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k)) :
+    primeRemainder P.d P.q₀ D.x ≤ c * P.q₀.totient * (u * D.logB ^ k) / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + u * |primeRemainder P.d 1 D.x₁| := by
   -- Write `R_{q₀}(x)` through the total remainder, divide the main inequality by `m a #Φ_b`, and
-  -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b log b`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
+  -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b u`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
   have hm : (0 : ℝ) < D.m := Data.HasLogBound.pos D
   have ha : (0 : ℝ) < D.a := Data.HasLogBound.pos D
-  have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
+  have h_logB_pow_nonneg : 0 ≤ D.logB ^ k := pow_nonneg (Data.HasLogBound.pos D).le _
   have h_aPlaces_pos : (0 : ℝ) < #D.aPlaces := by
     rw [D.card_aPlaces]
     exact Data.HasLogBound.pos D
-  have h_card : (#D.aPlaces : ℝ) ≤ #D.bPlaces * D.logB := by
-    rw [D.card_aPlaces]
-    exact D.towerDeg_le_card_bPlaces_mul
+  have h_card : (#D.aPlaces : ℝ) ≤ #D.bPlaces * u := by rwa [D.card_aPlaces]
   have h_bPlaces_pos : (0 : ℝ) < #D.bPlaces :=
-    (mul_pos_iff_of_pos_right h_logB_pos).1 (h_aPlaces_pos.trans_le h_card)
-  have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ D.logB := (div_le_iff₀' h_bPlaces_pos).2 h_card
+    (mul_pos_iff_of_pos_right hu).1 (h_aPlaces_pos.trans_le h_card)
+  have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ u := (div_le_iff₀' h_bPlaces_pos).2 h_card
   have h_main : D.totalRemainder ≤ c * (D.f * D.a * D.logB ^ k) / D.m :=
     (le_div_iff₀' hm).2 h_bound
   calc primeRemainder P.d P.q₀ D.x
@@ -58,14 +57,34 @@ private lemma Data.primeRemainder_le_of_main_bound {P : Parameters} (D : Data P)
           #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
         rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
         field
-    _ ≤ c * P.q₀.totient * D.logB ^ (k + 1) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-          D.logB * |primeRemainder P.d 1 D.x₁| := by grw [h_ratio, ← pow_succ']
+    _ ≤ c * P.q₀.totient * (u * D.logB ^ k) / D.m + |primeRemainder P.d P.q₀ D.x₁| +
+          u * |primeRemainder P.d 1 D.x₁| := by grw [h_ratio]
 
 /-- The bound at the first cut-off using the fourth power in the main inequality. -/
 lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
     primeRemainder P.d P.q₀ D.x ≤ 128 * P.q₀.totient * D.logB ^ 5 / D.m +
-      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| :=
-  D.primeRemainder_le_of_main_bound (by norm_num) (star_inequality D)
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  simpa only [← pow_succ'] using D.primeRemainder_le_of_main_bound (c := 128) (k := 4)
+    (by norm_num) (Data.HasLogBound.pos D) D.towerDeg_le_card_bPlaces_mul (star_inequality D)
+
+private lemma eventually_exists_data_scales_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
+    ∀ᶠ x : ℕ in atTop, ∃ D : Data P, D.x = x ∧ D.logB ≤ 2 * (x : ℝ) ^ ε ∧
+      (x : ℝ) ^ (1 / 2 : ℝ) ≤ D.m ∧ (x : ℝ) ^ (ε / 12) ≤ D.logX₁ ∧
+      towerDeg D.towerExp ≤ #D.bPlaces * (x : ℝ) ^ γ := by
+  have h_two : ∀ᶠ x : ℕ in atTop, (2 : ℝ) ≤ (x : ℝ) ^ (ε / 12) :=
+    ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 2
+  filter_upwards [eventually_exists_data_with_density P hε hε_lt hγ hγε, h_two, eventually_ge_atTop 1]
+    with x ⟨D, hx, _, _, _, _, hx₁_ge, ⟨_, hb_le⟩, h_density⟩ hx_two hx_one
+  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
+  have hx_eq : D.x = x := by rw [← hx, ← D.exp_logX]
+  refine ⟨D, hx_eq, by linarith [one_le_rpow hx_ge hε.le], ?_, ?_, h_density⟩
+  · rw [← hx_eq, Data.x, ← exp_mul, mul_one_div]
+    exact (Set.mem_Icc.1 D.m_mem).1
+  · have h_sq : (x : ℝ) ^ (ε / 6) = (x : ℝ) ^ (ε / 12) * (x : ℝ) ^ (ε / 12) := by
+      rw [← rpow_add (by positivity)]
+      ring_nf
+    nlinarith
 
 /-- Let `0 < ε < 1/100`. A term `D : Data P` (admissible data) bundles all the choices that the main
 inequality needs, among them integer scales `x`, `x₁`, `b` with `x ^ 10⁶ ≤ x₁` and `x₁ ^ 10⁶ ≤ b`
@@ -75,19 +94,9 @@ integer `x` such data exist with `D.x = x`, `log b ≤ 2 x ^ ε`, `√x ≤ m` a
 lemma eventually_exists_data_scales (P : Parameters) {ε : ℝ} (hε : 0 < ε) (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop, ∃ D : Data P, D.x = x ∧ D.logB ≤ 2 * (x : ℝ) ^ ε ∧
       (x : ℝ) ^ (1 / 2 : ℝ) ≤ D.m ∧ (x : ℝ) ^ (ε / 12) ≤ D.logX₁ := by
-  have h_two : ∀ᶠ x : ℕ in atTop, (2 : ℝ) ≤ (x : ℝ) ^ (ε / 12) :=
-    ((tendsto_rpow_atTop (by positivity)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop 2
-  filter_upwards [eventually_exists_data P hε hε_lt, h_two, eventually_ge_atTop 1]
-    with x ⟨D, hx, _, _, _, _, hx₁_ge, _, hb_le⟩ hx_two hx_one
-  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
-  have hx_eq : D.x = x := by rw [← hx, ← D.exp_logX]
-  refine ⟨D, hx_eq, by linarith [one_le_rpow hx_ge hε.le], ?_, ?_⟩
-  · rw [← hx_eq, Data.x, ← exp_mul, mul_one_div]
-    exact (Set.mem_Icc.1 D.m_mem).1
-  · have h_sq : (x : ℝ) ^ (ε / 6) = (x : ℝ) ^ (ε / 12) * (x : ℝ) ^ (ε / 12) := by
-      rw [← rpow_add (by positivity)]
-      ring_nf
-    nlinarith
+  filter_upwards [eventually_exists_data_scales_with_density P hε hε_lt hε le_rfl]
+    with x ⟨D, hx, hlog, hm, h₁, _⟩
+  exact ⟨D, hx, hlog, hm, h₁⟩
 
 /-- Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of the parameters `P`, and let
 `ε > 0`. Let `R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q) - c_q`. For
@@ -117,43 +126,58 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
       _ ≤ (x : ℝ) ^ (-2 : ℝ) := rpow_le_rpow_of_exponent_le hx_ge h_exp
   exact (hY (exp l) (by linarith [add_one_le_exp l])).imp h_small.trans' h_small.trans'
 
-private lemma eventually_primeRemainder_natCast_le_of_data_bound (P : Parameters) {ε : ℝ}
-    (hε : 0 < ε) (hε_lt : ε < 1 / 100) {c : ℝ} (hc : 0 ≤ c) {k : ℕ}
-    (h_bound : ∀ D : Data P, primeRemainder P.d P.q₀ D.x ≤
-      c * P.q₀.totient * D.logB ^ k / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁|) :
+/-- For the data scales controlled by `ε` and sparse density controlled by `γ`, the bound at
+integers has exponent `-1/2 + 4 ε + γ`. The density factor multiplies both the covolume error
+and the remainder at `x₁` for the trivial modulus. -/
+lemma eventually_primeRemainder_natCast_le_with_density (P : Parameters) {ε γ : ℝ} (hε : 0 < ε)
+    (hε_lt : ε < 1 / 100) (hγ : 0 < γ) (hγε : γ ≤ ε) :
     ∀ᶠ x : ℕ in atTop,
-      primeRemainder P.d P.q₀ x ≤ (c * 2 ^ k * P.q₀.totient + 3) *
-        (x : ℝ) ^ (-1 / 2 + k * ε) := by
-  -- Insert the scales and the bounds at `x₁` into the supplied bound on the prime remainder.
-  filter_upwards [eventually_exists_data_scales P hε hε_lt,
+      primeRemainder P.d P.q₀ x ≤ (400 * P.q₀.totient + 2) * (x : ℝ) ^ (-1 / 2 + 4 * ε + γ) := by
+  filter_upwards [eventually_exists_data_scales_with_density P hε hε_lt hγ hγε,
     eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
-    with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
+    with x ⟨D, hx_eq, h_logB, hm, h_logX₁, h_density⟩ h_at_x₁ hx_one
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
-  obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
-      |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
+  obtain ⟨h_rem_q₀, h_rem_one⟩ := h_at_x₁ D.logX₁ h_logX₁
   have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_exp_nonneg : 0 ≤ (k : ℝ) * ε := by positivity
-  have h_inv : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + k * ε) :=
-    rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_mul : (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + k * ε) := by
+  let t : ℝ := -1 / 2 + 4 * ε + γ
+  have h_inv : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ t :=
+    rpow_le_rpow_of_exponent_le hx_ge (by dsimp [t]; linarith)
+  have h_mul : (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ t := by
     rw [← rpow_add hx_pos]
-    exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_main : ((x : ℝ) ^ ε) ^ k / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ (-1 / 2 + k * ε) := by
-    rw [← rpow_mul_natCast hx_pos.le, ← rpow_sub hx_pos]
-    ring_nf
+    exact rpow_le_rpow_of_exponent_le hx_ge (by dsimp [t]; linarith)
+  have h_main : ((x : ℝ) ^ γ * ((x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ) = (x : ℝ) ^ t := by
+    rw [← rpow_mul_natCast hx_pos.le, ← rpow_add hx_pos, ← rpow_sub hx_pos]
+    congr 1
+    push_cast
+    dsimp [t]
+    ring
   calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ c * P.q₀.totient * D.logB ^ k / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁| := h_bound D
-    _ ≤ c * P.q₀.totient * (2 * (x : ℝ) ^ ε) ^ k / (x : ℝ) ^ (1 / 2 : ℝ) +
-        (x : ℝ) ^ (-2 : ℝ) + 2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
+    _ ≤ 25 * P.q₀.totient * ((x : ℝ) ^ γ * D.logB ^ 4) / D.m +
+        |primeRemainder P.d P.q₀ D.x₁| + (x : ℝ) ^ γ * |primeRemainder P.d 1 D.x₁| :=
+      D.primeRemainder_le_of_main_bound (c := 25) (k := 4) (by norm_num)
+        (rpow_pos_of_pos hx_pos _) h_density (star_inequality_with_completion_cost D)
+    _ ≤ 25 * P.q₀.totient * ((x : ℝ) ^ γ * (2 * (x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ) +
+        (x : ℝ) ^ (-2 : ℝ) + (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) := by
       grw [h_rem_q₀, h_rem_one, h_logB, ← hm]
-    _ ≤ c * P.q₀.totient * 2 ^ k * (x : ℝ) ^ (-1 / 2 + k * ε) +
-        (x : ℝ) ^ (-1 / 2 + k * ε) + 2 * (x : ℝ) ^ (-1 / 2 + k * ε) := by
-      rw [mul_pow, ← mul_assoc, mul_div_assoc, h_main, mul_assoc (2 : ℝ)]
-      gcongr
-    _ = (c * 2 ^ k * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + k * ε) := by ring
+    _ = 400 * P.q₀.totient * (((x : ℝ) ^ γ * ((x : ℝ) ^ ε) ^ 4) / (x : ℝ) ^ (1 / 2 : ℝ)) +
+        (x : ℝ) ^ (-2 : ℝ) + (x : ℝ) ^ γ * (x : ℝ) ^ (-2 : ℝ) := by
+      rw [mul_pow]
+      ring
+    _ ≤ 400 * P.q₀.totient * (x : ℝ) ^ t + (x : ℝ) ^ t + (x : ℝ) ^ t := by
+      grw [h_main, h_mul, h_inv]
+    _ = (400 * P.q₀.totient + 2) * (x : ℝ) ^ t := by ring
+
+/-- The bound at integers with the greedy choice stopped at the basis completion cost. -/
+lemma eventually_primeRemainder_natCast_le_with_completion_cost
+    (P : Parameters) {ε : ℝ} (hε : 0 < ε) (hε_lt : ε < 1 / 100) :
+    ∀ᶠ x : ℕ in atTop,
+      primeRemainder P.d P.q₀ x ≤ (800 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 5 * ε) := by
+  have h := eventually_primeRemainder_natCast_le_with_density P hε hε_lt hε le_rfl
+  rw [show -1 / 2 + 4 * ε + ε = -1 / 2 + 5 * ε by ring] at h
+  have h_coefficient : (400 : ℝ) * P.q₀.totient + 2 ≤ 800 * P.q₀.totient + 3 := by
+    linarith [show 0 ≤ (P.q₀.totient : ℝ) from Nat.cast_nonneg _]
+  exact h.mono fun x hx ↦ hx.trans (mul_le_mul_of_nonneg_right h_coefficient (by positivity))
 
 /-- The one-sided bound with the fourth power in the main inequality. For all large integers
 `x`, the prime remainder is at most `(4096 φ(q₀) + 3) x ^ (-1/2 + 5 ε)`. -/
@@ -161,19 +185,10 @@ lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (4096 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 5 * ε) := by
-  simpa only [show (128 * 2 ^ 5 : ℝ) = 4096 by norm_num, Nat.cast_ofNat] using
-    eventually_primeRemainder_natCast_le_of_data_bound P hε hε_lt (c := 128) (k := 5)
-      (by norm_num) (fun D ↦ D.primeRemainder_le)
-
-/-- The bound at integers with the greedy choice stopped at the basis completion cost. -/
-lemma eventually_primeRemainder_natCast_le_with_completion_cost
-    (P : Parameters) {ε : ℝ} (hε : 0 < ε) (hε_lt : ε < 1 / 100) :
-    ∀ᶠ x : ℕ in atTop,
-      primeRemainder P.d P.q₀ x ≤ (800 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 5 * ε) := by
-  simpa only [show (25 * 2 ^ 5 : ℝ) = 800 by norm_num, Nat.cast_ofNat] using
-    eventually_primeRemainder_natCast_le_of_data_bound P hε hε_lt (c := 25) (k := 5)
-      (by norm_num) (fun D ↦ D.primeRemainder_le_of_main_bound
-        (by norm_num) (star_inequality_with_completion_cost D))
+  have h_coefficient : (800 : ℝ) * P.q₀.totient + 3 ≤ 4096 * P.q₀.totient + 3 := by
+    linarith [show 0 ≤ (P.q₀.totient : ℝ) from Nat.cast_nonneg _]
+  exact (eventually_primeRemainder_natCast_le_with_completion_cost P hε hε_lt).mono fun x hx ↦
+    hx.trans (mul_le_mul_of_nonneg_right h_coefficient (by positivity))
 
 /-- Let `d` be a prime, `q > 0`, and `R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) -
 log y / φ(q) - c_q`. Then `R_q(y) - R_q(⌊y⌋) ≤ 26 / y` for `y ≥ 2`. -/
@@ -217,29 +232,29 @@ lemma dvd_two_mul_succ_and_not_dvd_succ {q₀ d : ℕ} (hq₀_pos : 0 < q₀) (h
 
 /-- **One-sided bound.** Let `q₀ > 0` be a multiple of `18480`, let `d ≡ q₀ / 2 - 1` modulo `q₀` be
 a prime, and let `ε > 0`. Then `R = primeRemainder d q₀` satisfies
-`R(y) ≤ (1600 φ(q₀) + 32) y ^ (-1/2 + ε)` for all large real `y`. -/
-theorem eventually_primeRemainder_le_mul_rpow_with_completion_cost
+`R(y) ≤ (800 φ(q₀) + 30) y ^ (-1/2 + ε)` for all large real `y`. -/
+theorem eventually_primeRemainder_le_mul_rpow_with_density
     {q₀ : ℕ} [NeZero q₀] (hq₀ : 18480 ∣ q₀) {d : ℕ}
     [hd_prime : Fact d.Prime] (hd : d ≡ q₀ / 2 - 1 [MOD q₀]) {ε : ℝ} (hε : 0 < ε) :
-    ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ y ≤ (1600 * q₀.totient + 32) * y ^ (-1 / 2 + ε) := by
+    ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ y ≤ (800 * q₀.totient + 30) * y ^ (-1 / 2 + ε) := by
   let P : Parameters :=
     { q₀ := q₀
       d := d
       dvd_q₀ := hq₀
       d_prime := hd_prime.out
       q₀_dvd_and_not_dvd := dvd_two_mul_succ_and_not_dvd_succ (NeZero.pos q₀) (by omega) hd }
-  -- It suffices to prove the bound with `5 δ` in place of `ε`, for `0 < δ < 1/100`.
-  obtain ⟨δ, hδ, hδ_lt, hδε⟩ : ∃ δ > (0 : ℝ), δ < 1 / 100 ∧ 5 * δ ≤ ε := by
-    refine ⟨min (1 / 200) (ε / 5), by positivity, ?_, ?_⟩
-    · linarith [min_le_left (1 / 200) (ε / 5)]
-    · linarith [min_le_right (1 / 200) (ε / 5)]
-  set C : ℝ := 800 * q₀.totient + 3
-  set t : ℝ := -1 / 2 + 5 * δ with ht
+  -- Use δ for the analytic scales and δ / 2 for the sparse set.
+  obtain ⟨δ, hδ, hδ_lt, hδε⟩ : ∃ δ > (0 : ℝ), δ < 1 / 100 ∧ 4 * δ + δ / 2 ≤ ε := by
+    refine ⟨min (1 / 200) (2 * ε / 9), by positivity, ?_, ?_⟩
+    · linarith [min_le_left (1 / 200) (2 * ε / 9)]
+    · linarith [min_le_right (1 / 200) (2 * ε / 9)]
+  set C : ℝ := 400 * q₀.totient + 2
+  set t : ℝ := -1 / 2 + 4 * δ + δ / 2 with ht
   have ht_ge : -1 ≤ t := by linarith
   have ht_le : t ≤ 0 := by linarith
   have h_floor : ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ ⌊y⌋₊ ≤ C * (⌊y⌋₊ : ℝ) ^ t :=
     tendsto_nat_floor_atTop.eventually
-      (eventually_primeRemainder_natCast_le_with_completion_cost P hδ hδ_lt)
+      (eventually_primeRemainder_natCast_le_with_density P hδ hδ_lt (half_pos hδ) (by linarith))
   filter_upwards [h_floor, eventually_ge_atTop 2] with y hy_floor hy
   have hy_one : 1 ≤ y := one_le_two.trans hy
   calc primeRemainder d q₀ y
@@ -249,9 +264,20 @@ theorem eventually_primeRemainder_le_mul_rpow_with_completion_cost
     _ ≤ C * (2 * y ^ t) + 26 * y ^ t := by
         gcongr
         exact natFloor_rpow_le_two_mul_rpow hy ht_ge ht_le
-    _ = (1600 * q₀.totient + 32) * y ^ t := by dsimp [C]; ring
-    _ ≤ (1600 * q₀.totient + 32) * y ^ (-1 / 2 + ε) :=
+    _ = (800 * q₀.totient + 30) * y ^ t := by dsimp [C]; ring
+    _ ≤ (800 * q₀.totient + 30) * y ^ (-1 / 2 + ε) :=
       mul_le_mul_of_nonneg_left (rpow_le_rpow_of_exponent_le hy_one (by linarith [ht])) (by positivity)
+
+/-- The one-sided bound using the coefficient from the completion-cost estimate. -/
+theorem eventually_primeRemainder_le_mul_rpow_with_completion_cost
+    {q₀ : ℕ} [NeZero q₀] (hq₀ : 18480 ∣ q₀) {d : ℕ}
+    [Fact d.Prime] (hd : d ≡ q₀ / 2 - 1 [MOD q₀]) {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ y ≤ (1600 * q₀.totient + 32) * y ^ (-1 / 2 + ε) := by
+  filter_upwards [eventually_primeRemainder_le_mul_rpow_with_density hq₀ hd hε,
+    eventually_ge_atTop (0 : ℝ)] with y hy hy_nonneg
+  have h_coefficient : (800 : ℝ) * q₀.totient + 30 ≤ 1600 * q₀.totient + 32 := by
+    linarith [show 0 ≤ (q₀.totient : ℝ) from Nat.cast_nonneg _]
+  exact hy.trans (mul_le_mul_of_nonneg_right h_coefficient (rpow_nonneg hy_nonneg _))
 
 /-- The one-sided bound with the earlier coefficient. -/
 theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ : 18480 ∣ q₀) {d : ℕ}
@@ -285,12 +311,12 @@ theorem grh : DirichletLNonvanishingRightOfHalf := by
   -- The one-sided bound is the hypothesis of the criterion.
   have h_bound (d : Nat.Primes) (hd : (d : ℕ) ≡ d₀ [MOD 18480 * q]) :
       ∃ A : ℝ, ∀ᶠ x : ℝ in atTop, primeRemainder d (18480 * q) x ≤ A * x ^ (β - 1) := by
-    refine ⟨1600 * (18480 * q).totient + 32, ?_⟩
+    refine ⟨800 * (18480 * q).totient + 30, ?_⟩
     have hd₀_eq : d₀ = 18480 * q / 2 - 1 := by omega
     have h_exp : β - 1 = -1 / 2 + (β - 1 / 2) := by ring
     rw [hd₀_eq] at hd
     rw [h_exp]
-    exact eventually_primeRemainder_le_mul_rpow_with_completion_cost
+    exact eventually_primeRemainder_le_mul_rpow_with_density
       (dvd_mul_right 18480 q) hd (sub_pos.2 hβ)
   have h_induced : (χ.changeLevel (dvd_mul_left q 18480)).LFunction ρ ≠ 0 :=
     LFunction_ne_zero_of_primeRemainder_le (by omega) (by omega) hd₀_cop hβ h_bound _ hρ_ne hβρ
