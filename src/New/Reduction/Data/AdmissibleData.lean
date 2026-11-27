@@ -134,9 +134,8 @@ structure New.Data (P : Parameters) where
   /-- The `b`-places are `≡ -1` modulo `q₀`. -/
   placeClass_of_mem_bPlaces : ∀ σ ∈ bPlaces,
     P.placeClass (P.q₀.dvd_mul_right (towerDeg towerExp)) σ = -1
-  /-- There are at least `towerDeg s / log b` of them; `towerDeg s` is the number of places `≡ 1`
-  modulo `q₀`. -/
-  towerDeg_le_card_bPlaces_mul : towerDeg towerExp ≤ bPlaces.card * logB
+  /-- At least one place has weight `b`. -/
+  bPlaces_nonempty : bPlaces.Nonempty
   /-- The `b`-places are sparse for the primes up to `k t`, where `k = r + 1 - m` and `t = 5 r`. -/
   sparse : P.IsSparse towerExp ((r + 1 - m) * (5 * r)) bPlaces
   /-- The weight `κ(τ)` of a place. -/

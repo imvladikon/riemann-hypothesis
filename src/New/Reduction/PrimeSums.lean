@@ -85,6 +85,17 @@ over `K`. -/
 lemma card_aPlaces : #D.aPlaces = towerDeg D.towerExp :=
   card_placeClass_eq_one_eq_towerDeg (P.q₀.dvd_mul_right (towerDeg D.towerExp))
 
+lemma card_bPlaces_pos : (0 : ℝ) < #D.bPlaces := by
+  exact_mod_cast D.bPlaces_nonempty.card_pos
+
+/-- The ratio of the number of `a`-places to the number of `b`-places. -/
+noncomputable def placeCountRatio : ℝ := (#D.aPlaces : ℝ) / #D.bPlaces
+
+lemma placeCountRatio_le_of_card_bound {density : ℝ}
+    (h : (towerDeg D.towerExp : ℝ) ≤ #D.bPlaces * density) : D.placeCountRatio ≤ density := by
+  rw [placeCountRatio, div_le_iff₀' D.card_bPlaces_pos, card_aPlaces]
+  exact h
+
 /-- The number `f` of all places is the number of `a`-places times `φ(q₀)`. -/
 lemma f_eq_card_aPlaces_mul : D.f = #D.aPlaces * P.q₀.totient := by
   rw [card_aPlaces]
@@ -268,15 +279,16 @@ lemma jetSize_sub_primeSum_mem_Icc (τ : D.Φ) :
     D.primeSum_mem_Icc (Nat.cast_nonneg _) hκa τ
   constructor <;> linarith
 
-/-- The direction amount `D.directionAmount = ∑_τ (s_∞(κ(τ)) - s_fin(κ(τ), τ))`, summed over all `f`
-places with weights `κ`, lies between `b #Φ_a` and `25 f b log b`. -/
-lemma directionAmount_mem_Icc :
+/-- With at least `#Φ_a / log b` places of weight `b`, the direction amount lies between
+`b #Φ_a` and `25 f b log b`. -/
+lemma directionAmount_mem_Icc
+    (h_density : (towerDeg D.towerExp : ℝ) ≤ #D.bPlaces * D.logB) :
     D.directionAmount ∈ Set.Icc (D.b * #D.aPlaces) (25 * D.f * D.b * D.logB) := by
   have h_log : 0 ≤ D.logB := (HasLogBound.pos D).le
   constructor
   · -- On the `b`-places `κ = b`, and there are at least `#Φ_a / log b` of them.
     calc D.b * #D.aPlaces ≤ D.b * (#D.bPlaces * D.logB) := by
-          grw [card_aPlaces, D.towerDeg_le_card_bPlaces_mul]
+          grw [card_aPlaces, h_density]
       _ = ∑ τ ∈ D.bPlaces, D.weight τ * D.logB := by
         simp +contextual [D.weight_eq, ← D.exp_logB, mul_left_comm]
       _ ≤ ∑ τ : D.Φ, D.weight τ * D.logB := sum_le_univ_sum_of_nonneg fun τ ↦ by positivity
@@ -292,13 +304,18 @@ lemma directionAmount_mem_Icc :
 `m ∈ [√x, 2 √x]` is the number of theta lifts, `k = r + 1 - m` is the rank of the source
 (`r ∈ [x⁵, 3 x⁵]` that of the target), `x` is the first cut-off, `b` is the weight on `D.bPlaces`
 and `a = x b`. -/
-lemma le_mainAmount : D.x ^ 4 * D.f * D.a ≤ D.mainAmount := by
+lemma le_mainAmount (h_density : (towerDeg D.towerExp : ℝ) ≤ #D.bPlaces * D.logB) :
+    D.x ^ 4 * D.f * D.a ≤ D.mainAmount := by
   -- The first step is an inequality between products of the parameters, compared by logarithms.
   calc D.x ^ 4 * D.f * D.a ≤ D.m * D.k * (D.b * towerDeg D.towerExp) := D.le_of_hasLogBound
-    _ ≤ D.mainAmount := by grw [mainAmount, ← D.card_aPlaces, D.directionAmount_mem_Icc.1]
+    _ ≤ D.mainAmount := by grw [mainAmount, ← D.card_aPlaces, (D.directionAmount_mem_Icc h_density).1]
 
 /-- The main amount `D.mainAmount` is nonnegative. -/
-lemma mainAmount_nonneg : 0 ≤ D.mainAmount := le_trans (by positivity) D.le_mainAmount
+lemma mainAmount_nonneg : 0 ≤ D.mainAmount := by
+  have hB : 0 ≤ D.logB := (HasLogBound.pos D).le
+  unfold mainAmount directionAmount
+  exact mul_nonneg (by positivity) <| sum_nonneg fun τ _ ↦
+    (mul_nonneg (Nat.cast_nonneg _) hB).trans (D.jetSize_sub_primeSum_mem_Icc τ).1
 
 end Data
 

@@ -4,10 +4,10 @@ public import New.Reduction.Data.Existence
 import Lib.Analytic.Primes
 
 /-!
-# Admissible data with a subexponential weight
+# Admissible data with a polynomial scale for the logarithmic weight
 
-The Behrend density governs the logarithmic weight. The prime search uses polynomial
-windows in the logarithmic variable, and a separate polynomial scale controls the tail.
+The Behrend count bounds the ratio of place counts. A polynomial in the logarithmic variable
+provides the scale for the weights, prime windows and auxiliary cutoff.
 -/
 
 @[expose] public section
@@ -266,7 +266,7 @@ theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
 noncomputable def behrendDigitCount (y : ℝ) : ℕ :=
   ⌈sqrt (22 * y * log (5184 * y)) / log (5184 * y)⌉₊
 
-/-- An upper scale for the logarithmic weight, with leading exponent
+/-- A bound for the ratio of place counts, with leading exponent
 `2 * sqrt (22 * y * log (5184 * y))`. -/
 noncomputable def subexponentialWeightBound (y : ℝ) : ℝ :=
   exp (2 * sqrt (22 * y * log (5184 * y)) + 3 * log (5184 * y) + behrendDigitCount y + 44)
@@ -274,6 +274,19 @@ noncomputable def subexponentialWeightBound (y : ℝ) : ℝ :=
 private lemma tendsto_log_behrend_base :
     Tendsto (fun y : ℝ ↦ log (5184 * y)) atTop atTop :=
   tendsto_log_atTop.comp (tendsto_id.const_mul_atTop (by norm_num))
+
+private lemma eventually_log_scale_le_behrend {c : ℝ} (hc : 0 < c) :
+    ∀ᶠ y : ℝ in atTop, log (5184 * y) ≤ c * sqrt (22 * y * log (5184 * y)) := by
+  filter_upwards [tendsto_log_behrend_base.eventually_ge_atTop 1,
+    eventually_log_scale_le (22 * c ^ 2) (by positivity)] with y hL h_log
+  let L := log (5184 * y)
+  have hL_nonneg : 0 ≤ L := zero_le_one.trans hL
+  have hL_sq : L ^ 2 ≤ c ^ 2 * (22 * y * L) := calc
+    _ = L * L := pow_two _
+    _ ≤ (22 * c ^ 2 * y) * L := mul_le_mul_of_nonneg_right h_log hL_nonneg
+    _ = _ := by ring
+  have h := sqrt_le_sqrt hL_sq
+  rwa [sqrt_sq hL_nonneg, sqrt_mul (sq_nonneg c), sqrt_sq hc.le] at h
 
 private lemma eventually_behrend_digit_bounds :
     ∀ᶠ y : ℝ in atTop,
@@ -316,16 +329,15 @@ private lemma eventually_behrend_digit_bounds :
   rw [h_exp]
   exact exp_le_exp.2 (by linarith only [hnL, hS_upper, hL_upper, hy])
 
-/-- The logarithmic weight has leading exponent at most two times the Behrend scale. -/
+/-- The log of the place count ratio is bounded by two times the Behrend scale plus lower-order terms. -/
 theorem eventually_log_subexponentialWeightBound_le_behrend {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ y : ℝ in atTop,
       log (subexponentialWeightBound y) ≤ (2 + ε) * sqrt (22 * y * log (5184 * y)) := by
   filter_upwards [eventually_behrend_digit_bounds,
     tendsto_log_behrend_base.eventually_ge_atTop (3 / ε),
-    eventually_log_scale_le (22 * (ε / 9) ^ 2) (by positivity),
-    tendsto_sqrt_atTop.eventually_ge_atTop (45 / (ε / 3)),
-    eventually_ge_atTop (2 : ℝ)]
-    with y ⟨hL, h_sqrt, _, _, hn_upper, _, _, _⟩ h_inv h_log h_const hy
+    eventually_log_scale_le_behrend (c := ε / 9) (by positivity),
+    tendsto_sqrt_atTop.eventually_ge_atTop (45 / (ε / 3))]
+    with y ⟨hL, h_sqrt, _, _, hn_upper, _, _, _⟩ h_inv hL_fit h_const
   let L := log (5184 * y)
   let S := sqrt (22 * y * L)
   have hL_pos : 0 < L := one_pos.trans_le hL
@@ -339,21 +351,13 @@ theorem eventually_log_subexponentialWeightBound_le_behrend {ε : ℝ} (hε : 0 
       _ = ((ε / 3) * S) * L := by ring)
   have hn : (behrendDigitCount y : ℝ) ≤ (ε / 3) * S + 1 :=
     hn_upper.trans (add_le_add h_ratio le_rfl)
-  have hL_sq : L ^ 2 ≤ (ε / 9) ^ 2 * (22 * y * L) := calc
-    _ = L * L := pow_two _
-    _ ≤ (22 * (ε / 9) ^ 2 * y) * L := mul_le_mul_of_nonneg_right h_log hL_pos.le
-    _ = _ := by ring
-  have hL_fit : L ≤ (ε / 9) * S := by
-    have h := sqrt_le_sqrt hL_sq
-    rw [sqrt_sq hL_pos.le, sqrt_mul (sq_nonneg (ε / 9)), sqrt_sq (by positivity)] at h
-    exact h
   have h45 : (45 : ℝ) ≤ (ε / 3) * S :=
     (div_le_iff₀ (by positivity : 0 < ε / 3)).1 (h_const.trans h_sqrt) |>.trans_eq (mul_comm _ _)
   rw [subexponentialWeightBound, log_exp]
   change 2 * S + 3 * L + (behrendDigitCount y : ℝ) + 44 ≤ (2 + ε) * S
   linarith only [hn, hL_fit, h45]
 
-/-- The logarithm of the weight bound is sublinear in `y`. -/
+/-- The logarithm of the density bound is sublinear in `y`. -/
 theorem eventually_log_subexponentialWeightBound_le {c : ℝ} (hc : 0 < c) :
     ∀ᶠ y : ℝ in atTop, log (subexponentialWeightBound y) ≤ c * y := by
   filter_upwards [eventually_log_subexponentialWeightBound_le_behrend (ε := 1) one_pos,
@@ -505,6 +509,58 @@ private lemma Parameters.eventually_polynomial_prime_windows (P : Parameters) :
 /-- The logarithm of the auxiliary cutoff is fixed by the tail estimate. -/
 private noncomputable def auxiliaryCutoff (y : ℝ) : ℝ := 2 * (64 * y) ^ 27
 
+/-- A polynomial scale for the logarithmic weight, above the sixth power of the cutoff. -/
+noncomputable def polynomialWeightScale (y : ℝ) : ℝ := y ^ 163
+
+private lemma eventually_mul_pow_le_polynomialWeightScale (C : ℝ) {n : ℕ} (hn : n < 163) :
+    ∀ᶠ y : ℝ in atTop, C * y ^ n ≤ polynomialWeightScale y := by
+  filter_upwards [eventually_ge_atTop (max 1 C)] with y hy
+  have hy_one : 1 ≤ y := (le_max_left _ _).trans hy
+  calc
+    _ ≤ y * y ^ n := mul_le_mul_of_nonneg_right ((le_max_right _ _).trans hy) (by positivity)
+    _ = y ^ (n + 1) := (pow_succ' y n).symm
+    _ ≤ _ := pow_le_pow_right₀ hy_one hn
+
+private lemma log_polynomialWeightScale_add_one_le {y : ℝ} (hy : 1 ≤ y)
+    (hL : 1 ≤ log (5184 * y)) : log (polynomialWeightScale y + 1) ≤ 164 * log (5184 * y) := by
+  let B := polynomialWeightScale y
+  have hy_pos := one_pos.trans_le hy
+  have hB : 1 ≤ B := one_le_pow₀ hy
+  have hB_pos : 0 < B := one_pos.trans_le hB
+  have h_log : log (B + 1) ≤ log B + 1 := by
+    rw [log_le_iff_le_exp (by linarith), exp_add, exp_log hB_pos]
+    calc
+      _ ≤ B * 2 := by linarith
+      _ ≤ _ := mul_le_mul_of_nonneg_left (by linarith [add_one_le_exp 1]) hB_pos.le
+  have h_log_B : log B = 163 * log y := by simp [B, polynomialWeightScale, log_pow]
+  have h_yL : log y ≤ log (5184 * y) := log_le_log hy_pos
+    (le_mul_of_one_le_left hy_pos.le (by norm_num))
+  linarith only [h_log, h_log_B, h_yL, hL]
+
+/-- The logarithm of the polynomial weight scale is sublinear. -/
+theorem eventually_log_polynomialWeightScale_add_one_le {c : ℝ} (hc : 0 < c) :
+    ∀ᶠ y : ℝ in atTop, log (polynomialWeightScale y + 1) ≤ c * y := by
+  filter_upwards [eventually_ge_atTop (1 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1,
+    eventually_log_scale_le (c / 164) (by positivity)] with y hy hL h_log
+  exact (log_polynomialWeightScale_add_one_le hy hL).trans (by linarith only [h_log])
+
+/-- The log of the polynomial weight is eventually smaller than any positive multiple of the
+Behrend scale. -/
+theorem eventually_log_polynomialWeightScale_add_one_le_behrend {c : ℝ} (hc : 0 < c) :
+    ∀ᶠ y : ℝ in atTop,
+      log (polynomialWeightScale y + 1) ≤ c * sqrt (22 * y * log (5184 * y)) := by
+  filter_upwards [eventually_ge_atTop (1 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1,
+    eventually_log_scale_le_behrend (c := c / 164) (by positivity)] with y hy hL h_log
+  exact (log_polynomialWeightScale_add_one_le hy hL).trans (by linarith only [h_log])
+
+/-- The polynomial weight and the rounding error fit the earlier subexponential scale. -/
+theorem eventually_polynomialWeightScale_add_one_le_subexponentialWeightBound :
+    ∀ᶠ y : ℝ in atTop, polynomialWeightScale y + 1 ≤ subexponentialWeightBound y := by
+  filter_upwards [eventually_ge_atTop (1 : ℝ),
+    eventually_mul_pow_le_subexponentialWeightBound 2 163] with y hy h
+  have h_one : 1 ≤ polynomialWeightScale y := one_le_pow₀ hy
+  exact (show polynomialWeightScale y + 1 ≤ 2 * polynomialWeightScale y by linarith).trans h
+
 private lemma eventually_exp_y_div_eight_le (C : ℝ) :
     ∀ᶠ y : ℝ in atTop, C ≤ exp (y / 8) := by
   filter_upwards [eventually_ge_atTop (8 * C)] with y hy
@@ -512,11 +568,11 @@ private lemma eventually_exp_y_div_eight_le (C : ℝ) :
 
 private lemma Parameters.eventually_prime_scale_inequalities (P : Parameters) :
     ∀ᶠ y : ℝ in atTop,
-      let Q := subexponentialWeightBound y
+      let J := polynomialWeightScale y
       let W := P.polynomialPrimeWindowWidth y
       let V := auxiliaryCutoff y
-      1 ≤ W ∧ W ^ 2 ≤ Q ∧ (2 * classNumber P.K + 2) * W ≤ Q ∧ P.primeScale y + V ≤ Q ∧
-        7 ≤ Q ∧ 24 * (2 * exp (y / 2)) * (Q + 1) ≤ exp y := by
+      1 ≤ W ∧ W ^ 2 ≤ J ∧ (2 * classNumber P.K + 2) * W ≤ J ∧ P.primeScale y + V ≤ J ∧
+        7 ≤ J ∧ 24 * (2 * exp (y / 2)) * (J + 1) ≤ exp y := by
   let C : ℝ := 99 * (P.q₀ : ℝ) * P.d + 1
   have hC : 1 ≤ C := le_add_of_nonneg_left (by positivity)
   have hW (y : ℝ) : P.polynomialPrimeWindowWidth y = (4 * C ^ 50) * y ^ (50 : ℕ) := by
@@ -527,13 +583,16 @@ private lemma Parameters.eventually_prime_scale_inequalities (P : Parameters) :
     norm_num
   have hW_sq (y : ℝ) : P.polynomialPrimeWindowWidth y ^ 2 = (4 * C ^ 50) ^ 2 * y ^ (100 : ℕ) := by
     rw [hW, mul_pow, ← pow_mul]
-  filter_upwards [eventually_mul_pow_le_subexponentialWeightBound ((4 * C ^ 50) ^ 2) 100,
-    eventually_mul_pow_le_subexponentialWeightBound ((2 * classNumber P.K + 2) * (4 * C ^ 50)) 50,
-    eventually_mul_pow_le_subexponentialWeightBound (C + 2 * 64 ^ 27) 27,
-    eventually_mul_pow_le_subexponentialWeightBound 7 0, eventually_log_subexponentialWeightBound_le (c := 1 / 8)
-      (by norm_num), eventually_exp_y_div_eight_le 48, eventually_ge_atTop (2 : ℝ)]
-    with y hW_Q h_class h_cutoff h_seven h_log h_exp hy
-  let Q := subexponentialWeightBound y
+  filter_upwards [
+    eventually_mul_pow_le_polynomialWeightScale ((4 * C ^ 50) ^ 2) (n := 100) (by decide),
+    eventually_mul_pow_le_polynomialWeightScale
+      ((2 * classNumber P.K + 2) * (4 * C ^ 50)) (n := 50) (by decide),
+    eventually_mul_pow_le_polynomialWeightScale (C + 2 * 64 ^ 27) (n := 27) (by decide),
+    eventually_mul_pow_le_polynomialWeightScale 7 (n := 0) (by decide),
+    eventually_log_polynomialWeightScale_add_one_le (c := 1 / 4) (by norm_num),
+    eventually_exp_y_div_eight_le 48, eventually_ge_atTop (2 : ℝ)]
+    with y hW_J h_class h_cutoff h_seven h_log h_exp hy
+  let J := polynomialWeightScale y
   let ℓ := P.primeScale y
   let V := auxiliaryCutoff y
   have hℓ : 1 ≤ ℓ := one_le_mul_of_one_le_of_one_le hC (by linarith)
@@ -545,20 +604,16 @@ private lemma Parameters.eventually_prime_scale_inequalities (P : Parameters) :
     _ = _ := by
       dsimp only [V, auxiliaryCutoff]
       rw [mul_pow, ← mul_assoc, ← add_mul]
-  have hQ : Q ≤ exp (y / 8) :=
-    (log_le_iff_le_exp (show 0 < Q from exp_pos _)).1 (by linarith only [h_log])
-  have hQ_add : Q + 1 ≤ exp (y / 4) := calc
-    _ ≤ 2 * exp (y / 8) := by linarith only [hQ, h_exp]
-    _ ≤ exp (y / 8) * exp (y / 8) :=
-      mul_le_mul_of_nonneg_right (by linarith only [h_exp]) (exp_pos _).le
-    _ = _ := by rw [← exp_add]; congr 1; ring
-  refine ⟨hW_one, (hW_sq y).le.trans hW_Q, ?_, hV.trans h_cutoff,
+  have hJ_pos : 0 < J := pow_pos (by linarith) _
+  have hJ_add : J + 1 ≤ exp (y / 4) := (log_le_iff_le_exp (by linarith)).1 (by
+    linarith only [h_log])
+  refine ⟨hW_one, (hW_sq y).le.trans hW_J, ?_, hV.trans h_cutoff,
     by simpa only [pow_zero, mul_one] using h_seven, ?_⟩
   · rwa [hW, ← mul_assoc]
   · calc
-      24 * (2 * exp (y / 2)) * (Q + 1) ≤ 48 * exp (y / 2) * exp (y / 4) := by
+      24 * (2 * exp (y / 2)) * (J + 1) ≤ 48 * exp (y / 2) * exp (y / 4) := by
         rw [show 24 * (2 * exp (y / 2)) = 48 * exp (y / 2) by ring]
-        exact mul_le_mul_of_nonneg_left hQ_add (by positivity)
+        exact mul_le_mul_of_nonneg_left hJ_add (by positivity)
       _ = 48 * exp (y / 2 + y / 4) := by rw [exp_add, mul_assoc]
       _ ≤ exp (y / 4) * exp (y / 2 + y / 4) := mul_le_mul_of_nonneg_right
         (h_exp.trans (exp_le_exp.2 (by linarith))) (exp_pos _).le
@@ -566,13 +621,13 @@ private lemma Parameters.eventually_prime_scale_inequalities (P : Parameters) :
 
 private lemma eventually_cutoff_inequalities :
     ∀ᶠ y : ℝ in atTop,
-      let Q := subexponentialWeightBound y
+      let J := polynomialWeightScale y
       let V := auxiliaryCutoff y
-      1e6 * y ≤ V - 1 ∧ (64 * y) ^ 27 ≤ V - 1 ∧ V ^ 6 ≤ Q ∧ 1e6 * V ≤ Q := by
+      1e6 * y ≤ V - 1 ∧ (64 * y) ^ 27 ≤ V - 1 ∧ V ^ 6 ≤ J ∧ 1e6 * V ≤ J := by
   filter_upwards [eventually_ge_atTop (2 : ℝ),
-    eventually_mul_pow_le_subexponentialWeightBound (2 ^ 6 * 64 ^ 162) 162,
-    eventually_mul_pow_le_subexponentialWeightBound (1e6 * (2 * 64 ^ 27)) 27]
-    with y hy hV_pow hV_Q
+    eventually_mul_pow_le_polynomialWeightScale (2 ^ 6 * 64 ^ 162) (n := 162) (by decide),
+    eventually_mul_pow_le_polynomialWeightScale (1e6 * (2 * 64 ^ 27)) (n := 27) (by decide)]
+    with y hy hV_pow hV_J
   let V := auxiliaryCutoff y
   have h_power_one : 1 ≤ (64 * y) ^ (27 : ℕ) := one_le_pow₀ (by linarith)
   have h_poly : 1e6 * y + 1 ≤ (64 * y) ^ (27 : ℕ) := calc
@@ -592,43 +647,36 @@ private lemma eventually_cutoff_inequalities :
         change 2 ^ 6 * (64 * y) ^ (162 : ℕ) = _
         rw [mul_pow, mul_assoc]
       _ ≤ _ := hV_pow
-  · simpa only [V, auxiliaryCutoff, mul_pow, mul_assoc] using hV_Q
+  · simpa only [V, auxiliaryCutoff, mul_pow, mul_assoc] using hV_J
 
 private lemma eventually_data_weight_inequalities (P : Parameters) :
     ∀ᶠ y : ℝ in atTop,
-      let Q := subexponentialWeightBound y
+      let J := polynomialWeightScale y
       let U := log ⌊exp (auxiliaryCutoff y)⌋₊
-      ∀ B ∈ Set.Icc Q (Q + 1),
+      ∀ B ∈ Set.Icc J (J + 1),
         1e12 * P.constantBound ≤ log B ∧ 100 * log B ≤ y ∧
           1e6 * y ≤ U ∧ 1e6 * U ≤ B ∧ 6 * log U ≤ log B := by
-  filter_upwards [eventually_ge_atTop (200 : ℝ), eventually_cutoff_inequalities,
-    eventually_log_subexponentialWeightBound_le (c := 1 / 200) (by norm_num),
-    eventually_mul_pow_le_subexponentialWeightBound (exp (1e12 * P.constantBound)) 0,
-    eventually_mul_pow_le_subexponentialWeightBound 1 0]
-    with y hy ⟨hV_lower, _, hV_pow, hV_B⟩ h_log h_const h_one
+  filter_upwards [eventually_ge_atTop (2 : ℝ), eventually_cutoff_inequalities,
+    eventually_log_polynomialWeightScale_add_one_le (c := 1 / 100) (by norm_num),
+    eventually_mul_pow_le_polynomialWeightScale (exp (1e12 * P.constantBound)) (n := 0) (by decide)]
+    with y hy ⟨hV_lower, _, hV_pow, hV_B⟩ h_log h_const
   dsimp only
   intro B hB
-  let Q := subexponentialWeightBound y
+  let J := polynomialWeightScale y
   let V := auxiliaryCutoff y
   let U := log ⌊exp V⌋₊
-  have hQ_pos : 0 < Q := exp_pos _
-  have hQ_one : 1 ≤ Q := by simpa only [pow_zero, mul_one] using h_one
-  have hB_pos : 0 < B := hQ_pos.trans_le hB.1
+  have hJ_pos : 0 < J := pow_pos (by linarith) _
+  have hB_pos : 0 < B := hJ_pos.trans_le hB.1
   have hV_nonneg : 0 ≤ V := by linarith only [hy, hV_lower]
   have h_floor : U ∈ Set.Icc (V - 1) V := log_floor_exp_mem_Icc hV_nonneg
   have hU_lower : 1e6 * y ≤ U := hV_lower.trans h_floor.1
   have hU_pos : 0 < U := by linarith only [hy, hU_lower]
-  have h_lower : 1e12 * P.constantBound ≤ log Q := by
-    apply (le_log_iff_exp_le hQ_pos).2
+  have h_lower : 1e12 * P.constantBound ≤ log J := by
+    apply (le_log_iff_exp_le hJ_pos).2
     simpa only [pow_zero, mul_one] using h_const
-  have h_log_upper : log B ≤ log Q + 1 := by
-    rw [log_le_iff_le_exp hB_pos, exp_add, exp_log hQ_pos]
-    calc
-      _ ≤ Q + 1 := hB.2
-      _ ≤ Q * 2 := by linarith only [hQ_one]
-      _ ≤ _ := mul_le_mul_of_nonneg_left (by linarith [add_one_le_exp 1]) hQ_pos.le
-  refine ⟨h_lower.trans (log_le_log hQ_pos hB.1),
-    by linarith only [h_log, h_log_upper, hy], hU_lower,
+  have h_log_upper : log B ≤ log (J + 1) := log_le_log hB_pos hB.2
+  refine ⟨h_lower.trans (log_le_log hJ_pos hB.1),
+    by linarith only [h_log, h_log_upper], hU_lower,
     (mul_le_mul_of_nonneg_left h_floor.2 (by norm_num)).trans (hV_B.trans hB.1), ?_⟩
   have hU_pow : U ^ (6 : ℕ) ≤ B :=
     ((pow_le_pow_left₀ hU_pos.le h_floor.2 _).trans hV_pow).trans hB.1
@@ -646,12 +694,15 @@ private lemma exists_weight_with_cutoff {q : ℕ} {ℓ V Q : ℝ} (hq : 0 < q)
     _ = exp (ℓ + V) := (exp_add _ _).symm
     _ ≤ _ := exp_le_exp.2 hQ
 
-/-- Construct admissible data using independent scales for the density, prime windows and cutoff. -/
-theorem eventually_exists_data_with_weightBound (P : Parameters) :
-    ∀ᶠ x : ℕ in atTop, ∃ D : Data P,
-      D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * log (x : ℝ)) ^ 27)⌋₊ ∧
-        sqrt x ≤ D.m ∧ (64 * log (x : ℝ)) ^ 27 ≤ D.logX₁ ∧
-        D.logB ≤ subexponentialWeightBound (log (x : ℝ)) + 1 := by
+/-- Construct admissible data with polynomial logarithmic weight and a separate density bound. -/
+theorem eventually_exists_data_with_polynomial_weight (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      let J := polynomialWeightScale y
+      ∃ D : Data P,
+        D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * y) ^ 27)⌋₊ ∧
+          sqrt x ≤ D.m ∧ (64 * y) ^ 27 ≤ D.logX₁ ∧ D.logB ∈ Set.Icc J (J + 1) ∧
+          towerDeg D.towerExp ≤ #D.bPlaces * subexponentialWeightBound y := by
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   filter_upwards [h_log.eventually P.eventually_exists_isSparse_with_weightBound,
@@ -660,12 +711,12 @@ theorem eventually_exists_data_with_weightBound (P : Parameters) :
     h_log.eventually eventually_cutoff_inequalities,
     h_log.eventually (eventually_data_weight_inequalities P),
     h_log.eventually_ge_atTop 200, eventually_ge_atTop 1]
-    with x h_sparse_data h_window ⟨hW_one, hW_sq, h_class_le, h_scale_le, hQ_large, h_endpoint⟩
+    with x h_sparse_data h_window ⟨hW_one, hW_sq, h_class_le, h_scale_le, hJ_large, h_endpoint⟩
       ⟨hV_x, hV_tail, _, _⟩ h_scales hy hx_one
   let y := log (x : ℝ)
   let W := P.polynomialPrimeWindowWidth y
   let V := auxiliaryCutoff y
-  let Q := subexponentialWeightBound y
+  let J := polynomialWeightScale y
   let ℓ := P.primeScale y
   have hV_nonneg : 0 ≤ V := by linarith only [hV_x, hy]
   have hW_pos : 0 < W := one_pos.trans_le hW_one
@@ -683,11 +734,11 @@ theorem eventually_exists_data_with_weightBound (P : Parameters) :
     grw [Nat.le_mul_of_pos_right (P.q₁ s) P.d_prime.pos, hq₁d_le]
   obtain ⟨b, hb, hB⟩ := exists_weight_with_cutoff (NeZero.pos (P.q₁ s)) hq₁_le hV_nonneg h_scale_le
   let B := log (b : ℝ)
-  have hb_pos : 0 < (b : ℝ) := (exp_pos Q).trans hb.1.2
+  have hb_pos : 0 < (b : ℝ) := (exp_pos J).trans hb.1.2
   have hb_eq : exp B = b := exp_log hb_pos
-  have hQ_B : Q ≤ B := hB.1
-  have hB_upper : B ≤ Q + 1 := hB.2
-  have hB_pos : 0 < B := by linarith only [hQ_large, hQ_B]
+  have hJ_B : J ≤ B := hB.1
+  have hB_upper : B ≤ J + 1 := hB.2
+  have hB_pos : 0 < B := by linarith only [hJ_large, hJ_B]
   have h_cutoff : (64 * y) ^ 27 ≤ log ⌊exp V⌋₊ :=
     hV_tail.trans (log_floor_exp_mem_Icc hV_nonneg).1
   have hx_le : x ≤ ⌊exp V⌋₊ :=
@@ -701,22 +752,22 @@ theorem eventually_exists_data_with_weightBound (P : Parameters) :
       ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD P.q₂ s ^ 2] ∧ log p ∈ Set.Icc U (U + W) := by
     apply h_window s hs U
     refine ⟨(le_self_pow₀ hW_one (by decide : (2 : ℕ) ≠ 0)).trans
-      (hW_sq.trans (hQ_B.trans h_lower)), h_upper.trans ?_⟩
-    exact (by gcongr : 24 * (m : ℝ) * B ≤ 24 * (2 * exp (y / 2)) * (Q + 1)).trans h_endpoint
+      (hW_sq.trans (hJ_B.trans h_lower)), h_upper.trans ?_⟩
+    exact (by gcongr : 24 * (m : ℝ) * B ≤ 24 * (2 * exp (y / 2)) * (J + 1)).trans h_endpoint
   have hm_two : 2 ≤ m := by
     have h : (2 : ℝ) ≤ exp (y / 2) := by linarith only [add_one_le_exp (y / 2), hy]
     exact_mod_cast h.trans hm_lower
   have hm_mul : B ≤ m * B := le_mul_of_one_le_left hB_pos.le (mod_cast (by omega : 1 ≤ m))
   obtain ⟨p₀, p₁, α, h_ne, hp₀, hp₁, h_norm⟩ := P.exists_prime_pair_norm s hW_pos
-    (h_class_le.trans hQ_B) fun U hU ↦ h_prime U (by linarith only [hU.1, hB_pos]) (by
+    (h_class_le.trans hJ_B) fun U hU ↦ h_prime U (by linarith only [hU.1, hB_pos]) (by
       rw [mul_assoc]
       linarith only [hU.2, hm_mul, hB_pos])
   have hg : ∀ i : Fin 2, P.IsPrincipalLevelPrime s B (![p₀, p₁] i) :=
     Fin.forall_fin_two.2 ⟨hp₀, hp₁⟩
   have h_cond : (P.q₁ s * P.d : ℕ) ≤ exp B :=
-    hq₁d_le.trans (exp_le_exp.2 (by linarith only [h_scale_le, hQ_B, hV_nonneg]))
+    hq₁d_le.trans (exp_le_exp.2 (by linarith only [h_scale_le, hJ_B, hV_nonneg]))
   obtain ⟨N, β, hN, hN_mod, hN_log, hβ⟩ := P.exists_prime_log_mem_Icc_mul_star_eq hm_two
-    (hQ_large.trans hQ_B) (hW_sq.trans hQ_B) hκ (hp₀.mul_mem_Icc hp₁) h_cond
+    (hJ_large.trans hJ_B) (hW_sq.trans hJ_B) hκ (hp₀.mul_mem_Icc hp₁) h_cond
     fun U hU ↦ h_prime U (hm_mul.trans hU.1) hU.2
   obtain ⟨h_const, h_scaleB, h_scaleX₁, h_scaleB₁, h_scale_pow⟩ := h_scales B hB
   let D : Data P :=
@@ -735,8 +786,7 @@ theorem eventually_exists_data_with_weightBound (P : Parameters) :
       exists_m_eq_two_pow := ⟨e, hm_pow, hs_eq⟩, exists_r_eq_three_pow := hr_pow
       towerExp_le := hs, dvd_natB := hb.1.1
       bPlaces := T, placeClass_of_mem_bPlaces := h_class
-      towerDeg_le_card_bPlaces_mul := h_card.trans
-        (mul_le_mul_of_nonneg_left hQ_B (Nat.cast_nonneg T.card))
+      bPlaces_nonempty := nonempty_of_towerDeg_le_card_mul h_card
       sparse := h_sparse, weight := κ, weight_eq _ := rfl
       levelPrime := ![p₀, p₁], levelPrime_prime i := (hg i).prime
       levelPrime_modEq_one_q₂_sq i := (hg i).modEq_one
@@ -745,8 +795,21 @@ theorem eventually_exists_data_with_weightBound (P : Parameters) :
       piMBar := α, piMBar_mul_star := h_norm
       N, N_prime := hN, N_modEq_one_q₂_sq := hN_mod, log_N_mem := hN_log
       piN := β, piN_mul_star := hβ }
-  refine ⟨D, exp_log hx_pos, rfl, ?_, h_cutoff, hB_upper⟩
+  refine ⟨D, exp_log hx_pos, rfl, ?_, h_cutoff, hB, h_card⟩
   simpa only [y, exp_half, exp_log hx_pos] using hm_lower
+
+/-- These data also satisfy the subexponential upper bound on the logarithmic weight. -/
+theorem eventually_exists_data_with_weightBound (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop, ∃ D : Data P,
+      D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * log (x : ℝ)) ^ 27)⌋₊ ∧
+        sqrt x ≤ D.m ∧ (64 * log (x : ℝ)) ^ 27 ≤ D.logX₁ ∧
+        D.logB ≤ subexponentialWeightBound (log (x : ℝ)) + 1 := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_exists_data_with_polynomial_weight P,
+    h_log.eventually eventually_polynomialWeightScale_add_one_le_subexponentialWeightBound]
+    with x ⟨D, hx, hx₁, hm, h_cutoff, hB, _⟩ hJ
+  exact ⟨D, hx, hx₁, hm, h_cutoff, hB.2.trans (hJ.trans (le_add_of_nonneg_right zero_le_one))⟩
 
 /-- The weight bound is eventually within the former square of the prime-window scale. -/
 theorem Parameters.eventually_weightBound_le_subexponentialWindowWidth_sq (P : Parameters) :

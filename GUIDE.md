@@ -136,7 +136,7 @@ q₀ and d are fixed, and x → ∞; x is the point at which R_{q₀} is bounded
 | N | level, a prime | log N within √(log b) above log N₋, N₋ = κ̄^m (M rd_E/2π)^(m−1) b^(−15/2) (`P.logLevelMin`); so in [m log b, 30 m log b] |
 | `D.errorUnit` | unit of the errors | f a log³ b |
 
-There are at least T / log b b-places. Y₀ is X₀ plus ϱ = `D.ϱ` hyperbolic planes and one line of norm −N (`D.spaceY_gram_eq`), with m = 2ϱ + 2.
+The set of b-places is nonempty. In `eventually_exists_data_with_polynomial_weight`, the Behrend count bounds T / #Φ_b and the logarithmic weight is between (log x)^163 and (log x)^163 + 1. Y₀ is X₀ plus ϱ = `D.ϱ` hyperbolic planes and one line of norm −N (`D.spaceY_gram_eq`), with m = 2ϱ + 2.
 
 Constants. 18480 = 16·3·5·7·11 divides q₀. The parameters ask q₀ ∣ 2(d + 1) and q₀ ∤ d + 1 (`New/Reduction/Data/FieldsAndPlaces`), so 16 ∣ 2(d + 1) and d ≡ 7 mod 8. Primes dividing q₀ split in K, so a prime that does not split is at least 13 (`Parameters.thirteen_le_of_chiK_ne_one`). 5040 = 7!, the order of the root of unity in `HasPrimitiveRoot5040`, divides q₁. For 0 < ε < 1/100 and large integers x, R_{q₀}(x) ≤ (64 φ(q₀) + 3)·x^(−1/2 + 6ε); the exponent comes from log⁶ b / m with log b ≤ 2x^ε (`eventually_primeRemainder_natCast_le`).
 

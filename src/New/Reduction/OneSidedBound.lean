@@ -3,6 +3,7 @@ module
 public import Statements
 public import New.Reduction.Data.AdmissibleData
 public import New.Reduction.Data.Subexponential
+public import New.Reduction.PrimeSums
 import New.Reduction.Data.Magnitudes
 import New.Reduction.MainInequality
 import New.Reduction.Zeros.Criterion
@@ -13,11 +14,11 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality gives a remainder term
-proportional to `φ(q₀) log² b / m`. The Behrend density gives `log b ≤ Q + 1` and the chosen
-rank satisfies `m ≥ √x`. A separate logarithmic cutoff makes both prime remainders at `x₁` at
-most `x ^ (-2)`. The resulting factor `Q ^ 2` is absorbed in any positive exponent slack.
-Passage to real arguments gives the one-sided criterion for non-vanishing of Dirichlet
-`L`-functions in `re s > 1/2`.
+proportional to `φ(q₀) (#Φ_a / #Φ_b) log b / m`. The Behrend count bounds the ratio of place
+counts, while the logarithmic weight and auxiliary cutoff use polynomial scales in `log x`.
+Both prime remainders at `x₁` are at most `x ^ (-2)`. The resulting error is absorbed in
+any positive exponent slack. Passage to real arguments gives the one-sided criterion
+for non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
 
 Notions from other files:
 * `Parameters`: a multiple `q₀ = P.q₀` of `18480` and a prime `d = P.d ≡ q₀ / 2 - 1` modulo `q₀`.
@@ -34,95 +35,99 @@ open DirichletCharacter Filter Finset Real ZMod
 
 namespace New
 
-private lemma Data.primeRemainder_le_of_loss {P : Parameters} (D : Data P) {loss : ℝ}
+private lemma Data.primeRemainder_le_of_loss {P : Parameters} (D : Data P) {loss density : ℝ}
+    (h_density : D.placeCountRatio ≤ density)
     (h_loss : 0 ≤ loss) (h_bound : D.m * D.totalRemainder ≤ D.f * D.a * loss) :
-    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * (D.logB * loss) / D.m +
-      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
-  -- Write `R_{q₀}(x)` through the total remainder, divide the main inequality by `m a #Φ_b`, and
-  -- use `f = φ(q₀) #Φ_a` and `#Φ_a ≤ #Φ_b log b`, where `Φ_a = D.aPlaces` and `Φ_b = D.bPlaces`.
+    primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * (density * loss) / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + density * |primeRemainder P.d 1 D.x₁| := by
   have hm : (0 : ℝ) < D.m := Data.HasLogBound.pos D
   have ha : (0 : ℝ) < D.a := Data.HasLogBound.pos D
-  have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_aPlaces_pos : (0 : ℝ) < #D.aPlaces := by
-    rw [D.card_aPlaces]
-    exact Data.HasLogBound.pos D
-  have h_card : (#D.aPlaces : ℝ) ≤ #D.bPlaces * D.logB := by
-    rw [D.card_aPlaces]
-    exact D.towerDeg_le_card_bPlaces_mul
-  have h_bPlaces_pos : (0 : ℝ) < #D.bPlaces :=
-    (mul_pos_iff_of_pos_right h_logB_pos).1 (h_aPlaces_pos.trans_le h_card)
-  have h_ratio : (#D.aPlaces : ℝ) / #D.bPlaces ≤ D.logB := (div_le_iff₀' h_bPlaces_pos).2 h_card
+  have hb := D.card_bPlaces_pos
+  have h_ratio : 0 ≤ D.placeCountRatio := by unfold Data.placeCountRatio; positivity
   have h_main : D.totalRemainder ≤ D.f * D.a * loss / D.m := (le_div_iff₀' hm).2 h_bound
   calc primeRemainder P.d P.q₀ D.x
       = D.totalRemainder / (D.a * #D.bPlaces) + primeRemainder P.d P.q₀ D.x₁ -
-          #D.aPlaces / #D.bPlaces * primeRemainder P.d 1 D.x₁ := by
-        rw [D.totalRemainder_eq]
+          D.placeCountRatio * primeRemainder P.d 1 D.x₁ := by
+        rw [D.totalRemainder_eq, Data.placeCountRatio]
         field
     _ ≤ D.f * D.a * loss / D.m / (D.a * #D.bPlaces) + |primeRemainder P.d P.q₀ D.x₁| +
-          #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
+          D.placeCountRatio * |primeRemainder P.d 1 D.x₁| := by
         grw [h_main, le_abs_self (primeRemainder P.d P.q₀ D.x₁), sub_eq_add_neg, ← mul_neg,
           neg_le_abs]
-    _ = P.q₀.totient * (#D.aPlaces / #D.bPlaces * loss) / D.m +
+    _ = P.q₀.totient * (D.placeCountRatio * loss) / D.m +
           |primeRemainder P.d P.q₀ D.x₁| +
-          #D.aPlaces / #D.bPlaces * |primeRemainder P.d 1 D.x₁| := by
-        rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul]
+          D.placeCountRatio * |primeRemainder P.d 1 D.x₁| := by
+        rw [D.f_eq_card_aPlaces_mul, Nat.cast_mul, Data.placeCountRatio]
         field
-    _ ≤ _ := by grw [h_ratio]
+    _ ≤ _ := by grw [h_density]
 
-/-- The one-sided prime remainder bound from the linear main inequality. -/
-lemma Data.primeRemainder_le_linear {P : Parameters} (D : Data P) :
+/-- The linear main inequality gives separate factors for the density and the logarithmic weight. -/
+lemma Data.primeRemainder_le_linear_with_density {P : Parameters} (D : Data P) {density : ℝ}
+    (h_density : D.placeCountRatio ≤ density) :
     primeRemainder P.d P.q₀ D.x ≤
-      1700000 * P.q₀.totient * D.logB ^ 2 / D.m +
-      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+      1700000 * P.q₀.totient * (density * D.logB) / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + density * |primeRemainder P.d 1 D.x₁| := by
   have hB : 0 < D.logB := Data.HasLogBound.pos D
   have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (1700000 * D.logB) := by
     calc
       _ ≤ 1700000 * (D.f * D.a * D.logB) := star_inequality_linear D
       _ = _ := by ring
-  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  convert D.primeRemainder_le_of_loss h_density (by positivity) h_bound using 1
   ring
 
+/-- The one-sided prime remainder bound from the linear main inequality. -/
+lemma Data.primeRemainder_le_linear {P : Parameters} (D : Data P)
+    (h_density : D.placeCountRatio ≤ D.logB) :
+    primeRemainder P.d P.q₀ D.x ≤
+      1700000 * P.q₀.totient * D.logB ^ 2 / D.m +
+      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+  simpa only [pow_two] using D.primeRemainder_le_linear_with_density h_density
+
 /-- The one-sided prime remainder bound from the quadratic main inequality. -/
-lemma Data.primeRemainder_le_quadratic {P : Parameters} (D : Data P) :
+lemma Data.primeRemainder_le_quadratic {P : Parameters} (D : Data P)
+    (h_density : D.placeCountRatio ≤ D.logB) :
     primeRemainder P.d P.q₀ D.x ≤ 27 * P.q₀.totient * D.logB ^ 3 / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (27 * D.logB ^ 2) := by
     calc
       _ ≤ 27 * (D.f * D.a * D.logB ^ 2) := star_inequality_quadratic D
       _ = _ := by ring
-  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  convert D.primeRemainder_le_of_loss h_density (by positivity) h_bound using 1
   ring
 
 /-- The one-sided prime remainder bound using the weighted valuation loss. -/
-lemma Data.primeRemainder_le_weighted_loss {P : Parameters} (D : Data P) :
+lemma Data.primeRemainder_le_weighted_loss {P : Parameters} (D : Data P)
+    (h_density : D.placeCountRatio ≤ D.logB) :
     primeRemainder P.d P.q₀ D.x ≤ 90 * P.q₀.totient * (D.logB ^ 3 * D.logX₁ ^ 2) / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (90 * (D.logB ^ 2 * D.logX₁ ^ 2)) := by
     calc _ ≤ 90 * (D.f * D.a * D.logB ^ 2 * D.logX₁ ^ 2) := star_inequality_with_weighted_loss D
       _ = _ := by ring
-  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  convert D.primeRemainder_le_of_loss h_density (by positivity) h_bound using 1
   ring
 
 /-- The one-sided prime remainder bound with the error expressed using cubic units. -/
-lemma Data.primeRemainder_le_cubic {P : Parameters} (D : Data P) :
+lemma Data.primeRemainder_le_cubic {P : Parameters} (D : Data P)
+    (h_density : D.placeCountRatio ≤ D.logB) :
     primeRemainder P.d P.q₀ D.x ≤ 20 * P.q₀.totient * D.logB ^ 4 / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   have h_logB : 0 < D.logB := Data.HasLogBound.pos D
   have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (20 * D.logB ^ 3) := by
     calc _ ≤ 20 * D.errorUnit := star_inequality_with_polynomial_completion D
       _ = _ := by unfold Data.errorUnit; ring
-  convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
+  convert D.primeRemainder_le_of_loss h_density (by positivity) h_bound using 1
   ring
 
 /-- The prime remainder with the sixth-power error. -/
-lemma Data.primeRemainder_le {P : Parameters} (D : Data P) :
+lemma Data.primeRemainder_le {P : Parameters} (D : Data P)
+    (h_density : D.placeCountRatio ≤ D.logB) :
     primeRemainder P.d P.q₀ D.x ≤ P.q₀.totient * D.logB ^ 6 / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   have h_scale : 20 ≤ D.logB ^ 2 := D.le_of_hasLogBound
   have h_power : 20 * D.logB ^ 4 ≤ D.logB ^ 6 := calc
     _ ≤ D.logB ^ 2 * D.logB ^ 4 := mul_le_mul_of_nonneg_right h_scale (by positivity)
     _ = _ := by ring
-  refine D.primeRemainder_le_cubic.trans (add_le_add (add_le_add ?_ le_rfl) le_rfl)
+  refine (D.primeRemainder_le_cubic h_density).trans (add_le_add (add_le_add ?_ le_rfl) le_rfl)
   calc
     _ = (P.q₀.totient : ℝ) * (20 * D.logB ^ 4) / D.m := by ring
     _ ≤ _ := by gcongr
@@ -199,55 +204,105 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff {d q : ℕ}
     _ ≤ rexp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
     _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
 
-/-- The independent weight scale controls the prime remainder with a factor `Q ^ 2`. -/
-theorem eventually_primeRemainder_natCast_le_with_weightBound (P : Parameters) :
+/-- The one-sided remainder uses the product of the density bound and the logarithmic weight. -/
+theorem eventually_primeRemainder_natCast_le_with_polynomial_weight (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
-      let Q := subexponentialWeightBound (log x)
-      primeRemainder P.d P.q₀ x ≤
-        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * Q ^ 2) := by
+      let y := log (x : ℝ)
+      let Q := subexponentialWeightBound y
+      let J := polynomialWeightScale y
+      primeRemainder P.d P.q₀ x ≤ (1700000 * P.q₀.totient + 2) *
+        ((x : ℝ) ^ (-1 / 2 : ℝ) * (Q * (J + 1))) := by
   have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have h_weight : ∀ᶠ x : ℕ in atTop, 3 ≤ subexponentialWeightBound (log x) := by
+  have hQ_one : ∀ᶠ x : ℕ in atTop, 1 ≤ subexponentialWeightBound (log x) := by
     simpa only [pow_zero, mul_one] using
-      h_log.eventually (eventually_mul_pow_le_subexponentialWeightBound 3 0)
-  filter_upwards [eventually_exists_data_with_weightBound P, h_weight, eventually_ge_atTop 1,
+      h_log.eventually (eventually_mul_pow_le_subexponentialWeightBound 1 0)
+  filter_upwards [eventually_exists_data_with_polynomial_weight P, hQ_one, eventually_ge_atTop 1,
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd h_cop),
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
-    with x ⟨D, hx, _, hm, h_cutoff, hb⟩ hQ hx_one h_q₀ h_one
-  let Q := subexponentialWeightBound (log x)
+    with x ⟨D, hx, _, hm, h_cutoff, hb, h_card⟩ hQ hx_one h_q₀ h_one
+  let y := log (x : ℝ)
+  let Q := subexponentialWeightBound y
+  let B := polynomialWeightScale y + 1
   let Z := (x : ℝ) ^ (-1 / 2 : ℝ)
   have h_Rq₀ := h_q₀ D.logX₁ h_cutoff
   have h_Rone := h_one D.logX₁ h_cutoff
-  have hQ_mul : 0 ≤ (Q - 3) * (Q + 1) := mul_nonneg (by linarith) (by linarith)
-  have hBa : D.logB ≤ Q ^ 2 := hb.trans (by nlinarith only [hQ, hQ_mul])
-  have hB : 0 < D.logB := Data.HasLogBound.pos D
-  have hBb : D.logB ^ 2 ≤ 2 * Q ^ 2 :=
-    (pow_le_pow_left₀ hB.le hb 2).trans (by nlinarith only [hQ_mul])
+  have h_density : D.placeCountRatio ≤ Q := D.placeCountRatio_le_of_card_bound h_card
+  have hB_one : 1 ≤ B := le_add_of_nonneg_left
+    (pow_nonneg (log_natCast_nonneg x) _)
+  have hB_nonneg : 0 ≤ D.logB := (Data.HasLogBound.pos D).le
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
   have hZ_inv : Z = ((x : ℝ) ^ (1 / 2 : ℝ))⁻¹ := by
     dsimp [Z]
     rw [show (-1 / 2 : ℝ) = -(1 / 2 : ℝ) by ring, rpow_neg hx_pos.le]
+  have hz : 0 ≤ Z := by positivity
   have hsmall : (x : ℝ) ^ (-2 : ℝ) ≤ Z := rpow_le_rpow_of_exponent_le hx_ge (by norm_num)
-  have htail : (x : ℝ) ^ (-2 : ℝ) ≤ Z * Q ^ 2 :=
-    hsmall.trans (le_mul_of_one_le_right (by positivity) (one_le_pow₀ (by linarith)))
-  have htail_q₀ : |primeRemainder P.d P.q₀ D.x₁| ≤ Z * Q ^ 2 := h_Rq₀.trans htail
-  have htail_one : D.logB * |primeRemainder P.d 1 D.x₁| ≤ Q ^ 2 * Z :=
-    mul_le_mul hBa (h_Rone.trans hsmall) (abs_nonneg _) (by positivity)
+  have h_tail_q₀ : |primeRemainder P.d P.q₀ D.x₁| ≤ Z * (Q * B) :=
+    (h_Rq₀.trans hsmall).trans (le_mul_of_one_le_right hz (one_le_mul_of_one_le_of_one_le hQ hB_one))
+  have h_tail_one : Q * |primeRemainder P.d 1 D.x₁| ≤ Z * (Q * B) := calc
+    _ ≤ Q * Z := mul_le_mul_of_nonneg_left (h_Rone.trans hsmall) (zero_le_one.trans hQ)
+    _ = Z * Q := mul_comm _ _
+    _ ≤ _ := mul_le_mul_of_nonneg_left
+      (le_mul_of_one_le_right (zero_le_one.trans hQ) hB_one) hz
   rw [sqrt_eq_rpow] at hm
   calc primeRemainder P.d P.q₀ x
-      ≤ 1700000 * P.q₀.totient * D.logB ^ 2 / D.m +
-          |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
-        simpa only [hx] using D.primeRemainder_le_linear
-    _ ≤ 1700000 * P.q₀.totient * (2 * Q ^ 2) / (x : ℝ) ^ (1 / 2 : ℝ) +
-          Z * Q ^ 2 + Q ^ 2 * Z := by
-        refine add_le_add (add_le_add ?_ htail_q₀) htail_one
-        grw [← hm, hBb]
+      ≤ 1700000 * P.q₀.totient * (Q * D.logB) / D.m +
+          |primeRemainder P.d P.q₀ D.x₁| + Q * |primeRemainder P.d 1 D.x₁| := by
+        simpa only [hx] using D.primeRemainder_le_linear_with_density h_density
+    _ ≤ 1700000 * P.q₀.totient * (Q * B) / (x : ℝ) ^ (1 / 2 : ℝ) +
+          Z * (Q * B) + Z * (Q * B) := by
+        refine add_le_add (add_le_add ?_ h_tail_q₀) h_tail_one
+        grw [← hm, hb.2]
     _ = _ := by
       rw [div_eq_mul_inv, ← hZ_inv]
       ring
+
+/-- The leading term in the subexponential correction comes from the density bound. -/
+theorem eventually_primeRemainder_natCast_le_with_polynomial_weight_exponent (P : Parameters)
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      primeRemainder P.d P.q₀ x ≤ (1700000 * P.q₀.totient + 2) *
+        ((x : ℝ) ^ (-1 / 2 : ℝ) * exp ((2 + ε) * sqrt (22 * y * log (5184 * y)))) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_polynomial_weight P,
+    h_log.eventually (eventually_log_subexponentialWeightBound_le_behrend (half_pos hε)),
+    h_log.eventually (eventually_log_polynomialWeightScale_add_one_le_behrend (half_pos hε))]
+    with x h_R h_logQ h_logB
+  let y := log (x : ℝ)
+  let Q := subexponentialWeightBound y
+  let B := polynomialWeightScale y + 1
+  have hQ : 0 < Q := exp_pos _
+  have hB : 0 < B := add_pos_of_nonneg_of_pos (pow_nonneg (log_natCast_nonneg x) _) one_pos
+  have h_product : Q * B ≤ exp ((2 + ε) * sqrt (22 * y * log (5184 * y))) := calc
+    _ = exp (log (Q * B)) := (exp_log (mul_pos hQ hB)).symm
+    _ ≤ _ := exp_le_exp.2 (by
+      rw [log_mul hQ.ne' hB.ne']
+      linarith only [h_logQ, h_logB])
+  exact h_R.trans (by gcongr)
+
+/-- The remainder also satisfies the estimate with two factors of the density bound. -/
+theorem eventually_primeRemainder_natCast_le_with_weightBound (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let Q := subexponentialWeightBound (log x)
+      primeRemainder P.d P.q₀ x ≤
+        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * Q ^ 2) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_polynomial_weight P,
+    h_log.eventually eventually_polynomialWeightScale_add_one_le_subexponentialWeightBound] with x h_R hB
+  refine h_R.trans ?_
+  rw [pow_two]
+  have h_coefficient : (1700000 * P.q₀.totient + 2 : ℝ) ≤ 3400000 * P.q₀.totient + 2 := by
+    linarith only [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
+  have hQ : 0 ≤ subexponentialWeightBound (log (x : ℝ)) := exp_nonneg _
+  have h_poly : 0 ≤ polynomialWeightScale (log (x : ℝ)) + 1 :=
+    add_nonneg (pow_nonneg (log_natCast_nonneg x) _) zero_le_one
+  gcongr
 
 /-- The prime remainder also satisfies the bound in terms of the rounded prime-window width. -/
 theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Parameters) :
@@ -286,27 +341,33 @@ theorem eventually_primeRemainder_natCast_le_with_behrend_exponent (P : Paramete
   rw [show Q ^ 2 = exp (2 * log Q) by rw [two_mul, exp_add, exp_log hQ, pow_two]]
   exact exp_le_exp.2 (by linarith only [h_weight])
 
-private lemma eventually_primeRemainder_natCast_le_of_weightBound
+private lemma eventually_primeRemainder_natCast_le_of_density
     (P : Parameters) {s C : ℝ} (hs : 0 < s) (hC : 0 < C) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ C * (x : ℝ) ^ (-1 / 2 + s) := by
-  let A : ℝ := 3400000 * P.q₀.totient + 2
+  let A : ℝ := 1700000 * P.q₀.totient + 2
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [eventually_primeRemainder_natCast_le_with_weightBound P,
+  filter_upwards [eventually_primeRemainder_natCast_le_with_polynomial_weight P,
     h_log.eventually (eventually_log_subexponentialWeightBound_le (show 0 < s / 4 by positivity)),
+    h_log.eventually (eventually_log_polynomialWeightScale_add_one_le (show 0 < s / 4 by positivity)),
     ((tendsto_rpow_atTop (half_pos hs)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop (A / C),
-    eventually_ge_atTop 1] with x h_bound h_logQ h_coeff hx_one
-  let Q := subexponentialWeightBound (log x)
+    eventually_ge_atTop 1] with x h_bound h_logQ h_logB h_coeff hx_one
+  let y := log (x : ℝ)
+  let Q := subexponentialWeightBound y
+  let B := polynomialWeightScale y + 1
   have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
   have hQ : 0 < Q := exp_pos _
-  have h_power : Q ^ 2 ≤ (x : ℝ) ^ (s / 2) := calc
-    _ = exp ((2 : ℕ) * log Q) := by rw [exp_natCast_mul, exp_log hQ]
-    _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logQ])
+  have hB : 0 < B := add_pos_of_nonneg_of_pos (pow_nonneg (log_natCast_nonneg x) _) one_pos
+  have h_power : Q * B ≤ (x : ℝ) ^ (s / 2) := calc
+    _ = exp (log (Q * B)) := (exp_log (mul_pos hQ hB)).symm
+    _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by
+      rw [log_mul hQ.ne' hB.ne']
+      linarith only [h_logQ, h_logB])
     _ = _ := by rw [rpow_def_of_pos hx_pos]; congr 1; ring
   have hA : A ≤ C * (x : ℝ) ^ (s / 2) := by
     change A / C ≤ (x : ℝ) ^ (s / 2) at h_coeff
     exact ((div_le_iff₀ hC).1 h_coeff).trans_eq (mul_comm _ _)
-  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * Q ^ 2) := h_bound
+  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * (Q * B)) := h_bound
     _ ≤ (C * (x : ℝ) ^ (s / 2)) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (x : ℝ) ^ (s / 2)) := by
       gcongr
     _ = C * ((x : ℝ) ^ (-1 / 2 : ℝ) * ((x : ℝ) ^ (s / 2) * (x : ℝ) ^ (s / 2))) := by ring
@@ -323,7 +384,7 @@ lemma eventually_primeRemainder_natCast_le_linear (P : Parameters) {ε : ℝ} (h
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         ((5400 * 10 ^ 6) * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 2 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 2 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_density (s := 2 * ε) P (by positivity) (by positivity)
 
 /-- The one-sided bound at integers. Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of
 the parameters `P`, and let `0 < ε < 1/100`. Let
@@ -335,7 +396,7 @@ lemma eventually_primeRemainder_natCast_le_quadratic (P : Parameters) {ε : ℝ}
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (216 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 3 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_density (s := 3 * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + (10/3) ε`. -/
 lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
@@ -343,21 +404,21 @@ lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : 
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_weightBound (s := (10 / 3) * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_density (s := (10 / 3) * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + 4 ε`. -/
 lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 4 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_density (s := 4 * ε) P (by positivity) (by positivity)
 
 /-- The integer bound with coefficient `64 φ(q₀) + 3` and exponent `-1/2 + 6 ε`. -/
 lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 6 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_density (s := 6 * ε) P (by positivity) (by positivity)
 
 end IntegerBounds
 
@@ -421,7 +482,7 @@ theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ 
   have ht_le : t ≤ 0 := by linarith [min_le_left (1 / 4 : ℝ) ε]
   have h_integer_bound : ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ ⌊y⌋₊ ≤ C * (⌊y⌋₊ : ℝ) ^ t :=
     tendsto_nat_floor_atTop.eventually
-      (eventually_primeRemainder_natCast_le_of_weightBound (C := C) P hs (by dsimp [C]; positivity))
+      (eventually_primeRemainder_natCast_le_of_density (C := C) P hs (by dsimp [C]; positivity))
   filter_upwards [h_integer_bound, eventually_ge_atTop 2] with y hy_floor hy
   have hy_one : 1 ≤ y := one_le_two.trans hy
   calc primeRemainder d q₀ y

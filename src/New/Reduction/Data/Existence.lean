@@ -605,6 +605,13 @@ lemma rpow_div_six_pow_six (x : ℕ) (ε : ℝ) : ((x : ℝ) ^ (ε / 6)) ^ 6 = (
 
 /-! ### Admissible data -/
 
+/-- A set with a positive lower bound on its weighted cardinality is nonempty. -/
+lemma nonempty_of_towerDeg_le_card_mul {α : Type*} {T : Finset α} {s : ℕ} {C : ℝ}
+    (h : (towerDeg s : ℝ) ≤ #T * C) : T.Nonempty := by
+  by_contra! hT
+  rw [hT, card_empty, Nat.cast_zero, zero_mul] at h
+  exact (Nat.cast_pos.2 (NeZero.pos (towerDeg s))).not_ge h
+
 /-- The admissible data at the integer `x` and the real `W`. The ranks `m`, `r`, the exponent `s`
 and the scales `x₁ = ⌊exp W⌋` and `b` are determined by `x` and `W`; the set `T` of `b`-places (the
 infinite places of `P.E s` that get the weight `b`), the
@@ -836,7 +843,7 @@ lemma Parameters.IsAdmissibleData.exists_hasFields {P : Parameters} {x n m r s b
       exists_m_eq_two_pow := ⟨e, hm_pow, hs_eq⟩, exists_r_eq_three_pow := hr_pow
       towerExp_le := hs, dvd_natB := hb_dvd, weight_eq _ := rfl
       placeClass_of_mem_bPlaces := h_adm.placeClass_eq_neg_one
-      towerDeg_le_card_bPlaces_mul := h_adm.towerDeg_le
+      bPlaces_nonempty := nonempty_of_towerDeg_le_card_mul h_adm.towerDeg_le
       levelPrime_mem i := by simpa only [hb_eq] using h_adm.levelPrime_mem i
       piMBar_mul_star := h_adm.α_mul_star, piN_mul_star := h_adm.β_mul_star }
   have h_fields : D.HasFields x W m r s b := ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
