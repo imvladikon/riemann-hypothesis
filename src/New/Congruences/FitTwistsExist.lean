@@ -57,12 +57,12 @@ open New Selmer Submodule Data GaloisRep Polynomial Multiset Finset Real
 
 /-- A bound linear in `log b` for the sum of logarithmic denominators. -/
 noncomputable abbrev New.Data.linearDenominatorBudget {P : Parameters} (D : Data P) : ℝ :=
-  (432 * 10 ^ 6 + 1) * (D.f * D.a * D.logB) / (D.m * D.k)
+  515000 * (D.f * D.a * D.logB) / (D.m * D.k)
 
 lemma New.Data.linearDenominatorBudget_le_quadratic {P : Parameters} (D : Data P) :
     D.linearDenominatorBudget ≤ (D.f * D.a * D.logB ^ 2) / (D.m * D.k) := by
   have hB : 0 < D.logB := HasLogBound.pos D
-  have h_scale : 432 * 10 ^ 6 + 1 ≤ D.logB := D.le_of_hasLogBound
+  have h_scale : 515000 ≤ D.logB := D.le_of_hasLogBound
   unfold linearDenominatorBudget
   apply div_le_div_of_nonneg_right _ (by positivity)
   calc
@@ -139,42 +139,45 @@ lemma New.Selmer.prod_Ioc_natB_le_pow {P : Parameters} (D : Data P) :
       prod_le_pow_card _ _ _ fun k hk ↦ (Finset.mem_Ioc.1 hk).2
     _ ≤ (D.natB + 30 * hCube) ^ (60 * hCube) := Nat.pow_le_pow_right (by positivity) h_card
 
-/-- Let `m` be the number of lifts, `r` the rank of the target, `k = r + 1 - m` the rank of the
-source, `b = D.natB` the weight as a natural number, `h = D.halfGap = r ^ 8`, and `M = D.M` the
-product of the two level primes. The local loss `defectBound D l` is
-`10⁶ (m / k) (b v_l(M) + v_l((2 b)! Π ^ h³))`, where `v_l` is the `l`-adic valuation and `Π` is the
-product of the positive integers in `(b - 30 h³, b + 30 h³]`. Summed over any finite set `T` of
-primes `l` with weights `log l`, these losses are at most
-`10⁶ (m / k) (b log M + log ((2 b)! (b + 30 h³) ^ (60 h⁶)))`. -/
+/-- Sum the tame term by the valuation of the level and the crystalline term by a common
+factorial and window product. The crystalline term carries its own coefficient `6433`. -/
 lemma New.Selmer.sum_defectBound_mul_log_le {P : Parameters} (D : Data P) (T : Finset ℕ)
     (hT : ∀ l ∈ T, l.Prime) :
     ∑ l ∈ T, (defectBound D l : ℝ) * log l ≤
-      10 ^ 6 * ((D.m : ℝ) / D.k) * (D.natB * log D.M +
-        log ((2 * D.natB).factorial *
+      ((D.m : ℝ) / D.k) * (D.natB * log D.M +
+        6433 * log ((2 * D.natB).factorial *
           ((D.natB + 30 * D.halfGap ^ 3) ^ (60 * D.halfGap ^ 3)) ^ D.halfGap ^ 3 : ℕ)) := by
-  -- `defectBound` is a combination of two valuations; bound each weighted sum by a logarithm
   set hCube : ℕ := D.halfGap ^ 3
   let N : ℕ := (2 * D.natB).factorial *
     (∏ k ∈ Finset.Ioc (D.natB - 30 * hCube) (D.natB + 30 * hCube), k) ^ hCube
   have hN : N ≤ (2 * D.natB).factorial * ((D.natB + 30 * hCube) ^ (60 * hCube)) ^ hCube :=
     Nat.mul_le_mul_left _ (Nat.pow_le_pow_left (prod_Ioc_natB_le_pow D) _)
+  have h_sum : ∑ l ∈ T, (minimalCrystallineLoss D.halfGap D.natB l : ℝ) * log l ≤
+      ∑ l ∈ T, (padicValNat l N : ℝ) * log l := by
+    refine sum_le_sum fun l hl ↦ mul_le_mul_of_nonneg_right ?_ (log_natCast_nonneg l)
+    have : Fact l.Prime := ⟨hT l hl⟩
+    have : ThePrime l := ⟨⟩
+    have h_loss := minimalCrystallineLoss_le_crystallineLoss (ℓ := l) D.halfGap D.natB
+    rw [crystallineLoss] at h_loss
+    exact_mod_cast h_loss
   calc ∑ l ∈ T, (defectBound D l : ℝ) * log l
-      = 10 ^ 6 * ((D.m : ℝ) / D.k) * (D.natB * ∑ l ∈ T, (padicValNat l D.M : ℝ) * log l +
-          ∑ l ∈ T, (padicValNat l N : ℝ) * log l) := by
-        rw [mul_sum, ← sum_add_distrib, mul_sum]
+      = ((D.m : ℝ) / D.k) * (D.natB * ∑ l ∈ T, (padicValNat l D.M : ℝ) * log l +
+          6433 * ∑ l ∈ T, (minimalCrystallineLoss D.halfGap D.natB l : ℝ) * log l) := by
+        rw [mul_sum, mul_sum, ← sum_add_distrib, mul_sum]
         refine sum_congr rfl fun l _ ↦ ?_
-        push_cast [defectBound, crystallineLoss, N, hCube]
+        push_cast [defectBound]
         ring
     _ ≤ _ := by
         gcongr
-        exacts [sum_padicValNat_mul_log_le T hT le_rfl, sum_padicValNat_mul_log_le T hT hN]
+        exacts [sum_padicValNat_mul_log_le T hT le_rfl,
+          h_sum.trans (sum_padicValNat_mul_log_le T hT hN)]
 
-/-- The logarithmic cost of the local defect is at most `27 b log b`.
-The level costs `22 b log b`, the factorial costs `4 b log b`, and the window costs `b log b`. -/
+/-- In units of `b log b`, the level costs `22` and the crystalline term costs at most
+`6433 · (4 + 1)`, from the factorial and the window. -/
 private lemma New.Selmer.log_defect_bound_le {P : Parameters} (D : Data P) :
-    D.natB * log D.M + log ((2 * D.natB).factorial *
+    D.natB * log D.M + 6433 * log ((2 * D.natB).factorial *
       ((D.natB + 30 * D.halfGap ^ 3) ^ (60 * D.halfGap ^ 3)) ^ D.halfGap ^ 3 : ℕ) ≤
-      27 * D.b * D.logB := by
+      32187 * D.b * D.logB := by
   have hB : 0 < D.logB := Data.HasLogBound.pos D
   have hb : 0 < D.b := exp_pos _
   have hn : 0 < (D.natB : ℝ) := by rw [D.cast_natB]; exact hb
@@ -221,19 +224,18 @@ private lemma New.Selmer.log_defect_bound_le {P : Parameters} (D : Data P) :
 lemma New.Selmer.sum_localDefectBound_mul_log_le_sharp {P : Parameters} (D : Data P) (T : Finset ℕ)
     (hT : ∀ l ∈ T, l.Prime) :
     ∑ l ∈ T, (localDefectBound D l : ℝ) * log l ≤
-      108 * 10 ^ 6 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) := by
+      128748 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) := by
   calc ∑ l ∈ T, (localDefectBound D l : ℝ) * log l = 4 * D.f * ∑ l ∈ T,
          (defectBound D l : ℝ) * log l := by
         simp [localDefectBound, mul_sum, mul_assoc]
-    _ ≤ 4 * D.f * (10 ^ 6 * ((D.m : ℝ) / D.k) * (27 * D.b * D.logB)) := by
+    _ ≤ 4 * D.f * (((D.m : ℝ) / D.k) * (32187 * D.b * D.logB)) := by
         grw [sum_defectBound_mul_log_le D T hT, log_defect_bound_le D]
     _ = _ := by ring
 
 /-- **Bound for the local loss.** The numbers `localDefectBound D l = 4 f · defectBound D l` have
 `∑ localDefectBound D l · log l ≤ 4 · 10⁶ e¹⁸⁰ f (m / k) b log b` over every finite set `T` of
 primes. Here `f` is the number of infinite places of `D.E`, `m` the number of lifts, `k = r + 1 - m`
-the rank of the source, `b = exp D.logB` the weight, and `defectBound D l` is `10⁶ (m / k)` times a
-sum of `l`-adic valuations of integers attached to `D`. -/
+the rank of the source, and `b = exp D.logB` the weight. -/
 lemma New.Selmer.sum_localDefectBound_mul_log_le {P : Parameters} (D : Data P) (T : Finset ℕ)
     (hT : ∀ l ∈ T, l.Prime) :
     ∑ l ∈ T, (localDefectBound D l : ℝ) * log l ≤
@@ -242,7 +244,8 @@ lemma New.Selmer.sum_localDefectBound_mul_log_le {P : Parameters} (D : Data P) (
   have h_exp : (27 : ℝ) ≤ exp 180 := by linarith [add_one_le_exp (180 : ℝ)]
   refine (sum_localDefectBound_mul_log_le_sharp D T hT).trans ?_
   calc
-    _ = (4 * 10 ^ 6 * 27) * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) := by ring
+    _ ≤ (4 * 10 ^ 6 * 27) * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) :=
+      mul_le_mul_of_nonneg_right (by norm_num) (by positivity)
     _ ≤ _ := by gcongr
 
 /-- **The odd classes are few.** The integer `oddClassBound D` is at most `2 ^ (4 (N + t + 3) ^ 27)`
@@ -336,11 +339,10 @@ lemma New.Selmer.sum_clearingBound_add_padicValNat_le_linear {P : Parameters} (D
   have hm : (0 : ℝ) < D.m := HasLogBound.pos D
   have hk : (0 : ℝ) < D.k := HasLogBound.pos D
   have hB : 0 < D.logB := HasLogBound.pos D
-  have h_leading : 108 * 10 ^ 6 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) ≤
-      (432 * 10 ^ 6) * B := calc
-    _ = (108 * 10 ^ 6 * (D.f * D.b * D.logB) / (D.m * D.k)) * (D.m : ℝ) ^ 2 := by
+  have h_leading : 128748 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) ≤ 514992 * B := calc
+    _ = (128748 * (D.f * D.b * D.logB) / (D.m * D.k)) * (D.m : ℝ) ^ 2 := by
       field
-    _ ≤ (108 * 10 ^ 6 * (D.f * D.b * D.logB) / (D.m * D.k)) * (4 * D.x) :=
+    _ ≤ (128748 * (D.f * D.b * D.logB) / (D.m * D.k)) * (4 * D.x) :=
       mul_le_mul_of_nonneg_left D.m_sq_le_four_mul_x (by positivity)
     _ = _ := by rw [show B = (D.f * D.a * D.logB) / (D.m * D.k) from rfl, D.cast_a]; ring
   have h_other : (1 + 2 * D.t) * D.x ^ 999 + D.x ^ 4000 + log D.chosenGroupOrder + D.x ^ 30 ≤ B :=
@@ -355,15 +357,18 @@ lemma New.Selmer.sum_clearingBound_add_padicValNat_le_linear {P : Parameters} (D
         refine sum_congr rfl fun l _ ↦ ?_
         push_cast [clearingBound, ENNReal.coe_toNNReal_eq_toReal]
         ring
-    _ ≤ 108 * 10 ^ 6 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) +
+    _ ≤ 128748 * (D.f * ((D.m : ℝ) / D.k) * D.b * D.logB) +
         (1 + 2 * D.t) * D.x ^ 999 + D.x ^ 4000 + log D.chosenGroupOrder + D.x ^ 30 := by
         grw [sum_localDefectBound_mul_log_le_sharp D T hT,
           (isNegligible_twistError D).sum_mul_log_le T hT,
           (isNegligible_denominatorError D).sum_mul_log_le T hT,
           sum_padicValNat_mul_log_le T hT (a := D.chosenGroupOrder) le_rfl,
           (isNegligible_padicValNat_card_stdClasses D).sum_mul_log_le T hT]
-    _ ≤ (432 * 10 ^ 6) * B + B := by
+    _ ≤ 514992 * B + B := by
         linarith only [h_leading, h_other]
+    _ ≤ 515000 * B := by
+        have hB_nonneg : 0 ≤ B := by dsimp [B]; positivity
+        linarith only [hB_nonneg]
     _ = D.linearDenominatorBudget := by dsimp [B, linearDenominatorBudget]; ring
 
 /-- The sum of logarithmic denominators in quadratic units. -/

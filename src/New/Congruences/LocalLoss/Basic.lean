@@ -21,7 +21,7 @@ the CM type and `-1` if not.
 
 ## Main definitions and results
 
-* `New.Selmer.crystallineLoss`, `New.Selmer.defectBound`: the crystalline loss, and the unit of the
+* `New.Selmer.minimalCrystallineLoss`, `New.Selmer.defectBound`: the crystalline loss and the unit of the
   bound on the total loss of a lift.
 * `New.Selmer.ribetCocycles.exists_graph_subrepresentation`: for an element `a` of a noetherian ring
   `O` and finitely many matrix representations `u x` of a group, a cocycle with values in `(O/aO)^d`
@@ -127,11 +127,51 @@ def crystallineLoss (h b l : ℕ) : ℕ :=
   padicValNat l
     ((2 * b).factorial * (∏ k ∈ Finset.Ioc (b - 30 * h ^ 3) (b + 30 * h ^ 3), k) ^ h ^ 3)
 
+private lemma exists_dvd_Ioc_iff_div_lt {a b ℓ : ℕ} (hℓ : 0 < ℓ) :
+    (∃ n ∈ Finset.Ioc a b, ℓ ∣ n) ↔ a / ℓ < b / ℓ := by
+  constructor
+  · rintro ⟨n, hn, k, rfl⟩
+    obtain ⟨ha, hb⟩ := Finset.mem_Ioc.1 hn
+    rw [Nat.mul_comm ℓ k] at ha hb
+    exact ((Nat.div_lt_iff_lt_mul hℓ).2 ha).trans_le ((Nat.le_div_iff_mul_le hℓ).2 hb)
+  · intro hab
+    let k := a / ℓ + 1
+    refine ⟨k * ℓ, Finset.mem_Ioc.2 ⟨?_, (Nat.le_div_iff_mul_le hℓ).1 (Nat.succ_le_of_lt hab)⟩,
+      k, Nat.mul_comm k ℓ⟩
+    rw [Nat.mul_comm k ℓ]
+    exact Nat.lt_mul_div_succ a hℓ
+
+/-- The least loss needed by the crystalline estimate. The jump interval contains a multiple of
+`ℓ` exactly when its right endpoint has a larger quotient by `ℓ` than its left endpoint. -/
+def minimalCrystallineLoss (h b ℓ : ℕ) : ℕ :=
+  max (2 * b / ℓ) (if (b - 30 * h ^ 3) / ℓ < (b + 30 * h ^ 3) / ℓ then h ^ 3 else 0)
+
+/-- A loss covers both crystalline conditions exactly when it bounds `minimalCrystallineLoss`. -/
+lemma minimalCrystallineLoss_le_iff {h b ℓ v : ℕ} (hℓ : 0 < ℓ) :
+    minimalCrystallineLoss h b ℓ ≤ v ↔ 2 * b < ℓ * (v + 1) ∧
+      ∀ ⦃n : ℕ⦄, n ∈ Finset.Ioc (b - 30 * h ^ 3) (b + 30 * h ^ 3) → ℓ ∣ n → h ^ 3 ≤ v := by
+  simp only [minimalCrystallineLoss, max_le_iff, ← exists_dvd_Ioc_iff_div_lt hℓ]
+  constructor
+  · rintro ⟨h_div, h_near⟩
+    refine ⟨?_, fun n hn hd ↦ ?_⟩
+    · simpa only [Nat.mul_comm ℓ] using
+        (Nat.div_lt_iff_lt_mul hℓ).1 (Nat.lt_succ_iff.2 h_div)
+    · have h_exists : ∃ k ∈ Finset.Ioc (b - 30 * h ^ 3) (b + 30 * h ^ 3), ℓ ∣ k := ⟨n, hn, hd⟩
+      simpa only [ite_eq_left h_exists] using h_near
+  · rintro ⟨h_range, h_cube⟩
+    refine ⟨Nat.lt_succ_iff.1 ((Nat.div_lt_iff_lt_mul hℓ).2 (by
+      simpa only [Nat.mul_comm ℓ] using h_range)), ?_⟩
+    split
+    · rename_i h_near
+      obtain ⟨n, hn, hd⟩ := h_near
+      exact h_cube hn hd
+    · exact Nat.zero_le _
+
 /-- The unit at `l` of the bound on the loss of a lift, for the data `D`:
-`10⁶ (m/k) (natB v_l(M) + crystallineLoss halfGap natB l)`, where `v_l` is the `l`-adic valuation
-and `M = D.M` is the product of the two level primes. -/
+`(m/k) (natB v_l(M) + 6433 v)`, where `v = minimalCrystallineLoss halfGap natB l` and
+`M = D.M` is the product of the two level primes. -/
 def defectBound (l : ℕ) : NNReal :=
-  10 ^ 6 * (D.m / D.k * (D.natB * padicValNat l D.M + crystallineLoss D.halfGap D.natB l))
+  D.m / D.k * (D.natB * padicValNat l D.M + 6433 * minimalCrystallineLoss D.halfGap D.natB l)
 
 end MainSummandWeights
 

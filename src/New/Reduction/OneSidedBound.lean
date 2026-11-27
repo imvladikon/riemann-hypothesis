@@ -72,12 +72,12 @@ private lemma Data.primeRemainder_le_of_loss {P : Parameters} (D : Data P) {loss
 /-- The one-sided prime remainder bound from the linear main inequality. -/
 lemma Data.primeRemainder_le_linear {P : Parameters} (D : Data P) :
     primeRemainder P.d P.q₀ D.x ≤
-      (1350 * 10 ^ 6) * P.q₀.totient * D.logB ^ 2 / D.m +
+      1700000 * P.q₀.totient * D.logB ^ 2 / D.m +
       |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
   have hB : 0 < D.logB := Data.HasLogBound.pos D
-  have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * ((1350 * 10 ^ 6) * D.logB) := by
+  have h_bound : D.m * D.totalRemainder ≤ D.f * D.a * (1700000 * D.logB) := by
     calc
-      _ ≤ (1350 * 10 ^ 6) * (D.f * D.a * D.logB) := star_inequality_linear D
+      _ ≤ 1700000 * (D.f * D.a * D.logB) := star_inequality_linear D
       _ = _ := by ring
   convert D.primeRemainder_le_of_loss (by positivity) h_bound using 1
   ring
@@ -204,7 +204,7 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Para
     ∀ᶠ x : ℕ in atTop,
       let W := P.subexponentialWindowWidth (log x)
       primeRemainder P.d P.q₀ x ≤
-        ((2700 * 10 ^ 6) * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := by
+        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := by
   have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
@@ -248,10 +248,10 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Para
     mul_le_mul hBa (h_Rone.trans hsmall) (abs_nonneg _) (by positivity)
   rw [sqrt_eq_rpow] at hm
   calc primeRemainder P.d P.q₀ x
-      ≤ (1350 * 10 ^ 6) * P.q₀.totient * D.logB ^ 2 / D.m +
+      ≤ 1700000 * P.q₀.totient * D.logB ^ 2 / D.m +
           |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
         simpa only [hx] using D.primeRemainder_le_linear
-    _ ≤ (1350 * 10 ^ 6) * P.q₀.totient * (2 * Q ^ 2) / (x : ℝ) ^ (1 / 2 : ℝ) +
+    _ ≤ 1700000 * P.q₀.totient * (2 * Q ^ 2) / (x : ℝ) ^ (1 / 2 : ℝ) +
           Z * Q ^ 2 + Q ^ 2 * Z := by
         refine add_le_add (add_le_add ?_ htail_q₀) htail_one
         grw [← hm, hBb]
@@ -263,7 +263,7 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Para
 private lemma eventually_primeRemainder_natCast_le_of_width
     (P : Parameters) {s C : ℝ} (hs : 0 < s) (hC : 0 < C) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ C * (x : ℝ) ^ (-1 / 2 + s) := by
-  let A : ℝ := (2700 * 10 ^ 6) * P.q₀.totient + 2
+  let A : ℝ := 3400000 * P.q₀.totient + 2
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   filter_upwards [eventually_primeRemainder_natCast_le_with_subexponential_width P,

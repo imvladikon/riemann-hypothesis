@@ -184,16 +184,16 @@ private lemma quadratic_loss_le_cubic (D : Data P) :
       linarith only [(HasLogBound.pos D : 0 < D.errorUnit)]
 
 private lemma linear_loss_le_quadratic (D : Data P) :
-    (1300 * 10 ^ 6) * (D.f * D.a * D.logB) ≤ 17 * (D.f * D.a * D.logB ^ 2) := by
+    1665002 * (D.f * D.a * D.logB) ≤ 17 * (D.f * D.a * D.logB ^ 2) := by
   have h_loss := D.mul_linearErrorUnit_le_quadraticErrorUnit
-    (D.le_of_hasLogBound : (1300 * 10 ^ 6 : ℝ) ≤ D.logB)
+    (D.le_of_hasLogBound : (1665002 : ℝ) ≤ D.logB)
   linarith only [h_loss, show 0 ≤ (D.f * D.a * D.logB ^ 2 : ℝ) by positivity]
 
 variable (D) in
 private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_linear :
     ∃ θ : PrimePadicIso → D.MFoldTwist, D.HasSmallRatios θ ∧ ∀ j ∈ Icc 1 D.m,
       HeightLe (D.targetDim *
-        ((1300 * 10 ^ 6) * (D.f * D.a * D.logB) / D.m - D.k * D.directionAmount))
+        (1665002 * (D.f * D.a * D.logB) / D.m - D.k * D.directionAmount))
         fun ι : PrimePadicIso ↦ D.liftDeterminant 1 j / D.liftDeterminant (θ ι) j := by
   obtain ⟨θ, hθ, γ, h_sum, h_local⟩ := exists_hasSmallRatios_and_linear_denominators D
   have hB : 0 < D.logB := HasLogBound.pos D
@@ -201,20 +201,18 @@ private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_linear :
   have hk : (0 : ℝ) < D.k := HasLogBound.pos D
   have h_budget : 0 ≤ D.linearDenominatorBudget := by unfold linearDenominatorBudget; positivity
   have h_cancel : D.m * D.k * D.linearDenominatorBudget =
-      (432 * 10 ^ 6 + 1) * (D.f * D.a * D.logB) := by
+      515000 * (D.f * D.a * D.logB) := by
     unfold linearDenominatorBudget
     field
-  have h_coeff : 3 * (432 * 10 ^ 6 + 1) + 120002 ≤ (1300 : ℝ) * 10 ^ 6 := by norm_num
-  have h_cost : 3 * (D.m * D.k * D.linearDenominatorBudget) + 120002 * (D.f * D.a * D.logB) ≤
-      (1300 * 10 ^ 6) * (D.f * D.a * D.logB) := by
+  have h_cost : 3 * (D.m * D.k * D.linearDenominatorBudget) + 120002 * (D.f * D.a * D.logB) =
+      1665002 * (D.f * D.a * D.logB) := by
     rw [h_cancel]
-    calc _ = (3 * (432 * 10 ^ 6 + 1) + 120002) * (D.f * D.a * D.logB) := by ring
-      _ ≤ _ := mul_le_mul_of_nonneg_right h_coeff (by positivity)
+    ring
   refine ⟨θ, hθ, fun j hj ↦ ?_⟩
   refine (heightLe_liftDeterminant_ratio_linear hθ ⟨j, mem_Icc.1 hj⟩ h_budget
     ⟨γ, h_sum, fun ι ↦ h_local ι _⟩).mono ?_ fun _ ↦ le_rfl
   exact mul_le_mul_of_nonneg_left
-    (sub_le_sub_right (div_le_div_of_nonneg_right h_cost hm.le) _) (by positivity)
+    (sub_le_sub_right (div_le_div_of_nonneg_right h_cost.le hm.le) _) (by positivity)
 
 variable (D) in
 private theorem exists_hasSmallRatios_heightLe_liftDeterminant_div_quadratic :
@@ -306,7 +304,7 @@ per missing dimension. -/
 theorem integral_forms_long_with_linear_error {n : ℕ} {y : Fin n → D.targetForms} {δ c : ℝ}
     (hy : LinearIndependent ℂ y)
     (hδ : D.targetLattice.IndexLe y δ) (hc : D.targetLattice.CovolumeLe y c) :
-    D.targetDim * (D.mainAmount - (1300 * 10 ^ 6) * (D.f * D.a * D.logB) - D.b) ≤
+    D.targetDim * (D.mainAmount - 1665002 * (D.f * D.a * D.logB) - D.b) ≤
       c + 2 * δ + ((D.targetDim : ℝ) - n) * ((1 + 2 * D.x ^ 202) * D.b) := by
   obtain ⟨θ, h_small_ratios, h_single_lift_heights⟩ :=
     D.exists_hasSmallRatios_heightLe_liftDeterminant_div_linear
@@ -328,7 +326,7 @@ theorem integral_forms_long_with_linear_error {n : ℕ} {y : Fin n → D.targetF
       fun ι ↦ le_of_eq ?_
     rw [hγ_norm, Pi.pow_apply, inv_pow]
   have h_chain_ratio_height :
-      HeightLe (D.targetDim * (D.b + (1300 * 10 ^ 6) * (D.f * D.a * D.logB) - D.mainAmount))
+      HeightLe (D.targetDim * (D.b + 1665002 * (D.f * D.a * D.logB) - D.mainAmount))
       fun ι : PrimePadicIso ↦ D.targetLattice.volume 1 / D.targetLattice.volume (θ ι) :=
     heightLe_chainDeterminant_one_div_of_bound h_small_ratios h_single_lift_heights
   have h_product := TwistedLattice.covolume_add_index_nonneg

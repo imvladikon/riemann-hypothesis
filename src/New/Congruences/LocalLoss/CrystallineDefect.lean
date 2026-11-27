@@ -328,12 +328,7 @@ lemma New.Selmer.IsMainSummandWeights.le_two_mul_natAbs {P : Parameters} {D : Da
 /-- Let `ℓ = D.levelPrime n` be one of the two level primes of the data `D`, let `r = D.r` be the
 rank, `t = D.t = 5 r` and `0 < x ≤ t`. The number `3 r² ((r + t) r + 1)² + 150 (h₂² + 4 t + 2)`
 bounds the exponent of `ℓ` that `New.Lift.hasCupExponent_of_isTameType` gives at the sizes of the
-data. Twice this number is at most `defectBound D ℓ / x`, with
-`defectBound D ℓ = 10⁶ (m / k) (b v_ℓ(M) + λ)` in the nonnegative reals, where `m = D.m`,
-`k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the product of the
-two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
-`(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`. The term `10⁶ (m / k) b v_ℓ(M) / x` suffices. -/
+data. The tame term `(m / k) b v_ℓ(M) / x` of `defectBound D ℓ / x` covers twice this exponent. -/
 lemma New.Selmer.two_mul_tame_exponent_le_defectBound {P : Parameters} (D : Data P) (n : Fin 2)
     {x : ℕ} (hx_pos : 0 < x) (hx_le : x ≤ D.t) :
     2 * ((3 * (D.r ^ 2 * ((D.r + D.t) * D.r + 1) ^ 2) +
@@ -342,45 +337,38 @@ lemma New.Selmer.two_mul_tame_exponent_le_defectBound {P : Parameters} (D : Data
   have h_val : 1 ≤ padicValNat (D.levelPrime n) D.M := by
     rw [Nat.padicValNat_def]
     exact one_le_multiplicity_of_dvd out (by fin_cases n <;> simp [M])
-  calc _ ≤ (10 ^ 6 * (D.m / D.k * (D.natB * 1)) / D.t : NNReal) := by
-         -- A comparison of sizes, read off the logarithmic scales of the data.
-         rify
-         exact D.le_of_hasLogBound
+  calc
+    _ ≤ (D.m / D.k * (D.natB * 1) / D.t : NNReal) := by
+      rify
+      exact D.le_of_hasLogBound
     _ ≤ defectBound D (D.levelPrime n) / x := by
       grw [defectBound, ← h_val, ← le_self_add, hx_le]
       simp
 
-/-- Let `t = D.t = 5 D.r` and `0 < x ≤ t`. Then
-`10⁵ (ρ ⌊2 λ / (k t)⌋ m + ⌊ρ m / (k x)⌋ λ) ≤ ρ · defectBound D ℓ / x`, with
-`defectBound D ℓ = 10⁶ (m / k) (b v_ℓ(M) + λ)` in the nonnegative reals, where `m = D.m`,
-`k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the product of the
-two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
-`(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`. The left side bounds the threshold in
-`New.Selmer.normLength_dualDefect_le_of_crystallineSizes` for a lattice of rank `ρ`, with `Q = k t`
-and `μ = ⌊ρ m / (k x)⌋`. -/
+/-- The crystalline threshold for a lattice of rank `ρ` is covered by the crystalline term of
+`ρ · defectBound D ℓ / x`. For `v = minimalCrystallineLoss h₂ b ℓ`, the choices
+`K = ⌊2 v / (k t)⌋` and `μ = ⌊ρ m / (k x)⌋` cost at most `6433 ρ m v / (k x)`. -/
 lemma New.Selmer.crystalline_bound_le_defectBound {P : Parameters} (D : Data P) (ℓ ρ : ℕ) {x : ℕ}
     (hx_pos : 0 < x) (hx_le : x ≤ D.t) :
-    ((10 ^ 5 * (ρ * (2 * crystallineLoss D.halfGap D.natB ℓ / (D.k * D.t) * D.m) +
-      ρ * D.m / (D.k * x) * crystallineLoss D.halfGap D.natB ℓ) : ℕ) : NNReal) ≤
-      ρ * (defectBound D ℓ / x) := by
+    let v := minimalCrystallineLoss D.halfGap D.natB ℓ
+    ((3200 * (ρ * (2 * v / (D.k * D.t) * D.m)) + 33 * (ρ * D.m / (D.k * x) * v) : ℕ) :
+      NNReal) ≤ ρ * (defectBound D ℓ / x) := by
   have hk_pos : 0 < D.k := D.k_pos
-  set v : ℕ := crystallineLoss D.halfGap D.natB ℓ with hv
+  dsimp only
+  set v : ℕ := minimalCrystallineLoss D.halfGap D.natB ℓ with hv
   have h_div : ((2 * v / (D.k * D.t) : ℕ) : NNReal) ≤ 2 * v / (D.k * x) := by
     grw [cast_div_le, ← hx_le]
     simp
   have h_low : ((ρ * D.m / (D.k * x) : ℕ) : NNReal) ≤ ρ * D.m / (D.k * x) :=
     cast_div_le.trans_eq (by simp)
-  calc _ ≤ (10 ^ 5 * (ρ * (2 * v / (D.k * x) * D.m) + ρ * D.m / (D.k * x) * v) : NNReal) := by
-         push_cast
-         gcongr
-         norm_num
-    _ = 3 * 10 ^ 5 * ρ * D.m * v / (D.k * x) := by
-      field
-    _ ≤ 10 ^ 6 * ρ * D.m * (D.natB * padicValNat ℓ D.M + v) / (D.k * x) := by
-      grw [← le_add_self]
+  calc
+    _ ≤ (3200 * (ρ * (2 * v / (D.k * x) * D.m)) + 33 * (ρ * D.m / (D.k * x) * v) :
+        NNReal) := by
+      push_cast
       gcongr
-      norm_num
+    _ = ρ * D.m * (6433 * v) / (D.k * x) := by field
+    _ ≤ ρ * D.m * (D.natB * padicValNat ℓ D.M + 6433 * v) / (D.k * x) := by
+      grw [← le_add_self]
     _ = ρ * (defectBound D ℓ / x) := by
       rw [defectBound, ← hv]
       field_simp
@@ -488,11 +476,7 @@ kills `s` on its periods, for `s` in inertia. Assume:
 Then the defect of `L` for the class `InClass F K U`, the length of the crystalline cocycles modulo
 those orthogonal, under cup products, to the crystalline cocycles of the lattices in the class,
 normalised so that `O / ℓ` has length `1`, is at most `[G_ℓ : Γ] · rank L · defectBound D ℓ / x` for
-`0 < x ≤ D.t`. Here `defectBound D ℓ = 10⁶ (m / k) (b v_ℓ(M) + λ)` in the nonnegative reals, where
-`m = D.m`, `k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is the
-product of the two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
-`(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`. -/
+`0 < x ≤ D.t`. -/
 lemma New.Selmer.normLength_dualDefect_le_defectBound_of_isTameType {P : Parameters} {D : Data P}
     {n : Fin 2} [ThePrime (D.levelPrime n)] {Γ : Type} [Group Γ]
     [𝒥 : OverGp Γ (D.levelPrime n)] [TopologicalSpace Γ]
@@ -541,11 +525,7 @@ crystalline (`F = ⊤`, `K = ⊥`); each member of `U γ` is a jump of some `L c
 the length of the crystalline cocycles modulo those orthogonal, under cup products, to the
 crystalline cocycles of the lattices in the class, normalised so that `O / ℓ` has length `1`, is at
 most `[G_ℓ : Γ] · rank (L c) · defectBound D ℓ / x`, where `x = 1` for the main summand and
-`x = D.t` otherwise. Here `defectBound D ℓ = 10⁶ (m / k) (b v_ℓ(M) + λ)` in the nonnegative reals,
-where `m = D.m`, `k = D.k = D.r + 1 - m`, `b = D.natB` is the weight at the b-places, `M = D.M` is
-the product of the two level primes, and `λ = crystallineLoss h₂ b ℓ` is the `ℓ`-adic valuation of
-`(2 b)! (∏ a) ^ h₂³`, with `a` over the positive integers in `(b - 30 h₂³, b + 30 h₂³]` and
-`h₂ = D.halfGap = D.r ^ 8`; the division by `x` is exact. -/
+`x = D.t` otherwise. The division by `x` is exact. -/
 lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {ℓ : ℕ} {Γ : Type}
     {D : Data P} [hp : ThePrime ℓ] [PadicIso ℓ] [Group Γ] [𝒥 : OverGp Γ ℓ] [TopologicalSpace Γ]
     {e : D.E →+* PadicAlgCl ℓ} {r t : ℕ} {J : (D.E →+* ℂ) → Multiset ℤ}
@@ -614,12 +594,12 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
     { h_reads with
       thick_iff := fun γ hγ ↦ by simpa only [h_lift] using h_reads.thick_iff (lift γ) hγ
       sign_eq := fun γ hγ ↦ by simpa only [h_lift] using h_reads.sign_eq (lift γ) hγ }
+  let v := minimalCrystallineLoss D.halfGap D.natB ℓ
+  obtain ⟨h_loss, h_cube⟩ := (minimalCrystallineLoss_le_iff hp.out.pos).1 (le_refl v)
   refine normLength_dualDefect_le_of_crystallineSizes (Γ := ⟨Γ⟩) (D.k * D.t) D.m D.halfGap
     (finrank O (L c) * D.m / (D.k * x)) (crystallineSizes_data D hi) (fun γ ↦ (h_win γ).1)
     (fun γ u hu ↦ (h_win γ).2 u (filter_subset _ _ hu)) h_dual' ?_
-    (two_mul_lt_mul_crystallineLoss_succ D.halfGap D.natB)
-    (lt_div_mul_add (crystallineSizes_data D hi).bound_pos)
-    (fun ⦃n⦄ hn hd ↦ cube_le_crystallineLoss_of_dvd hn hd)
+    h_loss (lt_div_mul_add (crystallineSizes_data D hi).bound_pos) h_cube
     ?_ h_group.1 k ζ h_reads'
   · cases c with
     | none =>
@@ -632,8 +612,6 @@ lemma New.Selmer.normLength_dualDefect_le_of_isSummandClass {P : Parameters} {�
       exact .inr fun γ ↦ subset_Icc_of_jump_eq_single h_in.isPotentiallyCrystalline
         (c.isLt.trans_le hJ.t_le) (h_count (some c)) (hU' γ)
   · rw [finrank_linearMap_self]
-    refine le_trans ?_ (crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le)
-    norm_cast
-    omega
+    exact crystalline_bound_le_defectBound D ℓ (finrank O (L c)) hx_pos hx_le
 
 end OnePlaceDefect

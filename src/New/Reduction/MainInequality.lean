@@ -121,7 +121,7 @@ The parameters `P` are a multiple `q₀` of `18480` and a prime `d ≡ q₀/2 - 
 integers with `(log b) ^ 100 ≤ x`, `x ^ 10⁶ ≤ x₁`, `x₁ ^ 10⁶ ≤ b` and
 `log log b ≥ 10¹² P.constantBound`. -/
 theorem star_inequality_linear {P : Parameters} (D : Data P) :
-    D.m * D.totalRemainder ≤ (1350 * 10 ^ 6) * (D.f * D.a * D.logB) := by
+    D.m * D.totalRemainder ≤ 1700000 * (D.f * D.a * D.logB) := by
   let denominator := completionFactor D
   let share : ℝ := denominator⁻¹
   have hden_pos : 0 < denominator := by
@@ -208,8 +208,8 @@ theorem star_inequality_linear {P : Parameters} (D : Data P) :
       (show (0 : ℝ) ≤ D.targetDim * D.f * D.a by positivity)
     linarith only [h_cost]
   have h_main_cancelled : n * (D.m * D.totalRemainder) ≤
-      D.targetDim * ((1300 * 10 ^ 6 + 688) * D.linearErrorUnit) := by
-    change D.targetDim * (D.mainAmount - (1300 * 10 ^ 6) * D.linearErrorUnit - D.b) ≤
+      D.targetDim * ((1665002 + 688) * D.linearErrorUnit) := by
+    change D.targetDim * (D.mainAmount - 1665002 * D.linearErrorUnit - D.b) ≤
       n * (D.mainAmount - D.m * D.totalRemainder + sizeLoss) +
         2 * (D.targetDim * indexBudgetPerDim) + ((D.targetDim : ℝ) - n) * (denominator * D.b)
       at h_volume_index_lower
@@ -220,18 +220,18 @@ theorem star_inequality_linear {P : Parameters} (D : Data P) :
   have hn_pos : (0 : ℝ) < n :=
     (mul_pos (by norm_num) (Nat.cast_pos.2 D.targetDim_pos)).trans_le h_rank
   refine le_of_mul_le_mul_left ?_ hn_pos
-  have h_coeff : 1300 * 10 ^ 6 + 688 ≤
-      (49 / 50 : ℝ) * (1350 * 10 ^ 6) := by
+  have h_coeff : 1665002 + 688 ≤
+      (49 / 50 : ℝ) * 1700000 := by
     norm_num
-  have h_rank_cost : (D.targetDim : ℝ) * (1300 * 10 ^ 6 + 688) ≤ n * (1350 * 10 ^ 6) := calc
-    _ ≤ D.targetDim * ((49 / 50 : ℝ) * (1350 * 10 ^ 6)) :=
+  have h_rank_cost : (D.targetDim : ℝ) * (1665002 + 688) ≤ n * 1700000 := calc
+    _ ≤ D.targetDim * ((49 / 50 : ℝ) * 1700000) :=
       mul_le_mul_of_nonneg_left h_coeff D.targetDim.cast_nonneg
-    _ = ((49 / 50 : ℝ) * D.targetDim) * (1350 * 10 ^ 6) := by ring
+    _ = ((49 / 50 : ℝ) * D.targetDim) * 1700000 := by ring
     _ ≤ _ := mul_le_mul_of_nonneg_right h_rank (by positivity)
   calc n * (D.m * D.totalRemainder)
-    _ ≤ D.targetDim * ((1300 * 10 ^ 6 + 688) * D.linearErrorUnit) := h_main_cancelled
-    _ = (D.targetDim * (1300 * 10 ^ 6 + 688)) * D.linearErrorUnit := by ring
-    _ ≤ (n * (1350 * 10 ^ 6)) * D.linearErrorUnit :=
+    _ ≤ D.targetDim * ((1665002 + 688) * D.linearErrorUnit) := h_main_cancelled
+    _ = (D.targetDim * (1665002 + 688)) * D.linearErrorUnit := by ring
+    _ ≤ (n * 1700000) * D.linearErrorUnit :=
       mul_le_mul_of_nonneg_right h_rank_cost (by unfold linearErrorUnit; positivity)
     _ = _ := by unfold linearErrorUnit; ring
 
@@ -240,7 +240,7 @@ theorem star_inequality_quadratic {P : Parameters} (D : Data P) :
     D.m * D.totalRemainder ≤ 27 * (D.f * D.a * D.logB ^ 2) := by
   refine (star_inequality_linear D).trans ?_
   have h_loss := D.mul_linearErrorUnit_le_quadraticErrorUnit
-    (D.le_of_hasLogBound : (1350 * 10 ^ 6 : ℝ) ≤ D.logB)
+    (D.le_of_hasLogBound : (1700000 : ℝ) ≤ D.logB)
   linarith only [h_loss, show 0 ≤ (D.f * D.a * D.logB ^ 2 : ℝ) by positivity]
 
 /-- The main inequality expressed with the earlier weighted valuation budget. -/

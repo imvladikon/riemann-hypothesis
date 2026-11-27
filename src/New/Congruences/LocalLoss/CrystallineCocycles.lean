@@ -218,6 +218,12 @@ lemma New.Selmer.cube_le_crystallineLoss_of_dvd {ℓ h b n : ℕ} [ThePrime ℓ]
   le_crystallineLoss_of_pow_dvd
     ((pow_dvd_pow_of_dvd (hℓ.trans (dvd_prod_of_mem _ hn)) _).mul_left _)
 
+/-- The factorial and the window product give a common upper bound for the least local loss. -/
+lemma New.Selmer.minimalCrystallineLoss_le_crystallineLoss {ℓ : ℕ} [hp : ThePrime ℓ] (h b : ℕ) :
+    minimalCrystallineLoss h b ℓ ≤ crystallineLoss h b ℓ :=
+  (minimalCrystallineLoss_le_iff hp.out.pos).2
+    ⟨two_mul_lt_mul_crystallineLoss_succ h b, fun _ hn hd ↦ cube_le_crystallineLoss_of_dvd hn hd⟩
+
 /-- If `H ≤ 4 b` and `2 log (4 b) < m`, then `⌊log_ℓ H⌋ < m`, because `log ℓ ≥ 1 / 2`. -/
 lemma New.Selmer.natLog_lt_of_two_mul_log_lt {ℓ H b m : ℕ} [hp : ThePrime ℓ]
     (hm : 2 * Real.log (4 * b : ℝ) < m) (hH : H ≤ 4 * b) : ℓ.log H < m := by
