@@ -4,10 +4,10 @@ public import New.Reduction.Data.Existence
 import Lib.Analytic.Primes
 
 /-!
-# Subexponential windows with a separate auxiliary cutoff
+# Admissible data with a subexponential weight
 
-The modulus and the sparse-set construction bound the logarithmic width from below. Choose
-its size by balancing both conditions. The auxiliary cutoff is chosen from the tail estimate.
+The Behrend density governs the logarithmic weight. The prime search uses polynomial
+windows in the logarithmic variable, and a separate polynomial scale controls the tail.
 -/
 
 @[expose] public section
@@ -262,222 +262,432 @@ theorem Parameters.eventually_isLargeScale_with_prime_windows (P : Parameters) :
     lt_of_le_of_lt (by grw [h_modulus]) h_total
   simpa only [hX_sq] using h_window X U k hk hX h_modulus (hX_sq.le.trans hU.1) h_bound
 
-private lemma tower_pow_le {P : Parameters} {s n : ℕ} {y W : ℝ}
-    (h_scale : P.IsLargeScale n y W) (hs : s ≤ 32 * y) :
-    ((2 : ℝ) ^ s) ^ 4 ≤ W ^ n := by
-  refine pow_le_of_le_log (one_pos.trans_le h_scale.one_le) ?_
-  rw [log_pow, log_pow]
-  simp only [Nat.cast_ofNat]
-  have h_log : (s : ℝ) * log 2 ≤ s * 2 := mul_le_mul_of_nonneg_left
-    (log_le_self (by norm_num)) (Nat.cast_nonneg s)
-  calc
-    _ ≤ 4 * ((s : ℝ) * 2) := mul_le_mul_of_nonneg_left h_log (by norm_num)
-    _ ≤ 256 * y := by linarith only [hs]
-    _ ≤ _ := (mul_le_mul_of_nonneg_right P.window_coefficient_ge (by linarith [h_scale.hundred_le])).trans
-      h_scale.le_mul_log_W
+/-- The number of Behrend digits, chosen from the size of the tower and the spacing of digits. -/
+noncomputable def behrendDigitCount (y : ℝ) : ℕ :=
+  ⌈sqrt (22 * y * log (5184 * y)) / log (5184 * y)⌉₊
 
-private lemma count_sq_le {P : Parameters} {s n : ℕ} {y W : ℝ}
-    (h_scale : P.IsLargeScale n y W) (hl : (l₀ s : ℝ) ≤ 2592 * y) :
-    (3 * (l₀ s : ℝ) * n * 2 ^ n) ^ 2 ≤ W := by
-  have hy : 100 ≤ y := h_scale.hundred_le
-  have h_large : 256 * y ≤ (n : ℝ) * log W :=
-    (mul_le_mul_of_nonneg_right P.window_coefficient_ge (by linarith)).trans h_scale.le_mul_log_W
-  have hn : 3 ≤ n := by
-    by_contra! hn
-    have hn' : (n : ℝ) ≤ 2 := by exact_mod_cast (show n ≤ 2 by omega)
-    have h_mul := mul_le_mul_of_nonneg_right hn' (log_nonneg h_scale.one_le)
-    linarith only [h_large, h_mul, hy, h_scale.log_W_le]
-  have h_two : (n : ℝ) ≤ (2 : ℝ) ^ n := by exact_mod_cast n.lt_two_pow_self.le
-  have h_count : 3 * (l₀ s : ℝ) * n * 2 ^ n ≤ 7776 * y * (4 : ℝ) ^ n := calc
-    _ ≤ 3 * (2592 * y) * (2 : ℝ) ^ n * 2 ^ n := by gcongr
-    _ = (3 * (2592 * y)) * ((2 : ℝ) ^ n * 2 ^ n) := by ring
-    _ = _ := by rw [← mul_pow]; ring
-  have h_square : 0 ≤ (y - 2) * y ^ 2 := mul_nonneg (by linarith) (sq_nonneg y)
-  have h_base : (7776 * y) ^ 2 ≤ (324 * y) ^ n := calc
-    _ ≤ (324 * y) ^ 3 := by nlinarith only [h_square, sq_nonneg y]
-    _ ≤ _ := pow_le_pow_right₀ (by linarith) hn
-  calc
-    _ ≤ (7776 * y * (4 : ℝ) ^ n) ^ 2 := pow_le_pow_left₀ (by positivity) h_count _
-    _ = (7776 * y) ^ 2 * (16 : ℝ) ^ n := by rw [mul_pow, pow_right_comm (4 : ℝ)]; norm_num
-    _ ≤ (324 * y) ^ n * (16 : ℝ) ^ n := mul_le_mul_of_nonneg_right h_base (by positivity)
-    _ = (5184 * y) ^ n := by rw [← mul_pow]; congr 1; ring
-    _ ≤ W := h_scale.pow_le
+/-- An upper scale for the logarithmic weight, with leading exponent
+`2 * sqrt (22 * y * log (5184 * y))`. -/
+noncomputable def subexponentialWeightBound (y : ℝ) : ℝ :=
+  exp (2 * sqrt (22 * y * log (5184 * y)) + 3 * log (5184 * y) + behrendDigitCount y + 44)
 
-private lemma exists_isSparse_at_square_width {P : Parameters} {m r s n : ℕ} {y W : ℝ}
-    (h_scale : P.IsLargeScale n y W) (hm : exp (y / 2) ≤ m) (hr : r ≤ 3 * exp (5 * y))
-    (h_pow : 2 ^ s = m ^ 22) (hs : s ≤ 32 * y) (hW : W ≤ exp (y / 2)) :
-    ∃ T : Finset (P.Φ s),
-      (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
-        towerDeg s ≤ #T * W ^ 2 ∧ P.IsSparse s ((r + 1 - m) * (5 * r)) T := by
-  have hy : 100 ≤ y := h_scale.hundred_le
-  have hm_one : (1 : ℝ) ≤ m := h_scale.one_le.trans (hW.trans hm)
-  have h_lower : W ≤ (2 : ℝ) ^ s := calc
-    _ ≤ (m : ℝ) ^ 22 := (hW.trans hm).trans (le_self_pow₀ hm_one (by norm_num))
-    _ = _ := mod_cast h_pow.symm
+private lemma tendsto_log_behrend_base :
+    Tendsto (fun y : ℝ ↦ log (5184 * y)) atTop atTop :=
+  tendsto_log_atTop.comp (tendsto_id.const_mul_atTop (by norm_num))
+
+private lemma eventually_behrend_digit_bounds :
+    ∀ᶠ y : ℝ in atTop,
+      let L := log (5184 * y)
+      let S := sqrt (22 * y * L)
+      let n := behrendDigitCount y
+      1 ≤ L ∧ sqrt y ≤ S ∧ 0 < n ∧ (n : ℝ) ≤ y ∧
+        (n : ℝ) ≤ S / L + 1 ∧ (n : ℝ) * L ≤ S + L ∧ 22 * y ≤ (n : ℝ) * S ∧
+        (5184 * y) ^ n ≤ exp (11 * y) := by
+  filter_upwards [eventually_ge_atTop (2 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1,
+    eventually_log_scale_le (1 / 2) (by norm_num),
+    eventually_sqrt_scale_le (A := 22) (by norm_num) (c := 1 / 2) (by norm_num)]
+    with y hy hL hL_upper hS_upper
+  let L := log (5184 * y)
+  let S := sqrt (22 * y * L)
+  let n := behrendDigitCount y
+  have hy_pos : 0 < y := by linarith
+  have hL_pos : 0 < L := one_pos.trans_le hL
+  have hS_pos : 0 < S := sqrt_pos_of_pos (by positivity)
+  have ht_pos : 0 < S / L := div_pos hS_pos hL_pos
+  have hn_pos : 0 < n := Nat.ceil_pos.2 ht_pos
+  have hn_lower : S / L ≤ (n : ℝ) := Nat.le_ceil _
+  have hn_upper : (n : ℝ) ≤ S / L + 1 := (Nat.ceil_lt_add_one ht_pos.le).le
+  have h_ratio : S / L ≤ S :=
+    (div_le_iff₀ hL_pos).2 (le_mul_of_one_le_right hS_pos.le hL)
+  have hn_y : (n : ℝ) ≤ y := by linarith only [hn_upper, h_ratio, hS_upper, hy]
+  have hnL : (n : ℝ) * L ≤ S + L := calc
+    _ ≤ (S / L + 1) * L := mul_le_mul_of_nonneg_right hn_upper hL_pos.le
+    _ = _ := by rw [add_mul, div_mul_cancel₀ _ hL_pos.ne', one_mul]
+  have hnS : 22 * y ≤ (n : ℝ) * S := calc
+    _ = S / L * S := by
+      rw [div_mul_eq_mul_div, ← pow_two, show S ^ 2 = 22 * y * L from sq_sqrt (by positivity)]
+      exact (mul_div_cancel_right₀ _ hL_pos.ne').symm
+    _ ≤ _ := mul_le_mul_of_nonneg_right hn_lower hS_pos.le
+  have h_sqrt : sqrt y ≤ S := sqrt_le_sqrt ((show y ≤ 22 * y by linarith).trans
+    (le_mul_of_one_le_right (by positivity) hL))
+  refine ⟨hL, h_sqrt, hn_pos, hn_y, hn_upper, hnL, hnS, ?_⟩
+  have h_exp : (5184 * y) ^ n = exp ((n : ℝ) * L) := by
+    rw [exp_natCast_mul, exp_log (show 0 < 5184 * y by positivity)]
+  rw [h_exp]
+  exact exp_le_exp.2 (by linarith only [hnL, hS_upper, hL_upper, hy])
+
+/-- The logarithmic weight has leading exponent at most two times the Behrend scale. -/
+theorem eventually_log_subexponentialWeightBound_le_behrend {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ y : ℝ in atTop,
+      log (subexponentialWeightBound y) ≤ (2 + ε) * sqrt (22 * y * log (5184 * y)) := by
+  filter_upwards [eventually_behrend_digit_bounds,
+    tendsto_log_behrend_base.eventually_ge_atTop (3 / ε),
+    eventually_log_scale_le (22 * (ε / 9) ^ 2) (by positivity),
+    tendsto_sqrt_atTop.eventually_ge_atTop (45 / (ε / 3)),
+    eventually_ge_atTop (2 : ℝ)]
+    with y ⟨hL, h_sqrt, _, _, hn_upper, _, _, _⟩ h_inv h_log h_const hy
+  let L := log (5184 * y)
+  let S := sqrt (22 * y * L)
+  have hL_pos : 0 < L := one_pos.trans_le hL
+  have hS_nonneg : 0 ≤ S := sqrt_nonneg _
+  have h_inv_mul : 1 ≤ (ε / 3) * L := by
+    have h_inv' : 3 ≤ L * ε := (div_le_iff₀ hε).1 h_inv
+    nlinarith only [h_inv']
+  have h_ratio : S / L ≤ (ε / 3) * S := (div_le_iff₀ hL_pos).2 (by
+    calc
+      S ≤ S * ((ε / 3) * L) := le_mul_of_one_le_right hS_nonneg h_inv_mul
+      _ = ((ε / 3) * S) * L := by ring)
+  have hn : (behrendDigitCount y : ℝ) ≤ (ε / 3) * S + 1 :=
+    hn_upper.trans (add_le_add h_ratio le_rfl)
+  have hL_sq : L ^ 2 ≤ (ε / 9) ^ 2 * (22 * y * L) := calc
+    _ = L * L := pow_two _
+    _ ≤ (22 * (ε / 9) ^ 2 * y) * L := mul_le_mul_of_nonneg_right h_log hL_pos.le
+    _ = _ := by ring
+  have hL_fit : L ≤ (ε / 9) * S := by
+    have h := sqrt_le_sqrt hL_sq
+    rw [sqrt_sq hL_pos.le, sqrt_mul (sq_nonneg (ε / 9)), sqrt_sq (by positivity)] at h
+    exact h
+  have h45 : (45 : ℝ) ≤ (ε / 3) * S :=
+    (div_le_iff₀ (by positivity : 0 < ε / 3)).1 (h_const.trans h_sqrt) |>.trans_eq (mul_comm _ _)
+  rw [subexponentialWeightBound, log_exp]
+  change 2 * S + 3 * L + (behrendDigitCount y : ℝ) + 44 ≤ (2 + ε) * S
+  linarith only [hn, hL_fit, h45]
+
+/-- The logarithm of the weight bound is sublinear in `y`. -/
+theorem eventually_log_subexponentialWeightBound_le {c : ℝ} (hc : 0 < c) :
+    ∀ᶠ y : ℝ in atTop, log (subexponentialWeightBound y) ≤ c * y := by
+  filter_upwards [eventually_log_subexponentialWeightBound_le_behrend (ε := 1) one_pos,
+    eventually_sqrt_scale_le (A := 22) (by norm_num) (c := c / 3) (by positivity)]
+    with y h_weight h_sqrt
+  linarith only [h_weight, h_sqrt]
+
+/-- The weight bound eventually dominates every fixed monomial in the logarithmic scale. -/
+theorem eventually_mul_pow_le_subexponentialWeightBound (C : ℝ) (n : ℕ) :
+    ∀ᶠ y : ℝ in atTop, C * y ^ n ≤ subexponentialWeightBound y := by
+  filter_upwards [eventually_behrend_digit_bounds, eventually_mul_pow_le_exp_sqrt C n]
+    with y ⟨hL, h_sqrt, _, _, _, _, _, _⟩ h_poly
+  refine h_poly.trans (exp_le_exp.2 ?_)
+  linarith only [hL, h_sqrt, sqrt_nonneg (22 * y * log (5184 * y)), (behrendDigitCount y).cast_nonneg (α := ℝ)]
+
+private lemma log_two_le_one : log (2 : ℝ) ≤ 1 := by
+  have h := log_le_sub_one_of_pos (by norm_num : 0 < (2 : ℝ))
+  norm_num at h
+  exact h
+
+/-- The Behrend density fits the weight scale when the digits are chosen from the tower size. -/
+theorem Parameters.eventually_exists_isSparse_with_weightBound (P : Parameters) :
+    ∀ᶠ y : ℝ in atTop,
+      ∀ m r s : ℕ, exp (y / 2) ≤ m → m ≤ 2 * exp (y / 2) → r ≤ 3 * exp (5 * y) →
+        2 ^ s = m ^ 22 → s ≤ 32 * y →
+        ∃ T : Finset (P.Φ s),
+          (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
+            towerDeg s ≤ #T * subexponentialWeightBound y ∧
+            P.IsSparse s ((r + 1 - m) * (5 * r)) T := by
+  filter_upwards [eventually_behrend_digit_bounds,
+    eventually_mul_pow_le_exp_sqrt 1e6 1, eventually_ge_atTop (2 : ℝ)]
+    with y ⟨hL, _, hn_pos, hn_y, _, hnL, hnS, hW_upper⟩ h_large hy
+  intro m r s hm_lower hm_upper hr h_pow hs
+  let L := log (5184 * y)
+  let S := sqrt (22 * y * L)
+  let n := behrendDigitCount y
+  let W := (5184 * y) ^ n
+  have hy_pos : 0 < y := by linarith
+  have hb_pos : 0 < 5184 * y := by positivity
+  have hW_one : 1 ≤ W := one_le_pow₀ (by linarith)
+  have hm_pos : 0 < (m : ℝ) := (exp_pos _).trans_le hm_lower
+  have h_tower : (2 : ℝ) ^ s = (m : ℝ) ^ 22 := by exact_mod_cast h_pow
+  have hW_le : W ≤ (2 : ℝ) ^ s := hW_upper.trans (calc
+    exp (11 * y) = (exp (y / 2)) ^ (22 : ℕ) := by
+      rw [← exp_natCast_mul]; congr 1; ring
+    _ ≤ (m : ℝ) ^ 22 := pow_le_pow_left₀ (exp_pos _).le hm_lower 22
+    _ = _ := h_tower.symm)
   have hs_ne : s ≠ 0 := by
     intro hs0
-    simp [hs0] at h_lower
-    linarith only [h_lower, hy, h_scale.mul_y_le_W]
+    simp [hs0] at h_tower
+    have hm_one : 1 < (m : ℝ) := (one_lt_exp_iff.2 (by positivity)).trans_le hm_lower
+    linarith only [one_lt_pow₀ hm_one (by decide : (22 : ℕ) ≠ 0), h_tower]
   have hl : (l₀ s : ℝ) ≤ 2592 * y := by
-    linarith [show (l₀ s : ℝ) ≤ 81 * s from mod_cast l₀_le_mul hs_ne]
-  have h_exp : 1e6 * y ≤ exp y :=
-    ((show 1e6 * y ≤ 2e6 * y by linarith).trans h_scale.mul_y_le_W).trans
-      (hW.trans (exp_le_exp.2 (by linarith)))
-  refine P.exists_isSparse_square h_scale.n_pos h_scale.one_le h_lower (tower_pow_le h_scale hs) ?_
-    (count_sq_le h_scale hl) (mul_rank_lt_two_pow (by linarith) h_exp hm hr h_pow hl)
-  grw [← h_scale.pow_le, hl, ← mul_assoc, show (2 * 2592 : ℝ) = 5184 by norm_num]
+    linarith only [hs, show (l₀ s : ℝ) ≤ 81 * s from mod_cast l₀_le_mul hs_ne]
+  have hroom : (2 * (l₀ s : ℝ)) ^ n ≤ W := pow_le_pow_left₀ (by positivity) (by linarith) n
+  have h_rank : 2 * l₀ s * ((r + 1 - m) * (5 * r) + 1) < 2 ^ s :=
+    mul_rank_lt_two_pow hy_pos (by
+      rw [pow_one] at h_large
+      refine h_large.trans (exp_le_exp.2 ?_)
+      exact (sqrt_le_left (by linarith)).2 (by
+        nlinarith only [mul_nonneg hy_pos.le (show 0 ≤ y - 1 by linarith)])) hm_lower hr h_pow hl
+  obtain ⟨T, k, h_class, hk, h_count, h_sparse⟩ :=
+    P.exists_isSparse_card_bound hn_pos hW_one hW_le hroom h_rank
+  let H : ℝ := (2 : ℝ) ^ k
+  have hH_pos : 0 < H := by positivity
+  have hHn : H ^ n ≤ (2 : ℝ) ^ s :=
+    (le_mul_of_one_le_right (by positivity) hW_one).trans hk
+  have hH_log : (n : ℝ) * log H ≤ (s : ℝ) * log 2 := by
+    simpa only [log_pow] using log_le_log (pow_pos hH_pos n) hHn
+  have hs_log : (s : ℝ) * log 2 = 22 * log m := by
+    simpa only [log_pow, Nat.cast_ofNat] using congrArg log h_tower
+  have hm_log : log m ≤ log 2 + y / 2 := by
+    have h := log_le_log hm_pos hm_upper
+    rwa [log_mul (by norm_num) (exp_ne_zero _), log_exp] at h
+  have hs_upper : 2 * ((s : ℝ) * log 2) ≤ 22 * y + 44 := by
+    linarith only [hm_log, hs_log, log_two_le_one]
+  have hn_one : (1 : ℝ) ≤ n := by exact_mod_cast hn_pos
+  have h_mul : (n : ℝ) * (2 * log H) ≤ (n : ℝ) * (S + 44) := by
+    nlinarith only [hH_log, hs_upper, hnS,
+      mul_le_mul_of_nonneg_right hn_one (show (0 : ℝ) ≤ 44 by norm_num)]
+  have hH_fit : H ^ 2 ≤ exp (S + 44) := (log_le_iff_le_exp (pow_pos hH_pos 2)).1 (by
+    rw [log_pow]
+    exact le_of_mul_le_mul_left h_mul (by linarith))
+  have h_coefficient : 3 * (l₀ s : ℝ) * n ≤ exp (2 * L) := calc
+    _ ≤ 3 * (2592 * y) * y := by gcongr
+    _ ≤ (5184 * y) ^ 2 := by nlinarith only [sq_nonneg y]
+    _ = _ := by simp only [two_mul, exp_add, L, exp_log hb_pos, pow_two]
+  have hn_fit : (2 : ℝ) ^ n ≤ exp n := calc
+    _ = exp ((n : ℝ) * log 2) := by rw [exp_natCast_mul, exp_log (by norm_num : (0 : ℝ) < 2)]
+    _ ≤ _ := exp_le_exp.2 (by nlinarith only [mul_le_mul_of_nonneg_left log_two_le_one (n.cast_nonneg (α := ℝ))])
+  have hW_fit : W ≤ exp (S + L) := calc
+    _ = exp ((n : ℝ) * L) := by rw [exp_natCast_mul, exp_log hb_pos]
+    _ ≤ _ := exp_le_exp.2 hnL
+  refine ⟨T, h_class, h_count.trans ?_, h_sparse⟩
+  apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg T.card)
+  change 3 * (l₀ s : ℝ) * n * 2 ^ n * W * H ^ 2 ≤ subexponentialWeightBound y
+  calc
+    _ ≤ exp (2 * L) * exp n * exp (S + L) * exp (S + 44) := by gcongr
+    _ = _ := by
+      rw [← exp_add, ← exp_add, ← exp_add, subexponentialWeightBound]
+      change exp _ = exp (2 * S + 3 * L + n + 44)
+      congr 1
+      ring
 
-/-- The logarithm of the auxiliary cutoff, chosen from the tail estimate. -/
+/-- The logarithmic prime window uses the modulus and the left endpoint estimates. -/
+private noncomputable def Parameters.primeScale (P : Parameters) (y : ℝ) : ℝ :=
+  (99 * (P.q₀ : ℝ) * P.d + 1) * y
+
+/-- The length of the logarithmic prime interval is a polynomial in the log scale. -/
+private noncomputable def Parameters.polynomialPrimeWindowWidth (P : Parameters) (y : ℝ) : ℝ :=
+  (2 * P.primeScale y ^ 25) ^ 2
+
+private lemma Parameters.q₂_sq_le_exp_primeScale (P : Parameters) {s : ℕ} {y : ℝ}
+    (hy : 2 ≤ y) (hs : s ≤ 32 * y) : (P.q₂ s ^ 2 : ℕ) ≤ exp (P.primeScale y) := by
+  simpa only [pow_one] using P.q₂_sq_le (n := 1) hy (exp_pos (P.primeScale y)) hs (by
+    simp only [log_exp, Nat.cast_one, one_mul, primeScale]
+    nlinarith only [hy])
+
+private lemma Parameters.eventually_polynomial_prime_windows (P : Parameters) :
+    ∀ᶠ y : ℝ in atTop, ∀ s : ℕ, s ≤ 32 * y →
+      ∀ U ∈ Set.Icc (P.polynomialPrimeWindowWidth y) (exp y),
+        ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD P.q₂ s ^ 2] ∧
+          log p ∈ Set.Icc U (U + P.polynomialPrimeWindowWidth y) := by
+  have h_top : Tendsto P.primeScale atTop atTop :=
+    tendsto_id.const_mul_atTop (by positivity)
+  have h_four : 4 ∣ P.q₀ * P.d := Dvd.dvd.mul_right (.trans (by norm_num) P.dvd_q₀) P.d
+  filter_upwards [h_top.eventually (eventually_exists_prime_modEq_one_log_mem_of_exp _ h_four),
+    h_top.eventually_ge_atTop 8, eventually_ge_atTop (2 : ℝ)] with y h_window hℓ hy
+  intro s hs U hU
+  let ℓ := P.primeScale y
+  let X := 2 * ℓ ^ (25 : ℕ)
+  have hy_le : y ≤ ℓ := by
+    dsimp [ℓ, primeScale]
+    exact le_mul_of_one_le_left (by linarith) (le_add_of_nonneg_left (by positivity))
+  have hℓX : 16 * ℓ ≤ X := calc
+    _ ≤ 2 * ℓ ^ 2 := by nlinarith only [mul_nonneg (show 0 ≤ ℓ by linarith) (sub_nonneg.2 hℓ)]
+    _ ≤ _ := mul_le_mul_of_nonneg_left
+      (pow_le_pow_right₀ (by linarith) (by norm_num : (2 : ℕ) ≤ 25)) (by norm_num)
+  have h_modulus := P.q₂_sq_le_exp_primeScale hy hs
+  have hU_le := hU.2.trans (exp_le_exp.2 hy_le)
+  have h_total : 3 * U * (P.q₂ s ^ 2 : ℕ) * exp 2 < exp (4⁻¹ * X) := calc
+    _ ≤ 3 * exp ℓ * exp ℓ * exp 2 := by grw [hU_le, h_modulus]
+    _ = exp (log 3 + ℓ + ℓ + 2) := by simp only [exp_add, exp_log (by norm_num : (0 : ℝ) < 3)]
+    _ ≤ exp (3 * ℓ) := exp_le_exp.2 (by linarith [log_le_self (by norm_num : (0 : ℝ) ≤ 3)])
+    _ < _ := exp_lt_exp.2 (by linarith only [hℓ, hℓX])
+  rw [Parameters.q₂, ← pow_mul] at h_modulus h_total ⊢
+  exact h_window X U _ (by omega) le_rfl (mod_cast h_modulus) hU.1 (mod_cast h_total)
+
+/-- The logarithm of the auxiliary cutoff is fixed by the tail estimate. -/
 private noncomputable def auxiliaryCutoff (y : ℝ) : ℝ := 2 * (64 * y) ^ 27
 
-private lemma eventually_cutoff_fits (P : Parameters) :
+private lemma eventually_exp_y_div_eight_le (C : ℝ) :
+    ∀ᶠ y : ℝ in atTop, C ≤ exp (y / 8) := by
+  filter_upwards [eventually_ge_atTop (8 * C)] with y hy
+  linarith only [add_one_le_exp (y / 8), hy]
+
+private lemma Parameters.eventually_prime_scale_inequalities (P : Parameters) :
     ∀ᶠ y : ℝ in atTop,
-      let W := P.subexponentialWindowWidth y
+      let Q := subexponentialWeightBound y
+      let W := P.polynomialPrimeWindowWidth y
       let V := auxiliaryCutoff y
-      1e6 * y ≤ V - 1 ∧ (64 * y) ^ 27 ≤ V - 1 ∧ V ^ 6 ≤ W ^ 2 ∧
-        1e6 * V ≤ W ^ 2 ∧ V ≤ W := by
-  filter_upwards [P.eventually_isLargeScale_subexponential_rounded,
-    P.eventually_mul_pow_le_subexponentialWindowWidth (2 ^ 6 * 64 ^ 162) 162]
-    with y ⟨_, n, h_scale, _, _⟩ h_polynomial
-  let W := P.subexponentialWindowWidth y
+      1 ≤ W ∧ W ^ 2 ≤ Q ∧ (2 * classNumber P.K + 2) * W ≤ Q ∧ P.primeScale y + V ≤ Q ∧
+        7 ≤ Q ∧ 24 * (2 * exp (y / 2)) * (Q + 1) ≤ exp y := by
+  let C : ℝ := 99 * (P.q₀ : ℝ) * P.d + 1
+  have hC : 1 ≤ C := le_add_of_nonneg_left (by positivity)
+  have hW (y : ℝ) : P.polynomialPrimeWindowWidth y = (4 * C ^ 50) * y ^ (50 : ℕ) := by
+    unfold polynomialPrimeWindowWidth primeScale
+    rw [mul_pow, ← pow_mul]
+    change 2 ^ 2 * (C * y) ^ (50 : ℕ) = _
+    rw [mul_pow, ← mul_assoc]
+    norm_num
+  have hW_sq (y : ℝ) : P.polynomialPrimeWindowWidth y ^ 2 = (4 * C ^ 50) ^ 2 * y ^ (100 : ℕ) := by
+    rw [hW, mul_pow, ← pow_mul]
+  filter_upwards [eventually_mul_pow_le_subexponentialWeightBound ((4 * C ^ 50) ^ 2) 100,
+    eventually_mul_pow_le_subexponentialWeightBound ((2 * classNumber P.K + 2) * (4 * C ^ 50)) 50,
+    eventually_mul_pow_le_subexponentialWeightBound (C + 2 * 64 ^ 27) 27,
+    eventually_mul_pow_le_subexponentialWeightBound 7 0, eventually_log_subexponentialWeightBound_le (c := 1 / 8)
+      (by norm_num), eventually_exp_y_div_eight_le 48, eventually_ge_atTop (2 : ℝ)]
+    with y hW_Q h_class h_cutoff h_seven h_log h_exp hy
+  let Q := subexponentialWeightBound y
+  let ℓ := P.primeScale y
   let V := auxiliaryCutoff y
-  have hy : 100 ≤ y := h_scale.hundred_le
-  have hy_one : 1 ≤ y := by linarith
+  have hℓ : 1 ≤ ℓ := one_le_mul_of_one_le_of_one_le hC (by linarith)
+  have hW_one : 1 ≤ P.polynomialPrimeWindowWidth y :=
+    one_le_pow₀ (one_le_mul_of_one_le_of_one_le (by norm_num) (one_le_pow₀ hℓ))
+  have hV : ℓ + V ≤ (C + 2 * 64 ^ 27) * y ^ (27 : ℕ) := calc
+    _ ≤ C * y ^ (27 : ℕ) + V := add_le_add
+      (mul_le_mul_of_nonneg_left (le_self_pow₀ (by linarith) (by decide)) (by linarith)) le_rfl
+    _ = _ := by
+      dsimp only [V, auxiliaryCutoff]
+      rw [mul_pow, ← mul_assoc, ← add_mul]
+  have hQ : Q ≤ exp (y / 8) :=
+    (log_le_iff_le_exp (show 0 < Q from exp_pos _)).1 (by linarith only [h_log])
+  have hQ_add : Q + 1 ≤ exp (y / 4) := calc
+    _ ≤ 2 * exp (y / 8) := by linarith only [hQ, h_exp]
+    _ ≤ exp (y / 8) * exp (y / 8) :=
+      mul_le_mul_of_nonneg_right (by linarith only [h_exp]) (exp_pos _).le
+    _ = _ := by rw [← exp_add]; congr 1; ring
+  refine ⟨hW_one, (hW_sq y).le.trans hW_Q, ?_, hV.trans h_cutoff,
+    by simpa only [pow_zero, mul_one] using h_seven, ?_⟩
+  · rwa [hW, ← mul_assoc]
+  · calc
+      24 * (2 * exp (y / 2)) * (Q + 1) ≤ 48 * exp (y / 2) * exp (y / 4) := by
+        rw [show 24 * (2 * exp (y / 2)) = 48 * exp (y / 2) by ring]
+        exact mul_le_mul_of_nonneg_left hQ_add (by positivity)
+      _ = 48 * exp (y / 2 + y / 4) := by rw [exp_add, mul_assoc]
+      _ ≤ exp (y / 4) * exp (y / 2 + y / 4) := mul_le_mul_of_nonneg_right
+        (h_exp.trans (exp_le_exp.2 (by linarith))) (exp_pos _).le
+      _ = _ := by rw [← exp_add]; congr 1; ring
+
+private lemma eventually_cutoff_inequalities :
+    ∀ᶠ y : ℝ in atTop,
+      let Q := subexponentialWeightBound y
+      let V := auxiliaryCutoff y
+      1e6 * y ≤ V - 1 ∧ (64 * y) ^ 27 ≤ V - 1 ∧ V ^ 6 ≤ Q ∧ 1e6 * V ≤ Q := by
+  filter_upwards [eventually_ge_atTop (2 : ℝ),
+    eventually_mul_pow_le_subexponentialWeightBound (2 ^ 6 * 64 ^ 162) 162,
+    eventually_mul_pow_le_subexponentialWeightBound (1e6 * (2 * 64 ^ 27)) 27]
+    with y hy hV_pow hV_Q
+  let V := auxiliaryCutoff y
   have h_power_one : 1 ≤ (64 * y) ^ (27 : ℕ) := one_le_pow₀ (by linarith)
   have h_poly : 1e6 * y + 1 ≤ (64 * y) ^ (27 : ℕ) := calc
     _ ≤ 64 ^ 4 * y := by linarith
     _ ≤ 64 ^ 4 * y ^ (4 : ℕ) :=
-      mul_le_mul_of_nonneg_left (le_self_pow₀ hy_one (by norm_num)) (by positivity)
+      mul_le_mul_of_nonneg_left (le_self_pow₀ (by linarith) (by norm_num)) (by positivity)
     _ = (64 * y) ^ (4 : ℕ) := (mul_pow _ _ _).symm
     _ ≤ _ := pow_le_pow_right₀ (by linarith) (by norm_num)
   have h_tail : (64 * y) ^ (27 : ℕ) ≤ V - 1 := by
     dsimp [V, auxiliaryCutoff]
     linarith only [h_power_one]
-  have hV : 1 ≤ V := by linarith only [h_tail, h_power_one]
-  have hV_pow : V ^ (6 : ℕ) ≤ W := calc
-    _ = (2 ^ 6 * 64 ^ 162) * y ^ (162 : ℕ) := by
-      dsimp [V, auxiliaryCutoff]
-      rw [mul_pow, ← pow_mul]
-      change 2 ^ 6 * (64 * y) ^ (162 : ℕ) = _
-      rw [mul_pow, mul_assoc]
-    _ ≤ W := h_polynomial
-  have hV_le : V ≤ W := (le_self_pow₀ hV (by norm_num : (6 : ℕ) ≠ 0)).trans hV_pow
-  have hW_large : (1e6 : ℝ) ≤ W := by linarith [h_scale.mul_y_le_W]
-  refine ⟨by linarith only [h_poly, h_tail], h_tail,
-    hV_pow.trans (le_self_pow₀ h_scale.one_le (by norm_num)),
-    ?_, hV_le⟩
-  calc
-    _ ≤ W * V := mul_le_mul_of_nonneg_right hW_large (by linarith)
-    _ ≤ W * W := mul_le_mul_of_nonneg_left hV_le (by linarith [h_scale.one_le])
-    _ = _ := (pow_two _).symm
+  refine ⟨by linarith only [h_poly, h_tail], h_tail, ?_, ?_⟩
+  · calc
+      V ^ (6 : ℕ) = (2 ^ 6 * 64 ^ 162) * y ^ (162 : ℕ) := by
+        dsimp [V, auxiliaryCutoff]
+        rw [mul_pow, ← pow_mul]
+        change 2 ^ 6 * (64 * y) ^ (162 : ℕ) = _
+        rw [mul_pow, mul_assoc]
+      _ ≤ _ := hV_pow
+  · simpa only [V, auxiliaryCutoff, mul_pow, mul_assoc] using hV_Q
 
-private lemma exists_weight_at_square_width {q n : ℕ} {W V : ℝ} (hq : 0 < q) (hW : 1 ≤ W)
-    (hV₀ : 0 ≤ V) (hV : V ≤ W) (hn : n + 1 ≤ W) (hq_le : q ≤ W ^ n) :
-    ∃ b : ℕ, IsLeast {b : ℕ | q * ⌊exp V⌋₊ ∣ b ∧ exp (W ^ 2) < b} b ∧
-      log b ∈ Set.Icc (W ^ 2) (W ^ 2 + 1) ∧
-      log (log b) ∈ Set.Icc (2 * log W) (2 * log W + 1) := by
-  have hW_pos : 0 < W := one_pos.trans_le hW
-  have h_step : (q * ⌊exp V⌋₊ : ℕ) ≤ exp (W ^ 2) := calc
-    _ ≤ W ^ n * exp V := by
-      rw [Nat.cast_mul]
-      exact mul_le_mul hq_le (Nat.floor_le (exp_pos _).le) (by positivity) (by positivity)
-    _ = exp ((n : ℝ) * log W + V) := by rw [exp_add, exp_natCast_mul, exp_log hW_pos]
-    _ ≤ exp (W ^ 2) := exp_le_exp.2 <| calc
-      _ ≤ (n : ℝ) * W + W := add_le_add
-        (mul_le_mul_of_nonneg_left (log_le_self hW_pos.le) (Nat.cast_nonneg n)) hV
-      _ = ((n : ℝ) + 1) * W := by ring
-      _ ≤ _ := (mul_le_mul_of_nonneg_right hn hW_pos.le).trans_eq (pow_two _).symm
-  obtain ⟨b, hb, h_lower, h_upper⟩ := exists_isLeast_dvd_and_exp_lt
-    (mul_pos hq (Nat.floor_pos.2 (one_le_exp hV₀))) h_step
-  have h_log_sq : log (W ^ 2) = 2 * log W := by simp
-  refine ⟨b, hb, ⟨h_lower, h_upper⟩, h_log_sq.ge.trans (log_le_log (by positivity) h_lower), ?_⟩
-  rw [← h_log_sq, log_le_iff_le_exp ((sq_pos_of_pos hW_pos).trans_le h_lower),
-    exp_add, exp_log (sq_pos_of_pos hW_pos)]
-  nlinarith [add_one_le_exp 1, one_le_pow₀ (n := 2) hW]
-
-private lemma eventually_data_scale_inequalities (P : Parameters) :
+private lemma eventually_data_weight_inequalities (P : Parameters) :
     ∀ᶠ y : ℝ in atTop,
-      let W := P.subexponentialWindowWidth y
+      let Q := subexponentialWeightBound y
       let U := log ⌊exp (auxiliaryCutoff y)⌋₊
-      ∀ B ∈ Set.Icc (W ^ 2) (W ^ 2 + 1),
+      ∀ B ∈ Set.Icc Q (Q + 1),
         1e12 * P.constantBound ≤ log B ∧ 100 * log B ≤ y ∧
           1e6 * y ≤ U ∧ 1e6 * U ≤ B ∧ 6 * log U ≤ log B := by
-  filter_upwards [P.eventually_isLargeScale_subexponential_rounded, eventually_cutoff_fits P]
-    with y ⟨_, n, h_scale, _, _⟩ ⟨hV_lower, _, hV_pow, hV_B, _⟩
+  filter_upwards [eventually_ge_atTop (200 : ℝ), eventually_cutoff_inequalities,
+    eventually_log_subexponentialWeightBound_le (c := 1 / 200) (by norm_num),
+    eventually_mul_pow_le_subexponentialWeightBound (exp (1e12 * P.constantBound)) 0,
+    eventually_mul_pow_le_subexponentialWeightBound 1 0]
+    with y hy ⟨hV_lower, _, hV_pow, hV_B⟩ h_log h_const h_one
   dsimp only
   intro B hB
-  let W := P.subexponentialWindowWidth y
+  let Q := subexponentialWeightBound y
   let V := auxiliaryCutoff y
   let U := log ⌊exp V⌋₊
-  have hy : 100 ≤ y := h_scale.hundred_le
-  have hW : 1 ≤ W := h_scale.one_le
-  have hW_sq : 0 < W ^ (2 : ℕ) := sq_pos_of_pos (by linarith)
-  have hB_pos : 0 < B := hW_sq.trans_le hB.1
+  have hQ_pos : 0 < Q := exp_pos _
+  have hQ_one : 1 ≤ Q := by simpa only [pow_zero, mul_one] using h_one
+  have hB_pos : 0 < B := hQ_pos.trans_le hB.1
   have hV_nonneg : 0 ≤ V := by linarith only [hy, hV_lower]
   have h_floor : U ∈ Set.Icc (V - 1) V := log_floor_exp_mem_Icc hV_nonneg
   have hU_lower : 1e6 * y ≤ U := hV_lower.trans h_floor.1
   have hU_pos : 0 < U := by linarith only [hy, hU_lower]
-  have h_log_sq : log (W ^ 2) = 2 * log W := by simp
-  have h_log_lower : 2 * log W ≤ log B := h_log_sq.ge.trans (log_le_log hW_sq hB.1)
-  have h_log_upper : log B ≤ 2 * log W + 1 := by
-    rw [← h_log_sq, log_le_iff_le_exp hB_pos, exp_add, exp_log hW_sq]
+  have h_lower : 1e12 * P.constantBound ≤ log Q := by
+    apply (le_log_iff_exp_le hQ_pos).2
+    simpa only [pow_zero, mul_one] using h_const
+  have h_log_upper : log B ≤ log Q + 1 := by
+    rw [log_le_iff_le_exp hB_pos, exp_add, exp_log hQ_pos]
     calc
-      _ ≤ W ^ 2 + 1 := hB.2
-      _ ≤ W ^ 2 * 2 := by linarith only [one_le_pow₀ (n := 2) hW]
-      _ ≤ _ := mul_le_mul_of_nonneg_left (by linarith [add_one_le_exp 1]) hW_sq.le
-  refine ⟨by linarith only [h_scale.const_le, h_log_lower, log_nonneg hW],
-    by linarith only [h_scale.log_W_le, h_log_upper, log_nonneg hW], hU_lower,
+      _ ≤ Q + 1 := hB.2
+      _ ≤ Q * 2 := by linarith only [hQ_one]
+      _ ≤ _ := mul_le_mul_of_nonneg_left (by linarith [add_one_le_exp 1]) hQ_pos.le
+  refine ⟨h_lower.trans (log_le_log hQ_pos hB.1),
+    by linarith only [h_log, h_log_upper, hy], hU_lower,
     (mul_le_mul_of_nonneg_left h_floor.2 (by norm_num)).trans (hV_B.trans hB.1), ?_⟩
   have hU_pow : U ^ (6 : ℕ) ≤ B :=
     ((pow_le_pow_left₀ hU_pos.le h_floor.2 _).trans hV_pow).trans hB.1
   simpa only [log_pow, Nat.cast_ofNat] using log_le_log (pow_pos hU_pos (6 : ℕ)) hU_pow
 
-/-- Construct admissible data at the width for the prime windows, using a separate cutoff. -/
-theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :
-    ∀ᶠ x : ℕ in atTop,
-      let W := P.subexponentialWindowWidth (log x)
-      exp (3 * sqrt (log x)) ≤ W ∧ ∃ D : Data P,
-        D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * log (x : ℝ)) ^ 27)⌋₊ ∧
-          sqrt x ≤ D.m ∧ (64 * log (x : ℝ)) ^ 27 ≤ D.logX₁ ∧ D.logB ≤ W ^ 2 + 1 := by
+private lemma exists_weight_with_cutoff {q : ℕ} {ℓ V Q : ℝ} (hq : 0 < q)
+    (hq_le : q ≤ exp ℓ) (hV : 0 ≤ V) (hQ : ℓ + V ≤ Q) :
+    ∃ b : ℕ, IsLeast {b : ℕ | q * ⌊exp V⌋₊ ∣ b ∧ exp Q < b} b ∧
+      log b ∈ Set.Icc Q (Q + 1) := by
+  apply exists_isLeast_dvd_and_exp_lt (mul_pos hq (Nat.floor_pos.2 (one_le_exp hV)))
+  calc
+    _ ≤ exp ℓ * exp V := by
+      rw [Nat.cast_mul]
+      exact mul_le_mul hq_le (Nat.floor_le (exp_pos _).le) (by positivity) (by positivity)
+    _ = exp (ℓ + V) := (exp_add _ _).symm
+    _ ≤ _ := exp_le_exp.2 hQ
+
+/-- Construct admissible data using independent scales for the density, prime windows and cutoff. -/
+theorem eventually_exists_data_with_weightBound (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop, ∃ D : Data P,
+      D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * log (x : ℝ)) ^ 27)⌋₊ ∧
+        sqrt x ≤ D.m ∧ (64 * log (x : ℝ)) ^ 27 ≤ D.logX₁ ∧
+        D.logB ≤ subexponentialWeightBound (log (x : ℝ)) + 1 := by
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [h_log.eventually P.eventually_isLargeScale_with_prime_windows,
-    h_log.eventually (eventually_cutoff_fits P),
-    h_log.eventually (eventually_data_scale_inequalities P),
-    eventually_ge_atTop 1]
-    with x ⟨n, h_scale, h_lower, h_window⟩ ⟨hV_x, hV_tail, _, _, hV_W⟩ h_scales hx_one
+  filter_upwards [h_log.eventually P.eventually_exists_isSparse_with_weightBound,
+    h_log.eventually P.eventually_polynomial_prime_windows,
+    h_log.eventually P.eventually_prime_scale_inequalities,
+    h_log.eventually eventually_cutoff_inequalities,
+    h_log.eventually (eventually_data_weight_inequalities P),
+    h_log.eventually_ge_atTop 200, eventually_ge_atTop 1]
+    with x h_sparse_data h_window ⟨hW_one, hW_sq, h_class_le, h_scale_le, hQ_large, h_endpoint⟩
+      ⟨hV_x, hV_tail, _, _⟩ h_scales hy hx_one
   let y := log (x : ℝ)
-  let W := P.subexponentialWindowWidth y
+  let W := P.polynomialPrimeWindowWidth y
   let V := auxiliaryCutoff y
-  have hy : 100 ≤ y := h_scale.hundred_le
+  let Q := subexponentialWeightBound y
+  let ℓ := P.primeScale y
   have hV_nonneg : 0 ≤ V := by linarith only [hV_x, hy]
-  have hW_one : 1 ≤ W := h_scale.one_le
   have hW_pos : 0 < W := one_pos.trans_le hW_one
-  have hW_large : 2e8 ≤ W := by linarith only [h_scale.mul_y_le_W, hy]
   have hx_pos : 0 < (x : ℝ) := by exact_mod_cast Nat.zero_lt_one.trans_le hx_one
-  have hW_le : W ≤ exp (y / 2) :=
-    (log_le_iff_le_exp hW_pos).1 (by linarith only [log_nonneg hW_one, h_scale.log_W_le])
   obtain ⟨m, r, s, hm, hr, hm_upper, hr_upper, ⟨e, hm_pow, hs_eq⟩, hr_pow, hs⟩ :=
     exists_isLeast_two_pow_three_pow (y := y) (by linarith)
   have h_pow : 2 ^ s = m ^ 22 := by rw [hm_pow, hs_eq, pow_mul]
   have hm_lower : exp (y / 2) ≤ m := hm.1.2
   have hr_lower : exp (5 * y) ≤ r := hr.1.2
-  have hm_le : m ≤ W ^ n := (h_scale.two_pow_le hs).trans' <|
-    mod_cast (Nat.le_self_pow (by norm_num) m).trans h_pow.ge
-  obtain ⟨T, h_class, h_card, h_sparse⟩ :=
-    exists_isSparse_at_square_width h_scale hm_lower hr_upper h_pow hs hW_le
-  have hq₁_le : P.q₁ s ≤ W ^ n := by
-    grw [Nat.le_mul_of_pos_right (P.q₁ s) P.d_prime.pos, h_scale.q₁_mul_d_le hs]
-  obtain ⟨b, hb, hB, _⟩ := exists_weight_at_square_width
-    (NeZero.pos (P.q₁ s)) hW_one hV_nonneg hV_W h_scale.add_one_le hq₁_le
+  obtain ⟨T, h_class, h_card, h_sparse⟩ := h_sparse_data m r s hm_lower hm_upper hr_upper h_pow hs
+  have hq₁d_le : (P.q₁ s * P.d : ℕ) ≤ exp ℓ := by
+    grw [Nat.le_of_dvd (NeZero.pos _) (P.q₁_mul_d_dvd_q₂.pow two_ne_zero),
+      P.q₂_sq_le_exp_primeScale (by linarith only [hy]) hs]
+  have hq₁_le : P.q₁ s ≤ exp ℓ := by
+    grw [Nat.le_mul_of_pos_right (P.q₁ s) P.d_prime.pos, hq₁d_le]
+  obtain ⟨b, hb, hB⟩ := exists_weight_with_cutoff (NeZero.pos (P.q₁ s)) hq₁_le hV_nonneg h_scale_le
   let B := log (b : ℝ)
-  have hb_pos : 0 < (b : ℝ) := (exp_pos (W ^ 2)).trans hb.1.2
+  have hb_pos : 0 < (b : ℝ) := (exp_pos Q).trans hb.1.2
   have hb_eq : exp B = b := exp_log hb_pos
-  have hB_two : W ^ 2 ≤ B := hB.1
-  have hB_upper : B ≤ W ^ 2 + 1 := hB.2
-  have hB_pos : 0 < B := (sq_pos_of_pos hW_pos).trans_le hB_two
-  have hB_large : 2e8 * W ≤ B :=
-    (mul_le_mul_of_nonneg_right hW_large hW_pos.le).trans (by simpa only [pow_two] using hB_two)
+  have hQ_B : Q ≤ B := hB.1
+  have hB_upper : B ≤ Q + 1 := hB.2
+  have hB_pos : 0 < B := by linarith only [hQ_large, hQ_B]
   have h_cutoff : (64 * y) ^ 27 ≤ log ⌊exp V⌋₊ :=
     hV_tail.trans (log_floor_exp_mem_Icc hV_nonneg).1
   have hx_le : x ≤ ⌊exp V⌋₊ :=
@@ -487,43 +697,26 @@ theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :
   let κ (τ : P.Φ s) : ℕ := if τ ∈ T then b else x * b / ⌊exp V⌋₊
   have hκ (τ : P.Φ s) : (κ τ : ℝ) ∈ Set.Icc 1 (exp B) := by
     simpa [hb_eq] using ite_mul_div_mem_Icc hx_one hx_le hb_ge (τ ∈ T)
-  have htop : 24 * B ≤ W ^ 7 := calc
-    _ ≤ 48 * W ^ 2 := by linarith only [hB_upper, one_le_pow₀ (n := 2) hW_one]
-    _ ≤ W * W ^ 2 := mul_le_mul_of_nonneg_right (by linarith) (sq_nonneg W)
-    _ = W ^ 3 := by ring
-    _ ≤ _ := pow_le_pow_right₀ hW_one (by norm_num)
   have h_prime (U : ℝ) (h_lower : B ≤ U) (h_upper : U ≤ 24 * m * B) :
       ∃ p : ℕ, p.Prime ∧ p ≡ 1 [MOD P.q₂ s ^ 2] ∧ log p ∈ Set.Icc U (U + W) := by
-    have h_modulus : (P.q₂ s ^ 2 : ℕ) ≤ W ^ (n + 7) :=
-      (h_scale.q₂_sq_le hs).trans (pow_le_pow_right₀ hW_one (n.le_add_right 7))
-    rw [Parameters.q₂, ← pow_mul] at h_modulus ⊢
-    refine h_window _ (by omega) (mod_cast h_modulus) U ⟨?_, ?_⟩
-    · exact (le_self_pow₀ hW_one (by norm_num : (2 : ℕ) ≠ 0)).trans (hB_two.trans h_lower)
-    · calc
-        U ≤ m * (24 * B) := by linarith
-        _ ≤ W ^ (n + 7) := by grw [hm_le, htop, pow_add]
-  have h_class_le : (2 * classNumber P.K + 2) * W ≤ B := by
-    grw [h_scale.classNumber_le, ← sq, hB_two]
-  have hm_one : (1 : ℝ) ≤ m := hW_one.trans (hW_le.trans hm_lower)
-  have hm_mul : B ≤ m * B := le_mul_of_one_le_left hB_pos.le hm_one
-  obtain ⟨p₀, p₁, α, h_ne, hp₀, hp₁, h_norm⟩ := P.exists_prime_pair_norm s hW_pos h_class_le
-    fun U hU ↦ h_prime U (by linarith only [hU.1, hB_pos]) (by
+    apply h_window s hs U
+    refine ⟨(le_self_pow₀ hW_one (by decide : (2 : ℕ) ≠ 0)).trans
+      (hW_sq.trans (hQ_B.trans h_lower)), h_upper.trans ?_⟩
+    exact (by gcongr : 24 * (m : ℝ) * B ≤ 24 * (2 * exp (y / 2)) * (Q + 1)).trans h_endpoint
+  have hm_two : 2 ≤ m := by
+    have h : (2 : ℝ) ≤ exp (y / 2) := by linarith only [add_one_le_exp (y / 2), hy]
+    exact_mod_cast h.trans hm_lower
+  have hm_mul : B ≤ m * B := le_mul_of_one_le_left hB_pos.le (mod_cast (by omega : 1 ≤ m))
+  obtain ⟨p₀, p₁, α, h_ne, hp₀, hp₁, h_norm⟩ := P.exists_prime_pair_norm s hW_pos
+    (h_class_le.trans hQ_B) fun U hU ↦ h_prime U (by linarith only [hU.1, hB_pos]) (by
       rw [mul_assoc]
       linarith only [hU.2, hm_mul, hB_pos])
   have hg : ∀ i : Fin 2, P.IsPrincipalLevelPrime s B (![p₀, p₁] i) :=
     Fin.forall_fin_two.2 ⟨hp₀, hp₁⟩
-  have hm_two : 2 ≤ m := mod_cast (by linarith : (2 : ℝ) ≤ m)
-  have h_cond : (P.q₁ s * P.d : ℕ) ≤ exp B := calc
-    _ ≤ W ^ n := h_scale.q₁_mul_d_le hs
-    _ = exp ((n : ℝ) * log W) := by rw [exp_natCast_mul, exp_log hW_pos]
-    _ ≤ exp B := exp_le_exp.2 <| calc
-      _ ≤ (n : ℝ) * W := mul_le_mul_of_nonneg_left (log_le_self hW_pos.le) (Nat.cast_nonneg _)
-      _ ≤ W ^ 2 := by
-        rw [pow_two]
-        exact mul_le_mul_of_nonneg_right (by linarith [h_scale.add_one_le]) hW_pos.le
-      _ ≤ B := hB_two
+  have h_cond : (P.q₁ s * P.d : ℕ) ≤ exp B :=
+    hq₁d_le.trans (exp_le_exp.2 (by linarith only [h_scale_le, hQ_B, hV_nonneg]))
   obtain ⟨N, β, hN, hN_mod, hN_log, hβ⟩ := P.exists_prime_log_mem_Icc_mul_star_eq hm_two
-    (by linarith only [hB_large, hW_one]) hB_two hκ (hp₀.mul_mem_Icc hp₁) h_cond
+    (hQ_large.trans hQ_B) (hW_sq.trans hQ_B) hκ (hp₀.mul_mem_Icc hp₁) h_cond
     fun U hU ↦ h_prime U (hm_mul.trans hU.1) hU.2
   obtain ⟨h_const, h_scaleB, h_scaleX₁, h_scaleB₁, h_scale_pow⟩ := h_scales B hB
   let D : Data P :=
@@ -543,7 +736,7 @@ theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :
       towerExp_le := hs, dvd_natB := hb.1.1
       bPlaces := T, placeClass_of_mem_bPlaces := h_class
       towerDeg_le_card_bPlaces_mul := h_card.trans
-        (mul_le_mul_of_nonneg_left hB_two (Nat.cast_nonneg T.card))
+        (mul_le_mul_of_nonneg_left hQ_B (Nat.cast_nonneg T.card))
       sparse := h_sparse, weight := κ, weight_eq _ := rfl
       levelPrime := ![p₀, p₁], levelPrime_prime i := (hg i).prime
       levelPrime_modEq_one_q₂_sq i := (hg i).modEq_one
@@ -552,7 +745,46 @@ theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :
       piMBar := α, piMBar_mul_star := h_norm
       N, N_prime := hN, N_modEq_one_q₂_sq := hN_mod, log_N_mem := hN_log
       piN := β, piN_mul_star := hβ }
-  refine ⟨h_lower, D, exp_log hx_pos, rfl, ?_, h_cutoff, hB_upper⟩
+  refine ⟨D, exp_log hx_pos, rfl, ?_, h_cutoff, hB_upper⟩
   simpa only [y, exp_half, exp_log hx_pos] using hm_lower
+
+/-- The weight bound is eventually within the former square of the prime-window scale. -/
+theorem Parameters.eventually_weightBound_le_subexponentialWindowWidth_sq (P : Parameters) :
+    ∀ᶠ y : ℝ in atTop, subexponentialWeightBound y ≤ P.subexponentialWindowWidth y ^ 2 := by
+  filter_upwards [P.eventually_isLargeScale_subexponential_rounded,
+    eventually_log_subexponentialWeightBound_le_behrend (ε := 1) one_pos,
+    eventually_ge_atTop (2 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1]
+    with y ⟨⟨h_width, _⟩, _, h_scale, _, _⟩ h_Q hy hL
+  let L := log (5184 * y)
+  let A : ℝ := 99 * P.q₀ * P.d
+  let S := sqrt (22 * y * L)
+  have h_yL : 0 ≤ y * L := mul_nonneg (by linarith) (by linarith)
+  have h_compare : 2 * S ≤ sqrt (A * y * L) := by
+    rw [← sqrt_sq (by norm_num : (0 : ℝ) ≤ 2), ← sqrt_mul (sq_nonneg (2 : ℝ))]
+    apply sqrt_le_sqrt
+    nlinarith only [mul_le_mul_of_nonneg_right P.window_coefficient_ge h_yL, h_yL]
+  have hW : 0 < P.subexponentialWindowWidth y := one_pos.trans_le h_scale.one_le
+  have hQ_pos : 0 < subexponentialWeightBound y := exp_pos _
+  have hQ_log : log (subexponentialWeightBound y) ≤ 2 * log (P.subexponentialWindowWidth y) :=
+    h_Q.trans (by linarith only [h_compare, h_width, sqrt_nonneg (22 * y * L)])
+  calc
+    _ = exp (log (subexponentialWeightBound y)) := (exp_log hQ_pos).symm
+    _ ≤ exp (2 * log (P.subexponentialWindowWidth y)) := exp_le_exp.2 hQ_log
+    _ = _ := by rw [two_mul, exp_add, exp_log hW, pow_two]
+
+/-- The admissible data also satisfy the bounds stated in terms of the rounded window. -/
+theorem eventually_exists_data_with_subexponential_windows (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let W := P.subexponentialWindowWidth (log x)
+      exp (3 * sqrt (log x)) ≤ W ∧ ∃ D : Data P,
+        D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * log (x : ℝ)) ^ 27)⌋₊ ∧
+          sqrt x ≤ D.m ∧ (64 * log (x : ℝ)) ^ 27 ≤ D.logX₁ ∧ D.logB ≤ W ^ 2 + 1 := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_exists_data_with_weightBound P,
+    h_log.eventually P.eventually_isLargeScale_subexponential,
+    h_log.eventually P.eventually_weightBound_le_subexponentialWindowWidth_sq]
+    with x ⟨D, hx, hx₁, hm, h_cutoff, hB⟩ ⟨_, _, _, h_lower⟩ h_Q
+  exact ⟨h_lower, D, hx, hx₁, hm, h_cutoff, hB.trans (add_le_add h_Q le_rfl)⟩
 
 end New

@@ -252,8 +252,8 @@ lemma Parameters.exists_large_isSparse (P : Parameters) {s n H L : ℕ}
     have h_small : (ℓ + 1) * (2 * i) ≤ (L + 1) * (2 * l₀ s) := Nat.mul_le_mul (by omega) (by omega)
     linarith only [h_order, h_small, hL]
 
-/-- The Behrend count before estimating the side of the cube. -/
-private lemma Parameters.exists_isSparse_card_bound (P : Parameters) {s n L : ℕ} {W : ℝ}
+/-- The Behrend count with the side `2 ^ k` of the cube retained in the density bound. -/
+lemma Parameters.exists_isSparse_card_bound (P : Parameters) {s n L : ℕ} {W : ℝ}
     (hn : 0 < n) (hW : 1 ≤ W) (h_lower : W ≤ 2 ^ s) (h_room : (2 * (l₀ s : ℝ)) ^ n ≤ W)
     (hL : 2 * l₀ s * (L + 1) < 2 ^ s) :
     ∃ (T : Finset (P.Φ s)) (k : ℕ),

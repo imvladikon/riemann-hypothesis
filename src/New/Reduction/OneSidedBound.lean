@@ -13,11 +13,11 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality gives a remainder term
-proportional to `φ(q₀) log² b / m`. The subexponential window width `W` gives
-`log b ≤ W ^ 2 + 1` and `m ≥ √x`. A separate logarithmic cutoff makes both prime remainders
-at `x₁` at most `x ^ (-2)`. The resulting bound of order `x ^ (-1/2) * W ^ 4` absorbs the width and fixed constant in any
-positive exponent slack. Passage to real arguments gives the one-sided criterion for non-vanishing
-of Dirichlet `L`-functions in `re s > 1/2`.
+proportional to `φ(q₀) log² b / m`. The Behrend density gives `log b ≤ Q + 1` and the chosen
+rank satisfies `m ≥ √x`. A separate logarithmic cutoff makes both prime remainders at `x₁` at
+most `x ^ (-2)`. The resulting factor `Q ^ 2` is absorbed in any positive exponent slack.
+Passage to real arguments gives the one-sided criterion for non-vanishing of Dirichlet
+`L`-functions in `re s > 1/2`.
 
 Notions from other files:
 * `Parameters`: a multiple `q₀ = P.q₀` of `18480` and a prime `d = P.d ≡ q₀ / 2 - 1` modulo `q₀`.
@@ -199,29 +199,27 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff {d q : ℕ}
     _ ≤ rexp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
     _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
 
-/-- The square-width weight controls the prime remainder with a factor `W ^ 4`. -/
-theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Parameters) :
+/-- The independent weight scale controls the prime remainder with a factor `Q ^ 2`. -/
+theorem eventually_primeRemainder_natCast_le_with_weightBound (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
-      let W := P.subexponentialWindowWidth (log x)
+      let Q := subexponentialWeightBound (log x)
       primeRemainder P.d P.q₀ x ≤
-        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 4) := by
+        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * Q ^ 2) := by
   have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have h_width : ∀ᶠ x : ℕ in atTop, 3 ≤ P.subexponentialWindowWidth (log x) := by
+  have h_weight : ∀ᶠ x : ℕ in atTop, 3 ≤ subexponentialWeightBound (log x) := by
     simpa only [pow_zero, mul_one] using
-      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth 3 0)
-  filter_upwards [eventually_exists_data_with_subexponential_windows P, h_width, eventually_ge_atTop 1,
+      h_log.eventually (eventually_mul_pow_le_subexponentialWeightBound 3 0)
+  filter_upwards [eventually_exists_data_with_weightBound P, h_weight, eventually_ge_atTop 1,
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd h_cop),
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
-    with x ⟨_, D, hx, _, hm, h_cutoff, hb⟩ hW hx_one h_q₀ h_one
-  let W := P.subexponentialWindowWidth (log x)
-  let Q := W ^ (2 : ℕ)
+    with x ⟨D, hx, _, hm, h_cutoff, hb⟩ hQ hx_one h_q₀ h_one
+  let Q := subexponentialWeightBound (log x)
   let Z := (x : ℝ) ^ (-1 / 2 : ℝ)
   have h_Rq₀ := h_q₀ D.logX₁ h_cutoff
   have h_Rone := h_one D.logX₁ h_cutoff
-  have hQ : 3 ≤ Q := hW.trans (le_self_pow₀ (by linarith) (by decide))
   have hQ_mul : 0 ≤ (Q - 3) * (Q + 1) := mul_nonneg (by linarith) (by linarith)
   have hBa : D.logB ≤ Q ^ 2 := hb.trans (by nlinarith only [hQ, hQ_mul])
   have hB : 0 < D.logB := Data.HasLogBound.pos D
@@ -249,30 +247,66 @@ theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Para
         grw [← hm, hBb]
     _ = _ := by
       rw [div_eq_mul_inv, ← hZ_inv]
-      dsimp [Q]
       ring
 
-private lemma eventually_primeRemainder_natCast_le_of_width
+/-- The prime remainder also satisfies the bound in terms of the rounded prime-window width. -/
+theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let W := P.subexponentialWindowWidth (log x)
+      primeRemainder P.d P.q₀ x ≤
+        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 4) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_weightBound P,
+    h_log.eventually P.eventually_weightBound_le_subexponentialWindowWidth_sq] with x h_R h_weight
+  refine h_R.trans ?_
+  rw [show (4 : ℕ) = 2 * 2 by decide, pow_mul]
+  gcongr
+  exact exp_nonneg _
+
+/-- The leading subexponential correction in the one-sided prime remainder is the Behrend scale
+times four. -/
+theorem eventually_primeRemainder_natCast_le_with_behrend_exponent (P : Parameters)
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      primeRemainder P.d P.q₀ x ≤ (3400000 * P.q₀.totient + 2) *
+        ((x : ℝ) ^ (-1 / 2 : ℝ) * exp ((4 + ε) * sqrt (22 * y * log (5184 * y)))) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_weightBound P,
+    h_log.eventually (eventually_log_subexponentialWeightBound_le_behrend (half_pos hε))]
+    with x h_R h_weight
+  let y := log (x : ℝ)
+  let Q := subexponentialWeightBound y
+  have hQ : 0 < Q := exp_pos _
+  refine h_R.trans ?_
+  change _ * (_ * Q ^ 2) ≤ _
+  gcongr
+  rw [show Q ^ 2 = exp (2 * log Q) by rw [two_mul, exp_add, exp_log hQ, pow_two]]
+  exact exp_le_exp.2 (by linarith only [h_weight])
+
+private lemma eventually_primeRemainder_natCast_le_of_weightBound
     (P : Parameters) {s C : ℝ} (hs : 0 < s) (hC : 0 < C) :
     ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ C * (x : ℝ) ^ (-1 / 2 + s) := by
   let A : ℝ := 3400000 * P.q₀.totient + 2
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [eventually_primeRemainder_natCast_le_with_subexponential_width P,
-    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 8 by positivity)),
+  filter_upwards [eventually_primeRemainder_natCast_le_with_weightBound P,
+    h_log.eventually (eventually_log_subexponentialWeightBound_le (show 0 < s / 4 by positivity)),
     ((tendsto_rpow_atTop (half_pos hs)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop (A / C),
-    eventually_ge_atTop 1] with x h_bound h_logW h_coeff hx_one
-  let W := P.subexponentialWindowWidth (log x)
+    eventually_ge_atTop 1] with x h_bound h_logQ h_coeff hx_one
+  let Q := subexponentialWeightBound (log x)
   have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
-  have hW : 0 < W := exp_pos _
-  have h_power : W ^ 4 ≤ (x : ℝ) ^ (s / 2) := calc
-    _ = exp ((4 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
-    _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logW])
+  have hQ : 0 < Q := exp_pos _
+  have h_power : Q ^ 2 ≤ (x : ℝ) ^ (s / 2) := calc
+    _ = exp ((2 : ℕ) * log Q) := by rw [exp_natCast_mul, exp_log hQ]
+    _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logQ])
     _ = _ := by rw [rpow_def_of_pos hx_pos]; congr 1; ring
   have hA : A ≤ C * (x : ℝ) ^ (s / 2) := by
     change A / C ≤ (x : ℝ) ^ (s / 2) at h_coeff
     exact ((div_le_iff₀ hC).1 h_coeff).trans_eq (mul_comm _ _)
-  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 4) := h_bound
+  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * Q ^ 2) := h_bound
     _ ≤ (C * (x : ℝ) ^ (s / 2)) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (x : ℝ) ^ (s / 2)) := by
       gcongr
     _ = C * ((x : ℝ) ^ (-1 / 2 : ℝ) * ((x : ℝ) ^ (s / 2) * (x : ℝ) ^ (s / 2))) := by ring
@@ -289,7 +323,7 @@ lemma eventually_primeRemainder_natCast_le_linear (P : Parameters) {ε : ℝ} (h
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         ((5400 * 10 ^ 6) * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 2 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_width (s := 2 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 2 * ε) P (by positivity) (by positivity)
 
 /-- The one-sided bound at integers. Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of
 the parameters `P`, and let `0 < ε < 1/100`. Let
@@ -301,7 +335,7 @@ lemma eventually_primeRemainder_natCast_le_quadratic (P : Parameters) {ε : ℝ}
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (216 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_width (s := 3 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 3 * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + (10/3) ε`. -/
 lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
@@ -309,21 +343,21 @@ lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : 
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_width (s := (10 / 3) * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_weightBound (s := (10 / 3) * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + 4 ε`. -/
 lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_width (s := 4 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 4 * ε) P (by positivity) (by positivity)
 
 /-- The integer bound with coefficient `64 φ(q₀) + 3` and exponent `-1/2 + 6 ε`. -/
 lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-  exact eventually_primeRemainder_natCast_le_of_width (s := 6 * ε) P (by positivity) (by positivity)
+  exact eventually_primeRemainder_natCast_le_of_weightBound (s := 6 * ε) P (by positivity) (by positivity)
 
 end IntegerBounds
 
@@ -387,7 +421,7 @@ theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ 
   have ht_le : t ≤ 0 := by linarith [min_le_left (1 / 4 : ℝ) ε]
   have h_integer_bound : ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ ⌊y⌋₊ ≤ C * (⌊y⌋₊ : ℝ) ^ t :=
     tendsto_nat_floor_atTop.eventually
-      (eventually_primeRemainder_natCast_le_of_width (C := C) P hs (by dsimp [C]; positivity))
+      (eventually_primeRemainder_natCast_le_of_weightBound (C := C) P hs (by dsimp [C]; positivity))
   filter_upwards [h_integer_bound, eventually_ge_atTop 2] with y hy_floor hy
   have hy_one : 1 ≤ y := one_le_two.trans hy
   calc primeRemainder d q₀ y
