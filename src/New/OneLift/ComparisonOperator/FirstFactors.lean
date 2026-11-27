@@ -171,14 +171,33 @@ lemma constantRows_mul_transpose_eq_mul_fromBlocks (j : D.LiftIndex) (i : D.RowC
       submatrix_apply, id_eq, Matrix.mul_apply, map_apply, map_zero, zero_mul, mul_zero,
       sum_const_zero, add_zero, zero_add]
 
+/-- A common logarithmic bound for the first factors and the size of the gluing sum. -/
+abbrev comparisonSizeBudget (D : Data P) : ℝ := 10000 * (D.f * D.m * D.b * D.logB)
+
+lemma comparisonSizeBudget_le_quadratic (D : Data P) :
+    D.comparisonSizeBudget ≤ D.f * D.m * D.b * D.logB ^ 2 := by
+  have hB : 0 < D.logB := HasLogBound.pos D
+  have h : (10000 : ℝ) ≤ D.logB := D.le_of_hasLogBound
+  calc D.comparisonSizeBudget ≤ D.logB * (D.f * D.m * D.b * D.logB) :=
+      mul_le_mul_of_nonneg_right h (by positivity)
+    _ = _ := by ring
+
+/-- The number of boxes from the first factor at a single place is at most `2b`. -/
+lemma firstFactorBoxes_le_two_mul_b (D : Data P) :
+    ((D.natB + D.offWeight + D.gap + D.m * D.gap : ℕ) : ℝ) ≤ 2 * D.b := by
+  have h : (D.offWeight + D.gap + D.m * D.gap : ℝ) ≤ D.b := D.le_of_hasLogBound
+  push_cast
+  rw [D.cast_natB]
+  linarith
+
 /-- Let `q` be the bound on the number of determinants, `n ≤ (10 m + 1) q` a degree with `n ≤ D.M`
 and `0 < H ≤ (n ^ n) ^ 3` a denominator. Then the constant `chosenGroupOrder ^ 2`, the two class
 numbers, three kernel bounds `exp x₁`, the order of GL_{3m} over the residue ring and the bound on
-`H` times the coordinates give at most exp(f m b log² b) after squaring. Here f = `D.f` is the
+`H` times the coordinates give at most exp(10000 f m b log b) after squaring. Here f = `D.f` is the
 number of infinite places, b = `D.b` and `D.natB` the weight at the b-places, log b = `D.logB`,
 `D.offWeight` the weight at the other places, `D.gap` = 2 r⁸ the gap, x₁ = `D.x₁` the second cut-off
 and `D.chosenGroupOrder` a common multiple of the orders of the stabilisers. -/
-lemma firstFactorSize_sq_le_exp {q n : ℕ} {H : ℤ}
+lemma firstFactorSize_sq_le_exp_linear {q n : ℕ} {H : ℤ}
     (hq : q = Fintype.card D.Φ * (D.natB + D.offWeight + D.gap + D.m * D.gap))
     (hn : n ≤ (10 * D.m + 1) * q) (hn_le_M : n ≤ D.M) (H_pos : 0 < H)
     (H_le : H ≤ (n ^ n) ^ 3) (φ : ℂ ≃+* ℂ) :
@@ -188,19 +207,53 @@ lemma firstFactorSize_sq_le_exp {q n : ℕ} {H : ℤ}
             (rexp D.x₁ * rexp D.x₁ *
               (rexp D.x₁ * Fintype.card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing) *
                 √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q)))))) ^ 2 ≤
-      rexp (D.f * D.m * D.b * D.logB ^ 2) := by
+      rexp D.comparisonSizeBudget := by
   -- With M = `D.M` and R the residue ring of `D.untwistedModulus 2`: both class numbers are at
   -- most exp(x³⁰), H ≤ n³ⁿ ≤ M³ⁿ, |GL(R)| ≤ |R|^{(3m)²}, and |R| ≤ (M²)^{2e} with
   -- e = `Core.numInfPlaces D.E`. The logarithm of the product is then the left side of `h_scale`,
-  -- and with n ≤ (10 m + 1) q the scale inequalities of the data put it below f m b log² b.
+  -- and with n ≤ (10 m + 1) q the scale inequalities of the data put it below `comparisonSizeBudget`.
   have h_scale :
       4 * log D.chosenGroupOrder +
         2 * (D.x ^ 30 + (D.x ^ 30 + (D.x₁ + D.x₁ +
           (D.x₁ + 2 * (2 * Core.numInfPlaces D.E * (2 * D.m + D.m) ^ 2) * log D.M +
             (n * 3 * 2 * log D.M / 2 + 9 * ((12 * D.m + 1) * q) * log D.M / 2))))) ≤
-      D.f * D.m * D.b * D.logB ^ 2 := by
-    grw [hn, hq]
-    exact D.le_of_hasLogBound
+      D.comparisonSizeBudget := by
+    have hB : 0 < D.logB := HasLogBound.pos D
+    have h_M : 0 ≤ log (D.M : ℝ) := log_natCast_nonneg _
+    have h_one : (1 : ℝ) ≤ D.m := D.le_of_hasLogBound
+    have h_m : (D.m : ℝ) ≤ D.b := D.le_of_hasLogBound
+    have hq_le : (q : ℝ) ≤ 2 * D.f * D.b := by
+      rw [hq, Nat.cast_mul]
+      change (D.f : ℝ) * _ ≤ _
+      calc
+        _ ≤ D.f * (2 * D.b) :=
+          mul_le_mul_of_nonneg_left D.firstFactorBoxes_le_two_mul_b (by positivity)
+        _ = _ := by ring
+    have h_n : (n : ℝ) ≤ 11 * D.m * q := calc
+      (n : ℝ) ≤ (10 * D.m + 1) * q := by exact_mod_cast hn
+      _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (by positivity)
+    have h_det : ((12 * D.m + 1) * q : ℝ) ≤ 13 * D.m * q :=
+      mul_le_mul_of_nonneg_right (by linarith) (by positivity)
+    have h_mq : (D.m * q : ℝ) ≤ 2 * (D.f * D.m * D.b) := calc
+      _ ≤ D.m * (2 * D.f * D.b) := by gcongr
+      _ = _ := by ring
+    have h_sq : (D.f * D.m ^ 2 : ℝ) ≤ D.f * D.m * D.b := by
+      calc
+        _ = (D.f * D.m : ℝ) * D.m := by ring
+        _ ≤ _ := mul_le_mul_of_nonneg_left h_m (by positivity)
+    have h_coeff : (72 * D.f * D.m ^ 2 + 6 * n + 9 * ((12 * D.m + 1) * q) : ℝ) ≤
+        438 * (D.f * D.m * D.b) := by
+      linarith only [h_n, h_det, h_mq, h_sq]
+    have h_tail : 4 * log D.chosenGroupOrder + 4 * D.x ^ 30 + 6 * D.x₁ ≤
+        D.f * D.m * D.b * D.logB := D.le_of_hasLogBound
+    calc
+      _ = (4 * log D.chosenGroupOrder + 4 * D.x ^ 30 + 6 * D.x₁) +
+          (72 * D.f * D.m ^ 2 + 6 * n + 9 * ((12 * D.m + 1) * q)) * log D.M := by ring
+      _ ≤ D.f * D.m * D.b * D.logB + (438 * (D.f * D.m * D.b)) * (22 * D.logB) := by
+        grw [h_tail, h_coeff, D.log_M_le_twenty_two_mul_logB]
+      _ ≤ _ := by
+        unfold comparisonSizeBudget
+        linarith only [show 0 ≤ D.f * D.m * D.b * D.logB by positivity]
   have h_carrier : card D.CarrierIndex ≤ D.n D.m := by simpa using D.nat_le_of_hasLogBound
   have h_fin : card (Fin D.m) ≤ D.n D.m := by simpa using D.nat_le_of_hasLogBound
   grw [D.card_stdClasses_le_exp principalLevel_le_stdLevel h_carrier,
@@ -219,6 +272,21 @@ lemma firstFactorSize_sq_le_exp {q n : ℕ} {H : ℤ}
     exact h_scale
   simp only [CanonicallyOrderedAdd.prod_pos, toAutChar_one_and_toTwist_one_and_Q_one,
     notMem_empty, FinPlace.q_bounds, implies_true, mul_pos_iff_of_pos_left, pos]
+
+/-- The bound for the first factor expressed with a quadratic exponent. -/
+lemma firstFactorSize_sq_le_exp {q n : ℕ} {H : ℤ}
+    (hq : q = Fintype.card D.Φ * (D.natB + D.offWeight + D.gap + D.m * D.gap))
+    (hn : n ≤ (10 * D.m + 1) * q) (hn_le_M : n ≤ D.M) (H_pos : 0 < H)
+    (H_le : H ≤ (n ^ n) ^ 3) (φ : ℂ ≃+* ℂ) :
+    ‖φ (D.chosenGroupOrder ^ 2)‖ ^ 2 *
+        (Nat.card (StdClasses (stdLevel D.E D.CarrierIndex)) *
+          (Nat.card (StdClasses (stdLevel D.E (Fin D.m))) *
+            (rexp D.x₁ * rexp D.x₁ *
+              (rexp D.x₁ * Fintype.card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing) *
+                √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q)))))) ^ 2 ≤
+      rexp (D.f * D.m * D.b * D.logB ^ 2) :=
+  (firstFactorSize_sq_le_exp_linear hq hn hn_le_M H_pos H_le φ).trans
+    (exp_le_exp.mpr D.comparisonSizeBudget_le_quadratic)
 
 /-- Equivariance under rational points. Let Γ and γ' be rational unitary points of the definite
 spaces W^add and V″, and let the constant rows built from Y' be those built from Y multiplied by
@@ -512,8 +580,35 @@ M = `D.M`, and `0 < H ≤ (n ^ n) ^ 3`. Let every vector `F w v` have `φ`-conju
 exp(3 x₁) |GL_{3m}(O_E/ϖ²)| √(H² M^{9 (12 m + 1) q}), where x₁ = `D.x₁` is a size parameter of the
 data and ϖ² = `D.untwistedModulus 2` is the square of the product of the chosen places. Then the
 double class sum of `F`, multiplied by the square of `D.chosenGroupOrder` (a common multiple of the
-orders of the stabilisers), has `φ`-conjugate of squared norm at most exp(f m b log² b), for the
+orders of the stabilisers), has `φ`-conjugate of squared norm at most exp(10000 f m b log b), for the
 number f = `D.f` of infinite places, the weight b = `D.b` and log b = `D.logB`. -/
+lemma weylNormSq_stdClassSum_stdClassSum_le_linear {j : D.LiftIndex} {q n : ℕ} {H : ℤ}
+    (hq : q = Fintype.card D.Φ * (D.natB + D.offWeight + D.gap + D.m * D.gap))
+    (hn : n ≤ (10 * D.m + 1) * q) (hn_le_M : n ≤ D.M) (H_pos : 0 < H)
+    (H_le : H ≤ (n ^ n) ^ 3) (φ : ℂ ≃+* ℂ)
+    {F : Gf D.E D.CarrierIndex → Gf D.E (Fin D.m) →
+      WeylIndex (FirstFactorIndex j) (untwistedDescentPair j).colsPlus → ℂ}
+    (hF : ∀ (w : Gf D.E D.CarrierIndex) (v : Gf D.E (Fin D.m)),
+      √(weylNormSq (φ ∘ F w v)) ≤ rexp D.x₁ * rexp D.x₁ *
+        (rexp D.x₁ * card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing) *
+          √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q)))) :
+    weylNormSq (φ ∘ ((D.chosenGroupOrder ^ 2 : ℂ) •
+        stdClassSum (stdLevel D.E D.CarrierIndex) fun w : Gf D.E D.CarrierIndex ↦
+          stdClassSum (stdLevel D.E (Fin D.m)) (F w))) ≤
+      rexp D.comparisonSizeBudget := by
+  -- Each class sum multiplies the bound by its class number; the rest is numerical.
+  have h_sum : √(weylNormSq (φ ∘ stdClassSum (stdLevel D.E D.CarrierIndex)
+        fun w : Gf D.E D.CarrierIndex ↦ stdClassSum (stdLevel D.E (Fin D.m)) (F w))) ≤
+      Nat.card (StdClasses (stdLevel D.E D.CarrierIndex)) *
+        (Nat.card (StdClasses (stdLevel D.E (Fin D.m))) *
+        (rexp D.x₁ * rexp D.x₁ *
+          (rexp D.x₁ * card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing) *
+            √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q))))) :=
+    sqrt_weylNormSq_classSum_le φ fun w ↦ sqrt_weylNormSq_classSum_le φ (hF w)
+  grw (transparency := default) [weylNormSq_comp_smul, (sqrt_le_iff.1 h_sum).2]
+  exact firstFactorSize_sq_le_exp_linear hq hn hn_le_M H_pos H_le φ
+
+/-- The double class sum bound with a quadratic exponent. -/
 lemma weylNormSq_stdClassSum_stdClassSum_le {j : D.LiftIndex} {q n : ℕ} {H : ℤ}
     (hq : q = Fintype.card D.Φ * (D.natB + D.offWeight + D.gap + D.m * D.gap))
     (hn : n ≤ (10 * D.m + 1) * q) (hn_le_M : n ≤ D.M) (H_pos : 0 < H)
@@ -527,18 +622,9 @@ lemma weylNormSq_stdClassSum_stdClassSum_le {j : D.LiftIndex} {q n : ℕ} {H : �
     weylNormSq (φ ∘ ((D.chosenGroupOrder ^ 2 : ℂ) •
         stdClassSum (stdLevel D.E D.CarrierIndex) fun w : Gf D.E D.CarrierIndex ↦
           stdClassSum (stdLevel D.E (Fin D.m)) (F w))) ≤
-      rexp (D.f * D.m * D.b * D.logB ^ 2) := by
-  -- Each class sum multiplies the bound by its class number; the rest is numerical.
-  have h_sum : √(weylNormSq (φ ∘ stdClassSum (stdLevel D.E D.CarrierIndex)
-        fun w : Gf D.E D.CarrierIndex ↦ stdClassSum (stdLevel D.E (Fin D.m)) (F w))) ≤
-      Nat.card (StdClasses (stdLevel D.E D.CarrierIndex)) *
-        (Nat.card (StdClasses (stdLevel D.E (Fin D.m))) *
-        (rexp D.x₁ * rexp D.x₁ *
-          (rexp D.x₁ * card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing) *
-            √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q))))) :=
-    sqrt_weylNormSq_classSum_le φ fun w ↦ sqrt_weylNormSq_classSum_le φ (hF w)
-  grw (transparency := default) [weylNormSq_comp_smul, (sqrt_le_iff.1 h_sum).2]
-  exact firstFactorSize_sq_le_exp hq hn hn_le_M H_pos H_le φ
+      rexp (D.f * D.m * D.b * D.logB ^ 2) :=
+  (weylNormSq_stdClassSum_stdClassSum_le_linear hq hn hn_le_M H_pos H_le φ hF).trans
+    (exp_le_exp.mpr D.comparisonSizeBudget_le_quadratic)
 
 /-- The vector `y` of weight `(untwistedDescentPair j).colsPlus` is integral at `h` away from the
 norm `ϑ.normQ` of Q (the product of the norms of the places in `ϑ.Q`), and has small conjugates if
@@ -682,20 +768,19 @@ lemma exists_star_leftSideSeries_eq_classSum (j : D.LiftIndex) :
   rw [Pi.star_apply, Pi.smul_apply, smul_eq_mul, h_scalar, h_series]
   simp [h_coord, map_classSum, θ, ← Int.cast_smul_eq_zsmul ℂ H]
 
-/-- For 1 ≤ j ≤ m there is one c ≠ 0, independent of i, ϑ and h, such that every vector y = conj
-(c · Υ) is integral and small in the sense of `New.Data.IsIntegralAndSmall`: for every prime p that
-does not divide `ϑ.normQ`, the product of the norms of the places in `ϑ.Q`, the coordinates of
-h⁻¹ · ιₚ(y) are `p`-integral (`New.weylGauge` ≤ 1), and if `ϑ.Q = ∅`, every conjugate φ ∘ y,
-φ ∈ Aut(ℂ), has squared norm at most exp(f m b log² b), with the number f = `D.f` of infinite
-places, m = `D.m`, the weight b = `D.b` and log b = `D.logB`. -/
-lemma exists_isIntegralAndSmall_leftSideSeries (j : D.LiftIndex) :
+/-- A single normalization makes every first factor integral away from the twist conductor.
+At the empty conductor its conjugate squared norms are at most `exp (10000 f m b log b)`. -/
+lemma exists_isIntegralAndSmall_leftSideSeries_linear (j : D.LiftIndex) :
     ∃ c ≠ (0 : ℂ), ∀ (i : ChoiceIndex j) (ϑ : D.TameChar) (h : Gf D.E (FirstFactorIndex j)),
-      IsIntegralAndSmall ϑ j h (star (c • leftSideSeries ϑ j i h)) := by
+      (∀ (p : ℕ) [Fact p.Prime] [PadicPlace p], p.Coprime ϑ.normQ →
+        weylGauge (untwistedDescentPair j).colsPlus 0 h (star (c • leftSideSeries ϑ j i h)) ≤ 1) ∧
+      (ϑ.Q = ∅ → ∀ φ : ℂ ≃+* ℂ, weylNormSq (φ ∘ star (c • leftSideSeries ϑ j i h)) ≤
+        exp D.comparisonSizeBudget) := by
   -- Write the vector y as a double class sum of terms conj(k₀ · conj k₁ · k₂), three kernels of
   -- definite pairs, each made integral by a constant from `exists_ne_zero_isModKernelScale`;
   -- the last is evaluated on H·`stackedDetProdCoords`. Integrality: move the classes into the
   -- p-integral points and multiply the three bounds. Size: bound each term by duality, count the
-  -- classes, via `weylNormSq_stdClassSum_stdClassSum_le`. `q` bounds the total number of
+  -- classes, via `weylNormSq_stdClassSum_stdClassSum_le_linear`. `q` bounds the total number of
   -- determinants, over the infinite places.
   let q : ℕ := card D.Φ * (D.natB + D.offWeight + D.gap + D.m * D.gap)
   have h_detCount : ∑ τ : D.Φ, card (DetIndex j τ) ≤ q :=
@@ -789,7 +874,7 @@ lemma exists_isIntegralAndSmall_leftSideSeries (j : D.LiftIndex) :
     let N : ℕ := card (GL D.CarrierIndex (D.untwistedModulus 2).ResidueRing)
     let B : ℝ := √((H : ℝ) ^ 2 * (D.M ^ 9) ^ ((12 * D.m + 1) * q))
     -- By duality it is enough to bound the kernel at every Q that is small at the small points.
-    refine weylNormSq_stdClassSum_stdClassSum_le rfl hn hn_le_M H_pos H_le φ fun w v ↦
+    refine weylNormSq_stdClassSum_stdClassSum_le_linear rfl hn hn_le_M H_pos H_le φ fun w v ↦
       sqrt_weylNormSq_comp_le_of_eval_le σ ((k₀ v w * conj k₁) • c₂ • θ w)
         (S := {z | ∀ x, ‖σ (z x)‖ ≤ D.M ^ 4})
         (fun l ↦ isHomogeneous_iff_aeval_smul_X.2 (h_denom i (D.shortRows i) l).aeval_smul_X)
@@ -799,6 +884,19 @@ lemma exists_isIntegralAndSmall_leftSideSeries (j : D.LiftIndex) :
       K₂.norm_map_le h_added h_first hn_le_M hb hb h𝔪 (norm_map_addedDatum_le j u) hQ_hom σ hQ_le
         _ h
     simpa [mul_assoc] using norm_mul_le_of_le (norm_mul_le_of_le (size₀ v w) size₁) size₂
+
+/-- For 1 ≤ j ≤ m there is one c ≠ 0, independent of i, ϑ and h, such that every vector y = conj
+(c · Υ) is integral and small in the sense of `New.Data.IsIntegralAndSmall`: for every prime p that
+does not divide `ϑ.normQ`, the product of the norms of the places in `ϑ.Q`, the coordinates of
+h⁻¹ · ιₚ(y) are `p`-integral (`New.weylGauge` ≤ 1), and if `ϑ.Q = ∅`, every conjugate φ ∘ y,
+φ ∈ Aut(ℂ), has squared norm at most exp(f m b log² b), with the number f = `D.f` of infinite
+places, m = `D.m`, the weight b = `D.b` and log b = `D.logB`. -/
+lemma exists_isIntegralAndSmall_leftSideSeries (j : D.LiftIndex) :
+    ∃ c ≠ (0 : ℂ), ∀ (i : ChoiceIndex j) (ϑ : D.TameChar) (h : Gf D.E (FirstFactorIndex j)),
+      IsIntegralAndSmall ϑ j h (star (c • leftSideSeries ϑ j i h)) := by
+  obtain ⟨c, hc, h⟩ := exists_isIntegralAndSmall_leftSideSeries_linear j
+  exact ⟨c, hc, fun i ϑ g ↦ ⟨(h i ϑ g).1, fun hQ σ ↦
+    ((h i ϑ g).2 hQ σ).trans (exp_le_exp.mpr D.comparisonSizeBudget_le_quadratic)⟩⟩
 
 end New.Data
 

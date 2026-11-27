@@ -999,9 +999,25 @@ lemma isShort_ramifyingOp {P : Parameters} (D : Data P) (s : Finset D.piNPlaces)
       ih.sub_translate (mem_of_le_of_mem inf_le_left
         (D.scalarFin_scalingGenerator_mem_maxCompactAt w (D.X 0)))
 
+/-- The error unit linear in `log b`. -/
+abbrev linearErrorUnit {P : Parameters} (D : Data P) : ℝ := D.f * D.a * D.logB
+
 /-- For admissible data `D` (`New.Data`), let `f = D.f` be the number of infinite places of the
 field `D.E`, let `x` and `b` be the scales of `D` and `a = x b`. -/
 abbrev quadraticErrorUnit {P : Parameters} (D : Data P) : ℝ := D.f * D.a * D.logB ^ 2
+
+lemma mul_linearErrorUnit_le_quadraticErrorUnit {P : Parameters} (D : Data P) {c : ℝ}
+    (hc : c ≤ D.logB) : c * D.linearErrorUnit ≤ D.quadraticErrorUnit := by
+  have hB : 0 < D.logB := HasLogBound.pos D
+  calc
+    _ ≤ D.logB * D.linearErrorUnit :=
+      mul_le_mul_of_nonneg_right hc (by unfold linearErrorUnit; positivity)
+    _ = _ := by unfold linearErrorUnit quadraticErrorUnit; ring
+
+lemma linearErrorUnit_le_quadraticErrorUnit {P : Parameters} (D : Data P) :
+    D.linearErrorUnit ≤ D.quadraticErrorUnit := by
+  simpa only [one_mul] using D.mul_linearErrorUnit_le_quadraticErrorUnit
+    (D.le_of_hasLogBound : 1 ≤ D.logB)
 
 lemma quadraticErrorUnit_le_errorUnit {P : Parameters} (D : Data P) :
     D.quadraticErrorUnit ≤ D.errorUnit := by
@@ -1013,9 +1029,9 @@ lemma quadraticErrorUnit_le_errorUnit {P : Parameters} (D : Data P) :
     _ = D.errorUnit := by unfold quadraticErrorUnit errorUnit; ring
 
 /-- The source forms are spanned by integral forms with squared conjugate norms at most
-`exp (f a (log b)²) / 4 ^ f`. -/
-lemma span_isShort_eq_top_quadratic {P : Parameters} (D : Data P) :
-    span ℂ {φ : D.SourceForm | IsShort (D.quadraticErrorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
+`exp (f a log b) / 4 ^ f`. -/
+lemma span_isShort_eq_top_linear {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.SourceForm | IsShort (D.linearErrorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
   have h_boxes : boxes D.columnCount (Fintype.card (D.X 0)) ≤ D.f * D.a := by
     simpa using sum_le_card_nsmul univ _ D.a fun τ _ ↦ D.sum_height_mul_columnCount_le τ
   -- The base in `h_bound` is `shortBasisConst` for the rank `D.k` of `X_0` and the natural number
@@ -1023,14 +1039,43 @@ lemma span_isShort_eq_top_quadratic {P : Parameters} (D : Data P) :
   have h_const : (shortBasisConst D.E (D.X 0) (D.q₁ * P.d) : ℝ) =
       6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 := by
     simp [n]
+  have hB : 0 < D.logB := HasLogBound.pos D
+  have h_base : (6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 : ℝ) ≤ Real.exp (D.logB / 24) :=
+    D.le_of_hasLogBound
+  have h_four : (4 : ℝ) ≤ Real.exp (D.a * D.logB / 2) := by
+    have ha : (1 : ℝ) ≤ D.a := D.le_of_hasLogBound
+    have h_eight : 8 ≤ D.logB := D.le_of_hasLogBound
+    linarith only [h_eight, mul_le_mul_of_nonneg_right ha hB.le,
+      Real.add_one_le_exp (D.a * D.logB / 2)]
+  have hk : (D.k : ℝ) ≤ D.a := D.le_of_hasLogBound
+  have h_degree : (6 * (D.k * D.f + D.f * D.a) : ℝ) ≤ 12 * D.f * D.a := calc
+    (6 * (D.k * D.f + D.f * D.a) : ℝ) ≤ 6 * (D.a * D.f + D.f * D.a) := by grw [hk]
+    _ = _ := by ring
   have h_bound : 4 ^ D.f * (6 * (D.q₁ * P.d) * (D.f * D.k) ^ 2 : ℝ) ^
-      (6 * (D.k * D.f + D.f * D.a)) ≤ D.quadraticErrorUnit.exp :=
-    Real.le_exp_of_log_le D.le_of_hasLogBound
+      (6 * (D.k * D.f + D.f * D.a)) ≤ D.linearErrorUnit.exp := calc
+    _ ≤ (Real.exp (D.a * D.logB / 2)) ^ D.f *
+        (Real.exp (D.logB / 24)) ^ (6 * (D.k * D.f + D.f * D.a)) := by grw [h_four, h_base]
+    _ = Real.exp (D.f * (D.a * D.logB / 2) + 6 * (D.k * D.f + D.f * D.a) * (D.logB / 24)) := by
+      simp only [← Real.exp_natCast_mul, ← Real.exp_add, Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat]
+    _ ≤ _ := by
+      apply Real.exp_le_exp.mpr
+      calc
+        _ ≤ D.f * (D.a * D.logB / 2) + (12 * D.f * D.a) * (D.logB / 24) := by grw [h_degree]
+        _ = _ := by unfold linearErrorUnit; ring
   have h_rank : Fintype.card (D.X 0) = D.k := by rw [card_X, n, zero_mul, add_zero]
   refine New.span_isShort_eq_top D.classAut_levelX_zero_eq_bot P.conductor_mem_differentIdeal
     (Nat.add_le_add_left h_boxes _) ?_
   rw [le_div_iff₀' (by positivity), h_const, h_rank]
   exact h_bound
+
+/-- The short spanning family expressed with the quadratic error unit. -/
+lemma span_isShort_eq_top_quadratic {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.SourceForm | IsShort (D.quadraticErrorUnit.exp / 4 ^ D.f) φ.val} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_isShort_eq_top_linear
+  intro φ hφ
+  apply IsShort.mono hφ
+  exact div_le_div_of_nonneg_right (Real.exp_le_exp.mpr D.linearErrorUnit_le_quadraticErrorUnit)
+    (by positivity)
 
 /-- The short spanning family expressed with the cubic error unit. -/
 lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
@@ -1042,19 +1087,26 @@ lemma span_isShort_eq_top {P : Parameters} (D : Data P) :
     (by positivity)
 
 /-- The ramified source forms `D.ramifiedSourceForms` are spanned by those that are `B`-short for
-`B = exp (f a (log b)²)`: their values are `p`-adically integral for every `p`, and all conjugates of
+`B = exp (f a log b)`: their values are `p`-adically integral for every `p`, and all conjugates of
 the values have squared norm at most `B`. -/
-lemma span_isShort_ramifiedSourceForms_eq_top_quadratic {P : Parameters} (D : Data P) :
-    span ℂ {φ : D.ramifiedSourceForms | IsShort D.quadraticErrorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
+lemma span_isShort_ramifiedSourceForms_eq_top_linear {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.ramifiedSourceForms | IsShort D.linearErrorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
   -- The `Z`-short source forms span, and `∏ (1 - z_w)` makes them `4 ^ f Z`-short.
-  let Z : ℝ := D.quadraticErrorUnit.exp / 4 ^ D.f
+  let Z : ℝ := D.linearErrorUnit.exp / 4 ^ D.f
   have h_maps : Set.MapsTo (D.ramifyingOp univ) {φ : D.SourceForm | IsShort Z φ.val}
-      {φ : D.SourceForm | IsShort D.quadraticErrorUnit.exp φ.val} := by
+      {φ : D.SourceForm | IsShort D.linearErrorUnit.exp φ.val} := by
     intro φ hφ
     simpa [Z, card_piNPlaces, mul_div_cancel₀] using D.isShort_ramifyingOp univ hφ
   exact span_setOf_mem_eq_top_of_eq_range
-    (T := {φ : D.SourceForm | IsShort D.quadraticErrorUnit.exp φ.val})
-    D.ramifiedSourceForms_eq_range D.span_isShort_eq_top_quadratic h_maps
+    (T := {φ : D.SourceForm | IsShort D.linearErrorUnit.exp φ.val})
+    D.ramifiedSourceForms_eq_range D.span_isShort_eq_top_linear h_maps
+
+/-- The ramified short spanning family expressed with the quadratic error unit. -/
+lemma span_isShort_ramifiedSourceForms_eq_top_quadratic {P : Parameters} (D : Data P) :
+    span ℂ {φ : D.ramifiedSourceForms | IsShort D.quadraticErrorUnit.exp (φ : D.SourceForm).val} = ⊤ := by
+  refine eq_top_mono (span_mono ?_) D.span_isShort_ramifiedSourceForms_eq_top_linear
+  intro φ hφ
+  exact IsShort.mono hφ (Real.exp_le_exp.mpr D.linearErrorUnit_le_quadraticErrorUnit)
 
 /-- The ramified short spanning family expressed with the cubic error unit. -/
 lemma span_isShort_ramifiedSourceForms_eq_top {P : Parameters} (D : Data P) :
