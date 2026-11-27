@@ -252,6 +252,33 @@ lemma Parameters.exists_large_isSparse (P : Parameters) {s n H L : ℕ}
     have h_small : (ℓ + 1) * (2 * i) ≤ (L + 1) * (2 * l₀ s) := Nat.mul_le_mul (by omega) (by omega)
     linarith only [h_order, h_small, hL]
 
+/-- The Behrend count before estimating the side of the cube. -/
+private lemma Parameters.exists_isSparse_card_bound (P : Parameters) {s n L : ℕ} {W : ℝ}
+    (hn : 0 < n) (hW : 1 ≤ W) (h_lower : W ≤ 2 ^ s) (h_room : (2 * (l₀ s : ℝ)) ^ n ≤ W)
+    (hL : 2 * l₀ s * (L + 1) < 2 ^ s) :
+    ∃ (T : Finset (P.Φ s)) (k : ℕ),
+      (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
+        ((2 : ℝ) ^ k) ^ n * W ≤ 2 ^ s ∧
+        towerDeg s ≤ #T * (3 * l₀ s * n * 2 ^ n * W * ((2 : ℝ) ^ k) ^ 2) ∧
+        P.IsSparse s L T := by
+  have hW_pos : 0 < W := one_pos.trans_le hW
+  -- the side `H = 2 ^ k` of Behrend's cube has `H ^ n ≤ 2 ^ s / W < (2 H) ^ n`
+  obtain ⟨k, hk_lower, hk_upper⟩ :
+      ∃ k : ℕ, (2 ^ n) ^ k ≤ 2 ^ s / W ∧ 2 ^ s / W < (2 ^ n) ^ (k + 1) :=
+    exists_nat_pow_near ((one_le_div hW_pos).2 h_lower) (one_lt_pow₀ one_lt_two hn.ne')
+  rw [pow_right_comm, le_div_iff₀ hW_pos] at hk_lower
+  rw [pow_right_comm, div_lt_iff₀ hW_pos, pow_succ', mul_pow] at hk_upper
+  have h_fit : (2 * l₀ s * 2 ^ k) ^ n ≤ 2 ^ s := by
+    rify
+    grw [mul_pow _ (2 ^ k), h_room, ← hk_lower, mul_comm]
+  obtain ⟨T, h_class, h_card, h_sparse⟩ := P.exists_large_isSparse h_fit hL
+  refine ⟨T, k, h_class, hk_lower, ?_, h_sparse⟩
+  push_cast at h_card
+  calc (towerDeg s : ℝ) = 3 * l₀ s * 2 ^ s := by simp [towerDeg_eq]
+    _ ≤ 3 * l₀ s * (2 ^ n * (2 ^ k) ^ n * W) := by grw [hk_upper]
+    _ = (2 ^ k) ^ n / (n * (2 ^ k) ^ 2) * (3 * l₀ s * n * 2 ^ n * W * (2 ^ k) ^ 2) := by field
+    _ ≤ _ := by gcongr
+
 /-- **A large sparse set of places.** The infinite places `P.Φ s` of `E = P.E s` form the group
 `(ℤ/q₁)ˣ`. Let `0 < n`, `1 ≤ W ≤ 2 ^ s ≤ W ^ n`, `(2 l₀) ^ n ≤ W`, `3 l₀ n 2 ^ n ≤ W ^ 3` and
 `2 l₀ (L + 1) < 2 ^ s`. There is a set of at least `towerDeg s / W ^ 6` places of class `-1` modulo
@@ -264,26 +291,44 @@ lemma Parameters.exists_isSparse (P : Parameters) {s n L : ℕ} {W : ℝ} (hn : 
       (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
       towerDeg s ≤ #T * W ^ 6 ∧
       P.IsSparse s L T := by
-  have hW_pos : 0 < W := one_pos.trans_le hW
-  -- the side `H = 2 ^ k` of Behrend's cube has `H ^ n ≤ 2 ^ s / W < (2 H) ^ n`, so `H ≤ W`
-  obtain ⟨k, hk_lower, hk_upper⟩ :
-      ∃ k : ℕ, (2 ^ n) ^ k ≤ 2 ^ s / W ∧ 2 ^ s / W < (2 ^ n) ^ (k + 1) :=
-    exists_nat_pow_near ((one_le_div hW_pos).2 h_lower) (one_lt_pow₀ one_lt_two hn.ne')
-  rw [pow_right_comm, le_div_iff₀ hW_pos] at hk_lower
-  rw [pow_right_comm, div_lt_iff₀ hW_pos, pow_succ', mul_pow] at hk_upper
-  have hH : 2 ^ k ≤ W :=
-    le_of_pow_le_pow_left₀ hn.ne' hW_pos.le (by grw [← h_upper, ← hk_lower, ← hW, mul_one])
-  have h_fit : (2 * l₀ s * 2 ^ k) ^ n ≤ 2 ^ s := by
-    rify
-    grw [mul_pow _ (2 ^ k), h_room, ← hk_lower, mul_comm]
-  obtain ⟨T, h_class, h_card, h_sparse⟩ := P.exists_large_isSparse h_fit hL
-  refine ⟨T, h_class, ?_, h_sparse⟩
-  push_cast at h_card
-  calc (towerDeg s : ℝ) = 3 * l₀ s * 2 ^ s := by simp [towerDeg_eq]
-    _ ≤ 3 * l₀ s * (2 ^ n * (2 ^ k) ^ n * W) := by grw [hk_upper]
-    _ = (2 ^ k) ^ n / (n * (2 ^ k) ^ 2) * (3 * l₀ s * n * 2 ^ n * W * (2 ^ k) ^ 2) := by field
+  obtain ⟨T, k, h_class, hk, h_card, h_sparse⟩ := P.exists_isSparse_card_bound hn hW h_lower h_room hL
+  have hH : (2 : ℝ) ^ k ≤ W :=
+    le_of_pow_le_pow_left₀ hn.ne' (by linarith) (by grw [← h_upper, ← hk, ← hW, mul_one])
+  refine ⟨T, h_class, h_card.trans ?_, h_sparse⟩
+  calc
     _ ≤ #T * (W ^ 3 * W * W ^ 2) := by gcongr
-    _ = #T * W ^ 6 := by ring
+    _ = _ := by ring
+
+/-- The same sparse set has density at least `1 / W ^ 2` under stronger bounds on the size of
+the cube and the counting factor. -/
+lemma Parameters.exists_isSparse_square (P : Parameters) {s n L : ℕ} {W : ℝ} (hn : 0 < n)
+    (hW : 1 ≤ W) (h_lower : W ≤ 2 ^ s) (h_upper : ((2 : ℝ) ^ s) ^ 4 ≤ W ^ n)
+    (h_room : (2 * (l₀ s : ℝ)) ^ n ≤ W) (h_count : (3 * (l₀ s : ℝ) * n * 2 ^ n) ^ 2 ≤ W)
+    (hL : 2 * l₀ s * (L + 1) < 2 ^ s) :
+    ∃ T : Finset (P.Φ s),
+      (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
+        towerDeg s ≤ #T * W ^ 2 ∧ P.IsSparse s L T := by
+  obtain ⟨T, k, h_class, hk, h_card, h_sparse⟩ := P.exists_isSparse_card_bound hn hW h_lower h_room hL
+  have hW_pos : 0 < W := one_pos.trans_le hW
+  let H : ℝ := 2 ^ k
+  let C : ℝ := 3 * (l₀ s : ℝ) * n * 2 ^ n
+  have hH : H ^ 4 ≤ W := by
+    apply le_of_pow_le_pow_left₀ hn.ne' hW_pos.le
+    calc
+      (H ^ 4) ^ n = (H ^ n) ^ 4 := pow_right_comm H 4 n
+      _ ≤ (H ^ n * W) ^ 4 := pow_le_pow_left₀ (by positivity)
+        (le_mul_of_one_le_right (by positivity) hW) _
+      _ ≤ _ := (pow_le_pow_left₀ (by positivity) hk _).trans h_upper
+  have h_size : C * H ^ 2 ≤ W := by
+    apply le_of_pow_le_pow_left₀ (by norm_num : (2 : ℕ) ≠ 0) hW_pos.le
+    calc
+      (C * H ^ 2) ^ 2 = C ^ 2 * H ^ 4 := by rw [mul_pow, ← pow_mul]
+      _ ≤ W * W := mul_le_mul h_count hH (by positivity) hW_pos.le
+      _ = W ^ 2 := (pow_two _).symm
+  refine ⟨T, h_class, h_card.trans ?_, h_sparse⟩
+  change (T.card : ℝ) * (C * W * H ^ 2) ≤ (T.card : ℝ) * W ^ 2
+  rw [show C * W * H ^ 2 = (C * H ^ 2) * W by ring, pow_two W]
+  gcongr
 
 /-- Pigeonhole in the class group: given `h + 1` pairs `(I i, J i)` of finite places with
 `I i * J i` principal, `h` the class number, there are `i ≠ j` with `I i * J j` principal. -/

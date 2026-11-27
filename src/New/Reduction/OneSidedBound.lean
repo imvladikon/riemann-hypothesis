@@ -13,9 +13,9 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality gives a remainder term
-proportional to `φ(q₀) log² b / m`. A common subexponential width `W` gives `log b ≤ W ^ 6 + 1`,
-`m ≥ √x`, and an auxiliary cutoff `x₁` at which both prime remainders are at most `x ^ (-2)`.
-The resulting bound of order `x ^ (-1/2) * W ^ 12` absorbs the width and fixed constant in any
+proportional to `φ(q₀) log² b / m`. The subexponential window width `W` gives
+`log b ≤ W ^ 2 + 1` and `m ≥ √x`. A separate logarithmic cutoff makes both prime remainders
+at `x₁` at most `x ^ (-2)`. The resulting bound of order `x ^ (-1/2) * W ^ 4` absorbs the width and fixed constant in any
 positive exponent slack. Passage to real arguments gives the one-sided criterion for non-vanishing
 of Dirichlet `L`-functions in `re s > 1/2`.
 
@@ -199,36 +199,28 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff {d q : ℕ}
     _ ≤ rexp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
     _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
 
-/-- The common window controls the linear prime remainder with a factor `W ^ 12`. -/
+/-- The square-width weight controls the prime remainder with a factor `W ^ 4`. -/
 theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
       let W := P.subexponentialWindowWidth (log x)
       primeRemainder P.d P.q₀ x ≤
-        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := by
+        (3400000 * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 4) := by
   have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have h_fit : ∀ᶠ x : ℕ in atTop,
-      2 * (64 * log (x : ℝ)) ^ (27 : ℕ) ≤ P.subexponentialWindowWidth (log x) := by
-    simpa only [mul_pow, ← mul_assoc] using
-      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth (2 * 64 ^ 27) 27)
-  filter_upwards [eventually_exists_data_with_subexponential_windows P, h_fit,
-    h_log.eventually_ge_atTop 1, eventually_ge_atTop 1,
+  have h_width : ∀ᶠ x : ℕ in atTop, 3 ≤ P.subexponentialWindowWidth (log x) := by
+    simpa only [pow_zero, mul_one] using
+      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth 3 0)
+  filter_upwards [eventually_exists_data_with_subexponential_windows P, h_width, eventually_ge_atTop 1,
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd h_cop),
-    tendsto_natCast_atTop_atTop.eventually
-      (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
-    with x ⟨_, D, hx, _, hm, h_cutoff, hb⟩ h_fit h_logx hx_one h_q₀ h_one
+    tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
+    with x ⟨_, D, hx, _, hm, h_cutoff, hb⟩ hW hx_one h_q₀ h_one
   let W := P.subexponentialWindowWidth (log x)
-  let Q := W ^ (6 : ℕ)
+  let Q := W ^ (2 : ℕ)
   let Z := (x : ℝ) ^ (-1 / 2 : ℝ)
-  have hT : 64 ≤ (64 * log (x : ℝ)) ^ (27 : ℕ) :=
-    (show 64 ≤ 64 * log (x : ℝ) by linarith).trans (le_self_pow₀ (by linarith) (by decide))
-  have h_tail_scale : (64 * log (x : ℝ)) ^ (27 : ℕ) ≤ D.logX₁ := by
-    linarith only [h_fit, h_cutoff, hT]
-  have h_Rq₀ := h_q₀ D.logX₁ h_tail_scale
-  have h_Rone := h_one D.logX₁ h_tail_scale
-  have hW : 3 ≤ W := by linarith only [h_fit, hT]
+  have h_Rq₀ := h_q₀ D.logX₁ h_cutoff
+  have h_Rone := h_one D.logX₁ h_cutoff
   have hQ : 3 ≤ Q := hW.trans (le_self_pow₀ (by linarith) (by decide))
   have hQ_mul : 0 ≤ (Q - 3) * (Q + 1) := mul_nonneg (by linarith) (by linarith)
   have hBa : D.logB ≤ Q ^ 2 := hb.trans (by nlinarith only [hQ, hQ_mul])
@@ -267,20 +259,20 @@ private lemma eventually_primeRemainder_natCast_le_of_width
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
   filter_upwards [eventually_primeRemainder_natCast_le_with_subexponential_width P,
-    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 24 by positivity)),
+    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 8 by positivity)),
     ((tendsto_rpow_atTop (half_pos hs)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop (A / C),
     eventually_ge_atTop 1] with x h_bound h_logW h_coeff hx_one
   let W := P.subexponentialWindowWidth (log x)
   have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
   have hW : 0 < W := exp_pos _
-  have h_power : W ^ 12 ≤ (x : ℝ) ^ (s / 2) := calc
-    _ = exp ((12 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
+  have h_power : W ^ 4 ≤ (x : ℝ) ^ (s / 2) := calc
+    _ = exp ((4 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
     _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logW])
     _ = _ := by rw [rpow_def_of_pos hx_pos]; congr 1; ring
   have hA : A ≤ C * (x : ℝ) ^ (s / 2) := by
     change A / C ≤ (x : ℝ) ^ (s / 2) at h_coeff
     exact ((div_le_iff₀ hC).1 h_coeff).trans_eq (mul_comm _ _)
-  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := h_bound
+  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 4) := h_bound
     _ ≤ (C * (x : ℝ) ^ (s / 2)) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (x : ℝ) ^ (s / 2)) := by
       gcongr
     _ = C * ((x : ℝ) ^ (-1 / 2 : ℝ) * ((x : ℝ) ^ (s / 2) * (x : ℝ) ^ (s / 2))) := by ring
