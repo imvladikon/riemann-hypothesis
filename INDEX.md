@@ -18,8 +18,8 @@ Names omit `New.`; `D` is the data. The head of `New/Reduction/MainInequality` g
 | `D.integral_forms_long` | `New/Determinant/Twist/LongForms` | Theorem C, the lower bound: covolume and twice the index together are at least about the main amount. |
 | `star_inequality` | `New/Reduction/MainInequality` | The main inequality: the main amount cancels and the remainder is bounded above. |
 | `eventually_abs_primeRemainder_le` | `New/Reduction/Zeros/PrimeNumberTheorem` | The prime number theorem for the remainder of the prime sum, used at the second cut-off. |
-| `eventually_primeRemainder_le_rpow` | `New/Reduction/OneSidedBound` | The one-sided bound x^(−1/2 + ε) for the remainder of the prime sum. |
-| `LFunction_ne_zero_of_primeRemainder_le` | `New/Reduction/Zeros/Criterion` | A one-sided bound gives a zero-free half-plane. |
+| `eventually_primeRemainder_le_mul_rpow` | `New/Reduction/OneSidedBound` | For each ε > 0 the prime remainder is at most (128 φ(q₀) + 32) x^(−1/2 + ε) for all sufficiently large x. |
+| `LFunction_ne_zero_of_primeRemainder_le` | `New/Reduction/Zeros/Criterion` | A one-sided bound for each prime d in the prescribed class, with a constant allowed to depend on d, gives a zero-free half-plane. |
 | `grh` | `New/Reduction/OneSidedBound` | No Dirichlet L-function vanishes in re s > 1/2 (s ≠ 1 for a principal character). |
 
 The prime number theorem in this table is known (Montgomery and Vaughan, Multiplicative Number Theory I, 2007, Cor. 11.19). Its proof is in `Lib/Analytic/PrimeNumberTheorem/ZeroFreeRegion` and `Lib/Analytic/PrimeNumberTheorem/Tauberian`.
@@ -115,7 +115,7 @@ The prime number theorem in this table is known (Montgomery and Vaughan, Multipl
 | result | file | further files | sources |
 |---|---|---|---|
 | Prime number theorem in arithmetic progressions with an error term that saves every power of the logarithm | `New/Reduction/Zeros/PrimeNumberTheorem` |  | Montgomery and Vaughan, Multiplicative Number Theory I, 2007, Cor. 11.19. Form here: the modulus is fixed, and the count is the smoothed sum `∑_{n ≤ y} λ(n) (1/n - 1/y)` over the prime powers `n ≡ 1` mod `q`; for `d ≡ 3` mod `4` the primes that split in `ℚ(√-d)` have weight zero |
-| Behrend's construction for several equations at once | `New/Reduction/Data/Existence` |  | Shapira, Behrend-type constructions for sets of linear equations, Acta Arith. 2006 (after Behrend, PNAS 32, 1946); compare Alon–Shapira, A characterization of easily testable induced subgraphs (2006), Lemma 4.1 (preprint numbering). Form here: all weights up to a given bound are avoided at once, modulo an integer, with a fixed number of digits and the explicit count of points on a sphere. This concerns `exists_three_term_free` |
+| Behrend's construction for all bounded positive weights | `New/Reduction/Data/Existence` |  | Alon–Shapira, *A characterization of easily testable induced subgraphs*, [Lemma 4.1 (authors' version)](https://web.math.princeton.edu/~nalon/PDFS/testindfull2.pdf#page=6), gives one set for all bounded pairs of weights in an integer equation. `exists_three_term_free` uses this digit-sphere argument with a bound on the sum of the weights, a congruence modulo `o` and an explicit count for a fixed number of digits. See also Shapira, *Behrend-type constructions for sets of linear equations*, Acta Arith. (2006). |
 | The Schur algebra, and that group elements span it in degrees below the size of the field | `New/UpperBound/ElementaryDivisors/InvariantAverage` |  | Green, Polynomial representations of GL_n, 1980; Benson–Doty, Schur–Weyl duality over finite fields, 2009 |
 | Smoothness and Schur's orthogonality relations for vectors of a discrete series representation (Harish-Chandra) | `New/Spanning/Bessel/SchurBound` |  |  |
 | Siegel's lemma over number fields (Bombieri–Vaaler) | `New/Spanning/RemainingTerms/SiegelLemma` | `Lib/General/NumberTheory/LatticeCovolumes` | E. Bombieri, J. Vaaler, On Siegel's lemma, Invent. Math. 73 (1983) |
@@ -254,7 +254,7 @@ The prime number theorem in this table is known (Montgomery and Vaughan, Multipl
 | The Gauss norm equals the supremum norm on the unit polydisc over an algebraically closed valued field | `Lib/General/Algebra/SeriesBounds` |  | Bosch, Güntzer and Remmert, *Non-Archimedean Analysis* |
 | The integrality of the `p`-adic exponential and logarithm on series of large enough valuation, and of the binomial series with exponent in `ℤ_p` | `Lib/General/Algebra/SeriesBounds` |  |  |
 | Length of a matrix kernel modulo `a` over a discrete valuation ring via maximal minors | `Lib/General/Algebra/SharpMinors` |  |  |
-| Ostrowski–Taussky inequality and the complex Gaussian integral | `Lib/General/Analysis/GaussianIntegral` |  |  |
+| The complex Gaussian integral | `Lib/General/Analysis/GaussianIntegral` |  |  |
 | Stone–Weierstrass for monoids of functions; Fourier inversion on compact quotients; Fourier decay | `Lib/General/Analysis/FourierTransforms` |  |  |
 | An upper bound for Hua's determinant integral | `Lib/General/Analysis/HolomorphicIntegrals` |  | Hua, Harmonic Analysis of Functions of Several Complex Variables in the Classical Domains, AMS 1963 |
 | Mean value property of holomorphic functions; entire function determined by its Taylor series at 0 | `Lib/General/Analysis/MeanValueAndTaylor` |  |  |
