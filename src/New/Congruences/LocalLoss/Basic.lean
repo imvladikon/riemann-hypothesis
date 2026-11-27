@@ -292,7 +292,7 @@ lemma placeClass_eq_cmSign_mul_pow (e : D.E →+* PadicAlgCl ℓ) (g g' : Gp ℓ
 
 /-- Spacing of the b-places `D.bPlaces`, the sparse set of infinite places of `E` of weight `b` in
 the data `D`. Let `e : E → ℚ̄_ℓ` for a prime `ℓ ≤ D.k * D.t = (D.r + 1 - D.m) * (5 * D.r)`, and let
-`0 < i < n < l₀ s`, where `s = D.towerExp` and `l₀ s` is the least power of `3` above `27 s`. Let
+`0 < i < n < shortArcLength s ℓ`, where `s = D.towerExp`. Let
 `g' * g⁻¹` and `g' * g₁⁻¹` in `Gp ℓ` raise `e ζ ^ ℓ ^ a` to the powers `ℓ ^ n` and `ℓ ^ i`, where
 `ζ = P.ζ s` generates `E` over `K = ℚ(√-d)`. Each `γ` in `Gp ℓ = Gal(ℚ̄_ℓ/ℚ_ℓ)` gives the complex
 embedding `complexEmbeddingOf e γ = ι⁻¹ ∘ γ⁻¹ ∘ e`, for the fixed `ι : ℂ ≃ ℚ̄_ℓ`. If the embeddings
@@ -302,7 +302,8 @@ lemma notMem_bPlaces_of_short_arc {e : D.E →+* PadicAlgCl ℓ} {g g' g₁ : Gp
     (h_mem' : NumberField.InfinitePlace.mk (complexEmbeddingOf e g') ∈ D.bPlaces)
     (h_act : (g' * g⁻¹) (e (P.ζ D.towerExp) ^ ℓ ^ a) = (e (P.ζ D.towerExp) ^ ℓ ^ a) ^ ℓ ^ n)
     (h_act₁ : (g' * g₁⁻¹) (e (P.ζ D.towerExp) ^ ℓ ^ a) = (e (P.ζ D.towerExp) ^ ℓ ^ a) ^ ℓ ^ i)
-    (hℓ_le : ℓ ≤ D.k * D.t) (hi_pos : 0 < i) (hi_lt : i < n) (hn_lt : n < l₀ D.towerExp) :
+    (hℓ_le : ℓ ≤ D.k * D.t) (hi_pos : 0 < i) (hi_lt : i < n)
+    (hn_lt : n < shortArcLength D.towerExp ℓ) :
     NumberField.InfinitePlace.mk (complexEmbeddingOf e g₁) ∉ D.bPlaces := by
   -- By `placeClass_eq_cmSign_mul_pow`, the ratios of the places of `g₁` and `g` to that of `g'` are
   -- `± ℓ ^ i` and `± ℓ ^ n` modulo the part of `q₁` prime to `ℓ`, which the sparseness of

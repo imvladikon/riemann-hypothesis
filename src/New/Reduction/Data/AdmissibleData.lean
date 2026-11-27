@@ -59,14 +59,66 @@ def New.Parameters.constantBound (P : Parameters) : ℝ :=
     ∑ w ∈ primitiveRoots P.q₀ ℂ, |log ‖(Polynomial.cyclotomic P.q₀ ℂ).derivative.eval w‖|)
 
 /-- A set `T` of infinite places of `P.E s`, viewed in `(ℤ/q₁)ˣ` with `q₁ = P.q₁ s`, is sparse for
-the primes up to `L` if for all primes `ℓ ≤ L` and integers `0 < i < j < l₀ s` there are no places
+the primes up to `L` with arc lengths `A` if for primes `ℓ ≤ L` and `0 < i < j < A ℓ` there are no places
 `σ, τ, ρ` in `T`, distinct or not, with `τ / σ ≡ ± ℓ ^ i` and `ρ / σ ≡ ± ℓ ^ j` modulo the part of
 `q₁` prime to `ℓ`. The two signs are independent. -/
-def New.Parameters.IsSparse (P : Parameters) (s L : ℕ) (T : Finset (P.Φ s)) : Prop :=
-  ∀ ℓ : ℕ, ℓ.Prime → ℓ ≤ L → ∀ i j : ℕ, 0 < i → i < j → j < l₀ s →
+def New.Parameters.IsSparseUpTo (P : Parameters) (s L : ℕ) (A : ℕ → ℕ) (T : Finset (P.Φ s)) : Prop :=
+  ∀ ℓ : ℕ, ℓ.Prime → ℓ ≤ L → ∀ i j : ℕ, 0 < i → i < j → j < A ℓ →
     let φ : P.Φ s →* (ZMod (ordCompl[ℓ] (P.q₁ s)))ˣ := P.placeClass (Nat.ordCompl_dvd (P.q₁ s) ℓ)
     ¬∃ σ ∈ T, ∃ τ ∈ T, ∃ ρ ∈ T, ∃ ε ε' : ℤˣ,
       (φ (τ / σ)).val = (ε : ℤ) * ℓ ^ i ∧ (φ (ρ / σ)).val = (ε' : ℤ) * ℓ ^ j
+
+/-- Sparsity with a common arc length `l₀ s` for every prime. -/
+def New.Parameters.IsSparse (P : Parameters) (s L : ℕ) (T : Finset (P.Φ s)) : Prop :=
+  P.IsSparseUpTo s L (fun _ ↦ l₀ s) T
+
+/-- The arc length covering the crystalline triples and the sums of two near-pair exponents. -/
+def New.shortArcLength (s ℓ : ℕ) : ℕ := min (l₀ s) (2 * ℓ.log (2 ^ (12 * s)) + 3)
+
+/-- The partner series can be bounded by its geometric tail from this exponent onward. -/
+def New.nearPairCutoff (s p : ℕ) : ℕ := min ((l₀ s + 1) / 2) (p.log (2 ^ s) + 2)
+
+lemma New.nearPairCutoff_le_l₀ (s p : ℕ) : nearPairCutoff s p ≤ l₀ s :=
+  (min_le_left _ _).trans (by omega)
+
+lemma New.nearPairCutoff_le_shortArcLength (s p : ℕ) :
+    nearPairCutoff s p ≤ shortArcLength s p := by
+  have h_log := Nat.log_mono_right (b := p)
+    (show (2 : ℕ) ^ s ≤ 2 ^ (12 * s) from pow_le_pow_right₀ (by decide) (by omega))
+  exact le_min (nearPairCutoff_le_l₀ s p) ((min_le_right _ _).trans (by omega))
+
+lemma New.two_mul_lt_l₀_of_lt_nearPairCutoff {s p e : ℕ} (he : e < nearPairCutoff s p) :
+    2 * e < l₀ s := by
+  have := he.trans_le (min_le_left _ _)
+  omega
+
+lemma New.add_lt_shortArcLength_of_lt_nearPairCutoff {s p e e' : ℕ}
+    (he : e < nearPairCutoff s p) (he' : e' < nearPairCutoff s p) :
+    e + e' < shortArcLength s p := by
+  have h_log := Nat.log_mono_right (b := p)
+    (show (2 : ℕ) ^ s ≤ 2 ^ (12 * s) from pow_le_pow_right₀ (by decide) (by omega))
+  simp only [nearPairCutoff, lt_min_iff] at he he'
+  rw [shortArcLength, lt_min_iff]
+  exact ⟨by omega, by omega⟩
+
+lemma New.tower_mul_prime_le_pow_nearPairCutoff {s p : ℕ} (hp : 1 < p) :
+    2 ^ s * p ≤ p ^ nearPairCutoff s p := by
+  have h_l₀ := mul_lt_l₀ s
+  have h_cap : s + 1 ≤ (l₀ s + 1) / 2 := by omega
+  have h_left : 2 ^ s * p ≤ p ^ ((l₀ s + 1) / 2) := calc
+    _ ≤ p ^ s * p := Nat.mul_le_mul_right _ (Nat.pow_le_pow_left (by omega) _)
+    _ = p ^ (s + 1) := (pow_succ _ _).symm
+    _ ≤ _ := pow_le_pow_right₀ hp.le h_cap
+  have h_right : 2 ^ s * p ≤ p ^ (p.log (2 ^ s) + 2) := by
+    rw [show p.log (2 ^ s) + 2 = p.log (2 ^ s) + 1 + 1 by omega, pow_succ]
+    exact Nat.mul_le_mul_right _ (Nat.lt_pow_succ_log_self hp _).le
+  rcases le_total ((l₀ s + 1) / 2) (p.log (2 ^ s) + 2) with h | h
+  · simpa [nearPairCutoff, min_eq_left h] using h_left
+  · simpa [nearPairCutoff, min_eq_right h] using h_right
+
+lemma New.Parameters.IsSparse.shortArcs {P : Parameters} {s L : ℕ} {T : Finset (P.Φ s)}
+    (h : P.IsSparse s L T) : P.IsSparseUpTo s L (shortArcLength s) T :=
+  fun ℓ hp hL i j hi hij hj ↦ h ℓ hp hL i j hi hij (hj.trans_le (min_le_left _ _))
 
 /-- The logarithm of `N₋ = κ̄ ^ m (M rd_E / 2π) ^ (m - 1) b ^ (-15 / 2)`, the lower end of the
 range for the level. Here `κ̄` is the geometric mean of the weights `κ τ` over the infinite
@@ -136,8 +188,8 @@ structure New.Data (P : Parameters) where
     P.placeClass (P.q₀.dvd_mul_right (towerDeg towerExp)) σ = -1
   /-- At least one place has weight `b`. -/
   bPlaces_nonempty : bPlaces.Nonempty
-  /-- The `b`-places are sparse for the primes up to `k t`, where `k = r + 1 - m` and `t = 5 r`. -/
-  sparse : P.IsSparse towerExp ((r + 1 - m) * (5 * r)) bPlaces
+  /-- The `b`-places are sparse on short arcs for the primes up to `k t`. -/
+  sparse : P.IsSparseUpTo towerExp ((r + 1 - m) * (5 * r)) (shortArcLength towerExp) bPlaces
   /-- The weight `κ(τ)` of a place. -/
   weight : P.Φ towerExp → ℕ
   /-- The weight is `b = a / x` at the `b`-places and `a / x₁` elsewhere, where `a = x b`. -/

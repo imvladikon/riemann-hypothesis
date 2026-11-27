@@ -192,25 +192,28 @@ lemma New.Selmer.notMem_bPlaces_of_coefficientEmbedding_eq_pow {P : Parameters} 
     (h_mem₂ : InfinitePlace.mk (complexEmbeddingOf e g₂) ∈ D.bPlaces) :
     InfinitePlace.mk (complexEmbeddingOf e g₁) ∉ D.bPlaces := by
   -- By `notMem_bPlaces_of_short_arc` it suffices that `g₂ g₀⁻¹` and `g₂ g₁⁻¹` raise `ξ` to the
-  -- powers `ℓ ^ (a + b)` and `ℓ ^ b`, with `a + b < l₀`. Here `ξ` is the prime-to-`ℓ` part of the
+  -- powers `ℓ ^ (a + b)` and `ℓ ^ b` inside the short arc. Here `ξ` is the prime-to-`ℓ` part of the
   -- `q₁`-th root of unity `P.ζ D.towerExp`.
   let ξ : PadicAlgCl ℓ := e (P.ζ D.towerExp) ^ ℓ ^ (P.q₁ D.towerExp).factorization ℓ
   obtain ⟨-, h_range : ∀ g : Gp ℓ, g ∈ j.range ↔ ∀ x : D.E, g (e x) = e x⟩ := hj
   have hξ : ξ ^ (ℓ ^ f.val - 1) = 1 :=
     pow_ordProj_pow_sub_one_eq_one hF (P.isPrimitiveRoot_zeta.map_of_injective e.injective)
       ((h_range F).1 hF_mem _)
+  have h_size : D.halfGap ^ 3 ≤ (2 ^ D.towerExp) ^ 12 := D.nat_le_of_hasLogBound
   have h_log : ℓ.log (D.halfGap ^ 3) ≤ D.towerExp * 12 := by
-    have h_size : D.halfGap ^ 3 ≤ (2 ^ D.towerExp) ^ 12 := D.nat_le_of_hasLogBound
     simpa [← pow_mul 2] using log_mono .refl hp.out.one_lt h_size
   have hg₂₁ : coefficientEmbedding O g₂ ζ = coefficientEmbedding O g₁ ζ ^ ℓ ^ b := by
     rw [hg₂, hg₁, pow_add, pow_mul]
-  obtain ⟨hb_pos, hb_lt, h_short⟩ : 0 < b ∧ b < a + b ∧ a + b ≤ 27 * D.towerExp := by
-    rw [mem_Icc] at ha hb
-    omega
+  rw [mem_Icc] at ha hb
+  have h_arc : a + b < shortArcLength D.towerExp ℓ := by
+    rw [shortArcLength, lt_min_iff]
+    have h_log_arc : ℓ.log (D.halfGap ^ 3) ≤ ℓ.log (2 ^ (12 * D.towerExp)) :=
+      Nat.log_mono_right (by simpa only [← pow_mul, mul_comm D.towerExp 12] using h_size)
+    have h_l₀ := mul_lt_l₀ D.towerExp
+    exact ⟨by omega, by omega⟩
   exact notMem_bPlaces_of_short_arc h_mem₀ h_mem₂
     (smul_eq_pow_of_coefficientEmbedding_eq_pow hζ hg₂ ξ hξ)
-    (smul_eq_pow_of_coefficientEmbedding_eq_pow hζ hg₂₁ ξ hξ) hℓ hb_pos hb_lt
-    (h_short.trans_lt (mul_lt_l₀ D.towerExp))
+    (smul_eq_pow_of_coefficientEmbedding_eq_pow hζ hg₂₁ ξ hξ) hℓ (by omega) (by omega) h_arc
 
 /-- Let `𝒥.toGp : Γ → G_ℓ` be an open embedding onto the elements of `G_ℓ = Gal(ℚ̄_ℓ / ℚ_ℓ)` that
 fix `e E`, where `E = D.E`, and put `Q = D.k * D.t`. For `O` large there are a Kummer chart of `Γ`

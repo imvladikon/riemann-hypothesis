@@ -205,10 +205,10 @@ private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff {d q : ℕ}
     _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
 
 /-- The one-sided remainder uses the product of the density bound and the logarithmic weight. -/
-theorem eventually_primeRemainder_natCast_le_with_polynomial_weight (P : Parameters) :
+theorem eventually_primeRemainder_natCast_le_with_short_arcs (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
       let y := log (x : ℝ)
-      let Q := subexponentialWeightBound y
+      let Q := shortArcDensityBound y
       let J := polynomialWeightScale y
       primeRemainder P.d P.q₀ x ≤ (1700000 * P.q₀.totient + 2) *
         ((x : ℝ) ^ (-1 / 2 : ℝ) * (Q * (J + 1))) := by
@@ -216,15 +216,13 @@ theorem eventually_primeRemainder_natCast_le_with_polynomial_weight (P : Paramet
   have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  have hQ_one : ∀ᶠ x : ℕ in atTop, 1 ≤ subexponentialWeightBound (log x) := by
-    simpa only [pow_zero, mul_one] using
-      h_log.eventually (eventually_mul_pow_le_subexponentialWeightBound 1 0)
-  filter_upwards [eventually_exists_data_with_polynomial_weight P, hQ_one, eventually_ge_atTop 1,
+  have hQ_one := h_log.eventually eventually_one_le_shortArcDensityBound
+  filter_upwards [eventually_exists_data_with_short_arcs P, hQ_one, eventually_ge_atTop 1,
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd h_cop),
     tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
     with x ⟨D, hx, _, hm, h_cutoff, hb, h_card⟩ hQ hx_one h_q₀ h_one
   let y := log (x : ℝ)
-  let Q := subexponentialWeightBound y
+  let Q := shortArcDensityBound y
   let B := polynomialWeightScale y + 1
   let Z := (x : ℝ) ^ (-1 / 2 : ℝ)
   have h_Rq₀ := h_q₀ D.logX₁ h_cutoff
@@ -259,6 +257,65 @@ theorem eventually_primeRemainder_natCast_le_with_polynomial_weight (P : Paramet
     _ = _ := by
       rw [div_eq_mul_inv, ← hZ_inv]
       ring
+
+/-- With prime-dependent arcs, the one-sided remainder has leading logarithmic loss
+`2 * sqrt (11 * y * log y)`, where `y = log x`. -/
+theorem eventually_primeRemainder_natCast_le_with_short_arc_exponent (P : Parameters)
+    {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      primeRemainder P.d P.q₀ x ≤ (1700000 * P.q₀.totient + 2) *
+        ((x : ℝ) ^ (-1 / 2 : ℝ) * exp ((2 + ε) * sqrt (11 * y * log y))) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_short_arcs P,
+    h_log.eventually (eventually_log_shortArcDensityBound_le (half_pos hε)),
+    h_log.eventually (eventually_log_polynomialWeightScale_add_one_le_behrend
+      (show 0 < ε / 4 by positivity)), h_log.eventually_ge_atTop 5184]
+    with x h_R h_logQ h_logB_old hy
+  let y := log (x : ℝ)
+  let Q := shortArcDensityBound y
+  let B := polynomialWeightScale y + 1
+  let S := sqrt (11 * y * log y)
+  have hy_pos : 0 < y := by linarith
+  have hQ : 0 < Q := exp_pos _
+  have hB : 0 < B := add_pos_of_nonneg_of_pos (pow_nonneg hy_pos.le _) one_pos
+  have h_log_y : log 5184 ≤ log y := log_le_log (by norm_num) hy
+  have h_log_compare : log (5184 * y) ≤ 2 * log y := by
+    rw [log_mul (by norm_num) hy_pos.ne']
+    linarith only [h_log_y]
+  have h_scale : sqrt (22 * y * log (5184 * y)) ≤ 2 * S := by
+    have h_sq : 22 * y * log (5184 * y) ≤ 4 * (11 * y * log y) := calc
+      _ ≤ (22 * y) * (2 * log y) := mul_le_mul_of_nonneg_left h_log_compare (by positivity)
+      _ = _ := by ring
+    have h := sqrt_le_sqrt h_sq
+    rwa [sqrt_mul (by norm_num : (0 : ℝ) ≤ 4), show sqrt 4 = 2 by norm_num] at h
+  have h_logB : log B ≤ (ε / 2) * S := calc
+    _ ≤ (ε / 4) * sqrt (22 * y * log (5184 * y)) := h_logB_old
+    _ ≤ (ε / 4) * (2 * S) := mul_le_mul_of_nonneg_left h_scale (by positivity)
+    _ = _ := by ring
+  have h_product : Q * B ≤ exp ((2 + ε) * S) := calc
+    _ = exp (log (Q * B)) := (exp_log (mul_pos hQ hB)).symm
+    _ ≤ _ := exp_le_exp.2 (by
+      rw [log_mul hQ.ne' hB.ne']
+      linarith only [h_logQ, h_logB])
+  exact h_R.trans (by gcongr)
+
+/-- The short-arc estimate also gives the bound in terms of the density for a common arc length. -/
+theorem eventually_primeRemainder_natCast_le_with_polynomial_weight (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      let Q := subexponentialWeightBound y
+      let J := polynomialWeightScale y
+      primeRemainder P.d P.q₀ x ≤ (1700000 * P.q₀.totient + 2) *
+        ((x : ℝ) ^ (-1 / 2 : ℝ) * (Q * (J + 1))) := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_short_arcs P,
+    h_log.eventually eventually_shortArcDensityBound_le_subexponentialWeightBound] with x h_R hQ
+  have hB : 0 ≤ polynomialWeightScale (log (x : ℝ)) + 1 :=
+    add_nonneg (pow_nonneg (log_natCast_nonneg x) _) zero_le_one
+  exact h_R.trans (by gcongr)
 
 /-- The leading term in the subexponential correction comes from the density bound. -/
 theorem eventually_primeRemainder_natCast_le_with_polynomial_weight_exponent (P : Parameters)
@@ -347,16 +404,18 @@ private lemma eventually_primeRemainder_natCast_le_of_density
   let A : ℝ := 1700000 * P.q₀.totient + 2
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [eventually_primeRemainder_natCast_le_with_polynomial_weight P,
+  filter_upwards [eventually_primeRemainder_natCast_le_with_short_arcs P,
     h_log.eventually (eventually_log_subexponentialWeightBound_le (show 0 < s / 4 by positivity)),
+    h_log.eventually eventually_shortArcDensityBound_le_subexponentialWeightBound,
     h_log.eventually (eventually_log_polynomialWeightScale_add_one_le (show 0 < s / 4 by positivity)),
     ((tendsto_rpow_atTop (half_pos hs)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop (A / C),
-    eventually_ge_atTop 1] with x h_bound h_logQ h_logB h_coeff hx_one
+    eventually_ge_atTop 1] with x h_bound h_logQ_old h_compare h_logB h_coeff hx_one
   let y := log (x : ℝ)
-  let Q := subexponentialWeightBound y
+  let Q := shortArcDensityBound y
   let B := polynomialWeightScale y + 1
   have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
   have hQ : 0 < Q := exp_pos _
+  have h_logQ := (log_le_log hQ h_compare).trans h_logQ_old
   have hB : 0 < B := add_pos_of_nonneg_of_pos (pow_nonneg (log_natCast_nonneg x) _) one_pos
   have h_power : Q * B ≤ (x : ℝ) ^ (s / 2) := calc
     _ = exp (log (Q * B)) := (exp_log (mul_pos hQ hB)).symm

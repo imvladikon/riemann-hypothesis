@@ -6,8 +6,9 @@ import Lib.Analytic.Primes
 /-!
 # Admissible data with a polynomial scale for the logarithmic weight
 
-The Behrend count bounds the ratio of place counts. A polynomial in the logarithmic variable
-provides the scale for the weights, prime windows and auxiliary cutoff.
+The Behrend count bounds the ratio of place counts using the arc lengths required at each prime.
+A polynomial in the logarithmic variable provides the scale for the weights, prime windows and
+auxiliary cutoff.
 -/
 
 @[expose] public section
@@ -288,21 +289,18 @@ private lemma eventually_log_scale_le_behrend {c : ℝ} (hc : 0 < c) :
   have h := sqrt_le_sqrt hL_sq
   rwa [sqrt_sq hL_nonneg, sqrt_mul (sq_nonneg c), sqrt_sq hc.le] at h
 
-private lemma eventually_behrend_digit_bounds :
-    ∀ᶠ y : ℝ in atTop,
-      let L := log (5184 * y)
-      let S := sqrt (22 * y * L)
-      let n := behrendDigitCount y
-      1 ≤ L ∧ sqrt y ≤ S ∧ 0 < n ∧ (n : ℝ) ≤ y ∧
-        (n : ℝ) ≤ S / L + 1 ∧ (n : ℝ) * L ≤ S + L ∧ 22 * y ≤ (n : ℝ) * S ∧
-        (5184 * y) ^ n ≤ exp (11 * y) := by
-  filter_upwards [eventually_ge_atTop (2 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1,
-    eventually_log_scale_le (1 / 2) (by norm_num),
-    eventually_sqrt_scale_le (A := 22) (by norm_num) (c := 1 / 2) (by norm_num)]
-    with y hy hL hL_upper hS_upper
-  let L := log (5184 * y)
+private lemma behrend_digit_bounds {y base : ℝ} (hy : 2 ≤ y) (hb : 0 < base)
+    (hL : 1 ≤ log base) (hL_upper : log base ≤ 1 / 2 * y)
+    (hS_upper : sqrt (22 * y * log base) ≤ 1 / 2 * y) :
+    let L := log base
+    let S := sqrt (22 * y * L)
+    let n : ℕ := ⌈S / L⌉₊
+    sqrt y ≤ S ∧ 0 < n ∧ (n : ℝ) ≤ y ∧
+      (n : ℝ) ≤ S / L + 1 ∧ (n : ℝ) * L ≤ S + L ∧ 22 * y ≤ (n : ℝ) * S ∧
+      base ^ n ≤ exp y := by
+  let L := log base
   let S := sqrt (22 * y * L)
-  let n := behrendDigitCount y
+  let n : ℕ := ⌈S / L⌉₊
   have hy_pos : 0 < y := by linarith
   have hL_pos : 0 < L := one_pos.trans_le hL
   have hS_pos : 0 < S := sqrt_pos_of_pos (by positivity)
@@ -323,11 +321,28 @@ private lemma eventually_behrend_digit_bounds :
     _ ≤ _ := mul_le_mul_of_nonneg_right hn_lower hS_pos.le
   have h_sqrt : sqrt y ≤ S := sqrt_le_sqrt ((show y ≤ 22 * y by linarith).trans
     (le_mul_of_one_le_right (by positivity) hL))
-  refine ⟨hL, h_sqrt, hn_pos, hn_y, hn_upper, hnL, hnS, ?_⟩
-  have h_exp : (5184 * y) ^ n = exp ((n : ℝ) * L) := by
-    rw [exp_natCast_mul, exp_log (show 0 < 5184 * y by positivity)]
+  refine ⟨h_sqrt, hn_pos, hn_y, hn_upper, hnL, hnS, ?_⟩
+  have h_exp : base ^ n = exp ((n : ℝ) * L) := by
+    rw [exp_natCast_mul, exp_log hb]
   rw [h_exp]
   exact exp_le_exp.2 (by linarith only [hnL, hS_upper, hL_upper, hy])
+
+private lemma eventually_behrend_digit_bounds :
+    ∀ᶠ y : ℝ in atTop,
+      let L := log (5184 * y)
+      let S := sqrt (22 * y * L)
+      let n := behrendDigitCount y
+      1 ≤ L ∧ sqrt y ≤ S ∧ 0 < n ∧ (n : ℝ) ≤ y ∧
+        (n : ℝ) ≤ S / L + 1 ∧ (n : ℝ) * L ≤ S + L ∧ 22 * y ≤ (n : ℝ) * S ∧
+        (5184 * y) ^ n ≤ exp (11 * y) := by
+  filter_upwards [eventually_ge_atTop (2 : ℝ), tendsto_log_behrend_base.eventually_ge_atTop 1,
+    eventually_log_scale_le (1 / 2) (by norm_num),
+    eventually_sqrt_scale_le (A := 22) (by norm_num) (c := 1 / 2) (by norm_num)]
+    with y hy hL hL_upper hS_upper
+  obtain ⟨h_sqrt, hn_pos, hn_y, hn_upper, hnL, hnS, h_exp⟩ :=
+    behrend_digit_bounds hy (by positivity) hL hL_upper hS_upper
+  exact ⟨hL, h_sqrt, hn_pos, hn_y, hn_upper, hnL, hnS,
+    h_exp.trans (exp_le_exp.2 (by linarith))⟩
 
 /-- The log of the place count ratio is bounded by two times the Behrend scale plus lower-order terms. -/
 theorem eventually_log_subexponentialWeightBound_le_behrend {ε : ℝ} (hε : 0 < ε) :
@@ -378,6 +393,33 @@ private lemma log_two_le_one : log (2 : ℝ) ≤ 1 := by
   norm_num at h
   exact h
 
+private lemma behrend_side_sq_le {H S y : ℝ} {m n s : ℕ}
+    (hH_pos : 0 < H) (hm_pos : 0 < (m : ℝ)) (hn_pos : 0 < n)
+    (hm_upper : (m : ℝ) ≤ 2 * exp (y / 2)) (h_tower : (2 : ℝ) ^ s = (m : ℝ) ^ 22)
+    (hHn : H ^ n ≤ (2 : ℝ) ^ s) (hnS : 22 * y ≤ (n : ℝ) * S) :
+    H ^ 2 ≤ exp (S + 44) := by
+  have hH_log : (n : ℝ) * log H ≤ (s : ℝ) * log 2 := by
+    simpa only [log_pow] using log_le_log (pow_pos hH_pos n) hHn
+  have hs_log : (s : ℝ) * log 2 = 22 * log m := by
+    simpa only [log_pow, Nat.cast_ofNat] using congrArg log h_tower
+  have hm_log : log m ≤ log 2 + y / 2 := by
+    have h := log_le_log hm_pos hm_upper
+    rwa [log_mul (by norm_num) (exp_ne_zero _), log_exp] at h
+  have hs_upper : 2 * ((s : ℝ) * log 2) ≤ 22 * y + 44 := by
+    linarith only [hm_log, hs_log, log_two_le_one]
+  have hn_one : (1 : ℝ) ≤ n := by exact_mod_cast hn_pos
+  have h_mul : (n : ℝ) * (2 * log H) ≤ (n : ℝ) * (S + 44) := by
+    nlinarith only [hH_log, hs_upper, hnS,
+      mul_le_mul_of_nonneg_right hn_one (show (0 : ℝ) ≤ 44 by norm_num)]
+  exact (log_le_iff_le_exp (pow_pos hH_pos 2)).1 (by
+    rw [log_pow]
+    exact le_of_mul_le_mul_left h_mul (by linarith))
+
+private lemma two_pow_le_exp_nat (n : ℕ) : (2 : ℝ) ^ n ≤ exp n := calc
+  _ = exp ((n : ℝ) * log 2) := by rw [exp_natCast_mul, exp_log (by norm_num : (0 : ℝ) < 2)]
+  _ ≤ _ := exp_le_exp.2 (by linarith only [
+    mul_le_mul_of_nonneg_left log_two_le_one (Nat.cast_nonneg n)])
+
 /-- The Behrend density fits the weight scale when the digits are chosen from the tower size. -/
 theorem Parameters.eventually_exists_isSparse_with_weightBound (P : Parameters) :
     ∀ᶠ y : ℝ in atTop,
@@ -425,29 +467,12 @@ theorem Parameters.eventually_exists_isSparse_with_weightBound (P : Parameters) 
   have hH_pos : 0 < H := by positivity
   have hHn : H ^ n ≤ (2 : ℝ) ^ s :=
     (le_mul_of_one_le_right (by positivity) hW_one).trans hk
-  have hH_log : (n : ℝ) * log H ≤ (s : ℝ) * log 2 := by
-    simpa only [log_pow] using log_le_log (pow_pos hH_pos n) hHn
-  have hs_log : (s : ℝ) * log 2 = 22 * log m := by
-    simpa only [log_pow, Nat.cast_ofNat] using congrArg log h_tower
-  have hm_log : log m ≤ log 2 + y / 2 := by
-    have h := log_le_log hm_pos hm_upper
-    rwa [log_mul (by norm_num) (exp_ne_zero _), log_exp] at h
-  have hs_upper : 2 * ((s : ℝ) * log 2) ≤ 22 * y + 44 := by
-    linarith only [hm_log, hs_log, log_two_le_one]
-  have hn_one : (1 : ℝ) ≤ n := by exact_mod_cast hn_pos
-  have h_mul : (n : ℝ) * (2 * log H) ≤ (n : ℝ) * (S + 44) := by
-    nlinarith only [hH_log, hs_upper, hnS,
-      mul_le_mul_of_nonneg_right hn_one (show (0 : ℝ) ≤ 44 by norm_num)]
-  have hH_fit : H ^ 2 ≤ exp (S + 44) := (log_le_iff_le_exp (pow_pos hH_pos 2)).1 (by
-    rw [log_pow]
-    exact le_of_mul_le_mul_left h_mul (by linarith))
+  have hH_fit := behrend_side_sq_le hH_pos hm_pos hn_pos hm_upper h_tower hHn hnS
   have h_coefficient : 3 * (l₀ s : ℝ) * n ≤ exp (2 * L) := calc
     _ ≤ 3 * (2592 * y) * y := by gcongr
     _ ≤ (5184 * y) ^ 2 := by nlinarith only [sq_nonneg y]
     _ = _ := by simp only [two_mul, exp_add, L, exp_log hb_pos, pow_two]
-  have hn_fit : (2 : ℝ) ^ n ≤ exp n := calc
-    _ = exp ((n : ℝ) * log 2) := by rw [exp_natCast_mul, exp_log (by norm_num : (0 : ℝ) < 2)]
-    _ ≤ _ := exp_le_exp.2 (by nlinarith only [mul_le_mul_of_nonneg_left log_two_le_one (n.cast_nonneg (α := ℝ))])
+  have hn_fit := two_pow_le_exp_nat n
   have hW_fit : W ≤ exp (S + L) := calc
     _ = exp ((n : ℝ) * L) := by rw [exp_natCast_mul, exp_log hb_pos]
     _ ≤ _ := exp_le_exp.2 hnL
@@ -459,6 +484,346 @@ theorem Parameters.eventually_exists_isSparse_with_weightBound (P : Parameters) 
     _ = _ := by
       rw [← exp_add, ← exp_add, ← exp_add, subexponentialWeightBound]
       change exp _ = exp (2 * S + 3 * L + n + 44)
+      congr 1
+      ring
+
+/-- The factor in the digit spacing for the Behrend construction with short arcs. -/
+noncomputable def shortArcBase (y : ℝ) : ℝ := 5184 * sqrt y
+
+/-- The rounded number of digits for the short-arc construction. -/
+noncomputable def shortArcDigitCount (y : ℝ) : ℕ :=
+  ⌈sqrt (22 * y * log (shortArcBase y)) / log (shortArcBase y)⌉₊
+
+/-- The ratio of place counts for the construction with prime-dependent arc lengths. -/
+noncomputable def shortArcDensityBound (y : ℝ) : ℝ :=
+  let L := log (shortArcBase y)
+  exp (2 * sqrt (22 * y * L) + 7 * L + shortArcDigitCount y + 44 + sqrt y)
+
+private lemma tendsto_shortArcBase_log :
+    Tendsto (fun y : ℝ ↦ log (shortArcBase y)) atTop atTop :=
+  tendsto_log_atTop.comp (tendsto_sqrt_atTop.const_mul_atTop (by norm_num))
+
+private lemma log_shortArcBase_eq {y : ℝ} (hy : 0 < y) :
+    log (shortArcBase y) = log 5184 + log y / 2 := by
+  rw [shortArcBase, log_mul (by norm_num) (sqrt_pos_of_pos hy).ne', log_sqrt hy.le]
+
+private lemma eventually_log_shortArcBase_le_log_scale :
+    ∀ᶠ y : ℝ in atTop, log (shortArcBase y) ≤ log (5184 * y) := by
+  filter_upwards [eventually_ge_atTop (1 : ℝ)] with y hy
+  have hy_pos := one_pos.trans_le hy
+  have h_sqrt : sqrt y ≤ y := (sqrt_le_left hy_pos.le).2 (by
+    nlinarith only [mul_nonneg hy_pos.le (sub_nonneg.2 hy)])
+  exact log_le_log (show 0 < shortArcBase y from mul_pos (by norm_num) (sqrt_pos_of_pos hy_pos))
+    (mul_le_mul_of_nonneg_left h_sqrt (by norm_num))
+
+private lemma eventually_log_shortArcBase_le {c : ℝ} (hc : 0 < c) :
+    ∀ᶠ y : ℝ in atTop, log (shortArcBase y) ≤ c * y := by
+  filter_upwards [eventually_log_shortArcBase_le_log_scale, eventually_log_scale_le c hc]
+    with y hL h
+  exact hL.trans h
+
+private lemma eventually_short_arc_digit_bounds :
+    ∀ᶠ y : ℝ in atTop,
+      let L := log (shortArcBase y)
+      let S := sqrt (22 * y * L)
+      let n := shortArcDigitCount y
+      1 ≤ L ∧ sqrt y ≤ S ∧ 0 < n ∧ (n : ℝ) ≤ y ∧
+        (n : ℝ) ≤ S / L + 1 ∧ (n : ℝ) * L ≤ S + L ∧ 22 * y ≤ (n : ℝ) * S ∧
+        shortArcBase y ^ n ≤ exp y := by
+  filter_upwards [eventually_ge_atTop (2 : ℝ), tendsto_shortArcBase_log.eventually_ge_atTop 1,
+    eventually_log_shortArcBase_le (c := 1 / 2) (by norm_num),
+    eventually_log_shortArcBase_le_log_scale,
+    eventually_sqrt_scale_le (A := 22) (by norm_num) (c := 1 / 2) (by norm_num)]
+    with y hy hL hL_upper h_compare hS_upper
+  have hy_pos : 0 < y := by linarith
+  have h_base : 0 < shortArcBase y := mul_pos (by norm_num) (sqrt_pos_of_pos hy_pos)
+  have hS : sqrt (22 * y * log (shortArcBase y)) ≤ 1 / 2 * y :=
+    (sqrt_le_sqrt (mul_le_mul_of_nonneg_left h_compare (by positivity))).trans hS_upper
+  exact ⟨hL, behrend_digit_bounds hy h_base hL hL_upper hS⟩
+
+private lemma eventually_log_shortArcDensityBound_le_base {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ y : ℝ in atTop,
+      log (shortArcDensityBound y) ≤ (2 + ε) * sqrt (22 * y * log (shortArcBase y)) := by
+  filter_upwards [eventually_short_arc_digit_bounds,
+    tendsto_shortArcBase_log.eventually_ge_atTop (4 / ε),
+    eventually_log_shortArcBase_le (c := 22 * (ε / 28) ^ 2) (by positivity),
+    tendsto_shortArcBase_log.eventually_ge_atTop (1 / ((ε / 4) ^ 2 * 22)),
+    tendsto_sqrt_atTop.eventually_ge_atTop (45 / (ε / 4)),
+    eventually_ge_atTop (2 : ℝ)]
+    with y ⟨hL, h_sqrt, _, _, hn_upper, _, _, _⟩ h_inv hL_small hL_large h_const hy
+  let L := log (shortArcBase y)
+  let S := sqrt (22 * y * L)
+  have hy_pos : 0 < y := by linarith
+  have hL_pos : 0 < L := one_pos.trans_le hL
+  have hS_nonneg : 0 ≤ S := sqrt_nonneg _
+  have h_inv_mul : 1 ≤ (ε / 4) * L := by
+    have h := (div_le_iff₀ hε).1 h_inv
+    nlinarith only [h]
+  have h_ratio : S / L ≤ (ε / 4) * S := (div_le_iff₀ hL_pos).2 (by
+    calc
+      S ≤ S * ((ε / 4) * L) := le_mul_of_one_le_right hS_nonneg h_inv_mul
+      _ = ((ε / 4) * S) * L := by ring)
+  have hn : (shortArcDigitCount y : ℝ) ≤ (ε / 4) * S + 1 :=
+    hn_upper.trans (add_le_add h_ratio le_rfl)
+  have hL_sq : L ^ 2 ≤ (ε / 28) ^ 2 * (22 * y * L) := calc
+    _ = L * L := pow_two _
+    _ ≤ (22 * (ε / 28) ^ 2 * y) * L := mul_le_mul_of_nonneg_right hL_small hL_pos.le
+    _ = _ := by ring
+  have hL_fit : L ≤ (ε / 28) * S := by
+    have h := sqrt_le_sqrt hL_sq
+    rwa [sqrt_sq hL_pos.le, sqrt_mul (sq_nonneg (ε / 28)), sqrt_sq (by positivity)] at h
+  have h_y_fit : sqrt y ≤ (ε / 4) * S := by
+    have h_threshold := (div_le_iff₀ (show 0 < (ε / 4) ^ 2 * 22 by positivity)).1 hL_large
+    have h_pow : y ≤ (ε / 4) ^ 2 * (22 * y * L) := calc
+      _ ≤ y * (L * ((ε / 4) ^ 2 * 22)) := le_mul_of_one_le_right hy_pos.le h_threshold
+      _ = _ := by ring
+    have h := sqrt_le_sqrt h_pow
+    rwa [sqrt_mul (sq_nonneg (ε / 4)), sqrt_sq (by positivity)] at h
+  have h45 : (45 : ℝ) ≤ (ε / 4) * S :=
+    (div_le_iff₀ (by positivity : 0 < ε / 4)).1 (h_const.trans h_sqrt) |>.trans_eq (mul_comm _ _)
+  rw [shortArcDensityBound, log_exp]
+  change 2 * S + 7 * L + (shortArcDigitCount y : ℝ) + 44 + sqrt y ≤ (2 + ε) * S
+  linarith only [hn, hL_fit, h_y_fit, h45]
+
+/-- The logarithm of the short-arc density bound has leading term
+`2 * sqrt (11 * y * log y)`. -/
+theorem eventually_log_shortArcDensityBound_le {ε : ℝ} (hε : 0 < ε) :
+    ∀ᶠ y : ℝ in atTop,
+      log (shortArcDensityBound y) ≤ (2 + ε) * sqrt (11 * y * log y) := by
+  let δ : ℝ := ε / (4 + ε)
+  have hδ : 0 < δ := by dsimp [δ]; positivity
+  filter_upwards [eventually_log_shortArcDensityBound_le_base (half_pos hε),
+    tendsto_log_atTop.eventually_ge_atTop (log 5184 / δ),
+    eventually_ge_atTop (1 : ℝ)] with y hQ hL hy
+  have hy_pos := one_pos.trans_le hy
+  have hL_pos : 0 ≤ log y := log_nonneg hy
+  have h_c := (div_le_iff₀ hδ).1 hL
+  have h_inner : 22 * y * log (shortArcBase y) ≤ (1 + δ) ^ 2 * (11 * y * log y) := by
+    rw [log_shortArcBase_eq hy_pos]
+    have h_scale : 2 * log 5184 + log y ≤ (1 + δ) ^ 2 * log y := by
+      nlinarith only [h_c, mul_nonneg (sq_nonneg δ) hL_pos]
+    calc
+      _ = (11 * y) * (2 * log 5184 + log y) := by ring
+      _ ≤ (11 * y) * ((1 + δ) ^ 2 * log y) :=
+        mul_le_mul_of_nonneg_left h_scale (by positivity)
+      _ = _ := by ring
+  have h_sqrt : sqrt (22 * y * log (shortArcBase y)) ≤ (1 + δ) * sqrt (11 * y * log y) := by
+    have h := sqrt_le_sqrt h_inner
+    rwa [sqrt_mul (sq_nonneg (1 + δ)), sqrt_sq (by linarith)] at h
+  calc
+    _ ≤ (2 + ε / 2) * sqrt (22 * y * log (shortArcBase y)) := hQ
+    _ ≤ (2 + ε / 2) * ((1 + δ) * sqrt (11 * y * log y)) :=
+      mul_le_mul_of_nonneg_left h_sqrt (by linarith)
+    _ = _ := by
+      dsimp [δ]
+      field_simp [show 4 + ε ≠ 0 by positivity]
+      ring
+
+/-- The short-arc construction also fits the bound from a common arc length. -/
+theorem eventually_shortArcDensityBound_le_subexponentialWeightBound :
+    ∀ᶠ y : ℝ in atTop, shortArcDensityBound y ≤ subexponentialWeightBound y := by
+  filter_upwards [eventually_log_shortArcDensityBound_le_base (ε := 1 / 4) (by norm_num),
+    eventually_ge_atTop (5184 : ℝ)] with y hQ hy
+  let L := log (5184 * y)
+  let S := sqrt (22 * y * L)
+  have hy_pos : 0 < y := by linarith
+  have h_log_y : log 5184 ≤ log y := log_le_log (by norm_num) hy
+  have hL_eq : L = log 5184 + log y := log_mul (by norm_num) hy_pos.ne'
+  have hL_nonneg : 0 ≤ L := log_nonneg (by linarith)
+  have hL_fit : log (shortArcBase y) ≤ (7 / 8) ^ 2 * L := by
+    rw [log_shortArcBase_eq hy_pos]
+    linarith only [h_log_y, hL_eq, hL_nonneg]
+  have h_sqrt : sqrt (22 * y * log (shortArcBase y)) ≤ (7 / 8) * S := by
+    have h : 22 * y * log (shortArcBase y) ≤ (7 / 8) ^ 2 * (22 * y * L) := calc
+      _ ≤ (22 * y) * ((7 / 8) ^ 2 * L) := mul_le_mul_of_nonneg_left hL_fit (by positivity)
+      _ = _ := by ring
+    have hs := sqrt_le_sqrt h
+    rwa [sqrt_mul (sq_nonneg (7 / 8 : ℝ)), sqrt_sq (by norm_num)] at hs
+  have hQ_old : 2 * S ≤ log (subexponentialWeightBound y) := by
+    rw [subexponentialWeightBound, log_exp]
+    linarith only [hL_nonneg, Nat.cast_nonneg (α := ℝ) (behrendDigitCount y)]
+  have hpos : 0 < shortArcDensityBound y := exp_pos _
+  have hpos_old : 0 < subexponentialWeightBound y := exp_pos _
+  apply (log_le_log_iff hpos hpos_old).1
+  exact hQ.trans (le_trans (by linarith only [h_sqrt, sqrt_nonneg (22 * y * L)]) hQ_old)
+
+/-- The density bound for short arcs is at least one at large scales. -/
+theorem eventually_one_le_shortArcDensityBound :
+    ∀ᶠ y : ℝ in atTop, 1 ≤ shortArcDensityBound y := by
+  filter_upwards [tendsto_shortArcBase_log.eventually_ge_atTop 1] with y hL
+  have hS := sqrt_nonneg (22 * y * log (shortArcBase y))
+  have h_sqrt := sqrt_nonneg y
+  have hn := Nat.cast_nonneg (α := ℝ) (shortArcDigitCount y)
+  rw [shortArcDensityBound, ← exp_zero]
+  exact exp_le_exp.2 (by linarith only [hL, hS, h_sqrt, hn])
+
+private lemma exists_short_arc_depth (l M : ℕ) (hl : 0 < l) :
+    ∃ u : ℕ, 2 * l * (M + 1) < 2 ^ u ∧ 2 ^ u ≤ 4 * l * (M + 1) := by
+  let d := 2 * l * (M + 1)
+  refine ⟨Nat.log 2 d + 1, Nat.lt_pow_succ_log_self (by decide) d, ?_⟩
+  have hd : d ≠ 0 := by dsimp [d]; positivity
+  calc
+    2 ^ (Nat.log 2 d + 1) = 2 ^ Nat.log 2 d * 2 := pow_succ _ _
+    _ ≤ d * 2 := Nat.mul_le_mul_right 2 (Nat.pow_log_le_self 2 hd)
+    _ = _ := by dsimp [d]; ring
+
+private lemma log_tower_le_sqrt_of_large_prime {y : ℝ} {ℓ s : ℕ}
+    (hy : 0 < y) (hℓ : exp (sqrt y) < ℓ) (hs : (s : ℝ) ≤ 32 * y) :
+    (Nat.log ℓ (2 ^ (12 * s)) : ℝ) ≤ 384 * sqrt y := by
+  let j := Nat.log ℓ (2 ^ (12 * s))
+  have hℓ_pos : 0 < (ℓ : ℝ) := (exp_pos _).trans hℓ
+  have h_log := (lt_log_iff_exp_lt hℓ_pos).2 hℓ
+  have h_nat : ℓ ^ j ≤ 2 ^ (12 * s) := Nat.pow_log_le_self ℓ (by positivity)
+  have h_pow : (ℓ : ℝ) ^ j ≤ (2 : ℝ) ^ (12 * s) := by exact_mod_cast h_nat
+  have h_j : (j : ℝ) * log ℓ ≤ 12 * (s : ℝ) * log 2 := by
+    simpa only [log_pow, Nat.cast_mul, Nat.cast_ofNat] using
+      log_le_log (pow_pos hℓ_pos j) h_pow
+  have h_two : log (2 : ℝ) ≤ 1 := by
+    have h := log_le_sub_one_of_pos (by norm_num : 0 < (2 : ℝ))
+    norm_num at h
+    exact h
+  have root_pos : 0 < sqrt y := sqrt_pos_of_pos hy
+  have h_bound : (j : ℝ) * sqrt y ≤ (384 * sqrt y) * sqrt y := calc
+    _ ≤ (j : ℝ) * log ℓ := mul_le_mul_of_nonneg_left h_log.le (Nat.cast_nonneg j)
+    _ ≤ _ := h_j
+    _ ≤ 12 * (s : ℝ) * 1 := mul_le_mul_of_nonneg_left h_two (by positivity)
+    _ ≤ 384 * y := by linarith only [hs]
+    _ = _ := by nlinarith only [sq_sqrt hy.le]
+  exact le_of_mul_le_mul_right h_bound root_pos
+
+/-- The short-arc count uses a base proportional to `sqrt y` and a cycle of order `2 ^ (s - u)`. -/
+theorem Parameters.eventually_exists_isSparse_with_short_arcs (P : Parameters) :
+    ∀ᶠ y : ℝ in atTop,
+      ∀ m r s : ℕ, exp (y / 2) ≤ m → m ≤ 2 * exp (y / 2) → r ≤ 3 * exp (5 * y) →
+        2 ^ s = m ^ 22 → s ≤ 32 * y →
+        ∃ T : Finset (P.Φ s),
+          (∀ σ ∈ T, P.placeClass (P.q₀.dvd_mul_right (towerDeg s)) σ = -1) ∧
+            towerDeg s ≤ #T * shortArcDensityBound y ∧
+            P.IsSparseUpTo s ((r + 1 - m) * (5 * r)) (shortArcLength s) T := by
+  filter_upwards [eventually_short_arc_digit_bounds, eventually_mul_pow_le_exp_sqrt 1e6 1,
+    eventually_ge_atTop (4 : ℝ)]
+    with y ⟨_, _, hn_pos, hn_y, _, hnL, hnS, hG_upper⟩ h_large hy
+  intro m r s hm_lower hm_upper hr h_pow hs
+  let K := shortArcBase y
+  let L := log K
+  let S := sqrt (22 * y * L)
+  let n := shortArcDigitCount y
+  let G := K ^ n
+  let M := ⌊exp (sqrt y)⌋₊
+  let J : ℕ := ⌈1000 * sqrt y⌉₊
+  have hy_pos : 0 < y := by linarith
+  have h_root : 2 ≤ sqrt y := (le_sqrt (by norm_num) hy_pos.le).2 (by linarith)
+  have hK_one : 1 ≤ K := by dsimp [K, shortArcBase]; linarith
+  have hK_pos : 0 < K := one_pos.trans_le hK_one
+  have hG_one : 1 ≤ G := one_le_pow₀ hK_one
+  have hm_pos : 0 < (m : ℝ) := (exp_pos _).trans_le hm_lower
+  have h_tower : (2 : ℝ) ^ s = (m : ℝ) ^ 22 := by exact_mod_cast h_pow
+  have h_tower_lower : exp (11 * y) ≤ (2 : ℝ) ^ s := calc
+    _ = (exp (y / 2)) ^ (22 : ℕ) := by rw [← exp_natCast_mul]; congr 1; ring
+    _ ≤ (m : ℝ) ^ 22 := pow_le_pow_left₀ (exp_pos _).le hm_lower 22
+    _ = _ := h_tower.symm
+  have hs_ne : s ≠ 0 := by
+    intro hs0
+    rw [hs0, pow_zero] at h_tower_lower
+    exact (one_lt_exp_iff.2 (by positivity)).not_ge h_tower_lower
+  have hl : (l₀ s : ℝ) ≤ 2592 * y := by
+    linarith only [hs, show (l₀ s : ℝ) ≤ 81 * s from mod_cast l₀_le_mul hs_ne]
+  have hl_pos : 0 < l₀ s := (Nat.zero_le _).trans_lt (mul_lt_l₀ s)
+  obtain ⟨u, h_depth, h_u⟩ := exists_short_arc_depth (l₀ s) M hl_pos
+  have hM : (M : ℝ) + 1 ≤ 2 * exp (sqrt y) := by
+    have h_floor : (M : ℝ) ≤ exp (sqrt y) := Nat.floor_le (exp_pos _).le
+    linarith only [h_floor, one_le_exp (sqrt_nonneg y)]
+  have h_u_real : (2 : ℝ) ^ u ≤ 8 * l₀ s * exp (sqrt y) := calc
+    _ ≤ 4 * (l₀ s : ℝ) * ((M : ℝ) + 1) := by exact_mod_cast h_u
+    _ ≤ 4 * (l₀ s : ℝ) * (2 * exp (sqrt y)) := mul_le_mul_of_nonneg_left hM (by positivity)
+    _ = _ := by ring
+  have h_root_linear : 2 * sqrt y ≤ y := by
+    nlinarith only [sq_sqrt hy_pos.le, mul_nonneg (sqrt_nonneg y) (sub_nonneg.2 h_root)]
+  have h_u_exp : (2 : ℝ) ^ u ≤ exp y := calc
+    _ ≤ 8 * (l₀ s : ℝ) * exp (sqrt y) := h_u_real
+    _ ≤ (1e6 * y) * exp (sqrt y) := mul_le_mul_of_nonneg_right
+      (by linarith only [hl, hy]) (exp_pos _).le
+    _ ≤ exp (sqrt y) * exp (sqrt y) := mul_le_mul_of_nonneg_right
+      (by simpa only [pow_one] using h_large) (exp_pos _).le
+    _ ≤ _ := by rw [← exp_add]; exact exp_le_exp.2 (by linarith only [h_root_linear])
+  have hu : u ≤ s := by
+    by_contra! h
+    exact (pow_lt_pow_right₀ (show (1 : ℝ) < 2 by norm_num) h).not_ge
+      (h_u_exp.trans ((exp_le_exp.2 (by linarith)).trans h_tower_lower))
+  have h_cap : G ≤ (2 : ℝ) ^ (s - u) := by
+    apply (mul_le_mul_iff_right₀ (pow_pos (by norm_num : (0 : ℝ) < 2) u)).1
+    rw [← pow_add, show u + (s - u) = s by omega]
+    calc
+      _ ≤ exp y * exp y := mul_le_mul h_u_exp hG_upper (zero_le_one.trans hG_one) (exp_pos _).le
+      _ ≤ exp (11 * y) := by rw [← exp_add]; exact exp_le_exp.2 (by linarith)
+      _ ≤ _ := h_tower_lower
+  have hJ_pos : 0 < J := Nat.ceil_pos.2 (by positivity)
+  have hJ_fit : (2 * (J : ℝ)) ^ n ≤ G := by
+    have hJ : (J : ℝ) ≤ 1000 * sqrt y + 1 :=
+      (Nat.ceil_lt_add_one (show 0 ≤ 1000 * sqrt y by positivity)).le
+    apply pow_le_pow_left₀ (by positivity) _ n
+    dsimp [K, shortArcBase]
+    linarith only [hJ, h_root]
+  have h_rank : 2 * l₀ s * ((r + 1 - m) * (5 * r) + 1) < 2 ^ s :=
+    mul_rank_lt_two_pow hy_pos ((by simpa only [pow_one] using h_large :
+      1e6 * y ≤ exp (sqrt y)).trans (exp_le_exp.2 (by linarith only [h_root_linear, sqrt_nonneg y])))
+      hm_lower hr h_pow hl
+  have h_cut (ℓ : ℕ) : shortArcLength s ℓ ≤ J ∨ 2 * l₀ s * (ℓ + 1) < 2 ^ u := by
+    by_cases hℓ : ℓ ≤ M
+    · exact Or.inr ((Nat.mul_le_mul_left _ (Nat.succ_le_succ hℓ)).trans_lt h_depth)
+    · have h_exp : exp (sqrt y) < (ℓ : ℝ) := (Nat.floor_lt (exp_pos _).le).1 (lt_of_not_ge hℓ)
+      have h_log := log_tower_le_sqrt_of_large_prime hy_pos h_exp hs
+      have h_arc : (shortArcLength s ℓ : ℝ) ≤ 768 * sqrt y + 3 := by
+        have h : shortArcLength s ℓ ≤ 2 * ℓ.log (2 ^ (12 * s)) + 3 := min_le_right _ _
+        have h_real : (shortArcLength s ℓ : ℝ) ≤ 2 * (ℓ.log (2 ^ (12 * s)) : ℝ) + 3 := by
+          exact_mod_cast h
+        linarith only [h_real, h_log]
+      exact Or.inl (by
+        have h : (shortArcLength s ℓ : ℝ) ≤ J :=
+          h_arc.trans ((by linarith only [h_root] : 768 * sqrt y + 3 ≤ 1000 * sqrt y).trans
+            (Nat.le_ceil _))
+        exact_mod_cast h)
+  obtain ⟨T, k, h_class, hk, h_count, h_sparse⟩ :=
+    P.exists_isSparseUpTo_card_bound (A := shortArcLength s) hu hJ_pos hn_pos
+      hG_one h_cap hJ_fit h_rank (fun _ ↦ min_le_left _ _) (fun ℓ _ _ ↦ h_cut ℓ)
+  let H : ℝ := (2 : ℝ) ^ k
+  have hH_pos : 0 < H := by positivity
+  have hHn : H ^ n ≤ (2 : ℝ) ^ s :=
+    ((le_mul_of_one_le_right (by positivity) hG_one).trans hk).trans
+      (pow_le_pow_right₀ (by norm_num) (Nat.sub_le _ _))
+  have hH_fit := behrend_side_sq_le hH_pos hm_pos hn_pos hm_upper h_tower hHn hnS
+  have h_u_bound : (2 : ℝ) ^ u ≤ 8 * (2592 * y) * exp (sqrt y) :=
+    h_u_real.trans (by gcongr)
+  have hK_pow : K ^ (6 : ℕ) = 5184 ^ (6 : ℕ) * y ^ (3 : ℕ) := by
+    dsimp [K, shortArcBase]
+    rw [mul_pow, show (sqrt y) ^ (6 : ℕ) = ((sqrt y) ^ (2 : ℕ)) ^ (3 : ℕ) from
+      pow_mul (sqrt y) 2 3, sq_sqrt hy_pos.le]
+  have h_coefficient : 3 * (l₀ s : ℝ) * 2 ^ u * n ≤ exp (6 * L + sqrt y) := calc
+    _ ≤ 3 * (2592 * y) * (8 * (2592 * y) * exp (sqrt y)) * y := by
+      gcongr
+    _ = (24 * 2592 ^ 2) * y ^ 3 * exp (sqrt y) := by ring
+    _ ≤ K ^ 6 * exp (sqrt y) := by
+      rw [hK_pow]
+      gcongr
+      norm_num
+    _ = _ := by
+      rw [exp_add]
+      congr 1
+      change K ^ (6 : ℕ) = exp (((6 : ℕ) : ℝ) * log K)
+      rw [exp_natCast_mul, exp_log hK_pos]
+  have hG_fit : G ≤ exp (S + L) := calc
+    _ = exp ((n : ℝ) * L) := by rw [exp_natCast_mul, exp_log hK_pos]
+    _ ≤ _ := exp_le_exp.2 hnL
+  refine ⟨T, h_class, h_count.trans ?_, h_sparse⟩
+  apply mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg T.card)
+  change 3 * (l₀ s : ℝ) * 2 ^ u * n * 2 ^ n * G * H ^ 2 ≤ shortArcDensityBound y
+  calc
+    _ ≤ exp (6 * L + sqrt y) * exp n * exp (S + L) * exp (S + 44) := by
+      have hn_fit := two_pow_le_exp_nat n
+      gcongr
+    _ = _ := by
+      rw [← exp_add, ← exp_add, ← exp_add, shortArcDensityBound]
+      change exp _ = exp (2 * S + 7 * L + n + 44 + sqrt y)
       congr 1
       ring
 
@@ -694,18 +1059,18 @@ private lemma exists_weight_with_cutoff {q : ℕ} {ℓ V Q : ℝ} (hq : 0 < q)
     _ = exp (ℓ + V) := (exp_add _ _).symm
     _ ≤ _ := exp_le_exp.2 hQ
 
-/-- Construct admissible data with polynomial logarithmic weight and a separate density bound. -/
-theorem eventually_exists_data_with_polynomial_weight (P : Parameters) :
+/-- Construct admissible data with polynomial weight using the short-arc density bound. -/
+theorem eventually_exists_data_with_short_arcs (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
       let y := log (x : ℝ)
       let J := polynomialWeightScale y
       ∃ D : Data P,
         D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * y) ^ 27)⌋₊ ∧
           sqrt x ≤ D.m ∧ (64 * y) ^ 27 ≤ D.logX₁ ∧ D.logB ∈ Set.Icc J (J + 1) ∧
-          towerDeg D.towerExp ≤ #D.bPlaces * subexponentialWeightBound y := by
+          towerDeg D.towerExp ≤ #D.bPlaces * shortArcDensityBound y := by
   have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
     tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
-  filter_upwards [h_log.eventually P.eventually_exists_isSparse_with_weightBound,
+  filter_upwards [h_log.eventually P.eventually_exists_isSparse_with_short_arcs,
     h_log.eventually P.eventually_polynomial_prime_windows,
     h_log.eventually P.eventually_prime_scale_inequalities,
     h_log.eventually eventually_cutoff_inequalities,
@@ -797,6 +1162,23 @@ theorem eventually_exists_data_with_polynomial_weight (P : Parameters) :
       piN := β, piN_mul_star := hβ }
   refine ⟨D, exp_log hx_pos, rfl, ?_, h_cutoff, hB, h_card⟩
   simpa only [y, exp_half, exp_log hx_pos] using hm_lower
+
+/-- Construct admissible data with polynomial logarithmic weight and a separate density bound. -/
+theorem eventually_exists_data_with_polynomial_weight (P : Parameters) :
+    ∀ᶠ x : ℕ in atTop,
+      let y := log (x : ℝ)
+      let J := polynomialWeightScale y
+      ∃ D : Data P,
+        D.x = x ∧ D.natX₁ = ⌊exp (2 * (64 * y) ^ 27)⌋₊ ∧
+          sqrt x ≤ D.m ∧ (64 * y) ^ 27 ≤ D.logX₁ ∧ D.logB ∈ Set.Icc J (J + 1) ∧
+          towerDeg D.towerExp ≤ #D.bPlaces * subexponentialWeightBound y := by
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_exists_data_with_short_arcs P,
+    h_log.eventually eventually_shortArcDensityBound_le_subexponentialWeightBound]
+    with x ⟨D, hx, hx₁, hm, h_cutoff, hB, h_card⟩ hQ
+  exact ⟨D, hx, hx₁, hm, h_cutoff, hB, h_card.trans
+    (mul_le_mul_of_nonneg_left hQ (Nat.cast_nonneg _))⟩
 
 /-- These data also satisfy the subexponential upper bound on the logarithmic weight. -/
 theorem eventually_exists_data_with_weightBound (P : Parameters) :

@@ -60,7 +60,7 @@ variable {P : Parameters}
 /-! ## Partners of places at a non-split prime
 
 For `p = d` a place and its partner lie in different classes modulo `q₀`. For a non-split `p ≤ k`
-the `b`-places are sparse along the powers of `-p`.
+the `b`-places are sparse along short arcs of powers of `-p`.
 -/
 
 /-- If the place `-p ^ e σ` has the same class modulo `q₀` as the place `σ`, then `p` is not the
@@ -94,11 +94,12 @@ lemma summable_posPart_sub_weight (D : Data P) (p : ℕ) [Fact p.Prime] (y : ℝ
   · simp
 
 /-- Sparseness along the powers of `-p`: for a prime `p ≤ k = D.k` that does not split in
-`K = ℚ(√-d)`, that is `χ_K(p) = chiK P.d p ≠ 1`, and `0 < i < j < l₀`, the places `σ`, `(-p) ^ i σ`,
+`K = ℚ(√-d)`, that is `χ_K(p) = chiK P.d p ≠ 1`, and `0 < i < j < shortArcLength s p`, the places `σ`, `(-p) ^ i σ`,
 `(-p) ^ j σ`, distinct or not, are not all `b`-places. -/
 lemma notMem_bPlaces_of_two_partners (D : Data P) {p : ℕ} (hp : p.Prime)
     (h_nonsplit : chiK P.d p ≠ 1)
-    (hk : p ≤ D.k) (σ : D.Φ) (i j : ℕ) (hi : 0 < i) (hij : i < j) (hj : j < l₀ D.towerExp)
+    (hk : p ≤ D.k) (σ : D.Φ) (i j : ℕ) (hi : 0 < i) (hij : i < j)
+    (hj : j < shortArcLength D.towerExp p)
     (hσ : σ ∈ D.bPlaces) (hσi : D.placeOfInt (-p) ^ i * σ ∈ D.bPlaces)
     (hσj : D.placeOfInt (-p) ^ j * σ ∈ D.bPlaces) : False := by
   have : Fact p.Prime := ⟨hp⟩
@@ -116,17 +117,25 @@ lemma notMem_bPlaces_of_two_partners (D : Data P) {p : ℕ} (hp : p.Prime)
 /-! ## Near pairs -/
 
 /-- `(τ, e)` is a near pair with start `τ` and end `-p ^ e τ`: the exponent `e` lies in `I_p` (odd
-if `p` is inert, positive if `p = d`), `e < l₀ / 2`, and both places are `b`-places. -/
+if `p` is inert, positive if `p = d`), `e < nearPairCutoff s p`, and both places are `b`-places. -/
 structure IsNearPair (D : Data P) (p : ℕ) (τ : D.Φ) (e : ℕ) : Prop where
   /-- The exponent lies in `I_p`. -/
   exponent_mem : e ∈ positivePartnerExponents P.d p
-  /-- The exponent is less than `l₀ / 2`. -/
-  two_mul_lt : 2 * e < l₀ D.towerExp
+  /-- The exponent is below the cutoff for the geometric tail. -/
+  lt_cutoff : e < nearPairCutoff D.towerExp p
   /-- The start is a `b`-place. -/
   start_mem : τ ∈ D.bPlaces
   /-- The end is a `b`-place. -/
   end_mem : P.partner D.towerExp p e τ ∈ D.bPlaces
 
+
+lemma IsNearPair.two_mul_lt {D : Data P} {p : ℕ} {τ : D.Φ} {e : ℕ}
+    (h : D.IsNearPair p τ e) : 2 * e < l₀ D.towerExp :=
+  two_mul_lt_l₀_of_lt_nearPairCutoff h.lt_cutoff
+
+private lemma IsNearPair.lt_shortArcLength {D : Data P} {p : ℕ} {τ : D.Φ} {e : ℕ}
+    (h : D.IsNearPair p τ e) : e < shortArcLength D.towerExp p :=
+  h.lt_cutoff.trans_le (nearPairCutoff_le_shortArcLength _ _)
 
 /-- For `p = d` there are no near pairs, as all `b`-places have the same class modulo `q₀`. -/
 lemma IsNearPair.ne_d {D : Data P} {p : ℕ} {τ : D.Φ} {e : ℕ} (h : D.IsNearPair p τ e) : p ≠ P.d :=
@@ -170,7 +179,7 @@ lemma IsNearPair.exponent_unique {D : Data P} {p : ℕ} {τ : D.Φ} {e e' : ℕ}
   · exact h_symm h' h (Ne.symm hne) (by lia)
   -- For `e < e'` the `b`-places `τ`, `-p ^ e τ`, `-p ^ e' τ` are a triple that sparseness excludes.
   exact D.notMem_bPlaces_of_two_partners hp h_nonsplit hk τ e e' h.pos hlt
-    (by linarith [h'.two_mul_lt]) h.start_mem h.pow_mul_mem h'.pow_mul_mem
+    h'.lt_shortArcLength h.start_mem h.pow_mul_mem h'.pow_mul_mem
 
 /-- For a prime `p ≤ k = D.k` that does not split in `K = ℚ(√-d)`, two near pairs `(τ, e)`,
 `(τ', e')` with the same end are equal. -/
@@ -189,7 +198,7 @@ lemma IsNearPair.eq_and_eq_of_partner_eq {D : Data P} {p : ℕ} {τ τ' : D.Φ} 
     apply mul_left_cancel (a := D.placeOfInt (-p) ^ e)
     rw [← h.partner_eq, h_end, h'.partner_eq, ← mul_assoc, pow_mul_pow_sub _ hlt.le]
   exact D.notMem_bPlaces_of_two_partners hp h_nonsplit hk τ' (e' - e) e' (Nat.sub_pos_of_lt hlt)
-    (Nat.sub_lt h'.pos h.pos) (by linarith [h'.two_mul_lt]) h'.start_mem h.start_mem h'.pow_mul_mem
+    (Nat.sub_lt h'.pos h.pos) h'.lt_shortArcLength h'.start_mem h.start_mem h'.pow_mul_mem
 
 /-- For a prime `p ≤ D.k` that does not split in `K = ℚ(√-d)`, that is `χ_K(p) ≠ 1`, the end
 `-p ^ e τ` of a near pair `(τ, e)` is not the start `τ'` of a near pair `(τ', e')`. -/
@@ -201,7 +210,8 @@ lemma IsNearPair.end_ne_start {D : Data P} {p : ℕ} {τ τ' : D.Φ} {e e' : ℕ
   have h_end : D.placeOfInt (-p) ^ (e' + e) * τ ∈ D.bPlaces := by
     simpa only [pow_add, mul_assoc, h.partner_eq] using h'.pow_mul_mem
   exact D.notMem_bPlaces_of_two_partners hp h_nonsplit hk τ e (e' + e) h.pos
-    (lt_add_of_pos_left e h'.pos) (by linarith [h.two_mul_lt, h'.two_mul_lt]) h.start_mem
+    (lt_add_of_pos_left e h'.pos)
+    (add_lt_shortArcLength_of_lt_nearPairCutoff h'.lt_cutoff h.lt_cutoff) h.start_mem
       h.pow_mul_mem h_end
 
 end New.Data
@@ -388,30 +398,34 @@ lemma summable_partnerMinTerm (D : Data P) {p : ℕ} [Fact p.Prime] (τ : D.Φ) 
   (summable_geometric_two' _).of_nonneg_of_le (D.partnerMinTerm_nonneg p τ)
     (D.partnerMinTerm_add_le τ 0)
 
-/-- Let `n ≥ l₀ / 2`, where `l₀ = l₀ D.towerExp` is the least power of `3` above `27 D.towerExp`.
-Then the terms `D.partnerMinTerm p τ e`, `e ≥ n`, add up to at most `2 b / (k p)`. -/
+private lemma tsum_partnerMinTerm_add_le_of_pow_bound (D : Data P) {p : ℕ} [hp : Fact p.Prime]
+    (τ : D.Φ) {n : ℕ} (hn : D.k * p ≤ p ^ n) :
+    ∑' e : ℕ, D.partnerMinTerm p τ (e + n) ≤ 2 * D.b / (D.k * p) := by
+  have hk_pos : (0 : ℝ) < D.k := mod_cast D.k_pos
+  have hp_pos : (0 : ℝ) < p := mod_cast hp.out.pos
+  calc
+    _ ≤ 2 * D.b / p ^ n := hasSum_le (D.partnerMinTerm_add_le τ _)
+      ((summable_nat_add_iff _).2 (D.summable_partnerMinTerm τ)).hasSum (hasSum_geometric_two' _)
+    _ ≤ _ := by grw [← (show (D.k : ℝ) * p ≤ (p : ℝ) ^ n by exact_mod_cast hn)]
+
+private lemma k_mul_prime_le_pow_nearPairCutoff (D : Data P) {p : ℕ} (hp : p.Prime) :
+    D.k * p ≤ p ^ nearPairCutoff D.towerExp p :=
+  (Nat.mul_le_mul_right p (D.nat_le_of_hasLogBound : D.k ≤ 2 ^ D.towerExp)).trans
+    (tower_mul_prime_le_pow_nearPairCutoff hp.one_lt)
+
+/-- For `n ≥ l₀ / 2`, the geometric tail of the partner series is at most `2 b / (k p)`. -/
 lemma tsum_partnerMinTerm_add_le (D : Data P) {p : ℕ} [hp : Fact p.Prime] (τ : D.Φ) {n : ℕ}
     (hn : l₀ D.towerExp ≤ 2 * n) :
     ∑' e : ℕ, D.partnerMinTerm p τ (e + n) ≤ 2 * D.b / (D.k * p) := by
-  have hp2 : (2 : ℝ) ≤ p := mod_cast hp.out.two_le
-  have hk_pos : (0 : ℝ) < D.k := mod_cast D.k_pos
-  have h_towerExp_lt : D.towerExp < n := by linarith [mul_lt_l₀ D.towerExp]
-  obtain ⟨n', rfl⟩ : ∃ n' : ℕ, n = n' + 1 := exists_eq_succ_of_ne_zero h_towerExp_lt.ne_bot
-  have hk_le : (D.k : ℝ) ≤ p ^ n' :=
-    calc (D.k : ℝ) ≤ 2 ^ D.towerExp := D.le_of_hasLogBound
-      _ ≤ 2 ^ n' := pow_le_pow_right₀ one_le_two (Nat.le_of_lt_succ h_towerExp_lt)
-      _ ≤ p ^ n' := pow_le_pow_left₀ zero_le_two hp2 n'
-  calc ∑' e : ℕ, D.partnerMinTerm p τ (e + (n' + 1)) ≤ 2 * D.b / p ^ (n' + 1) :=
-        hasSum_le (D.partnerMinTerm_add_le τ _)
-          ((summable_nat_add_iff _).2 (D.summable_partnerMinTerm τ)).hasSum
-          (hasSum_geometric_two' _)
-    _ ≤ 2 * D.b / (D.k * p) := by grw [_root_.pow_succ, ← hk_le]
+  have h_cut : nearPairCutoff D.towerExp p ≤ n := (min_le_left _ _).trans (by omega)
+  exact D.tsum_partnerMinTerm_add_le_of_pow_bound τ ((D.k_mul_prime_le_pow_nearPairCutoff hp.out).trans
+    (pow_le_pow_right₀ hp.out.one_lt.le h_cut))
 
-/-- If `e < l₀ / 2` and `(τ, e)` is not a near pair, then the term `D.partnerMinTerm p τ e` is at
+/-- If `e < nearPairCutoff s p` and `(τ, e)` is not a near pair, then the term `D.partnerMinTerm p τ e` is at
 most `a / x₁`. This term is `min (κ(τ) / p ^ e) (κ(-p ^ e τ))` if `e` lies in the set `I_p` and `0`
 otherwise. -/
 lemma partnerMinTerm_le_of_not_isNearPair (D : Data P) {p : ℕ} [hp : Fact p.Prime] {τ : D.Φ} {e : ℕ}
-    (he : 2 * e < l₀ D.towerExp) (h_not_near : ¬D.IsNearPair p τ e) :
+    (he : e < nearPairCutoff D.towerExp p) (h_not_near : ¬D.IsNearPair p τ e) :
     D.partnerMinTerm p τ e ≤ D.a / D.x₁ := by
   by_cases h_start : τ ∈ D.bPlaces
   · unfold partnerMinTerm
@@ -426,14 +440,12 @@ lemma partnerMinTerm_le_of_not_isNearPair (D : Data P) {p : ℕ} [hp : Fact p.Pr
 
 /-- Let `c ≥ 0`, and suppose that a near pair `(τ, e)` can occur only for `e = e₀`, and that
 `κ(τ) / p ^ e₀ ≤ c + 1` if it occurs. Then `R_τ ≤ c + 1 + l₀ a / x₁ + 2 b / (k p)`: the term of the
-near pair is at most `c + 1`, each other term with `e < l₀ / 2` at most `a / x₁`, and the rest add
+near pair is at most `c + 1`, each other term below the cutoff at most `a / x₁`, and the rest add
 up to at most `2 b / (k p)`. -/
-lemma partnerMinSum_le (D : Data P) {p : ℕ} [Fact p.Prime] {τ : D.Φ} {e₀ : ℕ} {c : ℝ} (hc : 0 ≤ c)
+lemma partnerMinSum_le (D : Data P) {p : ℕ} [hp : Fact p.Prime] {τ : D.Φ} {e₀ : ℕ} {c : ℝ} (hc : 0 ≤ c)
     (h_near : ∀ e : ℕ, D.IsNearPair p τ e → e = e₀ ∧ (D.weight τ : ℝ) / p ^ e ≤ c + 1) :
     D.partnerMinSum p τ ≤ c + 1 + l₀ D.towerExp * (D.a / D.x₁) + 2 * D.b / (D.k * p) := by
-  -- Cut the series at `n = ⌈l₀ / 2⌉`.
-  obtain ⟨n, hn_lower, hn_upper⟩ : ∃ n : ℕ, l₀ D.towerExp ≤ 2 * n ∧ 2 * n ≤ l₀ D.towerExp + 1 :=
-    ⟨(l₀ D.towerExp + 1) / 2, by lia, by lia⟩
+  let n := nearPairCutoff D.towerExp p
   have h_term_le (e : ℕ) (he : e ∈ range n) :
       D.partnerMinTerm p τ e ≤ (if e = e₀ then c + 1 else 0) + D.a / D.x₁ := by
     by_cases h_pair : D.IsNearPair p τ e
@@ -441,17 +453,18 @@ lemma partnerMinSum_le (D : Data P) {p : ℕ} [Fact p.Prime] {τ : D.Φ} {e₀ :
       rw [ite_eq_left rfl]
       exact le_add_of_le_of_nonneg ((D.partnerMinTerm_le_div p τ e).trans h_term) (by positivity)
     · exact le_add_of_nonneg_of_le (by positivity)
-        (D.partnerMinTerm_le_of_not_isNearPair (by grind) h_pair)
+        (D.partnerMinTerm_le_of_not_isNearPair (mem_range.1 he) h_pair)
   have h_single : ∑ e ∈ range n, (if e = e₀ then c + 1 else 0) ≤ c + 1 := by
     simp [sum_ite_eq', apply_ite (· ≤ c + 1), add_nonneg hc zero_le_one]
   calc D.partnerMinSum p τ = ∑ e ∈ range n, D.partnerMinTerm p τ e + ∑' e : ℕ,
          D.partnerMinTerm p τ (e + n) :=
         ((D.summable_partnerMinTerm τ).sum_add_tsum_nat_add n).symm
     _ ≤ ∑ e ∈ range n, ((if e = e₀ then c + 1 else 0) + D.a / D.x₁) + 2 * D.b / (D.k * p) :=
-        add_le_add (sum_le_sum h_term_le) (D.tsum_partnerMinTerm_add_le τ hn_lower)
+        add_le_add (sum_le_sum h_term_le)
+          (D.tsum_partnerMinTerm_add_le_of_pow_bound τ (D.k_mul_prime_le_pow_nearPairCutoff hp.out))
     _ ≤ c + 1 + l₀ D.towerExp * (D.a / D.x₁) + 2 * D.b / (D.k * p) := by
         grw [sum_add_distrib, sum_const, card_range, nsmul_eq_mul, h_single,
-          show n ≤ l₀ D.towerExp by lia]
+          show n ≤ l₀ D.towerExp from nearPairCutoff_le_l₀ D.towerExp p]
 
 /-- For a prime `p ≤ k` and any `l`, the errors at one place add up to at most
 `3 b / (k p) ≤ n♯ / p - 1 ≤ v(B)`. There are three errors: `3 (log b + 2) + x ^ 42 + 1`, which is at

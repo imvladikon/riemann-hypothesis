@@ -420,7 +420,7 @@ lemma gammaPrime_mul_degree_sub_le_localPrimeSumTotal_add (D : Data P) {p : ℕ}
 
 /-- Let `p` be a prime that does not split in `ℚ(√-d)` and is at most `k = D.k = r + 1 - m` (the
 rank of the source, for the ranks `m`, `r` of the data), and let `(τ, e τ)` be a near pair for each
-`τ ∈ Φ₀`: `e τ < l₀ / 2`, with `l₀` the least power of `3` above `27 * D.towerExp`; `e τ` lies in
+`τ ∈ Φ₀`: `e τ` is below the cutoff `nearPairCutoff D.towerExp p` and lies in
 the set `I_p`; and `τ` and its partner `-p ^ e τ * τ` are `b`-places. Then `Φ₀` and `e` are a family
 of couplings: the exponents are odd, and no other pair `(τ₁, e')` with `τ₁ ∈ Φ₀` and odd `e' ≤ e τ`
 has the partner of `(τ, e τ)`. -/
@@ -432,7 +432,7 @@ lemma isCouplingFamily_of_isNearPair (D : Data P) {p : ℕ} [hp : Fact p.Prime]
   -- The pair `(τ₁, e')` is near, with the same end as `(τ, e τ)`.
   have h_pair : D.IsNearPair p τ₁ e' :=
     { exponent_mem := ⟨h_odd.pos, .inr ⟨(he τ hτ).inert, h_odd⟩⟩
-      two_mul_lt := (Nat.mul_le_mul_left 2 he').trans_lt (he τ hτ).two_mul_lt
+      lt_cutoff := he'.trans_lt (he τ hτ).lt_cutoff
       start_mem := (he τ₁ hτ₁).start_mem
       end_mem := by simpa only [h_end] using (he τ hτ).end_mem }
   exact h_pair.eq_and_eq_of_partner_eq hp.out h_nonsplit hk (he τ hτ) h_end
