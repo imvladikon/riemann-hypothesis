@@ -2,7 +2,7 @@ module
 
 public import Statements
 public import New.Reduction.Data.AdmissibleData
-import New.Reduction.Data.Existence
+public import New.Reduction.Data.Subexponential
 import New.Reduction.Data.Magnitudes
 import New.Reduction.MainInequality
 import New.Reduction.Zeros.Criterion
@@ -13,11 +13,11 @@ public import TauCeti.NumberTheory.DirichletCharacter.LFunction.ZeroReflection -
 # The one-sided bound, and the theorem in half-plane form
 
 For admissible data at an integer `x`, the main inequality gives a remainder term
-proportional to `φ(q₀) log² b / m`. The exponent `-1/2 + 2 ε` follows from `log b ≤ 2 x^ε`
-and `m ≥ √x`.
-The prime number theorem bounds both remainders at the auxiliary cutoff `x₁` by `x^(-2)`.
-The passage to reals and the choice of a smaller `ε` give the one-sided criterion for
-non-vanishing of Dirichlet `L`-functions in `re s > 1/2`.
+proportional to `φ(q₀) log² b / m`. A common subexponential width `W` gives `log b ≤ W ^ 6 + 1`,
+`m ≥ √x`, and an auxiliary cutoff `x₁` at which both prime remainders are at most `x ^ (-2)`.
+The resulting bound of order `x ^ (-1/2) * W ^ 12` absorbs the width and fixed constant in any
+positive exponent slack. Passage to real arguments gives the one-sided criterion for non-vanishing
+of Dirichlet `L`-functions in `re s > 1/2`.
 
 Notions from other files:
 * `Parameters`: a multiple `q₀ = P.q₀` of `18480` and a prime `d = P.d ≡ q₀ / 2 - 1` modulo `q₀`.
@@ -177,45 +177,119 @@ lemma eventually_abs_primeRemainder_exp_le (P : Parameters) {ε : ℝ} (hε : 0 
       _ ≤ (x : ℝ) ^ (-2 : ℝ) := rpow_le_rpow_of_exponent_le hx_ge h_exp
   exact (hY (exp l) (by linarith [add_one_le_exp l])).imp h_small.trans' h_small.trans'
 
-private lemma eventually_primeRemainder_natCast_le_of_log_pow (P : Parameters)
-    {ε A : ℝ} (hε : 0 < ε) (hε_lt : ε < 1 / 100) (h_A : 0 ≤ A) (s : ℕ)
-    (hR : ∀ D : Data P, primeRemainder P.d P.q₀ D.x ≤ A * P.q₀.totient * D.logB ^ s / D.m +
-      |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁|) :
+/-- A logarithmic cutoff of order `(log x) ^ 27` suffices to make each tail at most `x ^ (-2)`. -/
+private lemma eventually_abs_primeRemainder_exp_le_of_polylog_cutoff {d q : ℕ} [Fact d.Prime] [NeZero q]
+    (hd : d ≠ 2) (h_cop : q.Coprime d) :
+    ∀ᶠ x : ℝ in atTop, ∀ v : ℝ, (64 * Real.log x) ^ (27 : ℕ) ≤ v →
+      |primeRemainder d q (rexp v)| ≤ x ^ (-2 : ℝ) := by
+  obtain ⟨t, ht⟩ := eventually_atTop.1 (eventually_abs_primeRemainder_exp_le_stretched hd h_cop)
+  have h_log : Tendsto (fun x : ℝ ↦ 64 * Real.log x) atTop atTop :=
+    Real.tendsto_log_atTop.const_mul_atTop (by norm_num)
+  have h_cutoff : Tendsto (fun x : ℝ ↦ (64 * Real.log x) ^ (27 : ℕ)) atTop atTop :=
+    (tendsto_pow_atTop (by decide : (27 : ℕ) ≠ 0)).comp h_log
+  filter_upwards [h_cutoff.eventually_ge_atTop t, eventually_ge_atTop 1] with x hx hx_one v hv
+  have hx_pos : 0 < x := one_pos.trans_le hx_one
+  have h_log_nonneg : 0 ≤ 64 * Real.log x := mul_nonneg (by norm_num) (Real.log_nonneg hx_one)
+  have h_root : 64 * Real.log x ≤ v ^ (1 / 27 : ℝ) := calc
+    _ = ((64 * Real.log x) ^ (27 : ℕ)) ^ (1 / 27 : ℝ) := by
+      rw [← Real.rpow_natCast_mul h_log_nonneg]
+      norm_num
+    _ ≤ v ^ (1 / 27 : ℝ) := Real.rpow_le_rpow (by positivity) hv (by norm_num)
+  calc |primeRemainder d q (rexp v)| ≤ rexp (-(v ^ (1 / 27 : ℝ) / 32)) := ht v (hx.trans hv)
+    _ ≤ rexp (-(2 * Real.log x)) := Real.exp_le_exp.2 (by linarith)
+    _ = x ^ (-2 : ℝ) := by rw [Real.rpow_def_of_pos hx_pos]; congr 1; ring
+
+/-- The common window controls the linear prime remainder with a factor `W ^ 12`. -/
+theorem eventually_primeRemainder_natCast_le_with_subexponential_width (P : Parameters) :
     ∀ᶠ x : ℕ in atTop,
+      let W := P.subexponentialWindowWidth (log x)
       primeRemainder P.d P.q₀ x ≤
-        ((2 : ℝ) ^ s * A * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (s : ℝ) * ε) := by
-  filter_upwards [eventually_exists_data_scales P hε hε_lt,
-    eventually_abs_primeRemainder_exp_le P hε, eventually_ge_atTop 1]
-    with x ⟨D, hx_eq, h_logB, hm, h_logX₁⟩ h_at_x₁ hx_one
+        ((2700 * 10 ^ 6) * P.q₀.totient + 2) * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := by
+  have hd : P.d ≠ 2 := by linarith [P.sixty_four_lt_d]
+  have h_cop : P.q₀.Coprime P.d := (P.coprime_q₁_d 0).coprime_mul_right
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  have h_fit : ∀ᶠ x : ℕ in atTop,
+      2 * (64 * log (x : ℝ)) ^ (27 : ℕ) ≤ P.subexponentialWindowWidth (log x) := by
+    simpa only [mul_pow, ← mul_assoc] using
+      h_log.eventually (P.eventually_mul_pow_le_subexponentialWindowWidth (2 * 64 ^ 27) 27)
+  filter_upwards [eventually_exists_data_with_subexponential_windows P, h_fit,
+    h_log.eventually_ge_atTop 1, eventually_ge_atTop 1,
+    tendsto_natCast_atTop_atTop.eventually (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd h_cop),
+    tendsto_natCast_atTop_atTop.eventually
+      (eventually_abs_primeRemainder_exp_le_of_polylog_cutoff hd P.d.coprime_one_left)]
+    with x ⟨_, D, hx, _, hm, h_cutoff, hb⟩ h_fit h_logx hx_one h_q₀ h_one
+  let W := P.subexponentialWindowWidth (log x)
+  let Q := W ^ (6 : ℕ)
+  let Z := (x : ℝ) ^ (-1 / 2 : ℝ)
+  have hT : 64 ≤ (64 * log (x : ℝ)) ^ (27 : ℕ) :=
+    (show 64 ≤ 64 * log (x : ℝ) by linarith).trans (le_self_pow₀ (by linarith) (by decide))
+  have h_tail_scale : (64 * log (x : ℝ)) ^ (27 : ℕ) ≤ D.logX₁ := by
+    linarith only [h_fit, h_cutoff, hT]
+  have h_Rq₀ := h_q₀ D.logX₁ h_tail_scale
+  have h_Rone := h_one D.logX₁ h_tail_scale
+  have hW : 3 ≤ W := by linarith only [h_fit, hT]
+  have hQ : 3 ≤ Q := hW.trans (le_self_pow₀ (by linarith) (by decide))
+  have hQ_mul : 0 ≤ (Q - 3) * (Q + 1) := mul_nonneg (by linarith) (by linarith)
+  have hBa : D.logB ≤ Q ^ 2 := hb.trans (by nlinarith only [hQ, hQ_mul])
+  have hB : 0 < D.logB := Data.HasLogBound.pos D
+  have hBb : D.logB ^ 2 ≤ 2 * Q ^ 2 :=
+    (pow_le_pow_left₀ hB.le hb 2).trans (by nlinarith only [hQ_mul])
   have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
   have hx_pos : (0 : ℝ) < x := one_pos.trans_le hx_ge
-  obtain ⟨h_rem_q₀, h_rem_one⟩ : |primeRemainder P.d P.q₀ D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) ∧
-      |primeRemainder P.d 1 D.x₁| ≤ (x : ℝ) ^ (-2 : ℝ) := h_at_x₁ D.logX₁ h_logX₁
-  have h_logB_pos : 0 < D.logB := Data.HasLogBound.pos D
-  have h_exp_nonneg : 0 ≤ (s : ℝ) * ε := mul_nonneg (Nat.cast_nonneg _) hε.le
-  have h_weight : D.logB ^ s ≤ (2 : ℝ) ^ s * (x : ℝ) ^ ((s : ℝ) * ε) := calc
-    _ ≤ (2 * (x : ℝ) ^ ε) ^ s := by gcongr
-    _ = _ := by rw [mul_pow, ← rpow_natCast ((x : ℝ) ^ ε) s, ← rpow_mul hx_pos.le, mul_comm ε]
-  have h_remainder_decay : (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (s : ℝ) * ε) :=
-    rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_weighted_remainder_decay :
-      (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) ≤ (x : ℝ) ^ (-1 / 2 + (s : ℝ) * ε) := by
-    rw [← rpow_add hx_pos]
-    exact rpow_le_rpow_of_exponent_le hx_ge (by linarith)
-  have h_main_exponent :
-      (x : ℝ) ^ ((s : ℝ) * ε) / (x : ℝ) ^ (1 / 2 : ℝ) =
-        (x : ℝ) ^ (-1 / 2 + (s : ℝ) * ε) := by
-    rw [← rpow_sub hx_pos]
-    ring_nf
-  calc primeRemainder P.d P.q₀ x = primeRemainder P.d P.q₀ D.x := by rw [hx_eq]
-    _ ≤ A * P.q₀.totient * D.logB ^ s / D.m + |primeRemainder P.d P.q₀ D.x₁| +
-        D.logB * |primeRemainder P.d 1 D.x₁| := hR D
-    _ ≤ A * P.q₀.totient * ((2 : ℝ) ^ s * (x : ℝ) ^ ((s : ℝ) * ε)) / (x : ℝ) ^ (1 / 2 : ℝ) +
-        (x : ℝ) ^ (-2 : ℝ) + 2 * (x : ℝ) ^ ε * (x : ℝ) ^ (-2 : ℝ) := by
-      grw [h_rem_q₀, h_rem_one, h_weight, h_logB, ← hm]
-    _ ≤ ((2 : ℝ) ^ s * A * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (s : ℝ) * ε) := by
-      rw [mul_div_assoc, mul_div_assoc, h_main_exponent]
-      linarith
+  have hZ_inv : Z = ((x : ℝ) ^ (1 / 2 : ℝ))⁻¹ := by
+    dsimp [Z]
+    rw [show (-1 / 2 : ℝ) = -(1 / 2 : ℝ) by ring, rpow_neg hx_pos.le]
+  have hsmall : (x : ℝ) ^ (-2 : ℝ) ≤ Z := rpow_le_rpow_of_exponent_le hx_ge (by norm_num)
+  have htail : (x : ℝ) ^ (-2 : ℝ) ≤ Z * Q ^ 2 :=
+    hsmall.trans (le_mul_of_one_le_right (by positivity) (one_le_pow₀ (by linarith)))
+  have htail_q₀ : |primeRemainder P.d P.q₀ D.x₁| ≤ Z * Q ^ 2 := h_Rq₀.trans htail
+  have htail_one : D.logB * |primeRemainder P.d 1 D.x₁| ≤ Q ^ 2 * Z :=
+    mul_le_mul hBa (h_Rone.trans hsmall) (abs_nonneg _) (by positivity)
+  rw [sqrt_eq_rpow] at hm
+  calc primeRemainder P.d P.q₀ x
+      ≤ (1350 * 10 ^ 6) * P.q₀.totient * D.logB ^ 2 / D.m +
+          |primeRemainder P.d P.q₀ D.x₁| + D.logB * |primeRemainder P.d 1 D.x₁| := by
+        simpa only [hx] using D.primeRemainder_le_linear
+    _ ≤ (1350 * 10 ^ 6) * P.q₀.totient * (2 * Q ^ 2) / (x : ℝ) ^ (1 / 2 : ℝ) +
+          Z * Q ^ 2 + Q ^ 2 * Z := by
+        refine add_le_add (add_le_add ?_ htail_q₀) htail_one
+        grw [← hm, hBb]
+    _ = _ := by
+      rw [div_eq_mul_inv, ← hZ_inv]
+      dsimp [Q]
+      ring
+
+private lemma eventually_primeRemainder_natCast_le_of_width
+    (P : Parameters) {s C : ℝ} (hs : 0 < s) (hC : 0 < C) :
+    ∀ᶠ x : ℕ in atTop, primeRemainder P.d P.q₀ x ≤ C * (x : ℝ) ^ (-1 / 2 + s) := by
+  let A : ℝ := (2700 * 10 ^ 6) * P.q₀.totient + 2
+  have h_log : Tendsto (fun x : ℕ ↦ log (x : ℝ)) atTop atTop :=
+    tendsto_log_atTop.comp tendsto_natCast_atTop_atTop
+  filter_upwards [eventually_primeRemainder_natCast_le_with_subexponential_width P,
+    h_log.eventually (P.eventually_log_subexponentialWindowWidth_le (show 0 < s / 24 by positivity)),
+    ((tendsto_rpow_atTop (half_pos hs)).comp tendsto_natCast_atTop_atTop).eventually_ge_atTop (A / C),
+    eventually_ge_atTop 1] with x h_bound h_logW h_coeff hx_one
+  let W := P.subexponentialWindowWidth (log x)
+  have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
+  have hW : 0 < W := exp_pos _
+  have h_power : W ^ 12 ≤ (x : ℝ) ^ (s / 2) := calc
+    _ = exp ((12 : ℕ) * log W) := by rw [exp_natCast_mul, exp_log hW]
+    _ ≤ exp (s / 2 * log x) := exp_le_exp.2 (by linarith only [h_logW])
+    _ = _ := by rw [rpow_def_of_pos hx_pos]; congr 1; ring
+  have hA : A ≤ C * (x : ℝ) ^ (s / 2) := by
+    change A / C ≤ (x : ℝ) ^ (s / 2) at h_coeff
+    exact ((div_le_iff₀ hC).1 h_coeff).trans_eq (mul_comm _ _)
+  calc primeRemainder P.d P.q₀ x ≤ A * ((x : ℝ) ^ (-1 / 2 : ℝ) * W ^ 12) := h_bound
+    _ ≤ (C * (x : ℝ) ^ (s / 2)) * ((x : ℝ) ^ (-1 / 2 : ℝ) * (x : ℝ) ^ (s / 2)) := by
+      gcongr
+    _ = C * ((x : ℝ) ^ (-1 / 2 : ℝ) * ((x : ℝ) ^ (s / 2) * (x : ℝ) ^ (s / 2))) := by ring
+    _ = _ := by rw [← rpow_add hx_pos, add_halves, ← rpow_add hx_pos]
+
+section IntegerBounds
+
+-- Preserve the named upper bound on ε in the existing integer statements.
+set_option linter.unusedVariables false
 
 /-- The one-sided bound at integers with exponent `-1/2 + 2 ε`. -/
 lemma eventually_primeRemainder_natCast_le_linear (P : Parameters) {ε : ℝ} (hε : 0 < ε)
@@ -223,25 +297,19 @@ lemma eventually_primeRemainder_natCast_le_linear (P : Parameters) {ε : ℝ} (h
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         ((5400 * 10 ^ 6) * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 2 * ε) := by
-  have h := eventually_primeRemainder_natCast_le_of_log_pow P hε hε_lt
-    (show 0 ≤ 1350 * 10 ^ 6 by positivity) 2 Data.primeRemainder_le_linear
-  have h_coefficient : (2 : ℝ) ^ 2 * (1350 * 10 ^ 6) = 5400 * 10 ^ 6 := by norm_num
-  simpa only [h_coefficient, Nat.cast_ofNat] using h
+  exact eventually_primeRemainder_natCast_le_of_width (s := 2 * ε) P (by positivity) (by positivity)
 
 /-- The one-sided bound at integers. Let `q₀ = P.q₀` and `d = P.d` be the modulus and the prime of
 the parameters `P`, and let `0 < ε < 1/100`. Let
 `R(y) = primeRemainder d q₀ y = ∑_{n ≤ y} λ(n) (1/n - 1/y) - log y / φ(q₀) - c`, where
 `λ(n) = Λ(n) (1 - (n/d))` for `n ≡ 1` modulo `q₀` and `0` otherwise, `(·/d)` is the Legendre symbol,
-and `c` is the constant with `R(y) → 0`. The quadratic main inequality gives exponent `-1/2 + 3 ε`
-for all large integers `x`. -/
+and `c` is the constant with `R(y) → 0`. The bound has exponent `-1/2 + 3 ε` for all large integers `x`. -/
 lemma eventually_primeRemainder_natCast_le_quadratic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (216 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 3 * ε) := by
-  simpa only [show (2 : ℝ) ^ 3 * 27 = 216 by norm_num, Nat.cast_ofNat] using
-    eventually_primeRemainder_natCast_le_of_log_pow P hε hε_lt (by norm_num) 3
-      Data.primeRemainder_le_quadratic
+  exact eventually_primeRemainder_natCast_le_of_width (s := 3 * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + (10/3) ε`. -/
 lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : ℝ} (hε : 0 < ε)
@@ -249,53 +317,23 @@ lemma eventually_primeRemainder_natCast_le_weighted_loss (P : Parameters) {ε : 
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤
         (1440 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + (10 / 3) * ε) := by
-  filter_upwards [eventually_primeRemainder_natCast_le_quadratic P hε hε_lt, eventually_ge_atTop 1]
-    with x hx_bound hx_one
-  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
-  refine hx_bound.trans (mul_le_mul ?_ (rpow_le_rpow_of_exponent_le hx_ge ?_) ?_ ?_)
-  · linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
-  · linarith
-  · positivity
-  · positivity
+  exact eventually_primeRemainder_natCast_le_of_width (s := (10 / 3) * ε) P (by positivity) (by positivity)
 
 /-- The integer remainder bound with exponent `-1/2 + 4 ε`. -/
 lemma eventually_primeRemainder_natCast_le_cubic (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (320 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 4 * ε) := by
-  filter_upwards [eventually_primeRemainder_natCast_le_quadratic P hε hε_lt, eventually_ge_atTop 1]
-    with x hx_bound hx_one
-  have hx_ge : (1 : ℝ) ≤ x := mod_cast hx_one
-  refine hx_bound.trans (mul_le_mul ?_ (rpow_le_rpow_of_exponent_le hx_ge ?_) ?_ ?_)
-  · linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient]
-  · linarith
-  · positivity
-  · positivity
+  exact eventually_primeRemainder_natCast_le_of_width (s := 4 * ε) P (by positivity) (by positivity)
 
-/-- The integer bound with coefficient `64 φ(q₀) + 3` follows by using the extra `4 ε`. -/
+/-- The integer bound with coefficient `64 φ(q₀) + 3` and exponent `-1/2 + 6 ε`. -/
 lemma eventually_primeRemainder_natCast_le (P : Parameters) {ε : ℝ} (hε : 0 < ε)
     (hε_lt : ε < 1 / 100) :
     ∀ᶠ x : ℕ in atTop,
       primeRemainder P.d P.q₀ x ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (-1 / 2 + 6 * ε) := by
-  let C : ℝ := (5400 * 10 ^ 6) * P.q₀.totient + 3
-  have hC : 0 ≤ C := by dsimp [C]; positivity
-  have h_growth : ∀ᶠ x : ℕ in atTop, C ≤ (x : ℝ) ^ (4 * ε) :=
-    ((tendsto_rpow_atTop (show 0 < 4 * ε by positivity)).comp
-      tendsto_natCast_atTop_atTop).eventually_ge_atTop C
-  filter_upwards [eventually_primeRemainder_natCast_le_linear P hε hε_lt,
-    h_growth, eventually_ge_atTop 1] with x hx_bound hx_growth hx_one
-  have hx_pos : (0 : ℝ) < x := by exact_mod_cast (Nat.zero_lt_one.trans_le hx_one)
-  have h_coeff : C ≤ (64 * P.q₀.totient + 3) * (x : ℝ) ^ (4 * ε) := calc
-    _ ≤ (64 * P.q₀.totient + 3) * C :=
-      le_mul_of_one_le_left hC (by linarith [Nat.cast_nonneg (α := ℝ) P.q₀.totient])
-    _ ≤ _ := by gcongr
-  calc
-    _ ≤ C * (x : ℝ) ^ (-1 / 2 + 2 * ε) := hx_bound
-    _ ≤ ((64 * P.q₀.totient + 3) * (x : ℝ) ^ (4 * ε)) * (x : ℝ) ^ (-1 / 2 + 2 * ε) :=
-      mul_le_mul_of_nonneg_right h_coeff (rpow_nonneg hx_pos.le _)
-    _ = _ := by
-      rw [mul_assoc, ← rpow_add hx_pos]
-      ring_nf
+  exact eventually_primeRemainder_natCast_le_of_width (s := 6 * ε) P (by positivity) (by positivity)
+
+end IntegerBounds
 
 /-- Let `d` be a prime, `q > 0`, and `R_q(y) = primeRemainder d q y = ∑_{n ≤ y} λ(n) (1/n - 1/y) -
 log y / φ(q) - c_q`. Then `R_q(y) - R_q(⌊y⌋) ≤ 26 / y` for `y ≥ 2`. -/
@@ -348,17 +386,16 @@ theorem eventually_primeRemainder_le_mul_rpow {q₀ : ℕ} [NeZero q₀] (hq₀ 
       dvd_q₀ := hq₀
       d_prime := hd_prime.out
       q₀_dvd_and_not_dvd := dvd_two_mul_succ_and_not_dvd_succ (NeZero.pos q₀) (by omega) hd }
-  -- It suffices to prove the bound with `6 δ` in place of `ε`, for `0 < δ < 1/100`.
-  obtain ⟨δ, hδ, hδ_lt, h_exponent_slack⟩ : ∃ δ > (0 : ℝ), δ < 1 / 100 ∧ 6 * δ ≤ ε := by
-    refine ⟨min (1 / 200) (ε / 6), by positivity, ?_, ?_⟩
-    · linarith [min_le_left (1 / 200) (ε / 6)]
-    · linarith [min_le_right (1 / 200) (ε / 6)]
+  let s := min (1 / 4 : ℝ) ε
+  have hs : 0 < s := lt_min (by norm_num) hε
+  have hs_le : s ≤ ε := min_le_right _ _
   set C : ℝ := 64 * q₀.totient + 3
-  set t : ℝ := -1 / 2 + 6 * δ with ht
+  set t : ℝ := -1 / 2 + s with ht
   have ht_ge : -1 ≤ t := by linarith
-  have ht_le : t ≤ 0 := by linarith
+  have ht_le : t ≤ 0 := by linarith [min_le_left (1 / 4 : ℝ) ε]
   have h_integer_bound : ∀ᶠ y : ℝ in atTop, primeRemainder d q₀ ⌊y⌋₊ ≤ C * (⌊y⌋₊ : ℝ) ^ t :=
-    tendsto_nat_floor_atTop.eventually (eventually_primeRemainder_natCast_le P hδ hδ_lt)
+    tendsto_nat_floor_atTop.eventually
+      (eventually_primeRemainder_natCast_le_of_width (C := C) P hs (by dsimp [C]; positivity))
   filter_upwards [h_integer_bound, eventually_ge_atTop 2] with y hy_floor hy
   have hy_one : 1 ≤ y := one_le_two.trans hy
   calc primeRemainder d q₀ y

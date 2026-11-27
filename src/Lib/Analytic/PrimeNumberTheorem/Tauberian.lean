@@ -269,6 +269,20 @@ lemma norm_taylorCoeff_transform_sub_le_of_lipschitz (hR : Measurable R)
   rw [H_eq]
   field
 
+/-- For large `u` an even power of `c log u` is at most `u`, and a power of `u` is at most
+`exp (√u / 2)`. -/
+lemma eventually_log_pow_le_and_pow_le_exp_sqrt (c : ℝ) (A j : ℕ) : ∀ᶠ u : ℝ in atTop,
+    (c * u.log) ^ (2 * A) ≤ u ∧ u ^ j ≤ rexp (√u / 2) := by
+  have h_log : (fun u : ℝ ↦ (c * u.log) ^ (2 * A)) =o[atTop] id := by
+    simpa [mul_pow] using
+      (Real.isLittleO_pow_log_id_atTop (n := 2 * A)).const_mul_left (c ^ (2 * A))
+  have h_exp : ∀ᶠ t : ℝ in atTop, ‖t ^ (2 * j)‖ ≤ ‖rexp (2⁻¹ * t)‖ :=
+    (isLittleO_pow_exp_pos_mul_atTop _ (by norm_num)).eventuallyLE
+  filter_upwards [h_log.eventuallyLE, Real.tendsto_sqrt_atTop.eventually h_exp,
+    eventually_ge_atTop 0] with u h_log_le h_exp_le hu
+  refine ⟨(le_abs_self _).trans (h_log_le.trans_eq (abs_of_nonneg hu)), ?_⟩
+  simpa [pow_mul, Real.sq_sqrt hu, abs_of_nonneg hu, div_eq_inv_mul] using h_exp_le
+
 /-- Every point `s` of the disc of radius `H + η` about `1 + H` has `re s ≥ 1 - η` and
 `|s| ≤ 2 H + η + 1`, for `H ≥ 0`. -/
 lemma one_sub_le_re_and_norm_le_of_mem_closedBall {H η : ℝ} (hH : 0 ≤ H) {s : ℂ}
@@ -277,6 +291,33 @@ lemma one_sub_le_re_and_norm_le_of_mem_closedBall {H η : ℝ} (hH : 0 ≤ H) {s
   have h_re : |s.re - (1 + H)| ≤ H + η := by simpa using (abs_re_le_norm _).trans hs
   have h_centre : ‖(1 + H : ℂ)‖ = 1 + H := mod_cast Real.norm_of_nonneg (by linarith)
   exact ⟨by linarith [abs_le.1 h_re], by linarith [norm_le_norm_sub_add s (1 + H)]⟩
+
+/-- Let `l ≥ 1`, let `H = (k + 1) / u > 1` with `4 H ≤ u ^ (2 B + 5)`, and let `F` be holomorphic
+and at most `l ^ A` on the disc of radius `H + l ^ (-A)` about `1 + H`. If `l ^ (2 A) ≤ u` and
+`u ^ (3 B + 7) ≤ exp (√u / 2)`, the normalised Taylor coefficient of `dslope F 1` at `1 + H` is at
+most `u ^ (-(B + 1))`: the gain is `exp (-u / (2 l ^ A)) ≤ exp (-√u / 2)`. -/
+lemma norm_taylorCoeff_dslope_le_inv_pow {u l H : ℝ} {A B k : ℕ} (hu : 0 < u) (hl : 1 ≤ l)
+    (H_eq : H = (k + 1) / u) (hH : 1 < H) (hH_le : 4 * H ≤ u * u ^ (2 * B + 4))
+    (h_pow : l ^ (2 * A) ≤ u) (h_exp : u ^ (3 * B + 7) ≤ rexp (√u / 2))
+    (hF : ∀ s ∈ closedBall (1 + H : ℂ) (H + 1 / l ^ A), DifferentiableAt ℂ F s ∧ ‖F s‖ ≤ l ^ A) :
+    ‖(-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)‖ ≤ 1 / u ^ (B + 1) := by
+  have hη_le : 1 / l ^ A ≤ H := by grw [← one_le_pow₀ hl, ← hH, div_one]
+  have h_sqrt : l ^ A ≤ √u := Real.le_sqrt_of_sq_le (by rwa [← pow_mul, mul_comm])
+  have h_gain : √u / 2 ≤ (k + 1) * (1 / l ^ A / (2 * H)) :=
+    calc √u / 2 = u / √u / 2 := by rw [Real.div_sqrt]
+      _ ≤ u / l ^ A / 2 := by gcongr
+      _ = (k + 1) * (1 / l ^ A / (2 * H)) := by
+        rw [H_eq]
+        field
+  calc ‖(-H) ^ k * H / k ! * iteratedDeriv k (dslope F 1) (1 + H)‖
+      ≤ 4 * l ^ A * H / (1 / l ^ A) * rexp (-((k + 1) * (1 / l ^ A / (2 * H)))) :=
+        norm_taylorCoeff_dslope_le (by positivity) hη_le hF k
+    _ = l ^ (2 * A) * (4 * H) / rexp ((k + 1) * (1 / l ^ A / (2 * H))) := by
+        rw [Real.exp_neg]
+        field
+    _ ≤ u * (u * u ^ (2 * B + 4)) / u ^ (3 * B + 7) := by
+        grw [h_pow, hH_le, ← h_gain, ← h_exp]
+    _ = 1 / u ^ (B + 1) := by field
 
 private lemma eventually_const_mul_pow_le_exp (C : ℝ) (n : ℕ) :
     ∀ᶠ l : ℝ in atTop, C * l ^ n ≤ rexp (l / 8) := by
